@@ -3,8 +3,21 @@
 	<head>
 		<meta charset="utf-8">
 		<title>快速启动</title>
+		<script src="../../ext/vue/vue.js"></script>
 	</head>
 	<body>
 		快速启动界面
+		<div id="app">
+			{{ message }}
+		</div>
 	</body>
+	<script>
+		var app = new Vue({
+			el: '#app',
+			data: {
+				message: 'Hello Vue!'
+			}
+		})
+	</script>
+
 </html>
