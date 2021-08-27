@@ -11,7 +11,8 @@ const {
   ipcMain: ipc,
   Menu, MenuItem,
   crashReporter,
-  dialog
+  dialog,
+  globalShortcut
 } = electron
 
 crashReporter.start({
@@ -300,6 +301,37 @@ function createWindowWithBounds (bounds) {
   return mainWindow
 }
 
+function createLanuchBar(){
+	//如果不存在则创建
+	
+	let lanuchBar = new BrowserWindow({
+    width: 800,
+    height:40,
+    titleBarStyle: 'customButtonsOnHover',
+    trafficLightPosition: { x: 12, y: 10 },
+    icon: __dirname + '/icons/icon256.png',
+    frame: false,
+    alwaysOnTop: true,
+    backgroundColor: '#fff', // the value of this is ignored, but setting it seems to work around https://github.com/electron/electron/issues/10559
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+      nodeIntegrationInWorker: true, // used by ProcessSpawner
+      additionalArguments: [
+        '--user-data-path=' + userDataPath,
+        '--app-version=' + app.getVersion(),
+        '--app-name=' + app.getName(),
+        ...((isDevelopmentMode ? ['--development-mode'] : [])),
+      ]
+    },
+	title:'快速搜索',
+	show:false
+  })
+  lanuchBar.loadURL('file://' + __dirname +"/pages/lanuchBar/index.html")
+	app.lanuchBar=lanuchBar;
+  
+  
+}
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
   // On OS X it is common for applications and their menu bar
@@ -321,6 +353,29 @@ app.on('ready', function () {
     return
   }
 
+	//预先创建好快速启动窗口
+	createLanuchBar()
+	//注册快捷键，用于展示启动界面
+	globalShortcut.register('alt+space', () => {
+		//注册全局快捷键
+		//todo 判断一下注册失败
+		console.log('Electron loves global shortcuts!')
+		
+		if (app.lanuchBar) {
+			if(app.lanuchBar.isVisible()){
+				app.lanuchBar.hide()  //如果已经存在，则隐藏
+			}else{
+				app.lanuchBar.show()
+			}
+			
+		} else {
+			createLanuchBar()
+		}
+
+	})
+	
+
+	
   createWindow(function () {
     mainWindow.webContents.on('did-finish-load', function () {
       // if a URL was passed as a command line argument (probably because Min is set as the default browser on Linux), open it.
