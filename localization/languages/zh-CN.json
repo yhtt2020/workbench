@@ -153,7 +153,7 @@
     "settingsUserscriptsToggle": "允许自定义脚本",
     "settingsShowDividerToggle": "显示标签页边界",
     "settingsSeparateTitlebarToggle": "显示浏览器标题栏",
-    "settingsAutoplayToggle": null, //missing translation 
+    "settingsAutoplayToggle": "允许自动播放", //missing translation 
     "settingsOpenTabsInForegroundToggle": "在前台打开新标签页",
     "settingsUserscriptsExplanation": {
       "unsafeHTML": "自定义脚本允许您改变网站行为 - <a href=\"https://github.com/minbrowser/min/wiki/userscripts\">查看更多</a>."
@@ -267,11 +267,11 @@
     "passwordCaptureSavePassword": "是否保存%s的密码？",
     "passwordCaptureSave": "保存",
     "passwordCaptureDontSave": "不保存",
-    "passwordCaptureNeverSave": null, //missing translation
+    "passwordCaptureNeverSave": "永不保存", //missing translation
     /* Password viewer */
     "savedPasswordsHeading": "已保存密码",
     "savedPasswordsEmpty": "当前未保存任何密码",
-    "savedPasswordsNeverSavedLabel": null, //missing translation
+    "savedPasswordsNeverSavedLabel": "从不保存", //missing translation
     "deletePassword": "删除保存的%s密码？",
     /* Dialogs */
     "loginPromptTitle": "登录 %h (%r)",
@@ -281,9 +281,9 @@
     "email": "邮箱",
     "password": "密码",
     "secretKey": "密钥",
-    "openExternalApp": null, //missing translation
-    "clickToCopy": null, //missing translation
-    "copied": null ,//missing translation
+    "openExternalApp": "打开外部应用", //missing translation
+    "clickToCopy": "点击复制", //missing translation
+    "copied": "已复制" ,//missing translation
 	
 	
 	
