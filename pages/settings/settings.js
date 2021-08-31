@@ -411,7 +411,7 @@ function createKeyMapListItem (action, keyMap) {
   var li = document.createElement('li')
   var label = document.createElement('label')
   var input = document.createElement('input')
-  label.innerText = formatCamelCase(action)
+  label.innerText = l(action)
   label.htmlFor = action
 
   input.type = 'text'

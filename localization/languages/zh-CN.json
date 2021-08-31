@@ -283,6 +283,43 @@
     "secretKey": "密钥",
     "openExternalApp": null, //missing translation
     "clickToCopy": null, //missing translation
-    "copied": null //missing translation
+    "copied": null ,//missing translation
+	
+	
+	
+	
+	/* 快捷键 */
+	"quitMin": "退出浏览器",
+	"addTab": "添加标签",
+	"addPrivateTab": "添加隐私标签",
+	"duplicateTab": "复制标签",
+	"addTask": "创建新任务",
+	"toggleTasks": "开关任务",
+	"goBack": "回退",
+	"goForward": "前进",
+	"enterEditMode":"进入编辑模式",
+	"runShortcut": "执行快捷方式",
+	"completeSearchbar": "完成搜索条",
+	"closeTab": "关闭标签",
+	"restoreTab":"恢复标签" ,
+	"gotoFirstTab": "到第一个标签",
+	"gotoLastTab": "到最后一个标签",
+	"addToFavorites": "添加到收藏",
+	"showBookmarks":"显示书签" ,
+	"toggleReaderView": "开关阅读模式",
+	"switchToNextTab": "切换到下一个标签",
+	"switchToPreviousTab": "切换到下一个标签",
+	"switchToNextTask": "切换到下一个任务",
+	"switchToPreviousTask": "切换到上一个任务",
+	"closeAllTabs":"关闭全部的标签" ,
+	"reload": "刷新",
+	"reloadIgnoringCache": "无缓存刷新",
+	"showMenu":"显示菜单" ,
+	"followLink": "跟踪链接",
+	"fillPassword":"填充密码",
+	"toggleTabAudio": "关闭标签音频",
+	"showHistory": "显示历史记录"
+	
+	
   }
 }
