@@ -16,17 +16,28 @@ function refreshAll() {
 
 	//对分组进行遍历
 	tasks.forEach(function(task, index) {
-		if (task.tabs.count() > 0) {
+		
 			//根据分组第一个网站创建一个图标
 			let img = document.createElement("img");
 			let favicon = task.tabs.getAtIndex(0).favicon
-			if(typeof favicon== 'undefined'){
+			console.log(task)
+			if(typeof favicon == 'undefined'){
+				img.setAttribute('src', "icons/empty.png")
+			}else if(typeof favicon =='undefined'){
+				img.setAttribute('src', "icons/empty.png")
+			}else if(favicon ==null){
 				img.setAttribute('src', "icons/empty.png")
 			}else{
 				img.setAttribute('src', favicon.url)
 			}
 			
 			
+			// if (typeof(favicon.url)!='string') {
+			// 	img.setAttribute('src', "icons/empty.png")
+			// } else {
+			// 	img.setAttribute('src', favicon.url)
+			// }
+
 			img.setAttribute('class', 'icon')
 			//将图标放到li当中
 			let li = document.createElement('li')
@@ -40,14 +51,14 @@ function refreshAll() {
 
 			li.appendChild(img)
 			li.appendChild(img)
-			li.onclick= function(e){
-				let taskId= e.currentTarget.getAttribute('task-id');
+			li.onclick = function(e) {
+				let taskId = e.currentTarget.getAttribute('task-id');
 				console.log(e.currentTarget)
 				console.log(taskId)
 				browserUI.switchToTask(taskId)
 			}
 			aList.appendChild(li)
-		}
+		
 
 	})
 
@@ -62,5 +73,6 @@ function refreshAll() {
 
 
 module.exports = {
-	initialize,refreshAll
+	initialize,
+	refreshAll
 }

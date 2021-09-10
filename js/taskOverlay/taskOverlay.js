@@ -17,7 +17,6 @@ var taskSwitcherButton = document.getElementById('switch-task-button')
 var addTaskButton = document.getElementById('add-task')
 var addTaskLabel = addTaskButton.querySelector('span')
 var taskOverlayNavbar = document.getElementById('task-overlay-navbar')
-
 function addTaskFromMenu () {
   /* new tasks can't be created in modal mode */
   if (modalMode.enabled()) {
@@ -36,6 +35,7 @@ function addTaskFromMenu () {
     taskOverlay.hide()
     tabEditor.show(tabs.getSelected())
   }, 600)
+  	sideBar.refreshAll()
 }
 
 function getTaskContainer (id) {
