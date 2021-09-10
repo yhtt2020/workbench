@@ -20,7 +20,13 @@ function refreshAll() {
 			//根据分组第一个网站创建一个图标
 			let img = document.createElement("img");
 			let favicon = task.tabs.getAtIndex(0).favicon
-			img.setAttribute('src', favicon.url)
+			if(typeof favicon== 'undefined'){
+				img.setAttribute('src', "icons/empty.png")
+			}else{
+				img.setAttribute('src', favicon.url)
+			}
+			
+			
 			img.setAttribute('class', 'icon')
 			//将图标放到li当中
 			let li = document.createElement('li')
