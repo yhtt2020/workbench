@@ -138,7 +138,7 @@ const webviews = {
       fn: fn
     })
   },
-  viewMargins: [0, 0, 0, 230], // top, right, bottom, left
+  viewMargins: [0, 0, 0, 45], // top, right, bottom, left
   adjustMargin: function (margins) {
     for (var i = 0; i < margins.length; i++) {
       webviews.viewMargins[i] += margins[i]
