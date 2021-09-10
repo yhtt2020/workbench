@@ -1,3 +1,4 @@
+
 class TabList {
   constructor (tabs, parentTaskList) {
     this.tabs = tabs || []
@@ -37,6 +38,7 @@ class TabList {
     }
 
     this.parentTaskList.emit('tab-added', tabId)
+
 
     return tabId
   }

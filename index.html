@@ -192,39 +192,34 @@
     <div id="overlay"></div>
 
     <div id="webviews">
-		<div style="left:0;height: 100vh;width: 45px;border-right: 1px solid #D7D7D7;">
+		<div id="sidebar" style="left:0;height: 100vh;width: 45px;border-right: 1px solid #D7D7D7;">
+			<ul id="appGroup" class="app-task">
+				<li data-role="task" class="openTask" task-id="">
+					<img class="icon" src="icons/icon256.png">
+				</li>
 			
+			</ul>
 		</div>
 		<style>
-		.menu-title{
-			margin-top: 10px;margin-left: 10px;font-size: 14px;color: #333333;
-			margin-bottom: 10px;
-			font-weight: bold;
+		#sidebar ul li{
+			list-style-type:none;
+			width:45px;
+			height: 45px;
+			text-align: center;
+			
+			display: flex;
+			justify-content: center; 
+			align-items: center; 
+			cursor: pointer;
 		}
-			.side-menu-2 li a{
-				font-size: 14px;color:#333;padding: 10px;display: block;margin-left:10px;
-			}
-			.side-menu-2 li a:hover{
-				
-				 background-color: #f4f8f9;
-			}
-			.side-menu-2 .side-menu-subitem a{
-				    font-size: 14px;
-				    color: #666;
-				    margin: 10px;
-					margin-left:20px;
-				    display: block;
-				    border-radius: 4px;
-				    padding: 10px;
-					margin-bottom:0;
-					white-space:nowrap;
-					overflow:hidden;
-					text-overflow:ellipsis;
-			}
-			.side-menu-2 .side-menu-subitem a:hover{
-				 background-color: #f4f8f9;
-				 
-			}
+		#sidebar ul li:hover{
+			background-color: #efefef;
+		}
+		#sidebar .app-task .icon{
+			width: 30px;
+			height: 30px;
+		}
+		
 		</style>
       <div id="leftArrowContainer" class="arrow-indicator">
         <i id="leftArrow" class="i carbon:chevron-left"></i>
