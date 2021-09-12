@@ -123,7 +123,9 @@
 					window: window
 				}
 			})
+			window.sidebarItems=[]
 			Vue.prototype.window = window
+			Vue.prototype.sidebarItems= window.sidebarItems
 			Vue.config.devtools = true;
 		</script>
 

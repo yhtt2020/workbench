@@ -26,7 +26,8 @@
       "IntersectionObserver",
       "Node",
       "Event",
-	  "browserUI"
+	  "browserUI",
+	  "sidebarItems"
     ]
   },
   "dependencies": {

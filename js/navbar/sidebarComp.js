@@ -82,6 +82,8 @@ Vue.component('sidebar', {
 
 				})
 			}
+			that.dumpSidebarItems()
+		
 
 		}, 1000)
 
@@ -94,6 +96,7 @@ Vue.component('sidebar', {
 			set(newValue) {
 				this.items = newValue
 				console.log(newValue)
+				this.dumpSidebarItems()
 			}
 		},
 		getPinItems: {
@@ -107,7 +110,8 @@ Vue.component('sidebar', {
 				this.pinItems = newValue
 				console.log('触发了修改元素')
 				console.log(newValue)
-				
+				this.dumpSidebarItems()
+
 			}
 
 		},
@@ -194,7 +198,6 @@ Vue.component('sidebar', {
 			//找到拖动的任务的id
 			let el = e.item
 			var droppedTaskId = el.getAttribute('item-id')
-			console.log(droppedTaskId)
 			let newIndex = this.getNewIndex(droppedTaskId)
 			let droppedTask = this.tasks.splice(this.tasks.getIndex(droppedTaskId), 1)[0]
 			//两轮寻找后，一定会找到真正的id
@@ -226,9 +229,15 @@ Vue.component('sidebar', {
 					}
 				}
 			}
-			console.log(index) //输出新的真正的id
 			return index
 
+		},
+		dumpSidebarItems() {
+			window.sidebarItems = {
+				'pinItems': this.pinItems,
+				'items': this.items
+			}
 		}
-	},
+	}
+
 })
