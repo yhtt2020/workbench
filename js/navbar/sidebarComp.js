@@ -6,9 +6,7 @@ Vue.component('sidebar', {
 		return {
 			tasks: null,
 			browserUI: null,
-
-			items: [],
-			selectedIndex: -1
+			items: []
 		}
 	},
 	mounted: function() {
@@ -25,8 +23,6 @@ Vue.component('sidebar', {
 			that.tasks = tasks
 			that.items = tasks.getAll();
 			that.browserUI = browserUI
-
-
 		}, 1000)
 
 	},
@@ -85,7 +81,6 @@ Vue.component('sidebar', {
 	methods: {
 		openTask(taskId, index) {
 			this.browserUI.switchToTask(taskId)
-			this.selectedIndex = index
 		}
 	},
 })
