@@ -5,9 +5,6 @@
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline'" />
 
     <title>Min</title>
-	<script type="module">
-	  import Vue from './ext/vue/vue.esm.js'
-	</script>
 	<script src="./ext/vue/vue.js"></script>
     <link rel="stylesheet" href="dist/bundle.css" />
     <link rel="stylesheet" href="ext/icons/iconfont.css" />
@@ -213,7 +210,6 @@
 		<style>
 		.sidebar ul li{
 			list-style-type:none;
-			width:45px;
 			height: 45px;
 			text-align: center;
 			
@@ -228,6 +224,10 @@
 		.sidebar .app-task .icon{
 			width: 30px;
 			height: 30px;
+		}
+		.sidebar .active{
+			border-left: #1B74BB solid 3px;
+			background-color: #efefef;
 		}
 		
 		</style>
