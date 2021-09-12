@@ -61,6 +61,10 @@ class TaskList {
   get (id) {
     return this.find(task => task.id === id) || null
   }
+  
+  getAll(){
+	  return this.tasks
+  }
 
   getSelected () {
     return this.get(this.selected)
