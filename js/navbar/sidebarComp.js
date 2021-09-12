@@ -40,6 +40,9 @@ Vue.component('sidebar', {
 		},
 		getIcon() {
 			return task => {
+				if(task.tabs.count()==0){
+					return  "icons/empty.png"
+				}
 				let favicon= task.tabs.getAtIndex(0).favicon;
 				
 				if (typeof favicon == 'undefined') {
