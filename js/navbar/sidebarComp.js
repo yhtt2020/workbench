@@ -9,11 +9,11 @@ Vue.component('sidebar', {
 			browserUI: null,
 			//用于渲染组件的数组
 			items: [], //置顶的数组
-			pinItems: [] ,//下方列表
-			
-			drag:false
+			pinItems: [], //下方列表
+
+			drag: false
 		}
-		
+
 	},
 	mounted: function() {
 
@@ -31,7 +31,8 @@ Vue.component('sidebar', {
 			id: "1", //id
 			icon: "/icons/fav.png", //图标
 			draggable: true, //是否允许拖拽
-			ext: '' //额外的信息
+			ext: '', //额外的信息
+			fixed: false //固定
 		}
 
 		let that = this;
@@ -43,12 +44,21 @@ Vue.component('sidebar', {
 		setTimeout(function() {
 			that.tasks = tasks
 			that.browserUI = browserUI
-		}, 1000)
 
-	},
-	computed: {
-		getItems() {
-			let that = this
+			that.pinItems = []
+			let item = {
+				title: '收藏夹', //名称，用于显示提示
+				index: 0, //索引
+				id: 1, //id
+				icon: "icons/fav.png", //图标
+				draggable: true, //是否允许拖拽
+				ext: '', //额外的信息
+				fixed: true,
+				type: 'system-bookmark'
+			}
+			that.pinItems.push(item)
+
+
 			this.items = []
 			if (this.tasks != null) {
 				//从任务当中取得任务的小组
@@ -64,36 +74,40 @@ Vue.component('sidebar', {
 						id: task.id, //任务id
 						icon: parsedIcon, //图标
 						draggable: true, //是否允许拖拽
-						ext: task.id //额外的信息
+						ext: task.id, //额外的信息
+						fixed: false,
+						type: 'task'
 					}
 					that.items.push(item)
 
 				})
+			}
+
+		}, 1000)
+
+	},
+	computed: {
+		getItems: {
+			get() {
 				return this.items
-			} else {
-				return {}
+			},
+			set(newValue) {
+				this.items = newValue
+				console.log(newValue)
 			}
 		},
 		getPinItems: {
 
-			get: function() {
-				this.pinItems = []
-				let item = {
-					title: '收藏夹', //名称，用于显示提示
-					index: 0, //索引
-					id: 1, //id
-					icon: "icons/fav.png", //图标
-					draggable: true, //是否允许拖拽
-					ext: '' //额外的信息
-				}
-				this.pinItems.push(item)
+			get() {
+
 				return this.pinItems
 			},
 			// setter
-			set: function(newValue) {
+			set(newValue) {
 				this.pinItems = newValue
 				console.log('触发了修改元素')
 				console.log(newValue)
+				
 			}
 
 		},
@@ -114,7 +128,7 @@ Vue.component('sidebar', {
 		<ul id="pinGroup" class="app-task">
 
 			
-			 <draggable v-model="pinItems" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass" chosenClass="chosenClass" @start="onStartPin" @end="onEndPin">
+			 <draggable v-model="getPinItems" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass" chosenClass="chosenClass" @start="onStart" @end="onEnd">
 			                    <transition-group>
 								<li v-for="(item,i) in getPinItems" :key="item.id" @click="openTask(item.id,i)" data-role="task" :class="isActive(item.id)" :item-id="item.id" :title="item.title">
 									<img class="icon" :src="item.icon">
@@ -126,9 +140,9 @@ Vue.component('sidebar', {
 		<div style="border-top: 1px solid lightgrey;margin: 8px;"></div>
 		
 		<ul id="appGroup" class="app-task">
-		<draggable v-model="items" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass" chosenClass="chosenClass" @start="onStart" @end="onEnd">
+		<draggable v-model="getItems" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass" chosenClass="chosenClass" @start="onStart" @end="onEnd">
 		                   <transition-group>
-			<li @click="openTask(item.id,i)" v-for="(item,i) in getItems"  :key="item.id" data-role="task" :class="isActive(item.id)" :task-id="item.id" :title="item.title">
+			<li @click="openTask(item.id,i)" v-for="(item,i) in getItems"  :key="item.id" data-role="task" :class="isActive(item.id)" :item-id="item.id" :title="item.title">
 				<img class="icon" :src="item.icon">
 			</li>
 			</transition-group>
@@ -174,25 +188,47 @@ Vue.component('sidebar', {
 			this.drag = true;
 		},
 		//拖拽结束事件
-		onEnd(end) {
-			console.log(end)
+		onEnd(e) {
 			this.drag = false;
-			console.log('拖动了普通列表')
-			console.log(this.items)
-			
+			console.log('拖动了列表')
+			//找到拖动的任务的id
+			let el = e.item
+			var droppedTaskId = el.getAttribute('item-id')
+			console.log(droppedTaskId)
+			let newIndex = this.getNewIndex(droppedTaskId)
+			let droppedTask = this.tasks.splice(this.tasks.getIndex(droppedTaskId), 1)[0]
+			//两轮寻找后，一定会找到真正的id
+			tasks.splice(newIndex, 0, droppedTask)
 		},
-		//开始拖拽事件
-		onStartPin() {
-			this.drag = true;
-		},
-		//拖拽结束事件
-		onEndPin(end) {
-			console.log(end)
-			this.drag = false;
-			console.log('拖动了置顶列表')
-			console.log(this.pinItems)
-			
-		},
+		//对任务数组重新进行排序
+		getNewIndex(droppedTaskId) {
+			let index = 0
+			let find = 0
+			for (var i = 0; i < this.pinItems.length; i++) {
+				if (this.pinItems[i]['type'] == 'task')
+					index++
+				//如果当前新数组的元素是task类型，且id和拓转的是一样的。则直接返回index即可了
+				if (this.pinItems[i]['type'] == 'task' && this.pinItems[i]['ext'] == droppedTaskId) {
+					index = index - 1
+					find = 1
+					break;
+				}
+			}
+			if (find == 0) {
+				for (var i = 0; i < this.items.length; i++) {
+					//继续找，如果上面没找到index应该还是-1
+					if (this.items[i]['type'] == 'task') {
+						index++
+					}
+					if (this.items[i]['type'] == 'task' && this.items[i]['ext'] == droppedTaskId) {
+						index = index - 1 //需要加上第一组的id的总数
+						break;
+					}
+				}
+			}
+			console.log(index) //输出新的真正的id
+			return index
 
+		}
 	},
 })
