@@ -21,13 +21,10 @@ Vue.component('sidebar', {
 		// })
 		let that = this;
 		setTimeout(function() {
-			aList = that.getList()
-			console.log(tasks)
 			that.tasks = tasks
 			that.items = tasks.getAll();
 			that.browserUI = browserUI
-			console.log(browserUI)
-			//that.refreshAll()
+		
 
 		}, 1000)
 
@@ -72,56 +69,6 @@ Vue.component('sidebar', {
 	methods: {
 		openTask(taskId){
 			this.browserUI.switchToTask(taskId)
-		},
-		getList: function() {
-			return document.getElementById("appGroup")
-		},
-		refreshAll: function() {
-
-			//对分组进行遍历
-			this.tasks.forEach(function(task, index) {
-
-				//根据分组第一个网站创建一个图标
-				let img = document.createElement("img");
-				let favicon = task.tabs.getAtIndex(0).favicon
-				console.log(task)
-				if (typeof favicon == 'undefined') {
-					img.setAttribute('src', "icons/empty.png")
-				} else if (typeof favicon == 'undefined') {
-					img.setAttribute('src', "icons/empty.png")
-				} else if (favicon == null) {
-					img.setAttribute('src', "icons/empty.png")
-				} else {
-					img.setAttribute('src', favicon.url)
-				}
-
-
-				// if (typeof(favicon.url)!='string') {
-				// 	img.setAttribute('src', "icons/empty.png")
-				// } else {
-				// 	img.setAttribute('src', favicon.url)
-				// }
-
-				img.setAttribute('class', 'icon')
-				//将图标放到li当中
-				let li = document.createElement('li')
-				li.setAttribute('data-role', 'task')
-				li.setAttribute('class', 'openTask')
-				li.setAttribute('task-id', task.id)
-
-
-				li.appendChild(img)
-				li.appendChild(img)
-				let that = this;
-				li.onclick = function(e) {
-					let taskId = e.currentTarget.getAttribute('task-id');
-					console.log(e.currentTarget)
-					console.log(taskId)
-
-					that.browserUI.switchToTask(taskId)
-				}
-				aList.appendChild(li)
-			})
 		}
 	},
 })
