@@ -25,7 +25,8 @@
       "performance",
       "IntersectionObserver",
       "Node",
-      "Event"
+      "Event",
+	  "browserUI"
     ]
   },
   "dependencies": {

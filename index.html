@@ -2,10 +2,13 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="Content-Security-Policy" content="script-src 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline'" />
 
     <title>Min</title>
-
+	<script type="module">
+	  import Vue from './ext/vue/vue.esm.js'
+	</script>
+	<script src="./ext/vue/vue.js"></script>
     <link rel="stylesheet" href="dist/bundle.css" />
     <link rel="stylesheet" href="ext/icons/iconfont.css" />
   </head>
@@ -185,23 +188,30 @@
       </svg>
     </button>
 
+		
     <div id="searchbar" class="theme-background-color theme-text-color">
       <div class="top-answer-area"></div>
     </div>
-
-    <div id="overlay"></div>
-
-    <div id="webviews">
-		<div id="sidebar" style="left:0;height: 100vh;width: 45px;border-right: 1px solid #D7D7D7;">
-			<ul id="appGroup" class="app-task">
-				<li data-role="task" class="openTask" task-id="">
-					<img class="icon" src="icons/icon256.png">
-				</li>
-			
-			</ul>
-		</div>
+	<script src="js/navbar/sidebarComp.js"></script>
+	<div id="app" class="sidebar">
+	<sidebar/>
+	</div>	
+	<script>
+	
+	var app = new Vue({
+		el: '#app',
+		data: {
+			message: 'Hello Vue!',
+			window:window
+		}
+	})
+	Vue.prototype.window=window
+	 Vue.config.devtools = true;
+	</script>
+		
+		
 		<style>
-		#sidebar ul li{
+		.sidebar ul li{
 			list-style-type:none;
 			width:45px;
 			height: 45px;
@@ -212,15 +222,20 @@
 			align-items: center; 
 			cursor: pointer;
 		}
-		#sidebar ul li:hover{
+		.sidebar ul li:hover{
 			background-color: #efefef;
 		}
-		#sidebar .app-task .icon{
+		.sidebar .app-task .icon{
 			width: 30px;
 			height: 30px;
 		}
 		
 		</style>
+    <div id="overlay"></div>
+
+
+    <div id="webviews">
+	
       <div id="leftArrowContainer" class="arrow-indicator">
         <i id="leftArrow" class="i carbon:chevron-left"></i>
       </div>

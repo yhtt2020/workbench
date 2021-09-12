@@ -197,6 +197,8 @@ function createWindowWithBounds (bounds) {
       ]
     }
   })
+  
+
 
   // windows and linux always use a menu button in the upper-left corner instead
   // if frame: false is set, this won't have any effect, but it does apply on Linux if "use separate titlebar" is enabled
@@ -355,24 +357,33 @@ app.on('ready', function () {
 
 	//预先创建好快速启动窗口
 	createLanuchBar()
+	
+	
+	if(isDevelopmentMode){
+	 session.defaultSession.loadExtension(
+	    path.join(__dirname, 'devtools-5.3.4/packages/shell-chrome'),
+	    // allowFileAccess is required to load the devtools extension on file:// URLs.
+	    { allowFileAccess: true }
+	  )
+	  }
 	//注册快捷键，用于展示启动界面
-	globalShortcut.register('alt+space', () => {
-		//注册全局快捷键
-		//todo 判断一下注册失败
-		console.log('Electron loves global shortcuts!')
+	// globalShortcut.register('alt+space', () => {
+	// 	//注册全局快捷键
+	// 	//todo 判断一下注册失败
+	// 	console.log('Electron loves global shortcuts!')
 		
-		if (app.lanuchBar) {
-			if(app.lanuchBar.isVisible()){
-				app.lanuchBar.hide()  //如果已经存在，则隐藏
-			}else{
-				app.lanuchBar.show()
-			}
+	// 	if (app.lanuchBar) {
+	// 		if(app.lanuchBar.isVisible()){
+	// 			app.lanuchBar.hide()  //如果已经存在，则隐藏
+	// 		}else{
+	// 			app.lanuchBar.show()
+	// 		}
 			
-		} else {
-			createLanuchBar()
-		}
+	// 	} else {
+	// 		createLanuchBar()
+	// 	}
 
-	})
+	// })
 	
 
 	
