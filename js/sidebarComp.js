@@ -86,6 +86,7 @@ Vue.component('sidebar', {
 	computed: {
 		getItems: {
 			get() {
+				console.log('重新拉取item')
 				return this.items
 			},
 			set(newValue) {
@@ -96,7 +97,7 @@ Vue.component('sidebar', {
 		getPinItems: {
 
 			get() {
-
+				console.log('重新拉取pinitem')
 				return this.pinItems
 			},
 			// setter
