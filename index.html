@@ -108,26 +108,10 @@
 		<div id="searchbar" class="theme-background-color theme-text-color">
 			<div class="top-answer-area"></div>
 		</div>
-		<script src="js/navbar/sidebarComp.js"></script>
+		<script src="main/sidebarComp.js"></script>
 		<div id="app" class="sidebar">
 			<sidebar />
 		</div>
-		<script>
-			var app = new Vue({
-				el: '#app',
-				components:{
-					vuedraggable	
-				},
-				data: {
-					message: 'Hello Vue!',
-					window: window
-				}
-			})
-			window.sidebarItems=[]
-			Vue.prototype.window = window
-			Vue.prototype.sidebarItems= window.sidebarItems
-			Vue.config.devtools = true;
-		</script>
 
 
 		<style>
@@ -266,5 +250,7 @@
 		<!-- add scripts in Gruntfile.js -->
 
 		<script src="dist/bundle.js"></script>
+		
+
 	</body>
 </html>
