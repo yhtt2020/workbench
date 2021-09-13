@@ -78,7 +78,7 @@ function closeTask (taskId) {
   var previousCurrentTask = tasks.getSelected().id
 
   destroyTask(taskId)
-
+	window.$store.getters.fillTasksToItems
   if (taskId === previousCurrentTask) {
     // the current task was destroyed, find another task to switch to
 

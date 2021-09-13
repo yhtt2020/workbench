@@ -304,11 +304,13 @@ var taskOverlay = {
       // if dropping on "add task" button, create a new task
       if (target === addTaskButton) {
         newTask = tasks.get(tasks.add())
+		window.$store.getters.fillTasksToItems
         // remove from button, and re-create in overlay
         el.remove()
       } else {
         // otherwise, find a source task to add this tab to
         newTask = tasks.get(target.getAttribute('data-task'))
+		window.$store.getters.fillTasksToItems
       }
 
       if (sibling) {
@@ -380,6 +382,7 @@ var taskOverlay = {
 
     addTaskButton.addEventListener('click', function (e) {
       browserUI.switchToTask(tasks.add())
+	  window.$store.getters.fillTasksToItems
       taskOverlay.hide()
     })
 

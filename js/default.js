@@ -340,7 +340,13 @@ window.onload = function() {
 		data: {
 			message: 'Hello Vue!',
 			window: window
+		},
+		mounted:function(){
+			window.$store=store
 		}
 	})
+	
+	
+	
 
 }

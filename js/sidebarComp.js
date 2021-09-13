@@ -26,7 +26,7 @@ Vue.component('sidebar', {
 		// }
 
 		this.$store.commit('initItems')
-
+		
 
 
 	},

@@ -48,6 +48,7 @@ class TaskList {
 
     this.emit('task-added', newTask.id)
 
+	
     return newTask.id
   }
 
