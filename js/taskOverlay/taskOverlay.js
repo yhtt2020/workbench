@@ -166,6 +166,7 @@ var taskOverlay = {
 
   hide: function () {
     if (this.isShown) {
+	  
       this.isShown = false
       this.overlayElement.hidden = true
 
@@ -205,6 +206,7 @@ var taskOverlay = {
       browserUI.switchToTab(tabs.getSelected())
 
       taskSwitcherButton.classList.remove('active')
+	  window.$store.getters.fillTasksToItems
     }
   },
 
@@ -304,13 +306,12 @@ var taskOverlay = {
       // if dropping on "add task" button, create a new task
       if (target === addTaskButton) {
         newTask = tasks.get(tasks.add())
-		window.$store.getters.fillTasksToItems
         // remove from button, and re-create in overlay
         el.remove()
       } else {
         // otherwise, find a source task to add this tab to
         newTask = tasks.get(target.getAttribute('data-task'))
-		window.$store.getters.fillTasksToItems
+		
       }
 
       if (sibling) {
@@ -384,6 +385,7 @@ var taskOverlay = {
       browserUI.switchToTask(tasks.add())
 	  window.$store.getters.fillTasksToItems
       taskOverlay.hide()
+	  window.$store.getters.fillTasksToItems
     })
 
     taskOverlayNavbar.addEventListener('click', function () {

@@ -64,7 +64,7 @@ Vue.component('sidebar', {
 
 	},
 	template: `
-	<div id="sidebar" style="left:0;height: 100vh;width: 45px;border-right: 1px solid #D7D7D7;">
+	<div id="sidebar" class="side-container">
 		<ul id="pinGroup" class="app-task">
 
 			
@@ -79,7 +79,9 @@ Vue.component('sidebar', {
 		
 		<div style="border-top: 1px solid lightgrey;margin: 8px;"></div>
 		
-		<ul id="appGroup" class="app-task">
+		<div class="app-box">
+		
+		<ul id="appGroup" class="app-task app-items">
 		<draggable v-model="getItems" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass" chosenClass="chosenClass" :move="onMove" @start="onStart" @end="onEnd">
 		                   <transition-group>
 			<li @click="openItem(item.id,i)" v-for="(item,i) in getItems"  :key="item.id" data-role="task" :class="isActive(item.id)" :item-id="item.id" :title="item.title">
@@ -88,6 +90,7 @@ Vue.component('sidebar', {
 			</transition-group>
 			</draggable>
 		</ul>
+		</div>
 	</div>
 	`,
 	methods: {
@@ -123,7 +126,7 @@ Vue.component('sidebar', {
 			const relatedElement = relatedContext.element;
 			const draggedElement = draggedContext.element;
 			return (
-				(!relatedElement || !relatedElement.fixed) && !draggedElement.fixed
+				!draggedElement.fixed//&&(!relatedElement || !relatedElement.fixed) 
 			);
 		},
 		//对任务数组重新进行排序

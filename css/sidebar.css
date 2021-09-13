@@ -18,6 +18,31 @@
 	height: 25px;
 }
 
+.sidebar .app-items {
+	width: 60px;
+	overflow-y: scroll;
+	bottom: 35px;
+	position: absolute;
+	top: 0;
+}
+
+.side-container {
+	flex-direction: column;
+	display: flex;
+	
+	left: 0;
+	height: 100vh;
+	width: 45px;
+	border-right: 1px solid #D7D7D7;
+}
+
+.sidebar .app-box {
+	overflow: hidden;
+	width: 45px;
+	flex: 1;
+	position: relative;
+}
+
 .sidebar .active {
 	border-left: #1B74BB solid 3px;
 	background-color: #efefef;

@@ -343,6 +343,11 @@ window.onload = function() {
 		},
 		mounted:function(){
 			window.$store=store
+			var webviews = require('webviews.js')
+			webviews.bindEvent('did-navigate', function (tabId, color) {
+			  window.$store.getters.fillTasksToItems
+			})
+			
 		}
 	})
 	
