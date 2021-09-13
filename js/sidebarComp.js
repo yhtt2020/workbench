@@ -26,15 +26,15 @@ Vue.component('sidebar', {
 		// 	this.refreshAll()
 		// })
 
-		let item = {
-			title: '打开标签', //名称，用于显示提示
-			index: 0, //索引
-			id: "1", //id
-			icon: "/icons/fav.png", //图标
-			draggable: true, //是否允许拖拽
-			ext: '', //额外的信息
-			fixed: false //固定
-		}
+		// let item = {
+		// 	title: '打开标签', //名称，用于显示提示
+		// 	index: 0, //索引
+		// 	id: "1", //id
+		// 	icon: "/icons/fav.png", //图标
+		// 	draggable: true, //是否允许拖拽
+		// 	ext: '', //额外的信息
+		// 	fixed: false //固定
+		// }
 
 		let that = this;
 		// this.pinItems.push({
@@ -42,51 +42,50 @@ Vue.component('sidebar', {
 		// 	id: "1",
 		// 	icon: "/icons/fav.png"
 		// })
-		setTimeout(function() {
-			that.tasks = tasks
-			that.browserUI = browserUI
 		
-			that.pinItems = sidebarItems.pinItems
-			let item = {
-				title: '收藏夹', //名称，用于显示提示
-				index: 0, //索引
-				id: 1, //id
-				icon: "icons/fav.png", //图标
-				draggable: true, //是否允许拖拽
-				ext: '', //额外的信息
-				fixed: true,
-				type: 'system-bookmark'
-			}
-			that.pinItems.push(item)
-			
-			
-			this.items = sidebarItems.items
-			if (this.tasks != null) {
-				//从任务当中取得任务的小组
-				let tasksArray = this.tasks.getAll()
-				let tasks = this.tasks
-				tasks.forEach(function(task, index) {
-					let parsedTitle = that.getTitle(task.name, index)
-					let parsedIcon = that.getIcon(task)
-					let item = {
-						title: parsedTitle, //名称，用于显示提示
-						name: parsedTitle,
-						index: index, //索引组
-						id: task.id, //任务id
-						icon: parsedIcon, //图标
-						draggable: true, //是否允许拖拽
-						ext: task.id, //额外的信息
-						fixed: false,
-						type: 'task'
-					}
-					that.items.push(item)
-
-				})
-			}
-			that.dumpSidebarItems()
-
-
-		}, 1000)
+		this.tasks = tasks
+		this.browserUI = browserUI
+				
+		this.pinItems = this.$sidebarItems.pinItems
+		let item = {
+			title: '收藏夹', //名称，用于显示提示
+			index: 0, //索引
+			id: 1, //id
+			icon: "icons/fav.png", //图标
+			draggable: true, //是否允许拖拽
+			ext: '', //额外的信息
+			fixed: true,
+			type: 'system-bookmark'
+		}
+		this.pinItems.push(item)
+		
+		
+		this.items = this.$sidebarItems.items
+		if (this.tasks != null) {
+			//从任务当中取得任务的小组
+			let tasksArray = this.tasks.getAll()
+			let tasks = this.tasks
+			let that=this
+			tasks.forEach(function(task, index) {
+				let parsedTitle = that.getTitle(task.name, index)
+				let parsedIcon = that.getIcon(task)
+				let item = {
+					title: parsedTitle, //名称，用于显示提示
+					name: parsedTitle,
+					index: index, //索引组
+					id: task.id, //任务id
+					icon: parsedIcon, //图标
+					draggable: true, //是否允许拖拽
+					ext: task.id, //额外的信息
+					fixed: false,
+					type: 'task'
+				}
+				that.items.push(item)
+		
+			})
+		}
+		that.dumpSidebarItems()
+	
 
 	},
 	computed: {

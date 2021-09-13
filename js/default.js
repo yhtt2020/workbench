@@ -179,8 +179,13 @@ window.browserUI = require('browserUI.js')
 // once everything's loaded, start the session
 require('sessionRestore.js').restore()
 var tabEditor = require('navbar/tabEditor.js')
+require('sidebarComp.js')
 window.onload = function() {
 	Vue.prototype.$window = window
+	window.sidebarItems = {
+		'pinItems': [],
+		'items': []
+	}
 	Vue.prototype.$sidebarItems = window.sidebarItems
 	Vue.prototype.$tabEditor=tabEditor
 	
@@ -195,8 +200,5 @@ window.onload = function() {
 			window: window
 		}
 	})
-	window.sidebarItems = {
-		'pinItems': [],
-		'items': []
-	}
+	
 }
