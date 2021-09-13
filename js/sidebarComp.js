@@ -4,9 +4,7 @@ Vue.component('sidebar', {
 	props: {},
 	data: function() {
 		return {
-			//暂存来自系统的两个值
-			tasks: null,
-			browserUI: null,
+			
 			//用于渲染组件的数组
 			items: [], //置顶的数组
 			pinItems: [], //下方列表
@@ -35,17 +33,14 @@ Vue.component('sidebar', {
 		// 	ext: '', //额外的信息
 		// 	fixed: false //固定
 		// }
-
-		let that = this;
 		// this.pinItems.push({
 		// 	title: '打开标签',
 		// 	id: "1",
 		// 	icon: "/icons/fav.png"
 		// })
 		
-		this.tasks = tasks
-		this.browserUI = browserUI
 				
+		//在置顶区域插入一个收藏夹的图标按钮
 		this.pinItems = this.$sidebarItems.pinItems
 		let item = {
 			title: '收藏夹', //名称，用于显示提示
@@ -54,17 +49,15 @@ Vue.component('sidebar', {
 			icon: "icons/fav.png", //图标
 			draggable: true, //是否允许拖拽
 			ext: '', //额外的信息
-			fixed: true,
+			fixed: true,//锁定，不让它移动
 			type: 'system-bookmark'
 		}
 		this.pinItems.push(item)
 		
-		
 		this.items = this.$sidebarItems.items
-		if (this.tasks != null) {
+		if (tasks != null) {
 			//从任务当中取得任务的小组
-			let tasksArray = this.tasks.getAll()
-			let tasks = this.tasks
+			let tasksArray = tasks.getAll()
 			let that=this
 			tasks.forEach(function(task, index) {
 				let parsedTitle = that.getTitle(task.name, index)
@@ -84,7 +77,7 @@ Vue.component('sidebar', {
 		
 			})
 		}
-		that.dumpSidebarItems()
+		this.dumpSidebarItems()
 	
 
 	},
@@ -115,7 +108,7 @@ Vue.component('sidebar', {
 		isActive() {
 			return (id) => {
 				return {
-					active: id == this.tasks.getSelected().id,
+					active: id ==tasks.getSelected().id,
 					'app-task': true
 				}
 
@@ -160,7 +153,7 @@ Vue.component('sidebar', {
 			
 		},
 		openItem(id, index) {
-			this.browserUI.switchToTask(id, index)
+			browserUI.switchToTask(id, index)
 		},
 		getTitle(name, index) {
 			//如果标签没名字，就给它取个默认名字
@@ -195,12 +188,12 @@ Vue.component('sidebar', {
 		//拖拽结束事件
 		onEnd(e) {
 			this.drag = false;
-			console.log('拖动了列表')
+			
 			//找到拖动的任务的id
 			let el = e.item
 			var droppedTaskId = el.getAttribute('item-id')
 			let newIndex = this.getNewIndex(droppedTaskId)
-			let droppedTask = this.tasks.splice(this.tasks.getIndex(droppedTaskId), 1)[0]
+			let droppedTask = tasks.splice(tasks.getIndex(droppedTaskId), 1)[0]
 			//两轮寻找后，一定会找到真正的id
 			tasks.splice(newIndex, 0, droppedTask)
 		},
