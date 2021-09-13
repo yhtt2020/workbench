@@ -4,15 +4,15 @@ Vue.component('sidebar', {
 	props: {},
 	data: function() {
 		return {
-			
+
 			//用于渲染组件的数组
 			items: [], //置顶的数组
 			pinItems: [], //下方列表
 
 			drag: false,
-			remote:{},
-			
-			tasks:tasks //绑定tasks，这样tasks变动，属性也会跟着变
+			remote: {},
+
+			tasks: tasks //绑定tasks，这样tasks变动，属性也会跟着变
 		}
 
 	},
@@ -28,7 +28,7 @@ Vue.component('sidebar', {
 		// 	ext: '', //额外的信息
 		// 	fixed: false //固定
 		// }
-				
+
 		//在置顶区域插入一个收藏夹的图标按钮
 		this.pinItems = this.$sidebarItems.pinItems
 		let item = {
@@ -38,16 +38,16 @@ Vue.component('sidebar', {
 			icon: "icons/fav.png", //图标
 			draggable: true, //是否允许拖拽
 			ext: '', //额外的信息
-			fixed: true,//锁定，不让它移动
+			fixed: true, //锁定，不让它移动
 			type: 'system-bookmark'
 		}
 		this.pinItems.push(item)
-		
+
 		this.items = this.$sidebarItems.items
 		if (tasks != null) {
 			//从任务当中取得任务的小组
 			let tasksArray = tasks.getAll()
-			let that=this
+			let that = this
 			tasks.forEach(function(task, index) {
 				let parsedTitle = that.getTitle(task.name, index)
 				let parsedIcon = that.getIcon(task)
@@ -63,11 +63,11 @@ Vue.component('sidebar', {
 					type: 'task'
 				}
 				that.items.push(item)
-		
+
 			})
 		}
 		this.dumpSidebarItems()
-	
+
 
 	},
 	computed: {
@@ -96,7 +96,7 @@ Vue.component('sidebar', {
 		isActive() {
 			return (id) => {
 				return {
-					active: id ==tasks.getSelected().id,
+					active: id == tasks.getSelected().id,
 					'app-task': true
 				}
 
@@ -134,17 +134,16 @@ Vue.component('sidebar', {
 	`,
 	methods: {
 		openPinItem(id, index) {
-			if (this.pinItems[index].type == 'system-bookmark')
-				{
-					this.$tabEditor.show(tabs.getSelected(), '!bookmarks ')
-				}
-				
-			this.currentId=id	
-			
+			if (this.pinItems[index].type == 'system-bookmark') {
+				this.$tabEditor.show(tabs.getSelected(), '!bookmarks ')
+			}
+
+			this.currentId = id
+
 		},
 		openItem(id, index) {
 			browserUI.switchToTask(id, index)
-			this.currentId=id
+			this.currentId = id
 		},
 		getTitle(name, index) {
 			//如果标签没名字，就给它取个默认名字
@@ -179,7 +178,7 @@ Vue.component('sidebar', {
 		//拖拽结束事件
 		onEnd(e) {
 			this.drag = false;
-			
+
 			//找到拖动的任务的id
 			let el = e.item
 			var droppedTaskId = el.getAttribute('item-id')
