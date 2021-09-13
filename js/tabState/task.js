@@ -159,14 +159,6 @@ class TaskList {
     return Math.round(Math.random() * 100000000000000000)
   }
   
-  //将当前的任务同步到侧边栏	
-  dumpToSidebar(){
-	  for(let i=0 ; i<this.tasks.length;i++)
-	  {
-		  
-	  }
-  }
-  
 }
 
 module.exports = TaskList

@@ -5,10 +5,6 @@ Vue.component('sidebar', {
 	data: function() {
 		return {
 
-			//用于渲染组件的数组
-			items: [], //置顶的数组
-			pinItems: [], //下方列表
-
 			drag: false,
 			remote: {},
 
@@ -29,67 +25,29 @@ Vue.component('sidebar', {
 		// 	fixed: false //固定
 		// }
 
-		//在置顶区域插入一个收藏夹的图标按钮
-		this.pinItems = this.$sidebarItems.pinItems
-		let item = {
-			title: '收藏夹', //名称，用于显示提示
-			index: 0, //索引
-			id: 1, //id
-			icon: "icons/fav.png", //图标
-			draggable: true, //是否允许拖拽
-			ext: '', //额外的信息
-			fixed: true, //锁定，不让它移动
-			type: 'system-bookmark'
-		}
-		this.pinItems.push(item)
+		this.$store.commit('initItems')
 
-		this.items = this.$sidebarItems.items
-		if (tasks != null) {
-			//从任务当中取得任务的小组
-			let tasksArray = tasks.getAll()
-			let that = this
-			tasks.forEach(function(task, index) {
-				let parsedTitle = that.getTitle(task.name, index)
-				let parsedIcon = that.getIcon(task)
-				let item = {
-					title: parsedTitle, //名称，用于显示提示
-					name: parsedTitle,
-					index: index, //索引组
-					id: task.id, //任务id
-					icon: parsedIcon, //图标
-					draggable: true, //是否允许拖拽
-					ext: task.id, //额外的信息
-					fixed: false,
-					type: 'task'
-				}
-				that.items.push(item)
-
-			})
-		}
-		this.dumpSidebarItems()
 
 
 	},
 	computed: {
 		getItems: {
 			get() {
-				return this.items
+				//将task与items同步一次
+				return this.$store.getters.getItems.items
 			},
 			set(newValue) {
-				this.items = newValue
-				this.dumpSidebarItems()
+				this.$store.commit('saveItems', newValue)
 			}
 		},
 		getPinItems: {
-
 			get() {
-				return this.pinItems
+				//将task与items同步一次
+				return this.$store.getters.getItems.pinItems
 			},
 			// setter
 			set(newValue) {
-				this.pinItems = newValue
-				this.dumpSidebarItems()
-
+				this.$store.commit('savePinItems', newValue)
 			}
 
 		},
@@ -134,42 +92,13 @@ Vue.component('sidebar', {
 	`,
 	methods: {
 		openPinItem(id, index) {
-			if (this.pinItems[index].type == 'system-bookmark') {
-				this.$tabEditor.show(tabs.getSelected(), '!bookmarks ')
+			if (this.$store.getters.getItems.pinItems[index].type == 'system-bookmark') {
+				this.$tabEditor.show(tasks.getSelected().tabs.getSelected(), '!bookmarks ')
 			}
-
-			this.currentId = id
-
 		},
 		openItem(id, index) {
 			browserUI.switchToTask(id, index)
-			this.currentId = id
-		},
-		getTitle(name, index) {
-			//如果标签没名字，就给它取个默认名字
-			if (name == null) {
-				return l('defaultTaskName').replace('%n', index + 1)
-			} else {
-				return name
-			}
-
-		},
-		getIcon(task) {
-			if (task.tabs.count() == 0) {
-				return "icons/empty.png"
-			}
-			let favicon = task.tabs.getAtIndex(0).favicon;
-
-			if (typeof favicon == 'undefined') {
-				return "icons/empty.png"
-			} else if (typeof favicon == 'undefined') {
-				return "icons/empty.png"
-			} else if (favicon == null) {
-				return "icons/empty.png"
-			} else {
-				return favicon.url
-			}
-
+			this.$store.getters.fillTasksToItems
 		},
 		//开始拖拽事件
 		onStart() {
@@ -201,23 +130,25 @@ Vue.component('sidebar', {
 		getNewIndex(droppedTaskId) {
 			let index = 0
 			let find = 0
-			for (var i = 0; i < this.pinItems.length; i++) {
-				if (this.pinItems[i]['type'] == 'task')
+			let pinItems = this.$store.getters.getItems.pinItems
+			let items = this.$store.getters.getItems.items
+			for (var i = 0; i < pinItems.length; i++) {
+				if (pinItems[i]['type'] == 'task')
 					index++
 				//如果当前新数组的元素是task类型，且id和拓转的是一样的。则直接返回index即可了
-				if (this.pinItems[i]['type'] == 'task' && this.pinItems[i]['ext'] == droppedTaskId) {
+				if (pinItems[i]['type'] == 'task' && pinItems[i]['ext'] == droppedTaskId) {
 					index = index - 1
 					find = 1
 					break;
 				}
 			}
 			if (find == 0) {
-				for (var i = 0; i < this.items.length; i++) {
+				for (var i = 0; i < items.length; i++) {
 					//继续找，如果上面没找到index应该还是-1
-					if (this.items[i]['type'] == 'task') {
+					if (items[i]['type'] == 'task') {
 						index++
 					}
-					if (this.items[i]['type'] == 'task' && this.items[i]['ext'] == droppedTaskId) {
+					if (items[i]['type'] == 'task' && items[i]['ext'] == droppedTaskId) {
 						index = index - 1 //需要加上第一组的id的总数
 						break;
 					}
@@ -225,12 +156,6 @@ Vue.component('sidebar', {
 			}
 			return index
 
-		},
-		dumpSidebarItems() {
-			window.sidebarItems = {
-				'pinItems': this.pinItems,
-				'items': this.items
-			}
 		}
 	}
 

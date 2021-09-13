@@ -182,16 +182,158 @@ var tabEditor = require('navbar/tabEditor.js')
 require('sidebarComp.js')
 window.onload = function() {
 	Vue.prototype.$window = window
-	window.sidebarItems = {
-		'pinItems': [],
-		'items': []
-	}
+
+	Vue.use(Vuex)
+	const store = new Vuex.Store({
+		state: {
+			pinItems: [], //置顶区域的items
+			items: [] //普通区域的items
+		},
+		getters: {
+
+			fillTasksToItems: state => {
+
+				//将tasks转化为items
+				console.log('fillTasksToItems')
+				let replaceIndex = 0
+				state.pinItems.forEach(function(pinItem, indexPin) {
+					if (pinItem.type == "task") {
+						console.log(tasks.get(replaceIndex))
+						state.pinItems[indexPin] = store.getters.getItemFromTask(tasks.byIndex(
+							replaceIndex))
+						replaceIndex++
+					}
+
+				});
+				console.log(state.pinItems);
+				state.items.forEach(function(item, index) {
+					if (item.type == "task") {
+						if (replaceIndex >= tasks.getLength()) {
+							state.items.splice(index, 1)
+						} else {
+							state.items[index] = store.getters.getItemFromTask(tasks.byIndex(
+							replaceIndex))
+							replaceIndex++
+						}
+
+					}
+
+				});
+				let last = tasks.getLength() - replaceIndex
+				if (last > 0) {
+					//如果有剩下的，就往数组最后添加上
+					for (let i = 0; i < last; i++) {
+						state.items.push(store.getters.getItemFromTask(tasks.byIndex(replaceIndex)))
+						replaceIndex++
+					}
+				} 
+
+
+				let result = {
+					'pinItems': state.pinItems,
+					'items': state.items
+				}
+				return result
+				//1.循环一遍items，找到新的tasks里该顺序的task，替换掉对应的item即可
+			},
+			getItems: state => {
+				return {
+					'pinItems': state.pinItems,
+					'items': state.items
+				}
+			},
+
+			getItemTitle: (state) => (task) => {
+				//如果标签没名字，就给它取个默认名字
+				if (task.name == null) {
+					return l('defaultTaskName').replace('%n', tasks.getIndex(task.id) + 1)
+				} else {
+					return task.name
+				}
+			},
+			getItemIcon: (state) => (task) => {
+				if (task.tabs.count() == 0) {
+					return "icons/empty.png"
+				}
+				let favicon = task.tabs.getAtIndex(0).favicon;
+
+				if (typeof favicon == 'undefined') {
+					return "icons/empty.png"
+				} else if (typeof favicon == 'undefined') {
+					return "icons/empty.png"
+				} else if (favicon == null) {
+					return "icons/empty.png"
+				} else {
+					return favicon.url
+				}
+
+			},
+			getItemFromTask: (state) => (task) => {
+				let parsedTitle = store.getters.getItemTitle(task)
+				let parsedIcon = store.getters.getItemIcon(task)
+				let item = {
+					title: parsedTitle, //名称，用于显示提示
+					name: parsedTitle,
+					index: task.index, //索引组
+					id: task.id, //任务id
+					icon: parsedIcon, //图标
+					draggable: true, //是否允许拖拽
+					ext: task.id, //额外的信息
+					fixed: false,
+					type: 'task'
+				}
+				return item
+			}
+
+		},
+		mutations: {
+			savePinItems(state, pinItems) {
+				//将根据pin和items生成Tasks
+				state.pinItems = pinItems
+			},
+			saveItems(state, items) {
+				state.items = items
+			},
+
+			initItems: state => {
+				console.log('initItems')
+				//在置顶区域插入一个收藏夹的图标按钮
+				let item = {
+					title: '收藏夹', //名称，用于显示提示
+					index: 0, //索引
+					id: 1, //id
+					icon: "icons/fav.png", //图标
+					draggable: true, //是否允许拖拽
+					ext: '', //额外的信息
+					fixed: true, //锁定，不让它移动
+					type: 'system-bookmark'
+				}
+				state.pinItems.push(item)
+
+
+				if (tasks != null) {
+					//从任务当中取得任务的小组
+					let tasksArray = tasks.getAll()
+					let that = this
+					tasks.forEach(function(task, index) {
+						let item = store.getters.getItemFromTask(task)
+
+						state.items.push(item)
+					})
+				}
+			}
+
+		}
+	})
+
+
 	Vue.prototype.$sidebarItems = window.sidebarItems
-	Vue.prototype.$tabEditor=tabEditor
-	
+	Vue.prototype.$tabEditor = tabEditor
+
 	Vue.config.devtools = true
 	var app = new Vue({
 		el: '#app',
+		store: store,
 		components: {
 			vuedraggable
 		},
@@ -200,5 +342,5 @@ window.onload = function() {
 			window: window
 		}
 	})
-	
+
 }
