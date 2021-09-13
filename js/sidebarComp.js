@@ -18,13 +18,6 @@ Vue.component('sidebar', {
 	},
 	mounted: function() {
 
-		// this.$nextTick(() => {
-		// 	aList = this.getList()
-		// 		console.log(tasks)
-		// 	this.tasks = tasks;
-
-		// 	this.refreshAll()
-		// })
 
 		// let item = {
 		// 	title: '打开标签', //名称，用于显示提示
@@ -35,12 +28,6 @@ Vue.component('sidebar', {
 		// 	ext: '', //额外的信息
 		// 	fixed: false //固定
 		// }
-		// this.pinItems.push({
-		// 	title: '打开标签',
-		// 	id: "1",
-		// 	icon: "/icons/fav.png"
-		// })
-		
 				
 		//在置顶区域插入一个收藏夹的图标按钮
 		this.pinItems = this.$sidebarItems.pinItems
@@ -86,7 +73,6 @@ Vue.component('sidebar', {
 	computed: {
 		getItems: {
 			get() {
-				console.log('重新拉取item')
 				return this.items
 			},
 			set(newValue) {
@@ -97,7 +83,6 @@ Vue.component('sidebar', {
 		getPinItems: {
 
 			get() {
-				console.log('重新拉取pinitem')
 				return this.pinItems
 			},
 			// setter
