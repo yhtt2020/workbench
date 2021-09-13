@@ -11,6 +11,8 @@ Vue.component('sidebar', {
 
 			drag: false,
 			remote:{},
+			
+			tasks:tasks //绑定tasks，这样tasks变动，属性也会跟着变
 		}
 
 	},
@@ -150,10 +152,13 @@ Vue.component('sidebar', {
 				{
 					this.$tabEditor.show(tabs.getSelected(), '!bookmarks ')
 				}
+				
+			this.currentId=id	
 			
 		},
 		openItem(id, index) {
 			browserUI.switchToTask(id, index)
+			this.currentId=id
 		},
 		getTitle(name, index) {
 			//如果标签没名字，就给它取个默认名字
