@@ -1,3 +1,11 @@
+.sidebar {
+	position: fixed;
+	bottom: 0;
+	top: 48px;
+	left: 0;
+	z-index: 1;
+}
+
 .sidebar ul li {
 	list-style-type: none;
 	height: 45px;
@@ -21,7 +29,7 @@
 .sidebar .app-items {
 	width: 60px;
 	overflow-y: scroll;
-	bottom: 35px;
+	bottom: 48px;
 	position: absolute;
 	top: 0;
 }
@@ -29,7 +37,7 @@
 .side-container {
 	flex-direction: column;
 	display: flex;
-	
+
 	left: 0;
 	height: 100vh;
 	width: 45px;
@@ -48,7 +56,6 @@
 	background-color: #efefef;
 }
 
-//拖拽样式区
 .dragClass {
 	background-color: blueviolet !important;
 	opacity: 1 !important;
