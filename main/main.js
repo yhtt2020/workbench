@@ -369,18 +369,18 @@ app.on('ready', function() {
 	}
 
 	//预先创建好快速启动窗口
-	createLanuchBar()
+	//createLanuchBar()
 
 
-	if (isDevelopmentMode) {
-		session.defaultSession.loadExtension(
-			path.join(__dirname, 'devtools-5.3.4/packages/shell-chrome'),
-			// allowFileAccess is required to load the devtools extension on file:// URLs.
-			{
-				allowFileAccess: true
-			}
-		)
-	}
+	// if (isDevelopmentMode) {
+	// 	session.defaultSession.loadExtension(
+	// 		path.join(__dirname, 'devtools-5.3.4/packages/shell-chrome'),
+	// 		// allowFileAccess is required to load the devtools extension on file:// URLs.
+	// 		{
+	// 			allowFileAccess: true
+	// 		}
+	// 	)
+	// }
 	//注册快捷键，用于展示启动界面
 	// globalShortcut.register('alt+space', () => {
 	// 	//注册全局快捷键

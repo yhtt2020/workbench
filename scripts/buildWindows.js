@@ -32,6 +32,7 @@ async function afterPackageBuilt (appPaths) {
       noMsi: true
     }
 
+console.log(options)
     console.log('Creating package (this may take a while)')
 
     await installer(options)
