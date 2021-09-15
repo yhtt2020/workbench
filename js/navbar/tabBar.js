@@ -12,6 +12,10 @@ const tabEditor = require('navbar/tabEditor.js')
 const progressBar = require('navbar/progressBar.js')
 const permissionRequests = require('navbar/permissionRequests.js')
 
+//添加tab上的右键菜单，支持右键选择关闭行为组
+const remoteMenu = require('remoteMenuRenderer.js')
+
+
 var lastTabDeletion = 0 // TODO get rid of this
 
 const tabBar = {
@@ -128,6 +132,75 @@ const tabBar = {
         }, 150) // wait until the animation has completed
       }
     })
+		
+		tabEl.addEventListener('contextmenu',(e) =>{
+			e.preventDefault()
+			e.stopPropagation()
+			let template = [
+			    [
+						{
+							id:'open',
+						  label:'创建一个新组',
+						  click: function () {
+						    //console.log('关闭全部标签被点击')
+								require('browserUI.js').addTask()
+								$store.getters.fillTasksToItems()
+						  }
+						},
+						{
+							id:'open',
+			        label:'打开新标签',
+			        click: function () {
+			          //console.log('关闭全部标签被点击')
+								require('browserUI.js').addTab()
+			        }
+			      },
+			      {
+			        label:'重新加载',
+			        click: function () {
+			          //console.log('关闭全部标签被点击')
+								
+								console.log(tabEl)
+								console.log(focusedWindow)
+			        }
+						
+			      }
+			    ],
+					[
+						{
+						  label:'关闭',
+						  click: function () {
+						    //console.log('关闭全部标签被点击')
+								
+						  }
+						},
+						{
+						  label:'关闭其他标签',
+						  click: function () {
+						    //console.log('关闭全部标签被点击')
+								
+						  }
+						},
+						{
+						  label:'关闭左侧标签',
+						  click: function () {
+						    //console.log('关闭全部标签被点击')
+								
+						  }
+						},
+						{
+						  label:'关闭右侧标签',
+						  click: function () {
+						    //console.log('关闭全部标签被点击')
+								
+						  }
+						}
+					]
+			  ]
+			
+			  remoteMenu.open(template)
+			//绑定代码结束
+		})
 
     tabBar.updateTab(data.id, tabEl)
 
@@ -195,7 +268,12 @@ const tabBar = {
 
     var tabEl = tabBar.createTab(tab)
     tabBar.containerInner.insertBefore(tabEl, tabBar.containerInner.childNodes[index])
-    tabBar.tabElementMap[tabId] = tabEl
+  
+	   tabBar.tabElementMap[tabId] = tabEl
+		
+		
+		
+		
   },
   removeTab: function (tabId) {
     var tabEl = tabBar.getTab(tabId)
@@ -275,5 +353,8 @@ tabBar.container.addEventListener('drop', e => {
     private: tabs.get(tabs.getSelected()).private
   }), { enterEditMode: false, openInBackground: !settings.get('openTabsInForeground') })
 })
+
+
+
 
 module.exports = tabBar

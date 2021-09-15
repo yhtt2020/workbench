@@ -82,7 +82,7 @@ const contentBlockingToggle = {
         {
           label: l('appMenuReportBug'),
           click: function () {
-            var newTab = tabs.add({ url: 'https://github.com/minbrowser/min/issues/new?title=Content%20blocking%20issue%20on%20' + encodeURIComponent(url) })
+            var newTab = tabs.add({ url: 'https://work.thisky.com' + encodeURIComponent(url) })
             require('browserUI.js').addTab(newTab, { enterEditMode: false })
           }
         }
