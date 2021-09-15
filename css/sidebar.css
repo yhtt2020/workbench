@@ -1,9 +1,10 @@
 .sidebar {
 	position: fixed;
 	bottom: 0;
-	top: 48px;
+	top: calc(36px + var(--control-space-top));
 	left: 0;
 	z-index: 1;
+	background-color: white;
 }
 
 .sidebar ul li {
@@ -29,7 +30,7 @@
 .sidebar .app-items {
 	width: 60px;
 	overflow-y: scroll;
-	bottom: 48px;
+	bottom: calc(36px + var(--control-space-top));
 	position: absolute;
 	top: 0;
 }
