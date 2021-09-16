@@ -339,8 +339,8 @@ window.onload = function() {
 	Vue.prototype.$tabEditor = tabEditor
 
 	Vue.config.devtools = true
-	var app = new Vue({
-		el: '#app',
+	var appVue = new Vue({
+		el: '#appVue',
 		store: store,
 		components: {
 			vuedraggable
