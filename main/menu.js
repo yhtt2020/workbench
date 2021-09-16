@@ -364,7 +364,7 @@ function buildAppMenu (options = {}) {
         {
           label: l('appMenuKeyboardShortcuts'),
           click: function () {
-            openTabInWindow('https://github.com/minbrowser/min/wiki#keyboard-shortcuts')
+            openTabInWindow('https://www.yuque.com/tswork/ngd5zk/sgla5i')
           }
         },
         {
@@ -376,13 +376,13 @@ function buildAppMenu (options = {}) {
         {
           label: l('appMenuTakeTour'),
           click: function () {
-            openTabInWindow('https://minbrowser.github.io/min/tour/')
+            openTabInWindow('https://www.yuque.com/tswork/')
           }
         },
         {
-          label: l('appMenuViewGithub'),
+          label: l('appOfficialWebsite'),
           click: function () {
-            openTabInWindow('https://github.com/minbrowser/min')
+            openTabInWindow('https://work.thisky.com')
           }
         },
         ...(process.platform !== 'darwin' ? [{ type: 'separator' }] : []),

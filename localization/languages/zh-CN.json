@@ -212,7 +212,8 @@
     "appMenuKeyboardShortcuts": "快捷键",
     "appMenuReportBug": "报告 Bug",
     "appMenuTakeTour": "使用手册",
-    "appMenuViewGithub": "GitHub",
+	//修改git地址为官方网站
+    "appOfficialWebsite": "官方网站",
     "appMenuAbout": "关于 %n", //%n is replaced with app name
     "appMenuPreferences": "设置",
     "appMenuServices": "服务",
