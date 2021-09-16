@@ -98,16 +98,16 @@
     "crashErrorSubtitle": "渲染页面时，发生错误。",
     "errorPagePrimaryAction": "重试",
     "serverNotFoundTitle": "未找到服务器",
-    "serverNotFoundSubtitle": "Min 无法找到当前地址的服务器。",
+    "serverNotFoundSubtitle": "无法找到当前地址的服务器。",
     "archiveSearchAction": "从 archive.org 搜索内容",
     "sslErrorTitle": "当前站点是无效的",
-    "sslErrorMessage": "Min 不能与当前站点建立安全连接。",
+    "sslErrorMessage": "不能与当前站点建立安全连接。",
     "dnsErrorTitle": "站点未找到",
     "dnsErrorMessage": "发生 DNS 错误。",
     "offlineErrorTitle": "您处于离线状态",
     "offlineErrorMessage": "重新连接网络并重试。",
-    "genericConnectionFail": "Min 无法连接到站点。",
-    "sslTimeErrorMessage": "Min 无法安全地连接到当前站点。请确保您的电脑时钟是否正确。",
+    "genericConnectionFail": "无法连接到站点。",
+    "sslTimeErrorMessage": "无法安全地连接到当前站点。请确保您的电脑时钟是否正确。",
     "addressInvalidTitle": "无效的地址。",
     "genericError": "发生错误",
     /* pages/phishing/index.html */
@@ -116,7 +116,7 @@
     "phishingErrorVisitAnyway": "继续访问",
     "phishingErrorLeave": "离开",
     /* multiple instances alert */
-    "multipleInstancesErrorMessage": "发生错误。请关闭其他视窗并重启 Min 浏览器",
+    "multipleInstancesErrorMessage": "发生错误。请关闭其他视窗并重启浏览器",
     /* pages/sessionRestoreError/index.html */
     "sessionRestoreErrorTitle": "发生错误",
     "sessionRestoreErrorExplanation": "您保存的标签页未能正确恢复。",
@@ -135,7 +135,7 @@
     "settingsBlockScriptsToggle": "禁止运行脚本",
     "settingsBlockImagesToggle": "禁止加载图片",
     "settingsBlockedRequestCount": {
-      "unsafeHTML": "到目前为止，Min已经过滤了<strong></strong>个广告和追踪程序。"
+      "unsafeHTML": "到目前为止，已经过滤了<strong></strong>个广告和追踪程序。"
     },
     "settingsCustomBangs": "自定义Bangs",
     "settingsCustomBangsAdd": "添加自定义bang",
@@ -165,7 +165,7 @@
     },
     "settingsSearchEngineHeading": "搜索引擎",
     "settingsDefaultSearchEngine": "选择默认的搜索引擎:",
-    "settingsDDGExplanation": "将 DuckDuckGo 设为默认的搜索引擎可以直接在搜索栏查看搜索结果。",
+    "settingsDDGExplanation": "默认的搜索引擎可以直接在搜索栏查看搜索结果。",
     "customSearchEngineDescription": "将搜索字符串以 %s 代替",
     "settingsKeyboardShortcutsHeading": "快捷键",
     "settingsKeyboardShortcutsHelp": "用逗号分隔多个快捷键",
@@ -240,7 +240,7 @@
     "downloadStateCompleted": "已完成",
     "downloadStateFailed": "失败",
     /* Update Notifications */
-    "updateNotificationTitle": "已有新的Min版本",
+    "updateNotificationTitle": "已有新的版本",
     /* Autofill settings */
     "settingsPasswordAutoFillHeadline": "密码自动填充",
     "settingsSelectPasswordManager": "选择一个支持的密码管理器：",
@@ -258,7 +258,7 @@
     "passwordManagerSetupStep2": "然后把工具拖动到下面的框中：",
     "passwordManagerSetupDragBox": "把工具拖动到这里",
     "passwordManagerSetupInstalling": "安装中...",
-    "passwordManagerSetupSignIn": "登录密码管理器以使用自动填充。你的凭证不会在Min内存储。",
+    "passwordManagerSetupSignIn": "登录密码管理器以使用自动填充。你的凭证不会在浏览器内存储。",
     "disableAutofill": "关闭自动填充",
     "passwordManagerSetupUnlockError": "解锁密码存储区失败：",
     "passwordManagerSetupRetry": "请确认你使用了正确的文件和密码。你可以再次把工具拖到这里并重试。",
@@ -321,7 +321,11 @@
 	"showHistory": "显示历史记录",
 	
 	"translatePage":"翻译页面（测试）",
-	"translateTip":"当你翻译当前页面的时候，页面内容将被发送到服务器，我们不会存储你的翻译内容或者使用他们来识别你。请放心使用。"
+	"translateTip":"当你翻译当前页面的时候，页面内容将被发送到服务器，我们不会存储你的翻译内容或者使用他们来识别你。请放心使用。",
+	
+	"settingsBrowserHeading":"默认浏览器",
+	"settingsDefaultBrowser":"设置为默认浏览器",
+	"settingsDefaultBrowserToggle":"设置为默认浏览器"
 	
 	
   }
