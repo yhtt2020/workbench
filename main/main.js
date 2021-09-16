@@ -473,7 +473,22 @@ ipc.on('showSecondaryMenu', function(event, data) {
 		y: data.y
 	})
 })
+//设置默认浏览器部分代码开始
+//获取默认浏览器
+ipc.on('getIsDefaulBrowser',function(event){
+	let isDefault=app.isDefaultProtocolClient('http')
+	event.reply('returnIsDefaultBrowser',isDefault)
+})
+//移除默认浏览器
+ipc.on('callSetOrRemoveDefaultBrowser',function(event){
+	if(app.isDefaultProtocolClient('http')){
+		app.removeAsDefaultProtocolClient('http')
+	}else{
+		app.setAsDefaultProtocolClient('http')
+	}
+})
 
+//设置默认浏览器部分结束
 ipc.on('quit', function() {
 	app.quit()
 })

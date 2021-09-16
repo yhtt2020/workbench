@@ -49,6 +49,10 @@ var settings = {
       settings.list[key] = value
       settings.runChangeCallbacks(key)
     })
+	
+	ipc.on('returnIsDefaultBrowser',function(e,value){
+		console.log(value)
+	})
   }
 }
 
