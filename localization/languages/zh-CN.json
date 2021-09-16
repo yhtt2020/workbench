@@ -122,7 +122,7 @@
 		"sessionRestoreErrorExplanation": "您保存的标签页未能正确恢复。",
 		"sessionRestoreErrorBackupInfo": "我们将您的数据备份保存在：%l.", //%l will be replaced with a path to a file
 		"sessionRestoreErrorLinkInfo": {
-			"unsafeHTML": "如果持续发生此错误，请在<a href=\"https://github.com/minbrowser/min\" target=\"_blank\">此处</a>报告错误信息。"
+			"unsafeHTML": "如果持续发生此错误，请在<a href=\"https://work.thisky.com\" target=\"_blank\">此处</a>报告错误信息。"
 		},
 		/* pages/settings/index.html */
 		"settingsPreferencesHeading": "设置",
@@ -156,12 +156,12 @@
 		"settingsAutoplayToggle": "允许自动播放", //missing translation 
 		"settingsOpenTabsInForegroundToggle": "在前台打开新标签页",
 		"settingsUserscriptsExplanation": {
-			"unsafeHTML": "自定义脚本允许您改变网站行为 - <a href=\"https://github.com/minbrowser/min/wiki/userscripts\">查看更多</a>."
+			"unsafeHTML": "自定义脚本允许您改变网站行为 - <a href=\"https://www.yuque.com/tswork/ngd5zk/zoxpq7\">查看更多</a>."
 		},
 		"settingsUserAgentToggle": "自定义浏览器User-Agent",
 		"settingsUpdateNotificationsToggle": "自动检查更新",
 		"settingsUsageStatisticsToggle": {
-			"unsafeHTML": "发送使用情况统计信息 (<a href=\"https://github.com/minbrowser/min/blob/master/docs/statistics.md\">更多说明</a>)"
+			"unsafeHTML": "发送使用情况统计信息 (<a href=\"https://www.yuque.com/tswork/ngd5zk/bdvvgs\">更多说明</a>)"
 		},
 		"settingsSearchEngineHeading": "搜索引擎",
 		"settingsDefaultSearchEngine": "选择默认的搜索引擎:",
@@ -327,7 +327,9 @@
 		"settingsBrowserHeading": "默认浏览器",
 
 		"notDefaultBrowser": "目前不是默认浏览器，点击设置",
-		"isDefaultBrowser": "目前是默认浏览器，点击取消"
+		"isDefaultBrowser": "目前是默认浏览器，点击取消",
+		
+		"appName":"想天工作台"
 
 
 	}
