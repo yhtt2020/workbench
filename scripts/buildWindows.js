@@ -10,7 +10,7 @@ async function afterPackageBuilt (appPaths) {
   /* create zip files */
 
   await appPaths.forEach(async function (packagePath) {
-    var output = fs.createWriteStream(packagePath.replace('Min-', 'Min-v' + version + '-') + '.zip')
+    var output = fs.createWriteStream(packagePath.replace('Min-', 'TsWork-v' + version + '-') + '.zip')
     var archive = archiver('zip', {
       zlib: { level: 9 }
     })
@@ -33,7 +33,7 @@ async function afterPackageBuilt (appPaths) {
     }
 
 console.log(options)
-    console.log('Creating package (this may take a while)')
+    console.log('正在打包 (可能需要较长时间)')
 
     await installer(options)
       .then(function () {
