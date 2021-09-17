@@ -370,7 +370,7 @@ function buildAppMenu (options = {}) {
         {
           label: l('appMenuReportBug'),
           click: function () {
-            openTabInWindow('https://work.thisky.com')
+            openTabInWindow('https://www.yuque.com/tswork/thyzgp/rgzqv3')
           }
         },
         {
@@ -390,7 +390,7 @@ function buildAppMenu (options = {}) {
           label: l('appMenuAbout').replace('%n', app.name),
           click: function (item, window) {
             var info = [
-              l('appName') + app.getVersion(),
+              'Min v' + app.getVersion(),
               'Chromium v' + process.versions.chrome
             ]
             electron.dialog.showMessageBox({
