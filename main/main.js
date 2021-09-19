@@ -295,7 +295,6 @@ function createWindowWithBounds(bounds) {
 	
 		mainWindow.addBrowserView(view)
 		mainBrowserView=view
-		console.log('设置了一下主view')
 		//console.log(view.webContents.URL)
 	}
 	
@@ -361,21 +360,7 @@ function createSideBarView(mainWindow){
 		//sidebarView.setBounds({ x: 0, y: 0, width: 200, height:mainWindow.getBounds().height })
 		sidebarView.setBackgroundColor('#00000000')
 		sidebarView.webContents.openDevTools()
-		// setInterval(()=>{
-		// 	let needAdd=true
-		// 	mainWindow.getBrowserViews().forEach((v)=>{
-		// 		if(v==sidebarView){
-		// 			 needAdd=false
-		// 		}
-		// 	})
-		// 	if(needAdd){
-		// 		mainWindow.addBrowserView(sidebarView)
-		// 		mainWindow.setTopBrowserView(sidebarView)
-		// 	}else{
-		// 		mainWindow.setTopBrowserView(sidebarView)
-		// 	}
-		// 	},
-		// 	3000)			
+			
 }
 
 
@@ -572,11 +557,13 @@ ipc.on('getGlobal',()=>{
 
 
 ipc.on('receiveGlobal',function(event,data){
+	data.mainWindowId=mainWindow.webContents.id
 	sidebarView.webContents.send('receiveGlobal',data)
 })
 
-ipc.on('showBookmarks',function(){
-	mainWindow.removeBrowserView(sidebarView)
-	sendIPCToWindow(mainWindow,'showBookmarks')
+ // ipc.on('showBookmarks',function(){
+ // 	mainWindow.removeBrowserView(sidebarView)
+ // 	sendIPCToWindow(mainWindow,'showBookmarks')
 	
-})
+ // })
+

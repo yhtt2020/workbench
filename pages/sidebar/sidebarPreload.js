@@ -9,14 +9,13 @@ window.addEventListener('message', function (e) {
   if (!e.origin.startsWith('file://')) {
     return
   }
-  console.log(e.data.message)
   let messageType=getMessageType(e.data)
   switch(messageType){
 	  case 'getGlobal':
 		  ipc.send('getGlobal')
 		  break
 	  case 'openBookMarks':
-		  ipc.send('showBookmarks')
+		  ipc.sendTo(mainWindowId,'showBookmarks')  //直传给mainWindow，让它唤出书签页面
 		  break
 	  case 'switchToTask':
 		  ipc.send('a')
@@ -41,4 +40,6 @@ setInterval(function(){
 
 ipc.on('receiveGlobal',function(e,data){
 	window.postMessage({message:'receiveGlobal',data:data})
+	window.mainWindowId=data.mainWindowId
+	
 })
