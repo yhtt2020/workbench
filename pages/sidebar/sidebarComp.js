@@ -8,7 +8,7 @@ Vue.component('sidebar', {
 			drag: false,
 			remote: {},
 
-			tasks: tasks //绑定tasks，这样tasks变动，属性也会跟着变
+			tasks: window.tasks //绑定tasks，这样tasks变动，属性也会跟着变
 		}
 
 	},
@@ -26,6 +26,7 @@ Vue.component('sidebar', {
 		// }
 
 		this.$store.commit('initItems')
+		this.tasks= new TasksList()
 		
 
 
@@ -53,10 +54,20 @@ Vue.component('sidebar', {
 		},
 		isActive() {
 			return (id) => {
-				return {
-					active: id == tasks.getSelected().id,
-					'app-task': true
+				
+				if(tasks.getSelected()!=null)
+					return {
+						active: id == tasks.getSelected().id,
+						'app-task': true
+					}
+				
+				else{
+					return {
+						active: false,
+						'app-task': true
+					}
 				}
+				
 
 			}
 
@@ -85,7 +96,12 @@ Vue.component('sidebar', {
 		<draggable v-model="getItems" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass" chosenClass="chosenClass" :move="onMove" @start="onStart" @end="onEnd">
 		                   <transition-group>
 			<li @click="openItem(item.id,i)" v-for="(item,i) in getItems"  :key="item.id" data-role="task" :class="isActive(item.id)" :item-id="item.id" :title="item.title">
-				<img class="icon" :src="item.icon">
+				<a-tooltip>
+				    <template slot="title">
+				      {{ item.title }}
+				    </template>
+				    <img class="icon" :src="item.icon">
+				  </a-tooltip>
 			</li>
 			</transition-group>
 			</draggable>
@@ -101,7 +117,7 @@ Vue.component('sidebar', {
 		},
 		openItem(id, index) {
 			browserUI.switchToTask(id, index)
-			this.$store.getters.fillTasksToItems
+			//this.$store.getters.fillTasksToItems
 		},
 		//开始拖拽事件
 		onStart() {

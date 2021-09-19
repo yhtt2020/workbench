@@ -50,6 +50,7 @@ const tabBar = {
 			el.scrollIntoView()
 		})
 	},
+	/*标签栏补充的右键菜单触发动作开始*/
 	//关闭其他的标签
 	closeOtherTabs: function(tabId) {
 		browserUI.switchToTab(tabId)
@@ -61,8 +62,9 @@ const tabBar = {
 		needDestroy.forEach(function(tid, index) {
 			browserUI.destroyTab(tid)
 		})
-		$store.getters.fillTasksToItems
+		//$store.getters.fillTasksToItems
 	},
+	//关闭左侧标签
 	closeLeftTabs: function(tabId) {
 		browserUI.switchToTab(tabId)
 		let needDestroy = []
@@ -79,8 +81,9 @@ const tabBar = {
 		needDestroy.forEach(function(tid, index) {
 			browserUI.destroyTab(tid)
 		})
-		$store.getters.fillTasksToItems
+		//$store.getters.fillTasksToItems
 	},
+	//关闭右侧标签
 	closeRightTabs: function(tabId) {
 		browserUI.switchToTab(tabId)
 		let needDestroy = []
@@ -97,8 +100,9 @@ const tabBar = {
 		needDestroy.forEach(function(tid, index) {
 			browserUI.destroyTab(tid)
 		})
-		$store.getters.fillTasksToItems
+		//$store.getters.fillTasksToItems
 	},
+	//移动到第一个标签
 	moveToFirst: function(tabId) {
 		let tabs = tasks.getSelected().tabs
 		tab = tabs.get(tabId)
@@ -110,9 +114,11 @@ const tabBar = {
 
 
 	},
+	//刷新
 	refresh:function(id){
 		webviews.update(id,tasks.getSelected().tabs.get(id).url)
 	},
+	/*标签栏补充的右键菜单触发动作结束*/
 	createTab: function(data) {
 		var tabEl = document.createElement('div')
 		tabEl.className = 'tab-item'
@@ -207,7 +213,7 @@ const tabBar = {
 						label: '创建一个新组',
 						click: function() {
 							browserUI.addTask()
-							$store.getters.fillTasksToItems
+							//$store.getters.fillTasksToItems
 						}
 					},
 					{
@@ -240,7 +246,7 @@ const tabBar = {
 						label: '关闭标签',
 						click: function() {
 							//console.log('关闭全部标签被点击')
-							$store.getters.fillTasksToItems
+							//$store.getters.fillTasksToItems
 							browserUI.closeTab(data.id)
 						}
 					}

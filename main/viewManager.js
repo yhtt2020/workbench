@@ -5,6 +5,8 @@ var viewStateMap = {} // id: view state
 
 var temporaryPopupViews = {} // id: view
 
+
+
 const defaultViewWebPreferences = {
   nodeIntegration: false,
   nodeIntegrationInSubFrames: true,
@@ -166,10 +168,15 @@ function destroyView (id) {
   if (!viewMap[id]) {
     return
   }
-
-  if (viewMap[id] === mainWindow.getBrowserView()) {
-    mainWindow.setBrowserView(null)
+  if (viewMap[id] === mainWindow.getMainView()) {
+	mainWindow.setMainView(null)
   }
+  // else if(viewMap[id]===sidebarView)//如果是侧边栏的view，则直接将其置顶起来
+  // {
+	 //  console.log('阻止一次被消耗')
+	 //  mainWindow.setTopBrowserView(sidebarView)
+	 //  return 
+  // }
   viewMap[id].webContents.destroy()
 
   delete viewMap[id]
@@ -181,9 +188,13 @@ function destroyAllViews () {
     destroyView(id)
   }
 }
+//处理设置当前BrowserView事件，以将sidebarView拿出来
+
+
 
 function setView (id) {
-  mainWindow.setBrowserView(viewMap[id])
+	mainWindow.setMainView(viewMap[id])
+
 }
 
 function setBounds (id, bounds) {
@@ -203,7 +214,7 @@ function focusView (id) {
 }
 
 function hideCurrentView () {
-  mainWindow.setBrowserView(null)
+  mainWindow.setMainView(null)
   mainWindow.webContents.focus()
 }
 

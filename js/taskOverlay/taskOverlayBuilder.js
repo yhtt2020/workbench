@@ -98,7 +98,7 @@ var TaskOverlayBuilder = {
           if (task.tabs.isEmpty()) {
             container.remove()
             browserUI.closeTask(task.id)
-			$store.getters.fillTasksToItems()
+			//$store.getters.fillTasksToItems()
           } else {
             container.classList.add('deleting')
             setTimeout(function () {

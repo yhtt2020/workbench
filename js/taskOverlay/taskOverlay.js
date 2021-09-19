@@ -206,7 +206,7 @@ var taskOverlay = {
       browserUI.switchToTab(tabs.getSelected())
 
       taskSwitcherButton.classList.remove('active')
-	  window.$store.getters.fillTasksToItems
+	  //window.$store.getters.fillTasksToItems
     }
   },
 
@@ -383,9 +383,9 @@ var taskOverlay = {
 
     addTaskButton.addEventListener('click', function (e) {
       browserUI.switchToTask(tasks.add())
-	  window.$store.getters.fillTasksToItems
+	  //window.$store.getters.fillTasksToItems
       taskOverlay.hide()
-	  window.$store.getters.fillTasksToItems
+	  //window.$store.getters.fillTasksToItems
     })
 
     taskOverlayNavbar.addEventListener('click', function () {

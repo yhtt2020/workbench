@@ -82,7 +82,9 @@ const contentBlockingToggle = {
         {
           label: l('appMenuReportBug'),
           click: function () {
-            var newTab = tabs.add({ url: 'https://work.thisky.com' + encodeURIComponent(url) })
+			//var newTab = tabs.add({ url: 'https://github.com/minbrowser/min/issues/new?title=Content%20blocking%20issue%20on%20' + encodeURIComponent(url) })
+			//todo 实现报告bug功能
+            var newTab = tabs.add({ url: 'https://www.yuque.com/tswork/thyzgp/rgzqv3?url=' + encodeURIComponent(url) })
             require('browserUI.js').addTab(newTab, { enterEditMode: false })
           }
         }

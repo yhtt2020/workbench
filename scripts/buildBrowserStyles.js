@@ -12,7 +12,6 @@ const modules = [
   'css/taskOverlay.css',
   'css/webviews.css',
   'css/searchbar.css',
-  'css/sidebar.css',//加入sidebar
   'css/listItem.css',
   'css/bookmarkManager.css',
   'css/findinpage.css',

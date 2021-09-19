@@ -70,6 +70,9 @@ var secondaryMenu = null
 var isFocusMode = false
 var appIsReady = false
 
+var sidebarView=null
+var mainBrowserView=null //主窗体
+
 const isFirstInstance = app.requestSingleInstanceLock()
 
 if (!isFirstInstance) {
@@ -190,7 +193,7 @@ function createWindowWithBounds(bounds) {
 		icon: __dirname + '/icons/icon256.png',
 		frame: settings.get('useSeparateTitlebar'),
 		alwaysOnTop: settings.get('windowAlwaysOnTop'),
-		backgroundColor: '#fff', // the value of this is ignored, but setting it seems to work around https://github.com/electron/electron/issues/10559
+		transparent: true,//backgroundColor: '#fff', // the value of this is ignored, but setting it seems to work around https://github.com/electron/electron/issues/10559
 		webPreferences: {
 			nodeIntegration: true,
 			contextIsolation: false,
@@ -284,7 +287,31 @@ function createWindowWithBounds(bounds) {
 		sendIPCToWindow(mainWindow,'showBookmarks')
 		console.log('showboom')
 	})
-
+	
+	
+	//设置主view
+	mainWindow.setMainView=(view)=>{
+		mainWindow.setBrowserView(sidebarView)
+		mainWindow.addBrowserView(view)
+		mainBrowserView=view
+		console.log('设置了一下主view')
+		//console.log(view.webContents.URL)
+	}
+	
+	//取回主view
+	mainWindow.getMainView=()=>{
+		if(mainWindow.getBrowserViews().length>1){
+			return mainBrowserView
+		}else{
+			return mainWindow.getBrowserView()
+		}
+	}
+	
+	mainWindow.getSideBarView=()=>{
+		return sidebarView
+	}
+	
+	
 	/*
 	Handles events from mouse buttons
 	Unsupported on macOS, and on Linux, there is a default handler already,
@@ -309,16 +336,54 @@ function createWindowWithBounds(bounds) {
 	})
 
 	mainWindow.setTouchBar(buildTouchBar())
-
+	createSideBarView(mainWindow)
 	return mainWindow
+
 }
+
+function createSideBarView(mainWindow){
+		const defaultViewWebPreferences = {
+		nodeIntegration: true,
+
+		preload: path.join(__dirname , '/pages/sidebar/sidebarPreload.js'),
+	
+		}
+		sidebarView = new BrowserView({ webPreferences:defaultViewWebPreferences})
+		//mainWindow.setBrowserView(view)
+		
+		
+		
+		//mainWindow.setTopBrowserView(view)
+		sidebarView.webContents.loadURL('file://' + __dirname + "/pages/sidebar/sidebar.html")
+		console.log(sidebarView)
+		mainWindow.addBrowserView(sidebarView)
+		sidebarView.setBounds({ x: 0, y: 0, width: 200, height:mainWindow.getBounds().height })
+		sidebarView.setBackgroundColor('#00000000')
+		sidebarView.webContents.openDevTools()
+		// setInterval(()=>{
+		// 	let needAdd=true
+		// 	mainWindow.getBrowserViews().forEach((v)=>{
+		// 		if(v==sidebarView){
+		// 			 needAdd=false
+		// 		}
+		// 	})
+		// 	if(needAdd){
+		// 		mainWindow.addBrowserView(sidebarView)
+		// 		mainWindow.setTopBrowserView(sidebarView)
+		// 	}else{
+		// 		mainWindow.setTopBrowserView(sidebarView)
+		// 	}
+		// 	},
+		// 	3000)			
+}
+
 
 function createLanuchBar() {
 	//如果不存在则创建
 
 	let lanuchBar = new BrowserWindow({
-		width: 800,
-		height: 40,
+		width: 200,
+		height: 480,
 		titleBarStyle: 'customButtonsOnHover',
 		trafficLightPosition: {
 			x: 12,
@@ -326,6 +391,7 @@ function createLanuchBar() {
 		},
 		icon: __dirname + '/icons/icon256.png',
 		frame: false,
+		transparent: true,
 		alwaysOnTop: true,
 		backgroundColor: '#fff', // the value of this is ignored, but setting it seems to work around https://github.com/electron/electron/issues/10559
 		webPreferences: {
@@ -344,7 +410,7 @@ function createLanuchBar() {
 	})
 	lanuchBar.loadURL('file://' + __dirname + "/pages/lanuchBar/index.html")
 	app.lanuchBar = lanuchBar;
-
+	
 
 }
 // Quit when all windows are closed.
@@ -370,7 +436,7 @@ app.on('ready', function() {
 
 	//预先创建好快速启动窗口
 	//createLanuchBar()
-
+//app.lanuchBar.show()
 
 	// if (isDevelopmentMode) {
 	// 	session.defaultSession.loadExtension(
@@ -417,10 +483,14 @@ app.on('ready', function() {
 			}
 		})
 	})
-
+	
+	
+	
 	mainMenu = buildAppMenu()
 	Menu.setApplicationMenu(mainMenu)
 	createDockMenu()
+	
+
 })
 
 app.on('open-url', function(e, url) {
@@ -477,6 +547,7 @@ ipc.on('showSecondaryMenu', function(event, data) {
 //获取默认浏览器
 ipc.on('getIsDefaulBrowser',function(event){
 	let isDefault=app.isDefaultProtocolClient('http')
+	console.log('返回是不是默认浏览器'+isDefault)
 	event.reply('returnIsDefaultBrowser',isDefault)
 })
 //移除默认浏览器
@@ -491,4 +562,19 @@ ipc.on('callSetOrRemoveDefaultBrowser',function(event){
 //设置默认浏览器部分结束
 ipc.on('quit', function() {
 	app.quit()
+})
+
+//主窗口收到要获取全局变量的消息
+ipc.on('getGlobal',()=>{
+	
+	sendIPCToWindow(mainWindow, 'getGlobal')
+	console.log('主窗口收到要获取全局变量的消息')
+	
+})
+
+
+ipc.on('receiveGlobal',function(event,data){
+	console.log('主进程又收到消息了receiveGlobal')
+	console.log(data)
+	sidebarView.webContents.send('receiveGlobal',data)
 })
