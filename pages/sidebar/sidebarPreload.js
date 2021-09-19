@@ -21,10 +21,6 @@ window.addEventListener('message', function (e) {
 		  ipc.send('a')
   }
 
-
-  
-  
-  console.log('getMessageFromSidebar',e.data)
   
 })
 function getMessageType(data){

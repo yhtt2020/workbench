@@ -218,7 +218,7 @@ function focusView (id) {
 
 function hideCurrentView () {
   mainWindow.setMainView(null)
-  mainWindow.removeBrowserView(sidebarView)
+  mainWindow.removeBrowserView(sidebarView) //把sidebar也一并移除
   mainWindow.webContents.focus()
 }
 
