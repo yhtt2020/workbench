@@ -141,7 +141,6 @@ window.addEventListener('load', function() {
 require('tabState.js').initialize()
 require('windowControls.js').initialize()
 require('navbar/menuButton.js').initialize()
-
 require('navbar/addTabButton.js').initialize()
 require('navbar/tabActivity.js').initialize()
 require('navbar/tabColor.js').initialize()
@@ -182,7 +181,4 @@ require('searchbar/historyViewer.js').initialize()
 require('searchbar/developmentModeNotification.js').initialize()
 require('searchbar/shortcutButtons.js').initialize()
 require('searchbar/calculatorPlugin.js').initialize()
-window.browserUI = require('browserUI.js')
-// once everything's loaded, start the session
 require('sessionRestore.js').restore()
-var tabEditor = require('navbar/tabEditor.js')
