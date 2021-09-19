@@ -76,13 +76,19 @@ Vue.component('sidebar', {
 	},
 	template: `
 	<div id="sidebar" class="side-container">
-		<ul id="pinGroup" class="app-task">
+		<ul id="pinGroup" class="app-task" style="margin-bottom: 0;">
 
 			
 			 <draggable v-model="getPinItems" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass" chosenClass="chosenClass" :move="onMove" @start="onStart" @end="onEnd">
 			                    <transition-group>
 								<li v-for="(item,i) in getPinItems" :key="item.id" @click="openPinItem(item.id,i)" data-role="task" :class="isActive(item.id)" :item-id="item.id" :title="item.title">
-									<img class="icon" :src="item.icon">
+									<a-tooltip>
+										<template slot="title">
+											{{ item.title }}
+											</template>
+											<img class="icon" :src="item.icon">
+										
+									 </a-tooltip>
 								</li>	
 			                    </transition-group>
 			  </draggable>
@@ -112,11 +118,13 @@ Vue.component('sidebar', {
 	methods: {
 		openPinItem(id, index) {
 			if (this.$store.getters.getItems.pinItems[index].type == 'system-bookmark') {
-				this.$tabEditor.show(tasks.getSelected().tabs.getSelected(), '!bookmarks ')
+				//this.$tabEditor.show(tasks.getSelected().tabs.getSelected(), '!bookmarks ')
+				postMessage({message:'openBookMarks'})
 			}
 		},
 		openItem(id, index) {
-			browserUI.switchToTask(id, index)
+			postMessage({message:'switchToTask',args:{id:id,index:index}})
+			//browserUI.switchToTask(id, index)
 			//this.$store.getters.fillTasksToItems
 		},
 		//开始拖拽事件

@@ -292,6 +292,7 @@ function createWindowWithBounds(bounds) {
 	//设置主view
 	mainWindow.setMainView=(view)=>{
 		mainWindow.setBrowserView(sidebarView)
+	
 		mainWindow.addBrowserView(view)
 		mainBrowserView=view
 		console.log('设置了一下主view')
@@ -357,7 +358,7 @@ function createSideBarView(mainWindow){
 		sidebarView.webContents.loadURL('file://' + __dirname + "/pages/sidebar/sidebar.html")
 		console.log(sidebarView)
 		mainWindow.addBrowserView(sidebarView)
-		sidebarView.setBounds({ x: 0, y: 0, width: 200, height:mainWindow.getBounds().height })
+		//sidebarView.setBounds({ x: 0, y: 0, width: 200, height:mainWindow.getBounds().height })
 		sidebarView.setBackgroundColor('#00000000')
 		sidebarView.webContents.openDevTools()
 		// setInterval(()=>{
@@ -566,15 +567,16 @@ ipc.on('quit', function() {
 
 //主窗口收到要获取全局变量的消息
 ipc.on('getGlobal',()=>{
-	
 	sendIPCToWindow(mainWindow, 'getGlobal')
-	console.log('主窗口收到要获取全局变量的消息')
-	
 })
 
 
 ipc.on('receiveGlobal',function(event,data){
-	console.log('主进程又收到消息了receiveGlobal')
-	console.log(data)
 	sidebarView.webContents.send('receiveGlobal',data)
+})
+
+ipc.on('showBookmarks',function(){
+	mainWindow.removeBrowserView(sidebarView)
+	sendIPCToWindow(mainWindow,'showBookmarks')
+	
 })

@@ -1,5 +1,4 @@
 
-
 class TasksList{
 	constructor () {
 		this.tasks=[]
@@ -35,8 +34,21 @@ class TasksList{
 	getAll(){
 		  return this.tasks
 	}
+	getLength(){
+		return this.tasks.length
+	}
 	
+	byIndex (index) {
+	  return this.tasks[index]
+	}
+	
+	
+	getIndex (id) {
+	  return this.tasks.findIndex(task => task.id === id)
+	}
 }
+
+
 
 window.addEventListener('message', function (e) {
 	
@@ -44,6 +56,7 @@ window.addEventListener('message', function (e) {
 	let tasksList= new TasksList()
     tasksList.init(e.data.data.tasks)
 	 window.tasks=tasksList
+	 $store.getters.fillTasksToItems
   }
  
 })
@@ -128,10 +141,10 @@ window.onload = function() {
 			},
 			//获取任务的icon
 			getItemIcon: (state) => (task) => {
-				if (task.tabs.count() == 0) {
+				if (task.tabs.length == 0) {
 					return "../../icons/empty.png"
 				}
-				let favicon = task.tabs.getAtIndex(0).favicon;
+				let favicon = task.tabs[0].favicon;
 
 				if (typeof favicon == 'undefined') {
 					return "../../icons/empty.png"

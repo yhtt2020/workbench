@@ -5,7 +5,8 @@ var viewStateMap = {} // id: view state
 
 var temporaryPopupViews = {} // id: view
 
-
+var viewBounds={}
+var sidebarBounds={}
 
 const defaultViewWebPreferences = {
   nodeIntegration: false,
@@ -158,7 +159,7 @@ function createView (existingViewId, id, webPreferencesString, boundsString, eve
   view.webContents.on('will-redirect', handleExternalProtocol)
 
   view.setBounds(JSON.parse(boundsString))
-
+  viewBounds=JSON.parse(boundsString)
   viewMap[id] = view
 
   return view
@@ -194,13 +195,15 @@ function destroyAllViews () {
 
 function setView (id) {
 	mainWindow.setMainView(viewMap[id])
-
+	
 }
 
 function setBounds (id, bounds) {
   if (viewMap[id]) {
     viewMap[id].setBounds(bounds)
   }
+  viewBounds = bounds
+  sidebarView.setBounds({x:0,y:bounds.y,width:120,height:bounds.height})
 }
 
 function focusView (id) {
@@ -215,6 +218,7 @@ function focusView (id) {
 
 function hideCurrentView () {
   mainWindow.setMainView(null)
+  mainWindow.removeBrowserView(sidebarView)
   mainWindow.webContents.focus()
 }
 
