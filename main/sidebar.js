@@ -52,7 +52,7 @@ function createSideBarView(mainWindow) {
 	//sidebarView.setBounds({ x: 0, y: 0, width: 200, height:mainWindow.getBounds().height })
 	sidebarView.setBackgroundColor('#00000000')
 	sidebarView.webContents.openDevTools()
-
+	
 }
 
 
@@ -67,4 +67,19 @@ ipc.on('getGlobal', () => {
 ipc.on('receiveGlobal', function(event, data) {
 	data.mainWindowId = mainWindow.webContents.id
 	sidebarView.webContents.send('receiveGlobal', data)
+})
+
+//sidebar鼠标移入的时候要把sidebar尺寸调大，防止显示不全
+ipc.on('bringSidebarToFront',function(){
+
+	mainWindow.setTopBrowserView(sidebarView)
+	sidebarView.setBounds({x:0,y:sidebarBounds.y,width:120,height:sidebarBounds.height})
+
+})
+
+//sidebar鼠标移出的时候要把sidebar尺寸调回原尺寸，防止遮挡网页
+ipc.on('bringSidebarToBack',function(){
+	mainWindow.setTopBrowserView(mainBrowserView)
+	
+	sidebarView.setBounds({x:0,y:sidebarBounds.y,width:45,height:sidebarBounds.height})
 })

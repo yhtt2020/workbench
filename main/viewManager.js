@@ -8,6 +8,8 @@ var temporaryPopupViews = {} // id: view
 var viewBounds={}
 var sidebarBounds={}
 
+
+
 const defaultViewWebPreferences = {
   nodeIntegration: false,
   nodeIntegrationInSubFrames: true,
@@ -203,7 +205,9 @@ function setBounds (id, bounds) {
     viewMap[id].setBounds(bounds)
   }
   viewBounds = bounds
-  sidebarView.setBounds({x:0,y:bounds.y,width:120,height:bounds.height})
+  sidebarBounds={x:0,y:bounds.y,width:45,height:bounds.height}
+  sidebarView.setBounds(sidebarBounds)
+
 }
 
 function focusView (id) {

@@ -11,8 +11,7 @@
 		<link rel="stylesheet" href="../../ext/vue/antd.min.css" />
 		<link rel="stylesheet" href="sidebar.css" />
 	</head>
-	<body style="background-color:#13C2C2 ;">
-
+	<body onmouseenter="mouseEnter()" onmouseleave="moueseLeave()" style="background-color: #00000000;">
 		<div id="appVue" class="sidebar">
 			<sidebar />
 		</div>
@@ -20,9 +19,23 @@
 	<script src="./sidebarComp.js"></script>
 	<script src="./sidebar.js"></script>
 	<style>
-	ul{
-		list-style: none;
-		padding:0
-	}
+		ul {
+			list-style: none;
+			padding: 0
+		}
 	</style>
+
+	<script>
+		function mouseEnter() {
+			postMessage({
+				message: 'bringToFront'
+			})
+		}
+
+		function moueseLeave() {
+			postMessage({
+				message: 'bringToBack'
+			})
+		}
+	</script>
 </html>
