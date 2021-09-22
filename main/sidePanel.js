@@ -27,9 +27,10 @@ function loadSidePanel() {
 	})
 	sidePanel.webContents.loadURL('file://' + __dirname + "/pages/sidebar/sidebar.html")
 	sidePanel.show()
+	//如果不舍为置顶，鼠标移动进去不会触发悬浮窗，必须点一下才能有反应。
+	sidePanel.setAlwaysOnTop(true, 'status')
 	//sidePanel.webContents.openDevTools()
 	mainWindow.on('will-resize', function(event, newBounds, details) {
-		console.log(newBounds.x)
 		sidePanel.setBounds({
 			x: newBounds.x,
 			y: newBounds.y + titlebarHeight,
@@ -57,25 +58,67 @@ function loadSidePanel() {
 			height: bounds.height - titlebarHeight
 		})
 	})
-	
-	//设置侧边栏全局置顶，不设置的话，移动鼠标上去的话，是无法直接获得焦点，触发其弹窗浮层的效果
-	sidePanel.setAlwaysOnTop(true, 'pop-up-menu')
+
+	//当主窗体失去焦点的时候，取消侧边栏的置顶。
 	mainWindow.on('blur', () => {
-		if (sidePanel != {} && !sidePanel.isFocused()) {
+		if (sidePanel != {} && !sidePanel.isFocused() && !mainWindow.isMinimized()) {
 			sidePanel.setAlwaysOnTop(false)
-			mainWindow.blur()
+			sidePanel.moveAbove(mainWindow.getMediaSourceId()) //移动到父级最前面，不挡住其他的界面，不使用这个办法会突出来
+			//mainWindow.blur()
 			//sidePanel.showInactive()
 		}
 	})
-	
-	//当主窗体获得焦点的时候，取消侧边栏的置顶。
+
+	//设置侧边栏全局置顶，不设置的话，移动鼠标上去的话，是无法直接获得焦点，触发其弹窗浮层的效果
 	mainWindow.on('focus', () => {
-		
+
 		if (sidePanel != {} && mainWindow.isVisible())
-			sidePanel.setAlwaysOnTop(true, 'pop-up-menu')
-			sidePanel.showInactive()
+		 {
+			 sidePanel.setAlwaysOnTop(true, 'status')
+		 }
+		sidePanel.showInactive()
 	})
 
+	mainWindow.on('maximize', () => {
+		bounds = mainWindow.getBounds()
+		sidePanel.setBounds({
+			x: 0,
+			y: 0 + titlebarHeight,
+			width: panelWidth,
+			height: bounds.height - titlebarHeight
+		})
+	})
+	
+	mainWindow.on('unmaximize', () => {
+		bounds = mainWindow.getBounds()
+		sidePanel.setBounds({
+			x: 0,
+			y: 0 + titlebarHeight,
+			width: panelWidth,
+			height: bounds.height - titlebarHeight
+		})
+	})
+	
+	mainWindow.on('enter-full-screen', () => {
+		bounds = mainWindow.getBounds()
+		sidePanel.setBounds({
+			x: 0,
+			y: 0 + titlebarHeight,
+			width: panelWidth,
+			height: bounds.height - titlebarHeight
+		})
+		sidePanel.setAlwaysOnTop(true, 'floating')
+	})
+	mainWindow.on('leave-full-screen', () => {
+		bounds = mainWindow.getBounds()
+		sidePanel.setBounds({
+			x: 0,
+			y: 0 + titlebarHeight,
+			width: panelWidth,
+			height: bounds.height - titlebarHeight
+		})
+		sidePanel.setAlwaysOnTop(true, 'status')
+	})
 }
 
 // setInterval(function() {

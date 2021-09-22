@@ -109,7 +109,7 @@ Vue.component('sidebar', {
 	`,
 	methods: {
 		openPinItem(id, index) {
-			if (this.$store.getters.getItems.pinItems[index].type == 'system-bookmark') {
+			if (this.$store.getters.getPinItems[index].type == 'system-bookmark') {
 				//this.$tabEditor.show(tasks.getSelected().tabs.getSelected(), '!bookmarks ')
 				postMessage({
 					message: 'openBookMarks'
