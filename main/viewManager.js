@@ -171,9 +171,9 @@ function destroyView (id) {
   if (!viewMap[id]) {
     return
   }
-  if (viewMap[id] === mainWindow.getMainView()) {
-	mainWindow.setMainView(null)
-  }
+  if (viewMap[id] === mainWindow.getBrowserView()) {
+      mainWindow.setBrowserView(null)
+	}
   // else if(viewMap[id]===sidebarView)//如果是侧边栏的view，则直接将其置顶起来
   // {
 	 //  console.log('阻止一次被消耗')
@@ -196,7 +196,7 @@ function destroyAllViews () {
 
 
 function setView (id) {
-	mainWindow.setMainView(viewMap[id])
+	mainWindow.setBrowserView(viewMap[id])
 	
 }
 
@@ -205,8 +205,8 @@ function setBounds (id, bounds) {
     viewMap[id].setBounds(bounds)
   }
   viewBounds = bounds
-  sidebarBounds={x:0,y:bounds.y,width:45,height:bounds.height}
-  sidebarView.setBounds(sidebarBounds)
+  // sidebarBounds={x:0,y:bounds.y,width:45,height:bounds.height}
+  // sidebarView.setBounds(sidebarBounds)
 
 }
 
@@ -221,8 +221,8 @@ function focusView (id) {
 }
 
 function hideCurrentView () {
-  mainWindow.setMainView(null)
-  mainWindow.removeBrowserView(sidebarView) //把sidebar也一并移除
+  mainWindow.setBrowserView(null)
+  // mainWindow.removeBrowserView(sidebarView) //把sidebar也一并移除
   mainWindow.webContents.focus()
 }
 

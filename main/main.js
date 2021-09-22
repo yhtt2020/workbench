@@ -286,9 +286,11 @@ function createWindowWithBounds(bounds) {
 		console.log('showboom')
 	})
 	
-	loadSidebar()
-	
-	
+	//loadSidebar()
+	loadSidePanel()
+
+
+
 	/*
 	Handles events from mouse buttons
 	Unsupported on macOS, and on Linux, there is a default handler already,
@@ -370,12 +372,13 @@ app.on('window-all-closed', function() {
 app.on('ready', function() {
 	settings.set('restartNow', false)
 	appIsReady = true
-
+	
 	/* the installer launches the app to install registry items and shortcuts,
 	but if that's happening, we shouldn't display anything */
 	if (isInstallerRunning) {
 		return
 	}
+	
 
 	//预先创建好快速启动窗口
 	//createLanuchBar()

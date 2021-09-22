@@ -145,22 +145,31 @@ window.onload = function() {
 					return "../../icons/empty.png"
 				}
 				let favicon = task.tabs[0].favicon;
+				return store.getters.getIcon(favicon,"../../icons/empty.png")
+				
 
+			},
+			getIcon:(state)=>(favicon,defaultIcon)=>{
 				if (typeof favicon == 'undefined') {
-					return "../../icons/empty.png"
+					return defaultIcon
 				} else if (typeof favicon == 'undefined') {
-					return "../../icons/empty.png"
+					return defaultIcon
 				} else if (favicon == null) {
-					return "../../icons/empty.png"
+					return defaultIcon
 				} else {
 					return favicon.url
-				}
-
+				}	
 			},
 			//从任务转化出一个item，用于items列表
 			getItemFromTask: (state) => (task) => {
 				let parsedTitle = store.getters.getItemTitle(task)
 				let parsedIcon = store.getters.getItemIcon(task)
+				task.tabs.forEach(function(tab){
+					tab.icon=store.getters.getIcon(tab.favicon,"../../icons/tab.png")
+					if(!tab.title){
+						tab.title=l('newTabLabel')
+					}
+				})
 				let item = {
 					title: parsedTitle, //名称，用于显示提示
 					name: parsedTitle,
@@ -170,8 +179,11 @@ window.onload = function() {
 					draggable: true, //是否允许拖拽
 					ext: task.id, //额外的信息
 					fixed: false,
-					type: 'task'
+					type: 'task',
+					tabs:task.tabs
 				}
+				
+				
 				return item
 			}
 

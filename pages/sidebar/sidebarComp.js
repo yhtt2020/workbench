@@ -8,7 +8,8 @@ Vue.component('sidebar', {
 			drag: false,
 			remote: {},
 
-			tasks: window.tasks //绑定tasks，这样tasks变动，属性也会跟着变
+			tasks: window.tasks, //绑定tasks，这样tasks变动，属性也会跟着变
+			selected: 0
 		}
 
 	},
@@ -26,8 +27,20 @@ Vue.component('sidebar', {
 		// }
 
 		this.$store.commit('initItems')
-		this.tasks= new TasksList()
-		
+		this.tasks = new TasksList()
+
+		setInterval(() => {
+			let tips = document.getElementsByClassName("tips")
+			if (tips.length == 0)
+				postMessage({
+					message: 'bringToBack'
+				})
+			else {
+				postMessage({
+					message: 'bringToFront'
+				})
+			}
+		}, 500)
 
 
 	},
@@ -54,20 +67,13 @@ Vue.component('sidebar', {
 		},
 		isActive() {
 			return (id) => {
-				
-				if(tasks.getSelected()!=null)
-					return {
-						active: id == tasks.getSelected().id,
-						'app-task': true
-					}
-				
-				else{
-					return {
-						active: false,
-						'app-task': true
-					}
+				return {
+					active: id == this.selected,
+					'app-task': true
 				}
-				
+
+
+
 
 			}
 
@@ -79,16 +85,22 @@ Vue.component('sidebar', {
 		<ul id="pinGroup" class="app-task" style="margin-bottom: 0;">
 
 			
-			 <draggable v-model="getPinItems" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass" chosenClass="chosenClass" :move="onMove" @start="onStart" @end="onEnd">
+			 <draggable v-model="getPinItems" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass" chosenClass="chosenClass"  @start="onStart" @end="onEnd">
 			                    <transition-group>
-								<li v-for="(item,i) in getPinItems" :key="item.id" @click="openPinItem(item.id,i)" data-role="task" :class="isActive(item.id)" :item-id="item.id" :title="item.title">
-									<a-tooltip>
-										<template slot="title">
-											{{ item.title }}
-											</template>
-											<img class="icon" :src="item.icon">
-										
-									 </a-tooltip>
+								<li v-for="(item,i) in getPinItems" :key="item.id" @click="openPinItem(item.id,i)" data-role="task" :class="isActive(item.id)" :item-id="item.id" >
+									<a-popover :title="item.title+'（右键查看)'" placement="right" :mouseEnterDelay="0.1" :mouseLeaveDelay="0.1" :destroyTooltipOnHide="true" overlayClassName="tips">
+									<template slot="content">
+									
+																<ul class="tabs">
+																<li class="tab-title" v-for="(tab,j) in item.tabs" :key="tab.id">
+																	<img class="tab-icon" :src="tab.icon"> {{ tab.title }}
+																</li>
+																</ul>
+																</template>
+											<div class="wrapper">
+											<img class="icon" :src="item.icon" >
+											</div>
+									 </a-popover>
 								</li>	
 			                    </transition-group>
 			  </draggable>
@@ -96,18 +108,26 @@ Vue.component('sidebar', {
 		
 		<div style="border-top: 1px solid lightgrey;margin: 8px;"></div>
 		
-		<div class="app-box">
+		<div class="app-box" >
 		
 		<ul id="appGroup" class="app-task app-items">
-		<draggable v-model="getItems" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass" chosenClass="chosenClass" :move="onMove" @start="onStart" @end="onEnd">
+		<draggable v-model="getItems" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass" chosenClass="chosenClass"  @start="onStart" @end="onEnd">
 		                   <transition-group>
-			<li @click="openItem(item.id,i)" v-for="(item,i) in getItems"  :key="item.id" data-role="task" :class="isActive(item.id)" :item-id="item.id" :title="item.title">
-				<a-tooltip>
-				    <template slot="title">
-				      {{ item.title }}
-				    </template>
-				    <img class="icon" :src="item.icon">
-				  </a-tooltip>
+			<li @click="openItem(item.id,i)" v-for="(item,i) in getItems"  :key="item.id" data-role="task" :class="isActive(item.id)" :item-id="item.id"   >
+				<a-popover :title="item.title+'（右键查看)'" placement="right" :mouseEnterDelay="0" :mouseLeaveDelay="0.1"  :destroyTooltipOnHide="true" overlayClassName="tips">
+				   <template slot="content">
+				   
+							<ul class="tabs">
+							<li class="tab-title" v-for="(tab,j) in item.tabs" :key="tab.id">
+								<img class="tab-icon" :src="tab.icon"> {{ tab.title }}
+							</li>
+							</ul>
+							</template>
+							<div class="wrapper">
+							 <img class="icon" :src="item.icon">
+							</div>
+				   
+				  </a-popover>
 			</li>
 			</transition-group>
 			</draggable>
@@ -119,11 +139,18 @@ Vue.component('sidebar', {
 		openPinItem(id, index) {
 			if (this.$store.getters.getItems.pinItems[index].type == 'system-bookmark') {
 				//this.$tabEditor.show(tasks.getSelected().tabs.getSelected(), '!bookmarks ')
-				postMessage({message:'openBookMarks'})
+				postMessage({
+					message: 'openBookMarks'
+				})
 			}
 		},
 		openItem(id, index) {
-			postMessage({message:'switchToTask',args:{id:id,index:index}})
+			postMessage({
+				message: 'switchToTask',
+				id: id,
+				index: index
+			})
+			this.selected=id
 			//browserUI.switchToTask(id, index)
 			//this.$store.getters.fillTasksToItems
 		},
@@ -150,7 +177,7 @@ Vue.component('sidebar', {
 			const relatedElement = relatedContext.element;
 			const draggedElement = draggedContext.element;
 			return (
-				!draggedElement.fixed//&&(!relatedElement || !relatedElement.fixed) 
+				!draggedElement.fixed //&&(!relatedElement || !relatedElement.fixed) 
 			);
 		},
 		//对任务数组重新进行排序

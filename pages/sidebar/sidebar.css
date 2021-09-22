@@ -1,22 +1,12 @@
 .sidebar {
 	position: fixed;
 	bottom: 0;
-	top: calc(36px + var(--control-space-top));
 	left: 0;
 	z-index: 1;
-	background-color: white;
+	
 }
 
-.sidebar ul li {
-	list-style-type: none;
-	height: 45px;
-	text-align: center;
-
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	cursor: pointer;
-}
+.sidebar ul li {}
 
 .sidebar ul li:hover {
 	background-color: #efefef;
@@ -30,9 +20,10 @@
 .sidebar .app-items {
 	width: 60px;
 	overflow-y: scroll;
-	bottom: calc(36px + var(--control-space-top));
 	position: absolute;
 	top: 0;
+	bottom: 0;
+	margin-bottom: 0;
 }
 
 .side-container {
@@ -43,6 +34,8 @@
 	height: 100vh;
 	width: 45px;
 	border-right: 1px solid #D7D7D7;
+	border-radius: 0px 0px 0px 10px;
+	background: white;
 }
 
 .sidebar .app-box {
@@ -68,4 +61,33 @@
 .item:hover {
 	background-color: #fdfdfd;
 	cursor: move;
+}
+
+.tab-icon {
+	width: 20px;
+	height: 20px;
+	margin-right: 5px;
+}
+
+.tab-title {
+	width: 250px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	padding: 5px;
+	border-radius: 4px;
+}
+
+.tab-title:hover {
+	background-color: #efefef;
+}
+
+.wrapper {
+	width: 42px;
+	height: 42px;
+	display: flex;
+	cursor: pointer;
+	text-align: center;
+	align-items: center;
+	justify-content: center;
 }

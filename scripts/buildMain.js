@@ -9,7 +9,7 @@ const modules = [
   'main/touchbar.js',
   'main/registryConfig.js',
   'main/main.js',
-  'main/sidebar.js',
+  'main/sidePanel.js',
   'js/util/settings/settingsMain.js',
   'main/filtering.js',
   'main/viewManager.js',

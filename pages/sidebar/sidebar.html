@@ -11,31 +11,65 @@
 		<link rel="stylesheet" href="../../ext/vue/antd.min.css" />
 		<link rel="stylesheet" href="sidebar.css" />
 	</head>
-	<body onmouseenter="mouseEnter()" onmouseleave="moueseLeave()" style="background-color: #00000000;">
+	<body style="background-color: #00000000;overflow-x: hidden;overflow-y: hidden;">
 		<div id="appVue" class="sidebar">
 			<sidebar />
+		</div>
+		<div id="clickThroughElement" style="
+		background-color: #0000000;height:100vh;
+		 position:absolute;
+    left: 52px;
+    width: 348px;">
+
 		</div>
 	</body>
 	<script src="./sidebarComp.js"></script>
 	<script src="./sidebar.js"></script>
 	<style>
-		ul {
+		.tabs,
+		.sidebar ul {
 			list-style: none;
 			padding: 0
 		}
 	</style>
 
 	<script>
-		function mouseEnter() {
-			postMessage({
-				message: 'bringToFront'
+		// function mouseEnter() {
+		// 	postMessage({
+		// 		message: 'bringToFront'
+		// 	})
+		// }
+
+		// function moueseLeave() {
+		// 		postMessage({
+		// 			message: 'bringToBack'
+		// 		})
+		//onmouseenter="mouseEnter()" onmouseleave="moueseLeave()" 
+
+		// }
+		let count = 0
+		const el = document.getElementById('clickThroughElement')
+
+		function setIgnore() {
+			ipc.send('set-ignore-mouse-events', true, {
+				forward: true
 			})
 		}
 
-		function moueseLeave() {
-			postMessage({
-				message: 'bringToBack'
-			})
-		}
+		// function setNoIgnore() {
+		// 	ipc.send('set-ignore-mouse-events', false, {
+		// 		forward: true
+		// 	})
+		// }
+		
+		
+		el.addEventListener('mouseenter', () => {
+
+			setIgnore()
+		})
+		// el.addEventListener('mouseleave', () => {
+
+		// 	setNoIgnore()
+		// })
 	</script>
 </html>

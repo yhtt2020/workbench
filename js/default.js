@@ -73,7 +73,6 @@ window.throttle = function(fn, threshhold, scope) {
 }
 
 ipc.on('getGlobal',function(event,args){
-	console.log('我擦啦，收到了')
 	ipc.send('receiveGlobal',{
 		tasks:tasks.getStringifyableState(),
 		tabs:tabs.getStringifyableState(),

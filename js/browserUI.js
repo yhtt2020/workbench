@@ -200,6 +200,10 @@ ipc.on('set-file-view', function (e, data) {
   })
 })
 
+ipc.on('switchToTask',function(e,data){
+	switchToTask(data.id)
+})
+
 searchbar.events.on('url-selected', function (data) {
   var searchbarQuery = searchEngine.getSearch(urlParser.parse(data.url))
   if (searchbarQuery) {
