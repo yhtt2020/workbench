@@ -1,7 +1,7 @@
 {
-    "version": "0.0.3",
-    "releaseTime": 1631809028000,
-    "releaseHeadline": "更好的性能和体验",
+    "version": "0.1.0",
+    "releaseTime": 1632325693000,
+    "releaseHeadline": "重写了左侧栏，并加入左侧栏标签悬浮提醒，仍然存在部分不稳定因素",
     "releaseNotes": "https://www.yuque.com/tswork/thyzgp/rgzqv3",
     "availabilityPercent": 1
 }
