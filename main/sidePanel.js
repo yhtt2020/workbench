@@ -25,6 +25,9 @@ function loadSidePanel() {
 		}
 
 	})
+	if(process.platform == 'win32'){
+	   titlebarHeight=48
+	}
 	sidePanel.webContents.loadURL('file://' + __dirname + "/pages/sidebar/sidebar.html")
 	sidePanel.show()
 	//如果不舍为置顶，鼠标移动进去不会触发悬浮窗，必须点一下才能有反应。
@@ -39,6 +42,7 @@ function loadSidePanel() {
 		})
 		bounds = newBounds
 	})
+	
 
 	mainWindow.on('move', () => {
 		bounds = mainWindow.getBounds()
