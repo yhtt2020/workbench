@@ -57,7 +57,7 @@ Vue.component('sidebar', {
 		<ul id="pinGroup" class="app-task" style="margin-bottom: 0;">
 
 			
-			 <draggable v-model="this.$store.getters.getPinItems" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass" chosenClass="chosenClass"  @start="onStart" @end="onEnd">
+			 <draggable v-model="getPinItems" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass" chosenClass="chosenClass"  @start="onStart" @end="onEnd">
 			                    <transition-group>
 								<li v-for="(item,i) in this.$store.getters.getPinItems" :key="item.id" @click="openPinItem(item.id,i)" data-role="task" :class="isActive(item.id)" :item-id="item.id" >
 									<a-popover :title="item.title+'（右键查看)'" placement="right" :mouseEnterDelay="0.1" :mouseLeaveDelay="0.1" :destroyTooltipOnHide="true" overlayClassName="tips">
@@ -83,7 +83,7 @@ Vue.component('sidebar', {
 		<div class="app-box" >
 		
 		<ul id="appGroup" class="app-task app-items">
-		<draggable v-model="this.$store.getters.getItems" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass" chosenClass="chosenClass"  @start="onStart" @end="onEnd">
+		<draggable v-model="getItems" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass" chosenClass="chosenClass"  @start="onStart" @end="onEnd">
 		                   <transition-group>
 			<li @click="openItem(item.id,i)" v-for="(item,i) in this.$store.getters.getItems"  :key="item.id" data-role="task" :class="isActive(item.id)" :item-id="item.id"   >
 				<a-popover :title="item.title+'（右键查看)'" placement="right" :mouseEnterDelay="0" :mouseLeaveDelay="0.1"  :destroyTooltipOnHide="true" overlayClassName="tips">
@@ -114,6 +114,13 @@ Vue.component('sidebar', {
 				postMessage({
 					message: 'openBookMarks'
 				})
+			}else if(this.$store.getters.getPinItems[index].type =='task'){
+				postMessage({
+					message: 'switchToTask',
+					id: id,
+					index: index
+				})
+				this.$store.commit('setSelected',id)
 			}
 		},
 		openItem(id, index) {
@@ -135,10 +142,18 @@ Vue.component('sidebar', {
 			//找到拖动的任务的id
 			let el = e.item
 			var droppedTaskId = el.getAttribute('item-id')
-			let newIndex = this.getNewIndex(droppedTaskId)
-			let droppedTask = tasks.splice(tasks.getIndex(droppedTaskId), 1)[0]
+			let adjacentTaskId = this.getNewIndex(droppedTaskId)
+			let oldTasks=this.$store.state.tasks
+			
+			//let droppedTask = oldTasks.splice(oldTasks.getIndex(droppedTaskId), 1)[0]
 			//两轮寻找后，一定会找到真正的id
-			tasks.splice(newIndex, 0, droppedTask)
+			//oldTasks.splice(adjacentTaskId, 0, droppedTask)
+			postMessage({
+				'message':'resortTasks',
+				'droppedTaskId':droppedTaskId,
+				'adjacentTaskId':adjacentTaskId
+			})
+		
 		},
 		onMove({
 			relatedContext,
@@ -154,8 +169,8 @@ Vue.component('sidebar', {
 		getNewIndex(droppedTaskId) {
 			let index = 0
 			let find = 0
-			let pinItems = this.$store.getters.getItems.pinItems
-			let items = this.$store.getters.getItems.items
+			let pinItems = this.$store.getters.getPinItems
+			let items = this.$store.getters.getItems
 			for (var i = 0; i < pinItems.length; i++) {
 				if (pinItems[i]['type'] == 'task')
 					index++

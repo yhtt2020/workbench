@@ -48,6 +48,10 @@ class TasksList {
 	getIndex(id) {
 		return this.tasks.findIndex(task => task.id === id)
 	}
+	
+	slice (...args) { return this.tasks.slice.apply(this.tasks, args) }
+	
+	splice (...args) { return this.tasks.splice.apply(this.tasks, args) }
 }
 
 
@@ -57,7 +61,7 @@ window.addEventListener('message', function(e) {
 		let tasksList = new TasksList()
 		tasksList.init(e.data.data.tasks)
 		$store.commit('fillTasksToItems',tasksList)
-		console.log('同步'+count+++"次")
+		//console.log('同步'+count+++"次")
 	}
 
 })

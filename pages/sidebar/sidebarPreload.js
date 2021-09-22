@@ -39,6 +39,11 @@ window.addEventListener('message', function(e) {
 			})
 			
 			break
+		case 'resortTasks':
+			ipc.sendTo(mainWindowId,'resortTasks',{
+				'droppedTaskId':e.data.droppedTaskId,
+				'adjacentTaskId':e.data.adjacentTaskId
+			})
 	}
 
 

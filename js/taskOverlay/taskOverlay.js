@@ -355,6 +355,8 @@ var taskOverlay = {
       // reinsert the task
       tasks.splice(newIdx, 0, droppedTask)
     })
+	
+
 
     /* auto-scroll the container when the item is dragged to the edge of the screen */
 

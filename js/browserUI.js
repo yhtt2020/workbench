@@ -199,10 +199,28 @@ ipc.on('set-file-view', function (e, data) {
     }
   })
 })
-
+	
+	
+	
 ipc.on('switchToTask',function(e,data){
 	switchToTask(data.id)
 })
+
+
+/**插入一个简易排序方法*/
+	function resortTask(droppedTaskId,adjacentTaskId){
+		let droppedTask = tasks.splice(tasks.getIndex(droppedTaskId), 1)[0]
+		tasks.splice(adjacentTaskId, 0, droppedTask)
+		
+	}
+	
+	ipc.on('resortTasks',function(e,data){
+		
+		resortTask(data.droppedTaskId,data.adjacentTaskId)
+	
+	})
+	/**简易排序插入结束*/
+
 
 searchbar.events.on('url-selected', function (data) {
   var searchbarQuery = searchEngine.getSearch(urlParser.parse(data.url))
