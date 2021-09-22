@@ -109,10 +109,11 @@
 				ipc.send('set-ignore-mouse-events', false, {
 					forward: true
 				})
+			
 				
 			}
 		</script>
-		<div style="width: 45;height:100vh;" onmouseenter="setNoIgnore()"></div>
+		
 
 		<div id="searchbar" class="theme-background-color theme-text-color">
 			<div class="top-answer-area"></div>
@@ -207,6 +208,15 @@
 			<div id="password-viewer-empty" data-string="savedPasswordsEmpty" hidden></div>
 			<div id="password-viewer-list"></div>
 		</div>
+<div style="width: 45px;
+    position: fixed;
+    height: 100vh;
+    z-index: 99;
+    left: 0;
+    bottom: 0;
+    top: calc(36px + var(--control-space-left));
+
+" onmouseenter="setNoIgnore()"></div>
 
 		<!-- add scripts in Gruntfile.js -->
 
