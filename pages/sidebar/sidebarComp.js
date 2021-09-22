@@ -1,21 +1,14 @@
 //const browserUI= require('./js/browserUI.js')
 
 Vue.component('sidebar', {
-	props: {},
 	data: function() {
 		return {
-
 			drag: false,
 			remote: {},
-
-			tasks: window.tasks, //绑定tasks，这样tasks变动，属性也会跟着变
-			selected: 0
 		}
 
 	},
 	mounted: function() {
-
-
 		// let item = {
 		// 	title: '打开标签', //名称，用于显示提示
 		// 	index: 0, //索引
@@ -25,30 +18,13 @@ Vue.component('sidebar', {
 		// 	ext: '', //额外的信息
 		// 	fixed: false //固定
 		// }
-
 		this.$store.commit('initItems')
-		this.tasks = new TasksList()
-
-		setInterval(() => {
-			let tips = document.getElementsByClassName("tips")
-			if (tips.length == 0)
-				postMessage({
-					message: 'bringToBack'
-				})
-			else {
-				postMessage({
-					message: 'bringToFront'
-				})
-			}
-		}, 500)
-
-
 	},
 	computed: {
 		getItems: {
 			get() {
 				//将task与items同步一次
-				return this.$store.getters.getItems.items
+				return this.$store.getters.getItems
 			},
 			set(newValue) {
 				this.$store.commit('saveItems', newValue)
@@ -57,7 +33,7 @@ Vue.component('sidebar', {
 		getPinItems: {
 			get() {
 				//将task与items同步一次
-				return this.$store.getters.getItems.pinItems
+				return this.$store.getters.getPinItems
 			},
 			// setter
 			set(newValue) {
@@ -68,13 +44,9 @@ Vue.component('sidebar', {
 		isActive() {
 			return (id) => {
 				return {
-					active: id == this.selected,
+					active: id == this.$store.state.selected,
 					'app-task': true
 				}
-
-
-
-
 			}
 
 		}
@@ -85,9 +57,9 @@ Vue.component('sidebar', {
 		<ul id="pinGroup" class="app-task" style="margin-bottom: 0;">
 
 			
-			 <draggable v-model="getPinItems" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass" chosenClass="chosenClass"  @start="onStart" @end="onEnd">
+			 <draggable v-model="this.$store.getters.getPinItems" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass" chosenClass="chosenClass"  @start="onStart" @end="onEnd">
 			                    <transition-group>
-								<li v-for="(item,i) in getPinItems" :key="item.id" @click="openPinItem(item.id,i)" data-role="task" :class="isActive(item.id)" :item-id="item.id" >
+								<li v-for="(item,i) in this.$store.getters.getPinItems" :key="item.id" @click="openPinItem(item.id,i)" data-role="task" :class="isActive(item.id)" :item-id="item.id" >
 									<a-popover :title="item.title+'（右键查看)'" placement="right" :mouseEnterDelay="0.1" :mouseLeaveDelay="0.1" :destroyTooltipOnHide="true" overlayClassName="tips">
 									<template slot="content">
 									
@@ -111,9 +83,9 @@ Vue.component('sidebar', {
 		<div class="app-box" >
 		
 		<ul id="appGroup" class="app-task app-items">
-		<draggable v-model="getItems" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass" chosenClass="chosenClass"  @start="onStart" @end="onEnd">
+		<draggable v-model="this.$store.getters.getItems" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass" chosenClass="chosenClass"  @start="onStart" @end="onEnd">
 		                   <transition-group>
-			<li @click="openItem(item.id,i)" v-for="(item,i) in getItems"  :key="item.id" data-role="task" :class="isActive(item.id)" :item-id="item.id"   >
+			<li @click="openItem(item.id,i)" v-for="(item,i) in this.$store.getters.getItems"  :key="item.id" data-role="task" :class="isActive(item.id)" :item-id="item.id"   >
 				<a-popover :title="item.title+'（右键查看)'" placement="right" :mouseEnterDelay="0" :mouseLeaveDelay="0.1"  :destroyTooltipOnHide="true" overlayClassName="tips">
 				   <template slot="content">
 				   
@@ -150,9 +122,7 @@ Vue.component('sidebar', {
 				id: id,
 				index: index
 			})
-			this.selected=id
-			//browserUI.switchToTask(id, index)
-			//this.$store.getters.fillTasksToItems
+			this.$store.commit('setSelected',id)
 		},
 		//开始拖拽事件
 		onStart() {

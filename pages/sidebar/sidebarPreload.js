@@ -53,7 +53,7 @@ function getMessageType(data) {
 
 setInterval(function() {
 	ipc.send('getGlobal')
-}, 1000)
+}, 500)
 
 ipc.on('receiveGlobal', function(e, data) {
 	window.postMessage({

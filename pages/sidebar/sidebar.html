@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>sidebar</title>
+		<title>侧边栏</title>
 		<script src="../../ext/vue/vue.js"></script>
 		<script src="../../ext/vue/vuex.js"></script>
 		<script src="../../ext/vue/sortable.min.js"></script>
@@ -13,14 +13,10 @@
 	</head>
 	<body style="background-color: #00000000;overflow-x: hidden;overflow-y: hidden;">
 		<div id="appVue" class="sidebar">
-			<sidebar />
+			<sidebar  />
 		</div>
-		<div id="clickThroughElement" style="
-		background-color: #0000000;height:100vh;
-		 position:absolute;
-    left: 52px;
-    width: 348px;">
-
+		<div id="clickThroughElement"
+			style="background-color: #00000000;height:100vh; position:absolute;left: 45px;width: 360px;">
 		</div>
 	</body>
 	<script src="./sidebarComp.js"></script>
@@ -34,20 +30,7 @@
 	</style>
 
 	<script>
-		// function mouseEnter() {
-		// 	postMessage({
-		// 		message: 'bringToFront'
-		// 	})
-		// }
-
-		// function moueseLeave() {
-		// 		postMessage({
-		// 			message: 'bringToBack'
-		// 		})
-		//onmouseenter="mouseEnter()" onmouseleave="moueseLeave()" 
-
-		// }
-		let count = 0
+		//对clickThrough区域进行穿透设置，这样鼠标移动到clickThroug的区域就会自动穿透
 		const el = document.getElementById('clickThroughElement')
 
 		function setIgnore() {
@@ -55,21 +38,8 @@
 				forward: true
 			})
 		}
-
-		// function setNoIgnore() {
-		// 	ipc.send('set-ignore-mouse-events', false, {
-		// 		forward: true
-		// 	})
-		// }
-		
-		
 		el.addEventListener('mouseenter', () => {
-
 			setIgnore()
 		})
-		// el.addEventListener('mouseleave', () => {
-
-		// 	setNoIgnore()
-		// })
 	</script>
 </html>
