@@ -30,6 +30,14 @@ function loadSidePanel() {
 	}
 	sidePanel.webContents.loadURL('file://' + __dirname + "/pages/sidebar/sidebar.html")
 	sidePanel.show()
+	//windows上首次载入就要设置一下位置
+	sidePanel.setBounds({
+		x: bounds.x,
+		y: bounds.y + titlebarHeight,
+		width: panelWidth,
+		height: bounds.height - titlebarHeight
+	})
+
 	//如果不舍为置顶，鼠标移动进去不会触发悬浮窗，必须点一下才能有反应。
 	sidePanel.setAlwaysOnTop(true, 'status')
 	//sidePanel.webContents.openDevTools()
