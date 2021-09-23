@@ -288,7 +288,7 @@ function createWindowWithBounds(bounds) {
 	
 	//loadSidebar()
 	loadSidePanel()
-
+	addMainWindowListen()
 
 
 	/*

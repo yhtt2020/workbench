@@ -256,6 +256,8 @@ ipc.on('setView', function (e, args) {
   if (args.focus) {
     focusView(args.id)
   }
+  //设置当前view
+  onSetView()
 })
 
 ipc.on('setBounds', function (e, args) {
@@ -268,6 +270,8 @@ ipc.on('focusView', function (e, id) {
 
 ipc.on('hideCurrentView', function (e) {
   hideCurrentView()
+  //调用隐藏当前视图的回调到sidebar
+  onHideCurrentView()
 })
 
 ipc.on('loadURLInView', function (e, args) {

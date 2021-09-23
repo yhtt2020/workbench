@@ -6,7 +6,9 @@
 	overflow-x: hidden;
 }
 
-.sidebar ul li {}
+.sidebar ul li {
+	cursor: pointer;
+}
 
 .sidebar ul li:hover {
 	background-color: #efefef;
