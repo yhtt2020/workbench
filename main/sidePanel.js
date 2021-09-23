@@ -63,6 +63,9 @@ class SidePanel {
 				that.unsetTop()
 			}
 		})
+		setTimeout(function(){
+			sendIPCToWindow(mainWindow,'getTitlebarHeight')
+		},500)
 
 	}
 
@@ -91,11 +94,22 @@ class SidePanel {
 		}
 		this.bounds = mainWindow.getBounds()
 	
+		//windows全屏模式单独处理
 		if(mainWindow.isMaximized() && process.platform=='win32')
 		{
 				if (this.bounds.x<0) this.bounds.x=0
 				if(this.bounds.y<0) this.bounds.y=0
 				
+				if( settings.get('useSeparateTitlebar')){
+					this.bounds.y+=23
+					this.bounds.height-=40
+				}
+				
+				//win上带标题栏的单独处理
+		}else if(settings.get('useSeparateTitlebar')  && process.platform=='win32'){
+			this.bounds.x+=8
+			this.bounds.y+=31
+			this.bounds.height-=40
 		}
 		let setX=this.bounds.x
 		let setY=!resetY?this.bounds.y + this.titlebarHeight:this.bounds.y+resetY

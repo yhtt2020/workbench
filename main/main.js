@@ -516,6 +516,7 @@ ipc.on('quit', function() {
 ipc.on('returnTitlebarHeight',function(event,data){
 	if(data.titlebarHeight && sidePanel!=null){
 		sidePanel.titlebarHeight=data.titlebarHeight
+		console.log(data.titlebarHeight)
 		sidePanel.attachToMainWindow()
 	}
 })
