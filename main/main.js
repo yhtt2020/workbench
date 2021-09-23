@@ -236,6 +236,7 @@ function createWindowWithBounds(bounds) {
 		// when you should delete the corresponding element.
 		mainWindow = null
 		mainWindowIsMinimized = false
+	
 	})
 
 	mainWindow.on('focus', function() {
@@ -287,8 +288,9 @@ function createWindowWithBounds(bounds) {
 	})
 	
 	//loadSidebar()
+	sendIPCToWindow(mainWindow,'getTitlebarHeight')
 	loadSidePanel()
-	addMainWindowListen()
+	addMainWindowEventListener()
 
 
 	/*
@@ -493,7 +495,7 @@ ipc.on('showSecondaryMenu', function(event, data) {
 //获取默认浏览器
 ipc.on('getIsDefaulBrowser',function(event){
 	let isDefault=app.isDefaultProtocolClient('http')
-	console.log('返回是不是默认浏览器'+isDefault)
+	//console.log('返回是不是默认浏览器'+isDefault)
 	event.reply('returnIsDefaultBrowser',isDefault)
 })
 //移除默认浏览器
@@ -511,6 +513,12 @@ ipc.on('quit', function() {
 })
 
 
+ipc.on('returnTitlebarHeight',function(event,data){
+	if(data.titlebarHeight && sidePanel!=null){
+		sidePanel.titlebarHeight=data.titlebarHeight
+		sidePanel.attachToMainWindow()
+	}
+})
 
  // ipc.on('showBookmarks',function(){
  // 	mainWindow.removeBrowserView(sidebarView)

@@ -108,6 +108,14 @@ Vue.component('sidebar', {
 	</div>
 	`,
 	methods: {
+		switchTask(id,index){
+			postMessage({
+				message: 'switchToTask',
+				id: id,
+				index: index
+			})
+			this.$store.commit('setSelected',id)
+		},
 		openPinItem(id, index) {
 			if (this.$store.getters.getPinItems[index].type == 'system-bookmark') {
 				//this.$tabEditor.show(tasks.getSelected().tabs.getSelected(), '!bookmarks ')
@@ -115,21 +123,11 @@ Vue.component('sidebar', {
 					message: 'openBookMarks'
 				})
 			}else if(this.$store.getters.getPinItems[index].type =='task'){
-				postMessage({
-					message: 'switchToTask',
-					id: id,
-					index: index
-				})
-				this.$store.commit('setSelected',id)
+				this.switchTask(id,index)
 			}
 		},
 		openItem(id, index) {
-			postMessage({
-				message: 'switchToTask',
-				id: id,
-				index: index
-			})
-			this.$store.commit('setSelected',id)
+			this.switchTask(id,index)
 		},
 		//开始拖拽事件
 		onStart() {

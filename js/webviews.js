@@ -196,6 +196,7 @@ const webviews = {
       boundsString: JSON.stringify(webviews.getViewBounds()),
       events: webviews.events.map(e => e.event).filter((i, idx, arr) => arr.indexOf(i) === idx)
     })
+	
 
     if (!existingViewId) {
       if (tabData.url) {
@@ -509,4 +510,6 @@ ipc.on('windowFocus', function () {
   }
 })
 
+
 module.exports = webviews
+

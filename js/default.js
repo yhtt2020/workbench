@@ -26,6 +26,8 @@ if (navigator.platform === 'MacIntel') {
 	window.platformType = 'linux'
 }
 
+
+
 if (navigator.maxTouchPoints > 0) {
 	document.body.classList.add('touch')
 }
@@ -46,7 +48,17 @@ ipc.on('maximize', function() {
 ipc.on('unmaximize', function() {
 	document.body.classList.remove('maximized')
 })
+let webviewsElement = document.getElementById('webviews')
+ipc.on('getTitlebarHeight',function(){
+	console.log(webviewsElement.offsetTop)
+	ipc.send('returnTitlebarHeight',{
+			titlebarHeight:webviewsElement.offsetTop,
+	})
 
+})
+ipc.send('returnTitlebarHeight',{
+	 		titlebarHeight:webviewsElement.offsetTop,
+})
 // https://remysharp.com/2010/07/21/throttling-function-calls
 
 window.throttle = function(fn, threshhold, scope) {

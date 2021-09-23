@@ -22,6 +22,7 @@ window.addEventListener('message', function(e) {
 			break
 		case 'openBookMarks':
 			ipc.sendTo(mainWindowId, 'showBookmarks') //直传给mainWindow，让它唤出书签页面
+			ipc.send('showBookmarks')
 			break
 		// case 'bringToFront':
 		// 	ipc.send('bringSidebarToFront')
