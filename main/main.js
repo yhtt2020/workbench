@@ -191,7 +191,7 @@ function createWindowWithBounds(bounds) {
 		icon: __dirname + '/icons/icon256.png',
 		frame: settings.get('useSeparateTitlebar'),
 		alwaysOnTop: settings.get('windowAlwaysOnTop'),
-		transparent: true,//backgroundColor: '#fff', // the value of this is ignored, but setting it seems to work around https://github.com/electron/electron/issues/10559
+		backgroundColor: '#fff',//backgroundColor: '#fff', // the value of this is ignored, but setting it seems to work around https://github.com/electron/electron/issues/10559
 		webPreferences: {
 			nodeIntegration: true,
 			contextIsolation: false,
