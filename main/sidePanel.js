@@ -56,6 +56,13 @@ class SidePanel {
 		this.attachToMainWindow()
 		this.setTop()
 		this._sidePanel.hide()
+		let that=this
+		//左侧栏和主界面都失去焦点的时候，取消掉自身的置顶，以防止捅破别的地方
+		this._sidePanel.on('blur',function(){
+			if(!mainWindow.isFocused()){
+				that.unsetTop()
+			}
+		})
 
 	}
 
@@ -73,7 +80,7 @@ class SidePanel {
 	/**
 	 * 获取一下mainWindow的位置信息并同步一下sidePanel，不包含焦点处理
 	 */
-	attachToMainWindow() {
+	attachToMainWindow(resetY=0) {
 		if (!SidePanel.alive()) return
 		if (mainWindow == null || sidePanel == null) {
 			return
@@ -83,13 +90,23 @@ class SidePanel {
 			return
 		}
 		this.bounds = mainWindow.getBounds()
+	
+		if(mainWindow.isMaximized() && process.platform=='win32')
+		{
+				if (this.bounds.x<0) this.bounds.x=0
+				if(this.bounds.y<0) this.bounds.y=0
+				
+		}
+		let setX=this.bounds.x
+		let setY=!resetY?this.bounds.y + this.titlebarHeight:this.bounds.y+resetY
 		this._sidePanel.setBounds({
-			x: this.bounds.x,
-			y: this.bounds.y + this.titlebarHeight,
+			x: setX,
+			y: setY,
 			width: this.panelWidth,
 			height: this.bounds.height - this.titlebarHeight
 		})
 	}
+	
 	setTop() {
 		if (SidePanel.alive())
 			this._sidePanel.setAlwaysOnTop(true, 'status')
@@ -180,22 +197,26 @@ function addMainWindowEventListener() {
 	})
 
 	mainWindow.on('maximize', () => {
-		sendIPCToWindow(mainWindow,'getTitlebarHeight')
 		sidePanel.attachToMainWindow()
-		
+		sendIPCToWindow(mainWindow, 'getTitlebarHeight')
 	})
 
 	mainWindow.on('unmaximize', () => {
 		sidePanel.attachToMainWindow()
+		sendIPCToWindow(mainWindow,'getTitlebarHeight')
 	})
 
 	mainWindow.on('enter-full-screen', () => {
 		sidePanel.attachToMainWindow()
+		//windows上全屏少了一块区域
+		sendIPCToWindow(mainWindow,'getTitlebarHeight')
 		// this.sidePanel.setAlwaysOnTop(true, 'floating')
 	})
 	mainWindow.on('leave-full-screen', () => {
 		sidePanel.attachToMainWindow()
 		sidePanel.setTop()
+		sendIPCToWindow(mainWindow,'getTitlebarHeight')
+		
 	})
 	mainWindow.on('resize', function(event, newBounds, details) {
 		sidePanel.attachToMainWindow()
@@ -231,7 +252,7 @@ function loadSidePanel() {
 //用于viewManager回调，以使sidebar配合显示
 function onSetView() {
 	sidePanel.show()
-	
+
 }
 //用于viewManager回调，以使sidebar配合隐藏
 function onHideCurrentView() {
@@ -239,14 +260,16 @@ function onHideCurrentView() {
 }
 
 ipc.on('set-ignore-mouse-events', (event, ...args) => {
-	console.log(args)
-	if (args[0]) {
-		mainWindow.focus()
-	} else {
-		sidePanel.focus()
+	if (mainWindow.isFocused() || sidePanel._sidePanel.isFocused()) {
+		if (args[0]) {
+			mainWindow.focus()
+		} else {
+			sidePanel.focus()
+		}
+		if (sidePanel._sidePanel.isVisible())
+			sidePanel.setIgnoreMouseEvents(...args)
 	}
-	if(sidePanel._sidePanel.isVisible())
-		sidePanel.setIgnoreMouseEvents(...args)
+
 })
 //主窗口收到要获取全局变量的消息，主要是返回tasks和tabs两个数组，用于同步左侧栏
 ipc.on('getGlobal', () => {
@@ -262,6 +285,6 @@ ipc.on('receiveGlobal', function(event, data) {
 })
 
 //显示书签的时候，将sidepanel隐藏起来
-ipc.on('showBookmarks',function(){
+ipc.on('showBookmarks', function() {
 	sidePanel.hide()
 })

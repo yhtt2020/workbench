@@ -60,7 +60,7 @@ Vue.component('sidebar', {
 			 <draggable v-model="getPinItems" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass" chosenClass="chosenClass"  @start="onStart" @end="onEnd">
 			                    <transition-group>
 								<li v-for="(item,i) in this.$store.getters.getPinItems" :key="item.id" @click="openPinItem(item.id,i)" data-role="task" :class="isActive(item.id)" :item-id="item.id" >
-									<a-popover :title="item.title+'（右键查看)'" placement="right" :mouseEnterDelay="0.1" :mouseLeaveDelay="0.1" :destroyTooltipOnHide="true" overlayClassName="tips">
+									<a-popover :title="item.title" placement="right" :mouseEnterDelay="0.1" :mouseLeaveDelay="0.1" :destroyTooltipOnHide="true" overlayClassName="tips">
 									<template slot="content">
 									
 																<ul class="tabs">
@@ -86,7 +86,7 @@ Vue.component('sidebar', {
 		<draggable v-model="getItems" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass" chosenClass="chosenClass"  @start="onStart" @end="onEnd">
 		                   <transition-group>
 			<li @click="openItem(item.id,i)" v-for="(item,i) in this.$store.getters.getItems"  :key="item.id" data-role="task" :class="isActive(item.id)" :item-id="item.id"   >
-				<a-popover :title="item.title+'（右键查看)'" placement="right" :mouseEnterDelay="0" :mouseLeaveDelay="0.1"  :destroyTooltipOnHide="true" overlayClassName="tips">
+				<a-popover :title="item.title" placement="right" :mouseEnterDelay="0" :mouseLeaveDelay="0.1"  :destroyTooltipOnHide="true" overlayClassName="tips">
 				   <template slot="content">
 				   
 							<ul class="tabs">

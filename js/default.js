@@ -48,16 +48,16 @@ ipc.on('maximize', function() {
 ipc.on('unmaximize', function() {
 	document.body.classList.remove('maximized')
 })
-let webviewsElement = document.getElementById('webviews')
+let mouseRcoverAreaElement = document.getElementById('mouseRcoverArea')
 ipc.on('getTitlebarHeight',function(){
-	console.log(webviewsElement.offsetTop)
+	console.log(mouseRcoverAreaElement.offsetTop)
 	ipc.send('returnTitlebarHeight',{
-			titlebarHeight:webviewsElement.offsetTop,
+			titlebarHeight:mouseRcoverAreaElement.offsetTop,
 	})
 
 })
 ipc.send('returnTitlebarHeight',{
-	 		titlebarHeight:webviewsElement.offsetTop,
+	 		titlebarHeight:mouseRcoverAreaElement.offsetTop,
 })
 // https://remysharp.com/2010/07/21/throttling-function-calls
 
