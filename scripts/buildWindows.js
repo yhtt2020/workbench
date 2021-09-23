@@ -32,7 +32,7 @@ async function afterPackageBuilt (appPaths) {
       noMsi: true
     }
 
-console.log(options)
+	console.log(options)
     console.log('正在打包 (可能需要较长时间)')
 
     await installer(options)
