@@ -103,9 +103,11 @@ class SidePanel {
 				if( settings.get('useSeparateTitlebar')){
 					this.bounds.y+=23
 					this.bounds.height-=40
+				}else{
+					this.bounds.height-=20
 				}
 				
-				//win上带标题栏的单独处理
+		//win上带标题栏的单独处理
 		}else if(settings.get('useSeparateTitlebar')  && process.platform=='win32'){
 			this.bounds.x+=8
 			this.bounds.y+=31
