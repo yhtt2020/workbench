@@ -52,69 +52,15 @@ Vue.component('sidebar', {
 		}
 
 	},
-	template: `
-	<div id="sidebar" class="side-container">
-		<ul id="pinGroup" class="app-task" style="margin-bottom: 0;">
-
-			
-			 <draggable v-model="getPinItems" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass" chosenClass="chosenClass"  @start="onStart" @end="onEnd">
-			                    <transition-group>
-								<li v-for="(item,i) in this.$store.getters.getPinItems" :key="item.id" @click="openPinItem(item.id,i)" data-role="task" :class="isActive(item.id)" :item-id="item.id" >
-									<a-popover :title="item.title" placement="right" :mouseEnterDelay="0.1" :mouseLeaveDelay="0.1" :destroyTooltipOnHide="true" overlayClassName="tips">
-									<template slot="content">
-									
-																<ul class="tabs">
-																<li class="tab-title" v-for="(tab,j) in item.tabs" :key="tab.id">
-																	<img class="tab-icon" :src="tab.icon"> {{ tab.title }}
-																</li>
-																</ul>
-																</template>
-											<div class="wrapper">
-											<img class="icon" :src="item.icon" >
-											</div>
-									 </a-popover>
-								</li>	
-			                    </transition-group>
-			  </draggable>
-		</ul>
-		
-		<div style="border-top: 1px solid lightgrey;margin: 8px;"></div>
-		
-		<div class="app-box" >
-		
-		<ul id="appGroup" class="app-task app-items">
-		<draggable v-model="getItems" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass" chosenClass="chosenClass"  @start="onStart" @end="onEnd">
-		                   <transition-group>
-			<li @click="openItem(item.id,i)" v-for="(item,i) in this.$store.getters.getItems"  :key="item.id" data-role="task" :class="isActive(item.id)" :item-id="item.id"   >
-				<a-popover :title="item.title" placement="right" :mouseEnterDelay="0" :mouseLeaveDelay="0.1"  :destroyTooltipOnHide="true" overlayClassName="tips">
-				   <template slot="content">
-				   
-							<ul class="tabs">
-							<li class="tab-title" v-for="(tab,j) in item.tabs" :key="tab.id">
-								<img class="tab-icon" :src="tab.icon"> {{ tab.title }}
-							</li>
-							</ul>
-							</template>
-							<div class="wrapper">
-							 <img class="icon" :src="item.icon">
-							</div>
-				   
-				  </a-popover>
-			</li>
-			</transition-group>
-			</draggable>
-		</ul>
-		</div>
-	</div>
-	`,
+	template: '#sidebarTpl',
 	methods: {
-		switchTask(id,index){
+		switchTask(id, index) {
 			postMessage({
 				message: 'switchToTask',
 				id: id,
 				index: index
 			})
-			this.$store.commit('setSelected',id)
+			this.$store.commit('setSelected', id)
 		},
 		openPinItem(id, index) {
 			if (this.$store.getters.getPinItems[index].type == 'system-bookmark') {
@@ -122,12 +68,23 @@ Vue.component('sidebar', {
 				postMessage({
 					message: 'openBookMarks'
 				})
-			}else if(this.$store.getters.getPinItems[index].type =='task'){
-				this.switchTask(id,index)
+			} else if (this.$store.getters.getPinItems[index].type == 'task') {
+				this.switchTask(id, index)
 			}
 		},
 		openItem(id, index) {
-			this.switchTask(id,index)
+			this.switchTask(id, index)
+		},
+		openBottom(action){
+			console.log(action)
+			switch(action){
+				case 'setting':
+					postMessage({
+					message:'setting'
+				})
+				break
+					
+			}
 		},
 		//开始拖拽事件
 		onStart() {
@@ -141,17 +98,17 @@ Vue.component('sidebar', {
 			let el = e.item
 			var droppedTaskId = el.getAttribute('item-id')
 			let adjacentTaskId = this.getNewIndex(droppedTaskId)
-			let oldTasks=this.$store.state.tasks
-			
+			let oldTasks = this.$store.state.tasks
+
 			//let droppedTask = oldTasks.splice(oldTasks.getIndex(droppedTaskId), 1)[0]
 			//两轮寻找后，一定会找到真正的id
 			//oldTasks.splice(adjacentTaskId, 0, droppedTask)
 			postMessage({
-				'message':'resortTasks',
-				'droppedTaskId':droppedTaskId,
-				'adjacentTaskId':adjacentTaskId
+				'message': 'resortTasks',
+				'droppedTaskId': droppedTaskId,
+				'adjacentTaskId': adjacentTaskId
 			})
-		
+
 		},
 		onMove({
 			relatedContext,

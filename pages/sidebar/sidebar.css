@@ -2,24 +2,34 @@
 	position: fixed;
 	bottom: 0;
 	left: 0;
-	z-index: 1;
+	overflow-x: hidden;
+	top: 0;
+	border-right: 1px solid #D7D7D7;
+	border-radius: 0px 0px 0px 10px;
+	width: 46px;
+}
+
+
+
+.sidebar .side-items {
+	bottom: 0;
 	overflow-x: hidden;
 }
 
-.sidebar ul li {
+.sidebar .side-items ul li {
 	cursor: pointer;
 }
 
-.sidebar ul li:hover {
+.sidebar .side-items ul li:hover {
 	background-color: #efefef;
 }
 
-.sidebar .app-task .icon {
+.sidebar .side-container .side-items .app-task .icon {
 	width: 25px;
 	height: 25px;
 }
 
-.sidebar .app-items {
+.sidebar .side-items .app-items {
 	width: 60px;
 	overflow-y: scroll;
 	position: absolute;
@@ -29,21 +39,22 @@
 	overflow-x: hidden;
 }
 
-.side-container {
+.side-container .side-items {
 	flex-direction: column;
 	display: flex;
-
 	left: 0;
-	height: 100vh;
+	/* height: 100vh; */
 	width: 45px;
-	border-right: 1px solid #D7D7D7;
-	border-radius: 0px 0px 0px 10px;
+
 	background: white;
+	bottom: 45px;
+	top: 0;
+	position: fixed;
 }
 
 .sidebar .app-box {
 	overflow: hidden;
-	width: 44px;
+	width: 45px;
 	flex: 1;
 	position: relative;
 }
@@ -61,7 +72,7 @@
 	background-image: none !important;
 }
 
-.item:hover {
+.side-items .item:hover {
 	background-color: #fdfdfd;
 	cursor: move;
 }
@@ -93,4 +104,23 @@
 	text-align: center;
 	align-items: center;
 	justify-content: center;
+}
+
+/* 底部栏的样式 */
+
+.bottomBar li {
+	width: 45px;
+	height: 45px;
+	display: flex;
+	cursor: pointer;
+	text-align: center;
+	align-items: center;
+	justify-content: center;
+}
+
+.bottom-container {
+	position: fixed;
+	bottom: 0;
+	width: 45px;
+	height: 45px;
 }

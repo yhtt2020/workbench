@@ -13,11 +13,98 @@
 	</head>
 	<body style="background-color: #00000000;overflow-x: hidden;overflow-y: hidden;">
 		<div id="appVue" class="sidebar">
-			<sidebar  />
+			<sidebar />
 		</div>
 		<div id="clickThroughElement"
 			style="background-color: #00000000;height:100vh; position:absolute;left: 45px;width: 360px;">
 		</div>
+
+		<template id="sidebarTpl">
+			<div id="sidebar" class="side-container">
+				<div class="side-items">
+
+					<ul id="pinGroup" class="app-task" style="margin-bottom: 0;">
+
+
+						<draggable v-model="getPinItems" group="sideBtn" animation="300" dragClass="dragClass"
+							ghostClass="ghostClass" chosenClass="chosenClass" @start="onStart" @end="onEnd">
+							<transition-group>
+								<li v-for="(item,i) in this.$store.getters.getPinItems" :key="item.id"
+									@click="openPinItem(item.id,i)" data-role="task" :class="isActive(item.id)"
+									:item-id="item.id">
+									<a-popover :title="item.title" placement="right" :mouse-enter-delay="0.1"
+										:mouse-leave-delay="0.1" :destroy-tooltip-on-hide="true" overlay-class-name="tips">
+										<template slot="content">
+
+											<ul class="tabs">
+												<li class="tab-title" v-for="(tab,j) in item.tabs" :key="tab.id">
+													<img class="tab-icon" :src="tab.icon"> {{ tab.title }}
+												</li>
+											</ul>
+										</template>
+										<div class="wrapper">
+											<img class="icon" :src="item.icon">
+										</div>
+									</a-popover>
+								</li>
+							</transition-group>
+						</draggable>
+					</ul>
+
+					<div style="border-top: 1px solid lightgrey;margin: 8px;"></div>
+
+					<div class="app-box">
+
+						<ul id="appGroup" class="app-task app-items">
+							<draggable v-model="getItems" group="sideBtn" animation="300" dragClass="dragClass"
+								ghostClass="ghostClass" chosenClass="chosenClass" @start="onStart" @end="onEnd">
+								<transition-group>
+									<li @click="openItem(item.id,i)" v-for="(item,i) in this.$store.getters.getItems"
+										:key="item.id" data-role="task" :class="isActive(item.id)" :item-id="item.id">
+										<a-popover :title="item.title" placement="right" :mouse-enter-delay="0"
+											:mouse-leave-delay="0.1" :destroy-tooltip-on-hide="true" overlay-class-name="tips">
+											<template slot="content">
+
+												<ul class="tabs">
+													<li class="tab-title" v-for="(tab,j) in item.tabs" :key="tab.id">
+														<img class="tab-icon" :src="tab.icon"> {{ tab.title }}
+													</li>
+												</ul>
+											</template>
+											<div class="wrapper">
+												<img class="icon" :src="item.icon">
+											</div>
+
+										</a-popover>
+									</li>
+								</transition-group>
+							</draggable>
+						</ul>
+
+
+					</div>
+					
+
+				</div>
+				<div class="bottom-container"  style="">
+				
+				
+					<ul class="bottomBar">
+					<!-- 	<li>
+							<a-button @click="openBottom('appstore')" type="default" shape="circle" icon="appstore" />
+						</li> -->
+						<li>
+							<a-button @click="openBottom('setting')" type="default" shape="circle" icon="setting"   />
+						</li>
+						<!-- <li>
+							<a-button @click="openBottom('home')" type="default" shape="circle" icon="home"   />
+						</li> -->
+					</ul>
+				
+				</div>
+
+			</div>
+		</template>
 	</body>
 	<script src="./sidebarComp.js"></script>
 	<script src="./sidebar.js"></script>

@@ -45,6 +45,9 @@ window.addEventListener('message', function(e) {
 				'droppedTaskId':e.data.droppedTaskId,
 				'adjacentTaskId':e.data.adjacentTaskId
 			})
+			break
+		case 'setting':
+			ipc.send('openSetting')
 	}
 
 

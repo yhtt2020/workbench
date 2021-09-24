@@ -56,6 +56,7 @@ class SidePanel {
 		this.attachToMainWindow()
 		this.setTop()
 		this._sidePanel.hide()
+		this._sidePanel.webContents.openDevTools()
 		let that=this
 		//左侧栏和主界面都失去焦点的时候，取消掉自身的置顶，以防止捅破别的地方
 		this._sidePanel.on('blur',function(){
@@ -303,4 +304,9 @@ ipc.on('receiveGlobal', function(event, data) {
 //显示书签的时候，将sidepanel隐藏起来
 ipc.on('showBookmarks', function() {
 	sidePanel.hide()
+})
+ipc.on('openSetting',function(){
+	sendIPCToWindow(mainWindow, 'addTab', {
+		url: 'file://' + __dirname + '/pages/settings/index.html'
+	})
 })
