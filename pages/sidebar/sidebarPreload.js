@@ -1,15 +1,14 @@
-
 require('../../dist/localization.build.js')
 var electron = require('electron')
 var ipc = electron.ipcRenderer
-let mainWindowId=0
+let mainWindowId = 0
 window.l = l
 const {
 	contextBridge
 } = require('electron')
 //将语言包的接口暴露给里面的页面
 contextBridge.exposeInMainWorld('l', l)
-contextBridge.exposeInMainWorld('ipc',ipc)
+contextBridge.exposeInMainWorld('ipc', ipc)
 
 window.addEventListener('message', function(e) {
 	if (!e.origin.startsWith('file://')) {
@@ -24,30 +23,37 @@ window.addEventListener('message', function(e) {
 			ipc.sendTo(mainWindowId, 'showBookmarks') //直传给mainWindow，让它唤出书签页面
 			ipc.send('showBookmarks')
 			break
-		// case 'bringToFront':
-		// 	ipc.send('bringSidebarToFront')
-		// 	break
-		// //case 'bringToBack':
-		// 	ipc.send('bringSidebarToBack')
-		// 	break
-		// case 'bringToBackDelay':
-		// 	ipc.send('bringSidebarToBackDelay') //延迟关闭
-		// 	break
+			// case 'bringToFront':
+			// 	ipc.send('bringSidebarToFront')
+			// 	break
+			// //case 'bringToBack':
+			// 	ipc.send('bringSidebarToBack')
+			// 	break
+			// case 'bringToBackDelay':
+			// 	ipc.send('bringSidebarToBackDelay') //延迟关闭
+			// 	break
 		case 'switchToTask':
 			ipc.sendTo(mainWindowId, 'switchToTask', {
 				id: e.data.id,
 				index: e.data.index
 			})
-			
+
 			break
 		case 'resortTasks':
-			ipc.sendTo(mainWindowId,'resortTasks',{
-				'droppedTaskId':e.data.droppedTaskId,
-				'adjacentTaskId':e.data.adjacentTaskId
+			ipc.sendTo(mainWindowId, 'resortTasks', {
+				'droppedTaskId': e.data.droppedTaskId,
+				'adjacentTaskId': e.data.adjacentTaskId
 			})
 			break
 		case 'setting':
 			ipc.send('openSetting')
+			break
+		case 'home':
+			ipc.send('openHome')
+			break
+		case 'help':
+			ipc.send('openHelp')
+			break
 	}
 
 
@@ -69,6 +75,6 @@ ipc.on('receiveGlobal', function(e, data) {
 		message: 'receiveGlobal',
 		data: data
 	})
-	mainWindowId=data.mainWindowId
-	
+	mainWindowId = data.mainWindowId
+
 })

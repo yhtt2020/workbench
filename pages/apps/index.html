@@ -2,8 +2,97 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title></title>
+		<title>应用中心</title>
+		<script src="../../ext/vue/vue.js"></script>
+		<script src="../../ext/vue/vuex.js"></script>
+		<script src="../../ext/vue/antd.min.js"></script>
+		<link rel="stylesheet" href="../../ext/vue/antd.min.css" />
+		<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline'" />
 	</head>
 	<body>
+		<div id="appVue">
+			<sidenav />
+		</div>
+		<template id="sidenavTpl">
+			<div>
+				<a-menu style="width: 256px;height: 100vh;" :default-selected-keys="['1']" :open-keys.sync="openKeys"
+					mode="inline" @click="handleClick">
+					<a-sub-menu key="sub1" @titleClick="titleClick">
+						<span slot="title">
+							<a-icon type="mail" /><span>Navigation One</span>
+						</span>
+						<a-menu-item-group key="g1">
+							<template slot="title">
+								<a-icon type="qq" /><span>Item 1</span>
+							</template>
+							<a-menu-item key="1">
+								我的应用
+							</a-menu-item>
+							<a-menu-item key="2">
+								应用中心
+							</a-menu-item>
+						</a-menu-item-group>
+						<a-menu-item-group key="g2" title="Item 2">
+							<a-menu-item key="3">
+								Option 3
+							</a-menu-item>
+							<a-menu-item key="4">
+								Option 4
+							</a-menu-item>
+						</a-menu-item-group>
+					</a-sub-menu>
+					<a-sub-menu key="sub2" @titleClick="titleClick">
+						<span slot="title">
+							<a-icon type="appstore" /><span>Navigation Two</span>
+						</span>
+						<a-menu-item key="5">
+							Option 5
+						</a-menu-item>
+						<a-menu-item key="6">
+							Option 6
+						</a-menu-item>
+						<a-sub-menu key="sub3" title="Submenu">
+							<a-menu-item key="7">
+								Option 7
+							</a-menu-item>
+							<a-menu-item key="8">
+								Option 8
+							</a-menu-item>
+						</a-sub-menu>
+					</a-sub-menu>
+					<a-sub-menu key="sub4">
+						<span slot="title">
+							<a-icon type="setting" /><span>Navigation Three</span>
+						</span>
+						<a-menu-item key="9">
+							Option 9
+						</a-menu-item>
+						<a-menu-item key="10">
+							Option 10
+						</a-menu-item>
+						<a-menu-item key="11">
+							Option 11
+						</a-menu-item>
+						<a-menu-item key="12">
+							Option 12
+						</a-menu-item>
+					</a-sub-menu>
+				</a-menu>
+			</div>
+		</template>
+
+
 	</body>
+	<script>
+		Vue.use(antd);
+	</script>
+	<script src="./sidenav.js"></script>
+	<script>
+		var appVue = new Vue({
+			el: '#appVue',
+			components: {},
+			data: {},
+			mounted: function() {}
+		})
+	</script>
 </html>

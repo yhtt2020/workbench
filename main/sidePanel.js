@@ -310,3 +310,15 @@ ipc.on('openSetting',function(){
 		url: 'file://' + __dirname + '/pages/settings/index.html'
 	})
 })
+
+ipc.on('openHome',function(){
+	sendIPCToWindow(mainWindow, 'addTab', {
+		url: 'file://' + __dirname + '/pages/apps/index.html'
+	})
+})
+
+ipc.on('openHelp',function(){
+	sendIPCToWindow(mainWindow, 'addTab', {
+		url: 'https://www.yuque.com/tswork/ngd5zk'
+	})
+})

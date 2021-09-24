@@ -75,15 +75,25 @@ Vue.component('sidebar', {
 		openItem(id, index) {
 			this.switchTask(id, index)
 		},
-		openBottom(action){
+		openBottom(action) {
 			console.log(action)
-			switch(action){
+			switch (action) {
 				case 'setting':
 					postMessage({
-					message:'setting'
-				})
-				break
-					
+						message: 'setting'
+					})
+					break
+				case 'home':
+					postMessage({
+						message: 'home'
+					})
+					break
+				case 'help':
+					postMessage({
+						message: 'help'
+					})
+					break
+
 			}
 		},
 		//开始拖拽事件
