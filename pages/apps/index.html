@@ -4,95 +4,417 @@
 		<meta charset="utf-8">
 		<title>应用中心</title>
 		<script src="../../ext/vue/vue.js"></script>
-		<script src="../../ext/vue/vuex.js"></script>
 		<script src="../../ext/vue/antd.min.js"></script>
 		<link rel="stylesheet" href="../../ext/vue/antd.min.css" />
 		<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline'" />
 	</head>
 	<body>
+		<script>
+			Vue.use(antd);
+		</script>
 		<div id="appVue">
-			<sidenav />
-		</div>
-		<template id="sidenavTpl">
 			<div>
-				<a-menu style="width: 256px;height: 100vh;" :default-selected-keys="['1']" :open-keys.sync="openKeys"
-					mode="inline" @click="handleClick">
-					<a-sub-menu key="sub1" @titleClick="titleClick">
-						<span slot="title">
-							<a-icon type="mail" /><span>Navigation One</span>
-						</span>
-						<a-menu-item-group key="g1">
-							<template slot="title">
-								<a-icon type="qq" /><span>Item 1</span>
-							</template>
-							<a-menu-item key="1">
-								我的应用
-							</a-menu-item>
-							<a-menu-item key="2">
-								应用中心
-							</a-menu-item>
-						</a-menu-item-group>
-						<a-menu-item-group key="g2" title="Item 2">
-							<a-menu-item key="3">
-								Option 3
-							</a-menu-item>
-							<a-menu-item key="4">
-								Option 4
-							</a-menu-item>
-						</a-menu-item-group>
-					</a-sub-menu>
-					<a-sub-menu key="sub2" @titleClick="titleClick">
-						<span slot="title">
-							<a-icon type="appstore" /><span>Navigation Two</span>
-						</span>
-						<a-menu-item key="5">
-							Option 5
-						</a-menu-item>
-						<a-menu-item key="6">
-							Option 6
-						</a-menu-item>
-						<a-sub-menu key="sub3" title="Submenu">
-							<a-menu-item key="7">
-								Option 7
-							</a-menu-item>
-							<a-menu-item key="8">
-								Option 8
-							</a-menu-item>
-						</a-sub-menu>
-					</a-sub-menu>
-					<a-sub-menu key="sub4">
-						<span slot="title">
-							<a-icon type="setting" /><span>Navigation Three</span>
-						</span>
-						<a-menu-item key="9">
-							Option 9
-						</a-menu-item>
-						<a-menu-item key="10">
-							Option 10
-						</a-menu-item>
-						<a-menu-item key="11">
-							Option 11
-						</a-menu-item>
-						<a-menu-item key="12">
-							Option 12
-						</a-menu-item>
-					</a-sub-menu>
-				</a-menu>
+				<a-layout style="height: 100vh;" :trigger="null">
+					<a-layout-sider style="background-color: white;">
+						<sidenav />
+					</a-layout-sider>
+					<a-layout>
+						<a-layout-header style="background: #fff; padding: 0">
+							<a-page-header style="border: 1px solid rgb(235, 237, 240)" title="我的应用"
+								sub-title="管理我的应用，这里的应用可以随时添加到左侧栏，或者基于应用创建标签，不会因标签被关闭而丢失。" />
+						</a-layout-header>
+						<a-layout-content>
+							<div style="padding: 20px;text-align: center;padding: 10px;margin:20px">
+								<div style="text-align: center;margin:20px">
+									<search />
+								</div>
+								<div>
+									<a-card title="现有应用">
+
+										<a slot="extra" @click="showModal">添加应用</a>
+
+										<a-card-grid v-for="(app, index) in apps" class="app">
+											<a-avatar shape="square" :size="64" :src="app.icon"
+												style="margin-bottom: 10px;"></a-avatar>
+											<a-card-meta :title="app.name">
+												<template slot="description" >
+													{{ app.summary }}
+												</template>
+
+											</a-card-meta>
+
+										</a-card-grid>
+
+										<a-card-grid class="app" style="cursor: pointer;" @click="showModal">
+											<a-avatar shape="square" :size="64" icon="plus"
+												style="margin-bottom: 10px;"></a-avatar>
+											<a-card-meta title="添加">
+												<template slot="description">
+													自行添加应用
+												</template>
+											</a-card-meta>
+										</a-card-grid>
+									</a-card>
+
+								</div>
+
+
+						</a-layout-content>
+
+			</div>
+			<a-layout-footer style="text-align: center">想天科技版权所有 ©2014-2021 </a-layout-footer>
+			</a-layout>
+			</a-layout>
+		</div>
+		<template>
+			<div>
+				<a-modal v-model="visible" title="添加应用" :footer="null" :width="800">
+					<template>
+						<a-tabs default-active-key="2" :tab-position="'top'">
+							<a-tab-pane key="1">
+								<span slot="tab">
+									<a-icon type="appstore"></a-icon>
+									全部
+								</span>
+								待开发
+							</a-tab-pane>
+							<a-tab-pane key="2">
+								<span slot="tab">
+									<a-icon type="book"></a-icon>
+									从书签创建
+								</span>
+								待开发
+							</a-tab-pane>
+							<a-tab-pane key="3">
+								<span slot="tab">
+									<a-icon type="folder"></a-icon>
+									从标签创建
+								</span>
+								待开发
+							</a-tab-pane>
+							<a-tab-pane key="4">
+								<span slot="tab">
+									<a-icon type="link"></a-icon>
+									从URL创建
+								</span>
+								<template>
+									<a-form :form="form" @submit="handleSubmit">
+										<a-alert message="网站的图标不需要设置，当你打开一次这个网站之后，系统就会自动获取并更新。" type="info" show-icon
+											style="margin-bottom: 10px;"></a-alert>
+										<a-form-item v-bind="formItemLayout"  label="name">
+											<span slot="label">
+												应用名&nbsp;
+												<a-tooltip title="应用名称">
+													<a-icon type="question-circle-o" />
+												</a-tooltip>
+											</span>
+											<a-input placeholder="请输入应用名，少于8个字" v-decorator="[
+          'name',
+          {
+            rules: [{ required: true, message: '请输入应用名！', whitespace: true },{max:8,message:'不得超过8个字！'}],
+          },
+        ]" />
+										</a-form-item>
+
+										<a-form-item v-bind="formItemLayout" label="url">
+											<span slot="label">
+												网址&nbsp;
+												<a-tooltip title="输入网址，如果不以http://或https://开头，系统会自动加上http://">
+													<a-icon type="question-circle-o" />
+												</a-tooltip>
+											</span>
+
+											<a-auto-complete 
+												v-decorator="['url', { rules: [{ required: true, message: '请输入网址！' },{max:512,message:'最多不能超过512个字母！'}] }]"
+												placeholder="输入任意网址，如http://work.thisky.com，以http或https开头"
+												@change="handleWebsiteChange">
+												<template slot="dataSource">
+													<a-select-option v-for="url in autoCompleteResult" :key="url">
+														{{ url }}
+													</a-select-option>
+												</template>
+												<a-input />
+											</a-auto-complete>
+										</a-form-item>
+
+										<a-form-item v-bind="formItemLayout" label="summary">
+											<span slot="label">
+												应用介绍&nbsp;
+											</span>
+											<template>
+												<a-textarea placeholder="应用介绍，非必填，不超过100字" :rows="4"
+													v-decorator="['summary', { rules: [{max:100,message:'最多不能超过100个字！'}] }]"></a-textarea>
+											</template>
+										</a-form-item>
+										<a-form-item :wrapper-col="{ span: 12, offset: 6 }">
+											<a-button type="primary" html-type="submit">
+												添加
+											</a-button>
+										</a-form-item>
+									</a-form>
+								</template>
+							</a-tab-pane>
+						</a-tabs>
+					</template>
+				</a-modal>
 			</div>
 		</template>
 
+		</div>
 
 	</body>
-	<script>
-		Vue.use(antd);
-	</script>
+	<template id="sidenavTpl">
+		<div>
+			<div class="logo">
+				<img src="../../icons/icon256.png" style="width: 32px;height: 32px;">
+				应用中心
+			</div>
+			<a-menu mode="vertical" @click="handleClick" theme="light" :default-selected-keys="['myapp']">
+				<a-menu-item key="myapp">
+					<a-icon type="user"></a-icon>
+					<span>我的应用</span>
+				</a-menu-item>
+				<a-menu-item key="appstore">
+					<a-icon type="appstore"></a-icon>
+					<span>应用中心</span>
+				</a-menu-item>
+			</a-menu>
+		</div>
+	</template>
+
+	<template id="searchTpl">
+		<div class="global-search-wrapper" style="width: 300px">
+			<a-auto-complete class="global-search" size="large" style="width: 100%" placeholder="搜索标签、书签、应用、文件"
+				option-label-prop="title" @select="onSelect" @search="handleSearch">
+				<template slot="dataSource">
+					<a-select-option v-for="item in dataSource" :key="item.category" :title="item.category">
+						发现 {{ item.query }} 在
+						<a :href="`https://s.taobao.com/search?q=${item.query}`" target="_blank"
+							rel="noopener noreferrer">
+							{{ item.category }}
+						</a>
+						<span className="global-search-item-count">{{ item.count }} 个结果</span>
+					</a-select-option>
+				</template>
+				<a-input>
+					<a-button slot="suffix" style="margin-right: -12px" class="search-btn" size="large" type="primary">
+						<a-icon type="search" />
+					</a-button>
+				</a-input>
+			</a-auto-complete>
+		</div>
+	</template>
+
+
+
+
 	<script src="./sidenav.js"></script>
+	<script src="./search.js"></script>
 	<script>
+		Vue.use(antd)
+		Vue.prototype.$form = antd.Form
 		var appVue = new Vue({
 			el: '#appVue',
 			components: {},
-			data: {},
-			mounted: function() {}
+			data() {
+				return {
+					apps: [{
+							name: '悟空crm',
+							url: 'http://www.5kcrm.com',
+							summary: '一款CRM软件',
+							icon: 'http://www.5kcrm.com/public/static/index/images/favicon.ico'
+						},
+						{
+							name: '想天工作台',
+							url: 'http://work.thisky.com',
+							summary: '效率工具',
+							icon: 'http://work.thisky.com/img/favicon.ico'
+						},
+						{
+							name: '小鹅通',
+							url: 'https://www.xiaoe-tech.com/',
+							summary: '打造您的在线知识店铺',
+							icon: 'https://www.xiaoe-tech.com//logo-64.ico'
+						},
+						{
+							name: '微信网页版',
+							url: 'https://wx.qq.com/',
+							summary: '全民聊天工具',
+							icon: 'https://res.wx.qq.com/a/wx_fed/assets/res/OTE0YTAw.png'
+						},
+						{
+							name: '图怪兽',
+							url: 'https://818ps.com/',
+							summary: '图片制作工具',
+							icon: 'https://js.tuguaishou.com/image/index/share-logo.png'
+						}
+					],
+					//左侧导航的数据
+					current: ['myapp'],
+					
+					loading: false,
+					visible: false,
+					
+					
+					//表单验证用字段
+					confirmDirty: false,
+					//表单自动填充用字段
+					autoCompleteResult: [],
+					
+					//表单专用填充项目
+					name: '',
+					url: '',
+					summary: '',
+					
+					//表单布局用字段
+					formItemLayout: {
+						labelCol: {
+							xs: {
+								span: 8
+							},
+							sm: {
+								span: 6
+							},
+						},
+						wrapperCol: {
+							xs: {
+								span: 24
+							},
+							sm: {
+								span: 16
+							},
+						},
+					},
+				};
+			},
+			beforeCreate() {
+				this.form = this.$form.createForm(this, {
+					name: 'register'
+				});
+			},
+			watch: {
+				openKeys(val) {
+					console.log('openKeys', val);
+				},
+			},
+			methods: {
+				//添加表单提交数据
+				handleSubmit(e) {
+					e.preventDefault();
+					let that = this
+					this.form.validateFieldsAndScroll((err, values) => {
+						if (!err) {
+							that.apps.push(values)
+							
+							that.$nextTick(()=>{
+								that.form.resetFields()
+								
+							})
+						}
+					});
+				},
+				showModal() {
+					this.visible = true;
+				},
+				handleWebsiteChange(value) {
+					let autoCompleteResult;
+					if (!value) {
+						autoCompleteResult = [];
+					} else {
+						autoCompleteResult = ['.com', '.org', '.net'].map(domain => `${value}${domain}`);
+					}
+					this.autoCompleteResult = autoCompleteResult;
+				},
+				handleConfirmBlur(e) {
+					const value = e.target.value;
+					this.confirmDirty = this.confirmDirty || !!value;
+				}
+
+			}
 		})
 	</script>
+	<style>
+		.logo {
+			height: 32px;
+			background: rgba(255, 255, 255, 0.2);
+			margin: 16px;
+		}
+
+		.trigger {
+			font-size: 18px;
+			line-height: 64px;
+			padding: 0 24px;
+			cursor: pointer;
+			transition: color 0.3s;
+		}
+
+		.trigger:hover {
+			color: #1890ff;
+		}
+	</style>
+
+
+	<style>
+		.global-search-wrapper {
+			padding-right: 50px;
+			text-align: center;
+			display: inline-block;
+		}
+
+		.global-search {
+			width: 100%;
+		}
+
+		.global-search.ant-select-auto-complete .ant-select-selection--single {
+			margin-right: -46px;
+		}
+
+		.global-search.ant-select-auto-complete .ant-input-affix-wrapper .ant-input:not(:last-child) {
+			padding-right: 62px;
+		}
+
+		.global-search.ant-select-auto-complete .ant-input-affix-wrapper .ant-input-suffix button {
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
+		}
+
+		.global-search-item {
+			display: flex;
+		}
+
+		.global-search-item-desc {
+			flex: auto;
+			text-overflow: ellipsis;
+			overflow: hidden;
+		}
+
+		.global-search-item-count {
+			flex: none;
+		}
+
+		.app {
+			width: 140px;
+			text-align: center
+		}
+
+		.ant-modal-header {
+			border-bottom: none;
+		}
+
+		.ant-modal-body {
+			padding-top: 0;
+		}
+
+		.ant-card-meta-description {
+			font-size: 12px;
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 1;
+			overflow: hidden;
+		}
+		
+		.ant-menu-inline, .ant-menu-vertical, .ant-menu-vertical-left{
+			border: none;
+		}
+	</style>
 </html>

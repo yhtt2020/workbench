@@ -1,9 +1,10 @@
+
 Vue.component('sidenav', {
+	name:'sidenav',
 	data() {
 		return {
-			current: ['mail'],
-			openKeys: ['sub1'],
-		};
+			current: ['myapp']
+		}
 	},
 	template: '#sidenavTpl',
 	watch: {
