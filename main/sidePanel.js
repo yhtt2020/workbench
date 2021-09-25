@@ -193,12 +193,15 @@ function addMainWindowEventListener() {
 
 	//当主窗体失去焦点的时候，取消侧边栏的置顶。
 	mainWindow.on('blur', () => {
-		if (sidePanel._sidePanel != null && !sidePanel._sidePanel.isFocused() && !mainWindow.isMinimized()) {
-			sidePanel._sidePanel.setAlwaysOnTop(false)
-			sidePanel._sidePanel.moveAbove(mainWindow.getMediaSourceId()) //移动到父级最前面，不挡住其他的界面，不使用这个办法会突出来
-			//mainWindow.blur()
-			//sidePanel.showInactive()
+		if(sidePanel!=null){
+			if (sidePanel._sidePanel != null && !sidePanel._sidePanel.isFocused() && !mainWindow.isMinimized()) {
+				sidePanel._sidePanel.setAlwaysOnTop(false)
+				sidePanel._sidePanel.moveAbove(mainWindow.getMediaSourceId()) //移动到父级最前面，不挡住其他的界面，不使用这个办法会突出来
+				//mainWindow.blur()
+				//sidePanel.showInactive()
+			}
 		}
+		
 	})
 
 	//设置侧边栏全局置顶，不设置的话，移动鼠标上去的话，是无法直接获得焦点，触发其弹窗浮层的效果
