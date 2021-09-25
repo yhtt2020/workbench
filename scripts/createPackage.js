@@ -11,6 +11,7 @@ const basedir = require('path').join(__dirname, '../')
 const ignoredDirs = [
   '.DS_Store',
   'dist/app',
+  'setup',
   /\.map$/g,
   /\.md$/g,
   // electron-installer-debian is actually a development module, but it isn't pruned because it's optional
