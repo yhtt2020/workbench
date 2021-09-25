@@ -201,9 +201,23 @@ ipc.on('set-file-view', function (e, data) {
 })
 	
 	
-	
+//增加一些与其他窗体的互动ipc
 ipc.on('switchToTask',function(e,data){
 	switchToTask(data.id)
+})
+ipc.on('addTaskFromApps',function(e,data){
+	let newTask = {
+	  name: data.name || null,
+	  collapsed:false
+	}
+	let tid=tasks.add(newTask)
+	let newTab= {
+      url: data.url || '',
+	  title:data.name
+    }
+	tasks.get(tid).tabs.add(newTab)
+	
+	
 })
 
 

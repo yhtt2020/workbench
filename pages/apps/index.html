@@ -37,7 +37,7 @@
 										<a slot="extra" @click="showModal">添加应用</a>
 
 										
-										<a-card-grid v-for="(app, index) in myApps" class="app">
+										<a-card-grid v-for="(app, index) in myApps" class="app" style="cursor: pointer;" @click="addTask(app)">
 											<a-avatar shape="square" :size="64" :src="app.icon"
 												style="margin-bottom: 10px;"></a-avatar>
 											<a-card-meta :title="app.name">
@@ -571,6 +571,15 @@
 						this.$message.success('添加了应用：' + app.name)
 					}
 
+				},
+				//添加应用到任务栏
+				addTask(app){
+					postMessage({
+						message:'addTask',
+						name:app.name,
+						url:app.url
+					})
+					this.$message.success('成功在左侧栏添加了应用：' + app.name+'，首次访问后将刷新图标')
 				}
 
 			}
