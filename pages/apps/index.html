@@ -101,7 +101,7 @@
 									<a-form :form="form" @submit="handleSubmit">
 										<a-alert message="网站的图标不需要设置，当你打开一次这个网站之后，系统就会自动获取并更新。" type="info" show-icon
 											style="margin-bottom: 10px;"></a-alert>
-										<a-form-item v-bind="formItemLayout"  label="name">
+										<a-form-item v-bind="formItemLayout"  label="应用名">
 											<span slot="label">
 												应用名&nbsp;
 												<a-tooltip title="应用名称">
@@ -116,7 +116,7 @@
         ]" />
 										</a-form-item>
 
-										<a-form-item v-bind="formItemLayout" label="url">
+										<a-form-item v-bind="formItemLayout" label="网址">
 											<span slot="label">
 												网址&nbsp;
 												<a-tooltip title="输入网址，如果不以http://或https://开头，系统会自动加上http://">
@@ -137,7 +137,7 @@
 											</a-auto-complete>
 										</a-form-item>
 
-										<a-form-item v-bind="formItemLayout" label="summary">
+										<a-form-item v-bind="formItemLayout" label="应用介绍">
 											<span slot="label">
 												应用介绍&nbsp;
 											</span>
