@@ -92,7 +92,7 @@
 								    >
 								      <a-tab-pane v-for="(type, indexType) in allApps" :key="type.name" :tab="type.title"> 
 									   
-									    <a-card :title="type.title">
+									    <a-card :title="type.title" style="padding: 10px;">
 									   <a-card-grid style="width: 140px;cursor: pointer;" v-for="(app, indexApp) in type.apps" class="app" @click="addApp(app)">
 									   	<a-avatar shape="square" :size="64" :src="app.icon"
 									   		style="margin-bottom: 10px;"></a-avatar>
@@ -662,6 +662,9 @@
 		}
 		.ant-card-head{
 			border-bottom: none;
+		}
+		.ant-card-grid{
+			box-shadow: none;
 		}
 	</style>
 </html>
