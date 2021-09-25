@@ -34,7 +34,7 @@
 
 										<a slot="extra" @click="showModal">添加应用</a>
 
-										<a-card-grid v-for="(app, index) in apps" class="app">
+										<a-card-grid v-for="(app, index) in myApps" class="app">
 											<a-avatar shape="square" :size="64" :src="app.icon"
 												style="margin-bottom: 10px;"></a-avatar>
 											<a-card-meta :title="app.name">
@@ -67,17 +67,53 @@
 			</a-layout>
 			</a-layout>
 		</div>
+		
 		<template>
 			<div>
 				<a-modal v-model="visible" title="添加应用" :footer="null" :width="800">
 					<template>
-						<a-tabs default-active-key="2" :tab-position="'top'">
+						<a-tabs default-active-key="1" tab-position="top">
 							<a-tab-pane key="1">
 								<span slot="tab">
 									<a-icon type="appstore"></a-icon>
 									全部
 								</span>
-								待开发
+								<a-alert message="点击图标即可添加，添加完毕后，需手动关闭本界面。" type="info" show-icon
+									style="margin-bottom: 10px;"></a-alert>
+								
+								
+								<template>
+								  <div style="width: 750px">
+								   
+								    <a-tabs
+								      default-active-key="productive"
+								      tab-position="left"
+								      :style="{ height: '600px' }"
+								    >
+								      <a-tab-pane v-for="(type, indexType) in allApps" :key="type.name" :tab="type.title"> 
+									   
+									    <a-card :title="type.title">
+									   <a-card-grid style="width: 140px;cursor: pointer;" v-for="(app, indexApp) in type.apps" class="app" @click="addApp(app)">
+									   	<a-avatar shape="square" :size="64" :src="app.icon"
+									   		style="margin-bottom: 10px;"></a-avatar>
+									   	<a-card-meta :title="app.name">
+									   		<template slot="description" >
+									   			{{ app.summary }}
+									   		</template>
+									   	</a-card-meta>
+									   </a-card-grid>
+									   </a-tab-pane>
+									   </a-card>
+								    </a-tabs>
+								  </div>
+								</template>
+								
+								
+								
+								
+								
+								
+								
 							</a-tab-pane>
 							<a-tab-pane key="2">
 								<span slot="tab">
@@ -219,7 +255,7 @@
 			components: {},
 			data() {
 				return {
-					apps: [{
+					myApps: [{
 							name: '悟空crm',
 							url: 'http://www.5kcrm.com',
 							summary: '一款CRM软件',
@@ -250,6 +286,192 @@
 							icon: 'https://js.tuguaishou.com/image/index/share-logo.png'
 						}
 					],
+					//定义全部的apps，后期可以改成接口获取
+					allApps:[
+							
+							{
+								'name':'im',
+								'title':'即时通讯',
+								apps:[
+									{
+										name: '企业微信',
+										url: 'https://work.weixin.qq.com/',
+										summary: '腾讯企业沟通工具',
+										icon: 'http://wwcdn.weixin.qq.com/node/wwnl/wwnl/style/images/independent/favicon/favicon_32h$a41a4426.png'
+									},
+									{
+										name: '微信网页版',
+										url: 'https://wx.qq.com/',
+										summary: '全民沟通工具',
+										icon: 'https://res.wx.qq.com/a/wx_fed/assets/res/NTI4MWU5.ico'
+									},
+									{
+										name: '钉钉网页版',
+										url: 'https://im.dingtalk.com/',
+										summary: '阿里出品企业沟通工具',
+										icon: 'http://g.alicdn.com/dingding/web/0.2.6/img/oldIcon.ico'
+									}
+								]
+							},
+							
+							{
+								'name':'doc',
+								'title':'文档表单',
+								apps:[
+									{
+										name: '语雀',
+										url: 'https://www.yuque.com/',
+										summary: '面向企业、个人、团队的文档协作工具',
+										icon: 'https://gw.alipayobjects.com/zos/rmsportal/UTjFYEzMSYVwzxIGVhMu.png'
+									},
+									{
+										name: '腾讯文档',
+										url: 'https://docs.qq.com/',
+										summary: '一款可多人协作的在线文档',
+										icon: 'https://docs.idqqimg.com/tim/docs/desktop/favicon.ico'
+									},
+									{
+										name: '金山文档',
+										url: 'https://im.dingtalk.com/',
+										summary: '阿里出品企业沟通工具',
+										icon: 'http://g.alicdn.com/dingding/web/0.2.6/img/oldIcon.ico'
+									},
+									{
+										name: '石墨文档',
+										url: 'https://shimowendang.com/recent',
+										summary: '在线协同办公系统平台',
+										icon: 'http://g.alicdn.com/dingding/web/0.2.6/img/oldIcon.ico'
+									},
+									{
+										name: '幕布',
+										url: 'https://mubu.com/home',
+										summary: '一款结合了大纲笔记和思维导图的头脑管理工具',
+										icon: 'https://sf1-dycdn-tos.pstatp.com/obj/eden-cn/792eh7bouloj/mubu/favicon.ico'
+									}
+								]
+							},
+							
+							{
+								'name':'email',
+								'title':'常用邮箱',
+								apps:[
+									{
+										name: 'QQ邮箱',
+										url: 'https://mail.qq.com/',
+										summary: '为亿万用户提供高效稳定便捷的电子邮件服务。',
+										icon: 'https://gw.alipayobjects.com/zos/rmsportal/UTjFYEzMSYVwzxIGVhMu.png'
+									},
+									{
+										name: '163邮箱',
+										url: 'https://docs.qq.com/',
+										summary: '一款可多人协作的在线文档',
+										icon: 'https://docs.idqqimg.com/tim/docs/desktop/favicon.ico'
+									}
+								]
+							},
+							{
+								'name':'productive',
+								'title':'生产力',
+								apps:[
+									{
+										name: '少数派',
+										url: 'https://sspai.com/',
+										summary: '高效工作，品质生活',
+										icon: 'https://cdn.sspai.com/sspai/assets/img/favicon/icon.ico'
+									},
+									{
+										name: '想天工作台',
+										url: 'https://work.thisky.com/',
+										summary: '一站式企业门户，你工作的好帮手',
+										icon: 'https://work.thisky.com/img/favicon.ico'
+									}
+								]
+							},
+							{
+								'name':'process',
+								'title':'审批流程',
+								apps:[
+									{
+										name: '轻流',
+										url: 'https://qingflow.com/',
+										summary: '轻量级、可自定义的管理系统搭建平台',
+										icon: 'https://qingflow.com/favicon.ico'
+									}
+								]
+							},
+							{
+								'name':'media',
+								'title':'新媒体',
+								apps:[
+									{
+										name: '公众平台',
+										url: 'https://mp.weixin.qq.com/',
+										summary: '微信公众平台，给个人、企业和组织提供业务服务与用户管理能力的全新服务平台。',
+										icon: 'https://api.iowen.cn/favicon/mp.weixin.qq.com.png'
+									},
+									{
+										name: '新浪微博',
+										url: 'https://qingflow.com/',
+										summary: '轻量级、可自定义的管理系统搭建平台',
+										icon: 'https://qingflow.com/favicon.ico'
+									},
+									{
+										name: '头条号',
+										url: 'https://mp.toutiao.com/auth/page/login?redirect_url=JTJGcHJvZmlsZV92NCUyRg==',
+										summary: '你创作的，就是头条。',
+										icon: 'https://sf1-cdn-tos.toutiaostatic.com/obj/ttfe/pgcfe/sz/mp_logo.png'
+									},
+									{
+										name: '百家号',
+										url: 'https://baijiahao.baidu.com/builder/rc/home',
+										summary: '百家号，是百度为创作者打造的集创作、发布、变现于一体的内容创作平台，也是众多企业号实现营销转化的运营新阵地。',
+										icon: 'https://api.iowen.cn/favicon/baijiahao.baidu.com.png'
+									},
+									{
+										name: '腾讯内容开放平台',
+										url: 'https://om.qq.com/userAuth/index',
+										summary: '腾讯内容开放平台',
+										icon: 'https://api.iowen.cn/favicon/om.qq.com.png'
+									},
+									{
+										name: '小红书创作平台',
+										url: 'https://creator.xiaohongshu.com/login',
+										summary: '轻量级、可自定义的管理系统搭建平台',
+										icon: 'https://api.iowen.cn/favicon/creator.xiaohongshu.com.png'
+									},
+									{
+										name: '微信视频号',
+										url: 'https://channels.weixin.qq.com/login',
+										summary: '微信小视频助手',
+										icon: 'https://api.iowen.cn/favicon/channels.weixin.qq.com.png'
+									}
+									
+									
+								]
+							},
+							{
+								'name':'drive',
+								'title':'存储传输',
+								apps:[
+									{
+										name: '百度网盘',
+										url: 'https://pan.baidu.com/disk/home?#/all?path=%2F&vmode=list',
+										summary: '为您提供文件的网络备份、同步和分享服务。空间大、速度快、安全稳固，支持教育网加速，支持手机端。',
+										icon: 'https://api.iowen.cn/favicon/pan.baidu.com.png'
+									},
+									{
+										name: '坚果云',
+										url: 'https://www.jianguoyun.com/',
+										summary: '一款提供网盘|云盘|云服务的团队协助软件,可随时随地实现共享文件夹。坚果云网盘支持移动办公,协同办公,文件同步,数据备份,智能管理,在线编辑等功能。',
+										icon: 'https://api.iowen.cn/favicon/www.jianguoyun.com.png'
+									}
+								]
+							}
+							
+							
+						
+					],
+					
 					//左侧导航的数据
 					current: ['myapp'],
 					
@@ -305,7 +527,7 @@
 					let that = this
 					this.form.validateFieldsAndScroll((err, values) => {
 						if (!err) {
-							that.apps.push(values)
+							that.myApps.push(values)
 							
 							that.$nextTick(()=>{
 								that.form.resetFields()
@@ -329,6 +551,22 @@
 				handleConfirmBlur(e) {
 					const value = e.target.value;
 					this.confirmDirty = this.confirmDirty || !!value;
+				},
+				addApp(app){
+					let that =this
+					let have=false
+					this.myApps.forEach(function(tApp,index){
+						if(tApp.name==app.name){
+							have= true
+						}
+					})
+					if(have){
+						that.$message.warning('已经添加过'+app.name+'，无需重复添加')
+					}else{
+						this.myApps.push(app)
+						this.$message.success('添加了应用：'+app.name)
+					}
+					
 				}
 
 			}
@@ -416,6 +654,14 @@
 		
 		.ant-menu-inline, .ant-menu-vertical, .ant-menu-vertical-left{
 			border: none;
+		}
+		
+		.ant-card{
+			background-color: #00000000;
+			border: none;
+		}
+		.ant-card-head{
+			border-bottom: none;
 		}
 	</style>
 </html>
