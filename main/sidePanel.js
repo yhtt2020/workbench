@@ -317,9 +317,7 @@ ipc.on('openSetting', function() {
 })
 
 ipc.on('openHome', function() {
-	sendIPCToWindow(mainWindow, 'addTab', {
-		url: 'file://' + __dirname + '/pages/apps/index.html'
-	})
+	sendIPCToWindow(mainWindow, 'openApps')
 })
 
 ipc.on('openHelp', function() {
