@@ -57,16 +57,16 @@ class SidePanel {
 		this.setTop()
 		this._sidePanel.hide()
 		this._sidePanel.webContents.openDevTools()
-		let that=this
+		let that = this
 		//左侧栏和主界面都失去焦点的时候，取消掉自身的置顶，以防止捅破别的地方
-		this._sidePanel.on('blur',function(){
-			if(!mainWindow.isFocused()){
+		this._sidePanel.on('blur', function() {
+			if (!mainWindow.isFocused()) {
 				that.unsetTop()
 			}
 		})
-		setTimeout(function(){
-			sendIPCToWindow(mainWindow,'getTitlebarHeight')
-		},500)
+		setTimeout(function() {
+			sendIPCToWindow(mainWindow, 'getTitlebarHeight')
+		}, 500)
 
 	}
 
@@ -84,7 +84,7 @@ class SidePanel {
 	/**
 	 * 获取一下mainWindow的位置信息并同步一下sidePanel，不包含焦点处理
 	 */
-	attachToMainWindow(resetY=0) {
+	attachToMainWindow(resetY = 0) {
 		if (!SidePanel.alive()) return
 		if (mainWindow == null || sidePanel == null) {
 			return
@@ -94,28 +94,27 @@ class SidePanel {
 			return
 		}
 		this.bounds = mainWindow.getBounds()
-	
+
 		//windows全屏模式单独处理
-		if(mainWindow.isMaximized() && process.platform=='win32')
-		{
-				if (this.bounds.x<0) this.bounds.x=0
-				if(this.bounds.y<0) this.bounds.y=0
-				
-				if( settings.get('useSeparateTitlebar')){
-					this.bounds.y+=23
-					this.bounds.height-=40
-				}else{
-					this.bounds.height-=20
-				}
-				
-		//win上带标题栏的单独处理
-		}else if(settings.get('useSeparateTitlebar')  && process.platform=='win32'){
-			this.bounds.x+=8
-			this.bounds.y+=31
-			this.bounds.height-=40
+		if (mainWindow.isMaximized() && process.platform == 'win32') {
+			if (this.bounds.x < 0) this.bounds.x = 0
+			if (this.bounds.y < 0) this.bounds.y = 0
+
+			if (settings.get('useSeparateTitlebar')) {
+				this.bounds.y += 23
+				this.bounds.height -= 40
+			} else {
+				this.bounds.height -= 20
+			}
+
+			//win上带标题栏的单独处理
+		} else if (settings.get('useSeparateTitlebar') && process.platform == 'win32') {
+			this.bounds.x += 8
+			this.bounds.y += 31
+			this.bounds.height -= 40
 		}
-		let setX=this.bounds.x
-		let setY=!resetY?this.bounds.y + this.titlebarHeight:this.bounds.y+resetY
+		let setX = this.bounds.x
+		let setY = !resetY ? this.bounds.y + this.titlebarHeight : this.bounds.y + resetY
 		this._sidePanel.setBounds({
 			x: setX,
 			y: setY,
@@ -123,7 +122,7 @@ class SidePanel {
 			height: this.bounds.height - this.titlebarHeight
 		})
 	}
-	
+
 	setTop() {
 		if (SidePanel.alive())
 			this._sidePanel.setAlwaysOnTop(true, 'status')
@@ -193,15 +192,16 @@ function addMainWindowEventListener() {
 
 	//当主窗体失去焦点的时候，取消侧边栏的置顶。
 	mainWindow.on('blur', () => {
-		if(sidePanel!=null){
-			if (sidePanel._sidePanel != null && !sidePanel._sidePanel.isFocused() && !mainWindow.isMinimized()) {
+		if (sidePanel != null) {
+			if (sidePanel._sidePanel != null && !sidePanel._sidePanel.isFocused() && !mainWindow
+			.isMinimized()) {
 				sidePanel._sidePanel.setAlwaysOnTop(false)
 				sidePanel._sidePanel.moveAbove(mainWindow.getMediaSourceId()) //移动到父级最前面，不挡住其他的界面，不使用这个办法会突出来
 				//mainWindow.blur()
 				//sidePanel.showInactive()
 			}
 		}
-		
+
 	})
 
 	//设置侧边栏全局置顶，不设置的话，移动鼠标上去的话，是无法直接获得焦点，触发其弹窗浮层的效果
@@ -223,20 +223,20 @@ function addMainWindowEventListener() {
 
 	mainWindow.on('unmaximize', () => {
 		sidePanel.attachToMainWindow()
-		sendIPCToWindow(mainWindow,'getTitlebarHeight')
+		sendIPCToWindow(mainWindow, 'getTitlebarHeight')
 	})
 
 	mainWindow.on('enter-full-screen', () => {
 		sidePanel.attachToMainWindow()
 		//windows上全屏少了一块区域
-		sendIPCToWindow(mainWindow,'getTitlebarHeight')
+		sendIPCToWindow(mainWindow, 'getTitlebarHeight')
 		// this.sidePanel.setAlwaysOnTop(true, 'floating')
 	})
 	mainWindow.on('leave-full-screen', () => {
 		sidePanel.attachToMainWindow()
 		sidePanel.setTop()
-		sendIPCToWindow(mainWindow,'getTitlebarHeight')
-		
+		sendIPCToWindow(mainWindow, 'getTitlebarHeight')
+
 	})
 	mainWindow.on('resize', function(event, newBounds, details) {
 		sidePanel.attachToMainWindow()
@@ -271,12 +271,14 @@ function loadSidePanel() {
 
 //用于viewManager回调，以使sidebar配合显示
 function onSetView() {
-	sidePanel.show()
+	if (SidePanel.alive())
+		sidePanel.show()
 
 }
 //用于viewManager回调，以使sidebar配合隐藏
 function onHideCurrentView() {
-	sidePanel.hide()
+	if (SidePanel.alive())
+		sidePanel.hide()
 }
 
 ipc.on('set-ignore-mouse-events', (event, ...args) => {
@@ -308,19 +310,19 @@ ipc.on('receiveGlobal', function(event, data) {
 ipc.on('showBookmarks', function() {
 	sidePanel.hide()
 })
-ipc.on('openSetting',function(){
+ipc.on('openSetting', function() {
 	sendIPCToWindow(mainWindow, 'addTab', {
 		url: 'file://' + __dirname + '/pages/settings/index.html'
 	})
 })
 
-ipc.on('openHome',function(){
+ipc.on('openHome', function() {
 	sendIPCToWindow(mainWindow, 'addTab', {
 		url: 'file://' + __dirname + '/pages/apps/index.html'
 	})
 })
 
-ipc.on('openHelp',function(){
+ipc.on('openHelp', function() {
 	sendIPCToWindow(mainWindow, 'addTab', {
 		url: 'https://www.yuque.com/tswork/ngd5zk'
 	})
