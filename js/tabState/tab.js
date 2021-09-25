@@ -25,7 +25,7 @@ class TabList {
       scrollPosition: tab.scrollPosition || 0,
       selected: tab.selected || false,
       muted: tab.muted || false,
-      loaded: tab.loaded || false,
+      loaded: tab.loaded || false,
       hasAudio: false,
       previewImage: '',
       isFileView: false,
