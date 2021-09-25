@@ -307,7 +307,13 @@ const tabBar = {
 		tabTitle = (tabTitle || l('newTabLabel')).substring(0, 500)
 
 		var titleEl = tabEl.querySelector('.title')
-		titleEl.textContent = tabTitle
+
+		//给tab加上favicon的显示，以提升每个页面的辨识度
+		var iconEl= this.createIconEl(tabData,tabData.loaded)
+		//titleEl.textContent = tabTitle  原先的方法只是添加了文字
+		titleEl.innerHTML=''
+		titleEl.appendChild(iconEl)
+		titleEl.append(tabTitle)	
 
 		tabEl.title = tabTitle
 		if (tabData.private) {
@@ -373,6 +379,27 @@ const tabBar = {
 		} else {
 			tabBar.navBar.classList.remove('show-dividers')
 		}
+	},
+	
+	
+	//扩充一个获取icon的方法
+	createIconEl:function(tabData,loaded){
+		var iconEl=document.createElement('img')
+		iconEl.className='icon'
+		var src=''
+		if(loaded==false){
+			console.log('加载中')
+			src=__dirname+'/icons/loading.gif'
+		}else{
+			if(tabData.favicon==null){
+				src=__dirname+'/icons/default18.png'
+			}else{
+				src=tabData.favicon.url
+			}
+		}
+		
+		iconEl.src=src
+		return iconEl
 	}
 }
 
@@ -397,7 +424,7 @@ webviews.bindEvent('did-stop-loading', function(tabId) {
 })
 
 tasks.on('tab-updated', function(id, key) {
-	var updateKeys = ['title', 'secure', 'url', 'muted', 'hasAudio']
+	var updateKeys = ['title', 'secure', 'url', 'muted', 'hasAudio','favicon']//增加了一下更新的字段，否则favcion变化是不会生效的
 	if (updateKeys.includes(key)) {
 		tabBar.updateTab(id)
 	}

@@ -196,6 +196,18 @@ body.linux #menu-button {
   font-size: 15px;
 }
 
+/* 添加上favicon*/
+.tab-item .icon {
+	width: 18px;
+	height: 18px;
+	margin-right: 10px;
+	vertical-align: text-bottom;
+	background: #ffffffbb;
+	border-radius: 2px;
+}
+
+
+
 /* buttons */
 
 .navbar-action-button {
