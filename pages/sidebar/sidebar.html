@@ -30,9 +30,9 @@
 							ghostClass="ghostClass" chosenClass="chosenClass" @start="onStart" @end="onEnd">
 							<transition-group>
 								<li v-for="(item,i) in this.$store.getters.getPinItems" :key="item.id"
-									@click="openPinItem(item.id,i)" data-role="task" :class="isActive(item.id)"
+									@click="openPinItem(item.id,i)" :class="isActive(item.id)" style="position: relative;"
 									:item-id="item.id">
-									<a-popover :title="item.title" placement="right" :mouse-enter-delay="0.1"
+									<a-popover :title="item.count>5?item.title+' -- 高负载（5+）':item.title" placement="right" :mouse-enter-delay="0.1"
 										:mouse-leave-delay="0.1" :destroy-tooltip-on-hide="true" overlay-class-name="tips">
 										<template slot="content">
 
@@ -43,6 +43,7 @@
 											</ul>
 										</template>
 										<div class="wrapper">
+											<a-badge  :count="item.count" :dot="true" status="processing"  :style="{position: 'absolute',right:  '0px',top:'0px',visibility:item.count>5?'visible':'hidden'}" /></a-badge>
 											<img class="icon" :src="item.icon">
 										</div>
 									</a-popover>
@@ -60,18 +61,20 @@
 								ghostClass="ghostClass" chosenClass="chosenClass" @start="onStart" @end="onEnd">
 								<transition-group>
 									<li @click="openItem(item.id,i)" v-for="(item,i) in this.$store.getters.getItems"
-										:key="item.id" data-role="task" :class="isActive(item.id)" :item-id="item.id">
-										<a-popover :title="item.title" placement="right" :mouse-enter-delay="0"
+										:key="item.id" :visible="item.count>1" data-role="task" :class="isActive(item.id)" :item-id="item.id" style="position: relative;">
+										<a-badge  :count="item.count" :dot="true" status="processing"  :style="{position: 'absolute',right:  '0px',top:'0px',visibility:item.count>5?'visible':'hidden'}" /></a-badge>
+										<a-popover :title="item.count>5?item.title+' -- 高负载（5+）':item.title" placement="right" :mouse-enter-delay="0"
 											:mouse-leave-delay="0.1" :destroy-tooltip-on-hide="true" overlay-class-name="tips">
 											<template slot="content">
 
 												<ul class="tabs">
-													<li class="tab-title" v-for="(tab,j) in item.tabs" :key="tab.id">
+													<li class="tab-title"  v-for="(tab,j) in item.tabs" :key="tab.id">
 														<img class="tab-icon" :src="tab.icon"> {{ tab.title }}
 													</li>
 												</ul>
 											</template>
 											<div class="wrapper">
+												
 												<img class="icon" :src="item.icon">
 											</div>
 

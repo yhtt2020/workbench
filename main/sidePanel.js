@@ -56,7 +56,7 @@ class SidePanel {
 		this.attachToMainWindow()
 		this.setTop()
 		this._sidePanel.hide()
-		//this._sidePanel.webContents.openDevTools()
+		this._sidePanel.webContents.openDevTools()
 		let that = this
 		//左侧栏和主界面都失去焦点的时候，取消掉自身的置顶，以防止捅破别的地方
 		this._sidePanel.on('blur', function() {

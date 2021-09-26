@@ -139,8 +139,10 @@ window.onload = function() {
 					ext: task.id, //额外的信息
 					fixed: false,
 					type: 'task',
-					tabs: task.tabs
+					tabs: task.tabs,
+					count:0
 				}
+				item.count=task.tabs.length
 
 			
 				return item
@@ -172,7 +174,8 @@ window.onload = function() {
 					draggable: true, //是否允许拖拽
 					ext: '', //额外的信息
 					fixed: true, //锁定，不让它移动
-					type: 'system-bookmark'
+					type: 'system-bookmark',
+					count:0
 				}
 				state.pinItems.push(item)
 				// if (tasks != null) {
