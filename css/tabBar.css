@@ -55,6 +55,9 @@ body.is-edit-mode #toolbar-navigation-buttons {
   transition: none;
   padding: 0 0.6rem;
 }
+.navbar-action-button:hover{
+  background: #ffffff63;
+}
 #back-button {
   padding-left: 0.4rem;
 }
