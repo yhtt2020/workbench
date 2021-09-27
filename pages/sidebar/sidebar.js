@@ -59,6 +59,10 @@ let count=0
 window.addEventListener('message', function(e) {
 	if (e.data.message && e.data.message === 'receiveGlobal') {
 		let tasksList = new TasksList()
+		if($store.state.pinItems==null){
+			console.log('还未初始化')
+			return
+		}
 		tasksList.init(e.data.data.tasks)
 		$store.commit('fillTasksToItems',tasksList)
 		//console.log('同步'+count+++"次")
@@ -73,12 +77,27 @@ window.onload = function() {
 	Vue.use(Vuex)
 	const store = new Vuex.Store({
 		state: {
-			pinItems: [], //置顶区域的items，横线上方部分
-			items: [], //普通区域的items
+			pinItems: null, //置顶区域的items，横线上方部分
+			items: null, //普通区域的items
 			selected: '', //当前选中的
 			tasks:new TasksList()
 		},
 		getters: {
+			getAll:state=>{
+				if(state.pinItems==null){//还未初始化
+					$store.commit('initItems')
+				}
+				return {
+					'pinItems':state.pinItems,
+					'items':state.items
+				}
+			},
+			getStringifyableState(sate){
+				return {
+					sidebar: store.getters.getAll
+				}
+				
+			},
 			//获取当前选中的id
 			getSelected: state => {
 				return state.selected
@@ -177,6 +196,8 @@ window.onload = function() {
 					type: 'system-bookmark',
 					count:0
 				}
+				state.pinItems=[]
+				state.items=[]
 				state.pinItems.push(item)
 				// if (tasks != null) {
 				// 	//从任务当中取得任务的小组

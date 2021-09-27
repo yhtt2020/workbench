@@ -7,8 +7,10 @@ const {
 	contextBridge
 } = require('electron')
 //将语言包的接口暴露给里面的页面
-contextBridge.exposeInMainWorld('l', l)
-contextBridge.exposeInMainWorld('ipc', ipc)
+window.l = l
+window.ipc = ipc
+// contextBridge.exposeInMainWorld('l', l)
+// contextBridge.exposeInMainWorld('ipc', ipc)
 
 window.addEventListener('message', function(e) {
 	if (!e.origin.startsWith('file://')) {
@@ -59,15 +61,20 @@ window.addEventListener('message', function(e) {
 
 })
 
+let sidebarRestore = require('./sidebarRestore.js').initialize()
+
+
 function getMessageType(data) {
 	if (data && data.message)
 		return data.message
 	else
 		return ''
 }
-
+let loaded = window.loaded
 setInterval(function() {
-	ipc.send('getGlobal')
+	if (loaded === true) {
+		ipc.send('getGlobal')
+	}
 }, 500)
 
 ipc.on('receiveGlobal', function(e, data) {

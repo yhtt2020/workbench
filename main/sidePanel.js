@@ -46,6 +46,13 @@ class SidePanel {
 			webPreferences: {
 				preload: path.join(__dirname, '/pages/sidebar/sidebarPreload.js'),
 				nodeIntegration: true,
+				contextIsolation:false,
+				additionalArguments: [
+					'--user-data-path=' + userDataPath,
+					'--app-version=' + app.getVersion(),
+					'--app-name=' + app.getName(),
+					...((isDevelopmentMode ? ['--development-mode'] : [])),
+				]
 			}
 		})
 		// if (process.platform == 'win32') {

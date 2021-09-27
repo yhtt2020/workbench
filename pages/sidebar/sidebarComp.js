@@ -5,6 +5,7 @@ Vue.component('sidebar', {
 		return {
 			drag: false,
 			remote: {},
+			
 		}
 
 	},
@@ -18,7 +19,15 @@ Vue.component('sidebar', {
 		// 	ext: '', //额外的信息
 		// 	fixed: false //固定
 		// }
-		this.$store.commit('initItems')
+		if(window.sidebarData===false){
+			console.log('comp loaded fail')
+			console.log(window.sidebarData)
+			this.$store.commit('initItems')
+		}else{
+			this.$store.state.pinItems=window.sidebarData.state.sidebar.pinItems
+			this.$store.state.items=window.sidebarData.state.sidebar.items
+		}
+		
 	},
 	computed: {
 		getItems: {
