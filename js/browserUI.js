@@ -220,16 +220,15 @@ ipc.on('addTaskFromApps',function(e,data){
 	
 })
 ipc.on('openApps',function(){
-	let url= 'file:///' + __dirname + '/pages/apps/index.html'//左斜杠三条是为了统一判断里tab的三条左斜杠，不知道为什么会这样
+	let url= 'ts://apps'//左斜杠三条是为了统一判断里tab的三条左斜杠，不知道为什么会这样
 	let findout=false
 	let tid=0
 	let tabId=0
 	tasks.forEach(function(task,index){
 		let tTask=task
-		console.log(tTask)
 		tTask.tabs.forEach(function(tab,index){
 			//替换左斜杠为右斜杠，保证平台差异一致。
-			if(tab.url.replace(/\//g, '\\')==url.replace(/\//g, '\\'))
+			if(require('util/urlParser.js').getSourceURL(tab.url)==url)
 				{
 					tid=tTask.id
 					tabId=tab.id
@@ -244,7 +243,7 @@ ipc.on('openApps',function(){
 		}
 		tid=tasks.add(newTask)
 		let newTab= {
-		  url: url,
+		  url: 'file://' + __dirname + '/pages/apps/index.html',
 		  title:'应用中心'
 		}
 		tabId=tasks.get(tid).tabs.add(newTab)
@@ -254,8 +253,7 @@ ipc.on('openApps',function(){
 	switchToTab(tabId)
 	
 })
-
-
+/* 增加一些与其他窗口的互动ipcend*/
 
 
 /**插入一个简易排序方法*/

@@ -85,3 +85,8 @@ ipc.on('receiveGlobal', function(e, data) {
 	mainWindowId = data.mainWindowId
 
 })
+
+ipc.on('addItem',function(e,data){
+	console.log(data)
+	window.$store.state.items.push(data.item)
+})

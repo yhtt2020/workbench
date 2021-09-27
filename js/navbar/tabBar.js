@@ -388,7 +388,6 @@ const tabBar = {
 		iconEl.className='icon'
 		var src=''
 		if(loaded==false){
-			console.log('加载中')
 			src=__dirname+'/icons/loading.gif'
 		}else{
 			if(tabData.favicon==null){

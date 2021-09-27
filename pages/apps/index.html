@@ -36,8 +36,9 @@
 
 										<a slot="extra" @click="showModal">添加应用</a>
 
-										
-										<a-card-grid v-for="(app, index) in myApps" class="app" style="cursor: pointer;" @click="addTask(app)">
+
+										<a-card-grid v-for="(app, index) in myApps" class="app" style="cursor: pointer;"
+											@click="addTask(app)">
 											<a-avatar shape="square" :size="64" :src="app.icon"
 												style="margin-bottom: 10px;"></a-avatar>
 											<a-card-meta :title="app.name">
@@ -48,14 +49,14 @@
 											</a-card-meta>
 
 										</a-card-grid>
-										
-											<a-empty v-if="myApps.length==0" description="还未添加任何应用，点击添加应用选择应用" >
-												
-												 <a-button type="primary"  @click="showModal">
-												     添加应用
-												    </a-button>
-												
-											</a-empty>
+
+										<a-empty v-if="myApps.length==0" description="还未添加任何应用，点击添加应用选择应用">
+
+											<a-button type="primary" @click="showModal">
+												添加应用
+											</a-button>
+
+										</a-empty>
 										<a-card-grid v-else class="app" style="cursor: pointer;" @click="showModal">
 											<a-avatar shape="square" :size="64" icon="plus"
 												style="margin-bottom: 10px;"></a-avatar>
@@ -266,42 +267,10 @@
 			components: {},
 			data() {
 				return {
-					myApps: [
-						// {
-						// 	name: '悟空crm',
-						// 	url: 'http://www.5kcrm.com',
-						// 	summary: '一款CRM软件',
-						// 	icon: 'http://www.5kcrm.com/public/static/index/images/favicon.ico'
-						// },
-						// {
-						// 	name: '想天工作台',
-						// 	url: 'http://work.thisky.com',
-						// 	summary: '效率工具',
-						// 	icon: 'http://work.thisky.com/img/favicon.ico'
-						// },
-						// {
-						// 	name: '小鹅通',
-						// 	url: 'https://www.xiaoe-tech.com/',
-						// 	summary: '打造您的在线知识店铺',
-						// 	icon: 'https://www.xiaoe-tech.com//logo-64.ico'
-						// },
-						// {
-						// 	name: '微信网页版',
-						// 	url: 'https://wx.qq.com/',
-						// 	summary: '全民聊天工具',
-						// 	icon: 'https://res.wx.qq.com/a/wx_fed/assets/res/OTE0YTAw.png'
-						// },
-						// {
-						// 	name: '图怪兽',
-						// 	url: 'https://818ps.com/',
-						// 	summary: '图片制作工具',
-						// 	icon: 'https://js.tuguaishou.com/image/index/share-logo.png'
-						// }
-					],
+					//计算属性，这里加上下划线区分一下
+					_myApps: [],
 					//定义全部的apps，后期可以改成接口获取
-					allApps: [
-
-						{
+					allApps: [{
 							'name': 'im',
 							'title': '即时通讯',
 							apps: [{
@@ -471,9 +440,6 @@
 								}
 							]
 						}
-
-
-
 					],
 
 					//左侧导航的数据
@@ -512,17 +478,48 @@
 							},
 						},
 					},
-				};
+				}
 			},
 			beforeCreate() {
 				this.form = this.$form.createForm(this, {
 					name: 'register'
 				});
+
+				if (window.appsData == false && window.loaded) {
+					this._myApps = []
+					window.appsData= {
+						state:{
+							myApps:[]
+						}
+					}
+					return
+				} else {
+					this._myApps = window.appsData.state.myApps
+				}
 			},
 			watch: {
 				openKeys(val) {
 					console.log('openKeys', val);
 				},
+			},
+			computed: {
+				myApps: {
+					// getter
+					get: function() {
+						return this._myApps
+					},
+					// setter
+					set: function(newValue) {
+						this._myApps = newValue
+						window.appsData = {
+							state: {
+								myApps: newValue
+							}
+						}
+						console.log(window.appsData)
+						window.$appsRestore.save()
+					}
+				}
 			},
 			methods: {
 				//添加表单提交数据
@@ -573,13 +570,14 @@
 
 				},
 				//添加应用到任务栏
-				addTask(app){
+				addTask(app) {
 					postMessage({
-						message:'addTask',
-						name:app.name,
-						url:app.url
+						message: 'addTask',
+						name: app.name,
+						url: app.url,
+						icon:app.icon
 					})
-					this.$message.success('成功在左侧栏添加了应用：' + app.name+'，首次访问后将刷新图标')
+					this.$message.success('成功在左侧栏添加了应用：' + app.name + '。')
 				}
 
 			}
