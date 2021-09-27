@@ -63,8 +63,8 @@ class SidePanel {
 		this.attachToMainWindow()
 		this.setTop()
 		this._sidePanel.hide()
-		if (isDevelopmentMode)
-			this._sidePanel.webContents.openDevTools()
+		//if (isDevelopmentMode)
+			//this._sidePanel.webContents.openDevTools()
 		let that = this
 		//左侧栏和主界面都失去焦点的时候，取消掉自身的置顶，以防止捅破别的地方
 		this._sidePanel.on('blur', function() {
@@ -336,8 +336,10 @@ ipc.on('getGlobal', () => {
 
 //ipc从mainWindow得到全局变量后，返回给sidebar
 ipc.on('receiveGlobal', function(event, data) {
-	data.mainWindowId = mainWindow.webContents.id
-	sidePanel.get().webContents.send('receiveGlobal', data)
+	if(sidePanel!=null && mainWindow!=null){
+		data.mainWindowId = mainWindow.webContents.id
+		sidePanel.get().webContents.send('receiveGlobal', data)
+	}
 })
 
 //显示书签的时候，将sidepanel隐藏起来
