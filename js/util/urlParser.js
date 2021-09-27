@@ -127,7 +127,7 @@ var urlParser = {
           var pageName = url.match(/\/pages\/([a-zA-Z]+)\//)
           var urlObj = new URL(url)
           if (pageName) {
-            return 'min://' + pageName[1] + urlObj.search
+            return 'ts://' + pageName[1] + urlObj.search
           }
         } catch (e) {}
       }
