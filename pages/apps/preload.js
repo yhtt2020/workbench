@@ -1,3 +1,6 @@
+var electron = require('electron')
+var ipc = electron.ipcRenderer
+
 window.addEventListener('message', function(e) {
 			if (!e.origin.startsWith('file://')) {
 				return
@@ -7,7 +10,8 @@ window.addEventListener('message', function(e) {
 				case 'addTask':
 					ipc.send('addTask', {
 						name: e.data.name,
-						url: e.data.url
+						url: e.data.url,
+						icon:e.data.icon
 					})
 					break
 			}
@@ -19,3 +23,9 @@ function getMessageType(data) {
 	else
 		return ''
 }
+
+
+
+let appsRestore = require('./appsRestore.js')
+appsRestore.initialize()
+window.$appsRestore=appsRestore

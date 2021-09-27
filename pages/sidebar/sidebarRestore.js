@@ -30,7 +30,6 @@ const sidebarRestore = {
 	save: function(forceSave, sync) {
 		//序列化sidebar成json
 		var sidebarData = window.$store.getters.getStringifyableState
-		//console.log(sidebarData) //输出一下看看数据
 
 		var stateString = JSON.stringify(sidebarData)
 		var data = {
@@ -54,7 +53,6 @@ const sidebarRestore = {
 		}
 	},
 	restore: function() {
-		console.log(sidebarRestore.savePath)
 		var savedStringData
 		try {
 			savedStringData = fs.readFileSync(sidebarRestore.savePath, 'utf-8')
@@ -125,7 +123,6 @@ const sidebarRestore = {
 
 		window.onbeforeunload = function(e) {
 			sidebarRestore.save(true, true)
-			console.log(sidebarRestore.savePath)
 		}
 		sidebarRestore.restore()
 	}

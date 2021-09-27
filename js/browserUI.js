@@ -243,7 +243,7 @@ ipc.on('openApps',function(){
 		}
 		tid=tasks.add(newTask)
 		let newTab= {
-		  url: 'file:///' + __dirname + '/pages/apps/index.html',
+		  url: 'file://' + __dirname + '/pages/apps/index.html',
 		  title:'应用中心'
 		}
 		tabId=tasks.get(tid).tabs.add(newTab)
@@ -253,8 +253,7 @@ ipc.on('openApps',function(){
 	switchToTab(tabId)
 	
 })
-
-
+/* 增加一些与其他窗口的互动ipcend*/
 
 
 /**插入一个简易排序方法*/

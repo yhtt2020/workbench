@@ -119,36 +119,43 @@ window.onload = function() {
 				}
 			},
 			//获取任务的icon
-			getItemIcon: (state) => (task) => {
+			updateItemIcon: (state) => (task,item) => {
 				if (task.tabs.length == 0) {
 					return "../../icons/empty.png"
 				}
 				let favicon = task.tabs[0].favicon;
-				return store.getters.getIcon(favicon, "../../icons/empty.png")
+			
+					gotIcon=store.getters.getIcon(favicon)
+				if(gotIcon!==false)//获取到了图标
+				{
+					return gotIcon
+				}
+				return  item.icon //如果取不到图标，维持原样，防止icon丢失
 			},
 			//获取图标的方法
-			getIcon: (state) => (favicon, defaultIcon) => {
+			getIcon: (state) => (favicon) => {
 				if (typeof favicon == 'undefined') {
-					return defaultIcon
+					return false
 				} else if (typeof favicon == 'undefined') {
-					return defaultIcon
+					return false
 				} else if (favicon == null) {
-					return defaultIcon
+					return false
 				} else {
 					return favicon.url
 				}
 			},
 			//从一个任务转化出一个item，用于items列表
-			getItemFromTask: (state) => (task) => {
+			getItemFromTask: (state) => (task,item) => {
 				let parsedTitle = store.getters.getItemTitle(task)
-				let parsedIcon = store.getters.getItemIcon(task)
+				let parsedIcon = store.getters.updateItemIcon(task,item)
 				task.tabs.forEach(function(tab) {
-					tab.icon = store.getters.getIcon(tab.favicon, "../../icons/tab.png")
+					let icon=store.getters.getIcon(tab.favicon)
+					tab.icon = icon===false?"../../icons/tab.png":icon
 					if (!tab.title) {
 						tab.title = l('newTabLabel')
 					}
 				})
-				let item = {
+				let addItem = {
 					title: parsedTitle, //名称，用于显示提示
 					name: parsedTitle,
 					index: task.index, //索引组
@@ -161,10 +168,8 @@ window.onload = function() {
 					tabs: task.tabs,
 					count:0
 				}
-				item.count=task.tabs.length
-
-			
-				return item
+				addItem.count=task.tabs.length
+				return addItem
 			}
 
 		},
@@ -218,7 +223,7 @@ window.onload = function() {
 				state.pinItems.forEach(function(pinItem, indexPin) {
 					if (pinItem.type == "task") {
 						state.pinItems[indexPin] = store.getters.getItemFromTask(tasksList.byIndex(
-							replaceIndex))
+							replaceIndex),pinItem)
 						replaceIndex++
 					}
 
@@ -232,7 +237,7 @@ window.onload = function() {
 							state.items.splice(index, 1)
 						} else {
 							state.items[index] = store.getters.getItemFromTask(tasksList.byIndex(
-								replaceIndex))
+								replaceIndex),item)
 							replaceIndex++
 						}
 

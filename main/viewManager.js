@@ -40,7 +40,6 @@ function createView (existingViewId, id, webPreferencesString, boundsString, eve
   } else {
     view = new BrowserView({ webPreferences: Object.assign({}, defaultViewWebPreferences, JSON.parse(webPreferencesString)) })
   }
-
   events.forEach(function (event) {
     view.webContents.on(event, function (e) {
       var args = Array.prototype.slice.call(arguments).slice(1)

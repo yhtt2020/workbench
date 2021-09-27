@@ -183,6 +183,32 @@ class SidePanel {
 		}
 
 	}
+	
+	addItem(item){
+		
+		let defaultItem={
+					title: '', //名称，用于显示提示
+					name: '',
+					index: 0, //索引组
+					id: 0, //任务id
+					icon: '', //图标
+					draggable: true, //是否允许拖拽
+					ext: '', //额外的信息，如果是任务则放任务id
+					fixed: false,
+					type: 'task',//task fav
+					tabs: [],//初始化的时候必要用于展示的有就行了，其他的会自动同步过去
+					count:0
+				}
+				
+		let addItem=Object.assign({},defaultItem,item)
+		
+		if(this._sidePanel!=null)
+		{
+			this._sidePanel.webContents.send('addItem',{item:addItem} )
+			console.log(addItem)
+		}
+		
+	}
 
 }
 
