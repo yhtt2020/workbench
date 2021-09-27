@@ -63,7 +63,8 @@ class SidePanel {
 		this.attachToMainWindow()
 		this.setTop()
 		this._sidePanel.hide()
-		this._sidePanel.webContents.openDevTools()
+		if (isDevelopmentMode)
+			this._sidePanel.webContents.openDevTools()
 		let that = this
 		//左侧栏和主界面都失去焦点的时候，取消掉自身的置顶，以防止捅破别的地方
 		this._sidePanel.on('blur', function() {
@@ -201,7 +202,7 @@ function addMainWindowEventListener() {
 	mainWindow.on('blur', () => {
 		if (sidePanel != null) {
 			if (sidePanel._sidePanel != null && !sidePanel._sidePanel.isFocused() && !mainWindow
-			.isMinimized()) {
+				.isMinimized()) {
 				sidePanel._sidePanel.setAlwaysOnTop(false)
 				sidePanel._sidePanel.moveAbove(mainWindow.getMediaSourceId()) //移动到父级最前面，不挡住其他的界面，不使用这个办法会突出来
 				//mainWindow.blur()
