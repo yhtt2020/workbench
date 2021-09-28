@@ -6,19 +6,19 @@
 					"name": "企业微信",
 					"url": "https://work.weixin.qq.com/",
 					"summary": "腾讯企业沟通工具",
-					"icon": "http://wwcdn.weixin.qq.com/node/wwnl/wwnl/style/images/independent/favicon/favicon_32h$a41a4426.png"
+					"icon": "http://d.xiangtian.ren/api/hdlogo/qywx.jpeg"
 				},
 				{
 					"name": "微信网页版",
 					"url": "https://wx.qq.com/",
 					"summary": "全民沟通工具",
-					"icon": "https://res.wx.qq.com/a/wx_fed/assets/res/NTI4MWU5.ico"
+					"icon": "http://d.xiangtian.ren/api/hdlogo/wx.svg"
 				},
 				{
 					"name": "钉钉网页版",
 					"url": "https://im.dingtalk.com/",
 					"summary": "阿里出品企业沟通工具",
-					"icon": "http://g.alicdn.com/dingding/web/0.2.6/img/oldIcon.ico"
+					"icon": "http://d.xiangtian.ren/api/hdlogo/dd.svg"
 				}
 			]
 		},
@@ -28,31 +28,31 @@
 			"apps": [{
 					"name": "语雀",
 					"url": "https://www.yuque.com/",
-					"summary": "面向企业、个人、团队的文档协作工具",
+					"summary": "文档协作工具",
 					"icon": "https://gw.alipayobjects.com/zos/rmsportal/UTjFYEzMSYVwzxIGVhMu.png"
 				},
 				{
 					"name": "腾讯文档",
 					"url": "https://docs.qq.com/",
-					"summary": "一款可多人协作的在线文档",
-					"icon": "https://docs.idqqimg.com/tim/docs/desktop/favicon.ico"
+					"summary": "多人协作在线文档",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/txwendang.jpeg"
 				},
 				{
 					"name": "金山文档",
-					"url": "https://im.dingtalk.com/",
-					"summary": "阿里出品企业沟通工具",
-					"icon": "http://g.alicdn.com/dingding/web/0.2.6/img/oldIcon.ico"
+					"url": "https://www.kdocs.cn/",
+					"summary": "多人实时在线协作",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/jinshan.png"
 				},
 				{
 					"name": "石墨文档",
 					"url": "https://shimowendang.com/recent",
 					"summary": "在线协同办公系统平台",
-					"icon": "http://g.alicdn.com/dingding/web/0.2.6/img/oldIcon.ico"
+					"icon": "http://d.xiangtian.ren/api/hdlogo/shimo.webp"
 				},
 				{
 					"name": "幕布",
 					"url": "https://mubu.com/home",
-					"summary": "一款结合了大纲笔记和思维导图的头脑管理工具",
+					"summary": "思维导图和笔记",
 					"icon": "https://sf1-dycdn-tos.pstatp.com/obj/eden-cn/792eh7bouloj/mubu/favicon.ico"
 				}
 			]
@@ -64,42 +64,50 @@
 					"name": "QQ邮箱",
 					"url": "https://mail.qq.com/",
 					"summary": "为亿万用户提供高效稳定便捷的电子邮件服务。",
-					"icon": "https://gw.alipayobjects.com/zos/rmsportal/UTjFYEzMSYVwzxIGVhMu.png"
+					"icon": "http://d.xiangtian.ren/api/hdlogo/qqmail.jpeg"
 				},
 				{
 					"name": "163邮箱",
 					"url": "https://docs.qq.com/",
 					"summary": "一款可多人协作的在线文档",
-					"icon": "https://docs.idqqimg.com/tim/docs/desktop/favicon.ico"
+					"icon": "http://d.xiangtian.ren/api/hdlogo/163mail.jpeg"
 				}
 			]
+		},
+		{
+			"name": "news",
+			"title": "资讯门户",
+			"apps": [{
+				"name": "少数派",
+				"url": "https://sspai.com/",
+				"summary": "高效工作，品质生活",
+				"icon": "https://cdn.sspai.com/sspai/assets/img/favicon/icon.ico"
+			}]
 		},
 		{
 			"name": "productive",
 			"title": "生产力",
 			"apps": [{
-					"name": "少数派",
-					"url": "https://sspai.com/",
-					"summary": "高效工作，品质生活",
-					"icon": "https://cdn.sspai.com/sspai/assets/img/favicon/icon.ico"
-				},
-				{
 					"name": "想天工作台",
 					"url": "https://work.thisky.com/",
-					"summary": "一站式企业门户，你工作的好帮手",
-					"icon": "https://work.thisky.com/img/favicon.ico"
+					"summary": "你在用的神器",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/gzt.svg"
+				},
+
+				{
+					"name": "图怪兽",
+					"url": "https://818ps.com/",
+					"summary": "图片编辑剪辑",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/tuguaishou.png"
+				},
+
+				{
+					"name": "蓝湖",
+					"url": "https://lanhuapp.com/",
+					"summary": "原型图预览",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/lanhu.png"
 				}
 			]
-		},
-		{
-			"name": "process",
-			"title": "审批流程",
-			"apps": [{
-				"name": "轻流",
-				"url": "https://qingflow.com/",
-				"summary": "轻量级、可自定义的管理系统搭建平台",
-				"icon": "https://qingflow.com/favicon.ico"
-			}]
 		},
 		{
 			"name": "media",
@@ -108,13 +116,13 @@
 					"name": "公众平台",
 					"url": "https://mp.weixin.qq.com/",
 					"summary": "微信公众平台，给个人、企业和组织提供业务服务与用户管理能力的全新服务平台。",
-					"icon": "https://api.iowen.cn/favicon/mp.weixin.qq.com.png"
+					"icon": "http://d.xiangtian.ren/api/hdlogo/wx.svg"
 				},
 				{
 					"name": "新浪微博",
 					"url": "https://qingflow.com/",
 					"summary": "轻量级、可自定义的管理系统搭建平台",
-					"icon": "https://qingflow.com/favicon.ico"
+					"icon": "http://d.xiangtian.ren/api/hdlogo/weibo.svg"
 				},
 				{
 					"name": "头条号",
@@ -132,19 +140,25 @@
 					"name": "腾讯内容开放平台",
 					"url": "https://om.qq.com/userAuth/index",
 					"summary": "腾讯内容开放平台",
-					"icon": "https://api.iowen.cn/favicon/om.qq.com.png"
+					"icon": "http://d.xiangtian.ren/api/hdlogo/qenr.svg"
 				},
 				{
 					"name": "小红书创作平台",
 					"url": "https://creator.xiaohongshu.com/login",
 					"summary": "轻量级、可自定义的管理系统搭建平台",
-					"icon": "https://api.iowen.cn/favicon/creator.xiaohongshu.com.png"
+					"icon": "http://d.xiangtian.ren/api/hdlogo/xhs.jpg"
 				},
 				{
 					"name": "微信视频号",
 					"url": "https://channels.weixin.qq.com/login",
 					"summary": "微信小视频助手",
 					"icon": "https://api.iowen.cn/favicon/channels.weixin.qq.com.png"
+				},
+				{
+					"name": "抖音后台",
+					"url": "https://open.douyin.com/platform",
+					"summary": "抖音管理后台",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/douyin.gif"
 				}
 			]
 		},
@@ -161,10 +175,39 @@
 					"name": "坚果云",
 					"url": "https://www.jianguoyun.com/",
 					"summary": "一款提供网盘|云盘|云服务的团队协助软件,可随时随地实现共享文件夹。坚果云网盘支持移动办公,协同办公,文件同步,数据备份,智能管理,在线编辑等功能。",
-					"icon": "https://api.iowen.cn/favicon/www.jianguoyun.com.png"
+					"icon": "http://d.xiangtian.ren/api/hdlogo/jianguo.jpeg"
+				}
+			]
+		},
+		{
+			"name": "saas",
+			"title": "SAAS服务",
+			"apps": [{
+					"name": "有赞后台",
+					"url": "https://account.youzan.com/login",
+					"summary": "商城",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/youzan.jpeg"
+				},
+				{
+					"name": "小鹅通",
+					"url": "https://admin.xiaoe-tech.com/login_page?channel=5670-8121#/register",
+					"summary": "知识付费",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/xiaoe.jpg"
+				},
+				{
+					"name": "分销销客",
+					"url": "https://www.fxiaoke.com/",
+					"summary": "赋能企业数字化未来",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/fenxiang.webp"
+				},
+				{
+					"name": "轻流",
+					"url": "https://qingflow.com/",
+					"summary": "轻量级、可自定义的管理系统搭建平台",
+					"icon": "https://qingflow.com/favicon.ico"
 				}
 			]
 		}
 	],
-	"updateTime": "2021年9月28日 周二 下午2:10"
+	"updateTime": "2021年9月28日 周二 下午4:22"
 }
