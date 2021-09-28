@@ -564,7 +564,9 @@
 					if (have) {
 						that.$message.warning('已经添加过' + app.name + '，无需重复添加')
 					} else {
-						this.myApps.push(app)
+						let apps=this.myApps;
+						apps.push(app)
+						this.myApps=apps
 						this.$message.success('添加了应用：' + app.name)
 					}
 

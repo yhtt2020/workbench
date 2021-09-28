@@ -26,8 +26,6 @@ const appsRestore = {
 	save: function(forceSave, sync) {
 		//序列化apps成json
 		var state = window.appsData.state
-		//console.log(appsData) //输出一下看看数据
-
 		var stateString = JSON.stringify(state)
 		var data = {
 			version: 2,
