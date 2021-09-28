@@ -9,12 +9,14 @@ Vue.component('sidenav', {
 	template: '#sidenavTpl',
 	watch: {
 		openKeys(val) {
+			
 			console.log('openKeys', val);
 		},
 	},
 	methods: {
 		handleClick(e) {
-			console.log('click', e);
+			window.tab=e.key
+			this.$emit('gettab',e.key)
 		},
 		titleClick(e) {
 			console.log('titleClick', e);
