@@ -8,18 +8,20 @@
 		<link rel="stylesheet" href="../../ext/vue/antd.min.css" />
 		<link rel="icon" type="image/svg+xml" href="../../icons/apps.svg" />
 		<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline'" />
+			<link rel="stylesheet" href="./apps.css" />
 	</head>
 	<body>
 		<script>
 			Vue.use(antd);
 		</script>
 		<div id="appVue">
-			<div>
+		
+			<div class="">
 				<a-layout style="height: 100vh;" :trigger="null">
 					<a-layout-sider style="background-color: white;">
 						<sidenav @gettab="settab" />
 					</a-layout-sider>
-					<a-layout v-show="current==='myapp'">
+					<a-layout class="wall" v-show="current==='myapp'" style="background: url('http://d.xiangtian.ren/api/wall/1.jpeg');">
 						<a-layout-header style="background: #fff; padding: 0">
 							<a-page-header style="border: 1px solid rgb(235, 237, 240)" title="我的应用"
 								sub-title="管理我的应用，这里的应用可以随时添加到左侧栏，或者基于应用创建标签，不会因标签被关闭而丢失。" />
@@ -34,7 +36,7 @@
 
 
 
-										<a slot="extra" @click="showModal">添加应用</a>
+										<a class="add-button" slot="extra" @click="showModal">添加应用</a>
 
 
 										<a-card-grid v-for="(app, index) in myApps" class="app" style="cursor: pointer;"
@@ -71,7 +73,7 @@
 								</div>
 							</div>
 						</a-layout-content>
-						<a-layout-footer style="text-align: center">想天科技版权所有 ©2014-2021 </a-layout-footer>
+						<!-- <a-layout-footer style="text-align: center">想天科技版权所有 ©2014-2021 </a-layout-footer> -->
 					</a-layout>
 					<a-layout v-show="current==='appstore'">
 						<a-layout-header style="background: #fff; padding: 0">
@@ -488,103 +490,5 @@
 			}
 		})
 	</script>
-	<style>
-		.logo {
-			height: 32px;
-			background: rgba(255, 255, 255, 0.2);
-			margin: 16px;
-		}
-
-		.trigger {
-			font-size: 18px;
-			line-height: 64px;
-			padding: 0 24px;
-			cursor: pointer;
-			transition: color 0.3s;
-		}
-
-		.trigger:hover {
-			color: #1890ff;
-		}
-	</style>
-
-
-	<style>
-		.global-search-wrapper {
-			padding-right: 50px;
-			text-align: center;
-			display: inline-block;
-		}
-
-		.global-search {
-			width: 100%;
-		}
-
-		.global-search.ant-select-auto-complete .ant-select-selection--single {
-			margin-right: -46px;
-		}
-
-		.global-search.ant-select-auto-complete .ant-input-affix-wrapper .ant-input:not(:last-child) {
-			padding-right: 62px;
-		}
-
-		.global-search.ant-select-auto-complete .ant-input-affix-wrapper .ant-input-suffix button {
-			border-top-left-radius: 0;
-			border-bottom-left-radius: 0;
-		}
-
-		.global-search-item {
-			display: flex;
-		}
-
-		.global-search-item-desc {
-			flex: auto;
-			text-overflow: ellipsis;
-			overflow: hidden;
-		}
-
-		.global-search-item-count {
-			flex: none;
-		}
-
-		.app {
-			width: 140px;
-			text-align: center
-		}
-
-		.ant-modal-header {
-			border-bottom: none;
-		}
-
-		.ant-modal-body {
-			padding-top: 0;
-		}
-
-		.ant-card-meta-description {
-			font-size: 12px;
-			display: -webkit-box;
-			-webkit-box-orient: vertical;
-			-webkit-line-clamp: 1;
-			overflow: hidden;
-		}
-
-		.ant-menu-inline,
-		.ant-menu-vertical,
-		.ant-menu-vertical-left {
-			border: none;
-		}
-
-		.ant-card {
-			background-color: #00000000;
-			border: none;
-		}
-
-		.ant-card-head {
-			border-bottom: none;
-		}
-
-		.ant-card-grid {
-			box-shadow: none;
-		}
-	</style>
+	
 </html>
