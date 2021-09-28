@@ -61,7 +61,5 @@ function initAppsData() {
 	
 	window.nativeData= JSON.parse(fs.readFileSync(__dirname+apiNative, 'utf-8'))
 
-	// window.$allApps=
-
 }
 initAppsData()
