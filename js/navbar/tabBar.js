@@ -53,20 +53,21 @@ const tabBar = {
 	/*标签栏补充的右键菜单触发动作开始*/
 	//关闭其他的标签
 	closeOtherTabs: function(tabId) {
-		browserUI.switchToTab(tabId)
+		
+		require('browserUI.js').switchToTab(tabId)
 		let needDestroy = []
 		tasks.getSelected().tabs.forEach(function(tab, index) {
 			if (tab.id != tabId)
 				needDestroy.push(tab.id)
 		})
 		needDestroy.forEach(function(tid, index) {
-			browserUI.destroyTab(tid)
+			require('browserUI.js').destroyTab(tid)
 		})
 		//$store.getters.fillTasksToItems
 	},
 	//关闭左侧标签
 	closeLeftTabs: function(tabId) {
-		browserUI.switchToTab(tabId)
+		require('browserUI.js').switchToTab(tabId)
 		let needDestroy = []
 		let tabs = tasks.getSelected().tabs
 		let count = tabs.count();
@@ -79,13 +80,13 @@ const tabBar = {
 			}
 		}
 		needDestroy.forEach(function(tid, index) {
-			browserUI.destroyTab(tid)
+			require('browserUI.js').destroyTab(tid)
 		})
 		//$store.getters.fillTasksToItems
 	},
 	//关闭右侧标签
 	closeRightTabs: function(tabId) {
-		browserUI.switchToTab(tabId)
+		require('browserUI.js').switchToTab(tabId)
 		let needDestroy = []
 		let tabs = tasks.getSelected().tabs
 		let count = tabs.count();
@@ -98,7 +99,7 @@ const tabBar = {
 			}
 		}
 		needDestroy.forEach(function(tid, index) {
-			browserUI.destroyTab(tid)
+			require('browserUI.js').destroyTab(tid)
 		})
 		//$store.getters.fillTasksToItems
 	},
@@ -110,7 +111,7 @@ const tabBar = {
 		tabs.splice(index, 1)
 		tabs.splice(0, 0, tab)
 		tabBar.updateAll()
-		browserUI.switchToTab(tabId)
+		require('browserUI.js').switchToTab(tabId)
 
 
 	},
@@ -202,7 +203,7 @@ const tabBar = {
 				}, 150) // wait until the animation has completed
 			}
 		})
-		const browserUI = require('browserUI.js')
+	
 		tabEl.addEventListener('contextmenu', (e) => {
 			e.preventDefault()
 			e.stopPropagation()
@@ -212,7 +213,7 @@ const tabBar = {
 						id: 'open',
 						label: '创建一个新组',
 						click: function() {
-							browserUI.addTask()
+							require('browserUI.js').addTask()
 							//$store.getters.fillTasksToItems
 						}
 					},
@@ -221,7 +222,7 @@ const tabBar = {
 						label: '打开新标签',
 						click: function() {
 							//console.log('关闭全部标签被点击')
-							browserUI.addTab()
+							require('browserUI.js').addTab()
 						}
 					},
 					{
@@ -247,14 +248,14 @@ const tabBar = {
 						click: function() {
 							//console.log('关闭全部标签被点击')
 							//$store.getters.fillTasksToItems
-							browserUI.closeTab(data.id)
+							require('browserUI.js').closeTab(data.id)
 						}
 					}
 				],
 				[{
 						label: '关闭整组',
 						click: function() {
-							browserUI.closeTask(tasks.getSelected().id)
+							require('browserUI.js').closeTask(tasks.getSelected().id)
 						}
 					},
 					{
