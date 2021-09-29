@@ -120,8 +120,8 @@
 				},
 				{
 					"name": "新浪微博",
-					"url": "https://qingflow.com/",
-					"summary": "轻量级、可自定义的管理系统搭建平台",
+					"url": "https://weibo.com/login.php",
+					"summary": "随时随地发现新鲜事",
 					"icon": "http://d.xiangtian.ren/api/hdlogo/weibo.svg"
 				},
 				{
@@ -163,8 +163,8 @@
 			]
 		},
 		{
-			"name": "drive",
-			"title": "存储传输",
+			"name": "desktop",
+			"title": "常用软件",
 			"apps": [{
 					"name": "百度网盘",
 					"url": "https://pan.baidu.com/disk/home?#/all?path=%2F&vmode=list",
@@ -176,6 +176,12 @@
 					"url": "https://www.jianguoyun.com/",
 					"summary": "一款提供网盘|云盘|云服务的团队协助软件,可随时随地实现共享文件夹。坚果云网盘支持移动办公,协同办公,文件同步,数据备份,智能管理,在线编辑等功能。",
 					"icon": "http://d.xiangtian.ren/api/hdlogo/jianguo.jpeg"
+				},
+				{
+					"name": "微信桌面版",
+					"url": "https://weixin.qq.com/",
+					"summary": "聊天工具",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/wx.svg"
 				}
 			]
 		},
@@ -207,7 +213,108 @@
 					"icon": "https://qingflow.com/favicon.ico"
 				}
 			]
+		},
+		{
+			"name": "dev",
+			"title": "程序开发",
+			"apps": [{
+					"name": "GitHub",
+					"url": "https://github.com/",
+					"summary": "代码管理",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/github.webp"
+				},
+				{
+					"name": "DockerHub",
+					"url": "https://registry.hub.docker.com/search?type=image",
+					"summary": "镜像仓库",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/default.svg"
+				},
+				{
+					"name": "Jenkins",
+					"url": "https://www.jenkins.io/zh/",
+					"summary": "持续集成",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/jenkins.webp"
+				},
+				{
+					"name": "禅道官方",
+					"url": "https://www.zentao.net/",
+					"summary": "项目管理",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/default.svg"
+				},
+				{
+					"name": "yapi",
+					"url": "https://hellosean1025.github.io/yapi/",
+					"summary": "接口自动化、mooc",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/yapi.png"
+				},
+				{
+					"name": "Vue",
+					"url": "https://cn.vuejs.org/",
+					"summary": "JS框架",
+					"icon": "https://cn.vuejs.org/images/logo.svg"
+				},
+				{
+					"name": "Antdesign",
+					"url": "https://ant.design/docs/react/introduce-cn",
+					"summary": "React前端框架",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/atd.svg"
+				},
+				{
+					"name": "Element",
+					"url": "https://element.eleme.io/#/zh-CN",
+					"summary": "Vue前端框架",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/element.jpg"
+				},
+				{
+					"name": "ATDVue",
+					"url": "https://www.antdv.com/docs/vue/introduce-cn/",
+					"summary": "Vue版ATD",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/atd.svg"
+				},
+				{
+					"name": "Gitee",
+					"url": "https://gitee.com/",
+					"summary": "国内源码版本库",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/gitee.jpg"
+				},
+				{
+					"name": "掘金",
+					"url": "https://juejin.cn/",
+					"summary": "程序员社区",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/juejin.webp"
+				},
+				{
+					"name": "Grafana",
+					"url": "https://grafana.com/",
+					"summary": "Promethus可视化",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/grafa.webp"
+				},
+				{
+					"name": "Git",
+					"url": "https://git-scm.com/",
+					"summary": "代码管理工具",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/git.jpg"
+				},
+				{
+					"name": "TortiseGit",
+					"url": "https://tortoisegit.org/download/",
+					"summary": "Win平台git辅助",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/tot.jpg"
+				},
+				{
+					"name": "Hbuilder",
+					"url": "https://www.dcloud.io/",
+					"summary": "uniapp、IDE",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/hbuilder.png"
+				},
+				{
+					"name": "Electron",
+					"url": "https://www.electronjs.org/",
+					"summary": "前端桌面App开发框架",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/ele.jpg"
+				}
+			]
 		}
 	],
-	"updateTime": "2021年9月28日 周二 下午4:22"
+	"updateTime": "2021年9月29日 周三 上午10:22"
 }

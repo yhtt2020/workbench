@@ -13,10 +13,10 @@
     <ROW Property="AiPreferFastOem" MultiBuildValue="DefaultBuild:1"/>
     <ROW Property="CTRLS" Value="2"/>
     <ROW Property="Manufacturer" Value="想天科技"/>
-    <ROW Property="ProductCode" Value="2052:{E9CEFEFD-C399-4B87-85A9-CA923B11BCDC} " Type="16"/>
+    <ROW Property="ProductCode" Value="2052:{BD2965EE-62CD-42A4-AD7A-E2020A814826} " Type="16"/>
     <ROW Property="ProductLanguage" Value="2052"/>
     <ROW Property="ProductName" Value="想天工作台"/>
-    <ROW Property="ProductVersion" Value="0.3.3" Type="32"/>
+    <ROW Property="ProductVersion" Value="0.3.5" Type="32"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND;AI_SETUPEXEPATH;SETUPEXEDIR"/>
     <ROW Property="UpgradeCode" Value="{1F59EEEE-549F-4185-8FAD-FCEB8AA484CB}"/>
@@ -39,6 +39,7 @@
     <ROW Directory="abpfilterparsermodified_Dir" Directory_Parent="ext_Dir" DefaultDir="ABP-FI~1|abp-filter-parser-modified" DirectoryOptions="3"/>
     <ROW Directory="ansiregex_1_Dir" Directory_Parent="node_modules_10_Dir" DefaultDir="ANSI-R~1|ansi-regex" DirectoryOptions="3"/>
     <ROW Directory="ansiregex_Dir" Directory_Parent="node_modules_3_Dir" DefaultDir="ANSI-R~1|ansi-regex" DirectoryOptions="3"/>
+    <ROW Directory="api_Dir" Directory_Parent="app_Dir" DefaultDir="api" DirectoryOptions="3"/>
     <ROW Directory="app_Dir" Directory_Parent="resources_Dir" DefaultDir="app" DirectoryOptions="3"/>
     <ROW Directory="apps_Dir" Directory_Parent="pages_Dir" DefaultDir="apps" DirectoryOptions="3"/>
     <ROW Directory="aproba_Dir" Directory_Parent="node_modules_Dir" DefaultDir="aproba" DirectoryOptions="3"/>
@@ -314,6 +315,7 @@
     <ROW Component="antd.min.css" ComponentId="{E4B2AD25-A5B2-48E1-AD93-442B471FCD77}" Directory_="vue_Dir" Attributes="0" KeyPath="antd.min.css" Type="0"/>
     <ROW Component="appbg.png" ComponentId="{A0C07667-615C-443D-BDD6-D1476965909C}" Directory_="icons_1_Dir" Attributes="0" KeyPath="appbg.png" Type="0"/>
     <ROW Component="apps.js" ComponentId="{366F76A6-09E4-4587-A66B-8AC5A71F46A4}" Directory_="main_Dir" Attributes="0" KeyPath="apps.js" Type="0"/>
+    <ROW Component="apps.json" ComponentId="{490C9E88-E765-4A0E-8EE1-F065DDEA9C42}" Directory_="api_Dir" Attributes="0" KeyPath="apps.json" Type="0"/>
     <ROW Component="appsRestore.js" ComponentId="{A895E005-9DE2-4885-A82E-EEE5EA61276D}" Directory_="apps_Dir" Attributes="0" KeyPath="appsRestore.js" Type="0"/>
     <ROW Component="asset.js" ComponentId="{E914BF32-41F6-49A8-B975-FC302639EBE9}" Directory_="prebuildinstall_Dir" Attributes="0" KeyPath="asset.js" Type="0"/>
     <ROW Component="async.cc" ComponentId="{EA8912EB-8CAF-4D25-95B4-AAC071830D9D}" Directory_="src_4_Dir" Attributes="0" KeyPath="async.cc" Type="0"/>
@@ -383,6 +385,7 @@
     <ROW Component="fuzzy_string.js" ComponentId="{76227CDC-DA32-4CAD-BBCA-197AB68925B9}" Directory_="comparisons_Dir" Attributes="0" KeyPath="fuzzy_string.js" Type="0"/>
     <ROW Component="gitignore" ComponentId="{4481440B-3033-4D4B-BFD9-18A2ACBC5CD4}" Directory_="app_Dir" Attributes="0" KeyPath="gitignore" Type="0"/>
     <ROW Component="gitignore_1" ComponentId="{420740B1-E13A-4964-9997-3B356093A36B}" Directory_="readabilitymaster_Dir" Attributes="0" KeyPath="gitignore_1" Type="0"/>
+    <ROW Component="groupCacheFactory.js" ComponentId="{0AFA7A15-480B-49A8-BD4D-A26DF25873FF}" Directory_="util_Dir" Attributes="0" KeyPath="groupCacheFactory.js" Type="0"/>
     <ROW Component="httpsTopSites.json" ComponentId="{E2B6E3A4-4763-4DEE-AA4F-2D994A1C1186}" Directory_="httpsUpgrade_Dir" Attributes="0" KeyPath="httpsTopSites.json" Type="0"/>
     <ROW Component="icon_128x128.png" ComponentId="{3D7A5844-03D0-4435-9318-80E62D5B1ECE}" Directory_="icons.iconset_Dir" Attributes="0" KeyPath="icon_128x128.png" Type="0"/>
     <ROW Component="iconfont.css" ComponentId="{81B5A09F-A0A0-44E9-BC0B-27630B92C0A9}" Directory_="icons_Dir" Attributes="0" KeyPath="iconfont.css" Type="0"/>
@@ -1673,12 +1676,14 @@
     <ROW File="vk_swiftshader.dll" Component_="vk_swiftshader.dll" FileName="VK_SWI~1.DLL|vk_swiftshader.dll" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\vk_swiftshader.dll" SelfReg="false"/>
     <ROW File="vk_swiftshader_icd.json" Component_="chrome_100_percent.pak" FileName="VK_SWI~1.JSO|vk_swiftshader_icd.json" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\vk_swiftshader_icd.json" SelfReg="false"/>
     <ROW File="vulkan1.dll" Component_="vulkan1.dll" FileName="vulkan-1.dll" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\vulkan-1.dll" SelfReg="false"/>
+    <ROW File="apps.json" Component_="apps.json" FileName="APPS~1.JSO|apps.json" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\api\apps.json" SelfReg="false"/>
+    <ROW File="groupCacheFactory.js" Component_="groupCacheFactory.js" FileName="GROUPC~1.JS|groupCacheFactory.js" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\js\util\groupCacheFactory.js" SelfReg="false"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.BootstrOptComponent">
     <ROW BootstrOptKey="GlobalOptions" DownloadFolder="[AppDataFolder][|Manufacturer]\[|ProductName]\prerequisites" Options="2"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.BuildComponent">
-    <ROW BuildKey="DefaultBuild" BuildName="DefaultBuild" BuildOrder="1" BuildType="1" PackageFolder="Setup Files" Languages="zh" InstallationType="2" CabsLocation="1" CompressCabs="false" UseLzma="true" LzmaMethod="2" LzmaCompressionLevel="2" PackageType="1" FilesInsideExe="true" ExeIconPath="..\icons\icon256.ico" ExtractionFolder="[AppDataFolder][|Manufacturer]\[|ProductName] [|ProductVersion]\install" ExtUI="true" Options="8" UseLargeSchema="true" ExeName="[|ProductName]-[|ProductVersion]-setup" MsiPackageType="AI_ALL"/>
+    <ROW BuildKey="DefaultBuild" BuildName="DefaultBuild" BuildOrder="1" BuildType="1" PackageFolder="Setup Files" Languages="zh" InstallationType="2" CabsLocation="1" CompressCabs="false" UseLzma="true" LzmaMethod="2" LzmaCompressionLevel="2" PackageType="1" FilesInsideExe="true" ExeIconPath="..\icons\icon256.ico" ExtractionFolder="[AppDataFolder][|Manufacturer]\[|ProductName] [|ProductVersion]\install" ExtUI="true" Options="8" UseLargeSchema="true" ExeName="tswork-[|ProductVersion]-setup" MsiPackageType="AI_ALL"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.DictionaryComponent">
     <ROW Path="&lt;AI_DICTS&gt;ui.ail"/>
@@ -2043,6 +2048,8 @@
     <ROW Feature_="MainFeature" Component_="test_12"/>
     <ROW Feature_="MainFeature" Component_="test_13"/>
     <ROW Feature_="MainFeature" Component_="test_14"/>
+    <ROW Feature_="MainFeature" Component_="apps.json"/>
+    <ROW Feature_="MainFeature" Component_="groupCacheFactory.js"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiIconsComponent">
     <ROW Name="icon256.exe" SourcePath="..\icons\icon256.ico" Index="0"/>
@@ -2108,6 +2115,6 @@
     <ROW UpgradeCode="[|UpgradeCode]" VersionMin="[|ProductVersion]" Attributes="2" ActionProperty="AI_NEWERPRODUCTFOUND"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.SynchronizedFolderComponent">
-    <ROW Directory_="APPDIR" SourcePath="..\dist\app\tswork-win32-x64" ExcludePattern="*~|#*#|%*%|._|CVS|.cvsignore|SCCS|vssver.scc|mssccprj.scc|vssver2.scc|.svn|.DS_Store" ExcludeFlags="6"/>
+    <ROW Directory_="APPDIR" SourcePath="..\dist\app\tswork-win32-x64" Feature="MainFeature" ExcludePattern="*~|#*#|%*%|._|CVS|.cvsignore|SCCS|vssver.scc|mssccprj.scc|vssver2.scc|.svn|.DS_Store" ExcludeFlags="6"/>
   </COMPONENT>
 </DOCUMENT>

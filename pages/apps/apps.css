@@ -71,7 +71,8 @@
 	font-size: 12px;
 	display: -webkit-box;
 	-webkit-box-orient: vertical;
-	-webkit-line-clamp: 1;
+	-webkit-line-clamp: 2;
+	height: 34px;
 	overflow: hidden;
 }
 
@@ -101,39 +102,60 @@
 
 .wall .add-button {
 	background-color: #0000007e;
-	padding:8px 15px;
+	padding: 8px 15px;
 	border-radius: 100px;
 	color: white;
 }
-.wall .add-button:hover{
+
+.wall .add-button:hover {
 	background-color: #0000004e;
 }
-.wall .ant-card-meta-title{
+
+.wall .ant-card-meta-title {
 	color: white;
 	text-shadow: 0 0 5px #000000;
 }
 
-.wall .ant-card-meta-description{
+.wall .ant-card-meta-description {
 	color: #d4d8d8;
 	text-shadow: 0 0 5px #000000;
 }
 
-.wall .ant-card-head-title{
+.wall .ant-card-head-title {
 	color: white;
 	text-shadow: 0 0 5px #000000;
 }
 
-.ant-card-grid-hoverable:hover{
+.ant-card-grid-hoverable:hover {
 	box-shadow: none;
 	background-color: #0000002f;
 	border-radius: 10px;
 }
 
-.wall .ant-empty{
-	    background: #0000001f;
-	    width: 450px;
-	    margin: auto;
-	    padding: 20px;
-	    border-radius: 10px;
-	    color: white;
+.wall .ant-empty {
+	background: #0000001f;
+	width: 450px;
+	margin: auto;
+	padding: 20px;
+	border-radius: 10px;
+	color: white;
+}
+
+
+
+.mask {
+	
+	z-index: 1000;
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	top: 0;
+	border-radius: 10px;
+}
+
+.inner-wrapper{
+	position: absolute;
+	bottom: 0;
+	width: 140px;
 }
