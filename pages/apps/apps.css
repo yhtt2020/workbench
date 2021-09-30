@@ -144,7 +144,7 @@
 
 
 .mask {
-	
+
 	z-index: 1000;
 	position: absolute;
 	left: 0;
@@ -154,8 +154,14 @@
 	border-radius: 10px;
 }
 
-.inner-wrapper{
+.inner-wrapper {
 	position: absolute;
 	bottom: 0;
 	width: 140px;
+}
+
+
+
+.ant-page-header-heading {
+	overflow: visible !important;
 }
