@@ -5,8 +5,49 @@ Vue.component('sidebar', {
 		return {
 			drag: false,
 			remote: {},
+			devices: [{
+					'name': 'IphoneX',
+					'width': 375,
+					'height': 812,
+					'icon': 'mobile'
+				}, {
+					'name': 'Ipad',
+					'width': 768,
+					'height': 1024,
+					'icon': 'tablet'
+				}, {
+					'name': 'IpadPro',
+					'width': 1024,
+					'height': 1366,
+					'icon': 'tablet'
+				},
+				{
+					'name': '1080P pc',
+					'width': 1920,
+					'height': 1080,
+					'icon': 'desktop'
+				},
+				{
+					'name': '2K pc',
+					'width': 2560,
+					'height': 1440,
+					'icon': 'desktop'
+				},
+				{
+					'name': '4K pc',
+					'width': 4096,
+					'height': 2160,
+					'icon': 'desktop'
+				}
 
+			]
 		}
+
+	},
+	beforeCreate() {
+		this.form = this.$form.createForm(this, {
+			name: 'validate_other'
+		});
 
 	},
 	mounted: function() {
@@ -157,17 +198,17 @@ Vue.component('sidebar', {
 
 		},
 		changeBottomSize() {
-			let that=this
-			setTimeout(function(){
+			let that = this
+			setTimeout(function() {
 				that.fixElementPosition()
-			},250)
-			
+			}, 250)
+
 		},
-		fixElementPosition(){
+		fixElementPosition() {
 			var itemsEl = document.getElementById('itemsEl')
 			var bottomsEl = document.getElementById('bottomsEl')
 			console.log(bottomsEl.offsetHeight)
-			itemsEl.style.bottom = bottomsEl.offsetHeight+'px'
+			itemsEl.style.bottom = bottomsEl.offsetHeight + 'px'
 		}
 	}
 
