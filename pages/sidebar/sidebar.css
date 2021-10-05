@@ -46,9 +46,6 @@
 	left: 0;
 	/* height: 100vh; */
 	width: 45px;
-
-
-	bottom: 135px;
 	top: 0;
 	position: fixed;
 }
@@ -123,5 +120,4 @@
 	position: fixed;
 	bottom: 0;
 	width: 45px;
-	height: 135px;
 }

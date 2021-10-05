@@ -21,7 +21,7 @@
 
 		<template id="sidebarTpl">
 			<div id="sidebar" class="side-container">
-				<div class="side-items">
+				<div id="itemsEl" class="side-items">
 
 					<ul id="pinGroup" class="app-task" style="margin-bottom: 0;">
 
@@ -89,15 +89,27 @@
 					
 
 				</div>
-				<div class="bottom-container"  style="">
+				<div id="bottomsEl" class="bottom-container"  style="">
 				
 					<ul class="bottomBar">
-						<li>
-							<a-button @click="openBottom('help')" type="default" shape="circle" icon="question-circle" />
-						</li>
-						<li>
-							<a-button @click="openBottom('setting')" type="default" shape="circle" icon="setting"   />
-						</li>
+						<template>
+						  <div>
+						    <a-collapse default-active-key="1" :bordered="false" @change="changeBottomSize">
+						      <a-collapse-panel key="1" >
+						        <li>
+						        	<a-button @click="openBottom('mobile')" type="default" shape="circle" icon="mobile" />
+						        </li>
+						        <li>
+						        	<a-button @click="openBottom('help')" type="default" shape="circle" icon="question-circle" />
+						        </li>
+						        <li>
+						        	<a-button @click="openBottom('setting')" type="default" shape="circle" icon="setting"   />
+						        </li>
+						      </a-collapse-panel>
+						    </a-collapse>
+						  </div>
+						</template>
+						
 						<li>
 							<a-button @click="openBottom('home')" type="default" shape="circle" icon="home"   />
 						</li>
@@ -116,6 +128,16 @@
 			list-style: none;
 			padding: 0
 		}
+		
+		.ant-collapse-content>.ant-collapse-content-box{
+			padding: 0;
+		}
+		.ant-collapse-borderless>.ant-collapse-item{
+			border-bottom: none;
+		}
+		.tabs, .sidebar ul{
+			margin-bottom: 0;
+		}
 	</style>
 
 	<script>
@@ -127,8 +149,12 @@
 				forward: true
 			})
 		}
-		el.addEventListener('mouseenter', () => {
+		el.addEventListener('mouseenter', (e) => {
 			setIgnore()
+			console.log(e.target)
 		})
+		
+		
+		
 	</script>
 </html>

@@ -5,7 +5,7 @@ Vue.component('sidebar', {
 		return {
 			drag: false,
 			remote: {},
-			
+
 		}
 
 	},
@@ -19,15 +19,16 @@ Vue.component('sidebar', {
 		// 	ext: '', //额外的信息
 		// 	fixed: false //固定
 		// }
-		if(window.sidebarData===false){
+		if (window.sidebarData === false) {
 			console.log('comp loaded fail')
 			console.log(window.sidebarData)
 			this.$store.commit('initItems')
-		}else{
-			this.$store.state.pinItems=window.sidebarData.state.sidebar.pinItems
-			this.$store.state.items=window.sidebarData.state.sidebar.items
+		} else {
+			this.$store.state.pinItems = window.sidebarData.state.sidebar.pinItems
+			this.$store.state.items = window.sidebarData.state.sidebar.items
 		}
-		
+
+		this.fixElementPosition()
 	},
 	computed: {
 		getItems: {
@@ -85,25 +86,10 @@ Vue.component('sidebar', {
 			this.switchTask(id, index)
 		},
 		openBottom(action) {
-			console.log(action)
-			switch (action) {
-				case 'setting':
-					postMessage({
-						message: 'setting'
-					})
-					break
-				case 'home':
-					postMessage({
-						message: 'home'
-					})
-					break
-				case 'help':
-					postMessage({
-						message: 'help'
-					})
-					break
+			postMessage({
+				message: action
+			})
 
-			}
 		},
 		//开始拖拽事件
 		onStart() {
@@ -169,6 +155,19 @@ Vue.component('sidebar', {
 			}
 			return index
 
+		},
+		changeBottomSize() {
+			let that=this
+			setTimeout(function(){
+				that.fixElementPosition()
+			},250)
+			
+		},
+		fixElementPosition(){
+			var itemsEl = document.getElementById('itemsEl')
+			var bottomsEl = document.getElementById('bottomsEl')
+			console.log(bottomsEl.offsetHeight)
+			itemsEl.style.bottom = bottomsEl.offsetHeight+'px'
 		}
 	}
 

@@ -56,6 +56,8 @@ window.addEventListener('message', function(e) {
 		case 'help':
 			ipc.send('openHelp')
 			break
+		case 'mobile':
+			ipc.send('openMobile')
 	}
 
 
