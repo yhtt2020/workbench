@@ -272,6 +272,15 @@ function addMainWindowEventListener() {
 		sendIPCToWindow(mainWindow, 'getTitlebarHeight')
 
 	})
+	
+	mainWindow.on('enter-html-full-screen', () => {
+		sidePanel.hide()
+	})
+	mainWindow.on('leave-full-screen', () => {
+		sidePanel.show()
+		mainWindow.focus()
+	
+	})
 	mainWindow.on('resize', function(event, newBounds, details) {
 		sidePanel.attachToMainWindow()
 	})
@@ -360,4 +369,18 @@ ipc.on('openHelp', function() {
 	sendIPCToWindow(mainWindow, 'addTab', {
 		url: 'https://www.yuque.com/tswork/ngd5zk'
 	})
+})
+
+ipc.on('hideSidePanel',function(){
+	if(SidePanel.alive()){
+		sidePanel.hide()
+	}
+	
+})
+
+ipc.on('showSidePanel',function(){
+	if(SidePanel.alive()){
+		sidePanel.show()
+	}
+	
 })
