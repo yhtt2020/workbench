@@ -101,6 +101,7 @@ var taskOverlay = {
     }
   }),
   show: function () {
+	
     /* disabled in focus mode */
     if (focusMode.enabled()) {
       focusMode.warn()
@@ -112,7 +113,7 @@ var taskOverlay = {
     document.body.classList.add('task-overlay-is-shown')
 
     tabEditor.hide()
-
+ipc.send('hideSidePanel')
     this.isShown = true
     taskSwitcherButton.classList.add('active')
 
@@ -161,9 +162,11 @@ var taskOverlay = {
       currentTabElement.classList.add('fakefocus')
       currentTabElement.focus()
     }
+	
   },
 
   hide: function () {
+	ipc.send('showSidePanel')
     if (this.isShown) {
 	  
       this.isShown = false

@@ -256,7 +256,7 @@ ipc.on('setView', function (e, args) {
     focusView(args.id)
   }
   //设置当前view
-  onSetView()
+  //onSetView()
 })
 
 ipc.on('setBounds', function (e, args) {
@@ -270,7 +270,7 @@ ipc.on('focusView', function (e, id) {
 ipc.on('hideCurrentView', function (e) {
   hideCurrentView()
   //调用隐藏当前视图的回调到sidebar
-  onHideCurrentView()
+  //onHideCurrentView()
 })
 
 ipc.on('loadURLInView', function (e, args) {
@@ -346,3 +346,39 @@ ipc.on('saveViewCapture', function (e, data) {
 })
 
 global.getView = getView
+var emulationViews=[]
+var oldAgent=''
+//当前view打开emulation
+ipc.on('enableEmulation',function(e,data){
+	var view=viewMap[data.id]
+	var index=emulationViews.indexOf(data.id)
+	if(index!=-1){
+		view.webContents.setUserAgent(oldAgent)
+		view.webContents.disableDeviceEmulation()
+		view.webContents.reload()
+		emulationViews.splice(index,1)
+	
+	}else{
+		oldAgent=view.webContents.getUserAgent()
+		view.setBackgroundColor("#d1d1d1")
+		view.webContents.setUserAgent('Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A403 Safari/8536.25')
+		view.webContents.enableDeviceEmulation({
+			 screenPosition: 'mobile',
+			 screenSize: { width: 375, height: 812 },
+			 deviceScaleFactor: 0,
+			 viewPosition: { x: 0, y: 0 },
+			 viewSize: { width: 375, height: 812 },
+			 fitToView: false,
+			 offset: { x: 0, y: 0 }
+		})
+		
+		emulationViews.push(data.id)
+		view.webContents.reload()
+	}
+	
+	// view.webContents.openDevTools({
+	// 	 mode: 'bottom'
+	// })
+	
+	
+})

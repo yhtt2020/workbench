@@ -20,6 +20,8 @@ var searchbar = {
   associatedInput: null,
   events: new EventEmitter(),
   show: function (associatedInput) {
+	//显示searchbar的时候隐藏sidebar
+	ipc.send('hideSidePanel')
     searchbar.el.hidden = false
     searchbar.associatedInput = associatedInput
     if (tabs.get(tabs.getSelected()).url) {
@@ -29,6 +31,8 @@ var searchbar = {
     }
   },
   hide: function () {
+	//隐藏searchbar的时候显示sidebar
+	ipc.send('showSidePanel')
     searchbar.associatedInput = null
     searchbar.el.hidden = true
 
@@ -39,6 +43,7 @@ var searchbar = {
     return text.replace(text.substring(searchbar.associatedInput.selectionStart, searchbar.associatedInput.selectionEnd), '')
   },
   showResults: function (text, event) {
+	ipc.send('hideSidePanel')
     // find the real input value, accounting for highlighted suggestions and the key that was just pressed
     // delete key doesn't behave like the others, String.fromCharCode returns an unprintable character (which has a length of one)
 

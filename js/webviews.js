@@ -205,7 +205,8 @@ const webviews = {
 			additionalArguments: [
 				'--user-data-path=' + window.globalArgs['user-data-path'],
 				'--app-version=' + window.globalArgs['app-version'],
-				'--app-name=' +  window.globalArgs['app-name']
+				'--app-name=' +  window.globalArgs['app-name'],
+				//'--is-Dev='+window.globalArgs['development--mode']
 			],
 			allowPopups:true
 		}
@@ -525,6 +526,12 @@ ipc.on('view-ipc', function (e, args) {
     }
   })
 })
+
+//在当前页面打开emulation
+ipc.on('openMobile',function(e,args){
+	ipc.send('enableEmulation',{id:webviews.selectedId})
+})
+
 
 setInterval(function () {
   captureCurrentTab()

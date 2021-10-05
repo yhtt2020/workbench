@@ -2,7 +2,7 @@ let sidePanel = null
 class SidePanel {
 	_sidePanel = null
 	titlebarHeight = 20
-	panelWidth = 400
+	panelWidth = 800
 	mainViewBounds = null
 	isStandalone = false //是否是独立
 	constructor() {
@@ -46,7 +46,7 @@ class SidePanel {
 			webPreferences: {
 				preload: path.join(__dirname, '/pages/sidebar/sidebarPreload.js'),
 				nodeIntegration: true,
-				contextIsolation:false,
+				contextIsolation: false,
 				additionalArguments: [
 					'--user-data-path=' + userDataPath,
 					'--app-version=' + app.getVersion(),
@@ -64,7 +64,7 @@ class SidePanel {
 		this.setTop()
 		this._sidePanel.hide()
 		//if (isDevelopmentMode)
-			//this._sidePanel.webContents.openDevTools()
+		//this._sidePanel.webContents.openDevTools()
 		let that = this
 		//左侧栏和主界面都失去焦点的时候，取消掉自身的置顶，以防止捅破别的地方
 		this._sidePanel.on('blur', function() {
@@ -132,13 +132,13 @@ class SidePanel {
 	}
 
 	setTop() {
-		if (SidePanel.alive())
-			this._sidePanel.setAlwaysOnTop(true, 'status')
+		// if (SidePanel.alive())
+		// 	this._sidePanel.setAlwaysOnTop(true, 'status')
 	}
 
 	unsetTop() {
-		if (SidePanel.alive())
-			this._sidePanel.setAlwaysOnTop(false)
+		// if (SidePanel.alive())
+		// 	this._sidePanel.setAlwaysOnTop(false)
 	}
 
 
@@ -183,31 +183,32 @@ class SidePanel {
 		}
 
 	}
-	
-	addItem(item){
-		
-		let defaultItem={
-					title: '', //名称，用于显示提示
-					name: '',
-					index: 0, //索引组
-					id: 0, //任务id
-					icon: '', //图标
-					draggable: true, //是否允许拖拽
-					ext: '', //额外的信息，如果是任务则放任务id
-					fixed: false,
-					type: 'task',//task fav
-					tabs: [],//初始化的时候必要用于展示的有就行了，其他的会自动同步过去
-					count:0
-				}
-				
-		let addItem=Object.assign({},defaultItem,item)
-		
-		if(this._sidePanel!=null)
-		{
-			this._sidePanel.webContents.send('addItem',{item:addItem} )
+
+	addItem(item) {
+
+		let defaultItem = {
+			title: '', //名称，用于显示提示
+			name: '',
+			index: 0, //索引组
+			id: 0, //任务id
+			icon: '', //图标
+			draggable: true, //是否允许拖拽
+			ext: '', //额外的信息，如果是任务则放任务id
+			fixed: false,
+			type: 'task', //task fav
+			tabs: [], //初始化的时候必要用于展示的有就行了，其他的会自动同步过去
+			count: 0
+		}
+
+		let addItem = Object.assign({}, defaultItem, item)
+
+		if (this._sidePanel != null) {
+			this._sidePanel.webContents.send('addItem', {
+				item: addItem
+			})
 			console.log(addItem)
 		}
-		
+
 	}
 
 }
@@ -220,17 +221,31 @@ function addMainWindowEventListener() {
 		sidePanel.attachToMainWindow()
 	})
 
+	mainWindow.on('hide', () => {
+		if (SidePanel.alive()) {
+			sidePanel.hide()
+		}
+	})
+
 	mainWindow.on('show', () => {
-		sidePanel.attachToMainWindow()
+		if (SidePanel.alive()) {
+			sidePanel.show()
+			sidePanel.attachToMainWindow()
+		}
+
 	})
 
 	//当主窗体失去焦点的时候，取消侧边栏的置顶。
 	mainWindow.on('blur', () => {
-		if (sidePanel != null) {
-			if (sidePanel._sidePanel != null && !sidePanel._sidePanel.isFocused() && !mainWindow
-				.isMinimized()) {
-				sidePanel._sidePanel.setAlwaysOnTop(false)
-				sidePanel._sidePanel.moveAbove(mainWindow.getMediaSourceId()) //移动到父级最前面，不挡住其他的界面，不使用这个办法会突出来
+		if (SidePanel.alive()) {
+			if (!sidePanel._sidePanel.isFocused() && !mainWindow.isMinimized()) {
+				//sidePanel失去焦点，且mainWindow不是最小化
+				if (sidePanel._sidePanel.isAlwaysOnTop()) {
+					sidePanel._sidePanel.setAlwaysOnTop(false)
+					sidePanel._sidePanel.moveAbove(mainWindow
+					.getMediaSourceId()) //移动到父级最前面，不挡住其他的界面，不使用这个办法会突出来
+					mainWindow.blur()
+				}
 				//mainWindow.blur()
 				//sidePanel.showInactive()
 			}
@@ -238,17 +253,19 @@ function addMainWindowEventListener() {
 
 	})
 
+
+
 	//设置侧边栏全局置顶，不设置的话，移动鼠标上去的话，是无法直接获得焦点，触发其弹窗浮层的效果
-	mainWindow.on('focus', () => {
-		if (SidePanel.alive()) {
-			if (mainWindow.isVisible()) {
-				sidePanel.setTop()
-				sidePanel._sidePanel.showInactive()
-			}
-		}
+	// mainWindow.on('focus', () => {
+	// 	if (SidePanel.alive()) {
+	// 		if (mainWindow.isVisible()) {
+	// 			sidePanel.setTop()
+	// 			sidePanel._sidePanel.showInactive()
+	// 		}
+	// 	}
 
 
-	})
+	// })
 
 	mainWindow.on('maximize', () => {
 		sidePanel.attachToMainWindow()
@@ -259,7 +276,14 @@ function addMainWindowEventListener() {
 		sidePanel.attachToMainWindow()
 		sendIPCToWindow(mainWindow, 'getTitlebarHeight')
 	})
+	mainWindow.on('minimize', () => {
+		sidePanel.hide()
 
+	})
+
+	mainWindow.on('restore', () => {
+		sidePanel.show()
+	})
 	mainWindow.on('enter-full-screen', () => {
 		sidePanel.attachToMainWindow()
 		//windows上全屏少了一块区域
@@ -272,14 +296,14 @@ function addMainWindowEventListener() {
 		sendIPCToWindow(mainWindow, 'getTitlebarHeight')
 
 	})
-	
+
 	mainWindow.on('enter-html-full-screen', () => {
 		sidePanel.hide()
 	})
 	mainWindow.on('leave-full-screen', () => {
 		sidePanel.show()
 		mainWindow.focus()
-	
+
 	})
 	mainWindow.on('resize', function(event, newBounds, details) {
 		sidePanel.attachToMainWindow()
@@ -312,29 +336,30 @@ function loadSidePanel() {
 
 
 
-//用于viewManager回调，以使sidebar配合显示
-function onSetView() {
-	if (SidePanel.alive())
-		sidePanel.show()
+// //用于viewManager回调，以使sidebar配合显示
+// function onSetView() {
+// 	if (SidePanel.alive())
+// 		sidePanel.show()
 
-}
-//用于viewManager回调，以使sidebar配合隐藏
-function onHideCurrentView() {
-	if (SidePanel.alive())
-		sidePanel.hide()
-}
+// }
+// //用于viewManager回调，以使sidebar配合隐藏
+// function onHideCurrentView() {
+// 	if (SidePanel.alive())
+// 		sidePanel.hide()
+// }
 
 ipc.on('set-ignore-mouse-events', (event, ...args) => {
-	if (mainWindow.isFocused() || sidePanel._sidePanel.isFocused()) {
-		if (args[0]) {
-			mainWindow.focus()
-		} else {
-			sidePanel.focus()
+	if (SidePanel.alive()) {
+		if (mainWindow.isFocused() || sidePanel._sidePanel.isFocused()) {
+			if (args[0]) {
+				mainWindow.focus()
+			} else {
+				sidePanel.focus()
+			}
+			if (sidePanel._sidePanel.isVisible())
+				sidePanel.setIgnoreMouseEvents(...args)
 		}
-		if (sidePanel._sidePanel.isVisible())
-			sidePanel.setIgnoreMouseEvents(...args)
 	}
-
 })
 //主窗口收到要获取全局变量的消息，主要是返回tasks和tabs两个数组，用于同步左侧栏
 ipc.on('getGlobal', () => {
@@ -345,7 +370,7 @@ ipc.on('getGlobal', () => {
 
 //ipc从mainWindow得到全局变量后，返回给sidebar
 ipc.on('receiveGlobal', function(event, data) {
-	if(sidePanel!=null && mainWindow!=null){
+	if (sidePanel != null && mainWindow != null) {
 		data.mainWindowId = mainWindow.webContents.id
 		sidePanel.get().webContents.send('receiveGlobal', data)
 	}
@@ -371,16 +396,20 @@ ipc.on('openHelp', function() {
 	})
 })
 
-ipc.on('hideSidePanel',function(){
-	if(SidePanel.alive()){
-		sidePanel.hide()
-	}
-	
+ipc.on('openMobile', function() {
+	sendIPCToWindow(mainWindow, 'openMobile')
 })
 
-ipc.on('showSidePanel',function(){
-	if(SidePanel.alive()){
+ipc.on('hideSidePanel', function() {
+	if (SidePanel.alive()) {
+		sidePanel.hide()
+	}
+
+})
+var count=0
+ipc.on('showSidePanel', function() {
+	if (SidePanel.alive()) {
 		sidePanel.show()
 	}
-	
+	console.log('收到显示的请求'+count++)
 })
