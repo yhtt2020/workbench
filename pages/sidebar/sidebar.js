@@ -130,6 +130,10 @@ window.onload = function() {
 				{
 					return gotIcon
 				}
+				if(typeof(item)=='undefined')
+				{
+					return "../../icons/empty.png"
+				}
 				return  item.icon //如果取不到图标，维持原样，防止icon丢失
 			},
 			//获取图标的方法
