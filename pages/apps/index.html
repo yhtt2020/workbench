@@ -89,7 +89,7 @@
 					<a-layout class="wall" v-show="current==='myapp'"
 						style="background: url('http://d.xiangtian.ren/api/wall/1.jpeg');">
 						<a-layout-header style="background: #fff; padding: 0">
-							<a-page-header style="border: 1px solid rgb(235, 237, 240)" title="我的应用"
+							<a-page-header  title="我的应用"
 								sub-title="管理我的应用，这里的应用可以随时添加到左侧栏，或者基于应用创建标签，不会因标签被关闭而丢失。" />
 						</a-layout-header>
 						<a-layout-content>
@@ -149,7 +149,7 @@
 										<template slot="extra">
 											<a-button icon="shopping-cart" key="3"
 												:type="shopcartApps.length>0?'primary':'default'">
-												购物车
+												清单
 												<a-badge :count="shopcartApps.length" :overflow-count="99"
 													:style="{'position':'absolute','top':'0','right':'0'}"
 													:number-style="{ backgroundColor: '#52c41a' }">
@@ -176,9 +176,9 @@
 												:tab="type.title">
 
 												<a-card :title="type.title" style="padding: 10px;">
-													<a-card-grid
-														style="width: 140px;cursor: pointer;position: relative;"
-														v-for="(app, indexApp) in type.apps" class="app"
+													<a-card-grid :class="{'app':true,'app-goods':true,'added':shopcartApps.indexOf(app)!=-1,'in-myApps':checkInMyApps(app)!=-1}"
+														style=""
+														v-for="(app, indexApp) in type.apps"
 														@mouseenter="show(app)" @mouseleave="hide()"
 														@contextmenu.prevent.native="showDrawer(app)">
 														<a-avatar shape="square" :size="64" :src="app.icon"
@@ -192,7 +192,7 @@
 														<div class="mask" v-show='currentApp== app '>
 															<div class="inner-wrapper" style="">
 
-																<a-button
+																<a-button v-if="checkInMyApps(app)==-1"
 																	style="border-radius: 4px 4px 0 0;text-align: left;"
 																	type="primary" icon="shopping-cart"
 																	@click="addAppToCart(app)" block>
@@ -474,7 +474,8 @@
 					name: 'register'
 				});
 
-				if (window.appsData == false && window.loaded) {
+				if ((window.appsData == false && window.loaded) ) {
+					//未读取到appsData
 					this._myApps = []
 					window.appsData = {
 						state: {
@@ -483,7 +484,7 @@
 					}
 					return
 				} else {
-					this._myApps = window.appsData.state.myApps
+						this._myApps = window.appsData.state.myApps
 				}
 			},
 			watch: {
@@ -650,6 +651,15 @@
 					})
 					return findIndex
 					
+				},
+				checkInMyApps(app){
+					apps = this.myApps
+					let findIndex=-1
+					apps.forEach(function(item, index) {
+						if (item.name == app.name)
+							findIndex=index
+					})
+					return findIndex
 				}
 
 

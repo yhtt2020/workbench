@@ -165,3 +165,20 @@
 .ant-page-header-heading {
 	overflow: visible !important;
 }
+
+.app-goods {
+	width: 140px;
+	cursor: pointer;
+	position: relative;
+	border:1px solid white;
+	margin: 2px;
+}
+
+.added {
+	border: 1px dashed #8c8c8c;
+	border-radius: 8px;
+}
+.in-myApps{
+	background-color: #00000010;
+	border-radius: 8px;
+}
