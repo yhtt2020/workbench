@@ -243,7 +243,7 @@ ipc.on('openApps',function(){
 		}
 		tid=tasks.add(newTask)
 		let newTab= {
-		  url: 'file://' + __dirname + '/pages/apps/index.html',
+		  url: require('util/urlParser.js').getFileURL( __dirname + '/pages/apps/index.html') ,
 		  title:'应用中心'
 		}
 		tabId=tasks.get(tid).tabs.add(newTab)
