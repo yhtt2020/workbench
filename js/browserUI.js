@@ -163,7 +163,7 @@ function switchToTab (id, options) {
   tabs.setSelected(id)
   tabBar.setActiveTab(id)
   webviews.setSelected(id, {
-    focus: options.focusWebview !== false
+    //focus: options.focusWebview !== false
   })
 }
 

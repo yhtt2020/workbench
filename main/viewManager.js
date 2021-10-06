@@ -253,7 +253,7 @@ ipc.on('setView', function (e, args) {
   setView(args.id)
   setBounds(args.id, args.bounds)
   if (args.focus) {
-    focusView(args.id)
+    //focusView(args.id) //todo观察，注释这行在切换view的时候给他聚焦的代码，用以解决mac平台上切换tab导致侧边栏丢失焦点出错的问题
   }
   //设置当前view
   //onSetView()
