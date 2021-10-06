@@ -411,5 +411,4 @@ ipc.on('showSidePanel', function() {
 	if (SidePanel.alive()) {
 		sidePanel.show()
 	}
-	console.log('收到显示的请求'+count++)
 })
