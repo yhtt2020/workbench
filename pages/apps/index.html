@@ -36,7 +36,7 @@
 						</p>
 						<p>
 							<a-icon type="like"></a-icon> 推荐指数：<template>
-								<a-rate :default-value="drawerApp.star" disabled />
+								<a-rate v-model="drawerApp.star"  default-value="3" ></a-rate>
 							</template>
 						</p>
 						<p>
@@ -49,37 +49,22 @@
 
 
 
-				<p>
+			<!-- 	<p>
 					<a-button type="primary" icon="plus-circle" @click="addApp()">
 						添加到我的应用
 					</a-button>
 					<a-button type="primary" icon="container">
 						添加到我的应用并新建任务
 					</a-button>
+				</p>
 				<p>
 					<a-button type="primary" icon="container">
 						添加到我的应用并添加至选择任务
 					</a-button>
-				</p>
+				</p> -->
 
-				</p>
-				<p>
-					<a-list :grid="{ gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 6, xxl: 3 }" bordered
-						:data-source="tasks">
-						<a-list-item slot="renderItem" slot-scope="item, index">
-							<a-card :title="item.title">
-								<a-list size="small" bordered :data-source="tasks">
-									<a-list-item slot="renderItem" slot-scope="item, index">
-										a
-									</a-list-item>
-									<div slot="header">
-										当前任务
-									</div>
-								</a-list>
-							</a-card>
-						</a-list-item>
-					</a-list>
-				</p>
+				
+				
 			</a-drawer>
 			<div class="">
 				<a-layout style="height: 100vh;" :trigger="null">
@@ -455,13 +440,6 @@
 					drawerVisible: false,
 					visibleCart: false,
 					quickDrawerVisible: false,
-					tasks: [{
-							title: '任务1'
-						},
-						{
-							title: '任务2'
-						}
-					],
 
 					_myApps: [],
 					//定义全部的apps，后期可以改成接口获取
