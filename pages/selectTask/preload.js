@@ -1,5 +1,7 @@
 const path = require('path')
 const fs = require('fs')
+var electron = require('electron')
+var ipc = electron.ipcRenderer
 window.globalArgs = {}
 let loaded = false
 process.argv.forEach(function(arg) {
@@ -36,3 +38,22 @@ try {
 console.log(tasks)
 window.tasks = tasks
 
+window.addEventListener('message', function(e) {
+	if (!e.origin.startsWith('file://')) {
+		return
+	}
+	let messageType = getMessageType(e.data)
+	switch (messageType) {
+		case 'closeWin':
+		 ipc.send('closeTaskSelect')
+			
+	}
+})
+
+
+function getMessageType(data) {
+	if (data && data.message)
+		return data.message
+	else
+		return ''
+}

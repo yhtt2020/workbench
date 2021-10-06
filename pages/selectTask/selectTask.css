@@ -28,7 +28,7 @@
 	box-shadow: 0 0 15px #00000030;
 	cursor: pointer;
 }
-	
+
 
 .tab-icon {
 	width: 20px;
@@ -49,6 +49,20 @@
 .tab-title:hover {
 	background-color: #efefef;
 }
-.ant-card-body{
+
+.ant-card-body {
 	padding: 20px;
+}
+
+.selected-span {
+	display: inline-block;
+	max-width: 300px;
+	hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	vertical-align: bottom;
+}
+.selected-span-task{
+	max-width: 100px;
 }
