@@ -80,6 +80,7 @@
 			"apps": [{
 				"name": "少数派",
 				"url": "https://sspai.com/",
+				"star":"3",
 				"summary": "高效工作，品质生活",
 				"icon": "https://cdn.sspai.com/sspai/assets/img/favicon/icon.ico"
 			}]
@@ -91,18 +92,21 @@
 					"name": "想天工作台",
 					"url": "https://work.thisky.com/",
 					"summary": "你在用的神器",
+					"star":"5",
 					"icon": "http://d.xiangtian.ren/api/hdlogo/gzt.svg"
 				},
 
 				{
 					"name": "图怪兽",
 					"url": "https://818ps.com/",
+					"star":"4",
 					"summary": "图片编辑剪辑",
 					"icon": "http://d.xiangtian.ren/api/hdlogo/tuguaishou.png"
 				},
 
 				{
 					"name": "蓝湖",
+					"star":"4",
 					"url": "https://lanhuapp.com/",
 					"summary": "原型图预览",
 					"icon": "http://d.xiangtian.ren/api/hdlogo/lanhu.png"
@@ -314,7 +318,150 @@
 					"icon": "http://d.xiangtian.ren/api/hdlogo/ele.jpg"
 				}
 			]
+		},
+		{
+			"name": "rest",
+			"title": "休闲放松",
+			"apps": [{
+					"name": "网易云音乐",
+					"url": "https://music.163.com",
+					"summary": "网抑云",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/wyy.png"
+				},
+				{
+					"name": "QQ音乐",
+					"url": "https://y.qq.com/",
+					"summary": "腾讯旗下音乐平台",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/qqyy.jpg"
+				},
+				{
+					"name": "哔哩哔哩",
+					"url": "https://www.bilibili.com/",
+					"summary": "干杯！",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/bilibili.webp"
+				},
+				{
+					"name": "爱奇艺",
+					"url": "https://www.iqiyi.com/",
+					"summary": "百度旗下视频网站",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/aiqiyi.webp"
+				},
+				{
+					"name": "腾讯视频",
+					"url": "https://v.qq.com/",
+					"summary": "不负好时光",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/tengxunsp.jpg"
+				},
+				{
+					"name": "优酷",
+					"url": "https://www.youku.com/",
+					"summary": "你的热爱",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/youku.jpg"
+				}
+			]
+		},
+		{
+			"name": "study",
+			"title": "学习成长",
+			"apps": [{
+					"name": "慕课网",
+					"url": "https://www.imooc.com/",
+					"summary": "程序员的梦工厂",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/muke.jpg"
+				},{
+					"name": "网易云课堂",
+					"url": "https://study.163.com/",
+					"summary": "实用技能平台",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/wyykt.webp"
+				},{
+					"name": "腾讯课堂",
+					"url": "https://ke.qq.com/",
+					"summary": "职业培训，考试提升",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/txykt.webp"
+				},
+				{
+					"name": "知乎",
+					"url": "https://www.zhihu.com",
+					"summary": "有问题就会有答案",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/zhihu.webp"
+				},
+				{
+					"name": "喜马拉雅",
+					"url": "https://www.ximalaya.com/",
+					"summary": "每一天的精神食粮",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/ximalaya.webp"
+				},
+				{
+					"name": "得到",
+					"url": "https://www.dedao.cn/",
+					"summary": "知识就是力量",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/dedao.webp"
+				}
+			]
+		},
+		{
+			"name": "buy",
+			"title": "企业采购",
+			"apps": [{
+					"name": "京东",
+					"url": "https://www.jd.com/",
+					"summary": "正品低价",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/jd.jpg"
+				},{
+					"name": "京满仓",
+					"url": "https://www.vipmro.net/",
+					"summary": "企业采购",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/jd.jpg"
+				},
+				{
+					"name": "苏宁易购",
+					"url": "https://www.suning.com/",
+					"summary": "专注好服务",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/suning.webp"
+				},
+				{
+					"name": "淘宝",
+					"url": "https://www.taobao.com/",
+					"summary": "淘！我喜欢",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/taobao.webp"
+				},
+				{
+					"name": "1688",
+					"url": "https://1688.com/",
+					"summary": "采购批发平台",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/1688.webp"
+				},
+				{
+					"name": "爱采购",
+					"url": "https://b2b.baidu.com/",
+					"summary": "轻量级、可自定义的管理系统搭建平台",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/aicaigou.jpg"
+				}
+			]
+		},
+		{
+			"name": "info",
+			"title": "企业信息",
+			"apps": [{
+					"name": "爱企查",
+					"url": "https://aiqicha.baidu.com/",
+					"summary": "专业免费的企业信息查询平台",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/aiqicha.jpg"
+				},
+				{
+					"name": "企查查",
+					"url": "https://www.qcc.com/",
+					"summary": "商业精英的共同选择",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/qichacha.jpg"
+				},
+				{
+					"name": "天眼查",
+					"url": "https://www.tianyancha.com/",
+					"summary": "重要决策前就用天眼查",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/tianyancha.png"
+				}
+			]
 		}
 	],
-	"updateTime": "2021年9月29日 周三 上午10:22"
+	"updateTime": "2021年10月6日 下午10:22"
 }
