@@ -89,8 +89,7 @@
 					<a-layout class="wall" v-show="current==='myapp'"
 						style="background: url('http://d.xiangtian.ren/api/wall/1.jpeg');">
 						<a-layout-header style="background: #fff; padding: 0">
-							<a-page-header  title="我的应用"
-								sub-title="管理我的应用，这里的应用可以随时添加到左侧栏，或者基于应用创建标签，不会因标签被关闭而丢失。" />
+							<a-page-header title="我的应用" sub-title="管理我的应用，这里的应用可以随时添加到左侧栏，或者基于应用创建标签，不会因标签被关闭而丢失。" />
 						</a-layout-header>
 						<a-layout-content>
 							<div style="padding: 20px;text-align: left;padding: 10px;margin:20px">
@@ -147,7 +146,7 @@
 									<a-page-header style="border: none;" title="应用中心"
 										:sub-title="'这里可以查看全部的应用,右键查看详情，应用列表更新于'+appUpdateTime+'。'">
 										<template slot="extra">
-											<a-button icon="shopping-cart" key="3"
+											<a-button icon="shopping-cart" key="3" @click="showDrawerCart()"
 												:type="shopcartApps.length>0?'primary':'default'">
 												清单
 												<a-badge :count="shopcartApps.length" :overflow-count="99"
@@ -176,9 +175,9 @@
 												:tab="type.title">
 
 												<a-card :title="type.title" style="padding: 10px;">
-													<a-card-grid :class="{'app':true,'app-goods':true,'added':shopcartApps.indexOf(app)!=-1,'in-myApps':checkInMyApps(app)!=-1}"
-														style=""
-														v-for="(app, indexApp) in type.apps"
+													<a-card-grid
+														:class="{'app':true,'app-goods':true,'added':shopcartApps.indexOf(app)!=-1,'in-myApps':checkInMyApps(app)!=-1}"
+														style="" v-for="(app, indexApp) in type.apps"
 														@mouseenter="show(app)" @mouseleave="hide()"
 														@contextmenu.prevent.native="showDrawer(app)">
 														<a-avatar shape="square" :size="64" :src="app.icon"
@@ -227,6 +226,42 @@
 					</a-layout>
 				</a-layout>
 			</div>
+
+			<a-drawer :title="'应用清单（'+shopcartApps.length+')'" placement="right" :visible="visibleCart"
+				@close="onCloseCart" :width="400">
+				<template>
+					 <a-empty v-if="shopcartApps.length==0" description="请选择应用"></a-empty> 
+					 
+					<a-card>
+						<a-card-grid v-for="app in shopcartApps" style="width:25%;text-align:center">
+							<a-avatar :src="app.icon"></a-avatar>
+							<p class="cart-title">
+								{{ app.name }}
+							</p>
+						</a-card-grid>
+					</a-card>
+
+					<div style="margin-top: 10px;">
+						<p>
+							<a-button icon="container" type="primary" block v-if="shopcartApps.length!=0">
+								收藏且添加至任务
+							</a-button>
+						</p>
+						<p>
+							<a-button icon="plus-circle" type="default" block v-if="shopcartApps.length!=0">
+								仅收藏，不打开
+							</a-button>
+						</p>
+						<p>
+							<a-button icon="rest" type="default" block v-if="shopcartApps.length!=0">
+								清空清单
+							</a-button>
+						</p>
+
+					</div>
+				</template>
+			</a-drawer>
+
 
 			<template>
 				<div>
@@ -409,15 +444,16 @@
 			components: {},
 			data() {
 				return {
-					btnText:'添加收藏',
+					btnText: '添加收藏',
 					shopcartApps: [], //购物车内的app
-					
+
 
 					currentApp: {}, //点击时的app
 					drawerApp: {},
 					quickDrawer: {},
 					//计算属性，这里加上下划线区分一下
 					drawerVisible: false,
+					visibleCart: false,
 					quickDrawerVisible: false,
 					tasks: [{
 							title: '任务1'
@@ -474,7 +510,7 @@
 					name: 'register'
 				});
 
-				if ((window.appsData == false && window.loaded) ) {
+				if ((window.appsData == false && window.loaded)) {
 					//未读取到appsData
 					this._myApps = []
 					window.appsData = {
@@ -484,7 +520,7 @@
 					}
 					return
 				} else {
-						this._myApps = window.appsData.state.myApps
+					this._myApps = window.appsData.state.myApps
 				}
 			},
 			watch: {
@@ -585,12 +621,12 @@
 					if (index != -1) {
 						this.myApps.splice(index, 1)
 						that.$message.warning('移除了应用：' + app.name + '')
-						this.btnText='添加收藏'
+						this.btnText = '添加收藏'
 					} else {
 						let apps = this.myApps;
 						apps.push(app)
 						this.myApps = apps
-						this.btnText='移出收藏'
+						this.btnText = '移出收藏'
 						this.$message.success('添加了应用：' + app.name)
 					}
 				},
@@ -614,12 +650,18 @@
 					this.drawerVisible = true;
 
 				},
+				showDrawerCart() {
+					this.visibleCart = true
+				},
 				onClose() {
-					this.drawerVisible = false;
+					this.drawerVisible = false
+				},
+				onCloseCart() {
+					this.visibleCart = false
 				},
 				show(app) {
 					this.currentApp = app
-					this.btnText=this.isInMyApps(app)==-1?'添加收藏':'移出收藏'
+					this.btnText = this.isInMyApps(app) == -1 ? '添加收藏' : '移出收藏'
 					console.log(this.currentApp)
 				},
 				hide(obj) {
@@ -637,27 +679,26 @@
 				},
 				//判断是否是我的应用
 				isInMyApps() {
-					
-					if(this.currentApp==null)
-					{
+
+					if (this.currentApp == null) {
 						return -1
 					}
 					apps = this.myApps
-					let app= this.currentApp
-					let findIndex=-1
+					let app = this.currentApp
+					let findIndex = -1
 					apps.forEach(function(item, index) {
 						if (item.name == app.name)
-							findIndex=index
+							findIndex = index
 					})
 					return findIndex
-					
+
 				},
-				checkInMyApps(app){
+				checkInMyApps(app) {
 					apps = this.myApps
-					let findIndex=-1
+					let findIndex = -1
 					apps.forEach(function(item, index) {
 						if (item.name == app.name)
-							findIndex=index
+							findIndex = index
 					})
 					return findIndex
 				}

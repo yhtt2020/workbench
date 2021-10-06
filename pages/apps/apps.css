@@ -182,3 +182,12 @@
 	background-color: #00000010;
 	border-radius: 8px;
 }
+
+.cart-title{
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	font-size:12px;
+	overflow: hidden;
+	margin-top: 10px;
+	height: 35px;
+}
