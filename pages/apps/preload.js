@@ -15,6 +15,9 @@ window.addEventListener('message', function(e) {
 				icon: e.data.icon
 			})
 			break
+		case 'selectTask':
+			ipc.send('selectTask')
+			break
 	}
 })
 
@@ -35,7 +38,7 @@ window.$appsRestore = appsRestore
 function initAppsData() {
 	const DevUrl = 'http://127.0.0.1:7002/apps/allApps' //使用egg接口返回数据
 	const PrdUrl = 'http://d.xiangtian.ren/api/apps.json' //正式站点的apps数据
-	const isDevelopmentMode = true//todo 需要加入开发环境的判断 process.argv.some(arg => arg === '--development-mode')
+	const isDevelopmentMode = true //todo 需要加入开发环境的判断 process.argv.some(arg => arg === '--development-mode')
 	const url = isDevelopmentMode ? DevUrl : PrdUrl
 	const apiUrl = url
 	const apiNative = '/../../api/apps.json'

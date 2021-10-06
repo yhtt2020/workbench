@@ -412,3 +412,33 @@ ipc.on('showSidePanel', function() {
 		sidePanel.show()
 	}
 })
+
+var selectTaskWindow=null
+ipc.on('selectTask',function(){
+	selectTaskWindow = new BrowserWindow({
+		frame: true,
+		backgroundColor :'black',
+		parent: mainWindow,
+		modal:true,
+		hasShadow: true,
+		width: 1000,
+		autoHideMenuBar:true,
+		height: 700,
+		resizable: false,
+		acceptFirstMouse: true,
+		visualEffectState: 'active',
+		webPreferences: {
+			preload: path.join(__dirname, '/pages/selectTask/preload.js'),
+			nodeIntegration: true,
+			contextIsolation: false,
+			additionalArguments: [
+				'--user-data-path=' + userDataPath,
+				'--app-version=' + app.getVersion(),
+				'--app-name=' + app.getName(),
+				...((isDevelopmentMode ? ['--development-mode'] : [])),
+			]
+		}
+	})
+	selectTaskWindow.webContents.loadURL('file://' + __dirname + "/pages/selectTask/index.html")
+	
+})

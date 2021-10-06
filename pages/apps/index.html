@@ -243,7 +243,7 @@
 
 					<div style="margin-top: 10px;">
 						<p>
-							<a-button icon="container" type="primary" block v-if="shopcartApps.length!=0">
+							<a-button icon="container" type="primary" block v-if="shopcartApps.length!=0" @click="selectTask()">
 								收藏且添加至任务
 							</a-button>
 						</p>
@@ -701,6 +701,12 @@
 							findIndex = index
 					})
 					return findIndex
+				},
+				//发送消息给preload，调取selectTask的窗体
+				selectTask(){
+					postMessage({
+						'message': 'selectTask'
+					})
 				}
 
 
