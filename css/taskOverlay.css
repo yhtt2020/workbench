@@ -265,3 +265,40 @@ body.dark-mode #task-overlay {
 .dark-mode #switch-task-button {
   color: dodgerblue;
 }
+
+/*优化一下任务栏的显示，增强区分度，减少认知成本*/
+
+    
+#task-overlay{
+	background-color: #f7f7f7;
+}
+
+.task-container{
+	width: 60%;
+	padding: 0.75em;
+	padding-left: 2.5em;
+	padding-bottom: 1em;
+	border-radius: 4px;
+	border: 1px solid #ececec;
+	margin-top: 10px;
+	background: white;
+}
+
+.task-name{
+	border-left: 4px solid #247afb;
+	padding-left: 10px;
+	font-weight: 700;
+}
+
+#add-task{
+	box-shadow: 0 0 15px #9a9a9a;
+	width: 100%;
+	 margin-left: 0;
+	 
+    z-index: 0;
+
+}
+.searchbar-item
+{
+	    border-bottom: 1px dashed #e6e6e6;
+}
