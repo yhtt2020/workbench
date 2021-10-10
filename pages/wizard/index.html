@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>首次使用向导</title>
+		<script src="../../ext/vue/vue.js"></script>
+		<script src="../../ext/vue/antd.min.js"></script>
+		<link rel="stylesheet" href="../../ext/vue/antd.min.css" />
+		<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline'" />
+		<link rel="stylesheet" href="./wizard.css" />
+	</head>
+	<body>
+
+		<div id="app">
+			<div id="stepLogin" class="step-login" v-show="step=='login'">
+				<h1>使用向导</h1>
+				<p>欢迎使用想天工作台，您是否首次使用产品？<br>您可以选择登录账号来同步您的<strong>配置</strong>和<strong>工作区</strong>。<br>如果您是<strong>首次使用</strong>，建议根据使用向导熟悉产品后再使用。
+				</p>
+				<template>
+					<a-form id="components-form-demo-normal-login" :form="form" class="login-form"
+						@submit="handleSubmit">
+						<a-form-item label="">
+							<a-input placeholder="手机号" v-decorator="[
+						          'phone',
+						          {
+						            rules: [{ required: true, message: '请输入您的手机号!' }],
+						          },
+						        ]" style="width: 100%">
+								<a-select slot="addonBefore" v-decorator="['prefix', { initialValue: '86' }]"
+									style="width: 70px">
+									<a-select-option value="86">
+										+86
+									</a-select-option>
+
+								</a-select>
+							</a-input>
+						</a-form-item>
+						<!-- <a-form-item>
+							<a-input v-decorator="[
+				  'password',
+				  { rules: [{ required: true, message: 'Please input your Password!' }] },
+				]" type="password" placeholder="Password">
+								<a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25)" />
+							</a-input>
+						</a-form-item> -->
+						<a-form-item label="">
+							<a-row :gutter="8">
+								<a-col :span="12">
+									<a-input placeholder="验证码" v-decorator="[
+						              'captcha',
+						              { rules: [{ required: true, message: '请输入获取的验证码!' }] },
+						            ]" />
+								</a-col>
+								<a-col :span="12">
+									<a-button>获取</a-button>
+								</a-col>
+							</a-row>
+						</a-form-item>
+						<a-form-item>
+							<a-button type="default" html-type="submit" class="login-form-button">
+								登录
+							</a-button>
+							<a-button type="primary" style="width: 40%;float:right" @click="step='wizard'">
+								首次使用
+							</a-button>
+						</a-form-item>
+					</a-form>
+				</template>
+			</div>
+			<div id="stepWizard" class="step-wizard" v-show="step=='wizard'">
+				<template>
+					<a-steps :current="current">
+						<a-step v-for="item in steps" :key="item.title" :title="item.title">
+							<a-icon slot="icon" :type="item.icon"></a-icon>
+						</a-step>
+					</a-steps>
+				</template>
+				<div v-show="current==0" class="steps-content">
+					<p>根据您的喜好和习惯完成以下设置，后面您也可以随时在<strong>设置</strong>当中进行调整。</p>
+					<h3>1.标签栏风格</h3>
+					<p class="setting-type" style="">
+						<template>
+
+							<p class="theme-carousel">
+							<div style="overflow: hidden;height: 113px;position: relative;    margin-bottom: 30px;">
+								<template>
+									<a-carousel arrows class="carousel-el" :autoplay='true' effect="fade"
+										v-show="titleBar=='theme'">
+
+
+										<div><img src="../../img/wy-theme.jpg"></img></div>
+										<div><img src="../../img/qq-theme.jpg"></img></div>
+										<div slot="prevArrow" slot-scope="props" class="custom-slick-arrow"
+											style="left: 10px;zIndex: 1">
+											<a-icon type="left-circle"></a-icon>
+										</div>
+										<div slot="nextArrow" slot-scope="props" class="custom-slick-arrow"
+											style="right: 10px">
+											<a-icon type="right-circle"></a-icon>
+										</div>
+									</a-carousel>
+								</template>
+								<template>
+									<a-carousel arrows class="carousel-el" :autoplay='true' effect="fade"
+										v-show="titleBar=='no-theme'">
+										<div slot="prevArrow" slot-scope="props" class="custom-slick-arrow"
+											style="left: 10px;zIndex: 1">
+											<a-icon type="left-circle"></a-icon>
+										</div>
+										<div slot="nextArrow" slot-scope="props" class="custom-slick-arrow"
+											style="right: 10px">
+											<a-icon type="right-circle"></a-icon>
+										</div>
+										<div><img src="../../img/wy-no.jpg"></img></div>
+										<div><img src="../../img/qq-no.jpg"></img></div>
+
+									</a-carousel>
+								</template>
+							</div>
+					</p>
+					<a-radio-group name="titleBar" default-value="theme" @change="changeTitleBar">
+
+						<a-radio value="theme" style="width: 300px;">
+							自适应标签色
+						</a-radio>
+						<a-radio value="no-theme">
+							纯色标签栏
+						</a-radio>
+					</a-radio-group>
+					</template>
+					</p>
+					<h3>2.默认搜索引擎</h3>
+					<p class="setting-type">
+						<template>
+							<a-radio-group name="improve" :default-value="1">
+								<a-radio :value="1">
+									bing
+								</a-radio>
+								<a-radio :value="2">
+									百度
+								</a-radio>
+								<a-radio :value="3">
+									搜狗
+								</a-radio>
+								<a-radio :value="4">
+									360
+								</a-radio>
+								<a-radio :value="5">
+									google（海外）
+								</a-radio>
+							</a-radio-group>
+						</template>
+					</p>
+					<h3>3.帮助我们改善产品</h3>
+					<p class="setting-type">
+						<template>
+							<a-radio-group name="improve" :default-value="1">
+								<a-radio :value="1">
+									发送统计信息（不会发送个人信息）
+								</a-radio>
+								<a-radio :value="2">
+									不发送统计信息
+								</a-radio>
+							</a-radio-group>
+						</template>
+					</p>
+					<h3>4.默认浏览器</h3>
+					<p>在您改变浏览器的使用习惯之前，我们并不推荐您设置为默认浏览器。</p>
+					<p class="setting-type">
+						<template>
+							<a-radio-group name="improve" :default-value="1">
+								<a-radio :value="1">
+									作为辅助浏览器
+								</a-radio>
+								<a-radio :value="2">
+									作为主力浏览器（设置为默认浏览器）
+								</a-radio>
+							</a-radio-group>
+						</template>
+					</p>
+					<div class="bottom-button">
+						<a-button type="primary" @click="next">
+							下一步.导入收藏
+						</a-button>
+						<a-button type="default" style="margin-left: 50px" @click="current=2">
+							暂不导入收藏
+						</a-button>
+					</div>
+				</div>
+				<div v-show="current==1" class="steps-content">
+					<template>
+						<div>
+							<a-collapse v-model="activeKey" :bordered="false">
+								<a-collapse-panel :style="customStyle" :show-arrow="false" key="1"
+									header="①安装浏览器插件，实现实时同步，强烈推荐">
+									<p>安装我们提供的浏览器插件，实现实时同步，无需导入导出</p>
+								</a-collapse-panel>
+								<a-collapse-panel :style="customStyle" :show-arrow="false" key="2" header="②自动导入书签">
+									<p>下面是我们检测到的系统内可支持自动导入的浏览器，请选择，可多个导入，如果有相同的后者会覆盖前者。</p>
+								</a-collapse-panel>
+								<a-collapse-panel :style="customStyle" :show-arrow="false" key="3" header="③手动导入导出">
+									<p>按照行业标准导出收藏夹，并选择文件导入</p>
+									<p><a href="https://www.yuque.com/tswork/ngd5zk/uizvd8" target="_blank">❓如何导出？</a>
+									</p>
+								</a-collapse-panel>
+							</a-collapse>
+						</div>
+					</template>
+					<div class="bottom-button">
+						<a-button type="primary" @click="next">
+							下一步.1分钟使用视频教程
+						</a-button>
+						<a-button type="default" style="margin-left: 50px" @click="current=2">
+							跳过教程，自己摸索
+						</a-button>
+					</div>
+				</div>
+				<div v-show="current==2" class="steps-content">
+					<template>
+						<!--  <a-carousel effect="fade" style="background-color: black;border-radius: 8px;min-height: 400px;">
+					    <div><h3>1</h3></div>
+					    <div><h3>2</h3></div>
+					    <div><h3>3</h3></div>
+					    <div><h3>4</h3></div>
+					  </a-carousel> -->
+						<a-carousel ref="videos" arrows effect="fade" style="text-align: center;">
+							<div slot="prevArrow" slot-scope="props" class="custom-slick-arrow"
+								style="left: 10px;zIndex: 1">
+								<a-icon type="left-circle" />
+							</div>
+							<div slot="nextArrow" slot-scope="props" class="custom-slick-arrow" style="right: 20px">
+								<a-icon type="right-circle" />
+							</div>
+							<div>
+								<h3 class="video-title">1.我们与传统浏览器最大的不同：分组浏览</h3>
+								<!-- <iframe src="//player.bilibili.com/player.html?aid=890908889&bvid=BV1hP4y187jw&cid=421342590&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+ -->
+								<!-- <video width="95%" height="400" style="    margin-left: 20px;" controls>
+								    <source src="https://www.bilibili.com/video/BV1hP4y187jw?share_source=copy_web" type="video/mp4">
+								    <source src="https://www.bilibili.com/video/BV1hP4y187jw?share_source=copy_web" type="video/ogg">
+								    您的浏览器不支持 video 标签。
+								</video> -->
+							</div>
+							<div>
+								<h3 class="video-title">2.精心设计的左侧栏</h3>
+
+							</div>
+							<div>
+								<h3 class="video-title">3.打造个人的应用中心</h3>
+
+							</div>
+							<div>
+								<h3 class="video-title">4.团队协作功能（即将上线）</h3>
+
+							</div>
+							
+						</a-carousel>
+						<div>
+							<iframe  class="frame-video" sandbox="allow-same-origin allow-scripts "
+								:src="videoSource"
+								scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true">
+							</iframe>
+						
+						</div>
+					</template>
+					<div class="bottom-button">
+						<a-button type="primary" @click="netxVideo">
+							新技能get，next
+						</a-button>
+						<a-button type="default" style="margin-left: 50px" @click="current=2">
+							学完了
+						</a-button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script>
+			Vue.use(antd)
+			Vue.prototype.$form = antd.Form
+			var appVue = new Vue({
+				el: '#app',
+
+				data() {
+					return {
+						step: 'login', // login ,wizard,reg
+						current: 0,
+						steps: [{
+								title: '基础设置',
+								content: 'First-content',
+								icon: 'setting'
+							},
+							{
+								title: '导入书签',
+								content: 'Second-content',
+								icon: 'star'
+							},
+							{
+								title: '新手教程',
+								content: 'Last-content',
+								icon: 'play-circle'
+							},
+						],
+						titleBar: 'theme',
+						activeKey: ['1'],
+						customStyle: 'background: #f7f7f7;border-radius: 4px;margin-bottom: 24px;border: 0;overflow: hidden',
+						videoSource:"http://player.bilibili.com/player.html?aid=890908889&bvid=BV1hP4y187jw&cid=421342590&page=1",
+						videoSources:[
+							"http://player.bilibili.com/player.html?aid=890908889&bvid=BV1hP4y187jw&cid=421342590&page=1",
+							"http://player.bilibili.com/player.html?aid=890908889&bvid=BV1hP4y187jw&cid=421342590&page=1&p=2",
+							"http://player.bilibili.com/player.html?aid=890908889&bvid=BV1hP4y187jw&cid=421342590&page=1&p=3",
+							"http://player.bilibili.com/player.html?aid=890908889&bvid=BV1hP4y187jw&cid=421342590&page=1&p=4"
+						],
+						currentVideoIndex:0,
+					}
+				},
+				beforeCreate() {
+					this.form = this.$form.createForm(this, {
+						name: 'normal_login'
+					});
+				},
+				methods: {
+					handleSubmit(e) {
+						e.preventDefault();
+						this.form.validateFields((err, values) => {
+							if (!err) {
+								console.log('Received values of form: ', values);
+							}
+						});
+					},
+					next() {
+						this.current++;
+					},
+					prev() {
+						this.current--;
+					},
+					changeTitleBar(e) {
+						this.titleBar = e.target.value
+						console.log(this.titleBar)
+					},
+					netxVideo() {
+						this.$refs.videos.next()
+						this.currentVideoIndex++;
+						if(this.currentVideoIndex==4){
+							this.currentVideoIndex=0
+						}
+						this.videoSource=this.videoSources[this.currentVideoIndex]
+					}
+				}
+			})
+		</script>
+
+
+		<style>
+			#components-form-demo-normal-login .login-form {
+				max-width: 250px;
+			}
+
+			#components-form-demo-normal-login .login-form-forgot {
+				float: right;
+			}
+
+			#components-form-demo-normal-login .login-form-button {
+				width: 40%;
+				margin-right: 5%;
+			}
+
+			.setting-type {
+				padding-bottom: 10px;
+				border-bottom: dashed 1px #ccc;
+				margin-bottom: 20px;
+			}
+
+			.theme-carousel {}
+
+			.carousel-el {
+				position: relative;
+				left: -18px;
+				top: -25px;
+				width: 796px;
+			}
+
+			.ant-carousel>>>.slick-slide {
+				text-align: center;
+				height: 160px;
+				line-height: 160px;
+				background: #364d79;
+				overflow: hidden;
+			}
+
+			.ant-carousel>>>.custom-slick-arrow {
+				width: 25px;
+				height: 25px;
+				font-size: 25px;
+				color: #fff;
+				background-color: rgba(31, 45, 61, 0.11);
+				opacity: 0.3;
+			}
+
+			.ant-carousel>>>.custom-slick-arrow:before {
+				display: none;
+			}
+
+			.ant-carousel>>>.custom-slick-arrow:hover {
+				opacity: 0.5;
+			}
+		</style>
+	</body>
+</html>
