@@ -152,7 +152,7 @@ class SidePanel {
 	show() {
 		if (SidePanel.alive()) {
 			if (!this._sidePanel.isVisible() && this._sidePanel != null) {
-				this._sidePanel.showInactive()
+				this._sidePanel.show()
 			}
 		}
 
@@ -211,6 +211,21 @@ class SidePanel {
 
 	}
 
+
+	//设置在侧边栏鼠标无效
+	setMouseIgnore() {
+		this._sidePanel.setIgnoreMouseEvents(true, {
+			forward: true
+		})
+		mainWindow.focus()
+		console.log('设置左侧栏不再感应鼠标，主窗体获得焦点')
+	}
+	//设置在侧边栏鼠标有效
+	setMouseEnable() {
+		this._sidePanel.setIgnoreMouseEvents(false)
+		this._sidePanel.focus()
+		console.log('设置左侧栏感应 鼠标，左侧栏同时获得焦点')
+	}
 }
 
 
@@ -243,7 +258,7 @@ function addMainWindowEventListener() {
 				if (sidePanel._sidePanel.isAlwaysOnTop()) {
 					sidePanel._sidePanel.setAlwaysOnTop(false)
 					sidePanel._sidePanel.moveAbove(mainWindow
-					.getMediaSourceId()) //移动到父级最前面，不挡住其他的界面，不使用这个办法会突出来
+						.getMediaSourceId()) //移动到父级最前面，不挡住其他的界面，不使用这个办法会突出来
 					mainWindow.blur()
 				}
 				//mainWindow.blur()
@@ -270,6 +285,7 @@ function addMainWindowEventListener() {
 	mainWindow.on('maximize', () => {
 		sidePanel.attachToMainWindow()
 		sendIPCToWindow(mainWindow, 'getTitlebarHeight')
+		sidePanel.show()//最大化情况下，最小化，再恢复窗体，必须要重新show一下，不然无法点击左侧栏
 	})
 
 	mainWindow.on('unmaximize', () => {
@@ -283,6 +299,8 @@ function addMainWindowEventListener() {
 
 	mainWindow.on('restore', () => {
 		sidePanel.show()
+		console.log('从最小化恢复')
+		sidePanel.focus()
 	})
 	mainWindow.on('enter-full-screen', () => {
 		sidePanel.attachToMainWindow()
@@ -348,19 +366,35 @@ function loadSidePanel() {
 // 		sidePanel.hide()
 // }
 
-ipc.on('set-ignore-mouse-events', (event, ...args) => {
-	if (SidePanel.alive()) {
-		if (mainWindow.isFocused() || sidePanel._sidePanel.isFocused()) {
-			if (args[0]) {
-				mainWindow.focus()
-			} else {
-				sidePanel.focus()
-			}
-			if (sidePanel._sidePanel.isVisible())
-				sidePanel.setIgnoreMouseEvents(...args)
-		}
-	}
+// ipc.on('set-ignore-mouse-events', (event, ...args) => {
+// 	if (SidePanel.alive()) {
+// 		if (mainWindow.isFocused() || sidePanel._sidePanel.isFocused()) {
+// 			if (args[0]) {
+// 				mainWindow.focus()
+// 			} else {
+// 				sidePanel.focus()
+// 			}
+// 			if (sidePanel._sidePanel.isVisible()) {
+// 				console.log(args)
+// 				 if (args[0]) {
+// 				 	sidePanel.setMouseIgnore()
+// 				 } else {
+// 				 	sidePanel.setMouseEnable()
+// 				 }
+			
+// 				//sidePanel.setIgnoreMouseEvents(...args)
+// 			}
+
+// 		}
+// 	}
+// })
+ipc.on('setMouseEnable',function(){
+	sidePanel.setMouseEnable()
 })
+ipc.on('setMouseIgnore',function(){
+	sidePanel.setMouseIgnore()
+})
+
 //主窗口收到要获取全局变量的消息，主要是返回tasks和tabs两个数组，用于同步左侧栏
 ipc.on('getGlobal', () => {
 	//sidebar发来的消息
@@ -406,23 +440,23 @@ ipc.on('hideSidePanel', function() {
 	}
 
 })
-var count=0
+var count = 0
 ipc.on('showSidePanel', function() {
 	if (SidePanel.alive()) {
 		sidePanel.show()
 	}
 })
 
-var selectTaskWindow=null
-ipc.on('selectTask',function(){
+var selectTaskWindow = null
+ipc.on('selectTask', function() {
 	selectTaskWindow = new BrowserWindow({
 		frame: true,
-		backgroundColor :'black',
+		backgroundColor: 'black',
 		parent: mainWindow,
-		modal:true,
+		modal: true,
 		hasShadow: true,
 		width: 1000,
-		autoHideMenuBar:true,
+		autoHideMenuBar: true,
 		height: 700,
 		resizable: false,
 		acceptFirstMouse: true,
@@ -440,5 +474,5 @@ ipc.on('selectTask',function(){
 		}
 	})
 	selectTaskWindow.webContents.loadURL('file://' + __dirname + "/pages/selectTask/index.html")
-	
+
 })
