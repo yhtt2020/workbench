@@ -81,14 +81,14 @@ class SidePanel {
 		// 	}
 		// })
 
-		this._sidePanel.on('close',function(){
+		this._sidePanel.on('close', function() {
 			console.log('sidebar-close:左侧栏隐藏')
 		})
 
-		this._sidePanel.on('show',function(){
+		this._sidePanel.on('show', function() {
 			console.log('sidebar-show:左侧栏显示')
 		})
-		this._sidePanel.on('hide',function(){
+		this._sidePanel.on('hide', function() {
 			console.log('sidebar-hide:左侧栏隐藏')
 		})
 		setTimeout(function() {
@@ -237,7 +237,7 @@ class SidePanel {
 		}
 
 	}
-	syncTitleBar(){
+	syncTitleBar() {
 		sendIPCToWindow(mainWindow, 'getTitlebarHeight')
 	}
 
@@ -274,7 +274,7 @@ function addMainWindowEventListener() {
 
 	mainWindow.on('show', () => {
 		if (SidePanel.alive()) {
-			console.log('mainwindow-show:侧边栏'+sidePanel._sidePanel)
+			console.log('mainwindow-show:侧边栏' + sidePanel._sidePanel)
 			//sidePanel.show()
 			//sidePanel.syncSize()
 		}
@@ -315,11 +315,13 @@ function addMainWindowEventListener() {
 
 	//最小化、恢复事件
 	mainWindow.on('minimize', () => {
-		//sidePanel.hide()
+		if (process.platform == 'win32')
+			sidePanel.hide()
 
 	})
 	mainWindow.on('restore', () => {
-		//sidePanel.show()
+		if (process.platform == 'win32')
+			sidePanel.show() //sidePanel.show()
 	})
 
 	//最大化，取消最大化事件，一般用于win
@@ -327,7 +329,7 @@ function addMainWindowEventListener() {
 		console.log('mainwindow-maximize:')
 		sidePanel.syncSize()
 		sidePanel.syncTitleBar()
-		sidePanel.show()//最大化情况下，最小化，再恢复窗体，必须要重新show一下，不然无法点击左侧栏
+		sidePanel.show() //最大化情况下，最小化，再恢复窗体，必须要重新show一下，不然无法点击左侧栏
 	})
 	mainWindow.on('unmaximize', () => {
 		console.log('mainwindow-unmaximize:')
@@ -349,7 +351,7 @@ function addMainWindowEventListener() {
 		console.log('mainwindow-leave-full-screen:进入全屏')
 		sidePanel.syncSize()
 		//sidePanel.setTop()
-		sidePanel.syncTitleBar()//sendIPCToWindow(mainWindow, 'getTitlebarHeight')
+		sidePanel.syncTitleBar() //sendIPCToWindow(mainWindow, 'getTitlebarHeight')
 
 	})
 
@@ -419,11 +421,13 @@ function loadSidePanel() {
 // 		}
 // 	}
 // })
-ipc.on('setMouseEnable',function(){
-	sidePanel.setMouseEnable()
+ipc.on('setMouseEnable', function() {
+	if (SidePanel.alive())
+		sidePanel.setMouseEnable()
 })
-ipc.on('setMouseIgnore',function(){
-	sidePanel.setMouseIgnore()
+ipc.on('setMouseIgnore', function() {
+	if (SidePanel.alive())
+		sidePanel.setMouseIgnore()
 })
 
 //主窗口收到要获取全局变量的消息，主要是返回tasks和tabs两个数组，用于同步左侧栏
@@ -472,9 +476,9 @@ ipc.on('hideSidePanel', function() {
 
 })
 
-ipc.on('returnTitlebarHeight',function(event,data){
-	if(data.titlebarHeight && sidePanel!=null){
-		sidePanel.titlebarHeight=data.titlebarHeight
+ipc.on('returnTitlebarHeight', function(event, data) {
+	if (data.titlebarHeight && sidePanel != null) {
+		sidePanel.titlebarHeight = data.titlebarHeight
 		sidePanel.syncSize()
 	}
 })
