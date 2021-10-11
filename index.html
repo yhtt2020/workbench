@@ -146,8 +146,14 @@
 			</button>
 		</div>
 
-		<div id="task-overlay" class="" hidden>
-			<div class="simulated-navbar windowDragHandle" id="task-overlay-navbar"></div>
+		 <div id="task-overlay" class="" hidden tabindex="-1">
+			<div class="simulated-navbar windowDragHandle" id="task-overlay-navbar">
+				<div class="task-search-input-container">
+				  <i class="i carbon:search"></i>
+				  <input type="search" id="task-search-input" class="mousetrap"/>
+				</div>
+			</div>
+			
 			<div id="task-area"></div>
 			<button id="add-task">
 				<i class="i carbon:new-tab"></i>
@@ -159,24 +165,13 @@
 			<div id="download-container" role="list" class="has-thin-scrollbar"></div>
 			<button id="download-close-button" class="i carbon:close"></button>
 		</div>
-
-    <div id="task-overlay" class="" hidden tabindex="-1">
-      <div
-        class="simulated-navbar windowDragHandle"
-        id="task-overlay-navbar"
-      >
-      <div class="task-search-input-container">
-        <i class="i carbon:search"></i>
-        <input type="search" id="task-search-input" class="mousetrap"/>
-      </div>
-    </div>
-      <div id="task-area"></div>
-      <button id="add-task">
-        <i class="i carbon:new-tab"></i>
-        <span></span>
-      </button>
-    </div>
-
+		 <div class="modal" id="manager-setup-dialog" hidden>
+		      <h3 class="modal-title" id="manager-setup-heading"></h3>
+		      <button
+		        id="manager-setup-close"
+		        class="modal-close-button i carbon:close"
+		      ></button>
+		
 			<div id="manager-setup-instructions-primary">
 				<div class="light-fade" data-string="passwordManagerSetupStep1" data-allowHTML></div>
 				<div class="spacer"></div>
