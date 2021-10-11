@@ -188,14 +188,18 @@
 																	{{ btnText }}
 																</a-button>
 
-																<a-button style="border-radius:0;text-align: left;"
-																	type="primary" icon="branches" block>
+																<a-button v-show="checkInMyApps(app)==-1" style="border-radius:0;text-align: left;"
+																	type="primary" icon="branches" @click="addApp(app);addTask(app)" block>
 																	收藏并打开
+																</a-button>
+																<a-button style="border-radius:0;text-align: left;"
+																	type="primary" icon="login" @click="addTask(app)" block>
+																	仅打开
 																</a-button>
 																<a-button
 																	style="border-radius:0 0 4px 4px;text-align: left;"
 																	type="primary" icon="container"
-																	@click="showDrawer(app)" block>
+																	@click="selectTask()" block>
 																	选择任务添加
 																</a-button>
 															</div>
