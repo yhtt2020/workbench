@@ -106,10 +106,8 @@
 				window.postMessage({
 					message:'set-ignore-mouse-events'
 					})
-				ipc.send('set-ignore-mouse-events', false, {
-					forward: true
-				})
-			
+				ipc.send('setMouseEnable')
+				//console.log('设置左侧栏鼠标有效')
 				
 			}
 		</script>

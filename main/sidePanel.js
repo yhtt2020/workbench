@@ -14,9 +14,6 @@ class SidePanel {
 	static getSidePanel() {
 		return this._sidePanel
 	}
-
-
-
 	//判断是否存在sidebar
 	static alive() {
 		if (sidePanel == null || typeof(sidePanel) == 'undefined') {
@@ -26,7 +23,6 @@ class SidePanel {
 		} else if (sidePanel.isDestroyed()) {
 			return false
 		}
-
 		return true
 	}
 
@@ -84,7 +80,7 @@ class SidePanel {
 		// 		that.unsetTop()
 		// 	}
 		// })
-		
+
 		this._sidePanel.on('close',function(){
 			console.log('sidebar-close:左侧栏隐藏')
 		})
@@ -178,9 +174,9 @@ class SidePanel {
 
 	show() {
 		if (SidePanel.alive()) {
-			if (!this.isVisible()) {
+			if (!this._sidePanel.isVisible() && this._sidePanel != null) {
 				console.log('调用sidebar.show()侧边栏')
-				this._sidePanel.showInactive()
+				this._sidePanel.show()
 			}
 		}
 
@@ -241,11 +237,24 @@ class SidePanel {
 		}
 
 	}
-
 	syncTitleBar(){
 		sendIPCToWindow(mainWindow, 'getTitlebarHeight')
 	}
 
+	//设置在侧边栏鼠标无效
+	setMouseIgnore() {
+		this._sidePanel.setIgnoreMouseEvents(true, {
+			forward: true
+		})
+		mainWindow.focus()
+		console.log('设置左侧栏不再感应鼠标，主窗体获得焦点')
+	}
+	//设置在侧边栏鼠标有效
+	setMouseEnable() {
+		this._sidePanel.setIgnoreMouseEvents(false)
+		this._sidePanel.focus()
+		console.log('设置左侧栏感应 鼠标，左侧栏同时获得焦点')
+	}
 }
 
 
@@ -316,10 +325,9 @@ function addMainWindowEventListener() {
 	//最大化，取消最大化事件，一般用于win
 	mainWindow.on('maximize', () => {
 		console.log('mainwindow-maximize:')
-		//sidePanel.show()
 		sidePanel.syncSize()
 		sidePanel.syncTitleBar()
-		//sendIPCToWindow(mainWindow, 'getTitlebarHeight')
+		sidePanel.show()//最大化情况下，最小化，再恢复窗体，必须要重新show一下，不然无法点击左侧栏
 	})
 	mainWindow.on('unmaximize', () => {
 		console.log('mainwindow-unmaximize:')
@@ -389,19 +397,35 @@ function loadSidePanel() {
 // 		sidePanel.hide()
 // }
 
-ipc.on('set-ignore-mouse-events', (event, ...args) => {
-	if (SidePanel.alive()) {
-		if (mainWindow.isFocused() || sidePanel._sidePanel.isFocused()) {
-			if (args[0]) {
-				mainWindow.focus()
-			} else {
-				sidePanel.focus()
-			}
-			if (sidePanel._sidePanel.isVisible())
-				sidePanel.setIgnoreMouseEvents(...args)
-		}
-	}
+// ipc.on('set-ignore-mouse-events', (event, ...args) => {
+// 	if (SidePanel.alive()) {
+// 		if (mainWindow.isFocused() || sidePanel._sidePanel.isFocused()) {
+// 			if (args[0]) {
+// 				mainWindow.focus()
+// 			} else {
+// 				sidePanel.focus()
+// 			}
+// 			if (sidePanel._sidePanel.isVisible()) {
+// 				console.log(args)
+// 				 if (args[0]) {
+// 				 	sidePanel.setMouseIgnore()
+// 				 } else {
+// 				 	sidePanel.setMouseEnable()
+// 				 }
+
+// 				//sidePanel.setIgnoreMouseEvents(...args)
+// 			}
+
+// 		}
+// 	}
+// })
+ipc.on('setMouseEnable',function(){
+	sidePanel.setMouseEnable()
 })
+ipc.on('setMouseIgnore',function(){
+	sidePanel.setMouseIgnore()
+})
+
 //主窗口收到要获取全局变量的消息，主要是返回tasks和tabs两个数组，用于同步左侧栏
 ipc.on('getGlobal', () => {
 	//sidebar发来的消息

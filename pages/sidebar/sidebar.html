@@ -142,8 +142,8 @@
 
 
 												</template> -->
-												<a-button @click="openBottom('mobile')" type="default" shape="circle"
-													icon="mobile" />
+											<a-button @click="openBottom('mobile')" type="default" shape="circle"
+												icon="mobile" />
 											<!-- </a-popover> -->
 										</li>
 										<li>
@@ -196,14 +196,10 @@
 		//对clickThrough区域进行穿透设置，这样鼠标移动到clickThroug的区域就会自动穿透
 		const el = document.getElementById('clickThroughElement')
 
-		function setIgnore() {
-			ipc.send('set-ignore-mouse-events', true, {
-				forward: true
-			})
-		}
+	
 		el.addEventListener('mouseenter', (e) => {
-			setIgnore()
-			console.log(e.target)
+			ipc.send('setMouseIgnore')
+			
 		})
 	</script>
 </html>
