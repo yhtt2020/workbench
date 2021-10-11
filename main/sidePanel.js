@@ -1,4 +1,6 @@
 let sidePanel = null
+
+
 class SidePanel {
 	_sidePanel = null
 	titlebarHeight = 20
@@ -112,6 +114,15 @@ class SidePanel {
 	 * 获取一下mainWindow的位置信息并同步一下sidePanel，不包含焦点处理
 	 */
 	syncSize(resetY = 0) {
+		function isWin11() {
+			var sysVersion = process.getSystemVersion()
+			if (sysVersion.startsWith('10.') && process.platform == 'win32') {
+				return true
+			} else {
+				return false
+			}
+		}
+		var isWin11 = isWin11()
 		if (!SidePanel.alive()) return
 		if (mainWindow == null || sidePanel == null) {
 			return
@@ -122,35 +133,46 @@ class SidePanel {
 		}
 		this.bounds = mainWindow.getBounds()
 
+		console.log(process.getSystemVersion())
+
+
 		//windows全屏模式单独处理
 		if (mainWindow.isMaximized() && process.platform == 'win32') {
+			//win上x和y在全屏下不为0，甚至为-8，目前未考虑win7
 			if (this.bounds.x < 0) this.bounds.x = 0
-			if (this.bounds.y < 0) this.bounds.y = 0
-
+			if (this.bounds.y < 0) {
+				this.bounds.y = 0
+			}
 			if (settings.get('useSeparateTitlebar')) {
 				this.bounds.y += 23
 				this.bounds.height -= 40
 			} else {
-				this.bounds.height -= 20
+				if(isWin11){
+					this.bounds.height-=15 //单独对win11的标题栏高度进行兼容
+				}else{
+					this.bounds.height -= 20
+				}
 			}
-
-			//win上带标题栏的单独处理
 		} else if (settings.get('useSeparateTitlebar') && process.platform == 'win32') {
+			//win上带标题栏的单独处理
 			this.bounds.x += 8
 			this.bounds.y += 31
 			this.bounds.height -= 40
 		}
-
-		//todo win11上尺寸单独处理 ，需要修复几个像素的差异
-
-
+		
 		let setX = this.bounds.x
 		let setY = !resetY ? this.bounds.y + this.titlebarHeight : this.bounds.y + resetY
+		let setHeight = this.bounds.height - this.titlebarHeight
+		if (isWin11) {
+			//win11的高度不一致
+			setX += 1
+			setHeight -= 1
+		}
 		this._sidePanel.setBounds({
 			x: setX,
 			y: setY,
 			width: this.panelWidth,
-			height: this.bounds.height - this.titlebarHeight
+			height:setHeight
 		})
 	}
 
