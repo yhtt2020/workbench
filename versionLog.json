@@ -3,5 +3,10 @@
     "releaseTime": "2021.10.11",
     "releaseHeadline": "修复了win11的个别像素差异",
 	"releaseNotes":""
-},
+},{
+    "version": "0.5.0",
+    "releaseTime": "2021.10.11 22:29",
+    "releaseHeadline": "任务标签栏增加搜索功能",
+	"releaseNotes":""
+}
 ]
