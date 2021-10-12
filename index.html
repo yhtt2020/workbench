@@ -4,7 +4,7 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline'" />
 
-		<title>æƒ³å¤©å·¥ä½œå°</title>
+		<title>ÏëÌì¹¤×÷Ì¨</title>
 		<link rel="stylesheet" href="dist/bundle.css" />
 		<link rel="stylesheet" href="ext/icons/iconfont.css" />
 	</head>
@@ -101,13 +101,13 @@
 			</svg>
 		</button>
 		<script>
-			//ç§»åŠ¨åˆ°å·¦ä¾§ç©ºç™½åŒºåŸŸçš„æ—¶å€™ï¼Œè®©å·¦ä¾§æ é‡è·é¼ æ ‡ï¼Œé˜²æ­¢æ— æ³•ç§»åŠ¨ä¸Šå»
+			//ÒÆ¶¯µ½×ó²à¿Õ°×ÇøÓòµÄÊ±ºò£¬ÈÃ×ó²àÀ¸ÖØ»ñÊó±ê£¬·ÀÖ¹ÎŞ·¨ÒÆ¶¯ÉÏÈ¥
 			function setNoIgnore() {
 				window.postMessage({
 					message:'set-ignore-mouse-events'
 					})
 				ipc.send('setMouseEnable')
-				//console.log('è®¾ç½®å·¦ä¾§æ é¼ æ ‡æœ‰æ•ˆ')
+				//console.log('ÉèÖÃ×ó²àÀ¸Êó±êÓĞĞ§')
 				
 			}
 		</script>
@@ -146,8 +146,14 @@
 			</button>
 		</div>
 
-		<div id="task-overlay" class="" hidden>
-			<div class="simulated-navbar windowDragHandle" id="task-overlay-navbar"></div>
+		 <div id="task-overlay" class="" hidden tabindex="-1">
+			<div class="simulated-navbar windowDragHandle" id="task-overlay-navbar">
+				<div class="task-search-input-container">
+				  <i class="i carbon:search"></i>
+				  <input type="search" id="task-search-input" class="mousetrap"/>
+				</div>
+			</div>
+			
 			<div id="task-area"></div>
 			<button id="add-task">
 				<i class="i carbon:new-tab"></i>
@@ -159,11 +165,13 @@
 			<div id="download-container" role="list" class="has-thin-scrollbar"></div>
 			<button id="download-close-button" class="i carbon:close"></button>
 		</div>
-
-		<div class="modal" id="manager-setup-dialog" hidden>
-			<h3 class="modal-title" id="manager-setup-heading"></h3>
-			<button id="manager-setup-close" class="modal-close-button i carbon:close"></button>
-
+		 <div class="modal" id="manager-setup-dialog" hidden>
+		      <h3 class="modal-title" id="manager-setup-heading"></h3>
+		      <button
+		        id="manager-setup-close"
+		        class="modal-close-button i carbon:close"
+		      ></button>
+		
 			<div id="manager-setup-instructions-primary">
 				<div class="light-fade" data-string="passwordManagerSetupStep1" data-allowHTML></div>
 				<div class="spacer"></div>
