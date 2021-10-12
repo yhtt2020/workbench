@@ -26,7 +26,7 @@ async function afterPackageBuilt (appPaths) {
     const options = {
       src: appPaths.filter(p => p.includes('x64'))[0],
       dest: 'dist/app/min-installer-x64',
-      icon: 'icons/icon256.ico',
+      icon: 'icons/browser.ico',
       animation: 'icons/windows-installer.gif',
       licenseUrl: 'https://github.com/minbrowser/min/blob/master/LICENSE.txt',
       noMsi: true
