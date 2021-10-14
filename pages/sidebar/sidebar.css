@@ -4,9 +4,9 @@
 	left: 0;
 	overflow-x: hidden;
 	top: 0;
-	border-right: 1px solid #D7D7D7;
+	box-shadow: 3px 0 3px #00000012;
 	border-radius: 0px 0px 0px 10px;
-	width: 46px;
+	width: 45px;
 	background: white;
 }
 
@@ -23,11 +23,33 @@
 
 .sidebar .side-items ul li:hover {
 	background-color: #efefef;
+	color: #1E90FF;
 }
 
 .sidebar .side-container .side-items .app-task .icon {
 	width: 25px;
 	height: 25px;
+
+}
+
+.item-icon {
+	width: 45px;
+	position: absolute;
+	left: 0;
+	display: inline-block;
+	height: 45px;
+	align-items: center;
+	text-align: center;
+	line-height: 45px;
+}
+
+.item-title {
+	position: absolute;
+	left: 50px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	max-width: 90px;
 }
 
 .sidebar .side-items .app-items {
@@ -59,7 +81,10 @@
 
 .sidebar .active {
 	border-left: #1B74BB solid 3px;
-	background-color: #efefef;
+	padding-left: -3px;
+	background-color: #f1f1f1;
+	box-sizing: content-box;
+	color: #1E90FF;
 }
 
 .dragClass {
@@ -71,7 +96,7 @@
 }
 
 .side-items .item:hover {
-	background-color: #fdfdfd;
+	background-color: #f1f1f1;
 	cursor: move;
 }
 
@@ -99,7 +124,7 @@
 	height: 42px;
 	display: flex;
 	cursor: pointer;
-	text-align: center;
+	text-align: left;
 	align-items: center;
 	justify-content: center;
 }
@@ -116,8 +141,60 @@
 	justify-content: center;
 }
 
+.bottomBar li:hover {
+	color: #1E90FF;
+}
+
 .bottom-container {
 	position: fixed;
 	bottom: 0;
 	width: 45px;
+	overflow: hidden;
+}
+
+
+.bottom-container .ant-collapse {
+	border-radius: 0;
+
+}
+
+.expanded {
+	width: 145px;
+	transition: width 0.1s;
+}
+
+.expanded .wrapper {
+	width: 142px;
+	transition: width 0.1s;
+}
+
+.expanded .side-container .side-items {
+	width: 145px;
+	transition: width 0.1s;
+}
+
+.expanded .bottom-container {
+	width: 145px;
+	transition: width 0.1s;
+}
+
+
+.expanded .side-items .app-items {
+	width: 162px ;
+	transition: width 0.1s;
+}
+
+.expanded .app-box {
+	width: 145px; 
+	transition: width 0.1s;
+}
+
+.expanded .app-task {
+	width: 162px;
+	transition: width 0.1s;
+}
+
+.expanded .ant-collapse>.ant-collapse-item>.ant-collapse-header .ant-collapse-arrow {
+	left: 68px;
+	transition: width 0.1s;
 }

@@ -12,11 +12,24 @@
 		<link rel="stylesheet" href="sidebar.css" />
 	</head>
 	<body style="background-color: #00000000;overflow-x: hidden;overflow-y: hidden;">
-		<div id="appVue" class="sidebar">
+		<script>
+		function mousenter(target){
+			target.setAttribute('class','sidebar expanded')
+			console.log('鼠标移入')
+			document.getElementById('clickThroughElement').style.left="146px"
+		}	
+		function mouseleave(target){
+			target.setAttribute('class','sidebar')
+			console.log('鼠标移出')
+			document.getElementById('clickThroughElement').style.left="46px"
+		}
+		
+		</script>
+		<div id="appVue" class="sidebar" onmouseenter="mousenter(this)" onmouseleave="mouseleave(this)">
 			<sidebar />
 		</div>
 		<div id="clickThroughElement"
-			style="background-color: #00000000;height:100vh; position:absolute;left: 45px;width: 560px;">
+			style="background-color: #00000000;height:100vh; position:absolute;left: 46px;width: 560px;">
 		</div>
 
 		<template id="sidebarTpl">
@@ -44,10 +57,15 @@
 											</ul>
 										</template>
 										<div class="wrapper">
-											<a-badge :count="item.count" :dot="true" status="processing"
-												:style="{position: 'absolute',right:  '0px',top:'0px',visibility:item.count>5?'visible':'hidden'}" />
-											</a-badge>
-											<img class="icon" :src="item.icon">
+											<div class="item-icon">
+												
+													<img class="icon" :src="item.icon">
+													<a-badge :count="item.count" :dot="true" status="processing"
+														:style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:item.count>5?'visible':'hidden'}" />
+													</a-badge>
+											</div>
+										
+											<div class="item-title">{{ item.title }}</div>
 										</div>
 									</a-popover>
 								</li>
@@ -66,23 +84,27 @@
 									<li @click="openItem(item.id,i)" v-for="(item,i) in this.$store.getters.getItems"
 										:key="item.id" :visible="item.count>1" data-role="task"
 										:class="isActive(item.id)" :item-id="item.id" style="position: relative;">
-										<a-badge :count="item.count" :dot="true" status="processing"
-											:style="{position: 'absolute',right:  '0px',top:'0px',visibility:item.count>5?'visible':'hidden'}" />
-										</a-badge>
+										
 										<a-popover :title="item.count>5?item.title+' -- 高负载（5+）':item.title"
-											placement="right" :mouse-enter-delay="0" :mouse-leave-delay="0.1"
+											placement="right" :mouse-enter-delay="0.1" :mouse-leave-delay="0.1"
 											:destroy-tooltip-on-hide="true" overlay-class-name="tips">
 											<template slot="content">
 
 												<ul class="tabs">
 													<li class="tab-title" v-for="(tab,j) in item.tabs" :key="tab.id">
-														<img class="tab-icon" :src="tab.icon"> {{ tab.title }}
+														<img class="tab-icon" :src="tab.icon">&nbsp;{{ tab.title }}
 													</li>
 												</ul>
 											</template>
 											<div class="wrapper">
-
-												<img class="icon" :src="item.icon">
+												<div class="item-icon">
+													
+													<img class="icon" :src="item.icon">
+													<a-badge :count="item.count" :dot="true" status="processing"
+														:style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:item.count>5?'visible':'hidden'}" />
+													</a-badge>
+												</div>
+												<div class="item-title">{{ item.title }}</div>
 											</div>
 
 										</a-popover>
@@ -103,7 +125,7 @@
 							<div>
 								<a-collapse default-active-key="1" :bordered="false" @change="changeBottomSize">
 									<a-collapse-panel key="1">
-										<li>
+										<li @click="openBottom('mobile')">
 
 											<!-- <a-popover title="手机模拟" placement="right" :mouse-enter-delay="0"
 												:mouse-leave-delay="0.1" :destroy-tooltip-on-hide="true"
@@ -142,25 +164,29 @@
 
 
 												</template> -->
-											<a-button @click="openBottom('mobile')" type="default" shape="circle"
-												icon="mobile" />
+											<a-button  type="default" shape="circle"
+												icon="mobile" ></a-button>
+											<div class="item-title">手机模式</div>
 											<!-- </a-popover> -->
 										</li>
-										<li>
-											<a-button @click="openBottom('help')" type="default" shape="circle"
-												icon="question-circle" />
+										<li @click="openBottom('help')" >
+											<a-button type="default" shape="circle"
+												icon="question-circle" ></a-button>
+											<div class="item-title">帮助中心</div>
 										</li>
-										<li>
-											<a-button @click="openBottom('setting')" type="default" shape="circle"
-												icon="setting" />
+										<li  @click="openBottom('setting')">
+											<a-button type="default" shape="circle"
+												icon="setting" ></a-button>
+											<div class="item-title">偏好设置</div>
 										</li>
 									</a-collapse-panel>
 								</a-collapse>
 							</div>
 						</template>
 
-						<li>
-							<a-button @click="openBottom('home')" type="default" shape="circle" icon="home" />
+						<li @click="openBottom('home')">
+							<a-button  type="default" shape="circle" icon="home"></a-button> 
+							<div class="item-title">应用中心</div>
 						</li>
 					</ul>
 
@@ -195,11 +221,8 @@
 	<script>
 		//对clickThrough区域进行穿透设置，这样鼠标移动到clickThroug的区域就会自动穿透
 		const el = document.getElementById('clickThroughElement')
-
-	
 		el.addEventListener('mouseenter', (e) => {
 			ipc.send('setMouseIgnore')
-			
 		})
 	</script>
 </html>
