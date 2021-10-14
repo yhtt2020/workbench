@@ -171,6 +171,7 @@
 .expanded .side-container .side-items {
 	width: 145px;
 	transition: width 0.1s;
+
 }
 
 .expanded .bottom-container {
