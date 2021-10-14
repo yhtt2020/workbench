@@ -5,6 +5,7 @@ directories:
 files:
     - dist/*.js
     - dist/*.css
+    - css/*.css
     - pages/**/*
     - icons/**/*
     - icons/*.svg
