@@ -2,7 +2,7 @@
   "name": "tswork",
   "productName": "想天工作台",
   "author": "Thisky",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "一款针对工作场景的极简浏览器，帮助你提升效率，保持专注",
   "electronVersion": "14.0.0-beta.21",
   "main": "main.build.js",
@@ -26,7 +26,7 @@
       "IntersectionObserver",
       "Node",
       "Event",
-	  "browserUI"
+      "browserUI"
     ]
   },
   "dependencies": {
@@ -52,6 +52,7 @@
     "electron-packager": "^15.1.0",
     "electron-rebuild": "^2.3.2",
     "electron-renderify": "0.0.2",
+	"electron-builder": "^22.13.1",
     "prettier": "^2.2.1",
     "snazzy": "^9.0.0",
     "standard": "^14.3.4"
@@ -82,7 +83,8 @@
     "updateFilters": "node ./ext/filterLists/updateEasylist.js",
     "updateHttpsList": "node ./ext/httpsUpgrade/updateHttpsList.js",
     "updateSuffixes": "node ./ext/publicSuffixes/updateSuffixes.js",
-    "lint": "prettier --write **/**/*.css **/**/*.md **/**/*.html **/**/*.json && standard --fix js/**/*.js main/*.js | snazzy"
+    "lint": "prettier --write **/**/*.css **/**/*.md **/**/*.html **/**/*.json && standard --fix js/**/*.js main/*.js | snazzy",
+	"package": "npm run build && ./node_modules/.bin/electron-builder --config electron-builder-config.yml --publish never" 
   },
   "repository": {
     "type": "git",

@@ -541,3 +541,7 @@ ipc.on('selectTask', function() {
 	selectTaskWindow.webContents.loadURL('file://' + __dirname + "/pages/selectTask/index.html")
 
 })
+
+ipc.on('closeTaskSelect',function(){
+	selectTaskWindow.close()
+})

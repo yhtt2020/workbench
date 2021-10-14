@@ -1,0 +1,43 @@
+directories:
+    output: setup
+    buildResources: dist
+
+files:
+    - dist/*.js
+    - dist/*.css
+    - css/*.css
+    - pages/**/*
+    - icons/**/*
+    - icons/*.svg
+    - js/**/*
+    - ./main.build.js
+    - ext/**/*
+    - index.html
+
+win:
+    icon: ./img/icons/win/icon.ico
+    target:
+        - target: nsis
+          arch:
+              - x64
+              - ia32
+        - target: zip
+          arch:
+              - x64
+              - ia32
+    publish:
+        - github
+
+mac:
+    icon: ./icons/icon.icns
+    category: public.app-category.utilities
+    target:
+        - dmg
+        - zip
+    publish:
+        - github
+
+nsis:
+    allowToChangeInstallationDirectory: true
+    oneClick: false
+    perMachine: true

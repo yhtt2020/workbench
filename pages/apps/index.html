@@ -16,40 +16,40 @@
 		</script>
 
 		<div id="appVue">
-
-			<a-drawer title="应用详情" width="640" placement="right" :closable="false" :visible="drawerVisible"
-				@close="onClose">
-				<a-row type="flex">
-					<a-col flex="128px">
-						<a-avatar shape="square" :size="100" :src="drawerApp.icon"></a-avatar>
-					</a-col>
-					<a-col flex="auto">
-						<h3>
-							{{drawerApp.name}}
-						</h3>
-						<p>
-							<a-icon type="link"></a-icon>
-							<a :href="drawerApp.url" target="_blank">{{drawerApp.url}}</a>
-						</p>
-						<p>
-							<a-icon type="bulb"></a-icon> {{drawerApp.summary}}
-						</p>
-						<p>
-							<a-icon type="like"></a-icon> 推荐指数：<template>
-								<a-rate v-model="drawerApp.star"  default-value="3" ></a-rate>
-							</template>
-						</p>
-						<p>
-							<a-icon type="api"></a-icon> 对接方式：URL打开（不支持数据对接）
-						</p>
-					</a-col>
-				</a-row>
-
-
+			<template>
+				<a-drawer title="应用详情" width="640" placement="right" :closable="false" :visible="drawerVisible"
+					@close="onClose">
+					<a-row type="flex">
+						<a-col flex="128px">
+							<a-avatar shape="square" :size="100" :src="drawerApp.icon"></a-avatar>
+						</a-col>
+						<a-col flex="auto">
+							<h3>
+								{{drawerApp.name}}
+							</h3>
+							<p>
+								<a-icon type="link"></a-icon>
+								<a :href="drawerApp.url" target="_blank">{{drawerApp.url}}</a>
+							</p>
+							<p>
+								<a-icon type="bulb"></a-icon> {{drawerApp.summary}}
+							</p>
+							<p>
+								<a-icon type="like"></a-icon> 推荐指数：<template>
+									<a-rate v-model="drawerApp.star" default-value="3"></a-rate>
+								</template>
+							</p>
+							<p>
+								<a-icon type="api"></a-icon> 对接方式：URL打开（不支持数据对接）
+							</p>
+						</a-col>
+					</a-row>
 
 
 
-			<!-- 	<p>
+
+
+					<!-- 	<p>
 					<a-button type="primary" icon="plus-circle" @click="addApp()">
 						添加到我的应用
 					</a-button>
@@ -63,9 +63,11 @@
 					</a-button>
 				</p> -->
 
-				
-				
-			</a-drawer>
+
+
+				</a-drawer>
+			</template>
+
 			<div class="">
 				<a-layout style="height: 100vh;" :trigger="null">
 					<a-layout-sider style="background-color: white;">
@@ -188,14 +190,21 @@
 																	{{ btnText }}
 																</a-button>
 
-																<a-button style="border-radius:0;text-align: left;"
-																	type="primary" icon="branches" block>
+																<a-button v-show="checkInMyApps(app)==-1"
+																	style="border-radius:0;text-align: left;"
+																	type="primary" icon="branches"
+																	@click="addApp(app);addTask(app)" block>
 																	收藏并打开
+																</a-button>
+																<a-button style="border-radius:0;text-align: left;"
+																	type="primary" icon="login" @click="addTask(app)"
+																	block>
+																	仅打开
 																</a-button>
 																<a-button
 																	style="border-radius:0 0 4px 4px;text-align: left;"
 																	type="primary" icon="container"
-																	@click="showDrawer(app)" block>
+																	@click="selectTask()" block>
 																	选择任务添加
 																</a-button>
 															</div>
@@ -215,8 +224,8 @@
 			<a-drawer :title="'应用清单（'+shopcartApps.length+')'" placement="right" :visible="visibleCart"
 				@close="onCloseCart" :width="400">
 				<template>
-					 <a-empty v-if="shopcartApps.length==0" description="请选择应用"></a-empty> 
-					 
+					<a-empty v-if="shopcartApps.length==0" description="请选择应用"></a-empty>
+
 					<a-card>
 						<a-card-grid v-for="app in shopcartApps" style="width:25%;text-align:center">
 							<a-avatar :src="app.icon"></a-avatar>
@@ -228,17 +237,26 @@
 
 					<div style="margin-top: 10px;">
 						<p>
-							<a-button icon="container" type="primary" block v-if="shopcartApps.length!=0" @click="selectTask()">
+							<a-button icon="container" type="primary" block v-if="shopcartApps.length!=0"
+								@click="selectTask()">
 								收藏且添加至任务
 							</a-button>
 						</p>
 						<p>
-							<a-button icon="plus-circle" type="default" block v-if="shopcartApps.length!=0">
+							<a-button icon="plus-circle" type="default" block v-if="shopcartApps.length!=0"
+								@click="addShopcartApps">
 								仅收藏，不打开
 							</a-button>
 						</p>
 						<p>
-							<a-button icon="rest" type="default" block v-if="shopcartApps.length!=0">
+							<a-button icon="login" type="default" block v-if="shopcartApps.length!=0"
+								@click="openShopcart">
+								不收藏，整组打开
+							</a-button>
+						</p>
+						<p>
+							<a-button icon="rest" type="default" block v-if="shopcartApps.length!=0"
+								@click="shopcartApps=[]">
 								清空清单
 							</a-button>
 						</p>
@@ -592,6 +610,27 @@
 					this.currentApp = app
 					this.addCurrentApp()
 				},
+				addShopcartApps() {
+					let addCount = 0
+					let hasCount = 0
+					let that = this
+					this.shopcartApps.forEach(function(app) {
+						if (that.isInMyApps(app) == -1) {
+							that.myApps.push(app)
+							addCount++
+						} else {
+							hasCount++
+						}
+					})
+					let text = '添加了' + addCount + '个应用。'
+					if (hasCount > 0) {
+						text = '选中' + that.shopcartApps.length + '个应用。由于购物车中' + hasCount + '个应用已经存在，实际添加了' +
+							addCount + '个应用。'
+					}
+					this.shopcartApps=[]
+					this.visibleCart=false
+					that.$message.success(text)
+				},
 				addCurrentApp() {
 					let that = this
 					let app = this.currentApp
@@ -681,10 +720,17 @@
 					return findIndex
 				},
 				//发送消息给preload，调取selectTask的窗体
-				selectTask(){
+				selectTask() {
 					postMessage({
 						'message': 'selectTask'
 					})
+				},
+				openShopcart() {
+					postMessage({
+						message: 'addTaskTabs',
+						tabs: this.shopcartApps
+					})
+					this.$message.success('成功在左侧栏添加了一组应用，本次共添加' + this.shopcartApps.length + '个应用。')
 				}
 
 
