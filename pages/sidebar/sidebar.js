@@ -48,23 +48,27 @@ class TasksList {
 	getIndex(id) {
 		return this.tasks.findIndex(task => task.id === id)
 	}
-	
-	slice (...args) { return this.tasks.slice.apply(this.tasks, args) }
-	
-	splice (...args) { return this.tasks.splice.apply(this.tasks, args) }
+
+	slice(...args) {
+		return this.tasks.slice.apply(this.tasks, args)
+	}
+
+	splice(...args) {
+		return this.tasks.splice.apply(this.tasks, args)
+	}
 }
 
 
-let count=0
+let count = 0
 window.addEventListener('message', function(e) {
 	if (e.data.message && e.data.message === 'receiveGlobal') {
 		let tasksList = new TasksList()
-		if($store.state.pinItems==null){
+		if ($store.state.pinItems == null) {
 			console.log('还未初始化')
 			return
 		}
 		tasksList.init(e.data.data.tasks)
-		$store.commit('fillTasksToItems',tasksList)
+		$store.commit('fillTasksToItems', tasksList)
 		//console.log('同步'+count+++"次")
 	}
 
@@ -80,23 +84,23 @@ window.onload = function() {
 			pinItems: null, //置顶区域的items，横线上方部分
 			items: null, //普通区域的items
 			selected: '', //当前选中的
-			tasks:new TasksList()
+			tasks: new TasksList()
 		},
 		getters: {
-			getAll:state=>{
-				if(state.pinItems==null){//还未初始化
+			getAll: state => {
+				if (state.pinItems == null) { //还未初始化
 					$store.commit('initItems')
 				}
 				return {
-					'pinItems':state.pinItems,
-					'items':state.items
+					'pinItems': state.pinItems,
+					'items': state.items
 				}
 			},
-			getStringifyableState(sate){
+			getStringifyableState(sate) {
 				return {
 					sidebar: store.getters.getAll
 				}
-				
+
 			},
 			//获取当前选中的id
 			getSelected: state => {
@@ -112,29 +116,31 @@ window.onload = function() {
 			//获取单个item的标题，自动处理无分组名的情况，支持语言包
 			getItemTitle: (state) => (task) => {
 				//如果标签没名字，就给它取个默认名字
+				if (typeof(task) == 'undefined') { //如果已经被删除了，容错处理
+					return ''
+				}
 				if (task.name == null) {
-					return l('defaultTaskName').replace('%n', state.tasks.getIndex(task.id)+1)
+					return l('defaultTaskName').replace('%n', state.tasks.getIndex(task.id) + 1)
 				} else {
 					return task.name
 				}
 			},
 			//获取任务的icon
-			updateItemIcon: (state) => (task,item) => {
+			updateItemIcon: (state) => (task, item) => {
 				if (task.tabs.length == 0) {
 					return "../../icons/empty.png"
 				}
 				let favicon = task.tabs[0].favicon;
-			
-					gotIcon=store.getters.getIcon(favicon)
-				if(gotIcon!==false)//获取到了图标
+
+				gotIcon = store.getters.getIcon(favicon)
+				if (gotIcon !== false) //获取到了图标
 				{
 					return gotIcon
 				}
-				if(typeof(item)=='undefined')
-				{
+				if (typeof(item) == 'undefined') {
 					return "../../icons/empty.png"
 				}
-				return  item.icon //如果取不到图标，维持原样，防止icon丢失
+				return item.icon //如果取不到图标，维持原样，防止icon丢失
 			},
 			//获取图标的方法
 			getIcon: (state) => (favicon) => {
@@ -149,12 +155,12 @@ window.onload = function() {
 				}
 			},
 			//从一个任务转化出一个item，用于items列表
-			getItemFromTask: (state) => (task,item) => {
+			getItemFromTask: (state) => (task, item) => {
 				let parsedTitle = store.getters.getItemTitle(task)
-				let parsedIcon = store.getters.updateItemIcon(task,item)
+				let parsedIcon = store.getters.updateItemIcon(task, item)
 				task.tabs.forEach(function(tab) {
-					let icon=store.getters.getIcon(tab.favicon)
-					tab.icon = icon===false?"../../icons/tab.png":icon
+					let icon = store.getters.getIcon(tab.favicon)
+					tab.icon = icon === false ? "../../icons/tab.png" : icon
 					if (!tab.title) {
 						tab.title = l('newTabLabel')
 					}
@@ -170,9 +176,9 @@ window.onload = function() {
 					fixed: false,
 					type: 'task',
 					tabs: task.tabs,
-					count:0
+					count: 0
 				}
-				addItem.count=task.tabs.length
+				addItem.count = task.tabs.length
 				return addItem
 			}
 
@@ -203,10 +209,10 @@ window.onload = function() {
 					ext: '', //额外的信息
 					fixed: true, //锁定，不让它移动
 					type: 'system-bookmark',
-					count:0
+					count: 0
 				}
-				state.pinItems=[]
-				state.items=[]
+				state.pinItems = []
+				state.items = []
 				state.pinItems.push(item)
 				// if (tasks != null) {
 				// 	//从任务当中取得任务的小组
@@ -220,28 +226,37 @@ window.onload = function() {
 			},
 			//将任务填充到item列表当中，系统会自动刷新一次列表。
 			//算法主要是遍历两个组，然后将task按顺序填充进去，如果有多的，就在队列尾部插入（应对插入新组的情况），如果有少的，则从队尾删除相应数量（应对删除任务的情况）
-			fillTasksToItems(state,tasksList){
+			fillTasksToItems(state, tasksList) {
 				//将tasks转化为items
 				let replaceIndex = 0
 				//遍历置顶的区域，把任务都替换进来
+				const totalCount = tasksList.getLength() //任务的总数
+
 				state.pinItems.forEach(function(pinItem, indexPin) {
 					if (pinItem.type == "task") {
-						state.pinItems[indexPin] = store.getters.getItemFromTask(tasksList.byIndex(
-							replaceIndex),pinItem)
-						replaceIndex++
+						if (replaceIndex >= totalCount) {
+							state.pinItems.splice(indexPin, 1) //如果已经都填充进去了，则删除掉剩余的任务即可。
+						} else {
+							state.pinItems[indexPin] = store.getters.getItemFromTask(tasksList
+								.byIndex(
+									replaceIndex), pinItem)
+							replaceIndex++
+						}
 					}
 
 				});
-			
+				
+
 				//遍历非置顶区域，把任务都替换进来
 				state.items.forEach(function(item, index) {
+
 					if (item.type == "task") {
 						//如果现存的任务都替换进去了，接下来就不是再替换了，而是删除掉剩余的task，以保持两边同步
 						if (replaceIndex >= tasksList.getLength()) {
 							state.items.splice(index, 1)
 						} else {
 							state.items[index] = store.getters.getItemFromTask(tasksList.byIndex(
-								replaceIndex),item)
+								replaceIndex), item)
 							replaceIndex++
 						}
 
@@ -257,23 +272,23 @@ window.onload = function() {
 						replaceIndex++
 					}
 				}
-				
-				let newPinItems=state.pinItems
+
+				let newPinItems = state.pinItems
 
 				//由于getter无法监控对象和数组的变化，所以这里设空一下，以促使其响应
-				state.pinItems=null
-				state.pinItems=newPinItems
-				
-				let newItems=state.items
-				state.items=null
-				state.items=newItems
-				
+				state.pinItems = null
+				state.pinItems = newPinItems
+
+				let newItems = state.items
+				state.items = null
+				state.items = newItems
+
 				state.selected = tasksList.selected
-				let newTasksList=tasksList
-				state.tasks=null
-				state.tasks=newTasksList
-				
-			
+				let newTasksList = tasksList
+				state.tasks = null
+				state.tasks = newTasksList
+
+
 			}
 
 		}
