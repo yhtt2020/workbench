@@ -11,6 +11,7 @@ const basedir = require('path').join(__dirname, '../')
 const ignoredDirs = [
   '.DS_Store',
   'dist/app',
+  'dist/mac-arm64',
   'setup',
   /\.map$/g,
   /\.md$/g,

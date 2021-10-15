@@ -6,6 +6,7 @@
 `yarn run start`
 
 打包-electron-package mac上首选打包方式
+packMacIntel 打包macIntel芯片版本
 `yarn run package` 会根据当前平台打包一个文件，采用asar简单封装应用目录
 使用的打包配置是
 `./electron-builder-config.yml`
