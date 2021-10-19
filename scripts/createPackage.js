@@ -78,7 +78,7 @@ var platformOptions = {
   win32: {
     arch: 'all',
     platform: 'win32',
-    icon: 'icons/icon256.ico'
+    icon: 'icons/browser.ico'
   },
   linuxAmd64: {
     name: 'min', // name must be lowercase to run correctly after installation
