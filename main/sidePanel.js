@@ -382,8 +382,12 @@ function addMainWindowEventListener() {
 		sidePanel.hide()
 	})
 	mainWindow.on('leave-html-full-screen', () => {
-		sidePanel.show()
-		mainWindow.focus()
+		//sidePanel.show()
+		setTimeout(function(){
+			sidePanel.show()
+			mainWindow.focus()
+		},750)
+		
 
 	})
 
