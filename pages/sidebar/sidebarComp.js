@@ -1,5 +1,5 @@
 //const browserUI= require('./js/browserUI.js')
-
+const serverConfig= require('./user.js')
 Vue.component('sidebar', {
 	data: function() {
 		return {
@@ -72,6 +72,9 @@ Vue.component('sidebar', {
 		this.fixElementPosition()
 	},
 	computed: {
+		user(){
+			return this.$store.state.user
+		},
 		getItems: {
 			get() {
 				//将task与items同步一次
@@ -209,6 +212,20 @@ Vue.component('sidebar', {
 			var bottomsEl = document.getElementById('bottomsEl')
 			console.log(bottomsEl.offsetHeight)
 			itemsEl.style.bottom = bottomsEl.offsetHeight + 'px'
+		},
+		//点击用户登录按钮
+		userClick(){
+			if(this.user.uid===0){
+				this.addTab(serverConfig.getUrl(serverConfig.apiUrl.user.login))
+			}else{
+				this.addTab(serverConfig.getUrl(serverConfig.apiUrl.user.home))
+			}
+		},
+		addTab(url){
+			postMessage({
+				message: "addTab",
+				'url':url
+			})
 		}
 	}
 

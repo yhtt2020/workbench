@@ -84,7 +84,12 @@ window.onload = function() {
 			pinItems: null, //置顶区域的items，横线上方部分
 			items: null, //普通区域的items
 			selected: '', //当前选中的
-			tasks: new TasksList()
+			tasks: new TasksList(),
+			user:{//当前用户
+				uid:0,
+				nickname:"立即登录",
+				avatar:"../../icons/app.png"
+			}
 		},
 		getters: {
 			getAll: state => {

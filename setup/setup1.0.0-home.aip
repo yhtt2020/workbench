@@ -9,10 +9,10 @@
     <ROW Property="ARPPRODUCTICON" Value="browser.exe" Type="8"/>
     <ROW Property="CTRLS" Value="2"/>
     <ROW Property="Manufacturer" Value="想天科技"/>
-    <ROW Property="ProductCode" Value="2052:{0B13898C-AF8C-4751-83B4-6DA79F0E482F} " Type="16"/>
+    <ROW Property="ProductCode" Value="2052:{032CABC6-4002-4CF3-AB07-15FE0C304DB8} " Type="16"/>
     <ROW Property="ProductLanguage" Value="2052"/>
     <ROW Property="ProductName" Value="想天工作台"/>
-    <ROW Property="ProductVersion" Value="0.5.1" Type="32"/>
+    <ROW Property="ProductVersion" Value="0.5.2" Type="32"/>
     <ROW Property="RUNAPPLICATION" Value="1" Type="4"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND;AI_SETUPEXEPATH;SETUPEXEDIR"/>
     <ROW Property="UpgradeCode" Value="{1F59EEEE-549F-4185-8FAD-FCEB8AA484CB}"/>
@@ -44,7 +44,8 @@
     <ROW Directory="babel_Dir" Directory_Parent="node_modules_Dir" DefaultDir="@babel" DirectoryOptions="3"/>
     <ROW Directory="base64js_Dir" Directory_Parent="node_modules_Dir" DefaultDir="BASE64~1|base64-js" DirectoryOptions="3"/>
     <ROW Directory="bin_1_Dir" Directory_Parent="keytar_Dir" DefaultDir="bin" DirectoryOptions="3"/>
-    <ROW Directory="bin_2_Dir" Directory_Parent="semver_Dir" DefaultDir="bin" DirectoryOptions="3"/>
+    <ROW Directory="bin_3_Dir" Directory_Parent="semver_1_Dir" DefaultDir="bin" DirectoryOptions="3"/>
+    <ROW Directory="bin_4_Dir" Directory_Parent="semver_2_Dir" DefaultDir="bin" DirectoryOptions="3"/>
     <ROW Directory="bin_Dir" Directory_Parent="detectlibc_Dir" DefaultDir="bin" DirectoryOptions="3"/>
     <ROW Directory="binddictionary_Dir" Directory_Parent="plugins_Dir" DefaultDir="BIND-D~1|bind-dictionary" DirectoryOptions="3"/>
     <ROW Directory="bl_Dir" Directory_Parent="node_modules_Dir" DefaultDir="bl" DirectoryOptions="3"/>
@@ -69,6 +70,7 @@
     <ROW Directory="deepextend_Dir" Directory_Parent="node_modules_Dir" DefaultDir="DEEP-E~1|deep-extend" DirectoryOptions="3"/>
     <ROW Directory="delegates_Dir" Directory_Parent="node_modules_Dir" DefaultDir="DELEGA~1|delegates" DirectoryOptions="3"/>
     <ROW Directory="detectlibc_Dir" Directory_Parent="node_modules_Dir" DefaultDir="DETECT~1|detect-libc" DirectoryOptions="3"/>
+    <ROW Directory="develar_Dir" Directory_Parent="node_modules_Dir" DefaultDir="@develar" DirectoryOptions="3"/>
     <ROW Directory="dexie_Dir" Directory_Parent="node_modules_Dir" DefaultDir="dexie" DirectoryOptions="3"/>
     <ROW Directory="dist_1_Dir" Directory_Parent="contra_Dir" DefaultDir="dist" DirectoryOptions="3"/>
     <ROW Directory="dist_2_Dir" Directory_Parent="crossvent_Dir" DefaultDir="dist" DirectoryOptions="3"/>
@@ -172,7 +174,7 @@
     <ROW Directory="node_modules_Dir" Directory_Parent="app_Dir" DefaultDir="NODE_M~1|node_modules" DirectoryOptions="3"/>
     <ROW Directory="nodeabi_1_Dir" Directory_Parent="node_modules_4_Dir" DefaultDir="node-abi" DirectoryOptions="3"/>
     <ROW Directory="nodeabi_Dir" Directory_Parent="node_modules_Dir" DefaultDir="node-abi" DirectoryOptions="3"/>
-    <ROW Directory="nodeaddonapi_Dir" Directory_Parent="node_modules_Dir" DefaultDir="NODE-A~1|node-addon-api" DirectoryOptions="3"/>
+    <ROW Directory="nodeaddonapi_1_Dir" Directory_Parent="node_modules_11_Dir" DefaultDir="NODE-A~1|node-addon-api" DirectoryOptions="3"/>
     <ROW Directory="npmlog_Dir" Directory_Parent="node_modules_Dir" DefaultDir="npmlog" DirectoryOptions="3"/>
     <ROW Directory="numberisnan_Dir" Directory_Parent="node_modules_Dir" DefaultDir="NUMBER~1|number-is-nan" DirectoryOptions="3"/>
     <ROW Directory="obj_Dir" Directory_Parent="Release_Dir" DefaultDir="obj" DirectoryOptions="3"/>
@@ -212,7 +214,8 @@
     <ROW Directory="scripts_Dir" Directory_Parent="nodeabi_Dir" DefaultDir="scripts" DirectoryOptions="3"/>
     <ROW Directory="searchbar_Dir" Directory_Parent="js_Dir" DefaultDir="SEARCH~1|searchbar" DirectoryOptions="3"/>
     <ROW Directory="selectTask_Dir" Directory_Parent="pages_Dir" DefaultDir="SELECT~1|selectTask" DirectoryOptions="3"/>
-    <ROW Directory="semver_Dir" Directory_Parent="node_modules_Dir" DefaultDir="semver" DirectoryOptions="3"/>
+    <ROW Directory="semver_1_Dir" Directory_Parent="node_modules_12_Dir" DefaultDir="semver" DirectoryOptions="3"/>
+    <ROW Directory="semver_2_Dir" Directory_Parent="node_modules_4_Dir" DefaultDir="semver" DirectoryOptions="3"/>
     <ROW Directory="sessionRestoreError_Dir" Directory_Parent="pages_Dir" DefaultDir="SESSIO~1|sessionRestoreError" DirectoryOptions="3"/>
     <ROW Directory="setblocking_Dir" Directory_Parent="node_modules_Dir" DefaultDir="SET-BL~1|set-blocking" DirectoryOptions="3"/>
     <ROW Directory="settings_1_Dir" Directory_Parent="pages_Dir" DefaultDir="settings" DirectoryOptions="3"/>
@@ -267,7 +270,7 @@
     <ROW Directory="textColor_Dir" Directory_Parent="ext_Dir" DefaultDir="TEXTCO~1|textColor" DirectoryOptions="3"/>
     <ROW Directory="through2_Dir" Directory_Parent="node_modules_7_Dir" DefaultDir="through2" DirectoryOptions="3"/>
     <ROW Directory="ticky_Dir" Directory_Parent="node_modules_Dir" DefaultDir="ticky" DirectoryOptions="3"/>
-    <ROW Directory="tools_Dir" Directory_Parent="nodeaddonapi_Dir" DefaultDir="tools" DirectoryOptions="3"/>
+    <ROW Directory="tools_1_Dir" Directory_Parent="nodeaddonapi_1_Dir" DefaultDir="tools" DirectoryOptions="3"/>
     <ROW Directory="tunnelagent_Dir" Directory_Parent="node_modules_Dir" DefaultDir="TUNNEL~1|tunnel-agent" DirectoryOptions="3"/>
     <ROW Directory="types_Dir" Directory_Parent="node_modules_Dir" DefaultDir="@types" DirectoryOptions="3"/>
     <ROW Directory="util_Dir" Directory_Parent="js_Dir" DefaultDir="util" DirectoryOptions="3"/>
@@ -305,9 +308,10 @@
     <ROW Component="LICENSE_2" ComponentId="{281F82DE-726C-414F-ADB1-4EF527CF7AE7}" Directory_="dexie_Dir" Attributes="0" KeyPath="LICENSE_19" Type="0"/>
     <ROW Component="LICENSE_3" ComponentId="{7E8EF648-5E91-48D6-95EA-08D6F24DFF01}" Directory_="npmlog_Dir" Attributes="0" KeyPath="LICENSE_43" Type="0"/>
     <ROW Component="LICENSE_4" ComponentId="{B0A43E57-F444-4949-9303-524697229539}" Directory_="once_Dir" Attributes="0" KeyPath="LICENSE_46" Type="0"/>
-    <ROW Component="LICENSE_5" ComponentId="{E758D969-E602-41FD-8478-0F99C18F4010}" Directory_="semver_Dir" Attributes="0" KeyPath="LICENSE_61" Type="0"/>
     <ROW Component="LICENSE_6" ComponentId="{4799CD6B-4872-4542-A078-42C41CE6D2E9}" Directory_="string_decoder_2_Dir" Attributes="0" KeyPath="LICENSE_66" Type="0"/>
     <ROW Component="LICENSE_7" ComponentId="{64B5D48C-3638-4234-BF5A-58836D83A429}" Directory_="wrappy_Dir" Attributes="0" KeyPath="LICENSE_77" Type="0"/>
+    <ROW Component="LICENSE_8" ComponentId="{FF80E57B-F858-4130-B21A-00A2134E445E}" Directory_="semver_1_Dir" Attributes="0" KeyPath="LICENSE_79" Type="0"/>
+    <ROW Component="LICENSE_9" ComponentId="{B103C558-B0DB-439D-B214-FA5F84EE832D}" Directory_="semver_2_Dir" Attributes="0" KeyPath="LICENSE_80" Type="0"/>
     <ROW Component="ProductInformation" ComponentId="{74D0849B-62FF-4A64-9755-515DB0B324EF}" Directory_="APPDIR" Attributes="4" KeyPath="Version"/>
     <ROW Component="ProjectSettings.json" ComponentId="{C8F171E9-D405-4082-83F7-C1A8F3D87E97}" Directory_="vs_Dir" Attributes="0" KeyPath="ProjectSettings.json" Type="0"/>
     <ROW Component="SHORTCUTDIR" ComponentId="{08895E99-81BF-496C-8368-B266F6BFA277}" Directory_="SHORTCUTDIR" Attributes="0"/>
@@ -356,11 +360,11 @@
     <ROW Component="buildBrowser.js" ComponentId="{6557B7E5-2BA4-4E23-A9A5-E2942A0F721A}" Directory_="scripts_2_Dir" Attributes="0" KeyPath="buildBrowser.js" Type="0"/>
     <ROW Component="buildpackages.yml" ComponentId="{0B5CCEAE-ABFD-4437-85C7-CE0484661BA5}" Directory_="workflows_Dir" Attributes="0" KeyPath="buildpackages.yml" Type="0"/>
     <ROW Component="bundle.js" ComponentId="{1EF51DB6-4B01-43CD-9A7C-1DA216D65E84}" Directory_="dist_5_Dir" Attributes="0" KeyPath="bundle.js_1" Type="0"/>
-    <ROW Component="checknapi.js" ComponentId="{4DAE1011-FC87-4D71-A933-B789CAC9CA21}" Directory_="tools_Dir" Attributes="0" KeyPath="checknapi.js" Type="0"/>
+    <ROW Component="checknapi.js_1" ComponentId="{0DCBE660-E9BE-4A90-8F10-A7F6884CCF5F}" Directory_="tools_1_Dir" Attributes="0" KeyPath="checknapi.js_1" Type="0"/>
     <ROW Component="chownr.js" ComponentId="{9D06EF67-F566-40A3-915C-E176CA33A18D}" Directory_="chownr_Dir" Attributes="0" KeyPath="chownr.js" Type="0"/>
     <ROW Component="chrome_100_percent.pak" ComponentId="{3E448DB6-95E2-420C-8E6A-7D31C0E4C35F}" Directory_="APPDIR" Attributes="0" KeyPath="chrome_100_percent.pak" Type="0"/>
     <ROW Component="common.css" ComponentId="{783E7E28-A64A-48B3-8974-E16132042440}" Directory_="livesearch_Dir" Attributes="0" KeyPath="common.css" Type="0"/>
-    <ROW Component="common.gypi" ComponentId="{DF200305-286E-459C-8351-78EC447CF1A8}" Directory_="nodeaddonapi_Dir" Attributes="0" KeyPath="common.gypi" Type="0"/>
+    <ROW Component="common.gypi_1" ComponentId="{9595F02A-F10F-47B5-9719-D20A9157F500}" Directory_="nodeaddonapi_1_Dir" Attributes="0" KeyPath="common.gypi_1" Type="0"/>
     <ROW Component="component.json" ComponentId="{845A00C1-D410-4CC7-AD1A-07736CC2D63C}" Directory_="isarray_1_Dir" Attributes="0" KeyPath="component.json_2" Type="0"/>
     <ROW Component="contra.js" ComponentId="{55FDDE11-4B33-4C24-8266-89120D8DC32A}" Directory_="dist_1_Dir" Attributes="0" KeyPath="contra.js_1" Type="0"/>
     <ROW Component="contributing.markdown" ComponentId="{0C110A8F-D00E-49FC-9606-8BB9BB4D4BBF}" Directory_="github_1_Dir" Attributes="0" KeyPath="contributing.markdown" Type="0"/>
@@ -374,6 +378,7 @@
     <ROW Component="demo.png" ComponentId="{C4C2CC37-397C-496C-8ACB-C39A92D0C898}" Directory_="resources_1_Dir" Attributes="0" KeyPath="demo.png" Type="0"/>
     <ROW Component="detectlibc.js" ComponentId="{FE6AA0A9-482C-4A58-BB87-9887948F3E61}" Directory_="bin_Dir" Attributes="0" KeyPath="detectlibc.js" Type="0"/>
     <ROW Component="detectlibc.js_1" ComponentId="{61D7BFDB-4DDF-40C2-8030-6B81C47C965E}" Directory_="lib_3_Dir" Attributes="0" KeyPath="detectlibc.js_1" Type="0"/>
+    <ROW Component="develar" ComponentId="{3CC6B814-379A-47DC-AD44-9585C093E822}" Directory_="develar_Dir" Attributes="0"/>
     <ROW Component="dexie.d.ts" ComponentId="{217B55E3-3B66-4062-B1F7-DAE9B06A5EA1}" Directory_="dist_3_Dir" Attributes="0" KeyPath="dexie.d.ts" Type="0"/>
     <ROW Component="docs" ComponentId="{08F6EF3F-1CEC-4711-9CE2-4FFAFCF5848B}" Directory_="docs_Dir" Attributes="0"/>
     <ROW Component="dragula.css" ComponentId="{69D334C0-66A3-4097-BFB2-F93DD64D2B99}" Directory_="dist_4_Dir" Attributes="0" KeyPath="dragula.css" Type="0"/>
@@ -467,8 +472,6 @@
     <ROW Component="mousetrapglobalbind.js" ComponentId="{0842F3AF-110F-463E-802A-07F2597A6C3F}" Directory_="globalbind_Dir" Attributes="0" KeyPath="mousetrapglobalbind.js" Type="0"/>
     <ROW Component="mousetrappause.js" ComponentId="{C8F8DDFC-E683-4AB3-A1D3-2B8F7EAD093A}" Directory_="pause_Dir" Attributes="0" KeyPath="mousetrappause.js" Type="0"/>
     <ROW Component="mousetraprecord.js" ComponentId="{C3C3E14A-9192-4AEE-9D8F-8FAF3A8DD8EA}" Directory_="record_Dir" Attributes="0" KeyPath="mousetraprecord.js" Type="0"/>
-    <ROW Component="node_modules_2" ComponentId="{C4D37494-1136-43F7-95BC-79533F549CEB}" Directory_="node_modules_11_Dir" Attributes="0"/>
-    <ROW Component="node_modules_6" ComponentId="{EBAE0A7C-01C5-48F1-AD2C-F72ED50EBD85}" Directory_="node_modules_12_Dir" Attributes="0"/>
     <ROW Component="node_modules_7" ComponentId="{2805E866-E014-40ED-90AD-F8C699A53C1A}" Directory_="node_modules_5_Dir" Attributes="0"/>
     <ROW Component="nonLetterRegex.js" ComponentId="{32A6D2A8-51C1-4496-BD36-603F3EE7C6B6}" Directory_="xregexp_Dir" Attributes="0" KeyPath="nonLetterRegex.js" Type="0"/>
     <ROW Component="npmignore" ComponentId="{193EE6F8-E257-4C31-90E5-DA307B84E20E}" Directory_="customevent_Dir" Attributes="0" KeyPath="npmignore_2" Type="0"/>
@@ -495,7 +498,8 @@
     <ROW Component="png_5" ComponentId="{B1E7FD26-F7DD-4784-97BB-3CF60AAFE20B}" Directory_="drawablexxxhdpi_Dir" Attributes="0" KeyPath="png_5" Type="0"/>
     <ROW Component="postinst_script" ComponentId="{92958883-8886-46BE-ADCF-EF9E9CC4C414}" Directory_="resources_2_Dir" Attributes="0" KeyPath="postinst_script" Type="0"/>
     <ROW Component="public_suffix_list.json" ComponentId="{2448847F-4809-4013-845E-97F89313DAD5}" Directory_="publicSuffixes_Dir" Attributes="0" KeyPath="public_suffix_list.json" Type="0"/>
-    <ROW Component="semver" ComponentId="{7FAA9884-8B02-45C8-AFFF-1D1BF20E257A}" Directory_="bin_2_Dir" Attributes="0" KeyPath="semver" Type="0"/>
+    <ROW Component="semver_1" ComponentId="{2EE77E9F-0AE9-4B7F-B3AF-733D04F0259D}" Directory_="bin_3_Dir" Attributes="0" KeyPath="semver_1" Type="0"/>
+    <ROW Component="semver_2" ComponentId="{7524709A-B9B3-4A34-BF5C-AC1B7455D754}" Directory_="bin_4_Dir" Attributes="0" KeyPath="semver_2" Type="0"/>
     <ROW Component="settings.js" ComponentId="{8D59230F-18B2-4834-83A6-09F75804414B}" Directory_="settings_Dir" Attributes="0" KeyPath="settings.js" Type="0"/>
     <ROW Component="sidebar.css" ComponentId="{3BA877C0-97A4-4DA2-8E6B-4E497EA14035}" Directory_="sidebar_Dir" Attributes="0" KeyPath="sidebar.css" Type="0"/>
     <ROW Component="sindresorhus" ComponentId="{E93FE86A-FE8E-48EF-A4EE-8D88FD929C76}" Directory_="sindresorhus_Dir" Attributes="0"/>
@@ -1491,20 +1495,6 @@
     <ROW File="index.js_30" Component_="index.js_15" FileName="index.js" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\napi-build-utils\index.js" SelfReg="false"/>
     <ROW File="LICENSE_41" Component_="index.js_15" FileName="LICENSE" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\napi-build-utils\LICENSE" SelfReg="false"/>
     <ROW File="package.json_46" Component_="index.js_15" FileName="PACKAG~1.JSO|package.json" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\napi-build-utils\package.json" SelfReg="false"/>
-    <ROW File="common.gypi" Component_="common.gypi" FileName="COMMON~1.GYP|common.gypi" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\node-addon-api\common.gypi" SelfReg="false"/>
-    <ROW File="except.gypi" Component_="common.gypi" FileName="EXCEPT~1.GYP|except.gypi" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\node-addon-api\except.gypi" SelfReg="false"/>
-    <ROW File="index.js_32" Component_="common.gypi" FileName="index.js" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\node-addon-api\index.js" SelfReg="false"/>
-    <ROW File="napiinl.deprecated.h" Component_="common.gypi" FileName="NAPI-I~1.H|napi-inl.deprecated.h" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\node-addon-api\napi-inl.deprecated.h" SelfReg="false"/>
-    <ROW File="napiinl.h" Component_="common.gypi" FileName="napi-inl.h" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\node-addon-api\napi-inl.h" SelfReg="false"/>
-    <ROW File="napi.h" Component_="common.gypi" FileName="napi.h" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\node-addon-api\napi.h" SelfReg="false"/>
-    <ROW File="node_api.gyp" Component_="common.gypi" FileName="node_api.gyp" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\node-addon-api\node_api.gyp" SelfReg="false"/>
-    <ROW File="noexcept.gypi" Component_="common.gypi" FileName="NOEXCE~1.GYP|noexcept.gypi" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\node-addon-api\noexcept.gypi" SelfReg="false"/>
-    <ROW File="nothing.c" Component_="common.gypi" FileName="nothing.c" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\node-addon-api\nothing.c" SelfReg="false"/>
-    <ROW File="packagesupport.json" Component_="common.gypi" FileName="PACKAG~1.JSO|package-support.json" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\node-addon-api\package-support.json" SelfReg="false"/>
-    <ROW File="package.json_48" Component_="common.gypi" FileName="PACKAG~2.JSO|package.json" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\node-addon-api\package.json" SelfReg="false"/>
-    <ROW File="checknapi.js" Component_="checknapi.js" FileName="CHECK-~1.JS|check-napi.js" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\node-addon-api\tools\check-napi.js" SelfReg="false"/>
-    <ROW File="clangformat.js" Component_="checknapi.js" FileName="CLANG-~1.JS|clang-format.js" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\node-addon-api\tools\clang-format.js" SelfReg="false"/>
-    <ROW File="conversion.js" Component_="checknapi.js" FileName="CONVER~1.JS|conversion.js" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\node-addon-api\tools\conversion.js" SelfReg="false"/>
     <ROW File="LICENSE_43" Component_="LICENSE_3" FileName="LICENSE" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\npmlog\LICENSE" SelfReg="false"/>
     <ROW File="log.js" Component_="LICENSE_3" FileName="log.js" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\npmlog\log.js" SelfReg="false"/>
     <ROW File="package.json_49" Component_="LICENSE_3" FileName="PACKAG~1.JSO|package.json" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\npmlog\package.json" SelfReg="false"/>
@@ -1608,11 +1598,6 @@
     <ROW File="index.js_45" Component_="index.d.ts_3" FileName="index.js" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\safe-buffer\index.js" SelfReg="false"/>
     <ROW File="LICENSE_60" Component_="index.d.ts_3" FileName="LICENSE" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\safe-buffer\LICENSE" SelfReg="false"/>
     <ROW File="package.json_68" Component_="index.d.ts_3" FileName="PACKAG~1.JSO|package.json" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\safe-buffer\package.json" SelfReg="false"/>
-    <ROW File="semver" Component_="semver" FileName="semver" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\semver\bin\semver" SelfReg="false"/>
-    <ROW File="LICENSE_61" Component_="LICENSE_5" FileName="LICENSE" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\semver\LICENSE" SelfReg="false"/>
-    <ROW File="package.json_69" Component_="LICENSE_5" FileName="PACKAG~1.JSO|package.json" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\semver\package.json" SelfReg="false"/>
-    <ROW File="range.bnf" Component_="LICENSE_5" FileName="range.bnf" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\semver\range.bnf" SelfReg="false"/>
-    <ROW File="semver.js" Component_="LICENSE_5" FileName="semver.js" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\semver\semver.js" SelfReg="false"/>
     <ROW File="index.js_46" Component_="index.js_20" FileName="index.js" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\set-blocking\index.js" SelfReg="false"/>
     <ROW File="LICENSE.txt_2" Component_="index.js_20" FileName="LICENSE.txt" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\set-blocking\LICENSE.txt" SelfReg="false"/>
     <ROW File="package.json_70" Component_="index.js_20" FileName="PACKAG~1.JSO|package.json" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\set-blocking\package.json" SelfReg="false"/>
@@ -1711,6 +1696,32 @@
     <ROW File="selectTask.css" Component_="index.html_10" FileName="SELECT~1.CSS|selectTask.css" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\pages\selectTask\selectTask.css" SelfReg="false"/>
     <ROW File="versionLog.json" Component_="versionLog.json" FileName="VERSIO~1.JSO|versionLog.json" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\versionLog.json" SelfReg="false"/>
     <ROW File="browser.ico" Component_="app.ico" FileName="browser.ico" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\icons\browser.ico" SelfReg="false"/>
+    <ROW File="electronbuilderconfig.yml" Component_="versionLog.json" FileName="ELECTR~1.YML|electron-builder-config.yml" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\electron-builder-config.yml" SelfReg="false"/>
+    <ROW File="iconcache.bat" Component_="versionLog.json" FileName="ICONCA~1.BAT|iconcache.bat" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\iconcache.bat" SelfReg="false"/>
+    <ROW File="common.gypi_1" Component_="common.gypi_1" FileName="COMMON~1.GYP|common.gypi" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\keytar\node_modules\node-addon-api\common.gypi" SelfReg="false"/>
+    <ROW File="except.gypi_1" Component_="common.gypi_1" FileName="EXCEPT~1.GYP|except.gypi" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\keytar\node_modules\node-addon-api\except.gypi" SelfReg="false"/>
+    <ROW File="index.js_59" Component_="common.gypi_1" FileName="index.js" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\keytar\node_modules\node-addon-api\index.js" SelfReg="false"/>
+    <ROW File="napiinl.deprecated.h_1" Component_="common.gypi_1" FileName="NAPI-I~1.H|napi-inl.deprecated.h" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\keytar\node_modules\node-addon-api\napi-inl.deprecated.h" SelfReg="false"/>
+    <ROW File="napiinl.h_1" Component_="common.gypi_1" FileName="napi-inl.h" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\keytar\node_modules\node-addon-api\napi-inl.h" SelfReg="false"/>
+    <ROW File="napi.h_1" Component_="common.gypi_1" FileName="napi.h" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\keytar\node_modules\node-addon-api\napi.h" SelfReg="false"/>
+    <ROW File="node_api.gyp_1" Component_="common.gypi_1" FileName="node_api.gyp" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\keytar\node_modules\node-addon-api\node_api.gyp" SelfReg="false"/>
+    <ROW File="noexcept.gypi_1" Component_="common.gypi_1" FileName="NOEXCE~1.GYP|noexcept.gypi" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\keytar\node_modules\node-addon-api\noexcept.gypi" SelfReg="false"/>
+    <ROW File="nothing.c_1" Component_="common.gypi_1" FileName="nothing.c" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\keytar\node_modules\node-addon-api\nothing.c" SelfReg="false"/>
+    <ROW File="packagesupport.json_1" Component_="common.gypi_1" FileName="PACKAG~1.JSO|package-support.json" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\keytar\node_modules\node-addon-api\package-support.json" SelfReg="false"/>
+    <ROW File="package.json_92" Component_="common.gypi_1" FileName="PACKAG~2.JSO|package.json" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\keytar\node_modules\node-addon-api\package.json" SelfReg="false"/>
+    <ROW File="checknapi.js_1" Component_="checknapi.js_1" FileName="CHECK-~1.JS|check-napi.js" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\keytar\node_modules\node-addon-api\tools\check-napi.js" SelfReg="false"/>
+    <ROW File="clangformat.js_1" Component_="checknapi.js_1" FileName="CLANG-~1.JS|clang-format.js" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\keytar\node_modules\node-addon-api\tools\clang-format.js" SelfReg="false"/>
+    <ROW File="conversion.js_1" Component_="checknapi.js_1" FileName="CONVER~1.JS|conversion.js" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\keytar\node_modules\node-addon-api\tools\conversion.js" SelfReg="false"/>
+    <ROW File="semver_1" Component_="semver_1" FileName="semver" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\node-abi\node_modules\semver\bin\semver" SelfReg="false"/>
+    <ROW File="LICENSE_79" Component_="LICENSE_8" FileName="LICENSE" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\node-abi\node_modules\semver\LICENSE" SelfReg="false"/>
+    <ROW File="package.json_93" Component_="LICENSE_8" FileName="PACKAG~1.JSO|package.json" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\node-abi\node_modules\semver\package.json" SelfReg="false"/>
+    <ROW File="range.bnf_1" Component_="LICENSE_8" FileName="range.bnf" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\node-abi\node_modules\semver\range.bnf" SelfReg="false"/>
+    <ROW File="semver.js_1" Component_="LICENSE_8" FileName="semver.js" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\node-abi\node_modules\semver\semver.js" SelfReg="false"/>
+    <ROW File="semver_2" Component_="semver_2" FileName="semver" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\prebuild-install\node_modules\semver\bin\semver" SelfReg="false"/>
+    <ROW File="LICENSE_80" Component_="LICENSE_9" FileName="LICENSE" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\prebuild-install\node_modules\semver\LICENSE" SelfReg="false"/>
+    <ROW File="package.json_94" Component_="LICENSE_9" FileName="PACKAG~1.JSO|package.json" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\prebuild-install\node_modules\semver\package.json" SelfReg="false"/>
+    <ROW File="range.bnf_2" Component_="LICENSE_9" FileName="range.bnf" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\prebuild-install\node_modules\semver\range.bnf" SelfReg="false"/>
+    <ROW File="semver.js_2" Component_="LICENSE_9" FileName="semver.js" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\dist\app\tswork-win32-x64\resources\app\node_modules\prebuild-install\node_modules\semver\semver.js" SelfReg="false"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.BootstrOptComponent">
     <ROW BootstrOptKey="GlobalOptions" DownloadFolder="[AppDataFolder][|Manufacturer]\[|ProductName]\prerequisites" Options="2"/>
@@ -1798,9 +1809,7 @@
     <ROW Directory_="test_4_Dir" Component_="test_4" ManualDelete="false"/>
     <ROW Directory_="test_5_Dir" Component_="test_5" ManualDelete="false"/>
     <ROW Directory_="test_6_Dir" Component_="test_6" ManualDelete="false"/>
-    <ROW Directory_="node_modules_11_Dir" Component_="node_modules_2" ManualDelete="false"/>
     <ROW Directory_="test_7_Dir" Component_="test_7" ManualDelete="false"/>
-    <ROW Directory_="node_modules_12_Dir" Component_="node_modules_6" ManualDelete="false"/>
     <ROW Directory_="test_8_Dir" Component_="test_8" ManualDelete="false"/>
     <ROW Directory_="node_modules_5_Dir" Component_="node_modules_7" ManualDelete="false"/>
     <ROW Directory_="test_9_Dir" Component_="test_9" ManualDelete="false"/>
@@ -1810,6 +1819,7 @@
     <ROW Directory_="test_12_Dir" Component_="test_12" ManualDelete="false"/>
     <ROW Directory_="test_13_Dir" Component_="test_13" ManualDelete="false"/>
     <ROW Directory_="test_14_Dir" Component_="test_14" ManualDelete="false"/>
+    <ROW Directory_="develar_Dir" Component_="develar" ManualDelete="false"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCustActComponent">
     <ROW Action="AI_BACKUP_AI_SETUPEXEPATH" Type="51" Source="AI_SETUPEXEPATH_ORIGINAL" Target="[AI_SETUPEXEPATH]"/>
@@ -1980,10 +1990,7 @@
     <ROW Feature_="MainFeature" Component_="test_9"/>
     <ROW Feature_="MainFeature" Component_="index.js_18"/>
     <ROW Feature_="MainFeature" Component_="travis.yml_6"/>
-    <ROW Feature_="MainFeature" Component_="node_modules_6"/>
-    <ROW Feature_="MainFeature" Component_="common.gypi"/>
     <ROW Feature_="MainFeature" Component_="test_8"/>
-    <ROW Feature_="MainFeature" Component_="checknapi.js"/>
     <ROW Feature_="MainFeature" Component_="LICENSE_3"/>
     <ROW Feature_="MainFeature" Component_="index.js_16"/>
     <ROW Feature_="MainFeature" Component_="browser.js_3"/>
@@ -2002,8 +2009,6 @@
     <ROW Feature_="MainFeature" Component_="npmignore_5"/>
     <ROW Feature_="MainFeature" Component_="test_11"/>
     <ROW Feature_="MainFeature" Component_="index.d.ts_3"/>
-    <ROW Feature_="MainFeature" Component_="semver"/>
-    <ROW Feature_="MainFeature" Component_="LICENSE_5"/>
     <ROW Feature_="MainFeature" Component_="index.js_20"/>
     <ROW Feature_="MainFeature" Component_="index.js_21"/>
     <ROW Feature_="MainFeature" Component_="travis.yml_9"/>
@@ -2074,7 +2079,6 @@
     <ROW Feature_="MainFeature" Component_="ini.js"/>
     <ROW Feature_="MainFeature" Component_="index.js_12"/>
     <ROW Feature_="MainFeature" Component_="npmignore_4"/>
-    <ROW Feature_="MainFeature" Component_="node_modules_2"/>
     <ROW Feature_="MainFeature" Component_="travis.yml_3"/>
     <ROW Feature_="MainFeature" Component_="parse.js"/>
     <ROW Feature_="MainFeature" Component_="test_7"/>
@@ -2096,6 +2100,13 @@
     <ROW Feature_="MainFeature" Component_="LICENSE_7"/>
     <ROW Feature_="MainFeature" Component_="jshintrc"/>
     <ROW Feature_="MainFeature" Component_="versionLog.json"/>
+    <ROW Feature_="MainFeature" Component_="develar"/>
+    <ROW Feature_="MainFeature" Component_="common.gypi_1"/>
+    <ROW Feature_="MainFeature" Component_="checknapi.js_1"/>
+    <ROW Feature_="MainFeature" Component_="semver_1"/>
+    <ROW Feature_="MainFeature" Component_="LICENSE_8"/>
+    <ROW Feature_="MainFeature" Component_="semver_2"/>
+    <ROW Feature_="MainFeature" Component_="LICENSE_9"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiIconsComponent">
     <ROW Name="browser.exe" SourcePath="..\icons\browser.ico" Index="0"/>

@@ -147,9 +147,9 @@ class SidePanel {
 				this.bounds.y += 23
 				this.bounds.height -= 40
 			} else {
-				if(isWin11){
-					this.bounds.height-=15 //单独对win11的标题栏高度进行兼容
-				}else{
+				if (isWin11) {
+					this.bounds.height -= 15 //单独对win11的标题栏高度进行兼容
+				} else {
 					this.bounds.height -= 20
 				}
 			}
@@ -159,7 +159,7 @@ class SidePanel {
 			this.bounds.y += 31
 			this.bounds.height -= 40
 		}
-		
+
 		let setX = this.bounds.x
 		let setY = !resetY ? this.bounds.y + this.titlebarHeight : this.bounds.y + resetY
 		let setHeight = this.bounds.height - this.titlebarHeight
@@ -172,7 +172,7 @@ class SidePanel {
 			x: setX,
 			y: setY,
 			width: this.panelWidth,
-			height:setHeight
+			height: setHeight
 		})
 	}
 
@@ -383,11 +383,11 @@ function addMainWindowEventListener() {
 	})
 	mainWindow.on('leave-html-full-screen', () => {
 		//sidePanel.show()
-		setTimeout(function(){
+		setTimeout(function() {
 			sidePanel.show()
 			mainWindow.focus()
-		},750)
-		
+		}, 750)
+
 
 	})
 
@@ -546,6 +546,18 @@ ipc.on('selectTask', function() {
 
 })
 
-ipc.on('closeTaskSelect',function(){
+ipc.on('closeTaskSelect', function() {
 	selectTaskWindow.close()
+})
+
+ipc.on('addTab', function(event, data) {
+	sendIPCToWindow(mainWindow, 'addTab', {
+		'url': data.url
+	})
+})
+
+ipc.on('userLogin', function(event, data) {
+	sidePanel.get().webContents.send( 'userLogin', {
+		'userInfo': data.userInfo
+	})
 })

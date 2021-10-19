@@ -13,17 +13,17 @@
 	</head>
 	<body style="background-color: #00000000;overflow-x: hidden;overflow-y: hidden;">
 		<script>
-		function mousenter(target){
-			target.setAttribute('class','sidebar expanded')
-			console.log('鼠标移入')
-			document.getElementById('clickThroughElement').style.left="146px"
-		}	
-		function mouseleave(target){
-			target.setAttribute('class','sidebar')
-			console.log('鼠标移出')
-			document.getElementById('clickThroughElement').style.left="46px"
-		}
-		
+			function mousenter(target) {
+				target.setAttribute('class', 'sidebar expanded')
+				console.log('鼠标移入')
+				document.getElementById('clickThroughElement').style.left = "146px"
+			}
+
+			function mouseleave(target) {
+				target.setAttribute('class', 'sidebar')
+				console.log('鼠标移出')
+				document.getElementById('clickThroughElement').style.left = "46px"
+			}
 		</script>
 		<div id="appVue" class="sidebar" onmouseenter="mousenter(this)" onmouseleave="mouseleave(this)">
 			<sidebar />
@@ -37,7 +37,23 @@
 				<div id="itemsEl" class="side-items">
 
 					<ul id="pinGroup" class="app-task" style="margin-bottom: 0;">
-
+						<li @click="userClick" class="" style="position: relative;">
+							<a-popover title="用户信息" placement="right"
+								:mouse-enter-delay="0.1" :mouse-leave-delay="0.1" :destroy-tooltip-on-hide="true"
+								overlay-class-name="tips">
+								<template slot="content">
+								</template>
+								<div class="wrapper">
+									<div class="item-icon">
+										<a-avatar style="border:1px solid #cfcfcf; backgroundColor: white" class="icon" :src="user.avatar"></a-avatar>
+										<!-- <a-badge :count="0" :dot="true" status="processing"
+											:style="{position: 'absolute',right:  '-2px',top:'-13px'}" />
+										</a-badge> -->
+									</div>
+									<div class="item-title">{{ user.nickname }}</div>
+								</div>
+							</a-popover>
+						</li>
 
 						<draggable v-model="getPinItems" group="sideBtn" animation="300" dragClass="dragClass"
 							ghostClass="ghostClass" chosenClass="chosenClass" @start="onStart" @end="onEnd">
@@ -58,13 +74,13 @@
 										</template>
 										<div class="wrapper">
 											<div class="item-icon">
-												
-													<img class="icon" :src="item.icon">
-													<a-badge :count="item.count" :dot="true" status="processing"
-														:style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:item.count>5?'visible':'hidden'}" />
-													</a-badge>
+
+												<img class="icon" :src="item.icon">
+												<a-badge :count="item.count" :dot="true" status="processing"
+													:style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:item.count>5?'visible':'hidden'}" />
+												</a-badge>
 											</div>
-										
+
 											<div class="item-title">{{ item.title }}</div>
 										</div>
 									</a-popover>
@@ -84,7 +100,7 @@
 									<li @click="openItem(item.id,i)" v-for="(item,i) in this.$store.getters.getItems"
 										:key="item.id" :visible="item.count>1" data-role="task"
 										:class="isActive(item.id)" :item-id="item.id" style="position: relative;">
-										
+
 										<a-popover :title="item.count>5?item.title+' -- 高负载（5+）':item.title"
 											placement="right" :mouse-enter-delay="0.1" :mouse-leave-delay="0.1"
 											:destroy-tooltip-on-hide="true" overlay-class-name="tips">
@@ -98,7 +114,7 @@
 											</template>
 											<div class="wrapper">
 												<div class="item-icon">
-													
+
 													<img class="icon" :src="item.icon">
 													<a-badge :count="item.count" :dot="true" status="processing"
 														:style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:item.count>5?'visible':'hidden'}" />
@@ -164,19 +180,16 @@
 
 
 												</template> -->
-											<a-button  type="default" shape="circle"
-												icon="mobile" ></a-button>
+											<a-button type="default" shape="circle" icon="mobile"></a-button>
 											<div class="item-title">手机模式</div>
 											<!-- </a-popover> -->
 										</li>
-										<li @click="openBottom('help')" >
-											<a-button type="default" shape="circle"
-												icon="question-circle" ></a-button>
+										<li @click="openBottom('help')">
+											<a-button type="default" shape="circle" icon="question-circle"></a-button>
 											<div class="item-title">帮助中心</div>
 										</li>
-										<li  @click="openBottom('setting')">
-											<a-button type="default" shape="circle"
-												icon="setting" ></a-button>
+										<li @click="openBottom('setting')">
+											<a-button type="default" shape="circle" icon="setting"></a-button>
 											<div class="item-title">偏好设置</div>
 										</li>
 									</a-collapse-panel>
@@ -185,7 +198,7 @@
 						</template>
 
 						<li @click="openBottom('home')">
-							<a-button  type="default" shape="circle" icon="home"></a-button> 
+							<a-button type="default" shape="circle" icon="home"></a-button>
 							<div class="item-title">应用中心</div>
 						</li>
 					</ul>

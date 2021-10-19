@@ -58,6 +58,8 @@ window.addEventListener('message', function(e) {
 			break
 		case 'mobile':
 			ipc.send('openMobile')
+		case "addTab":
+			ipc.send('addTab',{'url':e.data.url})
 	}
 
 
@@ -89,6 +91,19 @@ ipc.on('receiveGlobal', function(e, data) {
 })
 
 ipc.on('addItem',function(e,data){
-	console.log(data)
 	window.$store.state.items.push(data.item)
+})
+
+
+ipc.on('userLogin',function(e,data){
+	console.log('userinfo')
+	let userInfo= JSON.parse(data.userInfo)
+	console.log(userInfo)
+	let user={
+		uid:userInfo.uid,
+		nickname:userInfo.nickname,
+		avatar:userInfo.avatar
+	}
+	window.$store.state.user=user
+	console.log(user)
 })
