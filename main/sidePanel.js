@@ -268,13 +268,16 @@ class SidePanel {
 		this._sidePanel.setIgnoreMouseEvents(true, {
 			forward: true
 		})
+		if(BrowserWindow.getFocusedWindow()!=null)//如果有任意一个window还有焦点，则聚焦到mainwindow
+		      mainWindow.focus()
 		mainWindow.focus()
 		console.log('设置左侧栏不再感应鼠标，主窗体获得焦点')
 	}
 	//设置在侧边栏鼠标有效
 	setMouseEnable() {
 		this._sidePanel.setIgnoreMouseEvents(false)
-		this._sidePanel.focus()
+		if(BrowserWindow.getFocusedWindow()!=null)//如果有任意一个window还有焦点，则聚焦到sidepanel
+			this._sidePanel.focus()
 		console.log('设置左侧栏感应 鼠标，左侧栏同时获得焦点')
 	}
 }
