@@ -14,7 +14,7 @@ function isWin11() {
  * 是否是Mac
  */
 function isMac(){
-	
+	return process.platform == 'darwin'
 }
 /**
  * 是否是windows
@@ -404,14 +404,22 @@ function loadSidePanel() {
 		sidePanel.init()
 		sidePanel.setMouseIgnore() //重新让主界面获得焦点
 		mainWindow.focus()
+	}else{
+		sidePanel.show()
 	}
 }
 
 function closeSidePanel() {
 	console.log('执行closeSidePanel()')
 	if (SidePanel.alive()) {
-		sidePanel.close()
-		sidePanel = null
+		if(isMac()){
+			sidePanel.close()
+			sidePanel = null
+		}else{
+			sidePanel.hide()
+		}
+		
+		
 	}
 }
 
