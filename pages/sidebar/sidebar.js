@@ -315,5 +315,5 @@ window.onload = function() {
 
 
 
-
+	require('./theme.js').initialize()
 }

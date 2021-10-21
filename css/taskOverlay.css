@@ -322,7 +322,14 @@ body.dark-mode #task-overlay {
 	margin-top: 10px;
 	background: white;
 }
+.dark-theme .task-container{
+	background-color: #ffffff0f;
+	border-color: #f9f9f926;
+}
 
+.dark-theme #add-task{
+	box-shadow: 0 0 15px #5252523b;
+}
 .task-name{
 	border-left: 4px solid #247afb;
 	padding-left: 10px;

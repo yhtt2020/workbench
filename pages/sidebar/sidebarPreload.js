@@ -1,4 +1,5 @@
 require('../../dist/localization.build.js')
+
 var electron = require('electron')
 var ipc = electron.ipcRenderer
 let mainWindowId = 0
