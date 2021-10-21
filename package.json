@@ -2,7 +2,7 @@
   "name": "tswork",
   "productName": "想天工作台",
   "author": "Thisky",
-  "version": "0.5.8",
+  "version": "0.5.9",
   "description": "一款针对工作场景的极简浏览器，帮助你提升效率，保持专注",
   "electronVersion": "14.0.0-beta.21",
   "main": "main.build.js",
