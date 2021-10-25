@@ -1,0 +1,467 @@
+{
+	"allApps": [{
+			"name": "im",
+			"title": "即时通讯",
+			"apps": [{
+					"name": "企业微信",
+					"url": "https://work.weixin.qq.com/",
+					"summary": "腾讯企业沟通工具",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/qywx.jpeg"
+				},
+				{
+					"name": "微信网页版",
+					"url": "https://wx.qq.com/",
+					"summary": "全民沟通工具",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/wx.svg"
+				},
+				{
+					"name": "钉钉网页版",
+					"url": "https://im.dingtalk.com/",
+					"summary": "阿里出品企业沟通工具",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/dd.svg"
+				}
+			]
+		},
+		{
+			"name": "doc",
+			"title": "文档表单",
+			"apps": [{
+					"name": "语雀",
+					"url": "https://www.yuque.com/",
+					"summary": "文档协作工具",
+					"icon": "https://gw.alipayobjects.com/zos/rmsportal/UTjFYEzMSYVwzxIGVhMu.png"
+				},
+				{
+					"name": "腾讯文档",
+					"url": "https://docs.qq.com/",
+					"summary": "多人协作在线文档",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/txwendang.jpeg"
+				},
+				{
+					"name": "金山文档",
+					"url": "https://www.kdocs.cn/",
+					"summary": "多人实时在线协作",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/jinshan.png"
+				},
+				{
+					"name": "石墨文档",
+					"url": "https://shimowendang.com/recent",
+					"summary": "在线协同办公系统平台",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/shimo.webp"
+				},
+				{
+					"name": "幕布",
+					"url": "https://mubu.com/home",
+					"summary": "思维导图和笔记",
+					"icon": "https://sf1-dycdn-tos.pstatp.com/obj/eden-cn/792eh7bouloj/mubu/favicon.ico"
+				}
+			]
+		},
+		{
+			"name": "email",
+			"title": "常用邮箱",
+			"apps": [{
+					"name": "QQ邮箱",
+					"url": "https://mail.qq.com/",
+					"summary": "为亿万用户提供高效稳定便捷的电子邮件服务。",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/qqmail.jpeg"
+				},
+				{
+					"name": "163邮箱",
+					"url": "https://docs.qq.com/",
+					"summary": "一款可多人协作的在线文档",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/163mail.jpeg"
+				}
+			]
+		},
+		{
+			"name": "news",
+			"title": "资讯门户",
+			"apps": [{
+				"name": "少数派",
+				"url": "https://sspai.com/",
+				"star":"3",
+				"summary": "高效工作，品质生活",
+				"icon": "https://cdn.sspai.com/sspai/assets/img/favicon/icon.ico"
+			}]
+		},
+		{
+			"name": "productive",
+			"title": "生产力",
+			"apps": [{
+					"name": "想天工作台",
+					"url": "https://work.thisky.com/",
+					"summary": "你在用的神器",
+					"star":"5",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/gzt.svg"
+				},
+
+				{
+					"name": "图怪兽",
+					"url": "https://818ps.com/",
+					"star":"4",
+					"summary": "图片编辑剪辑",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/tuguaishou.png"
+				},
+
+				{
+					"name": "蓝湖",
+					"star":"4",
+					"url": "https://lanhuapp.com/",
+					"summary": "原型图预览",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/lanhu.png"
+				}
+			]
+		},
+		{
+			"name": "media",
+			"title": "新媒体",
+			"apps": [{
+					"name": "公众平台",
+					"url": "https://mp.weixin.qq.com/",
+					"summary": "微信公众平台，给个人、企业和组织提供业务服务与用户管理能力的全新服务平台。",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/wx.svg"
+				},
+				{
+					"name": "新浪微博",
+					"url": "https://weibo.com/login.php",
+					"summary": "随时随地发现新鲜事",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/weibo.svg"
+				},
+				{
+					"name": "头条号",
+					"url": "https://mp.toutiao.com/auth/page/login?redirect_url=JTJGcHJvZmlsZV92NCUyRg==",
+					"summary": "你创作的，就是头条。",
+					"icon": "https://sf1-cdn-tos.toutiaostatic.com/obj/ttfe/pgcfe/sz/mp_logo.png"
+				},
+				{
+					"name": "百家号",
+					"url": "https://baijiahao.baidu.com/builder/rc/home",
+					"summary": "百家号，是百度为创作者打造的集创作、发布、变现于一体的内容创作平台，也是众多企业号实现营销转化的运营新阵地。",
+					"icon": "https://api.iowen.cn/favicon/baijiahao.baidu.com.png"
+				},
+				{
+					"name": "腾讯内容开放平台",
+					"url": "https://om.qq.com/userAuth/index",
+					"summary": "腾讯内容开放平台",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/qenr.svg"
+				},
+				{
+					"name": "小红书创作平台",
+					"url": "https://creator.xiaohongshu.com/login",
+					"summary": "轻量级、可自定义的管理系统搭建平台",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/xhs.jpg"
+				},
+				{
+					"name": "微信视频号",
+					"url": "https://channels.weixin.qq.com/login",
+					"summary": "微信小视频助手",
+					"icon": "https://api.iowen.cn/favicon/channels.weixin.qq.com.png"
+				},
+				{
+					"name": "抖音后台",
+					"url": "https://open.douyin.com/platform",
+					"summary": "抖音管理后台",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/douyin.gif"
+				}
+			]
+		},
+		{
+			"name": "desktop",
+			"title": "常用软件",
+			"apps": [{
+					"name": "百度网盘",
+					"url": "https://pan.baidu.com/disk/home?#/all?path=%2F&vmode=list",
+					"summary": "为您提供文件的网络备份、同步和分享服务。空间大、速度快、安全稳固，支持教育网加速，支持手机端。",
+					"icon": "https://api.iowen.cn/favicon/pan.baidu.com.png"
+				},
+				{
+					"name": "坚果云",
+					"url": "https://www.jianguoyun.com/",
+					"summary": "一款提供网盘|云盘|云服务的团队协助软件,可随时随地实现共享文件夹。坚果云网盘支持移动办公,协同办公,文件同步,数据备份,智能管理,在线编辑等功能。",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/jianguo.jpeg"
+				},
+				{
+					"name": "微信桌面版",
+					"url": "https://weixin.qq.com/",
+					"summary": "聊天工具",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/wx.svg"
+				}
+			]
+		},
+		{
+			"name": "saas",
+			"title": "SAAS服务",
+			"apps": [{
+					"name": "有赞后台",
+					"url": "https://account.youzan.com/login",
+					"summary": "商城",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/youzan.jpeg"
+				},
+				{
+					"name": "小鹅通",
+					"url": "https://admin.xiaoe-tech.com/login_page?channel=5670-8121#/register",
+					"summary": "知识付费",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/xiaoe.jpg"
+				},
+				{
+					"name": "分销销客",
+					"url": "https://www.fxiaoke.com/",
+					"summary": "赋能企业数字化未来",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/fenxiang.webp"
+				},
+				{
+					"name": "轻流",
+					"url": "https://qingflow.com/",
+					"summary": "轻量级、可自定义的管理系统搭建平台",
+					"icon": "https://qingflow.com/favicon.ico"
+				}
+			]
+		},
+		{
+			"name": "dev",
+			"title": "程序开发",
+			"apps": [{
+					"name": "GitHub",
+					"url": "https://github.com/",
+					"summary": "代码管理",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/github.webp"
+				},
+				{
+					"name": "DockerHub",
+					"url": "https://registry.hub.docker.com/search?type=image",
+					"summary": "镜像仓库",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/default.svg"
+				},
+				{
+					"name": "Jenkins",
+					"url": "https://www.jenkins.io/zh/",
+					"summary": "持续集成",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/jenkins.webp"
+				},
+				{
+					"name": "禅道官方",
+					"url": "https://www.zentao.net/",
+					"summary": "项目管理",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/default.svg"
+				},
+				{
+					"name": "yapi",
+					"url": "https://hellosean1025.github.io/yapi/",
+					"summary": "接口自动化、mooc",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/yapi.png"
+				},
+				{
+					"name": "Vue",
+					"url": "https://cn.vuejs.org/",
+					"summary": "JS框架",
+					"icon": "https://cn.vuejs.org/images/logo.svg"
+				},
+				{
+					"name": "Antdesign",
+					"url": "https://ant.design/docs/react/introduce-cn",
+					"summary": "React前端框架",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/atd.svg"
+				},
+				{
+					"name": "Element",
+					"url": "https://element.eleme.io/#/zh-CN",
+					"summary": "Vue前端框架",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/element.jpg"
+				},
+				{
+					"name": "ATDVue",
+					"url": "https://www.antdv.com/docs/vue/introduce-cn/",
+					"summary": "Vue版ATD",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/atd.svg"
+				},
+				{
+					"name": "Gitee",
+					"url": "https://gitee.com/",
+					"summary": "国内源码版本库",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/gitee.jpg"
+				},
+				{
+					"name": "掘金",
+					"url": "https://juejin.cn/",
+					"summary": "程序员社区",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/juejin.webp"
+				},
+				{
+					"name": "Grafana",
+					"url": "https://grafana.com/",
+					"summary": "Promethus可视化",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/grafa.webp"
+				},
+				{
+					"name": "Git",
+					"url": "https://git-scm.com/",
+					"summary": "代码管理工具",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/git.jpg"
+				},
+				{
+					"name": "TortiseGit",
+					"url": "https://tortoisegit.org/download/",
+					"summary": "Win平台git辅助",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/tot.jpg"
+				},
+				{
+					"name": "Hbuilder",
+					"url": "https://www.dcloud.io/",
+					"summary": "uniapp、IDE",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/hbuilder.png"
+				},
+				{
+					"name": "Electron",
+					"url": "https://www.electronjs.org/",
+					"summary": "前端桌面App开发框架",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/ele.jpg"
+				}
+			]
+		},
+		{
+			"name": "rest",
+			"title": "休闲放松",
+			"apps": [{
+					"name": "网易云音乐",
+					"url": "https://music.163.com",
+					"summary": "网抑云",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/wyy.png"
+				},
+				{
+					"name": "QQ音乐",
+					"url": "https://y.qq.com/",
+					"summary": "腾讯旗下音乐平台",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/qqyy.jpg"
+				},
+				{
+					"name": "哔哩哔哩",
+					"url": "https://www.bilibili.com/",
+					"summary": "干杯！",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/bilibili.webp"
+				},
+				{
+					"name": "爱奇艺",
+					"url": "https://www.iqiyi.com/",
+					"summary": "百度旗下视频网站",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/aiqiyi.webp"
+				},
+				{
+					"name": "腾讯视频",
+					"url": "https://v.qq.com/",
+					"summary": "不负好时光",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/tengxunsp.jpg"
+				},
+				{
+					"name": "优酷",
+					"url": "https://www.youku.com/",
+					"summary": "你的热爱",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/youku.jpg"
+				}
+			]
+		},
+		{
+			"name": "study",
+			"title": "学习成长",
+			"apps": [{
+					"name": "慕课网",
+					"url": "https://www.imooc.com/",
+					"summary": "程序员的梦工厂",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/muke.jpg"
+				},{
+					"name": "网易云课堂",
+					"url": "https://study.163.com/",
+					"summary": "实用技能平台",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/wyykt.webp"
+				},{
+					"name": "腾讯课堂",
+					"url": "https://ke.qq.com/",
+					"summary": "职业培训，考试提升",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/txykt.webp"
+				},
+				{
+					"name": "知乎",
+					"url": "https://www.zhihu.com",
+					"summary": "有问题就会有答案",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/zhihu.webp"
+				},
+				{
+					"name": "喜马拉雅",
+					"url": "https://www.ximalaya.com/",
+					"summary": "每一天的精神食粮",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/ximalaya.webp"
+				},
+				{
+					"name": "得到",
+					"url": "https://www.dedao.cn/",
+					"summary": "知识就是力量",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/dedao.webp"
+				}
+			]
+		},
+		{
+			"name": "buy",
+			"title": "企业采购",
+			"apps": [{
+					"name": "京东",
+					"url": "https://www.jd.com/",
+					"summary": "正品低价",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/jd.jpg"
+				},{
+					"name": "京满仓",
+					"url": "https://www.vipmro.net/",
+					"summary": "企业采购",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/jd.jpg"
+				},
+				{
+					"name": "苏宁易购",
+					"url": "https://www.suning.com/",
+					"summary": "专注好服务",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/suning.webp"
+				},
+				{
+					"name": "淘宝",
+					"url": "https://www.taobao.com/",
+					"summary": "淘！我喜欢",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/taobao.webp"
+				},
+				{
+					"name": "1688",
+					"url": "https://1688.com/",
+					"summary": "采购批发平台",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/1688.webp"
+				},
+				{
+					"name": "爱采购",
+					"url": "https://b2b.baidu.com/",
+					"summary": "轻量级、可自定义的管理系统搭建平台",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/aicaigou.jpg"
+				}
+			]
+		},
+		{
+			"name": "info",
+			"title": "企业信息",
+			"apps": [{
+					"name": "爱企查",
+					"url": "https://aiqicha.baidu.com/",
+					"summary": "专业免费的企业信息查询平台",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/aiqicha.jpg"
+				},
+				{
+					"name": "企查查",
+					"url": "https://www.qcc.com/",
+					"summary": "商业精英的共同选择",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/qichacha.jpg"
+				},
+				{
+					"name": "天眼查",
+					"url": "https://www.tianyancha.com/",
+					"summary": "重要决策前就用天眼查",
+					"icon": "http://d.xiangtian.ren/api/hdlogo/tianyancha.png"
+				}
+			]
+		}
+	],
+	"updateTime": "2021年10月6日 下午10:22"
+}

@@ -8,10 +8,20 @@ var currentSearchEngine = {
   searchURL: '%s'
 }
 
-var defaultSearchEngine = 'DuckDuckGo'
+var defaultSearchEngine = 'Bing'
 
 var searchEngines = {
-  DuckDuckGo: {
+  Bing: {
+    name: 'Bing',
+    searchURL: 'https://www.bing.com/search?q=%s',
+    suggestionsURL: 'https://www.bing.com/osjson.aspx?query=%s',
+    queryParam: 'q'
+  },Baidu: {
+    name: 'Baidu',
+    searchURL: 'https://www.baidu.com/s?wd=%s',
+    suggestionsURL: 'https://www.baidu.com/su?wd=%s&action=opensearch',
+    queryParam: 'wd'
+  },DuckDuckGo: {
     name: 'DuckDuckGo',
     searchURL: 'https://duckduckgo.com/?q=%s&t=min',
     suggestionsURL: 'https://ac.duckduckgo.com/ac/?q=%s&type=list&t=min',
@@ -22,24 +32,14 @@ var searchEngines = {
     searchURL: 'https://www.google.com/search?q=%s',
     queryParam: 'q'
   },
-  Bing: {
-    name: 'Bing',
-    searchURL: 'https://www.bing.com/search?q=%s',
-    suggestionsURL: 'https://www.bing.com/osjson.aspx?query=%s',
-    queryParam: 'q'
-  },
+  
   Yahoo: {
     name: 'Yahoo',
     searchURL: 'https://search.yahoo.com/yhs/search?p=%s',
     suggestionsURL: 'https://search.yahoo.com/sugg/os?command=%s&output=fxjson',
     queryParam: 'p'
   },
-  Baidu: {
-    name: 'Baidu',
-    searchURL: 'https://www.baidu.com/s?wd=%s',
-    suggestionsURL: 'https://www.baidu.com/su?wd=%s&action=opensearch',
-    queryParam: 'wd'
-  },
+  
   StartPage: {
     name: 'StartPage',
     searchURL: 'https://www.startpage.com/do/search?q=%s',

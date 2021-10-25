@@ -11,6 +11,8 @@ const basedir = require('path').join(__dirname, '../')
 const ignoredDirs = [
   '.DS_Store',
   'dist/app',
+  'dist/mac-arm64',
+  'setup',
   /\.map$/g,
   /\.md$/g,
   // electron-installer-debian is actually a development module, but it isn't pruned because it's optional
@@ -30,7 +32,7 @@ const ignoredDirs = [
 ]
 
 var baseOptions = {
-  name: 'Min',
+  name: 'tswork',
   dir: basedir,
   out: 'dist/app',
   electronVersion: electronVersion,
@@ -76,7 +78,7 @@ var platformOptions = {
   win32: {
     arch: 'all',
     platform: 'win32',
-    icon: 'icons/icon256.ico'
+    icon: 'icons/browser.ico'
   },
   linuxAmd64: {
     name: 'min', // name must be lowercase to run correctly after installation

@@ -1,4 +1,4 @@
-const UPDATE_URL = 'https://minbrowser.github.io/min/updates/latestVersion.json'
+const UPDATE_URL = 'https://work.thisky.com/latestVersion.json'
 
 var settings = require('util/settings/settings.js')
 

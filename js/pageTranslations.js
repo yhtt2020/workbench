@@ -4,10 +4,14 @@ const settings = require('util/settings/settings.js')
 
 const pageTranslations = {
   apiURL: 'https://translate-api.minbrowser.org/translate',
-  translatePrivacyInfo: 'When you translate a page, the page contents are sent to Min\'s servers. We don\'t save your translations or use them to identify you.',
+  translatePrivacyInfo: l('translateTip'),
   languages: [
     {
-      name: 'English',
+      name: '简体中文',
+      code: 'zh'
+    },
+	{
+      name: '英文',
       code: 'en'
     },
     {
@@ -15,8 +19,8 @@ const pageTranslations = {
       code: 'ar'
     },
     {
-      name: 'Chinese',
-      code: 'zh'
+      name: 'Dutch',
+      code: 'nl'
     },
     {
       name: 'French',
@@ -29,6 +33,10 @@ const pageTranslations = {
     {
       name: 'Hindi',
       code: 'hi'
+    },
+    {
+      name: 'Indonesian',
+      code: 'id'
     },
     {
       name: 'Irish',
@@ -47,6 +55,10 @@ const pageTranslations = {
       code: 'ko'
     },
     {
+      name: 'Polish',
+      code: 'pl'
+    },
+    {
       name: 'Portuguese',
       code: 'pt'
     },
@@ -57,6 +69,18 @@ const pageTranslations = {
     {
       name: 'Spanish',
       code: 'es'
+    },
+    {
+      name: 'Turkish',
+      code: 'tr'
+    },
+    {
+      name: 'Ukranian',
+      code: 'uk'
+    },
+    {
+      name: 'Vietnamese',
+      code: 'vi'
     }
   ],
   getLanguageList: function () {

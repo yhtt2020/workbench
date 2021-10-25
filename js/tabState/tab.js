@@ -1,3 +1,4 @@
+
 class TabList {
   constructor (tabs, parentTaskList) {
     this.tabs = tabs || []
@@ -24,9 +25,10 @@ class TabList {
       scrollPosition: tab.scrollPosition || 0,
       selected: tab.selected || false,
       muted: tab.muted || false,
-      loaded: tab.loaded || false,
+      loaded: tab.loaded || false,
       hasAudio: false,
-      previewImage: ''
+      previewImage: '',
+      isFileView: false,
     }
 
     if (options.atEnd) {
@@ -36,6 +38,7 @@ class TabList {
     }
 
     this.parentTaskList.emit('tab-added', tabId)
+
 
     return tabId
   }

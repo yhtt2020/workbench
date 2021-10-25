@@ -5,6 +5,11 @@ var viewStateMap = {} // id: view state
 
 var temporaryPopupViews = {} // id: view
 
+var viewBounds={}
+var sidebarBounds={}
+
+
+
 const defaultViewWebPreferences = {
   nodeIntegration: false,
   nodeIntegrationInSubFrames: true,
@@ -35,7 +40,6 @@ function createView (existingViewId, id, webPreferencesString, boundsString, eve
   } else {
     view = new BrowserView({ webPreferences: Object.assign({}, defaultViewWebPreferences, JSON.parse(webPreferencesString)) })
   }
-
   events.forEach(function (event) {
     view.webContents.on(event, function (e) {
       var args = Array.prototype.slice.call(arguments).slice(1)
@@ -80,7 +84,7 @@ function createView (existingViewId, id, webPreferencesString, boundsString, eve
     mainWindow.webContents.send('view-event', {
       viewId: id,
       event: 'did-create-popup',
-      args: [popupId]
+      args: [popupId, url]
     })
   })
 
@@ -156,7 +160,7 @@ function createView (existingViewId, id, webPreferencesString, boundsString, eve
   view.webContents.on('will-redirect', handleExternalProtocol)
 
   view.setBounds(JSON.parse(boundsString))
-
+  viewBounds=JSON.parse(boundsString)
   viewMap[id] = view
 
   return view
@@ -166,10 +170,15 @@ function destroyView (id) {
   if (!viewMap[id]) {
     return
   }
-
   if (viewMap[id] === mainWindow.getBrowserView()) {
-    mainWindow.setBrowserView(null)
-  }
+      mainWindow.setBrowserView(null)
+	}
+  // else if(viewMap[id]===sidebarView)//如果是侧边栏的view，则直接将其置顶起来
+  // {
+	 //  console.log('阻止一次被消耗')
+	 //  mainWindow.setTopBrowserView(sidebarView)
+	 //  return 
+  // }
   viewMap[id].webContents.destroy()
 
   delete viewMap[id]
@@ -181,15 +190,23 @@ function destroyAllViews () {
     destroyView(id)
   }
 }
+//处理设置当前BrowserView事件，以将sidebarView拿出来
+
+
 
 function setView (id) {
-  mainWindow.setBrowserView(viewMap[id])
+	mainWindow.setBrowserView(viewMap[id])
+	
 }
 
 function setBounds (id, bounds) {
   if (viewMap[id]) {
     viewMap[id].setBounds(bounds)
   }
+  viewBounds = bounds
+  // sidebarBounds={x:0,y:bounds.y,width:45,height:bounds.height}
+  // sidebarView.setBounds(sidebarBounds)
+
 }
 
 function focusView (id) {
@@ -204,6 +221,7 @@ function focusView (id) {
 
 function hideCurrentView () {
   mainWindow.setBrowserView(null)
+  // mainWindow.removeBrowserView(sidebarView) //把sidebar也一并移除
   mainWindow.webContents.focus()
 }
 
@@ -235,8 +253,10 @@ ipc.on('setView', function (e, args) {
   setView(args.id)
   setBounds(args.id, args.bounds)
   if (args.focus) {
-    focusView(args.id)
+    //focusView(args.id) //todo观察，注释这行在切换view的时候给他聚焦的代码，用以解决mac平台上切换tab导致侧边栏丢失焦点出错的问题
   }
+  //设置当前view
+  //onSetView()
 })
 
 ipc.on('setBounds', function (e, args) {
@@ -249,6 +269,8 @@ ipc.on('focusView', function (e, id) {
 
 ipc.on('hideCurrentView', function (e) {
   hideCurrentView()
+  //调用隐藏当前视图的回调到sidebar
+  //onHideCurrentView()
 })
 
 ipc.on('loadURLInView', function (e, args) {
@@ -324,3 +346,39 @@ ipc.on('saveViewCapture', function (e, data) {
 })
 
 global.getView = getView
+var emulationViews=[]
+var oldAgent=''
+//当前view打开emulation
+ipc.on('enableEmulation',function(e,data){
+	var view=viewMap[data.id]
+	var index=emulationViews.indexOf(data.id)
+	if(index!=-1){
+		view.webContents.setUserAgent(oldAgent)
+		view.webContents.disableDeviceEmulation()
+		view.webContents.reload()
+		emulationViews.splice(index,1)
+	
+	}else{
+		oldAgent=view.webContents.getUserAgent()
+		view.setBackgroundColor("#d1d1d1")
+		view.webContents.setUserAgent('Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A403 Safari/8536.25')
+		view.webContents.enableDeviceEmulation({
+			 screenPosition: 'mobile',
+			 screenSize: { width: 375, height: 812 },
+			 deviceScaleFactor: 0,
+			 viewPosition: { x: 0, y: 0 },
+			 viewSize: { width: 375, height: 812 },
+			 fitToView: false,
+			 offset: { x: 0, y: 0 }
+		})
+		
+		emulationViews.push(data.id)
+		view.webContents.reload()
+	}
+	
+	// view.webContents.openDevTools({
+	// 	 mode: 'bottom'
+	// })
+	
+	
+})

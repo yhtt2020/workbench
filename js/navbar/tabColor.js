@@ -180,6 +180,7 @@ const tabColor = {
   useSiteTheme: true,
   initialize: function () {
     webviews.bindEvent('page-favicon-updated', function (tabId, favicons) {
+		
       tabColor.updateFromImage(favicons, tabId, function () {
         if (tabId === tabs.getSelected()) {
           tabColor.updateColors()

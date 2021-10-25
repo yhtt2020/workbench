@@ -1,9 +1,9 @@
 {
-  "name": "min",
-  "productName": "Min",
-  "author": "PalmerAL",
-  "version": "1.21.0",
-  "description": "A fast, minimal browser that protects your privacy",
+  "name": "tswork",
+  "productName": "想天工作台",
+  "author": "Thisky",
+  "version": "0.5.9",
+  "description": "一款针对工作场景的极简浏览器，帮助你提升效率，保持专注",
   "electronVersion": "14.0.0-beta.21",
   "main": "main.build.js",
   "standard": {
@@ -25,7 +25,8 @@
       "performance",
       "IntersectionObserver",
       "Node",
-      "Event"
+      "Event",
+      "browserUI"
     ]
   },
   "dependencies": {
@@ -33,7 +34,7 @@
     "dragula": "^3.7.3",
     "electron-squirrel-startup": "^1.0.0",
     "expr-eval": "^2.0.2",
-    "keytar": "7.6.0",
+    "keytar": "7.7.0",
     "mousetrap": "^1.5.3",
     "node-abi": "2.30.0",
     "pdfjs-dist": "2.4.456",
@@ -46,11 +47,12 @@
     "chokidar": "^3.4.0",
     "concurrently": "^5.2.0",
     "decomment": "^0.9.0",
-    "electron": "^14.0.0-beta.21",
+    "electron": "^15.2.0",
     "electron-installer-windows": "^3.0.0",
     "electron-packager": "^15.1.0",
     "electron-rebuild": "^2.3.2",
     "electron-renderify": "0.0.2",
+	"electron-builder": "^22.13.1",
     "prettier": "^2.2.1",
     "snazzy": "^9.0.0",
     "standard": "^14.3.4"
@@ -81,7 +83,9 @@
     "updateFilters": "node ./ext/filterLists/updateEasylist.js",
     "updateHttpsList": "node ./ext/httpsUpgrade/updateHttpsList.js",
     "updateSuffixes": "node ./ext/publicSuffixes/updateSuffixes.js",
-    "lint": "prettier --write **/**/*.css **/**/*.md **/**/*.html **/**/*.json && standard --fix js/**/*.js main/*.js | snazzy"
+    "lint": "prettier --write **/**/*.css **/**/*.md **/**/*.html **/**/*.json && standard --fix js/**/*.js main/*.js | snazzy",
+	"package": "npm run build && ./node_modules/.bin/electron-builder --config electron-builder-config.yml --publish never" ,
+	"packMacIntel":"npm run build && ./node_modules/.bin/electron-builder --mac --x64 --config electron-builder-config.yml --publish never"
   },
   "repository": {
     "type": "git",

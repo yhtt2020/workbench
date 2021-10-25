@@ -15,6 +15,7 @@ const tabEditor = {
     if (modalMode.enabled()) {
       return
     }
+	ipc.send('hideSidePanel')
 
     tabEditor.container.hidden = false
 
@@ -26,7 +27,7 @@ const tabEditor = {
     document.body.classList.add('is-edit-mode')
 
     var currentURL = urlParser.getSourceURL(tabs.get(tabId).url)
-    if (currentURL === 'min://newtab') {
+    if (currentURL === 'ts://newtab') {
       currentURL = ''
     }
 
@@ -69,6 +70,7 @@ const tabEditor = {
     }
   },
   hide: function () {
+	  ipc.send('showSidePanel')
     tabEditor.container.hidden = true
     tabEditor.container.removeAttribute('style')
 

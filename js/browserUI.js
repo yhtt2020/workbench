@@ -78,7 +78,7 @@ function closeTask (taskId) {
   var previousCurrentTask = tasks.getSelected().id
 
   destroyTask(taskId)
-
+	//window.$store.getters.fillTasksToItems
   if (taskId === previousCurrentTask) {
     // the current task was destroyed, find another task to switch to
 
@@ -163,12 +163,14 @@ function switchToTab (id, options) {
   tabs.setSelected(id)
   tabBar.setActiveTab(id)
   webviews.setSelected(id, {
-    focus: options.focusWebview !== false
+    //focus: options.focusWebview !== false
   })
 }
 
-webviews.bindEvent('did-create-popup', function (tabId, popupId) {
+webviews.bindEvent('did-create-popup', function (tabId, popupId, initialURL) {
   var popupTab = tabs.add({
+    // in most cases, initialURL will be overwritten once the popup loads, but if the URL is a downloaded file, it will remain the same
+    url: initialURL,
     private: tabs.get(tabId).private
   })
   tabBar.addTab(popupTab)
@@ -191,6 +193,85 @@ webviews.bindEvent('new-tab', function (tabId, url) {
 webviews.bindIPC('close-window', function (tabId, args) {
   closeTab(tabId)
 })
+
+ipc.on('set-file-view', function (e, data) {
+  tabs.get().forEach(function (tab) {
+    if (tab.url === data.url) {
+      tabs.update(tab.id, { isFileView: data.isFileView })
+    }
+  })
+})
+	
+	
+//增加一些与其他窗体的互动ipc
+ipc.on('switchToTask',function(e,data){
+	switchToTask(data.id)
+})
+ipc.on('addTaskFromApps',function(e,data){
+	let newTask = {
+	  name: data.name || null,
+	  collapsed:false
+	}
+	let tid=tasks.add(newTask)
+	let newTab= {
+      url: data.url || '',
+	  title:data.name
+    }
+	tasks.get(tid).tabs.add(newTab)
+	
+	
+})
+ipc.on('openApps',function(){
+	let url= 'ts://apps'//左斜杠三条是为了统一判断里tab的三条左斜杠，不知道为什么会这样
+	let findout=false
+	let tid=0
+	let tabId=0
+	tasks.forEach(function(task,index){
+		let tTask=task
+		tTask.tabs.forEach(function(tab,index){
+			//替换左斜杠为右斜杠，保证平台差异一致。
+			if(require('util/urlParser.js').getSourceURL(tab.url)==url)
+				{
+					tid=tTask.id
+					tabId=tab.id
+					findout=true
+				}
+		})
+	})
+	if(findout==false){
+		let newTask = {
+		  name: '应用中心',
+		  collapsed:false
+		}
+		tid=tasks.add(newTask)
+		let newTab= {
+		  url: require('util/urlParser.js').getFileURL( __dirname + '/pages/apps/index.html') ,
+		  title:'应用中心'
+		}
+		tabId=tasks.get(tid).tabs.add(newTab)
+		
+	}
+	switchToTask(tid)
+	switchToTab(tabId)
+	
+})
+/* 增加一些与其他窗口的互动ipcend*/
+
+
+/**插入一个简易排序方法*/
+	function resortTask(droppedTaskId,adjacentTaskId){
+		let droppedTask = tasks.splice(tasks.getIndex(droppedTaskId), 1)[0]
+		tasks.splice(adjacentTaskId, 0, droppedTask)
+		
+	}
+	
+	ipc.on('resortTasks',function(e,data){
+		
+		resortTask(data.droppedTaskId,data.adjacentTaskId)
+	
+	})
+	/**简易排序插入结束*/
+
 
 searchbar.events.on('url-selected', function (data) {
   var searchbarQuery = searchEngine.getSearch(urlParser.parse(data.url))

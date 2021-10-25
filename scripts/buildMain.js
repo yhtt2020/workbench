@@ -9,6 +9,7 @@ const modules = [
   'main/touchbar.js',
   'main/registryConfig.js',
   'main/main.js',
+  'main/sidePanel.js',
   'js/util/settings/settingsMain.js',
   'main/filtering.js',
   'main/viewManager.js',
@@ -19,7 +20,8 @@ const modules = [
   'main/remoteMenu.js',
   'main/remoteActions.js',
   'main/keychainService.js',
-  'js/util/proxy.js'
+  'js/util/proxy.js',
+  'main/apps.js'
 ]
 
 function buildMain () {

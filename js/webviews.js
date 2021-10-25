@@ -1,6 +1,5 @@
 var urlParser = require('util/urlParser.js')
 var settings = require('util/settings/settings.js')
-
 /* implements selecting webviews, switching between them, and creating new ones. */
 
 var placeholderImg = document.getElementById('webview-placeholder')
@@ -138,7 +137,7 @@ const webviews = {
       fn: fn
     })
   },
-  viewMargins: [0, 0, 0, 0], // top, right, bottom, left
+  viewMargins: [0, 0, 0, 45], // top, right, bottom, left
   adjustMargin: function (margins) {
     for (var i = 0; i < margins.length; i++) {
       webviews.viewMargins[i] += margins[i]
@@ -186,16 +185,55 @@ const webviews = {
     if (tabData.private === true) {
       var partition = tabId.toString() // options.tabId is a number, which remote.session.fromPartition won't accept. It must be converted to a string first
     }
-
+	
+	/*对特殊的内部webview做处理，增加一些额外的权限*/
+	let webPreferences={}
+	let sourceUrl=urlParser.getSourceURL(tabData.url)
+	if(sourceUrl=='ts://apps')
+	{
+		//仅仅对apps页面单独开启权限
+		console.log('即将打开Apps集成页面')
+		webPreferences={
+			preload: __dirname + '/pages/apps/preload.js',
+			nodeIntegration: true,
+			contextIsolation:false,
+			enableRemoteModule: true,
+			scrollBounce: false,
+			sandbox: false,
+			safeDialogs:false,
+			safeDialogsMessage:false,
+			additionalArguments: [
+				'--user-data-path=' + window.globalArgs['user-data-path'],
+				'--app-version=' + window.globalArgs['app-version'],
+				'--app-name=' +  window.globalArgs['app-name'],
+				//'--is-Dev='+window.globalArgs['development--mode']
+			],
+			allowPopups:true
+		}
+		
+		
+		// safeDialogs: true,
+		// safeDialogsMessage: 'Prevent this page from creating additional dialogs',
+		// preload: __dirname + '/dist/preload.js',
+		// contextIsolation: true,
+		// sandbox: true,
+		// enableRemoteModule: false,
+		// allowPopups: false,
+		// // partition: partition || 'persist:webcontent',
+		// enableWebSQL: false,
+		 console.log(webPreferences)
+	}
+	webPreferences.partition = partition || 'persist:webcontent' //网页的分区
+	/*特殊处理部分结束*/
+	
     ipc.send('createView', {
       existingViewId,
       id: tabId,
-      webPreferencesString: JSON.stringify({
-        partition: partition || 'persist:webcontent'
-      }),
+      webPreferencesString: JSON.stringify(webPreferences),
       boundsString: JSON.stringify(webviews.getViewBounds()),
       events: webviews.events.map(e => e.event).filter((i, idx, arr) => arr.indexOf(i) === idx)
     })
+	
 
     if (!existingViewId) {
       if (tabData.url) {
@@ -489,6 +527,12 @@ ipc.on('view-ipc', function (e, args) {
   })
 })
 
+//在当前页面打开emulation
+ipc.on('openMobile',function(e,args){
+	ipc.send('enableEmulation',{id:webviews.selectedId})
+})
+
+
 setInterval(function () {
   captureCurrentTab()
 }, 15000)
@@ -509,4 +553,6 @@ ipc.on('windowFocus', function () {
   }
 })
 
+
 module.exports = webviews
+

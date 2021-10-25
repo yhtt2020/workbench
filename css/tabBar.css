@@ -55,6 +55,9 @@ body.is-edit-mode #toolbar-navigation-buttons {
   transition: none;
   padding: 0 0.6rem;
 }
+.navbar-action-button:hover{
+  background: #ffffff63;
+}
 #back-button {
   padding-left: 0.4rem;
 }
@@ -195,6 +198,18 @@ body.linux #menu-button {
 .tab-item .title {
   font-size: 15px;
 }
+
+/* 添加上favicon*/
+.tab-item .icon {
+	width: 18px;
+	height: 18px;
+	margin-right: 10px;
+	vertical-align: text-bottom;
+	background: #ffffffbb;
+	border-radius: 2px;
+}
+
+
 
 /* buttons */
 
