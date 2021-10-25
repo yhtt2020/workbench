@@ -48,6 +48,7 @@ class TaskList {
 
     this.emit('task-added', newTask.id)
 
+	
     return newTask.id
   }
 
@@ -60,6 +61,10 @@ class TaskList {
 
   get (id) {
     return this.find(task => task.id === id) || null
+  }
+  
+  getAll(){
+	  return this.tasks
   }
 
   getSelected () {
@@ -154,6 +159,7 @@ class TaskList {
   static getRandomId () {
     return Math.round(Math.random() * 100000000000000000)
   }
+  
 }
 
 module.exports = TaskList

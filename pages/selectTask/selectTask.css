@@ -1,0 +1,68 @@
+.tabs,
+.sidebar ul {
+	list-style: none;
+	padding: 0
+}
+
+.ant-collapse-content>.ant-collapse-content-box {
+	padding: 0;
+}
+
+.ant-collapse-borderless>.ant-collapse-item {
+	border-bottom: none;
+}
+
+.tabs,
+.sidebar ul {
+	margin-bottom: 0;
+}
+
+.task {
+	height: 320px;
+	margin-bottom: 10px;
+	border-radius: 4px;
+
+}
+
+.task:hover {
+	box-shadow: 0 0 15px #00000030;
+	cursor: pointer;
+}
+
+
+.tab-icon {
+	width: 20px;
+	height: 20px;
+	margin-right: 5px;
+}
+
+.tab-title {
+	width: 250px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	padding: 5px;
+	border-radius: 4px;
+	border-bottom: 1px dashed #dedede;
+}
+
+.tab-title:hover {
+	background-color: #efefef;
+}
+
+.ant-card-body {
+	padding: 20px;
+}
+
+.selected-span {
+	display: inline-block;
+	max-width: 300px;
+	hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	vertical-align: bottom;
+}
+.selected-span-task{
+	max-width: 100px;
+}

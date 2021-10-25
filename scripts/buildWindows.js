@@ -10,7 +10,7 @@ async function afterPackageBuilt (appPaths) {
   /* create zip files */
 
   await appPaths.forEach(async function (packagePath) {
-    var output = fs.createWriteStream(packagePath.replace('Min-', 'Min-v' + version + '-') + '.zip')
+    var output = fs.createWriteStream(packagePath.replace('Min-', 'TsWork-v' + version + '-') + '.zip')
     var archive = archiver('zip', {
       zlib: { level: 9 }
     })
@@ -26,13 +26,14 @@ async function afterPackageBuilt (appPaths) {
     const options = {
       src: appPaths.filter(p => p.includes('x64'))[0],
       dest: 'dist/app/min-installer-x64',
-      icon: 'icons/icon256.ico',
+      icon: 'icons/browser.ico',
       animation: 'icons/windows-installer.gif',
       licenseUrl: 'https://github.com/minbrowser/min/blob/master/LICENSE.txt',
       noMsi: true
     }
 
-    console.log('Creating package (this may take a while)')
+	console.log(options)
+    console.log('正在打包 (可能需要较长时间)')
 
     await installer(options)
       .then(function () {

@@ -62,7 +62,7 @@ var urlParser = {
     }
 
     // if the URL is an internal URL, convert it to the correct file:// url
-    if (url.startsWith('min:')) {
+    if (url.startsWith('ts:')) {
       try {
         var urlObj = new URL(url)
         var pathname = urlObj.pathname.replace('//', '')
@@ -127,7 +127,7 @@ var urlParser = {
           var pageName = url.match(/\/pages\/([a-zA-Z]+)\//)
           var urlObj = new URL(url)
           if (pageName) {
-            return 'min://' + pageName[1] + urlObj.search
+            return 'ts://' + pageName[1] + urlObj.search
           }
         } catch (e) {}
       }

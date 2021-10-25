@@ -1,4 +1,4 @@
-document.title = l('settingsPreferencesHeading') + ' | Min'
+document.title = l('settingsPreferencesHeading')
 
 var contentTypeBlockingContainer = document.getElementById('content-type-blocking')
 var banner = document.getElementById('restart-required-banner')
@@ -388,6 +388,22 @@ searchEngineDropdown.addEventListener('change', function (e) {
 searchEngineInput.addEventListener('input', function (e) {
   settings.set('searchEngine', { url: this.value })
 })
+
+/* 默认浏览器设置 */
+//每秒钟循环询问主进程，我是不是默认浏览器，先发消息到渲染preload.js渲染进程
+setInterval(function(){
+	postMessage({message:'getIsDefaulBrowser'})
+},1000)
+
+//先发消息到渲染preload.js渲染进程，因为页面本身无法直接发送ipc消息
+function callSetDefaultBrowser(){
+	postMessage({ message: 'callSetOrRemoveDefaultBrowser' })
+}
+/*默认浏览器结束*/
+
+
+
+
 
 /* key map settings */
 

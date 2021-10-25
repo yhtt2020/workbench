@@ -4,19 +4,19 @@ const settings = require('util/settings/settings.js')
 
 const pageTranslations = {
   apiURL: 'https://translate-api.minbrowser.org/translate',
-  translatePrivacyInfo: 'When you translate a page, the page contents are sent to Min\'s servers. We don\'t save your translations or use them to identify you.',
+  translatePrivacyInfo: l('translateTip'),
   languages: [
     {
-      name: 'English',
+      name: '简体中文',
+      code: 'zh'
+    },
+	{
+      name: '英文',
       code: 'en'
     },
     {
       name: 'Arabic',
       code: 'ar'
-    },
-    {
-      name: 'Chinese',
-      code: 'zh'
     },
     {
       name: 'Dutch',
