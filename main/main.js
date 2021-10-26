@@ -3,17 +3,17 @@ const fs = require('fs')
 const path = require('path')
 
 const {
-	app, // Module to control application life.
-	protocol, // Module to control protocol handling
-	BrowserWindow, // Module to create native browser window.
-	webContents,
-	session,
-	ipcMain: ipc,
-	Menu,
-	MenuItem,
-	crashReporter,
-	dialog,
-	globalShortcut
+  app, // Module to control application life.
+  protocol, // Module to control protocol handling
+  BrowserWindow, // Module to create native browser window.
+  webContents,
+  session,
+  ipcMain: ipc,
+  Menu, MenuItem,
+  crashReporter,
+  dialog,
+  nativeTheme,
+  globalShortcut
 } = electron
 
 crashReporter.start({
@@ -204,7 +204,7 @@ function createWindowWithBounds(bounds) {
 			]
 		}
 	})
-	
+
 
 	// windows and linux always use a menu button in the upper-left corner instead
 	// if frame: false is set, this won't have any effect, but it does apply on Linux if "use separate titlebar" is enabled
@@ -236,7 +236,7 @@ function createWindowWithBounds(bounds) {
 		// when you should delete the corresponding element.
 		mainWindow = null
 		mainWindowIsMinimized = false
-	
+
 	})
 
 	mainWindow.on('focus', function() {
@@ -281,12 +281,12 @@ function createWindowWithBounds(bounds) {
 		// https://github.com/minbrowser/min/issues/952
 		mainWindow.setMenuBarVisibility(false)
 	})
-	
+
 	mainWindow.on('showBookmarks',function(){
 		sendIPCToWindow(mainWindow,'showBookmarks')
 		console.log('showboom')
 	})
-	
+
 	//loadSidebar()
 	sendIPCToWindow(mainWindow,'getTitlebarHeight')
 	loadSidePanel()
@@ -317,7 +317,7 @@ function createWindowWithBounds(bounds) {
 	})
 
 	mainWindow.setTouchBar(buildTouchBar())
-	
+
 	return mainWindow
 
 }
@@ -340,13 +340,13 @@ app.on('window-all-closed', function() {
 app.on('ready', function() {
 	settings.set('restartNow', false)
 	appIsReady = true
-	
+
 	/* the installer launches the app to install registry items and shortcuts,
 	but if that's happening, we shouldn't display anything */
 	if (isInstallerRunning) {
 		return
 	}
-	
+
 
 	//预先创建好快速启动窗口
 	//createLanuchBar()
@@ -397,13 +397,13 @@ app.on('ready', function() {
 			}
 		})
 	})
-	
-	
-	
+
+
+
 	mainMenu = buildAppMenu()
 	Menu.setApplicationMenu(mainMenu)
 	createDockMenu()
-	
+
 
 })
 
@@ -478,12 +478,18 @@ ipc.on('quit', function() {
 	app.quit()
 })
 
+app.on('ready', function() {
+  nativeTheme.on('updated', function () {
+    settings.set('systemShouldUseDarkColors', electron.nativeTheme.shouldUseDarkColors)
+  })
 
+  if (electron.nativeTheme.shouldUseDarkColors !== settings.get('systemShouldUseDarkColors')) {
+    settings.set('systemShouldUseDarkColors', electron.nativeTheme.shouldUseDarkColors)
+  }
+})
 
+// ipc.on('showBookmarks',function(){
+// 	mainWindow.removeBrowserView(sidebarView)
+// 	sendIPCToWindow(mainWindow,'showBookmarks')
 
- // ipc.on('showBookmarks',function(){
- // 	mainWindow.removeBrowserView(sidebarView)
- // 	sendIPCToWindow(mainWindow,'showBookmarks')
-	
- // })
-
+// })
