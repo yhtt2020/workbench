@@ -36,11 +36,11 @@
 			<div id="sidebar" class="side-container">
 				<div id="itemsEl" class="side-items">
 
-					<ul id="pinGroup" class="app-task" style="margin-bottom: 0;">
+					<ul id="pinGroup" class="app-task" style="margin-bottom: 0;overflow: hidden;">
 						<li @click="userClick" class="" style="position: relative;">
 							<a-popover title="用户信息" placement="right"
-								:mouse-enter-delay="0.1" :mouse-leave-delay="0.1" :destroy-tooltip-on-hide="true"
-								overlay-class-name="tips">
+									   :mouse-enter-delay="0.1" :mouse-leave-delay="0.1" :destroy-tooltip-on-hide="true"
+									   overlay-class-name="tips">
 								<template slot="content">
 								</template>
 								<div class="wrapper">
@@ -54,7 +54,6 @@
 								</div>
 							</a-popover>
 						</li>
-
 						<draggable v-model="getPinItems" group="sideBtn" animation="300" dragClass="dragClass"
 							ghostClass="ghostClass" chosenClass="chosenClass" @start="onStart" @end="onEnd">
 							<transition-group>
@@ -89,7 +88,7 @@
 						</draggable>
 					</ul>
 
-					<div style="border-top: 1px solid lightgrey;margin: 8px;"></div>
+					<div class="divider"></div>
 
 					<div class="app-box">
 

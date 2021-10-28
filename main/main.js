@@ -325,41 +325,7 @@ function createWindowWithBounds(bounds) {
 
 
 
-function createLanuchBar() {
-	//如果不存在则创建
 
-	let lanuchBar = new BrowserWindow({
-		width: 200,
-		height: 480,
-		titleBarStyle: 'customButtonsOnHover',
-		trafficLightPosition: {
-			x: 12,
-			y: 10
-		},
-		icon: __dirname + '/icons/icon256.png',
-		frame: false,
-		transparent: true,
-		alwaysOnTop: true,
-		backgroundColor: '#fff', // the value of this is ignored, but setting it seems to work around https://github.com/electron/electron/issues/10559
-		webPreferences: {
-			nodeIntegration: true,
-			contextIsolation: false,
-			nodeIntegrationInWorker: true, // used by ProcessSpawner
-			additionalArguments: [
-				'--user-data-path=' + userDataPath,
-				'--app-version=' + app.getVersion(),
-				'--app-name=' + app.getName(),
-				...((isDevelopmentMode ? ['--development-mode'] : [])),
-			]
-		},
-		title: '快速搜索',
-		show: false
-	})
-	lanuchBar.loadURL('file://' + __dirname + "/pages/lanuchBar/index.html")
-	app.lanuchBar = lanuchBar;
-	
-
-}
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
 	// On OS X it is common for applications and their menu bar

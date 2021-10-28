@@ -49,6 +49,7 @@ ipc.on('unmaximize', function() {
 	document.body.classList.remove('maximized')
 })
 let mouseRcoverAreaElement = document.getElementById('mouseRcoverArea')
+
 ipc.on('getTitlebarHeight',function(){
 	console.log(mouseRcoverAreaElement.offsetTop)
 	ipc.send('returnTitlebarHeight',{
@@ -59,6 +60,11 @@ ipc.on('getTitlebarHeight',function(){
 ipc.send('returnTitlebarHeight',{
 	 		titlebarHeight:mouseRcoverAreaElement.offsetTop,
 })
+setTimeout(()=>{
+	ipc.send('returnTitlebarHeight',{
+		 		titlebarHeight:mouseRcoverAreaElement.offsetTop,
+	})
+},500)
 // https://remysharp.com/2010/07/21/throttling-function-calls
 
 window.throttle = function(fn, threshhold, scope) {
