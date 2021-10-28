@@ -204,7 +204,7 @@ window.onload = function() {
 					title: '收藏夹', //名称，用于显示提示
 					index: 0, //索引
 					id: 1, //id
-					icon: "../../icons/fav.png", //图标
+					icon: "../../icons/fav.svg", //图标
 					draggable: true, //是否允许拖拽
 					ext: '', //额外的信息
 					fixed: true, //锁定，不让它移动
