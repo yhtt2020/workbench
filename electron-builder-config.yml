@@ -15,7 +15,7 @@ files:
     - index.html
 
 win:
-    icon: ./img/icons/win/icon.ico
+    icon: ./icon.ico
     target:
         - target: nsis
           arch:

@@ -1,8 +1,30 @@
-let sidePanel = null
-
+let sidePanel = null //SidePanel类的存储变量
+/**
+ * 是否是win11
+ */
+function isWin11() {
+	var sysVersion = process.getSystemVersion()
+	if (sysVersion.startsWith('10.') && process.platform == 'win32') {
+		return true
+	} else {
+		return false
+	}
+}
+/**
+ * 是否是Mac
+ */
+function isMac(){
+	return process.platform == 'darwin'
+}
+/**
+ * 是否是windows
+ */
+function isWin(){
+	return process.platform == 'win32'
+}
 
 class SidePanel {
-	_sidePanel = null
+	_sidePanel = null //sidePanelWindow的实例
 	titlebarHeight = 20
 	panelWidth = 800
 	mainViewBounds = null
@@ -69,19 +91,9 @@ class SidePanel {
 		// 	this.titlebarHeight = 48
 		// }
 		this._sidePanel.webContents.loadURL('file://' + __dirname + "/pages/sidebar/sidebar.html")
-		//windows上首次载入就要设置一下位置
+
 		this.syncSize()
-		//this.setTop()
-		this._sidePanel.hide()
-		//if (isDevelopmentMode)
-		//this._sidePanel.webContents.openDevTools()
-		let that = this
-		//左侧栏和主界面都失去焦点的时候，取消掉自身的置顶，以防止捅破别的地方
-		// this._sidePanel.on('blur', function() {
-		// 	if (!mainWindow.isFocused()) {
-		// 		that.unsetTop()
-		// 	}
-		// })
+		this.syncTitleBar()
 
 		this._sidePanel.on('close', function() {
 			console.log('sidebar-close:左侧栏隐藏')
@@ -93,10 +105,7 @@ class SidePanel {
 		this._sidePanel.on('hide', function() {
 			console.log('sidebar-hide:左侧栏隐藏')
 		})
-		setTimeout(function() {
-			sidePanel.syncTitleBar()
-		}, 500)
-
+		sidePanel = this
 	}
 
 
@@ -114,15 +123,7 @@ class SidePanel {
 	 * 获取一下mainWindow的位置信息并同步一下sidePanel，不包含焦点处理
 	 */
 	syncSize(resetY = 0) {
-		function isWin11() {
-			var sysVersion = process.getSystemVersion()
-			if (sysVersion.startsWith('10.') && process.platform == 'win32') {
-				return true
-			} else {
-				return false
-			}
-		}
-		var isWin11 = isWin11()
+
 		if (!SidePanel.alive()) return
 		if (mainWindow == null || sidePanel == null) {
 			return
@@ -133,11 +134,10 @@ class SidePanel {
 		}
 		this.bounds = mainWindow.getBounds()
 
-		console.log(process.getSystemVersion())
 
 
 		//windows全屏模式单独处理
-		if (mainWindow.isMaximized() && process.platform == 'win32') {
+		if (mainWindow.isMaximized() && isWin()) {
 			//win上x和y在全屏下不为0，甚至为-8，目前未考虑win7
 			if (this.bounds.x < 0) this.bounds.x = 0
 			if (this.bounds.y < 0) {
@@ -147,13 +147,13 @@ class SidePanel {
 				this.bounds.y += 23
 				this.bounds.height -= 40
 			} else {
-				if (isWin11) {
+				if (isWin11()) {
 					this.bounds.height -= 15 //单独对win11的标题栏高度进行兼容
 				} else {
 					this.bounds.height -= 20
 				}
 			}
-		} else if (settings.get('useSeparateTitlebar') && process.platform == 'win32') {
+		} else if (settings.get('useSeparateTitlebar') && isWin()) {
 			//win上带标题栏的单独处理
 			this.bounds.x += 8
 			this.bounds.y += 31
@@ -163,7 +163,7 @@ class SidePanel {
 		let setX = this.bounds.x
 		let setY = !resetY ? this.bounds.y + this.titlebarHeight : this.bounds.y + resetY
 		let setHeight = this.bounds.height - this.titlebarHeight
-		if (isWin11) {
+		if (isWin11()) {
 			//win11的高度不一致
 			setX += 1
 			setHeight -= 1
@@ -171,7 +171,7 @@ class SidePanel {
 		this._sidePanel.setBounds({
 			x: setX,
 			y: setY,
-			width: this.panelWidth,
+			width: this.bounds.width,
 			height: setHeight
 		})
 	}
@@ -224,13 +224,9 @@ class SidePanel {
 	}
 
 	close() {
-		if (SidePanel.alive()) {
-			console.log('调用sidebar.close()主动close')
-			this._sidePanel.close()
-			sidePanel = null
-			this._sidePanel = null
-		}
-
+		console.log('调用sidebar.close()主动close')
+		this._sidePanel.destroy()
+		this._sidePanel = null
 	}
 
 	addItem(item) {
@@ -266,17 +262,16 @@ class SidePanel {
 	//设置在侧边栏鼠标无效
 	setMouseIgnore() {
 		this._sidePanel.setIgnoreMouseEvents(true, {
-			forward: true
+			forward: false  //设置为false，如果为true，在windows上鼠标会闪的不行
 		})
-		if(BrowserWindow.getFocusedWindow()!=null)//如果有任意一个window还有焦点，则聚焦到mainwindow
-		      mainWindow.focus()
-		mainWindow.focus()
+		if (BrowserWindow.getFocusedWindow() != null) //如果有任意一个window还有焦点，则聚焦到mainwindow
+			mainWindow.focus()
 		console.log('设置左侧栏不再感应鼠标，主窗体获得焦点')
 	}
 	//设置在侧边栏鼠标有效
 	setMouseEnable() {
 		this._sidePanel.setIgnoreMouseEvents(false)
-		if(BrowserWindow.getFocusedWindow()!=null)//如果有任意一个window还有焦点，则聚焦到sidepanel
+		if (BrowserWindow.getFocusedWindow() != null) //如果有任意一个window还有焦点，则聚焦到sidepanel
 			this._sidePanel.focus()
 		console.log('设置左侧栏感应 鼠标，左侧栏同时获得焦点')
 	}
@@ -287,14 +282,14 @@ function addMainWindowEventListener() {
 
 
 	mainWindow.on('move', () => {
-		sidePanel.syncSize()
+		syncSize()
 	})
 
 	mainWindow.on('hide', () => {
-		if (SidePanel.alive()) {
-			//sidePanel.hide()
-			console.log('mainwindow-hide:隐藏侧边栏')
-		}
+		// if (SidePanel.alive()) {
+		// 	//sidePanel.hide()
+		// 	closeSidePanel()
+		// }
 	})
 
 	mainWindow.on('show', () => {
@@ -340,26 +335,28 @@ function addMainWindowEventListener() {
 
 	//最小化、恢复事件
 	mainWindow.on('minimize', () => {
-		if (process.platform == 'win32')
-			sidePanel.hide()
-
+		closeSidePanel()
 	})
 	mainWindow.on('restore', () => {
-		if (process.platform == 'win32')
-			sidePanel.show() //sidePanel.show()
+		loadSidePanel()
+		setTimeout(() => {
+			sidePanel.setMouseIgnore()
+			mainWindow.focus()
+		}, 500)
 	})
 
 	//最大化，取消最大化事件，一般用于win
 	mainWindow.on('maximize', () => {
 		console.log('mainwindow-maximize:')
-		sidePanel.syncSize()
-		sidePanel.syncTitleBar()
-		sidePanel.show() //最大化情况下，最小化，再恢复窗体，必须要重新show一下，不然无法点击左侧栏
+		loadSidePanel()
+		syncSize()
+		syncSidebarTitle()
+		//sidePanel.show() //最大化情况下，最小化，再恢复窗体，必须要重新show一下，不然无法点击左侧栏
 	})
 	mainWindow.on('unmaximize', () => {
 		console.log('mainwindow-unmaximize:')
-		sidePanel.syncSize()
-		sidePanel.syncTitleBar()
+		syncSize()
+		syncSidebarTitle()
 		//sendIPCToWindow(mainWindow, 'getTitlebarHeight')
 	})
 
@@ -374,47 +371,70 @@ function addMainWindowEventListener() {
 	})
 	mainWindow.on('leave-full-screen', () => {
 		console.log('mainwindow-leave-full-screen:进入全屏')
-		sidePanel.syncSize()
-		//sidePanel.setTop()
-		sidePanel.syncTitleBar() //sendIPCToWindow(mainWindow, 'getTitlebarHeight')
+		syncSize()
+		syncSidebarTitle() //sendIPCToWindow(mainWindow, 'getTitlebarHeight')
 
 	})
 
 	//进入退出html全屏，一般用于视频播放的时候
 	mainWindow.on('enter-html-full-screen', () => {
-		sidePanel.hide()
+		closeSidePanel()
 	})
 	mainWindow.on('leave-html-full-screen', () => {
-		//sidePanel.show()
-		setTimeout(function() {
-			sidePanel.show()
-			mainWindow.focus()
-		}, 750)
-
+		loadSidePanel()
 
 	})
 
 
 	mainWindow.on('resize', function(event, newBounds, details) {
 		console.log('mainwindow-resize:调整尺寸')
-		sidePanel.syncSize()
+		syncSize()
 	})
 	mainWindow.on('close', function() {
 		console.log('mainwindow-close:关闭')
-		sidePanel.close()
+		closeSidePanel()
 	})
 
 }
 
 
 function loadSidePanel() {
-	sidePanel = new SidePanel()
-	sidePanel.init()
+	console.log('执行loadSidePanel()')
+	if (!SidePanel.alive()) {
+		sidePanel = new SidePanel()
+		sidePanel.init()
+		sidePanel.setMouseIgnore() //重新让主界面获得焦点
+		mainWindow.focus()
+	}else{
+		sidePanel.show()
+	}
 }
 
+function closeSidePanel() {
+	console.log('执行closeSidePanel()')
+	if (SidePanel.alive()) {
+		if(isMac()){
+			sidePanel.close()
+			sidePanel = null
+		}else{
+			sidePanel.hide()
+		}
 
 
+	}
+}
 
+function syncSidebarTitle() {
+	if (sidePanel != null) {
+		sidePanel.syncTitleBar()
+	}
+}
+
+function syncSize() {
+	if (sidePanel != null) {
+		sidePanel.syncSize()
+	}
+}
 
 // //用于viewManager回调，以使sidebar配合显示
 // function onSetView() {
@@ -499,10 +519,7 @@ ipc.on('openMobile', function() {
 })
 
 ipc.on('hideSidePanel', function() {
-	if (SidePanel.alive()) {
-		sidePanel.hide()
-	}
-
+	closeSidePanel()
 })
 
 ipc.on('returnTitlebarHeight', function(event, data) {
@@ -514,9 +531,7 @@ ipc.on('returnTitlebarHeight', function(event, data) {
 
 var count = 0
 ipc.on('showSidePanel', function() {
-	if (SidePanel.alive()) {
-		sidePanel.show()
-	}
+	loadSidePanel()
 })
 
 var selectTaskWindow = null
@@ -552,7 +567,6 @@ ipc.on('selectTask', function() {
 ipc.on('closeTaskSelect', function() {
 	selectTaskWindow.close()
 })
-
 ipc.on('addTab', function(event, data) {
 	sendIPCToWindow(mainWindow, 'addTab', {
 		'url': data.url
