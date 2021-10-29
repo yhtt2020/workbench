@@ -58,7 +58,6 @@
                                   :body-style="{ paddingBottom: '80px' }"
                                   @close="toggleUserPanel"
                                   placement="left"
-                                  getContainer="#clickThroughElement"
                         >
                             <template slot="title">
 							<span v-if="user.uid==0">
@@ -136,7 +135,7 @@
                                     </div>
                                     <div>
                                         <div style="position: absolute;bottom: 5px;width: 80vw">
-                                            <a-button>注销</a-button>
+                                            <a-button @click="logout">注销</a-button>
                                         </div>
                                     </div>
                                 </template>

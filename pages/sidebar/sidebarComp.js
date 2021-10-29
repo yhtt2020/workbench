@@ -248,6 +248,11 @@ Vue.component('sidebar', {
 				message: "addTab",
 				'url':url
 			})
+		},
+		logout(){
+			window.insertDefaultUser()
+			db.system.where({name:'currentUser'}).delete()
+			this.$message.info('注销成功！');
 		}
 	}
 

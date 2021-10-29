@@ -5,6 +5,7 @@ const ipc = electron.ipcRenderer
 const { db } = require('../../js/util/database.js')
 let mainWindowId = 0
 window.l = l
+window.db= db
 const {
   contextBridge
 } = require('electron')
@@ -104,8 +105,8 @@ function getCurrentUser () {
         user = insertDefaultUser()
       } else {
         user = item.value
+        window.$store.state.user = user
       }
-      window.$store.state.user = user
       console.log('获取当前用户成功')
       console.log(user)
     }
@@ -135,6 +136,7 @@ function insertDefaultUser () {
     nickname: '立即登录',
     avatar: '../../icons/browser.ico'
   }
+  db.system.where({name:'currentUser'}).delete()
   db.system.put({//当前用户
     name: 'currentUser',
     value: defaultUser
@@ -143,9 +145,11 @@ function insertDefaultUser () {
   }).then((res) => {
     console.log('insertDefaultUser failed')
   })
+  window.$store.state.user=null
+  window.$store.state.user = defaultUser
   return defaultUser
 }
-
+window.insertDefaultUser=insertDefaultUser
 setTimeout(getCurrentUser, 1000)
 ipc.on('userLogin', function (e, data) {
   console.log('userinfo')
@@ -159,7 +163,8 @@ ipc.on('userLogin', function (e, data) {
 
   window.$store.state.user = user
   // 设置当前登陆账号为此账号
-  db.system.update('currentUser',{
+  db.system.where({name:'currentUser'}).delete()
+  db.system.put({
     name:'currentUser',
     value: user
   }).then((msg) => {
@@ -169,7 +174,7 @@ ipc.on('userLogin', function (e, data) {
       nickname: user.nickname,
       avatar: user.avatar,
       lastLoginTime: new Date().getTime()
-    }, user.uid)
+    })
   }).catch((err) => {
     console.log('登录后设置当前用户失败')
     console.log(err)

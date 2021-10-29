@@ -21,14 +21,13 @@ db.version(3).stores({
   */
   places: '++id, &url, title, color, visitCount, lastVisit, pageHTML, extractedText, *searchIndex, isBookmarked, *tags, metadata',
   readingList: 'url, time, visitCount, pageHTML, article, extraData', // TODO remove this (reading list is no longer used)
-  accounts:'++id,&uid,nickname,avatar,lastLoginTime,token,isCurrent,lastUseSpace',//本地已经登陆过的账号
-  localSpaces:'++id,uid,tasks,name,lastUseTime,createTime,icon',
-  system:'++id,&name,value'
+  accounts: '++id,&uid,nickname,avatar,lastLoginTime,token,isCurrent,lastUseSpace',//本地已经登陆过的账号
+  localSpaces: '++id,uid,tasks,name,lastUseTime,createTime,icon',
+  system: '++id,&name,value'
 })
 
 /*system的keyalue的值备注*/
 //currentUser 当前登陆的user
-
 
 db.open().then(function () {
   console.log('database opened ', performance.now())
