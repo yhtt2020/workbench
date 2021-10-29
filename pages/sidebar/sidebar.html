@@ -1,240 +1,371 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>侧边栏</title>
-		<script src="../../ext/vue/vue.js"></script>
-		<script src="../../ext/vue/vuex.js"></script>
-		<script src="../../ext/vue/sortable.min.js"></script>
-		<script src="../../ext/vue/vuedraggable.umd.min.js"></script>
-		<script src="../../ext/vue/antd.min.js"></script>
-		<link rel="stylesheet" href="../../ext/vue/antd.min.css" />
-		<link rel="stylesheet" href="sidebar.css" />
-	</head>
-	<body style="background-color: #00000000;overflow-x: hidden;overflow-y: hidden;">
-		<script>
-			function mousenter(target) {
-				target.setAttribute('class', 'sidebar expanded')
-				console.log('鼠标移入')
-				document.getElementById('clickThroughElement').style.left = "146px"
-			}
+<head>
+    <meta charset="utf-8">
+    <title>侧边栏</title>
+    <script src="../../ext/vue/vue.js"></script>
+    <script src="../../ext/vue/vuex.js"></script>
+    <script src="../../ext/vue/sortable.min.js"></script>
+    <script src="../../ext/vue/vuedraggable.umd.min.js"></script>
+    <script src="../../ext/vue/antd.min.js"></script>
+    <link rel="stylesheet" href="../../ext/vue/antd.min.css"/>
+    <link rel="stylesheet" href="sidebar.css"/>
+</head>
+<body style="background-color: #00000000;overflow-x: hidden;overflow-y: hidden;">
+<script>
+  function mousenter (target) {
+    target.setAttribute('class', 'sidebar expanded')
+    console.log('鼠标移入')
+    document.getElementById('clickThroughElement').style.left = '146px'
+  }
 
-			function mouseleave(target) {
-				target.setAttribute('class', 'sidebar')
-				console.log('鼠标移出')
-				document.getElementById('clickThroughElement').style.left = "46px"
-			}
-		</script>
-		<div id="appVue" class="sidebar" onmouseenter="mousenter(this)" onmouseleave="mouseleave(this)">
-			<sidebar />
-		</div>
-		<div id="clickThroughElement"
-			style="background-color: #00000000;height:100vh; position:absolute;left: 46px;width: 560px;">
-		</div>
+  function mouseleave (target) {
 
-		<template id="sidebarTpl">
-			<div id="sidebar" class="side-container">
-				<div id="itemsEl" class="side-items">
+    target.setAttribute('class', 'sidebar')
+    console.log('鼠标移出')
+    document.getElementById('clickThroughElement').style.left = '46px'
+  }
 
-					<ul id="pinGroup" class="app-task" style="margin-bottom: 0;overflow: hidden;">
-						<li @click="userClick" class="" style="position: relative;">
-							<a-popover title="用户信息" placement="right"
-									   :mouse-enter-delay="0.1" :mouse-leave-delay="0.1" :destroy-tooltip-on-hide="true"
-									   overlay-class-name="tips">
-								<template slot="content">
-								</template>
-								<div class="wrapper">
-									<div class="item-icon">
-										<a-avatar style="border:1px solid #cfcfcf; backgroundColor: white" class="icon" :src="user.avatar"></a-avatar>
-										<!-- <a-badge :count="0" :dot="true" status="processing"
-											:style="{position: 'absolute',right:  '-2px',top:'-13px'}" />
-										</a-badge> -->
-									</div>
-									<div class="item-title">{{ user.nickname }}</div>
-								</div>
-							</a-popover>
-						</li>
-						<draggable v-model="getPinItems" group="sideBtn" animation="300" dragClass="dragClass"
-							ghostClass="ghostClass" chosenClass="chosenClass" @start="onStart" @end="onEnd">
-							<transition-group>
-								<li v-for="(item,i) in this.$store.getters.getPinItems" :key="item.id"
-									@click="openPinItem(item.id,i)" :class="isActive(item.id)"
-									style="position: relative;" :item-id="item.id">
-									<a-popover :title="item.count>5?item.title+' -- 高负载（5+）':item.title"
-										placement="right" :mouse-enter-delay="0.1" :mouse-leave-delay="0.1"
-										:destroy-tooltip-on-hide="true" overlay-class-name="tips">
-										<template slot="content">
+  //对clickThrough区域进行穿透设置，这样鼠标移动到clickThroug的区域就会自动穿透
+  function setMainWindow (e) {
+    if (appVue.$refs.sidePanel.userPanelVisible === true) {
+      console.log('由于左侧栏是展开的，不可直接丢失焦点')
+    } else {
+      ipc.send('setMouseIgnore')
+      console.log('由于左侧栏未展开，丢失焦点')
+    }
+  }
+</script>
+<div id="appVue" class="sidebar" onmouseenter="mousenter(this)" onmouseleave="mouseleave(this)">
+    <sidebar ref="sidePanel"/>
+</div>
+<div id="clickThroughElement" onclick="appVue.$refs.sidePanel.userPanelVisible=false;setMainWindow()"
+     onmousemove="setMainWindow()"
+     style="background-color: #00000000;height:100vh; position:absolute;left: 46px;width: 100vw;">
+</div>
 
-											<ul class="tabs">
-												<li class="tab-title" v-for="(tab,j) in item.tabs" :key="tab.id">
-													<img class="tab-icon" :src="tab.icon"> {{ tab.title }}
-												</li>
-											</ul>
-										</template>
-										<div class="wrapper">
-											<div class="item-icon">
+<template id="sidebarTpl">
 
-												<img class="icon" :src="item.icon">
-												<a-badge :count="item.count" :dot="true" status="processing"
-													:style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:item.count>5?'visible':'hidden'}" />
-												</a-badge>
-											</div>
+    <div id="sidebar" class="side-container">
+        <div id="itemsEl" class="side-items">
+            <ul id="pinGroup" class="app-task" style="margin-bottom: 0;overflow: hidden;">
+                <li @click="toggleUserPanel" class="" style="position: relative; background-color: rgb(243 243 243)">
+                    <template>
+                        <a-drawer @mousemove="setSidePanel()"
 
-											<div class="item-title">{{ item.title }}</div>
-										</div>
-									</a-popover>
-								</li>
-							</transition-group>
-						</draggable>
-					</ul>
+                                  :width="300"
+                                  :visible="userPanelVisible"
+                                  :body-style="{ paddingBottom: '80px' }"
+                                  @close="toggleUserPanel"
+                                  placement="left"
+                                  getContainer="#clickThroughElement"
+                        >
+                            <template slot="title">
+							<span v-if="user.uid==0">
+								登陆账号免费体验完整功能
+							</span>
+                                <span v-else>
+								云账号同步
+							</span>
+                            </template>
+                            <div v-if="user.uid===0">
+                                <a-button @click="userClick" type="primary" block>登陆账号</a-button>
+                                <br><br>
+                                1.跨设备、跨终端同步我的应用和任务设置<br>
+                                2.支持多个空间任意切换<br>
+                                3.与其他用户在线交流、反馈产品使用建议<br>
+                                4.开启更多高级功能<br>
+                                &nbsp;①.团队功能，与团队成员共享收藏<br>
+                                &nbsp;②.企业社区，支持私密社区，供团队内成员交流<br>
+                                &nbsp;③.全网热议，支持任意网站与其他用户在线沟通
+                            </div>
+                            <div v-if="user.uid!==0">
+                                <template>
+                                    <div style="position:relative;">
+                                        <div style="text-align: center">
+                                            <p>
+                                                <a-avatar :size="80" :src="user.avatar"></a-avatar>
+                                            </p>
 
-					<div class="divider"></div>
+                                            <p>
+                                                <a @click="userClick">{{ user.nickname }}</a>
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <template>
+                                                <a-card :bordered="false">
+                                                    <a-card-grid :bordered="false" style="width:33%;text-align:center">
+                                                        <a-tooltip title="发表内容">
+                                                        <a-icon  style="font-size: 24px" type="plus-circle"></a-icon>
+                                                        </a-tooltip>
+                                                    </a-card-grid>
+                                                    <a-card-grid :bordered="false" style="width:33%;text-align:center"
+                                                                 :hoverable="false">
+                                                        <a-tooltip title="个人资料">
+                                                        <a-icon  style="font-size: 24px" type="profile"></a-icon>
+                                                        </a-tooltip>
+                                                    </a-card-grid>
+                                                    <a-card-grid :bordered="false" style="width:33%;text-align:center">
+                                                        <a-tooltip title="我的团队">
+                                                        <a-icon  style="font-size: 24px" type="team"></a-icon>
+                                                        </a-tooltip>
+                                                    </a-card-grid>
 
-					<div class="app-box">
+                                                </a-card>
+                                            </template>
+                                        </div>
+                                        <a-dropdown>
+                                            <a-menu slot="overlay">
+                                                <a-menu-item v-for="(item,key) in accounts" :key="key">
+                                                    <a-avatar shap="circle" size="small" :src="item.avatar"></a-avatar>
+                                                    &nbsp;{{ item.nickname}}
+                                                </a-menu-item>
+                                                <a-menu-item>
+                                                    <a-avatar shap="circle" size="small"
+                                                              src="../../icons/browser.ico"></a-avatar>
+                                                    &nbsp;绑定新账号
+                                                </a-menu-item>
+                                            </a-menu>
 
-						<ul id="appGroup" class="app-task app-items">
-							<draggable v-model="getItems" group="sideBtn" animation="300" dragClass="dragClass"
-								ghostClass="ghostClass" chosenClass="chosenClass" @start="onStart" @end="onEnd">
-								<transition-group>
-									<li @click="openItem(item.id,i)" v-for="(item,i) in this.$store.getters.getItems"
-										:key="item.id" :visible="item.count>1" data-role="task"
-										:class="isActive(item.id)" :item-id="item.id" style="position: relative;">
+                                            <a-button shape="circle" size="small"
+                                                      style="position: absolute;right: -5px;top:-5px">
+                                                <a-icon type="down"></a-icon>
+                                            </a-button>
 
-										<a-popover :title="item.count>5?item.title+' -- 高负载（5+）':item.title"
-											placement="right" :mouse-enter-delay="0.1" :mouse-leave-delay="0.1"
-											:destroy-tooltip-on-hide="true" overlay-class-name="tips">
-											<template slot="content">
+                                        </a-dropdown>
+                                    </div>
+                                    <div>
+                                        <div style="position: absolute;bottom: 5px;width: 80vw">
+                                            <a-button>注销</a-button>
+                                        </div>
+                                    </div>
+                                </template>
 
-												<ul class="tabs">
-													<li class="tab-title" v-for="(tab,j) in item.tabs" :key="tab.id">
-														<img class="tab-icon" :src="tab.icon">&nbsp;{{ tab.title }}
-													</li>
-												</ul>
-											</template>
-											<div class="wrapper">
-												<div class="item-icon">
+                                <h3>切换空间</h3>
+                                <p>
+                                    <a-button block>创建空间</a-button>
+                                </p>
 
-													<img class="icon" :src="item.icon">
-													<a-badge :count="item.count" :dot="true" status="processing"
-														:style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:item.count>5?'visible':'hidden'}" />
-													</a-badge>
-												</div>
-												<div class="item-title">{{ item.title }}</div>
-											</div>
+                            </div>
+                        </a-drawer>
 
-										</a-popover>
-									</li>
-								</transition-group>
-							</draggable>
-						</ul>
-
-
-					</div>
-
-
-				</div>
-				<div id="bottomsEl" class="bottom-container" style="">
-
-					<ul class="bottomBar">
-						<template>
-							<div>
-								<a-collapse default-active-key="1" :bordered="false" @change="changeBottomSize">
-									<a-collapse-panel key="1">
-										<li @click="openBottom('mobile')">
-
-											<!-- <a-popover title="手机模拟" placement="right" :mouse-enter-delay="0"
-												:mouse-leave-delay="0.1" :destroy-tooltip-on-hide="true"
-												overlay-class-name="tips">
-
-												<template slot="content">
-														<a-form id="validate_other" :form="form"
-															style="width: 500px;" v-bind="{
-      labelCol: { span: 5 },
-      wrapperCol: { span: 16 },
-    }">
-															
-															<a-form-item label="设备选择">
-															      <a-radio-group :value="1"  v-decorator="['radio-group']">
-															        <a-radio v-for="(device,index)  in devices" :value="index+1">
-															          <a-icon :type="device.icon"></a-icon>
-															          <strong>{{ device.name }}</strong>
-															          {{device.width}} x {{device.height}}
-															        </a-radio>
-															      </a-radio-group>
-															    </a-form-item>
-															<a-form-item label="缩放比例">
-																<a-slider :min="25" :max="200" v-decorator="['slider']" :default-value="100" :tooltipVisible="true"
-																	:dots='true'
-																	:marks="{25:'25%', 50: '50%', 75: '75%', 100: '100%', 125: '125%', 150: '150%',175:'175%', 200: '200%' }"
-																	:step="25" />
-															</a-form-item>
+                    </template>
+                    <a-popover placement="right"
+                               :mouse-enter-delay="0.3"
+                               overlay-class-name="tips">
+                        <template slot="title">
+							<span v-if="user.uid==0">
+								登陆账号免费体验完整功能
+							</span>
+                            <span v-else>
+								{{ user.nickname }}
+							</span>
+                        </template>
 
 
-															<a-form-item label="启用设备模拟">
-																<a-switch
-																	v-decorator="['switch', { valuePropName: 'checked' }]" />
-															</a-form-item>
-														</a-form>
+                        <template slot="content">
+                            <div v-if="user.uid===0">
+                                1.跨设备、跨终端同步我的应用和任务设置<br>
+                                2.支持多个空间任意切换<br>
+                                3.与其他用户在线交流、反馈产品使用建议<br>
+                                4.开启更多高级功能<br>
+                                &nbsp;①.团队功能，与团队成员共享收藏<br>
+                                &nbsp;②.企业社区，支持私密社区，供团队内成员交流<br>
+                                &nbsp;③.全网热议，支持任意网站与其他用户在线沟通
+                            </div>
+                            <div v-if="user.uid!==0">
+                                用户信息
+                            </div>
+
+                        </template>
+                        <div @contextmenu="toggleUserPanel()" class="wrapper" block>
+                            <div class="item-icon">
+                                <a-avatar style="border:1px solid #cfcfcf; backgroundColor: white" class="icon"
+                                          :src="user.avatar"></a-avatar>
+                                <!-- <a-badge :count="0" :dot="true" status="processing"
+                                    :style="{position: 'absolute',right:  '-2px',top:'-13px'}" />
+                                </a-badge> -->
+                            </div>
+                            <div class="item-title">{{ user.nickname }}</div>
+                        </div>
+                    </a-popover>
+                </li>
+                <draggable v-model="getPinItems" group="sideBtn" animation="300" dragClass="dragClass"
+                           ghostClass="ghostClass" chosenClass="chosenClass" @start="onStart" @end="onEnd">
+                    <transition-group>
+                        <li v-for="(item,i) in this.$store.getters.getPinItems" :key="item.id"
+                            @click="openPinItem(item.id,i)" :class="isActive(item.id)"
+                            style="position: relative;" :item-id="item.id">
+                            <a-popover :title="item.count>5?item.title+' -- 高负载（5+）':item.title"
+                                       placement="right" :mouse-enter-delay="0.1" :mouse-leave-delay="0.1"
+                                       :destroy-tooltip-on-hide="true" overlay-class-name="tips">
+                                <template slot="content">
+
+                                    <ul class="tabs">
+                                        <li class="tab-title" v-for="(tab,j) in item.tabs" :key="tab.id">
+                                            <img class="tab-icon" :src="tab.icon"> {{ tab.title }}
+                                        </li>
+                                    </ul>
+                                </template>
+                                <div class="wrapper">
+                                    <div class="item-icon">
+
+                                        <img class="icon" :src="item.icon">
+                                        <a-badge :count="item.count" :dot="true" status="processing"
+                                                 :style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:item.count>5?'visible':'hidden'}"/>
+                                        </a-badge>
+                                    </div>
+
+                                    <div class="item-title">{{ item.title }}</div>
+                                </div>
+                            </a-popover>
+                        </li>
+                    </transition-group>
+                </draggable>
+            </ul>
+
+            <div class="divider"></div>
+
+            <div class="app-box">
+
+                <ul id="appGroup" class="app-task app-items">
+                    <draggable v-model="getItems" group="sideBtn" animation="300" dragClass="dragClass"
+                               ghostClass="ghostClass" chosenClass="chosenClass" @start="onStart" @end="onEnd">
+                        <transition-group>
+                            <li @click="openItem(item.id,i)" v-for="(item,i) in this.$store.getters.getItems"
+                                :key="item.id" :visible="item.count>1" data-role="task"
+                                :class="isActive(item.id)" :item-id="item.id" style="position: relative;">
+
+                                <a-popover :title="item.count>5?item.title+' -- 高负载（5+）':item.title"
+                                           placement="right" :mouse-enter-delay="0.1" :mouse-leave-delay="0.1"
+                                           :destroy-tooltip-on-hide="true" overlay-class-name="tips">
+                                    <template slot="content">
+
+                                        <ul class="tabs">
+                                            <li class="tab-title" v-for="(tab,j) in item.tabs" :key="tab.id">
+                                                <img class="tab-icon" :src="tab.icon">&nbsp;{{ tab.title }}
+                                            </li>
+                                        </ul>
+                                    </template>
+                                    <div class="wrapper">
+                                        <div class="item-icon">
+
+                                            <img class="icon" :src="item.icon">
+                                            <a-badge :count="item.count" :dot="true" status="processing"
+                                                     :style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:item.count>5?'visible':'hidden'}"/>
+                                            </a-badge>
+                                        </div>
+                                        <div class="item-title">{{ item.title }}</div>
+                                    </div>
+
+                                </a-popover>
+                            </li>
+                        </transition-group>
+                    </draggable>
+                </ul>
+
+
+            </div>
+
+
+        </div>
+        <div id="bottomsEl" class="bottom-container">
+            <ul class="bottomBar">
+                <template>
+                    <div>
+                        <a-collapse default-active-key="1" :bordered="false" @change="changeBottomSize">
+                            <a-collapse-panel key="1">
+                                <li @click="openBottom('mobile')">
+
+                                    <!-- <a-popover title="手机模拟" placement="right" :mouse-enter-delay="0"
+                                        :mouse-leave-delay="0.1" :destroy-tooltip-on-hide="true"
+                                        overlay-class-name="tips">
+
+                                        <template slot="content">
+                                                <a-form id="validate_other" :form="form"
+                                                    style="width: 500px;" v-bind="{
+labelCol: { span: 5 },
+wrapperCol: { span: 16 },
+}">
+
+                                                    <a-form-item label="设备选择">
+                                                          <a-radio-group :value="1"  v-decorator="['radio-group']">
+                                                            <a-radio v-for="(device,index)  in devices" :value="index+1">
+                                                              <a-icon :type="device.icon"></a-icon>
+                                                              <strong>{{ device.name }}</strong>
+                                                              {{device.width}} x {{device.height}}
+                                                            </a-radio>
+                                                          </a-radio-group>
+                                                        </a-form-item>
+                                                    <a-form-item label="缩放比例">
+                                                        <a-slider :min="25" :max="200" v-decorator="['slider']" :default-value="100" :tooltipVisible="true"
+                                                            :dots='true'
+                                                            :marks="{25:'25%', 50: '50%', 75: '75%', 100: '100%', 125: '125%', 150: '150%',175:'175%', 200: '200%' }"
+                                                            :step="25" />
+                                                    </a-form-item>
+
+
+                                                    <a-form-item label="启用设备模拟">
+                                                        <a-switch
+                                                            v-decorator="['switch', { valuePropName: 'checked' }]" />
+                                                    </a-form-item>
+                                                </a-form>
 
 
 
-												</template> -->
-											<a-button type="default" shape="circle" icon="mobile"></a-button>
-											<div class="item-title">手机模式</div>
-											<!-- </a-popover> -->
-										</li>
-										<li @click="openBottom('help')">
-											<a-button type="default" shape="circle" icon="question-circle"></a-button>
-											<div class="item-title">帮助中心</div>
-										</li>
-										<li @click="openBottom('setting')">
-											<a-button type="default" shape="circle" icon="setting"></a-button>
-											<div class="item-title">偏好设置</div>
-										</li>
-									</a-collapse-panel>
-								</a-collapse>
-							</div>
-						</template>
+                                        </template> -->
+                                    <a-button type="default" shape="circle" icon="mobile"></a-button>
+                                    <div class="item-title">手机模式</div>
+                                    <!-- </a-popover> -->
+                                </li>
+                                <li @click="openBottom('help')">
+                                    <a-button type="default" shape="circle" icon="question-circle"></a-button>
+                                    <div class="item-title">帮助中心</div>
+                                </li>
+                                <li @click="openBottom('setting')">
+                                    <a-button type="default" shape="circle" icon="setting"></a-button>
+                                    <div class="item-title">偏好设置</div>
+                                </li>
+                            </a-collapse-panel>
+                        </a-collapse>
+                    </div>
+                </template>
 
-						<li @click="openBottom('home')">
-							<a-button type="default" shape="circle" icon="home"></a-button>
-							<div class="item-title">应用中心</div>
-						</li>
-					</ul>
+                <li @click="openBottom('home')">
+                    <a-button type="default" shape="circle" icon="home"></a-button>
+                    <div class="item-title">应用中心</div>
+                </li>
+            </ul>
 
-				</div>
+        </div>
 
-			</div>
-		</template>
-	</body>
-	<script src="./sidebarComp.js"></script>
-	<script src="./sidebar.js"></script>
-	<style>
-		.tabs,
-		.sidebar ul {
-			list-style: none;
-			padding: 0
-		}
+    </div>
+</template>
 
-		.ant-collapse-content>.ant-collapse-content-box {
-			padding: 0;
-		}
 
-		.ant-collapse-borderless>.ant-collapse-item {
-			border-bottom: none;
-		}
+</body>
+<script src="./sidebarComp.js"></script>
+<script src="./sidebar.js"></script>
+<style>
+    .tabs,
+    .sidebar ul {
+        list-style: none;
+        padding: 0
+    }
 
-		.tabs,
-		.sidebar ul {
-			margin-bottom: 0;
-		}
-	</style>
+    .ant-collapse-content > .ant-collapse-content-box {
+        padding: 0;
+    }
 
-	<script>
-		//对clickThrough区域进行穿透设置，这样鼠标移动到clickThroug的区域就会自动穿透
-		const el = document.getElementById('clickThroughElement')
-		el.addEventListener('mouseenter', (e) => {
-			ipc.send('setMouseIgnore')
-		})
-	</script>
+    .ant-collapse-borderless > .ant-collapse-item {
+        border-bottom: none;
+    }
+
+    .tabs,
+    .sidebar ul {
+        margin-bottom: 0;
+    }
+</style>
+
+
 </html>

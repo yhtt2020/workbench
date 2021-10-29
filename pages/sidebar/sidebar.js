@@ -88,7 +88,7 @@ window.onload = function() {
 			user:{//当前用户
 				uid:0,
 				nickname:"立即登录",
-				avatar:"../../icons/app.png"
+				avatar:"../../icons/browser.ico"
 			}
 		},
 		getters: {
@@ -313,10 +313,9 @@ window.onload = function() {
 		},
 		mounted: function() {
 			window.$store = store
-
-
 		}
 	})
+	window.appVue=appVue
 
 
 

@@ -5,6 +5,9 @@ Vue.component('sidebar', {
 		return {
 			drag: false,
 			remote: {},
+			loginPanelTitle:"登陆账号免费体验完整功能",
+			loginPanelContent:``,
+			userPanelVisible:false,
 			devices: [{
 					'name': 'IphoneX',
 					'width': 375,
@@ -38,8 +41,21 @@ Vue.component('sidebar', {
 					'width': 4096,
 					'height': 2160,
 					'icon': 'desktop'
-				}
+				},
 
+
+			],
+			accounts:[
+				{
+					'uid':1,
+					'nickname':'张三',
+					'avatar':'../../icons/apps.svg'
+				},
+				{
+					'uid':2,
+					'nickname':'李四',
+					'avatar':'../../icons/browser.ico'
+				}
 			]
 		}
 
@@ -108,6 +124,11 @@ Vue.component('sidebar', {
 	},
 	template: '#sidebarTpl',
 	methods: {
+		toggleUserPanel(){
+			console.log('toggele')
+			this.userPanelVisible=!this.userPanelVisible
+			console.log(this.userPanelVisible)
+		},
 		switchTask(id, index) {
 			postMessage({
 				message: 'switchToTask',
@@ -220,6 +241,7 @@ Vue.component('sidebar', {
 			}else{
 				this.addTab(serverConfig.getUrl(serverConfig.apiUrl.user.home))
 			}
+			this.userPanelVisible=false
 		},
 		addTab(url){
 			postMessage({
