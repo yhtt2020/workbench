@@ -41,7 +41,7 @@
 </div>
 <div id="clickThroughElement" onclick="appVue.$refs.sidePanel.userPanelVisible=false;setMainWindow()"
      onmousemove="setMainWindow()"
-     style="background-color: #00000000;height:100vh; position:absolute;left: 46px;width: 100vw;">
+     style="background-color: #00000000;height:100vh; position:absolute;left: 46px;width: calc(100% - 46px);">
 </div>
 
 <template id="sidebarTpl">
@@ -52,10 +52,8 @@
                 <li @click="toggleUserPanel" class="" style="position: relative; background-color: rgb(243 243 243)">
                     <template>
                         <a-drawer @mousemove="setSidePanel()"
-
                                   :width="300"
                                   :visible="userPanelVisible"
-                                  :body-style="{ paddingBottom: '80px' }"
                                   @close="toggleUserPanel"
                                   placement="left"
                         >
@@ -90,7 +88,7 @@
                                                 <a @click="userClick">{{ user.nickname }}</a>
                                             </p>
                                         </div>
-                                        <div>
+                                        <div style="margin-bottom: 10px">
                                             <template>
                                                 <a-card :bordered="false">
                                                     <a-card-grid :bordered="false" style="width:33%;text-align:center">
@@ -134,7 +132,7 @@
                                         </a-dropdown>
                                     </div>
                                     <div>
-                                        <div style="position: absolute;bottom: 5px;width: 80vw">
+                                        <div style="position: absolute;bottom: 5px;">
                                             <a-button @click="logout">注销</a-button>
                                         </div>
                                     </div>
