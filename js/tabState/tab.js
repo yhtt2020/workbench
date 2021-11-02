@@ -13,7 +13,7 @@ class TabList {
     var tabId = String(tab.id || Math.round(Math.random() * 100000000000000000)) // you can pass an id that will be used, or a random one will be generated.
 
     var newTab = {
-      url: tab.url || '',
+      url: tab.url || 'ts://newtab',//修改默认页面为newtab
       title: tab.title || '',
       id: tabId,
       lastActivity: tab.lastActivity || Date.now(),
