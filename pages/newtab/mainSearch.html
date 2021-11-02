@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="stylesheet" href="../../ext/flex-class.css">
+	<script src="../../ext/vue/vue.js"></script>
+	<script src="../../ext/vue/antd.min.js"></script>
+	<link rel="stylesheet" href="../../ext/vue/antd.min.css" />
+	<link rel="stylesheet" href="../../ext/reset.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="./assets/mainSearch.css">
+	<!-- <link rel="stylesheet" href="../pagebase.css"> -->
+	<title>新标签页</title>
+</head>
+<body>
+	<script>
+		Vue.use(antd)
+	</script>
+	<div id="app">
+		<template>
+			<div class="main">
+				<div class="main-top flex flex-direction justify-around align-center">
+					<img src="./assets/logo-noframe.svg" alt="" style="width: 84px;" class="xt-logo">
+					<div class="top-search flex justify-between align-center">
+						<a-popover placement="bottomLeft" style="margin-left: 20px;" v-model="visible">
+							<template slot="content">
+								<div class="card-list flex flex-wrap">
+									<div class="card flex justify-start align-center" @click="chooseBaidu">
+										<img src="./assets/baidu.svg" alt="" style="width:30px; height: 30px;">
+										<div style="margin-left: 15px;">百度</div>
+									</div>
+									<div class="card flex justify-start align-center" @click="chooseGoogle">
+										<img src="./assets/google.svg" alt="" style="width:30px; height: 30px;">
+										<div style="margin-left: 15px;">谷歌</div>
+									</div>
+									<div class="card flex justify-start align-center" @click="chooseBing">
+										<img src="./assets/bing.svg" alt="" style="width:30px; height: 30px;">
+										<div style="margin-left: 15px;">必应</div>
+									</div>
+									<div class="card flex justify-start align-center">
+										<img src="./assets/baidu.svg" alt="" style="width:30px; height: 30px;">
+										<div style="margin-left: 15px;">百度</div>
+									</div>
+								</div>
+							</template>
+							<template slot="title">
+								<div class="card-head flex justify-between ">
+									<div class="left flex align-center justify-center">选择您的默认搜索引擎:</div>
+									<div class="right flex align-center justify-center">搜索热词:</div>
+								</div>
+							</template>
+							<img :src="this.slinkLogo" alt="" style="width: 30px;">
+						</a-popover>
+						<input type="text" name="" id="" class="search" v-model="this.keyWord" style="font-size: 20px;">
+						<img src="./assets/search.svg" alt="" class="search-logo">
+					</div>
+				</div>
+				<div class="main-bottom flex justify-center">
+					<div class="bt-wrap flex flex-wrap justify-center">
+						<div class="bt-nav" @mouseenter="() => this.navallShow = true" @mouseleave="() => this.navallShow = false" style="min-height: 240px;">
+							<div class="nav-top flex justify-start align-center">
+								<img src="./assets/module.svg" alt="" style="width: 20px; margin-left: 10px;">
+								<div style="margin-left: 10px;">我的导航</div>
+							</div>
+							<div class="nav-content flex flex-wrap">
+								<div class="n-card flex flex-direction justify-around align-center">
+									<img src="./assets/search.svg" alt="" style="width: 40px">
+									<p>微信桌面版</p>
+								</div>
+								<div class="n-card flex flex-direction justify-around align-center">
+									<img src="./assets/search.svg" alt="" style="width: 40px">
+									<p>微信桌面版</p>
+								</div>
+								<div class="n-card flex flex-direction justify-around align-center">
+									<img src="./assets/search.svg" alt="" style="width: 40px">
+									<p>微信桌面版</p>
+								</div>
+								<div class="n-card flex flex-direction justify-around align-center">
+									<img src="./assets/search.svg" alt="" style="width: 40px">
+									<p>微信桌面版</p>
+								</div>
+								<div class="n-card flex flex-direction justify-around align-center">
+									<img src="./assets/search.svg" alt="" style="width: 40px">
+									<p>微信桌面版</p>
+								</div>
+							</div>
+							<div class="nav-bottom flex justify-center align-center" v-show="navallShow">+ 查看全部</div>
+
+						</div>
+						<div class="bt-nav" style="height: 240px;">
+							<div class="nav-top flex justify-start align-center">
+								<img src="./assets/star.svg" alt="" style="width: 20px; margin-left: 10px;">
+								<div style="margin-left: 10px;">书签收藏</div>
+							</div>
+							<div class="nav-content flex flex-direction" style="margin: 20px">
+									<div class="n-link flex justify-between align-center">
+										<img src="./assets/earth.svg" alt="" style="width: 20px;">
+										<div>
+											<p>从一维到十维，三维以后你还听得懂吗？_哔哩哔哩</p>
+											<p>http://www.bilibili.com/bideo/BV12x411y7y…</p>
+										</div>
+									</div>
+									<div class="n-link flex justify-between align-center">
+										<img src="./assets/earth.svg" alt="" style="width: 20px;">
+										<div>
+											<p>从一维到十维，三维以后你还听得懂吗？_哔哩哔哩</p>
+											<p>http://www.bilibili.com/bideo/BV12x411y7y…</p>
+										</div>
+									</div>
+									<div class="n-link flex justify-between align-center">
+										<img src="./assets/earth.svg" alt="" style="width: 20px;">
+										<div>
+											<p>从一维到十维，三维以后你还听得懂吗？_哔哩哔哩</p>
+											<p>http://www.bilibili.com/bideo/BV12x411y7y…</p>
+										</div>
+									</div>
+
+							</div>
+						</div>
+						<div class="bt-nav" style="min-height: 240px;">
+							<div class="nav-top flex justify-between align-center">
+
+								<div class="flex align-center" style="width: 300px;">
+									<img src="./assets/back.svg" alt="" style="width: 20px; margin-left: 10px;">
+									<div style="margin-left: 10px;">我的导航</div>
+								</div>
+								<img src="./assets/go.svg" alt="" style="width: 20px; margin-right: 10px;">
+							</div>
+							<div class="nav-content flex flex-wrap">
+								<div class="n-card flex flex-direction justify-around align-center">
+									<img src="./assets/search.svg" alt="" style="width: 40px">
+									<p>微信桌面版</p>
+								</div>
+								<div class="n-card flex flex-direction justify-around align-center">
+									<img src="./assets/search.svg" alt="" style="width: 40px">
+									<p>微信桌面版</p>
+								</div>
+								<div class="n-card flex flex-direction justify-around align-center">
+									<img src="./assets/search.svg" alt="" style="width: 40px">
+									<p>微信桌面版</p>
+								</div>
+								<div class="n-card flex flex-direction justify-around align-center">
+									<img src="./assets/search.svg" alt="" style="width: 40px">
+									<p>微信桌面版</p>
+								</div>
+								<div class="n-card flex flex-direction justify-around align-center">
+									<img src="./assets/search.svg" alt="" style="width: 40px">
+									<p>微信桌面版</p>
+								</div>
+							</div>
+						</div>
+						<div class="bt-nav" style="height: 240px;">
+							<div class="nav-top flex justify-between align-center">
+
+
+								<div class="flex align-center" style="width: 300px;">
+									<img src="./assets/history.svg" alt="" style="width: 20px; margin-left: 10px;">
+									<div style="margin-left: 10px;">访问历史</div>
+									<div style="margin-left: 10px;">昨天</div>
+									<div style="margin-left: 10px;">前天</div>
+									<div style="margin-left: 10px;">在此之前</div>
+								</div>
+								<img src="./assets/more.svg" alt="" style="width: 20px; margin-right: 10px;">
+
+							</div>
+							<div class="nav-content flex flex-direction" style="margin: 20px">
+									<div class="n-link flex justify-between align-center">
+										<img src="./assets/earth.svg" alt="" style="width: 20px;">
+										<div>
+											<p>从一维到十维，三维以后你还听得懂吗？_哔哩哔哩</p>
+											<p>http://www.bilibili.com/bideo/BV12x411y7y…</p>
+										</div>
+									</div>
+									<div class="n-link flex justify-between align-center">
+										<img src="./assets/earth.svg" alt="" style="width: 20px;">
+										<div>
+											<p>从一维到十维，三维以后你还听得懂吗？_哔哩哔哩</p>
+											<p>http://www.bilibili.com/bideo/BV12x411y7y…</p>
+										</div>
+									</div>
+									<div class="n-link flex justify-between align-center">
+										<img src="./assets/earth.svg" alt="" style="width: 20px;">
+										<div>
+											<p>从一维到十维，三维以后你还听得懂吗？_哔哩哔哩</p>
+											<p>http://www.bilibili.com/bideo/BV12x411y7y…</p>
+										</div>
+									</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</template>
+	</div>
+
+	<script>
+		Vue.use(antd)
+		var appVue = new Vue({
+			el: '#app',
+			data() {
+				return {
+					navallShow: false,
+					slinkLogo: './assets/baidu.svg',
+					frontLink: 'https://www.baidu.com/s?wd=',
+					searchWord: '',
+          visible: false
+				}
+			},
+			methods: {
+				chooseBaidu() {
+					this.slinkLogo = './assets/baidu.svg',
+					this.frontLink = 'https://www.baidu.com/s?wd=',
+          this.visible = false
+				},
+				chooseGoogle() {
+					this.slinkLogo = './assets/google.svg',
+					this.frontLink = 'https://www.google.com/search?q=',
+          this.visible = false
+				},
+				chooseBing() {
+					this.slinkLogo = './assets/bing.svg',
+					this.frontLink = 'https://cn.bing.com/search?q=',
+          this.visible = false
+				}
+
+			}
+
+
+		})
+	</script>
+
+</body>
+</html>

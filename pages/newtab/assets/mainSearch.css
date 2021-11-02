@@ -1,0 +1,157 @@
+body,html {
+	width: 100%;
+	height: 100%;
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+	font-family: ".SFNSText-Regular", "Helvetica Neue", "Arial", sans-serif;
+	background-color: #F2F2F2;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+.main .main-top {
+	width: 100%;
+	height: 20vh;
+	padding-top: 60px;
+	
+}
+
+
+.main-top .xt-logo{
+	width: 64px;
+	-webkit-animation: mymove 3s ease-in-out infinite;
+	animation: mymove 3s ease-in-out infinite;
+}
+
+@keyframes mymove{0%, 100%{-webkit-transform:translateY(0);transform:translateY(0);}
+50%{-webkit-transform:translateY(-20px);transform:translateY(-20px);}
+}
+
+.top-search {
+	width: 706px;
+	height: 54px;
+	border-radius: 20px;
+	background-color: white;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+	position: relative;
+
+}
+
+.top-search .search-pic {
+	width: 34px;
+	height: 34px;
+	background-color: teal;
+	margin-left: 20px;
+}
+
+.top-search .search {
+	width: 506px;
+	height: 50px;
+}
+
+.top-search .search-logo {
+	z-index: 20;
+	width: 28px;
+	margin-right: 20px;
+}
+
+.card-head {
+	width: 600px;
+	height: 50px;
+}
+
+.card-head .left {
+	font-size: 14px;
+    	color: #999;
+	    margin-left: 10px;
+}
+
+.card-head .right {
+	margin-right: 20px;
+}
+
+.card-list {
+	width: 600px;
+	height: 300px;
+	overflow: scroll;
+}
+
+
+.card-list .card {
+	width: 30%;
+	height: 18%;
+	background-color: #f9f9f9;
+	margin: 10px;
+}
+
+.card-list .card img {
+	margin-left: 10px;
+}
+
+.card-list .card div {
+	margin-left: 10px;
+}
+
+.main-bottom {
+	width: 100%;
+	height: 80vh;
+	padding-top: 60px;
+}
+
+.main-bottom .bt-wrap {
+	width: 80%;
+	height: 72vh;
+
+}
+
+.bt-wrap .bt-nav {
+	width: 398px;
+	background-color: white;
+	margin: 0px 30px 50px 30px ;
+	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+	border-radius: 15px;
+}
+
+.bt-nav .nav-bottom {
+	width: 398px;
+	height: 40px;
+	background-color: rgba(98, 60, 235, 0.05);
+}
+
+.nav-bottom:hover {
+	color: #02A7F0;
+}
+
+.bt-nav .nav-top {
+	height: 50px;
+	border-bottom: 1px solid rgb(226, 221, 221);
+}
+
+.bt-nav .nav-content {
+	overflow: hidden;
+}
+
+.nav-content .n-card {
+	width: 25%;
+	height: 95px;
+	background-color: wheat;
+}
+
+.n-card:hover {
+	color: #02A7F0;
+}
+
+
+
+.nav-content .n-link {
+	height: 50px;
+}
+
+
+
+
