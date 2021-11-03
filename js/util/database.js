@@ -20,7 +20,8 @@ db.version(1).stores({
   extraData - other metadata about the page
   */
   places: '++id, &url, title, color, visitCount, lastVisit, pageHTML, extractedText, *searchIndex, isBookmarked, *tags, metadata',
-  readingList: 'url, time, visitCount, pageHTML, article, extraData' // TODO remove this (reading list is no longer used)
+  readingList: 'url, time, visitCount, pageHTML, article, extraData', // TODO remove this (reading list is no longer used)
+  myApps:'++id,name,summary,url,icon,addTime,sort' // 我的应用表
 })
 
 db.open().then(function () {
