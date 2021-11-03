@@ -18,7 +18,7 @@ body,html {
 	width: 100%;
 	height: 20vh;
 	padding-top: 60px;
-	
+
 }
 
 
@@ -56,8 +56,7 @@ body,html {
 
 .top-search .search-logo {
 	z-index: 20;
-	width: 28px;
-	margin-right: 20px;
+	margin-right: 20px
 }
 
 .card-head {
@@ -114,13 +113,19 @@ body,html {
 	background-color: white;
 	margin: 0px 30px 50px 30px ;
 	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-	border-radius: 15px;
+	border-radius: 8px;
+}
+
+.bt-wrap .bt-nav.moreNow{
+  border-radius: 8px 8px 0px 0px;
 }
 
 .bt-nav .nav-bottom {
 	width: 398px;
 	height: 40px;
 	background-color: rgba(98, 60, 235, 0.05);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 0px 0px 8px 8px;
 }
 
 .nav-bottom:hover {
@@ -128,7 +133,7 @@ body,html {
 }
 
 .bt-nav .nav-top {
-	height: 50px;
+	height: 40px;
 	border-bottom: 1px solid rgb(226, 221, 221);
 }
 
@@ -138,7 +143,7 @@ body,html {
 
 .nav-content .n-card {
 	width: 25%;
-	height: 95px;
+	height: 100px;
 	background-color: wheat;
 }
 
@@ -153,5 +158,49 @@ body,html {
 }
 
 
+.bt-nav .ant-tabs-bar {
+  margin: 0px
+}
+
+.bt-nav .ant-tabs-nav .ant-tabs-tab {
+  margin: 0px;
+}
 
 
+.adrop1 {
+  position: absolute;
+  top: 12px;
+  right: 10px
+}
+
+.adrop1:hover {
+  color: #02A7F0
+}
+
+.adrop2 {
+  position: absolute;
+  top: 12px;
+  right: 10px
+}
+
+.adrop2:hover {
+  color: #02A7F0
+}
+
+.n-link .textdiv p{
+  text-overflow: -o-ellipsis-lastline;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+/* .n-link .textdiv a{
+  text-overflow: -o-ellipsis-lastline;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+} */
