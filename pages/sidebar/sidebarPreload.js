@@ -61,8 +61,10 @@ window.addEventListener('message', function (e) {
       break
     case 'mobile':
       ipc.send('openMobile')
+      break;
     case 'addTab':
       ipc.send('addTab', { 'url': e.data.url })
+      break;
   }
 
 })
