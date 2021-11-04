@@ -9,15 +9,14 @@
     <link rel="stylesheet" href="../../ext/vue/antd.min.css" />
     <link rel="stylesheet" href="../../ext/reset.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./assets/mainSearch.css" />
-    <!-- <link rel="stylesheet" href="../pagebase.css"> -->
+    <link rel="stylesheet" href="./assets/index.css" />
     <title>新标签页</title>
   </head>
   <body>
     <script>
       Vue.use(antd);
-      var electron = require('electron')
-      var ipc = electron.ipcRenderer
+      var electron = require('electron');
+      var ipc = electron.ipcRenderer;
     </script>
     <div id="app">
       <template>
@@ -34,7 +33,7 @@
                       class="card flex justify-start align-center"
                       @click="chooseSearch(index)"
                     >
-                      <img :src="item.slinkLogo" alt="" style="width: 30px; height: 30px" />
+                      <img :src="item.slinkLogo" alt="" />
                       <div style="margin-left: 15px">{{item.name}}</div>
                     </div>
                   </div>
@@ -48,21 +47,29 @@
                     </div>
                   </div>
                 </template>
-                <img :src="this.slinkLogo" alt="" style="width: 30px" />
+                <img :src="this.slinkLogo" alt="" style="width: 30px; cursor: pointer" />
               </a-popover>
-              <input type="text" name="" id="" class="search" v-model="this.keyWord" style="font-size: 20px" />
+              <input type="text" class="search" :value="searchWord" @input="searchWord = $event.target.value" style="font-size: 20px"/>
               <a-icon type="search" class="search-logo" :style="{ fontSize: '30px' }" />
             </div>
           </div>
+
           <div class="main-bottom flex justify-center">
-            <div class="bt-wrap flex flex-wrap justify-center">
+            <div class="mb-wrap flex flex-wrap justify-center">
               <div
-                class="bt-nav more"
-                :class="{'moreNow': this.navallShow}"
-                @mouseenter="() => this.navallShow = true"
-                @mouseleave="() => this.navallShow = false"
-                style="height: 240px"
+                class="wrap-nav1"
+                :class="{'moreNow': this.navallShow1}"
+                @mouseenter="mouseIn1"
+                @mouseleave="mouseOut1"
               >
+                <a-dropdown class="adrop1" v-show="this.bookdian1Show">
+                  <a-icon type="more" :style="{ fontSize: '18px'}"></a-icon>
+                  <a-menu slot="overlay">
+                    <a-menu-item>
+                      <a href="javascript:;">移除分组框</a>
+                    </a-menu-item>
+                  </a-menu>
+                </a-dropdown>
                 <div class="nav-top flex justify-start align-center">
                   <a-icon type="appstore" :style="{ fontSize: '18px'}" style="margin-left: 10px"></a-icon>
                   <div style="margin-left: 10px">我的导航</div>
@@ -77,89 +84,122 @@
                     <p>{{item.name}}</p>
                   </div>
                 </div>
-                <div class="nav-bottom flex justify-center align-center" v-show="navallShow" onclick="ipc.send('openHome')">+ 查看全部</div>
+                <transition name="slide-fade">
+                  <div
+                    class="nav-bottom flex justify-center align-center"
+                    v-show="navallShow1"
+                    onclick="ipc.send('openHome')"
+                  >
+                    + 查看全部
+                  </div>
+                </transition>
               </div>
+
               <div
-                class="bt-nav"
-                style="height: 240px; position: relative"
-                @mouseenter="() => this.bookdian1Show = true"
-                @mouseleave="() => this.bookdian1Show = false"
+                class="wrap-nav2"
+                :class="{'moreNow': this.navallShow2}"
+                @mouseenter="mouseIn2"
+                @mouseleave="mouseOut2"
               >
                 <div class="nav-top flex justify-start align-center">
                   <a-icon type="star" :style="{ fontSize: '18px'}" style="margin-left: 10px"></a-icon>
                   <div style="margin-left: 10px">书签收藏</div>
                 </div>
-                <a-dropdown class="adrop1" v-show="this.bookdian1Show">
-                  <a-icon type="more" :style="{ fontSize: '18px'}" style="margin-right: 10px"></a-icon>
+                <a-dropdown class="adrop2" v-show="this.bookdian2Show">
+                  <a-icon type="more" :style="{ fontSize: '18px'}"></a-icon>
                   <a-menu slot="overlay">
                     <a-menu-item>
                       <a href="javascript:;">移除分组框</a>
                     </a-menu-item>
                   </a-menu>
                 </a-dropdown>
-                <div class="nav-content flex flex-direction" style="margin: 20px; height: 150px">
+                <div class="nav-content flex flex-direction">
                   <div
-                    class="n-link flex justify-between align-center"
+                    class="bk-list flex justify-between align-center"
                     v-for="(item, index) in this.bookMark"
                     :key="index"
-                    style="margin-top: 20px"
                   >
                     <a-icon type="global" :style="{ fontSize: '18px'}"></a-icon>
-                    <div class="textdiv" style="margin-left: 20px">
-                      <p style="width: 300px;">{{item.title}}</p>
-                      <a :href="item.link">{{item.link}}</a>
-                    </div>
+                    <a :href="item.link">
+                      <p>{{item.title}}</p>
+                      <p>{{item.link}}</p>
+                    </a>
                   </div>
                 </div>
+                <transition name="slide-fade">
+                  <div class="nav-bottom flex justify-center align-center" v-show="navallShow2">+ 查看全部</div>
+                </transition>
               </div>
-              <div class="bt-nav">
+
+              <div
+                class="wrap-nav3"
+                :class="{'moreNow': this.navallShow3}"
+                @mouseenter="mouseIn3"
+                @mouseleave="mouseOut3"
+              >
+                <a-dropdown class="adrop3" v-show="this.bookdian3Show">
+                  <a-icon type="more" :style="{ fontSize: '18px'}"></a-icon>
+                  <a-menu slot="overlay">
+                    <a-menu-item>
+                      <a href="javascript:;">移除分组框</a>
+                    </a-menu-item>
+                  </a-menu>
+                </a-dropdown>
                 <a-tabs default-active-key="0" :tab-position="mode" @prevClick="callback" @nextClick="callback">
-                  <a-tab-pane v-for="(i, index) in this.recommmendNav" :key="index" :tab="i.name" style="height: 200px">
-                    <div class="nav-content flex flex-wrap">
+                  <a-tab-pane v-for="(i, index) in this.recommmendNav" :key="index" :tab="i.name">
+                    <div class="pane flex flex-wrap">
                       <div
                         class="n-card flex flex-direction justify-around align-center"
                         v-for="(item, index) in i.info"
                         :key="index"
                       >
-                        <img :src="item.linkLogo" alt="" style="width: 30px; padding-top: 10px" />
+                        <img :src="item.linkLogo" alt="" />
                         <p>{{item.name}}</p>
                       </div>
                     </div>
                   </a-tab-pane>
                 </a-tabs>
+                <transition name="slide-fade">
+                  <div class="nav-bottom flex justify-center align-center" v-show="navallShow3">+ 查看全部</div>
+                </transition>
               </div>
+
               <div
-                class="bt-nav"
-                style="height: 240px; position: relative"
-                @mouseenter="() => this.bookdian2Show = true"
-                @mouseleave="() => this.bookdian2Show = false"
+                class="wrap-nav4"
+                :class="{'moreNow': this.navallShow4}"
+                @mouseenter="mouseIn4"
+                @mouseleave="mouseOut4"
               >
                 <a-tabs default-active-key="0">
                   <a-tab-pane v-for="(i, index) in this.historyBar" :key="index" :tab="i.time_title">
-                    <div class="nav-content flex flex-direction" style="margin: 20px; height: 160px">
-                      <a-dropdown class="adrop2" v-show="bookdian2Show">
-                        <a-icon type="more" :style="{ fontSize: '18px'}" style="margin-right: 10px"></a-icon>
+                    <div class="pane flex flex-direction">
+                      <a-dropdown class="adrop4" v-show="bookdian4Show">
+                        <a-icon type="more" :style="{ fontSize: '18px'}"></a-icon>
                         <a-menu slot="overlay">
                           <a-menu-item>
                             <a href="javascript:;">移除分组框</a>
                           </a-menu-item>
                         </a-menu>
                       </a-dropdown>
-                      <div
-                        class="n-link flex justify-between align-center"
-                        v-for="(item, index) in i.info"
-                        :key="index"
-                        style="margin-top: 10px"
-                      >
-                        <a-icon type="global" :style="{ fontSize: '18px'}"></a-icon>
-                        <div style="margin-left: 20px" class="textdiv">
-                          <p style="width: 300px;">{{item.title}}</p>
-                          <a :href="item.link">{{item.link}}</a>
+                      <div class="nav-content flex flex-direction">
+                        <div
+                          class="wb-history flex justify-between align-center"
+                          v-for="(item, index) in i.info"
+                          :key="index"
+                        >
+                          <a-icon type="global" :style="{ fontSize: '18px'}"></a-icon>
+                          <a :href="item.link">
+                            <p>{{item.title}}</p>
+                            <p>{{item.link}}</p>
+                          </a>
                         </div>
                       </div>
                     </div>
                   </a-tab-pane>
                 </a-tabs>
+                <transition name="slide-fade">
+                  <div class="nav-bottom flex justify-center align-center" v-show="navallShow4">+ 查看全部</div>
+                </transition>
               </div>
             </div>
           </div>
@@ -174,12 +214,17 @@
         data() {
           return {
             mode: 'top',
-            navallShow: false,
             slinkLogo: './assets/baidu.svg',
             searchWord: '',
             visible: false,
             bookdian1Show: false,
             bookdian2Show: false,
+            bookdian3Show: false,
+            bookdian4Show: false,
+            navallShow1: false,
+            navallShow2: false,
+            navallShow3: false,
+            navallShow4: false,
             searchList: [
               {
                 name: '百度',
@@ -369,23 +414,23 @@
                 time_title: '访问历史',
                 info: [
                   {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩',
+                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
                     link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
                   },
                   {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩',
+                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
                     link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
                   },
                   {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩',
+                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
                     link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
                   },
                   {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩',
+                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
                     link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
                   },
                   {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩',
+                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
                     link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
                   },
                 ],
@@ -394,23 +439,23 @@
                 time_title: '昨天',
                 info: [
                   {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩',
+                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
                     link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
                   },
                   {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩',
+                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
                     link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
                   },
                   {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩',
+                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
                     link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
                   },
                   {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩',
+                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
                     link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
                   },
                   {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩',
+                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
                     link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
                   },
                 ],
@@ -419,23 +464,23 @@
                 time_title: '前天',
                 info: [
                   {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩',
+                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
                     link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
                   },
                   {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩',
+                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
                     link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
                   },
                   {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩',
+                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
                     link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
                   },
                   {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩',
+                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
                     link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
                   },
                   {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩',
+                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
                     link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
                   },
                 ],
@@ -444,23 +489,23 @@
                 time_title: '在此之前',
                 info: [
                   {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩',
+                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
                     link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
                   },
                   {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩',
+                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
                     link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
                   },
                   {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩',
+                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
                     link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
                   },
                   {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩',
+                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
                     link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
                   },
                   {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩',
+                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
                     link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
                   },
                 ],
@@ -468,16 +513,59 @@
             ],
           };
         },
+        watch: {
+          searchWord: {
+            handler(newValue) {
+              console.log(newValue);
+            },
+            deep: true,
+            immediate: true,
+          },
+        },
         methods: {
+          mouseIn1() {
+            this.navallShow1 = true;
+            this.bookdian1Show = true;
+          },
+          mouseOut1() {
+            this.navallShow1 = false;
+            this.bookdian1Show = false;
+          },
+          mouseIn2() {
+            this.navallShow2 = true;
+            this.bookdian2Show = true;
+          },
+          mouseOut2() {
+            this.navallShow2 = false;
+            this.bookdian2Show = false;
+          },
+          mouseIn3() {
+            this.navallShow3 = true;
+            this.bookdian3Show = true;
+          },
+          mouseOut3() {
+            this.navallShow3 = false;
+            this.bookdian3Show = false;
+          },
+          mouseIn4() {
+            this.navallShow4 = true;
+            this.bookdian4Show = true;
+          },
+          mouseOut4() {
+            this.navallShow4 = false;
+            this.bookdian4Show = false;
+          },
           chooseSearch(index) {
             console.log(index);
             this.visible = false;
+            this.slinkLogo = this.searchList[index].slinkLogo;
           },
           callback(val) {
             console.log(val);
           },
         },
-        computed: {},
+        computed: {
+        },
       });
     </script>
   </body>
