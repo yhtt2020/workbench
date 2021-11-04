@@ -242,8 +242,8 @@ const webviews = {
 		// allowPopups: false,
 		// // partition: partition || 'persist:webcontent',
 		// enableWebSQL: false,
-		 console.log(webPreferences)
-	}
+
+
     if(sourceUrl!='ts://apps'){
       webPreferences.partition = partition || 'persist:webcontent' //网页的分区
     }

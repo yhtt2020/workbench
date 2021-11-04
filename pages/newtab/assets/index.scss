@@ -60,7 +60,7 @@ html {
     .mb-wrap {
       width: 1200px;
       height: 100%;
-      padding-top: 40px;
+      padding-top: 60px;
       /* background-color: #999; */
       .wrap-nav1 {
         width: 398px;
@@ -139,7 +139,7 @@ html {
         }
         .nav-content {
           overflow: hidden;
-          padding: 10px 20px;
+          padding: 0px 20px 10px 20px;
           height: 200px;
           .bk-list {
             margin-top: 10px;
@@ -147,7 +147,7 @@ html {
               background-color: rgb(230, 223, 223);
             }
             p {
-              line-height: 18px;
+              line-height: 19px;
               width: 320px;
               text-overflow: -o-ellipsis-lastline;
               overflow: hidden;
@@ -254,7 +254,7 @@ html {
           }
           .nav-content {
             overflow: hidden;
-            padding: 10px 20px;
+            padding: 0px 20px 10px 20px;
             height: 200px;
             .wb-history {
               margin-top: 10px;
@@ -262,7 +262,7 @@ html {
                 background-color: rgb(230, 223, 223);
               }
               p {
-                line-height: 18px;
+                line-height: 19px;
                 width: 320px;
                 text-overflow: -o-ellipsis-lastline;
                 overflow: hidden;
@@ -336,4 +336,54 @@ html {
 .slide-fade-leave-to {
   transform: translateX(-10px);
   opacity: 0;
+}
+
+/* dialog中的样式 */
+.app {
+  width: 140px;
+  text-align: center;
+}
+
+.app-goods {
+  width: 140px;
+  cursor: pointer;
+  position: relative;
+  border: 1px solid white;
+  margin: 2px;
+}
+
+.adialog {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  height: 500px;
+
+  .ant-page-header-heading {
+    overflow: visible !important;
+  }
+  .ant-card-meta-description {
+    font-size: 12px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    height: 34px;
+    overflow: hidden;
+  }
+  .ant-card {
+    background-color: #00000000;
+    border: none;
+  }
+  .ant-card-head {
+    border-bottom: none;
+  }
+
+  .ant-card-grid {
+    box-shadow: none;
+  }
+  .ant-card-grid-hoverable:hover {
+    box-shadow: none;
+    background-color: #0000002f;
+    border-radius: 10px;
+  }
+
 }

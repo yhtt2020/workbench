@@ -1,580 +1,593 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <link rel="stylesheet" href="../../ext/flex-class.css" />
-    <script src="../../ext/vue/vue.js"></script>
-    <script src="../../ext/vue/antd.min.js"></script>
-    <link rel="stylesheet" href="../../ext/vue/antd.min.css" />
-    <link rel="stylesheet" href="../../ext/reset.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./assets/index.css" />
-    <title>新标签页</title>
-  </head>
-  <body>
-    <script>
-      Vue.use(antd);
-      var electron = require('electron');
-      var ipc = electron.ipcRenderer;
-    </script>
-    <div id="app">
-      <template>
-        <div class="main">
-          <div class="main-top flex flex-direction justify-around align-center">
-           <app-dialog></app-dialog>
-            <img src="./assets/logo-noframe.svg" alt="" style="width: 84px" class="xt-logo" />
-            <div class="top-search flex justify-between align-center">
-              <a-popover placement="bottomLeft" style="margin-left: 20px" v-model="visible">
-                <template slot="content">
-                  <div class="card-list flex flex-wrap">
-                    <div
-                      v-for="(item, index) in this.searchList"
-                      :key="index"
-                      class="card flex justify-start align-center"
-                      @click="chooseSearch(index)"
-                    >
-                      <img :src="item.slinkLogo" alt="" />
-                      <div style="margin-left: 15px">{{item.name}}</div>
-                    </div>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <link rel="stylesheet" href="../../ext/flex-class.css" />
+  <script src="../../ext/vue/vue.js"></script>
+  <script src="../../ext/vue/antd.min.js"></script>
+  <link rel="stylesheet" href="../../ext/vue/antd.min.css" />
+  <link rel="stylesheet" href="../../ext/reset.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./assets/index.css" />
+  <title>新标签页</title>
+</head>
+
+<body>
+  <script>
+    Vue.use(antd);
+    var electron = require('electron');
+    var ipc = electron.ipcRenderer;
+  </script>
+  <div id="app">
+    <template>
+      <div class="main">
+        <div class="main-top flex flex-direction justify-around align-center">
+          <img src="./assets/logo-noframe.svg" alt="" style="width: 84px" class="xt-logo" />
+          <div class="top-search flex justify-between align-center">
+            <a-popover placement="bottomLeft" style="margin-left: 20px" v-model="visible">
+              <template slot="content">
+                <div class="card-list flex flex-wrap">
+                  <div v-for="(item, index) in this.searchList" :key="index"
+                    class="card flex justify-start align-center" @click="chooseSearch(index)">
+                    <img :src="item.slinkLogo" alt="" />
+                    <div style="margin-left: 15px">{{item.name}}</div>
                   </div>
-                </template>
-                <template slot="title">
-                  <div class="card-head flex justify-between">
-                    <div class="left flex align-center justify-center">选择您的默认搜索引擎:</div>
-                    <div class="right flex align-center justify-center">
-                      <p>搜索热词:</p>
-                      <a-switch size="small" default-checked / style="margin-left: 5px;">
-                    </div>
+                </div>
+              </template>
+              <template slot="title">
+                <div class="card-head flex justify-between">
+                  <div class="left flex align-center justify-center">选择您的默认搜索引擎:</div>
+                  <div class="right flex align-center justify-center">
+                    <p>搜索热词:</p>
+                    <a-switch size="small" default-checked / style="margin-left: 5px;">
                   </div>
-                </template>
-                <img :src="this.slinkLogo" alt="" style="width: 30px; cursor: pointer" />
-              </a-popover>
-              <input type="text" class="search" :value="searchWord" @input="searchWord = $event.target.value" style="font-size: 20px"/>
-              <a-icon type="search" class="search-logo" :style="{ fontSize: '30px' }" />
-            </div>
+                </div>
+              </template>
+              <img :src="this.slinkLogo" alt="" style="width: 30px; cursor: pointer" />
+            </a-popover>
+            <input type="text" class="search" :value="searchWord" @input="searchWord = $event.target.value"
+              style="font-size: 20px" />
+            <a-icon type="search" class="search-logo" :style="{ fontSize: '30px' }" />
           </div>
+        </div>
 
-          <div class="main-bottom flex justify-center">
-            <div class="mb-wrap flex flex-wrap justify-center">
-              <div
-                class="wrap-nav1"
-                :class="{'moreNow': this.navallShow1}"
-                @mouseenter="mouseIn1"
-                @mouseleave="mouseOut1"
-              >
-                <a-dropdown class="adrop1" v-show="this.bookdian1Show">
-                  <a-icon type="more" :style="{ fontSize: '18px'}"></a-icon>
-                  <a-menu slot="overlay">
-                    <a-menu-item>
-                      <a href="javascript:;">移除分组框</a>
-                    </a-menu-item>
-                  </a-menu>
-                </a-dropdown>
-                <div class="nav-top flex justify-start align-center">
-                  <a-icon type="appstore" :style="{ fontSize: '18px'}" style="margin-left: 10px"></a-icon>
-                  <div style="margin-left: 10px">我的导航</div>
-                </div>
-                <div class="nav-content flex flex-wrap">
-                  <div
-                    class="n-card flex flex-direction justify-around align-center"
-                    v-for="(item, index) in this.infoCard"
-                    :key="index"
-                  >
-                    <img :src="item.linkLogo" alt="" style="width: 30px; padding-top: 10px" />
-                    <p>{{item.name}}</p>
-                  </div>
-                </div>
-                <transition name="slide-fade">
-                  <div
-                    class="nav-bottom flex justify-center align-center"
-                    v-show="navallShow1"
-                    onclick="ipc.send('openHome')"
-                  >
-                    + 查看全部
-                  </div>
-                </transition>
+        <div class="main-bottom flex justify-center">
+          <div class="mb-wrap flex flex-wrap justify-center">
+            <div class="wrap-nav1" :class="{'moreNow': this.navallShow1}" @mouseenter="mouseIn1"
+              @mouseleave="mouseOut1">
+              <a-dropdown class="adrop1" v-show="this.bookdian1Show">
+                <a-icon type="more" :style="{ fontSize: '18px'}"></a-icon>
+                <a-menu slot="overlay">
+                  <a-menu-item>
+                    <a href="javascript:;">移除分组框</a>
+                  </a-menu-item>
+                </a-menu>
+              </a-dropdown>
+              <div class="nav-top flex justify-start align-center">
+                <a-icon type="appstore" :style="{ fontSize: '18px'}" style="margin-left: 10px"></a-icon>
+                <div style="margin-left: 10px">我的导航</div>
               </div>
-
-              <div
-                class="wrap-nav2"
-                :class="{'moreNow': this.navallShow2}"
-                @mouseenter="mouseIn2"
-                @mouseleave="mouseOut2"
-              >
-                <div class="nav-top flex justify-start align-center">
-                  <a-icon type="star" :style="{ fontSize: '18px'}" style="margin-left: 10px"></a-icon>
-                  <div style="margin-left: 10px">书签收藏</div>
+              <div class="nav-content flex flex-wrap">
+                <div class="n-card flex flex-direction justify-around align-center"
+                  v-for="(item, index) in this.infoCard" :key="index">
+                  <img :src="item.linkLogo" alt="" style="width: 30px; padding-top: 10px" />
+                  <p>{{item.name}}</p>
                 </div>
-                <a-dropdown class="adrop2" v-show="this.bookdian2Show">
-                  <a-icon type="more" :style="{ fontSize: '18px'}"></a-icon>
-                  <a-menu slot="overlay">
-                    <a-menu-item>
-                      <a href="javascript:;">移除分组框</a>
-                    </a-menu-item>
-                  </a-menu>
-                </a-dropdown>
-                <div class="nav-content flex flex-direction">
-                  <div
-                    class="bk-list flex justify-between align-center"
-                    v-for="(item, index) in this.bookMark"
-                    :key="index"
-                  >
-                    <a-icon type="global" :style="{ fontSize: '18px'}"></a-icon>
-                    <a :href="item.link">
-                      <p>{{item.title}}</p>
-                      <p>{{item.link}}</p>
-                    </a>
-                  </div>
-                </div>
-                <transition name="slide-fade">
-                  <div class="nav-bottom flex justify-center align-center" v-show="navallShow2">+ 查看全部</div>
-                </transition>
               </div>
+              <transition name="slide-fade">
+                <div class="nav-bottom flex justify-center align-center" v-show="navallShow1"
+                  onclick="ipc.send('openHome')">
+                  + 查看全部
+                </div>
+              </transition>
+            </div>
 
-              <div
-                class="wrap-nav3"
-                :class="{'moreNow': this.navallShow3}"
-                @mouseenter="mouseIn3"
-                @mouseleave="mouseOut3"
-              >
-                <a-dropdown class="adrop3" v-show="this.bookdian3Show">
-                  <a-icon type="more" :style="{ fontSize: '18px'}"></a-icon>
-                  <a-menu slot="overlay">
-                    <a-menu-item>
-                      <a href="javascript:;">移除分组框</a>
-                    </a-menu-item>
-                  </a-menu>
-                </a-dropdown>
-                <a-tabs default-active-key="0" :tab-position="mode" @prevClick="callback" @nextClick="callback">
-                  <a-tab-pane v-for="(i, index) in this.recommmendNav" :key="index" :tab="i.name">
-                    <div class="pane flex flex-wrap">
-                      <div
-                        class="n-card flex flex-direction justify-around align-center"
-                        v-for="(item, index) in i.info"
-                        :key="index"
-                      >
-                        <img :src="item.linkLogo" alt="" />
-                        <p>{{item.name}}</p>
+            <div class="wrap-nav2" :class="{'moreNow': this.navallShow2}" @mouseenter="mouseIn2"
+              @mouseleave="mouseOut2">
+              <div class="nav-top flex justify-start align-center">
+                <a-icon type="star" :style="{ fontSize: '18px'}" style="margin-left: 10px"></a-icon>
+                <div style="margin-left: 10px">书签收藏</div>
+              </div>
+              <a-dropdown class="adrop2" v-show="this.bookdian2Show">
+                <a-icon type="more" :style="{ fontSize: '18px'}"></a-icon>
+                <a-menu slot="overlay">
+                  <a-menu-item>
+                    <a href="javascript:;">移除分组框</a>
+                  </a-menu-item>
+                </a-menu>
+              </a-dropdown>
+              <div class="nav-content flex flex-direction">
+                <div class="bk-list flex justify-between align-center" v-for="(item, index) in this.bookMark"
+                  :key="index">
+                  <a-icon type="global" :style="{ fontSize: '18px'}"></a-icon>
+                  <a :href="item.link">
+                    <p>{{item.title}}</p>
+                    <p>{{item.link}}</p>
+                  </a>
+                </div>
+              </div>
+              <transition name="slide-fade">
+                <div class="nav-bottom flex justify-center align-center" v-show="navallShow2">+ 查看全部</div>
+              </transition>
+            </div>
+
+            <div class="wrap-nav3" :class="{'moreNow': this.navallShow3}" @mouseenter="mouseIn3"
+              @mouseleave="mouseOut3">
+              <a-dropdown class="adrop3" v-show="this.bookdian3Show">
+                <a-icon type="more" :style="{ fontSize: '18px'}"></a-icon>
+                <a-menu slot="overlay">
+                  <a-menu-item>
+                    <a href="javascript:;">移除分组框</a>
+                  </a-menu-item>
+                </a-menu>
+              </a-dropdown>
+              <a-tabs default-active-key="0" :tab-position="mode" @prevClick="callback" @nextClick="callback">
+                <a-tab-pane v-for="(i, index) in this.recommmendNav" :key="index" :tab="i.name">
+                  <div class="pane flex flex-wrap">
+                    <div class="n-card flex flex-direction justify-around align-center" v-for="(item, index) in i.info"
+                      :key="index">
+                      <img :src="item.linkLogo" alt="" />
+                      <p>{{item.name}}</p>
+                    </div>
+                  </div>
+                </a-tab-pane>
+              </a-tabs>
+              <transition name="slide-fade">
+                <div class="nav-bottom flex justify-center align-center" v-show="navallShow3" @click="() => adVisible = true">+ 查看全部</div>
+              </transition>
+            </div>
+
+            <div class="wrap-nav4" :class="{'moreNow': this.navallShow4}" @mouseenter="mouseIn4"
+              @mouseleave="mouseOut4">
+              <a-tabs default-active-key="0">
+                <a-tab-pane v-for="(i, index) in this.historyBar" :key="index" :tab="i.time_title">
+                  <div class="pane flex flex-direction">
+                    <a-dropdown class="adrop4" v-show="bookdian4Show">
+                      <a-icon type="more" :style="{ fontSize: '18px'}"></a-icon>
+                      <a-menu slot="overlay">
+                        <a-menu-item>
+                          <a href="javascript:;">移除分组框</a>
+                        </a-menu-item>
+                      </a-menu>
+                    </a-dropdown>
+                    <div class="nav-content flex flex-direction">
+                      <div class="wb-history flex justify-between align-center" v-for="(item, index) in i.info"
+                        :key="index">
+                        <a-icon type="global" :style="{ fontSize: '18px'}"></a-icon>
+                        <a :href="item.link">
+                          <p>{{item.title}}</p>
+                          <p>{{item.link}}</p>
+                        </a>
                       </div>
                     </div>
-                  </a-tab-pane>
-                </a-tabs>
-                <transition name="slide-fade">
-                  <div class="nav-bottom flex justify-center align-center" v-show="navallShow3">+ 查看全部</div>
-                </transition>
-              </div>
-
-              <div
-                class="wrap-nav4"
-                :class="{'moreNow': this.navallShow4}"
-                @mouseenter="mouseIn4"
-                @mouseleave="mouseOut4"
-              >
-                <a-tabs default-active-key="0">
-                  <a-tab-pane v-for="(i, index) in this.historyBar" :key="index" :tab="i.time_title">
-                    <div class="pane flex flex-direction">
-                      <a-dropdown class="adrop4" v-show="bookdian4Show">
-                        <a-icon type="more" :style="{ fontSize: '18px'}"></a-icon>
-                        <a-menu slot="overlay">
-                          <a-menu-item>
-                            <a href="javascript:;">移除分组框</a>
-                          </a-menu-item>
-                        </a-menu>
-                      </a-dropdown>
-                      <div class="nav-content flex flex-direction">
-                        <div
-                          class="wb-history flex justify-between align-center"
-                          v-for="(item, index) in i.info"
-                          :key="index"
-                        >
-                          <a-icon type="global" :style="{ fontSize: '18px'}"></a-icon>
-                          <a :href="item.link">
-                            <p>{{item.title}}</p>
-                            <p>{{item.link}}</p>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </a-tab-pane>
-                </a-tabs>
-                <transition name="slide-fade">
-                  <div class="nav-bottom flex justify-center align-center" v-show="navallShow4">+ 查看全部</div>
-                </transition>
-              </div>
+                  </div>
+                </a-tab-pane>
+              </a-tabs>
+              <transition name="slide-fade">
+                <div class="nav-bottom flex justify-center align-center" v-show="navallShow4">+ 查看全部</div>
+              </transition>
             </div>
           </div>
         </div>
-      </template>
+        <app-dialog></app-dialog>
+      </div>
+    </template>
 
+    <template id="appstore">
+      <div>
+        <a-modal v-model="adVisible" title="应用中心" @ok="handleOk" :width="700">
+          <div class="adialog">
+            <a-tabs default-active-key="productive" tab-position="left" :style="{ height: '100%' }">
+              <a-tab-pane v-for="(type, indexType) in allApps" :key="type.name" :tab="type.title">
+                <!-- <div class="mxm">{{type.title}}</div> -->
 
+                <a-card :title="type.title" style="padding: 10px;">
+                  <a-card-grid
+                    :class="{'app':true,'app-goods':true}"
+                    v-for="(app, indexApp) in type.apps">
+                    <a :href="app.url">
+                      <a-avatar shape="square" :size="64" :src="app.icon" style="margin-bottom: 10px;"></a-avatar>
+                      <a-card-meta :title="app.name">
+                        <template slot="description">
+                          {{ app.summary }}
+                        </template>
+                      </a-card-meta>
+                    </a>
+                  </a-card-grid>
+              </a-tab-pane>
+              </a-card>
+            </a-tabs>
+          </div>
+        </a-modal>
+      </div>
+    </template>
+  </div>
 
-      <template id="appstore">
-        <div>haha</div>
-      </template>
-    </div>
-
-    <script src="./components/appStore/index.js"></script>
-    <script>
-      Vue.use(antd);
-      var appVue = new Vue({
-        el: '#app',
-        data() {
-          return {
-            mode: 'top',
-            slinkLogo: './assets/baidu.svg',
-            searchWord: '',
-            visible: false,
-            bookdian1Show: false,
-            bookdian2Show: false,
-            bookdian3Show: false,
-            bookdian4Show: false,
-            navallShow1: false,
-            navallShow2: false,
-            navallShow3: false,
-            navallShow4: false,
-            searchList: [
-              {
-                name: '百度',
-                slinkLogo: './assets/baidu.svg',
-                frontLink: 'https://www.baidu.com/s?wd=',
-              },
-              {
-                name: '谷歌',
-                slinkLogo: './assets/google.svg',
-                frontLink: 'https://www.google.com/search?q=',
-              },
-              {
-                name: '必应',
-                slinkLogo: './assets/bing.svg',
-                frontLink: 'https://cn.bing.com/search?q=',
-              },
-            ],
-            infoCard: [
-              {
-                linkLogo: './assets/search.svg',
-                name: '微信桌面版',
-              },
-              {
-                linkLogo: './assets/search.svg',
-                name: '微信桌面版',
-              },
-              {
-                linkLogo: './assets/search.svg',
-                name: '微信桌面版',
-              },
-              {
-                linkLogo: './assets/search.svg',
-                name: '微信桌面版',
-              },
-              {
-                linkLogo: './assets/search.svg',
-                name: '微信桌面版',
-              },
-              {
-                linkLogo: './assets/search.svg',
-                name: '微信桌面版',
-              },
-            ],
-            recommmendNav: [
-              {
-                name: '办公导航',
-                info: [
-                  {
-                    linkLogo: './assets/search.svg',
-                    name: '微信桌面版',
-                  },
-                  {
-                    linkLogo: './assets/search.svg',
-                    name: '微信桌面版',
-                  },
-                  {
-                    linkLogo: './assets/search.svg',
-                    name: '微信桌面版',
-                  },
-                  {
-                    linkLogo: './assets/search.svg',
-                    name: '微信桌面版',
-                  },
-                  {
-                    linkLogo: './assets/search.svg',
-                    name: '微信桌面版',
-                  },
-                  {
-                    linkLogo: './assets/search.svg',
-                    name: '微信桌面版',
-                  },
-                ],
-              },
-              {
-                name: '程序员导航',
-                info: [
-                  {
-                    linkLogo: './assets/search.svg',
-                    name: '微信桌面版',
-                  },
-                  {
-                    linkLogo: './assets/search.svg',
-                    name: '微信桌面版',
-                  },
-                  {
-                    linkLogo: './assets/search.svg',
-                    name: '微信桌面版',
-                  },
-                  {
-                    linkLogo: './assets/search.svg',
-                    name: '微信桌面版',
-                  },
-                  {
-                    linkLogo: './assets/search.svg',
-                    name: '微信桌面版',
-                  },
-                  {
-                    linkLogo: './assets/search.svg',
-                    name: '微信桌面版',
-                  },
-                ],
-              },
-              {
-                name: '程序员导航',
-                info: [
-                  {
-                    linkLogo: './assets/search.svg',
-                    name: '微信桌面版',
-                  },
-                  {
-                    linkLogo: './assets/search.svg',
-                    name: '微信桌面版',
-                  },
-                  {
-                    linkLogo: './assets/search.svg',
-                    name: '微信桌面版',
-                  },
-                  {
-                    linkLogo: './assets/search.svg',
-                    name: '微信桌面版',
-                  },
-                  {
-                    linkLogo: './assets/search.svg',
-                    name: '微信桌面版',
-                  },
-                  {
-                    linkLogo: './assets/search.svg',
-                    name: '微信桌面版',
-                  },
-                ],
-              },
-              {
-                name: '程序员导航',
-                info: [
-                  {
-                    linkLogo: './assets/search.svg',
-                    name: '微信桌面版',
-                  },
-                  {
-                    linkLogo: './assets/search.svg',
-                    name: '微信桌面版',
-                  },
-                ],
-              },
-              {
-                name: '程序员导航',
-                info: [
-                  {
-                    linkLogo: './assets/search.svg',
-                    name: '微信桌面版',
-                  },
-                  {
-                    linkLogo: './assets/search.svg',
-                    name: '微信桌面版',
-                  },
-                ],
-              },
-            ],
-            bookMark: [
-              {
-                title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-              },
-              {
-                title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-              },
-              {
-                title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-              },
-              {
-                title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-              },
-              {
-                title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-              },
-              {
-                title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-              },
-            ],
-            historyBar: [
-              {
-                time_title: '访问历史',
-                info: [
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                ],
-              },
-              {
-                time_title: '昨天',
-                info: [
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                ],
-              },
-              {
-                time_title: '前天',
-                info: [
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                ],
-              },
-              {
-                time_title: '在此之前',
-                info: [
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                ],
-              },
-            ],
-          };
-        },
-        watch: {
-          searchWord: {
-            handler(newValue) {
-              console.log(newValue);
+  <script src="./components/appStore/index.js"></script>
+  <script>
+    Vue.use(antd);
+    var appVue = new Vue({
+      el: '#app',
+      data() {
+        return {
+          adVisible: false,
+          mode: 'top',
+          slinkLogo: './assets/baidu.svg',
+          searchWord: '',
+          visible: false,
+          bookdian1Show: false,
+          bookdian2Show: false,
+          bookdian3Show: false,
+          bookdian4Show: false,
+          navallShow1: false,
+          navallShow2: false,
+          navallShow3: false,
+          navallShow4: false,
+          searchList: [
+            {
+              name: '百度',
+              slinkLogo: './assets/baidu.svg',
+              frontLink: 'https://www.baidu.com/s?wd=',
             },
-            deep: true,
-            immediate: true,
+            {
+              name: '谷歌',
+              slinkLogo: './assets/google.svg',
+              frontLink: 'https://www.google.com/search?q=',
+            },
+            {
+              name: '必应',
+              slinkLogo: './assets/bing.svg',
+              frontLink: 'https://cn.bing.com/search?q=',
+            },
+          ],
+          infoCard: [
+            {
+              linkLogo: './assets/search.svg',
+              name: '微信桌面版',
+            },
+            {
+              linkLogo: './assets/search.svg',
+              name: '微信桌面版',
+            },
+            {
+              linkLogo: './assets/search.svg',
+              name: '微信桌面版',
+            },
+            {
+              linkLogo: './assets/search.svg',
+              name: '微信桌面版',
+            },
+            {
+              linkLogo: './assets/search.svg',
+              name: '微信桌面版',
+            },
+            {
+              linkLogo: './assets/search.svg',
+              name: '微信桌面版',
+            },
+          ],
+          recommmendNav: [
+            {
+              name: '办公导航',
+              info: [
+                {
+                  linkLogo: './assets/search.svg',
+                  name: '微信桌面版',
+                },
+                {
+                  linkLogo: './assets/search.svg',
+                  name: '微信桌面版',
+                },
+                {
+                  linkLogo: './assets/search.svg',
+                  name: '微信桌面版',
+                },
+                {
+                  linkLogo: './assets/search.svg',
+                  name: '微信桌面版',
+                },
+                {
+                  linkLogo: './assets/search.svg',
+                  name: '微信桌面版',
+                },
+                {
+                  linkLogo: './assets/search.svg',
+                  name: '微信桌面版',
+                },
+              ],
+            },
+            {
+              name: '程序员导航',
+              info: [
+                {
+                  linkLogo: './assets/search.svg',
+                  name: '微信桌面版',
+                },
+                {
+                  linkLogo: './assets/search.svg',
+                  name: '微信桌面版',
+                },
+                {
+                  linkLogo: './assets/search.svg',
+                  name: '微信桌面版',
+                },
+                {
+                  linkLogo: './assets/search.svg',
+                  name: '微信桌面版',
+                },
+                {
+                  linkLogo: './assets/search.svg',
+                  name: '微信桌面版',
+                },
+                {
+                  linkLogo: './assets/search.svg',
+                  name: '微信桌面版',
+                },
+              ],
+            },
+            {
+              name: '程序员导航',
+              info: [
+                {
+                  linkLogo: './assets/search.svg',
+                  name: '微信桌面版',
+                },
+                {
+                  linkLogo: './assets/search.svg',
+                  name: '微信桌面版',
+                },
+                {
+                  linkLogo: './assets/search.svg',
+                  name: '微信桌面版',
+                },
+                {
+                  linkLogo: './assets/search.svg',
+                  name: '微信桌面版',
+                },
+                {
+                  linkLogo: './assets/search.svg',
+                  name: '微信桌面版',
+                },
+                {
+                  linkLogo: './assets/search.svg',
+                  name: '微信桌面版',
+                },
+              ],
+            },
+            {
+              name: '程序员导航',
+              info: [
+                {
+                  linkLogo: './assets/search.svg',
+                  name: '微信桌面版',
+                },
+                {
+                  linkLogo: './assets/search.svg',
+                  name: '微信桌面版',
+                },
+              ],
+            },
+            {
+              name: '程序员导航',
+              info: [
+                {
+                  linkLogo: './assets/search.svg',
+                  name: '微信桌面版',
+                },
+                {
+                  linkLogo: './assets/search.svg',
+                  name: '微信桌面版',
+                },
+              ],
+            },
+          ],
+          bookMark: [
+            {
+              title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
+              link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
+            },
+            {
+              title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
+              link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
+            },
+            {
+              title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
+              link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
+            },
+            {
+              title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
+              link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
+            },
+            {
+              title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
+              link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
+            },
+            {
+              title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
+              link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
+            },
+          ],
+          historyBar: [
+            {
+              time_title: '访问历史',
+              info: [
+                {
+                  title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
+                  link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
+                },
+                {
+                  title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
+                  link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
+                },
+                {
+                  title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
+                  link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
+                },
+                {
+                  title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
+                  link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
+                },
+                {
+                  title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
+                  link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
+                },
+              ],
+            },
+            {
+              time_title: '昨天',
+              info: [
+                {
+                  title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
+                  link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
+                },
+                {
+                  title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
+                  link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
+                },
+                {
+                  title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
+                  link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
+                },
+                {
+                  title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
+                  link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
+                },
+                {
+                  title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
+                  link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
+                },
+              ],
+            },
+            {
+              time_title: '前天',
+              info: [
+                {
+                  title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
+                  link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
+                },
+                {
+                  title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
+                  link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
+                },
+                {
+                  title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
+                  link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
+                },
+                {
+                  title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
+                  link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
+                },
+                {
+                  title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
+                  link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
+                },
+              ],
+            },
+            {
+              time_title: '在此之前',
+              info: [
+                {
+                  title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
+                  link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
+                },
+                {
+                  title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
+                  link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
+                },
+                {
+                  title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
+                  link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
+                },
+                {
+                  title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
+                  link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
+                },
+                {
+                  title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
+                  link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
+                },
+              ],
+            },
+          ],
+        };
+      },
+      watch: {
+        searchWord: {
+          handler(newValue) {
+            console.log(newValue);
           },
+          deep: true,
+          immediate: true,
         },
-        methods: {
-          mouseIn1() {
-            this.navallShow1 = true;
-            this.bookdian1Show = true;
+        allApps: {
+          handler(nV) {
+            console.log(nV)
           },
-          mouseOut1() {
-            this.navallShow1 = false;
-            this.bookdian1Show = false;
-          },
-          mouseIn2() {
-            this.navallShow2 = true;
-            this.bookdian2Show = true;
-          },
-          mouseOut2() {
-            this.navallShow2 = false;
-            this.bookdian2Show = false;
-          },
-          mouseIn3() {
-            this.navallShow3 = true;
-            this.bookdian3Show = true;
-          },
-          mouseOut3() {
-            this.navallShow3 = false;
-            this.bookdian3Show = false;
-          },
-          mouseIn4() {
-            this.navallShow4 = true;
-            this.bookdian4Show = true;
-          },
-          mouseOut4() {
-            this.navallShow4 = false;
-            this.bookdian4Show = false;
-          },
-          chooseSearch(index) {
-            console.log(index);
-            this.visible = false;
-            this.slinkLogo = this.searchList[index].slinkLogo;
-          },
-          callback(val) {
-            console.log(val);
-          },
+          deep: true,
+          immediate: true
+        }
+      },
+      methods: {
+        handleOk() {
+          console.log('点击了提交')
+          this.adVisible = false
         },
-        computed: {
+        mouseIn1() {
+          this.navallShow1 = true;
+          this.bookdian1Show = true;
         },
-      });
-    </script>
-  </body>
+        mouseOut1() {
+          this.navallShow1 = false;
+          this.bookdian1Show = false;
+        },
+        mouseIn2() {
+          this.navallShow2 = true;
+          this.bookdian2Show = true;
+        },
+        mouseOut2() {
+          this.navallShow2 = false;
+          this.bookdian2Show = false;
+        },
+        mouseIn3() {
+          this.navallShow3 = true;
+          this.bookdian3Show = true;
+        },
+        mouseOut3() {
+          this.navallShow3 = false;
+          this.bookdian3Show = false;
+        },
+        mouseIn4() {
+          this.navallShow4 = true;
+          this.bookdian4Show = true;
+        },
+        mouseOut4() {
+          this.navallShow4 = false;
+          this.bookdian4Show = false;
+        },
+        chooseSearch(index) {
+          console.log(index);
+          this.visible = false;
+          this.slinkLogo = this.searchList[index].slinkLogo;
+        },
+        callback(val) {
+          console.log(val);
+        },
+
+      },
+      computed: {
+        allApps: {
+          get: function () {
+            if (typeof window.$appsApiData == 'undefined' || window.$appsApiData == null) {
+              return window.nativeData.allApps
+            }
+            return window.$appsApiData.allApps
+          }
+        },
+      },
+    });
+  </script>
+</body>
+
 </html>
