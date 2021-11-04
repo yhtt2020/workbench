@@ -223,7 +223,10 @@ const webviews = {
 		// enableWebSQL: false,
 		 console.log(webPreferences)
 	}
-	webPreferences.partition = partition || 'persist:webcontent' //网页的分区
+    if(sourceUrl!='ts://apps'){
+      webPreferences.partition = partition || 'persist:webcontent' //网页的分区
+    }
+
 	/*特殊处理部分结束*/
 	
     ipc.send('createView', {

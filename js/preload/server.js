@@ -1,6 +1,6 @@
 //这个预载入文件用于与服务器进行交互，仅适用于项目路径
 const config = {
-	serverBaseUrl: "http://pc2.mark.opensns.cn",
+	serverBaseUrl: "http://pc2ys.mark.opensns.cn",
 }
 const api = {
 	'login': "/login",
