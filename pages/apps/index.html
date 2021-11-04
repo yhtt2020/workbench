@@ -449,7 +449,7 @@
 				return {
 					btnText: '添加收藏',
 					shopcartApps: [], //购物车内的app
-
+					myApps:[],
 
 					currentApp: {}, //点击时的app
 					drawerApp: {},
@@ -459,7 +459,6 @@
 					visibleCart: false,
 					quickDrawerVisible: false,
 
-					_myApps: [],
 					//定义全部的apps，后期可以改成接口获取
 					//_allApps: [], //默认从服务器获取应用列表，如果获取失败，则使用内置的Api
 
@@ -501,23 +500,29 @@
 					},
 				}
 			},
-			beforeCreate() {
+			beforeCreate(){
 				this.form = this.$form.createForm(this, {
 					name: 'register'
 				});
+			},
+			mounted() {
 
-				if ((window.appsData == false && window.loaded)) {
-					//未读取到appsData
-					this._myApps = []
-					window.appsData = {
-						state: {
-							myApps: []
-						}
-					}
-					return
-				} else {
-					this._myApps = window.appsData.state.myApps
-				}
+
+				// if ((window.appsData == false && window.loaded)) {
+				// 	//未读取到appsData
+				// 	this.myApps = []
+				// 	window.appsData = {
+				// 		state: {
+				// 			myApps: []
+				// 		}
+				// 	}
+				// 	return
+				// } else {
+				// 	this.myApps = window.appsData.state.myApps
+				// }
+				this.myApps=[]
+				this.load()
+
 			},
 			watch: {
 				openKeys(val) {
@@ -525,23 +530,6 @@
 				}
 			},
 			computed: {
-				myApps: {
-					// getter
-					get: function() {
-						return this._myApps
-					},
-					// setter
-					set: function(newValue) {
-						this._myApps = null
-						this._myApps = newValue
-						window.appsData = {
-							state: {
-								myApps: newValue
-							}
-						}
-						window.$appsRestore.save()
-					}
-				},
 				allApps: {
 					get: function() {
 						if (typeof window.$appsApiData == 'undefined' || window.$appsApiData == null) {
@@ -617,6 +605,7 @@
 					this.shopcartApps.forEach(function(app) {
 						if (that.isInMyApps(app) == -1) {
 							that.myApps.push(app)
+							window.$appsRestore.addApp(app)
 							addCount++
 						} else {
 							hasCount++
@@ -638,12 +627,14 @@
 					if (index != -1) {
 						this.myApps.splice(index, 1)
 						that.$message.warning('移除了应用：' + app.name + '')
+						window.$appsRestore.deleteApp(app.name)
 						this.btnText = '添加收藏'
 					} else {
 						let apps = this.myApps;
 						apps.push(app)
 						this.myApps = apps
 						this.btnText = '移出收藏'
+						window.$appsRestore.addApp(app)
 						this.$message.success('添加了应用：' + app.name)
 					}
 				},
@@ -679,7 +670,6 @@
 				show(app) {
 					this.currentApp = app
 					this.btnText = this.isInMyApps(app) == -1 ? '添加收藏' : '移出收藏'
-					console.log(this.currentApp)
 				},
 				hide(obj) {
 					this.currentApp = null
@@ -700,7 +690,7 @@
 					if (this.currentApp == null) {
 						return -1
 					}
-					apps = this.myApps
+					let apps = this.myApps
 					let app = this.currentApp
 					let findIndex = -1
 					apps.forEach(function(item, index) {
@@ -711,7 +701,9 @@
 
 				},
 				checkInMyApps(app) {
-					apps = this.myApps
+					if(typeof  this.myApps =='undefined')
+						return -1
+					let apps = this.myApps
 					let findIndex = -1
 					apps.forEach(function(item, index) {
 						if (item.name == app.name)
@@ -731,6 +723,26 @@
 						tabs: this.shopcartApps
 					})
 					this.$message.success('成功在左侧栏添加了一组应用，本次共添加' + this.shopcartApps.length + '个应用。')
+				},
+				// 全部保存，目前不使用，会导致全部丢失
+				save(){
+					window.$appsRestore.saveToDB(this.myApps)
+				},
+				 load: function(){
+					try{
+						let promise=  window.$appsRestore.restoreFromDB()
+						promise.then((data)=>{
+							this.myApps=data
+							console.log(this.myApps)
+							return data
+						})
+
+
+					}catch(e){
+						console.log(e)
+						this.myApps=[]
+					}
+
 				}
 
 

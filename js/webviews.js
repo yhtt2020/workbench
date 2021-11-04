@@ -240,11 +240,14 @@ const webviews = {
 		// sandbox: true,
 		// enableRemoteModule: false,
 		// allowPopups: false,
-    // // partition: partition || 'persist:webcontent',
-    // enableWebSQL: false,
-    console.log(webPreferences)
+		// // partition: partition || 'persist:webcontent',
+		// enableWebSQL: false,
+		 console.log(webPreferences)
+	}
+    if(sourceUrl!='ts://apps'){
+      webPreferences.partition = partition || 'persist:webcontent' //网页的分区
+    }
 
-	webPreferences.partition = partition || 'persist:webcontent' //网页的分区
 	/*特殊处理部分结束*/
 
     ipc.send('createView', {
