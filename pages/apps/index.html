@@ -594,6 +594,7 @@
 					const value = e.target.value;
 					this.confirmDirty = this.confirmDirty || !!value;
 				},
+        //收藏app
 				addApp(app) {
 					this.currentApp = app
 					this.addCurrentApp()
@@ -620,6 +621,7 @@
 					this.visibleCart=false
 					that.$message.success(text)
 				},
+        //收藏移除app dexie操作
 				addCurrentApp() {
 					let that = this
 					let app = this.currentApp
@@ -667,6 +669,7 @@
 				onCloseCart() {
 					this.visibleCart = false
 				},
+        //移入app时的菜单显示
 				show(app) {
 					this.currentApp = app
 					this.btnText = this.isInMyApps(app) == -1 ? '添加收藏' : '移出收藏'
@@ -700,6 +703,7 @@
 					return findIndex
 
 				},
+        //检查是否在dexie的myapp中
 				checkInMyApps(app) {
 					if(typeof  this.myApps =='undefined')
 						return -1

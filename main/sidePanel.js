@@ -518,6 +518,10 @@ ipc.on('openMobile', function() {
 	sendIPCToWindow(mainWindow, 'openMobile')
 })
 
+ipc.on('openHistory', function() {
+  sendIPCToWindow(mainWindow, 'showHistory')
+})
+
 ipc.on('hideSidePanel', function() {
 	closeSidePanel()
 })

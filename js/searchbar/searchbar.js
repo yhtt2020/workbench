@@ -43,7 +43,7 @@ var searchbar = {
     return text.replace(text.substring(searchbar.associatedInput.selectionStart, searchbar.associatedInput.selectionEnd), '')
   },
   showResults: function (text, event) {
-	ipc.send('hideSidePanel')
+	//ipc.send('hideSidePanel')
     // find the real input value, accounting for highlighted suggestions and the key that was just pressed
     // delete key doesn't behave like the others, String.fromCharCode returns an unprintable character (which has a length of one)
 
