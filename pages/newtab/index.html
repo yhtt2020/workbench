@@ -22,6 +22,7 @@
       <template>
         <div class="main">
           <div class="main-top flex flex-direction justify-around align-center">
+           <app-dialog></app-dialog>
             <img src="./assets/logo-noframe.svg" alt="" style="width: 84px" class="xt-logo" />
             <div class="top-search flex justify-between align-center">
               <a-popover placement="bottomLeft" style="margin-left: 20px" v-model="visible">
@@ -205,8 +206,15 @@
           </div>
         </div>
       </template>
+
+
+
+      <template id="appstore">
+        <div>haha</div>
+      </template>
     </div>
 
+    <script src="./components/appStore/index.js"></script>
     <script>
       Vue.use(antd);
       var appVue = new Vue({
