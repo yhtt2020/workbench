@@ -1,5 +1,5 @@
 const config={
-	serverBaseUrl:"http://pc2.mark.opensns.cn",
+	serverBaseUrl:"http://pc2ys.mark.opensns.cn",
 }
 const api={
 	'login':"/login",

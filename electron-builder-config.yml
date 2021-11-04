@@ -13,6 +13,7 @@ files:
     - ./main.build.js
     - ext/**/*
     - index.html
+    - server-config.js
 
 win:
     icon: ./icon.ico
