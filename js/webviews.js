@@ -244,7 +244,7 @@ const webviews = {
 		// enableWebSQL: false,
 
 
-    if(sourceUrl!='ts://apps'){
+    if(sourceUrl!='ts://apps' || sourceUrl !='ts://newtab'){
       webPreferences.partition = partition || 'persist:webcontent' //网页的分区
     }
 

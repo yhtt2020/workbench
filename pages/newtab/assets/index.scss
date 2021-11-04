@@ -39,7 +39,7 @@ html {
     .top-search {
       width: 706px;
       height: 54px;
-      border-radius: 20px;
+      border-radius: 100px;
       background-color: white;
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
       position: relative;
@@ -59,7 +59,7 @@ html {
     height: 80vh;
     .mb-wrap {
       width: 1200px;
-      height: 100%;
+      min-height: 600px;
       padding-top: 60px;
       /* background-color: #999; */
       .wrap-nav1 {
@@ -72,7 +72,7 @@ html {
         position: relative;
         cursor: pointer;
         .adrop1 {
-          width: 40px;
+          width: 20px;
           position: absolute;
           top: 12px;
           right: 10px;
@@ -80,7 +80,7 @@ html {
         .nav-bottom {
           width: 398px;
           height: 40px;
-          background-color: rgba(98, 60, 235, 0.05);
+          background-color: rgba(188, 186, 194, 0.05);
           box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
           border-radius: 0px 0px 8px 8px;
           &:hover {
@@ -92,14 +92,15 @@ html {
           border-bottom: 1px solid rgb(226, 221, 221);
         }
         .nav-content {
+          height: 200px;
           overflow: hidden;
           .n-card {
-            border-radius: 8px;
+            border-radius: 2px;
             width: 25%;
             height: 100px;
-            background-color: wheat;
             &:hover {
               color: #02a7f0;
+              background-color: #0000002f;
             }
           }
         }
@@ -122,7 +123,7 @@ html {
           border-bottom: 1px solid rgb(226, 221, 221);
         }
         .adrop2 {
-          width: 40px;
+          width: 20px;
           position: absolute;
           top: 12px;
           right: 10px;
@@ -130,7 +131,7 @@ html {
         .nav-bottom {
           width: 398px;
           height: 40px;
-          background-color: rgba(98, 60, 235, 0.05);
+          background-color: rgba(188, 186, 194, 0.05);
           box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
           border-radius: 0px 0px 8px 8px;
           &:hover {
@@ -143,9 +144,6 @@ html {
           height: 200px;
           .bk-list {
             margin-top: 10px;
-            a {
-              background-color: rgb(230, 223, 223);
-            }
             p {
               line-height: 19px;
               width: 320px;
@@ -173,7 +171,7 @@ html {
         position: relative;
         cursor: pointer;
         .adrop3 {
-          width: 40px;
+          width: 20px;
           position: absolute;
           top: 12px;
           right: 10px;
@@ -182,7 +180,7 @@ html {
         .nav-bottom {
           width: 398px;
           height: 40px;
-          background-color: rgba(98, 60, 235, 0.05);
+          background-color: rgba(188, 186, 194, 0.05);
           box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
           border-radius: 0px 0px 8px 8px;
           &:hover {
@@ -192,16 +190,26 @@ html {
         .pane {
           height: 200px;
           .n-card {
-            border-radius: 8px;
+            border-radius: 2px;
             width: 25%;
             height: 100px;
-            background-color: wheat;
             &:hover {
               color: #02a7f0;
+              background-color: #0000002f;
             }
             img {
               width: 30px;
               padding-top: 10px;
+            }
+            p {
+              width: 80px;
+              text-align: center;
+              text-overflow: -o-ellipsis-lastline;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              display: -webkit-box;
+              -webkit-line-clamp: 1;
+              -webkit-box-orient: vertical;
             }
           }
         }
@@ -214,13 +222,13 @@ html {
             margin: 0px;
           }
           .ant-tabs-ink-bar {
-            bottom: 9px;
+            bottom: 6px;
           }
         }
         &.moreNow {
           border-radius: 8px 8px 0px 0px;
           .ant-tabs-bar {
-            width: 85%;
+            width: 92%;
           }
         }
       }
@@ -237,7 +245,7 @@ html {
         .nav-bottom {
           width: 398px;
           height: 40px;
-          background-color: rgba(98, 60, 235, 0.05);
+          background-color: rgba(188, 186, 194, 0.05);
           box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
           border-radius: 0px 0px 8px 8px;
           &:hover {
@@ -247,7 +255,7 @@ html {
         .pane {
           height: 200px;
           .adrop4 {
-            width: 40px;
+            width: 20px;
             position: absolute;
             top: 12px;
             right: 10px;
@@ -258,9 +266,6 @@ html {
             height: 200px;
             .wb-history {
               margin-top: 10px;
-              a {
-                background-color: rgb(230, 223, 223);
-              }
               p {
                 line-height: 19px;
                 width: 320px;
@@ -283,7 +288,7 @@ html {
             margin: 0px;
           }
           .ant-tabs-ink-bar {
-            bottom: 9px;
+            bottom: 6px;
           }
         }
         &.moreNow {
