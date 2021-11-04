@@ -11,28 +11,24 @@
     <link rel="stylesheet" href="../../ext/vue/antd.min.css"/>
     <link rel="stylesheet" href="sidebar.css"/>
 </head>
-<body style="background-color: #00000000;overflow-x: hidden;overflow-y: hidden;">
+<body>
+
 <script>
   function mousenter (target) {
     target.setAttribute('class', 'sidebar expanded')
-    console.log('鼠标移入')
     document.getElementById('clickThroughElement').style.left = '146px'
   }
 
   function mouseleave (target) {
-
     target.setAttribute('class', 'sidebar')
-    console.log('鼠标移出')
     document.getElementById('clickThroughElement').style.left = '46px'
   }
 
   //对clickThrough区域进行穿透设置，这样鼠标移动到clickThroug的区域就会自动穿透
   function setMainWindow (e) {
     if (appVue.$refs.sidePanel.userPanelVisible === true) {
-      console.log('由于左侧栏是展开的，不可直接丢失焦点')
     } else {
       ipc.send('setMouseIgnore')
-      console.log('由于左侧栏未展开，丢失焦点')
     }
   }
 </script>
