@@ -46,7 +46,11 @@ function addTab (tabId = tabs.add(), options = {}) {
       focusWebview: options.enterEditMode === false
     })
     if (options.enterEditMode !== false) {
-      tabEditor.show(tabId)
+      if(tabs.get(tabId).url!=="ts://newtab"){
+        //添加新tab不弹窗
+        //todo 后续增加配置项，可以选择新标签的功能
+        tabEditor.show(tabId)
+      }
     }
   } else {
     tabBar.getTab(tabId).scrollIntoView()
@@ -201,8 +205,8 @@ ipc.on('set-file-view', function (e, data) {
     }
   })
 })
-	
-	
+
+
 //增加一些与其他窗体的互动ipc
 ipc.on('switchToTask',function(e,data){
 	switchToTask(data.id)
@@ -218,8 +222,8 @@ ipc.on('addTaskFromApps',function(e,data){
 	  title:data.name
     }
 	tasks.get(tid).tabs.add(newTab)
-	
-	
+
+
 })
 ipc.on('openApps',function(){
 	let url= 'ts://apps'//左斜杠三条是为了统一判断里tab的三条左斜杠，不知道为什么会这样
@@ -249,11 +253,11 @@ ipc.on('openApps',function(){
 		  title:'应用中心'
 		}
 		tabId=tasks.get(tid).tabs.add(newTab)
-		
+
 	}
 	switchToTask(tid)
 	switchToTab(tabId)
-	
+
 })
 /* 增加一些与其他窗口的互动ipcend*/
 
@@ -262,13 +266,13 @@ ipc.on('openApps',function(){
 	function resortTask(droppedTaskId,adjacentTaskId){
 		let droppedTask = tasks.splice(tasks.getIndex(droppedTaskId), 1)[0]
 		tasks.splice(adjacentTaskId, 0, droppedTask)
-		
+
 	}
-	
+
 	ipc.on('resortTasks',function(e,data){
-		
+
 		resortTask(data.droppedTaskId,data.adjacentTaskId)
-	
+
 	})
 	/**简易排序插入结束*/
 

@@ -101,7 +101,7 @@ var taskOverlay = {
     }
   }),
   show: function () {
-	
+
     /* disabled in focus mode */
     if (focusMode.enabled()) {
       focusMode.warn()
@@ -113,7 +113,7 @@ var taskOverlay = {
     document.body.classList.add('task-overlay-is-shown')
 
     tabEditor.hide()
-ipc.send('hideSidePanel')
+    ipc.send('hideSidePanel')
     document.getElementById('task-search-input').value = ''
 
     this.isShown = true
@@ -166,13 +166,13 @@ ipc.send('hideSidePanel')
       taskContainer.appendChild(el)
       taskOverlay.tabDragula.containers.push(el.getElementsByClassName('task-tabs-container')[0])
     })
-	
+
   },
 
   hide: function () {
 	ipc.send('showSidePanel')
     if (this.isShown) {
-	  
+
       this.isShown = false
       this.overlayElement.hidden = true
 
@@ -436,7 +436,7 @@ ipc.send('hideSidePanel')
       // reinsert the task
       tasks.splice(newIdx, 0, droppedTask)
     })
-	
+
 
 
     /* auto-scroll the container when the item is dragged to the edge of the screen */

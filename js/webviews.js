@@ -192,7 +192,6 @@ const webviews = {
 	if(sourceUrl=='ts://apps')
 	{
 		//仅仅对apps页面单独开启权限
-		console.log('即将打开Apps集成页面')
 		webPreferences={
 			preload: __dirname + '/pages/apps/preload.js',
 			nodeIntegration: true,
@@ -212,7 +211,6 @@ const webviews = {
 		}
   }else if(sourceUrl=='ts://newtab'){
     //仅仅对apps页面单独开启权限
-    console.log('即将打开newtab页面')
     webPreferences={
       preload: __dirname + '/pages/newtab/preload.js',
       nodeIntegration: true, //node集成开高了
@@ -244,7 +242,7 @@ const webviews = {
 		// enableWebSQL: false,
 
 
-    if(sourceUrl!='ts://apps'){
+    if(sourceUrl!='ts://apps' || sourceUrl=='ts://newtab'){
       webPreferences.partition = partition || 'persist:webcontent' //网页的分区
     }
 
@@ -264,7 +262,7 @@ const webviews = {
         ipc.send('loadURLInView', { id: tabData.id, url: urlParser.parse(tabData.url) })
       } else if (tabData.private) {
         // workaround for https://github.com/minbrowser/min/issues/872
-        ipc.send('loadURLInView', { id: tabData.id, url: urlParser.parse('min://newtab') })
+        ipc.send('loadURLInView', { id: tabData.id, url: urlParser.parse('ts://newtab') })
       }
     }
 
