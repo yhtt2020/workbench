@@ -135,13 +135,20 @@
                   </a-menu>
                 </a-dropdown>
                 <div class="nav-content flex flex-direction">
+                  <template>
+                    <div v-if="loadingBookmark" style="text-align: center;margin-top: 70px">
+                      <a-spin  tip="Loading...">
+
+                      </a-spin>
+                    </div>
+                  </template>
                   <a-empty
                     image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original"
                     class="flex flex-direction align-center justify-center"
                     style="width: 100%; height: 100%"
-                    v-show="bookMark.length == 0"
+                    v-show="bookmarkEmpty"
                   >
-                    <span slot="description">暂无书签导航</span>
+                    <span slot="description">暂无书签</span>
                     <a-button type="primary" onclick="ipc.send('importBookMarks')" size="small"> 导入书签 </a-button>
                   </a-empty>
                   <div
@@ -312,12 +319,9 @@
             navallShow2: false,
             navallShow3: false,
             navallShow4: false,
-            bookMark: [
-              {
-                title: '标题',
-                link: '内容',
-              }
-            ],
+            loadingBookmark:true,
+            bookmarkEmpty:false,
+            bookMark: [],
             historyBar: [
               {
                 time_title: '访问历史',
@@ -456,12 +460,16 @@
                 console.log(err)
               })
           },
-          loadBookmarks(){
-            window.$newtabRestore.loadBookmarks().then(
+          loadBookmarks(count){
+            window.$newtabRestore.loadBookmarks(count).then(
               (data)=>{
                 console.log(data)
                 console.log('get ')
                 this.bookMark=data
+                this.loadingBookmark=false
+                if(data.length==0){
+                  this.bookmarkEmpty=true
+                }
               }
             )
           },
@@ -546,8 +554,8 @@
           this.loadMyapp()
           setTimeout(() => {
             this.loadMysearch()
-            this.loadBookmarks()
-          }, 500)
+            this.loadBookmarks(6)
+          }, 200)
 
           //this.loadMysearch();
         },
