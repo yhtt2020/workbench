@@ -122,6 +122,37 @@ const newtabRestore = {
       return [];
     }
   },
+  loadBookmarks: async(count=7)=>{
+    let lastBookmarks=[]
+    try{
+      await db.places.orderBy('lastVisit').reverse().filter(function(place) { return place.isBookmarked }).limit(count).each(item=>{
+        lastBookmarks.push({
+          'title':item.title,
+          'link':item.url
+        })
+        console.log(item)
+      })
+       // await db.places.where({isBookmarked:1}).each((item)=>{
+       //  if(item.isBookmarked){
+       //    lastBookmarks.push({
+       //      'title':item.title,
+       //      'url':item.url
+       //    })
+       //    inserted++
+       //
+       //  }
+       //  if(inserted>=count){
+       //    return false
+       //  }
+      //   console.log(item)
+      // })
+
+      return lastBookmarks
+    }catch (err){
+      console.log(err)
+      return []
+    }
+  },
 
   //设置默认写入接口
   saveDefaultDB: async(id) => {

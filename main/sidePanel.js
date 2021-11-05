@@ -495,7 +495,8 @@ ipc.on('receiveGlobal', function(event, data) {
 })
 
 //显示书签的时候，将sidepanel隐藏起来
-ipc.on('showBookmarks', function() {
+ipc.on('openBookmarks', function() {
+  sendIPCToWindow(mainWindow, 'showBookmarks') //直传给mainWindow，让它唤出书签页面
 	sidePanel.hide()
 })
 ipc.on('openSetting', function() {
@@ -581,4 +582,9 @@ ipc.on('userLogin', function(event, data) {
 	sidePanel.get().webContents.send( 'userLogin', {
 		'userInfo': data.userInfo
 	})
+})
+
+
+ipc.on('importBookMarks',function(){
+  sendIPCToWindow(mainWindow,'importBookMarks')
 })

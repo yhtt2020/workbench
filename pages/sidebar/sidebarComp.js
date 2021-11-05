@@ -187,7 +187,7 @@ Vue.component('sidebar', {
 			const relatedElement = relatedContext.element;
 			const draggedElement = draggedContext.element;
 			return (
-				!draggedElement.fixed //&&(!relatedElement || !relatedElement.fixed) 
+				!draggedElement.fixed //&&(!relatedElement || !relatedElement.fixed)
 			);
 		},
 		//对任务数组重新进行排序
@@ -253,7 +253,24 @@ Vue.component('sidebar', {
 			window.insertDefaultUser()
 			db.system.where({name:'currentUser'}).delete()
 			this.$message.info('注销成功！');
-		}
+		},
+    switchAccount(){
+      this.userPanelVisible=false
+      this.addTab(serverConfig.getUrl(serverConfig.apiUrl.user.login))
+    },
+    goProfile(){
+      this.userPanelVisible=false
+      this.addTab(serverConfig.getUrl(serverConfig.apiUrl.user.profile))
+    },
+    goGroup(){
+      this.userPanelVisible=false
+      this.addTab(serverConfig.getUrl(serverConfig.apiUrl.group.index))
+    },
+    goAccount(){
+      this.userPanelVisible=false
+      this.addTab(serverConfig.getUrl(serverConfig.apiUrl.user.account))
+    }
+
 	}
 
 })

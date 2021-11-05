@@ -236,37 +236,40 @@ ipc.on('addTaskFromApps',function(e,data){
 
 })
 ipc.on('openApps',function(){
-	let url= 'ts://apps'//左斜杠三条是为了统一判断里tab的三条左斜杠，不知道为什么会这样
-	let findout=false
-	let tid=0
-	let tabId=0
-	tasks.forEach(function(task,index){
-		let tTask=task
-		tTask.tabs.forEach(function(tab,index){
-			//替换左斜杠为右斜杠，保证平台差异一致。
-			if(require('util/urlParser.js').getSourceURL(tab.url)==url)
-				{
-					tid=tTask.id
-					tabId=tab.id
-					findout=true
-				}
-		})
-	})
-	if(findout==false){
-		let newTask = {
-		  name: '应用中心',
-		  collapsed:false
-		}
-		tid=tasks.add(newTask)
+	// let url= 'ts://apps'//左斜杠三条是为了统一判断里tab的三条左斜杠，不知道为什么会这样
+	// let findout=false
+	// let tid=0
+	// let tabId=0
+	// tasks.forEach(function(task,index){
+	// 	let tTask=task
+	// 	tTask.tabs.forEach(function(tab,index){
+	// 		//替换左斜杠为右斜杠，保证平台差异一致。
+	// 		if(require('util/urlParser.js').getSourceURL(tab.url)==url)
+	// 			{
+	// 				tid=tTask.id
+	// 				tabId=tab.id
+	// 				findout=true
+	// 			}
+	// 	})
+	// })
+	// if(findout==false){
+		// let newTask = {
+		//   name: '应用中心',
+		//   collapsed:false
+		// }
+		// tid=tasks.add(newTask)
+    //todo 暂时先去除一下防止打开多个的功能，等后面观察一下是否有必要加回来。加回来会导致一些不可预期的切换任务，导致用户懵逼
 		let newTab= {
 		  url: require('util/urlParser.js').getFileURL( __dirname + '/pages/apps/index.html') ,
 		  title:'应用中心'
 		}
-		tabId=tasks.get(tid).tabs.add(newTab)
 
-	}
-	switchToTask(tid)
-	switchToTab(tabId)
+    tabId=tasks.getSelected().tabs.add(newTab)
+    addTab(tabId, { enterEditMode: false })
+
+    switchToTab(tabId)
+
+
 
 })
 /* 增加一些与其他窗口的互动ipcend*/

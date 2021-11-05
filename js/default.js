@@ -199,3 +199,8 @@ require('searchbar/developmentModeNotification.js').initialize()
 require('searchbar/shortcutButtons.js').initialize()
 require('searchbar/calculatorPlugin.js').initialize()
 require('sessionRestore.js').restore()
+
+const searchbar = require('searchbar/searchbar.js')
+ipc.on('importBookMarks',function(){
+  searchbar.openURL('!importbookmarks', null)
+})

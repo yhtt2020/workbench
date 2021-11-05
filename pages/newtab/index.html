@@ -135,6 +135,22 @@
                   </a-menu>
                 </a-dropdown>
                 <div class="nav-content flex flex-direction">
+                  <template>
+                    <div v-if="loadingBookmark" style="text-align: center;margin-top: 70px">
+                      <a-spin  tip="Loading...">
+
+                      </a-spin>
+                    </div>
+                  </template>
+                  <a-empty
+                    image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original"
+                    class="flex flex-direction align-center justify-center"
+                    style="width: 100%; height: 100%"
+                    v-show="bookmarkEmpty"
+                  >
+                    <span slot="description">暂无书签</span>
+                    <a-button type="primary" onclick="ipc.send('importBookMarks')" size="small"> 导入书签 </a-button>
+                  </a-empty>
                   <div
                     class="bk-list flex justify-between align-center"
                     v-for="(item, index) in this.bookMark"
@@ -153,7 +169,7 @@
                   <div
                     class="nav-bottom flex justify-center align-center"
                     v-show="navallShow2"
-                    onclick="ipc.send('showBookmarks')"
+                    onclick="ipc.send('openBookmarks')"
                   >
                     + 查看全部
                   </div>
@@ -303,32 +319,9 @@
             navallShow2: false,
             navallShow3: false,
             navallShow4: false,
-            bookMark: [
-              {
-                title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-              },
-              {
-                title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-              },
-              {
-                title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-              },
-              {
-                title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-              },
-              {
-                title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-              },
-              {
-                title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-              },
-            ],
+            loadingBookmark:true,
+            bookmarkEmpty:false,
+            bookMark: [],
             historyBar: [
               {
                 time_title: '访问历史',
@@ -467,6 +460,19 @@
                 console.log(err)
               })
           },
+          loadBookmarks(count){
+            window.$newtabRestore.loadBookmarks(count).then(
+              (data)=>{
+                console.log(data)
+                console.log('get ')
+                this.bookMark=data
+                this.loadingBookmark=false
+                if(data.length==0){
+                  this.bookmarkEmpty=true
+                }
+              }
+            )
+          },
           loadMyapp() {
             window.$appsRestore
               .restoreFromDB()
@@ -548,7 +554,9 @@
           this.loadMyapp()
           setTimeout(() => {
             this.loadMysearch()
+            this.loadBookmarks(6)
           }, 500)
+
           //this.loadMysearch();
         },
       })

@@ -241,10 +241,13 @@ const webviews = {
 		// // partition: partition || 'persist:webcontent',
 		// enableWebSQL: false,
 
-
-    if(sourceUrl!='ts://apps' || sourceUrl !='ts://newtab'){
+  console.log(sourceUrl)
+    if(sourceUrl==='ts://apps' || sourceUrl ==='ts://newtab'){
+      webPreferences.partition=null
+    }else{
       webPreferences.partition = partition || 'persist:webcontent' //网页的分区
     }
+    console.log(webPreferences.partition)
 
 	/*特殊处理部分结束*/
 
