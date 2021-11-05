@@ -51,6 +51,9 @@ html {
         cursor: pointer;
         z-index: 20;
         margin-right: 20px;
+        &:hover {
+          color: #1890ff;
+        }
       }
     }
   }
@@ -59,7 +62,7 @@ html {
     height: 80vh;
     .mb-wrap {
       width: 1200px;
-      min-height: 600px;
+      height: 600px;
       padding-top: 60px;
       /* background-color: #999; */
       .wrap-nav1 {
@@ -84,7 +87,7 @@ html {
           box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
           border-radius: 0px 0px 8px 8px;
           &:hover {
-            color: #02a7f0;
+            color: #1890ff;
           }
         }
         .nav-top {
@@ -94,13 +97,29 @@ html {
         .nav-content {
           height: 200px;
           overflow: hidden;
+          padding: 5px;
           .n-card {
             border-radius: 2px;
             width: 25%;
-            height: 100px;
+            height: 50%;
             &:hover {
-              color: #02a7f0;
-              background-color: #0000002f;
+              color: #1890ff !important;
+              background-color: #7e7b7b2f;
+            }
+            img {
+              width: 36px;
+              margin-top: 10px;
+              border-radius: 5px;
+            }
+            p {
+              width: 80px;
+              text-align: center;
+              text-overflow: -o-ellipsis-lastline;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              display: -webkit-box;
+              -webkit-line-clamp: 1;
+              -webkit-box-orient: vertical;
             }
           }
         }
@@ -135,7 +154,7 @@ html {
           box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
           border-radius: 0px 0px 8px 8px;
           &:hover {
-            color: #02a7f0;
+            color: #1890ff;
           }
         }
         .nav-content {
@@ -144,6 +163,16 @@ html {
           height: 200px;
           .bk-list {
             margin-top: 10px;
+            a {
+              color: #333333;
+              &:hover {
+                color: #1890ff !important;
+                background-color: #7e7b7b2f;
+                p {
+                  color: #1890ff !important;
+                }
+              }
+            }
             p {
               line-height: 19px;
               width: 320px;
@@ -184,22 +213,24 @@ html {
           box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
           border-radius: 0px 0px 8px 8px;
           &:hover {
-            color: #02a7f0;
+            color: #1890ff;
           }
         }
         .pane {
           height: 200px;
+          padding: 5px;
           .n-card {
             border-radius: 2px;
             width: 25%;
-            height: 100px;
+            height: 50%;
             &:hover {
-              color: #02a7f0;
-              background-color: #0000002f;
+              color: #1890ff !important;
+              background-color: #7e7b7b2f;
             }
             img {
-              width: 30px;
-              padding-top: 10px;
+              width: 36px;
+              margin-top: 10px;
+              border-radius: 5px;
             }
             p {
               width: 80px;
@@ -249,7 +280,7 @@ html {
           box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
           border-radius: 0px 0px 8px 8px;
           &:hover {
-            color: #02a7f0;
+            color: #1890ff;
           }
         }
         .pane {
@@ -266,6 +297,16 @@ html {
             height: 200px;
             .wb-history {
               margin-top: 10px;
+              a {
+                color: #333333;
+                &:hover {
+                  color: #1890ff !important;
+                  background-color: #7e7b7b2f;
+                  p {
+                    color: #1890ff !important;
+                  }
+                }
+              }
               p {
                 line-height: 19px;
                 width: 320px;

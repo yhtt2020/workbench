@@ -1,16 +1,16 @@
 Vue.component('app-dialog', {
   props: {
     //dialog显示
-    adVisible: {
-      type: Boolean,
-      default: false
-    }
+    // adVisible: {
+    //   type: Boolean,
+    //   default: false
+    // }
   },
-	data() {
-		return {
-      dd:1
-		};
-	},
+	// data() {
+	// 	return {
+  //     dd:1
+	// 	};
+	// },
 	template:'#appstore',
   methods: {
     // handleOk() {
