@@ -633,7 +633,7 @@
 						this.btnText = '添加收藏'
 					} else {
 						let apps = this.myApps;
-						apps.push(app)
+						apps.unshift(app)
 						this.myApps = apps
 						this.btnText = '移出收藏'
 						window.$appsRestore.addApp(app)
@@ -733,19 +733,16 @@
 					window.$appsRestore.saveToDB(this.myApps)
 				},
 				 load: function(){
-					try{
-						let promise=  window.$appsRestore.restoreFromDB()
-						promise.then((data)=>{
+						 window.$appsRestore.restoreFromDB().then((data)=>{
 							this.myApps=data
 							console.log(this.myApps)
 							return data
-						})
+						}).catch(e=>{
+							 console.log(e)
+							 this.myApps=[]
+						 })
 
 
-					}catch(e){
-						console.log(e)
-						this.myApps=[]
-					}
 
 				}
 

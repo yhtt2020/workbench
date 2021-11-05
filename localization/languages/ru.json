@@ -71,7 +71,7 @@
     "taskDeleteWarning": {
       "unsafeHTML": "Задача удалена. <a>Отменить?</a>"
     },
-    "tasksSearchTabs": null, //missing translation
+    "tasksSearchTabs": "Поиск по вкладкам",
     "returnToTask": "Вернуться к предыдущей задаче",
     "taskDescriptionTwo": "%t и %t",
     "taskDescriptionThree": "%t, %t, и %n больше",
@@ -149,6 +149,7 @@
     "settingsDarkModeNever": "Нет",
     "settingsDarkModeNight": "Только ночью",
     "settingsDarkModeAlways": "Всегда",
+    "settingsDarkModeSystem": null,
     "settingsSiteThemeToggle": "Использовать тему сайта",
     "settingsAdditionalFeaturesHeading": "Дополнительные возможности",
     "settingsUserscriptsToggle": "Пользовательские скрипты",

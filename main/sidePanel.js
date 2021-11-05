@@ -382,6 +382,7 @@ function addMainWindowEventListener() {
 	})
 	mainWindow.on('leave-html-full-screen', () => {
 		loadSidePanel()
+
 	})
 
 
@@ -569,4 +570,15 @@ ipc.on('selectTask', function() {
 
 ipc.on('closeTaskSelect', function() {
 	selectTaskWindow.close()
+})
+ipc.on('addTab', function(event, data) {
+	sendIPCToWindow(mainWindow, 'addTab', {
+		'url': data.url
+	})
+})
+
+ipc.on('userLogin', function(event, data) {
+	sidePanel.get().webContents.send( 'userLogin', {
+		'userInfo': data.userInfo
+	})
 })

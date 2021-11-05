@@ -10,7 +10,7 @@ var dbErrorAlertShown = false
 
 var db = new Dexie('browsingData2')
 
-db.version(1).stores({
+db.version(11).stores({
   /*
   color - the main color of the page, extracted from the page icon
   pageHTML - a saved copy of the page's HTML, when it was last visited. Removed in 1.6.0, so all pages visited after then will have an empty string in this field.
@@ -22,8 +22,14 @@ db.version(1).stores({
   places: '++id, &url, title, color, visitCount, lastVisit, pageHTML, extractedText, *searchIndex, isBookmarked, *tags, metadata',
   readingList: 'url, time, visitCount, pageHTML, article, extraData', // TODO remove this (reading list is no longer used)
   myApps:'++id,name,summary,url,icon,addTime,sort', // 我的应用表
-  mySearch: '++id,name,slinkLogo,frontLink,sDefault' // 我的搜索引擎
+  mySearch: '++id,name,slinkLogo,frontLink,sDefault', // 我的搜索引擎
+  accounts: '++id,&uid,nickname,avatar,lastLoginTime,token,isCurrent,lastUseSpace',//本地已经登陆过的账号
+  localSpaces: '++id,uid,tasks,name,lastUseTime,createTime,icon',
+  system: '++id,&name,value'
 })
+
+/*system的keyalue的值备注*/
+//currentUser 当前登陆的user
 
 db.open().then(function () {
   console.log('database opened ', performance.now())

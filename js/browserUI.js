@@ -57,6 +57,16 @@ function addTab (tabId = tabs.add(), options = {}) {
   }
 }
 
+function moveTabLeft (tabId = tabs.getSelected()) {
+  tabs.moveBy(tabId, -1)
+  tabBar.updateAll()
+}
+
+function moveTabRight (tabId = tabs.getSelected()) {
+  tabs.moveBy(tabId, 1)
+  tabBar.updateAll()
+}
+
 /* destroys a task object and the associated webviews */
 
 function destroyTask (id) {
@@ -314,5 +324,7 @@ module.exports = {
   closeTask,
   closeTab,
   switchToTask,
-  switchToTab
+  switchToTab,
+  moveTabLeft,
+  moveTabRight
 }

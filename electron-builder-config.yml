@@ -13,6 +13,7 @@ files:
     - ./main.build.js
     - ext/**/*
     - index.html
+    - server-config.js
 
 win:
     icon: ./icon.ico
@@ -31,6 +32,7 @@ win:
 mac:
     icon: ./icons/icon.icns
     category: public.app-category.utilities
+    identity: com.thisky.browser
     target:
         - dmg
         - zip
@@ -41,3 +43,11 @@ nsis:
     allowToChangeInstallationDirectory: true
     oneClick: false
     perMachine: true
+protocols:
+    name: TSBrowser
+    schemes:
+       - tsb
+       - http
+       - https
+
+
