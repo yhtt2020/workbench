@@ -62,6 +62,13 @@ const newtabRestore = {
       return [];
     }
   },
+  loadBookmarks: async()=>{
+    try{
+      return await db.places.where('isBookmarked').equals(true).toArray()
+    }catch (err){
+      return []
+    }
+  },
 
   //设置默认写入接口
   saveDefaultDB: async(id) => {

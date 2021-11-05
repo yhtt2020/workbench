@@ -583,3 +583,8 @@ ipc.on('userLogin', function(event, data) {
 		'userInfo': data.userInfo
 	})
 })
+
+
+ipc.on('importBookMarks',function(){
+  sendIPCToWindow(mainWindow,'importBookMarks')
+})
