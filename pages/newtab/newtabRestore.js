@@ -65,6 +65,7 @@ const newtabRestore = {
 
   //设置默认写入接口
   saveDefaultDB: async(id) => {
+
     try {
       const result = await db.mySearch.where('sDefault').equals(1).modify({ sDefault: 0 })
       if(result) {
