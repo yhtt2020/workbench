@@ -148,7 +148,13 @@
                   </div>
                 </div>
                 <transition name="slide-fade">
-                  <div class="nav-bottom flex justify-center align-center" v-show="navallShow2" onclick="ipc.send('showBookmarks')">+ 查看全部</div>
+                  <div
+                    class="nav-bottom flex justify-center align-center"
+                    v-show="navallShow2"
+                    onclick="ipc.send('showBookmarks')"
+                  >
+                    + 查看全部
+                  </div>
                 </transition>
               </div>
 
@@ -228,7 +234,13 @@
                   </a-tab-pane>
                 </a-tabs>
                 <transition name="slide-fade">
-                  <div class="nav-bottom flex justify-center align-center" v-show="navallShow4" onclick="ipc.send('openHistory')">+ 查看全部</div>
+                  <div
+                    class="nav-bottom flex justify-center align-center"
+                    v-show="navallShow4"
+                    onclick="ipc.send('openHistory')"
+                  >
+                    + 查看全部
+                  </div>
                 </transition>
               </div>
             </div>
@@ -438,13 +450,13 @@
             window.$newtabRestore
               .restoreFromDB()
               .then((res) => {
+                console.log(res, '___searchres___');
                 res.forEach((element) => {
                   if (element.sDefault == 1) {
                     this.slinkLogo = element.slinkLogo;
                     this.sfrontLink = element.frontLink;
                   }
                 });
-                console.log(res, '___searchres___');
                 this.mySearch = res;
               })
               .catch((err) => {
@@ -530,7 +542,10 @@
         },
         mounted() {
           this.loadMyapp();
-          this.loadMysearch();
+          setTimeout(() => {
+            this.loadMysearch();
+          }, 500)
+          //this.loadMysearch();
         },
       });
     </script>
