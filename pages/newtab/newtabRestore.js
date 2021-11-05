@@ -130,29 +130,82 @@ const newtabRestore = {
           'title':item.title,
           'link':item.url
         })
-        console.log(item)
       })
-       // await db.places.where({isBookmarked:1}).each((item)=>{
-       //  if(item.isBookmarked){
-       //    lastBookmarks.push({
-       //      'title':item.title,
-       //      'url':item.url
-       //    })
-       //    inserted++
-       //
-       //  }
-       //  if(inserted>=count){
-       //    return false
-       //  }
-      //   console.log(item)
-      // })
-
       return lastBookmarks
     }catch (err){
       console.log(err)
       return []
     }
   },
+  loadHistory:async(count=4)=>{
+    let todayHistory=[] //当前访问历史
+    let yesterdayHistory=[]
+    let dayBeforeYesterdayHistory=[]
+    let beforeAllHistory=[]
+    try{
+      var today = new Date();
+      today.setHours(0);
+      today.setMinutes(0);
+      today.setSeconds(0);
+      today.setMilliseconds(0);
+      var oneday = 1000 * 60 * 60 * 24;
+      var yesterday = new Date(today - oneday);
+      var dayBeforeYesterday = new Date(today - 2*oneday);
+      await db.places.orderBy('lastVisit').reverse().filter(function(place) {
+       if(place.lastVisit >=today.valueOf()) return true
+      }).limit(count).each(item=>{
+        todayHistory.push({
+          'title':item.title,
+          'link':item.url
+        })
+
+      })
+      await db.places.orderBy('lastVisit').reverse().filter(function(place) {
+        if(place.lastVisit >=yesterday.valueOf()&& place.lastVisit<today.valueOf()) return true
+      }).limit(count).each(item=>{
+        yesterdayHistory.push({
+          'title':item.title,
+          'link':item.url
+        })
+      })
+      await db.places.orderBy('lastVisit').reverse().filter(function(place) {
+        if(place.lastVisit >=dayBeforeYesterday.valueOf()&& place.lastVisit<yesterday.valueOf()) return true
+      }).limit(count).each(item=>{
+        dayBeforeYesterdayHistory.push({
+          'title':item.title,
+          'link':item.url
+        })
+      })
+      await db.places.orderBy('lastVisit').reverse().filter(function(place) {
+        if(place.lastVisit <dayBeforeYesterday.valueOf()) return true
+      }).limit(count).each(item=>{
+        beforeAllHistory.push({
+          'title':item.title,
+          'link':item.url
+        })
+      })
+
+      console.log(todayHistory)
+      return [{
+        time_title:'访问历史',
+        info:todayHistory
+      },{
+        time_title:'昨天',
+        info:yesterdayHistory
+      },{
+        time_title:'前天',
+        info:dayBeforeYesterdayHistory
+      }, {time_title:'前天以前',
+        info:beforeAllHistory
+    }]
+    }catch (err){
+      console.log(err)
+      return []
+    }
+
+
+  },
+
 
   //设置默认写入接口
   saveDefaultDB: async(id) => {

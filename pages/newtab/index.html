@@ -236,9 +236,18 @@
                         </a-menu>
                       </a-dropdown>
                       <div class="nav-content flex flex-direction">
+
+                        <a-empty
+                          image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original"
+                          class="flex flex-direction align-center justify-center"
+                          style="width: 100%; height: 100%"
+                          v-if="isEmpty(i.info) "
+                        >
+                          <span slot="description">无浏览历史</span>
+                        </a-empty>
                         <div
                           class="wb-history flex justify-between align-center"
-                          v-for="(item, index) in i.info"
+                          v-for="(item, index) in i.info "
                           :key="index"
                         >
                           <a :href="item.link" class="flex justify-around align-center">
@@ -320,108 +329,8 @@
             loadingBookmark:true,
             bookmarkEmpty:false,
             bookMark: [],
-            historyBar: [
-              {
-                time_title: '访问历史',
-                info: [
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                ],
-              },
-              {
-                time_title: '昨天',
-                info: [
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                ],
-              },
-              {
-                time_title: '前天',
-                info: [
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                ],
-              },
-              {
-                time_title: '在此之前',
-                info: [
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                  {
-                    title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
-                    link: 'http://www.bilibili.com/bideo/BV12x411y7/BV12x411y7yBV12x411y7yBV12x411y7y',
-                  },
-                ],
-              },
-            ],
+            loadingHistory:true,
+            historyBar: [],
           }
         },
         watch: {
@@ -434,6 +343,9 @@
           }
         },
         methods: {
+          isEmpty(array){
+            return array.length === 0 && this.loadingHistory === false
+          },
           loadMysearch() {
             window.$newtabRestore
               .restoreFromDB()
@@ -454,13 +366,21 @@
           loadBookmarks(count){
             window.$newtabRestore.loadBookmarks(count).then(
               (data)=>{
-                console.log(data)
-                console.log('get ')
                 this.bookMark=data
                 this.loadingBookmark=false
-                if(data.length==0){
+                if(data.length===0){
                   this.bookmarkEmpty=true
                 }
+              }
+            ).catch(err=>{
+              console.log(err)
+            })
+          },
+          loadHistory(){
+            window.$newtabRestore.loadHistory(4).then(
+              (data)=>{
+                this.historyBar=data
+                this.loadingHistory=false
               }
             )
           },
@@ -528,6 +448,7 @@
           },
         },
         computed: {
+
           allApps: {
             get: function () {
               if (typeof window.$appsApiData == 'undefined' || window.$appsApiData == null) {
@@ -535,14 +456,15 @@
               }
               return window.$appsApiData.allApps
             },
-          },
+          }
         },
         mounted() {
           this.loadMyapp()
           setTimeout(() => {
             this.loadMysearch()
             this.loadBookmarks(6)
-          }, 500)
+            this.loadHistory()
+          }, 200)
         },
       })
     </script>
