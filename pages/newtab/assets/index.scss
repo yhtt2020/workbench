@@ -73,12 +73,14 @@ html {
         box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
         border-radius: 8px;
         position: relative;
-        cursor: pointer;
         .adrop1 {
           width: 20px;
           position: absolute;
           top: 12px;
           right: 10px;
+          &:hover {
+            cursor: pointer;
+          }
         }
         .nav-bottom {
           width: 398px;
@@ -88,6 +90,7 @@ html {
           border-radius: 0px 0px 8px 8px;
           &:hover {
             color: #1890ff;
+            cursor: pointer;
           }
         }
         .nav-top {
@@ -99,6 +102,7 @@ html {
           overflow: hidden;
           padding: 5px;
           .n-card {
+            cursor: pointer;
             border-radius: 2px;
             width: 25%;
             height: 50%;
@@ -136,7 +140,6 @@ html {
         box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
         border-radius: 8px;
         position: relative;
-        cursor: pointer;
         .nav-top {
           height: 40px;
           border-bottom: 1px solid rgb(226, 221, 221);
@@ -146,6 +149,9 @@ html {
           position: absolute;
           top: 12px;
           right: 10px;
+          &:hover {
+            cursor: pointer;
+          }
         }
         .nav-bottom {
           width: 398px;
@@ -155,6 +161,7 @@ html {
           border-radius: 0px 0px 8px 8px;
           &:hover {
             color: #1890ff;
+            cursor: pointer;
           }
         }
         .nav-content {
@@ -162,6 +169,7 @@ html {
           padding: 0px 20px 10px 20px;
           height: 200px;
           .bk-list {
+            cursor: pointer;
             margin-top: 10px;
             a {
               color: #333333;
@@ -198,13 +206,15 @@ html {
         box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
         border-radius: 8px;
         position: relative;
-        cursor: pointer;
         .adrop3 {
           width: 20px;
           position: absolute;
           top: 12px;
           right: 10px;
           z-index: 30;
+          &:hover {
+            cursor: pointer;
+          }
         }
         .nav-bottom {
           width: 398px;
@@ -214,12 +224,14 @@ html {
           border-radius: 0px 0px 8px 8px;
           &:hover {
             color: #1890ff;
+            cursor: pointer;
           }
         }
         .pane {
           height: 200px;
           padding: 5px;
           .n-card {
+            cursor: pointer;
             border-radius: 2px;
             width: 25%;
             height: 50%;
@@ -272,7 +284,6 @@ html {
         box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
         border-radius: 8px;
         position: relative;
-        cursor: pointer;
         .nav-bottom {
           width: 398px;
           height: 40px;
@@ -281,6 +292,7 @@ html {
           border-radius: 0px 0px 8px 8px;
           &:hover {
             color: #1890ff;
+            cursor: pointer;
           }
         }
         .pane {
@@ -290,6 +302,9 @@ html {
             position: absolute;
             top: 12px;
             right: 10px;
+            &:hover {
+              cursor: pointer;
+            }
           }
           .nav-content {
             overflow: hidden;
@@ -298,6 +313,7 @@ html {
             .wb-history {
               margin-top: 10px;
               a {
+                cursor: pointer;
                 color: #333333;
                 &:hover {
                   color: #1890ff !important;
@@ -431,5 +447,4 @@ html {
     background-color: #0000002f;
     border-radius: 10px;
   }
-
 }

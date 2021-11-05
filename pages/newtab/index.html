@@ -15,9 +15,9 @@
 
   <body>
     <script>
-      Vue.use(antd);
-      var electron = require('electron');
-      var ipc = electron.ipcRenderer;
+      Vue.use(antd)
+      var electron = require('electron')
+      var ipc = electron.ipcRenderer
     </script>
     <div id="app">
       <template>
@@ -140,10 +140,12 @@
                     v-for="(item, index) in this.bookMark"
                     :key="index"
                   >
-                    <a-icon type="global" :style="{ fontSize: '18px'}"></a-icon>
-                    <a :href="item.link">
-                      <p>{{item.title}}</p>
-                      <p style="color: #7f7f7f">{{item.link}}</p>
+                    <a :href="item.link" class="flex justify-around align-center">
+                      <a-icon type="global" :style="{ fontSize: '18px'}"></a-icon>
+                      <div style="margin-left: 10px">
+                        <p>{{item.title}}</p>
+                        <p style="color: #7f7f7f">{{item.link}}</p>
+                      </div>
                     </a>
                   </div>
                 </div>
@@ -223,10 +225,12 @@
                           v-for="(item, index) in i.info"
                           :key="index"
                         >
-                          <a-icon type="global" :style="{ fontSize: '18px'}"></a-icon>
-                          <a :href="item.link">
-                            <p>{{item.title}}</p>
-                            <p style="color: #7f7f7f">{{item.link}}</p>
+                          <a :href="item.link" class="flex justify-around align-center">
+                            <a-icon type="global" :style="{ fontSize: '18px'}"></a-icon>
+                            <div style="margin-left: 10px">
+                              <p>{{item.title}}</p>
+                              <p style="color: #7f7f7f">{{item.link}}</p>
+                            </div>
                           </a>
                         </div>
                       </div>
@@ -277,7 +281,7 @@
 
     <script src="./components/appStore/index.js"></script>
     <script>
-      Vue.use(antd);
+      Vue.use(antd)
       var appVue = new Vue({
         el: '#app',
         data() {
@@ -427,19 +431,19 @@
                 ],
               },
             ],
-          };
+          }
         },
         watch: {
           searchWord: {
             handler(newValue) {
-              this.searchSplice = this.sfrontLink + newValue;
+              this.searchSplice = this.sfrontLink + newValue
             },
             deep: true,
             immediate: true,
           },
           allApps: {
             handler(nV) {
-              console.log(nV);
+              console.log(nV)
             },
             deep: true,
             immediate: true,
@@ -450,104 +454,104 @@
             window.$newtabRestore
               .restoreFromDB()
               .then((res) => {
-                console.log(res, '___searchres___');
+                console.log(res, '___searchres___')
                 res.forEach((element) => {
                   if (element.sDefault == 1) {
-                    this.slinkLogo = element.slinkLogo;
-                    this.sfrontLink = element.frontLink;
+                    this.slinkLogo = element.slinkLogo
+                    this.sfrontLink = element.frontLink
                   }
-                });
-                this.mySearch = res;
+                })
+                this.mySearch = res
               })
               .catch((err) => {
-                console.log(err);
-              });
+                console.log(err)
+              })
           },
           loadMyapp() {
             window.$appsRestore
               .restoreFromDB()
               .then((res) => {
-                console.log(res, '___res___');
-                this.myApps = res;
+                console.log(res, '___res___')
+                this.myApps = res
               })
               .catch((err) => {
-                console.log(err);
-              });
+                console.log(err)
+              })
           },
           enterSubmit() {
-            location.href = this.sfrontLink + this.searchWord;
+            location.href = this.sfrontLink + this.searchWord
           },
           handleOk() {
-            console.log('点击了提交');
-            this.adVisible = false;
+            console.log('点击了提交')
+            this.adVisible = false
           },
           mouseIn1() {
-            this.navallShow1 = true;
-            this.bookdian1Show = true;
+            this.navallShow1 = true
+            this.bookdian1Show = true
           },
           mouseOut1() {
-            this.navallShow1 = false;
-            this.bookdian1Show = false;
+            this.navallShow1 = false
+            this.bookdian1Show = false
           },
           mouseIn2() {
-            this.navallShow2 = true;
-            this.bookdian2Show = true;
+            this.navallShow2 = true
+            this.bookdian2Show = true
           },
           mouseOut2() {
-            this.navallShow2 = false;
-            this.bookdian2Show = false;
+            this.navallShow2 = false
+            this.bookdian2Show = false
           },
           mouseIn3() {
-            this.navallShow3 = true;
-            this.bookdian3Show = true;
+            this.navallShow3 = true
+            this.bookdian3Show = true
           },
           mouseOut3() {
-            this.navallShow3 = false;
-            this.bookdian3Show = false;
+            this.navallShow3 = false
+            this.bookdian3Show = false
           },
           mouseIn4() {
-            this.navallShow4 = true;
-            this.bookdian4Show = true;
+            this.navallShow4 = true
+            this.bookdian4Show = true
           },
           mouseOut4() {
-            this.navallShow4 = false;
-            this.bookdian4Show = false;
+            this.navallShow4 = false
+            this.bookdian4Show = false
           },
           chooseSearch(id, index) {
-            this.visible = false;
-            this.slinkLogo = this.mySearch[index].slinkLogo;
-            this.sfrontLink = this.mySearch[index].frontLink;
+            this.visible = false
+            this.slinkLogo = this.mySearch[index].slinkLogo
+            this.sfrontLink = this.mySearch[index].frontLink
             window.$newtabRestore
               .saveDefaultDB(id)
               .then(() => {
-                console.log('dexie设置默认搜索引擎成功');
+                console.log('dexie设置默认搜索引擎成功')
               })
               .catch((err) => {
-                console.log(err);
-              });
+                console.log(err)
+              })
           },
           callback(val) {
-            console.log(val);
+            console.log(val)
           },
         },
         computed: {
           allApps: {
             get: function () {
               if (typeof window.$appsApiData == 'undefined' || window.$appsApiData == null) {
-                return window.nativeData.allApps;
+                return window.nativeData.allApps
               }
-              return window.$appsApiData.allApps;
+              return window.$appsApiData.allApps
             },
           },
         },
         mounted() {
-          this.loadMyapp();
+          this.loadMyapp()
           setTimeout(() => {
-            this.loadMysearch();
+            this.loadMysearch()
           }, 500)
           //this.loadMysearch();
         },
-      });
+      })
     </script>
   </body>
 </html>
