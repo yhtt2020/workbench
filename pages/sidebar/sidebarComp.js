@@ -257,7 +257,20 @@ Vue.component('sidebar', {
     switchAccount(){
       this.userPanelVisible=false
       this.addTab(serverConfig.getUrl(serverConfig.apiUrl.user.login))
+    },
+    goProfile(){
+      this.userPanelVisible=false
+      this.addTab(serverConfig.getUrl(serverConfig.apiUrl.user.profile))
+    },
+    goGroup(){
+      this.userPanelVisible=false
+      this.addTab(serverConfig.getUrl(serverConfig.apiUrl.group.index))
+    },
+    goAccount(){
+      this.userPanelVisible=false
+      this.addTab(serverConfig.getUrl(serverConfig.apiUrl.user.account))
     }
+
 	}
 
 })

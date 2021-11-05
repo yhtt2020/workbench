@@ -87,22 +87,30 @@
                                         <div style="margin-bottom: 10px">
                                             <template>
                                                 <a-card :bordered="false">
-                                                    <a-card-grid :bordered="false" style="width:33%;text-align:center">
-                                                        <a-tooltip title="发表内容">
-                                                        <a-icon  style="font-size: 24px" type="plus-circle"></a-icon>
-                                                        </a-tooltip>
-                                                    </a-card-grid>
-                                                    <a-card-grid :bordered="false" style="width:33%;text-align:center"
+<!--                                                    <a-card-grid @click= :bordered="false" style="width:33%;text-align:center">-->
+<!--                                                        <a-tooltip title="发表内容">-->
+<!--                                                        <a-icon  style="font-size: 24px" type="plus-circle"></a-icon>-->
+<!--                                                        </a-tooltip>-->
+<!--                                                    </a-card-grid>-->
+                                                    <a-card-grid @click="goProfile"  :bordered="false" style="width:33%;text-align:center;cursor: pointer"
                                                                  :hoverable="false">
                                                         <a-tooltip title="个人资料">
                                                         <a-icon  style="font-size: 24px" type="profile"></a-icon>
+                                                          <div>资料</div>
                                                         </a-tooltip>
                                                     </a-card-grid>
-                                                    <a-card-grid :bordered="false" style="width:33%;text-align:center">
-                                                        <a-tooltip title="我的团队">
+                                                    <a-card-grid @click="goGroup" :bordered="false" style="width:33%;text-align:center;cursor: pointer">
+                                                        <a-tooltip title="团队">
                                                         <a-icon  style="font-size: 24px" type="team"></a-icon>
+                                                          <div>团队</div>
                                                         </a-tooltip>
                                                     </a-card-grid>
+                                                    <a-card-grid @click="goAccount" :bordered="false" style="width:33%;text-align:center;cursor: pointer">
+                                                    <a-tooltip title="账号管理">
+                                                      <a-icon  style="font-size: 24px" type="idcard"></a-icon>
+                                                      <div>账号</div>
+                                                    </a-tooltip>
+                                                     </a-card-grid>
 
                                                 </a-card>
                                             </template>
@@ -128,8 +136,8 @@
                                         </a-dropdown>
                                     </div>
                                     <div>
-                                        <div style="position: absolute;bottom: 5px;">
-                                            <a-button @click="logout">注销</a-button>
+                                        <div style="position: absolute;bottom: 5px;width: 250px">
+                                            <a-button @click="logout" block><a-icon type="poweroff" ></a-icon>注销</a-button>
                                         </div>
                                     </div>
                                 </template>
