@@ -42,6 +42,66 @@ const newtabRestore = {
           frontLink: 'https://cn.bing.com/search?q=',
           sDefault: 0,
         },
+        {
+          name: '淘宝搜索',
+          slinkLogo: './assets/taobao.svg',
+          frontLink: 'http://s.taobao.com/search?q=',
+          sDefault: 0,
+        },
+        {
+          name: '天猫搜索',
+          slinkLogo: './assets/tianmao.svg',
+          frontLink: 'http://list.tmall.com/search_product.htm?q=',
+          sDefault: 0,
+        },
+        {
+          name: '京东商城',
+          slinkLogo: './assets/jingdong.svg',
+          frontLink: 'http://search.jd.com/Search?keyword=',
+          sDefault: 0,
+        },
+        {
+          name: '1688商城',
+          slinkLogo: './assets/1688.svg',
+          frontLink: 'https://s.1688.com/selloffer/offer_search.htm?keywords=',
+          sDefault: 0,
+        },
+        {
+          name: '知乎',
+          slinkLogo: './assets/zhihu.svg',
+          frontLink: 'https://www.zhihu.com/search?type=content&q=',
+          sDefault: 0,
+        },
+        {
+          name: '微博搜索',
+          slinkLogo: './assets/weibo.svg',
+          frontLink: 'https://s.weibo.com/?Refer=',
+          sDefault: 0,
+        },
+        {
+          name: '哔哩哔哩',
+          slinkLogo: './assets/bilibili.svg',
+          frontLink: 'https://search.bilibili.com/all?keyword=',
+          sDefault: 0,
+        },
+        {
+          name: '豆瓣',
+          slinkLogo: './assets/douban.svg',
+          frontLink: 'https://www.douban.com/search?source=suggest&q=',
+          sDefault: 0,
+        },
+        {
+          name: '优酷',
+          slinkLogo: './assets/youku.svg',
+          frontLink: 'https://so.youku.com/search_video/q_',
+          sDefault: 0,
+        },
+        {
+          name: 'Github',
+          slinkLogo: './assets/github.svg',
+          frontLink: 'https://github.com/search?utf8=%E2%9C%93&q=',
+          sDefault: 0,
+        }
       ];
       db.mySearch
         .bulkAdd(searchList)
