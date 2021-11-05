@@ -62,10 +62,34 @@ const newtabRestore = {
       return [];
     }
   },
-  loadBookmarks: async()=>{
+  loadBookmarks: async(count=7)=>{
+    let lastBookmarks=[]
     try{
-      return await db.places.where('isBookmarked').equals(true).toArray()
+      await db.places.orderBy('lastVisit').reverse().filter(function(place) { return place.isBookmarked }).limit(count).each(item=>{
+        lastBookmarks.push({
+          'title':item.title,
+          'link':item.url
+        })
+        console.log(item)
+      })
+       // await db.places.where({isBookmarked:1}).each((item)=>{
+       //  if(item.isBookmarked){
+       //    lastBookmarks.push({
+       //      'title':item.title,
+       //      'url':item.url
+       //    })
+       //    inserted++
+       //
+       //  }
+       //  if(inserted>=count){
+       //    return false
+       //  }
+      //   console.log(item)
+      // })
+
+      return lastBookmarks
     }catch (err){
+      console.log(err)
       return []
     }
   },
