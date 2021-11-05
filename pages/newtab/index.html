@@ -29,10 +29,10 @@
                 <template slot="content">
                   <div class="card-list flex flex-wrap">
                     <div
-                      v-for="(item, index) in this.searchList"
-                      :key="index"
+                      v-for="(item, index) in mySearch"
+                      :key="item.id"
                       class="card flex justify-start align-center"
-                      @click="chooseSearch(index)"
+                      @click="chooseSearch(item.id, index)"
                     >
                       <img :src="item.slinkLogo" alt="" />
                       <div style="margin-left: 15px">{{item.name}}</div>
@@ -58,7 +58,7 @@
                 style="font-size: 20px"
                 @keyup.enter="enterSubmit"
               />
-              <a :href="searchSplice">
+              <a :href="searchSplice" style="color: #606266">
                 <a-icon type="search" class="search-logo" :style="{ fontSize: '30px' }"></a-icon>
               </a>
             </div>
@@ -85,13 +85,23 @@
                   <div style="margin-left: 10px">我的导航</div>
                 </div>
                 <div class="nav-content flex flex-wrap">
+                  <a-empty
+                    image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original"
+                    class="flex flex-direction align-center justify-center"
+                    style="width: 100%; height: 100%"
+                    v-show="myApps.length == 0"
+                  >
+                    <span slot="description">暂无应用</span>
+                    <a-button type="primary" onclick="ipc.send('openHome')" size="small"> 前往添加 </a-button>
+                  </a-empty>
                   <a
                     class="n-card flex flex-direction justify-around align-center"
                     v-for="(item, index) in myApps"
                     :key="index"
                     :href="item.url"
+                    style="color: #606266"
                   >
-                    <img :src="item.icon" alt="" style="width: 30px; padding-top: 10px" />
+                    <img :src="item.icon" alt="" />
                     <p>{{item.name}}</p>
                   </a>
                 </div>
@@ -133,12 +143,12 @@
                     <a-icon type="global" :style="{ fontSize: '18px'}"></a-icon>
                     <a :href="item.link">
                       <p>{{item.title}}</p>
-                      <p>{{item.link}}</p>
+                      <p style="color: #7f7f7f">{{item.link}}</p>
                     </a>
                   </div>
                 </div>
                 <transition name="slide-fade">
-                  <div class="nav-bottom flex justify-center align-center" v-show="navallShow2">+ 查看全部</div>
+                  <div class="nav-bottom flex justify-center align-center" v-show="navallShow2" onclick="ipc.send('showBookmarks')">+ 查看全部</div>
                 </transition>
               </div>
 
@@ -165,6 +175,7 @@
                         :key="index"
                         :href="item.url"
                         :title="item.name"
+                        style="color: #606266"
                       >
                         <img :src="item.icon" alt="" />
                         <p>{{item.name}}</p>
@@ -209,7 +220,7 @@
                           <a-icon type="global" :style="{ fontSize: '18px'}"></a-icon>
                           <a :href="item.link">
                             <p>{{item.title}}</p>
-                            <p>{{item.link}}</p>
+                            <p style="color: #7f7f7f">{{item.link}}</p>
                           </a>
                         </div>
                       </div>
@@ -217,7 +228,7 @@
                   </a-tab-pane>
                 </a-tabs>
                 <transition name="slide-fade">
-                  <div class="nav-bottom flex justify-center align-center" v-show="navallShow4">+ 查看全部</div>
+                  <div class="nav-bottom flex justify-center align-center" v-show="navallShow4" onclick="ipc.send('openHistory')">+ 查看全部</div>
                 </transition>
               </div>
             </div>
@@ -259,6 +270,7 @@
         el: '#app',
         data() {
           return {
+            mySearch: [],
             myApps: [],
             searchSplice: '',
             adVisible: false,
@@ -275,49 +287,6 @@
             navallShow2: false,
             navallShow3: false,
             navallShow4: false,
-            searchList: [
-              {
-                name: '百度',
-                slinkLogo: './assets/baidu.svg',
-                frontLink: 'https://www.baidu.com/s?wd=',
-              },
-              {
-                name: '谷歌',
-                slinkLogo: './assets/google.svg',
-                frontLink: 'https://www.google.com/search?q=',
-              },
-              {
-                name: '必应',
-                slinkLogo: './assets/bing.svg',
-                frontLink: 'https://cn.bing.com/search?q=',
-              },
-            ],
-            infoCard: [
-              {
-                linkLogo: './assets/search.svg',
-                name: '微信桌面版',
-              },
-              {
-                linkLogo: './assets/search.svg',
-                name: '微信桌面版',
-              },
-              {
-                linkLogo: './assets/search.svg',
-                name: '微信桌面版',
-              },
-              {
-                linkLogo: './assets/search.svg',
-                name: '微信桌面版',
-              },
-              {
-                linkLogo: './assets/search.svg',
-                name: '微信桌面版',
-              },
-              {
-                linkLogo: './assets/search.svg',
-                name: '微信桌面版',
-              },
-            ],
             bookMark: [
               {
                 title: '从一维到十维，三维以后你还听得懂吗？_哔哩哔哩从一维到十维，三维以后你还听得懂吗',
@@ -465,11 +434,28 @@
           },
         },
         methods: {
+          loadMysearch() {
+            window.$newtabRestore
+              .restoreFromDB()
+              .then((res) => {
+                res.forEach((element) => {
+                  if (element.sDefault == 1) {
+                    this.slinkLogo = element.slinkLogo;
+                    this.sfrontLink = element.frontLink;
+                  }
+                });
+                console.log(res, '___searchres___');
+                this.mySearch = res;
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          },
           loadMyapp() {
             window.$appsRestore
               .restoreFromDB()
               .then((res) => {
-                console.log(res, '___res___')
+                console.log(res, '___res___');
                 this.myApps = res;
               })
               .catch((err) => {
@@ -515,11 +501,18 @@
             this.navallShow4 = false;
             this.bookdian4Show = false;
           },
-          chooseSearch(index) {
-            console.log(index);
+          chooseSearch(id, index) {
             this.visible = false;
-            this.slinkLogo = this.searchList[index].slinkLogo;
-            this.sfrontLink = this.searchList[index].frontLink;
+            this.slinkLogo = this.mySearch[index].slinkLogo;
+            this.sfrontLink = this.mySearch[index].frontLink;
+            window.$newtabRestore
+              .saveDefaultDB(id)
+              .then(() => {
+                console.log('dexie设置默认搜索引擎成功');
+              })
+              .catch((err) => {
+                console.log(err);
+              });
           },
           callback(val) {
             console.log(val);
@@ -536,8 +529,9 @@
           },
         },
         mounted() {
-          this.loadMyapp()
-        }
+          this.loadMyapp();
+          this.loadMysearch();
+        },
       });
     </script>
   </body>

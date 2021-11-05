@@ -21,7 +21,8 @@ db.version(1).stores({
   */
   places: '++id, &url, title, color, visitCount, lastVisit, pageHTML, extractedText, *searchIndex, isBookmarked, *tags, metadata',
   readingList: 'url, time, visitCount, pageHTML, article, extraData', // TODO remove this (reading list is no longer used)
-  myApps:'++id,name,summary,url,icon,addTime,sort' // 我的应用表
+  myApps:'++id,name,summary,url,icon,addTime,sort', // 我的应用表
+  mySearch: '++id,name,slinkLogo,frontLink,sDefault' // 我的搜索引擎
 })
 
 db.open().then(function () {

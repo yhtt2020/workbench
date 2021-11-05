@@ -35,6 +35,11 @@ appsRestore.initialize()
 window.$appsRestore = appsRestore
 
 
+let newtabRestore = require('./newtabRestore.js')
+newtabRestore.initialize()
+window.$newtabRestore = newtabRestore
+
+
 function initAppsData() {
 	const DevUrl = 'http://127.0.0.1:7002/apps/allApps' //使用egg接口返回数据
 	const PrdUrl = 'http://d.xiangtian.ren/api/apps.json' //正式站点的apps数据
