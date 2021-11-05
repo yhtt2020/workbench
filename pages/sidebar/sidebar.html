@@ -77,11 +77,11 @@
                                     <div style="position:relative;">
                                         <div style="text-align: center">
                                             <p>
-                                                <a-avatar :size="80" :src="user.avatar"></a-avatar>
+                                                <a-avatar style="cursor:pointer" @click="userClick" :size="60" :src="user.avatar"></a-avatar>
                                             </p>
 
                                             <p>
-                                                <a @click="userClick">{{ user.nickname }}</a>
+                                                <a style="color: #333" @click="userClick">{{ user.nickname }}</a>
                                             </p>
                                         </div>
                                         <div style="margin-bottom: 10px">
@@ -113,9 +113,9 @@
                                                     <a-avatar shap="circle" size="small" :src="item.avatar"></a-avatar>
                                                     &nbsp;{{ item.nickname}}
                                                 </a-menu-item>
-                                                <a-menu-item>
-                                                    <a-avatar shap="circle" size="small"
-                                                              src="../../icons/browser.ico"></a-avatar>
+                                                <a-menu-item @click="switchAccount">
+                                                    <a-icon style="margin-left: 5px" shap="circle" type="plus-circle"
+                                                              ></a-icon>
                                                     &nbsp;绑定新账号
                                                 </a-menu-item>
                                             </a-menu>
