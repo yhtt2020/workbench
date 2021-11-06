@@ -38,7 +38,6 @@ function createView (existingViewId, id, webPreferencesString, boundsString, eve
     view.setBackgroundColor('#fff')
     viewStateMap[id].loadedInitialURL = true
   } else {
-    console.log(webPreferencesString)
     view = new BrowserView({ webPreferences: Object.assign({}, defaultViewWebPreferences, JSON.parse(webPreferencesString)) })
   }
   events.forEach(function (event) {
