@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" href="../../ext/reset.css" />
     <link rel="stylesheet" href="../../ext/flex-class.css" />
     <script src="../../ext/vue/vue.js"></script>
     <script src="../../ext/vue/antd.min.js"></script>
     <link rel="stylesheet" href="../../ext/vue/antd.min.css" />
-    <link rel="stylesheet" href="../../ext/reset.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./assets/index.css" />
     <title>新标签页</title>
@@ -27,7 +27,7 @@
             <div class="top-search flex justify-between align-center">
               <a-popover placement="bottomLeft" style="margin-left: 20px" v-model="visible">
                 <template slot="content">
-                  <div class="card-list flex flex-wrap">
+                  <div class="card-list flex flex-wrap justify-center align-center">
                     <div
                       v-for="(item, index) in mySearch"
                       :key="item.id"
@@ -136,10 +136,8 @@
                 </a-dropdown>
                 <div class="nav-content flex flex-direction">
                   <template>
-                    <div v-if="loadingBookmark" style="text-align: center;margin-top: 70px">
-                      <a-spin  tip="Loading...">
-
-                      </a-spin>
+                    <div v-if="loadingBookmark" style="text-align: center; margin-top: 70px">
+                      <a-spin tip="Loading..."> </a-spin>
                     </div>
                   </template>
                   <a-empty
@@ -151,19 +149,18 @@
                     <span slot="description">暂无书签</span>
                     <a-button type="primary" onclick="ipc.send('importBookMarks')" size="small"> 导入书签 </a-button>
                   </a-empty>
-                  <div
-                    class="bk-list flex justify-between align-center"
+                  <a
+                    :href="item.link"
+                    class="flex justify-around align-center"
                     v-for="(item, index) in this.bookMark"
                     :key="index"
                   >
-                    <a :href="item.link" class="flex justify-around align-center">
-                      <a-icon type="global" :style="{ fontSize: '18px'}"></a-icon>
-                      <div style="margin-left: 10px">
-                        <p>{{item.title}}</p>
-                        <p style="color: #7f7f7f">{{item.link}}</p>
-                      </div>
-                    </a>
-                  </div>
+                    <a-icon type="global" :style="{ fontSize: '18px'}"></a-icon>
+                    <ul class="flex flex-direction justify-center align-center">
+                      <li>{{item.title}}</li>
+                      <li style="color: #7f7f7f">{{item.link}}</li>
+                    </ul>
+                  </a>
                 </div>
                 <transition name="slide-fade">
                   <div
@@ -236,28 +233,26 @@
                         </a-menu>
                       </a-dropdown>
                       <div class="nav-content flex flex-direction">
-
                         <a-empty
-                          image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original"
+                          image="./assets/original.png"
                           class="flex flex-direction align-center justify-center"
                           style="width: 100%; height: 100%"
                           v-if="isEmpty(i.info) "
                         >
                           <span slot="description">无浏览历史</span>
                         </a-empty>
-                        <div
-                          class="wb-history flex justify-between align-center"
+                        <a
+                          :href="item.link"
+                          class="flex justify-around align-center"
                           v-for="(item, index) in i.info "
                           :key="index"
                         >
-                          <a :href="item.link" class="flex justify-around align-center">
-                            <a-icon type="global" :style="{ fontSize: '18px'}"></a-icon>
-                            <div style="margin-left: 10px">
-                              <p>{{item.title}}</p>
-                              <p style="color: #7f7f7f">{{item.link}}</p>
-                            </div>
-                          </a>
-                        </div>
+                          <a-icon type="global" :style="{ fontSize: '18px'}"></a-icon>
+                          <ul class="flex flex-direction justify-center align-center">
+                            <li>{{item.title}}</li>
+                            <li style="color: #7f7f7f">{{item.link}}</li>
+                          </ul>
+                        </a>
                       </div>
                     </div>
                   </a-tab-pane>
@@ -326,10 +321,10 @@
             navallShow2: false,
             navallShow3: false,
             navallShow4: false,
-            loadingBookmark:true,
-            bookmarkEmpty:false,
+            loadingBookmark: true,
+            bookmarkEmpty: false,
             bookMark: [],
-            loadingHistory:true,
+            loadingHistory: true,
             historyBar: [],
           }
         },
@@ -340,55 +335,54 @@
             },
             deep: true,
             immediate: true,
-          }
+          },
         },
         methods: {
-          isEmpty(array){
+          isEmpty(array) {
             return array.length === 0 && this.loadingHistory === false
           },
           loadMysearch() {
             window.$newtabRestore
               .restoreFromDB()
               .then((res) => {
-                console.log(res, '___searchres___')
+                this.mySearch = res
+                //console.log(res, '___searchres___')
                 res.forEach((element) => {
                   if (element.sDefault == 1) {
                     this.slinkLogo = element.slinkLogo
                     this.sfrontLink = element.frontLink
                   }
                 })
-                this.mySearch = res
               })
               .catch((err) => {
                 console.log(err)
               })
           },
-          loadBookmarks(count){
-            window.$newtabRestore.loadBookmarks(count).then(
-              (data)=>{
-                this.bookMark=data
-                this.loadingBookmark=false
-                if(data.length===0){
-                  this.bookmarkEmpty=true
+          loadBookmarks(count) {
+            window.$newtabRestore
+              .loadBookmarks(count)
+              .then((data) => {
+                this.bookMark = data
+                this.loadingBookmark = false
+                if (data.length === 0) {
+                  this.bookmarkEmpty = true
                 }
-              }
-            ).catch(err=>{
-              console.log(err)
-            })
+              })
+              .catch((err) => {
+                console.log(err)
+              })
           },
-          loadHistory(){
-            window.$newtabRestore.loadHistory(4).then(
-              (data)=>{
-                this.historyBar=data
-                this.loadingHistory=false
-              }
-            )
+          loadHistory() {
+            window.$newtabRestore.loadHistory(4).then((data) => {
+              this.historyBar = data
+              this.loadingHistory = false
+            })
           },
           loadMyapp() {
             window.$appsRestore
               .restoreFromDB()
               .then((res) => {
-                console.log(res, '___res___')
+                //console.log(res, '___res___')
                 this.myApps = res
               })
               .catch((err) => {
@@ -448,7 +442,6 @@
           },
         },
         computed: {
-
           allApps: {
             get: function () {
               if (typeof window.$appsApiData == 'undefined' || window.$appsApiData == null) {
@@ -456,7 +449,7 @@
               }
               return window.$appsApiData.allApps
             },
-          }
+          },
         },
         mounted() {
           this.loadMyapp()
