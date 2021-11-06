@@ -166,30 +166,34 @@ html {
         }
         .nav-content {
           overflow: hidden;
-          padding: 0px 20px 10px 20px;
+          padding: 5px;
           height: 200px;
-          .bk-list {
+          a {
             cursor: pointer;
-            margin-top: 10px;
-            a {
-              color: #333333;
-              &:hover {
+            width: 100%;
+            border-radius: 5px;
+            color: #333333;
+            &:hover {
+              color: #1890ff !important;
+              background-color: #7e7b7b2f;
+              ul {
                 color: #1890ff !important;
-                background-color: #7e7b7b2f;
-                p {
-                  color: #1890ff !important;
-                }
               }
             }
-            p {
-              line-height: 19px;
-              width: 320px;
-              text-overflow: -o-ellipsis-lastline;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              display: -webkit-box;
-              -webkit-line-clamp: 1;
-              -webkit-box-orient: vertical;
+            ul {
+              margin-bottom: 0px;
+              li {
+                display: inline-block;
+                line-height: 24px;
+                width: 300px;
+                text-overflow: -o-ellipsis-lastline;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 1;
+                -webkit-box-orient: vertical;
+                word-break: break-all;
+              }
             }
           }
         }
@@ -308,30 +312,34 @@ html {
           }
           .nav-content {
             overflow: hidden;
-            padding: 0px 20px 10px 20px;
+            padding: 5px;
             height: 200px;
-            .wb-history {
-              margin-top: 10px;
-              a {
-                cursor: pointer;
-                color: #333333;
-                &:hover {
+            a {
+              cursor: pointer;
+              width: 100%;
+              border-radius: 5px;
+              color: #333333;
+              &:hover {
+                color: #1890ff !important;
+                background-color: #7e7b7b2f;
+                ul {
                   color: #1890ff !important;
-                  background-color: #7e7b7b2f;
-                  p {
-                    color: #1890ff !important;
-                  }
                 }
               }
-              p {
-                line-height: 19px;
-                width: 320px;
-                text-overflow: -o-ellipsis-lastline;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                display: -webkit-box;
-                -webkit-line-clamp: 1;
-                -webkit-box-orient: vertical;
+              ul {
+                margin-bottom: 0px;
+                li {
+                  display: inline-block;
+                  line-height: 24px;
+                  width: 300px;
+                  text-overflow: -o-ellipsis-lastline;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  display: -webkit-box;
+                  -webkit-line-clamp: 1;
+                  -webkit-box-orient: vertical;
+                  word-break: break-all;
+                }
               }
             }
           }
@@ -362,7 +370,7 @@ html {
   overflow: auto;
   cursor: pointer;
   .card {
-    width: 30%;
+    width: 28%;
     height: 18%;
     background-color: #f9f9f9;
     margin: 10px;

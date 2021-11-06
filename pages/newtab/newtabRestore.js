@@ -185,7 +185,7 @@ const newtabRestore = {
         })
       })
 
-      console.log(todayHistory)
+      //console.log(todayHistory)
       return [{
         time_title:'访问历史',
         info:todayHistory
@@ -223,7 +223,7 @@ const newtabRestore = {
   //初始化mySearch数据库
   initialize: async() => {
     const result = await newtabRestore.restoreFromDB()
-    console.log(result, '__ini__')
+    //console.log(result, '__ini__')
     if(result.length == 0) {
       await newtabRestore.saveToDB()
     }
