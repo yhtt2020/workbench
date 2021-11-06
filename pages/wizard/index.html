@@ -13,28 +13,28 @@
 
 		<div id="app">
 			<div id="stepLogin" class="step-login" v-show="step=='login'">
-				<h1>使用向导</h1>
+				<h1>首次使用向导</h1>
 				<p>欢迎使用想天工作台，您是否首次使用产品？<br>您可以选择登录账号来同步您的<strong>配置</strong>和<strong>工作区</strong>。<br>如果您是<strong>首次使用</strong>，建议根据使用向导熟悉产品后再使用。
 				</p>
-				<template>
-					<a-form id="components-form-demo-normal-login" :form="form" class="login-form"
+				<template >
+					<a-form  id="components-form-demo-normal-login" :form="form" class="login-form"
 						@submit="handleSubmit">
-						<a-form-item label="">
-							<a-input placeholder="手机号" v-decorator="[
-						          'phone',
-						          {
-						            rules: [{ required: true, message: '请输入您的手机号!' }],
-						          },
-						        ]" style="width: 100%">
-								<a-select slot="addonBefore" v-decorator="['prefix', { initialValue: '86' }]"
-									style="width: 70px">
-									<a-select-option value="86">
-										+86
-									</a-select-option>
+<!--						<a-form-item label="">-->
+<!--							<a-input placeholder="手机号" v-decorator="[-->
+<!--						          'phone',-->
+<!--						          {-->
+<!--						            rules: [{ required: true, message: '请输入您的手机号!' }],-->
+<!--						          },-->
+<!--						        ]" style="width: 100%">-->
+<!--								<a-select slot="addonBefore" v-decorator="['prefix', { initialValue: '86' }]"-->
+<!--									style="width: 70px">-->
+<!--									<a-select-option value="86">-->
+<!--										+86-->
+<!--									</a-select-option>-->
 
-								</a-select>
-							</a-input>
-						</a-form-item>
+<!--								</a-select>-->
+<!--							</a-input>-->
+<!--						</a-form-item>-->
 						<!-- <a-form-item>
 							<a-input v-decorator="[
 				  'password',
@@ -43,27 +43,33 @@
 								<a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25)" />
 							</a-input>
 						</a-form-item> -->
-						<a-form-item label="">
-							<a-row :gutter="8">
-								<a-col :span="12">
-									<a-input placeholder="验证码" v-decorator="[
-						              'captcha',
-						              { rules: [{ required: true, message: '请输入获取的验证码!' }] },
-						            ]" />
-								</a-col>
-								<a-col :span="12">
-									<a-button>获取</a-button>
-								</a-col>
-							</a-row>
-						</a-form-item>
-						<a-form-item>
-							<a-button type="default" html-type="submit" class="login-form-button">
-								登录
-							</a-button>
-							<a-button type="primary" style="width: 40%;float:right" @click="step='wizard'">
-								首次使用
-							</a-button>
-						</a-form-item>
+<!--						<a-form-item label="">-->
+<!--							<a-row :gutter="8">-->
+<!--								<a-col :span="12">-->
+<!--									<a-input placeholder="验证码" v-decorator="[-->
+<!--						              'captcha',-->
+<!--						              { rules: [{ required: true, message: '请输入获取的验证码!' }] },-->
+<!--						            ]" />-->
+<!--								</a-col>-->
+<!--								<a-col :span="12">-->
+<!--									<a-button>获取</a-button>-->
+<!--								</a-col>-->
+<!--							</a-row>-->
+<!--						</a-form-item>-->
+<!--						<a-form-item>-->
+<!--							<a-button type="default" html-type="submit" class="login-form-button">-->
+<!--								登录-->
+<!--							</a-button>		</a-form-item>-->
+            <div style="position:absolute;bottom: 20px;width: 400px">
+              <a-button @click="close()" type="default" html-type="submit" class="login-form-button">
+                我是老用户，关闭向导
+              </a-button>
+              <a-button type="primary" style="width: 40%;float:right" @click="step='wizard'">
+                首次使用
+              </a-button>
+            </div>
+
+
 					</a-form>
 				</template>
 			</div>
@@ -190,18 +196,24 @@
 				<div v-show="current==1" class="steps-content">
 					<template>
 						<div>
-							<a-collapse v-model="activeKey" :bordered="false">
-								<a-collapse-panel :style="customStyle" :show-arrow="false" key="1"
-									header="①安装浏览器插件，实现实时同步，强烈推荐">
-									<p>安装我们提供的浏览器插件，实现实时同步，无需导入导出</p>
-								</a-collapse-panel>
-								<a-collapse-panel :style="customStyle" :show-arrow="false" key="2" header="②自动导入书签">
-									<p>下面是我们检测到的系统内可支持自动导入的浏览器，请选择，可多个导入，如果有相同的后者会覆盖前者。</p>
-								</a-collapse-panel>
-								<a-collapse-panel :style="customStyle" :show-arrow="false" key="3" header="③手动导入导出">
+							<a-collapse v-model="activeKey"  :bordered="false">
+<!--								<a-collapse-panel :style="customStyle" :show-arrow="false" key="1"-->
+<!--									header="①安装浏览器插件，实现实时同步，强烈推荐">-->
+<!--									<p>安装我们提供的浏览器插件，实现实时同步，无需导入导出</p>-->
+<!--								</a-collapse-panel>-->
+<!--								<a-collapse-panel :style="customStyle" :show-arrow="false" key="2" header="②自动导入书签">-->
+<!--									<p>下面是我们检测到的系统内可支持自动导入的浏览器，请选择，可多个导入，如果有相同的后者会覆盖前者。</p>-->
+<!--								</a-collapse-panel>-->
+								<a-collapse-panel :style="customStyle" :show-arrow="false" key="3" header="手动导入导出">
 									<p>按照行业标准导出收藏夹，并选择文件导入</p>
 									<p><a href="https://www.yuque.com/tswork/ngd5zk/uizvd8" target="_blank">❓如何导出？</a>
+
 									</p>
+                  <p>
+                    <a-button @click="ipc.send('importBookMarks')" type="primary">
+                      导入Html格式书签
+                    </a-button>
+                  </p>
 								</a-collapse-panel>
 							</a-collapse>
 						</div>
@@ -253,21 +265,21 @@
 								<h3 class="video-title">4.团队协作功能（即将上线）</h3>
 
 							</div>
-							
+
 						</a-carousel>
 						<div>
 							<iframe  class="frame-video" sandbox="allow-same-origin allow-scripts "
 								:src="videoSource"
 								scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true">
 							</iframe>
-						
+
 						</div>
 					</template>
 					<div class="bottom-button">
 						<a-button type="primary" @click="netxVideo">
 							新技能get，next
 						</a-button>
-						<a-button type="default" style="margin-left: 50px" @click="current=2">
+						<a-button type="default" style="margin-left: 50px" @click="close">
 							学完了
 						</a-button>
 					</div>
@@ -275,13 +287,14 @@
 			</div>
 		</div>
 		<script>
+
 			Vue.use(antd)
 			Vue.prototype.$form = antd.Form
 			var appVue = new Vue({
 				el: '#app',
-
 				data() {
 					return {
+            ipc:window.ipc,
 						step: 'login', // login ,wizard,reg
 						current: 0,
 						steps: [{
@@ -301,7 +314,7 @@
 							},
 						],
 						titleBar: 'theme',
-						activeKey: ['1'],
+						activeKey: ['3'],
 						customStyle: 'background: #f7f7f7;border-radius: 4px;margin-bottom: 24px;border: 0;overflow: hidden',
 						videoSource:"http://player.bilibili.com/player.html?aid=890908889&bvid=BV1hP4y187jw&cid=421342590&page=1",
 						videoSources:[
@@ -344,7 +357,13 @@
 							this.currentVideoIndex=0
 						}
 						this.videoSource=this.videoSources[this.currentVideoIndex]
-					}
+					},
+          close(){
+            db.system.put({name:'firstRun',value:1}).catch((err)=>{
+              console.log(err)
+            })
+            ipc.send('closeWizard')
+          }
 				}
 			})
 		</script>
