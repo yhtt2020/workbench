@@ -13,7 +13,7 @@
     <title>新标签页</title>
   </head>
 
-  <body>
+  <body style="background-position: ">
     <script>
       Vue.use(antd)
       var electron = require('electron')
@@ -44,7 +44,7 @@
                     <div class="left flex align-center justify-center">选择您的默认搜索引擎:</div>
                     <div class="right flex align-center justify-center" style="display: none">
                       <p>搜索热词:</p>
-                      <a-switch size="small" default-checked / style="margin-left: 5px;">
+                      <a-switch size="small" default-checked  style="margin-left: 5px;">
                     </div>
                   </div>
                 </template>
@@ -463,7 +463,11 @@
               if(!!!bg){
               }else{
                 const newtabBg=bg.value
-                document.body.style= `background:url('${newtabBg}')`
+                document.body.style= `
+                background: url("${newtabBg}") no-repeat;
+                background-size:cover;
+                background-attachment:fixed;
+`
               }
             }).catch(err=>console.log(err))
 
