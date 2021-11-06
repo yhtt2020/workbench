@@ -85,28 +85,25 @@
 								</div> -->
 								<div>
 									<a-card title="本地导航">
-
-
-
 										<a class="add-button" slot="extra" @click="showModal">添加网站</a>
-
-
-										<a-card-grid v-for="(app, index) in myApps" class="app" style="cursor: pointer;"
+                    <a-dropdown v-for="(app, index) in myApps" :trigger="['contextmenu']">
+                    <a-card-grid  class="app" style="cursor: pointer;"
 											@click="addTask(app)">
-
 											<a-avatar shape="square" :size="64" :src="app.icon"
 												style="margin-bottom: 10px;"></a-avatar>
 											<a-card-meta :title="app.name">
-
-
 											</a-card-meta>
-
 										</a-card-grid>
-
+                      <a-menu slot="overlay">
+                        <a-menu-item @click="addApp(app)" key="1">
+                          <a-icon type="delete"></a-icon> 删除
+                        </a-menu-item>
+                      </a-menu>
+                    </a-dropdown>
 										<a-empty v-if="myApps.length==0" description="还未添加任何网站，点击添加网站">
 
 											<a-button type="primary" @click="showModal">
-												添加网站
+												 添加网站
 											</a-button>
 
 										</a-empty>
