@@ -78,6 +78,7 @@ if(window.location.href.startsWith('file://')){
   }
   initAppsData()
 }else{
+  require('../../dist/preload.js') //载入默认的js，保证菜单依然可以显示
   // 删除nodejs集成带的变量，保持环境洁净
   delete window.require
   delete window.exports
