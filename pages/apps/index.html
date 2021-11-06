@@ -300,8 +300,9 @@
 																</template>
 															</a-card-meta>
 														</a-card-grid>
-												</a-tab-pane>
+
 												</a-card>
+                        </a-tab-pane>
 											</a-tabs>
 										</div>
 									</template>
@@ -339,7 +340,7 @@
 												<a-input placeholder="请输入应用名，少于8个字" v-decorator="[
           'name',
           {
-            rules: [{ required: true, message: '请输入应用名！', whitespace: true },{max:8,message:'不得超过8个字！'}],
+            rules: [{ required: true, message: '请输入应用名！', whitespace: true },{max:24,message:'不得超过24个字！'}],
           },
         ]" />
 											</a-form-item>
@@ -376,9 +377,9 @@
 												</template>
 											</a-form-item>
 											<a-form-item :wrapper-col="{ span: 12, offset: 6 }">
-												<a-button type="primary" html-type="submit">
-													添加
-												</a-button>
+                        <a-button style="margin-left: 20px"  type="primary" html-type="submit">
+                          添加并继续
+                        </a-button>
 											</a-form-item>
 										</a-form>
 									</template>
@@ -569,7 +570,14 @@
 					let that = this
 					this.form.validateFieldsAndScroll((err, values) => {
 						if (!err) {
-							that.myApps.push(values)
+              console.log(values)
+              const app={
+                'name':values.name,
+                'url':values.url,
+                'summary':values.summary,
+                'icon':'../../icons/default.svg'
+              }
+							that.addApp(app)
 
 							that.$nextTick(() => {
 								that.form.resetFields()
