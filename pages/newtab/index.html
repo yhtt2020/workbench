@@ -44,7 +44,7 @@
                     <div class="left flex align-center justify-center">选择您的默认搜索引擎:</div>
                     <div class="right flex align-center justify-center" style="display: none">
                       <p>搜索热词:</p>
-                      <a-switch size="small" default-checked / style="margin-left: 5px;">
+                      <a-switch size="small" default-checked  style="margin-left: 5px;">
                     </div>
                   </div>
                 </template>
@@ -326,6 +326,7 @@
             bookMark: [],
             loadingHistory: true,
             historyBar: [],
+            bg:window.newtabBg
           }
         },
         watch: {
@@ -458,6 +459,18 @@
             this.loadBookmarks(6)
             this.loadHistory()
           }, 200)
+          db.system.get({name:'newtabBg'}).then(bg=>{
+              if(!!!bg){
+              }else{
+                const newtabBg=bg.value
+                document.body.style= `
+                background: url("${newtabBg}") no-repeat;
+                background-size:cover;
+                background-attachment:fixed;
+`
+              }
+            }).catch(err=>console.log(err))
+
         },
       })
     </script>

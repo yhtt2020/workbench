@@ -113,6 +113,7 @@ const newtabRestore = {
     });
   },
 
+
   //从数据库读出所有的搜索引擎数据
   restoreFromDB: async () => {
     try {
