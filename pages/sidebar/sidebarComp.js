@@ -56,7 +56,8 @@ Vue.component('sidebar', {
 					'nickname':'李四',
 					'avatar':'../../icons/browser.ico'
 				}
-			]
+			],
+      sidebarBottom:0
 		}
 
 	},
@@ -84,8 +85,11 @@ Vue.component('sidebar', {
 			this.$store.state.pinItems = window.sidebarData.state.sidebar.pinItems
 			this.$store.state.items = window.sidebarData.state.sidebar.items
 		}
-
-		this.fixElementPosition()
+    let that=this
+    db.system.where({name:'sidebarBottom'}).first((data)=>{
+      that.sidebarBottom= data.value
+      setTimeout(that.fixElementPosition,250)
+    })
 	},
 	computed: {
 		user(){
@@ -221,18 +225,21 @@ Vue.component('sidebar', {
 			return index
 
 		},
-		changeBottomSize() {
+		changeBottomSize(key) {
 			let that = this
 			setTimeout(function() {
 				that.fixElementPosition()
-			}, 250)
+			}, 200)
+      let state= key.length===1?1:0
+      db.system.where({name:'sidebarBottom'}).delete()
+      db.system.put({name:'sidebarBottom',value:state})
 
 		},
 		fixElementPosition() {
-			var itemsEl = document.getElementById('itemsEl')
-			var bottomsEl = document.getElementById('bottomsEl')
-			console.log(bottomsEl.offsetHeight)
+			const itemsEl = document.getElementById('itemsEl')
+			const bottomsEl = document.getElementById('bottomsEl')
 			itemsEl.style.bottom = bottomsEl.offsetHeight + 'px'
+      console.log(itemsEl.style.bottom)
 		},
 		//点击用户登录按钮
 		userClick(){

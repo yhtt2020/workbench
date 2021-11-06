@@ -274,7 +274,7 @@
             <ul class="bottomBar">
                 <template>
                     <div>
-                        <a-collapse default-active-key="1" :bordered="false" @change="changeBottomSize">
+                        <a-collapse default-active-key="0" :active-key="sidebarBottom" :bordered="false" @change="changeBottomSize">
                             <a-collapse-panel key="1">
                                 <li @click="openBottom('mobile')">
 
