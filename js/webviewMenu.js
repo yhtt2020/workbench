@@ -8,6 +8,7 @@ const settings = require('util/settings/settings.js')
 const pageTranslations = require('pageTranslations.js')
 
 const remoteMenu = require('remoteMenuRenderer.js')
+const { db } = require('./util/database')
 
 const webviewMenu = {
   menuData: null,
@@ -141,6 +142,26 @@ const webviewMenu = {
         }
       })
 
+
+      imageActions.push({
+        label: "设为新标签页壁纸",
+        click: async function () {
+          const db=require('./util/database').db
+          try{
+            let newtabBg=await db.system.get({name:'newtabBg'})
+            console.log(newtabBg)
+              if(!!!newtabBg){
+                 db.system.put({name:'newtabBg',value:mediaURL})
+              }else{
+                db.system.update(newtabBg.id,{name:'newtabBg',value:mediaURL})
+              }
+                  alert('设置成功，可在新建标签中查看效果。')
+          }catch(err){
+            console.log(err)
+          }
+        }
+      })
+
       menuSections.push(imageActions)
 
       menuSections.push([
@@ -151,6 +172,8 @@ const webviewMenu = {
           }
         }
       ])
+
+
     }
 
     /* selected text */
