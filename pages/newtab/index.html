@@ -326,6 +326,7 @@
             bookMark: [],
             loadingHistory: true,
             historyBar: [],
+            bg:window.newtabBg
           }
         },
         watch: {
@@ -458,6 +459,14 @@
             this.loadBookmarks(6)
             this.loadHistory()
           }, 200)
+          db.system.get({name:'newtabBg'}).then(bg=>{
+              if(!!!bg){
+              }else{
+                const newtabBg=bg.value
+                document.body.style= `background:url('${newtabBg}')`
+              }
+            }).catch(err=>console.log(err))
+
         },
       })
     </script>
