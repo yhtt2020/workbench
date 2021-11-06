@@ -244,6 +244,14 @@ const webviewMenu = {
             webviews.callAsync(tabs.getSelected(), 'goForward')
           } catch (e) { }
         }
+      },
+      {
+        label: l('reload'),
+        click: function () {
+          try {
+            webviews.callAsync(tabs.getSelected(), 'reload')
+          } catch (e) { }
+        }
       }
     ]
 
