@@ -208,7 +208,7 @@
                                         </li>
                                     </ul>
                                 </template>
-                                <div class="wrapper">
+                                <div class="wrapper" @dblclick.stop="closeItem(item)">
                                     <div class="item-icon">
 
                                         <img class="icon" :src="item.icon">
@@ -248,7 +248,7 @@
                                             </li>
                                         </ul>
                                     </template>
-                                    <div class="wrapper">
+                                    <div class="wrapper" @dblclick.stop="closeItem(item)">
                                         <div class="item-icon">
 
                                             <img class="icon" :src="item.icon">

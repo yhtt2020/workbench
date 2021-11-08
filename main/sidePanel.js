@@ -599,3 +599,7 @@ ipc.on('importBookMarks',function(){
 ipc.on('message',function(event,args){
   sidePanel.get().webContents.send('message',args)
 })
+
+ipc.on('closeTask',function(event,args){
+  sendIPCToWindow(mainWindow,'closeTask',args)
+})

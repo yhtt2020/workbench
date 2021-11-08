@@ -476,4 +476,8 @@ var taskOverlay = {
   }
 }
 
+ipc.on('closeTask',(event,args)=>{
+  browserUI.closeTask(args.tabId)
+})
+
 module.exports = taskOverlay
