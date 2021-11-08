@@ -276,6 +276,10 @@ Vue.component('sidebar', {
     goAccount(){
       this.userPanelVisible=false
       this.addTab(serverConfig.getUrl(serverConfig.apiUrl.user.account))
+    },
+    addNewTask(e){
+      ipc.send('addNewTask')
+      this.$message.success({content:'成功添加一个新任务到左侧栏。'})
     }
 
 	}

@@ -229,7 +229,7 @@
 
             <div class="app-box">
 
-                <ul id="appGroup" class="app-task app-items">
+                <ul id="appGroup" style="user-select: none;" class="app-task app-items" @dblclick.prevent="addNewTask">
                     <draggable v-model="getItems" group="sideBtn" animation="300" dragClass="dragClass"
                                ghostClass="ghostClass" chosenClass="chosenClass" @start="onStart" @end="onEnd">
                         <transition-group>

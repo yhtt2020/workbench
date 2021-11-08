@@ -17,3 +17,7 @@ ipc.on('addTask',function(event, data){
 		sidePanel.addItem(item)
 	sendIPCToWindow(mainWindow,'addTaskFromApps',{id:taskId,name:data.name,url:data.url})
 })
+
+ipc.on('addNewTask',function(){
+  sendIPCToWindow(mainWindow,'addTask')
+})
