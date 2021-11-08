@@ -155,7 +155,7 @@ const webviewMenu = {
               }else{
                 db.system.update(newtabBg.id,{name:'newtabBg',value:mediaURL})
               }
-                  alert('设置成功，可在新建标签中查看效果。')
+                  ipc.send('message',{type:'success',config:{content:'设置成功，可在新建标签中查看效果。'}})
           }catch(err){
             console.log(err)
           }

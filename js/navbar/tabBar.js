@@ -125,8 +125,7 @@ const tabBar = {
   //添加到本地导航(我的应用)
   addToMyapps: function(tabId) {
     let tabs = tasks.getSelected().tabs
-    tab = tabs.get(tabId)
-    index = tabs.getIndex(tabId)
+    let tab = tabs.get(tabId)
     const appNow = {
       icon: tab.favicon.url,
       name: tab.title,
@@ -136,15 +135,15 @@ const tabBar = {
     }
     const appsRestore = require('../../pages/apps/appsRestore.js')
     appsRestore.addApp(appNow)
+    ipc.send('message',{type:'success',config:{content:'添加到本地导航成功，可在我的导航和新标签页中查看。'}})
   },
 
   //移动tab到新的分组且完成切换
   moveTabTask: function(tabId) {
     //拿到当前tab标签页
     let tabs = tasks.getSelected().tabs
-    tab = tabs.get(tabId)
-    index = tabs.getIndex(tabId)
-
+    let tab = tabs.get(tabId)
+    console.log(tab)
     ipc.send('addTask', {
       name: tab.title,
       url: tab.url,
@@ -153,7 +152,8 @@ const tabBar = {
     setTimeout(()=>{
       let taskNew = tasks.getAll()[tasks.getAll().length -1]
       require('browserUI.js').switchToTask(taskNew.id)
-    }, 200)
+      ipc.send('message',{type:'success',config:{content:'移动到分组成功，已为您切换到新的分组。'}})
+    }, 300)
   },
 
 	/*标签栏补充的右键菜单触发动作结束*/

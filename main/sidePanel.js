@@ -592,3 +592,10 @@ ipc.on('userLogin', function(event, data) {
 ipc.on('importBookMarks',function(){
   sendIPCToWindow(mainWindow,'importBookMarks')
 })
+
+/**
+ * 发送消息到sidebar，进行全局提示
+ */
+ipc.on('message',function(event,args){
+  sidePanel.get().webContents.send('message',args)
+})
