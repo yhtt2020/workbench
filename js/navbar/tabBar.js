@@ -151,6 +151,7 @@ const tabBar = {
     })
     setTimeout(()=>{
       let taskNew = tasks.getAll()[tasks.getAll().length -1]
+      require('browserUI.js').destroyTab(tabId)
       require('browserUI.js').switchToTask(taskNew.id)
       ipc.send('message',{type:'success',config:{content:'移动到分组成功，已为您切换到新的分组。'}})
     }, 300)
