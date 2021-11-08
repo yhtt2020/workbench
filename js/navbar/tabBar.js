@@ -15,6 +15,8 @@ const permissionRequests = require('navbar/permissionRequests.js')
 //添加tab上的右键菜单，支持右键选择关闭行为组
 const remoteMenu = require('remoteMenuRenderer.js')
 
+const ipc = electron.ipcRenderer
+
 
 var lastTabDeletion = 0 // TODO get rid of this
 
@@ -53,7 +55,7 @@ const tabBar = {
 	/*标签栏补充的右键菜单触发动作开始*/
 	//关闭其他的标签
 	closeOtherTabs: function(tabId) {
-		
+
 		require('browserUI.js').switchToTab(tabId)
 		let needDestroy = []
 		tasks.getSelected().tabs.forEach(function(tab, index) {
@@ -119,6 +121,41 @@ const tabBar = {
 	refresh:function(id){
 		webviews.update(id,tasks.getSelected().tabs.get(id).url)
 	},
+
+  //添加到本地导航(我的应用)
+  addToMyapps: function(tabId) {
+    let tabs = tasks.getSelected().tabs
+    tab = tabs.get(tabId)
+    index = tabs.getIndex(tabId)
+    const appNow = {
+      icon: tab.favicon.url,
+      name: tab.title,
+      url: tab.url,
+      summary: tab.title,
+      star: "5"
+    }
+    const appsRestore = require('../../pages/apps/appsRestore.js')
+    appsRestore.addApp(appNow)
+  },
+
+  //移动tab到新的分组且完成切换
+  moveTabTask: function(tabId) {
+    //拿到当前tab标签页
+    let tabs = tasks.getSelected().tabs
+    tab = tabs.get(tabId)
+    index = tabs.getIndex(tabId)
+
+    ipc.send('addTask', {
+      name: tab.title,
+      url: tab.url,
+      icon: tab.favicon.url
+    })
+    setTimeout(()=>{
+      let taskNew = tasks.getAll()[tasks.getAll().length -1]
+      require('browserUI.js').switchToTask(taskNew.id)
+    }, 200)
+  },
+
 	/*标签栏补充的右键菜单触发动作结束*/
 	createTab: function(data) {
 		var tabEl = document.createElement('div')
@@ -203,7 +240,7 @@ const tabBar = {
 				}, 150) // wait until the animation has completed
 			}
 		})
-	
+
 		tabEl.addEventListener('contextmenu', (e) => {
 			e.preventDefault()
 			e.stopPropagation()
@@ -239,7 +276,7 @@ const tabBar = {
 						click: function() {
 							//console.log('关闭全部标签被点击')
 							tabBar.refresh(data.id)
-					
+
 						}
 
 					},
@@ -278,7 +315,21 @@ const tabBar = {
 
 						}
 					}
-				]
+				],
+        [
+          {
+            label: '添加到本地导航',
+            click: function() {
+              tabBar.addToMyapps(data.id)
+            }
+          },
+          {
+            label: '移入新建分组中',
+            click: function() {
+              tabBar.moveTabTask(data.id)
+            }
+          }
+        ]
 
 			]
 
@@ -290,6 +341,7 @@ const tabBar = {
 
 		return tabEl
 	},
+
 	updateTab: function(tabId, tabEl = tabBar.getTab(tabId)) {
 		var tabData = tabs.get(tabId)
 
@@ -314,7 +366,7 @@ const tabBar = {
 		//titleEl.textContent = tabTitle  原先的方法只是添加了文字
 		titleEl.innerHTML=''
 		titleEl.appendChild(iconEl)
-		titleEl.append(tabTitle)	
+		titleEl.append(tabTitle)
 
 		tabEl.title = tabTitle
 		if (tabData.private) {
@@ -381,8 +433,8 @@ const tabBar = {
 			tabBar.navBar.classList.remove('show-dividers')
 		}
 	},
-	
-	
+
+
 	//扩充一个获取icon的方法
 	createIconEl:function(tabData,loaded){
 		var iconEl=document.createElement('img')
@@ -397,7 +449,7 @@ const tabBar = {
 				src=tabData.favicon.url
 			}
 		}
-		
+
 		iconEl.src=src
 		return iconEl
 	}
