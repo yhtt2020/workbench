@@ -280,6 +280,12 @@ Vue.component('sidebar', {
     addNewTask(e){
       ipc.send('addNewTask')
       this.$message.success({content:'成功添加一个新任务到左侧栏。'})
+    },
+    closeItem(item){
+      if(item.type==='task'){
+        ipc.send('closeTask',{tabId:item.id})
+        this.$message.success({content:'删除任务成功。'})
+      }
     }
 
 	}
