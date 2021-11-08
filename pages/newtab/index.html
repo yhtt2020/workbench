@@ -58,9 +58,9 @@
                 style="font-size: 20px"
                 @keyup.enter="enterSubmit"
               />
-              <a :href="searchSplice" style="color: #606266">
+              <div @click="clklogo" style="color: #606266">
                 <a-icon type="search" class="search-logo" :style="{ fontSize: '30px' }"></a-icon>
-              </a>
+              </div>
             </div>
           </div>
 
@@ -69,12 +69,12 @@
               <div
                 class="wrap-nav1"
                 :class="{'moreNow': this.navallShow1}"
-                @mouseenter="mouseIn1"
-                @mouseleave="mouseOut1"
+                @mouseenter="mouseIn(0)"
+                @mouseleave="mouseOut(0)"
               >
                 <a-dropdown class="adrop1" v-show="this.bookdian1Show">
                   <a-icon type="more" :style="{ fontSize: '18px'}"></a-icon>
-                  <a-menu slot="overlay">
+                  <a-menu slot="overlay" style="display: none;">
                     <a-menu-item>
                       <a href="javascript:;">移除分组框</a>
                     </a-menu-item>
@@ -119,8 +119,8 @@
               <div
                 class="wrap-nav2"
                 :class="{'moreNow': this.navallShow2}"
-                @mouseenter="mouseIn2"
-                @mouseleave="mouseOut2"
+                @mouseenter="mouseIn(1)"
+                @mouseleave="mouseOut(1)"
               >
                 <div class="nav-top flex justify-start align-center">
                   <a-icon type="star" :style="{ fontSize: '18px'}" style="margin-left: 10px"></a-icon>
@@ -128,7 +128,7 @@
                 </div>
                 <a-dropdown class="adrop2" v-show="this.bookdian2Show">
                   <a-icon type="more" :style="{ fontSize: '18px'}"></a-icon>
-                  <a-menu slot="overlay">
+                  <a-menu slot="overlay" style="display: none;">
                     <a-menu-item>
                       <a href="javascript:;">移除分组框</a>
                     </a-menu-item>
@@ -152,7 +152,7 @@
                   <a
                     :href="item.link"
                     class="flex justify-around align-center"
-                    v-for="(item, index) in this.bookMark"
+                    v-for="(item, index) in bookmark"
                     :key="index"
                   >
                     <a-icon type="global" :style="{ fontSize: '18px'}"></a-icon>
@@ -176,12 +176,12 @@
               <div
                 class="wrap-nav3"
                 :class="{'moreNow': this.navallShow3}"
-                @mouseenter="mouseIn3"
-                @mouseleave="mouseOut3"
+                @mouseenter="mouseIn(2)"
+                @mouseleave="mouseOut(2)"
               >
                 <a-dropdown class="adrop3" v-show="this.bookdian3Show">
                   <a-icon type="more" :style="{ fontSize: '18px'}"></a-icon>
-                  <a-menu slot="overlay">
+                  <a-menu slot="overlay" style="display: none;">
                     <a-menu-item>
                       <a href="javascript:;">移除分组框</a>
                     </a-menu-item>
@@ -218,15 +218,15 @@
               <div
                 class="wrap-nav4"
                 :class="{'moreNow': this.navallShow4}"
-                @mouseenter="mouseIn4"
-                @mouseleave="mouseOut4"
+                @mouseenter="mouseIn(3)"
+                @mouseleave="mouseOut(3)"
               >
                 <a-tabs default-active-key="0">
                   <a-tab-pane v-for="(i, index) in this.historyBar" :key="index" :tab="i.time_title">
                     <div class="pane flex flex-direction">
                       <a-dropdown class="adrop4" v-show="bookdian4Show">
                         <a-icon type="more" :style="{ fontSize: '18px'}"></a-icon>
-                        <a-menu slot="overlay">
+                        <a-menu slot="overlay" style="display: none;">
                           <a-menu-item>
                             <a href="javascript:;">移除分组框</a>
                           </a-menu-item>
@@ -306,7 +306,6 @@
           return {
             mySearch: [],
             myApps: [],
-            searchSplice: '',
             adVisible: false,
             mode: 'top',
             slinkLogo: './assets/baidu.svg',
@@ -323,22 +322,16 @@
             navallShow4: false,
             loadingBookmark: true,
             bookmarkEmpty: false,
-            bookMark: [],
+            bookmark: [],
             loadingHistory: true,
             historyBar: [],
             bg:window.newtabBg
           }
         },
-        watch: {
-          searchWord: {
-            handler(newValue) {
-              this.searchSplice = this.sfrontLink + newValue
-            },
-            deep: true,
-            immediate: true,
-          },
-        },
         methods: {
+          clklogo() {
+            location.href = this.sfrontLink + this.searchWord
+          },
           isEmpty(array) {
             return array.length === 0 && this.loadingHistory === false
           },
@@ -363,7 +356,7 @@
             window.$newtabRestore
               .loadBookmarks(count)
               .then((data) => {
-                this.bookMark = data
+                this.bookmark = data
                 this.loadingBookmark = false
                 if (data.length === 0) {
                   this.bookmarkEmpty = true
@@ -379,7 +372,7 @@
               this.loadingHistory = false
             })
           },
-          loadMyapp() {
+          loadMyapps() {
             window.$appsRestore
               .restoreFromDB()
               .then((res) => {
@@ -393,42 +386,19 @@
           enterSubmit() {
             location.href = this.sfrontLink + this.searchWord
           },
-          mouseIn1() {
-            this.navallShow1 = true
-            this.bookdian1Show = true
+          mouseIn(i) {
+            this[`navallShow${i + 1}`] = true
+            this[`bookdian${i + 1}Show`] = true
           },
-          mouseOut1() {
-            this.navallShow1 = false
-            this.bookdian1Show = false
-          },
-          mouseIn2() {
-            this.navallShow2 = true
-            this.bookdian2Show = true
-          },
-          mouseOut2() {
-            this.navallShow2 = false
-            this.bookdian2Show = false
-          },
-          mouseIn3() {
-            this.navallShow3 = true
-            this.bookdian3Show = true
-          },
-          mouseOut3() {
-            this.navallShow3 = false
-            this.bookdian3Show = false
-          },
-          mouseIn4() {
-            this.navallShow4 = true
-            this.bookdian4Show = true
-          },
-          mouseOut4() {
-            this.navallShow4 = false
-            this.bookdian4Show = false
+          mouseOut(i) {
+            this[`navallShow${i + 1}`] = false
+            this[`bookdian${i + 1}Show`] = false
           },
           chooseSearch(id, index) {
             this.visible = false
             this.slinkLogo = this.mySearch[index].slinkLogo
             this.sfrontLink = this.mySearch[index].frontLink
+            console.log(this.sfrontLink)
             window.$newtabRestore
               .saveDefaultDB(id)
               .then(() => {
@@ -453,7 +423,7 @@
           },
         },
         mounted() {
-          this.loadMyapp()
+          this.loadMyapps()
           setTimeout(() => {
             this.loadMysearch()
             this.loadBookmarks(6)
