@@ -287,34 +287,8 @@ Vue.component('sidebar', {
 })
 
 ipc.on('message',function(event,args){
-  switch(args.type){
-
-    case 'success':
-      appVue.$message.success(args.config)
-      break
-    case 'error':
-      appVue.$message.error(args.config)
-      break
-    case 'info':
-      appVue.$message.info(args.config)
-      break
-    case 'warning':
-      appVue.$message.warning(args.config)
-      break
-    case 'warn':
-      appVue.$message.warn(args.config)
-      break
-    case 'loading':
-      appVue.$message.loading(args.config)
-      break
-    default:
-      appVue.$message.open(args.config)
+  if(!!!args.type){
+    args.type='open'
   }
-  // message.open(config)
-  // message.success(config)
-  // message.error(config)
-  // message.info(config)
-  // message.warning(config)
-  // message.warn(config) // alias of warning
-  // message.loading(config)
+  appVue.$message[args.type](args.config)
 })
