@@ -15,6 +15,7 @@ const {
   nativeTheme,
   globalShortcut
 } = electron
+const { autoUpdater } = require('electron-updater')
 console.log(app.setAsDefaultProtocolClient("tsb"))
 console.log(app.isDefaultProtocolClient('tsb'))
 console.log(app.getApplicationNameForProtocol("tsb://"))
@@ -495,3 +496,6 @@ app.on('ready', function() {
 // 	sendIPCToWindow(mainWindow,'showBookmarks')
 
 // })
+
+
+

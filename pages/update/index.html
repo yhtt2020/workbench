@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>自动升级</title>
+  <script src="../../ext/vue/vue.js"></script>
+  <script src="../../ext/vue/antd.min.js"></script>
+  <link rel="stylesheet" href="../../ext/vue/antd.min.css"/>
+</head>
+<body>
+<script>
+  Vue.use(antd)
+</script>
+<div id="appVue">
+  <template>
+    <a-result title="您有新的升级可用">
+<!--      <template #extra>-->
+<!--        <a-button key="console" type="primary">-->
+<!--          下载更新-->
+<!--        </a-button>-->
+<!--      -->
+<!--       -->
+<!--      </template>-->
+      <div class="desc">
+        <p style="font-size: 16px;">
+          <strong>新版本信息如下：</strong>
+        </p>
+        <p>
+           版本号：v1.0.0
+          <a>了解更多 &gt;</a>
+        </p>
+        <p>
+          更新内容：
+          1.xxx
+          2.xxx
+          3.xxx
+        </p>
+        <p>
+          更新日期： 2021年11月9日
+        </p>
+      </div>
+      <template #extra>
+        <a-button key="console" type="primary">
+          下载更新
+        </a-button>
+        <a-button key="buy">
+         暂不更新
+        </a-button>
+      </template>
+    </a-result>
+    <style scoped>
+      .desc p {
+        margin-bottom: 1em;
+      }
+    </style>
+  </template>
+</div>
+<script>
+
+  let appVue = new Vue({
+    el: '#appVue',
+    components: {},
+    data () {
+      return {
+
+      }
+    }
+  })
+</script>
+</body>
+</html>
+
