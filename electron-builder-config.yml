@@ -29,7 +29,7 @@ win:
               - ia32
     publish:
         - provider : generic
-          url: http://d.xiangtian.ren
+          url: http://d.xiangtian.ren/update/browser/win/
           channel: latest
 
 mac:
@@ -41,7 +41,7 @@ mac:
         - zip
     publish:
       - provider : generic
-        url: http://d.xiangtian.ren/browser/mac/
+        url: http://d.xiangtian.ren/update/browser/mac/
         channel: latest
 
 

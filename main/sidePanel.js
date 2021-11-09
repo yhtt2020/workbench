@@ -1,4 +1,5 @@
 
+
 let sidePanel = null //SidePanel类的存储变量
 /**
  * 是否是win11
@@ -606,50 +607,3 @@ ipc.on('closeTask',function(event,args){
 })
 
 
-// 自动检测升级机制
-autoUpdater.checkForUpdates()
-autoUpdater.on('update-downloaded',()=>{
-  console.log('update下载完成')
-  mainWindow.webContents.send('updateDownloaded')
-})
-let updaterWindow=null
-function loadUpdate(){
-  updaterWindow= new BrowserWindow({
-    parent: mainWindow,
-    width: 400,
-    height: 600,
-    resizable: false,
-    visible:false,
-    acceptFirstMouse: true,
-    webPreferences: {
-      //preload: path.join(__dirname, '/pages/update/inde.js'),
-      nodeIntegration: true,
-      contextIsolation: false,
-      additionalArguments: [
-        '--user-data-path=' + userDataPath,
-        '--app-version=' + app.getVersion(),
-        '--app-name=' + app.getName(),
-        ...((isDevelopmentMode ? ['--development-mode'] : [])),
-      ]
-    }
-  })
-  updaterWindow.webContents.loadURL('file://' + __dirname + "/pages/update/index.html")
-  updaterWindow.on('ready-to-show',()=>updaterWindow.show())
-  updaterWindow.focus()
-}
-app.whenReady().then(()=>loadUpdate())
-
-
-autoUpdater.on('update-available',()=>{
-  console.log('update有升级可用')
-  loadUpdate()
-  sidePanel.get().webContents.send('message', {content:'有新版本可用，系统将在后台自动下载。' })
-})
-
-autoUpdater.on("error", (error) => {
-  console.log(`升级检测失败: ${error}`)
-});
-ipc.on('quitAndInstall',(event)=>{
-  console.log('退出并执行升级')
-  autoUpdater.quitAndInstall()
-})
