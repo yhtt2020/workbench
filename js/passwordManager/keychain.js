@@ -10,7 +10,7 @@ const { ipcRenderer } = require('electron')
 class Keychain {
   constructor () {
     this.name = 'Built-in password manager'
-    this.keychainServiceName = 'Min saved password'
+    this.keychainServiceName = 'com.thisky.browser'
   }
 
   getDownloadLink () {

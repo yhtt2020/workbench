@@ -35,7 +35,7 @@
     "electron-squirrel-startup": "^1.0.0",
     "electron-updater": "^4.3.9",
     "expr-eval": "^2.0.2",
-    "keytar": "7.7.0",
+    "keytar": "7.6.0",
     "mousetrap": "^1.5.3",
     "node-abi": "^3.2.0",
     "pdfjs-dist": "2.4.456",
