@@ -29,7 +29,7 @@
           @close="setThemeVisible=false"
 
         >
-            <a-page-header style="padding: 0" slot="title" title="设置主题" sub-title="您可以在浏览器中查看图片时，右键设置图片为壁纸。也可以选择下方壁纸快速设置。" ></a-page-header>
+            <a-page-header  style="padding: 0" slot="title" title="设置主题" sub-title="您可以在浏览器中查看图片时，右键设置图片为壁纸。也可以选择下方壁纸快速设置。" ></a-page-header>
           <div>
             <template>
                 <template>
@@ -66,7 +66,7 @@
 
         </a-drawer>
 
-        <a-button style="position: fixed;right: 20px;top: 20px" shape="circle" icon="skin" type="link" @click="setTheme" ghost></a-button>
+        <a-button style="position: fixed;right: 20px;top: 20px;background-color: rgba(0,0,0,0.3);color: white;border:none" shape="circle" type="primary" icon="skin"  @click="setTheme" ></a-button>
         </style>
         <div class="main">
           <div class="main-top flex flex-direction justify-around align-center">
@@ -476,7 +476,7 @@
               let newtabBg = await db.system.get({ name: 'newtabBg' })
               const imageUrl=wallUrl+wallPaper.image
               if (!!!newtabBg) {
-                db.system.put({ name: 'newtabBg', value: mediaURL })
+                db.system.put({ name: 'newtabBg', value: imageUrl })
               } else {
                 db.system.update(newtabBg.id, { name: 'newtabBg', value: imageUrl })
               }
