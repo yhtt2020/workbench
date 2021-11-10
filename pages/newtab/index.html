@@ -268,7 +268,7 @@
                 @mouseenter="mouseIn(3)"
                 @mouseleave="mouseOut(3)"
               >
-                <a-tabs default-active-key="0">
+                <a-tabs  default-active-key="0">
                   <a-tab-pane v-for="(i, index) in this.historyBar" :key="index" :tab="i.time_title">
                     <div class="pane flex flex-direction">
                       <a-dropdown class="adrop4" v-show="bookdian4Show">
@@ -498,6 +498,14 @@
             Array.prototype.forEach.call(cards, (element) => {
               element.style.backgroundColor = 'rgba(256,256,256,' + opacity / 100 + ')'
             })
+            // let navTops = document.getElementsByClassName('nav-top')
+            // Array.prototype.forEach.call(navTops, (element) => {
+            //   element.style.borderBottomColor = 'rgba(226,221,221,' + opacity / 100 + ')'
+            // })
+
+
+
+
           },
           saveChangeOpacity (value) {
             db.system.get({ name: 'newtabCardOpacity' }).then((newtabCardOpacity) => {
@@ -551,6 +559,13 @@
 
       })
     </script>
-
+    <style>
+      .ant-tabs-bar{
+       border-bottom:none;
+      }
+      .nav-top{
+        border-bottom: none !important;
+      }
+    </style>
   </body>
 </html>
