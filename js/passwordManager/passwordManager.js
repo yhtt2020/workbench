@@ -107,6 +107,14 @@ const PasswordManagers = {
         }
 
         manager.getSuggestions(domain).then(credentials => {
+          console.log(credentials)
+          // 增加对找回密码数量的提示，减少认知成本
+          if(credentials.length===0){
+            ipc.send('message',{type:'error',config:{content:"暂未找到保存密码。"}})
+          }else{
+            ipc.send('message',{type:'success',config:{content:`找到 ${credentials.length} 个密码，点击输入框选择。`}})
+          }
+
           if (credentials != null) {
             webviews.callAsync(tab, 'getURL', function (err, topLevelURL) {
               if (err) {
@@ -118,6 +126,7 @@ const PasswordManagers = {
                 topLevelDomain = topLevelDomain.slice(4)
               }
               if (domain !== topLevelDomain) {
+                ipc.send('message',{type:'error',config:{content:"自动填充密码不支持第三方框架。"}})
                 console.warn("autofill isn't supported for 3rd-party frames")
                 return
               }
@@ -128,6 +137,7 @@ const PasswordManagers = {
             })
           }
         }).catch(e => {
+          ipc.send('message',{type:'error',config:{content:"获取自动填充密码失败。"}})
           console.error('Failed to get password suggestions: ' + e.message)
         })
       })

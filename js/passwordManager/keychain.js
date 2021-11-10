@@ -35,7 +35,7 @@ class Keychain {
 
   async getSuggestions (domain) {
     return ipcRenderer.invoke('keychainFindCredentials', this.keychainServiceName).then(function (results) {
-       let pwds=results
+      return results
         .filter(function (result) {
           try {
             return JSON.parse(result.account).domain === domain
@@ -50,10 +50,6 @@ class Keychain {
             manager: 'Keychain'
           }
         })
-      if(pwds.length===0){
-        ipc.send('message',{type:'error',config:{content:"暂未找到保存密码。"}})
-      }
-      return pwds
     })
   }
 
@@ -62,6 +58,7 @@ class Keychain {
   }
 
   saveCredential (domain, username, password) {
+    console.log('保存密码')
     ipcRenderer.invoke('keychainSetPassword', this.keychainServiceName, JSON.stringify({ domain: domain, username: username }), password)
   }
 

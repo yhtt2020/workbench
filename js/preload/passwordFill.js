@@ -22,6 +22,30 @@ we expect the login form to be present in the HTML code at page load. We can
 add a MutationObserver to the document, or DOMNodeInserted listener, but I
 wanted to keep it lightweight and not impact browser performace too much.
 */
+/*
+* 简单的用户名/密码字段检测器和自动填充器。
+
+加载页面时，我们尝试查找具有特定名称的任何输入字段
+属性。如果我们发现有用的东西，我们会发送一个 IPC 事件
+'password-autofill' 表示我们要检查是否有自动填充数据
+可用的。
+
+当我们收到带有自动填充的 IPC 事件 'password-autofill-match' 时
+数据，我们做两件事之一：
+
+- 如果有一个凭据匹配，我们用它填充输入字段
+  数据。
+
+- 如果有多个匹配项，我们会在
+  用户名/电子邮件字段将显示一个可用的小覆盖 div
+  选项。当用户选择其中一个选项时，我们用
+  选择的凭据数据。
+
+此代码不适用于基于 JS 的表单。我们不会监听所有的 DOM 变化，
+我们希望登录表单在页面加载时出现在 HTML 代码中。我们可以
+添加一个 MutationObserver 到文档，或者 DOMNodeInserted 监听器，但我
+希望保持轻量级并且不会过多地影响浏览器性能。
+* */
 
 // "carbon:password"
 const keyIcon = '<svg title="密码管理" width="22px" height="22px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="1em" height="1em" style="vertical-align: -0.125em;-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32"><path d="M21 2a9 9 0 0 0-9 9a8.87 8.87 0 0 0 .39 2.61L2 24v6h6l10.39-10.39A9 9 0 0 0 30 11.74a8.77 8.77 0 0 0-1.65-6A9 9 0 0 0 21 2zm0 16a7 7 0 0 1-2-.3l-1.15-.35l-.85.85l-3.18 3.18L12.41 20L11 21.41l1.38 1.38l-1.59 1.59L9.41 23L8 24.41l1.38 1.38L7.17 28H4v-3.17L13.8 15l.85-.85l-.29-.95a7.14 7.14 0 0 1 3.4-8.44a7 7 0 0 1 10.24 6a6.69 6.69 0 0 1-1.09 4A7 7 0 0 1 21 18z" fill="currentColor"/><circle cx="22" cy="10" r="2" fill="currentColor"/></svg>'
