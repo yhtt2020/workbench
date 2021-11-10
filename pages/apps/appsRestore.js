@@ -50,7 +50,6 @@ const appsRestore = {
       await db.myApps.bulkPut(needFilled)
       //await db.myApps.where('addTime').equals(undefined).modify({ 'addTime':Date.now() })
       let s = await db.myApps.orderBy('addTime').reverse().toArray()
-      console.log(s)
       return s
     } catch (e) {
       console.log(e)

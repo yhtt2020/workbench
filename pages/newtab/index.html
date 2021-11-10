@@ -21,6 +21,53 @@
     </script>
     <div id="app">
       <template>
+        <a-drawer
+          placement="bottom"
+          :height="500"
+          :closable="false"
+          :visible="setThemeVisible"
+          @close="setThemeVisible=false"
+
+        >
+            <a-page-header style="padding: 0" slot="title" title="设置主题" sub-title="您可以在浏览器中查看图片时，右键设置图片为壁纸。也可以选择下方壁纸快速设置。" ></a-page-header>
+          <div>
+            <template>
+                <template>
+                  <div>
+                    <a-tabs :default-active-key="0" @change="callback">
+                      <a-tab-pane v-for="(type,typeIndex) in defaultWallPaper" :key="typeIndex" :tab="type.title">
+                        <div style="background-color: #ececec; padding: 20px;">
+                        <a-row :gutter="24">
+                          <a-col v-for="(wallPaper,wallPaperIndex) in type.list"  :span="4">
+                            <a-card @click="setWallPaper(wallPaper)" hoverable :bordered="false">
+                              <img style="object-fit: cover;"   height="100"
+                                   slot="cover"
+                                   :alt="wallPaper.title"
+                                   :src="wallUrl+wallPaper.image"
+                              />
+                              <a-card-meta :title="wallPaper.title"></a-card-meta>
+                            </a-card>
+                          </a-col>
+                        </a-row>
+                        </div>
+                      </a-tab-pane>
+                    </a-tabs>
+                  </div>
+                </template>
+
+
+
+              <div>
+                <h1 style="font-size: 14px;margin-top: 20px">卡片不透明度：</h1>
+                <a-slider id="cardOpacity"  @change="changeOpacity" :step="10" v-model="cardOpacity" :default-value="100"> </a-slider>
+              </div>
+            </template>
+          </div>
+
+        </a-drawer>
+
+        <a-button style="position: fixed;right: 20px;top: 20px" shape="circle" icon="skin" type="link" @click="setTheme" ghost></a-button>
+        </style>
         <div class="main">
           <div class="main-top flex flex-direction justify-around align-center">
             <img src="./assets/logo-noframe.svg" alt="" style="width: 84px" class="xt-logo" />
@@ -44,7 +91,7 @@
                     <div class="left flex align-center justify-center">选择您的默认搜索引擎:</div>
                     <div class="right flex align-center justify-center" style="display: none">
                       <p>搜索热词:</p>
-                      <a-switch size="small" default-checked  style="margin-left: 5px;">
+                      <a-switch size="small" default-checked  style="margin-left: 5px;"></a-switch>
                     </div>
                   </div>
                 </template>
@@ -67,7 +114,7 @@
           <div class="main-bottom flex justify-center">
             <div class="mb-wrap flex flex-wrap justify-center">
               <div
-                class="wrap-nav1"
+                class=" wrap-nav wrap-nav1"
                 :class="{'moreNow': this.navallShow1}"
                 @mouseenter="mouseIn(0)"
                 @mouseleave="mouseOut(0)"
@@ -117,7 +164,7 @@
               </div>
 
               <div
-                class="wrap-nav2"
+                class="wrap-nav wrap-nav2"
                 :class="{'moreNow': this.navallShow2}"
                 @mouseenter="mouseIn(1)"
                 @mouseleave="mouseOut(1)"
@@ -174,7 +221,7 @@
               </div>
 
               <div
-                class="wrap-nav3"
+                class="wrap-nav wrap-nav3"
                 :class="{'moreNow': this.navallShow3}"
                 @mouseenter="mouseIn(2)"
                 @mouseleave="mouseOut(2)"
@@ -216,7 +263,7 @@
               </div>
 
               <div
-                class="wrap-nav4"
+                class="wrap-nav wrap-nav4"
                 :class="{'moreNow': this.navallShow4}"
                 @mouseenter="mouseIn(3)"
                 @mouseleave="mouseOut(3)"
@@ -300,6 +347,8 @@
     <script src="./components/appStore/index.js"></script>
     <script>
       Vue.use(antd)
+      const wallUrl='http://d.xiangtian.ren/api/wall/'
+      const wallList=require('./wall.json')
       var appVue = new Vue({
         el: '#app',
         data() {
@@ -325,17 +374,21 @@
             bookmark: [],
             loadingHistory: true,
             historyBar: [],
-            bg:window.newtabBg
+            bg:window.newtabBg,
+            setThemeVisible:false, //设置壁纸的抽
+            wallUrl:wallUrl,
+            defaultWallPaper:wallList,
+            cardOpacity:100
           }
         },
         methods: {
-          clklogo() {
+          clklogo () {
             location.href = this.sfrontLink + this.searchWord
           },
-          isEmpty(array) {
+          isEmpty (array) {
             return array.length === 0 && this.loadingHistory === false
           },
-          loadMysearch() {
+          loadMysearch () {
             window.$newtabRestore
               .restoreFromDB()
               .then((res) => {
@@ -352,7 +405,7 @@
                 console.log(err)
               })
           },
-          loadBookmarks(count) {
+          loadBookmarks (count) {
             window.$newtabRestore
               .loadBookmarks(count)
               .then((data) => {
@@ -366,13 +419,13 @@
                 console.log(err)
               })
           },
-          loadHistory() {
+          loadHistory () {
             window.$newtabRestore.loadHistory(4).then((data) => {
               this.historyBar = data
               this.loadingHistory = false
             })
           },
-          loadMyapps() {
+          loadMyapps () {
             window.$appsRestore
               .restoreFromDB()
               .then((res) => {
@@ -383,18 +436,18 @@
                 console.log(err)
               })
           },
-          enterSubmit() {
+          enterSubmit () {
             location.href = this.sfrontLink + this.searchWord
           },
-          mouseIn(i) {
+          mouseIn (i) {
             this[`navallShow${i + 1}`] = true
             this[`bookdian${i + 1}Show`] = true
           },
-          mouseOut(i) {
+          mouseOut (i) {
             this[`navallShow${i + 1}`] = false
             this[`bookdian${i + 1}Show`] = false
           },
-          chooseSearch(id, index) {
+          chooseSearch (id, index) {
             this.visible = false
             this.slinkLogo = this.mySearch[index].slinkLogo
             this.sfrontLink = this.mySearch[index].frontLink
@@ -408,9 +461,53 @@
                 console.log(err)
               })
           },
-          callback(val) {
+          callback (val) {
             console.log(val)
           },
+          /**
+           * 设置壁纸
+           */
+          setTheme () {
+            this.setThemeVisible = true
+          },
+          async setWallPaper (wallPaper) {
+
+            try {
+              let newtabBg = await db.system.get({ name: 'newtabBg' })
+              const imageUrl=wallUrl+wallPaper.image
+              if (!!!newtabBg) {
+                db.system.put({ name: 'newtabBg', value: mediaURL })
+              } else {
+                db.system.update(newtabBg.id, { name: 'newtabBg', value: imageUrl })
+              }
+              document.body.style = `
+                background: url("${imageUrl}") no-repeat;
+                background-size:cover;
+                background-attachment:fixed;`
+              this.$message.success({ content: '壁纸设置成功。' })
+            } catch (err) {
+              console.log(err)
+            }
+          },
+          changeOpacity (opacity) {
+            let cards = document.getElementsByClassName('wrap-nav')
+            Array.prototype.forEach.call(cards, (element) => {
+              element.style.backgroundColor = 'rgba(256,256,256,' + opacity / 100 + ')'
+            })
+            this.saveChangeOpacity(opacity)
+          },
+          saveChangeOpacity (value) {
+            db.system.get({ name: 'newtabCardOpacity' }).then((newtabCardOpacity) => {
+              if (!!!newtabCardOpacity) {
+                db.system.put({ name: 'newtabCardOpacity', value: value })
+              } else {
+                db.system.update(newtabCardOpacity.id, { name: 'newtabCardOpacity', value: value })
+              }
+              this.$message.success({ content: '卡片透明度设置成功。',key:'msgOpacity' })
+            }).catch((err) => {
+              console.log(err)
+            })
+          }
         },
         computed: {
           allApps: {
@@ -440,9 +537,19 @@
 `
               }
             }).catch(err=>console.log(err))
+          db.system.get({name:'newtabCardOpacity'}).then(data=>{
+            if(!!!data){
+            }else{
+              this.cardOpacity=data.value
+              this.changeOpacity(data.value)
+              setTimeout(()=>{
+              },1000)
+          }
+          }).catch(err=>console.log(err))
+        }
 
-        },
       })
     </script>
+
   </body>
 </html>
