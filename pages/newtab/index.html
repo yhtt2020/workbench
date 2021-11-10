@@ -490,11 +490,14 @@
             }
           },
           changeOpacity (opacity) {
+           this.setOpacity(opacity)
+            this.saveChangeOpacity(opacity)
+          },
+          setOpacity(opacity){
             let cards = document.getElementsByClassName('wrap-nav')
             Array.prototype.forEach.call(cards, (element) => {
               element.style.backgroundColor = 'rgba(256,256,256,' + opacity / 100 + ')'
             })
-            this.saveChangeOpacity(opacity)
           },
           saveChangeOpacity (value) {
             db.system.get({ name: 'newtabCardOpacity' }).then((newtabCardOpacity) => {
@@ -541,9 +544,7 @@
             if(!!!data){
             }else{
               this.cardOpacity=data.value
-              this.changeOpacity(data.value)
-              setTimeout(()=>{
-              },1000)
+              this.setOpacity(data.value)
           }
           }).catch(err=>console.log(err))
         }
