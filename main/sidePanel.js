@@ -1,12 +1,11 @@
 
-
 let sidePanel = null //SidePanel类的存储变量
 /**
  * 是否是win11
  */
 function isWin11() {
-	var sysVersion = process.getSystemVersion()
-	if (sysVersion.startsWith('10.') && process.platform === 'win32') {
+  const sysVersion = process.getSystemVersion()
+  if (sysVersion.startsWith('10.') && process.platform === 'win32') {
 		return true
 	} else {
 		return false
@@ -42,7 +41,8 @@ class SidePanel {
 	 * 返回sidePanel实例
 	 */
 	static getSidePanel() {
-		return this._sidePanel
+    console.log(BrowserWindow.getAllWindows())
+		return sidePanel.get()
 	}
 	//判断是否存在sidebar
 	static alive() {

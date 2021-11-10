@@ -92,6 +92,7 @@ const PasswordManagers = {
 
       PasswordManagers.getConfiguredPasswordManager().then(async (manager) => {
         if (!manager) {
+          ipc.send('message',{type:'success',config:{content:"没有可用的密码管理器。"}})
           return
         }
 
@@ -99,6 +100,7 @@ const PasswordManagers = {
           await PasswordManagers.unlock(manager)
         }
 
+        // 去除域名里的www，根域名用同一套账号
         var domain = hostname
         if (domain.startsWith('www.')) {
           domain = domain.slice(4)
