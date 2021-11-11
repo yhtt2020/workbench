@@ -177,12 +177,13 @@
                             <div v-if="user.uid!==0">
                                 用户信息
                             </div>
-
                         </template>
                         <div @contextmenu="toggleUserPanel()" class="wrapper" block>
                             <div class="item-icon">
-                                <a-avatar style="border:1px solid #cfcfcf; backgroundColor: white" class="icon"
+                                <a-avatar v-if="user.uid!==0" style="border:1px solid #cfcfcf; background-color: white" class="icon"
                                           :src="user.avatar"></a-avatar>
+                              <a-avatar v-if="user.uid===0" icon="user" style="border:1px solid #cfcfcf; background-color: white;color: #666" class="icon"
+                                        ></a-avatar>
                                 <!-- <a-badge :count="0" :dot="true" status="processing"
                                     :style="{position: 'absolute',right:  '-2px',top:'-13px'}" />
                                 </a-badge> -->
