@@ -14,7 +14,7 @@ const serverConfig={
 		}
 	},
 	getUrl(path){
-		return config.serverBaseUrl+path
+		return config.SERVER_BASE_URL+path
 	}
 
 }

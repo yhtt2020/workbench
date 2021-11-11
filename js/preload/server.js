@@ -1,34 +1,23 @@
 //这个预载入文件用于与服务器进行交互，仅适用于项目路径
-const config = {
-	serverBaseUrl: "http://pc2ys.mark.opensns.cn",
-}
-const api = {
-	'login': "/login",
-	'home': '/'
-}
-
 let href = window.location.href
-const {ipcRenderer} = require('electron')
-
-
 const server = { //服务主脚本
 	init(path) {
 		switch (path) {
-			case api.login:
+			case api.getUrl(api.API_URL.user.login):
 				this.login()
 				break
-			case api.home:
+			case api.getUrl(api.API_URL.user.home):
 				this.home()
+        break
+      default:
+        console.log('在server网站下，但未命中任何预加载处理路径：'+path)
 		}
-
-
 	},
 	login() {
-		console.log('注入登录页面脚本')
-		//alert('来到登录页面')
-		
+		console.log('运行在想天浏览器中，登陆页面')
 	},
 	home(){
+    console.log('运行在想天浏览器中，home页')
 		document.onreadystatechange = () => {
 		  if (document.readyState === 'complete') {
 		    if(localStorage.getItem('hasLogin')=='true' ){
@@ -37,18 +26,12 @@ const server = { //服务主脚本
 			}
 		  }
 		}
-		
 	}
 }
 
-
-
-
-//const {config,api}=require('../server-config.js')
-if (href == config.serverBaseUrl + api.login) {
-	server.init(api.login)
+if(href.startsWith(config.SERVER_BASE_URL))
+{
+  server.init(href)
 }
-if(href==config.serverBaseUrl + api.home){
-	server.init(api.home)
-}
-console.log(ipc)
+
+

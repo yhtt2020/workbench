@@ -1,5 +1,4 @@
-//const browserUI= require('./js/browserUI.js')
-const serverConfig= require('./user.js')
+const { api } = require('../../server-config')
 Vue.component('sidebar', {
 	data: function() {
 		return {
@@ -244,9 +243,9 @@ Vue.component('sidebar', {
 		//点击用户登录按钮
 		userClick(){
 			if(this.user.uid===0){
-				this.addTab(serverConfig.getUrl(serverConfig.apiUrl.user.login))
+				this.addTab(api.getUrl(api.API_URL.user.login))
 			}else{
-				this.addTab(serverConfig.getUrl(serverConfig.apiUrl.user.home))
+				this.addTab(api.getUrl(api.API_URL.user.home))
 			}
 			this.userPanelVisible=false
 		},
@@ -263,19 +262,19 @@ Vue.component('sidebar', {
 		},
     switchAccount(){
       this.userPanelVisible=false
-      this.addTab(serverConfig.getUrl(serverConfig.apiUrl.user.login))
+      this.addTab(api.getUrl(api.API_URL.user.login))
     },
     goProfile(){
       this.userPanelVisible=false
-      this.addTab(serverConfig.getUrl(serverConfig.apiUrl.user.profile))
+      this.addTab(api.getUrl(api.API_URL.user.profile))
     },
     goGroup(){
       this.userPanelVisible=false
-      this.addTab(serverConfig.getUrl(serverConfig.apiUrl.group.index))
+      this.addTab(api.getUrl(api.API_URL.group.index))
     },
     goAccount(){
       this.userPanelVisible=false
-      this.addTab(serverConfig.getUrl(serverConfig.apiUrl.user.account))
+      this.addTab(api.getUrl(api.API_URL.user.account))
     },
     addNewTask(e){
       ipc.send('addNewTask')
