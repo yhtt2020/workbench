@@ -607,3 +607,8 @@ ipc.on('closeTask',function(event,args){
 })
 
 
+ipc.on('refresh',()=>{
+  //刷新当前页
+  console.log('refresh当前页')
+  sendIPCToWindow(mainWindow,'refresh')
+})

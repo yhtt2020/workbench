@@ -273,15 +273,6 @@ const tabBar = {
 
 					},
 					{
-						label: '刷新',
-						click: function() {
-							//console.log('关闭全部标签被点击')
-							tabBar.refresh(data.id)
-
-						}
-
-					},
-					{
 						label: '关闭标签',
 						click: function() {
 							//console.log('关闭全部标签被点击')
@@ -523,7 +514,9 @@ tabBar.container.addEventListener('drop', e => {
 		openInBackground: !settings.get('openTabsInForeground')
 	})
 })
-
+ipc.on('refresh',()=>{
+  webviews.update(tabs.getSelected(),tasks.getSelected().tabs.get(tabs.getSelected()).url)
+})
 
 
 

@@ -68,6 +68,7 @@
 
         <a-button style="position: fixed;right: 20px;top: 20px;background-color: rgba(0,0,0,0.3);color: white;border:none" shape="circle" type="primary" icon="skin"  @click="setTheme" ></a-button>
         </style>
+        <a-dropdown :trigger="['contextmenu']">
         <div class="main">
           <div class="main-top flex flex-direction justify-around align-center">
             <img src="./assets/logo-noframe.svg" alt="" style="width: 84px" class="xt-logo" />
@@ -318,6 +319,18 @@
           </div>
           <app-dialog></app-dialog>
         </div>
+          <a-menu slot="overlay">
+            <a-menu-item key="1">
+              添加本地导航自定义块
+            </a-menu-item>
+            <a-menu-item @click="refresh" key="2">
+              刷新
+            </a-menu-item>
+            <a-menu-item @click="setTheme" key="3">
+              设置壁纸
+            </a-menu-item>
+          </a-menu>
+        </a-dropdown>
       </template>
 
       <template id="appstore">
@@ -518,7 +531,11 @@
             }).catch((err) => {
               console.log(err)
             })
+          },
+          refresh(){//菜单刷新
+              ipc.send('refresh')
           }
+
         },
         computed: {
           allApps: {
