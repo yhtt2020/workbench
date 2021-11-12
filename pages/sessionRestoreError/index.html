@@ -5,40 +5,97 @@
 
     <title data-string="sessionRestoreErrorTitle"></title>
     <link rel="stylesheet" href="../pagebase.css" />
+    <script src="../../ext/vue/vue.js"></script>
+    <script src="../../ext/vue/antd.min.js"></script>
+    <link rel="stylesheet" href="../../ext/vue/antd.min.css"/>
   </head>
 
   <body>
-    <div id="page-wrapper">
-      <h1 data-string="sessionRestoreErrorTitle"></h1>
-      <h2 id="error-message">
-        <span data-string="sessionRestoreErrorExplanation"></span>
-        <br />
-        <br />
-        <span id="backup-info"></span>
-        <br />
-        <br />
-        <span
-          id="link-info"
-          data-string="sessionRestoreErrorLinkInfo"
-          data-allowHTML
-        ></span>
-      </h2>
+<!--    <div id="page-wrapper">-->
+<!--      <h1 data-string="sessionRestoreErrorTitle"></h1>-->
+<!--      <h2 id="error-message">-->
+<!--        <span data-string="sessionRestoreErrorExplanation"></span>-->
+<!--        <br />-->
+<!--        <br />-->
+<!--        <span id="backup-info"></span>-->
+<!--        <br />-->
+<!--        <br />-->
+<!--        <span-->
+<!--          id="link-info"-->
+<!--          data-string="sessionRestoreErrorLinkInfo"-->
+<!--          data-allowHTML-->
+<!--        ></span>-->
+<!--      </h2>-->
+<!--    </div>-->
+    <div id="appVue">
+      <template>
+        <a-result style="max-width: 800px;position: fixed;word-break: break-all;
+    top:calc( 50% - 400px);
+    left:calc( 50% - 400px) ;"
+          status="error"
+          title="发生错误"
+          sub-title="您保存的标签组已损坏，导致无法正确加载。"
+        >
+          <div class="desc">
+            <p style="font-size: 16px;">
+              <strong>您可以选择以下操作，或者<a target="_blank" href="http://com.thisky.com/forum?id=3">报告错误</a>给我们。</strong>
+            </p>
+            <p>
+              <a-icon :style="{ color: 'green' }" type="check-circle" ></a-icon> 从备份中恢复，恢复到上一次备份的时间。
+
+
+            </p>
+<!--            <p style="text-indent: 1em">-->
+<!--              最近一次备份时间：{{ time }}<br>-->
+
+<!--            </p>-->
+            <p  style="text-indent: 1em">
+              备份文件存放地址：{{ backLoc }}
+            </p>
+            <p>
+              <a-icon :style="{ color: 'red' }" type="close-circle" ></a-icon> 关闭此标签页，放弃备份。这将导致无法再次打开之前保存的标签组。请谨慎操作。
+            </p>
+          </div>
+          <template #extra>
+<!--            <a-button key="console" type="primary">-->
+<!--             从备份中恢复-->
+<!--            </a-button>-->
+          </template>
+        </a-result>
+      </template>
     </div>
 
     <script src="../../js/util/settings/settingsContent.js"></script>
     <script src="../../js/util/theme.js"></script>
     <script src="../../dist/localization.build.js"></script>
+  <script>
+    const ipc=require('electron').ipcRenderer
+    let appVue = new Vue({
+      el: '#appVue',
+      components: {},
+      data () {
+        return {
+          backLoc:new URLSearchParams(window.location.search).get(
+            "backupLoc"
+          ),
+          info:{
+            version:'读取数据中',
+            releaseDate:'读取数据中'
+          }
+        }
+      },
+      mounted(){
 
-    <script>
-      var backupLoc = new URLSearchParams(window.location.search).get(
-        "backupLoc"
-      );
-
-      var backupInfoEl = document.getElementById("backup-info");
-      backupInfoEl.textContent = l("sessionRestoreErrorBackupInfo").replace(
-        "%l",
-        backupLoc
-      );
-    </script>
+      },
+      methods:{
+        startInstall(){
+          ipc.send('startInstall')
+        },
+        cancel(){
+          ipc.send('closeUpdate')
+        }
+      }
+    })
+  </script>
   </body>
 </html>
