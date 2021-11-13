@@ -69,7 +69,6 @@
     <script src="../../js/util/theme.js"></script>
     <script src="../../dist/localization.build.js"></script>
   <script>
-    const ipc=require('electron').ipcRenderer
     let appVue = new Vue({
       el: '#appVue',
       components: {},
@@ -88,12 +87,6 @@
 
       },
       methods:{
-        startInstall(){
-          ipc.send('startInstall')
-        },
-        cancel(){
-          ipc.send('closeUpdate')
-        }
       }
     })
   </script>
