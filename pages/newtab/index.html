@@ -59,7 +59,11 @@
 
               <div>
                 <h1 style="font-size: 14px;margin-top: 20px">卡片不透明度：</h1>
-                <a-slider id="cardOpacity"  @change="changeOpacity" :step="10" v-model="cardOpacity" :default-value="100"> </a-slider>
+                <a-slider id="cardOpacity"  @change="changeOpacity" :step="5" v-model="cardOpacity" :default-value="100"> </a-slider>
+              </div>
+              <div>
+                <h1 style="font-size: 14px;margin-top: 20px">快捷坞图标大小：</h1>
+                <a-slider id="dockSize" v-model="dockAppSize" @change="saveDockSize" :step="1" :min="20" :max="120" v-model="cardOpacity" :default-value="60"> </a-slider>
               </div>
             </template>
           </div>
@@ -363,12 +367,12 @@
               {{item.name}}
             </template>
             <div  >
-              <a-avatar  shape="square" :size="60" :src="item.icon"></a-avatar>
-              <div style="overflow: hidden;text-align: center;max-width: 100%;overflow: hidden;padding-top: 5px;text-shadow:0 0 1px rgba(255,255,255,0.1);
-            text-overflow:ellipsis;
-            white-space: nowrap; ">
-                {{item.name}}
-              </div>
+              <a-avatar  shape="square" :size="dockAppSize" :src="item.icon"></a-avatar>
+<!--              <div style="overflow: hidden;text-align: center;max-width: 100%;overflow: hidden;padding-top: 5px;text-shadow:0 0 1px rgba(255,255,255,0.1);-->
+<!--            text-overflow:ellipsis;-->
+<!--            white-space: nowrap; ">-->
+<!--                {{item.name}}-->
+<!--              </div>-->
             </div>
           </a-tooltip>
           <a-menu slot="overlay">
@@ -385,9 +389,10 @@
     <script src="./components/appStore/index.js"></script>
     <script>
       Vue.use(antd)
-      const wallUrl='http://d.xiangtian.ren/api/wall/'
+
       const wallList=require('./wall.json')
-      const {wallPaper,themeSetting}=require('../util/theme.js')
+      const {wallPaper,themeSetting,wallUrl}=require('../util/theme.js')
+
       var appVue = new Vue({
         el: '#app',
         data() {
@@ -429,6 +434,7 @@
                 url:'http://com.thisky.com'
               }
             ]//dock里的应用
+            ,dockAppSize:60
           }
         },
         methods: {
@@ -561,6 +567,18 @@
               console.log(err)
             })
           },
+          saveDockSize(value){
+            try {
+              //保存壁纸设置
+              themeSetting.setNewtabDockSize(value).then(()=>{
+                  this.$message.success({ content: '设置快捷坞图标尺寸成功。',key:'dockSize' })
+                }
+              )
+            } catch (err) {
+              this.$message.error({content:'设置快捷坞图标尺寸失败。',key:'dockSize'})
+              console.log(err)
+            }
+          },
           refresh(){//菜单刷新
               ipc.send('refresh')
           },
@@ -572,6 +590,7 @@
               icon:item.icon
             }
           },
+
           async addDragItem(ev){
 
             const item=this.dragItem
@@ -594,7 +613,6 @@
             }
             this.dock.splice(this.dock.indexOf(item),1)
             console.log(item.id)
-
             db.dockApps.delete(item.id).catch(err=>{
               console.log(err)
             })
@@ -633,6 +651,15 @@
               this.cardOpacity=data.value
             }
           }).catch(err=>console.log(err))
+          themeSetting.getNewtabDockSize().then(data=>{
+            if(!!data){
+              this.dockAppSize=data.value
+            }else{
+              this.dockAppSize=60
+            }
+          })
+
+
           db.dockApps.toArray(data=>{
             this.dock=this.dock.concat(data)
           })
@@ -648,14 +675,17 @@
       }
       .dock-item{
         display:inline-block;
-        width: 60px;
+
         border-radius: 10px;
         margin: 10px 10px ;
       }
       .dock{
         flex-direction: row;
-        position: fixed;bottom: 20px;border-radius: 10px;background-color: rgba(255,255,255,0.5);width: auto;left: 50%;z-index: 1001;
+        position: fixed;bottom: 20px;border-radius: 10px;background-color: rgba(255,255,255,0.5);
+        width: fit-content;
+        left: 50%;z-index: 1001;
         transform: translate(-50%,0);
+        max-width: calc(100vw - 20px);
       }
     </style>
   </body>
