@@ -360,7 +360,7 @@
         </div>
       </template>
       <div  @drop="addDragItem" @dragover.prevent class="dock">
-
+      <template>
         <a-dropdown :trigger="['contextmenu']" v-for="item in dock">
           <a-tooltip  class="dock-item"   @click="openUrl(item)">
             <template slot="title">
@@ -381,7 +381,7 @@
             </a-menu-item>
           </a-menu>
         </a-dropdown>
-
+      </template>
         </template>
       </div>
     </div>
