@@ -387,6 +387,7 @@
       Vue.use(antd)
       const wallUrl='http://d.xiangtian.ren/api/wall/'
       const wallList=require('./wall.json')
+      const {wallPaper,themeSetting}=require('../util/theme.js')
       var appVue = new Vue({
         el: '#app',
         data() {
@@ -519,22 +520,17 @@
           setTheme () {
             this.setThemeVisible = true
           },
-          async setWallPaper (wallPaper) {
+          async setWallPaper (wp) {
 
             try {
-              let newtabBg = await db.system.get({ name: 'newtabBg' })
-              const imageUrl=wallUrl+wallPaper.image
-              if (!!!newtabBg) {
-                db.system.put({ name: 'newtabBg', value: imageUrl })
-              } else {
-                db.system.update(newtabBg.id, { name: 'newtabBg', value: imageUrl })
-              }
-              document.body.style = `
-                background: url("${imageUrl}") no-repeat;
-                background-size:cover;
-                background-attachment:fixed;`
-              this.$message.success({ content: '壁纸设置成功。' })
+              //保存壁纸设置
+              wallPaper.set(wp.image).then(()=>{
+                wallPaper.setElementBg(document.body,wallPaper.getWallPaperUrl(wp.image))
+                this.$message.success({ content: '壁纸设置成功。' })
+                }
+              )
             } catch (err) {
+              this.$message.error({content:'保存壁纸失败。'})
               console.log(err)
             }
           },
@@ -551,9 +547,6 @@
             // Array.prototype.forEach.call(navTops, (element) => {
             //   element.style.borderBottomColor = 'rgba(226,221,221,' + opacity / 100 + ')'
             // })
-
-
-
 
           },
           saveChangeOpacity (value) {
@@ -605,9 +598,10 @@
             db.dockApps.delete(item.id).catch(err=>{
               console.log(err)
             })
+          },
+          setBg(tabBg) {
+            wallPaper.setElementBg(document.body, tabBg)
           }
-
-
         },
         computed: {
           allApps: {
@@ -626,26 +620,19 @@
             this.loadBookmarks(6)
             this.loadHistory()
           }, 200)
-          db.system.get({name:'newtabBg'}).then(bg=>{
-              if(!!!bg){
-              }else{
-                const newtabBg=bg.value
-                document.body.style= `
-                background: url("${newtabBg}") no-repeat;
-                background-size:cover;
-                background-attachment:fixed;
-`
-              }
-            }).catch(err=>console.log(err))
-          db.system.get({name:'newtabCardOpacity'}).then(data=>{
-            if(!!!data){
-            }else{
-              this.cardOpacity=data.value
+          //获取壁纸
+           wallPaper.get().then(data=>{
+             if(!!data){
+               this.setBg(data.value)
+             }
+           }).catch(err=>console.log(err))
+          //获取主题的卡片透明度
+          themeSetting.getNewtabCardOpacity().then(data=>{
+            if(!!data){
               this.setOpacity(data.value)
-          }
+              this.cardOpacity=data.value
+            }
           }).catch(err=>console.log(err))
-
-
           db.dockApps.toArray(data=>{
             this.dock=this.dock.concat(data)
           })

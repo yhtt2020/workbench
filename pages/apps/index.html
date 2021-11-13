@@ -73,8 +73,7 @@
 					<a-layout-sider style="background-color: white;">
 						<sidenav @gettab="settab" />
 					</a-layout-sider>
-					<a-layout class="wall" v-show="current==='myapp'"
-						style="background: url('http://d.xiangtian.ren/api/wall/1.jpeg');">
+					<a-layout id="wall" class="wall" v-show="current==='myapp'"	 style="background: #f1f1f1">
 						<a-layout-header style="background: #fff; padding: 0">
 							<a-page-header title="本地导航" sub-title="本地导航可能由于软件重装、卸载、系统重装等原因丢失，建议使用云端导航，此处仅做临时存储使用。" />
 						</a-layout-header>
@@ -84,7 +83,7 @@
 									<search />
 								</div> -->
 								<div>
-									<a-card title="本地导航">
+									<a-card  >
 										<a class="add-button" slot="extra" @click="showModal">添加网站</a>
                     <a-dropdown v-for="(app, index) in myApps" :trigger="['contextmenu']">
                     <a-card-grid  class="app" style="cursor: pointer;"
@@ -440,6 +439,7 @@
 	<script>
 		Vue.use(antd)
 		Vue.prototype.$form = antd.Form
+    const wallPaper=require('../util/theme.js').wallPaper
 		var appVue = new Vue({
 			el: '#appVue',
 			components: {},
@@ -504,7 +504,11 @@
 				});
 			},
 			mounted() {
-
+        wallPaper.get().then(data=>{
+          if(!!data){
+            wallPaper.setElementBg(document.getElementById('wall'),data.value)
+          }
+        }).catch(err=>console.log(err))
 
 				// if ((window.appsData == false && window.loaded)) {
 				// 	//未读取到appsData
