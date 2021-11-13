@@ -144,44 +144,25 @@ function closeTab (tabId) {
 /* changes the currently-selected task and updates the UI */
 
 function switchToTask (id) {
-  let currentTab=0
-  if(tasks.getSelected()!=null){
-    currentTab=tasks.getSelected().tabs.getSelected()
-  }
-
-  if(tasks.getSelected()!==null){
-     if(tasks.getSelected().id===id){
-       //如果当前的task是一样的，就不切换Switch任务了，但是如果不执行后面的话，会导致ui问题，所以依然执行后面的，只是减少了setSelected事件
-     }else{
-       tasks.setSelected(id)
-     }
-  }else{
-     tasks.setSelected(id)
-   }
-
+  tasks.setSelected(id)
 
   tabBar.updateAll()
 
   var taskData = tasks.get(id)
 
   if (taskData.tabs.count() > 0) {
-    //如果切过去的task已经有tab了
     var selectedTab = taskData.tabs.getSelected()
 
-    //如果任务没有选中的tab，则切换到最近的选中tab if the task has no tab that is selected, switch to the most recent one
+    // if the task has no tab that is selected, switch to the most recent one
+
     if (!selectedTab) {
       selectedTab = taskData.tabs.get().sort(function (a, b) {
         return b.lastActivity - a.lastActivity
       })[0].id
-    }else{
-      if(currentTab===selectedTab){
-        return
-      }
     }
 
     switchToTab(selectedTab)
   } else {
-    //如果切过去的task没有tab则添加一个新tab
     addTab()
   }
 }
