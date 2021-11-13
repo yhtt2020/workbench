@@ -2,6 +2,7 @@ const { api } = require('../../server-config')
 Vue.component('sidebar', {
 	data: function() {
 		return {
+      lastOpenId:0,
 			drag: false,
 			remote: {},
 			loginPanelTitle:"登陆账号免费体验完整功能",
@@ -151,7 +152,11 @@ Vue.component('sidebar', {
 			}
 		},
 		openItem(id, index) {
-			this.switchTask(id, index)
+      if(id!==this.lastOpenId){
+        this.switchTask(id, index)
+        this.lastOpenId=id
+      }
+
 		},
 		openBottom(action) {
 			postMessage({
