@@ -148,7 +148,7 @@ Vue.component('sidebar', {
 					message: 'openBookMarks'
 				})
 			} else if (this.$store.getters.getPinItems[index].type == 'task') {
-				this.switchTask(id, index)
+        this.openItem(id, index)
 			}
 		},
 		openItem(id, index) {
