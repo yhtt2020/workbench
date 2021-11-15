@@ -290,6 +290,9 @@ Vue.component('sidebar', {
         ipc.send('closeTask',{tabId:item.id})
         this.$message.success({content:'删除任务成功。'})
       }
+    },
+    createGroup(){
+      ipc.send('createGroup')
     }
 
 	}
