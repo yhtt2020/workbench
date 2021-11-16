@@ -1,10 +1,13 @@
 //const browserUI= require('./js/browserUI.js')
-
+const serverConfig= require('./user.js')
 Vue.component('sidebar', {
 	data: function() {
 		return {
 			drag: false,
 			remote: {},
+			loginPanelTitle:"登陆账号免费体验完整功能",
+			loginPanelContent:``,
+			userPanelVisible:false,
 			devices: [{
 					'name': 'IphoneX',
 					'width': 375,
@@ -38,9 +41,23 @@ Vue.component('sidebar', {
 					'width': 4096,
 					'height': 2160,
 					'icon': 'desktop'
-				}
+				},
 
-			]
+
+			],
+			accounts:[
+				{
+					'uid':1,
+					'nickname':'张三',
+					'avatar':'../../icons/apps.svg'
+				},
+				{
+					'uid':2,
+					'nickname':'李四',
+					'avatar':'../../icons/browser.ico'
+				}
+			],
+      sidebarBottom:0
 		}
 
 	},
@@ -68,10 +85,16 @@ Vue.component('sidebar', {
 			this.$store.state.pinItems = window.sidebarData.state.sidebar.pinItems
 			this.$store.state.items = window.sidebarData.state.sidebar.items
 		}
-
-		this.fixElementPosition()
+    let that=this
+    db.system.where({name:'sidebarBottom'}).first((data)=>{
+      that.sidebarBottom= data.value
+      setTimeout(that.fixElementPosition,250)
+    })
 	},
 	computed: {
+		user(){
+			return this.$store.state.user
+		},
 		getItems: {
 			get() {
 				//将task与items同步一次
@@ -105,6 +128,11 @@ Vue.component('sidebar', {
 	},
 	template: '#sidebarTpl',
 	methods: {
+		toggleUserPanel(){
+			console.log('toggele')
+			this.userPanelVisible=!this.userPanelVisible
+			console.log(this.userPanelVisible)
+		},
 		switchTask(id, index) {
 			postMessage({
 				message: 'switchToTask',
@@ -163,7 +191,7 @@ Vue.component('sidebar', {
 			const relatedElement = relatedContext.element;
 			const draggedElement = draggedContext.element;
 			return (
-				!draggedElement.fixed //&&(!relatedElement || !relatedElement.fixed) 
+				!draggedElement.fixed //&&(!relatedElement || !relatedElement.fixed)
 			);
 		},
 		//对任务数组重新进行排序
@@ -197,19 +225,59 @@ Vue.component('sidebar', {
 			return index
 
 		},
-		changeBottomSize() {
+		changeBottomSize(key) {
 			let that = this
 			setTimeout(function() {
 				that.fixElementPosition()
-			}, 250)
+			}, 200)
+      let state= key.length===1?1:0
+      db.system.where({name:'sidebarBottom'}).delete()
+      db.system.put({name:'sidebarBottom',value:state})
 
 		},
 		fixElementPosition() {
-			var itemsEl = document.getElementById('itemsEl')
-			var bottomsEl = document.getElementById('bottomsEl')
-			console.log(bottomsEl.offsetHeight)
+			const itemsEl = document.getElementById('itemsEl')
+			const bottomsEl = document.getElementById('bottomsEl')
 			itemsEl.style.bottom = bottomsEl.offsetHeight + 'px'
-		}
+      console.log(itemsEl.style.bottom)
+		},
+		//点击用户登录按钮
+		userClick(){
+			if(this.user.uid===0){
+				this.addTab(serverConfig.getUrl(serverConfig.apiUrl.user.login))
+			}else{
+				this.addTab(serverConfig.getUrl(serverConfig.apiUrl.user.home))
+			}
+			this.userPanelVisible=false
+		},
+		addTab(url){
+			postMessage({
+				message: "addTab",
+				'url':url
+			})
+		},
+		logout(){
+			window.insertDefaultUser()
+			db.system.where({name:'currentUser'}).delete()
+			this.$message.info('注销成功！');
+		},
+    switchAccount(){
+      this.userPanelVisible=false
+      this.addTab(serverConfig.getUrl(serverConfig.apiUrl.user.login))
+    },
+    goProfile(){
+      this.userPanelVisible=false
+      this.addTab(serverConfig.getUrl(serverConfig.apiUrl.user.profile))
+    },
+    goGroup(){
+      this.userPanelVisible=false
+      this.addTab(serverConfig.getUrl(serverConfig.apiUrl.group.index))
+    },
+    goAccount(){
+      this.userPanelVisible=false
+      this.addTab(serverConfig.getUrl(serverConfig.apiUrl.user.account))
+    }
+
 	}
 
 })

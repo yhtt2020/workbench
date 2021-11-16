@@ -1,12 +1,6 @@
-const path = require('path')
 const fs = require('fs')
-const {
-	contextBridge
-} = require('electron')
-
 
 window.globalArgs = {}
-let loaded = false
 process.argv.forEach(function(arg) {
 	if (arg.startsWith('--')) {
 		var key = arg.split('=')[0].replace('--', '')

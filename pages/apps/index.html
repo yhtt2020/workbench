@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>应用中心</title>
+		<title>网址导航</title>
 		<script src="../../ext/vue/vue.js"></script>
 		<script src="../../ext/vue/antd.min.js"></script>
 		<link rel="stylesheet" href="../../ext/vue/antd.min.css" />
@@ -76,7 +76,7 @@
 					<a-layout class="wall" v-show="current==='myapp'"
 						style="background: url('http://d.xiangtian.ren/api/wall/1.jpeg');">
 						<a-layout-header style="background: #fff; padding: 0">
-							<a-page-header title="我的应用" sub-title="管理我的应用，这里的应用可以随时添加到左侧栏，或者基于应用创建标签，不会因标签被关闭而丢失。" />
+							<a-page-header title="本地导航" sub-title="本地导航可能由于软件重装、卸载、系统重装等原因丢失，建议使用云端导航，此处仅做临时存储使用。" />
 						</a-layout-header>
 						<a-layout-content>
 							<div style="padding: 20px;text-align: left;padding: 10px;margin:20px">
@@ -84,11 +84,11 @@
 									<search />
 								</div> -->
 								<div>
-									<a-card title="现有应用">
+									<a-card title="本地导航">
 
 
 
-										<a class="add-button" slot="extra" @click="showModal">添加应用</a>
+										<a class="add-button" slot="extra" @click="showModal">添加网站</a>
 
 
 										<a-card-grid v-for="(app, index) in myApps" class="app" style="cursor: pointer;"
@@ -103,10 +103,10 @@
 
 										</a-card-grid>
 
-										<a-empty v-if="myApps.length==0" description="还未添加任何应用，点击添加应用选择应用">
+										<a-empty v-if="myApps.length==0" description="还未添加任何网站，点击添加网站">
 
 											<a-button type="primary" @click="showModal">
-												添加应用
+												添加网站
 											</a-button>
 
 										</a-empty>
@@ -130,8 +130,8 @@
 
 							<template>
 								<div>
-									<a-page-header style="border: none;" title="应用中心"
-										:sub-title="'这里可以查看全部的应用,右键查看详情，应用列表更新于'+appUpdateTime+'。'">
+									<a-page-header style="border: none;" title="办公导航"
+										:sub-title="'想天办公导航，右键查看详情，网站更新于'+appUpdateTime+'。'">
 										<template slot="extra">
 											<a-button icon="shopping-cart" key="3" @click="showDrawerCart()"
 												:type="shopcartApps.length>0?'primary':'default'">
@@ -268,7 +268,7 @@
 
 			<template>
 				<div>
-					<a-modal v-model="visible" title="添加应用" :footer="null" :width="800">
+					<a-modal v-model="visible" title="添加网站" :footer="null" :width="800">
 						<template>
 							<a-tabs default-active-key="1" tab-position="top">
 								<a-tab-pane key="1">
@@ -396,16 +396,16 @@
 		<div>
 			<div class="logo">
 				<img src="../../icons/logo1024.png" style="width: 32px;height: 32px;">
-				应用中心
+				网址导航
 			</div>
 			<a-menu mode="vertical" @click="handleClick" theme="light" :default-selected-keys="['myapp']">
 				<a-menu-item key="myapp">
 					<a-icon type="user"></a-icon>
-					<span>我的应用</span>
+					<span>本地导航</span>
 				</a-menu-item>
 				<a-menu-item key="appstore">
 					<a-icon type="appstore"></a-icon>
-					<span>应用中心</span>
+					<span>办公导航</span>
 				</a-menu-item>
 			</a-menu>
 		</div>
@@ -594,6 +594,7 @@
 					const value = e.target.value;
 					this.confirmDirty = this.confirmDirty || !!value;
 				},
+        //收藏app
 				addApp(app) {
 					this.currentApp = app
 					this.addCurrentApp()
@@ -620,6 +621,7 @@
 					this.visibleCart=false
 					that.$message.success(text)
 				},
+        //收藏移除app dexie操作
 				addCurrentApp() {
 					let that = this
 					let app = this.currentApp
@@ -667,6 +669,7 @@
 				onCloseCart() {
 					this.visibleCart = false
 				},
+        //移入app时的菜单显示
 				show(app) {
 					this.currentApp = app
 					this.btnText = this.isInMyApps(app) == -1 ? '添加收藏' : '移出收藏'
@@ -700,6 +703,7 @@
 					return findIndex
 
 				},
+        //检查是否在dexie的myapp中
 				checkInMyApps(app) {
 					if(typeof  this.myApps =='undefined')
 						return -1

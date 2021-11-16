@@ -15,7 +15,9 @@ const {
   nativeTheme,
   globalShortcut
 } = electron
-
+console.log(app.setAsDefaultProtocolClient("tsb"))
+console.log(app.isDefaultProtocolClient('tsb'))
+console.log(app.getApplicationNameForProtocol("tsb://"))
 crashReporter.start({
 	submitURL: 'https://minbrowser.org/',
 	uploadToServer: false,

@@ -4,23 +4,27 @@ let sidePanel = null //SidePanel类的存储变量
  */
 function isWin11() {
 	var sysVersion = process.getSystemVersion()
-	if (sysVersion.startsWith('10.') && process.platform == 'win32') {
+	if (sysVersion.startsWith('10.') && process.platform === 'win32') {
 		return true
 	} else {
 		return false
 	}
 }
+function log(info){
+  //console.log(info)
+}
+
 /**
  * 是否是Mac
  */
 function isMac(){
-	return process.platform == 'darwin'
+	return process.platform === 'darwin'
 }
 /**
  * 是否是windows
  */
 function isWin(){
-	return process.platform == 'win32'
+	return process.platform === 'win32'
 }
 
 class SidePanel {
@@ -96,14 +100,14 @@ class SidePanel {
 		this.syncTitleBar()
 
 		this._sidePanel.on('close', function() {
-			console.log('sidebar-close:左侧栏隐藏')
+			log('sidebar-close:左侧栏隐藏')
 		})
 
 		this._sidePanel.on('show', function() {
-			console.log('sidebar-show:左侧栏显示')
+			log('sidebar-show:左侧栏显示')
 		})
 		this._sidePanel.on('hide', function() {
-			console.log('sidebar-hide:左侧栏隐藏')
+			log('sidebar-hide:左侧栏隐藏')
 		})
 		sidePanel = this
 	}
@@ -197,7 +201,7 @@ class SidePanel {
 	show() {
 		if (SidePanel.alive()) {
 			if (!this._sidePanel.isVisible() && this._sidePanel != null) {
-				console.log('调用sidebar.show()侧边栏')
+				log('调用sidebar.show()侧边栏')
 				this._sidePanel.show()
 			}
 		}
@@ -205,14 +209,14 @@ class SidePanel {
 	}
 	hide() {
 		if (SidePanel.alive()) {
-			console.log('调用sidebar.hide()侧边栏')
+			log('调用sidebar.hide()侧边栏')
 			this._sidePanel.hide()
 		}
 	}
 
 	focus() {
 		if (SidePanel.alive()) {
-			console.log('调用sidebar.focus()侧边栏')
+			log('调用sidebar.focus()侧边栏')
 			this._sidePanel.focus()
 		}
 	}
@@ -224,7 +228,7 @@ class SidePanel {
 	}
 
 	close() {
-		console.log('调用sidebar.close()主动close')
+		log('调用sidebar.close()主动close')
 		this._sidePanel.destroy()
 		this._sidePanel = null
 	}
@@ -251,7 +255,7 @@ class SidePanel {
 			this._sidePanel.webContents.send('addItem', {
 				item: addItem
 			})
-			console.log(addItem)
+			log(addItem)
 		}
 
 	}
@@ -266,14 +270,14 @@ class SidePanel {
 		})
 		if (BrowserWindow.getFocusedWindow() != null) //如果有任意一个window还有焦点，则聚焦到mainwindow
 			mainWindow.focus()
-		console.log('设置左侧栏不再感应鼠标，主窗体获得焦点')
+		log('设置左侧栏不再感应鼠标，主窗体获得焦点')
 	}
 	//设置在侧边栏鼠标有效
 	setMouseEnable() {
 		this._sidePanel.setIgnoreMouseEvents(false)
 		if (BrowserWindow.getFocusedWindow() != null) //如果有任意一个window还有焦点，则聚焦到sidepanel
 			this._sidePanel.focus()
-		console.log('设置左侧栏感应 鼠标，左侧栏同时获得焦点')
+		log('设置左侧栏感应 鼠标，左侧栏同时获得焦点')
 	}
 }
 
@@ -294,7 +298,7 @@ function addMainWindowEventListener() {
 
 	mainWindow.on('show', () => {
 		if (SidePanel.alive()) {
-			console.log('mainwindow-show:侧边栏' + sidePanel._sidePanel)
+			log('mainwindow-show:侧边栏' + sidePanel._sidePanel)
 			//sidePanel.show()
 			//sidePanel.syncSize()
 		}
@@ -347,14 +351,14 @@ function addMainWindowEventListener() {
 
 	//最大化，取消最大化事件，一般用于win
 	mainWindow.on('maximize', () => {
-		console.log('mainwindow-maximize:')
+		log('mainwindow-maximize:')
 		loadSidePanel()
 		syncSize()
 		syncSidebarTitle()
 		//sidePanel.show() //最大化情况下，最小化，再恢复窗体，必须要重新show一下，不然无法点击左侧栏
 	})
 	mainWindow.on('unmaximize', () => {
-		console.log('mainwindow-unmaximize:')
+		log('mainwindow-unmaximize:')
 		syncSize()
 		syncSidebarTitle()
 		//sendIPCToWindow(mainWindow, 'getTitlebarHeight')
@@ -363,14 +367,14 @@ function addMainWindowEventListener() {
 
 	//进入退出全屏事件
 	mainWindow.on('enter-full-screen', () => {
-		console.log('mainwindow-enter-full-screen:进入全屏')
+		log('mainwindow-enter-full-screen:进入全屏')
 		//sidePanel.syncSize()
 		//windows上全屏少了一块区域
 		//sidePanel.syncTitleBar()
 		// this.sidePanel.setAlwaysOnTop(true, 'floating')
 	})
 	mainWindow.on('leave-full-screen', () => {
-		console.log('mainwindow-leave-full-screen:进入全屏')
+		log('mainwindow-leave-full-screen:进入全屏')
 		syncSize()
 		syncSidebarTitle() //sendIPCToWindow(mainWindow, 'getTitlebarHeight')
 
@@ -382,15 +386,16 @@ function addMainWindowEventListener() {
 	})
 	mainWindow.on('leave-html-full-screen', () => {
 		loadSidePanel()
+
 	})
 
 
 	mainWindow.on('resize', function(event, newBounds, details) {
-		console.log('mainwindow-resize:调整尺寸')
+		log('mainwindow-resize:调整尺寸')
 		syncSize()
 	})
 	mainWindow.on('close', function() {
-		console.log('mainwindow-close:关闭')
+		log('mainwindow-close:关闭')
 		closeSidePanel()
 	})
 
@@ -398,7 +403,7 @@ function addMainWindowEventListener() {
 
 
 function loadSidePanel() {
-	console.log('执行loadSidePanel()')
+	log('执行loadSidePanel()')
 	if (!SidePanel.alive()) {
 		sidePanel = new SidePanel()
 		sidePanel.init()
@@ -410,7 +415,7 @@ function loadSidePanel() {
 }
 
 function closeSidePanel() {
-	console.log('执行closeSidePanel()')
+	log('执行closeSidePanel()')
 	if (SidePanel.alive()) {
 		if(isMac()){
 			sidePanel.close()
@@ -418,8 +423,8 @@ function closeSidePanel() {
 		}else{
 			sidePanel.hide()
 		}
-		
-		
+
+
 	}
 }
 
@@ -456,7 +461,7 @@ function syncSize() {
 // 				sidePanel.focus()
 // 			}
 // 			if (sidePanel._sidePanel.isVisible()) {
-// 				console.log(args)
+// 				log(args)
 // 				 if (args[0]) {
 // 				 	sidePanel.setMouseIgnore()
 // 				 } else {
@@ -494,7 +499,8 @@ ipc.on('receiveGlobal', function(event, data) {
 })
 
 //显示书签的时候，将sidepanel隐藏起来
-ipc.on('showBookmarks', function() {
+ipc.on('openBookmarks', function() {
+  sendIPCToWindow(mainWindow, 'showBookmarks') //直传给mainWindow，让它唤出书签页面
 	sidePanel.hide()
 })
 ipc.on('openSetting', function() {
@@ -515,6 +521,10 @@ ipc.on('openHelp', function() {
 
 ipc.on('openMobile', function() {
 	sendIPCToWindow(mainWindow, 'openMobile')
+})
+
+ipc.on('openHistory', function() {
+  sendIPCToWindow(mainWindow, 'showHistory')
 })
 
 ipc.on('hideSidePanel', function() {
@@ -565,4 +575,20 @@ ipc.on('selectTask', function() {
 
 ipc.on('closeTaskSelect', function() {
 	selectTaskWindow.close()
+})
+ipc.on('addTab', function(event, data) {
+	sendIPCToWindow(mainWindow, 'addTab', {
+		'url': data.url
+	})
+})
+
+ipc.on('userLogin', function(event, data) {
+	sidePanel.get().webContents.send( 'userLogin', {
+		'userInfo': data.userInfo
+	})
+})
+
+
+ipc.on('importBookMarks',function(){
+  sendIPCToWindow(mainWindow,'importBookMarks')
 })

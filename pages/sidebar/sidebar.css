@@ -1,3 +1,7 @@
+body{
+	background-color: #00000000;
+	overflow: hidden;
+}
 .sidebar {
 	position: fixed;
 	bottom: 0;

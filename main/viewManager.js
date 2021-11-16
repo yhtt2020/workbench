@@ -177,7 +177,7 @@ function destroyView (id) {
   // {
 	 //  console.log('阻止一次被消耗')
 	 //  mainWindow.setTopBrowserView(sidebarView)
-	 //  return 
+	 //  return
   // }
   viewMap[id].webContents.destroy()
 
@@ -196,7 +196,7 @@ function destroyAllViews () {
 
 function setView (id) {
 	mainWindow.setBrowserView(viewMap[id])
-	
+
 }
 
 function setBounds (id, bounds) {
@@ -357,7 +357,7 @@ ipc.on('enableEmulation',function(e,data){
 		view.webContents.disableDeviceEmulation()
 		view.webContents.reload()
 		emulationViews.splice(index,1)
-	
+
 	}else{
 		oldAgent=view.webContents.getUserAgent()
 		view.setBackgroundColor("#d1d1d1")
@@ -371,14 +371,14 @@ ipc.on('enableEmulation',function(e,data){
 			 fitToView: false,
 			 offset: { x: 0, y: 0 }
 		})
-		
+
 		emulationViews.push(data.id)
 		view.webContents.reload()
 	}
-	
+
 	// view.webContents.openDevTools({
 	// 	 mode: 'bottom'
 	// })
-	
-	
+
+
 })

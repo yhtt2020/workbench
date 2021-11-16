@@ -84,7 +84,12 @@ window.onload = function() {
 			pinItems: null, //置顶区域的items，横线上方部分
 			items: null, //普通区域的items
 			selected: '', //当前选中的
-			tasks: new TasksList()
+			tasks: new TasksList(),
+			user:{//当前用户
+				uid:0,
+				nickname:"立即登录",
+				avatar:"../../icons/browser.ico"
+			}
 		},
 		getters: {
 			getAll: state => {
@@ -204,7 +209,7 @@ window.onload = function() {
 					title: '收藏夹', //名称，用于显示提示
 					index: 0, //索引
 					id: 1, //id
-					icon: "../../icons/fav.png", //图标
+					icon: "../../icons/fav.svg", //图标
 					draggable: true, //是否允许拖拽
 					ext: '', //额外的信息
 					fixed: true, //锁定，不让它移动
@@ -308,10 +313,9 @@ window.onload = function() {
 		},
 		mounted: function() {
 			window.$store = store
-
-
 		}
 	})
+	window.appVue=appVue
 
 
 
