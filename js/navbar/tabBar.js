@@ -127,7 +127,7 @@ const tabBar = {
     let tabs = tasks.getSelected().tabs
     let tab = tabs.get(tabId)
     const appNow = {
-      icon: tab.favicon.url,
+      icon:tab.favicon==null? '../../icons/default.svg' : tab.favicon.url,
       name: tab.title,
       url: tab.url,
       summary: tab.title,
@@ -147,7 +147,7 @@ const tabBar = {
     ipc.send('addTask', {
       name: tab.title,
       url: tab.url,
-      icon: tab.favicon.url
+      icon: tab.favicon==null? '../../icons/empty.png' :tab.favicon.url
     })
     setTimeout(()=>{
       let taskNew = tasks.getAll()[tasks.getAll().length -1]
