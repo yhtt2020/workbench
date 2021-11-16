@@ -1,16 +1,16 @@
-let createGroupWindow = null
-app.on('ready', () => {
 
+app.on('ready', () => {
+  let createGroupWindow = null
   ipc.on('createGroup', () => {
-    if (createGroupWindow != null) {
+    if (createGroupWindow !== null ) {
       createGroupWindow.focus()
       return //如果已经创建了，则不再重复创建
     }
     createGroupWindow = new BrowserWindow({
       backgroundColor: 'black',
       parent: mainWindow,
-      width: 360,
-      height: 530,
+      width: 440,
+      height: 640,
       maximizable:false,
       resizable: false,
       acceptFirstMouse: true,
@@ -27,9 +27,10 @@ app.on('ready', () => {
       }
     })
     createGroupWindow.webContents.loadURL('file://' + __dirname + '/pages/group/create.html')
+    createGroupWindow.on('close',()=>createGroupWindow=null)
   })
   ipc.on('closeCreateGroupWindow', () => {
-    createGroupWindow.close()
+    createGroupWindow.destroy()
     createGroupWindow = null
   })
 })

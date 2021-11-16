@@ -30,7 +30,7 @@
               <a-input
                 v-decorator="[
           'name',
-          { rules: [{ required: true, message: '请输入团队名2-32个汉字' }] },
+          { rules: [{ required: true, message: '请输入团队名2-32个汉字' ,min:4,max:32}] },
         ]"
                 placeholder="团队名2-16个汉字"
               />
@@ -40,12 +40,15 @@
                 <a-radio value="public">
                   公开（自由加入）
                 </a-radio>
+                <div class="tip"> 兴趣小组、行业交流、职业交流、培训学习、产品交流</div>
                 <a-radio value="publicNeedAudit">
                   公开（验证加入）
                 </a-radio>
+                <div class="tip"> 开放组织、讨论小组</div>
                 <a-radio value="private">
                   私密（不公开）
                 </a-radio>
+                <div class="tip"> 企业、组织机构、校友会、协会</div>
               </a-radio-group>
             </a-form-item>
             <a-form-item label="头像" >
@@ -71,8 +74,8 @@
 
             </a-form-item>
 
-            <a-form-item style="margin-bottom: 0" :wrapper-col="{ span: 12, offset: 6 }">
-              <a-button style="margin-right: 30px" type="primary" html-type="submit">
+            <a-form-item style="margin-bottom: 0" :wrapper-col="{ span: 12, offset: 7 }">
+              <a-button style="margin-right: 40px" type="primary" html-type="submit">
                 创建
               </a-button>
               <a-button @click="close">
@@ -152,6 +155,13 @@
     }
     .active{
       border: 1px dashed #ccc;
+    }
+    .tip{
+      color: #999;
+      padding-left: 25px;
+      padding-top: 5px;
+      margin-bottom: 10px;
+      padding-bottom: 0;
     }
   </style>
 </html>
