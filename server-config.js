@@ -2,6 +2,7 @@
 //也可以直接require进去(在非preload当中）
 const config={
 	SERVER_BASE_URL:"http://com.thisky.com",
+  NODE_SERVER_BASE_URL: "http://test.com:8001"
 }
 // const api={
 // 	'login':"/login",
@@ -12,7 +13,8 @@ const api={
 
   API_URL:{
     user:{
-      login:"/login", //登陆页面
+      //login:"/login", //登陆页面
+      login:"/login?response_type=code&client_id=10001&state=1", //登陆页面
       home:'/', //用户主页
       profile:'/user/info', //用户资料
       account:"/user/account-info" //账号信息
@@ -22,9 +24,17 @@ const api={
 
     }
   },
+  NODE_API_URL: {
+    user: {
+      code: '/app/authorizeCode',    //code截取url
+    }
+  },
   getUrl(path){
     //const params=path.split('/')
     return config.SERVER_BASE_URL+path
+  },
+  getNodeUrl(path) {
+    return config.NODE_SERVER_BASE_URL+path
   }
 
 }
