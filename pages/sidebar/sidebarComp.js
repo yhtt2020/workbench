@@ -1,8 +1,8 @@
-//const browserUI= require('./js/browserUI.js')
-const serverConfig= require('./user.js')
+const { api } = require('../../server-config')
 Vue.component('sidebar', {
 	data: function() {
 		return {
+      lastOpenId:0,
 			drag: false,
 			remote: {},
 			loginPanelTitle:"登陆账号免费体验完整功能",
@@ -148,11 +148,15 @@ Vue.component('sidebar', {
 					message: 'openBookMarks'
 				})
 			} else if (this.$store.getters.getPinItems[index].type == 'task') {
-				this.switchTask(id, index)
+        this.openItem(id, index)
 			}
 		},
 		openItem(id, index) {
-			this.switchTask(id, index)
+      if(id!==this.lastOpenId){
+        this.switchTask(id, index)
+        this.lastOpenId=id
+      }
+
 		},
 		openBottom(action) {
 			postMessage({
@@ -244,9 +248,9 @@ Vue.component('sidebar', {
 		//点击用户登录按钮
 		userClick(){
 			if(this.user.uid===0){
-				this.addTab(serverConfig.getUrl(serverConfig.apiUrl.user.login))
+				this.addTab(api.getUrl(api.API_URL.user.login))
 			}else{
-				this.addTab(serverConfig.getUrl(serverConfig.apiUrl.user.home))
+				this.addTab(api.getUrl(api.API_URL.user.home))
 			}
 			this.userPanelVisible=false
 		},
@@ -263,21 +267,38 @@ Vue.component('sidebar', {
 		},
     switchAccount(){
       this.userPanelVisible=false
-      this.addTab(serverConfig.getUrl(serverConfig.apiUrl.user.login))
+      this.addTab(api.getUrl(api.API_URL.user.login))
     },
     goProfile(){
       this.userPanelVisible=false
-      this.addTab(serverConfig.getUrl(serverConfig.apiUrl.user.profile))
+      this.addTab(api.getUrl(api.API_URL.user.profile))
     },
     goGroup(){
       this.userPanelVisible=false
-      this.addTab(serverConfig.getUrl(serverConfig.apiUrl.group.index))
+      this.addTab(api.getUrl(api.API_URL.group.index))
     },
     goAccount(){
       this.userPanelVisible=false
-      this.addTab(serverConfig.getUrl(serverConfig.apiUrl.user.account))
+      this.addTab(api.getUrl(api.API_URL.user.account))
+    },
+    addNewTask(e){
+      ipc.send('addNewTask')
+      this.$message.success({content:'成功添加一个新任务到左侧栏。'})
+    },
+    closeItem(item){
+      if(item.type==='task'){
+        ipc.send('closeTask',{tabId:item.id})
+        this.$message.success({content:'删除任务成功。'})
+      }
     }
 
 	}
 
+})
+
+ipc.on('message',function(event,args){
+  if(!!!args.type){
+    args.type='open'
+  }
+  appVue.$message[args.type](args.config)
 })

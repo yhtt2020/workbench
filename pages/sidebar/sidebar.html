@@ -177,12 +177,13 @@
                             <div v-if="user.uid!==0">
                                 用户信息
                             </div>
-
                         </template>
                         <div @contextmenu="toggleUserPanel()" class="wrapper" block>
                             <div class="item-icon">
-                                <a-avatar style="border:1px solid #cfcfcf; backgroundColor: white" class="icon"
+                                <a-avatar v-if="user.uid!==0" style="border:1px solid #cfcfcf; background-color: white" class="icon"
                                           :src="user.avatar"></a-avatar>
+                              <a-avatar v-if="user.uid===0"  style="border:1px solid #cfcfcf; background-color: white;color: #aaa" class="icon"
+                                       src="../../icons/user.svg"  ></a-avatar>
                                 <!-- <a-badge :count="0" :dot="true" status="processing"
                                     :style="{position: 'absolute',right:  '-2px',top:'-13px'}" />
                                 </a-badge> -->
@@ -208,7 +209,7 @@
                                         </li>
                                     </ul>
                                 </template>
-                                <div class="wrapper">
+                                <div class="wrapper" @dblclick.stop="closeItem(item)">
                                     <div class="item-icon">
 
                                         <img class="icon" :src="item.icon">
@@ -229,11 +230,11 @@
 
             <div class="app-box">
 
-                <ul id="appGroup" class="app-task app-items">
+                <ul id="appGroup" style="user-select: none;" class="app-task app-items" @dblclick.prevent="addNewTask">
                     <draggable v-model="getItems" group="sideBtn" animation="300" dragClass="dragClass"
                                ghostClass="ghostClass" chosenClass="chosenClass" @start="onStart" @end="onEnd">
                         <transition-group>
-                            <li @click="openItem(item.id,i)" v-for="(item,i) in this.$store.getters.getItems"
+                            <li @click="openItem(item.id,i)"  @dblclick.stop="closeItem(item)"  v-for="(item,i) in this.$store.getters.getItems"
                                 :key="item.id" :visible="item.count>1" data-role="task"
                                 :class="isActive(item.id)" :item-id="item.id" style="position: relative;">
 

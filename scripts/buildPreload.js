@@ -4,6 +4,7 @@ const fs = require('fs')
 const outFile = path.resolve(__dirname, '../dist/preload.js')
 
 const modules = [
+
   'js/preload/default.js',
   'js/preload/textExtractor.js',
   'js/preload/readerDetector.js',
@@ -11,6 +12,7 @@ const modules = [
   'js/util/settings/settingsPreload.js',
   'js/preload/passwordFill.js',
   'js/preload/translate.js',
+  'server-config.js',
   'js/preload/server.js'
 ]
 

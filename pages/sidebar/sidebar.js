@@ -204,21 +204,22 @@ window.onload = function() {
 
 			//从任务组读入置顶区域，目前还不支持存档，每次进去会重新填充一次
 			initItems: state => {
-				//在置顶区域插入一个收藏夹的图标按钮
-				let item = {
-					title: '收藏夹', //名称，用于显示提示
-					index: 0, //索引
-					id: 1, //id
-					icon: "../../icons/fav.svg", //图标
-					draggable: true, //是否允许拖拽
-					ext: '', //额外的信息
-					fixed: true, //锁定，不让它移动
-					type: 'system-bookmark',
-					count: 0
-				}
+
 				state.pinItems = []
 				state.items = []
-				state.pinItems.push(item)
+        //在置顶区域插入一个收藏夹的图标按钮
+        // let item = {
+        //   title: '收藏夹', //名称，用于显示提示
+        //   index: 0, //索引
+        //   id: 1, //id
+        //   icon: "../../icons/fav.svg", //图标
+        //   draggable: true, //是否允许拖拽
+        //   ext: '', //额外的信息
+        //   fixed: true, //锁定，不让它移动
+        //   type: 'system-bookmark',
+        //   count: 0
+        // }
+				// state.pinItems.push(item)
 				// if (tasks != null) {
 				// 	//从任务当中取得任务的小组
 				// 	let tasksArray = tasks.getAll()
@@ -250,7 +251,7 @@ window.onload = function() {
 					}
 
 				});
-				
+
 
 				//遍历非置顶区域，把任务都替换进来
 				state.items.forEach(function(item, index) {

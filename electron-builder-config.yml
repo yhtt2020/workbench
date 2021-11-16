@@ -28,7 +28,9 @@ win:
               - x64
               - ia32
     publish:
-        - github
+        - provider : generic
+          url: http://d.xiangtian.ren/update/browser/win/
+          channel: latest
 
 mac:
     icon: ./icons/icon.icns
@@ -38,7 +40,10 @@ mac:
         - dmg
         - zip
     publish:
-        - github
+      - provider : generic
+        url: http://d.xiangtian.ren/update/browser/mac/
+        channel: latest
+
 
 nsis:
     allowToChangeInstallationDirectory: true

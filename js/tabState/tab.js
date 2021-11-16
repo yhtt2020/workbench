@@ -190,7 +190,7 @@ class TabList {
       Object.keys(tab)
       .filter(key => !TabList.temporaryProperties.includes(key))
       .forEach(key => result[key] = tab[key])
-      
+
       return result
   }
 

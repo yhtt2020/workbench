@@ -73,8 +73,7 @@
 					<a-layout-sider style="background-color: white;">
 						<sidenav @gettab="settab" />
 					</a-layout-sider>
-					<a-layout class="wall" v-show="current==='myapp'"
-						style="background: url('http://d.xiangtian.ren/api/wall/1.jpeg');">
+					<a-layout id="wall" class="wall" v-show="current==='myapp'"	 style="background: #f1f1f1">
 						<a-layout-header style="background: #fff; padding: 0">
 							<a-page-header title="本地导航" sub-title="本地导航可能由于软件重装、卸载、系统重装等原因丢失，建议使用云端导航，此处仅做临时存储使用。" />
 						</a-layout-header>
@@ -84,29 +83,26 @@
 									<search />
 								</div> -->
 								<div>
-									<a-card title="本地导航">
-
-
-
+									<a-card  >
 										<a class="add-button" slot="extra" @click="showModal">添加网站</a>
-
-
-										<a-card-grid v-for="(app, index) in myApps" class="app" style="cursor: pointer;"
+                    <a-dropdown v-for="(app, index) in myApps" :trigger="['contextmenu']">
+                    <a-card-grid  class="app" style="cursor: pointer;"
 											@click="addTask(app)">
-
 											<a-avatar shape="square" :size="64" :src="app.icon"
 												style="margin-bottom: 10px;"></a-avatar>
 											<a-card-meta :title="app.name">
-
-
 											</a-card-meta>
-
 										</a-card-grid>
-
+                      <a-menu slot="overlay">
+                        <a-menu-item @click="addApp(app)" key="1">
+                          <a-icon type="delete"></a-icon> 删除
+                        </a-menu-item>
+                      </a-menu>
+                    </a-dropdown>
 										<a-empty v-if="myApps.length==0" description="还未添加任何网站，点击添加网站">
 
 											<a-button type="primary" @click="showModal">
-												添加网站
+												 添加网站
 											</a-button>
 
 										</a-empty>
@@ -300,8 +296,9 @@
 																</template>
 															</a-card-meta>
 														</a-card-grid>
-												</a-tab-pane>
+
 												</a-card>
+                        </a-tab-pane>
 											</a-tabs>
 										</div>
 									</template>
@@ -339,7 +336,7 @@
 												<a-input placeholder="请输入应用名，少于8个字" v-decorator="[
           'name',
           {
-            rules: [{ required: true, message: '请输入应用名！', whitespace: true },{max:8,message:'不得超过8个字！'}],
+            rules: [{ required: true, message: '请输入应用名！', whitespace: true },{max:24,message:'不得超过24个字！'}],
           },
         ]" />
 											</a-form-item>
@@ -376,9 +373,9 @@
 												</template>
 											</a-form-item>
 											<a-form-item :wrapper-col="{ span: 12, offset: 6 }">
-												<a-button type="primary" html-type="submit">
-													添加
-												</a-button>
+                        <a-button style="margin-left: 20px"  type="primary" html-type="submit">
+                          添加并继续
+                        </a-button>
 											</a-form-item>
 										</a-form>
 									</template>
@@ -442,6 +439,7 @@
 	<script>
 		Vue.use(antd)
 		Vue.prototype.$form = antd.Form
+    const wallPaper=require('../util/theme.js').wallPaper
 		var appVue = new Vue({
 			el: '#appVue',
 			components: {},
@@ -506,7 +504,11 @@
 				});
 			},
 			mounted() {
-
+        wallPaper.get().then(data=>{
+          if(!!data){
+            wallPaper.setElementBg(document.getElementById('wall'),data.value)
+          }
+        }).catch(err=>console.log(err))
 
 				// if ((window.appsData == false && window.loaded)) {
 				// 	//未读取到appsData
@@ -569,7 +571,14 @@
 					let that = this
 					this.form.validateFieldsAndScroll((err, values) => {
 						if (!err) {
-							that.myApps.push(values)
+              console.log(values)
+              const app={
+                'name':values.name,
+                'url':values.url,
+                'summary':values.summary,
+                'icon':'../../icons/default.svg'
+              }
+							that.addApp(app)
 
 							that.$nextTick(() => {
 								that.form.resetFields()
