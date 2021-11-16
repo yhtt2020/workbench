@@ -772,7 +772,6 @@
 				 load: function(){
 						 window.$appsRestore.restoreFromDB().then((data)=>{
 							this.myApps=data
-							console.log(this.myApps)
 							return data
 						}).catch(e=>{
 							 console.log(e)

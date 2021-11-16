@@ -5,7 +5,7 @@ const tpl = `
 网址导航
 </div>
       <template >
-        <a-tree style="padding: 10px" :tree-data="treeData" :block-node="true" show-icon default-expand-all :default-selected-keys="['local']"
+        <a-tree style="padding: 10px" :tree-data="[myAppsLists]" :block-node="true" show-icon default-expand-all :default-selected-keys="['local']"
         @select="onSelect"
         >
           <a-icon slot="user" type="user" > </a-icon>
@@ -16,7 +16,7 @@ const tpl = `
           <a-icon slot="lock" type="lock"> </a-icon>
           <a-icon slot="star" type="star"> </a-icon>
           <a-icon slot="cloud" type="cloud"> </a-icon>
-
+          <a-icon slot="list-icon" type="file-text"> </a-icon>
 
           <template slot="custom" slot-scope="{ selected }">
             <a-icon :type="selected ? 'frown' : 'frown-o'" ></a-icon>
@@ -26,10 +26,11 @@ const tpl = `
         <span>{{ title }}</span>
         <template #overlay>
           <a-menu @click="({ key: menuKey }) => onContextMenuClick(treeKey, menuKey)">
-            <a-menu-item key="createList" :disabled="disableCreate">创建列表</a-menu-item>
-            <a-menu-item key="createChildList" :disabled="disableCreateChild">创建子列表</a-menu-item>
-            <a-menu-item key="copyList" :disabled="disableCopy">复制列表</a-menu-item>
-            <a-menu-item key="renameList" :disabled="disableRename">重命名列表</a-menu-item>
+            <a-menu-item key="createList" :disabled="disableCreate"><a-icon type="plus-square"></a-icon>  创建列表</a-menu-item>
+            <a-menu-item key="createChildList" :disabled="disableCreateChild"><a-icon type="plus-circle"></a-icon>  创建子列表</a-menu-item>
+            <a-menu-item key="copyList" :disabled="disableCopy"><a-icon type="copy"></a-icon>  复制列表</a-menu-item>
+            <a-menu-item key="renameList" :disabled="disableRename"><a-icon type="edit"></a-icon> 重命名列表</a-menu-item>
+            <a-menu-item key="deleteList" :disabled="disableDelete"><a-icon type="delete"></a-icon> 删除列表</a-menu-item>
           </a-menu>
         </template>
       </a-dropdown>
@@ -51,7 +52,7 @@ const tpl = `
 </div>
 
 `
-
+const appList=require('../util/appList.js')
 const treeData = [
   {
     title: '本地导航',
@@ -136,11 +137,32 @@ Vue.component('sidenav', {
       disableCreateChild:false,
       disableCopy:false,
       disableRename:false,
+      disableDelete:false,
       nameValue:'',
-      handleNameInput :()=>{}
+      handleNameInput :()=>{},
+      //下面是数据暂存属性
+      myAppsLists:{
+        title:'本地导航',
+        key:'myapp',
+        slots:{
+          icon:'star'
+        },
+        children:[]
+      }
     }
   },
   template: tpl,
+  mounted(){
+    let that=this
+    appList.list().then(data=>{
+      data.forEach((item)=>{
+        that.myAppsLists.children.push(appList.convertTreeNode(item))
+      })
+    })
+
+
+
+  },
   methods: {
 
     titleClick (e) {
@@ -167,7 +189,7 @@ Vue.component('sidenav', {
           //创建列表菜单
           this.handleMenuCreateList(treeKey)
         }else if(menuKey==='renameList'){
-          this.handleMenuCreateList(treeKey)
+          this.handleMenuRenameList(treeKey)
         }
     },
     /**
@@ -175,15 +197,51 @@ Vue.component('sidenav', {
      * @param treeKey
      */
     handleMenuRenameList(treeKey){
-
-    },
+      let that=this
+      if(this.isType(treeKey,'myapp')) {
+        console.log(treeKey)
+        let list=null
+        that.myAppsLists.children.forEach((item)=>{
+          if(item.key===treeKey){
+            list=item
+          }
+        })
+        that.createList(function () {
+          const newName=getNameInputValue()
+          appList.put({id:Number(treeKey.replace('myapp_','')),name:newName,updateTime:Date.now()}).then(()=>{
+            list.title=newName
+            that.$message.success({content:"重命名成功。"})
+            that.createListVisible=false
+          }).catch(err=>console.log(err))
+        },list.title,'重命名')
+        }
+      },
     /**
      * 处理菜单的创建列表事件
      */
     handleMenuCreateList(treeKey){
+      let that=this
       if(this.isType(treeKey,'myapp')){
         this.createList(function (){
-          alert(getNameInputValue())
+          let name=getNameInputValue()
+          let list={}
+          list.name=name
+          list.createTime=Date.now()
+          list.updateTime=Date.now()
+          list.order=0
+          list.summary=''
+          list.appsCount=0
+          list.parentId=0
+          appList.add(list).then(data=>{
+            appVue.$message.success({content:'添加列表成功。'})
+            console.log(list)
+            that.myAppsLists.children.push(appList.convertTreeNode(list))
+            that.createListVisible=false
+          },()=>{
+            appVue.$message.error({content:'添加列表失败。'})
+          }).catch(err=>{
+            console.log(err)
+          })
         },'本地列表','本地')
       }else if(this.isType(treeKey,'cloud')){
         this.createList(function (){
@@ -211,12 +269,14 @@ Vue.component('sidenav', {
       this.disableCreateChild=false
       this.disableCopy=false
       this.disableRename=false
+      this.disableDelete=false
       if(visible===true){//在创建菜单的时候对菜单的可用性进行调整
         if(this.isType(treeKey,'appstore')){
           this.disableCreate=true
           this.disableCreateChild=true
           this.disableCopy=true
           this.disableRename=true
+          this.disableDelete=true
         }else{
         }
       }
