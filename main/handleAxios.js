@@ -4,13 +4,18 @@ const axios = require(path.join(__dirname, '../js/util/axios.js'))
 
 module.exports = {
   initialize: function() {
+    //测试接口
+    ipc.on('test', async (event, arg) => {
+      const result = await axios.get('/app/testget')
+      console.log(result, '__test!!__')
+    })
     //游览器登录
     ipc.on('loginB', async (event, arg) => {
       const data = {
         code: arg
       }
-      const result = await axios.post('http://test.com:8001/app/loginB', data)
-      console.log(result, '__result__')
+      const result = await axios.post('/app/loginB', data)
+      // console.log(result, '__result__')
       event.reply('callback-loginB', result)
     })
     //游览器登出
@@ -18,7 +23,8 @@ module.exports = {
       const data = {
         code: arg
       }
-      await axios.post('http://test.com:8001/app/logoutB', data)
+      const result = await axios.post('/app/logoutB', data)
+      console.log(result, '__logout__')
     })
   }
 }

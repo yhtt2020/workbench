@@ -131,13 +131,16 @@ function getCurrentUser () {
   //if(currentUser)
 }
 
-function insertDefaultUser () {
+async function insertDefaultUser (code) {
   const defaultUser = {
     uid: 0,
     nickname: '立即登录',
     avatar: '../../icons/browser.ico'
   }
-  db.system.where({name:'currentUser'}).delete()
+  await db.system.where({name:'currentUser'}).delete()
+  if(code) {
+    await db.accounts.where('code').equals(code).delete()
+  }
   db.system.put({//当前用户
     name: 'currentUser',
     value: defaultUser

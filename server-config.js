@@ -4,10 +4,6 @@ const config={
 	SERVER_BASE_URL:"http://com.thisky.com",
   NODE_SERVER_BASE_URL: "http://test.com:8001"
 }
-// const api={
-// 	'login':"/login",
-// 	'home':'/'
-// }
 
 const api={
 
@@ -27,7 +23,11 @@ const api={
   NODE_API_URL: {
     user: {
       code: '/app/authorizeCode',    //code截取url
-    }
+    },
+    // ignoreUrl: [
+    //   '/app/loginB',
+    //   '/app/testget'
+    // ]
   },
   getUrl(path){
     //const params=path.split('/')

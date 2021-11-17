@@ -18,6 +18,7 @@ const server = { //服务主脚本
 	},
   async test() {
     console.log('测试中。。。')
+    ipc.send('test')
   },
 	login() {
     console.log(window.location.href)
