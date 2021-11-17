@@ -18,7 +18,28 @@ const appList = {
   },
   put:async(data)=>{
     db.appList.put(data)
+  },
+  delete:async(id)=>{
+    db.appList.delete(id)
+  },
+  getIdFromTreeKey(treeKey){
+    return treeUtil.getIdFromTreeKey(treeKey,'myapp_')
   }
 }
-
-module.exports = appList
+const treeUtil={
+  getIdFromTreeKey(treeKey,type){
+    return treeKey.replace(type,'')
+  },
+  findTreeNode(treeKey,treeList){
+    let list=null
+    let key=-1
+    treeList.forEach((item,index)=>{
+      if(item.key===treeKey){
+        list=item
+        key=index
+      }
+    })
+    return {list,key}
+  }
+}
+module.exports = {appList,treeUtil}

@@ -52,7 +52,7 @@ const tpl = `
 </div>
 
 `
-const appList=require('../util/appList.js')
+const {appList,treeUtil}=require('../util/appList.js')
 const treeData = [
   {
     title: '本地导航',
@@ -190,7 +190,20 @@ Vue.component('sidenav', {
           this.handleMenuCreateList(treeKey)
         }else if(menuKey==='renameList'){
           this.handleMenuRenameList(treeKey)
+        }else if(menuKey==='deleteList'){
+          this.handleMenuDeleteList(treeKey)
         }
+    },
+    handleMenuDeleteList(treeKey){
+      let that=this
+      if(this.isType(treeKey,'myapp')) {
+        let {list,key}=treeUtil.findTreeNode(treeKey,that.myAppsLists.children)
+        console.log(list)
+          appList.delete(Number(appList.getIdFromTreeKey(treeKey))).then(()=>{
+            that.$message.success({content:"删除成功。"})
+            that.myAppsLists.children.splice(key,1)
+          })
+      }
     },
     /**
      * 处理菜单的重命名列表事件
@@ -199,16 +212,10 @@ Vue.component('sidenav', {
     handleMenuRenameList(treeKey){
       let that=this
       if(this.isType(treeKey,'myapp')) {
-        console.log(treeKey)
-        let list=null
-        that.myAppsLists.children.forEach((item)=>{
-          if(item.key===treeKey){
-            list=item
-          }
-        })
+        const {list}=treeUtil.findTreeNode(treeKey,that.myAppsLists.children)
         that.createList(function () {
           const newName=getNameInputValue()
-          appList.put({id:Number(treeKey.replace('myapp_','')),name:newName,updateTime:Date.now()}).then(()=>{
+          appList.put({id:Number(appList.getIdFromTreeKey(treeKey)),name:newName,updateTime:Date.now()}).then(()=>{
             list.title=newName
             that.$message.success({content:"重命名成功。"})
             that.createListVisible=false
@@ -232,6 +239,10 @@ Vue.component('sidenav', {
           list.summary=''
           list.appsCount=0
           list.parentId=0
+          if(!!!list.name){
+            appVue.$message.error({content:"请输入列表名称。"})
+            return
+          }
           appList.add(list).then(data=>{
             appVue.$message.success({content:'添加列表成功。'})
             console.log(list)
@@ -271,7 +282,7 @@ Vue.component('sidenav', {
       this.disableRename=false
       this.disableDelete=false
       if(visible===true){//在创建菜单的时候对菜单的可用性进行调整
-        if(this.isType(treeKey,'appstore')){
+        if(this.isType(treeKey,'appstore') ){
           this.disableCreate=true
           this.disableCreateChild=true
           this.disableCopy=true
@@ -279,6 +290,12 @@ Vue.component('sidenav', {
           this.disableDelete=true
         }else{
         }
+      }
+      if(treeKey==='myapp'){
+        this.disableCreateChild=true
+        this.disableCopy=true
+        this.disableRename=true
+        this.disableDelete=true
       }
     }
   }
