@@ -39,7 +39,7 @@ const tpl = `
       </template>
       <template>
         <div>
-          <a-modal v-model="createListVisible" ok-text="创建" cancel-text="取消"  :title="'创建'+createTitle+'列表'" @ok="handleNameInput">
+          <a-modal v-model="createListVisible" ok-text="创建" cancel-text="取消"  :title="createTitle" @ok="handleNameInput">
             <p>输入列表名称</p>
             <p><a-input id="nameInput" name="name" ></a-input></p>
           </a-modal>
@@ -199,10 +199,22 @@ Vue.component('sidenav', {
       if(this.isType(treeKey,'myapp')) {
         let {list,key}=treeUtil.findTreeNode(treeKey,that.myAppsLists.children)
         console.log(list)
-          appList.delete(Number(appList.getIdFromTreeKey(treeKey))).then(()=>{
-            that.$message.success({content:"删除成功。"})
-            that.myAppsLists.children.splice(key,1)
-          })
+        this.$confirm({
+          title: `确认删除列表： ${list.title} ？`,
+          content:   `删除后无法撤销，请谨慎操作！`,
+          okText:'确认删除，不后悔',
+          cancelText:'保留' ,
+          onOk() {
+            appList.delete(Number(appList.getIdFromTreeKey(treeKey))).then(()=>{
+              that.$message.success({content:"删除成功。"})
+              that.myAppsLists.children.splice(key,1)
+            })
+          },
+          onCancel() {
+            console.log('Cancel');
+          }
+        });
+
       }
     },
     /**
