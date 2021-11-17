@@ -1,16 +1,14 @@
 //这个预载入文件用于与服务器进行交互，仅适用于项目路径
-//const axios = require('../util/axios.js')
 let href = window.location.href
 const server = { //服务主脚本
 	init(path) {
 		switch (path) {
 			case api.getUrl(api.API_URL.user.login):
-				//this.login()
         this.test()
 				break
-			case api.getUrl(api.API_URL.user.home):
-				this.home()
-        break
+			// case api.getUrl(api.API_URL.user.home):
+			// 	this.home()
+      //   break
       case api.getNodeUrl(api.NODE_API_URL.user.code):
         this.login()
         break
@@ -20,22 +18,22 @@ const server = { //服务主脚本
 	},
   async test() {
     console.log('测试中。。。')
-    // const result = await fetch('https://www.baidu.com', {
-    //   method: 'get',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    // })
-    // console.log(result)
-    console.log(ipc.send('loginB'))
-    ipc.on('b-loginB', (event, arg) => {
-      console.log(arg)
-    })
-
   },
 	login() {
     console.log(window.location.href)
-		console.log('运行在想天浏览器中，登陆页面')
+    if(window.location.href.includes('code=')) {
+      //不加g就不会在第一个匹配时就停止，\S：匹配任何非空白字符，*：多次
+      const code = window.location.href.match(/code\=(\S*)\&/)[1]
+      ipc.send('loginB', code)
+      ipc.on('callback-loginB', (event, arg) => {
+        if(arg.code === 1000 ) {
+          console.log(arg)
+          ipc.send('userLogin', arg.data)
+        } else {
+          console.log(arg.message)
+        }
+      })
+    }
 	},
 	home(){
     console.log('运行在想天浏览器中，home页')
@@ -49,8 +47,8 @@ const server = { //服务主脚本
 		}
 	},
   handleUrl(url) {
+    //把authorizeCode后面的部分全部去掉
     return url.replace(/\?code.*$/, '')
-
   }
 }
 

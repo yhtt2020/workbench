@@ -151,15 +151,16 @@ function insertDefaultUser () {
   return defaultUser
 }
 window.insertDefaultUser=insertDefaultUser
+
+//sidebar的数据依托于vuex，每次preload载入需要重新getCurrentUser
 setTimeout(getCurrentUser, 1000)
 ipc.on('userLogin', function (e, data) {
-  console.log('userinfo')
-  let userInfo = JSON.parse(data.userInfo)
-  console.log(userInfo)
   let user = {
-    uid: userInfo.uid,
-    nickname: userInfo.nickname,
-    avatar: userInfo.avatar
+    uid: data.userInfo.uid,
+    nickname: data.userInfo.nickname,
+    avatar: data.userInfo.avatar,
+    token: data.token,
+    code: data.code
   }
 
   window.$store.state.user = user
@@ -174,7 +175,9 @@ ipc.on('userLogin', function (e, data) {
       uid: user.uid,
       nickname: user.nickname,
       avatar: user.avatar,
-      lastLoginTime: new Date().getTime()
+      lastLoginTime: new Date().getTime(),
+      token: user.token,
+      code: user.code
     })
   }).catch((err) => {
     console.log('登录后设置当前用户失败')

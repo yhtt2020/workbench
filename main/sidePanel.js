@@ -585,9 +585,7 @@ ipc.on('addTab', function(event, data) {
 })
 
 ipc.on('userLogin', function(event, data) {
-	sidePanel.get().webContents.send( 'userLogin', {
-		'userInfo': data.userInfo
-	})
+	sidePanel.get().webContents.send( 'userLogin', data)
 })
 
 

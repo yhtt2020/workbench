@@ -1,18 +1,27 @@
 const { ipcMain: ipc } = require('electron')
 const path = require('path')
-// const axios = require('./util/axios.js')
 const axios = require(path.join(__dirname, '../js/util/axios.js'))
 
 module.exports = {
   initialize: function() {
-    ipc.on('loginB', async (event, data) => {
-      const result = await axios.get('https://www.baidu.com')
+    //游览器登录
+    ipc.on('loginB', async (event, arg) => {
+      const data = {
+        code: arg
+      }
+      const result = await axios.post('http://test.com:8001/app/loginB', data)
       console.log(result, '__result__')
-      event.reply('b-loginB', result)
+      event.reply('callback-loginB', result)
+    })
+    //游览器登出
+    ipc.on('logoutB', async(event, arg) => {
+      const data = {
+        code: arg
+      }
+      await axios.post('http://test.com:8001/app/logoutB', data)
     })
   }
 }
-
 
 
 // module.exports = {
