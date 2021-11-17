@@ -1,4 +1,5 @@
 require('../../dist/localization.build.js')
+const storage = require('electron-localstorage');
 
 const electron = require('electron')
 const ipc = electron.ipcRenderer
@@ -165,8 +166,8 @@ ipc.on('userLogin', function (e, data) {
     token: data.token,
     code: data.code
   }
-
   window.$store.state.user = user
+  storage.setItem(`userToken`, data.token)
   // 设置当前登陆账号为此账号
   db.system.where({name:'currentUser'}).delete()
   db.system.put({

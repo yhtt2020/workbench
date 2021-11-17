@@ -28,10 +28,11 @@ const server = { //服务主脚本
       ipc.send('loginB', code)
       ipc.on('callback-loginB', (event, arg) => {
         if(arg.code === 1000 ) {
-          console.log(arg)
           ipc.send('userLogin', arg.data)
+          window.location.href = api.getUrl(api.API_URL.group.index)
         } else {
           console.log(arg.message)
+          window.location.href = api.getUrl(api.API_URL.user.login)
         }
       })
     }

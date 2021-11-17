@@ -1,10 +1,12 @@
 const axios = require('axios')
 const { config, api } = require('../../server-config')
-var { db } = require('./database.js')
+const storage = require('electron-localstorage');
+
+//console.log(storage.getAll())
+// storage.clear();
 
 // function getToken() {
-//   const resUser = db.system.where('name').equals('currentUser').first()
-//   return resUser.value.token ?? null
+//   return storage.getItem(`userToken`)
 // }
 
 axios.defaults.baseURL = config.NODE_SERVER_BASE_URL;
@@ -14,7 +16,7 @@ axios.defaults.adapter = require('axios/lib/adapters/http');
 axios.interceptors.request.use(
   config => {
     // if (getToken()) {
-    //   config.headers.Authorization = `${getToken()}`
+    //   config.headers.Authorization = getToken()
     // }
     // Do something before request is sent
     return config;

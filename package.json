@@ -35,6 +35,7 @@
     "dragula": "^3.7.3",
     "electron-installer-debian": "^3.1.0",
     "electron-installer-redhat": "^3.2.0",
+    "electron-localstorage": "^1.0.5",
     "electron-squirrel-startup": "^1.0.0",
     "electron-updater": "^4.3.9",
     "expr-eval": "^2.0.2",
