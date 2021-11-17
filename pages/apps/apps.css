@@ -112,8 +112,7 @@
 }
 
 .wall .ant-card-meta-title {
-	color: white;
-	text-shadow: 0 0 5px #000000;
+	color: #333;
 }
 
 .wall .ant-card-meta-description {

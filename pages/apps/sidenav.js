@@ -1,23 +1,26 @@
 const tpl = `
-<div>
+<div style="padding: 15px;">
 <div class="logo">
 <img src="../../icons/apps.svg" style="width: 1.2em">
 网址导航
 </div>
       <template >
-        <a-tree style="padding: 10px" :tree-data="[myAppsLists]" :block-node="true" show-icon default-expand-all :default-selected-keys="['local']"
+       <h4 style="color: #999;font-size: 12px">网络导航</h4>
+       <h4 style="color: #999;font-size: 12px">本地导航</h4>
+        <local @gettab="gettab"></local>
+        <h4 style="color: #999;font-size: 12px">云端导航</h4>
+        <a-tree style="padding: 10px" :tree-data="[cloudLists,appstoreLists,groupLists]" :block-node="true" show-icon default-expand-all :default-selected-keys="['local']"
         @select="onSelect"
         >
           <a-icon slot="user" type="user" > </a-icon>
           <a-icon slot="appstore" type="appstore" > </a-icon>
           <a-icon slot="meh" type="smile-o"> </a-icon>
-          <a-icon slot="global" type="global"> </a-icon>
-          <a-icon slot="team" type="team"> </a-icon>
+          <a-icon slot="global" style="font-size: 18px" type="global"> </a-icon>
+          <a-icon slot="team" style="font-size: 18px" type="team"> </a-icon>
           <a-icon slot="lock" type="lock"> </a-icon>
-          <a-icon slot="star" type="star"> </a-icon>
-          <a-icon slot="cloud" type="cloud"> </a-icon>
+          <a-icon slot="star" style="font-size: 18px" type="star"> </a-icon>
+          <a-icon slot="cloud" style="font-size: 18px" type="cloud"> </a-icon>
           <a-icon slot="list-icon" type="file-text"> </a-icon>
-
           <template slot="custom" slot-scope="{ selected }">
             <a-icon :type="selected ? 'frown' : 'frown-o'" ></a-icon>
           </template>
@@ -36,6 +39,7 @@ const tpl = `
       </a-dropdown>
     </template>
         </a-tree>
+         <h4 style="color: #999;font-size: 12px">团队导航</h4>
       </template>
       <template>
         <div>
@@ -45,10 +49,6 @@ const tpl = `
           </a-modal>
         </div>
       </template>
-
-
-
-
 </div>
 
 `
@@ -123,8 +123,10 @@ const treeData = [
 const getNameInputValue=function (){
   return document.getElementById('nameInput').value
 }
+const local=require('./local.js')
 Vue.component('sidenav', {
   name: 'sidenav',
+  component:"local",
   data () {
     return {
       current: ['myapp'],
@@ -141,11 +143,28 @@ Vue.component('sidenav', {
       nameValue:'',
       handleNameInput :()=>{},
       //下面是数据暂存属性
-      myAppsLists:{
-        title:'本地导航',
-        key:'myapp',
+
+      appstoreLists:{
+        title:'网络导航',
+        key:'appstore',
         slots:{
-          icon:'star'
+        icon:'global'
+        },
+        children:[]
+      },
+      groupLists:{
+        title:'团队导航',
+        key:'group',
+        slots:{
+          icon:'team'
+        },
+        children:[]
+      },
+      cloudLists:{
+        title:'云端导航',
+        key:'cloud',
+        slots:{
+          icon:'cloud'
         },
         children:[]
       }
@@ -159,12 +178,11 @@ Vue.component('sidenav', {
         that.myAppsLists.children.push(appList.convertTreeNode(item))
       })
     })
-
-
-
   },
   methods: {
-
+    gettab(){
+      this.$emit('gettab', window.tab)
+    },
     titleClick (e) {
       console.log('titleClick', e)
     },
@@ -195,27 +213,7 @@ Vue.component('sidenav', {
         }
     },
     handleMenuDeleteList(treeKey){
-      let that=this
-      if(this.isType(treeKey,'myapp')) {
-        let {list,key}=treeUtil.findTreeNode(treeKey,that.myAppsLists.children)
-        console.log(list)
-        this.$confirm({
-          title: `确认删除列表： ${list.title} ？`,
-          content:   `删除后无法撤销，请谨慎操作！`,
-          okText:'确认删除，不后悔',
-          cancelText:'保留' ,
-          onOk() {
-            appList.delete(Number(appList.getIdFromTreeKey(treeKey))).then(()=>{
-              that.$message.success({content:"删除成功。"})
-              that.myAppsLists.children.splice(key,1)
-            })
-          },
-          onCancel() {
-            console.log('Cancel');
-          }
-        });
 
-      }
     },
     /**
      * 处理菜单的重命名列表事件
@@ -223,50 +221,13 @@ Vue.component('sidenav', {
      */
     handleMenuRenameList(treeKey){
       let that=this
-      if(this.isType(treeKey,'myapp')) {
-        const {list}=treeUtil.findTreeNode(treeKey,that.myAppsLists.children)
-        that.createList(function () {
-          const newName=getNameInputValue()
-          appList.put({id:Number(appList.getIdFromTreeKey(treeKey)),name:newName,updateTime:Date.now()}).then(()=>{
-            list.title=newName
-            that.$message.success({content:"重命名成功。"})
-            that.createListVisible=false
-          }).catch(err=>console.log(err))
-        },list.title,'重命名')
-        }
       },
     /**
      * 处理菜单的创建列表事件
      */
     handleMenuCreateList(treeKey){
       let that=this
-      if(this.isType(treeKey,'myapp')){
-        this.createList(function (){
-          let name=getNameInputValue()
-          let list={}
-          list.name=name
-          list.createTime=Date.now()
-          list.updateTime=Date.now()
-          list.order=0
-          list.summary=''
-          list.appsCount=0
-          list.parentId=0
-          if(!!!list.name){
-            appVue.$message.error({content:"请输入列表名称。"})
-            return
-          }
-          appList.add(list).then(data=>{
-            appVue.$message.success({content:'添加列表成功。'})
-            console.log(list)
-            that.myAppsLists.children.push(appList.convertTreeNode(list))
-            that.createListVisible=false
-          },()=>{
-            appVue.$message.error({content:'添加列表失败。'})
-          }).catch(err=>{
-            console.log(err)
-          })
-        },'本地列表','本地')
-      }else if(this.isType(treeKey,'cloud')){
+     if(this.isType(treeKey,'cloud')){
         this.createList(function (){
           alert(getNameInputValue())
         },'云端列表','云端')
