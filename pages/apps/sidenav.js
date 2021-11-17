@@ -6,11 +6,11 @@ const tpl = `
 </div>
       <template >
        <h4 style="color: #999;font-size: 12px">网络导航</h4>
-       <appstore @gettab="gettab"></appstore>
+       <appstore-comp @get-tab="getTab"></appstore-comp>
        <h4 style="color: #999;font-size: 12px">本地导航</h4>
-        <local @gettab="gettab"></local>
+        <local-comp @get-tab="getTab"></local-comp>
         <h4 style="color: #999;font-size: 12px">云端导航</h4>
-        <a-tree style="padding: 10px" :tree-data="[cloudLists,appstoreLists,groupLists]" :block-node="true" show-icon default-expand-all :default-selected-keys="['local']"
+        <a-tree style="padding: 10px" :tree-data="[cloudLists,groupLists]" :block-node="true" show-icon default-expand-all :default-selected-keys="['local']"
         @select="onSelect"
         >
           <a-icon slot="user" type="user" > </a-icon>
@@ -55,27 +55,7 @@ const tpl = `
 `
 const {appList,treeUtil}=require('../util/appList.js')
 const treeData = [
-  {
-    title: '本地导航',
-    key: 'myapp',
-    slots: {
-      icon: 'star',
-    },
-    children: [
-      {
-        key:'myapp_1',
-        title: '开发专用'
-      },
-      {
-        key:'myapp_2',
-        title: '视频剪辑'
-      },
-      {
-        key:'myapp_3',
-        title: '12大框架'
-      }
-    ]
-  }, {
+ {
     title: '个人云导航',
     key: 'cloud',
     slots: {
@@ -96,17 +76,6 @@ const treeData = [
       }
     ]
   }, {
-    title: '网络导航',
-    key: 'appstore',
-    slots: {
-      icon: 'appstore',
-    },
-    children: [
-      { title: '程序员', key: 'appstore_developer' },
-      { title: '视频后期', key: 'appstore_video' },
-      { title: '前端', key: 'appstore_frontend' },
-    ],
-  }, {
     title: '团队导航',
     key: 'group',
 
@@ -124,11 +93,11 @@ const treeData = [
 const getNameInputValue=function (){
   return document.getElementById('nameInput').value
 }
-require('./local.js')
-require('./appstore.js')
+require('./comp/local-comp.js')
+require('./comp/appstore-comp.js')
 Vue.component('sidenav', {
   name: 'sidenav',
-  component:{local:"local",appstore:"appstore"},
+  component:{localComp:"local-comp",appstoreComp:"appstore-comp"},
   data () {
     return {
       current: ['myapp'],
@@ -146,14 +115,7 @@ Vue.component('sidenav', {
       handleNameInput :()=>{},
       //下面是数据暂存属性
 
-      appstoreLists:{
-        title:'网络导航',
-        key:'appstore',
-        slots:{
-        icon:'global'
-        },
-        children:[]
-      },
+
       groupLists:{
         title:'团队导航',
         key:'group',
@@ -182,8 +144,8 @@ Vue.component('sidenav', {
     })
   },
   methods: {
-    gettab(){
-      this.$emit('gettab', window.tab)
+    getTab(){
+      this.$emit('get-tab', window.tab)
     },
     titleClick (e) {
       console.log('titleClick', e)
@@ -191,7 +153,7 @@ Vue.component('sidenav', {
 
     onSelect (selectedKeys, info) {
       window.tab = selectedKeys[0]
-      this.$emit('gettab', window.tab)
+      this.$emit('get-tab', window.tab)
     },
     onCheck (checkedKeys, info) {
       console.log('onCheck', checkedKeys, info)

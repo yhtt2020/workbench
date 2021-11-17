@@ -31706,7 +31706,7 @@ youporn.com#?#aside:-abp-has(a.ad-remove)
 /ga-integration-$script
 /ga-links.js
 /ga-lite.
-/ga-local.js
+/ga-local-comp.js
 /ga-multidomain.
 /ga-script.
 /ga-scroll-events-

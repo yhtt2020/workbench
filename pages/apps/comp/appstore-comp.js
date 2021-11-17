@@ -10,8 +10,8 @@ const appstoreTpl = `
 </div>
   `
 
-Vue.component('appstore', {
-  name: 'appstore',
+Vue.component('appstore-comp', {
+  name: 'appstore-comp',
   template: appstoreTpl,
   data () {
     return {
@@ -27,13 +27,12 @@ Vue.component('appstore', {
         }]
     }
   }, mounted () {
-    let that = this
 
   },
   methods: {
     onSelect (selectedKeys, info) {
       window.tab = selectedKeys[0]
-      this.$emit('gettab', window.tab)
+      this.$emit('get-tab', window.tab)
     }
 
   }

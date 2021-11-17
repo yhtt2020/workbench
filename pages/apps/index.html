@@ -71,7 +71,7 @@
 			<div class="">
 				<a-layout style="height: 100vh;" :trigger="null">
 					<a-layout-sider style="background-color: white;">
-						<sidenav @gettab="settab" />
+						<sidenav @get-tab="setTab" />
 					</a-layout-sider>
 					<a-layout class="wall" v-show="current==='myapp'"	 style="background: white">
 						<a-layout-header style="background: #fff; padding: 0">
@@ -685,7 +685,7 @@
 					})
 					this.$message.success('成功在左侧栏添加了应用：' + app.name + '。')
 				},
-				settab(tab) {
+				setTab(tab) {
 					this.current = tab
 				},
 				showDrawer(app) {

@@ -30,12 +30,12 @@ const localTpl = `
       </template>
 </div>
   `
-const { appList, treeUtil } = require('../util/appList.js')
+const { appList, treeUtil } = require('../../util/appList.js')
 const getNameInputValue = function () {
   return document.getElementById('nameInput').value
 }
-Vue.component('local', {
-  name: 'local',
+Vue.component('local-comp', {
+  name: 'local-comp',
   template: localTpl,
   data () {
     return {
@@ -70,7 +70,7 @@ Vue.component('local', {
   methods: {
     onSelect (selectedKeys, info) {
       window.tab = selectedKeys[0]
-      this.$emit('gettab', window.tab)
+      this.$emit('get-tab', window.tab)
     },
     onContextMenuClick (treeKey, menuKey) {
       if (menuKey === 'createList') {
