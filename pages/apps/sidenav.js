@@ -10,7 +10,7 @@ const tpl = `
        <h4 style="color: #999;font-size: 12px">本地导航</h4>
         <local-comp @get-tab="getTab"></local-comp>
         <h4 style="color: #999;font-size: 12px">云端导航</h4>
-        <a-tree style="padding: 10px" :tree-data="[cloudLists,groupLists]" :block-node="true" show-icon default-expand-all :default-selected-keys="['local']"
+        <a-tree style="padding: 10px" :tree-data="[cloudLists]" :block-node="true" show-icon default-expand-all :default-selected-keys="['local']"
         @select="onSelect"
         >
           <a-icon slot="user" type="user" > </a-icon>
@@ -41,6 +41,7 @@ const tpl = `
     </template>
         </a-tree>
          <h4 style="color: #999;font-size: 12px">团队导航</h4>
+          <group-comp @get-tab="getTab"></group-comp>
       </template>
       <template>
         <div>
@@ -95,9 +96,10 @@ const getNameInputValue=function (){
 }
 require('./comp/local-comp.js')
 require('./comp/appstore-comp.js')
+require('./comp/group-comp.js')
 Vue.component('sidenav', {
   name: 'sidenav',
-  component:{localComp:"local-comp",appstoreComp:"appstore-comp"},
+  component:{localComp:"local-comp",appstoreComp:"appstore-comp",groupComp:"group-comp"},
   data () {
     return {
       current: ['myapp'],
