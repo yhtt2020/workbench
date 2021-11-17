@@ -6,6 +6,7 @@ const tpl = `
 </div>
       <template >
        <h4 style="color: #999;font-size: 12px">网络导航</h4>
+       <appstore @gettab="gettab"></appstore>
        <h4 style="color: #999;font-size: 12px">本地导航</h4>
         <local @gettab="gettab"></local>
         <h4 style="color: #999;font-size: 12px">云端导航</h4>
@@ -123,10 +124,11 @@ const treeData = [
 const getNameInputValue=function (){
   return document.getElementById('nameInput').value
 }
-const local=require('./local.js')
+require('./local.js')
+require('./appstore.js')
 Vue.component('sidenav', {
   name: 'sidenav',
-  component:"local",
+  component:{local:"local",appstore:"appstore"},
   data () {
     return {
       current: ['myapp'],
