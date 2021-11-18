@@ -3,30 +3,21 @@ let href = window.location.href
 const server = { //服务主脚本
 	init(path) {
 		switch (path) {
-			case api.getUrl(api.API_URL.user.login):
-        this.test()
-				break
-			// case api.getUrl(api.API_URL.user.home):
-			// 	this.home()
-      //   break
-      case api.getNodeUrl(api.NODE_API_URL.user.code):
+      case api.getProdNodeUrl(api.NODE_API_URL.user.code):
+        this.login()
+        break
+      case api.getDevNodeUrl(api.NODE_API_URL.user.code):
         this.login()
         break
       default:
         console.log('在server网站下，但未命中任何预加载处理路径：'+path)
 		}
 	},
-  async test() {
-    console.log('测试中。。。')
-    ipc.send('test')
-  },
 	login() {
-    console.log(window.location.href)
     if(window.location.href.includes('code=')) {
-      //不加g就不会在第一个匹配时就停止，\S：匹配任何非空白字符，*：多次
-      const code = window.location.href.match(/code\=(\S*)\&/)[1]
-      ipc.send('loginB', code)
-      ipc.on('callback-loginB', (event, arg) => {
+      const code = server.matchIntercept(window.location.href, 'code', '\\&')
+      ipc.send('loginBrowser', code)
+      ipc.on('callback-loginBrowser', (event, arg) => {
         if(arg.code === 1000 ) {
           ipc.send('userLogin', arg.data)
           window.location.href = api.getUrl(api.API_URL.group.index)
@@ -37,28 +28,27 @@ const server = { //服务主脚本
       })
     }
 	},
-	home(){
-    console.log('运行在想天浏览器中，home页')
-		document.onreadystatechange = () => {
-		  if (document.readyState === 'complete') {
-		    if(localStorage.getItem('hasLogin')=='true' ){
-				let userInfo=localStorage.getItem('userInfo')
-				ipc.send('userLogin',{'userInfo':userInfo})//回传登录信息给主界面
-			}
-		  }
-		}
-	},
-  handleUrl(url) {
-    //把authorizeCode后面的部分全部去掉
-    return url.replace(/\?code.*$/, '')
+  /**
+   * 正则匹配标记之间的内容，进一次，特殊字符请添加\\
+   * @param {String} url
+   * @param {String} start
+   * @param {String} end
+   */
+  matchIntercept(url, start, end) {
+    //不加g就不会在第一个匹配时就停止，\S：匹配任何非空白字符，*：多次
+    const reg = new RegExp(start + "\\=(\\S*)" + end)
+    return url.match(reg)[1]
   }
 }
 
 if(href.startsWith(config.SERVER_BASE_URL))
 {
   server.init(href)
-} else if (href.startsWith(config.NODE_SERVER_BASE_URL)) {
-  const newUrl = server.handleUrl(href)
+} else if (href.startsWith(config.DEV_NODE_SERVER_BASE_URL)) {
+  const newUrl = window.location.origin + window.location.pathname
+  server.init(newUrl)
+} else if (href.startsWith(config.PROD_NODE_SERVER_BASE_URL)) {
+  const newUrl = window.location.origin + window.location.pathname
   server.init(newUrl)
 }
 

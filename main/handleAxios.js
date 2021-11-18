@@ -5,32 +5,35 @@ const storage = require('electron-localstorage');
 
 module.exports = {
   initialize: function() {
-    //测试接口
-    ipc.on('test', async (event, arg) => {
-      // const result = await axios.get('/app/testget')
-      // console.log(result, '__test!!__')
-    })
+    // let baseURL
+    // //设置默认baseURL
+    // ipc.on('setBaseUrl', (event, arg) => {
+    //   baseURL = arg
+    // })
     //游览器登录
-    ipc.on('loginB', async (event, arg) => {
+    ipc.on('loginBrowser', async (event, arg) => {
       const data = {
         code: arg
       }
       const result = await axios({
         method: 'post',
-        url: '/app/loginB',
+        url: `/app/loginBrowser`,
         data
       })
-      // console.log(result, '__result__')
-      event.reply('callback-loginB', result)
+      console.log(result, '__res__')
+      if(result.code === 1000) {
+        storage.setItem(`userToken`, result.data.token)
+      }
+      event.reply('callback-loginBrowser', result)
     })
     //游览器登出
-    ipc.on('logoutB', async(event, arg) => {
+    ipc.on('logoutBrowser', async(event, arg) => {
       const data = {
         code: arg
       }
       await axios({
         method: 'post',
-        url: '/app/logoutB',
+        url: `/app/logoutBrowser`,
         headers: { 'Authorization': storage.getItem(`userToken`)},
         data
       })

@@ -1,5 +1,4 @@
 require('../../dist/localization.build.js')
-const storage = require('electron-localstorage');
 
 const electron = require('electron')
 const ipc = electron.ipcRenderer
@@ -138,19 +137,11 @@ async function insertDefaultUser (code) {
     nickname: '立即登录',
     avatar: '../../icons/browser.ico'
   }
-  await db.system.where({name:'currentUser'}).delete()
   if(code) {
     await db.accounts.where('code').equals(code).delete()
   }
-  db.system.put({//当前用户
-    name: 'currentUser',
-    value: defaultUser
-  }).catch((err) => {
-    console.log(err)
-  }).then((res) => {
-    console.log('insertDefaultUser failed')
-  })
-  window.$store.state.user=null
+  await db.system.where('name').equals('currentUser').modify({value: defaultUser})
+  window.$store.state.user= null
   window.$store.state.user = defaultUser
   return defaultUser
 }
@@ -167,7 +158,6 @@ ipc.on('userLogin', function (e, data) {
     code: data.code
   }
   window.$store.state.user = user
-  storage.setItem(`userToken`, data.token)
   // 设置当前登陆账号为此账号
   db.system.where({name:'currentUser'}).delete()
   db.system.put({

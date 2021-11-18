@@ -1,23 +1,12 @@
 const axios = require('axios')
 const { config, api } = require('../../server-config')
-const storage = require('electron-localstorage');
 
-//console.log(storage.getAll())
-// storage.clear();
-
-// function getToken() {
-//   return storage.getItem(`userToken`)
-// }
-
-axios.defaults.baseURL = config.NODE_SERVER_BASE_URL;
+axios.defaults.baseURL = config.PROD_NODE_SERVER_BASE_URL;
 //<!--强制使用node模块。-->
 axios.defaults.adapter = require('axios/lib/adapters/http');
 
 axios.interceptors.request.use(
   config => {
-    // if (getToken()) {
-    //   config.headers.Authorization = getToken()
-    // }
     // Do something before request is sent
     return config;
   },
