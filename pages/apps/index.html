@@ -71,9 +71,9 @@
 			<div class="">
 				<a-layout style="height: 100vh;" :trigger="null">
 					<a-layout-sider style="background-color: white;">
-						<sidenav @gettab="settab" />
+						<sidenav @get-tab="setTab" />
 					</a-layout-sider>
-					<a-layout id="wall" class="wall" v-show="current==='myapp'"	 style="background: #f1f1f1">
+					<a-layout class="wall" v-show="current==='myapp'"	 style="background: white">
 						<a-layout-header style="background: #fff; padding: 0">
 							<a-page-header title="本地导航" sub-title="本地导航可能由于软件重装、卸载、系统重装等原因丢失，建议使用云端导航，此处仅做临时存储使用。" />
 						</a-layout-header>
@@ -421,9 +421,7 @@
 					</a-modal>
 				</div>
 			</template>
-
 		</div>
-
 	</body>
 
 
@@ -518,6 +516,12 @@
 							},
 						},
 					},
+
+
+
+
+
+
 				}
 			},
 			beforeCreate(){
@@ -681,7 +685,7 @@
 					})
 					this.$message.success('成功在左侧栏添加了应用：' + app.name + '。')
 				},
-				settab(tab) {
+				setTab(tab) {
 					this.current = tab
 				},
 				showDrawer(app) {
@@ -766,7 +770,6 @@
 				 load: function(){
 						 window.$appsRestore.restoreFromDB().then((data)=>{
 							this.myApps=data
-							console.log(this.myApps)
 							return data
 						}).catch(e=>{
 							 console.log(e)
