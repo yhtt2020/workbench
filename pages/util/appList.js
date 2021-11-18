@@ -12,7 +12,7 @@ const appList = {
     item.title = appList.name
     item.key = 'myapp_' + appList.id
     item.slots = {
-      icon: 'folder'
+      icon: 'list-icon'
     }
     return item
   },

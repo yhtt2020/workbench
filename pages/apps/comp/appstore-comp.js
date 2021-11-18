@@ -3,8 +3,8 @@ const appstoreTpl = `
 <a-tree :tree-data="appstoreList" :block-node="true" show-icon :default-selected-keys="['local']"
         @select="onSelect"
         >
-           <a-icon slot="folder" type="folder"> </a-icon>
-          <a-icon slot="list-icon" type="file-text"> </a-icon>
+          <a-avatar slot="folder" shape="square" style="width: 1.2em;height: auto " src="../../icons/svg/internet.svg"></a-avatar>
+          <a-avatar slot="list-icon" shape="square" style="width: 1.3em;height: auto " src="../../icons/svg/collection.svg"></a-avatar>
         </a-tree>
 
 </div>
