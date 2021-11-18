@@ -115,20 +115,6 @@ function getCurrentUser () {
     console.log('获取当前用户失败')
     console.log(err)
   })
-
-  // db.system.put({//当前用户
-  // 		name:'currentUser',
-  // 		value:{
-  // 			uid:0,
-  // 			nickname:"立即登录",
-  // 			avatar:"../../icons/browser.ico"
-  // 		}
-  // 	}).catch((err)=>{
-  // 		console.log(err)
-  // }).then((res)=>{
-  // 	console.log(res)
-  // })
-  //if(currentUser)
 }
 
 async function insertDefaultUser (code) {

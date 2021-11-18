@@ -5,12 +5,6 @@ const storage = require('electron-localstorage');
 
 module.exports = {
   initialize: function() {
-    // let baseURL
-    // //设置默认baseURL
-    // ipc.on('setBaseUrl', (event, arg) => {
-    //   baseURL = arg
-    // })
-    //游览器登录
     ipc.on('loginBrowser', async (event, arg) => {
       const data = {
         code: arg
@@ -20,7 +14,6 @@ module.exports = {
         url: `/app/loginBrowser`,
         data
       })
-      console.log(result, '__res__')
       if(result.code === 1000) {
         storage.setItem(`userToken`, result.data.token)
       }
