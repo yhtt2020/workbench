@@ -68,7 +68,7 @@ Vue.component('sidebar', {
 		});
 
 	},
-	mounted: function() {
+	async mounted() {
 		// let item = {
 		// 	title: '打开标签', //名称，用于显示提示
 		// 	index: 0, //索引
@@ -90,6 +90,11 @@ Vue.component('sidebar', {
     db.system.where({name:'sidebarBottom'}).first((data)=>{
       that.sidebarBottom= data.value
       setTimeout(that.fixElementPosition,250)
+    })
+    const currentUser = await db.system.where('name').equals('currentUser').first()
+    await this.$store.dispatch('getGroups', {
+      uid: currentUser.value.uid,
+      token: currentUser.value.token
     })
 	},
 	computed: {
