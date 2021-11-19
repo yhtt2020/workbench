@@ -10,7 +10,7 @@ const appList = {
   convertTreeNode: (appList) => {
     let item = {}
     item.title = appList.name
-    item.key = 'myapp_' + appList.id
+    item.key =  appList.id
     item.slots = {
       icon: 'list-icon'
     }
@@ -23,7 +23,7 @@ const appList = {
     db.appList.delete(id)
   },
   getIdFromTreeKey(treeKey){
-    return treeUtil.getIdFromTreeKey(treeKey,'myapp_')
+    return treeKey
   }
 }
 const treeUtil={

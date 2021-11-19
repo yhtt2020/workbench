@@ -4,6 +4,7 @@
 		<meta charset="utf-8">
 		<title>网址导航</title>
 		<script src="../../ext/vue/vue.js"></script>
+    <script src="../../ext/vue/vue-router.js"></script>
 		<script src="../../ext/vue/antd.min.js"></script>
 		<link rel="stylesheet" href="../../ext/vue/antd.min.css" />
 		<link rel="icon" type="image/svg+xml" href="../../icons/apps.svg" />
@@ -14,417 +15,38 @@
 		<script>
 			Vue.use(antd);
 		</script>
-
 		<div id="appVue">
-			<template>
-				<a-drawer title="应用详情" width="640" placement="right" :closable="false" :visible="drawerVisible"
-					@close="onClose">
-					<a-row type="flex">
-						<a-col flex="128px">
-							<a-avatar shape="square" :size="100" :src="drawerApp.icon"></a-avatar>
-						</a-col>
-						<a-col flex="auto">
-							<h3>
-								{{drawerApp.name}}
-							</h3>
-							<p>
-								<a-icon type="link"></a-icon>
-								<a :href="drawerApp.url" target="_blank">{{drawerApp.url}}</a>
-							</p>
-							<p>
-								<a-icon type="bulb"></a-icon> {{drawerApp.summary}}
-							</p>
-							<p>
-								<a-icon type="like"></a-icon> 推荐指数：<template>
-									<a-rate v-model="drawerApp.star" default-value="3"></a-rate>
-								</template>
-							</p>
-							<p>
-								<a-icon type="api"></a-icon> 对接方式：URL打开（不支持数据对接）
-							</p>
-						</a-col>
-					</a-row>
-
-
-
-
-
-					<!-- 	<p>
-					<a-button type="primary" icon="plus-circle" @click="addApp()">
-						添加到我的应用
-					</a-button>
-					<a-button type="primary" icon="container">
-						添加到我的应用并新建任务
-					</a-button>
-				</p>
-				<p>
-					<a-button type="primary" icon="container">
-						添加到我的应用并添加至选择任务
-					</a-button>
-				</p> -->
-
-
-
-				</a-drawer>
-			</template>
-
 			<div class="">
 				<a-layout style="height: 100vh;" :trigger="null">
 					<a-layout-sider style="background-color: white;">
 						<sidenav @get-tab="setTab" />
-					</a-layout-sider>
+          </a-layout-sider>
+          <router-view></router-view>
 					<a-layout class="wall" v-show="current==='myapp'"	 style="background: white">
-						<a-layout-header style="background: #fff; padding: 0">
-							<a-page-header title="本地导航" sub-title="本地导航可能由于软件重装、卸载、系统重装等原因丢失，建议使用云端导航，此处仅做临时存储使用。" />
-						</a-layout-header>
-						<a-layout-content>
-							<div style="padding: 20px;text-align: left;padding: 10px;margin:20px">
-								<!-- <div style="text-align: center;margin:20px">
-									<search />
-								</div> -->
-								<div>
-									<a-card  >
-										<a class="add-button" slot="extra" @click="showModal">添加网站</a>
-                    <a-dropdown v-for="(app, index) in myApps" :trigger="['contextmenu']">
-                    <a-card-grid  class="app" style="cursor: pointer;"
-											@click="addTask(app)">
-											<a-avatar shape="square" :size="64" :src="app.icon"
-												style="margin-bottom: 10px;"></a-avatar>
-											<a-card-meta :title="app.name">
-											</a-card-meta>
-										</a-card-grid>
-                      <a-menu slot="overlay">
-                        <a-menu-item @click="addApp(app)" key="1">
-                          <a-icon type="delete"></a-icon> 删除
-                        </a-menu-item>
-                      </a-menu>
-                    </a-dropdown>
-										<a-empty v-if="myApps.length==0" description="还未添加任何网站，点击添加网站">
-
-											<a-button type="primary" @click="showModal">
-												 添加网站
-											</a-button>
-
-										</a-empty>
-										<a-card-grid v-else class="app" style="cursor: pointer;" @click="showModal">
-											<a-avatar shape="square" :size="64" icon="plus"
-												style="margin-bottom: 10px;"></a-avatar>
-											<a-card-meta title="添加">
-
-											</a-card-meta>
-										</a-card-grid>
-									</a-card>
-
-								</div>
-							</div>
-						</a-layout-content>
-
 					</a-layout>
-
           <a-layout v-show="current==='group'">
             <a-layout-header style="background: #fff; padding: 0">
-
               <template>
                 <div >
                   <a-page-header style="border: none;" title="团队导航"
                                  sub-title="我的全部团队">
-
                   </a-page-header>
                   <br />
                 </div>
               </template>
-
             </a-layout-header>
-
             <a-layout-content>
               <template>
                 <div style="background-color: white; padding: 20px;" class="group-apps">
                   <groups></groups>
                 </div>
-
-
               </template>
             </a-layout-content>
           </a-layout>
-
-
-					<a-layout v-show="current==='appstore'">
-						<a-layout-header style="background: #fff; padding: 0">
-
-							<template>
-								<div>
-									<a-page-header style="border: none;" title="办公导航"
-										:sub-title="'想天办公导航，右键查看详情，网站更新于'+appUpdateTime+'。'">
-										<template slot="extra">
-                      <a-button-group>
-                        <a-button>
-                         <a-icon type="appstore"></a-icon>
-                        </a-button>
-                        <a-button>  <a-icon type="table"></a-icon></a-button>
-                        <a-button>  <a-icon type="bars"></a-icon>
-                        </a-button>
-
-                      </a-button-group>
-											<a-button icon="shopping-cart" key="3" @click="showDrawerCart()"
-												:type="shopcartApps.length>0?'primary':'default'">
-												清单
-												<a-badge :count="shopcartApps.length" :overflow-count="99"
-													:style="{'position':'absolute','top':'0','right':'0'}"
-													:number-style="{ backgroundColor: '#52c41a' }">
-													<a href="#" class="head-example" />
-												</a-badge>
-											</a-button>
-										</template>
-									</a-page-header>
-									<br />
-								</div>
-							</template>
-
-						</a-layout-header>
-						<a-layout-content>
-							<div style="padding: 20px;text-align: left;padding: 10px;margin:20px">
-								<template>
-									<div style="width: 100% ;background: white;
-    border-radius: 8px;
-    padding: 20px;
-    min-height: 800px;">
-										<a-tabs default-active-key="productive" tab-position="left"
-											:style="{ height: '100%' }">
-											<a-tab-pane v-for="(type, indexType) in allApps" :key="type.name"
-												:tab="type.title">
-
-												<a-card :title="type.title" style="padding: 10px;">
-													<a-card-grid
-														:class="{'app':true,'app-goods':true,'added':shopcartApps.indexOf(app)!=-1,'in-myApps':checkInMyApps(app)!=-1}"
-														style="" v-for="(app, indexApp) in type.apps"
-														@mouseenter="show(app)" @mouseleave="hide()"
-														@contextmenu.prevent.native="showDrawer(app)">
-														<a-avatar shape="square" :size="64" :src="app.icon"
-															style="margin-bottom: 10px;"></a-avatar>
-														<a-card-meta :title="app.name">
-															<template slot="description">
-																{{ app.summary }}
-															</template>
-														</a-card-meta>
-
-														<div class="mask" v-show='currentApp== app '>
-															<div class="inner-wrapper" style="">
-
-																<a-button v-if="checkInMyApps(app)==-1"
-																	style="border-radius: 4px 4px 0 0;text-align: left;"
-																	type="primary" icon="shopping-cart"
-																	@click="addAppToCart(app)" block>
-																	{{ shopcartApps.indexOf(app)==-1 ?'添加到购物车':'从购物车移除' }}
-																</a-button>
-																<a-button style="border-radius:0;text-align: left;"
-																	type="primary" icon="plus-circle"
-																	@click="addApp(app)" block>
-																	{{ btnText }}
-																</a-button>
-
-																<a-button v-show="checkInMyApps(app)==-1"
-																	style="border-radius:0;text-align: left;"
-																	type="primary" icon="branches"
-																	@click="addApp(app);addTask(app)" block>
-																	收藏并打开
-																</a-button>
-																<a-button style="border-radius:0;text-align: left;"
-																	type="primary" icon="login" @click="addTask(app)"
-																	block>
-																	仅打开
-																</a-button>
-																<a-button
-																	style="border-radius:0 0 4px 4px;text-align: left;"
-																	type="primary" icon="container"
-																	@click="selectTask()" block>
-																	选择任务添加
-																</a-button>
-															</div>
-														</div>
-													</a-card-grid>
-											</a-tab-pane>
-											</a-card>
-										</a-tabs>
-									</div>
-								</template>
-							</div>
-						</a-layout-content>
-					</a-layout>
 				</a-layout>
 			</div>
-
-			<a-drawer :title="'应用清单（'+shopcartApps.length+')'" placement="right" :visible="visibleCart"
-				@close="onCloseCart" :width="400">
-				<template>
-					<a-empty v-if="shopcartApps.length==0" description="请选择应用"></a-empty>
-
-					<a-card>
-						<a-card-grid v-for="app in shopcartApps" style="width:25%;text-align:center">
-							<a-avatar :src="app.icon"></a-avatar>
-							<p class="cart-title">
-								{{ app.name }}
-							</p>
-						</a-card-grid>
-					</a-card>
-
-					<div style="margin-top: 10px;">
-						<p>
-							<a-button icon="container" type="primary" block v-if="shopcartApps.length!=0"
-								@click="selectTask()">
-								收藏且添加至任务
-							</a-button>
-						</p>
-						<p>
-							<a-button icon="plus-circle" type="default" block v-if="shopcartApps.length!=0"
-								@click="addShopcartApps">
-								仅收藏，不打开
-							</a-button>
-						</p>
-						<p>
-							<a-button icon="login" type="default" block v-if="shopcartApps.length!=0"
-								@click="openShopcart">
-								不收藏，整组打开
-							</a-button>
-						</p>
-						<p>
-							<a-button icon="rest" type="default" block v-if="shopcartApps.length!=0"
-								@click="shopcartApps=[]">
-								清空清单
-							</a-button>
-						</p>
-
-					</div>
-				</template>
-			</a-drawer>
-
-
-			<template>
-				<div>
-					<a-modal v-model="visible" title="添加网站" :footer="null" :width="800">
-						<template>
-							<a-tabs default-active-key="1" tab-position="top">
-								<a-tab-pane key="1">
-									<span slot="tab">
-										<a-icon type="appstore"></a-icon>
-										全部
-									</span>
-									<a-alert message="点击图标即可添加，添加完毕后，需手动关闭本界面。" type="info" show-icon
-										style="margin-bottom: 10px;"></a-alert>
-
-
-									<template>
-										<div style="width: 750px">
-
-											<a-tabs default-active-key="productive" tab-position="left"
-												:style="{ height: '600px' }">
-												<a-tab-pane v-for="(type, indexType) in allApps" :key="type.name"
-													:tab="type.title">
-
-													<a-card :title="type.title" style="padding: 10px;">
-														<a-card-grid style="width: 140px;cursor: pointer;"
-															v-for="(app, indexApp) in type.apps" class="app"
-															@click="addApp(app)">
-															<a-avatar shape="square" :size="64" :src="app.icon"
-																style="margin-bottom: 10px;"></a-avatar>
-															<a-card-meta :title="app.name">
-																<template slot="description">
-																	{{ app.summary }}
-																</template>
-															</a-card-meta>
-														</a-card-grid>
-
-												</a-card>
-                        </a-tab-pane>
-											</a-tabs>
-										</div>
-									</template>
-								</a-tab-pane>
-								<!-- <a-tab-pane key="2">
-									<span slot="tab">
-										<a-icon type="book"></a-icon>
-										从书签创建
-									</span>
-									待开发
-								</a-tab-pane>
-								<a-tab-pane key="3">
-									<span slot="tab">
-										<a-icon type="folder"></a-icon>
-										从标签创建
-									</span>
-									待开发
-								</a-tab-pane> -->
-								<a-tab-pane key="4">
-									<span slot="tab">
-										<a-icon type="link"></a-icon>
-										从URL创建
-									</span>
-									<template>
-										<a-form :form="form" @submit="handleSubmit">
-											<a-alert message="网站的图标不需要设置，当你打开一次这个网站之后，系统就会自动获取并更新。" type="info"
-												show-icon style="margin-bottom: 10px;"></a-alert>
-											<a-form-item v-bind="formItemLayout" label="应用名">
-												<span slot="label">
-													应用名&nbsp;
-													<a-tooltip title="应用名称">
-														<a-icon type="question-circle-o" />
-													</a-tooltip>
-												</span>
-												<a-input placeholder="请输入应用名，少于8个字" v-decorator="[
-          'name',
-          {
-            rules: [{ required: true, message: '请输入应用名！', whitespace: true },{max:24,message:'不得超过24个字！'}],
-          },
-        ]" />
-											</a-form-item>
-
-											<a-form-item v-bind="formItemLayout" label="网址">
-												<span slot="label">
-													网址&nbsp;
-													<a-tooltip title="输入网址，如果不以http://或https://开头，系统会自动加上http://">
-														<a-icon type="question-circle-o" />
-													</a-tooltip>
-												</span>
-
-												<a-auto-complete
-													v-decorator="['url', { rules: [{ required: true, message: '请输入网址！' },{max:512,message:'最多不能超过512个字母！'}] }]"
-													placeholder="输入任意网址，如http://work.thisky.com，以http或https开头"
-													@change="handleWebsiteChange">
-													<template slot="dataSource">
-														<a-select-option v-for="url in autoCompleteResult" :key="url">
-															{{ url }}
-														</a-select-option>
-													</template>
-													<a-input />
-												</a-auto-complete>
-											</a-form-item>
-
-											<a-form-item v-bind="formItemLayout" label="应用介绍">
-												<span slot="label">
-													应用介绍&nbsp;
-												</span>
-												<template>
-													<a-textarea placeholder="应用介绍，非必填，不超过100字" :rows="4"
-														v-decorator="['summary', { rules: [{max:100,message:'最多不能超过100个字！'}] }]">
-													</a-textarea>
-												</template>
-											</a-form-item>
-											<a-form-item :wrapper-col="{ span: 12, offset: 6 }">
-                        <a-button style="margin-left: 20px"  type="primary" html-type="submit">
-                          添加并继续
-                        </a-button>
-											</a-form-item>
-										</a-form>
-									</template>
-								</a-tab-pane>
-							</a-tabs>
-						</template>
-					</a-modal>
-				</div>
-			</template>
 		</div>
 	</body>
-
-
 	<template id="searchTpl">
 		<div class="global-search-wrapper" style="width: 300px">
 			<a-auto-complete class="global-search" size="large" style="width: 100%" placeholder="搜索标签、书签、应用、文件"
@@ -456,85 +78,34 @@
 
 	<script>
 		Vue.use(antd)
+
 		Vue.prototype.$form = antd.Form
     const wallPaper=require('../util/theme.js').wallPaper
+    const routes=require('./routes.js')
 
+    const router = new VueRouter({
+      routes // (缩写) 相当于 routes: routes
+    })
+    const originalPush = VueRouter.prototype.push
+    VueRouter.prototype.push = function push(location) {
+      return originalPush.call(this, location).catch(err => err)
+    }
 		var appVue = new Vue({
+      router,
 			el: '#appVue',
 			components: {},
 			data() {
 				return {
           treeData,
-					btnText: '添加收藏',
-					shopcartApps: [], //购物车内的app
-					myApps:[],
-
-					currentApp: {}, //点击时的app
-					drawerApp: {},
-					quickDrawer: {},
-					//计算属性，这里加上下划线区分一下
-					drawerVisible: false,
-					visibleCart: false,
-					quickDrawerVisible: false,
-
 					//定义全部的apps，后期可以改成接口获取
-					//_allApps: [], //默认从服务器获取应用列表，如果获取失败，则使用内置的Api
-
+					//_allAps: [], //默认从服务器获取应用列表，如果获取失败，则使用内置的Api
 					//左侧导航的数据
 					current: 'myapp',
-
 					loading: false,
 					visible: false,
-
-
-					//表单验证用字段
-					confirmDirty: false,
-					//表单自动填充用字段
-					autoCompleteResult: [],
-
-					//表单专用填充项目
-					name: '',
-					url: '',
-					summary: '',
-
-					//表单布局用字段
-					formItemLayout: {
-						labelCol: {
-							xs: {
-								span: 8
-							},
-							sm: {
-								span: 6
-							},
-						},
-						wrapperCol: {
-							xs: {
-								span: 24
-							},
-							sm: {
-								span: 16
-							},
-						},
-					},
-
-
-
-
-
-
 				}
 			},
-			beforeCreate(){
-				this.form = this.$form.createForm(this, {
-					name: 'register'
-				});
-			},
 			mounted() {
-        wallPaper.get().then(data=>{
-          if(!!data){
-            wallPaper.setElementBg(document.getElementById('wall'),data.value)
-          }
-        }).catch(err=>console.log(err))
 
 				// if ((window.appsData == false && window.loaded)) {
 				// 	//未读取到appsData
@@ -592,163 +163,20 @@
 
 				},
 				//添加表单提交数据
-				handleSubmit(e) {
-					e.preventDefault();
-					let that = this
-					this.form.validateFieldsAndScroll((err, values) => {
-						if (!err) {
-              console.log(values)
-              const app={
-                'name':values.name,
-                'url':values.url,
-                'summary':values.summary,
-                'icon':'../../icons/default.svg'
-              }
-							that.addApp(app)
 
-							that.$nextTick(() => {
-								that.form.resetFields()
-
-							})
-						}
-					});
-				},
 				showModal() {
 					this.visible = true;
 				},
-				handleWebsiteChange(value) {
-					let autoCompleteResult;
-					if (!value) {
-						autoCompleteResult = [];
-					} else {
-						autoCompleteResult = ['.com', '.org', '.net'].map(domain => `${value}${domain}`);
-					}
-					this.autoCompleteResult = autoCompleteResult;
-				},
+
 				handleConfirmBlur(e) {
 					const value = e.target.value;
 					this.confirmDirty = this.confirmDirty || !!value;
 				},
-        //收藏app
-				addApp(app) {
-					this.currentApp = app
-					this.addCurrentApp()
-				},
-				addShopcartApps() {
-					let addCount = 0
-					let hasCount = 0
-					let that = this
-					this.shopcartApps.forEach(function(app) {
-						if (that.isInMyApps(app) == -1) {
-							that.myApps.push(app)
-							window.$appsRestore.addApp(app)
-							addCount++
-						} else {
-							hasCount++
-						}
-					})
-					let text = '添加了' + addCount + '个应用。'
-					if (hasCount > 0) {
-						text = '选中' + that.shopcartApps.length + '个应用。由于购物车中' + hasCount + '个应用已经存在，实际添加了' +
-							addCount + '个应用。'
-					}
-					this.shopcartApps=[]
-					this.visibleCart=false
-					that.$message.success(text)
-				},
-        //收藏移除app dexie操作
-				addCurrentApp() {
-					let that = this
-					let app = this.currentApp
-					let index = this.isInMyApps(app)
-					if (index != -1) {
-						this.myApps.splice(index, 1)
-						that.$message.warning('移除了应用：' + app.name + '')
-						window.$appsRestore.deleteApp(app.name)
-						this.btnText = '添加收藏'
-					} else {
-						let apps = this.myApps;
-						apps.unshift(app)
-						this.myApps = apps
-						this.btnText = '移出收藏'
-						window.$appsRestore.addApp(app)
-						this.$message.success('添加了应用：' + app.name)
-					}
-				},
-				//添加应用到任务栏
-				addTask(app) {
-					postMessage({
-						message: 'addTask',
-						name: app.name,
-						url: app.url,
-						icon: app.icon
-					})
-					this.$message.success('成功在左侧栏添加了应用：' + app.name + '。')
-				},
+
 				setTab(tab) {
-					this.current = tab
-				},
-				showDrawer(app) {
-					this.drawerApp = null
-					this.drawerApp = app
-					console.log(this.drawerApp)
-					this.drawerVisible = true;
-
-				},
-				showDrawerCart() {
-					this.visibleCart = true
-				},
-				onClose() {
-					this.drawerVisible = false
-				},
-				onCloseCart() {
-					this.visibleCart = false
-				},
-        //移入app时的菜单显示
-				show(app) {
-					this.currentApp = app
-					this.btnText = this.isInMyApps(app) == -1 ? '添加收藏' : '移出收藏'
-				},
-				hide(obj) {
-					this.currentApp = null
-				},
-				//添加到购物车
-				addAppToCart(app) {
-					if (this.shopcartApps.indexOf(app) == -1)
-						//如果不在，就添加
-						this.shopcartApps.push(app)
-					else {
-						//如果已经有了，就删除
-						this.shopcartApps.splice(this.shopcartApps.indexOf(app), 1)
-					}
-				},
-				//判断是否是我的应用
-				isInMyApps() {
-
-					if (this.currentApp == null) {
-						return -1
-					}
-					let apps = this.myApps
-					let app = this.currentApp
-					let findIndex = -1
-					apps.forEach(function(item, index) {
-						if (item.name == app.name)
-							findIndex = index
-					})
-					return findIndex
-
-				},
-        //检查是否在dexie的myapp中
-				checkInMyApps(app) {
-					if(typeof  this.myApps =='undefined')
-						return -1
-					let apps = this.myApps
-					let findIndex = -1
-					apps.forEach(function(item, index) {
-						if (item.name == app.name)
-							findIndex = index
-					})
-					return findIndex
+          console.log(tab)
+          this.$router.push('/'+tab)
+					//this.current = tab
 				},
 				//发送消息给preload，调取selectTask的窗体
 				selectTask() {
@@ -775,11 +203,7 @@
 							 console.log(e)
 							 this.myApps=[]
 						 })
-
-
-
 				}
-
 			}
 		})
 	</script>

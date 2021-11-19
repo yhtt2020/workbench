@@ -69,8 +69,11 @@ Vue.component('local-comp', {
   },
   methods: {
     onSelect (selectedKeys, info) {
-      window.tab = selectedKeys[0]
-      this.$emit('get-tab', window.tab)
+      this.$router.push({path:'/myapp',query: { listId: selectedKeys[0]}})
+      //window.tab = selectedKeys[0]
+
+      //this.$emit('get-tab', window.tab)
+
     },
     onContextMenuClick (treeKey, menuKey) {
       if (menuKey === 'createList') {
