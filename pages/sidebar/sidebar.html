@@ -1,284 +1,346 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
+  <head>
+    <meta charset="utf-8" />
     <title>侧边栏</title>
+    <link rel="stylesheet" href="../../ext/flex-class.css" />
     <script src="../../ext/vue/vue.js"></script>
     <script src="../../ext/vue/vuex.js"></script>
     <script src="../../ext/vue/sortable.min.js"></script>
     <script src="../../ext/vue/vuedraggable.umd.min.js"></script>
     <script src="../../ext/vue/antd.min.js"></script>
-    <link rel="stylesheet" href="../../ext/vue/antd.min.css"/>
-    <link rel="stylesheet" href="sidebar.css"/>
-</head>
-<body>
+    <link rel="stylesheet" href="../../ext/vue/antd.min.css" />
+    <link rel="stylesheet" href="sidebar.css" />
+    <link rel="stylesheet" href="sidebar2.css" />
+  </head>
+  <body>
+    <script>
+      function mousenter(target) {
+        target.setAttribute('class', 'sidebar expanded')
+        document.getElementById('clickThroughElement').style.left = '146px'
+      }
 
-<script>
-  function mousenter (target) {
-    target.setAttribute('class', 'sidebar expanded')
-    document.getElementById('clickThroughElement').style.left = '146px'
-  }
+      function mouseleave(target) {
+        target.setAttribute('class', 'sidebar')
+        document.getElementById('clickThroughElement').style.left = '46px'
+      }
 
-  function mouseleave (target) {
-    target.setAttribute('class', 'sidebar')
-    document.getElementById('clickThroughElement').style.left = '46px'
-  }
+      //对clickThrough区域进行穿透设置，这样鼠标移动到clickThroug的区域就会自动穿透
+      function setMainWindow(e) {
+        if (appVue.$refs.sidePanel.userPanelVisible === true) {
+        } else {
+          ipc.send('setMouseIgnore')
+        }
+      }
+    </script>
+    <div id="appVue" class="sidebar" onmouseenter="mousenter(this)" onmouseleave="mouseleave(this)">
+      <sidebar ref="sidePanel" />
+    </div>
+    <div
+      id="clickThroughElement"
+      onclick="appVue.$refs.sidePanel.userPanelVisible=false;setMainWindow()"
+      onmousemove="setMainWindow()"
+      style="background-color: #00000000; height: 100vh; position: absolute; left: 46px; width: calc(100% - 46px)"
+    ></div>
 
-  //对clickThrough区域进行穿透设置，这样鼠标移动到clickThroug的区域就会自动穿透
-  function setMainWindow (e) {
-    if (appVue.$refs.sidePanel.userPanelVisible === true) {
-    } else {
-      ipc.send('setMouseIgnore')
-    }
-  }
-</script>
-<div id="appVue" class="sidebar" onmouseenter="mousenter(this)" onmouseleave="mouseleave(this)">
-    <sidebar ref="sidePanel"/>
-</div>
-<div id="clickThroughElement" onclick="appVue.$refs.sidePanel.userPanelVisible=false;setMainWindow()"
-     onmousemove="setMainWindow()"
-     style="background-color: #00000000;height:100vh; position:absolute;left: 46px;width: calc(100% - 46px);">
-</div>
-
-<template id="sidebarTpl">
-
-    <div id="sidebar" class="side-container">
+    <template id="sidebarTpl">
+      <div id="sidebar" class="side-container">
         <div id="itemsEl" class="side-items">
-            <ul id="pinGroup" class="app-task" style="margin-bottom: 0;overflow: hidden;">
-                <li @click="toggleUserPanel" class="" style="position: relative; background-color: rgb(243 243 243)">
+          <ul id="pinGroup" class="app-task" style="margin-bottom: 0; overflow: hidden">
+            <li @click="toggleUserPanel" class="" style="position: relative; background-color: rgb(243 243 243)">
+              <template>
+                <a-drawer
+                  @mousemove="setSidePanel()"
+                  :width="300"
+                  :visible="userPanelVisible"
+                  @close="toggleUserPanel"
+                  placement="left"
+                >
+                  <template slot="title">
+                    <span v-if="user.uid==0"> 登陆账号免费体验完整功能 </span>
+                    <span v-else> 云账号同步 </span>
+                  </template>
+                  <div v-if="user.uid===0">
+                    <a-button @click="userClick" type="primary" block>登陆账号</a-button>
+                    <br /><br />
+                    1.跨设备、跨终端同步我的应用和任务设置<br />
+                    2.支持多个空间任意切换<br />
+                    3.与其他用户在线交流、反馈产品使用建议<br />
+                    4.开启更多高级功能<br />
+                    &nbsp;①.团队功能，与团队成员共享收藏<br />
+                    &nbsp;②.企业社区，支持私密社区，供团队内成员交流<br />
+                    &nbsp;③.全网热议，支持任意网站与其他用户在线沟通
+                  </div>
+                  <div v-if="user.uid!==0">
                     <template>
-                        <a-drawer @mousemove="setSidePanel()"
-                                  :width="300"
-                                  :visible="userPanelVisible"
-                                  @close="toggleUserPanel"
-                                  placement="left"
-                        >
-                            <template slot="title">
-							<span v-if="user.uid==0">
-								登陆账号免费体验完整功能
-							</span>
-                                <span v-else>
-								云账号同步
-							</span>
-                            </template>
-                            <div v-if="user.uid===0">
-                                <a-button @click="userClick" type="primary" block>登陆账号</a-button>
-                                <br><br>
-                                1.跨设备、跨终端同步我的应用和任务设置<br>
-                                2.支持多个空间任意切换<br>
-                                3.与其他用户在线交流、反馈产品使用建议<br>
-                                4.开启更多高级功能<br>
-                                &nbsp;①.团队功能，与团队成员共享收藏<br>
-                                &nbsp;②.企业社区，支持私密社区，供团队内成员交流<br>
-                                &nbsp;③.全网热议，支持任意网站与其他用户在线沟通
+                      <div style="position: relative">
+                        <div style="text-align: center">
+                          <p>
+                            <a-avatar
+                              style="cursor: pointer"
+                              @click="userClick"
+                              :size="60"
+                              :src="user.avatar"
+                            ></a-avatar>
+                          </p>
+
+                          <p>
+                            <a style="color: #333" @click="userClick">{{ user.nickname }}</a>
+                          </p>
+                        </div>
+                        <div style="margin-bottom: 10px">
+                          <template>
+                            <a-card :bordered="false">
+                              <!--                                                    <a-card-grid @click= :bordered="false" style="width:33%;text-align:center">-->
+                              <!--                                                        <a-tooltip title="发表内容">-->
+                              <!--                                                        <a-icon  style="font-size: 24px" type="plus-circle"></a-icon>-->
+                              <!--                                                        </a-tooltip>-->
+                              <!--                                                    </a-card-grid>-->
+                              <a-card-grid
+                                @click="goProfile"
+                                :bordered="false"
+                                style="width: 33%; text-align: center; cursor: pointer"
+                                :hoverable="false"
+                              >
+                                <a-tooltip title="个人资料">
+                                  <a-icon style="font-size: 24px" type="profile"></a-icon>
+                                  <div>资料</div>
+                                </a-tooltip>
+                              </a-card-grid>
+                              <a-card-grid
+                                @click="goGroup"
+                                :bordered="false"
+                                style="width: 33%; text-align: center; cursor: pointer"
+                              >
+                                <a-tooltip title="团队">
+                                  <a-icon style="font-size: 24px" type="team"></a-icon>
+                                  <div>团队</div>
+                                </a-tooltip>
+                              </a-card-grid>
+                              <a-card-grid
+                                @click="goAccount"
+                                :bordered="false"
+                                style="width: 33%; text-align: center; cursor: pointer"
+                              >
+                                <a-tooltip title="账号管理">
+                                  <a-icon style="font-size: 24px" type="idcard"></a-icon>
+                                  <div>账号</div>
+                                </a-tooltip>
+                              </a-card-grid>
+                            </a-card>
+                          </template>
+                        </div>
+                        <div class="my-group">
+                          <template>
+                            <div class="mg-top flex justify-between align-center">
+                              <div class="mg-top-lf">我加入的团队({{this.$store.getters.getMyGroups.length}})</div>
+                              <a-button class="mg-top-right" type="primary" icon="plus" size="small" @click="createGroup" />
                             </div>
-                            <div v-if="user.uid!==0">
-                                <template>
-                                    <div style="position:relative;">
-                                        <div style="text-align: center">
-                                            <p>
-                                                <a-avatar style="cursor:pointer" @click="userClick" :size="60" :src="user.avatar"></a-avatar>
-                                            </p>
-
-                                            <p>
-                                                <a style="color: #333" @click="userClick">{{ user.nickname }}</a>
-                                            </p>
-                                        </div>
-                                        <div style="margin-bottom: 10px">
-                                            <template>
-                                                <a-card :bordered="false">
-<!--                                                    <a-card-grid @click= :bordered="false" style="width:33%;text-align:center">-->
-<!--                                                        <a-tooltip title="发表内容">-->
-<!--                                                        <a-icon  style="font-size: 24px" type="plus-circle"></a-icon>-->
-<!--                                                        </a-tooltip>-->
-<!--                                                    </a-card-grid>-->
-                                                    <a-card-grid @click="goProfile"  :bordered="false" style="width:33%;text-align:center;cursor: pointer"
-                                                                 :hoverable="false">
-                                                        <a-tooltip title="个人资料">
-                                                        <a-icon  style="font-size: 24px" type="profile"></a-icon>
-                                                          <div>资料</div>
-                                                        </a-tooltip>
-                                                    </a-card-grid>
-                                                    <a-card-grid @click="goGroup" :bordered="false" style="width:33%;text-align:center;cursor: pointer">
-                                                        <a-tooltip title="团队">
-                                                        <a-icon  style="font-size: 24px" type="team"></a-icon>
-                                                          <div>团队</div>
-                                                        </a-tooltip>
-                                                    </a-card-grid>
-                                                    <a-card-grid @click="goAccount" :bordered="false" style="width:33%;text-align:center;cursor: pointer">
-                                                    <a-tooltip title="账号管理">
-                                                      <a-icon  style="font-size: 24px" type="idcard"></a-icon>
-                                                      <div>账号</div>
-                                                    </a-tooltip>
-                                                     </a-card-grid>
-
-                                                </a-card>
-                                            </template>
-                                        </div>
-                                        <a-dropdown>
-                                            <a-menu slot="overlay">
-                                                <a-menu-item v-for="(item,key) in accounts" :key="key">
-                                                    <a-avatar shap="circle" size="small" :src="item.avatar"></a-avatar>
-                                                    &nbsp;{{ item.nickname}}
-                                                </a-menu-item>
-                                                <a-menu-item @click="switchAccount">
-                                                    <a-icon style="margin-left: 5px" shap="circle" type="plus-circle"
-                                                              ></a-icon>
-                                                    &nbsp;绑定新账号
-                                                </a-menu-item>
-                                            </a-menu>
-
-                                            <a-button shape="circle" size="small"
-                                                      style="position: absolute;right: -5px;top:-5px">
-                                                <a-icon type="down"></a-icon>
-                                            </a-button>
-
-                                        </a-dropdown>
-                                    </div>
-                                    <div>
-                                        <div style="position: absolute;bottom: 5px;width: 250px">
-                                            <a-button @click="logout" block><a-icon type="poweroff" ></a-icon>注销</a-button>
-                                        </div>
-                                    </div>
-                                </template>
-
-                                <p>
-                                    <a-button @click="createGroup" block>创建团队</a-button>
-                                </p>
-
+                            <div class="mg-content">
+                              <div class="mg-content-btn flex align-center" v-for="(item, index) in this.$store.getters.getMyGroups" :key="item.id">
+                                <img class="cb-lf" src="http://comad.thisky.com/public/uploads/attach/2021/11/10/618bdd4e3e629.jpeg" alt="">
+                                <div class="cb-rg flex justify-between align-center">
+                                  <img :src="item.logo" alt="">
+                                  <div>{{item.name}}</div>
+                                </div>
+                              </div>
                             </div>
-                        </a-drawer>
+                          </template>
+                        </div>
+                        <a-dropdown>
+                          <a-menu slot="overlay">
+                            <a-menu-item v-for="(item,key) in accounts" :key="key">
+                              <a-avatar shap="circle" size="small" :src="item.avatar"></a-avatar>
+                              &nbsp;{{ item.nickname}}
+                            </a-menu-item>
+                            <a-menu-item @click="switchAccount">
+                              <a-icon style="margin-left: 5px" shap="circle" type="plus-circle"></a-icon>
+                              &nbsp;绑定新账号
+                            </a-menu-item>
+                          </a-menu>
 
+                          <a-button shape="circle" size="small" style="position: absolute; right: -5px; top: -5px">
+                            <a-icon type="down"></a-icon>
+                          </a-button>
+                        </a-dropdown>
+                      </div>
+                      <div>
+                        <div style="position: absolute; bottom: 5px; width: 250px">
+                          <a-button @click="logout" block><a-icon type="poweroff"></a-icon>注销</a-button>
+                        </div>
+                      </div>
                     </template>
-                    <a-popover placement="right"
-                               :mouse-enter-delay="0.3"
-                               overlay-class-name="tips">
-                        <template slot="title">
-							<span v-if="user.uid==0">
-								登陆账号免费体验完整功能
-							</span>
-                            <span v-else>
-								{{ user.nickname }}
-							</span>
-                        </template>
+                  </div>
+                </a-drawer>
+              </template>
+              <a-popover placement="right" :mouse-enter-delay="0.3" overlay-class-name="tips">
+                <template slot="title">
+                  <span v-if="user.uid==0"> 登陆账号免费体验完整功能 </span>
+                  <span v-else> {{ user.nickname }} </span>
+                </template>
 
-
-                        <template slot="content">
-                            <div v-if="user.uid===0">
-                                1.跨设备、跨终端同步我的应用和任务设置<br>
-                                2.支持多个空间任意切换<br>
-                                3.与其他用户在线交流、反馈产品使用建议<br>
-                                4.开启更多高级功能<br>
-                                &nbsp;①.团队功能，与团队成员共享收藏<br>
-                                &nbsp;②.企业社区，支持私密社区，供团队内成员交流<br>
-                                &nbsp;③.全网热议，支持任意网站与其他用户在线沟通
-                            </div>
-                            <div v-if="user.uid!==0">
-                                用户信息
-                            </div>
-                        </template>
-                        <div @contextmenu="toggleUserPanel()" class="wrapper" block>
-                            <div class="item-icon">
-                                <a-avatar v-if="user.uid!==0" style="border:1px solid #cfcfcf; background-color: white" class="icon"
-                                          :src="user.avatar"></a-avatar>
-                              <a-avatar v-if="user.uid===0"  style="border:1px solid #cfcfcf; background-color: white;color: #aaa" class="icon"
-                                       src="../../icons/user.svg"  ></a-avatar>
-                                <!-- <a-badge :count="0" :dot="true" status="processing"
+                <template slot="content">
+                  <div v-if="user.uid===0">
+                    1.跨设备、跨终端同步我的应用和任务设置<br />
+                    2.支持多个空间任意切换<br />
+                    3.与其他用户在线交流、反馈产品使用建议<br />
+                    4.开启更多高级功能<br />
+                    &nbsp;①.团队功能，与团队成员共享收藏<br />
+                    &nbsp;②.企业社区，支持私密社区，供团队内成员交流<br />
+                    &nbsp;③.全网热议，支持任意网站与其他用户在线沟通
+                  </div>
+                  <div v-if="user.uid!==0">用户信息</div>
+                </template>
+                <div @contextmenu="toggleUserPanel()" class="wrapper" block>
+                  <div class="item-icon">
+                    <a-avatar
+                      v-if="user.uid!==0"
+                      style="border: 1px solid #cfcfcf; background-color: white"
+                      class="icon"
+                      :src="user.avatar"
+                    ></a-avatar>
+                    <a-avatar
+                      v-if="user.uid===0"
+                      style="border: 1px solid #cfcfcf; background-color: white; color: #aaa"
+                      class="icon"
+                      src="../../icons/user.svg"
+                    ></a-avatar>
+                    <!-- <a-badge :count="0" :dot="true" status="processing"
                                     :style="{position: 'absolute',right:  '-2px',top:'-13px'}" />
                                 </a-badge> -->
-                            </div>
-                            <div class="item-title">{{ user.nickname }}</div>
-                        </div>
-                    </a-popover>
-                </li>
-                <draggable v-model="getPinItems" group="sideBtn" animation="300" dragClass="dragClass"
-                           ghostClass="ghostClass" chosenClass="chosenClass" @start="onStart" @end="onEnd">
-                    <transition-group>
-                        <li v-for="(item,i) in this.$store.getters.getPinItems" :key="item.id"
-                            @click="openPinItem(item.id,i)" :class="isActive(item.id)"
-                            style="position: relative;" :item-id="item.id">
-                            <a-popover :title="item.count>5?item.title+' -- 高负载（5+）':item.title"
-                                       placement="right" :mouse-enter-delay="0.1" :mouse-leave-delay="0.1"
-                                       :destroy-tooltip-on-hide="true" overlay-class-name="tips">
-                                <template slot="content">
-
-                                    <ul class="tabs">
-                                        <li class="tab-title" v-for="(tab,j) in item.tabs" :key="tab.id">
-                                            <img class="tab-icon" :src="tab.icon"> {{ tab.title }}
-                                        </li>
-                                    </ul>
-                                </template>
-                                <div class="wrapper" @dblclick.stop="closeItem(item)">
-                                    <div class="item-icon">
-
-                                        <img class="icon" :src="item.icon">
-                                        <a-badge :count="item.count" :dot="true" status="processing"
-                                                 :style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:item.count>5?'visible':'hidden'}"/>
-                                        </a-badge>
-                                    </div>
-
-                                    <div class="item-title">{{ item.title }}</div>
-                                </div>
-                            </a-popover>
+                  </div>
+                  <div class="item-title">{{ user.nickname }}</div>
+                </div>
+              </a-popover>
+            </li>
+            <draggable
+              v-model="getPinItems"
+              group="sideBtn"
+              animation="300"
+              dragClass="dragClass"
+              ghostClass="ghostClass"
+              chosenClass="chosenClass"
+              @start="onStart"
+              @end="onEnd"
+            >
+              <transition-group>
+                <li
+                  v-for="(item,i) in this.$store.getters.getPinItems"
+                  :key="item.id"
+                  @click="openPinItem(item.id,i)"
+                  :class="isActive(item.id)"
+                  style="position: relative"
+                  :item-id="item.id"
+                >
+                  <a-popover
+                    :title="item.count>5?item.title+' -- 高负载（5+）':item.title"
+                    placement="right"
+                    :mouse-enter-delay="0.1"
+                    :mouse-leave-delay="0.1"
+                    :destroy-tooltip-on-hide="true"
+                    overlay-class-name="tips"
+                  >
+                    <template slot="content">
+                      <ul class="tabs">
+                        <li class="tab-title" v-for="(tab,j) in item.tabs" :key="tab.id">
+                          <img class="tab-icon" :src="tab.icon" /> {{ tab.title }}
                         </li>
-                    </transition-group>
-                </draggable>
+                      </ul>
+                    </template>
+                    <div class="wrapper" @dblclick.stop="closeItem(item)">
+                      <div class="item-icon">
+                        <img class="icon" :src="item.icon" />
+                        <a-badge
+                          :count="item.count"
+                          :dot="true"
+                          status="processing"
+                          :style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:item.count>5?'visible':'hidden'}"
+                        >
+                        </a-badge>
+                      </div>
+
+                      <div class="item-title">{{ item.title }}</div>
+                    </div>
+                  </a-popover>
+                </li>
+              </transition-group>
+            </draggable>
+          </ul>
+
+          <div class="divider"></div>
+
+          <div class="app-box">
+            <ul id="appGroup" style="user-select: none" class="app-task app-items" @dblclick.prevent="addNewTask">
+              <draggable
+                v-model="getItems"
+                group="sideBtn"
+                animation="300"
+                dragClass="dragClass"
+                ghostClass="ghostClass"
+                chosenClass="chosenClass"
+                @start="onStart"
+                @end="onEnd"
+              >
+                <transition-group>
+                  <li
+                    @click="openItem(item.id,i)"
+                    @dblclick.stop="closeItem(item)"
+                    v-for="(item,i) in this.$store.getters.getItems"
+                    :key="item.id"
+                    :visible="item.count>1"
+                    data-role="task"
+                    :class="isActive(item.id)"
+                    :item-id="item.id"
+                    style="position: relative"
+                  >
+                    <a-popover
+                      :title="item.count>5?item.title+' -- 高负载（5+）':item.title"
+                      placement="right"
+                      :mouse-enter-delay="0.1"
+                      :mouse-leave-delay="0.1"
+                      :destroy-tooltip-on-hide="true"
+                      overlay-class-name="tips"
+                    >
+                      <template slot="content">
+                        <ul class="tabs">
+                          <li class="tab-title" v-for="(tab,j) in item.tabs" :key="tab.id">
+                            <img class="tab-icon" :src="tab.icon" />&nbsp;{{ tab.title }}
+                          </li>
+                        </ul>
+                      </template>
+                      <div class="wrapper">
+                        <div class="item-icon">
+                          <img class="icon" :src="item.icon" />
+                          <a-badge
+                            :count="item.count"
+                            :dot="true"
+                            status="processing"
+                            :style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:item.count>5?'visible':'hidden'}"
+                          >
+                          </a-badge>
+                        </div>
+                        <div class="item-title">{{ item.title }}</div>
+                      </div>
+                    </a-popover>
+                  </li>
+                </transition-group>
+              </draggable>
             </ul>
-
-            <div class="divider"></div>
-
-            <div class="app-box">
-
-                <ul id="appGroup" style="user-select: none;" class="app-task app-items" @dblclick.prevent="addNewTask">
-                    <draggable v-model="getItems" group="sideBtn" animation="300" dragClass="dragClass"
-                               ghostClass="ghostClass" chosenClass="chosenClass" @start="onStart" @end="onEnd">
-                        <transition-group>
-                            <li @click="openItem(item.id,i)"  @dblclick.stop="closeItem(item)"  v-for="(item,i) in this.$store.getters.getItems"
-                                :key="item.id" :visible="item.count>1" data-role="task"
-                                :class="isActive(item.id)" :item-id="item.id" style="position: relative;">
-
-                                <a-popover :title="item.count>5?item.title+' -- 高负载（5+）':item.title"
-                                           placement="right" :mouse-enter-delay="0.1" :mouse-leave-delay="0.1"
-                                           :destroy-tooltip-on-hide="true" overlay-class-name="tips">
-                                    <template slot="content">
-
-                                        <ul class="tabs">
-                                            <li class="tab-title" v-for="(tab,j) in item.tabs" :key="tab.id">
-                                                <img class="tab-icon" :src="tab.icon">&nbsp;{{ tab.title }}
-                                            </li>
-                                        </ul>
-                                    </template>
-                                    <div class="wrapper">
-                                        <div class="item-icon">
-
-                                            <img class="icon" :src="item.icon">
-                                            <a-badge :count="item.count" :dot="true" status="processing"
-                                                     :style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:item.count>5?'visible':'hidden'}"/>
-                                            </a-badge>
-                                        </div>
-                                        <div class="item-title">{{ item.title }}</div>
-                                    </div>
-
-                                </a-popover>
-                            </li>
-                        </transition-group>
-                    </draggable>
-                </ul>
-
-
-            </div>
-
-
+          </div>
         </div>
         <div id="bottomsEl" class="bottom-container">
-            <ul class="bottomBar">
-                <template>
-                    <div>
-                        <a-collapse default-active-key="0" :active-key="sidebarBottom" :bordered="false" @change="changeBottomSize">
-                            <a-collapse-panel key="1">
-                                <li @click="openBottom('mobile')">
-
-                                    <!-- <a-popover title="手机模拟" placement="right" :mouse-enter-delay="0"
+          <ul class="bottomBar">
+            <template>
+              <div>
+                <a-collapse
+                  default-active-key="0"
+                  :active-key="sidebarBottom"
+                  :bordered="false"
+                  @change="changeBottomSize"
+                >
+                  <a-collapse-panel key="1">
+                    <li @click="openBottom('mobile')">
+                      <!-- <a-popover title="手机模拟" placement="right" :mouse-enter-delay="0"
                                         :mouse-leave-delay="0.1" :destroy-tooltip-on-hide="true"
                                         overlay-class-name="tips">
 
@@ -315,58 +377,52 @@ wrapperCol: { span: 16 },
 
 
                                         </template> -->
-                                    <a-button type="default" shape="circle" icon="mobile"></a-button>
-                                    <div class="item-title">手机模式</div>
-                                    <!-- </a-popover> -->
-                                </li>
-                                <li @click="openBottom('help')">
-                                    <a-button type="default" shape="circle" icon="question-circle"></a-button>
-                                    <div class="item-title">帮助中心</div>
-                                </li>
-                                <li @click="openBottom('setting')">
-                                    <a-button type="default" shape="circle" icon="setting"></a-button>
-                                    <div class="item-title">偏好设置</div>
-                                </li>
-                            </a-collapse-panel>
-                        </a-collapse>
-                    </div>
-                </template>
+                      <a-button type="default" shape="circle" icon="mobile"></a-button>
+                      <div class="item-title">手机模式</div>
+                      <!-- </a-popover> -->
+                    </li>
+                    <li @click="openBottom('help')">
+                      <a-button type="default" shape="circle" icon="question-circle"></a-button>
+                      <div class="item-title">帮助中心</div>
+                    </li>
+                    <li @click="openBottom('setting')">
+                      <a-button type="default" shape="circle" icon="setting"></a-button>
+                      <div class="item-title">偏好设置</div>
+                    </li>
+                  </a-collapse-panel>
+                </a-collapse>
+              </div>
+            </template>
 
-                <li @click="openBottom('home')">
-                    <a-button type="default" shape="circle" icon="home"></a-button>
-                    <div class="item-title">网站导航</div>
-                </li>
-            </ul>
-
+            <li @click="openBottom('home')">
+              <a-button type="default" shape="circle" icon="home"></a-button>
+              <div class="item-title">网站导航</div>
+            </li>
+          </ul>
         </div>
-
-    </div>
-</template>
-
-
-</body>
-<script src="./sidebarComp.js"></script>
-<script src="./sidebar.js"></script>
-<style>
+      </div>
+    </template>
+  </body>
+  <script src="./sidebarComp.js"></script>
+  <script src="./sidebar.js"></script>
+  <style>
     .tabs,
     .sidebar ul {
-        list-style: none;
-        padding: 0
+      list-style: none;
+      padding: 0;
     }
 
     .ant-collapse-content > .ant-collapse-content-box {
-        padding: 0;
+      padding: 0;
     }
 
     .ant-collapse-borderless > .ant-collapse-item {
-        border-bottom: none;
+      border-bottom: none;
     }
 
     .tabs,
     .sidebar ul {
-        margin-bottom: 0;
+      margin-bottom: 0;
     }
-</style>
-
-
+  </style>
 </html>

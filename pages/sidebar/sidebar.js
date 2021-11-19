@@ -1,4 +1,5 @@
 //定义一个TaskList来接收tasks类型的数据
+const axios = require('../../js/util/axios.js')
 class TasksList {
 	constructor() {
 		this.tasks = []
@@ -89,9 +90,13 @@ window.onload = function() {
 				uid:0,
 				nickname:"立即登录",
 				avatar:"../../icons/browser.ico"
-			}
+			},
+      myGroups: []
 		},
 		getters: {
+      getMyGroups: state => {
+        return state.myGroups
+      },
 			getAll: state => {
 				if (state.pinItems == null) { //还未初始化
 					$store.commit('initItems')
@@ -189,6 +194,10 @@ window.onload = function() {
 
 		},
 		mutations: {
+      //设置我的团队列表
+      SET_MYGROUPS: (state, myGroups) => {
+        state.myGroups = myGroups
+      },
 			//设置置顶区域的item
 			savePinItems(state, pinItems) {
 				//将根据pin和items生成Tasks
@@ -297,7 +306,24 @@ window.onload = function() {
 
 			}
 
-		}
+		},
+    actions: {
+      async getGroups({ commit }, userInfo) {
+        const { uid, token } = userInfo
+        const result = await axios({
+          method: 'post',
+          url: '/app/browser/group/list',
+          headers: { Authorization: token },
+          data: {
+            uid: uid
+          },
+        })
+        console.log(result, '__gp__')
+        if(result.code === 1000) {
+          commit('SET_MYGROUPS', result.data)
+        }
+      }
+    }
 	})
 
 	Vue.use(antd);

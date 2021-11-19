@@ -115,53 +115,34 @@ function getCurrentUser () {
     console.log('获取当前用户失败')
     console.log(err)
   })
-
-  // db.system.put({//当前用户
-  // 		name:'currentUser',
-  // 		value:{
-  // 			uid:0,
-  // 			nickname:"立即登录",
-  // 			avatar:"../../icons/browser.ico"
-  // 		}
-  // 	}).catch((err)=>{
-  // 		console.log(err)
-  // }).then((res)=>{
-  // 	console.log(res)
-  // })
-  //if(currentUser)
 }
 
-function insertDefaultUser () {
+async function insertDefaultUser (code) {
   const defaultUser = {
     uid: 0,
     nickname: '立即登录',
     avatar: '../../icons/browser.ico'
   }
-  db.system.where({name:'currentUser'}).delete()
-  db.system.put({//当前用户
-    name: 'currentUser',
-    value: defaultUser
-  }).catch((err) => {
-    console.log(err)
-  }).then((res) => {
-    console.log('insertDefaultUser failed')
-  })
-  window.$store.state.user=null
+  if(code) {
+    await db.accounts.where('code').equals(code).delete()
+  }
+  await db.system.where('name').equals('currentUser').modify({value: defaultUser})
+  window.$store.state.user= null
   window.$store.state.user = defaultUser
   return defaultUser
 }
 window.insertDefaultUser=insertDefaultUser
+
+//sidebar的数据依托于vuex，每次preload载入需要重新getCurrentUser
 setTimeout(getCurrentUser, 1000)
 ipc.on('userLogin', function (e, data) {
-  console.log('userinfo')
-  let userInfo = JSON.parse(data.userInfo)
-  console.log(userInfo)
   let user = {
-    uid: userInfo.uid,
-    nickname: userInfo.nickname,
-    avatar: userInfo.avatar
+    uid: data.userInfo.uid,
+    nickname: data.userInfo.nickname,
+    avatar: data.userInfo.avatar,
+    token: data.token,
+    code: data.code
   }
-
   window.$store.state.user = user
   // 设置当前登陆账号为此账号
   db.system.where({name:'currentUser'}).delete()
@@ -174,7 +155,9 @@ ipc.on('userLogin', function (e, data) {
       uid: user.uid,
       nickname: user.nickname,
       avatar: user.avatar,
-      lastLoginTime: new Date().getTime()
+      lastLoginTime: new Date().getTime(),
+      token: user.token,
+      code: user.code
     })
   }).catch((err) => {
     console.log('登录后设置当前用户失败')
