@@ -29,8 +29,11 @@
         width: 30px;
         height: 30px;
         border-radius: 50%;
+        background-color: whitesmoke
       }
       div {
+        margin-left: 10px;
+        text-align:left !important;
         font-weight: 500;
         color: #353535;
         z-index: 2;

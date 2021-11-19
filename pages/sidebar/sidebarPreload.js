@@ -97,6 +97,14 @@ ipc.on('addItem', function (e, data) {
   window.$store.state.items.push(data.item)
 })
 
+ipc.on('refreshMyGroups', async ()=> {
+  const currentUser = await db.system.where('name').equals('currentUser').first()
+  await window.$store.dispatch('getGroups', {
+    uid: currentUser.value.uid,
+    token: currentUser.value.token
+  })
+})
+
 //读入当前登陆的账号
 function getCurrentUser () {
   db.system.get({ 'name': 'currentUser' }).then((item) => {

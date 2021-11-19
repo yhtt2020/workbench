@@ -33,4 +33,10 @@ app.on('ready', () => {
     createGroupWindow.destroy()
     createGroupWindow = null
   })
+
+  ipc.on('refreshMyGroups', () => {
+    if(SidePanel.alive()) {
+      sidePanel.get().webContents.send('refreshMyGroups')
+    }
+  })
 })
