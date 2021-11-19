@@ -26,6 +26,7 @@ app.on('ready', () => {
         ]
       }
     })
+    createGroupWindow.setMenu(null)
     createGroupWindow.webContents.loadURL('file://' + __dirname + '/pages/group/create.html')
     createGroupWindow.on('close',()=>createGroupWindow=null)
   })

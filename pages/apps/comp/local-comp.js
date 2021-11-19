@@ -3,8 +3,8 @@ const localTpl = `
 <a-tree :tree-data="myAppsLists" :block-node="true" show-icon :default-selected-keys="['local']"
         @select="onSelect"
         >
-           <a-icon slot="folder" type="folder"> </a-icon>
-          <a-icon slot="list-icon" type="file-text"> </a-icon>
+            <a-avatar slot="folder" shape="square" style="width: 1.3em;height: auto " src="../../icons/svg/folder.svg"></a-avatar>
+          <a-avatar slot="list-icon" shape="square" style="width: 1.3em;height: auto " src="../../icons/svg/plan.svg"></a-avatar>
           <template #title="{ key: treeKey, title }">
       <a-dropdown :trigger="['contextmenu']" @visibleChange="checkMenuDisable($event,treeKey)">
         <span>{{ title }}</span>

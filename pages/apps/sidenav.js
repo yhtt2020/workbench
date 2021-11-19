@@ -13,15 +13,13 @@ const tpl = `
         <a-tree style="padding: 10px" :tree-data="[cloudLists]" :block-node="true" show-icon default-expand-all :default-selected-keys="['local']"
         @select="onSelect"
         >
-          <a-icon slot="user" type="user" > </a-icon>
-          <a-icon slot="appstore" type="appstore" > </a-icon>
-          <a-icon slot="meh" type="smile-o"> </a-icon>
-          <a-icon slot="global" style="font-size: 18px" type="global"> </a-icon>
-          <a-icon slot="team" style="font-size: 18px" type="team"> </a-icon>
+           <a-avatar slot="team" shape="square" style="width: 1.3em;height: auto " src="../../icons/svg/team.svg"></a-avatar>
+   <a-avatar slot="cloud" shape="square" style="width: 1.3em;height: auto " src="../../icons/svg/cloud.svg"></a-avatar>
+
           <a-icon slot="lock" type="lock"> </a-icon>
           <a-icon slot="star" style="font-size: 18px" type="star"> </a-icon>
-          <a-icon slot="cloud" style="font-size: 18px" type="cloud"> </a-icon>
-          <a-icon slot="list-icon" type="file-text"> </a-icon>
+          <a-avatar slot="list-icon" src="../../icons/svg/collection"></a-avatar>
+
           <template slot="custom" slot-scope="{ selected }">
             <a-icon :type="selected ? 'frown' : 'frown-o'" ></a-icon>
           </template>

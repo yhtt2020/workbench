@@ -207,7 +207,7 @@
                     v-for="(item, index) in bookmark"
                     :key="index"
                   >
-                    <a-icon type="global" :style="{ fontSize: '18px'}"></a-icon>
+                    <a-avatar shape="square" style="width:2em;height: auto" src="../../icons/svg/library.svg"></a-avatar>
                     <ul class="flex flex-direction justify-center align-center">
                       <li>{{item.title}}</li>
                       <li style="color: #7f7f7f">{{item.link}}</li>
@@ -298,8 +298,8 @@
                           class="flex justify-around align-center"
                           v-for="(item, index) in i.info "
                           :key="index"
-                        >
-                          <a-icon type="global" :style="{ fontSize: '18px'}"></a-icon>
+                        ><a-avatar shape="square" style="width:2em;height: auto" src="../../icons/svg/footprint.svg"></a-avatar>
+
                           <ul class="flex flex-direction justify-center align-center">
                             <li>{{item.title}}</li>
                             <li style="color: #7f7f7f">{{item.link}}</li>
