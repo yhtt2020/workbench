@@ -114,6 +114,7 @@
             })
             if(result.code === 1000) {
               this.$message.success('成功创建团队:' + values.name)
+              ipc.send('refreshMyGroups')
               setTimeout(function() {
                 ipc.send('closeCreateGroupWindow')
               }, 1000)
