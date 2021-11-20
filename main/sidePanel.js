@@ -546,7 +546,8 @@ ipc.on('showSidePanel', function() {
 })
 
 var selectTaskWindow = null
-ipc.on('selectTask', function() {
+ipc.on('selectTask', function(event, arg) {
+  console.log(arg, '__apppp__')
 	selectTaskWindow = new BrowserWindow({
 		frame: true,
 		backgroundColor: 'black',
@@ -572,7 +573,9 @@ ipc.on('selectTask', function() {
 		}
 	})
 	selectTaskWindow.webContents.loadURL('file://' + __dirname + "/pages/selectTask/index.html")
-
+  if(toString.call(arg) === '[object Array]') {
+    selectTaskWindow.webContents.send('appsCartList', arg)
+  }
 })
 
 ipc.on('closeTaskSelect', function() {
@@ -582,6 +585,14 @@ ipc.on('addTab', function(event, data) {
 	sendIPCToWindow(mainWindow, 'addTab', {
 		'url': data.url
 	})
+})
+
+//选择到对应的task，再在对应的位置执行addTab
+ipc.on('toTask-addTab', (event, arg)=> {
+  console.log(arg, '__传来的__')
+  //browserUI里都是对tab和task处理的一些集成方法和UI转换
+  //我们把具体的ipc操作传到menuRenderer中
+  sendIPCToWindow(mainWindow, 'toTaskAddTab', arg)
 })
 
 ipc.on('userLogin', function(event, data) {

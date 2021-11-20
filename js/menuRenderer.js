@@ -96,6 +96,16 @@ module.exports = {
       })
     })
 
+    //定位到task组的某tabid，往后插入创建tab
+    ipc.on('toTaskAddTab', (event, arg) => {
+      tasks.get(arg.taskId).tabs.add({
+        url: arg.tab.url,
+        title: arg.tab.name
+      }, {}, arg.tabIndex)
+      console.log(tasks, '__taskins__')
+      console.log(arg, '__传到了browserUI__')
+    })
+
     ipc.on('saveCurrentPage', async function () {
       var currentTab = tabs.get(tabs.getSelected())
 

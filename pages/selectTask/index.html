@@ -13,21 +13,23 @@
 	<body>
 		<script>
 			Vue.use(antd);
+      var electron = require('electron')
+      var ipc = electron.ipcRenderer
 		</script>
 		<div id="appVue">
 
 			<template>
 				<div style="background-color: #ececec; padding: 20px;height: 100%;">
 					<a-row :gutter="16">
-						<a-col :span="8" v-for="(task,index) in tasks">
+						<a-col :span="8" v-for="(task,index) in tasks" :key="index">
 							<a-card :bordered="false" class="task">
 								<span slot="title" slot-scope="title">
 									<a-avatar shape="square" size="small" :src="task.icon"></a-avatar> &nbsp;
 									{{ task.name }}
 								</span>
 								<ul class="tabs" style="height: 220px;overflow-y:auto;margin-right: -10px;">
-									<li class="tab-title" v-for="(tab,j) in task.tabs" :key="tab.id"
-										@click="selectTab(tab,task)">
+									<li class="tab-title" v-for="(tab, Dindex) in task.tabs" :key="Dindex"
+										@click="selectTab(task, tab, task.id, Dindex)">
 										<a-avatar shape="square" size="small" class="tab-icon"
 											:src="getIcon(tab.favicon)"></a-avatar> {{ tab.title==''?'新标签':tab.title }}
 									</li>
@@ -61,7 +63,7 @@
 								<a-button type="default">
 									<a-icon type="left"></a-icon>插入在前
 								</a-button>
-								<a-button type="primary">
+								<a-button type="primary" @click="setAfter">
 									插入在后
 									<a-icon type="right" />
 									</a-icon>
@@ -99,9 +101,21 @@
 						'name': '新建任务',
 						'icon': "../../icons/empty.png",
 						id: 0
-					}
+					},
+          selectedApps: [],
+          selectedTaskId: String,
+          selectedTabIndex: Number
 				}
 			},
+      watch: {
+        selectedApps: {
+          handler(newValue) {
+            console.log(newValue, '__new__')
+          },
+          deep: true,
+          immediate: true
+        }
+      },
 			mounted() {
 				this.tasks = window.tasks
 				let that = this
@@ -110,8 +124,24 @@
 						task.name = '标签组' + (index + 1)
 					task.icon = that.getIcon(task.tabs[0].favicon)
 				})
+        //从preload拿到选中的App
+        this.selectedApps = window.selectedApps
 			},
 			methods: {
+        //插入到后面
+        setAfter() {
+          let appTab = []
+          this.selectedApps.forEach(e => {
+            setTimeout(()=> {
+              postMessage({
+                message: 'toTask-addTab',
+                addTab: e,
+                taskId: this.selectedTaskId,
+                tabIndex: this.selectedTabIndex
+              })
+            }, 0)
+          })
+        },
 				//获取图标的方法
 				getIcon(favicon) {
 					var defaultIcon = "../../icons/empty.png"
@@ -124,9 +154,15 @@
 					}
 
 				},
-				selectTab(tab, task) {
+				selectTab(task, tab, id, Dindex) {
+          console.log(tab, '__tab__')
+          console.log(task, '__task__')
+          console.log(id, '__id__')
+          console.log(Dindex, '__Dindex__')
 					this.selectedTab = tab
 					this.selectedTask = task
+          this.selectedTaskId = id
+          this.selectedTabIndex = Dindex
 				},
 				reset(e) {
 					this.selectedTab = {
