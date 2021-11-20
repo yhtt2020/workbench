@@ -1,8 +1,7 @@
 const localTpl = `
 <div>
-<a-tree :tree-data="myAppsLists" :block-node="true" show-icon :default-selected-keys="['local']"
-        @select="onSelect"
-        >
+<a-tree ref="myappTree" :tree-data="myAppsLists" :block-node="true" show-icon :selected-keys="selectedValues"
+        @select="onSelect" >
             <a-avatar slot="folder" shape="square" style="width: 1.3em;height: auto " src="../../icons/svg/folder.svg"></a-avatar>
           <a-avatar slot="list-icon" shape="square" style="width: 1.3em;height: auto " src="../../icons/svg/plan.svg"></a-avatar>
           <template #title="{ key: treeKey, title }">
@@ -37,11 +36,15 @@ const getNameInputValue = function () {
 Vue.component('local-comp', {
   name: 'local-comp',
   template: localTpl,
+  props:{
+
+  },
   data () {
     return {
       //创建列表的弹窗可见
       createListVisible: false,
       createTitle: '',//创建列表的标题
+      selectedValues:[],
       //下拉菜单控制属性
       disableCreate: false,
       disableCreateChild: false,
@@ -61,6 +64,10 @@ Vue.component('local-comp', {
     }
   }, mounted () {
     let that = this
+    window.$trees.push({
+      name:'myapp',
+      comp:this
+    })
     appList.list().then(data => {
       data.forEach((item) => {
         that.myAppsLists[0].children.push(appList.convertTreeNode(item))
@@ -70,10 +77,7 @@ Vue.component('local-comp', {
   methods: {
     onSelect (selectedKeys, info) {
       this.$router.push({path:'/myapp',query: { listId: selectedKeys[0]}})
-      //window.tab = selectedKeys[0]
-
-      //this.$emit('get-tab', window.tab)
-
+      resetOtherTree('myapp',selectedKeys)
     },
     onContextMenuClick (treeKey, menuKey) {
       if (menuKey === 'createList') {

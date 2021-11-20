@@ -1,223 +1,252 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>网址导航</title>
-		<script src="../../ext/vue/vue.js"></script>
-    <script src="../../ext/vue/vue-router.js"></script>
-		<script src="../../ext/vue/antd.min.js"></script>
-		<link rel="stylesheet" href="../../ext/vue/antd.min.css" />
-		<link rel="icon" type="image/svg+xml" href="../../icons/apps.svg" />
-		<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline'" />
-		<link rel="stylesheet" href="./apps.css" />
-	</head>
-	<body>
-		<script>
-			Vue.use(antd);
-		</script>
-		<div id="appVue">
-			<div class="">
-				<a-layout style="height: 100vh;" :trigger="null">
-					<a-layout-sider style="background-color: white;">
-						<sidenav @get-tab="setTab" />
-          </a-layout-sider>
-          <router-view></router-view>
-					<a-layout class="wall" v-show="current==='myapp'"	 style="background: white">
-					</a-layout>
-          <a-layout v-show="current==='group'">
-            <a-layout-header style="background: #fff; padding: 0">
-              <template>
-                <div >
-                  <a-page-header style="border: none;" title="团队导航"
-                                 sub-title="我的全部团队">
-                  </a-page-header>
-                  <br />
-                </div>
-              </template>
-            </a-layout-header>
-            <a-layout-content>
-              <template>
-                <div style="background-color: white; padding: 20px;" class="group-apps">
-                  <groups></groups>
-                </div>
-              </template>
-            </a-layout-content>
-          </a-layout>
-				</a-layout>
-			</div>
-		</div>
-	</body>
-	<template id="searchTpl">
-		<div class="global-search-wrapper" style="width: 300px">
-			<a-auto-complete class="global-search" size="large" style="width: 100%" placeholder="搜索标签、书签、应用、文件"
-				option-label-prop="title" @select="onSelect" @search="handleSearch">
-				<template slot="dataSource">
-					<a-select-option v-for="item in dataSource" :key="item.category" :title="item.category">
-						发现 {{ item.query }} 在
-						<a :href="`https://s.taobao.com/search?q=${item.query}`" target="_blank"
-							rel="noopener noreferrer">
-							{{ item.category }}
-						</a>
-						<span className="global-search-item-count">{{ item.count }} 个结果</span>
-					</a-select-option>
-				</template>
-				<a-input>
-					<a-button slot="suffix" style="margin-right: -12px" class="search-btn" size="large" type="primary">
-						<a-icon type="search" />
-					</a-button>
-				</a-input>
-			</a-auto-complete>
-		</div>
-	</template>
+<head>
+  <meta charset="utf-8">
+  <title>网址导航</title>
+  <script src="../../ext/vue/vue.js"></script>
+  <script src="../../ext/vue/vue-router.js"></script>
+  <script src="../../ext/vue/antd.min.js"></script>
+  <link rel="stylesheet" href="../../ext/vue/antd.min.css"/>
+  <link rel="icon" type="image/svg+xml" href="../../icons/apps.svg"/>
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline'"/>
+  <link rel="stylesheet" href="./apps.css"/>
+</head>
+<body>
+<script>
+  Vue.use(antd)
+</script>
+<div id="appVue">
+  <div class="">
+    <a-layout style="height: 100vh;" :trigger="null">
+      <a-layout-sider style="background-color: white;">
+        <sidenav @get-tab="setTab"/>
+      </a-layout-sider>
+      <router-view></router-view>
+      <a-layout class="wall" v-show="current==='myapp'" style="background: white">
+      </a-layout>
+      <a-layout v-show="current==='group'">
+        <a-layout-header style="background: #fff; padding: 0">
+          <template>
+            <div>
+              <a-page-header style="border: none;" title="团队导航"
+                             sub-title="我的全部团队">
+              </a-page-header>
+              <br/>
+            </div>
+          </template>
+        </a-layout-header>
+        <a-layout-content>
+          <template>
+            <div style="background-color: white; padding: 20px;" class="group-apps">
+              <groups></groups>
+            </div>
+          </template>
+        </a-layout-content>
+      </a-layout>
+    </a-layout>
+  </div>
+</div>
+</body>
+<template id="searchTpl">
+  <div class="global-search-wrapper" style="width: 300px">
+    <a-auto-complete class="global-search" size="large" style="width: 100%" placeholder="搜索标签、书签、应用、文件"
+                     option-label-prop="title" @select="onSelect" @search="handleSearch">
+      <template slot="dataSource">
+        <a-select-option v-for="item in dataSource" :key="item.category" :title="item.category">
+          发现 {{ item.query }} 在
+          <a :href="`https://s.taobao.com/search?q=${item.query}`" target="_blank"
+             rel="noopener noreferrer">
+            {{ item.category }}
+          </a>
+          <span className="global-search-item-count">{{ item.count }} 个结果</span>
+        </a-select-option>
+      </template>
+      <a-input>
+        <a-button slot="suffix" style="margin-right: -12px" class="search-btn" size="large" type="primary">
+          <a-icon type="search"/>
+        </a-button>
+      </a-input>
+    </a-auto-complete>
+  </div>
+</template>
 
 
+<script src="./sidenav.js"></script>
+<script src="./groups.js"></script>
+<script src="./search.js"></script>
 
-	<script src="./sidenav.js"></script>
-  <script src="./groups.js"></script>
-	<script src="./search.js"></script>
+<script>
+  Vue.use(antd)
+  /**
+   * 定义当前的树状组件组
+   * @type {[{comp: null, name: string}, {comp: null, name: string}, {comp: null, name: string}, {comp: null, name: string}]}
+   */
+  window.$trees = [
+    // {
+    //   name: 'myapp',
+    //   comp: null
+    // },
+    // {
+    //   name: 'appstore',
+    //   comp: null
+    // }, {
+    //   name: 'cloud',
+    //   comp: null
+    // }, {
+    //   name: 'group',
+    //   comp: null
+    //
+    // }
+  ]
+  Vue.prototype.$form = antd.Form
+  const wallPaper = require('../util/theme.js').wallPaper
+  const routes = require('./routes.js')
 
-	<script>
-		Vue.use(antd)
+  const router = new VueRouter({
+    routes // (缩写) 相当于 routes: routes
+  })
+  const originalPush = VueRouter.prototype.push
+  VueRouter.prototype.push = function push (location) {
+    return originalPush.call(this, location).catch(err => err)
+  }
+  var appVue = new Vue({
+    router,
+    el: '#appVue',
+    components: {},
+    data () {
+      return {
+        treeData,
+        //定义全部的apps，后期可以改成接口获取
+        //_allAps: [], //默认从服务器获取应用列表，如果获取失败，则使用内置的Api
+        //左侧导航的数据
+        current: 'myapp',
+        loading: false,
+        visible: false,
+      }
+    },
+    mounted () {
 
-		Vue.prototype.$form = antd.Form
-    const wallPaper=require('../util/theme.js').wallPaper
-    const routes=require('./routes.js')
+      // if ((window.appsData == false && window.loaded)) {
+      // 	//未读取到appsData
+      // 	this.myApps = []
+      // 	window.appsData = {
+      // 		state: {
+      // 			myApps: []
+      // 		}
+      // 	}
+      // 	return
+      // } else {
+      // 	this.myApps = window.appsData.state.myApps
+      // }
+      this.myApps = []
+      this.load()
+      window.resetOtherTree = (tree = 'myapp',selectedKeys) => {
+        window.$trees.forEach((item)=>{
+          if(item.name!==tree){
+            item.comp.selectedValues=[]
+          }else{
+            item.comp.selectedValues=selectedKeys
+          }
+        })
+      }
 
-    const router = new VueRouter({
-      routes // (缩写) 相当于 routes: routes
-    })
-    const originalPush = VueRouter.prototype.push
-    VueRouter.prototype.push = function push(location) {
-      return originalPush.call(this, location).catch(err => err)
+    },
+    watch: {
+      openKeys (val) {
+        console.log('openKeys', val)
+      }
+    },
+    computed: {
+      allApps: {
+        get: function () {
+          if (typeof window.$appsApiData == 'undefined' || window.$appsApiData == null) {
+            return window.nativeData.allApps
+          }
+          return window.$appsApiData.allApps
+        }
+      },
+      appUpdateTime: {
+        get: function () {
+          if (typeof window.$appsApiData == 'undefined' || window.$appsApiData == null) {
+            return window.nativeData.updateTime
+          } else {
+            return window.$appsApiData.updateTime
+          }
+
+        }
+      }
+    },
+    methods: {
+      getCache (key) {
+        //todo 判断是否过期
+
+        if (!window.caches) {
+          return false
+        } else {
+          if (typeof window.caches != 'undefined')
+            return window.caches[key]
+        }
+      },
+      setCache (key, value, expire) {
+
+      },
+      //添加表单提交数据
+
+      showModal () {
+        this.visible = true
+      },
+
+      handleConfirmBlur (e) {
+        const value = e.target.value
+        this.confirmDirty = this.confirmDirty || !!value
+      },
+
+      setTab (tab) {
+        this.$router.push('/' + tab)
+        //this.current = tab
+      },
+      //发送消息给preload，调取selectTask的窗体
+      selectTask () {
+        postMessage({
+          'message': 'selectTask'
+        })
+      },
+      openShopcart () {
+        postMessage({
+          message: 'addTaskTabs',
+          tabs: this.shopcartApps
+        })
+        this.$message.success('成功在左侧栏添加了一组应用，本次共添加' + this.shopcartApps.length + '个应用。')
+      },
+      // 全部保存，目前不使用，会导致全部丢失
+      save () {
+        window.$appsRestore.saveToDB(this.myApps)
+      },
+      load: function () {
+        window.$appsRestore.restoreFromDB().then((data) => {
+          this.myApps = data
+          return data
+        }).catch(e => {
+          console.log(e)
+          this.myApps = []
+        })
+      }
     }
-		var appVue = new Vue({
-      router,
-			el: '#appVue',
-			components: {},
-			data() {
-				return {
-          treeData,
-					//定义全部的apps，后期可以改成接口获取
-					//_allAps: [], //默认从服务器获取应用列表，如果获取失败，则使用内置的Api
-					//左侧导航的数据
-					current: 'myapp',
-					loading: false,
-					visible: false,
-				}
-			},
-			mounted() {
+  })
+</script>
+<style>
+  tr:last-child td {
+    padding-bottom: 0;
+  }
 
-				// if ((window.appsData == false && window.loaded)) {
-				// 	//未读取到appsData
-				// 	this.myApps = []
-				// 	window.appsData = {
-				// 		state: {
-				// 			myApps: []
-				// 		}
-				// 	}
-				// 	return
-				// } else {
-				// 	this.myApps = window.appsData.state.myApps
-				// }
-				this.myApps=[]
-				this.load()
+  .group-apps .ant-card-bordered {
+    border: 1px solid #e8e8e8 !important;
+  }
 
-			},
-			watch: {
-				openKeys(val) {
-					console.log('openKeys', val);
-				}
-			},
-			computed: {
-				allApps: {
-					get: function() {
-						if (typeof window.$appsApiData == 'undefined' || window.$appsApiData == null) {
-							return window.nativeData.allApps
-						}
-						return window.$appsApiData.allApps
-					}
-				},
-				appUpdateTime: {
-					get: function() {
-						if (typeof window.$appsApiData == 'undefined' || window.$appsApiData == null) {
-							return window.nativeData.updateTime
-						} else {
-							return window.$appsApiData.updateTime
-						}
-
-					}
-				}
-			},
-			methods: {
-				getCache(key) {
-					//todo 判断是否过期
-
-					if (!window.caches) {
-						return false
-					} else {
-						if (typeof window.caches != 'undefined')
-							return window.caches[key]
-					}
-				},
-				setCache(key, value, expire) {
-
-				},
-				//添加表单提交数据
-
-				showModal() {
-					this.visible = true;
-				},
-
-				handleConfirmBlur(e) {
-					const value = e.target.value;
-					this.confirmDirty = this.confirmDirty || !!value;
-				},
-
-				setTab(tab) {
-          console.log(tab)
-          this.$router.push('/'+tab)
-					//this.current = tab
-				},
-				//发送消息给preload，调取selectTask的窗体
-				selectTask() {
-					postMessage({
-						'message': 'selectTask'
-					})
-				},
-				openShopcart() {
-					postMessage({
-						message: 'addTaskTabs',
-						tabs: this.shopcartApps
-					})
-					this.$message.success('成功在左侧栏添加了一组应用，本次共添加' + this.shopcartApps.length + '个应用。')
-				},
-				// 全部保存，目前不使用，会导致全部丢失
-				save(){
-					window.$appsRestore.saveToDB(this.myApps)
-				},
-				 load: function(){
-						 window.$appsRestore.restoreFromDB().then((data)=>{
-							this.myApps=data
-							return data
-						}).catch(e=>{
-							 console.log(e)
-							 this.myApps=[]
-						 })
-				}
-			}
-		})
-	</script>
-	<style>
-		tr:last-child td {
-			padding-bottom: 0;
-		}
-    .group-apps .ant-card-bordered {
-      border: 1px solid #e8e8e8 !important;
-    }
-    .ant-layout-sider{
-      box-shadow: 0 0 10px #999;
-      z-index: 1;
-      background-color: white;
-    }
-	</style>
+  .ant-layout-sider {
+    box-shadow: 0 0 10px #999;
+    z-index: 1;
+    background-color: white;
+  }
+</style>
 </html>

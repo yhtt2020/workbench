@@ -176,12 +176,12 @@ style="margin-bottom: 10px;"></a-avatar>
 module.exports = Vue.component('myapp-page', {
   name: 'myapp-page',
   template: myappTpl,
-  beforeRouteUpdate(to, from, next) {
-    this.listId=to.query.listId
+  beforeRouteUpdate (to, from, next) {
+    this.listId = to.query.listId
   },
   data () {
     return {
-      listId:this.$route.query.listId,
+      listId: this.$route.query.listId,
       visible: false,
       myApps: [],
       //表单布局用字段
