@@ -1,11 +1,12 @@
 const groupTpl = `
 <div>
-<a-tree :tree-data="groupLists" :block-node="true" show-icon :default-selected-keys="['local']"
+<a-tree :tree-data="groupLists" :block-node="true" show-icon :selected-keys="selectedValues"
         @select="onSelect"
         >
-        <a-avatar slot="folder" shape="square" style="width: 1.2em;height: auto " src="../../icons/svg/team.svg"></a-avatar>
-          <a-avatar slot="list-icon" shape="square" style="width: 1.3em;height: auto " src="../../icons/svg/plan.svg"></a-avatar>
-           <a-avatar slot="group-icon" shape="square" style="width: 1.3em;height: auto " src="../../icons/svg/team.svg"></a-avatar>
+         <a-avatar class="tree-icon" slot="folder-text" shape="square" src="../../icons/svg/foldertext.svg"></a-avatar>
+        <a-avatar slot="folder" shape="square" class="tree-icon" src="../../icons/svg/team.svg"></a-avatar>
+          <a-avatar slot="list-icon" shape="square" class="tree-icon" src="../../icons/svg/plan.svg"></a-avatar>
+           <a-avatar slot="group-icon" shape="square" class="tree-icon" src="../../icons/svg/team.svg"></a-avatar>
          <template #title="{ key: treeKey, title }">
       <a-dropdown :trigger="['contextmenu']" @visibleChange="checkMenuDisable($event,treeKey)">
         <span>{{ title }}</span>
@@ -50,13 +51,14 @@ Vue.component('group-comp', {
       disableCopy: false,
       disableRename: false,
       disableDelete: false,
+      selectedValues:[],
       handleNameInput: () => {},
       groupLists: [
         {
           title: '团队列表',
           key: 'group',
           slots: {
-            icon: 'folder'
+            icon: 'folder-text'
           },
           children: [{
             title:"想天销售部",
@@ -77,16 +79,14 @@ Vue.component('group-comp', {
         }]
     }
   }, mounted () {
-    let that = this
-    appList.list().then(data => {
-      data.forEach((item) => {
-        that.myAppsLists[0].children.push(appList.convertTreeNode(item))
-      })
+    window.$trees.push({
+      name:'group',
+      comp:this
     })
   },
   methods: {
     onSelect (selectedKeys, info) {
-      window.tab = selectedKeys[0]
+      resetOtherTree('group',selectedKeys)
       this.$emit('get-tab', window.tab)
     },
     onContextMenuClick (treeKey, menuKey) {

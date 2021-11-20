@@ -2,8 +2,8 @@ const localTpl = `
 <div>
 <a-tree ref="myappTree" :tree-data="myAppsLists" :block-node="true" show-icon :selected-keys="selectedValues"
         @select="onSelect" >
-            <a-avatar slot="folder" shape="square" style="width: 1.3em;height: auto " src="../../icons/svg/folder.svg"></a-avatar>
-          <a-avatar slot="list-icon" shape="square" style="width: 1.3em;height: auto " src="../../icons/svg/plan.svg"></a-avatar>
+            <a-avatar slot="folder" shape="square" class="tree-icon" src="../../icons/svg/folder.svg"></a-avatar>
+          <a-avatar slot="list-icon" shape="square" class="tree-icon" src="../../icons/svg/plan.svg"></a-avatar>
           <template #title="{ key: treeKey, title }">
       <a-dropdown :trigger="['contextmenu']" @visibleChange="checkMenuDisable($event,treeKey)">
         <span>{{ title }}</span>

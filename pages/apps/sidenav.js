@@ -136,12 +136,7 @@ Vue.component('sidenav', {
   },
   template: tpl,
   mounted(){
-    let that=this
-    appList.list().then(data=>{
-      data.forEach((item)=>{
-        that.myAppsLists.children.push(appList.convertTreeNode(item))
-      })
-    })
+
   },
   methods: {
     getTab(){

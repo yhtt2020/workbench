@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-cn">
 <head>
   <meta charset="utf-8">
   <title>网址导航</title>
@@ -19,7 +19,7 @@
   <div class="">
     <a-layout style="height: 100vh;" :trigger="null">
       <a-layout-sider style="background-color: white;">
-        <sidenav @get-tab="setTab"/>
+        <sidenav @get-tab="setTab"></sidenav>
       </a-layout-sider>
       <router-view></router-view>
       <a-layout class="wall" v-show="current==='myapp'" style="background: white">
@@ -63,7 +63,7 @@
       </template>
       <a-input>
         <a-button slot="suffix" style="margin-right: -12px" class="search-btn" size="large" type="primary">
-          <a-icon type="search"/>
+          <a-icon type="search"></a-icon>
         </a-button>
       </a-input>
     </a-auto-complete>
@@ -109,7 +109,7 @@
   VueRouter.prototype.push = function push (location) {
     return originalPush.call(this, location).catch(err => err)
   }
-  var appVue = new Vue({
+  const appVue = new Vue({
     router,
     el: '#appVue',
     components: {},
@@ -140,12 +140,13 @@
       // }
       this.myApps = []
       this.load()
-      window.resetOtherTree = (tree = 'myapp',selectedKeys) => {
-        window.$trees.forEach((item)=>{
-          if(item.name!==tree){
-            item.comp.selectedValues=[]
-          }else{
-            item.comp.selectedValues=selectedKeys
+      //重新设置其他树状菜单，防止同时选中多个树状结构
+      window.resetOtherTree = (tree = 'myapp', selectedKeys) => {
+        window.$trees.forEach((item) => {
+          if (item.name !== tree) {
+            item.comp.selectedValues = []
+          } else {
+            item.comp.selectedValues = selectedKeys
           }
         })
       }
