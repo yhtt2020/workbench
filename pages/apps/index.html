@@ -18,7 +18,8 @@
 <div id="appVue">
   <div class="">
     <a-layout style="height: 100vh;" :trigger="null">
-      <a-layout-sider style="background-color: white;">
+      <a-layout-sider style="background-color: white;overflow-y: auto;
+    overflow-x: hidden;">
         <sidenav @get-tab="setTab"></sidenav>
       </a-layout-sider>
       <router-view></router-view>

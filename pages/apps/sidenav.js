@@ -52,43 +52,7 @@ const tpl = `
 </div>
 
 `
-const {appList,treeUtil}=require('../util/appList.js')
-const treeData = [
- {
-    title: '个人云导航',
-    key: 'cloud',
-    slots: {
-      icon: 'cloud',
-    },
-    children: [
-      {
-        key:'cloud_1',
-        title: '开发专用'
-      },
-      {
-        key:'cloud_2',
-        title: '视频剪辑'
-      },
-      {
-        key:'cloud_3',
-        title: '12大框架'
-      }
-    ]
-  }, {
-    title: '团队导航',
-    key: 'group',
 
-    slots: {
-      icon: 'team',
-    },
-    children: [
-          { title: '人人都是产品经理', key: 'group_1' ,slots: { icon: 'global' }},
-          { title: '少数派Plus', key: 'group_2' ,slots: { icon: 'global' }},
-          { title: '产研部', key: 'group_3' ,slots: { icon: 'lock' }},
-          { title: '销售部', key: 'group_4',slots: { icon: 'lock' } },
-    ],
-  },
-]
 const getNameInputValue=function (){
   return document.getElementById('nameInput').value
 }
@@ -101,7 +65,6 @@ Vue.component('sidenav', {
   data () {
     return {
       current: ['myapp'],
-      treeData,
       //创建列表的弹窗可见
       createListVisible:false,
       createTitle:'',//创建列表的标题
@@ -116,14 +79,7 @@ Vue.component('sidenav', {
       //下面是数据暂存属性
 
 
-      groupLists:{
-        title:'团队导航',
-        key:'group',
-        slots:{
-          icon:'team'
-        },
-        children:[]
-      },
+
       cloudLists:{
         title:'云端导航',
         key:'cloud',
