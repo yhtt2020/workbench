@@ -50,6 +50,13 @@ window.addEventListener('message', function (e) {
     case 'toTask-addTab':
       ipc.send('toTask-addTab', { taskId: e.data.taskId, tabIndex: e.data.tabIndex, tab: e.data.addTab })
       break
+    case 'refresh':
+      ipc.send('refresh')
+      break
+    case 'endMoveApps':
+      ipc.send('closeTaskSelect')
+      ipc.send('refresh')
+      break
   }
 })
 

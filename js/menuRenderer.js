@@ -102,8 +102,8 @@ module.exports = {
         url: arg.tab.url,
         title: arg.tab.name
       }, {}, arg.tabIndex)
-      console.log(tasks, '__taskins__')
-      console.log(arg, '__传到了browserUI__')
+      // console.log(tasks, '__taskins__')
+      // console.log(arg, '__传到了browserUI__')
     })
 
     ipc.on('saveCurrentPage', async function () {

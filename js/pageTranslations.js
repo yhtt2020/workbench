@@ -107,6 +107,7 @@ const pageTranslations = {
     }
     webviews.callAsync(tabId, 'send', ['translate-page', language])
   },
+  //翻译请求接口
   makeTranslationRequest: async function (tab, data) {
     const requestOptions = {
       method: 'POST',
