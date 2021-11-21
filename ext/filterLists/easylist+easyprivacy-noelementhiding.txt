@@ -2460,7 +2460,7 @@
 /ads/banner?
 /ads/banner_
 /ads/banners/*
-/ads/base.
+/ads/baseApi.
 /ads/beacon.
 /ads/behicon.
 /ads/bg_
@@ -42545,7 +42545,7 @@ $third-party,xmlhttprequest,domain=opensubtitles.org
 ||tracker.euroweb.net^
 ||tracker.winload.de^
 ||tracking-opi.fonpit.de^
-||tracking.base.de^
+||tracking.baseApi.de^
 ||tracking.emsmobile.de^
 ||tracking.gameforge.de^
 ||tracking.hannoversche.de^
@@ -47980,7 +47980,7 @@ ytics.disneyplus.com^
 ||metrics.baitoru.com^
 ||metrics.barclaycardus.com^
 ||metrics.barclays.co.uk^
-||metrics.base.be^
+||metrics.baseApi.be^
 ||metrics.be.carrefour.eu^
 ||metrics.beatsbydre.com^
 ||metrics.bestrecipes.com.au^
@@ -48201,7 +48201,7 @@ ytics.disneyplus.com^
 ||metrics.polivy.com^
 ||metrics.popularwoodworking.com^
 ||metrics.postoffice.co.uk^
-||metrics.prd.base.be^
+||metrics.prd.baseApi.be^
 ||metrics.privilege.com^
 ||metrics.professionnels.roche.fr^
 ||metrics.prudential.com^
@@ -53077,7 +53077,7 @@ ytics.disneyplus.com^
 ||ard.de/ard.gif
 ||arlt.com^*/econda/
 ||arte.tv^*=countstats,
-||as.base.de^
+||as.baseApi.de^
 ||as.mirapodo.de^
 ||as.mytoys.de^
 ||as.yomonda.de^
@@ -53189,7 +53189,7 @@ ytics.disneyplus.com^
 ||ht4u.net^*/blackpixel2.php
 ||inside-channels.ch^*/ping/
 ||inside-it.ch^*/ping/
-||is.base.de^
+||is.baseApi.de^
 ||jobanova.de/stats.php?
 ||jobs.ch^*/track/
 ||jolie.de^*/pic.gif?
@@ -53258,7 +53258,7 @@ ytics.disneyplus.com^
 ||pooltrax.com/stats/
 ||powercount.jswelt.de^
 ||preisvergleich.de/setcookie/
-||proactive.base.de^
+||proactive.baseApi.de^
 ||putpat.tv/tracking?
 ||px.derstandard.at^
 ||pxc.otto.de^

@@ -22,27 +22,6 @@
         <sidenav @get-tab="setTab"></sidenav>
       </a-layout-sider>
       <router-view></router-view>
-      <a-layout class="wall" v-show="current==='myapp'" style="background: white">
-      </a-layout>
-      <a-layout v-show="current==='group'">
-        <a-layout-header style="background: #fff; padding: 0">
-          <template>
-            <div>
-              <a-page-header style="border: none;" title="团队导航"
-                             sub-title="我的全部团队">
-              </a-page-header>
-              <br/>
-            </div>
-          </template>
-        </a-layout-header>
-        <a-layout-content>
-          <template>
-            <div style="background-color: white; padding: 20px;" class="group-apps">
-              <groups></groups>
-            </div>
-          </template>
-        </a-layout-content>
-      </a-layout>
     </a-layout>
   </div>
 </div>
@@ -72,7 +51,7 @@
 
 
 <script src="./sidenav.js"></script>
-<script src="./groups.js"></script>
+<script src="comp/groups.js"></script>
 <script src="./search.js"></script>
 
 <script>
@@ -125,19 +104,6 @@
       }
     },
     mounted () {
-
-      // if ((window.appsData == false && window.loaded)) {
-      // 	//未读取到appsData
-      // 	this.myApps = []
-      // 	window.appsData = {
-      // 		state: {
-      // 			myApps: []
-      // 		}
-      // 	}
-      // 	return
-      // } else {
-      // 	this.myApps = window.appsData.state.myApps
-      // }
       this.myApps = []
       this.load()
       //重新设置其他树状菜单，防止同时选中多个树状结构

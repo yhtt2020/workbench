@@ -5,14 +5,17 @@ const groupTpl = `
         >
          <a-avatar class="tree-icon" slot="folder-text" shape="square" src="../../icons/svg/foldertext.svg"></a-avatar>
         <a-avatar slot="folder" shape="square" class="tree-icon" src="../../icons/svg/team.svg"></a-avatar>
-          <a-avatar slot="list-icon" shape="square" class="tree-icon" src="../../icons/svg/plan.svg"></a-avatar>
-           <a-avatar slot="group-icon" shape="square" class="tree-icon" src="../../icons/svg/team.svg"></a-avatar>
+        <a-avatar slot="list-icon" shape="square" class="tree-icon" src="../../icons/svg/plan.svg"></a-avatar>
+        <a-avatar slot="group-icon" shape="square" class="tree-icon" src="../../icons/svg/team.svg"></a-avatar>
+          <template slot="custom" slot-scope="item">
+                <a-avatar shape="square" class="tree-icon" :src="item.logo"></a-avatar>
+            </template>
          <template #title="{ key: treeKey, title }">
       <a-dropdown :trigger="['contextmenu']" @visibleChange="checkMenuDisable($event,treeKey)">
         <span>{{ title }}</span>
         <template #overlay>
           <a-menu @click="({ key: menuKey }) => onContextMenuClick(treeKey, menuKey)">
-            <a-menu-item key="createList" :disabled="disableCreate"><a-icon type="plus-square"></a-icon>  创建列表</a-menu-item>
+            <a-menu-item key="createList" :disabled="disableCreate"><a-icon type="plus-square"></a-icon>创建列表</a-menu-item>
             <a-menu-item key="createChildList" :disabled="disableCreateChild"><a-icon type="plus-circle"></a-icon>  创建子列表</a-menu-item>
             <a-menu-item key="copyList" :disabled="disableCopy"><a-icon type="copy"></a-icon>  复制列表</a-menu-item>
             <a-menu-item key="renameList" :disabled="disableRename"><a-icon type="edit"></a-icon> 重命名列表</a-menu-item>
@@ -33,7 +36,8 @@ const groupTpl = `
 </div>
   `
 const { appList, treeUtil } = require('../../util/appList.js')
-
+const groupApi = require('../../util/api/groupApi')
+const groupModel = require('../../util/model/groupModel')
 const getNameInputValue = function () {
   return document.getElementById('nameInput').value
 }
@@ -51,7 +55,7 @@ Vue.component('group-comp', {
       disableCopy: false,
       disableRename: false,
       disableDelete: false,
-      selectedValues:[],
+      selectedValues: [],
       handleNameInput: () => {},
       groupLists: [
         {
@@ -60,34 +64,46 @@ Vue.component('group-comp', {
           slots: {
             icon: 'folder-text'
           },
-          children: [{
-            title:"想天销售部",
-            key:'12',
-            slots:{
-              icon:'group-icon'
+          children: [
+          //   {
+          //   title: '想天销售部',
+          //   key: '12',
+          //   slots: {
+          //     icon: 'group-icon'
+          //
+          //   },
+          //   children: [{
+          //     title: '部门常用网站',
+          //     key: '13',
+          //     slots: {
+          //       icon: 'list-icon'
+          //     }
+          //   }]
+          //
+          // }
+          ]
 
-            },
-            children:[{
-              title:'部门常用网站',
-              key:"13",
-              slots:{
-                icon:'list-icon'
-              }
-            }]
-
-          }]
         }]
     }
   }, mounted () {
+    const that=this
     window.$trees.push({
-      name:'group',
-      comp:this
+      name: 'group',
+      comp: this
     })
+     groupModel.getMyList().then(data=>{
+       data.data.forEach(item=>{
+         that.groupLists[0].children.push(groupModel.convertTreeNode(item))
+       })
+     })
+
   },
   methods: {
     onSelect (selectedKeys, info) {
-      resetOtherTree('group',selectedKeys)
-      this.$emit('get-tab', window.tab)
+      resetOtherTree('group', selectedKeys)
+      this.$router.push({ path: '/group', query: { listId: selectedKeys[0] } })
+      console.log('go')
+     // this.$emit('get-tab', window.tab)
     },
     onContextMenuClick (treeKey, menuKey) {
       if (menuKey === 'createList') {
