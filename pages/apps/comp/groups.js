@@ -1,7 +1,7 @@
 const tpls = `
 <div>
 <a-row :gutter="24">
-                    <a-col v-for="group in myGroups" :span="6" >
+                    <a-col v-for="(group,index) in myGroups" :key="index" :span="6" >
                       <a-card   hoverable style="margin-bottom: 10px" >
 <!--                        <img-->
 <!--                          slot="cover"-->
@@ -38,12 +38,10 @@ Vue.component('groups', {
   },
   data () {
     return {
-      groups
     }
   },
   template: tpls,
   mounted(){
-    console.log(this.myGroups)
   },
   methods: {
 

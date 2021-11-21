@@ -102,8 +102,6 @@ Vue.component('group-comp', {
     onSelect (selectedKeys, info) {
       resetOtherTree('group', selectedKeys)
       this.$router.push({ path: '/group', query: { listId: selectedKeys[0] } })
-      console.log('go')
-     // this.$emit('get-tab', window.tab)
     },
     onContextMenuClick (treeKey, menuKey) {
       if (menuKey === 'createList') {

@@ -41,9 +41,7 @@ const appstoreTpl =
     min-height: 800px;">
         <a-tabs default-active-key="productive" tab-position="left"
         :style="{ height: '100%' }">
-        <a-tab-pane v-for="(type, indexType) in allApps" :key="type.name"
-        :tab="type.title">
-
+        <a-tab-pane v-for="(type, indexType) in allApps" :key="type.name" :tab="type.title">
         <a-card :title="type.title" style="padding: 10px;">
         <a-card-grid
         :class="{'app':true,'app-goods':true,'added':shopcartApps.indexOf(app)!=-1,'in-myApps':checkInMyApps(app)!=-1}"
@@ -57,6 +55,10 @@ const appstoreTpl =
         {{ app.summary }}
       </template>
     </a-card-meta>
+    </a-card-grid>
+    </a-card>
+    </a-tab-pane>
+    </a-tabs>
 
     <div class="mask" v-show='currentApp== app '>
       <div class="inner-wrapper" style="">
@@ -213,6 +215,7 @@ module.exports = Vue.component('appstore-page', {
       visibleCart: false,
       quickDrawerVisible: false,
       btnText: '添加收藏',
+      app:{}
     }
   },
   computed: {
