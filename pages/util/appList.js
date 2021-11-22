@@ -5,19 +5,19 @@ const appList = {
     return db.appList.toArray()
   },
   add: async (appList) => {
-    db.appList.put(appList)
+    return await db.appList.put(appList)
   },
   convertTreeNode: (appList) => {
     let item = {}
     item.title = appList.name
-    item.key =  appList.id
+    item.key =  Number(appList.id)
     item.slots = {
       icon: 'list-icon'
     }
     return item
   },
   put:async(data)=>{
-    db.appList.put(data)
+    return await db.appList.put(data)
   },
   delete:async(id)=>{
     db.appList.delete(id)

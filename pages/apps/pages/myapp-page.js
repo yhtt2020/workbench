@@ -6,14 +6,14 @@ myappTpl =
       <a-page-header title="本地导航" sub-title="本地导航可能由于软件重装、卸载、系统重装等原因丢失，建议使用云端导航，此处仅做临时存储使用。"/>
     </a-layout-header>
     <a-layout-content>
-      {{listId}}
+<!--      {{listId}}-->
       <div style="padding: 20px;text-align: left;padding: 10px;margin:20px">
         <!-- <div style="text-align: center;margin:20px">
           <search />
         </div> -->
         <div>
           <a-card>
-            <a class="add-button" slot="extra" @click="showModal">添加网站</a>
+            <a-button type="primary" shape="round" class="add-button" slot="extra" @click="showModal">添加网站</a-button>
             <a-dropdown v-for="(app, index) in myApps" :trigger="['contextmenu']">
               <a-card-grid class="app" style="cursor: pointer;"
                            @click="addTask(app)">
@@ -173,12 +173,22 @@ myappTpl =
 </div>
 
 `
-
+function parseNumber(str){
+  const num=Number(str)
+  return isNaN(num)?0:num
+}
 module.exports = Vue.component('myapp-page', {
   name: 'myapp-page',
   template: myappTpl,
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      vm.listId=parseNumber(to.query.listId)// 通过 `vm` 访问组件实例
+      vm.load()
+    })
+  },
   beforeRouteUpdate (to, from, next) {
-    this.listId = to.query.listId
+    this.listId=parseNumber(to.query.listId)
+    this.load()
   },
   data () {
     return {
@@ -244,7 +254,56 @@ module.exports = Vue.component('myapp-page', {
       name: 'register'
     })
   },
-  methods: {
+  methods: {//判断是否是我的应用
+    //添加应用到任务栏
+    addTask(app) {
+      postMessage({
+        message: 'addTask',
+        name: app.name,
+        url: app.url,
+        icon: app.icon
+      })
+      this.$message.success('成功在左侧栏添加了应用：' + app.name + '。')
+    },
+    isInMyApps() {
+
+      if (this.currentApp == null) {
+        return -1
+      }
+      let apps = this.myApps
+      let app = this.currentApp
+      let findIndex = -1
+      apps.forEach(function(item, index) {
+        if (item.name == app.name)
+          findIndex = index
+      })
+      return findIndex
+
+    },
+    addCurrentApp() {
+      let that = this
+      let app = this.currentApp
+      let index = this.isInMyApps(app)
+      if (index != -1) {
+        this.myApps.splice(index, 1)
+        that.$message.warning('移除了应用：' + app.name + '')
+        window.$appsRestore.deleteApp(app.name)
+        this.btnText = '添加收藏'
+      } else {
+        let apps = this.myApps;
+        apps.unshift(app)
+        this.myApps = apps
+        this.btnText = '移出收藏'
+
+        app.listId=this.listId
+        window.$appsRestore.addApp(app)
+        this.$message.success('添加了应用：' + app.name)
+      }
+    },
+    addApp(app) {
+      this.currentApp = app
+      this.addCurrentApp()
+    },
     handleSubmit (e) {
       e.preventDefault()
       let that = this
@@ -278,7 +337,7 @@ module.exports = Vue.component('myapp-page', {
       this.visible = true
     },
     load: function () {
-      window.$appsRestore.restoreFromDB().then((data) => {
+      window.$appsRestore.restoreFromDB(this.listId).then((data) => {
         this.myApps = data
         return data
       }).catch(e => {
