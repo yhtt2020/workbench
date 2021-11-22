@@ -427,7 +427,6 @@ html {
 .adialog {
   background: white;
   border-radius: 8px;
-  padding: 20px;
   height: 500px;
 
   .ant-page-header-heading {
@@ -441,6 +440,7 @@ html {
     height: 34px;
     overflow: hidden;
   }
+
   .ant-card {
     background-color: #00000000;
     border: none;

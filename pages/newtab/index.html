@@ -340,10 +340,11 @@
 
       <template id="appstore">
         <div>
-          <a-modal v-model="adVisible" title="应用中心" :width="700" :footer="null" :mask="false" :mask-closable="false">
+          <a-modal body-style="height: 700px;" v-model="adVisible" title="应用中心" :width="700"  :footer="null" :mask="false" :mask-closable="false">
             <div class="adialog">
-              <a-tabs default-active-key="productive" tab-position="left" :style="{ height: '100%' }">
+              <a-tabs default-active-key="productive" tab-position="left" :style="{ height: '650px' }">
                 <a-tab-pane  v-for="(type, indexType) in allApps" :key="type.name" :tab="type.title">
+                  <div style="overflow-y: auto;max-height: 650px">
                   <a-card :title="type.title" style="padding: 10px">
                     <a-card-grid :class="{'app':true,'app-goods':true}" v-for="(app, indexApp) in type.apps" draggable="true" @dragstart="setDrag($event,app)">
                       <a :href="app.url">
@@ -354,6 +355,7 @@
                       </a>
                     </a-card-grid>
                   </a-card>
+                  </div>
                 </a-tab-pane>
               </a-tabs>
             </div>

@@ -67,9 +67,10 @@ myappTpl =
                   <a-tabs default-active-key="productive" tab-position="left"
                           :style="{ height: '600px' }">
                     <a-tab-pane v-for="(type, indexType) in allApps" :key="type.name"
-                                :tab="type.title">
+                                :tab="type.title" >
 
-                      <a-card :title="type.title" style="padding: 10px;">
+                <div style="overflow-y: auto;max-height: 600px">
+                <a-card :title="type.title" style="padding: 10px;">
                         <a-card-grid style="width: 140px;cursor: pointer;"
                                      v-for="(app, indexApp) in type.apps" class="app"
                                      @click="addApp(app)">
@@ -83,6 +84,8 @@ myappTpl =
                         </a-card-grid>
 
                       </a-card>
+</div>
+
                     </a-tab-pane>
                   </a-tabs>
                 </div>
