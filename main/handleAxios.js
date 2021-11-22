@@ -32,5 +32,18 @@ module.exports = {
       })
       storage.removeItem(`userToken`);
     })
+    //获取百度翻译参数
+    ipc.on('getBaiduTranslate', async(event, arg)=> {
+      const result = await axios({
+        method: 'get',
+        url: `/app/baiduTranslate`
+      })
+      console.log(result, '_gagagag_')
+      if(result.code === 1000) {
+        storage.setItem(`baiduAppId`, result.data.appId)
+        storage.setItem(`baiduSecretKey`, result.data.secretKey)
+      }
+      console.log(storage.getAll(), '__ALLLLLL__')
+    })
   }
 }
