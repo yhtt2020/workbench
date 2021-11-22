@@ -32,28 +32,11 @@ const appsRestore = {
   },
   // 从数据库读取
   restoreFromDB: async function (listId) {
-    try {
-      //循环处理一下一些没存时间或者没存sort的对象，进行纠错
-      var needFilled=[]
-       //console.log(await db.myApps.where("addTime").equals(null).toArray())
-      await db.myApps.each(async item=>{
-        if(typeof item.addTime == 'undefined' ||typeof item.sort=='undefined' || typeof item.listId=='undefined'){
-          let i=item
-          if(typeof item.addTime=='undefined')
-            i.addTime=Date.now()
-          if(typeof item.sort=='undefined')
-            i.sort=0
-          if(typeof item.listId=='undefined'){
-            i.listId=0
-          }
-          needFilled.push(i)
-          console.log(i)
-        }
-      })
-      await db.myApps.bulkPut(needFilled)
-      //await db.myApps.where('addTime').equals(undefined).modify({ 'addTime':Date.now() })
-      let s = await db.myApps.where({listId:listId}).desc('order').toArray()
-      return s
+    try{
+      if(typeof listId==="undefined"){
+        listId=0
+      }
+      return await db.myApps.where({listId:listId}).desc('order').toArray()
     } catch (e) {
       console.log(e)
       return []

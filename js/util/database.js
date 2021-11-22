@@ -28,8 +28,23 @@ db.version(123).stores({
   system: '++id,&name,value',
   dockApps:'++id,name,url,icon,order',
   appList:'++id,name,createTime,updateTime,order,summary,appsCount,parentId'//应用列表
+}).upgrade(trans=> {
+  let needFilled = []
+  trans.myApps.each(async item => {
+    if (typeof item.addTime == 'undefined' || typeof item.sort == 'undefined' || typeof item.listId == 'undefined') {
+      let i = item
+      if (typeof item.addTime == 'undefined')
+        i.addTime = Date.now()
+      if (typeof item.sort == 'undefined')
+        i.sort = 0
+      if (typeof item.listId == 'undefined') {
+        i.listId = 0
+      }
+      needFilled.push(i)
+    }
+  })
+  trans.myApps.bulkPut(needFilled)
 })
-
 /*system的keyalue的值备注*/
 //currentUser 当前登陆的user
 
