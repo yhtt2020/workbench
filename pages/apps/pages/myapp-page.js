@@ -184,7 +184,9 @@ module.exports = Vue.component('myapp-page', {
   name: 'myapp-page',
   template: myappTpl,
   beforeRouteEnter (to, from, next) {
+    console.log(to)
     next(vm => {
+      vm.myApps = []
       vm.listId=parseNumber(to.query.listId)// 通过 `vm` 访问组件实例
       vm.load()
     })
@@ -249,8 +251,8 @@ module.exports = Vue.component('myapp-page', {
     }
   },
   mounted () {
-    this.myApps = []
-    this.load()
+    // this.myApps = []
+    // this.load()
   },
   beforeCreate () {
     this.form = this.$form.createForm(this, {

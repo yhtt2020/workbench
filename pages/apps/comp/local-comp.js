@@ -77,11 +77,14 @@ Vue.component('local-comp', {
   methods: {
     onSelect (selectedKeys, info) {
       let jump=0
-      if(selectedKeys[0]==="myapp"){
+      console.log(selectedKeys)
+      if(isNaN(Number(selectedKeys[0]))){
+        console.log(selectedKeys)
         jump=0
       }else{
-        jump=selectedKeys[0]
+        jump=Number(selectedKeys[0])
       }
+      console.log(jump)
       this.$router.push({path:'/myapp',query: { listId: jump}})
       resetOtherTree('myapp',selectedKeys)
     },
