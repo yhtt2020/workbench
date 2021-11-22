@@ -76,7 +76,13 @@ Vue.component('local-comp', {
   },
   methods: {
     onSelect (selectedKeys, info) {
-      this.$router.push({path:'/myapp',query: { listId: selectedKeys[0]}})
+      let jump=0
+      if(selectedKeys[0]==="myapp"){
+        jump=0
+      }else{
+        jump=selectedKeys[0]
+      }
+      this.$router.push({path:'/myapp',query: { listId: jump}})
       resetOtherTree('myapp',selectedKeys)
     },
     onContextMenuClick (treeKey, menuKey) {
@@ -144,7 +150,7 @@ Vue.component('local-comp', {
      */
     handleMenuCreateList (treeKey) {
       let that = this
-      this.createList(function () {
+      this.createList(async function () {
         let name = getNameInputValue()
         let list = {}
         list.name = name
@@ -158,15 +164,18 @@ Vue.component('local-comp', {
           appVue.$message.error({ content: '请输入列表名称。' })
           return
         }
-        appList.add(list).then(data => {
+          appList.add(list).then(data => {
           appVue.$message.success({ content: '添加列表成功。' })
           that.myAppsLists[0].children.push(appList.convertTreeNode(list))
           that.createListVisible = false
-        }, () => {
-          appVue.$message.error({ content: '添加列表失败。' })
-        }).catch(err => {
-          console.log(err)
-        })
+          }, () => {
+            appVue.$message.error({ content: '添加列表失败。' })
+
+          }).catch(err => {
+            console.log(err)
+          })
+
+
       }, '本地列表', '本地')
     },
 
