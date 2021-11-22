@@ -24,21 +24,22 @@ Vue.component('appstore-comp', {
           slots: {
             icon: 'folder'
           },
-          children: [{
-            title: '办公导航',
-            key: '123',
-            slots: {
-              icon: 'list-icon'
-            }
-          },
-            {
-              title: '程序员导航',
-              key: '1223',
-              slots: {
-                icon: 'list-icon'
-              }
-            }
-        ]}
+        //   children: [{
+        //     title: '办公导航',
+        //     key: '123',
+        //     slots: {
+        //       icon: 'list-icon'
+        //     }
+        //   },
+        //     {
+        //       title: '程序员导航',
+        //       key: '1223',
+        //       slots: {
+        //         icon: 'list-icon'
+        //       }
+        //     }
+        // ]
+        }
 
   ]
   }

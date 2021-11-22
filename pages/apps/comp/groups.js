@@ -8,11 +8,11 @@ const tpls = `
 <!--                          alt="example"-->
 <!--                          src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"-->
 <!--                        />-->
-                        <template slot="actions" class="ant-card-actions">
-                          <a-icon key="setting" title="查看导航" type="appstore" ></a-icon>
-                          <a-icon key="power-off" type="poweroff" ></a-icon>
-                          <a-icon key="ellipsis" type="ellipsis"></a-icon>
-                        </template>
+<!--                        <template slot="actions" class="ant-card-actions">-->
+<!--                          <a-icon key="setting" title="查看导航" type="appstore" ></a-icon>-->
+<!--                          <a-icon key="power-off" type="poweroff" ></a-icon>-->
+<!--                          <a-icon key="ellipsis" type="ellipsis"></a-icon>-->
+<!--                        </template>-->
                         <a-card-meta :title="group.name" >
                          <div slot="description">
                           <a-icon :type="group.type=='public'?'global':'lock'"></a-icon>&nbsp;{{ group.type=='public'?'公开团队':'私密团队'}}
