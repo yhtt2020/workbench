@@ -55,12 +55,7 @@ const appstoreTpl =
         {{ app.summary }}
       </template>
     </a-card-meta>
-    </a-card-grid>
-    </a-card>
-    </a-tab-pane>
-    </a-tabs>
-
-    <div class="mask" v-show='currentApp== app '>
+     <div class="mask" v-show='currentApp== app '>
       <div class="inner-wrapper" style="">
 
         <a-button v-if="checkInMyApps(app)==-1"
@@ -94,6 +89,12 @@ const appstoreTpl =
 </a-button>
 </div>
 </div>
+    </a-card-grid>
+    </a-card>
+    </a-tab-pane>
+    </a-tabs>
+
+
 </a-card-grid>
 </a-tab-pane>
 </a-card>
@@ -247,13 +248,13 @@ module.exports = Vue.component('appstore-page', {
       this.visible = true
     },
     load: function () {
-      window.$appsRestore.restoreFromDB().then((data) => {
-        this.myApps = data
-        return data
-      }).catch(e => {
-        console.log(e)
-        this.myApps = []
-      })
+      // window.$appsRestore.restoreFromDB().then((data) => {
+      //   this.myApps = data
+      //   return data
+      // }).catch(e => {
+      //   console.log(e)
+      //   this.myApps = []
+      // })
     },
     showDrawer(app) {
       this.drawerApp = null
@@ -371,6 +372,19 @@ module.exports = Vue.component('appstore-page', {
         icon: app.icon
       })
       this.$message.success('成功在左侧栏添加了应用：' + app.name + '。')
+    },
+    //发送消息给preload，调取selectTask的窗体
+    selectTask() {
+      postMessage({
+        'message': 'selectTask'
+      })
+    },
+    openShopcart() {
+      postMessage({
+        message: 'addTaskTabs',
+        tabs: this.shopcartApps
+      })
+      this.$message.success('成功在左侧栏添加了一组应用，本次共添加' + this.shopcartApps.length + '个应用。')
     }
   }
 })
