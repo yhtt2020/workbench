@@ -376,7 +376,8 @@ module.exports = Vue.component('appstore-page', {
     //发送消息给preload，调取selectTask的窗体
     selectTask() {
       postMessage({
-        'message': 'selectTask'
+        'message': 'selectTask',
+        tabs: this.shopcartApps
       })
     },
     openShopcart() {

@@ -3,6 +3,7 @@ const { config, api } = require('../../server-config')
 
 axios.defaults.baseURL = config.PROD_NODE_SERVER_BASE_URL;
 //axios.defaults.baseURL = config.DEV_NODE_SERVER_BASE_URL;
+//axios.defaults.baseURL = 'http://127.0.0.1:8001'
 //<!--强制使用node模块。-->
 axios.defaults.adapter = require('axios/lib/adapters/http');
 
