@@ -175,13 +175,14 @@
       //发送消息给preload，调取selectTask的窗体
       selectTask () {
         postMessage({
-          'message': 'selectTask'
+          'message': 'selectTask',
+          tabs: this.shopcartApps
         })
       },
       openShopcart () {
         postMessage({
           message: 'addTaskTabs',
-          tabs: this.shopcartApps
+
         })
         this.$message.success('成功在左侧栏添加了一组应用，本次共添加' + this.shopcartApps.length + '个应用。')
       },
