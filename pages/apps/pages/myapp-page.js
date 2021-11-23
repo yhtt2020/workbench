@@ -5,14 +5,18 @@ myappTpl =
     <a-layout-header style="background: #fff; padding: 0">
       <a-page-header title="本地导航" sub-title="本地导航可能由于软件重装、卸载、系统重装等原因丢失，建议使用云端导航，此处仅做临时存储使用。">
        <template slot="extra">
-            <a-button-group>
-              <a-button>
-                <a-icon type="appstore"></a-icon>
-              </a-button>
-              <a-button>  <a-icon type="table"></a-icon></a-button>
-              <a-button>  <a-icon type="bars"></a-icon>
-              </a-button>
-            </a-button-group>
+
+       <a-radio-group :value="appList.type" @change="onListTypeChange">
+        <a-radio-button value="0">
+          <a-icon type="appstore"></a-icon>
+        </a-radio-button>
+           <a-radio-button value="1">
+          <a-icon type="table"></a-icon>
+        </a-radio-button>
+        <a-radio-button value="2">
+          <a-icon type="bars"></a-icon>
+        </a-radio-button>
+      </a-radio-group>
       </template>
       </a-page-header>
     </a-layout-header>
@@ -195,37 +199,40 @@ myappTpl =
 </div>
 
 `
-function parseNumber(str){
-  const num=Number(str)
-  return isNaN(num)?0:num
+
+function parseNumber (str) {
+  const num = Number(str)
+  return isNaN(num) ? 0 : num
 }
-const appListModel=require('../../util/model/appListModel.js').appListModel
+
+const appListModel = require('../../util/model/appListModel.js').appListModel
 module.exports = Vue.component('myapp-page', {
   name: 'myapp-page',
   template: myappTpl,
   beforeRouteEnter (to, from, next) {
     console.log(to)
-    console.log('beforeRouteEnter'+to.query.listId)
-     next(vm => {
+    console.log('beforeRouteEnter' + to.query.listId)
+    next(vm => {
       vm.myApps = []
-      console.log('before enter'+to.query.listId)
-      vm.listId=parseNumber(to.query.listId)// 通过 `vm` 访问组件实例
+      console.log('before enter' + to.query.listId)
+      vm.listId = parseNumber(to.query.listId)// 通过 `vm` 访问组件实例
       vm.load()
     })
   },
   beforeRouteUpdate (to, from, next) {
-    this.listId=parseNumber(to.query.listId)
-    console.log('before update'+to.query.listId)
+    this.listId = parseNumber(to.query.listId)
+    console.log('before update' + to.query.listId)
     this.load()
   },
   data () {
     return {
       listId: this.$route.query.listId,
       visible: false,
+      type: 0,
       myApps: [],
       appList: {
-        name:""
-      } ,
+        name: ''
+      },
       //表单布局用字段
       formItemLayout: {
         labelCol: {
@@ -287,7 +294,7 @@ module.exports = Vue.component('myapp-page', {
   },
   methods: {//判断是否是我的应用
     //添加应用到任务栏
-    addTask(app) {
+    addTask (app) {
       postMessage({
         message: 'addTask',
         name: app.name,
@@ -296,10 +303,10 @@ module.exports = Vue.component('myapp-page', {
       })
       this.$message.success('成功在左侧栏添加了应用：' + app.name + '。')
     },
-    getAppList(){
+    getAppList () {
 
     },
-    isInMyApps() {
+    isInMyApps () {
 
       if (this.currentApp == null) {
         return -1
@@ -307,14 +314,14 @@ module.exports = Vue.component('myapp-page', {
       let apps = this.myApps
       let app = this.currentApp
       let findIndex = -1
-      apps.forEach(function(item, index) {
+      apps.forEach(function (item, index) {
         if (item.name == app.name)
           findIndex = index
       })
       return findIndex
 
     },
-    addCurrentApp() {
+    addCurrentApp () {
       let that = this
       let app = this.currentApp
       let index = this.isInMyApps(app)
@@ -324,17 +331,17 @@ module.exports = Vue.component('myapp-page', {
         window.$appsRestore.deleteApp(app.name)
         this.btnText = '添加收藏'
       } else {
-        let apps = this.myApps;
+        let apps = this.myApps
         apps.unshift(app)
         this.myApps = apps
         this.btnText = '移出收藏'
 
-        app.listId=this.listId
+        app.listId = this.listId
         window.$appsRestore.addApp(app)
         this.$message.success('添加了应用：' + app.name)
       }
     },
-    addApp(app) {
+    addApp (app) {
       this.currentApp = app
       this.addCurrentApp()
     },
@@ -378,20 +385,25 @@ module.exports = Vue.component('myapp-page', {
         console.log(e)
         this.myApps = []
       })
-    console.log(this.listId)
-      if(this.listId===0){
-        this.appList={
-          name:'默认列表'
+      console.log(this.listId)
+      if (this.listId === 0) {
+        this.appList = {
+          name: '默认列表',
+          type: "0"
         }
-      }else{
-        const data= appListModel.get(this.listId).catch(err=>console.log(err))
-        data.then(data=>{
-          data.name
-          this.appList=data
+      } else {
+        const data = appListModel.get(this.listId).catch(err => console.log(err))
+        data.then(data => {
+          this.appList = null
+          this.appList = data
+          this.appList.type=String(this.appList.type)
+          console.log(this.appList)
         })
       }
-
-
+    },
+    onListTypeChange (e) {
+      this.appList.type=e.target.value
+      //todo 去保存appList的type
     }
   }
 })

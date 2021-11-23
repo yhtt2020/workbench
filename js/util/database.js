@@ -38,7 +38,7 @@ db.version(125).stores({
         item.listId = 0
     })
 })
-db.version(126).stores({
+db.version(127).stores({
   /*
   color - the main color of the page, extracted from the page icon
   pageHTML - a saved copy of the page's HTML, when it was last visited. Removed in 1.6.0, so all pages visited after then will have an empty string in this field.
@@ -57,13 +57,7 @@ db.version(126).stores({
   dockApps:'++id,name,url,icon,order',
   appList:'++id,name,createTime,updateTime,order,summary,appsCount,parentId,type'//应用列表 type:0.默认，大图标,1.小图标,2.列表
 }).upgrade(trans=> {
-  return trans.myApps.toCollection().modify (item => {
-    if (!!!item.addTime)
-      item.addTime = Date.now()
-    if (!!!item.sort)
-      item.sort = 0
-    if (!!!item.listId)
-      item.listId = 0
+  return trans.appList.toCollection().modify (item => {
     if(!!!item.type){
       item.type=0
     }
