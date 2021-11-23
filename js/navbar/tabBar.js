@@ -131,6 +131,7 @@ const tabBar = {
       name: tab.title,
       url: tab.url,
       summary: tab.title,
+      listId:0,
       star: "5"
     }
     const appsRestore = require('../../pages/apps/appsRestore.js')
