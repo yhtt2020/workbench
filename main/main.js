@@ -496,4 +496,3 @@ app.on('ready', function() {
 // 	sendIPCToWindow(mainWindow,'showBookmarks')
 
 // })
-require(path.join(__dirname, '/main/handleAxios.js')).initialize()
