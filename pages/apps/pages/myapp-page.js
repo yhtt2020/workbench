@@ -10,9 +10,9 @@ myappTpl =
         <a-radio-button value="0">
           <a-icon type="appstore"></a-icon>
         </a-radio-button>
-           <a-radio-button value="1">
-          <a-icon type="table"></a-icon>
-        </a-radio-button>
+<!--           <a-radio-button value="1">-->
+<!--          <a-icon type="table"></a-icon>-->
+<!--        </a-radio-button>-->
         <a-radio-button value="2">
           <a-icon type="bars"></a-icon>
         </a-radio-button>
@@ -21,13 +21,14 @@ myappTpl =
       </a-page-header>
     </a-layout-header>
     <a-layout-content>
-      <div style="padding: 20px;text-align: left;padding: 10px;margin:20px">
+      <div style="text-align: left;padding: 10px;margin:20px">
        <div style="float: left">
        <template>
   <a-breadcrumb>
     <a-breadcrumb-item>本地列表</a-breadcrumb-item>
     <a-breadcrumb-item>{{appList.name}}</a-breadcrumb-item>
   </a-breadcrumb>
+
 </template>
        </div>
         <!-- <div style="text-align: center;margin:20px">
@@ -37,7 +38,25 @@ myappTpl =
           <a-card>
 
             <a-button type="primary" shape="round" class="add-button" slot="extra" @click="showModal">添加网站</a-button>
-            <a-dropdown v-for="(app, index) in myApps" :trigger="['contextmenu']">
+
+<div id="main-content" style="max-height: calc( 100vh - 238px);overflow-y: auto">
+<template>
+  <a-list  v-show="appList.type==='2'" item-layout="horizontal" :data-source="myApps" :pagination="pagination">
+    <a-list-item slot="renderItem" slot-scope="item, index">
+      <a-list-item-meta
+        :description="item.summary"
+      >
+        <a slot="title" :href="item.url">{{ item.name }}</a>
+        <a-avatar
+          slot="avatar"
+          :src="item.icon"
+        />
+      </a-list-item-meta>
+    </a-list-item>
+  </a-list>
+</template>
+<div v-show="appList.type==='0'">
+ <a-dropdown  v-for="(app, index) in myApps" :trigger="['contextmenu']">
               <a-card-grid class="app" style="cursor: pointer;"
                            @click="addTask(app)">
                 <a-avatar shape="square" :size="64" :src="app.icon"
@@ -59,12 +78,10 @@ myappTpl =
               </a-button>
 
             </a-empty>
-            <a-card-grid v-else class="app" style="cursor: pointer;" @click="showModal">
-              <a-avatar shape="square" :size="64" icon="plus"
-                        style="margin-bottom: 10px;"></a-avatar>
-              <a-card-meta title="添加">
-              </a-card-meta>
-            </a-card-grid>
+</div>
+
+
+</div>
           </a-card>
         </div>
       </div>
@@ -226,6 +243,13 @@ module.exports = Vue.component('myapp-page', {
   },
   data () {
     return {
+      pagination:{
+        onChange: page => {
+          console.log(page);
+        },
+        pageSize: 10,
+        hideOnSinglePage:true
+      },
       listId: this.$route.query.listId,
       visible: false,
       type: 0,
