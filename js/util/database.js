@@ -10,7 +10,7 @@ var dbErrorAlertShown = false
 
 var db = new Dexie('browsingData2')
 
-db.version(123).stores({
+db.version(125).stores({
   /*
   color - the main color of the page, extracted from the page icon
   pageHTML - a saved copy of the page's HTML, when it was last visited. Removed in 1.6.0, so all pages visited after then will have an empty string in this field.
@@ -29,22 +29,16 @@ db.version(123).stores({
   dockApps:'++id,name,url,icon,order',
   appList:'++id,name,createTime,updateTime,order,summary,appsCount,parentId'//应用列表
 }).upgrade(trans=> {
-  let needFilled = []
-  trans.myApps.each(async item => {
-    if (typeof item.addTime == 'undefined' || typeof item.sort == 'undefined' || typeof item.listId == 'undefined') {
-      let i = item
-      if (typeof item.addTime == 'undefined')
-        i.addTime = Date.now()
-      if (typeof item.sort == 'undefined')
-        i.sort = 0
-      if (typeof item.listId == 'undefined') {
-        i.listId = 0
-      }
-      needFilled.push(i)
-    }
-  })
-  trans.myApps.bulkPut(needFilled)
+    return trans.myApps.toCollection().modify (item => {
+      if (!!!item.addTime)
+        item.addTime = Date.now()
+      if (!!!item.sort)
+        item.sort = 0
+      if (!!!item.listId)
+        item.listId = 0
+    })
 })
+
 /*system的keyalue的值备注*/
 //currentUser 当前登陆的user
 
