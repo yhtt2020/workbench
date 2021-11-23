@@ -27,6 +27,26 @@ const appListModel = {
   },
   getIdFromTreeKey(treeKey){
     return treeKey
+  },
+  getDefaultList: ()=>{
+      const  result=  db.system.where({'name':"myappDefault"}).first()
+       if(!!!result){
+         return null
+       }else{
+         return result
+       }
+
+  },
+  putDefaultList(newData){
+     db.system.where({'name':"myappDefault"}).first().then(data=>{
+       if(!!!data){
+         return db.system.put({'name':"myappDefault",'value':data})
+       }else{
+         data.value=newData
+         return db.system.put(data)
+       }
+     })
+
   }
 }
 const treeUtil={

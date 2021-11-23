@@ -41,7 +41,7 @@ myappTpl =
 
 <div id="main-content" style="max-height: calc( 100vh - 238px);overflow-y: auto">
 <template>
-  <a-list  v-show="appList.type==='2'" item-layout="horizontal" :data-source="myApps" :pagination="pagination">
+  <a-list  v-show="appList.type==='2' && myApps.length>0" item-layout="horizontal" :data-source="myApps" :pagination="pagination" >
     <a-list-item slot="renderItem" slot-scope="item, index">
       <a-list-item-meta
         :description="item.summary"
@@ -55,7 +55,7 @@ myappTpl =
     </a-list-item>
   </a-list>
 </template>
-<div v-show="appList.type==='0'">
+<div v-show="appList.type==='0' && myApps.length>0">
  <a-dropdown  v-for="(app, index) in myApps" :trigger="['contextmenu']">
               <a-card-grid class="app" style="cursor: pointer;"
                            @click="addTask(app)">
@@ -71,16 +71,16 @@ myappTpl =
                 </a-menu-item>
               </a-menu>
             </a-dropdown>
-            <a-empty v-if="myApps.length==0" description="还未添加任何网站，点击添加网站">
+
+</div>
+
+ <a-empty v-if="myApps.length==0" description="还未添加任何网站，点击添加网站">
 
               <a-button type="primary" @click="showModal">
                 添加网站
               </a-button>
 
             </a-empty>
-</div>
-
-
 </div>
           </a-card>
         </div>
@@ -411,22 +411,40 @@ module.exports = Vue.component('myapp-page', {
       })
       console.log(this.listId)
       if (this.listId === 0) {
-        this.appList = {
-          name: '默认列表',
-          type: "0"
-        }
+         appListModel.getDefaultList().then(defaultList=>{
+          if(!!!defaultList){
+            this.appList = {
+              id:0,
+              name: '默认列表',
+              type: "0"
+            }
+          }else{
+            this.appList=defaultList.value
+            this.appList.type=String(this.appList.type)
+          }
+        })
+
+
+
       } else {
         const data = appListModel.get(this.listId).catch(err => console.log(err))
         data.then(data => {
           this.appList = null
           this.appList = data
           this.appList.type=String(this.appList.type)
-          console.log(this.appList)
         })
       }
     },
     onListTypeChange (e) {
       this.appList.type=e.target.value
+      let saveData={}
+      Object.assign(saveData,this.appList)
+      saveData.type=Number(saveData.type)
+      if(this.appList.id!==0){
+        appListModel.put(saveData).then().catch()
+      }else{
+          appListModel.putDefaultList(saveData)
+      }
       //todo 去保存appList的type
     }
   }
