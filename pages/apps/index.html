@@ -85,10 +85,10 @@
   const router = new VueRouter({
     routes // (缩写) 相当于 routes: routes
   })
-  const originalPush = VueRouter.prototype.push
-  VueRouter.prototype.push = function push (location) {
-    return originalPush.call(this, location).catch(err => err)
-  }
+  // const originalPush = VueRouter.prototype.push
+  // VueRouter.prototype.push = function push (location) {
+  //   return originalPush.call(this, location).catch(err => err)
+  // }
   const appVue = new Vue({
     router,
     el: '#appVue',
