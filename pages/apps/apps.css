@@ -196,3 +196,11 @@
 .tree-icon{
   width: 1.2em;height: auto
 }
+
+
+.ant-tree-title{
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: inline-block;
+  width: 100px;
+}
