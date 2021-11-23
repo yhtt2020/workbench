@@ -29,7 +29,7 @@ const localTpl = `
       </template>
 </div>
   `
-const { appList, treeUtil } = require('../../util/appList.js')
+const { appListModel, treeUtil } = require('../../util/model/appListModel.js')
 const getNameInputValue = function () {
   return document.getElementById('nameInput').value
 }
@@ -68,24 +68,21 @@ Vue.component('local-comp', {
       name:'myapp',
       comp:this
     })
-    appList.list().then(data => {
+    appListModel.list().then(data => {
       data.forEach((item) => {
-        that.myAppsLists[0].children.push(appList.convertTreeNode(item))
+        that.myAppsLists[0].children.push(appListModel.convertTreeNode(item))
       })
     })
   },
   methods: {
     onSelect (selectedKeys, info) {
       let jump=0
-      console.log(selectedKeys)
       if(isNaN(Number(selectedKeys[0]))){
-        console.log(selectedKeys)
         jump=0
       }else{
         jump=Number(selectedKeys[0])
       }
-      console.log(jump)
-      this.$router.push({path:'/myapp',query: { listId: jump}})
+      this.$router.push({name:'myapp',query: { listId: jump,t:Date.now()}})
       resetOtherTree('myapp',selectedKeys)
     },
     onContextMenuClick (treeKey, menuKey) {
@@ -116,7 +113,7 @@ Vue.component('local-comp', {
         okText: '确认删除，不后悔',
         cancelText: '保留',
         onOk () {
-          appList.delete(Number(appList.getIdFromTreeKey(treeKey))).then(() => {
+          appListModel.delete(Number(appListModel.getIdFromTreeKey(treeKey))).then(() => {
             that.$message.success({ content: '删除成功。' })
             that.myAppsLists[0].children.splice(key, 1)
           })
@@ -136,8 +133,8 @@ Vue.component('local-comp', {
       const { list } = treeUtil.findTreeNode(treeKey, that.myAppsLists[0].children)
       that.createList(function () {
         const newName = getNameInputValue()
-        appList.put({
-          id: Number(appList.getIdFromTreeKey(treeKey)),
+        appListModel.put({
+          id: Number(appListModel.getIdFromTreeKey(treeKey)),
           name: newName,
           updateTime: Date.now()
         }).then(() => {
@@ -167,9 +164,9 @@ Vue.component('local-comp', {
           appVue.$message.error({ content: '请输入列表名称。' })
           return
         }
-          appList.add(list).then(data => {
+          appListModel.add(list).then(data => {
           appVue.$message.success({ content: '添加列表成功。' })
-          that.myAppsLists[0].children.push(appList.convertTreeNode(list))
+          that.myAppsLists[0].children.push(appListModel.convertTreeNode(list))
           that.createListVisible = false
           }, () => {
             appVue.$message.error({ content: '添加列表失败。' })

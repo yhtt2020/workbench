@@ -35,7 +35,7 @@ const groupTpl = `
       </template>
 </div>
   `
-const { appList, treeUtil } = require('../../util/appList.js')
+const { appList, treeUtil } = require('../../util/model/appListModel.js')
 const groupApi = require('../../util/api/groupApi')
 const groupModel = require('../../util/model/groupModel')
 const getNameInputValue = function () {

@@ -1,6 +1,6 @@
-db = require('../../js/util/database').db
+db = require('../../../js/util/database').db
 
-const appList = {
+const appListModel = {
   list: async () => {
     return db.appList.toArray()
   },
@@ -18,6 +18,9 @@ const appList = {
   },
   put:async(data)=>{
     return await db.appList.put(data)
+  },
+  get:async(id)=>{
+    return await db.appList.get(id)
   },
   delete:async(id)=>{
     db.appList.delete(id)
@@ -42,4 +45,4 @@ const treeUtil={
     return {list,key}
   }
 }
-module.exports = {appList,treeUtil}
+module.exports = { appListModel , treeUtil }

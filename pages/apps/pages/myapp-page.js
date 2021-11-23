@@ -3,16 +3,35 @@ myappTpl =
 <div style="width: 100%">
   <a-layout>
     <a-layout-header style="background: #fff; padding: 0">
-      <a-page-header title="本地导航" sub-title="本地导航可能由于软件重装、卸载、系统重装等原因丢失，建议使用云端导航，此处仅做临时存储使用。"/>
+      <a-page-header title="本地导航" sub-title="本地导航可能由于软件重装、卸载、系统重装等原因丢失，建议使用云端导航，此处仅做临时存储使用。">
+       <template slot="extra">
+            <a-button-group>
+              <a-button>
+                <a-icon type="appstore"></a-icon>
+              </a-button>
+              <a-button>  <a-icon type="table"></a-icon></a-button>
+              <a-button>  <a-icon type="bars"></a-icon>
+              </a-button>
+            </a-button-group>
+      </template>
+      </a-page-header>
     </a-layout-header>
     <a-layout-content>
-<!--      {{listId}}-->
       <div style="padding: 20px;text-align: left;padding: 10px;margin:20px">
+       <div style="float: left">
+       <template>
+  <a-breadcrumb>
+    <a-breadcrumb-item>本地列表</a-breadcrumb-item>
+    <a-breadcrumb-item>{{appList.name}}</a-breadcrumb-item>
+  </a-breadcrumb>
+</template>
+       </div>
         <!-- <div style="text-align: center;margin:20px">
           <search />
         </div> -->
         <div>
           <a-card>
+
             <a-button type="primary" shape="round" class="add-button" slot="extra" @click="showModal">添加网站</a-button>
             <a-dropdown v-for="(app, index) in myApps" :trigger="['contextmenu']">
               <a-card-grid class="app" style="cursor: pointer;"
@@ -180,19 +199,23 @@ function parseNumber(str){
   const num=Number(str)
   return isNaN(num)?0:num
 }
+const appListModel=require('../../util/model/appListModel.js').appListModel
 module.exports = Vue.component('myapp-page', {
   name: 'myapp-page',
   template: myappTpl,
   beforeRouteEnter (to, from, next) {
     console.log(to)
-    next(vm => {
+    console.log('beforeRouteEnter'+to.query.listId)
+     next(vm => {
       vm.myApps = []
+      console.log('before enter'+to.query.listId)
       vm.listId=parseNumber(to.query.listId)// 通过 `vm` 访问组件实例
       vm.load()
     })
   },
   beforeRouteUpdate (to, from, next) {
     this.listId=parseNumber(to.query.listId)
+    console.log('before update'+to.query.listId)
     this.load()
   },
   data () {
@@ -200,6 +223,9 @@ module.exports = Vue.component('myapp-page', {
       listId: this.$route.query.listId,
       visible: false,
       myApps: [],
+      appList: {
+        name:""
+      } ,
       //表单布局用字段
       formItemLayout: {
         labelCol: {
@@ -269,6 +295,9 @@ module.exports = Vue.component('myapp-page', {
         icon: app.icon
       })
       this.$message.success('成功在左侧栏添加了应用：' + app.name + '。')
+    },
+    getAppList(){
+
     },
     isInMyApps() {
 
@@ -349,6 +378,20 @@ module.exports = Vue.component('myapp-page', {
         console.log(e)
         this.myApps = []
       })
+    console.log(this.listId)
+      if(this.listId===0){
+        this.appList={
+          name:'默认列表'
+        }
+      }else{
+        const data= appListModel.get(this.listId).catch(err=>console.log(err))
+        data.then(data=>{
+          data.name
+          this.appList=data
+        })
+      }
+
+
     }
   }
 })
