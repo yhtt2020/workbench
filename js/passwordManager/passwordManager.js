@@ -100,7 +100,7 @@ const PasswordManagers = {
           await PasswordManagers.unlock(manager)
         }
 
-        // 去除域名里的www，根域名用同一套账号
+        // 去除域名里的www，根域名用同一套帐号
         var domain = hostname
         if (domain.startsWith('www.')) {
           domain = domain.slice(4)

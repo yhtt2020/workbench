@@ -105,7 +105,7 @@ ipc.on('refreshMyGroups', async ()=> {
   })
 })
 
-//读入当前登陆的账号
+//读入当前登录的帐号
 function getCurrentUser () {
   db.system.get({ 'name': 'currentUser' }).then((item) => {
       let user = {}
@@ -152,7 +152,7 @@ ipc.on('userLogin', function (e, data) {
     code: data.code
   }
   window.$store.state.user = user
-  // 设置当前登陆账号为此账号
+  // 设置当前登录帐号为此帐号
   db.system.where({name:'currentUser'}).delete()
   db.system.put({
     name:'currentUser',
@@ -172,6 +172,6 @@ ipc.on('userLogin', function (e, data) {
     console.log(err)
   })
   // ++id,uid,nickname,avatar,lastLoginTime,token,isCurrent,lastUseSpace
-  //插入一个用户账号到账号表
+  //插入一个用户帐号到帐号表
 
 })

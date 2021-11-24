@@ -6,7 +6,7 @@ Vue.component('sidebar', {
       lastOpenId:0,
 			drag: false,
 			remote: {},
-			loginPanelTitle:"登陆账号免费体验完整功能",
+			loginPanelTitle:"登录帐号免费体验完整功能",
 			loginPanelContent:``,
 			userPanelVisible:false,
 			devices: [{
