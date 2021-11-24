@@ -49,16 +49,16 @@
           <ul id="pinGroup" class="app-task" style="margin-bottom: 0; overflow: hidden">
             <li @click="toggleUserPanel" class="" style="position: relative; background-color: rgb(243 243 243)">
               <template>
-                <a-drawer
+                <a-drawer class="user-panel"
                   @mousemove="setSidePanel()"
                   :width="300"
                   :visible="userPanelVisible"
                   @close="toggleUserPanel"
+                          :mask="false"
                   placement="left"
                 >
                   <template slot="title">
                     <span v-if="user.uid==0"> 登录帐号免费体验完整功能 </span>
-                    <span v-else> 云帐号同步 </span>
                   </template>
                   <div v-if="user.uid===0">
                     <a-button @click="userClick" type="primary" block>登录帐号</a-button>
@@ -74,60 +74,48 @@
                   <div v-if="user.uid!==0">
                     <template>
                       <div style="position: relative">
-                        <div style="text-align: center">
-                          <p>
-                            <a-avatar
-                              style="cursor: pointer"
-                              @click="userClick"
-                              :size="60"
-                              :src="user.avatar"
-                            ></a-avatar>
-                          </p>
-
-                          <p>
-                            <a style="color: #333" @click="userClick">{{ user.nickname }}</a>
-                          </p>
+                        <div style="text-align: left">
+                          <a-row >
+                            <a-col :span="8">
+                              <a-avatar
+                                style="cursor: pointer"
+                                @click="userClick"
+                                :size="60"
+                                :src="user.avatar"
+                              ></a-avatar>
+                            </a-col>
+                            <a-col :span="12">
+                              <a class="nick-name" @click="userClick">{{ user.nickname }}</a>
+                            </a-col>
+                          </a-row>
                         </div>
                         <div style="margin-bottom: 10px">
                           <template>
-                            <a-card :bordered="false">
-                              <!--                                                    <a-card-grid @click= :bordered="false" style="width:33%;text-align:center">-->
-                              <!--                                                        <a-tooltip title="发表内容">-->
-                              <!--                                                        <a-icon  style="font-size: 24px" type="plus-circle"></a-icon>-->
-                              <!--                                                        </a-tooltip>-->
-                              <!--                                                    </a-card-grid>-->
-                              <a-card-grid
-                                @click="goProfile"
-                                :bordered="false"
-                                style="width: 33%; text-align: center; cursor: pointer"
-                                :hoverable="false"
-                              >
+                            <a-row class="actions">
+
+                              <a-col  @click="goProfile"
+                                       class="action" :span="8">
                                 <a-tooltip title="个人资料">
                                   <a-icon style="font-size: 24px" type="profile"></a-icon>
                                   <div>资料</div>
                                 </a-tooltip>
-                              </a-card-grid>
-                              <a-card-grid
-                                @click="goGroup"
-                                :bordered="false"
-                                style="width: 33%; text-align: center; cursor: pointer"
-                              >
+                              </a-col>
+                              <a-col @click="goGroup" class="action" :span="8">
                                 <a-tooltip title="团队">
                                   <a-icon style="font-size: 24px" type="team"></a-icon>
                                   <div>团队</div>
                                 </a-tooltip>
-                              </a-card-grid>
-                              <a-card-grid
-                                @click="goAccount"
-                                :bordered="false"
-                                style="width: 33%; text-align: center; cursor: pointer"
-                              >
+                              </a-col>
+                              <a-col @click="goAccount"  class="action" :span="6">
                                 <a-tooltip title="帐号管理">
                                   <a-icon style="font-size: 24px" type="idcard"></a-icon>
                                   <div>帐号</div>
                                 </a-tooltip>
-                              </a-card-grid>
-                            </a-card>
+                              </a-col>
+<!--                              <a-col  class="action" :span="8">-->
+
+<!--                              </a-col>-->
+                            </a-row>
                           </template>
                         </div>
                         <div class="my-group">
@@ -147,25 +135,25 @@
                             </div>
                           </template>
                         </div>
-                        <a-dropdown>
-                          <a-menu slot="overlay">
-<!--                            <a-menu-item v-for="(item,key) in accounts" :key="key">-->
-<!--                              <a-avatar shap="circle" size="small" :src="item.avatar"></a-avatar>-->
-<!--                              &nbsp;{{ item.nickname}}-->
+<!--                        <a-dropdown>-->
+<!--                          <a-menu slot="overlay">-->
+<!--&lt;!&ndash;                            <a-menu-item v-for="(item,key) in accounts" :key="key">&ndash;&gt;-->
+<!--&lt;!&ndash;                              <a-avatar shap="circle" size="small" :src="item.avatar"></a-avatar>&ndash;&gt;-->
+<!--&lt;!&ndash;                              &nbsp;{{ item.nickname}}&ndash;&gt;-->
+<!--&lt;!&ndash;                            </a-menu-item>&ndash;&gt;-->
+<!--                            <a-menu-item @click="switchAccount">-->
+<!--                              <a-icon style="margin-left: 5px" shap="circle" type="plus-circle"></a-icon>-->
+<!--                              &nbsp;绑定新帐号-->
 <!--                            </a-menu-item>-->
-                            <a-menu-item @click="switchAccount">
-                              <a-icon style="margin-left: 5px" shap="circle" type="plus-circle"></a-icon>
-                              &nbsp;绑定新帐号
-                            </a-menu-item>
-                          </a-menu>
+<!--                          </a-menu>-->
 
-                          <a-button shape="circle" size="small" style="position: absolute; right: -5px; top: -5px">
-                            <a-icon type="down"></a-icon>
-                          </a-button>
-                        </a-dropdown>
+<!--                          <a-button shape="circle" size="small" style="position: absolute; right: 10px; top:10px">-->
+<!--                            <a-icon type="down"></a-icon>-->
+<!--                          </a-button>-->
+<!--                        </a-dropdown>-->
                       </div>
                       <div>
-                        <div style="position: absolute; bottom: 5px; width: 250px">
+                        <div style="position: absolute; bottom: 10px; width: 250px">
                           <a-button @click="logout" block><a-icon type="poweroff"></a-icon>注销</a-button>
                         </div>
                       </div>

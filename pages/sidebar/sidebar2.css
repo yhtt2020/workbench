@@ -1,10 +1,11 @@
 .mg-content {
-  max-height: calc(100vh - 375px);
+  max-height: calc(100vh - 340px);
   overflow-y: auto;
   margin-top: 10px;
   padding: 10px;
 }
 .mg-content .mg-content-btn {
+  background: white;
   margin-top: 6px;
   height: 46px;
   position: relative;
@@ -35,7 +36,6 @@
   width: 30px;
   height: 30px;
   border-radius: 4px;
-  background-color: whitesmoke;
 }
 .mg-content .mg-content-btn .cb-rg div {
   margin-left: 10px;
