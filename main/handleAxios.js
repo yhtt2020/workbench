@@ -1,8 +1,10 @@
 const axios = require(path.join(__dirname, './js/util/axios.js'))
 const storage = require('electron-localstorage');
+const { clipboard } = require('electron')
 
 const handleAxios =  {
   initialize: function() {
+    //游览器登录
     ipc.on('loginBrowser', async (event, arg) => {
       const data = {
         code: arg
@@ -14,6 +16,7 @@ const handleAxios =  {
       })
       if(result.code === 1000) {
         storage.setItem(`userToken`, result.data.token)
+        storage.setItem(`userInfo`, result.data.userInfo)
       }
       event.reply('callback-loginBrowser', result)
     })
@@ -29,6 +32,25 @@ const handleAxios =  {
         data
       })
       storage.removeItem(`userToken`);
+      storage.removeItem(`userInfo`)
+    })
+
+    //分享组
+    ipc.on('shareTask', async (event, arg) => {
+      const data = {
+        title: `${storage.getItem(`userInfo`).nickname}在${new Date()}分享的组`,
+        uid: storage.getItem(`userInfo`).uid,
+        site_list: arg
+      }
+      const createRes = await axios({
+        method: 'post',
+        url: `/app/createTask`,
+        data
+      })
+      if(createRes.code === 1000) {
+        clipboard.writeText(createRes.data.shareTask_link)
+        sidePanel.get().webContents.send('message',{type:'success',config:{content:'复制成功'}})
+      }
     })
   }
 }
