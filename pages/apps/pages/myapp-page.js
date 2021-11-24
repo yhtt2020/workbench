@@ -241,8 +241,6 @@ module.exports = Vue.component('myapp-page', {
     VueSelecto
   },
   beforeRouteEnter (to, from, next) {
-    console.log(to)
-    console.log('beforeRouteEnter' + to.query.listId)
     next(vm => {
       vm.myApps = []
       console.log('before enter' + to.query.listId)
@@ -253,7 +251,6 @@ module.exports = Vue.component('myapp-page', {
   },
   beforeRouteUpdate (to, from, next) {
     this.listId = parseNumber(to.query.listId)
-    console.log('before update' + to.query.listId)
     window.$listId=this.listId
     this.load()
   },
@@ -263,10 +260,8 @@ module.exports = Vue.component('myapp-page', {
       selectedElements:[],
       selected:[],
       //selecto end
-
       pagination:{
         onChange: page => {
-          console.log(page);
         },
         pageSize: 10,
         hideOnSinglePage:true
