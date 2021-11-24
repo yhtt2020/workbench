@@ -445,7 +445,6 @@ module.exports = Vue.component('myapp-page', {
       }else{
           appListModel.putDefaultList(saveData)
       }
-      //todo 去保存appList的type
     }
   }
 })

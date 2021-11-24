@@ -160,6 +160,7 @@ Vue.component('local-comp', {
         list.summary = ''
         list.appsCount = 0
         list.parentId = 0
+        list.type = 0
         if (!!!list.name) {
           appVue.$message.error({ content: '请输入列表名称。' })
           return

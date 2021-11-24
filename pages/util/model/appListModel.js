@@ -40,7 +40,7 @@ const appListModel = {
   putDefaultList(newData){
      db.system.where({'name':"myappDefault"}).first().then(data=>{
        if(!!!data){
-         return db.system.put({'name':"myappDefault",'value':data})
+         return db.system.put({'name':"myappDefault",'value':newData})
        }else{
          data.value=newData
          return db.system.put(data)
