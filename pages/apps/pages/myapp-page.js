@@ -368,7 +368,7 @@ module.exports = Vue.component('myapp-page', {
       if (index != -1) {
         this.myApps.splice(index, 1)
         that.$message.warning('移除了应用：' + app.name + '')
-        window.$appsRestore.deleteApp(app.name)
+        window.$appsRestore.deleteApp(app.id)
         this.btnText = '添加收藏'
       } else {
         let apps = this.myApps

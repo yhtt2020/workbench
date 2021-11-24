@@ -43,9 +43,9 @@ const appsRestore = {
     }
   },
   // 删除单个app
-  deleteApp: async function (name) {
+  deleteApp: async function (id) {
     try {
-      const s = await db.myApps.where({ name: name }).delete()
+      const s = await db.myApps.where({ id: id }).delete()
     } catch (e) {
       console.log(e)
     }
