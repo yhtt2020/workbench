@@ -247,12 +247,14 @@ module.exports = Vue.component('myapp-page', {
       vm.myApps = []
       console.log('before enter' + to.query.listId)
       vm.listId = parseNumber(to.query.listId)// 通过 `vm` 访问组件实例
+      window.$listId=vm.listId
       vm.load()
     })
   },
   beforeRouteUpdate (to, from, next) {
     this.listId = parseNumber(to.query.listId)
     console.log('before update' + to.query.listId)
+    window.$listId=this.listId
     this.load()
   },
   data () {
@@ -481,10 +483,10 @@ module.exports = Vue.component('myapp-page', {
     // 框选结束存储数据
     selectEnd (e) {
       this.selectedElements=[]
+      window.$selectedApps=[]
       e.selected.map(item => {
         this.selectedElements.push(item)
         this.selected.push(item.id)
-
       })
       window.$selectedApps=this.selected
     },

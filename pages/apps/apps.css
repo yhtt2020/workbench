@@ -215,4 +215,9 @@
   margin: 5px;
 }
 
+.canDrag{
+  border: 1px dashed #ccc;
+  border-radius: 2px;
+  color: #1E90FF;
+}
 /*selectoend*/
