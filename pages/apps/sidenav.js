@@ -1,7 +1,7 @@
 const tpl = `
 <div style="padding: 15px;">
 <div class="logo">
-<img src="../../icons/apps.svg" style="width: 1.2em">
+<img src="../../icons/svg/discover.svg" style="width: 2em">
 网址导航
 </div>
       <template >
