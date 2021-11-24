@@ -7,15 +7,6 @@ const appstoreTpl =
           <a-page-header style="border: none;" title="办公导航"
           :sub-title="'想天办公导航，右键查看详情，网站更新于'+appUpdateTime+'。'">
           <template slot="extra">
-            <a-button-group>
-              <a-button>
-                <a-icon type="appstore"></a-icon>
-              </a-button>
-              <a-button>  <a-icon type="table"></a-icon></a-button>
-              <a-button>  <a-icon type="bars"></a-icon>
-              </a-button>
-
-            </a-button-group>
             <a-button icon="shopping-cart" key="3" @click="showDrawerCart()"
             :type="shopcartApps.length>0?'primary':'default'">
             清单
@@ -319,6 +310,7 @@ module.exports = Vue.component('appstore-page', {
     },
     //收藏app
     addApp(app) {
+      app.listId=0
       this.currentApp = app
       this.addCurrentApp()
     },
@@ -328,6 +320,7 @@ module.exports = Vue.component('appstore-page', {
       let that = this
       this.shopcartApps.forEach(function(app) {
         if (that.isInMyApps(app) == -1) {
+          app.listId=0
           that.myApps.push(app)
           window.$appsRestore.addApp(app)
           addCount++
@@ -359,6 +352,7 @@ module.exports = Vue.component('appstore-page', {
         apps.unshift(app)
         this.myApps = apps
         this.btnText = '移出收藏'
+        app.listId=0
         window.$appsRestore.addApp(app)
         this.$message.success('添加了应用：' + app.name)
       }
