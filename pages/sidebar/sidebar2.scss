@@ -1,4 +1,8 @@
 .mg-content {
+  max-height: calc( 100vh - 375px);
+  overflow-y: auto;
+  margin-top: 10px;
+  padding: 10px;
   .mg-content-btn {
     margin-top: 6px;
     height: 46px;
@@ -22,13 +26,13 @@
       //background:center, no-repeat;
     }
     .cb-rg {
-      margin-left: 36px;
-      width: 60%;
+      margin-left: 10px;
+      width: 100%;
       img {
         z-index: 2;
         width: 30px;
         height: 30px;
-        border-radius: 50%;
+        border-radius: 4px;
         background-color: whitesmoke
       }
       div {
@@ -37,15 +41,13 @@
         font-weight: 500;
         color: #353535;
         z-index: 2;
-        width: 100px;
-        text-align: center;
-        text-overflow: -o-ellipsis-lastline;
-        overflow: hidden;
+        width: 80%;
         text-overflow: ellipsis;
+        overflow: hidden;
         display: -webkit-box;
+
         -webkit-line-clamp: 1;
         -webkit-box-orient: vertical;
-
       }
     }
   }
