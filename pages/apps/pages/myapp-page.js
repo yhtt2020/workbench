@@ -46,7 +46,7 @@ myappTpl =
       <a-list-item-meta
         :description="item.summary"
       >
-        <a slot="title" :href="item.url">{{ item.name }}</a>
+        <a slot="title" target="_blank" :href="item.url">{{ item.name }}</a>
         <a-avatar style="margin:10px"
           slot="avatar"
           shape="square"
@@ -70,7 +70,7 @@ myappTpl =
 
  <a-dropdown  v-for="(app, index) in myApps" :trigger="['contextmenu']">
               <a-card-grid @dragstart="dragStart($event,app)" @mousedown.stop draggable="true"  :id="app.id"  class="app" style="cursor: pointer;"
-                           @click="addTask(app)"  >
+                           @click="openUrl(app.url)"  >
                 <a-avatar shape="square" :size="64" :src="app.icon"
                           style="margin-bottom: 10px;"></a-avatar>
                 <a-card-meta :title="app.name">
@@ -468,7 +468,9 @@ module.exports = Vue.component('myapp-page', {
       }
       //todo 去保存appList的type
     },
-
+    openUrl(url){
+      window.open(url)
+    },
     //selecto
     onSelect (e) {
 

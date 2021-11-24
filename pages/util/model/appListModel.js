@@ -24,6 +24,7 @@ const appListModel = {
   },
   delete:async(id)=>{
     db.appList.delete(id)
+    //todo 将被删除的列表里的导航移动到默认列表
   },
   getIdFromTreeKey(treeKey){
     return treeKey
