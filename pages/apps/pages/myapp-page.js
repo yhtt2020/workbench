@@ -42,7 +42,7 @@ myappTpl =
 <div id="main-content" class="elements selecto-area" style="max-height: calc( 100vh - 238px);overflow-y: auto">
 <template>
   <a-list  v-show="appList.type==='2' && myApps.length>0" item-layout="horizontal" :data-source="myApps" :pagination="pagination" >
-    <a-list-item class="app-list" slot="renderItem" slot-scope="item, index">
+    <a-list-item class="app-list" :id="item.id"  slot="renderItem" slot-scope="item, index">
       <a-list-item-meta
         :description="item.summary"
       >
@@ -68,8 +68,8 @@ myappTpl =
     ></vue-selecto>
 <div class="" id="selecto1" v-show="appList.type==='0' && myApps.length>0">
 
- <a-dropdown  v-for="(app, index) in myApps" :trigger="['contextmenu']">
-              <a-card-grid class="app" style="cursor: pointer;"
+ <a-dropdown   v-for="(app, index) in myApps" :trigger="['contextmenu']">
+              <a-card-grid :id="app.id"  class="app" style="cursor: pointer;"
                            @click="addTask(app)">
                 <a-avatar shape="square" :size="64" :src="app.icon"
                           style="margin-bottom: 10px;"></a-avatar>
@@ -470,10 +470,6 @@ module.exports = Vue.component('myapp-page', {
 
     //selecto
     onSelect (e) {
-      console.log('added')
-      console.log(e.added)
-      console.log('removed')
-      console.log(e.removed)
       e.added.forEach(el => {
         el.classList.add('selected')
       })
@@ -487,7 +483,7 @@ module.exports = Vue.component('myapp-page', {
       e.selected.map(item => {
         this.selected.push(item.id)
       })
-
+      window.$selectedApps=this.selected
       console.log(this.selected)
     }
     //selecto end
