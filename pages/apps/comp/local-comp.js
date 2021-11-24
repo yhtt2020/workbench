@@ -6,7 +6,7 @@ const localTpl = `
           <a-avatar slot="list-icon" shape="square" class="tree-icon" src="../../icons/svg/plan.svg"></a-avatar>
           <template #title="{ key: treeKey, title }">
       <a-dropdown :trigger="['contextmenu']" @visibleChange="checkMenuDisable($event,treeKey)">
-        <span>{{ title }}</span>
+        <span @dragover.prevent="allowDrop" @drop.prevent="drop(treeKey)">{{ title }}</span>
         <template #overlay>
           <a-menu @click="({ key: menuKey }) => onContextMenuClick(treeKey, menuKey)">
             <a-menu-item key="createList" :disabled="disableCreate"><a-icon type="plus-square"></a-icon>  创建列表</a-menu-item>
@@ -199,7 +199,26 @@ Vue.component('local-comp', {
           this.disableDelete = true
         }
       }
-
+    },
+    // 拖拽元素放置到了目的地元素上面
+    allowDrop () {
+    },
+    // 拖拽元素结束了操作
+    drop (key) {
+      //todo 将选中的id移动到
+      if(key==="myapp"){
+        key=0
+      }
+      key=Number(key)
+      //1.找到全部的选中apps
+      //2.将选中apps的listId改为新的id即可
+      appListModel.moveAppsToList(window.$selectedApps,key).then(movedApps=>{
+        if(movedApps.length>0){
+          appVue.$message.success({content:"成功移动"+movedApps.length+"个应用"})
+          window.$selectedApps=[]
+          window.$removeApps()
+        }
+      })
     }
   }
 })

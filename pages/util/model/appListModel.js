@@ -47,6 +47,22 @@ const appListModel = {
        }
      })
 
+  },
+
+  /**
+   * 移动一批应用到某个列表
+   * @param appsIds 应用id数组
+   * @param listId 列表id
+   */
+  async moveAppsToList (appsIds,listId){
+    appsIds.forEach((app,index)=>{
+      appsIds[index]=Number(app)
+    })
+   const apps=await db.myApps.bulkGet(appsIds)
+    apps.forEach((newApp)=>{
+      newApp.listId=listId
+    })
+    return await db.myApps.bulkPut(apps,{allKeys: true})
   }
 }
 const treeUtil={

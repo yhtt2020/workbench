@@ -6,7 +6,6 @@ const baseApi={
   uid:0,
   getCurrentUser: ()=>{
      return db.system.where('name').equals('currentUser').first()
-
   },
   init: async()=>{
      await baseApi.getCurrentUser().then(user=>{
@@ -17,6 +16,7 @@ const baseApi={
   },
 
   axios: async (url,data)=>{
+    //todo 对未登录的场景进行判断
    return axios({
       method: 'post',
       url:url,

@@ -42,7 +42,7 @@ myappTpl =
 <div id="main-content" class="elements selecto-area" style="max-height: calc( 100vh - 238px);overflow-y: auto">
 <template>
   <a-list  v-show="appList.type==='2' && myApps.length>0" item-layout="horizontal" :data-source="myApps" :pagination="pagination" >
-    <a-list-item class="app-list" :id="item.id"  slot="renderItem" slot-scope="item, index">
+    <a-list-item  @dragstart="dragStart($event,item)" @mousedown.stop draggable="true"  class="app-list" :id="item.id"  slot="renderItem" slot-scope="item, index">
       <a-list-item-meta
         :description="item.summary"
       >
@@ -68,9 +68,9 @@ myappTpl =
     ></vue-selecto>
 <div class="" id="selecto1" v-show="appList.type==='0' && myApps.length>0">
 
- <a-dropdown   v-for="(app, index) in myApps" :trigger="['contextmenu']">
-              <a-card-grid :id="app.id"  class="app" style="cursor: pointer;"
-                           @click="addTask(app)">
+ <a-dropdown  v-for="(app, index) in myApps" :trigger="['contextmenu']">
+              <a-card-grid @dragstart="dragStart($event,app)" @mousedown.stop draggable="true"  :id="app.id"  class="app" style="cursor: pointer;"
+                           @click="addTask(app)"  >
                 <a-avatar shape="square" :size="64" :src="app.icon"
                           style="margin-bottom: 10px;"></a-avatar>
                 <a-card-meta :title="app.name">
@@ -134,10 +134,8 @@ myappTpl =
                             </template>
                           </a-card-meta>
                         </a-card-grid>
-
                       </a-card>
 </div>
-
                     </a-tab-pane>
                   </a-tabs>
                 </div>
@@ -260,6 +258,7 @@ module.exports = Vue.component('myapp-page', {
   data () {
     return {
       //selecto
+      selectedElements:[],
       selected:[],
       //selecto end
 
@@ -470,6 +469,7 @@ module.exports = Vue.component('myapp-page', {
 
     //selecto
     onSelect (e) {
+
       e.added.forEach(el => {
         el.classList.add('selected')
       })
@@ -480,12 +480,32 @@ module.exports = Vue.component('myapp-page', {
     },
     // 框选结束存储数据
     selectEnd (e) {
+      this.selectedElements=[]
       e.selected.map(item => {
+        this.selectedElements.push(item)
         this.selected.push(item.id)
+
       })
       window.$selectedApps=this.selected
-      console.log(this.selected)
-    }
+    },
+
     //selecto end
+
+    //drag
+    dragStart (e,app) {
+       if(!!!window.$selectedApps){
+         window.$selectedApps=[String(app.id)]
+      }else if(window.$selectedApps.length===0  ){
+        window.$selectedApps.push(String(app.id))
+      }
+       window.$removeApps=()=>{
+         this.selected=[]
+         this.selectedElements.forEach(el => {
+           el.classList.remove('selected')
+         })
+         this.load()
+      }
+    }
+    //drag end
   }
 })
