@@ -39,23 +39,35 @@ myappTpl =
 
             <a-button type="primary" shape="round" class="add-button" slot="extra" @click="showModal">添加网站</a-button>
 
-<div id="main-content" style="max-height: calc( 100vh - 238px);overflow-y: auto">
+<div id="main-content" class="elements selecto-area" style="max-height: calc( 100vh - 238px);overflow-y: auto">
 <template>
   <a-list  v-show="appList.type==='2' && myApps.length>0" item-layout="horizontal" :data-source="myApps" :pagination="pagination" >
-    <a-list-item slot="renderItem" slot-scope="item, index">
+    <a-list-item class="app-list" slot="renderItem" slot-scope="item, index">
       <a-list-item-meta
         :description="item.summary"
       >
         <a slot="title" :href="item.url">{{ item.name }}</a>
-        <a-avatar
+        <a-avatar style="margin:10px"
           slot="avatar"
+          shape="square"
           :src="item.icon"
         />
       </a-list-item-meta>
     </a-list-item>
   </a-list>
 </template>
-<div v-show="appList.type==='0' && myApps.length>0">
+<vue-selecto
+    dragContainer=".elements"
+    v-bind:selectableTargets='[".selecto-area .app",".selecto-area .app-list"]'
+    v-bind:hitRate='5'
+    v-bind:selectByClick='true'
+    v-bind:selectFromInside='true'
+    v-bind:ratio='0'
+    @select="onSelect"
+    @selectEnd="selectEnd"
+    ></vue-selecto>
+<div class="" id="selecto1" v-show="appList.type==='0' && myApps.length>0">
+
  <a-dropdown  v-for="(app, index) in myApps" :trigger="['contextmenu']">
               <a-card-grid class="app" style="cursor: pointer;"
                            @click="addTask(app)">
@@ -223,9 +235,13 @@ function parseNumber (str) {
 }
 
 const appListModel = require('../../util/model/appListModel.js').appListModel
+const VueSelecto=require('vue-selecto')
 module.exports = Vue.component('myapp-page', {
   name: 'myapp-page',
   template: myappTpl,
+  components:{
+    VueSelecto
+  },
   beforeRouteEnter (to, from, next) {
     console.log(to)
     console.log('beforeRouteEnter' + to.query.listId)
@@ -243,6 +259,10 @@ module.exports = Vue.component('myapp-page', {
   },
   data () {
     return {
+      //selecto
+      selected:[],
+      //selecto end
+
       pagination:{
         onChange: page => {
           console.log(page);
@@ -446,6 +466,30 @@ module.exports = Vue.component('myapp-page', {
           appListModel.putDefaultList(saveData)
       }
       //todo 去保存appList的type
+    },
+
+    //selecto
+    onSelect (e) {
+      console.log('added')
+      console.log(e.added)
+      console.log('removed')
+      console.log(e.removed)
+      e.added.forEach(el => {
+        el.classList.add('selected')
+      })
+      e.removed.forEach(el => {
+        el.classList.remove('selected')
+        this.selected = []
+      })
+    },
+    // 框选结束存储数据
+    selectEnd (e) {
+      e.selected.map(item => {
+        this.selected.push(item.id)
+      })
+
+      console.log(this.selected)
     }
+    //selecto end
   }
 })

@@ -204,3 +204,15 @@
   display: inline-block;
   width: 100px;
 }
+
+
+/*selecto*/
+.selected {
+  background-color: #00000010;
+  border-radius: 8px;
+}
+.app{
+  margin: 5px;
+}
+
+/*selectoend*/
