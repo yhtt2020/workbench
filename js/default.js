@@ -200,6 +200,9 @@ require('searchbar/shortcutButtons.js').initialize()
 require('searchbar/calculatorPlugin.js').initialize()
 require('sessionRestore.js').restore()
 
+//通用工具类(copy实现、深拷贝命中)
+require('util/tools.js').initialize()
+
 const searchbar = require('searchbar/searchbar.js')
 ipc.on('importBookMarks',function(){
   searchbar.openURL('!importbookmarks', null)
