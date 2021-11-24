@@ -124,12 +124,8 @@ const tabBar = {
       name: tab.title,
       url: tab.url,
       summary: tab.title,
-<<<<<<< HEAD
-      star: '5',
-=======
       listId:0,
       star: "5"
->>>>>>> d15af029c8dd418db997f3d44c8af48773a6fcb2
     }
     const appsRestore = require('../../pages/apps/appsRestore.js')
     appsRestore.addApp(appNow)
