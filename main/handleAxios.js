@@ -4,8 +4,7 @@ const { clipboard } = require('electron')
 
 const handleAxios =  {
   initialize: function() {
-    app.whenReady().then(()=>{
-       //游览器登录
+    //游览器登录
     ipc.on('loginBrowser', async (event, arg) => {
       const data = {
         code: arg
@@ -38,27 +37,35 @@ const handleAxios =  {
 
     //分享组
     ipc.on('shareTask', async (event, arg) => {
-         console.log('shareTask')
       const data = {
         title: `${storage.getItem(`userInfo`).nickname} 在${new Date()}分享的组`,
         uid: storage.getItem(`userInfo`).uid,
         site_list: arg
       }
-      const createRes = await axios({
-        method: 'post',
-        url: `/app/createTask`,
-        data
-      })
-      console.log(createRes)
-      if(createRes.code === 1000) {
-        clipboard.writeText(createRes.data.shareTask_link)
-        sidePanel.get().webContents.send('message',{type:'success',config:{content:'复制成功，已为您自动排除系统页面。'}})
-      }
-      })
-    })
+      try{
+        const createRes = await axios({
+          method: 'post',
+          url: `/app/createTask`,
+          data
+        })
+        if(createRes.code === 1000) {
+          clipboard.writeText(createRes.data.shareTask_link)
+          sidePanel.get().webContents.send('message',{type:'success',config:{content:'复制成功，已为您自动排除系统页面。'}})
+        }else{
+          sidePanel.get().webContents.send('message',{type:"error",config:{content:'分享失败，服务器繁忙。'}})
 
+        }
+      }
+      catch(err){
+        sidePanel.get().webContents.send('message',{type:"error",config:{content:'分享失败，请检查网络。'}})
+        console.log(err)
+      }
+
+    })
   }
 }
 
+app.whenReady().then(()=>{
+  handleAxios.initialize()
+})
 
-handleAxios.initialize()
