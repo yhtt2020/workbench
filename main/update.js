@@ -40,12 +40,14 @@ app.whenReady().then(()=>{
       releaseDate:updateInfo.updateInfo.releaseDate
     }
   }).catch((err)=>console.log(err))
-
+ autoUpdater.on('error',(err)=>{
+   sidePanel.get().webContents.send('message',{type:'error',config:{content:"升级文件下载失败，重启软件后重试。",key:"update"}})
+ })
 
   autoUpdater.on('update-available',(data)=>{
     updateInfo=data
     console.log(updateInfo)
-    sidePanel.get().webContents.send('message', {content:'有新版本可用，系统将在后台自动下载。' })
+    sidePanel.get().webContents.send('message',{type:'success',config:{content:"有新版本可用，系统将在后台自动下载。",key:"update"}})
   })
 
   // autoUpdater.on('download-progress',(progressObj)=>{
@@ -64,7 +66,12 @@ app.whenReady().then(()=>{
     autoUpdater.quitAndInstall()
   })
   autoUpdater.on("error", (error) => {
-    console.log(`升级检测失败: ${error}`)
+    console.log(`升级失败: ${error}`)
+    let errInfo=''
+    if(error.code===2){
+      errInfo="软件包名无法验证，"
+    }
+    sidePanel.get().webContents.send('message',{type:'info',config:{content:"系统升级失败，"+errInfo+"请重启后重试。",key:"update"}})
   });
   // ipc.on('quitAndInstall',(event)=>{
   //   console.log('退出并执行升级')
