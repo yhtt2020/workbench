@@ -123,7 +123,7 @@ const tabBar = {
       icon: tab.favicon == null ? '../../icons/default.svg' : tab.favicon.url,
       name: tab.title,
       url: tab.url,
-      summary: tab.title,
+      summary:"",
       listId:0,
       star: "5"
     }

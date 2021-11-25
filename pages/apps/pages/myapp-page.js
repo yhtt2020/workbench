@@ -43,10 +43,11 @@ myappTpl =
 <template>
   <a-list  v-show="appList.type==='2' && myApps.length>0" item-layout="horizontal" :data-source="myApps" :pagination="pagination" >
     <a-list-item  @dragstart="dragStart($event,item)" @mousedown.stop draggable="true"  class="app-list" :id="item.id"  slot="renderItem" slot-scope="item, index">
-      <a-list-item-meta
-        :description="item.summary"
-      >
-        <a slot="title" target="_blank" :href="item.url">{{ item.name }}</a>
+      <a-list-item-meta>
+      <div slot="description">
+        <a style="color: #999" target="_blank" :href="item.url">{{item.url}}</a>
+        </div>
+        <a slot="title" target="_blank" :href="item.url"><strong>{{ item.name }}</strong> <span style="color: #999;font-weight: normal;padding-left: 20px">{{item.summary}}</span></a>
         <a-avatar style="margin:10px"
           slot="avatar"
           shape="square"
