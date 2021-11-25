@@ -39,8 +39,7 @@ const handleAxios =  {
     ipc.on('shareTask', async (event, arg) => {
       sidePanel.get().webContents.send('message',{type:'loading',config:{content:'正在生成分享链接。',key:"shareTask"}})
       const data = {
-        title: `${storage.getItem(`userInfo`).nickname} 在${new Date()}分享的组`,
-        uid: storage.getItem(`userInfo`).uid,
+        uid: storage.getItem(`userInfo`) ? storage.getItem(`userInfo`).uid : null,
         site_list: arg
       }
       try{

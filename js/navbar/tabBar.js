@@ -169,7 +169,7 @@ const tabBar = {
     for(let i = 0; i < filterList.length; i++) {
       const obj = {
         url: filterList[i].url,
-        favicon: filterList[i].favicon === null ? '../../icons/default.svg' : filterList[i].favicon.url,
+        favicon: filterList[i].favicon === null ? '/shareTask/default.svg' : filterList[i].favicon.url,
         title: filterList[i].title
       }
       args.push(obj)
