@@ -8,9 +8,9 @@ const { config, api } = require('../../server-config')
 // console.log(storage.getAll())
 // storage.clear();
 
-axios.defaults.baseURL = config.PROD_NODE_SERVER_BASE_URL;
+//axios.defaults.baseURL = config.PROD_NODE_SERVER_BASE_URL;
 //axios.defaults.baseURL = config.DEV_NODE_SERVER_BASE_URL;
-//axios.defaults.baseURL = 'http://127.0.0.1:8001'
+axios.defaults.baseURL = 'http://127.0.0.1:8001'
 //<!--强制使用node模块。-->
 axios.defaults.adapter = require('axios/lib/adapters/http');
 
@@ -29,7 +29,18 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   response => {
     if (response.status >= 200 && response.status < 300) {
-      return response.data;
+      if(response.data.code === 1000) {
+        return response.data;
+      } else if (response.data.code === 1001) {
+        //要区别axios在两种提示环境中使用，主进程中是无法直接ipcMain.send的'ipc是引入时的简写'
+        if(ipc) {
+          ipc.send('message',{type:'error',config:{content: response.data.message}})
+        } else {
+          sidePanel.get().webContents.send('message',{type:"error",config:{content: response.data.message, key: Date.now()}})
+        }
+        return Promise.reject(response.data)
+      }
+      // return response.data;
     } else {
       return Promise.reject(response);
     }
