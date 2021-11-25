@@ -78,6 +78,11 @@ const pageTranslations = {
       code: 'vie'
     }
   ],
+  baiduError: [
+    '52001',   //百度侧请求超时
+    '54005',   //长query请求频繁
+    '54003',   //访问频率受限
+  ],
   getLanguageList: function () {
     const userPrefs = navigator.languages.map(lang => lang.split('-')[0])
     const topLangs = pageTranslations.languages.filter(lang => userPrefs.includes(lang.code))
@@ -110,24 +115,30 @@ const pageTranslations = {
       queryStr: handleURL(data[0].query)
     }
     axios.post('/app/translate', requestOptions).then(res => {
-      for(let i = 0; i < res.data.trans_result.length; i++) {
-        result.translatedText[i] = res.data.trans_result[i].dst
+      console.log(res, '__restrans___')
+      if(res.code === 1000) {
+        for(let i = 0; i < res.data.trans_result.length; i++) {
+          result.translatedText[i] = res.data.trans_result[i].dst
+        }
+        webviews.callAsync(tab, 'send', ['translation-response-' + data[0].requestId, {
+          response: result
+        }])
       }
-      webviews.callAsync(tab, 'send', ['translation-response-' + data[0].requestId, {
-        response: result
-      }])
     }).catch(err => {
-      console.warn('retrying translation request')
-      setTimeout(()=> {
-        axios.post('/app/translate', requestOptions).then(res => {
-          for(let i = 0; i < res.data.trans_result.length; i++) {
-            result.translatedText[i] = res.data.trans_result[i].dst
-          }
-          webviews.callAsync(tab, 'send', ['translation-response-' + data[0].requestId, {
-            response: result
-          }])
-        }, 1000)
-      })
+      //只有错误码列表中的错误，才会进行重新翻译请求
+      if(pageTranslations.baiduError.indexOf(err.message.slice(8)) !== -1) {
+        console.warn('retrying translation request')
+        setTimeout(()=> {
+          axios.post('/app/translate', requestOptions).then(res => {
+            for(let i = 0; i < res.data.trans_result.length; i++) {
+              result.translatedText[i] = res.data.trans_result[i].dst
+            }
+            webviews.callAsync(tab, 'send', ['translation-response-' + data[0].requestId, {
+              response: result
+            }])
+          }, 3000)
+        })
+      }
     })
   },
   initialize: function () {
