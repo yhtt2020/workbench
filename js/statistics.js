@@ -1,4 +1,6 @@
 const settings = require('util/settings/settings.js')
+const axios = require('./util/axios')
+const storage = require('electron-localstorage');
 
 const statistics = {
   envGetters: [],
@@ -42,29 +44,48 @@ const statistics = {
       }
     })
 
-    fetch('https://services.minbrowser.org/stats/v1/collect', {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        clientID: settings.get('clientID'),
-        installTime: settings.get('installTime'),
-        os: process.platform,
-        lang: navigator.language,
-        appVersion: window.globalArgs['app-version'],
-        appName: window.globalArgs['app-name'],
-        isDev: 'development-mode' in window.globalArgs,
-        usageData: usageData
-      })
+    const options = {
+      client_id: settings.get('clientID'),
+      install_time: settings.get('installTime'),
+      os: process.platform,
+      lang: navigator.language,
+      app_version: window.globalArgs['app-version'],
+      app_name: window.globalArgs['app-name'],
+      is_dev: 'development-mode' in window.globalArgs,
+      usageData: storage.getItem(`userInfo`) ? storage.getItem(`userInfo`) : '',
+    }
+    axios.post('/app/open/usageStats/add', options).then(res => {
+      statistics.usageDataCache = {
+        created: Date.now()
+      }
+      settings.set('usageData', null)
+    }).catch(e => {
+      console.warn('failed to send usage statistics', e)
     })
-      .then(function () {
-        statistics.usageDataCache = {
-          created: Date.now()
-        }
-        settings.set('usageData', null)
-      })
-      .catch(e => console.warn('failed to send usage statistics', e))
+
+    // fetch('https://services.minbrowser.org/stats/v1/collect', {
+    //   method: 'post',
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   },
+    //   body: JSON.stringify({
+    //     clientID: settings.get('clientID'),
+    //     installTime: settings.get('installTime'),
+    //     os: process.platform,
+    //     lang: navigator.language,
+    //     appVersion: window.globalArgs['app-version'],
+    //     appName: window.globalArgs['app-name'],
+    //     isDev: 'development-mode' in window.globalArgs,
+    //     usageData: usageData
+    //   })
+    // })
+    //   .then(function () {
+    //     statistics.usageDataCache = {
+    //       created: Date.now()
+    //     }
+    //     settings.set('usageData', null)
+    //   })
+    //   .catch(e => console.warn('failed to send usage statistics', e))
   },
   initialize: function () {
     setTimeout(statistics.upload, 10000)

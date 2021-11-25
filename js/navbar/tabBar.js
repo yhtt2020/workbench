@@ -174,7 +174,6 @@ const tabBar = {
       }
       args.push(obj)
     }
-    console.log(filterList)
     ipc.send('shareTask', args)
   },
 

@@ -34,7 +34,11 @@ axios.interceptors.response.use(
       } else if (response.data.code === 1001) {
         //要区别axios在两种提示环境中使用，主进程中是无法直接ipcMain.send的'ipc是引入时的简写'
         if(ipc) {
-          ipc.send('message',{type:'error',config:{content: response.data.message}})
+          if(response.data.message.indexOf('54003') !== -1) {
+            ipc.send('message',{type:'error',config:{content: '服务器翻译繁忙!', key: Date.now()}})
+          } else {
+            ipc.send('message',{type:'error',config:{content: response.data.message, key: Date.now()}})
+          }
         } else {
           sidePanel.get().webContents.send('message',{type:"error",config:{content: response.data.message, key: Date.now()}})
         }

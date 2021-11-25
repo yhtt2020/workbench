@@ -114,32 +114,34 @@ const pageTranslations = {
       toLang: data[0].lang,
       queryStr: handleURL(data[0].query)
     }
-    axios.post('/app/translate', requestOptions).then(res => {
-      console.log(res, '__restrans___')
-      if(res.code === 1000) {
-        for(let i = 0; i < res.data.trans_result.length; i++) {
-          result.translatedText[i] = res.data.trans_result[i].dst
+    //1000毫秒发起一次请求
+    setTimeout(()=> {
+      axios.post('/app/translate', requestOptions).then(res => {
+        if(res.code === 1000) {
+          for(let i = 0; i < res.data.trans_result.length; i++) {
+            result.translatedText[i] = res.data.trans_result[i].dst
+          }
+          webviews.callAsync(tab, 'send', ['translation-response-' + data[0].requestId, {
+            response: result
+          }])
         }
-        webviews.callAsync(tab, 'send', ['translation-response-' + data[0].requestId, {
-          response: result
-        }])
-      }
-    }).catch(err => {
-      //只有错误码列表中的错误，才会进行重新翻译请求
-      if(pageTranslations.baiduError.indexOf(err.message.slice(8)) !== -1) {
-        console.warn('retrying translation request')
-        setTimeout(()=> {
-          axios.post('/app/translate', requestOptions).then(res => {
-            for(let i = 0; i < res.data.trans_result.length; i++) {
-              result.translatedText[i] = res.data.trans_result[i].dst
-            }
-            webviews.callAsync(tab, 'send', ['translation-response-' + data[0].requestId, {
-              response: result
-            }])
-          }, 3000)
-        })
-      }
-    })
+      }).catch(err => {
+        //只有错误码列表中的错误，才会进行重新翻译请求
+        if(pageTranslations.baiduError.indexOf(err.message.slice(8)) !== -1) {
+          console.warn('retrying translation request')
+          setTimeout(()=> {
+            axios.post('/app/translate', requestOptions).then(res => {
+              for(let i = 0; i < res.data.trans_result.length; i++) {
+                result.translatedText[i] = res.data.trans_result[i].dst
+              }
+              webviews.callAsync(tab, 'send', ['translation-response-' + data[0].requestId, {
+                response: result
+              }])
+            }, 3000)
+          })
+        }
+      })
+    }, 1000)
   },
   initialize: function () {
     webviews.bindIPC('translation-request', this.makeTranslationRequest)
