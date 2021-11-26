@@ -17,6 +17,9 @@ myappTpl =
           <a-icon type="bars"></a-icon>
         </a-radio-button>
       </a-radio-group>
+
+      <a-button shape="circle" icon="share-alt" @click="shareList" title="分享整组"/>
+       <a-button shape="circle" icon="diff" @click="openList" title="整组打开" />
       </template>
       </a-page-header>
     </a-layout-header>
@@ -227,7 +230,7 @@ myappTpl =
 </div>
 
 `
-
+const ipc=require("electron").ipcRenderer
 function parseNumber (str) {
   const num = Number(str)
   return isNaN(num) ? 0 : num
@@ -505,7 +508,33 @@ module.exports = Vue.component('myapp-page', {
          })
          this.load()
       }
-    }
+    },
     //drag end
+
+    /***
+     * 分享整组
+     */
+    shareList(){
+      let apps=this.myApps
+      let filterList =  apps.filter(e => !e.url.startsWith('file:///'))    //过滤掉file层面的tab
+      let args = []
+      for(let i = 0; i < filterList.length; i++) {
+        const obj = {
+          url: filterList[i].url,
+          favicon: filterList[i].icon,
+          title: filterList[i].name
+        }
+        args.push(obj)
+      }
+      ipc.send('shareTask', args)
+    },
+    /***
+     * 分享整个列表
+     */
+    openList(){
+        this.myApps.forEach(app=>{
+          window.open(app.url)
+        })
+    }
   }
 })
