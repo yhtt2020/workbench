@@ -1,6 +1,6 @@
 const settings = require('util/settings/settings.js')
 const axios = require('./util/axios')
-const storage = require('electron-localstorage');
+const { db } = require('./util/database');
 
 const statistics = {
   envGetters: [],
@@ -21,7 +21,7 @@ const statistics = {
       statistics.usageDataCache[key] = 1
     }
   },
-  upload: function () {
+  async upload () {
     if (settings.get('collectUsageStats') === false) {
       return
     }
@@ -44,15 +44,17 @@ const statistics = {
       }
     })
 
+    const result = await db.system.where('name').equals('currentUser').first()
+
     const options = {
       client_id: settings.get('clientID'),
-      install_time: settings.get('installTime'),
+      install_time: `${Date.now()}`,
       os: process.platform,
       lang: navigator.language,
       app_version: window.globalArgs['app-version'],
       app_name: window.globalArgs['app-name'],
       is_dev: 'development-mode' in window.globalArgs,
-      usageData: storage.getItem(`userInfo`) ? storage.getItem(`userInfo`) : '',
+      usage_data: result.value.uid != 0 ? Object.assign(usageData, result.value) : usageData
     }
     axios.post('/app/open/usageStats/add', options).then(res => {
       statistics.usageDataCache = {
@@ -62,30 +64,6 @@ const statistics = {
     }).catch(e => {
       console.warn('failed to send usage statistics', e)
     })
-
-    // fetch('https://services.minbrowser.org/stats/v1/collect', {
-    //   method: 'post',
-    //   headers: {
-    //     'Content-Type': 'application/json'
-    //   },
-    //   body: JSON.stringify({
-    //     clientID: settings.get('clientID'),
-    //     installTime: settings.get('installTime'),
-    //     os: process.platform,
-    //     lang: navigator.language,
-    //     appVersion: window.globalArgs['app-version'],
-    //     appName: window.globalArgs['app-name'],
-    //     isDev: 'development-mode' in window.globalArgs,
-    //     usageData: usageData
-    //   })
-    // })
-    //   .then(function () {
-    //     statistics.usageDataCache = {
-    //       created: Date.now()
-    //     }
-    //     settings.set('usageData', null)
-    //   })
-    //   .catch(e => console.warn('failed to send usage statistics', e))
   },
   initialize: function () {
     setTimeout(statistics.upload, 10000)
