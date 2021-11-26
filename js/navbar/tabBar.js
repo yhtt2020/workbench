@@ -130,7 +130,7 @@ const tabBar = {
         icon: tab.favicon == null ? '../../icons/default.svg' : tab.favicon.url,
         name: tab.title,
         url: tab.url,
-        summary: tab.title,
+        summary: "",
         listId: listId ? listId : 0,
         star: "5"
       }
@@ -145,7 +145,7 @@ const tabBar = {
           icon: item.favicon == null ? '../../icons/default.svg' : item.favicon.url,
           name: item.title,
           url: item.url,
-          summary: item.title,
+          summary: "",
           listId: listId ? listId : 0,
           star: "5"
         }
