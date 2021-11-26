@@ -14,6 +14,7 @@ const permissionRequests = require('navbar/permissionRequests.js')
 
 //添加tab上的右键菜单，支持右键选择关闭行为组
 const remoteMenu = require('remoteMenuRenderer.js')
+//const path = require('path')
 
 const ipc = electron.ipcRenderer
 
@@ -115,21 +116,43 @@ const tabBar = {
     webviews.update(id, tasks.getSelected().tabs.get(id).url)
   },
 
-  //添加到本地导航(我的应用)
-  addToMyapps: function (tabId) {
-    let tabs = tasks.getSelected().tabs
-    let tab = tabs.get(tabId)
-    const appNow = {
-      icon: tab.favicon == null ? '../../icons/default.svg' : tab.favicon.url,
-      name: tab.title,
-      url: tab.url,
-      summary: tab.title,
-      listId:0,
-      star: "5"
+  /**
+   * 添加到本地自建列表或本地默认列表(分单个和整组)
+   * @param {String} tabId  tab标签id
+   * @param {Number} listId 父级id
+   * @param {Boolean} single 默认true单个？整组？移动
+   */
+  addToScopeLocal(tabId, listId, single = true) {
+    if(single) {
+      let tabs = tasks.getSelected().tabs
+      let tab = tabs.get(tabId)
+      const appNow = {
+        icon: tab.favicon == null ? '../../icons/default.svg' : tab.favicon.url,
+        name: tab.title,
+        url: tab.url,
+        summary: tab.title,
+        listId: listId ? listId : 0,
+        star: "5"
+      }
+      const appsRestore = require('../../pages/apps/appsRestore.js')
+      appsRestore.addApp(appNow)
+      ipc.send('message', { type: 'success', config: { content: '添加成功，可在我的导航和新标签页中查看。' } })
+    } else {
+      const appsRestore = require('../../pages/apps/appsRestore.js')
+      let tabs = tasks.getSelected().tabs
+      tabs.tabs.forEach(item => {
+        const appNow = {
+          icon: item.favicon == null ? '../../icons/default.svg' : item.favicon.url,
+          name: item.title,
+          url: item.url,
+          summary: item.title,
+          listId: listId ? listId : 0,
+          star: "5"
+        }
+        appsRestore.addApp(appNow)
+      })
+      ipc.send('message', { type: 'success', config: { content: '整组添加成功，可在我的导航和新标签页中查看。' } })
     }
-    const appsRestore = require('../../pages/apps/appsRestore.js')
-    appsRestore.addApp(appNow)
-    ipc.send('message', { type: 'success', config: { content: '添加到本地导航成功，可在我的导航和新标签页中查看。' } })
   },
 
   //移动tab到新的分组且完成切换
@@ -265,9 +288,53 @@ const tabBar = {
       }
     })
 
-    tabEl.addEventListener('contextmenu', (e) => {
+    tabEl.addEventListener('contextmenu', async (e) => {
       e.preventDefault()
       e.stopPropagation()
+
+      let handleSingleTab = [
+        {
+          label: '默认列表',
+          click: () => {
+            tabBar.addToScopeLocal(data.id)
+          }
+        },
+        {type: 'separator'}
+      ]
+
+      let handleAllTab = [
+        {
+          label: '默认列表',
+          click: () => {
+            tabBar.addToScopeLocal(data.id, null, false)
+          }
+        },
+        {type: 'separator'}
+      ]
+
+      //处理本地导航的列表呈现
+      const localAppsMenu = async () => {
+        const { appListModel } = require('../../pages/util/model/appListModel')
+        const list = await appListModel.list()
+        list.forEach(item => {
+          handleSingleTab.push({
+            label: item.name,
+            click: ()=> {
+              tabBar.addToScopeLocal(data.id, item.id)
+            }
+            //icon: path.join(__dirname, '/icons/apps.png')
+          })
+          handleAllTab.push({
+            label: item.name,
+            click: ()=> {
+              tabBar.addToScopeLocal(data.id, item.id, false)
+            }
+            //icon: path.join(__dirname, '/icons/apps.png')
+          })
+        })
+      }
+
+      await localAppsMenu()
 
       let template = [
         [
@@ -333,9 +400,14 @@ const tabBar = {
         [
           {
             label: '添加到本地导航',
-            click: function () {
-              tabBar.addToMyapps(data.id)
-            },
+            submenu: handleSingleTab
+            // click: function () {
+            //   tabBar.addToMyapps(data.id)
+            // },
+          },
+          {
+            label: '整组添加到本地导航',
+            submenu: handleAllTab
           },
           {
             label: '移入新建分组中',
