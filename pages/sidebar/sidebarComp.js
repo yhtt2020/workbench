@@ -1,11 +1,12 @@
-//const browserUI= require('./js/browserUI.js')
-const serverConfig= require('./user.js')
+const { db } = require('../../js/util/database');
+const { api } = require('../../server-config')
 Vue.component('sidebar', {
 	data: function() {
 		return {
+      lastOpenId:0,
 			drag: false,
 			remote: {},
-			loginPanelTitle:"登陆账号免费体验完整功能",
+			loginPanelTitle:"登录帐号免费体验完整功能",
 			loginPanelContent:``,
 			userPanelVisible:false,
 			devices: [{
@@ -67,7 +68,7 @@ Vue.component('sidebar', {
 		});
 
 	},
-	mounted: function() {
+	async mounted() {
 		// let item = {
 		// 	title: '打开标签', //名称，用于显示提示
 		// 	index: 0, //索引
@@ -90,6 +91,13 @@ Vue.component('sidebar', {
       that.sidebarBottom= data.value
       setTimeout(that.fixElementPosition,250)
     })
+    const currentUser = await db.system.where('name').equals('currentUser').first()
+    if(currentUser.value.uid !== 0 ) {
+      await this.$store.dispatch('getGroups', {
+        uid: currentUser.value.uid,
+        token: currentUser.value.token
+      })
+    }
 	},
 	computed: {
 		user(){
@@ -148,11 +156,15 @@ Vue.component('sidebar', {
 					message: 'openBookMarks'
 				})
 			} else if (this.$store.getters.getPinItems[index].type == 'task') {
-				this.switchTask(id, index)
+        this.openItem(id, index)
 			}
 		},
 		openItem(id, index) {
-			this.switchTask(id, index)
+      if(id!==this.lastOpenId){
+        this.switchTask(id, index)
+        this.lastOpenId=id
+      }
+
 		},
 		openBottom(action) {
 			postMessage({
@@ -244,9 +256,9 @@ Vue.component('sidebar', {
 		//点击用户登录按钮
 		userClick(){
 			if(this.user.uid===0){
-				this.addTab(serverConfig.getUrl(serverConfig.apiUrl.user.login))
+				this.addTab(api.getUrl(api.API_URL.user.login))
 			}else{
-				this.addTab(serverConfig.getUrl(serverConfig.apiUrl.user.home))
+				this.addTab(api.getUrl(api.API_URL.user.home))
 			}
 			this.userPanelVisible=false
 		},
@@ -256,28 +268,51 @@ Vue.component('sidebar', {
 				'url':url
 			})
 		},
-		logout(){
-			window.insertDefaultUser()
-			db.system.where({name:'currentUser'}).delete()
+		async logout(){
+      const result = await db.system.where('name').equals('currentUser').first()
+      ipc.send('logoutBrowser', result.value.code)
+			await window.insertDefaultUser(result.value.code)
+      //下面这步在insertDefaultUser方法中有
+			//db.system.where({name:'currentUser'}).delete()
 			this.$message.info('注销成功！');
 		},
     switchAccount(){
       this.userPanelVisible=false
-      this.addTab(serverConfig.getUrl(serverConfig.apiUrl.user.login))
+      this.addTab(api.getUrl(api.API_URL.user.login))
     },
     goProfile(){
       this.userPanelVisible=false
-      this.addTab(serverConfig.getUrl(serverConfig.apiUrl.user.profile))
+      this.addTab(api.getUrl(api.API_URL.user.profile))
     },
     goGroup(){
       this.userPanelVisible=false
-      this.addTab(serverConfig.getUrl(serverConfig.apiUrl.group.index))
+      this.addTab(api.getUrl(api.API_URL.group.index))
     },
     goAccount(){
       this.userPanelVisible=false
-      this.addTab(serverConfig.getUrl(serverConfig.apiUrl.user.account))
+      this.addTab(api.getUrl(api.API_URL.user.account))
+    },
+    addNewTask(e){
+      ipc.send('addNewTask')
+      this.$message.success({content:'成功添加一个新任务到左侧栏。'})
+    },
+    closeItem(item){
+      if(item.type==='task'){
+        ipc.send('closeTask',{tabId:item.id})
+        this.$message.success({content:'删除任务成功。'})
+      }
+    },
+    createGroup(){
+      ipc.send('createGroup')
     }
 
 	}
 
+})
+
+ipc.on('message',function(event,args){
+  if(!!!args.type){
+    args.type='open'
+  }
+  appVue.$message[args.type](args.config)
 })

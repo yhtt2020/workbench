@@ -1,10 +1,11 @@
+
 let sidePanel = null //SidePanel类的存储变量
 /**
  * 是否是win11
  */
 function isWin11() {
-	var sysVersion = process.getSystemVersion()
-	if (sysVersion.startsWith('10.') && process.platform === 'win32') {
+  const sysVersion = process.getSystemVersion()
+  if (sysVersion.startsWith('10.') && process.platform === 'win32') {
 		return true
 	} else {
 		return false
@@ -40,7 +41,8 @@ class SidePanel {
 	 * 返回sidePanel实例
 	 */
 	static getSidePanel() {
-		return this._sidePanel
+    console.log(BrowserWindow.getAllWindows())
+		return sidePanel.get()
 	}
 	//判断是否存在sidebar
 	static alive() {
@@ -544,7 +546,8 @@ ipc.on('showSidePanel', function() {
 })
 
 var selectTaskWindow = null
-ipc.on('selectTask', function() {
+ipc.on('selectTask', function(event, arg) {
+  console.log(arg, '__apppp__')
 	selectTaskWindow = new BrowserWindow({
 		frame: true,
 		backgroundColor: 'black',
@@ -570,7 +573,9 @@ ipc.on('selectTask', function() {
 		}
 	})
 	selectTaskWindow.webContents.loadURL('file://' + __dirname + "/pages/selectTask/index.html")
-
+  if(toString.call(arg) === '[object Array]') {
+    selectTaskWindow.webContents.send('appsCartList', arg)
+  }
 })
 
 ipc.on('closeTaskSelect', function() {
@@ -582,13 +587,60 @@ ipc.on('addTab', function(event, data) {
 	})
 })
 
+//选择到对应的task，再在对应的位置执行addTab
+ipc.on('toTask-addTab', (event, arg)=> {
+  console.log(arg, '__传来的__')
+  //browserUI里都是对tab和task处理的一些集成方法和UI转换
+  //我们把具体的ipc操作传到menuRenderer中
+  sendIPCToWindow(mainWindow, 'toTaskAddTab', arg)
+})
+
 ipc.on('userLogin', function(event, data) {
-	sidePanel.get().webContents.send( 'userLogin', {
-		'userInfo': data.userInfo
-	})
+	sidePanel.get().webContents.send( 'userLogin', data)
 })
 
 
 ipc.on('importBookMarks',function(){
   sendIPCToWindow(mainWindow,'importBookMarks')
+})
+
+/**
+ * 发送消息到sidebar，进行全局提示
+ */
+ipc.on('message',function(event,args){
+  sidePanel.get().webContents.send('message',args)
+})
+
+ipc.on('closeTask',function(event,args){
+  sendIPCToWindow(mainWindow,'closeTask',args)
+})
+
+
+ipc.on('refresh',()=>{
+  //刷新当前页
+  console.log('refresh当前页')
+  sendIPCToWindow(mainWindow,'refresh')
+})
+ipc.on('addTask',function(event, data){
+  let taskId=Math.round(Math.random() * 100000000000000000)
+  let item={
+    title: data.name, //名称，用于显示提示
+    name: data.name,
+    index: 0, //索引组
+    id: taskId, //任务id
+    icon: data.icon, //图标
+    draggable: true, //是否允许拖拽
+    ext: taskId, //额外的信息，如果是任务则放任务id
+    fixed: false,
+    type: 'task',//task fav
+    tabs: [],//初始化的时候必要用于展示的有就行了，其他的会自动同步过去
+    count:1
+  }
+  if(sidePanel!=null)
+    sidePanel.addItem(item)
+  sendIPCToWindow(mainWindow,'addTaskFromApps',{id:taskId,name:data.name,url:data.url})
+})
+
+ipc.on('addNewTask',function(){
+  sendIPCToWindow(mainWindow,'addTask')
 })

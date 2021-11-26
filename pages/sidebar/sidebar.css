@@ -1,248 +1,270 @@
-body{
-	background-color: #00000000;
-	overflow: hidden;
+@charset "UTF-8";
+body {
+  background-color: #00000000;
+  overflow: hidden;
 }
+
 .sidebar {
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	overflow-x: hidden;
-	top: 0;
-	box-shadow: 3px 0 3px #00000012;
-	border-radius: 0px 0px 0px 10px;
-	width: 45px;
-	background: white;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  overflow-x: hidden;
+  top: 0;
+  box-shadow: 3px 0 3px #00000012;
+  border-radius: 0px 0px 0px 10px;
+  width: 45px;
+  background: white;
 }
-
-
 
 .sidebar .side-items {
-	bottom: 0;
-	overflow-x: hidden;
+  bottom: 0;
+  overflow-x: hidden;
 }
 
 .sidebar .side-items ul li {
-	cursor: pointer;
+  cursor: pointer;
 }
 
 .sidebar .side-items ul li:hover {
-	background-color: #efefef;
-	color: #1E90FF;
+  background-color: #efefef;
+  color: #1E90FF;
 }
 
 .sidebar .side-container .side-items .app-task .icon {
-	width: 25px;
-	height: 25px;
-
+  width: 25px;
+  height: 25px;
 }
 
 .item-icon {
-	width: 45px;
-	position: absolute;
-	left: 0;
-	display: inline-block;
-	height: 45px;
-	align-items: center;
-	text-align: center;
-	line-height: 45px;
+  width: 45px;
+  position: absolute;
+  left: 0;
+  display: inline-block;
+  height: 45px;
+  align-items: center;
+  text-align: center;
+  line-height: 45px;
 }
 
 .item-title {
-	position: absolute;
-	left: 50px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	max-width: 90px;
+  position: absolute;
+  left: 50px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 90px;
 }
 
 .sidebar .side-items .app-items {
-	width: 62px;
-	overflow-y: scroll;
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	margin-bottom: 0;
-	overflow-x: hidden;
+  width: 62px;
+  overflow-y: scroll;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin-bottom: 0;
+  overflow-x: hidden;
 }
 
 .side-container .side-items {
-	flex-direction: column;
-	display: flex;
-	left: 0;
-	/* height: 100vh; */
-	width: 45px;
-	top: 0;
-	position: fixed;
+  flex-direction: column;
+  display: flex;
+  left: 0;
+  /* height: 100vh; */
+  width: 45px;
+  top: 0;
+  position: fixed;
 }
 
 .sidebar .app-box {
-	overflow: hidden;
-	width: 45px;
-	flex: 1;
-	position: relative;
+  overflow: hidden;
+  width: 45px;
+  flex: 1;
+  position: relative;
 }
 
 .sidebar .active {
-	border-left: #1B74BB solid 3px;
-	padding-left: -3px;
-	background-color: #f1f1f1;
-	box-sizing: content-box;
-	color: #1E90FF;
+  border-left: #1B74BB solid 3px;
+  padding-left: -3px;
+  background-color: #f1f1f1;
+  box-sizing: content-box;
+  color: #1E90FF;
 }
 
 .dragClass {
-	background-color: blueviolet !important;
-	opacity: 1 !important;
-	box-shadow: none !important;
-	outline: none !important;
-	background-image: none !important;
+  background-color: blueviolet !important;
+  opacity: 1 !important;
+  box-shadow: none !important;
+  outline: none !important;
+  background-image: none !important;
 }
 
 .side-items .item:hover {
-	background-color: #f1f1f1;
-	cursor: move;
+  background-color: #f1f1f1;
+  cursor: move;
 }
 
 .tab-icon {
-	width: 20px;
-	height: 20px;
-	margin-right: 5px;
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
 }
 
 .tab-title {
-	width: 250px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	padding: 5px;
-	border-radius: 4px;
+  width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 5px;
+  border-radius: 4px;
 }
 
 .tab-title:hover {
-	background-color: #efefef;
+  background-color: #efefef;
 }
 
 .wrapper {
-	width: 42px;
-	height: 42px;
-	display: flex;
-	cursor: pointer;
-	text-align: left;
-	align-items: center;
-	justify-content: center;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  cursor: pointer;
+  text-align: left;
+  align-items: center;
+  justify-content: center;
 }
 
 /* 底部栏的样式 */
-
 .bottomBar li {
-	width: 45px;
-	height: 45px;
-	display: flex;
-	cursor: pointer;
-	text-align: center;
-	align-items: center;
-	justify-content: center;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  cursor: pointer;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
 }
 
 .bottomBar li:hover {
-	color: #1E90FF;
+  color: #1E90FF;
 }
 
 .bottom-container {
-	position: fixed;
-	bottom: 0;
-	width: 45px;
-	overflow: hidden;
+  position: fixed;
+  bottom: 0;
+  width: 45px;
+  overflow: hidden;
 }
 
-
 .bottom-container .ant-collapse {
-	border-radius: 0;
-
+  border-radius: 0;
 }
 
 .expanded {
-	width: 145px;
-	transition: width 0.1s;
+  width: 145px;
+  transition: width 0.1s;
 }
 
 .expanded .wrapper {
-	width: 142px;
-	transition: width 0.1s;
+  width: 142px;
+  transition: width 0.1s;
 }
 
 .expanded .side-container .side-items {
-	width: 145px;
-	transition: width 0.1s;
-
+  width: 145px;
+  transition: width 0.1s;
 }
 
 .expanded .bottom-container {
-	width: 145px;
-	transition: width 0.1s;
+  width: 145px;
+  transition: width 0.1s;
 }
 
-
 .expanded .side-items .app-items {
-	width: 162px;
-	transition: width 0.1s;
+  width: 162px;
+  transition: width 0.1s;
 }
 
 .expanded .app-box {
-	width: 145px;
-	transition: width 0.1s;
+  width: 145px;
+  transition: width 0.1s;
 }
 
 .expanded .app-task {
-	width: 162px;
-	transition: width 0.1s;
+  width: 162px;
+  transition: width 0.1s;
 }
 
-.expanded .ant-collapse>.ant-collapse-item>.ant-collapse-header .ant-collapse-arrow {
-	left: 68px;
-	transition: width 0.1s;
+.expanded .ant-collapse > .ant-collapse-item > .ant-collapse-header .ant-collapse-arrow {
+  left: 68px;
+  transition: width 0.1s;
 }
 
-.divider{
-	border-top: 1px solid lightgrey;margin: 8px;
+.divider {
+  border-top: 1px solid lightgrey;
+  margin: 8px;
 }
 
 .ant-collapse-borderless {
-	background-color: transparent;
+  background-color: transparent;
 }
 
 .dark-mode .sidebar {
-	background-color: #565656;
+  background-color: #565656;
 }
 
 .dark-mode .ant-btn {
-	background-color: #ffffff0f ;
-	border-color: #d9d9d90f;
-}
-.dark-mode .bottomBar li:hover .ant-btn{
-	background-color: #ffffff0f ;
-	border-color: #d9d9d90f;
+  background-color: #ffffff0f;
+  border-color: #d9d9d90f;
 }
 
-.dark-mode li:hover{
-	color:#333
+.dark-mode .bottomBar li:hover .ant-btn {
+  background-color: #ffffff0f;
+  border-color: #d9d9d90f;
 }
+
+.dark-mode li:hover {
+  color: #333;
+}
+
 .dark-mode .ant-btn:hover {
-	color: #9f9f9f;
-	background-color: #ffffff24 !important;
-	border-color: #d7d7d7;
-}
-.dark-mode .sidebar .active,.dark-mode .sidebar .side-items ul li:hover{
-	background-color: #f1f1f11f;
-	border-color: #1b1c1cc5;
-	color:#d5d5d5;
+  color: #9f9f9f;
+  background-color: #ffffff24 !important;
+  border-color: #d7d7d7;
 }
 
-.dark-mode  .sidebar .side-container .side-items .app-task .icon{
-	opacity:0.6 !important;
+.dark-mode .sidebar .active, .dark-mode .sidebar .side-items ul li:hover {
+  background-color: #f1f1f11f;
+  border-color: #1b1c1cc5;
+  color: #d5d5d5;
 }
 
-.dark-mode .divider{
-	border-color: #a1a1a15e;
+.dark-mode .sidebar .side-container .side-items .app-task .icon {
+  opacity: 0.6 !important;
 }
+
+.dark-mode .divider {
+  border-color: #a1a1a15e;
+}
+
+.user-panel .ant-drawer-body {
+  background: #f6f6f6;
+  height: calc(100vh - 55px);
+}
+.user-panel .nick-name {
+  color: #333;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+.user-panel .actions {
+  background: white;
+  border-radius: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+.user-panel .actions .action {
+  text-align: center;
+  padding: 10px;
+  cursor: pointer;
+}
+
+/*# sourceMappingURL=sidebar.css.map */

@@ -155,7 +155,7 @@ const webviewMenu = {
               }else{
                 db.system.update(newtabBg.id,{name:'newtabBg',value:mediaURL})
               }
-                  alert('设置成功，可在新建标签中查看效果。')
+                  ipc.send('message',{type:'success',config:{content:'设置成功，可在新建标签中查看效果。'}})
           }catch(err){
             console.log(err)
           }
@@ -350,12 +350,12 @@ const webviewMenu = {
       type: 'separator'
     })
 
-    translateMenu.submenu.push({
-      label: 'Send Feedback',
-      click: function () {
-        browserUI.addTab(tabs.add({ url: 'https://github.com/minbrowser/min/issues/new?title=Translation%20feedback%20for%20' + encodeURIComponent(tabs.get(tabs.getSelected()).url) }), { enterEditMode: false, openInBackground: false })
-      }
-    })
+    // translateMenu.submenu.push({
+    //   label: 'Send Feedback',
+    //   click: function () {
+    //     browserUI.addTab(tabs.add({ url: 'https://github.com/minbrowser/min/issues/new?title=Translation%20feedback%20for%20' + encodeURIComponent(tabs.get(tabs.getSelected()).url) }), { enterEditMode: false, openInBackground: false })
+    //   }
+    // })
 
     menuSections.push([translateMenu])
 

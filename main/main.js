@@ -15,6 +15,7 @@ const {
   nativeTheme,
   globalShortcut
 } = electron
+const { autoUpdater } = require('electron-updater')
 console.log(app.setAsDefaultProtocolClient("tsb"))
 console.log(app.isDefaultProtocolClient('tsb'))
 console.log(app.getApplicationNameForProtocol("tsb://"))
@@ -414,6 +415,9 @@ app.on('open-url', function(e, url) {
 		sendIPCToWindow(mainWindow, 'addTab', {
 			url: url
 		})
+    if(mainWindow.isMinimized()){
+      mainWindow.restore()
+    }
 	} else {
 		global.URLToOpen = url // this will be handled later in the createWindow callback
 	}

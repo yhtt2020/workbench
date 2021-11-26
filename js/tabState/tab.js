@@ -9,7 +9,7 @@ class TabList {
 
   static temporaryProperties = ['hasAudio', 'previewImage', 'loaded']
 
-  add (tab = {}, options = {}) {
+  add (tab = {}, options = {}, index) {
     var tabId = String(tab.id || Math.round(Math.random() * 100000000000000000)) // you can pass an id that will be used, or a random one will be generated.
 
     var newTab = {
@@ -33,6 +33,8 @@ class TabList {
 
     if (options.atEnd) {
       this.tabs.push(newTab)
+    } else if (index) {
+      this.tabs.splice(index + 1, 0, newTab)
     } else {
       this.tabs.splice(this.getSelectedIndex() + 1, 0, newTab)
     }
@@ -190,7 +192,7 @@ class TabList {
       Object.keys(tab)
       .filter(key => !TabList.temporaryProperties.includes(key))
       .forEach(key => result[key] = tab[key])
-      
+
       return result
   }
 

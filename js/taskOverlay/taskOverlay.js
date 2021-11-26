@@ -30,11 +30,12 @@ function addTaskFromMenu () {
   }
 
   browserUI.addTask()
-  taskOverlay.show()
-  setTimeout(function () {
-    taskOverlay.hide()
-    tabEditor.show(tabs.getSelected())
-  }, 600)
+  // 移除两次弹窗事件
+  //taskOverlay.show()
+  // setTimeout(function () {
+  //   taskOverlay.hide()
+  //   tabEditor.show(tabs.getSelected())
+  // }, 600)
 }
 
 function getTaskContainer (id) {
@@ -474,5 +475,9 @@ var taskOverlay = {
     })
   }
 }
+
+ipc.on('closeTask',(event,args)=>{
+  browserUI.closeTask(args.tabId)
+})
 
 module.exports = taskOverlay

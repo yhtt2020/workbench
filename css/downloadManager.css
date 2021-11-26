@@ -4,7 +4,7 @@
   bottom: 0px;
   left: 45px;
   background: rgb(250, 250, 250);
-  width: 100%;
+  width: calc( 100% - 45px);
   border-top: 1px solid rgb(214, 214, 214);
   color: black;
   padding: 0 0.5em;

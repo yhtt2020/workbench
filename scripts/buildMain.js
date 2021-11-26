@@ -10,6 +10,9 @@ const modules = [
   'main/registryConfig.js',
   'main/main.js',
   'main/sidePanel.js',
+  'main/handleAxios.js',
+  'main/group.js',
+  'main/update.js',
   'js/util/settings/settingsMain.js',
   'main/filtering.js',
   'main/viewManager.js',
@@ -21,7 +24,6 @@ const modules = [
   'main/remoteActions.js',
   'main/keychainService.js',
   'js/util/proxy.js',
-  'main/apps.js',
   'main/wizard.js'
 ]
 

@@ -2,9 +2,9 @@
   "name": "tsbrowser",
   "productName": "想天浏览器",
   "author": "Thisky",
-  "version": "0.8.0",
+  "version": "1.2.6",
   "description": "一款针对工作场景的极简浏览器，帮助你提升效率，保持专注",
-  "electronVersion": "15.3.0",
+  "electronVersion": "15.3.1",
   "main": "main.build.js",
   "standard": {
     "globals": [
@@ -30,16 +30,20 @@
     ]
   },
   "dependencies": {
+    "axios": "^0.24.0",
     "dexie": "^3.0.3",
     "dragula": "^3.7.3",
+    "electron-localstorage": "^1.0.5",
     "electron-squirrel-startup": "^1.0.0",
+    "electron-updater": "^4.3.9",
     "expr-eval": "^2.0.2",
     "keytar": "7.7.0",
     "mousetrap": "^1.5.3",
     "node-abi": "^3.2.0",
     "pdfjs-dist": "2.4.456",
     "regedit": "^3.0.3",
-    "string_score": "^0.1.22"
+    "string_score": "^0.1.22",
+    "vue-selecto": "^1.13.3"
   },
   "devDependencies": {
     "archiver": "^4.0.1",
@@ -48,11 +52,11 @@
     "concurrently": "^5.2.0",
     "decomment": "^0.9.0",
     "electron": "^15.3.0",
+    "electron-builder": "^22.13.1",
     "electron-installer-windows": "^3.0.0",
     "electron-packager": "^15.1.0",
     "electron-rebuild": "^2.3.2",
     "electron-renderify": "0.0.2",
-    "electron-builder": "^22.13.1",
     "prettier": "^2.2.1",
     "snazzy": "^9.0.0",
     "standard": "^14.3.4"

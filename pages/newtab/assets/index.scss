@@ -85,7 +85,7 @@ html {
         .nav-bottom {
           width: 398px;
           height: 40px;
-          background-color: rgba(188, 186, 194, 0.05);
+          background-color: rgb(243, 241, 241);
           box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
           border-radius: 0px 0px 8px 8px;
           &:hover {
@@ -156,7 +156,7 @@ html {
         .nav-bottom {
           width: 398px;
           height: 40px;
-          background-color: rgba(188, 186, 194, 0.05);
+          background-color: rgb(243, 241, 241);
           box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
           border-radius: 0px 0px 8px 8px;
           &:hover {
@@ -224,7 +224,7 @@ html {
         .nav-bottom {
           width: 398px;
           height: 40px;
-          background-color: rgba(188, 186, 194, 0.05);
+          background-color: rgb(243, 241, 241);
           box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
           border-radius: 0px 0px 8px 8px;
           &:hover {
@@ -292,7 +292,7 @@ html {
         .nav-bottom {
           width: 398px;
           height: 40px;
-          background-color: rgba(188, 186, 194, 0.05);
+          background-color: rgb(243, 241, 241);
           box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
           border-radius: 0px 0px 8px 8px;
           &:hover {
@@ -399,14 +399,14 @@ html {
 }
 
 .slide-fade-enter-active {
-  transition: all 0.8s ease;
+  transition: all 0.3s ease;
 }
 .slide-fade-leave-active {
   transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
 }
 .slide-fade-enter,
 .slide-fade-leave-to {
-  transform: translateX(-10px);
+  transform: translateY(-10px);
   opacity: 0;
 }
 
@@ -427,7 +427,6 @@ html {
 .adialog {
   background: white;
   border-radius: 8px;
-  padding: 20px;
   height: 500px;
 
   .ant-page-header-heading {
@@ -441,6 +440,7 @@ html {
     height: 34px;
     overflow: hidden;
   }
+
   .ant-card {
     background-color: #00000000;
     border: none;

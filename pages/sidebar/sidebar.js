@@ -1,4 +1,5 @@
 //定义一个TaskList来接收tasks类型的数据
+const axios = require('../../js/util/axios.js')
 class TasksList {
 	constructor() {
 		this.tasks = []
@@ -89,9 +90,13 @@ window.onload = function() {
 				uid:0,
 				nickname:"立即登录",
 				avatar:"../../icons/browser.ico"
-			}
+			},
+      myGroups: []
 		},
 		getters: {
+      getMyGroups: state => {
+        return state.myGroups
+      },
 			getAll: state => {
 				if (state.pinItems == null) { //还未初始化
 					$store.commit('initItems')
@@ -189,6 +194,10 @@ window.onload = function() {
 
 		},
 		mutations: {
+      //设置我的团队列表
+      SET_MYGROUPS: (state, myGroups) => {
+        state.myGroups = myGroups
+      },
 			//设置置顶区域的item
 			savePinItems(state, pinItems) {
 				//将根据pin和items生成Tasks
@@ -204,21 +213,22 @@ window.onload = function() {
 
 			//从任务组读入置顶区域，目前还不支持存档，每次进去会重新填充一次
 			initItems: state => {
-				//在置顶区域插入一个收藏夹的图标按钮
-				let item = {
-					title: '收藏夹', //名称，用于显示提示
-					index: 0, //索引
-					id: 1, //id
-					icon: "../../icons/fav.svg", //图标
-					draggable: true, //是否允许拖拽
-					ext: '', //额外的信息
-					fixed: true, //锁定，不让它移动
-					type: 'system-bookmark',
-					count: 0
-				}
+
 				state.pinItems = []
 				state.items = []
-				state.pinItems.push(item)
+        //在置顶区域插入一个收藏夹的图标按钮
+        // let item = {
+        //   title: '收藏夹', //名称，用于显示提示
+        //   index: 0, //索引
+        //   id: 1, //id
+        //   icon: "../../icons/fav.svg", //图标
+        //   draggable: true, //是否允许拖拽
+        //   ext: '', //额外的信息
+        //   fixed: true, //锁定，不让它移动
+        //   type: 'system-bookmark',
+        //   count: 0
+        // }
+				// state.pinItems.push(item)
 				// if (tasks != null) {
 				// 	//从任务当中取得任务的小组
 				// 	let tasksArray = tasks.getAll()
@@ -250,7 +260,7 @@ window.onload = function() {
 					}
 
 				});
-				
+
 
 				//遍历非置顶区域，把任务都替换进来
 				state.items.forEach(function(item, index) {
@@ -296,7 +306,24 @@ window.onload = function() {
 
 			}
 
-		}
+		},
+    actions: {
+      async getGroups({ commit }, userInfo) {
+        const { uid, token } = userInfo
+        const result = await axios({
+          method: 'post',
+          url: '/app/browser/group/list',
+          headers: { Authorization: token },
+          data: {
+            uid: uid
+          },
+        })
+        console.log(result, '__gp__')
+        if(result.code === 1000) {
+          commit('SET_MYGROUPS', result.data)
+        }
+      }
+    }
 	})
 
 	Vue.use(antd);
