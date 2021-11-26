@@ -14,7 +14,10 @@
 		<div id="app">
 			<div id="stepLogin" class="step-login" v-show="step=='login'">
 				<h1>首次使用向导</h1>
-				<p>欢迎使用想天工作台，您是否首次使用产品？<br>您可以选择登录账号来同步您的<strong>配置</strong>和<strong>工作区</strong>。<br>如果您是<strong>首次使用</strong>，建议根据使用向导熟悉产品后再使用。
+				<p style="line-height: 28px">欢迎使用想天工作台，您是否首次使用产品？<br>
+          如果是首次使用，建议不要跳过引导。
+<!--          您可以选择登录账号来同步您的<strong>配置</strong>和<strong>工作区</strong>。-->
+          <br>如果您是<strong>老用户</strong>，可跳过引导直接使用产品。
 				</p>
 				<template >
 					<a-form  id="components-form-demo-normal-login" :form="form" class="login-form"
@@ -62,10 +65,10 @@
 <!--							</a-button>		</a-form-item>-->
             <div style="position:absolute;bottom: 20px;width: 400px">
               <a-button @click="close()" type="default" html-type="submit" class="login-form-button">
-                我是老用户，关闭向导
+                我是老用户，关闭
               </a-button>
               <a-button type="primary" style="width: 40%;float:right" @click="step='wizard'">
-                首次使用
+                首次使用，进入引导
               </a-button>
             </div>
 
@@ -170,20 +173,20 @@
 							</a-radio-group>
 						</template>
 					</p>
-					<h3>4.默认浏览器</h3>
-					<p>在您改变浏览器的使用习惯之前，我们并不推荐您设置为默认浏览器。</p>
-					<p class="setting-type">
-						<template>
-							<a-radio-group name="improve" :default-value="1">
-								<a-radio :value="1">
-									作为辅助浏览器
-								</a-radio>
-								<a-radio :value="2">
-									作为主力浏览器（设置为默认浏览器）
-								</a-radio>
-							</a-radio-group>
-						</template>
-					</p>
+<!--					<h3>4.默认浏览器</h3>-->
+<!--					<p>在您改变浏览器的使用习惯之前，我们并不推荐您设置为默认浏览器。</p>-->
+<!--					<p class="setting-type">-->
+<!--						<template>-->
+<!--							<a-radio-group name="improve" :default-value="1">-->
+<!--								<a-radio :value="1">-->
+<!--									作为辅助浏览器-->
+<!--								</a-radio>-->
+<!--								<a-radio :value="2">-->
+<!--									作为主力浏览器（设置为默认浏览器）-->
+<!--								</a-radio>-->
+<!--							</a-radio-group>-->
+<!--						</template>-->
+<!--					</p>-->
 					<div class="bottom-button">
 						<a-button type="primary" @click="next">
 							下一步.导入收藏
@@ -222,7 +225,7 @@
 						<a-button type="primary" @click="next">
 							下一步.1分钟使用视频教程
 						</a-button>
-						<a-button type="default" style="margin-left: 50px" @click="current=2">
+						<a-button type="default" style="margin-left: 50px" @click="current=3">
 							跳过教程，自己摸索
 						</a-button>
 					</div>
@@ -280,7 +283,7 @@
 							新技能get，next
 						</a-button>
 						<a-button type="default" style="margin-left: 50px" @click="close">
-							学完了
+							学完了，开始使用
 						</a-button>
 					</div>
 				</div>
