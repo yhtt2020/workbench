@@ -29,6 +29,7 @@ const appListModel = {
   getIdFromTreeKey(treeKey){
     return treeKey
   },
+  //创建默认列表面包屑
   getDefaultList: ()=>{
       const  result=  db.system.where({'name':"myappDefault"}).first()
        if(!!!result){
