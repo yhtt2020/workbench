@@ -3,7 +3,7 @@ myappTpl =
 <div style="width: 100%">
   <a-layout>
     <a-layout-header style="background: #fff; padding: 0">
-      <a-page-header title="本地导航" sub-title="本地导航可能由于软件重装、卸载、系统重装等原因丢失，建议使用云端导航，此处仅做临时存储使用。">
+      <a-page-header title="本地导航" >
        <template slot="extra">
 
        <a-radio-group :value="appList.type" @change="onListTypeChange">
