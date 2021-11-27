@@ -3,7 +3,7 @@ cloudTpl =
 <div style="width: 100%">
   <a-layout>
     <a-layout-header style="background: #fff; padding: 0">
-      <a-page-header title="本地导航" sub-title="本地导航可能由于软件重装、卸载、系统重装等原因丢失，建议使用云端导航，此处仅做临时存储使用。">
+      <a-page-header title="云端列表" sub-title="这里是云端导航，云端导航与账号绑定，重装系统、更换电脑都可以同步，永不丢失。">
        <template slot="extra">
 
        <a-radio-group :value="appList.type" @change="onListTypeChange">
@@ -240,14 +240,13 @@ const appListModel = require('../../util/model/appListModel.js').appListModel
 const VueSelecto=require('vue-selecto')
 module.exports = Vue.component('cloud-page', {
   name: 'cloud-page',
-  template: myappTpl,
+  template: cloudTpl,
   components:{
     VueSelecto
   },
   beforeRouteEnter (to, from, next) {
     next(vm => {
       vm.myApps = []
-      console.log('before enter' + to.query.listId)
       vm.listId = parseNumber(to.query.listId)// 通过 `vm` 访问组件实例
       window.$listId=vm.listId
       vm.load()

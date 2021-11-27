@@ -2,6 +2,7 @@ const cloudTpl = `
 <div>
 <a-tree ref="cloudTree" :tree-data="myAppsLists" :block-node="true" show-icon :selected-keys="selectedValues"
         @select="onSelect" >
+        <a-avatar slot="cloud" shape="square" style="width: 1.3em;height: auto " src="../../icons/svg/cloud.svg"></a-avatar>
             <a-avatar slot="folder" shape="square" class="tree-icon" src="../../icons/svg/folder.svg"></a-avatar>
           <a-avatar slot="list-icon" shape="square" class="tree-icon" src="../../icons/svg/plan.svg"></a-avatar>
           <template #title="{ key: treeKey, title }">
@@ -54,10 +55,10 @@ Vue.component('cloud-comp', {
       handleNameInput: () => {},
       myAppsLists: [
         {
-          title: '本地列表',
-          key: 'myapp',
+          title: '云端列表',
+          key: 'cloud',
           slots: {
-            icon: 'folder'
+            icon: 'cloud'
           },
           children: []
         }]
@@ -65,7 +66,7 @@ Vue.component('cloud-comp', {
   }, mounted () {
     let that = this
     window.$trees.push({
-      name:'myapp',
+      name:'cloud',
       comp:this
     })
     appListModel.list().then(data => {
@@ -82,8 +83,8 @@ Vue.component('cloud-comp', {
       }else{
         jump=Number(selectedKeys[0])
       }
-      this.$router.push({name:'myapp',query: { listId: jump,t:Date.now()}})
-      resetOtherTree('myapp',selectedKeys)
+      this.$router.push({name:'cloud',query: { listId: jump,t:Date.now()}})
+      resetOtherTree('cloud',selectedKeys)
     },
     onContextMenuClick (treeKey, menuKey) {
       if (menuKey === 'createList') {
