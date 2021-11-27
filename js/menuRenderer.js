@@ -45,6 +45,7 @@ module.exports = {
 
       findinpage.start()
     })
+    //查看源码
 
     ipc.on('inspectPage', function () {
       webviews.callAsync(tabs.getSelected(), 'toggleDevTools')

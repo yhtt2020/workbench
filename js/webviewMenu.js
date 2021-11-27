@@ -283,6 +283,16 @@ const webviewMenu = {
     /* inspect element */
     menuSections.push([
       {
+        label: l('viewSource'),
+        click: function () {
+          const newTab = tabs.add({
+            url:"view-source:"+ tabs.get(tabs.getSelected()).url,
+            private: tabs.get(tabs.getSelected()).private
+          })
+          browserUI.addTab(newTab,{ enterEditMode: false, openInBackground: false })
+        }
+      },
+      {
         label: l('inspectElement'),
         click: function () {
           webviews.callAsync(tabs.getSelected(), 'inspectElement', [data.x || 0, data.y || 0])

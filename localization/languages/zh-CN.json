@@ -26,6 +26,7 @@
     "goBack": "后退",
     "goForward": "前进",
     "inspectElement": "查看元素",
+    "viewSource": "查看源码",
     /* searchbar */
     "pasteAndGo": "粘贴并前往",
     "DDGAnswerSubtitle": "搜索结果", //this is a noun - it is used as a subtitle when displaying Instant Answers from DuckDuckGo in the searchbar
