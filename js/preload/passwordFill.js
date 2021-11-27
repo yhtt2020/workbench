@@ -22,6 +22,20 @@ we expect the login form to be present in the HTML code at page load. We can
 add a MutationObserver to the document, or DOMNodeInserted listener, but I
 wanted to keep it lightweight and not impact browser performace too much.
 */
+
+// 密码识别难度分级
+// 基础级别：
+// gitlab
+//com.thisky.com
+// 中高难度：
+//
+//
+// 高难度：
+// 表格里没有字段符合要求
+
+//js表格
+
+
 /*
 * 简单的用户名/密码字段检测器和自动填充器。
 
@@ -53,10 +67,15 @@ const keyIcon = '<svg title="密码管理" width="22px" height="22px" xmlns="htt
 // Ref to added unlock button.
 var currentUnlockButton = null
 var currentAutocompleteList = null
-
+function log(text){
+  if(1)
+    console.log(text)
+}
+log('加载密码')
 // Creates an unlock button element.
-//
+// 创建一个解锁按钮元素
 // - input: Input element to 'attach' unlock button to.
+// 输入元素添加一个解锁按钮过去
 function createUnlockButton (input) {
   var inputRect = input.getBoundingClientRect()
 
@@ -105,9 +124,14 @@ function createUnlockButton (input) {
 
 // Tries to find if an element has a specific attribute value that contains at
 // least one of the values from 'matches' array.
+// 尝试找出一个元素有特殊属性值
+// 至少一个值符合匹配数组
 function checkAttributes (element, attributes, matches) {
+  log(matches)
+  log(attributes)
   for (const attribute of attributes) {
     const value = element.getAttribute(attribute)
+    log(value)
     if (value == null) { continue }
     if (matches.some(match => value.toLowerCase().includes(match))) {
       return true
@@ -118,6 +142,8 @@ function checkAttributes (element, attributes, matches) {
 
 // Gets all input fields on a page that contain at least one of the provided
 // strings in their name attribute.
+// 获取全部的页面上的输入字段
+// 他们的属性
 function getBestInput (names, exclusionNames, types) {
   const allFields = [
     ...(document.querySelectorAll('form input') || []),
@@ -126,33 +152,60 @@ function getBestInput (names, exclusionNames, types) {
   // this list includes duplicates, but we only use the first one we find that matches, so there's no need to dedupe
 
   for (const field of allFields) {
+    log('找到元素')
+    log(field)
     // checkAttribute won't work here because type can be a property but not an attribute
     if (!types.includes(field.type)) {
+      log(types)
+      log(field.type)
+      log('失败原因1')
       continue
     }
 
     // We expect the field to have either 'name', 'formcontrolname' or 'id' attribute
     // that we can use to identify it as a login form input field.
-    if (names.length === 0 || checkAttributes(field, ['name', 'formcontrolname', 'id', 'placholder'], names)) {
+    // 我们期望字段有 name formcontrolname id 等属性
+    // 我们可以使用识别为登录表单的输入字段
+    if (names.length === 0 || checkAttributes(field, ['name', 'formcontrolname', 'id', 'placeholder'], names)) {
       if (!checkAttributes(field, ['name', 'formcontrolname', 'id', 'placeholder'], exclusionNames) && field.type !== 'hidden') {
+        // 不包含排除名称 且类型不为hidden
+        log('return')
+        log(field)
         return field
+      }else{
+        log('失败原因2')
       }
+    }else{
+      log('匹配失败，原因：'+'不符合条件 names不为0或者包含指定字段')
     }
   }
   return null
 }
 
 // Shortcut to get username fields from a page.
+// 从页面里获取用户名字段
 function getBestUsernameField () {
-  return getBestInput(['user', 'name', 'mail', 'login', 'auth', 'identifier','account'], ['confirm', 'filename'], ['text', 'email'])
+  const input=getBestInput(['user', 'name', 'mail', 'login', 'auth', 'identifier','account','phone','用户名','手机','邮箱','账号','帐号','email'], ['confirm', 'filename'], ['text', 'email'])
+  if(!!input){
+    log('获取到匹配的用户名字段')
+    log(input)
+  }
+  return input
 }
 
 // Shortcut to get password fields from a page.
+// 从页面里获取密码字段
 function getBestPasswordField () {
-  return getBestInput([], [], ['password'])
+  const input=getBestInput([''], [], ['password'])
+  if(!!input){
+    log('获取到匹配的password字段')
+    log(input)
+  }
+  return input
 }
 
 // Removes credentials list overlay.
+// 移除凭证列表浮层
 function removeAutocompleteList () {
   if (currentAutocompleteList && currentAutocompleteList.parentNode) {
     currentAutocompleteList.parentNode.removeChild(currentAutocompleteList)
@@ -160,6 +213,7 @@ function removeAutocompleteList () {
 }
 
 // Populates username/password fields with provided credentials.
+// 输入用户名/密码字段 使用提供的凭证
 function fillCredentials (credentials) {
   const { username, password } = credentials
   const inputEvents = ['keydown', 'keypress', 'keyup', 'input', 'change']
@@ -189,6 +243,15 @@ function fillCredentials (credentials) {
 //
 // - element: input field to add a listener to
 // - credentials: an array of { username, password } objects
+
+//设置一个焦点/单击用户名输入字段上的侦听器。
+//
+//当这些事件发生时，我们添加一个匹配列表的小覆盖
+// 凭证。单击列表中的项将填充输入字段
+//选择的用户名/密码对。
+//
+// - element:添加监听器的输入字段
+// - credentials:一个{username, password}对象的数组
 function addFocusListener (element, credentials) {
   const inputRect = element.getBoundingClientRect()
   // Creates an options list container.
@@ -206,6 +269,7 @@ function addFocusListener (element, credentials) {
   }
 
   // Adds an option row to the list container.
+  // 添加一个选择行到列表容器
   function addOption (parent, username) {
     const suggestionItem = document.createElement('div')
     suggestionItem.innerHTML = username
@@ -231,6 +295,7 @@ function addFocusListener (element, credentials) {
   }
 
   // Creates autocomplete list and adds it below the activated field.
+  // 创建自动填充列表并且添加到激活的字段下
   function showAutocompleteList (e) {
     removeAutocompleteList()
     const container = buildContainer()
@@ -245,6 +310,7 @@ function addFocusListener (element, credentials) {
   element.addEventListener('click', showAutocompleteList)
 
   // Hide options overlay when user clicks out of the input field.
+  // 隐藏选择浮层，当用户点击框外
   document.addEventListener('click', function (e) {
     if (e.target !== element) {
       removeAutocompleteList()
@@ -253,6 +319,8 @@ function addFocusListener (element, credentials) {
 
   // Show the autocomplete list right away if field is already focused.
   // Userful for login pages which auto-focus the input field on page load.
+  // 显示自动填充列表，如果字段被聚焦
+  // 可用登录页
   if (element === document.activeElement) {
     showAutocompleteList()
   }
@@ -266,6 +334,9 @@ function requestAutofill () {
 
 function maybeAddUnlockButton (target) {
   // require both a username and a password field to reduce the false-positive rate
+  // 要求同时存在用户名和密码字段来降低误报率
+  const userNameField= getBestUsernameField()
+  const passwordField=getBestPasswordField()
   if (target instanceof Node && getBestUsernameField() && getBestPasswordField()) {
     if (getBestUsernameField().isSameNode(target) || getBestPasswordField().isSameNode(target)) {
       const unlockButton = createUnlockButton(target)
@@ -273,10 +344,14 @@ function maybeAddUnlockButton (target) {
 
       currentUnlockButton = unlockButton
     }
+  }else{
+
+    log('失败了，失败原因无法匹配到,只找到了'+userNameField+passwordField)
   }
 }
 
 function checkInitialFocus () {
+  log('检查初始focus')
   maybeAddUnlockButton(document.activeElement)
 }
 
@@ -323,7 +398,17 @@ ipc.on('password-autofill-shortcut', (event) => {
 })
 
 // Autofill enabled event handler. Initializes focus listeners for input fields.
+// 自动填充事件handler，初始化输入框的焦点事件
 ipc.on('password-autofill-enabled', (event) => {
+  log('密码自动填充有效')
+  checkInitialFocus()
+
+  // Add default focus event listeners.
+  window.addEventListener('blur', handleBlur, true)
+  window.addEventListener('focus', handleFocus, true)
+})
+window.addEventListener('DOMNodeInsertedIntoDocument',(event) => {
+  log('页面元素有变')
   checkInitialFocus()
 
   // Add default focus event listeners.
@@ -332,15 +417,17 @@ ipc.on('password-autofill-enabled', (event) => {
 })
 
 // Check if password autofill is configured.
+// 检查密码填充是否启用
 window.addEventListener('load', function (event) {
   ipc.send('password-autofill-check')
 })
 
 // send passwords back to the main process so they can be saved to storage
+// 将账号密码送回主进程以保存
 function handleFormSubmit () {
   var usernameValue = getBestUsernameField()?.value
   var passwordValue = getBestPasswordField()?.value
-
+  log('发送密码到主进程')
   if ((usernameValue && usernameValue.length > 0) && (passwordValue && passwordValue.length > 0)) {
     ipc.send('password-form-filled', [window.location.hostname, usernameValue, passwordValue])
   }
