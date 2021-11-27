@@ -298,8 +298,6 @@
     "duplicateTab": "复制标签",
     "addTask": "创建新任务",
     "toggleTasks": "开关任务",
-    "goBack": "回退",
-    "goForward": "前进",
     "enterEditMode": "进入编辑模式",
     "runShortcut": "执行快捷方式",
     "completeSearchbar": "完成搜索条",
@@ -322,6 +320,10 @@
     "fillPassword": "填充密码",
     "toggleTabAudio": "关闭标签音频",
     "showHistory": "显示历史记录",
+    "moveTabRight": "向右移动当前标签",
+    "moveTabLeft": "向左移动当前标签",
+
+
 
     "translatePage": "翻译页面（测试）",
     "translateTip": "当你翻译当前页面的时候，页面内容将被发送到服务器，我们不会存储你的翻译内容或者使用他们来识别你。请放心使用。",
