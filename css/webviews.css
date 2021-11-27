@@ -51,7 +51,8 @@ body.linux #webviews {
 }
 
 #webview-placeholder {
-  width: 100%;
+  margin-left:45px;
+  width: calc(100% - 45px);
   height: 100%;
   /* the built-in blur() function creates white edges around the image, avoid this by using an SVG filter. Source:
 	https://codepen.io/tigt/post/fixing-the-white-glow-in-the-css-blur-filter#comment-id-6373
