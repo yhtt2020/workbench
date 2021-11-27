@@ -117,7 +117,7 @@ const tabBar = {
   },
 
   /**
-   * 添加到本地自建列表或本地默认列表(分单个和整组)
+   * 添加收藏到本地自建列表或本地默认列表(分单个和整组)
    * @param {String} tabId  tab标签id
    * @param {Number} listId 父级id
    * @param {Boolean} single 默认true单个？整组？移动
@@ -126,21 +126,26 @@ const tabBar = {
     if(single) {
       let tabs = tasks.getSelected().tabs
       let tab = tabs.get(tabId)
-      const appNow = {
-        icon: tab.favicon == null ? '../../icons/default.svg' : tab.favicon.url,
-        name: tab.title,
-        url: tab.url,
-        summary: "",
-        listId: listId ? listId : 0,
-        star: "5"
+      if(tab.url.startsWith('file:///')) {
+        ipc.send('message', { type: 'error', config: { content: '系统页面无法添加!' } })
+      } else {
+        const appNow = {
+          icon: tab.favicon == null ? '../../icons/default.svg' : tab.favicon.url,
+          name: tab.title,
+          url: tab.url,
+          summary: "",
+          listId: listId ? listId : 0,
+          star: "5"
+        }
+        const appsRestore = require('../../pages/apps/appsRestore.js')
+        appsRestore.addApp(appNow)
+        ipc.send('message', { type: 'success', config: { content: '添加成功，可在我的导航和新标签页中查看。' } })
       }
-      const appsRestore = require('../../pages/apps/appsRestore.js')
-      appsRestore.addApp(appNow)
-      ipc.send('message', { type: 'success', config: { content: '添加成功，可在我的导航和新标签页中查看。' } })
     } else {
       const appsRestore = require('../../pages/apps/appsRestore.js')
       let tabs = tasks.getSelected().tabs
-      tabs.tabs.forEach(item => {
+      const filterTabs = tabs.tabs.filter(e => !e.url.startsWith('file:///'))
+      filterTabs.forEach(item => {
         const appNow = {
           icon: item.favicon == null ? '../../icons/default.svg' : item.favicon.url,
           name: item.title,
@@ -151,7 +156,7 @@ const tabBar = {
         }
         appsRestore.addApp(appNow)
       })
-      ipc.send('message', { type: 'success', config: { content: '整组添加成功，可在我的导航和新标签页中查看。' } })
+      ipc.send('message', { type: 'success', config: { content: '整组添加成功，已为您排除系统页面，可在我的导航和新标签页中查看。' } })
     }
   },
 
