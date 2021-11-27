@@ -165,7 +165,9 @@ body.linux #menu-button {
   background: rgba(255, 255, 255, 0.15);
 }
 .tab-item.active:not(:only-child) {
-  background: rgba(0, 0, 0, 0.06);
+  /*background: rgba(0, 0, 0, 0.06);*/
+  background: #1890ff;
+  color: white;
 }
 .dark-theme .tab-item.active:not(:only-child) {
   background: rgba(255, 255, 255, 0.2);
