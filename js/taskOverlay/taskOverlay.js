@@ -114,7 +114,6 @@ var taskOverlay = {
     document.body.classList.add('task-overlay-is-shown')
 
     tabEditor.hide()
-    ipc.send('hideSidePanel')
     document.getElementById('task-search-input').value = ''
 
     this.isShown = true
@@ -171,7 +170,6 @@ var taskOverlay = {
   },
 
   hide: function () {
-	ipc.send('showSidePanel')
     if (this.isShown) {
 
       this.isShown = false

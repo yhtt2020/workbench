@@ -15,8 +15,6 @@ const tabEditor = {
     if (modalMode.enabled()) {
       return
     }
-	ipc.send('hideSidePanel')
-
     tabEditor.container.hidden = false
 
     bookmarkStar.update(tabId, tabEditor.star)
@@ -70,7 +68,6 @@ const tabEditor = {
     }
   },
   hide: function () {
-	  ipc.send('showSidePanel')
     tabEditor.container.hidden = true
     tabEditor.container.removeAttribute('style')
 
