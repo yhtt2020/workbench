@@ -6,8 +6,6 @@
   width: calc( (100% - 46px ) * 0.96);
   background: #fff;
   color: #000;
-  padding-left: 20px;
-  padding-right: 20px;
   -webkit-user-select: none;
   max-height: calc(100% - 125px);
   overflow-y: auto;
@@ -29,6 +27,7 @@ body.linux #searchbar {
 
 .searchbar-plugin-container {
   position: relative;
+  margin-left: 40px;
 }
 
 .searchbar-heading {

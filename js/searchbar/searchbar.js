@@ -20,8 +20,6 @@ var searchbar = {
   associatedInput: null,
   events: new EventEmitter(),
   show: function (associatedInput) {
-	//显示searchbar的时候隐藏sidebar
-	ipc.send('hideSidePanel')
     searchbar.el.hidden = false
     searchbar.associatedInput = associatedInput
     if (tabs.get(tabs.getSelected()).url) {
@@ -31,8 +29,6 @@ var searchbar = {
     }
   },
   hide: function () {
-	//隐藏searchbar的时候显示sidebar
-	ipc.send('showSidePanel')
     searchbar.associatedInput = null
     searchbar.el.hidden = true
 
