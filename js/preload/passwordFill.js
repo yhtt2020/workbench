@@ -68,7 +68,7 @@ const keyIcon = '<svg title="密码管理" width="22px" height="22px" xmlns="htt
 var currentUnlockButton = null
 var currentAutocompleteList = null
 function log(text){
-  if(1)
+  if(0)
     console.log(text)
 }
 log('加载密码')
@@ -433,7 +433,18 @@ function handleFormSubmit () {
   }
 }
 
-window.addEventListener('submit', handleFormSubmit)
+// window.addEventListener('submit', handleFormSubmit)
+
+//注释掉表单提交，将事件重新绑定到页面跳转，这样可以提高填充成功率
+window.onbeforeunload=function(e){
+  var e = window.event||e;
+  handleFormSubmit()
+}
+// old = XMLHttpRequest;
+// XMLHttpRequest = function() {
+//   handleFormSubmit()
+//   console.log(arguments);
+//   return old.apply(this, arguments); }
 
 electron.webFrame.executeJavaScript(`
 var origSubmit = HTMLFormElement.prototype.submit;
