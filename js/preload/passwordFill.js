@@ -63,7 +63,7 @@ wanted to keep it lightweight and not impact browser performace too much.
 
 // "carbon:password"
 const keyIcon = '<svg title="密码管理" width="22px" height="22px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false" width="1em" height="1em" style="vertical-align: -0.125em;-ms-transform: rotate(360deg); -webkit-transform: rotate(360deg); transform: rotate(360deg);" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32"><path d="M21 2a9 9 0 0 0-9 9a8.87 8.87 0 0 0 .39 2.61L2 24v6h6l10.39-10.39A9 9 0 0 0 30 11.74a8.77 8.77 0 0 0-1.65-6A9 9 0 0 0 21 2zm0 16a7 7 0 0 1-2-.3l-1.15-.35l-.85.85l-3.18 3.18L12.41 20L11 21.41l1.38 1.38l-1.59 1.59L9.41 23L8 24.41l1.38 1.38L7.17 28H4v-3.17L13.8 15l.85-.85l-.29-.95a7.14 7.14 0 0 1 3.4-8.44a7 7 0 0 1 10.24 6a6.69 6.69 0 0 1-1.09 4A7 7 0 0 1 21 18z" fill="currentColor"/><circle cx="22" cy="10" r="2" fill="currentColor"/></svg>'
-
+const lockIcon=`<svg style="vertical-align: middle"  t="1638195533973" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="21180" width="15" height="15"><path d="M92.16 348.16m81.92 0l686.08 0q81.92 0 81.92 81.92l0 491.52q0 81.92-81.92 81.92l-686.08 0q-81.92 0-81.92-81.92l0-491.52q0-81.92 81.92-81.92Z" fill="#40A9FF" p-id="21181"></path><path d="M92.16 829.44m81.92 0l686.08 0q81.92 0 81.92 81.92l0 10.24q0 81.92-81.92 81.92l-686.08 0q-81.92 0-81.92-81.92l0-10.24q0-81.92 81.92-81.92Z" fill="#40A9FF" p-id="21182"></path><path d="M382.28992 351.08864V204.8c0-43.42784 61.56288-87.76704 145.07008-87.76704 83.5072 0 145.07008 44.3392 145.07008 87.76704v146.28864c0 32.31744 25.97888 58.51136 58.01984 58.51136C762.50112 409.6 788.48 383.40608 788.48 351.08864V204.8C788.48 86.64064 668.19072 0 527.36 0S266.24 86.64064 266.24 204.8v146.28864C266.24 383.40608 292.21888 409.6 324.27008 409.6s58.01984-26.19392 58.01984-58.51136z" fill="#40A9FF" p-id="21183"></path><path d="M517.12 522.24a87.04 87.04 0 0 1 46.09024 160.89088L563.2 783.36a46.08 46.08 0 1 1-92.16 0v-100.22912A87.04 87.04 0 0 1 517.12 522.24z" fill="#91D5FF" p-id="21184"></path></svg>`
 // Ref to added unlock button.
 var currentUnlockButton = null
 var currentAutocompleteList = null
@@ -257,8 +257,13 @@ function addFocusListener (element, credentials) {
   // Creates an options list container.
   function buildContainer () {
     const suggestionsDiv = document.createElement('div')
-    suggestionsDiv.style = 'position: absolute; border: 1px solid #d4d4d4; z-index: 999999; border-bottom: none; background: #FFFFFF; transform: scale(0); opacity: 0; transform-origin: top left; transition: 0.15s; color: #000000;'
-    suggestionsDiv.style.top = (inputRect.y + inputRect.height) + 'px'
+    suggestionsDiv.style = `
+    position: absolute; border: 1px solid #d4d4d4; z-index: 999999; background: #FFFFFF; transform: scale(0); opacity: 0; transform-origin: top left; transition: 0.15s; color: #000000;
+    border-radius:6px;
+    box-shadow:rgb(207 207 207 / 85%) 0px 0px 9px;
+    overflow:hidden
+    `
+    suggestionsDiv.style.top = (inputRect.y + inputRect.height +30 ) + 'px'
     suggestionsDiv.style.left = (inputRect.x) + 'px'
     suggestionsDiv.id = 'password-autocomplete-list'
     requestAnimationFrame(function () {
@@ -273,7 +278,7 @@ function addFocusListener (element, credentials) {
   function addOption (parent, username) {
     const suggestionItem = document.createElement('div')
     suggestionItem.innerHTML = username
-    suggestionItem.style = 'padding: 10px; cursor: pointer; background-color: #fff; border-bottom: 1px solid #d4d4d4;'
+    suggestionItem.style = 'padding: 10px; cursor: pointer; background-color: #fff; width:100%;'
 
     // Hover.
     suggestionItem.addEventListener('mouseenter', (event) => {
@@ -299,6 +304,9 @@ function addFocusListener (element, credentials) {
   function showAutocompleteList (e) {
     removeAutocompleteList()
     const container = buildContainer()
+    const inputWidth=e.target.offsetWidth
+    console.log()
+    container.innerHTML=`<div style="padding: 5px;border-bottom: 1px solid #c1c1c1;color: grey;width:${inputWidth}px"> ${lockIcon} 个人账号</div>`
     for (const cred of credentials) {
       addOption(container, cred.username)
     }
