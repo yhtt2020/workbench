@@ -1,39 +1,38 @@
-cloudTpl =
-  `
+cloudTpl = `
 <div style="width: 100%">
   <a-layout>
     <a-layout-header style="background: #fff; padding: 0">
       <a-page-header title="云端列表" sub-title="这里是云端导航，云端导航与账号绑定，重装系统、更换电脑都可以同步，永不丢失。">
-       <template slot="extra">
+        <template slot="extra">
 
-       <a-radio-group :value="appList.type" @change="onListTypeChange">
-        <a-radio-button value="0">
-          <a-icon type="appstore"></a-icon>
-        </a-radio-button>
-<!--           <a-radio-button value="1">-->
-<!--          <a-icon type="table"></a-icon>-->
-<!--        </a-radio-button>-->
-        <a-radio-button value="2">
-          <a-icon type="bars"></a-icon>
-        </a-radio-button>
-      </a-radio-group>
+          <a-radio-group :value="appList.type" @change="onListTypeChange">
+            <a-radio-button value="0">
+              <a-icon type="appstore"></a-icon>
+            </a-radio-button>
+            <!--           <a-radio-button value="1">-->
+            <!--          <a-icon type="table"></a-icon>-->
+            <!--        </a-radio-button>-->
+            <a-radio-button value="2">
+              <a-icon type="bars"></a-icon>
+            </a-radio-button>
+          </a-radio-group>
 
-      <a-button shape="circle" icon="share-alt" @click="shareList" title="分享整组"/>
-       <a-button shape="circle" icon="diff" @click="openList" title="整组打开" />
-      </template>
+          <a-button shape="circle" icon="share-alt" @click="shareList" title="分享整组" />
+          <a-button shape="circle" icon="diff" @click="openList" title="整组打开" />
+        </template>
       </a-page-header>
     </a-layout-header>
     <a-layout-content>
       <div style="text-align: left;padding: 10px;margin:20px">
-       <div style="float: left">
-       <template>
-  <a-breadcrumb>
-    <a-breadcrumb-item>本地列表</a-breadcrumb-item>
-    <a-breadcrumb-item>{{appList.name}}</a-breadcrumb-item>
-  </a-breadcrumb>
+        <div style="float: left">
+          <template>
+            <a-breadcrumb>
+              <a-breadcrumb-item>本地列表</a-breadcrumb-item>
+              <a-breadcrumb-item>{{appList.name}}</a-breadcrumb-item>
+            </a-breadcrumb>
 
-</template>
-       </div>
+          </template>
+        </div>
         <!-- <div style="text-align: center;margin:20px">
           <search />
         </div> -->
@@ -42,62 +41,55 @@ cloudTpl =
 
             <a-button type="primary" shape="round" class="add-button" slot="extra" @click="showModal">添加网站</a-button>
 
-<div id="main-content" class="elements selecto-area" style="max-height: calc( 100vh - 238px);overflow-y: auto">
-<template>
-  <a-list  v-show="appList.type==='2' && myApps.length>0" item-layout="horizontal" :data-source="myApps" :pagination="pagination" >
-    <a-list-item  @dragstart="dragStart($event,item)" @mousedown.stop draggable="true"  class="app-list" :id="item.id"  slot="renderItem" slot-scope="item, index">
-      <a-list-item-meta>
-      <div slot="description">
-        <a style="color: #999" target="_blank" :href="item.url">{{item.url}}</a>
-        </div>
-        <a slot="title" target="_blank" :href="item.url"><strong>{{ item.name }}</strong> <span style="color: #999;font-weight: normal;padding-left: 20px">{{item.summary}}</span></a>
-        <a-avatar style="margin:10px"
-          slot="avatar"
-          shape="square"
-          :src="item.icon"
-        />
-      </a-list-item-meta>
-    </a-list-item>
-  </a-list>
-</template>
-<vue-selecto
-    dragContainer=".elements"
-    v-bind:selectableTargets='[".selecto-area .app",".selecto-area .app-list"]'
-    v-bind:hitRate='5'
-    v-bind:selectByClick='true'
-    v-bind:selectFromInside='true'
-    v-bind:ratio='0'
-    @select="onSelect"
-    @selectEnd="selectEnd"
-    ></vue-selecto>
-<div class="" id="selecto1" v-show="appList.type==='0' && myApps.length>0">
+            <div id="main-content" class="elements selecto-area"
+              style="max-height: calc( 100vh - 238px);overflow-y: auto">
+              <template>
+                <a-list v-show="appList.type==='2' && myApps.length>0" item-layout="horizontal" :data-source="myApps"
+                  :pagination="pagination">
+                  <a-list-item @dragstart="dragStart($event,item)" @mousedown.stop draggable="true" class="app-list"
+                    :id="item.id" slot="renderItem" slot-scope="item, index">
+                    <a-list-item-meta>
+                      <div slot="description">
+                        <a style="color: #999" target="_blank" :href="item.url">{{item.url}}</a>
+                      </div>
+                      <a slot="title" target="_blank" :href="item.url"><strong>{{ item.name }}</strong> <span
+                          style="color: #999;font-weight: normal;padding-left: 20px">{{item.summary}}</span></a>
+                      <a-avatar style="margin:10px" slot="avatar" shape="square" :src="item.icon" />
+                    </a-list-item-meta>
+                  </a-list-item>
+                </a-list>
+              </template>
+              <vue-selecto dragContainer=".elements"
+                v-bind:selectableTargets='[".selecto-area .app",".selecto-area .app-list"]' v-bind:hitRate='5'
+                v-bind:selectByClick='true' v-bind:selectFromInside='true' v-bind:ratio='0' @select="onSelect"
+                @selectEnd="selectEnd"></vue-selecto>
+              <div class="" id="selecto1" v-show="appList.type==='0' && myApps.length>0">
 
- <a-dropdown  v-for="(app, index) in myApps" :trigger="['contextmenu']">
-              <a-card-grid @dragstart="dragStart($event,app)" @mousedown.stop draggable="true"  :id="app.id"  class="app" style="cursor: pointer;"
-                           @click="openUrl(app.url)"  >
-                <a-avatar shape="square" :size="64" :src="app.icon"
-                          style="margin-bottom: 10px;"></a-avatar>
-                <a-card-meta :title="app.name">
-                </a-card-meta>
-              </a-card-grid>
-              <a-menu slot="overlay">
-                <a-menu-item @click="addApp(app)" key="1">
-                  <a-icon type="delete"></a-icon>
-                  删除
-                </a-menu-item>
-              </a-menu>
-            </a-dropdown>
+                <a-dropdown v-for="(app, index) in myApps" :trigger="['contextmenu']">
+                  <a-card-grid @dragstart="dragStart($event,app)" @mousedown.stop draggable="true" :id="app.id"
+                    class="app" style="cursor: pointer;" @click="openUrl(app.url)">
+                    <a-avatar shape="square" :size="64" :src="app.icon" style="margin-bottom: 10px;"></a-avatar>
+                    <a-card-meta :title="app.name">
+                    </a-card-meta>
+                  </a-card-grid>
+                  <a-menu slot="overlay">
+                    <a-menu-item @click="addApp(app)" key="1">
+                      <a-icon type="delete"></a-icon>
+                      删除
+                    </a-menu-item>
+                  </a-menu>
+                </a-dropdown>
 
-</div>
+              </div>
 
- <a-empty v-if="myApps.length==0" description="还未添加任何网站，点击添加网站">
+              <a-empty v-if="myApps.length==0" description="还未添加任何网站，点击添加网站">
 
-              <a-button type="primary" @click="showModal">
-                添加网站
-              </a-button>
+                <a-button type="primary" @click="showModal">
+                  添加网站
+                </a-button>
 
-            </a-empty>
-</div>
+              </a-empty>
+            </div>
           </a-card>
         </div>
       </div>
@@ -109,37 +101,31 @@ cloudTpl =
         <template>
           <a-tabs default-active-key="1" tab-position="top">
             <a-tab-pane key="1">
-\t\t\t\t\t\t\t\t\t<span slot="tab">
-\t\t\t\t\t\t\t\t\t\t<a-icon type="appstore"></a-icon>
-\t\t\t\t\t\t\t\t\t\t全部
-\t\t\t\t\t\t\t\t\t</span>
-              <a-alert message="点击图标即可添加，添加完毕后，需手动关闭本界面。" type="info" show-icon
-                       style="margin-bottom: 10px;"></a-alert>
-
+              \t\t\t\t\t\t\t\t\t<span slot="tab">
+                \t\t\t\t\t\t\t\t\t\t<a-icon type="appstore"></a-icon>
+                \t\t\t\t\t\t\t\t\t\t全部
+                \t\t\t\t\t\t\t\t\t</span>
+              <a-alert message="点击图标即可添加，添加完毕后，需手动关闭本界面。" type="info" show-icon style="margin-bottom: 10px;"></a-alert>
 
               <template>
                 <div style="width: 750px">
 
-                  <a-tabs default-active-key="productive" tab-position="left"
-                          :style="{ height: '600px' }">
-                    <a-tab-pane v-for="(type, indexType) in allApps" :key="type.name"
-                                :tab="type.title" >
+                  <a-tabs default-active-key="productive" tab-position="left" :style="{ height: '600px' }">
+                    <a-tab-pane v-for="(type, indexType) in allApps" :key="type.name" :tab="type.title">
 
-                <div style="overflow-y: auto;max-height: 600px">
-                <a-card :title="type.title" style="padding: 10px;">
-                        <a-card-grid style="width: 140px;cursor: pointer;"
-                                     v-for="(app, indexApp) in type.apps" class="app"
-                                     @click="addApp(app)">
-                          <a-avatar shape="square" :size="64" :src="app.icon"
-                                    style="margin-bottom: 10px;"></a-avatar>
-                          <a-card-meta :title="app.name">
-                            <template slot="description">
-                              {{ app.summary }}
-                            </template>
-                          </a-card-meta>
-                        </a-card-grid>
-                      </a-card>
-</div>
+                      <div style="overflow-y: auto;max-height: 600px">
+                        <a-card :title="type.title" style="padding: 10px;">
+                          <a-card-grid style="width: 140px;cursor: pointer;" v-for="(app, indexApp) in type.apps"
+                            class="app" @click="addApp(app)">
+                            <a-avatar shape="square" :size="64" :src="app.icon" style="margin-bottom: 10px;"></a-avatar>
+                            <a-card-meta :title="app.name">
+                              <template slot="description">
+                                {{ app.summary }}
+                              </template>
+                            </a-card-meta>
+                          </a-card-grid>
+                        </a-card>
+                      </div>
                     </a-tab-pane>
                   </a-tabs>
                 </div>
@@ -160,57 +146,58 @@ cloudTpl =
               待开发
             </a-tab-pane> -->
             <a-tab-pane key="4">
-  <span slot="tab">
-  <a-icon type="link"></a-icon>
-从URL创建
-</span>
+              <span slot="tab">
+                <a-icon type="link"></a-icon>
+                从URL创建
+              </span>
               <template>
                 <a-form :form="form" @submit="handleSubmit">
-                  <a-alert message="网站的图标不需要设置，当你打开一次这个网站之后，系统就会自动获取并更新。" type="info"
-                           show-icon style="margin-bottom: 10px;"></a-alert>
+                  <a-alert message="网站的图标不需要设置，当你打开一次这个网站之后，系统就会自动获取并更新。" type="info" show-icon
+                    style="margin-bottom: 10px;"></a-alert>
                   <a-form-item v-bind="formItemLayout" label="应用名">
-\t\t\t\t\t\t\t\t\t\t\t\t<span slot="label">
-\t\t\t\t\t\t\t\t\t\t\t\t\t应用名&nbsp;
-                          <a-tooltip title="应用名称">
-\t\t\t\t\t\t\t\t\t\t\t\t\t\t<a-icon type="question-circle-o"/>
-\t\t\t\t\t\t\t\t\t\t\t\t\t</a-tooltip>
-\t\t\t\t\t\t\t\t\t\t\t\t</span>
+                    \t\t\t\t\t\t\t\t\t\t\t\t<span slot="label">
+                      \t\t\t\t\t\t\t\t\t\t\t\t\t应用名&nbsp;
+                      <a-tooltip title="应用名称">
+                        \t\t\t\t\t\t\t\t\t\t\t\t\t\t
+                        <a-icon type="question-circle-o" />
+                        \t\t\t\t\t\t\t\t\t\t\t\t\t</a-tooltip>
+                      \t\t\t\t\t\t\t\t\t\t\t\t</span>
                     <a-input placeholder="请输入应用名，少于8个字" v-decorator="[
           'name',
           {
             rules: [{ required: true, message: '请输入应用名！', whitespace: true },{max:24,message:'不得超过24个字！'}],
           },
-        ]"/>
+        ]" />
                   </a-form-item>
 
                   <a-form-item v-bind="formItemLayout" label="网址">
-\t\t\t\t\t\t\t\t\t\t\t\t<span slot="label">
-\t\t\t\t\t\t\t\t\t\t\t\t\t网址&nbsp;
-                          <a-tooltip title="输入网址，如果不以http://或https://开头，系统会自动加上http://">
-\t\t\t\t\t\t\t\t\t\t\t\t\t\t<a-icon type="question-circle-o"/>
-\t\t\t\t\t\t\t\t\t\t\t\t\t</a-tooltip>
-\t\t\t\t\t\t\t\t\t\t\t\t</span>
+                    \t\t\t\t\t\t\t\t\t\t\t\t<span slot="label">
+                      \t\t\t\t\t\t\t\t\t\t\t\t\t网址&nbsp;
+                      <a-tooltip title="输入网址，如果不以http://或https://开头，系统会自动加上http://">
+                        \t\t\t\t\t\t\t\t\t\t\t\t\t\t
+                        <a-icon type="question-circle-o" />
+                        \t\t\t\t\t\t\t\t\t\t\t\t\t</a-tooltip>
+                      \t\t\t\t\t\t\t\t\t\t\t\t</span>
 
                     <a-auto-complete
                       v-decorator="['url', { rules: [{ required: true, message: '请输入网址！' },{max:512,message:'最多不能超过512个字母！'}] }]"
-                      placeholder="输入任意网址，如http://work.thisky.com，以http或https开头"
-                      @change="handleWebsiteChange">
+                      placeholder="输入任意网址，如http://work.thisky.com，以http或https开头" @change="handleWebsiteChange">
                       <template slot="dataSource">
                         <a-select-option v-for="url in autoCompleteResult" :key="url">
                           {{ url }}
                         </a-select-option>
                       </template>
-                      <a-input/>
+                      <a-input />
                     </a-auto-complete>
                   </a-form-item>
 
                   <a-form-item v-bind="formItemLayout" label="应用介绍">
-\t\t\t\t\t\t\t\t\t\t\t\t<span slot="label">
-\t\t\t\t\t\t\t\t\t\t\t\t\t应用介绍&nbsp;
-\t\t\t\t\t\t\t\t\t\t\t\t</span>
+                    \t\t\t\t\t\t\t\t\t\t\t\t<span slot="label">
+                      \t\t\t\t\t\t\t\t\t\t\t\t\t应用介绍&nbsp;
+                      \t\t\t\t\t\t\t\t\t\t\t\t</span>
                     <template>
                       <a-textarea placeholder="应用介绍，非必填，不超过100字" :rows="4"
-                                  v-decorator="['summary', { rules: [{max:100,message:'最多不能超过100个字！'}] }]">
+                        v-decorator="['summary', { rules: [{max:100,message:'最多不能超过100个字！'}] }]">
                       </a-textarea>
                     </template>
                   </a-form-item>
@@ -228,7 +215,6 @@ cloudTpl =
     </div>
   </template>
 </div>
-
 `
 const ipc=require("electron").ipcRenderer
 function parseNumber (str) {
@@ -245,17 +231,23 @@ module.exports = Vue.component('cloud-page', {
     VueSelecto
   },
   beforeRouteEnter (to, from, next) {
-    next(vm => {
+    next(async vm => {
       vm.myApps = []
       vm.listId = parseNumber(to.query.listId)// 通过 `vm` 访问组件实例
       window.$listId=vm.listId
-      vm.load()
+      await vm.load()
+      vm.appList.type = String(to.query.type)
+      vm.myApps = vm.$store.getters.getUserNavApps
+      console.log(vm.myApps, '路由进来前?????')
     })
   },
-  beforeRouteUpdate (to, from, next) {
-    this.listId = parseNumber(to.query.listId)
+  async beforeRouteUpdate (to, from, next) {
+    this.listId = Number(to.query.listId)
     window.$listId=this.listId
-    this.load()
+    await this.load()
+    this.appList.type = String(to.query.type)
+    this.myApps = this.$store.getters.getUserNavApps
+    console.log(this.myApps, '路由更新前?????')
   },
   data () {
     return {
@@ -269,12 +261,15 @@ module.exports = Vue.component('cloud-page', {
         pageSize: 10,
         hideOnSinglePage:true
       },
-      listId: this.$route.query.listId,
+      //可删
+      //listId: this.$route.query.listId,
+      listId: Number,
       visible: false,
       type: 0,
       myApps: [],
       appList: {
-        name: ''
+        name: '',
+        type: ''
       },
       //表单布局用字段
       formItemLayout: {
@@ -327,8 +322,7 @@ module.exports = Vue.component('cloud-page', {
     }
   },
   mounted () {
-    // this.myApps = []
-    // this.load()
+    //因为路由切换控制 mounted无法满足需求
   },
   beforeCreate () {
     this.form = this.$form.createForm(this, {
@@ -346,45 +340,47 @@ module.exports = Vue.component('cloud-page', {
       })
       this.$message.success('成功在左侧栏添加了应用：' + app.name + '。')
     },
-    getAppList () {
-
-    },
     isInMyApps () {
-
       if (this.currentApp == null) {
         return -1
       }
-      let apps = this.myApps
-      let app = this.currentApp
       let findIndex = -1
-      apps.forEach(function (item, index) {
-        if (item.name == app.name)
+      this.myApps.forEach((item, index) => {
+        if (item.name == this.currentApp.name)
           findIndex = index
       })
       return findIndex
 
     },
+    //添加app
     addCurrentApp () {
-      let that = this
-      let app = this.currentApp
-      let index = this.isInMyApps(app)
-      if (index != -1) {
-        this.myApps.splice(index, 1)
-        that.$message.warning('移除了应用：' + app.name + '')
-        window.$appsRestore.deleteApp(app.id)
-        this.btnText = '添加收藏'
-      } else {
-        let apps = this.myApps
-        apps.unshift(app)
-        this.myApps = apps
-        this.btnText = '移出收藏'
+      const index = this.isInMyApps(this.currentApp)
+      if(index !== -1) {
 
-        app.listId = this.listId
-        window.$appsRestore.addApp(app)
-        this.$message.success('添加了应用：' + app.name)
       }
+      // let that = this
+      // let app = this.currentApp
+      // let index = this.isInMyApps(app)
+      // if (index != -1) {
+      //   this.myApps.splice(index, 1)
+      //   that.$message.warning('移除了应用：' + app.name + '')
+      //   window.$appsRestore.deleteApp(app.id)
+      //   this.btnText = '添加收藏'
+      // } else {
+      //   let apps = this.myApps
+      //   apps.unshift(app)
+      //   this.myApps = apps
+      //   this.btnText = '移出收藏'
+
+      //   app.listId = this.listId
+      //   window.$appsRestore.addApp(app)
+      //   this.$message.success('添加了应用：' + app.name)
+      // }
     },
+    //点击那些app的时候
+    //但我把提交实现放在关闭按钮时
     addApp (app) {
+      console.log(app, 'cc_app')
       this.currentApp = app
       this.addCurrentApp()
     },
@@ -420,39 +416,8 @@ module.exports = Vue.component('cloud-page', {
     showModal () {
       this.visible = true
     },
-    load: function () {
-      window.$appsRestore.restoreFromDB(this.listId).then((data) => {
-        this.myApps = data
-        return data
-      }).catch(e => {
-        console.log(e)
-        this.myApps = []
-      })
-      console.log(this.listId)
-      if (this.listId === 0) {
-         appListModel.getDefaultList().then(defaultList=>{
-          if(!!!defaultList){
-            this.appList = {
-              id:0,
-              name: '默认列表',
-              type: "0"
-            }
-          }else{
-            this.appList=defaultList.value
-            this.appList.type=String(this.appList.type)
-          }
-        })
-
-
-
-      } else {
-        const data = appListModel.get(this.listId).catch(err => console.log(err))
-        data.then(data => {
-          this.appList = null
-          this.appList = data
-          this.appList.type=String(this.appList.type)
-        })
-      }
+    async load() {
+      await this.$store.dispatch('getUserNavApps', this.listId)
     },
     onListTypeChange (e) {
       this.appList.type=e.target.value

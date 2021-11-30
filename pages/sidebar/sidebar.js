@@ -318,7 +318,6 @@ window.onload = function() {
             uid: uid
           },
         })
-        console.log(result, '__gp__')
         if(result.code === 1000) {
           commit('SET_MYGROUPS', result.data)
         }
