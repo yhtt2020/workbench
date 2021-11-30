@@ -5,6 +5,7 @@
   <title>网址导航</title>
   <script src="../../ext/vue/vue.js"></script>
   <script src="../../ext/vue/vue-router.js"></script>
+  <script src="../../ext/vue/vuex.js"></script>
   <script src="../../ext/vue/antd.min.js"></script>
   <link rel="stylesheet" href="../../ext/vue/antd.min.css"/>
   <link rel="icon" type="image/svg+xml" href="../../icons/svg/discover.svg"/>
@@ -13,6 +14,7 @@
 </head>
 <body>
 <script>
+  Vue.use(Vuex)
   Vue.use(antd)
 </script>
 <div id="appVue">
@@ -54,9 +56,10 @@
 <script src="./sidenav.js"></script>
 <script src="comp/groups.js"></script>
 <script src="./search.js"></script>
+<script src="./store.js"></script>
 
 <script>
-  Vue.use(antd)
+  //const userAppsApi = require('../util/api/userAppsApi.js')
   /**
    * 定义当前的树状组件组
    * @type {[{comp: null, name: string}, {comp: null, name: string}, {comp: null, name: string}, {comp: null, name: string}]}
@@ -92,6 +95,7 @@
   const appVue = new Vue({
     router,
     el: '#appVue',
+    store: store,
     components: {},
     data () {
       return {
@@ -103,9 +107,10 @@
         visible: false,
       }
     },
-    mounted () {
+    async mounted () {
       this.myApps = []
       this.load()
+      //await this.$store.dispatch('getAppUserNavs')
       //重新设置其他树状菜单，防止同时选中多个树状结构
       window.resetOtherTree = (tree = 'myapp', selectedKeys) => {
         window.$trees.forEach((item) => {
