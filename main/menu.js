@@ -221,6 +221,18 @@ function buildAppMenu (options = {}) {
       ]
     },
     {
+      label: "导航",
+      submenu: [
+        {
+          label: "选择器",
+          accelerator: 'Ctrl+tab',
+          click:function(item,window){
+            createSwitchTask()
+          }
+        }
+      ]
+    },
+    {
       label: l('appMenuView'),
       submenu: [
         ...(!options.secondary ? personalDataItems : []),

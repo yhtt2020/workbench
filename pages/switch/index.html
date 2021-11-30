@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>选择器</title>
+  <script src="../../ext/vue/vue.js"></script>
+  <script src="../../ext/vue/antd.min.js"></script>
+  <link rel="stylesheet" href="../../ext/vue/antd.min.css"/>
+  <link rel="icon" type="image/svg+xml" href="../../icons/apps.svg"/>
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline'"/>
+  <link rel="stylesheet" href="./switch.css"/>
+</head>
+<body>
+<div id="appVue">
+  <div>
+    <a-row type="flex">
+      <a-col flex="150px" class="task-container">
+        <ul class="item-list">
+          <li>
+            <span class="num">1.</span>
+            <a-avatar :size="20" src="http://zt.xiangtian.ren/favicon.ico" shape="square"></a-avatar>
+            禅道
+          </li>
+          <li>
+            <span class="num">2.</span>
+            <a-avatar :size="20" src="http://zt.xiangtian.ren/favicon.ico" shape="square"></a-avatar>
+            禅道
+          </li>
+          <li>
+            <span class="num">3.</span>
+            <a-avatar :size="20" src="http://zt.xiangtian.ren/favicon.ico" shape="square"></a-avatar>
+            禅道
+          </li>
+          <li>
+            <span class="num">4.</span>
+            <a-avatar :size="20" src="http://zt.xiangtian.ren/favicon.ico" shape="square"></a-avatar>
+            禅道
+          </li>
+          <li>
+            <span class="num">5.</span>
+            <a-avatar :size="20" src="http://zt.xiangtian.ren/favicon.ico" shape="square"></a-avatar>
+            禅道
+          </li>
+          <li>
+            <span class="num">6.</span>
+            <a-avatar :size="20" src="http://zt.xiangtian.ren/favicon.ico" shape="square"></a-avatar>
+            禅道
+          </li>
+          <li>
+            <span class="num">7.</span>
+            <a-avatar :size="20" src="http://zt.xiangtian.ren/favicon.ico" shape="square"></a-avatar>
+            禅道
+          </li>
+          <li>
+            <span class="num">8.</span>
+            <a-avatar :size="20" src="http://zt.xiangtian.ren/favicon.ico" shape="square"></a-avatar>
+            禅道
+          </li>
+          <li>
+            <span class="num">9.</span>
+            <a-avatar :size="20" src="http://zt.xiangtian.ren/favicon.ico" shape="square"></a-avatar>
+            禅道
+          </li>
+          <li>
+            <span class="num">T.</span>
+            <a-avatar :size="20" src="http://zt.xiangtian.ren/favicon.ico" shape="square"></a-avatar>
+            禅道
+          </li>
+
+        </ul>
+      </a-col>
+      <a-col flex="auto">
+        <ul class="item-list">
+          <li v-for="(item,index) in currentTabs" :class="{'active':selectedIndex===index}">
+            <a-avatar :size="20" :src="item.icon" shape="square"></a-avatar>
+            {{item.title}}
+          </li>
+        </ul>
+      </a-col>
+    </a-row>
+    <div class="path">所属任务：
+      <a-avatar :size="20" :src="currentTabs[selectedIndex].task.icon" shape="square"></a-avatar>
+      {{currentTabs[selectedIndex].task.title}}
+    </div>
+  </div>
+
+</div>
+<style type="text/css">
+  .item-list {
+    padding-left: 0;
+    margin-bottom: 0;
+  }
+
+  .item-list li {
+    list-style: none;
+    margin-left: 0;
+    text-indent: 0;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  .item-list li:first-child{
+    padding-top: 10px;
+  }
+  .item-list li:last-child{
+    padding-bottom: 10px;
+  }
+
+  .item-list .active {
+    background-color: #f3f3f3;
+  }
+
+  .item-list li:hover {
+    background-color: #f3f3f3;
+
+  }
+
+  .num {
+    font-size: 14px;
+    color: #333;
+  }
+
+  .path {
+    width: 100vw;
+    border-top: 1px solid #f3f3f3;
+    padding: 5px 10px;
+    color: #666;
+  }
+
+  .task-container {
+    padding: 0;
+    border-right: 1px solid #f3f3f3;
+    min-height: calc(100vh - 60px)
+  }
+</style>
+
+<script>
+  Vue.use(antd)
+  const electron = require('electron')
+  const ipc = electron.ipcRenderer
+  const appVue = new Vue({
+    el: '#appVue',
+    data () {
+      return {
+        currentTabs: [
+          {
+            title: 'iconfont-阿里巴巴矢量图标库',
+            icon: 'https://www.cool-js.com/favicon.ico',
+            task:{
+              title:'ddd',
+              icon:'https://www.cool-js.com/favicon.ico'
+            }
+          }, {
+            title: '介绍 | COOL-ADMIN 后台管理系统',
+            icon: 'https://www.cool-js.com/favicon.ico',
+            task:{
+              title:'22',
+              icon:'https://www.cool-js.com/favicon.ico'
+            }
+          }
+        ],
+        selectedIndex: 0,
+        tasks: []
+      }
+    },
+    mounted(){
+      window.onkeydown= function(e){
+        e = e || window.event;
+        if(e.keyCode === 9){
+          // 执行保存
+          if(appVue.selectedIndex>=appVue.currentTabs.length-1){
+            appVue.selectedIndex=0
+          }else{
+            appVue.selectedIndex++
+          }
+        }
+      }
+    },
+    methods: {
+
+    }
+  })
+
+  // 调用例子
+  compositeKey('ctrl+alt+w', function (e) {console.log(e)})
+</script>
+</body>
+</html>

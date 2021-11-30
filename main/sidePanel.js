@@ -644,3 +644,45 @@ ipc.on('addTask',function(event, data){
 ipc.on('addNewTask',function(){
   sendIPCToWindow(mainWindow,'addTask')
 })
+
+
+let switchWindow = null
+function createSwitchTask(){
+  if(switchWindow===null){
+    switchWindow = new BrowserWindow({
+      frame: true,
+      backgroundColor: 'white',
+      parent: mainWindow,
+      modal: false,
+      hasShadow: true,
+      width: 480,
+      autoHideMenuBar: true,
+      height: 395,
+      resizable: false,
+      acceptFirstMouse: true,
+      maximizable:false,
+      visualEffectState: 'active',
+      alwaysOnTop:true,
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false,
+        additionalArguments: [
+          '--user-data-path=' + userDataPath,
+          '--app-version=' + app.getVersion(),
+          '--app-name=' + app.getName(),
+          ...((isDevelopmentMode ? ['--development-mode'] : [])),
+        ]
+      }
+    })
+    switchWindow.webContents.loadURL('file://' + __dirname + "/pages/switch/index.html")
+    switchWindow.focus()
+    switchWindow.on('close',()=>switchWindow=null)
+  }else{
+    switchWindow.close()
+    switchWindow=null
+  }
+
+}
+// app.whenReady().then(()=>{
+//   createSwitchTask()
+// })
