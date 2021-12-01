@@ -15,7 +15,7 @@
   <div>
     <a-row type="flex">
       <a-col flex="160px" class="task-container">
-        <div class="title">前9个任务</div>
+
         <ul class="item-list" style="max-width: 160px;">
           <li :class="{'active':selectedTaskIndex===index}" @click.prevent="openTask(item.id)" v-for="(item,index) in tasks">
             <span class="key">{{index + 1}}</span>&nbsp;
@@ -29,15 +29,17 @@
             打开任务管理
           </li>
         </ul>
+        <div class="title">↑前9个任务，按键切换</div>
       </a-col>
       <a-col flex="1">
-        <div class="title">最近打开的10个标签，   <span  class="key">Tab</span> 键切换</div>
+
         <ul class="item-list" style="max-width:319px">
           <li @click="openTab(item.id,item.task.id)" v-for="(item,index) in currentTabs" :class="{'active':selectedIndex===index}">
             <a-avatar :size="20" :src="item.icon" shape="square"></a-avatar>
             {{item.title}}
           </li>
         </ul>
+        <div class="title">↑最近打开标签，   <span  class="key">tab</span> 切换，<span class="key">space</span> 确认</div>
       </a-col>
     </a-row>
     <div class="path" @click="openTask(currentTabs[selectedIndex].task.id)">所属任务：
