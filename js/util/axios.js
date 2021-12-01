@@ -29,6 +29,7 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   response => {
     if (response.status >= 200 && response.status < 300) {
+      console.log(response.data, '__axios拦截(全局拦截还未完善勿删！)__')
       if(response.data.code === 1000) {
         return response.data;
       } else if (response.data.code === 1001) {

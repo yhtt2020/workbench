@@ -32,7 +32,12 @@ const store = new Vuex.Store({
     async addAppUserNav({commit}, data) {
       return await userAppsApi.addAppUserNav(data)
     },
-
+    async deleteAppUserNav({commit}, data) {
+      return await userAppsApi.deleteAppUserNav(data)
+    },
+    async updateAppUserNav({commit}, data) {
+      return await userAppsApi.updateAppUserNav(data)
+    },
 
     async getUserNavApps({commit}, data) {
       const result = await userAppsApi.getUserNavApps(data)

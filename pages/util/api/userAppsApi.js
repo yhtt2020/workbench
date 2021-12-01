@@ -3,6 +3,8 @@ const baseApi = require('./baseApi.js')
 const url = {
   navsList: '/app/browser/appUserList/list',
   addNav: '/app/browser/appUserList/add',
+  delNav: '/app/browser/appUserList/delete',
+  updateNav: '/app/browser/appUserList/update',
 
   appsList: '/app/browser/myApps/list',
   addApp: '/app/browser/myApps/add',
@@ -19,6 +21,16 @@ const userAppsApi = {
   async addAppUserNav(info) {
     await baseApi.init()
     return baseApi.axios(url.addNav, info)
+  },
+  //delete
+  async deleteAppUserNav(ids) {
+    await baseApi.init()
+    return baseApi.axios(url.delNav, ids)
+  },
+  //update
+  async updateAppUserNav(info) {
+    await baseApi.init()
+    return baseApi.axios(url.updateNav, info)
   },
 
 
