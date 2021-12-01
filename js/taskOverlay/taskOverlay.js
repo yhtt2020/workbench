@@ -473,7 +473,9 @@ var taskOverlay = {
     })
   }
 }
-
+ipc.on('showTasks',()=>{
+  taskOverlay.show()
+})
 ipc.on('closeTask',(event,args)=>{
   browserUI.closeTask(args.tabId)
 })
