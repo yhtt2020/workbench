@@ -42,7 +42,7 @@
         <div class="title">↑最近打开标签，   <span  class="key">tab</span> 切换，<span class="key">space</span> 确认</div>
       </a-col>
     </a-row>
-    <div class="path" @click="openTask(currentTabs[selectedIndex].task.id)">所属任务：
+    <div v-if="currentTabs.length>0" class="path" @click="openTask(currentTabs[selectedIndex].task.id)">所属任务：
       <a-avatar :size="20" :src="currentTabs[selectedIndex].task.icon" shape="square"></a-avatar>
       {{currentTabs[selectedIndex].task.name}}
     </div>
@@ -139,7 +139,7 @@
         currentTabs: [],
         selectedIndex: 1,
         selectedTaskIndex:-1,
-        tasks: window.tasks
+        tasks: []
       }
     },
     mounted () {
@@ -240,12 +240,10 @@
             allTabs.push(tab)
           })
         })
-        console.log(allTabs)
         //todo 2sort
         allTabs.sort((a, b) => {
           return b.lastActivity - a.lastActivity
         })
-        console.log(allTabs)
         //todo 3getlast10
         let last10Tabs = []
         allTabs.forEach((tab, index) => {
@@ -259,6 +257,6 @@
     }
   })
 </script>
-<script src="./switch.js"></script>
+
 </body>
 </html>
