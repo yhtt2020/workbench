@@ -29,6 +29,11 @@ const store = new Vuex.Store({
         commit('SET_APPUSERNAVS', result.data)
       }
     },
+    async addAppUserNav({commit}, data) {
+      return await userAppsApi.addAppUserNav(data)
+    },
+
+
     async getUserNavApps({commit}, data) {
       const result = await userAppsApi.getUserNavApps(data)
       console.log(result, '__apps__')
@@ -37,10 +42,13 @@ const store = new Vuex.Store({
       }
     },
     async addUserNavApps({commit}, data) {
-      await userAppsApi.addUserNavApps(data)
+      return await userAppsApi.addUserNavApps(data)
     },
     async delUserNavApps({commit}, data) {
-      await userAppsApi.delUserNavApps(data)
+      return await userAppsApi.delUserNavApps(data)
+    },
+    async updateUserNavApps({commit}, data) {
+      return await userAppsApi.updateUserNavApps(data)
     }
   }
 })

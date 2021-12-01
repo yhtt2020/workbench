@@ -2,9 +2,12 @@ const baseApi = require('./baseApi.js')
 
 const url = {
   navsList: '/app/browser/appUserList/list',
+  addNav: '/app/browser/appUserList/add',
+
   appsList: '/app/browser/myApps/list',
   addApp: '/app/browser/myApps/add',
-  deleteApp: '/app/browser/myApps/delete'
+  deleteApp: '/app/browser/myApps/delete',
+  updateApp: '/app/browser/myApps/update'
 }
 const userAppsApi = {
   //获取云导航列表
@@ -12,6 +15,13 @@ const userAppsApi = {
     await baseApi.init()
     return baseApi.axios(url.navsList)
   },
+  //add
+  async addAppUserNav(info) {
+    await baseApi.init()
+    return baseApi.axios(url.addNav, info)
+  },
+
+
   //获取某一个导航下的apps
   async getUserNavApps(listId) {
     const data = {
@@ -29,6 +39,11 @@ const userAppsApi = {
   async delUserNavApps(ids) {
     await baseApi.init()
     return baseApi.axios(url.deleteApp, ids)
+  },
+  //update
+  async updateUserNavApps(info) {
+    await baseApi.init()
+    return baseApi.axios(url.updateApp, info)
   }
 }
 module.exports = userAppsApi

@@ -76,13 +76,23 @@ Vue.component('cloud-comp', {
       name: 'cloud',
       comp: this,
     })
-    await this.$store.dispatch('getAppUserNavs')
-    this.$store.getters.getAppUserNavs.forEach((element) => {
-      this.myAppsLists[0].children.push(appListModel.convertTreeNode(element))
-    })
+    await this.refreshNavs()
     console.log(this.myAppsLists)
   },
   methods: {
+    async refreshNavs() {
+      await this.$store.dispatch('getAppUserNavs')
+      if(this.myAppsLists[0].children.length > 0 ) {
+        this.myAppsLists[0].children = []
+        this.$store.getters.getAppUserNavs.forEach((element) => {
+          this.myAppsLists[0].children.push(appListModel.convertTreeNode(element))
+        })
+      } else {
+        this.$store.getters.getAppUserNavs.forEach((element) => {
+          this.myAppsLists[0].children.push(appListModel.convertTreeNode(element))
+        })
+      }
+    },
     onSelect(selectedKeys, info) {
       console.log(selectedKeys, 'sssss')
       console.log(info, 'info')
@@ -171,38 +181,24 @@ Vue.component('cloud-comp', {
      * 处理菜单的创建列表事件
      */
     handleMenuCreateList(treeKey) {
-      let that = this
       this.createList(
-        async function () {
-          let name = getNameInputValue()
-          let list = {}
-          list.name = name
-          list.createTime = Date.now()
-          list.updateTime = Date.now()
-          list.order = 0
-          list.summary = ''
-          list.appsCount = 0
-          list.parentId = 0
-          list.type = 0
+        async () => {
+          let list = {
+            name: getNameInputValue(),
+            summary: '云端导航列表的描述'
+          }
           if (!!!list.name) {
             appVue.$message.error({ content: '请输入列表名称。' })
             return
           }
-          appListModel
-            .add(list)
-            .then(
-              (data) => {
-                appVue.$message.success({ content: '添加列表成功。' })
-                that.myAppsLists[0].children.push(appListModel.convertTreeNode(list))
-                that.createListVisible = false
-              },
-              () => {
-                appVue.$message.error({ content: '添加列表失败。' })
-              }
-            )
-            .catch((err) => {
-              console.log(err)
-            })
+          const result = await this.$store.dispatch('addAppUserNav', list)
+          if(result.code === 1000) {
+            this.createListVisible = false
+            await this.refreshNavs()
+            appVue.$message.success({ content: '添加列表成功。' })
+          } else {
+            appVue.$message.error({ content: '添加列表失败。' })
+          }
         },
         '本地列表',
         '本地'
