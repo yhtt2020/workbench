@@ -221,6 +221,18 @@ ipc.on('set-file-view', function (e, data) {
 ipc.on('switchToTask',function(e,data){
 	switchToTask(data.id)
 })
+ipc.on('switchToTab',function(e,data){
+  console.log(data.tabId)
+  const tab= tabs.get(data.tabId)
+  console.log(tab)
+  if(!!!data.taskId){
+    switchToTab(data.tabId)
+  }else{
+    switchToTask(data.taskId)
+    switchToTab(data.tabId)
+  }
+
+})
 ipc.on('addTaskFromApps',function(e,data){
 	let newTask = {
 	  name: data.name || null,
