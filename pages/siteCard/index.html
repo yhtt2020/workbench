@@ -23,11 +23,21 @@
             {{siteTitle}}
           </div>
           <div class="site-url">
-            {{siteUrl}}
+           所属网站： {{siteDomain}}
           </div>
         </a-col>
         <a-col :flex="2">
-          证书
+          <div v-if="tabData.secure">
+            <a-tag color="#87d068">
+              安全
+            </a-tag>
+          </div>
+          <div v-else>
+            <a-tag color="#f50">
+              不安全
+            </a-tag>
+          </div>
+
         </a-col>
       </a-row>
     </div>
@@ -35,11 +45,50 @@
       <a-tabs
         default-active-key="1"
         tab-position="top"
-        :style="{ height: '200px' }"
+        :style="{ height: '310px' }"
         @prevClick="callback"
         @nextClick="callback"
       >
-        <a-tab-pane v-for="(tab,index) in tabs" :key="tab.key" :tab="tab.title"> tab.title</a-tab-pane>
+        <a-tab-pane key="1">
+          <template slot="tab">
+            密码管理
+            <a-badge :count="pwds.length" :number-style="{ backgroundColor: '#52c41a' }"></a-badge>
+          </template>
+
+          <a-table :columns="pwdColumns" :data-source="pwds" size="small">
+            <span slot="password" slot-scope="password">
+              <span v-if="password.hide">
+                ······ <a-icon type="eye" @click="show(password)"></a-icon>
+              </span>
+              <span v-else>
+                {{password.pwd}}
+              </span>
+            </span>
+            <span slot="action" slot-scope="text, record">
+      <a>删除  </a>
+
+    </span>
+          </a-table>
+        </a-tab-pane>
+        <a-tab-pane key="3" tab="安全">
+          <div v-if="tabData.secure">
+            <a-tag color="#87d068">
+              安全
+            </a-tag>
+            <p>
+              此站点为安全网站，通过浏览器的基本安全校验。但也建议您不要过度信任网站，您仍然存在一定的安全风险。
+            </p>
+          </div>
+          <div v-else>
+            <a-tag color="#f50">
+              不安全
+            </a-tag>
+            <p>
+              此网站使用不安全的连接方式。对此，您可能存在信息泄露、被恶意捕捉信息、篡改等安全风险。建议您不要过于信任此网站的内容。
+            </p>
+
+          </div>
+        </a-tab-pane>
       </a-tabs>
     </div>
 
@@ -65,10 +114,12 @@
     overflow: hidden;
     white-space: nowrap;
     width: 300px;
+    font-size: 12px;
   }
 </style>
 </body>
 <script>
+
   Vue.use(antd)
   const electron = require('electron')
   const ipc = electron.ipcRenderer
@@ -80,6 +131,7 @@
         siteUrl: '',
         siteTitle: '',
         tabData: {},
+        pwds: [],
         //tab
         tabs: [
           {
@@ -89,22 +141,71 @@
           {
             title: '导航',
             key: 2
+          }, {
+            title: '安全',
+            key: 3
+          }
+        ],
+        pwdColumns: [
+
+          {
+            title: '标题',
+            dataIndex: 'title',
+            width:'100px'
+          },{
+            title: '账号',
+            dataIndex: 'username',
+            width:'100px'
           },
+
+          {
+            title: '密码',
+            dataIndex: 'password',
+            width:'120px',
+            scopedSlots: { customRender: 'password' }
+          },
+          {
+            title: '操作',
+            key: 'action',
+            width:'100px',
+            scopedSlots: { customRender: 'action' },
+          }
+          //,
+          // {
+          //   title: 'Address',
+          //   dataIndex: 'address',
+          // }
         ]
+      }
+    },
+    computed:{
+      siteDomain(){
+        return tools.getDomainFromUrl(this.siteUrl)
       }
     },
     mounted () {
       tools.getWindowArgs(window)
-      console.log(window.globalArgs)
+      const passwordModel = require('../util/model/passwordModel')
       this.siteUrl = window.globalArgs['site-url']
       this.siteTitle = window.globalArgs['site-title']
-      console.log(window.globalArgs['tab-data'])
       this.tabData = JSON.parse(decodeURIComponent(window.globalArgs['tab-data']))
-      console.log(this.tabData)
+      passwordModel.getSiteCredit(this.tabData.url).then((result) => {
+        appVue.pwds = result
+        appVue.pwds.forEach((pwd)=>{
+          pwd.password={
+            hide:true,
+            pwd:pwd.password
+          }
+        })
+      })
+
     },
     methods: {
       callback (val) {
         console.log(val)
+      },
+      show(password){
+        password.hide=false
       }
     }
   })

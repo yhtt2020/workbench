@@ -15,6 +15,26 @@ const tools = {
     } else {
       window.platformType = 'linux'
     }
+    return window
+  }
+  ,//提取域名
+  getDomain: function (hostname) {
+    // 去除域名里的www，根域名用同一套帐号
+    let domain = hostname
+    if (domain.startsWith('www.')) {
+      domain = domain.slice(4)
+    }
+    return domain
+  },
+  getDomainFromUrl(url){
+    let domain = url.split('/'); //以“/”进行分割
+    if( domain[2] ) {
+      domain = domain[2];
+    } else {
+      domain = ''; //如果url不正确就取空
+    }
+    domain = tools.getDomain(domain)
+    return domain
   }
 }
 

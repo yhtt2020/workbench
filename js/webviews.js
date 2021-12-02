@@ -421,6 +421,8 @@ ipc.on('leave-full-screen', function () {
   }
 })
 
+
+
 webviews.bindEvent('enter-html-full-screen', function (tabId) {
   webviews.viewFullscreenMap[tabId] = true
   webviews.resize()
@@ -475,6 +477,8 @@ function willNavigate(tabId, url, isInPlace, isMainFrame, frameProcessId, frameR
 webviews.bindEvent('did-navigate', function (tabId, url, httpResponseCode, httpStatusText) {
   onPageURLChange(tabId, url)
 })
+
+
 
 webviews.bindEvent('did-finish-load', onPageLoad)
 

@@ -43,7 +43,6 @@ function createSiteCardWin(url,pos,title,tabData){
   }
 }
 ipc.on('createSiteCard',(event,args)=>{
-  console.log(args)
   createSiteCardWin(args.url,{x:args.x,y:args.y},args.title,args.tabData)
 })
 app.whenReady().then(()=>{

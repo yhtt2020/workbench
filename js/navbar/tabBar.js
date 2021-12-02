@@ -216,6 +216,8 @@ const tabBar = {
     tabEl.appendChild(tabAudio.getButton(data.id))
     tabEl.appendChild(progressBar.create())
 
+
+    console.log(data)
     // icons
 
     var iconArea = document.createElement('span')
@@ -566,11 +568,7 @@ const tabBar = {
     iconEl.style.cursor='pointer'
    // iconEl.style="cursor:pointer"
     iconEl.addEventListener('click',(e)=>{
-      console.log(tabData)
-      const data={
-        favicon:tabData.favicon
-      }
-      ipc.send('createSiteCard',{url:tabData.url,x:e.clientX,y:e.clientY,title:tabData.title,tabData:data})
+      ipc.send('createSiteCard',{url:tabData.url,x:e.clientX,y:e.clientY,title:tabData.title,tabData:tabData})
       e.preventDefault()
       e.stopPropagation()
     })
