@@ -29,24 +29,33 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   response => {
     if (response.status >= 200 && response.status < 300) {
+      console.log(response.data, '__axios拦截(全局拦截还未完善勿删！)__')
       if(response.data.code === 1000) {
         return response.data;
       } else if (response.data.code === 1001) {
-        //要区别axios在两种提示环境中使用，主进程中是无法直接ipcMain.send的'ipc是引入时的简写'
-        if(ipc) {
-          if(response.data.message.indexOf('54003') !== -1) {
-            ipc.send('message',{type:'error',config:{content: '服务器翻译繁忙!', key: Date.now()}})
+        //有一种情况就是ipc sidePanel是not defind,需要被catch块抓出来
+        try {
+          //要区别axios在两种主进程环境中使用，主进程中是无法直接ipcMain.send的'ipc是引入时的简写'
+          if(ipc) {
+            if(response.data.message.indexOf('54003') !== -1) {
+              ipc.send('message',{type:'error',config:{content: '服务器翻译繁忙!', key: Date.now()}})
+            } else {
+              ipc.send('message',{type:'error',config:{content: response.data.message, key: Date.now()}})
+            }
           } else {
-            ipc.send('message',{type:'error',config:{content: response.data.message, key: Date.now()}})
+            sidePanel.get().webContents.send('message',{type:"error",config:{content: response.data.message, key: Date.now()}})
           }
-        } else {
-          sidePanel.get().webContents.send('message',{type:"error",config:{content: response.data.message, key: Date.now()}})
+          return Promise.reject(response.data)
+        } catch(err) {
+          return response.data
         }
-        return Promise.reject(response.data)
+      } else if (response.data.code === 1002) {
+        //参数错误
+        return response.data
       }
       // return response.data;
     } else {
-      return Promise.reject(response);
+      return Promise.reject(response.data);
     }
   },
   error => {
