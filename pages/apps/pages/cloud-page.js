@@ -215,51 +215,48 @@ cloudTpl = `
     </div>
   </template>
 </div>
-`
-const ipc=require("electron").ipcRenderer
-function parseNumber (str) {
-  const num = Number(str)
-  return isNaN(num) ? 0 : num
+`;
+const ipc = require("electron").ipcRenderer;
+function parseNumber(str) {
+  const num = Number(str);
+  return isNaN(num) ? 0 : num;
 }
 
-const appListModel = require('../../util/model/appListModel.js').appListModel
-const VueSelecto=require('vue-selecto')
-module.exports = Vue.component('cloud-page', {
-  name: 'cloud-page',
+const appListModel = require("../../util/model/appListModel.js").appListModel;
+const VueSelecto = require("vue-selecto");
+module.exports = Vue.component("cloud-page", {
+  name: "cloud-page",
   template: cloudTpl,
-  components:{
-    VueSelecto
+  components: {
+    VueSelecto,
   },
-  beforeRouteEnter (to, from, next) {
-    next(async vm => {
-      vm.myApps = []
-      vm.listId = parseNumber(to.query.listId)// 通过 `vm` 访问组件实例
-      window.$listId=vm.listId
-      await vm.load()
-      vm.appList.type = String(to.query.type)
-      vm.myApps = vm.$store.getters.getUserNavApps
-      console.log(vm.myApps, '路由进来前?????')
-    })
+  beforeRouteEnter(to, from, next) {
+    next(async (vm) => {
+      vm.myApps = [];
+      vm.listId = parseNumber(to.query.listId); // 通过 `vm` 访问组件实例
+      window.$listId = vm.listId;
+      window.$type = String(to.query.type);
+      vm.appList.type = String(to.query.type);
+      await vm.load(vm);
+    });
   },
-  async beforeRouteUpdate (to, from, next) {
-    this.listId = Number(to.query.listId)
-    window.$listId=this.listId
-    await this.load()
-    this.appList.type = String(to.query.type)
-    this.myApps = this.$store.getters.getUserNavApps
-    console.log(this.myApps, '路由更新前?????')
+  async beforeRouteUpdate(to, from, next) {
+    this.listId = Number(to.query.listId);
+    window.$listId = this.listId;
+    window.$type = String(to.query.type);
+    this.appList.type = String(to.query.type);
+    await this.load(this);
   },
-  data () {
+  data() {
     return {
       //selecto
-      selectedElements:[],
-      selected:[],
+      selectedElements: [],
+      selected: [],
       //selecto end
-      pagination:{
-        onChange: page => {
-        },
+      pagination: {
+        onChange: (page) => {},
         pageSize: 10,
-        hideOnSinglePage:true
+        hideOnSinglePage: true,
       },
       //可删
       //listId: this.$route.query.listId,
@@ -268,25 +265,25 @@ module.exports = Vue.component('cloud-page', {
       type: 0,
       myApps: [],
       appList: {
-        name: '',
-        type: ''
+        name: "",
+        type: "",
       },
       //表单布局用字段
       formItemLayout: {
         labelCol: {
           xs: {
-            span: 8
+            span: 8,
           },
           sm: {
-            span: 6
+            span: 6,
           },
         },
         wrapperCol: {
           xs: {
-            span: 24
+            span: 24,
           },
           sm: {
-            span: 16
+            span: 16,
           },
         },
       },
@@ -296,79 +293,86 @@ module.exports = Vue.component('cloud-page', {
       autoCompleteResult: [],
 
       //表单专用填充项目
-      name: '',
-      url: '',
-      summary: '',
-    }
+      name: "",
+      url: "",
+      summary: "",
+    };
   },
   computed: {
     allApps: {
       get: function () {
-        if (typeof window.$appsApiData == 'undefined' || window.$appsApiData == null) {
-          return window.nativeData.allApps
+        if (
+          typeof window.$appsApiData == "undefined" ||
+          window.$appsApiData == null
+        ) {
+          return window.nativeData.allApps;
         }
-        return window.$appsApiData.allApps
-      }
+        return window.$appsApiData.allApps;
+      },
     },
     appUpdateTime: {
       get: function () {
-        if (typeof window.$appsApiData == 'undefined' || window.$appsApiData == null) {
-          return window.nativeData.updateTime
+        if (
+          typeof window.$appsApiData == "undefined" ||
+          window.$appsApiData == null
+        ) {
+          return window.nativeData.updateTime;
         } else {
-          return window.$appsApiData.updateTime
+          return window.$appsApiData.updateTime;
         }
-
-      }
-    }
+      },
+    },
   },
-  mounted () {
+  mounted() {
     //因为路由切换控制 mounted无法满足需求
   },
-  beforeCreate () {
+  beforeCreate() {
     this.form = this.$form.createForm(this, {
-      name: 'register'
-    })
+      name: "register",
+    });
   },
-  methods: {//判断是否是我的应用
+  methods: {
+    //判断是否是我的应用
     //添加应用到任务栏
-    addTask (app) {
+    addTask(app) {
       postMessage({
-        message: 'addTask',
+        message: "addTask",
         name: app.name,
         url: app.url,
-        icon: app.icon
-      })
-      this.$message.success('成功在左侧栏添加了应用：' + app.name + '。')
+        icon: app.icon,
+      });
+      this.$message.success("成功在左侧栏添加了应用：" + app.name + "。");
     },
-    isInMyApps () {
+    isInMyApps() {
       // if (this.currentApp == null) {
       //   return -1
       // }
-      let findIndex = -1
-      let findIds = []
+      let findIndex = -1;
+      let findIds = [];
       this.myApps.forEach((item, index) => {
         if (item.name == this.currentApp.name) {
-          findIndex = index
-          findIds.push(item.id)
+          findIndex = index;
+          findIds.push(item.id);
         }
-      })
+      });
       return {
         findIndex: findIndex,
-        findIds: findIds
-      }
-
+        findIds: findIds,
+      };
     },
     //添加app
-    async addCurrentApp () {
-      const resFind = this.isInMyApps(this.currentApp)
-      if(resFind.findIndex !== -1) {
-        const result = await this.$store.dispatch('delUserNavApps', { ids: resFind.findIds })
-        if(result.code === 1000) {
-          this.$message.warning('移除了应用：' + this.currentApp.name + '')
-          await this.$store.dispatch('getUserNavApps', this.listId)
-          this.myApps = this.$store.getters.getUserNavApps
+    async addCurrentApp() {
+      const resFind = this.isInMyApps(this.currentApp);
+      if (resFind.findIndex !== -1) {
+        const result = await this.$store.dispatch("delUserNavApps", {
+          ids: resFind.findIds,
+        });
+        if (result.code === 1000) {
+          this.$message.warning("移除了应用：" + this.currentApp.name + "");
+          await this.$store.dispatch("getUserNavApps", this.listId);
+          this.myApps = this.$store.getters.getUserNavApps;
         } else {
-          this.$message.error('移除应用失败!')
+          this.$message.error("移除应用失败!");
         }
       } else {
         const data = {
@@ -377,137 +381,144 @@ module.exports = Vue.component('cloud-page', {
           url: this.currentApp.url,
           icon: this.currentApp.icon,
           add_time: String(new Date().getTime()),
-          list_id: this.listId
-        }
-        const result = await this.$store.dispatch('addUserNavApps', data)
-        if(result.code === 1000) {
-          this.$message.success('添加了应用：' + this.currentApp.name)
-          await this.$store.dispatch('getUserNavApps', this.listId)
-          this.myApps = this.$store.getters.getUserNavApps
+          list_id: this.listId,
+        };
+        const result = await this.$store.dispatch("addUserNavApps", data);
+        if (result.code === 1000) {
+          this.$message.success("添加了应用：" + this.currentApp.name);
+          await this.$store.dispatch("getUserNavApps", this.listId);
+          this.myApps = this.$store.getters.getUserNavApps;
         } else {
-          this.$message.error('添加应用失败!')
+          this.$message.error("添加应用失败!");
         }
       }
     },
     //点击那些app的时候
-    async addApp (app) {
-      console.log(app, 'cc_app')
-      this.currentApp = app
-      await this.addCurrentApp()
+    async addApp(app) {
+      console.log(app, "cc_app");
+      this.currentApp = app;
+      await this.addCurrentApp();
     },
-    handleSubmit (e) {
-      e.preventDefault()
-      let that = this
+    handleSubmit(e) {
+      e.preventDefault();
+      let that = this;
       this.form.validateFieldsAndScroll(async (err, values) => {
         if (!err) {
           const app = {
-            'name': values.name,
-            'url': values.url,
-            'summary': values.summary,
-            'icon': '../../icons/default.svg'
-          }
-          await that.addApp(app)
+            name: values.name,
+            url: values.url,
+            summary: values.summary,
+            icon: "../../icons/default.svg",
+          };
+          await that.addApp(app);
           that.$nextTick(() => {
-            that.form.resetFields()
-          })
+            that.form.resetFields();
+          });
         }
-      })
+      });
     },
-    handleWebsiteChange (value) {
-      let autoCompleteResult
+    handleWebsiteChange(value) {
+      let autoCompleteResult;
       if (!value) {
-        autoCompleteResult = []
+        autoCompleteResult = [];
       } else {
-        autoCompleteResult = ['.com', '.org', '.net'].map(domain => `${value}${domain}`)
+        autoCompleteResult = [".com", ".org", ".net"].map(
+          (domain) => `${value}${domain}`
+        );
       }
-      this.autoCompleteResult = autoCompleteResult
+      this.autoCompleteResult = autoCompleteResult;
     },
-    showModal () {
-      this.visible = true
+    showModal() {
+      this.visible = true;
     },
-    async load() {
-      await this.$store.dispatch('getUserNavApps', this.listId)
+    async load(vm) {
+      await this.$store.dispatch("getUserNavApps", this.listId);
+      vm.myApps = vm.$store.getters.getUserNavApps;
     },
-    onListTypeChange (e) {
-      this.appList.type=e.target.value
-      let saveData={}
-      Object.assign(saveData,this.appList)
-      saveData.type=Number(saveData.type)
-      if(this.appList.id!==0){
-        appListModel.put(saveData).then().catch()
-      }else{
-          appListModel.putDefaultList(saveData)
+    onListTypeChange(e) {
+      this.appList.type = e.target.value;
+      let saveData = {};
+      Object.assign(saveData, this.appList);
+      saveData.type = Number(saveData.type);
+      if (this.appList.id !== 0) {
+        appListModel.put(saveData).then().catch();
+      } else {
+        appListModel.putDefaultList(saveData);
       }
       //todo 去保存appList的type
     },
-    openUrl(url){
-      window.open(url)
+    openUrl(url) {
+      window.open(url);
     },
     //selecto
-    onSelect (e) {
-
-      e.added.forEach(el => {
-        el.classList.add('selected')
-      })
-      e.removed.forEach(el => {
-        el.classList.remove('selected')
-        this.selected = []
-      })
+    onSelect(e) {
+      e.added.forEach((el) => {
+        el.classList.add("selected");
+      });
+      e.removed.forEach((el) => {
+        el.classList.remove("selected");
+        this.selected = [];
+      });
     },
     // 框选结束存储数据
-    selectEnd (e) {
-      this.selectedElements=[]
-      window.$selectedApps=[]
-      e.selected.map(item => {
-        this.selectedElements.push(item)
-        this.selected.push(item.id)
-      })
-      window.$selectedApps=this.selected
+    selectEnd(e) {
+      //console.log(e, '>>>>>>>>>>>>?')
+      this.selectedElements = [];
+      window.$selectedApps = [];
+      e.selected.map((item) => {
+        this.selectedElements.push(item);
+        this.selected.push(item.id);
+      });
+      window.$selectedApps = this.selected;
     },
 
     //selecto end
 
     //drag
-    dragStart (e,app) {
-       if(!!!window.$selectedApps){
-         window.$selectedApps=[String(app.id)]
-      }else if(window.$selectedApps.length===0  ){
-        window.$selectedApps.push(String(app.id))
+    dragStart(e, app) {
+      //console.log(e, 'e')
+      console.log(app, "app");
+      if (!!!window.$selectedApps) {
+        window.$selectedApps = [String(app.id)];
+      } else if (window.$selectedApps.length === 0) {
+        window.$selectedApps.push(String(app.id));
       }
-       window.$removeApps=()=>{
-         this.selected=[]
-         this.selectedElements.forEach(el => {
-           el.classList.remove('selected')
-         })
-         this.load()
-      }
+      //fn中的this不会出现指向问题，在cloud-comp中调用fn时
+      //因为这是箭头函数，指向的this还是这个cloud-page组建
+      window.$removeApps = () => {
+        this.selected = [];
+        this.selectedElements.forEach((el) => {
+          el.classList.remove("selected");
+        });
+        this.load(this);
+      };
     },
     //drag end
 
     /***
      * 分享整组
      */
-    shareList(){
-      let apps=this.myApps
-      let filterList =  apps.filter(e => !e.url.startsWith('file:///'))    //过滤掉file层面的tab
-      let args = []
-      for(let i = 0; i < filterList.length; i++) {
+    shareList() {
+      let apps = this.myApps;
+      let filterList = apps.filter((e) => !e.url.startsWith("file:///")); //过滤掉file层面的tab
+      let args = [];
+      for (let i = 0; i < filterList.length; i++) {
         const obj = {
           url: filterList[i].url,
           favicon: filterList[i].icon,
-          title: filterList[i].name
-        }
-        args.push(obj)
+          title: filterList[i].name,
+        };
+        args.push(obj);
       }
-      ipc.send('shareTask', args)
+      ipc.send("shareTask", args);
     },
     /***
      * 分享整个列表
      */
-    openList(){
-        this.myApps.forEach(app=>{
-          window.open(app.url)
-        })
-    }
-  }
-})
+    openList() {
+      this.myApps.forEach((app) => {
+        window.open(app.url);
+      });
+    },
+  },
+});

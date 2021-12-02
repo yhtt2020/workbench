@@ -20,7 +20,7 @@ const baseApi = {
    * @param {String} url 请求url
    * @param {Object} params  请求体body或query对象
    * @param {String} method  请求方式默认为post
-   * @returns
+   * @returns Promise
    */
   axios: async (url, params, method = "post") => {
     let data = {};
