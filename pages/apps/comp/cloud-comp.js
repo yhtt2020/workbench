@@ -76,13 +76,23 @@ Vue.component('cloud-comp', {
       name: 'cloud',
       comp: this,
     })
-    await this.$store.dispatch('getAppUserNavs')
-    this.$store.getters.getAppUserNavs.forEach((element) => {
-      this.myAppsLists[0].children.push(appListModel.convertTreeNode(element))
-    })
+    await this.refreshNavs()
     console.log(this.myAppsLists)
   },
   methods: {
+    async refreshNavs() {
+      await this.$store.dispatch('getAppUserNavs')
+      if(this.myAppsLists[0].children.length > 0 ) {
+        this.myAppsLists[0].children = []
+        this.$store.getters.getAppUserNavs.forEach((element) => {
+          this.myAppsLists[0].children.push(appListModel.convertTreeNode(element))
+        })
+      } else {
+        this.$store.getters.getAppUserNavs.forEach((element) => {
+          this.myAppsLists[0].children.push(appListModel.convertTreeNode(element))
+        })
+      }
+    },
     onSelect(selectedKeys, info) {
       console.log(selectedKeys, 'sssss')
       console.log(info, 'info')
@@ -122,18 +132,21 @@ Vue.component('cloud-comp', {
     },
     handleMenuDeleteList(treeKey) {
       let that = this
-      let { list, key } = treeUtil.findTreeNode(treeKey, that.myAppsLists[0].children)
-      console.log(list)
+      const { list } = treeUtil.findTreeNode(treeKey, this.myAppsLists[0].children)
       this.$confirm({
         title: `确认删除列表： ${list.title} ？`,
         content: `删除后无法撤销，请谨慎操作！`,
         okText: '确认删除，不后悔',
         cancelText: '保留',
-        onOk() {
-          appListModel.delete(Number(appListModel.getIdFromTreeKey(treeKey))).then(() => {
-            that.$message.success({ content: '删除成功。' })
-            that.myAppsLists[0].children.splice(key, 1)
-          })
+        async onOk() {
+          const result = await that.$store.dispatch('deleteAppUserNav', { ids: [treeKey] })
+          if(result.code === 1000) {
+            that.createListVisible = false
+            await that.refreshNavs()
+            appVue.$message.success({ content: '列表删除成功' })
+          } else {
+            appVue.$message.error({ content: '列表删除失败!' })
+          }
         },
         onCancel() {
           console.log('Cancel')
@@ -145,64 +158,51 @@ Vue.component('cloud-comp', {
      * @param treeKey
      */
     handleMenuRenameList(treeKey) {
-      let that = this
-      const { list } = treeUtil.findTreeNode(treeKey, that.myAppsLists[0].children)
-      that.createList(
-        function () {
-          const newName = getNameInputValue()
-          appListModel
-            .put({
-              id: Number(appListModel.getIdFromTreeKey(treeKey)),
-              name: newName,
-              updateTime: Date.now(),
-            })
-            .then(() => {
-              list.title = newName
-              that.$message.success({ content: '重命名成功。' })
-              that.createListVisible = false
-            })
-            .catch((err) => console.log(err))
-        },
-        list.title,
-        '重命名'
-      )
+      console.log(treeKey)
+      const { list } = treeUtil.findTreeNode(treeKey, this.myAppsLists[0].children)
+      this.createList(async ()=> {
+        const name = getNameInputValue()
+        if (!!!name) {
+          appVue.$message.error({ content: '请输入列表名称。' })
+          return
+        }
+        const data =  {
+          id: treeKey,
+          name: name,
+          summary: '云端导航列表的描述'
+        }
+        const result = await this.$store.dispatch('updateAppUserNav', data)
+        if(result.code === 1000) {
+          this.createListVisible = false
+          await this.refreshNavs()
+          appVue.$message.success({ content: '重命名列表成功' })
+        } else {
+          appVue.$message.error({ content: '重命名列表失败!' })
+        }
+      }, list.title, '重命名')
     },
     /**
      * 处理菜单的创建列表事件
      */
     handleMenuCreateList(treeKey) {
-      let that = this
       this.createList(
-        async function () {
-          let name = getNameInputValue()
-          let list = {}
-          list.name = name
-          list.createTime = Date.now()
-          list.updateTime = Date.now()
-          list.order = 0
-          list.summary = ''
-          list.appsCount = 0
-          list.parentId = 0
-          list.type = 0
+        async () => {
+          let list = {
+            name: getNameInputValue(),
+            summary: '云端导航列表的描述'
+          }
           if (!!!list.name) {
             appVue.$message.error({ content: '请输入列表名称。' })
             return
           }
-          appListModel
-            .add(list)
-            .then(
-              (data) => {
-                appVue.$message.success({ content: '添加列表成功。' })
-                that.myAppsLists[0].children.push(appListModel.convertTreeNode(list))
-                that.createListVisible = false
-              },
-              () => {
-                appVue.$message.error({ content: '添加列表失败。' })
-              }
-            )
-            .catch((err) => {
-              console.log(err)
-            })
+          const result = await this.$store.dispatch('addAppUserNav', list)
+          if(result.code === 1000) {
+            this.createListVisible = false
+            await this.refreshNavs()
+            appVue.$message.success({ content: '添加列表成功。' })
+          } else {
+            appVue.$message.error({ content: '添加列表失败。' })
+          }
         },
         '本地列表',
         '本地'

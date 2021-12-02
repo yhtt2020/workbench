@@ -341,70 +341,79 @@ module.exports = Vue.component('cloud-page', {
       this.$message.success('成功在左侧栏添加了应用：' + app.name + '。')
     },
     isInMyApps () {
-      if (this.currentApp == null) {
-        return -1
-      }
+      // if (this.currentApp == null) {
+      //   return -1
+      // }
       let findIndex = -1
+      let findIds = []
       this.myApps.forEach((item, index) => {
-        if (item.name == this.currentApp.name)
+        if (item.name == this.currentApp.name) {
           findIndex = index
+          findIds.push(item.id)
+        }
       })
-      return findIndex
+      return {
+        findIndex: findIndex,
+        findIds: findIds
+      }
 
     },
     //添加app
-    addCurrentApp () {
-      const index = this.isInMyApps(this.currentApp)
-      if(index !== -1) {
-
+    async addCurrentApp () {
+      const resFind = this.isInMyApps(this.currentApp)
+      if(resFind.findIndex !== -1) {
+        const result = await this.$store.dispatch('delUserNavApps', { ids: resFind.findIds })
+        if(result.code === 1000) {
+          this.$message.warning('移除了应用：' + this.currentApp.name + '')
+          await this.$store.dispatch('getUserNavApps', this.listId)
+          this.myApps = this.$store.getters.getUserNavApps
+        } else {
+          this.$message.error('移除应用失败!')
+        }
+      } else {
+        const data = {
+          name: this.currentApp.name,
+          summary: this.currentApp.summary,
+          url: this.currentApp.url,
+          icon: this.currentApp.icon,
+          add_time: String(new Date().getTime()),
+          list_id: this.listId
+        }
+        const result = await this.$store.dispatch('addUserNavApps', data)
+        if(result.code === 1000) {
+          this.$message.success('添加了应用：' + this.currentApp.name)
+          await this.$store.dispatch('getUserNavApps', this.listId)
+          this.myApps = this.$store.getters.getUserNavApps
+        } else {
+          this.$message.error('添加应用失败!')
+        }
       }
-      // let that = this
-      // let app = this.currentApp
-      // let index = this.isInMyApps(app)
-      // if (index != -1) {
-      //   this.myApps.splice(index, 1)
-      //   that.$message.warning('移除了应用：' + app.name + '')
-      //   window.$appsRestore.deleteApp(app.id)
-      //   this.btnText = '添加收藏'
-      // } else {
-      //   let apps = this.myApps
-      //   apps.unshift(app)
-      //   this.myApps = apps
-      //   this.btnText = '移出收藏'
-
-      //   app.listId = this.listId
-      //   window.$appsRestore.addApp(app)
-      //   this.$message.success('添加了应用：' + app.name)
-      // }
     },
     //点击那些app的时候
-    //但我把提交实现放在关闭按钮时
-    addApp (app) {
+    async addApp (app) {
       console.log(app, 'cc_app')
       this.currentApp = app
-      this.addCurrentApp()
+      await this.addCurrentApp()
     },
     handleSubmit (e) {
       e.preventDefault()
       let that = this
-      this.form.validateFieldsAndScroll((err, values) => {
+      this.form.validateFieldsAndScroll(async (err, values) => {
         if (!err) {
-          console.log(values)
           const app = {
             'name': values.name,
             'url': values.url,
             'summary': values.summary,
             'icon': '../../icons/default.svg'
           }
-          that.addApp(app)
-
+          await that.addApp(app)
           that.$nextTick(() => {
             that.form.resetFields()
-
           })
         }
       })
-    }, handleWebsiteChange (value) {
+    },
+    handleWebsiteChange (value) {
       let autoCompleteResult
       if (!value) {
         autoCompleteResult = []
