@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>网站名片</title>
+  <script src="../../ext/vue/vue.js"></script>
+  <script src="../../ext/vue/antd.min.js"></script>
+  <link rel="stylesheet" href="../../ext/vue/antd.min.css"/>
+  <link rel="icon" type="image/svg+xml" href="../../icons/apps.svg"/>
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline'"/>
+  <link rel="stylesheet" href="./card.css"/>
+</head>
+<body>
+<div id="appVue">
+  <div style="padding:15px">
+    <div class="site-info">
+      <a-row type="flex">
+        <a-col flex="55px">
+          <a-avatar shape="square" :size="40" :src="!!!tabData.favicon?'':tabData.favicon.url"></a-avatar>
+        </a-col>
+        <a-col :flex="3">
+          <div class="site-title" :title="siteTitle">
+            {{siteTitle}}
+          </div>
+          <div class="site-url">
+            {{siteUrl}}
+          </div>
+        </a-col>
+        <a-col :flex="2">
+          证书
+        </a-col>
+      </a-row>
+    </div>
+    <div>
+      <a-tabs
+        default-active-key="1"
+        tab-position="top"
+        :style="{ height: '200px' }"
+        @prevClick="callback"
+        @nextClick="callback"
+      >
+        <a-tab-pane v-for="(tab,index) in tabs" :key="tab.key" :tab="tab.title"> tab.title</a-tab-pane>
+      </a-tabs>
+    </div>
+
+  </div>
+
+</div>
+<style>
+  .site-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    list-style: none;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 250px;
+  }
+
+  .site-url {
+    color: #999;
+    list-style: none;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 300px;
+  }
+</style>
+</body>
+<script>
+  Vue.use(antd)
+  const electron = require('electron')
+  const ipc = electron.ipcRenderer
+  let tools = require('../util/util.js').tools
+  const appVue = new Vue({
+    el: '#appVue',
+    data () {
+      return {
+        siteUrl: '',
+        siteTitle: '',
+        tabData: {},
+        //tab
+        tabs: [
+          {
+            title: '密码管理',
+            key: 1
+          },
+          {
+            title: '导航',
+            key: 2
+          },
+        ]
+      }
+    },
+    mounted () {
+      tools.getWindowArgs(window)
+      console.log(window.globalArgs)
+      this.siteUrl = window.globalArgs['site-url']
+      this.siteTitle = window.globalArgs['site-title']
+      console.log(window.globalArgs['tab-data'])
+      this.tabData = JSON.parse(decodeURIComponent(window.globalArgs['tab-data']))
+      console.log(this.tabData)
+    },
+    methods: {
+      callback (val) {
+        console.log(val)
+      }
+    }
+  })
+</script>
+</html>

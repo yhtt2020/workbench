@@ -561,8 +561,19 @@ const tabBar = {
         src = tabData.favicon.url
       }
     }
-
+    iconEl.title="点击查看网站名片"
     iconEl.src = src
+    iconEl.style.cursor='pointer'
+   // iconEl.style="cursor:pointer"
+    iconEl.addEventListener('click',(e)=>{
+      console.log(tabData)
+      const data={
+        favicon:tabData.favicon
+      }
+      ipc.send('createSiteCard',{url:tabData.url,x:e.clientX,y:e.clientY,title:tabData.title,tabData:data})
+      e.preventDefault()
+      e.stopPropagation()
+    })
     return iconEl
   },
 }
