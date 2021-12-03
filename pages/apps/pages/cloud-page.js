@@ -27,7 +27,7 @@ cloudTpl = `
         <div style="float: left">
           <template>
             <a-breadcrumb>
-              <a-breadcrumb-item>本地列表</a-breadcrumb-item>
+              <a-breadcrumb-item>云端列表</a-breadcrumb-item>
               <a-breadcrumb-item>{{appList.name}}</a-breadcrumb-item>
             </a-breadcrumb>
 
@@ -237,6 +237,7 @@ module.exports = Vue.component("cloud-page", {
       window.$listId = vm.listId;
       window.$type = String(to.query.type);
       vm.appList.type = String(to.query.type);
+      vm.appList.name = String(to.query.name)
       await vm.load(vm);
     });
   },
@@ -245,6 +246,7 @@ module.exports = Vue.component("cloud-page", {
     window.$listId = this.listId;
     window.$type = String(to.query.type);
     this.appList.type = String(to.query.type);
+    this.appList.name = String(to.query.name)
     await this.load(this);
   },
   data() {
@@ -435,6 +437,7 @@ module.exports = Vue.component("cloud-page", {
       await this.$store.dispatch("getUserNavApps", this.listId);
       vm.myApps = vm.$store.getters.getUserNavApps;
     },
+    //todo
     onListTypeChange(e) {
       this.appList.type = e.target.value;
       let saveData = {};

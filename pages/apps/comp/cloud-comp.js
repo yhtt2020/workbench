@@ -104,12 +104,14 @@ Vue.component('cloud-comp', {
       }
       //处理nav的type, 缩略图还是列表也远端处理了, 到时候选择相关的展现形式也要发起一个请求链接
       let type = Number
+      let name = '默认列表'
       this.$store.getters.getAppUserNavs.forEach((item) => {
         if (item.id === selectedKeys[0]) {
           type = item.type
+          name = item.name
         }
       })
-      this.$router.push({ name: 'cloud', query: { listId: jump, t: Date.now(), type: type } })
+      this.$router.push({ name: 'cloud', query: { listId: jump, t: Date.now(), type: type, name: name } })
       resetOtherTree('cloud', selectedKeys)
     },
     onContextMenuClick(treeKey, menuKey) {
@@ -204,8 +206,8 @@ Vue.component('cloud-comp', {
             appVue.$message.error({ content: '添加列表失败。' })
           }
         },
-        '本地列表',
-        '本地'
+        '👉请输入云端导航名',
+        '云端'
       )
     },
 
@@ -257,8 +259,12 @@ Vue.component('cloud-comp', {
       if (key === 'myapp') {
         key = 0
       }
+      let ids = []
+      window.$selectedApps.forEach(e => {
+        ids.push(Number(e))
+      })
       const data  = {
-        id: Number(window.$selectedApps[0]),
+        ids,
         list_id: Number(key),
       }
       const result = await this.$store.dispatch('updateUserNavApps', data)
