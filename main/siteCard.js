@@ -1,5 +1,6 @@
-let siteCardWindow=null
-function createSiteCardWin(url,pos,title,tabData){
+let siteCardWindow = null
+
+function createSiteCardWin (url, pos, title, tabData) {
   if (siteCardWindow === null) {
     siteCardWindow = new BrowserWindow({
       frame: true,
@@ -7,11 +8,14 @@ function createSiteCardWin(url,pos,title,tabData){
       parent: mainWindow,
       modal: false,
       hasShadow: true,
-      width: 600,
+
+      minWidth: 600,
+      width:600,
       autoHideMenuBar: true,
-      height: 600,
-      x:pos.x+mainWindow.getBounds().x,
-      y:mainWindow.getBounds().y+40,
+      minHeight: 600,
+      height:600,
+      x: pos.x + mainWindow.getBounds().x,
+      y: mainWindow.getBounds().y + 40,
       acceptFirstMouse: true,
       maximizable: false,
       visualEffectState: 'active',
@@ -23,9 +27,9 @@ function createSiteCardWin(url,pos,title,tabData){
           '--user-data-path=' + userDataPath,
           '--app-version=' + app.getVersion(),
           '--app-name=' + app.getName(),
-          '--site-url='+url,
-          '--site-title='+title,
-          '--tab-data='+  encodeURIComponent(JSON.stringify(tabData)),
+          '--site-url=' + url,
+          '--site-title=' + title,
+          '--tab-data=' + encodeURIComponent(JSON.stringify(tabData)),
           ...((isDevelopmentMode ? ['--development-mode'] : [])),
         ]
       }
@@ -36,14 +40,16 @@ function createSiteCardWin(url,pos,title,tabData){
     siteCardWindow.on('show', () => {
       siteCardWindow.focus()
     })
+
   } else {
     siteCardWindow.close()
     siteCardWindow = null
   }
 }
-ipc.on('createSiteCard',(event,args)=>{
-  createSiteCardWin(args.url,{x:args.x,y:args.y},args.title,args.tabData)
+
+ipc.on('createSiteCard', (event, args) => {
+  createSiteCardWin(args.url, { x: args.x, y: args.y }, args.title, args.tabData)
 })
-app.whenReady().then(()=>{
+app.whenReady().then(() => {
   createSiteCardWin()
 })

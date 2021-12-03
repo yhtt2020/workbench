@@ -25,6 +25,12 @@ const tools = {
       domain = domain.slice(4)
     }
     return domain
+  },//提取域名
+  getRootDomain: function (hostname) {
+    // 去除域名里的www，根域名用同一套帐号
+    let domain=tools.getDomainFromUrl(hostname)
+    let domainArray=domain.split('.')
+    return domainArray[domainArray.length-2]+'.'+domainArray[domainArray.length-1]
   },
   getDomainFromUrl(url){
     let domain = url.split('/'); //以“/”进行分割

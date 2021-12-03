@@ -78,10 +78,15 @@ const PasswordModel = {
     //获取到真实在用的密码管理器
     PasswordModel.activeManager = await PasswordModel.getConfiguredPasswordManager()
   },
-  getSiteCredit :async function(siteUrl) {
+  getSiteCredit :async function(siteUrl,includeRoot=false) {
     await PasswordModel.initialize()
     const domain=tools.getDomainFromUrl(siteUrl)
-    let sitePwds=[]
+    const rootDomain=tools.getRootDomain(siteUrl)
+    let pwds= {
+      item:[],
+      rootItem:[]
+    }
+
     let result=await PasswordModel.activeManager.getAllCredentials().catch((err)=>{return []})
     // passwords.forEach((pwd)=>{
     //   console.log(pwd)
@@ -91,10 +96,16 @@ const PasswordModel = {
     }
     result.forEach((pwd)=>{
       if(pwd.domain===domain){
-        sitePwds.push(pwd)
+        pwds.item.push(pwd)
+      }
+      if(includeRoot){
+        if(pwd.domain.indexOf(rootDomain)>-1){
+          pwds.rootItem.push(pwd)
+        }
       }
     })
-    return sitePwds
+    return pwds
   },
+
 }
 module.exports = PasswordModel
