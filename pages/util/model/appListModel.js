@@ -8,6 +8,7 @@ const appListModel = {
     return await db.appList.put(appList)
   },
   convertTreeNode: (appList) => {
+     //console.log(appList, 'woxianzai yao de ')
     let item = {}
     item.title = appList.name
     item.key =  Number(appList.id)
