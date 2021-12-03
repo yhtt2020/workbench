@@ -222,7 +222,6 @@ function parseNumber(str) {
   return isNaN(num) ? 0 : num;
 }
 
-const appListModel = require("../../util/model/appListModel.js").appListModel;
 const VueSelecto = require("vue-selecto");
 module.exports = Vue.component("cloud-page", {
   name: "cloud-page",
@@ -238,6 +237,7 @@ module.exports = Vue.component("cloud-page", {
       window.$type = String(to.query.type);
       vm.appList.type = String(to.query.type);
       vm.appList.name = String(to.query.name)
+      vm.appList.summary = String(to.query.summary)
       await vm.load(vm);
     });
   },
@@ -247,6 +247,7 @@ module.exports = Vue.component("cloud-page", {
     window.$type = String(to.query.type);
     this.appList.type = String(to.query.type);
     this.appList.name = String(to.query.name)
+    this.appList.summary = String(to.query.summary)
     await this.load(this);
   },
   data() {
@@ -260,8 +261,6 @@ module.exports = Vue.component("cloud-page", {
         pageSize: 10,
         hideOnSinglePage: true,
       },
-      //可删
-      //listId: this.$route.query.listId,
       listId: Number,
       visible: false,
       type: 0,
@@ -269,6 +268,7 @@ module.exports = Vue.component("cloud-page", {
       appList: {
         name: "",
         type: "",
+        summary: ""
       },
       //表单布局用字段
       formItemLayout: {
@@ -397,7 +397,6 @@ module.exports = Vue.component("cloud-page", {
     },
     //点击那些app的时候
     async addApp(app) {
-      console.log(app, "cc_app");
       this.currentApp = app;
       await this.addCurrentApp();
     },
@@ -438,17 +437,13 @@ module.exports = Vue.component("cloud-page", {
       vm.myApps = vm.$store.getters.getUserNavApps;
     },
     //todo
-    onListTypeChange(e) {
+    async onListTypeChange(e) {
       this.appList.type = e.target.value;
-      let saveData = {};
-      Object.assign(saveData, this.appList);
-      saveData.type = Number(saveData.type);
-      if (this.appList.id !== 0) {
-        appListModel.put(saveData).then().catch();
-      } else {
-        appListModel.putDefaultList(saveData);
+      const data = {
+        id: this.listId
       }
-      //todo 去保存appList的type
+      await this.$store.dispatch('updateAppUserNav', Object.assign(data, this.appList))
+      await this.$store.dispatch('getAppUserNavs')
     },
     openUrl(url) {
       window.open(url);
