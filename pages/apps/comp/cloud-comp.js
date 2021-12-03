@@ -257,8 +257,12 @@ Vue.component('cloud-comp', {
       if (key === 'myapp') {
         key = 0
       }
+      let ids = []
+      window.$selectedApps.forEach(e => {
+        ids.push(Number(e))
+      })
       const data  = {
-        id: Number(window.$selectedApps[0]),
+        ids,
         list_id: Number(key),
       }
       const result = await this.$store.dispatch('updateUserNavApps', data)
