@@ -23,7 +23,19 @@
             {{siteTitle}}
           </div>
           <div class="site-url">
-           所属网站： {{siteDomain}}
+            {{siteDomain}}
+            <a-tooltip placement="bottom">
+              <template slot="title">
+                <span>以根域名作为筛选条件<br>例如bilibli.com<br>
+                  将包含以下站点的内容：<br>
+                  passport.bilibili.com<br>
+                  www.bilibili.com<br>
+                  t.bilibli.com<br>
+                   ***.bilibili.com</span>
+              </template>
+              <a-switch checked-children="全站" un-checked-children="子站" size="small"></a-switch>
+            </a-tooltip>
+
           </div>
         </a-col>
         <a-col :flex="2">
@@ -39,20 +51,25 @@
           </div>
 
         </a-col>
+        <a-col :flex="1">
+          <a-switch checked-children="团队" un-checked-children="个人"></a-switch>
+        </a-col>
       </a-row>
     </div>
     <div>
       <a-tabs
+        size="small"
+         :tab-bar-gutter="0"
         default-active-key="1"
         tab-position="top"
-        :style="{ height: '310px' }"
+        style=" height: calc(100vh - 72px)"
         @prevClick="callback"
         @nextClick="callback"
       >
         <a-tab-pane key="1">
           <template slot="tab">
-            密码管理
-            <a-badge :count="pwds.length" :number-style="{ backgroundColor: '#52c41a' }"></a-badge>
+            密码
+
           </template>
 
           <a-table :columns="pwdColumns" :data-source="pwds" size="small">
@@ -70,7 +87,17 @@
     </span>
           </a-table>
         </a-tab-pane>
-        <a-tab-pane key="3" tab="安全">
+        <a-tab-pane key="2" tab="导航">
+        </a-tab-pane>
+        <a-tab-pane key="3" tab="笔记">
+        </a-tab-pane>
+        <a-tab-pane key="4" tab="任务">
+        </a-tab-pane>
+        <a-tab-pane key="5" tab="讨论">
+        </a-tab-pane>
+        <a-tab-pane key="6" tab="口碑">
+        </a-tab-pane>
+        <a-tab-pane key="7" tab="安全">
           <div v-if="tabData.secure">
             <a-tag color="#87d068">
               安全
@@ -139,11 +166,23 @@
             key: 1
           },
           {
-            title: '导航',
+            title: '导航收藏',
             key: 2
           }, {
-            title: '安全',
+            title: '笔记备忘',
             key: 3
+          }, {
+            title: '任务代办',
+            key: 4
+          }, {
+            title: '社区讨论',
+            key: 5
+          }, {
+            title: '站点口碑',
+            key: 6
+          }, {
+            title: '安全风险',
+            key: 7
           }
         ],
         pwdColumns: [
@@ -151,23 +190,23 @@
           {
             title: '标题',
             dataIndex: 'title',
-            width:'100px'
-          },{
+            width: '100px'
+          }, {
             title: '账号',
             dataIndex: 'username',
-            width:'100px'
+            width: '100px'
           },
 
           {
             title: '密码',
             dataIndex: 'password',
-            width:'120px',
+            width: '120px',
             scopedSlots: { customRender: 'password' }
           },
           {
             title: '操作',
             key: 'action',
-            width:'100px',
+            width: '100px',
             scopedSlots: { customRender: 'action' },
           }
           //,
@@ -178,8 +217,8 @@
         ]
       }
     },
-    computed:{
-      siteDomain(){
+    computed: {
+      siteDomain () {
         return tools.getDomainFromUrl(this.siteUrl)
       }
     },
@@ -191,10 +230,10 @@
       this.tabData = JSON.parse(decodeURIComponent(window.globalArgs['tab-data']))
       passwordModel.getSiteCredit(this.tabData.url).then((result) => {
         appVue.pwds = result
-        appVue.pwds.forEach((pwd)=>{
-          pwd.password={
-            hide:true,
-            pwd:pwd.password
+        appVue.pwds.forEach((pwd) => {
+          pwd.password = {
+            hide: true,
+            pwd: pwd.password
           }
         })
       })
@@ -204,8 +243,8 @@
       callback (val) {
         console.log(val)
       },
-      show(password){
-        password.hide=false
+      show (password) {
+        password.hide = false
       }
     }
   })
