@@ -216,6 +216,8 @@ const tabBar = {
     tabEl.appendChild(tabAudio.getButton(data.id))
     tabEl.appendChild(progressBar.create())
 
+
+    console.log(data)
     // icons
 
     var iconArea = document.createElement('span')
@@ -561,8 +563,15 @@ const tabBar = {
         src = tabData.favicon.url
       }
     }
-
+    iconEl.title="点击查看网站名片"
     iconEl.src = src
+    iconEl.style.cursor='pointer'
+   // iconEl.style="cursor:pointer"
+    iconEl.addEventListener('click',(e)=>{
+      ipc.send('createSiteCard',{url:tabData.url,x:e.clientX,y:e.clientY,title:tabData.title,tabData:tabData})
+      e.preventDefault()
+      e.stopPropagation()
+    })
     return iconEl
   },
 }

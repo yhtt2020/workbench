@@ -211,6 +211,10 @@ body.linux #menu-button {
 	vertical-align: text-bottom;
 	background: #ffffffbb;
 	border-radius: 2px;
+  cursor: pointer;
+}
+.tab-item .icon:hover{
+  background: #ffffff;
 }
 
 

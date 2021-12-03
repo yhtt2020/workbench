@@ -1,4 +1,4 @@
-const ProcessSpawner = require('util/process.js')
+const ProcessSpawner = require('../../js/util/process.js')
 const path = require('path')
 const fs = require('fs')
 
