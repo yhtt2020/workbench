@@ -263,7 +263,7 @@ function addFocusListener (element, credentials) {
     box-shadow:rgb(207 207 207 / 85%) 0px 0px 9px;
     overflow:hidden
     `
-    suggestionsDiv.style.top = (inputRect.y + inputRect.height +30 ) + 'px'
+    suggestionsDiv.style.top = (inputRect.y + inputRect.height  ) + 'px'
     suggestionsDiv.style.left = (inputRect.x) + 'px'
     suggestionsDiv.id = 'password-autocomplete-list'
     requestAnimationFrame(function () {
