@@ -88,7 +88,7 @@
         </a-tab-pane>
         <a-tab-pane key="1">
           <template slot="tab">
-            密码
+            密码  <a-badge :count="this.showPwds.length" :number-style="{ backgroundColor: '#52c41a' }" ></a-badge>
           </template>
 
           <a-table :columns="pwdColumns" :data-source="showPwds" size="small">
@@ -100,7 +100,7 @@
                  {{text}}
                </span>
                <br>
-               <span style="color: grey">{{record.domain}}</span>
+               <span :style="{'font-weight':siteDomain===record.domain?'bold':'normal',color: siteDomain===record.domain?'#333':'grey'}">{{record.domain}}</span>
             </span>
             <span slot="remark" slot-scope="text,record">
               <span v-if="!!!record.remark">
