@@ -109,9 +109,10 @@ Vue.component('cloud-comp', {
         if (item.id === selectedKeys[0]) {
           type = item.type
           name = item.name
+          summary = item.summary
         }
       })
-      this.$router.push({ name: 'cloud', query: { listId: jump, t: Date.now(), type: type, name: name } })
+      this.$router.push({ name: 'cloud', query: { listId: jump, t: Date.now(), type: type, name: name, summary: summary } })
       resetOtherTree('cloud', selectedKeys)
     },
     onContextMenuClick(treeKey, menuKey) {

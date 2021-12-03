@@ -443,9 +443,6 @@ module.exports = Vue.component('myapp-page', {
             this.appList.type=String(this.appList.type)
           }
         })
-
-
-
       } else {
         const data = appListModel.get(this.listId).catch(err => console.log(err))
         data.then(data => {

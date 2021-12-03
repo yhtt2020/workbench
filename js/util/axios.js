@@ -29,7 +29,6 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   response => {
     if (response.status >= 200 && response.status < 300) {
-      console.log(response.data, '__axios拦截(全局拦截还未完善勿删！)__')
       if(response.data.code === 1000) {
         return response.data;
       } else if (response.data.code === 1001) {
@@ -50,8 +49,10 @@ axios.interceptors.response.use(
           return response.data
         }
       } else if (response.data.code === 1002) {
-        //参数错误
+        //参数错误是属于200错误，并不reject
         return response.data
+      } else {
+        console.log(response.data, 'axios拦截(全局勿删!）')
       }
       // return response.data;
     } else {

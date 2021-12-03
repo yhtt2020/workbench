@@ -24,7 +24,6 @@ const store = new Vuex.Store({
   actions: {
     async getAppUserNavs({commit}) {
       const result = await userAppsApi.getAppUserNavs()
-      console.log(result, '__list__')
       if(result.code === 1000) {
         commit('SET_APPUSERNAVS', result.data)
       }
@@ -41,7 +40,6 @@ const store = new Vuex.Store({
 
     async getUserNavApps({commit}, data) {
       const result = await userAppsApi.getUserNavApps(data)
-      console.log(result, '__apps__')
       if(result.code === 1000) {
         commit('SET_USERNAVAPPS', result.data)
       }
