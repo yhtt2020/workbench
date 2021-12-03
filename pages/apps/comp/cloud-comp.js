@@ -247,27 +247,28 @@ Vue.component('cloud-comp', {
     },
     dragLeave(e) {
       console.log('leave')
-      e.target.classList.remove('canDrag')
       console.log(e)
+      e.target.classList.remove('canDrag')
     },
 
     // 拖拽元素结束了操作
-    drop(e, key) {
+    async drop(e, key) {
       e.target.classList.remove('canDrag')
       if (key === 'myapp') {
         key = 0
       }
-      key = Number(key)
-
-      //1.找到全部的选中apps
-      //2.将选中apps的listId改为新的id即可
-      appListModel.moveAppsToList(window.$selectedApps, key).then((movedApps) => {
-        if (movedApps.length > 0) {
-          appVue.$message.success({ content: '成功移动' + movedApps.length + '个应用' })
-          window.$selectedApps = []
-          window.$removeApps()
-        }
-      })
+      const data  = {
+        id: Number(window.$selectedApps[0]),
+        list_id: Number(key),
+      }
+      const result = await this.$store.dispatch('updateUserNavApps', data)
+      if(result.code === 1000){
+        window.$selectedApps = []
+        window.$removeApps()
+        appVue.$message.success({ content: '移动应用成功。' })
+      } else {
+        appVue.$message.success({ content: '移动应用失败！' })
+      }
     },
   },
 })
