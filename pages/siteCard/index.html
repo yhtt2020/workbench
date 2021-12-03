@@ -33,19 +33,21 @@
                   t.bilibli.com<br>
                    ***.bilibili.com</span>
               </template>
-              <a-switch checked-children="全站" un-checked-children="子站" size="small"  @change="changeSiteMode"></a-switch>
+              <a-switch checked-children="全站" :default-checked="true" un-checked-children="子站" size="small" @change="changeSiteMode"></a-switch>
             </a-tooltip>
           </div>
         </a-col>
         <a-col :flex="2">
           <div v-if="tabData.secure">
             <a-tag @click="activeTab='7'" color="#87d068">
-              <a-avatar  style="width: 20px;height: auto" src="../../icons/svg/safe.svg"></a-avatar> 安全
+              <a-avatar style="width: 20px;height: auto" src="../../icons/svg/safe.svg"></a-avatar>
+              安全
             </a-tag>
           </div>
           <div v-else>
             <a-tag @click="activeTab='7'" color="#f50">
-              <a-avatar style="width: 20px;height: auto" src="../../icons/svg/unsafe.svg"></a-avatar> 风险
+              <a-avatar style="width: 20px;height: auto" src="../../icons/svg/unsafe.svg"></a-avatar>
+              风险
             </a-tag>
           </div>
 
@@ -58,7 +60,7 @@
     <div>
       <a-tabs
         size="small"
-         :tab-bar-gutter="0"
+        :tab-bar-gutter="0"
         default-active-key="0"
         v-model="activeTab"
         tab-position="top"
@@ -72,10 +74,10 @@
             <p>
               {{siteTitle}}
             </p>
-            <h3>当前访问网址：</h3>
             <p>完整网址：{{siteUrl}}</p>
-            <p>所属子站点：{{ siteDomain}}</p>
-            <p>所属站点：{{ rootDomain}}</p>
+            <h3>所属：</h3>
+            <p>子站点：{{ siteDomain}}</p>
+            <p>站点：{{ rootDomain}}</p>
             <h3>站长信息</h3>
             <p>暂无站长</p>
             <h3>企业信息</h3>
@@ -99,6 +101,15 @@
                </span>
                <br>
                <span style="color: grey">{{record.domain}}</span>
+            </span>
+            <span slot="remark" slot-scope="text,record">
+              <span v-if="!!!record.remark">
+                -
+              </span>
+               <span v-else>
+                 {{record.remark}}
+               </span>
+               <br>
             </span>
             <span slot="passwordSwitch" slot-scope="text,record">
               <span v-if="record.passwordSwitch.hide">
@@ -125,14 +136,14 @@
         <a-tab-pane key="6" tab="口碑">
         </a-tab-pane>
         <a-tab-pane key="7" tab="安全">
-          <div class="info-content" >
+          <div class="info-content">
             <h3>网站安全情况：</h3>
             <div v-if="tabData.secure">
-      <p>
-        <a-tag color="#87d068">
-          安全
-        </a-tag>
-      </p>
+              <p>
+                <a-tag color="#87d068">
+                  安全
+                </a-tag>
+              </p>
               <p>
 
                 此站点为安全网站，通过浏览器的基本安全校验。但也建议您不要过度信任网站，您仍然存在一定的安全风险。
@@ -181,14 +192,16 @@
     font-size: 12px;
   }
 
-  .info-content h3{
+  .info-content h3 {
     text-indent: 1em;
     font-size: 14px;
   }
-  .info-content p{
+
+  .info-content p {
     text-indent: 2em;
   }
-  .info-content .ant-tag{
+
+  .info-content .ant-tag {
     text-indent: 0 !important;
   }
 </style>
@@ -207,10 +220,10 @@
         siteTitle: '',//网站标题，优先采用tab的name
         tabData: {},//当前网站的tab数据，包含一个完整结构的json
         pwds: [],//当前筛选出的全部符合条件的密码
-        rootPwds:[],
-        siteMode:'child',//筛选数据模式，child代表子站点，all代表全站
+        rootPwds: [],
+        siteMode: 'all',//筛选数据模式，child代表子站点，all代表全站
         //tabs
-        activeTab:"0",//当前激活的tab
+        activeTab: '0',//当前激活的tab
         tabs: [
           {
             title: '基础',
@@ -246,7 +259,7 @@
             title: '标题',
             dataIndex: 'title',
             width: '140px',
-            scopedSlots: { customRender: 'd-title'  }
+            scopedSlots: { customRender: 'd-title' }
           }, {
             title: '账号',
             dataIndex: 'username',
@@ -260,10 +273,10 @@
             scopedSlots: { customRender: 'passwordSwitch' }
           },
           {
-            title: '操作',
-            key: 'action',
+            title: '备注',
+            key: 'remark',
             width: '100px',
-            scopedSlots: { customRender: 'action' },
+            scopedSlots: { customRender: 'remark' },
           }
           //,
           // {
@@ -277,11 +290,11 @@
       siteDomain () {
         return tools.getDomainFromUrl(this.siteUrl)
       },
-      rootDomain(){
+      rootDomain () {
         return tools.getRootDomain(this.siteUrl)
       },
-      showPwds(){
-        return this.siteMode==="all"?this.rootPwds:this.pwds
+      showPwds () {
+        return this.siteMode === 'all' ? this.rootPwds : this.pwds
       }
     },
     mounted () {
@@ -291,21 +304,21 @@
       this.siteUrl = window.globalArgs['site-url']
       this.siteTitle = window.globalArgs['site-title']
       this.tabData = JSON.parse(decodeURIComponent(window.globalArgs['tab-data']))//需要urldecode解码保证完整性
-      passwordModel.getSiteCredit(this.tabData.url,true).then((result) => {
+      passwordModel.getSiteCredit(this.tabData.url, true).then((result) => {
         result.item.forEach((item) => {
-          let pwd=item
-          pwd.passwordSwitch={
-            hide:true,
-            pwd:item.password
+          let pwd = item
+          pwd.passwordSwitch = {
+            hide: true,
+            pwd: item.password
           }
           appVue.pwds.push(pwd)
         })
 
         result.rootItem.forEach((item) => {
-          let pwd=item
-          pwd.passwordSwitch={
-            hide:true,
-            pwd:item.password
+          let pwd = item
+          pwd.passwordSwitch = {
+            hide: true,
+            pwd: item.password
           }
           appVue.rootPwds.push(pwd)
         })
@@ -321,8 +334,8 @@
       show (password) {
         password.hide = false
       },
-      changeSiteMode(value){
-        this.siteMode=value?'all':'child'
+      changeSiteMode (value) {
+        this.siteMode = value ? 'all' : 'child'
         console.log(this.siteMode)
       }
     }
