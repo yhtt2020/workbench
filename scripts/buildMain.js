@@ -10,6 +10,7 @@ const modules = [
   'main/registryConfig.js',
   'main/main.js',
   'main/sidePanel.js',
+  'main/group.js',
   'main/update.js',
   'js/util/settings/settingsMain.js',
   'main/filtering.js',

@@ -1,3 +1,4 @@
+const { db } = require('../../js/util/database');
 const { api } = require('../../server-config')
 Vue.component('sidebar', {
 	data: function() {
@@ -260,9 +261,12 @@ Vue.component('sidebar', {
 				'url':url
 			})
 		},
-		logout(){
-			window.insertDefaultUser()
-			db.system.where({name:'currentUser'}).delete()
+		async logout(){
+      const result = await db.system.where('name').equals('currentUser').first()
+      ipc.send('logoutBrowser', result.value.code)
+			await window.insertDefaultUser(result.value.code)
+      //下面这步在insertDefaultUser方法中有
+			//db.system.where({name:'currentUser'}).delete()
 			this.$message.info('注销成功！');
 		},
     switchAccount(){
@@ -290,6 +294,9 @@ Vue.component('sidebar', {
         ipc.send('closeTask',{tabId:item.id})
         this.$message.success({content:'删除任务成功。'})
       }
+    },
+    createGroup(){
+      ipc.send('createGroup')
     }
 
 	}

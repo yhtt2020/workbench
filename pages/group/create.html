@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>创建团队</title>
+    <script src="../../ext/vue/vue.js"></script>
+    <script src="../../ext/vue/antd.min.js"></script>
+    <link rel="stylesheet" href="../../ext/vue/antd.min.css" />
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline'" />
+    <link rel="stylesheet" href="./create.css" />
+  </head>
+  <body>
+    <script>
+      Vue.use(antd)
+    </script>
+    <div id="appVue">
+      <div style="padding: 20px; overflow: hidden">
+        <template style="">
+          <a-form id="components-form-demo-validate-other" :form="form" v-bind="formItemLayout" @submit="handleSubmit">
+            <a-form-item :label-col="formItemLayout.labelCol" :wrapper-col="formItemLayout.wrapperCol" label="团队名称">
+              <a-input
+                v-decorator="[
+          'name',
+          { rules: [{ required: true, message: '请输入团队名2-32个汉字' ,min:4,max:32}] },
+        ]"
+                placeholder="团队名2-16个汉字"
+              />
+            </a-form-item>
+            <a-form-item label="类型">
+              <a-radio-group v-decorator="['type',{rules:[{required: true}],initialValue: 'private' }]">
+                <a-radio value="public"> 公开（自由加入） </a-radio>
+                <div class="tip">兴趣小组、行业交流、职业交流、培训学习、产品交流</div>
+                <a-radio value="publicNeedAudit"> 公开（验证加入） </a-radio>
+                <div class="tip">开放组织、讨论小组</div>
+                <a-radio value="private"> 私密（不公开） </a-radio>
+                <div class="tip">企业、组织机构、校友会、协会</div>
+              </a-radio-group>
+            </a-form-item>
+            <a-form-item label="头像">
+              <a-avatar shape="square" :src="groupLogo"></a-avatar>
+              <!-- <a-upload
+                v-decorator="[
+          'upload',
+          {
+            valuePropName: 'fileList',
+            getValueFromEvent: normFile,
+
+          },
+        ]"
+                name="logo"
+                action="/upload.do"
+                list-type="picture"
+              >
+                <a-button> <a-icon type="upload"></a-icon> </a-button>
+              </a-upload> -->
+              <a-avatar
+                @click="selectCandlogo(item,index)"
+                v-for="(item,index) in cands"
+                :class="['candidate',{'active':selectCandIndex===index}]"
+                shape="square"
+                :src="'../../icons/group/'+item"
+              >
+              </a-avatar>
+            </a-form-item>
+
+            <a-form-item style="margin-bottom: 0" :wrapper-col="{ span: 12, offset: 7 }">
+              <a-button style="margin-right: 40px" type="primary" html-type="submit"> 创建 </a-button>
+              <a-button @click="close"> 取消 </a-button>
+            </a-form-item>
+          </a-form>
+        </template>
+      </div>
+    </div>
+  </body>
+  <script>
+    const { db } = require('../../js/util/database.js')
+    const axios = require('../../js/util/axios.js')
+    const ipc = require('electron').ipcRenderer
+    Vue.use(antd)
+    Vue.prototype.$form = antd.Form
+    const cands = require('./cand.json')
+    var appVue = new Vue({
+      el: '#appVue',
+      data() {
+        return {
+          formItemLayout: {
+            labelCol: { span: 6 },
+            wrapperCol: { span: 14 },
+          },
+          cands: cands,
+          groupLogo: '../../icons/group/cand1.svg',
+          selectCandIndex: 0,
+        }
+      },
+      beforeCreate() {
+        this.form = this.$form.createForm(this, { name: 'validate_other' })
+      },
+      mounted() {},
+      methods: {
+        handleSubmit(e) {
+          e.preventDefault()
+          this.form.validateFields(async (err, values) => {
+            if (!err) {
+              console.log('Received values of form: ', values)
+            }
+            const currentUser = await db.system.where('name').equals('currentUser').first()
+            values.logo = appVue.$data.groupLogo
+            values.uid = currentUser.value.uid
+            const result = await axios({
+              method: 'post',
+              url: '/app/browser/group/add',
+              headers: { Authorization: currentUser.value.token },
+              data: values,
+            })
+            if(result.code === 1000) {
+              this.$message.success('成功创建团队:' + values.name)
+              setTimeout(function() {
+                ipc.send('closeCreateGroupWindow')
+              }, 1000)
+            }
+          })
+        },
+        normFile(e) {
+          console.log('Upload event:', e)
+          if (Array.isArray(e)) {
+            return e
+          }
+          return e && e.fileList
+        },
+        selectCandlogo(item, index) {
+          this.groupLogo = '../../icons/group/' + item
+          this.selectCandIndex = index
+        },
+        close() {
+          ipc.send('closeCreateGroupWindow')
+        },
+      },
+    })
+  </script>
+  <style>
+    #components-form-demo-validate-other .dropbox {
+      height: 180px;
+      line-height: 1.5;
+    }
+    .candidate {
+      margin-right: 10px;
+      cursor: pointer;
+    }
+    .active {
+      border: 1px dashed #ccc;
+    }
+    .tip {
+      color: #999;
+      padding-left: 25px;
+      padding-top: 5px;
+      margin-bottom: 10px;
+      padding-bottom: 0;
+    }
+  </style>
+</html>

@@ -71,9 +71,9 @@
 			<div class="">
 				<a-layout style="height: 100vh;" :trigger="null">
 					<a-layout-sider style="background-color: white;">
-						<sidenav @gettab="settab" />
+						<sidenav @get-tab="setTab" />
 					</a-layout-sider>
-					<a-layout id="wall" class="wall" v-show="current==='myapp'"	 style="background: #f1f1f1">
+					<a-layout class="wall" v-show="current==='myapp'"	 style="background: white">
 						<a-layout-header style="background: #fff; padding: 0">
 							<a-page-header title="本地导航" sub-title="本地导航可能由于软件重装、卸载、系统重装等原因丢失，建议使用云端导航，此处仅做临时存储使用。" />
 						</a-layout-header>
@@ -121,6 +121,33 @@
 
 					</a-layout>
 
+          <a-layout v-show="current==='group'">
+            <a-layout-header style="background: #fff; padding: 0">
+
+              <template>
+                <div >
+                  <a-page-header style="border: none;" title="团队导航"
+                                 sub-title="我的全部团队">
+
+                  </a-page-header>
+                  <br />
+                </div>
+              </template>
+
+            </a-layout-header>
+
+            <a-layout-content>
+              <template>
+                <div style="background-color: white; padding: 20px;" class="group-apps">
+                  <groups></groups>
+                </div>
+
+
+              </template>
+            </a-layout-content>
+          </a-layout>
+
+
 					<a-layout v-show="current==='appstore'">
 						<a-layout-header style="background: #fff; padding: 0">
 
@@ -129,6 +156,15 @@
 									<a-page-header style="border: none;" title="办公导航"
 										:sub-title="'想天办公导航，右键查看详情，网站更新于'+appUpdateTime+'。'">
 										<template slot="extra">
+                      <a-button-group>
+                        <a-button>
+                         <a-icon type="appstore"></a-icon>
+                        </a-button>
+                        <a-button>  <a-icon type="table"></a-icon></a-button>
+                        <a-button>  <a-icon type="bars"></a-icon>
+                        </a-button>
+
+                      </a-button-group>
 											<a-button icon="shopping-cart" key="3" @click="showDrawerCart()"
 												:type="shopcartApps.length>0?'primary':'default'">
 												清单
@@ -385,28 +421,9 @@
 					</a-modal>
 				</div>
 			</template>
-
 		</div>
-
 	</body>
-	<template id="sidenavTpl">
-		<div>
-			<div class="logo">
-				<img src="../../icons/logo1024.png" style="width: 32px;height: 32px;">
-				网址导航
-			</div>
-			<a-menu mode="vertical" @click="handleClick" theme="light" :default-selected-keys="['myapp']">
-				<a-menu-item key="myapp">
-					<a-icon type="user"></a-icon>
-					<span>本地导航</span>
-				</a-menu-item>
-				<a-menu-item key="appstore">
-					<a-icon type="appstore"></a-icon>
-					<span>办公导航</span>
-				</a-menu-item>
-			</a-menu>
-		</div>
-	</template>
+
 
 	<template id="searchTpl">
 		<div class="global-search-wrapper" style="width: 300px">
@@ -434,17 +451,20 @@
 
 
 	<script src="./sidenav.js"></script>
+  <script src="./groups.js"></script>
 	<script src="./search.js"></script>
 
 	<script>
 		Vue.use(antd)
 		Vue.prototype.$form = antd.Form
     const wallPaper=require('../util/theme.js').wallPaper
+
 		var appVue = new Vue({
 			el: '#appVue',
 			components: {},
 			data() {
 				return {
+          treeData,
 					btnText: '添加收藏',
 					shopcartApps: [], //购物车内的app
 					myApps:[],
@@ -496,6 +516,12 @@
 							},
 						},
 					},
+
+
+
+
+
+
 				}
 			},
 			beforeCreate(){
@@ -659,7 +685,7 @@
 					})
 					this.$message.success('成功在左侧栏添加了应用：' + app.name + '。')
 				},
-				settab(tab) {
+				setTab(tab) {
 					this.current = tab
 				},
 				showDrawer(app) {
@@ -744,7 +770,6 @@
 				 load: function(){
 						 window.$appsRestore.restoreFromDB().then((data)=>{
 							this.myApps=data
-							console.log(this.myApps)
 							return data
 						}).catch(e=>{
 							 console.log(e)
@@ -755,7 +780,6 @@
 
 				}
 
-
 			}
 		})
 	</script>
@@ -763,5 +787,13 @@
 		tr:last-child td {
 			padding-bottom: 0;
 		}
+    .group-apps .ant-card-bordered {
+      border: 1px solid #e8e8e8 !important;
+    }
+    .ant-layout-sider{
+      box-shadow: 0 0 10px #999;
+      z-index: 1;
+      background-color: white;
+    }
 	</style>
 </html>
