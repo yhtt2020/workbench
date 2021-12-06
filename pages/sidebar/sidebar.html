@@ -201,6 +201,35 @@
                 </div>
               </a-popover>
             </li>
+            <li
+              @click="openGroup()"
+              style="position: relative"
+            >
+<!--              <a-popover-->
+<!--                title="团队协作"-->
+<!--                placement="right"-->
+<!--                :mouse-enter-delay="0.1"-->
+<!--                :mouse-leave-delay="0.1"-->
+<!--                :destroy-tooltip-on-hide="true"-->
+<!--                overlay-class-name="tips">-->
+<!--                <template slot="content">-->
+
+<!--                </template>-->
+                <div class="wrapper" @dblclick.stop="closeItem(item)">
+                  <div class="item-icon">
+                    <img class="icon" src="../../icons/svg/team.svg" />
+                    <a-badge
+                      count="0"
+                      :dot="true"
+                      status="processing"
+                      :style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:'visible'}"
+                    >
+                    </a-badge>
+                  </div>
+                  <div class="item-title">团队协作</div>
+                </div>
+<!--              </a-popover>-->
+            </li>
             <draggable
               v-model="getPinItems"
               group="sideBtn"

@@ -172,6 +172,9 @@ Vue.component('sidebar', {
 			})
 
 		},
+    openGroup(){
+      ipc.send('openGroup')
+    },
 		//开始拖拽事件
 		onStart() {
 			this.drag = true;
