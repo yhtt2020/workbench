@@ -1,8 +1,13 @@
 const userAppsApi = require('../util/api/userAppsApi')
+const groupApi = require('../util/api/groupApi')
 const store = new Vuex.Store({
   state: {
+    //云端用户相关
     appUserNavs: [],
-    userNavApps:[]
+    userNavApps:[],
+    //云端团队相关
+    myGroups:[]
+
   },
   getters: {
     getAppUserNavs: state => {
@@ -10,6 +15,9 @@ const store = new Vuex.Store({
     },
     getUserNavApps: state => {
       return state.userNavApps
+    },
+    getMyGroups: state => {
+      return state.myGroups
     }
   },
   mutations: {
@@ -19,9 +27,13 @@ const store = new Vuex.Store({
     },
     SET_USERNAVAPPS: (state, userNavApps) => {
       state.userNavApps = userNavApps
+    },
+    SET_MYGROUPS: (state, myGroups) => {
+      state.myGroups = myGroups
     }
   },
   actions: {
+    //云端用户相关
     async getAppUserNavs({commit}) {
       const result = await userAppsApi.getAppUserNavs()
       if(result.code === 1000) {
@@ -52,6 +64,15 @@ const store = new Vuex.Store({
     },
     async updateUserNavApps({commit}, data) {
       return await userAppsApi.updateUserNavApps(data)
+    },
+
+    //云端团队相关
+    async getMyGroups({commit}, data) {
+      const result = await groupApi.getGroups()
+      if(result.code === 1000) {
+        console.log(result, 'list')
+        commit('SET_MYGROUPS', result.data)
+      }
     }
   }
 })

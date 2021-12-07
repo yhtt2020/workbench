@@ -79,29 +79,38 @@ Vue.component('group-comp', {
           //       icon: 'list-icon'
           //     }
           //   }]
-          //
           // }
           ]
 
         }]
     }
-  }, mounted () {
-    const that=this
+  },
+  async mounted () {
     window.$trees.push({
       name: 'group',
       comp: this
     })
-     groupModel.getMyList().then(data=>{
-       data.data.forEach(item=>{
-         that.groupLists[0].children.push(groupModel.convertTreeNode(item))
-       })
-     })
 
+    await this.refreshNavs()
   },
   methods: {
+    async refreshNavs() {
+      await this.$store.dispatch('getMyGroups')
+      if(this.groupLists[0].children.length > 0 ) {
+        this.groupLists[0].children = []
+        this.groupLists[0].children= groupModel.convertTreeNode(this.$store.getters.getMyGroups, 'app_group_list', 'custom', 'list-icon')
+      } else {
+        this.groupLists[0].children = groupModel.convertTreeNode(this.$store.getters.getMyGroups, 'app_group_list', 'custom', 'list-icon')
+      }
+    },
     onSelect (selectedKeys, info) {
-      resetOtherTree('group', selectedKeys)
-      this.$router.push({ path: '/group', query: { listId: selectedKeys[0] } })
+      console.log(selectedKeys, 'selectedKeys__~')
+      if(selectedKeys[0] === 'group') {
+        resetOtherTree('group', selectedKeys)
+        this.$router.push({ name: 'groupList', query: {t: Date.now()}})
+      }
+      // resetOtherTree('group', selectedKeys)
+      // this.$router.push({ path: '/group', query: { listId: selectedKeys[0] } })
     },
     onContextMenuClick (treeKey, menuKey) {
       if (menuKey === 'createList') {

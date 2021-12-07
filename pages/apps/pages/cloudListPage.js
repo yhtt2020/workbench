@@ -27,8 +27,14 @@ module.exports = Vue.component('cloud-list-page', {
   name: 'cloud-list-page',
   template: cloudListTpl,
   component: {clouds:"clouds"},
-  beforeRouteUpdate (to, from, next) {
-    this.listId = to.query.listId
+  beforeRouteEnter(to, from, next) {
+    next(async vm => {
+      vm.myClouds = []
+      await vm.load(vm);
+    });
+  },
+  async beforeRouteUpdate(to, from, next) {
+    await this.load(this);
   },
   data () {
     return {
@@ -39,14 +45,15 @@ module.exports = Vue.component('cloud-list-page', {
 
   },
   mounted () {
-    console.log(this.$store.getters.getAppUserNavs, 'getAppUserNavs~~~~')
-    this.myClouds = this.$store.getters.getAppUserNavs
+
   },
   beforeCreate () {
 
   },
   methods: {
-
-
+    async load(vm) {
+      await this.$store.dispatch('getAppUserNavs')
+      vm.myClouds = vm.$store.getters.getAppUserNavs
+    }
   }
 })

@@ -6,11 +6,7 @@ const url = {
 const groupApi = {
   async getGroups () {
     await baseApi.init()
-    const data = {
-      uid: baseApi.uid
-    }
-    return  baseApi.axios(url.list, data)
-
+    return baseApi.axios(url.list)
   }
 }
 module.exports = groupApi

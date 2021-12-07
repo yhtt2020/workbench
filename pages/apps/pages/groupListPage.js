@@ -1,4 +1,4 @@
-groupTpl=`
+groupListTpl=`
 <div style="width: 100%">
 <a-layout>
         <a-layout-header style="background: #fff; padding: 0">
@@ -24,12 +24,18 @@ groupTpl=`
 require('../comp/groups.js')
 
 const groupModel = require('../../util/model/groupModel')
-module.exports = Vue.component('group-page', {
-  name: 'group-page',
-  template: groupTpl,
+module.exports = Vue.component('group-list-page', {
+  name: 'group-list-page',
+  template: groupListTpl,
   component: {groups:"groups"},
-  beforeRouteUpdate (to, from, next) {
-    this.listId = to.query.listId
+  beforeRouteEnter(to, from, next) {
+    next(async vm => {
+      vm.myGroups = []
+      await vm.load(vm);
+    });
+  },
+  async beforeRouteUpdate(to, from, next) {
+    await this.load(this);
   },
   data () {
     return {
@@ -40,18 +46,16 @@ module.exports = Vue.component('group-page', {
 
   },
   mounted () {
-    const that=this
-    groupModel.getMyList().then(data=>{
-      data.data.forEach(item=>{
-        that.myGroups.push(item)
-      })
-    })
+
   },
   beforeCreate () {
 
   },
   methods: {
-
+    async load(vm) {
+      await this.$store.dispatch('getMyGroups')
+      vm.myGroups = vm.$store.getters.getMyGroups
+    }
 
   }
 })

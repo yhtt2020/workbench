@@ -83,7 +83,7 @@ Vue.component('cloud-comp', {
     async refreshNavs() {
       await this.$store.dispatch('getAppUserNavs')
       if(this.myAppsLists[0].children.length > 0 ) {
-        this.myAppsLists[0].children = []
+        this.myAppsLists[0].children = []   //重置
         this.$store.getters.getAppUserNavs.forEach((element) => {
           this.myAppsLists[0].children.push(appListModel.convertTreeNode(element))
         })
@@ -94,26 +94,37 @@ Vue.component('cloud-comp', {
       }
     },
     onSelect(selectedKeys, info) {
-      console.log(selectedKeys, 'sssss')
+      console.log(selectedKeys, '__selectedKeys__')
       console.log(info, 'info')
-      let jump = 0
-      if (isNaN(Number(selectedKeys[0]))) {
-        jump = 0
-      } else {
-        jump = Number(selectedKeys[0])
-      }
-      //处理nav的type, 缩略图还是列表也远端处理了, 到时候选择相关的展现形式也要发起一个请求链接
-      let type = Number
-      let name = '默认列表'
-      this.$store.getters.getAppUserNavs.forEach((item) => {
-        if (item.id === selectedKeys[0]) {
-          type = item.type
-          name = item.name
-          summary = item.summary
+      if(selectedKeys.length > 0) {
+        if(selectedKeys[0] === 'cloud') {
+          resetOtherTree('cloud', selectedKeys)
+          this.$router.push({ name: 'cloudList', query: {t: Date.now()}})
+        } else {
+          let jump = 0
+          if (isNaN(Number(selectedKeys[0]))) {
+            jump = 0
+          } else {
+            jump = Number(selectedKeys[0])
+          }
+          //处理nav的type, 缩略图还是列表也远端处理了, 到时候选择相关的展现形式也要发起一个请求链接
+          let type = Number
+          let name = '默认列表'
+          this.$store.getters.getAppUserNavs.forEach((item) => {
+            if (item.id === selectedKeys[0]) {
+              type = item.type
+              name = item.name
+              summary = item.summary
+            }
+          })
+          this.$router.push({ name: 'cloud', query: { listId: jump, t: Date.now(), type: type, name: name, summary: summary } })
+          resetOtherTree('cloud', selectedKeys)
         }
-      })
-      this.$router.push({ name: 'cloud', query: { listId: jump, t: Date.now(), type: type, name: name, summary: summary } })
-      resetOtherTree('cloud', selectedKeys)
+      } else {
+        //todo 如果再次点击树节点，导致selectedKeys是空数组了，路由跳转到默认列表
+        //todo 默认列表设置是无法被删除的节点，且在用户创建的时候已经建立
+      }
+
     },
     onContextMenuClick(treeKey, menuKey) {
       if (menuKey === 'createList') {
