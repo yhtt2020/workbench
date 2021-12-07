@@ -265,6 +265,13 @@ Vue.component('sidebar', {
 			}
 			this.userPanelVisible=false
 		},
+    openCom(){
+      if(this.user.uid===0){
+        this.addTab(api.getUrl(api.API_URL.user.login))
+      }else{
+        this.addTab(api.getUrl(api.API_URL.user.home))
+      }
+    },
 		addTab(url){
 			postMessage({
 				message: "addTab",
