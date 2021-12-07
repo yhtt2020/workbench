@@ -4,6 +4,12 @@ const config = {
   SERVER_BASE_URL: 'http://com.thisky.com',
   DEV_NODE_SERVER_BASE_URL: 'http://test.com:8001',
   PROD_NODE_SERVER_BASE_URL: 'https://work.thisky.com',
+  IM:{
+    API_BASE_URL:"http://im-serve.xiangtian.ren",
+    WEB_SOCKET_URL:"ws://im-socket.xiangtian.ren/socket.io",
+    FRONT_URL:"http://im.xiangtian.ren",
+    FRONT_URL_DEV:""
+  }
 }
 
 const appConfig = {

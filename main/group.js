@@ -72,7 +72,8 @@ app.on('ready', () => {
         }
       })
       groupIMWindow.setMenu(null)
-      groupIMWindow.webContents.loadURL('http://127.0.0.1:8000')
+      const IM_URL=require(path.join(__dirname, '//server-config.js')).config.IM.FRONT_URL
+      groupIMWindow.webContents.loadURL(IM_URL)
       groupIMWindow.on('close',()=>groupIMWindow=null)
     }else{
       groupIMWindow.focus()
