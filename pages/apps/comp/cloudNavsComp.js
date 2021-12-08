@@ -1,7 +1,7 @@
 const tpls = `
 <div>
   <a-row :gutter="24">
-    <a-col v-for="(item,index) in myClouds" :key="index" :span="6">
+    <a-col v-for="(item,index) in Clouds" :key="index" :span="6">
       <a-card hoverable style="margin-bottom: 10px">
         <a-card-meta :title="item.name">
         </a-card-meta>
@@ -13,7 +13,7 @@ const tpls = `
 
 Vue.component('CloudNavsComp', {
   props:{
-      myClouds:[]
+      Clouds:[]
   },
   data () {
     return {

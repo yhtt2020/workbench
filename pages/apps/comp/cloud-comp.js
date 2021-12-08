@@ -98,8 +98,8 @@ Vue.component('cloud-comp', {
       console.log(info, 'info')
       if(selectedKeys.length > 0) {
         if(selectedKeys[0] === 'cloud') {
-          resetOtherTree('cloud', selectedKeys)
           this.$router.push({ name: 'cloudNavs', query: {t: Date.now()}})
+          resetOtherTree('cloud', selectedKeys)
         } else {
           let jump = 0
           if (isNaN(Number(selectedKeys[0]))) {
@@ -110,6 +110,7 @@ Vue.component('cloud-comp', {
           //处理nav的type, 缩略图还是列表也远端处理了, 到时候选择相关的展现形式也要发起一个请求链接
           let type = Number
           let name = '默认列表'
+          let summary = '描述'
           this.$store.getters.getAppUserNavs.forEach((item) => {
             if (item.id === selectedKeys[0]) {
               type = item.type
@@ -218,7 +219,7 @@ Vue.component('cloud-comp', {
             appVue.$message.error({ content: '添加列表失败。' })
           }
         },
-        '👉请输入云端导航名',
+        '👉请输入云端用户导航名',
         '云端'
       )
     },

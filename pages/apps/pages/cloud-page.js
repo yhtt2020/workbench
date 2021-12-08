@@ -230,6 +230,8 @@ module.exports = Vue.component("cloud-page", {
   },
   beforeRouteEnter(to, from, next) {
     next(async (vm) => {
+      console.log(to, 'to????')
+      console.log(from, 'from????')
       vm.myApps = [];
       vm.listId = parseNumber(to.query.listId); // 通过 `vm` 访问组件实例
       window.$listId = vm.listId;
@@ -237,17 +239,19 @@ module.exports = Vue.component("cloud-page", {
       vm.appList.type = String(to.query.type);
       vm.appList.name = String(to.query.name)
       vm.appList.summary = String(to.query.summary)
-      await vm.load(vm);
+      await vm.load(vm, to.params);
     });
   },
   async beforeRouteUpdate(to, from, next) {
+    console.log(to, 'to????')
+    console.log(from, 'from????')
     this.listId = parseNumber(to.query.listId);
     window.$listId = this.listId;
     window.$type = String(to.query.type);
     this.appList.type = String(to.query.type);
     this.appList.name = String(to.query.name)
     this.appList.summary = String(to.query.summary)
-    await this.load(this);
+    await this.load(this, to.params);
   },
   data() {
     return {
@@ -431,9 +435,14 @@ module.exports = Vue.component("cloud-page", {
     showModal() {
       this.visible = true;
     },
-    async load(vm) {
-      await this.$store.dispatch("getUserNavApps", this.listId);
-      vm.myApps = vm.$store.getters.getUserNavApps;
+    async load(vm, params) {
+      if(params.from === 'group') {
+        await this.$store.dispatch("getGroupNavApps", this.listId);
+        vm.myApps = vm.$store.getters.getGroupNavApps;
+      } else {
+        await this.$store.dispatch("getUserNavApps", this.listId);
+        vm.myApps = vm.$store.getters.getUserNavApps;
+      }
     },
     //todo
     async onListTypeChange(e) {

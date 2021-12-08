@@ -1,58 +1,59 @@
 const tpl = `
 <div style="padding: 15px;">
-<div class="logo">
-<img src="../../icons/svg/discover.svg" style="width: 2em">
-网址导航
+  <div class="logo">
+    <img src="../../icons/svg/discover.svg" style="width: 2em">
+    网址导航
+  </div>
+  <template>
+    <h4 style="color: #999;font-size: 12px">网络导航</h4>
+    <appstore-comp @get-tab="getTab"></appstore-comp>
+    <h4 style="color: #999;font-size: 12px">本地导航</h4>
+    <local-comp @get-tab="getTab"></local-comp>
+    <h4 style="color: #999;font-size: 12px">云端导航</h4>
+
+    <cloud-comp @get-tab="getTab"></cloud-comp>
+    <!--        <a-tree style="padding: 10px" :tree-data="[cloudLists]" :block-node="true" show-icon default-expand-all :default-selected-keys="['local']"-->
+    <!--        @select="onSelect"-->
+    <!--        >-->
+    <!--           <a-avatar slot="team" shape="square" style="width: 1.3em;height: auto " src="../../icons/svg/team.svg"></a-avatar>-->
+    <!--   <a-avatar slot="cloud" shape="square" style="width: 1.3em;height: auto " src="../../icons/svg/cloud.svg"></a-avatar>-->
+
+    <!--          <a-icon slot="lock" type="lock"> </a-icon>-->
+    <!--          <a-icon slot="star" style="font-size: 18px" type="star"> </a-icon>-->
+    <!--          <a-avatar slot="list-icon" src="../../icons/svg/collection"></a-avatar>-->
+
+    <!--          <template slot="custom" slot-scope="{ selected }">-->
+    <!--            <a-icon :type="selected ? 'frown' : 'frown-o'" ></a-icon>-->
+    <!--          </template>-->
+    <!--          <template #title="{ key: treeKey, title }">-->
+    <!--      <a-dropdown :trigger="['contextmenu']" @visibleChange="checkMenuDisable($event,treeKey)">-->
+    <!--        <span>{{ title }}</span>-->
+    <!--        <template #overlay>-->
+    <!--          <a-menu @click="({ key: menuKey }) => onContextMenuClick(treeKey, menuKey)">-->
+    <!--            <a-menu-item key="createList" :disabled="disableCreate"><a-icon type="plus-square"></a-icon>  创建列表</a-menu-item>-->
+    <!--            <a-menu-item key="createChildList" :disabled="disableCreateChild"><a-icon type="plus-circle"></a-icon>  创建子列表</a-menu-item>-->
+    <!--            <a-menu-item key="copyList" :disabled="disableCopy"><a-icon type="copy"></a-icon>  复制列表</a-menu-item>-->
+    <!--            <a-menu-item key="renameList" :disabled="disableRename"><a-icon type="edit"></a-icon> 重命名列表</a-menu-item>-->
+    <!--            <a-menu-item key="deleteList" :disabled="disableDelete"><a-icon type="delete"></a-icon> 删除列表</a-menu-item>-->
+    <!--          </a-menu>-->
+    <!--        </template>-->
+    <!--      </a-dropdown>-->
+    <!--    </template>-->
+    <!--        </a-tree>-->
+    <h4 style="color: #999;font-size: 12px">团队导航</h4>
+    <group-comp @get-tab="getTab"></group-comp>
+  </template>
+  <template>
+    <div>
+      <a-modal v-model="createListVisible" ok-text="创建" cancel-text="取消" :title="createTitle" @ok="handleNameInput">
+        <p>输入列表名称</p>
+        <p>
+          <a-input id="nameInput" name="name"></a-input>
+        </p>
+      </a-modal>
+    </div>
+  </template>
 </div>
-      <template >
-       <h4 style="color: #999;font-size: 12px">网络导航</h4>
-       <appstore-comp @get-tab="getTab"></appstore-comp>
-       <h4 style="color: #999;font-size: 12px">本地导航</h4>
-        <local-comp @get-tab="getTab"></local-comp>
-      <h4 style="color: #999;font-size: 12px">云端导航</h4>
-
-      <cloud-comp @get-tab="getTab"></cloud-comp>
-<!--        <a-tree style="padding: 10px" :tree-data="[cloudLists]" :block-node="true" show-icon default-expand-all :default-selected-keys="['local']"-->
-<!--        @select="onSelect"-->
-<!--        >-->
-<!--           <a-avatar slot="team" shape="square" style="width: 1.3em;height: auto " src="../../icons/svg/team.svg"></a-avatar>-->
-<!--   <a-avatar slot="cloud" shape="square" style="width: 1.3em;height: auto " src="../../icons/svg/cloud.svg"></a-avatar>-->
-
-<!--          <a-icon slot="lock" type="lock"> </a-icon>-->
-<!--          <a-icon slot="star" style="font-size: 18px" type="star"> </a-icon>-->
-<!--          <a-avatar slot="list-icon" src="../../icons/svg/collection"></a-avatar>-->
-
-<!--          <template slot="custom" slot-scope="{ selected }">-->
-<!--            <a-icon :type="selected ? 'frown' : 'frown-o'" ></a-icon>-->
-<!--          </template>-->
-<!--          <template #title="{ key: treeKey, title }">-->
-<!--      <a-dropdown :trigger="['contextmenu']" @visibleChange="checkMenuDisable($event,treeKey)">-->
-<!--        <span>{{ title }}</span>-->
-<!--        <template #overlay>-->
-<!--          <a-menu @click="({ key: menuKey }) => onContextMenuClick(treeKey, menuKey)">-->
-<!--            <a-menu-item key="createList" :disabled="disableCreate"><a-icon type="plus-square"></a-icon>  创建列表</a-menu-item>-->
-<!--            <a-menu-item key="createChildList" :disabled="disableCreateChild"><a-icon type="plus-circle"></a-icon>  创建子列表</a-menu-item>-->
-<!--            <a-menu-item key="copyList" :disabled="disableCopy"><a-icon type="copy"></a-icon>  复制列表</a-menu-item>-->
-<!--            <a-menu-item key="renameList" :disabled="disableRename"><a-icon type="edit"></a-icon> 重命名列表</a-menu-item>-->
-<!--            <a-menu-item key="deleteList" :disabled="disableDelete"><a-icon type="delete"></a-icon> 删除列表</a-menu-item>-->
-<!--          </a-menu>-->
-<!--        </template>-->
-<!--      </a-dropdown>-->
-<!--    </template>-->
-<!--        </a-tree>-->
-         <h4 style="color: #999;font-size: 12px">团队导航</h4>
-          <group-comp @get-tab="getTab"></group-comp>
-      </template>
-      <template>
-        <div>
-          <a-modal v-model="createListVisible" ok-text="创建" cancel-text="取消"  :title="createTitle" @ok="handleNameInput">
-            <p>输入列表名称</p>
-            <p><a-input id="nameInput" name="name" ></a-input></p>
-          </a-modal>
-        </div>
-      </template>
-</div>
-
 `
 
 const getNameInputValue=function (){
