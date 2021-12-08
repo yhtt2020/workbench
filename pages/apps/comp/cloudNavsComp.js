@@ -11,8 +11,7 @@ const tpls = `
 </div>
 `
 
-Vue.component('clouds', {
-  name: 'clouds',
+Vue.component('CloudNavsComp', {
   props:{
       myClouds:[]
   },

@@ -1,4 +1,4 @@
-const cloudListTpl=`
+const cloudNavsTpl=`
 <div style="width: 100%">
   <a-layout>
     <a-layout-header style="background: #fff; padding: 0">
@@ -13,7 +13,7 @@ const cloudListTpl=`
     <a-layout-content>
       <template>
         <div style="background-color: white; padding: 20px;" class="group-apps">
-          <clouds :myClouds="myClouds"></clouds>
+          <CloudNavsComp :myClouds="myClouds"></CloudNavsComp>
         </div>
       </template>
     </a-layout-content>
@@ -21,12 +21,12 @@ const cloudListTpl=`
 </div>
 `
 
-require('../comp/clouds.js')
+const CloudNavsComp = require('../comp/cloudNavsComp.js')
 
-module.exports = Vue.component('cloud-list-page', {
-  name: 'cloud-list-page',
-  template: cloudListTpl,
-  component: {clouds:"clouds"},
+module.exports = Vue.component('cloud-navs-page', {
+  name: 'cloud-navs-page',
+  template: cloudNavsTpl,
+  component: {CloudNavsComp},
   beforeRouteEnter(to, from, next) {
     next(async vm => {
       vm.myClouds = []

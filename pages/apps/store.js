@@ -6,7 +6,8 @@ const store = new Vuex.Store({
     appUserNavs: [],
     userNavApps:[],
     //云端团队相关
-    myGroups:[]
+    myGroups:[],
+    appGroupNavs: []
 
   },
   getters: {
@@ -18,7 +19,10 @@ const store = new Vuex.Store({
     },
     getMyGroups: state => {
       return state.myGroups
-    }
+    },
+    getAppGroupNavs: state => {
+      return state.appGroupNavs
+    },
   },
   mutations: {
     //设置我的云端导航
@@ -30,7 +34,10 @@ const store = new Vuex.Store({
     },
     SET_MYGROUPS: (state, myGroups) => {
       state.myGroups = myGroups
-    }
+    },
+    SET_APPGROUPNAVS: (state, appGroupNavs) => {
+      state.appGroupNavs = appGroupNavs
+    },
   },
   actions: {
     //云端用户相关
@@ -72,6 +79,13 @@ const store = new Vuex.Store({
       if(result.code === 1000) {
         console.log(result, 'list')
         commit('SET_MYGROUPS', result.data)
+      }
+    },
+
+    async getAppGroupNavs({commit}, data) {
+      const result = await groupApi.getAppGroupNavs(data)
+      if(result.code === 1000) {
+        commit('SET_APPGROUPNAVS', result.data)
       }
     }
   }

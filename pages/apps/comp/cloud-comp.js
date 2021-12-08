@@ -99,7 +99,7 @@ Vue.component('cloud-comp', {
       if(selectedKeys.length > 0) {
         if(selectedKeys[0] === 'cloud') {
           resetOtherTree('cloud', selectedKeys)
-          this.$router.push({ name: 'cloudList', query: {t: Date.now()}})
+          this.$router.push({ name: 'cloudNavs', query: {t: Date.now()}})
         } else {
           let jump = 0
           if (isNaN(Number(selectedKeys[0]))) {

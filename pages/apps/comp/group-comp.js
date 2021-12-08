@@ -64,25 +64,9 @@ Vue.component('group-comp', {
           slots: {
             icon: 'folder-text'
           },
-          children: [
-          //   {
-          //   title: '想天销售部',
-          //   key: '12',
-          //   slots: {
-          //     icon: 'group-icon'
-          //
-          //   },
-          //   children: [{
-          //     title: '部门常用网站',
-          //     key: '13',
-          //     slots: {
-          //       icon: 'list-icon'
-          //     }
-          //   }]
-          // }
-          ]
-
-        }]
+          children: []
+        }
+      ]
     }
   },
   async mounted () {
@@ -108,6 +92,9 @@ Vue.component('group-comp', {
       if(selectedKeys[0] === 'group') {
         resetOtherTree('group', selectedKeys)
         this.$router.push({ name: 'groupList', query: {t: Date.now()}})
+      } else if (selectedKeys[0].startsWith('L1')) {
+        resetOtherTree('cloud', selectedKeys)
+        this.$router.push({ name: 'cloudNavs', query: {t: Date.now()}})
       }
       // resetOtherTree('group', selectedKeys)
       // this.$router.push({ path: '/group', query: { listId: selectedKeys[0] } })

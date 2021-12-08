@@ -64,7 +64,6 @@ cloudTpl = `
                 v-bind:selectByClick='true' v-bind:selectFromInside='true' v-bind:ratio='0' @select="onSelect"
                 @selectEnd="selectEnd"></vue-selecto>
               <div class="" id="selecto1" v-show="appList.type==='0' && myApps.length>0">
-
                 <a-dropdown v-for="(app, index) in myApps" :trigger="['contextmenu']">
                   <a-card-grid @dragstart="dragStart($event,app)" @mousedown.stop draggable="true" :id="app.id"
                     class="app" style="cursor: pointer;" @click="openUrl(app.url)">
@@ -242,7 +241,7 @@ module.exports = Vue.component("cloud-page", {
     });
   },
   async beforeRouteUpdate(to, from, next) {
-    this.listId = Number(to.query.listId);
+    this.listId = parseNumber(to.query.listId);
     window.$listId = this.listId;
     window.$type = String(to.query.type);
     this.appList.type = String(to.query.type);

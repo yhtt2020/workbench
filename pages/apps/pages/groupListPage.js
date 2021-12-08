@@ -14,20 +14,19 @@ groupListTpl=`
         <a-layout-content>
           <template>
             <div style="background-color: white; padding: 20px;" class="group-apps">
-              <groups :myGroups="myGroups"></groups>
+              <GroupListComp :myGroups="myGroups"></GroupListComp>
             </div>
           </template>
         </a-layout-content>
 </a-layout>
 </div>
   `
-require('../comp/groups.js')
+const GroupListComp = require('../comp/groupListComp.js')
 
-const groupModel = require('../../util/model/groupModel')
 module.exports = Vue.component('group-list-page', {
   name: 'group-list-page',
   template: groupListTpl,
-  component: {groups:"groups"},
+  component: {GroupListComp},
   beforeRouteEnter(to, from, next) {
     next(async vm => {
       vm.myGroups = []
