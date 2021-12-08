@@ -52,13 +52,13 @@ app.on('ready', () => {
         width:900,
         autoHideMenuBar: true,
         minHeight: 600,
-        height:600,
+        height:700,
         x: 50+ mainWindow.getBounds().x,
         y: 150 +mainWindow.getBounds().y,
         acceptFirstMouse: true,
         maximizable: false,
         visualEffectState: 'active',
-        alwaysOnTop: true,
+        //alwaysOnTop: true,
         webPreferences: {
           preload:path.join(__dirname, '/pages/group/imPreload.js'),
           nodeIntegration: true,
@@ -72,8 +72,13 @@ app.on('ready', () => {
         }
       })
       groupIMWindow.setMenu(null)
-      const IM_URL=require(path.join(__dirname, '//server-config.js')).config.IM.FRONT_URL
-      groupIMWindow.webContents.loadURL(IM_URL)
+      let im_url=''
+      if(isDevelopmentMode){
+         im_url=require(path.join(__dirname, '//server-config.js')).config.IM.FRONT_URL_DEV
+      }else{
+         im_url=require(path.join(__dirname, '//server-config.js')).config.IM.FRONT_URL
+      }
+      groupIMWindow.webContents.loadURL(im_url)
       groupIMWindow.on('close',()=>groupIMWindow=null)
     }else{
       groupIMWindow.focus()

@@ -8,7 +8,7 @@ const config = {
     API_BASE_URL:"http://im-serve.xiangtian.ren",
     WEB_SOCKET_URL:"ws://im-socket.xiangtian.ren/socket.io",
     FRONT_URL:"http://im.xiangtian.ren",
-    FRONT_URL_DEV:""
+    FRONT_URL_DEV:"http://127.0.0.1:8000"
   }
 }
 
