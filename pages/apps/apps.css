@@ -95,8 +95,9 @@
 	box-shadow: none;
 }
 
-.ant-dropdown-trigger {
+span .ant-tree-title .ant-dropdown-trigger {
   display: block;
+  height: 24px;
 }
 
 
