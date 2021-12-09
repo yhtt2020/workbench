@@ -309,14 +309,11 @@ window.onload = function() {
 		},
     actions: {
       async getGroups({ commit }, userInfo) {
-        const { uid, token } = userInfo
+        const { token } = userInfo
         const result = await axios({
           method: 'post',
           url: '/app/browser/group/list',
-          headers: { Authorization: token },
-          data: {
-            uid: uid
-          },
+          headers: { Authorization: token }
         })
         if(result.code === 1000) {
           commit('SET_MYGROUPS', result.data)
