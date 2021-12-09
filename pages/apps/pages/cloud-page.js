@@ -64,7 +64,6 @@ cloudTpl = `
                 v-bind:selectByClick='true' v-bind:selectFromInside='true' v-bind:ratio='0' @select="onSelect"
                 @selectEnd="selectEnd"></vue-selecto>
               <div class="" id="selecto1" v-show="appList.type==='0' && myApps.length>0">
-
                 <a-dropdown v-for="(app, index) in myApps" :trigger="['contextmenu']">
                   <a-card-grid @dragstart="dragStart($event,app)" @mousedown.stop draggable="true" :id="app.id"
                     class="app" style="cursor: pointer;" @click="openUrl(app.url)">
@@ -242,7 +241,7 @@ module.exports = Vue.component("cloud-page", {
     });
   },
   async beforeRouteUpdate(to, from, next) {
-    this.listId = Number(to.query.listId);
+    this.listId = parseNumber(to.query.listId);
     window.$listId = this.listId;
     window.$type = String(to.query.type);
     this.appList.type = String(to.query.type);
@@ -366,6 +365,7 @@ module.exports = Vue.component("cloud-page", {
     async addCurrentApp() {
       const resFind = this.isInMyApps(this.currentApp);
       if (resFind.findIndex !== -1) {
+        //user
         const result = await this.$store.dispatch("delUserNavApps", {
           ids: resFind.findIds,
         });
@@ -385,6 +385,7 @@ module.exports = Vue.component("cloud-page", {
           add_time: String(new Date().getTime()),
           list_id: this.listId,
         };
+        //user
         const result = await this.$store.dispatch("addUserNavApps", data);
         if (result.code === 1000) {
           this.$message.success("添加了应用：" + this.currentApp.name);
@@ -395,7 +396,7 @@ module.exports = Vue.component("cloud-page", {
         }
       }
     },
-    //点击那些app的时候
+    //点击app或手动创建的时候
     async addApp(app) {
       this.currentApp = app;
       await this.addCurrentApp();
@@ -433,10 +434,9 @@ module.exports = Vue.component("cloud-page", {
       this.visible = true;
     },
     async load(vm) {
-      await this.$store.dispatch("getUserNavApps", this.listId);
+      await vm.$store.dispatch("getUserNavApps", vm.listId);
       vm.myApps = vm.$store.getters.getUserNavApps;
     },
-    //todo
     async onListTypeChange(e) {
       this.appList.type = e.target.value;
       const data = {

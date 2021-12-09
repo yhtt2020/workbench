@@ -83,7 +83,7 @@ Vue.component('cloud-comp', {
     async refreshNavs() {
       await this.$store.dispatch('getAppUserNavs')
       if(this.myAppsLists[0].children.length > 0 ) {
-        this.myAppsLists[0].children = []
+        this.myAppsLists[0].children = []   //重置
         this.$store.getters.getAppUserNavs.forEach((element) => {
           this.myAppsLists[0].children.push(appListModel.convertTreeNode(element))
         })
@@ -94,26 +94,38 @@ Vue.component('cloud-comp', {
       }
     },
     onSelect(selectedKeys, info) {
-      console.log(selectedKeys, 'sssss')
+      console.log(selectedKeys, '__selectedKeys__')
       console.log(info, 'info')
-      let jump = 0
-      if (isNaN(Number(selectedKeys[0]))) {
-        jump = 0
-      } else {
-        jump = Number(selectedKeys[0])
-      }
-      //处理nav的type, 缩略图还是列表也远端处理了, 到时候选择相关的展现形式也要发起一个请求链接
-      let type = Number
-      let name = '默认列表'
-      this.$store.getters.getAppUserNavs.forEach((item) => {
-        if (item.id === selectedKeys[0]) {
-          type = item.type
-          name = item.name
-          summary = item.summary
+      if(selectedKeys.length > 0) {
+        if(selectedKeys[0] === 'cloud') {
+          this.$router.push({ name: 'cloudNavs', query: {t: Date.now()}})
+          resetOtherTree('cloud', selectedKeys)
+        } else {
+          let jump = 0
+          if (isNaN(Number(selectedKeys[0]))) {
+            jump = 0
+          } else {
+            jump = Number(selectedKeys[0])
+          }
+          //处理nav的type, 缩略图还是列表也远端处理了, 到时候选择相关的展现形式也要发起一个请求链接
+          let type = Number
+          let name = '默认列表'
+          let summary = '描述'
+          this.$store.getters.getAppUserNavs.forEach((item) => {
+            if (item.id === selectedKeys[0]) {
+              type = item.type
+              name = item.name
+              summary = item.summary
+            }
+          })
+          this.$router.push({ name: 'cloud', query: { listId: jump, t: Date.now(), type: type, name: name, summary: summary } })
+          resetOtherTree('cloud', selectedKeys)
         }
-      })
-      this.$router.push({ name: 'cloud', query: { listId: jump, t: Date.now(), type: type, name: name, summary: summary } })
-      resetOtherTree('cloud', selectedKeys)
+      } else {
+        //todo 如果再次点击树节点，导致selectedKeys是空数组了，路由跳转到默认列表
+        //todo 默认列表设置是无法被删除的节点，且在用户创建的时候已经建立
+      }
+
     },
     onContextMenuClick(treeKey, menuKey) {
       if (menuKey === 'createList') {
@@ -207,41 +219,30 @@ Vue.component('cloud-comp', {
             appVue.$message.error({ content: '添加列表失败。' })
           }
         },
-        '👉请输入云端导航名',
+        '请输入云端用户导航名',
         '云端'
       )
     },
 
     /**
-     * 检查菜单的可用性
+     * 检查菜单的可用性    右键创建的可用性
      * @param visible
      * @param treeKey
      */
     checkMenuDisable(visible, treeKey) {
-      this.disableCreate = false
-      this.disableCreateChild = false
-      this.disableCopy = false
-      this.disableRename = false
-      this.disableDelete = false
-      if (visible === true) {
-        //在创建菜单的时候对菜单的可用性进行调整
-        if (treeKey === 'myapp') {
-          this.disableCreateChild = true
-          this.disableCopy = true
-          this.disableRename = true
-          this.disableDelete = true
-        }
+      if(treeKey === 'cloud') {
+        this.disableCreate = false
+        this.disableRename = true
+        this.disableDelete = true
+      } else {
+        this.disableCreate = true
+        this.disableRename = false
+        this.disableDelete = false
       }
     },
     // 拖拽元素放置到了目的地元素上面
     allowDrop(e, key) {
-      if (key === 'myapp') {
-        key = 0
-      }
-      key = Number(key)
-      if (key === window.$listId) {
-        //todo 阻止放下
-      }
+      console.log(key, '拖拽key～～～')
     },
     dragEnter(e) {
       console.log('enter')
@@ -257,24 +258,26 @@ Vue.component('cloud-comp', {
     // 拖拽元素结束了操作
     async drop(e, key) {
       e.target.classList.remove('canDrag')
-      if (key === 'myapp') {
-        key = 0
-      }
-      let ids = []
-      window.$selectedApps.forEach(e => {
-        ids.push(Number(e))
-      })
-      const data  = {
-        ids,
-        list_id: Number(key),
-      }
-      const result = await this.$store.dispatch('updateUserNavApps', data)
-      if(result.code === 1000){
-        window.$selectedApps = []
-        window.$removeApps()
-        appVue.$message.success({ content: '移动应用成功。' })
+      if (key === 'cloud' || key === window.$listId) {
+        e.preventDefault()
+        appVue.$message.error({ content: '注意移动目标!' })
       } else {
-        appVue.$message.success({ content: '移动应用失败！' })
+        let ids = []
+        window.$selectedApps.forEach(e => {
+          ids.push(Number(e))
+        })
+        const data  = {
+          ids,
+          list_id: Number(key),
+        }
+        const result = await this.$store.dispatch('updateUserNavApps', data)
+        if(result.code === 1000){
+          window.$selectedApps = []
+          window.$removeApps()
+          appVue.$message.success({ content: '移动应用成功。' })
+        } else {
+          appVue.$message.success({ content: '移动应用失败！' })
+        }
       }
     },
   },

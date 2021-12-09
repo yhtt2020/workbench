@@ -106,7 +106,6 @@
             }
             const currentUser = await db.system.where('name').equals('currentUser').first()
             values.logo = appVue.$data.groupLogo
-            values.uid = currentUser.value.uid
             const result = await axios({
               method: 'post',
               url: '/app/browser/group/add',

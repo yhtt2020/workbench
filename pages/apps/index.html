@@ -54,7 +54,6 @@
 
 
 <script src="./sidenav.js"></script>
-<script src="comp/groups.js"></script>
 <script src="./search.js"></script>
 <script src="./store.js"></script>
 
@@ -64,34 +63,20 @@
    * 定义当前的树状组件组
    * @type {[{comp: null, name: string}, {comp: null, name: string}, {comp: null, name: string}, {comp: null, name: string}]}
    */
-  window.$trees = [
-    // {
-    //   name: 'myapp',
-    //   comp: null
-    // },
-    // {
-    //   name: 'appstore',
-    //   comp: null
-    // }, {
-    //   name: 'cloud',
-    //   comp: null
-    // }, {
-    //   name: 'group',
-    //   comp: null
-    //
-    // }
-  ]
+  window.$trees = []
   Vue.prototype.$form = antd.Form
   const wallPaper = require('../util/theme.js').wallPaper
   const routes = require('./routes.js')
 
+  //控制当前路由重载导致的报错
+  // const originalPush = VueRouter.prototype.push
+  // VueRouter.prototype.push = function push(location) {
+  // return originalPush.call(this, location).catch(err => err)
+  // }
   const router = new VueRouter({
     routes // (缩写) 相当于 routes: routes
   })
-  // const originalPush = VueRouter.prototype.push
-  // VueRouter.prototype.push = function push (location) {
-  //   return originalPush.call(this, location).catch(err => err)
-  // }
+
   const appVue = new Vue({
     router,
     el: '#appVue',
