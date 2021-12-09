@@ -1,3 +1,4 @@
+const authApi = require(path.join(__dirname, './js/request/api/authApi.js'))
 const axios = require(path.join(__dirname, './js/util/axios.js'))
 const storage = require('electron-localstorage');
 const { clipboard } = require('electron')
@@ -9,11 +10,7 @@ const handleAxios =  {
       const data = {
         code: arg
       }
-      const result = await axios({
-        method: 'post',
-        url: `/app/loginBrowser`,
-        data
-      })
+      const result = await authApi.loginBrowser(data)
       if(result.code === 1000) {
         storage.setItem(`userToken`, result.data.token)
         storage.setItem(`userInfo`, result.data.userInfo)
@@ -25,12 +22,7 @@ const handleAxios =  {
       const data = {
         code: arg
       }
-      await axios({
-        method: 'post',
-        url: `/app/logoutBrowser`,
-        headers: { 'Authorization': storage.getItem(`userToken`)},
-        data
-      })
+      await authApi.logoutBrowser(data)
       storage.removeItem(`userToken`);
       storage.removeItem(`userInfo`)
     })
@@ -60,7 +52,6 @@ const handleAxios =  {
         sidePanel.get().webContents.send('message',{type:"error",config:{content:'分享失败，请检查网络。',key:"shareTask"}})
         console.log(err)
       }
-
     })
   }
 }

@@ -18,6 +18,8 @@ const remoteMenu = require('remoteMenuRenderer.js')
 
 const ipc = electron.ipcRenderer
 
+const navbarApi = require('../request/api/navbarApi.js')
+
 var lastTabDeletion = 0 // TODO get rid of this
 
 const tabBar = {
@@ -158,6 +160,10 @@ const tabBar = {
       })
       ipc.send('message', { type: 'success', config: { content: '整组添加成功，已为您排除系统页面，可在我的导航和新标签页中查看。' } })
     }
+  },
+
+  addToUserNav() {
+
   },
 
   //移动tab到新的分组且完成切换
@@ -319,6 +325,36 @@ const tabBar = {
         {type: 'separator'}
       ]
 
+      let showSiglAppUserNav = []
+      let showMulAppUserNav = []
+
+      //处理云端用户导航列表的呈现
+      const handleUserNav = async() => {
+        try {
+          const result = await navbarApi.getUserNavs()
+          if(result.code === 1000) {
+            result.data.forEach(e => {
+              showSiglAppUserNav.push({
+                label: e.name,
+                click: () => {
+                  tabBar.addToUserNav()
+                }
+              })
+              showMulAppUserNav.push({
+                label: e.name,
+                click: () => {
+                  tabBar.addToUserNav(false)
+                }
+              })
+            })
+          }
+        } catch(err) {
+          console.log(err)
+        }
+      }
+
+      await handleUserNav()
+
       //处理本地导航的列表呈现
       const localAppsMenu = async () => {
         const { appListModel } = require('../../pages/util/model/appListModel')
@@ -408,13 +444,18 @@ const tabBar = {
           {
             label: '添加到本地导航',
             submenu: handleSingleTab
-            // click: function () {
-            //   tabBar.addToMyapps(data.id)
-            // },
           },
           {
             label: '整组添加到本地导航',
             submenu: handleAllTab
+          },
+          {
+            label: '添加到云端用户导航',
+            submenu: showSiglAppUserNav
+          },
+          {
+            label: '整组添加到云端用户导航',
+            submenu: showMulAppUserNav
           },
           {
             label: '移入新建分组中',

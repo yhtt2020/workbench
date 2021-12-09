@@ -5,8 +5,8 @@ const { config, api } = require('../../server-config')
 //因为我这里本地环境测试就算用户注销但拿到的code是体验站上的code
 //会出现退出失败，redis无法清除，本地storage也无法清除
 //本地下面代码强制清除storage
-// console.log(storage.getAll())
-// storage.clear();
+//console.log(storage.getAll())
+//storage.clear();
 
 axios.defaults.baseURL = config.PROD_NODE_SERVER_BASE_URL;
 //axios.defaults.baseURL = config.DEV_NODE_SERVER_BASE_URL;
