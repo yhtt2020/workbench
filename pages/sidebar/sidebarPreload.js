@@ -100,7 +100,6 @@ ipc.on('addItem', function (e, data) {
 ipc.on('refreshMyGroups', async ()=> {
   const currentUser = await db.system.where('name').equals('currentUser').first()
   await window.$store.dispatch('getGroups', {
-    uid: currentUser.value.uid,
     token: currentUser.value.token
   })
 })
@@ -157,7 +156,7 @@ ipc.on('userLogin', function (e, data) {
   db.system.put({
     name:'currentUser',
     value: user
-  }).then((msg) => {
+  }).then(async (msg) => {
     console.log(msg)
     db.accounts.put({
       uid: user.uid,
@@ -166,6 +165,9 @@ ipc.on('userLogin', function (e, data) {
       lastLoginTime: new Date().getTime(),
       token: user.token,
       code: user.code
+    })
+    await window.$store.dispatch('getGroups', {
+      token: user.token
     })
   }).catch((err) => {
     console.log('登录后设置当前用户失败')

@@ -95,7 +95,6 @@ Vue.component('sidebar', {
     const currentUser = await db.system.where('name').equals('currentUser').first()
     if(currentUser.value.uid !== 0 ) {
       await this.$store.dispatch('getGroups', {
-        uid: currentUser.value.uid,
         token: currentUser.value.token
       })
     }
