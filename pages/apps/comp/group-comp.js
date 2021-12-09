@@ -10,7 +10,8 @@ const groupTpl = `
     </template>
     <template #title="{ key: treeKey, title }">
       <a-dropdown :trigger="['contextmenu']" @visibleChange="checkMenuDisable($event,treeKey)">
-        <span>{{ title }}</span>
+        <span @dragenter.prevent="dragEnter($event)" @dragleave.prevent="dragLeave($event)"
+        @dragover.prevent="allowDrop($event,treeKey)" @drop.prevent="drop($event,treeKey)">{{ title }}</span>
         <template #overlay>
           <a-menu @click="({ key: menuKey }) => onContextMenuClick(treeKey, menuKey)">
             <a-menu-item key="createList" :disabled="disableCreate"><a-icon type="plus-square"></a-icon>创建云端团队导航</a-menu-item>
@@ -106,7 +107,7 @@ Vue.component('group-comp', {
         let type = Number
         let name = '默认列表'
         let summary = '描述'
-        console.log(this.$store.getters.getAppGroupNavs, '?????')
+        let group_id = Number(selectedKeys[0].split('-')[1])
         this.$store.getters.getAppGroupNavs.forEach((item) => {
           if (item.id === jump) {
             type = item.type
@@ -114,7 +115,7 @@ Vue.component('group-comp', {
             summary = item.summary
           }
         })
-        this.$router.push({ name: 'cloud', query: { listId: jump, t: Date.now(), type: type, name: name, summary: summary }, params: { from: 'group'} })
+        this.$router.push({ name: 'group', query: { groupId: group_id, listId: jump, t: Date.now(), type: type, name: name, summary: summary } })
         resetOtherTree('group', selectedKeys)
       }
     },
@@ -138,22 +139,29 @@ Vue.component('group-comp', {
     },
     handleMenuDeleteList (treeKey) {
       let that = this
-      let { list, key } = treeUtil.findTreeNode(treeKey, that.myAppsLists[0].children)
-      console.log(list)
+      const result = groupModel.findTreeNode(this.groupLists[0].children, treeKey)
       this.$confirm({
-        title: `确认删除列表： ${list.title} ？`,
+        title: `确认删除列表： ${result.title} ？`,
         content: `删除后无法撤销，请谨慎操作！`,
         okText: '确认删除，不后悔',
         cancelText: '保留',
-        onOk () {
-          appList.delete(Number(appList.getIdFromTreeKey(treeKey))).then(() => {
-            that.$message.success({ content: '删除成功。' })
-            that.myAppsLists[0].children.splice(key, 1)
-          })
+        async onOk() {
+          const data = {
+            ids: [Number(treeKey.split('-')[2])],
+            group_id: Number(treeKey.split('-')[1])
+          }
+          const result = await that.$store.dispatch('deleteAppGroupNav', data)
+          if(result.code === 1000) {
+            that.createListVisible = false
+            await that.refreshNavs()
+            appVue.$message.success({ content: '列表删除成功' })
+          } else {
+            appVue.$message.error({ content: '列表删除失败!' })
+          }
         },
-        onCancel () {
+        onCancel() {
           console.log('Cancel')
-        }
+        },
       })
 
     },
@@ -170,7 +178,7 @@ Vue.component('group-comp', {
           return
         }
         const data =  {
-          id: treeKey,
+          id: Number(treeKey.split('-')[2]),
           name: name,
           summary: '描述',
           group_id: Number(treeKey.split('-')[1])
@@ -209,7 +217,7 @@ Vue.component('group-comp', {
             appVue.$message.error({ content: '添加列表失败。' })
           }
         },
-        '👉请输入云端团队导航名',
+        '请输入云端团队导航名',
         '云端'
       )
     },
@@ -220,8 +228,6 @@ Vue.component('group-comp', {
      * @param treeKey
      */
     checkMenuDisable (visible, treeKey) {
-      console.log(visible, 'visible?????')
-      console.log(treeKey, 'treeKey????')
       if(treeKey.startsWith('group')) {
           this.disableCreate = true
           this.disableRename = true
@@ -235,6 +241,48 @@ Vue.component('group-comp', {
         this.disableRename = true
         this.disableDelete = true
       }
-    }
+    },
+
+    // 拖拽元素放置到了目的地元素上面
+    allowDrop(e, key) {
+      console.log(key, '拖拽key～～～')
+    },
+    dragEnter(e) {
+      console.log('enter')
+      console.log(e)
+      e.target.classList.add('canDrag')
+    },
+    dragLeave(e) {
+      console.log('leave')
+      console.log(e)
+      e.target.classList.remove('canDrag')
+    },
+
+    // 拖拽元素结束了操作
+    async drop(e, key) {
+      e.target.classList.remove('canDrag')
+      if (key === 'group' || key.startsWith('L1') || Number(key.split('-')[2]) === window.$listId) {
+        e.preventDefault()
+        appVue.$message.error({ content: '注意移动目标!' })
+      } else {
+        let ids = []
+        window.$selectedApps.forEach(e => {
+          ids.push(Number(e))
+        })
+        const data  = {
+          ids,
+          list_id: Number(key.split('-')[2]),
+        }
+        const result = await this.$store.dispatch('updateGroupNavApps', data)
+        if(result.code === 1000){
+          window.$selectedApps = []
+          window.$removeApps()
+          appVue.$message.success({ content: '移动应用成功。' })
+        } else {
+          console.log(result)
+          appVue.$message.success({ content: '移动应用失败！' })
+        }
+      }
+    },
   }
 })

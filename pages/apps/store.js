@@ -84,7 +84,6 @@ const store = new Vuex.Store({
     async getMyGroups({commit}, data) {
       const result = await groupApi.getGroups()
       if(result.code === 1000) {
-        console.log(result, 'list')
         commit('SET_MYGROUPS', result.data)
       }
     },
@@ -95,18 +94,32 @@ const store = new Vuex.Store({
         commit('SET_APPGROUPNAVS', result.data)
       }
     },
+    async addAppGroupNav({commit}, data) {
+      return await groupApi.addAppGroupNav(data)
+    },
+    async updateAppGroupNav({commit}, data) {
+      return await groupApi.updateAppGroupNav(data)
+    },
+    async deleteAppGroupNav({commit}, data) {
+      return await groupApi.deleteAppGroupNav(data)
+    },
+
+
     async getGroupNavApps({commit}, data) {
       const result = await groupApi.getGroupNavApps(data)
       if(result.code === 1000) {
         commit('SET_GROUPNAVAPPS', result.data)
       }
     },
-    async addAppGroupNav({commit}, data) {
-      return await groupApi.addAppGroupNav(data)
+    async addGroupNavApps({commit}, data) {
+      return await groupApi.addGroupNavApps(data)
     },
-    async updateAppGroupNav({commit}, data) {
-      return await groupApi.updateAppGroupNav(data)
-    }
+    async delGroupNavApps({commit}, data) {
+      return await groupApi.delGroupNavApps(data)
+    },
+    async updateGroupNavApps({commit}, data) {
+      return await groupApi.updateGroupNavApps(data)
+    },
   }
 })
 

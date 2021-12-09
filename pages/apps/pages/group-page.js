@@ -2,7 +2,7 @@ cloudTpl = `
 <div style="width: 100%">
   <a-layout>
     <a-layout-header style="background: #fff; padding: 0">
-      <a-page-header title="云端列表" sub-title="这里是云端导航，云端导航与账号绑定，重装系统、更换电脑都可以同步，永不丢失。">
+      <a-page-header title="云端团队导航" sub-title="这里是云端团队导航，云端导航与账号绑定，重装系统、更换电脑都可以同步，永不丢失。">
         <template slot="extra">
 
           <a-radio-group :value="appList.type" @change="onListTypeChange">
@@ -27,7 +27,7 @@ cloudTpl = `
         <div style="float: left">
           <template>
             <a-breadcrumb>
-              <a-breadcrumb-item>云端列表</a-breadcrumb-item>
+              <a-breadcrumb-item>云端团队导航列表</a-breadcrumb-item>
               <a-breadcrumb-item>{{appList.name}}</a-breadcrumb-item>
             </a-breadcrumb>
 
@@ -231,6 +231,7 @@ module.exports = Vue.component("cloud-page", {
   beforeRouteEnter(to, from, next) {
     next(async (vm) => {
       vm.myApps = [];
+      vm.groupId = parseNumber(to.query.groupId)
       vm.listId = parseNumber(to.query.listId); // 通过 `vm` 访问组件实例
       window.$listId = vm.listId;
       window.$type = String(to.query.type);
@@ -242,6 +243,7 @@ module.exports = Vue.component("cloud-page", {
   },
   async beforeRouteUpdate(to, from, next) {
     this.listId = parseNumber(to.query.listId);
+    this.groupId = parseNumber(to.query.groupId)
     window.$listId = this.listId;
     window.$type = String(to.query.type);
     this.appList.type = String(to.query.type);
@@ -261,6 +263,7 @@ module.exports = Vue.component("cloud-page", {
         hideOnSinglePage: true,
       },
       listId: Number,
+      groupId: Number,
       visible: false,
       type: 0,
       myApps: [],
@@ -365,14 +368,15 @@ module.exports = Vue.component("cloud-page", {
     async addCurrentApp() {
       const resFind = this.isInMyApps(this.currentApp);
       if (resFind.findIndex !== -1) {
-        //user
-        const result = await this.$store.dispatch("delUserNavApps", {
+        const data = {
           ids: resFind.findIds,
-        });
+          list_id: this.listId
+        }
+        const result = await this.$store.dispatch("delGroupNavApps", data);
         if (result.code === 1000) {
           this.$message.warning("移除了应用：" + this.currentApp.name + "");
-          await this.$store.dispatch("getUserNavApps", this.listId);
-          this.myApps = this.$store.getters.getUserNavApps;
+          await this.$store.dispatch("getGroupNavApps", this.listId);
+          this.myApps = this.$store.getters.getGroupNavApps;
         } else {
           this.$message.error("移除应用失败!");
         }
@@ -385,12 +389,12 @@ module.exports = Vue.component("cloud-page", {
           add_time: String(new Date().getTime()),
           list_id: this.listId,
         };
-        //user
-        const result = await this.$store.dispatch("addUserNavApps", data);
+        //group
+        const result = await this.$store.dispatch("addGroupNavApps", data);
         if (result.code === 1000) {
           this.$message.success("添加了应用：" + this.currentApp.name);
-          await this.$store.dispatch("getUserNavApps", this.listId);
-          this.myApps = this.$store.getters.getUserNavApps;
+          await this.$store.dispatch("getGroupNavApps", this.listId);
+          this.myApps = this.$store.getters.getGroupNavApps;
         } else {
           this.$message.error("添加应用失败!");
         }
@@ -434,16 +438,17 @@ module.exports = Vue.component("cloud-page", {
       this.visible = true;
     },
     async load(vm) {
-      await vm.$store.dispatch("getUserNavApps", vm.listId);
-      vm.myApps = vm.$store.getters.getUserNavApps;
+      await vm.$store.dispatch("getGroupNavApps", vm.listId);
+      vm.myApps = vm.$store.getters.getGroupNavApps;
     },
     async onListTypeChange(e) {
       this.appList.type = e.target.value;
       const data = {
-        id: this.listId
+        id: this.listId,
+        group_id: this.groupId
       }
-      await this.$store.dispatch('updateAppUserNav', Object.assign(data, this.appList))
-      await this.$store.dispatch('getAppUserNavs')
+      await this.$store.dispatch('updateAppGroupNav', Object.assign(data, this.appList))
+      await this.$store.dispatch('getAppGroupNavs', { id: this.groupId})
     },
     openUrl(url) {
       window.open(url);

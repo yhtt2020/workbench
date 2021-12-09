@@ -219,41 +219,30 @@ Vue.component('cloud-comp', {
             appVue.$message.error({ content: '添加列表失败。' })
           }
         },
-        '👉请输入云端用户导航名',
+        '请输入云端用户导航名',
         '云端'
       )
     },
 
     /**
-     * 检查菜单的可用性
+     * 检查菜单的可用性    右键创建的可用性
      * @param visible
      * @param treeKey
      */
     checkMenuDisable(visible, treeKey) {
-      this.disableCreate = false
-      this.disableCreateChild = false
-      this.disableCopy = false
-      this.disableRename = false
-      this.disableDelete = false
-      if (visible === true) {
-        //在创建菜单的时候对菜单的可用性进行调整
-        if (treeKey === 'myapp') {
-          this.disableCreateChild = true
-          this.disableCopy = true
-          this.disableRename = true
-          this.disableDelete = true
-        }
+      if(treeKey === 'cloud') {
+        this.disableCreate = false
+        this.disableRename = true
+        this.disableDelete = true
+      } else {
+        this.disableCreate = true
+        this.disableRename = false
+        this.disableDelete = false
       }
     },
     // 拖拽元素放置到了目的地元素上面
     allowDrop(e, key) {
-      if (key === 'myapp') {
-        key = 0
-      }
-      key = Number(key)
-      if (key === window.$listId) {
-        //todo 阻止放下
-      }
+      console.log(key, '拖拽key～～～')
     },
     dragEnter(e) {
       console.log('enter')
@@ -269,24 +258,26 @@ Vue.component('cloud-comp', {
     // 拖拽元素结束了操作
     async drop(e, key) {
       e.target.classList.remove('canDrag')
-      if (key === 'myapp') {
-        key = 0
-      }
-      let ids = []
-      window.$selectedApps.forEach(e => {
-        ids.push(Number(e))
-      })
-      const data  = {
-        ids,
-        list_id: Number(key),
-      }
-      const result = await this.$store.dispatch('updateUserNavApps', data)
-      if(result.code === 1000){
-        window.$selectedApps = []
-        window.$removeApps()
-        appVue.$message.success({ content: '移动应用成功。' })
+      if (key === 'cloud' || key === window.$listId) {
+        e.preventDefault()
+        appVue.$message.error({ content: '注意移动目标!' })
       } else {
-        appVue.$message.success({ content: '移动应用失败！' })
+        let ids = []
+        window.$selectedApps.forEach(e => {
+          ids.push(Number(e))
+        })
+        const data  = {
+          ids,
+          list_id: Number(key),
+        }
+        const result = await this.$store.dispatch('updateUserNavApps', data)
+        if(result.code === 1000){
+          window.$selectedApps = []
+          window.$removeApps()
+          appVue.$message.success({ content: '移动应用成功。' })
+        } else {
+          appVue.$message.success({ content: '移动应用失败！' })
+        }
       }
     },
   },
