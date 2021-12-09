@@ -18,7 +18,7 @@ const baseApi = {
   /**
    *
    * @param {String} url 请求url
-   * @param {Object} params  请求体body或query对象
+   * @param {Object} params  请求体body或query对象, body中请传入类似data:{...}的格式，query中请传入{...}的格式。
    * @param {String} method  请求方式默认为post
    * @returns Promise
    */
