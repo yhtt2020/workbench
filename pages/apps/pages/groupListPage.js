@@ -1,24 +1,23 @@
 groupListTpl=`
 <div style="width: 100%">
-<a-layout>
-        <a-layout-header style="background: #fff; padding: 0">
-          <template>
-            <div>
-              <a-page-header style="border: none;" title="团队导航"
-                             sub-title="我的全部团队">
-              </a-page-header>
-              <br/>
-            </div>
-          </template>
-        </a-layout-header>
-        <a-layout-content>
-          <template>
-            <div style="background-color: white; padding: 20px;" class="group-apps">
-              <GroupListComp :myGroups="myGroups"></GroupListComp>
-            </div>
-          </template>
-        </a-layout-content>
-</a-layout>
+  <a-layout>
+    <a-layout-header style="background: #fff; padding: 0">
+      <template>
+        <div>
+          <a-page-header style="border: none;" title="团队导航" sub-title="我的全部团队">
+          </a-page-header>
+          <br />
+        </div>
+      </template>
+    </a-layout-header>
+    <a-layout-content>
+      <template>
+        <div style="background-color: white; padding: 20px;" class="group-apps">
+          <GroupListComp :myGroups="myGroups"></GroupListComp>
+        </div>
+      </template>
+    </a-layout-content>
+  </a-layout>
 </div>
   `
 const GroupListComp = require('../comp/groupListComp.js')
