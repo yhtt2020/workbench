@@ -38,7 +38,9 @@ function initialize () {
 
   if (window.platformType === 'windows') {
     updateCaptionButtons()
-
+    window.onload=function (){
+      document.getElementById('navbar').style.marginTop='12px'
+    }
     captionMinimize.addEventListener('click', function (e) {
       ipc.invoke('minimize')
     })
