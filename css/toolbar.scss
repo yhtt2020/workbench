@@ -1,4 +1,8 @@
 #toolbar{
+  z-index: 1;
+  top: calc(36px + var(--control-space-top));
+  width: 100vw;
+  position: fixed;
   height: 40px;
   background: #f9f9f9;
   .action{
@@ -28,6 +32,3 @@
 #tab-editor .tab-editor-button:hover{
   line-height: 1em;
 }
-
-
-
