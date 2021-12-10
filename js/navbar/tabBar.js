@@ -264,6 +264,9 @@ const tabBar = {
         tabEditor.show(data.id)
       }
     })
+    tabEditor.input.addEventListener('focus',function (){
+      tabEditor.show(data.id)
+    })
 
     tabEl.addEventListener('auxclick', function (e) {
       if (e.which === 2) {

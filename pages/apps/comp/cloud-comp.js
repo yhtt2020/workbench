@@ -101,13 +101,7 @@ Vue.component('cloud-comp', {
           this.$router.push({ name: 'cloudNavs', query: {t: Date.now()}})
           resetOtherTree('cloud', selectedKeys)
         } else {
-          let jump = 0
-          if (isNaN(Number(selectedKeys[0]))) {
-            jump = 0
-          } else {
-            jump = Number(selectedKeys[0])
-          }
-          //处理nav的type, 缩略图还是列表也远端处理了, 到时候选择相关的展现形式也要发起一个请求链接
+          let jump = Number(selectedKeys[0])
           let type = Number
           let name = '默认列表'
           let summary = '描述'

@@ -1,37 +1,67 @@
 const webviews = require('webviews.js')
-
+const toolbar = require('js/toolbar/toolbar.js')
 var navigationButtons = {
   tabsList: document.getElementById('tabs-inner'),
   container: document.getElementById('toolbar-navigation-buttons'),
   backButton: document.getElementById('back-button'),
   forwardButton: document.getElementById('forward-button'),
+  backButtonToolbar:document.getElementById('back-button-toolbar'),
+  forwardButtonToolbar: document.getElementById('forward-button-toolbar'),
+
   update: function () {
     if (!tabs.get(tabs.getSelected()).url) {
-      navigationButtons.backButton.disabled = true
-      navigationButtons.forwardButton.disabled = true
+      //navigationButtons.backButton.disabled = true
+      //navigationButtons.forwardButton.disabled = true
+      navigationButtons.setBackButtonDisabled(true)
+      navigationButtons.setForwardButtonDisabled(true)
       return
     }
     webviews.callAsync(tabs.getSelected(), 'canGoBack', function (err, canGoBack) {
       if (err) {
         return
       }
-      navigationButtons.backButton.disabled = !canGoBack
+      //navigationButtons.backButton.disabled = !canGoBack
+      navigationButtons.setBackButtonDisabled(!canGoBack)
     })
     webviews.callAsync(tabs.getSelected(), 'canGoForward', function (err, canGoForward) {
       if (err) {
         return
       }
-      navigationButtons.forwardButton.disabled = !canGoForward
+      //navigationButtons.forwardButton.disabled = !canGoForward
+      navigationButtons.setForwardButtonDisabled(!canGoForward)
       if (canGoForward) {
         navigationButtons.container.classList.add('can-go-forward')
+        navigationButtons.forwardButtonToolbar.classList.remove('disable')
       } else {
         navigationButtons.container.classList.remove('can-go-forward')
+        navigationButtons.forwardButtonToolbar.classList.add('disable')
       }
     })
   },
-  initialize: function () {
-    navigationButtons.container.hidden = false
 
+  //重新抽象设置方法
+  setBackButtonDisabled:function(disabled){
+    navigationButtons.backButton.disabled = disabled
+    navigationButtons.backButtonToolbar.disabled = disabled
+    if(disabled){
+      navigationButtons.backButtonToolbar.classList.add('disable')
+    }else{
+      navigationButtons.backButtonToolbar.classList.remove('disable')
+    }
+
+  },
+  setForwardButtonDisabled:function(disabled){
+    navigationButtons.forwardButton.disabled = disabled
+    navigationButtons.forwardButtonToolbar.disabled = disabled
+
+  },
+
+
+
+  initialize: function () {
+    if(!toolbar.expanded){
+      navigationButtons.container.hidden = false
+    }
     navigationButtons.backButton.addEventListener('click', function (e) {
       webviews.goBackIgnoringRedirects(tabs.getSelected())
     })
