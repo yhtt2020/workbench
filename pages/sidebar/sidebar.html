@@ -21,8 +21,11 @@
       }
 
       function mouseleave(target) {
-        target.setAttribute('class', 'sidebar')
-        document.getElementById('clickThroughElement').style.left = '46px'
+        //
+        // if(appVue.$refs.sidePanel.isPopoverShowing===false){
+        //   target.setAttribute('class', 'sidebar')
+        //   document.getElementById('clickThroughElement').style.left = '46px'
+        // }
       }
 
       //对clickThrough区域进行穿透设置，这样鼠标移动到clickThroug的区域就会自动穿透
@@ -32,14 +35,27 @@
           ipc.send('setMouseIgnore')
         }
       }
+      function clickThroughMove(){
+        setMainWindow()
+        if(appVue.$refs.sidePanel.isPopoverShowing===false && document.getElementById('clickThroughElement').offsetLeft===146){
+          setTimeout(function(){
+          document.getElementById('clickThroughElement').style.left = '46px'
+            document.getElementById('appVue').setAttribute('class', 'sidebar')
+          },200)
+
+        }
+      }
+      function clickThroughClick(){
+        appVue.$refs.sidePanel.userPanelVisible=false;setMainWindow()
+      }
     </script>
     <div id="appVue" class="sidebar" onmouseenter="mousenter(this)" onmouseleave="mouseleave(this)">
       <sidebar ref="sidePanel" />
     </div>
     <div
       id="clickThroughElement"
-      onclick="appVue.$refs.sidePanel.userPanelVisible=false;setMainWindow()"
-      onmousemove="setMainWindow()"
+      onclick="clickThroughClick()"
+      onmousemove="clickThroughMove()"
       style="background-color: #00000000; height: 100vh; position: absolute; left: 46px; width: calc(100% - 46px)"
     ></div>
 
@@ -161,7 +177,7 @@
                   </div>
                 </a-drawer>
               </template>
-              <a-popover placement="right" :mouse-enter-delay="0.3" overlay-class-name="tips">
+              <a-popover @visible-change="changePopoverVisible" placement="right" :mouse-enter-delay="0.3" overlay-class-name="tips">
                 <template slot="title">
                   <span v-if="user.uid==0"> 登录帐号免费体验完整功能 </span>
                   <span v-else> {{ user.nickname }} </span>
@@ -224,7 +240,7 @@
                     :title="item.count>5?item.title+' -- 高负载（5+）':item.title"
                     placement="right"
                     :mouse-enter-delay="0.1"
-                    :mouse-leave-delay="0.1"
+                    :mouse-leave-delay="0.2"
                     :destroy-tooltip-on-hide="true"
                     overlay-class-name="tips"
                   >
@@ -285,7 +301,7 @@
                       :title="item.count>5?item.title+' -- 高负载（5+）':item.title"
                       placement="right"
                       :mouse-enter-delay="0.1"
-                      :mouse-leave-delay="0.1"
+                      :mouse-leave-delay="0.2"
                       :destroy-tooltip-on-hide="true"
                       overlay-class-name="tips"
                     >

@@ -1,6 +1,5 @@
 var urlParser = require('util/urlParser.js')
 var settings = require('util/settings/settings.js')
-
 /* implements selecting webviews, switching between them, and creating new ones. */
 
 var placeholderImg = document.getElementById('webview-placeholder')
@@ -45,6 +44,7 @@ function onPageURLChange (tab, url) {
 // called whenever a navigation finishes
 function onNavigate (tabId, url, isInPlace, isMainFrame, frameProcessId, frameRoutingId) {
   if (isMainFrame) {
+    require('js/navbar/tabEditor').updateUrl(urlParser.getSourceURL(url))
     onPageURLChange(tabId, url)
   }
 }
@@ -138,7 +138,7 @@ const webviews = {
       fn: fn
     })
   },
-  viewMargins: [0, 0, 0, 45], // top, right, bottom, left
+  viewMargins: [document.getElementById('toolbar').hidden?0:40, 0, 0, 45], // top, right, bottom, left
   adjustMargin: function (margins) {
     for (var i = 0; i < margins.length; i++) {
       webviews.viewMargins[i] += margins[i]
@@ -281,6 +281,7 @@ const webviews = {
       bounds: webviews.getViewBounds(),
       focus: !options || options.focus !== false
     })
+    require('js/navbar/tabEditor').updateUrl(urlParser.getSourceURL(tabs.get(id).url))
     webviews.emitEvent('view-shown', id)
   },
   update: function (id, url) {

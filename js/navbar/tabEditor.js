@@ -5,31 +5,37 @@ var urlParser = require('util/urlParser.js')
 var keyboardNavigationHelper = require('util/keyboardNavigationHelper.js')
 var bookmarkStar = require('navbar/bookmarkStar.js')
 var contentBlockingToggle = require('navbar/contentBlockingToggle.js')
-
+var toolbar=require('toolbar/toolbar.js')
 const tabEditor = {
   container: document.getElementById('tab-editor'),
   input: document.getElementById('tab-editor-input'),
   star: null,
+  updateUrl:function(url){
+    tabEditor.input.value = url
+  },
   show: function (tabId, editingValue, showSearchbar) {
     /* Edit mode is not available in modal mode. */
     if (modalMode.enabled()) {
       return
     }
-    tabEditor.container.hidden = false
-
-    bookmarkStar.update(tabId, tabEditor.star)
-    contentBlockingToggle.update(tabId, tabEditor.contentBlockingToggle)
-
-    webviews.requestPlaceholder('editMode')
-
-    document.body.classList.add('is-edit-mode')
 
     var currentURL = urlParser.getSourceURL(tabs.get(tabId).url)
     if (currentURL === 'ts://newtab') {
       currentURL = ''
     }
+    if(!toolbar.expanded){
+      tabEditor.container.hidden = false
+    }
 
-    tabEditor.input.value = editingValue || currentURL
+    bookmarkStar.update(tabId, tabEditor.star)
+    contentBlockingToggle.update(tabId, tabEditor.contentBlockingToggle)
+
+    webviews.requestPlaceholder('editMode')
+    if(!toolbar.expanded) {
+      document.body.classList.add('is-edit-mode')
+    }
+    tabEditor.updateUrl(editingValue || currentURL)
+
     tabEditor.input.focus()
     if (!editingValue) {
       tabEditor.input.select()
@@ -68,14 +74,16 @@ const tabEditor = {
     }
   },
   hide: function () {
-    tabEditor.container.hidden = true
+    if(!toolbar.expanded){
+      tabEditor.container.hidden = true
+    }
     tabEditor.container.removeAttribute('style')
 
     tabEditor.input.blur()
     searchbar.hide()
-
-    document.body.classList.remove('is-edit-mode')
-
+    if(!toolbar.expanded) {
+      document.body.classList.remove('is-edit-mode')
+    }
     webviews.hidePlaceholder('editMode')
   },
   initialize: function () {

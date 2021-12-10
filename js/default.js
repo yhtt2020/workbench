@@ -163,7 +163,8 @@ require('navbar/addTabButton.js').initialize()
 require('navbar/tabActivity.js').initialize()
 require('navbar/tabColor.js').initialize()
 require('navbar/navigationButtons.js').initialize()
-
+//加入工具栏
+require('toolbar/toolbar')
 
 
 require('downloadManager.js').initialize()

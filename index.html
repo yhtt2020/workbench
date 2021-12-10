@@ -116,9 +116,73 @@
 		</script>
 
 
-		<div id="searchbar" class="">
+		<div id="searchbar" class="" hidden>
 			<div class="top-answer-area"></div>
 		</div>
+
+    <!--toolbar区域-->
+    <div id="appVue">
+      <div id="toolbar" style="padding-left: 45px;line-height: 40px;color:black">
+        <div  style="display: flex;justify-content: flex-start;flex-direction:row" type="flex">
+          <div style="width:160px" >
+            <div style="display: flex;justify-content: flex-start;flex-direction:row" type="flex">
+              <div style="width: 40px" flex="40px">
+                <img title="后退（⌘←）" id="back-button-toolbar" class="action"  src="./icons/toolbar/arrowleft.svg">
+              </div>
+              <div style="width: 40px" flex="40px">
+                <img  title="前进（⌘→）" id="forward-button-toolbar" class="action"  src="./icons/toolbar/arrowright.svg">
+              </div>
+              <div style="width: 40px" flex="40px">
+                <img title="刷新（⌘R）" id="refresh-button-toolbar" class="action"   src="./icons/toolbar/rotate.svg">
+              </div>
+              <div style="width: 40px" flex="40px">
+               <img title="首页"  id="home-button-toolbar" class="action"  src="./icons/toolbar/home.svg">
+              </div>
+
+            </div>
+          </div>
+          <div style="flex-grow:1 ;position:relative;" id="address-bar"  >
+<!--            <a-input style="width: 100%"></a-input>-->
+
+<!--            <div id="tab-editor-toolbar">-->
+<!--              <input id="tab-editor-input-toolbar" class="mousetrap" spellcheck="false" />-->
+<!--            </div>-->
+
+          </div>
+          <div style="display: flex;width: 40px" >
+            <div type="flex">
+<!--              <a-col flex="40px">-->
+<!--                1-->
+<!--              </a-col>-->
+<!--              <a-col flex="40px">-->
+<!--                2-->
+<!--              </a-col>-->
+<!--              <a-col flex="40px">-->
+<!--                3-->
+<!--              </a-col>-->
+<!--              <a-col flex="40px">-->
+<!--                4-->
+<!--              </a-col>-->
+<!--              <a-col flex="40px">-->
+<!--                5-->
+<!--              </a-col>-->
+<!--              <a-col flex="40px">-->
+<!--                6-->
+<!--              </a-col>-->
+<!--              <a-col flex="40px">-->
+<!--                7-->
+<!--              </a-col>-->
+<!--              <a-col flex="40px">-->
+<!--                8-->
+<!--              </a-col>-->
+            <div style="width: 40px">
+              <img title="收起地址栏，使用精简模式"  id="collapse-button-toolbar" class="action"  src="./icons/toolbar/chevronsup.svg">
+             </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 		<div id="webviews">
 			<div id="leftArrowContainer" class="arrow-indicator">
 				<i id="leftArrow" class="i carbon:chevron-left"></i>

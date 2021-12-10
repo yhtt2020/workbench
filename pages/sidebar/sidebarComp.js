@@ -3,6 +3,7 @@ const { api } = require('../../server-config')
 Vue.component('sidebar', {
 	data: function() {
 		return {
+      isPopoverShowing:false,
       lastOpenId:0,
 			drag: false,
 			remote: {},
@@ -303,6 +304,9 @@ Vue.component('sidebar', {
     },
     createGroup(){
       ipc.send('createGroup')
+    },
+    changePopoverVisible(visible){
+      this.isPopoverShowing=visible
     }
 
 	}
