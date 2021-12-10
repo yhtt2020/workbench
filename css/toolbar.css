@@ -1,10 +1,10 @@
 #toolbar {
- top: calc(36px + var(--control-space-top));
- width: 100vw;
- position: fixed;
- height: 40px;
- background: #f9f9f9;
- z-index: 1;
+  z-index: 1;
+  top: calc(36px + var(--control-space-top));
+  width: 100vw;
+  position: fixed;
+  height: 40px;
+  background: #f9f9f9;
 }
 #toolbar .action {
   padding: 6px;
