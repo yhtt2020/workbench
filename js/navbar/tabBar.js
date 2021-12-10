@@ -122,7 +122,7 @@ const tabBar = {
    * 添加收藏到本地自建列表或本地默认列表(分单个和整组)
    * @param {String} tabId  tab标签id
    * @param {Number} listId 父级id
-   * @param {Boolean} single 默认true单个？整组？移动
+   * @param {Boolean} single 默认true单个移动
    */
   addToScopeLocal(tabId, listId, single = true) {
     if(single) {
@@ -162,8 +162,90 @@ const tabBar = {
     }
   },
 
-  addToUserNav() {
+  /**
+   * 添加到云端用户导航(分单个和整组)
+   * @param {String} tabId  tab标签id
+   * @param {Number} listId 父级id
+   * @param {Boolean} single 默认true单个移动
+   */
+  async addToUserNav(tabId, listId, single = true) {
+    if(single) {
+      let tabs = tasks.getSelected().tabs
+      let tab = tabs.get(tabId)
+      if(tab.url.startsWith('file:///')) {
+        ipc.send('message', { type: 'error', config: { content: '系统页面无法添加!' } })
+      } else {
+        const appNow = {
+          icon: tab.favicon == null ? '../../icons/default.svg' : tab.favicon.url,
+          name: tab.title,
+          url: tab.url,
+          summary: "",
+          list_id: listId,
+          add_time: String(new Date().getTime()),
+        }
+        const result = await navbarApi.addUserNavApp(appNow)
+        if(result.code === 1000) {
+          ipc.send('message', { type: 'success', config: { content: '添加成功，可在云端用户导航中查看。' } })
+        }
+      }
+    } else {
+      let tabs = tasks.getSelected().tabs
+      const filterTabs = tabs.tabs.filter(e => !e.url.startsWith('file:///'))
+      filterTabs.forEach(item => {
+        const appNow = {
+          icon: item.favicon == null ? '../../icons/default.svg' : item.favicon.url,
+          name: item.title,
+          url: item.url,
+          summary: "",
+          list_id: listId,
+          add_time: String(new Date().getTime()),
+        }
+        setTimeout(async ()=> {
+          await navbarApi.addUserNavApp(appNow)
+        }, 200)
+      })
+      ipc.send('message', { type: 'success', config: { content: '添加成功，可在云端用户导航中查看。' } })
+    }
+  },
 
+  async addToGroupNav(tabId, listId, single = true) {
+    if(single) {
+      let tabs = tasks.getSelected().tabs
+      let tab = tabs.get(tabId)
+      if(tab.url.startsWith('file:///')) {
+        ipc.send('message', { type: 'error', config: { content: '系统页面无法添加!' } })
+      } else {
+        const appNow = {
+          icon: tab.favicon == null ? '../../icons/default.svg' : tab.favicon.url,
+          name: tab.title,
+          url: tab.url,
+          summary: "",
+          list_id: listId,
+          add_time: String(new Date().getTime()),
+        }
+        const result = await navbarApi.addGroupNavApp(appNow)
+        if(result.code === 1000) {
+          ipc.send('message', { type: 'success', config: { content: '添加成功，可在云端团队导航中查看。' } })
+        }
+      }
+    } else {
+      let tabs = tasks.getSelected().tabs
+      const filterTabs = tabs.tabs.filter(e => !e.url.startsWith('file:///'))
+      filterTabs.forEach(item => {
+        const appNow = {
+          icon: item.favicon == null ? '../../icons/default.svg' : item.favicon.url,
+          name: item.title,
+          url: item.url,
+          summary: "",
+          list_id: listId,
+          add_time: String(new Date().getTime()),
+        }
+        setTimeout(async ()=> {
+          await navbarApi.addGroupNavApp(appNow)
+        }, 200)
+      })
+      ipc.send('message', { type: 'success', config: { content: '添加成功，可在云端团队导航中查看。' } })
+    }
   },
 
   //移动tab到新的分组且完成切换
@@ -337,13 +419,13 @@ const tabBar = {
               showSiglAppUserNav.push({
                 label: e.name,
                 click: () => {
-                  tabBar.addToUserNav()
+                  tabBar.addToUserNav(data.id, e.id)
                 }
               })
               showMulAppUserNav.push({
                 label: e.name,
                 click: () => {
-                  tabBar.addToUserNav(false)
+                  tabBar.addToUserNav(data.id, e.id, false)
                 }
               })
             })
@@ -354,6 +436,71 @@ const tabBar = {
       }
 
       await handleUserNav()
+
+      let showSiglAppGroupNav = []
+      let showMulAppGrouprNav = []
+
+      const handleGroupNav = async() => {
+        const result = await navbarApi.getGroupList()
+        if(result.code === 1000) {
+          showSiglAppGroupNav = result.data.map(e => {
+            if(e.app_group_list.length > 0) {
+              let arr = []
+              let obj = {}
+              e.app_group_list.forEach(v => {
+                obj = {
+                  id: v.id,
+                  label: v.name,
+                  click: () => {
+                    tabBar.addToGroupNav(data.id, v.id)
+                  }
+                }
+                arr.push(obj)
+              })
+              return e = {
+                id: e.id,
+                label: e.name,
+                submenu: arr
+              }
+            } else {
+              return e = {
+                id: e.id,
+                label: e.name
+              }
+            }
+          })
+
+          showMulAppGrouprNav = result.data.map(e => {
+            if(e.app_group_list.length > 0) {
+              let arr = []
+              let obj = {}
+              e.app_group_list.forEach(v => {
+                obj = {
+                  id: v.id,
+                  label: v.name,
+                  click: () => {
+                    tabBar.addToGroupNav(data.id, v.id, false)
+                  }
+                }
+                arr.push(obj)
+              })
+              return e = {
+                id: e.id,
+                label: e.name,
+                submenu: arr
+              }
+            } else {
+              return e = {
+                id: e.id,
+                label: e.name
+              }
+            }
+          })
+        }
+        // console.log(showSiglAppGroupNav, 'showSiglAppGroupNav__')
+      }
+
+      await handleGroupNav()
 
       //处理本地导航的列表呈现
       const localAppsMenu = async () => {
@@ -456,6 +603,14 @@ const tabBar = {
           {
             label: '整组添加到云端用户导航',
             submenu: showMulAppUserNav
+          },
+          {
+            label: '添加到云端团队导航',
+            submenu: showSiglAppGroupNav
+          },
+          {
+            label: '整组添加到云端团队导航',
+            submenu: showMulAppGrouprNav
           },
           {
             label: '移入新建分组中',

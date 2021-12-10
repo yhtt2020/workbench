@@ -1,5 +1,4 @@
 const authApi = require(path.join(__dirname, './js/request/api/authApi.js'))
-const axios = require(path.join(__dirname, './js/util/axios.js'))
 const storage = require('electron-localstorage');
 const { clipboard } = require('electron')
 
@@ -30,16 +29,8 @@ const handleAxios =  {
     //分享组
     ipc.on('shareTask', async (event, arg) => {
       sidePanel.get().webContents.send('message',{type:'loading',config:{content:'正在生成分享链接。',key:"shareTask"}})
-      const data = {
-        uid: storage.getItem(`userInfo`) ? storage.getItem(`userInfo`).uid : null,
-        site_list: arg
-      }
       try{
-        const createRes = await axios({
-          method: 'post',
-          url: `/app/createTask`,
-          data
-        })
+        const createRes = await authApi.shareTasks(arg)
         if(createRes.code === 1000) {
           clipboard.writeText(createRes.data.shareTask_link)
           sidePanel.get().webContents.send('message',{type:'success',config:{content:'复制成功，已为您自动排除系统页面。',key:"shareTask"}})

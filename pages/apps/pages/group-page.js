@@ -413,7 +413,7 @@ module.exports = Vue.component("cloud-page", {
           const app = {
             name: values.name,
             url: values.url,
-            summary: values.summary,
+            summary: values.summary ? values.summary : "",
             icon: "../../icons/default.svg",
           };
           await that.addApp(app);
