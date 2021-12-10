@@ -161,3 +161,6 @@ body.dark-mode.task-overlay-is-shown #linux-control-buttons {
   fill-opacity: 0.45;
   stroke-opacity: 0.7;
 }
+body.windows #navbar{
+  margin-top: 12px;
+}
