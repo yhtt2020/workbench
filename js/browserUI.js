@@ -222,9 +222,6 @@ ipc.on('switchToTask',function(e,data){
 	switchToTask(data.id)
 })
 ipc.on('switchToTab',function(e,data){
-  console.log(data.tabId)
-  const tab= tabs.get(data.tabId)
-  console.log(tab)
   if(!!!data.taskId){
     switchToTab(data.tabId)
   }else{
