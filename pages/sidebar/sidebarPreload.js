@@ -41,7 +41,12 @@ window.addEventListener('message', function (e) {
         id: e.data.id,
         index: e.data.index
       })
-
+      break
+    case 'switchToTab':
+      ipc.sendTo(mainWindowId, 'switchToTab', {
+        taskId: e.data.taskId ? e.data.taskId : null,
+        tabId: e.data.tabId
+      })
       break
     case 'resortTasks':
       ipc.sendTo(mainWindowId, 'resortTasks', {

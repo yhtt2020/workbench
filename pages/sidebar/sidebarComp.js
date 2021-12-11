@@ -149,6 +149,14 @@ Vue.component('sidebar', {
 			})
 			this.$store.commit('setSelected', id)
 		},
+    switchTab(taskId, tabId) {
+      postMessage({
+        message: 'switchToTab',
+        taskId: taskId,
+        tabId: tabId
+      })
+      this.$store.commit('setSelected', taskId)
+    },
 		openPinItem(id, index) {
 			if (this.$store.getters.getPinItems[index].type == 'system-bookmark') {
 				//this.$tabEditor.show(tasks.getSelected().tabs.getSelected(), '!bookmarks ')
@@ -166,6 +174,16 @@ Vue.component('sidebar', {
       }
 
 		},
+    openPopoverTab(taskId, tabId) {
+      if(taskId !== this.lastOpenId) {
+        //当点击不同task的popover卡片内的tab时
+        this.switchTab(taskId, tabId)
+        this.lastOpenId = taskId
+      } else {
+        //当点击同一个task的popover卡片内的tab时，只需跳转tab
+        this.switchTab(null, tabId)
+      }
+    },
 		openBottom(action) {
 			postMessage({
 				message: action

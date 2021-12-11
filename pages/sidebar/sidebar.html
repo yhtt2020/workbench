@@ -307,7 +307,7 @@
                     >
                       <template slot="content">
                         <ul class="tabs">
-                          <li class="tab-title" v-for="(tab,j) in item.tabs" :key="tab.id">
+                          <li style="cursor: pointer;" class="tab-title" v-for="(tab,j) in item.tabs" :key="tab.id" @click="openPopoverTab(item.id, tab.id)">
                             <img class="tab-icon" :src="tab.icon" />&nbsp;{{ tab.title }}
                           </li>
                         </ul>
