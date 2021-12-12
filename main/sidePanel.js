@@ -578,17 +578,16 @@ ipc.on('selectTask', function (event, arg) {
 ipc.on('closeTaskSelect', function () {
   selectTaskWindow.close()
 })
+
 ipc.on('addTab', function (event, data) {
   sendIPCToWindow(mainWindow, 'addTab', {
     'url': data.url
   })
 })
 
+//可以尝试移动到browserUI中有tab和task的环境，而且能直接捕获从preload传出来的ipc
 //选择到对应的task，再在对应的位置执行addTab
-ipc.on('toTask-addTab', (event, arg) => {
-  console.log(arg, '__传来的__')
-  //browserUI里都是对tab和task处理的一些集成方法和UI转换
-  //我们把具体的ipc操作传到menuRenderer中
+ipc.on('insertTab', (event, arg) => {
   sendIPCToWindow(mainWindow, 'toTaskAddTab', arg)
 })
 
@@ -611,11 +610,11 @@ ipc.on('closeTask', function (event, args) {
   sendIPCToWindow(mainWindow, 'closeTask', args)
 })
 
-ipc.on('refresh', () => {
-  //刷新当前页
-  console.log('refresh当前页')
-  sendIPCToWindow(mainWindow, 'refresh')
+ipc.on('refresh', (event, args) => {
+  sendIPCToWindow(mainWindow, 'refresh')    //刷新当前页
+  sendIPCToWindow(mainWindow, 'switchToTab', args)
 })
+
 ipc.on('addTask', function (event, data) {
   let taskId = Math.round(Math.random() * 100000000000000000)
   let item = {

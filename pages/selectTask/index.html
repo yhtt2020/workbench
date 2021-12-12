@@ -134,15 +134,17 @@
         setBefore() {
           this.selectedApps.forEach((e) => {
             postMessage({
-              message: 'toTask-addTab',
+              message: 'insertTab',
               addTab: e,
               taskId: this.selectedTaskId,
               tabIndex: parseInt(this.selectedTabIndex) - 1,
             })
+            this.selectedTabIndex = this.selectedTabIndex + 1
           })
           this.$nextTick(() => {
             postMessage({
               message: 'endMoveApps',
+              taskId: this.selectedTaskId,
             })
           })
         },
@@ -150,15 +152,17 @@
         setAfter() {
           this.selectedApps.forEach((e) => {
             postMessage({
-              message: 'toTask-addTab',
+              message: 'insertTab',
               addTab: e,
               taskId: this.selectedTaskId,
               tabIndex: parseInt(this.selectedTabIndex),
             })
+            this.selectedTabIndex = this.selectedTabIndex + 1
           })
           this.$nextTick(() => {
             postMessage({
               message: 'endMoveApps',
+              taskId: this.selectedTaskId,
             })
           })
         },

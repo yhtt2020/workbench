@@ -192,6 +192,7 @@ webviews.bindEvent('did-create-popup', function (tabId, popupId, initialURL) {
   switchToTab(popupTab)
 })
 
+//
 webviews.bindEvent('new-tab', function (tabId, url) {
   var newTab = tabs.add({
     url: url,
@@ -224,12 +225,21 @@ ipc.on('switchToTask',function(e,data){
 ipc.on('switchToTab',function(e,data){
   if(!!!data.taskId){
     switchToTab(data.tabId)
-  }else{
+  } else if (!!!data.tabId) {
+    //当插入到当前task，需要去跳转一下task，才能在tabBar栏展示出来
+    tasks.getSelected().id === data.taskId ? switchToTask(data.taskId) : fasle
+  } else {
     switchToTask(data.taskId)
     switchToTab(data.tabId)
   }
-
 })
+
+//定位到task组的某tabid，往后插入创建tab
+//browserUI中有tab和task的环境，而且能直接捕获从preload传出来的ipc，也能拿到tabBar的环境
+// ipc.on('toTask-addTab', (event, arg) => {
+//   console.log(arg, '---------------@@@@@')
+// })
+
 ipc.on('addTaskFromApps',function(e,data){
 	let newTask = {
 	  name: data.name || null,
