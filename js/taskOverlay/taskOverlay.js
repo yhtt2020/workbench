@@ -354,7 +354,7 @@ var taskOverlay = {
         addTaskButton.classList.remove('drag-target')
       }
     })
-
+    //mark 这里是拖动标签到另外的位置
     taskOverlay.tabDragula.on('drop', function (el, target, source, sibling) { // see https://github.com/bevacqua/dragula#drakeon-events
       var tabId = el.getAttribute('data-tab')
 

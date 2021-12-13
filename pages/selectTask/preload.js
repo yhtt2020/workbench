@@ -60,12 +60,9 @@ window.addEventListener("message", function (e) {
         tab: e.data.addTab,
       });
       break;
-    case "refresh":
-      ipc.send("refresh");
-      break;
-    case "endMoveApps":
+    case "endInsertOp":
       ipc.send("closeTaskSelect");
-      ipc.send("refresh", { taskId: e.data.taskId });
+      ipc.send("reloadTask");
       break;
   }
 });
@@ -75,6 +72,12 @@ function getMessageType(data) {
   else return "";
 }
 
+//从应用购物车跳转过来的
 ipc.on("appsCartList", (event, arg) => {
+  window.selectedApps = arg;
+});
+
+//从tabBar右键跳转过来的
+ipc.on("fromTabBarOp", (event, arg) => {
   window.selectedApps = arg;
 });

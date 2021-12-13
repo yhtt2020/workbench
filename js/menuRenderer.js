@@ -99,15 +99,29 @@ module.exports = {
 
     //定位到task组的某tabid，往后插入创建tab
     ipc.on('toTaskAddTab', (event, arg) => {
-      let newTab = tasks.get(arg.taskId).tabs.add({
-        url: arg.tab.url,
-        title: arg.tab.name
-      }, {}, arg.tabIndex)
+      if(arg.tab.id) {
+        //右键移动的操作
+        let newTask = tasks.get(arg.taskId)
+        newTask.tabs.splice(arg.tabIndex + 1, 0, arg.tab)
+        ipc.send('closeTaskSelect')
+        browserUI.switchToTask(tasks.getSelected().id)
 
-      browserUI.addTab(newTab, {
-        enterEditMode: false,
-        openInBackground: !settings.get('openTabsInForeground')
-      })
+        // 不能这么调用，会导致左侧的sidebar被切换的两者无法再来回点击
+        // browserUI.switchToTask(arg.taskId)
+        // browserUI.switchToTab(arg.tab.id)
+
+      } else {
+        //购物车应用的操作
+        let newTab = tasks.get(arg.taskId).tabs.add({
+          url: arg.tab.url,
+          title: arg.tab.name
+        }, {}, arg.tabIndex)
+
+        browserUI.addTab(newTab, {
+          enterEditMode: false,
+          openInBackground: !settings.get('openTabsInForeground')
+        })
+      }
     })
 
     ipc.on('saveCurrentPage', async function () {

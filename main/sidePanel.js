@@ -544,7 +544,7 @@ ipc.on('showSidePanel', function () {
 
 var selectTaskWindow = null
 ipc.on('selectTask', function (event, arg) {
-  console.log(arg, '__apppp__')
+  //console.log(arg, '__apppp__')
   selectTaskWindow = new BrowserWindow({
     frame: true,
     backgroundColor: 'black',
@@ -572,6 +572,8 @@ ipc.on('selectTask', function (event, arg) {
   selectTaskWindow.webContents.loadURL('file://' + __dirname + '/pages/selectTask/index.html')
   if (toString.call(arg) === '[object Array]') {
     selectTaskWindow.webContents.send('appsCartList', arg)
+  } else if(toString.call(arg) === '[object Object]') {
+    selectTaskWindow.webContents.send('fromTabBarOp', arg)
   }
 })
 
@@ -610,9 +612,8 @@ ipc.on('closeTask', function (event, args) {
   sendIPCToWindow(mainWindow, 'closeTask', args)
 })
 
-ipc.on('refresh', (event, args) => {
-  sendIPCToWindow(mainWindow, 'refresh')    //刷新当前页
-  sendIPCToWindow(mainWindow, 'switchToTab', args)
+ipc.on('reloadTask', () => {
+  sendIPCToWindow(mainWindow, 'reloadTask')
 })
 
 ipc.on('addTask', function (event, data) {
