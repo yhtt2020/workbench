@@ -122,17 +122,7 @@ const tabBar = {
     let previousTask = tasks.getSelected()
     //移除旧标签组中的tab，且拿到oldTab的信息
     let oldTab = previousTask.tabs.splice(previousTask.tabs.getIndex(tabId), 1)[0]
-    //去移入新的task中
-    // tabArr.push({
-    //   name: tab.title,
-    //   url: tab.url,
-    //   summary: '',
-    //   icon: tab.favicon == null ? '../../icons/default.svg' : tab.favicon.url,
-
-    // })
-    console.log(previousTask, 'task是啥')
-    console.log(oldTab, 'tab是啥')
-    ipc.send('selectTask', oldTab)
+    ipc.send('selectTask', oldTab)   //呼出面板
   },
 
   /**
