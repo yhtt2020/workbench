@@ -20,7 +20,9 @@ const server = { //服务主脚本
       ipc.on('callback-loginBrowser', (event, arg) => {
         if(arg.code === 1000 ) {
           ipc.send('userLogin', arg.data)
-          window.location.href = api.getUrl(api.API_URL.group.index)
+          setTimeout(() => {
+            window.location.href = api.getUrl(api.API_URL.group.index)
+          }, 500)
         } else {
           console.log(arg.message)
           window.location.href = api.getUrl(api.API_URL.user.login)

@@ -105,7 +105,7 @@
             icon: '../../icons/empty.png',
             id: 0,
           },
-          selectedApps: [],
+          selectedApps: Object,
           selectedTaskId: String,
           selectedTabIndex: Number,
         }
@@ -132,35 +132,55 @@
       methods: {
         //插入在前面
         setBefore() {
-          this.selectedApps.forEach((e) => {
+          if(toString.call(this.selectedApps) === '[object Array]') {
+            this.selectedApps.forEach((e) => {
+              postMessage({
+                message: 'insertTab',
+                addTab: e,
+                taskId: this.selectedTaskId,
+                tabIndex: parseInt(this.selectedTabIndex) - 1,
+              })
+              this.selectedTabIndex = this.selectedTabIndex + 1
+            })
+            this.$nextTick(() => {
+              postMessage({
+                message: 'endInsertOp'
+              })
+            })
+          } else if (toString.call(this.selectedApps) === '[object Object]') {
             postMessage({
-              message: 'toTask-addTab',
-              addTab: e,
+              message: 'insertTab',
+              addTab: this.selectedApps,
               taskId: this.selectedTaskId,
-              tabIndex: parseInt(this.selectedTabIndex) - 1,
+              tabIndex: parseInt(this.selectedTabIndex) - 1
             })
-          })
-          this.$nextTick(() => {
-            postMessage({
-              message: 'endMoveApps',
-            })
-          })
+          }
         },
         //插入到后面
         setAfter() {
-          this.selectedApps.forEach((e) => {
+          if(toString.call(this.selectedApps) === '[object Array]') {
+            this.selectedApps.forEach((e) => {
+              postMessage({
+                message: 'insertTab',
+                addTab: e,
+                taskId: this.selectedTaskId,
+                tabIndex: parseInt(this.selectedTabIndex),
+              })
+              this.selectedTabIndex = this.selectedTabIndex + 1
+            })
+            this.$nextTick(() => {
+              postMessage({
+                message: 'endInsertOp'
+              })
+            })
+          } else if (toString.call(this.selectedApps) === '[object Object]') {
             postMessage({
-              message: 'toTask-addTab',
-              addTab: e,
+              message: 'insertTab',
+              addTab: this.selectedApps,
               taskId: this.selectedTaskId,
-              tabIndex: parseInt(this.selectedTabIndex),
+              tabIndex: parseInt(this.selectedTabIndex)
             })
-          })
-          this.$nextTick(() => {
-            postMessage({
-              message: 'endMoveApps',
-            })
-          })
+          }
         },
         //获取图标的方法
         getIcon(favicon) {
