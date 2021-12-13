@@ -311,8 +311,6 @@ const tabBar = {
     tabEl.appendChild(tabAudio.getButton(data.id))
     tabEl.appendChild(progressBar.create())
 
-
-    console.log(data)
     // icons
 
     var iconArea = document.createElement('span')

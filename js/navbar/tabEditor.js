@@ -86,6 +86,10 @@ const tabEditor = {
     }
     webviews.hidePlaceholder('editMode')
   },
+  updateTool(tabId){
+    bookmarkStar.update(tabId, tabEditor.star)
+    contentBlockingToggle.update(tabId, tabEditor.contentBlockingToggle)
+  },
   initialize: function () {
     tabEditor.input.setAttribute('placeholder', l('searchbarPlaceholder'))
 

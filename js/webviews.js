@@ -297,6 +297,7 @@ const webviews = {
   updateToolBarStatus(tabData){
     require('js/navbar/tabEditor').updateUrl(urlParser.getSourceURL(tabData.url))
     webviews.updateToolbarSecure(tabData.secure)
+    require('./navbar/tabEditor').updateTool(tabData.id)
   },
   updateToolbarSecure(secure){
     if(secure){
