@@ -11,8 +11,11 @@
 
   }
   .action:hover{
-    background: rgba(238, 238, 238, 0.39);
+    background: rgba(238, 238, 238, 0.8);
 
+  }
+  .action-wrapper{
+    width: 40px;
   }
 
   .disable{
@@ -21,8 +24,31 @@
   .disable:hover{
     background: none;
   }
+  .site-card{
+    cursor: pointer;
+    vertical-align: middle;
+    width: 28px;
+    margin-top: -5px;
+  }
+  .site-card:hover{
+    opacity: 0.8;
+  }
+  #tab-editor{
+    left: 35px;
+    width: calc(100% - 35px);
+  }
   #tab-editor-input{
     font-size: 14px;
+
+  }
+  #address-bar{
+    background: white;
+    display: block;
+    height: 28px;
+    margin: 6px;
+    line-height: 30px;
+    border-radius: 150px;
+    padding-left: 3px;
   }
 }
 #tab-editor .tab-editor-button:hover{

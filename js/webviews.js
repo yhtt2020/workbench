@@ -28,23 +28,27 @@ function captureCurrentTab (options) {
 
 // called whenever a new page starts loading, or an in-page navigation occurs
 function onPageURLChange (tab, url) {
-    if (url.indexOf('https://') === 0 || url.indexOf('about:') === 0 || url.indexOf('chrome:') === 0 || url.indexOf('file://') === 0) {
+    //增加了ts开头的页面的安全提示，避免提示不安全
+
+    if (url.indexOf('https://') === 0 || url.indexOf('about:') === 0 || url.indexOf('chrome:') === 0 || url.indexOf('file://') === 0 || url.indexOf('ts://') === 0) {
       tabs.update(tab, {
         secure: true,
         url: url
       })
+      webviews.updateToolbarSecure(true)
     } else {
       tabs.update(tab, {
         secure: false,
         url: url
       })
+      webviews.updateToolbarSecure(false)
     }
+
 }
 
 // called whenever a navigation finishes
 function onNavigate (tabId, url, isInPlace, isMainFrame, frameProcessId, frameRoutingId) {
   if (isMainFrame) {
-    require('js/navbar/tabEditor').updateUrl(urlParser.getSourceURL(url))
     onPageURLChange(tabId, url)
   }
 }
@@ -61,6 +65,7 @@ function onPageLoad (tabId) {
 }
 
 function scrollOnLoad (tabId, scrollPosition) {
+
   const listener = function (eTabId) {
     if (eTabId === tabId) {
       // the scrollable content may not be available until some time after the load event, so attempt scrolling several times
@@ -281,8 +286,24 @@ const webviews = {
       bounds: webviews.getViewBounds(),
       focus: !options || options.focus !== false
     })
-    require('js/navbar/tabEditor').updateUrl(urlParser.getSourceURL(tabs.get(id).url))
+    //当切换选中的view的时候要同步一下信息
+    webviews.updateToolBarStatus(tabs.get(id))
     webviews.emitEvent('view-shown', id)
+  },
+  /**
+   * 更新一下工具栏的状态
+   * @param tabData tab的信息
+   */
+  updateToolBarStatus(tabData){
+    require('js/navbar/tabEditor').updateUrl(urlParser.getSourceURL(tabData.url))
+    webviews.updateToolbarSecure(tabData.secure)
+  },
+  updateToolbarSecure(secure){
+    if(secure){
+      document.getElementById('site-card').setAttribute('src','./icons/svg/safe.svg')
+    }else{
+      document.getElementById('site-card').setAttribute('src','./icons/svg/unsafe.svg')
+    }
   },
   update: function (id, url) {
     ipc.send('loadURLInView', { id: id, url: urlParser.parse(url) })
