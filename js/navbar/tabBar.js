@@ -255,24 +255,6 @@ const tabBar = {
     }
   },
 
-  //移动tab到新的分组且完成切换
-  moveTabTask: function (tabId) {
-    //拿到当前tab标签页
-    let tabs = tasks.getSelected().tabs
-    let tab = tabs.get(tabId)
-    ipc.send('addTask', {
-      name: tab.title,
-      url: tab.url,
-      icon: tab.favicon == null ? '../../icons/empty.png' : tab.favicon.url,
-    })
-    setTimeout(() => {
-      let taskNew = tasks.getAll()[tasks.getAll().length - 1]
-      require('browserUI.js').destroyTab(tabId)
-      require('browserUI.js').switchToTask(taskNew.id)
-      ipc.send('message', { type: 'success', config: { content: '移动到分组成功，已为您切换到新的分组。' } })
-    }, 300)
-  },
-
   //复制tab链接
   shareTab: function (tabId) {
     let tabs = tasks.getSelected().tabs
@@ -627,13 +609,7 @@ const tabBar = {
           {
             label: '整组添加到云端团队导航',
             submenu: showMulAppGrouprNav
-          },
-          {
-            label: '移入新建分组中',
-            click: function () {
-              tabBar.moveTabTask(data.id)
-            },
-          },
+          }
         ],
         [
           {
