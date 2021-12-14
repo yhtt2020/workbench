@@ -8,8 +8,14 @@ const toolbar={
   forwardButton:document.getElementById('forward-button-toolbar'),
   backButton:document.getElementById('back-button-toolbar'),
   collapseButton:document.getElementById('collapse-button-toolbar'),
-
+  focusInput(){
+    if($toolbar.expanded && document.getElementById('searchbar').hidden){
+      //如果是toolbar展开模式，input获得焦点则触发事件
+      require('../navbar/tabEditor.js').show(tabs.getSelected())
+    }
+  },
   initialize:function (){
+      window.$toolbar=toolbar
       toolbar.homeButton.addEventListener('click',()=>{
         require('browserUI.js').addTab(tabs.add({}))
       })
