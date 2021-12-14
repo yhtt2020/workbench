@@ -681,6 +681,9 @@ function createSwitchTask () {
   }
 
 }
+ipc.on('openSwitch',()=>{
+  createSwitchTask()
+})
 ipc.on('closeSwitch',()=>{
   if(switchWindow!==null){
     switchWindow.close()

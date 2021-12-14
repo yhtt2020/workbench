@@ -155,10 +155,16 @@
 <!--            </div>-->
 
           </div>
-          <div style="display: flex;width: 120px" >
+          <div style="display: flex;width: 180px" >
+            <div class="action-wrapper" >
+                <span onclick="ipc.send('openSwitch')" title="快速切换（Ctrl+Tab）" id="switch-toolbar"><img class="action" src="./icons/toolbar/switch.svg">
+                </span>
+            </div>
+            <div class="action-wrapper" style="text-align: center;width: 10px">
+              <div style="border-right: 1px solid #cacaca;display: inline-block;height: 16px;vertical-align: middle;width: 0;margin-top: -3px"></div>
+            </div>
               <div class="action-wrapper" >
                 <span onclick="ipc.send('openPwdManager',{tabData:tabs.get(tabs.getSelected())})" title="密码管理" id="pwd-toolbar"><img class="action" src="./icons/svg/lock.svg">
-
                 <span hidden class="bandage" id="pwdCount">0</span>
                 </span>
               </div>
