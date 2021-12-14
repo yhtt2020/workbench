@@ -344,7 +344,7 @@
                 <transition-group>
                   <li
                     @click="openItem(item.id,i)"
-                    @dblclick.stop="closeItem(item)"
+                    @dblclick.stop=""
                     v-for="(item,i) in this.$store.getters.getItems"
                     :key="item.id"
                     :visible="item.count>1"
@@ -354,13 +354,18 @@
                     style="position: relative"
                   >
                     <a-popover
-                      :title="item.count>5?item.title+' -- 高负载（5+）':item.title"
                       placement="right"
                       :mouse-enter-delay="0.1"
                       :mouse-leave-delay="0.2"
                       :destroy-tooltip-on-hide="true"
                       overlay-class-name="tips"
                     >
+                      <div slot="title">
+                        {{ item.count>5?item.title+' -- 高负载（5+）':item.title }}
+                        <span>
+                          <a-icon @click="closeItem(item)" style="float: right;margin-top: 5px;cursor: pointer" type="close"></a-icon>
+                        </span>
+                      </div>
                       <template slot="content">
                         <ul class="tabs">
                           <li style="cursor: pointer;" class="tab-title" v-for="(tab,j) in item.tabs" :key="tab.id" @click="openPopoverTab(item.id, tab.id)">
