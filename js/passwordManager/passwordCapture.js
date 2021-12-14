@@ -26,6 +26,11 @@ const passwordCapture = {
 
     passwordCapture.barHeight = passwordCapture.bar.getBoundingClientRect().height
     webviews.adjustMargin([passwordCapture.barHeight, 0, 0, 0])
+    if($toolbar.expanded){
+      document.getElementById('password-capture-bar').style.top=document.getElementById('toolbar').offsetTop+40 +'px'
+    }else{
+      document.getElementById('password-capture-bar').style.top='calc(36px + var(--control-space-top))'
+    }
   },
   hideCaptureBar: function () {
     webviews.adjustMargin([passwordCapture.barHeight * -1, 0, 0, 0])
@@ -111,6 +116,8 @@ const passwordCapture = {
         webviews.adjustMargin([passwordCapture.barHeight - oldHeight, 0, 0, 0])
       }
     })
+    console.log($toolbar.expanded)
+
   }
 }
 
