@@ -19,15 +19,13 @@ function createSiteCardWin (args) {
       frame: true,
       backgroundColor: 'white',
       parent: mainWindow,
-      modal: false,
+      center:true,
       hasShadow: true,
       minWidth: 600,
       width: 600,
       autoHideMenuBar: true,
       minHeight: 600,
       height: 600,
-      x: pos.x ,
-      y: pos.y +28,
       acceptFirstMouse: true,
       maximizable: false,
       visualEffectState: 'active',
@@ -47,6 +45,16 @@ function createSiteCardWin (args) {
         ]
       }
     })
+    var parent_x = mainWindow.getPosition()[0]
+    var parent_y = mainWindow.getPosition()[1]
+    var parent_size_x = mainWindow.getSize()[0]
+    var parent_size_y = mainWindow.getSize()[1]
+    var siteCardWindow_size_x = siteCardWindow.getSize()[0]
+    var siteCardWindow_size_y = siteCardWindow.getSize()[1]
+    var siteCardWindows_new_x = parent_x + (parent_size_x - siteCardWindow_size_x) / 2
+    var siteCardWindow_new_y = parent_y + (parent_size_y - siteCardWindow_size_y) / 2
+    siteCardWindow.setPosition(parseInt(siteCardWindows_new_x), parseInt(siteCardWindow_new_y), false)
+
     siteCardWindow.webContents.loadURL('file://' + __dirname + '/pages/siteCard/index.html')
     //siteCardWindow.webContents.openDevTools()
     siteCardWindow.on('close', () => siteCardWindow = null)
