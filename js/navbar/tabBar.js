@@ -117,6 +117,13 @@ const tabBar = {
   refresh: function (id) {
     webviews.update(id, tasks.getSelected().tabs.get(id).url)
   },
+  //移动到其他标签组
+  insertTabToTask(tabId) {
+    let previousTask = tasks.getSelected()
+    //移除旧标签组中的tab，且拿到oldTab的信息
+    let oldTab = previousTask.tabs.splice(previousTask.tabs.getIndex(tabId), 1)[0]
+    ipc.send('selectTask', oldTab)   //呼出面板
+  },
 
   /**
    * 添加收藏到本地自建列表或本地默认列表(分单个和整组)
@@ -304,8 +311,6 @@ const tabBar = {
     tabEl.appendChild(tabAudio.getButton(data.id))
     tabEl.appendChild(progressBar.create())
 
-
-    console.log(data)
     // icons
 
     var iconArea = document.createElement('span')
@@ -556,6 +561,12 @@ const tabBar = {
             },
           },
           {
+            label: '移动到其他标签组',
+            click: () => {
+              tabBar.insertTabToTask(data.id)
+            }
+          },
+          {
             label: '关闭标签',
             click: function () {
               //console.log('关闭全部标签被点击')
@@ -762,15 +773,15 @@ const tabBar = {
         src = tabData.favicon.url
       }
     }
-    iconEl.title="点击查看网站名片"
+    // iconEl.title="点击查看网站名片"
     iconEl.src = src
-    iconEl.style.cursor='pointer'
+    // iconEl.style.cursor='pointer'
    // iconEl.style="cursor:pointer"
-    iconEl.addEventListener('click',(e)=>{
-      ipc.send('createSiteCard',{url:tabData.url,x:e.clientX,y:e.clientY,title:tabData.title,tabData:tabData})
-      e.preventDefault()
-      e.stopPropagation()
-    })
+   //  iconEl.addEventListener('click',(e)=>{
+   //    ipc.send('createSiteCard',{url:tabData.url,x:e.clientX,y:e.clientY,title:tabData.title,tabData:tabData})
+   //    e.preventDefault()
+   //    e.stopPropagation()
+   //  })
     return iconEl
   },
 }

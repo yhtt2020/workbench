@@ -13,6 +13,7 @@
 <body>
 <div id="appVue">
   <div style="padding:15px">
+    <template>
     <div class="site-info">
       <a-row type="flex">
         <a-col flex="55px">
@@ -39,10 +40,8 @@
         </a-col>
         <a-col :flex="2">
           <div v-if="tabData.secure">
-            <a-tag @click="activeTab='7'" color="#87d068">
-              <a-avatar style="width: 20px;height: auto" src="../../icons/svg/safe.svg"></a-avatar>
+              <a-avatar @click="activeTab='7'" style="width: 20px;height: auto" src="../../icons/svg/safe.svg"></a-avatar>
               安全
-            </a-tag>
           </div>
           <div v-else>
             <a-tag @click="activeTab='7'" color="#f50">
@@ -61,15 +60,15 @@
       <a-tabs
         size="small"
         :tab-bar-gutter="0"
-        default-active-key="0"
+        default-active-key="base"
         v-model="activeTab"
         tab-position="top"
         style="margin-top: 10px; height: calc(100vh - 82px)"
         @prevClick="callback"
         @nextClick="callback"
       >
-        <a-tab-pane key="0" tab="基础">
-          <div class="info-content">
+        <a-tab-pane key="base" tab="基础">
+          <div v-if="!siteUrl.startsWith('ts://')" class="info-content">
             <h3>网页标题</h3>
             <p>
               {{siteTitle}}
@@ -83,10 +82,20 @@
             <h3>企业信息</h3>
             <p>暂不支持显示</p>
           </div>
-
+          <div v-else  class="info-content">
+            <h3>网页标题</h3>
+            <p>
+              {{siteTitle}}
+            </p>
+            <p>浏览器系统页面</p>
+            <h3>站长信息</h3>
+            <p>想天软件</p>
+            <h3>企业信息</h3>
+            <p>嘉兴想天信息科技有限公司</p>
+          </div>
 
         </a-tab-pane>
-        <a-tab-pane key="1">
+        <a-tab-pane  v-if="!this.isInnerUrl" key="pwd">
           <template slot="tab">
             密码  <a-badge :count="this.showPwds.length" :number-style="{ backgroundColor: '#52c41a' }" ></a-badge>
           </template>
@@ -166,7 +175,7 @@
         </a-tab-pane>
       </a-tabs>
     </div>
-
+    </template>
   </div>
 
 </div>
@@ -227,11 +236,11 @@
         tabs: [
           {
             title: '基础',
-            key: 0
+            key: "base"
           },
           {
             title: '密码管理',
-            key: 1
+            key: "pwd"
           },
           {
             title: '导航收藏',
@@ -288,22 +297,30 @@
     },
     computed: {
       siteDomain () {
-        return tools.getDomainFromUrl(this.siteUrl)
+        return tools.getDomainFromUrl(this.tabData.url)
       },
       rootDomain () {
-        return tools.getRootDomain(this.siteUrl)
+        return tools.getRootDomain(this.tabData.url)
       },
       showPwds () {
         return this.siteMode === 'all' ? this.rootPwds : this.pwds
+      },
+      isInnerUrl(){
+        return this.siteUrl.startsWith('ts://')
       }
     },
     mounted () {
       //获取传递过来的global参数
       tools.getWindowArgs(window)
-      const passwordModel = require('../util/model/passwordModel')
+
       this.siteUrl = window.globalArgs['site-url']
       this.siteTitle = window.globalArgs['site-title']
       this.tabData = JSON.parse(decodeURIComponent(window.globalArgs['tab-data']))//需要urldecode解码保证完整性
+      this.activeTab=window.globalArgs['active-tab']
+      if(this.isInnerUrl)
+        this.activeTab='base'
+
+      const passwordModel = require('../util/model/passwordModel')
       passwordModel.getSiteCredit(this.tabData.url, true).then((result) => {
         result.item.forEach((item) => {
           let pwd = item
@@ -323,8 +340,6 @@
           appVue.rootPwds.push(pwd)
         })
 
-        console.log(appVue.pwds)
-        console.log(appVue.rootPwds)
       })
     },
     methods: {

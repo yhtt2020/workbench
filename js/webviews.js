@@ -1,5 +1,6 @@
 var urlParser = require('util/urlParser.js')
 var settings = require('util/settings/settings.js')
+const passwordModel = require('../pages/util/model/passwordModel')
 /* implements selecting webviews, switching between them, and creating new ones. */
 
 var placeholderImg = document.getElementById('webview-placeholder')
@@ -28,23 +29,27 @@ function captureCurrentTab (options) {
 
 // called whenever a new page starts loading, or an in-page navigation occurs
 function onPageURLChange (tab, url) {
-    if (url.indexOf('https://') === 0 || url.indexOf('about:') === 0 || url.indexOf('chrome:') === 0 || url.indexOf('file://') === 0) {
+    //增加了ts开头的页面的安全提示，避免提示不安全
+
+    if (url.indexOf('https://') === 0 || url.indexOf('about:') === 0 || url.indexOf('chrome:') === 0 || url.indexOf('file://') === 0 || url.indexOf('ts://') === 0) {
       tabs.update(tab, {
         secure: true,
         url: url
       })
+      webviews.updateToolbarSecure(true)
     } else {
       tabs.update(tab, {
         secure: false,
         url: url
       })
+      webviews.updateToolbarSecure(false)
     }
+
 }
 
 // called whenever a navigation finishes
 function onNavigate (tabId, url, isInPlace, isMainFrame, frameProcessId, frameRoutingId) {
   if (isMainFrame) {
-    require('js/navbar/tabEditor').updateUrl(urlParser.getSourceURL(url))
     onPageURLChange(tabId, url)
   }
 }
@@ -61,6 +66,7 @@ function onPageLoad (tabId) {
 }
 
 function scrollOnLoad (tabId, scrollPosition) {
+
   const listener = function (eTabId) {
     if (eTabId === tabId) {
       // the scrollable content may not be available until some time after the load event, so attempt scrolling several times
@@ -281,8 +287,40 @@ const webviews = {
       bounds: webviews.getViewBounds(),
       focus: !options || options.focus !== false
     })
-    require('js/navbar/tabEditor').updateUrl(urlParser.getSourceURL(tabs.get(id).url))
+    //当切换选中的view的时候要同步一下信息
+    webviews.updateToolBarStatus(tabs.get(id))
     webviews.emitEvent('view-shown', id)
+  },
+  /**
+   * 更新一下工具栏的状态
+   * @param tabData tab的信息
+   */
+  updateToolBarStatus(tabData){
+    require('js/navbar/tabEditor').updateUrl(urlParser.getSourceURL(tabData.url))
+    webviews.updateToolbarSecure(tabData.secure)
+    require('./navbar/tabEditor').updateTool(tabData.id)
+    webviews.updateAppStatus(tabData)
+  },
+  updateAppStatus(tabData){
+    // 添加密码数量显示
+    const passwordModel = require('../pages/util/model/passwordModel')
+    passwordModel.getSiteCredit(tabData.url, true).then((result) => {
+      const pwdCountEl=document.getElementById('pwdCount')
+      pwdCountEl.innerText=result.rootItem.length>9? 9 : result.rootItem.length
+      if(result.rootItem.length===0)
+      {
+        pwdCountEl.hidden=true
+      }else{
+        pwdCountEl.hidden=false
+      }
+    })
+  },
+  updateToolbarSecure(secure){
+    if(secure){
+      document.getElementById('site-card').setAttribute('src','./icons/svg/safe.svg')
+    }else{
+      document.getElementById('site-card').setAttribute('src','./icons/svg/unsafe.svg')
+    }
   },
   update: function (id, url) {
     ipc.send('loadURLInView', { id: id, url: urlParser.parse(url) })
