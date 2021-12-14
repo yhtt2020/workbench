@@ -1,21 +1,33 @@
 let siteCardWindow = null
 
-function createSiteCardWin (url, pos, title, tabData) {
+function createSiteCardWin (args) {
+  let { url, pos, title, tabData ,activeTab} = args
+  // url:当前网页的url，完整的url
+  // pos：展现坐标位置
+  // title：窗口标题，站点名称
+  // tabData：当前的tab对象
   if (siteCardWindow === null) {
+    url=!!!url?tabData.url:url
+    console.log(tabData)
+    title=!!!title?tabData.title:title
+    activeTab=!!!activeTab?'base':activeTab
+    const siteUrl=parseInnerURL(url)
+    if(!!!pos){
+      pos = electron.screen.getCursorScreenPoint()
+    }
     siteCardWindow = new BrowserWindow({
       frame: true,
       backgroundColor: 'white',
       parent: mainWindow,
       modal: false,
       hasShadow: true,
-
       minWidth: 600,
-      width:600,
+      width: 600,
       autoHideMenuBar: true,
       minHeight: 600,
-      height:600,
-      x: pos.x + mainWindow.getBounds().x,
-      y: mainWindow.getBounds().y + 40,
+      height: 600,
+      x: pos.x ,
+      y: pos.y +28,
       acceptFirstMouse: true,
       maximizable: false,
       visualEffectState: 'active',
@@ -27,9 +39,10 @@ function createSiteCardWin (url, pos, title, tabData) {
           '--user-data-path=' + userDataPath,
           '--app-version=' + app.getVersion(),
           '--app-name=' + app.getName(),
-          '--site-url=' + url,
+          '--site-url=' + siteUrl,
           '--site-title=' + title,
           '--tab-data=' + encodeURIComponent(JSON.stringify(tabData)),
+          '--active-tab='+activeTab,
           ...((isDevelopmentMode ? ['--development-mode'] : [])),
         ]
       }
@@ -48,8 +61,27 @@ function createSiteCardWin (url, pos, title, tabData) {
 }
 
 ipc.on('createSiteCard', (event, args) => {
-  createSiteCardWin(args.url, { x: args.x, y: args.y }, args.title, args.tabData)
+  createSiteCardWin({ url: args.url, pos:args.pos, title: args.title, tabData: args.tabData })
 })
 app.whenReady().then(() => {
   createSiteCardWin()
 })
+
+ipc.on('openPwdManager', (event, args) => {
+  createSiteCardWin({ tabData: args.tabData ,activeTab:'pwd'})
+})
+
+function parseInnerURL(url){
+  if(url.startsWith('file://')){
+    try {
+      var pageName = url.match(/\/pages\/([a-zA-Z]+)\//)
+      var urlObj = new URL(url)
+      if (pageName) {
+        return 'ts://' + pageName[1] + urlObj.search
+      }
+    } catch (e) {}
+  }else{
+    return url
+  }
+
+}

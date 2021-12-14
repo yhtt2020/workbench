@@ -155,24 +155,13 @@
 <!--            </div>-->
 
           </div>
-          <div style="display: flex;width: 320px" >
+          <div style="display: flex;width: 120px" >
               <div class="action-wrapper" >
-                <img class="action" src="./icons/svg/cloud.svg">
+                <span onclick="ipc.send('openPwdManager',{tabData:tabs.get(tabs.getSelected())})" title="密码管理" id="pwd-toolbar"><img class="action" src="./icons/svg/lock.svg"></span>
               </div>
               <div class="action-wrapper" >
-                <img class="action" src="./icons/svg/cloud.svg">
-              </div> <div class="action-wrapper" >
-              <img class="action" src="./icons/svg/cloud.svg">
-            </div> <div class="action-wrapper" >
-              <img class="action" src="./icons/svg/cloud.svg">
-            </div> <div class="action-wrapper" >
-              <img class="action" src="./icons/svg/cloud.svg">
-            </div> <div class="action-wrapper" >
-              <img class="action" src="./icons/svg/cloud.svg">
-            </div>
-            <div class="action-wrapper" >
-              <img class="action" src="./icons/svg/cloud.svg">
-            </div>
+                <span onclick="ipc.send('openHome')" title="导航管理" id="nav-toolbar"><img class="action" src="./icons/svg/cloud.svg"></span>
+              </div>
             <div class="action-wrapper">
               <img title="收起地址栏，使用精简模式"  id="collapse-button-toolbar" class="action"  src="./icons/toolbar/chevronsup.svg">
              </div>
