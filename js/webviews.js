@@ -1,5 +1,6 @@
 var urlParser = require('util/urlParser.js')
 var settings = require('util/settings/settings.js')
+const passwordModel = require('../pages/util/model/passwordModel')
 /* implements selecting webviews, switching between them, and creating new ones. */
 
 var placeholderImg = document.getElementById('webview-placeholder')
@@ -298,6 +299,21 @@ const webviews = {
     require('js/navbar/tabEditor').updateUrl(urlParser.getSourceURL(tabData.url))
     webviews.updateToolbarSecure(tabData.secure)
     require('./navbar/tabEditor').updateTool(tabData.id)
+    webviews.updateAppStatus(tabData)
+  },
+  updateAppStatus(tabData){
+    // 添加密码数量显示
+    const passwordModel = require('../pages/util/model/passwordModel')
+    passwordModel.getSiteCredit(tabData.url, true).then((result) => {
+      const pwdCountEl=document.getElementById('pwdCount')
+      pwdCountEl.innerText=result.rootItem.length>9? 9 : result.rootItem.length
+      if(result.rootItem.length===0)
+      {
+        pwdCountEl.hidden=true
+      }else{
+        pwdCountEl.hidden=false
+      }
+    })
   },
   updateToolbarSecure(secure){
     if(secure){

@@ -312,13 +312,15 @@
     mounted () {
       //获取传递过来的global参数
       tools.getWindowArgs(window)
-      const passwordModel = require('../util/model/passwordModel')
+
       this.siteUrl = window.globalArgs['site-url']
       this.siteTitle = window.globalArgs['site-title']
       this.tabData = JSON.parse(decodeURIComponent(window.globalArgs['tab-data']))//需要urldecode解码保证完整性
       this.activeTab=window.globalArgs['active-tab']
       if(this.isInnerUrl)
         this.activeTab='base'
+
+      const passwordModel = require('../util/model/passwordModel')
       passwordModel.getSiteCredit(this.tabData.url, true).then((result) => {
         result.item.forEach((item) => {
           let pwd = item
@@ -338,8 +340,6 @@
           appVue.rootPwds.push(pwd)
         })
 
-        console.log(appVue.pwds)
-        console.log(appVue.rootPwds)
       })
     },
     methods: {

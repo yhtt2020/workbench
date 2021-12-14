@@ -15,6 +15,21 @@
 }
 #toolbar .action-wrapper {
   width: 40px;
+  position: relative;
+}
+#toolbar .action-wrapper .bandage {
+  position: absolute;
+  display: inline-block;
+  font-size: 10px;
+  background: #52c41a;
+  color: white;
+  border-radius: 100%;
+  width: 14px;
+  height: 14px;
+  right: 7px;
+  top: 7px;
+  text-align: center;
+  line-height: 14px;
 }
 #toolbar .disable {
   opacity: 0.3;
