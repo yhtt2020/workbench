@@ -354,12 +354,16 @@ const tabBar = {
         tabBar.events.emit('tab-selected', data.id)
       } else {
         // the tab is focused, edit tab instead
-        tabEditor.show(data.id)
+        if(!$toolbar.expanded){
+          //如果非二栏模式才可以触发show
+          tabEditor.show(data.id)
+        }
       }
     })
-    tabEditor.input.addEventListener('focus',function (){
-      tabEditor.show(data.id)
-    })
+
+
+    tabEditor.input.removeEventListener('focus',$toolbar.focusInput)
+    tabEditor.input.addEventListener('focus',$toolbar.focusInput)
 
     tabEl.addEventListener('auxclick', function (e) {
       if (e.which === 2) {

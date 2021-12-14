@@ -10,6 +10,7 @@ const tabEditor = {
   container: document.getElementById('tab-editor'),
   input: document.getElementById('tab-editor-input'),
   star: null,
+
   updateUrl:function(url){
     tabEditor.input.value = url
   },
@@ -34,9 +35,11 @@ const tabEditor = {
     if(!toolbar.expanded) {
       document.body.classList.add('is-edit-mode')
     }
+    console.log(editingValue || currentURL)
     tabEditor.updateUrl(editingValue || currentURL)
-
-    tabEditor.input.focus()
+    if(!toolbar.expanded){
+      tabEditor.input.focus()
+    }
     if (!editingValue) {
       tabEditor.input.select()
     }
