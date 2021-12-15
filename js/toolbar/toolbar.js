@@ -1,19 +1,75 @@
 const webviews = require('webviews.js')
 const urlParser = require('util/urlParser.js')
+const sideBar={
+  mod:'auto',// auto.自动展开收起, open.一直展开 ,最小化。
+  //切换侧边栏模式
+  switchSideMod(){
+    function setIcon(icon){
+      toolbar.sideModeButton.src=icon
+    }
+    function setTitle(title){
+      toolbar.sideModeButton.title=title
+    }
+    switch (sideBar.mod){
+      case 'auto':
+        //todo 切换到关闭
+        //更换图标
+        setIcon('./icons/toolbar/sideclose.svg')
+        sideBar.mod='close'
+        setTitle('当前模式：精简模式；点击切换到展开模式')
+
+        //设置提示文字
+        break
+      case 'close':
+        //todo 切换到展开
+        //更换图标
+        setIcon('./icons/toolbar/sideopen.svg')
+        sideBar.mod='open'
+        setTitle('当前模式：展开模式；点击切换到自动模式')
+        break
+      //更换模式
+      case 'open':
+        //todo 切换到自动模式
+        //更换图标
+        setIcon('./icons/toolbar/sideauto.svg')
+        sideBar.mod='auto'
+        setTitle('当前模式：自动展开收起；点击切换收起左侧栏，不再自动展开')
+        sideBar.setToOpen()
+      //更换模式
+
+    }
+  },
+  /**
+   * 将侧边栏模式更改为展开
+   */
+  setToOpen(){
+    //发送ipc消息给侧边栏，告诉他要切换到open模式
+    //todo 调整mainwindow的布局
+    //调整左侧的感应区大小
+    //todo 调整其他组件的左侧位置
+    //调整webviews框的位置
+    //调整密码提示的左侧位置
+    //调整下载框的左侧位置
+  },
+}
+
 const toolbar = {
   expanded: true,
+  sideModeButton:document.getElementById('side-mod-button-toolbar'),
   toolbarEl: document.getElementById('toolbar'),
   homeButton: document.getElementById('home-button-toolbar'),
   refreshButton: document.getElementById('refresh-button-toolbar'),
   forwardButton: document.getElementById('forward-button-toolbar'),
   backButton: document.getElementById('back-button-toolbar'),
   collapseButton: document.getElementById('collapse-button-toolbar'),
+  //地址输入框焦点
   focusInput () {
     if ($toolbar.expanded && document.getElementById('searchbar').hidden) {
       //如果是toolbar展开模式，input获得焦点则触发事件
       require('../navbar/tabEditor.js').show(tabs.getSelected())
     }
   },
+  //设置移动模式是否可用
   setMobileCanUse (canUse) {
     const mobileEl = document.getElementById('mobile-toolbar')
     if (!canUse) {
@@ -27,6 +83,7 @@ const toolbar = {
       mobileEl.disable = false
     }
   },
+  //设置密码管理器是否可用
   setPwdCanUse (canUse) {
     const pwdEl = document.getElementById('pwd-toolbar')
     if (!canUse) {
@@ -40,6 +97,7 @@ const toolbar = {
       pwdEl.disabled = false
     }
   },
+  //设置一个元素的透明度
   setElOpacity (el, opacity = 1) {
     el.style.opacity = opacity
   },
@@ -58,6 +116,8 @@ const toolbar = {
     toolbar.backButton.addEventListener('click', function () {
       webviews.goBackIgnoringRedirects(tabs.getSelected())
     })
+
+    toolbar.sideModeButton.addEventListener('click',sideBar.switchSideMod)
 
     toolbar.collapseButton.addEventListener('click', () => {
       toolbar.expanded = false
@@ -78,4 +138,9 @@ const toolbar = {
   }
 }
 toolbar.initialize()
+
+
+
+
+
 module.exports = toolbar
