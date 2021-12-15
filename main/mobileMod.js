@@ -11,8 +11,6 @@ const mobileMod = {
     const space=10
     const { screen } = require('electron')
     const maxWidth=screen.getPrimaryDisplay().workAreaSize.width
-    const maxHeight=screen.getPrimaryDisplay().workAreaSize.height
-    let targetPos = { x: 0, y: 0 }
     const sourcePoint = {
       x: mainWindow.getBounds().x + 300,
       y: mainWindow.getBounds().y + 300

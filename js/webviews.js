@@ -300,6 +300,14 @@ const webviews = {
     webviews.updateToolbarSecure(tabData.secure)
     require('./navbar/tabEditor').updateTool(tabData.id)
     webviews.updateAppStatus(tabData)
+    mobileEl=document.getElementById('mobile-toolbar')
+    if(urlParser.getSourceURL(tabData.url).startsWith('ts://')){
+      mobileEl.style.opacity=.5
+      mobileEl.title='手机浏览模式（当前站点不可用）'
+    }else{
+      mobileEl.style.opacity=1
+      mobileEl.title='手机浏览模式'
+    }
   },
   updateAppStatus(tabData){
     // 添加密码数量显示
