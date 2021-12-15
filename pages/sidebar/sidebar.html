@@ -404,48 +404,6 @@
                   @change="changeBottomSize"
                 >
                   <a-collapse-panel key="1">
-                    <li @click="openBottom('mobile')">
-                      <!-- <a-popover title="手机模拟" placement="right" :mouse-enter-delay="0"
-                                        :mouse-leave-delay="0.1" :destroy-tooltip-on-hide="true"
-                                        overlay-class-name="tips">
-
-                                        <template slot="content">
-                                                <a-form id="validate_other" :form="form"
-                                                    style="width: 500px;" v-bind="{
-labelCol: { span: 5 },
-wrapperCol: { span: 16 },
-}">
-
-                                                    <a-form-item label="设备选择">
-                                                          <a-radio-group :value="1"  v-decorator="['radio-group']">
-                                                            <a-radio v-for="(device,index)  in devices" :value="index+1">
-                                                              <a-icon :type="device.icon"></a-icon>
-                                                              <strong>{{ device.name }}</strong>
-                                                              {{device.width}} x {{device.height}}
-                                                            </a-radio>
-                                                          </a-radio-group>
-                                                        </a-form-item>
-                                                    <a-form-item label="缩放比例">
-                                                        <a-slider :min="25" :max="200" v-decorator="['slider']" :default-value="100" :tooltipVisible="true"
-                                                            :dots='true'
-                                                            :marks="{25:'25%', 50: '50%', 75: '75%', 100: '100%', 125: '125%', 150: '150%',175:'175%', 200: '200%' }"
-                                                            :step="25" />
-                                                    </a-form-item>
-
-
-                                                    <a-form-item label="启用设备模拟">
-                                                        <a-switch
-                                                            v-decorator="['switch', { valuePropName: 'checked' }]" />
-                                                    </a-form-item>
-                                                </a-form>
-
-
-
-                                        </template> -->
-                      <a-button type="default" shape="circle" icon="mobile"></a-button>
-                      <div class="item-title">手机模式</div>
-                      <!-- </a-popover> -->
-                    </li>
                     <li @click="openBottom('help')">
                       <a-button type="default" shape="circle" icon="question-circle"></a-button>
                       <div class="item-title">帮助中心</div>
