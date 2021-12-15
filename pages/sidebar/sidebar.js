@@ -331,6 +331,7 @@ window.onload = function() {
 			vuedraggable
 		},
 		data: {
+      mod:'auto',
 			message: 'Hello Vue!',
 			window: window
 		},
@@ -344,3 +345,20 @@ window.onload = function() {
 
 	require('./theme.js').initialize()
 }
+
+ipc.on('sideSetOpen',(event,args)=>{
+  console.log('open')
+  document.getElementById('clickThroughElement').style.left = '145px'
+  appVue.mod='open'
+
+})
+ipc.on('sideSetClose',(event,args)=>{
+  document.getElementById('clickThroughElement').style.left = '45px'
+  console.log('close')
+  appVue.mod='close'
+})
+ipc.on('sideSetAuto',(event,args)=>{
+  console.log('auto')
+  document.getElementById('clickThroughElement').style.left = '45px'
+  appVue.mod='auto'
+})

@@ -18,6 +18,7 @@ const sideBar={
     switch (sideBar.mod){
       case 'auto':
         //todo 切换到关闭
+        ipc.send('sideSetClose')
         //更换图标
         setIcon('./icons/toolbar/sideclose.svg')
         sideBar.mod='close'
@@ -28,6 +29,7 @@ const sideBar={
       case 'close':
         //todo 切换到展开
         //更换图标
+        ipc.send('sideSetOpen')
         setIcon('./icons/toolbar/sideopen.svg')
         sideBar.mod='open'
         setTitle('当前模式：展开模式；点击切换到自动模式')
@@ -36,6 +38,7 @@ const sideBar={
       //更换模式
       case 'open':
         //todo 切换到自动模式
+        ipc.send('sideSetAuto')
         //更换图标
         setIcon('./icons/toolbar/sideauto.svg')
         sideBar.mod='auto'

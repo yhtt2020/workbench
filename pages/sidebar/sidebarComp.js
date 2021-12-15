@@ -3,6 +3,7 @@ const { api } = require('../../server-config')
 Vue.component('sidebar', {
 	data: function() {
 		return {
+      mod:'auto',//auto open close
       isPopoverShowing:false,
       lastOpenId:0,
 			drag: false,
