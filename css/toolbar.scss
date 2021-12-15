@@ -1,7 +1,9 @@
 #toolbar{
+  line-height: 40px;
   z-index: 1;
   top: calc(36px + var(--control-space-top));
-  width: 100vw;
+  width: calc(100vw - 45px);
+  left: 45px;
   position: fixed;
   height: 40px;
   background: #f9f9f9;
@@ -12,7 +14,6 @@
     margin:4px;
     vertical-align: top;
     border-radius: 4px;
-
   }
   .action:hover{
     background: rgba(238, 238, 238, 0.8);

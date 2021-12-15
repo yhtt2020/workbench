@@ -1,6 +1,11 @@
 const webviews = require('webviews.js')
 const urlParser = require('util/urlParser.js')
 const sideBar={
+  minSizeCss:'45px',
+  maxSizeCss:'145px',
+  minWidth:45,
+  maxWidth:145,
+  expandWidth:100,
   mod:'auto',// auto.自动展开收起, open.一直展开 ,最小化。
   //切换侧边栏模式
   switchSideMod(){
@@ -26,6 +31,7 @@ const sideBar={
         setIcon('./icons/toolbar/sideopen.svg')
         sideBar.mod='open'
         setTitle('当前模式：展开模式；点击切换到自动模式')
+        sideBar.setToMax()
         break
       //更换模式
       case 'open':
@@ -34,7 +40,7 @@ const sideBar={
         setIcon('./icons/toolbar/sideauto.svg')
         sideBar.mod='auto'
         setTitle('当前模式：自动展开收起；点击切换收起左侧栏，不再自动展开')
-        sideBar.setToOpen()
+        sideBar.setToMin()
       //更换模式
 
     }
@@ -42,15 +48,42 @@ const sideBar={
   /**
    * 将侧边栏模式更改为展开
    */
-  setToOpen(){
+  setToMax(){
+    let posLeft = sideBar.minWidth+sideBar.expandWidth
     //发送ipc消息给侧边栏，告诉他要切换到open模式
+    sideBar.setLayoutLeft(posLeft)
+  },
+  setLayoutLeft(posLeft){
+    let postLeftCss= String(posLeft)+'px'
     //todo 调整mainwindow的布局
-    //调整左侧的感应区大小
+    document.getElementById('mouseRcoverArea').style.width=postLeftCss//调整左侧的感应区大小
     //todo 调整其他组件的左侧位置
-    //调整webviews框的位置
+    toolbar.toolbarEl.style.left=postLeftCss//调整webviews框的位置
+    toolbar.toolbarEl.style.width= 'calc(100vw - '+postLeftCss+')'
+    const adjustLeft= posLeft - webviews.viewMargins[3]
+    webviews.adjustMargin([0, 0, 0, adjustLeft])//调整工具栏左侧
+    //设置搜索栏的左侧位置
+    document.getElementById('searchbar').style.left='calc((100% - '+postLeftCss+' )*0.02 + '+postLeftCss+' )'
+    document.getElementById('searchbar').style.width='calc( (100% - '+postLeftCss+' ) * 0.96)'
+    //设置overlay的左侧
+    document.getElementById('webview-placeholder').style.marginLeft=postLeftCss
+    document.getElementById('webview-placeholder').style.width='calc(100% - '+postLeftCss+')'
     //调整密码提示的左侧位置
     //调整下载框的左侧位置
   },
+  setToMin(){
+    let posLeft = sideBar.minWidth
+    //发送ipc消息给侧边栏，告诉他要切换到open模式
+    sideBar.setLayoutLeft(posLeft)
+    // document.getElementById('mouseRcoverArea').style.width='45px'
+    // toolbar.toolbarEl.style.left='45px'
+    // toolbar.toolbarEl.style.width='calc(100vw - 45px)'
+    // webviews.adjustMargin([0, 0, 0, -sideBar.expandWidth])
+    // document.getElementById('searchbar').style.left='calc((100% - 45px )*0.02 + 45px )'
+    // document.getElementById('searchbar').style.width='calc( (100% - 45px ) * 0.96)'
+    // document.getElementById('webview-placeholder').style.width='calc(100% - 45px)'
+    // document.getElementById('webview-placeholder').style.left='45px'
+  }
 }
 
 const toolbar = {
