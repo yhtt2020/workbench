@@ -17,17 +17,15 @@ const sideBar={
     }
     switch (sideBar.mod){
       case 'auto':
-        //todo 切换到关闭
+        // 切换到关闭
         ipc.send('sideSetClose')
         //更换图标
         setIcon('./icons/toolbar/sideclose.svg')
         sideBar.mod='close'
-        setTitle('当前模式：精简模式；点击切换到展开模式')
-
-        //设置提示文字
+        setTitle('当前模式：精简模式；点击切换到展开模式')//设置提示文字
         break
       case 'close':
-        //todo 切换到展开
+        // 切换到展开
         //更换图标
         ipc.send('sideSetOpen')
         setIcon('./icons/toolbar/sideopen.svg')
@@ -37,15 +35,14 @@ const sideBar={
         break
       //更换模式
       case 'open':
-        //todo 切换到自动模式
+        // 切换到自动模式
         ipc.send('sideSetAuto')
         //更换图标
         setIcon('./icons/toolbar/sideauto.svg')
         sideBar.mod='auto'
         setTitle('当前模式：自动展开收起；点击切换收起左侧栏，不再自动展开')
         sideBar.setToMin()
-      //更换模式
-
+        //更换模式
     }
   },
   /**
@@ -53,16 +50,16 @@ const sideBar={
    */
   setToMax(){
     let posLeft = sideBar.minWidth+sideBar.expandWidth
-    //发送ipc消息给侧边栏，告诉他要切换到open模式
     sideBar.setLayoutLeft(posLeft)
   },
   setLayoutLeft(posLeft){
     let postLeftCss= String(posLeft)+'px'
-    //todo 调整mainwindow的布局
     document.getElementById('mouseRcoverArea').style.width=postLeftCss//调整左侧的感应区大小
-    //todo 调整其他组件的左侧位置
+    //调整主界面中各个组件的位置
+    //设置工具栏位置
     toolbar.toolbarEl.style.left=postLeftCss//调整webviews框的位置
     toolbar.toolbarEl.style.width= 'calc(100vw - '+postLeftCss+')'
+    //设置webviews位置
     const adjustLeft= posLeft - webviews.viewMargins[3]
     webviews.adjustMargin([0, 0, 0, adjustLeft])//调整工具栏左侧
     //设置搜索栏的左侧位置
@@ -72,7 +69,11 @@ const sideBar={
     document.getElementById('webview-placeholder').style.marginLeft=postLeftCss
     document.getElementById('webview-placeholder').style.width='calc(100% - '+postLeftCss+')'
     //调整密码提示的左侧位置
+    document.getElementById('password-capture-bar').style.left=postLeftCss
+    document.getElementById('password-capture-bar').style.width='calc(100% - '+postLeftCss+')'
     //调整下载框的左侧位置
+    document.getElementById('download-bar').style.left=postLeftCss
+    document.getElementById('download-bar').style.width='calc(100% - '+postLeftCss+')'
   },
   setToMin(){
     let posLeft = sideBar.minWidth
