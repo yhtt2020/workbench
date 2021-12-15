@@ -59,7 +59,6 @@ const mobileMod = {
       width: initSize.width,
       height: initSize.height - 70
     })
-    mobileWindow.toggleTabBar()
     mobileWindow.setBrowserView(view)
     view.setBounds({
       x: 0,
