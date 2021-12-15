@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>手机模式</title>
+</head>
+<body style="padding: 0;margin:0;background-color: #f1f1f1">
+<div style="display: flex;justify-content: flex-start;flex-direction: row;">
+  <div style="width: 120px;display: flex;justify-content: flex-start;flex-direction: row;">
+    <div id="goBack" onclick="goBack()" title="返回" class="action" style="opacity: 0.5">
+      <img class="action-icon" src="../../icons/toolbar/arrowleft.svg">
+    </div>
+    <div id="goForward" onclick="goForward()" title="前进" class="action" style="opacity: 0.5">
+      <img class="action-icon" src="../../icons/toolbar/arrowright.svg">
+    </div>
+    <div onclick="refresh()" title="刷新" class="action">
+      <img class="action-icon" src="../../icons/toolbar/rotate.svg">
+    </div>
+  </div>
+  <div style="flex: auto;      line-height: 40px;">
+    <input id="address" readonly
+           style=" width: calc(100% - 20px);border:1px solid #cacaca;border-radius: 4px;padding: 5px;margin:5px">
+  </div>
+  <div style="width: 40px">
+    <div  onclick="resetSize()" title="重置到初始尺寸 480 * 750" class="action">
+      <img class="action-icon" src="../../icons/toolbar/minimize.svg">
+    </div>
+  </div>
+  <style>
+    .action {
+      position: relative;
+      width: 40px;
+      text-align: center;
+      line-height: 40px;
+    }
+
+    .action-icon {
+      padding: 6px;
+      width: 20px;
+      height: 20px;
+      vertical-align: middle;
+      border-radius: 5px;
+
+    }
+
+    .action-icon:hover {
+
+      background-color: #e3e3e3;
+    }
+  </style>
+
+  <script>
+    const ipc = require('electron').ipcRenderer
+    let windowId=0
+    let id=0
+    ipc.on('updateView', (event, args) => {
+      console.log(event)
+      console.log(args)
+      document.getElementById('address').value = args.url
+      if(args.canGoBack)
+      {
+        document.getElementById('goBack').style.opacity=1
+      }else{
+        document.getElementById('goBack').style.opacity=0.5
+      }
+      if(args.canGoForward)
+      {
+        document.getElementById('goForward').style.opacity=1
+      }else{
+        document.getElementById('goForward').style.opacity=0.5
+      }
+
+    })
+
+    ipc.on('init', (event, args) => {
+      windowId=args.windowId
+      id=args.id
+      document.getElementById('address').value = args.url
+      document.title='手机模式 #'+id
+    })
+    function goBack(){
+      ipc.send("mobileGoBack",{
+        id:id
+      })
+    }
+    function goForward(){
+      ipc.send("mobileGoForward",{
+        id:id
+      })
+    }
+    function refresh(){
+      ipc.send("mobileRefresh",{
+        id:id
+      })
+    }
+    function resetSize(){
+      ipc.send("mobileResetSize",{
+        id:id
+      })
+    }
+  </script>
+</div>
+</body>
+</html>
