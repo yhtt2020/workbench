@@ -348,17 +348,17 @@ window.onload = function() {
 
 ipc.on('sideSetOpen',(event,args)=>{
   console.log('open')
-  document.getElementById('clickThroughElement').style.left = '145px'
+  document.getElementById('clickThroughElement').style.left = '155px'
   appVue.mod='open'
 
 })
 ipc.on('sideSetClose',(event,args)=>{
-  document.getElementById('clickThroughElement').style.left = '45px'
+  document.getElementById('clickThroughElement').style.left = '55px'
   console.log('close')
   appVue.mod='close'
 })
 ipc.on('sideSetAuto',(event,args)=>{
   console.log('auto')
-  document.getElementById('clickThroughElement').style.left = '45px'
+  document.getElementById('clickThroughElement').style.left = '55px'
   appVue.mod='auto'
 })

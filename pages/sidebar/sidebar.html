@@ -18,7 +18,7 @@
   function mousenter (target) {
     if (appVue.mod==='auto') {
       target.setAttribute('class', 'sidebar expanded')
-      document.getElementById('clickThroughElement').style.left = '145px'
+      document.getElementById('clickThroughElement').style.left = '155px'
     }
   }
 
@@ -40,9 +40,9 @@
 
   function clickThroughMove () {
     setMainWindow()
-    if (appVue.$refs.sidePanel.isPopoverShowing === false && document.getElementById('clickThroughElement').offsetLeft === 145 && appVue.mod==='auto') {
+    if (appVue.$refs.sidePanel.isPopoverShowing === false && document.getElementById('clickThroughElement').offsetLeft === 155 && appVue.mod==='auto') {
       setTimeout(function () {
-        document.getElementById('clickThroughElement').style.left = '45px'
+        document.getElementById('clickThroughElement').style.left = '55px'
         document.getElementById('appVue').setAttribute('class', 'sidebar')
       }, 200)
     }
