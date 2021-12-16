@@ -558,7 +558,7 @@ const tabBar = {
           },
           {
             label: '移动到最左边',
-            toolTip: '作为组代表,当前任务组会更新为此标签的网站图标',
+            toolTip: '作为组代表,当前标签组会更新为此标签的网站图标',
             click: function () {
               //console.log('关闭全部标签被点击')
               tabBar.moveToFirst(data.id)

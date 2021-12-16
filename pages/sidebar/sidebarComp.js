@@ -323,12 +323,12 @@ Vue.component('sidebar', {
     },
     addNewTask(e){
       ipc.send('addNewTask')
-      this.$message.success({content:'成功添加一个新任务到左侧栏。'})
+      this.$message.success({content:'成功添加一个新标签组到左侧栏。'})
     },
     closeItem(item){
       if(item.type==='task'){
         ipc.send('closeTask',{tabId:item.id})
-        this.$message.success({content:'删除任务成功。'})
+        this.$message.success({content:'删除标签组成功。'})
       }
     },
     createGroup(){
