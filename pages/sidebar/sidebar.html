@@ -371,10 +371,13 @@
                   overlay-class-name="tips"
                 >
                   <div slot="title">
-                    {{ item.count > 5 ? item.title + ' -- 高负载（5+）' : item.title }}
+                    <span @click.stop="editTaskName(item)"  class="task-title"><span class="text" :id="'taskTitle'+item.id">{{ item.count > 5 ? item.title + ' -- 高负载（5+）' : item.title }}
+                     </span>
+                      <a-icon :id="'editTip'+item.id" class="edit-tip" type="edit"></a-icon>
+                      <a-input @blur="editTaskNameBlur(item)" hidden :id="'taskTitleInput'+item.id" size="small" @keypress.enter="editTaskNameKeyPress($event)" :default-value="item.title"></a-input> </span>
                     <span  style="float: right;cursor: pointer" @click="closeItem(item)">
-                          <a-icon title="删除标签组"
-                                  type="close"></a-icon>
+                         <a-icon title="删除标签组"
+                                 type="close-circle"></a-icon>
                         </span>
                   </div>
                   <template slot="content">

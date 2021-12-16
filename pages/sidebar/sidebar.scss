@@ -104,6 +104,32 @@ body {
   background-color: #f1f1f1;
   cursor: move;
 }
+.task-title{
+  cursor: pointer;
+  display: inline-block;
+  min-width: 20px;
+  max-width: 240px;
+  .text{
+    display: inline-block;
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  &:hover{
+    color: grey;
+    .edit-tip{
+      vertical-align: text-top;
+      margin-top: -3px;
+      display: inline-block;
+
+    }
+  }
+  .edit-tip{
+    display: none;
+  }
+}
+
 .action{
   cursor: pointer;
   padding: 3px;

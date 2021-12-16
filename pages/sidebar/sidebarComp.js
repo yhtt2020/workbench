@@ -373,6 +373,30 @@ Vue.component('sidebar', {
     },
     clearTaskUnlock(task) {
       ipc.sendTo(mainWindowId, 'clearTaskUnlock', { id: task.id })
+    },
+
+
+    editTaskName(item){
+      const id=item.id
+      const inputEl=document.getElementById('taskTitleInput'+id)
+      document.getElementById('editTip'+id).hidden=true
+      if(inputEl.hidden===true){
+        document.getElementById('taskTitle'+id).hidden=true
+        inputEl.hidden=false
+        inputEl.select()
+      }
+
+    },
+    editTaskNameBlur(item){
+      const id=item.id
+      document.getElementById('taskTitle'+id).hidden=false
+      document.getElementById('editTip'+id).hidden=false
+      const inputEl=document.getElementById('taskTitleInput'+id)
+      inputEl.hidden=true
+      ipc.sendTo(mainWindowId,'renameTask',{id:item.id,newName:inputEl.value})
+    },
+    editTaskNameKeyPress(event){
+        event.currentTarget.blur()
     }
 	}
 

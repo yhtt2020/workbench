@@ -129,7 +129,7 @@ window.onload = function() {
 				if (typeof(task) == 'undefined') { //如果已经被删除了，容错处理
 					return ''
 				}
-				if (task.name == null) {
+				if (task.name == null || task.name==='') {
 					return l('defaultTaskName').replace('%n', state.tasks.getIndex(task.id) + 1)
 				} else {
 					return task.name

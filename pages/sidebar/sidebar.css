@@ -104,6 +104,31 @@ body {
   cursor: move;
 }
 
+.task-title {
+  cursor: pointer;
+  display: inline-block;
+  min-width: 20px;
+  max-width: 240px;
+}
+.task-title .text {
+  display: inline-block;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.task-title:hover {
+  color: grey;
+}
+.task-title:hover .edit-tip {
+  vertical-align: text-top;
+  margin-top: -3px;
+  display: inline-block;
+}
+.task-title .edit-tip {
+  display: none;
+}
+
 .action {
   cursor: pointer;
   padding: 3px;

@@ -230,6 +230,13 @@ ipc.on('switchToTab',function(e,data){
     switchToTab(data.tabId)
   }
 })
+ipc.on('renameTask',function(e,data){
+  if(data.newName.trim()==='')
+  {
+    return
+  }
+  tasks.get(data.id).name=data.newName
+})
 
 ipc.on('reloadTask', () => {
   switchToTask(tasks.getSelected().id)
