@@ -367,17 +367,12 @@ Vue.component('sidebar', {
       document.getElementById('hoverLock'+tab.id).hidden=false
     },
     hideHoverLock(tab){
-      console.log(tab)
       if(!(tab.lock===true)){
-        console.log(tab)
         document.getElementById('hoverLock'+tab.id).hidden=true
       }
     },
-    clearTaskUnlock(task){
-      if(task.tabs.length===1){
-        this.$message.error({content:'该任务只有一个标签，无法执行清理。'})
-      }else
-        ipc.sendTo(mainWindowId,'clearTaskUnlock',{id:task.id})
+    clearTaskUnlock(task) {
+      ipc.sendTo(mainWindowId, 'clearTaskUnlock', { id: task.id })
     }
 	}
 

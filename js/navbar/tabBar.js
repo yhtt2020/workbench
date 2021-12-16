@@ -859,14 +859,28 @@ ipc.on('lockTask',(event,args)=>{
 })
 
 ipc.on('clearTaskUnlock',(event,args)=>{
-  let tabs=tasks.get(args.id)
-  tabs.tabs.forEach((item,index)=>{
-   if(!(item.lock===true)){
-     tabs.tabs.destroy(item.id)
+  let task=tasks.get(args.id)
+  let deleteIds=[]
+  task.tabs.forEach((tab,index)=>{
+    console.log(tab.lock)
+   if(!!!tab.lock ){
+    deleteIds.push(tab.id)
    }
-   tabBar.updateAll()
-
   })
+  deleteIds.forEach((id)=>{
+    if(args.id===tasks.getSelected().id){
+      //如果是当前的标签组，则通过ui去关闭标签
+      require('../browserUI.js').closeTab(id)
+    }else{
+      //如果不是当前选中的标签组，则直接移除
+      task.tabs.destroy(id)
+    }
+  })
+  if(task.tabs.count()===0 && args.id!==tasks.getSelected().id){
+    //清空了，再加一个新标签进去，防止tabs出问题
+    task.tabs.add()
+  }
+
 })
 
 module.exports = tabBar
