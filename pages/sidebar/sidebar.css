@@ -104,6 +104,15 @@ body {
   cursor: move;
 }
 
+.action {
+  cursor: pointer;
+  padding: 3px;
+}
+.action:hover {
+  background: rgba(224, 224, 224, 0.35);
+  border-radius: 4px;
+}
+
 .tabs {
   position: relative;
 }

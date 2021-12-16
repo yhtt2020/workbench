@@ -104,7 +104,14 @@ body {
   background-color: #f1f1f1;
   cursor: move;
 }
-
+.action{
+  cursor: pointer;
+  padding: 3px;
+  &:hover{
+    background: rgba(224, 224, 224, 0.35);
+    border-radius: 4px;
+  }
+}
 .tabs {
   position: relative;
   .tab-icon {

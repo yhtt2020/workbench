@@ -379,12 +379,12 @@
                   </div>
                   <template slot="content">
                     <div style="text-align: right">
-                      <a-button size="small" title="锁定当前标签组内全部标签" @click="lockTask(item.id)" style="cursor:pointer;"><a-icon
-                                    type="lock"></a-icon>全部锁定</a-button>
-                      <a-button size="small" title="清理组内全部未锁定标签" @click="clearTaskUnlock(item)" style="cursor:pointer;">
+                      <span class="action" size="small" title="锁定当前标签组内全部标签" @click="lockTask(item.id)"><a-icon
+                                    type="lock"></a-icon>锁定</span>
+                      <span class="action"  size="small" title="清理组内全部未锁定标签" @click="clearTaskUnlock(item)">
                         <a-icon
-                                type="delete"></a-icon>清理未锁定
-                      </a-button>
+                                type="delete"></a-icon>清理
+                      </span>
                     </div>
                     <ul class="tabs" style="margin-top: 5px">
                       <li style="position:relative;" @mouseenter="showHoverLock(tab)" @mouseleave="hideHoverLock(tab)" v-for="(tab,j) in item.tabs" :key="tab.id">
