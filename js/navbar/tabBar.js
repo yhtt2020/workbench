@@ -19,6 +19,7 @@ const remoteMenu = require('remoteMenuRenderer.js')
 const ipc = electron.ipcRenderer
 
 const navbarApi = require('../request/api/navbarApi.js')
+const baseApi = require('../request/api/baseApi')
 
 var lastTabDeletion = 0 // TODO get rid of this
 
@@ -379,6 +380,101 @@ const tabBar = {
       e.preventDefault()
       e.stopPropagation()
 
+      let template = [
+        [
+          {
+            id: 'open',
+            label: '创建一个新组',
+            click: function () {
+              require('browserUI.js').addTask()
+              //$store.getters.fillTasksToItems
+            },
+          },
+          {
+            id: 'open',
+            label: '打开新标签',
+            click: function () {
+              require('browserUI.js').addTab()
+            },
+          },
+          {
+            label: '移动到最左边',
+            toolTip: '作为组代表,当前任务组会更新为此标签的网站图标',
+            click: function () {
+              tabBar.moveToFirst(data.id)
+            },
+          },
+          {
+            label: '移动到其他标签组',
+            click: () => {
+              tabBar.insertTabToTask(data.id)
+            }
+          },
+          {
+            label: '关闭标签',
+            click: function () {
+              require('browserUI.js').closeTab(data.id)
+            },
+          },
+        ],
+        [
+          {
+            label: '关闭整组',
+            click: function () {
+              require('browserUI.js').closeTask(tasks.getSelected().id)
+            },
+          },
+          {
+            label: '关闭其他标签',
+            click: function () {
+              tabBar.closeOtherTabs(data.id)
+            },
+          },
+          {
+            label: '关闭左侧标签',
+            click: function () {
+              tabBar.closeLeftTabs(data.id)
+            },
+          },
+          {
+            label: '关闭右侧标签',
+            click: function () {
+              tabBar.closeRightTabs(data.id)
+            },
+          },
+        ],
+        [
+          {
+            label: '分享标签',
+            submenu: [
+              {
+                label: '复制链接',
+                click: function () {
+                  tabBar.shareTab(data.id)
+                },
+              },
+            ],
+          },
+          {
+            label: '分享整组',
+            submenu: [
+              {
+                label: '复制链接',
+                click: function() {
+                  tabBar.shareTask()
+                }
+              },
+            ],
+          },
+        ],
+      ]
+
+      const judgeUser = await baseApi.getCurrentUser()
+      if(judgeUser.value.uid === 0) {
+        remoteMenu.open(template)
+        return
+      }
+
       let handleSingleTab = [
         {
           label: '默认列表',
@@ -518,124 +614,34 @@ const tabBar = {
 
       await localAppsMenu()
 
-      let template = [
-        [
-          {
-            id: 'open',
-            label: '创建一个新组',
-            click: function () {
-              require('browserUI.js').addTask()
-              //$store.getters.fillTasksToItems
-            },
-          },
-          {
-            id: 'open',
-            label: '打开新标签',
-            click: function () {
-              //console.log('关闭全部标签被点击')
-              require('browserUI.js').addTab()
-            },
-          },
-          {
-            label: '移动到最左边',
-            toolTip: '作为组代表,当前任务组会更新为此标签的网站图标',
-            click: function () {
-              //console.log('关闭全部标签被点击')
-              tabBar.moveToFirst(data.id)
-            },
-          },
-          {
-            label: '移动到其他标签组',
-            click: () => {
-              tabBar.insertTabToTask(data.id)
-            }
-          },
-          {
-            label: '关闭标签',
-            click: function () {
-              //console.log('关闭全部标签被点击')
-              //$store.getters.fillTasksToItems
-              require('browserUI.js').closeTab(data.id)
-            },
-          },
-        ],
-        [
-          {
-            label: '关闭整组',
-            click: function () {
-              require('browserUI.js').closeTask(tasks.getSelected().id)
-            },
-          },
-          {
-            label: '关闭其他标签',
-            click: function () {
-              tabBar.closeOtherTabs(data.id)
-            },
-          },
-          {
-            label: '关闭左侧标签',
-            click: function () {
-              tabBar.closeLeftTabs(data.id)
-            },
-          },
-          {
-            label: '关闭右侧标签',
-            click: function () {
-              tabBar.closeRightTabs(data.id)
-            },
-          },
-        ],
-        [
-          {
-            label: '添加到本地导航',
-            submenu: handleSingleTab
-          },
-          {
-            label: '整组添加到本地导航',
-            submenu: handleAllTab
-          },
-          {
-            label: '添加到云端用户导航',
-            submenu: showSiglAppUserNav
-          },
-          {
-            label: '整组添加到云端用户导航',
-            submenu: showMulAppUserNav
-          },
-          {
-            label: '添加到云端团队导航',
-            submenu: showSiglAppGroupNav
-          },
-          {
-            label: '整组添加到云端团队导航',
-            submenu: showMulAppGrouprNav
-          }
-        ],
-        [
-          {
-            label: '分享标签',
-            submenu: [
-              {
-                label: '复制链接',
-                click: function () {
-                  tabBar.shareTab(data.id)
-                },
-              },
-            ],
-          },
-          {
-            label: '分享整组',
-            submenu: [
-              {
-                label: '复制链接',
-                click: function() {
-                  tabBar.shareTask()
-                }
-              },
-            ],
-          },
-        ],
+      const onlineTempl = [
+        {
+          label: '添加到本地导航',
+          submenu: handleSingleTab
+        },
+        {
+          label: '整组添加到本地导航',
+          submenu: handleAllTab
+        },
+        {
+          label: '添加到云端用户导航',
+          submenu: showSiglAppUserNav
+        },
+        {
+          label: '整组添加到云端用户导航',
+          submenu: showMulAppUserNav
+        },
+        {
+          label: '添加到云端团队导航',
+          submenu: showSiglAppGroupNav
+        },
+        {
+          label: '整组添加到云端团队导航',
+          submenu: showMulAppGrouprNav
+        }
       ]
+
+      template.splice(2, 0, onlineTempl)
 
       remoteMenu.open(template)
       //绑定代码结束
