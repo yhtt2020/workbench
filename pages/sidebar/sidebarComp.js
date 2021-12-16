@@ -358,6 +358,7 @@ Vue.component('sidebar', {
     /**
      * 锁定单个标签
      * @param id
+     * @param taskId 标签组id
      */
     toggleLockTab(id,taskId){
       ipc.sendTo(mainWindowId,'toggleLockTab',{id:id,taskId:taskId})
@@ -366,9 +367,17 @@ Vue.component('sidebar', {
       document.getElementById('hoverLock'+tab.id).hidden=false
     },
     hideHoverLock(tab){
-      if(tab.lock===false){
+      console.log(tab)
+      if(!(tab.lock===true)){
+        console.log(tab)
         document.getElementById('hoverLock'+tab.id).hidden=true
       }
+    },
+    clearTaskUnlock(task){
+      if(task.tabs.length===1){
+        this.$message.error({content:'该任务只有一个标签，无法执行清理。'})
+      }else
+        ipc.sendTo(mainWindowId,'clearTaskUnlock',{id:task.id})
     }
 	}
 
