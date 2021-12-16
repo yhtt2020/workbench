@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>用户脚本管理</title>
+  <script src="../../ext/vue/vue.js"></script>
+  <script src="../../ext/vue/antd.min.js"></script>
+  <link rel="stylesheet" href="../../ext/vue/antd.min.css"/>
+</head>
+<body>
+<div id="appVue">
+<template>
+  <a-table :columns="columns" :data-source="data">
+    <span slot="tags" slot-scope="tags">
+      <a-tag
+        v-for="tag in tags"
+        :key="tag"
+        :color="tag === 'loser' ? 'volcano' : tag.length > 5 ? 'geekblue' : 'green'"
+      >
+        {{ tag.toUpperCase() }}
+      </a-tag>
+    </span>
+    <span slot="action" slot-scope="text, record">
+      <a>查看源码</a>
+      <br>
+      <a>删除脚本</a>
+    </span>
+  </a-table>
+</template>
+</div>
+<script>
+  const columns = [
+    {
+      dataIndex: 'name',
+      key: 'name',
+      width:150,
+      title:'脚本名'
+    },
+    {
+      title: '文件名',
+      width:150,
+      dataIndex: 'filename',
+      key: 'filename',
+    },
+    {
+      title: '文件大小',
+      width:100,
+      dataIndex: 'size',
+      key: 'size',
+    },
+    {
+      title: '标签',
+      key: 'tags',
+      dataIndex: 'tags',
+      scopedSlots: { customRender: 'tags' },
+    },
+    {
+      title: '操作',
+      width:150,
+      key: 'action',
+      scopedSlots: { customRender: 'action' },
+    },
+  ]
+
+  Vue.use(antd)
+  const electron = require('electron')
+  const ipc = electron.ipcRenderer
+  const tools=require('../util/util.js').tools
+  const userScriptModel=require('../util/model/userScriptModel.js')
+  const appVue = new Vue({
+    el: '#appVue',
+    data () {
+      return {
+        data:[],
+        columns,
+      }
+    },
+    mounted(){
+      tools.getWindowArgs(window)
+      this.data = userScriptModel.init(window.globalArgs['user-data-path'])
+
+    }
+  })
+
+
+
+</script>
+</body>
+</html>

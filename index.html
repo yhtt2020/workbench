@@ -158,7 +158,7 @@
 <!--            </div>-->
 
           </div>
-          <div style="display: flex;width: 220px" >
+          <div style="display: flex;width: 260px" >
             <div class="action-wrapper" >
                 <span onclick="ipc.send('openSwitch')" title="快速切换（Ctrl+Tab）" id="switch-toolbar"><img class="action" src="./icons/toolbar/switch.svg">
                 </span>
@@ -178,6 +178,9 @@
               <div class="action-wrapper" >
                 <span onclick="ipc.send('openHome')" title="导航管理" id="nav-toolbar"><img class="action" src="./icons/svg/cloud.svg"></span>
               </div>
+            <div class="action-wrapper" >
+              <span onclick="ipc.send('openScriptManager')" title="脚本插件" id="userscript-toolbar"><img class="action" src="./icons/toolbar/code.svg"></span>
+            </div>
             <div class="action-wrapper">
               <img title="收起地址栏，使用精简模式"  id="collapse-button-toolbar" class="action"  src="./icons/toolbar/chevronsup.svg">
              </div>

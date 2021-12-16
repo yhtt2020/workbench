@@ -11,6 +11,7 @@ const modules = [
   'main/main.js',
   'main/sidePanel.js',
   'main/siteCard.js',
+  'main/userScript.js',
   'main/handleAxios.js',
   'main/group.js',
   'main/update.js',
