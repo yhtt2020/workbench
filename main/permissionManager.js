@@ -99,13 +99,13 @@ function pagePermissionRequestHandler (webContents, permission, callback, detail
   //   openExternal - Request to open links in external applications.
   //   unknown - An unrecognized permission request
   const permissions=[
-    // 'notifications',
-    // 'fullscreen',
+     'notifications',
+     'fullscreen',
     // 'clipboard-sanitized-write',
     'media'
   ]
 
-  if ( permissions.indexOf(permission)>-1) {
+  if ( permissions.includes(permission)) {
     callback(true)
     //todo 应当在ui层加入选择
     return
