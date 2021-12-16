@@ -372,9 +372,8 @@
                 >
                   <div slot="title">
                     {{ item.count > 5 ? item.title + ' -- 高负载（5+）' : item.title }}
-                    <span  style="float: right;cursor: pointer">
-
-                          <a-icon @click="closeItem(item)"
+                    <span  style="float: right;cursor: pointer" @click="closeItem(item)">
+                          <a-icon title="删除标签组"
                                   type="close"></a-icon>
                         </span>
                   </div>
@@ -384,7 +383,7 @@
                                     type="unlock"></a-icon>全部锁定</a-button>
                       <a-button size="small" title="清理组内全部未锁定标签" @click="lockTask(item.id)" style="cursor:pointer;">
                         <a-icon
-                                type="delete"></a-icon>清理
+                                type="delete"></a-icon>清理未锁定
                       </a-button>
                     </div>
                     <ul class="tabs" style="margin-top: 5px">

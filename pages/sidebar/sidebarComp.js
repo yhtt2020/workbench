@@ -327,8 +327,19 @@ Vue.component('sidebar', {
     },
     closeItem(item){
       if(item.type==='task'){
-        ipc.send('closeTask',{tabId:item.id})
-        this.$message.success({content:'删除标签组成功。'})
+        let hasLocked=false
+        item.tabs.forEach((item)=>{
+          if(item.lock===true){
+            hasLocked=true
+          }
+        })
+        if(hasLocked===false){
+          ipc.send('closeTask',{tabId:item.id})
+          this.$message.success({content:'删除标签组成功。'})
+        }else{
+          this.$message.error({content:'删除标签失败，组内存在锁定标签，请解锁后重新删除。'})
+        }
+
       }
     },
     createGroup(){
