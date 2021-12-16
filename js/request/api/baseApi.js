@@ -26,7 +26,7 @@ const baseApi = {
     } else {
       const user = await baseApi.getCurrentUser()
       if(user.value.uid === 0) {
-        return Promise.reject('请先登入再操作!')
+        return Promise.reject('请先登入再操作')
       } else {
         baseApi.currentUser = user;
         baseApi.token = user.value.token;
