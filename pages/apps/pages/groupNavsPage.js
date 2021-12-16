@@ -13,7 +13,10 @@ const groupNavsTpl=`
     <a-layout-content>
       <template>
         <div style="background-color: white; padding: 20px;" class="group-apps">
-          <CloudNavsComp :Clouds="groupClouds"></CloudNavsComp>
+          <CloudNavsComp :Clouds="groupClouds" v-if="this.groupClouds.length > 0"></CloudNavsComp>
+          <template v-else>
+            <a-empty :description="false"/>
+          </template>
         </div>
       </template>
     </a-layout-content>

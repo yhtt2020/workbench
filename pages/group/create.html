@@ -113,11 +113,11 @@
               data: values,
             })
             if(result.code === 1000) {
-              this.$message.success('成功创建团队:' + values.name)
               ipc.send('refreshMyGroups')
-              setTimeout(function() {
-                ipc.send('closeCreateGroupWindow')
-              }, 1000)
+              ipc.send('closeCreateGroupWindow')
+              ipc.send('message',{type:'success',config:{content: '成功创建团队:' + values.name, key: Date.now()}})
+              //如果来自group-comp创建成功还需要转发一条消息出去通知group-comp去更新一下group的信息
+              ipc.send('refreshGroupComp')
             }
           })
         },

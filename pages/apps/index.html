@@ -93,6 +93,7 @@
       }
     },
     async mounted () {
+      window.$store = store
       this.myApps = []
       this.load()
       //await this.$store.dispatch('getAppUserNavs')
