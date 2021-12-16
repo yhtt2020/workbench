@@ -17,14 +17,6 @@ const sideBar={
     }
     switch (sideBar.mod){
       case 'auto':
-        // 切换到关闭
-        ipc.send('sideSetClose')
-        //更换图标
-        setIcon('./icons/toolbar/sideclose.svg')
-        sideBar.mod='close'
-        setTitle('当前模式：精简模式；点击切换到展开模式')//设置提示文字
-        break
-      case 'close':
         // 切换到展开
         //更换图标
         ipc.send('sideSetOpen')
@@ -33,8 +25,7 @@ const sideBar={
         setTitle('当前模式：展开模式；点击切换到自动模式')
         sideBar.setToMax()
         break
-      //更换模式
-      case 'open':
+      case 'close':
         // 切换到自动模式
         ipc.send('sideSetAuto')
         //更换图标
@@ -43,6 +34,16 @@ const sideBar={
         setTitle('当前模式：自动展开收起；点击切换收起左侧栏，不再自动展开')
         sideBar.setToMin()
         //更换模式
+        break
+      //更换模式
+      case 'open':
+        // 切换到关闭
+        ipc.send('sideSetClose')
+        //更换图标
+        setIcon('./icons/toolbar/sideclose.svg')
+        sideBar.mod='close'
+        setTitle('当前模式：精简模式；点击切换到展开模式')//设置提示文字
+        sideBar.setToMin()
     }
   },
   /**
