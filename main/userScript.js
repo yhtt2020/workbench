@@ -58,4 +58,37 @@ app.whenReady().then(()=>{
   ipc.on('openScriptManager', (event, args) => {
     createUserScriptWin()
   })
+  ipc.on('viewCode',(event,args)=>{
+    const file=args.file
+    let viewCodeWindow = new BrowserWindow({
+      frame: true,
+      backgroundColor: 'white',
+      parent: mainWindow,
+      center:true,
+      hasShadow: true,
+      minWidth: 800,
+      width: 800,
+      autoHideMenuBar: true,
+      minHeight: 600,
+      height: 600,
+      acceptFirstMouse: true,
+      maximizable: false,
+      visualEffectState: 'active',
+      alwaysOnTop: true,
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false,
+        additionalArguments: [
+          '--user-data-path=' + userDataPath,
+          '--app-version=' + app.getVersion(),
+          '--app-name=' + app.getName(),
+          '--file='+file.filename,
+          ...((isDevelopmentMode ? ['--development-mode'] : [])),
+        ]
+      }
+    })
+    viewCodeWindow.webContents.loadURL('file://'+ __dirname + '/pages/userScript/code.html')
+
+
+  })
 })
