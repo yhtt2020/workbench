@@ -294,8 +294,6 @@ const tabBar = {
     tabEl.appendChild(tabAudio.getButton(data.id))
     tabEl.appendChild(progressBar.create())
 
-
-    console.log(data)
     // icons
 
     var iconArea = document.createElement('span')
@@ -339,12 +337,16 @@ const tabBar = {
         tabBar.events.emit('tab-selected', data.id)
       } else {
         // the tab is focused, edit tab instead
-        tabEditor.show(data.id)
+        if(!$toolbar.expanded){
+          //如果非二栏模式才可以触发show
+          tabEditor.show(data.id)
+        }
       }
     })
-    tabEditor.input.addEventListener('focus',function (){
-      tabEditor.show(data.id)
-    })
+
+
+    tabEditor.input.removeEventListener('focus',$toolbar.focusInput)
+    tabEditor.input.addEventListener('focus',$toolbar.focusInput)
 
     tabEl.addEventListener('auxclick', function (e) {
       if (e.which === 2) {
@@ -757,15 +759,15 @@ const tabBar = {
         src = tabData.favicon.url
       }
     }
-    iconEl.title="点击查看网站名片"
+    // iconEl.title="点击查看网站名片"
     iconEl.src = src
-    iconEl.style.cursor='pointer'
+    // iconEl.style.cursor='pointer'
    // iconEl.style="cursor:pointer"
-    iconEl.addEventListener('click',(e)=>{
-      ipc.send('createSiteCard',{url:tabData.url,x:e.clientX,y:e.clientY,title:tabData.title,tabData:tabData})
-      e.preventDefault()
-      e.stopPropagation()
-    })
+   //  iconEl.addEventListener('click',(e)=>{
+   //    ipc.send('createSiteCard',{url:tabData.url,x:e.clientX,y:e.clientY,title:tabData.title,tabData:tabData})
+   //    e.preventDefault()
+   //    e.stopPropagation()
+   //  })
     return iconEl
   },
 }

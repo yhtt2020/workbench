@@ -3,6 +3,7 @@ const { api } = require('../../server-config')
 Vue.component('sidebar', {
 	data: function() {
 		return {
+      mod:'auto',//auto open close
       isPopoverShowing:false,
       lastOpenId:0,
 			drag: false,
@@ -190,6 +191,9 @@ Vue.component('sidebar', {
 			})
 
 		},
+    openGroup(){
+      ipc.send('openGroup')
+    },
 		//开始拖拽事件
 		onStart() {
 			this.drag = true;
@@ -280,6 +284,13 @@ Vue.component('sidebar', {
 			}
 			this.userPanelVisible=false
 		},
+    openCom(){
+      if(this.user.uid===0){
+        this.addTab(api.getUrl(api.API_URL.user.login))
+      }else{
+        this.addTab(api.getUrl(api.API_URL.user.home))
+      }
+    },
 		addTab(url){
 			postMessage({
 				message: "addTab",
@@ -312,12 +323,12 @@ Vue.component('sidebar', {
     },
     addNewTask(e){
       ipc.send('addNewTask')
-      this.$message.success({content:'成功添加一个新任务到左侧栏。'})
+      this.$message.success({content:'成功添加一个新标签组到左侧栏。'})
     },
     closeItem(item){
       if(item.type==='task'){
         ipc.send('closeTask',{tabId:item.id})
-        this.$message.success({content:'删除任务成功。'})
+        this.$message.success({content:'删除标签组成功。'})
       }
     },
     createGroup(){

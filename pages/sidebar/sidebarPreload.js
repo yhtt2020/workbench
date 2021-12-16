@@ -120,8 +120,6 @@ function getCurrentUser () {
         user = item.value
         window.$store.state.user = user
       }
-      console.log('获取当前用户成功')
-      console.log(user)
     }
   ).catch((err) => {
     console.log('获取当前用户失败')

@@ -5,10 +5,8 @@ var viewStateMap = {} // id: view state
 
 var temporaryPopupViews = {} // id: view
 
-var viewBounds={}
-var sidebarBounds={}
-
-
+var viewBounds = {}
+var sidebarBounds = {}
 
 const defaultViewWebPreferences = {
   nodeIntegration: false,
@@ -160,15 +158,15 @@ function createView (existingViewId, id, webPreferencesString, boundsString, eve
   view.webContents.on('will-redirect', handleExternalProtocol)
 
   view.setBounds(JSON.parse(boundsString))
-  viewBounds=JSON.parse(boundsString)
+  viewBounds = JSON.parse(boundsString)
   viewMap[id] = view
 
   //增加对证书的验证事件处理
   view.webContents.session.setCertificateVerifyProc((request, callback) => {
-      const { hostname } = request
-     //沿用默认验证方法
-      callback(-3)
-    })
+    const { hostname } = request
+    //沿用默认验证方法
+    callback(-3)
+  })
   //end
   return view
 }
@@ -178,13 +176,13 @@ function destroyView (id) {
     return
   }
   if (viewMap[id] === mainWindow.getBrowserView()) {
-      mainWindow.setBrowserView(null)
-	}
+    mainWindow.setBrowserView(null)
+  }
   // else if(viewMap[id]===sidebarView)//如果是侧边栏的view，则直接将其置顶起来
   // {
-	 //  console.log('阻止一次被消耗')
-	 //  mainWindow.setTopBrowserView(sidebarView)
-	 //  return
+  //  console.log('阻止一次被消耗')
+  //  mainWindow.setTopBrowserView(sidebarView)
+  //  return
   // }
   viewMap[id].webContents.destroy()
 
@@ -197,12 +195,11 @@ function destroyAllViews () {
     destroyView(id)
   }
 }
+
 //处理设置当前BrowserView事件，以将sidebarView拿出来
 
-
-
 function setView (id) {
-	mainWindow.setBrowserView(viewMap[id])
+  mainWindow.setBrowserView(viewMap[id])
 
 }
 
@@ -353,39 +350,12 @@ ipc.on('saveViewCapture', function (e, data) {
 })
 
 global.getView = getView
-var emulationViews=[]
-var oldAgent=''
+var emulationViews = []
+var oldAgent = ''
 //当前view打开emulation
-ipc.on('enableEmulation',function(e,data){
-	var view=viewMap[data.id]
-	var index=emulationViews.indexOf(data.id)
-	if(index!=-1){
-		view.webContents.setUserAgent(oldAgent)
-		view.webContents.disableDeviceEmulation()
-		view.webContents.reload()
-		emulationViews.splice(index,1)
-
-	}else{
-		oldAgent=view.webContents.getUserAgent()
-		view.setBackgroundColor("#d1d1d1")
-		view.webContents.setUserAgent('Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A403 Safari/8536.25')
-		view.webContents.enableDeviceEmulation({
-			 screenPosition: 'mobile',
-			 screenSize: { width: 375, height: 812 },
-			 deviceScaleFactor: 0,
-			 viewPosition: { x: 0, y: 0 },
-			 viewSize: { width: 375, height: 812 },
-			 fitToView: false,
-			 offset: { x: 0, y: 0 }
-		})
-
-		emulationViews.push(data.id)
-		view.webContents.reload()
-	}
-
-	// view.webContents.openDevTools({
-	// 	 mode: 'bottom'
-	// })
-
+ipc.on('enableEmulation', function (e, data) {
+  if(viewMap[data.id].webContents.getURL().startsWith("file://") || viewMap[data.id].webContents.getURL().startsWith("ts://"))
+    return
+  mobileMod.add(viewMap[data.id].webContents.getURL())
 
 })

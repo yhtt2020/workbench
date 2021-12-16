@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>选择任务打开</title>
+    <title>选择标签组打开</title>
     <script src="../../ext/vue/vue.js"></script>
     <script src="../../ext/vue/antd.min.js"></script>
     <link rel="stylesheet" href="../../ext/vue/antd.min.css" />
@@ -80,7 +80,7 @@
               </a-button-group>
               <a-button v-show="this.selectedTab.id==0" type="primary">
                 <a-icon type="plus-circle"> </a-icon>
-                新建任务
+                新建标签组
               </a-button>
               <a-button type="default" @click="closeWin"> 取消 </a-button>
             </a-col>
@@ -101,7 +101,7 @@
             id: 0,
           },
           selectedTask: {
-            name: '新建任务',
+            name: '新建标签组',
             icon: '../../icons/empty.png',
             id: 0,
           },
@@ -209,7 +209,7 @@
             id: 0,
           }),
             (this.selectedTask = {
-              name: '新建任务',
+              name: '新建标签组',
               icon: '../../icons/empty.png',
               id: 0,
             })

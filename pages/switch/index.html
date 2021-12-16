@@ -26,10 +26,10 @@
           <li :class="{'active':selectedTaskIndex===-2}" @click.prevent="openTasks">
             <span class="key">T</span>&nbsp;
             <a-avatar :size="20" src="../../icons/svg/tasks.svg" shape="square"></a-avatar>
-            打开任务管理
+            打开标签组管理
           </li>
         </ul>
-        <div class="title">↑前9个任务，按键切换</div>
+        <div class="title">↑前9个标签组，按键切换</div>
       </a-col>
       <a-col flex="1" style="overflow: hidden;">
 
@@ -42,7 +42,7 @@
         <div class="title">↑最近打开标签，   <span  class="key">tab</span> 切换，<span class="key">space</span> 确认</div>
       </a-col>
     </a-row>
-    <div v-if="currentTabs.length>0" class="path" @click="openTask(currentTabs[selectedIndex].task.id)">所属任务：
+    <div v-if="currentTabs.length>0" class="path" @click="openTask(currentTabs[selectedIndex].task.id)">所属标签组：
       <a-avatar :size="20" :src="currentTabs[selectedIndex].task.icon" shape="square"></a-avatar>
       {{currentTabs[selectedIndex].task.name}}
     </div>

@@ -59,6 +59,13 @@ class SidePanel {
     return true
   }
 
+  static send(channel,args){
+
+    if(SidePanel.alive()){
+      console.log('send')
+      sidePanel.get().webContents.send(channel,args)
+    }
+  }
   isVisible () {
     return this._sidePanel.isVisible()
   }
@@ -681,6 +688,9 @@ function createSwitchTask () {
   }
 
 }
+ipc.on('openSwitch',()=>{
+  createSwitchTask()
+})
 ipc.on('closeSwitch',()=>{
   if(switchWindow!==null){
     switchWindow.close()
@@ -698,3 +708,16 @@ ipc.on('openTasks',(event,args)=>{
 // app.whenReady().then(()=>{
 //   createSwitchTask()
 // })
+//设置侧边栏模式
+ipc.on('sideSetOpen',(event,args)=>{
+  console.log('sideopen')
+  SidePanel.send('sideSetOpen')
+})
+ipc.on('sideSetClose',(event,args)=>{
+  console.log('sideclose')
+  SidePanel.send('sideSetClose')
+})
+ipc.on('sideSetAuto',(event,args)=>{
+  console.log('auto')
+  SidePanel.send('sideSetAuto')
+})
