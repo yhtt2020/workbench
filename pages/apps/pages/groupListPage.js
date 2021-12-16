@@ -1,6 +1,6 @@
 groupListTpl=`
 <div style="width: 100%">
-  <template v-if=" this.$store.getters.getCurrentUser.value.uid > 0">
+  <template v-if=" uid > 0">
     <a-layout>
       <a-layout-header style="background: #fff; padding: 0">
         <template>
@@ -52,6 +52,7 @@ module.exports = Vue.component('group-list-page', {
   },
   data () {
     return {
+      uid: Number,
       myGroups:[]
     }
   },
@@ -60,6 +61,7 @@ module.exports = Vue.component('group-list-page', {
   },
   async mounted () {
     await this.$store.dispatch('getCurrentUser')
+    this.uid = this.$store.getters.getCurrentUser.value.uid
   },
   beforeCreate () {
 

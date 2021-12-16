@@ -59,6 +59,9 @@ module.exports = Vue.component('group-navs-page', {
     async load(vm, params) {
       await this.$store.dispatch('getAppGroupNavs', params)
       vm.groupClouds = vm.$store.getters.getAppGroupNavs
+      vm.groupClouds.forEach(e => {
+        e.groupId = vm.groupId
+      })
     }
   }
 })
