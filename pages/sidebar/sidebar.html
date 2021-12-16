@@ -372,16 +372,28 @@
                 >
                   <div slot="title">
                     {{ item.count > 5 ? item.title + ' -- 高负载（5+）' : item.title }}
-                    <span>
-                          <a-icon @click="closeItem(item)" style="float: right;margin-top: 5px;cursor: pointer"
+                    <span  style="float: right;cursor: pointer">
+
+                          <a-icon @click="closeItem(item)"
                                   type="close"></a-icon>
                         </span>
                   </div>
                   <template slot="content">
-                    <ul class="tabs">
-                      <li style="cursor: pointer;" class="tab-title" v-for="(tab,j) in item.tabs" :key="tab.id"
-                          @click="openPopoverTab(item.id, tab.id)">
-                        <img class="tab-icon" :src="tab.icon"/>&nbsp;{{ tab.title }}
+                    <div style="text-align: right">
+                      <a-button size="small" title="锁定当前标签组内全部标签" @click="lockTask(item.id)" style="cursor:pointer;"><a-icon
+                                    type="unlock"></a-icon>全部锁定</a-button>
+                      <a-button size="small" title="清理组内全部未锁定标签" @click="lockTask(item.id)" style="cursor:pointer;">
+                        <a-icon
+                                type="delete"></a-icon>清理
+                      </a-button>
+                    </div>
+                    <ul class="tabs" style="margin-top: 5px">
+                      <li style="position:relative;" @mouseenter="showHoverLock(tab)" @mouseleave="hideHoverLock(tab)" v-for="(tab,j) in item.tabs" :key="tab.id">
+                        <div class="tab-title" @click="openPopoverTab(item.id, tab.id)">
+                          <img class="tab-icon" :src="tab.icon" />&nbsp;{{ tab.title }}
+                        </div>
+                        <span @click="toggleLockTab(tab.id,item.id)" :id="'hoverLock'+tab.id" :hidden="tab.lock!==true" title="锁定当前标签；锁定后，标签将无法随意关闭" class="unlock-tab" ><a-icon
+                        type="lock"></a-icon></span>
                       </li>
                     </ul>
                   </template>

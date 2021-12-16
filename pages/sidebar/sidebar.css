@@ -104,13 +104,17 @@ body {
   cursor: move;
 }
 
-.tab-icon {
+.tabs {
+  position: relative;
+}
+.tabs .tab-icon {
   width: 20px;
   height: 20px;
   margin-right: 5px;
 }
-
-.tab-title {
+.tabs .tab-title {
+  cursor: pointer;
+  margin-right: 22px;
   width: 250px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -118,8 +122,18 @@ body {
   padding: 5px;
   border-radius: 4px;
 }
-
-.tab-title:hover {
+.tabs .unlock-tab {
+  padding: 2px 4px;
+  position: absolute;
+  right: 0;
+  top: 4px;
+  cursor: pointer;
+}
+.tabs .unlock-tab:hover {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+.tabs .tab-title:hover {
   background-color: #efefef;
 }
 

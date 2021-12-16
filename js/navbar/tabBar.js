@@ -846,4 +846,18 @@ ipc.on('refresh', () => {
   webviews.update(tabs.getSelected(), tasks.getSelected().tabs.get(tabs.getSelected()).url)
 })
 
+ipc.on('toggleLockTab',(event,args)=>{
+  const tab=tasks.get(args.taskId).tabs.get(args.id)
+  tab.lock=!tab.lock
+  tasks.get(args.taskId).tabs.update(tab.id,tab)
+})
+
+ipc.on('lockTask',(event,args)=>{
+  let tabs=tasks.get(args.id)
+  tabs.tabs.forEach((item,index)=>{
+    item.lock=true
+    tabs.tabs.update(item.id,item)
+  })
+})
+
 module.exports = tabBar

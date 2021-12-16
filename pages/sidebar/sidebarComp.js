@@ -336,8 +336,29 @@ Vue.component('sidebar', {
     },
     changePopoverVisible(visible){
       this.isPopoverShowing=visible
+    },
+    /**
+     * 锁定任务
+     * @param id
+     */
+    lockTask(id){
+      ipc.sendTo(mainWindowId,'lockTask',{id:id})
+    },
+    /**
+     * 锁定单个标签
+     * @param id
+     */
+    toggleLockTab(id,taskId){
+      ipc.sendTo(mainWindowId,'toggleLockTab',{id:id,taskId:taskId})
+    },
+    showHoverLock(tab){
+      document.getElementById('hoverLock'+tab.id).hidden=false
+    },
+    hideHoverLock(tab){
+      if(tab.lock===false){
+        document.getElementById('hoverLock'+tab.id).hidden=true
+      }
     }
-
 	}
 
 })

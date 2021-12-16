@@ -3,7 +3,7 @@ require('../../dist/localization.build.js')
 const electron = require('electron')
 const ipc = electron.ipcRenderer
 const { db } = require('../../js/util/database.js')
-let mainWindowId = 0
+window.mainWindowId = 0 //主窗体id
 window.l = l
 window.db= db
 const {
