@@ -9,6 +9,9 @@ var urlParser = require('util/urlParser.js')
 
 var statistics = require('js/statistics.js')
 
+//匹配到的网站的脚本数存储
+
+
 function parseTampermonkeyFeatures (content) {
   var parsedFeatures = {}
   var foundFeatures = false
@@ -151,8 +154,11 @@ const userscripts = {
     }
 
     var src = tabs.get(tabId).url
-
-    userscripts.getMatchingScripts(src).forEach(function (script) {
+    const matchedScripts=userscripts.getMatchingScripts(src)
+    //往窗体的变量中添加匹配数
+    $matchedScriptsForSite[tabId]=matchedScripts
+    $toolbar.updateScriptsCountTip(tabId)
+    matchedScripts.forEach(function (script) {
       // TODO run different types of scripts at the correct time
       if (!script.options['run-at'] || script.options['run-at'].some(i => ['document-start', 'document-body', 'document-end', 'document-idle'].includes(i))) {
         userscripts.runScript(tabId, script)
@@ -165,6 +171,7 @@ const userscripts = {
     })
 
     settings.listen('userscriptsEnabled', function (value) {
+      window.$matchedScriptsForSite= {}
       if (value === true) {
         userscripts.loadScripts()
       } else {

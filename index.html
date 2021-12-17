@@ -179,7 +179,10 @@
                 <span onclick="ipc.send('openHome')" title="导航管理" id="nav-toolbar"><img class="action" src="./icons/svg/cloud.svg"></span>
               </div>
             <div class="action-wrapper" >
-              <span onclick="ipc.send('openScriptManager')" title="脚本插件" id="userscript-toolbar"><img class="action" src="./icons/toolbar/code.svg"></span>
+              <span onclick="ipc.send('openScriptManager')" title="管理脚本插件" id="userscript-toolbar"><img class="action" src="./icons/toolbar/code.svg">
+              <span hidden title="当前页面有3个脚本正在启用" class="bandage" id="scriptCount">3</span>
+              </span>
+
             </div>
             <div class="action-wrapper">
               <img title="收起地址栏，使用精简模式"  id="collapse-button-toolbar" class="action"  src="./icons/toolbar/chevronsup.svg">

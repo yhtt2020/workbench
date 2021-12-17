@@ -322,6 +322,8 @@ const webviews = {
         pwdCountEl.hidden=false
       }
     })
+
+    $toolbar.updateScriptsCountTip(tabData.id)
   },
   updateToolbarSecure(secure){
     if(secure){

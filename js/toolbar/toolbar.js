@@ -121,6 +121,13 @@ const toolbar = {
       mobileEl.disable = false
     }
   },
+  updateScriptsCountTip(tabId=tabs.getSelected().id){
+    matchedScripts= window.$matchedScriptsForSite[tabId]
+    scriptCountEl= document.getElementById('scriptCount')
+    scriptCountEl.hidden=!(matchedScripts.length>0)
+    scriptCountEl.innerText=String(matchedScripts.length)
+    scriptCountEl.title='共有'+matchedScripts.length+'个脚本生效中'
+  },
   //设置密码管理器是否可用
   setPwdCanUse (canUse) {
     const pwdEl = document.getElementById('pwd-toolbar')
