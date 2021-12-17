@@ -12,7 +12,7 @@
 <template>
   <div style="padding: 20px">
     <h3>当前启用脚本</h3>
-<!--    <a-button style="position:absolute;right: 20px;top: 20px" type="primary" icon="download">导入自定义脚本</a-button>-->
+    <a-button title="导入外部用户脚本" @click="importScript" style="position:absolute;right: 20px;top: 20px" type="primary" icon="download">导入脚本</a-button>
   </div>
   <a-table :columns="columns" :data-source="data" :pagination="false">
     <p v-html="record.description" slot="expandedRowRender" slot-scope="record" style="margin: 0">
@@ -86,6 +86,9 @@
       viewCode(record){
         ipc.send('viewCode',{file:record})
         console.log(record)
+      },
+      importScript(){
+        ipc.send('importScript')
       }
     }
   })

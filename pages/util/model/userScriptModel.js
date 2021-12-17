@@ -44,39 +44,39 @@ const userScriptModel = {
   },
   init (userDataPath) {
     const pathName = userDataPath + '/userscripts/'
-    fs.readdir(pathName, function (err, files) {
-      for (var i = 0; i < files.length; i++) {
-        let filename = files[i]
-        if (filename.endsWith('.js')) {
-          fs.stat(path.join(pathName, files[i]), async function (err, data) {
-            if (data.isFile()) {
-              let script = {}
-              script.name = '自定义脚本'
-              script.filename = filename
-              script.size = data.size
-              script.createTime = data.ctime
-              script.content = fs.readFileSync(path.join(pathName, filename), 'utf-8')
-              const features = userScriptModel.parseTampermonkeyFeatures(script.content)
-              console.log(features)
-              // author: ['AC']
-              // description: ['去掉百度的推广链接']
-              // grant: ['none']
-              // icon: ['https://coding.net/u/zb227/p/zbImg/git/raw/master/img0/icon.jpg']
-              // include: (2) ['http://www.baidu.com/*', 'https://www.baidu.com/*']
-              // name: ['AC-百度去广告']
-              // namespace: ['ACNoAdd']
-              // run-at: ['document-end']
-              // version: ['5.0']
+    const files = fs.readdirSync(pathName)
+    console.log(files)
+    for (var i = 0; i < files.length; i++) {
+      let filename = files[i]
+      if (filename.endsWith('.js')) {
+        const data = fs.statSync(path.join(pathName, files[i]))
+        if (data.isFile()) {
+          let script = {}
+          script.name = '自定义脚本'
+          script.filename = filename
+          script.size = data.size
+          script.createTime = data.ctime
+          script.content = fs.readFileSync(path.join(pathName, filename), 'utf-8')
+          const features = userScriptModel.parseTampermonkeyFeatures(script.content)
+          console.log(features)
+          // author: ['AC']
+          // description: ['去掉百度的推广链接']
+          // grant: ['none']
+          // icon: ['https://coding.net/u/zb227/p/zbImg/git/raw/master/img0/icon.jpg']
+          // include: (2) ['http://www.baidu.com/*', 'https://www.baidu.com/*']
+          // name: ['AC-百度去广告']
+          // namespace: ['ACNoAdd']
+          // run-at: ['document-end']
+          // version: ['5.0']
+          script.feature =!!!features.description?'': features.description.join('')
+          script.author = !!!features.author?'':features.author.join('')
+          script.name =!!!features.name?'': features.name.join('')
 
-              script.feature=features.description.join('')
-              script.author=features.author.join('')
-              script.name=features.name.join('')
+          script.version =!!!features.features?'': features.version.join('')
+          script.scope =!!!features.include?'': features.include.join('\n')
+          script.runat =!!!features.features?'': features['run-at'].join('<br>')
 
-              script.version=features.version.join('')
-              script.scope=features.include.join('\n')
-              script.runat=features['run-at'].join('<br>')
-
-              script.description=`
+          script.description = `
 <h4>脚本属性</h4>
               文件名：${script.filename}<br>
               作者：${script.author}<br>
@@ -85,13 +85,12 @@ const userScriptModel = {
               运行位置：${script.runat}<br>
               `
 
-
-              scripts.push(script)
-            }
-          })
+          scripts.push(script)
         }
+
       }
-    })
+    }
+
     return scripts
   }
 }

@@ -10,7 +10,7 @@ function createUserScriptWin (args) {
       frame: true,
       backgroundColor: 'white',
       parent: mainWindow,
-      center:true,
+      center: true,
       hasShadow: true,
       minWidth: 800,
       width: 800,
@@ -54,17 +54,59 @@ function createUserScriptWin (args) {
     userScriptWindow = null
   }
 }
-app.whenReady().then(()=>{
+
+app.whenReady().then(() => {
+  const userScriptPath = userDataPath + '/userscripts'
+  ipc.on('importScript', (event, args) => {
+    let existsCount = 0
+    let imported = 0
+    let existsFilename = []
+    userScriptWindow.setAlwaysOnTop(false)
+    mainWindow.focus()
+    const files = dialog.showOpenDialogSync({
+      filters: [
+        { name: '脚本文件', extensions: ['js'] }
+      ], properties: ['openFile', 'multiSelections']
+    })
+    if(!!!files){
+      return
+    }
+    files.forEach((file) => {
+      const filename = file.slice(file.lastIndexOf('/') + 1, file.length)
+      const target = userScriptPath + '/' + filename
+      if (fs.existsSync(target)) {
+        existsCount++
+        existsFilename.push(filename)
+      } else {
+        fs.copyFileSync(file, target)
+        if (fs.existsSync(target)) {
+          imported++
+        }
+      }
+
+    })
+    if (existsCount > 0) {
+      sendMessage({
+        type: 'info',
+        config: { content: '成功导入' + imported + '个脚本，导入失败' + existsCount + '个脚本。导入失败的脚本名称如下：\n' + existsFilename.join('\n') }
+      })
+    } else {
+      sendMessage({ type: 'success', config: { content: '成功导入' + imported + '个脚本。' } })
+    }
+    userScriptWindow.webContents.reload()
+    userScriptWindow.setAlwaysOnTop(true)
+
+  })
   ipc.on('openScriptManager', (event, args) => {
     createUserScriptWin()
   })
-  ipc.on('viewCode',(event,args)=>{
-    const file=args.file
+  ipc.on('viewCode', (event, args) => {
+    const file = args.file
     let viewCodeWindow = new BrowserWindow({
       frame: true,
       backgroundColor: 'white',
       parent: mainWindow,
-      center:true,
+      center: true,
       hasShadow: true,
       minWidth: 800,
       width: 800,
@@ -82,13 +124,12 @@ app.whenReady().then(()=>{
           '--user-data-path=' + userDataPath,
           '--app-version=' + app.getVersion(),
           '--app-name=' + app.getName(),
-          '--file='+file.filename,
+          '--file=' + file.filename,
           ...((isDevelopmentMode ? ['--development-mode'] : [])),
         ]
       }
     })
-    viewCodeWindow.webContents.loadURL('file://'+ __dirname + '/pages/userScript/code.html')
-
-
+    viewCodeWindow.webContents.loadURL('file://' + __dirname + '/pages/userScript/code.html')
   })
+
 })
