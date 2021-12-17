@@ -57,13 +57,24 @@ function createUserScriptWin (args) {
 
 app.whenReady().then(() => {
   const userScriptPath = userDataPath + '/userscripts'
+  ipc.on('exportScript',(event,args)=>{
+    const filename=args.filename
+    const path=dialog.showSaveDialogSync(userScriptWindow,{title:'导出脚本',defaultPath:args.filename})
+    console.log(path)
+    if(!!!path){
+      return
+    }else{
+      fs.copyFileSync(userScriptPath+'/'+filename,path)
+    }
+  })
+
   ipc.on('importScript', (event, args) => {
     let existsCount = 0
     let imported = 0
     let existsFilename = []
-    userScriptWindow.setAlwaysOnTop(false)
     mainWindow.focus()
     const files = dialog.showOpenDialogSync({
+      userScriptWindow,
       filters: [
         { name: '脚本文件', extensions: ['js'] }
       ], properties: ['openFile', 'multiSelections']
@@ -88,13 +99,12 @@ app.whenReady().then(() => {
     if (existsCount > 0) {
       sendMessage({
         type: 'info',
-        config: { content: '成功导入' + imported + '个脚本，导入失败' + existsCount + '个脚本。导入失败的脚本名称如下：\n' + existsFilename.join('\n') }
+        config: { content: '成功导入' + imported + '个脚本，导入失败' + existsCount + '个脚本。导入失败的脚本名称如下：\n' + existsFilename.join('\n')+' 新导入的脚本需要重启浏览器方可生效。' }
       })
     } else {
-      sendMessage({ type: 'success', config: { content: '成功导入' + imported + '个脚本。' } })
+      sendMessage({ type: 'success', config: { content: '成功导入' + imported + '个脚本。新导入的脚本需要重启浏览器方可生效。' } })
     }
     userScriptWindow.webContents.reload()
-    userScriptWindow.setAlwaysOnTop(true)
 
   })
   ipc.on('openScriptManager', (event, args) => {

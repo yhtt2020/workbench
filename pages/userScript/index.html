@@ -9,15 +9,17 @@
 </head>
 <body>
 <div id="appVue">
-<template>
-  <div style="padding: 20px">
-    <h3>当前启用脚本</h3>
-    <a-button title="导入外部用户脚本" @click="importScript" style="position:absolute;right: 20px;top: 20px" type="primary" icon="download">导入脚本</a-button>
-  </div>
-  <a-table :columns="columns" :data-source="data" :pagination="false">
-    <p v-html="record.description" slot="expandedRowRender" slot-scope="record" style="margin: 0">
-    </p>
-    <span slot="tags" slot-scope="tags">
+  <template>
+    <div style="padding: 20px">
+      <h3>当前启用脚本</h3>
+      <a-button title="导入外部用户脚本" @click="importScript" style="position:absolute;right: 20px;top: 20px" type="primary"
+                icon="download">导入脚本
+      </a-button>
+    </div>
+    <a-table :columns="columns" :data-source="data" :pagination="false">
+      <p v-html="record.description" slot="expandedRowRender" slot-scope="record" style="margin: 0">
+      </p>
+      <span slot="tags" slot-scope="tags">
       <a-tag
         v-for="tag in tags"
         :key="tag"
@@ -26,73 +28,80 @@
         {{ tag.toUpperCase() }}
       </a-tag>
     </span>
-    <span slot="action" slot-scope="text, record">
+      <span slot="action" slot-scope="text, record">
       <a-dropdown>
-      <a-menu slot="overlay" >
+      <a-menu slot="overlay">
         <a-menu-item key="1" @click="viewCode(record)"> <a-icon type="eye"></a-icon>查看源码</a-menu-item>
-<!--        <a-menu-item key="2"> <a-icon type="export"> </a-icon>导出脚本 </a-menu-item>-->
-<!--        <a-menu-item key="3"> <a-icon type="delete"></a-icon>删除脚本</a-menu-item>-->
+        <a-menu-item key="2" @click="exportScript(record)"> <a-icon type="export"> </a-icon>导出脚本 </a-menu-item>
+        <a-menu-item key="3" @click="deleteScript(record)"> <a-icon type="delete"></a-icon>删除脚本</a-menu-item>
       </a-menu>
         <a-button style="margin-left: 8px"> 操作 <a-icon type="down"></a-icon></a-button>
     </a-dropdown>
     </span>
-  </a-table>
-</template>
+    </a-table>
+  </template>
 </div>
 <script>
   const columns = [
     {
       dataIndex: 'name',
-      width:150,
-      title:'脚本名'
+      width: 150,
+      title: '脚本名'
     },
     {
       title: '脚本功能',
-      width:200,
-      dataIndex: 'feature',
-    },{
-      title:'适用范围',
       width: 200,
-      dataIndex: 'scope',
+      dataIndex: 'feature',
     },
     {
       title: '操作',
-      width:150,
+      width: 150,
       key: 'action',
-      scopedSlots: { customRender: 'action' },
-      fixed: 'right',
+      scopedSlots: { customRender: 'action' }
     },
   ]
 
   Vue.use(antd)
   const electron = require('electron')
   const ipc = electron.ipcRenderer
-  const tools=require('../util/util.js').tools
-  const userScriptModel=require('../util/model/userScriptModel.js')
+  const tools = require('../util/util.js').tools
+  const userScriptModel = require('../util/model/userScriptModel.js')
   const appVue = new Vue({
     el: '#appVue',
     data () {
       return {
-        data:[],
+        data: [],
         columns,
       }
     },
-    mounted(){
+    mounted () {
       tools.getWindowArgs(window)
-      this.data = userScriptModel.init(window.globalArgs['user-data-path'])
+      window.$userScriptModel = userScriptModel
+      this.data = window.$userScriptModel.init(window.globalArgs['user-data-path'])
 
     },
-    methods:{
-      viewCode(record){
-        ipc.send('viewCode',{file:record})
+    methods: {
+      viewCode (record) {
+        ipc.send('viewCode', { file: record })
         console.log(record)
       },
-      importScript(){
+      importScript () {
         ipc.send('importScript')
+      },
+      exportScript(record){
+        ipc.send('exportScript',{filename:record.filename})
+      },
+      deleteScript (record) {
+        if (window.$userScriptModel.deleteScript(record.filename)) {
+          this.$message.success({ content: '删除脚本文件成功' })
+          setTimeout(() => {window.location.reload()}, 1500)
+        } else {
+          this.$message.error({ content: '删除脚本文件失败' })
+        }
       }
+
     }
   })
-
 
 
 </script>

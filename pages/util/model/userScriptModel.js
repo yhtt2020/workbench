@@ -1,7 +1,10 @@
 const path = require('path')
 const fs = require('fs')
-let scripts = []
+
 const userScriptModel = {
+
+  pathName: '',
+  scriptsPath: '',
   parseTampermonkeyFeatures (content) {
     var parsedFeatures = {}
     var foundFeatures = false
@@ -42,10 +45,19 @@ const userScriptModel = {
       return null
     }
   },
+  /**
+   * 删除脚本
+   */
+  deleteScript (filename) {
+    const filePath = userScriptModel.scriptsPath+filename
+    fs.rmSync(filePath)
+    return !fs.existsSync(filePath)
+  },
   init (userDataPath) {
-    const pathName = userDataPath + '/userscripts/'
+    userScriptModel.scriptsPath = userDataPath + '/userscripts/'
+    let scripts = []
+    const pathName = userScriptModel.scriptsPath
     const files = fs.readdirSync(pathName)
-    console.log(files)
     for (var i = 0; i < files.length; i++) {
       let filename = files[i]
       if (filename.endsWith('.js')) {
@@ -68,14 +80,14 @@ const userScriptModel = {
           // namespace: ['ACNoAdd']
           // run-at: ['document-end']
           // version: ['5.0']
-          script.feature =!!!features.description?'': features.description.join('')
-          script.author = !!!features.author?'':features.author.join('')
-          script.name =!!!features.name?'': features.name.join('')
+          script.feature = !!!features.description ? '-' : features.description.join('')
+          script.author = !!!features.author ? '-' : features.author.join('')
+          script.name = !!!features.name ? '-' : features.name.join('')
 
-          script.version =!!!features.features?'': features.version.join('')
-          script.scope =!!!features.include?'': features.include.join('\n')
-          script.runat =!!!features.features?'': features['run-at'].join('<br>')
-
+          script.version = !!!features.version ? '-' : features.version.join('')
+          script.include = !!!features.include ? '-' : features.include.join('<br>')
+          script.runat = !!!features['run-at'] ? '-' : features['run-at'].join('<br>')
+          script.match=!!!features.match?'-':features['match'].join('<br>')
           script.description = `
 <h4>脚本属性</h4>
               文件名：${script.filename}<br>
@@ -83,8 +95,9 @@ const userScriptModel = {
               描述：${script.feature}<br>
               版本号：${script.version}<br>
               运行位置：${script.runat}<br>
+              包括：${script.include}<br>
+              匹配：${script.match}
               `
-
           scripts.push(script)
         }
 
