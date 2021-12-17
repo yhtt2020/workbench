@@ -123,6 +123,9 @@ const toolbar = {
   },
   updateScriptsCountTip(tabId=tabs.getSelected().id){
     matchedScripts= window.$matchedScriptsForSite[tabId]
+    if(!!!matchedScripts){
+      matchedScripts=[]
+    }
     scriptCountEl= document.getElementById('scriptCount')
     scriptCountEl.hidden=!(matchedScripts.length>0)
     scriptCountEl.innerText=String(matchedScripts.length)
