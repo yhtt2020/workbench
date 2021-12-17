@@ -21,7 +21,7 @@
               <a-input
                 v-decorator="[
           'name',
-          { rules: [{ required: true, message: '请输入团队名2-32个汉字' ,min:4,max:32}] },
+          { rules: [{ required: true, message: '请输入团队名2-16个汉字' ,min:2,max:16}] },
         ]"
                 placeholder="团队名2-16个汉字"
               />
@@ -38,6 +38,7 @@
             </a-form-item>
             <a-form-item label="头像">
               <a-avatar shape="square" :src="groupLogo"></a-avatar>
+              <br>
               <!-- <a-upload
                 v-decorator="[
           'upload',
@@ -114,6 +115,7 @@
             })
             if(result.code === 1000) {
               this.$message.success('成功创建团队:' + values.name)
+              ipc.send('refreshMyGroups')
               setTimeout(function() {
                 ipc.send('closeCreateGroupWindow')
               }, 1000)

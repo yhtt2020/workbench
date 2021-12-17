@@ -31,35 +31,21 @@ const appsRestore = {
     }).catch((err) => console.log(err))
   },
   // 从数据库读取
-  restoreFromDB: async function () {
-    try {
-      //循环处理一下一些没存时间或者没存sort的对象，进行纠错
-      var needFilled=[]
-       //console.log(await db.myApps.where("addTime").equals(null).toArray())
-      await db.myApps.each(async item=>{
-        if(typeof item.addTime == 'undefined' ||typeof item.sort=='undefined'){
-          let i=item
-          if(typeof item.addTime=='undefined')
-            i.addTime=Date.now()
-          if(typeof item.sort=='undefined')
-            i.sort=0
-          needFilled.push(i)
-          console.log(i)
-        }
-      })
-      await db.myApps.bulkPut(needFilled)
-      //await db.myApps.where('addTime').equals(undefined).modify({ 'addTime':Date.now() })
-      let s = await db.myApps.orderBy('addTime').reverse().toArray()
-      return s
+  restoreFromDB: async function (listId) {
+    try{
+      if(typeof listId==="undefined"){
+        listId=0
+      }
+      return await db.myApps.where({listId:listId}).desc('order').toArray()
     } catch (e) {
       console.log(e)
       return []
     }
   },
   // 删除单个app
-  deleteApp: async function (name) {
+  deleteApp: async function (id) {
     try {
-      const s = await db.myApps.where({ name: name }).delete()
+      const s = await db.myApps.where({ id: id }).delete()
     } catch (e) {
       console.log(e)
     }

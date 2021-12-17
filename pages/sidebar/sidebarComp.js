@@ -6,7 +6,7 @@ Vue.component('sidebar', {
       lastOpenId:0,
 			drag: false,
 			remote: {},
-			loginPanelTitle:"登陆账号免费体验完整功能",
+			loginPanelTitle:"登录帐号免费体验完整功能",
 			loginPanelContent:``,
 			userPanelVisible:false,
 			devices: [{
@@ -68,7 +68,7 @@ Vue.component('sidebar', {
 		});
 
 	},
-	mounted: function() {
+	async mounted() {
 		// let item = {
 		// 	title: '打开标签', //名称，用于显示提示
 		// 	index: 0, //索引
@@ -91,6 +91,13 @@ Vue.component('sidebar', {
       that.sidebarBottom= data.value
       setTimeout(that.fixElementPosition,250)
     })
+    const currentUser = await db.system.where('name').equals('currentUser').first()
+    if(currentUser.value.uid !== 0 ) {
+      await this.$store.dispatch('getGroups', {
+        uid: currentUser.value.uid,
+        token: currentUser.value.token
+      })
+    }
 	},
 	computed: {
 		user(){

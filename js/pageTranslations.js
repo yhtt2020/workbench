@@ -1,65 +1,68 @@
 const webviews = require('webviews.js')
 const statistics = require('js/statistics.js')
 const settings = require('util/settings/settings.js')
+const axios = require('./util/axios')
+
+//处理nodeList至URL
+function handleURL(qlist) {
+  let str = ''
+  for(let i = 0; i < qlist.length; i++) {
+    qlist[i].replace("\n", "")
+    if(i === 0 ) {
+      str = str + qlist[i]
+    } else{
+      str = str + "\n" + qlist[i]
+    }
+  }
+  return str
+}
 
 const pageTranslations = {
-  apiURL: 'https://translate-api.minbrowser.org/translate',
+  apiURL: 'https://fanyi-api.baidu.com/api/trans/vip/translate',
   translatePrivacyInfo: l('translateTip'),
   languages: [
     {
       name: '简体中文',
       code: 'zh'
     },
-	{
+	  {
       name: '英文',
       code: 'en'
     },
     {
-      name: 'Arabic',
-      code: 'ar'
+      name: 'Arabic',   //阿拉伯语
+      code: 'ara'
     },
     {
-      name: 'Dutch',
+      name: 'Dutch',    //荷兰语
       code: 'nl'
     },
     {
       name: 'French',
-      code: 'fr'
+      code: 'fra'
     },
     {
       name: 'German',
       code: 'de'
     },
     {
-      name: 'Hindi',
-      code: 'hi'
-    },
-    {
-      name: 'Indonesian',
-      code: 'id'
-    },
-    {
-      name: 'Irish',
-      code: 'ga'
-    },
-    {
-      name: 'Italian',
+      name: 'Italian',  //意大利
       code: 'it'
     },
     {
       name: 'Japanese',
-      code: 'ja'
+      code: 'jp'
     },
     {
       name: 'Korean',
-      code: 'ko'
+      code: 'kor'
     },
     {
-      name: 'Polish',
+      name: 'Polish',   //波兰
       code: 'pl'
     },
     {
-      name: 'Portuguese',
+      name: 'Portuguese',  //葡萄牙
       code: 'pt'
     },
     {
@@ -67,21 +70,18 @@ const pageTranslations = {
       code: 'ru'
     },
     {
-      name: 'Spanish',
-      code: 'es'
+      name: 'Spanish',   //西班牙
+      code: 'spa'
     },
     {
-      name: 'Turkish',
-      code: 'tr'
-    },
-    {
-      name: 'Ukranian',
-      code: 'uk'
-    },
-    {
-      name: 'Vietnamese',
-      code: 'vi'
+      name: 'Vietnamese',   //越南语
+      code: 'vie'
     }
+  ],
+  baiduError: [
+    '52001',   //百度侧请求超时
+    '54005',   //长query请求频繁
+    '54003',   //访问频率受限
   ],
   getLanguageList: function () {
     const userPrefs = navigator.languages.map(lang => lang.split('-')[0])
@@ -107,39 +107,41 @@ const pageTranslations = {
     }
     webviews.callAsync(tabId, 'send', ['translate-page', language])
   },
+  //翻译请求接口
   makeTranslationRequest: async function (tab, data) {
+    let result = {translatedText: []}
     const requestOptions = {
-      method: 'POST',
-      body: JSON.stringify({
-        q: data[0].query,
-        source: 'auto',
-        target: data[0].lang
-      }),
-      headers: { 'Content-Type': 'application/json' }
+      toLang: data[0].lang,
+      queryStr: handleURL(data[0].query)
     }
-
-    fetch(pageTranslations.apiURL, requestOptions)
-      .then(res => res.json())
-      .then(function (result) {
-        console.log(result)
-        webviews.callAsync(tab, 'send', ['translation-response-' + data[0].requestId, {
-          response: result
-        }])
-      })
-      .catch(function (e) {
-        // retry once
-        setTimeout(function () {
+    //1000毫秒发起一次请求
+    setTimeout(()=> {
+      axios.post('/app/translate', requestOptions).then(res => {
+        if(res.code === 1000) {
+          for(let i = 0; i < res.data.trans_result.length; i++) {
+            result.translatedText[i] = res.data.trans_result[i].dst
+          }
+          webviews.callAsync(tab, 'send', ['translation-response-' + data[0].requestId, {
+            response: result
+          }])
+        }
+      }).catch(err => {
+        //只有错误码列表中的错误，才会进行重新翻译请求
+        if(pageTranslations.baiduError.indexOf(err.message.slice(8)) !== -1) {
           console.warn('retrying translation request')
-          fetch(pageTranslations.apiURL, requestOptions)
-            .then(res => res.json())
-            .then(function (result) {
-              console.log('after retry', result)
+          setTimeout(()=> {
+            axios.post('/app/translate', requestOptions).then(res => {
+              for(let i = 0; i < res.data.trans_result.length; i++) {
+                result.translatedText[i] = res.data.trans_result[i].dst
+              }
               webviews.callAsync(tab, 'send', ['translation-response-' + data[0].requestId, {
                 response: result
               }])
-            })
-        }, 5000)
+            }, 3000)
+          })
+        }
       })
+    }, 1000)
   },
   initialize: function () {
     webviews.bindIPC('translation-request', this.makeTranslationRequest)

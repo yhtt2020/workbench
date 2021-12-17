@@ -190,3 +190,34 @@
 	margin-top: 10px;
 	height: 35px;
 }
+
+
+
+.tree-icon{
+  width: 1.2em;height: auto
+}
+
+
+.ant-tree-title{
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: inline-block;
+  width: 100px;
+}
+
+
+/*selecto*/
+.selected {
+  background-color: #00000010;
+  border-radius: 8px;
+}
+.app{
+  margin: 5px;
+}
+
+.canDrag{
+  border: 1px dashed #ccc;
+  border-radius: 2px;
+  color: #1E90FF;
+}
+/*selectoend*/

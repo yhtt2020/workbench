@@ -1,7 +1,7 @@
 const tpl = `
 <div style="padding: 15px;">
 <div class="logo">
-<img src="../../icons/apps.svg" style="width: 1.2em">
+<img src="../../icons/svg/discover.svg" style="width: 2em">
 网址导航
 </div>
       <template >
@@ -9,37 +9,35 @@ const tpl = `
        <appstore-comp @get-tab="getTab"></appstore-comp>
        <h4 style="color: #999;font-size: 12px">本地导航</h4>
         <local-comp @get-tab="getTab"></local-comp>
-        <h4 style="color: #999;font-size: 12px">云端导航</h4>
-        <a-tree style="padding: 10px" :tree-data="[cloudLists]" :block-node="true" show-icon default-expand-all :default-selected-keys="['local']"
-        @select="onSelect"
-        >
-          <a-icon slot="user" type="user" > </a-icon>
-          <a-icon slot="appstore" type="appstore" > </a-icon>
-          <a-icon slot="meh" type="smile-o"> </a-icon>
-          <a-icon slot="global" style="font-size: 18px" type="global"> </a-icon>
-          <a-icon slot="team" style="font-size: 18px" type="team"> </a-icon>
-          <a-icon slot="lock" type="lock"> </a-icon>
-          <a-icon slot="star" style="font-size: 18px" type="star"> </a-icon>
-          <a-icon slot="cloud" style="font-size: 18px" type="cloud"> </a-icon>
-          <a-icon slot="list-icon" type="file-text"> </a-icon>
-          <template slot="custom" slot-scope="{ selected }">
-            <a-icon :type="selected ? 'frown' : 'frown-o'" ></a-icon>
-          </template>
-          <template #title="{ key: treeKey, title }">
-      <a-dropdown :trigger="['contextmenu']" @visibleChange="checkMenuDisable($event,treeKey)">
-        <span>{{ title }}</span>
-        <template #overlay>
-          <a-menu @click="({ key: menuKey }) => onContextMenuClick(treeKey, menuKey)">
-            <a-menu-item key="createList" :disabled="disableCreate"><a-icon type="plus-square"></a-icon>  创建列表</a-menu-item>
-            <a-menu-item key="createChildList" :disabled="disableCreateChild"><a-icon type="plus-circle"></a-icon>  创建子列表</a-menu-item>
-            <a-menu-item key="copyList" :disabled="disableCopy"><a-icon type="copy"></a-icon>  复制列表</a-menu-item>
-            <a-menu-item key="renameList" :disabled="disableRename"><a-icon type="edit"></a-icon> 重命名列表</a-menu-item>
-            <a-menu-item key="deleteList" :disabled="disableDelete"><a-icon type="delete"></a-icon> 删除列表</a-menu-item>
-          </a-menu>
-        </template>
-      </a-dropdown>
-    </template>
-        </a-tree>
+<!--        <h4 style="color: #999;font-size: 12px">云端导航</h4>-->
+<!--        <a-tree style="padding: 10px" :tree-data="[cloudLists]" :block-node="true" show-icon default-expand-all :default-selected-keys="['local']"-->
+<!--        @select="onSelect"-->
+<!--        >-->
+<!--           <a-avatar slot="team" shape="square" style="width: 1.3em;height: auto " src="../../icons/svg/team.svg"></a-avatar>-->
+<!--   <a-avatar slot="cloud" shape="square" style="width: 1.3em;height: auto " src="../../icons/svg/cloud.svg"></a-avatar>-->
+
+<!--          <a-icon slot="lock" type="lock"> </a-icon>-->
+<!--          <a-icon slot="star" style="font-size: 18px" type="star"> </a-icon>-->
+<!--          <a-avatar slot="list-icon" src="../../icons/svg/collection"></a-avatar>-->
+
+<!--          <template slot="custom" slot-scope="{ selected }">-->
+<!--            <a-icon :type="selected ? 'frown' : 'frown-o'" ></a-icon>-->
+<!--          </template>-->
+<!--          <template #title="{ key: treeKey, title }">-->
+<!--      <a-dropdown :trigger="['contextmenu']" @visibleChange="checkMenuDisable($event,treeKey)">-->
+<!--        <span>{{ title }}</span>-->
+<!--        <template #overlay>-->
+<!--          <a-menu @click="({ key: menuKey }) => onContextMenuClick(treeKey, menuKey)">-->
+<!--            <a-menu-item key="createList" :disabled="disableCreate"><a-icon type="plus-square"></a-icon>  创建列表</a-menu-item>-->
+<!--            <a-menu-item key="createChildList" :disabled="disableCreateChild"><a-icon type="plus-circle"></a-icon>  创建子列表</a-menu-item>-->
+<!--            <a-menu-item key="copyList" :disabled="disableCopy"><a-icon type="copy"></a-icon>  复制列表</a-menu-item>-->
+<!--            <a-menu-item key="renameList" :disabled="disableRename"><a-icon type="edit"></a-icon> 重命名列表</a-menu-item>-->
+<!--            <a-menu-item key="deleteList" :disabled="disableDelete"><a-icon type="delete"></a-icon> 删除列表</a-menu-item>-->
+<!--          </a-menu>-->
+<!--        </template>-->
+<!--      </a-dropdown>-->
+<!--    </template>-->
+<!--        </a-tree>-->
          <h4 style="color: #999;font-size: 12px">团队导航</h4>
           <group-comp @get-tab="getTab"></group-comp>
       </template>
@@ -54,43 +52,7 @@ const tpl = `
 </div>
 
 `
-const {appList,treeUtil}=require('../util/appList.js')
-const treeData = [
- {
-    title: '个人云导航',
-    key: 'cloud',
-    slots: {
-      icon: 'cloud',
-    },
-    children: [
-      {
-        key:'cloud_1',
-        title: '开发专用'
-      },
-      {
-        key:'cloud_2',
-        title: '视频剪辑'
-      },
-      {
-        key:'cloud_3',
-        title: '12大框架'
-      }
-    ]
-  }, {
-    title: '团队导航',
-    key: 'group',
 
-    slots: {
-      icon: 'team',
-    },
-    children: [
-          { title: '人人都是产品经理', key: 'group_1' ,slots: { icon: 'global' }},
-          { title: '少数派Plus', key: 'group_2' ,slots: { icon: 'global' }},
-          { title: '产研部', key: 'group_3' ,slots: { icon: 'lock' }},
-          { title: '销售部', key: 'group_4',slots: { icon: 'lock' } },
-    ],
-  },
-]
 const getNameInputValue=function (){
   return document.getElementById('nameInput').value
 }
@@ -103,7 +65,6 @@ Vue.component('sidenav', {
   data () {
     return {
       current: ['myapp'],
-      treeData,
       //创建列表的弹窗可见
       createListVisible:false,
       createTitle:'',//创建列表的标题
@@ -118,14 +79,7 @@ Vue.component('sidenav', {
       //下面是数据暂存属性
 
 
-      groupLists:{
-        title:'团队导航',
-        key:'group',
-        slots:{
-          icon:'team'
-        },
-        children:[]
-      },
+
       cloudLists:{
         title:'云端导航',
         key:'cloud',
@@ -138,12 +92,7 @@ Vue.component('sidenav', {
   },
   template: tpl,
   mounted(){
-    let that=this
-    appList.list().then(data=>{
-      data.forEach((item)=>{
-        that.myAppsLists.children.push(appList.convertTreeNode(item))
-      })
-    })
+
   },
   methods: {
     getTab(){

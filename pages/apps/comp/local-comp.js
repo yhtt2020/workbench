@@ -1,18 +1,17 @@
 const localTpl = `
 <div>
-<a-tree :tree-data="myAppsLists" :block-node="true" show-icon :default-selected-keys="['local']"
-        @select="onSelect"
-        >
-           <a-icon slot="folder" type="folder"> </a-icon>
-          <a-icon slot="list-icon" type="file-text"> </a-icon>
+<a-tree ref="myappTree" :tree-data="myAppsLists" :block-node="true" show-icon :selected-keys="selectedValues"
+        @select="onSelect" >
+            <a-avatar slot="folder" shape="square" class="tree-icon" src="../../icons/svg/folder.svg"></a-avatar>
+          <a-avatar slot="list-icon" shape="square" class="tree-icon" src="../../icons/svg/plan.svg"></a-avatar>
           <template #title="{ key: treeKey, title }">
       <a-dropdown :trigger="['contextmenu']" @visibleChange="checkMenuDisable($event,treeKey)">
-        <span>{{ title }}</span>
+        <span @dragenter.prevent="dragEnter($event)" @dragleave.prevent="dragLeave($event)" @dragover.prevent="allowDrop($event,treeKey)" @drop.prevent="drop($event,treeKey)">{{ title }}</span>
         <template #overlay>
           <a-menu @click="({ key: menuKey }) => onContextMenuClick(treeKey, menuKey)">
             <a-menu-item key="createList" :disabled="disableCreate"><a-icon type="plus-square"></a-icon>  创建列表</a-menu-item>
-            <a-menu-item key="createChildList" :disabled="disableCreateChild"><a-icon type="plus-circle"></a-icon>  创建子列表</a-menu-item>
-            <a-menu-item key="copyList" :disabled="disableCopy"><a-icon type="copy"></a-icon>  复制列表</a-menu-item>
+<!--            <a-menu-item key="createChildList" :disabled="disableCreateChild"><a-icon type="plus-circle"></a-icon>  创建子列表</a-menu-item>-->
+<!--            <a-menu-item key="copyList" :disabled="disableCopy"><a-icon type="copy"></a-icon>  复制列表</a-menu-item>-->
             <a-menu-item key="renameList" :disabled="disableRename"><a-icon type="edit"></a-icon> 重命名列表</a-menu-item>
             <a-menu-item key="deleteList" :disabled="disableDelete"><a-icon type="delete"></a-icon> 删除列表</a-menu-item>
           </a-menu>
@@ -30,18 +29,22 @@ const localTpl = `
       </template>
 </div>
   `
-const { appList, treeUtil } = require('../../util/appList.js')
+const { appListModel, treeUtil } = require('../../util/model/appListModel.js')
 const getNameInputValue = function () {
   return document.getElementById('nameInput').value
 }
 Vue.component('local-comp', {
   name: 'local-comp',
   template: localTpl,
+  props:{
+
+  },
   data () {
     return {
       //创建列表的弹窗可见
       createListVisible: false,
       createTitle: '',//创建列表的标题
+      selectedValues:[],
       //下拉菜单控制属性
       disableCreate: false,
       disableCreateChild: false,
@@ -61,16 +64,26 @@ Vue.component('local-comp', {
     }
   }, mounted () {
     let that = this
-    appList.list().then(data => {
+    window.$trees.push({
+      name:'myapp',
+      comp:this
+    })
+    appListModel.list().then(data => {
       data.forEach((item) => {
-        that.myAppsLists[0].children.push(appList.convertTreeNode(item))
+        that.myAppsLists[0].children.push(appListModel.convertTreeNode(item))
       })
     })
   },
   methods: {
     onSelect (selectedKeys, info) {
-      window.tab = selectedKeys[0]
-      this.$emit('get-tab', window.tab)
+      let jump=0
+      if(isNaN(Number(selectedKeys[0]))){
+        jump=0
+      }else{
+        jump=Number(selectedKeys[0])
+      }
+      this.$router.push({name:'myapp',query: { listId: jump,t:Date.now()}})
+      resetOtherTree('myapp',selectedKeys)
     },
     onContextMenuClick (treeKey, menuKey) {
       if (menuKey === 'createList') {
@@ -100,7 +113,7 @@ Vue.component('local-comp', {
         okText: '确认删除，不后悔',
         cancelText: '保留',
         onOk () {
-          appList.delete(Number(appList.getIdFromTreeKey(treeKey))).then(() => {
+          appListModel.delete(Number(appListModel.getIdFromTreeKey(treeKey))).then(() => {
             that.$message.success({ content: '删除成功。' })
             that.myAppsLists[0].children.splice(key, 1)
           })
@@ -120,8 +133,8 @@ Vue.component('local-comp', {
       const { list } = treeUtil.findTreeNode(treeKey, that.myAppsLists[0].children)
       that.createList(function () {
         const newName = getNameInputValue()
-        appList.put({
-          id: Number(appList.getIdFromTreeKey(treeKey)),
+        appListModel.put({
+          id: Number(appListModel.getIdFromTreeKey(treeKey)),
           name: newName,
           updateTime: Date.now()
         }).then(() => {
@@ -137,7 +150,7 @@ Vue.component('local-comp', {
      */
     handleMenuCreateList (treeKey) {
       let that = this
-      this.createList(function () {
+      this.createList(async function () {
         let name = getNameInputValue()
         let list = {}
         list.name = name
@@ -147,19 +160,23 @@ Vue.component('local-comp', {
         list.summary = ''
         list.appsCount = 0
         list.parentId = 0
+        list.type = 0
         if (!!!list.name) {
           appVue.$message.error({ content: '请输入列表名称。' })
           return
         }
-        appList.add(list).then(data => {
+          appListModel.add(list).then(data => {
           appVue.$message.success({ content: '添加列表成功。' })
-          that.myAppsLists[0].children.push(appList.convertTreeNode(list))
+          that.myAppsLists[0].children.push(appListModel.convertTreeNode(list))
           that.createListVisible = false
-        }, () => {
-          appVue.$message.error({ content: '添加列表失败。' })
-        }).catch(err => {
-          console.log(err)
-        })
+          }, () => {
+            appVue.$message.error({ content: '添加列表失败。' })
+
+          }).catch(err => {
+            console.log(err)
+          })
+
+
       }, '本地列表', '本地')
     },
 
@@ -182,7 +199,45 @@ Vue.component('local-comp', {
           this.disableDelete = true
         }
       }
+    },
+    // 拖拽元素放置到了目的地元素上面
+    allowDrop (e,key) {
+      if(key==="myapp"){
+        key=0
+      }
+      key=Number(key)
+      if(key===window.$listId){
+        //todo 阻止放下
+      }
+    },
+    dragEnter(e){
+      console.log('enter')
+      console.log(e)
+      e.target.classList.add('canDrag')
+    },
+    dragLeave(e){
+      console.log('leave')
+      e.target.classList.remove('canDrag')
+      console.log(e)
+    },
 
+    // 拖拽元素结束了操作
+    drop (e,key) {
+      e.target.classList.remove('canDrag')
+      if(key==="myapp"){
+        key=0
+      }
+      key=Number(key)
+
+      //1.找到全部的选中apps
+      //2.将选中apps的listId改为新的id即可
+      appListModel.moveAppsToList(window.$selectedApps,key).then(movedApps=>{
+        if(movedApps.length>0){
+          appVue.$message.success({content:"成功移动"+movedApps.length+"个应用"})
+          window.$selectedApps=[]
+          window.$removeApps()
+        }
+      })
     }
   }
 })

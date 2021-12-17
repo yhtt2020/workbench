@@ -53,7 +53,5 @@ protocols:
     name: TSBrowser
     schemes:
        - tsb
-       - http
-       - https
 
 

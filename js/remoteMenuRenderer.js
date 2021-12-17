@@ -43,7 +43,7 @@ ipc.on('context-menu-will-close', function (e, data) {
   // delay close event until after selected event has been received
   setTimeout(function () {
     delete menuCallbacks[data.menuId]
-  }, 16)
+  }, 200) //改大销毁菜单的延迟，防止在m1芯片上先销毁菜单，后触发点击
 })
 
 module.exports = { open }

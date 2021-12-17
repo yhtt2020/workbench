@@ -10,7 +10,7 @@ var dbErrorAlertShown = false
 
 var db = new Dexie('browsingData2')
 
-db.version(122).stores({
+db.version(125).stores({
   /*
   color - the main color of the page, extracted from the page icon
   pageHTML - a saved copy of the page's HTML, when it was last visited. Removed in 1.6.0, so all pages visited after then will have an empty string in this field.
@@ -21,17 +21,50 @@ db.version(122).stores({
   */
   places: '++id, &url, title, color, visitCount, lastVisit, pageHTML, extractedText, *searchIndex, isBookmarked, *tags, metadata',
   readingList: 'url, time, visitCount, pageHTML, article, extraData', // TODO remove this (reading list is no longer used)
-  myApps:'++id,name,summary,url,icon,addTime,sort', // 我的应用表
+  myApps:'++id,name,summary,url,icon,addTime,sort,listId', // 我的应用表
   mySearch: '++id,name,slinkLogo,frontLink,sDefault', // 我的搜索引擎
-  accounts: '++id,&uid,nickname,avatar,lastLoginTime,code,token,isCurrent,lastUseSpace',//本地已经登陆过的账号
+  accounts: '++id,&uid,nickname,avatar,lastLoginTime,code,token,isCurrent,lastUseSpace',//本地已经登录过的帐号
   localSpaces: '++id,uid,tasks,name,lastUseTime,createTime,icon',
   system: '++id,&name,value',
   dockApps:'++id,name,url,icon,order',
   appList:'++id,name,createTime,updateTime,order,summary,appsCount,parentId'//应用列表
+}).upgrade(trans=> {
+    return trans.myApps.toCollection().modify (item => {
+      if (!!!item.addTime)
+        item.addTime = Date.now()
+      if (!!!item.sort)
+        item.sort = 0
+      if (!!!item.listId)
+        item.listId = 0
+    })
 })
-
+db.version(127).stores({
+  /*
+  color - the main color of the page, extracted from the page icon
+  pageHTML - a saved copy of the page's HTML, when it was last visited. Removed in 1.6.0, so all pages visited after then will have an empty string in this field.
+  extractedText - the text content of the page, extracted from pageHTML. Unused as of 1.7.0, should be removed completely in a future version.
+  searchIndex - an array of words on the page (created from extractedText), used for full-text searchIndex
+  isBookmarked - whether the page is a bookmark
+  extraData - other metadata about the page
+  */
+  places: '++id, &url, title, color, visitCount, lastVisit, pageHTML, extractedText, *searchIndex, isBookmarked, *tags, metadata',
+  readingList: 'url, time, visitCount, pageHTML, article, extraData', // TODO remove this (reading list is no longer used)
+  myApps:'++id,name,summary,url,icon,addTime,sort,listId', // 我的应用表
+  mySearch: '++id,name,slinkLogo,frontLink,sDefault', // 我的搜索引擎
+  accounts: '++id,&uid,nickname,avatar,lastLoginTime,code,token,isCurrent,lastUseSpace',//本地已经登录过的帐号
+  localSpaces: '++id,uid,tasks,name,lastUseTime,createTime,icon',
+  system: '++id,&name,value',
+  dockApps:'++id,name,url,icon,order',
+  appList:'++id,name,createTime,updateTime,order,summary,appsCount,parentId,type'//应用列表 type:0.默认，大图标,1.小图标,2.列表
+}).upgrade(trans=> {
+  return trans.appList.toCollection().modify (item => {
+    if(!!!item.type){
+      item.type=0
+    }
+  })
+})
 /*system的keyalue的值备注*/
-//currentUser 当前登陆的user
+//currentUser 当前登录的user
 
 db.open().then(function () {
   console.log('database opened ', performance.now())

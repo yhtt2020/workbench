@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../../ext/vue/antd.min.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./assets/index.css" />
+    <link rel="icon" type="image/svg+xml" href="../../icons/svg/hi.svg"/>
     <title>新标签页</title>
   </head>
 
@@ -108,7 +109,7 @@
                 :value="searchWord"
                 @input="searchWord = $event.target.value"
                 style="font-size: 20px"
-                @keyup.enter="enterSubmit"
+                @keypress.enter="enterSubmit"
               />
               <div @click="clklogo" style="color: #606266">
                 <a-icon type="search" class="search-logo" :style="{ fontSize: '30px' }"></a-icon>
@@ -207,7 +208,7 @@
                     v-for="(item, index) in bookmark"
                     :key="index"
                   >
-                    <a-icon type="global" :style="{ fontSize: '18px'}"></a-icon>
+                    <a-avatar shape="square" style="width:2em;height: auto" src="../../icons/svg/library.svg"></a-avatar>
                     <ul class="flex flex-direction justify-center align-center">
                       <li>{{item.title}}</li>
                       <li style="color: #7f7f7f">{{item.link}}</li>
@@ -298,8 +299,8 @@
                           class="flex justify-around align-center"
                           v-for="(item, index) in i.info "
                           :key="index"
-                        >
-                          <a-icon type="global" :style="{ fontSize: '18px'}"></a-icon>
+                        ><a-avatar shape="square" style="width:2em;height: auto" src="../../icons/svg/footprint.svg"></a-avatar>
+
                           <ul class="flex flex-direction justify-center align-center">
                             <li>{{item.title}}</li>
                             <li style="color: #7f7f7f">{{item.link}}</li>
@@ -324,9 +325,9 @@
           <app-dialog></app-dialog>
         </div>
           <a-menu slot="overlay">
-            <a-menu-item key="1">
-              添加本地导航自定义块
-            </a-menu-item>
+<!--            <a-menu-item key="1">-->
+<!--              添加本地导航自定义块-->
+<!--            </a-menu-item>-->
             <a-menu-item @click="refresh" key="2">
               刷新
             </a-menu-item>
@@ -339,10 +340,11 @@
 
       <template id="appstore">
         <div>
-          <a-modal v-model="adVisible" title="应用中心" :width="700" :footer="null" :mask="false" :mask-closable="false">
+          <a-modal body-style="height: 700px;" v-model="adVisible" title="应用中心" :width="700"  :footer="null" :mask="false" :mask-closable="false">
             <div class="adialog">
-              <a-tabs default-active-key="productive" tab-position="left" :style="{ height: '100%' }">
+              <a-tabs default-active-key="productive" tab-position="left" :style="{ height: '650px' }">
                 <a-tab-pane  v-for="(type, indexType) in allApps" :key="type.name" :tab="type.title">
+                  <div style="overflow-y: auto;max-height: 650px">
                   <a-card :title="type.title" style="padding: 10px">
                     <a-card-grid :class="{'app':true,'app-goods':true}" v-for="(app, indexApp) in type.apps" draggable="true" @dragstart="setDrag($event,app)">
                       <a :href="app.url">
@@ -353,6 +355,7 @@
                       </a>
                     </a-card-grid>
                   </a-card>
+                  </div>
                 </a-tab-pane>
               </a-tabs>
             </div>
@@ -430,7 +433,7 @@
                 url:'http://work.thisky.com'
               },{
                 name:'想天社区',
-                icon:'../../icons/logo1024.png',
+                icon:'../../icons/comlogo.png',
                 url:'http://com.thisky.com'
               }
             ]//dock里的应用

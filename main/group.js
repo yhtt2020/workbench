@@ -26,11 +26,18 @@ app.on('ready', () => {
         ]
       }
     })
+    createGroupWindow.setMenu(null)
     createGroupWindow.webContents.loadURL('file://' + __dirname + '/pages/group/create.html')
     createGroupWindow.on('close',()=>createGroupWindow=null)
   })
   ipc.on('closeCreateGroupWindow', () => {
     createGroupWindow.destroy()
     createGroupWindow = null
+  })
+
+  ipc.on('refreshMyGroups', () => {
+    if(SidePanel.alive()) {
+      sidePanel.get().webContents.send('refreshMyGroups')
+    }
   })
 })

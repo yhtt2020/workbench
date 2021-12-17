@@ -2,9 +2,9 @@
   "name": "tsbrowser",
   "productName": "想天浏览器",
   "author": "Thisky",
-  "version": "0.9.1",
+  "version": "1.2.7",
   "description": "一款针对工作场景的极简浏览器，帮助你提升效率，保持专注",
-  "electronVersion": "15.3.0",
+  "electronVersion": "15.3.1",
   "main": "main.build.js",
   "standard": {
     "globals": [
@@ -39,12 +39,13 @@
     "electron-squirrel-startup": "^1.0.0",
     "electron-updater": "^4.3.9",
     "expr-eval": "^2.0.2",
-    "keytar": "7.6.0",
+    "keytar": "7.7.0",
     "mousetrap": "^1.5.3",
     "node-abi": "^3.2.0",
     "pdfjs-dist": "2.4.456",
     "regedit": "^3.0.3",
-    "string_score": "^0.1.22"
+    "string_score": "^0.1.22",
+    "vue-selecto": "^1.13.3"
   },
   "devDependencies": {
     "archiver": "^4.0.1",

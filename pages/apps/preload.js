@@ -16,7 +16,7 @@ window.addEventListener('message', function(e) {
 			})
 			break
 		case 'selectTask':
-			ipc.send('selectTask')
+			ipc.send('selectTask', e.data.tabs)
 			break
 	}
 })
