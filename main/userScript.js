@@ -72,6 +72,7 @@ app.whenReady().then(() => {
     let existsCount = 0
     let imported = 0
     let existsFilename = []
+    userScriptWindow.setAlwaysOnTop(false)
     mainWindow.focus()
     const files = dialog.showOpenDialogSync({
       userScriptWindow,
@@ -82,13 +83,18 @@ app.whenReady().then(() => {
     if(!!!files){
       return
     }
+     if(!fs.existsSync(userScriptPath)){
+     	fs.mkdirSync(userScriptPath)
+     }
     files.forEach((file) => {
+      let  filename=''
       if(isWin()){
-        const filename = file.slice(file.lastIndexOf('\\') + 1, file.length)
+         filename= file.slice(file.lastIndexOf('\\') + 1, file.length)
       }else{
-        const filename = file.slice(file.lastIndexOf('/') + 1, file.length)
+        filename = file.slice(file.lastIndexOf('/') + 1, file.length)
       }
       const target = userScriptPath + '/' + filename
+
       if (fs.existsSync(target)) {
         existsCount++
         existsFilename.push(filename)
@@ -108,6 +114,7 @@ app.whenReady().then(() => {
     } else {
       sendMessage({ type: 'success', config: { content: '成功导入' + imported + '个脚本。新导入的脚本需要重启浏览器方可生效。' } })
     }
+    userScriptWindow.setAlwaysOnTop(true)
     userScriptWindow.webContents.reload()
 
   })
