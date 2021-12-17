@@ -83,7 +83,11 @@ app.whenReady().then(() => {
       return
     }
     files.forEach((file) => {
-      const filename = file.slice(file.lastIndexOf('/') + 1, file.length)
+      if(isWin()){
+        const filename = file.slice(file.lastIndexOf('\\') + 1, file.length)
+      }else{
+        const filename = file.slice(file.lastIndexOf('/') + 1, file.length)
+      }
       const target = userScriptPath + '/' + filename
       if (fs.existsSync(target)) {
         existsCount++
