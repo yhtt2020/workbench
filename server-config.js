@@ -48,5 +48,5 @@ const api = {
 }
 if (typeof module != 'undefined') {
   //如果不是preload中，则直接按照模块exports出去
-  module.exports = { config, api }
+  module.exports = { config, api, appConfig }
 }
