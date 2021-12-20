@@ -209,6 +209,45 @@ const userscripts = {
     }
 
   },
+  prepareGMEnv(tabId,script){
+    //1.注册函数 //todo 兼容油猴常用函数
+    //兼容GM_addStyle
+    console.log(script)
+    if(!!script.options){
+      if(!!script.options.grant){
+        script.options.grant.forEach((grant)=>{
+          if($matchedScriptsForSiteGM[tabId]['grant'].includes(grant)){
+            console.log(grant+'已被其他脚本注册，无需重复注册')
+          }
+          //todo 实现油猴函数的代理
+          switch(grant){
+            case 'GM_addStyle':
+              webviews.callAsync(tabId, 'executeJavaScript', ['function GM_addStyle(){ console.log("gm_addstyle")}'])
+              $matchedScriptsForSiteGM[tabId]['grant'].push(grant)
+              console.log('注册'+grant+'函数成功')
+              //todo 实现GM_addStyle
+              break
+            case 'GM_setValue':
+              window.$matchedScriptsForSiteGM.values={}
+              webviews.callAsync(tabId, 'executeJavaScript', ['function GM_setValue(){ console.log("gm_setValue")}'])
+              $matchedScriptsForSiteGM[tabId]['grant'].push(grant)
+              console.log('注册'+grant+'函数成功')
+              //todo GM_setValue
+              break
+            case 'GM_getValue':
+              window.$matchedScriptsForSiteGM.values={}
+              webviews.callAsync(tabId, 'executeJavaScript', ['function GM_getValue(){ console.log("gm_getValue")}'])
+              console.log('注册'+grant+'函数成功')
+              //todo GM_getValue
+              break
+            default:
+              console.log(grant+'函数暂不支持，请等待系统更新后支持')
+          }
+          $matchedScriptsForSiteGM[tabId]['grant'].push(grant)
+        })
+      }
+    }
+  },
   onPageLoad: function (tabId) {
     if (userscripts.scripts.length === 0) {
       return
@@ -219,12 +258,15 @@ const userscripts = {
     //往窗体的变量中添加匹配数
     $matchedScriptsForSite[tabId]=matchedScripts
     $toolbar.updateScriptsCountTip(tabId)
-    //todo 准备油猴环境
-    //1.注册函数 //todo 兼容油猴常用函数
-
-
 
     matchedScripts.forEach(function (script) {
+      //todo 准备油猴环境
+      if(!!!$matchedScriptsForSiteGM[tabId]){
+        $matchedScriptsForSiteGM[tabId]={
+          grant:[]
+        }
+      }
+      userscripts.prepareGMEnv(tabId,script)
       // TODO run different types of scripts at the correct time
       if (!script.options['run-at'] || script.options['run-at'].some(i => ['document-start', 'document-body', 'document-end', 'document-idle'].includes(i))) {
         userscripts.runScript(tabId, script)
@@ -238,6 +280,7 @@ const userscripts = {
 
     settings.listen('userscriptsEnabled', function (value) {
       window.$matchedScriptsForSite= {}
+      window.$matchedScriptsForSiteGM={}
       if (value === true) {
         userscripts.loadScripts()
       } else {
