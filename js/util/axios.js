@@ -52,7 +52,8 @@ axios.interceptors.response.use(
         //参数错误是属于200错误，并不reject
         return response.data
       } else {
-        console.log(response.data, 'axios拦截(全局勿删!）')
+        //console.log(response.data, 'axios拦截(全局勿删!）')
+        return response
       }
       // return response.data;
     } else {
