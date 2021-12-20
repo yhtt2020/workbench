@@ -10,7 +10,7 @@ const localTpl = `
         <template #overlay>
           <a-menu @click="({ key: menuKey }) => onContextMenuClick(treeKey, menuKey)">
             <a-menu-item key="createList" :disabled="disableCreate"><a-icon type="plus-square"></a-icon>  创建列表</a-menu-item>
-<!--            <a-menu-item key="createChildList" :disabled="disableCreateChild"><a-icon type="plus-circle"></a-icon>  创建子列表</a-menu-item>-->
+            <a-menu-item key="createChildList" :disabled="disableCreateChild"><a-icon type="plus-circle"></a-icon>  创建子列表</a-menu-item>
 <!--            <a-menu-item key="copyList" :disabled="disableCopy"><a-icon type="copy"></a-icon>  复制列表</a-menu-item>-->
             <a-menu-item key="renameList" :disabled="disableRename"><a-icon type="edit"></a-icon> 重命名列表</a-menu-item>
             <a-menu-item key="deleteList" :disabled="disableDelete"><a-icon type="delete"></a-icon> 删除列表</a-menu-item>
@@ -62,19 +62,22 @@ Vue.component('local-comp', {
           children: []
         }]
     }
-  }, mounted () {
-    let that = this
+  },mounted () {
     window.$trees.push({
       name:'myapp',
       comp:this
     })
-    appListModel.list().then(data => {
-      data.forEach((item) => {
-        that.myAppsLists[0].children.push(appListModel.convertTreeNode(item))
-      })
-    })
+    this.loadData()
+    // appListModel.list().then(data => {
+    //   data.forEach((item) => {
+    //     that.myAppsLists[0].children.push(appListModel.convertTreeNode(item))
+    //   })
+    // })
   },
   methods: {
+    async loadData(){
+      this.myAppsLists[0].children=await appListModel.list()
+    },
     onSelect (selectedKeys, info) {
       let jump=0
       if(isNaN(Number(selectedKeys[0]))){
@@ -93,6 +96,8 @@ Vue.component('local-comp', {
         this.handleMenuRenameList(treeKey)
       } else if (menuKey === 'deleteList') {
         this.handleMenuDeleteList(treeKey)
+      }else if(menuKey==="createChildList"){
+        this.handleMenuCreateChildList(treeKey)
       }
     },
     createList (callback = () => {}, value = '', title = '') {
@@ -105,17 +110,20 @@ Vue.component('local-comp', {
     },
     handleMenuDeleteList (treeKey) {
       let that = this
-      let { list, key } = treeUtil.findTreeNode(treeKey, that.myAppsLists[0].children)
-      console.log(list)
+      let result = treeUtil.findTreeNode(treeKey, that.myAppsLists[0].children)
+      if(result.key===-1){
+        that.$message.error({content:'需要删除的列表不存在！'})
+        return
+      }
       this.$confirm({
-        title: `确认删除列表： ${list.title} ？`,
+        title: `确认删除列表： ${result.list.title} ？`,
         content: `删除后无法撤销，请谨慎操作！`,
         okText: '确认删除，不后悔',
         cancelText: '保留',
         onOk () {
           appListModel.delete(Number(appListModel.getIdFromTreeKey(treeKey))).then(() => {
             that.$message.success({ content: '删除成功。' })
-            that.myAppsLists[0].children.splice(key, 1)
+            that.loadData()
           })
         },
         onCancel () {
@@ -179,7 +187,41 @@ Vue.component('local-comp', {
 
       }, '本地列表', '本地')
     },
+    /**
+     * 处理菜单的创建子列表事件
+     */
+     handleMenuCreateChildList (treeKey) {
+      let that = this
+      console.log(treeKey)
+      this.createList(async function () {
+        let name = getNameInputValue()
+        let list = {}
+        list.name = name
+        list.createTime = Date.now()
+        list.updateTime = Date.now()
+        list.parentId=Number(treeKey)
+        list.order = 0
+        list.summary = ''
+        list.appsCount = 0
+        list.type = 0
+        if (!!!list.name) {
+          appVue.$message.error({ content: '请输入子列表名称。' })
+          return
+        }
+        appListModel.add(list).then(async data => {
+          appVue.$message.success({ content: '添加列表成功。' })
+          that.myAppsLists[0].children=await appListModel.list()
+          that.createListVisible = false
+        }, () => {
+          appVue.$message.error({ content: '添加列表失败。' })
 
+        }).catch(err => {
+          console.log(err)
+        })
+
+
+      }, '子列表', '在列表中创建子列表')
+    },
     /**
      * 检查菜单的可用性
      * @param visible

@@ -1,8 +1,15 @@
 db = require('../../../js/util/database').db
 
 const appListModel = {
-  list: async () => {
-    return db.appList.toArray()
+  list: async (list={id:0}) => {
+    let lists= await db.appList.where({parentId:list.id}).toArray()
+    let childTreeList= []
+    lists.forEach(async (childList)=>{
+      childList.children= await appListModel.list(childList)
+      childTreeList.push(appListModel.convertTreeNode(childList))
+    })
+
+    return childTreeList
   },
   add: async (appList) => {
     return await db.appList.put(appList)
@@ -15,6 +22,7 @@ const appListModel = {
     item.slots = {
       icon: 'list-icon'
     }
+    item.children= appList.children
     return item
   },
   put:async(data)=>{
@@ -72,16 +80,35 @@ const treeUtil={
   getIdFromTreeKey(treeKey,type){
     return treeKey.replace(type,'')
   },
-  findTreeNode(treeKey,treeList){
-    let list=null
+  findTreeNode(findKey,treeList){
     let key=-1
-    treeList.forEach((item,index)=>{
-      if(item.key===treeKey){
-        list=item
-        key=index
+    let findedList={}
+    for(let i=0;i<treeList.length;i++){
+      if(Number(treeList[i].key)===Number(findKey)){
+        console.log('find')
+        findedList=treeList[i]
+        key=treeList[i].key
+        break
       }
-    })
-    return {list,key}
+      if(!!treeList[i].children){
+        const result=treeUtil.findTreeNode(findKey,treeList[i].children)
+        if(result.key>-1){
+          //如果其children找到了这个列表，则直接返回找到的
+          findedList=result.list
+          key=result.key
+          break
+        }
+      }
+    }
+
+
+    //如果本层级也没找到这个则，返回失败
+    if(key===-1){
+      return {list:null,key:-1}
+    }else{
+      return { list:findedList,key:key }
+    }
+
   }
 }
 module.exports = { appListModel , treeUtil }
