@@ -222,21 +222,42 @@ const userscripts = {
           //todo 实现油猴函数的代理
           switch(grant){
             case 'GM_addStyle':
-              webviews.callAsync(tabId, 'executeJavaScript', ['function GM_addStyle(){ console.log("gm_addstyle")}'])
+              const jsGM_addStyle=`
+function GM_addStyle(str){
+var style=str;
+var ele=document.createElement("style");
+ele.innerHTML=style;
+document.getElementsByTagName('head')[0].appendChild(ele)
+console.log(ele)
+return ele
+}
+              `
+              webviews.callAsync(tabId, 'executeJavaScript', [jsGM_addStyle])
               $matchedScriptsForSiteGM[tabId]['grant'].push(grant)
               console.log('注册'+grant+'函数成功')
-              //todo 实现GM_addStyle
               break
             case 'GM_setValue':
+              const jsGM_setValue=`
+         function GM_setValue(name, value){
+         localStorage.setItem(name,value)
+          }
+              `
               window.$matchedScriptsForSiteGM.values={}
-              webviews.callAsync(tabId, 'executeJavaScript', ['function GM_setValue(){ console.log("gm_setValue")}'])
+              webviews.callAsync(tabId, 'executeJavaScript', [jsGM_setValue])
               $matchedScriptsForSiteGM[tabId]['grant'].push(grant)
               console.log('注册'+grant+'函数成功')
               //todo GM_setValue
               break
             case 'GM_getValue':
+              const jsGM_getValue=`
+             function GM_getValue(name, defaultValue){
+              const value= localStorage.getItem(name)
+               if(!!!value)
+                 return defaultValue
+                 }
+              `
               window.$matchedScriptsForSiteGM.values={}
-              webviews.callAsync(tabId, 'executeJavaScript', ['function GM_getValue(){ console.log("gm_getValue")}'])
+              webviews.callAsync(tabId, 'executeJavaScript', [jsGM_getValue])
               console.log('注册'+grant+'函数成功')
               //todo GM_getValue
               break
