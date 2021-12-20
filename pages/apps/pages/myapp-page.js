@@ -42,7 +42,7 @@ myappTpl =
 
             <a-button type="primary" shape="round" class="add-button" slot="extra" @click="showModal">添加网站</a-button>
 
-<div id="main-content" class="elements selecto-area" style="max-height: calc( 100vh - 238px);overflow-y: auto">
+<div id="main-content" class=" selecto-area" style="max-height: calc( 100vh - 238px);overflow-y: auto">
 <template>
   <a-list  v-show="appList.type==='2' && myApps.length>0" item-layout="horizontal" :data-source="myApps" :pagination="pagination" >
     <a-list-item  @dragstart="dragStart($event,item)" @mousedown.stop draggable="true"  class="app-list" :id="item.id"  slot="renderItem" slot-scope="item, index">
@@ -70,7 +70,7 @@ myappTpl =
     @select="onSelect"
     @selectEnd="selectEnd"
     ></vue-selecto>
-<div class="" id="selecto1" v-show="appList.type==='0' && myApps.length>0">
+<div class="elements" id="selecto1" v-show="appList.type==='0' && myApps.length>0">
 
  <a-dropdown  v-for="(app, index) in myApps" :trigger="['contextmenu']">
               <a-card-grid @dragstart="dragStart($event,app)" @mousedown.stop draggable="true"  :id="app.id"  class="app" style="cursor: pointer;"

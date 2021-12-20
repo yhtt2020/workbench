@@ -1,12 +1,13 @@
 const localTpl = `
 <div>
 <a-tree ref="myappTree" :tree-data="myAppsLists" :block-node="true" show-icon :selected-keys="selectedValues"
-        @select="onSelect" >
+        @select="onSelect" @dragenter.prevent="onDragEnter" draggable @mousedown.stop="" @drop="onDrop"
+    >
             <a-avatar slot="folder" shape="square" class="tree-icon" src="../../icons/svg/folder.svg"></a-avatar>
           <a-avatar slot="list-icon" shape="square" class="tree-icon" src="../../icons/svg/plan.svg"></a-avatar>
           <template #title="{ key: treeKey, title }">
       <a-dropdown :trigger="['contextmenu']" @visibleChange="checkMenuDisable($event,treeKey)">
-        <span @dragenter.prevent="dragEnter($event)" @dragleave.prevent="dragLeave($event)" @dragover.prevent="allowDrop($event,treeKey)" @drop.prevent="drop($event,treeKey)">{{ title }}</span>
+        <span @mousedown.stop="" @dragenter.prevent="dragEnter($event)" @dragleave.prevent="dragLeave($event)" @dragover.prevent="allowDrop($event,treeKey)" @drop.prevent="drop($event,treeKey)">{{ title }}</span>
         <template #overlay>
           <a-menu @click="({ key: menuKey }) => onContextMenuClick(treeKey, menuKey)">
             <a-menu-item key="createList" :disabled="disableCreate"><a-icon type="plus-square"></a-icon>  创建列表</a-menu-item>
@@ -160,6 +161,7 @@ Vue.component('local-comp', {
       let that = this
       this.createList(async function () {
         let name = getNameInputValue()
+        console.log(name)
         let list = {}
         list.name = name
         list.createTime = Date.now()
@@ -280,6 +282,75 @@ Vue.component('local-comp', {
           window.$removeApps()
         }
       })
-    }
+    },
+    onDragEnter(info) {
+      // expandedKeys 需要受控时设置
+      // this.expandedKeys = info.expandedKeys
+    },
+    //节点丢弃，移动列表
+    onDrop(info) {
+      //console.log('移动列表')
+      //console.log(info);
+      const dropKey = info.node.eventKey;
+      const dragKey = info.dragNode.eventKey;
+      const dropPos = info.node.pos.split('-');
+      const dropPosition = info.dropPosition - Number(dropPos[dropPos.length - 1]);
+      const loop = (data, key, callback) => {
+        data.forEach((item, index, arr) => {
+          if (item.key === key) {
+            return callback(item, index, arr);
+          }
+          if (item.children) {
+            return loop(item.children, key, callback);
+          }
+        });
+      };
+      const data = [...this.myAppsLists];
+
+      // Find dragObject
+      let dragObj;
+      loop(data, dragKey, (item, index, arr) => {
+        arr.splice(index, 1);
+        dragObj = item;
+      });
+
+      if (!info.dropToGap) {
+        // 移动到一个列表上
+        loop(data, dropKey, item => {
+          item.children = item.children || [];
+          // where to insert 示例添加到尾部，可以是随意位置
+          item.children.push(dragObj);
+
+        });
+      } else if (
+        (info.node.children || []).length > 0 && // 存在子元素
+        info.node.expanded && // 展开
+        dropPosition === 1 // 在在底部沟上
+      ) {
+        loop(data, dropKey, item => {
+          item.children = item.children || [];
+          // where to insert 示例添加到尾部，可以是随意位置
+          item.children.unshift(dragObj);
+          //todo 还需要排个序
+        });
+      } else {
+        let ar;
+        let i;
+        loop(data, dropKey, (item, index, arr) => {
+          ar = arr;
+          i = index;
+        });
+        if (dropPosition === -1) {
+          ar.splice(i, 0, dragObj);
+        } else {
+          ar.splice(i + 1, 0, dragObj);
+        }
+
+      }
+      //console.log(data)
+      appListModel.saveTree(data[0])
+      this.myAppsLists = data;
+    },
+
   }
 })

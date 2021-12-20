@@ -2,17 +2,22 @@ db = require('../../../js/util/database').db
 
 const appListModel = {
   list: async (list={id:0}) => {
-    let lists= await db.appList.where({parentId:list.id}).toArray()
+    let lists= await db.appList.where("parentId").anyOf(list.id).sortBy('sort')
     let childTreeList= []
     lists.forEach(async (childList)=>{
       childList.children= await appListModel.list(childList)
       childTreeList.push(appListModel.convertTreeNode(childList))
     })
-
     return childTreeList
   },
   add: async (appList) => {
     return await db.appList.put(appList)
+  },
+  moveAppListToList(moveItemId,toParentId=0){
+    if(toParentId==="myapp"){
+      toParentId=0
+    }
+    db.appList.update({id:moveItemId},{parentId:toParentId})
   },
   convertTreeNode: (appList) => {
      //console.log(appList, 'woxianzai yao de ')
@@ -58,6 +63,35 @@ const appListModel = {
        }
      })
 
+  },
+  //将树状结构存储回数据库
+  saveTree(data,parentId=0,sort=0,path="0"){
+    if(data.key==='myapp'){
+      //data没有key，所以是根路径
+      data.key=0
+    }else{
+      path+='-'+data.key  //拼接路径
+    }
+    console.log(data)
+    console.log(path)
+    console.log('parentid='+parentId)
+    const newItem={
+      parentId:parentId,
+      path:path,
+      sort:sort
+    }
+    console.log(newItem)
+    //todo 更新
+    if(data.key!==0){
+      db.appList.update(data.key,newItem)
+    }
+
+    if(data.children.length>0){
+      //如果存在子元素，则将子元素递归保存进去
+      for(let i=0;i<data.children.length;i++){
+        appListModel.saveTree(data.children[i],data.key,i,path)
+      }
+    }
   },
 
   /**
