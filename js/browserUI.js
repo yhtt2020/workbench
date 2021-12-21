@@ -124,6 +124,11 @@ function closeTab (tabId) {
     return
   }
 
+  if(!!tabs.get(tabId).lock){
+    ipc.send('message',{type:'info',config:{content:'该标签为锁定标签，无法直接关闭，请解锁后再关闭。',key:'lockTip'}})
+    return
+  }
+
   if (tabId === tabs.getSelected()) {
     var currentIndex = tabs.getIndex(tabs.getSelected())
     var nextTab =
