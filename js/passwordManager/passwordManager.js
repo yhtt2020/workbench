@@ -107,7 +107,7 @@ const PasswordManagers = {
         }
 
         manager.getSuggestions(domain).then(credentials => {
-          console.log(credentials)
+          //console.log(credentials)
           // 增加对找回密码数量的提示，减少认知成本
           if(credentials.length===0){
             ipc.send('message',{type:'error',config:{content:"暂未找到保存密码。",key:"password"}})

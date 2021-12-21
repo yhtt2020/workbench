@@ -5,7 +5,7 @@ Runs in the main process because of https://github.com/atom/node-keytar/issues/2
 
 const keytar = require('keytar')
 function keylog(obj){
-  console.log(obj)
+  //console.log(obj)
 }
 ipc.handle('keychainGetPassword', function (event, service, account) {
   keylog(keychainGetPassword)
