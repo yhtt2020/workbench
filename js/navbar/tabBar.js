@@ -58,50 +58,75 @@ const tabBar = {
   /*标签栏补充的右键菜单触发动作开始*/
   //关闭其他的标签
   closeOtherTabs: function (tabId) {
-    require('browserUI.js').switchToTab(tabId)
+    if(tabId!==tabs.getSelected())
+     require('browserUI.js').switchToTab(tabId)
     let needDestroy = []
+    let lockCount=0
     tasks.getSelected().tabs.forEach(function (tab, index) {
-      if (tab.id != tabId) needDestroy.push(tab.id)
+      if (tab.id != tabId  )
+      {
+        if(!!tabs.get(tab.id).lock) {
+          lockCount++
+        }else{
+          needDestroy.push(tab.id)
+        }
+
+      }
+
     })
-    needDestroy.forEach(function (tid, index) {
+    tabBar.closeTabsById(needDestroy,lockCount)
+    //$store.getters.fillTasksToItems
+  },
+  closeTabsById(needDestroyIds,lockCount){
+    needDestroyIds.forEach(function (tid, index) {
       require('browserUI.js').destroyTab(tid)
     })
-    //$store.getters.fillTasksToItems
+    if(lockCount>0){
+      ipc.send('message',{type:'success',config:{content:'成功关闭'+needDestroyIds.length+"个标签。但有"+lockCount+"个锁定标签未关闭，请解锁后关闭。"}})
+    }else{
+      ipc.send('message',{type:'success',config:{content:'成功关闭'+needDestroyIds.length+"个标签。"}})
+    }
   },
   //关闭左侧标签
   closeLeftTabs: function (tabId) {
-    require('browserUI.js').switchToTab(tabId)
-    let needDestroy = []
     let tabs = tasks.getSelected().tabs
+    if(tabId!==tabs.getSelected())
+      require('browserUI.js').switchToTab(tabId)
+    let needDestroy = []
     let count = tabs.count()
+    let lockCount=0
     console.log(count)
-    for (i = 0; i < count; i++) {
-      if (tabs.getAtIndex(i).id != tabId) needDestroy.push(tabs.getAtIndex(i).id)
-      else {
-        break
+    for (let i = 0; i < count; i++) {
+      if (tabs.getAtIndex(i).id != tabId ){
+        if(!!tabs.getAtIndex(i).lock){
+          lockCount++
+        }else{
+          needDestroy.push(tabs.getAtIndex(i).id)
+        }
       }
     }
-    needDestroy.forEach(function (tid, index) {
-      require('browserUI.js').destroyTab(tid)
-    })
+    tabBar.closeTabsById(needDestroy,lockCount)
     //$store.getters.fillTasksToItems
   },
   //关闭右侧标签
   closeRightTabs: function (tabId) {
-    require('browserUI.js').switchToTab(tabId)
-    let needDestroy = []
     let tabs = tasks.getSelected().tabs
+    if(tabId!==tabs.getSelected())
+      require('browserUI.js').switchToTab(tabId)
+    let needDestroy = []
     let count = tabs.count()
-    console.log(count)
-    for (i = count - 1; i >= 0; i--) {
-      if (tabs.getAtIndex(i).id != tabId) needDestroy.push(tabs.getAtIndex(i).id)
-      else {
-        break
+    let lockCount=0
+    for (let i = count - 1; i >= 0; i--) {
+      if (tabs.getAtIndex(i).id != tabId)
+      {
+        if(!!tabs.getAtIndex(i).lock){
+          lockCount++
+        }else{
+          needDestroy.push(tabs.getAtIndex(i).id)
+        }
       }
     }
-    needDestroy.forEach(function (tid, index) {
-      require('browserUI.js').destroyTab(tid)
-    })
+    tabBar.closeTabsById(needDestroy,lockCount)
     //$store.getters.fillTasksToItems
   },
   //移动到第一个标签
