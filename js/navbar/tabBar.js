@@ -330,10 +330,10 @@ const tabBar = {
       iconArea.appendChild(pbIcon)
     }
 
-    var secIcon = document.createElement('i')
-    secIcon.className = 'icon-tab-not-secure tab-icon tab-info-icon i carbon:unlocked'
-    secIcon.title = l('connectionNotSecure')
-    iconArea.appendChild(secIcon)
+    // var secIcon = document.createElement('i')
+    // secIcon.className = 'icon-tab-not-secure tab-icon tab-info-icon i carbon:unlocked'
+    // secIcon.title = l('connectionNotSecure')
+    //iconArea.appendChild(secIcon)
 
     var closeTabButton = document.createElement('button')
     closeTabButton.className = 'tab-icon tab-close-button i carbon:close'
@@ -735,12 +735,12 @@ const tabBar = {
         tabEl.insertBefore(button, tabEl.children[0])
       })
 
-    var secIcon = tabEl.getElementsByClassName('icon-tab-not-secure')[0]
-    if (tabData.secure === false) {
-      secIcon.hidden = false
-    } else {
-      secIcon.hidden = true
-    }
+    // var secIcon = tabEl.getElementsByClassName('icon-tab-not-secure')[0]
+    // if (tabData.secure === false) {
+    //   secIcon.hidden = false
+    // } else {
+    //   secIcon.hidden = true
+    // }
   },
   updateAll: function () {
     empty(tabBar.containerInner)
