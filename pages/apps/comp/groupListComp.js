@@ -2,7 +2,7 @@ const tpls = `
 <div>
   <a-row :gutter="24">
     <a-col v-for="(group,index) in myGroups" :key="index" :span="6">
-      <a-card hoverable style="margin-bottom: 10px">
+      <a-card hoverable style="margin-bottom: 10px" @click.native="clickCard(group)">
         <!--                        <img-->
         <!--                          slot="cover"-->
         <!--                          alt="example"-->
@@ -37,17 +37,10 @@ Vue.component('GroupListComp', {
   mounted(){
   },
   methods: {
-
-    titleClick (e) {
-      console.log('titleClick', e)
-    },
-
-    onSelect (selectedKeys, info) {
-      window.tab= selectedKeys[0]
-      this.$emit('gettab',window.tab)
-    },
-    onCheck (checkedKeys, info) {
-      console.log('onCheck', checkedKeys, info)
+    clickCard(group) {
+      this.$router.push({ name: 'groupNavs', query: {id: group.id, t: Date.now()}})
+      const spliceStr = `L1-${group.id}`
+      resetOtherTree('group', [spliceStr])
     }
   }
 })

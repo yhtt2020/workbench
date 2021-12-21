@@ -44,6 +44,17 @@ const handleAxios =  {
         console.log(err)
       }
     })
+
+    //检测node是否登录
+    ipc.on('checkLogin', async(event, args) => {
+      storage.getItem(`userToken`) ? event.reply('callback-checkLogin', true) : event.reply('callback-checkLogin', false)
+    })
+
+    //Osx免登录
+    ipc.on('autoLogin', async(event, args) => {
+      const result = await authApi.autoLogin()
+      event.reply('callback-autoLogin', result)
+    })
   }
 }
 app.on('ready',()=>{

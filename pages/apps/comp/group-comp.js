@@ -1,5 +1,6 @@
 const groupTpl = `
-<div>
+<div class="gp-tree">
+  <a-button class="ct-btn" type="primary" icon="plus" size="small" @click="createGroup"/>
   <a-tree :tree-data="groupLists" :block-node="true" show-icon :selected-keys="selectedValues" @select="onSelect">
     <a-avatar class="tree-icon" slot="folder-text" shape="square" src="../../icons/svg/foldertext.svg"></a-avatar>
     <a-avatar slot="folder" shape="square" class="tree-icon" src="../../icons/svg/team.svg"></a-avatar>
@@ -35,7 +36,6 @@ const groupTpl = `
 </div>
 `
 
-const { appList, treeUtil } = require('../../util/model/appListModel.js')
 const groupModel = require('../../util/model/groupModel')
 const getNameInputValue = function () {
   return document.getElementById('nameInput').value
@@ -75,13 +75,11 @@ Vue.component('group-comp', {
     })
     await this.refreshNavs()
   },
-  computed: {
-    // hideD(treeKey) {
-    //   console.log(treeKey, 'treeKeytreeKey')
-    //   return true
-    // }
-  },
+  computed: {},
   methods: {
+    createGroup() {
+      ipc.send('createGroup', {from: 'groupComp'})
+    },
     async refreshNavs() {
       await this.$store.dispatch('getMyGroups')
       if(this.groupLists[0].children.length > 0 ) {
@@ -141,8 +139,8 @@ Vue.component('group-comp', {
       let that = this
       const result = groupModel.findTreeNode(this.groupLists[0].children, treeKey)
       this.$confirm({
-        title: `确认删除列表： ${result.title} ？`,
-        content: `删除后无法撤销，请谨慎操作！`,
+        title: `确认删除列表: ${result.title} ？`,
+        content: `删除后无法撤销，请谨慎操作!`,
         okText: '确认删除，不后悔',
         cancelText: '保留',
         async onOk() {
@@ -280,7 +278,7 @@ Vue.component('group-comp', {
           appVue.$message.success({ content: '移动应用成功。' })
         } else {
           console.log(result)
-          appVue.$message.success({ content: '移动应用失败！' })
+          appVue.$message.success({ content: '移动应用失败!' })
         }
       }
     },

@@ -1,7 +1,8 @@
 let groupIMWindow=null
 app.on('ready', () => {
   let createGroupWindow = null
-  ipc.on('createGroup', () => {
+  let fromRender = null
+  ipc.on('createGroup', (event, arg) => {
     if (createGroupWindow !== null ) {
       createGroupWindow.focus()
       return //如果已经创建了，则不再重复创建
@@ -29,13 +30,27 @@ app.on('ready', () => {
     createGroupWindow.setMenu(null)
     createGroupWindow.webContents.loadURL('file://' + __dirname + '/pages/group/create.html')
     createGroupWindow.on('close',()=>createGroupWindow=null)
+    if(arg) {
+      if(arg.from === 'groupComp') {
+        //消息来源，后续需要返回消息的webContents，这里只对groupComp发来的ipc通信做存储
+        fromRender = event.sender
+      }
+    }
   })
   ipc.on('closeCreateGroupWindow', () => {
     createGroupWindow.destroy()
     createGroupWindow = null
   })
 
+  ipc.on('refreshGroupComp', (event, arg) => {
+    if(fromRender) {
+      fromRender.send('callback-refreshGroupComp')
+    }
+    fromRender = null
+  })
+
   ipc.on('refreshMyGroups', () => {
+    //同在main中可以直接拿到SidePanel的webContents
     if(SidePanel.alive()) {
       sidePanel.get().webContents.send('refreshMyGroups')
     }

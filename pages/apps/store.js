@@ -1,7 +1,10 @@
 const userAppsApi = require('../util/api/userAppsApi')
 const groupApi = require('../util/api/groupApi')
+const baseApi = require('../util/api/baseApi')
 const store = new Vuex.Store({
   state: {
+    //当前用户
+    userInfo: {},
     //云端用户相关
     appUserNavs: [],
     userNavApps:[],
@@ -12,6 +15,9 @@ const store = new Vuex.Store({
 
   },
   getters: {
+    getCurrentUser: state => {
+      return state.userInfo
+    },
     getAppUserNavs: state => {
       return state.appUserNavs
     },
@@ -29,6 +35,10 @@ const store = new Vuex.Store({
     },
   },
   mutations: {
+    //设置当前用户
+    SET_USERINFO: (state, userInfo) => {
+      state.userInfo = userInfo
+    },
     //设置我的云端导航
     SET_APPUSERNAVS: (state, appUserNavs) => {
       state.appUserNavs = appUserNavs
@@ -47,6 +57,11 @@ const store = new Vuex.Store({
     },
   },
   actions: {
+    //获取当前用户
+    async getCurrentUser({commit}) {
+      const result = await baseApi.getCurrentUser()
+      commit('SET_USERINFO', result)
+    },
     //云端用户相关
     async getAppUserNavs({commit}) {
       const result = await userAppsApi.getAppUserNavs()

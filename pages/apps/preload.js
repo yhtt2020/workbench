@@ -1,7 +1,9 @@
 var electron = require('electron')
 var ipc = electron.ipcRenderer
 var fs = require('fs')
-var http = require('http')
+
+window.ipc = ipc
+
 window.addEventListener('message', function(e) {
 	if (!e.origin.startsWith('file://')) {
 		return
@@ -27,6 +29,13 @@ function getMessageType(data) {
 	else
 		return ''
 }
+
+
+ipc.on('callback-refreshGroupComp', () => {
+  //因为action刷新grouplist没法满足，因为左边的树形是在页面加载前拿着数据做过处理的
+  //暂时只能去刷新页面了
+  window.location.reload()
+})
 
 
 

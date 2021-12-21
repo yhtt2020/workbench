@@ -100,7 +100,16 @@ span .ant-tree-title .ant-dropdown-trigger {
   height: 24px;
 }
 
+/*group-comp样式*/
+.gp-tree {
+  position: relative;
+}
 
+.gp-tree .ct-btn {
+  position: absolute;
+  right: 0px;
+  top: 7px
+}
 
 
 /*添加了壁纸之后的样式,完全不一样了*/
