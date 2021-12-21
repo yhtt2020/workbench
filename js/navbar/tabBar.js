@@ -440,7 +440,11 @@ const tabBar = {
           {
             label: '关闭标签',
             click: function () {
-              require('browserUI.js').closeTab(data.id)
+              if(!!tabs.get(data.id).lock){
+                ipc.send('message',{type:'info',config:{content:'该标签为锁定标签，无法直接关闭，请解锁后再关闭。',key:'lockTip'}})
+              }else{
+                require('browserUI.js').closeTab(data.id)
+              }
             },
           },
         ],
@@ -448,6 +452,14 @@ const tabBar = {
           {
             label: '关闭整组',
             click: function () {
+              const tabsList=tasks.getSelected().tabs
+              console.log(tabsList)
+              for(let i=0;i<tabsList.tabs.length;i++){
+                if(!!tabsList.tabs[i].lock){
+                  ipc.send('message',{type:'error',config:{content:'组内存在锁定标签，无法关闭整组。请解锁后再试。'}})
+                  return
+                }
+              }
               require('browserUI.js').closeTask(tasks.getSelected().id)
             },
           },
