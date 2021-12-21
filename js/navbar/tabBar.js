@@ -456,7 +456,7 @@ const tabBar = {
               console.log(tabsList)
               for(let i=0;i<tabsList.tabs.length;i++){
                 if(!!tabsList.tabs[i].lock){
-                  ipc.send('message',{type:'error',config:{content:'组内存在锁定标签，无法关闭整组。请解锁后再试。'}})
+                  ipc.send('message',{type:'info',config:{content:'组内存在锁定标签，无法关闭整组。请解锁后再试。'}})
                   return
                 }
               }
