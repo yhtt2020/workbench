@@ -166,13 +166,14 @@
               :use-css-transforms="false"
             >
 
-              <grid-item class="element" v-for="item in layout"
+              <grid-item class="element" v-for="item in layout" :style="{'display':item.element.type==='card'?'flex':'block'}"
                          :x="item.x"
                          :y="item.y"
                          :w="item.w"
                          :h="item.h"
                          :i="item.i"
                          :key="item.i"
+                         :is-resizable="item.isResizable"
                          :drag-ignore-from="item.dragIgnoreFrom"
 
               >
@@ -182,6 +183,13 @@
                     {{ item.element.data.name}}
                   </div>
                 </div>
+
+                  <div :class="'gradient gradient--'+item.element.data.color" class="title-card" v-if="item.element.type==='card'">
+                    <div>{{item.element.data.text}}</div>
+                  </div>
+
+
+
               </grid-item>
             </grid-layout>
           </div>
@@ -413,14 +421,42 @@
               <a-tab-pane key="1" tab="自定义">
               </a-tab-pane>
               <a-tab-pane key="2" tab="小组件">
-                小组件
+               <ul class="tools"><li >
+                 <h3>文字小卡片</h3>
+                 <a-row type="flex">
+                   <a-col flex="160px">
+                     <div :class="'gradient gradient--'+this.selectedColor"  class="title-card">
+                       <div>{{cardText}}</div>
+                     </div>
+                   </a-col>
+                   <a-col flex="auto" style="padding-left: 10px;padding-right: 10px">
+                     <ul class="colors">
+                       <li v-for="color in colors" @click="setCardColor(color)" :class="'gradient gradient--'+color">
+                         &nbsp;
+                       </li>
+                     </ul>
+                     <div style="margin-top: 10px">
+                       <a-textarea style="width: 160px" v-model="cardText" allow-clear placeholder="输入卡片内容" :rows="2"></a-textarea>
+                     </div>
+                   </a-col>
+                   <a-col :flex="1">
+                     <a-button type="primary" @click="addElement({type:'card',data:{color:selectedColor,text:cardText}})" >
+                       添加组件
+                     </a-button>
+                   </a-col>
+                 </a-row>
+
+               </li></ul>
+
+
+
               </a-tab-pane>
               <a-tab-pane key="3" tab="网站导航">
                 <a-tabs default-active-key="productive" tab-position="top" @ok="handleOk" :style="{ height: '650px' }">
                   <a-tab-pane  v-for="(type, indexType) in allApps" :key="type.name" :tab="type.title">
                     <div style="overflow-y: auto;max-height: 650px">
                       <a-card :title="type.title" style="padding: 10px">
-                        <a-card-grid @click="addElement({type:'app',data:app},indexApp)" :class="{'app':true,'app-goods':true}" v-for="(app, indexApp) in type.apps" draggable="true" @dragstart="setDrag($event,app)">
+                        <a-card-grid @click="addElement({type:'app',data:app})" :class="{'app':true,'app-goods':true}" v-for="(app, indexApp) in type.apps" draggable="true" @dragstart="setDrag($event,app)">
                           <a >
                             <a-avatar shape="square" :size="64" :src="app.icon" style="margin-bottom: 10px"></a-avatar>
                             <a-card-meta :title="app.name">
@@ -507,6 +543,12 @@
         el: '#app',
         data() {
           return {
+            cardText:'文字小卡片',
+            cardLines:1,
+            colors:[
+              1,2,3,4,5,6,7,8,9,10,11,12
+            ],
+            selectedColor:0,
             layout: [
             // {"x":0,"y":0,"w":2,"h":2,"i":"0"},
             // {"x":2,"y":0,"w":2,"h":4,"i":"1"},
@@ -582,6 +624,14 @@
           }
         },
         methods: {
+          //设置小卡片组件的颜色
+          setCardColor(color){
+            this.selectedColor= color
+          },
+          setCardText(e){
+            console.log(e)
+              this.cardText=e.value
+          },
           layoutUpdatedEvent(){
             localStorage.setItem('desk',JSON.stringify(this.layout))
           },
@@ -589,16 +639,23 @@
             console.log(e);
             this.visibleAdd = false;
           },
-          addElement(element,index){
-
+          addElement(element){
+            const sizes={
+              card:{
+                w:2,h:1,isResizable: true
+              },
+              app:{
+                w:1,h:1,isResizable: false
+              }
+            }
             const pos={
               x: (this.layout.length) % (this.colNum || 12),
               y:0, // puts it at the bottom
-              w: 1,
-              h: 1,
+              w: sizes[element.type].w,
+              h: sizes[element.type].h,
               i: Date.now(),
               dragIgnoreFrom:'button',
-              isResizable:false,
+              isResizable:sizes[element.type].isResizable,
             }
             this.index++
             console.log(pos)
@@ -807,7 +864,7 @@
               }
               return window.$appsApiData.allApps
             },
-          },
+          }
 
         },
         mounted() {
