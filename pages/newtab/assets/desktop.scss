@@ -1,0 +1,103 @@
+:root {
+  --element-width: 60px;
+  --element-height: 100px;
+  --element-inner-width: 60px;
+  --element--inner-height: 60px;
+}
+//@media screen and (min-width:1100px){ /*三栏布局*/
+//  .desktop{width: 100px;} /*没有写高度，由内容撑起来*/
+//}
+//@media screen and (min-width:800px) and (max-width:1100px){ /*二栏布局*/
+//  .desktop{width: 100px;}
+//}
+//@media screen and (max-width:800px) { /*一栏布局*/
+//  .desktop{width: 600px;}
+//}
+.desktop {
+  width:80%;
+  //background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  min-height: 80px;
+  min-width: 720px;
+  //max-width: 800px;
+  margin: 40px auto auto;
+}
+.element {
+  width: var(--element-width);
+  &:active {
+    img {
+      animation: scale .2s forwards;
+      transform: scale(0.95, 0.95);
+    }
+
+  }
+
+  .app {
+    display: block;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 20px;
+    width: var(--element-width);
+    height: var(--element-height);
+
+    img {
+      width: var(--element-inner-width);
+      height: var(--element--inner-height);
+      border-radius: 8px;
+    }
+
+    .name {
+      color: white;
+      text-shadow: 0 0 3px #000c17;
+      font-size: 12px;
+      padding-top: 5px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 100%;
+    }
+  }
+}
+
+.vue-grid-item.vue-grid-placeholder {
+  background: #1c1c1c !important;
+  border-radius: 8px;
+
+}
+
+//.desktop{
+//  max-width: 800px;
+//  margin: 40px auto auto;
+//  .element{
+//    touch-action: none;
+//    &:active{
+//      img{
+//        animation: scale .2s forwards;
+//        transform: scale(0.95, 0.95);
+//      }
+//    }
+//
+//    .app{
+//      display: block;
+//      margin-left: 10px;
+//      margin-right: 10px;
+//      margin-bottom: 20px;
+//      width: var(--element-width);
+//      height: var(--element-height);
+//      img{
+//        width: var(--element-inner-width);
+//        height: var(--element--inner-height);
+//        border-radius: 8px;
+//      }
+//      .name{
+//        color: white;
+//        text-shadow: 0 0 3px #000c17;
+//        font-size: 14px;
+//        padding: 5px;
+//        text-wrap: none;
+//        text-emphasis: dot;
+//
+//      }
+//    }
+//  }
+//}

@@ -14,6 +14,39 @@ html {
 *:after {
   box-sizing: inherit;
 }
+/*最左侧栏*/
+.side-bar{
+position: fixed;
+  height: 100vh;
+  width: 45px;
+  background: rgba(255,255,255,0.3);
+  backdrop-filter: blur(4px);
+  display: flex;
+  right: 0;
+
+  .action-list {
+    width: 100%;
+    height: auto;
+    align-self: center;
+
+    .active{
+      background: rgba(255,255,255,0.3) !important;
+    }
+    .action{
+      margin-bottom:10px;
+      text-align: center;
+      padding:5px;
+      display: block;
+      color: #333;
+      &:hover{
+        background: rgba(255,255,255,0.3);
+      }
+    }
+  }
+
+}
+/*最左侧栏end*/
+
 
 .main {
   .main-top {

@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="../../ext/vue/antd.min.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./assets/index.css" />
+    <link rel="stylesheet" href="./assets/desktop.css" />
+    <script src="../../ext/vue/vue-grid-layout.umd.min.js"></script>
     <link rel="icon" type="image/svg+xml" href="../../icons/svg/hi.svg"/>
     <title>新标签页</title>
   </head>
@@ -22,6 +24,40 @@
     </script>
     <div id="app">
       <template>
+
+        <div class="side-bar">
+          <div class="action-list">
+            <ul>
+              <li>
+                <a-popover placement="left">
+                  <template slot="content">
+                    我的个人桌面
+                  </template>
+                  <a class="active action ">
+                    <a-icon type="home"></a-icon>
+                    <div>主页</div>
+                  </a>
+                </a-popover>
+
+              </li>
+              <li >
+                <a-popover placement="left">
+                  <template slot="content">
+                    <h3>效率社区</h3>
+                    <p>与全球的高效能人士共同成长</p>
+                  </template>
+                    <a href="https://com.thisky.com" class="action">
+                      <a-icon type="message"></a-icon>
+                      <div>社区</div>
+                    </a>
+                </a-popover>
+
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
         <a-drawer style="z-index:1005"
           placement="bottom"
           :height="500"
@@ -55,9 +91,6 @@
                     </a-tabs>
                   </div>
                 </template>
-
-
-
               <div>
                 <h1 style="font-size: 14px;margin-top: 20px">卡片不透明度：</h1>
                 <a-slider id="cardOpacity"  @change="changeOpacity" :step="5" v-model="cardOpacity" :default-value="100"> </a-slider>
@@ -71,8 +104,7 @@
 
         </a-drawer>
 
-        <a-button style="position: fixed;right: 20px;top: 20px;background-color: rgba(0,0,0,0.3);color: white;border:none" shape="circle" type="primary" icon="skin"  @click="setTheme" ></a-button>
-        </style>
+        <a-button style="position: fixed;right: 6px;top: 20px;background-color: rgba(0,0,0,0.3);color: white;border:none" shape="circle" type="primary" icon="skin"  @click="setTheme" ></a-button>
         <a-dropdown :trigger="['contextmenu']">
         <div class="main">
           <div class="main-top flex flex-direction justify-around align-center">
@@ -117,218 +149,254 @@
               </div>
             </div>
           </div>
+          <div class="desktop" style="">
+            <grid-layout
+              :layout.sync="layout"
+              :cols="{ lg: 20, md: 15, sm: 12, xs: 10, xxs: 0 }"
+              :row-height="80"
+              :is-draggable="true"
+              :is-resizable="false"
+              :auto-size="true"
+              :is-mirrored="false"
+              :breakpoints="{ lg: 1200, md: 900, sm: 720, xs: 600, xxs: 0 }"
+              :vertical-compact="false"
+              :margin="[0, 20]"
+              @layout-updated="layoutUpdatedEvent"
+              :response="true"
+              :use-css-transforms="false"
+            >
 
-          <div class="main-bottom flex justify-center">
-            <div class="mb-wrap flex flex-wrap justify-center">
-              <div
-                class=" wrap-nav wrap-nav1"
-                :class="{'moreNow': this.navallShow1}"
-                @mouseenter="mouseIn(0)"
-                @mouseleave="mouseOut(0)"
+              <grid-item class="element" v-for="item in layout"
+                         :x="item.x"
+                         :y="item.y"
+                         :w="item.w"
+                         :h="item.h"
+                         :i="item.i"
+                         :key="item.i"
+                         :drag-ignore-from="item.dragIgnoreFrom"
+
               >
-                <a-dropdown class="adrop1" v-show="this.bookdian1Show">
-                  <a-icon type="more" :style="{ fontSize: '18px'}"></a-icon>
-                  <a-menu slot="overlay" style="display: none;">
-                    <a-menu-item>
-                      <a href="javascript:;">移除分组框</a>
-                    </a-menu-item>
-                  </a-menu>
-                </a-dropdown>
-                <div class="nav-top flex justify-start align-center">
-                  <a-icon type="appstore" :style="{ fontSize: '18px'}" style="margin-left: 10px"></a-icon>
-                  <div style="margin-left: 10px">我的导航</div>
-                </div>
-                <div class="nav-content flex flex-wrap">
-                  <a-empty
-                    image="./assets/original.png"
-                    class="flex flex-direction align-center justify-center"
-                    style="width: 100%; height: 100%"
-                    v-show="myApps.length == 0"
-                  >
-                    <span slot="description">暂无应用</span>
-                    <a-button type="primary" onclick="ipc.send('openHome')" size="small"> 前往添加 </a-button>
-                  </a-empty>
-                  <a draggable="true" @dragstart="setDrag($event,item)"
-                    class="n-card flex flex-direction justify-around align-center"
-                    v-for="(item, index) in myApps"
-                    :key="index"
-                    :href="item.url"
-                    style="color: #606266"
-                  >
-                    <img :src="item.icon" alt="" />
-                    <p>{{item.name}}</p>
-                  </a>
-                </div>
-                <transition name="slide-fade">
-                  <div
-                    class="nav-bottom flex justify-center align-center"
-                    v-show="navallShow1"
-                    onclick="ipc.send('openHome')"
-                  >
-                    + 查看全部
+                <div class="app" :href="item.element.data.url"    v-if="item.element.type==='app'">
+                  <img :src="item.element.data.icon">
+                  <div class="name">
+                    {{ item.element.data.name}}
                   </div>
-                </transition>
-              </div>
-
-              <div
-                class="wrap-nav wrap-nav2"
-                :class="{'moreNow': this.navallShow2}"
-                @mouseenter="mouseIn(1)"
-                @mouseleave="mouseOut(1)"
-              >
-                <div class="nav-top flex justify-start align-center">
-                  <a-icon type="star" :style="{ fontSize: '18px'}" style="margin-left: 10px"></a-icon>
-                  <div style="margin-left: 10px">书签收藏</div>
                 </div>
-                <a-dropdown class="adrop2" v-show="this.bookdian2Show">
-                  <a-icon type="more" :style="{ fontSize: '18px'}"></a-icon>
-                  <a-menu slot="overlay" style="display: none;">
-                    <a-menu-item>
-                      <a href="javascript:;">移除分组框</a>
-                    </a-menu-item>
-                  </a-menu>
-                </a-dropdown>
-                <div class="nav-content flex flex-direction">
-                  <template>
-                    <div v-if="loadingBookmark" style="text-align: center; margin-top: 70px">
-                      <a-spin tip="Loading..."> </a-spin>
-                    </div>
-                  </template>
-                  <a-empty
-                    image="./assets/original.png"
-                    class="flex flex-direction align-center justify-center"
-                    style="width: 100%; height: 100%"
-                    v-show="bookmarkEmpty"
-                  >
-                    <span slot="description">暂无书签</span>
-                    <a-button type="primary" onclick="ipc.send('importBookMarks')" size="small"> 导入书签 </a-button>
-                  </a-empty>
-                  <a
-                    :href="item.link"
-                    class="flex justify-around align-center"
-                    v-for="(item, index) in bookmark"
-                    :key="index"
-                  >
-                    <a-avatar shape="square" style="width:2em;height: auto" src="../../icons/svg/library.svg"></a-avatar>
-                    <ul class="flex flex-direction justify-center align-center">
-                      <li>{{item.title}}</li>
-                      <li style="color: #7f7f7f">{{item.link}}</li>
-                    </ul>
-                  </a>
-                </div>
-                <transition name="slide-fade">
-                  <div
-                    class="nav-bottom flex justify-center align-center"
-                    v-show="navallShow2"
-                    onclick="ipc.send('openBookmarks')"
-                  >
-                    + 查看全部
-                  </div>
-                </transition>
-              </div>
-
-              <div
-                class="wrap-nav wrap-nav3"
-                :class="{'moreNow': this.navallShow3}"
-                @mouseenter="mouseIn(2)"
-                @mouseleave="mouseOut(2)"
-              >
-                <a-dropdown class="adrop3" v-show="this.bookdian3Show">
-                  <a-icon type="more" :style="{ fontSize: '18px'}"></a-icon>
-                  <a-menu slot="overlay" style="display: none;">
-                    <a-menu-item>
-                      <a href="javascript:;">移除分组框</a>
-                    </a-menu-item>
-                  </a-menu>
-                </a-dropdown>
-                <a-tabs default-active-key="0" :tab-position="mode" @prevClick="callback" @nextClick="callback">
-                  <a-tab-pane v-for="(i, index) in allApps" :key="index" :tab="i.title">
-                    <div class="pane flex flex-wrap">
-                      <a draggable="true" @dragstart="setDrag($event,item)"
-                        class="n-card flex flex-direction justify-around align-center"
-                        v-for="(item, index) in i.apps"
-                        :key="index"
-                        :href="item.url"
-                        :title="item.name"
-                        style="color: #606266"
-                      >
-                        <img :src="item.icon" alt="" />
-                        <p>{{item.name}}</p>
-                      </a>
-                    </div>
-                  </a-tab-pane>
-                </a-tabs>
-                <transition name="slide-fade">
-                  <div
-                    class="nav-bottom flex justify-center align-center"
-                    v-show="navallShow3"
-                    @click="() => adVisible = true"
-                  >
-                    + 查看全部
-                  </div>
-                </transition>
-              </div>
-
-              <div
-                class="wrap-nav wrap-nav4"
-                :class="{'moreNow': this.navallShow4}"
-                @mouseenter="mouseIn(3)"
-                @mouseleave="mouseOut(3)"
-              >
-                <a-tabs  default-active-key="0">
-                  <a-tab-pane v-for="(i, index) in this.historyBar" :key="index" :tab="i.time_title">
-                    <div class="pane flex flex-direction">
-                      <a-dropdown class="adrop4" v-show="bookdian4Show">
-                        <a-icon type="more" :style="{ fontSize: '18px'}"></a-icon>
-                        <a-menu slot="overlay" style="display: none;">
-                          <a-menu-item>
-                            <a href="javascript:;">移除分组框</a>
-                          </a-menu-item>
-                        </a-menu>
-                      </a-dropdown>
-                      <div class="nav-content flex flex-direction">
-                        <a-empty
-                          image="./assets/original.png"
-                          class="flex flex-direction align-center justify-center"
-                          style="width: 100%; height: 100%"
-                          v-if="isEmpty(i.info) "
-                        >
-                          <span slot="description">无浏览历史</span>
-                        </a-empty>
-                        <a
-                          :href="item.link"
-                          class="flex justify-around align-center"
-                          v-for="(item, index) in i.info "
-                          :key="index"
-                        ><a-avatar shape="square" style="width:2em;height: auto" src="../../icons/svg/footprint.svg"></a-avatar>
-
-                          <ul class="flex flex-direction justify-center align-center">
-                            <li>{{item.title}}</li>
-                            <li style="color: #7f7f7f">{{item.link}}</li>
-                          </ul>
-                        </a>
-                      </div>
-                    </div>
-                  </a-tab-pane>
-                </a-tabs>
-                <transition name="slide-fade">
-                  <div
-                    class="nav-bottom flex justify-center align-center"
-                    v-show="navallShow4"
-                    onclick="ipc.send('openHistory')"
-                  >
-                    + 查看全部
-                  </div>
-                </transition>
-              </div>
-            </div>
+              </grid-item>
+            </grid-layout>
           </div>
+
+<!--          <div class="main-bottom flex justify-center">-->
+<!--            <div class="mb-wrap flex flex-wrap justify-center">-->
+<!--              <div-->
+<!--                class=" wrap-nav wrap-nav1"-->
+<!--                :class="{'moreNow': this.navallShow1}"-->
+<!--                @mouseenter="mouseIn(0)"-->
+<!--                @mouseleave="mouseOut(0)"-->
+<!--              >-->
+<!--                <a-dropdown class="adrop1" v-show="this.bookdian1Show">-->
+<!--                  <a-icon type="more" :style="{ fontSize: '18px'}"></a-icon>-->
+<!--                  <a-menu slot="overlay" style="display: none;">-->
+<!--                    <a-menu-item>-->
+<!--                      <a href="javascript:;">移除分组框</a>-->
+<!--                    </a-menu-item>-->
+<!--                  </a-menu>-->
+<!--                </a-dropdown>-->
+<!--                <div class="nav-top flex justify-start align-center">-->
+<!--                  <a-icon type="appstore" :style="{ fontSize: '18px'}" style="margin-left: 10px"></a-icon>-->
+<!--                  <div style="margin-left: 10px">我的导航</div>-->
+<!--                </div>-->
+<!--                <div class="nav-content flex flex-wrap">-->
+<!--                  <a-empty-->
+<!--                    image="./assets/original.png"-->
+<!--                    class="flex flex-direction align-center justify-center"-->
+<!--                    style="width: 100%; height: 100%"-->
+<!--                    v-show="myApps.length == 0"-->
+<!--                  >-->
+<!--                    <span slot="description">暂无应用</span>-->
+<!--                    <a-button type="primary" onclick="ipc.send('openHome')" size="small"> 前往添加 </a-button>-->
+<!--                  </a-empty>-->
+<!--                  <a draggable="true" @dragstart="setDrag($event,item)"-->
+<!--                    class="n-card flex flex-direction justify-around align-center"-->
+<!--                    v-for="(item, index) in myApps"-->
+<!--                    :key="index"-->
+<!--                    :href="item.url"-->
+<!--                    style="color: #606266"-->
+<!--                  >-->
+<!--                    <img :src="item.icon" alt="" />-->
+<!--                    <p>{{item.name}}</p>-->
+<!--                  </a>-->
+<!--                </div>-->
+<!--                <transition name="slide-fade">-->
+<!--                  <div-->
+<!--                    class="nav-bottom flex justify-center align-center"-->
+<!--                    v-show="navallShow1"-->
+<!--                    onclick="ipc.send('openHome')"-->
+<!--                  >-->
+<!--                    + 查看全部-->
+<!--                  </div>-->
+<!--                </transition>-->
+<!--              </div>-->
+
+<!--              <div-->
+<!--                class="wrap-nav wrap-nav2"-->
+<!--                :class="{'moreNow': this.navallShow2}"-->
+<!--                @mouseenter="mouseIn(1)"-->
+<!--                @mouseleave="mouseOut(1)"-->
+<!--              >-->
+<!--                <div class="nav-top flex justify-start align-center">-->
+<!--                  <a-icon type="star" :style="{ fontSize: '18px'}" style="margin-left: 10px"></a-icon>-->
+<!--                  <div style="margin-left: 10px">书签收藏</div>-->
+<!--                </div>-->
+<!--                <a-dropdown class="adrop2" v-show="this.bookdian2Show">-->
+<!--                  <a-icon type="more" :style="{ fontSize: '18px'}"></a-icon>-->
+<!--                  <a-menu slot="overlay" style="display: none;">-->
+<!--                    <a-menu-item>-->
+<!--                      <a href="javascript:;">移除分组框</a>-->
+<!--                    </a-menu-item>-->
+<!--                  </a-menu>-->
+<!--                </a-dropdown>-->
+<!--                <div class="nav-content flex flex-direction">-->
+<!--                  <template>-->
+<!--                    <div v-if="loadingBookmark" style="text-align: center; margin-top: 70px">-->
+<!--                      <a-spin tip="Loading..."> </a-spin>-->
+<!--                    </div>-->
+<!--                  </template>-->
+<!--                  <a-empty-->
+<!--                    image="./assets/original.png"-->
+<!--                    class="flex flex-direction align-center justify-center"-->
+<!--                    style="width: 100%; height: 100%"-->
+<!--                    v-show="bookmarkEmpty"-->
+<!--                  >-->
+<!--                    <span slot="description">暂无书签</span>-->
+<!--                    <a-button type="primary" onclick="ipc.send('importBookMarks')" size="small"> 导入书签 </a-button>-->
+<!--                  </a-empty>-->
+<!--                  <a-->
+<!--                    :href="item.link"-->
+<!--                    class="flex justify-around align-center"-->
+<!--                    v-for="(item, index) in bookmark"-->
+<!--                    :key="index"-->
+<!--                  >-->
+<!--                    <a-avatar shape="square" style="width:2em;height: auto" src="../../icons/svg/library.svg"></a-avatar>-->
+<!--                    <ul class="flex flex-direction justify-center align-center">-->
+<!--                      <li>{{item.title}}</li>-->
+<!--                      <li style="color: #7f7f7f">{{item.link}}</li>-->
+<!--                    </ul>-->
+<!--                  </a>-->
+<!--                </div>-->
+<!--                <transition name="slide-fade">-->
+<!--                  <div-->
+<!--                    class="nav-bottom flex justify-center align-center"-->
+<!--                    v-show="navallShow2"-->
+<!--                    onclick="ipc.send('openBookmarks')"-->
+<!--                  >-->
+<!--                    + 查看全部-->
+<!--                  </div>-->
+<!--                </transition>-->
+<!--              </div>-->
+
+<!--              <div-->
+<!--                class="wrap-nav wrap-nav3"-->
+<!--                :class="{'moreNow': this.navallShow3}"-->
+<!--                @mouseenter="mouseIn(2)"-->
+<!--                @mouseleave="mouseOut(2)"-->
+<!--              >-->
+<!--                <a-dropdown class="adrop3" v-show="this.bookdian3Show">-->
+<!--                  <a-icon type="more" :style="{ fontSize: '18px'}"></a-icon>-->
+<!--                  <a-menu slot="overlay" style="display: none;">-->
+<!--                    <a-menu-item>-->
+<!--                      <a href="javascript:;">移除分组框</a>-->
+<!--                    </a-menu-item>-->
+<!--                  </a-menu>-->
+<!--                </a-dropdown>-->
+<!--                <a-tabs default-active-key="0" :tab-position="mode" @prevClick="callback" @nextClick="callback">-->
+<!--                  <a-tab-pane v-for="(i, index) in allApps" :key="index" :tab="i.title">-->
+<!--                    <div class="pane flex flex-wrap">-->
+<!--                      <a draggable="true" @dragstart="setDrag($event,item)"-->
+<!--                        class="n-card flex flex-direction justify-around align-center"-->
+<!--                        v-for="(item, index) in i.apps"-->
+<!--                        :key="index"-->
+<!--                        :href="item.url"-->
+<!--                        :title="item.name"-->
+<!--                        style="color: #606266"-->
+<!--                      >-->
+<!--                        <img :src="item.icon" alt="" />-->
+<!--                        <p>{{item.name}}</p>-->
+<!--                      </a>-->
+<!--                    </div>-->
+<!--                  </a-tab-pane>-->
+<!--                </a-tabs>-->
+<!--                <transition name="slide-fade">-->
+<!--                  <div-->
+<!--                    class="nav-bottom flex justify-center align-center"-->
+<!--                    v-show="navallShow3"-->
+<!--                    @click="() => adVisible = true"-->
+<!--                  >-->
+<!--                    + 查看全部-->
+<!--                  </div>-->
+<!--                </transition>-->
+<!--              </div>-->
+
+<!--              <div-->
+<!--                class="wrap-nav wrap-nav4"-->
+<!--                :class="{'moreNow': this.navallShow4}"-->
+<!--                @mouseenter="mouseIn(3)"-->
+<!--                @mouseleave="mouseOut(3)"-->
+<!--              >-->
+<!--                <a-tabs  default-active-key="0">-->
+<!--                  <a-tab-pane v-for="(i, index) in this.historyBar" :key="index" :tab="i.time_title">-->
+<!--                    <div class="pane flex flex-direction">-->
+<!--                      <a-dropdown class="adrop4" v-show="bookdian4Show">-->
+<!--                        <a-icon type="more" :style="{ fontSize: '18px'}"></a-icon>-->
+<!--                        <a-menu slot="overlay" style="display: none;">-->
+<!--                          <a-menu-item>-->
+<!--                            <a href="javascript:;">移除分组框</a>-->
+<!--                          </a-menu-item>-->
+<!--                        </a-menu>-->
+<!--                      </a-dropdown>-->
+<!--                      <div class="nav-content flex flex-direction">-->
+<!--                        <a-empty-->
+<!--                          image="./assets/original.png"-->
+<!--                          class="flex flex-direction align-center justify-center"-->
+<!--                          style="width: 100%; height: 100%"-->
+<!--                          v-if="isEmpty(i.info) "-->
+<!--                        >-->
+<!--                          <span slot="description">无浏览历史</span>-->
+<!--                        </a-empty>-->
+<!--                        <a-->
+<!--                          :href="item.link"-->
+<!--                          class="flex justify-around align-center"-->
+<!--                          v-for="(item, index) in i.info "-->
+<!--                          :key="index"-->
+<!--                        ><a-avatar shape="square" style="width:2em;height: auto" src="../../icons/svg/footprint.svg"></a-avatar>-->
+
+<!--                          <ul class="flex flex-direction justify-center align-center">-->
+<!--                            <li>{{item.title}}</li>-->
+<!--                            <li style="color: #7f7f7f">{{item.link}}</li>-->
+<!--                          </ul>-->
+<!--                        </a>-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                  </a-tab-pane>-->
+<!--                </a-tabs>-->
+<!--                <transition name="slide-fade">-->
+<!--                  <div-->
+<!--                    class="nav-bottom flex justify-center align-center"-->
+<!--                    v-show="navallShow4"-->
+<!--                    onclick="ipc.send('openHistory')"-->
+<!--                  >-->
+<!--                    + 查看全部-->
+<!--                  </div>-->
+<!--                </transition>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
           <app-dialog></app-dialog>
         </div>
           <a-menu slot="overlay">
-<!--            <a-menu-item key="1">-->
-<!--              添加本地导航自定义块-->
-<!--            </a-menu-item>-->
+            <a-menu-item @click="addIcon()" key="1">
+              添加图标
+            </a-menu-item>
             <a-menu-item @click="refresh" key="2">
               刷新
             </a-menu-item>
@@ -338,7 +406,46 @@
           </a-menu>
         </a-dropdown>
       </template>
-
+      <template>
+        <div>
+          <a-modal v-model="visibleAdd" title="添加组件" :width="800">
+            <a-tabs default-active-key="1" tab-position="left">
+              <a-tab-pane key="1" tab="自定义">
+              </a-tab-pane>
+              <a-tab-pane key="2" tab="小组件">
+                小组件
+              </a-tab-pane>
+              <a-tab-pane key="3" tab="网站导航">
+                <a-tabs default-active-key="productive" tab-position="top" @ok="handleOk" :style="{ height: '650px' }">
+                  <a-tab-pane  v-for="(type, indexType) in allApps" :key="type.name" :tab="type.title">
+                    <div style="overflow-y: auto;max-height: 650px">
+                      <a-card :title="type.title" style="padding: 10px">
+                        <a-card-grid @click="addElement({type:'app',data:app},indexApp)" :class="{'app':true,'app-goods':true}" v-for="(app, indexApp) in type.apps" draggable="true" @dragstart="setDrag($event,app)">
+                          <a >
+                            <a-avatar shape="square" :size="64" :src="app.icon" style="margin-bottom: 10px"></a-avatar>
+                            <a-card-meta :title="app.name">
+                              <template slot="description"> {{ app.summary }} </template>
+                            </a-card-meta>
+                          </a>
+                        </a-card-grid>
+                      </a-card>
+                    </div>
+                  </a-tab-pane>
+                </a-tabs>
+              </a-tab-pane>
+              <a-tab-pane key="4" tab="本地导航">
+                本地导航
+              </a-tab-pane>
+              <a-tab-pane key="5" tab="云端导航">
+                云端导航
+              </a-tab-pane>
+              <a-tab-pane key="6" tab="团队导航">
+                团队导航
+              </a-tab-pane>
+            </a-tabs>
+          </a-modal>
+        </div>
+      </template>
       <template id="appstore">
         <div>
           <a-modal :body-style="{height: '700px'}" v-model="adVisible" title="在线导航" :width="700"  :footer="null" :mask="false" :mask-closable="false">
@@ -396,11 +503,39 @@
 
       const wallList=require('./wall.json')
       const {wallPaper,themeSetting,wallUrl}=require('../util/theme.js')
-
       var appVue = new Vue({
         el: '#app',
         data() {
           return {
+            layout: [
+            // {"x":0,"y":0,"w":2,"h":2,"i":"0"},
+            // {"x":2,"y":0,"w":2,"h":4,"i":"1"},
+            // {"x":4,"y":0,"w":2,"h":5,"i":"2"},
+            // {"x":6,"y":0,"w":2,"h":3,"i":"3"},
+            // {"x":8,"y":0,"w":2,"h":3,"i":"4"},
+            // {"x":10,"y":0,"w":2,"h":3,"i":"5"},
+            // {"x":0,"y":5,"w":2,"h":5,"i":"6"},
+            // {"x":2,"y":5,"w":2,"h":5,"i":"7"},
+            // {"x":4,"y":5,"w":2,"h":5,"i":"8"},
+            // {"x":6,"y":3,"w":2,"h":4,"i":"9"},
+            // {"x":8,"y":4,"w":2,"h":4,"i":"10"},
+            // {"x":10,"y":4,"w":2,"h":4,"i":"11"},
+            // {"x":0,"y":10,"w":2,"h":5,"i":"12"},
+            // {"x":2,"y":10,"w":2,"h":5,"i":"13"},
+            // {"x":4,"y":8,"w":2,"h":4,"i":"14"},
+            // {"x":6,"y":8,"w":2,"h":4,"i":"15"},
+            // {"x":8,"y":10,"w":2,"h":5,"i":"16"},
+            // {"x":10,"y":4,"w":2,"h":2,"i":"17"},
+            // {"x":0,"y":9,"w":2,"h":3,"i":"18"},
+            // {"x":2,"y":6,"w":2,"h":2,"i":"19"}
+          ],
+            draggable: true,
+            resizable: true,
+            colNum: 12,
+            index: 0,
+
+
+            visibleAdd:false,//添加组件页面
             mySearch: [],
             myApps: [],
             adVisible: false,
@@ -429,19 +564,50 @@
             cardOpacity:100,
             dock:[
               {
-                name:'想天工作台',
-                icon:'../../icons/logo1024.png',
-                url:'http://work.thisky.com'
-              },{
-                name:'想天社区',
-                icon:'../../icons/comlogo.png',
-                url:'http://com.thisky.com'
-              }
-            ]//dock里的应用
-            ,dockAppSize:60
+                   name:'我的导航',
+                   icon:'../../icons/svg/apps.svg',
+                   url:'ts://apps'
+                 }
+            //   {
+            //     name:'想天工作台',
+            //     icon:'../../icons/logo1024.png',
+            //     url:'http://work.thisky.com'
+            //   },{
+            //     name:'想天社区',
+            //     icon:'../../icons/comlogo.png',
+            //     url:'http://com.thisky.com'
+            //   }
+            // ]//dock里的应用
+            ],dockAppSize:60
           }
         },
         methods: {
+          layoutUpdatedEvent(){
+            localStorage.setItem('desk',JSON.stringify(this.layout))
+          },
+          handleOk(e) {
+            console.log(e);
+            this.visibleAdd = false;
+          },
+          addElement(element,index){
+
+            const pos={
+              x: (this.layout.length) % (this.colNum || 12),
+              y:0, // puts it at the bottom
+              w: 1,
+              h: 1,
+              i: Date.now(),
+              dragIgnoreFrom:'button',
+              isResizable:false,
+            }
+            this.index++
+            console.log(pos)
+            pos.element=element
+            this.layout.push(pos)
+          },
+          addIcon(){
+            this.visibleAdd=true
+          },
           clklogo () {
             location.href = this.sfrontLink + this.searchWord
           },
@@ -623,7 +789,15 @@
           },
           setBg(tabBg) {
             wallPaper.setElementBg(document.body, tabBg)
-          }
+          },
+          //开始拖拽事件
+          onStart(){
+            this.drag=true;
+          },
+          //拖拽结束事件
+          onEnd() {
+            this.drag=false;
+          },
         },
         computed: {
           allApps: {
@@ -634,8 +808,18 @@
               return window.$appsApiData.allApps
             },
           },
+
         },
         mounted() {
+          const desk=localStorage.getItem('desk')
+          if(!!desk){
+            try{
+              this.layout=  JSON.parse(desk)
+            }
+           catch (err){
+              console.log('desk损坏')
+           }
+          }
 
           this.loadMyapps()
           setTimeout(() => {
