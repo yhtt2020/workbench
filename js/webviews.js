@@ -527,6 +527,10 @@ webviews.bindEvent('did-navigate', function (tabId, url, httpResponseCode, httpS
   onPageURLChange(tabId, url)
 })
 
+webviews.bindEvent('did-navigate-in-page',(tabId)=>{
+  const tabData=tabs.get(tabId)
+  webviews.updateToolBarStatus(tabData)
+})
 
 
 webviews.bindEvent('did-finish-load', onPageLoad)
