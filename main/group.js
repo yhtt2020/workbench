@@ -88,10 +88,11 @@ app.on('ready', () => {
       })
       groupIMWindow.setMenu(null)
       let im_url=''
+      const { config } = require(path.join(__dirname, '//server-config.js'))
       if(isDevelopmentMode){
-         im_url=require(path.join(__dirname, '//server-config.js')).config.IM.FRONT_URL_DEV
+         im_url=config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN
       }else{
-         im_url=require(path.join(__dirname, '//server-config.js')).config.IM.FRONT_URL
+         im_url=config.IM.FRONT_URL + config.IM.AUTO_LOGIN
       }
       groupIMWindow.webContents.loadURL(im_url)
       groupIMWindow.on('close',()=>groupIMWindow=null)

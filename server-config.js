@@ -1,19 +1,21 @@
 //本代码会同时被preoload.js合并进去
 //也可以直接require进去(在非preload当中）
 const config = {
-  SERVER_BASE_URL: 'http://com.thisky.com',
+  SERVER_BASE_URL: 'https://com.thisky.com',
   DEV_NODE_SERVER_BASE_URL: 'http://test.com:8001',
   PROD_NODE_SERVER_BASE_URL: 'https://work.thisky.com',
   IM:{
     API_BASE_URL:"http://im-serve.xiangtian.ren",
     WEB_SOCKET_URL:"ws://im-socket.xiangtian.ren/socket.io",
     FRONT_URL:"http://im.xiangtian.ren",
-    FRONT_URL_DEV:"http://127.0.0.1:8000"
+    FRONT_URL_DEV:"http://127.0.0.1:8000",
+    AUTO_LOGIN: '/im_autologin'      //免登等待路由
   }
 }
 
 const appConfig = {
-  client_id: 10001,
+  client_id: 10001,   //浏览器 id
+  bind_im_id: 10002,  //lumen id
   state: 1,
   response_type: 'code',
 }
