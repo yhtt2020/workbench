@@ -91,29 +91,31 @@
       border-radius: 3px;
     }
   }
-  &:active {
-    .group-icons{
-      animation: scale .2s forwards;
-      transform: scale(0.95, 0.95);
-    }
-    img {
-      animation: scale .2s forwards;
-      transform: scale(0.95, 0.95);
-    }
 
-  }
   &.selected{
     background: #1c1c1c77 !important;
     border-radius: 8px;
   }
 
   .app {
+      .group-icons{
+        cursor: pointer;
+        &:active{
+        animation: scale .2s forwards;
+        transform: scale(0.95, 0.95);
+        }
+      }
+
     display: block;
     margin: auto;
     padding: 10px 0;
     width: var(--element-width);
     height: var(--element-height);
     img {
+      &:active{
+        animation: scale .2s forwards;
+        transform: scale(0.95, 0.95);
+      }
       width: var(--element-inner-width);
       height: var(--element--inner-height);
       border-radius: 8px;

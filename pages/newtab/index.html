@@ -205,8 +205,8 @@
                     </a-dropdown>
                     <a-dropdown :trigger="['contextmenu']" v-if="item.element.type==='group'">
                       <!--分组-->
-                      <div @click="openGroup(item)"  @mousedown.stop=""   @contextmenu.stop="" class="app">
-                        <div  class="group-icons">
+                      <div   @mousedown.stop=""   @contextmenu.stop="" class="app">
+                        <div @click="openGroup(item)" class="group-icons">
                           <div class="icon" v-if="iconEl.element.type==='app'" v-for="iconEl in item.element.data" >
                             <img :src="iconEl.element.data.icon" >
                           </div>

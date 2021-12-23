@@ -80,14 +80,6 @@
   background: white !important;
   border-radius: 3px;
 }
-.element:active .group-icons {
-  animation: scale 0.2s forwards;
-  transform: scale(0.95, 0.95);
-}
-.element:active img {
-  animation: scale 0.2s forwards;
-  transform: scale(0.95, 0.95);
-}
 .element.selected {
   background: #1c1c1c77 !important;
   border-radius: 8px;
@@ -99,10 +91,21 @@
   width: var(--element-width);
   height: var(--element-height);
 }
+.element .app .group-icons {
+  cursor: pointer;
+}
+.element .app .group-icons:active {
+  animation: scale 0.2s forwards;
+  transform: scale(0.95, 0.95);
+}
 .element .app img {
   width: var(--element-inner-width);
   height: var(--element--inner-height);
   border-radius: 8px;
+}
+.element .app img:active {
+  animation: scale 0.2s forwards;
+  transform: scale(0.95, 0.95);
 }
 .element .app .name {
   color: white;
