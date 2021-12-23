@@ -1,3 +1,4 @@
+@charset "UTF-8";
 :root {
   --element-width: 60px;
   --element-height: 100px;
@@ -6,6 +7,7 @@
 }
 
 .desktop {
+  user-select: none;
   border-radius: 12px;
   min-height: 80px;
   min-width: 720px;
@@ -23,16 +25,59 @@
 
 .element {
   width: var(--element-width);
+  text-align: center;
+  /*组图标*/
+}
+.element .group-icons {
+  user-select: none;
+  text-align: left;
+  width: 60px;
+  height: 60px;
+  background: #ffffff77;
+  border-radius: 3px;
+  overflow: hidden;
+  vertical-align: top;
+  line-height: 18px;
+  padding: 3px 3px;
+}
+.element .group-icons .icon {
+  display: inline-block;
+  width: 18px !important;
+  height: 18px !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  text-align: center;
+}
+.element .group-icons .icon img {
+  vertical-align: middle;
+  width: 15px !important;
+  height: 15px !important;
+  border-radius: 3px !important;
+}
+.element .group-icons .other {
+  vertical-align: middle;
+  display: inline-block;
+  width: 15px !important;
+  height: 15px !important;
+  background: white !important;
+  border-radius: 3px;
+}
+.element:active .group-icons {
+  animation: scale 0.2s forwards;
+  transform: scale(0.95, 0.95);
 }
 .element:active img {
   animation: scale 0.2s forwards;
   transform: scale(0.95, 0.95);
 }
+.element.selected {
+  background: #1c1c1c77 !important;
+  border-radius: 8px;
+}
 .element .app {
   display: block;
-  margin-left: 10px;
-  margin-right: 10px;
-  margin-bottom: 20px;
+  margin: auto;
+  padding: 10px 0;
   width: var(--element-width);
   height: var(--element-height);
 }

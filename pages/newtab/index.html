@@ -23,7 +23,15 @@
       var ipc = electron.ipcRenderer
     </script>
     <div id="app">
+
       <template>
+        <vue-selecto
+          drag-container=".desktop-content"
+          :selectable-targets='[".selectable"]'
+          :select-by-blick="false"
+          :hit-rate="100"
+          @select="onSelect"
+        /></vue-selecto>
         <div class="side-bar">
           <div class="action-list">
             <ul>
@@ -154,21 +162,20 @@
                 <grid-layout
                   :layout.sync="layout"
                   :cols="{ lg: 20, md: 15, sm: 12, xs: 10, xxs: 0 }"
-                  :row-height="80"
+                  :row-height="100"
                   :is-draggable="true"
                   :is-resizable="false"
                   :auto-size="false"
-
                   :is-mirrored="false"
                   :breakpoints="{ lg: 1200, md: 900, sm: 720, xs: 600, xxs: 0 }"
                   :vertical-compact="false"
-                  :margin="[0, 20]"
+                  :margin="[10, 20]"
                   @layout-updated="layoutUpdatedEvent"
                   :response="true"
                   :use-css-transforms="false"
                 >
 
-                  <grid-item class="element" v-for="item in layout" :style="{'display':item.element.type==='card'?'flex':'block'}"
+                  <grid-item @mousedown.stop="" :data-id="item.i"  :class="{'element':true,'selectable':item.element.type==='app'}" v-for="item in layout" :style="{'display':item.element.type==='card'?'flex':'block'}"
                              :x="item.x"
                              :y="item.y"
                              :w="item.w"
@@ -180,7 +187,8 @@
 
                   >
                     <a-dropdown :trigger="['contextmenu']" v-if="item.element.type==='app'">
-                    <div  @contextmenu.stop="" class="app"     >
+                      <!--应用-->
+                    <div  @mousedown.stop=""   @contextmenu.stop="" class="app">
                       <a :href="item.element.data.url"><img draggable="true" @dragstart="setDrag($event,item.element.data)" :src="item.element.data.icon"></a>
                       <div class="name">
                         {{ item.element.data.name}}
@@ -190,18 +198,52 @@
                         <a-menu-item @click="removeElement(item)" key="2">
                           移除组件
                         </a-menu-item>
+                        <a-menu-item @mousedown.stop="" @click="composeSelectedElements()" key="3" v-show="isSelected(item) && selectedElements.length>1">
+                          合并{{selectedElements.length}}个选中图标成组
+                        </a-menu-item>
                       </a-menu>
                     </a-dropdown>
-                    <a-dropdown :trigger="['contextmenu']" v-if="item.element.type==='card'">
-                      <div @contextmenu.stop="" :class="'gradient gradient--'+item.element.data.color" class="title-card" >
+                    <a-dropdown :trigger="['contextmenu']" v-if="item.element.type==='group'">
+                      <!--应用-->
+                      <div  @mousedown.stop=""   @contextmenu.stop="" class="app">
+                        <div class="group-icons">
+                          <div class="icon" v-if="iconEl.element.type==='app'" v-for="iconEl in item.element.data" >
+                            <img :src="iconEl.element.data.icon" >
+                          </div>
+                          <div class="icon" v-else>
+                            <div class="other">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="name">
+                          组
+                        </div>
+                      </div>
+                      <a-menu slot="overlay">
+                        <a-menu-item @click="removeElement(item)" key="2">
+                          移除整组
+                        </a-menu-item>
+                        <a-menu-item @mousedown.stop="" @click="composeSelectedElements()" key="3" v-show="isSelected(item) && selectedElements.length>1">
+                          解散组
+                        </a-menu-item>
+                      </a-menu>
+                    </a-dropdown>
+                    <a-dropdown  @mousedown.stop="" :trigger="['contextmenu']" v-if="item.element.type==='card'">
+                      <!--卡片-->
+                      <div   @contextmenu.stop="" :class="'gradient gradient--'+item.element.data.color" class="title-card" >
                         <textarea @change="saveDesk" spellcheck="false" class="card-text" v-model="item.element.data.text" placeholder="输入卡片内容" ></textarea>
                       </div>
                       <a-menu slot="overlay">
                         <a-menu-item @click="removeElement(item)" key="2">
                           移除组件
                         </a-menu-item>
+                        <a-menu-item @mousedown.stop="" @click="composeSelectedElements()" key="3"  v-show="isSelected(item) && selectedElements.length>1">
+                          合并{{selectedElements.length}}个选中图标成组
+                        </a-menu-item>
                       </a-menu>
                     </a-dropdown>
+
+
                   </grid-item>
                 </grid-layout>
               </div>
@@ -552,10 +594,20 @@
 
       const wallList=require('./wall.json')
       const {wallPaper,themeSetting,wallUrl}=require('../util/theme.js')
+      const VueSelecto=require('vue-selecto')
       var appVue = new Vue({
         el: '#app',
+        components:{
+          VueSelecto
+        },
         data() {
           return {
+            //选中了的elements
+            selectedElements:[],
+            popLayouts:[],
+
+
+
             cardText:'文字小卡片',
             cardLines:1,
             colors:[
@@ -619,12 +671,81 @@
           }
         },
         methods: {
+          /**
+           * 组合当前选中的全部元素成一个新的组
+           */
+          composeSelectedElements(){
+            function getElement(id){
+              for(let i=0;i<appVue.layout.length;i++){
+                if(Number(appVue.layout[i].i)===Number(id)){
+                  const item=appVue.layout[i]
+                  appVue.layout.splice(i,1)
+                  return item
+                }
+              }
+              return null
+            }
+            let composeItems=[]
+            this.selectedElements.forEach((item)=>{
+              console.log(item)
+              let gotItem=getElement(item)
+              if(gotItem!==null){
+                composeItems.push(gotItem)
+              }
+            })
+            this.addElement({type:'group',data:composeItems})
+            console.log(composeItems)
+
+          },
+          /**
+           * 判断当前的元素是否被选中了
+           * @param item
+           * @returns {boolean}
+           */
+          isSelected(item){
+            if(this.selectedElements.length>0){
+              for(let i=0 ;i<this.selectedElements.length;i++)
+              {
+                if(Number(this.selectedElements[i])===item.i )
+                {
+                  return true
+                }
+              }
+            }
+            return false
+          },
+          /**
+           * 在selecto选择的时候触发，同步一下选中的数组
+           * @param e
+           */
+          onSelect(e){
+              e.added.forEach(el => {
+                this.selectedElements.push(el.getAttribute('data-id'))
+                el.classList.add("selected");
+              })
+              e.removed.forEach(el => {
+                for(let i=0;i<this.selectedElements.length;i++){
+                  if(this.selectedElements[i]===el.getAttribute('data-id')){
+                    this.selectedElements.splice(i,1)
+                  }
+                }
+
+                el.classList.remove("selected");
+              })
+          },
+          /**
+           * 隐藏主菜单
+           */
           hideMainMenu(){
             this.visibleMainMenu=false
           },
           changeMainMenuVisible(visible){
             this.visibleMainMenu=visible
           },
+          /**
+           * 删除元素
+           * @param element
+           */
           removeElement(element) {
             for (let i = 0; i < this.layout.length; i++)
               if (this.layout[i].i === element.i) {
@@ -659,6 +780,10 @@
               app:{
                 w:1,h:1,
                 isResizable: false,
+              },
+              group:{
+                w:1,h:1,
+                isResizable:false
               }
             }
             const pos={
@@ -869,8 +994,11 @@
           onEnd() {
             this.drag=false;
           },
+
         },
+
         computed: {
+
           allApps: {
             get: function () {
               if (typeof window.$appsApiData == 'undefined' || window.$appsApiData == null) {
