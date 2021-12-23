@@ -543,7 +543,7 @@
                   <div style="background: rgba(0,0,0,0.1);display: inline-block;padding: 50px;margin: 20px;border-radius: 10px">
                     <div class="app" >
                       <div class="icon-wrapper" :style="this.iconStyle(this.formEdit)">
-                        <a-avatar shape="square" :size="60"  :src="formEdit.icon"></a-avatar>
+                        <img  :src="formEdit.icon">
                       </div>
                       <div class="name" :style="'background-color:'+this.formEdit.textColor" v-if="this.formEdit.useTextBg">
                         {{ formEdit.name}}
@@ -566,7 +566,7 @@
                       </a-form-item>
                       <a-form-item label="图标圆角">
                         <a-switch v-model="formEdit.useRadius" ></a-switch>
-                        <div style="float: right" ><a-input-number v-model="formEdit.radius" :min="0" :max="100"></a-input-number> %</div>
+                        <div style="float: right" ><a-input-number v-model="formEdit.radius" :min="0" :step="3" :max="50"></a-input-number> %</div>
                       </a-form-item>
                       <a-form-item label="图标背景">
                         <a-switch v-model="formEdit.useBg" ></a-switch>
@@ -602,16 +602,21 @@
               <a-tab-pane key="3" tab="网站导航">
                 <a-tabs default-active-key="productive" tab-position="top" @ok="handleOk" :style="{ height: '650px' }">
                   <a-tab-pane  v-for="(type, indexType) in allApps" :key="type.name" :tab="type.title">
-                    <div style="overflow-y: auto;max-height: 650px">
-                      <a-row style="padding: 10px;margin-bottom: 20px">
-                        <a-col :span="4" @click="addElement({type:'app',data:app})" :class="{'app':true,'app-goods':true}" v-for="(app, indexApp) in type.apps" draggable="true" @dragstart="setDrag($event,app)">
-                          <a-avatar shape="square" :size="64" :src="app.icon" style="margin-bottom: 10px"></a-avatar>
-                          <h2 style="font-weight: bold">
-                            {{ app.name }}
-                          </h2>
-                          <p style="color: #999 !important;">
-                            {{ app.summary }}
-                          </p>
+                    <div style="max-height: 650px">
+                      <a-row>
+                        <a-col :span="5" @click="addElement({type:'app',data:app})"   v-for="(app, indexApp) in type.apps" draggable="true" @dragstart="setDrag($event,app)">
+                          <div class="shop-app" style="height: 140px;width: 80px">
+                            <div class="icon-wrapper">
+                              <img  :src="app.icon"/>
+                            </div>
+                            <div class="name" :title="app.name" style="color: #333;font-size:14px;text-shadow: none !important;">
+                              {{ app.name }}
+                            </div>
+                            <div class="summary" :title="app.summary" style="color: #999 !important;">
+                              {{ app.summary }}
+                            </div>
+                          </div>
+
                         </a-col>
                       </a-row>
                     </div>

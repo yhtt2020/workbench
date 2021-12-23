@@ -106,7 +106,6 @@
 .app img {
   width: var(--element-inner-width);
   height: var(--element--inner-height);
-  border-radius: 8px;
 }
 .app img:active {
   animation: scale 0.2s forwards;
@@ -125,6 +124,58 @@
   line-height: 12px;
   padding: 2px;
   display: inline-block;
+}
+
+.shop-app {
+  text-align: center;
+  cursor: pointer;
+  display: block;
+  margin: auto;
+  padding: 10px 0;
+  width: var(--element-width);
+  height: var(--element-height);
+}
+.shop-app .icon-wrapper {
+  display: inline-block;
+  overflow: hidden;
+}
+.shop-app .group-icons {
+  cursor: pointer;
+}
+.shop-app .group-icons:active {
+  animation: scale 0.2s forwards;
+  transform: scale(0.95, 0.95);
+}
+.shop-app img {
+  width: var(--element-inner-width);
+  height: var(--element--inner-height);
+}
+.shop-app img:active {
+  animation: scale 0.2s forwards;
+  transform: scale(0.95, 0.95);
+}
+.shop-app .name {
+  margin-top: 5px;
+  color: white;
+  text-shadow: 0 0 3px #000c17;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 110%;
+  border-radius: 5px;
+  line-height: 12px;
+  padding: 2px;
+  display: inline-block;
+}
+.shop-app .summary {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  overflow-wrap: break-word;
+  line-height: 16px;
+  font-size: 12px;
+  height: 32px;
+  line-clamp: 2;
 }
 
 .color-select {
