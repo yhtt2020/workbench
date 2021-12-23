@@ -282,7 +282,7 @@
                       <div style="margin-top: 5px;background-color: rgba(40,40,40,0.55);height: 200px;border-radius: 40px" class="clock" v-if="item.element.data.type===2">
                         <clock2></clock2>
                       </div>
-                      <div style="background-color: rgba(0,0,0,0.4); height: 330px; border-radius: 12px;"  v-if="item.element.data.type===3">
+                      <div style="border-radius: 12px;padding-top: 35px"  v-if="item.element.data.type===3">
                         <clock3></clock3>
                       </div>
                     </div>
@@ -729,9 +729,9 @@
                     </div>
                     <div style="padding: 10px">
                       <h3 style="font-weight: bold">时钟3</h3>
-                      <p>尺寸 5*4 巨大组件
+                      <p>尺寸 4*4 巨大组件
                         <a-button type="primary" style="float:right"
-                                  @click="addElement({type:'clock',data:{type:3}},{w:5,h:4})">
+                                  @click="addElement({type:'clock',data:{type:3}},{w:4,h:4})">
                           添加组件
                         </a-button>
                       </p>
