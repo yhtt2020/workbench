@@ -1,0 +1,195 @@
+:root {
+  --element-width: 60px;
+  --element-height: 100px;
+  --element-inner-width: 60px;
+  --element--inner-height: 60px;
+}
+
+.desktop {
+  width: 80%;
+  border-radius: 12px;
+  min-height: 80px;
+  min-width: 720px;
+  margin: 40px auto auto;
+}
+
+.element {
+  width: var(--element-width);
+}
+.element:active img {
+  animation: scale 0.2s forwards;
+  transform: scale(0.95, 0.95);
+}
+.element .app {
+  display: block;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 20px;
+  width: var(--element-width);
+  height: var(--element-height);
+}
+.element .app img {
+  width: var(--element-inner-width);
+  height: var(--element--inner-height);
+  border-radius: 8px;
+}
+.element .app .name {
+  color: white;
+  text-shadow: 0 0 3px #000c17;
+  font-size: 12px;
+  padding-top: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.vue-grid-item.vue-grid-placeholder {
+  background: #1c1c1c !important;
+  border-radius: 8px;
+}
+
+.gradient--0 {
+  --gradient-start: #6DE195;
+  --gradient-start-text: "#6DE195";
+  --gradient-end: #C4E759;
+  --gradient-end-text: "#C4E759";
+}
+
+.gradient--1 {
+  --gradient-start: #41C7AF;
+  --gradient-start-text: "#41C7AF";
+  --gradient-end: #54E38E;
+  --gradient-end-text: "#54E38E";
+}
+
+.gradient--2 {
+  --gradient-start: #99E5A2;
+  --gradient-start-text: "#99E5A2";
+  --gradient-end: #D4FC78;
+  --gradient-end-text: "#D4FC78";
+}
+
+.gradient--3 {
+  --gradient-start: #ABC7FF;
+  --gradient-start-text: "#ABC7FF";
+  --gradient-end: #C1E3FF;
+  --gradient-end-text: "#C1E3FF";
+}
+
+.gradient--4 {
+  --gradient-start: #6CACFF;
+  --gradient-start-text: "#6CACFF";
+  --gradient-end: #8DEBFF;
+  --gradient-end-text: "#8DEBFF";
+}
+
+.gradient--5 {
+  --gradient-start: #5583EE;
+  --gradient-start-text: "#5583EE";
+  --gradient-end: #41D8DD;
+  --gradient-end-text: "#41D8DD";
+}
+
+.gradient--6 {
+  --gradient-start: #A16BFE;
+  --gradient-start-text: "#A16BFE";
+  --gradient-end: #DEB0DF;
+  --gradient-end-text: "#DEB0DF";
+}
+
+.gradient--7 {
+  --gradient-start: #D279EE;
+  --gradient-start-text: "#D279EE";
+  --gradient-end: #F8C390;
+  --gradient-end-text: "#F8C390";
+}
+
+.gradient--8 {
+  --gradient-start: #F78FAD;
+  --gradient-start-text: "#F78FAD";
+  --gradient-end: #FDEB82;
+  --gradient-end-text: "#FDEB82";
+}
+
+.gradient--9 {
+  --gradient-start: #BC3D2F;
+  --gradient-start-text: "#BC3D2F";
+  --gradient-end: #A16BFE;
+  --gradient-end-text: "#A16BFE";
+}
+
+.gradient--10 {
+  --gradient-start: #A43AB2;
+  --gradient-start-text: "#A43AB2";
+  --gradient-end: #E13680;
+  --gradient-end-text: "#E13680";
+}
+
+.gradient--11 {
+  --gradient-start: #9D2E7D;
+  --gradient-start-text: "#9D2E7D";
+  --gradient-end: #E16E93;
+  --gradient-end-text: "#E16E93";
+}
+
+.gradient--12 {
+  --gradient-start: #F5CCF6;
+  --gradient-start-text: "#F5CCF6";
+  --gradient-end: #F1EEF9;
+  --gradient-end-text: "#F1EEF9";
+}
+
+.gradient--13 {
+  --gradient-start: #F0EFF0;
+  --gradient-start-text: "#F0EFF0";
+  --gradient-end: #FAF8F9;
+  --gradient-end-text: "#FAF8F9";
+}
+
+.gradient--14 {
+  --gradient-start: #121317;
+  --gradient-start-text: "#121317";
+  --gradient-end: #323B42;
+  --gradient-end-text: "#323B42";
+}
+
+.gradient {
+  display: inline-block;
+  background: linear-gradient(33deg, var(--gradient-start), var(--gradient-end));
+  box-shadow: 0 0px 5px #0002;
+}
+
+.colors li {
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.title-card {
+  border-radius: 8px;
+  text-align: center;
+  line-height: 28px;
+  width: calc(100% - 20px);
+  flex: 1;
+  background: linear-gradient(33deg, var(--gradient-start), var(--gradient-end));
+  word-break: break-all;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  line-clamp: 3;
+  margin: 10px;
+  padding: 10px;
+}
+
+.tools {
+  background: rgba(193, 193, 193, 0.11);
+  border-radius: 4px;
+  padding: 10px;
+}
+
+/*# sourceMappingURL=desktop.css.map */

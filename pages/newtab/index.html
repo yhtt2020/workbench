@@ -105,8 +105,8 @@
         </a-drawer>
 
         <a-button style="position: fixed;right: 6px;top: 20px;background-color: rgba(0,0,0,0.3);color: white;border:none" shape="circle" type="primary" icon="skin"  @click="setTheme" ></a-button>
-        <a-dropdown :trigger="['contextmenu']">
-        <div class="main">
+        <a-dropdown v-model="visibleMainMenu" :trigger="['contextmenu']" @visible-change="changeMainMenuVisible">
+        <div class="main" @click="hideMainMenu">
           <div class="main-top flex flex-direction justify-around align-center">
             <img src="./assets/logo-noframe.svg" alt="" style="width: 84px" class="xt-logo" />
             <div class="top-search flex justify-between align-center">
@@ -183,13 +183,21 @@
                     {{ item.element.data.name}}
                   </div>
                 </div>
-
-                  <div :class="'gradient gradient--'+item.element.data.color" class="title-card" v-if="item.element.type==='card'">
-                    <div>{{item.element.data.text}}</div>
+                <a-dropdown @contextmenu.stop="" :trigger="['contextmenu']" v-if="item.element.type==='card'">
+                  <div @contextmenu.stop="" :class="'gradient gradient--'+item.element.data.color" class="title-card" >
+                      <div>
+                        <div>{{item.element.data.text}}</div>
+                      </div>
                   </div>
-
-
-
+                  <a-menu slot="overlay">
+                    <a-menu-item key="1">
+                      修改组件
+                    </a-menu-item>
+                    <a-menu-item @click="removeElement(item)" key="2">
+                      移除组件
+                    </a-menu-item>
+                  </a-menu>
+                </a-dropdown>
               </grid-item>
             </grid-layout>
           </div>
@@ -401,9 +409,9 @@
 <!--          </div>-->
           <app-dialog></app-dialog>
         </div>
-          <a-menu slot="overlay">
-            <a-menu-item @click="addIcon()" key="1">
-              添加图标
+          <a-menu  slot="overlay">
+            <a-menu-item @click="showAddElementModal()" key="1">
+              添加内容
             </a-menu-item>
             <a-menu-item @click="refresh" key="2">
               刷新
@@ -416,7 +424,7 @@
       </template>
       <template>
         <div>
-          <a-modal v-model="visibleAdd" title="添加组件" :width="800">
+          <a-modal v-model="visibleAdd" title="添加组件" :width="800" :footer="null">
             <a-tabs default-active-key="1" tab-position="left">
               <a-tab-pane key="1" tab="自定义">
               </a-tab-pane>
@@ -549,33 +557,15 @@
               1,2,3,4,5,6,7,8,9,10,11,12
             ],
             selectedColor:0,
+
+            //桌面布局专用属性
             layout: [
-            // {"x":0,"y":0,"w":2,"h":2,"i":"0"},
-            // {"x":2,"y":0,"w":2,"h":4,"i":"1"},
-            // {"x":4,"y":0,"w":2,"h":5,"i":"2"},
-            // {"x":6,"y":0,"w":2,"h":3,"i":"3"},
-            // {"x":8,"y":0,"w":2,"h":3,"i":"4"},
-            // {"x":10,"y":0,"w":2,"h":3,"i":"5"},
-            // {"x":0,"y":5,"w":2,"h":5,"i":"6"},
-            // {"x":2,"y":5,"w":2,"h":5,"i":"7"},
-            // {"x":4,"y":5,"w":2,"h":5,"i":"8"},
-            // {"x":6,"y":3,"w":2,"h":4,"i":"9"},
-            // {"x":8,"y":4,"w":2,"h":4,"i":"10"},
-            // {"x":10,"y":4,"w":2,"h":4,"i":"11"},
-            // {"x":0,"y":10,"w":2,"h":5,"i":"12"},
-            // {"x":2,"y":10,"w":2,"h":5,"i":"13"},
-            // {"x":4,"y":8,"w":2,"h":4,"i":"14"},
-            // {"x":6,"y":8,"w":2,"h":4,"i":"15"},
-            // {"x":8,"y":10,"w":2,"h":5,"i":"16"},
-            // {"x":10,"y":4,"w":2,"h":2,"i":"17"},
-            // {"x":0,"y":9,"w":2,"h":3,"i":"18"},
-            // {"x":2,"y":6,"w":2,"h":2,"i":"19"}
           ],
             draggable: true,
             resizable: true,
             colNum: 12,
             index: 0,
-
+            visibleMainMenu:false,//主页面的下拉菜单
 
             visibleAdd:false,//添加组件页面
             mySearch: [],
@@ -624,6 +614,18 @@
           }
         },
         methods: {
+          hideMainMenu(){
+            this.visibleMainMenu=false
+          },
+          changeMainMenuVisible(visible){
+            this.visibleMainMenu=visible
+          },
+          removeElement(element) {
+            for (let i = 0; i < this.layout.length; i++)
+              if (this.layout[i].i === element.i) {
+                this.layout.splice(i,1)
+              }
+          },
           //设置小卡片组件的颜色
           setCardColor(color){
             this.selectedColor= color
@@ -662,8 +664,9 @@
             pos.element=element
             this.layout.push(pos)
           },
-          addIcon(){
+          showAddElementModal(){
             this.visibleAdd=true
+            this.visibleMainMenu=false
           },
           clklogo () {
             location.href = this.sfrontLink + this.searchWord
