@@ -84,38 +84,55 @@
   background: #1c1c1c77 !important;
   border-radius: 8px;
 }
-.element .app {
+
+.app {
   display: block;
   margin: auto;
   padding: 10px 0;
   width: var(--element-width);
   height: var(--element-height);
 }
-.element .app .group-icons {
+.app .icon-wrapper {
+  display: inline-block;
+  overflow: hidden;
+}
+.app .group-icons {
   cursor: pointer;
 }
-.element .app .group-icons:active {
+.app .group-icons:active {
   animation: scale 0.2s forwards;
   transform: scale(0.95, 0.95);
 }
-.element .app img {
+.app img {
   width: var(--element-inner-width);
   height: var(--element--inner-height);
   border-radius: 8px;
 }
-.element .app img:active {
+.app img:active {
   animation: scale 0.2s forwards;
   transform: scale(0.95, 0.95);
 }
-.element .app .name {
+.app .name {
+  margin-top: 5px;
   color: white;
   text-shadow: 0 0 3px #000c17;
   font-size: 12px;
-  padding-top: 5px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 100%;
+  max-width: 110%;
+  border-radius: 5px;
+  line-height: 12px;
+  padding: 2px;
+  display: inline-block;
+}
+
+.color-select {
+  float: right;
+  padding: 0;
+  height: 42px;
+  border-radius: 12px;
+  box-shadow: 0 0 7px #787878;
 }
 
 .vue-grid-item.vue-grid-placeholder {

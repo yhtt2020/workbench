@@ -34,6 +34,8 @@
 
   }
 }
+
+
 .group-modal{
   .ant-modal-content{
     border-radius: 12px;
@@ -97,41 +99,58 @@
     border-radius: 8px;
   }
 
-  .app {
-      .group-icons{
-        cursor: pointer;
-        &:active{
-        animation: scale .2s forwards;
-        transform: scale(0.95, 0.95);
-        }
-      }
 
-    display: block;
-    margin: auto;
-    padding: 10px 0;
-    width: var(--element-width);
-    height: var(--element-height);
-    img {
-      &:active{
-        animation: scale .2s forwards;
-        transform: scale(0.95, 0.95);
-      }
-      width: var(--element-inner-width);
-      height: var(--element--inner-height);
-      border-radius: 8px;
-    }
-
-    .name {
-      color: white;
-      text-shadow: 0 0 3px #000c17;
-      font-size: 12px;
-      padding-top: 5px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      max-width: 100%;
+}
+.app {
+  .icon-wrapper{
+    display:inline-block;
+    overflow: hidden;
+  }
+  .group-icons{
+    cursor: pointer;
+    &:active{
+      animation: scale .2s forwards;
+      transform: scale(0.95, 0.95);
     }
   }
+
+  display: block;
+  margin: auto;
+  padding: 10px 0;
+  width: var(--element-width);
+  height: var(--element-height);
+  img {
+    &:active{
+      animation: scale .2s forwards;
+      transform: scale(0.95, 0.95);
+    }
+    width: var(--element-inner-width);
+    height: var(--element--inner-height);
+    border-radius: 8px;
+  }
+
+  .name {
+    margin-top: 5px;
+    color: white;
+    text-shadow: 0 0 3px #000c17;
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 110%;
+
+    border-radius: 5px;
+    line-height: 12px;
+    padding: 2px;
+    display: inline-block;
+  }
+}
+.color-select{
+  float: right;
+  padding: 0;
+  height: 42px;
+  border-radius: 12px;
+  box-shadow: 0 0 7px #787878;
 }
 
 .vue-grid-item.vue-grid-placeholder {
