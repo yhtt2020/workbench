@@ -177,17 +177,15 @@
                          :drag-ignore-from="item.dragIgnoreFrom"
 
               >
-                <div class="app" :href="item.element.data.url"    v-if="item.element.type==='app'">
-                  <img :src="item.element.data.icon">
+                <div class="app"     v-if="item.element.type==='app'">
+                  <a :href="item.element.data.url"><img :src="item.element.data.icon"></a>
                   <div class="name">
                     {{ item.element.data.name}}
                   </div>
                 </div>
                 <a-dropdown @contextmenu.stop="" :trigger="['contextmenu']" v-if="item.element.type==='card'">
                   <div @contextmenu.stop="" :class="'gradient gradient--'+item.element.data.color" class="title-card" >
-                      <div>
-                        <div>{{item.element.data.text}}</div>
-                      </div>
+                    <textarea @change="saveDesk" spellcheck="false" class="card-text" v-model="item.element.data.text" placeholder="输入卡片内容" ></textarea>
                   </div>
                   <a-menu slot="overlay">
                     <a-menu-item key="1">
@@ -434,20 +432,16 @@
                  <a-row type="flex">
                    <a-col flex="160px">
                      <div :class="'gradient gradient--'+this.selectedColor"  class="title-card">
-                       <div>{{cardText}}</div>
+                       <div><textarea class="card-text" v-model="cardText" placeholder="输入卡片内容" ></textarea></div>
                      </div>
                    </a-col>
-                   <a-col flex="auto" style="padding-left: 10px;padding-right: 10px">
+                   <a-col flex="1" style="padding-left: 10px;padding-right: 10px">
                      <ul class="colors">
                        <li v-for="color in colors" @click="setCardColor(color)" :class="'gradient gradient--'+color">
-                         &nbsp;
                        </li>
                      </ul>
-                     <div style="margin-top: 10px">
-                       <a-textarea style="width: 160px" v-model="cardText" allow-clear placeholder="输入卡片内容" :rows="2"></a-textarea>
-                     </div>
                    </a-col>
-                   <a-col :flex="1">
+                   <a-col flex="100px">
                      <a-button type="primary" @click="addElement({type:'card',data:{color:selectedColor,text:cardText}})" >
                        添加组件
                      </a-button>
@@ -554,7 +548,7 @@
             cardText:'文字小卡片',
             cardLines:1,
             colors:[
-              1,2,3,4,5,6,7,8,9,10,11,12
+              0,1,2,3,4,5,6,7,8,9,10,11,12,13,14
             ],
             selectedColor:0,
 
@@ -634,8 +628,11 @@
             console.log(e)
               this.cardText=e.value
           },
-          layoutUpdatedEvent(){
+          saveDesk(){
             localStorage.setItem('desk',JSON.stringify(this.layout))
+          },
+          layoutUpdatedEvent(){
+            this.saveDesk()
           },
           handleOk(e) {
             console.log(e);
@@ -644,10 +641,13 @@
           addElement(element){
             const sizes={
               card:{
-                w:2,h:1,isResizable: true
+                w:2,h:1,
+                isResizable: true,
+                dragIgnoreFrom:"textarea"
               },
               app:{
-                w:1,h:1,isResizable: false
+                w:1,h:1,
+                isResizable: false,
               }
             }
             const pos={
@@ -656,7 +656,7 @@
               w: sizes[element.type].w,
               h: sizes[element.type].h,
               i: Date.now(),
-              dragIgnoreFrom:'button',
+              dragIgnoreFrom:!!!sizes[element.type].dragIgnoreFrom? 'button,a':sizes[element.type].dragIgnoreFrom,
               isResizable:sizes[element.type].isResizable,
             }
             this.index++
