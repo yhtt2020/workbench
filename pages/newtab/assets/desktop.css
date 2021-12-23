@@ -337,7 +337,17 @@
   resize: none;
 }
 
-.tools {
+.tools li {
+  margin-bottom: 15px;
+}
+.tools li .element-name {
+  font-size: 16px;
+  font-weight: bold;
+}
+.tools li .element-summary {
+  color: #999;
+}
+.tools li .element-content {
   background: rgba(193, 193, 193, 0.11);
   border-radius: 4px;
   padding: 10px;
