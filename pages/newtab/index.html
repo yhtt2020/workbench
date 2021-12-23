@@ -478,7 +478,7 @@
             <a-menu-item @click="showAddElementModal()" key="1">
               添加内容
             </a-menu-item>
-            <a-menu-item @click="refresh" key="2">
+            <a-menu-item @click="refresh" key="refresh">
               刷新
             </a-menu-item>
             <a-menu-item @click="setTheme" key="3">
@@ -1147,6 +1147,7 @@
            */
           setTheme () {
             this.setThemeVisible = true
+            this.visibleMainMenu=false
           },
           async setWallPaper (wp) {
 
@@ -1202,7 +1203,7 @@
             }
           },
           refresh(){//菜单刷新
-              ipc.send('refresh')
+              window.location.reload()
           },
           setDrag(ev,item){
             this.$message.info({content:'移动图标，可将图标移入分组或底部快捷坞。',key:"tip"})
