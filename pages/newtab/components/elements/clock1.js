@@ -1,6 +1,5 @@
-const clockTpl=
+const clock1Tpl=
   `
-
    <div class="clock">
      <link rel="stylesheet" href="./assets/elements/clocks/clock1.css"/>
         <div class="flip">
@@ -34,18 +33,7 @@ const clockTpl=
 
   `
 Vue.component('clock1', {
-  props: {
-    //dialog显示
-    adVisible: {
-      type: Boolean,
-      default: false
-    },
-    //所有应用数据
-    allApps: {
-      type: Array,
-    }
-  },
-  template:clockTpl,
+  template:clock1Tpl,
   name: "ClockData",
   data () {
     return {

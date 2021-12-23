@@ -256,7 +256,7 @@
                   <a-dropdown @mousedown.stop="" :trigger="['contextmenu']" v-if="item.element.type==='card'">
                     <!--卡片-->
                     <div @contextmenu.stop="" :class="'gradient gradient--'+item.element.data.color" class="title-card">
-                      <textarea @change="saveDesk" spellcheck="false" class="card-text" v-model="item.element.data.text"
+                      <textarea @mousedown.stop="" @change="saveDesk" spellcheck="false" class="card-text" v-model="item.element.data.text"
                                 placeholder="输入卡片内容"></textarea>
                     </div>
                     <a-menu slot="overlay">
@@ -272,7 +272,26 @@
                       </a-menu-item>
                     </a-menu>
                   </a-dropdown>
+                  <a-dropdown :trigger="['contextmenu']" v-if="item.element.type==='clock'">
+                    <!--卡片-->
+                    <div  @mousedown.stop=""  @contextmenu.stop="">
+                      <div  class="clock" style="padding-left: 25px" v-if="item.element.data.type===1">
+                        <clock1></clock1>
 
+                      </div>
+                      <div style="margin-top: 5px;background-color: rgba(40,40,40,0.55);height: 200px;border-radius: 40px" class="clock" v-if="item.element.data.type===2">
+                        <clock2></clock2>
+                      </div>
+                      <div style="background-color: rgba(0,0,0,0.4); height: 330px; border-radius: 12px;"  v-if="item.element.data.type===3">
+                        <clock3></clock3>
+                      </div>
+                    </div>
+                    <a-menu slot="overlay">
+                      <a-menu-item @click="removeElement(item)" key="2">
+                        移除组件
+                      </a-menu-item>
+                    </a-menu>
+                  </a-dropdown>
 
                 </grid-item>
               </grid-layout>
@@ -617,7 +636,7 @@
 
         </template>
       </a-modal>
-      <a-modal v-model="visibleAdd" title="添加组件" :width="800" :body-style="{height: '700px'}" :footer="null">
+      <a-modal v-model="visibleAdd" title="添加组件" :width="820" :body-style="{height: '700px'}" :footer="null">
         <a-tabs default-active-key="3" tab-position="left" style="height: 100%">
           <!--              <a-tab-pane key="1" tab="自定义">-->
           <!--              </a-tab-pane>-->
@@ -647,8 +666,8 @@
               </a-tab-pane>
             </a-tabs>
           </a-tab-pane>
-          <a-tab-pane key="2" tab="小组件">
-            <ul class="tools">
+          <a-tab-pane key="2" tab="小组件" style="overflow-y: auto;height: 650px">
+            <ul class="tools" style="margin-right: 10px" >
               <li>
                 <h2 class="element-name">1.桌面小便签</h2>
                 <p class="element-summary">可以自由修改内容、调整大小。</p>
@@ -683,32 +702,46 @@
                 <h2 class="element-name">2.个性时钟</h2>
                 <p class="element-summary">酷酷的时钟组件，支持多种款式</p>
                 <div class="element-content">
-                  <a-row type="flex">
-                    <a-col flex="160px">
-                      <h3 class="tip-head">预览</h3>
-                      <div>
-                        <clock1></clock1>
+                  <div>
+                    <div style="margin-bottom: 10px;border-bottom: 1px solid #ccc;padding: 10px">
+                      <h3 style="font-weight: bold">时钟1</h3>
+                      <p>尺寸 4*2 中组件
+                        <a-button type="primary" style="float:right"
+                                  @click="addElement({type:'clock',data:{type:1}},{w:5,h:1})">
+                          添加组件
+                        </a-button>
+                      </p>
+                      <clock1></clock1>
+                    </div>
+                    <div style="padding: 10px;margin-bottom: 10px;border-bottom: 1px solid #ccc;padding: 10px">
+                      <h3 style="font-weight: bold;">时钟2</h3>
+                      <p>尺寸 5*2 大组件
+                        <a-button type="primary" style="float:right"
+                                  @click="addElement({type:'clock',data:{type:2,color:'black'}},{w:5,h:2})">
+                          添加组件
+                        </a-button>
+                      </p>
+                      <div style="position: relative;background-color: black;
+    height: 330px;
+    border-radius: 12px;">
+                        <clock2></clock2>
                       </div>
-                    </a-col>
-                    <a-col flex="1" style="padding-left: 10px;padding-right: 10px">
-                      <h3 class="tip-head">设置</h3>
-                      <div style="width: 150px">
-                        <ul class="clocks">
-                          <li @click="setCardColor(color)" >
-                            <img src="assets/elements/clocks/clock-circle.gif" style="width: 80px;height: auto">
-                            <div>圆形表盘</div>
-                          </li>
-                        </ul>
+                    </div>
+                    <div style="padding: 10px">
+                      <h3 style="font-weight: bold">时钟3</h3>
+                      <p>尺寸 5*4 巨大组件
+                        <a-button type="primary" style="float:right"
+                                  @click="addElement({type:'clock',data:{type:3}},{w:5,h:4})">
+                          添加组件
+                        </a-button>
+                      </p>
+                      <div style="position: relative;background-color: rgba(0,0,0,0.4);
+    height: 400px;
+    border-radius: 12px;">
+                        <clock3></clock3>
                       </div>
-                    </a-col>
-                    <a-col flex="100px" class="actions">
-
-                      <a-button type="primary"
-                                @click="addElement({type:'card',data:{color:selectedColor,text:cardText}})">
-                        添加组件
-                      </a-button>
-                    </a-col>
-                  </a-row>
+                    </div>
+                  </div>
                 </div>
               </li>
               <li>
@@ -795,6 +828,8 @@
 
 <script src="./components/appStore/index.js"></script>
 <script src="./components/elements/clock1.js"></script>
+<script src="./components/elements/clock2.js"></script>
+<script src="./components/elements/clock3.js"></script>
 <script>
   Vue.use(antd)
 
@@ -1100,7 +1135,7 @@
         console.log(e)
         this.visibleAdd = false
       },
-      addElement (element) {
+      addElement (element,posElement) {
         const sizes = {
           card: {
             w: 2, h: 1,
@@ -1115,8 +1150,11 @@
             w: 1, h: 1,
             isResizable: false,
             dragIgnoreFrom: '.group-icons'
+          },
+          clock:{
           }
         }
+
         const pos = {
           x: 0,
           y: 0, // puts it at the bottom
@@ -1126,8 +1164,8 @@
           dragIgnoreFrom: !!!sizes[element.type].dragIgnoreFrom ? 'button,a' : sizes[element.type].dragIgnoreFrom,
           isResizable: sizes[element.type].isResizable,
         }
+        Object.assign(pos,posElement)
         this.index++
-        console.log(pos)
         pos.element = element
         this.layout.push(pos)
       },
