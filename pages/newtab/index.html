@@ -655,11 +655,13 @@
                 <div class="element-content">
                   <a-row type="flex">
                     <a-col flex="160px">
+                      <h3 class="tip-head">预览</h3>
                       <div :class="'gradient gradient--'+this.selectedColor" class="title-card">
                         <div><textarea class="card-text" v-model="cardText" placeholder="输入卡片内容"></textarea></div>
                       </div>
                     </a-col>
                     <a-col flex="1" style="padding-left: 10px;padding-right: 10px">
+                      <h3 class="tip-head">设置</h3>
                       <div style="width: 150px">
                         <ul class="colors">
                           <li v-for="color in colors" @click="setCardColor(color)" :class="'gradient gradient--'+color">
@@ -667,7 +669,40 @@
                         </ul>
                       </div>
                     </a-col>
-                    <a-col flex="100px">
+                    <a-col flex="100px" class="actions">
+                      <a-button type="primary"
+                                @click="addElement({type:'card',data:{color:selectedColor,text:cardText}})">
+                        添加组件
+                      </a-button>
+                    </a-col>
+                  </a-row>
+                </div>
+              </li>
+
+              <li>
+                <h2 class="element-name">2.个性时钟</h2>
+                <p class="element-summary">酷酷的时钟组件，支持多种款式</p>
+                <div class="element-content">
+                  <a-row type="flex">
+                    <a-col flex="160px">
+                      <h3 class="tip-head">预览</h3>
+                      <div>
+                        <clock1></clock1>
+                      </div>
+                    </a-col>
+                    <a-col flex="1" style="padding-left: 10px;padding-right: 10px">
+                      <h3 class="tip-head">设置</h3>
+                      <div style="width: 150px">
+                        <ul class="clocks">
+                          <li @click="setCardColor(color)" >
+                            <img src="assets/elements/clocks/clock-circle.gif" style="width: 80px;height: auto">
+                            <div>圆形表盘</div>
+                          </li>
+                        </ul>
+                      </div>
+                    </a-col>
+                    <a-col flex="100px" class="actions">
+
                       <a-button type="primary"
                                 @click="addElement({type:'card',data:{color:selectedColor,text:cardText}})">
                         添加组件
@@ -677,7 +712,7 @@
                 </div>
               </li>
               <li>
-                <h2 class="element-name">2.书签收藏夹（预告）</h2>
+                <h2 class="element-name">3.书签收藏夹（预告）</h2>
                 <p class="element-summary">即将上线。</p>
                 <div class="element-content" style="padding: 40px;text-align: center">
                   <a-spin tip="Coding...">
@@ -759,6 +794,7 @@
 </div>
 
 <script src="./components/appStore/index.js"></script>
+<script src="./components/elements/clock1.js"></script>
 <script>
   Vue.use(antd)
 

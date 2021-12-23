@@ -352,5 +352,12 @@
   border-radius: 4px;
   padding: 10px;
 }
+.tools li .actions {
+  padding: 50px;
+}
+.tools li .tip-head {
+  color: #999;
+  font-size: 12px;
+}
 
 /*# sourceMappingURL=desktop.css.map */
