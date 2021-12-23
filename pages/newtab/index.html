@@ -24,7 +24,6 @@
     </script>
     <div id="app">
       <template>
-
         <div class="side-bar">
           <div class="action-list">
             <ul>
@@ -106,7 +105,7 @@
 
         <a-button style="position: fixed;right: 6px;top: 20px;background-color: rgba(0,0,0,0.3);color: white;border:none" shape="circle" type="primary" icon="skin"  @click="setTheme" ></a-button>
         <a-dropdown v-model="visibleMainMenu" :trigger="['contextmenu']" @visible-change="changeMainMenuVisible">
-        <div class="main" @click="hideMainMenu">
+        <div class="main" @click="hideMainMenu" style="overflow-x: hidden">
           <div class="main-top flex flex-direction justify-around align-center">
             <img src="./assets/logo-noframe.svg" alt="" style="width: 84px" class="xt-logo" />
             <div class="top-search flex justify-between align-center">
@@ -150,54 +149,64 @@
             </div>
           </div>
           <div class="desktop" style="">
-            <grid-layout
-              :layout.sync="layout"
-              :cols="{ lg: 20, md: 15, sm: 12, xs: 10, xxs: 0 }"
-              :row-height="80"
-              :is-draggable="true"
-              :is-resizable="false"
-              :auto-size="true"
-              :is-mirrored="false"
-              :breakpoints="{ lg: 1200, md: 900, sm: 720, xs: 600, xxs: 0 }"
-              :vertical-compact="false"
-              :margin="[0, 20]"
-              @layout-updated="layoutUpdatedEvent"
-              :response="true"
-              :use-css-transforms="false"
-            >
+            <div class="desktop-content">
+              <div>
+                <grid-layout
+                  :layout.sync="layout"
+                  :cols="{ lg: 20, md: 15, sm: 12, xs: 10, xxs: 0 }"
+                  :row-height="80"
+                  :is-draggable="true"
+                  :is-resizable="false"
+                  :auto-size="false"
 
-              <grid-item class="element" v-for="item in layout" :style="{'display':item.element.type==='card'?'flex':'block'}"
-                         :x="item.x"
-                         :y="item.y"
-                         :w="item.w"
-                         :h="item.h"
-                         :i="item.i"
-                         :key="item.i"
-                         :is-resizable="item.isResizable"
-                         :drag-ignore-from="item.dragIgnoreFrom"
+                  :is-mirrored="false"
+                  :breakpoints="{ lg: 1200, md: 900, sm: 720, xs: 600, xxs: 0 }"
+                  :vertical-compact="false"
+                  :margin="[0, 20]"
+                  @layout-updated="layoutUpdatedEvent"
+                  :response="true"
+                  :use-css-transforms="false"
+                >
 
-              >
-                <div class="app"     v-if="item.element.type==='app'">
-                  <a :href="item.element.data.url"><img :src="item.element.data.icon"></a>
-                  <div class="name">
-                    {{ item.element.data.name}}
-                  </div>
-                </div>
-                <a-dropdown @contextmenu.stop="" :trigger="['contextmenu']" v-if="item.element.type==='card'">
-                  <div @contextmenu.stop="" :class="'gradient gradient--'+item.element.data.color" class="title-card" >
-                    <textarea @change="saveDesk" spellcheck="false" class="card-text" v-model="item.element.data.text" placeholder="输入卡片内容" ></textarea>
-                  </div>
-                  <a-menu slot="overlay">
-                    <a-menu-item key="1">
-                      修改组件
-                    </a-menu-item>
-                    <a-menu-item @click="removeElement(item)" key="2">
-                      移除组件
-                    </a-menu-item>
-                  </a-menu>
-                </a-dropdown>
-              </grid-item>
-            </grid-layout>
+                  <grid-item class="element" v-for="item in layout" :style="{'display':item.element.type==='card'?'flex':'block'}"
+                             :x="item.x"
+                             :y="item.y"
+                             :w="item.w"
+                             :h="item.h"
+                             :i="item.i"
+                             :key="item.i"
+                             :is-resizable="item.isResizable"
+                             :drag-ignore-from="item.dragIgnoreFrom"
+
+                  >
+                    <a-dropdown :trigger="['contextmenu']" v-if="item.element.type==='app'">
+                    <div  @contextmenu.stop="" class="app"     >
+                      <a :href="item.element.data.url"><img draggable="true" @dragstart="setDrag($event,item.element.data)" :src="item.element.data.icon"></a>
+                      <div class="name">
+                        {{ item.element.data.name}}
+                      </div>
+                    </div>
+                      <a-menu slot="overlay">
+                        <a-menu-item @click="removeElement(item)" key="2">
+                          移除组件
+                        </a-menu-item>
+                      </a-menu>
+                    </a-dropdown>
+                    <a-dropdown :trigger="['contextmenu']" v-if="item.element.type==='card'">
+                      <div @contextmenu.stop="" :class="'gradient gradient--'+item.element.data.color" class="title-card" >
+                        <textarea @change="saveDesk" spellcheck="false" class="card-text" v-model="item.element.data.text" placeholder="输入卡片内容" ></textarea>
+                      </div>
+                      <a-menu slot="overlay">
+                        <a-menu-item @click="removeElement(item)" key="2">
+                          移除组件
+                        </a-menu-item>
+                      </a-menu>
+                    </a-dropdown>
+                  </grid-item>
+                </grid-layout>
+              </div>
+
+            </div>
           </div>
 
 <!--          <div class="main-bottom flex justify-center">-->
@@ -422,9 +431,28 @@
       </template>
       <template>
         <div>
-          <a-modal v-model="visibleAdd" title="添加组件" :width="800" :footer="null">
-            <a-tabs default-active-key="1" tab-position="left">
-              <a-tab-pane key="1" tab="自定义">
+          <a-modal v-model="visibleAdd" title="添加组件" :width="800"  :body-style="{height: '700px'}"  :footer="null">
+            <a-tabs default-active-key="3" tab-position="left" style="height: 100%">
+<!--              <a-tab-pane key="1" tab="自定义">-->
+<!--              </a-tab-pane>-->
+              <a-tab-pane key="3" tab="网站导航">
+                <a-tabs default-active-key="productive" tab-position="top" @ok="handleOk" :style="{ height: '650px' }">
+                  <a-tab-pane  v-for="(type, indexType) in allApps" :key="type.name" :tab="type.title">
+                    <div style="overflow-y: auto;max-height: 650px">
+                      <a-row style="padding: 10px;margin-bottom: 20px">
+                        <a-col :span="4" @click="addElement({type:'app',data:app})" :class="{'app':true,'app-goods':true}" v-for="(app, indexApp) in type.apps" draggable="true" @dragstart="setDrag($event,app)">
+                          <a-avatar shape="square" :size="64" :src="app.icon" style="margin-bottom: 10px"></a-avatar>
+                          <h2 style="font-weight: bold">
+                            {{ app.name }}
+                          </h2>
+                          <p style="color: #999 !important;">
+                            {{ app.summary }}
+                          </p>
+                        </a-col>
+                      </a-row>
+                    </div>
+                  </a-tab-pane>
+                </a-tabs>
               </a-tab-pane>
               <a-tab-pane key="2" tab="小组件">
                <ul class="tools"><li >
@@ -453,33 +481,16 @@
 
 
               </a-tab-pane>
-              <a-tab-pane key="3" tab="网站导航">
-                <a-tabs default-active-key="productive" tab-position="top" @ok="handleOk" :style="{ height: '650px' }">
-                  <a-tab-pane  v-for="(type, indexType) in allApps" :key="type.name" :tab="type.title">
-                    <div style="overflow-y: auto;max-height: 650px">
-                      <a-card :title="type.title" style="padding: 10px">
-                        <a-card-grid @click="addElement({type:'app',data:app})" :class="{'app':true,'app-goods':true}" v-for="(app, indexApp) in type.apps" draggable="true" @dragstart="setDrag($event,app)">
-                          <a >
-                            <a-avatar shape="square" :size="64" :src="app.icon" style="margin-bottom: 10px"></a-avatar>
-                            <a-card-meta :title="app.name">
-                              <template slot="description"> {{ app.summary }} </template>
-                            </a-card-meta>
-                          </a>
-                        </a-card-grid>
-                      </a-card>
-                    </div>
-                  </a-tab-pane>
-                </a-tabs>
-              </a-tab-pane>
-              <a-tab-pane key="4" tab="本地导航">
-                本地导航
-              </a-tab-pane>
-              <a-tab-pane key="5" tab="云端导航">
-                云端导航
-              </a-tab-pane>
-              <a-tab-pane key="6" tab="团队导航">
-                团队导航
-              </a-tab-pane>
+
+<!--              <a-tab-pane key="4" tab="本地导航">-->
+<!--                本地导航-->
+<!--              </a-tab-pane>-->
+<!--              <a-tab-pane key="5" tab="云端导航">-->
+<!--                云端导航-->
+<!--              </a-tab-pane>-->
+<!--              <a-tab-pane key="6" tab="团队导航">-->
+<!--                团队导航-->
+<!--              </a-tab-pane>-->
             </a-tabs>
           </a-modal>
         </div>
@@ -651,7 +662,7 @@
               }
             }
             const pos={
-              x: (this.layout.length) % (this.colNum || 12),
+              x: 0,
               y:0, // puts it at the bottom
               w: sizes[element.type].w,
               h: sizes[element.type].h,

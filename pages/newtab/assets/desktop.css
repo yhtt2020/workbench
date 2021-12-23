@@ -6,11 +6,19 @@
 }
 
 .desktop {
-  width: 80%;
   border-radius: 12px;
   min-height: 80px;
   min-width: 720px;
+  overflow-x: hidden;
+  height: calc(100vh - 400px);
+  width: 80%;
   margin: 40px auto auto;
+}
+.desktop .desktop-content {
+  overflow-y: auto;
+  height: 100%;
+  overflow-x: hidden;
+  width: calc(100% + 20px);
 }
 
 .element {
