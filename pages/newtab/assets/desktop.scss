@@ -29,10 +29,30 @@
     overflow-y: auto;
     height: 100%;
     overflow-x: hidden;
+
     width:calc(100% + 20px);
+
   }
 }
-
+.group-modal{
+  .ant-modal-content{
+    border-radius: 12px;
+    background: rgba(0,0,0,0.2);
+    backdrop-filter:blur(12px);
+  }
+  .ant-modal-close{
+    color: white;
+  }
+  .ant-modal-header{
+    background: none;
+    color: white;
+    border-bottom: none;
+    .ant-modal-title{
+      text-align: center;
+      color: white !important;
+    }
+  }
+}
 .element {
   width: var(--element-width);
   text-align: center;

@@ -204,9 +204,9 @@
                       </a-menu>
                     </a-dropdown>
                     <a-dropdown :trigger="['contextmenu']" v-if="item.element.type==='group'">
-                      <!--应用-->
-                      <div  @mousedown.stop=""   @contextmenu.stop="" class="app">
-                        <div class="group-icons">
+                      <!--分组-->
+                      <div @click="openGroup(item)"  @mousedown.stop=""   @contextmenu.stop="" class="app">
+                        <div  class="group-icons">
                           <div class="icon" v-if="iconEl.element.type==='app'" v-for="iconEl in item.element.data" >
                             <img :src="iconEl.element.data.icon" >
                           </div>
@@ -216,7 +216,7 @@
                           </div>
                         </div>
                         <div class="name">
-                          组
+                          {{ item.element.name }}
                         </div>
                       </div>
                       <a-menu slot="overlay">
@@ -473,6 +473,52 @@
       </template>
       <template>
         <div>
+          <!--:mask="false" :mask-closable="false" -->
+          <a-modal  :centered="true" dialog-class="group-modal" :footer="null"v-model="visibleGroup" :title="selectGroup.element.name" @ok="handleOk">
+            <div>
+              <grid-layout
+                :layout.sync="groupItems"
+                :row-height="100"
+                :col-num="5"
+                :is-draggable="true"
+                :is-resizable="false"
+                :auto-size="true"
+                :is-mirrored="false"
+                :vertical-compact="true"
+                :margin="[10, 20]"
+                @layout-updated="layoutUpdatedEvent"
+                :response="true"
+                :use-css-transforms="false"
+              >
+              <grid-item @mousedown.stop="" :data-id="item.i"  :class="{'element':true,'selectable':item.element.type==='app'}" v-for="item in groupItems" :style="{'display':item.element.type==='card'?'flex':'block'}"
+                         :x="item.x"
+                         :y="item.y"
+                         :w="item.w"
+                         :h="item.h"
+                         :i="item.i"
+                         :key="item.i"
+                         :is-resizable="item.isResizable"
+                         :drag-ignore-from="item.dragIgnoreFrom"
+
+              >
+                <a-dropdown :trigger="['contextmenu']">
+                  <!--应用-->
+                  <div  @mousedown.stop=""   @contextmenu.stop="" class="app">
+                    <a :href="item.element.data.url"><img draggable="true" @dragstart="setDrag($event,item.element.data)" :src="item.element.data.icon"></a>
+                    <div class="name">
+                      {{ item.element.data.name}}
+                    </div>
+                  </div>
+                  <a-menu slot="overlay">
+                    <a-menu-item @click="removeElement(item)" key="2">
+                      移除组件
+                    </a-menu-item>
+                  </a-menu>
+                </a-dropdown>
+              </grid-item>
+              </grid-layout>
+            </div>
+          </a-modal>
           <a-modal v-model="visibleAdd" title="添加组件" :width="800"  :body-style="{height: '700px'}"  :footer="null">
             <a-tabs default-active-key="3" tab-position="left" style="height: 100%">
 <!--              <a-tab-pane key="1" tab="自定义">-->
@@ -606,6 +652,10 @@
             selectedElements:[],
             popLayouts:[],
 
+            //选中打开的item元素
+            groupItems:[],
+            visibleGroup:false,
+            selectGroup:{element:{name:'分组'}},
 
 
             cardText:'文字小卡片',
@@ -671,6 +721,12 @@
           }
         },
         methods: {
+          openGroup(item){
+             this.groupItems=item.element.data //是一个数组
+             this.selectGroup=item
+            this.visibleGroup=true
+            console.log(item)
+          },
           /**
            * 组合当前选中的全部元素成一个新的组
            */
@@ -686,14 +742,20 @@
               return null
             }
             let composeItems=[]
+            //用于计算分布的变量
+            const colNum=5
+            let index=0
             this.selectedElements.forEach((item)=>{
-              console.log(item)
               let gotItem=getElement(item)
               if(gotItem!==null){
+                gotItem.x= index % colNum
+                gotItem.y= Math.floor(index/colNum)
+                console.log(gotItem.x+'|'+gotItem.y)
+                index++
                 composeItems.push(gotItem)
               }
             })
-            this.addElement({type:'group',data:composeItems})
+            this.addElement({type:'group',name:'分组',data:composeItems})
             console.log(composeItems)
 
           },
@@ -783,7 +845,8 @@
               },
               group:{
                 w:1,h:1,
-                isResizable:false
+                isResizable:false,
+                dragIgnoreFrom:'.group-icons'
               }
             }
             const pos={
@@ -949,6 +1012,7 @@
               ipc.send('refresh')
           },
           setDrag(ev,item){
+            this.$message.info({content:'移动图标，可将图标移入分组或底部快捷坞。',key:"tip"})
             //拖动应用
             this.dragItem={
               name:item.name,

@@ -23,6 +23,24 @@
   width: calc(100% + 20px);
 }
 
+.group-modal .ant-modal-content {
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(12px);
+}
+.group-modal .ant-modal-close {
+  color: white;
+}
+.group-modal .ant-modal-header {
+  background: none;
+  color: white;
+  border-bottom: none;
+}
+.group-modal .ant-modal-header .ant-modal-title {
+  text-align: center;
+  color: white !important;
+}
+
 .element {
   width: var(--element-width);
   text-align: center;
