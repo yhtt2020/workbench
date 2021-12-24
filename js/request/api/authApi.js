@@ -4,7 +4,8 @@ const url = {
   logoutBrowser: '/app/logoutBrowser',
   loginBrowser: '/app/loginBrowser',
   shareTasks: '/app/createTask',
-  autoLogin: '/app/autoLogin'
+  autoLogin: '/app/autoLogin',
+  imAutoLogin: '/app/imAutoLogin'
 }
 const authApi = {
   async loginBrowser(info) {
@@ -29,6 +30,14 @@ const authApi = {
       client_id: require('../../../server-config').appConfig.client_id
     }
     return baseApi.axios(url.autoLogin, data)
+  },
+  async imAutoLogin() {
+    await baseApi.init()
+    const data = {
+      client_id: require('../../../server-config').appConfig.client_id,
+      bind_id: require('../../../server-config').appConfig.bind_im_id
+    }
+    return baseApi.axios(url.imAutoLogin, data)
   }
 }
 module.exports = authApi

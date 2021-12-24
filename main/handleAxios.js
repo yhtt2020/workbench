@@ -55,6 +55,12 @@ const handleAxios =  {
       const result = await authApi.autoLogin()
       event.reply('callback-autoLogin', result)
     })
+
+    //IM免登录
+    ipc.on('imAutoLogin', async(event, args) => {
+      const result = await authApi.imAutoLogin()
+      event.reply('callback-imAutoLogin', result)
+    })
   }
 }
 app.on('ready',()=>{
