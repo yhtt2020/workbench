@@ -2,8 +2,8 @@
 let href = window.location.href
 const server = {
   //osx端说pc登录是否已掉的前置判断
-  async beforeInit() {
-    //先检车node是否登录
+  beforeInit() {
+    //先检测node是否登录
     ipc.send('checkLogin')
     ipc.on('callback-checkLogin', (event, args) => {
       if(args) {
@@ -15,7 +15,7 @@ const server = {
           ipc.on('callback-autoLogin', (event, args) => {
             if(args.code === 1000) {
               console.log(args.data)
-              window.location.href = args.data
+              //window.location.href = args.data
             }
           })
         }
