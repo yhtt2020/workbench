@@ -230,8 +230,8 @@
                     <!--分组-->
                     <div  class="app" @mousedown.stop="">
                       <div @mousemove.stop="this.mouseFlag=1" @contextmenu.stop="" @mousedown.stop="this.mouseFlag=0" @mouseup.stop="if(!this.mouseFlag) {openGroup(item) }" class="group-icons allow-drag">
-                        <div class="icon" v-if="iconEl.element.type==='app'" v-for="iconEl in item.element.data">
-                          <img :src="iconEl.element.data.icon">
+                        <div class="icon" v-if="iconEl.element.type==='app'" v-for="iconEl in item.element.data" >
+                          <img :src="iconEl.element.data.icon" :style="iconStyle(iconEl.element.data)">
                         </div>
                         <div class="icon" v-else>
                           <div class="other">
@@ -246,18 +246,18 @@
                       <a-menu-item @click="removeElement(item)" key="2">
                         移除整组
                       </a-menu-item>
-                      <a-menu-item @click="editElement(item)" key="2">
-                        编辑组件
-                      </a-menu-item>
-                      <a-menu-item @mousedown.stop="" @click="composeSelectedElements()" key="3"
-                                   v-show="isSelected(item) && selectedElements.length>1">
-                        解散组
-                      </a-menu-item>
+<!--                      <a-menu-item @click="editElement(item)" key="2">-->
+<!--                        编辑组件-->
+<!--                      </a-menu-item>-->
+<!--                      <a-menu-item @mousedown.stop="" @click="composeSelectedElements()" key="3"-->
+<!--                                   v-show="isSelected(item) && selectedElements.length>1">-->
+<!--                        解散组-->
+<!--                      </a-menu-item>-->
                     </a-menu>
                   </a-dropdown>
                   <a-dropdown @mousedown.stop="" :trigger="['contextmenu']" v-if="item.element.type==='card'">
                     <!--卡片-->
-                    <div @contextmenu.stop="this.visibleMainMenu=false" :class="'allow-drag gradient gradient--'+item.element.data.color" class="title-card" >
+                    <div @mousedown.stop="" @contextmenu.stop="this.visibleMainMenu=false" :class="'allow-drag gradient gradient--'+item.element.data.color" class="title-card" >
                       <textarea  @mousedown.stop="" @change="saveDesk" spellcheck="false" class="card-text ignore-drag" v-model="item.element.data.text"
                                 placeholder="输入卡片内容"></textarea>
                     </div>
@@ -558,15 +558,25 @@
               <a-dropdown :trigger="['contextmenu']">
                 <!--应用-->
                 <div @mousedown.stop="" @contextmenu.stop="" class="app">
-                  <a :href="item.element.data.url"><img draggable="true" @dragstart="setDrag($event,item.element.data)"
-                                                        :src="item.element.data.icon"></a>
-                  <div class="name">
+                  <div draggable="true" @dragstart="setDrag($event,item.element.data)" class="icon-wrapper allow-drag" @mousedown.stop="appMouseDown" @mousemove.stop="appMouseMove" @mouseup.stop="appMouseUp($event,item.element.data.url)"
+                       :style="iconStyle(item.element.data)">
+                    <img
+                      :src="item.element.data.icon">
+                  </div>
+                  <div class="name allow-drag" :style="'background-color:'+item.element.data.textColor"
+                       v-if="item.element.data.useTextBg">
+                    {{ item.element.data.name}}
+                  </div>
+                  <div class="name allow-drag" v-else>
                     {{ item.element.data.name}}
                   </div>
                 </div>
                 <a-menu slot="overlay">
-                  <a-menu-item @click="removeElement(item)" key="2">
+                  <a-menu-item @click="removeElement(item,selectGroup.i)" key="remove">
                     移除组件
+                  </a-menu-item>
+                  <a-menu-item @click="editElement(item,selectGroup.i)" key="edit">
+                    编辑组件
                   </a-menu-item>
                 </a-menu>
               </a-dropdown>
@@ -978,10 +988,20 @@
        */
       onSubmitEdit () {
         console.log('submit!', this.formEdit)
-
-        for (let i = 0; i < this.layout.length; i++) {
-          if (Number(this.layout[i].i) === this.formEdit.id) {
-            let item = this.layout[i]
+        let parentEl={}
+        if(this.formEdit.groupId===0){
+           parentEl= this.layout
+        }else{
+           this.layout.forEach((item)=>{
+             if(item.i===this.formEdit.groupId)
+             {
+               parentEl=item.element.data
+             }
+           })
+        }
+        for (let i = 0; i < parentEl.length; i++) {
+          if (Number(parentEl[i].i) === this.formEdit.id) {
+            let item = parentEl[i]
             item.name = this.formEdit.name
             item.element.data.name = this.formEdit.name
             item.element.data.url = this.formEdit.url
@@ -993,7 +1013,7 @@
             item.element.data.color = this.formEdit.color
             item.element.data.textColor = this.formEdit.textColor
             item.element.data.radius = this.formEdit.radius
-            this.layout[i] = item
+            parentEl[i] = item
           }
         }
         this.saveDesk()
@@ -1104,8 +1124,9 @@
       /**
        * 编辑组件
        * @param item
+       * @param groupId 组id用于分组组件编辑
        */
-      editElement (item) {
+      editElement (item,groupId=0) {
         console.log(item)
         const element = item.element
         this.visibleEdit = true
@@ -1115,6 +1136,12 @@
           this.formEdit.name = element.data.name
         } else {
           this.formEdit.name = item.name
+        }
+        if(groupId!==0){
+          this.formEdit.groupId=groupId
+          console.log(this.formEdit.groupId)
+        }else{
+          this.formEdit.groupId=0
         }
         this.formEdit.url = element.data.url
         this.formEdit.icon = element.data.icon
@@ -1143,10 +1170,18 @@
        * 删除元素
        * @param element
        */
-      removeElement (element) {
-        for (let i = 0; i < this.layout.length; i++)
-          if (this.layout[i].i === element.i) {
-            this.layout.splice(i, 1)
+      removeElement (element,groupId=0) {
+        let parentEl=this.layout
+        if(groupId!==0){
+          this.layout.forEach((item)=>{
+            if(item.i===groupId){
+              parentEl=item.element.data
+            }
+          })
+        }
+        for (let i = 0; i < parentEl.length; i++)
+          if (parentEl[i].i === element.i) {
+            parentEl.splice(i, 1)
           }
       },
       //设置小卡片组件的颜色
