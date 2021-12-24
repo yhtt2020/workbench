@@ -109,8 +109,8 @@
           </div>
           <div>
             <h1 style="font-size: 14px;margin-top: 20px">快捷坞图标大小：</h1>
-            <a-slider id="dockSize" v-model="dockAppSize" @change="saveDockSize" :step="1" :min="20" :max="120"
-                      v-model="cardOpacity" :default-value="60"></a-slider>
+            <a-slider id="dockSize" v-model="dockAppSize" @change="saveDockSize" :step="1" :min="30" :max="60"
+                      v-model="cardOpacity" :default-value="50"></a-slider>
           </div>
         </template>
       </div>
@@ -214,10 +214,10 @@
                       </div>
                     </div>
                     <a-menu slot="overlay">
-                      <a-menu-item @click="removeElement(item)" key="2">
+                      <a-menu-item @click="removeElement(item)" key="remove">
                         移除组件
                       </a-menu-item>
-                      <a-menu-item @click="editElement(item)" key="2">
+                      <a-menu-item @click="editElement(item)" key="edit">
                         编辑组件
                       </a-menu-item>
                       <a-menu-item @mousedown.stop="" @click="composeSelectedElements()" key="3"
@@ -226,10 +226,10 @@
                       </a-menu-item>
                     </a-menu>
                   </a-dropdown>
-                  <a-dropdown :trigger="['contextmenu']" v-if="item.element.type==='group'">
+                  <a-dropdown  :trigger="['contextmenu']" v-if="item.element.type==='group'">
                     <!--分组-->
-                    <div  class="app" @mousedown.stop="">
-                      <div @mousemove.stop="this.mouseFlag=1" @contextmenu.stop="" @mousedown.stop="this.mouseFlag=0" @mouseup.stop="if(!this.mouseFlag) {openGroup(item) }" class="group-icons allow-drag">
+                    <div  class="app" @contextmenu.stop="" @mousedown.stop="">
+                      <div @mousemove.stop="this.mouseFlag=1"  @mousedown.stop="this.mouseFlag=0" @mouseup.stop="if(!this.mouseFlag) {openGroup(item) }" class="group-icons allow-drag">
                         <div class="icon" v-if="iconEl.element.type==='app'" v-for="iconEl in item.element.data" >
                           <img :src="iconEl.element.data.icon" :style="iconStyle(iconEl.element.data)">
                         </div>
@@ -243,7 +243,7 @@
                       </div>
                     </div>
                     <a-menu slot="overlay">
-                      <a-menu-item @click="removeElement(item)" key="2">
+                      <a-menu-item @click="removeElement(item)" key="remove">
                         移除整组
                       </a-menu-item>
 <!--                      <a-menu-item @click="editElement(item)" key="2">-->
@@ -289,7 +289,7 @@
                       </div>
                     </div>
                     <a-menu slot="overlay">
-                      <a-menu-item @click="removeElement(item)" key="2">
+                      <a-menu-item @click="removeElement(item)" key="remove">
                         移除组件
                       </a-menu-item>
                     </a-menu>
@@ -960,7 +960,6 @@
         setTimeout(()=>{
           let handles=document.getElementsByClassName('vue-resizable-handle')
           for(let i=0;i<handles.length;i++){
-            console.log(handles[i])
             handles[i].addEventListener('mousedown',(e)=>{
               e.stopPropagation()
             })
@@ -977,9 +976,8 @@
         this.mouseFlag=1
       },
       appMouseUp(e,url){
-        if(this.mouseFlag===1){
-          return
-        }else{
+        console.log(e)
+        if(this.mouseFlag===0 && e.button===0) {
           this.openUrl(url)
         }
       },
