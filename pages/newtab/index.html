@@ -197,36 +197,8 @@
                            drag-ignore-from=".ignore-drag"
 
                 >
-                  <app data="" v-if="item.element.type==='app'" :item="item" @edit-element="editElement(item)" @remove-element="removeElement(item)" @open-url="openUrl(item.element.data.url)"></app>
-                  <a-dropdown  :trigger="['contextmenu']" v-if="item.element.type==='group'">
-                    <!--分组-->
-                    <div  class="app" @contextmenu.stop="" @mousedown.stop="">
-                      <div @mousemove.stop="this.mouseFlag=1"  @mousedown.stop="this.mouseFlag=0" @mouseup.stop="if(!this.mouseFlag) {openGroup(item) }" class="group-icons allow-drag">
-                        <div class="icon" v-if="iconEl.element.type==='app'" v-for="iconEl in item.element.data" >
-                          <img :src="iconEl.element.data.icon" :style="iconStyle(iconEl.element.data)">
-                        </div>
-                        <div class="icon" v-else>
-                          <div class="other">
-                          </div>
-                        </div>
-                      </div>
-                      <div class="name allow-drag" @mousedown.stop="">
-                        {{ item.element.name }}
-                      </div>
-                    </div>
-                    <a-menu slot="overlay">
-                      <a-menu-item @click="removeElement(item)" key="remove">
-                        移除整组
-                      </a-menu-item>
-<!--                      <a-menu-item @click="editElement(item)" key="2">-->
-<!--                        编辑组件-->
-<!--                      </a-menu-item>-->
-<!--                      <a-menu-item @mousedown.stop="" @click="composeSelectedElements()" key="3"-->
-<!--                                   v-show="isSelected(item) && selectedElements.length>1">-->
-<!--                        解散组-->
-<!--                      </a-menu-item>-->
-                    </a-menu>
-                  </a-dropdown>
+                  <app  v-if="item.element.type==='app'" :item="item" @edit-element="editElement(item)" @remove-element="removeElement(item)" @open-url="openUrl(item.element.data.url)"></app>
+                  <group v-if="item.element.type==='group'" :item="item"  @edit-group="editGroup(item)" @remove-element="removeElement(item)" @open-group="openGroup(item)"></group>
                   <a-dropdown @mousedown.stop="" :trigger="['contextmenu']" v-if="item.element.type==='card'">
                     <!--卡片-->
                     <div @mousedown.stop="" @contextmenu.stop="this.visibleMainMenu=false" :class="'allow-drag gradient gradient--'+item.element.data.color" class="title-card" >
@@ -788,6 +760,7 @@
 
 <script src="./components/appStore/index.js"></script>
 <script src="./components/elements/app.js"></script>
+<script src="./components/elements/group.js"></script>
 <script src="./components/elements/clock1.js"></script>
 <script src="./components/elements/clock2.js"></script>
 <script src="./components/elements/clock3.js"></script>
@@ -916,21 +889,6 @@
         },500)
       },
       /**
-       * app按钮上鼠标事件，区分移动和拖拽
-       */
-      appMouseDown(){
-        this.mouseFlag=0
-      },
-      appMouseMove(){
-        this.mouseFlag=1
-      },
-      appMouseUp(e,url){
-        console.log(e)
-        if(this.mouseFlag===0 && e.button===0) {
-          this.openUrl(url)
-        }
-      },
-      /**
        * 编辑组件
        */
       onSubmitEdit () {
@@ -990,7 +948,6 @@
         this.groupItems = item.element.data //是一个数组
         this.selectGroup = item
         this.visibleGroup = true
-        console.log(item)
       },
       /**
        * 组合当前选中的全部元素成一个新的组
