@@ -24,9 +24,13 @@ const appTpl=`
                       <a-menu-item @click="editElement(item)" key="edit">
                         编辑组件
                       </a-menu-item>
-                      <a-menu-item @mousedown.stop="" @click="composeGroup()" key="3"
-                                   v-show="isSelected">
+                      <a-menu-divider v-show="selectedMenuVisible"> </a-menu-divider>
+                      <a-menu-item @click="composeGroup()" @mousedown.stop="" key="composeGroup"
+                                   v-show="selectedMenuVisible">
                         合并选中图标成组
+                      </a-menu-item>
+                       <a-menu-item @click="removeSelected" @mousedown.stop="" key="removeSelected"  v-show="selectedMenuVisible">
+                        移除选中组件
                       </a-menu-item>
                     </a-menu>
                   </a-dropdown>
@@ -63,7 +67,7 @@ const appTpl=`
                   <a-form-item label="图标圆角">
                     <a-switch v-model="formEdit.useRadius"></a-switch>
                     <div >
-                    <a-slider v-model="formEdit.radius" :default-value="30"  :min="0" :max="50"></a-slider>
+                    <a-slider v-model="formEdit.radius"  :min="0" :max="50"></a-slider>
                     </div>
                   </a-form-item>
                   <a-form-item label="图标背景">
@@ -97,7 +101,7 @@ const swatches= window['vue-swatches']
 Vue.component('app', {
   template:appTpl,
   name: "app",
-  props: ['item','groupId','isSelected'],
+  props: ['item','groupId','selectedMenuVisible'],
   components: {
     'v-swatches':swatches
   },
@@ -158,7 +162,6 @@ Vue.component('app', {
       }else{
         this.formEdit.groupId=0
       }
-      console.log(this.formEdit.groupId)
       this.formEdit.url = element.data.url
       this.formEdit.icon = element.data.icon
       this.formEdit.useBg = element.data.useBg
@@ -210,6 +213,9 @@ Vue.component('app', {
     },
     composeGroup(){
       this.$emit('compose-group')
+    },
+    removeSelected(){
+      this.$emit('remove-selected')
     }
 
   },
