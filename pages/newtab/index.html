@@ -527,31 +527,7 @@
                        :drag-ignore-from="item.dragIgnoreFrom"
 
             >
-              <a-dropdown :trigger="['contextmenu']">
-                <!--应用-->
-                <div @mousedown.stop="" @contextmenu.stop="" class="app">
-                  <div draggable="true" @dragstart="setDrag($event,item.element.data)" class="icon-wrapper allow-drag" @mousedown.stop="appMouseDown" @mousemove.stop="appMouseMove" @mouseup.stop="appMouseUp($event,item.element.data.url)"
-                       :style="iconStyle(item.element.data)">
-                    <img
-                      :src="item.element.data.icon">
-                  </div>
-                  <div class="name allow-drag" :style="'background-color:'+item.element.data.textColor"
-                       v-if="item.element.data.useTextBg">
-                    {{ item.element.data.name}}
-                  </div>
-                  <div class="name allow-drag" v-else>
-                    {{ item.element.data.name}}
-                  </div>
-                </div>
-                <a-menu slot="overlay">
-                  <a-menu-item @click="removeElement(item,selectGroup.i)" key="remove">
-                    移除组件
-                  </a-menu-item>
-                  <a-menu-item @click="editElement(item,selectGroup.i)" key="edit">
-                    编辑组件
-                  </a-menu-item>
-                </a-menu>
-              </a-dropdown>
+              <app :item="item" @edit-element="editElement(item,selectGroup.i)" @remove-element="removeElement(item,selectGroup.i)" @open-url="openUrl(item.element.data.url)"></app>
             </grid-item>
           </grid-layout>
         </div>
