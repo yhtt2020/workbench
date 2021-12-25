@@ -50,7 +50,6 @@ Vue.component('group', {
     },
     mouseUp (event) {
       if (this.mouseFlag===0) {
-        console.log(this.mouseFlag)
         this.$emit('open-group')
       }
       event.stopPropagation()

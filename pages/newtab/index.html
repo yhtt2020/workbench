@@ -197,7 +197,7 @@
                            drag-ignore-from=".ignore-drag"
 
                 >
-                  <app  v-if="item.element.type==='app'" :item="item" @edit-element="editElement(item)" @remove-element="removeElement(item)" @open-url="openUrl(item.element.data.url)"></app>
+                  <app :is-selected="isSelected(item)"  v-if="item.element.type==='app'" @compose-group="composeGroup" :group-id="selectGroup.i" :item="item" @edit-app="onSubmitEdit" @remove-element="removeElement(item)" @open-url="openUrl(item.element.data.url)"></app>
                   <group v-if="item.element.type==='group'" :item="item"  @edit-group="editGroup(item)" @remove-element="removeElement(item)" @open-group="openGroup(item)"></group>
                   <a-dropdown @mousedown.stop="" :trigger="['contextmenu']" v-if="item.element.type==='card'">
                     <!--卡片-->
@@ -211,10 +211,6 @@
                       </a-menu-item>
                       <a-menu-item @click="editElement(item)" key="edit">
                         编辑组件
-                      </a-menu-item>
-                      <a-menu-item @mousedown.stop="" @click="composeSelectedElements()" key="compose"
-                                   v-show="isSelected(item) && selectedElements.length>1">
-                        合并{{selectedElements.length}}个选中图标成组
                       </a-menu-item>
                     </a-menu>
                   </a-dropdown>
@@ -499,75 +495,12 @@
                        :drag-ignore-from="item.dragIgnoreFrom"
 
             >
-              <app :item="item" @edit-element="editElement(item,selectGroup.i)" @remove-element="removeElement(item,selectGroup.i)" @open-url="openUrl(item.element.data.url)"></app>
+              <app :item="item" :group-id="selectGroup.i"   @edit-app="onSubmitEdit" @remove-element="removeElement(item,selectGroup.i)" @open-url="openUrl(item.element.data.url)"></app>
             </grid-item>
           </grid-layout>
         </div>
       </a-modal>
-      <a-modal v-model="visibleEdit" :width="800" title="编辑组件" :centered="true" :footer="null">
-        <template>
-          <a-row type="flex">
-            <a-col flex="100px">
-              效果预览：
-              <div
-                style="background: rgba(0,0,0,0.1);display: inline-block;padding: 50px;margin: 20px;border-radius: 10px">
-                <div class="app">
-                  <div class="icon-wrapper" :style="this.iconStyle(this.formEdit)">
-                    <img :src="formEdit.icon">
-                  </div>
-                  <div class="name" :style="'background-color:'+this.formEdit.textColor" v-if="this.formEdit.useTextBg">
-                    {{ formEdit.name}}
-                  </div>
-                  <div class="name" v-else>
-                    {{ formEdit.name}}
-                  </div>
-                </div>
-              </div>
 
-            </a-col>
-            <a-col flex="1">
-              <a-form-model :model="formEdit" :label-col="labelCol" :wrapper-col="wrapperCol">
-                <template>
-                  <a-form-item label="图标名称">
-                    <a-input placeholder="输入组件名称" v-model="formEdit.name"></a-input>
-                  </a-form-item>
-                  <a-form-item label="链接">
-                    <a-input placeholder="输入链接地址" v-model="formEdit.url"></a-input>
-                  </a-form-item>
-                  <a-form-item label="图标圆角">
-                    <a-switch v-model="formEdit.useRadius"></a-switch>
-                    <div style="float: right">
-                      <a-input-number v-model="formEdit.radius" :min="0" :step="3" :max="50"></a-input-number>
-                      %
-                    </div>
-                  </a-form-item>
-                  <a-form-item label="图标背景">
-                    <a-switch v-model="formEdit.useBg"></a-switch>
-                    <v-swatches class="color-select" v-model="formEdit.color" popover-x="left"></v-swatches>
-                  </a-form-item>
-                  <a-form-item label="文字背景色">
-                    <a-switch v-model="formEdit.useTextBg"></a-switch>
-                    <v-swatches class="color-select" v-model="formEdit.textColor" popover-x="left"></v-swatches>
-                  </a-form-item>
-                  <a-form-item label="说明">
-                    <a-input v-model="formEdit.summary" type="textarea"></a-input>
-                  </a-form-item>
-                </template>
-                <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-                  <a-button type="primary" @click="onSubmitEdit">
-                    保存
-                  </a-button>
-                  <a-button style="margin-left: 10px;" @click="visibleEdit=false">
-                    取消
-                  </a-button>
-                </a-form-item>
-              </a-form-model>
-            </a-col>
-          </a-row>
-
-
-        </template>
-      </a-modal>
       <a-modal v-model="visibleAdd" title="添加组件" :width="820" :body-style="{height: '700px'}" :footer="null">
         <a-tabs default-active-key="3" tab-position="left" style="height: 100%">
           <!--              <a-tab-pane key="1" tab="自定义">-->
@@ -770,42 +703,21 @@
   const wallList = require('./wall.json')
   const { wallPaper, themeSetting, wallUrl } = require('../util/theme.js')
   const VueSelecto = require('vue-selecto')
+  window.selectedElements=[]
   var appVue = new Vue({
     el: '#app',
     components: {
-      VueSelecto,
-      VSwatches: window['vue-swatches']
+      VueSelecto
     },
     data () {
       return {
         mouseFlag:0,//鼠标移动标志，用于解决鼠标拖拽和单机的冲突导致跳转在拖拽后触发的问题。
-
-
         selectoContainer:document.getElementById('.desktop-content'),
         //编辑组件
-        visibleEdit: false,
-        labelCol: { span: 4 },
-        wrapperCol: { span: 14 },
 
-        formEdit: {
-          id: 0,
-          url: '',
-          name: '',
-          useBg: false,
-          color: '#00000000',
 
-          useTextBg: false,
-          textColor: '#00000000',
 
-          desc: '',
-          type: 'app', //card group,
-          useRadius: false,
-          radius: 8,
 
-          element: {
-            type: ''
-          }
-        },
 
         //选中了的elements
         selectedElements: [],
@@ -814,7 +726,7 @@
         //选中打开的item元素
         groupItems: [],
         visibleGroup: false,
-        selectGroup: { element: { name: '分组' } },
+        selectGroup: { element: { name: '分组' } ,i:0},
 
         cardText: '文字小卡片',
         cardLines: 1,
@@ -891,39 +803,45 @@
       /**
        * 编辑组件
        */
-      onSubmitEdit () {
-        console.log('submit!', this.formEdit)
+      onSubmitEdit (event) {
         let parentEl={}
-        if(this.formEdit.groupId===0){
+        let success=false
+        let data=event.data
+        console.log(data)
+        if(data.groupId===0){
            parentEl= this.layout
         }else{
            this.layout.forEach((item)=>{
-             if(item.i===this.formEdit.groupId)
+             if(item.i===data.groupId)
              {
                parentEl=item.element.data
              }
            })
         }
         for (let i = 0; i < parentEl.length; i++) {
-          if (Number(parentEl[i].i) === this.formEdit.id) {
-            let item = parentEl[i]
-            item.name = this.formEdit.name
-            item.element.data.name = this.formEdit.name
-            item.element.data.url = this.formEdit.url
-            item.element.data.summary = this.formEdit.summary
-            item.element.data.icon = this.formEdit.icon
-            item.element.data.useBg = this.formEdit.useBg
-            item.element.data.useTextBg = this.formEdit.useTextBg
-            item.element.data.useRadius = this.formEdit.useRadius
-            item.element.data.color = this.formEdit.color
-            item.element.data.textColor = this.formEdit.textColor
-            item.element.data.radius = this.formEdit.radius
-            parentEl[i] = item
+          if (Number(parentEl[i].i) === data.id) {
+            parentEl[i].name = data.name
+            parentEl[i].element.data.name = data.name
+            parentEl[i].element.data.url = data.url
+            parentEl[i].element.data.summary = data.summary
+            parentEl[i].element.data.icon = data.icon
+            parentEl[i].element.data.useBg =data.useBg
+            parentEl[i].element.data.useTextBg = data.useTextBg
+            parentEl[i].element.data.useRadius = data.useRadius
+            parentEl[i].element.data.color = data.color
+            parentEl[i].element.data.textColor = data.textColor
+            parentEl[i].element.data.radius = data.radius
+            success=true
           }
         }
         this.saveDesk()
-        this.$message.success({ content: '保存图标成功。' })
-        this.visibleEdit = false
+        if(success){
+          this.$message.success({ content: '保存图标成功。' })
+        }else{
+          this.$message.error({ content: '保存图标失败，未找到对应图标。' })
+        }
+
+
         //
         // console.log(item)
         // const element=item.element
@@ -952,7 +870,7 @@
       /**
        * 组合当前选中的全部元素成一个新的组
        */
-      composeSelectedElements () {
+      composeGroup () {
         function getElement (id) {
           for (let i = 0; i < appVue.layout.length; i++) {
             if (Number(appVue.layout[i].i) === Number(id)) {
@@ -1001,6 +919,8 @@
        * @param e
        */
       onSelect (e) {
+
+        this.selectedElements=[]
         e.added.forEach(el => {
           this.selectedElements.push(el.getAttribute('data-id'))
           el.classList.add('selected')
@@ -1014,6 +934,7 @@
 
           el.classList.remove('selected')
         })
+        console.log(this.selectedElements)
       },
       /**
        * 隐藏主菜单
@@ -1024,40 +945,7 @@
       changeMainMenuVisible (visible) {
         this.visibleMainMenu = visible
       },
-      /**
-       * 编辑组件
-       * @param item
-       * @param groupId 组id用于分组组件编辑
-       */
-      editElement (item,groupId=0) {
-        const element = item.element
-        this.visibleEdit = true
 
-        this.formEdit.type = element.type
-        if (element.type === 'app' && !!!item.name) {
-          this.formEdit.name = element.data.name
-        } else {
-          this.formEdit.name = item.name
-        }
-        if(groupId!==0){
-          this.formEdit.groupId=groupId
-          console.log(this.formEdit.groupId)
-        }else{
-          this.formEdit.groupId=0
-        }
-        this.formEdit.url = element.data.url
-        this.formEdit.icon = element.data.icon
-        this.formEdit.useBg = element.data.useBg
-        this.formEdit.color = element.data.color
-        this.formEdit.textColor = element.data.textColor
-        this.formEdit.useTextBg = element.data.useTextBg
-        this.formEdit.useRadius = element.data.useRadius
-        this.formEdit.radius = element.data.radius
-
-        this.formEdit.summary = element.data.summary
-        this.formEdit.element = item.element
-        this.formEdit.id = item.i
-      },
       iconStyle: function (item) {
         const style = {}
         if (!!item.useBg) {
@@ -1068,6 +956,7 @@
         }
         return style
       },
+
       /**
        * 删除元素
        * @param element
@@ -1127,7 +1016,7 @@
 
         const pos = {
           x: 0,
-          y: 0, // puts it at the bottom
+          y: 0, // puts it at tselectedElements bottom
           w: sizes[element.type].w,
           h: sizes[element.type].h,
           i: Date.now(),
