@@ -121,48 +121,10 @@
               shape="circle" type="primary" icon="skin" @click="setTheme"></a-button>
     <a-dropdown v-model="visibleMainMenu" :trigger="['contextmenu']" @visible-change="changeMainMenuVisible">
       <div class="main" @click="hideMainMenu" style="overflow-x: hidden">
-        <div class="main-top flex flex-direction justify-around align-center">
-          <img src="./assets/logo-noframe.svg" alt="" style="width: 84px" class="xt-logo"/>
-          <div class="top-search flex justify-between align-center">
-            <a-popover placement="bottomLeft" style="margin-left: 20px" v-model="visible">
-              <template slot="content">
-                <div class="card-list flex flex-wrap justify-center align-center">
-                  <div
-                    v-for="(item, index) in mySearch"
-                    :key="item.id"
-                    class="card flex justify-start align-center"
-                    @click="chooseSearch(item.id, index)"
-                  >
-                    <img :src="item.slinkLogo" alt=""/>
-                    <div style="margin-left: 15px">{{item.name}}</div>
-                  </div>
-                </div>
-              </template>
-              <template slot="title">
-                <div class="card-head flex justify-between">
-                  <div class="left flex align-center justify-center">选择您的默认搜索引擎:</div>
-                  <div class="right flex align-center justify-center" style="display: none">
-                    <p>搜索热词:</p>
-                    <a-switch size="small" default-checked style="margin-left: 5px;"></a-switch>
-                  </div>
-                </div>
-              </template>
-              <img :src="this.slinkLogo" alt="" style="width: 30px; cursor: pointer"/>
-            </a-popover>
-            <input
-              ref="searchInput"
-              type="text"
-              class="search"
-              :value="searchWord"
-              @input="searchWord = $event.target.value"
-              style="font-size: 20px"
-              @keypress.enter="enterSubmit"
-            />
-            <div @click="clklogo" style="color: #606266">
-              <a-icon type="search" class="search-logo" :style="{ fontSize: '30px' }"></a-icon>
-            </div>
-          </div>
-        </div>
+<!--        <div class="main-top flex flex-direction justify-around align-center">-->
+<!--&lt;!&ndash;          <img src="./assets/logo-noframe.svg" alt="" style="width: 84px" class="xt-logo"/>&ndash;&gt;-->
+
+<!--        </div>-->
         <div class="desktop" style="">
           <div id="desktop-content" class="desktop-content">
             <div>
@@ -191,12 +153,15 @@
                            :w="item.w"
                            :h="item.h"
                            :i="item.i"
+                           :max-w="item.maxW"
+                           :max-h="item.maxH"
                            :key="item.i"
                            :is-resizable="item.isResizable"
                            drag-allow-from=".allow-drag"
                            drag-ignore-from=".ignore-drag"
 
                 >
+                  <search  v-if="item.element.type==='search'" @remove-element="removeElement(item)"></search>
                   <app :selected-menu-visible="showSelectedMenu(item)" v-if="item.element.type==='app'" @compose-group="composeGroup"
                        :group-id="selectGroup.i" :item="item" @edit-app="onSubmitEdit" @remove-selected="removeSelected"
                        @remove-element="removeElement(item)" @open-url="openUrl(item.element.data.url)"></app>
@@ -533,7 +498,6 @@
                           {{ app.summary }}
                         </div>
                       </div>
-
                     </a-col>
                   </a-row>
                 </div>
@@ -543,7 +507,25 @@
           <a-tab-pane key="2" tab="小组件" style="overflow-y: auto;height: 650px">
             <ul class="tools" style="margin-right: 10px">
               <li>
-                <h2 class="element-name">1.桌面小便签</h2>
+                <h2 class="element-name">搜索工具栏</h2>
+                <p class="element-summary">支持多种搜索引擎。</p>
+                <div  class="element-content" style="padding: 10px">
+                  <a-row type="flex">
+                    <a-col flex="1">
+                      <search></search>
+                    </a-col>
+                    <a-col flex="100px" class="actions">
+                      <a-button type="primary"
+                                @click="addElement({type:'search',data:{}},{maxH:1})">
+                        添加组件
+                      </a-button>
+                    </a-col>
+                  </a-row>
+                </div>
+
+              </li>
+              <li>
+                <h2 class="element-name">桌面小便签</h2>
                 <p class="element-summary">可以自由修改内容、调整大小。</p>
                 <div class="element-content">
                   <a-row type="flex">
@@ -551,6 +533,7 @@
                       <h3 class="tip-head">预览</h3>
                       <div :class="'gradient gradient--'+this.selectedColor" class="title-card">
                         <div><textarea class="card-text" v-model="cardText" placeholder="输入卡片内容"></textarea></div>
+
                       </div>
                     </a-col>
                     <a-col flex="1" style="padding-left: 10px;padding-right: 10px">
@@ -573,7 +556,7 @@
               </li>
 
               <li>
-                <h2 class="element-name">2.个性时钟</h2>
+                <h2 class="element-name">个性时钟</h2>
                 <p class="element-summary">酷酷的时钟组件，支持多种款式</p>
                 <div class="element-content">
                   <div>
@@ -619,7 +602,7 @@
                 </div>
               </li>
               <li>
-                <h2 class="element-name">3.书签收藏夹（预告）</h2>
+                <h2 class="element-name">书签收藏夹（预告）</h2>
                 <p class="element-summary">即将上线。</p>
                 <div class="element-content" style="padding: 40px;text-align: center">
                   <a-spin tip="Coding...">
@@ -701,6 +684,7 @@
 </div>
 
 <script src="./components/appStore/index.js"></script>
+<script src="./components/elements/search.js"></script>
 <script src="./components/elements/app.js"></script>
 <script src="./components/elements/group.js"></script>
 <script src="./components/elements/clock1.js"></script>
@@ -749,14 +733,12 @@
         visibleMainMenu: false,//主页面的下拉菜单
 
         visibleAdd: false,//添加组件页面
-        mySearch: [],
+
         myApps: [],
         adVisible: false,
         mode: 'top',
-        slinkLogo: './assets/baidu.svg',
-        searchWord: '',
-        sfrontLink: 'https://www.baidu.com/s?wd=',
-        visible: false,
+
+
         bookdian1Show: false,
         bookdian2Show: false,
         bookdian3Show: false,
@@ -998,7 +980,7 @@
         console.log(e)
         this.visibleAdd = false
       },
-      addElement (element, posElement) {
+      addElement (element, posElement=null) {
         const sizes = {
           card: {
             w: 2, h: 1,
@@ -1014,7 +996,11 @@
             isResizable: false,
             dragIgnoreFrom: '.group-icons'
           },
-          clock: {}
+          clock: {},
+          search: {
+            w: 4, h: 1,
+            isResizable: true,
+          },
         }
 
         const pos = {
@@ -1024,10 +1010,12 @@
           h: sizes[element.type].h,
           i: Date.now(),
           //dragIgnoreFrom: !!!sizes[element.type].dragIgnoreFrom ? 'button,a' : sizes[element.type].dragIgnoreFrom,
+
           isResizable: sizes[element.type].isResizable
         }
-        Object.assign(pos, posElement)
-        console.log(pos)
+        if(posElement!==null){
+          Object.assign(pos, posElement)
+        }
         this.index++
         pos.element = element
         this.layout.push(pos)
@@ -1037,29 +1025,11 @@
         this.visibleAdd = true
         this.visibleMainMenu = false
       },
-      clklogo () {
-        location.href = this.sfrontLink + this.searchWord
-      },
+
       isEmpty (array) {
         return array.length === 0 && this.loadingHistory === false
       },
-      loadMysearch () {
-        window.$newtabRestore
-          .restoreFromDB()
-          .then((res) => {
-            this.mySearch = res
-            //console.log(res, '___searchres___')
-            res.forEach((element) => {
-              if (element.sDefault == 1) {
-                this.slinkLogo = element.slinkLogo
-                this.sfrontLink = element.frontLink
-              }
-            })
-          })
-          .catch((err) => {
-            console.log(err)
-          })
-      },
+
       loadBookmarks (count) {
         window.$newtabRestore
           .loadBookmarks(count)
@@ -1091,9 +1061,6 @@
             console.log(err)
           })
       },
-      enterSubmit () {
-        location.href = this.sfrontLink + this.searchWord
-      },
       mouseIn (i) {
         this[`navallShow${i + 1}`] = true
         this[`bookdian${i + 1}Show`] = true
@@ -1102,20 +1069,7 @@
         this[`navallShow${i + 1}`] = false
         this[`bookdian${i + 1}Show`] = false
       },
-      chooseSearch (id, index) {
-        this.visible = false
-        this.slinkLogo = this.mySearch[index].slinkLogo
-        this.sfrontLink = this.mySearch[index].frontLink
-        console.log(this.sfrontLink)
-        window.$newtabRestore
-          .saveDefaultDB(id)
-          .then(() => {
-            console.log('dexie设置默认搜索引擎成功')
-          })
-          .catch((err) => {
-            console.log(err)
-          })
-      },
+
       callback (val) {
         console.log(val)
       },
@@ -1256,10 +1210,9 @@
 
       this.loadMyapps()
       setTimeout(() => {
-        this.loadMysearch()
         this.loadBookmarks(6)
         this.loadHistory()
-        appVue.$refs['searchInput'].focus()
+
       }, 200)
       //获取壁纸
       wallPaper.get().then(data => {
