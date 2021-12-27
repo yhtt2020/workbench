@@ -36,36 +36,54 @@
     />
     </vue-selecto>
     <div class="side-bar">
+      <div style="flex: 1"></div>
       <div class="action-list">
-        <ul>
-          <li>
-            <a-popover placement="left">
-              <template slot="content">
-                我的个人桌面
-              </template>
-              <a class="active action ">
-                <a-icon type="home"></a-icon>
-                <div>主页</div>
-              </a>
-            </a-popover>
+        <div>
+          <a-popover>
+            <template slot="content">
+              我的个人桌面
+            </template>
+            <a class="active action ">
+              <a-icon type="home"></a-icon>
+              <div class="name">主页</div>
+            </a>
+          </a-popover>
 
-          </li>
-          <li>
-            <a-popover placement="left">
-              <template slot="content">
-                <h3>效率社区</h3>
-                <p>与全球的高效能人士共同成长</p>
-              </template>
-              <a href="https://com.thisky.com" class="action">
-                <a-icon type="message"></a-icon>
-                <div>社区</div>
-              </a>
-            </a-popover>
+        </div>
+        <div v-for="desk in desks">
+          <a class=" action ">
+            <a-icon :type="desk.icon"></a-icon>
+            <div class="name">{{desk.name}}</div>
+          </a>
+        </div>
+        <div>
+          <a-popover >
+            <template slot="content">
+              添加一个自定义桌面
+            </template>
+            <a @click="visibleCreateDesk=true" class="action">
+              <a-icon type="plus-circle"></a-icon>
+              <div class="name">添加</div>
+            </a>
+          </a-popover>
+          <create-desk @add-desk="addDesk" v-model="visibleCreateDesk"></create-desk>
 
-          </li>
-        </ul>
+        </div>
+        <div>
+          <a-popover >
+            <template slot="content">
+              <h3>效率社区</h3>
+              <p>与全球的高效能人士共同成长</p>
+            </template>
+            <a href="https://com.thisky.com" class="action">
+              <a-icon type="message"></a-icon>
+              <div class="name">社区</div>
+            </a>
+          </a-popover>
+
+        </div>
       </div>
-
+      <div style="flex: 1"></div>
     </div>
 
     <a-drawer style="z-index:1005"
@@ -121,10 +139,10 @@
               shape="circle" type="primary" icon="skin" @click="setTheme"></a-button>
     <a-dropdown v-model="visibleMainMenu" :trigger="['contextmenu']" @visible-change="changeMainMenuVisible">
       <div class="main" @click="hideMainMenu" style="overflow-x: hidden">
-<!--        <div class="main-top flex flex-direction justify-around align-center">-->
-<!--&lt;!&ndash;          <img src="./assets/logo-noframe.svg" alt="" style="width: 84px" class="xt-logo"/>&ndash;&gt;-->
+        <!--        <div class="main-top flex flex-direction justify-around align-center">-->
+        <!--&lt;!&ndash;          <img src="./assets/logo-noframe.svg" alt="" style="width: 84px" class="xt-logo"/>&ndash;&gt;-->
 
-<!--        </div>-->
+        <!--        </div>-->
         <div class="desktop" style="">
           <div id="desktop-content" class="desktop-content">
             <div>
@@ -161,8 +179,9 @@
                            drag-ignore-from=".ignore-drag"
 
                 >
-                  <search  v-if="item.element.type==='search'" @remove-element="removeElement(item)"></search>
-                  <app :selected-menu-visible="showSelectedMenu(item)" v-if="item.element.type==='app'" @compose-group="composeGroup"
+                  <search v-if="item.element.type==='search'" @remove-element="removeElement(item)"></search>
+                  <app :selected-menu-visible="showSelectedMenu(item)" v-if="item.element.type==='app'"
+                       @compose-group="composeGroup"
                        :group-id="selectGroup.i" :item="item" @edit-app="onSubmitEdit" @remove-selected="removeSelected"
                        @remove-element="removeElement(item)" @open-url="openUrl(item.element.data.url)"></app>
                   <group v-if="item.element.type==='group'" :item="item" @edit-group="editGroup(item)"
@@ -509,7 +528,7 @@
               <li>
                 <h2 class="element-name">搜索工具栏</h2>
                 <p class="element-summary">支持多种搜索引擎。</p>
-                <div  class="element-content" style="padding: 10px">
+                <div class="element-content" style="padding: 10px">
                   <a-row type="flex">
                     <a-col flex="1">
                       <search></search>
@@ -690,6 +709,7 @@
 <script src="./components/elements/clock1.js"></script>
 <script src="./components/elements/clock2.js"></script>
 <script src="./components/elements/clock3.js"></script>
+<script src="./components/createDesk.js"></script>
 <script>
   Vue.use(antd)
 
@@ -708,6 +728,8 @@
         selectoContainer: document.getElementById('.desktop-content'),
         //编辑组件
 
+        visibleCreateDesk: false,
+
         //选中了的elements
         selectedElements: [],
         popLayouts: [],
@@ -725,6 +747,7 @@
         selectedColor: 0,
 
         //桌面布局专用属性
+        desks: [],
         layout: [],
         draggable: true,
         resizable: true,
@@ -737,7 +760,6 @@
         myApps: [],
         adVisible: false,
         mode: 'top',
-
 
         bookdian1Show: false,
         bookdian2Show: false,
@@ -777,6 +799,14 @@
       }
     },
     methods: {
+      addDesk (data) {
+        data.id = Date.now()
+        data.layout = []
+        data.createTime = Date.now()
+        console.log(data)
+        this.desks.push(data)
+        localStorage.setItem('desks', JSON.stringify(this.desks))
+      },
       removeResizeHandleEvent () {
         setTimeout(() => {
           let handles = document.getElementsByClassName('vue-resizable-handle')
@@ -884,8 +914,8 @@
       },
       removeSelected () {
         this.selectedElements.forEach((itemId) => {
-           this.deleteElement(itemId)
-          })
+          this.deleteElement(itemId)
+        })
       },
       /**
        * 判断当前的元素是否被选中了
@@ -893,7 +923,7 @@
        * @returns {boolean}
        */
       showSelectedMenu (item) {
-        if (this.selectedElements.length > 1 && this.selectedElements.length>1) {
+        if (this.selectedElements.length > 1 && this.selectedElements.length > 1) {
           for (let i = 0; i < this.selectedElements.length; i++) {
             if (Number(this.selectedElements[i]) === item.i) {
               return true
@@ -980,7 +1010,7 @@
         console.log(e)
         this.visibleAdd = false
       },
-      addElement (element, posElement=null) {
+      addElement (element, posElement = null) {
         const sizes = {
           card: {
             w: 2, h: 1,
@@ -1013,7 +1043,7 @@
 
           isResizable: sizes[element.type].isResizable
         }
-        if(posElement!==null){
+        if (posElement !== null) {
           Object.assign(pos, posElement)
         }
         this.index++
@@ -1206,9 +1236,9 @@
         } catch (err) {
           console.log('desk损坏')
         }
-      }else{
-        const defaultDesk=require('./default.json')
-       this.layout=defaultDesk
+      } else {
+        const defaultDesk = require('./default.json')
+        this.layout = defaultDesk
       }
 
       this.loadMyapps()

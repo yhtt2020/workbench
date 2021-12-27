@@ -12,9 +12,9 @@
   min-height: 80px;
   min-width: 720px;
   overflow-x: hidden;
-  height: 100vh;
   width: 80%;
-  margin: 0 auto auto;
+  margin: 40px auto auto;
+  height: calc(100vh - 40px);
 }
 .desktop .desktop-content {
   overflow-y: auto;
@@ -384,5 +384,77 @@
 .top-search .search-logo:hover {
   color: #1890ff;
 }
+
+/*创建桌面小图标*/
+.icons-list li {
+  cursor: pointer;
+  float: left;
+  margin-right: 10px;
+  font-size: 20px;
+  line-height: 24px;
+  padding: 5px;
+}
+.icons-list li:hover {
+  background: rgba(204, 204, 204, 0.51);
+  border-radius: 3px;
+}
+.icons-list li.active {
+  background: rgba(204, 204, 204, 0.51);
+  border-radius: 3px;
+}
+
+/*最左侧栏*/
+.side-bar {
+  position: fixed;
+  height: 40px;
+  top: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.side-bar .action-list {
+  border-radius: 8px;
+  margin-top: 10px;
+  overflow: hidden;
+  backdrop-filter: blur(4px);
+  background: rgba(145, 145, 145, 0.51);
+  display: flex;
+  flex-direction: row;
+  width: auto;
+  height: auto;
+  align-self: center;
+}
+.side-bar .action-list .active {
+  background: rgba(255, 255, 255, 0.11) !important;
+}
+.side-bar .action-list .action {
+  text-align: center;
+  line-height: 40px;
+  height: 40px;
+  display: flex;
+  color: #ffffff;
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+  padding: 0 15px;
+}
+.side-bar .action-list .action:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+.side-bar .action-list .action i {
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+  vertical-align: middle;
+  font-size: 20px;
+  margin-top: 8px;
+  margin-right: 10px;
+}
+.side-bar .action-list .action .name {
+  vertical-align: middle;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/*最左侧栏end*/
 
 /*# sourceMappingURL=desktop.css.map */

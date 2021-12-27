@@ -22,9 +22,9 @@
   min-width: 720px;
   //max-width: 800px;
   overflow-x:hidden;
-  height:100vh;
   width: 80%;
-  margin: 0 auto auto;
+  margin: 40px auto auto;
+  height: calc(100vh - 40px);
   .desktop-content{
     overflow-y: auto;
     height: 100%;
@@ -448,3 +448,80 @@
     }
   }
 }
+
+
+/*创建桌面小图标*/
+.icons-list{
+    li{
+      cursor: pointer;
+      float: left;
+      margin-right: 10px;
+      font-size: 20px;
+      line-height: 24px;
+      &:hover{
+        background: rgba(204, 204, 204, 0.51);
+        border-radius: 3px;
+      }
+      &.active{
+        background: rgba(204, 204, 204, 0.51);
+        border-radius: 3px;
+      }
+      padding: 5px;
+    }
+}
+
+/*最左侧栏*/
+.side-bar{
+  position: fixed;
+  height: 40px;
+
+  top: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  .action-list {
+    border-radius: 8px;
+    margin-top: 10px;
+    overflow: hidden;
+    backdrop-filter: blur(4px);
+    background: rgba(145, 145, 145, 0.51);
+    display: flex;
+    flex-direction:row;
+    width: auto;
+    height: auto;
+    align-self: center;
+    .active{
+      background: rgba(255, 255, 255, 0.11) !important;
+    }
+    .action{
+      text-align: center;
+      line-height: 40px;
+      height: 40px;
+      display: flex;
+      color: #ffffff;
+      text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+      padding: 0 15px;
+      &:hover{
+        background: rgba(255,255,255,0.3);
+      }
+      i{
+        text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+        vertical-align: middle;
+        font-size: 20px;
+        margin-top: 8px;
+        margin-right: 10px;
+
+      }
+      .name{
+        vertical-align: middle;
+        font-size: 12px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
+
+}
+/*最左侧栏end*/
