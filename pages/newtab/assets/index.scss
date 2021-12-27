@@ -69,26 +69,7 @@ position: fixed;
         transform: translateY(-20px);
       }
     }
-    .top-search {
-      width: 706px;
-      height: 54px;
-      border-radius: 100px;
-      background-color: white;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-      position: relative;
-      .search {
-        width: 580px;
-        height: 50px;
-      }
-      .search-logo {
-        cursor: pointer;
-        z-index: 20;
-        margin-right: 20px;
-        &:hover {
-          color: #1890ff;
-        }
-      }
-    }
+
   }
   .main-bottom {
     width: 100%;

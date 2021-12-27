@@ -121,48 +121,10 @@
               shape="circle" type="primary" icon="skin" @click="setTheme"></a-button>
     <a-dropdown v-model="visibleMainMenu" :trigger="['contextmenu']" @visible-change="changeMainMenuVisible">
       <div class="main" @click="hideMainMenu" style="overflow-x: hidden">
-        <div class="main-top flex flex-direction justify-around align-center">
-          <img src="./assets/logo-noframe.svg" alt="" style="width: 84px" class="xt-logo"/>
-          <div class="top-search flex justify-between align-center">
-            <a-popover placement="bottomLeft" style="margin-left: 20px" v-model="visible">
-              <template slot="content">
-                <div class="card-list flex flex-wrap justify-center align-center">
-                  <div
-                    v-for="(item, index) in mySearch"
-                    :key="item.id"
-                    class="card flex justify-start align-center"
-                    @click="chooseSearch(item.id, index)"
-                  >
-                    <img :src="item.slinkLogo" alt=""/>
-                    <div style="margin-left: 15px">{{item.name}}</div>
-                  </div>
-                </div>
-              </template>
-              <template slot="title">
-                <div class="card-head flex justify-between">
-                  <div class="left flex align-center justify-center">选择您的默认搜索引擎:</div>
-                  <div class="right flex align-center justify-center" style="display: none">
-                    <p>搜索热词:</p>
-                    <a-switch size="small" default-checked style="margin-left: 5px;"></a-switch>
-                  </div>
-                </div>
-              </template>
-              <img :src="this.slinkLogo" alt="" style="width: 30px; cursor: pointer"/>
-            </a-popover>
-            <input
-              ref="searchInput"
-              type="text"
-              class="search"
-              :value="searchWord"
-              @input="searchWord = $event.target.value"
-              style="font-size: 20px"
-              @keypress.enter="enterSubmit"
-            />
-            <div @click="clklogo" style="color: #606266">
-              <a-icon type="search" class="search-logo" :style="{ fontSize: '30px' }"></a-icon>
-            </div>
-          </div>
-        </div>
+<!--        <div class="main-top flex flex-direction justify-around align-center">-->
+<!--&lt;!&ndash;          <img src="./assets/logo-noframe.svg" alt="" style="width: 84px" class="xt-logo"/>&ndash;&gt;-->
+
+<!--        </div>-->
         <div class="desktop" style="">
           <div id="desktop-content" class="desktop-content">
             <div>
@@ -191,74 +153,26 @@
                            :w="item.w"
                            :h="item.h"
                            :i="item.i"
+                           :max-w="item.maxW"
+                           :max-h="item.maxH"
                            :key="item.i"
                            :is-resizable="item.isResizable"
                            drag-allow-from=".allow-drag"
                            drag-ignore-from=".ignore-drag"
 
                 >
-                  <a-dropdown :trigger="['contextmenu']" v-if="item.element.type==='app'">
-                    <!--应用-->
-                    <div @mousedown.stop="" @contextmenu.stop="" class="app">
-                      <div draggable="true" @dragstart="setDrag($event,item.element.data)" class="icon-wrapper allow-drag" @mousedown.stop="appMouseDown" @mousemove.stop="appMouseMove" @mouseup.stop="appMouseUp($event,item.element.data.url)"
-                           :style="iconStyle(item.element.data)">
-                        <img
-                             :src="item.element.data.icon">
-                      </div>
-                      <div class="name allow-drag" :style="'background-color:'+item.element.data.textColor"
-                           v-if="item.element.data.useTextBg">
-                        {{ item.element.data.name}}
-                      </div>
-                      <div class="name allow-drag" v-else>
-                        {{ item.element.data.name}}
-                      </div>
-                    </div>
-                    <a-menu slot="overlay">
-                      <a-menu-item @click="removeElement(item)" key="remove">
-                        移除组件
-                      </a-menu-item>
-                      <a-menu-item @click="editElement(item)" key="edit">
-                        编辑组件
-                      </a-menu-item>
-                      <a-menu-item @mousedown.stop="" @click="composeSelectedElements()" key="3"
-                                   v-show="isSelected(item) && selectedElements.length>1">
-                        合并{{selectedElements.length}}个选中图标成组
-                      </a-menu-item>
-                    </a-menu>
-                  </a-dropdown>
-                  <a-dropdown  :trigger="['contextmenu']" v-if="item.element.type==='group'">
-                    <!--分组-->
-                    <div  class="app" @contextmenu.stop="" @mousedown.stop="">
-                      <div @mousemove.stop="this.mouseFlag=1"  @mousedown.stop="this.mouseFlag=0" @mouseup.stop="if(!this.mouseFlag) {openGroup(item) }" class="group-icons allow-drag">
-                        <div class="icon" v-if="iconEl.element.type==='app'" v-for="iconEl in item.element.data" >
-                          <img :src="iconEl.element.data.icon" :style="iconStyle(iconEl.element.data)">
-                        </div>
-                        <div class="icon" v-else>
-                          <div class="other">
-                          </div>
-                        </div>
-                      </div>
-                      <div class="name allow-drag" @mousedown.stop="">
-                        {{ item.element.name }}
-                      </div>
-                    </div>
-                    <a-menu slot="overlay">
-                      <a-menu-item @click="removeElement(item)" key="remove">
-                        移除整组
-                      </a-menu-item>
-<!--                      <a-menu-item @click="editElement(item)" key="2">-->
-<!--                        编辑组件-->
-<!--                      </a-menu-item>-->
-<!--                      <a-menu-item @mousedown.stop="" @click="composeSelectedElements()" key="3"-->
-<!--                                   v-show="isSelected(item) && selectedElements.length>1">-->
-<!--                        解散组-->
-<!--                      </a-menu-item>-->
-                    </a-menu>
-                  </a-dropdown>
+                  <search  v-if="item.element.type==='search'" @remove-element="removeElement(item)"></search>
+                  <app :selected-menu-visible="showSelectedMenu(item)" v-if="item.element.type==='app'" @compose-group="composeGroup"
+                       :group-id="selectGroup.i" :item="item" @edit-app="onSubmitEdit" @remove-selected="removeSelected"
+                       @remove-element="removeElement(item)" @open-url="openUrl(item.element.data.url)"></app>
+                  <group v-if="item.element.type==='group'" :item="item" @edit-group="editGroup(item)"
+                         @remove-element="removeElement(item)" @open-group="openGroup(item)"></group>
                   <a-dropdown @mousedown.stop="" :trigger="['contextmenu']" v-if="item.element.type==='card'">
                     <!--卡片-->
-                    <div @mousedown.stop="" @contextmenu.stop="this.visibleMainMenu=false" :class="'allow-drag gradient gradient--'+item.element.data.color" class="title-card" >
-                      <textarea  @mousedown.stop="" @change="saveDesk" spellcheck="false" class="card-text ignore-drag" v-model="item.element.data.text"
+                    <div @mousedown.stop="" @contextmenu.stop="this.visibleMainMenu=false"
+                         :class="'allow-drag gradient gradient--'+item.element.data.color" class="title-card">
+                      <textarea @mousedown.stop="" @change="saveDesk" spellcheck="false" class="card-text ignore-drag"
+                                v-model="item.element.data.text"
                                 placeholder="输入卡片内容"></textarea>
                     </div>
                     <a-menu slot="overlay">
@@ -268,23 +182,22 @@
                       <a-menu-item @click="editElement(item)" key="edit">
                         编辑组件
                       </a-menu-item>
-                      <a-menu-item @mousedown.stop="" @click="composeSelectedElements()" key="compose"
-                                   v-show="isSelected(item) && selectedElements.length>1">
-                        合并{{selectedElements.length}}个选中图标成组
-                      </a-menu-item>
                     </a-menu>
                   </a-dropdown>
                   <a-dropdown :trigger="['contextmenu']" v-if="item.element.type==='clock'">
                     <!--时钟-->
-                    <div  @mousedown.stop=""  @contextmenu.stop="">
-                      <div  class="clock allow-drag" style="padding-left: 25px" v-if="item.element.data.type===1">
+                    <div @mousedown.stop="" @contextmenu.stop="">
+                      <div class="clock allow-drag" style="padding-left: 25px" v-if="item.element.data.type===1">
                         <clock1></clock1>
 
                       </div>
-                      <div style="margin-top: 5px;background-color: rgba(40,40,40,0.55);height: 200px;border-radius: 40px" class="clock allow-drag" v-if="item.element.data.type===2">
+                      <div
+                        style="margin-top: 5px;background-color: rgba(40,40,40,0.55);height: 200px;border-radius: 40px"
+                        class="clock allow-drag" v-if="item.element.data.type===2">
                         <clock2></clock2>
                       </div>
-                      <div class="allow-drag" style="border-radius: 12px;padding-top: 35px"  v-if="item.element.data.type===3">
+                      <div class="allow-drag" style="border-radius: 12px;padding-top: 35px"
+                           v-if="item.element.data.type===3">
                         <clock3></clock3>
                       </div>
                     </div>
@@ -542,7 +455,7 @@
             :response="true"
             :use-css-transforms="false"
           >
-            <grid-item  :data-id="item.i"
+            <grid-item :data-id="item.i"
                        :class="{'element':true,'selectable':item.element.type==='app'}" v-for="item in groupItems"
                        :style="{'display':item.element.type==='card'?'flex':'block'}"
                        :x="item.x"
@@ -555,99 +468,13 @@
                        :drag-ignore-from="item.dragIgnoreFrom"
 
             >
-              <a-dropdown :trigger="['contextmenu']">
-                <!--应用-->
-                <div @mousedown.stop="" @contextmenu.stop="" class="app">
-                  <div draggable="true" @dragstart="setDrag($event,item.element.data)" class="icon-wrapper allow-drag" @mousedown.stop="appMouseDown" @mousemove.stop="appMouseMove" @mouseup.stop="appMouseUp($event,item.element.data.url)"
-                       :style="iconStyle(item.element.data)">
-                    <img
-                      :src="item.element.data.icon">
-                  </div>
-                  <div class="name allow-drag" :style="'background-color:'+item.element.data.textColor"
-                       v-if="item.element.data.useTextBg">
-                    {{ item.element.data.name}}
-                  </div>
-                  <div class="name allow-drag" v-else>
-                    {{ item.element.data.name}}
-                  </div>
-                </div>
-                <a-menu slot="overlay">
-                  <a-menu-item @click="removeElement(item,selectGroup.i)" key="remove">
-                    移除组件
-                  </a-menu-item>
-                  <a-menu-item @click="editElement(item,selectGroup.i)" key="edit">
-                    编辑组件
-                  </a-menu-item>
-                </a-menu>
-              </a-dropdown>
+              <app :item="item" :group-id="selectGroup.i" @edit-app="onSubmitEdit"
+                   @remove-element="removeElement(item,selectGroup.i)" @open-url="openUrl(item.element.data.url)"></app>
             </grid-item>
           </grid-layout>
         </div>
       </a-modal>
-      <a-modal v-model="visibleEdit" :width="800" title="编辑组件" :centered="true" :footer="null">
-        <template>
-          <a-row type="flex">
-            <a-col flex="100px">
-              效果预览：
-              <div
-                style="background: rgba(0,0,0,0.1);display: inline-block;padding: 50px;margin: 20px;border-radius: 10px">
-                <div class="app">
-                  <div class="icon-wrapper" :style="this.iconStyle(this.formEdit)">
-                    <img :src="formEdit.icon">
-                  </div>
-                  <div class="name" :style="'background-color:'+this.formEdit.textColor" v-if="this.formEdit.useTextBg">
-                    {{ formEdit.name}}
-                  </div>
-                  <div class="name" v-else>
-                    {{ formEdit.name}}
-                  </div>
-                </div>
-              </div>
 
-            </a-col>
-            <a-col flex="1">
-              <a-form-model :model="formEdit" :label-col="labelCol" :wrapper-col="wrapperCol">
-                <template>
-                  <a-form-item label="图标名称">
-                    <a-input placeholder="输入组件名称" v-model="formEdit.name"></a-input>
-                  </a-form-item>
-                  <a-form-item label="链接">
-                    <a-input placeholder="输入链接地址" v-model="formEdit.url"></a-input>
-                  </a-form-item>
-                  <a-form-item label="图标圆角">
-                    <a-switch v-model="formEdit.useRadius"></a-switch>
-                    <div style="float: right">
-                      <a-input-number v-model="formEdit.radius" :min="0" :step="3" :max="50"></a-input-number>
-                      %
-                    </div>
-                  </a-form-item>
-                  <a-form-item label="图标背景">
-                    <a-switch v-model="formEdit.useBg"></a-switch>
-                    <v-swatches class="color-select" v-model="formEdit.color" popover-x="left"></v-swatches>
-                  </a-form-item>
-                  <a-form-item label="文字背景色">
-                    <a-switch v-model="formEdit.useTextBg"></a-switch>
-                    <v-swatches class="color-select" v-model="formEdit.textColor" popover-x="left"></v-swatches>
-                  </a-form-item>
-                  <a-form-item label="说明">
-                    <a-input v-model="formEdit.summary" type="textarea"></a-input>
-                  </a-form-item>
-                </template>
-                <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-                  <a-button type="primary" @click="onSubmitEdit">
-                    保存
-                  </a-button>
-                  <a-button style="margin-left: 10px;" @click="visibleEdit=false">
-                    取消
-                  </a-button>
-                </a-form-item>
-              </a-form-model>
-            </a-col>
-          </a-row>
-
-
-        </template>
-      </a-modal>
       <a-modal v-model="visibleAdd" title="添加组件" :width="820" :body-style="{height: '700px'}" :footer="null">
         <a-tabs default-active-key="3" tab-position="left" style="height: 100%">
           <!--              <a-tab-pane key="1" tab="自定义">-->
@@ -671,7 +498,6 @@
                           {{ app.summary }}
                         </div>
                       </div>
-
                     </a-col>
                   </a-row>
                 </div>
@@ -679,9 +505,27 @@
             </a-tabs>
           </a-tab-pane>
           <a-tab-pane key="2" tab="小组件" style="overflow-y: auto;height: 650px">
-            <ul class="tools" style="margin-right: 10px" >
+            <ul class="tools" style="margin-right: 10px">
               <li>
-                <h2 class="element-name">1.桌面小便签</h2>
+                <h2 class="element-name">搜索工具栏</h2>
+                <p class="element-summary">支持多种搜索引擎。</p>
+                <div  class="element-content" style="padding: 10px">
+                  <a-row type="flex">
+                    <a-col flex="1">
+                      <search></search>
+                    </a-col>
+                    <a-col flex="100px" class="actions">
+                      <a-button type="primary"
+                                @click="addElement({type:'search',data:{}},{maxH:1})">
+                        添加组件
+                      </a-button>
+                    </a-col>
+                  </a-row>
+                </div>
+
+              </li>
+              <li>
+                <h2 class="element-name">桌面小便签</h2>
                 <p class="element-summary">可以自由修改内容、调整大小。</p>
                 <div class="element-content">
                   <a-row type="flex">
@@ -689,6 +533,7 @@
                       <h3 class="tip-head">预览</h3>
                       <div :class="'gradient gradient--'+this.selectedColor" class="title-card">
                         <div><textarea class="card-text" v-model="cardText" placeholder="输入卡片内容"></textarea></div>
+
                       </div>
                     </a-col>
                     <a-col flex="1" style="padding-left: 10px;padding-right: 10px">
@@ -711,7 +556,7 @@
               </li>
 
               <li>
-                <h2 class="element-name">2.个性时钟</h2>
+                <h2 class="element-name">个性时钟</h2>
                 <p class="element-summary">酷酷的时钟组件，支持多种款式</p>
                 <div class="element-content">
                   <div>
@@ -757,7 +602,7 @@
                 </div>
               </li>
               <li>
-                <h2 class="element-name">3.书签收藏夹（预告）</h2>
+                <h2 class="element-name">书签收藏夹（预告）</h2>
                 <p class="element-summary">即将上线。</p>
                 <div class="element-content" style="padding: 40px;text-align: center">
                   <a-spin tip="Coding...">
@@ -839,6 +684,9 @@
 </div>
 
 <script src="./components/appStore/index.js"></script>
+<script src="./components/elements/search.js"></script>
+<script src="./components/elements/app.js"></script>
+<script src="./components/elements/group.js"></script>
 <script src="./components/elements/clock1.js"></script>
 <script src="./components/elements/clock2.js"></script>
 <script src="./components/elements/clock3.js"></script>
@@ -848,42 +696,17 @@
   const wallList = require('./wall.json')
   const { wallPaper, themeSetting, wallUrl } = require('../util/theme.js')
   const VueSelecto = require('vue-selecto')
+  window.selectedElements = []
   var appVue = new Vue({
     el: '#app',
     components: {
-      VueSelecto,
-      VSwatches: window['vue-swatches']
+      VueSelecto
     },
     data () {
       return {
-        mouseFlag:0,//鼠标移动标志，用于解决鼠标拖拽和单机的冲突导致跳转在拖拽后触发的问题。
-
-
-        selectoContainer:document.getElementById('.desktop-content'),
+        mouseFlag: 0,//鼠标移动标志，用于解决鼠标拖拽和单机的冲突导致跳转在拖拽后触发的问题。
+        selectoContainer: document.getElementById('.desktop-content'),
         //编辑组件
-        visibleEdit: false,
-        labelCol: { span: 4 },
-        wrapperCol: { span: 14 },
-
-        formEdit: {
-          id: 0,
-          url: '',
-          name: '',
-          useBg: false,
-          color: '#00000000',
-
-          useTextBg: false,
-          textColor: '#00000000',
-
-          desc: '',
-          type: 'app', //card group,
-          useRadius: false,
-          radius: 8,
-
-          element: {
-            type: ''
-          }
-        },
 
         //选中了的elements
         selectedElements: [],
@@ -892,7 +715,7 @@
         //选中打开的item元素
         groupItems: [],
         visibleGroup: false,
-        selectGroup: { element: { name: '分组' } },
+        selectGroup: { element: { name: '分组' }, i: 0 },
 
         cardText: '文字小卡片',
         cardLines: 1,
@@ -910,14 +733,12 @@
         visibleMainMenu: false,//主页面的下拉菜单
 
         visibleAdd: false,//添加组件页面
-        mySearch: [],
+
         myApps: [],
         adVisible: false,
         mode: 'top',
-        slinkLogo: './assets/baidu.svg',
-        searchWord: '',
-        sfrontLink: 'https://www.baidu.com/s?wd=',
-        visible: false,
+
+
         bookdian1Show: false,
         bookdian2Show: false,
         bookdian3Show: false,
@@ -956,67 +777,56 @@
       }
     },
     methods: {
-      removeResizeHandleEvent(){
-        setTimeout(()=>{
-          let handles=document.getElementsByClassName('vue-resizable-handle')
-          for(let i=0;i<handles.length;i++){
-            handles[i].addEventListener('mousedown',(e)=>{
+      removeResizeHandleEvent () {
+        setTimeout(() => {
+          let handles = document.getElementsByClassName('vue-resizable-handle')
+          for (let i = 0; i < handles.length; i++) {
+            handles[i].addEventListener('mousedown', (e) => {
               e.stopPropagation()
             })
           }
-        },500)
-      },
-      /**
-       * app按钮上鼠标事件，区分移动和拖拽
-       */
-      appMouseDown(){
-        this.mouseFlag=0
-      },
-      appMouseMove(){
-        this.mouseFlag=1
-      },
-      appMouseUp(e,url){
-        console.log(e)
-        if(this.mouseFlag===0 && e.button===0) {
-          this.openUrl(url)
-        }
+        }, 500)
       },
       /**
        * 编辑组件
        */
-      onSubmitEdit () {
-        console.log('submit!', this.formEdit)
-        let parentEl={}
-        if(this.formEdit.groupId===0){
-           parentEl= this.layout
-        }else{
-           this.layout.forEach((item)=>{
-             if(item.i===this.formEdit.groupId)
-             {
-               parentEl=item.element.data
-             }
-           })
+      onSubmitEdit (event) {
+        let parentEl = {}
+        let success = false
+        let data = event.data
+        console.log(data)
+        if (data.groupId === 0) {
+          parentEl = this.layout
+        } else {
+          this.layout.forEach((item) => {
+            if (item.i === data.groupId) {
+              parentEl = item.element.data
+            }
+          })
         }
         for (let i = 0; i < parentEl.length; i++) {
-          if (Number(parentEl[i].i) === this.formEdit.id) {
-            let item = parentEl[i]
-            item.name = this.formEdit.name
-            item.element.data.name = this.formEdit.name
-            item.element.data.url = this.formEdit.url
-            item.element.data.summary = this.formEdit.summary
-            item.element.data.icon = this.formEdit.icon
-            item.element.data.useBg = this.formEdit.useBg
-            item.element.data.useTextBg = this.formEdit.useTextBg
-            item.element.data.useRadius = this.formEdit.useRadius
-            item.element.data.color = this.formEdit.color
-            item.element.data.textColor = this.formEdit.textColor
-            item.element.data.radius = this.formEdit.radius
-            parentEl[i] = item
+          if (Number(parentEl[i].i) === data.id) {
+            parentEl[i].name = data.name
+            parentEl[i].element.data.name = data.name
+            parentEl[i].element.data.url = data.url
+            parentEl[i].element.data.summary = data.summary
+            parentEl[i].element.data.icon = data.icon
+            parentEl[i].element.data.useBg = data.useBg
+            parentEl[i].element.data.useTextBg = data.useTextBg
+            parentEl[i].element.data.useRadius = data.useRadius
+            parentEl[i].element.data.color = data.color
+            parentEl[i].element.data.textColor = data.textColor
+            parentEl[i].element.data.radius = data.radius
+            success = true
           }
         }
         this.saveDesk()
-        this.$message.success({ content: '保存图标成功。' })
-        this.visibleEdit = false
+        if (success) {
+          this.$message.success({ content: '保存图标成功。' })
+        } else {
+          this.$message.error({ content: '保存图标失败，未找到对应图标。' })
+        }
+
         //
         // console.log(item)
         // const element=item.element
@@ -1041,29 +851,27 @@
         this.groupItems = item.element.data //是一个数组
         this.selectGroup = item
         this.visibleGroup = true
-        console.log(item)
+      },
+      deleteElement (id) {
+        for (let i = 0; i < appVue.layout.length; i++) {
+          if (Number(appVue.layout[i].i) === Number(id)) {
+            const item = appVue.layout[i]
+            appVue.layout.splice(i, 1)
+            return item
+          }
+        }
+        return null
       },
       /**
        * 组合当前选中的全部元素成一个新的组
        */
-      composeSelectedElements () {
-        function getElement (id) {
-          for (let i = 0; i < appVue.layout.length; i++) {
-            if (Number(appVue.layout[i].i) === Number(id)) {
-              const item = appVue.layout[i]
-              appVue.layout.splice(i, 1)
-              return item
-            }
-          }
-          return null
-        }
-
+      composeGroup () {
         let composeItems = []
         //用于计算分布的变量
         const colNum = 5
         let index = 0
-        this.selectedElements.forEach((item) => {
-          let gotItem = getElement(item)
+        this.selectedElements.forEach((itemId) => {
+          let gotItem = this.deleteElement(itemId)
           if (gotItem !== null) {
             gotItem.x = index % colNum
             gotItem.y = Math.floor(index / colNum)
@@ -1073,16 +881,19 @@
           }
         })
         this.addElement({ type: 'group', name: '分组', data: composeItems })
-        console.log(composeItems)
-
+      },
+      removeSelected () {
+        this.selectedElements.forEach((itemId) => {
+           this.deleteElement(itemId)
+          })
       },
       /**
        * 判断当前的元素是否被选中了
        * @param item
        * @returns {boolean}
        */
-      isSelected (item) {
-        if (this.selectedElements.length > 0) {
+      showSelectedMenu (item) {
+        if (this.selectedElements.length > 1 && this.selectedElements.length>1) {
           for (let i = 0; i < this.selectedElements.length; i++) {
             if (Number(this.selectedElements[i]) === item.i) {
               return true
@@ -1109,6 +920,7 @@
 
           el.classList.remove('selected')
         })
+        console.log(this.selectedElements)
       },
       /**
        * 隐藏主菜单
@@ -1119,41 +931,7 @@
       changeMainMenuVisible (visible) {
         this.visibleMainMenu = visible
       },
-      /**
-       * 编辑组件
-       * @param item
-       * @param groupId 组id用于分组组件编辑
-       */
-      editElement (item,groupId=0) {
-        console.log(item)
-        const element = item.element
-        this.visibleEdit = true
 
-        this.formEdit.type = element.type
-        if (element.type === 'app' && !!!item.name) {
-          this.formEdit.name = element.data.name
-        } else {
-          this.formEdit.name = item.name
-        }
-        if(groupId!==0){
-          this.formEdit.groupId=groupId
-          console.log(this.formEdit.groupId)
-        }else{
-          this.formEdit.groupId=0
-        }
-        this.formEdit.url = element.data.url
-        this.formEdit.icon = element.data.icon
-        this.formEdit.useBg = element.data.useBg
-        this.formEdit.color = element.data.color
-        this.formEdit.textColor = element.data.textColor
-        this.formEdit.useTextBg = element.data.useTextBg
-        this.formEdit.useRadius = element.data.useRadius
-        this.formEdit.radius = element.data.radius
-
-        this.formEdit.summary = element.data.summary
-        this.formEdit.element = item.element
-        this.formEdit.id = item.i
-      },
       iconStyle: function (item) {
         const style = {}
         if (!!item.useBg) {
@@ -1164,16 +942,17 @@
         }
         return style
       },
+
       /**
        * 删除元素
        * @param element
        */
-      removeElement (element,groupId=0) {
-        let parentEl=this.layout
-        if(groupId!==0){
-          this.layout.forEach((item)=>{
-            if(item.i===groupId){
-              parentEl=item.element.data
+      removeElement (element, groupId = 0) {
+        let parentEl = this.layout
+        if (groupId !== 0) {
+          this.layout.forEach((item) => {
+            if (item.i === groupId) {
+              parentEl = item.element.data
             }
           })
         }
@@ -1201,7 +980,7 @@
         console.log(e)
         this.visibleAdd = false
       },
-      addElement (element,posElement) {
+      addElement (element, posElement=null) {
         const sizes = {
           card: {
             w: 2, h: 1,
@@ -1217,21 +996,26 @@
             isResizable: false,
             dragIgnoreFrom: '.group-icons'
           },
-          clock:{
-          }
+          clock: {},
+          search: {
+            w: 4, h: 1,
+            isResizable: true,
+          },
         }
 
         const pos = {
           x: 0,
-          y: 0, // puts it at the bottom
+          y: 0, // puts it at tselectedElements bottom
           w: sizes[element.type].w,
           h: sizes[element.type].h,
           i: Date.now(),
           //dragIgnoreFrom: !!!sizes[element.type].dragIgnoreFrom ? 'button,a' : sizes[element.type].dragIgnoreFrom,
+
           isResizable: sizes[element.type].isResizable
         }
-        Object.assign(pos,posElement)
-        console.log(pos)
+        if(posElement!==null){
+          Object.assign(pos, posElement)
+        }
         this.index++
         pos.element = element
         this.layout.push(pos)
@@ -1241,29 +1025,11 @@
         this.visibleAdd = true
         this.visibleMainMenu = false
       },
-      clklogo () {
-        location.href = this.sfrontLink + this.searchWord
-      },
+
       isEmpty (array) {
         return array.length === 0 && this.loadingHistory === false
       },
-      loadMysearch () {
-        window.$newtabRestore
-          .restoreFromDB()
-          .then((res) => {
-            this.mySearch = res
-            //console.log(res, '___searchres___')
-            res.forEach((element) => {
-              if (element.sDefault == 1) {
-                this.slinkLogo = element.slinkLogo
-                this.sfrontLink = element.frontLink
-              }
-            })
-          })
-          .catch((err) => {
-            console.log(err)
-          })
-      },
+
       loadBookmarks (count) {
         window.$newtabRestore
           .loadBookmarks(count)
@@ -1295,9 +1061,6 @@
             console.log(err)
           })
       },
-      enterSubmit () {
-        location.href = this.sfrontLink + this.searchWord
-      },
       mouseIn (i) {
         this[`navallShow${i + 1}`] = true
         this[`bookdian${i + 1}Show`] = true
@@ -1306,20 +1069,7 @@
         this[`navallShow${i + 1}`] = false
         this[`bookdian${i + 1}Show`] = false
       },
-      chooseSearch (id, index) {
-        this.visible = false
-        this.slinkLogo = this.mySearch[index].slinkLogo
-        this.sfrontLink = this.mySearch[index].frontLink
-        console.log(this.sfrontLink)
-        window.$newtabRestore
-          .saveDefaultDB(id)
-          .then(() => {
-            console.log('dexie设置默认搜索引擎成功')
-          })
-          .catch((err) => {
-            console.log(err)
-          })
-      },
+
       callback (val) {
         console.log(val)
       },
@@ -1460,10 +1210,9 @@
 
       this.loadMyapps()
       setTimeout(() => {
-        this.loadMysearch()
         this.loadBookmarks(6)
         this.loadHistory()
-        appVue.$refs['searchInput'].focus()
+
       }, 200)
       //获取壁纸
       wallPaper.get().then(data => {
