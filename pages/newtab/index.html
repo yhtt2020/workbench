@@ -43,34 +43,34 @@
             <template slot="content">
               我的个人桌面
             </template>
-            <a class="active action ">
+            <div @click="changeDesk(0)" :class="{'action':1,'active':0===this.selectedDesk}">
               <a-icon type="home"></a-icon>
               <div class="name">主页</div>
-            </a>
+            </div>
           </a-popover>
 
         </div>
         <div v-for="desk in desks">
-          <a class=" action ">
+          <div @click="changeDesk(desk.id)" :class="{'action':1,'active':isSelectedDesk(desk.id)}">
             <a-icon :type="desk.icon"></a-icon>
             <div class="name">{{desk.name}}</div>
-          </a>
+          </div>
         </div>
         <div>
-          <a-popover >
+          <a-popover>
             <template slot="content">
               添加一个自定义桌面
             </template>
-            <a @click="visibleCreateDesk=true" class="action">
+            <div @click="visibleCreateDesk=true" class="action">
               <a-icon type="plus-circle"></a-icon>
               <div class="name">添加</div>
-            </a>
+            </div>
           </a-popover>
           <create-desk @add-desk="addDesk" v-model="visibleCreateDesk"></create-desk>
 
         </div>
         <div>
-          <a-popover >
+          <a-popover>
             <template slot="content">
               <h3>效率社区</h3>
               <p>与全球的高效能人士共同成长</p>
@@ -729,6 +729,7 @@
         //编辑组件
 
         visibleCreateDesk: false,
+        selectedDesk: 0,
 
         //选中了的elements
         selectedElements: [],
@@ -799,6 +800,13 @@
       }
     },
     methods: {
+      changeDesk (id) {
+        this.selectedDesk = id
+        console.log(this.selectedDesk)
+      },
+      isSelectedDesk (id) {
+        return id === this.selectedDesk
+      },
       addDesk (data) {
         data.id = Date.now()
         data.layout = []
