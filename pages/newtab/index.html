@@ -802,10 +802,13 @@
     methods: {
       changeDesk (id) {
         this.selectedDesk = id
+        localStorage.setItem('selectedDesk',id)
+        this.loadDesk(id)
         console.log(this.selectedDesk)
+
       },
       isSelectedDesk (id) {
-        return id === this.selectedDesk
+        return Number(id) === Number(this.selectedDesk)
       },
       addDesk (data) {
         data.id = Date.now()
@@ -814,6 +817,7 @@
         console.log(data)
         this.desks.push(data)
         localStorage.setItem('desks', JSON.stringify(this.desks))
+        localStorage.setItem('desk_'+data.id,'[]')
       },
       removeResizeHandleEvent () {
         setTimeout(() => {
@@ -1007,8 +1011,52 @@
         console.log(e)
         this.cardText = e.value
       },
+      /**
+       * 保存桌面布局
+       */
       saveDesk () {
-        localStorage.setItem('desk', JSON.stringify(this.layout))
+        console.log('save')
+        localStorage.setItem('desk_'+this.selectedDesk, JSON.stringify(this.layout))
+      },
+      /**
+       * 读入一个桌面布局
+       * @param id
+       */
+      loadDesk(id=-1){
+        let storedSelectedDesk=0
+        if(id===-1){
+          //如果没有赋值桌面id，则认为是初始化读取，则需要对未存储过选中的桌面做判断
+          storedSelectedDesk=localStorage.getItem('selectedDesk')
+          if(!!!storedSelectedDesk)
+          {
+            //默认选择0
+            storedSelectedDesk=0
+
+          }
+          this.selectedDesk=storedSelectedDesk
+        }
+        console.log(this.selectedDesk)
+
+        //读入对应桌面
+        const deskLayout = localStorage.getItem('desk_'+this.selectedDesk)
+        console.log(id)
+        console.log(this.selectedDesk)
+        if (!!deskLayout) {
+          //如果存在桌面
+          try {
+            let layout= JSON.parse(deskLayout)
+            if(layout.length===0 && id===0){
+              //发现桌面是空的
+              const defaultDesk = require('./default.json')
+              layout = defaultDesk
+            }
+            this.layout =layout
+            console.log(layout)
+          } catch (err) {
+            console.log('desk损坏')
+          }
+        }
+
       },
       layoutUpdatedEvent () {
         this.saveDesk()
@@ -1222,6 +1270,8 @@
         this.drag = false
       },
 
+
+
     },
 
     computed: {
@@ -1237,18 +1287,8 @@
 
     },
     mounted () {
-      const desk = localStorage.getItem('desk')
-      if (!!desk) {
-        try {
-          this.layout = JSON.parse(desk)
-        } catch (err) {
-          console.log('desk损坏')
-        }
-      } else {
-        const defaultDesk = require('./default.json')
-        this.layout = defaultDesk
-      }
-
+      this.desks=JSON.parse(localStorage.getItem('desks'))
+      this.loadDesk()
       this.loadMyapps()
       setTimeout(() => {
         this.loadBookmarks(6)
