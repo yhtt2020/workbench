@@ -56,6 +56,16 @@ app.on('ready', () => {
     }
   })
   function createGroupIMWindow(){
+    let boundsSetting=settings.get('groupWindowBounds')
+    if(!boundsSetting){
+      boundsSetting={
+        x:50+ mainWindow.getBounds().x,
+        y:150 +mainWindow.getBounds().y,
+        width:900,
+        height:700
+      }
+      //如果未设置，则不用管
+    }
     if(groupIMWindow===null){
       groupIMWindow = new BrowserWindow({
         frame: true,
@@ -64,12 +74,12 @@ app.on('ready', () => {
         modal: false,
         hasShadow: true,
         minWidth: 600,
-        width:900,
+        width:boundsSetting.width,
         autoHideMenuBar: true,
         minHeight: 600,
-        height:700,
-        x: 50+ mainWindow.getBounds().x,
-        y: 150 +mainWindow.getBounds().y,
+        height:boundsSetting.height,
+        x: boundsSetting.x ,
+        y: boundsSetting.y,
         acceptFirstMouse: true,
         maximizable: false,
         visualEffectState: 'active',
@@ -85,6 +95,12 @@ app.on('ready', () => {
             ...((isDevelopmentMode ? ['--development-mode'] : [])),
           ]
         }
+      })
+      groupIMWindow.on('resized',()=>{
+        settings.set('groupWindowBounds',groupIMWindow.getBounds())
+      })
+      groupIMWindow.on('moved',()=>{
+        settings.set('groupWindowBounds',groupIMWindow.getBounds())
       })
       groupIMWindow.setMenu(null)
       let im_url=''
