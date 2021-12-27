@@ -1206,6 +1206,9 @@
         } catch (err) {
           console.log('desk损坏')
         }
+      }else{
+        const defaultDesk=require('./default.json')
+       this.layout=defaultDesk
       }
 
       this.loadMyapps()
