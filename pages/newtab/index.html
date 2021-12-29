@@ -1031,7 +1031,13 @@
           {
             //默认选择0
             storedSelectedDesk=0
-
+            //如果存在老桌面，则自动完成迁移，备份，并移除。
+            let oldDesk=localStorage.getItem('desk')
+            if(oldDesk){
+              localStorage.setItem('desk_0',oldDesk)
+              localStorage.setItem('desk_bk',oldDesk)
+              localStorage.removeItem('desk')
+            }
           }
           this.selectedDesk=storedSelectedDesk
         }
