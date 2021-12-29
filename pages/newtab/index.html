@@ -1294,6 +1294,11 @@
     },
     mounted () {
       this.desks=JSON.parse(localStorage.getItem('desks'))
+      if(!!!this.desks){
+        //desks不存在,则初始化一个空对象
+        this.desks=[]
+        localStorage.setItem('desks',JSON.stringify([]))
+      }
       this.loadDesk()
       this.loadMyapps()
       setTimeout(() => {
