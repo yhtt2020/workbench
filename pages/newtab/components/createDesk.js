@@ -8,8 +8,7 @@ const createDeskTpl = `
       @ok="handleOk"
       @cancel="handleCancel"
 
-      cancelText="取消"
-    >
+      cancelText="取消">
       <p>桌面图标</p>
       <p >
       <ul class="icons-list">
@@ -48,7 +47,6 @@ Vue.component('createDesk', {
     return {
       name:'新桌面',
       icon:'bulb',
-
       icons: [
         'bulb','account-book', 'alert', 'api', 'appstore', 'audio', 'bank', 'bell', 'book', 'bug',  'calculator', 'build', 'calendar', 'camera', 'car'
       ]
@@ -58,7 +56,6 @@ Vue.component('createDesk', {
 
   },
   mounted () {
-
   },
   methods: {
     isSelectedIcon(icon){
@@ -79,6 +76,7 @@ Vue.component('createDesk', {
         this.$message.error('必须输入桌面名称')
         return
       }
+      this.visibleChange()
       this.$emit('add-desk',{icon:this.icon,name:this.name})
     },
     selectIcon(icon){

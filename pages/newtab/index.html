@@ -51,10 +51,20 @@
 
         </div>
         <div v-for="desk in desks">
-          <div @click="changeDesk(desk.id)" :class="{'action':1,'active':isSelectedDesk(desk.id)}">
-            <a-icon :type="desk.icon"></a-icon>
-            <div class="name">{{desk.name}}</div>
-          </div>
+          <a-dropdown :trigger="['contextmenu']">
+            <div @click="changeDesk(desk.id)" :class="{'action':1,'active':isSelectedDesk(desk.id)}">
+              <a-icon :type="desk.icon"></a-icon>
+              <div class="name">{{desk.name}}</div>
+            </div>
+            <a-menu slot="overlay">
+              <a-menu-item key="editDesk">
+                编辑
+              </a-menu-item>
+              <a-menu-item @click="removeDesk(desk)" key="removeDesk" style="color: red">
+                删除
+              </a-menu-item>
+            </a-menu>
+          </a-dropdown>
         </div>
         <div>
           <a-popover>
@@ -814,10 +824,36 @@
         data.id = Date.now()
         data.layout = []
         data.createTime = Date.now()
-        console.log(data)
         this.desks.push(data)
         localStorage.setItem('desks', JSON.stringify(this.desks))
         localStorage.setItem('desk_'+data.id,'[]')
+      },
+      removeDesk(desk){
+        let that=this
+        this.$confirm({
+          title: `删除桌面确认`,
+          okText:'保留',
+          cancelText:`确认删除！！`,
+          content:  function(createElement){
+            return createElement(`div`,'确认删除桌面：'+desk.name+` ？ 删除后无法恢复。` )
+              //createElement(`<div style="color:red;">确认删除桌面，删除后不可恢复？</div>`)
+          },
+          onOk() {
+            console.log('OK');
+          },
+          onCancel() {
+            //todo实现删除逻辑
+            for(let i=0;i<that.desks.length;i++){
+              if(that.desks[i].id===desk.id)
+              {
+                that.desks.splice(i,1)
+              }
+            }
+            localStorage.removeItem('desk_'+desk.id)
+            that.selectedDesk=0
+            that.loadDesk(0)
+          }
+        });
       },
       removeResizeHandleEvent () {
         setTimeout(() => {
@@ -1015,7 +1051,6 @@
        * 保存桌面布局
        */
       saveDesk () {
-        console.log('save')
         localStorage.setItem('desk_'+this.selectedDesk, JSON.stringify(this.layout))
       },
       /**
@@ -1061,6 +1096,8 @@
           } catch (err) {
             console.log('desk损坏')
           }
+        }else{
+          this.layout=[]
         }
 
       },
@@ -1275,9 +1312,6 @@
       onEnd () {
         this.drag = false
       },
-
-
-
     },
 
     computed: {
