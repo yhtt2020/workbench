@@ -1,0 +1,13 @@
+.coolClockWrap {
+  margin: auto;
+  background: radial-gradient(#f8f6f5, #f7f5f4, #e4e3e2, #b9b8b7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  width: 360px;
+  height: 360px;
+  box-shadow: 0 0 10px #000c17;
+}
+
+/*# sourceMappingURL=clock3.css.map */

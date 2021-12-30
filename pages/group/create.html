@@ -15,7 +15,7 @@
     </script>
     <div id="appVue">
       <div style="padding: 20px; overflow: hidden">
-        <template style="">
+        <template>
           <a-form id="components-form-demo-validate-other" :form="form" v-bind="formItemLayout" @submit="handleSubmit">
             <a-form-item :label-col="formItemLayout.labelCol" :wrapper-col="formItemLayout.wrapperCol" label="团队名称">
               <a-input
@@ -106,7 +106,6 @@
             }
             const currentUser = await db.system.where('name').equals('currentUser').first()
             values.logo = appVue.$data.groupLogo
-            values.uid = currentUser.value.uid
             const result = await axios({
               method: 'post',
               url: '/app/browser/group/add',
@@ -114,11 +113,11 @@
               data: values,
             })
             if(result.code === 1000) {
-              this.$message.success('成功创建团队:' + values.name)
               ipc.send('refreshMyGroups')
-              setTimeout(function() {
-                ipc.send('closeCreateGroupWindow')
-              }, 1000)
+              ipc.send('closeCreateGroupWindow')
+              ipc.send('message',{type:'success',config:{content: '成功创建团队:' + values.name, key: Date.now()}})
+              //如果来自group-comp创建成功还需要转发一条消息出去通知group-comp去更新一下group的信息
+              ipc.send('refreshGroupComp')
             }
           })
         },

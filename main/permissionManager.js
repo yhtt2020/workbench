@@ -85,9 +85,29 @@ function pagePermissionRequestHandler (webContents, permission, callback, detail
     callback(false)
     return
   }
+  //允许的网页权限
+  // clipboard-read - Request access to read from the clipboard.
+  //   media - Request access to media devices such as camera, microphone and speakers.
+  //   display-capture - Request access to capture the screen.
+  //   mediaKeySystem - Request access to DRM protected content.
+  //   geolocation - Request access to user's current location.
+  // notifications - Request notification creation and the ability to display them in the user's system tray.
+  // midi - Request MIDI access in the webmidi API.
+  //   midiSysex - Request the use of system exclusive messages in the webmidi API.
+  //   pointerLock - Request to directly interpret mouse movements as an input method. Click here to know more.
+  //   fullscreen - Request for the app to enter fullscreen mode.
+  //   openExternal - Request to open links in external applications.
+  //   unknown - An unrecognized permission request
+  const permissions=[
+     'notifications',
+     'fullscreen',
+    // 'clipboard-sanitized-write',
+    'media'
+  ]
 
-  if (permission === 'fullscreen' || permission === 'clipboard-sanitized-write') {
+  if ( permissions.includes(permission)) {
     callback(true)
+    //todo 应当在ui层加入选择
     return
   }
 

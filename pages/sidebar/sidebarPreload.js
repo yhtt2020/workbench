@@ -3,7 +3,7 @@ require('../../dist/localization.build.js')
 const electron = require('electron')
 const ipc = electron.ipcRenderer
 const { db } = require('../../js/util/database.js')
-let mainWindowId = 0
+window.mainWindowId = 0 //主窗体id
 window.l = l
 window.db= db
 const {
@@ -41,7 +41,12 @@ window.addEventListener('message', function (e) {
         id: e.data.id,
         index: e.data.index
       })
-
+      break
+    case 'switchToTab':
+      ipc.sendTo(mainWindowId, 'switchToTab', {
+        taskId: e.data.taskId ? e.data.taskId : null,
+        tabId: e.data.tabId
+      })
       break
     case 'resortTasks':
       ipc.sendTo(mainWindowId, 'resortTasks', {
@@ -100,7 +105,6 @@ ipc.on('addItem', function (e, data) {
 ipc.on('refreshMyGroups', async ()=> {
   const currentUser = await db.system.where('name').equals('currentUser').first()
   await window.$store.dispatch('getGroups', {
-    uid: currentUser.value.uid,
     token: currentUser.value.token
   })
 })
@@ -116,8 +120,6 @@ function getCurrentUser () {
         user = item.value
         window.$store.state.user = user
       }
-      console.log('获取当前用户成功')
-      console.log(user)
     }
   ).catch((err) => {
     console.log('获取当前用户失败')
@@ -157,7 +159,7 @@ ipc.on('userLogin', function (e, data) {
   db.system.put({
     name:'currentUser',
     value: user
-  }).then((msg) => {
+  }).then(async (msg) => {
     console.log(msg)
     db.accounts.put({
       uid: user.uid,
@@ -166,6 +168,9 @@ ipc.on('userLogin', function (e, data) {
       lastLoginTime: new Date().getTime(),
       token: user.token,
       code: user.code
+    })
+    await window.$store.dispatch('getGroups', {
+      token: user.token
     })
   }).catch((err) => {
     console.log('登录后设置当前用户失败')

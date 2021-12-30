@@ -1,5 +1,6 @@
 var urlParser = require('util/urlParser.js')
 var settings = require('util/settings/settings.js')
+const passwordModel = require('../pages/util/model/passwordModel')
 /* implements selecting webviews, switching between them, and creating new ones. */
 
 var placeholderImg = document.getElementById('webview-placeholder')
@@ -28,17 +29,22 @@ function captureCurrentTab (options) {
 
 // called whenever a new page starts loading, or an in-page navigation occurs
 function onPageURLChange (tab, url) {
-  if (url.indexOf('https://') === 0 || url.indexOf('about:') === 0 || url.indexOf('chrome:') === 0 || url.indexOf('file://') === 0) {
-    tabs.update(tab, {
-      secure: true,
-      url: url
-    })
-  } else {
-    tabs.update(tab, {
-      secure: false,
-      url: url
-    })
-  }
+    //增加了ts开头的页面的安全提示，避免提示不安全
+    webviews.updateToolBarStatus(tabs.get(tab))
+    if (url.indexOf('https://') === 0 || url.indexOf('about:') === 0 || url.indexOf('chrome:') === 0 || url.indexOf('file://') === 0 || url.indexOf('ts://') === 0) {
+      tabs.update(tab, {
+        secure: true,
+        url: url
+      })
+      webviews.updateToolbarSecure(true)
+    } else {
+      tabs.update(tab, {
+        secure: false,
+        url: url
+      })
+      webviews.updateToolbarSecure(false)
+    }
+
 }
 
 // called whenever a navigation finishes
@@ -60,6 +66,7 @@ function onPageLoad (tabId) {
 }
 
 function scrollOnLoad (tabId, scrollPosition) {
+
   const listener = function (eTabId) {
     if (eTabId === tabId) {
       // the scrollable content may not be available until some time after the load event, so attempt scrolling several times
@@ -137,7 +144,7 @@ const webviews = {
       fn: fn
     })
   },
-  viewMargins: [0, 0, 0, 45], // top, right, bottom, left
+  viewMargins: [document.getElementById('toolbar').hidden?0:40, 0, 0, 45], // top, right, bottom, left
   adjustMargin: function (margins) {
     for (var i = 0; i < margins.length; i++) {
       webviews.viewMargins[i] += margins[i]
@@ -280,7 +287,50 @@ const webviews = {
       bounds: webviews.getViewBounds(),
       focus: !options || options.focus !== false
     })
+    //当切换选中的view的时候要同步一下信息
+    webviews.updateToolBarStatus(tabs.get(id))
     webviews.emitEvent('view-shown', id)
+  },
+  /**
+   * 更新一下工具栏的状态
+   * @param tabData tab的信息
+   */
+  updateToolBarStatus(tabData){
+    require('js/navbar/tabEditor').updateUrl(urlParser.getSourceURL(tabData.url))
+    webviews.updateToolbarSecure(tabData.secure)
+    require('./navbar/tabEditor').updateTool(tabData.id)
+    webviews.updateAppStatus(tabData)
+
+   if(urlParser.getSourceURL(tabData.url).startsWith('ts://')){
+     $toolbar.setPwdCanUse(false)
+     $toolbar.setMobileCanUse(false)
+   }else{
+     $toolbar.setPwdCanUse(true)
+     $toolbar.setMobileCanUse(true)
+   }
+  },
+  updateAppStatus(tabData){
+    // 添加密码数量显示
+    const passwordModel = require('../pages/util/model/passwordModel')
+    passwordModel.getSiteCredit(tabData.url, true).then((result) => {
+      const pwdCountEl=document.getElementById('pwdCount')
+      pwdCountEl.innerText=result.rootItem.length>9? 9 : result.rootItem.length
+      if(result.rootItem.length===0)
+      {
+        pwdCountEl.hidden=true
+      }else{
+        pwdCountEl.hidden=false
+      }
+    })
+
+    $toolbar.updateScriptsCountTip(tabData.id)
+  },
+  updateToolbarSecure(secure){
+    if(secure){
+      document.getElementById('site-card').setAttribute('src','./icons/svg/safe.svg')
+    }else{
+      document.getElementById('site-card').setAttribute('src','./icons/svg/unsafe.svg')
+    }
   },
   update: function (id, url) {
     ipc.send('loadURLInView', { id: id, url: urlParser.parse(url) })
@@ -420,6 +470,8 @@ ipc.on('leave-full-screen', function () {
   }
 })
 
+
+
 webviews.bindEvent('enter-html-full-screen', function (tabId) {
   webviews.viewFullscreenMap[tabId] = true
   webviews.resize()
@@ -450,11 +502,36 @@ ipc.on('leave-full-screen', function () {
   webviews.resize()
 })
 
-webviews.bindEvent('did-start-navigation', onNavigate)
+webviews.bindEvent('did-start-navigation', willNavigate)
 webviews.bindEvent('will-redirect', onNavigate)
+function willNavigate(tabId, url, isInPlace, isMainFrame, frameProcessId, frameRoutingId){
+  const currentTab=tabs.get(tabId)
+  if(currentTab.url===urlParser.parse('ts://newtab') && url!==urlParser.parse('ts://newtab')){
+    var newTab = tabs.add({
+      url: url,
+      private: currentTab.private
+    })
+    require('./browserUI.js').addTab(newTab, {
+      enterEditMode: false
+    })
+    //判断要跳转的页面是newtab： 当前的是tabs，且要跳转的页面不是newtab
+    //如果是当前newtab页输入了网址，则关闭当前标签并新开一个标签，给页面降降权，同时可以防止出现js污染
+    require('./browserUI.js').closeTab(tabId)
+    //todo 过早关闭tab导致后面有报错，但是不影响使用，后面再修正
+  }else{
+    onNavigate(tabId, url, isInPlace, isMainFrame, frameProcessId, frameRoutingId)
+  }
+}
+
 webviews.bindEvent('did-navigate', function (tabId, url, httpResponseCode, httpStatusText) {
   onPageURLChange(tabId, url)
 })
+
+webviews.bindEvent('did-navigate-in-page',(tabId)=>{
+  const tabData=tabs.get(tabId)
+  webviews.updateToolBarStatus(tabData)
+})
+
 
 webviews.bindEvent('did-finish-load', onPageLoad)
 

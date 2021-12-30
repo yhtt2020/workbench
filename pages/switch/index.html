@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>选择器</title>
+  <script src="../../ext/vue/vue.js"></script>
+  <script src="../../ext/vue/antd.min.js"></script>
+  <link rel="stylesheet" href="../../ext/vue/antd.min.css"/>
+  <link rel="icon" type="image/svg+xml" href="../../icons/apps.svg"/>
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline'"/>
+  <link rel="stylesheet" href="./switch.css"/>
+</head>
+<body>
+<div id="appVue">
+  <div>
+    <a-row type="flex">
+      <a-col flex="160px" class="task-container">
+
+        <ul class="item-list" style="max-width: 160px;">
+          <li :class="{'active':selectedTaskIndex===index}" @click.prevent="openTask(item.id)" v-for="(item,index) in tasks">
+            <span class="key">{{index + 1}}</span>&nbsp;
+            <a-avatar :size="20" :src="item.icon" shape="square"></a-avatar>
+            {{item.name}}
+          </li>
+
+          <li :class="{'active':selectedTaskIndex===-2}" @click.prevent="openTasks">
+            <span class="key">T</span>&nbsp;
+            <a-avatar :size="20" src="../../icons/svg/tasks.svg" shape="square"></a-avatar>
+            打开标签组管理
+          </li>
+        </ul>
+        <div class="title">↑前9个标签组，按键切换</div>
+      </a-col>
+      <a-col flex="1" style="overflow: hidden;">
+
+        <ul class="item-list" style="max-width:319px">
+          <li @click="openTab(item.id,item.task.id)" v-for="(item,index) in currentTabs" :class="{'active':selectedIndex===index}">
+            <a-avatar :size="20" :src="item.icon" shape="square"></a-avatar>
+            {{item.title}}
+          </li>
+        </ul>
+        <div class="title">↑最近打开标签，   <span  class="key">tab</span> 切换，<span class="key">space</span> 确认</div>
+      </a-col>
+    </a-row>
+    <div v-if="currentTabs.length>0" class="path" @click="openTask(currentTabs[selectedIndex].task.id)">所属标签组：
+      <a-avatar :size="20" :src="currentTabs[selectedIndex].task.icon" shape="square"></a-avatar>
+      {{currentTabs[selectedIndex].task.name}}
+    </div>
+  </div>
+
+</div>
+<style type="text/css">
+  .title {
+    padding: 2px 10px;
+    padding-bottom: 0;
+    font-size: 12px;
+    color: #cacaca;
+    position: absolute;
+    bottom: 5px;
+  }
+
+  body {
+    overflow: hidden;
+  }
+
+  .item-list {
+    padding-left: 0;
+    margin: 0;
+  }
+
+  .item-list li {
+    list-style: none;
+    margin-left: 0;
+    text-indent: 0;
+    padding: 5px 10px;
+    cursor: pointer;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+
+
+  }
+
+  .item-list li:first-child {
+    padding-top: 5px;
+  }
+
+  .item-list li:last-child {
+    padding-bottom: 10px;
+  }
+
+  .item-list .active {
+    background-color: #f3f3f3;
+  }
+
+  .item-list li:hover {
+    background-color: #f3f3f3;
+
+  }
+
+  .key {
+    font-size: 12px;
+    color: #999;
+    border: 1px solid white;
+    box-shadow: 0 0 5px rgba(63, 63, 63, 0.55);
+   padding-left: 5px;
+    padding-right: 5px;
+    height: 18px;
+    line-height: 15px;
+    text-align: center;
+    display: inline-block;
+    border-radius: 3px;
+    vertical-align: middle;
+    background-color: #fafafa;
+
+
+  }
+
+  .path {
+    width: 100vw;
+    border-top: 1px solid #f3f3f3;
+    padding: 5px 10px;
+    color: #666;
+    cursor:pointer;
+  }
+
+  .task-container {
+    padding: 0;
+    border-right: 1px solid #f3f3f3;
+    min-height: calc(100vh - 35px)
+  }
+</style>
+
+<script>
+
+  Vue.use(antd)
+  const electron = require('electron')
+  const ipc = electron.ipcRenderer
+  //const tools=require('../util/util.js').tools
+  const appVue = new Vue({
+    el: '#appVue',
+    data () {
+      return {
+        currentTabs: [],
+        selectedIndex: 1,
+        selectedTaskIndex:-1,
+        tasks: []
+      }
+    },
+    mounted () {
+      //tools.getWindowArgs(window)
+      this.bindKeys()
+      ipc.on('receiveGlobal', (event, data) => {
+        //获取到最新的9个任务
+        const lastTasks = []
+        data.tasks.tasks.forEach((item, index) => {
+          item = appVue.parseItem(item, index)
+          if (index <= 8) {
+            lastTasks.push(item)
+          }
+        })
+        appVue.tasks = lastTasks
+        appVue.getLastTabs(data.tasks.tasks)
+
+      })
+      ipc.send('getGlobal', { callbackWin: 'switchWin' })
+    },
+    methods: {
+      bindKeys(){
+        window.onkeydown = function (e) {
+          e = e || window.event
+          if (e.keyCode === 9) {
+            // tab键切换任务
+            if (appVue.selectedIndex >= appVue.currentTabs.length - 1) {
+              appVue.selectedIndex = 0
+            } else {
+              appVue.selectedIndex++
+            }
+          }
+          if (e.keyCode === 13 || e.keyCode === 32) {
+            //回车或换行
+            appVue.openSelectedTab()
+          }
+          if((e.keyCode>=49 && e.keyCode<=57) ){
+            //如果是数字键 输出序号
+            appVue.selectedTaskIndex=e.keyCode-49
+            appVue.openTask(appVue.tasks[e.keyCode-49].id)
+            setTimeout(()=>{
+              appVue.closeWindow()
+            },1000)
+          }
+          if((e.keyCode>=97 && e.keyCode<=105)){
+            appVue.selectedTaskIndex=e.keyCode-97
+            appVue.openTask(appVue.tasks[e.keyCode-97].id)
+            setTimeout(()=>{
+              appVue.closeWindow()
+            },1000)
+          }
+          if(e.keyCode===84){
+            appVue.openTasks()
+            appVue.selectedTaskIndex=-2
+            setTimeout(()=>{
+              appVue.closeWindow()
+            },1000)
+          }
+        }
+      },
+      openTasks(){
+        ipc.send('openTasks')
+        this.closeWindow()
+      },
+
+      closeWindow(){
+        ipc.send('closeSwitch')
+      },
+      openSelectedTab(){
+        appVue.openTab(appVue.currentTabs[appVue.selectedIndex].id, appVue.currentTabs[appVue.selectedIndex].task.id)
+      },
+      openTask(taskId){
+        console.log(taskId)
+        ipc.send('switchToTask',{id:taskId})
+        this.closeWindow()
+      },
+      openTab (tabId,taskId) {
+        console.log(tabId)
+        ipc.send('switchToTab', { taskId: taskId, tabId: tabId })
+        this.closeWindow()
+      },
+      parseItem (item, index) {
+        return {
+          icon: !!!item.tabs[0].favicon ? '../../icons/empty.png' : item.tabs[0].favicon.url,
+          name: !!!item.name ? '标签组 ' + (index + 1) : item.name,
+          id:item.id
+        }
+      },
+      getLastTabs (tasks) {
+        //todo 1get alltabs
+        const allTabs = []
+        tasks.forEach((task, index) => {
+          task.tabs.forEach((tab, tabIndex) => {
+            tab.task = appVue.parseItem(task, index)
+            tab.task.id = task.id
+            tab.icon = !!!tab.favicon ? '../../icons/default.svg' : tab.favicon.url
+            tab.name = !!!tab.name ? '新标签' : tab.name
+            allTabs.push(tab)
+          })
+        })
+        //todo 2sort
+        allTabs.sort((a, b) => {
+          return b.lastActivity - a.lastActivity
+        })
+        //todo 3getlast10
+        let last10Tabs = []
+        allTabs.forEach((tab, index) => {
+          if (index <= 9) {
+            last10Tabs.push(tab)
+          }
+        })
+
+        appVue.currentTabs = last10Tabs
+      }
+    }
+  })
+</script>
+
+</body>
+</html>

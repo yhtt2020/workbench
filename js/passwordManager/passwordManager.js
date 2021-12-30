@@ -92,7 +92,7 @@ const PasswordManagers = {
 
       PasswordManagers.getConfiguredPasswordManager().then(async (manager) => {
         if (!manager) {
-          ipc.send('message',{type:'success',config:{content:"没有可用的密码管理器。"}})
+          ipc.send('message',{type:'success',config:{content:"没有可用的密码管理器。",key:"password"}})
           return
         }
 
@@ -107,12 +107,12 @@ const PasswordManagers = {
         }
 
         manager.getSuggestions(domain).then(credentials => {
-          console.log(credentials)
+          //console.log(credentials)
           // 增加对找回密码数量的提示，减少认知成本
           if(credentials.length===0){
-            ipc.send('message',{type:'error',config:{content:"暂未找到保存密码。"}})
+            ipc.send('message',{type:'error',config:{content:"暂未找到保存密码。",key:"password"}})
           }else{
-            ipc.send('message',{type:'success',config:{content:`找到 ${credentials.length} 个密码，点击输入框选择。`}})
+            ipc.send('message',{type:'success',config:{content:`找到 ${credentials.length} 个密码。`,key:"password"}})
           }
 
           if (credentials != null) {

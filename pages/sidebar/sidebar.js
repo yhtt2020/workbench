@@ -129,7 +129,7 @@ window.onload = function() {
 				if (typeof(task) == 'undefined') { //如果已经被删除了，容错处理
 					return ''
 				}
-				if (task.name == null) {
+				if (task.name == null || task.name==='') {
 					return l('defaultTaskName').replace('%n', state.tasks.getIndex(task.id) + 1)
 				} else {
 					return task.name
@@ -309,16 +309,12 @@ window.onload = function() {
 		},
     actions: {
       async getGroups({ commit }, userInfo) {
-        const { uid, token } = userInfo
+        const { token } = userInfo
         const result = await axios({
           method: 'post',
           url: '/app/browser/group/list',
-          headers: { Authorization: token },
-          data: {
-            uid: uid
-          },
+          headers: { Authorization: token }
         })
-        console.log(result, '__gp__')
         if(result.code === 1000) {
           commit('SET_MYGROUPS', result.data)
         }
@@ -335,6 +331,7 @@ window.onload = function() {
 			vuedraggable
 		},
 		data: {
+      mod:'auto',
 			message: 'Hello Vue!',
 			window: window
 		},
@@ -348,3 +345,20 @@ window.onload = function() {
 
 	require('./theme.js').initialize()
 }
+
+ipc.on('sideSetOpen',(event,args)=>{
+  console.log('open')
+  document.getElementById('clickThroughElement').style.left = '155px'
+  appVue.mod='open'
+
+})
+ipc.on('sideSetClose',(event,args)=>{
+  document.getElementById('clickThroughElement').style.left = '55px'
+  console.log('close')
+  appVue.mod='close'
+})
+ipc.on('sideSetAuto',(event,args)=>{
+  console.log('auto')
+  document.getElementById('clickThroughElement').style.left = '55px'
+  appVue.mod='auto'
+})

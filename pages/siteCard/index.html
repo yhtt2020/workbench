@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>网站名片</title>
+  <script src="../../ext/vue/vue.js"></script>
+  <script src="../../ext/vue/antd.min.js"></script>
+  <link rel="stylesheet" href="../../ext/vue/antd.min.css"/>
+  <link rel="icon" type="image/svg+xml" href="../../icons/apps.svg"/>
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline'"/>
+  <link rel="stylesheet" href="./card.css"/>
+</head>
+<body>
+<div id="appVue">
+  <div style="padding:15px">
+    <template>
+    <div class="site-info">
+      <a-row type="flex">
+        <a-col flex="55px">
+          <a-avatar shape="square" :size="40" :src="!!!tabData.favicon?'':tabData.favicon.url"></a-avatar>
+        </a-col>
+        <a-col :flex="3">
+          <div class="site-title" :title="siteTitle">
+            {{siteTitle}}
+          </div>
+          <div class="site-url">
+            {{siteDomain}}
+            <a-tooltip placement="bottom">
+              <template slot="title">
+                <span>以根域名作为筛选条件<br>例如bilibli.com<br>
+                  将包含以下站点的内容：<br>
+                  passport.bilibili.com<br>
+                  www.bilibili.com<br>
+                  t.bilibli.com<br>
+                   ***.bilibili.com</span>
+              </template>
+              <a-switch checked-children="全站" :default-checked="true" un-checked-children="子站" size="small" @change="changeSiteMode"></a-switch>
+            </a-tooltip>
+          </div>
+        </a-col>
+        <a-col :flex="2">
+          <div v-if="tabData.secure">
+              <a-avatar @click="activeTab='7'" style="width: 20px;height: auto" src="../../icons/svg/safe.svg"></a-avatar>
+              安全
+          </div>
+          <div v-else>
+            <a-tag @click="activeTab='7'" color="#f50">
+              <a-avatar style="width: 20px;height: auto" src="../../icons/svg/unsafe.svg"></a-avatar>
+              风险
+            </a-tag>
+          </div>
+
+        </a-col>
+        <a-col :flex="1">
+          <a-switch checked-children="团队" un-checked-children="个人"></a-switch>
+        </a-col>
+      </a-row>
+    </div>
+    <div>
+      <a-tabs
+        size="small"
+        :tab-bar-gutter="0"
+        default-active-key="base"
+        v-model="activeTab"
+        tab-position="top"
+        style="margin-top: 10px; height: calc(100vh - 82px)"
+        @prevClick="callback"
+        @nextClick="callback"
+      >
+        <a-tab-pane key="base" tab="基础">
+          <div v-if="!siteUrl.startsWith('ts://')" class="info-content">
+            <h3>网页标题</h3>
+            <p>
+              {{siteTitle}}
+            </p>
+            <p>完整网址：{{siteUrl}}</p>
+            <h3>所属：</h3>
+            <p>子站点：{{ siteDomain}}</p>
+            <p>站点：{{ rootDomain}}</p>
+            <h3>站长信息</h3>
+            <p>暂无站长</p>
+            <h3>企业信息</h3>
+            <p>暂不支持显示</p>
+          </div>
+          <div v-else  class="info-content">
+            <h3>网页标题</h3>
+            <p>
+              {{siteTitle}}
+            </p>
+            <p>浏览器系统页面</p>
+            <h3>站长信息</h3>
+            <p>想天软件</p>
+            <h3>企业信息</h3>
+            <p>嘉兴想天信息科技有限公司</p>
+          </div>
+
+        </a-tab-pane>
+        <a-tab-pane  v-if="!this.isInnerUrl" key="pwd">
+          <template slot="tab">
+            密码  <a-badge :count="this.showPwds.length" :number-style="{ backgroundColor: '#52c41a' }" ></a-badge>
+          </template>
+
+          <a-table :columns="pwdColumns" :data-source="showPwds" size="small">
+             <span slot="d-title" slot-scope="text,record">
+              <span v-if="!!!text">
+                (无标题)
+              </span>
+               <span v-else>
+                 {{text}}
+               </span>
+               <br>
+               <span :style="{'font-weight':siteDomain===record.domain?'bold':'normal',color: siteDomain===record.domain?'#333':'grey'}">{{record.domain}}</span>
+            </span>
+            <span slot="remark" slot-scope="text,record">
+              <span v-if="!!!record.remark">
+                -
+              </span>
+               <span v-else>
+                 {{record.remark}}
+               </span>
+               <br>
+            </span>
+            <span slot="passwordSwitch" slot-scope="text,record">
+              <span v-if="record.passwordSwitch.hide">
+                ······ <a-icon type="eye" @click="show(record.passwordSwitch)"></a-icon>
+              </span>
+              <span v-else>
+                {{record.passwordSwitch.pwd}}
+              </span>
+            </span>
+            <span slot="action" slot-scope="text, record">
+      <a>删除  </a>
+
+    </span>
+          </a-table>
+        </a-tab-pane>
+<!--        <a-tab-pane key="2" tab="导航">-->
+<!--        </a-tab-pane>-->
+<!--        <a-tab-pane key="3" tab="笔记">-->
+<!--        </a-tab-pane>-->
+<!--        <a-tab-pane key="4" tab="任务">-->
+<!--        </a-tab-pane>-->
+<!--        <a-tab-pane key="5" tab="讨论">-->
+<!--        </a-tab-pane>-->
+<!--        <a-tab-pane key="6" tab="口碑">-->
+<!--        </a-tab-pane>-->
+        <a-tab-pane key="7" tab="安全">
+          <div class="info-content">
+            <h3>网站安全情况：</h3>
+            <div v-if="tabData.secure">
+              <p>
+                <a-tag color="#87d068">
+                  安全
+                </a-tag>
+              </p>
+              <p>
+
+                此站点为安全网站，通过浏览器的基本安全校验。但也建议您不要过度信任网站，您仍然存在一定的安全风险。
+              </p>
+            </div>
+            <div v-else>
+              <p>
+                <a-tag color="#f50">
+                  不安全
+                </a-tag>
+              </p>
+              <p>
+
+                此网站使用不安全的连接方式。对此，您可能存在信息泄露、被恶意捕捉信息、篡改等安全风险。建议您不要过于信任此网站的内容。
+              </p>
+
+            </div>
+          </div>
+
+        </a-tab-pane>
+      </a-tabs>
+    </div>
+    </template>
+  </div>
+
+</div>
+<style>
+  .site-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    list-style: none;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 250px;
+  }
+
+  .site-url {
+    color: #999;
+    list-style: none;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 300px;
+    font-size: 12px;
+  }
+
+  .info-content h3 {
+    text-indent: 1em;
+    font-size: 14px;
+  }
+
+  .info-content p {
+    text-indent: 2em;
+  }
+
+  .info-content .ant-tag {
+    text-indent: 0 !important;
+  }
+</style>
+</body>
+<script>
+
+  Vue.use(antd)
+  const electron = require('electron')
+  const ipc = electron.ipcRenderer
+  let tools = require('../util/util.js').tools
+  const appVue = new Vue({
+    el: '#appVue',
+    data () {
+      return {
+        siteUrl: '',//网站的完整路径，可以通过tools方法转换为域名
+        siteTitle: '',//网站标题，优先采用tab的name
+        tabData: {},//当前网站的tab数据，包含一个完整结构的json
+        pwds: [],//当前筛选出的全部符合条件的密码
+        rootPwds: [],
+        siteMode: 'all',//筛选数据模式，child代表子站点，all代表全站
+        //tabs
+        activeTab: '0',//当前激活的tab
+        tabs: [
+          {
+            title: '基础',
+            key: "base"
+          },
+          {
+            title: '密码管理',
+            key: "pwd"
+          },
+          {
+            title: '导航收藏',
+            key: 2
+          }, {
+            title: '笔记备忘',
+            key: 3
+          }, {
+            title: '任务代办',
+            key: 4
+          }, {
+            title: '社区讨论',
+            key: 5
+          }, {
+            title: '站点口碑',
+            key: 6
+          }, {
+            title: '安全风险',
+            key: 7
+          }
+        ],
+        //密码表的字段
+        pwdColumns: [
+          {
+            title: '标题',
+            dataIndex: 'title',
+            width: '140px',
+            scopedSlots: { customRender: 'd-title' }
+          }, {
+            title: '账号',
+            dataIndex: 'username',
+            width: '100px'
+          },
+
+          {
+            title: '密码',
+            dataIndex: 'passwordSwitch',
+            width: '120px',
+            scopedSlots: { customRender: 'passwordSwitch' }
+          },
+          {
+            title: '备注',
+            key: 'remark',
+            width: '100px',
+            scopedSlots: { customRender: 'remark' },
+          }
+          //,
+          // {
+          //   title: 'Address',
+          //   dataIndex: 'address',
+          // }
+        ]
+      }
+    },
+    computed: {
+      siteDomain () {
+        return tools.getDomainFromUrl(this.tabData.url)
+      },
+      rootDomain () {
+        return tools.getRootDomain(this.tabData.url)
+      },
+      showPwds () {
+        return this.siteMode === 'all' ? this.rootPwds : this.pwds
+      },
+      isInnerUrl(){
+        return this.siteUrl.startsWith('ts://')
+      }
+    },
+    mounted () {
+      //获取传递过来的global参数
+      tools.getWindowArgs(window)
+
+      this.siteUrl = window.globalArgs['site-url']
+      this.siteTitle = window.globalArgs['site-title']
+      this.tabData = JSON.parse(decodeURIComponent(window.globalArgs['tab-data']))//需要urldecode解码保证完整性
+      this.activeTab=window.globalArgs['active-tab']
+      if(this.isInnerUrl)
+        this.activeTab='base'
+
+      const passwordModel = require('../util/model/passwordModel')
+      passwordModel.getSiteCredit(this.tabData.url, true).then((result) => {
+        result.item.forEach((item) => {
+          let pwd = item
+          pwd.passwordSwitch = {
+            hide: true,
+            pwd: item.password
+          }
+          appVue.pwds.push(pwd)
+        })
+
+        result.rootItem.forEach((item) => {
+          let pwd = item
+          pwd.passwordSwitch = {
+            hide: true,
+            pwd: item.password
+          }
+          appVue.rootPwds.push(pwd)
+        })
+
+      })
+    },
+    methods: {
+      callback (val) {
+        console.log(val)
+      },
+      show (password) {
+        password.hide = false
+      },
+      changeSiteMode (value) {
+        this.siteMode = value ? 'all' : 'child'
+        console.log(this.siteMode)
+      }
+    }
+  })
+</script>
+</html>

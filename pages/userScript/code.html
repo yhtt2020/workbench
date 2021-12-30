@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>查看代码</title>
+  <script src="../../ext/codemirror/codemirror.js"></script>
+  <link rel="stylesheet" href="../../ext/codemirror/codemirror.css">
+  <script src="../../ext/codemirror/javascript.js"></script>
+</head>
+<body>
+<div id="code" style="height: 100vh">
+
+</div>
+</body>
+<script>
+  const tools=require('../util/util.js').tools
+  const fs=require('fs')
+  tools.getWindowArgs(window)
+  const path=window.globalArgs['user-data-path']+'/userscripts/'+window.globalArgs['file']
+  console.log(path)
+  fs.readFile(path,'utf-8',(err,data)=>{
+    if(err)
+      console.log(err);
+    else
+      console.log(data)
+      var myCodeMirror = CodeMirror(document.getElementById('code'),{
+        value: data,
+        mode:  "javascript",
+        lineNumbers:true
+      });
+  });
+
+
+</script>
+<style>
+  .CodeMirror{
+    height: auto;
+  }
+</style>
+</html>

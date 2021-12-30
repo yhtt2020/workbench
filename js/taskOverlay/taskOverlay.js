@@ -114,7 +114,6 @@ var taskOverlay = {
     document.body.classList.add('task-overlay-is-shown')
 
     tabEditor.hide()
-    ipc.send('hideSidePanel')
     document.getElementById('task-search-input').value = ''
 
     this.isShown = true
@@ -171,7 +170,6 @@ var taskOverlay = {
   },
 
   hide: function () {
-	ipc.send('showSidePanel')
     if (this.isShown) {
 
       this.isShown = false
@@ -356,7 +354,7 @@ var taskOverlay = {
         addTaskButton.classList.remove('drag-target')
       }
     })
-
+    //mark 这里是拖动标签到另外的位置
     taskOverlay.tabDragula.on('drop', function (el, target, source, sibling) { // see https://github.com/bevacqua/dragula#drakeon-events
       var tabId = el.getAttribute('data-tab')
 
@@ -475,7 +473,9 @@ var taskOverlay = {
     })
   }
 }
-
+ipc.on('showTasks',()=>{
+  taskOverlay.show()
+})
 ipc.on('closeTask',(event,args)=>{
   browserUI.closeTask(args.tabId)
 })

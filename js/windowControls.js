@@ -37,8 +37,7 @@ function initialize () {
   }
 
   if (window.platformType === 'windows') {
-    updateCaptionButtons()
-
+    updateCaptionButtons()  
     captionMinimize.addEventListener('click', function (e) {
       ipc.invoke('minimize')
     })

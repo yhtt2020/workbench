@@ -17,7 +17,7 @@ var defaultKeyMap = {
   addToFavorites: 'mod+d',
   showBookmarks: 'shift+mod+b',
   toggleReaderView: 'shift+mod+r',
-  switchToNextTab: ['option+mod+right', 'ctrl+tab', 'shift+mod+pagedown'],
+  switchToNextTab: ['option+mod+right', 'shift+mod+pagedown'],
   switchToPreviousTab: ['option+mod+left', 'shift+ctrl+tab', 'shift+mod+pageup'],
   moveTabLeft: 'option+mod+shift+left',
   moveTabRight: 'option+mod+shift+right',

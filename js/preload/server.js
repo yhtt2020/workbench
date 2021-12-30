@@ -1,6 +1,29 @@
 //这个预载入文件用于与服务器进行交互，仅适用于项目路径
 let href = window.location.href
-const server = { //服务主脚本
+const server = {
+  //osx端说pc登录是否已掉的前置判断
+  beforeInit() {
+    //先检测node是否登录
+    ipc.send('checkLogin')
+    ipc.on('callback-checkLogin', (event, args) => {
+      if(args) {
+        if(window.localStorage.getItem('token')) {
+          return
+        } else {
+          //免登录操作
+          ipc.send('autoLogin')
+          ipc.on('callback-autoLogin', (event, args) => {
+            if(args.code === 1000) {
+              console.log(args.data)
+              //window.location.href = args.data
+            }
+          })
+        }
+      } else {
+        return
+      }
+    })
+  },
 	init(path) {
 		switch (path) {
       case api.getProdNodeUrl(api.NODE_API_URL.user.code):
@@ -10,7 +33,7 @@ const server = { //服务主脚本
         this.login()
         break
       default:
-        console.log('在server网站下，但未命中任何预加载处理路径：'+path)
+        console.log('在server网站下，但未命中任何预加载处理路径:'+path)
 		}
 	},
 	login() {
@@ -20,7 +43,9 @@ const server = { //服务主脚本
       ipc.on('callback-loginBrowser', (event, arg) => {
         if(arg.code === 1000 ) {
           ipc.send('userLogin', arg.data)
-          window.location.href = api.getUrl(api.API_URL.group.index)
+          setTimeout(() => {
+            window.location.href = api.getUrl(api.API_URL.group.index)
+          }, 500)
         } else {
           console.log(arg.message)
           window.location.href = api.getUrl(api.API_URL.user.login)
@@ -43,6 +68,7 @@ const server = { //服务主脚本
 
 if(href.startsWith(config.SERVER_BASE_URL))
 {
+  server.beforeInit()
   server.init(href)
 } else if (href.startsWith(config.DEV_NODE_SERVER_BASE_URL)) {
   const newUrl = window.location.origin + window.location.pathname

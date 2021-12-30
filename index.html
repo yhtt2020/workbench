@@ -91,14 +91,17 @@
 
 		<button id="switch-task-button" class="navbar-action-button theme-text-color windowDragHandle i"
 			data-label="viewTasks" tabindex="-1">
-			<svg version="1.1" viewBox="0.0 0.0 26.0 26.0" fill="none" stroke="none" stroke-linecap="square"
-				stroke-miterlimit="10" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
-				<g clip-path="url(#p.0)">
-					<path fill="currentColor" d="m0 0l32 0l0 4l-32 0z" fill-rule="evenodd" />
-					<path fill="currentColor" d="m0 11l32 0l0 4l-32 0z" fill-rule="evenodd" />
-					<path fill="currentColor" d="m0 22l32 0l0 4l-32 0z" fill-rule="evenodd" />
-				</g>
-			</svg>
+<!--			<svg version="1.1" viewBox="0.0 0.0 26.0 26.0" fill="none" stroke="none" stroke-linecap="square"-->
+<!--				stroke-miterlimit="10" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">-->
+<!--				<g clip-path="url(#p.0)">-->
+<!--					<path fill="currentColor" d="m0 0l32 0l0 4l-32 0z" fill-rule="evenodd" />-->
+<!--					<path fill="currentColor" d="m0 11l32 0l0 4l-32 0z" fill-rule="evenodd" />-->
+<!--					<path fill="currentColor" d="m0 22l32 0l0 4l-32 0z" fill-rule="evenodd" />-->
+<!--				</g>-->
+<!--			</svg>-->
+      <svg t="1638283597356" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="39977" width="24" height="24">
+        <path d="M713 178.67H132.36C59.38 178.67 0 238.02 0 310.97v580.69C0 964.63 59.38 1024 132.36 1024H713c72.97 0 132.34-59.37 132.34-132.34V310.97c0-72.95-59.37-132.3-132.34-132.3zM86.02 310.97c0-25.55 20.79-46.33 46.34-46.33H713c25.54 0 46.32 20.78 46.32 46.33v580.69c0 25.57-20.78 46.37-46.32 46.37H132.36c-25.55 0-46.34-20.8-46.34-46.37V310.97z" fill="currentColor" p-id="39978"></path>
+        <path d="M891.66 0H311.02c-23.71 0-43 19.27-43 42.96 0 23.71 19.29 43 43 43h580.65c25.54 0 46.32 20.78 46.32 46.33v580.69c0 23.71 19.29 43 43 43s43-19.29 43-43V132.3C1024 59.35 964.63 0 891.66 0zM221.68 845.33h401.98c23.71 0 43-19.29 43-43 0-23.69-19.29-42.96-43-42.96H221.68c-23.72 0-43.02 19.27-43.02 42.96 0 23.71 19.3 43 43.02 43z" fill="currentColor" p-id="39979"></path></svg>
 		</button>
 		<script>
 			//移动到左侧空白区域的时候，让左侧栏重获鼠标，防止无法移动上去
@@ -110,12 +113,84 @@
 				//console.log('设置左侧栏鼠标有效')
 
 			}
+      function openSiteCard(e,tabData){
+        ipc.send('createSiteCard',{url:tabData.url,x:e.clientX,y:e.clientY,title:tabData.title,tabData:tabData})
+        e.preventDefault()
+        e.stopPropagation()
+      }
 		</script>
-
-
-		<div id="searchbar" class="theme-background-color theme-text-color">
+		<div id="searchbar" class="" hidden>
 			<div class="top-answer-area"></div>
 		</div>
+
+    <!--toolbar区域-->
+    <div id="appVue">
+      <div id="toolbar">
+        <div  style="display: flex;justify-content: flex-start;flex-direction:row" type="flex">
+          <div style="width:200px" >
+            <div style="display: flex;justify-content: flex-start;flex-direction:row" type="flex">
+              <div class="action-wrapper" >
+                <img title="当前模式：自动展开收起；点击切换收起左侧栏，不再自动展开" id="side-mod-button-toolbar" class="action"  src="./icons/toolbar/sideauto.svg">
+              </div>
+              <div class="action-wrapper" >
+                <img title="后退（⌘←）" id="back-button-toolbar" class="action"  src="./icons/toolbar/arrowleft.svg">
+              </div>
+              <div class="action-wrapper">
+                <img  title="前进（⌘→）" id="forward-button-toolbar" class="action"  src="./icons/toolbar/arrowright.svg">
+              </div>
+              <div class="action-wrapper">
+                <img title="刷新（⌘R）" id="refresh-button-toolbar" class="action"   src="./icons/toolbar/rotate.svg">
+              </div>
+              <div class="action-wrapper">
+               <img title="首页"  id="home-button-toolbar" class="action"  src="./icons/toolbar/home.svg">
+              </div>
+            </div>
+          </div>
+          <div style="flex-grow:1 ;position:relative;"   >
+            <div id="address-bar">
+              <img id="site-card" onclick="openSiteCard(this,tabs.get(tabs.getSelected()))" title="网站信息" class="site-card" src="icons/svg/safe.svg" >
+            </div>
+
+<!--            <a-input style="width: 100%"></a-input>-->
+
+<!--            <div id="tab-editor-toolbar">-->
+<!--              <input id="tab-editor-input-toolbar" class="mousetrap" spellcheck="false" />-->
+<!--            </div>-->
+
+          </div>
+          <div style="display: flex;width: 260px" >
+            <div class="action-wrapper" >
+                <span onclick="ipc.send('openSwitch')" title="快速切换（Ctrl+Tab）" id="switch-toolbar"><img class="action" src="./icons/toolbar/switch.svg">
+                </span>
+            </div>
+            <div class="action-wrapper" >
+                <span onclick="ipc.send('openMobile')" title="手机浏览工具" id="mobile-toolbar"><img class="action" src="./icons/toolbar/smartphone.svg">
+                </span>
+            </div>
+            <div class="action-wrapper" style="text-align: center;width: 10px">
+              <div style="border-right: 1px solid #cacaca;display: inline-block;height: 16px;vertical-align: middle;width: 0;margin-top: -3px"></div>
+            </div>
+              <div  class="action-wrapper" >
+                <span onclick="ipc.send('openPwdManager',{tabData:tabs.get(tabs.getSelected())})" title="密码管理" id="pwd-toolbar"><img class="action" src="./icons/svg/lock.svg">
+                <span hidden class="bandage" id="pwdCount">0</span>
+                </span>
+              </div>
+              <div class="action-wrapper" >
+                <span onclick="ipc.send('openHome')" title="导航管理" id="nav-toolbar"><img class="action" src="./icons/svg/cloud.svg"></span>
+              </div>
+            <div class="action-wrapper" >
+              <span onclick="ipc.send('openScriptManager')" title="管理脚本插件" id="userscript-toolbar"><img class="action" src="./icons/toolbar/code.svg">
+              <span hidden title="当前页面有3个脚本正在启用" class="bandage" id="scriptCount">3</span>
+              </span>
+
+            </div>
+            <div class="action-wrapper">
+              <img title="收起地址栏，使用精简模式"  id="collapse-button-toolbar" class="action"  src="./icons/toolbar/chevronsup.svg">
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
 		<div id="webviews">
 			<div id="leftArrowContainer" class="arrow-indicator">
 				<i id="leftArrow" class="i carbon:chevron-left"></i>

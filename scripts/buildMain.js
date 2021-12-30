@@ -10,6 +10,8 @@ const modules = [
   'main/registryConfig.js',
   'main/main.js',
   'main/sidePanel.js',
+  'main/siteCard.js',
+  'main/userScript.js',
   'main/handleAxios.js',
   'main/group.js',
   'main/update.js',
@@ -23,7 +25,8 @@ const modules = [
   'main/remoteMenu.js',
   'main/remoteActions.js',
   'main/keychainService.js',
-  'js/util/proxy.js'
+  'js/util/proxy.js',
+  'main/mobileMod.js'
 ]
 
 function buildMain () {

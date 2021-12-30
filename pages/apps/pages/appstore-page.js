@@ -76,7 +76,7 @@ const appstoreTpl =
   style="border-radius:0 0 4px 4px;text-align: left;"
   type="primary" icon="container"
 																	@click="selectTask()" block>
-选择任务添加
+选择标签组添加
 </a-button>
 </div>
 </div>
@@ -133,12 +133,12 @@ const appstoreTpl =
   添加到我的应用
 </a-button>
 <a-button type="primary" icon="container">
-  添加到我的应用并新建任务
+  添加到我的应用并新建标签组
 </a-button>
 </p>
 <p>
   <a-button type="primary" icon="container">
-    添加到我的应用并添加至选择任务
+    添加到我的应用并添加至选择标签组
   </a-button>
 </p> -->
 
@@ -164,7 +164,7 @@ const appstoreTpl =
   <p>
     <a-button icon="container" type="primary" block v-if="shopcartApps.length!=0"
     @click="selectTask()">
-    收藏且添加至任务
+    收藏且添加至标签组
   </a-button>
 </p>
 <p>

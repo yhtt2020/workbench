@@ -18,6 +18,9 @@ const remoteMenu = require('remoteMenuRenderer.js')
 
 const ipc = electron.ipcRenderer
 
+const navbarApi = require('../request/api/navbarApi.js')
+const baseApi = require('../request/api/baseApi')
+
 var lastTabDeletion = 0 // TODO get rid of this
 
 const tabBar = {
@@ -55,50 +58,75 @@ const tabBar = {
   /*标签栏补充的右键菜单触发动作开始*/
   //关闭其他的标签
   closeOtherTabs: function (tabId) {
-    require('browserUI.js').switchToTab(tabId)
+    if(tabId!==tabs.getSelected())
+     require('browserUI.js').switchToTab(tabId)
     let needDestroy = []
+    let lockCount=0
     tasks.getSelected().tabs.forEach(function (tab, index) {
-      if (tab.id != tabId) needDestroy.push(tab.id)
+      if (tab.id != tabId  )
+      {
+        if(!!tabs.get(tab.id).lock) {
+          lockCount++
+        }else{
+          needDestroy.push(tab.id)
+        }
+
+      }
+
     })
-    needDestroy.forEach(function (tid, index) {
+    tabBar.closeTabsById(needDestroy,lockCount)
+    //$store.getters.fillTasksToItems
+  },
+  closeTabsById(needDestroyIds,lockCount){
+    needDestroyIds.forEach(function (tid, index) {
       require('browserUI.js').destroyTab(tid)
     })
-    //$store.getters.fillTasksToItems
+    if(lockCount>0){
+      ipc.send('message',{type:'success',config:{content:'成功关闭'+needDestroyIds.length+"个标签。但有"+lockCount+"个锁定标签未关闭，请解锁后关闭。"}})
+    }else{
+      ipc.send('message',{type:'success',config:{content:'成功关闭'+needDestroyIds.length+"个标签。"}})
+    }
   },
   //关闭左侧标签
   closeLeftTabs: function (tabId) {
-    require('browserUI.js').switchToTab(tabId)
-    let needDestroy = []
     let tabs = tasks.getSelected().tabs
+    if(tabId!==tabs.getSelected())
+      require('browserUI.js').switchToTab(tabId)
+    let needDestroy = []
     let count = tabs.count()
+    let lockCount=0
     console.log(count)
-    for (i = 0; i < count; i++) {
-      if (tabs.getAtIndex(i).id != tabId) needDestroy.push(tabs.getAtIndex(i).id)
-      else {
-        break
+    for (let i = 0; i < count; i++) {
+      if (tabs.getAtIndex(i).id != tabId ){
+        if(!!tabs.getAtIndex(i).lock){
+          lockCount++
+        }else{
+          needDestroy.push(tabs.getAtIndex(i).id)
+        }
       }
     }
-    needDestroy.forEach(function (tid, index) {
-      require('browserUI.js').destroyTab(tid)
-    })
+    tabBar.closeTabsById(needDestroy,lockCount)
     //$store.getters.fillTasksToItems
   },
   //关闭右侧标签
   closeRightTabs: function (tabId) {
-    require('browserUI.js').switchToTab(tabId)
-    let needDestroy = []
     let tabs = tasks.getSelected().tabs
+    if(tabId!==tabs.getSelected())
+      require('browserUI.js').switchToTab(tabId)
+    let needDestroy = []
     let count = tabs.count()
-    console.log(count)
-    for (i = count - 1; i >= 0; i--) {
-      if (tabs.getAtIndex(i).id != tabId) needDestroy.push(tabs.getAtIndex(i).id)
-      else {
-        break
+    let lockCount=0
+    for (let i = count - 1; i >= 0; i--) {
+      if (tabs.getAtIndex(i).id != tabId)
+      {
+        if(!!tabs.getAtIndex(i).lock){
+          lockCount++
+        }else{
+          needDestroy.push(tabs.getAtIndex(i).id)
+        }
       }
     }
-    needDestroy.forEach(function (tid, index) {
-      require('browserUI.js').destroyTab(tid)
-    })
+    tabBar.closeTabsById(needDestroy,lockCount)
     //$store.getters.fillTasksToItems
   },
   //移动到第一个标签
@@ -115,12 +143,19 @@ const tabBar = {
   refresh: function (id) {
     webviews.update(id, tasks.getSelected().tabs.get(id).url)
   },
+  //移动到其他标签组
+  insertTabToTask(tabId) {
+    let previousTask = tasks.getSelected()
+    //移除旧标签组中的tab，且拿到oldTab的信息
+    let oldTab = previousTask.tabs.splice(previousTask.tabs.getIndex(tabId), 1)[0]
+    ipc.send('selectTask', oldTab)   //呼出面板
+  },
 
   /**
    * 添加收藏到本地自建列表或本地默认列表(分单个和整组)
    * @param {String} tabId  tab标签id
    * @param {Number} listId 父级id
-   * @param {Boolean} single 默认true单个？整组？移动
+   * @param {Boolean} single 默认true单个移动
    */
   addToScopeLocal(tabId, listId, single = true) {
     if(single) {
@@ -160,22 +195,90 @@ const tabBar = {
     }
   },
 
-  //移动tab到新的分组且完成切换
-  moveTabTask: function (tabId) {
-    //拿到当前tab标签页
-    let tabs = tasks.getSelected().tabs
-    let tab = tabs.get(tabId)
-    ipc.send('addTask', {
-      name: tab.title,
-      url: tab.url,
-      icon: tab.favicon == null ? '../../icons/empty.png' : tab.favicon.url,
-    })
-    setTimeout(() => {
-      let taskNew = tasks.getAll()[tasks.getAll().length - 1]
-      require('browserUI.js').destroyTab(tabId)
-      require('browserUI.js').switchToTask(taskNew.id)
-      ipc.send('message', { type: 'success', config: { content: '移动到分组成功，已为您切换到新的分组。' } })
-    }, 300)
+  /**
+   * 添加到云端用户导航(分单个和整组)
+   * @param {String} tabId  tab标签id
+   * @param {Number} listId 父级id
+   * @param {Boolean} single 默认true单个移动
+   */
+  async addToUserNav(tabId, listId, single = true) {
+    if(single) {
+      let tabs = tasks.getSelected().tabs
+      let tab = tabs.get(tabId)
+      if(tab.url.startsWith('file:///')) {
+        ipc.send('message', { type: 'error', config: { content: '系统页面无法添加!' } })
+      } else {
+        const appNow = {
+          icon: tab.favicon == null ? '../../icons/default.svg' : tab.favicon.url,
+          name: tab.title,
+          url: tab.url,
+          summary: "",
+          list_id: listId,
+          add_time: String(new Date().getTime()),
+        }
+        const result = await navbarApi.addUserNavApp(appNow)
+        if(result.code === 1000) {
+          ipc.send('message', { type: 'success', config: { content: '添加成功，可在云端用户导航中查看。' } })
+        }
+      }
+    } else {
+      let tabs = tasks.getSelected().tabs
+      const filterTabs = tabs.tabs.filter(e => !e.url.startsWith('file:///'))
+      filterTabs.forEach(item => {
+        const appNow = {
+          icon: item.favicon == null ? '../../icons/default.svg' : item.favicon.url,
+          name: item.title,
+          url: item.url,
+          summary: "",
+          list_id: listId,
+          add_time: String(new Date().getTime()),
+        }
+        setTimeout(async ()=> {
+          await navbarApi.addUserNavApp(appNow)
+        }, 200)
+      })
+      ipc.send('message', { type: 'success', config: { content: '添加成功，可在云端用户导航中查看。' } })
+    }
+  },
+
+  async addToGroupNav(tabId, listId, single = true) {
+    if(single) {
+      let tabs = tasks.getSelected().tabs
+      let tab = tabs.get(tabId)
+      if(tab.url.startsWith('file:///')) {
+        ipc.send('message', { type: 'error', config: { content: '系统页面无法添加!' } })
+      } else {
+        const appNow = {
+          icon: tab.favicon == null ? '../../icons/default.svg' : tab.favicon.url,
+          name: tab.title,
+          url: tab.url,
+          summary: "",
+          list_id: listId,
+          add_time: String(new Date().getTime()),
+        }
+        const result = await navbarApi.addGroupNavApp(appNow)
+        if(result.code === 1000) {
+          ipc.send('message', { type: 'success', config: { content: '添加成功，可在云端团队导航中查看。' } })
+        }
+      }
+    } else {
+      let tabs = tasks.getSelected().tabs
+      const filterTabs = tabs.tabs.filter(e => !e.url.startsWith('file:///'))
+      filterTabs.forEach(item => {
+        const appNow = {
+          icon: item.favicon == null ? '../../icons/default.svg' : item.favicon.url,
+          name: item.title,
+          url: item.url,
+          summary: "",
+          list_id: listId,
+          add_time: String(new Date().getTime()),
+        }
+        setTimeout(async ()=> {
+          await navbarApi.addGroupNavApp(appNow)
+        }, 200)
+      })
+      ipc.send('message', { type: 'success', config: { content: '添加成功，可在云端团队导航中查看。' } })
+    }
   },
 
   //复制tab链接
@@ -227,10 +330,10 @@ const tabBar = {
       iconArea.appendChild(pbIcon)
     }
 
-    var secIcon = document.createElement('i')
-    secIcon.className = 'icon-tab-not-secure tab-icon tab-info-icon i carbon:unlocked'
-    secIcon.title = l('connectionNotSecure')
-    iconArea.appendChild(secIcon)
+    // var secIcon = document.createElement('i')
+    // secIcon.className = 'icon-tab-not-secure tab-icon tab-info-icon i carbon:unlocked'
+    // secIcon.title = l('connectionNotSecure')
+    //iconArea.appendChild(secIcon)
 
     var closeTabButton = document.createElement('button')
     closeTabButton.className = 'tab-icon tab-close-button i carbon:close'
@@ -259,9 +362,16 @@ const tabBar = {
         tabBar.events.emit('tab-selected', data.id)
       } else {
         // the tab is focused, edit tab instead
-        tabEditor.show(data.id)
+        if(!$toolbar.expanded){
+          //如果非二栏模式才可以触发show
+          tabEditor.show(data.id)
+        }
       }
     })
+
+
+    tabEditor.input.removeEventListener('focus',$toolbar.focusInput)
+    tabEditor.input.addEventListener('focus',$toolbar.focusInput)
 
     tabEl.addEventListener('auxclick', function (e) {
       if (e.which === 2) {
@@ -297,50 +407,6 @@ const tabBar = {
       e.preventDefault()
       e.stopPropagation()
 
-      let handleSingleTab = [
-        {
-          label: '默认列表',
-          click: () => {
-            tabBar.addToScopeLocal(data.id)
-          }
-        },
-        {type: 'separator'}
-      ]
-
-      let handleAllTab = [
-        {
-          label: '默认列表',
-          click: () => {
-            tabBar.addToScopeLocal(data.id, null, false)
-          }
-        },
-        {type: 'separator'}
-      ]
-
-      //处理本地导航的列表呈现
-      const localAppsMenu = async () => {
-        const { appListModel } = require('../../pages/util/model/appListModel')
-        const list = await appListModel.list()
-        list.forEach(item => {
-          handleSingleTab.push({
-            label: item.name,
-            click: ()=> {
-              tabBar.addToScopeLocal(data.id, item.id)
-            }
-            //icon: path.join(__dirname, '/icons/apps.png')
-          })
-          handleAllTab.push({
-            label: item.name,
-            click: ()=> {
-              tabBar.addToScopeLocal(data.id, item.id, false)
-            }
-            //icon: path.join(__dirname, '/icons/apps.png')
-          })
-        })
-      }
-
-      await localAppsMenu()
-
       let template = [
         [
           {
@@ -355,7 +421,6 @@ const tabBar = {
             id: 'open',
             label: '打开新标签',
             click: function () {
-              //console.log('关闭全部标签被点击')
               require('browserUI.js').addTab()
             },
           },
@@ -363,16 +428,23 @@ const tabBar = {
             label: '移动到最左边',
             toolTip: '作为组代表,当前任务组会更新为此标签的网站图标',
             click: function () {
-              //console.log('关闭全部标签被点击')
               tabBar.moveToFirst(data.id)
             },
           },
           {
+            label: '移动到其他标签组',
+            click: () => {
+              tabBar.insertTabToTask(data.id)
+            }
+          },
+          {
             label: '关闭标签',
             click: function () {
-              //console.log('关闭全部标签被点击')
-              //$store.getters.fillTasksToItems
-              require('browserUI.js').closeTab(data.id)
+              if(!!tabs.get(data.id).lock){
+                ipc.send('message',{type:'info',config:{content:'该标签为锁定标签，无法直接关闭，请解锁后再关闭。',key:'lockTip'}})
+              }else{
+                require('browserUI.js').closeTab(data.id)
+              }
             },
           },
         ],
@@ -380,6 +452,14 @@ const tabBar = {
           {
             label: '关闭整组',
             click: function () {
+              const tabsList=tasks.getSelected().tabs
+              console.log(tabsList)
+              for(let i=0;i<tabsList.tabs.length;i++){
+                if(!!tabsList.tabs[i].lock){
+                  ipc.send('message',{type:'info',config:{content:'组内存在锁定标签，无法关闭整组。请解锁后再试。'}})
+                  return
+                }
+              }
               require('browserUI.js').closeTask(tasks.getSelected().id)
             },
           },
@@ -399,25 +479,6 @@ const tabBar = {
             label: '关闭右侧标签',
             click: function () {
               tabBar.closeRightTabs(data.id)
-            },
-          },
-        ],
-        [
-          {
-            label: '添加到本地导航',
-            submenu: handleSingleTab
-            // click: function () {
-            //   tabBar.addToMyapps(data.id)
-            // },
-          },
-          {
-            label: '整组添加到本地导航',
-            submenu: handleAllTab
-          },
-          {
-            label: '移入新建分组中',
-            click: function () {
-              tabBar.moveTabTask(data.id)
             },
           },
         ],
@@ -446,6 +507,180 @@ const tabBar = {
           },
         ],
       ]
+
+      const judgeUser = await baseApi.getCurrentUser()
+      if(judgeUser.value.uid === 0) {
+        remoteMenu.open(template)
+        return
+      }
+
+      let handleSingleTab = [
+        {
+          label: '默认列表',
+          click: () => {
+            tabBar.addToScopeLocal(data.id)
+          }
+        },
+        {type: 'separator'}
+      ]
+
+      let handleAllTab = [
+        {
+          label: '默认列表',
+          click: () => {
+            tabBar.addToScopeLocal(data.id, null, false)
+          }
+        },
+        {type: 'separator'}
+      ]
+
+      let showSiglAppUserNav = []
+      let showMulAppUserNav = []
+
+      //处理云端用户导航列表的呈现
+      const handleUserNav = async() => {
+        try {
+          const result = await navbarApi.getUserNavs()
+          if(result.code === 1000) {
+            result.data.forEach(e => {
+              showSiglAppUserNav.push({
+                label: e.name,
+                click: () => {
+                  tabBar.addToUserNav(data.id, e.id)
+                }
+              })
+              showMulAppUserNav.push({
+                label: e.name,
+                click: () => {
+                  tabBar.addToUserNav(data.id, e.id, false)
+                }
+              })
+            })
+          }
+        } catch(err) {
+          console.log(err)
+        }
+      }
+
+      await handleUserNav()
+
+      let showSiglAppGroupNav = []
+      let showMulAppGrouprNav = []
+
+      const handleGroupNav = async() => {
+        const result = await navbarApi.getGroupList()
+        if(result.code === 1000) {
+          showSiglAppGroupNav = result.data.map(e => {
+            if(e.app_group_list.length > 0) {
+              let arr = []
+              let obj = {}
+              e.app_group_list.forEach(v => {
+                obj = {
+                  id: v.id,
+                  label: v.name,
+                  click: () => {
+                    tabBar.addToGroupNav(data.id, v.id)
+                  }
+                }
+                arr.push(obj)
+              })
+              return e = {
+                id: e.id,
+                label: e.name,
+                submenu: arr
+              }
+            } else {
+              return e = {
+                id: e.id,
+                label: e.name
+              }
+            }
+          })
+
+          showMulAppGrouprNav = result.data.map(e => {
+            if(e.app_group_list.length > 0) {
+              let arr = []
+              let obj = {}
+              e.app_group_list.forEach(v => {
+                obj = {
+                  id: v.id,
+                  label: v.name,
+                  click: () => {
+                    tabBar.addToGroupNav(data.id, v.id, false)
+                  }
+                }
+                arr.push(obj)
+              })
+              return e = {
+                id: e.id,
+                label: e.name,
+                submenu: arr
+              }
+            } else {
+              return e = {
+                id: e.id,
+                label: e.name
+              }
+            }
+          })
+        }
+        // console.log(showSiglAppGroupNav, 'showSiglAppGroupNav__')
+      }
+
+      await handleGroupNav()
+
+      //处理本地导航的列表呈现
+      const localAppsMenu = async () => {
+        const { appListModel } = require('../../pages/util/model/appListModel')
+        const list = await appListModel.list()
+        list.forEach(item => {
+          handleSingleTab.push({
+            label: item.name,
+            click: ()=> {
+              tabBar.addToScopeLocal(data.id, item.id)
+            }
+            //icon: path.join(__dirname, '/icons/apps.png')
+          })
+          handleAllTab.push({
+            label: item.name,
+            click: ()=> {
+              tabBar.addToScopeLocal(data.id, item.id, false)
+            }
+            //icon: path.join(__dirname, '/icons/apps.png')
+          })
+        })
+      }
+
+      await localAppsMenu()
+
+      const onlineTempl = [
+        {
+          label: '添加到本地导航',
+          submenu: handleSingleTab
+        },
+        {
+          label: '整组添加到本地导航',
+          submenu: handleAllTab
+        },
+        {
+          label: '添加到云端用户导航',
+          submenu: showSiglAppUserNav
+        },
+        {
+          label: '整组添加到云端用户导航',
+          submenu: showMulAppUserNav
+        },
+        {
+          label: '添加到云端团队导航',
+          submenu: showSiglAppGroupNav
+        },
+        {
+          label: '整组添加到云端团队导航',
+          submenu: showMulAppGrouprNav
+        }
+      ]
+
+      template.splice(2, 0, onlineTempl)
 
       remoteMenu.open(template)
       //绑定代码结束
@@ -500,12 +735,12 @@ const tabBar = {
         tabEl.insertBefore(button, tabEl.children[0])
       })
 
-    var secIcon = tabEl.getElementsByClassName('icon-tab-not-secure')[0]
-    if (tabData.secure === false) {
-      secIcon.hidden = false
-    } else {
-      secIcon.hidden = true
-    }
+    // var secIcon = tabEl.getElementsByClassName('icon-tab-not-secure')[0]
+    // if (tabData.secure === false) {
+    //   secIcon.hidden = false
+    // } else {
+    //   secIcon.hidden = true
+    // }
   },
   updateAll: function () {
     empty(tabBar.containerInner)
@@ -561,8 +796,15 @@ const tabBar = {
         src = tabData.favicon.url
       }
     }
-
+    // iconEl.title="点击查看网站名片"
     iconEl.src = src
+    // iconEl.style.cursor='pointer'
+   // iconEl.style="cursor:pointer"
+   //  iconEl.addEventListener('click',(e)=>{
+   //    ipc.send('createSiteCard',{url:tabData.url,x:e.clientX,y:e.clientY,title:tabData.title,tabData:tabData})
+   //    e.preventDefault()
+   //    e.stopPropagation()
+   //  })
     return iconEl
   },
 }
@@ -639,6 +881,43 @@ tabBar.container.addEventListener('drop', (e) => {
 })
 ipc.on('refresh', () => {
   webviews.update(tabs.getSelected(), tasks.getSelected().tabs.get(tabs.getSelected()).url)
+})
+
+ipc.on('toggleLockTab',(event,args)=>{
+  const tab=tasks.get(args.taskId).tabs.get(args.id)
+  tasks.get(args.taskId).tabs.update(tab.id,{ lock:!tab.lock })
+})
+
+ipc.on('lockTask',(event,args)=>{
+  let tabs=tasks.get(args.id)
+  tabs.tabs.forEach((item,index)=>{
+    tabs.tabs.update(item.id, { lock:true })
+  })
+})
+
+ipc.on('clearTaskUnlock',(event,args)=>{
+  let task=tasks.get(args.id)
+  let deleteIds=[]
+  task.tabs.forEach((tab,index)=>{
+    console.log(tab.lock)
+   if(!!!tab.lock ){
+    deleteIds.push(tab.id)
+   }
+  })
+  deleteIds.forEach((id)=>{
+    if(args.id===tasks.getSelected().id){
+      //如果是当前的标签组，则通过ui去关闭标签
+      require('../browserUI.js').closeTab(id)
+    }else{
+      //如果不是当前选中的标签组，则直接移除
+      task.tabs.destroy(id)
+    }
+  })
+  if(task.tabs.count()===0 && args.id!==tasks.getSelected().id){
+    //清空了，再加一个新标签进去，防止tabs出问题
+    task.tabs.add()
+  }
+
 })
 
 module.exports = tabBar

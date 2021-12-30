@@ -1,0 +1,28 @@
+.clock2 {
+  font-family: 'Share Tech Mono', monospace;
+  color: #ffffff;
+  text-align: center;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  color: #daf6ff;
+  text-shadow: 0 0 20px #0aafe6, 0 0 20px rgba(10, 175, 230, 0);
+}
+.clock2 .time {
+  letter-spacing: 0.05em;
+  font-size: 70px;
+  padding: 5px 0;
+  margin-bottom: 0;
+}
+.clock2 .date {
+  letter-spacing: 0.1em;
+  font-size: 24px;
+  margin-bottom: 0;
+}
+.clock2 .name {
+  letter-spacing: 0.1em;
+  font-size: 12px;
+  padding: 20px 0 0;
+}

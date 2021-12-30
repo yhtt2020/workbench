@@ -46,7 +46,7 @@ app.whenReady().then(()=>{
 
   autoUpdater.on('update-available',(data)=>{
     updateInfo=data
-    console.log(updateInfo)
+    //console.log(updateInfo)
     sidePanel.get().webContents.send('message',{type:'success',config:{content:"有新版本可用，系统将在后台自动下载。",key:"update"}})
   })
 
@@ -58,7 +58,7 @@ app.whenReady().then(()=>{
     // ipc.on('updateNow',(e,arg)=>{
     //   autoUpdater.quitAndInstall()
     // })
-    console.log('update下载完成')
+    //console.log('update下载完成')
     loadUpdate(updateInfo)
   })
 
@@ -66,7 +66,7 @@ app.whenReady().then(()=>{
     autoUpdater.quitAndInstall()
   })
   autoUpdater.on("error", (error) => {
-    console.log(`升级失败: ${error}`)
+    //console.log(`升级失败: ${error}`)
     let errInfo=''
     if(error.code===2){
       errInfo="软件包名无法验证，"

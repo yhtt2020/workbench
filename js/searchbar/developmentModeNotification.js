@@ -9,7 +9,7 @@ function initialize () {
     showResults: function () {
       searchbarPlugins.reset('developmentModeNotification')
       searchbarPlugins.addResult('developmentModeNotification', {
-        title: 'Development Mode Enabled'
+        title: '当前模式：开发者模式启用中'
       })
     }
   })

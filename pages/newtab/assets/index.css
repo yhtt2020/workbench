@@ -16,6 +16,36 @@ html {
   box-sizing: inherit;
 }
 
+/*最左侧栏*/
+.side-bar {
+  position: fixed;
+  height: 100vh;
+  width: 45px;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(4px);
+  display: flex;
+  right: 0;
+}
+.side-bar .action-list {
+  width: 100%;
+  height: auto;
+  align-self: center;
+}
+.side-bar .action-list .active {
+  background: rgba(255, 255, 255, 0.3) !important;
+}
+.side-bar .action-list .action {
+  margin-bottom: 10px;
+  text-align: center;
+  padding: 5px;
+  display: block;
+  color: #333;
+}
+.side-bar .action-list .action:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/*最左侧栏end*/
 .main .main-top {
   width: 100%;
   height: 20vh;
@@ -35,26 +65,6 @@ html {
     -webkit-transform: translateY(-20px);
     transform: translateY(-20px);
   }
-}
-.main .main-top .top-search {
-  width: 706px;
-  height: 54px;
-  border-radius: 100px;
-  background-color: white;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-  position: relative;
-}
-.main .main-top .top-search .search {
-  width: 580px;
-  height: 50px;
-}
-.main .main-top .top-search .search-logo {
-  cursor: pointer;
-  z-index: 20;
-  margin-right: 20px;
-}
-.main .main-top .top-search .search-logo:hover {
-  color: #1890ff;
 }
 .main .main-bottom {
   width: 100%;
