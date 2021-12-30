@@ -734,6 +734,8 @@
     },
     data () {
       return {
+        deskCanEdit:true,
+        uuid:0,
         mouseFlag: 0,//鼠标移动标志，用于解决鼠标拖拽和单机的冲突导致跳转在拖拽后触发的问题。
         selectoContainer: document.getElementById('.desktop-content'),
         //编辑组件
@@ -1049,7 +1051,11 @@
        * 保存桌面布局
        */
       saveDesk () {
-        localStorage.setItem('desk_'+this.selectedDesk, JSON.stringify(this.layout))
+        if(appVue.deskCanEdit){
+          localStorage.setItem('desk_'+this.selectedDesk, JSON.stringify(this.layout))
+        }else{
+          appVue.$message.error({content:'由于当前桌面并非最新打开的桌面，无法保存设置，请切换到最新打开的桌面，或者刷新当前页面后再编辑。',duration:5})
+        }
       },
       /**
        * 读入一个桌面布局
@@ -1318,6 +1324,35 @@
 
     },
     mounted () {
+      function generateUUID() {
+        var d = new Date().getTime();
+        if (window.performance && typeof window.performance.now === "function") {
+          d += performance.now(); //use high-precision timer if available
+        }
+        var uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+          var r = (d + Math.random() * 16) % 16 | 0;
+          d = Math.floor(d / 16);
+          return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
+        });
+        return uuid;
+      }
+      this.uuid=generateUUID()
+      localStorage.setItem('livingNewtabUUID',this.uuid)
+      function aLive(){
+        if(appVue.uuid===localStorage.getItem('livingNewtabUUID'))
+        {
+          return true
+        }else{
+          //todo died
+          appVue.deskCanEdit=false
+          document.title='新标签|离线'
+          appVue.$notification.error({message:'桌面无法编辑',description:'为了防止桌面设置互相覆盖，当前桌面无法再编辑，也无法再保存，请前往最新打开的桌面管理。'})
+          clearInterval(window.alive)
+        }
+      }
+      window.alive= setInterval(aLive,1000)
+      document.title='新标签|在线'
+      console.log(this.uuid)
       this.desks=JSON.parse(localStorage.getItem('desks'))
       if(!!!this.desks){
         //desks不存在,则初始化一个空对象
