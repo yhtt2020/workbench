@@ -1345,14 +1345,15 @@
         }else{
           //todo died
           appVue.deskCanEdit=false
-          document.title='新标签|离线'
-          appVue.$notification.error({message:'桌面无法编辑',description:'为了防止桌面设置互相覆盖，当前桌面无法再编辑，也无法再保存，请前往最新打开的桌面管理。'})
+          document.title='新标签'
+          appVue.$notification.error({message:'桌面无法编辑',
+            description:'为了防止桌面设置互相覆盖，当前桌面无法再编辑，也无法再保存，请前往最新打开的桌面管理，或者刷新当前页面以获得编辑权限。',
+          duration: null})//,closeIcon:h=>h('div',{style:'display:none'})
           clearInterval(window.alive)
         }
       }
       window.alive= setInterval(aLive,1000)
-      document.title='新标签|在线'
-      console.log(this.uuid)
+      document.title='新标签'
       this.desks=JSON.parse(localStorage.getItem('desks'))
       if(!!!this.desks){
         //desks不存在,则初始化一个空对象
