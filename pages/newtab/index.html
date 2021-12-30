@@ -43,7 +43,7 @@
             <template slot="content">
               我的个人桌面
             </template>
-            <div @click="changeDesk(0)" :class="{'action':1,'active':0===this.selectedDesk}">
+            <div @click="changeDesk(0)" :class="{'action':1,'active':0===Number(this.selectedDesk)}">
               <a-icon type="home"></a-icon>
               <div class="name">主页</div>
             </div>
@@ -57,9 +57,9 @@
               <div class="name">{{desk.name}}</div>
             </div>
             <a-menu slot="overlay">
-              <a-menu-item key="editDesk">
-                编辑
-              </a-menu-item>
+<!--              <a-menu-item @click="showAddDesk(desk)" key="editDesk">-->
+<!--                编辑-->
+<!--              </a-menu-item>-->
               <a-menu-item @click="removeDesk(desk)" key="removeDesk" style="color: red">
                 删除
               </a-menu-item>
@@ -76,7 +76,7 @@
               <div class="name">添加</div>
             </div>
           </a-popover>
-          <create-desk @add-desk="addDesk" v-model="visibleCreateDesk"></create-desk>
+          <create-desk @add-desk="addDesk" v-model:desk-id="editDeskId" v-model="visibleCreateDesk"></create-desk>
 
         </div>
         <div>
@@ -739,6 +739,7 @@
         //编辑组件
 
         visibleCreateDesk: false,
+        editDeskId:-1,
         selectedDesk: 0,
 
         //选中了的elements
@@ -814,7 +815,6 @@
         this.selectedDesk = id
         localStorage.setItem('selectedDesk',id)
         this.loadDesk(id)
-        console.log(this.selectedDesk)
 
       },
       isSelectedDesk (id) {
@@ -839,7 +839,6 @@
               //createElement(`<div style="color:red;">确认删除桌面，删除后不可恢复？</div>`)
           },
           onOk() {
-            console.log('OK');
           },
           onCancel() {
             //todo实现删除逻辑
@@ -847,10 +846,13 @@
               if(that.desks[i].id===desk.id)
               {
                 that.desks.splice(i,1)
+                localStorage.setItem('desks',JSON.stringify(that.desks))
               }
             }
             localStorage.removeItem('desk_'+desk.id)
+            console.log(desk.id)
             that.selectedDesk=0
+            localStorage.setItem('selectedDesk',that.selectedDesk)
             that.loadDesk(0)
           }
         });
@@ -872,7 +874,6 @@
         let parentEl = {}
         let success = false
         let data = event.data
-        console.log(data)
         if (data.groupId === 0) {
           parentEl = this.layout
         } else {
@@ -953,7 +954,6 @@
           if (gotItem !== null) {
             gotItem.x = index % colNum
             gotItem.y = Math.floor(index / colNum)
-            console.log(gotItem.x + '|' + gotItem.y)
             index++
             composeItems.push(gotItem)
           }
@@ -998,7 +998,6 @@
 
           el.classList.remove('selected')
         })
-        console.log(this.selectedElements)
       },
       /**
        * 隐藏主菜单
@@ -1044,7 +1043,6 @@
         this.selectedColor = color
       },
       setCardText (e) {
-        console.log(e)
         this.cardText = e.value
       },
       /**
@@ -1076,12 +1074,9 @@
           }
           this.selectedDesk=storedSelectedDesk
         }
-        console.log(this.selectedDesk)
 
         //读入对应桌面
         const deskLayout = localStorage.getItem('desk_'+this.selectedDesk)
-        console.log(id)
-        console.log(this.selectedDesk)
         if (!!deskLayout) {
           //如果存在桌面
           try {
@@ -1092,9 +1087,8 @@
               layout = defaultDesk
             }
             this.layout =layout
-            console.log(layout)
           } catch (err) {
-            console.log('desk损坏')
+            this.$message.error({content:"桌面损坏。"})
           }
         }else{
           this.layout=[]
@@ -1106,7 +1100,6 @@
         this.removeResizeHandleEvent()
       },
       handleOk (e) {
-        console.log(e)
         this.visibleAdd = false
       },
       addElement (element, posElement = null) {
@@ -1220,7 +1213,6 @@
           )
         } catch (err) {
           this.$message.error({ content: '保存壁纸失败。' })
-          console.log(err)
         }
       },
       changeOpacity (opacity) {
@@ -1296,7 +1288,6 @@
           return
         }
         this.dock.splice(this.dock.indexOf(item), 1)
-        console.log(item.id)
         db.dockApps.delete(item.id).catch(err => {
           console.log(err)
         })
