@@ -22,7 +22,7 @@ const iconSelector=Vue.component('icon-selector', {
       icons: [
         'bulb','account-book', 'alert', 'api', 'appstore', 'audio', 'bank', 'bell', 'book', 'bug',  'calculator', 'build', 'calendar', 'camera', 'car',
         'carry-out','cloud','code','compass','contacts','container','control','credit-card','crown','customer-service','dashboard','database','dislike','environment',
-        'experiment','eye-invisible','eye','file-add','file-excel','file-exclamation','file-image','file-markdown','file-pdf','file-ppt','file-text','file-unknown','file-image',
+        'experiment','eye-invisible','eye','file-add','file-excel','file-exclamation','file-image',
         'file-markdown','file-pdf','file-ppt','file-text','file-unknown','file-word','folder','folder-open','frown','funnel-plot','gift','hdd','heart','home','hourglass','idcard',
         'insurance','interaction','layout','like','lock','mail','medicine-box','meh','message','mobile','money-collect','pay-circle','notification','phone','picture','play-square',
         'printer','profile','pushpin','property-safety','read','reconciliation','red-envelope','rest','rocket','safety-certificate','save','schedule','security-scan','setting','shop',
