@@ -22,8 +22,12 @@ const server = {
           })
         }
       } else {
-        ipc.send('message',{type:'error',config:{content: '请先完成浏览器登录!', key: Date.now()}})
-        return
+        if(window.localStorage.getItem('LUMNEIM-TOKEN')) {
+          //浏览器已经登出，但是im还登录的情况
+          window.location.href = `${host}${config.IM.AUTO_LOGIN}?removeToken=true`
+        } else {
+          ipc.send('message',{type:'error',config:{content: '请先完成浏览器登录!', key: Date.now()}})
+        }
       }
     })
   },
