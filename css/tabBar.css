@@ -103,7 +103,8 @@ body.linux #menu-button {
 
 .tab-item {
   flex: 1;
-  min-width: 125px;
+  max-width: 240px;
+  min-width: 100px;
   transition: 0.2s transform;
   line-height: 36px;
   height: 36px;
