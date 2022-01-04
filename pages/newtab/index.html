@@ -957,9 +957,11 @@
             success = true
           }
         }
-        this.saveDesk()
+        deskModel.updateDeskLayout(this.currentDeskInfo.id,this.layout)
         if (success) {
           this.$message.success({ content: '保存图标成功。' })
+          deskModel.refreshDeskInfoUpdateTime(this.currentDeskInfo.id)
+          this.currentDeskInfo=deskModel.getCurrentDeskInfo()
         } else {
           this.$message.error({ content: '保存图标失败，未找到对应图标。' })
         }
@@ -1106,11 +1108,12 @@
       /**
        * 保存桌面布局
        */
-      saveDesk () {
+      saveDesk (skipNext=false) {
         if(this.layoutSkipSave===true){//如果跳过，则不自动保存
           this.layoutSkipSave=false
           return
         }
+        this.layoutSkipSave=skipNext
         let oldDeskInfo=deskModel.getDeskInfo(this.currentDeskInfo.id)
         console.log('触发保存')
         if(oldDeskInfo.updateTime===this.currentDeskInfo.updateTime){
@@ -1120,6 +1123,7 @@
         }else{
           appVue.$message.error({content:'保存桌面失败。失败原因：当前桌面数据已失效。请刷新桌面后重试。',duration:5})
         }
+
       },
       /**
        * 读入一个桌面布局
@@ -1361,11 +1365,6 @@
           //当前桌面未更新
           return true
         }else{
-          //todo died
-          // appVue.deskCanEdit=false
-          // document.title='新标签'
-          // uuid已经变化，证明已经不是最新的，则自动加载最新的。
-          // 重新刷新uuid，并刷新当前桌面的layout
           appVue.layout=deskModel.getCurrentDeskLayout()
           appVue.currentDeskInfo=deskModel.getCurrentDeskInfo()
           appVue.layoutSkipSave=true//不需要自动保存
