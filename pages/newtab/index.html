@@ -1365,12 +1365,13 @@
           //当前桌面未更新
           return true
         }else{
-          appVue.layout=deskModel.getCurrentDeskLayout()
-          appVue.currentDeskInfo=deskModel.getCurrentDeskInfo()
-          appVue.layoutSkipSave=true//不需要自动保存
-          appVue.$notification.success({message:'桌面已更新',
-            description:'当前桌面已改变，已自动读入最新桌面。',
-          duration: null})//,closeIcon:h=>h('div',{style:'display:none'})
+          window.location.reload()
+          // appVue.layout=deskModel.getCurrentDeskLayout()
+          // appVue.currentDeskInfo=deskModel.getCurrentDeskInfo()
+          // appVue.layoutSkipSave=true//不需要自动保存
+          // appVue.$notification.success({message:'桌面已更新',
+          //   description:'当前桌面已改变，已自动读入最新桌面。',
+          // duration: null})//,closeIcon:h=>h('div',{style:'display:none'})
         }
       }
       window.alive= setInterval(aLive,1000)
