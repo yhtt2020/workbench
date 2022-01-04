@@ -30,7 +30,13 @@ const deskModel={
    * 获取当前桌面的信息
    */
   getCurrentDeskInfo(){
-    return deskModel.getDeskInfo(deskModel.getCurrentDeskId())
+    let deskInfo=deskModel.getDeskInfo(deskModel.getCurrentDeskId())
+    if(!!!deskInfo.updateTime)
+    {
+      //如果找到的deskInfo不存在updateTime
+     deskInfo=  deskModel.refreshDeskInfoUpdateTime(deskModel.getCurrentDeskId())
+    }
+    return deskInfo
   },
   getDeskLayout(deskId){
     let desk=[]
@@ -44,6 +50,8 @@ const deskModel={
   getDeskInfo(id){
     let desks=deskModel.getAllDeskInfo()
     let deskInfo={}
+    console.log(desks)
+    console.log(id)
     desks.forEach((item)=>{
       if(Number(item.id)===Number(id)){
         deskInfo=item
@@ -73,16 +81,18 @@ const deskModel={
       if(desks[i].id===deskInfo.id){
         deskInfo.updateTime=Date.now()
         desks[i]=deskInfo
+        deskModel.updateDeskInfo(deskInfo.id,deskInfo)
       }
     }
-    deskModel.saveAllDeskInfo(desks)
+    return deskInfo
+    //deskModel.saveAllDeskInfo(desks)
   },
   /**
    * 刷新一个桌面的最后更新时间
    * @param id
    */
   refreshDeskInfoUpdateTime(id){
-    deskModel.updateDeskInfo(id,deskModel.getDeskInfo(id))//更新一下deskInfo最后更新时间
+    return deskModel.updateDeskInfo(id,deskModel.getDeskInfo(id))//更新一下deskInfo最后更新时间
   },
   /**
    * 更新一个桌面的布局
@@ -92,7 +102,7 @@ const deskModel={
   updateDeskLayout(id,layout){
     localStorage.setItem('desk_'+id.toString(),JSON.stringify(layout))
     deskModel.refreshDeskInfoUpdateTime(id)//刷新一下桌面更新时间
-    localStorage.setItem(deskModel.livingNewtabUUID,deskModel.generateUUID())//重新生成uuid，代表已变更
+    //localStorage.setItem(deskModel.livingNewtabUUID,deskModel.generateUUID())//重新生成uuid，代表已变更
   },
   /**
    * 生成一个uuid

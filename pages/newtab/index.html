@@ -1358,14 +1358,12 @@
     mounted () {
       function aLive(){
         let latestCurrentDeskInfo=deskModel.getCurrentDeskInfo()//当前最新的桌面信息
-        console.log(latestCurrentDeskInfo.updateTime)
-        console.log(appVue.currentDeskInfo.updateTime)
-        if(appVue.currentDeskInfo.updateTime===latestCurrentDeskInfo.updateTime)
+        if(Number(appVue.currentDeskInfo.updateTime)===Number(latestCurrentDeskInfo.updateTime))
         {
           //当前桌面未更新
           return true
         }else{
-          window.location.reload()
+          //window.location.reload()
           // appVue.layout=deskModel.getCurrentDeskLayout()
           // appVue.currentDeskInfo=deskModel.getCurrentDeskInfo()
           // appVue.layoutSkipSave=true//不需要自动保存
