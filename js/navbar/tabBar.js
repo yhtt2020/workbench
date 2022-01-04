@@ -407,6 +407,33 @@ const tabBar = {
     tabEl.addEventListener('contextmenu', async (e) => {
       e.preventDefault()
       e.stopPropagation()
+      let desks=[]
+      try{
+        desks=JSON.parse(localStorage.getItem('desks'))
+      }
+      catch (e){
+      }
+      let addToDeskMenus=[]
+     desks.forEach((desk)=>{
+       addToDeskMenus.push({
+         id:desk.id,
+         label:desk.name,
+         click:()=>{
+        const tab=tabs.get(data.id)
+        const app={
+          type:'app',
+          data:{
+            name:tab.title,
+            icon:tab.favicon == null ? '../../icons/default.svg' : tab.favicon.url,
+            url:tab.url
+          }
+        }
+        const  deskModel=require('../../pages/util/model/deskModel.js')
+        const element= deskModel.createElementPos(app)
+        deskModel.addElementToDesk(element,desk.id)
+       }
+       })
+     })
 
       let template = [
         [
@@ -417,6 +444,11 @@ const tabBar = {
               require('browserUI.js').addTask()
               //$store.getters.fillTasksToItems
             },
+          },
+          {
+            id:'addToDesk',
+            label:'添加到桌面',
+            submenu: addToDeskMenus
           },
           {
             id: 'open',
