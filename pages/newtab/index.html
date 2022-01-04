@@ -175,7 +175,7 @@
 
                 <grid-item @contextmenu.stop="" @mousedown.stop="" :data-id="item.i"
                            :class="{'element':true,'selectable':item.element.type==='app'}" v-for="item in layout"
-                           :style="{'display':item.element.type==='card'?'flex':'block'}"
+                           :style="{'display':['card','video'].indexOf(item.element.type)!==-1?'flex':'block'}"
                            :x="item.x"
                            :y="item.y"
                            :w="item.w"
@@ -194,6 +194,8 @@
                        @compose-group="composeGroup"
                        :group-id="selectGroup.i" :item="item" @edit-app="onSubmitEdit" @remove-selected="removeSelected"
                        @remove-element="removeElement(item)" @open-url="openUrl(item.element.data.url)"></app>
+                  <ele-video :source="item.element.data.source" :controls="item.element.data.controls"
+                       @remove-element="removeElement(item)" v-if="item.element.type==='video'" ></ele-video>
                   <group v-if="item.element.type==='group'" :item="item" @edit-group="editGroup(item)"
                          @remove-element="removeElement(item)" @open-group="openGroup(item)"></group>
                   <a-dropdown @mousedown.stop="" :trigger="['contextmenu']" v-if="item.element.type==='card'">
@@ -505,10 +507,10 @@
       </a-modal>
 
       <a-modal v-model="visibleAdd" title="添加组件" :width="820" :body-style="{height: '700px'}" :footer="null">
-        <a-tabs default-active-key="3" tab-position="left" style="height: 100%">
+        <a-tabs default-active-key="daohang" tab-position="left" style="height: 100%">
           <!--              <a-tab-pane key="1" tab="自定义">-->
           <!--              </a-tab-pane>-->
-          <a-tab-pane key="3" tab="网站导航">
+          <a-tab-pane key="daohang" tab="网站导航">
             <a-tabs default-active-key="productive" tab-position="top" @ok="handleOk" :style="{ height: '650px' }">
               <a-tab-pane v-for="(type, indexType) in allApps" :key="type.name" :tab="type.title">
                 <div style="max-height: 650px">
@@ -533,26 +535,8 @@
               </a-tab-pane>
             </a-tabs>
           </a-tab-pane>
-          <a-tab-pane key="2" tab="小组件" style="overflow-y: auto;height: 650px">
+          <a-tab-pane key="useful" tab="实用组件">
             <ul class="tools" style="margin-right: 10px">
-              <li>
-                <h2 class="element-name">搜索工具栏</h2>
-                <p class="element-summary">支持多种搜索引擎。</p>
-                <div class="element-content" style="padding: 10px">
-                  <a-row type="flex">
-                    <a-col flex="1">
-                      <search></search>
-                    </a-col>
-                    <a-col flex="100px" class="actions">
-                      <a-button type="primary"
-                                @click="addElement({type:'search',data:{}},{maxH:1})">
-                        添加组件
-                      </a-button>
-                    </a-col>
-                  </a-row>
-                </div>
-
-              </li>
               <li>
                 <h2 class="element-name">桌面小便签</h2>
                 <p class="element-summary">可以自由修改内容、调整大小。</p>
@@ -583,7 +567,66 @@
                   </a-row>
                 </div>
               </li>
+              <li>
+                <h2 class="element-name">搜索工具栏</h2>
+                <p class="element-summary">支持多种搜索引擎。</p>
+                <div class="element-content" style="padding: 10px">
+                  <a-row type="flex">
+                    <a-col flex="1">
+                      <search></search>
+                    </a-col>
+                    <a-col flex="100px" class="actions">
+                      <a-button type="primary"
+                                @click="addElement({type:'search',data:{}},{maxH:1})">
+                        添加组件
+                      </a-button>
+                    </a-col>
+                  </a-row>
+                </div>
 
+              </li>
+
+            </ul>
+          </a-tab-pane>
+          <a-tab-pane key="menghu" tab="门户组件">
+            <ul class="tools" style="margin-right: 10px">
+              <li>
+                <h2 class="element-name">视频展示</h2>
+                <p class="element-summary">可以展示视频，视频大小根据框的大小自动</p>
+                <div class="element-content">
+                  <a-row type="flex">
+                    <a-col :span="24">
+                      <h3 class="tip-head">预览</h3>
+                      <div >
+                        <div style="width: 50%"> <ele-video ref="eleVideo" :source="eleVideoSource" :controls="eleVideoControls"></ele-video></div>
+
+                      </div>
+                    </a-col>
+                    <a-col flex="1" style="padding-left: 10px;padding-right: 10px">
+                      <h3 class="tip-head">设置</h3>
+                      <div :flex="1">
+                        <a-input style="margin-bottom:10px;margin-top: 10px" addon-before="地址：" placeholder="支持mp4" @change="eleVideoChange"></a-input>
+                        显示控制按钮： <a-switch @change="eleVideoControlsChange"></a-switch>
+                      </div>
+                    </a-col>
+                    <a-col flex="100px" class="actions">
+                      <a-button type="primary"
+                                @click="addElement({type:'video',data:{source:eleVideoSource,controls:eleVideoControls}})">
+                        添加组件
+                      </a-button>
+                    </a-col>
+                  </a-row>
+
+
+                </div>
+                <div>
+
+                </div>
+              </li>
+            </ul>
+          </a-tab-pane>
+          <a-tab-pane key="gexing" tab="个性组件" style="overflow-y: auto;height: 650px">
+            <ul class="tools" style="margin-right: 10px">
               <li>
                 <h2 class="element-name">个性时钟</h2>
                 <p class="element-summary">酷酷的时钟组件，支持多种款式</p>
@@ -642,8 +685,6 @@
                 </div>
               </li>
             </ul>
-
-
           </a-tab-pane>
 
           <!--              <a-tab-pane key="4" tab="本地导航">-->
@@ -719,6 +760,7 @@
 <script src="./components/elements/clock1.js"></script>
 <script src="./components/elements/clock2.js"></script>
 <script src="./components/elements/clock3.js"></script>
+<script src="./components/elements/video.js"></script>
 <script src="./components/createDesk.js"></script>
 <script>
   Vue.use(antd)
@@ -734,6 +776,9 @@
     },
     data () {
       return {
+        eleVideoSource:'',
+        eleVideoControls:false,
+
         deskCanEdit:true,
         uuid:0,
         mouseFlag: 0,//鼠标移动标志，用于解决鼠标拖拽和单机的冲突导致跳转在拖拽后触发的问题。
@@ -813,6 +858,12 @@
       }
     },
     methods: {
+      eleVideoChange(e){
+        this.eleVideoSource=e.target.value
+      },
+      eleVideoControlsChange(checked){
+        this.eleVideoControls=checked
+      },
       changeDesk (id) {
         this.selectedDesk = id
         localStorage.setItem('selectedDesk',id)
@@ -1129,6 +1180,10 @@
             w: 4, h: 1,
             isResizable: true,
           },
+          video:{
+            w:2,h:1,
+            isResizable:true,
+          }
         }
 
         const pos = {

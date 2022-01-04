@@ -89,14 +89,14 @@ const tabBar = {
   },
   //关闭左侧标签
   closeLeftTabs: function (tabId) {
+    console.log('close left')
     let tabs = tasks.getSelected().tabs
     if(tabId!==tabs.getSelected())
       require('browserUI.js').switchToTab(tabId)
     let needDestroy = []
-    let count = tabs.count()
     let lockCount=0
-    console.log(count)
-    for (let i = 0; i < count; i++) {
+    let currentIndex=tabs.getIndex(tabId)
+    for (let i = 0; i < currentIndex; i++) {
       if (tabs.getAtIndex(i).id != tabId ){
         if(!!tabs.getAtIndex(i).lock){
           lockCount++
@@ -116,7 +116,8 @@ const tabBar = {
     let needDestroy = []
     let count = tabs.count()
     let lockCount=0
-    for (let i = count - 1; i >= 0; i--) {
+    let currentIndex=tabs.getIndex(tabId)
+    for (let i = count - 1; i >= currentIndex; i--) {
       if (tabs.getAtIndex(i).id != tabId)
       {
         if(!!tabs.getAtIndex(i).lock){
