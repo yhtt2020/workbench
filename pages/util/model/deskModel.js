@@ -10,6 +10,7 @@
 //   "updateTime": 1641286442216
 // }
 // deskLayout 复杂的结构，详见api文档
+const fs= require('fs')
 const deskModel={
  // livingNewtabUUID:'livingNewtabUUID',//uuid方式已废弃
   selectedDesk:'selectedDesk',
@@ -19,6 +20,7 @@ const deskModel={
     let currentDesk=deskModel.getCurrentDeskId()
     return deskModel.getDeskLayout(currentDesk)
   },
+
   getCurrentDeskId(){
     let currentDesk=localStorage.getItem(deskModel.selectedDesk)
     if(!!!currentDesk){
@@ -50,8 +52,6 @@ const deskModel={
   getDeskInfo(id){
     let desks=deskModel.getAllDeskInfo()
     let deskInfo={}
-    console.log(desks)
-    console.log(id)
     desks.forEach((item)=>{
       if(Number(item.id)===Number(id)){
         deskInfo=item
@@ -172,6 +172,41 @@ const deskModel={
     }
     pos.element = element
     return pos
+  },
+  createDesk(deskInfo,layout){
+    let allDeskInfo=deskModel.getAllDeskInfo()
+    allDeskInfo.push(deskInfo)
+    deskModel.saveAllDeskInfo(allDeskInfo)
+    deskModel.updateDeskLayout(deskInfo.id,layout)
+  },
+  /**
+   * 从文件还原桌面
+   * @param files 文件数组，tsbk结尾
+   * @returns {{data: {count: number}, status, info: string}}
+   */
+  importDesk(files){
+    let successCount=0
+    files.forEach((file)=>{
+      try{
+       const desk= JSON.parse( fs.readFileSync(file,{encoding:'utf8'}))
+       if(!!!desk || !!!desk.name || !!!desk.createTime){
+         return {status:false,info:'文件格式错误。'}
+       }
+       const newDesk={
+         name:desk.name,
+         icon:desk.icon,
+         id:Date.now(),
+         createTime:desk.createTime,
+         updateTime:desk.updateTime
+       }
+       deskModel.createDesk(newDesk,desk.layout)
+        successCount++
+      }catch (e) {
+        console.log(e)
+        return {status:false,info:'意外终止。'}
+      }
+    })
+    return {status:true,info:'成功导入。',data:{count:successCount} }
   }
 }
 

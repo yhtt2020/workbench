@@ -725,13 +725,19 @@ ipc.on('sideSetAuto',(event,args)=>{
   SidePanel.send('sideSetAuto')
 })
 
+ipc.on('importDesk',(event,args)=>{
+  const files=dialog.showOpenDialogSync(mainWindow,{title:'导入桌面',defaultPath:'.tsbk',filters:[{name:'桌面备份',extensions:['tsbk']}]})
+  if(!!!files){
+    return
+  }else{
+    event.reply('importDesk',{files:files})
+    console.log(files)
+  }
+})
 ipc.on('exportDesk',(event,args)=>{
-  console.log(args.desk)
-  console.log(args.deskLayout)
   let desk=args.desk
   desk.layout=args.deskLayout
   const path=dialog.showSaveDialogSync(mainWindow,{title:'导出桌面',defaultPath:'桌面备份-'+desk.name+'.tsbk',filters:[{name:'桌面备份',extensions:['tsbk']}]})
-  console.log(path)
   if(!!!path){
     return
   }else{

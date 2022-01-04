@@ -60,8 +60,11 @@
 <!--              <a-menu-item @click="showAddDesk(desk)" key="editDesk">-->
 <!--                编辑-->
 <!--              </a-menu-item>-->
+              <a-menu-item @click="importDesk(desk)" key="importDesk">
+                导入备份桌面
+              </a-menu-item>
               <a-menu-item @click="exportDesk(desk)" key="exportDesk">
-                导出桌面
+                导出选中备份
               </a-menu-item>
               <a-menu-item @click="removeDesk(desk)" key="removeDesk" style="color: red">
                 删除
@@ -889,6 +892,9 @@
         localStorage.setItem('desks', JSON.stringify(this.desks))
         localStorage.setItem('desk_'+data.id,'[]')
       },
+      importDesk(){
+        ipc.send('importDesk')
+      },
       exportDesk(desk){
         ipc.send('exportDesk',{desk:desk,deskLayout:deskModel.getDeskLayout(desk.id)})
       },
@@ -914,7 +920,6 @@
               }
             }
             localStorage.removeItem('desk_'+desk.id)
-            console.log(desk.id)
             that.selectedDesk=0
             localStorage.setItem('selectedDesk',that.selectedDesk)
             that.switchToDesk(0)
@@ -1414,6 +1419,17 @@
         this.dock = this.dock.concat(data)
       })
     }
+  })
+
+  ipc.on('importDesk',(event,args)=>{
+    const result=deskModel.importDesk(args.files)
+    if(result.status){
+      appVue.$message.success({content:"导入成功。"})
+      appVue.desks=deskModel.getAllDeskInfo()
+    }else{
+      appVue.$message.error({content:'导入失败。'+result.status.info})
+    }
+    console.log(args)
   })
 </script>
 <style>
