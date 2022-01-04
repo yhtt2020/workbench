@@ -12,6 +12,29 @@
 // deskLayout 复杂的结构，详见api文档
 const fs= require('fs')
 const deskModel={
+  initialize(){
+    //兼容老版本，将home转为一个普通桌面
+    const homeDeskLayout=deskModel.getDeskLayout(0)
+    if(!!homeDeskLayout){
+      console.log(homeDeskLayout)
+      //自动在首部生成一个桌面
+      let allDesk=deskModel.getAllDeskInfo()
+      let homeDesk={
+        id:Date.now(),
+        name:'主页',
+        createTime:Date.now(),
+        updateTime:Date.now(),
+        icon:'home',
+        layout:[]
+      }
+      allDesk.unshift(homeDesk)
+      deskModel.saveAllDeskInfo(allDesk)
+      localStorage.setItem('bkHome',JSON.stringify(homeDeskLayout))
+      localStorage.removeItem('desk_0')
+      deskModel.updateDeskLayout(homeDesk.id,deskModel.getDeskLayout(0))
+      console.log('发现老桌面')
+    }
+  },
  // livingNewtabUUID:'livingNewtabUUID',//uuid方式已废弃
   selectedDesk:'selectedDesk',
   saveAll(desks){
@@ -81,11 +104,13 @@ const deskModel={
       if(desks[i].id===deskInfo.id){
         deskInfo.updateTime=Date.now()
         desks[i]=deskInfo
-        deskModel.updateDeskInfo(deskInfo.id,deskInfo)
+
+        //deskModel.updateDeskInfo(deskInfo.id,deskInfo)
       }
     }
+
+    deskModel.saveAllDeskInfo(desks)
     return deskInfo
-    //deskModel.saveAllDeskInfo(desks)
   },
   /**
    * 刷新一个桌面的最后更新时间

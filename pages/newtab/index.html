@@ -39,15 +39,15 @@
       <div style="flex: 1"></div>
       <div class="action-list">
         <div>
-          <a-popover>
-            <template slot="content">
-              我的个人桌面
-            </template>
-            <div @click="changeDesk(0)" :class="{'action':1,'active':0===Number(this.selectedDesk)}">
-              <a-icon type="home"></a-icon>
-              <div class="name">主页</div>
-            </div>
-          </a-popover>
+<!--          <a-popover>-->
+<!--            <template slot="content">-->
+<!--              我的个人桌面-->
+<!--            </template>-->
+<!--            <div @click="changeDesk(0)" :class="{'action':1,'active':0===Number(this.selectedDesk)}">-->
+<!--              <a-icon type="home"></a-icon>-->
+<!--              <div class="name">主页</div>-->
+<!--            </div>-->
+<!--          </a-popover>-->
 
         </div>
         <div v-for="desk in desks">
@@ -775,6 +775,7 @@
   const { wallPaper, themeSetting, wallUrl } = require('../util/theme.js')
   const VueSelecto = require('vue-selecto')
   const deskModel = require('../util/model/deskModel')
+  deskModel.initialize()
   window.selectedElements = []
   var appVue = new Vue({
     el: '#app',
