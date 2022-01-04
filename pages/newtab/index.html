@@ -768,6 +768,7 @@
   const wallList = require('./wall.json')
   const { wallPaper, themeSetting, wallUrl } = require('../util/theme.js')
   const VueSelecto = require('vue-selecto')
+  const deskModel = require('../util/model/deskModel')
   window.selectedElements = []
   var appVue = new Vue({
     el: '#app',
@@ -779,8 +780,11 @@
         eleVideoSource:'',
         eleVideoControls:false,
 
+
+        layoutSkipSave:false,//跳过保存，用于切换桌面的时候使用
         deskCanEdit:true,
         uuid:0,
+        currentDeskInfo:{},//当前桌面信息，用于比较更新时间，每次读入都会自动更新
         mouseFlag: 0,//鼠标移动标志，用于解决鼠标拖拽和单机的冲突导致跳转在拖拽后触发的问题。
         selectoContainer: document.getElementById('.desktop-content'),
         //编辑组件
@@ -867,7 +871,8 @@
       changeDesk (id) {
         this.selectedDesk = id
         localStorage.setItem('selectedDesk',id)
-        this.loadDesk(id)
+        this.currentDeskInfo=deskModel.getCurrentDeskInfo()
+        this.switchToDesk(id)
 
       },
       isSelectedDesk (id) {
@@ -906,7 +911,7 @@
             console.log(desk.id)
             that.selectedDesk=0
             localStorage.setItem('selectedDesk',that.selectedDesk)
-            that.loadDesk(0)
+            that.switchToDesk(0)
           }
         });
       },
@@ -952,9 +957,11 @@
             success = true
           }
         }
-        this.saveDesk()
+        deskModel.updateDeskLayout(this.currentDeskInfo.id,this.layout)
         if (success) {
           this.$message.success({ content: '保存图标成功。' })
+          deskModel.refreshDeskInfoUpdateTime(this.currentDeskInfo.id)
+          this.currentDeskInfo=deskModel.getCurrentDeskInfo()
         } else {
           this.$message.error({ content: '保存图标失败，未找到对应图标。' })
         }
@@ -1101,18 +1108,29 @@
       /**
        * 保存桌面布局
        */
-      saveDesk () {
-        if(appVue.deskCanEdit){
-          localStorage.setItem('desk_'+this.selectedDesk, JSON.stringify(this.layout))
-        }else{
-          appVue.$message.error({content:'由于当前桌面并非最新打开的桌面，无法保存设置，请切换到最新打开的桌面，或者刷新当前页面后再编辑。',duration:5})
+      saveDesk (skipNext=false) {
+        if(this.layoutSkipSave===true){//如果跳过，则不自动保存
+          this.layoutSkipSave=false
+          return
         }
+        this.layoutSkipSave=skipNext
+        let oldDeskInfo=deskModel.getDeskInfo(this.currentDeskInfo.id)
+        console.log('触发保存')
+        if(oldDeskInfo.updateTime===this.currentDeskInfo.updateTime){
+          appVue.$message.success({content:'桌面有变更，自动保存。',duration:5})
+          deskModel.updateDeskLayout(this.selectedDesk,this.layout)
+          this.currentDeskInfo=deskModel.getCurrentDeskInfo()//因为更新了，所以要手动充值一下当前桌面的信息
+        }else{
+          appVue.$message.error({content:'保存桌面失败。失败原因：当前桌面数据已失效。请刷新桌面后重试。',duration:5})
+        }
+
       },
       /**
        * 读入一个桌面布局
        * @param id
        */
-      loadDesk(id=-1){
+      switchToDesk(id=-1){
+        this.layoutSkipSave=true
         let storedSelectedDesk=0
         if(id===-1){
           //如果没有赋值桌面id，则认为是初始化读取，则需要对未存储过选中的桌面做判断
@@ -1160,49 +1178,8 @@
         this.visibleAdd = false
       },
       addElement (element, posElement = null) {
-        const sizes = {
-          card: {
-            w: 2, h: 1,
-            isResizable: true,
-            dragIgnoreFrom: 'textarea'
-          },
-          app: {
-            w: 1, h: 1,
-            isResizable: false,
-          },
-          group: {
-            w: 1, h: 1,
-            isResizable: false,
-            dragIgnoreFrom: '.group-icons'
-          },
-          clock: {},
-          search: {
-            w: 4, h: 1,
-            isResizable: true,
-          },
-          video:{
-            w:2,h:1,
-            isResizable:true,
-          }
-        }
-
-        const pos = {
-          x: 0,
-          y: 0, // puts it at tselectedElements bottom
-          w: sizes[element.type].w,
-          h: sizes[element.type].h,
-          i: Date.now(),
-          //dragIgnoreFrom: !!!sizes[element.type].dragIgnoreFrom ? 'button,a' : sizes[element.type].dragIgnoreFrom,
-
-          isResizable: sizes[element.type].isResizable
-        }
-        if (posElement !== null) {
-          Object.assign(pos, posElement)
-        }
         this.index++
-        pos.element = element
-        this.layout.push(pos)
-
+        this.layout.push(deskModel.createElementPos(element,posElement))
       },
       showAddElementModal () {
         this.visibleAdd = true
@@ -1379,43 +1356,29 @@
 
     },
     mounted () {
-      function generateUUID() {
-        var d = new Date().getTime();
-        if (window.performance && typeof window.performance.now === "function") {
-          d += performance.now(); //use high-precision timer if available
-        }
-        var uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-          var r = (d + Math.random() * 16) % 16 | 0;
-          d = Math.floor(d / 16);
-          return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
-        });
-        return uuid;
-      }
-      this.uuid=generateUUID()
-      localStorage.setItem('livingNewtabUUID',this.uuid)
       function aLive(){
-        if(appVue.uuid===localStorage.getItem('livingNewtabUUID'))
+        let latestCurrentDeskInfo=deskModel.getCurrentDeskInfo()//当前最新的桌面信息
+        console.log(latestCurrentDeskInfo.updateTime)
+        console.log(appVue.currentDeskInfo.updateTime)
+        if(appVue.currentDeskInfo.updateTime===latestCurrentDeskInfo.updateTime)
         {
+          //当前桌面未更新
           return true
         }else{
-          //todo died
-          appVue.deskCanEdit=false
-          document.title='新标签'
-          appVue.$notification.error({message:'桌面无法编辑',
-            description:'为了防止桌面设置互相覆盖，当前桌面无法再编辑，也无法再保存，请前往最新打开的桌面管理，或者刷新当前页面以获得编辑权限。',
-          duration: null})//,closeIcon:h=>h('div',{style:'display:none'})
-          clearInterval(window.alive)
+          window.location.reload()
+          // appVue.layout=deskModel.getCurrentDeskLayout()
+          // appVue.currentDeskInfo=deskModel.getCurrentDeskInfo()
+          // appVue.layoutSkipSave=true//不需要自动保存
+          // appVue.$notification.success({message:'桌面已更新',
+          //   description:'当前桌面已改变，已自动读入最新桌面。',
+          // duration: null})//,closeIcon:h=>h('div',{style:'display:none'})
         }
       }
       window.alive= setInterval(aLive,1000)
       document.title='新标签'
-      this.desks=JSON.parse(localStorage.getItem('desks'))
-      if(!!!this.desks){
-        //desks不存在,则初始化一个空对象
-        this.desks=[]
-        localStorage.setItem('desks',JSON.stringify([]))
-      }
-      this.loadDesk()
+      this.desks=deskModel.getAllDeskInfo()
+      this.switchToDesk()
+      this.currentDeskInfo=deskModel.getCurrentDeskInfo()
       this.loadMyapps()
       setTimeout(() => {
         this.loadBookmarks(6)
