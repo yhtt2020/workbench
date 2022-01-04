@@ -60,6 +60,9 @@
 <!--              <a-menu-item @click="showAddDesk(desk)" key="editDesk">-->
 <!--                编辑-->
 <!--              </a-menu-item>-->
+              <a-menu-item @click="exportDesk(desk)" key="exportDesk">
+                导出桌面
+              </a-menu-item>
               <a-menu-item @click="removeDesk(desk)" key="removeDesk" style="color: red">
                 删除
               </a-menu-item>
@@ -885,6 +888,9 @@
         this.desks.push(data)
         localStorage.setItem('desks', JSON.stringify(this.desks))
         localStorage.setItem('desk_'+data.id,'[]')
+      },
+      exportDesk(desk){
+        ipc.send('exportDesk',{desk:desk,deskLayout:deskModel.getDeskLayout(desk.id)})
       },
       removeDesk(desk){
         let that=this
