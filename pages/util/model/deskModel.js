@@ -30,8 +30,9 @@ const deskModel={
       allDesk.unshift(homeDesk)
       deskModel.saveAllDeskInfo(allDesk)
       localStorage.setItem('bkHome',JSON.stringify(homeDeskLayout))
-      localStorage.removeItem('desk_0')
       deskModel.updateDeskLayout(homeDesk.id,deskModel.getDeskLayout(0))
+      localStorage.removeItem('desk_0')
+
       console.log('发现老桌面')
     }
   },
