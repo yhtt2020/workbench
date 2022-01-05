@@ -145,6 +145,9 @@
 
     </a-drawer>
 
+
+
+
     <a-button style="position: fixed;right: 6px;top: 20px;background-color: rgba(0,0,0,0.3);color: white;border:none"
               shape="circle" type="primary" icon="skin" @click="setTheme"></a-button>
     <a-dropdown v-model="visibleMainMenu" :trigger="['contextmenu']" @visible-change="changeMainMenuVisible">
@@ -1421,25 +1424,6 @@
     border-bottom: none !important;
   }
 
-  .dock-item {
-    display: inline-block;
-
-    border-radius: 10px;
-    margin: 10px 10px;
-  }
-
-  .dock {
-    flex-direction: row;
-    position: fixed;
-    bottom: 20px;
-    border-radius: 10px;
-    background-color: rgba(255, 255, 255, 0.5);
-    width: fit-content;
-    left: 50%;
-    z-index: 1001;
-    transform: translate(-50%, 0);
-    max-width: calc(100vw - 20px);
-  }
 </style>
 </body>
 </html>

@@ -441,3 +441,25 @@ html {
     border-radius: 10px;
   }
 }
+
+
+/*dock栏*/
+.dock-item {
+  display: inline-block;
+
+  border-radius: 10px;
+  margin: 10px 10px;
+}
+
+.dock {
+  flex-direction: row;
+  position: fixed;
+  bottom: 20px;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.5);
+  width: fit-content;
+  left: 50%;
+  transform: translate(-50%, 0);
+  max-width: calc(100vw - 20px);
+}
+/*dock栏结束*/
