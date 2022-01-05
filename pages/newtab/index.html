@@ -232,7 +232,7 @@
 
                 >
                   <search v-if="item.element.type==='search'" @remove-element="removeElement(item)"></search>
-                  <app :selected-menu-visible="showSelectedMenu(item)" v-if="item.element.type==='app'"
+                  <app :selected-menu-visible="showSelectedMenu(item)" v-if="item.element.type==='app'" :groups="groups"
                        @compose-group="composeGroup"
                        :group-id="selectGroup.i" :item="item" @edit-app="onSubmitEdit" @remove-selected="removeSelected"
                        @remove-element="removeElement(item)" @open-url="openUrl(item.element.data.url)"></app>
@@ -1470,7 +1470,18 @@
     },
 
     computed: {
-
+      groups:{
+        get:function(){
+          let groups=[]
+          this.layout.forEach((item)=>{
+            if(item.element.type==='group'){
+              groups.push(item)
+            }
+          })
+          console.log(groups)
+          return groups
+        }
+      },
       allApps: {
         get: function () {
           if (typeof window.$appsApiData == 'undefined' || window.$appsApiData == null) {

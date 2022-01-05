@@ -26,11 +26,19 @@ const appTpl = `
                       <a-menu-item @click="editElement(item)" key="edit">
                         编辑组件
                       </a-menu-item>
+                       <a-sub-menu title="移动组件到" >
+<!--                        <a-menu-item>创建新组</a-menu-item>-->
+                        <a-menu-divider />
+                        <a-menu-item @click="moveAppTo(group)" v-for="group in groups">{{ group.element.name }}</a-menu-item>
+                        </a-sub-menu>
                       <a-menu-divider v-show="selectedMenuVisible"> </a-menu-divider>
                       <a-menu-item @click="composeGroup()" @mousedown.stop="" key="composeGroup"
                                    v-show="selectedMenuVisible">
                         合并选中图标成组
                       </a-menu-item>
+                       <a-sub-menu @mousedown.stop="" title="移动选中组件到" v-show="selectedMenuVisible">
+                             <a-menu-item @mousedown.stop="" @click="moveAppsTo(group)" v-for="group in groups">{{ group.element.name }}</a-menu-item>
+                        </a-sub-menu>
                        <a-menu-item @click="removeSelected" @mousedown.stop="" key="removeSelected"  v-show="selectedMenuVisible">
                         移除选中组件
                       </a-menu-item>
@@ -111,7 +119,7 @@ const swatches = window['vue-swatches']
 Vue.component('app', {
   template: appTpl,
   name: 'app',
-  props: ['item', 'groupId', 'selectedMenuVisible'],
+  props: ['item', 'groupId', 'selectedMenuVisible','groups'],
   components: {
     'v-swatches': swatches
   },
@@ -149,6 +157,31 @@ Vue.component('app', {
 
   },
   methods: {
+    moveAppTo(group){
+      group.element.data.push(this.item)
+      for(let i=0;i<appVue.layout.length;i++){
+        if(appVue.layout[i].i===this.item.i){
+          appVue.layout.splice(i,1)
+          break
+        }
+      }
+    },
+    moveAppsTo(group){
+
+      console.log(appVue.selectedElements)
+      for(let selectedI=0;selectedI<appVue.selectedElements.length;selectedI++){
+        let item=appVue.selectedElements[selectedI]
+        for(let i=0;i<appVue.layout.length;i++){
+          if(appVue.layout[i].i===Number(item)){
+            console.log(item)
+            group.element.data.push(appVue.layout[i])
+            appVue.layout.splice(i,1)
+            break
+          }
+        }
+      }
+
+    },
     // url 是图片地址，如，http://wximg.233.com/attached/image/20160815/20160815162505_0878.png
 // filepath 是文件下载的本地目录
 // name 是下载后的文件名
