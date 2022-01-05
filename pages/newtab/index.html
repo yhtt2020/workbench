@@ -469,16 +469,18 @@
       </div>
       <a-menu slot="overlay">
         <a-menu-item @click="showAddElementModal()" key="1">
-          添加组件
+          <a-icon type="plus" ></a-icon> 添加组件
         </a-menu-item>
-        <a-menu-item @click="refresh" key="refresh">
-          刷新页面
-        </a-menu-item>
+
         <a-menu-item @click="setTheme" key="3">
-          设置壁纸
+          <a-icon type="skin" ></a-icon> 设置壁纸
         </a-menu-item>
         <a-menu-item @click="deskSetting" key="3">
-          设置桌面
+          <a-icon type="setting" ></a-icon> 设置桌面
+        </a-menu-item>
+        <a-menu-divider ></a-menu-divider>
+        <a-menu-item @click="refresh" key="refresh">
+          <a-icon type="redo" ></a-icon> 刷新页面
         </a-menu-item>
       </a-menu>
     </a-dropdown>
@@ -1262,6 +1264,7 @@
       },
       deskSetting(){
         this.deskSettingVisible = !this.deskSettingVisible
+        this.visibleMainMenu = false
       },
       async setWallPaper (wp) {
 
