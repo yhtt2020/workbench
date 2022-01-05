@@ -526,3 +526,20 @@
 
 }
 /*最左侧栏end*/
+.group-list-list{
+  li{
+    cursor: pointer;
+    .icon{
+      margin-right: 10px;
+    }
+    margin-bottom: 10px;
+    .name{
+      color: white;
+      line-height: 28px;
+      margin-bottom: 10px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}

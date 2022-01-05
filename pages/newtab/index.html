@@ -517,9 +517,31 @@
     <div>
       <!--:mask="false" :mask-closable="false" -->
       <a-modal :centered="true" dialog-class="group-modal" :footer="null" v-model="visibleGroup"
-               :title="selectGroup.element.name" @ok="handleOk">
+               :title="null" :closable="false">
         <div>
-          <grid-layout
+          <div style="color: white;text-align: center">
+            {{selectGroup.element.name}}
+            <div style="float: right">
+              <a-icon type="appstore" @click="changeGroupSetting(selectGroup,'listType','icon')"></a-icon>&nbsp;
+              <a-icon type="unordered-list" @click="changeGroupSetting(selectGroup,'listType','list')"></a-icon>&nbsp;&nbsp;&nbsp;&nbsp;
+              <a-icon title="关闭" type="close" @click="visibleGroup=false"></a-icon>
+            </div>
+          </div>
+          <div v-if="this.selectGroup.element.listType==='list'" style="margin-top: 30px">
+            <ul class="group-list-list">
+              <li @click="openUrl(item.element.data.url)" v-for="item in groupItems">
+                <a-row type="flex">
+                  <a-col flex="40px">
+                    <a-avatar class="icon" shape="square" :src="item.element.data.icon"></a-avatar>
+                  </a-col>
+                  <a-col class="name" flex="1">
+                    {{item.name || item.element.data.name}}
+                  </a-col>
+                </a-row>
+              </li>
+            </ul>
+          </div>
+          <grid-layout v-else
             :layout.sync="groupItems"
             :row-height="100"
             :col-num="5"
@@ -855,7 +877,7 @@
         //选中打开的item元素
         groupItems: [],
         visibleGroup: false,
-        selectGroup: { element: { name: '分组' }, i: 0 },
+        selectGroup: { element: { name: '分组',listType:'icon'}, i: 0 },
 
         cardText: '文字小卡片',
         cardLines: 1,
@@ -917,6 +939,12 @@
       }
     },
     methods: {
+      changeGroupSetting(group,field,value){
+         group.element[field]=value
+        this.selectGroup=group
+        this.saveDesk()
+        //todo 设置selectgroup
+      },
       eleVideoChange(e){
         this.eleVideoSource=e.target.value
       },
@@ -1049,7 +1077,12 @@
       openGroup (item) {
         this.groupItems = item.element.data //是一个数组
         this.selectGroup = item
+        if(!!!this.selectGroup.element.listType)
+        {
+          this.selectGroup.element['listType']='icon'
+        }
         this.visibleGroup = true
+
       },
       deleteElement (id) {
         for (let i = 0; i < appVue.layout.length; i++) {

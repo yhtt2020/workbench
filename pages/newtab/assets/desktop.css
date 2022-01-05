@@ -458,5 +458,20 @@
 }
 
 /*最左侧栏end*/
+.group-list-list li {
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+.group-list-list li .icon {
+  margin-right: 10px;
+}
+.group-list-list li .name {
+  color: white;
+  line-height: 28px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
 /*# sourceMappingURL=desktop.css.map */
