@@ -520,7 +520,7 @@
                :title="null" :closable="false">
         <div>
           <div style="color: white;text-align: center">
-            {{selectGroup.element.name}}
+            <a-input class="edit-group-name" @click="$event.currentTarget.select()" :value="selectGroup.element.name" @change="changeGroupSetting(selectGroup,'name',$event.target.value)"></a-input>
             <div style="float: right">
               <a-icon type="appstore" @click="changeGroupSetting(selectGroup,'listType','icon')"></a-icon>&nbsp;
               <a-icon type="unordered-list" @click="changeGroupSetting(selectGroup,'listType','list')"></a-icon>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -536,6 +536,9 @@
                   </a-col>
                   <a-col class="name" flex="1">
                     {{item.name || item.element.data.name}}
+                    <div class="url">
+                      {{item.element.data.url}}
+                    </div>
                   </a-col>
                 </a-row>
               </li>
@@ -942,7 +945,12 @@
       changeGroupSetting(group,field,value){
          group.element[field]=value
         this.selectGroup=group
-        this.saveDesk()
+        if(field==='listType' && value==='icon'){
+          this.saveDesk(true)
+        }else{
+          this.saveDesk(false)
+        }
+
         //todo 设置selectgroup
       },
       eleVideoChange(e){
@@ -1111,7 +1119,7 @@
             composeItems.push(gotItem)
           }
         })
-        this.addElement({ type: 'group', name: '分组', data: composeItems })
+        this.addElement({ type: 'group', name: '分组', data: composeItems ,listType:'icon' })
       },
       removeSelected () {
         this.selectedElements.forEach((itemId) => {
@@ -1210,7 +1218,7 @@
         let oldDeskInfo=deskModel.getDeskInfo(this.currentDeskInfo.id)
         console.log('触发保存')
         if(oldDeskInfo.updateTime===this.currentDeskInfo.updateTime){
-          appVue.$message.success({content:'桌面有变更，自动保存。',duration:5})
+          appVue.$notification.success({message:'桌面有变更，自动保存。',duration:1,'key':'save'})
           deskModel.updateDeskLayout(this.selectedDesk,this.layout)
           this.currentDeskInfo=deskModel.getCurrentDeskInfo()//因为更新了，所以要手动充值一下当前桌面的信息
         }else{

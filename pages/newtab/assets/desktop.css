@@ -458,6 +458,14 @@
 }
 
 /*最左侧栏end*/
+.edit-group-name {
+  background: none;
+  border: none;
+  color: white;
+  text-align: center;
+  width: 300px;
+}
+
 .group-list-list li {
   cursor: pointer;
   margin-bottom: 10px;
@@ -467,11 +475,18 @@
 }
 .group-list-list li .name {
   color: white;
-  line-height: 28px;
+  line-height: 18px;
   margin-bottom: 10px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.group-list-list li .url {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  color: #b7b7b7;
 }
 
 /*# sourceMappingURL=desktop.css.map */
