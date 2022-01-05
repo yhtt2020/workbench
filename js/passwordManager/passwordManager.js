@@ -110,7 +110,7 @@ const PasswordManagers = {
           //console.log(credentials)
           // 增加对找回密码数量的提示，减少认知成本
           if(credentials.length===0){
-            ipc.send('message',{type:'error',config:{content:"暂未找到保存密码。",key:"password"}})
+            // ipc.send('message',{type:'error',config:{content:"暂未找到保存密码。",key:"password"}})
           }else{
             ipc.send('message',{type:'success',config:{content:`找到 ${credentials.length} 个密码。`,key:"password"}})
           }

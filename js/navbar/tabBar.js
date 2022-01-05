@@ -431,6 +431,7 @@ const tabBar = {
         const  deskModel=require('../../pages/util/model/deskModel.js')
         const element= deskModel.createElementPos(app)
         deskModel.addElementToDesk(element,desk.id)
+           ipc.send('message',{'type':'success',config:{'content':'添加到桌面成功'}})
        }
        })
      })
