@@ -96,40 +96,51 @@
       <div style="flex: 1"></div>
     </div>
 
-    <a-drawer style="z-index:1005"
-              placement="bottom"
-              :height="500"
-              :closable="false"
-              :visible="setThemeVisible"
-              @close="setThemeVisible=false"
+    <a-modal :visible="setThemeVisible" title="设置壁纸" :width="800"  :footer="null" @cancel="setThemeVisible=false">
+      <template>
+        <div>
 
+          <a-alert style="margin-bottom: 10px"
+            message="您可以在浏览器中【查看图片】时，【右键】-【设置图片为壁纸】。也可以选择下方壁纸快速设置。"
+            type="info"
+            closable
+            show-icon
+          ></a-alert>
+          <a-tabs  :default-active-key="0" @change="callback" tab-position="left">
+            <a-tab-pane v-for="(type,typeIndex) in defaultWallPaper" :key="typeIndex" :tab="type.title">
+              <div style="background-color: #ececec; padding: 20px;">
+                <a-row :gutter="24">
+                  <a-col v-for="(wallPaper,wallPaperIndex) in type.list" :span="8">
+                    <a-card @click="setWallPaper(wallPaper)" hoverable :bordered="false">
+                      <img style="object-fit: cover;" height="100"
+                           slot="cover"
+                           :alt="wallPaper.title"
+                           :src="wallUrl+wallPaper.image"
+                      />
+                      <a-card-meta :title="wallPaper.title"></a-card-meta>
+                    </a-card>
+                  </a-col>
+                </a-row>
+              </div>
+            </a-tab-pane>
+          </a-tabs>
+        </div>
+      </template>
+    </a-modal>
+
+
+    <a-drawer style="z-index:1005"
+              placement="right"
+              :height="500"
+              :closable="true"
+              title="设置桌面"
+              :visible="deskSettingVisible"
+              @close="deskSettingVisible=false"
+              :width="300"
     >
-      <a-page-header style="padding: 0" slot="title" title="设置主题"
-                     sub-title="您可以在浏览器中查看图片时，右键设置图片为壁纸。也可以选择下方壁纸快速设置。"></a-page-header>
       <div>
         <template>
-          <template>
-            <div>
-              <a-tabs :default-active-key="0" @change="callback">
-                <a-tab-pane v-for="(type,typeIndex) in defaultWallPaper" :key="typeIndex" :tab="type.title">
-                  <div style="background-color: #ececec; padding: 20px;">
-                    <a-row :gutter="24">
-                      <a-col v-for="(wallPaper,wallPaperIndex) in type.list" :span="4">
-                        <a-card @click="setWallPaper(wallPaper)" hoverable :bordered="false">
-                          <img style="object-fit: cover;" height="100"
-                               slot="cover"
-                               :alt="wallPaper.title"
-                               :src="wallUrl+wallPaper.image"
-                          />
-                          <a-card-meta :title="wallPaper.title"></a-card-meta>
-                        </a-card>
-                      </a-col>
-                    </a-row>
-                  </div>
-                </a-tab-pane>
-              </a-tabs>
-            </div>
-          </template>
+
           <div>
             <h1 style="font-size: 14px;margin-top: 20px">卡片不透明度：</h1>
             <a-slider id="cardOpacity" @change="changeOpacity" :step="5" v-model="cardOpacity"
@@ -466,6 +477,9 @@
         <a-menu-item @click="setTheme" key="3">
           设置壁纸
         </a-menu-item>
+        <a-menu-item @click="deskSetting" key="3">
+          设置桌面
+        </a-menu-item>
       </a-menu>
     </a-dropdown>
   </template>
@@ -780,6 +794,9 @@
     },
     data () {
       return {
+        deskSettingVisible:false,//桌面设置
+
+
         eleVideoSource:'',
         eleVideoControls:false,
 
@@ -1242,6 +1259,9 @@
       setTheme () {
         this.setThemeVisible = true
         this.visibleMainMenu = false
+      },
+      deskSetting(){
+        this.deskSettingVisible = !this.deskSettingVisible
       },
       async setWallPaper (wp) {
 
