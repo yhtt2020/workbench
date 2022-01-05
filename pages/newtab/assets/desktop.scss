@@ -526,3 +526,34 @@
 
 }
 /*最左侧栏end*/
+.edit-group-name{
+  background: none;
+  border: none;
+  color: white;
+  text-align: center;
+  width: 300px;
+}
+.group-list-list{
+  li{
+    cursor: pointer;
+    .icon{
+      margin-right: 10px;
+    }
+    margin-bottom: 10px;
+    .name{
+      color: white;
+      line-height: 18px;
+      margin-bottom: 10px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .url{
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 12px;
+      color: #b7b7b7;
+    }
+  }
+}
