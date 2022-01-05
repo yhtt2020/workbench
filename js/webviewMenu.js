@@ -146,19 +146,11 @@ const webviewMenu = {
       imageActions.push({
         label: "设为新标签页壁纸",
         click: async function () {
-          const db=require('./util/database').db
-          try{
-            let newtabBg=await db.system.get({name:'newtabBg'})
-            console.log(newtabBg)
-              if(!!!newtabBg){
-                 db.system.put({name:'newtabBg',value:mediaURL})
-              }else{
-                db.system.update(newtabBg.id,{name:'newtabBg',value:mediaURL})
-              }
-                  ipc.send('message',{type:'success',config:{content:'设置成功，可在新建标签中查看效果。'}})
-          }catch(err){
+          require('../pages/util/theme').wallPaper.setUrlWallPaper(mediaURL).then(()=>{
+            ipc.send('message',{type:'success',config:{content:'设置成功，可在新建标签中查看效果。'}})
+          }).catch(err=>{
             console.log(err)
-          }
+          })
         }
       })
 

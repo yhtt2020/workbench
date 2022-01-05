@@ -102,17 +102,39 @@
       <div style="flex: 1"></div>
     </div>
 
-    <a-modal :visible="setThemeVisible" title="设置壁纸" :width="800"  :footer="null" @cancel="setThemeVisible=false">
+    <a-modal :visible="setThemeVisible" title="设置壁纸" :width="800"  :footer="null" @cancel="setThemeVisible=false;this.loadingWallPaperHistory=true">
       <template>
         <div>
-
           <a-alert style="margin-bottom: 10px"
             message="您可以在浏览器中【查看图片】时，【右键】-【设置图片为壁纸】。也可以选择下方壁纸快速设置。"
             type="info"
             closable
             show-icon
           ></a-alert>
-          <a-tabs  :default-active-key="0" @change="callback" tab-position="left">
+          <a-tabs  default-active-key="history" tab-position="left">
+<!--            <a-tab-pane key="search" tab="网络搜索" >-->
+
+<!--            </a-tab-pane>-->
+
+            <a-tab-pane key="history" tab="最近" >
+              <div style="height: 600px;overflow-y: auto">
+
+                <div v-if="wallPaperHistory.length!==0 && this.loadingWallPaperHistory===false" style="background-color: #ececec; padding: 20px;">
+                  <a-row :gutter="24">
+                    <a-col v-for="(wallPaper,wallPaperIndex) in wallPaperHistory" :span="8" style="margin-bottom: 10px">
+                      <a-card @click="setHistoryWallPaper(wallPaper)" hoverable :bordered="false">
+                        <img style="object-fit: cover;" height="100"
+                             slot="cover"
+                             :src="wallPaper"
+                        />
+                      </a-card>
+                    </a-col>
+                  </a-row>
+                </div>
+                <a-spin  style="padding: 250px" v-if="this.loadingWallPaperHistory===true" size="large"></a-spin>
+                <a-empty style="padding: 100px" description="暂无壁纸历史" v-if="wallPaperHistory.length===0"></a-empty>
+              </div>
+            </a-tab-pane>
             <a-tab-pane v-for="(type,typeIndex) in defaultWallPaper" :key="typeIndex" :tab="type.title">
               <div style="background-color: #ececec; padding: 20px;">
                 <a-row :gutter="24">
@@ -123,7 +145,6 @@
                            :alt="wallPaper.title"
                            :src="wallUrl+wallPaper.image"
                       />
-                      <a-card-meta :title="wallPaper.title"></a-card-meta>
                     </a-card>
                   </a-col>
                 </a-row>
@@ -146,12 +167,13 @@
     >
       <div>
         <template>
-
-          <div>
-            <h1 style="font-size: 14px;margin-top: 20px">卡片不透明度：</h1>
-            <a-slider id="cardOpacity" @change="changeOpacity" :step="5" v-model="cardOpacity"
-                      :default-value="100"></a-slider>
-          </div>
+          <a-divider orientation="left">当前桌面设置</a-divider>
+<!--          <div>-->
+<!--            <h1 style="font-size: 14px;margin-top: 20px">卡片不透明度：</h1>-->
+<!--            <a-slider id="cardOpacity" @change="changeOpacity" :step="5" v-model="cardOpacity"-->
+<!--                      :default-value="100"></a-slider>-->
+<!--          </div>-->
+          <a-divider orientation="left">通用设置</a-divider>
           <div>
             <h1 style="font-size: 14px;margin-top: 20px">快捷坞图标大小：</h1>
             <a-slider id="dockSize" v-model="dockAppSize" @change="saveDockSize" :step="1" :min="30" :max="60"
@@ -474,14 +496,14 @@
         <app-dialog></app-dialog>
       </div>
       <a-menu slot="overlay">
-        <a-menu-item @click="showAddElementModal()" key="1">
+        <a-menu-item @click="showAddElementModal()" key="element">
           <a-icon type="plus" ></a-icon> 添加组件
         </a-menu-item>
 
-        <a-menu-item @click="setTheme" key="3">
+        <a-menu-item @click="setTheme" key="wallpaper">
           <a-icon type="skin" ></a-icon> 设置壁纸
         </a-menu-item>
-        <a-menu-item @click="deskSetting" key="3">
+        <a-menu-item @click="deskSetting" key="setting">
           <a-icon type="setting" ></a-icon> 设置桌面
         </a-menu-item>
         <a-menu-divider ></a-menu-divider>
@@ -803,6 +825,10 @@
     },
     data () {
       return {
+        loadingWallPaperHistory:true,
+        wallPaperHistory:[],//壁纸历史
+
+
         deskSettingVisible:false,//桌面设置
 
 
@@ -1265,12 +1291,15 @@
       },
 
       callback (val) {
-        console.log(val)
+
       },
       /**
        * 设置壁纸
        */
       setTheme () {
+        setTimeout(()=>{
+          appVue.loadingWallPaperHistory=false
+        },500)
         this.setThemeVisible = true
         this.visibleMainMenu = false
       },
@@ -1278,18 +1307,36 @@
         this.deskSettingVisible = !this.deskSettingVisible
         this.visibleMainMenu = false
       },
-      async setWallPaper (wp) {
-
+      refreshWallPaperHistory(){
+        this.wallPaperHistory=wallPaper.getHistory()
+      },
+      setHistoryWallPaper(wp){
         try {
           //保存壁纸设置
-          wallPaper.set(wp.image).then(() => {
-              wallPaper.setElementBg(document.body, wallPaper.getWallPaperUrl(wp.image))
+          wallPaper.setUrlWallPaper(wp).then(() => {
+              wallPaper.setElementBg(document.body, wp)
+            this.refreshWallPaperHistory()
               this.$message.success({ content: '壁纸设置成功。' })
             }
           )
         } catch (err) {
           this.$message.error({ content: '保存壁纸失败。' })
         }
+
+      },
+      async setWallPaper (wp) {
+        try {
+          //保存壁纸设置
+          wallPaper.set(wp.image).then(() => {
+              wallPaper.setElementBg(document.body, wallPaper.getWallPaperUrl(wp.image))
+            this.refreshWallPaperHistory()
+              this.$message.success({ content: '壁纸设置成功。' })
+            }
+          )
+        } catch (err) {
+          this.$message.error({ content: '保存壁纸失败。' })
+        }
+
       },
       changeOpacity (opacity) {
         this.setOpacity(opacity)
@@ -1422,6 +1469,7 @@
 
       }, 200)
       //获取壁纸
+      this.wallPaperHistory=wallPaper.getHistory()
       wallPaper.get().then(data => {
         if (!!data) {
           this.setBg(data.value)
