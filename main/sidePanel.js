@@ -724,3 +724,30 @@ ipc.on('sideSetAuto',(event,args)=>{
   console.log('auto')
   SidePanel.send('sideSetAuto')
 })
+
+ipc.on('importDesk',(event,args)=>{
+  const files=dialog.showOpenDialogSync(mainWindow,{title:'导入桌面',defaultPath:'.tsbk',filters:[{name:'桌面备份',extensions:['tsbk']}]})
+  if(!!!files){
+    return
+  }else{
+    event.reply('importDesk',{files:files})
+    console.log(files)
+  }
+})
+ipc.on('exportDesk',(event,args)=>{
+  let desk=args.desk
+  desk.layout=args.deskLayout
+  const path=dialog.showSaveDialogSync(mainWindow,{title:'导出桌面',defaultPath:'桌面备份-'+desk.name+'.tsbk',filters:[{name:'桌面备份',extensions:['tsbk']}]})
+  if(!!!path){
+    return
+  }else{
+    fs.writeFile(path, JSON.stringify(desk),  function(err) {
+      if (err) {
+        sendMessage({type:'error',config:{content:'备份失败。请重试。'}})
+      }
+      else{
+        sendMessage({type:'success',config:{content:'保存桌面备份成功。'}})
+      }
+    })
+  }
+})

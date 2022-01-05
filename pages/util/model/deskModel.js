@@ -10,7 +10,32 @@
 //   "updateTime": 1641286442216
 // }
 // deskLayout 复杂的结构，详见api文档
+const fs= require('fs')
 const deskModel={
+  initialize(){
+    //兼容老版本，将home转为一个普通桌面
+    const homeDeskLayout=deskModel.getDeskLayout(0)
+    if(!!homeDeskLayout){
+      console.log(homeDeskLayout)
+      //自动在首部生成一个桌面
+      let allDesk=deskModel.getAllDeskInfo()
+      let homeDesk={
+        id:Date.now(),
+        name:'主页',
+        createTime:Date.now(),
+        updateTime:Date.now(),
+        icon:'home',
+        layout:[]
+      }
+      allDesk.unshift(homeDesk)
+      deskModel.saveAllDeskInfo(allDesk)
+      localStorage.setItem('bkHome',JSON.stringify(homeDeskLayout))
+      deskModel.updateDeskLayout(homeDesk.id,deskModel.getDeskLayout(0))
+      localStorage.removeItem('desk_0')
+
+      console.log('发现老桌面')
+    }
+  },
  // livingNewtabUUID:'livingNewtabUUID',//uuid方式已废弃
   selectedDesk:'selectedDesk',
   saveAll(desks){
@@ -19,6 +44,7 @@ const deskModel={
     let currentDesk=deskModel.getCurrentDeskId()
     return deskModel.getDeskLayout(currentDesk)
   },
+
   getCurrentDeskId(){
     let currentDesk=localStorage.getItem(deskModel.selectedDesk)
     if(!!!currentDesk){
@@ -30,7 +56,13 @@ const deskModel={
    * 获取当前桌面的信息
    */
   getCurrentDeskInfo(){
-    return deskModel.getDeskInfo(deskModel.getCurrentDeskId())
+    let deskInfo=deskModel.getDeskInfo(deskModel.getCurrentDeskId())
+    if(!!!deskInfo.updateTime)
+    {
+      //如果找到的deskInfo不存在updateTime
+     deskInfo=  deskModel.refreshDeskInfoUpdateTime(deskModel.getCurrentDeskId())
+    }
+    return deskInfo
   },
   getDeskLayout(deskId){
     let desk=[]
@@ -73,16 +105,20 @@ const deskModel={
       if(desks[i].id===deskInfo.id){
         deskInfo.updateTime=Date.now()
         desks[i]=deskInfo
+
+        //deskModel.updateDeskInfo(deskInfo.id,deskInfo)
       }
     }
+
     deskModel.saveAllDeskInfo(desks)
+    return deskInfo
   },
   /**
    * 刷新一个桌面的最后更新时间
    * @param id
    */
   refreshDeskInfoUpdateTime(id){
-    deskModel.updateDeskInfo(id,deskModel.getDeskInfo(id))//更新一下deskInfo最后更新时间
+    return deskModel.updateDeskInfo(id,deskModel.getDeskInfo(id))//更新一下deskInfo最后更新时间
   },
   /**
    * 更新一个桌面的布局
@@ -92,7 +128,7 @@ const deskModel={
   updateDeskLayout(id,layout){
     localStorage.setItem('desk_'+id.toString(),JSON.stringify(layout))
     deskModel.refreshDeskInfoUpdateTime(id)//刷新一下桌面更新时间
-    localStorage.setItem(deskModel.livingNewtabUUID,deskModel.generateUUID())//重新生成uuid，代表已变更
+    //localStorage.setItem(deskModel.livingNewtabUUID,deskModel.generateUUID())//重新生成uuid，代表已变更
   },
   /**
    * 生成一个uuid
@@ -162,6 +198,41 @@ const deskModel={
     }
     pos.element = element
     return pos
+  },
+  createDesk(deskInfo,layout){
+    let allDeskInfo=deskModel.getAllDeskInfo()
+    allDeskInfo.push(deskInfo)
+    deskModel.saveAllDeskInfo(allDeskInfo)
+    deskModel.updateDeskLayout(deskInfo.id,layout)
+  },
+  /**
+   * 从文件还原桌面
+   * @param files 文件数组，tsbk结尾
+   * @returns {{data: {count: number}, status, info: string}}
+   */
+  importDesk(files){
+    let successCount=0
+    files.forEach((file)=>{
+      try{
+       const desk= JSON.parse( fs.readFileSync(file,{encoding:'utf8'}))
+       if(!!!desk || !!!desk.name || !!!desk.createTime){
+         return {status:false,info:'文件格式错误。'}
+       }
+       const newDesk={
+         name:desk.name,
+         icon:desk.icon,
+         id:Date.now(),
+         createTime:desk.createTime,
+         updateTime:desk.updateTime
+       }
+       deskModel.createDesk(newDesk,desk.layout)
+        successCount++
+      }catch (e) {
+        console.log(e)
+        return {status:false,info:'意外终止。'}
+      }
+    })
+    return {status:true,info:'成功导入。',data:{count:successCount} }
   }
 }
 
