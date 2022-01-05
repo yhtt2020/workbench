@@ -1,6 +1,7 @@
 var electron = require('electron')
 var ipc = electron.ipcRenderer
 const { config } = require('../../server-config')
+const xtbk = require('../../js/xtbSdk/dist/xtbSdk')
 
 window.ipc = ipc
 let href = window.location.href
@@ -34,6 +35,9 @@ const server = {
 }
 
 if(href === config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN) {
+  const xtb = xtbk.default.content()
+  console.log(xtb)
+  xtb.OsxpcBinding()
   server.beforeInit(config.IM.FRONT_URL_DEV)
 } else if(href === config.IM.FRONT_URL + config.IM.AUTO_LOGIN) {
   server.beforeInit(config.IM.FRONT_URL)

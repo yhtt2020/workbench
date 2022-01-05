@@ -103,4 +103,8 @@ app.on('ready', () => {
   ipc.on('openGroup',(event,args)=>{
     createGroupIMWindow()
   })
+  ipc.on('navigateToAccount', (event, args) => {
+    //if(groupIMWindow) {groupIMWindow.close}
+    console.log('走到这里了@！！！！！！！')
+  })
 })
