@@ -70,7 +70,7 @@ app.on('ready', () => {
       groupIMWindow = new BrowserWindow({
         frame: true,
         backgroundColor: 'white',
-        parent: mainWindow,
+        parent: null,  //设置 parent 为当前窗口的父窗口. 为null时表示将当前窗口转为顶级窗口
         modal: false,
         hasShadow: true,
         minWidth: 600,
@@ -80,6 +80,8 @@ app.on('ready', () => {
         height:boundsSetting.height,
         x: boundsSetting.x ,
         y: boundsSetting.y,
+        minimizable: true,
+        alwaysOnTop: true,
         acceptFirstMouse: true,
         maximizable: false,
         visualEffectState: 'active',
@@ -95,6 +97,9 @@ app.on('ready', () => {
             ...((isDevelopmentMode ? ['--development-mode'] : [])),
           ]
         }
+      })
+      groupIMWindow.on('minimize', () => {
+        groupIMWindow.close()
       })
       groupIMWindow.on('resized',()=>{
         settings.set('groupWindowBounds',groupIMWindow.getBounds())

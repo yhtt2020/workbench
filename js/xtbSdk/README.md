@@ -4,7 +4,7 @@
 ###### 1、进入到electron-app/js/xtbSdk中执行上面的命令
 ###### 2、打包出来的文件在dist文件夹中，支持node环境或者browser环境的引入
 ###### 3、SDK文件在browser项目中采用一步引入的方式，避免资源对项目资源的竞争
-###### 4、在Electron环境中使用SDK接口能力时，确保electron.ipcRenderer方法赋予ipc这个对象
+###### 4、在Electron环境中使用SDK接口能力时，确保electron.ipcRenderer这个EventEmitter的实例赋予ipc这个对象
 ###### 5、完善后建包发布npm
 
 
