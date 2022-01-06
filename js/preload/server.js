@@ -14,8 +14,7 @@ const server = {
           ipc.send('autoLogin')
           ipc.on('callback-autoLogin', (event, args) => {
             if(args.code === 1000) {
-              console.log(args.data)
-              //window.location.href = args.data
+              window.location.href = args.data
             }
           })
         }
@@ -66,7 +65,7 @@ const server = {
   }
 }
 
-if(href.startsWith(config.SERVER_BASE_URL))
+if(href.startsWith(config.SERVER_BASE_URL) && !href.startsWith(config.SERVER_BASE_URL + api.API_URL.user.AUTO_LOGIN))
 {
   server.beforeInit()
   server.init(href)

@@ -7,6 +7,7 @@ const { config, api } = require('../../server-config')
 //本地下面代码强制清除storage
 //console.log(storage.getAll())
 //storage.clear();
+//console.log(storage.getStoragePath())
 
 axios.defaults.baseURL = config.PROD_NODE_SERVER_BASE_URL;
 //axios.defaults.baseURL = config.DEV_NODE_SERVER_BASE_URL;

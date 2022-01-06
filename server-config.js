@@ -27,6 +27,8 @@ const api = {
       home: '/', //用户主页
       profile: '/user/info', //用户资料
       account: '/user/account-info', //帐号信息
+      AUTO_LOGIN: '/autologin',   //短说免登跳转路由
+      USER_ACCOUNT: '/user/account-info', //短说账号设置页面
     },
     group: {
       index: '/groups', //群组
