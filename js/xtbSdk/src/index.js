@@ -8,8 +8,7 @@ export default class xtbk {
 
   //不同环境获取不同的实例
   static get_instance(config) {
-    const electronVersion = window.process.versions['electron']
-    if(electronVersion) {
+    if(window.process) {
       return new econstructor(config, this)
     } else {
       return new bconstructor(config, this)

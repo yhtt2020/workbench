@@ -1,4 +1,5 @@
 export default class bconstructor {
+  //web项目中嵌入另一个第三方web项目。利用iFrame.contentWindow.postMessage解决同源策略限制
   constructor(config, self) {
     this.self = self
     this.key = config.key
@@ -6,15 +7,6 @@ export default class bconstructor {
   }
   //登出IM跳转短说社区【设置/账号/账号信息】
   OsxpcBinding() {
-    const setIframe = () => {
-      const iframe = document.createElement('iframe')
-      iframe.style = 'display:none'
-      iframe.src = "http://127.0.0.1:8000"
-      document.body.appendChild(iframe)
-      iframe.onload = function() {
-        iframe.contentWindow.postMessage('OsxpcBinding', '*')
-      }
-    }
-    setIframe()
+    window.postMessage('OsxpcBinding', `${window.origin}`)
   }
 }

@@ -846,4 +846,10 @@ ipc.on('refresh', () => {
   webviews.update(tabs.getSelected(), tasks.getSelected().tabs.get(tabs.getSelected()).url)
 })
 
+ipc.on('tab-navigateToAccount', function(e, data) {
+  const { url } = data
+  const newTab = tabs.add({ url})
+  require('browserUI.js').addTab(newTab, { enterEditMode: false})
+})
+
 module.exports = tabBar

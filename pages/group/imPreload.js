@@ -36,8 +36,7 @@ const server = {
 
 if(href === config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN) {
   const xtb = xtbk.default.content()
-  console.log(xtb)
-  xtb.OsxpcBinding()
+  xtb.OsxpcBinding('navigateToAccount')
   server.beforeInit(config.IM.FRONT_URL_DEV)
 } else if(href === config.IM.FRONT_URL + config.IM.AUTO_LOGIN) {
   server.beforeInit(config.IM.FRONT_URL)

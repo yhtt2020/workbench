@@ -76,7 +76,7 @@ app.on('ready', () => {
         //alwaysOnTop: true,
         webPreferences: {
           preload:path.join(__dirname, '/pages/group/imPreload.js'),
-          nodeIntegration: true,
+          nodeIntegration: false,
           contextIsolation: false,
           additionalArguments: [
             '--user-data-path=' + userDataPath,
@@ -104,7 +104,10 @@ app.on('ready', () => {
     createGroupIMWindow()
   })
   ipc.on('navigateToAccount', (event, args) => {
-    //if(groupIMWindow) {groupIMWindow.close}
-    console.log('走到这里了@！！！！！！！')
+    if(groupIMWindow) {
+      const { config, api } = require(path.join(__dirname, '//server-config.js'))
+      sendIPCToWindow(mainWindow,'tab-navigateToAccount', {url: config.SERVER_BASE_URL + api.API_URL.user.USER_ACCOUNT})
+      groupIMWindow.close()
+    }
   })
 })
