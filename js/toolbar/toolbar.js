@@ -1,38 +1,27 @@
 const webviews = require('webviews.js')
 const urlParser = require('util/urlParser.js')
-const sideBar={
-  minSizeCss:'45px',
-  maxSizeCss:'145px',
-  minWidth:45,
-  maxWidth:145,
-  expandWidth:100,
-  mod:'auto',// auto.自动展开收起, open.一直展开 ,最小化。
+const sideBar = {
+  minSizeCss: '45px',
+  maxSizeCss: '145px',
+  minWidth: 45,
+  maxWidth: 145,
+  expandWidth: 100,
+  mod: 'auto',// auto.自动展开收起, open.一直展开 ,最小化。
   //切换侧边栏模式
-  switchSideMod(){
-    function setIcon(icon){
-      toolbar.sideModeButton.src=icon
-    }
-    function setTitle(title){
-      toolbar.sideModeButton.title=title
-    }
-    switch (sideBar.mod){
+  switchSideMod () {
+
+    switch (sideBar.mod) {
       case 'auto':
         // 切换到展开
         //更换图标
         ipc.send('sideSetOpen')
-        setIcon('./icons/toolbar/sideopen.svg')
-        sideBar.mod='open'
-        setTitle('当前模式：展开模式；点击切换到自动模式')
-        sideBar.setToMax()
+        sideBar.mod = 'open'
         break
       case 'close':
         // 切换到自动模式
         ipc.send('sideSetAuto')
         //更换图标
-        setIcon('./icons/toolbar/sideauto.svg')
-        sideBar.mod='auto'
-        setTitle('当前模式：自动展开收起；点击切换收起左侧栏，不再自动展开')
-        sideBar.setToMin()
+        sideBar.mod = 'auto'
         //更换模式
         break
       //更换模式
@@ -40,43 +29,70 @@ const sideBar={
         // 切换到关闭
         ipc.send('sideSetClose')
         //更换图标
-        setIcon('./icons/toolbar/sideclose.svg')
-        sideBar.mod='close'
-        setTitle('当前模式：精简模式；点击切换到展开模式')//设置提示文字
+        sideBar.mod = 'close'
+        break
+    }
+    sideBar.syncMod()
+  },
+  setIcon (icon) {
+    toolbar.sideModeButton.src = icon
+  },
+  setTitle (title) {
+    toolbar.sideModeButton.title = title
+  },
+  /**
+   * 同步模式的左侧栏
+   */
+  syncMod () {
+    switch (sideBar.mod) {
+      case 'auto':
+        sideBar.setIcon('./icons/toolbar/sideauto.svg')
+        sideBar.setTitle('当前模式：自动展开收起；点击切换收起左侧栏，不再自动展开')
         sideBar.setToMin()
+        break
+      case 'open':
+        sideBar.setIcon('./icons/toolbar/sideopen.svg')
+        sideBar.setTitle('当前模式：展开模式；点击切换到自动模式')
+        sideBar.setToMax()
+        break
+      case 'close':
+        sideBar.setIcon('./icons/toolbar/sideclose.svg')
+        sideBar.setTitle('当前模式：精简模式；点击切换到展开模式')//设置提示文字
+        sideBar.setToMin()
+
     }
   },
   /**
    * 将侧边栏模式更改为展开
    */
-  setToMax(){
-    let posLeft = sideBar.minWidth+sideBar.expandWidth
+  setToMax () {
+    let posLeft = sideBar.minWidth + sideBar.expandWidth
     sideBar.setLayoutLeft(posLeft)
   },
-  setLayoutLeft(posLeft){
-    let postLeftCss= String(posLeft)+'px'
-    document.getElementById('mouseRcoverArea').style.width=postLeftCss//调整左侧的感应区大小
+  setLayoutLeft (posLeft) {
+    let postLeftCss = String(posLeft) + 'px'
+    document.getElementById('mouseRcoverArea').style.width = postLeftCss//调整左侧的感应区大小
     //调整主界面中各个组件的位置
     //设置工具栏位置
-    toolbar.toolbarEl.style.left=postLeftCss//调整webviews框的位置
-    toolbar.toolbarEl.style.width= 'calc(100vw - '+postLeftCss+')'
+    toolbar.toolbarEl.style.left = postLeftCss//调整webviews框的位置
+    toolbar.toolbarEl.style.width = 'calc(100vw - ' + postLeftCss + ')'
     //设置webviews位置
-    const adjustLeft= posLeft - webviews.viewMargins[3]
+    const adjustLeft = posLeft - webviews.viewMargins[3]
     webviews.adjustMargin([0, 0, 0, adjustLeft])//调整工具栏左侧
     //设置搜索栏的左侧位置
-    document.getElementById('searchbar').style.left='calc((100% - '+postLeftCss+' )*0.02 + '+postLeftCss+' )'
-    document.getElementById('searchbar').style.width='calc( (100% - '+postLeftCss+' ) * 0.96)'
+    document.getElementById('searchbar').style.left = 'calc((100% - ' + postLeftCss + ' )*0.02 + ' + postLeftCss + ' )'
+    document.getElementById('searchbar').style.width = 'calc( (100% - ' + postLeftCss + ' ) * 0.96)'
     //设置overlay的左侧
-    document.getElementById('webview-placeholder').style.marginLeft=postLeftCss
-    document.getElementById('webview-placeholder').style.width='calc(100% - '+postLeftCss+')'
+    document.getElementById('webview-placeholder').style.marginLeft = postLeftCss
+    document.getElementById('webview-placeholder').style.width = 'calc(100% - ' + postLeftCss + ')'
     //调整密码提示的左侧位置
-    document.getElementById('password-capture-bar').style.left=postLeftCss
-    document.getElementById('password-capture-bar').style.width='calc(100% - '+postLeftCss+')'
+    document.getElementById('password-capture-bar').style.left = postLeftCss
+    document.getElementById('password-capture-bar').style.width = 'calc(100% - ' + postLeftCss + ')'
     //调整下载框的左侧位置
-    document.getElementById('download-bar').style.left=postLeftCss
-    document.getElementById('download-bar').style.width='calc(100% - '+postLeftCss+')'
+    document.getElementById('download-bar').style.left = postLeftCss
+    document.getElementById('download-bar').style.width = 'calc(100% - ' + postLeftCss + ')'
   },
-  setToMin(){
+  setToMin () {
     let posLeft = sideBar.minWidth
     //发送ipc消息给侧边栏，告诉他要切换到open模式
     sideBar.setLayoutLeft(posLeft)
@@ -93,7 +109,7 @@ const sideBar={
 
 const toolbar = {
   expanded: true,
-  sideModeButton:document.getElementById('side-mod-button-toolbar'),
+  sideModeButton: document.getElementById('side-mod-button-toolbar'),
   toolbarEl: document.getElementById('toolbar'),
   homeButton: document.getElementById('home-button-toolbar'),
   refreshButton: document.getElementById('refresh-button-toolbar'),
@@ -121,15 +137,15 @@ const toolbar = {
       mobileEl.disable = false
     }
   },
-  updateScriptsCountTip(tabId=tabs.getSelected().id){
-    matchedScripts= window.$matchedScriptsForSite[tabId]
-    if(!!!matchedScripts){
-      matchedScripts=[]
+  updateScriptsCountTip (tabId = tabs.getSelected().id) {
+    matchedScripts = window.$matchedScriptsForSite[tabId]
+    if (!!!matchedScripts) {
+      matchedScripts = []
     }
-    scriptCountEl= document.getElementById('scriptCount')
-    scriptCountEl.hidden=!(matchedScripts.length>0)
-    scriptCountEl.innerText=String(matchedScripts.length)
-    scriptCountEl.title='共有'+matchedScripts.length+'个脚本生效中'
+    scriptCountEl = document.getElementById('scriptCount')
+    scriptCountEl.hidden = !(matchedScripts.length > 0)
+    scriptCountEl.innerText = String(matchedScripts.length)
+    scriptCountEl.title = '共有' + matchedScripts.length + '个脚本生效中'
   },
   //设置密码管理器是否可用
   setPwdCanUse (canUse) {
@@ -165,7 +181,7 @@ const toolbar = {
       webviews.goBackIgnoringRedirects(tabs.getSelected())
     })
 
-    toolbar.sideModeButton.addEventListener('click',sideBar.switchSideMod)
+    toolbar.sideModeButton.addEventListener('click', sideBar.switchSideMod)
 
     toolbar.collapseButton.addEventListener('click', () => {
       toolbar.expanded = false
@@ -183,12 +199,15 @@ const toolbar = {
       document.getElementById('tab-editor').hidden = false
       document.getElementById('toolbar-navigation-buttons').hidden = true
     }
+    toolbar.adjustSideBar()
+  },
+  adjustSideBar () {
+    let sideMode = localStorage.getItem('sideMode')
+    sideMode = sideMode || 'auto'
+    sideBar.mod = sideMode
+    sideBar.syncMod()
   }
 }
 toolbar.initialize()
-
-
-
-
 
 module.exports = toolbar
