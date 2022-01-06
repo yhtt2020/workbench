@@ -989,9 +989,14 @@
         data.id = Date.now()
         data.layout = []
         data.createTime = Date.now()
+        data.updateTime=Date.now()
         this.desks.push(data)
         localStorage.setItem('desks', JSON.stringify(this.desks))
         localStorage.setItem('desk_'+data.id,'[]')
+        this.selectedDesk=data.id
+        this.currentDeskInfo=data
+        localStorage.setItem('selectedDesk',this.selectedDesk)
+        this.switchToDesk(data.id)
       },
       importDesk(){
         ipc.send('importDesk')
@@ -1038,14 +1043,14 @@
                 updateTime:newDeskId
               },[])
               that.selectedDesk=newDeskId
-              localStorage.setItem('selectedDesk',that.selectedDesk)
-              that.switchToDesk(newDeskId)
-
+              that.desks=deskModel.getAllDeskInfo()
+              that.$message.info({content:'已自动为您创建新的桌面。'})
             }else{
               that.selectedDesk=that.desks[preDesk].id
-              localStorage.setItem('selectedDesk',that.selectedDesk)
-              that.switchToDesk(that.selectedDesk)
             }
+            localStorage.setItem('selectedDesk',that.selectedDesk)
+            that.currentDeskInfo=deskModel.getDeskInfo(that.selectedDesk)
+            that.switchToDesk(that.selectedDesk)
           }
         });
       },
