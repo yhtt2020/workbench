@@ -997,7 +997,8 @@
         ipc.send('importDesk')
       },
       exportDesk(desk){
-        ipc.send('exportDesk',{desk:desk,deskLayout:deskModel.getDeskLayout(desk.id)})
+        const deskInfo=deskModel.getDeskInfo(desk.id)
+        ipc.send('exportDesk',{desk:deskInfo,deskLayout:deskModel.getDeskLayout(desk.id)})
       },
       removeDesk(desk){
         let that=this

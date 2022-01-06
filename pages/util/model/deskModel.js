@@ -221,6 +221,7 @@ const deskModel={
        const newDesk={
          name:desk.name,
          icon:desk.icon,
+         wallPaper:desk.wallPaper,
          id:Date.now(),
          createTime:desk.createTime,
          updateTime:desk.updateTime
