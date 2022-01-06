@@ -102,58 +102,58 @@
       <div style="flex: 1"></div>
     </div>
 
-    <a-modal :visible="setThemeVisible" title="设置壁纸" :width="800"  :footer="null" @cancel="setThemeVisible=false;this.loadingWallPaperHistory=true">
-      <template>
-        <div>
-          <a-alert style="margin-bottom: 10px"
-            message="您可以在浏览器中【查看图片】时，【右键】-【设置图片为壁纸】。也可以选择下方壁纸快速设置。"
-            type="info"
-            closable
-            show-icon
-          ></a-alert>
-          <a-tabs  default-active-key="history" tab-position="left">
-<!--            <a-tab-pane key="search" tab="网络搜索" >-->
+<!--    <a-modal :visible="setThemeVisible" title="设置壁纸" :width="800"  :footer="null" @cancel="setThemeVisible=false;this.loadingWallPaperHistory=true">-->
+<!--      <template>-->
+<!--        <div>-->
+<!--          <a-alert style="margin-bottom: 10px"-->
+<!--            message="您可以在浏览器中【查看图片】时，【右键】-【设置图片为壁纸】。也可以选择下方壁纸快速设置。"-->
+<!--            type="info"-->
+<!--            closable-->
+<!--            show-icon-->
+<!--          ></a-alert>-->
+<!--          <a-tabs  default-active-key="history" tab-position="left">-->
+<!--&lt;!&ndash;            <a-tab-pane key="search" tab="网络搜索" >&ndash;&gt;-->
 
+<!--&lt;!&ndash;            </a-tab-pane>&ndash;&gt;-->
+
+<!--            <a-tab-pane key="history" tab="最近" >-->
+<!--              <div style="height: 600px;overflow-y: auto">-->
+
+<!--                <div v-if="wallPaperHistory.length!==0 && this.loadingWallPaperHistory===false" style="background-color: #ececec; padding: 20px;">-->
+<!--                  <a-row :gutter="24">-->
+<!--                    <a-col v-for="(wallPaper,wallPaperIndex) in wallPaperHistory" :span="8" style="margin-bottom: 10px">-->
+<!--                      <a-card @click="setHistoryWallPaper(wallPaper)" hoverable :bordered="false">-->
+<!--                        <img style="object-fit: cover;" height="100"-->
+<!--                             slot="cover"-->
+<!--                             :src="wallPaper"-->
+<!--                        />-->
+<!--                      </a-card>-->
+<!--                    </a-col>-->
+<!--                  </a-row>-->
+<!--                </div>-->
+<!--                <a-spin  style="padding: 250px" v-if="this.loadingWallPaperHistory===true" size="large"></a-spin>-->
+<!--                <a-empty style="padding: 100px" description="暂无壁纸历史" v-if="wallPaperHistory.length===0"></a-empty>-->
+<!--              </div>-->
 <!--            </a-tab-pane>-->
-
-            <a-tab-pane key="history" tab="最近" >
-              <div style="height: 600px;overflow-y: auto">
-
-                <div v-if="wallPaperHistory.length!==0 && this.loadingWallPaperHistory===false" style="background-color: #ececec; padding: 20px;">
-                  <a-row :gutter="24">
-                    <a-col v-for="(wallPaper,wallPaperIndex) in wallPaperHistory" :span="8" style="margin-bottom: 10px">
-                      <a-card @click="setHistoryWallPaper(wallPaper)" hoverable :bordered="false">
-                        <img style="object-fit: cover;" height="100"
-                             slot="cover"
-                             :src="wallPaper"
-                        />
-                      </a-card>
-                    </a-col>
-                  </a-row>
-                </div>
-                <a-spin  style="padding: 250px" v-if="this.loadingWallPaperHistory===true" size="large"></a-spin>
-                <a-empty style="padding: 100px" description="暂无壁纸历史" v-if="wallPaperHistory.length===0"></a-empty>
-              </div>
-            </a-tab-pane>
-            <a-tab-pane v-for="(type,typeIndex) in defaultWallPaper" :key="typeIndex" :tab="type.title">
-              <div style="background-color: #ececec; padding: 20px;">
-                <a-row :gutter="24">
-                  <a-col v-for="(wallPaper,wallPaperIndex) in type.list" :span="8">
-                    <a-card @click="setWallPaper(wallPaper)" hoverable :bordered="false">
-                      <img style="object-fit: cover;" height="100"
-                           slot="cover"
-                           :alt="wallPaper.title"
-                           :src="wallUrl+wallPaper.image"
-                      />
-                    </a-card>
-                  </a-col>
-                </a-row>
-              </div>
-            </a-tab-pane>
-          </a-tabs>
-        </div>
-      </template>
-    </a-modal>
+<!--            <a-tab-pane v-for="(type,typeIndex) in defaultWallPaper" :key="typeIndex" :tab="type.title">-->
+<!--              <div style="background-color: #ececec; padding: 20px;">-->
+<!--                <a-row :gutter="24">-->
+<!--                  <a-col v-for="(wallPaper,wallPaperIndex) in type.list" :span="8">-->
+<!--                    <a-card @click="setWallPaper(wallPaper)" hoverable :bordered="false">-->
+<!--                      <img style="object-fit: cover;" height="100"-->
+<!--                           slot="cover"-->
+<!--                           :alt="wallPaper.title"-->
+<!--                           :src="wallUrl+wallPaper.image"-->
+<!--                      />-->
+<!--                    </a-card>-->
+<!--                  </a-col>-->
+<!--                </a-row>-->
+<!--              </div>-->
+<!--            </a-tab-pane>-->
+<!--          </a-tabs>-->
+<!--        </div>-->
+<!--      </template>-->
+<!--    </a-modal>-->
 
 
     <a-drawer style="z-index:1005"
@@ -173,7 +173,17 @@
 <!--            <a-slider id="cardOpacity" @change="changeOpacity" :step="5" v-model="cardOpacity"-->
 <!--                      :default-value="100"></a-slider>-->
 <!--          </div>-->
+          <h1>壁纸</h1>
+          <div style="font-size: 12px;color: #999;margin-bottom: 5px">仅用于当前桌面</div>
+          <div>
+            <wallpaper-selector :value="currentDeskInfo.wallPaper" :default-wall-paper="defaultDeskWallPaper" :desk-id="currentDeskInfo.id"></wallpaper-selector>
+          </div>
           <a-divider orientation="left">通用设置</a-divider>
+          <h1>桌面默认壁纸</h1>
+          <div style="font-size: 12px;color: #999;margin-bottom: 5px">未单独设置壁纸的桌面都将使用此壁纸</div>
+          <div>
+            <wallpaper-selector :value="defaultDeskWallPaper" ></wallpaper-selector>
+          </div>
           <div>
             <h1 style="font-size: 14px;margin-top: 20px">快捷坞图标大小：</h1>
             <a-slider id="dockSize" v-model="dockAppSize" @change="saveDockSize" :step="1" :min="30" :max="60"
@@ -188,7 +198,7 @@
 
 
     <a-button style="position: fixed;right: 6px;top: 20px;background-color: rgba(0,0,0,0.3);color: white;border:none"
-              shape="circle" type="primary" icon="skin" @click="setTheme"></a-button>
+              shape="circle" type="primary" icon="setting" @click="deskSetting()"></a-button>
     <a-dropdown v-model="visibleMainMenu" :trigger="['contextmenu']" @visible-change="changeMainMenuVisible">
       <div class="main" @click="hideMainMenu" style="overflow-x: hidden">
         <!--        <div class="main-top flex flex-direction justify-around align-center">-->
@@ -500,9 +510,9 @@
           <a-icon type="plus" ></a-icon> 添加组件
         </a-menu-item>
 
-        <a-menu-item @click="setTheme" key="wallpaper">
-          <a-icon type="skin" ></a-icon> 设置壁纸
-        </a-menu-item>
+<!--        <a-menu-item @click="setTheme" key="wallpaper">-->
+<!--          <a-icon type="skin" ></a-icon> 设置壁纸-->
+<!--        </a-menu-item>-->
         <a-menu-item @click="deskSetting" key="setting">
           <a-icon type="setting" ></a-icon> 设置桌面
         </a-menu-item>
@@ -837,21 +847,25 @@
 <script>
   Vue.use(antd)
 
-  const wallList = require('./wall.json')
+
   const { wallPaper, themeSetting, wallUrl } = require('../util/theme.js')
   const VueSelecto = require('vue-selecto')
   const deskModel = require('../util/model/deskModel')
+  const wallpaperSelector=require('./components/wallpaper-selector.js')
   deskModel.initialize()
   window.selectedElements = []
   var appVue = new Vue({
     el: '#app',
     components: {
-      VueSelecto
+      VueSelecto,
+      'wallpaper-selector':wallpaperSelector
     },
     data () {
       return {
-        loadingWallPaperHistory:true,
-        wallPaperHistory:[],//壁纸历史
+
+        defaultDeskWallPaper:'',
+
+
 
 
         deskSettingVisible:false,//桌面设置
@@ -864,7 +878,9 @@
         layoutSkipSave:false,//跳过保存，用于切换桌面的时候使用
         deskCanEdit:true,
         uuid:0,
-        currentDeskInfo:{},//当前桌面信息，用于比较更新时间，每次读入都会自动更新
+        currentDeskInfo:{
+          wallPaper:''
+        },//当前桌面信息，用于比较更新时间，每次读入都会自动更新
         mouseFlag: 0,//鼠标移动标志，用于解决鼠标拖拽和单机的冲突导致跳转在拖拽后触发的问题。
         selectoContainer: document.getElementById('.desktop-content'),
         //编辑组件
@@ -918,9 +934,9 @@
         loadingHistory: true,
         historyBar: [],
         bg: window.newtabBg,
-        setThemeVisible: false, //设置壁纸的抽
-        wallUrl: wallUrl,
-        defaultWallPaper: wallList,
+
+
+
         cardOpacity: 100,
         dock: [
           {
@@ -1263,6 +1279,13 @@
               layout = defaultDesk
             }
             this.layout =layout
+            if(!!!this.currentDeskInfo.wallPaper){
+              this.setBg(this.defaultDeskWallPaper)
+            }else{
+              this.setBg(this.currentDeskInfo.wallPaper)
+            }
+            console.log(this.currentDeskInfo.wallPaper)
+
           } catch (err) {
             this.$message.error({content:"桌面损坏。"})
           }
@@ -1334,50 +1357,12 @@
       callback (val) {
 
       },
-      /**
-       * 设置壁纸
-       */
-      setTheme () {
-        setTimeout(()=>{
-          appVue.loadingWallPaperHistory=false
-        },500)
-        this.setThemeVisible = true
-        this.visibleMainMenu = false
-      },
+
       deskSetting(){
         this.deskSettingVisible = !this.deskSettingVisible
         this.visibleMainMenu = false
       },
-      refreshWallPaperHistory(){
-        this.wallPaperHistory=wallPaper.getHistory()
-      },
-      setHistoryWallPaper(wp){
-        try {
-          //保存壁纸设置
-          wallPaper.setUrlWallPaper(wp).then(() => {
-              wallPaper.setElementBg(document.body, wp)
-            this.refreshWallPaperHistory()
-              this.$message.success({ content: '壁纸设置成功。' })
-            }
-          )
-        } catch (err) {
-          this.$message.error({ content: '保存壁纸失败。' })
-        }
-
-      },
-      async setWallPaper (wp) {
-        try {
-          //保存壁纸设置
-          wallPaper.set(wp.image).then(() => {
-              wallPaper.setElementBg(document.body, wallPaper.getWallPaperUrl(wp.image))
-            this.refreshWallPaperHistory()
-              this.$message.success({ content: '壁纸设置成功。' })
-            }
-          )
-        } catch (err) {
-          this.$message.error({ content: '保存壁纸失败。' })
-        }
-
+      setDefaultTheme(wallPaper){
       },
       changeOpacity (opacity) {
         this.setOpacity(opacity)
@@ -1521,12 +1506,18 @@
 
       }, 200)
       //获取壁纸
-      this.wallPaperHistory=wallPaper.getHistory()
       wallPaper.get().then(data => {
         if (!!data) {
+          this.defaultDeskWallPaper=data.value
+        }
+        if(!!!this.currentDeskInfo.wallPaper){
           this.setBg(data.value)
+        }else{
+          this.setBg(this.currentDeskInfo.wallPaper)
         }
       }).catch(err => console.log(err))
+
+
       //获取主题的卡片透明度
       themeSetting.getNewtabCardOpacity().then(data => {
         if (!!data) {
