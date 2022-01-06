@@ -275,7 +275,7 @@
 
                       </div>
                       <div
-                        style="margin-top: 5px;background-color: rgba(40,40,40,0.55);height: 200px;border-radius: 40px"
+                        style="margin-top: 5px;height: 200px;border-radius: 40px"
                         class="clock allow-drag" v-if="item.element.data.type===2">
                         <clock2></clock2>
                       </div>
@@ -726,14 +726,14 @@
                     </div>
                     <div style="padding: 10px;margin-bottom: 10px;border-bottom: 1px solid #ccc;padding: 10px">
                       <h3 style="font-weight: bold;">时钟2</h3>
-                      <p>尺寸 5*2 大组件
+                      <p>尺寸 3*1 小组件
                         <a-button type="primary" style="float:right"
-                                  @click="addElement({type:'clock',data:{type:2,color:'black'}},{w:5,h:2})">
+                                  @click="addElement({type:'clock',data:{type:2,color:'black'}},{w:3,h:1})">
                           添加组件
                         </a-button>
                       </p>
-                      <div style="position: relative;background-color: black;
-    height: 330px;
+                      <div style="position: relative;background-color: #696969; width: 300px;
+    height: 120px;
     border-radius: 12px;">
                         <clock2></clock2>
                       </div>
