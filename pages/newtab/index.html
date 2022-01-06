@@ -1013,18 +1013,39 @@
           onOk() {
           },
           onCancel() {
+            let preDesk=0
             //todo实现删除逻辑
             for(let i=0;i<that.desks.length;i++){
               if(that.desks[i].id===desk.id)
               {
+                if(i-1>=0){
+                  //如果上一个桌面存在
+                  preDesk=i-1
+                }
                 that.desks.splice(i,1)
                 localStorage.setItem('desks',JSON.stringify(that.desks))
               }
             }
             localStorage.removeItem('desk_'+desk.id)
-            that.selectedDesk=0
-            localStorage.setItem('selectedDesk',that.selectedDesk)
-            that.switchToDesk(0)
+            if(that.desks.length<=0){
+              //如果删除后，没有别的桌面了，自动创建一个新桌面填充上
+              let newDeskId=Date.now()
+              deskModel.createDesk({
+                id:newDeskId,
+                name:'新桌面',
+                icon:'home',
+                createTime:newDeskId,
+                updateTime:newDeskId
+              },[])
+              that.selectedDesk=newDeskId
+              localStorage.setItem('selectedDesk',that.selectedDesk)
+              that.switchToDesk(newDeskId)
+
+            }else{
+              that.selectedDesk=that.desks[preDesk].id
+              localStorage.setItem('selectedDesk',that.selectedDesk)
+              that.switchToDesk(that.selectedDesk)
+            }
           }
         });
       },
