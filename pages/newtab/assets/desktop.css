@@ -489,4 +489,14 @@
   color: #b7b7b7;
 }
 
+.wallPaperFrame {
+  cursor: pointer;
+  width: 180px;
+  height: 100px;
+  object-fit: cover;
+  border: 3px solid white;
+  border-radius: 8px !important;
+  box-shadow: 0 0 8px rgba(100, 100, 100, 0.75);
+}
+
 /*# sourceMappingURL=desktop.css.map */
