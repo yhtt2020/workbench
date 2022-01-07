@@ -17,10 +17,6 @@ const groupTpl = `
                           <div>{{iconEl.element.data.name}}</div>
                             </div>
                         </div>
-                        <div class="icon" >
-                          <div class="other">
-                          </div>
-                        </div>
                       </div>
                       <div class="name allow-drag" @mousedown.stop="">
                         {{ item.element.name }}
