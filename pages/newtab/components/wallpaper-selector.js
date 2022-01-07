@@ -133,6 +133,7 @@ const wallpaperSelector = Vue.component('wallpaper-selector', {
         deskInfo.wallPaper=wp
         appVue.currentDeskInfo=deskModel.updateDeskInfo(this.deskId,deskInfo)
         appVue.setBg(wp)
+        this.$message.success({ content: '当前桌面壁纸设置成功。' ,key:'setWallPaper'})
       }
 
 
