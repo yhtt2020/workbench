@@ -57,8 +57,32 @@ const mobileMod = {
     })
     let view = new BrowserView({
       width: initSize.width,
-      height: initSize.height - 70
+      height: initSize.height - 70,
+      webPreferences:{
+        nodeIntegration: false,
+        nodeIntegrationInSubFrames: true,
+        scrollBounce: true,
+        safeDialogs: true,
+        safeDialogsMessage: 'Prevent this page from creating additional dialogs',
+        preload: __dirname + '/dist/preload.js',
+        contextIsolation: true,
+        sandbox: true,
+        enableRemoteModule: false,
+        allowPopups: false,
+        partition: 'persist:webcontent',
+        enableWebSQL: false,
+        autoplayPolicy: (settings.get('enableAutoplay') ? 'no-user-gesture-required' : 'user-gesture-required'),
+        // partition:'persist:webcontent',
+        // preload: path.join(__dirname, '/dist/preload.js'),
+        // additionalArguments: [
+        //   '--user-data-path=' + userDataPath,
+        //   '--app-version=' + app.getVersion(),
+        //   '--app-name=' + app.getName(),
+        //   ...((isDevelopmentMode ? ['--development-mode'] : [])),
+        // ]
+      }
     })
+    console.log(path.join(__dirname, '/dist/preload.js'))
     mobileWindow.setBrowserView(view)
     view.setBounds({
       x: 0,
