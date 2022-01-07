@@ -1,9 +1,9 @@
 import econstructor from "./electron/econstructor"
 import bconstructor from "./browser/bconstructor"
 
-export default class xtbk {
+export default class tsbk {
   static content(config= {}) {
-    return xtbk.get_instance(config)
+    return tsbk.get_instance(config)
   }
 
   //不同环境获取不同的实例

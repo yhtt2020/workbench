@@ -5,8 +5,14 @@ export default class bconstructor {
     this.key = config.key
     //this.xxx = config.xxx
   }
+
   //登出IM跳转短说社区【设置/账号/账号信息】
   OsxpcBinding() {
     window.postMessage('OsxpcBinding', `${window.origin}`)
+  }
+
+  //登出IM跳转短说社区【设置/账号/用户信息】
+  OsxpcUserInfo() {
+    window.postMessage('OsxpcUserInfo', `${window.origin}`)
   }
 }

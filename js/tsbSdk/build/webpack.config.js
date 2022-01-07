@@ -8,8 +8,8 @@ module.exports = {
   entry: "./src/index.js",
   output: {
     path: path.resolve(__dirname, '../dist'),
-    filename: "xtbSdk.js",
-    library: 'xtb-SDK',
+    filename: "tsbSdk.js",
+    library: 'tsb-SDK',
     libraryTarget: 'umd',
     globalObject: 'this'
   },

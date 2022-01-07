@@ -1,7 +1,7 @@
 var electron = require('electron')
 var ipc = electron.ipcRenderer
 const { config } = require('../../server-config')
-const xtbk = require('../../js/xtbSdk/dist/xtbSdk')
+const tsbk = require('../../js/tsbSdk/dist/tsbSdk')
 
 window.ipc = ipc
 let href = window.location.href
@@ -35,10 +35,14 @@ const server = {
 }
 
 if(href === config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN) {
-  const xtb = xtbk.default.content()
-  xtb.OsxpcBinding('navigateToAccount')
+  const tsb = tsbk.default.content()
+  tsb.OsxpcBinding('navigateToAccount')
+  tsb.OsxpcUserInfo('navigateToUserInfo')
   server.beforeInit(config.IM.FRONT_URL_DEV)
 } else if(href === config.IM.FRONT_URL + config.IM.AUTO_LOGIN) {
+  const tsb = tsbk.default.content()
+  tsb.OsxpcBinding('navigateToAccount')
+  tsb.OsxpcUserInfo('navigateToUserInfo')
   server.beforeInit(config.IM.FRONT_URL)
 }
 
