@@ -233,10 +233,10 @@
                            :w="item.w"
                            :h="item.h"
                            :i="item.i"
-                           :max-w="item.maxW"
-                           :max-h="item.maxH"
+                           :max-w="item.element.type==='group'?2:item.maxW"
+                           :max-h="item.element.type==='group'?2:item.maxH"
                            :key="item.i"
-                           :is-resizable="item.isResizable"
+                           :is-resizable="item.element.type==='group'?true:item.isResizable"
                            drag-allow-from=".allow-drag"
                            drag-ignore-from=".ignore-drag"
 
@@ -248,7 +248,7 @@
                        @remove-element="removeElement(item)" @open-url="openUrl(item.element.data.url)"></app>
                   <ele-video :source="item.element.data.source" :controls="item.element.data.controls"
                        @remove-element="removeElement(item)" v-if="item.element.type==='video'" ></ele-video>
-                  <group v-if="item.element.type==='group'" :item="item" @edit-group="editGroup(item)"
+                  <group :w="item.w" :h="item.h" v-if="item.element.type==='group'" :item="item" @edit-group="editGroup(item)"
                          @remove-element="removeElement(item)" @open-group="openGroup(item)"></group>
                   <a-dropdown @mousedown.stop="" :trigger="['contextmenu']" v-if="item.element.type==='card'">
                     <!--卡片-->

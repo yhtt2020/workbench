@@ -68,13 +68,13 @@
     user-select: none;
     text-align: left;
     width: 60px;
-    height: 60px;
+    height: 66px;
     background: #ffffff77;
     border-radius: 3px;
     overflow: hidden;
     vertical-align: top;
-    line-height: 18px;
-    padding: 3px 3px;
+    line-height: 17px;
+    padding: 2px 2px;
 
     .icon {
       display: inline-block;
@@ -612,3 +612,65 @@
   border-radius: 8px !important;
   box-shadow: 0 0 8px rgba(100, 100, 100, 0.75)
 }
+
+/**app图标2*2模式*/
+.app-group-2x2 {
+  width: 150px;
+
+  height: calc(var(--element-height) * 2);
+
+  .group-icons {
+    width: 150px;
+    height: 165px;
+    padding: 5px;
+
+    .icon {
+      width: 46px !important;
+      height: 53px !important;
+
+      img {
+        width: 28px !important;
+        height: 28px !important;
+      }
+
+      .more {
+        position: relative;
+        img {
+          left: 11px;
+          top: 3px;
+          width: 25px !important;
+          height: 25px !important;;
+          z-index: 1;
+          position: absolute;
+          border-radius: 3px;
+        }
+        .app-name{
+          margin-top: 28px;
+        }
+
+        .place-handler {
+          width: 25px;
+          height: 25px;
+          background: #e5e5e5;
+          border-radius: 3px;
+          position: absolute;
+          top: 0;
+          left: 7px;
+          z-index: 0;
+        }
+      }
+
+      div {
+        font-size: 10px;
+        color: white;
+        text-shadow: 0 0 3px rgba(0, 0, 0, 0.37);
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-wrap: none;
+        white-space: nowrap;
+      }
+    }
+  }
+}
+
