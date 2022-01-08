@@ -1,4 +1,5 @@
 let groupIMWindow=null
+let alwaysHide = false
 app.on('ready', () => {
   let createGroupWindow = null
   let fromRender = null
@@ -113,22 +114,29 @@ app.on('ready', () => {
       }
       groupIMWindow.webContents.loadURL(im_url)
       groupIMWindow.on('close',(e)=> {
-        const result = dialog.showMessageBoxSync({
-          type: 'none',
-          buttons: ['取消','退出', '隐藏'],
-          message: '退出后无法接受消息提醒,请注意!',
-          cancelId: 0,
-          defaultId: 2,
-          noLink: true
-        })
-        if(result === 0 ) {
-          e.preventDefault()
-          return
-        } else if(result === 2) {
+        if(alwaysHide) {
           e.preventDefault()
           groupIMWindow.hide()
         } else {
-          groupIMWindow = null
+          const result = dialog.showMessageBoxSync({
+            type: 'none',
+            buttons: ['取消','退出', '隐藏[不再询问]'],
+            message: '退出后无法接受消息提醒,请注意!',
+            cancelId: 0,
+            defaultId: 2,
+            noLink: true
+          })
+          if(result === 0 ) {
+            e.preventDefault()
+            return
+          } else if(result === 2) {
+            e.preventDefault()
+            alwaysHide = true
+            groupIMWindow.hide()
+          } else {
+            groupIMWindow = null
+            alwaysHide = false
+          }
         }
       })
     }else{
