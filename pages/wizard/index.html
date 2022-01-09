@@ -20,8 +20,8 @@
           <br>如果您是<strong>老用户</strong>，可跳过引导直接使用产品。
 				</p>
 				<template >
-					<a-form  id="components-form-demo-normal-login" :form="form" class="login-form"
-						@submit="handleSubmit">
+<!--					<a-form  id="components-form-demo-normal-login" :form="form" class="login-form"-->
+<!--						@submit="handleSubmit">-->
 <!--						<a-form-item label="">-->
 <!--							<a-input placeholder="手机号" v-decorator="[-->
 <!--						          'phone',-->
@@ -71,9 +71,7 @@
                 首次使用，进入引导
               </a-button>
             </div>
-
-
-					</a-form>
+<!--					</a-form>-->
 				</template>
 			</div>
 			<div id="stepWizard" class="step-wizard" v-show="step=='wizard'">
@@ -85,11 +83,14 @@
 					</a-steps>
 				</template>
 				<div v-show="current==0" class="steps-content">
+          <a-form
+            id="components-form-demo-validate-other"
+            :form="formSetting"
+            @submit="handleSubmitSetting"
+          >
 					<p>根据您的喜好和习惯完成以下设置，后面您也可以随时在<strong>设置</strong>当中进行调整。</p>
 					<h3>1.标签栏风格</h3>
 					<p class="setting-type" style="">
-						<template>
-
 							<p class="theme-carousel">
 							<div style="overflow: hidden;height: 113px;position: relative;    margin-bottom: 30px;">
 								<template>
@@ -126,22 +127,28 @@
 									</a-carousel>
 								</template>
 							</div>
+              </p>
 					</p>
-					<a-radio-group name="titleBar" default-value="theme" @change="changeTitleBar">
+          <p class="setting-type" style="">
+            <a-form-item>
+              <a-radio-group v-decorator="['siteTheme',{initialValue:'theme'}]"  @onChange="changeTitleBar">
 
-						<a-radio value="theme" style="width: 300px;">
-							自适应标签色（根据网站图标自动变换）
-						</a-radio>
-						<a-radio value="no-theme">
-							纯色标签栏（白色标题栏，固定）
-						</a-radio>
-					</a-radio-group>
+                <a-radio value="theme" style="width: 300px;">
+                  自适应标签色（根据网站图标自动变换）
+                </a-radio>
+                <a-radio value="no-theme">
+                  纯色标签栏（白色标题栏，固定）
+                </a-radio>
+              </a-radio-group>
+            </a-form-item>
+
 					</template>
 					</p>
 					<h3>2.默认搜索引擎</h3>
 					<p class="setting-type">
 						<template>
-							<a-radio-group name="improve" default-value="Baidu">
+              <a-form-item>
+							<a-radio-group v-decorator="['searchEngine',{initialValue:'Baidu'}]">
 								<a-radio value="Baidu">
 									百度
 								</a-radio>
@@ -158,19 +165,22 @@
 									google（海外，国内无法正常使用）
 								</a-radio>
 							</a-radio-group>
+              </a-form-item>
 						</template>
 					</p>
 					<h3>3.帮助我们改善产品</h3>
 					<p class="setting-type">
 						<template>
-							<a-radio-group name="improve" :default-value="1">
-								<a-radio :value="1">
+              <a-form-item>
+							<a-radio-group v-decorator="['improve',{initialValue:'true'}]" >
+								<a-radio :value="'true'">
 									发送统计信息（不会发送个人信息）
 								</a-radio>
-								<a-radio :value="2">
+								<a-radio :value="'false'">
 									不发送统计信息
 								</a-radio>
 							</a-radio-group>
+              </a-form-item>
 						</template>
 					</p>
 <!--					<h3>4.默认浏览器</h3>-->
@@ -188,13 +198,11 @@
 <!--						</template>-->
 <!--					</p>-->
 					<div class="bottom-button">
-						<a-button type="primary" @click="next">
+						<a-button type="primary" html-type="submit">
 							下一步.导入收藏
 						</a-button>
-						<a-button type="default" style="margin-left: 50px" @click="close">
-							暂不导入收藏，完成设置
-						</a-button>
 					</div>
+          </a-form>
 				</div>
 				<div v-show="current==1" class="steps-content">
 					<template>
@@ -293,6 +301,11 @@
 
 			Vue.use(antd)
 			Vue.prototype.$form = antd.Form
+      const fs=require('fs')
+      const tools = require('../util/util.js').tools
+      tools.getWindowArgs(window)
+      let settings=require('../../js/util/settings/settings')
+
 			var appVue = new Vue({
 				el: '#app',
 				data() {
@@ -327,27 +340,83 @@
 							"http://player.bilibili.com/player.html?aid=890908889&bvid=BV1hP4y187jw&cid=421342590&page=1&p=4"
 						],
 						currentVideoIndex:0,
-					}
-				},
+
+            /**
+             * 设置项目
+             */
+            formSetting:this.$form.createForm(this,{
+              name:'setting'
+            }),
+            settingSiteTheme:true,
+            settingCollectUsageStats:undefined,
+            settingSearchEngine:{name:'Baidu'}
+          }
+        },
 				beforeCreate() {
-					this.form = this.$form.createForm(this, {
-						name: 'normal_login'
-					});
+					// this.form = this.$form.createForm(this, {
+					// 	name: 'normal_login'
+					// });
+          // this.formSetting=this.$form.createForm(this,{
+          //   name:'setting'
+          // })
 				},
+        mounted(){
+          this.settingSiteTheme=settings.get('siteTheme')
+          this.settingCollectUsageStats=settings.get('collectUsageStats')
+          this.settingSearchEngine=settings.get('searchEngine')
+        },
 				methods: {
 					handleSubmit(e) {
-						e.preventDefault();
+						e.preventDefault()
 						this.form.validateFields((err, values) => {
 							if (!err) {
-								console.log('Received values of form: ', values);
+                // console.log(values.siteTheme)
+                // if(values.siteTheme==='no-theme'){
+                //   settings.set('siteTheme',false)
+                // }else{
+                //   settings.set('siteTheme',true)
+                // }
+                // settings.set('searchEngine',{ name: values.searchEngine })
+                // if(values.improve==='true'){
+                //   settings.set('collectUsageStats', true)
+                // }else{
+                //   settings.set('collectUsageStats', false)
+                // }
+								// console.log('Received values of form: ', values)
 							}
-						});
+						})
 					},
+          handleSubmitSetting(e){
+            e.preventDefault();
+            //console.log(this.formSetting.getFieldsValue())
+            // console.log(this.formSetting)
+            this.formSetting.validateFields((err, values) => {
+              if (!err) {
+                if(values.siteTheme==='no-theme'){
+                  settings.set('siteTheme',false)
+                }else{
+                  settings.set('siteTheme',true)
+                }
+                settings.set('searchEngine',{ name: values.searchEngine })
+                if(values.improve==='true'){
+                  settings.set('collectUsageStats', true)
+                }else{
+                  settings.set('collectUsageStats', false)
+                }
+                this.next()
+              }
+            })
+          },
+          saveSetting(next){ //next  close
+
+          },
 					next() {
-						this.current++;
+            if(this.current===0){
+            }
+						this.current++
 					},
 					prev() {
-						this.current--;
+						this.current--
 					},
 					changeTitleBar(e) {
 						this.titleBar = e.target.value
@@ -355,7 +424,7 @@
 					},
 					netxVideo() {
 						this.$refs.videos.next()
-						this.currentVideoIndex++;
+						this.currentVideoIndex++
 						if(this.currentVideoIndex==4){
 							this.currentVideoIndex=0
 						}
