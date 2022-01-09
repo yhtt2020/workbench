@@ -50,14 +50,27 @@ const tsbSdk = {
     //解密signature，sha1方法
     //校验解密出来的timestamp、nonceStr是否一致
     //然后再进一步远程ts服务器校验(jsapi_ticket, origin)是否过期，不过期返回一个true，过期返回false
-    //const axios = require('axios')
+    const axios = require('axios')
     axios.post().then(res => {
       if(res.code === 200) {
         window.postMessage({
           eventName: 'authResult',
-          data: true
+          signature: signature,
+          sdkSwitch: true
+        })
+      } else {
+        window.postMessage({
+          eventName: 'authResult',
+          signature: signature,
+          sdkSwitch: false
         })
       }
+    }).catch(err => {
+      window.postMessage({
+        eventName: 'authResult',
+        signature: signature,
+        sdkSwitch: false
+      })
     })
 
   }

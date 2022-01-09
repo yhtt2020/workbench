@@ -17,13 +17,20 @@ export default class bconstructor {
 
   //obj中必须要的属性 appId:必填，三方应用唯一标识 、timestamp:必填，生成签名的时间戳、 nonceStr: 必填，生成签名的随机串、 signature:必填，签名、 jsApiList:[]必填，需要使用的JS接口列表
   static config(obj) {
-    window.postMessage({
-      eventName: 'checkAuth',
-      secretInfo: bconstructor.secretInfo
-    }, `${window.origin}`)
-    const keyNames = Object.keys(obj)
-    for(let i = 0; i < keyNames.length; i++) {
-      bconstructor.secretInfo[keyNames[i]] = obj[keyNames[i]]
+    if (Object.keys(bconstructor.secretInfo).length > 0) {
+      window.postMessage({
+        eventName: 'checkAuth',
+        secretInfo: bconstructor.secretInfo
+      }, `${window.origin}`)
+    } else {
+      const keyNames = Object.keys(obj)
+      for(let i = 0; i < keyNames.length; i++) {
+        bconstructor.secretInfo[keyNames[i]] = obj[keyNames[i]]
+      }
+      window.postMessage({
+        eventName: 'checkAuth',
+        secretInfo: bconstructor.secretInfo
+      }, `${window.origin}`)
     }
   }
 
