@@ -130,10 +130,10 @@
 					<a-radio-group name="titleBar" default-value="theme" @change="changeTitleBar">
 
 						<a-radio value="theme" style="width: 300px;">
-							自适应标签色
+							自适应标签色（根据网站图标自动变换）
 						</a-radio>
 						<a-radio value="no-theme">
-							纯色标签栏
+							纯色标签栏（白色标题栏，固定）
 						</a-radio>
 					</a-radio-group>
 					</template>
@@ -141,21 +141,21 @@
 					<h3>2.默认搜索引擎</h3>
 					<p class="setting-type">
 						<template>
-							<a-radio-group name="improve" :default-value="1">
-								<a-radio :value="1">
-									bing
-								</a-radio>
-								<a-radio :value="2">
+							<a-radio-group name="improve" default-value="Baidu">
+								<a-radio value="Baidu">
 									百度
 								</a-radio>
-								<a-radio :value="3">
+                <a-radio value="Bing">
+                  bing
+                </a-radio>
+							<!--	<a-radio :value="3">
 									搜狗
 								</a-radio>
 								<a-radio :value="4">
 									360
-								</a-radio>
-								<a-radio :value="5">
-									google（海外）
+								</a-radio>-->
+								<a-radio value="Google">
+									google（海外，国内无法正常使用）
 								</a-radio>
 							</a-radio-group>
 						</template>
@@ -191,8 +191,8 @@
 						<a-button type="primary" @click="next">
 							下一步.导入收藏
 						</a-button>
-						<a-button type="default" style="margin-left: 50px" @click="current=2">
-							暂不导入收藏
+						<a-button type="default" style="margin-left: 50px" @click="close">
+							暂不导入收藏，完成设置
 						</a-button>
 					</div>
 				</div>
@@ -222,71 +222,71 @@
 						</div>
 					</template>
 					<div class="bottom-button">
-						<a-button type="primary" @click="next">
-							下一步.1分钟使用视频教程
-						</a-button>
-						<a-button type="default" style="margin-left: 50px" @click="current=3">
-							跳过教程，自己摸索
-						</a-button>
-					</div>
-				</div>
-				<div v-show="current==2" class="steps-content">
-					<template>
-						<!--  <a-carousel effect="fade" style="background-color: black;border-radius: 8px;min-height: 400px;">
-					    <div><h3>1</h3></div>
-					    <div><h3>2</h3></div>
-					    <div><h3>3</h3></div>
-					    <div><h3>4</h3></div>
-					  </a-carousel> -->
-						<a-carousel ref="videos" arrows effect="fade" style="text-align: center;">
-							<div slot="prevArrow" slot-scope="props" class="custom-slick-arrow"
-								style="left: 10px;zIndex: 1">
-								<a-icon type="left-circle" />
-							</div>
-							<div slot="nextArrow" slot-scope="props" class="custom-slick-arrow" style="right: 20px">
-								<a-icon type="right-circle" />
-							</div>
-							<div>
-								<h3 class="video-title">1.我们与传统浏览器最大的不同：分组浏览</h3>
-								<!-- <iframe src="//player.bilibili.com/player.html?aid=890908889&bvid=BV1hP4y187jw&cid=421342590&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
- -->
-								<!-- <video width="95%" height="400" style="    margin-left: 20px;" controls>
-								    <source src="https://www.bilibili.com/video/BV1hP4y187jw?share_source=copy_web" type="video/mp4">
-								    <source src="https://www.bilibili.com/video/BV1hP4y187jw?share_source=copy_web" type="video/ogg">
-								    您的浏览器不支持 video 标签。
-								</video> -->
-							</div>
-							<div>
-								<h3 class="video-title">2.精心设计的左侧栏</h3>
-
-							</div>
-							<div>
-								<h3 class="video-title">3.打造个人的应用中心</h3>
-
-							</div>
-							<div>
-								<h3 class="video-title">4.团队协作功能（即将上线）</h3>
-
-							</div>
-
-						</a-carousel>
-						<div>
-							<iframe  class="frame-video" sandbox="allow-same-origin allow-scripts "
-								:src="videoSource"
-								scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true">
-							</iframe>
-
-						</div>
-					</template>
-					<div class="bottom-button">
-						<a-button type="primary" @click="netxVideo">
-							新技能get，next
-						</a-button>
+<!--						<a-button type="primary" @click="next">-->
+<!--							下一步.1分钟使用视频教程-->
+<!--						</a-button>-->
 						<a-button type="default" style="margin-left: 50px" @click="close">
-							学完了，开始使用
+							设置完毕
 						</a-button>
 					</div>
 				</div>
+<!--				<div v-show="current==2" class="steps-content">-->
+<!--					<template>-->
+<!--						&lt;!&ndash;  <a-carousel effect="fade" style="background-color: black;border-radius: 8px;min-height: 400px;">-->
+<!--					    <div><h3>1</h3></div>-->
+<!--					    <div><h3>2</h3></div>-->
+<!--					    <div><h3>3</h3></div>-->
+<!--					    <div><h3>4</h3></div>-->
+<!--					  </a-carousel> &ndash;&gt;-->
+<!--						<a-carousel ref="videos" arrows effect="fade" style="text-align: center;">-->
+<!--							<div slot="prevArrow" slot-scope="props" class="custom-slick-arrow"-->
+<!--								style="left: 10px;zIndex: 1">-->
+<!--								<a-icon type="left-circle" />-->
+<!--							</div>-->
+<!--							<div slot="nextArrow" slot-scope="props" class="custom-slick-arrow" style="right: 20px">-->
+<!--								<a-icon type="right-circle" />-->
+<!--							</div>-->
+<!--							<div>-->
+<!--								<h3 class="video-title">1.我们与传统浏览器最大的不同：分组浏览</h3>-->
+<!--								&lt;!&ndash; <iframe src="//player.bilibili.com/player.html?aid=890908889&bvid=BV1hP4y187jw&cid=421342590&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>-->
+<!-- &ndash;&gt;-->
+<!--								&lt;!&ndash; <video width="95%" height="400" style="    margin-left: 20px;" controls>-->
+<!--								    <source src="https://www.bilibili.com/video/BV1hP4y187jw?share_source=copy_web" type="video/mp4">-->
+<!--								    <source src="https://www.bilibili.com/video/BV1hP4y187jw?share_source=copy_web" type="video/ogg">-->
+<!--								    您的浏览器不支持 video 标签。-->
+<!--								</video> &ndash;&gt;-->
+<!--							</div>-->
+<!--							<div>-->
+<!--								<h3 class="video-title">2.精心设计的左侧栏</h3>-->
+
+<!--							</div>-->
+<!--							<div>-->
+<!--								<h3 class="video-title">3.打造个人的应用中心</h3>-->
+
+<!--							</div>-->
+<!--							<div>-->
+<!--								<h3 class="video-title">4.团队协作功能（即将上线）</h3>-->
+
+<!--							</div>-->
+
+<!--						</a-carousel>-->
+<!--						<div>-->
+<!--							<iframe  class="frame-video" sandbox="allow-same-origin allow-scripts "-->
+<!--								:src="videoSource"-->
+<!--								scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true">-->
+<!--							</iframe>-->
+
+<!--						</div>-->
+<!--					</template>-->
+<!--					<div class="bottom-button">-->
+<!--						<a-button type="primary" @click="netxVideo">-->
+<!--							新技能get，next-->
+<!--						</a-button>-->
+<!--						<a-button type="default" style="margin-left: 50px" @click="close">-->
+<!--							学完了，开始使用-->
+<!--						</a-button>-->
+<!--					</div>-->
+<!--				</div>-->
 			</div>
 		</div>
 		<script>
@@ -362,9 +362,7 @@
 						this.videoSource=this.videoSources[this.currentVideoIndex]
 					},
           close(){
-            db.system.put({name:'firstRun',value:1}).catch((err)=>{
-              console.log(err)
-            })
+            localStorage.setItem('firstRun','1')
             ipc.send('closeWizard')
           }
 				}

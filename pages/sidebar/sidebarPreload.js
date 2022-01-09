@@ -14,14 +14,9 @@ window.l = l
 window.ipc = ipc
 // contextBridge.exposeInMainWorld('l', l)
 // contextBridge.exposeInMainWorld('ipc', ipc)
-
-db.system.get({name:'firstRun'}).then((data)=>{
-  const isFirstRun=!!!data
-  if(isFirstRun){
-    ipc.send('wizard')
-  }
-  console.log(isFirstRun)
-})
+if(!!!localStorage.getItem('firstRun')) {
+  ipc.send('wizard')
+}
 
 window.addEventListener('message', function (e) {
   if (!e.origin.startsWith('file://')) {
