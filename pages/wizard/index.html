@@ -131,7 +131,7 @@
 					</p>
           <p class="setting-type" style="">
             <a-form-item>
-              <a-radio-group v-decorator="['siteTheme',{initialValue:'theme'}]"  @onChange="changeTitleBar">
+              <a-radio-group v-decorator="['siteTheme',{initialValue:'theme'}]"  @change="changeTitleBar">
 
                 <a-radio value="theme" style="width: 300px;">
                   自适应标签色（根据网站图标自动变换）
@@ -318,16 +318,17 @@
 								content: 'First-content',
 								icon: 'setting'
 							},
-							{
-								title: '导入书签',
-								content: 'Second-content',
-								icon: 'star'
-							},
-							{
-								title: '新手教程',
-								content: 'Last-content',
-								icon: 'play-circle'
-							},
+              {
+                title: '导入书签',
+                content: 'Second-content',
+                icon: 'star'
+              }
+							// },
+							// {
+							// 	title: '新手教程',
+							// 	content: 'Last-content',
+							// 	icon: 'play-circle'
+							// },
 						],
 						titleBar: 'theme',
 						activeKey: ['3'],
