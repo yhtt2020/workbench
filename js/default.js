@@ -94,6 +94,7 @@ ipc.on('getGlobal',function(event,args){
 	ipc.send('receiveGlobal',{
 		tasks:tasks.getStringifyableState(),
 		tabs:tabs.getStringifyableState(),
+    callbackWin:args.callbackWin
 		})
 })
 // https://remysharp.com/2010/07/21/throttling-function-calls
@@ -162,7 +163,8 @@ require('navbar/addTabButton.js').initialize()
 require('navbar/tabActivity.js').initialize()
 require('navbar/tabColor.js').initialize()
 require('navbar/navigationButtons.js').initialize()
-
+//加入工具栏
+require('toolbar/toolbar')
 
 
 require('downloadManager.js').initialize()

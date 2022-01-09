@@ -95,7 +95,21 @@
 	box-shadow: none;
 }
 
+span .ant-tree-title .ant-dropdown-trigger {
+  display: block;
+  height: 24px;
+}
 
+/*group-comp样式*/
+.gp-tree {
+  position: relative;
+}
+
+.gp-tree .ct-btn {
+  position: absolute;
+  right: 0px;
+  top: 7px
+}
 
 
 /*添加了壁纸之后的样式,完全不一样了*/
@@ -202,7 +216,7 @@
   text-overflow: ellipsis;
   overflow: hidden;
   display: inline-block;
-  width: 100px;
+  width: 200px;
 }
 
 

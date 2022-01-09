@@ -4,15 +4,18 @@ const searchbarPlugins = require('searchbar/searchbarPlugins.js')
 const shortcuts = [
   {
     icon: 'recently-viewed',
-    text: '!history '
+    text: '!history ',
+    title:'浏览历史'
   },
   {
     icon: 'star',
-    text: '!bookmarks '
+    text: '!bookmarks ',
+    title:'书签收藏'
   },
   {
     icon: 'overflow-menu-horizontal',
-    text: '!'
+    text: '!',
+    title:'超级指令'
   }
 ]
 
@@ -25,6 +28,7 @@ function showShortcutButtons (text, input, event) {
     var el = document.createElement('button')
     el.className = 'searchbar-shortcut i carbon:' + shortcut.icon
     el.title = shortcut.text
+    el.innerHTML =" "+ shortcut.title
     el.tabIndex = -1
     el.addEventListener('click', function () {
       input.value = shortcut.text

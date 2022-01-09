@@ -14,6 +14,7 @@ body {
   border-radius: 0px 0px 0px 10px;
   width: 45px;
   background: white;
+  transition: width 0.2s;
 }
 
 .sidebar .side-items {
@@ -103,13 +104,51 @@ body {
   cursor: move;
 }
 
-.tab-icon {
+.task-title {
+  cursor: pointer;
+  display: inline-block;
+  min-width: 20px;
+  max-width: 240px;
+}
+.task-title .text {
+  display: inline-block;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.task-title:hover {
+  color: grey;
+}
+.task-title:hover .edit-tip {
+  vertical-align: text-top;
+  margin-top: -3px;
+  display: inline-block;
+}
+.task-title .edit-tip {
+  display: none;
+}
+
+.action {
+  cursor: pointer;
+  padding: 3px;
+}
+.action:hover {
+  background: rgba(224, 224, 224, 0.35);
+  border-radius: 4px;
+}
+
+.tabs {
+  position: relative;
+}
+.tabs .tab-icon {
   width: 20px;
   height: 20px;
   margin-right: 5px;
 }
-
-.tab-title {
+.tabs .tab-title {
+  cursor: pointer;
+  margin-right: 22px;
   width: 250px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -117,8 +156,18 @@ body {
   padding: 5px;
   border-radius: 4px;
 }
-
-.tab-title:hover {
+.tabs .unlock-tab {
+  padding: 2px 4px;
+  position: absolute;
+  right: 0;
+  top: 4px;
+  cursor: pointer;
+}
+.tabs .unlock-tab:hover {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+.tabs .tab-title:hover {
   background-color: #efefef;
 }
 

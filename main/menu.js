@@ -221,6 +221,18 @@ function buildAppMenu (options = {}) {
       ]
     },
     {
+      label: "导航",
+      submenu: [
+        {
+          label: "选择器",
+          accelerator: 'Ctrl+tab',
+          click:function(item,window){
+            createSwitchTask()
+          }
+        }
+      ]
+    },
+    {
       label: l('appMenuView'),
       submenu: [
         ...(!options.secondary ? personalDataItems : []),
@@ -279,7 +291,7 @@ function buildAppMenu (options = {}) {
         {
           label: l('appMenuInspectPage'),
           accelerator: (function () {
-            if (process.platform == 'darwin') { return 'Cmd+Alt+I' } else { return 'Ctrl+Shift+I' }
+            if (process.platform == 'darwin') { return 'F12' } else { return 'F12' }
           })(),
           click: function (item, window) {
             sendIPCToWindow(window, 'inspectPage')

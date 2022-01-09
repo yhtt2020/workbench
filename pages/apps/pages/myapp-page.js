@@ -3,7 +3,7 @@ myappTpl =
 <div style="width: 100%">
   <a-layout>
     <a-layout-header style="background: #fff; padding: 0">
-      <a-page-header title="本地导航" sub-title="本地导航可能由于软件重装、卸载、系统重装等原因丢失，建议使用云端导航，此处仅做临时存储使用。">
+      <a-page-header title="本地导航" >
        <template slot="extra">
 
        <a-radio-group :value="appList.type" @change="onListTypeChange">
@@ -17,6 +17,9 @@ myappTpl =
           <a-icon type="bars"></a-icon>
         </a-radio-button>
       </a-radio-group>
+
+      <a-button shape="circle" icon="share-alt" @click="shareList" title="分享整组"/>
+       <a-button shape="circle" icon="diff" @click="openList" title="整组打开" />
       </template>
       </a-page-header>
     </a-layout-header>
@@ -39,7 +42,7 @@ myappTpl =
 
             <a-button type="primary" shape="round" class="add-button" slot="extra" @click="showModal">添加网站</a-button>
 
-<div id="main-content" class="elements selecto-area" style="max-height: calc( 100vh - 238px);overflow-y: auto">
+<div id="main-content" class=" selecto-area" style="max-height: calc( 100vh - 238px);overflow-y: auto">
 <template>
   <a-list  v-show="appList.type==='2' && myApps.length>0" item-layout="horizontal" :data-source="myApps" :pagination="pagination" >
     <a-list-item  @dragstart="dragStart($event,item)" @mousedown.stop draggable="true"  class="app-list" :id="item.id"  slot="renderItem" slot-scope="item, index">
@@ -67,7 +70,7 @@ myappTpl =
     @select="onSelect"
     @selectEnd="selectEnd"
     ></vue-selecto>
-<div class="" id="selecto1" v-show="appList.type==='0' && myApps.length>0">
+<div class="elements" id="selecto1" v-show="appList.type==='0' && myApps.length>0">
 
  <a-dropdown  v-for="(app, index) in myApps" :trigger="['contextmenu']">
               <a-card-grid @dragstart="dragStart($event,app)" @mousedown.stop draggable="true"  :id="app.id"  class="app" style="cursor: pointer;"
@@ -227,7 +230,7 @@ myappTpl =
 </div>
 
 `
-
+const ipc=require("electron").ipcRenderer
 function parseNumber (str) {
   const num = Number(str)
   return isNaN(num) ? 0 : num
@@ -440,9 +443,6 @@ module.exports = Vue.component('myapp-page', {
             this.appList.type=String(this.appList.type)
           }
         })
-
-
-
       } else {
         const data = appListModel.get(this.listId).catch(err => console.log(err))
         data.then(data => {
@@ -505,7 +505,33 @@ module.exports = Vue.component('myapp-page', {
          })
          this.load()
       }
-    }
+    },
     //drag end
+
+    /***
+     * 分享整组
+     */
+    shareList(){
+      let apps=this.myApps
+      let filterList =  apps.filter(e => !e.url.startsWith('file:///'))    //过滤掉file层面的tab
+      let args = []
+      for(let i = 0; i < filterList.length; i++) {
+        const obj = {
+          url: filterList[i].url,
+          favicon: filterList[i].icon,
+          title: filterList[i].name
+        }
+        args.push(obj)
+      }
+      ipc.send('shareTask', args)
+    },
+    /***
+     * 分享整个列表
+     */
+    openList(){
+        this.myApps.forEach(app=>{
+          window.open(app.url)
+        })
+    }
   }
 })

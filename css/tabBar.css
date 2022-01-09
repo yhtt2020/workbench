@@ -103,7 +103,8 @@ body.linux #menu-button {
 
 .tab-item {
   flex: 1;
-  min-width: 125px;
+  max-width: 240px;
+  min-width: 100px;
   transition: 0.2s transform;
   line-height: 36px;
   height: 36px;
@@ -165,7 +166,9 @@ body.linux #menu-button {
   background: rgba(255, 255, 255, 0.15);
 }
 .tab-item.active:not(:only-child) {
-  background: rgba(0, 0, 0, 0.06);
+  /*background: rgba(0, 0, 0, 0.06);*/
+  background: #1890ff;
+  color: white;
 }
 .dark-theme .tab-item.active:not(:only-child) {
   background: rgba(255, 255, 255, 0.2);
@@ -207,6 +210,10 @@ body.linux #menu-button {
 	vertical-align: text-bottom;
 	background: #ffffffbb;
 	border-radius: 2px;
+  cursor: pointer;
+}
+.tab-item .icon:hover{
+  background: #ffffff;
 }
 
 

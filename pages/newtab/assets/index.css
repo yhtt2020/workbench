@@ -36,26 +36,6 @@ html {
     transform: translateY(-20px);
   }
 }
-.main .main-top .top-search {
-  width: 706px;
-  height: 54px;
-  border-radius: 100px;
-  background-color: white;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-  position: relative;
-}
-.main .main-top .top-search .search {
-  width: 580px;
-  height: 50px;
-}
-.main .main-top .top-search .search-logo {
-  cursor: pointer;
-  z-index: 20;
-  margin-right: 20px;
-}
-.main .main-top .top-search .search-logo:hover {
-  color: #1890ff;
-}
 .main .main-bottom {
   width: 100%;
   height: 80vh;
@@ -449,5 +429,26 @@ html {
   background-color: #0000002f;
   border-radius: 10px;
 }
+
+/*dock栏*/
+.dock-item {
+  display: inline-block;
+  border-radius: 10px;
+  margin: 10px 10px;
+}
+
+.dock {
+  flex-direction: row;
+  position: fixed;
+  bottom: 20px;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.5);
+  width: fit-content;
+  left: 50%;
+  transform: translate(-50%, 0);
+  max-width: calc(100vw - 20px);
+}
+
+/*dock栏结束*/
 
 /*# sourceMappingURL=index.css.map */

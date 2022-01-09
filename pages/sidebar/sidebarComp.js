@@ -3,6 +3,8 @@ const { api } = require('../../server-config')
 Vue.component('sidebar', {
 	data: function() {
 		return {
+      mod:'auto',//auto open close
+      isPopoverShowing:false,
       lastOpenId:0,
 			drag: false,
 			remote: {},
@@ -94,10 +96,17 @@ Vue.component('sidebar', {
     const currentUser = await db.system.where('name').equals('currentUser').first()
     if(currentUser.value.uid !== 0 ) {
       await this.$store.dispatch('getGroups', {
-        uid: currentUser.value.uid,
         token: currentUser.value.token
       })
     }
+    let sideMode=localStorage.getItem('sideMode')
+    sideMode = sideMode||'auto'
+    if(sideMode==='close' || sideMode==='auto')
+      document.getElementById('clickThroughElement').style.left = '55px'
+    else if(sideMode==='open'){
+      document.getElementById('clickThroughElement').style.left = '155px'
+    }
+    appVue.mod=sideMode
 	},
 	computed: {
 		user(){
@@ -149,6 +158,14 @@ Vue.component('sidebar', {
 			})
 			this.$store.commit('setSelected', id)
 		},
+    switchTab(taskId, tabId) {
+      postMessage({
+        message: 'switchToTab',
+        taskId: taskId,
+        tabId: tabId
+      })
+      this.$store.commit('setSelected', taskId)
+    },
 		openPinItem(id, index) {
 			if (this.$store.getters.getPinItems[index].type == 'system-bookmark') {
 				//this.$tabEditor.show(tasks.getSelected().tabs.getSelected(), '!bookmarks ')
@@ -166,12 +183,25 @@ Vue.component('sidebar', {
       }
 
 		},
+    openPopoverTab(taskId, tabId) {
+      if(taskId !== this.lastOpenId) {
+        //当点击不同task的popover卡片内的tab时
+        this.switchTab(taskId, tabId)
+        this.lastOpenId = taskId
+      } else {
+        //当点击同一个task的popover卡片内的tab时，只需跳转tab
+        this.switchTab(null, tabId)
+      }
+    },
 		openBottom(action) {
 			postMessage({
 				message: action
 			})
 
 		},
+    openGroup(){
+      ipc.send('openGroup')
+    },
 		//开始拖拽事件
 		onStart() {
 			this.drag = true;
@@ -262,6 +292,13 @@ Vue.component('sidebar', {
 			}
 			this.userPanelVisible=false
 		},
+    openCom(){
+      if(this.user.uid===0){
+        this.addTab(api.getUrl(api.API_URL.user.login))
+      }else{
+        this.addTab(api.getUrl(api.API_URL.user.home))
+      }
+    },
 		addTab(url){
 			postMessage({
 				message: "addTab",
@@ -294,18 +331,81 @@ Vue.component('sidebar', {
     },
     addNewTask(e){
       ipc.send('addNewTask')
-      this.$message.success({content:'成功添加一个新任务到左侧栏。'})
+      this.$message.success({content:'成功添加一个新标签组到左侧栏。'})
     },
     closeItem(item){
       if(item.type==='task'){
-        ipc.send('closeTask',{tabId:item.id})
-        this.$message.success({content:'删除任务成功。'})
+        let hasLocked=false
+        item.tabs.forEach((item)=>{
+          if(item.lock===true){
+            hasLocked=true
+          }
+        })
+        if(hasLocked===false){
+          ipc.send('closeTask',{tabId:item.id})
+          this.$message.success({content:'删除标签组成功。'})
+        }else{
+          this.$message.error({content:'删除标签失败，组内存在锁定标签，请解锁后重新删除。'})
+        }
+
       }
     },
     createGroup(){
       ipc.send('createGroup')
-    }
+    },
+    changePopoverVisible(visible){
+      this.isPopoverShowing=visible
+    },
+    /**
+     * 锁定任务
+     * @param id
+     */
+    lockTask(id){
+      ipc.sendTo(mainWindowId,'lockTask',{id:id})
+    },
+    /**
+     * 锁定单个标签
+     * @param id
+     * @param taskId 标签组id
+     */
+    toggleLockTab(id,taskId){
+      ipc.sendTo(mainWindowId,'toggleLockTab',{id:id,taskId:taskId})
+    },
+    showHoverLock(tab){
+      document.getElementById('hoverLock'+tab.id).hidden=false
+    },
+    hideHoverLock(tab){
+      if(!(tab.lock===true)){
+        document.getElementById('hoverLock'+tab.id).hidden=true
+      }
+    },
+    clearTaskUnlock(task) {
+      ipc.sendTo(mainWindowId, 'clearTaskUnlock', { id: task.id })
+    },
 
+
+    editTaskName(item){
+      const id=item.id
+      const inputEl=document.getElementById('taskTitleInput'+id)
+      document.getElementById('editTip'+id).hidden=true
+      if(inputEl.hidden===true){
+        document.getElementById('taskTitle'+id).hidden=true
+        inputEl.hidden=false
+        inputEl.select()
+      }
+
+    },
+    editTaskNameBlur(item){
+      const id=item.id
+      document.getElementById('taskTitle'+id).hidden=false
+      document.getElementById('editTip'+id).hidden=false
+      const inputEl=document.getElementById('taskTitleInput'+id)
+      inputEl.hidden=true
+      ipc.sendTo(mainWindowId,'renameTask',{id:item.id,newName:inputEl.value})
+    },
+    editTaskNameKeyPress(event){
+        event.currentTarget.blur()
+    }
 	}
 
 })

@@ -9,7 +9,8 @@ if (settings.get('customUserAgent')) {
   newUserAgent = settings.get('customUserAgent')
   hasCustomUserAgent = true
 } else {
-  newUserAgent = defaultUserAgent.replace(/Min\/\S+\s/, '').replace(/Electron\/\S+\s/, '')
+  newUserAgent = defaultUserAgent.replace(/想天浏览器\/\S+\s/, '').replace(/Electron\/\S+\s/, '')
+  console.log(newUserAgent)
 }
 app.userAgentFallback = newUserAgent
 

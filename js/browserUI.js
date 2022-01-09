@@ -124,6 +124,11 @@ function closeTab (tabId) {
     return
   }
 
+  if(!!tabs.get(tabId).lock){
+    ipc.send('message',{type:'info',config:{content:'该标签为锁定标签，无法直接关闭，请解锁后再关闭。',key:'lockTip'}})
+    return
+  }
+
   if (tabId === tabs.getSelected()) {
     var currentIndex = tabs.getIndex(tabs.getSelected())
     var nextTab =
@@ -192,6 +197,7 @@ webviews.bindEvent('did-create-popup', function (tabId, popupId, initialURL) {
   switchToTab(popupTab)
 })
 
+//
 webviews.bindEvent('new-tab', function (tabId, url) {
   var newTab = tabs.add({
     url: url,
@@ -221,6 +227,32 @@ ipc.on('set-file-view', function (e, data) {
 ipc.on('switchToTask',function(e,data){
 	switchToTask(data.id)
 })
+ipc.on('switchToTab',function(e,data){
+  if(!!!data.taskId){
+    switchToTab(data.tabId)
+  } else {
+    switchToTask(data.taskId)
+    switchToTab(data.tabId)
+  }
+})
+ipc.on('renameTask',function(e,data){
+  if(data.newName.trim()==='')
+  {
+    return
+  }
+  tasks.get(data.id).name=data.newName
+})
+
+ipc.on('reloadTask', () => {
+  switchToTask(tasks.getSelected().id)
+})
+
+//定位到task组的某tabid，往后插入创建tab
+//browserUI中有tab和task的环境，而且能直接捕获从preload传出来的ipc，也能拿到tabBar的环境
+// ipc.on('toTask-addTab', (event, arg) => {
+//   console.log(arg, '---------------@@@@@')
+// })
+
 ipc.on('addTaskFromApps',function(e,data){
 	let newTask = {
 	  name: data.name || null,

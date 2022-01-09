@@ -1,0 +1,676 @@
+:root {
+  --element-width: 60px;
+  --element-height: 100px;
+  --element-inner-width: 60px;
+  --element--inner-height: 60px;
+}
+
+//@media screen and (min-width:1100px){ /*三栏布局*/
+//  .desktop{width: 100px;} /*没有写高度，由内容撑起来*/
+//}
+//@media screen and (min-width:800px) and (max-width:1100px){ /*二栏布局*/
+//  .desktop{width: 100px;}
+//}
+//@media screen and (max-width:800px) { /*一栏布局*/
+//  .desktop{width: 600px;}
+//}
+.desktop {
+  user-select: none;
+  //background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  min-height: 80px;
+  min-width: 720px;
+  //max-width: 800px;
+  overflow-x: hidden;
+  width: 80%;
+  margin: 40px auto auto;
+  height: calc(100vh - 40px);
+
+  .desktop-content {
+    overflow-y: auto;
+    height: 100%;
+    overflow-x: hidden;
+
+    width: calc(100% + 20px);
+
+  }
+}
+
+
+.group-modal {
+  .ant-modal-content {
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(12px);
+  }
+
+  .ant-modal-close {
+    color: white;
+  }
+
+  .ant-modal-header {
+    background: none;
+    color: white;
+    border-bottom: none;
+
+    .ant-modal-title {
+      text-align: center;
+      color: white !important;
+    }
+  }
+}
+
+.element {
+  width: var(--element-width);
+  text-align: center;
+  /*组图标*/
+  .group-icons {
+    user-select: none;
+    text-align: left;
+    width: 60px;
+    height: 66px;
+    background: #ffffff77;
+    border-radius: 3px;
+    overflow: hidden;
+    vertical-align: top;
+    line-height: 17px;
+    padding: 2px 2px;
+
+    .icon {
+      display: inline-block;
+      overflow: hidden;
+      width: 18px !important;
+      height: 18px !important;
+      margin-top: 0 !important;
+      margin-bottom: 0 !important;
+      text-align: center;
+
+      img {
+        vertical-align: middle;
+        width: 15px !important;
+        height: 15px !important;
+      }
+    }
+
+    .other {
+      vertical-align: middle;
+      display: inline-block;
+      width: 15px !important;
+      height: 15px !important;
+      background: rgb(255, 255, 255) !important;
+      border-radius: 3px;
+    }
+  }
+
+  &.selected {
+    background: #1c1c1c77 !important;
+    border-radius: 8px;
+  }
+
+
+}
+
+.app {
+  .icon-wrapper {
+    display: inline-block;
+    overflow: hidden;
+  }
+
+  .group-icons {
+    cursor: pointer;
+
+    &:active {
+      animation: scale .2s forwards;
+      transform: scale(0.95, 0.95);
+    }
+  }
+
+  display: block;
+  margin: auto;
+  padding: 10px 0;
+  width: var(--element-width);
+  height: var(--element-height);
+
+  img {
+    &:active {
+      animation: scale .2s forwards;
+      transform: scale(0.95, 0.95);
+    }
+
+    width: var(--element-inner-width);
+    height: var(--element--inner-height);
+  }
+
+  .name {
+    margin-top: 5px;
+    color: white;
+    text-shadow: 0 0 3px #000c17;
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 110%;
+    border-radius: 5px;
+    line-height: 12px;
+    padding: 2px;
+    display: inline-block;
+  }
+
+}
+
+.shop-app {
+  text-align: center;
+  cursor: pointer;
+
+  .icon-wrapper {
+    display: inline-block;
+    overflow: hidden;
+  }
+
+  .group-icons {
+    cursor: pointer;
+
+    &:active {
+      animation: scale .2s forwards;
+      transform: scale(0.95, 0.95);
+    }
+  }
+
+  display: block;
+  margin: auto;
+  padding: 10px 0;
+  width: var(--element-width);
+  height: var(--element-height);
+
+  img {
+    &:active {
+      animation: scale .2s forwards;
+      transform: scale(0.95, 0.95);
+    }
+
+    width: var(--element-inner-width);
+    height: var(--element--inner-height);
+  }
+
+  .name {
+    margin-top: 5px;
+    color: white;
+    text-shadow: 0 0 3px #000c17;
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 110%;
+    border-radius: 5px;
+    line-height: 12px;
+    padding: 2px;
+    display: inline-block;
+  }
+
+  .summary {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    overflow-wrap: break-word;
+    line-height: 16px;
+    font-size: 12px;
+    height: 32px;
+    line-clamp: 2;
+  }
+}
+
+.color-select {
+  float: right;
+  padding: 0;
+  height: 42px;
+  border-radius: 12px;
+  box-shadow: 0 0 7px #787878;
+}
+
+.vue-grid-item.vue-grid-placeholder {
+  background: #1c1c1c !important;
+  border-radius: 8px;
+
+}
+
+//.desktop{
+//  max-width: 800px;
+//  margin: 40px auto auto;
+//  .element{
+//    touch-action: none;
+//    &:active{
+//      img{
+//        animation: scale .2s forwards;
+//        transform: scale(0.95, 0.95);
+//      }
+//    }
+//
+//    .app{
+//      display: block;
+//      margin-left: 10px;
+//      margin-right: 10px;
+//      margin-bottom: 20px;
+//      width: var(--element-width);
+//      height: var(--element-height);
+//      img{
+//        width: var(--element-inner-width);
+//        height: var(--element--inner-height);
+//        border-radius: 8px;
+//      }
+//      .name{
+//        color: white;
+//        text-shadow: 0 0 3px #000c17;
+//        font-size: 14px;
+//        padding: 5px;
+//        text-wrap: none;
+//        text-emphasis: dot;
+//
+//      }
+//    }
+//  }
+//}
+.gradient--0 {
+  --gradient-start: #6DE195;
+  --gradient-start-text: '#6DE195';
+  --gradient-end: #C4E759;
+  --gradient-end-text: '#C4E759';
+}
+
+.gradient--1 {
+  --gradient-start: #41C7AF;
+  --gradient-start-text: '#41C7AF';
+  --gradient-end: #54E38E;
+  --gradient-end-text: '#54E38E';
+}
+
+.gradient--2 {
+  --gradient-start: #99E5A2;
+  --gradient-start-text: '#99E5A2';
+  --gradient-end: #D4FC78;
+  --gradient-end-text: '#D4FC78';
+}
+
+.gradient--3 {
+  --gradient-start: #ABC7FF;
+  --gradient-start-text: '#ABC7FF';
+  --gradient-end: #C1E3FF;
+  --gradient-end-text: '#C1E3FF';
+}
+
+.gradient--4 {
+  --gradient-start: #6CACFF;
+  --gradient-start-text: '#6CACFF';
+  --gradient-end: #8DEBFF;
+  --gradient-end-text: '#8DEBFF';
+}
+
+.gradient--5 {
+  --gradient-start: #5583EE;
+  --gradient-start-text: '#5583EE';
+  --gradient-end: #41D8DD;
+  --gradient-end-text: '#41D8DD';
+}
+
+.gradient--6 {
+  --gradient-start: #A16BFE;
+  --gradient-start-text: '#A16BFE';
+  --gradient-end: #DEB0DF;
+  --gradient-end-text: '#DEB0DF';
+}
+
+.gradient--7 {
+  --gradient-start: #D279EE;
+  --gradient-start-text: '#D279EE';
+  --gradient-end: #F8C390;
+  --gradient-end-text: '#F8C390';
+}
+
+.gradient--8 {
+  --gradient-start: #F78FAD;
+  --gradient-start-text: '#F78FAD';
+  --gradient-end: #FDEB82;
+  --gradient-end-text: '#FDEB82';
+}
+
+.gradient--9 {
+  --gradient-start: #BC3D2F;
+  --gradient-start-text: '#BC3D2F';
+  --gradient-end: #A16BFE;
+  --gradient-end-text: '#A16BFE';
+}
+
+.gradient--10 {
+  --gradient-start: #A43AB2;
+  --gradient-start-text: '#A43AB2';
+  --gradient-end: #E13680;
+  --gradient-end-text: '#E13680';
+}
+
+.gradient--11 {
+  --gradient-start: #9D2E7D;
+  --gradient-start-text: '#9D2E7D';
+  --gradient-end: #E16E93;
+  --gradient-end-text: '#E16E93';
+}
+
+.gradient--12 {
+  --gradient-start: #F5CCF6;
+  --gradient-start-text: '#F5CCF6';
+  --gradient-end: #F1EEF9;
+  --gradient-end-text: '#F1EEF9';
+}
+
+.gradient--13 {
+  --gradient-start: #F0EFF0;
+  --gradient-start-text: '#F0EFF0';
+  --gradient-end: #FAF8F9;
+  --gradient-end-text: '#FAF8F9';
+}
+
+.gradient--14 {
+  --gradient-start: #121317;
+  --gradient-start-text: '#121317';
+  --gradient-end: #323B42;
+  --gradient-end-text: '#323B42';
+}
+
+.gradient {
+  display: inline-block;
+  background: linear-gradient(33deg, var(--gradient-start), var(--gradient-end));
+  box-shadow: 0 0 5px #0002;
+}
+
+.colors li {
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.title-card {
+  border-radius: 8px;
+  text-align: center;
+  line-height: 28px;
+  width: calc(100% - 20px);
+  flex: 1;
+  background: linear-gradient(
+      33deg, var(--gradient-start), var(--gradient-end));
+  word-break: break-all;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  margin: 10px;
+  padding: 10px;
+}
+
+.card-text {
+  flex: 1;
+  width: calc(100% + 20px);
+  background: #00000000 !important;
+  color: white;
+  overflow: hidden;
+  text-shadow: 0 0 3px rgba(0, 0, 0, 0.74);
+  resize: none;
+
+}
+
+//.vue-resizable-handle{
+//  right: 10px !important;
+//  bottom: 10px !important;;
+//}
+.tools {
+  li {
+    .element-name {
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .element-summary {
+      color: #999;
+    }
+
+    .element-content {
+      background: rgba(193, 193, 193, 0.11);
+      border-radius: 4px;
+      padding: 10px;
+    }
+
+    .actions {
+      padding: 40px;
+    }
+
+    margin-bottom: 15px;
+
+    .tip-head {
+      color: #999;
+      font-size: 12px;
+    }
+  }
+}
+
+.top-search {
+  width: 100%;
+  height: 40px;
+  border-radius: 100px;
+  background-color: white;
+  box-shadow: 0 5px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+  margin-top: 30px;
+
+  .search {
+    height: 35px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 16px;
+    width: 100%;
+  }
+
+  .search-logo {
+    cursor: pointer;
+    z-index: 20;
+    margin-right: 20px;
+
+    &:hover {
+      color: #1890ff;
+    }
+  }
+}
+
+
+/*创建桌面小图标*/
+.icons-list {
+  li {
+    cursor: pointer;
+    float: left;
+    margin-right: 10px;
+    font-size: 20px;
+    line-height: 24px;
+
+    &:hover {
+      background: rgba(204, 204, 204, 0.51);
+      border-radius: 3px;
+    }
+
+    &.active {
+      background: rgba(204, 204, 204, 0.51);
+      border-radius: 3px;
+    }
+
+    padding: 5px;
+  }
+}
+
+/*最左侧栏*/
+.side-bar {
+  position: fixed;
+  height: 40px;
+  top: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  user-select: none;
+
+  .action-list {
+    border-radius: 8px;
+    margin-top: 10px;
+    overflow: hidden;
+    backdrop-filter: blur(4px);
+    background: rgba(145, 145, 145, 0.51);
+    display: flex;
+    flex-direction: row;
+    width: auto;
+    height: auto;
+    align-self: center;
+
+    .active {
+      background: rgba(255, 255, 255, 0.11) !important;
+    }
+
+    .action {
+      cursor: pointer;
+      text-align: center;
+      line-height: 40px;
+      height: 40px;
+      display: flex;
+      color: #ffffff;
+      text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+      padding: 0 15px;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      i {
+        text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+        vertical-align: middle;
+        font-size: 20px;
+        margin-top: 8px;
+        margin-right: 10px;
+
+      }
+
+      .name {
+        vertical-align: middle;
+        font-size: 12px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
+
+}
+
+/*最左侧栏end*/
+.edit-group-name {
+  background: none;
+  border: none;
+  color: white;
+  text-align: center;
+  width: 300px;
+}
+
+.group-list-list {
+  li {
+    cursor: pointer;
+
+    .icon {
+      margin-right: 10px;
+    }
+
+    margin-bottom: 10px;
+
+    .name {
+      color: white;
+      line-height: 18px;
+      margin-bottom: 10px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .url {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 12px;
+      color: #b7b7b7;
+    }
+  }
+}
+
+
+.wallPaperFrame {
+  cursor: pointer;
+  width: 180px;
+  height: 100px;
+  object-fit: cover;
+  border: 3px solid white;
+  border-radius: 8px !important;
+  box-shadow: 0 0 8px rgba(100, 100, 100, 0.75)
+}
+
+/**app图标2*2模式*/
+.app-group-2x2 {
+  width: 150px;
+
+  height: calc(var(--element-height) * 2);
+
+  .group-icons {
+    width: 150px;
+    height: 165px;
+    padding: 5px;
+
+    .icon {
+      width: 46px !important;
+      height: 53px !important;
+
+      img {
+        width: 28px !important;
+        height: 28px !important;
+      }
+
+      .more {
+        position: relative;
+        img {
+          left: 11px;
+          top: 3px;
+          width: 25px !important;
+          height: 25px !important;;
+          z-index: 1;
+          position: absolute;
+          border-radius: 3px;
+        }
+        .app-name{
+          margin-top: 28px;
+        }
+
+        .place-handler {
+          width: 25px;
+          height: 25px;
+          background: #e5e5e5;
+          border-radius: 3px;
+          position: absolute;
+          top: 0;
+          left: 7px;
+          z-index: 0;
+        }
+      }
+
+      div {
+        font-size: 10px;
+        color: white;
+        text-shadow: 0 0 3px rgba(0, 0, 0, 0.37);
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-wrap: none;
+        white-space: nowrap;
+      }
+    }
+  }
+}
+

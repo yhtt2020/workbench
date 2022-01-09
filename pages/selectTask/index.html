@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>选择任务打开</title>
+    <title>选择标签组打开</title>
     <script src="../../ext/vue/vue.js"></script>
     <script src="../../ext/vue/antd.min.js"></script>
     <link rel="stylesheet" href="../../ext/vue/antd.min.css" />
@@ -80,7 +80,7 @@
               </a-button-group>
               <a-button v-show="this.selectedTab.id==0" type="primary">
                 <a-icon type="plus-circle"> </a-icon>
-                新建任务
+                新建标签组
               </a-button>
               <a-button type="default" @click="closeWin"> 取消 </a-button>
             </a-col>
@@ -90,7 +90,6 @@
     </div>
   </body>
   <script>
-    Vue.use(antd)
     Vue.prototype.$form = antd.Form
     var appVue = new Vue({
       el: '#appVue',
@@ -102,11 +101,11 @@
             id: 0,
           },
           selectedTask: {
-            name: '新建任务',
+            name: '新建标签组',
             icon: '../../icons/empty.png',
             id: 0,
           },
-          selectedApps: [],
+          selectedApps: Object,
           selectedTaskId: String,
           selectedTabIndex: Number,
         }
@@ -133,35 +132,55 @@
       methods: {
         //插入在前面
         setBefore() {
-          this.selectedApps.forEach((e) => {
+          if(toString.call(this.selectedApps) === '[object Array]') {
+            this.selectedApps.forEach((e) => {
+              postMessage({
+                message: 'insertTab',
+                addTab: e,
+                taskId: this.selectedTaskId,
+                tabIndex: parseInt(this.selectedTabIndex) - 1,
+              })
+              this.selectedTabIndex = this.selectedTabIndex + 1
+            })
+            this.$nextTick(() => {
+              postMessage({
+                message: 'endInsertOp'
+              })
+            })
+          } else if (toString.call(this.selectedApps) === '[object Object]') {
             postMessage({
-              message: 'toTask-addTab',
-              addTab: e,
+              message: 'insertTab',
+              addTab: this.selectedApps,
               taskId: this.selectedTaskId,
-              tabIndex: parseInt(this.selectedTabIndex) - 1,
+              tabIndex: parseInt(this.selectedTabIndex) - 1
             })
-          })
-          this.$nextTick(() => {
-            postMessage({
-              message: 'endMoveApps',
-            })
-          })
+          }
         },
         //插入到后面
         setAfter() {
-          this.selectedApps.forEach((e) => {
+          if(toString.call(this.selectedApps) === '[object Array]') {
+            this.selectedApps.forEach((e) => {
+              postMessage({
+                message: 'insertTab',
+                addTab: e,
+                taskId: this.selectedTaskId,
+                tabIndex: parseInt(this.selectedTabIndex),
+              })
+              this.selectedTabIndex = this.selectedTabIndex + 1
+            })
+            this.$nextTick(() => {
+              postMessage({
+                message: 'endInsertOp'
+              })
+            })
+          } else if (toString.call(this.selectedApps) === '[object Object]') {
             postMessage({
-              message: 'toTask-addTab',
-              addTab: e,
+              message: 'insertTab',
+              addTab: this.selectedApps,
               taskId: this.selectedTaskId,
-              tabIndex: parseInt(this.selectedTabIndex),
+              tabIndex: parseInt(this.selectedTabIndex)
             })
-          })
-          this.$nextTick(() => {
-            postMessage({
-              message: 'endMoveApps',
-            })
-          })
+          }
         },
         //获取图标的方法
         getIcon(favicon) {
@@ -190,7 +209,7 @@
             id: 0,
           }),
             (this.selectedTask = {
-              name: '新建任务',
+              name: '新建标签组',
               icon: '../../icons/empty.png',
               id: 0,
             })

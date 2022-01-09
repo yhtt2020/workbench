@@ -26,6 +26,7 @@
     "goBack": "后退",
     "goForward": "前进",
     "inspectElement": "查看元素",
+    "viewSource": "查看源码",
     /* searchbar */
     "pasteAndGo": "粘贴并前往",
     "DDGAnswerSubtitle": "搜索结果", //this is a noun - it is used as a subtitle when displaying Instant Answers from DuckDuckGo in the searchbar
@@ -71,7 +72,7 @@
     "taskDeleteWarning": {
       "unsafeHTML": "标签组已删除 <a>恢复？</a>"
     },
-    "tasksSearchTabs": "任务搜索标签", //missing translation
+    "tasksSearchTabs": "标签组搜索标签", //missing translation
     "returnToTask": "返回上一个标签组",
     "taskDescriptionTwo": "%t 和 %t", //used to describe a task that has two tabs, %t is replaced with the tab titles
     "taskDescriptionThree": "%t, %t, 和其他%n个标签", //used to describe a task that has three or more tabs
@@ -296,10 +297,8 @@
     "addTab": "添加标签",
     "addPrivateTab": "添加隐私标签",
     "duplicateTab": "复制标签",
-    "addTask": "创建新任务",
-    "toggleTasks": "开关任务",
-    "goBack": "回退",
-    "goForward": "前进",
+    "addTask": "创建新标签组",
+    "toggleTasks": "开关标签组",
     "enterEditMode": "进入编辑模式",
     "runShortcut": "执行快捷方式",
     "completeSearchbar": "完成搜索条",
@@ -307,13 +306,13 @@
     "restoreTab": "恢复标签",
     "gotoFirstTab": "到第一个标签",
     "gotoLastTab": "到最后一个标签",
-    "addToFavorites": "添加到收藏",
+    "addToFavorites": "添加到书签",
     "showBookmarks": "显示书签",
     "toggleReaderView": "开关阅读模式",
     "switchToNextTab": "切换到下一个标签",
     "switchToPreviousTab": "切换到下一个标签",
-    "switchToNextTask": "切换到下一个任务",
-    "switchToPreviousTask": "切换到上一个任务",
+    "switchToNextTask": "切换到下一个标签组",
+    "switchToPreviousTask": "切换到上一个标签组",
     "closeAllTabs": "关闭全部的标签",
     "reload": "刷新",
     "reloadIgnoringCache": "无缓存刷新",
@@ -322,6 +321,10 @@
     "fillPassword": "填充密码",
     "toggleTabAudio": "关闭标签音频",
     "showHistory": "显示历史记录",
+    "moveTabRight": "向右移动当前标签",
+    "moveTabLeft": "向左移动当前标签",
+
+
 
     "translatePage": "翻译页面（测试）",
     "translateTip": "当你翻译当前页面的时候，页面内容将被发送到服务器，我们不会存储你的翻译内容或者使用他们来识别你。请放心使用。",

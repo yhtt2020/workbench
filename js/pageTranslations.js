@@ -141,7 +141,7 @@ const pageTranslations = {
           })
         }
       })
-    }, 1000)
+    }, 200)
   },
   initialize: function () {
     webviews.bindIPC('translation-request', this.makeTranslationRequest)

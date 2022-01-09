@@ -6,7 +6,7 @@ and then resolves the promise with gathered data.
 
 const { spawn, spawnSync } = require('child_process')
 
-const worker = new Worker('js/util/processWorker.js')
+const worker = new Worker(__dirname+'/js/util/processWorker.js')
 
 let processPath = process.env.PATH
 

@@ -83,11 +83,17 @@ const sidebarRestore = {
 				//window.$store.commit('initItems') //就初始化一个带fav按钮的侧边栏
 				window.loaded = true //设置为已经读入了左侧栏
 				window.sidebarData=false
+
 				//console.log('loaded failed cant restore')
 				//console.log(data)
 				return
 			}
 			//尝试读取一次getAll，这个会创建一个默认的数组
+      if(data.state.sidebar.pinItems.length>0){
+        if(data.state.sidebar.pinItems[0].title==='收藏夹'){
+          delete data.state.sidebar.pinItems[0]
+        }
+      }
 			window.sidebarData=data
 			//console.log('loaded success')
 			//console.log(window.sidebarData)
