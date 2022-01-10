@@ -151,7 +151,6 @@ app.on('ready', () => {
     if(groupIMWindow) {
       const { config, api } = require(path.join(__dirname, '//server-config.js'))
       sendIPCToWindow(mainWindow,'tabNavigateToOSx', {url: config.SERVER_BASE_URL + api.API_URL.user.USER_ACCOUNT})
-      groupIMWindow.hide()
     }
   })
 
@@ -159,7 +158,11 @@ app.on('ready', () => {
     if(groupIMWindow) {
       const { config, api } = require(path.join(__dirname, '//server-config.js'))
       sendIPCToWindow(mainWindow,'tabNavigateToOSx', {url: config.SERVER_BASE_URL + api.API_URL.user.USER_INFO})
-      groupIMWindow.hide()
     }
   })
+
+  ipc.on('sdkHideApp', () => {
+    groupIMWindow.hide()
+  })
+
 })
