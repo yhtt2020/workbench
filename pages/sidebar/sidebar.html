@@ -392,7 +392,7 @@
                     <ul class="tabs" style="margin-top: 5px">
                       <li style="position:relative;" @mouseenter="showHoverLock(tab)" @mouseleave="hideHoverLock(tab)" v-for="(tab,j) in item.tabs" :key="tab.id">
                         <div class="tab-title" @click="openPopoverTab(item.id, tab.id)">
-                          <img class="tab-icon" :src="tab.icon" />&nbsp;{{ tab.title }}
+                          <img class="tab-icon" :src="tab.icon" onerror="this.src='../../icons/default.svg'"/>&nbsp;{{ tab.title }}
                         </div>
                         <span @click="toggleLockTab(tab.id,item.id)" :id="'hoverLock'+tab.id" :hidden="tab.lock!==true" title="锁定当前标签；锁定后，标签将无法随意关闭" class="unlock-tab" ><a-icon
                         type="lock"></a-icon></span>
@@ -401,7 +401,7 @@
                   </template>
                   <div class="wrapper">
                     <div class="item-icon">
-                      <img class="icon" :src="item.icon"/>
+                      <img class="icon" :src="item.icon" onerror="this.src='../../icons/default.svg'"/>
                       <a-badge
                         :count="item.count"
                         :dot="true"

@@ -9,7 +9,7 @@ const appTpl = `
                       <div   class="icon-wrapper allow-drag" @mousedown.stop="appMouseDown" @mousemove.stop="appMouseMove" @mouseup.stop="appMouseUp($event,item.element.data.url)"
                            :style="iconStyle(item.element.data)">
                         <img
-                             :src="item.element.data.icon">
+                             :src="item.element.data.icon" onerror="this.src='../../icons/default.svg'">
                       </div>
                       <div class="name allow-drag" :style="'background-color:'+item.element.data.textColor"
                            v-if="item.element.data.useTextBg">

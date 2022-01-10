@@ -611,7 +611,7 @@
                            draggable="true" @dragstart="setDrag($event,app)">
                       <div class="shop-app" style="height: 140px;width: 80px">
                         <div class="icon-wrapper">
-                          <img :src="app.icon"/>
+                          <img :src="app.icon" onerror="this.src='../../icons/default.svg'"/>
                         </div>
                         <div class="name" :title="app.name"
                              style="color: #333;font-size:14px;text-shadow: none !important;">

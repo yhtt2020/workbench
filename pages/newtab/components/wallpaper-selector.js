@@ -1,6 +1,6 @@
 const wallpaperSelectorTpl = `
 <div>
-<img class="wallPaperFrame" :src="wallPaper" @click="showWallPaperSetting">
+<img class="wallPaperFrame" :src="wallPaper" @click="showWallPaperSetting" onerror="this.src='../../icons/svg/empty.svg'">
   <a-modal  :z-index="100000" style="" :visible="setWallPaperVisible" title="设置壁纸" :width="800"  :footer="null" @cancel="setWallPaperVisible=false;this.loadingWallPaperHistory=true">
       <template>
         <div>
@@ -24,7 +24,7 @@ const wallpaperSelectorTpl = `
                       <a-card @click="setWallPaper(wallPaper)" hoverable :bordered="false">
                         <img  class="wallPaperFrame" height="100"
                              slot="cover"
-                             :src="wallPaper"
+                             :src="wallPaper" onerror="this.src='../../icons/svg/empty.svg'"
                         />
                       </a-card>
                     </a-col>
@@ -42,7 +42,7 @@ const wallpaperSelectorTpl = `
                       <img class="wallPaperFrame" height="100"
                            slot="cover"
                            :alt="wallPaper.title"
-                           :src="wallUrl+wallPaper.image"
+                           :src="wallUrl+wallPaper.image" onerror="this.src='../../icons/svg/empty.svg'"
                       />
                     </a-card>
                   </a-col>

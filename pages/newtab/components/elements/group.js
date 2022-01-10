@@ -13,7 +13,7 @@ const groupTpl = `
                           <div class="app-name">其他</div>
                             </div>
                            <div v-else @mouseup.stop="appMouseUp($event,iconEl.element.data.url)">
-                           <img :src="iconEl.element.data.icon" :style="iconStyle(iconEl.element.data)">
+                           <img :src="iconEl.element.data.icon" :style="iconStyle(iconEl.element.data)" onerror="this.src='../../icons/default.svg'">
                           <div>{{iconEl.element.data.name}}</div>
                             </div>
                         </div>
@@ -25,7 +25,7 @@ const groupTpl = `
                     <div  v-else class="app" @contextmenu.stop="" @mousedown.stop="" >
                       <div @mousemove.stop="mouseMove"  @mousedown.stop="mouseDown" @mouseup.stop="mouseUp" class="group-icons allow-drag">
                         <div class="icon" v-if="iconEl.element.type==='app'" v-for="iconEl in item.element.data" >
-                          <img :src="iconEl.element.data.icon" :style="iconStyle(iconEl.element.data)">
+                          <img :src="iconEl.element.data.icon" :style="iconStyle(iconEl.element.data)" onerror="this.src='../../icons/default.svg'">
                         </div>
                         <div class="icon" v-else>
                           <div class="other">
