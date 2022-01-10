@@ -26,7 +26,8 @@ const modules = [
   'main/remoteActions.js',
   'main/keychainService.js',
   'js/util/proxy.js',
-  'main/mobileMod.js'
+  'main/mobileMod.js',
+  'main/wizard.js'
 ]
 
 function buildMain () {
