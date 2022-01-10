@@ -752,17 +752,16 @@ ipc.on('exportDesk',(event,args)=>{
   }
 })
 ipc.on('captureDeskScreen',(event,args)=>{
-  console.log(args)
   let capturedImage=undefined
-  console.log(event.sender.capturePage(args.bounds).then((data)=>{
+  event.sender.capturePage(args.bounds).then((data)=>{
     capturedImage=data
     if(!fs.existsSync(userDataPath+'/desk')){
       fs.mkdirSync(userDataPath+'/desk')
     }
-    fs.writeFile(path.resolve(userDataPath+'/desk/screen'+args.desk.id+'.png'),capturedImage.toPNG(),(err)=>{
+    fs.writeFile(path.resolve(userDataPath+'/desk/screen'+args.desk.id+'.jpg'),capturedImage.toJPEG(50),(err)=>{
         if(!err){
           event.reply('updateScreen', { id:args.desk.id })
         }
     })
-  }))
+  })
 })

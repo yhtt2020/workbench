@@ -54,7 +54,7 @@
           <a-dropdown :trigger="['contextmenu']">
             <a-popover  :mouse-leave-delay="0" overlay-class-name="desk-preview"  v-if="!isSelectedDesk(desk.id)">
               <template slot="content" >
-               <img :src="deskPath(desk)" style="border-radius: 3px;width: 200px;height: 120px;margin: -9px -13px" onerror="this.src='../../icons/svg/imageerror.svg'" >
+               <img :src="deskPath(desk)" style="border-radius: 3px;width: 200px;height: 120px;margin: -9px -13px;object-fit: cover" onerror="this.src='../../icons/svg/empty.svg'" >
               </template>
               <div @click="changeDesk(desk.id)" :class="{'action':1,'active':isSelectedDesk(desk.id)}">
               <a-icon :type="desk.icon"></a-icon>
@@ -1062,9 +1062,13 @@
               }
             }
             try{
-              fs.rmSync('file://'+window.globalArgs['user-data-dir']+'/desk/screen'+desk.id+'.png')
+              const fs=require('fs')
+              fs.unlink(window.globalArgs['user-data-dir']+'/desk/screen'+desk.id+'.jpg',(e)=>{
+                console.log(e)
+              })
             }
            catch (e) {
+              console.log(e)
              return
            }
             localStorage.removeItem('desk_'+desk.id)
@@ -1350,7 +1354,6 @@
             }else{
               this.setBg(this.currentDeskInfo.wallPaper)
             }
-            console.log(this.currentDeskInfo.wallPaper)
 
           } catch (err) {
             this.$message.error({content:"桌面损坏。"})
@@ -1519,7 +1522,7 @@
         this.drag = false
       },
       deskPath(desk){
-        let str='file://'+window.globalArgs['user-data-dir']+'/desk/screen'+desk.id+'.png?t='+Date.now()
+        let str='file://'+window.globalArgs['user-data-dir']+'/desk/screen'+desk.id+'.jpg?t='+Date.now()
           //`${window.globalArgs['user-data-dir']}/desk/${desk.id}.png`
           return  str
         }
@@ -1556,10 +1559,9 @@
           //当前桌面未更新
           return true
         }else{
-          console.log(latestCurrentDeskInfo)
-          console.log(deskModel.getCurrentDeskInfo())
-          return
-          if(!!!latestCurrentDeskInfo){
+          if(!!!latestCurrentDeskInfo.updateTime){
+            console.log(latestCurrentDeskInfo)
+            console.log(deskModel.getCurrentDeskInfo())
             return
           }else{
             window.location.reload()

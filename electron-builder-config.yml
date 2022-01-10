@@ -15,6 +15,7 @@ files:
     - index.html
     - server-config.js
     - api/*
+    - img/*.jpg
 
 win:
     icon: ./icon.ico
