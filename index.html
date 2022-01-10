@@ -81,13 +81,23 @@
 				<div id="tab-editor" hidden>
 					<input id="tab-editor-input" class="mousetrap" spellcheck="false" />
 				</div>
-				<div id="tabs-inner" role="tablist" class="has-thin-scrollbar"></div>
+				<div id="tabs-inner" role="tablist" class="has-thin-scrollbar">
+          <div style="flex-grow:1;-webkit-app-region:drag ;"></div>
+        </div>
 			</div>
 			<div class="navbar-right-actions">
 				<button id="add-tab-button" class="navbar-action-button i carbon:add" data-label="newTabAction"
 					tabindex="-1"></button>
 			</div>
 		</div>
+    <style>
+    #tabs-inner {
+          -webkit-app-region: drag;
+    }
+    .tab-item,#tab-editor,#tab-editor button {
+      -webkit-app-region: no-drag;
+    }
+    </style>
 
 		<button id="switch-task-button" class="navbar-action-button theme-text-color windowDragHandle i"
 			data-label="viewTasks" tabindex="-1">

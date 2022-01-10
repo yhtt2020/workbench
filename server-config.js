@@ -8,7 +8,8 @@ const config = {
     API_BASE_URL:"http://im-serve.xiangtian.ren",
     WEB_SOCKET_URL:"ws://im-socket.xiangtian.ren/socket.io",
     FRONT_URL:"http://im.xiangtian.ren",
-    FRONT_URL_DEV:"http://im.xiangtian.ren",
+    //FRONT_URL_DEV:"http://im.xiangtian.ren",
+    FRONT_URL_DEV:"http://127.0.0.1:8000",
     AUTO_LOGIN: '/auto-login'      //免登等待路由
   }
 }
@@ -29,6 +30,7 @@ const api = {
       account: '/user/account-info', //帐号信息
       AUTO_LOGIN: '/autologin',   //短说免登跳转路由
       USER_ACCOUNT: '/user/account-info', //短说账号设置页面
+      USER_INFO: '/user/info',  //短说用户设置
     },
     group: {
       index: '/groups', //群组

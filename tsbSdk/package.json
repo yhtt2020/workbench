@@ -1,8 +1,8 @@
 {
-  "name": "xtbsdk",
+  "name": "tsbsdk",
   "version": "1.0.0",
   "description": "xiangtian SDK",
-  "main": "dist/xtbSdk",
+  "main": "dist/tsbSdk",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint --fix --ext .js,.vue src",
