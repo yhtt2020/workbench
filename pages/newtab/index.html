@@ -52,10 +52,20 @@
         </div>
         <div v-for="desk in desks">
           <a-dropdown :trigger="['contextmenu']">
-            <div @click="changeDesk(desk.id)" :class="{'action':1,'active':isSelectedDesk(desk.id)}">
+            <a-popover  :mouse-leave-delay="0" overlay-class-name="desk-preview"  v-if="!isSelectedDesk(desk.id)">
+              <template slot="content" >
+               <img :src="deskPath(desk)" style="border-radius: 3px;width: 200px;height: 120px;margin: -9px -13px" onerror="this.src='../../icons/svg/imageerror.svg'" >
+              </template>
+              <div @click="changeDesk(desk.id)" :class="{'action':1,'active':isSelectedDesk(desk.id)}">
               <a-icon :type="desk.icon"></a-icon>
               <div class="name">{{desk.name}}</div>
             </div>
+           </a-popover>
+
+                <div v-else @click="changeDesk(desk.id)" :class="{'action':1,'active':isSelectedDesk(desk.id)}">
+                  <a-icon :type="desk.icon"></a-icon>
+                  <div class="name">{{desk.name}}</div>
+                </div>
             <a-menu slot="overlay">
 <!--              <a-menu-item @click="showAddDesk(desk)" key="editDesk">-->
 <!--                编辑-->
@@ -862,6 +872,7 @@
     },
     data () {
       return {
+        USER_PATH:'',
 
         defaultDeskWallPaper:'',
 
@@ -879,7 +890,8 @@
         deskCanEdit:true,
         uuid:0,
         currentDeskInfo:{
-          wallPaper:''
+          wallPaper:'',
+          id:0
         },//当前桌面信息，用于比较更新时间，每次读入都会自动更新
         mouseFlag: 0,//鼠标移动标志，用于解决鼠标拖拽和单机的冲突导致跳转在拖拽后触发的问题。
         selectoContainer: document.getElementById('.desktop-content'),
@@ -957,7 +969,14 @@
         ], dockAppSize: 60
       }
     },
+    beforeCreate(){
+      const tools=require('../util/util').tools
+      tools.getWindowArgs(window)
+      this.USER_PATH=window.globalArgs['user-data-dir']
+      console.log(this.USER_PATH)
+    },
     methods: {
+
       changeGroupSetting(group,field,value){
          group.element[field]=value
         this.selectGroup=group
@@ -976,10 +995,21 @@
         this.eleVideoControls=checked
       },
       changeDesk (id) {
-        this.selectedDesk = id
-        localStorage.setItem('selectedDesk',id)
-        this.currentDeskInfo=deskModel.getCurrentDeskInfo()
-        this.switchToDesk(id)
+        let tips= document.getElementsByClassName('desk-preview')
+        for(let i=0;i<tips.length;i++){
+          tips[i].style.display='none'
+        }
+        setTimeout(()=>{
+          deskModel.getCurrentDeskCapture()
+          setTimeout(()=>{
+            this.selectedDesk = id
+            localStorage.setItem('selectedDesk',id)
+            this.currentDeskInfo=deskModel.getCurrentDeskInfo()
+            this.switchToDesk(id)
+          },50)
+        })
+
+
 
       },
       isSelectedDesk (id) {
@@ -1031,7 +1061,15 @@
                 localStorage.setItem('desks',JSON.stringify(that.desks))
               }
             }
+            try{
+              fs.rmSync('file://'+window.globalArgs['user-data-dir']+'/desk/screen'+desk.id+'.png')
+            }
+           catch (e) {
+             return
+           }
             localStorage.removeItem('desk_'+desk.id)
+
+
             if(that.desks.length<=0){
               //如果删除后，没有别的桌面了，自动创建一个新桌面填充上
               let newDeskId=Date.now()
@@ -1263,7 +1301,7 @@
         if(oldDeskInfo.updateTime===this.currentDeskInfo.updateTime){
           appVue.$notification.success({message:'桌面有变更，自动保存。',duration:1,'key':'save'})
           deskModel.updateDeskLayout(this.selectedDesk,this.layout)
-          this.currentDeskInfo=deskModel.getCurrentDeskInfo()//因为更新了，所以要手动充值一下当前桌面的信息
+          this.currentDeskInfo=deskModel.getCurrentDeskInfo()//因为更新了，所以要手动重置一下当前桌面的信息
         }else{
           appVue.$message.error({content:'保存桌面失败。失败原因：当前桌面数据已失效。请刷新桌面后重试。',duration:5})
         }
@@ -1299,6 +1337,7 @@
         if (!!deskLayout) {
           //如果存在桌面
           try {
+
             let layout= JSON.parse(deskLayout)
             if(layout.length===0 && id===0){
               //发现桌面是空的
@@ -1479,6 +1518,11 @@
       onEnd () {
         this.drag = false
       },
+      deskPath(desk){
+        let str='file://'+window.globalArgs['user-data-dir']+'/desk/screen'+desk.id+'.png?t='+Date.now()
+          //`${window.globalArgs['user-data-dir']}/desk/${desk.id}.png`
+          return  str
+        }
     },
 
     computed: {
@@ -1512,7 +1556,15 @@
           //当前桌面未更新
           return true
         }else{
-          window.location.reload()
+          console.log(latestCurrentDeskInfo)
+          console.log(deskModel.getCurrentDeskInfo())
+          return
+          if(!!!latestCurrentDeskInfo){
+            return
+          }else{
+            window.location.reload()
+          }
+
           // appVue.layout=deskModel.getCurrentDeskLayout()
           // appVue.currentDeskInfo=deskModel.getCurrentDeskInfo()
           // appVue.layoutSkipSave=true//不需要自动保存
@@ -1563,6 +1615,7 @@
       db.dockApps.toArray(data => {
         this.dock = this.dock.concat(data)
       })
+
     }
   })
 
@@ -1574,6 +1627,9 @@
     }else{
       appVue.$message.error({content:'导入失败。'+result.status.info})
     }
+    console.log(args)
+  })
+  ipc.on('updateScreen',(event,args)=>{
     console.log(args)
   })
 </script>

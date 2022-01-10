@@ -14,6 +14,9 @@ window.l = l
 window.ipc = ipc
 // contextBridge.exposeInMainWorld('l', l)
 // contextBridge.exposeInMainWorld('ipc', ipc)
+if(!!!localStorage.getItem('firstRun')) {
+  ipc.send('wizard')
+}
 
 window.addEventListener('message', function (e) {
   if (!e.origin.startsWith('file://')) {

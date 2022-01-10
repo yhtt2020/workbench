@@ -128,6 +128,7 @@ const deskModel={
   updateDeskLayout(id,layout){
     localStorage.setItem('desk_'+id.toString(),JSON.stringify(layout))
     deskModel.refreshDeskInfoUpdateTime(id)//刷新一下桌面更新时间
+    // deskModel.getDeskCapture(id)
     //localStorage.setItem(deskModel.livingNewtabUUID,deskModel.generateUUID())//重新生成uuid，代表已变更
   },
   /**
@@ -204,6 +205,22 @@ const deskModel={
     allDeskInfo.push(deskInfo)
     deskModel.saveAllDeskInfo(allDeskInfo)
     deskModel.updateDeskLayout(deskInfo.id,layout)
+
+  },
+  getDeskCapture(id){
+    let deskEl=document.getElementById('desktop-content')
+    let bounds={
+      x:deskEl.offsetLeft,
+      y:deskEl.offsetTop+20,
+      width:deskEl.offsetWidth,
+      height:deskEl.offsetHeight-100
+    }
+    setTimeout(()=>{
+      ipc.send('captureDeskScreen',{desk: { id:id },bounds:bounds})
+    },0)
+  },
+  getCurrentDeskCapture(){
+    deskModel.getDeskCapture(deskModel.getCurrentDeskId())
   },
   /**
    * 从文件还原桌面
