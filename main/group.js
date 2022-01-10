@@ -70,7 +70,6 @@ app.on('ready', () => {
       groupIMWindow = new BrowserWindow({
         frame: true,
         backgroundColor: 'white',
-        parent: mainWindow,
         modal: false,
         hasShadow: true,
         minWidth: 600,

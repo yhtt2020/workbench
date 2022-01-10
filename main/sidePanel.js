@@ -274,7 +274,8 @@ class SidePanel {
     this._sidePanel.setIgnoreMouseEvents(true, {
       forward: false  //设置为false，如果为true，在windows上鼠标会闪的不行
     })
-    if (BrowserWindow.getFocusedWindow() != null && switchWindow === null) //如果有任意一个window还有焦点，则聚焦到mainwindow
+    if (BrowserWindow.getFocusedWindow() != null && sidePanel.get().isFocused() ) //如果有任意一个window还有焦点，则聚焦到mainwindow
+      //有窗体还有焦点 且 只有左侧栏
       mainWindow.focus()
     log('设置左侧栏不再感应鼠标，主窗体获得焦点')
   }
@@ -287,7 +288,13 @@ class SidePanel {
     log('设置左侧栏感应 鼠标，左侧栏同时获得焦点')
   }
 }
-
+// function onlyFocusedSideBarAndMainWindow(windows=[]){
+//   if(sidePanel.get().isFocused() || mainWindow.isFocused())
+//   {
+//     return true
+//   }
+//   //如果目前
+// }
 function addMainWindowEventListener () {
 
   mainWindow.on('move', () => {
