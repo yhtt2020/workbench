@@ -233,27 +233,76 @@
 <!--						<a-button type="primary" @click="next">-->
 <!--							下一步.1分钟使用视频教程-->
 <!--						</a-button>-->
-						<a-button type="default" style="margin-left: 50px" @click="close">
-							设置完毕
+						<a-button type="primary" style="margin-left: 50px" @click="next">
+							下一步
 						</a-button>
 					</div>
 				</div>
-<!--				<div v-show="current==2" class="steps-content">-->
-<!--					<template>-->
-<!--						&lt;!&ndash;  <a-carousel effect="fade" style="background-color: black;border-radius: 8px;min-height: 400px;">-->
-<!--					    <div><h3>1</h3></div>-->
-<!--					    <div><h3>2</h3></div>-->
-<!--					    <div><h3>3</h3></div>-->
-<!--					    <div><h3>4</h3></div>-->
-<!--					  </a-carousel> &ndash;&gt;-->
-<!--						<a-carousel ref="videos" arrows effect="fade" style="text-align: center;">-->
-<!--							<div slot="prevArrow" slot-scope="props" class="custom-slick-arrow"-->
-<!--								style="left: 10px;zIndex: 1">-->
-<!--								<a-icon type="left-circle" />-->
-<!--							</div>-->
-<!--							<div slot="nextArrow" slot-scope="props" class="custom-slick-arrow" style="right: 20px">-->
-<!--								<a-icon type="right-circle" />-->
-<!--							</div>-->
+				<div v-show="current==2" class="steps-content">
+					<template>
+						<!--  <a-carousel effect="fade" style="background-color: black;border-radius: 8px;min-height: 400px;">
+					    <div><h3>1</h3></div>
+					    <div><h3>2</h3></div>
+					    <div><h3>3</h3></div>
+					    <div><h3>4</h3></div>
+					  </a-carousel> -->
+						<a-carousel ref="videos" arrows effect="fade" style="text-align: center;">
+							<div slot="prevArrow" slot-scope="props" class="custom-slick-arrow"
+								style="left: 10px;zIndex: 1">
+								<a-icon type="left-circle" />
+							</div>
+							<div slot="nextArrow" slot-scope="props" class="custom-slick-arrow" style="right: 20px">
+								<a-icon type="right-circle" />
+							</div>
+              <div>
+                <h3 class="video-title">1.我们与传统浏览器最大的不同：分组浏览</h3>
+                <p>
+                  与传统浏览器不同的是，我们采用分组浏览模式.
+                  <br>结合锁定、清理等小功能，让标签组不再混乱。
+                  <br>我们将在向导关闭后，自动为您创建一个帮助桌面，您可以在桌面获得帮助。
+                </p>
+                <p>
+                  <img src="">
+                </p>
+                <!-- <iframe src="//player.bilibili.com/player.html?aid=890908889&bvid=BV1hP4y187jw&cid=421342590&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+ -->
+                <!-- <video width="95%" height="400" style="    margin-left: 20px;" controls>
+                    <source src="https://www.bilibili.com/video/BV1hP4y187jw?share_source=copy_web" type="video/mp4">
+                    <source src="https://www.bilibili.com/video/BV1hP4y187jw?share_source=copy_web" type="video/ogg">
+                    您的浏览器不支持 video 标签。
+                </video> -->
+              </div>
+              <div>
+                <h3 class="video-title">2.精心设计的左侧栏</h3>
+                <p>
+                  我们部分核心功能都在左侧栏，这也是与其他浏览器的不同之处。
+                  <br>我们将在向导关闭后，自动为您创建一个帮助桌面，您可以在桌面获得帮助。
+                </p>
+                <p>
+                  <img src="">
+                </p>
+              </div>
+              <div>
+                <h3 class="video-title">3.打造个人强大桌面</h3>
+                <p>我们定位为webOS，为您打造了一款高度个性化的桌面。<br>您可以任意添加桌面、支持独立壁纸、支持分享。
+                <br>我们将在向导关闭后，自动为您创建一个帮助桌面，您可以在桌面获得帮助。</p>
+              </div>
+              <div>
+                <h3 class="video-title">4.团队协作功能</h3>
+                <p>
+                 除了基本的浏览功能以外，我们还为工作场景专门打造了一个团队协作功能。
+                  <br>与传统的团队IM软件相比，我们更强调现场协作，更关注便利性。
+                  <br>我们将在向导关闭后，自动为您创建一个帮助桌面，您可以在桌面获得帮助。
+                </p>
+              </div>
+              <div>
+                <h3 class="video-title">5.更多有趣、有用的功能等你探索</h3>
+                <p>
+                  我们为您和您的团队准备了大量与众不同的功能和设计，需要您自行探索。您也可以随时在桌面查看帮助桌面，以了解掌握这些功能。
+                  <br>
+                  开启您的愉快之旅吧。
+                </p>
+              </div>
 <!--							<div>-->
 <!--								<h3 class="video-title">1.我们与传统浏览器最大的不同：分组浏览</h3>-->
 <!--								&lt;!&ndash; <iframe src="//player.bilibili.com/player.html?aid=890908889&bvid=BV1hP4y187jw&cid=421342590&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>-->
@@ -277,7 +326,7 @@
 
 <!--							</div>-->
 
-<!--						</a-carousel>-->
+						</a-carousel>
 <!--						<div>-->
 <!--							<iframe  class="frame-video" sandbox="allow-same-origin allow-scripts "-->
 <!--								:src="videoSource"-->
@@ -285,16 +334,16 @@
 <!--							</iframe>-->
 
 <!--						</div>-->
-<!--					</template>-->
-<!--					<div class="bottom-button">-->
-<!--						<a-button type="primary" @click="netxVideo">-->
-<!--							新技能get，next-->
-<!--						</a-button>-->
-<!--						<a-button type="default" style="margin-left: 50px" @click="close">-->
-<!--							学完了，开始使用-->
-<!--						</a-button>-->
-<!--					</div>-->
-<!--				</div>-->
+					</template>
+					<div class="bottom-button">
+						<a-button type="primary" @click="netxVideo">
+							新技能get，next
+						</a-button>
+						<a-button type="default" style="margin-left: 50px" @click="close">
+							学完了，开始使用
+						</a-button>
+					</div>
+				</div>
 			</div>
 		</div>
 		<script>
@@ -322,7 +371,12 @@
                 title: '导入书签',
                 content: 'Second-content',
                 icon: 'star'
-              }
+              },
+              {
+              	title: '快速导览',
+              	content: 'Last-content',
+              	icon: 'smile'
+              },
 							// },
 							// {
 							// 	title: '新手教程',
