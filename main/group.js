@@ -82,7 +82,7 @@ app.on('ready', () => {
         x: boundsSetting.x ,
         y: boundsSetting.y,
         minimizable: true,
-        alwaysOnTop: true,
+        alwaysOnTop: false,
         acceptFirstMouse: true,
         maximizable: false,
         visualEffectState: 'active',
@@ -104,7 +104,7 @@ app.on('ready', () => {
       groupIMWindow.on('moved',()=>{
         settings.set('groupWindowBounds',groupIMWindow.getBounds())
       })
-      groupIMWindow.setMenu(null)
+      //groupIMWindow.setMenu(null)
       let im_url=''
       const { config } = require(path.join(__dirname, '//server-config.js'))
       if(isDevelopmentMode){
