@@ -166,3 +166,10 @@ app.on('ready', () => {
   })
 
 })
+
+app.on('before-quit', () => {
+  if(groupIMWindow) {
+    groupIMWindow.destroy()
+    groupIMWindow = null
+  }
+})
