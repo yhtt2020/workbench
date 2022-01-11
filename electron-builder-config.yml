@@ -16,6 +16,7 @@ files:
     - server-config.js
     - api/*
     - img/*.jpg
+    - reader/*
 
 win:
     icon: ./icon.ico
