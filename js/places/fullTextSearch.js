@@ -1,5 +1,6 @@
 /* global db Dexie */
 
+const stemmer = require('stemmer')
 importScripts('../../ext/xregexp/nonLetterRegex.js')
 
 const whitespaceRegex = /\s+/g
@@ -140,7 +141,9 @@ function tokenize (string) {
     .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     .split(whitespaceRegex).filter(function (token) {
       return !stopWords[token] && token.length <= 100
-    }).slice(0, 20000)
+    })
+    .map(token => stemmer(token))
+    .slice(0, 20000)
 }
 
 // finds the documents that contain all of the prefixes in their searchIndex
@@ -266,8 +269,51 @@ function fullTextPlacesSearch (searchText, callback) {
 
       doc.boost += Math.min(totalWordDistanceBoost, 5)
 
-      // these properties are never used, and sending them from the worker takes a long time
+      // generate a search snippet for the document
 
+      const snippetIndex = doc.extractedText ? doc.extractedText.split(/\s+/g) : []
+
+      // array of 0 or 1 - 1 indicates this item in the snippetIndex is a search word
+      const mappedArr = snippetIndex.map(w => searchWords.includes(stemmer(w.toLowerCase().replace(nonLetterRegex, ''))) ? 1 : 0)
+
+      // find the bounds of the max subarray within mappedArr
+      let indexBegin = -10
+      let indexEnd = 0
+      let currentScore = 0
+      let maxScore = 0
+      let maxBegin = -10
+      let maxEnd = 0
+      for (let i2 = 0; i2 < mappedArr.length; i2++) {
+        if (indexBegin >= 0) {
+          currentScore -= mappedArr[indexBegin]
+        }
+        currentScore += mappedArr[indexEnd]
+        if (currentScore > maxScore || (currentScore > 0 && currentScore === maxScore && (indexBegin - maxBegin <= 1))) {
+          maxBegin = indexBegin
+          maxEnd = indexEnd
+          maxScore = currentScore
+        }
+        indexBegin++
+        indexEnd++
+      }
+
+      // include a few words before the start of the match
+      maxBegin = maxBegin - 2
+
+      // shift a few words farther back if doing so makes the snippet start at the beginning of a phrase or sentence
+      for (let bound = maxBegin; bound >= maxBegin - 10 && bound > 0; bound--) {
+        if (snippetIndex[bound].endsWith('.') || snippetIndex[bound].endsWith(',')) {
+          maxBegin = bound + 1
+          break
+        }
+      }
+
+      const snippet = snippetIndex.slice(maxBegin, maxEnd + 5).join(' ')
+      if (snippet) {
+        doc.searchSnippet = snippet + '...'
+      }
+
+      // these properties are never used, and sending them from the worker takes a long time
       delete doc.pageHTML
       delete doc.extractedText
       delete doc.searchIndex
@@ -275,4 +321,5 @@ function fullTextPlacesSearch (searchText, callback) {
 
     callback(docs)
   })
+    .catch(e => console.error(e))
 }

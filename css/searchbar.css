@@ -15,7 +15,8 @@
   border-top: none;
 }
 
-#searchbar:not(.is-new-tab) {
+body:not(.is-ntp) #searchbar,
+body.ntp-has-background #searchbar {
   box-shadow: rgba(0, 0, 0, 0.1) 0 0 8px ;
 }
 
