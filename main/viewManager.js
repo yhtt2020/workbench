@@ -2,6 +2,7 @@ const BrowserView = electron.BrowserView
 
 var viewMap = {} // id: view
 var viewStateMap = {} // id: view state
+var selectedView = null
 
 var temporaryPopupViews = {} // id: view
 
@@ -50,13 +51,24 @@ function createView (existingViewId, id, webPreferencesString, boundsString, eve
     })
   })
 
+  view.webContents.on('select-bluetooth-device', function (event, deviceList, callback) {
+    event.preventDefault()
+    callback('')
+  })
 
   view.webContents.setWindowOpenHandler(function (details) {
-    if (details.disposition === 'background-tab') {
+    /*
+      Opening a popup with window.open() generally requires features to be set
+      So if there are no features, the event is most likely from clicking on a link, which should open a new tab.
+      Clicking a link can still have a "new-window" or "foreground-tab" disposition depending on which keys are pressed
+      when it is clicked.
+      (https://github.com/minbrowser/min/issues/1835)
+    */
+    if (!details.features) {
       mainWindow.webContents.send('view-event', {
         viewId: id,
         event: 'new-tab',
-        args: [details.url]
+        args: [details.url, !(details.disposition === 'background-tab')]
       })
       return {
         action: 'deny'
@@ -179,6 +191,7 @@ function destroyView (id) {
   }
   if (viewMap[id] === mainWindow.getBrowserView()) {
     mainWindow.setBrowserView(null)
+    selectedView = null
   }
   // else if(viewMap[id]===sidebarView)//如果是侧边栏的view，则直接将其置顶起来
   // {
@@ -201,8 +214,12 @@ function destroyAllViews () {
 //处理设置当前BrowserView事件，以将sidebarView拿出来
 
 function setView (id) {
-  mainWindow.setBrowserView(viewMap[id])
-
+  if (viewStateMap[id].loadedInitialURL) {
+    mainWindow.setBrowserView(viewMap[id])
+  } else {
+    mainWindow.setBrowserView(null)
+  }
+  selectedView = id
 }
 
 function setBounds (id, bounds) {
@@ -227,7 +244,7 @@ function focusView (id) {
 
 function hideCurrentView () {
   mainWindow.setBrowserView(null)
-  // mainWindow.removeBrowserView(sidebarView) //把sidebar也一并移除
+  selectedView = null
   mainWindow.webContents.focus()
 }
 
@@ -289,6 +306,10 @@ ipc.on('loadURLInView', function (e, args) {
   // wait until the first URL is loaded to set the background color so that new tabs can use a custom background
   if (!viewStateMap[args.id].loadedInitialURL) {
     viewMap[args.id].setBackgroundColor('#fff')
+    // If the view has no URL, it won't be attached yet
+    if (args.id === selectedView) {
+      mainWindow.setBrowserView(viewMap[args.id])
+    }
   }
   viewMap[args.id].webContents.loadURL(args.url)
   viewStateMap[args.id].loadedInitialURL = true

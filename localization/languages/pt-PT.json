@@ -71,7 +71,7 @@
     "taskDeleteWarning": {
       "unsafeHTML": "Tarefa eliminada. <a>Desfazer</a>?"
     },
-    "tasksSearchTabs": null, //missing translation
+    "tasksSearchTabs": "Pesquisar separadores",
     "returnToTask": "Retornar à tarefa anterior",
     "taskDescriptionTwo": "%t e %t", //used to describe a task that has two tabs, %t is replaced with the tab titles
     "taskDescriptionThree": "%t, %t e %n mais", //used to describe a task that has three or more tabs
@@ -149,7 +149,7 @@
     "settingsDarkModeNever": "Nunca",
     "settingsDarkModeNight": "De noite",
     "settingsDarkModeAlways": "Sempre",
-    "settingsDarkModeSystem": null,
+    "settingsDarkModeSystem": "Seguir tema do sistema",
     "settingsSiteThemeToggle": "Ativar tema do site",
     "settingsAdditionalFeaturesHeading": "Outras funcionalidades",
     "settingsUserscriptsToggle": "Ativar scripts de utilizador",
@@ -260,6 +260,7 @@
     "passwordManagerSetupStep2": "Depois, arraste a ferramenta para a caixa abaixo:",
     "passwordManagerSetupDragBox": "Arraste a ferramenta para aqui",
     "passwordManagerSetupInstalling": "A instalar...",
+    "passwordManagerBitwardenSignIn": "Para estabelecer ligação à sua conta Bitwarden, aceda a vault.bitwarden.com/#/settings/account e escolha \"View API Key\". Depois, cole os valores nos campos abaixo.",
     "passwordManagerSetupSignIn": "Inicie sessão no gestor de palavras-passe para utilizar o preenchimento automático. As suas credenciais não serão guardadas no Min.",
     "disableAutofill": "Desativar preenchimento automático",
     "passwordManagerSetupUnlockError": "Falha ao desbloquear: ",
@@ -284,7 +285,7 @@
     "password": "Palavra-passe",
     "secretKey": "Chave secreta",
     "openExternalApp": "Abrir em \\\"%s\\\"?", // %s is the name of an app
-    "clickToCopy": null, //missing translation
-    "copied": null //missing translation
+    "clickToCopy": "Clique para copiar",
+    "copied": "Copiado"
   }
 }
