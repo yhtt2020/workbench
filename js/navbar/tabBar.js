@@ -953,9 +953,11 @@ ipc.on('clearTaskUnlock',(event,args)=>{
   }
 
 })
-ipc.on('tab-navigateToAccount', function(e, data) {
+
+ipc.on('tabNavigateToOSx', function(e, data) {
   const { url } = data
   const newTab = tabs.add({ url})
   require('browserUI.js').addTab(newTab, { enterEditMode: false})
 })
+
 module.exports = tabBar

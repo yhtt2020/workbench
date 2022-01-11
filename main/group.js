@@ -1,4 +1,5 @@
 let groupIMWindow=null
+let alwaysHide = false
 app.on('ready', () => {
   let createGroupWindow = null
   let fromRender = null
@@ -79,6 +80,8 @@ app.on('ready', () => {
         height:boundsSetting.height,
         x: boundsSetting.x ,
         y: boundsSetting.y,
+        minimizable: true,
+        alwaysOnTop: false,
         acceptFirstMouse: true,
         maximizable: false,
         visualEffectState: 'active',
@@ -110,19 +113,56 @@ app.on('ready', () => {
          im_url=config.IM.FRONT_URL + config.IM.AUTO_LOGIN
       }
       groupIMWindow.webContents.loadURL(im_url)
-      groupIMWindow.on('close',()=>groupIMWindow=null)
+      groupIMWindow.on('close',(e)=> {
+        if(alwaysHide) {
+          e.preventDefault()
+          groupIMWindow.hide()
+        } else {
+          const result = dialog.showMessageBoxSync({
+            type: 'none',
+            buttons: ['取消','退出', '隐藏[不再询问]'],
+            message: '退出后无法接受消息提醒,请注意!',
+            cancelId: 0,
+            defaultId: 2,
+            noLink: true
+          })
+          if(result === 0 ) {
+            e.preventDefault()
+            return
+          } else if(result === 2) {
+            e.preventDefault()
+            alwaysHide = true
+            groupIMWindow.hide()
+          } else {
+            groupIMWindow = null
+            alwaysHide = false
+          }
+        }
+      })
     }else{
       groupIMWindow.focus()
     }
   }
   ipc.on('openGroup',(event,args)=>{
-    createGroupIMWindow()
+    groupIMWindow ? groupIMWindow.show() : createGroupIMWindow()
   })
+
   ipc.on('navigateToAccount', (event, args) => {
     if(groupIMWindow) {
       const { config, api } = require(path.join(__dirname, '//server-config.js'))
-      sendIPCToWindow(mainWindow,'tab-navigateToAccount', {url: config.SERVER_BASE_URL + api.API_URL.user.USER_ACCOUNT})
-      groupIMWindow.close()
+      sendIPCToWindow(mainWindow,'tabNavigateToOSx', {url: config.SERVER_BASE_URL + api.API_URL.user.USER_ACCOUNT})
     }
   })
+
+  ipc.on('navigateToUserInfo', () => {
+    if(groupIMWindow) {
+      const { config, api } = require(path.join(__dirname, '//server-config.js'))
+      sendIPCToWindow(mainWindow,'tabNavigateToOSx', {url: config.SERVER_BASE_URL + api.API_URL.user.USER_INFO})
+    }
+  })
+
+  ipc.on('sdkHideApp', () => {
+    groupIMWindow.hide()
+  })
+
 })
