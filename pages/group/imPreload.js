@@ -4,6 +4,7 @@ const { config } = require('../../server-config')
 const tsbSdk = require('../../js/util/tsbSdk')
 
 window.ipc = ipc
+window.$browser = 'tsbrowser'
 let href = window.location.href
 
 const server = {
