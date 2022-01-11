@@ -1,6 +1,6 @@
 #toolbar {
   line-height: 40px;
-  z-index: 1;
+  z-index: 2;
   top: calc(36px + var(--control-space-top));
   width: calc(100vw - 45px);
   left: 45px;
