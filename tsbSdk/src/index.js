@@ -47,7 +47,10 @@ export default class tsbk {
             observe(tsbk.sdkSwitch)
           } else {
             tsbk.sdkSwitch = false
-            reverse('SDK接口鉴权失败')
+            reverse({
+              code: 401,
+              msg: 'SDK接口鉴权失败'
+            })
           }
           break;
       }
