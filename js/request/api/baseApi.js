@@ -20,9 +20,11 @@ const baseApi = {
     if(baseApi.inMain) {
       const userToken = storage.getItem(`userToken`)
       const userInfo = storage.getItem(`userInfo`)
-      baseApi.currentUser = userInfo;
-      baseApi.token = userToken;
-      baseApi.uid = userInfo.uid;
+      if(userToken && userInfo) {
+        baseApi.currentUser = userInfo;
+        baseApi.token = userToken;
+        baseApi.uid = userInfo.uid;        
+      }
     } else {
       const user = await baseApi.getCurrentUser()
       if(user.value.uid === 0) {

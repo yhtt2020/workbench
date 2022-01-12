@@ -1,20 +1,27 @@
 const authApi = require(path.join(__dirname, './js/request/api/authApi.js'))
 const storage = require('electron-localstorage');
-const { clipboard } = require('electron')
+const { clipboard } = require('electron');
+const dlog = require('electron-log');
 
 const handleAxios =  {
   initialize: function() {
+
     //游览器登录
     ipc.on('loginBrowser', async (event, arg) => {
-      const data = {
-        code: arg
+      try {
+        const data = {
+          code: arg
+        }
+        const result = await authApi.loginBrowser(data)
+        if(result.code === 1000) {
+          storage.setItem(`userToken`, result.data.token)
+          storage.setItem(`userInfo`, result.data.userInfo)
+        }
+        event.reply('callback-loginBrowser', result)
+      } catch (err) {
+        dlog.error(err)
       }
-      const result = await authApi.loginBrowser(data)
-      if(result.code === 1000) {
-        storage.setItem(`userToken`, result.data.token)
-        storage.setItem(`userInfo`, result.data.userInfo)
-      }
-      event.reply('callback-loginBrowser', result)
+
     })
     //游览器登出
     ipc.on('logoutBrowser', async(event, arg) => {
