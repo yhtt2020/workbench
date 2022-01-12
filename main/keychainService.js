@@ -1,7 +1,4 @@
-/*
-Wrapper for node-keytar
-Runs in the main process because of https://github.com/atom/node-keytar/issues/250
-*/
+/* Uses Electron's safeStorage to encrypt a password file - encryption key gets stored in the system keychain */
 
 const keytar = require('keytar')
 const safeStorage = require('electron').safeStorage
@@ -64,18 +61,37 @@ ipc.handle('credentialStoreSetPassword', async function (event, account) {
   return credentialStoreSetPassword(account)
 })
 
-ipc.handle('keychainSetPassword', function (event, service, account, password) {
-  return keytar.setPassword(service, account, password)
+ipc.handle('credentialStoreDeletePassword', async function (event, account) {
+  const fileContent = readSavedPasswordFile()
+
+  // delete matching credentials
+  for (let i = 0; i < fileContent.credentials.length; i++) {
+    if (fileContent.credentials[i].domain === account.domain && fileContent.credentials[i].username === account.username) {
+      fileContent.credentials.splice(i, 1)
+      i--
+    }
+  }
+
+  return writeSavedPasswordFile(fileContent)
 })
 
-ipc.handle('keychainDeletePassword', function (event, service, account) {
-  return keytar.deletePassword(service, account)
+ipc.handle('credentialStoreGetCredentials', async function () {
+  return readSavedPasswordFile().credentials
 })
 
-ipc.handle('keychainFindCredentials', function (event, service) {
-  return keytar.findCredentials(service)
-})
+/* On startup, migrate everything from keychain */
 
-ipc.handle('keychainFindPassword', function (event, service) {
-  return keytar.setPassword(service)
-})
+setTimeout(function () {
+  if (!settings.get('v1_23_keychainMigrationComplete')) {
+    keytar.findCredentials('com.thisky.browser').then(function (results) {
+      results.forEach(function (result) {
+        credentialStoreSetPassword({
+          domain: JSON.parse(result.account).domain,
+          username: JSON.parse(result.account).username,
+          password: result.password
+        })
+      })
+      settings.set('v1_23_keychainMigrationComplete', true)
+    })
+  }
+}, 5000)
