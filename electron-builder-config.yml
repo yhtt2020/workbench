@@ -35,9 +35,9 @@ win:
           channel: latest
 
 mac:
+    gatekeeperAssess: false
     icon: ./icons/icon.icns
     category: public.app-category.utilities
-    identity: com.thisky.browser
     target:
         - dmg
         - zip
