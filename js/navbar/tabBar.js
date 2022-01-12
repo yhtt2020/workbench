@@ -542,7 +542,7 @@ const tabBar = {
         ],
       ]
 
-      const judgeUser = await baseApi.getCurrentUser()
+      const judgeUser = await baseApi.getCurrentUser() ?? {value: {uid: 0}}
       if(judgeUser.value.uid === 0) {
         remoteMenu.open(template)
         return
