@@ -62,7 +62,16 @@ axios.interceptors.response.use(
     }
   },
   error => {
-    return Promise.reject(error);
+    if(error.code === 'ENOTFOUND' && error.isAxiosError) {
+      ipc ? ipc.send('message',{type:'error',config:{content: '请检查网络!', key: Date.now()}})
+      : sidePanel.get().webContents.send('message',{type:"error",config:{content: '请检查网络!', key: Date.now()}})
+      return ({
+        code: error.code,
+        error_data: error
+      })
+    } else {
+      return Promise.reject(error)
+    }
   }
 );
 
