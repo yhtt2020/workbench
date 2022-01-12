@@ -486,6 +486,8 @@
 						this.videoSource=this.videoSources[this.currentVideoIndex]
 					},
           close(){
+            //todo 添加一些桌面
+
             localStorage.setItem('firstRun','1')
             ipc.send('closeWizard')
           }
