@@ -10,12 +10,11 @@ const tsbSdk = {
         case 'hideApp':
           tsbSdk.handleHideApp()
           break
-        case 'toBind':
-          tsbSdk.handleToBind()
+        case 'tabLinkJump':
+          tsbSdk.newTabNavigate(e.data)
           break
-        case 'toUser':
-          tsbSdk.handleToUser()
-          break
+        case 'destoryApp':
+          tsbSdk.handleDestoryApp()
       }
     })
   },
@@ -59,12 +58,16 @@ const tsbSdk = {
     ipc.send('sdkHideApp')
   },
 
-  handleToBind: function() {
-    ipc.send('navigateToAccount')
+  newTabNavigate: function(options) {
+    if(options.url.length > 0) {
+      ipc.send('sdkTabNavigate', options)
+    } else {
+      return
+    }
   },
 
-  handleToUser: function() {
-    ipc.send('navigateToUserInfo')
+  handleDestoryApp: function() {
+    ipc.send('sdkDestoryApp')
   }
 
 }
