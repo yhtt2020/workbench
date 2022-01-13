@@ -20,6 +20,7 @@ const ipc = electron.ipcRenderer
 
 const navbarApi = require('../request/api/navbarApi.js')
 const baseApi = require('../request/api/baseApi')
+const deskModel = require('../../pages/util/model/deskModel.js')
 
 var lastTabDeletion = 0 // TODO get rid of this
 
@@ -414,27 +415,30 @@ const tabBar = {
       catch (e){
       }
       let addToDeskMenus=[]
-     desks.forEach((desk)=>{
-       addToDeskMenus.push({
-         id:desk.id,
-         label:desk.name,
-         click:()=>{
-        const tab=tabs.get(data.id)
-        const app={
-          type:'app',
-          data:{
-            name:tab.title,
-            icon:tab.favicon == null ? '../../icons/default.svg' : tab.favicon.url,
-            url:tab.url
-          }
-        }
-        const  deskModel=require('../../pages/util/model/deskModel.js')
-        const element= deskModel.createElementPos(app)
-        deskModel.addElementToDesk(element,desk.id)
-           ipc.send('message',{'type':'success',config:{'content':'添加到桌面成功'}})
-       }
-       })
-     })
+      if(!!desks){
+        desks.forEach((desk)=>{
+          addToDeskMenus.push({
+            id:desk.id,
+            label:desk.name,
+            click:()=>{
+              const tab=tabs.get(data.id)
+              const app={
+                type:'app',
+                data:{
+                  name:tab.title,
+                  icon:tab.favicon == null ? '../../icons/default.svg' : tab.favicon.url,
+                  url:tab.url
+                }
+              }
+              const  deskModel=require('../../pages/util/model/deskModel.js')
+              const element= deskModel.createElementPos(app)
+              deskModel.addElementToDesk(element,desk.id)
+              ipc.send('message',{'type':'success',config:{'content':'添加到桌面成功'}})
+            }
+          })
+        })
+      }
+
 
       let template = [
         [
