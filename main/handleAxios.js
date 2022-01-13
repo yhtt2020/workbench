@@ -57,8 +57,8 @@ const handleAxios =  {
         }
       }
       catch(err){
-        sidePanel.get().webContents.send('message',{type:"error",config:{content:'分享失败，请检查网络。',key:"shareTask"}})
-        console.log(err)
+        sidePanel.get().webContents.send('message',{type:"error",config:{content:'分享失败!',key:"shareTask"}})
+        dlog.error(err)
       }
     })
 
