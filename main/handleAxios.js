@@ -1,7 +1,17 @@
+const dlog = require('electron-log');
 const authApi = require(path.join(__dirname, './js/request/api/authApi.js'))
 const storage = require('electron-localstorage');
+const _path= path.join(app.getPath("userData"), app.getName()+"/", 'userConfig.json');
+const _path_dir = path.dirname(_path);
+if(!fs.existsSync(_path_dir)){
+  try{
+    fs.mkdirSync(_path_dir)
+  }
+  catch(e){ dlog.error(err) }
+}
+storage.setStoragePath(_path);
+global.sharedPath = {extra:storage.getStoragePath()}   //remote官方建议弃用，全局变量在渲染进程中暂时没找到可以替换获取的方法，但是在主进程中全局electronGlobal对象能获取到
 const { clipboard } = require('electron');
-const dlog = require('electron-log');
 
 const handleAxios =  {
   initialize: function() {
