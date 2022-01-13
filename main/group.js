@@ -147,22 +147,20 @@ app.on('ready', () => {
     groupIMWindow ? groupIMWindow.show() : createGroupIMWindow()
   })
 
-  ipc.on('navigateToAccount', (event, args) => {
-    if(groupIMWindow) {
-      const { config, api } = require(path.join(__dirname, '//server-config.js'))
-      sendIPCToWindow(mainWindow,'tabNavigateToOSx', {url: config.SERVER_BASE_URL + api.API_URL.user.USER_ACCOUNT})
-    }
-  })
-
-  ipc.on('navigateToUserInfo', () => {
-    if(groupIMWindow) {
-      const { config, api } = require(path.join(__dirname, '//server-config.js'))
-      sendIPCToWindow(mainWindow,'tabNavigateToOSx', {url: config.SERVER_BASE_URL + api.API_URL.user.USER_INFO})
-    }
-  })
-
   ipc.on('sdkHideApp', () => {
     groupIMWindow.hide()
+  })
+
+  ipc.on('sdkTabNavigate', (event, args) => {
+    if(groupIMWindow) {
+      sendIPCToWindow(mainWindow, 'tabNavigateTo', {url: args.url})
+    }
+  })
+
+  ipc.on('sdkDestoryApp', () => {
+    groupIMWindow.destroy()
+    groupIMWindow=null
+    alwaysHide = false
   })
 
 })

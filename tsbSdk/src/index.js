@@ -27,8 +27,8 @@ export default class tsbk {
           },
           `${window.origin}`
         );
-        tsbk.listener(resolve, reject)
-      })
+        tsbk.listener(resolve, reject);
+      });
     } else {
       const keyNames = Object.keys(obj);
       for (let i = 0; i < keyNames.length; i++) {
@@ -42,15 +42,15 @@ export default class tsbk {
       let messageEvent = e.data.eventName;
       switch (messageEvent) {
         case "authResult":
-          if(tsbk.secretInfo.signature === e.data.signature) {
-            tsbk.sdkSwitch = e.data.sdkSwitch
-            observe(tsbk.sdkSwitch)
+          if (tsbk.secretInfo.signature === e.data.signature) {
+            tsbk.sdkSwitch = e.data.sdkSwitch;
+            observe(tsbk.sdkSwitch);
           } else {
-            tsbk.sdkSwitch = false
+            tsbk.sdkSwitch = false;
             reverse({
               code: 401,
-              msg: 'SDK接口鉴权失败'
-            })
+              msg: "SDK接口鉴权失败",
+            });
           }
           break;
       }
@@ -59,40 +59,65 @@ export default class tsbk {
 
   static ready(fn) {
     tsbk.config().then((res) => {
-      fn()
-    })
+      fn();
+    });
   }
 
   static error(fn) {
-    tsbk.config().catch(err => {
-      fn(err)
-    })
+    tsbk.config().catch((err) => {
+      fn(err);
+    });
   }
 
-  static hideApp(obj = { success: () => {}, fail: () => {}}) {
-    window.postMessage({
-      eventName: "hideApp",
-    }, `${window.origin}`)
-    tsbk.sdkSwitch ? obj.success.apply(window) : obj.fail.apply(window)
+  static hideApp(obj) {
+    window.postMessage(
+      {
+        eventName: "hideApp",
+      },
+      `${window.origin}`
+    );
+    if (obj) {
+      if (tsbk.sdkSwitch) {
+        obj.hasOwnProperty("success") ? obj.success() : false;
+      } else {
+        obj.hasOwnProperty("fail") ? obj.fail() : false;
+      }
+    } else {
+      return;
+    }
   }
 
-  static toBind(obj = { success: () => {}, fail: () => {}}) {
-    window.postMessage({
-      eventName: "toBind",
-    }, `${window.origin}`)
-    tsbk.sdkSwitch ? obj.success.apply(window) : obj.fail.apply(window)
+  static tabLinkJump(obj) {
+    if (obj) {
+      window.postMessage({
+        eventName: "tabLinkJump",
+        url: obj.url ?? "",
+      });
+      if (tsbk.sdkSwitch) {
+        obj.hasOwnProperty("success") ? obj.success() : false;
+      } else {
+        obj.hasOwnProperty("fail") ? obj.fail() : false;
+      }
+    } else {
+      return ;
+    }
   }
 
-  static toUser(obj = { success: () => {}, fail: () => {}}) {
-    window.postMessage({
-      eventName: "toUser",
-    }, `${window.origin}`)
-    tsbk.sdkSwitch ? obj.success.apply(window) : obj.fail.apply(window)
+  static destoryApp(obj) {
+    window.postMessage(
+      {
+        eventName: "destoryApp",
+      },
+      `${window.origin}`
+    );
+    if (obj) {
+      if (tsbk.sdkSwitch) {
+        obj.hasOwnProperty("success") ? obj.success() : false;
+      } else {
+        obj.hasOwnProperty("fail") ? obj.fail() : false;
+      }
+    } else {
+      return;
+    }
   }
 }
-
-
-
-
-
-
