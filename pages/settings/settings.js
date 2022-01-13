@@ -189,10 +189,11 @@ var darkModeSystem = document.getElementById('dark-mode-system')
 
 // -1 - off ; 0 - auto ; 1 - on
 settings.get('darkMode', function (value) {
-  darkModeNever.checked = (value === -1)
+  //调整到默认关闭
+  darkModeNever.checked = (value === -1 || value === undefined || value === false)
   darkModeNight.checked = (value === 0)
   darkModeAlways.checked = (value === 1 || value === true)
-  darkModeSystem.checked = (value === 2 || value === undefined || value === false)
+  darkModeSystem.checked = (value === 2 )
 })
 
 darkModeNever.addEventListener('change', function (e) {
