@@ -105,14 +105,14 @@ app.on('ready', () => {
         settings.set('groupWindowBounds',groupIMWindow.getBounds())
       })
       //groupIMWindow.setMenu(null)
-      let im_url=''
-      const { config } = require(path.join(__dirname, '//server-config.js'))
-      if(isDevelopmentMode){
-         im_url=config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN
-      }else{
-         im_url=config.IM.FRONT_URL + config.IM.AUTO_LOGIN
-      }
-      groupIMWindow.webContents.loadURL(im_url)
+      // let im_url=''
+      // const { config } = require(path.join(__dirname, '//server-config.js'))
+      // if(isDevelopmentMode){
+      //    im_url=config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN
+      // }else{
+      //    im_url=config.IM.FRONT_URL + config.IM.AUTO_LOGIN
+      // }
+      // groupIMWindow.webContents.loadURL(im_url)
       groupIMWindow.on('close',(e)=> {
         if(alwaysHide) {
           e.preventDefault()
@@ -143,9 +143,9 @@ app.on('ready', () => {
       groupIMWindow.focus()
     }
   }
-  ipc.on('openGroup',(event,args)=>{
-    groupIMWindow ? groupIMWindow.show() : createGroupIMWindow()
-  })
+  // ipc.on('openGroup',(event,args)=>{
+  //   groupIMWindow ? groupIMWindow.show() : createGroupIMWindow()
+  // })
 
   ipc.on('sdkHideApp', () => {
     groupIMWindow.hide()

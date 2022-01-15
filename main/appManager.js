@@ -13,10 +13,28 @@ function apLog(e){
  */
 app.whenReady().then(()=>{
   const appManager={
+    /**
+     * 聚焦窗体
+     * @param windowId
+     */
     focusWindow(windowId){
       processingAppWindows.forEach((item)=>{
         if(item.saApp.windowId===windowId){
+          if(!item.window.isVisible()){
+            item.window.show()
+          }
           item.window.focus()
+        }
+      })
+    },
+    /**
+     * 隐藏窗体
+     * @param windowId
+     */
+    hideWindow(windowId){
+      processingAppWindows.forEach((item)=>{
+        if(item.saApp.windowId===windowId){
+          item.window.hide()
         }
       })
     },
@@ -48,10 +66,30 @@ app.whenReady().then(()=>{
     },
     /**
      * 设置应用的设置
-     * @param settings
+     * @param saAppId 应用id
+     * @param settings 应用设置，一个对象，类似{isAlwaysHide:true,runAtStart:true} 参考开发文档
      */
-    setAppSettings(settings=[]){
+    setAppSettings(saAppId,settings=[]){
+      for(let i=0;i<processingAppWindows.length;i++){
+        if(processingAppWindows[i].saApp.id===saAppId){
+          processingAppWindows[i].saApp.settings=Object.assign(processingAppWindows[i].saApp.settings,settings)
+          console.log(processingAppWindows[i].saApp.settings)
+        }
+      }
+    },
+    /**
+     * 获取应用设置
+     * @param saAppId 应用id
+     * @param settingName 设置名称
+     * @returns {*}
+     */
+    getAppSettings(saAppId,settingName){
+      for(let i=0;i<processingAppWindows.length;i++){
+        if(processingAppWindows[i].saApp.id===saAppId){
+          return processingAppWindows[i].saApp.settings[settingName]
+        }
 
+      }
     },
     /**
      * 执行应用
@@ -101,8 +139,37 @@ app.whenReady().then(()=>{
          * 关闭窗体的同时通知sidePanel关闭窗体
          */
         appWindow.on('close',(event,args)=>{
-          appManager.removeAppWindow(saApp.windowId)
-          SidePanel.send('closeApp',{app:saApp})
+          if(appManager.getAppSettings(saApp.id,'alwaysHide')) {
+            event.preventDefault()
+            apLog('隐藏窗体'+saApp.id)
+            appManager.hideWindow(saApp.windowId)
+          } else {
+            const result = dialog.showMessageBoxSync({
+              type: 'none',
+              buttons: ['取消','退出', '隐藏[不再询问]'],
+              message: '退出后无法接受消息提醒,请注意!',
+              cancelId: 0,
+              defaultId: 2,
+              noLink: true
+            })
+            if(result === 0 ) {
+              apLog('阻止隐藏')
+              event.preventDefault()
+              return
+            } else if(result === 2) {
+              event.preventDefault()
+              apLog('设置设置,true')
+              appManager.setAppSettings(saApp.id,{'alwaysHide':true})//alwaysHide = true
+              appManager.hideWindow(saApp.windowId)
+              //groupIMWindow.hide()
+            } else {
+              appManager.removeAppWindow(saApp.windowId)
+              SidePanel.send('closeApp',{app:saApp})
+              //alwaysHide = false
+              apLog('设置设置false')
+              appManager.setAppSettings(saApp.id,{'alwaysHide':false})
+            }
+          }
         })
 
         processingAppWindows.push({
