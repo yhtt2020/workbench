@@ -60,9 +60,7 @@ class SidePanel {
   }
 
   static send(channel,args){
-
     if(SidePanel.alive()){
-      console.log('send')
       sidePanel.get().webContents.send(channel,args)
     }
   }

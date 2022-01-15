@@ -39,8 +39,6 @@ app.whenReady().then(()=>{
      * @param saAppWindowId 窗体id,这里不适用appid，因为未来可能是多开窗体的
      */
     removeAppWindow(saAppWindowId){
-      console.log(saAppWindowId)
-      console.log(processingAppWindows)
       for(let i=0;i<processingAppWindows.length;i++){
           if(processingAppWindows[i].saApp.windowId===saAppWindowId){
             processingAppWindows.splice(i,1)
@@ -63,31 +61,36 @@ app.whenReady().then(()=>{
       if(1){
         //todo 判断一下是不是独立窗体模式
         let appWindow=new BrowserWindow({
-          width: 440,
-          height: 640,
+          width: 800,
+          height: 600,
           acceptFirstMouse: true,
           webPreferences: {
-            preload: path.join(saApp.preload),
-            nodeIntegration: false,
-            contextIsolation: true,
+            preload: path.join(__dirname,saApp.preload),
+            nodeIntegration: true,
+            contextIsolation: false,
+            enableRemoteModule: true,
+            sandbox: false,
+            safeDialogs:false,
+            safeDialogsMessage:false,
+            partition:null,
             additionalArguments: [
               '--user-data-path=' + userDataPath,
               '--app-version=' + app.getVersion(),
               '--app-name=' + app.getName(),
-              ...((isDevelopmentMode ? ['--development-mode'] : [])),
+              //...((isDevelopmentMode ? ['--development-mode'] : [])),
             ]
           }
         })
+        apLog(path.join(__dirname,saApp.preload))
         saApp.windowId=appWindow.webContents.id
 
         appWindow.setBounds(saApp.settings.bounds)
         if(saApp.type==='local'){
-          appWindow.webContents.loadURL()
+          appWindow.webContents.loadURL('file://'+path.join(__dirname,saApp.url))
+          apLog(path.join(__dirname,saApp.url))
         }else{
           appWindow.webContents.loadURL(saApp.url)
         }
-
-
 
         SidePanel.send('executedAppSuccess',{app:saApp})
         appWindow.on('resize',(event,args)=>{
@@ -107,7 +110,6 @@ app.whenReady().then(()=>{
           saApp:saApp
         })
         console.log(processingAppWindows)
-
       }else{
         //todo intab模式，在主窗体某个标签内
       }
@@ -116,11 +118,9 @@ app.whenReady().then(()=>{
 
   ipc.on('executeApp', (event, args) => {
     let saApp = args.app
-    console.log('收到消息要执行app')
     if(!!!saApp.processing){
       //首先必须是没运行的
       console.log('想要执行app')
-      console.log(saApp)
       if(!appManager.isAppProcessing(saApp.id)){
         appManager.executeApp(saApp)
       }
@@ -130,7 +130,6 @@ app.whenReady().then(()=>{
         apLog('聚焦单例'+saApp.windowId)
         appManager.focusWindow(saApp.windowId)
       }
-      console.log('想要执行已经存在的应用')
     }
   })
 
