@@ -200,4 +200,15 @@ app.whenReady().then(()=>{
     }
   })
 
+  /**
+   * 应用关闭前，将所有开启的窗体销毁掉
+   */
+  app.on('before-quit',()=>{
+    processingAppWindows.forEach((item)=>{
+      if(!item.window.isDestroyed())
+      {
+        item.window.destroy()
+      }
+    })
+  })
 })
