@@ -10,8 +10,7 @@
   <script src="../../ext/vue/vuedraggable.umd.min.js"></script>
   <script src="../../ext/vue/antd.min.js"></script>
   <link rel="stylesheet" href="../../ext/vue/antd.min.css"/>
-  <link rel="stylesheet" href="sidebar.css"/>
-  <link rel="stylesheet" href="sidebar2.css"/>
+  <link rel="stylesheet" href="css/sidebar.css"/>
 </head>
 <body>
 <script>
@@ -206,6 +205,7 @@
               <div v-if="user.uid!==0">用户信息</div>
             </template>
             <div @contextmenu="toggleUserPanel()" class="wrapper" block>
+              <div class="processing"></div>
               <div class="item-icon">
                 <a-avatar
                   v-if="user.uid!==0"
@@ -227,6 +227,9 @@
             </div>
           </a-popover>
         </li>
+        <li>
+          <app-manager></app-manager>
+        </li>
         <li
           @click="openGroup()"
           style="position: relative"
@@ -242,8 +245,8 @@
 
           <!--                </template>-->
           <div class="wrapper" @dblclick.stop="closeItem(item)">
-            <div class="item-icon">
-              <img class="icon" src="../../icons/svg/chat.svg"/>
+            <div class="item-icon ">
+              <img class="icon sa-app" style="border-color:#0788c0" src="../../icons/svg/chat.svg"/>
               <a-badge
                 count="0"
                 :dot="true"
@@ -271,7 +274,7 @@
           <!--                </template>-->
           <div class="wrapper" @dblclick.stop="closeItem(item)">
             <div class="item-icon">
-              <img class="icon" src="../../icons/svg/com.svg"/>
+              <img class="icon sa-app" style="border-color:#12a900" src="../../icons/svg/com.svg"/>
               <a-badge
                 count="0"
                 :dot="true"
@@ -456,6 +459,7 @@
 </body>
 <script src="./sidebarComp.js"></script>
 <script src="./sidebar.js"></script>
+<script src="./comp/app-manager.js"></script>
 <style>
   .tabs,
   .sidebar ul {

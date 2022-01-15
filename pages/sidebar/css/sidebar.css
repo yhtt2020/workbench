@@ -1,4 +1,192 @@
 @charset "UTF-8";
+.mg-content {
+  max-height: calc(100vh - 340px);
+  overflow-y: auto;
+  margin-top: 10px;
+  padding: 10px;
+}
+.mg-content .mg-content-btn {
+  background: white;
+  margin-top: 6px;
+  height: 46px;
+  position: relative;
+  width: 100%;
+  border: 1px solid #e2dddd;
+  border-radius: 8px;
+}
+.mg-content .mg-content-btn:hover {
+  border: 1px solid #1890ff;
+  cursor: pointer;
+}
+.mg-content .mg-content-btn .cb-lf {
+  z-index: 1;
+  width: 50px;
+  height: 100%;
+  border-bottom-left-radius: 8px;
+  border-top-left-radius: 8px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.mg-content .mg-content-btn .cb-rg {
+  margin-left: 10px;
+  width: 100%;
+}
+.mg-content .mg-content-btn .cb-rg img {
+  z-index: 2;
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+}
+.mg-content .mg-content-btn .cb-rg div {
+  margin-left: 10px;
+  text-align: left !important;
+  font-weight: 500;
+  color: #353535;
+  z-index: 2;
+  width: 80%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.sa-app {
+  border-radius: 50%;
+  border: 2px solid #b0b0b0;
+  padding: 1px;
+  width: 30px !important;
+  height: 30px !important;
+}
+
+/*外框*/
+.wrapper {
+  position: relative;
+}
+.wrapper .processing {
+  display: inline-block;
+  position: absolute;
+  left: 2px;
+  top: 50%;
+  height: 3px;
+  width: 3px;
+  z-index: 4;
+  border-radius: 100%;
+  background-color: rgba(0, 0, 0, 0.68);
+}
+
+.app-manager-overlay {
+  width: 400px;
+}
+.app-manager-overlay .app-manager-title {
+  background-color: rgba(234, 234, 234, 0.41);
+  border-radius: 8px 8px 0 0;
+  padding: 8px;
+}
+.app-manager-overlay .ant-popover-title {
+  padding: 0;
+}
+.app-manager-overlay .ant-popover-inner-content {
+  padding: 0;
+}
+.app-manager-overlay .ant-popover-inner-content .in-process-app {
+  padding: 0 0 0 10px;
+}
+.app-manager-overlay .ant-popover-inner-content .in-process-app .scroller-wrapper {
+  padding: 10px;
+  overflow-y: auto;
+  max-height: 800px;
+}
+.app-manager-overlay .ant-popover-inner-content .in-process-app .scroller-wrapper::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: white;
+}
+.app-manager-overlay .ant-popover-inner-content .in-process-app .scroller-wrapper::-webkit-scrollbar {
+  width: 6px;
+  background-color: #F5F5F5;
+}
+.app-manager-overlay .ant-popover-inner-content .in-process-app .scroller-wrapper::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.app-manager-overlay .ant-popover-inner-content .in-process-app .app-list {
+  list-style: none;
+  padding-left: 0;
+}
+.app-manager-overlay .ant-popover-inner-content .in-process-app .app-list li {
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 5px;
+}
+.app-manager-overlay .ant-popover-inner-content .in-process-app .app-list .active, .app-manager-overlay .ant-popover-inner-content .in-process-app .app-list li:hover {
+  background-color: rgba(204, 204, 204, 0.31);
+}
+.app-manager-overlay .ant-popover-inner-content .in-process-app .app-list .app-title {
+  margin-bottom: 10px;
+}
+.app-manager-overlay .ant-popover-inner-content .in-process-app .app-list .app-title .app-logo {
+  padding-left: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+.app-manager-overlay .ant-popover-inner-content .in-process-app .app-list .app-title .app-name {
+  font-weight: bold;
+  margin-left: 10px;
+}
+.app-manager-overlay .ant-popover-inner-content .in-process-app .app-list .app-capture {
+  width: 265px;
+  height: 130px;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(117, 117, 117, 0.58);
+  position: relative;
+  overflow: hidden;
+}
+.app-manager-overlay .ant-popover-inner-content .in-process-app .app-list .app-capture img {
+  width: 265px;
+  height: auto;
+  display: block;
+  overflow: hidden;
+  position: relative;
+}
+.app-manager-overlay .ant-popover-inner-content .in-process-app .app-list .app-capture .overlay {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 30px;
+  left: 0;
+  z-index: 10;
+  background: linear-gradient(to top, rgba(9, 6, 6, 0.11), transparent);
+}
+.app-manager-overlay .ant-popover-inner-content .more-app {
+  padding: 10px;
+  border-left: 1px solid #e7e7e7;
+}
+.app-manager-overlay .ant-popover-inner-content .more-app .other-app-list {
+  text-align: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.app-manager-overlay .ant-popover-inner-content .more-app .other-app-list li {
+  cursor: pointer;
+  padding: 0;
+}
+.app-manager-overlay .ant-popover-inner-content .more-app .other-app-list li：hover {
+  background-color: rgba(126, 126, 126, 0.84);
+}
+.app-manager-overlay .ant-popover-inner-content .more-app .other-app-list .logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+.app-manager-overlay .ant-popover-inner-content .more-app .other-app-list .title {
+  font-size: 12px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
 body {
   background-color: #00000000;
   overflow: hidden;
