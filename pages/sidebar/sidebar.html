@@ -234,7 +234,7 @@
           <div class="wrapper" >
             <div v-if="app.processing" class="processing"></div>
             <div class="item-icon">
-              <img class="icon sa-app" :style="{'border-color':app.userThemeColor!==''?app.userThemeColor:app.themeColor}" :src="app.logo"/>
+              <img class="icon sa-app" :style="app.processing? {'border-color':app.userThemeColor!==''?app.userThemeColor:app.themeColor}:{}" :src="app.logo"/>
               <a-badge
                 :count="app.unreadCount"
                 :dot="true"

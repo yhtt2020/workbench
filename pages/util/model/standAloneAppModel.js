@@ -51,6 +51,7 @@ const standAloneAppModel = {
         summary: '效率社区，与全球高效能人士共同成长',
         type: 'web',
         url: serverConfig.SERVER_BASE_URL,
+        preload:'/pages/com/preload.js',
         themeColor: '#85ff85',
         userThemeColor: '',
         createTime: Date.now(),
@@ -59,7 +60,12 @@ const standAloneAppModel = {
         order: 0,
         useCount: 0,
         lastExecuteTime: Date.now(),
-        settings: JSON.stringify(''),
+        settings: JSON.stringify({
+          bounds:{
+            width:1100,
+            height:800
+          }
+        }),
         unreadCount: 0,
         showInSideBar: true
       },
@@ -81,8 +87,8 @@ const standAloneAppModel = {
         lastExecuteTime: Date.now(),
         settings: JSON.stringify({
           bounds:{
-            width:800,
-            height:600
+            width:1200,
+            height:800
           }
         }),
         unreadCount: 0,
