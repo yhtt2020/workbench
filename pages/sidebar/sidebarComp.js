@@ -1,8 +1,10 @@
 const { db } = require('../../js/util/database');
 const { api } = require('../../server-config')
+const standAloneAppModel=require('../util/model/standAloneAppModel.js')
 Vue.component('sidebar', {
 	data: function() {
 		return {
+      apps:[],
       mod:'auto',//auto open close
       isPopoverShowing:false,
       lastOpenId:0,
@@ -71,6 +73,9 @@ Vue.component('sidebar', {
 
 	},
 	async mounted() {
+    await standAloneAppModel.initialize()
+    this.apps=await standAloneAppModel.getAllApps()
+    console.log(this.apps)
 		// let item = {
 		// 	title: '打开标签', //名称，用于显示提示
 		// 	index: 0, //索引
@@ -109,6 +114,7 @@ Vue.component('sidebar', {
     appVue.mod=sideMode
 	},
 	computed: {
+
 		user(){
 			return this.$store.state.user
 		},
@@ -145,6 +151,13 @@ Vue.component('sidebar', {
 	},
 	template: '#sidebarTpl',
 	methods: {
+    executeApp(app){
+      // if(!!!app.processing){
+      //   ipc.send('executeApp',{app:app})
+      // }
+      // 判断单例的问题留给主进程处理
+      ipc.send('executeApp',{app:app})
+    },
 		toggleUserPanel(){
 			console.log('toggele')
 			this.userPanelVisible=!this.userPanelVisible
@@ -415,4 +428,21 @@ ipc.on('message',function(event,args){
     args.type='open'
   }
   appVue.$message[args.type](args.config)
+})
+
+ipc.on('executedAppSuccess',function (event,args){
+  appVue.$refs.sidePanel.apps.forEach(app=>{
+    if(app.id===args.app.id){
+      app.processing=true
+      app.windowId=args.app.windowId
+    }
+  })
+})
+ipc.on('closeApp',function (event,args){
+  console.log(args)
+  appVue.$refs.sidePanel.apps.forEach(app=>{
+    if(app.id===args.app.id){
+      app.processing=false
+    }
+  })
 })

@@ -10,6 +10,7 @@ const modules = [
   'main/registryConfig.js',
   'main/main.js',
   'main/sidePanel.js',
+  'main/appManager.js',
   'main/siteCard.js',
   'main/userScript.js',
   'main/handleAxios.js',

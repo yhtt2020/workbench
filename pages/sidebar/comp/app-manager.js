@@ -106,9 +106,8 @@ const appManagerTpl =
 </a-row>
                 </template>
                 <div class="wrapper" >
-                <div class="processing"></div>
                   <div class="item-icon ">
-                    <img class="icon sa-app" src="../../icons/svg/control.svg"/>
+                    <img class="icon" src="../../icons/svg/control.svg"/>
 <!--                    <a-badge-->
 <!--                      :count="item.count"-->
 <!--                      :dot="true"-->
@@ -125,14 +124,17 @@ const appManagerTpl =
 
 
   `
+
 Vue.component('app-manager', {
   template: appManagerTpl,
   name: 'app-manager',
   data () {
-    return {}
+    return {
+      apps:[]
+    }
   },
   mounted () {
-
+    this.apps=standAloneAppModel.getAllApps()
   },
   methods: {
     destroyed () {
