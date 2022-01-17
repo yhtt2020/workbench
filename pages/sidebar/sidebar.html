@@ -230,7 +230,20 @@
         <li>
           <app-manager></app-manager>
         </li>
-        <li v-for="app in apps" @click="executeApp(app)">
+        <li v-for="app in apps" @click="executeApp(app)" @mouseenter="hoverApp($event,app)">
+          <a-popover  placement="right" :mouse-enter-delay="0.3"
+                     overlay-class-name="tips"  @visible-change="">
+            <template slot="title">
+              <span> {{app.name}} </span>
+            </template>
+            <template slot="content" v-if="app.processing">
+              <div class="app-capture">
+                <img  :src="'file://'+app.capture" onerror="this.src='../../icons/svg/empty.svg'">
+              </div>
+            </template>
+            <template slot="content" v-else>
+              {{app.summary}}
+            </template>
           <div class="wrapper" >
             <div v-if="app.processing" class="processing"></div>
             <div class="item-icon">
@@ -244,6 +257,7 @@
             </div>
             <div class="item-title">{{app.name}}</div>
           </div>
+          </a-popover>
         </li>
 
         <li

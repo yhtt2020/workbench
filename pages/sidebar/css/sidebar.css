@@ -77,6 +77,31 @@
   background-color: rgba(0, 0, 0, 0.68);
 }
 
+.app-capture {
+  width: 265px;
+  height: 130px;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(117, 117, 117, 0.58);
+  position: relative;
+  overflow: hidden;
+}
+.app-capture img {
+  width: 265px;
+  height: auto;
+  display: block;
+  overflow: hidden;
+  position: relative;
+}
+.app-capture .overlay {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 30px;
+  left: 0;
+  z-index: 10;
+  background: linear-gradient(to top, rgba(9, 6, 6, 0.11), transparent);
+}
+
 .app-manager-overlay {
   width: 400px;
 }
@@ -135,30 +160,6 @@
 .app-manager-overlay .ant-popover-inner-content .in-process-app .app-list .app-title .app-name {
   font-weight: bold;
   margin-left: 10px;
-}
-.app-manager-overlay .ant-popover-inner-content .in-process-app .app-list .app-capture {
-  width: 265px;
-  height: 130px;
-  border-radius: 8px;
-  box-shadow: 0 0 5px rgba(117, 117, 117, 0.58);
-  position: relative;
-  overflow: hidden;
-}
-.app-manager-overlay .ant-popover-inner-content .in-process-app .app-list .app-capture img {
-  width: 265px;
-  height: auto;
-  display: block;
-  overflow: hidden;
-  position: relative;
-}
-.app-manager-overlay .ant-popover-inner-content .in-process-app .app-list .app-capture .overlay {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 30px;
-  left: 0;
-  z-index: 10;
-  background: linear-gradient(to top, rgba(9, 6, 6, 0.11), transparent);
 }
 .app-manager-overlay .ant-popover-inner-content .more-app {
   padding: 10px;

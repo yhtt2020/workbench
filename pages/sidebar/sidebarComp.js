@@ -151,11 +151,20 @@ Vue.component('sidebar', {
 	},
 	template: '#sidebarTpl',
 	methods: {
+    /**
+     * app浮窗显示隐藏
+     */
+    hoverApp(e,app){
+       if(app.processing){
+         ipc.send('getAppCapture',{id:app.id})
+       }
+    },
     executeApp(app){
       // if(!!!app.processing){
       //   ipc.send('executeApp',{app:app})
       // }
       // 判断单例的问题留给主进程处理
+      console.log(app)
       ipc.send('executeApp',{app:app})
     },
 		toggleUserPanel(){
@@ -418,7 +427,8 @@ Vue.component('sidebar', {
     },
     editTaskNameKeyPress(event){
         event.currentTarget.blur()
-    }
+    },
+
 	}
 
 })
@@ -443,6 +453,15 @@ ipc.on('closeApp',function (event,args){
   appVue.$refs.sidePanel.apps.forEach(app=>{
     if(app.id===args.app.id){
       app.processing=false
+    }
+  })
+})
+
+ipc.on('updateAppCapture',function (event,args){
+  console.log(args)
+  appVue.$refs.sidePanel.apps.forEach(app=>{
+    if(app.id===args.id){
+      app.capture=args.captureSrc +"?t="+Date.now()
     }
   })
 })

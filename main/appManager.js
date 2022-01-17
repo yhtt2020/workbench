@@ -92,6 +92,61 @@ app.whenReady().then(()=>{
       }
     },
     /**
+     * 通过窗体获得saApp实体
+     * @returns {*}
+     */
+    getSaAppByWindowId(saAppWindowId){
+      for(let i=0;i<processingAppWindows.length;i++){
+        if(processingAppWindows[i].saApp.windowId===saAppWindowId){
+          return processingAppWindows[i]
+        }
+      }
+    },
+    /**
+     * 通过WindowId获得对应索引
+     * @returns {number}
+     */
+    getIndexByWindowId(saAppWindowId){
+      for(let i=0;i<processingAppWindows.length;i++){
+        if(processingAppWindows[i].saApp.windowId===saAppWindowId){
+          return i
+        }
+      }
+    },
+    /**
+     * 获取saApp信息，通过appid
+     * @param appId
+     * @returns {*}
+     */
+    getSaAppByAppId(appId){
+      for(let i=0;i<processingAppWindows.length;i++){
+        if(processingAppWindows[i].saApp.id===appId){
+          return processingAppWindows[i].saApp
+        }
+      }
+    },
+    /**
+     * 通过windowId给APP截图并传送ipc回sidePanel
+     * @param saAppWindowId
+     */
+    capture(saAppWindowId){
+      let saApp= appManager.getSaAppByWindowId(saAppWindowId)
+      let capturedImage=undefined
+      saApp.window.webContents.capturePage().then((data)=>{
+        capturedImage=data
+        if(!fs.existsSync(userDataPath+'/app')){
+          fs.mkdirSync(userDataPath+'/app')
+        }
+        let imgePath=userDataPath+'/app/screen'+saApp.saApp.id+'.jpg'
+        fs.writeFile(path.resolve(imgePath),capturedImage.toJPEG(50),(err)=>{
+          if(!err){
+            SidePanel.send('updateAppCapture', { id:saApp.saApp.id,captureSrc: path.resolve(imgePath)})
+          }
+        })
+      })
+    },
+
+    /**
      * 执行应用
      * @param saApp 一个应用实体
      */
@@ -135,6 +190,13 @@ app.whenReady().then(()=>{
           //todo 完成设置同步
         })
 
+        appWindow.on('show',(event)=>{
+          console.log(saApp.windowId)
+          setTimeout(()=>{
+            appManager.capture(saApp.windowId)
+          },1000)
+
+        })
         /**
          * 关闭窗体的同时通知sidePanel关闭窗体
          */
@@ -176,7 +238,10 @@ app.whenReady().then(()=>{
           window:appWindow,//在本地的对象中插入window对象，方便后续操作
           saApp:saApp
         })
-        console.log(processingAppWindows)
+        //完成运行后，截个图发送到侧边栏，更新其截图
+        console.log(saApp)
+
+
       }else{
         //todo intab模式，在主窗体某个标签内
       }
@@ -198,6 +263,10 @@ app.whenReady().then(()=>{
         appManager.focusWindow(saApp.windowId)
       }
     }
+  })
+  ipc.on('getAppCapture',(event,args)=>{
+    let app=appManager.getSaAppByAppId(args.id)
+    appManager.capture(app.windowId)
   })
 
   /**
