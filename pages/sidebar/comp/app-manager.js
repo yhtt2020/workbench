@@ -23,6 +23,7 @@ const appManagerTpl =
              <li v-for="(appId,index) in runningApps" >
              <div class="app-title">
              <img :src="getApp(appId).logo" class="app-logo"><span class="app-name">{{getApp(appId).name}}</span>
+             <span style="float: right"><a-icon title="彻底退出" @click="closeApp(appId)" type="poweroff"></a-icon></span>
 </div>
              <div>
              <div class="app-capture">
@@ -126,6 +127,9 @@ Vue.component('app-manager', {
           currentApp=app
       })
       return currentApp
+    },
+    closeApp(appId){
+        ipc.send('closeApp',{id:appId})
     }
   },
   computed:{

@@ -452,10 +452,10 @@ ipc.on('executedAppSuccess',function (event,args){
 })
 ipc.on('closeApp',function (event,args){
   appVue.$refs.sidePanel.apps.forEach(app=>{
-    if(app.id===args.app.id){
+    if(app.id===args.id){
       app.processing=false
       //从正在运行的app里移除掉该id
-      let appIndex=appVue.$refs.sidePanel.runningApps.indexOf(args.app.id)
+      let appIndex=appVue.$refs.sidePanel.runningApps.indexOf(args.id)
       console.log(appVue.$refs.sidePanel.runningApps)
       if(appIndex>-1)
         appVue.$refs.sidePanel.runningApps.splice(appIndex,1)

@@ -139,6 +139,13 @@ app.whenReady().then(()=>{
         }
       }
     },
+    getWindowByAppId(appId){
+      for(let i=0;i<processingAppWindows.length;i++){
+        if(processingAppWindows[i].saApp.id===appId){
+          return processingAppWindows[i].window
+        }
+      }
+    },
     /**
      * 通过windowId给APP截图并传送ipc回sidePanel
      * @param saAppWindowId
@@ -162,7 +169,16 @@ app.whenReady().then(()=>{
         })
       })
     },
-
+    closeApp(appId){
+      let window=appManager.getWindowByAppId(appId)
+      let saApp=appManager.getSaAppByAppId(appId)
+      console.log(saApp)
+      if(!window.isDestroyed()){
+        window.destroy()
+        appManager.removeAppWindow(saApp.windowId)
+        SidePanel.send('closeApp',{id:appId})
+      }
+    },
     /**
      * 执行应用
      * @param saApp 一个应用实体
@@ -224,40 +240,36 @@ app.whenReady().then(()=>{
             appManager.capture(saApp.windowId)
         })
         /**
-         * 关闭窗体的同时通知sidePanel关闭窗体
+         * 只允许通过关闭按钮隐藏，而不是彻底关闭
          */
         appWindow.on('close',(event,args)=>{
-          if(appManager.getAppSettings(saApp.id,'alwaysHide')) {
-            event.preventDefault()
-            apLog('隐藏窗体'+saApp.id)
-            appManager.hideWindow(saApp.windowId)
-          } else {
-            const result = dialog.showMessageBoxSync({
-              type: 'none',
-              buttons: ['取消','退出', '隐藏[不再询问]'],
-              message: '退出后无法接受消息提醒,请注意!',
-              cancelId: 0,
-              defaultId: 2,
-              noLink: true
-            })
-            if(result === 0 ) {
-              apLog('阻止隐藏')
-              event.preventDefault()
-              return
-            } else if(result === 2) {
-              event.preventDefault()
-              apLog('设置设置,true')
-              appManager.setAppSettings(saApp.id,{'alwaysHide':true})//alwaysHide = true
-              appManager.hideWindow(saApp.windowId)
-              //groupIMWindow.hide()
-            } else {
-              appManager.removeAppWindow(saApp.windowId)
-              SidePanel.send('closeApp',{app:saApp})
-              //alwaysHide = false
-              apLog('设置设置false')
-              appManager.setAppSettings(saApp.id,{'alwaysHide':false})
-            }
-          }
+          appManager.hideWindow(saApp.windowId)
+          event.preventDefault()
+            // const result = dialog.showMessageBoxSync({
+            //   type: 'none',
+            //   buttons: ['取消','退出', '隐藏[不再询问]'],
+            //   message: '退出后无法接受消息提醒,请注意!',
+            //   cancelId: 0,
+            //   defaultId: 2,
+            //   noLink: true
+            // })
+            // if(result === 0 ) {
+            //   apLog('阻止隐藏')
+            //   event.preventDefault()
+            //   return
+            // } else if(result === 2) {
+            //   event.preventDefault()
+            //   apLog('设置设置,true')
+            //   appManager.setAppSettings(saApp.id,{'alwaysHide':true})//alwaysHide = true
+            //
+            //   //groupIMWindow.hide()
+            // } else {
+            //   appManager.closeApp(saApp.id)
+            //   //alwaysHide = false
+            //   apLog('设置设置false')
+            //   appManager.setAppSettings(saApp.id,{'alwaysHide':false})
+            // }
+
         })
 
         processingAppWindows.push({
@@ -288,6 +300,9 @@ app.whenReady().then(()=>{
         appManager.focusWindow(saApp.windowId)
       }
     }
+  })
+  ipc.on('closeApp',(event,args)=>{
+    appManager.closeApp(args.id)
   })
   /**
    * 获取并更新一个app的截图
