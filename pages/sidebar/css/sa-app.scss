@@ -33,6 +33,11 @@
   box-shadow: 0 0 5px rgba(117, 117, 117, 0.58);
   position: relative;
   overflow: hidden;
+  &:hover{
+    .app-info{
+      display: block;
+    }
+  }
   img{
     width: 265px;
     height: auto;
@@ -157,6 +162,7 @@
 
 
 .app-info{
+  display: none;
   background-color: rgba(0, 0, 0, 0.54);
   color:white;
   position: absolute;

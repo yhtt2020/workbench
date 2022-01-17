@@ -86,6 +86,9 @@
   position: relative;
   overflow: hidden;
 }
+.app-capture:hover .app-info {
+  display: block;
+}
 .app-capture img {
   width: 265px;
   height: auto;
@@ -194,6 +197,7 @@
 }
 
 .app-info {
+  display: none;
   background-color: rgba(0, 0, 0, 0.54);
   color: white;
   position: absolute;

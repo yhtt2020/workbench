@@ -436,21 +436,16 @@
                   <a-button type="default" shape="circle" icon="question-circle"></a-button>
                   <div class="item-title">帮助中心</div>
                 </li>
-                <li @click="openBottom('setting')">
-                  <a-button type="default" shape="circle" icon="setting"></a-button>
-                  <div class="item-title">偏好设置</div>
-                </li>
+
               </a-collapse-panel>
             </a-collapse>
           </div>
         </template>
-
-        <li @click="openBottom('home')">
-          <a-button type="default" shape="circle" style="border: none">
-            <a-avatar src="../../icons/svg/apps.svg"></a-avatar>
-          </a-button>
-          <div class="item-title">网站导航</div>
+        <li @click="openBottom('setting')">
+          <a-button type="default" shape="circle" icon="setting"></a-button>
+          <div class="item-title">偏好设置</div>
         </li>
+
       </ul>
     </div>
   </div>

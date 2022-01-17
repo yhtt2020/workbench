@@ -202,7 +202,6 @@ app.whenReady().then(()=>{
         fs.mkdirSync(userDataPath+'/app')
       }
       let imagePath=path.resolve(userDataPath+'/app/screen'+saApp.saApp.id+'.jpg')
-      console.log(imagePath)
       try{
         fs.writeFileSync(imagePath,capturedImage.toJPEG(50))
       }catch (err){
@@ -213,7 +212,6 @@ app.whenReady().then(()=>{
     closeApp(appId){
       let window=appManager.getWindowByAppId(appId)
       let saApp=appManager.getSaAppByAppId(appId)
-      console.log(saApp)
       if(!window.isDestroyed()){
         window.destroy()
         appManager.removeAppWindow(saApp.windowId)

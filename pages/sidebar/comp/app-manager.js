@@ -28,6 +28,9 @@ const appManagerTpl =
              <div>
              <div class="app-capture" style="position: relative" @mouseenter="startStat(appId)" @mouseleave="stopStat">
              <a-row class="app-info">
+             <a-col :span="24" style="text-align: center">
+             运行情况
+</a-col>
              <a-col :span="6">
            内存：
 </a-col>
