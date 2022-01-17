@@ -156,9 +156,9 @@ Vue.component('sidebar', {
      * app浮窗显示隐藏
      */
     hoverApp(e,app){
-       if(app.processing){
-         ipc.send('getAppCapture',{id:app.id})
-       }
+       // if(app.processing){
+       //   ipc.send('getAppCapture',{id:app.id})
+       // }
     },
     executeApp(app){
       // if(!!!app.processing){
