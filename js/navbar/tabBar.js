@@ -451,8 +451,8 @@ const tabBar = {
             },
           },
           {
-            id:'addToDesk',
-            label:'添加到桌面',
+            id: 'addToDesk',
+            label: '添加到桌面',
             submenu: addToDeskMenus
           },
           {
@@ -462,6 +462,14 @@ const tabBar = {
               require('browserUI.js').addTab()
             },
           },
+          {
+            id:'lockTab',
+            label:tabs.get(data.id).lock===true?'解锁标签': '锁定标签',
+            click: function () {
+              tabBar.lockTab(data.id)
+            },
+          },
+
           {
             label: '移动到最左边',
             toolTip: '作为组代表,当前任务组会更新为此标签的网站图标',
@@ -478,9 +486,9 @@ const tabBar = {
           {
             label: '关闭标签',
             click: function () {
-              if(!!tabs.get(data.id).lock){
-                ipc.send('message',{type:'info',config:{content:'该标签为锁定标签，无法直接关闭，请解锁后再关闭。',key:'lockTip'}})
-              }else{
+              if (!!tabs.get(data.id).lock) {
+                ipc.send('message', {type: 'info', config: {content: '该标签为锁定标签，无法直接关闭，请解锁后再关闭。', key: 'lockTip'}})
+              } else {
                 require('browserUI.js').closeTab(data.id)
               }
             },
@@ -490,11 +498,11 @@ const tabBar = {
           {
             label: '关闭整组',
             click: function () {
-              const tabsList=tasks.getSelected().tabs
+              const tabsList = tasks.getSelected().tabs
               console.log(tabsList)
-              for(let i=0;i<tabsList.tabs.length;i++){
-                if(!!tabsList.tabs[i].lock){
-                  ipc.send('message',{type:'info',config:{content:'组内存在锁定标签，无法关闭整组。请解锁后再试。'}})
+              for (let i = 0; i < tabsList.tabs.length; i++) {
+                if (!!tabsList.tabs[i].lock) {
+                  ipc.send('message', {type: 'info', config: {content: '组内存在锁定标签，无法关闭整组。请解锁后再试。'}})
                   return
                 }
               }
@@ -537,7 +545,7 @@ const tabBar = {
             submenu: [
               {
                 label: '复制链接',
-                click: function() {
+                click: function () {
                   tabBar.shareTask()
                 }
               },
@@ -794,6 +802,18 @@ const tabBar = {
       tabBar.setActiveTab(tabs.getSelected())
     }
   },
+
+  lockTab: function (id) {
+    let tab=tabs.get(id)
+    if(tab.lock === true) {
+      tabs.update(tab.id,{ lock:!tab.lock })
+      ipc.send('message', {type: 'success', config: {content: '标签锁定解除'}})
+    }else {
+      tabs.update(tab.id,{ lock:!tab.lock })
+      ipc.send('message', {type: 'success', config: {content: '标签锁定成功'}})
+    }
+},
+
   addTab: function (tabId) {
     var tab = tabs.get(tabId)
     var index = tabs.getIndex(tabId)
@@ -803,6 +823,7 @@ const tabBar = {
 
     tabBar.tabElementMap[tabId] = tabEl
   },
+
   removeTab: function (tabId) {
     var tabEl = tabBar.getTab(tabId)
     if (tabEl) {
