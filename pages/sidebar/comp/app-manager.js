@@ -14,16 +14,16 @@ const appManagerTpl =
 </template>
                 <template slot="content">
                 <a-row type="flex">
-                <a-col class="in-process-app" :flex="1">
-                <div style="padding: 40px" v-if="runningApps.length===0">
+                <a-col class="in-process-app" flex="320px">
+                <div style="padding-top: 35px;text-align: center" v-if="runningApps.length===0">
                 <a-empty description="暂无运行中的应用" ></a-empty>
 </div>
             <div class="scroller-wrapper">
              <ul class="app-list">
-             <li v-for="(appId,index) in runningApps" >
-             <div class="app-title">
+             <li  v-for="(appId,index) in runningApps" >
+             <div style="cursor:pointer;" @click="executeApp(getApp(appId))" class="app-title">
              <img :src="getApp(appId).logo" class="app-logo"><span class="app-name">{{getApp(appId).name}}</span>
-             <span style="float: right"><a-icon title="彻底退出" @click="closeApp(appId)" type="poweroff"></a-icon></span>
+             <span style="float: right"><a-icon title="彻底退出" @click.stop="closeApp(appId)" type="poweroff"></a-icon></span>
 </div>
              <div>
              <div class="app-capture">
@@ -57,7 +57,7 @@ const appManagerTpl =
                 </template>
                 <div class="wrapper" >
                   <div class="item-icon ">
-                    <img class="icon" src="../../icons/svg/control.svg"/>
+                    <img class="icon" style="width: 32px !important;height: 32px !important;" src="../../icons/svg/control.svg"/>
 <!--                    <a-badge-->
 <!--                      :count="item.count"-->
 <!--                      :dot="true"-->

@@ -63,6 +63,7 @@
 
 /*外框*/
 .wrapper {
+  user-select: none;
   position: relative;
 }
 .wrapper .processing {
