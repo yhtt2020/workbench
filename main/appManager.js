@@ -255,23 +255,40 @@ app.whenReady().then(()=>{
     let saApp = args.app
     if(!!!saApp.processing){
       //首先必须是没运行的
-      console.log('想要执行app')
       if(!appManager.isAppProcessing(saApp.id)){
         appManager.executeApp(saApp)
       }
     }else{
       //todo 判断是多例还是单例
       if(1){//是单例
-        apLog('聚焦单例'+saApp.windowId)
+        console.log(saApp)
         appManager.focusWindow(saApp.windowId)
       }
     }
   })
+  /**
+   * 获取并更新一个app的截图
+   */
   ipc.on('getAppCapture',(event,args)=>{
-    let app=appManager.getSaAppByAppId(args.id)
-    appManager.capture(app.windowId)
+    let saApp=appManager.getSaAppByAppId(args.id)
+    if(!!!saApp){
+      return //如果不存在这个saApp
+    }
+    appManager.capture(saApp.windowId)
   })
+  /**
+   * 获取到全部正在运行的app清单
+   */
+  ipc.on('getRunningApps',(event,args)=>{
+    let runningApps=[]
+    let windows=[]
+    processingAppWindows.forEach(window=>{
 
+      runningApps.push(window.saApp.id)
+      windows.push(window.saApp.windowId)
+    })
+    SidePanel.send('updateRunningApps',{runningApps:runningApps,windows:windows})
+  })
   /**
    * 应用关闭前，将所有开启的窗体销毁掉
    */

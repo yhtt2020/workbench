@@ -76,6 +76,7 @@ Vue.component('sidebar', {
 	async mounted() {
     await standAloneAppModel.initialize()
     this.apps=await standAloneAppModel.getAllApps()
+    ipc.send('getRunningApps')
     console.log(this.apps)
 		// let item = {
 		// 	title: '打开标签', //名称，用于显示提示
@@ -165,7 +166,6 @@ Vue.component('sidebar', {
       //   ipc.send('executeApp',{app:app})
       // }
       // 判断单例的问题留给主进程处理
-      console.log(app)
       ipc.send('executeApp',{app:app})
     },
 		toggleUserPanel(){
@@ -451,7 +451,6 @@ ipc.on('executedAppSuccess',function (event,args){
   appVue.$refs.sidePanel.runningApps.push(args.app.id)
 })
 ipc.on('closeApp',function (event,args){
-  console.log(args)
   appVue.$refs.sidePanel.apps.forEach(app=>{
     if(app.id===args.app.id){
       app.processing=false
@@ -466,10 +465,19 @@ ipc.on('closeApp',function (event,args){
 })
 
 ipc.on('updateAppCapture',function (event,args){
-  console.log(args)
   appVue.$refs.sidePanel.apps.forEach(app=>{
     if(app.id===args.id){
       app.capture=args.captureSrc +"?t="+Date.now()
+    }
+  })
+})
+ipc.on('updateRunningApps',function(event,args){
+  appVue.$refs.sidePanel.runningApps=args.runningApps
+  appVue.$refs.sidePanel.apps.forEach((app,index)=>{
+    if(args.runningApps.indexOf(app.id)>-1){
+      app.processing=true
+      app.windowId=args.windows[index]
+      ipc.send('getAppCapture',{id:app.id})
     }
   })
 })

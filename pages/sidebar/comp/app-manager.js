@@ -125,7 +125,6 @@ Vue.component('app-manager', {
         if(app.id===id)
           currentApp=app
       })
-      console.log(currentApp)
       return currentApp
     }
   },
