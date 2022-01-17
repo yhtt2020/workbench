@@ -30,7 +30,7 @@
           <a>了解更多 &gt;</a>
         </p>
         <p>
-          发布日期： {{ info.releaseDate }}
+          发布日期： {{ renderTime(info.releaseDate) }}
         </p>
       </div>
       <template #extra>
@@ -54,7 +54,7 @@
       return {
           info:{
             version:'读取数据中',
-            releaseDate:'读取数据中'
+            releaseDate:'读取数据中',
           }
       }
     },
@@ -67,6 +67,10 @@
       },
       cancel(){
          ipc.send('closeUpdate')
+      },
+      renderTime(date){
+        var dateee = new Date(date).toJSON();
+        return new Date(+new Date(dateee) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '')
       }
     }
   })
