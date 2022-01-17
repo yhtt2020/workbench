@@ -142,6 +142,9 @@
           font-size: 12px;
           margin-top: 5px;
           margin-bottom:10px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
       }
 

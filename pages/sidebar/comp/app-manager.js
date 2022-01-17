@@ -39,32 +39,16 @@ const appManagerTpl =
 </a-col>
 <a-col class="more-app" flex="60px">
 <ul class="other-app-list">
-    <li>
-    <div>
-        <img class="logo" src="https://qingflow.com/favicon.ico">
-</div>
-<div class="title">
-轻流
-</div>
-
+<li v-if="runningApps.length===apps.length">
+均已运行
 </li>
-<li>
+    <li @click="executeApp(app)" v-for="app in apps" v-if="!app.processing">
     <div>
-        <img class="logo" src="https://qingflow.com/favicon.ico">
+        <img class="logo" :src="app.logo" onerror="this.src='../../icons/default.svg'">
 </div>
 <div class="title">
-轻流
+{{app.name}}
 </div>
-
-</li>
-<li>
-    <div>
-        <img class="logo" src="https://qingflow.com/favicon.ico">
-</div>
-<div class="title">
-轻流
-</div>
-
 </li>
 </ul>
 
@@ -114,6 +98,13 @@ Vue.component('app-manager', {
     destroyed () {
       // 销毁定时器
       clearInterval(this.timer)
+    },
+    executeApp(app){
+      // if(!!!app.processing){
+      //   ipc.send('executeApp',{app:app})
+      // }
+      // 判断单例的问题留给主进程处理
+      ipc.send('executeApp',{app:app})
     },
     getApp(id){
       let currentApp={
