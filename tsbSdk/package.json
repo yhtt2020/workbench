@@ -1,0 +1,25 @@
+{
+  "name": "tsbsdk",
+  "version": "1.0.0",
+  "description": "xiangtian SDK",
+  "main": "dist/tsbSdk",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint --fix --ext .js,.vue src",
+    "build": "webpack --config build/webpack.config.js"
+  },
+  "author": "marhoo",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.15.0",
+    "@babel/polyfill": "^7.12.1",
+    "@babel/preset-env": "^7.15.0",
+    "babel-loader": "^8.2.2",
+    "eslint": "^8.6.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.4",
+    "progress-bar-webpack-plugin": "^2.1.0",
+    "webpack": "^5.51.1",
+    "webpack-cli": "^4.8.0"
+  }
+}

@@ -320,19 +320,19 @@ userAgentInput.addEventListener('input', function (e) {
 
 /* update notifications setting */
 
-var updateNotificationsCheckbox = document.getElementById('checkbox-update-notifications')
-
-settings.get('updateNotificationsEnabled', function (value) {
-  if (value === false) {
-    updateNotificationsCheckbox.checked = false
-  } else {
-    updateNotificationsCheckbox.checked = true
-  }
-})
-
-updateNotificationsCheckbox.addEventListener('change', function (e) {
-  settings.set('updateNotificationsEnabled', this.checked)
-})
+// var updateNotificationsCheckbox = document.getElementById('checkbox-update-notifications')
+//
+// settings.get('updateNotificationsEnabled', function (value) {
+//   if (value === false) {
+//     updateNotificationsCheckbox.checked = false
+//   } else {
+//     updateNotificationsCheckbox.checked = true
+//   }
+// })
+//
+// updateNotificationsCheckbox.addEventListener('change', function (e) {
+//   settings.set('updateNotificationsEnabled', this.checked)
+// })
 
 /* usage statistics setting */
 

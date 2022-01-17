@@ -2,6 +2,7 @@ const axios = require("../../util/axios.js");
 const storage = require('electron-localstorage');
 const { db } = require("../../util/database.js");
 
+
 const baseApi = {
   inMain: false,
   token: "",
@@ -18,11 +19,15 @@ const baseApi = {
   init: async () => {
     await baseApi.beforeInit()
     if(baseApi.inMain) {
+      //主进程环境中直接拿electronGlobal的全局变量
+      storage.setStoragePath(global.sharedPath.extra)
       const userToken = storage.getItem(`userToken`)
       const userInfo = storage.getItem(`userInfo`)
-      baseApi.currentUser = userInfo;
-      baseApi.token = userToken;
-      baseApi.uid = userInfo.uid;
+      if(userToken && userInfo) {
+        baseApi.currentUser = userInfo;
+        baseApi.token = userToken;
+        baseApi.uid = userInfo.uid;        
+      }
     } else {
       const user = await baseApi.getCurrentUser()
       if(user.value.uid === 0) {

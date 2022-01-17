@@ -1,27 +1,24 @@
 .clock2 {
-  font-family: "Share Tech Mono", monospace;
   color: #ffffff;
   text-align: center;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  -webkit-transform: translate(-50%, -50%);
-  transform: translate(-50%, -50%);
-  color: #daf6ff;
-  text-shadow: 0 0 20px #0aafe6, 0 0 20px rgba(10, 175, 230, 0);
+  width: 100%;
+  height: 100%;
+  text-shadow: 0 0 20px #a9a9a9, 0 0 10px rgba(31, 31, 31, 0.25);
 }
 
 .clock2 .time {
+  font-family: "sans-serif";
   letter-spacing: 0.05em;
-  font-size: 70px;
-  padding: 5px 0;
+  font-size: 60px;
+  padding: 0 0;
+  margin-top: -10px;
   margin-bottom: 0;
 }
 
 .clock2 .date {
   letter-spacing: 0.1em;
-  font-size: 24px;
-  margin-bottom: 0;
+  font-size: 15px;
+  margin-top: -15px;
 }
 
 .clock2 .name {

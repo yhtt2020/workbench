@@ -103,13 +103,14 @@ setTimeout(getAvailableUpdates, 30000)
 setInterval(getAvailableUpdates, 24 * 60 * 60 * 1000)
 
 function initialize () {
-  searchbarPlugins.register('updateNotifications', {
-    index: 11,
-    trigger: function (text) {
-      return !text && performance.now() > 5000
-    },
-    showResults: showUpdateNotification
-  })
+  // searchbarPlugins.register('updateNotifications', {
+  //   index: 11,
+  //   trigger: function (text) {
+  //     return !text && performance.now() > 5000
+  //   },
+  //   showResults: showUpdateNotification
+  // })
+  //暂时禁用搜索栏更新提醒
 }
 
 module.exports = { initialize }

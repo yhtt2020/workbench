@@ -21,56 +21,62 @@
   min-height: 80px;
   min-width: 720px;
   //max-width: 800px;
-  overflow-x:hidden;
-  height:100vh;
+  overflow-x: hidden;
   width: 80%;
-  margin: 0 auto auto;
-  .desktop-content{
+  margin: 40px auto auto;
+  height: calc(100vh - 40px);
+
+  .desktop-content {
     overflow-y: auto;
     height: 100%;
     overflow-x: hidden;
 
-    width:calc(100% + 20px);
+    width: calc(100% + 20px);
 
   }
 }
 
 
-.group-modal{
-  .ant-modal-content{
+.group-modal {
+  .ant-modal-content {
     border-radius: 12px;
-    background: rgba(0,0,0,0.2);
-    backdrop-filter:blur(12px);
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(12px);
   }
-  .ant-modal-close{
+
+  .ant-modal-close {
     color: white;
   }
-  .ant-modal-header{
+
+  .ant-modal-header {
     background: none;
     color: white;
     border-bottom: none;
-    .ant-modal-title{
+
+    .ant-modal-title {
       text-align: center;
       color: white !important;
     }
   }
 }
+
 .element {
   width: var(--element-width);
   text-align: center;
   /*组图标*/
-  .group-icons{
+  .group-icons {
     user-select: none;
     text-align: left;
     width: 60px;
-    height: 60px;
+    height: 66px;
     background: #ffffff77;
     border-radius: 3px;
     overflow: hidden;
     vertical-align: top;
-    line-height: 18px;
-    padding:3px 3px;
-    .icon{
+    line-height: 17px;
+    padding: 2px 2px;
+
+    .icon {
       display: inline-block;
       overflow: hidden;
       width: 18px !important;
@@ -78,13 +84,15 @@
       margin-top: 0 !important;
       margin-bottom: 0 !important;
       text-align: center;
-      img{
+
+      img {
         vertical-align: middle;
         width: 15px !important;
         height: 15px !important;
       }
     }
-    .other{
+
+    .other {
       vertical-align: middle;
       display: inline-block;
       width: 15px !important;
@@ -94,21 +102,24 @@
     }
   }
 
-  &.selected{
+  &.selected {
     background: #1c1c1c77 !important;
     border-radius: 8px;
   }
 
 
 }
+
 .app {
-  .icon-wrapper{
-    display:inline-block;
+  .icon-wrapper {
+    display: inline-block;
     overflow: hidden;
   }
-  .group-icons{
+
+  .group-icons {
     cursor: pointer;
-    &:active{
+
+    &:active {
       animation: scale .2s forwards;
       transform: scale(0.95, 0.95);
     }
@@ -119,11 +130,13 @@
   padding: 10px 0;
   width: var(--element-width);
   height: var(--element-height);
+
   img {
-    &:active{
+    &:active {
       animation: scale .2s forwards;
       transform: scale(0.95, 0.95);
     }
+
     width: var(--element-inner-width);
     height: var(--element--inner-height);
   }
@@ -144,16 +157,20 @@
   }
 
 }
-.shop-app{
+
+.shop-app {
   text-align: center;
   cursor: pointer;
-  .icon-wrapper{
-    display:inline-block;
+
+  .icon-wrapper {
+    display: inline-block;
     overflow: hidden;
   }
-  .group-icons{
+
+  .group-icons {
     cursor: pointer;
-    &:active{
+
+    &:active {
       animation: scale .2s forwards;
       transform: scale(0.95, 0.95);
     }
@@ -164,11 +181,13 @@
   padding: 10px 0;
   width: var(--element-width);
   height: var(--element-height);
+
   img {
-    &:active{
+    &:active {
       animation: scale .2s forwards;
       transform: scale(0.95, 0.95);
     }
+
     width: var(--element-inner-width);
     height: var(--element--inner-height);
   }
@@ -187,7 +206,8 @@
     padding: 2px;
     display: inline-block;
   }
-  .summary{
+
+  .summary {
     overflow: hidden;
     text-overflow: ellipsis;
     overflow-wrap: break-word;
@@ -198,7 +218,7 @@
   }
 }
 
-.color-select{
+.color-select {
   float: right;
   padding: 0;
   height: 42px;
@@ -373,7 +393,7 @@
   text-align: center;
   line-height: 28px;
   width: calc(100% - 20px);
-  flex:1;
+  flex: 1;
   background: linear-gradient(
       33deg, var(--gradient-start), var(--gradient-end));
   word-break: break-all;
@@ -384,39 +404,46 @@
   margin: 10px;
   padding: 10px;
 }
-.card-text{
-  flex:1;
+
+.card-text {
+  flex: 1;
   width: calc(100% + 20px);
   background: #00000000 !important;
   color: white;
   overflow: hidden;
   text-shadow: 0 0 3px rgba(0, 0, 0, 0.74);
-  resize:none;
+  resize: none;
 
 }
+
 //.vue-resizable-handle{
 //  right: 10px !important;
 //  bottom: 10px !important;;
 //}
 .tools {
-  li{
-    .element-name{
+  li {
+    .element-name {
       font-size: 16px;
       font-weight: bold;
     }
-    .element-summary{
+
+    .element-summary {
       color: #999;
     }
-    .element-content{
+
+    .element-content {
       background: rgba(193, 193, 193, 0.11);
       border-radius: 4px;
       padding: 10px;
     }
-    .actions{
-        padding: 40px;
+
+    .actions {
+      padding: 40px;
     }
+
     margin-bottom: 15px;
-    .tip-head{
+
+    .tip-head {
       color: #999;
       font-size: 12px;
     }
@@ -431,6 +458,7 @@
   box-shadow: 0 5px 8px rgba(0, 0, 0, 0.2);
   position: relative;
   margin-top: 30px;
+
   .search {
     height: 35px;
     padding-left: 10px;
@@ -438,6 +466,7 @@
     font-size: 16px;
     width: 100%;
   }
+
   .search-logo {
     cursor: pointer;
     z-index: 20;
@@ -448,3 +477,200 @@
     }
   }
 }
+
+
+/*创建桌面小图标*/
+.icons-list {
+  li {
+    cursor: pointer;
+    float: left;
+    margin-right: 10px;
+    font-size: 20px;
+    line-height: 24px;
+
+    &:hover {
+      background: rgba(204, 204, 204, 0.51);
+      border-radius: 3px;
+    }
+
+    &.active {
+      background: rgba(204, 204, 204, 0.51);
+      border-radius: 3px;
+    }
+
+    padding: 5px;
+  }
+}
+
+/*最左侧栏*/
+.side-bar {
+  position: fixed;
+  height: 40px;
+  top: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  user-select: none;
+
+  .action-list {
+    border-radius: 8px;
+    margin-top: 10px;
+    overflow: hidden;
+    backdrop-filter: blur(4px);
+    background: rgba(145, 145, 145, 0.51);
+    display: flex;
+    flex-direction: row;
+    width: auto;
+    height: auto;
+    align-self: center;
+
+    .active {
+      background: rgba(255, 255, 255, 0.11) !important;
+    }
+
+    .action {
+      cursor: pointer;
+      text-align: center;
+      line-height: 40px;
+      height: 40px;
+      display: flex;
+      color: #ffffff;
+      text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+      padding: 0 15px;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      i {
+        text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+        vertical-align: middle;
+        font-size: 20px;
+        margin-top: 8px;
+        margin-right: 10px;
+
+      }
+
+      .name {
+        vertical-align: middle;
+        font-size: 12px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
+
+}
+
+/*最左侧栏end*/
+.edit-group-name {
+  background: none;
+  border: none;
+  color: white;
+  text-align: center;
+  width: 300px;
+}
+
+.group-list-list {
+  li {
+    cursor: pointer;
+
+    .icon {
+      margin-right: 10px;
+    }
+
+    margin-bottom: 10px;
+
+    .name {
+      color: white;
+      line-height: 18px;
+      margin-bottom: 10px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .url {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 12px;
+      color: #b7b7b7;
+    }
+  }
+}
+
+
+.wallPaperFrame {
+  cursor: pointer;
+  width: 180px;
+  height: 100px;
+  object-fit: cover;
+  border: 3px solid white;
+  border-radius: 8px !important;
+  box-shadow: 0 0 8px rgba(100, 100, 100, 0.75)
+}
+
+/**app图标2*2模式*/
+.app-group-2x2 {
+  width: 150px;
+
+  height: calc(var(--element-height) * 2);
+
+  .group-icons {
+    width: 150px;
+    height: 165px;
+    padding: 5px;
+
+    .icon {
+      width: 46px !important;
+      height: 53px !important;
+
+      img {
+        width: 28px !important;
+        height: 28px !important;
+      }
+
+      .more {
+        position: relative;
+        img {
+          left: 11px;
+          top: 3px;
+          width: 25px !important;
+          height: 25px !important;;
+          z-index: 1;
+          position: absolute;
+          border-radius: 3px;
+        }
+        .app-name{
+          margin-top: 28px;
+        }
+
+        .place-handler {
+          width: 25px;
+          height: 25px;
+          background: #e5e5e5;
+          border-radius: 3px;
+          position: absolute;
+          top: 0;
+          left: 7px;
+          z-index: 0;
+        }
+      }
+
+      div {
+        font-size: 10px;
+        color: white;
+        text-shadow: 0 0 3px rgba(0, 0, 0, 0.37);
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-wrap: none;
+        white-space: nowrap;
+      }
+    }
+  }
+}
+

@@ -36,76 +36,163 @@
     />
     </vue-selecto>
     <div class="side-bar">
+      <div style="flex: 1"></div>
       <div class="action-list">
-        <ul>
-          <li>
-            <a-popover placement="left">
-              <template slot="content">
-                我的个人桌面
-              </template>
-              <a class="active action ">
-                <a-icon type="home"></a-icon>
-                <div>主页</div>
-              </a>
-            </a-popover>
+        <div>
+<!--          <a-popover>-->
+<!--            <template slot="content">-->
+<!--              我的个人桌面-->
+<!--            </template>-->
+<!--            <div @click="changeDesk(0)" :class="{'action':1,'active':0===Number(this.selectedDesk)}">-->
+<!--              <a-icon type="home"></a-icon>-->
+<!--              <div class="name">主页</div>-->
+<!--            </div>-->
+<!--          </a-popover>-->
 
-          </li>
-          <li>
-            <a-popover placement="left">
-              <template slot="content">
-                <h3>效率社区</h3>
-                <p>与全球的高效能人士共同成长</p>
+        </div>
+        <div v-for="desk in desks">
+          <a-dropdown :trigger="['contextmenu']">
+            <a-popover  :mouse-leave-delay="0" overlay-class-name="desk-preview"  v-if="!isSelectedDesk(desk.id)">
+              <template slot="content" >
+               <img :src="deskPath(desk)" style="border-radius: 3px;width: 200px;height: 120px;margin: -9px -13px;object-fit: cover" onerror="this.src='../../icons/svg/empty.svg'" >
               </template>
-              <a href="https://com.thisky.com" class="action">
-                <a-icon type="message"></a-icon>
-                <div>社区</div>
-              </a>
-            </a-popover>
+              <div @click="changeDesk(desk.id)" :class="{'action':1,'active':isSelectedDesk(desk.id)}">
+              <a-icon :type="desk.icon"></a-icon>
+              <div class="name">{{desk.name}}</div>
+            </div>
+           </a-popover>
 
-          </li>
-        </ul>
+                <div v-else @click="changeDesk(desk.id)" :class="{'action':1,'active':isSelectedDesk(desk.id)}">
+                  <a-icon :type="desk.icon"></a-icon>
+                  <div class="name">{{desk.name}}</div>
+                </div>
+            <a-menu slot="overlay">
+<!--              <a-menu-item @click="showAddDesk(desk)" key="editDesk">-->
+<!--                编辑-->
+<!--              </a-menu-item>-->
+              <a-menu-item @click="importDesk(desk)" key="importDesk">
+                导入备份桌面
+              </a-menu-item>
+              <a-menu-item @click="exportDesk(desk)" key="exportDesk">
+                导出选中备份
+              </a-menu-item>
+              <a-menu-item @click="removeDesk(desk)" key="removeDesk" style="color: red">
+                删除
+              </a-menu-item>
+            </a-menu>
+          </a-dropdown>
+        </div>
+        <div>
+          <a-popover>
+            <template slot="content">
+              添加一个自定义桌面
+            </template>
+            <div @click="visibleCreateDesk=true" class="action">
+              <a-icon type="plus-circle"></a-icon>
+              <div class="name">添加</div>
+            </div>
+          </a-popover>
+          <create-desk @add-desk="addDesk" v-model:desk-id="editDeskId" v-model="visibleCreateDesk"></create-desk>
+
+        </div>
+        <div>
+          <a-popover>
+            <template slot="content">
+              <h3>效率社区</h3>
+              <p>与全球的高效能人士共同成长</p>
+            </template>
+            <a href="https://com.thisky.com" class="action">
+              <a-avatar style="margin-top: 7px;margin-right: 8px" :size="24" shape="circle" src="../../icons/svg/com.svg"></a-avatar>
+              <div class="name">社区</div>
+            </a>
+          </a-popover>
+
+        </div>
       </div>
-
+      <div style="flex: 1"></div>
     </div>
 
-    <a-drawer style="z-index:1005"
-              placement="bottom"
-              :height="500"
-              :closable="false"
-              :visible="setThemeVisible"
-              @close="setThemeVisible=false"
+<!--    <a-modal :visible="setThemeVisible" title="设置壁纸" :width="800"  :footer="null" @cancel="setThemeVisible=false;this.loadingWallPaperHistory=true">-->
+<!--      <template>-->
+<!--        <div>-->
+<!--          <a-alert style="margin-bottom: 10px"-->
+<!--            message="您可以在浏览器中【查看图片】时，【右键】-【设置图片为壁纸】。也可以选择下方壁纸快速设置。"-->
+<!--            type="info"-->
+<!--            closable-->
+<!--            show-icon-->
+<!--          ></a-alert>-->
+<!--          <a-tabs  default-active-key="history" tab-position="left">-->
+<!--&lt;!&ndash;            <a-tab-pane key="search" tab="网络搜索" >&ndash;&gt;-->
 
+<!--&lt;!&ndash;            </a-tab-pane>&ndash;&gt;-->
+
+<!--            <a-tab-pane key="history" tab="最近" >-->
+<!--              <div style="height: 600px;overflow-y: auto">-->
+
+<!--                <div v-if="wallPaperHistory.length!==0 && this.loadingWallPaperHistory===false" style="background-color: #ececec; padding: 20px;">-->
+<!--                  <a-row :gutter="24">-->
+<!--                    <a-col v-for="(wallPaper,wallPaperIndex) in wallPaperHistory" :span="8" style="margin-bottom: 10px">-->
+<!--                      <a-card @click="setHistoryWallPaper(wallPaper)" hoverable :bordered="false">-->
+<!--                        <img style="object-fit: cover;" height="100"-->
+<!--                             slot="cover"-->
+<!--                             :src="wallPaper"-->
+<!--                        />-->
+<!--                      </a-card>-->
+<!--                    </a-col>-->
+<!--                  </a-row>-->
+<!--                </div>-->
+<!--                <a-spin  style="padding: 250px" v-if="this.loadingWallPaperHistory===true" size="large"></a-spin>-->
+<!--                <a-empty style="padding: 100px" description="暂无壁纸历史" v-if="wallPaperHistory.length===0"></a-empty>-->
+<!--              </div>-->
+<!--            </a-tab-pane>-->
+<!--            <a-tab-pane v-for="(type,typeIndex) in defaultWallPaper" :key="typeIndex" :tab="type.title">-->
+<!--              <div style="background-color: #ececec; padding: 20px;">-->
+<!--                <a-row :gutter="24">-->
+<!--                  <a-col v-for="(wallPaper,wallPaperIndex) in type.list" :span="8">-->
+<!--                    <a-card @click="setWallPaper(wallPaper)" hoverable :bordered="false">-->
+<!--                      <img style="object-fit: cover;" height="100"-->
+<!--                           slot="cover"-->
+<!--                           :alt="wallPaper.title"-->
+<!--                           :src="wallUrl+wallPaper.image"-->
+<!--                      />-->
+<!--                    </a-card>-->
+<!--                  </a-col>-->
+<!--                </a-row>-->
+<!--              </div>-->
+<!--            </a-tab-pane>-->
+<!--          </a-tabs>-->
+<!--        </div>-->
+<!--      </template>-->
+<!--    </a-modal>-->
+
+
+    <a-drawer style="z-index:1005"
+              placement="right"
+              :height="500"
+              :closable="true"
+              title="设置桌面"
+              :visible="deskSettingVisible"
+              @close="deskSettingVisible=false"
+              :width="300"
     >
-      <a-page-header style="padding: 0" slot="title" title="设置主题"
-                     sub-title="您可以在浏览器中查看图片时，右键设置图片为壁纸。也可以选择下方壁纸快速设置。"></a-page-header>
       <div>
         <template>
-          <template>
-            <div>
-              <a-tabs :default-active-key="0" @change="callback">
-                <a-tab-pane v-for="(type,typeIndex) in defaultWallPaper" :key="typeIndex" :tab="type.title">
-                  <div style="background-color: #ececec; padding: 20px;">
-                    <a-row :gutter="24">
-                      <a-col v-for="(wallPaper,wallPaperIndex) in type.list" :span="4">
-                        <a-card @click="setWallPaper(wallPaper)" hoverable :bordered="false">
-                          <img style="object-fit: cover;" height="100"
-                               slot="cover"
-                               :alt="wallPaper.title"
-                               :src="wallUrl+wallPaper.image"
-                          />
-                          <a-card-meta :title="wallPaper.title"></a-card-meta>
-                        </a-card>
-                      </a-col>
-                    </a-row>
-                  </div>
-                </a-tab-pane>
-              </a-tabs>
-            </div>
-          </template>
+          <a-divider orientation="left">当前桌面设置</a-divider>
+<!--          <div>-->
+<!--            <h1 style="font-size: 14px;margin-top: 20px">卡片不透明度：</h1>-->
+<!--            <a-slider id="cardOpacity" @change="changeOpacity" :step="5" v-model="cardOpacity"-->
+<!--                      :default-value="100"></a-slider>-->
+<!--          </div>-->
+          <h1>壁纸</h1>
+          <div style="font-size: 12px;color: #999;margin-bottom: 5px">仅用于当前桌面</div>
           <div>
-            <h1 style="font-size: 14px;margin-top: 20px">卡片不透明度：</h1>
-            <a-slider id="cardOpacity" @change="changeOpacity" :step="5" v-model="cardOpacity"
-                      :default-value="100"></a-slider>
+            <wallpaper-selector :value="currentDeskInfo.wallPaper" :default-wall-paper="defaultDeskWallPaper" :desk-id="currentDeskInfo.id"></wallpaper-selector>
+          </div>
+          <a-divider orientation="left">通用设置</a-divider>
+          <h1>桌面默认壁纸</h1>
+          <div style="font-size: 12px;color: #999;margin-bottom: 5px">未单独设置壁纸的桌面都将使用此壁纸</div>
+          <div>
+            <wallpaper-selector :value="defaultDeskWallPaper" ></wallpaper-selector>
           </div>
           <div>
             <h1 style="font-size: 14px;margin-top: 20px">快捷坞图标大小：</h1>
@@ -117,14 +204,17 @@
 
     </a-drawer>
 
+
+
+
     <a-button style="position: fixed;right: 6px;top: 20px;background-color: rgba(0,0,0,0.3);color: white;border:none"
-              shape="circle" type="primary" icon="skin" @click="setTheme"></a-button>
+              shape="circle" type="primary" icon="setting" @click="deskSetting()"></a-button>
     <a-dropdown v-model="visibleMainMenu" :trigger="['contextmenu']" @visible-change="changeMainMenuVisible">
       <div class="main" @click="hideMainMenu" style="overflow-x: hidden">
-<!--        <div class="main-top flex flex-direction justify-around align-center">-->
-<!--&lt;!&ndash;          <img src="./assets/logo-noframe.svg" alt="" style="width: 84px" class="xt-logo"/>&ndash;&gt;-->
+        <!--        <div class="main-top flex flex-direction justify-around align-center">-->
+        <!--&lt;!&ndash;          <img src="./assets/logo-noframe.svg" alt="" style="width: 84px" class="xt-logo"/>&ndash;&gt;-->
 
-<!--        </div>-->
+        <!--        </div>-->
         <div class="desktop" style="">
           <div id="desktop-content" class="desktop-content">
             <div>
@@ -147,25 +237,28 @@
 
                 <grid-item @contextmenu.stop="" @mousedown.stop="" :data-id="item.i"
                            :class="{'element':true,'selectable':item.element.type==='app'}" v-for="item in layout"
-                           :style="{'display':item.element.type==='card'?'flex':'block'}"
+                           :style="{'display':['card','video'].indexOf(item.element.type)!==-1?'flex':'block'}"
                            :x="item.x"
                            :y="item.y"
                            :w="item.w"
                            :h="item.h"
                            :i="item.i"
-                           :max-w="item.maxW"
-                           :max-h="item.maxH"
+                           :max-w="item.element.type==='group'?2:item.maxW"
+                           :max-h="item.element.type==='group'?2:item.maxH"
                            :key="item.i"
-                           :is-resizable="item.isResizable"
+                           :is-resizable="item.element.type==='group'?true:item.isResizable"
                            drag-allow-from=".allow-drag"
                            drag-ignore-from=".ignore-drag"
 
                 >
-                  <search  v-if="item.element.type==='search'" @remove-element="removeElement(item)"></search>
-                  <app :selected-menu-visible="showSelectedMenu(item)" v-if="item.element.type==='app'" @compose-group="composeGroup"
+                  <search v-if="item.element.type==='search'" @remove-element="removeElement(item)"></search>
+                  <app :selected-menu-visible="showSelectedMenu(item)" v-if="item.element.type==='app'" :groups="groups"
+                       @compose-group="composeGroup"
                        :group-id="selectGroup.i" :item="item" @edit-app="onSubmitEdit" @remove-selected="removeSelected"
                        @remove-element="removeElement(item)" @open-url="openUrl(item.element.data.url)"></app>
-                  <group v-if="item.element.type==='group'" :item="item" @edit-group="editGroup(item)"
+                  <ele-video :source="item.element.data.source" :controls="item.element.data.controls"
+                       @remove-element="removeElement(item)" v-if="item.element.type==='video'" ></ele-video>
+                  <group :w="item.w" :h="item.h" v-if="item.element.type==='group'" :item="item" @edit-group="editGroup(item)"
                          @remove-element="removeElement(item)" @open-group="openGroup(item)"></group>
                   <a-dropdown @mousedown.stop="" :trigger="['contextmenu']" v-if="item.element.type==='card'">
                     <!--卡片-->
@@ -192,7 +285,7 @@
 
                       </div>
                       <div
-                        style="margin-top: 5px;background-color: rgba(40,40,40,0.55);height: 200px;border-radius: 40px"
+                        style="margin-top: 5px;border-radius: 40px"
                         class="clock allow-drag" v-if="item.element.data.type===2">
                         <clock2></clock2>
                       </div>
@@ -423,14 +516,19 @@
         <app-dialog></app-dialog>
       </div>
       <a-menu slot="overlay">
-        <a-menu-item @click="showAddElementModal()" key="1">
-          添加组件
+        <a-menu-item @click="showAddElementModal()" key="element">
+          <a-icon type="plus" ></a-icon> 添加组件
         </a-menu-item>
+
+<!--        <a-menu-item @click="setTheme" key="wallpaper">-->
+<!--          <a-icon type="skin" ></a-icon> 设置壁纸-->
+<!--        </a-menu-item>-->
+        <a-menu-item @click="deskSetting" key="setting">
+          <a-icon type="setting" ></a-icon> 设置桌面
+        </a-menu-item>
+        <a-menu-divider ></a-menu-divider>
         <a-menu-item @click="refresh" key="refresh">
-          刷新页面
-        </a-menu-item>
-        <a-menu-item @click="setTheme" key="3">
-          设置壁纸
+          <a-icon type="redo" ></a-icon> 刷新页面
         </a-menu-item>
       </a-menu>
     </a-dropdown>
@@ -439,9 +537,34 @@
     <div>
       <!--:mask="false" :mask-closable="false" -->
       <a-modal :centered="true" dialog-class="group-modal" :footer="null" v-model="visibleGroup"
-               :title="selectGroup.element.name" @ok="handleOk">
+               :title="null" :closable="false">
         <div>
-          <grid-layout
+          <div style="color: white;text-align: center">
+            <a-input class="edit-group-name" @click="$event.currentTarget.select()" :value="selectGroup.element.name" @change="changeGroupSetting(selectGroup,'name',$event.target.value)"></a-input>
+            <div style="float: right">
+              <a-icon type="appstore" @click="changeGroupSetting(selectGroup,'listType','icon')"></a-icon>&nbsp;
+              <a-icon type="unordered-list" @click="changeGroupSetting(selectGroup,'listType','list')"></a-icon>&nbsp;&nbsp;&nbsp;&nbsp;
+              <a-icon title="关闭" type="close" @click="visibleGroup=false"></a-icon>
+            </div>
+          </div>
+          <div v-if="this.selectGroup.element.listType==='list'" style="margin-top: 30px">
+            <ul class="group-list-list">
+              <li @click="openUrl(item.element.data.url)" v-for="item in groupItems">
+                <a-row type="flex">
+                  <a-col flex="40px">
+                    <a-avatar class="icon" shape="square" :src="item.element.data.icon"></a-avatar>
+                  </a-col>
+                  <a-col class="name" flex="1">
+                    {{item.name || item.element.data.name}}
+                    <div class="url">
+                      {{item.element.data.url}}
+                    </div>
+                  </a-col>
+                </a-row>
+              </li>
+            </ul>
+          </div>
+          <grid-layout v-else
             :layout.sync="groupItems"
             :row-height="100"
             :col-num="5"
@@ -476,10 +599,10 @@
       </a-modal>
 
       <a-modal v-model="visibleAdd" title="添加组件" :width="820" :body-style="{height: '700px'}" :footer="null">
-        <a-tabs default-active-key="3" tab-position="left" style="height: 100%">
+        <a-tabs default-active-key="daohang" tab-position="left" style="height: 100%">
           <!--              <a-tab-pane key="1" tab="自定义">-->
           <!--              </a-tab-pane>-->
-          <a-tab-pane key="3" tab="网站导航">
+          <a-tab-pane key="daohang" tab="网站导航">
             <a-tabs default-active-key="productive" tab-position="top" @ok="handleOk" :style="{ height: '650px' }">
               <a-tab-pane v-for="(type, indexType) in allApps" :key="type.name" :tab="type.title">
                 <div style="max-height: 650px">
@@ -488,7 +611,7 @@
                            draggable="true" @dragstart="setDrag($event,app)">
                       <div class="shop-app" style="height: 140px;width: 80px">
                         <div class="icon-wrapper">
-                          <img :src="app.icon"/>
+                          <img :src="app.icon" onerror="this.src='../../icons/default.svg'"/>
                         </div>
                         <div class="name" :title="app.name"
                              style="color: #333;font-size:14px;text-shadow: none !important;">
@@ -504,26 +627,8 @@
               </a-tab-pane>
             </a-tabs>
           </a-tab-pane>
-          <a-tab-pane key="2" tab="小组件" style="overflow-y: auto;height: 650px">
+          <a-tab-pane key="useful" tab="实用组件">
             <ul class="tools" style="margin-right: 10px">
-              <li>
-                <h2 class="element-name">搜索工具栏</h2>
-                <p class="element-summary">支持多种搜索引擎。</p>
-                <div  class="element-content" style="padding: 10px">
-                  <a-row type="flex">
-                    <a-col flex="1">
-                      <search></search>
-                    </a-col>
-                    <a-col flex="100px" class="actions">
-                      <a-button type="primary"
-                                @click="addElement({type:'search',data:{}},{maxH:1})">
-                        添加组件
-                      </a-button>
-                    </a-col>
-                  </a-row>
-                </div>
-
-              </li>
               <li>
                 <h2 class="element-name">桌面小便签</h2>
                 <p class="element-summary">可以自由修改内容、调整大小。</p>
@@ -554,7 +659,66 @@
                   </a-row>
                 </div>
               </li>
+              <li>
+                <h2 class="element-name">搜索工具栏</h2>
+                <p class="element-summary">支持多种搜索引擎。</p>
+                <div class="element-content" style="padding: 10px">
+                  <a-row type="flex">
+                    <a-col flex="1">
+                      <search></search>
+                    </a-col>
+                    <a-col flex="100px" class="actions">
+                      <a-button type="primary"
+                                @click="addElement({type:'search',data:{}},{maxH:1})">
+                        添加组件
+                      </a-button>
+                    </a-col>
+                  </a-row>
+                </div>
 
+              </li>
+
+            </ul>
+          </a-tab-pane>
+          <a-tab-pane key="menghu" tab="门户组件">
+            <ul class="tools" style="margin-right: 10px">
+              <li>
+                <h2 class="element-name">视频展示</h2>
+                <p class="element-summary">可以展示视频，视频大小根据框的大小自动</p>
+                <div class="element-content">
+                  <a-row type="flex">
+                    <a-col :span="24">
+                      <h3 class="tip-head">预览</h3>
+                      <div >
+                        <div style="width: 50%"> <ele-video ref="eleVideo" :source="eleVideoSource" :controls="eleVideoControls"></ele-video></div>
+
+                      </div>
+                    </a-col>
+                    <a-col flex="1" style="padding-left: 10px;padding-right: 10px">
+                      <h3 class="tip-head">设置</h3>
+                      <div :flex="1">
+                        <a-input style="margin-bottom:10px;margin-top: 10px" addon-before="地址：" placeholder="支持mp4" @change="eleVideoChange"></a-input>
+                        显示控制按钮： <a-switch @change="eleVideoControlsChange"></a-switch>
+                      </div>
+                    </a-col>
+                    <a-col flex="100px" class="actions">
+                      <a-button type="primary"
+                                @click="addElement({type:'video',data:{source:eleVideoSource,controls:eleVideoControls}})">
+                        添加组件
+                      </a-button>
+                    </a-col>
+                  </a-row>
+
+
+                </div>
+                <div>
+
+                </div>
+              </li>
+            </ul>
+          </a-tab-pane>
+          <a-tab-pane key="gexing" tab="个性组件" style="overflow-y: auto;height: 650px">
+            <ul class="tools" style="margin-right: 10px">
               <li>
                 <h2 class="element-name">个性时钟</h2>
                 <p class="element-summary">酷酷的时钟组件，支持多种款式</p>
@@ -570,16 +734,16 @@
                       </p>
                       <clock1></clock1>
                     </div>
-                    <div style="padding: 10px;margin-bottom: 10px;border-bottom: 1px solid #ccc;padding: 10px">
+                    <div style="padding: 10px;margin-bottom: 10px;border-bottom: 1px solid #ccc;">
                       <h3 style="font-weight: bold;">时钟2</h3>
-                      <p>尺寸 5*2 大组件
+                      <p>尺寸 3*1 小组件
                         <a-button type="primary" style="float:right"
-                                  @click="addElement({type:'clock',data:{type:2,color:'black'}},{w:5,h:2})">
+                                  @click="addElement({type:'clock',data:{type:2,color:'black'}},{w:3,h:1})">
                           添加组件
                         </a-button>
                       </p>
-                      <div style="position: relative;background-color: black;
-    height: 330px;
+                      <div style="position: relative;background-color: #696969; width: 300px;
+    height: 120px;
     border-radius: 12px;">
                         <clock2></clock2>
                       </div>
@@ -613,8 +777,6 @@
                 </div>
               </li>
             </ul>
-
-
           </a-tab-pane>
 
           <!--              <a-tab-pane key="4" tab="本地导航">-->
@@ -690,23 +852,54 @@
 <script src="./components/elements/clock1.js"></script>
 <script src="./components/elements/clock2.js"></script>
 <script src="./components/elements/clock3.js"></script>
+<script src="./components/elements/video.js"></script>
+<script src="./components/createDesk.js"></script>
 <script>
   Vue.use(antd)
 
-  const wallList = require('./wall.json')
+
   const { wallPaper, themeSetting, wallUrl } = require('../util/theme.js')
   const VueSelecto = require('vue-selecto')
+  const deskModel = require('../util/model/deskModel')
+  const wallpaperSelector=require('./components/wallpaper-selector.js')
+  deskModel.initialize()
   window.selectedElements = []
   var appVue = new Vue({
     el: '#app',
     components: {
-      VueSelecto
+      VueSelecto,
+      'wallpaper-selector':wallpaperSelector
     },
     data () {
       return {
+        USER_PATH:'',
+
+        defaultDeskWallPaper:'',
+
+
+
+
+        deskSettingVisible:false,//桌面设置
+
+
+        eleVideoSource:'',
+        eleVideoControls:false,
+
+
+        layoutSkipSave:false,//跳过保存，用于切换桌面的时候使用
+        deskCanEdit:true,
+        uuid:0,
+        currentDeskInfo:{
+          wallPaper:'',
+          id:0
+        },//当前桌面信息，用于比较更新时间，每次读入都会自动更新
         mouseFlag: 0,//鼠标移动标志，用于解决鼠标拖拽和单机的冲突导致跳转在拖拽后触发的问题。
         selectoContainer: document.getElementById('.desktop-content'),
         //编辑组件
+
+        visibleCreateDesk: false,
+        editDeskId:-1,
+        selectedDesk: 0,
 
         //选中了的elements
         selectedElements: [],
@@ -715,7 +908,7 @@
         //选中打开的item元素
         groupItems: [],
         visibleGroup: false,
-        selectGroup: { element: { name: '分组' }, i: 0 },
+        selectGroup: { element: { name: '分组',listType:'icon'}, i: 0 },
 
         cardText: '文字小卡片',
         cardLines: 1,
@@ -725,6 +918,7 @@
         selectedColor: 0,
 
         //桌面布局专用属性
+        desks: [],
         layout: [],
         draggable: true,
         resizable: true,
@@ -737,7 +931,6 @@
         myApps: [],
         adVisible: false,
         mode: 'top',
-
 
         bookdian1Show: false,
         bookdian2Show: false,
@@ -753,9 +946,9 @@
         loadingHistory: true,
         historyBar: [],
         bg: window.newtabBg,
-        setThemeVisible: false, //设置壁纸的抽
-        wallUrl: wallUrl,
-        defaultWallPaper: wallList,
+
+
+
         cardOpacity: 100,
         dock: [
           {
@@ -776,7 +969,133 @@
         ], dockAppSize: 60
       }
     },
+    beforeCreate(){
+      const tools=require('../util/util').tools
+      tools.getWindowArgs(window)
+      this.USER_PATH=window.globalArgs['user-data-dir']
+      console.log(this.USER_PATH)
+    },
     methods: {
+
+      changeGroupSetting(group,field,value){
+         group.element[field]=value
+        this.selectGroup=group
+        if(field==='listType' && value==='icon'){
+          this.saveDesk(true)
+        }else{
+          this.saveDesk(false)
+        }
+
+        //todo 设置selectgroup
+      },
+      eleVideoChange(e){
+        this.eleVideoSource=e.target.value
+      },
+      eleVideoControlsChange(checked){
+        this.eleVideoControls=checked
+      },
+      changeDesk (id) {
+        let tips= document.getElementsByClassName('desk-preview')
+        for(let i=0;i<tips.length;i++){
+          tips[i].style.display='none'
+        }
+        setTimeout(()=>{
+          deskModel.getCurrentDeskCapture()
+          setTimeout(()=>{
+            this.selectedDesk = id
+            localStorage.setItem('selectedDesk',id)
+            this.currentDeskInfo=deskModel.getCurrentDeskInfo()
+            this.switchToDesk(id)
+          },50)
+        })
+
+
+
+      },
+      isSelectedDesk (id) {
+        return Number(id) === Number(this.selectedDesk)
+      },
+      addDesk (data) {
+        data.id = Date.now()
+        data.layout = []
+        data.createTime = Date.now()
+        data.updateTime=Date.now()
+        this.desks.push(data)
+        localStorage.setItem('desks', JSON.stringify(this.desks))
+        localStorage.setItem('desk_'+data.id,'[]')
+        this.selectedDesk=data.id
+        this.currentDeskInfo=data
+        localStorage.setItem('selectedDesk',this.selectedDesk)
+        this.switchToDesk(data.id)
+      },
+      importDesk(){
+        ipc.send('importDesk')
+      },
+      exportDesk(desk){
+        const deskInfo=deskModel.getDeskInfo(desk.id)
+        ipc.send('exportDesk',{desk:deskInfo,deskLayout:deskModel.getDeskLayout(desk.id)})
+      },
+      removeDesk(desk){
+        let that=this
+        this.$confirm({
+          title: `删除桌面确认`,
+          okText:'保留',
+          cancelText:`确认删除！！`,
+          content:  function(createElement){
+            return createElement(`div`,'确认删除桌面：'+desk.name+` ？ 删除后无法恢复。` )
+              //createElement(`<div style="color:red;">确认删除桌面，删除后不可恢复？</div>`)
+          },
+          onOk() {
+          },
+          onCancel() {
+            let preDesk=0
+            //todo实现删除逻辑
+            for(let i=0;i<that.desks.length;i++){
+              if(that.desks[i].id===desk.id)
+              {
+                if(i-1>=0){
+                  //如果上一个桌面存在
+                  preDesk=i-1
+                }
+                that.desks.splice(i,1)
+                localStorage.setItem('desks',JSON.stringify(that.desks))
+              }
+            }
+            try{
+              const fs=require('fs')
+              fs.unlink(window.globalArgs['user-data-dir']+'/desk/screen'+desk.id+'.jpg',(e)=>{
+                console.log(e)
+              })
+            }
+           catch (e) {
+              console.log(e)
+             return
+           }
+            localStorage.removeItem('desk_'+desk.id)
+
+
+            if(that.desks.length<=0){
+              //如果删除后，没有别的桌面了，自动创建一个新桌面填充上
+              let newDeskId=Date.now()
+              deskModel.createDesk({
+                id:newDeskId,
+                name:'新桌面',
+                icon:'home',
+                createTime:newDeskId,
+                updateTime:newDeskId
+              },[])
+              that.selectedDesk=newDeskId
+              that.desks=deskModel.getAllDeskInfo()
+              that.$message.info({content:'已自动为您创建新的桌面。'})
+            }else{
+              that.selectedDesk=that.desks[preDesk].id
+            }
+            localStorage.setItem('selectedDesk',that.selectedDesk)
+            that.currentDeskInfo=deskModel.getDeskInfo(that.selectedDesk)
+            that.switchToDesk(that.selectedDesk)
+          }
+        });
+      },
       removeResizeHandleEvent () {
         setTimeout(() => {
           let handles = document.getElementsByClassName('vue-resizable-handle')
@@ -794,7 +1113,6 @@
         let parentEl = {}
         let success = false
         let data = event.data
-        console.log(data)
         if (data.groupId === 0) {
           parentEl = this.layout
         } else {
@@ -820,9 +1138,11 @@
             success = true
           }
         }
-        this.saveDesk()
+        deskModel.updateDeskLayout(this.currentDeskInfo.id,this.layout)
         if (success) {
           this.$message.success({ content: '保存图标成功。' })
+          deskModel.refreshDeskInfoUpdateTime(this.currentDeskInfo.id)
+          this.currentDeskInfo=deskModel.getCurrentDeskInfo()
         } else {
           this.$message.error({ content: '保存图标失败，未找到对应图标。' })
         }
@@ -850,7 +1170,12 @@
       openGroup (item) {
         this.groupItems = item.element.data //是一个数组
         this.selectGroup = item
+        if(!!!this.selectGroup.element.listType)
+        {
+          this.selectGroup.element['listType']='icon'
+        }
         this.visibleGroup = true
+
       },
       deleteElement (id) {
         for (let i = 0; i < appVue.layout.length; i++) {
@@ -875,17 +1200,16 @@
           if (gotItem !== null) {
             gotItem.x = index % colNum
             gotItem.y = Math.floor(index / colNum)
-            console.log(gotItem.x + '|' + gotItem.y)
             index++
             composeItems.push(gotItem)
           }
         })
-        this.addElement({ type: 'group', name: '分组', data: composeItems })
+        this.addElement({ type: 'group', name: '分组', data: composeItems ,listType:'icon' })
       },
       removeSelected () {
         this.selectedElements.forEach((itemId) => {
-           this.deleteElement(itemId)
-          })
+          this.deleteElement(itemId)
+        })
       },
       /**
        * 判断当前的元素是否被选中了
@@ -893,7 +1217,7 @@
        * @returns {boolean}
        */
       showSelectedMenu (item) {
-        if (this.selectedElements.length > 1 && this.selectedElements.length>1) {
+        if (this.selectedElements.length > 1 && this.selectedElements.length > 1) {
           for (let i = 0; i < this.selectedElements.length; i++) {
             if (Number(this.selectedElements[i]) === item.i) {
               return true
@@ -920,7 +1244,6 @@
 
           el.classList.remove('selected')
         })
-        console.log(this.selectedElements)
       },
       /**
        * 隐藏主菜单
@@ -966,60 +1289,90 @@
         this.selectedColor = color
       },
       setCardText (e) {
-        console.log(e)
         this.cardText = e.value
       },
-      saveDesk () {
-        localStorage.setItem('desk', JSON.stringify(this.layout))
+      /**
+       * 保存桌面布局
+       */
+      saveDesk (skipNext=false) {
+        if(this.layoutSkipSave===true){//如果跳过，则不自动保存
+          this.layoutSkipSave=false
+          return
+        }
+        this.layoutSkipSave=skipNext
+        let oldDeskInfo=deskModel.getDeskInfo(this.currentDeskInfo.id)
+        console.log('触发保存')
+        if(oldDeskInfo.updateTime===this.currentDeskInfo.updateTime){
+          appVue.$notification.success({message:'桌面有变更，自动保存。',duration:1,'key':'save'})
+          deskModel.updateDeskLayout(this.selectedDesk,this.layout)
+          this.currentDeskInfo=deskModel.getCurrentDeskInfo()//因为更新了，所以要手动重置一下当前桌面的信息
+        }else{
+          appVue.$message.error({content:'保存桌面失败。失败原因：当前桌面数据已失效。请刷新桌面后重试。',duration:5})
+        }
+
+      },
+      /**
+       * 读入一个桌面布局
+       * @param id
+       */
+      switchToDesk(id=-1){
+        this.layoutSkipSave=true
+        let storedSelectedDesk=0
+        if(id===-1){
+          //如果没有赋值桌面id，则认为是初始化读取，则需要对未存储过选中的桌面做判断
+          storedSelectedDesk=localStorage.getItem('selectedDesk')
+          if(!!!storedSelectedDesk)
+          {
+            //默认选择0
+            storedSelectedDesk=0
+            //如果存在老桌面，则自动完成迁移，备份，并移除。
+            let oldDesk=localStorage.getItem('desk')
+            if(oldDesk){
+              localStorage.setItem('desk_0',oldDesk)
+              localStorage.setItem('desk_bk',oldDesk)
+              localStorage.removeItem('desk')
+            }
+          }
+          this.selectedDesk=storedSelectedDesk
+        }
+
+        //读入对应桌面
+        const deskLayout = localStorage.getItem('desk_'+this.selectedDesk)
+        if (!!deskLayout) {
+          //如果存在桌面
+          try {
+
+            let layout= JSON.parse(deskLayout)
+            if(layout.length===0 && id===0){
+              //发现桌面是空的
+              const defaultDesk = require('./default.json')
+              layout = defaultDesk
+            }
+            this.layout =layout
+            if(!!!this.currentDeskInfo.wallPaper){
+              this.setBg(this.defaultDeskWallPaper)
+            }else{
+              this.setBg(this.currentDeskInfo.wallPaper)
+            }
+
+          } catch (err) {
+            this.$message.error({content:"桌面损坏。"})
+          }
+        }else{
+          this.layout=[]
+        }
+
       },
       layoutUpdatedEvent () {
         this.saveDesk()
         this.removeResizeHandleEvent()
       },
       handleOk (e) {
-        console.log(e)
         this.visibleAdd = false
       },
-      addElement (element, posElement=null) {
-        const sizes = {
-          card: {
-            w: 2, h: 1,
-            isResizable: true,
-            dragIgnoreFrom: 'textarea'
-          },
-          app: {
-            w: 1, h: 1,
-            isResizable: false,
-          },
-          group: {
-            w: 1, h: 1,
-            isResizable: false,
-            dragIgnoreFrom: '.group-icons'
-          },
-          clock: {},
-          search: {
-            w: 4, h: 1,
-            isResizable: true,
-          },
-        }
-
-        const pos = {
-          x: 0,
-          y: 0, // puts it at tselectedElements bottom
-          w: sizes[element.type].w,
-          h: sizes[element.type].h,
-          i: Date.now(),
-          //dragIgnoreFrom: !!!sizes[element.type].dragIgnoreFrom ? 'button,a' : sizes[element.type].dragIgnoreFrom,
-
-          isResizable: sizes[element.type].isResizable
-        }
-        if(posElement!==null){
-          Object.assign(pos, posElement)
-        }
+      addElement (element, posElement = null) {
         this.index++
-        pos.element = element
-        this.layout.push(pos)
-
+        this.layout.push(deskModel.createElementPos(element,posElement))
       },
       showAddElementModal () {
         this.visibleAdd = true
@@ -1071,28 +1424,14 @@
       },
 
       callback (val) {
-        console.log(val)
+
       },
-      /**
-       * 设置壁纸
-       */
-      setTheme () {
-        this.setThemeVisible = true
+
+      deskSetting(){
+        this.deskSettingVisible = !this.deskSettingVisible
         this.visibleMainMenu = false
       },
-      async setWallPaper (wp) {
-
-        try {
-          //保存壁纸设置
-          wallPaper.set(wp.image).then(() => {
-              wallPaper.setElementBg(document.body, wallPaper.getWallPaperUrl(wp.image))
-              this.$message.success({ content: '壁纸设置成功。' })
-            }
-          )
-        } catch (err) {
-          this.$message.error({ content: '保存壁纸失败。' })
-          console.log(err)
-        }
+      setDefaultTheme(wallPaper){
       },
       changeOpacity (opacity) {
         this.setOpacity(opacity)
@@ -1167,7 +1506,6 @@
           return
         }
         this.dock.splice(this.dock.indexOf(item), 1)
-        console.log(item.id)
         db.dockApps.delete(item.id).catch(err => {
           console.log(err)
         })
@@ -1183,11 +1521,26 @@
       onEnd () {
         this.drag = false
       },
-
+      deskPath(desk){
+        let str='file://'+window.globalArgs['user-data-dir']+'/desk/screen'+desk.id+'.jpg?t='+Date.now()
+          //`${window.globalArgs['user-data-dir']}/desk/${desk.id}.png`
+          return  str
+        }
     },
 
     computed: {
-
+      groups:{
+        get:function(){
+          let groups=[]
+          this.layout.forEach((item)=>{
+            if(item.element.type==='group'){
+              groups.push(item)
+            }
+          })
+          console.log(groups)
+          return groups
+        }
+      },
       allApps: {
         get: function () {
           if (typeof window.$appsApiData == 'undefined' || window.$appsApiData == null) {
@@ -1199,15 +1552,34 @@
 
     },
     mounted () {
-      const desk = localStorage.getItem('desk')
-      if (!!desk) {
-        try {
-          this.layout = JSON.parse(desk)
-        } catch (err) {
-          console.log('desk损坏')
+      function aLive(){
+        let latestCurrentDeskInfo=deskModel.getCurrentDeskInfo()//当前最新的桌面信息
+        if(Number(appVue.currentDeskInfo.updateTime)===Number(latestCurrentDeskInfo.updateTime))
+        {
+          //当前桌面未更新
+          return true
+        }else{
+          if(!!!latestCurrentDeskInfo.updateTime){
+            console.log(latestCurrentDeskInfo)
+            console.log(deskModel.getCurrentDeskInfo())
+            return
+          }else{
+            window.location.reload()
+          }
+
+          // appVue.layout=deskModel.getCurrentDeskLayout()
+          // appVue.currentDeskInfo=deskModel.getCurrentDeskInfo()
+          // appVue.layoutSkipSave=true//不需要自动保存
+          // appVue.$notification.success({message:'桌面已更新',
+          //   description:'当前桌面已改变，已自动读入最新桌面。',
+          // duration: null})//,closeIcon:h=>h('div',{style:'display:none'})
         }
       }
-
+      window.alive= setInterval(aLive,1000)
+      document.title='新标签'
+      this.desks=deskModel.getAllDeskInfo()
+      this.switchToDesk()
+      this.currentDeskInfo=deskModel.getCurrentDeskInfo()
       this.loadMyapps()
       setTimeout(() => {
         this.loadBookmarks(6)
@@ -1217,9 +1589,16 @@
       //获取壁纸
       wallPaper.get().then(data => {
         if (!!data) {
+          this.defaultDeskWallPaper=data.value
+        }
+        if(!!!this.currentDeskInfo.wallPaper){
           this.setBg(data.value)
+        }else{
+          this.setBg(this.currentDeskInfo.wallPaper)
         }
       }).catch(err => console.log(err))
+
+
       //获取主题的卡片透明度
       themeSetting.getNewtabCardOpacity().then(data => {
         if (!!data) {
@@ -1238,7 +1617,22 @@
       db.dockApps.toArray(data => {
         this.dock = this.dock.concat(data)
       })
+
     }
+  })
+
+  ipc.on('importDesk',(event,args)=>{
+    const result=deskModel.importDesk(args.files)
+    if(result.status){
+      appVue.$message.success({content:"导入成功。"})
+      appVue.desks=deskModel.getAllDeskInfo()
+    }else{
+      appVue.$message.error({content:'导入失败。'+result.status.info})
+    }
+    console.log(args)
+  })
+  ipc.on('updateScreen',(event,args)=>{
+    console.log(args)
   })
 </script>
 <style>
@@ -1250,25 +1644,6 @@
     border-bottom: none !important;
   }
 
-  .dock-item {
-    display: inline-block;
-
-    border-radius: 10px;
-    margin: 10px 10px;
-  }
-
-  .dock {
-    flex-direction: row;
-    position: fixed;
-    bottom: 20px;
-    border-radius: 10px;
-    background-color: rgba(255, 255, 255, 0.5);
-    width: fit-content;
-    left: 50%;
-    z-index: 1001;
-    transform: translate(-50%, 0);
-    max-width: calc(100vw - 20px);
-  }
 </style>
 </body>
 </html>

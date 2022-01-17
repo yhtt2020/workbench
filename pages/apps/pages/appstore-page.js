@@ -5,7 +5,7 @@ const appstoreTpl =
       <template>
         <div>
           <a-page-header style="border: none;" title="办公导航"
-          :sub-title="'想天办公导航，右键查看详情，网站更新于'+appUpdateTime+'。'">
+          sub-title="右键查看详情">
           <template slot="extra">
             <a-button icon="shopping-cart" key="3" @click="showDrawerCart()"
             :type="shopcartApps.length>0?'primary':'default'">

@@ -9,14 +9,49 @@ const wallPaper = {
   get: async () => {
     return db.system.get({ name: 'newtabBg' })
   },
+  async setUrlWallPaper(url){
+    let newtabBg = await db.system.get({ name: 'newtabBg' })
+    const imageUrl=url
+    wallPaper.pushHistory(imageUrl)//设置自定义壁纸历史
+    if (!!!newtabBg) {
+      db.system.put({ name: 'newtabBg', value: imageUrl })
+    } else {
+      return db.system.update(newtabBg.id, { name: 'newtabBg', value: imageUrl })
+    }
+  },
   set: async (image) => {
       let newtabBg = await db.system.get({ name: 'newtabBg' })
       const imageUrl=wallUrl+image
+      wallPaper.pushHistory(imageUrl)//设置自定义壁纸历史
       if (!!!newtabBg) {
         db.system.put({ name: 'newtabBg', value: imageUrl })
       } else {
         return db.system.update(newtabBg.id, { name: 'newtabBg', value: imageUrl })
       }
+  },
+
+  getHistory(){
+    let history=[]
+    try{
+      history=JSON.parse(localStorage.getItem('wallPaperHistory'))
+    }catch (e) {
+
+    }
+    if(!!!history)
+    {
+      return []
+    }
+    return history
+  },
+  pushHistory(imageUrl){
+    let history=wallPaper.getHistory()
+    for(let i=0;i<history.length;i++){
+      if(history[i]===imageUrl){
+        history.splice(i,1)
+      }
+    }
+    history.unshift(imageUrl)
+    localStorage.setItem('wallPaperHistory',JSON.stringify(history))
   },
   /**
    * 设置某个元素的背景

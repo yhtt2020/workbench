@@ -1,4 +1,6 @@
-const appTpl=`
+
+
+const appTpl = `
 <div>
   <a-dropdown :trigger="['contextmenu']" >
                     <!--应用-->
@@ -7,7 +9,7 @@ const appTpl=`
                       <div   class="icon-wrapper allow-drag" @mousedown.stop="appMouseDown" @mousemove.stop="appMouseMove" @mouseup.stop="appMouseUp($event,item.element.data.url)"
                            :style="iconStyle(item.element.data)">
                         <img
-                             :src="item.element.data.icon">
+                             :src="item.element.data.icon" onerror="this.src='../../icons/default.svg'">
                       </div>
                       <div class="name allow-drag" :style="'background-color:'+item.element.data.textColor"
                            v-if="item.element.data.useTextBg">
@@ -24,11 +26,19 @@ const appTpl=`
                       <a-menu-item @click="editElement(item)" key="edit">
                         编辑组件
                       </a-menu-item>
+                       <a-sub-menu title="移动组件到" >
+<!--                        <a-menu-item>创建新组</a-menu-item>-->
+                        <a-menu-divider />
+                        <a-menu-item @click="moveAppTo(group)" v-for="group in groups">{{ group.element.name }}</a-menu-item>
+                        </a-sub-menu>
                       <a-menu-divider v-show="selectedMenuVisible"> </a-menu-divider>
                       <a-menu-item @click="composeGroup()" @mousedown.stop="" key="composeGroup"
                                    v-show="selectedMenuVisible">
                         合并选中图标成组
                       </a-menu-item>
+                       <a-sub-menu @mousedown.stop="" title="移动选中组件到" v-show="selectedMenuVisible">
+                             <a-menu-item @mousedown.stop="" @click="moveAppsTo(group)" v-for="group in groups">{{ group.element.name }}</a-menu-item>
+                        </a-sub-menu>
                        <a-menu-item @click="removeSelected" @mousedown.stop="" key="removeSelected"  v-show="selectedMenuVisible">
                         移除选中组件
                       </a-menu-item>
@@ -53,6 +63,14 @@ const appTpl=`
                   </div>
                 </div>
               </div>
+             <div style="text-align: center">
+              <a-button @click="getIcon" :loading="iconLoading">
+              获取
+               </a-button>
+                 <a-button @click="restoreIcon">
+              还原
+               </a-button>
+            </div>
 
             </a-col>
             <a-col flex="1">
@@ -97,21 +115,20 @@ const appTpl=`
       </a-modal>
 </div>
   `
-const swatches= window['vue-swatches']
+const swatches = window['vue-swatches']
 Vue.component('app', {
-  template:appTpl,
-  name: "app",
-  props: ['item','groupId','selectedMenuVisible'],
+  template: appTpl,
+  name: 'app',
+  props: ['item', 'groupId', 'selectedMenuVisible','groups'],
   components: {
-    'v-swatches':swatches
+    'v-swatches': swatches
   },
   data () {
     return {
       visibleEdit: false,
-
+      iconLoading:false,
       labelCol: { span: 4 },
       wrapperCol: { span: 14 },
-
 
       formEdit: {
         id: 0,
@@ -119,6 +136,7 @@ Vue.component('app', {
         name: '',
         useBg: false,
         color: '#00000000',
+        icon:'',
 
         useTextBg: false,
         textColor: '#00000000',
@@ -134,14 +152,91 @@ Vue.component('app', {
       },
     }
   },
-  computed:{
-
-  },
-  mounted() {
+  computed: {},
+  mounted () {
 
   },
   methods: {
-    selectedElementsLength (){
+    moveAppTo(group){
+      group.element.data.push(this.item)
+      for(let i=0;i<appVue.layout.length;i++){
+        if(appVue.layout[i].i===this.item.i){
+          appVue.layout.splice(i,1)
+          break
+        }
+      }
+    },
+    moveAppsTo(group){
+
+      console.log(appVue.selectedElements)
+      for(let selectedI=0;selectedI<appVue.selectedElements.length;selectedI++){
+        let item=appVue.selectedElements[selectedI]
+        for(let i=0;i<appVue.layout.length;i++){
+          if(appVue.layout[i].i===Number(item)){
+            console.log(item)
+            group.element.data.push(appVue.layout[i])
+            appVue.layout.splice(i,1)
+            break
+          }
+        }
+      }
+
+    },
+    // url 是图片地址，如，http://wximg.233.com/attached/image/20160815/20160815162505_0878.png
+// filepath 是文件下载的本地目录
+// name 是下载后的文件名
+    async downloadFile (url, filepath, name) {
+      const fs=require('fs')
+      const path=require('path')
+      if (!fs.existsSync(filepath)) {
+        fs.mkdirSync(filepath)
+      }
+      const mypath = path.resolve(filepath, name)
+      const writer = fs.createWriteStream(mypath)
+      const axios=require('axios')
+      let {data} = await axios({
+        url,
+        method: 'get',
+        responseType: 'arraybuffer',
+      })
+      // let fd=fs.openSync(filepath+name,'w')
+      // fs.writeSync(fd,response.data)
+      // fs.closeSync(fd)
+      console.log(data)
+
+      fs.writeFileSync(filepath+name,new DataView(data))
+      //response.data.pipe(writer)
+      return true
+      // return new Promise((resolve, reject) => {
+      //   writer.on('finish', resolve)
+      //   writer.on('error', reject)
+      // })
+    },
+    restoreIcon () {
+      let icon=this.formEdit.element.data.icon
+      this.formEdit.icon = icon
+    },
+    async getIcon () {
+      function hash(str){
+        const crypto =require('crypto')
+        const shasum = crypto.createHash('sha1')
+        shasum.update(str);
+        return shasum.digest('hex')
+      }
+      this.iconLoading=true
+      let domain=this.formEdit.url.slice(this.formEdit.url.indexOf('://')+3)
+      let iconUrl = 'https://favicon.cccyun.cc/' + domain
+      let localPath=window.globalArgs['user-data-dir']+'/favicons/'
+      let filename=hash(iconUrl)
+      this.downloadFile(iconUrl,localPath,filename).then(()=>{
+        this.formEdit.icon=localPath+filename
+        this.iconLoading=false
+      }).catch((err)=>{
+        console.log(err)
+        this.iconLoading=false
+      })
+    },
+    selectedElementsLength () {
       return window.selectedElements.length
     },
     /**
@@ -157,10 +252,10 @@ Vue.component('app', {
       } else {
         this.formEdit.name = item.name
       }
-      if(this.groupId!==0){
-        this.formEdit.groupId=this.groupId
-      }else{
-        this.formEdit.groupId=0
+      if (this.groupId !== 0) {
+        this.formEdit.groupId = this.groupId
+      } else {
+        this.formEdit.groupId = 0
       }
       this.formEdit.url = element.data.url
       this.formEdit.icon = element.data.icon
@@ -176,14 +271,14 @@ Vue.component('app', {
       this.formEdit.id = item.i
       this.visibleEdit = true
     },
-    onSubmitEdit(){
-      this.$emit('edit-app',{data:this.formEdit})
+    onSubmitEdit () {
+      this.$emit('edit-app', { data: this.formEdit })
       this.visibleEdit = false
     },
-    openUrl(){
+    openUrl () {
       this.$emit('open-url')
     },
-    removeElement(){
+    removeElement () {
       this.$emit('remove-element')
     },
     iconStyle: function (item) {
@@ -199,26 +294,26 @@ Vue.component('app', {
     /**
      * app按钮上鼠标事件，区分移动和拖拽
      */
-    appMouseDown(){
-      this.mouseFlag=0
+    appMouseDown () {
+      this.mouseFlag = 0
     },
-    appMouseMove(){
-      this.mouseFlag=1
+    appMouseMove () {
+      this.mouseFlag = 1
     },
-    appMouseUp(e,url){
+    appMouseUp (e, url) {
       console.log(e)
-      if(this.mouseFlag===0 && e.button===0) {
+      if (this.mouseFlag === 0 && e.button === 0) {
         this.openUrl(url)
       }
     },
-    composeGroup(){
+    composeGroup () {
       this.$emit('compose-group')
     },
-    removeSelected(){
+    removeSelected () {
       this.$emit('remove-selected')
     }
 
   },
-  destroyed() {
+  destroyed () {
   }
 })

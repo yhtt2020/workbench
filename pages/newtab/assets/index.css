@@ -16,36 +16,6 @@ html {
   box-sizing: inherit;
 }
 
-/*最左侧栏*/
-.side-bar {
-  position: fixed;
-  height: 100vh;
-  width: 45px;
-  background: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(4px);
-  display: flex;
-  right: 0;
-}
-.side-bar .action-list {
-  width: 100%;
-  height: auto;
-  align-self: center;
-}
-.side-bar .action-list .active {
-  background: rgba(255, 255, 255, 0.3) !important;
-}
-.side-bar .action-list .action {
-  margin-bottom: 10px;
-  text-align: center;
-  padding: 5px;
-  display: block;
-  color: #333;
-}
-.side-bar .action-list .action:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
-
-/*最左侧栏end*/
 .main .main-top {
   width: 100%;
   height: 20vh;
@@ -459,5 +429,26 @@ html {
   background-color: #0000002f;
   border-radius: 10px;
 }
+
+/*dock栏*/
+.dock-item {
+  display: inline-block;
+  border-radius: 10px;
+  margin: 10px 10px;
+}
+
+.dock {
+  flex-direction: row;
+  position: fixed;
+  bottom: 20px;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.5);
+  width: fit-content;
+  left: 50%;
+  transform: translate(-50%, 0);
+  max-width: calc(100vw - 20px);
+}
+
+/*dock栏结束*/
 
 /*# sourceMappingURL=index.css.map */

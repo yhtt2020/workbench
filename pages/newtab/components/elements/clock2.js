@@ -2,8 +2,8 @@ const clock2Tpl =
   `
   <div class="clock2">
   <link rel="stylesheet" href="./assets/elements/clocks/clock2.css"/>
-    <p class="date">{{ date }}</p>
     <p class="time">{{ time }}</p>
+      <p class="date">{{ date }}</p>
     </div>
   `
 
@@ -34,7 +34,7 @@ Vue.component('clock2', {
     updateTime () {
       let cd = new Date()
       this.time = this.zeroPadding(cd.getHours(), 2) + ':' + this.zeroPadding(cd.getMinutes(), 2) + ':' + this.zeroPadding(cd.getSeconds(), 2)
-      this.date = this.zeroPadding(cd.getFullYear(), 4) + '-' + this.zeroPadding(cd.getMonth() + 1, 2) + '-' + this.zeroPadding(cd.getDate(), 2) + ' ' + this.week[cd.getDay()]
+      this.date = this.zeroPadding(cd.getFullYear(), 4) + '年' + this.zeroPadding(cd.getMonth() + 1, 2) + '月' + this.zeroPadding(cd.getDate(), 2) + '日 ' + this.week[cd.getDay()]
     }
   },
   destroyed () {

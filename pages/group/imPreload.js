@@ -1,8 +1,10 @@
 var electron = require('electron')
 var ipc = electron.ipcRenderer
 const { config } = require('../../server-config')
+const tsbSdk = require('../../js/util/tsbSdk')
 
 window.ipc = ipc
+window.$browser = 'tsbrowser'
 let href = window.location.href
 
 const server = {
@@ -22,16 +24,22 @@ const server = {
           })
         }
       } else {
-        ipc.send('message',{type:'error',config:{content: '请先完成浏览器登录!', key: Date.now()}})
-        return
+        if(window.localStorage.getItem('LUMNEIM-TOKEN')) {
+          //浏览器已经登出，但是im还登录的情况
+          window.location.href = `${host}${config.IM.AUTO_LOGIN}?removeToken=true`
+        } else {
+          ipc.send('message',{type:'error',config:{content: '请先完成浏览器登录!', key: Date.now()}})
+        }
       }
     })
   },
 }
 
 if(href === config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN) {
+  tsbSdk.listener()
   server.beforeInit(config.IM.FRONT_URL_DEV)
 } else if(href === config.IM.FRONT_URL + config.IM.AUTO_LOGIN) {
+  tsbSdk.listener()
   server.beforeInit(config.IM.FRONT_URL)
 }
 

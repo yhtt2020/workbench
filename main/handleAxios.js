@@ -1,20 +1,37 @@
+const dlog = require('electron-log');
 const authApi = require(path.join(__dirname, './js/request/api/authApi.js'))
 const storage = require('electron-localstorage');
-const { clipboard } = require('electron')
+const _path= path.join(app.getPath("userData"), app.getName()+"/", 'userConfig.json');
+const _path_dir = path.dirname(_path);
+if(!fs.existsSync(_path_dir)){
+  try{
+    fs.mkdirSync(_path_dir)
+  }
+  catch(e){ dlog.error(err) }
+}
+storage.setStoragePath(_path);
+global.sharedPath = {extra:storage.getStoragePath()}   //remote官方建议弃用，全局变量在渲染进程中暂时没找到可以替换获取的方法，但是在主进程中全局electronGlobal对象能获取到
+const { clipboard } = require('electron');
 
 const handleAxios =  {
   initialize: function() {
+
     //游览器登录
     ipc.on('loginBrowser', async (event, arg) => {
-      const data = {
-        code: arg
+      try {
+        const data = {
+          code: arg
+        }
+        const result = await authApi.loginBrowser(data)
+        if(result.code === 1000) {
+          storage.setItem(`userToken`, result.data.token)
+          storage.setItem(`userInfo`, result.data.userInfo)
+        }
+        event.reply('callback-loginBrowser', result)
+      } catch (err) {
+        dlog.error(err)
       }
-      const result = await authApi.loginBrowser(data)
-      if(result.code === 1000) {
-        storage.setItem(`userToken`, result.data.token)
-        storage.setItem(`userInfo`, result.data.userInfo)
-      }
-      event.reply('callback-loginBrowser', result)
+
     })
     //游览器登出
     ipc.on('logoutBrowser', async(event, arg) => {
@@ -40,8 +57,8 @@ const handleAxios =  {
         }
       }
       catch(err){
-        sidePanel.get().webContents.send('message',{type:"error",config:{content:'分享失败，请检查网络。',key:"shareTask"}})
-        console.log(err)
+        sidePanel.get().webContents.send('message',{type:"error",config:{content:'分享失败!',key:"shareTask"}})
+        dlog.error(err)
       }
     })
 

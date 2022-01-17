@@ -99,6 +99,14 @@ Vue.component('sidebar', {
         token: currentUser.value.token
       })
     }
+    let sideMode=localStorage.getItem('sideMode')
+    sideMode = sideMode||'auto'
+    if(sideMode==='close' || sideMode==='auto')
+      document.getElementById('clickThroughElement').style.left = '55px'
+    else if(sideMode==='open'){
+      document.getElementById('clickThroughElement').style.left = '155px'
+    }
+    appVue.mod=sideMode
 	},
 	computed: {
 		user(){

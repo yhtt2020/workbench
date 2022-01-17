@@ -274,7 +274,8 @@ class SidePanel {
     this._sidePanel.setIgnoreMouseEvents(true, {
       forward: false  //设置为false，如果为true，在windows上鼠标会闪的不行
     })
-    if (BrowserWindow.getFocusedWindow() != null && switchWindow === null) //如果有任意一个window还有焦点，则聚焦到mainwindow
+    if (BrowserWindow.getFocusedWindow() != null && sidePanel.get().isFocused() ) //如果有任意一个window还有焦点，则聚焦到mainwindow
+      //有窗体还有焦点 且 只有左侧栏
       mainWindow.focus()
     log('设置左侧栏不再感应鼠标，主窗体获得焦点')
   }
@@ -287,7 +288,13 @@ class SidePanel {
     log('设置左侧栏感应 鼠标，左侧栏同时获得焦点')
   }
 }
-
+// function onlyFocusedSideBarAndMainWindow(windows=[]){
+//   if(sidePanel.get().isFocused() || mainWindow.isFocused())
+//   {
+//     return true
+//   }
+//   //如果目前
+// }
 function addMainWindowEventListener () {
 
   mainWindow.on('move', () => {
@@ -723,4 +730,45 @@ ipc.on('sideSetClose',(event,args)=>{
 ipc.on('sideSetAuto',(event,args)=>{
   console.log('auto')
   SidePanel.send('sideSetAuto')
+})
+
+ipc.on('importDesk',(event,args)=>{
+  const files=dialog.showOpenDialogSync(mainWindow,{title:'导入桌面',defaultPath:'.tsbk',filters:[{name:'桌面备份',extensions:['tsbk']}]})
+  if(!!!files){
+    return
+  }else{
+    event.reply('importDesk',{files:files})
+    console.log(files)
+  }
+})
+ipc.on('exportDesk',(event,args)=>{
+  let desk=args.desk
+  desk.layout=args.deskLayout
+  const path=dialog.showSaveDialogSync(mainWindow,{title:'导出桌面',defaultPath:'桌面备份-'+desk.name+'.tsbk',filters:[{name:'桌面备份',extensions:['tsbk']}]})
+  if(!!!path){
+    return
+  }else{
+    fs.writeFile(path, JSON.stringify(desk),  function(err) {
+      if (err) {
+        sendMessage({type:'error',config:{content:'备份失败。请重试。'}})
+      }
+      else{
+        sendMessage({type:'success',config:{content:'保存桌面备份成功。'}})
+      }
+    })
+  }
+})
+ipc.on('captureDeskScreen',(event,args)=>{
+  let capturedImage=undefined
+  event.sender.capturePage(args.bounds).then((data)=>{
+    capturedImage=data
+    if(!fs.existsSync(userDataPath+'/desk')){
+      fs.mkdirSync(userDataPath+'/desk')
+    }
+    fs.writeFile(path.resolve(userDataPath+'/desk/screen'+args.desk.id+'.jpg'),capturedImage.toJPEG(50),(err)=>{
+        if(!err){
+          event.reply('updateScreen', { id:args.desk.id })
+        }
+    })
+  })
 })

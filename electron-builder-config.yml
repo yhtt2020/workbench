@@ -15,6 +15,8 @@ files:
     - index.html
     - server-config.js
     - api/*
+    - img/*.jpg
+    - reader/*
 
 win:
     icon: ./icon.ico
@@ -33,9 +35,9 @@ win:
           channel: latest
 
 mac:
+    gatekeeperAssess: false
     icon: ./icons/icon.icns
     category: public.app-category.utilities
-    identity: com.thisky.browser
     target:
         - dmg
         - zip

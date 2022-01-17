@@ -89,14 +89,14 @@ const tabBar = {
   },
   //关闭左侧标签
   closeLeftTabs: function (tabId) {
+    console.log('close left')
     let tabs = tasks.getSelected().tabs
     if(tabId!==tabs.getSelected())
       require('browserUI.js').switchToTab(tabId)
     let needDestroy = []
-    let count = tabs.count()
     let lockCount=0
-    console.log(count)
-    for (let i = 0; i < count; i++) {
+    let currentIndex=tabs.getIndex(tabId)
+    for (let i = 0; i < currentIndex; i++) {
       if (tabs.getAtIndex(i).id != tabId ){
         if(!!tabs.getAtIndex(i).lock){
           lockCount++
@@ -116,7 +116,8 @@ const tabBar = {
     let needDestroy = []
     let count = tabs.count()
     let lockCount=0
-    for (let i = count - 1; i >= 0; i--) {
+    let currentIndex=tabs.getIndex(tabId)
+    for (let i = count - 1; i >= currentIndex; i--) {
       if (tabs.getAtIndex(i).id != tabId)
       {
         if(!!tabs.getAtIndex(i).lock){
@@ -406,6 +407,34 @@ const tabBar = {
     tabEl.addEventListener('contextmenu', async (e) => {
       e.preventDefault()
       e.stopPropagation()
+      let desks=[]
+      try{
+        desks=JSON.parse(localStorage.getItem('desks'))
+      }
+      catch (e){
+      }
+      let addToDeskMenus=[]
+     desks.forEach((desk)=>{
+       addToDeskMenus.push({
+         id:desk.id,
+         label:desk.name,
+         click:()=>{
+        const tab=tabs.get(data.id)
+        const app={
+          type:'app',
+          data:{
+            name:tab.title,
+            icon:tab.favicon == null ? '../../icons/default.svg' : tab.favicon.url,
+            url:tab.url
+          }
+        }
+        const  deskModel=require('../../pages/util/model/deskModel.js')
+        const element= deskModel.createElementPos(app)
+        deskModel.addElementToDesk(element,desk.id)
+           ipc.send('message',{'type':'success',config:{'content':'添加到桌面成功'}})
+       }
+       })
+     })
 
       let template = [
         [
@@ -416,6 +445,11 @@ const tabBar = {
               require('browserUI.js').addTask()
               //$store.getters.fillTasksToItems
             },
+          },
+          {
+            id:'addToDesk',
+            label:'添加到桌面',
+            submenu: addToDeskMenus
           },
           {
             id: 'open',
@@ -508,7 +542,7 @@ const tabBar = {
         ],
       ]
 
-      const judgeUser = await baseApi.getCurrentUser()
+      const judgeUser = await baseApi.getCurrentUser() ?? {value: {uid: 0}}
       if(judgeUser.value.uid === 0) {
         remoteMenu.open(template)
         return
@@ -918,6 +952,12 @@ ipc.on('clearTaskUnlock',(event,args)=>{
     task.tabs.add()
   }
 
+})
+
+ipc.on('tabNavigateToOSx', function(e, data) {
+  const { url } = data
+  const newTab = tabs.add({ url})
+  require('browserUI.js').addTab(newTab, { enterEditMode: false})
 })
 
 module.exports = tabBar
