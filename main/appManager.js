@@ -132,6 +132,9 @@ app.whenReady().then(()=>{
     capture(saAppWindowId){
       let saApp= appManager.getSaAppByWindowId(saAppWindowId)
       let capturedImage=undefined
+      if(saApp.window.isDestroyed()){
+        return
+      }
       saApp.window.webContents.capturePage().then((data)=>{
         capturedImage=data
         if(!fs.existsSync(userDataPath+'/app')){
@@ -193,15 +196,6 @@ app.whenReady().then(()=>{
         appWindow.on('ready-to-show',(event)=>{
           //连续4秒都获取一次截图，保障能够截取到最新的图
           appManager.capture(saApp.windowId)
-          setTimeout(()=>{
-            appManager.capture(saApp.windowId)
-          },1000)
-          setTimeout(()=>{
-            appManager.capture(saApp.windowId)
-          },2000)
-          setTimeout(()=>{
-            appManager.capture(saApp.windowId)
-          },3000)
         })
         appWindow.on('blur',(event)=>{
             appManager.capture(saApp.windowId)

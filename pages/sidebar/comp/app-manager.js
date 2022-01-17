@@ -15,7 +15,9 @@ const appManagerTpl =
                 <template slot="content">
                 <a-row type="flex">
                 <a-col class="in-process-app" :flex="1">
-                <a-empty v-if="runningApps.length===0"></a-empty>
+                <div style="padding: 40px" v-if="runningApps.length===0">
+                <a-empty description="暂无运行中的应用" ></a-empty>
+</div>
             <div class="scroller-wrapper">
              <ul class="app-list">
              <li v-for="(appId,index) in runningApps" >
