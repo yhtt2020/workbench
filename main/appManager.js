@@ -146,28 +146,69 @@ app.whenReady().then(()=>{
         }
       }
     },
+    async getAppRunningInfo(id){
+      let saApp=appManager.getSaAppByAppId(id)
+      if(!!!saApp){
+        return //如果不存在这个saApp
+      }
+      let capture=await appManager.capture(saApp.windowId)
+      let memoryUsage=appManager.memoryUsageInfo(saApp.windowId)
+      let info={
+        "capture":capture,
+        "memoryUsage":memoryUsage
+      }
+      return info
+    },
     /**
-     * 通过windowId给APP截图并传送ipc回sidePanel
+     * 获取应用内存信息
      * @param saAppWindowId
      */
-    capture(saAppWindowId){
+    memoryUsageInfo(saAppWindowId){
       let saApp= appManager.getSaAppByWindowId(saAppWindowId)
-      let capturedImage=undefined
+      let appWindow=saApp.window //窗体
+      let memoryInfo={}
+      let allMetrics=app.getAppMetrics() //全局内存统计
+      /*
+      *[
+[1]   {
+[1]     cpu: { percentCPUUsage: 0, idleWakeupsPerSecond: 0 },
+[1]     pid: 82207,
+[1]     type: 'Browser',
+[1]     creationTime: 1642407867658.929,
+[1]     memory: { workingSetSize: 173120, peakWorkingSetSize: 173120 },
+[1]     sandboxed: false
+[1]   },
+* https://www.electronjs.org/zh/docs/latest/api/structures/process-metric
+* */
+      let pid=appWindow.webContents.getOSProcessId()
+      allMetrics.forEach((met)=>{
+        if(met.pid===pid){
+         memoryInfo=met
+        }
+      })
+      return memoryInfo
+    },
+    /**
+     * 通过windowId给APP截图
+     * @param saAppWindowId
+     */
+    async capture(saAppWindowId){
+      let saApp= appManager.getSaAppByWindowId(saAppWindowId)
       if(saApp.window.isDestroyed()){
         return
       }
-      saApp.window.webContents.capturePage().then((data)=>{
-        capturedImage=data
-        if(!fs.existsSync(userDataPath+'/app')){
-          fs.mkdirSync(userDataPath+'/app')
-        }
-        let imgePath=userDataPath+'/app/screen'+saApp.saApp.id+'.jpg'
-        fs.writeFile(path.resolve(imgePath),capturedImage.toJPEG(50),(err)=>{
-          if(!err){
-            SidePanel.send('updateAppCapture', { id:saApp.saApp.id,captureSrc: path.resolve(imgePath)})
-          }
-        })
-      })
+     let capturedImage =  await saApp.window.webContents.capturePage()
+      if(!fs.existsSync(userDataPath+'/app')){
+        fs.mkdirSync(userDataPath+'/app')
+      }
+      let imagePath=path.resolve(userDataPath+'/app/screen'+saApp.saApp.id+'.jpg')
+      console.log(imagePath)
+      try{
+        fs.writeFileSync(imagePath,capturedImage.toJPEG(50))
+      }catch (err){
+        return false
+      }
+      return imagePath
     },
     closeApp(appId){
       let window=appManager.getWindowByAppId(appId)
@@ -236,8 +277,8 @@ app.whenReady().then(()=>{
           //连续4秒都获取一次截图，保障能够截取到最新的图
           appManager.capture(saApp.windowId)
         })
-        appWindow.on('blur',(event)=>{
-            appManager.capture(saApp.windowId)
+        appWindow.on('blur',async (event)=>{
+          SidePanel.send('updateRunningInfo',{id:saApp.id,"info":await appManager.getAppRunningInfo(saApp.id)})
         })
         /**
          * 只允许通过关闭按钮隐藏，而不是彻底关闭
@@ -304,6 +345,9 @@ app.whenReady().then(()=>{
   ipc.on('closeApp',(event,args)=>{
     appManager.closeApp(args.id)
   })
+  ipc.on('getAppRunningInfo',async (event,args)=>{
+    SidePanel.send('updateRunningInfo',{id:args.id,"info":await appManager.getAppRunningInfo(args.id)})
+  })
   /**
    * 获取并更新一个app的截图
    */
@@ -312,7 +356,9 @@ app.whenReady().then(()=>{
     if(!!!saApp){
       return //如果不存在这个saApp
     }
-    appManager.capture(saApp.windowId)
+    let image= appManager.capture(saApp.windowId)
+    if(!!image)
+      SidePanel.send('updateAppCapture', { id:saApp.saApp.id,captureSrc:image})
   })
   /**
    * 获取到全部正在运行的app清单
@@ -321,7 +367,6 @@ app.whenReady().then(()=>{
     let runningApps=[]
     let windows=[]
     processingAppWindows.forEach(window=>{
-
       runningApps.push(window.saApp.id)
       windows.push(window.saApp.windowId)
     })

@@ -156,3 +156,24 @@
 }
 
 
+.app-info{
+  background-color: rgba(0, 0, 0, 0.54);
+  color:white;
+  position: absolute;
+  width: 265px;
+  padding: 10px;
+  height: 130px;
+  font-size: 12px;
+  left: 0;
+  top: 0;
+  text-align: left;
+  z-index:3;
+  line-height: 28px;
+  .value{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+

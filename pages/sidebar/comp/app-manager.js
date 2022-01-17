@@ -26,7 +26,35 @@ const appManagerTpl =
              <span style="float: right"><a-icon title="彻底退出" @click.stop="closeApp(appId)" type="poweroff"></a-icon></span>
 </div>
              <div>
-             <div class="app-capture">
+             <div class="app-capture" style="position: relative" @mouseenter="startStat(appId)" @mouseleave="stopStat">
+             <a-row class="app-info">
+             <a-col :span="6">
+           内存：
+</a-col>
+<a-col class="value"  :span="6">
+{{(getApp(appId).memoryUsage.memory.workingSetSize/2048).toFixed(1)}} MB
+</a-col>
+<a-col :span="6">
+CPU:
+</a-col>
+<a-col class="value"  :span="6">
+{{(getApp(appId).memoryUsage.cpu.percentCPUUsage *100).toFixed(1)}} %
+</a-col>
+<a-col :span="6">
+进程pid:
+</a-col>
+<a-col class="value" :span="6">
+{{getApp(appId).memoryUsage.pid}}
+</a-col>
+<a-col :span="6">
+已运行：
+</a-col>
+<a-col class="value"  :span="6">
+{{ ((Date.now()-getApp(appId).memoryUsage.creationTime)/1000/60).toFixed(1)}} 分钟
+</a-col>
+</a-row>
+
+
                  <div class="overlay"></div>
              <img :src="getApp(appId).capture" onerror="this.src='../../icons/svg/empty.svg'"  :alt="getApp(appId).name">
 
@@ -90,11 +118,28 @@ Vue.component('app-manager', {
   },
   data () {
     return {
+      setted:false,
+      timer: 0
     }
   },
   mounted () {
   },
   methods: {
+    startStat(id){
+      if(!this.setted){
+        window.tickId=id
+       this.timer= setInterval(()=>{
+         ipc.send('getAppRunningInfo',{id:window.tickId})
+         console.log(window.tickId)
+       },1000)
+        this.setted=true
+      }
+
+    },
+    stopStat(){
+      clearInterval(this.timer)
+      this.setted=false
+    },
     destroyed () {
       // 销毁定时器
       clearInterval(this.timer)
@@ -107,15 +152,33 @@ Vue.component('app-manager', {
       ipc.send('executeApp',{app:app})
     },
     getApp(id){
+      let defaultMemoryUsage={
+        cpu:{
+          percentCPUUsage:0
+        },
+        memory:{
+          workingSetSize:0
+        }
+      }
       let currentApp={
         name:'',
         id:'',
         logo:'',
-        capture:''
+        capture:'',
+        memoryUsage:defaultMemoryUsage
       }
       appVue.$refs.sidePanel.apps.forEach((app)=>{
         if(app.id===id)
+        {
+          if(!!!app.memoryUsage){
+            app.memoryUsage=defaultMemoryUsage
+          }
+          if(!!!app.capture){
+            app.capture=''
+          }
           currentApp=app
+        }
+
       })
       return currentApp
     },
