@@ -248,6 +248,7 @@ app.whenReady().then(()=>{
         })
         saApp.windowId=appWindow.webContents.id
         appWindow.setBounds(saApp.settings.bounds)
+        appWindow.setMenu(null)
         if(saApp.type==='local'){
           appWindow.webContents.loadURL('file://'+path.join(__dirname,saApp.url))
         }else{
