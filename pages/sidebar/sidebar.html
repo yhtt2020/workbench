@@ -228,7 +228,7 @@
           </a-popover>
         </li>
         <li>
-          <app-manager></app-manager>
+          <app-manager ref="appManager" :apps="apps" :running-apps="runningApps"></app-manager>
         </li>
         <li v-for="app in apps" @click="executeApp(app)" @mouseenter="hoverApp($event,app)">
           <a-popover  placement="right" :mouse-enter-delay="0.3"

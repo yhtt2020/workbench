@@ -197,6 +197,9 @@ app.whenReady().then(()=>{
           },1000)
 
         })
+        appWindow.on('blur',(event)=>{
+            appManager.capture(saApp.windowId)
+        })
         /**
          * 关闭窗体的同时通知sidePanel关闭窗体
          */

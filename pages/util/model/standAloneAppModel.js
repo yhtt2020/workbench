@@ -11,6 +11,7 @@ const standAloneAppModel = {
   async getAllApps () {
     let result= await db.standAloneApps.toArray()
     result.forEach((app)=>{
+      app.capture=''
       app.settings=JSON.parse(app.settings)
     })
     return result

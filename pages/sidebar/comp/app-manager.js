@@ -15,56 +15,19 @@ const appManagerTpl =
                 <template slot="content">
                 <a-row type="flex">
                 <a-col class="in-process-app" :flex="1">
+                <a-empty v-if="runningApps.length===0"></a-empty>
             <div class="scroller-wrapper">
              <ul class="app-list">
-
-             <li>
+             <li v-for="(appId,index) in runningApps" >
              <div class="app-title">
-             <img src="https://qingflow.com/favicon.ico" class="app-logo"><span class="app-name">轻流</span>
+             <img :src="getApp(appId).logo" class="app-logo"><span class="app-name">{{getApp(appId).name}}</span>
 </div>
              <div>
              <div class="app-capture">
                  <div class="overlay"></div>
-             <img src="./temp/iShot2022-01-15 11.15.21.jpg"  alt="轻流">
+             <img :src="getApp(appId).capture" onerror="this.src='../../icons/svg/empty.svg'"  :alt="getApp(appId).name">
 
 </div>
-</div>
-
-             </li>
-               <li class="active">
-             <div class="app-title">
-             <img src="https://qingflow.com/favicon.ico" class="app-logo"><span class="app-name">轻流</span>
-</div>
-              <div class="app-capture">
-               <div class="overlay"></div>
-             <img src="./temp/iShot2022-01-15 11.15.21.jpg"  alt="轻流">
-</div>
-
-             </li>  <li>
-             <div class="app-title">
-             <img src="https://qingflow.com/favicon.ico" class="app-logo"><span class="app-name">轻流</span>
-</div>
-              <div class="app-capture">
-               <div class="overlay"></div>
-             <img src="./temp/iShot2022-01-15 11.15.21.jpg"  alt="轻流">
-</div>
-
-             </li>  <li>
-             <div class="app-title">
-             <img src="https://qingflow.com/favicon.ico" class="app-logo"><span class="app-name">轻流</span>
-</div>
-              <div class="app-capture">
-               <div class="overlay"></div>
-             <img src="./temp/iShot2022-01-15 11.15.21.jpg"  alt="轻流">
-</div>
-
-             </li>  <li>
-             <div class="app-title">
-             <img src="https://qingflow.com/favicon.ico" class="app-logo"><span class="app-name">轻流</span>
-</div>
-             <div class="app-capture">
-              <div class="overlay"></div>
-             <img src="./temp/iShot2022-01-15 11.15.21.jpg"  alt="轻流">
 </div>
 
              </li>
@@ -128,18 +91,43 @@ const appManagerTpl =
 Vue.component('app-manager', {
   template: appManagerTpl,
   name: 'app-manager',
+  props:{
+    apps:{
+      type:Array,
+      default:[]
+    },
+    runningApps:{
+      type:Array,
+      default:[]
+    }
+  },
   data () {
     return {
-      apps:[]
     }
   },
   mounted () {
-    this.apps=standAloneAppModel.getAllApps()
   },
   methods: {
     destroyed () {
       // 销毁定时器
       clearInterval(this.timer)
+    },
+    getApp(id){
+      let currentApp={
+        name:'',
+        id:'',
+        logo:'',
+        capture:''
+      }
+      appVue.$refs.sidePanel.apps.forEach((app)=>{
+        if(app.id===id)
+          currentApp=app
+      })
+      console.log(currentApp)
+      return currentApp
     }
+  },
+  computed:{
+
   }
 })

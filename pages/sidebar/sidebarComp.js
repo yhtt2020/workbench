@@ -5,6 +5,7 @@ Vue.component('sidebar', {
 	data: function() {
 		return {
       apps:[],
+      runningApps:[],//运行中的应用
       mod:'auto',//auto open close
       isPopoverShowing:false,
       lastOpenId:0,
@@ -447,14 +448,21 @@ ipc.on('executedAppSuccess',function (event,args){
       app.windowId=args.app.windowId
     }
   })
+  appVue.$refs.sidePanel.runningApps.push(args.app.id)
 })
 ipc.on('closeApp',function (event,args){
   console.log(args)
   appVue.$refs.sidePanel.apps.forEach(app=>{
     if(app.id===args.app.id){
       app.processing=false
+      //从正在运行的app里移除掉该id
+      let appIndex=appVue.$refs.sidePanel.runningApps.indexOf(args.app.id)
+      console.log(appVue.$refs.sidePanel.runningApps)
+      if(appIndex>-1)
+        appVue.$refs.sidePanel.runningApps.splice(appIndex,1)
     }
   })
+
 })
 
 ipc.on('updateAppCapture',function (event,args){
