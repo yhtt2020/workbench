@@ -1,7 +1,6 @@
 const electron = require('electron')
 const fs = require('fs')
 const path = require('path')
-
 const {
   app, // Module to control application life.
   protocol, // Module to control protocol handling

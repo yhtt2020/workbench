@@ -4,7 +4,7 @@
  */
 let processingAppWindows=[]//运行中的应用
 function apLog(e){
-  if(1){
+  if(0){
     console.log(e)
   }
 }
@@ -246,12 +246,10 @@ app.whenReady().then(()=>{
             ]
           }
         })
-        apLog(path.join(__dirname,saApp.preload))
         saApp.windowId=appWindow.webContents.id
         appWindow.setBounds(saApp.settings.bounds)
         if(saApp.type==='local'){
           appWindow.webContents.loadURL('file://'+path.join(__dirname,saApp.url))
-          apLog(path.join(__dirname,saApp.url))
         }else{
           appWindow.webContents.loadURL(saApp.url)
         }
@@ -263,14 +261,6 @@ app.whenReady().then(()=>{
         appWindow.on('resized',(event,args)=>{
           appManager.setAppSettings(saApp.id,{bounds:appWindow.getBounds()})
         })
-
-        //   //   groupIMWindow.on('resized',()=>{
-        //   //     settings.set('groupWindowBounds',groupIMWindow.getBounds())
-        //   //   })
-        //   //   groupIMWindow.on('moved',()=>{
-        //   //     settings.set('groupWindowBounds',groupIMWindow.getBounds())
-        //   //   })
-
         appWindow.on('ready-to-show',(event)=>{
           //连续4秒都获取一次截图，保障能够截取到最新的图
           appManager.capture(saApp.windowId)
@@ -315,10 +305,6 @@ app.whenReady().then(()=>{
           window:appWindow,//在本地的对象中插入window对象，方便后续操作
           saApp:saApp
         })
-        //完成运行后，截个图发送到侧边栏，更新其截图
-        console.log(saApp)
-
-
       }else{
         //todo intab模式，在主窗体某个标签内
       }
@@ -335,7 +321,6 @@ app.whenReady().then(()=>{
     }else{
       //todo 判断是多例还是单例
       if(1){//是单例
-        console.log(saApp)
         appManager.focusWindow(saApp.windowId)
       }
     }

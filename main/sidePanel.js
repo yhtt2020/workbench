@@ -477,24 +477,24 @@ function syncSize () {
 // 		}
 // 	}
 // })
-ipc.on('setMouseEnable', function () {
+ipc.on(ipcMessageMain.sidePanel.setMouseEnable, function () {
   if (SidePanel.alive())
     sidePanel.setMouseEnable()
 })
-ipc.on('setMouseIgnore', function () {
+ipc.on(ipcMessageMain.sidePanel.setMouseIgnore, function () {
   if (SidePanel.alive())
     sidePanel.setMouseIgnore()
 })
 
 //主窗口收到要获取全局变量的消息，主要是返回tasks和tabs两个数组，用于同步左侧栏
-ipc.on('getGlobal', (event, args) => {
+ipc.on(ipcMessageMain.sidePanel.getGlobal, (event, args) => {
   //sidebar发来的消息
   if (mainWindow)
     sendIPCToWindow(mainWindow, 'getGlobal', args)
 })
 
 //ipc从mainWindow得到全局变量后，返回给sidebar
-ipc.on('receiveGlobal', function (event, args) {
+ipc.on(ipcMessageMain.sidePanel.receiveGlobal, function (event, args) {
   args.mainWindowId = mainWindow.webContents.id
   if (!!!args.callbackWin) {
     if (sidePanel != null && mainWindow != null) {
@@ -511,7 +511,7 @@ ipc.on('receiveGlobal', function (event, args) {
 })
 
 //显示书签的时候，将sidepanel隐藏起来
-ipc.on('openBookmarks', function () {
+ipc.on(ipcMessageMain.main.openBookmarks, function () {
   sendIPCToWindow(mainWindow, 'showBookmarks') //直传给mainWindow，让它唤出书签页面
 })
 ipc.on('openSetting', function () {
