@@ -14,6 +14,20 @@ function apLog(e){
 app.whenReady().then(()=>{
   const appManager={
     /**
+     * 单个更新app信息
+     * @param id
+     * @param saApp
+     */
+    updateSaApp(id,saApp){
+      for(let i=0;i<processingAppWindows.length;i++){
+        if(processingAppWindows[i].saApp.id===id){
+          processingAppWindows[i].saApp=saApp
+          return true
+        }
+      }
+      return false
+    },
+    /**
      * 聚焦窗体
      * @param windowId
      */
@@ -70,11 +84,11 @@ app.whenReady().then(()=>{
      * @param settings 应用设置，一个对象，类似{isAlwaysHide:true,runAtStart:true} 参考开发文档
      */
     setAppSettings(saAppId,settings=[]){
-      for(let i=0;i<processingAppWindows.length;i++){
-        if(processingAppWindows[i].saApp.id===saAppId){
-          processingAppWindows[i].saApp.settings=Object.assign(processingAppWindows[i].saApp.settings,settings)
-          console.log(processingAppWindows[i].saApp.settings)
-        }
+     let saApp= appManager.getSaAppByAppId(saAppId)
+      if(saApp){
+        SidePanel.send('updateSetting',{id:saAppId,settings:settings})
+        saApp.settings=Object.assign(saApp.settings,settings)
+        appManager.updateSaApp(saAppId,saApp)
       }
     },
     /**
@@ -179,7 +193,6 @@ app.whenReady().then(()=>{
         })
         apLog(path.join(__dirname,saApp.preload))
         saApp.windowId=appWindow.webContents.id
-
         appWindow.setBounds(saApp.settings.bounds)
         if(saApp.type==='local'){
           appWindow.webContents.loadURL('file://'+path.join(__dirname,saApp.url))
@@ -189,9 +202,19 @@ app.whenReady().then(()=>{
         }
 
         SidePanel.send('executedAppSuccess',{app:saApp})
-        appWindow.on('resize',(event,args)=>{
-          //todo 完成设置同步
+        appWindow.on('moved',(event,args)=>{
+          appManager.setAppSettings(saApp.id,{bounds:appWindow.getBounds()})
         })
+        appWindow.on('resized',(event,args)=>{
+          appManager.setAppSettings(saApp.id,{bounds:appWindow.getBounds()})
+        })
+
+        //   //   groupIMWindow.on('resized',()=>{
+        //   //     settings.set('groupWindowBounds',groupIMWindow.getBounds())
+        //   //   })
+        //   //   groupIMWindow.on('moved',()=>{
+        //   //     settings.set('groupWindowBounds',groupIMWindow.getBounds())
+        //   //   })
 
         appWindow.on('ready-to-show',(event)=>{
           //连续4秒都获取一次截图，保障能够截取到最新的图

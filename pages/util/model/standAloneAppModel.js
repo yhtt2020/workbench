@@ -16,6 +16,22 @@ const standAloneAppModel = {
     })
     return result
   },
+  async setAppSetting(id,settings){
+    let app=await db.standAloneApps.get(id)
+    if(!!!app){
+      console.log('app不存在')
+    }else{
+      let DBSavedSettings=JSON.parse(app.settings)
+      let newSettings=Object.assign(DBSavedSettings,settings)
+      await db.standAloneApps.update(id,{"settings":JSON.stringify(newSettings)}).then((result)=>{
+        console.log('save app settings success')
+        return true
+      }).catch((err)=>{
+        console.log('存储app的setting失败')
+      })
+      console.log(newSettings)
+    }
+  },
   /**
    * 插入系统内置应用
    * @returns {Promise<*>}

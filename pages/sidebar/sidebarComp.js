@@ -481,3 +481,12 @@ ipc.on('updateRunningApps',function(event,args){
     }
   })
 })
+
+ipc.on('updateSetting',function (event,args){
+  appVue.$refs.sidePanel.apps.forEach((app,index)=>{
+    if(app.id===args.id){
+      standAloneAppModel.setAppSetting(args.id,args.settings)
+      app.settings=Object.assign(app.settings,args.settings)
+    }
+  })
+})
