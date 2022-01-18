@@ -14,19 +14,50 @@ const appManagerTpl =
 </template>
                 <template slot="content">
                 <a-row type="flex">
-                <a-col class="in-process-app" :flex="1">
-                <div style="padding: 40px" v-if="runningApps.length===0">
+                <a-col class="in-process-app" flex="320px">
+                <div style="padding-top: 35px;text-align: center" v-if="runningApps.length===0">
                 <a-empty description="暂无运行中的应用" ></a-empty>
 </div>
             <div class="scroller-wrapper">
              <ul class="app-list">
-             <li v-for="(appId,index) in runningApps" >
-             <div class="app-title">
+             <li  v-for="(appId,index) in runningApps" >
+             <div style="cursor:pointer;" @click="executeApp(getApp(appId))" class="app-title">
              <img :src="getApp(appId).logo" class="app-logo"><span class="app-name">{{getApp(appId).name}}</span>
-             <span style="float: right"><a-icon title="彻底退出" @click="closeApp(appId)" type="poweroff"></a-icon></span>
+             <span style="float: right"><a-icon title="彻底退出" @click.stop="closeApp(appId)" type="poweroff"></a-icon></span>
 </div>
              <div>
-             <div class="app-capture">
+             <div class="app-capture" style="position: relative" @mouseenter="startStat(appId)" @mouseleave="stopStat">
+             <a-row class="app-info">
+             <a-col :span="24" style="text-align: center">
+             运行情况
+</a-col>
+             <a-col :span="6">
+           内存：
+</a-col>
+<a-col class="value"  :span="6">
+{{(getApp(appId).memoryUsage.memory.workingSetSize/2048).toFixed(1)}} MB
+</a-col>
+<a-col :span="6">
+CPU:
+</a-col>
+<a-col class="value"  :span="6">
+{{(getApp(appId).memoryUsage.cpu.percentCPUUsage *100).toFixed(1)}} %
+</a-col>
+<a-col :span="6">
+进程pid:
+</a-col>
+<a-col class="value" :span="6">
+{{getApp(appId).memoryUsage.pid}}
+</a-col>
+<a-col :span="6">
+已运行：
+</a-col>
+<a-col class="value"  :span="6">
+{{ ((Date.now()-getApp(appId).memoryUsage.creationTime)/1000/60).toFixed(1)}} 分钟
+</a-col>
+</a-row>
+
+
                  <div class="overlay"></div>
              <img :src="getApp(appId).capture" onerror="this.src='../../icons/svg/empty.svg'"  :alt="getApp(appId).name">
 
@@ -57,7 +88,7 @@ const appManagerTpl =
                 </template>
                 <div class="wrapper" >
                   <div class="item-icon ">
-                    <img class="icon" src="../../icons/svg/control.svg"/>
+                    <img class="icon" style="width: 32px !important;height: 32px !important;" src="../../icons/svg/control.svg"/>
 <!--                    <a-badge-->
 <!--                      :count="item.count"-->
 <!--                      :dot="true"-->
@@ -90,11 +121,28 @@ Vue.component('app-manager', {
   },
   data () {
     return {
+      setted:false,
+      timer: 0
     }
   },
   mounted () {
   },
   methods: {
+    startStat(id){
+      if(!this.setted){
+        window.tickId=id
+       this.timer= setInterval(()=>{
+         ipc.send('getAppRunningInfo',{id:window.tickId})
+         console.log(window.tickId)
+       },1000)
+        this.setted=true
+      }
+
+    },
+    stopStat(){
+      clearInterval(this.timer)
+      this.setted=false
+    },
     destroyed () {
       // 销毁定时器
       clearInterval(this.timer)
@@ -107,15 +155,33 @@ Vue.component('app-manager', {
       ipc.send('executeApp',{app:app})
     },
     getApp(id){
+      let defaultMemoryUsage={
+        cpu:{
+          percentCPUUsage:0
+        },
+        memory:{
+          workingSetSize:0
+        }
+      }
       let currentApp={
         name:'',
         id:'',
         logo:'',
-        capture:''
+        capture:'',
+        memoryUsage:defaultMemoryUsage
       }
       appVue.$refs.sidePanel.apps.forEach((app)=>{
         if(app.id===id)
+        {
+          if(!!!app.memoryUsage){
+            app.memoryUsage=defaultMemoryUsage
+          }
+          if(!!!app.capture){
+            app.capture=''
+          }
           currentApp=app
+        }
+
       })
       return currentApp
     },

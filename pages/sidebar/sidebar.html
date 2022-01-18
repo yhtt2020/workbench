@@ -62,7 +62,6 @@
   onmousemove="clickThroughMove()"
   style="background-color: #00000000; height: 100vh; position: absolute; left: 46px; width: calc(100% - 46px)"
 ></div>
-
 <template id="sidebarTpl">
   <div id="sidebar" class="side-container">
     <div id="itemsEl" class="side-items">
@@ -258,34 +257,34 @@
           </div>
           </a-popover>
         </li>
-        <li
-          @click="openCom()"
-          style="position: relative"
-        >
-          <!--              <a-popover-->
-          <!--                title="团队协作"-->
-          <!--                placement="right"-->
-          <!--                :mouse-enter-delay="0.1"-->
-          <!--                :mouse-leave-delay="0.1"-->
-          <!--                :destroy-tooltip-on-hide="true"-->
-          <!--                overlay-class-name="tips">-->
-          <!--                <template slot="content">-->
+<!--        <li-->
+<!--          @click="openCom()"-->
+<!--          style="position: relative"-->
+<!--        >-->
+<!--          &lt;!&ndash;              <a-popover&ndash;&gt;-->
+<!--          &lt;!&ndash;                title="团队协作"&ndash;&gt;-->
+<!--          &lt;!&ndash;                placement="right"&ndash;&gt;-->
+<!--          &lt;!&ndash;                :mouse-enter-delay="0.1"&ndash;&gt;-->
+<!--          &lt;!&ndash;                :mouse-leave-delay="0.1"&ndash;&gt;-->
+<!--          &lt;!&ndash;                :destroy-tooltip-on-hide="true"&ndash;&gt;-->
+<!--          &lt;!&ndash;                overlay-class-name="tips">&ndash;&gt;-->
+<!--          &lt;!&ndash;                <template slot="content">&ndash;&gt;-->
 
-          <!--                </template>-->
-          <div class="wrapper" @dblclick.stop="closeItem(item)">
-            <div class="item-icon">
-              <img class="icon" style="border-color:#12a900" src="../../icons/svg/com.svg"/>
-              <a-badge
-                count="0"
-                :dot="true"
-                :style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:'visible'}"
-              >
-              </a-badge>
-            </div>
-            <div class="item-title">效率社区</div>
-          </div>
-          <!--              </a-popover>-->
-        </li>
+<!--          &lt;!&ndash;                </template>&ndash;&gt;-->
+<!--          <div class="wrapper" @dblclick.stop="closeItem(item)">-->
+<!--            <div class="item-icon">-->
+<!--              <img class="icon" style="border-color:#12a900" src="../../icons/svg/com.svg"/>-->
+<!--              <a-badge-->
+<!--                count="0"-->
+<!--                :dot="true"-->
+<!--                :style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:'visible'}"-->
+<!--              >-->
+<!--              </a-badge>-->
+<!--            </div>-->
+<!--            <div class="item-title">效率社区</div>-->
+<!--          </div>-->
+<!--          &lt;!&ndash;              </a-popover>&ndash;&gt;-->
+<!--        </li>-->
         <draggable
           v-model="getPinItems"
           group="sideBtn"
@@ -437,21 +436,16 @@
                   <a-button type="default" shape="circle" icon="question-circle"></a-button>
                   <div class="item-title">帮助中心</div>
                 </li>
-                <li @click="openBottom('setting')">
-                  <a-button type="default" shape="circle" icon="setting"></a-button>
-                  <div class="item-title">偏好设置</div>
-                </li>
+
               </a-collapse-panel>
             </a-collapse>
           </div>
         </template>
-
-        <li @click="openBottom('home')">
-          <a-button type="default" shape="circle" style="border: none">
-            <a-avatar src="../../icons/svg/apps.svg"></a-avatar>
-          </a-button>
-          <div class="item-title">网站导航</div>
+        <li @click="openBottom('setting')">
+          <a-button type="default" shape="circle" icon="setting"></a-button>
+          <div class="item-title">偏好设置</div>
         </li>
+
       </ul>
     </div>
   </div>

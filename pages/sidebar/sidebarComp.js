@@ -477,7 +477,7 @@ ipc.on('updateRunningApps',function(event,args){
     if(args.runningApps.indexOf(app.id)>-1){
       app.processing=true
       app.windowId=args.windows[index]
-      ipc.send('getAppCapture',{id:app.id})
+      ipc.send('getAppRunningInfo',{id:app.id})
     }
   })
 })
@@ -487,6 +487,19 @@ ipc.on('updateSetting',function (event,args){
     if(app.id===args.id){
       standAloneAppModel.setAppSetting(args.id,args.settings)
       app.settings=Object.assign(app.settings,args.settings)
+    }
+  })
+})
+ipc.on('updateAppMemoryUsage',function (event,args){
+  console.log(args)
+})
+
+ipc.on('updateRunningInfo',function (event,args){
+  console.log(args)
+  appVue.$refs.sidePanel.apps.forEach(app=>{
+    if(app.id===args.id){
+      app.capture=args.info.capture +"?t="+Date.now()
+      app.memoryUsage=args.info.memoryUsage
     }
   })
 })
