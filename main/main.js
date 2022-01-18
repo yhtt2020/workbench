@@ -414,9 +414,14 @@ app.on('open-url', function(e, url) {
 		sendIPCToWindow(mainWindow, 'addTab', {
 			url: url
 		})
-    if(mainWindow.isMinimized()){
-      mainWindow.restore()
+    if(mainWindow){
+      if(mainWindow.isMinimized()){
+        mainWindow.restore()
+      }
+      mainWindow.focus()
     }
+
+
 	} else {
 		global.URLToOpen = url // this will be handled later in the createWindow callback
 	}
