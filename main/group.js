@@ -11,8 +11,8 @@ app.on('ready', () => {
     createGroupWindow = new BrowserWindow({
       backgroundColor: 'black',
       parent: mainWindow,
-      width: 440,
-      height: 640,
+      width: 420,
+      height: 720,
       maximizable:false,
       resizable: false,
       acceptFirstMouse: true,

@@ -111,7 +111,7 @@ const mobileMod = {
       })
     })
     view.webContents.on('new-window', (event, url) => {
-      console.log('blocking!')
+      event.preventDefault()
       view.webContents.loadURL(url)
     })
 
