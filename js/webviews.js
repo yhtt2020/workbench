@@ -571,7 +571,9 @@ webviews.bindIPC('getSettingsData', function (tabId, args) {
   const systemType=require('./util/systemType.js')
   const systemInfo={
     platformAlias:systemType.platformAlias(),
-    versionAlias:systemType.versionAlias()
+    versionAlias:systemType.versionAlias(),
+    platform:systemType.platform(),
+    systemVersion:systemType.systemVersion()
   }
   settings.list.systemInfo=systemInfo
   webviews.callAsync(tabId, 'send', ['receiveSettingsData', settings.list])
@@ -591,7 +593,9 @@ settings.listen(function () {
           const systemType=require('./util/systemType.js')
           const systemInfo={
             platformAlias:systemType.platformAlias(),
-            versionAlias:systemType.versionAlias()
+            versionAlias:systemType.versionAlias(),
+            platform:systemType.platform(),
+            systemVersion:systemType.systemVersion()
           }
           settings.list.systemInfo=systemInfo
           console.log(settings.list)

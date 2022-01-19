@@ -2,7 +2,7 @@
   "name": "tsbrowser",
   "productName": "想天浏览器",
   "author": "Thisky",
-  "version": "2.4.0",
+  "version": "2.4.6",
   "description": "一款针对工作场景的极简浏览器，帮助你提升效率，保持专注",
   "electronVersion": "15.3.4",
   "main": "main.build.js",
@@ -43,7 +43,7 @@
     "mousetrap": "^1.5.3",
     "node-abi": "^3.2.0",
     "pdfjs-dist": "2.12.313",
-    "regedit": "^3.0.3",
+    "regedit": "^5.0.0",
     "stemmer": "^1.0.5",
     "string_score": "^0.1.22",
     "vue-selecto": "^1.13.3"
@@ -97,5 +97,14 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/minbrowser/min.git"
-  }
+  },
+  "extraResources": [
+    {
+      "from": "node_modules/regedit/vbs",
+      "to": "vbs",
+      "filter": [
+        "**/*"
+      ]
+    }
+  ]
 }

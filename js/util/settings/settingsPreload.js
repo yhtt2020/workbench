@@ -1,4 +1,4 @@
-
+let systemInfo={}
 window.addEventListener('message', function (e) {
   if (!e.origin.startsWith('file://')) {
     return
@@ -17,7 +17,7 @@ window.addEventListener('message', function (e) {
 
 	//唤起主进程设置默认浏览器的请求，由于设置是异步的，这里只发起请求即可
 	if(e.data.message=='callSetOrRemoveDefaultBrowser'){
-		ipc.send('callSetOrRemoveDefaultBrowser')
+		ipc.send('callSetOrRemoveDefaultBrowser',{systemInfo:systemInfo})
 	}
 
 	//询问主进程，是否是默认浏览器
@@ -34,7 +34,10 @@ ipc.on('returnIsDefaultBrowser',function(e,data){
 ipc.on('receiveSettingsData', function (e, data) {
   console.log(data)
   if (window.location.toString().startsWith('file://')) { // probably redundant, but might as well check
+    systemInfo=data.systemInfo
     window.postMessage({ message: 'receiveSettingsData', settings: data }, 'file://')
   }
 })
-
+ipc.on('setBrowserReturn',(e,args)=>{
+  console.log(args)
+})

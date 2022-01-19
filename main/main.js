@@ -36,14 +36,15 @@ const isDevelopmentMode = process.argv.some(arg => arg === '--development-mode')
 function clamp(n, min, max) {
 	return Math.max(Math.min(n, max), min)
 }
-
+//如果是命令行下，会执行注册表的功能。
 if (process.platform === 'win32') {
-	(async function() {
-    await registryInstaller.install().then(()=>{
-      console.log('reg success')
-    },(err)=>{
-      console.log(err)
-    })
+	// (async function() {
+  //   await registryInstaller.install().then(()=>{
+  //     console.log('reg success')
+  //   },(err)=>{
+  //     console.log(err)
+  //   })
+    // registryInstaller.uninstall()
 		// var squirrelCommand = process.argv[1]
 		// if (squirrelCommand === '--squirrel-install' || squirrelCommand === '--squirrel-updated') {
 		// 	isInstallerRunning = true
@@ -56,7 +57,7 @@ if (process.platform === 'win32') {
 		// if (require('electron-squirrel-startup')) {
 		// 	app.quit()
 		// }
-	})()
+	// })()
 }
 
 if (isDevelopmentMode) {
@@ -472,21 +473,7 @@ ipc.on('showSecondaryMenu', function(event, data) {
 		y: data.y
 	})
 })
-//设置默认浏览器部分代码开始
-//获取默认浏览器
-ipc.on('getIsDefaulBrowser',function(event){
-	let isDefault=app.isDefaultProtocolClient('http')
-	//console.log('返回是不是默认浏览器'+isDefault)
-	event.reply('returnIsDefaultBrowser',isDefault)
-})
-//移除默认浏览器
-ipc.on('callSetOrRemoveDefaultBrowser',function(event){
-	if(app.isDefaultProtocolClient('http')){
-		app.removeAsDefaultProtocolClient('http')
-	}else{
-		app.setAsDefaultProtocolClient('http')
-	}
-})
+
 
 //设置默认浏览器部分结束
 ipc.on('quit', function() {

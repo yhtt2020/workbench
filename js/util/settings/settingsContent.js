@@ -69,11 +69,10 @@ window.addEventListener('message', function (e) {
 
     settings.loaded = true
     settings.runChangeCallbacks()
-	
 
-	
+
   }
-  
+
   //接收到返回是否是默认浏览器的消息，根据情况直接设置内容
   if(e.data.message && e.data.message === 'returnIsDefaultBrowser'){
 	var defaultBrowserButton = document.getElementById('button-default-browser')
@@ -83,8 +82,8 @@ window.addEventListener('message', function (e) {
 		defaultBrowserButton.innerText=l('isDefaultBrowser')
 	}
   }
-  
-  
+
+
 })
 
 settings.load()

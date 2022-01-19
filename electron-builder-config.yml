@@ -17,6 +17,9 @@ files:
     - api/*
     - img/*.jpg
     - reader/*
+    - resources/**/*
+    - vbs/*
+
 
 win:
     icon: ./icon.ico

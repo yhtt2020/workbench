@@ -39,7 +39,9 @@ app.whenReady().then(()=>{
       version:updateInfo.updateInfo.version,
       releaseDate:updateInfo.updateInfo.releaseDate
     }
-  }).catch((err)=>console.log(err))
+  }).catch((err)=> {
+    //console.log(err)
+    })
  autoUpdater.on('error',(err)=>{
    sidePanel.get().webContents.send('message',{type:'error',config:{content:"升级文件下载失败，重启软件后重试。",key:"update"}})
  })

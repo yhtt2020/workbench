@@ -11,6 +11,7 @@ const modules = [
   'main/registryConfig.js',
   'main/main.js',
   'main/sidePanel.js',
+  'main/bindIPC.js',
   'main/appManager.js',
   'main/siteCard.js',
   'main/userScript.js',
