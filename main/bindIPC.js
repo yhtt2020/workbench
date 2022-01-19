@@ -9,7 +9,7 @@ app.whenReady().then(()=>{
   })
 //移除默认浏览器
   ipc.on('callSetOrRemoveDefaultBrowser',async function(event,args){
-    console.log(args.systemInfo)
+    // console.log(args.systemInfo)
     //args.systemInfo
     //{
     // [1]   platformAlias: 'Windows',
@@ -19,27 +19,43 @@ app.whenReady().then(()=>{
     // [1] }
     if(app.isDefaultProtocolClient('http')){
       if(args.systemInfo.platform==='win32'){
-        await registryInstaller.uninstall().then(()=>{
-            console.log('uninstall success')
-            event.reply('setBrowserReturn',{type:'delete',success:true,info:'卸载注册表成功'})
-        }).catch((err)=>{
-          console.log('uninstall error')
-          console.log(err)
-          event.reply('setBrowserReturn',{type:'delete',success:false,info:err})
-        })
+        try {
+          registryInstaller.uninstall()
+          event.reply('setBrowserReturn',{type:'delete',success:true,info:'注册表清理成功'})
+        }
+        catch(e){
+          event.reply('setBrowserReturn',{type:'delete',success:false,info:e})
+        }
+
+
+        // await registryInstaller.uninstall().then(()=>{
+        //     console.log('uninstall success')
+        //     event.reply('setBrowserReturn',{type:'delete',success:true,info:'卸载注册表成功'})
+        // }).catch((err)=>{
+        //   console.log('uninstall error')
+        //   console.log(err)
+        //   event.reply('setBrowserReturn',{type:'delete',success:false,info:err})
+        // })
       }
       app.removeAsDefaultProtocolClient('http')
     }else{
       if(args.systemInfo.platform==='win32'){
-        await registryInstaller.install().then(()=>{
-            console.log('reg success')
-            event.reply('setBrowserReturn',{type:'reg',success:true,info:'添加注册表成功'})
-
-        }).catch((err)=>{
-          console.log('reg error')
-          console.log(err)
-          event.reply('setBrowserReturn',{type:'reg',success:false,info:err})
-        })
+        try {
+          registryInstaller.install()
+          event.reply('setBrowserReturn',{type:'reg',success:true,info:'注册表添加成功'})
+        }
+        catch(e){
+          event.reply('setBrowserReturn',{type:'reg',success:false,info:e})
+        }
+        // await registryInstaller.install().then(()=>{
+        //     console.log('reg success')
+        //     event.reply('setBrowserReturn',{type:'reg',success:true,info:'添加注册表成功'})
+        //
+        // }).catch((err)=>{
+        //   console.log('reg error')
+        //   console.log(err)
+        //   event.reply('setBrowserReturn',{type:'reg',success:false,info:err})
+        // })
       }
       app.setAsDefaultProtocolClient('http')
     }
