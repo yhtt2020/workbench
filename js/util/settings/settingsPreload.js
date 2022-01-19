@@ -6,8 +6,8 @@ window.addEventListener('message', function (e) {
 
   if (e.data && e.data.message && e.data.message === 'getSettingsData') {
     ipc.send('getSettingsData')
-	
-	
+
+
   }
 
   if (e.data && e.data.message && e.data.message === 'setSetting') {
@@ -19,12 +19,12 @@ window.addEventListener('message', function (e) {
 	if(e.data.message=='callSetOrRemoveDefaultBrowser'){
 		ipc.send('callSetOrRemoveDefaultBrowser')
 	}
-  
+
 	//询问主进程，是否是默认浏览器
 	if(e.data.message=='getIsDefaulBrowser'){
 		ipc.send('getIsDefaulBrowser' )
 	}
-  
+
 })
 
 ipc.on('returnIsDefaultBrowser',function(e,data){
@@ -32,6 +32,7 @@ ipc.on('returnIsDefaultBrowser',function(e,data){
 })
 
 ipc.on('receiveSettingsData', function (e, data) {
+  console.log(data)
   if (window.location.toString().startsWith('file://')) { // probably redundant, but might as well check
     window.postMessage({ message: 'receiveSettingsData', settings: data }, 'file://')
   }
