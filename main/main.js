@@ -39,18 +39,23 @@ function clamp(n, min, max) {
 
 if (process.platform === 'win32') {
 	(async function() {
-		var squirrelCommand = process.argv[1]
-		if (squirrelCommand === '--squirrel-install' || squirrelCommand === '--squirrel-updated') {
-			isInstallerRunning = true
-			await registryInstaller.install()
-		}
-		if (squirrelCommand === '--squirrel-uninstall') {
-			isInstallerRunning = true
-			await registryInstaller.uninstall()
-		}
-		if (require('electron-squirrel-startup')) {
-			app.quit()
-		}
+    await registryInstaller.install().then(()=>{
+      console.log('reg success')
+    },(err)=>{
+      console.log(err)
+    })
+		// var squirrelCommand = process.argv[1]
+		// if (squirrelCommand === '--squirrel-install' || squirrelCommand === '--squirrel-updated') {
+		// 	isInstallerRunning = true
+		// 	await registryInstaller.install()
+		// }
+		// if (squirrelCommand === '--squirrel-uninstall') {
+		// 	isInstallerRunning = true
+		// 	await registryInstaller.uninstall()
+		// }
+		// if (require('electron-squirrel-startup')) {
+		// 	app.quit()
+		// }
 	})()
 }
 
