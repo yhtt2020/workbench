@@ -131,6 +131,10 @@
             if (!err) {
               console.log("Received values of form: ", values);
             }
+            if(!appVue.$data.agreeProtoco) {
+              this.$message.warn('请先同意使用协议!')
+              return
+            }
             const currentUser = await db.system
               .where("name")
               .equals("currentUser")
