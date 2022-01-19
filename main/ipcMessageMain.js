@@ -1,6 +1,7 @@
 /**
  * IPC消息类型注册，用于集中填写消息
  * @type {{sidePanel: {setMouseEnable: string, getGlobal: string, setMouseIgnore: string, receiveGlobal: string}}}
+ * 完整IPC清单见此文档 https://duanshuo.yuque.com/hfru7g/gta7yy/vzv0n1
  */
 const ipcMessageMain={
   sidePanel: {
