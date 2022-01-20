@@ -281,7 +281,7 @@ class SidePanel {
   //设置在侧边栏鼠标有效
   setMouseEnable () {
     this._sidePanel.setIgnoreMouseEvents(false)
-    if (BrowserWindow.getFocusedWindow() != null) //如果有任意一个window还有焦点，则聚焦到sidepanel
+    if (BrowserWindow.getFocusedWindow() != null && mainWindow.isFocused()) //如果有任意一个window还有焦点，且主窗体有焦点，则取得焦点，则聚焦到sidepanel
       this._sidePanel.focus()
     log('设置左侧栏感应 鼠标，左侧栏同时获得焦点')
   }
