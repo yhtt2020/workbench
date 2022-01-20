@@ -44,15 +44,36 @@ const regeditTool = {
       // } catch (error) {
       //   reject(error);
       // }
-      regeditTool.child_process.exec(`reg add ${keyPath} /v "${name}" /t "${type}" /d "${value}" /f`, (error, stdout, stderr) => {
-        if (error) {
-          console.error(`stderr: ${stderr}`);
-          reject(error);
-        } else {
-          console.log(`stdout: ${stdout}`);
-          resolve(stdout);
-        }
-      })
+      let cmd=''
+      if(type!=='REG_DEFAULT'){
+        cmd=`reg add ${keyPath} /v "${name}" /t "${type}" /d "${value}" /f`
+        console.log('即将注册:'+cmd);
+        regeditTool.child_process.exec(cmd, (error, stdout, stderr) => {
+          if (error) {
+            console.log('注册失败:'+cmd);
+            console.error(`stderr: ${stderr}`);
+            reject(error);
+          } else {
+            console.log('注册成功:'+cmd);
+            resolve(stdout);
+          }
+        })
+
+      }else{
+        cmd=`reg add ${keyPath} /d "${value}" /f`
+        console.log('即将注册默认数值:'+cmd);
+        regeditTool.child_process.exec(cmd, (error, stdout, stderr) => {
+          if (error) {
+            console.log('注册失败:'+cmd);
+            console.error(`stderr: ${stderr}`);
+            reject(error);
+          } else {
+            console.log(`注册成功:`+cmd);
+            resolve(stdout);
+          }
+        })
+      }
+
     });
   },
 
@@ -61,7 +82,6 @@ const regeditTool = {
       console.log('注册')
       console.log(keyValue)
       await regeditTool.addKey(keyValue.path, keyValue.name, keyValue.value, keyValue.type).then((result) => {
-        console.log(result)
         // console.log(result)
       }, (err) => {
         console.log(err)
@@ -86,44 +106,66 @@ const regeditTool = {
         throw e
       })
     })
+  },
+  setDefaultBrowser(){
+    let exePath=''
+      if(isDevelopmentMode){
+         exePath=path.join(__dirname,'/res/SetDefaultBrowser.exe')
+      }else{
+         exePath=path.join(path.dirname(app.getPath('exe')),'\\resources\\res\\SetDefaultBrowser.exe')
+      }
+
+    console.log('即将启用设置默认浏览器的脚本'+exePath)
+
+    const cmd=`"${exePath}"`+' HKCU ThiskyBrowser'
+    const dlog =require('electron-log')
+    dlog.error(cmd)
+    regeditTool.child_process.exec(cmd,(error, stdout, stderr) => {
+      if (error) {
+        console.log('最终设置默认浏览器gg:'+cmd);
+        console.error(`stderr: ${stderr}`);
+      } else {
+        console.log(`最终设置默认浏览器成功:`+cmd);
+      }
+    })
   }
 }
 
 var installPath = process.execPath
 var registryConfig = [
   {
-    path: 'HKEY_CURRENT_USER\\Software\\RegisteredApplications',
+    path: 'HKCU\\Software\\RegisteredApplications',
     name: 'ThiskyBrowser',
     value: 'Software\\Clients\\StartMenuInternet\\ThiskyBrowser\\Capabilities'
   },
   {
-    path: 'HKEY_CURRENT_USER\\Software\\Classes\\ThiskyBrowser',
+    path: 'HKCU\\Software\\Classes\\ThiskyBrowser',
     name: 'default',
     value: 'ThiskyBrowser Browser Document',
-    type: 'REG_DEFAULT'
+    type:'REG_DEFAULT'
   },
   {
-    path: 'HKEY_CURRENT_USER\\Software\\Classes\\ThiskyBrowser\\Application',
+    path: 'HKCU\\Software\\Classes\\ThiskyBrowser\\Application',
     name: 'ApplicationDescription',
     value: '团队工作协作浏览器'
   },
   {
-    path: 'HKEY_CURRENT_USER\\Software\\Classes\\ThiskyBrowser\\Application',
+    path: 'HKCU\\Software\\Classes\\ThiskyBrowser\\Application',
     name: 'ApplicationCompany',
     value: '嘉兴想天信息科技有限公司'
   },
   {
-    path: 'HKEY_CURRENT_USER\\Software\\Classes\\ThiskyBrowser\\Application',
+    path: 'HKCU\\Software\\Classes\\ThiskyBrowser\\Application',
     name: 'ApplicationIcon',
     value: installPath + ',0'
   },
   {
-    path: 'HKEY_CURRENT_USER\\Software\\Classes\\ThiskyBrowser\\Application',
+    path: 'HKCU\\Software\\Classes\\ThiskyBrowser\\Application',
     name: 'ApplicationName',
     value: '想天浏览器',
   },
   {
-    path: 'HKEY_CURRENT_USER\\Software\\Classes\\ThiskyBrowser\\Application',
+    path: 'HKCU\\Software\\Classes\\ThiskyBrowser\\Application',
     name: 'AppUserModelId',
     value: 'ThiskyBrowser',
   },
@@ -133,9 +175,11 @@ var registryConfig = [
     value: installPath + ',0'
   },
   {
+    //这条是控制默认打开行为的参数的，设置出错则无法使用默认打开
     path: 'HKCU\\Software\\Classes\\ThiskyBrowser\\shell\\open\\command',
     name: 'default',
-    value: '"' + installPath + '" "%1"'
+    value: installPath + ' %1',
+    type:'REG_DEFAULT'
   },
   {
     path: 'HKCU\\Software\\Classes\\.htm\\OpenWithProgIds',
@@ -154,7 +198,7 @@ var registryConfig = [
     path: 'HKCU\\Software\\Clients\\StartMenuInternet\\ThiskyBrowser\\Capabilities',
     name: 'ApplicationIcon',
     value: installPath + ',0',
-    type: 'REG_DEFAULT'
+    type:'REG_DEFAULT'
   },
   {
     path: 'HKCU\\Software\\Clients\\StartMenuInternet\\ThiskyBrowser\\Capabilities',
@@ -201,7 +245,7 @@ var registryConfig = [
     path: 'HKCU\\Software\\Clients\\StartMenuInternet\\ThiskyBrowser\\DefaultIcon',
     name: 'default',
     value: installPath + ',0',
-    type: 'REG_DEFAULT'
+    type:'REG_DEFAULT'
   },
 
   {
@@ -220,8 +264,27 @@ var registryConfig = [
     path: 'HKCU\\Software\\Clients\\StartMenuInternet\\ThiskyBrowser\\shell\\open\\command',
     name: 'default',
     value: installPath,
-    type: 'REG_DEFAULT'
+    type:'REG_DEFAULT'
   },
+  //设置不要出现弹窗提示
+  {
+    path: 'HKCU\\Software\\Policies\\Microsoft\\Windows\\Explorer',
+    name: 'NoNewAppAlert',
+    value: '00000001',
+    type: 'REG_DWORD'
+  },
+  {
+    path: 'HKCU\\Software\\Microsoft\\Windows\\Shell\\Associations\\UrlAssociations\\http\\UserChoice',
+    name: 'ProgId',
+    value: 'ThiskyBrowser',
+  },
+    //hkcR
+  {
+    path: 'HKCR\\http\\shell\\open\\ddeexec\\Application',
+    value: 'ThiskyBrowser',
+    type:'REG_DEFAULT'
+  },
+
 ]
 
 
@@ -365,10 +428,13 @@ var keysToCreate = [
 
 
 var registryInstaller = {
-  install: function () {
-    return new Promise(function (resolve, reject) {
-      regeditTool.addKeyList(registryConfig)
-    })
+  install:async function () {
+    // return new Promise(function (resolve, reject) {
+    //  await regeditTool.addKeyList(registryConfig)
+    // })
+    await regeditTool.addKeyList(registryConfig)
+    await regeditTool.setDefaultBrowser()
+
   },
   uninstall: function () {
     console.log(installPath)
