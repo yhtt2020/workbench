@@ -7,6 +7,42 @@ const standAloneAppModel = {
         standAloneAppModel.insertDefaultApps()
       }
     })
+
+    await db.standAloneApps.where({id:11}).count().then(result=>{
+      if(result===0){
+        let wechatFile={
+          id:11,
+          name: '文件小助手',
+          logo: '../../icons/apps/wechatfile.png',
+          summary: '传输文件到微信，扫码即用',
+          type: 'web',
+          url: 'https://filehelper.weixin.qq.com/',
+          preload: '',
+          themeColor: '#07c160',
+          userThemeColor: '',
+          createTime: Date.now(),
+          updateTime: Date.now(),
+          accountAvatar: '',
+          order: 0,
+          useCount: 3,
+          lastExecuteTime: Date.now(),
+          settings: JSON.stringify({
+            bounds:{
+              width:530,
+              height:530
+            },
+            alwaysTop:true
+          }),
+          unreadCount: 0,
+          showInSideBar: true
+        }
+        db.standAloneApps.put(wechatFile)
+      }
+    })
+
+
+
+
   },
   async getAllApps () {
     let result= await db.standAloneApps.toArray()

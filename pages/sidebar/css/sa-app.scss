@@ -145,15 +145,15 @@
           border-radius: 50%;
         }
         .title{
-          font-size: 12px;
+          font-size: 11px;
           margin-top: 5px;
           margin-bottom:10px;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
+          max-width: 48px;
         }
       }
-
       padding: 10px;
       border-left: 1px solid #e7e7e7;
     }
