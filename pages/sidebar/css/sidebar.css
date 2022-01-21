@@ -188,12 +188,13 @@
   border-radius: 50%;
 }
 .app-manager-overlay .ant-popover-inner-content .more-app .other-app-list .title {
-  font-size: 12px;
+  font-size: 11px;
   margin-top: 5px;
   margin-bottom: 10px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  max-width: 48px;
 }
 
 .app-info {

@@ -229,6 +229,7 @@ app.whenReady().then(()=>{
           width: 800,
           height: 600,
           acceptFirstMouse: true,
+          alwaysOnTop:saApp.settings.alwaysTop,
           webPreferences: {
             preload: path.join(__dirname,saApp.preload),
             nodeIntegration: true,
