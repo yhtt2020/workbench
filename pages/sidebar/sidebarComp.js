@@ -476,7 +476,7 @@ ipc.on('updateRunningApps',function(event,args){
   appVue.$refs.sidePanel.apps.forEach((app,index)=>{
     if(args.runningApps.indexOf(app.id)>-1){
       app.processing=true
-      app.windowId=args.windows[index]
+      app.windowId=args.windows[args.runningApps.indexOf(app.id)]
       ipc.send('getAppRunningInfo',{id:app.id})
     }
   })
