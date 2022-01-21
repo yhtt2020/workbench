@@ -244,7 +244,11 @@ function createWindowWithBounds(bounds) {
 		// when you should delete the corresponding element.
 		mainWindow = null
 		mainWindowIsMinimized = false
-
+    if(process.platform==='win32'){
+      console.log('windows上强制终止app')
+        //todo 如果做了托盘菜单，这里不需要直接退出app
+      app.quit()
+    }
 	})
 
 	mainWindow.on('focus', function() {
