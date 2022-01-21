@@ -1,3 +1,4 @@
+let forceClose=false
 /**
  * 运行中的应用窗体，结构{window:窗体对象,saApp:独立窗体app对象}
  * @type {*[]}
@@ -274,8 +275,11 @@ app.whenReady().then(()=>{
          * 只允许通过关闭按钮隐藏，而不是彻底关闭
          */
         appWindow.on('close',(event,args)=>{
-          appManager.hideWindow(saApp.windowId)
-          event.preventDefault()
+          if(!forceClose){
+            appManager.hideWindow(saApp.windowId)
+            event.preventDefault()
+          }
+
             // const result = dialog.showMessageBoxSync({
             //   type: 'none',
             //   buttons: ['取消','退出', '隐藏[不再询问]'],
@@ -361,6 +365,7 @@ app.whenReady().then(()=>{
    * 应用关闭前，将所有开启的窗体销毁掉
    */
   app.on('before-quit',()=>{
+    forceClose=true
     processingAppWindows.forEach((item)=>{
       if(!item.window.isDestroyed())
       {
