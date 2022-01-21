@@ -154,6 +154,9 @@ ipc.on('userLogin', function (e, data) {
     nickname: data.userInfo.nickname,
     avatar: data.userInfo.avatar,
     token: data.token,
+    refreshToken: data.refreshToken,
+    expire_deadtime: new Date().getTime() + data.expire * 1000,
+    refreshExpire_deadtime: new Date().getTime() + data.refreshExpire * 1000,
     code: data.code
   }
   window.$store.state.user = user
@@ -170,6 +173,9 @@ ipc.on('userLogin', function (e, data) {
       avatar: user.avatar,
       lastLoginTime: new Date().getTime(),
       token: user.token,
+      refreshToken: user.refreshToken,
+      expire_deadtime: user.expire_deadtime,
+      refreshExpire_deadtime: user.refreshExpire_deadtime,
       code: user.code
     })
     await window.$store.dispatch('getGroups', {

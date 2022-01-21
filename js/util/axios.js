@@ -1,21 +1,59 @@
 const axios = require('axios')
 const { config, api } = require('../../server-config')
-//const storage = require('electron-localstorage');
+const {db } = require('./database.js')
+const storage = require('electron-localstorage');
 
 //因为我这里本地环境测试就算用户注销但拿到的code是体验站上的code
 //会出现退出失败，redis无法清除，本地storage也无法清除
 //本地下面代码强制清除storage
 //console.log(storage.getAll())
 //storage.clear();
-//console.log(storage.getStoragePath())
 
 axios.defaults.baseURL = config.NODE_SERVER_BASE_URL;
 //<!--强制使用node模块。-->
 axios.defaults.adapter = require('axios/lib/adapters/http');
 
+let requests = []
+let isRefreshing = false
+
 axios.interceptors.request.use(
-  config => {
+  async config => {
     // Do something before request is sent
+    console.log(config, '拦截的config')
+    console.log(db.system.where('name').equals('currentUser'), 'db!!!!!!!!!')
+    storage.setStoragePath(global.sharedPath.extra)
+    console.log(storage.getStoragePath(), '@@@@@@@')
+
+    // //验证token头是否存在，存在才说明这个请求是需要做无感知刷新的
+    // if(config.headers.Authorization.length > 0) {
+    //   //说明此请求正在请求刷新令牌，直接return出去
+		// 	if (config.url.includes("refreshBrowserToken")) {
+		// 		return config;
+		// 	}
+
+    //   //判断token是否过期
+    //   if(config.expireInfo.expire_deadtime - new Date().getTime() <= 8000) {
+    //     //判断refreshToken是否过期
+    //     if(config.expireInfo.refreshExpire_deadtime - new Date().getTime() <= 8000) {
+    //       if(config.expireInfo.inMain) {
+    //         //在主进程中的请求时发现过期，清空用户标识
+    //         storage.setStoragePath(global.sharedPath.extra)
+    //         storage.clear()
+    //         await db.system.where('name').equals('currentUser').modify({value: {
+    //           uid: 0,
+    //           nickname: '立即登录',
+    //           avatar: '../../../icons/browser.ico'
+    //         }})
+
+
+
+    //       }
+
+    //     }
+    //   }
+
+    // }
+
     return config;
   },
   error => {

@@ -4,6 +4,9 @@ const baseApi = {
   token: "",
   currentUser: {},
   uid: 0,
+  refreshToken: '',
+  expire_deadtime: 0,
+  refreshExpire_deadtime: 0,
   getCurrentUser: () => {
     return db.system.where("name").equals("currentUser").first();
   },
@@ -12,6 +15,9 @@ const baseApi = {
       baseApi.currentUser = user;
       baseApi.token = user.value.token;
       baseApi.uid = user.value.uid;
+      baseApi.refreshToken = user.value.refreshToken
+      baseApi.expire_deadtime = user.value.expire_deadtime
+      baseApi.refreshExpire_deadtime = user.value.refreshExpire_deadtime
     });
   },
 
@@ -33,6 +39,12 @@ const baseApi = {
       url: url,
       headers: { Authorization: baseApi.token },
       ...data,
+      expireInfo: {
+        refreshToken: baseApi.refreshToken,
+        expire_deadtime: baseApi.expire_deadtime,
+        refreshExpire_deadtime: baseApi.refreshExpire_deadtime,
+        inMain: false
+      }
     });
   },
 };

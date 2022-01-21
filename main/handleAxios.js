@@ -25,6 +25,9 @@ const handleAxios =  {
         const result = await authApi.loginBrowser(data)
         if(result.code === 1000) {
           storage.setItem(`userToken`, result.data.token)
+          storage.setItem(`refreshToken`, result.data.refreshToken)
+          storage.setItem(`expire_deadtime`, new Date().getTime() + result.data.expire * 1000)
+          storage.setItem(`refreshExpire_deadtime`, new Date().getTime() + result.data.refreshExpire * 1000)
           storage.setItem(`userInfo`, result.data.userInfo)
         }
         event.reply('callback-loginBrowser', result)
@@ -41,6 +44,9 @@ const handleAxios =  {
       await authApi.logoutBrowser(data)
       storage.removeItem(`userToken`);
       storage.removeItem(`userInfo`)
+      storage.removeItem(`refreshToken`)
+      storage.removeItem(`expire_deadtime`)
+      storage.removeItem(`refreshExpire_deadtime`)
     })
 
     //分享组
