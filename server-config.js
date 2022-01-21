@@ -15,7 +15,8 @@ const config = {
 }
 
 const appConfig = {
-  client_id: 10001,   //浏览器 id
+  //client_id: 10001,   //浏览器 id
+  client_id: 10003,   //浏览器 id
   bind_im_id: 10002,  //lumen id
   state: 1,
   response_type: 'code',
