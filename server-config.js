@@ -1,9 +1,12 @@
 //本代码会同时被preoload.js合并进去
 //也可以直接require进去(在非preload当中）
+let isDevelopmentMode = process.argv.some(arg=>arg==='--development-mode')
 const config = {
   SERVER_BASE_URL: 'https://com.thisky.com',
   DEV_NODE_SERVER_BASE_URL: 'http://test.com:8001',
   PROD_NODE_SERVER_BASE_URL: 'https://work.thisky.com',
+  NODE_SERVER_BASE_URL: isDevelopmentMode ? 'http://test.com:8001' : 'https://work.thisky.com',
+  //NODE_SERVER_BASE_URL: isDevelopmentMode ? 'https://work.thisky.com' : 'https://work.thisky.com',  //老板你本地用这个，注释上面这个
   IM:{
     API_BASE_URL:"http://im-serve.xiangtian.ren",
     WEB_SOCKET_URL:"ws://im-socket.xiangtian.ren/socket.io",
@@ -15,8 +18,8 @@ const config = {
 }
 
 const appConfig = {
-  //client_id: 10001,   //浏览器 id
-  client_id: 10003,   //浏览器 id
+  client_id: isDevelopmentMode ? 10003 : 10001,
+  //client_id: isDevelopmentMode ? 10001 : 10001,     //老板你本地用这个，注释上面这个
   bind_im_id: 10002,  //lumen id
   state: 1,
   response_type: 'code',
@@ -41,7 +44,6 @@ const api = {
     },
   },
   getUrl(path) {
-    //const params=path.split('/')
     return config.SERVER_BASE_URL + path
   },
   getProdNodeUrl(path) {

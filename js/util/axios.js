@@ -9,10 +9,7 @@ const { config, api } = require('../../server-config')
 //storage.clear();
 //console.log(storage.getStoragePath())
 
-const isDevelopmentMode = process.argv.some(arg=>arg==='--development-mode')
-
-//axios.defaults.baseURL = config.PROD_NODE_SERVER_BASE_URL;
-axios.defaults.baseURL = isDevelopmentMode ? config.DEV_NODE_SERVER_BASE_URL : config.PROD_NODE_SERVER_BASE_URL
+axios.defaults.baseURL = config.NODE_SERVER_BASE_URL;
 //<!--强制使用node模块。-->
 axios.defaults.adapter = require('axios/lib/adapters/http');
 
