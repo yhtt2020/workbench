@@ -319,7 +319,32 @@
 		<!-- add scripts in Gruntfile.js -->
 
 		<script src="dist/bundle.js"></script>
+    <script>
+      ipc.on('clearCurrentUser', async (event, args) => {
+        console.log('whoooooooh!@@@@@@')
+        const {db} = require('./js/util/database.js')
+        await db.system.where('name').equals('currentUser').modify({value: {
+          uid: 0,
+          nickname: '立即登录',
+          avatar: './icons/browser.ico'
+        }})
+      })
 
+      ipc.on('remakeCurrentUser', async (event, args) => {
+        console.log('在重制当前用户了@@@@')
+        const {db} = require('./js/util/database.js')
+        await db.system.where('name').equals('currentUser').modify({value: {
+          uid: args.userInfo.uid,
+          nickname: args.userInfo.nickname,
+          avatar: args.userInfo.avatar,
+          token: args.token,
+          refreshToken: args.refreshToken,
+          expire_deadtime: new Date().getTime() + args.expire * 1000,
+          refreshExpire_deadtime: new Date().getTime() + args.refreshExpire * 1000,
+          code: args.code
+        }})
+      })
+    </script>
 
 	</body>
 </html>

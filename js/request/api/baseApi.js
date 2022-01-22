@@ -68,6 +68,7 @@ const baseApi = {
       headers: { Authorization: baseApi.token },
       ...data,
       expireInfo: {
+        token: baseApi.token,
         refreshToken: baseApi.refreshToken,
         expire_deadtime: baseApi.expire_deadtime,
         refreshExpire_deadtime: baseApi.refreshExpire_deadtime,

@@ -27,10 +27,10 @@ const preload = {
   },
 	init(path) {
 		switch (path) {
-      case api.getProdNodeUrl(api.NODE_API_URL.user.code):
+      case api.getProdNodeUrl(api.NODE_API_URL.USER.CODE):
         this.login()
         break
-      case api.getDevNodeUrl(api.NODE_API_URL.user.code):
+      case api.getDevNodeUrl(api.NODE_API_URL.USER.CODE):
         this.login()
         break
       default:

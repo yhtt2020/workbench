@@ -39,8 +39,9 @@ const api = {
     },
   },
   NODE_API_URL: {
-    user: {
-      code: '/app/authorizeCode', //code截取url
+    USER: {
+      CODE: '/app/authorizeCode', //code截取url
+      REFRESH_TOKEN: '/app/refreshBrowserToken'
     },
   },
   getUrl(path) {

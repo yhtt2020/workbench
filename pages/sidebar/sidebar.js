@@ -1,5 +1,5 @@
 //定义一个TaskList来接收tasks类型的数据
-const axios = require('../../js/util/axios.js')
+const groupApi = require('../util/api/groupApi')
 class TasksList {
 	constructor() {
 		this.tasks = []
@@ -309,12 +309,7 @@ window.onload = function() {
 		},
     actions: {
       async getGroups({ commit }, userInfo) {
-        const { token } = userInfo
-        const result = await axios({
-          method: 'post',
-          url: '/app/browser/group/list',
-          headers: { Authorization: token }
-        })
+        const result = await groupApi.getGroups()
         if(result.code === 1000) {
           commit('SET_MYGROUPS', result.data)
         }
