@@ -321,7 +321,6 @@
 		<script src="dist/bundle.js"></script>
     <script>
       ipc.on('clearCurrentUser', async (event, args) => {
-        console.log('whoooooooh!@@@@@@')
         const {db} = require('./js/util/database.js')
         await db.system.where('name').equals('currentUser').modify({value: {
           uid: 0,
@@ -331,7 +330,6 @@
       })
 
       ipc.on('remakeCurrentUser', async (event, args) => {
-        console.log('在重制当前用户了@@@@')
         const {db} = require('./js/util/database.js')
         await db.system.where('name').equals('currentUser').modify({value: {
           uid: args.userInfo.uid,
