@@ -89,6 +89,15 @@
                   <a-form-item
                     :label-col="formItemLayout.labelCol"
                     :wrapper-col="formItemLayout.wrapperCol"
+                    label="应用地址："
+                  >
+                    <span class="ant-form-text" style="line-height: 40px">
+        {{this.saApp.url}}
+      </span>
+                  </a-form-item>
+                  <a-form-item
+                    :label-col="formItemLayout.labelCol"
+                    :wrapper-col="formItemLayout.wrapperCol"
                     label="应用说明"
                   >
                     <a-textarea
@@ -113,17 +122,17 @@
 
                   <a-form-item id="optimize" label="体验优化" style="margin-bottom: 0">
                     <a-checkbox-group
-                      v-decorator="['功能优化', { initialValue: ['A', 'B'] }]"
+                      v-decorator="['optimize', { initialValue: ['A', 'B'] }]"
                       style="width: 100%;"
                     >
                       <a-row class="setting-check-boxes">
                         <a-col :span="8">
-                          <a-checkbox value="autorun">
+                          <a-checkbox value="autoRun">
                             默认启动
                           </a-checkbox>
                         </a-col>
                         <a-col :span="8">
-                          <a-checkbox value="lock">
+                          <a-checkbox value="keepRunning">
                             保持运行
                           </a-checkbox>
                         </a-col>
@@ -138,13 +147,13 @@
                           </a-checkbox>
                         </a-col>
                         <a-col :span="8">
-                          <a-checkbox value="sideBar">
+                          <a-checkbox value="showInSideBar">
                             保持在左侧栏
                           </a-checkbox>
                         </a-col>
                         <a-col :span="8">
                           <a-checkbox value="alwaysTop">
-                            显示在最顶层
+                            保持在最顶层
                           </a-checkbox>
                         </a-col>
                       </a-row>
@@ -226,6 +235,16 @@
     border-radius:100%;
 
   }
+  .ant-form-item{
+    margin-bottom: 10px;
+  }
+  h1{
+    font-weight: bold !important;
+    font-size: 14px;
+  }
+  .ant-form-item-label{
+    font-weight: bold;
+  }
 </style>
 <script>
   const tools=require('../util/util.js').tools
@@ -233,7 +252,7 @@
   const swatches = window['vue-swatches']
   const formItemLayout = {
     labelCol: {span: 4},
-    wrapperCol: {span: 8},
+    wrapperCol: {span: 16},
   };
   const formTailLayout = {
     labelCol: {span: 4},
@@ -246,28 +265,48 @@
     },
     data() {
       return {
+        standAloneModel:{},
+        appId:0,
         saApp: {name: ''},
         checkNick: false,
         formItemLayout,
         formTailLayout,
         form: this.$form.createForm(this, {
           name: 'appSetting', onValuesChange: (props, values) => {
-            console.log(props)
-            console.log(values)
+            if(values.optimize){
+              //['keepRunning', 'theme', 'desktop', 'showInSideBar', 'alwaysTop', 'autoRun']
+              let optimizeValue=['keepRunning', 'theme', 'desktop', 'showInSideBar', 'alwaysTop', 'autoRun']
+              let optimize=values['optimize']
+              let settings={}
+              optimizeValue.forEach(item=>{
+                settings[item] = optimize.indexOf(item) > -1;
+               })
+              require('../util/model/standAloneAppModel').setAppSetting(Number(window.globalArgs['app-id']),settings)
+            }
           }
         }),
       }
     },
     beforeCreate() {
-      const standAloneModel = require('../util/model/standAloneAppModel')
       let that = this
-      standAloneModel.get(Number(window.globalArgs['app-id'])).then(data => {
+      this.standAloneModel=require('../util/model/standAloneAppModel')
+      this.appId=Number(window.globalArgs['app-id'])
+      this.standAloneModel.get(this.appId).then(data => {
         that.saApp = data
         that.form.name = data.name
+        let optimizeValues=['keepRunning', 'theme', 'desktop', 'showInSideBar', 'alwaysTop', 'autoRun']
+        let optimize=[]
+          optimizeValues.forEach(item=>{
+          if(data.settings[item]){
+            optimize.push(item)
+          }
+        })
+        console.log(optimize)
         this.form.setFieldsValue({
           name: data.name,
           summary: data.summary,
-          themeColor: data.themeColor
+          themeColor: data.themeColor,
+          optimize:optimize
         })
         console.log(that.saApp)
       })
