@@ -456,6 +456,13 @@ const tabBar = {
             submenu: addToDeskMenus
           },
           {
+            id: 'addToApps',
+            label: '安装到应用',
+            click: function () {
+              tabBar.addToApps(data.id)
+            },
+          },
+          {
             id: 'open',
             label: '打开新标签',
             click: function () {
@@ -819,7 +826,34 @@ const tabBar = {
       tabBar.navBar.classList.remove('show-dividers')
     }
   },
-
+  /**
+   * 添加一个应用
+   * @param id
+   */
+  addToApps(id){
+    let tab = tabs.get(id)
+    let standAloneAppModel=require('../../pages/util/model/standAloneAppModel.js')
+    console.log(tab)
+    let option={
+      name: tab.title,
+      logo: !!!tab.favicon?'../../icons/default.svg':tab.favicon.url,
+      summary:   '自定义应用',
+      type:'web',
+      themeColor: !!!tab.backgroundColor?'#ccc':tab.backgroundColor.color,
+      settings: {
+        bounds:{
+          width:1000,
+          height:800
+        }
+      },
+      showInSideBar: false
+    }
+    if(standAloneAppModel.install(tab.url,option)){
+      ipc.send('message', {type: 'success', config: {content: `添加应用：${tab.title} 成功`}})
+    }else{
+      ipc.send('message', {type: 'error', config: {content: '添加应用失败'}})
+    }
+  },
   //扩充一个获取icon的方法
   createIconEl: function (tabData, loaded) {
     var iconEl = document.createElement('img')

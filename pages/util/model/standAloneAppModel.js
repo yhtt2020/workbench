@@ -39,10 +39,35 @@ const standAloneAppModel = {
         db.standAloneApps.put(wechatFile)
       }
     })
-
-
-
-
+  },
+  /**
+   * 安装应用
+   * @param url 安装的web应用地址
+   * @param option 配置参数
+   * @returns {Promise<void>}
+   */
+  async install(url='',option={}){
+    if(!!!url) return false
+    let app={
+      name: option.name,
+      logo: option.logo,
+      summary: option.summary || '',
+      type: option.type || 'web',
+      url: url,
+      preload: '',
+      themeColor: option.themeColor||'#ccc',
+      userThemeColor: '',
+      createTime: Date.now(),
+      updateTime: Date.now(),
+      accountAvatar: '',
+      order: 0,
+      useCount: 0,
+      lastExecuteTime: Date.now(),
+      settings: JSON.stringify(option.settings),
+      unreadCount: 0,
+      showInSideBar: option.showInSideBar||false
+    }
+    return await db.standAloneApps.put(app)
   },
   async getAllApps () {
     let result= await db.standAloneApps.toArray()
@@ -52,6 +77,12 @@ const standAloneAppModel = {
     })
     return result
   },
+  /**
+   * 设置应用设置
+   * @param id
+   * @param settings
+   * @returns {Promise<void>}
+   */
   async setAppSetting(id,settings){
     let app=await db.standAloneApps.get(id)
     if(!!!app){
