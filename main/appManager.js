@@ -210,6 +210,35 @@ app.whenReady().then(()=>{
       }
       return imagePath
     },
+    openSetting(appId){
+      let settingWindow=new BrowserWindow({
+        width: 800,
+        height: 800,
+        acceptFirstMouse: true,
+        alwaysOnTop:true,
+        webPreferences: {
+          preload: __dirname+'/pages/saApp/settingPreload.js',
+          nodeIntegration: true,
+          contextIsolation: false,
+          enableRemoteModule: true,
+          sandbox: false,
+          safeDialogs:false,
+          safeDialogsMessage:false,
+          partition:null,
+          additionalArguments: [
+            '--user-data-path=' + userDataPath,
+            '--app-version=' + app.getVersion(),
+            '--app-name=' + app.getName(),
+            '--app-id='+appId,
+            ...((isDevelopmentMode ? ['--development-mode'] : [])),
+          ]
+        }
+      })
+      settingWindow.setMenu(null)
+      settingWindow.webContents.loadURL(__dirname+'/pages/saApp/setting.html')
+      if(isDevelopmentMode)
+      settingWindow.webContents.openDevTools()
+    },
     closeApp(appId){
       let window=appManager.getWindowByAppId(appId)
       let saApp=appManager.getSaAppByAppId(appId)
@@ -344,6 +373,9 @@ app.whenReady().then(()=>{
         appManager.focusWindow(saApp.windowId)
       }
     }
+  })
+  ipc.on(ipcMessageMain.saApps.openSetting,(event,args)=>{
+    appManager.openSetting(args.id)
   })
   ipc.on('closeApp',(event,args)=>{
     appManager.closeApp(args.id)

@@ -77,6 +77,15 @@ const standAloneAppModel = {
     })
     return result
   },
+  async get(id){
+    let data=false
+    await db.standAloneApps.get(id).then((result)=>{
+      data= result
+    },(err)=>{
+      data=false
+    })
+    return data
+  },
   /**
    * 设置应用设置
    * @param id

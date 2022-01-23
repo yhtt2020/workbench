@@ -1,6 +1,6 @@
 const appManagerTpl =
   `
-   <div class="wrapper">
+   <div class="wrapper" >
    <a-popover
                 placement="right"
                 :mouse-enter-delay="0.1"
@@ -13,7 +13,7 @@ const appManagerTpl =
 </div>
 </template>
                 <template slot="content">
-                <a-row type="flex">
+                <a-row type="flex" style="user-select: none">
                 <a-col class="in-process-app" flex="320px">
                 <div style="padding-top: 35px;text-align: center" v-if="runningApps.length===0">
                 <a-empty description="暂无运行中的应用" ></a-empty>
@@ -21,9 +21,10 @@ const appManagerTpl =
             <div class="scroller-wrapper">
              <ul class="app-list">
              <li  v-for="(appId,index) in runningApps" >
-             <div style="cursor:pointer;" @click="executeApp(getApp(appId))" class="app-title">
-             <img :src="getApp(appId).logo" class="app-logo"><span class="app-name">{{getApp(appId).name}}</span>
-             <span style="float: right"><a-icon title="彻底退出" @click.stop="closeApp(appId)" type="poweroff"></a-icon></span>
+             <div class="app-title">
+             <span style="cursor:pointer" @click="executeApp(getApp(appId))">
+             <img :src="getApp(appId).logo" class="app-logo"><span class="app-name">{{getApp(appId).name}}</span></span>
+             <span style="float: right"><a-icon title="设置" @click.stop="openSetting(appId)" type="setting"></a-icon>&nbsp;&nbsp; <a-icon title="彻底退出" @click.stop="closeApp(appId)" type="poweroff"></a-icon> </span>
 </div>
              <div>
              <div class="app-capture" style="position: relative" @mouseenter="startStat(appId)" @mouseleave="stopStat">
@@ -187,6 +188,9 @@ Vue.component('app-manager', {
     },
     closeApp(appId){
         ipc.send('closeApp',{id:appId})
+    },
+    openSetting(appId){
+      ipc.send('saAppOpenSetting',{id:appId})
     }
   },
   computed:{
