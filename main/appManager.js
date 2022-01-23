@@ -267,6 +267,18 @@ app.whenReady().then(()=>{
         appWindow.on('ready-to-show',(event)=>{
           //连续4秒都获取一次截图，保障能够截取到最新的图
           appManager.capture(saApp.windowId)
+          setTimeout(()=>{
+            if(!appWindow.isDestroyed())
+              appManager.capture(saApp.windowId)
+          },2000)
+          setTimeout(()=>{
+            if(!appWindow.isDestroyed())
+              appManager.capture(saApp.windowId)
+          },3000)
+          setTimeout(()=>{
+            if(!appWindow.isDestroyed())
+              appManager.capture(saApp.windowId)
+          },4000)
         })
         appWindow.on('blur',async (event)=>{
           SidePanel.send('updateRunningInfo',{id:saApp.id,"info":await appManager.getAppRunningInfo(saApp.id)})
