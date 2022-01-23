@@ -244,7 +244,7 @@ app.whenReady().then(()=>{
               '--user-data-path=' + userDataPath,
               '--app-version=' + app.getVersion(),
               '--app-name=' + app.getName(),
-              //...((isDevelopmentMode ? ['--development-mode'] : [])),
+              ...((isDevelopmentMode ? ['--development-mode'] : [])),
             ]
           }
         })

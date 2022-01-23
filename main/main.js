@@ -329,7 +329,7 @@ function createWindowWithBounds(bounds) {
 	})
 
 	mainWindow.setTouchBar(buildTouchBar())
-
+  global.utilWindow = mainWindow
 	return mainWindow
 
 }
