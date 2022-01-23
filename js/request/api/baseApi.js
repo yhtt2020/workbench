@@ -8,6 +8,9 @@ const baseApi = {
   token: "",
   currentUser: {},
   uid: 0,
+  refreshToken: '',
+  expire_deadtime: 0,
+  refreshExpire_deadtime: 0,
   beforeInit: async() => {
     db.open().catch(function (e) {
       baseApi.inMain = true
@@ -26,7 +29,10 @@ const baseApi = {
       if(userToken && userInfo) {
         baseApi.currentUser = userInfo;
         baseApi.token = userToken;
-        baseApi.uid = userInfo.uid;        
+        baseApi.uid = userInfo.uid;
+        baseApi.refreshToken = storage.getItem(`refreshToken`)
+        baseApi.expire_deadtime = storage.getItem(`expire_deadtime`)
+        baseApi.refreshExpire_deadtime = storage.getItem(`refreshExpire_deadtime`)
       }
     } else {
       const user = await baseApi.getCurrentUser()
@@ -36,6 +42,9 @@ const baseApi = {
         baseApi.currentUser = user;
         baseApi.token = user.value.token;
         baseApi.uid = user.value.uid;
+        baseApi.refreshToken = user.value.refreshToken
+        baseApi.expire_deadtime = user.value.expire_deadtime
+        baseApi.refreshExpire_deadtime = user.value.refreshExpire_deadtime
       }
     }
   },
@@ -58,6 +67,13 @@ const baseApi = {
       url: url,
       headers: { Authorization: baseApi.token },
       ...data,
+      expireInfo: {
+        token: baseApi.token,
+        refreshToken: baseApi.refreshToken,
+        expire_deadtime: baseApi.expire_deadtime,
+        refreshExpire_deadtime: baseApi.refreshExpire_deadtime,
+        inMain: baseApi.inMain
+      }
     });
   },
 };

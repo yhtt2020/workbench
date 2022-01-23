@@ -1,0 +1,38 @@
+#components-form-demo-validate-other .dropbox {
+  height: 180px;
+  line-height: 1.5;
+}
+
+.candidate {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.active {
+  border: 1px dashed #ccc;
+}
+
+.tip {
+  color: #999;
+  padding-left: 25px;
+  padding-top: 5px;
+  margin-bottom: 10px;
+  padding-bottom: 0;
+}
+
+.ant-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-item-col4 {
+  margin-bottom: 0;
+}
+.form-item-col4 .ant-form-item-control {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/*# sourceMappingURL=create.css.map */

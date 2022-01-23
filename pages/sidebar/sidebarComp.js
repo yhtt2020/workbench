@@ -102,9 +102,13 @@ Vue.component('sidebar', {
     })
     const currentUser = await db.system.where('name').equals('currentUser').first()
     if(currentUser.value.uid !== 0 ) {
-      await this.$store.dispatch('getGroups', {
-        token: currentUser.value.token
-      })
+      try {
+        await this.$store.dispatch('getGroups', {
+          token: currentUser.value.token
+        })
+      } catch(err) {
+        console.log('团队列表接口错误!')
+      }
     }
     let sideMode=localStorage.getItem('sideMode')
     sideMode = sideMode||'auto'

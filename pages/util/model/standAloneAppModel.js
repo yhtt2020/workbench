@@ -28,8 +28,8 @@ const standAloneAppModel = {
           lastExecuteTime: Date.now(),
           settings: JSON.stringify({
             bounds:{
-              width:530,
-              height:530
+              width:540,
+              height:540
             },
             alwaysTop:true
           }),
@@ -110,7 +110,8 @@ const standAloneAppModel = {
         logo: '../../icons/svg/chat.svg',
         summary: '团队协作，与团队成员高效协作',
         type: 'web',
-        url: serverConfig.IM.FRONT_URL+ serverConfig.IM.AUTO_LOGIN,
+        //url: serverConfig.IM.FRONT_URL+ serverConfig.IM.AUTO_LOGIN,
+        url: serverConfig.IM.FRONT_URL_DEV+ serverConfig.IM.AUTO_LOGIN,
         preload: '/pages/group/imPreload.js',
         themeColor: '#6fafff',
         userThemeColor: '',

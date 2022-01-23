@@ -1,3 +1,4 @@
+let forceClose=false
 /**
  * 运行中的应用窗体，结构{window:窗体对象,saApp:独立窗体app对象}
  * @type {*[]}
@@ -72,9 +73,9 @@ app.whenReady().then(()=>{
      */
     removeAppWindow(saAppWindowId){
       for(let i=0;i<processingAppWindows.length;i++){
-          if(processingAppWindows[i].saApp.windowId===saAppWindowId){
-            processingAppWindows.splice(i,1)
-          }
+        if(processingAppWindows[i].saApp.windowId===saAppWindowId){
+          processingAppWindows.splice(i,1)
+        }
 
       }
     },
@@ -84,7 +85,7 @@ app.whenReady().then(()=>{
      * @param settings 应用设置，一个对象，类似{isAlwaysHide:true,runAtStart:true} 参考开发文档
      */
     setAppSettings(saAppId,settings=[]){
-     let saApp= appManager.getSaAppByAppId(saAppId)
+      let saApp= appManager.getSaAppByAppId(saAppId)
       if(saApp){
         SidePanel.send('updateSetting',{id:saAppId,settings:settings})
         saApp.settings=Object.assign(saApp.settings,settings)
@@ -183,7 +184,7 @@ app.whenReady().then(()=>{
       let pid=appWindow.webContents.getOSProcessId()
       allMetrics.forEach((met)=>{
         if(met.pid===pid){
-         memoryInfo=met
+          memoryInfo=met
         }
       })
       return memoryInfo
@@ -197,7 +198,7 @@ app.whenReady().then(()=>{
       if(saApp.window.isDestroyed()){
         return
       }
-     let capturedImage =  await saApp.window.webContents.capturePage()
+      let capturedImage =  await saApp.window.webContents.capturePage()
       if(!fs.existsSync(userDataPath+'/app')){
         fs.mkdirSync(userDataPath+'/app')
       }
@@ -243,12 +244,13 @@ app.whenReady().then(()=>{
               '--user-data-path=' + userDataPath,
               '--app-version=' + app.getVersion(),
               '--app-name=' + app.getName(),
-              //...((isDevelopmentMode ? ['--development-mode'] : [])),
+              ...((isDevelopmentMode ? ['--development-mode'] : [])),
             ]
           }
         })
         saApp.windowId=appWindow.webContents.id
         appWindow.setBounds(saApp.settings.bounds)
+        appWindow.setMenu(null)
         if(saApp.type==='local'){
           appWindow.webContents.loadURL('file://'+path.join(__dirname,saApp.url))
         }else{
@@ -265,6 +267,18 @@ app.whenReady().then(()=>{
         appWindow.on('ready-to-show',(event)=>{
           //连续4秒都获取一次截图，保障能够截取到最新的图
           appManager.capture(saApp.windowId)
+          setTimeout(()=>{
+            if(!appWindow.isDestroyed())
+              appManager.capture(saApp.windowId)
+          },2000)
+          setTimeout(()=>{
+            if(!appWindow.isDestroyed())
+              appManager.capture(saApp.windowId)
+          },3000)
+          setTimeout(()=>{
+            if(!appWindow.isDestroyed())
+              appManager.capture(saApp.windowId)
+          },4000)
         })
         appWindow.on('blur',async (event)=>{
           SidePanel.send('updateRunningInfo',{id:saApp.id,"info":await appManager.getAppRunningInfo(saApp.id)})
@@ -273,32 +287,37 @@ app.whenReady().then(()=>{
          * 只允许通过关闭按钮隐藏，而不是彻底关闭
          */
         appWindow.on('close',(event,args)=>{
-          appManager.hideWindow(saApp.windowId)
-          event.preventDefault()
-            // const result = dialog.showMessageBoxSync({
-            //   type: 'none',
-            //   buttons: ['取消','退出', '隐藏[不再询问]'],
-            //   message: '退出后无法接受消息提醒,请注意!',
-            //   cancelId: 0,
-            //   defaultId: 2,
-            //   noLink: true
-            // })
-            // if(result === 0 ) {
-            //   apLog('阻止隐藏')
-            //   event.preventDefault()
-            //   return
-            // } else if(result === 2) {
-            //   event.preventDefault()
-            //   apLog('设置设置,true')
-            //   appManager.setAppSettings(saApp.id,{'alwaysHide':true})//alwaysHide = true
-            //
-            //   //groupIMWindow.hide()
-            // } else {
-            //   appManager.closeApp(saApp.id)
-            //   //alwaysHide = false
-            //   apLog('设置设置false')
-            //   appManager.setAppSettings(saApp.id,{'alwaysHide':false})
-            // }
+          if(!forceClose){
+            appManager.hideWindow(saApp.windowId)
+            event.preventDefault()
+          }else{
+            appManager.closeApp(saApp.id)
+          }
+
+          // const result = dialog.showMessageBoxSync({
+          //   type: 'none',
+          //   buttons: ['取消','退出', '隐藏[不再询问]'],
+          //   message: '退出后无法接受消息提醒,请注意!',
+          //   cancelId: 0,
+          //   defaultId: 2,
+          //   noLink: true
+          // })
+          // if(result === 0 ) {
+          //   apLog('阻止隐藏')
+          //   event.preventDefault()
+          //   return
+          // } else if(result === 2) {
+          //   event.preventDefault()
+          //   apLog('设置设置,true')
+          //   appManager.setAppSettings(saApp.id,{'alwaysHide':true})//alwaysHide = true
+          //
+          //   //groupIMWindow.hide()
+          // } else {
+          //   appManager.closeApp(saApp.id)
+          //   //alwaysHide = false
+          //   apLog('设置设置false')
+          //   appManager.setAppSettings(saApp.id,{'alwaysHide':false})
+          // }
 
         })
 
@@ -360,6 +379,7 @@ app.whenReady().then(()=>{
    * 应用关闭前，将所有开启的窗体销毁掉
    */
   app.on('before-quit',()=>{
+    forceClose=true
     processingAppWindows.forEach((item)=>{
       if(!item.window.isDestroyed())
       {
@@ -367,4 +387,7 @@ app.whenReady().then(()=>{
       }
     })
   })
+  console.log(process.platform)
+
+
 })

@@ -2,6 +2,8 @@ directories:
     output: setup
     buildResources: dist
 
+
+
 files:
     - dist/*.js
     - dist/*.css
@@ -17,9 +19,16 @@ files:
     - api/*
     - img/*.jpg
     - reader/*
+    - resources/**/*
+
 
 win:
-    icon: ./icon.ico
+    extraResources:
+        - from: res
+          to: res
+          filter:
+            - "**/*"
+    icon: ./icons/logowin.ico
     target:
         - target: nsis
           arch:

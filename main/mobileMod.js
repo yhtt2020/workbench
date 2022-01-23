@@ -103,7 +103,7 @@ const mobileMod = {
         canGoForward: view.webContents.canGoForward()
       })
     })
-    view.webContents.on('did-start-navigation', (event, url) => {
+    view.webContents.on('did-navigate', (event, url) => {
       mobileWindow.webContents.send('updateView', {
         url: url,
         canGoBack: view.webContents.canGoBack(),
@@ -111,8 +111,13 @@ const mobileMod = {
       })
     })
     view.webContents.on('new-window', (event, url) => {
-      console.log('blocking!')
+      event.preventDefault()
       view.webContents.loadURL(url)
+      mobileWindow.webContents.send('updateView', {
+        url: url,
+        canGoBack: view.webContents.canGoBack(),
+        canGoForward: view.webContents.canGoForward()
+      })
     })
 
     mobileWindow.webContents.setUserAgent(oldAgent)
