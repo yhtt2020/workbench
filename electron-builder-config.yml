@@ -28,7 +28,7 @@ win:
           to: res
           filter:
             - "**/*"
-    icon: ./icon.ico
+    icon: ./icons/logowin.ico
     target:
         - target: nsis
           arch:

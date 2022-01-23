@@ -183,6 +183,11 @@ function createWindow(cb) {
 }
 
 function createWindowWithBounds(bounds) {
+  let icon=__dirname + '/icons/logo1024.png'
+
+  if(process.platform==='win32'){
+    icon=__dirname + '/icons/logowin.ico'
+  }
 	mainWindow = new BrowserWindow({
 		width: bounds.width,
 		height: bounds.height,
@@ -196,7 +201,7 @@ function createWindowWithBounds(bounds) {
 			x: 12,
 			y: 10
 		},
-		icon: __dirname + '/icons/logo1024.png',
+		icon: icon,
 		frame: settings.get('useSeparateTitlebar'),
 		alwaysOnTop: settings.get('windowAlwaysOnTop'),
 		backgroundColor: '#fff',//backgroundColor: '#fff', // the value of this is ignored, but setting it seems to work around https://github.com/electron/electron/issues/10559
