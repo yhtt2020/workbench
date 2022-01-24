@@ -409,8 +409,8 @@ Vue.component('sidebar', {
     clearTaskUnlock(task) {
       ipc.sendTo(mainWindowId, 'clearTaskUnlock', { id: task.id })
     },
-    createMenu(appId){
-      ipc.send('createAppMenu',{id:appId})
+    createMenu(appId,app){
+      ipc.send('createAppMenu',{id:appId,app:app})
       // let remote=require('electron').remote
       // let {Menu,MenuItem}=remote
       // let menu=Menu.buildFromTemplate([
