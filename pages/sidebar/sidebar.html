@@ -228,7 +228,7 @@
         <li>
           <app-manager ref="appManager" :apps="apps" :running-apps="runningApps"></app-manager>
         </li>
-        <li v-for="app in apps" @click="executeApp(app)" @mouseenter="hoverApp($event,app)" @contextmenu="createMenu(app.id,app)">
+        <li v-for="app in apps" @click="executeApp(app)" @mouseenter="hoverApp($event,app)" @contextmenu="createMenu(app.id,app)" v-if="app.processing || app.settings.showInSideBar">
           <a-popover  placement="right" :mouse-enter-delay="0.3"
                      overlay-class-name="tips"  @visible-change="">
             <template slot="title">
