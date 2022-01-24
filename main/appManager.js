@@ -305,30 +305,33 @@ app.whenReady().then(() => {
      * @param saApp 一个应用实体
      */
     executeApp (saApp) {
+      saApp.isSystemApp= saApp.id<10 //todo 加入更加安全的系统应用判断方式
       if (1) {
         //todo 判断一下是不是独立窗体模式
+        let webPreferences={
+          preload:saApp.isSystemApp? path.join(__dirname, saApp.preload):path.join(__dirname+'/dist/preload.js'),
+          nodeIntegration: saApp.isSystemApp,
+          contextIsolation: !saApp.isSystemApp,
+          enableRemoteModule: saApp.isSystemApp,
+          sandbox: !saApp.isSystemApp,
+          safeDialogs: false,
+          safeDialogsMessage: false,
+          partition: saApp.isSystemApp ? null : 'persist:webcontent' ,
+          additionalArguments: [
+            '--user-data-path=' + userDataPath,
+            '--app-version=' + app.getVersion(),
+            '--app-name=' + app.getName(),
+            ...((isDevelopmentMode ? ['--development-mode'] : [])),
+          ]
+        }
         let appWindow = new BrowserWindow({
           width: 800,
           height: 600,
           acceptFirstMouse: true,
           alwaysOnTop: saApp.settings.alwaysTop,
-          webPreferences: {
-            preload: path.join(__dirname, saApp.preload),
-            nodeIntegration: true,
-            contextIsolation: false,
-            enableRemoteModule: true,
-            sandbox: false,
-            safeDialogs: false,
-            safeDialogsMessage: false,
-            partition: null,
-            additionalArguments: [
-              '--user-data-path=' + userDataPath,
-              '--app-version=' + app.getVersion(),
-              '--app-name=' + app.getName(),
-              ...((isDevelopmentMode ? ['--development-mode'] : [])),
-            ]
-          }
+          webPreferences: webPreferences
         })
+        console.log(webPreferences)
         saApp.windowId = appWindow.webContents.id
         appWindow.setBounds(saApp.settings.bounds)
         appWindow.setMenu(null)
@@ -337,7 +340,13 @@ app.whenReady().then(() => {
         } else {
           appWindow.webContents.loadURL(saApp.url)
         }
-
+        // appWindow.webContents.on('ipc-message', function (e, channel, data) {
+        //   mainWindow.webContents.send('view-ipc', {
+        //     name: channel,
+        //     data: data,
+        //     frameId: e.frameId
+        //   })
+        // })
         SidePanel.send('executedAppSuccess', { app: saApp })
         appWindow.on('moved', (event, args) => {
           appManager.setAppSettings(saApp.id, { bounds: appWindow.getBounds() })
