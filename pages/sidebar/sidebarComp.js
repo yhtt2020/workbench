@@ -530,7 +530,6 @@ ipc.on('deleteApp',function(event,args){
   }
   if(index)
   {
-    console.log('delete'+index)
     appVue.$refs.sidePanel.apps.splice(index,1)
   }
 })

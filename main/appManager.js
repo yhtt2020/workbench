@@ -248,8 +248,6 @@ app.whenReady().then(() => {
       return imagePath
     },
     openSetting (appId) {
-      console.log(appId)
-
       function loadSettingWindow (appId) {
         appManager.settingWindow = new BrowserWindow({
           width: 800,
@@ -284,7 +282,6 @@ app.whenReady().then(() => {
         loadSettingWindow(appId)
       } else {
         if (!appManager.settingWindow.isDestroyed()) {
-          console.log('关闭设置窗体')
           appManager.settingWindow.close()
           loadSettingWindow(appId)
         }
@@ -446,7 +443,6 @@ app.whenReady().then(() => {
     }
   })
   ipc.on(ipcMessageMain.saApps.createAppMenu, (event, args) => {
-    console.log('on menu')
     let appId = args.id
     let saApp = appManager.getSaAppByAppId(appId)
     let appWindow = appManager.getWindowByAppId(appId)
@@ -633,6 +629,5 @@ app.whenReady().then(() => {
       }
     })
   })
-  console.log(process.platform)
 
 })
