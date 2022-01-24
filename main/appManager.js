@@ -14,6 +14,7 @@ function apLog(e){
  */
 app.whenReady().then(()=>{
   const appManager={
+    settingWindow:null,
     /**
      * 单个更新app信息
      * @param id
@@ -211,33 +212,47 @@ app.whenReady().then(()=>{
       return imagePath
     },
     openSetting(appId){
-      let settingWindow=new BrowserWindow({
-        width: 800,
-        height: 800,
-        acceptFirstMouse: true,
-        alwaysOnTop:true,
-        webPreferences: {
-          preload: __dirname+'/pages/saApp/settingPreload.js',
-          nodeIntegration: true,
-          contextIsolation: false,
-          enableRemoteModule: true,
-          sandbox: false,
-          safeDialogs:false,
-          safeDialogsMessage:false,
-          partition:null,
-          additionalArguments: [
-            '--user-data-path=' + userDataPath,
-            '--app-version=' + app.getVersion(),
-            '--app-name=' + app.getName(),
-            '--app-id='+appId,
-            ...((isDevelopmentMode ? ['--development-mode'] : [])),
-          ]
+      console.log(appId)
+      function loadSettingWindow(appId){
+        appManager.settingWindow=new BrowserWindow({
+          width: 800,
+          height: 800,
+          acceptFirstMouse: true,
+          alwaysOnTop:true,
+          webPreferences: {
+            //preload: __dirname+'/pages/saApp/settingPreload.js',
+            nodeIntegration: true,
+            contextIsolation: false,
+            enableRemoteModule: true,
+            sandbox: false,
+            safeDialogs:false,
+            safeDialogsMessage:false,
+            partition:null,
+            additionalArguments: [
+              '--user-data-path=' + userDataPath,
+              '--app-version=' + app.getVersion(),
+              '--app-name=' + app.getName(),
+              '--app-id='+appId
+            ]
+          }
+        })
+        appManager.settingWindow.setMenu(null)
+        appManager.settingWindow.webContents.loadURL('file://'+__dirname+'/pages/saApp/setting.html')
+        if(isDevelopmentMode)
+          appManager.settingWindow.webContents.openDevTools()
+        appManager.settingWindow.on('close',()=>{appManager.settingWindow=null})
+      }
+      if(appManager.settingWindow===null){
+        loadSettingWindow(appId)
+      }else{
+        if(!appManager.settingWindow.isDestroyed())
+        {
+          console.log('关闭设置窗体')
+          appManager.settingWindow.close()
+          loadSettingWindow(appId)
         }
-      })
-      settingWindow.setMenu(null)
-      settingWindow.webContents.loadURL(__dirname+'/pages/saApp/setting.html')
-      if(isDevelopmentMode)
-      settingWindow.webContents.openDevTools()
+      }
+
     },
     closeApp(appId){
       let window=appManager.getWindowByAppId(appId)
@@ -373,6 +388,19 @@ app.whenReady().then(()=>{
         appManager.focusWindow(saApp.windowId)
       }
     }
+  })
+  ipc.on(ipcMessageMain.saApps.createAppMenu,(event,args)=>{
+    console.log('on menu')
+    let appId=args.id
+    let menu=require('electron').Menu.buildFromTemplate([
+      {
+        label:"设置",
+        click(){
+          appManager.openSetting(appId)
+        }
+      }
+    ])
+    menu.popup()
   })
   ipc.on(ipcMessageMain.saApps.openSetting,(event,args)=>{
     appManager.openSetting(args.id)

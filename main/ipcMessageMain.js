@@ -39,7 +39,8 @@ const ipcMessageMain={
     /**
      * 打开设置
      */
-    openSetting:'saAppOpenSetting'
+    openSetting:'saAppOpenSetting',
+    createAppMenu:'createAppMenu'
   }
 }
 

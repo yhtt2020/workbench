@@ -129,6 +129,7 @@ Vue.component('app-manager', {
   mounted () {
   },
   methods: {
+
     startStat(id){
       if(!this.setted){
         window.tickId=id
