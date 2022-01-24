@@ -66,7 +66,13 @@
                   style="margin-left: 1px"
                   :title="this.saApp.name"
                   sub-title="应用设置"
-                />
+                >
+                <template slot="extra">
+                  <a-button size="small" key="1" type="primary" @click="uninstall(appId)">
+                    卸载应用
+                  </a-button>
+                </template>
+                </a-page-header>
               </template>
               <template>
                 <a-form :form="form" style="padding: 20px">
@@ -89,7 +95,7 @@
                   <a-form-item
                     :label-col="formItemLayout.labelCol"
                     :wrapper-col="formItemLayout.wrapperCol"
-                    label="应用地址："
+                    label="应用起始地址："
                   >
                     <span class="ant-form-text" style="line-height: 40px">
         {{this.saApp.url}}
@@ -248,6 +254,7 @@
 </style>
 <script>
   const tools=require('../util/util.js').tools
+  const ipc=require('electron').ipcRenderer
   tools.getWindowArgs(window)
   const swatches = window['vue-swatches']
   const formItemLayout = {
@@ -258,6 +265,8 @@
     labelCol: {span: 4},
     wrapperCol: {span: 8, offset: 4},
   };
+  let standAloneModel=require('../util/model/standAloneAppModel')
+  let appId=Number(window.globalArgs['app-id'])
   var appVue = new Vue({
     el: '#appVue',
     components: {
@@ -265,8 +274,6 @@
     },
     data() {
       return {
-        standAloneModel:{},
-        appId:0,
         saApp: {name: ''},
         checkNick: false,
         formItemLayout,
@@ -281,7 +288,7 @@
               optimizeValue.forEach(item=>{
                 settings[item] = optimize.indexOf(item) > -1;
                })
-              require('../util/model/standAloneAppModel').setAppSetting(Number(window.globalArgs['app-id']),settings)
+              standAloneModel.setAppSetting(Number(window.globalArgs['app-id']),settings)
             }
           }
         }),
@@ -289,9 +296,7 @@
     },
     beforeCreate() {
       let that = this
-      this.standAloneModel=require('../util/model/standAloneAppModel')
-      this.appId=Number(window.globalArgs['app-id'])
-      this.standAloneModel.get(this.appId).then(data => {
+      standAloneModel.get(appId).then(data => {
         that.saApp = data
         that.form.name = data.name
         let optimizeValues=['keepRunning', 'theme', 'desktop', 'showInSideBar', 'alwaysTop', 'autoRun']
@@ -312,10 +317,31 @@
       })
     },
     mounted() {
-
-
+      this.appId=appId
     },
     methods: {
+      uninstall(appId){
+        this.$confirm({
+          title: '确定删除此应用？',
+          content: '此操作将关闭应用并清空所有应用数据，且无法还原。请谨慎操作。',
+          okText: '确认',
+          okType: 'danger',
+          cancelText: '取消',
+          onOk() {
+            standAloneModel.uninstall(appId).then(success=>{
+              ipc.send('message',{type:"success",config:{content:'卸载应用成功。'}})
+              ipc.send('deleteApp',{id:appId})
+              //todo 发送消息告知主进程清理掉相关应用
+            },err=>{
+              ipc.send('message',{type:"success",config:{content:'卸载失败。'}})
+            })
+          },
+          onCancel() {
+            console.log('Cancel');
+          },
+        });
+
+      },
       check() {
         this.form.validateFields(err => {
           if (!err) {

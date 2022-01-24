@@ -520,3 +520,11 @@ ipc.on('updateRunningInfo',function (event,args){
     }
   })
 })
+
+ipc.on('deleteApp',function(event,args){
+  for(let i=0;i<appVue.$refs.sidePanel.apps.length;i++){
+    if(appVue.$refs.sidePanel.apps[i].id===args.id){
+      appVue.$refs.sidePanel.apps.splice(i)
+    }
+  }
+})

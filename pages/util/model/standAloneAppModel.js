@@ -46,6 +46,15 @@ const standAloneAppModel = {
     return await db.standAloneApps.put(id,data)
   },
   /**
+   *删除对象
+   * @param appId
+   * @returns {Promise<*|boolean>}
+   */
+  async uninstall(appId){
+    if(!appId) return false
+    return await db.standAloneApps.delete(appId)
+  },
+  /**
    * 安装应用
    * @param url 安装的web应用地址
    * @param option 配置参数

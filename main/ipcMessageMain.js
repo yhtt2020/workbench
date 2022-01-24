@@ -40,7 +40,8 @@ const ipcMessageMain={
      * 打开设置
      */
     openSetting:'saAppOpenSetting',
-    createAppMenu:'createAppMenu'
+    createAppMenu:'createAppMenu',
+    deleteApp:'deleteApp',
   }
 }
 
