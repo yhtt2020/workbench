@@ -141,7 +141,8 @@ const standAloneAppModel = {
             width: 800,
             height: 600
           },
-          autoRun: true
+          autoRun: true,
+          showInSideBar:true
         }),
         unreadCount: 0,
         showInSideBar: true
