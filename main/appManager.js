@@ -55,11 +55,11 @@ app.whenReady().then(() => {
         }
       })
     },
-    toggleAppWindowVisible(appId){
-      let appWindow=appManager.getWindowByAppId(appId)
-      if(appWindow.isVisible()){
+    toggleAppWindowVisible (appId) {
+      let appWindow = appManager.getWindowByAppId(appId)
+      if (appWindow.isVisible()) {
         appWindow.hide()
-      }else{
+      } else {
         appWindow.show()
         appWindow.focus()
       }
@@ -69,7 +69,7 @@ app.whenReady().then(() => {
      * @param appId
      */
     hideAppWindow (appId) {
-     appManager.getWindowByAppId(appId).hide()
+      appManager.getWindowByAppId(appId).hide()
     },
     /**
      * 隐藏窗体
@@ -106,16 +106,26 @@ app.whenReady().then(() => {
       }
     },
     /**
-     * 设置应用的设置
+     * 设置原始app的设置，这里不考虑main中应用状态，还需要自行更新main的设置
+     * @param saAppId
+     * @param settings
+     */
+    setOriginAppSettings(saAppId,settings){
+      SidePanel.send('updateSetting', { id: saAppId, settings: settings })
+    },
+    /**
+     * 设置应用的设置，如果应用已存在，则会自动更新main中存储的设置，如果不存在，则直接调取originAppSetting，仅发送ipc去更新设置
      * @param saAppId 应用id
      * @param settings 应用设置，一个对象，类似{isAlwaysHide:true,runAtStart:true} 参考开发文档
      */
     setAppSettings (saAppId, settings = []) {
       let saApp = appManager.getSaAppByAppId(saAppId)
       if (saApp) {
-        SidePanel.send('updateSetting', { id: saAppId, settings: settings })
+        appManager.setOriginAppSettings(saAppId,settings)
         saApp.settings = Object.assign(saApp.settings, settings)
         appManager.updateSaApp(saAppId, saApp)
+      }else{
+        appManager.setOriginAppSettings(saAppId,settings)
       }
     },
     /**
@@ -419,8 +429,75 @@ app.whenReady().then(() => {
   ipc.on(ipcMessageMain.saApps.createAppMenu, (event, args) => {
     console.log('on menu')
     let appId = args.id
-    let saApp=appManager.getSaAppByAppId(appId)
+    let saApp = appManager.getSaAppByAppId(appId)
+    let appWindow = appManager.getWindowByAppId(appId)
     let template = [
+      {
+        label: '选项',
+        submenu: [{
+          type: 'checkbox',
+          checked:args.app.settings['alwaysOnTop'],
+          label: '窗口置顶',
+          click(){
+            if(args.app.settings['alwaysOnTop']) {
+              appManager.setAppSettings(appId, {
+                'alwaysOnTop': false
+              })
+              if(appWindow && !appWindow.isDestroyed())
+              {
+                appWindow.setAlwaysOnTop(false)
+              }
+            }else{
+              appManager.setAppSettings(appId,{
+                'alwaysOnTop':true
+              })
+              if(appWindow && !appWindow.isDestroyed())
+              {
+                appWindow.setAlwaysOnTop(true)
+              }
+            }
+          }
+        },
+          {
+          type: 'checkbox',
+          checked:args.app.settings['showInSideBar'],
+          label: '在左侧栏保留',
+          click(){
+            if(args.app.settings['showInSideBar']) {
+              appManager.setAppSettings(appId, {
+                'showInSideBar': false
+              })
+              //todo 更新左侧栏
+            }else{
+              appManager.setAppSettings(appId,{
+                'showInSideBar':true
+              })
+              //todo 在左侧栏显示
+            }
+          }
+        },
+          {
+            checked:args.app.settings['autoRun'],
+            type: 'checkbox',
+            label: '打开浏览器时运行',
+            click(){
+              if(args.app.settings['autoRun']) {
+                appManager.setAppSettings(appId, {
+                  'autoRun': false
+                })
+              }else{
+                appManager.setAppSettings(appId,{
+                  'autoRun':true
+                })
+              }
+            }
+          },
+          {
+            label:'发送到桌面'
+          }
+        ]
+
+      },
       {
         label: '设置',
         click () {
@@ -428,31 +505,31 @@ app.whenReady().then(() => {
         }
       }
     ]
-    let appWindow = appManager.getWindowByAppId(appId)
+
     if (appWindow) {
-      if(!appWindow.isDestroyed()){
+      if (!appWindow.isDestroyed()) {
         template.unshift(
           {
-            type:'checkbox',
-            checked:appWindow.isVisible(),
-            label:saApp.name,
-            click(){
+            type: 'checkbox',
+            checked: appWindow.isVisible(),
+            label: saApp.name,
+            click () {
               appManager.toggleAppWindowVisible(appId)
             }
-          },{
-            type:'separator'
+          }, {
+            type: 'separator'
           }
         )
 
       }
-      if(appWindow.isVisible()){
+      if (appWindow.isVisible()) {
         template.push({
           label: '隐藏',
           click () {
             appManager.hideAppWindow(appId)
           }
         })
-      }else{
+      } else {
         template.push({
           label: '显示',
           click () {
@@ -460,7 +537,7 @@ app.whenReady().then(() => {
           }
         })
       }
-      if (!appWindow.isDestroyed()){
+      if (!appWindow.isDestroyed()) {
         template.push({
           label: '退出',
           click () {
@@ -468,7 +545,7 @@ app.whenReady().then(() => {
           }
         })
       }
-    }else{
+    } else {
       template.push({
         label: '打开',
         click () {
