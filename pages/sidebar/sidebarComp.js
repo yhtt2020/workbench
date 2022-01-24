@@ -542,3 +542,12 @@ ipc.on('installApp',function (event,args){
     ipc.send('getRunningApps')
   })
 })
+
+ipc.on('runAutoRunApps',function(event,args){
+  console.log('尝试启用自启动应用')
+  appVue.$refs.sidePanel.apps.forEach(app=>{
+    if(app.settings.autoRun){
+      ipc.send('executeApp',{app:app,background:true})
+    }
+  })
+})

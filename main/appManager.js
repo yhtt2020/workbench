@@ -310,8 +310,9 @@ app.whenReady().then(() => {
     /**
      * 执行应用
      * @param saApp 一个应用实体
+     * @param background 是否后台运行，是则运行后不显示
      */
-    executeApp (saApp) {
+    executeApp (saApp,background=false) {
       saApp.isSystemApp= saApp.id<10 //todo 加入更加安全的系统应用判断方式
       if (1) {
         //todo 判断一下是不是独立窗体模式
@@ -334,6 +335,7 @@ app.whenReady().then(() => {
         let appWindow = new BrowserWindow({
           width: 800,
           height: 600,
+          show:!background,
           acceptFirstMouse: true,
           alwaysOnTop: saApp.settings.alwaysTop,
           webPreferences: webPreferences
@@ -428,12 +430,18 @@ app.whenReady().then(() => {
     }
   }
 
+  setTimeout(()=>{
+    SidePanel.send('runAutoRunApps')
+  },2000)
+
+
+
   ipc.on('executeApp', (event, args) => {
     let saApp = args.app
     if (!!!saApp.processing) {
       //首先必须是没运行的
       if (!appManager.isAppProcessing(saApp.id)) {
-        appManager.executeApp(saApp)
+        appManager.executeApp(saApp,args.background)
       }
     } else {
       //todo 判断是多例还是单例

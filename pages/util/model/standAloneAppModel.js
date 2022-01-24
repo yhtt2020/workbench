@@ -40,6 +40,27 @@ const standAloneAppModel = {
         db.standAloneApps.put(wechatFile)
       }
     })
+
+    let group =await db.standAloneApps.get({name:'团队协作'})
+    console.log(group)
+    if(!!!group.package){
+      await standAloneAppModel.setAppSetting(group.id, { autoRun: true ,showInSideBar:true})
+      db.standAloneApps.update(group.id,{id:1,package:'com.thisky.group'})
+
+      let com=await db.standAloneApps.get({name:'效率社区'})
+      db.standAloneApps.update(com.id,{id:2,package:'com.thisky.com'})
+      await standAloneAppModel.setAppSetting(com.id,{showInSideBar:true})
+
+      let file=await db.standAloneApps.get({name:'文件小助手'})
+      await standAloneAppModel.setAppSetting(file.id,{showInSideBar:true,alwaysTop:true})
+      db.standAloneApps.update(file.id,{id:101,package:''})
+
+      let nav = await  db.standAloneApps.get({name:'收藏夹'})
+      await standAloneAppModel.setAppSetting(nav.id,{showInSideBar:true})
+      db.standAloneApps.update(nav.id,{id:3,package:'com.thisky.nav'})
+
+      console.log('bbq了')
+    }
   },
   async put(id,data){
     data.settings=JSON.stringify(data.settings)
