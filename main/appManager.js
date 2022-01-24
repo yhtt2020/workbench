@@ -436,12 +436,12 @@ app.whenReady().then(() => {
         label: '选项',
         submenu: [{
           type: 'checkbox',
-          checked:args.app.settings['alwaysOnTop'],
+          checked:args.app.settings['alwaysTop'],
           label: '窗口置顶',
           click(){
-            if(args.app.settings['alwaysOnTop']) {
+            if(args.app.settings['alwaysTop']) {
               appManager.setAppSettings(appId, {
-                'alwaysOnTop': false
+                'alwaysTop': false
               })
               if(appWindow && !appWindow.isDestroyed())
               {
@@ -449,7 +449,7 @@ app.whenReady().then(() => {
               }
             }else{
               appManager.setAppSettings(appId,{
-                'alwaysOnTop':true
+                'alwaysTop':true
               })
               if(appWindow && !appWindow.isDestroyed())
               {
@@ -492,9 +492,12 @@ app.whenReady().then(() => {
               }
             }
           },
-          {
-            label:'发送到桌面'
-          }
+          // {
+          //   type: 'separator'
+          // },
+          // {
+          //   label:'发送到当前桌面'
+          // }
         ]
 
       },
