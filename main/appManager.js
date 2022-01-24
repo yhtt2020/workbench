@@ -291,6 +291,16 @@ app.whenReady().then(() => {
       }
 
     },
+    /**
+     * 关闭并删除应用
+     * @param appId
+     */
+    deleteApp(appId){
+      appManager.closeApp(appId)
+      setTimeout(()=>{
+        SidePanel.send('deleteApp',{id:appId})
+      },1000)
+    },
     closeApp (appId) {
       let window = appManager.getWindowByAppId(appId)
       let saApp = appManager.getSaAppByAppId(appId)
@@ -605,8 +615,12 @@ app.whenReady().then(() => {
   ipc.on(ipcMessageMain.saApps.deleteApp,(event,args)=>{
     let appId=args.id
     appManager.settingWindow.close()
-    appManager.closeApp(appId)
-    SidePanel.send('deleteApp',{id:appId})
+    appManager.deleteApp(appId)
+  })
+
+
+  ipc.on(ipcMessageMain.saApps.installApp,(event,args)=>{
+    SidePanel.send('installApp',{id:args.id})
   })
   /**
    * 应用关闭前，将所有开启的窗体销毁掉

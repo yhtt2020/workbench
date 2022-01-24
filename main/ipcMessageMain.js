@@ -42,6 +42,7 @@ const ipcMessageMain={
     openSetting:'saAppOpenSetting',
     createAppMenu:'createAppMenu',
     deleteApp:'deleteApp',
+    installApp:'installApp'
   }
 }
 

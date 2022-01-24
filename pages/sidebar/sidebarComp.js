@@ -522,9 +522,24 @@ ipc.on('updateRunningInfo',function (event,args){
 })
 
 ipc.on('deleteApp',function(event,args){
+  let index=0
   for(let i=0;i<appVue.$refs.sidePanel.apps.length;i++){
     if(appVue.$refs.sidePanel.apps[i].id===args.id){
-      appVue.$refs.sidePanel.apps.splice(i)
+      index=i
     }
   }
+  if(index)
+  {
+    console.log('delete'+index)
+    appVue.$refs.sidePanel.apps.splice(index,1)
+  }
+})
+
+ipc.on('installApp',function (event,args){
+  let id=args.id
+  standAloneAppModel.get(id).then(async app=>{
+    ipc.send('executeApp',{app:app})
+    appVue.$refs.sidePanel.apps=await standAloneAppModel.getAllApps()
+    ipc.send('getRunningApps')
+  })
 })

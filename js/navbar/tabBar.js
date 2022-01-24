@@ -854,7 +854,6 @@ const tabBar = {
   addToApps(id){
     let tab = tabs.get(id)
     let standAloneAppModel=require('../../pages/util/model/standAloneAppModel.js')
-    console.log(tab)
     let option={
       name: tab.title,
       logo: !!!tab.favicon?'../../icons/default.svg':tab.favicon.url,
@@ -869,11 +868,13 @@ const tabBar = {
       },
       showInSideBar: false
     }
-    if(standAloneAppModel.install(tab.url,option)){
+    standAloneAppModel.install(tab.url,option).then(success=>{
+      console.log(success)
       ipc.send('message', {type: 'success', config: {content: `添加应用：${tab.title} 成功`}})
-    }else{
+      ipc.send('installApp',{id:success})
+    },err=>{
       ipc.send('message', {type: 'error', config: {content: '添加应用失败'}})
-    }
+    })
   },
   //扩充一个获取icon的方法
   createIconEl: function (tabData, loaded) {
