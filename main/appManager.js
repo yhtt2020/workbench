@@ -338,6 +338,15 @@ app.whenReady().then(() => {
           canGoForward: appView.webContents.canGoForward()
         })
       })
+      appView.webContents.on('new-window', (event, url) => {
+        event.preventDefault()
+        appView.webContents.loadURL(url)
+        appWindow.webContents.send('updateView', {
+          url: url,
+          canGoBack: appView.webContents.canGoBack(),
+          canGoForward: appView.webContents.canGoForward()
+        })
+      })
       return appView
 
     },
