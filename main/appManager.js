@@ -375,7 +375,7 @@ app.whenReady().then(() => {
         let appWindow = new BrowserWindow({
           width: 800,
           height: 600,
-          minWidth:360,
+          minWidth:380,
           show: !background,
           frame:false,
           acceptFirstMouse: true,
@@ -764,5 +764,11 @@ app.whenReady().then(() => {
 
   ipc.on('saAppRefresh', (event, args) => {
     appManager.getWindowByAppId(args.id).view.webContents.reload()
+  })
+
+  ipc.on('saAppHome',(event,args)=>{
+    let saApp=appManager.getSaAppByAppId(args.id)
+    console.log(saApp.url)
+    appManager.getWindowByAppId(args.id).view.webContents.loadURL(saApp.url)
   })
 })
