@@ -318,6 +318,7 @@ app.whenReady().then(() => {
         enableRemoteModule: saApp.isSystemApp,
         sandbox: !saApp.isSystemApp,
         safeDialogs: false,
+        backgroundColor:'white',
         safeDialogsMessage: false,
         partition: saApp.isSystemApp ? null : 'persist:webcontent',
         additionalArguments: [
