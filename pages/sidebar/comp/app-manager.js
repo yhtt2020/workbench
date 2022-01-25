@@ -87,7 +87,7 @@ CPU:
 </a-col>
 </a-row>
                 </template>
-                <div class="wrapper" >
+                <div class="wrapper"  @click="showAllSaApps">
                   <div class="item-icon ">
                     <img class="icon" style="width: 32px !important;height: 32px !important;" src="../../icons/svg/control.svg"/>
 <!--                    <a-badge-->
@@ -192,6 +192,9 @@ Vue.component('app-manager', {
     },
     openSetting(appId){
       ipc.send('saAppOpenSetting',{id:appId})
+    },
+    showAllSaApps(){
+      ipc.send('showAllSaApps')
     }
   },
   computed:{

@@ -67,6 +67,24 @@ const standAloneAppModel = {
     await db.standAloneApps.update(2,{themeColor:'#4188ff'})
     await db.standAloneApps.update(3,{themeColor:'#8618d2'})
   },
+  async find(word,option){
+    let result= await db.standAloneApps.orderBy(option.order).toArray()
+    let searchResult=[]
+    result.forEach(item=>{
+      if(item.name.indexOf(word)>-1 || item.url.indexOf(word)>-1 || item.summary.indexOf(word)>-1){
+        item.settings=JSON.parse(item.settings)
+        searchResult.push(item)
+        console.log(item)
+      }
+    })
+    // for(let i=0;i<result.length;i++){
+    //   if(result[i].name.indexOf(word)>-1 || result[i].url.indexOf(word)>-1 || result[i].summary.indexOf(word)>-1){
+    //     searchResult.push(result[i])
+    //   }
+    // }
+    console.log(searchResult)
+    return searchResult
+  },
   async put(id,data){
     data.settings=JSON.stringify(data.settings)
     return await db.standAloneApps.put(id,data)
@@ -109,8 +127,16 @@ const standAloneAppModel = {
     }
     return await db.standAloneApps.put(app)
   },
-  async getAllApps() {
-    let result = await db.standAloneApps.toArray()
+  async getAllApps(option={}) {
+    let result=[]
+    if(option.order){
+      result = await db.standAloneApps.orderBy(option.order).reverse().limit(option.limit).toArray()
+      console.log('orderdd')
+    }else{
+      console.log('no ordered')
+      result = await db.standAloneApps.toArray()
+    }
+
     result.forEach((app) => {
       app.capture = ''
       app.settings = JSON.parse(app.settings)
@@ -126,6 +152,9 @@ const standAloneAppModel = {
       data = false
     })
     return data
+  },
+  async update(id,object){
+    return await db.standAloneApps.update(id,object)
   },
   /**
    * 设置应用设置
