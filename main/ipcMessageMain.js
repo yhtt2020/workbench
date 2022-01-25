@@ -31,6 +31,18 @@ const ipcMessageMain={
      * 打开书签
      */
     openBookmarks:'openBookmarks'
+  },
+  /**
+   * 独立应用IPC消息
+   */
+  saApps:{
+    /**
+     * 打开设置
+     */
+    openSetting:'saAppOpenSetting',
+    createAppMenu:'createAppMenu',
+    deleteApp:'deleteApp',
+    installApp:'installApp'
   }
 }
 

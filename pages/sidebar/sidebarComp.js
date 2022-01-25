@@ -409,7 +409,20 @@ Vue.component('sidebar', {
     clearTaskUnlock(task) {
       ipc.sendTo(mainWindowId, 'clearTaskUnlock', { id: task.id })
     },
-
+    createMenu(appId,app){
+      ipc.send('createAppMenu',{id:appId,app:app})
+      // let remote=require('electron').remote
+      // let {Menu,MenuItem}=remote
+      // let menu=Menu.buildFromTemplate([
+      //   {
+      //     label:"设置",
+      //     click(){
+      //       alert('a')
+      //     }
+      //   }
+      // ])
+      // menu.popup()
+    },
 
     editTaskName(item){
       const id=item.id
@@ -504,6 +517,37 @@ ipc.on('updateRunningInfo',function (event,args){
     if(app.id===args.id){
       app.capture=args.info.capture +"?t="+Date.now()
       app.memoryUsage=args.info.memoryUsage
+    }
+  })
+})
+
+ipc.on('deleteApp',function(event,args){
+  let index=0
+  for(let i=0;i<appVue.$refs.sidePanel.apps.length;i++){
+    if(appVue.$refs.sidePanel.apps[i].id===args.id){
+      index=i
+    }
+  }
+  if(index)
+  {
+    appVue.$refs.sidePanel.apps.splice(index,1)
+  }
+})
+
+ipc.on('installApp',function (event,args){
+  let id=args.id
+  standAloneAppModel.get(id).then(async app=>{
+    ipc.send('executeApp',{app:app})
+    appVue.$refs.sidePanel.apps=await standAloneAppModel.getAllApps()
+    ipc.send('getRunningApps')
+  })
+})
+
+ipc.on('runAutoRunApps',function(event,args){
+  console.log('尝试启用自启动应用')
+  appVue.$refs.sidePanel.apps.forEach(app=>{
+    if(app.settings.autoRun){
+      ipc.send('executeApp',{app:app,background:true})
     }
   })
 })
