@@ -8,10 +8,10 @@ const standAloneAppModel = {
       }
     })
 
-    await db.standAloneApps.where({id: 11}).count().then(result => {
+    await db.standAloneApps.where({id: 101}).count().then(result => {
       if (result === 0) {
         let wechatFile = {
-          id: 11,
+          id: 101,
           name: '文件小助手',
           logo: '../../icons/apps/wechatfile.png',
           summary: '传输文件到微信，扫码即用',
@@ -58,9 +58,14 @@ const standAloneAppModel = {
       let nav = await  db.standAloneApps.get({name:'收藏夹'})
       await standAloneAppModel.setAppSetting(nav.id,{showInSideBar:true})
       db.standAloneApps.update(nav.id,{id:3,package:'com.thisky.nav'})
-
-      console.log('bbq了')
     }
+
+    if(group.url===serverConfig.IM.FRONT_URL_DEV + serverConfig.IM.AUTO_LOGIN){
+      await db.standAloneApps.update(1,{url:serverConfig.IM.FRONT_URL + serverConfig.IM.AUTO_LOGIN})
+
+    }
+    await db.standAloneApps.update(2,{themeColor:'#4188ff'})
+    await db.standAloneApps.update(3,{themeColor:'#8618d2'})
   },
   async put(id,data){
     data.settings=JSON.stringify(data.settings)
@@ -156,8 +161,9 @@ const standAloneAppModel = {
         summary: '团队协作，与团队成员高效协作',
         type: 'web',
         //url: serverConfig.IM.FRONT_URL+ serverConfig.IM.AUTO_LOGIN,
-        url: serverConfig.IM.FRONT_URL_DEV + serverConfig.IM.AUTO_LOGIN,
+        url: serverConfig.IM.FRONT_URL + serverConfig.IM.AUTO_LOGIN,
         preload: '/pages/group/imPreload.js',
+        package:'com.thisky.group',
         themeColor: '#6fafff',
         userThemeColor: '',
         createTime: Date.now(),

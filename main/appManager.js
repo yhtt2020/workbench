@@ -1,4 +1,5 @@
 let forceClose = false
+const { config } = require(path.join(__dirname, '//server-config.js'))
 /**
  * 运行中的应用窗体，结构{window:窗体对象,saApp:独立窗体app对象}
  * @type {*[]}
@@ -331,6 +332,17 @@ app.whenReady().then(() => {
         width: saApp.settings.bounds.width,
         height: saApp.settings.bounds.height - 70, webPreferences: webPreferences
       })
+      /**
+       * 在dev模式下，group引用开发环境
+       */
+      if(saApp.package==='com.thisky.group' && isDevelopmentMode){
+        saApp.url=config.IM.FRONT_URL + config.IM.AUTO_LOGIN
+      }
+      if (saApp.type === 'local') {
+        appView.webContents.loadURL('file://' + path.join(__dirname, saApp.url))
+      } else {
+        appView.webContents.loadURL(saApp.url)
+      }
       appView.webContents.on('did-navigate-in-page', (event, url) => {
         appWindow.webContents.send('updateView', {
           url: url,
@@ -359,7 +371,6 @@ app.whenReady().then(() => {
       saApp.isSystemApp = saApp.id < 10 //todo 加入更加安全的系统应用判断方式
       if (1) {
         //todo 判断一下是不是独立窗体模式
-
         let appWindow = new BrowserWindow({
           width: 800,
           height: 600,
@@ -390,9 +401,7 @@ app.whenReady().then(() => {
         saApp.windowId = appWindow.webContents.id
 
         //appWindow.setMenu(null)
-        if (saApp.type === 'local') {
-          appWindow.webContents.loadURL('file://' + path.join(__dirname, saApp.url))
-        } else {
+
           appWindow.webContents.loadURL('file://' + path.join(__dirname + '/pages/saApp/index.html'))
           appWindow.on('ready-to-show',()=>{
             appWindow.webContents.send('init', {
@@ -406,14 +415,14 @@ app.whenReady().then(() => {
               appWindow.webContents.openDevTools()
             }
           })
-        }
+
         appWindow.setBounds(saApp.settings.bounds)
         // if (process.platform !== 'darwin') {
         //   appWindow.setMenuBarVisibility(false)
         // }
         let appView=appManager.loadView(saApp,appWindow)
         appWindow.setBrowserView(appView)
-        appView.webContents.loadURL(saApp.url)
+
         appView.setBounds({
           x: 0,
           y: 40,
