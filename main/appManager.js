@@ -363,9 +363,15 @@ app.whenReady().then(() => {
         let appWindow = new BrowserWindow({
           width: 800,
           height: 600,
+          minWidth:360,
           show: !background,
           frame:false,
           acceptFirstMouse: true,
+          trafficLightPosition: {
+            x: 12,
+            y: 14
+          },
+          titleBarStyle: 'hidden',
           alwaysOnTop: saApp.settings.alwaysTop,
           webPreferences: {
             nodeIntegration: true,
@@ -402,6 +408,9 @@ app.whenReady().then(() => {
           })
         }
         appWindow.setBounds(saApp.settings.bounds)
+        // if (process.platform !== 'darwin') {
+        //   appWindow.setMenuBarVisibility(false)
+        // }
         let appView=appManager.loadView(saApp,appWindow)
         appWindow.setBrowserView(appView)
         appView.webContents.loadURL(saApp.url)

@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <title>应用模式</title>
   <style>
+    body.mac #titleBar{
+      width: calc(100vw - 65px);
+      margin-left: 65px;
+    }
+    body.mac #title{
+      margin-left: -120px;
+    }
     #titleBar{
       -webkit-app-region: drag;
     }
@@ -79,14 +86,14 @@
 
   </style>
 </head>
-<body class="windows dark-theme" style="padding: 0;margin:0;background-color: white">
+<body class="dark-theme" style="padding: 0;margin:0;background-color: white">
 <div id="titleBar" class="windows" style="display: flex;justify-content: flex-start;flex-direction: row;">
   <div class="control-actions" style="width: 120px;display: flex;justify-content: flex-start;flex-direction: row;">
     <div id="goBack" onclick="goBack()" title="返回" class="action" style="opacity: 0.5">
       <svg  t="1643038310188" class="icon action-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10623" width="200" height="200"><path d="M877.397333 533.632a42.666667 42.666667 0 0 1-42.666666 42.666667H316.672l228.224 228.266666a42.666667 42.666667 0 0 1-60.330667 60.330667L182.869333 563.2a42.666667 42.666667 0 0 1 0-60.330667l301.653334-301.738666a42.666667 42.666667 0 0 1 60.373333 60.373333l-229.546667 229.461333h519.381334a42.666667 42.666667 0 0 1 42.666666 42.666667z" fill="#666666" p-id="10624"></path></svg>
 <!--      <img class="action-icon" src="../../icons/toolbar/arrowleft.svg">-->
     </div>
-    <div id="goForward" onclick="goForward()" title="前进" class="action" style="opacity: 0.5">
+    <div id="goForward" onclick="goForward()" title="前进" class="action" style="display: none">
       <svg t="1643038483998" class="icon action-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10758" width="200" height="200"><path d="M161.536 523.52a42.666667 42.666667 0 0 1 42.666667-42.666667l518.058666 0.085334-228.266666-228.266667a42.666667 42.666667 0 0 1 60.373333-60.373333l301.653333 301.696a42.666667 42.666667 0 0 1 0 60.373333l-301.653333 301.653333a42.666667 42.666667 0 0 1-60.373333-60.330666l229.546666-229.418667-519.338666-0.042667a42.666667 42.666667 0 0 1-42.666667-42.666666z" fill="#666666" p-id="10759"></path></svg>
     </div>
     <div onclick="refresh()" title="刷新" class="action">
@@ -97,10 +104,10 @@
     <input id="address" readonly
            style=" width: calc(100% - 20px);border:1px solid #cacaca;border-radius: 4px;padding: 5px;margin:5px">
   </div>
-  <div style="flex: auto; line-height: 40px;text-align: center">
-   <img style="margin-left:10px;border-radius: 100px ;background-color: white;width: 25px;height: 25px;vertical-align: middle;border:2px solid white" id="appLogo"><span style="color: white;margin-left: 10px;font-size: 14px" id="appName">应用模式</span>
+  <div id="title" style="flex: auto; line-height: 40px;text-align: center">
+   <img style="border-radius: 100px ;background-color: white;width: 25px;height: 25px;vertical-align: middle;border:2px solid white" id="appLogo"><span style="color: white;margin-left: 10px;font-size: 14px" id="appName">应用模式</span>
   </div>
-  <div class="" style="width: 140px;display: flex">
+  <div id="windows-control" style="width: 140px;display: flex">
     <div class="windows-caption-buttons">
       <div class="element caption-minimise">
         <svg>
@@ -152,6 +159,12 @@
     const ipc = require('electron').ipcRenderer
     let windowId=0
     let id=0
+    if(process.platform==='darwin'){
+      document.body.classList.add('mac')
+      document.getElementById('windows-control').style.display='none'
+    }else if(process.platform==='windows'){
+      document.body.classList.add('windows')
+    }
     ipc.on('updateView', (event, args) => {
       console.log(event)
       console.log(args)
@@ -165,9 +178,9 @@
       }
       if(args.canGoForward)
       {
-        document.getElementById('goForward').style.opacity=1
+        document.getElementById('goForward').style.display='inline-block'
       }else{
-        document.getElementById('goForward').style.opacity=0.5
+        document.getElementById('goForward').style.display='none'
       }
 
 
@@ -179,7 +192,7 @@
       document.getElementById('address').value = args.url
       document.getElementById('addressWrapper').style.display='none'
       document.title= args.title
-      document.getElementById('titleBar').style.backgroundColor=args.app.userThemeColor?args.app.userThemeColor:args.app.themeColor
+      document.body.style.backgroundColor=args.app.userThemeColor?args.app.userThemeColor:args.app.themeColor
       console.log(args.app)
       document.getElementById('appLogo').src=args.app.logo
       document.getElementById('appName').innerText=args.app.name
