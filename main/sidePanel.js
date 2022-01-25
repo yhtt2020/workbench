@@ -804,6 +804,10 @@ function createAllAppsWindow(){
   allAppsWindow.on('blur',()=>{
     allAppsWindow.hide()
   })
+  mainWindow.on('close',()=>{
+    allAppsWindow.destroy()
+    allAppsWindow=null
+  })
 }
 app.whenReady().then(()=>{
   createAllAppsWindow()
