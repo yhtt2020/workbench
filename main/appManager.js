@@ -236,7 +236,7 @@ app.whenReady().then(() => {
       if (saApp.window.isDestroyed()) {
         return
       }
-      let capturedImage = await saApp.window.webContents.capturePage()
+      let capturedImage = await saApp.window.view.webContents.capturePage()
       if (!fs.existsSync(userDataPath + '/app')) {
         fs.mkdirSync(userDataPath + '/app')
       }
