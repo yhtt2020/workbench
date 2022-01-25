@@ -360,6 +360,25 @@ app.whenReady().then(() => {
           canGoForward: appView.webContents.canGoForward()
         })
       })
+
+      appView.webContents.on('before-input-event', (event, input) => {
+        if(process.platform==='darwin'){
+          if(input.meta && input.key.toLowerCase()==='w'){
+            console.log('command + w')
+            appWindow.close()
+            event.preventDefault()
+          }
+          console.log(input)
+        }else if(process.platform==='win32'){
+          if (input.control && input.key.toLowerCase() === 'w') {
+            appWindow.close()
+            event.preventDefault()
+          }
+        }
+        console.log('press'+input)
+        //todo 判断linux
+      })
+
       return appView
 
     },
@@ -449,6 +468,23 @@ app.whenReady().then(() => {
             width: appWindow.getBounds().width,
             height: appWindow.getBounds().height - 40
           })
+        })
+        appWindow.webContents.on('before-input-event', (event, input) => {
+          if(process.platform==='darwin'){
+            if(input.meta && input.key.toLowerCase()==='w'){
+              console.log('command + w')
+              appWindow.close()
+              event.preventDefault()
+            }
+            console.log(input)
+          }else if(process.platform==='win32'){
+            if (input.control && input.key.toLowerCase() === 'w') {
+              appWindow.close()
+              event.preventDefault()
+            }
+          }
+          console.log('press'+input)
+          //todo 判断linux
         })
         appWindow.on('ready-to-show', (event) => {
           //连续4秒都获取一次截图，保障能够截取到最新的图
