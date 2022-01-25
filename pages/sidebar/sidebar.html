@@ -11,6 +11,8 @@
   <script src="../../ext/vue/antd.min.js"></script>
   <link rel="stylesheet" href="../../ext/vue/antd.min.css"/>
   <link rel="stylesheet" href="css/sidebar.css"/>
+  <link rel="stylesheet" href="css/sidebar2.css"/>
+  <link rel="stylesheet" href="css/sa-app.css"/>
 </head>
 <body>
 <script>
@@ -144,12 +146,21 @@
                           <a-button class="mg-top-right" type="primary" icon="plus" size="small" @click="createGroup"/>
                         </div>
                         <div class="mg-content">
-                          <div class="mg-content-btn flex align-center"
-                               v-for="(item, index) in this.$store.getters.getMyGroups" :key="item.id">
-                            <!--                                <img class="cb-lf" src="http://comad.thisky.com/public/uploads/attach/2021/11/10/618bdd4e3e629.jpeg" alt="">-->
-                            <div class="cb-rg flex align-center">
+                          <div class="mg-content-btn flex flex-direction" v-for="(item, index) in this.$store.getters.getMyGroups" :key="item.id">
+                            <div class="cb-top flex align-center justify-start">
                               <img :src="item.logo" alt="">
-                              <div>{{item.name}}</div>
+                              <div class="cb-top-word">{{item.name}}</div>
+                            </div>
+                            <div class="cb-bottom flex align-center justify-around">
+                              <a-button type="link" icon="team">
+                                圈子
+                              </a-button>
+                              <a-button type="link" icon="message">
+                                群聊
+                              </a-button>
+                              <a-button type="link" icon="setting">
+                                设置
+                              </a-button>
                             </div>
                           </div>
                         </div>
