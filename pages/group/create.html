@@ -158,6 +158,7 @@
               });
               //如果来自group-comp创建成功还需要转发一条消息出去通知group-comp去更新一下group的信息
               ipc.send("refreshGroupComp");
+              ipc.send('teamTip')
             }
           });
         },

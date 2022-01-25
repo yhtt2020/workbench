@@ -20,6 +20,8 @@ const server = {
           ipc.on('callback-imAutoLogin', (event, args) => {
             if(args.code === 1000) {
               window.location.href = `${host}${config.IM.AUTO_LOGIN}?code=${args.data.code}`
+            } else {
+              ipc.send('message',{type:'error',config:{content: args.message, key: Date.now()}})
             }
           })
         }
