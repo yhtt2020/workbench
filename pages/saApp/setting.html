@@ -68,7 +68,7 @@
                   sub-title="应用设置"
                 >
                 <template slot="extra">
-                  <a-button size="small" key="1" type="primary" @click="uninstall(appId)">
+                  <a-button size="small" key="1" type="danger" @click="uninstall(appId)" v-if="saApp.id>10">
                     卸载应用
                   </a-button>
                 </template>
@@ -322,8 +322,8 @@
     methods: {
       uninstall(appId){
         this.$confirm({
-          title: '确定删除此应用？',
-          content: '此操作将关闭应用并清空所有应用数据，且无法还原。请谨慎操作。',
+          title: '确定卸载此应用？',
+          content: '此操作将卸载应用并清空所有应用数据，且无法还原。请谨慎操作。',
           okText: '确认',
           okType: 'danger',
           cancelText: '取消',
@@ -331,7 +331,6 @@
             standAloneModel.uninstall(appId).then(success=>{
               ipc.send('message',{type:"success",config:{content:'卸载应用成功。'}})
               ipc.send('deleteApp',{id:appId})
-              //todo 发送消息告知主进程清理掉相关应用
             },err=>{
               ipc.send('message',{type:"success",config:{content:'卸载失败。'}})
             })
