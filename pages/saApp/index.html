@@ -162,7 +162,7 @@
     if(process.platform==='darwin'){
       document.body.classList.add('mac')
       document.getElementById('windows-control').style.display='none'
-    }else if(process.platform==='windows'){
+    }else if(process.platform==='win32'){
       document.body.classList.add('windows')
     }
     ipc.on('updateView', (event, args) => {
