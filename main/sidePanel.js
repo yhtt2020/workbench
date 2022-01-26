@@ -798,14 +798,20 @@ function createAllAppsWindow(){
   })
   allAppsWindow.loadURL('file://'+path.join(__dirname,'/pages/saApp/list.html'))
   allAppsWindow.on('close',(event)=>{
-    allAppsWindow.hide()
-    event.preventDefault()
+    if(forceClose){
+      allAppsWindow=null
+    }else{
+      allAppsWindow.hide()
+      event.preventDefault()
+    }
+
   })
   allAppsWindow.on('blur',()=>{
     allAppsWindow.hide()
   })
   mainWindow.on('close',()=>{
-    allAppsWindow.destroy()
+    forceClose=true
+    allAppsWindow.close()
     allAppsWindow=null
   })
 }
@@ -820,8 +826,8 @@ ipc.on('showAllSaApps',(event,args)=>{
   }
   let mainBounds=mainWindow.getBounds()
   allAppsWindow.setBounds({
-    x:mainBounds.x+200,
-    y:mainBounds.y+140
+    x:mainBounds.x+170,
+    y:mainBounds.y+70
   })
  allAppsWindow.show()
  allAppsWindow.focus()

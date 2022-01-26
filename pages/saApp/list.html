@@ -14,7 +14,7 @@
 <div id="appVue">
   <div style="padding: 20px; -webkit-app-region: none;">
     <div style="margin-bottom: 30px">
-      <a-input-search placeholder="输入应用名称" @input="updateSearchWords" style="width: 100%" @search="onSearch"></a-input-search>
+      <a-input-search placeholder="输入应用名称、起始页网址（暂不支持中文拼音）" @input="updateSearchWords" style="width: 100%" @search="onSearch"></a-input-search>
     </div>
     <div>
       <div v-if="this.searchWords===''">
@@ -36,7 +36,8 @@ text-overflow:ellipsis; ">
         </a-row>
       </div>
       <div v-if="this.searchWords===''" style="position: relative">
-        <h1>全部应用 </h1> <div style="position:absolute;right: 0;top: 0">管理</div>
+        <h1>全部应用 </h1>
+<!--        <div style="position:absolute;right: 0;top: 0">管理</div>-->
         <a-row>
           <a-col :span="4" v-for="app in apps">
             <div style="margin-bottom: 15px;text-align: center">
