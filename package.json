@@ -30,9 +30,11 @@
     ]
   },
   "dependencies": {
+    "@electron/remote": "^2.0.1",
     "axios": "^0.24.0",
     "dexie": "^3.0.3",
     "dragula": "^3.7.3",
+    "electron-find": "^1.0.7",
     "electron-localstorage": "^1.0.5",
     "electron-log": "^4.4.4",
     "electron-squirrel-startup": "^1.0.0",
