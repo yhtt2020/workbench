@@ -6,6 +6,7 @@ app.on('ready', () => {
   let teamTip = null
   let osxSearchMember = null
   let osxInviteMember = null
+  let osxCircleSetting = null
   ipc.on('createGroup', (event, arg) => {
     if (createGroupWindow !== null ) {
       createGroupWindow.focus()
@@ -148,6 +149,35 @@ app.on('ready', () => {
     //todo 圈子邀请添加成员url
     osxInviteMember.webContents.loadURL('')
     osxInviteMember.on('close', () => osxInviteMember = null)
+  })
+
+  //圈子设置
+  ipc.on('osxOpenCircleSetting', (event, args) => {
+    if(osxCircleSetting !== null) {
+      osxCircleSetting.focus()
+      return
+    }
+    osxCircleSetting = new BrowserWindow({
+      minimizable: false,
+      parent: null,
+      width: 640,
+      height: 660,
+      maximizable:false,
+      resizable: false,
+      webPreferences: {
+        devTools: true,
+        nodeIntegration: true,
+        contextIsolation: false,
+        additionalArguments: [
+          '--user-data-path=' + userDataPath,
+          '--app-version=' + app.getVersion(),
+          '--app-name=' + app.getName(),
+          ...((isDevelopmentMode ? ['--development-mode'] : [])),
+        ]
+      }
+    })
+    osxCircleSetting.webContents.loadURL('')
+    osxCircleSetting.on('close', () => osxCircleSetting = null)
   })
 
   ipc.on('sdkHideApp', () => {

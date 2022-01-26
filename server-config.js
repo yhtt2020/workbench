@@ -33,6 +33,7 @@ const api = {
       profile: '/user/info', //用户资料
       account: '/user/account-info', //帐号信息
       AUTO_LOGIN: '/autologin',   //短说免登跳转路由
+      CIRCLE: ''    //短说圈子
     },
     group: {
       index: '/groups', //群组
