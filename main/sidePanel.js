@@ -770,3 +770,66 @@ ipc.on('captureDeskScreen',(event,args)=>{
     })
   })
 })
+let allAppsWindow=null
+function createAllAppsWindow(){
+  allAppsWindow=new BrowserWindow({
+    width: 600,
+    height: 600,
+    acceptFirstMouse: true,
+    alwaysOnTop: true,
+    show:false,
+    resizable:false,
+    frame:false,
+    webPreferences: {
+      //preload: __dirname+'/pages/saApp/settingPreload.js',
+      nodeIntegration: true,
+      contextIsolation: false,
+      enableRemoteModule: true,
+      sandbox: false,
+      safeDialogs: false,
+      safeDialogsMessage: false,
+      partition: null,
+      additionalArguments: [
+        '--user-data-path=' + userDataPath,
+        '--app-version=' + app.getVersion(),
+        '--app-name=' + app.getName()
+      ]
+    }
+  })
+  allAppsWindow.loadURL('file://'+path.join(__dirname,'/pages/saApp/list.html'))
+  allAppsWindow.on('close',(event)=>{
+    if(forceClose){
+      allAppsWindow=null
+    }else{
+      allAppsWindow.hide()
+      event.preventDefault()
+    }
+
+  })
+  allAppsWindow.on('blur',()=>{
+    allAppsWindow.hide()
+  })
+  mainWindow.on('close',()=>{
+    forceClose=true
+    allAppsWindow.close()
+    allAppsWindow=null
+  })
+}
+app.whenReady().then(()=>{
+  createAllAppsWindow()
+})
+ipc.on('showAllSaApps',(event,args)=>{
+  if(allAppsWindow===null){
+    createAllAppsWindow()
+  }else{
+    allAppsWindow.webContents.send('refresh')
+  }
+  let mainBounds=mainWindow.getBounds()
+  allAppsWindow.setBounds({
+    x:mainBounds.x+170,
+    y:mainBounds.y+70
+  })
+ allAppsWindow.show()
+ allAppsWindow.focus()
+
+})

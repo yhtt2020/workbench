@@ -176,6 +176,7 @@ app.whenReady().then(() => {
           return processingAppWindows[i].saApp
         }
       }
+      return null
     },
     getWindowByAppId(appId) {
       for (let i = 0; i < processingAppWindows.length; i++) {
@@ -572,15 +573,20 @@ app.whenReady().then(() => {
 
 
   ipc.on('executeApp', (event, args) => {
-    let saApp = args.app
-    if (!!!saApp.processing) {
+    let saApp = appManager.getSaAppByAppId(args.app.id)
+    if (!!!saApp) {
       //首先必须是没运行的
-      if (!appManager.isAppProcessing(saApp.id)) {
+      if (!saApp ) {
+        //如果不存在，直接运行
+        appManager.executeApp(args.app, args.background)
+      }else if(!appManager.isAppProcessing(saApp.id)){
+        //如果存在且未运行，则执行
         appManager.executeApp(saApp, args.background)
       }
     } else {
       //todo 判断是多例还是单例
       if (1) {//是单例
+        appManager.getWindowByAppId(saApp.id)
         appManager.focusWindow(saApp.windowId)
       }
     }

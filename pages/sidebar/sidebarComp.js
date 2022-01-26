@@ -474,6 +474,9 @@ ipc.on('executedAppSuccess',function (event,args){
     }
   })
   appVue.$refs.sidePanel.runningApps.push(args.app.id)
+  standAloneAppModel.update(args.app.id,{lastExecuteTime:Date.now()}).then((res)=>{
+    console.log(res)
+  })
 })
 ipc.on('closeApp',function (event,args){
   appVue.$refs.sidePanel.apps.forEach(app=>{
