@@ -390,7 +390,6 @@ app.whenReady().then(() => {
         console.log('press'+input)
         //todo 判断linux
       })
-      appView.webContents.openDevTools()
       return appView
 
     },
