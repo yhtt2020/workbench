@@ -70,8 +70,25 @@ const standAloneAppModel = {
   async find(word,option){
     let result= await db.standAloneApps.orderBy(option.order).toArray()
     let searchResult=[]
+    const pyjs=require('js-pinyin')
     result.forEach(item=>{
-      if(item.name.indexOf(word)>-1 || item.url.indexOf(word)>-1 || item.summary.indexOf(word)>-1){
+      let pinyin=pyjs.getFullChars(item.name).toLowerCase()
+      console.log('word='+word)
+      console.log('pinyin='+pinyin)
+      function testWords(sourceStr,findWords){
+        for(let i=0;i<findWords.length;i++){
+          if(sourceStr.indexOf(findWords.charAt(i))===-1){
+           return false
+          }
+        }
+        return true
+      }
+
+      if(item.name.indexOf(word)>-1 ||
+        item.url.indexOf(word)>-1 ||
+        item.summary.indexOf(word)>-1 ||
+        testWords(pinyin,word)
+      ){
         item.settings=JSON.parse(item.settings)
         searchResult.push(item)
         console.log(item)

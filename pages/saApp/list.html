@@ -14,7 +14,7 @@
 <div id="appVue">
   <div style="padding: 20px; -webkit-app-region: none;">
     <div style="margin-bottom: 30px">
-      <a-input-search placeholder="输入应用名称、起始页网址（暂不支持中文拼音）" @input="updateSearchWords" style="width: 100%" @search="onSearch"></a-input-search>
+      <a-input-search ref="searchBar" :value="searchWords" placeholder="输入应用名称（支持拼音、简拼）、起始页网址" @keyup="updateSearchWords" style="width: 100%" @search="onSearch"></a-input-search>
     </div>
     <div>
       <div v-if="this.searchWords===''">
@@ -119,9 +119,8 @@ text-overflow:ellipsis; ">
       },
     watch:{
      async searchWords(){
-        console.log(this.searchWords)
-       this.searchResult= await  saAppModel.find(this.searchWords,{order:'lastExecuteTime'})
-       console.log(this.searchResult)
+       if(this.searchWords!=='')
+        this.searchResult= await  saAppModel.find(this.searchWords,{order:'lastExecuteTime'})
       }
     },
       mounted() {
@@ -131,9 +130,9 @@ text-overflow:ellipsis; ">
         onSearch(value) {
           this.searchWords = value
         },
-        updateSearchWords(input){
-          console.log(input)
-          this.searchWords = input.target.value
+        updateSearchWords(event){
+          console.log(event.currentTarget.value)
+            this.searchWords =event.currentTarget.value
           //
         },
         refresh(){
@@ -146,8 +145,9 @@ text-overflow:ellipsis; ">
         },
         executeApp(app){
           ipc.send('executeApp',{app:app})
-          console.log('execteApp')
-          console.log(app)
+          //this.searchWords=''
+          appVue.searchWords=''
+          console.log('a')
         }
       }
     }
