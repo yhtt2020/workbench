@@ -157,6 +157,14 @@ Vue.component('sidebar', {
 	},
 	template: '#sidebarTpl',
 	methods: {
+    openCircle() {
+      this.userPanelVisible = false
+      this.addTab(api.getUrl(api.API_URL.user.CIRCLE))
+    },
+
+    openCircleSetting() {
+      ipc.send('osxOpenCircleSetting')
+    },
     /**
      * app浮窗显示隐藏
      */

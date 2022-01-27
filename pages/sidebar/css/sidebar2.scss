@@ -1,54 +1,71 @@
 .mg-content {
-  max-height: calc( 100vh - 340px);
+  max-height: calc( 100vh - 300px);
   overflow-y: auto;
+  overflow-x: none;
   margin-top: 10px;
-  padding: 10px;
+  // padding: 10px;
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f6f6f6;
+    border-radius: 2px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgb(233, 232, 232);
+    border-radius: 20px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #747474;
+  }
+  &::-webkit-scrollbar-corner {
+    background: #f6f6f6;
+  }
   .mg-content-btn {
     background: white;
     margin-top: 6px;
-    height: 46px;
-    position: relative;
+    height: 92px;
     width: 100%;
     border: 1px solid rgb(226, 221, 221);
     border-radius: 8px;
     &:hover {
       border: 1px solid #1890ff;
-      cursor: pointer;
+      transition: all .3s cubic-bezier(.645,.045,.355,1);
+      background-color: rgba(3, 167, 248, 0.1);
     }
-    .cb-lf {
-      z-index: 1;
-      width: 50px;
-      height: 100%;
-      border-bottom-left-radius: 8px;
-      border-top-left-radius: 8px;
-      position: absolute;
-      top: 0;
-      left: 0;
-      //background:center, no-repeat;
-    }
-    .cb-rg {
-
-      margin-left: 10px;
+    .cb-top {
+      padding-left: 10px;
       width: 100%;
+      height: 46px;
+      border-bottom: 1px solid rgb(226, 221, 221);
       img {
-        z-index: 2;
-        width: 30px;
-        height: 30px;
-        border-radius: 4px;
+        padding-right: 10px;
+        width: 32px;
+        height: 32px;
       }
-      div {
-        margin-left: 10px;
-        text-align:left !important;
+      .cb-top-word {
+        font-size: 14px;
         font-weight: 500;
-        color: #353535;
-        z-index: 2;
-        width: 80%;
         text-overflow: ellipsis;
         overflow: hidden;
         display: -webkit-box;
-
         -webkit-line-clamp: 1;
         -webkit-box-orient: vertical;
+      }
+    }
+    .cb-bottom {
+      width: 100%;
+      height: 46px;
+      .cb-bottom-zone {
+        color: rgb(121, 118, 118);
+        &:nth-child(2) {
+          border-right: 1px solid rgb(226, 221, 221);
+          border-left: 1px solid rgb(226, 221, 221);
+        }
+        &:hover {
+          color: #1890ff;
+        }
       }
     }
   }

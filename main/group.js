@@ -3,6 +3,10 @@ let alwaysHide = false
 app.on('ready', () => {
   let createGroupWindow = null
   let fromRender = null
+  let teamTip = null
+  let osxSearchMember = null
+  let osxInviteMember = null
+  let osxCircleSetting = null
   ipc.on('createGroup', (event, arg) => {
     if (createGroupWindow !== null ) {
       createGroupWindow.focus()
@@ -56,111 +60,124 @@ app.on('ready', () => {
       sidePanel.get().webContents.send('refreshMyGroups')
     }
   })
-  // function createGroupIMWindow(){
-  //   // let boundsSetting=settings.get('groupWindowBounds')
-  //   // if(!boundsSetting){
-  //   //   boundsSetting={
-  //   //     x:50+ mainWindow.getBounds().x,
-  //   //     y:150 +mainWindow.getBounds().y,
-  //   //     width:900,
-  //   //     height:700
-  //   //   }
-  //     //如果未设置，则不用管
-  //   }
-  //   // if(groupIMWindow===null){
-  //   //   groupIMWindow = new BrowserWindow({
-  //   //     frame: true,
-  //   //     backgroundColor: 'white',
-  //   //     modal: false,
-  //   //     hasShadow: true,
-  //   //     minWidth: 600,
-  //   //     width:boundsSetting.width,
-  //   //     autoHideMenuBar: true,
-  //   //     minHeight: 600,
-  //   //     height:boundsSetting.height,
-  //   //     x: boundsSetting.x ,
-  //   //     y: boundsSetting.y,
-  //   //     minimizable: true,
-  //   //     alwaysOnTop: false,
-  //   //     acceptFirstMouse: true,
-  //   //     maximizable: false,
-  //   //     visualEffectState: 'active',
-  //   //     //alwaysOnTop: true,
-  //   //     webPreferences: {
-  //   //       preload:path.join(__dirname, '/pages/group/imPreload.js'),
-  //   //       nodeIntegration: false,
-  //   //       contextIsolation: false,
-  //   //       additionalArguments: [
-  //   //         '--user-data-path=' + userDataPath,
-  //   //         '--app-version=' + app.getVersion(),
-  //   //         '--app-name=' + app.getName(),
-  //   //         ...((isDevelopmentMode ? ['--development-mode'] : [])),
-  //   //       ]
-  //   //     }
-  //   //   })
-  //   //   groupIMWindow.on('resized',()=>{
-  //   //     settings.set('groupWindowBounds',groupIMWindow.getBounds())
-  //   //   })
-  //   //   groupIMWindow.on('moved',()=>{
-  //   //     settings.set('groupWindowBounds',groupIMWindow.getBounds())
-  //   //   })
-  //     //groupIMWindow.setMenu(null)
-  //     // let im_url=''
-  //     // const { config } = require(path.join(__dirname, '//server-config.js'))
-  //     // if(isDevelopmentMode){
-  //     //    im_url=config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN
-  //     // }else{
-  //     //    im_url=config.IM.FRONT_URL + config.IM.AUTO_LOGIN
-  //     // }
-  //     // groupIMWindow.webContents.loadURL(im_url)
-  //     // groupIMWindow.on('close',(e)=> {
-  //     //   if(alwaysHide) {
-  //     //     e.preventDefault()
-  //     //     groupIMWindow.hide()
-  //     //   } else {
-  //     //     const result = dialog.showMessageBoxSync({
-  //     //       type: 'none',
-  //     //       buttons: ['取消','退出', '隐藏[不再询问]'],
-  //     //       message: '退出后无法接受消息提醒,请注意!',
-  //     //       cancelId: 0,
-  //     //       defaultId: 2,
-  //     //       noLink: true
-  //     //     })
-  //     //     if(result === 0 ) {
-  //     //       e.preventDefault()
-  //     //       return
-  //     //     } else if(result === 2) {
-  //     //       e.preventDefault()
-  //     //       alwaysHide = true
-  //     //       groupIMWindow.hide()
-  //     //     } else {
-  //     //       groupIMWindow = null
-  //     //       alwaysHide = false
-  //     //     }
-  //     //   }
-  //     // })
-  //   // }else{
-  //   //   groupIMWindow.focus()
-  //   // }
-  // }
-  // ipc.on('openGroup',(event,args)=>{
-  //   groupIMWindow ? groupIMWindow.show() : createGroupIMWindow()
-  // })
 
-  ipc.on('sdkHideApp', () => {
-    groupIMWindow.hide()
-  })
-
-  ipc.on('sdkTabNavigate', (event, args) => {
-    if(groupIMWindow) {
-      sendIPCToWindow(mainWindow, 'tabNavigateTo', {url: args.url})
+  //圈子创建引导页
+  ipc.on('teamTip', (event, args) => {
+    if (teamTip !== null ) {
+      teamTip.focus()
+      return
     }
+    teamTip = new BrowserWindow({
+      minimizable: false,
+      parent: null,
+      width: 600,
+      height: 420,
+      maximizable:false,
+      resizable: false,
+      webPreferences: {
+        //preload: path.join(__dirname, ''),
+        devTools: true,
+        nodeIntegration: true,
+        contextIsolation: false,
+        additionalArguments: [
+          '--user-data-path=' + userDataPath,
+          '--app-version=' + app.getVersion(),
+          '--app-name=' + app.getName(),
+          ...((isDevelopmentMode ? ['--development-mode'] : [])),
+        ]
+      }
+    })
+    teamTip.webContents.loadURL('file://' + __dirname + '/pages/group/teamTip/index.html')
+    teamTip.on('close', () => teamTip = null)
   })
 
-  ipc.on('sdkDestoryApp', () => {
-    groupIMWindow.destroy()
-    groupIMWindow=null
-    alwaysHide = false
+  //圈子搜索添加成员
+  ipc.on('osxOpenSearchMember', (event, args) => {
+    if(osxSearchMember !== null) {
+      osxSearchMember.focus()
+      return
+    }
+    osxSearchMember = new BrowserWindow({
+      minimizable: false,
+      parent: null,
+      width: 500,
+      height: 620,
+      maximizable:false,
+      resizable: false,
+      webPreferences: {
+        devTools: true,
+        nodeIntegration: true,
+        contextIsolation: false,
+        additionalArguments: [
+          '--user-data-path=' + userDataPath,
+          '--app-version=' + app.getVersion(),
+          '--app-name=' + app.getName(),
+          ...((isDevelopmentMode ? ['--development-mode'] : [])),
+        ]
+      }
+    })
+    //todo  圈子搜索添加成员url
+    osxSearchMember.webContents.loadURL('')
+    osxSearchMember.on('close', () => osxSearchMember = null)
+  })
+
+  //圈子邀请添加成员
+  ipc.on('osxOpenInviteMember', (event, args) => {
+    if(osxInviteMember !== null) {
+      osxInviteMember.focus()
+      return
+    }
+    osxInviteMember = new BrowserWindow({
+      minimizable: false,
+      parent: null,
+      width: 420,
+      height: 300,
+      maximizable:false,
+      resizable: false,
+      webPreferences: {
+        devTools: true,
+        nodeIntegration: true,
+        contextIsolation: false,
+        additionalArguments: [
+          '--user-data-path=' + userDataPath,
+          '--app-version=' + app.getVersion(),
+          '--app-name=' + app.getName(),
+          ...((isDevelopmentMode ? ['--development-mode'] : [])),
+        ]
+      }
+    })
+    //todo 圈子邀请添加成员url
+    osxInviteMember.webContents.loadURL('')
+    osxInviteMember.on('close', () => osxInviteMember = null)
+  })
+
+  //圈子设置
+  ipc.on('osxOpenCircleSetting', (event, args) => {
+    if(osxCircleSetting !== null) {
+      osxCircleSetting.focus()
+      return
+    }
+    osxCircleSetting = new BrowserWindow({
+      minimizable: false,
+      parent: null,
+      width: 640,
+      height: 660,
+      maximizable:false,
+      resizable: false,
+      webPreferences: {
+        devTools: true,
+        nodeIntegration: true,
+        contextIsolation: false,
+        additionalArguments: [
+          '--user-data-path=' + userDataPath,
+          '--app-version=' + app.getVersion(),
+          '--app-name=' + app.getName(),
+          ...((isDevelopmentMode ? ['--development-mode'] : [])),
+        ]
+      }
+    })
+    osxCircleSetting.webContents.loadURL('')
+    osxCircleSetting.on('close', () => osxCircleSetting = null)
   })
 
 })

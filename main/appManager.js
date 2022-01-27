@@ -670,6 +670,20 @@ app.whenReady().then(() => {
         // setInterval(() => {
         //   appManager.notification(saApp.id,  {title:'测试消息标题', body: '测试内容' })
         // }, 1000)
+
+        ipc.on('getSaApp', (event, args) => {
+          event.reply('callback-getSaApp', { saApp })
+        })
+
+        ipc.on('sdkHideApp', (event, args) => {
+          appManager.getWindowByAppId(args.appId).hide()
+        })
+
+        ipc.on('sdkTabNavigate', (event, args) => {
+          sendIPCToWindow(mainWindow, 'tabNavigateTo', {url: args.url})
+        })
+
+        appWindow.view=appView
         processingAppWindows.push({
           window: appWindow,//在本地的对象中插入window对象，方便后续操作
           saApp: saApp

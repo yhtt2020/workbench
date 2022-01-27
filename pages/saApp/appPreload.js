@@ -13,6 +13,7 @@ window = tools.getWindowArgs(window)
 
 //通过内容暴露给window一些应用信息
 let sdkObject = {
+  hashTime: new Date().getTime(),
   has: true,
   globalArgs: window.globalArgs,
   platform: window.platformType,
@@ -51,8 +52,31 @@ tsbSdk.listener() //浏览器侧sdk
 
 ipc.on('init', (event, args) => {
   contextBridge.exposeInMainWorld('tsbSaApp', args.saApp)
-  sdkObject.emit('ready',{saAPP:args.saApp}) //在此处触发sdkBoject的ready，以确保获取到
+  sdkObject.emit('ready',{saApp:args.saApp}) //在此处触发sdkBoject的ready，以确保获取到
+
+  window.addEventListener('message', function(e) {
+    let messageEvent = e.data.eventName
+    switch(messageEvent) {
+      case 'preloadAuth':
+        //todo 后面添加真正的鉴权
+        window.postMessage()
+        break;
+      case 'sdkHideApp':
+        if(e.data.hashTime === sdkObject.hashTime) {
+          ipc.send('sdkHideApp', {appId: e.data.saApp.id})
+        } else {
+          console.log('验证hashTime错误！')
+        }
+    }
+    console.log(ipc, '无ipc的三方应用也被监听中。。。。')
+  })
 })
+
+
+
+
+
+
 
 //todo 网页右键菜单实现
 //todo 密码自动填充
