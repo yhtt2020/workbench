@@ -52,11 +52,10 @@ app.whenReady().then(() => {
     /**
      * 发送应用消息，进行提示，并给应用加上图标
      * @param appId
-     * @param title 消息标题
-     * @param option  option.body为消息体
+     * @param option  option.body为消息体  可参考此处参数说明 https://www.electronjs.org/zh/docs/latest/api/notification
      */
     notification (appId = 0, option = {
-      title: '应用消息', option: '消息内容'
+      title: '应用消息', body: '消息内容'
     })
     {
       new electron.Notification(option).show()
