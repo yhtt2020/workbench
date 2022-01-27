@@ -347,7 +347,7 @@ app.whenReady().then(() => {
           '--user-data-path=' + userDataPath,
           '--app-version=' + app.getVersion(),
           '--app-name=' + app.getName(),
-          '--saApp='+encodeURI(JSON.stringify(saApp)),
+          //'--saApp='+encodeURI(JSON.stringify(saApp)),
           ...((isDevelopmentMode ? ['--development-mode'] : [])),
         ]
       }
@@ -387,6 +387,9 @@ app.whenReady().then(() => {
           canGoForward: appView.webContents.canGoForward()
         })
       })
+      let saAppObject=saApp
+      delete saAppObject.window
+      appView.webContents.send('init',{saApp:saAppObject})
 
       appView.webContents.on('before-input-event', (event, input) => {
         if(process.platform==='darwin'){
@@ -409,8 +412,8 @@ app.whenReady().then(() => {
         console.log('press'+input)
         //todo 判断linux
       })
-      // if(isDevelopmentMode)
-      // appView.webContents.openDevTools()
+      if(isDevelopmentMode)
+      appView.webContents.openDevTools()
       return appView
 
     },

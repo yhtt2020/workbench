@@ -554,3 +554,16 @@ ipc.on('runAutoRunApps',function(event,args){
     }
   })
 })
+
+ipc.on('appBadge',function (event,args){
+  appVue.$refs.sidePanel.apps.forEach(app=>{
+    if(app.id===args.app.id){
+      if(app.add){
+        app.badge+=app.add //默认是使用add来增加，否则直接使用badge
+      }else{
+        app.badge=args.badge
+      }
+
+    }
+  })
+})
