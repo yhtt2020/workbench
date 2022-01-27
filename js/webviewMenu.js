@@ -188,6 +188,21 @@ const webviewMenu = {
           }
         }
       ]
+      if(selection.startsWith('http://')|| selection.startsWith('https://')){
+        textActions.push( {
+          label: '访问 '+encodeURI(selection),
+          click: function () {
+            var newTab = tabs.add({
+              url: encodeURI(selection),
+              private: currentTab.private
+            })
+            browserUI.addTab(newTab, {
+              enterEditMode: false,
+              openInBackground: false
+            })
+          }
+        })
+      }
       menuSections.push(textActions)
     }
 
