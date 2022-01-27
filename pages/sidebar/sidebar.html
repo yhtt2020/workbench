@@ -66,7 +66,7 @@
   <div id="sidebar" class="side-container">
     <div id="itemsEl" class="side-items">
       <ul id="pinGroup" class="app-task" style="margin-bottom: 0; overflow: hidden">
-        <li @click="toggleUserPanel" class="" style="position: relative; background-color: rgb(243 243 243)">
+        <li @click="toggleUserPanel" class="" style="position: relative;">
           <template>
             <a-drawer class="user-panel"
                       @mousemove="setSidePanel()"
@@ -213,7 +213,7 @@
                 ></a-avatar>
                 <a-avatar
                   v-if="user.uid===0"
-                  style="border: 1px solid #cfcfcf; background-color: white; color: #aaa"
+                  style=" background-color: white; color: #aaa;width: 28px;height: 28px"
                   class="icon"
                   src="../../icons/user.svg"
                 ></a-avatar>
