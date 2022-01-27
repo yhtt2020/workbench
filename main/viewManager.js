@@ -175,11 +175,11 @@ function createView (existingViewId, id, webPreferencesString, boundsString, eve
   viewMap[id] = view
 
   //增加对证书的验证事件处理
-  view.webContents.session.setCertificateVerifyProc((request, callback) => {
-    const { hostname } = request
-    //沿用默认验证方法
-    callback(-3)
-  })
+  // view.webContents.session.setCertificateVerifyProc((request, callback) => {
+  //   const { hostname } = request
+  //   //沿用默认验证方法
+  //   callback(-3)
+  // })
   //end
 
   return view
