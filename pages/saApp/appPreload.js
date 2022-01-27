@@ -4,8 +4,6 @@ const remote = require('@electron/remote')
 let FindInPage = require('electron-find').FindInPage
 const tsbSdk = require('../../js/util/tsbSdk')
 let tools = require('../util/util').tools
-let bindEvent = require('../util/bindEvent')
-const { $emit } = require('../util/bindEvent')
 //todo 为了引入findinpage，关闭了sandbox，可能存在安全隐患
 ipc.on('findInPage', () => {
   let findInPage = new FindInPage(remote.getCurrentWebContents())
@@ -46,8 +44,8 @@ let sdkObject = {
     }
   }
 }
-//sdkObject.on('ready',(saApp)=>{console.log(saApp)}) //测试挂载
-//sdkObject.on('ready',(saApp)=>{console.log(saApp)}) //测试挂载
+sdkObject.on('ready',(saApp)=>{console.log(saApp)}) //测试挂载
+sdkObject.on('ready',(saApp)=>{console.log(saApp)}) //测试挂载
 contextBridge.exposeInMainWorld('tsbSDK', sdkObject)
 tsbSdk.listener() //浏览器侧sdk
 
