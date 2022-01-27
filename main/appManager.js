@@ -397,7 +397,8 @@ app.whenReady().then(() => {
       let window = appManager.getWindowByAppId(appId)
       let saApp = appManager.getSaAppByAppId(appId)
       if (window && !window.isDestroyed()) {
-        window.destroy()
+        saApp.canClose=true
+        window.close()
         appManager.removeAppWindow(saApp.windowId)
         SidePanel.send('closeApp', { id: appId })
       }
@@ -634,6 +635,9 @@ app.whenReady().then(() => {
           appWindow.webContents.send('unmaximize')
         })
         appWindow.on('close', (event, args) => {
+          if(saApp.canClose){
+            return
+          }
           if (!forceClose) {
             appManager.hideWindow(saApp.windowId)
             event.preventDefault()
