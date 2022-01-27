@@ -243,6 +243,7 @@
           <a-popover  placement="right" :mouse-enter-delay="0.3"
                      overlay-class-name="tips"  @visible-change="">
             <template slot="title">
+              <a-badge>{{app.badge}}</a-badge>
               <span> {{app.name}} </span>
             </template>
             <template slot="content" v-if="app.processing">

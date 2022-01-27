@@ -5,6 +5,10 @@ const tools = {
       if (arg.startsWith('--')) {
         var key = arg.split('=')[0].replace('--', '')
         var value = arg.split('=')[1]
+        // if(key==='saApp'){
+        //   console.log(decodeURI(value))
+        //   value=JSON.parse(decodeURI(value))
+        // }
         globalArgs[key] = value
       }
     })

@@ -1,5 +1,7 @@
 let forceClose = false
 const { config } = require(path.join(__dirname, '//server-config.js'))
+const remote=require('@electron/remote/main')
+
 /**
  * 运行中的应用窗体，结构{window:窗体对象,saApp:独立窗体app对象}
  * @type {*[]}
@@ -15,6 +17,7 @@ function apLog(e) {
  * 执行一个应用
  */
 app.whenReady().then(() => {
+  remote.initialize()
   const appManager = {
     settingWindow: null,
     /**
@@ -44,6 +47,14 @@ app.whenReady().then(() => {
           item.window.focus()
         }
       })
+    },
+    notification(appId=1,title='应用消息',option='消息内容'){
+      function showNotification () {
+        new electron.Notification({ title: title, body: option.body }).show()
+
+      }
+      showNotification()
+      SidePanel.send('appBadge',{app:appId,add:1})
     },
     /**
      * 隐藏窗体
@@ -178,6 +189,11 @@ app.whenReady().then(() => {
       }
       return null
     },
+    /**
+     * 通过appid获取到对应的运行的window对象
+     * @param appId
+     * @returns {null|*}
+     */
     getWindowByAppId(appId) {
       for (let i = 0; i < processingAppWindows.length; i++) {
         if (processingAppWindows[i].saApp.id === appId) {
@@ -186,6 +202,11 @@ app.whenReady().then(() => {
       }
       return null
     },
+    /**
+     *
+     * @param id 应用id
+     * @returns {Promise<{memoryUsage: {}, capture: (boolean|*)}>} 包含内存使用和快照
+     */
     async getAppRunningInfo(id) {
       let saApp = appManager.getSaAppByAppId(id)
       if (!!!saApp) {
@@ -313,11 +334,11 @@ app.whenReady().then(() => {
     },
     loadView(saApp,appWindow){
       let webPreferences = {
-        preload: saApp.isSystemApp ? path.join(__dirname, saApp.preload) : null,
+        preload: saApp.isSystemApp ? path.join(__dirname, saApp.preload) : path.join(__dirname+'/pages/saApp/appPreload.js'),//后者是所有web应用公用的preload
         nodeIntegration: saApp.isSystemApp,
         contextIsolation: !saApp.isSystemApp,
-        enableRemoteModule: saApp.isSystemApp,
-        sandbox: !saApp.isSystemApp,
+        enableRemoteModule:true,
+        sandbox: false,
         safeDialogs: false,
         backgroundColor:'white',
         safeDialogsMessage: false,
@@ -326,13 +347,15 @@ app.whenReady().then(() => {
           '--user-data-path=' + userDataPath,
           '--app-version=' + app.getVersion(),
           '--app-name=' + app.getName(),
+          //'--saApp='+encodeURI(JSON.stringify(saApp)),
           ...((isDevelopmentMode ? ['--development-mode'] : [])),
         ]
       }
       console.log(webPreferences)
       let appView = new BrowserView({
         width: saApp.settings.bounds.width,
-        height: saApp.settings.bounds.height - 70, webPreferences: webPreferences
+        height: saApp.settings.bounds.height - 70,
+        webPreferences: webPreferences
       })
       /**
        * 在dev模式下，group引用开发环境
@@ -340,6 +363,8 @@ app.whenReady().then(() => {
       if(saApp.package==='com.thisky.group' && isDevelopmentMode){
         saApp.url=config.IM.FRONT_URL + config.IM.AUTO_LOGIN
       }
+
+      remote.enable(appView.webContents)
       if (saApp.type === 'local') {
         appView.webContents.loadURL('file://' + path.join(__dirname, saApp.url))
       } else {
@@ -352,6 +377,7 @@ app.whenReady().then(() => {
           canGoForward: appView.webContents.canGoForward()
         })
       })
+
       appView.webContents.on('new-window', (event, url) => {
         event.preventDefault()
         appView.webContents.loadURL(url)
@@ -361,12 +387,19 @@ app.whenReady().then(() => {
           canGoForward: appView.webContents.canGoForward()
         })
       })
+      let saAppObject=saApp
+      delete saAppObject.window
+      appView.webContents.send('init',{saApp:saAppObject})
 
       appView.webContents.on('before-input-event', (event, input) => {
         if(process.platform==='darwin'){
           if(input.meta && input.key.toLowerCase()==='w'){
             console.log('command + w')
             appWindow.close()
+            event.preventDefault()
+          }
+          if(input.meta && input.key.toLowerCase()==='f'){
+           appView.webContents.send('findInPage')
             event.preventDefault()
           }
           console.log(input)
@@ -379,7 +412,8 @@ app.whenReady().then(() => {
         console.log('press'+input)
         //todo 判断linux
       })
-
+      if(isDevelopmentMode)
+      appView.webContents.openDevTools()
       return appView
 
     },
@@ -475,6 +509,11 @@ app.whenReady().then(() => {
             if(input.meta && input.key.toLowerCase()==='w'){
               console.log('command + w')
               appWindow.close()
+              event.preventDefault()
+            }
+            if(input.meta && input.key.toLowerCase()==='f'){
+              console.log('command + f')
+              appView.webContents.send('findInPage')
               event.preventDefault()
             }
             console.log(input)
