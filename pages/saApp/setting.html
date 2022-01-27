@@ -87,7 +87,7 @@
                     <a-input :default-value="saApp.name"
                              v-decorator="[
           'name',
-          { rules: [{ required: true, message: '请输入应用名称' ,min:1,max:16, initialValue:this.saApp.name }] },
+          { rules: [{ required: true, message: '应用名称，长度大于1，小于16' ,min:1,max:16, initialValue:this.saApp.name }] },
         ]"
                              placeholder="输入应用名称"
                     />
@@ -295,6 +295,7 @@
               this.tipSave()
               //todo 主动更新应用信息，即时更新
             }else if(values.name){
+              this.saApp.name=values.name
               standAloneModel.update(Number(window.globalArgs['app-id']), { name: tools.htmlEncode(values.name) })
               this.tipSave()
               //todo 主动更新应用信息，即时更新
