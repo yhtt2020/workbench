@@ -180,22 +180,6 @@ app.on('ready', () => {
     osxCircleSetting.on('close', () => osxCircleSetting = null)
   })
 
-  ipc.on('sdkHideApp', () => {
-    groupIMWindow.hide()
-  })
-
-  ipc.on('sdkTabNavigate', (event, args) => {
-    if(groupIMWindow) {
-      sendIPCToWindow(mainWindow, 'tabNavigateTo', {url: args.url})
-    }
-  })
-
-  ipc.on('sdkDestoryApp', () => {
-    groupIMWindow.destroy()
-    groupIMWindow=null
-    alwaysHide = false
-  })
-
 })
 
 app.on('before-quit', () => {
