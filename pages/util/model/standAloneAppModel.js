@@ -42,7 +42,6 @@ const standAloneAppModel = {
     })
 
     let group =await db.standAloneApps.get({name:'团队协作'})
-    console.log(group)
     if(!!!group.package){
       await standAloneAppModel.setAppSetting(group.id, { autoRun: true ,showInSideBar:true})
       db.standAloneApps.update(group.id,{id:1,package:'com.thisky.group'})
@@ -73,8 +72,6 @@ const standAloneAppModel = {
     const pyjs=require('js-pinyin')
     result.forEach(item=>{
       let pinyin=pyjs.getFullChars(item.name).toLowerCase()
-      console.log('word='+word)
-      console.log('pinyin='+pinyin)
       function testWords(sourceStr,findWords){
         for(let i=0;i<findWords.length;i++){
           if(sourceStr.indexOf(findWords.charAt(i))===-1){
@@ -91,7 +88,6 @@ const standAloneAppModel = {
       ){
         item.settings=JSON.parse(item.settings)
         searchResult.push(item)
-        console.log(item)
       }
     })
     // for(let i=0;i<result.length;i++){
@@ -99,7 +95,6 @@ const standAloneAppModel = {
     //     searchResult.push(result[i])
     //   }
     // }
-    console.log(searchResult)
     return searchResult
   },
   async put(id,data){
@@ -148,9 +143,7 @@ const standAloneAppModel = {
     let result=[]
     if(option.order){
       result = await db.standAloneApps.orderBy(option.order).reverse().limit(option.limit).toArray()
-      console.log('orderdd')
     }else{
-      console.log('no ordered')
       result = await db.standAloneApps.toArray()
     }
 
@@ -187,12 +180,10 @@ const standAloneAppModel = {
       let DBSavedSettings = JSON.parse(app.settings)
       let newSettings = Object.assign(DBSavedSettings, settings)
       await db.standAloneApps.update(id, {"settings": JSON.stringify(newSettings)}).then((result) => {
-        console.log('save app settings success')
         return true
       }).catch((err) => {
         console.log('存储app的setting失败')
       })
-      console.log(newSettings)
     }
   },
   /**

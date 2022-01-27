@@ -243,8 +243,7 @@
           <a-popover  placement="right" :mouse-enter-delay="0.3"
                      overlay-class-name="tips"  @visible-change="">
             <template slot="title">
-              <a-badge>{{app.badge}}</a-badge>
-              <span> {{app.name}} </span>
+              <span> {{app.name}} </span>}
             </template>
             <template slot="content" v-if="app.processing">
               <div class="app-capture">
@@ -254,18 +253,18 @@
             <template slot="content" v-else>
               {{app.summary}}
             </template>
-          <div class="wrapper" >
+          <div class="wrapper sa-app-wrapper" >
             <div v-if="app.processing" class="processing"></div>
             <div class="item-icon">
-              <img class="icon sa-app" :style="app.processing? {'border-color':app.userThemeColor!==''?app.userThemeColor:app.themeColor}:{}" :src="app.logo"/>
               <a-badge
-                :count="app.unreadCount"
-                :dot="true"
-                :style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:'visible'}"
-              >
+                :count="app.badge">
+<!--                :style="{position: 'absolute',right:  '-2px',visibility:'visible'}"-->
+
+                <img class="icon sa-app" :style="app.processing? {'border-color':app.userThemeColor!==''?app.userThemeColor:app.themeColor}:{}" :src="app.logo"/>
+
               </a-badge>
             </div>
-            <div class="item-title">{{app.name}}</div>
+            <div class="item-title">{{app.name}} </div>
           </div>
           </a-popover>
         </li>
@@ -485,5 +484,15 @@
   .sidebar ul {
     margin-bottom: 0;
   }
+
+ .sa-app-wrapper .ant-badge-count{
+   right: 2px;
+   padding:0 !important;
+   font-size: 10px;
+   height: 15px;
+   width: 15px;
+   line-height: 15px;
+   min-width: 15px;
+ }
 </style>
 </html>
