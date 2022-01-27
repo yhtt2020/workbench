@@ -123,7 +123,9 @@
                     <div>
                       <span class="theme-color" :style="{'background-color':this.saApp.themeColor} "></span>&nbsp; 图标背景色
                     </div>
-                    <div><v-swatches class="color-select" shapes="circles" v-model="saApp.userThemeColor" popover-x="left" popover-y="bottom" swatches="text-advanced"></v-swatches> &nbsp;自定义背景色</div>
+                    <div><v-swatches class="color-select" @input="userThemeColorChanged" shapes="circles" v-model="saApp.userThemeColor" popover-x="left" popover-y="bottom" show-fallback swatches="text-advanced" fallback-input-type="color"></v-swatches> &nbsp;自定义背景色
+                    <a-button type="default" size="small" @click="saApp.userThemeColor='';userThemeColorChanged('')">重置</a-button>
+                    </div>
                   </a-form-item>
 
                   <a-form-item id="optimize" label="体验优化" style="margin-bottom: 0">
@@ -280,6 +282,7 @@
         formTailLayout,
         form: this.$form.createForm(this, {
           name: 'appSetting', onValuesChange: (props, values) => {
+            console.log(values)
             if(values.optimize){
               //['keepRunning', 'theme', 'desktop', 'showInSideBar', 'alwaysTop', 'autoRun']
               let optimizeValue=['keepRunning', 'theme', 'desktop', 'showInSideBar', 'alwaysTop', 'autoRun']
@@ -289,6 +292,16 @@
                 settings[item] = optimize.indexOf(item) > -1;
                })
               standAloneModel.setAppSetting(Number(window.globalArgs['app-id']),settings)
+              this.tipSave()
+              //todo 主动更新应用信息，即时更新
+            }else if(values.name){
+              standAloneModel.update(Number(window.globalArgs['app-id']), { name: tools.htmlEncode(values.name) })
+              this.tipSave()
+              //todo 主动更新应用信息，即时更新
+            }else if(values.summary){
+              standAloneModel.update(Number(window.globalArgs['app-id']), { summary: tools.htmlEncode(values.summary) })
+              this.tipSave()
+              //todo 主动更新应用信息，即时更新
             }
           }
         }),
@@ -320,6 +333,14 @@
       this.appId=appId
     },
     methods: {
+      userThemeColorChanged(input){
+        standAloneModel.update(this.appId,{userThemeColor:input})
+        this.tipSave()
+        console.log(input)
+      },
+      tipSave(){
+        appVue.$message.info({content:'保存成功，此处设置修改需浏览器重启后生效。',key:'save'})
+      },
       uninstall(appId){
         this.$confirm({
           title: '确定卸载此应用？',
