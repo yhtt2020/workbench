@@ -464,7 +464,6 @@ app.whenReady().then(() => {
       appView.webContents.on('before-input-event', (event, input) => {
         if (process.platform === 'darwin') {
           if (input.meta && input.key.toLowerCase() === 'w') {
-            console.log('command + w')
             appWindow.close()
             event.preventDefault()
           }
@@ -472,10 +471,13 @@ app.whenReady().then(() => {
             appView.webContents.send('findInPage')
             event.preventDefault()
           }
-          console.log(input)
         } else if (process.platform === 'win32') {
           if (input.control && input.key.toLowerCase() === 'w') {
             appWindow.close()
+            event.preventDefault()
+          }
+          if (input.control && input.key.toLowerCase() === 'f') {
+            appView.webContents.send('findInPage')
             event.preventDefault()
           }
         }
@@ -577,23 +579,23 @@ app.whenReady().then(() => {
         appWindow.webContents.on('before-input-event', (event, input) => {
           if (process.platform === 'darwin') {
             if (input.meta && input.key.toLowerCase() === 'w') {
-              console.log('command + w')
               appWindow.close()
               event.preventDefault()
             }
             if (input.meta && input.key.toLowerCase() === 'f') {
-              console.log('command + f')
               appView.webContents.send('findInPage')
               event.preventDefault()
             }
-            console.log(input)
           } else if (process.platform === 'win32') {
             if (input.control && input.key.toLowerCase() === 'w') {
               appWindow.close()
               event.preventDefault()
             }
+            if (input.control && input.key.toLowerCase() === 'f') {
+              appView.webContents.send('findInPage')
+              event.preventDefault()
+            }
           }
-          console.log('press' + input)
           //todo 判断linux
         })
         appWindow.on('ready-to-show', (event) => {
