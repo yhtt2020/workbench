@@ -17,6 +17,7 @@ const tsbSdk = {
           tsbSdk.handleDestoryApp()
       }
     })
+    console.log('挂载了SDK')
   },
 
   handleCheckAuth: function(data) {

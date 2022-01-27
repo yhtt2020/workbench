@@ -48,6 +48,14 @@ app.whenReady().then(() => {
         }
       })
     },
+    notification(appId=1,title='应用消息',option='消息内容'){
+      function showNotification () {
+        new electron.Notification({ title: title, body: option.body }).show()
+
+      }
+      showNotification()
+      SidePanel.send('appBadge',{app:appId,add:1})
+    },
     /**
      * 隐藏窗体
      * @param windowId
@@ -181,6 +189,11 @@ app.whenReady().then(() => {
       }
       return null
     },
+    /**
+     * 通过appid获取到对应的运行的window对象
+     * @param appId
+     * @returns {null|*}
+     */
     getWindowByAppId(appId) {
       for (let i = 0; i < processingAppWindows.length; i++) {
         if (processingAppWindows[i].saApp.id === appId) {
@@ -189,6 +202,11 @@ app.whenReady().then(() => {
       }
       return null
     },
+    /**
+     *
+     * @param id 应用id
+     * @returns {Promise<{memoryUsage: {}, capture: (boolean|*)}>} 包含内存使用和快照
+     */
     async getAppRunningInfo(id) {
       let saApp = appManager.getSaAppByAppId(id)
       if (!!!saApp) {
@@ -316,7 +334,7 @@ app.whenReady().then(() => {
     },
     loadView(saApp,appWindow){
       let webPreferences = {
-        preload: saApp.isSystemApp ? path.join(__dirname, saApp.preload) : path.join(__dirname+'/pages/saApp/appPreload.js'),
+        preload: saApp.isSystemApp ? path.join(__dirname, saApp.preload) : path.join(__dirname+'/pages/saApp/appPreload.js'),//后者是所有web应用公用的preload
         nodeIntegration: saApp.isSystemApp,
         contextIsolation: !saApp.isSystemApp,
         enableRemoteModule:true,
@@ -329,6 +347,7 @@ app.whenReady().then(() => {
           '--user-data-path=' + userDataPath,
           '--app-version=' + app.getVersion(),
           '--app-name=' + app.getName(),
+          '--saApp='+encodeURI(JSON.stringify(saApp)),
           ...((isDevelopmentMode ? ['--development-mode'] : [])),
         ]
       }
@@ -390,6 +409,8 @@ app.whenReady().then(() => {
         console.log('press'+input)
         //todo 判断linux
       })
+      // if(isDevelopmentMode)
+      // appView.webContents.openDevTools()
       return appView
 
     },
