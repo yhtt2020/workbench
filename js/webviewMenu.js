@@ -190,7 +190,7 @@ const webviewMenu = {
       ]
       if(selection.startsWith('http://')|| selection.startsWith('https://')){
         textActions.push( {
-          label: '访问 '+encodeURI(selection),
+          label: '访问 '+encodeURI((selection.length > 60) ? selection.substring(0, 50) + '...' : selection),
           click: function () {
             var newTab = tabs.add({
               url: encodeURI(selection),
