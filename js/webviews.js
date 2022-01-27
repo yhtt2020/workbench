@@ -598,7 +598,6 @@ settings.listen(function () {
             systemVersion:systemType.systemVersion()
           }
           settings.list.systemInfo=systemInfo
-          console.log(settings.list)
           webviews.callAsync(tab.id, 'send', ['receiveSettingsData', settings.list])
         } catch (e) {
           // webview might not actually exist
