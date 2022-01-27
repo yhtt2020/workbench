@@ -308,7 +308,6 @@ Vue.component('sidebar', {
 			const itemsEl = document.getElementById('itemsEl')
 			const bottomsEl = document.getElementById('bottomsEl')
 			itemsEl.style.bottom = bottomsEl.offsetHeight + 'px'
-      console.log(itemsEl.style.bottom)
 		},
 		//点击用户登录按钮
 		userClick(){
@@ -467,7 +466,6 @@ ipc.on('executedAppSuccess',function (event,args){
   })
   appVue.$refs.sidePanel.runningApps.push(args.app.id)
   standAloneAppModel.update(args.app.id,{lastExecuteTime:Date.now()}).then((res)=>{
-    console.log(res)
   })
 })
 ipc.on('closeApp',function (event,args){
@@ -511,11 +509,9 @@ ipc.on('updateSetting',function (event,args){
   })
 })
 ipc.on('updateAppMemoryUsage',function (event,args){
-  console.log(args)
 })
 
 ipc.on('updateRunningInfo',function (event,args){
-  console.log(args)
   appVue.$refs.sidePanel.apps.forEach(app=>{
     if(app.id===args.id){
       app.capture=args.info.capture +"?t="+Date.now()
@@ -556,14 +552,17 @@ ipc.on('runAutoRunApps',function(event,args){
 })
 
 ipc.on('appBadge',function (event,args){
+  console.log(args)
   appVue.$refs.sidePanel.apps.forEach(app=>{
-    if(app.id===args.app.id){
-      if(app.add){
-        app.badge+=app.add //默认是使用add来增加，否则直接使用badge
+    if(app.id===args.id){
+      if(args.add){
+        if(!!!app.badge) app.badge=0
+        app.badge+=args.add //默认是使用add来增加，否则直接使用badge
       }else{
         app.badge=args.badge
       }
-
+      console.log(app)
     }
+
   })
 })

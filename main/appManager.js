@@ -1,13 +1,13 @@
 let forceClose = false
 const { config } = require(path.join(__dirname, '//server-config.js'))
-const remote=require('@electron/remote/main')
+const remote = require('@electron/remote/main')
 
 /**
  * 运行中的应用窗体，结构{window:窗体对象,saApp:独立窗体app对象}
  * @type {*[]}
  */
 let processingAppWindows = []//运行中的应用
-function apLog(e) {
+function apLog (e) {
   if (0) {
     console.log(e)
   }
@@ -19,13 +19,14 @@ function apLog(e) {
 app.whenReady().then(() => {
   remote.initialize()
   const appManager = {
+    dockBadge: 0,
     settingWindow: null,
     /**
      * 单个更新app信息
      * @param id
      * @param saApp
      */
-    updateSaApp(id, saApp) {
+    updateSaApp (id, saApp) {
       for (let i = 0; i < processingAppWindows.length; i++) {
         if (processingAppWindows[i].saApp.id === id) {
           processingAppWindows[i].saApp = saApp
@@ -38,7 +39,7 @@ app.whenReady().then(() => {
      * 聚焦窗体
      * @param windowId
      */
-    focusWindow(windowId) {
+    focusWindow (windowId) {
       processingAppWindows.forEach((item) => {
         if (item.saApp.windowId === windowId) {
           if (!item.window.isVisible()) {
@@ -48,26 +49,92 @@ app.whenReady().then(() => {
         }
       })
     },
-    notification(appId=1,title='应用消息',option='消息内容'){
-      function showNotification () {
-        new electron.Notification({ title: title, body: option.body }).show()
-
+    /**
+     * 发送应用消息，进行提示，并给应用加上图标
+     * @param appId
+     * @param title 消息标题
+     * @param option  option.body为消息体
+     */
+    notification (appId = 0, option = {
+      title: '应用消息', option: '消息内容'
+    })
+    {
+      new electron.Notification(option).show()
+      //add给badge进行加减调试，优先使用add，存在add则badge参数无效; badge强行设置badge的值，不推荐使用。
+      appManager.incAppBadge(appId, 1)
+    },
+    /**
+     * 将app的badge+1，并更新dock中的badge
+     * @param appId
+     * @param add
+     */
+    incAppBadge (appId = 0, add = 1) {
+      processingAppWindows.forEach(processApp => {
+        if (processApp.saApp.id === appId) {
+          processApp.saApp.badge = processApp.saApp.badge ? processApp.saApp.badge + add : add
+          console.log(app)
+        }
+      })
+      SidePanel.send('appBadge', { id: appId, add: add })
+      appManager.updateDockBadge()
+    },
+    /**
+     * 自动统计全部的app的badge，进行汇总
+     */
+    updateDockBadge () {
+      if (process.platform === 'darwin') {
+        let count = 0
+        processingAppWindows.forEach(processApp => {
+          count += processApp.saApp.badge ? processApp.saApp.badge : 0
+        })
+        app.dock.setBadge(count.toString())
+        appManager.dockBadge = count
       }
-      showNotification()
-      SidePanel.send('appBadge',{app:appId,add:1})
+    },
+    /**
+     * 给当前dockBage+1，此操作可能导致不同步
+     * @param add
+     */
+    incDockBadge (add = 1) {
+      if (process.platform === 'darwin') {
+        appManager.dockBadge += add
+        app.dock.setBadge(appManager.dockBadge.toString())
+      }
+    },
+    /**
+     * 设置dock栏的badge，不建议直接使用，请使用updateDockBadge（更新统计）或者incDockBadge（单独增加值）
+     * @param count
+     */
+    setDockBadge (count) {
+      if (process.platform === 'darwin') {
+        appManager.dockBadge = count
+        app.dock.setBadge(appManager.dockBadge.toString())
+      }
+    },
+    /**
+     * 清理dock栏的badge，置零，不建议直接使用，这是临时性的，建议先调整每个应用的badge，然后使用updateDockBadge进行dock栏汇总更新
+     */
+    clearDockBadge () {
+      if (process.platform === 'darwin') {
+        app.dock.setBadge('0')
+      }
     },
     /**
      * 隐藏窗体
      * @param windowId
      */
-    hideWindow(windowId) {
+    hideWindow (windowId) {
       processingAppWindows.forEach((item) => {
         if (item.saApp.windowId === windowId) {
           item.window.hide()
         }
       })
     },
-    toggleAppWindowVisible(appId) {
+    /**
+     * 切换窗体的可见度，适用于不需要确认窗体是否可见的场景
+     * @param appId
+     */
+    toggleAppWindowVisible (appId) {
       let appWindow = appManager.getWindowByAppId(appId)
       if (appWindow.isVisible()) {
         appWindow.hide()
@@ -80,14 +147,14 @@ app.whenReady().then(() => {
      * 隐藏窗体
      * @param appId
      */
-    hideAppWindow(appId) {
+    hideAppWindow (appId) {
       appManager.getWindowByAppId(appId).hide()
     },
     /**
      * 隐藏窗体
      * @param appId
      */
-    showAppWindow(appId) {
+    showAppWindow (appId) {
       appManager.getWindowByAppId(appId).show()
       appManager.getWindowByAppId(appId).focus()
     },
@@ -96,7 +163,7 @@ app.whenReady().then(() => {
      * @param saAppId appId
      * @returns {boolean}
      */
-    isAppProcessing(saAppId) {
+    isAppProcessing (saAppId) {
       let processing = false
       processingAppWindows.forEach((item) => {
         if (item.saApp.id === saAppId) {
@@ -109,7 +176,7 @@ app.whenReady().then(() => {
      * 移除appWindow
      * @param saAppWindowId 窗体id,这里不适用appid，因为未来可能是多开窗体的
      */
-    removeAppWindow(saAppWindowId) {
+    removeAppWindow (saAppWindowId) {
       for (let i = 0; i < processingAppWindows.length; i++) {
         if (processingAppWindows[i].saApp.windowId === saAppWindowId) {
           processingAppWindows.splice(i, 1)
@@ -122,15 +189,15 @@ app.whenReady().then(() => {
      * @param saAppId
      * @param settings
      */
-    setOriginAppSettings(saAppId, settings) {
-      SidePanel.send('updateSetting', {id: saAppId, settings: settings})
+    setOriginAppSettings (saAppId, settings) {
+      SidePanel.send('updateSetting', { id: saAppId, settings: settings })
     },
     /**
      * 设置应用的设置，如果应用已存在，则会自动更新main中存储的设置，如果不存在，则直接调取originAppSetting，仅发送ipc去更新设置
      * @param saAppId 应用id
      * @param settings 应用设置，一个对象，类似{isAlwaysHide:true,runAtStart:true} 参考开发文档
      */
-    setAppSettings(saAppId, settings = []) {
+    setAppSettings (saAppId, settings = []) {
       let saApp = appManager.getSaAppByAppId(saAppId)
       if (saApp) {
         appManager.setOriginAppSettings(saAppId, settings)
@@ -146,7 +213,7 @@ app.whenReady().then(() => {
      * @param settingName 设置名称
      * @returns {*}
      */
-    getAppSettings(saAppId, settingName) {
+    getAppSettings (saAppId, settingName) {
       for (let i = 0; i < processingAppWindows.length; i++) {
         if (processingAppWindows[i].saApp.id === saAppId) {
           return processingAppWindows[i].saApp.settings[settingName]
@@ -158,7 +225,7 @@ app.whenReady().then(() => {
      * 通过窗体获得saApp实体
      * @returns {*}
      */
-    getSaAppByWindowId(saAppWindowId) {
+    getSaAppByWindowId (saAppWindowId) {
       for (let i = 0; i < processingAppWindows.length; i++) {
         if (processingAppWindows[i].saApp.windowId === saAppWindowId) {
           return processingAppWindows[i]
@@ -169,7 +236,7 @@ app.whenReady().then(() => {
      * 通过WindowId获得对应索引
      * @returns {number}
      */
-    getIndexByWindowId(saAppWindowId) {
+    getIndexByWindowId (saAppWindowId) {
       for (let i = 0; i < processingAppWindows.length; i++) {
         if (processingAppWindows[i].saApp.windowId === saAppWindowId) {
           return i
@@ -181,7 +248,7 @@ app.whenReady().then(() => {
      * @param appId
      * @returns {*}
      */
-    getSaAppByAppId(appId) {
+    getSaAppByAppId (appId) {
       for (let i = 0; i < processingAppWindows.length; i++) {
         if (processingAppWindows[i].saApp.id === appId) {
           return processingAppWindows[i].saApp
@@ -194,7 +261,7 @@ app.whenReady().then(() => {
      * @param appId
      * @returns {null|*}
      */
-    getWindowByAppId(appId) {
+    getWindowByAppId (appId) {
       for (let i = 0; i < processingAppWindows.length; i++) {
         if (processingAppWindows[i].saApp.id === appId) {
           return processingAppWindows[i].window
@@ -207,7 +274,7 @@ app.whenReady().then(() => {
      * @param id 应用id
      * @returns {Promise<{memoryUsage: {}, capture: (boolean|*)}>} 包含内存使用和快照
      */
-    async getAppRunningInfo(id) {
+    async getAppRunningInfo (id) {
       let saApp = appManager.getSaAppByAppId(id)
       if (!!!saApp) {
         return //如果不存在这个saApp
@@ -224,7 +291,7 @@ app.whenReady().then(() => {
      * 获取应用内存信息
      * @param saAppWindowId
      */
-    memoryUsageInfo(saAppWindowId) {
+    memoryUsageInfo (saAppWindowId) {
       let saApp = appManager.getSaAppByWindowId(saAppWindowId)
       let appWindow = saApp.window //窗体
       let memoryInfo = {}
@@ -253,7 +320,7 @@ app.whenReady().then(() => {
      * 通过windowId给APP截图
      * @param saAppWindowId
      */
-    async capture(saAppWindowId) {
+    async capture (saAppWindowId) {
       let saApp = appManager.getSaAppByWindowId(saAppWindowId)
       if (saApp.window.isDestroyed()) {
         return
@@ -270,8 +337,12 @@ app.whenReady().then(() => {
       }
       return imagePath
     },
-    openSetting(appId) {
-      function loadSettingWindow(appId) {
+    /**
+     * 打开应用的设置窗口
+     * @param appId
+     */
+    openSetting (appId) {
+      function loadSettingWindow (appId) {
         appManager.settingWindow = new BrowserWindow({
           width: 800,
           height: 800,
@@ -317,30 +388,30 @@ app.whenReady().then(() => {
      * 关闭并删除应用
      * @param appId
      */
-    deleteApp(appId) {
+    deleteApp (appId) {
       appManager.closeApp(appId)
       setTimeout(() => {
-        SidePanel.send('deleteApp', {id: appId})
+        SidePanel.send('deleteApp', { id: appId })
       }, 1000)
     },
-    closeApp(appId) {
+    closeApp (appId) {
       let window = appManager.getWindowByAppId(appId)
       let saApp = appManager.getSaAppByAppId(appId)
       if (window && !window.isDestroyed()) {
         window.destroy()
         appManager.removeAppWindow(saApp.windowId)
-        SidePanel.send('closeApp', {id: appId})
+        SidePanel.send('closeApp', { id: appId })
       }
     },
-    loadView(saApp,appWindow){
+    loadView (saApp, appWindow) {
       let webPreferences = {
-        preload: saApp.isSystemApp ? path.join(__dirname, saApp.preload) : path.join(__dirname+'/pages/saApp/appPreload.js'),//后者是所有web应用公用的preload
+        preload: saApp.isSystemApp ? path.join(__dirname, saApp.preload) : path.join(__dirname + '/pages/saApp/appPreload.js'),//后者是所有web应用公用的preload
         nodeIntegration: saApp.isSystemApp,
         contextIsolation: !saApp.isSystemApp,
-        enableRemoteModule:true,
+        enableRemoteModule: true,
         sandbox: false,
         safeDialogs: false,
-        backgroundColor:'white',
+        backgroundColor: 'white',
         safeDialogsMessage: false,
         partition: saApp.isSystemApp ? null : 'persist:webcontent',
         additionalArguments: [
@@ -360,8 +431,8 @@ app.whenReady().then(() => {
       /**
        * 在dev模式下，group引用开发环境
        */
-      if(saApp.package==='com.thisky.group' && isDevelopmentMode){
-        saApp.url=config.IM.FRONT_URL + config.IM.AUTO_LOGIN
+      if (saApp.package === 'com.thisky.group' && isDevelopmentMode) {
+        saApp.url = config.IM.FRONT_URL + config.IM.AUTO_LOGIN
       }
 
       remote.enable(appView.webContents)
@@ -387,33 +458,33 @@ app.whenReady().then(() => {
           canGoForward: appView.webContents.canGoForward()
         })
       })
-      let saAppObject=saApp
+      let saAppObject = saApp
       delete saAppObject.window
-      appView.webContents.send('init',{saApp:saAppObject})
+      appView.webContents.send('init', { saApp: saAppObject })
 
       appView.webContents.on('before-input-event', (event, input) => {
-        if(process.platform==='darwin'){
-          if(input.meta && input.key.toLowerCase()==='w'){
+        if (process.platform === 'darwin') {
+          if (input.meta && input.key.toLowerCase() === 'w') {
             console.log('command + w')
             appWindow.close()
             event.preventDefault()
           }
-          if(input.meta && input.key.toLowerCase()==='f'){
-           appView.webContents.send('findInPage')
+          if (input.meta && input.key.toLowerCase() === 'f') {
+            appView.webContents.send('findInPage')
             event.preventDefault()
           }
           console.log(input)
-        }else if(process.platform==='win32'){
+        } else if (process.platform === 'win32') {
           if (input.control && input.key.toLowerCase() === 'w') {
             appWindow.close()
             event.preventDefault()
           }
         }
-        console.log('press'+input)
+        console.log('press' + input)
         //todo 判断linux
       })
-      if(isDevelopmentMode)
-      appView.webContents.openDevTools()
+      if (isDevelopmentMode)
+        appView.webContents.openDevTools()
       return appView
 
     },
@@ -422,16 +493,16 @@ app.whenReady().then(() => {
      * @param saApp 一个应用实体
      * @param background 是否后台运行，是则运行后不显示
      */
-    executeApp(saApp, background = false) {
+    executeApp (saApp, background = false) {
       saApp.isSystemApp = saApp.id < 10 //todo 加入更加安全的系统应用判断方式
       if (1) {
         //todo 判断一下是不是独立窗体模式
         let appWindow = new BrowserWindow({
           width: 800,
           height: 600,
-          minWidth:380,
+          minWidth: 380,
           show: !background,
-          frame:false,
+          frame: false,
           acceptFirstMouse: true,
           trafficLightPosition: {
             x: 12,
@@ -457,25 +528,25 @@ app.whenReady().then(() => {
 
         //appWindow.setMenu(null)
 
-          appWindow.webContents.loadURL('file://' + path.join(__dirname + '/pages/saApp/index.html'))
-          appWindow.on('ready-to-show',()=>{
-            appWindow.webContents.send('init', {
-              url: saApp.url,
-              id: saApp.id,
-              title: saApp.name,
-              windowId: saApp.windowId,
-              app:saApp
-            })
-            if (isDevelopmentMode) {
-              appWindow.webContents.openDevTools()
-            }
+        appWindow.webContents.loadURL('file://' + path.join(__dirname + '/pages/saApp/index.html'))
+        appWindow.on('ready-to-show', () => {
+          appWindow.webContents.send('init', {
+            url: saApp.url,
+            id: saApp.id,
+            title: saApp.name,
+            windowId: saApp.windowId,
+            app: saApp
           })
+          if (isDevelopmentMode) {
+            appWindow.webContents.openDevTools()
+          }
+        })
 
         appWindow.setBounds(saApp.settings.bounds)
         // if (process.platform !== 'darwin') {
         //   appWindow.setMenuBarVisibility(false)
         // }
-        let appView=appManager.loadView(saApp,appWindow)
+        let appView = appManager.loadView(saApp, appWindow)
         appWindow.setBrowserView(appView)
 
         appView.setBounds({
@@ -491,12 +562,12 @@ app.whenReady().then(() => {
         //     frameId: e.frameId
         //   })
         // })
-        SidePanel.send('executedAppSuccess', {app: saApp})
+        SidePanel.send('executedAppSuccess', { app: saApp })
         appWindow.on('moved', (event, args) => {
-          appManager.setAppSettings(saApp.id, {bounds: appWindow.getBounds()})
+          appManager.setAppSettings(saApp.id, { bounds: appWindow.getBounds() })
         })
         appWindow.on('resize', (event, args) => {
-          appManager.setAppSettings(saApp.id, {bounds: appWindow.getBounds()})
+          appManager.setAppSettings(saApp.id, { bounds: appWindow.getBounds() })
           appView.setBounds({
             x: 0,
             y: 40,
@@ -505,25 +576,25 @@ app.whenReady().then(() => {
           })
         })
         appWindow.webContents.on('before-input-event', (event, input) => {
-          if(process.platform==='darwin'){
-            if(input.meta && input.key.toLowerCase()==='w'){
+          if (process.platform === 'darwin') {
+            if (input.meta && input.key.toLowerCase() === 'w') {
               console.log('command + w')
               appWindow.close()
               event.preventDefault()
             }
-            if(input.meta && input.key.toLowerCase()==='f'){
+            if (input.meta && input.key.toLowerCase() === 'f') {
               console.log('command + f')
               appView.webContents.send('findInPage')
               event.preventDefault()
             }
             console.log(input)
-          }else if(process.platform==='win32'){
+          } else if (process.platform === 'win32') {
             if (input.control && input.key.toLowerCase() === 'w') {
               appWindow.close()
               event.preventDefault()
             }
           }
-          console.log('press'+input)
+          console.log('press' + input)
           //todo 判断linux
         })
         appWindow.on('ready-to-show', (event) => {
@@ -543,22 +614,22 @@ app.whenReady().then(() => {
           }, 4000)
         })
         appWindow.on('blur', async (event) => {
-          SidePanel.send('updateRunningInfo', {id: saApp.id, 'info': await appManager.getAppRunningInfo(saApp.id)})
+          SidePanel.send('updateRunningInfo', { id: saApp.id, 'info': await appManager.getAppRunningInfo(saApp.id) })
         })
         /**
          * 只允许通过关闭按钮隐藏，而不是彻底关闭
          */
-        appWindow.on('enter-full-screen',()=>{
+        appWindow.on('enter-full-screen', () => {
           appWindow.webContents.send('enter-full-screen')
         })
-        appWindow.on('leave-full-screen',()=>{
+        appWindow.on('leave-full-screen', () => {
           appWindow.webContents.send('leave-full-screen')
         })
 
-        appWindow.on('maximize',()=>{
+        appWindow.on('maximize', () => {
           appWindow.webContents.send('maximize')
         })
-        appWindow.on('unmaximize',()=>{
+        appWindow.on('unmaximize', () => {
           appWindow.webContents.send('unmaximize')
         })
         appWindow.on('close', (event, args) => {
@@ -595,7 +666,11 @@ app.whenReady().then(() => {
           // }
 
         })
-        appWindow.view=appView
+        appWindow.view = appView
+        //test
+        // setInterval(() => {
+        //   appManager.notification(saApp.id,  {title:'测试消息标题', body: '测试内容' })
+        // }, 1000)
         processingAppWindows.push({
           window: appWindow,//在本地的对象中插入window对象，方便后续操作
           saApp: saApp
@@ -610,15 +685,14 @@ app.whenReady().then(() => {
     SidePanel.send('runAutoRunApps')
   }, 2000)
 
-
   ipc.on('executeApp', (event, args) => {
     let saApp = appManager.getSaAppByAppId(args.app.id)
     if (!!!saApp) {
       //首先必须是没运行的
-      if (!saApp ) {
+      if (!saApp) {
         //如果不存在，直接运行
         appManager.executeApp(args.app, args.background)
-      }else if(!appManager.isAppProcessing(saApp.id)){
+      } else if (!appManager.isAppProcessing(saApp.id)) {
         //如果存在且未运行，则执行
         appManager.executeApp(saApp, args.background)
       }
@@ -641,7 +715,7 @@ app.whenReady().then(() => {
           type: 'checkbox',
           checked: args.app.settings['alwaysTop'],
           label: '窗口置顶',
-          click() {
+          click () {
             if (args.app.settings['alwaysTop']) {
               appManager.setAppSettings(appId, {
                 'alwaysTop': false
@@ -663,7 +737,7 @@ app.whenReady().then(() => {
             type: 'checkbox',
             checked: args.app.settings['showInSideBar'],
             label: '在左侧栏保留',
-            click() {
+            click () {
               if (args.app.settings['showInSideBar']) {
                 appManager.setAppSettings(appId, {
                   'showInSideBar': false
@@ -681,7 +755,7 @@ app.whenReady().then(() => {
             checked: args.app.settings['autoRun'],
             type: 'checkbox',
             label: '打开浏览器时运行',
-            click() {
+            click () {
               if (args.app.settings['autoRun']) {
                 appManager.setAppSettings(appId, {
                   'autoRun': false
@@ -704,7 +778,7 @@ app.whenReady().then(() => {
       },
       {
         label: '设置',
-        click() {
+        click () {
           appManager.openSetting(appId)
         }
       }
@@ -717,7 +791,7 @@ app.whenReady().then(() => {
             type: 'checkbox',
             checked: appWindow.isVisible(),
             label: saApp.name,
-            click() {
+            click () {
               appManager.toggleAppWindowVisible(appId)
             }
           }, {
@@ -729,14 +803,14 @@ app.whenReady().then(() => {
       if (appWindow.isVisible()) {
         template.push({
           label: '隐藏',
-          click() {
+          click () {
             appManager.hideAppWindow(appId)
           }
         })
       } else {
         template.push({
           label: '显示',
-          click() {
+          click () {
             appManager.showAppWindow(appId)
           }
         })
@@ -744,7 +818,7 @@ app.whenReady().then(() => {
       if (!appWindow.isDestroyed()) {
         template.push({
           label: '退出',
-          click() {
+          click () {
             appManager.closeApp(appId)
           }
         })
@@ -752,7 +826,7 @@ app.whenReady().then(() => {
     } else {
       template.push({
         label: '打开',
-        click() {
+        click () {
           appManager.executeApp(args.app)
         }
       })
@@ -768,7 +842,7 @@ app.whenReady().then(() => {
     appManager.closeApp(args.id)
   })
   ipc.on('getAppRunningInfo', async (event, args) => {
-    SidePanel.send('updateRunningInfo', {id: args.id, 'info': await appManager.getAppRunningInfo(args.id)})
+    SidePanel.send('updateRunningInfo', { id: args.id, 'info': await appManager.getAppRunningInfo(args.id) })
   })
   /**
    * 获取并更新一个app的截图
@@ -780,7 +854,7 @@ app.whenReady().then(() => {
     }
     let image = appManager.capture(saApp.windowId)
     if (!!image)
-      SidePanel.send('updateAppCapture', {id: saApp.saApp.id, captureSrc: image})
+      SidePanel.send('updateAppCapture', { id: saApp.saApp.id, captureSrc: image })
   })
   /**
    * 获取到全部正在运行的app清单
@@ -792,7 +866,7 @@ app.whenReady().then(() => {
       runningApps.push(window.saApp.id)
       windows.push(window.saApp.windowId)
     })
-    SidePanel.send('updateRunningApps', {runningApps: runningApps, windows: windows})
+    SidePanel.send('updateRunningApps', { runningApps: runningApps, windows: windows })
   })
   ipc.on(ipcMessageMain.saApps.deleteApp, (event, args) => {
     let appId = args.id
@@ -800,9 +874,8 @@ app.whenReady().then(() => {
     appManager.deleteApp(appId)
   })
 
-
   ipc.on(ipcMessageMain.saApps.installApp, (event, args) => {
-    SidePanel.send('installApp', {id: args.id})
+    SidePanel.send('installApp', { id: args.id })
   })
   /**
    * 应用关闭前，将所有开启的窗体销毁掉
@@ -816,21 +889,20 @@ app.whenReady().then(() => {
     })
   })
 
-
-  ipc.handle('minimizeAppWindow',(event,args)=>{
+  ipc.handle('minimizeAppWindow', (event, args) => {
     console.log(args.id)
     appManager.getWindowByAppId(args.id).minimize()
   })
-  ipc.handle('closeAppWindow',(event,args)=>{
+  ipc.handle('closeAppWindow', (event, args) => {
     appManager.getWindowByAppId(args.id).close()
   })
-  ipc.handle('unmaximizeAppWindow',(event,args)=>{
+  ipc.handle('unmaximizeAppWindow', (event, args) => {
     appManager.getWindowByAppId(args.id).unmaximize()
   })
-  ipc.handle('maximizeAppWindow',(event,args)=>{
+  ipc.handle('maximizeAppWindow', (event, args) => {
     appManager.getWindowByAppId(args.id).maximize()
   })
-  ipc.handle('setFullScreenAppWindow',(event,args)=>{
+  ipc.handle('setFullScreenAppWindow', (event, args) => {
     appManager.getWindowByAppId(args.id).setFullScreen(args.flag)
 
   })
@@ -847,8 +919,8 @@ app.whenReady().then(() => {
     appManager.getWindowByAppId(args.id).view.webContents.reload()
   })
 
-  ipc.on('saAppHome',(event,args)=>{
-    let saApp=appManager.getSaAppByAppId(args.id)
+  ipc.on('saAppHome', (event, args) => {
+    let saApp = appManager.getSaAppByAppId(args.id)
     console.log(saApp.url)
     appManager.getWindowByAppId(args.id).view.webContents.loadURL(saApp.url)
   })
