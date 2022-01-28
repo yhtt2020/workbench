@@ -398,7 +398,8 @@ app.whenReady().then(() => {
       let saApp = appManager.getSaAppByAppId(appId)
       if (window && !window.isDestroyed()) {
         saApp.canClose=true
-        window.close()
+        window.view.webContents.destroy()
+        window.destroy()
         appManager.removeAppWindow(saApp.windowId)
         SidePanel.send('closeApp', { id: appId })
       }
