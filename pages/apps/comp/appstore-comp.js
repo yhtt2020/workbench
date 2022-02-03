@@ -5,6 +5,7 @@ const appstoreTpl = `
         >
           <a-avatar slot="folder" shape="square" class="tree-icon" src="../../icons/svg/internet.svg"></a-avatar>
           <a-avatar slot="list-icon" shape="square" class="tree-icon" src="../../icons/svg/plan.svg"></a-avatar>
+          <a-avatar slot="track" shape="square" class="tree-icon" src="../../icons/svg/track.svg"></a-avatar>
         </a-tree>
 </div>
   `
@@ -24,6 +25,7 @@ Vue.component('appstore-comp', {
           slots: {
             icon: 'folder'
           },
+
         //   children: [{
         //     title: '办公导航',
         //     key: '123',
@@ -39,6 +41,13 @@ Vue.component('appstore-comp', {
         //       }
         //     }
         // ]
+        },
+        {
+          title: '应用导航',
+          key: 'apps',
+          slots: {
+            icon: 'track'
+          }
         }
 
   ]

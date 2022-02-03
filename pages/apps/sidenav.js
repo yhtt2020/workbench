@@ -2,7 +2,7 @@ const tpl = `
 <div style="padding: 15px;">
   <div class="logo">
     <img src="../../icons/svg/apps.svg" style="width: 2em">
-    网址导航
+    收藏夹
   </div>
   <template>
     <h4 style="color: #999;font-size: 12px">网络导航</h4>
