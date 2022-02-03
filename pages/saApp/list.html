@@ -40,37 +40,47 @@ text-overflow:ellipsis; ">
 <!--        <div style="position:absolute;right: 0;top: 0">管理</div>-->
         <a-row>
           <a-col :span="4" v-for="app in apps">
-            <div style="margin-bottom: 15px;text-align: center">
-              <div style="margin-bottom: 10px">
-                <img  @click="executeApp(app)" shape="circle" class="logo clickable" :src="app.logo"
-                     :style="{'border-color':app.userThemeColor?app.userThemeColor:app.themeColor}">
-              </div>
-              <div class="clickable"  @click="executeApp(app)" style="white-space:nowrap;
+
+              <div style="margin-bottom: 15px;text-align: center">
+                <a-dropdown :trigger="['contextmenu']">
+                <div style="margin-bottom: 10px">
+                  <img  @click="executeApp(app)" shape="circle" class="logo clickable" :src="app.logo"
+                        :style="{'border-color':app.userThemeColor?app.userThemeColor:app.themeColor}">
+                </div>
+                <div class="clickable"  @click="executeApp(app)" style="white-space:nowrap;
 overflow:hidden;
 text-overflow:ellipsis; ">
-                {{app.name}}
+                  {{app.name}}
+                </div>
+                <a-menu slot="overlay" >
+                  <a-menu-item @click="openSetting(app.id)" key="setting"> <a-icon type="setting"></a-icon>设置</a-menu-item>
+                  <a-menu-item @click="uninstall(app.id)" v-if="app.id>10" key="uninstall"> <a-icon type="delete"></a-icon>卸载 </a-menu-item>
+                </a-menu>
+            </a-dropdown>
               </div>
-            </div>
+
           </a-col>
         </a-row>
       </div>
       <div v-if="this.searchWords!==''">
         <h1>搜索结果 - <span>{{searchWords}}</span></h1>
         <a-empty v-if="this.searchResult.length===0" description="暂无相关应用"></a-empty>
-
         <a-row>
           <a-col :span="4" v-for="app in searchResult">
-            <div style="margin-bottom: 15px;text-align: center">
-              <div style="margin-bottom: 10px">
-                <img  @click="executeApp(app)" shape="circle" class="logo clickable"  :src="app.logo"
-                     :style="{'border-color':app.userThemeColor?app.userThemeColor:app.themeColor}">
-              </div>
-              <div class="clickable"  @click="executeApp(app)" style="white-space:nowrap;
+
+              <div style="margin-bottom: 15px;text-align: center">
+                <div style="margin-bottom: 10px">
+                  <img  @click="executeApp(app)" shape="circle" class="logo clickable"  :src="app.logo"
+                        :style="{'border-color':app.userThemeColor?app.userThemeColor:app.themeColor}">
+                </div>
+                <div class="clickable"  @click="executeApp(app)" style="white-space:nowrap;
 overflow:hidden;
 text-overflow:ellipsis; ">
-                {{app.name}}
+                  {{app.name}}
+                </div>
               </div>
-            </div>
+
+
           </a-col>
         </a-row>
       </div>
@@ -148,6 +158,35 @@ text-overflow:ellipsis; ">
           //this.searchWords=''
           appVue.searchWords=''
           console.log('a')
+        },
+        openSetting(appId){
+          ipc.send('saAppOpenSetting',{id:appId})
+        },
+        uninstall(appId){
+          let that=this
+          appVue.$confirm({
+            title: '确定卸载此应用？',
+            content: '此操作将卸载应用并清空所有应用数据，且无法还原。请谨慎操作。',
+            okText: '确认',
+            okType: 'danger',
+            cancelText: '取消',
+            onOk() {
+              saAppModel.uninstall(appId).then(success=>{
+                for(let i=0;i<that.apps.length;i++){
+                  if(that.apps[i].id===appId){
+                    that.apps.splice(i,1)
+                  }
+                }
+                ipc.send('message',{type:"success",config:{content:'卸载应用成功。'}})
+                ipc.send('deleteApp',{id:appId})
+              },err=>{
+                ipc.send('message',{type:"success",config:{content:'卸载失败。'}})
+              })
+            },
+            onCancel() {
+              console.log('Cancel');
+            },
+          });
         }
       }
     }

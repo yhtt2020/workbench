@@ -890,7 +890,11 @@ app.whenReady().then(() => {
   })
   ipc.on(ipcMessageMain.saApps.deleteApp, (event, args) => {
     let appId = args.id
-    appManager.settingWindow.close()
+    if(appManager.settingWindow){
+      appManager.settingWindow.close()
+      appManager.settingWindow=null
+    }
+    mainWindow.focus()
     appManager.deleteApp(appId)
   })
 
