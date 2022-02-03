@@ -544,7 +544,8 @@ ipc.on('deleteApp',function(event,args){
 ipc.on('installApp',function (event,args){
   let id=args.id
   standAloneAppModel.get(id).then(async app=>{
-    ipc.send('executeApp',{app:app})
+    if(!args.background)
+    {ipc.send('executeApp',{app:app})}
     appVue.$refs.sidePanel.apps=await standAloneAppModel.getAllApps()
     ipc.send('getRunningApps')
   })

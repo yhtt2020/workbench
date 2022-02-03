@@ -895,7 +895,7 @@ app.whenReady().then(() => {
   })
 
   ipc.on(ipcMessageMain.saApps.installApp, (event, args) => {
-    SidePanel.send('installApp', { id: args.id })
+    SidePanel.send('installApp', { id: args.id ,background:args.background})
   })
   /**
    * 应用关闭前，将所有开启的窗体销毁掉
