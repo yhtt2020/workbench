@@ -37,6 +37,7 @@ const cloudNavsTpl=`
 
 const CloudNavsComp = require('../comp/cloudNavsComp.js')
 const { api } = require('../../../server-config')
+const { ipcRenderer: ipc } = require('electron')
 
 module.exports = Vue.component('cloud-navs-page', {
   name: 'cloud-navs-page',
@@ -74,7 +75,7 @@ module.exports = Vue.component('cloud-navs-page', {
     },
     Login() {
       //location.href = api.getUrl(api.API_URL.user.login)
-      window.open(api.getUrl(api.API_URL.user.login))
+      ipc.send('addTab',{url:api.getUrl(api.API_URL.user.login)})
     }
   }
 })

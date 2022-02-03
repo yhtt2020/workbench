@@ -36,6 +36,7 @@ groupListTpl=`
   `
 const GroupListComp = require('../comp/groupListComp.js')
 const { api } = require('../../../server-config')
+const { ipcRenderer: ipc } = require('electron')
 
 module.exports = Vue.component('group-list-page', {
   name: 'group-list-page',
@@ -73,7 +74,7 @@ module.exports = Vue.component('group-list-page', {
     },
     Login() {
       //location.href = api.getUrl(api.API_URL.user.login)
-      window.open(api.getUrl(api.API_URL.user.login))
+      ipc.send('addTab',{url:api.getUrl(api.API_URL.user.login)})
     }
   }
 })

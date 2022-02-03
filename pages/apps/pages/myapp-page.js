@@ -48,14 +48,14 @@ myappTpl =
     <a-list-item  @dragstart="dragStart($event,item)" @mousedown.stop draggable="true"  class="app-list" :id="item.id"  slot="renderItem" slot-scope="item, index">
       <a-list-item-meta>
       <div slot="description" >
-        <a style="color: #999" @click="addTab(item.url)" >{{item.url}}</a>
+        <a class="app-url"  @click="addTab(item.url)" >{{item.url}}</a>
         </div>
         <a slot="title" @click="addTab(item.url)" ><strong>{{ item.name }}</strong> <span style="color: #999;font-weight: normal;padding-left: 20px">{{item.summary}}</span></a>
         <a-avatar @click="addTab(item.url)" style="margin:10px;cursor:pointer;"
           slot="avatar"
           shape="square"
           :src="item.icon"
-          
+
         />
       </a-list-item-meta>
     </a-list-item>
@@ -534,7 +534,7 @@ module.exports = Vue.component('myapp-page', {
      */
     openList(){
         this.myApps.forEach(app=>{
-          window.open(app.url)
+          ipc.send('addTab',{url:app.url});
         })
     }
   }

@@ -235,3 +235,14 @@ span .ant-tree-title .ant-dropdown-trigger {
   color: #1E90FF;
 }
 /*selectoend*/
+
+.app-url{
+  color: #999;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: inline-block;
+  text-wrap: none;
+  white-space: nowrap;
+  word-break: break-all;
+  max-width: 300px;
+}

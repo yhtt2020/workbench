@@ -50,11 +50,11 @@ cloudTpl = `
                     :id="item.id" slot="renderItem" slot-scope="item, index">
                     <a-list-item-meta>
                       <div slot="description">
-                        <a style="color: #999" target="_blank" :href="item.url">{{item.url}}</a>
+                        <a class="app-url"   @click="openUrl(item.url)" >{{item.url}}</a>
                       </div>
-                      <a slot="title" target="_blank" :href="item.url"><strong>{{ item.name }}</strong> <span
+                      <a slot="title"  @click="openUrl(item.url)"><strong>{{ item.name }}</strong> <span
                           style="color: #999;font-weight: normal;padding-left: 20px">{{item.summary}}</span></a>
-                      <a-avatar style="margin:10px" slot="avatar" shape="square" :src="item.icon" />
+                      <a-avatar @click="openUrl(item.url)" style="margin:10px;cursor: pointer" slot="avatar" shape="square" :src="item.icon" />
                     </a-list-item-meta>
                   </a-list-item>
                 </a-list>
@@ -446,7 +446,7 @@ module.exports = Vue.component("cloud-page", {
       await this.$store.dispatch('getAppUserNavs')
     },
     openUrl(url) {
-      window.open(url);
+      ipc.send('addTab',{url:url})
     },
     //selecto
     onSelect(e) {
@@ -515,7 +515,7 @@ module.exports = Vue.component("cloud-page", {
      */
     openList() {
       this.myApps.forEach((app) => {
-        window.open(app.url);
+        ipc.send('addTab',{url:app.url});
       });
     },
   },
