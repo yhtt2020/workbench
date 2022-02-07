@@ -408,19 +408,19 @@ app.whenReady().then(() => {
       }
 
     },
-    findInPage(appId,args){
-      let window=appManager.getWindowByAppId(appId)
-      let view=window.view
-
-      view.webContents.findInPage(args.text,{
-        forward:args.forward,
-        findNext:args.findNext
-      })
-    },
-    stopFindInPage(appId,action){
-      let view=appManager.getWindowByAppId(appId).view
-      view.webContents.stopFindInPage(action)
-    },
+    // findInPage(appId,args){
+    //   let window=appManager.getWindowByAppId(appId)
+    //   let view=window.view
+    //
+    //   view.webContents.findInPage(args.text,{
+    //     forward:args.forward,
+    //     findNext:args.findNext
+    //   })
+    // },
+    // stopFindInPage(appId,action){
+    //   let view=appManager.getWindowByAppId(appId).view
+    //   view.webContents.stopFindInPage(action)
+    // },
     releaseFocus(appId){
       let window=appManager.getWindowByAppId(appId)
       window.webContents.focus()
@@ -511,16 +511,16 @@ app.whenReady().then(() => {
       appView.webContents.send('init', { saApp: saAppObject })
 
 
-      appView.webContents.on('found-in-page',(event,result)=>{
-        appWindow.webContents.send('found-in-page',{data:result})
-      })
+      // appView.webContents.on('found-in-page',(event,result)=>{
+      //   appWindow.webContents.send('found-in-page',{data:result})
+      // })
       appView.webContents.on('before-input-event', (event, input) => {
         if(process.platform==='darwin'){
           if(input.meta && input.key.toLowerCase()==='w'){
             appWindow.close()
             event.preventDefault()
           }else if(input.meta && input.key.toLowerCase()==='f'){
-            appWindow.webContents.send('findinpage')
+            appView.webContents.send('findInPage')
             event.preventDefault()
           }
         }else if(process.platform==='win32'){
@@ -528,7 +528,7 @@ app.whenReady().then(() => {
             appWindow.close()
             event.preventDefault()
           }else if(input.control && input.key.toLowerCase()==='f'){
-            appWindow.webContents.send('findinpage')
+            appView.webContents.send('findInPage')
             event.preventDefault()
           }
         }
@@ -631,6 +631,10 @@ app.whenReady().then(() => {
           if(process.platform==='darwin'){
             if(input.meta && input.key.toLowerCase()==='w'){
               appWindow.close()
+              event.preventDefault()
+            }
+            if (input.meta && input.key.toLowerCase() === 'f') {
+              appView.webContents.send('findInPage')
               event.preventDefault()
             }
           }else if(process.platform==='win32'){
@@ -985,13 +989,13 @@ app.whenReady().then(() => {
     console.log(saApp.url)
     appManager.getWindowByAppId(args.id).view.webContents.loadURL(saApp.url)
   })
- ipc.on('saAppFindInPage',(event,args)=>{
-   appManager.findInPage(args.id,args)
- })
-
-  ipc.on('saAppStopFindInPage',(event,args)=>{
-    appManager.stopFindInPage(args.id,args.action)
-  })
+ // ipc.on('saAppFindInPage',(event,args)=>{
+ //   appManager.findInPage(args.id,args)
+ // })
+ //
+ //  ipc.on('saAppStopFindInPage',(event,args)=>{
+ //    appManager.stopFindInPage(args.id,args.action)
+ //  })
 
   ipc.on('saAppFocusView',(event,args)=>{
     appManager.appFocusView(args.id)
