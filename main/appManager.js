@@ -53,14 +53,24 @@ app.whenReady().then(() => {
      * 发送应用消息，进行提示，并给应用加上图标
      * @param appId
      * @param option  option.body为消息体  可参考此处参数说明 https://www.electronjs.org/zh/docs/latest/api/notification
+     * @param ignoreWhenFocus 是否在窗体可见的时候直接跳过消息提示和badge设置，仅添加到消息记录，默认为false
      */
     notification (appId = 0, option = {
       title: '应用消息', body: '消息内容'
-    })
+    },ignoreWhenFocus=false)
     {
+      //todo 将消息体存入本地的消息中心
+      let saApp=appManager.getSaAppByAppId(appId)
+      if(ignoreWhenFocus && saApp.window.isFocused())
+      {
+        //不提示，不加badage，仅添加到消息记录
+      }else{
+        //否则则推送消息并设置badge
       new electron.Notification(option).show()
       //add给badge进行加减调试，优先使用add，存在add则badge参数无效; badge强行设置badge的值，不推荐使用。
       appManager.incAppBadge(appId, 1)
+    }
+
     },
     /**
      * 将app的badge+1，并更新dock中的badge
@@ -996,7 +1006,7 @@ app.whenReady().then(() => {
     appManager.notification(args.saAppId, {
       title: args.options.title,
       body: args.options.body
-    })
+    },true)
   })
 
   ipc.on('saAppTabNavigate', (event, args) => {
