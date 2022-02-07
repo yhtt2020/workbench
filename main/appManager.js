@@ -383,6 +383,27 @@ app.whenReady().then(() => {
       }
 
     },
+    findInPage(appId,args){
+      let window=appManager.getWindowByAppId(appId)
+      let view=window.view
+
+      view.webContents.findInPage(args.text,{
+        forward:args.forward,
+        findNext:args.findNext
+      })
+    },
+    stopFindInPage(appId,action){
+      let view=appManager.getWindowByAppId(appId).view
+      view.webContents.stopFindInPage(action)
+    },
+    releaseFocus(appId){
+      let window=appManager.getWindowByAppId(appId)
+      window.webContents.focus()
+    },
+    appFocusView(appId){
+      let view=appManager.getWindowByAppId(appId).view
+      view.webContents.focus()
+    },
     /**
      * 关闭并删除应用
      * @param appId
@@ -459,31 +480,34 @@ app.whenReady().then(() => {
           canGoForward: appView.webContents.canGoForward()
         })
       })
+
       let saAppObject = saApp
       delete saAppObject.window
       appView.webContents.send('init', { saApp: saAppObject })
 
+
+      appView.webContents.on('found-in-page',(event,result)=>{
+        appWindow.webContents.send('found-in-page',{data:result})
+      })
       appView.webContents.on('before-input-event', (event, input) => {
-        if (process.platform === 'darwin') {
-          if (input.meta && input.key.toLowerCase() === 'w') {
+        if(process.platform==='darwin'){
+          if(input.meta && input.key.toLowerCase()==='w'){
             appWindow.close()
             event.preventDefault()
-          }
-          if (input.meta && input.key.toLowerCase() === 'f') {
-            appView.webContents.send('findInPage')
+          }else if(input.meta && input.key.toLowerCase()==='f'){
+            appWindow.webContents.send('findinpage')
             event.preventDefault()
           }
-        } else if (process.platform === 'win32') {
+        }else if(process.platform==='win32'){
           if (input.control && input.key.toLowerCase() === 'w') {
             appWindow.close()
             event.preventDefault()
-          }
-          if (input.control && input.key.toLowerCase() === 'f') {
-            appView.webContents.send('findInPage')
+          }else if(input.control && input.key.toLowerCase()==='f'){
+            appWindow.webContents.send('findinpage')
             event.preventDefault()
           }
         }
-        console.log('press' + input)
+       // console.log('press'+input)
         //todo 判断linux
       })
       if (isDevelopmentMode)
@@ -579,16 +603,12 @@ app.whenReady().then(() => {
           })
         })
         appWindow.webContents.on('before-input-event', (event, input) => {
-          if (process.platform === 'darwin') {
-            if (input.meta && input.key.toLowerCase() === 'w') {
+          if(process.platform==='darwin'){
+            if(input.meta && input.key.toLowerCase()==='w'){
               appWindow.close()
               event.preventDefault()
             }
-            if (input.meta && input.key.toLowerCase() === 'f') {
-              appView.webContents.send('findInPage')
-              event.preventDefault()
-            }
-          } else if (process.platform === 'win32') {
+          }else if(process.platform==='win32'){
             if (input.control && input.key.toLowerCase() === 'w') {
               appWindow.close()
               event.preventDefault()
@@ -940,6 +960,22 @@ app.whenReady().then(() => {
     console.log(saApp.url)
     appManager.getWindowByAppId(args.id).view.webContents.loadURL(saApp.url)
   })
+ ipc.on('saAppFindInPage',(event,args)=>{
+   appManager.findInPage(args.id,args)
+ })
+
+  ipc.on('saAppStopFindInPage',(event,args)=>{
+    appManager.stopFindInPage(args.id,args.action)
+  })
+
+  ipc.on('saAppFocusView',(event,args)=>{
+    appManager.appFocusView(args.id)
+  })
+
+  ipc.on('releaseFocus',(event,args)=>{
+    appManager.releaseFocus(args.id)
+  })
+
 
   ipc.on('saAppNotice', (event, args) => {
     appManager.notification(args.saAppId, {
