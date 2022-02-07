@@ -89,3 +89,14 @@ tsbk.ready(function() {
 })
 ```
 
+##### 四、💥系统消息提示
+示例
+```
+tsbk.ready(function() {
+  tsbk.notice({
+    title: '标题',
+    body: '消息内容'
+  })
+})
+```
+

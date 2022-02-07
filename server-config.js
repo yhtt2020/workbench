@@ -12,7 +12,7 @@ const config = {
     WEB_SOCKET_URL:"ws://im-socket.xiangtian.ren/socket.io",
     FRONT_URL:"http://im.xiangtian.ren",
     FRONT_URL_DEV:"http://im.xiangtian.ren",
-    FRONT_URL_DEV:"http://127.0.0.1:8000",
+    //FRONT_URL_DEV:"http://127.0.0.1:8000",
     AUTO_LOGIN: '/auto-login'      //免登等待路由
   }
 }

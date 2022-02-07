@@ -1,3 +1,5 @@
+const xss = require("xss");
+
 const tsbSdk = {
   saApp: {},
   isThirdApp: Boolean,
@@ -29,6 +31,7 @@ const tsbSdk = {
           tsbSdk.handleHideApp()
           break
         case 'tabLinkJump':
+          e.data.url = xss(e.data.url)
           tsbSdk.newTabNavigate(e.data)
           break
         case 'destoryApp':
@@ -41,6 +44,13 @@ const tsbSdk = {
             signature: 'ts',
             sdkSwitch: true
           })
+          break
+        case 'saAppNotice':
+          e.data.options.title = xss(e.data.options.title)
+          e.data.options.body = xss(e.data.options.body)
+          //console.log(e.data.options.body, '输出转码后的')
+          tsbSdk.noticeApp(e.data.options)
+
       }
     })
     console.log('挂载了SDK')
@@ -93,27 +103,49 @@ const tsbSdk = {
   },
 
   handleHideApp: function() {
-    if(ipc) {
-      ipc.send('sdkHideApp', {appId: tsbSdk.saApp.id})
+    if(!tsbSdk.isThirdApp) {
+      ipc.send('saAppHide', {appId: tsbSdk.saApp.id})
     } else {
       window.postMessage({
-        eventName: 'sdkHideApp',
+        eventName: 'saAppHide',
         saApp: window.tsbSaApp,
-        hashTime: window.tsbSDK.hashTime
+        hashId: window.tsbSDK.hashId
       })
     }
   },
 
   newTabNavigate: function(options) {
-    if(options.url.length > 0) {
-      ipc.send('sdkTabNavigate', options)
+    if(!tsbSdk.isThirdApp) {
+      if(options.url.length > 0) {
+        ipc.send('saAppTabNavigate', options)
+      } else {
+        return
+      }
     } else {
-      return
+      window.postMessage({
+        eventName: 'saAppTabNavigate',
+        options,
+        saApp: window.tsbSaApp,
+        hashId: window.tsbSDK.hashId
+      })
     }
   },
 
-  handleDestoryApp: function() {
-    ipc.send('sdkDestoryApp')
+  noticeApp: function(options) {
+    if(!tsbSdk.isThirdApp) {
+      if(options.title.length > 0  && options.body.length > 0) {
+        ipc.send('saAppNotice', {options, saAppId: tsbSdk.saApp.id})
+      } else {
+        return
+      }
+    } else {
+      window.postMessage({
+        eventName: 'saAppNotice',
+        options,
+        saApp: window.tsbSaApp,
+        hashId: window.tsbSDK.hashId
+      })
+    }
   }
 
 }

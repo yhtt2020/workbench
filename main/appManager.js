@@ -71,7 +71,7 @@ app.whenReady().then(() => {
       processingAppWindows.forEach(processApp => {
         if (processApp.saApp.id === appId) {
           processApp.saApp.badge = processApp.saApp.badge ? processApp.saApp.badge + add : add
-          console.log(app)
+          console.log(processApp.saApp.badge) //todo这里输出看起来会触发两次，说明foreach遍历有两次是processApp.saApp.id === appId
         }
       })
       SidePanel.send('appBadge', { id: appId, add: add })
@@ -433,7 +433,7 @@ app.whenReady().then(() => {
        * 在dev模式下，group引用开发环境
        */
       if (saApp.package === 'com.thisky.group' && isDevelopmentMode) {
-        saApp.url = config.IM.FRONT_URL + config.IM.AUTO_LOGIN
+        saApp.url = config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN
       }
 
       remote.enable(appView.webContents)
@@ -680,14 +680,6 @@ app.whenReady().then(() => {
 
         ipc.on('getSaApp', (event, args) => {
           event.reply('callback-getSaApp', { saApp })
-        })
-
-        ipc.on('sdkHideApp', (event, args) => {
-          appManager.getWindowByAppId(args.appId).hide()
-        })
-
-        ipc.on('sdkTabNavigate', (event, args) => {
-          sendIPCToWindow(mainWindow, 'tabNavigateTo', {url: args.url})
         })
 
         appWindow.view=appView
@@ -948,4 +940,20 @@ app.whenReady().then(() => {
     console.log(saApp.url)
     appManager.getWindowByAppId(args.id).view.webContents.loadURL(saApp.url)
   })
+
+  ipc.on('saAppNotice', (event, args) => {
+    appManager.notification(args.saAppId, {
+      title: args.options.title,
+      body: args.options.body
+    })
+  })
+
+  ipc.on('saAppTabNavigate', (event, args) => {
+    sendIPCToWindow(mainWindow, 'tabNavigateTo', {url: args.url})
+  })
+
+  ipc.on('saAppHide', (event, args) => {
+    appManager.getWindowByAppId(args.appId).hide()
+  })
+
 })

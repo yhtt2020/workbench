@@ -16,8 +16,8 @@ export default class tsbk {
   static secretInfo = {};
   static sdkSwitch = false;
 
-  //obj中必须要的属性 appId:必填，三方应用唯一标识 、timestamp:必填，生成签名的时间戳、 nonceStr: 必填，生成签名的随机串、 signature:必填，签名、 jsApiList:[]必填，需要使用的JS接口列表
-  static config(obj) {
+  //options中必须要的属性 appId:必填，三方应用唯一标识 、timestamp:必填，生成签名的时间戳、 nonceStr: 必填，生成签名的随机串、 signature:必填，签名、 jsApiList:[]必填，需要使用的JS接口列表
+  static config(options) {
     if (Object.keys(tsbk.secretInfo).length > 0) {
       return new Promise((resolve, reject) => {
         window.postMessage(
@@ -30,9 +30,9 @@ export default class tsbk {
         tsbk.listener(resolve, reject);
       });
     } else {
-      const keyNames = Object.keys(obj);
+      const keyNames = Object.keys(options);
       for (let i = 0; i < keyNames.length; i++) {
-        tsbk.secretInfo[keyNames[i]] = obj[keyNames[i]];
+        tsbk.secretInfo[keyNames[i]] = options[keyNames[i]];
       }
     }
   }
@@ -69,55 +69,77 @@ export default class tsbk {
     });
   }
 
-  static hideApp(obj) {
-    window.postMessage(
-      {
-        eventName: "hideApp",
-      },
-      `${window.origin}`
-    );
-    if (obj) {
-      if (tsbk.sdkSwitch) {
-        obj.hasOwnProperty("success") ? obj.success() : false;
-      } else {
-        obj.hasOwnProperty("fail") ? obj.fail() : false;
-      }
+  static hideApp(options) {
+    if(options && tsbk.sdkSwitch) {
+      window.postMessage(
+        {
+          eventName: "hideApp",
+        },
+        `${window.origin}`
+      );
+      options.hasOwnProperty("success") ? options.success() : false;
     } else {
-      return;
+      if(!tsbk.sdkSwitch) {
+        options.hasOwnProperty("fail") ? options.fail() : false;
+        return
+      }
+      window.postMessage(
+        {
+          eventName: "hideApp",
+        },
+        `${window.origin}`
+      );
     }
   }
 
-  static tabLinkJump(obj) {
-    if (obj) {
+  static tabLinkJump(options) {
+    if(options && tsbk.sdkSwitch) {
       window.postMessage({
         eventName: "tabLinkJump",
-        url: obj.url ?? "",
+        url: options.url ?? "",
       });
-      if (tsbk.sdkSwitch) {
-        obj.hasOwnProperty("success") ? obj.success() : false;
-      } else {
-        obj.hasOwnProperty("fail") ? obj.fail() : false;
-      }
+      options.hasOwnProperty("success") ? options.success() : false;
     } else {
-      return ;
+      options.hasOwnProperty("fail") ? options.fail() : false;
+      return
     }
   }
 
-  static destoryApp(obj) {
-    window.postMessage(
-      {
-        eventName: "destoryApp",
-      },
-      `${window.origin}`
-    );
-    if (obj) {
-      if (tsbk.sdkSwitch) {
-        obj.hasOwnProperty("success") ? obj.success() : false;
-      } else {
-        obj.hasOwnProperty("fail") ? obj.fail() : false;
-      }
+  //暂时废弃
+  // static destoryApp(options) {
+  //   window.postMessage(
+  //     {
+  //       eventName: "destoryApp",
+  //     },
+  //     `${window.origin}`
+  //   );
+  //   if (options) {
+  //     if (tsbk.sdkSwitch) {
+  //       options.hasOwnProperty("success") ? options.success() : false;
+  //     } else {
+  //       options.hasOwnProperty("fail") ? options.fail() : false;
+  //     }
+  //   } else {
+  //     return;
+  //   }
+  // }
+
+  static notice(options) {
+    if(options && tsbk.sdkSwitch) {
+      window.postMessage({
+        eventName: 'saAppNotice',
+        options: options
+      })
+      options.hasOwnProperty("success") ? options.success() : false;
     } else {
-      return;
+      if(!tsbk.sdkSwitch) {
+        options.hasOwnProperty("fail") ? options.fail() : false;
+        return
+      }
+      window.postMessage({
+        eventName: 'saAppNotice',
+        options: options
+      })
     }
   }
 }

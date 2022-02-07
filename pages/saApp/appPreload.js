@@ -4,6 +4,8 @@ const remote = require('@electron/remote')
 let FindInPage = require('electron-find').FindInPage
 const tsbSdk = require('../../js/util/tsbSdk')
 let tools = require('../util/util').tools
+const { nanoid } = require('nanoid')
+
 //todo 为了引入findinpage，关闭了sandbox，可能存在安全隐患
 ipc.on('findInPage', () => {
   let findInPage = new FindInPage(remote.getCurrentWebContents())
@@ -13,7 +15,7 @@ window = tools.getWindowArgs(window)
 
 //通过内容暴露给window一些应用信息
 let sdkObject = {
-  hashTime: new Date().getTime(),
+  hashId: nanoid(),
   has: true,
   globalArgs: window.globalArgs,
   platform: window.platformType,
@@ -46,7 +48,6 @@ let sdkObject = {
   }
 }
 sdkObject.on('ready',(saApp)=>{console.log(saApp)}) //测试挂载
-sdkObject.on('ready',(saApp)=>{console.log(saApp)}) //测试挂载
 contextBridge.exposeInMainWorld('tsbSDK', sdkObject)
 tsbSdk.listener() //浏览器侧sdk
 
@@ -59,14 +60,35 @@ ipc.on('init', (event, args) => {
     switch(messageEvent) {
       case 'preloadAuth':
         //todo 后面添加真正的鉴权
-        window.postMessage()
+        //const { appId, timestamp, nonceStr, signature, jsApiList } = data.checkData
+        //解密signature，sha1方法
+        //校验解密出来的timestamp、nonceStr是否一致
+        //然后再进一步远程ts服务器校验(jsapi_ticket, origin)是否过期，不过期返回一个true，过期返回false
+        window.postMessage({
+          eventName: 'preloadAuthResult',
+        })
         break;
-      case 'sdkHideApp':
-        if(e.data.hashTime === sdkObject.hashTime) {
+      case 'saAppHide':
+        if(e.data.hashId === sdkObject.hashId) {
           ipc.send('sdkHideApp', {appId: e.data.saApp.id})
         } else {
-          console.log('验证hashTime错误！')
+          console.error('验证错误！')
         }
+        break;
+      case 'saAppTabNavigate':
+        if(e.data.hashId === sdkObject.hashId) {
+          ipc.send('addTab', { 'url': e.data.options.url })
+        } else {
+          console.error('验证错误！')
+        }
+        break;
+      case 'saAppNotice':
+        if(e.data.hashId === sdkObject.hashId) {
+          ipc.send('saAppNotice', {options: e.data.options, saAppId: e.data.saApp.id})
+        } else {
+          console.error('验证错误！')
+        }
+
     }
     console.log(ipc, '无ipc的三方应用也被监听中。。。。')
   })
