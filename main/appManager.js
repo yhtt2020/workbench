@@ -78,6 +78,21 @@ app.whenReady().then(() => {
       appManager.updateDockBadge()
     },
     /**
+     * 清理app的Bandage
+     * @param appId
+     * @param add
+     */
+    clearAppBadge (appId = 0, add = 1) {
+      processingAppWindows.forEach(processApp => {
+        if (processApp.saApp.id === appId) {
+          processApp.saApp.badge = 0
+          console.log(processApp.saApp.badge) //todo这里输出看起来会触发两次，说明foreach遍历有两次是processApp.saApp.id === appId
+        }
+      })
+      SidePanel.send('appBadge', { id: appId, badge: 0 })
+      appManager.updateDockBadge()
+    },
+    /**
      * 自动统计全部的app的badge，进行汇总
      */
     updateDockBadge () {
