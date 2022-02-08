@@ -1011,7 +1011,7 @@ app.whenReady().then(() => {
     appManager.notification(args.saAppId, {
       title: args.options.title,
       body: args.options.body
-    },args.ignoreWhenFocus)
+    },typeof args.ignoreWhenFocus == 'undefined'?false:args.ignoreWhenFocus)
   })
 
   ipc.on('saAppTabNavigate', (event, args) => {
