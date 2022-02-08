@@ -1,6 +1,7 @@
 //这个预载入文件用于与服务器进行交互，仅适用于项目路径
 let href = window.location.href
 let { config, api, appConfig }=require('../../server-config.js')
+const tsbSdk = require('../../js/util/tsbSdk.js')
 let ipc=require('electron').ipcRenderer
 const preload = {
   //osx端说pc登录是否已掉的前置判断
@@ -67,16 +68,23 @@ const preload = {
   }
 }
 
-if(href.startsWith(config.SERVER_BASE_URL) && !href.startsWith(config.SERVER_BASE_URL + api.API_URL.user.AUTO_LOGIN))
-{
-  preload.beforeInit()
-  preload.init(href)
-} else if (href.startsWith(config.DEV_NODE_SERVER_BASE_URL)) {
-  const newUrl = window.location.origin + window.location.pathname
-  preload.init(newUrl)
-} else if (href.startsWith(config.PROD_NODE_SERVER_BASE_URL)) {
-  const newUrl = window.location.origin + window.location.pathname
-  preload.init(newUrl)
-}
+ipc.on('init', (event, args) => {
+  window.tsbSaApp = args.saApp   //内置应用只需要挂个saApp的信息就可以了不需要像appPreload一样去挂tsbSDK
+
+  if(href.startsWith(config.SERVER_BASE_URL) && !href.startsWith(config.SERVER_BASE_URL + api.API_URL.user.AUTO_LOGIN))
+  {
+    preload.beforeInit()
+    preload.init(href)
+    tsbSdk.listener()
+  } else if (href.startsWith(config.DEV_NODE_SERVER_BASE_URL)) {
+    const newUrl = window.location.origin + window.location.pathname
+    preload.init(newUrl)
+    tsbSdk.listener()
+  } else if (href.startsWith(config.PROD_NODE_SERVER_BASE_URL)) {
+    const newUrl = window.location.origin + window.location.pathname
+    preload.init(newUrl)
+    tsbSdk.listener()
+  }
+})
 
 

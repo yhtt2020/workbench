@@ -49,7 +49,6 @@ let sdkObject = {
 }
 sdkObject.on('ready',(saApp)=>{console.log(saApp)}) //测试挂载
 contextBridge.exposeInMainWorld('tsbSDK', sdkObject)
-tsbSdk.listener() //浏览器侧sdk
 
 ipc.on('init', (event, args) => {
   contextBridge.exposeInMainWorld('tsbSaApp', args.saApp)
@@ -92,6 +91,9 @@ ipc.on('init', (event, args) => {
     }
     console.log(ipc, '无ipc的三方应用也被监听中。。。。')
   })
+
+
+  tsbSdk.listener() //浏览器侧sdk
 })
 
 
