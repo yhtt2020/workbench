@@ -16,8 +16,7 @@ function downloadHandler (event, item, webContents) {
 
   if (item.getMimeType() === 'application/pdf' && itemURL.indexOf('blob:') !== 0 && itemURL.indexOf('#pdfjs.action=download') === -1 && !attachment) { // clicking the download button in the viewer opens a blob url, so we don't want to open those in the viewer (since that would make it impossible to download a PDF)
     event.preventDefault()
-
-    sendIPCToWindow(mainWindow, 'openPDF', {
+    sendIPCToWindow(downloadWindow, 'openPDF', {
       url: itemURL,
       tabId: getViewIDFromWebContents(webContents)
     })
@@ -25,11 +24,12 @@ function downloadHandler (event, item, webContents) {
     var savePathFilename
 
     // send info to download manager
-    sendIPCToWindow(mainWindow, 'download-info', {
+    sendIPCToWindow(downloadWindow, 'download-info', {
       path: item.getSavePath(),
       name: item.getFilename(),
       status: 'progressing',
       size: { received: 0, total: item.getTotalBytes() }
+
     })
 
     item.on('updated', function (e, state) {
@@ -41,7 +41,7 @@ function downloadHandler (event, item, webContents) {
         currrentDownloadItems[item.getSavePath()] = item
       }
 
-      sendIPCToWindow(mainWindow, 'download-info', {
+      sendIPCToWindow(downloadWindow, 'download-info', {
         path: item.getSavePath(),
         name: savePathFilename,
         status: state,
@@ -51,7 +51,7 @@ function downloadHandler (event, item, webContents) {
 
     item.once('done', function (e, state) {
       delete currrentDownloadItems[item.getSavePath()]
-      sendIPCToWindow(mainWindow, 'download-info', {
+      sendIPCToWindow(downloadWindow, 'download-info', {
         path: item.getSavePath(),
         name: savePathFilename,
         status: state,
@@ -72,7 +72,7 @@ function listenForDownloadHeaders (ses) {
       if (typeHeader instanceof Array && typeHeader.filter(t => t.includes('application/pdf')).length > 0 && details.url.indexOf('#pdfjs.action=download') === -1 && !attachment) {
       // open in PDF viewer instead
         callback({ cancel: true })
-        sendIPCToWindow(mainWindow, 'openPDF', {
+        sendIPCToWindow(downloadWindow, 'openPDF', {
           url: details.url,
           tabId: null
         })
@@ -84,11 +84,12 @@ function listenForDownloadHeaders (ses) {
       // It doesn't make much sense to have this here, but only one onHeadersReceived instance can be created per session
       const isFileView = typeHeader instanceof Array && !typeHeader.some(t => t.includes('text/html'))
 
-      sendIPCToWindow(mainWindow, 'set-file-view', {
+      sendIPCToWindow(downloadWindow, 'set-file-view', {
         url: details.url,
         isFileView
       })
     }
+
     callback({ cancel: false })
   })
 }
@@ -98,7 +99,10 @@ app.once('ready', function () {
   listenForDownloadHeaders(session.defaultSession)
 })
 
+
 app.on('session-created', function (session) {
   session.on('will-download', downloadHandler)
   listenForDownloadHeaders(session)
 })
+
+

@@ -1,3 +1,4 @@
+
 let forceClose=false
 /**
  * 运行中的应用窗体，结构{window:窗体对象,saApp:独立窗体app对象}
@@ -388,6 +389,56 @@ app.whenReady().then(()=>{
     })
   })
   console.log(process.platform)
+  download()
+})
 
+let downloadWindow
+function download(){
+  downloadWindow = new BrowserWindow({
+    width: 400,
+    height: 500,
+    acceptFirstMouse: true,
+    maximizable:false,
+    alwaysOnTop:true,
+    webPreferences: {
+      //preload: path.join(__dirname,saApp.preload),
+      nodeIntegration: true,
+      contextIsolation: false,
+      enableRemoteModule: true,
+      sandbox: false,
+      safeDialogs:false,
+      safeDialogsMessage:false,
+      partition:null,
+    }
+  })
+
+  downloadWindow.loadFile('pages/download/index.html').whenReady().then(() =>{
+    download()
+  })
+}
+let {ipcMain} = require('electron')
+
+ipcMain.on('show-context-menu', (event) => {
+  const template = [
+    {
+      label: '启动',
+      click: () => { event.sender.send('context-menu-command', 'menu-item-1') }
+    },
+
+    { label: '打开文件夹', },
+
+    { label: '打开下载页', },
+    { label: '分享', },
+    { label: '复制下载链接', },
+    { label: '删除', }
+  ]
+  const menu = Menu.buildFromTemplate(template)
+  menu.popup(BrowserWindow.fromWebContents(event.sender))
+
+})
+
+
+ipcMain.on('download-info', (event, args) => {
+  console.log(args)
 
 })
