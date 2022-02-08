@@ -60,16 +60,16 @@ app.whenReady().then(() => {
     },ignoreWhenFocus=false)
     {
       //todo 将消息体存入本地的消息中心
-      let saApp=appManager.getSaAppByAppId(appId)
-      if(ignoreWhenFocus && saApp.window.isFocused())
+      let saAppWindow=appManager.getWindowByAppId(appId)
+      if(ignoreWhenFocus && saAppWindow.isFocused())
       {
         //不提示，不加badage，仅添加到消息记录
       }else{
         //否则则推送消息并设置badge
-      new electron.Notification(option).show()
-      //add给badge进行加减调试，优先使用add，存在add则badge参数无效; badge强行设置badge的值，不推荐使用。
-      appManager.incAppBadge(appId, 1)
-    }
+        new electron.Notification(option).show()
+        //add给badge进行加减调试，优先使用add，存在add则badge参数无效; badge强行设置badge的值，不推荐使用。
+        appManager.incAppBadge(appId, 1)
+      }
 
     },
     /**
@@ -111,7 +111,7 @@ app.whenReady().then(() => {
         processingAppWindows.forEach(processApp => {
           count += processApp.saApp.badge ? processApp.saApp.badge : 0
         })
-        app.dock.setBadge(count.toString())
+        count === 0 ? app.dock.setBadge('') : app.dock.setBadge(count.toString())
         appManager.dockBadge = count
       }
     },
@@ -762,6 +762,7 @@ app.whenReady().then(() => {
       if (1) {//是单例
         appManager.getWindowByAppId(saApp.id)
         appManager.focusWindow(saApp.windowId)
+        appManager.clearAppBadge(saApp.id)
       }
     }
   })
