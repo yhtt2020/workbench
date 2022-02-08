@@ -60,8 +60,8 @@ app.whenReady().then(() => {
     },ignoreWhenFocus=false)
     {
       //todo 将消息体存入本地的消息中心
-      let saApp=appManager.getSaAppByAppId(appId)
-      if(ignoreWhenFocus && saApp.window.isFocused())
+      let window=appManager.getWindowByAppId(appId)
+      if(ignoreWhenFocus && window.isFocused())
       {
         //不提示，不加badage，仅添加到消息记录
       }else{
@@ -1010,7 +1010,7 @@ app.whenReady().then(() => {
     appManager.notification(args.saAppId, {
       title: args.options.title,
       body: args.options.body
-    },true)
+    },args.ignoreWhenFocus)
   })
 
   ipc.on('saAppTabNavigate', (event, args) => {
