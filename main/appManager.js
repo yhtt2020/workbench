@@ -65,7 +65,6 @@ app.whenReady().then(() => {
       }
       option.icon = option.icon?option.icon:nativeImage.createFromPath(defaultIcon)
       //todo 将消息体存入本地的消息中心
-      console.log(option)
       let saAppWindow=appManager.getWindowByAppId(appId)
       if(ignoreWhenFocus && saAppWindow.isFocused())
       {

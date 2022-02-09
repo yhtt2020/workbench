@@ -15,9 +15,6 @@ const {
   globalShortcut
 } = electron
 const { autoUpdater } = require('electron-updater')
-console.log(app.setAsDefaultProtocolClient("tsb"))
-console.log(app.isDefaultProtocolClient('tsb'))
-console.log(app.getApplicationNameForProtocol("tsb://"))
 crashReporter.start({
 	submitURL: 'https://minbrowser.org/',
 	uploadToServer: false,
@@ -32,7 +29,11 @@ if (process.argv.some(arg => arg === '-v' || arg === '--version')) {
 
 let isInstallerRunning = false
 const isDevelopmentMode = process.argv.some(arg => arg === '--development-mode')
-
+ if (process.platform === 'win32')
+{
+  //修复通知出现应用名electron.app
+    app.setAppUserModelId(app.name);
+}
 function clamp(n, min, max) {
 	return Math.max(Math.min(n, max), min)
 }
