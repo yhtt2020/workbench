@@ -59,7 +59,13 @@ app.whenReady().then(() => {
       title: '应用消息', body: '消息内容'
     },ignoreWhenFocus=false)
     {
+      let defaultIcon=path.join(__dirname,'/icons/logo1024.png')
+      if(process.platform==='win32'){
+        defaultIcon=path.join(__dirname,'/icons/logo128.png')
+      }
+      option.icon = option.icon?option.icon:nativeImage.createFromPath(defaultIcon)
       //todo 将消息体存入本地的消息中心
+      console.log(option)
       let saAppWindow=appManager.getWindowByAppId(appId)
       if(ignoreWhenFocus && saAppWindow.isFocused())
       {
@@ -1019,9 +1025,10 @@ app.whenReady().then(() => {
 
 
   ipc.on('saAppNotice', (event, args) => {
+
     appManager.notification(args.saAppId, {
       title: args.options.title,
-      body: args.options.body
+      body: args.options.body,
     },typeof args.ignoreWhenFocus == 'undefined'?false:args.ignoreWhenFocus)
   })
 
