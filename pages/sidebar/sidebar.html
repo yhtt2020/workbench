@@ -218,7 +218,7 @@
               <div class="item-icon">
                 <a-avatar
                   v-if="user.uid!==0"
-                  style="border: 1px solid #cfcfcf; background-color: white"
+                  style="border: 1px solid #cfcfcf; background-color: white;width: 28px;height: 28px"
                   class="icon"
                   :src="user.avatar"
                 ></a-avatar>
@@ -260,7 +260,7 @@
                 :count="app.badge">
 <!--                :style="{position: 'absolute',right:  '-2px',visibility:'visible'}"-->
 
-                <img class="icon sa-app" :style="app.processing? {'border-color':app.userThemeColor!==''?app.userThemeColor:app.themeColor}:{}" :src="app.logo"/>
+                <img onerror="this.src='../../icons/default.svg'" class="icon sa-app" :style="app.processing? {'border-color':app.userThemeColor!==''?app.userThemeColor:app.themeColor}:{}" :src="app.logo"/>
 
               </a-badge>
             </div>

@@ -21,9 +21,10 @@
         <h1>最近使用</h1>
         <a-row>
           <a-col :span="4" v-for="app in appsRecently">
+            <a-dropdown :trigger="['contextmenu']">
             <div style="margin-bottom: 15px;text-align: center;">
               <div style="margin-bottom: 10px">
-                <img @click="executeApp(app)" shape="circle" class="logo clickable" :src="app.logo"
+                <img @click="executeApp(app)" onerror="this.src='../../icons/default.svg'" shape="circle" class="logo clickable" :src="app.logo"
                      :style="{'border-color':app.userThemeColor?app.userThemeColor:app.themeColor}">
               </div>
               <div class="clickable"  @click="executeApp(app)" style="white-space:nowrap;
@@ -32,6 +33,11 @@ text-overflow:ellipsis; ">
                 {{app.name}}
               </div>
             </div>
+            <a-menu slot="overlay" >
+              <a-menu-item @click="openSetting(app.id)" key="setting"> <a-icon type="setting"></a-icon>设置</a-menu-item>
+              <a-menu-item @click="uninstall(app.id)" v-if="app.id>10" key="uninstall"> <a-icon type="delete"></a-icon>卸载 </a-menu-item>
+            </a-menu>
+            </a-dropdown>
           </a-col>
         </a-row>
       </div>
@@ -44,14 +50,15 @@ text-overflow:ellipsis; ">
               <div style="margin-bottom: 15px;text-align: center">
                 <a-dropdown :trigger="['contextmenu']">
                   <div> <div style="margin-bottom: 10px">
-                    <img  @click="executeApp(app)" shape="circle" class="logo clickable" :src="app.logo"
+                    <img onerror="this.src='../../icons/default.svg'" @click="executeApp(app)" shape="circle" class="logo clickable" :src="app.logo"
                           :style="{'border-color':app.userThemeColor?app.userThemeColor:app.themeColor}">
                   </div>
                     <div class="clickable"  @click="executeApp(app)" style="white-space:nowrap;
 overflow:hidden;
 text-overflow:ellipsis; ">
                       {{app.name}}
-                    </div></div>
+                    </div>
+                  </div>
 
                 <a-menu slot="overlay" >
                   <a-menu-item @click="openSetting(app.id)" key="setting"> <a-icon type="setting"></a-icon>设置</a-menu-item>
@@ -68,10 +75,10 @@ text-overflow:ellipsis; ">
         <a-empty v-if="this.searchResult.length===0" description="暂无相关应用"></a-empty>
         <a-row>
           <a-col :span="4" v-for="app in searchResult">
-
+            <a-dropdown :trigger="['contextmenu']">
               <div style="margin-bottom: 15px;text-align: center">
                 <div style="margin-bottom: 10px">
-                  <img  @click="executeApp(app)" shape="circle" class="logo clickable"  :src="app.logo"
+                  <img onerror="this.src='../../icons/default.svg'"  @click="executeApp(app)" shape="circle" class="logo clickable"  :src="app.logo"
                         :style="{'border-color':app.userThemeColor?app.userThemeColor:app.themeColor}">
                 </div>
                 <div class="clickable"  @click="executeApp(app)" style="white-space:nowrap;
@@ -80,7 +87,11 @@ text-overflow:ellipsis; ">
                   {{app.name}}
                 </div>
               </div>
-
+            <a-menu slot="overlay" >
+              <a-menu-item @click="openSetting(app.id)" key="setting"> <a-icon type="setting"></a-icon>设置</a-menu-item>
+              <a-menu-item @click="uninstall(app.id)" v-if="app.id>10" key="uninstall"> <a-icon type="delete"></a-icon>卸载 </a-menu-item>
+            </a-menu>
+            </a-dropdown>
 
           </a-col>
         </a-row>
