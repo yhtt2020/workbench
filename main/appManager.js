@@ -451,8 +451,9 @@ app.whenReady().then(() => {
       }
     },
     loadView (saApp, appWindow) {
+      saApp.isSystemApp=saApp.id<10
       let webPreferences = {
-        preload: saApp.isSystemApp ? path.join(__dirname, saApp.preload) : path.join(__dirname + '/pages/saApp/appPreload.js'),//后者是所有web应用公用的preload
+        preload:'file://'+ saApp.isSystemApp ? path.join(__dirname + saApp.preload) : path.join(__dirname + '/pages/saApp/appPreload.js'),//后者是所有web应用公用的preload
         nodeIntegration: saApp.isSystemApp,
         contextIsolation: !saApp.isSystemApp,
         enableRemoteModule: true,
@@ -460,6 +461,7 @@ app.whenReady().then(() => {
         safeDialogs: false,
         backgroundColor: 'white',
         safeDialogsMessage: false,
+        webSecurity:!saApp.isSystemApp, //系统应用关闭同源策略，不开启会报cros
         partition: saApp.isSystemApp ? null : 'persist:webcontent',
         additionalArguments: [
           '--user-data-path=' + userDataPath,
@@ -478,11 +480,14 @@ app.whenReady().then(() => {
       /**
        * 在dev模式下，group引用开发环境
        */
+
       if (saApp.package === 'com.thisky.group' && isDevelopmentMode) {
-        saApp.url = config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN
+        // 当为开发环境下的时候，将团队强行更改为本地开发
+        //todo 根据实际需求更改
+        //saApp.url = config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN
       }
 
-      remote.enable(appView.webContents)
+      //remote.enable(appView.webContents)
       if (saApp.type === 'local') {
         appView.webContents.loadURL('file://' + path.join(__dirname, saApp.url))
       } else {
@@ -522,6 +527,9 @@ app.whenReady().then(() => {
           }else if(input.meta && input.key.toLowerCase()==='f'){
             appView.webContents.send('findInPage')
             event.preventDefault()
+          }else if(input.key.toLowerCase()==='f12'){
+            appView.webContents.openDevTools()
+            event.preventDefault()
           }
         }else if(process.platform==='win32'){
           if (input.control && input.key.toLowerCase() === 'w') {
@@ -529,6 +537,9 @@ app.whenReady().then(() => {
             event.preventDefault()
           }else if(input.control && input.key.toLowerCase()==='f'){
             appView.webContents.send('findInPage')
+            event.preventDefault()
+          }if(input.key.toLowerCase()==='f12'){
+            appView.webContents.openDevTools()
             event.preventDefault()
           }
         }
