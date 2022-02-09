@@ -192,7 +192,7 @@
           <h1>桌面默认壁纸</h1>
           <div style="font-size: 12px;color: #999;margin-bottom: 5px">未单独设置壁纸的桌面都将使用此壁纸</div>
           <div>
-            <wallpaper-selector :value="defaultDeskWallPaper" ></wallpaper-selector>
+            <wallpaper-selector :value="defaultDeskWallPaper" :default-wall-paper="defaultDeskWallPaper" ></wallpaper-selector>
           </div>
           <div>
             <h1 style="font-size: 14px;margin-top: 20px">快捷坞图标大小：</h1>
@@ -874,7 +874,7 @@
       return {
         USER_PATH:'',
 
-        defaultDeskWallPaper:'',
+        defaultDeskWallPaper:'../../img/wallpaper.jpeg',
 
 
 
