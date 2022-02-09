@@ -880,6 +880,9 @@ const tabBar = {
   createIconEl: function (tabData, loaded) {
     var iconEl = document.createElement('img')
     iconEl.className = 'icon'
+    iconEl.addEventListener('error',(e)=>{
+      e.target.src=__dirname+'/icons/default.svg'
+    })
     var src = ''
     if (loaded == false) {
       src = __dirname + '/icons/loading.gif'
