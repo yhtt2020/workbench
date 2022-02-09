@@ -453,7 +453,7 @@ app.whenReady().then(() => {
     loadView (saApp, appWindow) {
       saApp.isSystemApp=saApp.id<10
       let webPreferences = {
-        preload:'file://'+ saApp.isSystemApp ? path.join(__dirname + saApp.preload) : path.join(__dirname + '/pages/saApp/appPreload.js'),//后者是所有web应用公用的preload
+        preload: saApp.isSystemApp ? path.join(__dirname + saApp.preload) : path.join(__dirname + '/pages/saApp/appPreload.js'),//后者是所有web应用公用的preload
         nodeIntegration: saApp.isSystemApp,
         contextIsolation: !saApp.isSystemApp,
         enableRemoteModule: true,
@@ -484,7 +484,7 @@ app.whenReady().then(() => {
       if (saApp.package === 'com.thisky.group' && isDevelopmentMode) {
         // 当为开发环境下的时候，将团队强行更改为本地开发
         //todo 根据实际需求更改
-        //saApp.url = config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN
+        saApp.url = config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN
       }
 
       //remote.enable(appView.webContents)

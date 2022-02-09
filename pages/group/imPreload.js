@@ -38,6 +38,7 @@ const server = {
 }
 
 ipc.on('init', (event, args) => {
+  console.log('收到了！！！！')
   window.tsbSaApp = args.saApp   //内置应用只需要挂个saApp的信息就可以了不需要像appPreload一样去挂tsbSDK
 
   if(href === config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN) {
