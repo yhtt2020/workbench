@@ -351,14 +351,19 @@ app.whenReady().then(() => {
      */
     async capture (saAppWindowId) {
       let saApp = appManager.getSaAppByWindowId(saAppWindowId)
+      let imagePath = path.resolve(userDataPath + '/app/screen' + saApp.saApp.id + '.jpg')
       if (saApp.window.isDestroyed()) {
         return
       }
       let capturedImage = await saApp.window.view.webContents.capturePage()
+      if(capturedImage.isEmpty()){
+        //如果截图为空，则直接返回路径，而不进行覆盖，以提升截图成功率
+        return imagePath
+      }
       if (!fs.existsSync(userDataPath + '/app')) {
         fs.mkdirSync(userDataPath + '/app')
       }
-      let imagePath = path.resolve(userDataPath + '/app/screen' + saApp.saApp.id + '.jpg')
+     
       try {
         fs.writeFileSync(imagePath, capturedImage.toJPEG(50))
       } catch (err) {
