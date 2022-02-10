@@ -170,6 +170,15 @@ body.linux #menu-button {
   top: 0;
   left: -1px;
 }
+.windows .tab-item .tab-icon:is(.tab-close-button):hover:after{
+      top: 2px;
+      left: -1px;
+}
+.tab-item .tab-icon:is(.tab-close-button):hover:after {
+  background: rgba(245, 27, 27, 0.78) !important;
+  top: 0;
+  left: -1px;
+}
 .tab-item .tab-icon:is(.tab-close-button):hover:before{
   z-index: 2;
   color: white;
