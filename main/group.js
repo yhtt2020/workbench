@@ -117,7 +117,8 @@ app.on('ready', () => {
       }
     })
     //todo  圈子搜索添加成员url
-    osxSearchMember.webContents.loadURL('')
+    const { api } = require(path.join(__dirname, '//server-config.js'))
+    osxSearchMember.webContents.loadURL(api.getUrl(api.API_URL.user.CIRCLE_ADD_USER))
     osxSearchMember.on('close', () => osxSearchMember = null)
   })
 
@@ -147,7 +148,8 @@ app.on('ready', () => {
       }
     })
     //todo 圈子邀请添加成员url
-    osxInviteMember.webContents.loadURL('')
+    const { api } = require(path.join(__dirname, '//server-config.js'))
+    osxInviteMember.webContents.loadURL(api.getUrl(api.API_URL.user.CIRCLE_INVITELINK))
     osxInviteMember.on('close', () => osxInviteMember = null)
   })
 
@@ -176,7 +178,8 @@ app.on('ready', () => {
         ]
       }
     })
-    osxCircleSetting.webContents.loadURL('')
+    const { api } = require(path.join(__dirname, '//server-config.js'))
+    osxCircleSetting.webContents.loadURL(api.getUrl(api.API_URL.user.CIRCLE_SETTING))
     osxCircleSetting.on('close', () => osxCircleSetting = null)
   })
 
