@@ -2,6 +2,8 @@ const settings = require('util/settings/settings.js')
 const axios = require('./util/axios')
 const { db } = require('./util/database');
 
+const userStatsModel = require('../pages/util/model/userStatsModel')
+
 const statistics = {
   envGetters: [],
   registerGetter: function (key, fn) {
@@ -65,7 +67,9 @@ const statistics = {
       console.warn('failed to send usage statistics', e)
     })
   },
-  initialize: function () {
+  initialize: async function () {
+    await userStatsModel.initialize()
+
     setTimeout(statistics.upload, 10000)
     setInterval(statistics.upload, 24 * 60 * 60 * 1000)
 

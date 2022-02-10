@@ -38,6 +38,10 @@ function createView (existingViewId, id, webPreferencesString, boundsString, eve
     viewStateMap[id].loadedInitialURL = true
   } else {
     view = new BrowserView({ webPreferences: Object.assign({}, defaultViewWebPreferences, JSON.parse(webPreferencesString)) })
+    //mark插入对webviewInk的数据统计
+    //但在主进程中，需要发送一个ipc到常驻子进程中去db操作
+    //ipc.send('countWebviewInk')
+    console.log('打开了这个view@@@@@@@@@@')
   }
   events.forEach(function (event) {
     view.webContents.on(event, function (e) {
