@@ -866,7 +866,34 @@ app.whenReady().then(() => {
         }
       }
     ]
+    let addToDeskMenus=[]
+    let desks=args.desks
+    if(!!desks){
+      desks.forEach((desk)=>{
+        addToDeskMenus.push({
+          id:desk.id,
+          label:desk.name,
+          click:()=>{
+            const appIcon={
+              type:'app',
+              data:{
+                type:'saApp',
+                appId:args.app.id,
+                name:args.app.name,
+                icon:args.app.logo
+              }
+            }
+            SidePanel.send('addToDesk',{app:appIcon,deskId:desk.id})
 
+          }
+        })
+      })
+    }
+      template.push({
+        id: 'addToDesk',
+        label: '添加到桌面',
+        submenu: addToDeskMenus
+      })
     if (appWindow) {
       if (!appWindow.isDestroyed()) {
         template.unshift(
