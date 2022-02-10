@@ -279,7 +279,6 @@ Vue.component('app', {
       this.visibleEdit = false
     },
     async openUrl () {
-
       if(this.item.element.data.type==='saApp'){
         let saApp=await saAppModel.get(this.saApp.id)
         if(saApp){

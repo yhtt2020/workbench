@@ -880,7 +880,8 @@ app.whenReady().then(() => {
                 type:'saApp',
                 appId:args.app.id,
                 name:args.app.name,
-                icon:args.app.logo
+                icon:args.app.logo,
+                summary:args.app.summary
               }
             }
             SidePanel.send('addToDesk',{app:appIcon,deskId:desk.id})
