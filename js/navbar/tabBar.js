@@ -387,21 +387,27 @@ const tabBar = {
         // https://github.com/minbrowser/min/issues/698
         return
       }
+      event.preventDefault();
       if (e.deltaY > 65 && e.deltaX < 10 && Date.now() - lastTabDeletion > 900) {
-        // swipe up to delete tabs
-        lastTabDeletion = Date.now()
-
-        /* tab deletion is disabled in focus mode */
-        if (focusMode.enabled()) {
-          focusMode.warn()
-          return
-        }
-
-        this.style.transform = 'translateY(-100%)'
-
-        setTimeout(function () {
-          tabBar.events.emit('tab-closed', data.id)
-        }, 150) // wait until the animation has completed
+        e.target.scrollLeft += event.deltaY
+          ? event.deltaY
+          : (event.detail && event.detail !== 0)
+            ? event.detail
+            : -event.wheelDelta;
+        // // swipe up to delete tabs
+        // lastTabDeletion = Date.now()
+        //
+        // /* tab deletion is disabled in focus mode */
+        // if (focusMode.enabled()) {
+        //   focusMode.warn()
+        //   return
+        // }
+        //
+        // this.style.transform = 'translateY(-100%)'
+        //
+        // setTimeout(function () {
+        //   tabBar.events.emit('tab-closed', data.id)
+        // }, 150) // wait until the animation has completed
       }
     })
 
