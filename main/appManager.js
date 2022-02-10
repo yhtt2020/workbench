@@ -59,11 +59,11 @@ app.whenReady().then(() => {
       title: '应用消息', body: '消息内容'
     },ignoreWhenFocus=false)
     {
-      let defaultIcon=path.join(__dirname,'/icons/logo1024.png')
+      let defaultNotificationIcon=path.join(__dirname,'/icons/logo1024.png')
       if(process.platform==='win32'){
-        defaultIcon=path.join(__dirname,'/icons/logo128.png')
+        defaultNotificationIcon=path.join(__dirname,'/icons/logo128.png')
       }
-      option.icon = option.icon?option.icon:nativeImage.createFromPath(defaultIcon)
+      option.icon = option.icon?option.icon:nativeImage.createFromPath(defaultNotificationIcon)
       //todo 将消息体存入本地的消息中心
       let saAppWindow=appManager.getWindowByAppId(appId)
       if(ignoreWhenFocus && saAppWindow.isFocused())
@@ -363,7 +363,7 @@ app.whenReady().then(() => {
       if (!fs.existsSync(userDataPath + '/app')) {
         fs.mkdirSync(userDataPath + '/app')
       }
-     
+
       try {
         fs.writeFileSync(imagePath, capturedImage.toJPEG(50))
       } catch (err) {
