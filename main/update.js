@@ -3,8 +3,8 @@ let updaterWindow=null
 function loadUpdate(updateInfo){
   updaterWindow= new BrowserWindow({
     parent: mainWindow,
-    width: 400,
-    height: 530,
+    width: 500,
+    height: 580,
     resizable: false,
     visible:false,
     acceptFirstMouse: true,
@@ -67,7 +67,11 @@ app.whenReady().then(()=>{
   })
 
   ipc.on('startInstall',()=>{
+    destroyAllViews()
+    // save the window size for the next launch of the app
+    saveWindowBounds()
     autoUpdater.quitAndInstall()
+    app.quit()
   })
   autoUpdater.on("error", (error) => {
     //console.log(`升级失败: ${error}`)
