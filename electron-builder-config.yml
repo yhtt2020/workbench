@@ -52,8 +52,6 @@ mac:
     category: public.app-category.utilities
     target:
         - target: dmg
-          arch:
-            - arm64
         - target: zip
     publish:
       - provider : generic

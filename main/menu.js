@@ -382,13 +382,13 @@ function buildAppMenu (options = {}) {
         {
           label: l('appMenuReportBug'),
           click: function () {
-            openTabInWindow('https://www.yuque.com/tswork/thyzgp/rgzqv3')
+            openTabInWindow('https://com.thisky.com/forum?id=3')
           }
         },
         {
           label: l('appMenuTakeTour'),
           click: function () {
-            openTabInWindow('https://www.yuque.com/tswork/')
+            openTabInWindow('https://www.yuque.com/tswork/ngd5zk/sv8ozw')
           }
         },
         {
