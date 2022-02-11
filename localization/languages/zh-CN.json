@@ -124,7 +124,7 @@
     "sessionRestoreErrorExplanation": "您保存的标签页未能正确恢复。",
     "sessionRestoreErrorBackupInfo": "我们将您的数据备份保存在：%l.", //%l will be replaced with a path to a file
     "sessionRestoreErrorLinkInfo": {
-      "unsafeHTML": "如果持续发生此错误，请在<a href=\"https://work.thisky.com\" target=\"_blank\">此处</a>报告错误信息。"
+      "unsafeHTML": "如果持续发生此错误，请在<a href=\"https://apps.vip\" target=\"_blank\">此处</a>报告错误信息。"
     },
     /* pages/settings/index.html */
     "settingsPreferencesHeading": "设置",

@@ -394,7 +394,7 @@ function buildAppMenu (options = {}) {
         {
           label: l('appOfficialWebsite'),
           click: function () {
-            openTabInWindow('https://work.thisky.com')
+            openTabInWindow('https://apps.vip')
           }
         },
         ...(process.platform !== 'darwin' ? [{ type: 'separator' }] : []),
