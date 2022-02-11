@@ -74,7 +74,7 @@ app.whenReady().then(() => {
         let noti=new electron.Notification(option)
         noti.on('click',()=>{
           let saApp=appManager.getSaAppByAppId(appId)
-          appManager.openApp(appId,false)
+          appManager.openApp(appId,false,saApp)
         })
         noti.show()
         //add给badge进行加减调试，优先使用add，存在add则badge参数无效; badge强行设置badge的值，不推荐使用。
@@ -565,7 +565,7 @@ app.whenReady().then(() => {
       return appView
 
     },
-    openApp(appId,background,app){
+    openApp(appId,background=false,app){
       let saApp = appManager.getSaAppByAppId(appId)
       if (!!!saApp) {
         //首先必须是没运行的
@@ -795,7 +795,7 @@ app.whenReady().then(() => {
 
   ipc.on('executeApp', (event, args) => {
     //这里传app，代表app未运行则直接执行起来
-    appManager.openApp(args.app.id,args,args.app)
+    appManager.openApp(args.app.id,args.background,args.app)
   })
   ipc.on(ipcMessageMain.saApps.createAppMenu, (event, args) => {
     let appId = args.id
