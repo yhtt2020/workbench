@@ -2,8 +2,7 @@ directories:
     output: setup
     buildResources: dist
 
-
-
+afterSign: scripts/notarize.js
 files:
     - dist/*.js
     - dist/*.css
@@ -20,7 +19,8 @@ files:
     - img/*.jpg
     - reader/*
     - resources/**/*
-
+dmg:
+    sign: false
 
 win:
     extraResources:
@@ -44,6 +44,9 @@ win:
           channel: latest
 
 mac:
+    entitlements: entitlements.mac.plist
+    entitlementsInherit: entitlements.mac.plist
+    hardenedRuntime: true
     gatekeeperAssess: false
     icon: ./icons/icon.icns
     category: public.app-category.utilities
