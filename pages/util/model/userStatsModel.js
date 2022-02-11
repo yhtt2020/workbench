@@ -60,14 +60,14 @@ const userStatsModel = {
     const obj = {
       scripts: 0,
       apps: 0,
-      blockAds: 0,
+      blockAds: 0,    //mark插入对blockAds的数据统计
       tasks: 0,       //mark插入对tasks的数据统计，统计放在了sidebar里
       tabs: 0,        //mark插入对tabs的数据统计，统计放在了sidebar里
-      webviewsInk: 0,
+      webviewsInk: 0,  //mark插入对webviewInk的数据统计
       password: 0,
       defaultBrowser: 0,
-      searchCounts: 0,
-      translateCounts: 0,
+      searchCounts: 0,    //mark插入对searchCounts的数据统计
+      translateCounts: 0,  //mark插入对translateCounts翻译接口调用次数的数据统计
       startTime: Date.now()
     }
     await db.userStats.put(obj)

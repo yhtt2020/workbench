@@ -575,3 +575,15 @@ ipc.on('appBadge',function (event,args){
 
   })
 })
+
+ipc.on('countWebviewInk', async () => {
+  setTimeout(async () => {
+    await userStatsModel.incrementValue('webviewsInk')
+  }, 2000)
+})
+
+ipc.on('countBlockAds', (event, args) => {
+  setTimeout(async () => {
+    await userStatsModel.setValue('blockAds', args.blockAds)
+  }, 2000)
+})

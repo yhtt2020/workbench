@@ -157,7 +157,7 @@ db.version(132).stores({
   dockApps:'++id,name,url,icon,order',
   appList:'++id,name,createTime,updateTime,order,summary,appsCount,parentId,type,path,sort',//应用列表 type:0.默认，大图标,1.小图标,2.列表  path存储路径树，便于后面查询
   standAloneApps:'++id,name,package,logo,summary,type,url,themeColor,userThemeColor,createTime,updateTime,accountAvatar,order,useCount,lastExecuteTime,settings,unreadCount',
-  userStats: '++id,scripts,apps,blockAds,tasks,tabs,webviewsInk,password,defaultBrowser,searchCounts,translateCounts,startTime'  //脚本数，应用数，广告拦截数，标签组数，标签数，访问网站累计数，密码数，是否是默认浏览器，搜索数，翻译次数, 此次开始时间
+  userStats: '++id,scripts,apps,blockAds,tasks,tabs,webviewsInk,password,defaultBrowser,searchCounts,translateCounts,startTime'  //脚本数，应用数，广告拦截数，标签组数，标签数，访问网站累计数，密码数，是否是默认浏览器，搜索数（只对用tab栏选中后输入搜索内容用默认搜索引擎进行搜索的统计），翻译次数, 此次开始时间
 }).upgrade(trans=> {
   // return trans.standAloneApps.modify (item => {
   //   if(!!!item.type){

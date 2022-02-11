@@ -38,10 +38,13 @@ function createView (existingViewId, id, webPreferencesString, boundsString, eve
     viewStateMap[id].loadedInitialURL = true
   } else {
     view = new BrowserView({ webPreferences: Object.assign({}, defaultViewWebPreferences, JSON.parse(webPreferencesString)) })
-    //mark插入对webviewInk的数据统计
-    //但在主进程中，需要发送一个ipc到常驻子进程中去db操作
-    //ipc.send('countWebviewInk')
-    console.log('打开了这个view@@@@@@@@@@')
+
+    //mark插入对webviewInk的数据统计 但在主进程中，需要发送一个ipc到sidebar常驻子进程中去db操作
+    SidePanel.send('countWebviewInk')
+
+    //mark插入对blockAds的数据统计 每次载入webview收集一次blockAds的数量
+    let currentBlockAds = settings.get('filteringBlockedCount')
+    SidePanel.send('countBlockAds', {blockAds: currentBlockAds})
   }
   events.forEach(function (event) {
     view.webContents.on(event, function (e) {

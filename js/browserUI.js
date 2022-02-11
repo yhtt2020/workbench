@@ -11,6 +11,8 @@ var tabBar = require('navbar/tabBar.js')
 var tabEditor = require('navbar/tabEditor.js')
 var searchbar = require('searchbar/searchbar.js')
 
+const userStatsModel = require('../pages/util/model/userStatsModel')
+
 /* creates a new task */
 
 function addTask () {
@@ -332,10 +334,11 @@ ipc.on('openApps',function(){
 	/**简易排序插入结束*/
 
 
-searchbar.events.on('url-selected', function (data) {
+searchbar.events.on('url-selected', async function (data) {
   var searchbarQuery = searchEngine.getSearch(urlParser.parse(data.url))
   if (searchbarQuery) {
     statistics.incrementValue('searchCounts.' + searchbarQuery.engine)
+    await userStatsModel.incrementValue('searchCounts')  //mark插入对searchCounts的数据统计
   }
 
   if (data.background) {
