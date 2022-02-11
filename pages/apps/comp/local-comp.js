@@ -1,6 +1,7 @@
 const localTpl = `
 <div>
-<a-tree ref="myappTree" :tree-data="myAppsLists" :block-node="true" show-icon :selected-keys="selectedValues"
+<a-tree ref="myappTree" :default-expanded-keys="defaultExpandedKeys" :tree-data="myAppsLists" :block-node="true" show-icon :selected-keys="selectedValues"
+        @expand="saveExpand"
         @select="onSelect" @dragenter.prevent="onDragEnter" draggable @mousedown.stop="" @drop="onDrop"
     >
             <a-avatar slot="folder" shape="square" class="tree-icon" src="../../icons/svg/folder.svg"></a-avatar>
@@ -34,6 +35,8 @@ const { appListModel, treeUtil } = require('../../util/model/appListModel.js')
 const getNameInputValue = function () {
   return document.getElementById('nameInput').value
 }
+defaultExpandedKeys=JSON.parse(localStorage.getItem('treeExpanded_local'))
+
 Vue.component('local-comp', {
   name: 'local-comp',
   template: localTpl,
@@ -45,6 +48,7 @@ Vue.component('local-comp', {
       //创建列表的弹窗可见
       createListVisible: false,
       createTitle: '',//创建列表的标题
+      defaultExpandedKeys:defaultExpandedKeys,
       selectedValues:[],
       //下拉菜单控制属性
       disableCreate: false,
@@ -64,11 +68,13 @@ Vue.component('local-comp', {
         }]
     }
   },mounted () {
+
     window.$trees.push({
       name:'myapp',
       comp:this
     })
     this.loadData()
+
     // appListModel.list().then(data => {
     //   data.forEach((item) => {
     //     that.myAppsLists[0].children.push(appListModel.convertTreeNode(item))
@@ -351,6 +357,11 @@ Vue.component('local-comp', {
       appListModel.saveTree(data[0])
       this.myAppsLists = data;
     },
+
+    saveExpand(expandedKeys){
+      console.log('save')
+      localStorage.setItem('treeExpanded_local',JSON.stringify(expandedKeys))
+    }
 
   }
 })
