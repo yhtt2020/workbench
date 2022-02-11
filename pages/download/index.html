@@ -6,16 +6,11 @@
   <script  src="../../ext/vue/vue.js"></script>
   <script  src="../../ext/vue/antd.min.js"></script>
   <link rel="stylesheet" href="../../ext/vue/antd.min.css"/>
-
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
 </head>
 <body>
-<script>
-  Vue.use(antd)
-</script>
-<div id="download-bar" hidden>
-  <div id="download-container" role="list" class="has-thin-scrollbar"></div>
-  <button id="download-close-button" class="i carbon:close"></button>
-</div>
+
 
 <div id="appVue">
   <template>
@@ -28,29 +23,43 @@
            </a-badge>
         下载中
       </span>
-          <div id="demo">
-            <a-list class="demo-list" item-layout="horizontal" :data-source="data">
-              <a-list-item slot="renderItem" slot-scope="item, index">
-                <a-list-item-meta description="123131321313213">
-                  <a-avatar
-                    slot="avatar"
-                    src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"></a-avatar>
-                  <a slot="title" >{{ item.title }}</a>
-                </a-list-item-meta>
-                <div style="padding-right: 20px">content</div>
-                <div>
-                <a style="float: right" slot="actions">edit</a>
-                </div>
-                <a-progress style="margin-left: 50px;" :percent="30"></a-progress>
-              </a-list-item>
-            </a-list>
+          <div v-for="(list,index) in lists" v-bind:key="list.id">
+            <div style="width: 100%;height: 105px;background-color: #8c8c8c">
+            <div style="margin-left: 50px;float: left">{{list.title}}</div>
+            <div>{{list.realdata}}</div>
+            <div style="margin-left: 150px;float: left">{{list.received}}MB/{{list.total}}MB</div>
+
+              <el-button style="float: right;">暂停</el-button>
+              <el-popconfirm
+                title="这是一段内容确定删除吗？"
+                @confirm="del(lists.splice(index, 1))"
+              >
+                <el-button style="float: right;" slot="reference">删除</el-button>
+              </el-popconfirm>
+
+            <a-progress style="margin-left: 50px;width: 75% "  :percent="list.progressnuw"></a-progress>
+            </div>
           </div>
         </a-tab-pane>
+
         <a-tab-pane key="2" tab="已完成" force-render>
-          Content of Tab Pane 2
+          <div v-for="(donelist,index) in donelists" v-bind:key="donelist.id1">
+            <div style="width: 100%;height: 85px;background-color: #8c8c8c">
+              <div style="margin-left: 50px">{{donelist.title}}</div>
+              <button style="float: right" @click='donelists.splice(index, 1)'>删除</button>
+              <div style="margin-left: 50px">{{donelist.title}}</div>
+            </div>
+          </div>
         </a-tab-pane>
+
         <a-tab-pane key="3" tab="回收站">
-          Content of Tab Pane 3
+          <div v-for="(deletelist,index) in deletelists" v-bind:key="deletelists.id2">
+            <div style="width: 100%;height: 85px;background-color: #8c8c8c">
+              <div style="margin-left: 50px">{{deletelists.title}}</div>
+              <button style="float: right" @click='deletelists.splice(index, 1)'>删除</button>
+              <div style="margin-left: 50px">{{deletelists.title}}</div>
+            </div>
+          </div>
         </a-tab-pane>
       </a-tabs>
     </div>
@@ -60,7 +69,7 @@
 
 
 
-<script>
+<script type="module">
 
   let {ipcRenderer} = require('electron')
   window.addEventListener('contextmenu', (e) => {
@@ -72,23 +81,61 @@
   ipcRenderer.on('context-menu-command', (e, command) => {
     console.log(123)
   })
-  ipcMain
+
+
+  ipcRenderer.on('download-info', (event, args) => {
+    // console.log(args.realdata)
+    appVue.realdatalist=((args.realdata)/1024/1024).toFixed(2)
+    console.log(appVue.realdatalist)
+    if (args.status === 'progressing' && args.path !== '' ) {
+      console.log(args)
+      appVue.lists.splice(0,1,{
+        id: appVue.nextTodoId++,
+        title: args.name,
+        received:((args.size.received)/1024/1024).toFixed(2),
+        realdata:((args.realdata)/1024/1024).toFixed(2),
+        total:((args.size.total)/1024/1024).toFixed(2),
+        progressnuw:args.progressnuw
+      })
+    }
+
+      if(args.status === 'completed' && args.path !== '') {
+        console.log(args)
+        appVue.lists.splice(appVue.index, 1)
+        appVue.donelists.push({
+          id1: appVue.nextTodoId1++,
+          title: args.name
+        })
+      }
+
+  })
 
 
    let appVue = new Vue({
     el: '#appVue',
-     data() {
-       return {
-         data,
-       };
+     data: {
+       realdatalist:[],
+       lists:[],
+       donelists:[],
+       deletelists:[],
+       nextTodoId: 0,
+       nextTodoId1: 0,
+       nextTodoId2: 0,
+       progressnuw:0
      },
-    methods:{
+
+    methods: {
       callback(key) {
 
       },
+      del() {
+        this.deletelists.push({
+          id2: this.nextTodoId2++,
+        })
       },
-   })
 
+    }
+   })
 
 </script>
 
