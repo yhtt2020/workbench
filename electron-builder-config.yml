@@ -31,13 +31,7 @@ win:
     icon: ./icons/logowin.ico
     target:
         - target: nsis
-          arch:
-              - x64
-              - ia32
         - target: zip
-          arch:
-              - x64
-              - ia32
     publish:
         - provider : generic
           url: http://d.xiangtian.ren/update/browser/win/
