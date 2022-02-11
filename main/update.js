@@ -32,6 +32,10 @@ function loadUpdate(updateInfo){
 //app.whenReady().then(()=>loadUpdate())
 // 自动检测升级机制
 app.whenReady().then(()=>{
+  if(isDevelopmentMode){
+    //如果是开发环境，直接不检测，如需调试升级工具，将此处return注释掉即可
+    return
+  }
   let updateInfo={}
   autoUpdater.logger=require('electron-log')
   autoUpdater.logger.transports.file.level = "info"

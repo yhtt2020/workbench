@@ -72,7 +72,7 @@ ipc.on('createSiteCard', (event, args) => {
   createSiteCardWin({ url: args.url, pos:args.pos, title: args.title, tabData: args.tabData })
 })
 app.whenReady().then(() => {
-  createSiteCardWin()
+  //createSiteCardWin() 启动的时候不自动创建sitecard
 })
 
 ipc.on('openPwdManager', (event, args) => {
