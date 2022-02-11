@@ -417,7 +417,14 @@ Vue.component('sidebar', {
       ipc.sendTo(mainWindowId, 'clearTaskUnlock', { id: task.id })
     },
     createMenu(appId,app){
-      ipc.send('createAppMenu',{id:appId,app:app})
+      let desks=[]
+      try{
+        desks=JSON.parse(localStorage.getItem('desks'))
+      }
+      catch (e){
+        console.log('解析桌面失败')
+      }
+      ipc.send('createAppMenu',{id:appId,app:app,desks:desks})
       // let remote=require('electron').remote
       // let {Menu,MenuItem}=remote
       // let menu=Menu.buildFromTemplate([
@@ -586,4 +593,11 @@ ipc.on('countBlockAds', (event, args) => {
   setTimeout(async () => {
     await userStatsModel.setValue('blockAds', args.blockAds)
   }, 2000)
+})
+
+ipc.on('addToDesk',(event,args)=>{
+  const  deskModel=require('../util/model/deskModel.js')
+  const element= deskModel.createElementPos(args.app)
+  deskModel.addElementToDesk(element,args.deskId)
+  ipc.send('message',{'type':'success',config:{'content':'添加到桌面成功'}})
 })

@@ -58,7 +58,8 @@ const standAloneAppModel = {
       await standAloneAppModel.setAppSetting(nav.id,{showInSideBar:true})
       db.standAloneApps.update(nav.id,{id:3,package:'com.thisky.nav'})
     }
-
+    let nav = await  db.standAloneApps.get({name:'收藏夹'})
+    db.standAloneApps.update(nav.id,{id:3,package:'com.thisky.fav'})
     if(group.url===serverConfig.IM.FRONT_URL_DEV + serverConfig.IM.AUTO_LOGIN){
       await db.standAloneApps.update(1,{url:serverConfig.IM.FRONT_URL + serverConfig.IM.AUTO_LOGIN})
 
@@ -221,9 +222,9 @@ const standAloneAppModel = {
         showInSideBar: true
       },
       {
-        name: '效率社区',
+        name: '元社区',
         logo: '../../icons/svg/com.svg',
-        summary: '效率社区，与全球高效能人士共同成长',
+        summary: '用心经营您的元社区',
         type: 'web',
         url: serverConfig.SERVER_BASE_URL,
         preload: '/pages/com/preload.js',
@@ -250,7 +251,7 @@ const standAloneAppModel = {
         summary: '收集你的灵感，集锦',
         preload: '/pages/apps/preload.js',
         type: 'local',
-        package: 'com.thisky.group',
+        package: 'com.thisky.fav',
         url: '/pages/apps/index.html',
         themeColor: '#ecbfff9c',
         userThemeColor: '',

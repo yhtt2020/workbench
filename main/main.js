@@ -14,7 +14,7 @@ const {
   nativeTheme,
   globalShortcut
 } = electron
-const { autoUpdater } = require('electron-updater')
+
 crashReporter.start({
 	submitURL: 'https://minbrowser.org/',
 	uploadToServer: false,

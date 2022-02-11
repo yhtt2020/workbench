@@ -255,7 +255,7 @@
                   <app :selected-menu-visible="showSelectedMenu(item)" v-if="item.element.type==='app'" :groups="groups"
                        @compose-group="composeGroup"
                        :group-id="selectGroup.i" :item="item" @edit-app="onSubmitEdit" @remove-selected="removeSelected"
-                       @remove-element="removeElement(item)" @open-url="openUrl(item.element.data.url)"></app>
+                       @remove-element="removeElement(item)" @open-url="openUrl(item.element.data.url,item.element.data)"></app>
                   <ele-video :source="item.element.data.source" :controls="item.element.data.controls"
                        @remove-element="removeElement(item)" v-if="item.element.type==='video'" ></ele-video>
                   <group :w="item.w" :h="item.h" v-if="item.element.type==='group'" :item="item" @edit-group="editGroup(item)"
@@ -549,15 +549,20 @@
           </div>
           <div v-if="this.selectGroup.element.listType==='list'" style="margin-top: 30px">
             <ul class="group-list-list">
-              <li @click="openUrl(item.element.data.url)" v-for="item in groupItems">
+              <li @click="openUrl(item.element.data.url,item.element.data)" v-for="item in groupItems">
                 <a-row type="flex">
                   <a-col flex="40px">
-                    <a-avatar class="icon" shape="square" :src="item.element.data.icon"></a-avatar>
+                    <img style="width:32px;height:32px;" :style="iconStyle(item.element.data)" class="icon" shape="square" :src="item.element.data.icon">
                   </a-col>
                   <a-col class="name" flex="1">
                     {{item.name || item.element.data.name}}
                     <div class="url">
-                      {{item.element.data.url}}
+                      <span v-if="item.element.data.type==='saApp'">
+                        {{item.element.data.saApp.summary}}
+                      </span>
+                      <span else>
+                         {{item.element.data.url}}
+                      </span>
                     </div>
                   </a-col>
                 </a-row>
@@ -592,7 +597,7 @@
 
             >
               <app :item="item" :group-id="selectGroup.i" @edit-app="onSubmitEdit"
-                   @remove-element="removeElement(item,selectGroup.i)" @open-url="openUrl(item.element.data.url)"></app>
+                   @remove-element="removeElement(item,selectGroup.i)" @open-url="openUrl(item.element.data.url,item.element.data)"></app>
             </grid-item>
           </grid-layout>
         </div>
@@ -821,7 +826,7 @@
   <div @drop="addDragItem" @dragover.prevent class="dock">
     <template>
       <a-dropdown :trigger="['contextmenu']" v-for="item in dock">
-        <a-tooltip class="dock-item" @click="openUrl(item.url)">
+        <a-tooltip class="dock-item" @click="openUrl(item.url,item)">
           <template slot="title">
             {{item.name}}
           </template>
@@ -959,7 +964,7 @@
           //   {
           //     name:'想天工作台',
           //     icon:'../../icons/logo1024.png',
-          //     url:'http://work.thisky.com'
+          //     url:'http://apps.vip'
           //   },{
           //     name:'想天社区',
           //     icon:'../../icons/comlogo.png',
@@ -1173,6 +1178,12 @@
         if(!!!this.selectGroup.element.listType)
         {
           this.selectGroup.element['listType']='icon'
+          const saAppModel=require('../util/model/standAloneAppModel.js')
+          this.selectGroup.element.data.forEach(async(icon)=>{
+            if(icon.element.data.type==='saApp'){
+              icon.element.data.saApp= await saAppModel.get(icon.element.data.appId)
+            }
+          })
         }
         this.visibleGroup = true
 
@@ -1255,8 +1266,20 @@
         this.visibleMainMenu = visible
       },
 
-      iconStyle: function (item) {
+      iconStyle:function (item) {
         const style = {}
+        if(item.type==='saApp'){
+          let saApp=item.saApp
+          if(saApp){
+            style['border-radius']='50%'
+            style['background-color']='white'
+            style['padding']='1px'
+            let bg= saApp.userThemeColor?saApp.userThemeColor:saApp.themeColor
+            style['border']='2px solid '+bg.toString()
+          }
+
+          return style
+        }
         if (!!item.useBg) {
           style['background-color'] = item.color
         }
@@ -1497,8 +1520,18 @@
         item.id = id
         this.dock.push(item)
       },
-      openUrl (url) {
-        location.href = url
+      async openUrl (url,data) {
+        if(data.type==='saApp'){
+          let saApp=await require('../util/model/standAloneAppModel.js').get(data.appId)
+          if(saApp){
+            ipc.send('executeApp',{app:saApp})
+          }else{
+            appVue.$message.error({content:'此应用已经被卸载。无法打开。'})
+          }
+        }else{
+          location.href = url
+        }
+
       },
       removeDockApp (item) {
         if (!!!item.id) {

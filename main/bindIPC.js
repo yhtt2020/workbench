@@ -1,5 +1,4 @@
 app.whenReady().then(()=>{
-  console.log('开始绑定各种ipc')
   //设置默认浏览器部分代码开始
 //获取默认浏览器
   ipc.on('getIsDefaulBrowser',function(event){

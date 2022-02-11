@@ -71,7 +71,12 @@ app.whenReady().then(() => {
         //不提示，不加badage，仅添加到消息记录
       }else{
         //否则则推送消息并设置badge
-        new electron.Notification(option).show()
+        let noti=new electron.Notification(option)
+        noti.on('click',()=>{
+          let saApp=appManager.getSaAppByAppId(appId)
+          appManager.openApp(appId,false,saApp)
+        })
+        noti.show()
         //add给badge进行加减调试，优先使用add，存在add则badge参数无效; badge强行设置badge的值，不推荐使用。
         appManager.incAppBadge(appId, 1)
       }
@@ -481,7 +486,6 @@ app.whenReady().then(() => {
           ...((isDevelopmentMode ? ['--development-mode'] : [])),
         ]
       }
-      console.log(webPreferences)
       let appView = new BrowserView({
         width: saApp.settings.bounds.width,
         height: saApp.settings.bounds.height - 70,
@@ -494,7 +498,7 @@ app.whenReady().then(() => {
       if (saApp.package === 'com.thisky.group' && isDevelopmentMode) {
         // 当为开发环境下的时候，将团队强行更改为本地开发
         //todo 根据实际需求更改
-        saApp.url = config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN
+        //saApp.url = config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN
       }
 
       //remote.enable(appView.webContents)
@@ -560,6 +564,28 @@ app.whenReady().then(() => {
         appView.webContents.openDevTools()
       return appView
 
+    },
+    openApp(appId,background=false,app){
+      let saApp = appManager.getSaAppByAppId(appId)
+      if (!!!saApp) {
+        //首先必须是没运行的
+        if (!saApp) {
+          //如果不存在，直接运行
+          appManager.executeApp(app, background)
+        } else if (!appManager.isAppProcessing(appId)) {
+          //如果存在且未运行，则执行
+          appManager.executeApp(saApp, background)
+        }
+      } else {
+        //todo 判断是多例还是单例
+        if (1) {//是单例
+          appManager.getWindowByAppId(saApp.id)
+          appManager.focusWindow(saApp.windowId)
+          console.log(saApp)
+          console.log('ready to clear')
+          appManager.clearAppBadge(saApp.id)
+        }
+      }
     },
     /**
      * 执行应用
@@ -768,24 +794,8 @@ app.whenReady().then(() => {
   }, 2000)
 
   ipc.on('executeApp', (event, args) => {
-    let saApp = appManager.getSaAppByAppId(args.app.id)
-    if (!!!saApp) {
-      //首先必须是没运行的
-      if (!saApp) {
-        //如果不存在，直接运行
-        appManager.executeApp(args.app, args.background)
-      } else if (!appManager.isAppProcessing(saApp.id)) {
-        //如果存在且未运行，则执行
-        appManager.executeApp(saApp, args.background)
-      }
-    } else {
-      //todo 判断是多例还是单例
-      if (1) {//是单例
-        appManager.getWindowByAppId(saApp.id)
-        appManager.focusWindow(saApp.windowId)
-        appManager.clearAppBadge(saApp.id)
-      }
-    }
+    //这里传app，代表app未运行则直接执行起来
+    appManager.openApp(args.app.id,args.background,args.app)
   })
   ipc.on(ipcMessageMain.saApps.createAppMenu, (event, args) => {
     let appId = args.id
@@ -866,7 +876,35 @@ app.whenReady().then(() => {
         }
       }
     ]
+    let addToDeskMenus=[]
+    let desks=args.desks
+    if(!!desks){
+      desks.forEach((desk)=>{
+        addToDeskMenus.push({
+          id:desk.id,
+          label:desk.name,
+          click:()=>{
+            const appIcon={
+              type:'app',
+              data:{
+                type:'saApp',
+                appId:args.app.id,
+                name:args.app.name,
+                icon:args.app.logo,
+                summary:args.app.summary
+              }
+            }
+            SidePanel.send('addToDesk',{app:appIcon,deskId:desk.id})
 
+          }
+        })
+      })
+    }
+      template.push({
+        id: 'addToDesk',
+        label: '添加到桌面',
+        submenu: addToDeskMenus
+      })
     if (appWindow) {
       if (!appWindow.isDestroyed()) {
         template.unshift(

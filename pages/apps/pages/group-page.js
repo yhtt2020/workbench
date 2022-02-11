@@ -180,7 +180,7 @@ cloudTpl = `
 
                     <a-auto-complete
                       v-decorator="['url', { rules: [{ required: true, message: '请输入网址！' },{max:512,message:'最多不能超过512个字母！'}] }]"
-                      placeholder="输入任意网址，如http://work.thisky.com，以http或https开头" @change="handleWebsiteChange">
+                      placeholder="输入任意网址，如http://apps.vip，以http或https开头" @change="handleWebsiteChange">
                       <template slot="dataSource">
                         <a-select-option v-for="url in autoCompleteResult" :key="url">
                           {{ url }}

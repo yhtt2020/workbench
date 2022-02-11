@@ -1,9 +1,8 @@
 directories:
-    output: setup
+    output: setup-${arch}
     buildResources: dist
 
-
-
+afterSign: scripts/notarize.js
 files:
     - dist/*.js
     - dist/*.css
@@ -20,7 +19,8 @@ files:
     - img/*.jpg
     - reader/*
     - resources/**/*
-
+dmg:
+    sign: false
 
 win:
     extraResources:
@@ -44,15 +44,20 @@ win:
           channel: latest
 
 mac:
+    entitlements: entitlements.mac.plist
+    entitlementsInherit: entitlements.mac.plist
+    hardenedRuntime: true
     gatekeeperAssess: false
     icon: ./icons/icon.icns
     category: public.app-category.utilities
     target:
-        - dmg
-        - zip
+        - target: dmg
+          arch:
+            - arm64
+        - target: zip
     publish:
       - provider : generic
-        url: http://d.xiangtian.ren/update/browser/mac/
+        url: http://d.xiangtian.ren/update/browser/mac-${arch}/
         channel: latest
 
 

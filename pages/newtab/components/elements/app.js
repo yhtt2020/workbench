@@ -4,11 +4,11 @@ const appTpl = `
 <div>
   <a-dropdown :trigger="['contextmenu']" >
                     <!--应用-->
-                    <div @mousedown.stop="" @contextmenu.stop="" class="app">
+                    <div @mousedown.stop="" @contextmenu.stop="" :class="{'app':true,'sa-app':item.element.data.type==='saApp'}">
                     <!-- draggable="true"  @dragstart="setDrag($event,item.element.data)"-->
                       <div   class="icon-wrapper allow-drag" @mousedown.stop="appMouseDown" @mousemove.stop="appMouseMove" @mouseup.stop="appMouseUp($event,item.element.data.url)"
                            :style="iconStyle(item.element.data)">
-                        <img
+                        <img :style="{'border-color':saApp.userThemeColor?saApp.userThemeColor:saApp.themeColor}"
                              :src="item.element.data.icon" onerror="this.src='../../icons/default.svg'">
                       </div>
                       <div class="name allow-drag" :style="'background-color:'+item.element.data.textColor"
@@ -23,7 +23,7 @@ const appTpl = `
                       <a-menu-item @click="removeElement" key="remove">
                         移除组件
                       </a-menu-item>
-                      <a-menu-item @click="editElement(item)" key="edit">
+                      <a-menu-item @click="editElement(item)" key="edit" v-if="item.element.data.type!=='saApp'">
                         编辑组件
                       </a-menu-item>
                        <a-sub-menu title="移动组件到" >
@@ -115,6 +115,7 @@ const appTpl = `
       </a-modal>
 </div>
   `
+const saAppModel=require('../util/model/standAloneAppModel.js')
 const swatches = window['vue-swatches']
 Vue.component('app', {
   template: appTpl,
@@ -125,6 +126,9 @@ Vue.component('app', {
   },
   data () {
     return {
+      saApp:{
+
+      },
       visibleEdit: false,
       iconLoading:false,
       labelCol: { span: 4 },
@@ -153,8 +157,8 @@ Vue.component('app', {
     }
   },
   computed: {},
-  mounted () {
-
+  async mounted () {
+    this.saApp=await saAppModel.get(this.item.element.data.appId)
   },
   methods: {
     moveAppTo(group){
@@ -167,7 +171,6 @@ Vue.component('app', {
       }
     },
     moveAppsTo(group){
-
       console.log(appVue.selectedElements)
       for(let selectedI=0;selectedI<appVue.selectedElements.length;selectedI++){
         let item=appVue.selectedElements[selectedI]
@@ -275,8 +278,18 @@ Vue.component('app', {
       this.$emit('edit-app', { data: this.formEdit })
       this.visibleEdit = false
     },
-    openUrl () {
-      this.$emit('open-url')
+    async openUrl () {
+      if(this.item.element.data.type==='saApp'){
+        let saApp=await saAppModel.get(this.saApp.id)
+        if(saApp){
+          ipc.send('executeApp',{app:saApp})
+        }else{
+          appVue.$message.error({content:'此应用已经被卸载。无法打开。'})
+        }
+      }else{
+        this.$emit('open-url')
+      }
+
     },
     removeElement () {
       this.$emit('remove-element')

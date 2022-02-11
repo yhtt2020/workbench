@@ -27,18 +27,19 @@
         </p>
         <p>
            版本号：v{{ info.version }}
-          <a>了解更多 &gt;</a>
+          <a @click="send('addTab',{url:'https://www.yuque.com/tswork/ngd5zk/rvo0kt'})" >了解更多 &gt;</a>
         </p>
         <p>
           发布日期： {{ renderTime(info.releaseDate) }}
         </p>
+        <p>如更新后无法打开浏览器，请至官网 <a @click="send('addTab',{url:'https://apps.vip'})">apps.vip</a> 重新下载最新稳定版本。</p>
       </div>
       <template #extra>
         <a-button @click="startInstall()" type="primary">
-          重新打开并安装更新
+          重新打开并更新
         </a-button>
         <a-button @click="cancel()">
-         暂不更新
+         下次启动更新
         </a-button>
       </template>
     </a-result>
@@ -47,6 +48,7 @@
 </div>
 <script>
   const ipc=require('electron').ipcRenderer
+  window.ipc=ipc
   let appVue = new Vue({
     el: '#appVue',
     components: {},
@@ -71,6 +73,9 @@
       renderTime(date){
         var dateee = new Date(date).toJSON();
         return new Date(+new Date(dateee) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '')
+      },
+      send(event,args){
+        ipc.send(event,args)
       }
     }
   })

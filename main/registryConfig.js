@@ -1,6 +1,4 @@
-var regedit = require('regedit')
-const setResult = regedit.setExternalVBSLocation(__dirname + '/vbs')
-console.log(setResult)
+// var regedit = require('regedit')
 const regeditTool = {
   /**
    * @file 添加、删除注册列表的key值

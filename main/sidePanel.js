@@ -809,11 +809,14 @@ function createAllAppsWindow(){
   allAppsWindow.on('blur',()=>{
     allAppsWindow.hide()
   })
-  mainWindow.on('close',()=>{
-    forceClose=true
-    allAppsWindow.close()
-    allAppsWindow=null
-  })
+  setTimeout(()=>{
+    mainWindow.on('close',()=>{
+      forceClose=true
+      allAppsWindow.close()
+      allAppsWindow=null
+    })
+  },2000)
+
 }
 app.whenReady().then(()=>{
   createAllAppsWindow()
