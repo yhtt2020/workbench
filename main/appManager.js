@@ -481,7 +481,6 @@ app.whenReady().then(() => {
           ...((isDevelopmentMode ? ['--development-mode'] : [])),
         ]
       }
-      console.log(webPreferences)
       let appView = new BrowserView({
         width: saApp.settings.bounds.width,
         height: saApp.settings.bounds.height - 70,
