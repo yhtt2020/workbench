@@ -1,5 +1,5 @@
 directories:
-    output: setup
+    output: setup-${arch}
     buildResources: dist
 
 afterSign: scripts/notarize.js
@@ -51,11 +51,13 @@ mac:
     icon: ./icons/icon.icns
     category: public.app-category.utilities
     target:
-        - dmg
-        - zip
+        - target: dmg
+          arch:
+            - arm64
+        - target: zip
     publish:
       - provider : generic
-        url: http://d.xiangtian.ren/update/browser/mac/
+        url: http://d.xiangtian.ren/update/browser/mac-${arch}/
         channel: latest
 
 

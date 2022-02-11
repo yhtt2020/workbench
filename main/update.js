@@ -1,4 +1,4 @@
-
+const { autoUpdater } = require('electron-updater')
 let updaterWindow=null
 function loadUpdate(updateInfo){
   updaterWindow= new BrowserWindow({
@@ -33,6 +33,8 @@ function loadUpdate(updateInfo){
 // 自动检测升级机制
 app.whenReady().then(()=>{
   let updateInfo={}
+  autoUpdater.logger=require('electron-log')
+  autoUpdater.logger.transports.file.level = "info"
   autoUpdater.checkForUpdates().then((updateInfo)=>{
     //检测到可以升级，则发送升级的信息到updateWindow
     updateInfo={
