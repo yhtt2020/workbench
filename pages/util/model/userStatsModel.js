@@ -59,7 +59,8 @@ const userStatsModel = {
   async init() {
     const obj = {
       scripts: 0,
-      apps: 0,
+      apps: 0,  //mark插入对apps的数据统计
+      appsExecutedCounts: 0,  //mark插入对appsExecutedCounts的数据统计
       blockAds: 0,    //mark插入对blockAds的数据统计
       tasks: 0,       //mark插入对tasks的数据统计，统计放在了sidebar里
       tabs: 0,        //mark插入对tabs的数据统计，统计放在了sidebar里
@@ -80,6 +81,7 @@ const userStatsModel = {
     const obj = {
       scripts: 0,
       apps: 0,
+      appsExecutedCounts: 0,
       blockAds: 0,
       tasks: 0,
       tabs: 0,

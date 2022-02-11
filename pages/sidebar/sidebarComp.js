@@ -472,7 +472,7 @@ ipc.on('message',function(event,args){
   appVue.$message[args.type](args.config)
 })
 
-ipc.on('executedAppSuccess',function (event,args){
+ipc.on('executedAppSuccess',async function (event,args){
   appVue.$refs.sidePanel.apps.forEach(app=>{
     if(app.id===args.app.id){
       app.processing=true
@@ -482,6 +482,17 @@ ipc.on('executedAppSuccess',function (event,args){
   appVue.$refs.sidePanel.runningApps.push(args.app.id)
   standAloneAppModel.update(args.app.id,{lastExecuteTime:Date.now()}).then((res)=>{
   })
+
+  //mark插入对apps的数据统计
+  let num = await standAloneAppModel.countApps()
+  setTimeout(async () => {
+    await userStatsModel.setValue('apps', num)
+  }, 2000)
+
+  //mark插入对appsExecutedCounts的数据统计
+  setTimeout(async () => {
+    await userStatsModel.incrementValue('appsExecutedCounts')
+  }, 2000)
 })
 ipc.on('closeApp',function (event,args){
   appVue.$refs.sidePanel.apps.forEach(app=>{
@@ -494,7 +505,6 @@ ipc.on('closeApp',function (event,args){
         appVue.$refs.sidePanel.runningApps.splice(appIndex,1)
     }
   })
-
 })
 
 ipc.on('updateAppCapture',function (event,args){
