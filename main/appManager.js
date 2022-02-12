@@ -407,7 +407,7 @@ app.whenReady().then(() => {
         appManager.settingWindow.setMenu(null)
         appManager.settingWindow.webContents.loadURL('file://' + __dirname + '/pages/saApp/setting.html')
         if (isDevelopmentMode)
-          appManager.settingWindow.webContents.openDevTools()
+          //appManager.settingWindow.webContents.openDevTools()
         appManager.settingWindow.on('close', () => {
           appManager.settingWindow = null
         })
@@ -508,6 +508,7 @@ app.whenReady().then(() => {
         appView.webContents.loadURL(saApp.url)
       }
       appView.webContents.on('did-navigate-in-page', (event, url) => {
+        if(!appWindow.webContents.isDestroyed())
         appWindow.webContents.send('updateView', {
           url: url,
           canGoBack: appView.webContents.canGoBack(),
@@ -561,7 +562,7 @@ app.whenReady().then(() => {
         //todo 判断linux
       })
       if (isDevelopmentMode)
-        appView.webContents.openDevTools()
+        //appView.webContents.openDevTools()
       return appView
 
     },
@@ -637,7 +638,7 @@ app.whenReady().then(() => {
             app: saApp
           })
           if (isDevelopmentMode) {
-            appWindow.webContents.openDevTools()
+            //appWindow.webContents.openDevTools()
           }
         })
 
