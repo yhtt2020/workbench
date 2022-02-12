@@ -17,6 +17,7 @@ files:
     - server-config.js
     - api/*
     - img/*.jpg
+    - img/*.jpeg
     - reader/*
     - resources/**/*
 dmg:
