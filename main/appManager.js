@@ -9,6 +9,7 @@ const remote = require('@electron/remote/main')
 let processingAppWindows = []//运行中的应用
 function apLog (e) {
   if (0) {
+    electronLog.info(e)
     console.log(e)
   }
 }
@@ -501,7 +502,7 @@ app.whenReady().then(() => {
         //saApp.url = config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN
       }
 
-      //remote.enable(appView.webContents)
+      remote.enable(appView.webContents)
       if (saApp.type === 'local') {
         appView.webContents.loadURL('file://' + path.join(__dirname, saApp.url))
       } else {
@@ -561,8 +562,9 @@ app.whenReady().then(() => {
        // console.log('press'+input)
         //todo 判断linux
       })
-      if (isDevelopmentMode)
+      if (isDevelopmentMode){
         //appView.webContents.openDevTools()
+      }
       return appView
 
     },
@@ -570,22 +572,18 @@ app.whenReady().then(() => {
       let saApp = appManager.getSaAppByAppId(appId)
       if (!!!saApp) {
         //首先必须是没运行的
-        if (!saApp) {
-          //如果不存在，直接运行
-          appManager.executeApp(app, background)
-        } else if (!appManager.isAppProcessing(appId)) {
-          //如果存在且未运行，则执行
-          appManager.executeApp(saApp, background)
-        }
+        appManager.executeApp(saApp,background)
+        // if (!saApp) {
+        //   //如果不存在，直接运行
+        //   appManager.executeApp(saApp, background)
+        // } else if (!appManager.isAppProcessing(appId)) {
+        //   //如果存在且未运行，则执行
+        //   appManager.executeApp(saApp, background)
+        // }
       } else {
-        //todo 判断是多例还是单例
-        if (1) {//是单例
           appManager.getWindowByAppId(saApp.id)
           appManager.focusWindow(saApp.windowId)
-          console.log(saApp)
-          console.log('ready to clear')
           appManager.clearAppBadge(saApp.id)
-        }
       }
     },
     /**
