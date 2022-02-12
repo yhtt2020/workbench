@@ -572,6 +572,7 @@ app.whenReady().then(() => {
       let saApp = appManager.getSaAppByAppId(appId)
       if (!!!saApp) {
         //首先必须是没运行的
+        saApp = app
         appManager.executeApp(saApp,background)
         // if (!saApp) {
         //   //如果不存在，直接运行
