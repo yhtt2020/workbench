@@ -45,6 +45,12 @@ function createView (existingViewId, id, webPreferencesString, boundsString, eve
     //mark插入对blockAds的数据统计 每次载入webview收集一次blockAds的数量
     let currentBlockAds = settings.get('filteringBlockedCount')
     SidePanel.send('countBlockAds', {blockAds: currentBlockAds})
+
+    //mark插入对scripts的数据统计
+    SidePanel.send('countScript')
+
+    //mark插入对defaultBrowser的数据统计
+    SidePanel.send('defaultBrowser', app.isDefaultProtocolClient('http'))
   }
   events.forEach(function (event) {
     view.webContents.on(event, function (e) {

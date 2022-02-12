@@ -58,18 +58,18 @@ const userStatsModel = {
 
   async init() {
     const obj = {
-      scripts: 0,
+      scripts: 0, //mark插入对scripts的数据统计
       apps: 0,  //mark插入对apps的数据统计
       appsExecutedCounts: 0,  //mark插入对appsExecutedCounts的数据统计
       blockAds: 0,    //mark插入对blockAds的数据统计
       tasks: 0,       //mark插入对tasks的数据统计，统计放在了sidebar里
       tabs: 0,        //mark插入对tabs的数据统计，统计放在了sidebar里
       webviewsInk: 0,  //mark插入对webviewInk的数据统计
-      password: 0,
-      defaultBrowser: 0,
+      password: 0,     //mark插入对password的数据统计
+      defaultBrowser: 0,  //mark插入对defaultBrowser的数据统计
       searchCounts: 0,    //mark插入对searchCounts的数据统计
       translateCounts: 0,  //mark插入对translateCounts翻译接口调用次数的数据统计
-      startTime: Date.now()
+      startTime: Date.now()  //此次统计开始的时间
     }
     await db.userStats.put(obj)
   },

@@ -77,6 +77,11 @@ Vue.component('sidebar', {
     await standAloneAppModel.initialize()
     this.apps=await standAloneAppModel.getAllApps()
     ipc.send('getRunningApps')
+
+    //mark插入对password的数据统计
+    let passwordList = await ipc.invoke('credentialStoreGetCredentials')
+    await userStatsModel.setValue('password', passwordList.length)
+
     console.log(this.apps)
 		// let item = {
 		// 	title: '打开标签', //名称，用于显示提示
@@ -602,6 +607,19 @@ ipc.on('countWebviewInk', async () => {
 ipc.on('countBlockAds', (event, args) => {
   setTimeout(async () => {
     await userStatsModel.setValue('blockAds', args.blockAds)
+  }, 2000)
+})
+
+ipc.on('countScript', () => {
+  let num = require('../util/model/userScriptModel').countScript(window.globalArgs['user-data-path'])
+  setTimeout(async () => {
+    await userStatsModel.setValue('scripts', num)
+  }, 10000)
+})
+
+ipc.on('defaultBrowser', (event, args) => {
+  setTimeout(async () => {
+    args ? await userStatsModel.setValue('defaultBrowser', 1) : await userStatsModel.setValue('defaultBrowser', 0)
   }, 2000)
 })
 
