@@ -69,22 +69,22 @@ CPU:
              </ul>
              </div>
 </a-col>
-<a-col class="more-app" flex="60px">
-<ul class="other-app-list">
-<li v-if="runningApps.length===apps.length">
-均已运行
-</li>
-    <li @click="executeApp(app)" v-for="app in apps" v-if="!app.processing">
-    <div>
-        <img class="logo" :src="app.logo" onerror="this.src='../../icons/default.svg'">
-</div>
-<div class="title">
-{{app.name}}
-</div>
-</li>
-</ul>
+<!--<a-col class="more-app" flex="60px">-->
+<!--<ul class="other-app-list">-->
+<!--<li v-if="runningApps.length===apps.length">-->
+<!--均已运行-->
+<!--</li>-->
+<!--    <li @click="executeApp(app)" v-for="app in apps" v-if="!app.processing">-->
+<!--    <div>-->
+<!--        <img class="logo" :src="app.logo" onerror="this.src='../../icons/default.svg'">-->
+<!--</div>-->
+<!--<div class="title">-->
+<!--{{app.name}}-->
+<!--</div>-->
+<!--</li>-->
+<!--</ul>-->
 
-</a-col>
+<!--</a-col>-->
 </a-row>
                 </template>
                 <div class="wrapper"  @click="showAllSaApps">

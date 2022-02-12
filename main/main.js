@@ -1,6 +1,7 @@
 const electron = require('electron')
 const fs = require('fs')
 const path = require('path')
+const electronLog=require('electron-log')
 const {
   app, // Module to control application life.
   protocol, // Module to control protocol handling
@@ -64,7 +65,8 @@ if (process.platform === 'win32') {
 if (isDevelopmentMode) {
 	app.setPath('userData', app.getPath('userData') + '-development')
 }
-
+electronLog.transports.file.file=app.getPath('userData')+'/myLog.log'
+electronLog.transports.file.level = "info"
 // workaround for flicker when focusing app (https://github.com/electron/electron/issues/17942)
 app.commandLine.appendSwitch('disable-backgrounding-occluded-windows', 'true')
 
@@ -202,6 +204,7 @@ function createWindowWithBounds(bounds) {
 			x: 12,
 			y: 10
 		},
+    show:false,
 		icon: icon,
 		frame: settings.get('useSeparateTitlebar'),
 		alwaysOnTop: settings.get('windowAlwaysOnTop'),
@@ -242,6 +245,10 @@ function createWindowWithBounds(bounds) {
 		// save the window size for the next launch of the app
 		saveWindowBounds()
 	})
+  mainWindow.on('ready-to-show',()=>{
+    mainWindow.show()
+    loadSidePanel()
+  })
 
 	// Emitted when the window is closed.
 	mainWindow.on('closed', function() {
@@ -307,7 +314,6 @@ function createWindowWithBounds(bounds) {
 
 	//loadSidebar()
 	sendIPCToWindow(mainWindow,'getTitlebarHeight')
-	loadSidePanel()
 	addMainWindowEventListener()
 
 

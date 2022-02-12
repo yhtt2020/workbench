@@ -10,8 +10,30 @@
   <link rel="icon" type="image/svg+xml" href="../../icons/svg/apps.svg"/>
   <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline'"/>
 </head>
-<body style=" -webkit-app-region: drag;">
-<div id="appVue">
+<body class="wrapper-scroller" style=" -webkit-app-region: drag;">
+<style>
+  .wrapper-scroller::-webkit-scrollbar-track
+   {
+     border-radius: 10px;
+     background-color: white;
+    margin-top: 10px;
+    margin-bottom: 10px;
+   }
+
+  .wrapper-scroller::-webkit-scrollbar
+   {
+     width: 6px;
+     background-color: white;
+   }
+
+  .wrapper-scroller::-webkit-scrollbar-thumb
+   {
+     border-radius: 10px;
+     background-color: rgba(0, 0, 0, 0.15);
+   }
+
+</style>
+<div id="appVue" >
   <div style="padding: 20px; -webkit-app-region: none;">
     <div style="margin-bottom: 30px">
       <a-input-search ref="searchBar" :value="searchWords" placeholder="输入应用名称（支持拼音、简拼）、起始页网址" @keyup="updateSearchWords" style="width: 100%" @search="onSearch"></a-input-search>
@@ -41,7 +63,7 @@ text-overflow:ellipsis; ">
           </a-col>
         </a-row>
       </div>
-      <div v-if="this.searchWords===''" style="position: relative">
+      <div v-if="this.searchWords===''" style="position: relative;">
         <h1>全部应用 </h1>
 <!--        <div style="position:absolute;right: 0;top: 0">管理</div>-->
         <a-row>

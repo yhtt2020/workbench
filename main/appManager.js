@@ -9,6 +9,7 @@ const remote = require('@electron/remote/main')
 let processingAppWindows = []//运行中的应用
 function apLog (e) {
   if (0) {
+    electronLog.info(e)
     console.log(e)
   }
 }
@@ -407,7 +408,7 @@ app.whenReady().then(() => {
         appManager.settingWindow.setMenu(null)
         appManager.settingWindow.webContents.loadURL('file://' + __dirname + '/pages/saApp/setting.html')
         if (isDevelopmentMode)
-          appManager.settingWindow.webContents.openDevTools()
+          //appManager.settingWindow.webContents.openDevTools()
         appManager.settingWindow.on('close', () => {
           appManager.settingWindow = null
         })
@@ -501,13 +502,14 @@ app.whenReady().then(() => {
         //saApp.url = config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN
       }
 
-      //remote.enable(appView.webContents)
+      remote.enable(appView.webContents)
       if (saApp.type === 'local') {
         appView.webContents.loadURL('file://' + path.join(__dirname, saApp.url))
       } else {
         appView.webContents.loadURL(saApp.url)
       }
       appView.webContents.on('did-navigate-in-page', (event, url) => {
+        if(!appWindow.webContents.isDestroyed())
         appWindow.webContents.send('updateView', {
           url: url,
           canGoBack: appView.webContents.canGoBack(),
@@ -560,8 +562,9 @@ app.whenReady().then(() => {
        // console.log('press'+input)
         //todo 判断linux
       })
-      if (isDevelopmentMode)
-        appView.webContents.openDevTools()
+      if (isDevelopmentMode){
+        //appView.webContents.openDevTools()
+      }
       return appView
 
     },
@@ -569,22 +572,19 @@ app.whenReady().then(() => {
       let saApp = appManager.getSaAppByAppId(appId)
       if (!!!saApp) {
         //首先必须是没运行的
-        if (!saApp) {
-          //如果不存在，直接运行
-          appManager.executeApp(app, background)
-        } else if (!appManager.isAppProcessing(appId)) {
-          //如果存在且未运行，则执行
-          appManager.executeApp(saApp, background)
-        }
+        saApp = app
+        appManager.executeApp(saApp,background)
+        // if (!saApp) {
+        //   //如果不存在，直接运行
+        //   appManager.executeApp(saApp, background)
+        // } else if (!appManager.isAppProcessing(appId)) {
+        //   //如果存在且未运行，则执行
+        //   appManager.executeApp(saApp, background)
+        // }
       } else {
-        //todo 判断是多例还是单例
-        if (1) {//是单例
           appManager.getWindowByAppId(saApp.id)
           appManager.focusWindow(saApp.windowId)
-          console.log(saApp)
-          console.log('ready to clear')
           appManager.clearAppBadge(saApp.id)
-        }
       }
     },
     /**
@@ -637,7 +637,7 @@ app.whenReady().then(() => {
             app: saApp
           })
           if (isDevelopmentMode) {
-            appWindow.webContents.openDevTools()
+            //appWindow.webContents.openDevTools()
           }
         })
 

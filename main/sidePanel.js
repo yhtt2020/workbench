@@ -4,11 +4,7 @@ let sidePanel = null //SidePanel类的存储变量
  */
 function isWin11 () {
   const sysVersion = process.getSystemVersion()
-  if (sysVersion.startsWith('10.') && process.platform === 'win32') {
-    return true
-  } else {
-    return false
-  }
+  return sysVersion.startsWith('10.') && process.platform === 'win32';
 }
 
 function log (info) {
@@ -168,6 +164,8 @@ class SidePanel {
       this.bounds.height -= 40
     }
 
+
+
     let setX = this.bounds.x
     let setY = !resetY ? this.bounds.y + this.titlebarHeight : this.bounds.y + resetY
     let setHeight = this.bounds.height - this.titlebarHeight
@@ -176,12 +174,15 @@ class SidePanel {
       setX += 1
       setHeight -= 1
     }
+    if(isWin()){
+      setHeight+=1
+    }
     this._sidePanel.setBounds({
       x: setX,
       y: setY,
       width: this.bounds.width,
       height: setHeight
-    })
+    },false)
   }
 
   setTop () {
@@ -346,14 +347,23 @@ function addMainWindowEventListener () {
 
   //最小化、恢复事件
   mainWindow.on('minimize', () => {
-    closeSidePanel()
+
+    if(!isWin()){
+      closeSidePanel()
+    }
   })
   mainWindow.on('restore', () => {
-    loadSidePanel()
-    setTimeout(() => {
-      sidePanel.setMouseIgnore()
-      mainWindow.focus()
-    }, 500)
+    if(isWin()){
+
+    }else{
+      loadSidePanel()
+    }
+    //
+    sidePanel.setMouseIgnore()
+    mainWindow.focus()
+    // setTimeout(() => {
+    //
+    // }, 500)
   })
 
   //最大化，取消最大化事件，一般用于win
@@ -422,8 +432,9 @@ function closeSidePanel () {
   log('执行closeSidePanel()')
   if (SidePanel.alive()) {
     if (isMac()) {
-      sidePanel.close()
-      sidePanel = null
+      // sidePanel.close()
+      // sidePanel = null
+      sidePanel.hide()
     } else {
       sidePanel.hide()
     }
@@ -566,6 +577,7 @@ ipc.on('selectTask', function (event, arg) {
     width: 1000,
     autoHideMenuBar: true,
     height: 700,
+    thickFrame:false,
     resizable: false,
     acceptFirstMouse: true,
     visualEffectState: 'active',
