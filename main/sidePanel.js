@@ -422,8 +422,9 @@ function closeSidePanel () {
   log('执行closeSidePanel()')
   if (SidePanel.alive()) {
     if (isMac()) {
-      sidePanel.close()
-      sidePanel = null
+      // sidePanel.close()
+      // sidePanel = null
+      sidePanel.hide()
     } else {
       sidePanel.hide()
     }
