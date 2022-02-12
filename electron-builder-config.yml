@@ -17,6 +17,7 @@ files:
     - server-config.js
     - api/*
     - img/*.jpg
+    - img/*.jpeg
     - reader/*
     - resources/**/*
 dmg:
@@ -31,13 +32,7 @@ win:
     icon: ./icons/logowin.ico
     target:
         - target: nsis
-          arch:
-              - x64
-              - ia32
         - target: zip
-          arch:
-              - x64
-              - ia32
     publish:
         - provider : generic
           url: http://d.xiangtian.ren/update/browser/win/
@@ -52,8 +47,6 @@ mac:
     category: public.app-category.utilities
     target:
         - target: dmg
-          arch:
-            - arm64
         - target: zip
     publish:
       - provider : generic
