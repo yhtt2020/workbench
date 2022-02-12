@@ -37,8 +37,7 @@ app.whenReady().then(()=>{
     return
   }
   let updateInfo={}
-  autoUpdater.logger=require('electron-log')
-  autoUpdater.logger.transports.file.level = "info"
+  autoUpdater.logger=electronLog
   autoUpdater.checkForUpdates().then((updateInfo)=>{
     //检测到可以升级，则发送升级的信息到updateWindow
     updateInfo={

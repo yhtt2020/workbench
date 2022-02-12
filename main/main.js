@@ -1,6 +1,7 @@
 const electron = require('electron')
 const fs = require('fs')
 const path = require('path')
+const electronLog=require('electron-log')
 const {
   app, // Module to control application life.
   protocol, // Module to control protocol handling
@@ -64,7 +65,8 @@ if (process.platform === 'win32') {
 if (isDevelopmentMode) {
 	app.setPath('userData', app.getPath('userData') + '-development')
 }
-
+electronLog.transports.file.file=app.getPath('userData')+'/myLog.log'
+electronLog.transports.file.level = "info"
 // workaround for flicker when focusing app (https://github.com/electron/electron/issues/17942)
 app.commandLine.appendSwitch('disable-backgrounding-occluded-windows', 'true')
 
