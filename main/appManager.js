@@ -911,7 +911,7 @@ app.whenReady().then(() => {
           {
             type: 'checkbox',
             checked: appWindow.isVisible(),
-            label: saApp.name,
+            label: (saApp.name.length > 18) ? saApp.name.substring(0, 15) + '...' : saApp.name,
             click () {
               appManager.toggleAppWindowVisible(appId)
             }
