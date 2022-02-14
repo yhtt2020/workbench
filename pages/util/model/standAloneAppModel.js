@@ -47,7 +47,7 @@ const standAloneAppModel = {
       db.standAloneApps.update(group.id,{id:1,package:'com.thisky.group'})
 
       let com=await db.standAloneApps.get({name:'效率社区'})
-      db.standAloneApps.update(com.id,{id:2,package:'com.thisky.com'})
+      db.standAloneApps.update(com.id,{id:2,package:'s.apps.vip'})
       await standAloneAppModel.setAppSetting(com.id,{showInSideBar:true})
 
       let file=await db.standAloneApps.get({name:'文件小助手'})
@@ -64,6 +64,7 @@ const standAloneAppModel = {
       await db.standAloneApps.update(1,{url:serverConfig.IM.FRONT_URL + serverConfig.IM.AUTO_LOGIN})
 
     }
+    db.standAloneApps.update(2,{package:'com.thisky.com','name':'元社区','url':'https://s.apps.vip','logo':'../../icons/apps/yuan.png'})
     await db.standAloneApps.update(2,{themeColor:'#4188ff'})
     await db.standAloneApps.update(3,{themeColor:'#8618d2'})
   },
@@ -219,11 +220,11 @@ const standAloneAppModel = {
           showInSideBar:true
         }),
         unreadCount: 0,
-        showInSideBar: true
       },
       {
         name: '元社区',
-        logo: '../../icons/svg/com.svg',
+        logo: '../../icons/apps/yuan.png',
+        package:'com.thisky.com',
         summary: '用心经营您的元社区',
         type: 'web',
         url: serverConfig.SERVER_BASE_URL,
@@ -240,10 +241,10 @@ const standAloneAppModel = {
           bounds: {
             width: 1100,
             height: 800
-          }
+          },
+          showInSideBar: true
         }),
         unreadCount: 0,
-        showInSideBar: true
       },
       {
         name: '收藏夹',
@@ -265,7 +266,61 @@ const standAloneAppModel = {
           bounds: {
             width: 1200,
             height: 800
-          }
+          },
+          showInSideBar:true,
+        }),
+        unreadCount: 0,
+      },
+      {
+        id: 101,
+        name: '文件小助手',
+        logo: '../../icons/apps/wechatfile.png',
+        summary: '传输文件到微信，扫码即用',
+        type: 'web',
+        url: 'https://filehelper.weixin.qq.com/',
+        preload: '',
+        themeColor: '#07c160',
+        userThemeColor: '',
+        createTime: Date.now(),
+        updateTime: Date.now(),
+        accountAvatar: '',
+        order: 0,
+        useCount: 3,
+        lastExecuteTime: Date.now(),
+        settings: JSON.stringify({
+          bounds: {
+            width: 540,
+            height: 540
+          },
+          alwaysTop: true,
+          showInSideBar:true,
+        }),
+        unreadCount: 0,
+        showInSideBar: true
+      },
+      {
+        id: 102,
+        name: '小小时光机',
+        logo: 'http://d.xiangtian.ren/apps/timer/icon.svg',
+        summary: '精品计时器',
+        type: 'web',
+        url: 'http://d.xiangtian.ren/apps/timer',
+        preload: '',
+        themeColor: '#07c160',
+        userThemeColor: '',
+        createTime: Date.now(),
+        updateTime: Date.now(),
+        accountAvatar: '',
+        order: 0,
+        useCount: 3,
+        lastExecuteTime: Date.now(),
+        settings: JSON.stringify({
+          bounds: {
+            width: 500,
+            height: 370
+          },
+          alwaysTop: true,
+          showInSideBar:true,
         }),
         unreadCount: 0,
         showInSideBar: true

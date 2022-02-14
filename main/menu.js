@@ -382,7 +382,7 @@ function buildAppMenu (options = {}) {
         {
           label: l('appMenuReportBug'),
           click: function () {
-            openTabInWindow('https://com.thisky.com/forum?id=3')
+            openTabInWindow('https://s.apps.vip/forum?id=3')
           }
         },
         {
