@@ -393,7 +393,6 @@ function addMainWindowEventListener () {
     log('mainwindow-leave-full-screen:进入全屏')
     syncSize()
     syncSidebarTitle() //sendIPCToWindow(mainWindow, 'getTitlebarHeight')
-
   })
 
   //进入退出html全屏，一般用于视频播放的时候
@@ -432,9 +431,9 @@ function closeSidePanel () {
   log('执行closeSidePanel()')
   if (SidePanel.alive()) {
     if (isMac()) {
-      // sidePanel.close()
-      // sidePanel = null
-      sidePanel.hide()
+      sidePanel.close()
+      sidePanel = null
+      //sidePanel.hide()
     } else {
       sidePanel.hide()
     }
