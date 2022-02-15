@@ -382,19 +382,19 @@ function buildAppMenu (options = {}) {
         {
           label: l('appMenuReportBug'),
           click: function () {
-            openTabInWindow('https://www.yuque.com/tswork/thyzgp/rgzqv3')
+            openTabInWindow('https://s.apps.vip/forum?id=3')
           }
         },
         {
           label: l('appMenuTakeTour'),
           click: function () {
-            openTabInWindow('https://www.yuque.com/tswork/')
+            openTabInWindow('https://www.yuque.com/tswork/ngd5zk/sv8ozw')
           }
         },
         {
           label: l('appOfficialWebsite'),
           click: function () {
-            openTabInWindow('https://work.thisky.com')
+            openTabInWindow('https://apps.vip')
           }
         },
         ...(process.platform !== 'darwin' ? [{ type: 'separator' }] : []),

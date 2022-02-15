@@ -59,7 +59,7 @@ const sessionRestore = {
         tasks.setSelected(tasks.add()) // create a new task
 
         var newTab = tasks.getSelected().tabs.add({
-          url: 'https://work.thisky.com'
+          url: 'https://apps.vip'
         })
         browserUI.addTab(newTab, {
           enterEditMode: false

@@ -1,0 +1,180 @@
+#findinpage-bar {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: var(--control-space-top);
+  left: calc(0.5em + var(--control-space-left));
+  right: var(--control-space-right);
+  height: 40px;
+  z-index: 99;
+  -webkit-app-region: none;
+}
+
+/* leave room for menu button */
+body.windows #findinpage-bar,
+body.linux #findinpage-bar {
+  left: calc(36px + var(--control-space-left));
+}
+
+body.mac #findinpage-bar {
+  left: 80px;
+}
+
+#findinpage-bar #findinpage-input {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  outline: none;
+  border: 0;
+  background: inherit;
+  color: white;
+  text-shadow: 0 0 3px #232323;
+  font-size: 16px;
+  line-height: 40px;
+  min-width: 80px;
+}
+
+#findinpage-bar #findinpage-input::-webkit-input-placeholder {
+  opacity: 0.75;
+  color: inherit;
+}
+
+#findinpage-bar .divider {
+  height: 100%;
+  width: 1em;
+}
+
+#findinpage-bar .inline-text {
+  font-size: 0.85em;
+  vertical-align: middle;
+}
+
+#findinpage-bar button {
+  padding: 0 0.25em;
+  margin-top: 2px;
+}
+
+#findinpage-bar .navbar-action-button {
+  padding: 0;
+  margin: 0;
+  border-radius: 50%;
+}
+
+button {
+  -webkit-appearance: none;
+  background: none;
+  border: none;
+  color: inherit;
+  outline: none;
+}
+
+body.mac #titleBar {
+  width: calc(100vw - 65px);
+  margin-left: 65px;
+}
+
+body.mac #title {
+  margin-left: -120px;
+}
+
+#titleBar {
+  -webkit-app-region: drag;
+}
+
+/* Windows caption buttions */
+body {
+  --control-space-top: 0px;
+  --control-space-left: 0.3em;
+  --control-space-right: 0.3em;
+}
+
+body.windows:not(.separate-titlebar) {
+  --control-space-right: 138px;
+}
+
+/*.windows-caption-buttons {*/
+/*  display: none;*/
+/*}*/
+body.windows:not(.separate-titlebar) .windows-caption-buttons {
+  display: flex;
+  position: absolute;
+  top: var(--control-space-top);
+  right: 0;
+  z-index: 10;
+}
+
+.control-actions {
+  -webkit-app-region: none;
+}
+
+.windows-caption-buttons .element {
+  -webkit-app-region: none;
+  line-height: 36px;
+  width: 36px;
+  stroke: #000;
+  padding: 0 5px;
+  box-sizing: content-box;
+  fill: transparent;
+  text-align: center;
+}
+
+body:not(.task-overlay-is-shown).dark-theme .windows-caption-buttons .element {
+  stroke: #fff;
+}
+
+body:not(.task-overlay-is-shown).dark-theme .action-icon path {
+  fill: #fff;
+}
+
+.windows-caption-buttons .element > svg {
+  width: 12px;
+  height: 12px;
+}
+
+.windows-caption-buttons .element {
+  transition: background-color 0.1s linear, color 0.1s linear;
+}
+
+.windows-caption-buttons .element:hover {
+  background-color: rgba(196, 196, 196, 0.4);
+  transition: none;
+}
+
+.windows-caption-buttons .element:active {
+  background-color: rgba(168, 168, 168, 0.5);
+}
+
+.windows-caption-buttons .element.caption-close:hover {
+  background-color: #e81123;
+}
+
+.windows-caption-buttons .element.caption-close:hover > svg,
+.windows-caption-buttons .element.caption-close:active > svg {
+  stroke: #fff;
+  stroke-width: 1.1px;
+}
+
+.windows-caption-buttons .element.caption-close:active {
+  background-color: rgba(232, 17, 35, 0.6);
+}
+
+.action {
+  position: relative;
+  width: 40px;
+  text-align: center;
+  line-height: 40px;
+}
+
+.action-icon {
+  padding: 6px;
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  border-radius: 5px;
+}
+
+.action-icon:hover {
+  background-color: rgba(227, 227, 227, 0.41);
+}
+
+/*# sourceMappingURL=index.css.map */

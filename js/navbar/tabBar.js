@@ -20,6 +20,7 @@ const ipc = electron.ipcRenderer
 
 const navbarApi = require('../request/api/navbarApi.js')
 const baseApi = require('../request/api/baseApi')
+const deskModel = require('../../pages/util/model/deskModel.js')
 
 var lastTabDeletion = 0 // TODO get rid of this
 
@@ -386,21 +387,27 @@ const tabBar = {
         // https://github.com/minbrowser/min/issues/698
         return
       }
+      event.preventDefault();
       if (e.deltaY > 65 && e.deltaX < 10 && Date.now() - lastTabDeletion > 900) {
-        // swipe up to delete tabs
-        lastTabDeletion = Date.now()
-
-        /* tab deletion is disabled in focus mode */
-        if (focusMode.enabled()) {
-          focusMode.warn()
-          return
-        }
-
-        this.style.transform = 'translateY(-100%)'
-
-        setTimeout(function () {
-          tabBar.events.emit('tab-closed', data.id)
-        }, 150) // wait until the animation has completed
+        e.target.scrollLeft += event.deltaY
+          ? event.deltaY
+          : (event.detail && event.detail !== 0)
+            ? event.detail
+            : -event.wheelDelta;
+        // // swipe up to delete tabs
+        // lastTabDeletion = Date.now()
+        //
+        // /* tab deletion is disabled in focus mode */
+        // if (focusMode.enabled()) {
+        //   focusMode.warn()
+        //   return
+        // }
+        //
+        // this.style.transform = 'translateY(-100%)'
+        //
+        // setTimeout(function () {
+        //   tabBar.events.emit('tab-closed', data.id)
+        // }, 150) // wait until the animation has completed
       }
     })
 
@@ -414,27 +421,30 @@ const tabBar = {
       catch (e){
       }
       let addToDeskMenus=[]
-     desks.forEach((desk)=>{
-       addToDeskMenus.push({
-         id:desk.id,
-         label:desk.name,
-         click:()=>{
-        const tab=tabs.get(data.id)
-        const app={
-          type:'app',
-          data:{
-            name:tab.title,
-            icon:tab.favicon == null ? '../../icons/default.svg' : tab.favicon.url,
-            url:tab.url
-          }
-        }
-        const  deskModel=require('../../pages/util/model/deskModel.js')
-        const element= deskModel.createElementPos(app)
-        deskModel.addElementToDesk(element,desk.id)
-           ipc.send('message',{'type':'success',config:{'content':'添加到桌面成功'}})
-       }
-       })
-     })
+      if(!!desks){
+        desks.forEach((desk)=>{
+          addToDeskMenus.push({
+            id:desk.id,
+            label:desk.name,
+            click:()=>{
+              const tab=tabs.get(data.id)
+              const app={
+                type:'app',
+                data:{
+                  name:tab.title,
+                  icon:tab.favicon == null ? '../../icons/default.svg' : tab.favicon.url,
+                  url:tab.url
+                }
+              }
+              const  deskModel=require('../../pages/util/model/deskModel.js')
+              const element= deskModel.createElementPos(app)
+              deskModel.addElementToDesk(element,desk.id)
+              ipc.send('message',{'type':'success',config:{'content':'添加到桌面成功'}})
+            }
+          })
+        })
+      }
+
 
       let template = [
         [
@@ -450,6 +460,13 @@ const tabBar = {
             id: 'addToDesk',
             label: '添加到桌面',
             submenu: addToDeskMenus
+          },
+          {
+            id: 'addToApps',
+            label: '安装到应用',
+            click: function () {
+              tabBar.addToApps(data.id)
+            },
           },
           {
             id: 'open',
@@ -813,9 +830,9 @@ const tabBar = {
   addTab: function (tabId) {
     var tab = tabs.get(tabId)
     var index = tabs.getIndex(tabId)
-
     var tabEl = tabBar.createTab(tab)
-    tabBar.containerInner.insertBefore(tabEl, tabBar.containerInner.childNodes[index])
+    //修复插入位置错误，不知为什么多了俩，需要+2才行
+    tabBar.containerInner.insertBefore(tabEl, tabBar.containerInner.childNodes[index+2])
 
     tabBar.tabElementMap[tabId] = tabEl
   },
@@ -836,11 +853,42 @@ const tabBar = {
       tabBar.navBar.classList.remove('show-dividers')
     }
   },
-
+  /**
+   * 添加一个应用
+   * @param id
+   */
+  addToApps(id){
+    let tab = tabs.get(id)
+    let standAloneAppModel=require('../../pages/util/model/standAloneAppModel.js')
+    let option={
+      name: tab.title,
+      logo: !!!tab.favicon?'../../icons/default.svg':tab.favicon.url,
+      summary:   '自定义应用',
+      type:'web',
+      themeColor: !!!tab.backgroundColor?'#ccc':tab.backgroundColor.color,
+      settings: {
+        bounds:{
+          width:1000,
+          height:800
+        }
+      },
+      showInSideBar: false
+    }
+    standAloneAppModel.install(tab.url,option).then(success=>{
+      console.log(success)
+      ipc.send('message', {type: 'success', config: {content: `添加应用：${tab.title} 成功`}})
+      ipc.send('installApp',{id:success})
+    },err=>{
+      ipc.send('message', {type: 'error', config: {content: '添加应用失败'}})
+    })
+  },
   //扩充一个获取icon的方法
   createIconEl: function (tabData, loaded) {
     var iconEl = document.createElement('img')
     iconEl.className = 'icon'
+    iconEl.addEventListener('error',(e)=>{
+      e.target.src=__dirname+'/icons/default.svg'
+    })
     var src = ''
     if (loaded == false) {
       src = __dirname + '/icons/loading.gif'
@@ -975,7 +1023,7 @@ ipc.on('clearTaskUnlock',(event,args)=>{
 
 })
 
-ipc.on('tabNavigateToOSx', function(e, data) {
+ipc.on('tabNavigateTo', function(e, data) {
   const { url } = data
   const newTab = tabs.add({ url})
   require('browserUI.js').addTab(newTab, { enterEditMode: false})

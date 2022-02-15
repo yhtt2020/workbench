@@ -2,7 +2,7 @@
   "name": "tsbrowser",
   "productName": "想天浏览器",
   "author": "Thisky",
-  "version": "2.3.5",
+  "version": "2.7.0",
   "description": "一款针对工作场景的极简浏览器，帮助你提升效率，保持专注",
   "electronVersion": "15.3.4",
   "main": "main.build.js",
@@ -30,23 +30,28 @@
     ]
   },
   "dependencies": {
+    "@electron/remote": "^2.0.1",
     "axios": "^0.24.0",
     "dexie": "^3.0.3",
     "dragula": "^3.7.3",
+    "electron-find": "^1.0.7",
     "electron-localstorage": "^1.0.5",
     "electron-log": "^4.4.4",
     "electron-squirrel-startup": "^1.0.0",
     "electron-updater": "^4.3.9",
     "expr-eval": "^2.0.2",
     "iconv-lite": "^0.6.3",
+    "js-pinyin": "^0.1.9",
     "keytar": "7.7.0",
     "mousetrap": "^1.5.3",
+    "nanoid": "^3.2.0",
     "node-abi": "^3.2.0",
     "pdfjs-dist": "2.12.313",
-    "regedit": "^3.0.3",
+    "regedit": "^5.0.0",
     "stemmer": "^1.0.5",
     "string_score": "^0.1.22",
-    "vue-selecto": "^1.13.3"
+    "vue-selecto": "^1.13.3",
+    "xss": "^1.0.10"
   },
   "devDependencies": {
     "archiver": "^4.0.1",
@@ -57,6 +62,7 @@
     "electron": "^15.3.4",
     "electron-builder": "^22.13.1",
     "electron-installer-windows": "^3.0.0",
+    "electron-notarize": "^1.1.1",
     "electron-packager": "^15.1.0",
     "electron-rebuild": "^2.3.2",
     "electron-renderify": "0.0.2",
@@ -92,10 +98,20 @@
     "updateSuffixes": "node ./ext/publicSuffixes/updateSuffixes.js",
     "lint": "prettier --write **/**/*.css **/**/*.md **/**/*.html **/**/*.json && standard --fix js/**/*.js main/*.js | snazzy",
     "package": "npm run build && ./node_modules/.bin/electron-builder --config electron-builder-config.yml --publish never",
-    "packMacIntel": "npm run build && ./node_modules/.bin/electron-builder --mac --x64 --config electron-builder-config.yml --publish never"
+    "packMacIntel": "npm run build && ./node_modules/.bin/electron-builder --mac --x64 --config electron-builder-config.yml --publish never",
+    "postinstall": "./node_modules/.bin/electron-builder install-app-deps"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/minbrowser/min.git"
-  }
+  },
+  "extraResources": [
+    {
+      "from": "./res",
+      "to": "./res",
+      "filter": [
+        "**/*"
+      ]
+    }
+  ]
 }

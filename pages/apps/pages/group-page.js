@@ -50,11 +50,11 @@ cloudTpl = `
                     :id="item.id" slot="renderItem" slot-scope="item, index">
                     <a-list-item-meta>
                       <div slot="description">
-                        <a style="color: #999" target="_blank" :href="item.url">{{item.url}}</a>
+                        <a class="app-url"  @click="openUrl(item.url)">{{item.url}}</a>
                       </div>
-                      <a slot="title" target="_blank" :href="item.url"><strong>{{ item.name }}</strong> <span
+                      <a slot="title" @click="openUrl(item.url)"><strong>{{ item.name }}</strong> <span
                           style="color: #999;font-weight: normal;padding-left: 20px">{{item.summary}}</span></a>
-                      <a-avatar style="margin:10px" slot="avatar" shape="square" :src="item.icon" />
+                      <a-avatar @click="openUrl(item.url)" style="margin:10px;cursor:pointer;" slot="avatar" shape="square" :src="item.icon" />
                     </a-list-item-meta>
                   </a-list-item>
                 </a-list>
@@ -180,7 +180,7 @@ cloudTpl = `
 
                     <a-auto-complete
                       v-decorator="['url', { rules: [{ required: true, message: '请输入网址！' },{max:512,message:'最多不能超过512个字母！'}] }]"
-                      placeholder="输入任意网址，如http://work.thisky.com，以http或https开头" @change="handleWebsiteChange">
+                      placeholder="输入任意网址，如http://apps.vip，以http或https开头" @change="handleWebsiteChange">
                       <template slot="dataSource">
                         <a-select-option v-for="url in autoCompleteResult" :key="url">
                           {{ url }}
@@ -451,7 +451,7 @@ module.exports = Vue.component("cloud-page", {
       await this.$store.dispatch('getAppGroupNavs', { id: this.groupId})
     },
     openUrl(url) {
-      window.open(url);
+      ipc.send('addTab',{url:url});
     },
     //selecto
     onSelect(e) {
@@ -520,7 +520,7 @@ module.exports = Vue.component("cloud-page", {
      */
     openList() {
       this.myApps.forEach((app) => {
-        window.open(app.url);
+        ipc.send('addTab',{url:app.url});
       });
     },
   },

@@ -180,7 +180,7 @@ const tabColor = {
   useSiteTheme: true,
   initialize: function () {
     webviews.bindEvent('page-favicon-updated', function (tabId, favicons) {
-		
+
       tabColor.updateFromImage(favicons, tabId, function () {
         if (tabId === tabs.getSelected()) {
           tabColor.updateColors()
@@ -225,6 +225,11 @@ const tabColor = {
     settings.listen('siteTheme', function (value) {
       if (value !== undefined) {
         tabColor.useSiteTheme = value
+      }
+      if(tabColor.useSiteTheme){
+        document.body.classList.add('use-theme')
+      }else{
+        document.body.classList.remove('use-theme')
       }
     })
 

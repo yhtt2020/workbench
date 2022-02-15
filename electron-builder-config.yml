@@ -1,7 +1,9 @@
+#electron-builder打包配置文件，可参考官方文档：https://www.electron.build/configuration/configuration
 directories:
-    output: setup
+    output: setup-${arch}
     buildResources: dist
-
+#可以注释这里，省略公证环节，节省打包时间。此操作可节省2分半。下面 51行也影响打包速度，可以设为null，这样不签名，大幅度提高速度。
+#afterSign: scripts/notarize.js
 files:
     - dist/*.js
     - dist/*.css
@@ -16,34 +18,48 @@ files:
     - server-config.js
     - api/*
     - img/*.jpg
+    - img/*.jpeg
     - reader/*
+    - resources/**/*
+dmg:
+    sign: false
 
 win:
-    icon: ./icon.ico
+    extraResources:
+        - from: res
+          to: res
+          filter:
+            - "**/*"
+    icon: ./icons/logowin.ico
     target:
         - target: nsis
-          arch:
-              - x64
-              - ia32
         - target: zip
-          arch:
-              - x64
-              - ia32
     publish:
         - provider : generic
           url: http://d.xiangtian.ren/update/browser/win/
           channel: latest
 
 mac:
+   #此处为正式打包需要用到的脚本，如果仅仅测试，可以取消这里的注释，此操作会将identity设空，以至于无法找到证书，跳过签名阶段，以提高速度。
+   #打出的包则没有证书公证，官方说明https://www.electron.build/code-signing
+   #https://duanshuo.yuque.com/hfru7g/gta7yy/pqbzh3#QCbaN
+   #How to Disable Code Signing During the Build Process on macOS¶
+   #To disable Code Signing when building for macOS leave all the above vars unset except for CSC_IDENTITY_AUTO_DISCOVERY which needs to be set to false. This can be done by running export CSC_IDENTITY_AUTO_DISCOVERY=false.
+   #
+   #Another way — set mac.identity to null. You can pass aditional configuration using CLI as well: -c.mac.identity=null.
+    identity: null
+    entitlements: entitlements.mac.plist
+    entitlementsInherit: entitlements.mac.plist
+    hardenedRuntime: true
     gatekeeperAssess: false
     icon: ./icons/icon.icns
     category: public.app-category.utilities
     target:
-        - dmg
-        - zip
+        - target: dmg
+        - target: zip
     publish:
       - provider : generic
-        url: http://d.xiangtian.ren/update/browser/mac/
+        url: http://d.xiangtian.ren/update/browser/mac-${arch}/
         channel: latest
 
 

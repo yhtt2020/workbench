@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="495" height="496" viewBox="0 0 495 496">
+  <defs>
+    <radialGradient id="radial-gradient" cx="0.5" cy="0.506" r="0.5" gradientTransform="matrix(0.774, -0.633, 0.633, 0.774, -0.208, 0.431)" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#98c5ff"/>
+      <stop offset="1" stop-color="#1777f2"/>
+    </radialGradient>
+  </defs>
+  <g id="组_3" data-name="组 3" transform="translate(26 -1186.5)">
+    <g id="组_2" data-name="组 2" transform="translate(10 -12)">
+      <circle id="椭圆形" cx="247.5" cy="247.5" r="247.5" transform="translate(-36 1198.5)" fill="url(#radial-gradient)"/>
+      <path id="椭圆形-2" data-name="椭圆形" d="M168.595,309.761C217.927,285.773,292.387,358.8,277,243.3,258.121,94.8,231,1.3,161.6,1.3,13-17.7,0,176.649,0,243.3c0,23.594,1.162,42.5,4.8,49.766C56.748,332.3,123.085,307.8,168.595,309.761Z" transform="translate(65.18 1356.199)" fill="rgba(255,255,255,0.3)"/>
+      <g id="组_4" data-name="组 4" transform="translate(-1 -1)">
+        <path id="形状结合" d="M4.309,307.349A441.852,441.852,0,0,1,0,243.3c0-66.651,13-261,161.6-242,69.4,0,96.519,93.5,115.4,242a277.547,277.547,0,0,1,2.345,47.5A247.665,247.665,0,0,1,4.309,307.349Z" transform="translate(83 1354.199)" fill="#fff"/>
+        <path id="椭圆形-3" data-name="椭圆形" d="M92,188.7c50.81,0,92-34.511,92-88.635S142.81,0,92,0,0,45.937,0,100.061,41.19,188.7,92,188.7Z" transform="translate(130 1459.439)" fill="#030303"/>
+        <path id="直线" d="M0,27.892S24.2,0,64.805,0,117.6,22.244,117.6,22.244" transform="translate(148.73 1423.879) rotate(-8)" fill="none" stroke="#4d4d4d" stroke-linecap="round" stroke-miterlimit="10" stroke-width="21"/>
+        <path id="直线_3" data-name="直线 3" d="M86,48.035s-1.956-26.93-26.875-41S0,7.035,0,7.035" transform="translate(45.211 1360.611) rotate(-11)" fill="none" stroke="#fff" stroke-linecap="round" stroke-miterlimit="10" stroke-width="13"/>
+        <path id="直线_3-2" data-name="直线 3" d="M86,48.035s-1.956-26.93-26.875-41S0,7.035,0,7.035" transform="translate(253.278 1353.285) rotate(-51)" fill="none" stroke="#fff" stroke-linecap="round" stroke-miterlimit="10" stroke-width="15"/>
+        <circle id="椭圆_1" data-name="椭圆 1" cx="26.5" cy="26.5" r="26.5" transform="translate(215 1479)" fill="#fff"/>
+        <circle id="椭圆_2" data-name="椭圆 2" cx="10.5" cy="10.5" r="10.5" transform="translate(268 1522)" fill="#fff"/>
+      </g>
+    </g>
+  </g>
+</svg>

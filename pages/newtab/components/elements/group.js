@@ -6,13 +6,13 @@ const groupTpl = `
                         <div class="icon"  v-for="(iconEl,index) in item.element.data"  >
                           <div v-if="index===8" class="more" >
 
-                           <img :src="iconEl.element.data.icon" :style="iconStyle(iconEl.element.data)">
+                           <img :src="iconEl.element.data.icon"  :style="iconStyle(iconEl.element.data)">
                             <div class="place-handler" >
 
                             </div>
                           <div class="app-name">其他</div>
                             </div>
-                           <div v-else @mouseup.stop="appMouseUp($event,iconEl.element.data.url)">
+                           <div v-else @mouseup.stop="appMouseUp($event,iconEl.element.data.url,iconEl)">
                            <img :src="iconEl.element.data.icon" :style="iconStyle(iconEl.element.data)" onerror="this.src='../../icons/default.svg'">
                           <div>{{iconEl.element.data.name}}</div>
                             </div>
@@ -50,17 +50,23 @@ const groupTpl = `
                     </a-menu>
                   </a-dropdown>
   `
+
 Vue.component('group', {
   template: groupTpl,
   name: 'app',
   props: ['item','w','h'],
   data () {
     return {
-      mouseFlag: 0
+      mouseFlag: 0,
     }
   },
   mounted () {
-
+    const saAppModel=require('../util/model/standAloneAppModel.js')
+    this.item.element.data.forEach(async(icon,index)=>{
+      if(icon.element.data.type==='saApp'){
+        icon.element.data.saApp= await saAppModel.get(icon.element.data.appId)
+      }
+    })
   },
   methods: {
     mouseDown(){
@@ -84,8 +90,20 @@ Vue.component('group', {
     removeElement () {
       this.$emit('remove-element')
     },
-    iconStyle: function (item) {
+    iconStyle:function (item) {
       const style = {}
+      if(item.type==='saApp'){
+        let saApp=item.saApp
+            if(saApp){
+              style['border-radius']='50%'
+              style['background-color']='white'
+              style['padding']='1px'
+              let bg= saApp.userThemeColor?saApp.userThemeColor:saApp.themeColor
+              style['border']='2px solid '+bg.toString()
+            }
+
+        return style
+      }
       if (!!item.useBg) {
         style['background-color'] = item.color
       }
@@ -103,12 +121,23 @@ Vue.component('group', {
     appMouseMove () {
       this.mouseFlag = 1
     },
-    appMouseUp (e, url) {
-      console.log(e)
+   async appMouseUp (e, url,iconEl) {
+      const saAppModel=require('../util/model/standAloneAppModel.js')
       if (this.mouseFlag === 0 && e.button === 0) {
-        this.openUrl(url)
+        if(iconEl.element.data.type==='saApp'){
+          let saApp=await saAppModel.get(iconEl.element.data.appId)
+          if(saApp){
+            ipc.send('executeApp',{app:saApp})
+          }else{
+            appVue.$message.error({content:'此应用已经被卸载。无法打开。'})
+          }
+        }else{
+          this.openUrl(url)
+        }
       }
-    }, openUrl (url) {
+    },
+    openUrl (url) {
+
       location.href = url
     },
   },

@@ -5,6 +5,7 @@ const routes = [
   {name:'cloudNavs', path:'/cloudNavs', component: require('./pages/cloudNavsPage.js')},
   {name:'groupNavs', path:'/groupNavs', component: require('./pages/groupNavsPage.js')},
   {name:'appstore', path: '/appstore', component: require('./pages/appstore-page.js') },
+  {name:'apps', path: '/apps', component: require('./pages/apps-page.js') },
   {name:'groupList', path: '/groupList', component: require('./pages/groupListPage.js') },
   {name:'home', path: '/', redirect: { path: '/myapp' } }
 ]

@@ -39,7 +39,8 @@ const wallPaper = {
     }
     if(!!!history)
     {
-      return []
+      localStorage.setItem('wallPaperHistory',JSON.stringify(['../../img/wallpaper.jpeg']))
+      return ['../../img/wallpaper.jpeg']
     }
     return history
   },
@@ -51,6 +52,7 @@ const wallPaper = {
       }
     }
     history.unshift(imageUrl)
+    console.log(history)
     localStorage.setItem('wallPaperHistory',JSON.stringify(history))
   },
   /**

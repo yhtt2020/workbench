@@ -1,6 +1,7 @@
 var urlParser = require('util/urlParser.js')
 var settings = require('util/settings/settings.js')
 const passwordModel = require('../pages/util/model/passwordModel')
+const systemType = require('./util/systemType.js')
 /* implements selecting webviews, switching between them, and creating new ones. */
 
 var placeholderImg = document.getElementById('webview-placeholder')
@@ -567,6 +568,14 @@ webviews.bindIPC('getSettingsData', function (tabId, args) {
   if (!urlParser.isInternalURL(tabs.get(tabId).url)) {
     throw new Error()
   }
+  const systemType=require('./util/systemType.js')
+  const systemInfo={
+    platformAlias:systemType.platformAlias(),
+    versionAlias:systemType.versionAlias(),
+    platform:systemType.platform(),
+    systemVersion:systemType.systemVersion()
+  }
+  settings.list.systemInfo=systemInfo
   webviews.callAsync(tabId, 'send', ['receiveSettingsData', settings.list])
 })
 webviews.bindIPC('setSetting', function (tabId, args) {
@@ -581,6 +590,14 @@ settings.listen(function () {
     task.tabs.forEach(function (tab) {
       if (tab.url.startsWith('file://')) {
         try {
+          const systemType=require('./util/systemType.js')
+          const systemInfo={
+            platformAlias:systemType.platformAlias(),
+            versionAlias:systemType.versionAlias(),
+            platform:systemType.platform(),
+            systemVersion:systemType.systemVersion()
+          }
+          settings.list.systemInfo=systemInfo
           webviews.callAsync(tab.id, 'send', ['receiveSettingsData', settings.list])
         } catch (e) {
           // webview might not actually exist

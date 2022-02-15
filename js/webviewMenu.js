@@ -183,11 +183,26 @@ const webviewMenu = {
             })
             browserUI.addTab(newTab, {
               enterEditMode: false,
-              openInBackground: false
+              openInBackground: openInBackground
             })
           }
         }
       ]
+      if(selection.startsWith('http://')|| selection.startsWith('https://')){
+        textActions.push( {
+          label: '访问 '+encodeURI((selection.length > 60) ? selection.substring(0, 50) + '...' : selection),
+          click: function () {
+            var newTab = tabs.add({
+              url: encodeURI(selection),
+              private: currentTab.private
+            })
+            browserUI.addTab(newTab, {
+              enterEditMode: false,
+              openInBackground: false
+            })
+          }
+        })
+      }
       menuSections.push(textActions)
     }
 

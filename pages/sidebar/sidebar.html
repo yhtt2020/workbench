@@ -10,8 +10,9 @@
   <script src="../../ext/vue/vuedraggable.umd.min.js"></script>
   <script src="../../ext/vue/antd.min.js"></script>
   <link rel="stylesheet" href="../../ext/vue/antd.min.css"/>
-  <link rel="stylesheet" href="sidebar.css"/>
-  <link rel="stylesheet" href="sidebar2.css"/>
+  <link rel="stylesheet" href="css/sidebar.css"/>
+  <link rel="stylesheet" href="css/sidebar2.css"/>
+  <link rel="stylesheet" href="css/sa-app.css"/>
 </head>
 <body>
 <script>
@@ -63,12 +64,11 @@
   onmousemove="clickThroughMove()"
   style="background-color: #00000000; height: 100vh; position: absolute; left: 46px; width: calc(100% - 46px)"
 ></div>
-
 <template id="sidebarTpl">
   <div id="sidebar" class="side-container">
     <div id="itemsEl" class="side-items">
       <ul id="pinGroup" class="app-task" style="margin-bottom: 0; overflow: hidden">
-        <li @click="toggleUserPanel" class="" style="position: relative; background-color: rgb(243 243 243)">
+        <li @click="toggleUserPanel" class="" style="position: relative;">
           <template>
             <a-drawer class="user-panel"
                       @mousemove="setSidePanel()"
@@ -145,13 +145,22 @@
                           <div class="mg-top-lf">我加入的团队({{this.$store.getters.getMyGroups.length}})</div>
                           <a-button class="mg-top-right" type="primary" icon="plus" size="small" @click="createGroup"/>
                         </div>
-                        <div class="mg-content">
-                          <div class="mg-content-btn flex align-center"
-                               v-for="(item, index) in this.$store.getters.getMyGroups" :key="item.id">
-                            <!--                                <img class="cb-lf" src="http://comad.thisky.com/public/uploads/attach/2021/11/10/618bdd4e3e629.jpeg" alt="">-->
-                            <div class="cb-rg flex align-center">
+                        <div class="mg-content flex flex-direction">
+                          <div class="mg-content-btn flex flex-direction" v-for="(item, index) in this.$store.getters.getMyGroups" :key="item.id">
+                            <div class="cb-top flex align-center justify-start">
                               <img :src="item.logo" alt="">
-                              <div>{{item.name}}</div>
+                              <div class="cb-top-word">{{item.name}}</div>
+                            </div>
+                            <div class="cb-bottom flex align-center justify-around">
+                              <a-button class="cb-bottom-zone" type="link" icon="team" @click="openCircle">
+                                圈子
+                              </a-button>
+                              <a-button class="cb-bottom-zone" type="link" icon="message">
+                                群聊
+                              </a-button>
+                              <a-button class="cb-bottom-zone" type="link" icon="setting" @click="openCircleSetting">
+                                设置
+                              </a-button>
                             </div>
                           </div>
                         </div>
@@ -209,13 +218,13 @@
               <div class="item-icon">
                 <a-avatar
                   v-if="user.uid!==0"
-                  style="border: 1px solid #cfcfcf; background-color: white"
+                  style="border: 1px solid #cfcfcf; background-color: white;width: 28px;height: 28px"
                   class="icon"
                   :src="user.avatar"
                 ></a-avatar>
                 <a-avatar
                   v-if="user.uid===0"
-                  style="border: 1px solid #cfcfcf; background-color: white; color: #aaa"
+                  style=" background-color: white; color: #aaa;width: 28px;height: 28px"
                   class="icon"
                   src="../../icons/user.svg"
                 ></a-avatar>
@@ -227,62 +236,66 @@
             </div>
           </a-popover>
         </li>
-        <li
-          @click="openGroup()"
-          style="position: relative"
-        >
-          <!--              <a-popover-->
-          <!--                title="团队协作"-->
-          <!--                placement="right"-->
-          <!--                :mouse-enter-delay="0.1"-->
-          <!--                :mouse-leave-delay="0.1"-->
-          <!--                :destroy-tooltip-on-hide="true"-->
-          <!--                overlay-class-name="tips">-->
-          <!--                <template slot="content">-->
-
-          <!--                </template>-->
-          <div class="wrapper" @dblclick.stop="closeItem(item)">
+        <li>
+          <app-manager ref="appManager" :apps="apps" :running-apps="runningApps"></app-manager>
+        </li>
+        <li v-for="app in apps" @click="executeApp(app)" @mouseenter="hoverApp($event,app)" @contextmenu="createMenu(app.id,app)" v-if="app.processing || app.settings.showInSideBar">
+          <a-popover  placement="right" :mouse-enter-delay="0.3"
+                     overlay-class-name="tips"  @visible-change="">
+            <template slot="title" >
+              <span class="app-name-popover"> {{app.name}} </span>
+            </template>
+            <template slot="content" v-if="app.processing">
+              <div class="app-capture">
+                <img  :src="'file://'+app.capture" onerror="this.src='../../icons/svg/empty.svg'">
+              </div>
+            </template>
+            <template slot="content" v-else>
+              {{app.summary}}
+            </template>
+          <div class="wrapper sa-app-wrapper" >
+            <div v-if="app.processing" class="processing"></div>
             <div class="item-icon">
-              <img class="icon" src="../../icons/svg/chat.svg"/>
               <a-badge
-                count="0"
-                :dot="true"
-                :style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:'visible'}"
-              >
+                :count="app.badge">
+<!--                :style="{position: 'absolute',right:  '-2px',visibility:'visible'}"-->
+
+                <img onerror="this.src='../../icons/default.svg'" class="icon sa-app" :style="app.processing? {'border-color':app.userThemeColor!==''?app.userThemeColor:app.themeColor}:{}" :src="app.logo"/>
+
               </a-badge>
             </div>
-            <div class="item-title">团队协作</div>
+            <div class="item-title">{{app.name}} </div>
           </div>
-          <!--              </a-popover>-->
+          </a-popover>
         </li>
-        <li
-          @click="openCom()"
-          style="position: relative"
-        >
-          <!--              <a-popover-->
-          <!--                title="团队协作"-->
-          <!--                placement="right"-->
-          <!--                :mouse-enter-delay="0.1"-->
-          <!--                :mouse-leave-delay="0.1"-->
-          <!--                :destroy-tooltip-on-hide="true"-->
-          <!--                overlay-class-name="tips">-->
-          <!--                <template slot="content">-->
+<!--        <li-->
+<!--          @click="openCom()"-->
+<!--          style="position: relative"-->
+<!--        >-->
+<!--          &lt;!&ndash;              <a-popover&ndash;&gt;-->
+<!--          &lt;!&ndash;                title="团队协作"&ndash;&gt;-->
+<!--          &lt;!&ndash;                placement="right"&ndash;&gt;-->
+<!--          &lt;!&ndash;                :mouse-enter-delay="0.1"&ndash;&gt;-->
+<!--          &lt;!&ndash;                :mouse-leave-delay="0.1"&ndash;&gt;-->
+<!--          &lt;!&ndash;                :destroy-tooltip-on-hide="true"&ndash;&gt;-->
+<!--          &lt;!&ndash;                overlay-class-name="tips">&ndash;&gt;-->
+<!--          &lt;!&ndash;                <template slot="content">&ndash;&gt;-->
 
-          <!--                </template>-->
-          <div class="wrapper" @dblclick.stop="closeItem(item)">
-            <div class="item-icon">
-              <img class="icon" src="../../icons/svg/com.svg"/>
-              <a-badge
-                count="0"
-                :dot="true"
-                :style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:'visible'}"
-              >
-              </a-badge>
-            </div>
-            <div class="item-title">效率社区</div>
-          </div>
-          <!--              </a-popover>-->
-        </li>
+<!--          &lt;!&ndash;                </template>&ndash;&gt;-->
+<!--          <div class="wrapper" @dblclick.stop="closeItem(item)">-->
+<!--            <div class="item-icon">-->
+<!--              <img class="icon" style="border-color:#12a900" src="../../icons/svg/com.svg"/>-->
+<!--              <a-badge-->
+<!--                count="0"-->
+<!--                :dot="true"-->
+<!--                :style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:'visible'}"-->
+<!--              >-->
+<!--              </a-badge>-->
+<!--            </div>-->
+<!--            <div class="item-title">效率社区</div>-->
+<!--          </div>-->
+<!--          &lt;!&ndash;              </a-popover>&ndash;&gt;-->
+<!--        </li>-->
         <draggable
           v-model="getPinItems"
           group="sideBtn"
@@ -434,21 +447,16 @@
                   <a-button type="default" shape="circle" icon="question-circle"></a-button>
                   <div class="item-title">帮助中心</div>
                 </li>
-                <li @click="openBottom('setting')">
-                  <a-button type="default" shape="circle" icon="setting"></a-button>
-                  <div class="item-title">偏好设置</div>
-                </li>
+
               </a-collapse-panel>
             </a-collapse>
           </div>
         </template>
-
-        <li @click="openBottom('home')">
-          <a-button type="default" shape="circle" style="border: none">
-            <a-avatar src="../../icons/svg/apps.svg"></a-avatar>
-          </a-button>
-          <div class="item-title">网站导航</div>
+        <li @click="openBottom('setting')">
+          <a-button type="default" shape="circle" icon="setting"></a-button>
+          <div class="item-title">偏好设置</div>
         </li>
+
       </ul>
     </div>
   </div>
@@ -456,6 +464,7 @@
 </body>
 <script src="./sidebarComp.js"></script>
 <script src="./sidebar.js"></script>
+<script src="./comp/app-manager.js"></script>
 <style>
   .tabs,
   .sidebar ul {
@@ -475,5 +484,15 @@
   .sidebar ul {
     margin-bottom: 0;
   }
+
+ .sa-app-wrapper .ant-badge-count{
+   right: 2px;
+   padding:0 !important;
+   font-size: 10px;
+   height: 15px;
+   width: 15px;
+   line-height: 15px;
+   min-width: 15px;
+ }
 </style>
 </html>

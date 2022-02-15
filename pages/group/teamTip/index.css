@@ -1,0 +1,60 @@
+body,
+html {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: ".SFNSText-Regular", "Helvetica Neue", "Arial", sans-serif;
+  background-color: #ffff;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+.main {
+  width: 100%;
+  height: 340px;
+}
+.main .block {
+  margin-left: 20px;
+}
+.main .block p {
+  font-size: 14px;
+  font-weight: 600;
+}
+.main .block .selection-array {
+  display: flex;
+  align-items: center;
+}
+.main .block .selection-array .select-btn {
+  margin-right: 10px;
+  width: 140px;
+  height: 32px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.main .block .selection-array .select-btn:hover {
+  cursor: pointer;
+  color: #40a9ff;
+  border-color: #40a9ff;
+  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+.main .block .selection-array .select-btn img {
+  width: 20px;
+  height: 20px;
+}
+.main .block .selection-array .select-btn .select-btn-word {
+  margin-left: -5px;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/*# sourceMappingURL=index.css.map */

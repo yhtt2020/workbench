@@ -1,8 +1,11 @@
 const { db } = require('../../js/util/database');
 const { api } = require('../../server-config')
+const standAloneAppModel=require('../util/model/standAloneAppModel.js')
 Vue.component('sidebar', {
 	data: function() {
 		return {
+      apps:[],
+      runningApps:[],//运行中的应用
       mod:'auto',//auto open close
       isPopoverShowing:false,
       lastOpenId:0,
@@ -71,6 +74,10 @@ Vue.component('sidebar', {
 
 	},
 	async mounted() {
+    await standAloneAppModel.initialize()
+    this.apps=await standAloneAppModel.getAllApps()
+    ipc.send('getRunningApps')
+    console.log(this.apps)
 		// let item = {
 		// 	title: '打开标签', //名称，用于显示提示
 		// 	index: 0, //索引
@@ -95,9 +102,13 @@ Vue.component('sidebar', {
     })
     const currentUser = await db.system.where('name').equals('currentUser').first()
     if(currentUser.value.uid !== 0 ) {
-      await this.$store.dispatch('getGroups', {
-        token: currentUser.value.token
-      })
+      try {
+        await this.$store.dispatch('getGroups', {
+          token: currentUser.value.token
+        })
+      } catch(err) {
+        console.log('团队列表接口错误!')
+      }
     }
     let sideMode=localStorage.getItem('sideMode')
     sideMode = sideMode||'auto'
@@ -109,6 +120,7 @@ Vue.component('sidebar', {
     appVue.mod=sideMode
 	},
 	computed: {
+
 		user(){
 			return this.$store.state.user
 		},
@@ -145,6 +157,29 @@ Vue.component('sidebar', {
 	},
 	template: '#sidebarTpl',
 	methods: {
+    openCircle() {
+      this.userPanelVisible = false
+      this.addTab(api.getUrl(api.API_URL.user.CIRCLE))
+    },
+
+    openCircleSetting() {
+      ipc.send('osxOpenCircleSetting')
+    },
+    /**
+     * app浮窗显示隐藏
+     */
+    hoverApp(e,app){
+       // if(app.processing){
+       //   ipc.send('getAppCapture',{id:app.id})
+       // }
+    },
+    executeApp(app){
+      // if(!!!app.processing){
+      //   ipc.send('executeApp',{app:app})
+      // }
+      // 判断单例的问题留给主进程处理
+      ipc.send('executeApp',{app:app})
+    },
 		toggleUserPanel(){
 			console.log('toggele')
 			this.userPanelVisible=!this.userPanelVisible
@@ -281,7 +316,6 @@ Vue.component('sidebar', {
 			const itemsEl = document.getElementById('itemsEl')
 			const bottomsEl = document.getElementById('bottomsEl')
 			itemsEl.style.bottom = bottomsEl.offsetHeight + 'px'
-      console.log(itemsEl.style.bottom)
 		},
 		//点击用户登录按钮
 		userClick(){
@@ -382,7 +416,27 @@ Vue.component('sidebar', {
     clearTaskUnlock(task) {
       ipc.sendTo(mainWindowId, 'clearTaskUnlock', { id: task.id })
     },
-
+    createMenu(appId,app){
+      let desks=[]
+      try{
+        desks=JSON.parse(localStorage.getItem('desks'))
+      }
+      catch (e){
+        console.log('解析桌面失败')
+      }
+      ipc.send('createAppMenu',{id:appId,app:app,desks:desks})
+      // let remote=require('electron').remote
+      // let {Menu,MenuItem}=remote
+      // let menu=Menu.buildFromTemplate([
+      //   {
+      //     label:"设置",
+      //     click(){
+      //       alert('a')
+      //     }
+      //   }
+      // ])
+      // menu.popup()
+    },
 
     editTaskName(item){
       const id=item.id
@@ -405,7 +459,8 @@ Vue.component('sidebar', {
     },
     editTaskNameKeyPress(event){
         event.currentTarget.blur()
-    }
+    },
+
 	}
 
 })
@@ -415,4 +470,121 @@ ipc.on('message',function(event,args){
     args.type='open'
   }
   appVue.$message[args.type](args.config)
+})
+
+ipc.on('executedAppSuccess',function (event,args){
+  appVue.$refs.sidePanel.apps.forEach(app=>{
+    if(app.id===args.app.id){
+      app.processing=true
+      app.windowId=args.app.windowId
+    }
+  })
+  appVue.$refs.sidePanel.runningApps.push(args.app.id)
+  standAloneAppModel.update(args.app.id,{lastExecuteTime:Date.now()}).then((res)=>{
+  })
+})
+ipc.on('closeApp',function (event,args){
+  appVue.$refs.sidePanel.apps.forEach(app=>{
+    if(app.id===args.id){
+      app.processing=false
+      //从正在运行的app里移除掉该id
+      let appIndex=appVue.$refs.sidePanel.runningApps.indexOf(args.id)
+      console.log(appVue.$refs.sidePanel.runningApps)
+      if(appIndex>-1)
+        appVue.$refs.sidePanel.runningApps.splice(appIndex,1)
+    }
+  })
+
+})
+
+ipc.on('updateAppCapture',function (event,args){
+  appVue.$refs.sidePanel.apps.forEach(app=>{
+    if(app.id===args.id){
+      app.capture=args.captureSrc +"?t="+Date.now()
+    }
+  })
+})
+ipc.on('updateRunningApps',function(event,args){
+  appVue.$refs.sidePanel.runningApps=args.runningApps
+  appVue.$refs.sidePanel.apps.forEach((app,index)=>{
+    if(args.runningApps.indexOf(app.id)>-1){
+      app.processing=true
+      app.windowId=args.windows[args.runningApps.indexOf(app.id)]
+      ipc.send('getAppRunningInfo',{id:app.id})
+    }
+  })
+})
+
+ipc.on('updateSetting',function (event,args){
+  appVue.$refs.sidePanel.apps.forEach((app,index)=>{
+    if(app.id===args.id){
+      standAloneAppModel.setAppSetting(args.id,args.settings)
+      app.settings=Object.assign(app.settings,args.settings)
+    }
+  })
+})
+ipc.on('updateAppMemoryUsage',function (event,args){
+})
+
+ipc.on('updateRunningInfo',function (event,args){
+  appVue.$refs.sidePanel.apps.forEach(app=>{
+    if(app.id===args.id){
+      app.capture=args.info.capture +"?t="+Date.now()
+      app.memoryUsage=args.info.memoryUsage
+    }
+  })
+})
+
+ipc.on('deleteApp',function(event,args){
+  let index=0
+  for(let i=0;i<appVue.$refs.sidePanel.apps.length;i++){
+    if(appVue.$refs.sidePanel.apps[i].id===args.id){
+      index=i
+    }
+  }
+  if(index)
+  {
+    appVue.$refs.sidePanel.apps.splice(index,1)
+  }
+})
+
+ipc.on('installApp',function (event,args){
+  let id=args.id
+  standAloneAppModel.get(id).then(async app=>{
+    if(!args.background)
+    {ipc.send('executeApp',{app:app})}
+    appVue.$refs.sidePanel.apps=await standAloneAppModel.getAllApps()
+    ipc.send('getRunningApps')
+  })
+})
+
+ipc.on('runAutoRunApps',function(event,args){
+  console.log('尝试启用自启动应用')
+  appVue.$refs.sidePanel.apps.forEach(app=>{
+    if(app.settings.autoRun){
+      ipc.send('executeApp',{app:app,background:true})
+    }
+  })
+})
+
+ipc.on('appBadge',function (event,args){
+  console.log(args)
+  appVue.$refs.sidePanel.apps.forEach(app=>{
+    if(app.id===args.id){
+      if(args.add){
+        if(!!!app.badge) app.badge=0
+        app.badge+=args.add //默认是使用add来增加，否则直接使用badge
+      }else{
+        app.badge=args.badge
+      }
+      console.log(app)
+    }
+
+  })
+})
+ipc.on('addToDesk',(event,args)=>{
+  const  deskModel=require('../util/model/deskModel.js')
+  const element= deskModel.createElementPos(args.app)
+  deskModel.addElementToDesk(element,args.deskId)
+  ipc.send('message',{'type':'success',config:{'content':'添加到桌面成功'}})
 })

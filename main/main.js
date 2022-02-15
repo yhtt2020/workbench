@@ -1,7 +1,7 @@
 const electron = require('electron')
 const fs = require('fs')
 const path = require('path')
-
+const electronLog=require('electron-log')
 const {
   app, // Module to control application life.
   protocol, // Module to control protocol handling
@@ -15,10 +15,7 @@ const {
   nativeTheme,
   globalShortcut
 } = electron
-const { autoUpdater } = require('electron-updater')
-console.log(app.setAsDefaultProtocolClient("tsb"))
-console.log(app.isDefaultProtocolClient('tsb'))
-console.log(app.getApplicationNameForProtocol("tsb://"))
+
 crashReporter.start({
 	submitURL: 'https://minbrowser.org/',
 	uploadToServer: false,
@@ -33,32 +30,43 @@ if (process.argv.some(arg => arg === '-v' || arg === '--version')) {
 
 let isInstallerRunning = false
 const isDevelopmentMode = process.argv.some(arg => arg === '--development-mode')
-
+ if (process.platform === 'win32')
+{
+  //修复通知出现应用名electron.app
+    app.setAppUserModelId(app.name);
+}
 function clamp(n, min, max) {
 	return Math.max(Math.min(n, max), min)
 }
-
+//如果是命令行下，会执行注册表的功能。
 if (process.platform === 'win32') {
-	(async function() {
-		var squirrelCommand = process.argv[1]
-		if (squirrelCommand === '--squirrel-install' || squirrelCommand === '--squirrel-updated') {
-			isInstallerRunning = true
-			await registryInstaller.install()
-		}
-		if (squirrelCommand === '--squirrel-uninstall') {
-			isInstallerRunning = true
-			await registryInstaller.uninstall()
-		}
-		if (require('electron-squirrel-startup')) {
-			app.quit()
-		}
-	})()
+	// (async function() {
+  //   await registryInstaller.install().then(()=>{
+  //     console.log('reg success')
+  //   },(err)=>{
+  //     console.log(err)
+  //   })
+    // registryInstaller.uninstall()
+		// var squirrelCommand = process.argv[1]
+		// if (squirrelCommand === '--squirrel-install' || squirrelCommand === '--squirrel-updated') {
+		// 	isInstallerRunning = true
+		// 	await registryInstaller.install()
+		// }
+		// if (squirrelCommand === '--squirrel-uninstall') {
+		// 	isInstallerRunning = true
+		// 	await registryInstaller.uninstall()
+		// }
+		// if (require('electron-squirrel-startup')) {
+		// 	app.quit()
+		// }
+	// })()
 }
 
 if (isDevelopmentMode) {
 	app.setPath('userData', app.getPath('userData') + '-development')
 }
-
+electronLog.transports.file.file=app.getPath('userData')+'/myLog.log'
+electronLog.transports.file.level = "info"
 // workaround for flicker when focusing app (https://github.com/electron/electron/issues/17942)
 app.commandLine.appendSwitch('disable-backgrounding-occluded-windows', 'true')
 
@@ -178,6 +186,11 @@ function createWindow(cb) {
 }
 
 function createWindowWithBounds(bounds) {
+  let icon=__dirname + '/icons/logo1024.png'
+
+  if(process.platform==='win32'){
+    icon=__dirname + '/icons/logowin.ico'
+  }
 	mainWindow = new BrowserWindow({
 		width: bounds.width,
 		height: bounds.height,
@@ -191,7 +204,8 @@ function createWindowWithBounds(bounds) {
 			x: 12,
 			y: 10
 		},
-		icon: __dirname + '/icons/logo1024.png',
+    show:false,
+		icon: icon,
 		frame: settings.get('useSeparateTitlebar'),
 		alwaysOnTop: settings.get('windowAlwaysOnTop'),
 		backgroundColor: '#fff',//backgroundColor: '#fff', // the value of this is ignored, but setting it seems to work around https://github.com/electron/electron/issues/10559
@@ -231,6 +245,10 @@ function createWindowWithBounds(bounds) {
 		// save the window size for the next launch of the app
 		saveWindowBounds()
 	})
+  mainWindow.on('ready-to-show',()=>{
+    mainWindow.show()
+    loadSidePanel()
+  })
 
 	// Emitted when the window is closed.
 	mainWindow.on('closed', function() {
@@ -239,7 +257,11 @@ function createWindowWithBounds(bounds) {
 		// when you should delete the corresponding element.
 		mainWindow = null
 		mainWindowIsMinimized = false
-
+    if(process.platform==='win32'){
+      console.log('windows上强制终止app')
+        //todo 如果做了托盘菜单，这里不需要直接退出app
+      app.quit()
+    }
 	})
 
 	mainWindow.on('focus', function() {
@@ -292,7 +314,6 @@ function createWindowWithBounds(bounds) {
 
 	//loadSidebar()
 	sendIPCToWindow(mainWindow,'getTitlebarHeight')
-	loadSidePanel()
 	addMainWindowEventListener()
 
 
@@ -320,7 +341,7 @@ function createWindowWithBounds(bounds) {
 	})
 
 	mainWindow.setTouchBar(buildTouchBar())
-
+  global.utilWindow = mainWindow
 	return mainWindow
 
 }
@@ -415,9 +436,14 @@ app.on('open-url', function(e, url) {
 		sendIPCToWindow(mainWindow, 'addTab', {
 			url: url
 		})
-    if(mainWindow.isMinimized()){
-      mainWindow.restore()
+    if(mainWindow){
+      if(mainWindow.isMinimized()){
+        mainWindow.restore()
+      }
+      mainWindow.focus()
     }
+
+
 	} else {
 		global.URLToOpen = url // this will be handled later in the createWindow callback
 	}
@@ -463,21 +489,7 @@ ipc.on('showSecondaryMenu', function(event, data) {
 		y: data.y
 	})
 })
-//设置默认浏览器部分代码开始
-//获取默认浏览器
-ipc.on('getIsDefaulBrowser',function(event){
-	let isDefault=app.isDefaultProtocolClient('http')
-	//console.log('返回是不是默认浏览器'+isDefault)
-	event.reply('returnIsDefaultBrowser',isDefault)
-})
-//移除默认浏览器
-ipc.on('callSetOrRemoveDefaultBrowser',function(event){
-	if(app.isDefaultProtocolClient('http')){
-		app.removeAsDefaultProtocolClient('http')
-	}else{
-		app.setAsDefaultProtocolClient('http')
-	}
-})
+
 
 //设置默认浏览器部分结束
 ipc.on('quit', function() {

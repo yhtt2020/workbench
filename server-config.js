@@ -1,21 +1,25 @@
 //本代码会同时被preoload.js合并进去
 //也可以直接require进去(在非preload当中）
+let isDevelopmentMode = process.argv.some(arg=>arg==='--development-mode')
 const config = {
-  SERVER_BASE_URL: 'https://com.thisky.com',
+  SERVER_BASE_URL: 'https://s.apps.vip',
   DEV_NODE_SERVER_BASE_URL: 'http://test.com:8001',
-  PROD_NODE_SERVER_BASE_URL: 'https://work.thisky.com',
+  PROD_NODE_SERVER_BASE_URL: 'https://apps.vip',
+  //NODE_SERVER_BASE_URL: isDevelopmentMode ? 'http://test.com:8001' : 'https://apps.vip',
+  NODE_SERVER_BASE_URL: isDevelopmentMode ? 'https://apps.vip' : 'https://apps.vip',  //老板你本地用这个，注释上面这个
   IM:{
     API_BASE_URL:"http://im-serve.xiangtian.ren",
     WEB_SOCKET_URL:"ws://im-socket.xiangtian.ren/socket.io",
     FRONT_URL:"http://im.xiangtian.ren",
     //FRONT_URL_DEV:"http://im.xiangtian.ren",
-    FRONT_URL_DEV:"http://im.xiangtian.ren",
+    FRONT_URL_DEV:"http://127.0.0.1:8000",
     AUTO_LOGIN: '/auto-login'      //免登等待路由
   }
 }
 
 const appConfig = {
-  client_id: 10001,   //浏览器 id
+  //client_id: isDevelopmentMode ? 10003 : 10001,
+  client_id: isDevelopmentMode ? 10001 : 10001,     //老板你本地用这个，注释上面这个
   bind_im_id: 10002,  //lumen id
   state: 1,
   response_type: 'code',
@@ -29,20 +33,22 @@ const api = {
       profile: '/user/info', //用户资料
       account: '/user/account-info', //帐号信息
       AUTO_LOGIN: '/autologin',   //短说免登跳转路由
-      USER_ACCOUNT: '/user/account-info', //短说账号设置页面
-      USER_INFO: '/user/info',  //短说用户设置
+      CIRCLE: '/forum',    //短说圈子主页
+      CIRCLE_SETTING: '/user/create-edit-forum', //短说圈子设置
+      CIRCLE_ADD_USER: '/user/add-user', //短说圈子添加成员
+      CIRCLE_INVITELINK : '/user/invite-link', //短说圈子邀请链接
     },
     group: {
       index: '/groups', //群组
     },
   },
   NODE_API_URL: {
-    user: {
-      code: '/app/authorizeCode', //code截取url
+    USER: {
+      CODE: '/app/authorizeCode', //code截取url
+      REFRESH_TOKEN: '/app/refreshBrowserToken'
     },
   },
   getUrl(path) {
-    //const params=path.split('/')
     return config.SERVER_BASE_URL + path
   },
   getProdNodeUrl(path) {

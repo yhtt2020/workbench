@@ -5,11 +5,14 @@ const outFile = path.resolve(__dirname, '../main.build.js')
 
 const modules = [
   'dist/localization.build.js',
+  'main/ipcMessageMain.js',
   'main/menu.js',
   'main/touchbar.js',
   'main/registryConfig.js',
   'main/main.js',
   'main/sidePanel.js',
+  'main/bindIPC.js',
+  'main/appManager.js',
   'main/siteCard.js',
   'main/userScript.js',
   'main/handleAxios.js',

@@ -49,7 +49,8 @@ function initialize () {
     }
 
     // 2, undefined, or false: automatic dark mode following system
-    if (value === undefined || value === 2 || value === false) {
+    //移除undefined和false
+    if (value === 2 ) {
       if (systemShouldEnableDarkMode()) {
         enableDarkMode()
       } else {
@@ -82,7 +83,8 @@ function initialize () {
           disableDarkMode()
         }
       }, 10000)
-    } else if (value === -1) {
+      //undefined和false都默认和永久禁用一致
+    } else if (value === undefined || value === -1 || value === false) {
       // -1: never enable
       disableDarkMode()
     }

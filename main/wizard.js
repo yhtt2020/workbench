@@ -1,6 +1,5 @@
 let wizard = null
 app.whenReady().then(()=>{
-  console.log('registerWizard')
   ipc.on('wizard', () => {
     if(!!!wizard){
       closeSidePanel()

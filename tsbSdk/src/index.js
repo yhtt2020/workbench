@@ -16,8 +16,8 @@ export default class tsbk {
   static secretInfo = {};
   static sdkSwitch = false;
 
-  //obj中必须要的属性 appId:必填，三方应用唯一标识 、timestamp:必填，生成签名的时间戳、 nonceStr: 必填，生成签名的随机串、 signature:必填，签名、 jsApiList:[]必填，需要使用的JS接口列表
-  static config(obj) {
+  //options中必须要的属性 appId:必填，三方应用唯一标识 、timestamp:必填，生成签名的时间戳、 nonceStr: 必填，生成签名的随机串、 signature:必填，签名、 jsApiList:[]必填，需要使用的JS接口列表
+  static config(options) {
     if (Object.keys(tsbk.secretInfo).length > 0) {
       return new Promise((resolve, reject) => {
         window.postMessage(
@@ -27,12 +27,12 @@ export default class tsbk {
           },
           `${window.origin}`
         );
-        tsbk.listener(resolve, reject)
-      })
+        tsbk.listener(resolve, reject);
+      });
     } else {
-      const keyNames = Object.keys(obj);
+      const keyNames = Object.keys(options);
       for (let i = 0; i < keyNames.length; i++) {
-        tsbk.secretInfo[keyNames[i]] = obj[keyNames[i]];
+        tsbk.secretInfo[keyNames[i]] = options[keyNames[i]];
       }
     }
   }
@@ -42,15 +42,15 @@ export default class tsbk {
       let messageEvent = e.data.eventName;
       switch (messageEvent) {
         case "authResult":
-          if(tsbk.secretInfo.signature === e.data.signature) {
-            tsbk.sdkSwitch = e.data.sdkSwitch
-            observe(tsbk.sdkSwitch)
+          if (tsbk.secretInfo.signature === e.data.signature) {
+            tsbk.sdkSwitch = e.data.sdkSwitch;
+            observe(tsbk.sdkSwitch);
           } else {
-            tsbk.sdkSwitch = false
+            tsbk.sdkSwitch = false;
             reverse({
               code: 401,
-              msg: 'SDK接口鉴权失败'
-            })
+              msg: "SDK接口鉴权失败",
+            });
           }
           break;
       }
@@ -59,40 +59,87 @@ export default class tsbk {
 
   static ready(fn) {
     tsbk.config().then((res) => {
-      fn()
-    })
+      fn();
+    });
   }
 
   static error(fn) {
-    tsbk.config().catch(err => {
-      fn(err)
-    })
+    tsbk.config().catch((err) => {
+      fn(err);
+    });
   }
 
-  static hideApp(obj = { success: () => {}, fail: () => {}}) {
-    window.postMessage({
-      eventName: "hideApp",
-    }, `${window.origin}`)
-    tsbk.sdkSwitch ? obj.success.apply(window) : obj.fail.apply(window)
+  static hideApp(options) {
+    if(options && tsbk.sdkSwitch) {
+      window.postMessage(
+        {
+          eventName: "hideApp",
+        },
+        `${window.origin}`
+      );
+      options.hasOwnProperty("success") ? options.success() : false;
+    } else {
+      if(!tsbk.sdkSwitch) {
+        options.hasOwnProperty("fail") ? options.fail() : false;
+        return
+      }
+      window.postMessage(
+        {
+          eventName: "hideApp",
+        },
+        `${window.origin}`
+      );
+    }
   }
 
-  static toBind(obj = { success: () => {}, fail: () => {}}) {
-    window.postMessage({
-      eventName: "toBind",
-    }, `${window.origin}`)
-    tsbk.sdkSwitch ? obj.success.apply(window) : obj.fail.apply(window)
+  static tabLinkJump(options) {
+    if(options && tsbk.sdkSwitch) {
+      window.postMessage({
+        eventName: "tabLinkJump",
+        url: options.url ?? "",
+      });
+      options.hasOwnProperty("success") ? options.success() : false;
+    } else {
+      options.hasOwnProperty("fail") ? options.fail() : false;
+      return
+    }
   }
 
-  static toUser(obj = { success: () => {}, fail: () => {}}) {
-    window.postMessage({
-      eventName: "toUser",
-    }, `${window.origin}`)
-    tsbk.sdkSwitch ? obj.success.apply(window) : obj.fail.apply(window)
+  //暂时废弃
+  // static destoryApp(options) {
+  //   window.postMessage(
+  //     {
+  //       eventName: "destoryApp",
+  //     },
+  //     `${window.origin}`
+  //   );
+  //   if (options) {
+  //     if (tsbk.sdkSwitch) {
+  //       options.hasOwnProperty("success") ? options.success() : false;
+  //     } else {
+  //       options.hasOwnProperty("fail") ? options.fail() : false;
+  //     }
+  //   } else {
+  //     return;
+  //   }
+  // }
+
+  static notice(options) {
+    if(options && tsbk.sdkSwitch) {
+      window.postMessage({
+        eventName: 'saAppNotice',
+        options: options
+      })
+      options.hasOwnProperty("success") ? options.success() : false;
+    } else {
+      if(!tsbk.sdkSwitch) {
+        options.hasOwnProperty("fail") ? options.fail() : false;
+        return
+      }
+      window.postMessage({
+        eventName: 'saAppNotice',
+        options: options
+      })
+    }
   }
 }
-
-
-
-
-
-

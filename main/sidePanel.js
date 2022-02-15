@@ -4,11 +4,7 @@ let sidePanel = null //SidePanel类的存储变量
  */
 function isWin11 () {
   const sysVersion = process.getSystemVersion()
-  if (sysVersion.startsWith('10.') && process.platform === 'win32') {
-    return true
-  } else {
-    return false
-  }
+  return sysVersion.startsWith('10.') && process.platform === 'win32';
 }
 
 function log (info) {
@@ -60,9 +56,7 @@ class SidePanel {
   }
 
   static send(channel,args){
-
     if(SidePanel.alive()){
-      console.log('send')
       sidePanel.get().webContents.send(channel,args)
     }
   }
@@ -170,6 +164,8 @@ class SidePanel {
       this.bounds.height -= 40
     }
 
+
+
     let setX = this.bounds.x
     let setY = !resetY ? this.bounds.y + this.titlebarHeight : this.bounds.y + resetY
     let setHeight = this.bounds.height - this.titlebarHeight
@@ -178,12 +174,15 @@ class SidePanel {
       setX += 1
       setHeight -= 1
     }
+    if(isWin()){
+      setHeight+=1
+    }
     this._sidePanel.setBounds({
       x: setX,
       y: setY,
       width: this.bounds.width,
       height: setHeight
-    })
+    },false)
   }
 
   setTop () {
@@ -283,7 +282,7 @@ class SidePanel {
   //设置在侧边栏鼠标有效
   setMouseEnable () {
     this._sidePanel.setIgnoreMouseEvents(false)
-    if (BrowserWindow.getFocusedWindow() != null) //如果有任意一个window还有焦点，则聚焦到sidepanel
+    if (BrowserWindow.getFocusedWindow() != null && mainWindow.isFocused()) //如果有任意一个window还有焦点，且主窗体有焦点，则取得焦点，则聚焦到sidepanel
       this._sidePanel.focus()
     log('设置左侧栏感应 鼠标，左侧栏同时获得焦点')
   }
@@ -348,14 +347,23 @@ function addMainWindowEventListener () {
 
   //最小化、恢复事件
   mainWindow.on('minimize', () => {
-    closeSidePanel()
+
+    if(!isWin()){
+      closeSidePanel()
+    }
   })
   mainWindow.on('restore', () => {
-    loadSidePanel()
-    setTimeout(() => {
-      sidePanel.setMouseIgnore()
-      mainWindow.focus()
-    }, 500)
+    if(isWin()){
+
+    }else{
+      loadSidePanel()
+    }
+    //
+    sidePanel.setMouseIgnore()
+    mainWindow.focus()
+    // setTimeout(() => {
+    //
+    // }, 500)
   })
 
   //最大化，取消最大化事件，一般用于win
@@ -385,7 +393,6 @@ function addMainWindowEventListener () {
     log('mainwindow-leave-full-screen:进入全屏')
     syncSize()
     syncSidebarTitle() //sendIPCToWindow(mainWindow, 'getTitlebarHeight')
-
   })
 
   //进入退出html全屏，一般用于视频播放的时候
@@ -426,6 +433,7 @@ function closeSidePanel () {
     if (isMac()) {
       sidePanel.close()
       sidePanel = null
+      //sidePanel.hide()
     } else {
       sidePanel.hide()
     }
@@ -479,24 +487,24 @@ function syncSize () {
 // 		}
 // 	}
 // })
-ipc.on('setMouseEnable', function () {
+ipc.on(ipcMessageMain.sidePanel.setMouseEnable, function () {
   if (SidePanel.alive())
     sidePanel.setMouseEnable()
 })
-ipc.on('setMouseIgnore', function () {
+ipc.on(ipcMessageMain.sidePanel.setMouseIgnore, function () {
   if (SidePanel.alive())
     sidePanel.setMouseIgnore()
 })
 
 //主窗口收到要获取全局变量的消息，主要是返回tasks和tabs两个数组，用于同步左侧栏
-ipc.on('getGlobal', (event, args) => {
+ipc.on(ipcMessageMain.sidePanel.getGlobal, (event, args) => {
   //sidebar发来的消息
   if (mainWindow)
     sendIPCToWindow(mainWindow, 'getGlobal', args)
 })
 
 //ipc从mainWindow得到全局变量后，返回给sidebar
-ipc.on('receiveGlobal', function (event, args) {
+ipc.on(ipcMessageMain.sidePanel.receiveGlobal, function (event, args) {
   args.mainWindowId = mainWindow.webContents.id
   if (!!!args.callbackWin) {
     if (sidePanel != null && mainWindow != null) {
@@ -513,7 +521,7 @@ ipc.on('receiveGlobal', function (event, args) {
 })
 
 //显示书签的时候，将sidepanel隐藏起来
-ipc.on('openBookmarks', function () {
+ipc.on(ipcMessageMain.main.openBookmarks, function () {
   sendIPCToWindow(mainWindow, 'showBookmarks') //直传给mainWindow，让它唤出书签页面
 })
 ipc.on('openSetting', function () {
@@ -568,6 +576,7 @@ ipc.on('selectTask', function (event, arg) {
     width: 1000,
     autoHideMenuBar: true,
     height: 700,
+    thickFrame:false,
     resizable: false,
     acceptFirstMouse: true,
     visualEffectState: 'active',
@@ -771,4 +780,70 @@ ipc.on('captureDeskScreen',(event,args)=>{
         }
     })
   })
+})
+let allAppsWindow=null
+function createAllAppsWindow(){
+  allAppsWindow=new BrowserWindow({
+    width: 600,
+    height: 600,
+    acceptFirstMouse: true,
+    alwaysOnTop: true,
+    show:false,
+    resizable:false,
+    frame:false,
+    webPreferences: {
+      //preload: __dirname+'/pages/saApp/settingPreload.js',
+      nodeIntegration: true,
+      contextIsolation: false,
+      enableRemoteModule: true,
+      sandbox: false,
+      safeDialogs: false,
+      safeDialogsMessage: false,
+      partition: null,
+      additionalArguments: [
+        '--user-data-path=' + userDataPath,
+        '--app-version=' + app.getVersion(),
+        '--app-name=' + app.getName()
+      ]
+    }
+  })
+  allAppsWindow.loadURL('file://'+path.join(__dirname,'/pages/saApp/list.html'))
+  allAppsWindow.on('close',(event)=>{
+    if(forceClose){
+      allAppsWindow=null
+    }else{
+      allAppsWindow.hide()
+      event.preventDefault()
+    }
+
+  })
+  allAppsWindow.on('blur',()=>{
+    allAppsWindow.hide()
+  })
+  setTimeout(()=>{
+    mainWindow.on('close',()=>{
+      forceClose=true
+      allAppsWindow.close()
+      allAppsWindow=null
+    })
+  },2000)
+
+}
+app.whenReady().then(()=>{
+  createAllAppsWindow()
+})
+ipc.on('showAllSaApps',(event,args)=>{
+  if(allAppsWindow===null){
+    createAllAppsWindow()
+  }else{
+    allAppsWindow.webContents.send('refresh')
+  }
+  let mainBounds=mainWindow.getBounds()
+  allAppsWindow.setBounds({
+    x:mainBounds.x+170,
+    y:mainBounds.y+70
+  })
+ allAppsWindow.show()
+ allAppsWindow.focus()
+
 })

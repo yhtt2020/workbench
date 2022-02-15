@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>提示</title>
+  <link rel="stylesheet" href="../../../ext/reset.css"/>
+  <link rel="stylesheet" href="../../../ext/flex-class.css"/>
+  <script src="../../../ext/vue/vue.js"></script>
+  <script src="../../../ext/vue/antd.min.js"></script>
+  <link rel="stylesheet" href="../../../ext/vue/antd.min.css" />
+  <link rel="stylesheet" href="./index.css" />
+</head>
+<body>
+  <script>
+    Vue.use(antd);
+  </script>
+  <div id="appVue">
+    <div class="main flex flex-direction">
+      <p style="height: 40px; padding-left: 20px; padding-top: 30px; font-size: 14px; font-weight: 500;">团队创建成功，您现在可以进行以下操作：</p>
+      <div class="main-bottom flex flex-direction justify-around flex-grow-1">
+        <div class="block">
+          <p>团队</p>
+          <div class="selection-array">
+            <div class="select-btn" @click="inviteMember">
+              <img src="../../../icons/svg/chat.svg" alt="">
+              <div class="select-btn-word" >邀请添加成员</div>
+            </div>
+            <div class="select-btn" @click="searchMember">
+              <img src="../../../icons/svg/chat.svg" alt="">
+              <div class="select-btn-word" >搜索添加成员</div>
+            </div>
+            <div class="select-btn">
+              <img src="../../../icons/svg/chat.svg" alt="">
+              <div class="select-btn-word" >设置团队群聊</div>
+            </div>
+          </div>
+        </div>
+        <div class="block">
+          <p>社区</p>
+          <div class="selection-array">
+            <div class="select-btn">
+              <img src="../../../icons/svg/com.svg" alt="">
+              <div class="select-btn-word" >设置团队圈子</div>
+            </div>
+          </div>
+        </div>
+        <div class="block">
+          <p>浏览器</p>
+          <div class="selection-array">
+            <div class="select-btn">
+              <img src="../../../icons/svg/internet.svg" alt="">
+              <div class="select-btn-word" >设置团队导航</div>
+            </div>
+            <div class="select-btn">
+              <img src="../../../icons/svg/internet.svg" alt="">
+              <div class="select-btn-word" >设置团队桌面</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const ipc = require("electron").ipcRenderer;
+    const appVue = new Vue({
+      el: "#appVue",
+      data() {
+        return {
+
+        }
+      },
+      methods: {
+        searchMember() {
+          ipc.send('osxOpenSearchMember')
+        },
+        inviteMember() {
+          ipc.send('osxOpenInviteMember')
+        }
+      }
+    })
+  </script>
+</body>
+</html>

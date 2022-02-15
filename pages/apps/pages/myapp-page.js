@@ -47,14 +47,15 @@ myappTpl =
   <a-list  v-show="appList.type==='2' && myApps.length>0" item-layout="horizontal" :data-source="myApps" :pagination="pagination" >
     <a-list-item  @dragstart="dragStart($event,item)" @mousedown.stop draggable="true"  class="app-list" :id="item.id"  slot="renderItem" slot-scope="item, index">
       <a-list-item-meta>
-      <div slot="description">
-        <a style="color: #999" target="_blank" :href="item.url">{{item.url}}</a>
+      <div slot="description" >
+        <a class="app-url"  @click="addTab(item.url)" >{{item.url}}</a>
         </div>
-        <a slot="title" target="_blank" :href="item.url"><strong>{{ item.name }}</strong> <span style="color: #999;font-weight: normal;padding-left: 20px">{{item.summary}}</span></a>
-        <a-avatar style="margin:10px"
+        <a slot="title" @click="addTab(item.url)" ><strong>{{ item.name }}</strong> <span style="color: #999;font-weight: normal;padding-left: 20px">{{item.summary}}</span></a>
+        <a-avatar @click="addTab(item.url)" style="margin:10px;cursor:pointer;"
           slot="avatar"
           shape="square"
           :src="item.icon"
+
         />
       </a-list-item-meta>
     </a-list-item>
@@ -74,7 +75,7 @@ myappTpl =
 
  <a-dropdown  v-for="(app, index) in myApps" :trigger="['contextmenu']">
               <a-card-grid @dragstart="dragStart($event,app)" @mousedown.stop draggable="true"  :id="app.id"  class="app" style="cursor: pointer;"
-                           @click="openUrl(app.url)"  >
+                           @click="addTab(app.url)"  >
                 <a-avatar shape="square" :size="64" :src="app.icon"
                           style="margin-bottom: 10px;"></a-avatar>
                 <a-card-meta :title="app.name">
@@ -193,7 +194,7 @@ myappTpl =
 
                     <a-auto-complete
                       v-decorator="['url', { rules: [{ required: true, message: '请输入网址！' },{max:512,message:'最多不能超过512个字母！'}] }]"
-                      placeholder="输入任意网址，如http://work.thisky.com，以http或https开头"
+                      placeholder="输入任意网址，如http://apps.vip，以http或https开头"
                       @change="handleWebsiteChange">
                       <template slot="dataSource">
                         <a-select-option v-for="url in autoCompleteResult" :key="url">
@@ -467,6 +468,9 @@ module.exports = Vue.component('myapp-page', {
     openUrl(url){
       window.open(url)
     },
+    addTab(url){
+      ipc.send('addTab',{url:url})
+    },
     //selecto
     onSelect (e) {
 
@@ -530,7 +534,7 @@ module.exports = Vue.component('myapp-page', {
      */
     openList(){
         this.myApps.forEach(app=>{
-          window.open(app.url)
+          ipc.send('addTab',{url:app.url});
         })
     }
   }
