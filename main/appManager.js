@@ -1,4 +1,4 @@
-let forceClose = false
+
 const { config } = require(path.join(__dirname, '//server-config.js'))
 const remote = require('@electron/remote/main')
 
