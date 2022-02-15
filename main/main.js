@@ -2,6 +2,7 @@ const electron = require('electron')
 const fs = require('fs')
 const path = require('path')
 const electronLog=require('electron-log')
+let forceClose = false //是否强制退出应用
 const {
   app, // Module to control application life.
   protocol, // Module to control protocol handling
@@ -221,7 +222,7 @@ function createWindowWithBounds(bounds) {
 			]
 		}
 	})
-
+  forceClose=false
 
 	// windows and linux always use a menu button in the upper-left corner instead
 	// if frame: false is set, this won't have any effect, but it does apply on Linux if "use separate titlebar" is enabled
