@@ -283,7 +283,8 @@ openTabsInForegroundCheckbox.addEventListener('change', function (e) {
 /* media autoplay setting */
 
 settings.get('enableAutoplay', function (value) {
-  autoPlayCheckbox.checked = value
+
+  autoPlayCheckbox.checked = value===undefined?true:value
 })
 
 autoPlayCheckbox.addEventListener('change', function (e) {

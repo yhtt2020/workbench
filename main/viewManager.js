@@ -22,7 +22,7 @@ const defaultViewWebPreferences = {
   allowPopups: false,
   // partition: partition || 'persist:webcontent',
   enableWebSQL: false,
-  autoplayPolicy: (settings.get('enableAutoplay') ? 'no-user-gesture-required' : 'user-gesture-required')
+  autoplayPolicy: ((settings.get('enableAutoplay')||settings.get('enableAutoplay')===undefined) ? 'no-user-gesture-required' : 'user-gesture-required')
 }
 
 function createView (existingViewId, id, webPreferencesString, boundsString, events) {
