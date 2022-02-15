@@ -156,15 +156,15 @@
     "settingsUserscriptsToggle": "允许自定义脚本",
     "settingsShowDividerToggle": "显示标签页边界",
     "settingsSeparateTitlebarToggle": "显示浏览器标题栏",
-    "settingsAutoplayToggle": "允许自动播放", //missing translation
+    "settingsAutoplayToggle": "允许自动播放（关闭后，B站默认静音，其他视频网站也都需要手动播放）", //missing translation
     "settingsOpenTabsInForegroundToggle": "在前台打开新标签页",
     "settingsUserscriptsExplanation": {
-      "unsafeHTML": "自定义脚本允许您改变网站行为 - <a href=\"https://www.yuque.com/tswork/ngd5zk/zoxpq7\">查看更多</a>."
+      "unsafeHTML": "自定义脚本允许您改变网站行为 - <a target=\"_blank\" href=\"https://www.yuque.com/tswork/ngd5zk/zoxpq7\">查看更多</a>."
     },
     "settingsUserAgentToggle": "自定义浏览器User-Agent",
     "settingsUpdateNotificationsToggle": "自动检查更新",
     "settingsUsageStatisticsToggle": {
-      "unsafeHTML": "发送使用情况统计信息 (<a href=\"https://www.yuque.com/tswork/ngd5zk/bdvvgs\">更多说明</a>)"
+      "unsafeHTML": "发送使用情况统计信息 (<a target=\"_blank\" href=\"https://www.yuque.com/tswork/ngd5zk/bdvvgs\">更多说明</a>)"
     },
     "settingsSearchEngineHeading": "搜索引擎",
     "settingsDefaultSearchEngine": "选择默认的搜索引擎:",
