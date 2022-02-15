@@ -87,6 +87,18 @@ const statistics = {
   initialize: async function () {
     await userStatsModel.initialize()
 
+    //初次安装的用户需要往dexie的system表中插入此数据，否则第一次上传会报错
+    if(await db.system.count() === 0) {
+      await db.system.put({
+        name: "currentUser",
+        value: {
+          avatar: "../../icons/browser.ico",
+          nickname: "立即登录",
+          uid: 0
+        }
+      })
+    }
+
     setTimeout(statistics.upload, 10000)
     setInterval(statistics.upload, 24 * 60 * 60 * 1000)
     setInterval(statistics.uploadCumulativeTime, 1000 * 60)

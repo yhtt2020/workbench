@@ -1,5 +1,4 @@
 const db = require('../../../js/util/database.js').db
-const serverConfig = require('../../../server-config.js').config
 
 const userStatsModel = {
   async initialize() {
@@ -9,8 +8,22 @@ const userStatsModel = {
     }
   },
 
+  /**
+   * 返回id主键为1的值
+   * @param {Number} id
+   * @returns
+   */
   async get(id) {
+    await userStatsModel.setLocalApp()
     return await db.userStats.get(id)
+  },
+
+
+  async setLocalApp() {
+    const appListRes = await db.appList.count()
+    const myAppsRes = await db.myApps.count()
+    await userStatsModel.setValue('appList', appListRes)
+    await userStatsModel.setValue('myApps', myAppsRes)
   },
 
   /**
@@ -69,6 +82,8 @@ const userStatsModel = {
       defaultBrowser: 0,  //mark插入对defaultBrowser的数据统计
       searchCounts: 0,    //mark插入对searchCounts的数据统计
       translateCounts: 0,  //mark插入对translateCounts翻译接口调用次数的数据统计
+      appList: 0, //dexie本地导航列表数
+      myApps: 0, //dexie本地导航应用app数
       startTime: Date.now()  //此次统计开始的时间
     }
     await db.userStats.put(obj)
@@ -90,6 +105,8 @@ const userStatsModel = {
       defaultBrowser: 0,
       searchCounts: 0,
       translateCounts: 0,
+      appList: 0,
+      myApps: 0,
       startTime: Date.now()
     }
     await db.userStats.update(1, obj)
