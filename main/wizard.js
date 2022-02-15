@@ -1,14 +1,20 @@
 let wizard = null
 app.whenReady().then(()=>{
-  ipc.on('wizard', () => {
+  ipc.on('wizard', (event,args) => {
     if(!!!wizard){
-      closeSidePanel()
-      mainWindow.hide()
+      let page='index'
+      if(!!args){
+        page=args.page?'index':args.page
+      }
+      console.log(page)
+      //closeSidePanel()
+      //mainWindow.hide()
       wizard = new BrowserWindow({
         width:860,
-        height:740,
+        height:760,
         resizable: false,
         acceptFirstMouse: true,
+        parent:mainWindow,
         autoHideMenuBar :true,
         webPreferences: {
           preload: path.join(__dirname, '/pages/wizard/preload.js'),
@@ -22,7 +28,8 @@ app.whenReady().then(()=>{
           ]
         }
       })
-      wizard.webContents.loadURL('file://' + __dirname + "/pages/wizard/index.html")
+
+      wizard.webContents.loadURL('file://' + __dirname + `/pages/wizard/`+page+`.html`)
       // wizard.webContents.openDevTools()
       // setTimeout(() => {
       //   wizard.focus()
@@ -30,10 +37,10 @@ app.whenReady().then(()=>{
 
       ipc.on('closeWizard',()=>{
         wizard.close()
-        destroyAllViews()
-        mainWindow.webContents.reload()
-        mainWindow.show()//app.relaunch()
-        loadSidePanel()
+        //destroyAllViews()
+        //mainWindow.webContents.reload()
+        //mainWindow.show()//app.relaunch()
+        //loadSidePanel()
       })
     }
 
