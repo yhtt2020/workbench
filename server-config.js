@@ -2,7 +2,7 @@
 //也可以直接require进去(在非preload当中）
 let isDevelopmentMode = process.argv.some(arg=>arg==='--development-mode')
 const config = {
-  SERVER_BASE_URL: 'https://com.thisky.com',
+  SERVER_BASE_URL: 'https://s.apps.vip',
   DEV_NODE_SERVER_BASE_URL: 'http://test.com:8001',
   PROD_NODE_SERVER_BASE_URL: 'https://apps.vip',
   NODE_SERVER_BASE_URL: isDevelopmentMode ? 'http://test.com:8001' : 'https://apps.vip',
