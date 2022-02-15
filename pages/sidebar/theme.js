@@ -36,7 +36,7 @@ function initialize () {
     }
 
     // 0 or undefined: automatic dark mode
-    if (value === undefined || value === 0 || value === false) {
+    if ( value === 0 || value === false) {
       // If it is night and darkMode is set to auto/default
       if (shouldEnableDarkMode()) {
         enableDarkMode()
@@ -57,7 +57,7 @@ function initialize () {
 
     // -1: never enable
 
-    if (value === -1) {
+    if (value === -1  || value === undefined) {
       disableDarkMode()
     }
   })
