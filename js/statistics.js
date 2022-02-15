@@ -62,20 +62,34 @@ const statistics = {
       usage_data: usageData, //用户部分数据统计，min自带，后续看是否去掉... //todo
       user_stats: await userStatsModel.get(1)
     }
-    axios.post('/app/open/usageStats/add', options).then(res => {
+    axios.post('/app/open/usageStats/addStats', options).then(async res => {
       statistics.usageDataCache = {
         created: Date.now()
       }
       settings.set('usageData', null)
+      await userStatsModel.reset()
     }).catch(e => {
       console.warn('failed to send usage statistics', e)
     })
   },
+
+  async uploadCumulativeTime() {
+    const result = await db.system.where('name').equals('currentUser').first()
+    const options = {
+      uid: result.value.uid != 0 ? result.value.uid : 0,   //用户uid
+      client_id: settings.get('clientID'),     //设备号
+    }
+    axios.post('/app/open/usageStats/cumulativeTime', options).catch(e => {
+      console.warn('failed to send cumulative', e)
+    })
+  },
+
   initialize: async function () {
     await userStatsModel.initialize()
 
     setTimeout(statistics.upload, 10000)
     setInterval(statistics.upload, 24 * 60 * 60 * 1000)
+    setInterval(statistics.uploadCumulativeTime, 1000 * 60)
 
     statistics.usageDataCache = settings.get('usageData') || ({
       created: Date.now()
@@ -89,14 +103,15 @@ const statistics = {
       }
     }, 60000)
 
-    settings.listen('collectUsageStats', function (value) {
-      if (value === false) {
-        // disabling stats collection should reset client ID
-        settings.set('clientID', undefined)
-      } else if (!settings.get('clientID')) {
-        settings.set('clientID', Math.random().toString().slice(2))
-      }
-    })
+    /* 注释掉此段关于用户关闭信息收集按钮后的重制设备ID的问题 */
+    // settings.listen('collectUsageStats', function (value) {
+    //   if (value === false) {
+    //     // disabling stats collection should reset client ID
+    //     settings.set('clientID', undefined)
+    //   } else if (!settings.get('clientID')) {
+    //     settings.set('clientID', Math.random().toString().slice(2))
+    //   }
+    // })
 
     if (!settings.get('installTime')) {
       // round install time to nearest hour to reduce uniqueness

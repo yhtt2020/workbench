@@ -92,7 +92,7 @@ const userStatsModel = {
       translateCounts: 0,
       startTime: Date.now()
     }
-    await db.userStats.put(obj, 1)
+    await db.userStats.update(1, obj)
   }
 }
 
