@@ -1,6 +1,7 @@
 body {
 	padding: 10px;
-	background-color: #f1f1f1;
+	background-color: white;
+
 }
 
 .step-login {
@@ -20,11 +21,8 @@ body {
 }
 
 .step-wizard {
-	background: white;
 	padding: 20px;
 	border-radius: 6px;
-	box-shadow: 0 0 15px #ddd;
-	margin: 12px;
 }
 
 .bottom-button {

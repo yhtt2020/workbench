@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>首次使用向导</title>
+		<title>应用推荐</title>
 		<script src="../../ext/vue/vue.js"></script>
 		<script src="../../ext/vue/antd.min.js"></script>
 		<link rel="stylesheet" href="../../ext/vue/antd.min.css" />
@@ -12,338 +12,51 @@
 	<body>
 
 		<div id="app">
-			<div id="stepLogin" class="step-login" v-show="step=='login'">
-				<h1>首次使用向导</h1>
-				<p style="line-height: 28px">欢迎使用想天工作台，您是否首次使用产品？<br>
-          如果是首次使用，建议不要跳过引导。
-<!--          您可以选择登录账号来同步您的<strong>配置</strong>和<strong>工作区</strong>。-->
-          <br>如果您是<strong>老用户</strong>，可跳过引导直接使用产品。
-				</p>
-				<template >
-<!--					<a-form  id="components-form-demo-normal-login" :form="form" class="login-form"-->
-<!--						@submit="handleSubmit">-->
-<!--						<a-form-item label="">-->
-<!--							<a-input placeholder="手机号" v-decorator="[-->
-<!--						          'phone',-->
-<!--						          {-->
-<!--						            rules: [{ required: true, message: '请输入您的手机号!' }],-->
-<!--						          },-->
-<!--						        ]" style="width: 100%">-->
-<!--								<a-select slot="addonBefore" v-decorator="['prefix', { initialValue: '86' }]"-->
-<!--									style="width: 70px">-->
-<!--									<a-select-option value="86">-->
-<!--										+86-->
-<!--									</a-select-option>-->
 
-<!--								</a-select>-->
-<!--							</a-input>-->
-<!--						</a-form-item>-->
-						<!-- <a-form-item>
-							<a-input v-decorator="[
-				  'password',
-				  { rules: [{ required: true, message: 'Please input your Password!' }] },
-				]" type="password" placeholder="Password">
-								<a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25)" />
-							</a-input>
-						</a-form-item> -->
-<!--						<a-form-item label="">-->
-<!--							<a-row :gutter="8">-->
-<!--								<a-col :span="12">-->
-<!--									<a-input placeholder="验证码" v-decorator="[-->
-<!--						              'captcha',-->
-<!--						              { rules: [{ required: true, message: '请输入获取的验证码!' }] },-->
-<!--						            ]" />-->
-<!--								</a-col>-->
-<!--								<a-col :span="12">-->
-<!--									<a-button>获取</a-button>-->
-<!--								</a-col>-->
-<!--							</a-row>-->
-<!--						</a-form-item>-->
-<!--						<a-form-item>-->
-<!--							<a-button type="default" html-type="submit" class="login-form-button">-->
-<!--								登录-->
-<!--							</a-button>		</a-form-item>-->
-            <div style="position:absolute;bottom: 20px;width: 400px">
-              <a-button @click="close()" type="default" html-type="submit" class="login-form-button">
-                我是老用户，关闭
-              </a-button>
-              <a-button type="primary" style="width: 40%;float:right" @click="step='wizard'">
-                首次使用，进入引导
-              </a-button>
-            </div>
-<!--					</a-form>-->
-				</template>
-			</div>
-			<div id="stepWizard" class="step-wizard" v-show="step=='wizard'">
+			<div id="stepWizard" class="step-wizard" >
 				<template>
-					<a-steps :current="current">
-						<a-step v-for="item in steps" :key="item.title" :title="item.title">
-							<a-icon slot="icon" :type="item.icon"></a-icon>
-						</a-step>
-					</a-steps>
-				</template>
-				<div v-show="current==0" class="steps-content">
-          <a-form
-            id="components-form-demo-validate-other"
-            :form="formSetting"
-            @submit="handleSubmitSetting"
-          >
-					<p>根据您的喜好和习惯完成以下设置，后面您也可以随时在<strong>设置</strong>当中进行调整。</p>
-					<h3>1.标签栏风格</h3>
-					<p class="setting-type" style="">
-							<p class="theme-carousel">
-							<div style="overflow: hidden;height: 113px;position: relative;    margin-bottom: 30px;">
-								<template>
-									<a-carousel arrows class="carousel-el" :autoplay='true' effect="fade"
-										v-show="titleBar=='theme'">
 
-
-										<div><img src="../../img/wy-theme.jpg"></img></div>
-										<div><img src="../../img/qq-theme.jpg"></img></div>
-										<div slot="prevArrow" slot-scope="props" class="custom-slick-arrow"
-											style="left: 10px;zIndex: 1">
-											<a-icon type="left-circle"></a-icon>
-										</div>
-										<div slot="nextArrow" slot-scope="props" class="custom-slick-arrow"
-											style="right: 10px">
-											<a-icon type="right-circle"></a-icon>
-										</div>
-									</a-carousel>
-								</template>
-								<template>
-									<a-carousel arrows class="carousel-el" :autoplay='true' effect="fade"
-										v-show="titleBar=='no-theme'">
-										<div slot="prevArrow" slot-scope="props" class="custom-slick-arrow"
-											style="left: 10px;zIndex: 1">
-											<a-icon type="left-circle"></a-icon>
-										</div>
-										<div slot="nextArrow" slot-scope="props" class="custom-slick-arrow"
-											style="right: 10px">
-											<a-icon type="right-circle"></a-icon>
-										</div>
-										<div><img src="../../img/wy-no.jpg"></img></div>
-										<div><img src="../../img/qq-no.jpg"></img></div>
-
-									</a-carousel>
-								</template>
-							</div>
+          <a-alert  type="info" show-icon >
+            <div slot="message">应用推荐</div>
+            <div slot="description">
+              <p style="line-height: 28px">独立应用功能是想天浏览器独有的特色功能，这是一种将网页应用转变为接近桌面客户端的技术。
+                从而<strong>无需安装软件</strong>就可以以独立窗体运行网页。
+                <br>
+                安装应用<strong>不会在您的电脑中下载和安装任何软件</strong>，仅在浏览器左侧栏中加入应用图标以便于您方便使用。
+                <br>详细了解想天浏览器的功能请<a target="_blank" href="https://www.yuque.com/tswork/ngd5zk/mmcfd7">查看这里</a>。
               </p>
-					</p>
-          <p class="setting-type" style="">
-            <a-form-item>
-              <a-radio-group v-decorator="['siteTheme',{initialValue:'theme'}]"  @change="changeTitleBar">
+            </div>
+          </a-alert>
 
-                <a-radio value="theme" style="width: 300px;">
-                  自适应标签色（根据网站图标自动变换）
-                </a-radio>
-                <a-radio value="no-theme">
-                  纯色标签栏（白色标题栏，固定）
-                </a-radio>
-              </a-radio-group>
-            </a-form-item>
 
-					</template>
-					</p>
-					<h3>2.默认搜索引擎</h3>
-					<p class="setting-type">
-						<template>
-              <a-form-item>
-							<a-radio-group v-decorator="['searchEngine',{initialValue:'Baidu'}]">
-								<a-radio value="Baidu">
-									百度
-								</a-radio>
-                <a-radio value="Bing">
-                  bing
-                </a-radio>
-							<!--	<a-radio :value="3">
-									搜狗
-								</a-radio>
-								<a-radio :value="4">
-									360
-								</a-radio>-->
-								<a-radio value="Google">
-									google（海外，国内无法正常使用）
-								</a-radio>
-							</a-radio-group>
-              </a-form-item>
-						</template>
-					</p>
-					<h3>3.帮助我们改善产品</h3>
-					<p class="setting-type">
-						<template>
-              <a-form-item>
-							<a-radio-group v-decorator="['improve',{initialValue:'true'}]" >
-								<a-radio :value="'true'">
-									发送统计信息（不会发送个人信息）
-								</a-radio>
-								<a-radio :value="'false'">
-									不发送统计信息
-								</a-radio>
-							</a-radio-group>
-              </a-form-item>
-						</template>
-					</p>
-<!--					<h3>4.默认浏览器</h3>-->
-<!--					<p>在您改变浏览器的使用习惯之前，我们并不推荐您设置为默认浏览器。</p>-->
-<!--					<p class="setting-type">-->
-<!--						<template>-->
-<!--							<a-radio-group name="improve" :default-value="1">-->
-<!--								<a-radio :value="1">-->
-<!--									作为辅助浏览器-->
-<!--								</a-radio>-->
-<!--								<a-radio :value="2">-->
-<!--									作为主力浏览器（设置为默认浏览器）-->
-<!--								</a-radio>-->
-<!--							</a-radio-group>-->
-<!--						</template>-->
-<!--					</p>-->
-					<div class="bottom-button">
-						<a-button type="primary" html-type="submit">
-							下一步.导入收藏
-						</a-button>
-					</div>
-          </a-form>
-				</div>
-				<div v-show="current==1" class="steps-content">
-					<template>
-						<div>
-							<a-collapse v-model="activeKey"  :bordered="false">
-<!--								<a-collapse-panel :style="customStyle" :show-arrow="false" key="1"-->
-<!--									header="①安装浏览器插件，实现实时同步，强烈推荐">-->
-<!--									<p>安装我们提供的浏览器插件，实现实时同步，无需导入导出</p>-->
-<!--								</a-collapse-panel>-->
-<!--								<a-collapse-panel :style="customStyle" :show-arrow="false" key="2" header="②自动导入书签">-->
-<!--									<p>下面是我们检测到的系统内可支持自动导入的浏览器，请选择，可多个导入，如果有相同的后者会覆盖前者。</p>-->
-<!--								</a-collapse-panel>-->
-								<a-collapse-panel :style="customStyle" :show-arrow="false" key="3" header="手动导入导出">
-									<p>按照行业标准导出收藏夹，并选择文件导入</p>
-									<p><a href="https://www.yuque.com/tswork/ngd5zk/uizvd8" target="_blank">❓如何导出？</a>
+				</template>
 
-									</p>
-                  <p>
-                    <a-button @click="ipc.send('importBookMarks')" type="primary">
-                      导入Html格式书签
-                    </a-button>
-                  </p>
-								</a-collapse-panel>
-							</a-collapse>
-						</div>
-					</template>
-					<div class="bottom-button">
-<!--						<a-button type="primary" @click="next">-->
-<!--							下一步.1分钟使用视频教程-->
-<!--						</a-button>-->
-						<a-button type="primary" style="margin-left: 50px" @click="next">
-							下一步
-						</a-button>
-					</div>
-				</div>
-				<div v-show="current==2" class="steps-content">
-					<template>
-						<!--  <a-carousel effect="fade" style="background-color: black;border-radius: 8px;min-height: 400px;">
-					    <div><h3>1</h3></div>
-					    <div><h3>2</h3></div>
-					    <div><h3>3</h3></div>
-					    <div><h3>4</h3></div>
-					  </a-carousel> -->
-						<a-carousel ref="videos" arrows effect="fade" style="text-align: center;">
-							<div slot="prevArrow" slot-scope="props" class="custom-slick-arrow"
-								style="left: 10px;zIndex: 1">
-								<a-icon type="left-circle" />
-							</div>
-							<div slot="nextArrow" slot-scope="props" class="custom-slick-arrow" style="right: 20px">
-								<a-icon type="right-circle" />
-							</div>
-              <div>
-                <h3 class="video-title">1.我们与传统浏览器最大的不同：分组浏览</h3>
-                <p>
-                  与传统浏览器不同的是，我们采用分组浏览模式.
-                  <br>结合锁定、清理等小功能，让标签组不再混乱。
-                  <br>我们将在向导关闭后，自动为您创建一个帮助桌面，您可以在桌面获得帮助。
-                </p>
-                <p>
-                  <img src="">
-                </p>
-                <!-- <iframe src="//player.bilibili.com/player.html?aid=890908889&bvid=BV1hP4y187jw&cid=421342590&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
- -->
-                <!-- <video width="95%" height="400" style="    margin-left: 20px;" controls>
-                    <source src="https://www.bilibili.com/video/BV1hP4y187jw?share_source=copy_web" type="video/mp4">
-                    <source src="https://www.bilibili.com/video/BV1hP4y187jw?share_source=copy_web" type="video/ogg">
-                    您的浏览器不支持 video 标签。
-                </video> -->
-              </div>
-              <div>
-                <h3 class="video-title">2.精心设计的左侧栏</h3>
-                <p>
-                  我们部分核心功能都在左侧栏，这也是与其他浏览器的不同之处。
-                  <br>我们将在向导关闭后，自动为您创建一个帮助桌面，您可以在桌面获得帮助。
-                </p>
-                <p>
-                  <img src="">
-                </p>
-              </div>
-              <div>
-                <h3 class="video-title">3.打造个人强大桌面</h3>
-                <p>我们定位为webOS，为您打造了一款高度个性化的桌面。<br>您可以任意添加桌面、支持独立壁纸、支持分享。
-                <br>我们将在向导关闭后，自动为您创建一个帮助桌面，您可以在桌面获得帮助。</p>
-              </div>
-              <div>
-                <h3 class="video-title">4.团队协作功能</h3>
-                <p>
-                 除了基本的浏览功能以外，我们还为工作场景专门打造了一个团队协作功能。
-                  <br>与传统的团队IM软件相比，我们更强调现场协作，更关注便利性。
-                  <br>我们将在向导关闭后，自动为您创建一个帮助桌面，您可以在桌面获得帮助。
-                </p>
-              </div>
-              <div>
-                <h3 class="video-title">5.更多有趣、有用的功能等你探索</h3>
-                <p>
-                  我们为您和您的团队准备了大量与众不同的功能和设计，需要您自行探索。您也可以随时在桌面查看帮助桌面，以了解掌握这些功能。
-                  <br>
-                  开启您的愉快之旅吧。
-                </p>
-              </div>
-<!--							<div>-->
-<!--								<h3 class="video-title">1.我们与传统浏览器最大的不同：分组浏览</h3>-->
-<!--								&lt;!&ndash; <iframe src="//player.bilibili.com/player.html?aid=890908889&bvid=BV1hP4y187jw&cid=421342590&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>-->
-<!-- &ndash;&gt;-->
-<!--								&lt;!&ndash; <video width="95%" height="400" style="    margin-left: 20px;" controls>-->
-<!--								    <source src="https://www.bilibili.com/video/BV1hP4y187jw?share_source=copy_web" type="video/mp4">-->
-<!--								    <source src="https://www.bilibili.com/video/BV1hP4y187jw?share_source=copy_web" type="video/ogg">-->
-<!--								    您的浏览器不支持 video 标签。-->
-<!--								</video> &ndash;&gt;-->
-<!--							</div>-->
-<!--							<div>-->
-<!--								<h3 class="video-title">2.精心设计的左侧栏</h3>-->
+        <template>
+          <div>
+            <a-tabs size="large" default-active-key="1" @change="callback">
+              <a-tab-pane key="1" >
+                <span slot="tab">
+                  <a-icon type="desktop" ></a-icon>
+        必选系统功能
+      </span>
+                必选系统功能
+              </a-tab-pane>
+              <a-tab-pane key="2"  force-render>
+                 <span slot="tab">
+                  <a-icon type="like" ></a-icon>
+        强烈推荐应用
+      </span>强烈推荐应用
+              </a-tab-pane>
+              <a-tab-pane key="3" >
+                <span slot="tab">
+                  <a-icon type="fire" ></a-icon>
+        热门应用
+      </span>
+              </a-tab-pane>
+            </a-tabs>
+          </div>
+        </template>
 
-<!--							</div>-->
-<!--							<div>-->
-<!--								<h3 class="video-title">3.打造个人的应用中心</h3>-->
-
-<!--							</div>-->
-<!--							<div>-->
-<!--								<h3 class="video-title">4.团队协作功能（即将上线）</h3>-->
-
-<!--							</div>-->
-
-						</a-carousel>
-<!--						<div>-->
-<!--							<iframe  class="frame-video" sandbox="allow-same-origin allow-scripts "-->
-<!--								:src="videoSource"-->
-<!--								scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true">-->
-<!--							</iframe>-->
-
-<!--						</div>-->
-					</template>
-					<div class="bottom-button">
-						<a-button type="primary" @click="netxVideo">
-							新技能get，next
-						</a-button>
-						<a-button type="default" style="margin-left: 50px" @click="close">
-							学完了，开始使用
-						</a-button>
-					</div>
-				</div>
 			</div>
 		</div>
 		<script>

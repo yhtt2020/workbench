@@ -1,17 +1,22 @@
 let wizard = null
 app.whenReady().then(()=>{
-  ipc.on('wizard', (event,args) => {
+  function loadWizard(page='index'){
     if(!!!wizard){
-      let page='index'
-      if(!!args){
-        page=args.page?'index':args.page
-      }
-      console.log(page)
       //closeSidePanel()
       //mainWindow.hide()
+      let width=860
+      let height=840
+      switch (page){
+        case 'apps':
+          width=600
+          height=800
+      }
+
       wizard = new BrowserWindow({
-        width:860,
-        height:760,
+        width:width,
+        height:height,
+        minimizable:false,
+        maximizable:false,
         resizable: false,
         acceptFirstMouse: true,
         parent:mainWindow,
@@ -35,14 +40,27 @@ app.whenReady().then(()=>{
       //   wizard.focus()
       // }, 1000)
 
-      ipc.on('closeWizard',()=>{
+      ipc.on('closeWizard',(event,args)=>{
         wizard.close()
+        wizard=null
+        if(args.next==='apps'){
+          setTimeout(()=>{
+            loadWizard(args.next)
+          },args.delay)
+        }
         //destroyAllViews()
         //mainWindow.webContents.reload()
         //mainWindow.show()//app.relaunch()
         //loadSidePanel()
       })
     }
-
+  }
+  ipc.on('wizard', (event,args) => {
+    let page='index'
+    if(!!args){
+      page=args.page?'index':args.page
+    }
+    loadWizard(page)
   })
+  loadWizard('apps')
 })
