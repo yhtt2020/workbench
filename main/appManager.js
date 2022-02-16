@@ -392,11 +392,13 @@ app.whenReady().then(()=>{
   download()
 })
 
+
 let downloadWindow
 function download(){
   downloadWindow = new BrowserWindow({
-    width: 400,
-    height: 500,
+    width: 390,
+    height: 465,
+    resizable:false,
     acceptFirstMouse: true,
     maximizable:false,
     alwaysOnTop:true,
@@ -409,13 +411,16 @@ function download(){
       safeDialogs:false,
       safeDialogsMessage:false,
       partition:null,
+
     }
   })
 
   downloadWindow.loadFile('pages/download/index.html').whenReady().then(() =>{
     download()
+
   })
 }
+
 let {ipcMain} = require('electron')
 
 ipcMain.on('show-context-menu', (event) => {
@@ -437,8 +442,36 @@ ipcMain.on('show-context-menu', (event) => {
 
 })
 
+var downloadItems = new Map();
 
-ipcMain.on('download-info', (event, args) => {
-  console.log(args)
+function getDownloadItem(key) {
+  if(downloadItems.has(key)){
+    return downloadItems.get(key);
+  }else{
+    return false;
+  }
+}
 
+ipcMain.on('stopDownload', (event, args) => {
+  const item = getDownloadItem(args);
+  console.log(item)
+  if(item.isPaused()===false){
+    item.pause();
+  }
 })
+ipcMain.on('startDownload', (event, args) => {
+  const item = getDownloadItem(args);
+  if(item && item.isPaused()) {
+    item.resume();
+  }
+})
+ipcMain.on('cancleDownload', (event, args) => {
+  if (args.state !== 'completed') {
+    const item = getDownloadItem(args.time);
+    if (item) {
+      item.cancel();
+      downloadItems.delete(args.time)
+    }
+  }
+})
+

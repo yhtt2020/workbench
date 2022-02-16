@@ -6,8 +6,7 @@
   <script  src="../../ext/vue/vue.js"></script>
   <script  src="../../ext/vue/antd.min.js"></script>
   <link rel="stylesheet" href="../../ext/vue/antd.min.css"/>
-  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
-  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
 </head>
 <body>
 
@@ -18,46 +17,73 @@
       <a-tabs default-active-key="1" @change="callback">
         <a-tab-pane key="1" >
         <span slot="tab">
-           <a-badge count="5" id="bq">
+           <a-badge count="1" id="bq">
              <a href="#" class="head-example"></a>
            </a-badge>
         下载中
       </span>
-          <div v-for="(list,index) in lists" v-bind:key="list.id">
-            <div style="width: 100%;height: 105px;background-color: #8c8c8c">
-            <div style="margin-left: 50px;float: left">{{list.title}}</div>
-            <div>{{list.realdata}}</div>
-            <div style="margin-left: 150px;float: left">{{list.received}}MB/{{list.total}}MB</div>
-
-              <el-button style="float: right;">暂停</el-button>
-              <el-popconfirm
-                title="这是一段内容确定删除吗？"
+          <div v-for="(list,index) in lists" v-bind:key="index" @click="getIndex(index)">
+            <div style="margin-top: 0;width: 100%;height: 55px;background-color: #e6e6e6">
+              <div style="width: 34px;height: 40px;position: absolute;margin-top: 8px;margin-left: 5px;" >
+                <a-icon type="file-text" style="fontSize:30px"></a-icon>
+              </div>
+              <a-popconfirm
+                title="文件正在下载中，确定删除?"
+                ok-text="删除"
+                cancel-text="取消"
                 @confirm="del(lists.splice(index, 1))"
               >
-                <el-button style="float: right;" slot="reference">删除</el-button>
-              </el-popconfirm>
-
-            <a-progress style="margin-left: 50px;width: 75% "  :percent="list.progressnuw"></a-progress>
+                <a style="float: right;" href="#">删除</a>
+              </a-popconfirm>
+              <div >
+                <a-button style="position: absolute;margin-left: 270px;margin-top: 14px" type="link" @click="getPauseId(list.id)">
+                  暂停
+                </a-button>
+              </div>
+           <div>
+            <div style="margin-left: 50px;font-size: 15px;font-weight: bold ;">{{list.title}}</div>
+            <div style="margin-left: 50px;font-size: 12px;width: 150px;">{{list.received}}  MB  /  {{list.total}}  MB</div>
+            <div style="position: absolute;margin-left: 220px;width: 50px;margin-top: -20px" >{{list.realdata}}/MB</div>
+           </div>
+            <a-progress style="position: absolute;width: 95%;padding-left: 50px;margin-top: -6px"  :percent="list.progressnuw"></a-progress>
             </div>
           </div>
         </a-tab-pane>
 
         <a-tab-pane key="2" tab="已完成" force-render>
-          <div v-for="(donelist,index) in donelists" v-bind:key="donelist.id1">
-            <div style="width: 100%;height: 85px;background-color: #8c8c8c">
-              <div style="margin-left: 50px">{{donelist.title}}</div>
-              <button style="float: right" @click='donelists.splice(index, 1)'>删除</button>
-              <div style="margin-left: 50px">{{donelist.title}}</div>
+          <div v-for="(donelist,index) in donelists" v-bind:key="index">
+            <div style="width: 100%;height: 45px;background-color: #e6e6e6">
+              <div style="width: 34px;height: 40px;position: absolute;margin-top: 8px;margin-left: 5px;" >
+                <a-icon type="file-text" style="fontSize:30px"></a-icon>
+              </div>
+              <a-popconfirm
+                title="文件下载已完成，确定删除?"
+                ok-text="删除"
+                cancel-text="取消"
+                @confirm="del(donelists.splice(index, 1))"
+              >
+                <a style="float: right;" href="#">删除</a>
+              </a-popconfirm>
+              <div>
+              <a-button style="position: absolute;margin-left: 200px;margin-top: 5px" type="link" >
+                打开
+              </a-button>
+                <a-button style="position: absolute;margin-left: 240px;margin-top: 5px" type="link" >
+                  打开文件夹
+                </a-button>
+            </div>
+              <div style="margin-left: 50px;font-size: 15px;font-weight: bold ;">{{donelist.title}}</div>
+              <div style="margin-left: 50px;font-size: 12px;width: 150px;">{{donelist.total}}  MB</div>
+
             </div>
           </div>
         </a-tab-pane>
 
         <a-tab-pane key="3" tab="回收站">
-          <div v-for="(deletelist,index) in deletelists" v-bind:key="deletelists.id2">
-            <div style="width: 100%;height: 85px;background-color: #8c8c8c">
-              <div style="margin-left: 50px">{{deletelists.title}}</div>
-              <button style="float: right" @click='deletelists.splice(index, 1)'>删除</button>
-              <div style="margin-left: 50px">{{deletelists.title}}</div>
+          <div v-for="(deletelist,index) in deletelists" v-bind:key="index">
+            <div style="width: 100%;height: 45px;background-color: #8c8c8c">
+              <div style="margin-left: 50px">{{deletelist.title}}</div>
+              <div style="margin-left: 50px">{{deletelist.title}}</div>
             </div>
           </div>
         </a-tab-pane>
@@ -70,6 +96,8 @@
 
 
 <script type="module">
+
+  let {ipcMain} = require('electron')
 
   let {ipcRenderer} = require('electron')
   window.addEventListener('contextmenu', (e) => {
@@ -84,55 +112,65 @@
 
 
   ipcRenderer.on('download-info', (event, args) => {
-    // console.log(args.realdata)
-    appVue.realdatalist=((args.realdata)/1024/1024).toFixed(2)
-    console.log(appVue.realdatalist)
-    if (args.status === 'progressing' && args.path !== '' ) {
-      console.log(args)
-      appVue.lists.splice(0,1,{
-        id: appVue.nextTodoId++,
-        title: args.name,
-        received:((args.size.received)/1024/1024).toFixed(2),
-        realdata:((args.realdata)/1024/1024).toFixed(2),
-        total:((args.size.total)/1024/1024).toFixed(2),
-        progressnuw:args.progressnuw
+    let aname;
+    if (args.name.length >= 20) {
+      aname = args.name.substring(0, 10)+'...';
+    }else (aname=args.name)
+
+    if(args.status ==='start'){
+      appVue.lists.push({
+        title:args.name,
       })
     }
 
-      if(args.status === 'completed' && args.path !== '') {
-        console.log(args)
-        appVue.lists.splice(appVue.index, 1)
-        appVue.donelists.push({
-          id1: appVue.nextTodoId1++,
-          title: args.name
+    if (args.status === 'progressing' && args.path !== ''  ) {
+
+        appVue.lists.splice(appVue.index, 1, {
+          title: aname,
+          received: ((args.size.received) / 1024 / 1024).toFixed(2),
+          realdata: ((args.realdata) / 1024 / 1024).toFixed(2),
+          total: ((args.size.total) / 1024 / 1024).toFixed(2),
+          progressnuw: args.progressnuw
         })
       }
 
+      if(args.status === 'completed' && args.path !== '') {
+        console.log(args)
+        appVue.lists.splice(0, 1)
+        appVue.donelists.push({
+          id1: appVue.nextTodoId1++,
+          title: args.name,
+          total:((args.size.total)/1024/1024).toFixed(2)
+        })
+      }
   })
-
 
    let appVue = new Vue({
     el: '#appVue',
      data: {
-       realdatalist:[],
        lists:[],
        donelists:[],
        deletelists:[],
-       nextTodoId: 0,
-       nextTodoId1: 0,
+       nextTodoId1:0,
        nextTodoId2: 0,
-       progressnuw:0
+       progressnuw:0,
      },
 
     methods: {
       callback(key) {
-
       },
       del() {
         this.deletelists.push({
           id2: this.nextTodoId2++,
         })
       },
+      getPauseId(id) {
+        console.log(id)
+        ipcRenderer.send('stopDownload')
+      },
+      getIndex(index){
+        console.log(index);
+      }
 
     }
    })

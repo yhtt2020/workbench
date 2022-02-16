@@ -111,7 +111,6 @@ const downloadManager = {
     openFolder.className = 'download-action-button i carbon:folder'
     openFolder.hidden = true
     container.appendChild(openFolder)
-
     container.addEventListener('click', function () {
       downloadManager.onItemClicked(downloadItem.path)
     })
