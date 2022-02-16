@@ -95,6 +95,7 @@ const mobileMod = {
       url: mobileUrl,
       id: id
     })
+    view.webContents.setUserAgent('Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1')
     view.webContents.loadURL(mobileUrl)
     view.webContents.on('did-navigate-in-page', (event, url) => {
       mobileWindow.webContents.send('updateView', {
@@ -121,7 +122,6 @@ const mobileMod = {
     })
 
     mobileWindow.webContents.setUserAgent(oldAgent)
-    mobileWindow.webContents.setUserAgent('Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A403 Safari/8536.25')
     mobileWindow.loadURL('file://' + __dirname + '/pages/mobile/index.html')
     mobileWindow.on('resize', () => {
       view.setBounds({
