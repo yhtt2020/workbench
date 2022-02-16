@@ -1,267 +1,395 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>应用推荐</title>
-		<script src="../../ext/vue/vue.js"></script>
-		<script src="../../ext/vue/antd.min.js"></script>
-		<link rel="stylesheet" href="../../ext/vue/antd.min.css" />
-		<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline'" />
-		<link rel="stylesheet" href="./wizard.css" />
-	</head>
-	<body>
+<head>
+  <meta charset="utf-8">
+  <title>应用推荐</title>
+  <script src="../../ext/vue/vue.js"></script>
+  <script src="../../ext/vue/antd.min.js"></script>
+  <link rel="stylesheet" href="../../ext/vue/antd.min.css"/>
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline'"/>
+  <link rel="stylesheet" href="./wizard.css"/>
+</head>
+<body >
 
-		<div id="app">
+<div id="app" style="padding-bottom: 52px">
 
-			<div id="stepWizard" class="step-wizard" >
-				<template>
+  <div id="stepWizard" class="step-wizard">
+    <template>
 
-          <a-alert  type="info" show-icon >
-            <div slot="message">应用推荐</div>
-            <div slot="description">
-              <p style="line-height: 28px">独立应用功能是想天浏览器独有的特色功能，这是一种将网页应用转变为接近桌面客户端的技术。
-                从而<strong>无需安装软件</strong>就可以以独立窗体运行网页。
-                <br>
-                安装应用<strong>不会在您的电脑中下载和安装任何软件</strong>，仅在浏览器左侧栏中加入应用图标以便于您方便使用。
-                <br>详细了解想天浏览器的功能请<a target="_blank" href="https://www.yuque.com/tswork/ngd5zk/mmcfd7">查看这里</a>。
-              </p>
-            </div>
-          </a-alert>
+      <a-alert type="info" show-icon>
+        <div slot="message">应用推荐</div>
+        <div slot="description">
+          <p style="line-height: 28px">独立应用功能是想天浏览器独有的特色功能，这是一种将网页应用转变为接近桌面客户端的技术。
+            从而<strong>无需安装软件</strong>就可以以独立窗体运行网页。
+            <br>
+            安装应用<strong>不会在您的电脑中下载和安装任何软件</strong>，仅在浏览器左侧栏中加入应用图标以便于您方便使用。
+            <br>详细了解想天浏览器的功能请<a target="_blank" href="https://www.yuque.com/tswork/ngd5zk/mmcfd7">查看这里</a>。
+          </p>
+        </div>
+      </a-alert>
 
 
-				</template>
+    </template>
 
-        <template>
-          <div>
-            <a-tabs size="large" default-active-key="1" @change="callback">
-              <a-tab-pane key="1" >
+    <template>
+      <div>
+        <a-tabs default-active-key="1">
+          <a-tab-pane key="1">
                 <span slot="tab">
-                  <a-icon type="desktop" ></a-icon>
-        必选系统功能
-      </span>
-                必选系统功能
-              </a-tab-pane>
-              <a-tab-pane key="2"  force-render>
+                  <a-icon type="desktop"></a-icon>
+                系统应用 (3)
+                </span>
+            <p>系统应用是保障您可以完整使用想天浏览器基础性应用。</p>
+            <a-row class="app" v-for="app in apps.system">
+              <a-col :span="2" class="app-check">
+                <a-checkbox disabled checked></a-checkbox>
+              </a-col>
+              <a-col :span="3">
+                <img :style="{'border-color':app.themeColor}" class="app-logo" :src="app.logo"/>
+              </a-col>
+              <a-col :span="19">
+                <div class="app-name">{{app.name}}</div>
+                <p class="app-summary">{{app.summary}}</p>
+              </a-col>
+            </a-row>
+          </a-tab-pane>
+
+          <a-tab-pane key="2" force-render>
                  <span slot="tab">
-                  <a-icon type="like" ></a-icon>
-        强烈推荐应用
-      </span>强烈推荐应用
-              </a-tab-pane>
-              <a-tab-pane key="3" >
-                <span slot="tab">
-                  <a-icon type="fire" ></a-icon>
-        热门应用
+                  <a-icon type="like"></a-icon>
+        强烈推荐应用 ({{getCheckedCount('suggest')}})
       </span>
-              </a-tab-pane>
-            </a-tabs>
-          </div>
-        </template>
+            <p>强烈推荐应用是我们精选的应用，这些应用可以满足您日常办公效率所需。</p>
+            <a-row class="app" v-for="app in apps.suggest">
+              <a-col class="app-check" :span="2">
+                <a-checkbox :default-checked="true" :checked="app.checked"
+                            @change="onChangeCheck($event,app)"></a-checkbox>
+              </a-col>
+              <a-col :span="3">
+                <img :style="{'border-color':app.themeColor}" class="app-logo" :src="app.logo"/>
+              </a-col>
+              <a-col :span="16">
+                <div class="app-name">{{app.name}} <span class="app-installed">{{app.installed}}%的用户选择安装</span></div>
+                <p class="app-summary">{{app.summary}}</p>
+              </a-col>
+              <a-col :span="2">
+                <a-button target="_blank" :href="app.url"> 预览</a-button>
+              </a-col>
+            </a-row>
+          </a-tab-pane>
+          <a-tab-pane key="3">
+                <span slot="tab">
+                  <a-icon type="fire"></a-icon>
+        热门应用 ({{getCheckedCount('hot')}})
+      </span>
+            <p>推荐应用是我们为您推荐的应用，默认不会安装。</p>
+            <a-row>
+              <a-col :span="3">
+                <a-checkbox :default-checked="false"
+                            @change="onCheckAll($event,'hot')">全选</a-checkbox>
+              </a-col>
+            </a-row>
+            <a-row class="app" v-for="app in apps.hot">
+              <a-col class="app-check" :span="2">
+                <a-checkbox :default-checked="false" :checked="app.checked"
+                            @change="onChangeCheck($event,app)"></a-checkbox>
+              </a-col>
+              <a-col :span="3">
+                <img :style="{'border-color':app.themeColor}" class="app-logo" :src="app.logo"/>
+              </a-col>
+              <a-col :span="16">
+                <div class="app-name">{{app.name}}</div>
+                <p class="app-summary">{{app.summary}}</p>
+              </a-col>
+              <a-col :span="2">
+                <a-button target="_blank" :href="app.url"> 预览</a-button>
+              </a-col>
+            </a-row>
+          </a-tab-pane>
+        </a-tabs>
+      </div>
+      <div style="text-align: center;position: fixed;bottom: 0;left:0;padding-bottom:20px;padding-top:20px;width: 100vw;background: white;border-top: 1px solid rgba(232,232,232,0.47)">
+        <a-button type="primary">确认安装 ({{getCheckedCount()}})</a-button>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a-button @click="ipc.send('addTab',{url:'https://apps.vip/apps'})">逛逛应用市场</a-button>
+      </div>
+    </template>
 
-			</div>
-		</div>
-		<script>
+  </div>
+</div>
+<script>
 
-			Vue.use(antd)
-			Vue.prototype.$form = antd.Form
-      const fs=require('fs')
-      const tools = require('../util/util.js').tools
-      tools.getWindowArgs(window)
-      let settings=require('../../js/util/settings/settings')
+  Vue.use(antd)
+  Vue.prototype.$form = antd.Form
+  const fs = require('fs')
+  const tools = require('../util/util.js').tools
+  tools.getWindowArgs(window)
+  let settings = require('../../js/util/settings/settings')
 
-			var appVue = new Vue({
-				el: '#app',
-				data() {
-					return {
-            ipc:window.ipc,
-						step: 'login', // login ,wizard,reg
-						current: 0,
-						steps: [{
-								title: '基础设置',
-								content: 'First-content',
-								icon: 'setting'
-							},
-              {
-                title: '导入书签',
-                content: 'Second-content',
-                icon: 'star'
-              },
-              {
-              	title: '快速导览',
-              	content: 'Last-content',
-              	icon: 'smile'
-              },
-							// },
-							// {
-							// 	title: '新手教程',
-							// 	content: 'Last-content',
-							// 	icon: 'play-circle'
-							// },
-						],
-						titleBar: 'theme',
-						activeKey: ['3'],
-						customStyle: 'background: #f7f7f7;border-radius: 4px;margin-bottom: 24px;border: 0;overflow: hidden',
-						videoSource:"http://player.bilibili.com/player.html?aid=890908889&bvid=BV1hP4y187jw&cid=421342590&page=1",
-						videoSources:[
-							"http://player.bilibili.com/player.html?aid=890908889&bvid=BV1hP4y187jw&cid=421342590&page=1",
-							"http://player.bilibili.com/player.html?aid=890908889&bvid=BV1hP4y187jw&cid=421342590&page=1&p=2",
-							"http://player.bilibili.com/player.html?aid=890908889&bvid=BV1hP4y187jw&cid=421342590&page=1&p=3",
-							"http://player.bilibili.com/player.html?aid=890908889&bvid=BV1hP4y187jw&cid=421342590&page=1&p=4"
-						],
-						currentVideoIndex:0,
-
-            /**
-             * 设置项目
-             */
-            formSetting:this.$form.createForm(this,{
-              name:'setting'
-            }),
-            settingSiteTheme:true,
-            settingCollectUsageStats:undefined,
-            settingSearchEngine:{name:'Baidu'}
-          }
-        },
-				beforeCreate() {
-					// this.form = this.$form.createForm(this, {
-					// 	name: 'normal_login'
-					// });
-          // this.formSetting=this.$form.createForm(this,{
-          //   name:'setting'
-          // })
-				},
-        mounted(){
-          this.settingSiteTheme=settings.get('siteTheme')
-          this.settingCollectUsageStats=settings.get('collectUsageStats')
-          this.settingSearchEngine=settings.get('searchEngine')
-        },
-				methods: {
-					handleSubmit(e) {
-						e.preventDefault()
-						this.form.validateFields((err, values) => {
-							if (!err) {
-                // console.log(values.siteTheme)
-                // if(values.siteTheme==='no-theme'){
-                //   settings.set('siteTheme',false)
-                // }else{
-                //   settings.set('siteTheme',true)
-                // }
-                // settings.set('searchEngine',{ name: values.searchEngine })
-                // if(values.improve==='true'){
-                //   settings.set('collectUsageStats', true)
-                // }else{
-                //   settings.set('collectUsageStats', false)
-                // }
-								// console.log('Received values of form: ', values)
-							}
-						})
-					},
-          handleSubmitSetting(e){
-            e.preventDefault();
-            //console.log(this.formSetting.getFieldsValue())
-            // console.log(this.formSetting)
-            this.formSetting.validateFields((err, values) => {
-              if (!err) {
-                if(values.siteTheme==='no-theme'){
-                  settings.set('siteTheme',false)
-                }else{
-                  settings.set('siteTheme',true)
-                }
-                settings.set('searchEngine',{ name: values.searchEngine })
-                if(values.improve==='true'){
-                  settings.set('collectUsageStats', true)
-                }else{
-                  settings.set('collectUsageStats', false)
-                }
-                this.next()
-              }
-            })
-          },
-          saveSetting(next){ //next  close
-
-          },
-					next() {
-            if(this.current===0){
+  var appVue = new Vue({
+    el: '#app',
+    data () {
+      return {
+        ipc: window.ipc,
+        current: 0,
+        apps: {
+          system: [
+            {
+              name: '团队协作',
+              logo: '../../icons/svg/chat.svg',
+              themeColor: '#6fafff',
+              summary: '一款具备私聊、群聊、文件分享、投票、随手记等功能的沟通工具。\n' +
+                '                          通过团队协作，您可以与您的团队伙伴共享、协作各种资源。'
+            },
+            {
+              name: '收藏夹',
+              logo: '../../icons/svg/apps.svg',
+              themeColor: '#8618d2',
+              summary: '通过收藏夹，您可以便捷地管理您的书签，构建您自己的个人主页。通过分享功能，可以将收藏内容同步到团队。'
+            },
+            {
+              name: '元社区',
+              logo: '../../icons/apps/yuan.png',
+              themeColor: '#4188ff',
+              summary: '您可以随时免费创建属于您的元社区，元社区可以作为企业内部沟通平台、也可以作为行业交流平台、产品社区。'
             }
-						this.current++
-					},
-					prev() {
-						this.current--
-					},
-					changeTitleBar(e) {
-						this.titleBar = e.target.value
-						console.log(this.titleBar)
-					},
-					netxVideo() {
-						this.$refs.videos.next()
-						this.currentVideoIndex++
-						if(this.currentVideoIndex==4){
-							this.currentVideoIndex=0
-						}
-						this.videoSource=this.videoSources[this.currentVideoIndex]
-					},
-          close(){
-            //todo 添加一些桌面
+          ],
+          suggest: [
+            {
+              name: '文件小助手',
+              logo: '../../icons/apps/wechatfile.png',
+              url: 'https://filehelper.weixin.qq.com/',
+              installed: '99.5',
+              themeColor: '#07c160',
+              checked: true,
+              summary: '微信官方文件小助手，扫码即可与微信互传文件，非常便捷。'
+            },
+            {
+              name: '小小时光机',
+              themeColor: 'rgb(35,205,120)',
+              logo: 'http://d.xiangtian.ren/apps/timer/icon.svg',
+              url: 'http://d.xiangtian.ren/apps/timer',
+              installed: '95.1',
+              checked: true,
+              summary: '免费、简约的倒计时工具，具备常规倒计时功能，并将不断加入番茄钟、纪念日倒计时等功能，是您时间管理的神器。'
+            },
+            {
+              name: '图片编辑器',
+              themeColor: 'rgb(90,170,60)',
+              logo: 'http://d.xiangtian.ren/apps/imageEditor/icon.svg',
+              url: 'http://d.xiangtian.ren/apps/imageEditor/',
+              installed: '85.5',
+              checked: true,
+              summary: '可以为您的图片增加相框、贴纸、文字、进行简单裁减、旋转，还可以添加滤镜。'
+            }
+          ],
+          hot: [
+            {
+              name: '万年历',
+              logo: 'https://qq.ip138.com/favicon.ico',
+              themeColor: 'rgb(110,180,55)',
+              checked: false,
+              url: 'https://qq.ip138.com/day/',
+              summary: '可以显示全年日历，结合法定节假日显示，让你的工作更有盼头。'
+            },
+            {
+              name: '网易云音乐',
+              logo: 'https://s1.music.126.net/style/favicon.ico',
+              themeColor: 'rgb(220,0,25)',
+              checked: false,
+              url: 'https://music.163.com/',
+              summary: '有态度的音乐网站。'
+            },
+            {
+              name: '证件加水印',
+              logo: '../../icons/default.svg',
+              themeColor: '#1155cc',
+              checked: false,
+              url: 'http://watermark.dxcweb.com/',
+              summary: '一键给证件加上水印，纯前端实现，开源免费。'
+            },
+            {
+              name: '为知笔记',
+              logo: 'https://www.wiz.cn/favicon.ico',
+              themeColor: 'rgb(70,140,255)',
+              checked: false,
+              url: 'https://www.wiz.cn/xapp/',
+              summary: '一款好用的在线笔记软件。'
+            }, {
+              name: '即刻设计',
+              logo: 'https://img.js.design/assets/webImg/favicon.ico',
+              themeColor: 'rgb(25,30,40)',
+              checked: false,
+              url: 'https://js.design/workspace',
+              summary: '在同一个地方，构思、设计、协作，让你和团队更加高效。'
+            },
+            {
+              name: '小鹅通管理后台',
+              logo: 'https://admin.xiaoe-tech.com/logo-64.ico',
+              themeColor: '#256AEA',
+              checked: false,
+              url: 'https://admin.xiaoe-tech.com/login_page?channel=5670-8121#/register',
+              summary: '常用的saas应用管理后台，可以快速开通和管理你的知识店铺。'
+            }
 
-            localStorage.setItem('firstRun','1')
-            ipc.send('closeWizard')
+          ]
+        }
+      }
+    },
+    beforeCreate () {
+      // this.form = this.$form.createForm(this, {
+      // 	name: 'normal_login'
+      // });
+      // this.formSetting=this.$form.createForm(this,{
+      //   name:'setting'
+      // })
+    },
+    mounted () {
+      this.settingSiteTheme = settings.get('siteTheme')
+      this.settingCollectUsageStats = settings.get('collectUsageStats')
+      this.settingSearchEngine = settings.get('searchEngine')
+    },
+    methods: {
+      onCheckAll(e,type){
+        this.apps[type].forEach(item=>{
+          item.checked=e.target.checked
+        })
+      },
+      getCheckedCount (type = '') {
+        let count = type === '' ? this.apps.system.length : 0
+        if (type === '') {
+          this.apps.suggest.forEach((item) => {
+            if (item.checked) {
+              count++
+            }
+          })
+          this.apps.hot.forEach((item) => {
+            if (item.checked) {
+              count++
+            }
+          })
+        } else {
+          this.apps[type].forEach((item) => {
+            if (item.checked) {
+              count++
+            }
+          })
+        }
+        return count
+      },
+      onChangeCheck (event, app) {
+        app.checked = event.target.checked
+      },
+      handleSubmit (e) {
+        e.preventDefault()
+        this.form.validateFields((err, values) => {
+          if (!err) {
+            // console.log(values.siteTheme)
+            // if(values.siteTheme==='no-theme'){
+            //   settings.set('siteTheme',false)
+            // }else{
+            //   settings.set('siteTheme',true)
+            // }
+            // settings.set('searchEngine',{ name: values.searchEngine })
+            // if(values.improve==='true'){
+            //   settings.set('collectUsageStats', true)
+            // }else{
+            //   settings.set('collectUsageStats', false)
+            // }
+            // console.log('Received values of form: ', values)
           }
-				}
-			})
-		</script>
+        })
+      },
+      handleSubmitSetting (e) {
+        e.preventDefault()
+        //console.log(this.formSetting.getFieldsValue())
+        // console.log(this.formSetting)
+        this.formSetting.validateFields((err, values) => {
+          if (!err) {
+            if (values.siteTheme === 'no-theme') {
+              settings.set('siteTheme', false)
+            } else {
+              settings.set('siteTheme', true)
+            }
+            settings.set('searchEngine', { name: values.searchEngine })
+            if (values.improve === 'true') {
+              settings.set('collectUsageStats', true)
+            } else {
+              settings.set('collectUsageStats', false)
+            }
+            this.next()
+          }
+        })
+      },
+      saveSetting (next) { //next  close
+
+      },
+      next () {
+        if (this.current === 0) {
+        }
+        this.current++
+      },
+      prev () {
+        this.current--
+      },
+      changeTitleBar (e) {
+        this.titleBar = e.target.value
+        console.log(this.titleBar)
+      },
+      netxVideo () {
+        this.$refs.videos.next()
+        this.currentVideoIndex++
+        if (this.currentVideoIndex == 4) {
+          this.currentVideoIndex = 0
+        }
+        this.videoSource = this.videoSources[this.currentVideoIndex]
+      },
+      close () {
+        //todo 添加一些桌面
+
+        localStorage.setItem('firstRun', '1')
+        ipc.send('closeWizard')
+      }
+    }
+  })
+</script>
 
 
-		<style>
-			#components-form-demo-normal-login .login-form {
-				max-width: 250px;
-			}
+<style>
+  .app {
+    border-bottom: 1px solid #ddd;
+    padding-top: 10px;
+    font-size: 13px;
+  }
 
-			#components-form-demo-normal-login .login-form-forgot {
-				float: right;
-			}
+  .app-name {
+    font-size: 16px;
+    font-weight: bold;
+  }
 
-			#components-form-demo-normal-login .login-form-button {
-				width: 40%;
-				margin-right: 5%;
-			}
+  .app-summary {
+    color: #999;
+    height: 38px;
+  }
 
-			.setting-type {
-				padding-bottom: 10px;
-				border-bottom: dashed 1px #ccc;
-				margin-bottom: 20px;
-			}
+  .app-installed {
+    font-size: 15px;
+    font-weight: normal;
+    padding-left: 15px;
+  }
 
-			.theme-carousel {}
+  .app-check {
+    padding-top: 13px;
+  }
 
-			.carousel-el {
-				position: relative;
-				left: -18px;
-				top: -25px;
-				width: 796px;
-			}
-
-			.ant-carousel>>>.slick-slide {
-				text-align: center;
-				height: 160px;
-				line-height: 160px;
-				background: #364d79;
-				overflow: hidden;
-			}
-
-			.ant-carousel>>>.custom-slick-arrow {
-				width: 25px;
-				height: 25px;
-				font-size: 25px;
-				color: #fff;
-				background-color: rgba(31, 45, 61, 0.11);
-				opacity: 0.3;
-			}
-
-			.ant-carousel>>>.custom-slick-arrow:before {
-				display: none;
-			}
-
-			.ant-carousel>>>.custom-slick-arrow:hover {
-				opacity: 0.5;
-			}
-		</style>
-	</body>
+  .app-logo {
+    background: white;
+    width: 48px;
+    height: 48px;
+    border-radius: 100%;
+    padding: 2px;
+    border: 3px solid #ccc;
+  }
+</style>
+</body>
 </html>
