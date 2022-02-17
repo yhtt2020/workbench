@@ -327,6 +327,32 @@ const standAloneAppModel = {
       }
     ]
     return await db.standAloneApps.bulkAdd(defaultApps)
+  },
+  /**
+   * 设置转中文表达
+   * @param setting
+   */
+  settingToWords(setting){
+    //keepRunning', 'theme', 'desktop', 'showInSideBar', 'alwaysTop', 'autoRun'
+    let words=''
+    switch (setting){
+      case 'bounds':
+        words='窗口大小'
+        break
+      case 'keepRunning':
+        words='保持运行'
+        break
+      case 'showInSideBar':
+        words='保持在左侧栏'
+        break
+      case 'alwaysTop':
+        words='窗口置顶'
+        break
+      case 'autoRun':
+        words='自动运行'
+        break
+    }
+    return words
   }
 
 }

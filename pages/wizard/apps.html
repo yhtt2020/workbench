@@ -9,13 +9,11 @@
   <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline'"/>
   <link rel="stylesheet" href="./wizard.css"/>
 </head>
-<body >
+<body>
 
 <div id="app" style="padding-bottom: 52px">
-
   <div id="stepWizard" class="step-wizard">
     <template>
-
       <a-alert type="info" show-icon>
         <div slot="message">应用推荐</div>
         <div slot="description">
@@ -27,17 +25,14 @@
           </p>
         </div>
       </a-alert>
-
-
     </template>
-
     <template>
       <div>
         <a-tabs default-active-key="1">
           <a-tab-pane key="1">
                 <span slot="tab">
                   <a-icon type="desktop"></a-icon>
-                系统应用 (3)
+                系统应用
                 </span>
             <p>系统应用是保障您可以完整使用想天浏览器基础性应用。</p>
             <a-row class="app" v-for="app in apps.system">
@@ -69,8 +64,14 @@
                 <img :style="{'border-color':app.themeColor}" class="app-logo" :src="app.logo"/>
               </a-col>
               <a-col :span="16">
-                <div class="app-name">{{app.name}} <span class="app-installed">{{app.installed}}%的用户选择安装</span></div>
+                <div class="app-name">{{app.name}} <a target="_blank" v-if="app.author" :href="app.site">（{{app.author}}）</a><span v-else>(第三方)</span><span class="app-installed">{{app.installed}}%的用户选择安装</span></div>
                 <p class="app-summary">{{app.summary}}</p>
+                <p v-if="app.settings">
+                  默认设置：
+                  <a-tag v-for="(value,name) in app.settings">
+                       {{settingToWords(name)}}
+                  </a-tag>
+                </p>
               </a-col>
               <a-col :span="2">
                 <a-button target="_blank" :href="app.url"> 预览</a-button>
@@ -86,7 +87,8 @@
             <a-row>
               <a-col :span="3">
                 <a-checkbox :default-checked="false"
-                            @change="onCheckAll($event,'hot')">全选</a-checkbox>
+                            @change="onCheckAll($event,'hot')">全选
+                </a-checkbox>
               </a-col>
             </a-row>
             <a-row class="app" v-for="app in apps.hot">
@@ -98,7 +100,7 @@
                 <img :style="{'border-color':app.themeColor}" class="app-logo" :src="app.logo"/>
               </a-col>
               <a-col :span="16">
-                <div class="app-name">{{app.name}}</div>
+                <div class="app-name">{{app.name}}<a target="_blank" v-if="app.author" :href="app.site">（{{app.author}}）</a><span v-else>(第三方)</span></div>
                 <p class="app-summary">{{app.summary}}</p>
               </a-col>
               <a-col :span="2">
@@ -108,24 +110,22 @@
           </a-tab-pane>
         </a-tabs>
       </div>
-      <div style="text-align: center;position: fixed;bottom: 0;left:0;padding-bottom:20px;padding-top:20px;width: 100vw;background: white;border-top: 1px solid rgba(232,232,232,0.47)">
-        <a-button type="primary">确认安装 ({{getCheckedCount()}})</a-button>
+      <div
+        style="text-align: center;position: fixed;bottom: 0;left:0;padding-bottom:20px;padding-top:20px;width: 100vw;background: rgba(243,243,243,0.55);border-top: 1px solid rgba(232,232,232,0.47)">
+        <a-button type="primary" @click="install">确认安装 ({{getCheckedCount()}})</a-button>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <a-button @click="ipc.send('addTab',{url:'https://apps.vip/apps'})">逛逛应用市场</a-button>
       </div>
     </template>
-
   </div>
 </div>
 <script>
 
   Vue.use(antd)
-  Vue.prototype.$form = antd.Form
   const fs = require('fs')
   const tools = require('../util/util.js').tools
   tools.getWindowArgs(window)
-  let settings = require('../../js/util/settings/settings')
-
+  const standAloneAppModel = require('../util/model/standAloneAppModel')
   var appVue = new Vue({
     el: '#app',
     data () {
@@ -161,27 +161,64 @@
               url: 'https://filehelper.weixin.qq.com/',
               installed: '99.5',
               themeColor: '#07c160',
+              author:'微信官方',
+              site:'https://weixin.qq.com/',
               checked: true,
-              summary: '微信官方文件小助手，扫码即可与微信互传文件，非常便捷。'
+              summary: '微信官方文件小助手，扫码即可与微信互传文件，非常便捷。',
+              settings: {
+                bounds: {
+                  width: 540,
+                  height: 540
+                },
+                alwaysTop: true,
+                showInSideBar: true,
+              }
             },
             {
               name: '小小时光机',
               themeColor: 'rgb(35,205,120)',
+              author:'想天软件',
+              site:'http://apps.vip',
               logo: 'http://d.xiangtian.ren/apps/timer/icon.svg',
               url: 'http://d.xiangtian.ren/apps/timer',
               installed: '95.1',
+              package:'com.thisky.timer',
               checked: true,
-              summary: '免费、简约的倒计时工具，具备常规倒计时功能，并将不断加入番茄钟、纪念日倒计时等功能，是您时间管理的神器。'
+              summary: '免费、简约的倒计时工具，具备常规倒计时功能，并将不断加入番茄钟、纪念日倒计时等功能，是您时间管理的神器。',
+              settings: {
+                bounds: {
+                  width: 500,
+                  height: 370
+                },
+                alwaysTop: true,
+                showInSideBar: true,
+              }
             },
             {
               name: '图片编辑器',
               themeColor: 'rgb(90,170,60)',
+              author:'想天软件',
+              site:'http://apps.vip',
               logo: 'http://d.xiangtian.ren/apps/imageEditor/icon.svg',
               url: 'http://d.xiangtian.ren/apps/imageEditor/',
+              package:'com.thisky.imageEditor',
               installed: '85.5',
               checked: true,
               summary: '可以为您的图片增加相框、贴纸、文字、进行简单裁减、旋转，还可以添加滤镜。'
-            }
+            },
+            {
+              name: '网易云音乐',
+              author:'网易',
+              site:'https://corp.163.com/gb/about/overview.html',
+              logo: 'https://s1.music.126.net/style/favicon.ico',
+              themeColor: 'rgb(220,0,25)',
+              checked: true,
+              url: 'https://music.163.com/',
+              summary: '有态度的音乐网站。',
+              settings: {
+                showInSideBar: true
+              }
+            },
           ],
           hot: [
             {
@@ -192,14 +229,7 @@
               url: 'https://qq.ip138.com/day/',
               summary: '可以显示全年日历，结合法定节假日显示，让你的工作更有盼头。'
             },
-            {
-              name: '网易云音乐',
-              logo: 'https://s1.music.126.net/style/favicon.ico',
-              themeColor: 'rgb(220,0,25)',
-              checked: false,
-              url: 'https://music.163.com/',
-              summary: '有态度的音乐网站。'
-            },
+
             {
               name: '证件加水印',
               logo: '../../icons/default.svg',
@@ -216,7 +246,7 @@
               url: 'https://www.wiz.cn/xapp/',
               summary: '一款好用的在线笔记软件。'
             }, {
-              name: '即刻设计',
+              name: '即时设计',
               logo: 'https://img.js.design/assets/webImg/favicon.ico',
               themeColor: 'rgb(25,30,40)',
               checked: false,
@@ -226,6 +256,8 @@
             {
               name: '小鹅通管理后台',
               logo: 'https://admin.xiaoe-tech.com/logo-64.ico',
+              author:'小鹅通',
+              site:'https://www.xiaoe-tech.com/',
               themeColor: '#256AEA',
               checked: false,
               url: 'https://admin.xiaoe-tech.com/login_page?channel=5670-8121#/register',
@@ -237,26 +269,42 @@
       }
     },
     beforeCreate () {
-      // this.form = this.$form.createForm(this, {
-      // 	name: 'normal_login'
-      // });
-      // this.formSetting=this.$form.createForm(this,{
-      //   name:'setting'
-      // })
     },
     mounted () {
-      this.settingSiteTheme = settings.get('siteTheme')
-      this.settingCollectUsageStats = settings.get('collectUsageStats')
-      this.settingSearchEngine = settings.get('searchEngine')
     },
     methods: {
-      onCheckAll(e,type){
-        this.apps[type].forEach(item=>{
-          item.checked=e.target.checked
+      settingToWords (setting) {
+        return standAloneAppModel.settingToWords(setting)
+      },
+      install () {
+        //找出选中的
+        let needInstallApps = []
+        this.apps.suggest.forEach((item) => {
+          if (item.checked) {
+            let needInstallApp = item
+            delete needInstallApp.installed
+            delete needInstallApp.checked
+            needInstallApps.push(needInstallApp)
+          }
+        })
+        this.apps.hot.forEach((item) => {
+          if (item.checked) {
+            let needInstallAppHot = item
+            delete needInstallAppHot.checked
+            needInstallApps.push(needInstallAppHot)
+          }
+        })
+        console.log(needInstallApps)
+      },
+      //选中全部
+      onCheckAll (e, type) {
+        this.apps[type].forEach(item => {
+          item.checked = e.target.checked
         })
       },
+      //获取选中的数量
       getCheckedCount (type = '') {
-        let count = type === '' ? this.apps.system.length : 0
+        let count = 0
         if (type === '') {
           this.apps.suggest.forEach((item) => {
             if (item.checked) {
@@ -277,72 +325,9 @@
         }
         return count
       },
+      //checkbox选择回调
       onChangeCheck (event, app) {
         app.checked = event.target.checked
-      },
-      handleSubmit (e) {
-        e.preventDefault()
-        this.form.validateFields((err, values) => {
-          if (!err) {
-            // console.log(values.siteTheme)
-            // if(values.siteTheme==='no-theme'){
-            //   settings.set('siteTheme',false)
-            // }else{
-            //   settings.set('siteTheme',true)
-            // }
-            // settings.set('searchEngine',{ name: values.searchEngine })
-            // if(values.improve==='true'){
-            //   settings.set('collectUsageStats', true)
-            // }else{
-            //   settings.set('collectUsageStats', false)
-            // }
-            // console.log('Received values of form: ', values)
-          }
-        })
-      },
-      handleSubmitSetting (e) {
-        e.preventDefault()
-        //console.log(this.formSetting.getFieldsValue())
-        // console.log(this.formSetting)
-        this.formSetting.validateFields((err, values) => {
-          if (!err) {
-            if (values.siteTheme === 'no-theme') {
-              settings.set('siteTheme', false)
-            } else {
-              settings.set('siteTheme', true)
-            }
-            settings.set('searchEngine', { name: values.searchEngine })
-            if (values.improve === 'true') {
-              settings.set('collectUsageStats', true)
-            } else {
-              settings.set('collectUsageStats', false)
-            }
-            this.next()
-          }
-        })
-      },
-      saveSetting (next) { //next  close
-
-      },
-      next () {
-        if (this.current === 0) {
-        }
-        this.current++
-      },
-      prev () {
-        this.current--
-      },
-      changeTitleBar (e) {
-        this.titleBar = e.target.value
-        console.log(this.titleBar)
-      },
-      netxVideo () {
-        this.$refs.videos.next()
-        this.currentVideoIndex++
-        if (this.currentVideoIndex == 4) {
-          this.currentVideoIndex = 0
-        }
-        this.videoSource = this.videoSources[this.currentVideoIndex]
       },
       close () {
         //todo 添加一些桌面
