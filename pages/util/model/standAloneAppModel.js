@@ -327,6 +327,10 @@ const standAloneAppModel = {
       }
     ]
     return await db.standAloneApps.bulkAdd(defaultApps)
+  },
+
+  async countApps() {
+    return await db.standAloneApps.count()
   }
 
 }

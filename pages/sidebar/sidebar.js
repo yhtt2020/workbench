@@ -1,5 +1,6 @@
 //定义一个TaskList来接收tasks类型的数据
 const groupApi = require('../util/api/groupApi')
+const userStatsModel = require('../util/model/userStatsModel')
 class TasksList {
 	constructor() {
 		this.tasks = []
@@ -61,7 +62,7 @@ class TasksList {
 
 
 let count = 0
-window.addEventListener('message', function(e) {
+window.addEventListener('message', async function(e) {
 	if (e.data.message && e.data.message === 'receiveGlobal') {
 		let tasksList = new TasksList()
 		if ($store.state.pinItems == null) {
@@ -69,7 +70,7 @@ window.addEventListener('message', function(e) {
 			return
 		}
 		tasksList.init(e.data.data.tasks)
-		$store.commit('fillTasksToItems', tasksList)
+		await $store.commit('fillTasksToItems', tasksList)
 		//console.log('同步'+count+++"次")
 	}
 
@@ -241,7 +242,7 @@ window.onload = function() {
 			},
 			//将任务填充到item列表当中，系统会自动刷新一次列表。
 			//算法主要是遍历两个组，然后将task按顺序填充进去，如果有多的，就在队列尾部插入（应对插入新组的情况），如果有少的，则从队尾删除相应数量（应对删除任务的情况）
-			fillTasksToItems(state, tasksList) {
+			async fillTasksToItems(state, tasksList) {
 				//将tasks转化为items
 				let replaceIndex = 0
 				//遍历置顶的区域，把任务都替换进来
@@ -303,6 +304,15 @@ window.onload = function() {
 				state.tasks = null
 				state.tasks = newTasksList
 
+
+        //mark插入对tasks的数据统计
+        await userStatsModel.setValue('tasks', state.tasks.tasks.length)
+        //mark插入对tabs的数据统计
+        let tabsNum = 0
+        state.tasks.tasks.forEach(v => {
+          tabsNum += v.tabs.length
+        });
+        await userStatsModel.setValue('tabs', tabsNum)
 
 			}
 

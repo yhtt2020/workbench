@@ -2,6 +2,8 @@ const settings = require('util/settings/settings.js')
 const axios = require('./util/axios')
 const { db } = require('./util/database');
 
+const userStatsModel = require('../pages/util/model/userStatsModel')
+
 const statistics = {
   envGetters: [],
   registerGetter: function (key, fn) {
@@ -47,27 +49,59 @@ const statistics = {
     const result = await db.system.where('name').equals('currentUser').first()
 
     const options = {
-      client_id: settings.get('clientID'),
-      install_time: `${Date.now()}`,
-      os: process.platform,
-      lang: navigator.language,
-      app_version: window.globalArgs['app-version'],
-      app_name: window.globalArgs['app-name'],
-      is_dev: 'development-mode' in window.globalArgs,
-      usage_data: result.value.uid != 0 ? Object.assign(usageData, result.value) : usageData
+      uid: result.value.uid != 0 ? result.value.uid : 0,   //用户uid
+      client_id: settings.get('clientID'),     //设备号
+      install_time: String(settings.get('installTime')),  //初次安装的时间
+      submit_time: String(Date.now()),     //最新提交数据时间
+      os: process.platform,    //操作系统
+      lang: navigator.language,  //本地语言
+      app_version: window.globalArgs['app-version'],   //浏览器版本号
+      app_name: window.globalArgs['app-name'],   //浏览器名称
+      is_dev: 'development-mode' in window.globalArgs,    //是否是开发化境
+      user_info: result.value.uid != 0 ? result.value : {},  //登录账户数据
+      usage_data: usageData, //用户部分数据统计，min自带，后续看是否去掉... //todo
+      user_stats: await userStatsModel.get(1)
     }
-    axios.post('/app/open/usageStats/add', options).then(res => {
+    axios.post('/app/open/usageStats/addStats', options).then(async res => {
       statistics.usageDataCache = {
         created: Date.now()
       }
       settings.set('usageData', null)
+      await userStatsModel.reset()
     }).catch(e => {
       console.warn('failed to send usage statistics', e)
     })
   },
-  initialize: function () {
+
+  async uploadCumulativeTime() {
+    const result = await db.system.where('name').equals('currentUser').first()
+    const options = {
+      uid: result.value.uid != 0 ? result.value.uid : 0,   //用户uid
+      client_id: settings.get('clientID'),     //设备号
+    }
+    axios.post('/app/open/usageStats/cumulativeTime', options).catch(e => {
+      console.warn('failed to send cumulative', e)
+    })
+  },
+
+  initialize: async function () {
+    await userStatsModel.initialize()
+
+    //初次安装的用户需要往dexie的system表中插入此数据，否则第一次上传会报错
+    if(await db.system.count() === 0) {
+      await db.system.put({
+        name: "currentUser",
+        value: {
+          avatar: "../../icons/browser.ico",
+          nickname: "立即登录",
+          uid: 0
+        }
+      })
+    }
+
     setTimeout(statistics.upload, 10000)
     setInterval(statistics.upload, 24 * 60 * 60 * 1000)
+    setInterval(statistics.uploadCumulativeTime, 1000 * 60)
 
     statistics.usageDataCache = settings.get('usageData') || ({
       created: Date.now()
@@ -81,14 +115,15 @@ const statistics = {
       }
     }, 60000)
 
-    settings.listen('collectUsageStats', function (value) {
-      if (value === false) {
-        // disabling stats collection should reset client ID
-        settings.set('clientID', undefined)
-      } else if (!settings.get('clientID')) {
-        settings.set('clientID', Math.random().toString().slice(2))
-      }
-    })
+    /* 注释掉此段关于用户关闭信息收集按钮后的重制设备ID的问题 */
+    // settings.listen('collectUsageStats', function (value) {
+    //   if (value === false) {
+    //     // disabling stats collection should reset client ID
+    //     settings.set('clientID', undefined)
+    //   } else if (!settings.get('clientID')) {
+    //     settings.set('clientID', Math.random().toString().slice(2))
+    //   }
+    // })
 
     if (!settings.get('installTime')) {
       // round install time to nearest hour to reduce uniqueness
