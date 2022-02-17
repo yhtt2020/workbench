@@ -325,7 +325,7 @@
               >
                 <template slot="content">
                   <ul class="tabs">
-                    <li class="tab-title" v-for="(tab,j) in item.tabs" :key="tab.id">
+                    <li class="tab-title" :class="{'active':tab.selected}" v-for="(tab,j) in item.tabs" :key="tab.id">
                       <img class="tab-icon" :src="tab.icon"/> {{ tab.title }}
                     </li>
                   </ul>
@@ -380,7 +380,7 @@
                   placement="right"
                   :mouse-enter-delay="0.1"
                   :mouse-leave-delay="0.2"
-                  :destroy-tooltip-on-hide="true"
+
                   overlay-class-name="tips"
                 >
                   <div slot="title">
@@ -403,7 +403,7 @@
                       </span>
                     </div>
                     <ul class="tabs" style="margin-top: 5px">
-                      <li style="position:relative;" @mouseenter="showHoverLock(tab)" @mouseleave="hideHoverLock(tab)" v-for="(tab,j) in item.tabs" :key="tab.id">
+                      <li :class="{'active':(tab.selected && isActive(item.id))}" style="position:relative;" @mouseenter="showHoverLock(tab)" @mouseleave="hideHoverLock(tab)" v-for="(tab,j) in item.tabs" :key="tab.id">
                         <div class="tab-title" @click="openPopoverTab(item.id, tab.id)">
                           <img class="tab-icon" :src="tab.icon" onerror="this.src='../../icons/default.svg'"/>&nbsp;{{ tab.title }}
                         </div>
