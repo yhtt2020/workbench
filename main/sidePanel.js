@@ -116,6 +116,10 @@ class SidePanel {
       log('sidebar-hide:左侧栏隐藏')
     })
     sidePanel = this
+
+    this._sidePanel.on('blur',()=>{
+      this._sidePanel.webContents.send('blur')
+    })
   }
 
   /**
