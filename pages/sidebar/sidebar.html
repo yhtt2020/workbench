@@ -380,7 +380,7 @@
                   placement="right"
                   :mouse-enter-delay="0.1"
                   :mouse-leave-delay="0.2"
-
+                  :overlay-style="{'width':'305px','height':item.tabs.length*30+50+'px'}"
                   overlay-class-name="tips"
                 >
                   <div slot="title">
@@ -403,7 +403,7 @@
                       </span>
                     </div>
                     <ul class="tabs" style="margin-top: 5px">
-                      <li :class="{'active':(tab.selected && isActive(item.id))}" style="position:relative;" @mouseenter="showHoverLock(tab)" @mouseleave="hideHoverLock(tab)" v-for="(tab,j) in item.tabs" :key="tab.id">
+                      <li :class="{'active':(tab.selected )}" style="position:relative;" @mouseenter="showHoverLock(tab)" @mouseleave="hideHoverLock(tab)" v-for="(tab,j) in item.tabs" :key="tab.id">
                         <div class="tab-title" @click="openPopoverTab(item.id, tab.id)">
                           <img class="tab-icon" :src="tab.icon" onerror="this.src='../../icons/default.svg'"/>&nbsp;{{ tab.title }}
                         </div>
