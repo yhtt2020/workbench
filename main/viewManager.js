@@ -324,7 +324,11 @@ ipc.on('loadURLInView', function (e, args) {
       mainWindow.setBrowserView(viewMap[args.id])
     }
   }
-  viewMap[args.id].webContents.loadURL(args.url)
+  //todo 这行之后就会抢夺焦点到view上
+  mainWindow.setFocusable(false)
+  viewMap[args.id].webContents.loadURL(args.url).then(()=>{
+    mainWindow.setFocusable(true)
+  })
   viewStateMap[args.id].loadedInitialURL = true
 })
 
