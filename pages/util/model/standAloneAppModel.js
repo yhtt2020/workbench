@@ -8,38 +8,6 @@ const standAloneAppModel = {
       }
     })
 
-    await db.standAloneApps.where({id: 101}).count().then(result => {
-      if (result === 0) {
-        let wechatFile = {
-          id: 101,
-          name: '文件小助手',
-          logo: '../../icons/apps/wechatfile.png',
-          summary: '传输文件到微信，扫码即用',
-          type: 'web',
-          url: 'https://filehelper.weixin.qq.com/',
-          preload: '',
-          themeColor: '#07c160',
-          userThemeColor: '',
-          createTime: Date.now(),
-          updateTime: Date.now(),
-          accountAvatar: '',
-          order: 0,
-          useCount: 3,
-          lastExecuteTime: Date.now(),
-          settings: JSON.stringify({
-            bounds: {
-              width: 540,
-              height: 540
-            },
-            alwaysTop: true,
-            showInSideBar:true,
-          }),
-          unreadCount: 0,
-          showInSideBar: true
-        }
-        db.standAloneApps.put(wechatFile)
-      }
-    })
 
     let group =await db.standAloneApps.get({name:'团队协作'})
     if(!!!group.package){
@@ -115,19 +83,21 @@ const standAloneAppModel = {
   /**
    * 安装应用
    * @param url 安装的web应用地址
-   * @param option 配置参数
+   * @param app 配置参数
    * @returns {Promise<void>}
    */
-  async install(url = '', option = {}) {
+  async install(url = '', app = {}) {
     if (!!!url) return false
-    let app = {
-      name: option.name,
-      logo: option.logo,
-      summary: option.summary || '',
-      type: option.type || 'web',
+    let appInstall = {
+      name: app.name,
+      logo: app.logo,
+      summary: app.summary || '',
+      type: app.type || 'web',
+      author:app.author,
+      site:app.site,
       url: url,
       preload: '',
-      themeColor: option.themeColor || '#ccc',
+      themeColor: app.themeColor || '#ccc',
       userThemeColor: '',
       createTime: Date.now(),
       updateTime: Date.now(),
@@ -135,11 +105,11 @@ const standAloneAppModel = {
       order: 0,
       useCount: 0,
       lastExecuteTime: Date.now(),
-      settings: JSON.stringify(option.settings),
+      settings:app.settings? JSON.stringify(app.settings):'[]',
       unreadCount: 0,
-      showInSideBar: option.showInSideBar || false
+      showInSideBar: app.showInSideBar || false
     }
-    return await db.standAloneApps.put(app)
+    return await db.standAloneApps.put(appInstall)
   },
   async getAllApps(option={}) {
     let result=[]
@@ -151,7 +121,7 @@ const standAloneAppModel = {
 
     result.forEach((app) => {
       app.capture = ''
-      app.settings = JSON.parse(app.settings)
+      app.settings =app.settings? JSON.parse(app.settings):{}
     })
     return result
   },
@@ -270,60 +240,6 @@ const standAloneAppModel = {
           showInSideBar:true,
         }),
         unreadCount: 0,
-      },
-      {
-        id: 101,
-        name: '文件小助手',
-        logo: '../../icons/apps/wechatfile.png',
-        summary: '传输文件到微信，扫码即用',
-        type: 'web',
-        url: 'https://filehelper.weixin.qq.com/',
-        preload: '',
-        themeColor: '#07c160',
-        userThemeColor: '',
-        createTime: Date.now(),
-        updateTime: Date.now(),
-        accountAvatar: '',
-        order: 0,
-        useCount: 3,
-        lastExecuteTime: Date.now(),
-        settings: JSON.stringify({
-          bounds: {
-            width: 540,
-            height: 540
-          },
-          alwaysTop: true,
-          showInSideBar:true,
-        }),
-        unreadCount: 0,
-        showInSideBar: true
-      },
-      {
-        id: 102,
-        name: '小小时光机',
-        logo: 'http://d.xiangtian.ren/apps/timer/icon.svg',
-        summary: '精品计时器',
-        type: 'web',
-        url: 'http://d.xiangtian.ren/apps/timer',
-        preload: '',
-        themeColor: '#07c160',
-        userThemeColor: '',
-        createTime: Date.now(),
-        updateTime: Date.now(),
-        accountAvatar: '',
-        order: 0,
-        useCount: 3,
-        lastExecuteTime: Date.now(),
-        settings: JSON.stringify({
-          bounds: {
-            width: 500,
-            height: 370
-          },
-          alwaysTop: true,
-          showInSideBar:true,
-        }),
-        unreadCount: 0,
-        showInSideBar: true
       }
     ]
     return await db.standAloneApps.bulkAdd(defaultApps)

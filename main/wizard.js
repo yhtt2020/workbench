@@ -43,7 +43,7 @@ app.whenReady().then(()=>{
       ipc.on('closeWizard',(event,args)=>{
         wizard.close()
         wizard=null
-        if(args.next==='apps'){
+        if(args && args.next==='apps'){
           setTimeout(()=>{
             loadWizard(args.next)
           },args.delay)
