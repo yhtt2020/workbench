@@ -478,7 +478,6 @@ Vue.component('sidebar', {
       //处理全部的左侧浮窗，都加上display:none
       let popovers=document.getElementsByClassName('ant-popover')
       if(popovers){
-        console.log(popovers)
         for(let i=0;i<popovers.length;i++){
           popovers[i].style.display='none'
         }
