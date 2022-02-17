@@ -595,7 +595,6 @@ app.whenReady().then(() => {
     executeApp (saApp, background = false) {
       saApp.isSystemApp = saApp.id < 10 //todo 加入更加安全的系统应用判断方式
       saApp.settings=saApp.settings?saApp.settings:{}
-      console.log(saApp)
       if (1) {
         //todo 判断一下是不是独立窗体模式
         let appWindow = new BrowserWindow({

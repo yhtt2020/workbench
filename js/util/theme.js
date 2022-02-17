@@ -31,7 +31,6 @@ var themeInterval = null
 
 function initialize () {
   function themeSettingsChanged (value) {
-    console.log(value)
     /*
     value is the value of the darkMode pref
     0 - automatic dark mode
@@ -86,7 +85,6 @@ function initialize () {
       }, 10000)
       //undefined和false都默认和永久禁用一致
     } else if (value === undefined || value === -1 || value === false) {
-      console.log('nerver')
       // -1: never enable
       disableDarkMode()
     }
