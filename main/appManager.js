@@ -407,8 +407,9 @@ app.whenReady().then(() => {
         })
         appManager.settingWindow.setMenu(null)
         appManager.settingWindow.webContents.loadURL('file://' + __dirname + '/pages/saApp/setting.html')
-        if (isDevelopmentMode)
+        if (isDevelopmentMode){
           //appManager.settingWindow.webContents.openDevTools()
+        }
         appManager.settingWindow.on('close', () => {
           appManager.settingWindow = null
         })
