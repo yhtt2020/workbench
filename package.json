@@ -30,6 +30,7 @@
     ]
   },
   "dependencies": {
+    "@electron/remote": "^2.0.1",
     "axios": "^0.24.0",
     "dexie": "^3.0.3",
     "dragula": "^3.7.3",
@@ -44,11 +45,14 @@
     "node-abi": "^3.2.0",
     "pdfjs-dist": "2.12.313",
     "regedit": "^5.0.0",
+    "reqwest": "^2.0.5",
     "stemmer": "^1.0.5",
     "string_score": "^0.1.22",
+    "vue": "^2.6.14",
     "vue-selecto": "^1.13.3"
   },
   "devDependencies": {
+    "ant-design-vue": "^1.7.8",
     "archiver": "^4.0.1",
     "browserify": "^16.5.1",
     "chokidar": "^3.4.0",
@@ -62,7 +66,8 @@
     "electron-renderify": "0.0.2",
     "prettier": "^2.2.1",
     "snazzy": "^9.0.0",
-    "standard": "^14.3.4"
+    "standard": "^14.3.4",
+    "vue-infinite-scroll": "^2.0.2"
   },
   "optionalDependencies": {
     "electron-installer-debian": "^3.1.0",

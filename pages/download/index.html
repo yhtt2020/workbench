@@ -23,7 +23,7 @@
         下载中
       </span>
           <div v-for="(list,index) in lists" v-bind:key="index" @click="getIndex(index)">
-            <div style="margin-top: 0;width: 100%;height: 55px;background-color: #e6e6e6">
+            <div style="margin-top: 0;width: 100%;height: 55px;background-color: azure ">
               <div style="width: 34px;height: 40px;position: absolute;margin-top: 8px;margin-left: 5px;" >
                 <a-icon type="file-text" style="fontSize:30px"></a-icon>
               </div>
@@ -35,11 +35,11 @@
               >
                 <a style="float: right;" href="#">删除</a>
               </a-popconfirm>
-              <div >
-                <a-button style="position: absolute;margin-left: 270px;margin-top: 14px" type="link" @click="getPauseId(list.id)">
-                  暂停
-                </a-button>
-              </div>
+<!--              <div >-->
+<!--                <a-button style="position: absolute;margin-left: 270px;margin-top: 14px" type="link" @click="getPauseId(list.id)">-->
+<!--                  暂停-->
+<!--                </a-button>-->
+<!--              </div>-->
            <div>
             <div style="margin-left: 50px;font-size: 15px;font-weight: bold ;">{{list.title}}</div>
             <div style="margin-left: 50px;font-size: 12px;width: 150px;">{{list.received}}  MB  /  {{list.total}}  MB</div>
@@ -52,7 +52,7 @@
 
         <a-tab-pane key="2" tab="已完成" force-render>
           <div v-for="(donelist,index) in donelists" v-bind:key="index">
-            <div style="width: 100%;height: 45px;background-color: #e6e6e6">
+            <div style="width: 100%;height: 45px;background-color: azure">
               <div style="width: 34px;height: 40px;position: absolute;margin-top: 8px;margin-left: 5px;" >
                 <a-icon type="file-text" style="fontSize:30px"></a-icon>
               </div>
@@ -68,7 +68,7 @@
               <a-button style="position: absolute;margin-left: 200px;margin-top: 5px" type="link" >
                 打开
               </a-button>
-                <a-button style="position: absolute;margin-left: 240px;margin-top: 5px" type="link" >
+                <a-button style="position: absolute;margin-left: 240px;margin-top: 5px" type="link" @click="openFileHandler(donelist.path)" >
                   打开文件夹
                 </a-button>
             </div>
@@ -79,14 +79,14 @@
           </div>
         </a-tab-pane>
 
-        <a-tab-pane key="3" tab="回收站">
-          <div v-for="(deletelist,index) in deletelists" v-bind:key="index">
-            <div style="width: 100%;height: 45px;background-color: #8c8c8c">
-              <div style="margin-left: 50px">{{deletelist.title}}</div>
-              <div style="margin-left: 50px">{{deletelist.title}}</div>
-            </div>
-          </div>
-        </a-tab-pane>
+<!--        <a-tab-pane key="3" tab="回收站">-->
+<!--          <div v-for="(deletelist,index) in deletelists" v-bind:key="index">-->
+<!--            <div style="width: 100%;height: 45px;background-color: #8c8c8c">-->
+<!--              <div style="margin-left: 50px">{{deletelist.title}}</div>-->
+<!--              <div style="margin-left: 50px">{{deletelist.title}}</div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </a-tab-pane>-->
       </a-tabs>
     </div>
   </template>
@@ -96,9 +96,8 @@
 
 
 <script type="module">
-
+  const fs = require('fs')
   let {ipcMain} = require('electron')
-
   let {ipcRenderer} = require('electron')
   window.addEventListener('contextmenu', (e) => {
     e.preventDefault()
@@ -119,28 +118,38 @@
 
     if(args.status ==='start'){
       appVue.lists.push({
-        title:args.name,
+        title:aname,
+        received:'',
+        realdata:'',
+        total:'',
+        progressnuw:0,
+        time:args.time
       })
     }
+    if (args.status === 'progressing' && args.path !== '' ) {
 
-    if (args.status === 'progressing' && args.path !== ''  ) {
+      appVue.lists.forEach(function(item){
 
-        appVue.lists.splice(appVue.index, 1, {
-          title: aname,
-          received: ((args.size.received) / 1024 / 1024).toFixed(2),
-          realdata: ((args.realdata) / 1024 / 1024).toFixed(2),
-          total: ((args.size.total) / 1024 / 1024).toFixed(2),
-          progressnuw: args.progressnuw
-        })
-      }
+          item.title = aname;
+          item.received = ((args.size.received) / 1024 / 1024).toFixed(2);
+          item.realdata = ((args.realdata) / 1024 / 1024).toFixed(2);
+          item.total = ((args.size.total) / 1024 / 1024).toFixed(2);
+          item.progressnuw = args.progressnuw;
 
-      if(args.status === 'completed' && args.path !== '') {
-        console.log(args)
+    })
+
+      console.log(appVue.lists)
+
+    }
+
+      if(args.status === 'completed' && args.path !== '' ) {
+
         appVue.lists.splice(0, 1)
         appVue.donelists.push({
           id1: appVue.nextTodoId1++,
           title: args.name,
-          total:((args.size.total)/1024/1024).toFixed(2)
+          total:((args.size.total)/1024/1024).toFixed(2),
+          path:args.path
         })
       }
   })
@@ -152,7 +161,7 @@
        donelists:[],
        deletelists:[],
        nextTodoId1:0,
-       nextTodoId2: 0,
+       nextTodoId2:0,
        progressnuw:0,
      },
 
@@ -164,14 +173,21 @@
           id2: this.nextTodoId2++,
         })
       },
-      getPauseId(id) {
-        console.log(id)
-        ipcRenderer.send('stopDownload')
-      },
+      // getPauseId(id) {
+      //   console.log(id)
+      //   ipcRenderer.send('stopDownload')
+      // },
       getIndex(index){
         console.log(index);
-      }
-
+      },
+      openFileHandler(filePath) {
+        const {shell} = require('electron').remote
+        if(fs.existsSync(filePath)) {
+          shell.showItemInFolder(filePath);
+        }else{
+          ipcRenderer.send('exists')
+        }
+      },
     }
    })
 

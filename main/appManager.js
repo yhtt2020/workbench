@@ -393,6 +393,9 @@ app.whenReady().then(()=>{
 })
 
 
+
+
+
 let downloadWindow
 function download(){
   downloadWindow = new BrowserWindow({
@@ -417,7 +420,6 @@ function download(){
 
   downloadWindow.loadFile('pages/download/index.html').whenReady().then(() =>{
     download()
-
   })
 }
 

@@ -347,12 +347,14 @@ ipc.on('sideSetOpen',(event,args)=>{
   appVue.mod='open'
   localStorage.setItem('sideMode','open')
 })
+
 ipc.on('sideSetClose',(event,args)=>{
   document.getElementById('clickThroughElement').style.left = '55px'
   console.log('close')
   appVue.mod='close'
   localStorage.setItem('sideMode','close')
 })
+
 ipc.on('sideSetAuto',(event,args)=>{
   console.log('auto')
   document.getElementById('clickThroughElement').style.left = '55px'
