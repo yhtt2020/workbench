@@ -269,6 +269,9 @@ const standAloneAppModel = {
         break
     }
     return words
+  },
+  async countApps() {
+    return await db.standAloneApps.count()
   }
 
 }
