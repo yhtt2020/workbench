@@ -102,7 +102,7 @@
   </style>
 </head>
 <body class="dark-theme" style="padding: 0;margin:0;background-color: white">
-<div id="titleBar" class="windows" style="display: flex;justify-content: flex-start;flex-direction: row;">
+<div id="titleBar" oncontextmenu="ipc.send('createAppMenu',{id:window.id,app:window.app})" class="windows" style="display: flex;justify-content: flex-start;flex-direction: row;">
   <div class="control-actions" style="width: 120px;display: flex;justify-content: flex-start;flex-direction: row;">
     <div id="goBack" onclick="goBack()" title="返回" class="action" style="opacity: 0.5">
       <svg t="1643038310188" class="icon action-icon" viewBox="0 0 1024 1024" version="1.1"
@@ -214,6 +214,7 @@
 
     ipc.on('init', (event, args) => {
       windowId = args.windowId
+      window.app=args.app
       window.id = args.app.id
       document.getElementById('address').value = args.url
       document.getElementById('addressWrapper').style.display = 'none'

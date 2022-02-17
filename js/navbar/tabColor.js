@@ -125,7 +125,7 @@ function isLowContrast (color) {
 function adjustColorForTheme (color) {
   // dim the colors late at night or early in the morning if automatic dark mode is enabled
   const darkMode = settings.get('darkMode')
-  const isAuto = (darkMode === undefined || darkMode === true || darkMode >= 0)
+  const isAuto = ( darkMode === true || darkMode >= 0) //去除undefined
 
   let colorChange = 1
   if (isAuto) {
