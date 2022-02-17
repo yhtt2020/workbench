@@ -116,7 +116,9 @@
       </div>
       <div
         style="text-align: center;position: fixed;bottom: 0;left:0;padding-bottom:20px;padding-top:20px;width: 100vw;background: rgba(243,243,243,0.55);border-top: 1px solid rgba(232,232,232,0.47)">
-        <a-button type="primary" @click="install">绿色安装 ({{getCheckedCount()}})</a-button>
+        <a-button type="primary" @click="install" v-if="this.getCheckedCount()>0">绿色安装 ({{getCheckedCount()}})</a-button>
+        <a-button v-else type="default" @click="close">不安装</a-button>
+
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <a-button @click="ipc.send('addTab',{url:'https://apps.vip/apps'})">逛逛应用市场</a-button>
       </div>

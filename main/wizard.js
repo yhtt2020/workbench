@@ -40,27 +40,29 @@ app.whenReady().then(()=>{
       //   wizard.focus()
       // }, 1000)
 
-      ipc.on('closeWizard',(event,args)=>{
-        wizard.close()
-        wizard=null
-        if(args && args.next==='apps'){
-          setTimeout(()=>{
-            loadWizard(args.next)
-          },args.delay)
-        }
-        //destroyAllViews()
-        //mainWindow.webContents.reload()
-        //mainWindow.show()//app.relaunch()
-        //loadSidePanel()
-      })
+
     }
   }
+  ipc.on('closeWizard',(event,args)=>{
+    if(wizard){
+      wizard.close()
+      wizard=null
+      if(args && args.next==='apps'){
+        setTimeout(()=>{
+          loadWizard(args.next)
+        },args.delay)
+      }
+    }
+    //destroyAllViews()
+    //mainWindow.webContents.reload()
+    //mainWindow.show()//app.relaunch()
+    //loadSidePanel()
+  })
   ipc.on('wizard', (event,args) => {
     let page='index'
     if(!!args){
-      page=args.page?'index':args.page
+      page=args.page?args.page:'index'
     }
     loadWizard(page)
   })
-  loadWizard('apps')
 })
