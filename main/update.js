@@ -31,30 +31,52 @@ function loadUpdate(updateInfo){
 }
 //app.whenReady().then(()=>loadUpdate())
 // 自动检测升级机制
-app.whenReady().then(()=>{
+function checkUpdate(){
   if(isDevelopmentMode){
     //如果是开发环境，直接不检测，如需调试升级工具，将此处return注释掉即可
-    return
+    //return
   }
   let updateInfo={}
   autoUpdater.logger=electronLog
+  function showError(error,tag='check'){
+    if(!electron.net.online){
+      if(sidePanel.get()){
+        sidePanel.get().webContents.send('message',{type:'info',config:{content:"当前为离线状态，自动更新程序暂不检测更新，请联网后重启应用检测。",key:"update",duration:6}})
+      }
+      return
+    }
+    let errInfo='未知'
+    if(error.code===2){
+      errInfo="软件包名无法验证"
+    }
+    if(sidePanel.get()){
+      sidePanel.get().webContents.send('message',{type:'error',config:{content:"自动更新程序意外终止,错误原因： "+errInfo+" ，将为您打开产品官网apps.vip，请至官网手动下载最新版本更新。",key:tag,duration:6}})
+      sendIPCToWindow(mainWindow, 'addTab', {
+        url: 'https://apps.vip/#download'
+      })
+    }
+  }
   autoUpdater.checkForUpdates().then((updateInfo)=>{
     //检测到可以升级，则发送升级的信息到updateWindow
     updateInfo={
       version:updateInfo.updateInfo.version,
       releaseDate:updateInfo.updateInfo.releaseDate
     }
-  }).catch((err)=> {
-    //console.log(err)
-    })
- autoUpdater.on('error',(err)=>{
-   sidePanel.get().webContents.send('message',{type:'error',config:{content:"升级文件下载失败，重启软件后重试。",key:"update"}})
- })
+  }).catch((error)=> {
+    showError(error,'checkError')
+  })
+  autoUpdater.on('error',(error)=>{
+    showError(error,'error')
+  })
 
   autoUpdater.on('update-available',(data)=>{
     updateInfo=data
     //console.log(updateInfo)
-    sidePanel.get().webContents.send('message',{type:'success',config:{content:"有新版本可用，系统将在后台自动下载。",key:"update"}})
+    setTimeout(()=>{
+      if(sidePanel.get()){
+        sidePanel.get().webContents.send('message',{type:'success',config:{content:"有新版本可用，将为您准备更新。",key:"check"}})
+      }
+    },2000)
   })
 
   // autoUpdater.on('download-progress',(progressObj)=>{
@@ -76,14 +98,6 @@ app.whenReady().then(()=>{
     autoUpdater.quitAndInstall()
     app.quit()
   })
-  autoUpdater.on("error", (error) => {
-    //console.log(`升级失败: ${error}`)
-    let errInfo=''
-    if(error.code===2){
-      errInfo="软件包名无法验证，"
-    }
-    sidePanel.get().webContents.send('message',{type:'info',config:{content:"系统升级失败，"+errInfo+"请重启后重试。",key:"update"}})
-  });
   // ipc.on('quitAndInstall',(event)=>{
   //   console.log('退出并执行升级')
   //   autoUpdater.quitAndInstall()
@@ -91,7 +105,6 @@ app.whenReady().then(()=>{
   ipc.on('closeUpdate',()=>{
     updaterWindow.close()
   })
-
-})
+}
 
 

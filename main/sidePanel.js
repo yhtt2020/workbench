@@ -104,6 +104,9 @@ class SidePanel {
 
     this.syncSize()
     this.syncTitleBar()
+    this._sidePanel.on('ready-to-show',()=>{
+      checkUpdate()
+    })
 
     this._sidePanel.on('close', function () {
       log('sidebar-close:左侧栏隐藏')

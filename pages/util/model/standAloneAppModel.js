@@ -89,12 +89,13 @@ const standAloneAppModel = {
   async install(url = '', app = {}) {
     if (!!!url) return false
     let appInstall = {
+      id:app.id?app.id:undefined,
       name: app.name,
       logo: app.logo,
       summary: app.summary || '',
       type: app.type || 'web',
-      author:app.author,
-      site:app.site,
+      author:app.author?app.author:'',
+      site:app.site?app.site:'',
       url: url,
       preload: '',
       themeColor: app.themeColor || '#ccc',
