@@ -314,11 +314,13 @@
         appVue.$message.loading({content:'正在安装选择的应用，请稍候。', duration:0,key:'install'})
         let installed = []
         for(let i=0;i<needInstallApps.length;i++){
+          needInstallApps[i].id=1001+i
           installed.push(await standAloneAppModel.install(needInstallApps[i].url, needInstallApps[i]))
         }
         installed.forEach(appId=>{
           ipc.send('installApp',{id:appId,background:true})
         })
+        localStorage.setItem('suggest', '1')
         let tick=3
         setInterval(()=>{
           if(tick!==0)
@@ -362,7 +364,6 @@
         app.checked = event.target.checked
       },
       close () {
-        localStorage.setItem('suggest', '1')
         ipc.send('closeWizard')
       }
     }

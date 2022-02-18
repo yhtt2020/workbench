@@ -89,6 +89,7 @@ const standAloneAppModel = {
   async install(url = '', app = {}) {
     if (!!!url) return false
     let appInstall = {
+      id:app.id?app.id:null,
       name: app.name,
       logo: app.logo,
       summary: app.summary || '',
