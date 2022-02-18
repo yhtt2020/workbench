@@ -279,7 +279,10 @@ class SidePanel {
     })
     if (BrowserWindow.getFocusedWindow() != null && sidePanel.get().isFocused() ) //如果有任意一个window还有焦点，则聚焦到mainwindow
       //有窗体还有焦点 且 只有左侧栏
+    {
+      mainWindow.setFocusable(true)
       mainWindow.focus()
+    }
     log('设置左侧栏不再感应鼠标，主窗体获得焦点')
   }
 
