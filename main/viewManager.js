@@ -22,11 +22,11 @@ const defaultViewWebPreferences = {
   allowPopups: false,
   // partition: partition || 'persist:webcontent',
   enableWebSQL: false,
-  autoplayPolicy: ((settings.get('enableAutoplay')||settings.get('enableAutoplay')===undefined) ? 'no-user-gesture-required' : 'user-gesture-required')
+  autoplayPolicy: ((settings.get('enableAutoplay') || settings.get('enableAutoplay') === undefined) ? 'no-user-gesture-required' : 'user-gesture-required')
 }
 
-function createView (existingViewId, id, webPreferencesString, boundsString, events) {
-  viewStateMap[id] = { loadedInitialURL: false }
+function createView(existingViewId, id, webPreferencesString, boundsString, events) {
+  viewStateMap[id] = {loadedInitialURL: false}
 
   let view
   if (existingViewId) {
@@ -37,7 +37,7 @@ function createView (existingViewId, id, webPreferencesString, boundsString, eve
     view.setBackgroundColor('#fff')
     viewStateMap[id].loadedInitialURL = true
   } else {
-    view = new BrowserView({ webPreferences: Object.assign({}, defaultViewWebPreferences, JSON.parse(webPreferencesString)) })
+    view = new BrowserView({webPreferences: Object.assign({}, defaultViewWebPreferences, JSON.parse(webPreferencesString))})
 
     //mark插入对webviewInk的数据统计 但在主进程中，需要发送一个ipc到sidebar常驻子进程中去db操作
     SidePanel.send('countWebviewInk')
@@ -100,7 +100,7 @@ function createView (existingViewId, id, webPreferencesString, boundsString, eve
       return
     }
 
-    var view = new BrowserView({ webPreferences: defaultViewWebPreferences, webContents: webContents })
+    var view = new BrowserView({webPreferences: defaultViewWebPreferences, webContents: webContents})
 
     var popupId = Math.random().toString()
     temporaryPopupViews[popupId] = view
@@ -130,8 +130,8 @@ function createView (existingViewId, id, webPreferencesString, boundsString, eve
     var title = l('loginPromptTitle').replace('%h', authInfo.host).replace('%r', authInfo.realm)
     createPrompt({
       text: title,
-      values: [{ placeholder: l('username'), id: 'username', type: 'text' },
-        { placeholder: l('password'), id: 'password', type: 'password' }],
+      values: [{placeholder: l('username'), id: 'username', type: 'text'},
+        {placeholder: l('password'), id: 'password', type: 'password'}],
       ok: l('dialogConfirmButton'),
       cancel: l('dialogSkipButton'),
       width: 400,
@@ -144,7 +144,7 @@ function createView (existingViewId, id, webPreferencesString, boundsString, eve
 
   // show an "open in app" prompt for external protocols
 
-  function handleExternalProtocol (e, url, isInPlace, isMainFrame, frameProcessId, frameRoutingId) {
+  function handleExternalProtocol(e, url, isInPlace, isMainFrame, frameProcessId, frameRoutingId) {
     var knownProtocols = ['http', 'https', 'file', 'min', 'about', 'data', 'javascript', 'chrome'] // TODO anything else? tsb是新增的协议
     if (!knownProtocols.includes(url.split(':')[0])) {
       var externalApp = app.getApplicationNameForProtocol(url)
@@ -198,7 +198,7 @@ function createView (existingViewId, id, webPreferencesString, boundsString, eve
   return view
 }
 
-function destroyView (id) {
+function destroyView(id) {
   if (!viewMap[id]) {
     return
   }
@@ -218,7 +218,7 @@ function destroyView (id) {
   delete viewStateMap[id]
 }
 
-function destroyAllViews () {
+function destroyAllViews() {
   for (const id in viewMap) {
     destroyView(id)
   }
@@ -226,7 +226,7 @@ function destroyAllViews () {
 
 //处理设置当前BrowserView事件，以将sidebarView拿出来
 
-function setView (id) {
+function setView(id) {
   if (viewStateMap[id].loadedInitialURL) {
     mainWindow.setBrowserView(viewMap[id])
   } else {
@@ -235,7 +235,7 @@ function setView (id) {
   selectedView = id
 }
 
-function setBounds (id, bounds) {
+function setBounds(id, bounds) {
   if (viewMap[id]) {
     viewMap[id].setBounds(bounds)
   }
@@ -245,7 +245,7 @@ function setBounds (id, bounds) {
 
 }
 
-function focusView (id) {
+function focusView(id) {
   // empty views can't be focused because they won't propogate keyboard events correctly, see https://github.com/minbrowser/min/issues/616
   // also, make sure the view exists, since it might not if the app is shutting down
   if (viewMap[id] && (viewMap[id].webContents.getURL() !== '' || viewMap[id].webContents.isLoading())) {
@@ -255,17 +255,17 @@ function focusView (id) {
   }
 }
 
-function hideCurrentView () {
+function hideCurrentView() {
   mainWindow.setBrowserView(null)
   selectedView = null
   mainWindow.webContents.focus()
 }
 
-function getView (id) {
+function getView(id) {
   return viewMap[id]
 }
 
-function getViewIDFromWebContents (contents) {
+function getViewIDFromWebContents(contents) {
   for (var id in viewMap) {
     if (viewMap[id].webContents === contents) {
       return id
@@ -275,7 +275,7 @@ function getViewIDFromWebContents (contents) {
 
 ipc.on('createView', function (e, args) {
   createView(args.existingViewId, args.id, args.webPreferencesString, args.boundsString, args.events)
-    //focusView(args.id)
+  //focusView(args.id)
 })
 
 ipc.on('destroyView', function (e, id) {
@@ -290,9 +290,9 @@ ipc.on('setView', function (e, args) {
   setView(args.id)
   setBounds(args.id, args.bounds)
   if (args.focus) {
-    if(SidePanel.alive()&& sidePanel.get().isFocused()){
+    if (SidePanel.alive() && sidePanel.get().isFocused()) {
       //如果侧边栏是焦点状态，则不去聚焦
-    }else{
+    } else {
       focusView(args.id) //todo观察，注释这行在切换view的时候给他聚焦的代码，用以解决mac平台上切换tab导致侧边栏丢失焦点出错的问题
     }
 
@@ -324,11 +324,24 @@ ipc.on('loadURLInView', function (e, args) {
       mainWindow.setBrowserView(viewMap[args.id])
     }
   }
-  //todo 这行之后就会抢夺焦点到view上
-  mainWindow.setFocusable(false)
-  viewMap[args.id].webContents.loadURL(args.url).then(()=>{
-    mainWindow.setFocusable(true)
-  })
+  if (sidePanel.get()) {
+    if (sidePanel.get().isFocused()) {
+      if (process.platform === 'darwin') {
+        //todo 这行之后就会抢夺焦点到view上 只有mac上有需要这样抢夺焦点
+        mainWindow.setFocusable(false)
+        viewMap[args.id].webContents.loadURL(args.url).then(() => {
+          mainWindow.setFocusable(true)
+        })
+      } else {
+        viewMap[args.id].webContents.loadURL(args.url)
+      }
+    } else {
+      viewMap[args.id].webContents.loadURL(args.url)
+    }
+  } else {
+    viewMap[args.id].webContents.loadURL(args.url)
+  }
+
   viewStateMap[args.id].loadedInitialURL = true
 })
 
@@ -354,16 +367,16 @@ ipc.on('callViewMethod', function (e, data) {
   if (result instanceof Promise) {
     result.then(function (result) {
       if (data.callId) {
-        mainWindow.webContents.send('async-call-result', { callId: data.callId, error: null, result })
+        mainWindow.webContents.send('async-call-result', {callId: data.callId, error: null, result})
       }
     })
     result.catch(function (error) {
       if (data.callId) {
-        mainWindow.webContents.send('async-call-result', { callId: data.callId, error, result: null })
+        mainWindow.webContents.send('async-call-result', {callId: data.callId, error, result: null})
       }
     })
   } else if (data.callId) {
-    mainWindow.webContents.send('async-call-result', { callId: data.callId, error, result })
+    mainWindow.webContents.send('async-call-result', {callId: data.callId, error, result})
   }
 })
 
@@ -379,8 +392,8 @@ ipc.on('getCapture', function (e, data) {
     if (size.width === 0 && size.height === 0) {
       return
     }
-    img = img.resize({ width: data.width, height: data.height })
-    mainWindow.webContents.send('captureData', { id: data.id, url: img.toDataURL() })
+    img = img.resize({width: data.width, height: data.height})
+    mainWindow.webContents.send('captureData', {id: data.id, url: img.toDataURL()})
   })
 })
 
@@ -400,7 +413,7 @@ var emulationViews = []
 var oldAgent = ''
 //当前view打开emulation
 ipc.on('enableEmulation', function (e, data) {
-  if(viewMap[data.id].webContents.getURL().startsWith("file://") || viewMap[data.id].webContents.getURL().startsWith("ts://"))
+  if (viewMap[data.id].webContents.getURL().startsWith("file://") || viewMap[data.id].webContents.getURL().startsWith("ts://"))
     return
   mobileMod.add(viewMap[data.id].webContents.getURL())
 
