@@ -177,6 +177,9 @@ class SidePanel {
     if(isWin()){
       setHeight+=1
     }
+	  if(isWin11()){
+		setHeight-=1
+	  }
     this._sidePanel.setBounds({
       x: setX,
       y: setY,
