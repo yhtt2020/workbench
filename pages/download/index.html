@@ -22,7 +22,7 @@
            </a-badge>
         下载中
       </span>
-          <div v-for="(list,index) in lists" v-bind:key="index" @click="getIndex(index)">
+          <div v-for="(list,index) in lists" v-bind:key="index">
             <div style="margin-top: 0;width: 100%;height: 55px;background-color: azure ">
               <div style="width: 34px;height: 40px;position: absolute;margin-top: 8px;margin-left: 5px;" >
                 <a-icon type="file-text" style="fontSize:30px"></a-icon>
@@ -35,11 +35,11 @@
               >
                 <a style="float: right;" href="#">删除</a>
               </a-popconfirm>
-<!--              <div >-->
-<!--                <a-button style="position: absolute;margin-left: 270px;margin-top: 14px" type="link" @click="getPauseId(list.id)">-->
-<!--                  暂停-->
-<!--                </a-button>-->
-<!--              </div>-->
+              <div >
+                <a-button style="position: absolute;margin-left: 270px;margin-top: 14px" type="link" @click="stop()">
+                  暂停
+                </a-button>
+              </div>
            <div>
             <div style="margin-left: 50px;font-size: 15px;font-weight: bold ;">{{list.title}}</div>
             <div style="margin-left: 50px;font-size: 12px;width: 150px;">{{list.received}}  MB  /  {{list.total}}  MB</div>
@@ -68,7 +68,7 @@
               <a-button style="position: absolute;margin-left: 200px;margin-top: 5px" type="link" >
                 打开
               </a-button>
-                <a-button style="position: absolute;margin-left: 240px;margin-top: 5px" type="link" @click="openFileHandler(donelist.path)" >
+                <a-button style="position: absolute;margin-left: 240px;margin-top: 5px" type="link" @click="openFileHandler" >
                   打开文件夹
                 </a-button>
             </div>
@@ -96,6 +96,7 @@
 
 
 <script type="module">
+  const { shell } = require('electron')
   const fs = require('fs')
   let {ipcMain} = require('electron')
   let {ipcRenderer} = require('electron')
@@ -113,7 +114,7 @@
   ipcRenderer.on('download-info', (event, args) => {
     let aname;
     if (args.name.length >= 20) {
-      aname = args.name.substring(0, 10)+'...';
+      aname = args.name.substring(0, 15)+'...';
     }else (aname=args.name)
 
     if(args.status ==='start'){
@@ -123,34 +124,33 @@
         realdata:'',
         total:'',
         progressnuw:0,
-        time:args.time
+        startTime:args.startTime,
       })
     }
+
     if (args.status === 'progressing' && args.path !== '' ) {
-
-      appVue.lists.forEach(function(item){
-
+        appVue.lists.forEach(function(item,index,arr){
+          if(item.startTime===args.startTime){
           item.title = aname;
           item.received = ((args.size.received) / 1024 / 1024).toFixed(2);
           item.realdata = ((args.realdata) / 1024 / 1024).toFixed(2);
           item.total = ((args.size.total) / 1024 / 1024).toFixed(2);
-          item.progressnuw = args.progressnuw;
-
-    })
-
+          item.progressnuw = Math.round(args.progressnuw)
+        }
+       })
       console.log(appVue.lists)
-
     }
 
-      if(args.status === 'completed' && args.path !== '' ) {
 
+      if(args.status === 'completed' && args.path !== '' ) {
+        console.log(args)
         appVue.lists.splice(0, 1)
         appVue.donelists.push({
           id1: appVue.nextTodoId1++,
-          title: args.name,
+          title: aname,
           total:((args.size.total)/1024/1024).toFixed(2),
-          path:args.path
         })
+        appVue.path=args.path
       }
   })
 
@@ -163,6 +163,8 @@
        nextTodoId1:0,
        nextTodoId2:0,
        progressnuw:0,
+       startTime: '',
+       path:''
      },
 
     methods: {
@@ -173,20 +175,13 @@
           id2: this.nextTodoId2++,
         })
       },
-      // getPauseId(id) {
-      //   console.log(id)
-      //   ipcRenderer.send('stopDownload')
-      // },
-      getIndex(index){
-        console.log(index);
+      stop() {
+        ipcRenderer.send('stopDownload')
       },
-      openFileHandler(filePath) {
-        const {shell} = require('electron').remote
-        if(fs.existsSync(filePath)) {
-          shell.showItemInFolder(filePath);
-        }else{
-          ipcRenderer.send('exists')
-        }
+      openFileHandler() {
+        const { shell } = require('electron')
+        console.log(this.path)
+        shell.showItemInFolder()
       },
     }
    })

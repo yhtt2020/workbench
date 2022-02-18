@@ -41,7 +41,8 @@ function downloadHandler (event, item, webContents) {
       status: 'start',
       size: { received: 0, total: item.getTotalBytes() },
       paused: item.isPaused(),
-      time:item.getStartTime()
+      startTime:item.getStartTime(),
+
     })
 
 
@@ -70,7 +71,8 @@ function downloadHandler (event, item, webContents) {
         realdata:item.speed,
         progressnuw:((prevReceivedBytes/item.getTotalBytes()).toFixed(2))*100,
         paused: item.isPaused(),
-        time:item.getStartTime()
+        startTime:item.getStartTime()
+
       })
 
       console.log({
