@@ -99,8 +99,8 @@ const statistics = {
       })
     }
 
-    setTimeout(statistics.upload, 10000)
-    setInterval(statistics.upload, 24 * 60 * 60 * 1000)
+    setTimeout(statistics.upload, 10 * 1000)
+    setInterval(statistics.upload, 10 * 60 * 1000)
     setInterval(statistics.uploadCumulativeTime, 1000 * 60)
 
     statistics.usageDataCache = settings.get('usageData') || ({
@@ -113,17 +113,18 @@ const statistics = {
       } else {
         settings.set('usageData', statistics.usageDataCache)
       }
-    }, 60000)
+    }, 60 * 1000)
 
     /* 注释掉此段关于用户关闭信息收集按钮后的重制设备ID的问题 */
-    // settings.listen('collectUsageStats', function (value) {
-    //   if (value === false) {
-    //     // disabling stats collection should reset client ID
-    //     settings.set('clientID', undefined)
-    //   } else if (!settings.get('clientID')) {
-    //     settings.set('clientID', Math.random().toString().slice(2))
-    //   }
-    // })
+    settings.listen('collectUsageStats', function (value) {
+      if (value === false) {
+        // disabling stats collection should reset client ID
+        //settings.set('clientID', undefined)
+        return
+      } else if (!settings.get('clientID')) {
+        settings.set('clientID', Math.random().toString().slice(2))
+      }
+    })
 
     if (!settings.get('installTime')) {
       // round install time to nearest hour to reduce uniqueness
