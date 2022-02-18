@@ -145,7 +145,7 @@ function createView (existingViewId, id, webPreferencesString, boundsString, eve
   // show an "open in app" prompt for external protocols
 
   function handleExternalProtocol (e, url, isInPlace, isMainFrame, frameProcessId, frameRoutingId) {
-    var knownProtocols = ['http', 'https', 'file', 'min', 'about', 'data', 'javascript', 'chrome'] // TODO anything else?
+    var knownProtocols = ['http', 'https', 'file', 'min', 'about', 'data', 'javascript', 'chrome'] // TODO anything else? tsb是新增的协议
     if (!knownProtocols.includes(url.split(':')[0])) {
       var externalApp = app.getApplicationNameForProtocol(url)
       if (externalApp) {
@@ -324,7 +324,11 @@ ipc.on('loadURLInView', function (e, args) {
       mainWindow.setBrowserView(viewMap[args.id])
     }
   }
-  viewMap[args.id].webContents.loadURL(args.url)
+  //todo 这行之后就会抢夺焦点到view上
+  mainWindow.setFocusable(false)
+  viewMap[args.id].webContents.loadURL(args.url).then(()=>{
+    mainWindow.setFocusable(true)
+  })
   viewStateMap[args.id].loadedInitialURL = true
 })
 

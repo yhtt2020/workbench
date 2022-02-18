@@ -117,9 +117,11 @@ Vue.component('sidebar', {
     }
     let sideMode=localStorage.getItem('sideMode')
     sideMode = sideMode||'auto'
-    if(sideMode==='close' || sideMode==='auto')
+    if(sideMode==='close' || sideMode==='auto'){
       document.getElementById('clickThroughElement').style.left = '55px'
+    }
     else if(sideMode==='open'){
+      document.getElementById('appVue').classList.add('expand')
       document.getElementById('clickThroughElement').style.left = '155px'
     }
     appVue.mod=sideMode
@@ -465,7 +467,22 @@ Vue.component('sidebar', {
     editTaskNameKeyPress(event){
         event.currentTarget.blur()
     },
-
+    /**
+     * 处理窗体失去焦点事件
+     */
+    blur(){
+      //处理左侧栏，强制移除expanded样式
+      if(appVue.mod==='auto' || appVue.mod==='close'){
+        document.getElementById('appVue').classList.remove('expanded')
+      }
+      //处理全部的左侧浮窗，都加上display:none
+      let popovers=document.getElementsByClassName('ant-popover')
+      if(popovers){
+        for(let i=0;i<popovers.length;i++){
+          popovers[i].style.display='none'
+        }
+      }
+    }
 	}
 
 })
@@ -631,4 +648,10 @@ ipc.on('addToDesk',(event,args)=>{
   const element= deskModel.createElementPos(args.app)
   deskModel.addElementToDesk(element,args.deskId)
   ipc.send('message',{'type':'success',config:{'content':'添加到桌面成功'}})
+})
+
+//左侧栏失去焦点
+ipc.on('blur',(event,args)=>{
+  //todo 关闭左侧栏的展开
+  appVue.$refs.sidePanel.blur()
 })

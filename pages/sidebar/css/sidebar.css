@@ -329,6 +329,14 @@ body {
   height: 20px;
   margin-right: 5px;
 }
+.tabs li.active {
+  background-color: #efefef;
+  border-radius: 4px;
+}
+.tabs li:hover {
+  background-color: #efefef;
+  border-radius: 4px;
+}
 .tabs .tab-title {
   cursor: pointer;
   margin-right: 22px;
@@ -349,9 +357,6 @@ body {
 .tabs .unlock-tab:hover {
   background: #f1f1f1;
   border-radius: 3px;
-}
-.tabs .tab-title:hover {
-  background-color: #efefef;
 }
 
 .wrapper {
