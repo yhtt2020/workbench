@@ -31,7 +31,7 @@ function loadUpdate(updateInfo){
 }
 //app.whenReady().then(()=>loadUpdate())
 // 自动检测升级机制
-app.whenReady().then(()=>{
+function checkUpdate(){
   if(isDevelopmentMode){
     //如果是开发环境，直接不检测，如需调试升级工具，将此处return注释掉即可
     //return
@@ -46,14 +46,14 @@ app.whenReady().then(()=>{
     }
   }).catch((err)=> {
     //console.log(err)
-    })
- autoUpdater.on('error',(err)=>{
-   setTimeout(()=>{
-     if(sidePanel.get()){
-       sidePanel.get().webContents.send('message',{type:'error',config:{content:"升级文件下载失败，重启软件后重试。",key:"update"}})
-     }
-   },5000)
- })
+  })
+  autoUpdater.on('error',(err)=>{
+    setTimeout(()=>{
+      if(sidePanel.get()){
+        sidePanel.get().webContents.send('message',{type:'error',config:{content:"升级文件下载失败，重启软件后重试。",key:"update"}})
+      }
+    },2000)
+  })
 
   autoUpdater.on('update-available',(data)=>{
     updateInfo=data
@@ -62,7 +62,7 @@ app.whenReady().then(()=>{
       if(sidePanel.get()){
         sidePanel.get().webContents.send('message',{type:'success',config:{content:"有新版本可用，系统将在后台自动下载。",key:"update"}})
       }
-    },5000)
+    },2000)
   })
 
   // autoUpdater.on('download-progress',(progressObj)=>{
@@ -99,7 +99,6 @@ app.whenReady().then(()=>{
   ipc.on('closeUpdate',()=>{
     updaterWindow.close()
   })
-
-})
+}
 
 
