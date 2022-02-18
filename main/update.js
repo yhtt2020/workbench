@@ -34,7 +34,7 @@ function loadUpdate(updateInfo){
 app.whenReady().then(()=>{
   if(isDevelopmentMode){
     //如果是开发环境，直接不检测，如需调试升级工具，将此处return注释掉即可
-    return
+    //return
   }
   let updateInfo={}
   autoUpdater.logger=electronLog
@@ -48,13 +48,21 @@ app.whenReady().then(()=>{
     //console.log(err)
     })
  autoUpdater.on('error',(err)=>{
-   sidePanel.get().webContents.send('message',{type:'error',config:{content:"升级文件下载失败，重启软件后重试。",key:"update"}})
+   setTimeout(()=>{
+     if(sidePanel.get()){
+       sidePanel.get().webContents.send('message',{type:'error',config:{content:"升级文件下载失败，重启软件后重试。",key:"update"}})
+     }
+   },5000)
  })
 
   autoUpdater.on('update-available',(data)=>{
     updateInfo=data
     //console.log(updateInfo)
-    sidePanel.get().webContents.send('message',{type:'success',config:{content:"有新版本可用，系统将在后台自动下载。",key:"update"}})
+    setTimeout(()=>{
+      if(sidePanel.get()){
+        sidePanel.get().webContents.send('message',{type:'success',config:{content:"有新版本可用，系统将在后台自动下载。",key:"update"}})
+      }
+    },5000)
   })
 
   // autoUpdater.on('download-progress',(progressObj)=>{
