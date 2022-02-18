@@ -22,7 +22,7 @@ const defaultViewWebPreferences = {
   allowPopups: false,
   // partition: partition || 'persist:webcontent',
   enableWebSQL: false,
-  autoplayPolicy: (settings.get('enableAutoplay') ? 'no-user-gesture-required' : 'user-gesture-required')
+  autoplayPolicy: ((settings.get('enableAutoplay')||settings.get('enableAutoplay')===undefined) ? 'no-user-gesture-required' : 'user-gesture-required')
 }
 
 function createView (existingViewId, id, webPreferencesString, boundsString, events) {
@@ -38,6 +38,19 @@ function createView (existingViewId, id, webPreferencesString, boundsString, eve
     viewStateMap[id].loadedInitialURL = true
   } else {
     view = new BrowserView({ webPreferences: Object.assign({}, defaultViewWebPreferences, JSON.parse(webPreferencesString)) })
+
+    //mark插入对webviewInk的数据统计 但在主进程中，需要发送一个ipc到sidebar常驻子进程中去db操作
+    SidePanel.send('countWebviewInk')
+
+    //mark插入对blockAds的数据统计 每次载入webview收集一次blockAds的数量
+    let currentBlockAds = settings.get('filteringBlockedCount')
+    SidePanel.send('countBlockAds', {blockAds: currentBlockAds})
+
+    //mark插入对scripts的数据统计
+    SidePanel.send('countScript')
+
+    //mark插入对defaultBrowser的数据统计
+    SidePanel.send('defaultBrowser', app.isDefaultProtocolClient('http'))
   }
   events.forEach(function (event) {
     view.webContents.on(event, function (e) {
@@ -132,7 +145,7 @@ function createView (existingViewId, id, webPreferencesString, boundsString, eve
   // show an "open in app" prompt for external protocols
 
   function handleExternalProtocol (e, url, isInPlace, isMainFrame, frameProcessId, frameRoutingId) {
-    var knownProtocols = ['http', 'https', 'file', 'min', 'about', 'data', 'javascript', 'chrome'] // TODO anything else?
+    var knownProtocols = ['http', 'https', 'file', 'min', 'about', 'data', 'javascript', 'chrome'] // TODO anything else? tsb是新增的协议
     if (!knownProtocols.includes(url.split(':')[0])) {
       var externalApp = app.getApplicationNameForProtocol(url)
       if (externalApp) {
@@ -311,7 +324,11 @@ ipc.on('loadURLInView', function (e, args) {
       mainWindow.setBrowserView(viewMap[args.id])
     }
   }
-  viewMap[args.id].webContents.loadURL(args.url)
+  //todo 这行之后就会抢夺焦点到view上
+  mainWindow.setFocusable(false)
+  viewMap[args.id].webContents.loadURL(args.url).then(()=>{
+    mainWindow.setFocusable(true)
+  })
   viewStateMap[args.id].loadedInitialURL = true
 })
 

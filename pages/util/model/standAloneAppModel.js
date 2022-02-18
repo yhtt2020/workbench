@@ -8,38 +8,6 @@ const standAloneAppModel = {
       }
     })
 
-    await db.standAloneApps.where({id: 101}).count().then(result => {
-      if (result === 0) {
-        let wechatFile = {
-          id: 101,
-          name: '文件小助手',
-          logo: '../../icons/apps/wechatfile.png',
-          summary: '传输文件到微信，扫码即用',
-          type: 'web',
-          url: 'https://filehelper.weixin.qq.com/',
-          preload: '',
-          themeColor: '#07c160',
-          userThemeColor: '',
-          createTime: Date.now(),
-          updateTime: Date.now(),
-          accountAvatar: '',
-          order: 0,
-          useCount: 3,
-          lastExecuteTime: Date.now(),
-          settings: JSON.stringify({
-            bounds: {
-              width: 540,
-              height: 540
-            },
-            alwaysTop: true,
-            showInSideBar:true,
-          }),
-          unreadCount: 0,
-          showInSideBar: true
-        }
-        db.standAloneApps.put(wechatFile)
-      }
-    })
 
     let group =await db.standAloneApps.get({name:'团队协作'})
     if(!!!group.package){
@@ -47,7 +15,7 @@ const standAloneAppModel = {
       db.standAloneApps.update(group.id,{id:1,package:'com.thisky.group'})
 
       let com=await db.standAloneApps.get({name:'效率社区'})
-      db.standAloneApps.update(com.id,{id:2,package:'com.thisky.com'})
+      db.standAloneApps.update(com.id,{id:2,package:'s.apps.vip'})
       await standAloneAppModel.setAppSetting(com.id,{showInSideBar:true})
 
       let file=await db.standAloneApps.get({name:'文件小助手'})
@@ -64,6 +32,7 @@ const standAloneAppModel = {
       await db.standAloneApps.update(1,{url:serverConfig.IM.FRONT_URL + serverConfig.IM.AUTO_LOGIN})
 
     }
+    db.standAloneApps.update(2,{package:'com.thisky.com','name':'元社区','url':'https://s.apps.vip','logo':'../../icons/apps/yuan.png'})
     await db.standAloneApps.update(2,{themeColor:'#4188ff'})
     await db.standAloneApps.update(3,{themeColor:'#8618d2'})
   },
@@ -114,19 +83,22 @@ const standAloneAppModel = {
   /**
    * 安装应用
    * @param url 安装的web应用地址
-   * @param option 配置参数
+   * @param app 配置参数
    * @returns {Promise<void>}
    */
-  async install(url = '', option = {}) {
+  async install(url = '', app = {}) {
     if (!!!url) return false
-    let app = {
-      name: option.name,
-      logo: option.logo,
-      summary: option.summary || '',
-      type: option.type || 'web',
+    let appInstall = {
+      id:app.id?app.id:undefined,
+      name: app.name,
+      logo: app.logo,
+      summary: app.summary || '',
+      type: app.type || 'web',
+      author:app.author?app.author:'',
+      site:app.site?app.site:'',
       url: url,
       preload: '',
-      themeColor: option.themeColor || '#ccc',
+      themeColor: app.themeColor || '#ccc',
       userThemeColor: '',
       createTime: Date.now(),
       updateTime: Date.now(),
@@ -134,11 +106,11 @@ const standAloneAppModel = {
       order: 0,
       useCount: 0,
       lastExecuteTime: Date.now(),
-      settings: JSON.stringify(option.settings),
+      settings:app.settings? JSON.stringify(app.settings):'[]',
       unreadCount: 0,
-      showInSideBar: option.showInSideBar || false
+      showInSideBar: app.showInSideBar || false
     }
-    return await db.standAloneApps.put(app)
+    return await db.standAloneApps.put(appInstall)
   },
   async getAllApps(option={}) {
     let result=[]
@@ -150,7 +122,7 @@ const standAloneAppModel = {
 
     result.forEach((app) => {
       app.capture = ''
-      app.settings = JSON.parse(app.settings)
+      app.settings =app.settings? JSON.parse(app.settings):{}
     })
     return result
   },
@@ -219,11 +191,11 @@ const standAloneAppModel = {
           showInSideBar:true
         }),
         unreadCount: 0,
-        showInSideBar: true
       },
       {
         name: '元社区',
-        logo: '../../icons/svg/com.svg',
+        logo: '../../icons/apps/yuan.png',
+        package:'com.thisky.com',
         summary: '用心经营您的元社区',
         type: 'web',
         url: serverConfig.SERVER_BASE_URL,
@@ -240,10 +212,10 @@ const standAloneAppModel = {
           bounds: {
             width: 1100,
             height: 800
-          }
+          },
+          showInSideBar: true
         }),
         unreadCount: 0,
-        showInSideBar: true
       },
       {
         name: '收藏夹',
@@ -265,13 +237,42 @@ const standAloneAppModel = {
           bounds: {
             width: 1200,
             height: 800
-          }
+          },
+          showInSideBar:true,
         }),
         unreadCount: 0,
-        showInSideBar: true
       }
     ]
     return await db.standAloneApps.bulkAdd(defaultApps)
+  },
+  /**
+   * 设置转中文表达
+   * @param setting
+   */
+  settingToWords(setting){
+    //keepRunning', 'theme', 'desktop', 'showInSideBar', 'alwaysTop', 'autoRun'
+    let words=''
+    switch (setting){
+      case 'bounds':
+        words='窗口大小'
+        break
+      case 'keepRunning':
+        words='保持运行'
+        break
+      case 'showInSideBar':
+        words='保持在左侧栏'
+        break
+      case 'alwaysTop':
+        words='窗口置顶'
+        break
+      case 'autoRun':
+        words='自动运行'
+        break
+    }
+    return words
+  },
+  async countApps() {
+    return await db.standAloneApps.count()
   }
 
 }

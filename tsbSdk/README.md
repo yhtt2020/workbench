@@ -76,7 +76,7 @@ tsbk.ready(function() {
 ```
 tsbk.ready(function() {
   tsbk.tabLinkJump({
-    url: 'https://com.thisky.com/user/account-info'
+    url: 'https://s.apps.vip/user/account-info'
   })
 })
 

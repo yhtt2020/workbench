@@ -88,9 +88,9 @@
                 2.支持多个空间任意切换<br/>
                 3.与其他用户在线交流、反馈产品使用建议<br/>
                 4.开启更多高级功能<br/>
-                &nbsp;①.团队功能，与团队成员共享收藏<br/>
-                &nbsp;②.企业社区，支持私密社区，供团队内成员交流<br/>
-                &nbsp;③.全网热议，支持任意网站与其他用户在线沟通
+                &nbsp;① 团队功能，与团队成员共享收藏<br/>
+                &nbsp;② 企业社区，支持私密社区，供团队内成员交流<br/>
+                &nbsp;③ 全网热议，支持任意网站与其他用户在线沟通
               </div>
               <div v-if="user.uid!==0">
                 <template>
@@ -208,9 +208,9 @@
                 2.支持多个空间任意切换<br/>
                 3.与其他用户在线交流、反馈产品使用建议<br/>
                 4.开启更多高级功能<br/>
-                &nbsp;①.团队功能，与团队成员共享收藏<br/>
-                &nbsp;②.企业社区，支持私密社区，供团队内成员交流<br/>
-                &nbsp;③.全网热议，支持任意网站与其他用户在线沟通
+                &nbsp;① 团队功能，与团队成员共享收藏<br/>
+                &nbsp;② 企业社区，支持私密社区，供团队内成员交流<br/>
+                &nbsp;③ 全网热议，支持任意网站与其他用户在线沟通
               </div>
               <div v-if="user.uid!==0">用户信息</div>
             </template>
@@ -242,8 +242,8 @@
         <li v-for="app in apps" @click="executeApp(app)" @mouseenter="hoverApp($event,app)" @contextmenu="createMenu(app.id,app)" v-if="app.processing || app.settings.showInSideBar">
           <a-popover  placement="right" :mouse-enter-delay="0.3"
                      overlay-class-name="tips"  @visible-change="">
-            <template slot="title">
-              <span> {{app.name}} </span>
+            <template slot="title" >
+              <span class="app-name-popover"> {{app.name}} </span>
             </template>
             <template slot="content" v-if="app.processing">
               <div class="app-capture">
@@ -325,7 +325,7 @@
               >
                 <template slot="content">
                   <ul class="tabs">
-                    <li class="tab-title" v-for="(tab,j) in item.tabs" :key="tab.id">
+                    <li class="tab-title" :class="{'active':tab.selected}" v-for="(tab,j) in item.tabs" :key="tab.id">
                       <img class="tab-icon" :src="tab.icon"/> {{ tab.title }}
                     </li>
                   </ul>
@@ -380,7 +380,7 @@
                   placement="right"
                   :mouse-enter-delay="0.1"
                   :mouse-leave-delay="0.2"
-                  :destroy-tooltip-on-hide="true"
+                  :overlay-style="{'width':'305px','height':item.tabs.length*30+50+'px'}"
                   overlay-class-name="tips"
                 >
                   <div slot="title">
@@ -403,7 +403,7 @@
                       </span>
                     </div>
                     <ul class="tabs" style="margin-top: 5px">
-                      <li style="position:relative;" @mouseenter="showHoverLock(tab)" @mouseleave="hideHoverLock(tab)" v-for="(tab,j) in item.tabs" :key="tab.id">
+                      <li :class="{'active':(tab.selected )}" style="position:relative;" @mouseenter="showHoverLock(tab)" @mouseleave="hideHoverLock(tab)" v-for="(tab,j) in item.tabs" :key="tab.id">
                         <div class="tab-title" @click="openPopoverTab(item.id, tab.id)">
                           <img class="tab-icon" :src="tab.icon" onerror="this.src='../../icons/default.svg'"/>&nbsp;{{ tab.title }}
                         </div>

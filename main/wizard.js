@@ -1,14 +1,25 @@
 let wizard = null
 app.whenReady().then(()=>{
-  ipc.on('wizard', () => {
+  function loadWizard(page='index'){
     if(!!!wizard){
-      closeSidePanel()
-      mainWindow.hide()
+      //closeSidePanel()
+      //mainWindow.hide()
+      let width=860
+      let height=840
+      switch (page){
+        case 'apps':
+          width=600
+          height=800
+      }
+
       wizard = new BrowserWindow({
-        width:860,
-        height:740,
+        width:width,
+        height:height,
+        minimizable:false,
+        maximizable:false,
         resizable: false,
         acceptFirstMouse: true,
+        parent:mainWindow,
         autoHideMenuBar :true,
         webPreferences: {
           preload: path.join(__dirname, '/pages/wizard/preload.js'),
@@ -22,20 +33,36 @@ app.whenReady().then(()=>{
           ]
         }
       })
-      wizard.webContents.loadURL('file://' + __dirname + "/pages/wizard/index.html")
+
+      wizard.webContents.loadURL('file://' + __dirname + `/pages/wizard/`+page+`.html`)
       // wizard.webContents.openDevTools()
       // setTimeout(() => {
       //   wizard.focus()
       // }, 1000)
 
-      ipc.on('closeWizard',()=>{
-        wizard.close()
-        destroyAllViews()
-        mainWindow.webContents.reload()
-        mainWindow.show()//app.relaunch()
-        loadSidePanel()
-      })
-    }
 
+    }
+  }
+  ipc.on('closeWizard',(event,args)=>{
+    if(wizard){
+      wizard.close()
+      wizard=null
+      if(args && args.next==='apps'){
+        setTimeout(()=>{
+          loadWizard(args.next)
+        },args.delay)
+      }
+    }
+    //destroyAllViews()
+    //mainWindow.webContents.reload()
+    //mainWindow.show()//app.relaunch()
+    //loadSidePanel()
+  })
+  ipc.on('wizard', (event,args) => {
+    let page='index'
+    if(!!args){
+      page=args.page?args.page:'index'
+    }
+    loadWizard(page)
   })
 })

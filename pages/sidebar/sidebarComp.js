@@ -77,6 +77,11 @@ Vue.component('sidebar', {
     await standAloneAppModel.initialize()
     this.apps=await standAloneAppModel.getAllApps()
     ipc.send('getRunningApps')
+
+    //mark插入对password的数据统计
+    let passwordList = await ipc.invoke('credentialStoreGetCredentials')
+    await userStatsModel.setValue('password', passwordList.length)
+
     console.log(this.apps)
 		// let item = {
 		// 	title: '打开标签', //名称，用于显示提示
@@ -112,9 +117,11 @@ Vue.component('sidebar', {
     }
     let sideMode=localStorage.getItem('sideMode')
     sideMode = sideMode||'auto'
-    if(sideMode==='close' || sideMode==='auto')
+    if(sideMode==='close' || sideMode==='auto'){
       document.getElementById('clickThroughElement').style.left = '55px'
+    }
     else if(sideMode==='open'){
+      document.getElementById('appVue').classList.add('expand')
       document.getElementById('clickThroughElement').style.left = '155px'
     }
     appVue.mod=sideMode
@@ -460,7 +467,22 @@ Vue.component('sidebar', {
     editTaskNameKeyPress(event){
         event.currentTarget.blur()
     },
-
+    /**
+     * 处理窗体失去焦点事件
+     */
+    blur(){
+      //处理左侧栏，强制移除expanded样式
+      if(appVue.mod==='auto' || appVue.mod==='close'){
+        document.getElementById('appVue').classList.remove('expanded')
+      }
+      //处理全部的左侧浮窗，都加上display:none
+      let popovers=document.getElementsByClassName('ant-popover')
+      if(popovers){
+        for(let i=0;i<popovers.length;i++){
+          popovers[i].style.display='none'
+        }
+      }
+    }
 	}
 
 })
@@ -472,7 +494,7 @@ ipc.on('message',function(event,args){
   appVue.$message[args.type](args.config)
 })
 
-ipc.on('executedAppSuccess',function (event,args){
+ipc.on('executedAppSuccess',async function (event,args){
   appVue.$refs.sidePanel.apps.forEach(app=>{
     if(app.id===args.app.id){
       app.processing=true
@@ -482,6 +504,17 @@ ipc.on('executedAppSuccess',function (event,args){
   appVue.$refs.sidePanel.runningApps.push(args.app.id)
   standAloneAppModel.update(args.app.id,{lastExecuteTime:Date.now()}).then((res)=>{
   })
+
+  //mark插入对apps的数据统计
+  let num = await standAloneAppModel.countApps()
+  setTimeout(async () => {
+    await userStatsModel.setValue('apps', num)
+  }, 2000)
+
+  //mark插入对appsExecutedCounts的数据统计
+  setTimeout(async () => {
+    await userStatsModel.incrementValue('appsExecutedCounts')
+  }, 2000)
 })
 ipc.on('closeApp',function (event,args){
   appVue.$refs.sidePanel.apps.forEach(app=>{
@@ -494,7 +527,6 @@ ipc.on('closeApp',function (event,args){
         appVue.$refs.sidePanel.runningApps.splice(appIndex,1)
     }
   })
-
 })
 
 ipc.on('updateAppCapture',function (event,args){
@@ -565,6 +597,9 @@ ipc.on('runAutoRunApps',function(event,args){
       ipc.send('executeApp',{app:app,background:true})
     }
   })
+  if(!localStorage.getItem('suggest')){
+    ipc.send('wizard',{page:'apps'})
+  }
 })
 
 ipc.on('appBadge',function (event,args){
@@ -582,9 +617,41 @@ ipc.on('appBadge',function (event,args){
 
   })
 })
+
+ipc.on('countWebviewInk', async () => {
+  setTimeout(async () => {
+    await userStatsModel.incrementValue('webviewsInk')
+  }, 2000)
+})
+
+ipc.on('countBlockAds', (event, args) => {
+  setTimeout(async () => {
+    await userStatsModel.setValue('blockAds', args.blockAds)
+  }, 2000)
+})
+
+ipc.on('countScript', () => {
+  let num = require('../util/model/userScriptModel').countScript(window.globalArgs['user-data-path'])
+  setTimeout(async () => {
+    await userStatsModel.setValue('scripts', num)
+  }, 10000)
+})
+
+ipc.on('defaultBrowser', (event, args) => {
+  setTimeout(async () => {
+    args ? await userStatsModel.setValue('defaultBrowser', 1) : await userStatsModel.setValue('defaultBrowser', 0)
+  }, 2000)
+})
+
 ipc.on('addToDesk',(event,args)=>{
   const  deskModel=require('../util/model/deskModel.js')
   const element= deskModel.createElementPos(args.app)
   deskModel.addElementToDesk(element,args.deskId)
   ipc.send('message',{'type':'success',config:{'content':'添加到桌面成功'}})
+})
+
+//左侧栏失去焦点
+ipc.on('blur',(event,args)=>{
+  //todo 关闭左侧栏的展开
+  appVue.$refs.sidePanel.blur()
 })

@@ -1,4 +1,4 @@
-let forceClose = false
+
 const { config } = require(path.join(__dirname, '//server-config.js'))
 const remote = require('@electron/remote/main')
 
@@ -407,8 +407,9 @@ app.whenReady().then(() => {
         })
         appManager.settingWindow.setMenu(null)
         appManager.settingWindow.webContents.loadURL('file://' + __dirname + '/pages/saApp/setting.html')
-        if (isDevelopmentMode)
+        if (isDevelopmentMode){
           //appManager.settingWindow.webContents.openDevTools()
+        }
         appManager.settingWindow.on('close', () => {
           appManager.settingWindow = null
         })
@@ -488,8 +489,8 @@ app.whenReady().then(() => {
         ]
       }
       let appView = new BrowserView({
-        width: saApp.settings.bounds.width,
-        height: saApp.settings.bounds.height - 70,
+        width: appWindow.getBounds().width,
+        height: appWindow.getBounds().height - 70,
         webPreferences: webPreferences
       })
       /**
@@ -594,11 +595,12 @@ app.whenReady().then(() => {
      */
     executeApp (saApp, background = false) {
       saApp.isSystemApp = saApp.id < 10 //todo 加入更加安全的系统应用判断方式
+      saApp.settings=saApp.settings?saApp.settings:{}
       if (1) {
         //todo 判断一下是不是独立窗体模式
         let appWindow = new BrowserWindow({
-          width: 800,
-          height: 600,
+          width: 1200,
+          height: 800,
           minWidth: 380,
           show: !background,
           frame: false,
@@ -608,7 +610,7 @@ app.whenReady().then(() => {
             y: 14
           },
           titleBarStyle: 'hidden',
-          alwaysOnTop: saApp.settings.alwaysTop,
+          alwaysOnTop: saApp.settings.alwaysTop?saApp.settings.alwaysTop:false,
           webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
@@ -625,7 +627,7 @@ app.whenReady().then(() => {
 
         saApp.windowId = appWindow.webContents.id
 
-        //appWindow.setMenu(null)
+        appWindow.setMenu(null)
 
         appWindow.webContents.loadURL('file://' + path.join(__dirname + '/pages/saApp/index.html'))
         appWindow.on('ready-to-show', () => {
@@ -640,8 +642,9 @@ app.whenReady().then(() => {
             //appWindow.webContents.openDevTools()
           }
         })
-
-        appWindow.setBounds(saApp.settings.bounds)
+        if(saApp.settings.bounds){
+          appWindow.setBounds(saApp.settings.bounds)
+        }
         // if (process.platform !== 'darwin') {
         //   appWindow.setMenuBarVisibility(false)
         // }
@@ -911,7 +914,7 @@ app.whenReady().then(() => {
           {
             type: 'checkbox',
             checked: appWindow.isVisible(),
-            label: saApp.name,
+            label: (saApp.name.length > 18) ? saApp.name.substring(0, 15) + '...' : saApp.name,
             click () {
               appManager.toggleAppWindowVisible(appId)
             }

@@ -339,6 +339,9 @@ const tabBar = {
 
     var closeTabButton = document.createElement('button')
     closeTabButton.className = 'tab-icon tab-close-button i carbon:close'
+    if(data.lock){
+      closeTabButton.style.display='none'
+    }
 
     closeTabButton.addEventListener('click', function (e) {
       tabBar.events.emit('tab-closed', data.id)
@@ -818,10 +821,14 @@ const tabBar = {
 
   lockTab: function (id) {
     let tab=tabs.get(id)
+    let tabEl=tabBar.tabElementMap[id]
+    let closeEl=tabEl.querySelector('.tab-close-button')
     if(tab.lock === true) {
       tabs.update(tab.id,{ lock:!tab.lock })
+      closeEl.style.display=""
       ipc.send('message', {type: 'success', config: {content: '标签锁定解除'}})
     }else {
+      closeEl.style.display="none"
       tabs.update(tab.id,{ lock:!tab.lock })
       ipc.send('message', {type: 'success', config: {content: '标签锁定成功'}})
     }
@@ -988,7 +995,13 @@ ipc.on('refresh', () => {
 
 ipc.on('toggleLockTab',(event,args)=>{
   const tab=tasks.get(args.taskId).tabs.get(args.id)
-  tasks.get(args.taskId).tabs.update(tab.id,{ lock:!tab.lock })
+  if(args.taskId===tasks.getSelected().id)
+  {
+    tabBar.lockTab(args.id)
+  }else
+  {
+    tasks.get(args.taskId).tabs.update(tab.id,{ lock:!tab.lock })
+  }
 })
 
 ipc.on('lockTask',(event,args)=>{

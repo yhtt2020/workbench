@@ -53,6 +53,19 @@ const userScriptModel = {
     fs.rmSync(filePath)
     return !fs.existsSync(filePath)
   },
+  countScript (userDataPath) {
+    userScriptModel.scriptsPath = userDataPath + '/userscripts/'
+    const pathName = userScriptModel.scriptsPath
+    const files = fs.readdirSync(pathName)
+    let scriptsNum = 0
+    for (var i = 0; i < files.length; i++) {
+      let filename = files[i]
+      if(filename.endsWith('.js')) {
+        scriptsNum += 1
+      }
+    }
+    return scriptsNum
+  },
   init (userDataPath) {
     userScriptModel.scriptsPath = userDataPath + '/userscripts/'
     let scripts = []

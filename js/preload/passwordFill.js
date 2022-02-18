@@ -26,7 +26,7 @@ wanted to keep it lightweight and not impact browser performace too much.
 // 密码识别难度分级
 // 基础级别：
 // gitlab
-//com.thisky.com
+//s.apps.vip
 // 中高难度：
 //
 //

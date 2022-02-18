@@ -12,69 +12,7 @@
 	<body>
 
 		<div id="app">
-			<div id="stepLogin" class="step-login" v-show="step=='login'">
-				<h1>首次使用向导</h1>
-				<p style="line-height: 28px">欢迎使用想天工作台，您是否首次使用产品？<br>
-          如果是首次使用，建议不要跳过引导。
-<!--          您可以选择登录账号来同步您的<strong>配置</strong>和<strong>工作区</strong>。-->
-          <br>如果您是<strong>老用户</strong>，可跳过引导直接使用产品。
-				</p>
-				<template >
-<!--					<a-form  id="components-form-demo-normal-login" :form="form" class="login-form"-->
-<!--						@submit="handleSubmit">-->
-<!--						<a-form-item label="">-->
-<!--							<a-input placeholder="手机号" v-decorator="[-->
-<!--						          'phone',-->
-<!--						          {-->
-<!--						            rules: [{ required: true, message: '请输入您的手机号!' }],-->
-<!--						          },-->
-<!--						        ]" style="width: 100%">-->
-<!--								<a-select slot="addonBefore" v-decorator="['prefix', { initialValue: '86' }]"-->
-<!--									style="width: 70px">-->
-<!--									<a-select-option value="86">-->
-<!--										+86-->
-<!--									</a-select-option>-->
-
-<!--								</a-select>-->
-<!--							</a-input>-->
-<!--						</a-form-item>-->
-						<!-- <a-form-item>
-							<a-input v-decorator="[
-				  'password',
-				  { rules: [{ required: true, message: 'Please input your Password!' }] },
-				]" type="password" placeholder="Password">
-								<a-icon slot="prefix" type="lock" style="color: rgba(0,0,0,.25)" />
-							</a-input>
-						</a-form-item> -->
-<!--						<a-form-item label="">-->
-<!--							<a-row :gutter="8">-->
-<!--								<a-col :span="12">-->
-<!--									<a-input placeholder="验证码" v-decorator="[-->
-<!--						              'captcha',-->
-<!--						              { rules: [{ required: true, message: '请输入获取的验证码!' }] },-->
-<!--						            ]" />-->
-<!--								</a-col>-->
-<!--								<a-col :span="12">-->
-<!--									<a-button>获取</a-button>-->
-<!--								</a-col>-->
-<!--							</a-row>-->
-<!--						</a-form-item>-->
-<!--						<a-form-item>-->
-<!--							<a-button type="default" html-type="submit" class="login-form-button">-->
-<!--								登录-->
-<!--							</a-button>		</a-form-item>-->
-            <div style="position:absolute;bottom: 20px;width: 400px">
-              <a-button @click="close()" type="default" html-type="submit" class="login-form-button">
-                我是老用户，关闭
-              </a-button>
-              <a-button type="primary" style="width: 40%;float:right" @click="step='wizard'">
-                首次使用，进入引导
-              </a-button>
-            </div>
-<!--					</a-form>-->
-				</template>
-			</div>
-			<div id="stepWizard" class="step-wizard" v-show="step=='wizard'">
+			<div id="stepWizard" class="step-wizard">
 				<template>
 					<a-steps :current="current">
 						<a-step v-for="item in steps" :key="item.title" :title="item.title">
@@ -88,11 +26,10 @@
             :form="formSetting"
             @submit="handleSubmitSetting"
           >
-					<p>根据您的喜好和习惯完成以下设置，后面您也可以随时在<strong>设置</strong>当中进行调整。</p>
-					<h3>1.标签栏风格</h3>
-					<p class="setting-type" style="">
+					<p>首次使用想天浏览器，需要根据您的喜好和习惯完成以下设置，后面您也可以在<strong>设置</strong>当中进行调整。</p>
+            <h3>1.标签栏风格</h3>
 							<p class="theme-carousel">
-							<div style="overflow: hidden;height: 113px;position: relative;    margin-bottom: 30px;">
+							<div style="overflow: hidden;height: 113px;position: relative;    margin-bottom: 10px;">
 								<template>
 									<a-carousel arrows class="carousel-el" :autoplay='true' effect="fade"
 										v-show="titleBar=='theme'">
@@ -134,7 +71,7 @@
               <a-radio-group v-decorator="['siteTheme',{initialValue:'theme'}]"  @change="changeTitleBar">
 
                 <a-radio value="theme" style="width: 300px;">
-                  自适应标签色（根据网站图标自动变换）
+                  标签栏主题色（根据网站图标自动变换）
                 </a-radio>
                 <a-radio value="no-theme">
                   纯色标签栏（白色标题栏，固定）
@@ -183,6 +120,21 @@
               </a-form-item>
 						</template>
 					</p>
+            <h3>4.开启广告过滤与隐私保护</h3>
+            <p class="setting-type">
+              <template>
+                <a-form-item>
+                  <a-radio-group v-decorator="['ad',{initialValue:'false'}]" >
+                    <a-radio :value="'false'">
+                      关闭（兼容性更好，但是有更多的网站广告和泄露隐私风险）
+                    </a-radio>
+                    <a-radio :value="'true'">
+                      开启（可能造成部分网站无法正常使用）
+                    </a-radio>
+                  </a-radio-group>
+                </a-form-item>
+              </template>
+            </p>
 <!--					<h3>4.默认浏览器</h3>-->
 <!--					<p>在您改变浏览器的使用习惯之前，我们并不推荐您设置为默认浏览器。</p>-->
 <!--					<p class="setting-type">-->
@@ -199,7 +151,7 @@
 <!--					</p>-->
 					<div class="bottom-button">
 						<a-button type="primary" html-type="submit">
-							下一步.导入收藏
+							下一步.导入书签
 						</a-button>
 					</div>
           </a-form>
@@ -255,52 +207,66 @@
 								<a-icon type="right-circle" />
 							</div>
               <div>
-                <h3 class="video-title">1.我们与传统浏览器最大的不同：分组浏览</h3>
+                <h3 class="video-title">1.我们与传统浏览器最大的不同：左侧栏与标签组</h3>
                 <p>
                   与传统浏览器不同的是，我们采用分组浏览模式.
                   <br>结合锁定、清理等小功能，让标签组不再混乱。
-                  <br>我们将在向导关闭后，自动为您创建一个帮助桌面，您可以在桌面获得帮助。
                 </p>
                 <p>
                   <img src="">
                 </p>
-                <!-- <iframe src="//player.bilibili.com/player.html?aid=890908889&bvid=BV1hP4y187jw&cid=421342590&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
- -->
-                <!-- <video width="95%" height="400" style="    margin-left: 20px;" controls>
-                    <source src="https://www.bilibili.com/video/BV1hP4y187jw?share_source=copy_web" type="video/mp4">
-                    <source src="https://www.bilibili.com/video/BV1hP4y187jw?share_source=copy_web" type="video/ogg">
-                    您的浏览器不支持 video 标签。
-                </video> -->
-              </div>
-              <div>
-                <h3 class="video-title">2.精心设计的左侧栏</h3>
                 <p>
-                  我们部分核心功能都在左侧栏，这也是与其他浏览器的不同之处。
-                  <br>我们将在向导关闭后，自动为您创建一个帮助桌面，您可以在桌面获得帮助。
-                </p>
-                <p>
-                  <img src="">
+                  <video width="95%" height="400" style="    margin-left: 20px;" controls>
+                    <source src="https://up.apps.vip/sidebar1080.mp4" type="video/mp4">
+                  </video>
                 </p>
               </div>
               <div>
-                <h3 class="video-title">3.打造个人强大桌面</h3>
+                <h3 class="video-title">2.打造个性化桌面</h3>
                 <p>我们定位为webOS，为您打造了一款高度个性化的桌面。<br>您可以任意添加桌面、支持独立壁纸、支持分享。
-                <br>我们将在向导关闭后，自动为您创建一个帮助桌面，您可以在桌面获得帮助。</p>
+                </p>
+                <p>
+                  <video width="95%" height="400" style="    margin-left: 20px;" controls>
+                    <source src="https://up.apps.vip/%E6%A1%8C%E9%9D%A2%E4%BD%BF%E7%94%A8.mp4" type="video/mp4">
+                  </video>
+                </p>
+              </div>
+              <div>
+                <h3 class="video-title">3.应用管理功能</h3>
+                <p>我们为您提供了改进网页应用体验的【独立应用模式】。<br>独立应用具备独立的窗体与生命周期。具备主题色标题栏。</p>
+<!--                <p>-->
+<!--                  <video width="95%" height="400" style="    margin-left: 20px;" controls>-->
+<!--                    <source src="https://up.apps.vip/%E6%A1%8C%E9%9D%A2%E4%BD%BF%E7%94%A8.mp4" type="video/mp4">-->
+<!--                    您的浏览器不支持 video 标签。-->
+<!--                  </video>-->
+<!--                </p>-->
+                <p style="text-align: center">
+                <img style="width: 400px;height: auto;display: inline-block" src="https://apps.vip/img/%E5%BA%94%E7%94%A8.svg">
+              </p>
               </div>
               <div>
                 <h3 class="video-title">4.团队协作功能</h3>
                 <p>
                  除了基本的浏览功能以外，我们还为工作场景专门打造了一个团队协作功能。
                   <br>与传统的团队IM软件相比，我们更强调现场协作，更关注便利性。
-                  <br>我们将在向导关闭后，自动为您创建一个帮助桌面，您可以在桌面获得帮助。
+                </p>
+                <p>
+                  <video width="95%" height="400" style="margin-left: 20px;" controls>
+                    <source src="https://up.apps.vip/team.mp4" type="video/mp4">
+                  </video>
                 </p>
               </div>
               <div>
                 <h3 class="video-title">5.更多有趣、有用的功能等你探索</h3>
                 <p>
-                  我们为您和您的团队准备了大量与众不同的功能和设计，需要您自行探索。您也可以随时在桌面查看帮助桌面，以了解掌握这些功能。
+                  我们为您和您的团队准备了大量与众不同的功能和设计，需要您自行探索。
+                  <br>您也可以随时在桌面查看帮助桌面，以了解掌握这些功能。
                   <br>
                   开启您的愉快之旅吧。
+
+                  <div style="background: #000c17;padding:20px;border-radius: 8px;color: white;font-size: 32px">
+                将为您推荐一些想天浏览器独有的应用。<br>以改善您的使用体验。
+              </div>
                 </p>
               </div>
 <!--							<div>-->
@@ -335,6 +301,9 @@
 
 <!--						</div>-->
 					</template>
+          <div style="margin: auto;text-align: center">
+            我们将在向导结束后，为您添加一个关于【新标签页】如何使用的帮助桌面。
+          </div>
 					<div class="bottom-button">
 						<a-button type="primary" @click="netxVideo">
 							新技能get，next
@@ -404,7 +373,8 @@
             }),
             settingSiteTheme:true,
             settingCollectUsageStats:undefined,
-            settingSearchEngine:{name:'Baidu'}
+            settingSearchEngine:{name:'Baidu'},
+            insertHelp:true,
           }
         },
 				beforeCreate() {
@@ -421,6 +391,9 @@
           this.settingSearchEngine=settings.get('searchEngine')
         },
 				methods: {
+          onChangeHelp(e){
+            this.insertHelp = e.target.checked
+          },
 					handleSubmit(e) {
 						e.preventDefault()
 						this.form.validateFields((err, values) => {
@@ -458,6 +431,13 @@
                 }else{
                   settings.set('collectUsageStats', false)
                 }
+                let value = {}
+                if(values.ad==='true'){
+                  value.blockingLevel = 1
+                }else{
+                  value.blockingLevel = 0
+                }
+                settings.set('filtering', value)
                 this.next()
               }
             })
@@ -489,7 +469,8 @@
             //todo 添加一些桌面
 
             localStorage.setItem('firstRun','1')
-            ipc.send('closeWizard')
+            ipc.send('closeWizard',{next:'apps',delay:1000})
+
           }
 				}
 			})
@@ -513,8 +494,12 @@
 			.setting-type {
 				padding-bottom: 10px;
 				border-bottom: dashed 1px #ccc;
-				margin-bottom: 20px;
+				margin-bottom: 10px;
 			}
+      .ant-form-item{
+       padding-bottom: 0;
+        margin-bottom: 0;
+      }
 
 			.theme-carousel {}
 

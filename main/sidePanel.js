@@ -104,6 +104,9 @@ class SidePanel {
 
     this.syncSize()
     this.syncTitleBar()
+    this._sidePanel.on('ready-to-show',()=>{
+      checkUpdate()
+    })
 
     this._sidePanel.on('close', function () {
       log('sidebar-close:左侧栏隐藏')
@@ -116,6 +119,10 @@ class SidePanel {
       log('sidebar-hide:左侧栏隐藏')
     })
     sidePanel = this
+
+    this._sidePanel.on('blur',()=>{
+      this._sidePanel.webContents.send('blur')
+    })
   }
 
   /**
@@ -278,7 +285,10 @@ class SidePanel {
     })
     if (BrowserWindow.getFocusedWindow() != null && sidePanel.get().isFocused() ) //如果有任意一个window还有焦点，则聚焦到mainwindow
       //有窗体还有焦点 且 只有左侧栏
+    {
+      mainWindow.setFocusable(true)
       mainWindow.focus()
+    }
     log('设置左侧栏不再感应鼠标，主窗体获得焦点')
   }
 
@@ -396,7 +406,6 @@ function addMainWindowEventListener () {
     log('mainwindow-leave-full-screen:进入全屏')
     syncSize()
     syncSidebarTitle() //sendIPCToWindow(mainWindow, 'getTitlebarHeight')
-
   })
 
   //进入退出html全屏，一般用于视频播放的时候
@@ -435,9 +444,9 @@ function closeSidePanel () {
   log('执行closeSidePanel()')
   if (SidePanel.alive()) {
     if (isMac()) {
-      // sidePanel.close()
-      // sidePanel = null
-      sidePanel.hide()
+      sidePanel.close()
+      sidePanel = null
+      //sidePanel.hide()
     } else {
       sidePanel.hide()
     }

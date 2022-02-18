@@ -149,6 +149,17 @@ body {
     margin-right: 5px;
   }
 
+  li.active{
+    background-color: #efefef;
+    border-radius: 4px;
+  }
+  li{
+    &:hover {
+      background-color: #efefef;
+      border-radius: 4px;
+    }
+  }
+
   .tab-title {
     cursor: pointer;
     margin-right: 22px;
@@ -158,8 +169,8 @@ body {
     white-space: nowrap;
     padding: 5px;
     border-radius: 4px;
-  }
 
+  }
   .unlock-tab {
     &:hover {
       background: #f1f1f1;
@@ -173,9 +184,7 @@ body {
     cursor: pointer
   }
 
-  .tab-title:hover {
-    background-color: #efefef;
-  }
+
 }
 
 
