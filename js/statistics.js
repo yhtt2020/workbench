@@ -3,6 +3,7 @@ const axios = require('./util/axios')
 const { db } = require('./util/database');
 
 const userStatsModel = require('../pages/util/model/userStatsModel')
+const standAloneAppModel = require('../pages/util/model/standAloneAppModel')
 
 const statistics = {
   envGetters: [],
@@ -48,12 +49,22 @@ const statistics = {
 
     const result = await db.system.where('name').equals('currentUser').first()
 
+    //mark插入对apps的数据统计
+    let appNum = await standAloneAppModel.countApps()
+    await userStatsModel.setValue('apps', appNum)
+
+    //mark插入对blockAds的数据统计
+    let currentBlockAds = settings.get('filteringBlockedCount')
+    await userStatsModel.setValue('blockAds', currentBlockAds)
+
+    let osVersion = process.getSystemVersion()
+
     const options = {
       uid: result.value.uid != 0 ? result.value.uid : 0,   //用户uid
       client_id: settings.get('clientID'),     //设备号
       install_time: String(settings.get('installTime')),  //初次安装的时间
       submit_time: String(Date.now()),     //最新提交数据时间
-      os: process.platform,    //操作系统
+      os: `${process.platform}/${osVersion}`,    //操作系统版本
       lang: navigator.language,  //本地语言
       app_version: window.globalArgs['app-version'],   //浏览器版本号
       app_name: window.globalArgs['app-name'],   //浏览器名称
@@ -119,7 +130,7 @@ const statistics = {
     settings.listen('collectUsageStats', function (value) {
       if (value === false) {
         // disabling stats collection should reset client ID
-        //settings.set('clientID', undefined)
+        // settings.set('clientID', undefined)
         return
       } else if (!settings.get('clientID')) {
         settings.set('clientID', Math.random().toString().slice(2))
