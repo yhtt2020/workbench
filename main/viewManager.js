@@ -42,10 +42,6 @@ function createView(existingViewId, id, webPreferencesString, boundsString, even
     //mark插入对webviewInk的数据统计 但在主进程中，需要发送一个ipc到sidebar常驻子进程中去db操作
     SidePanel.send('countWebviewInk')
 
-    //mark插入对blockAds的数据统计 每次载入webview收集一次blockAds的数量
-    let currentBlockAds = settings.get('filteringBlockedCount')
-    SidePanel.send('countBlockAds', {blockAds: currentBlockAds})
-
     //mark插入对scripts的数据统计
     SidePanel.send('countScript')
 

@@ -505,12 +505,6 @@ ipc.on('executedAppSuccess',async function (event,args){
   standAloneAppModel.update(args.app.id,{lastExecuteTime:Date.now()}).then((res)=>{
   })
 
-  //mark插入对apps的数据统计
-  let num = await standAloneAppModel.countApps()
-  setTimeout(async () => {
-    await userStatsModel.setValue('apps', num)
-  }, 2000)
-
   //mark插入对appsExecutedCounts的数据统计
   setTimeout(async () => {
     await userStatsModel.incrementValue('appsExecutedCounts')
@@ -621,12 +615,6 @@ ipc.on('appBadge',function (event,args){
 ipc.on('countWebviewInk', async () => {
   setTimeout(async () => {
     await userStatsModel.incrementValue('webviewsInk')
-  }, 2000)
-})
-
-ipc.on('countBlockAds', (event, args) => {
-  setTimeout(async () => {
-    await userStatsModel.setValue('blockAds', args.blockAds)
   }, 2000)
 })
 
