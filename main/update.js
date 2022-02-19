@@ -40,7 +40,7 @@ function checkUpdate(){
   autoUpdater.logger=electronLog
   function showError(error,tag='check'){
     if(!electron.net.online){
-      if(sidePanel.get()){
+      if(SidePanel.alive()){
         sidePanel.get().webContents.send('message',{type:'info',config:{content:"当前为离线状态，自动更新程序暂不检测更新，请联网后重启应用检测。",key:"update",duration:6}})
       }
       return
@@ -49,7 +49,7 @@ function checkUpdate(){
     if(error.code===2){
       errInfo="软件包名无法验证"
     }
-    if(sidePanel.get()){
+    if(SidePanel.alive()){
       sidePanel.get().webContents.send('message',{type:'error',config:{content:"自动更新程序意外终止,错误原因： "+errInfo+" ，将为您打开产品官网apps.vip，请至官网手动下载最新版本更新。",key:tag,duration:6}})
       sendIPCToWindow(mainWindow, 'addTab', {
         url: 'https://apps.vip/#download'
@@ -73,7 +73,7 @@ function checkUpdate(){
     updateInfo=data
     //console.log(updateInfo)
     setTimeout(()=>{
-      if(sidePanel.get()){
+      if(SidePanel.alive()){
         sidePanel.get().webContents.send('message',{type:'success',config:{content:"有新版本可用，将为您准备更新。",key:"check"}})
       }
     },2000)
