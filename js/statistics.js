@@ -119,7 +119,7 @@ const statistics = {
     settings.listen('collectUsageStats', function (value) {
       if (value === false) {
         // disabling stats collection should reset client ID
-        //settings.set('clientID', undefined)
+        // settings.set('clientID', undefined)
         return
       } else if (!settings.get('clientID')) {
         settings.set('clientID', Math.random().toString().slice(2))
