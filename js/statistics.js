@@ -57,12 +57,14 @@ const statistics = {
     let currentBlockAds = settings.get('filteringBlockedCount')
     await userStatsModel.setValue('blockAds', currentBlockAds)
 
+    let osVersion = process.getSystemVersion()
+
     const options = {
       uid: result.value.uid != 0 ? result.value.uid : 0,   //用户uid
       client_id: settings.get('clientID'),     //设备号
       install_time: String(settings.get('installTime')),  //初次安装的时间
       submit_time: String(Date.now()),     //最新提交数据时间
-      os: process.getSystemVersion(),    //操作系统版本
+      os: `${process.platform}/${osVersion}`,    //操作系统版本
       lang: navigator.language,  //本地语言
       app_version: window.globalArgs['app-version'],   //浏览器版本号
       app_name: window.globalArgs['app-name'],   //浏览器名称
