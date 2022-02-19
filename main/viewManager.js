@@ -324,7 +324,7 @@ ipc.on('loadURLInView', function (e, args) {
       mainWindow.setBrowserView(viewMap[args.id])
     }
   }
-  if (sidePanel.get()) {
+  if (SidePanel.alive()) {
     if (sidePanel.get().isFocused()) {
       if (process.platform === 'darwin') {
         //todo 这行之后就会抢夺焦点到view上 只有mac上有需要这样抢夺焦点
