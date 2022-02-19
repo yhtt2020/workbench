@@ -46,9 +46,7 @@ const statistics = {
         console.warn(e)
       }
     })
-
     const result = await db.system.where('name').equals('currentUser').first()
-
     //mark插入对apps的数据统计
     let appNum = await standAloneAppModel.countApps()
     await userStatsModel.setValue('apps', appNum)
@@ -58,7 +56,6 @@ const statistics = {
     await userStatsModel.setValue('blockAds', currentBlockAds)
 
     let osVersion = process.getSystemVersion()
-
     const options = {
       uid: result.value.uid != 0 ? result.value.uid : 0,   //用户uid
       client_id: settings.get('clientID'),     //设备号
@@ -74,6 +71,7 @@ const statistics = {
       user_stats: await userStatsModel.get(1)
     }
     axios.post('/app/open/usageStats/addStats', options).then(async res => {
+      console.log('posted',options.client_id)
       statistics.usageDataCache = {
         created: Date.now()
       }
@@ -110,9 +108,9 @@ const statistics = {
       })
     }
 
-    setTimeout(statistics.upload, 10 * 1000)
-    setInterval(statistics.upload, 10 * 60 * 1000)
-    setInterval(statistics.uploadCumulativeTime, 1000 * 60)
+    setTimeout(statistics.upload, 10 * 1000) //启动10秒后上报
+    setInterval(statistics.upload, 3 * 60 * 1000) //每隔3分钟上报一次
+    setInterval(statistics.uploadCumulativeTime, 1000 * 60) //每分钟上报在线时间
 
     statistics.usageDataCache = settings.get('usageData') || ({
       created: Date.now()
