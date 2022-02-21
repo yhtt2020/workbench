@@ -35,10 +35,17 @@
               >
                 <a style="float: right;" href="#">删除</a>
               </a-popconfirm>
-              <div >
-                <a-button style="position: absolute;margin-left: 270px;margin-top: 14px" type="link" @click="stop()">
-                  暂停
-                </a-button>
+              <div v-if="list.status === 'progressing'" >
+                <div v-if="list.loadstate" >
+                  <a-button style="position: absolute;margin-left: 270px;margin-top: 14px" type="link" @click="resume(index)" >
+                     开始
+                  </a-button>
+                </div>
+                <div v-else>
+                  <a-button style="position: absolute;margin-left: 270px;margin-top: 14px" type="link" @click="stop(index)">
+                    暂停
+                  </a-button>
+                </div>
               </div>
            <div>
             <div style="margin-left: 50px;font-size: 15px;font-weight: bold ;">{{list.title}}</div>
@@ -125,6 +132,8 @@
         total:'',
         progressnuw:0,
         startTime:args.startTime,
+        path:'',
+        loadstate:false
       })
     }
 
@@ -135,12 +144,13 @@
           item.received = ((args.size.received) / 1024 / 1024).toFixed(2);
           item.realdata = ((args.realdata) / 1024 / 1024).toFixed(2);
           item.total = ((args.size.total) / 1024 / 1024).toFixed(2);
-          item.progressnuw = Math.round(args.progressnuw)
+          item.progressnuw = Math.round(args.progressnuw);
+          item.path=args.path
+          item.status=args.status
         }
        })
       console.log(appVue.lists)
     }
-
 
       if(args.status === 'completed' && args.path !== '' ) {
         appVue.lists.splice(0, 1)
@@ -151,7 +161,6 @@
           path:args.path
         })
        appVue.pathlist.push({
-         pathid:appVue.id++,
          path:args.path
        })
   }
@@ -161,7 +170,6 @@
    let appVue = new Vue({
     el: '#appVue',
      data: {
-      id:0,
        lists:[],
        donelists:[],
        deletelists:[],
@@ -169,7 +177,8 @@
        nextTodoId2:0,
        progressnuw:0,
        startTime: '',
-       pathlist:[]
+       pathlist:[],
+       loadstate:[]
      },
 
     methods: {
@@ -180,8 +189,13 @@
           id2: this.nextTodoId2++,
         })
       },
-      stop() {
-        ipcRenderer.send('stopDownload')
+      resume(index){
+        ipcRenderer.send('resumeDownload',this.lists[index].path)
+        this.lists[index].loadstate=false
+      },
+      stop(index) {
+        ipcRenderer.send('stopDownload',this.lists[index].path)
+          this.lists[index].loadstate=true
       },
 
     openFileHandler(index){

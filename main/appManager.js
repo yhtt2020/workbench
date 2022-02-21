@@ -449,8 +449,5 @@ ipcMain.on('show-context-menu', (event) => {
 })
 
 
-ipcMain.on('stopDownload', (event, args) => {
-  if(!item.isPaused()){
-    item.pause();
-  }
-})
+
+

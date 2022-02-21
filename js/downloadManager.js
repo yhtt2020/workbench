@@ -129,7 +129,7 @@ const downloadManager = {
               ipc.send('cancelDownload', downloadItem.path)
               downloadManager.removeItem(downloadItem.path)
             }
-          }
+          },
         ]
       ]
 
@@ -182,7 +182,6 @@ const downloadManager = {
     this.closeButton.addEventListener('click', function () {
       downloadManager.hide()
     })
-
     ipc.on('download-info', function (e, info) {
       if (!info.path) {
         // download save location hasn't been chosen yet

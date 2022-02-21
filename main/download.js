@@ -1,8 +1,21 @@
+
 const currrentDownloadItems = {}
 
 ipc.on('cancelDownload', function (e, path) {
   if (currrentDownloadItems[path]) {
     currrentDownloadItems[path].cancel()
+  }
+})
+
+ipc.on('stopDownload',function (e,path){
+  if (currrentDownloadItems[path]) {
+    currrentDownloadItems[path].pause()
+  }
+})
+
+ipc.on('resumeDownload',function (e,path){
+  if (currrentDownloadItems[path]) {
+    currrentDownloadItems[path].resume()
   }
 })
 
@@ -97,6 +110,8 @@ function downloadHandler (event, item, webContents) {
     })
   }
   return true
+
+
 }
 
 function listenForDownloadHeaders (ses) {
