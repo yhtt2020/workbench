@@ -65,10 +65,10 @@
                 <a style="float: right;" href="#">删除</a>
               </a-popconfirm>
               <div>
-              <a-button style="position: absolute;margin-left: 200px;margin-top: 5px" type="link" >
+              <a-button style="position: absolute;margin-left: 200px;margin-top: 5px" type="link" @click="openFileHandler(index)" >
                 打开
               </a-button>
-                <a-button style="position: absolute;margin-left: 240px;margin-top: 5px" type="link" @click="openFileHandler" >
+                <a-button style="position: absolute;margin-left: 240px;margin-top: 5px" type="link" @click="showFileHandler(index)" >
                   打开文件夹
                 </a-button>
             </div>
@@ -143,20 +143,25 @@
 
 
       if(args.status === 'completed' && args.path !== '' ) {
-        console.log(args)
         appVue.lists.splice(0, 1)
         appVue.donelists.push({
           id1: appVue.nextTodoId1++,
           title: aname,
           total:((args.size.total)/1024/1024).toFixed(2),
+          path:args.path
         })
-        appVue.path=args.path
-      }
+       appVue.pathlist.push({
+         pathid:appVue.id++,
+         path:args.path
+       })
+  }
+      console.log(appVue.donelists)
   })
 
    let appVue = new Vue({
     el: '#appVue',
      data: {
+      id:0,
        lists:[],
        donelists:[],
        deletelists:[],
@@ -164,7 +169,7 @@
        nextTodoId2:0,
        progressnuw:0,
        startTime: '',
-       path:''
+       pathlist:[]
      },
 
     methods: {
@@ -178,10 +183,16 @@
       stop() {
         ipcRenderer.send('stopDownload')
       },
-      openFileHandler() {
+
+    openFileHandler(index){
+      const { shell } = require('electron')
+      console.log(this.pathlist[index].path)
+      shell.openPath(this.pathlist[index].path)
+    },
+      showFileHandler(index) {
         const { shell } = require('electron')
-        console.log(this.path)
-        shell.showItemInFolder()
+        console.log(this.pathlist[index].path)
+        shell.showItemInFolder(this.pathlist[index].path)
       },
     }
    })
