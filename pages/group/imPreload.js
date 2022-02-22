@@ -9,7 +9,6 @@ window.$browser = 'tsbrowser'
 let href = window.location.href
 
 let isDevelopmentMode = process.argv.some(arg=>arg==='--development-mode')
-console.log(isDevelopmentMode, '%%%%%')
 
 const server = {
   beforeInit(host) {
