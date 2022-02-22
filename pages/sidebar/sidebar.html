@@ -167,7 +167,7 @@
                         <div class="mg-content flex flex-direction">
                           <template v-if="this.$store.getters.getMyGroups.length===0" >
                             <a-empty style="margin-top: 10px">
-                              <span slot="description"> 暂无团队， <a href="https://www.yuque.com/tswork/ngd5zk/rls0pi">了解团队功能</a> </span>
+                              <span slot="description"> 暂无团队， <a @click="openGroupHelp">了解团队功能</a> </span>
                               <a-button type="primary" @click="createGroup">
                                 创建首个团队
                               </a-button>

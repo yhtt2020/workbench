@@ -383,6 +383,9 @@ Vue.component('sidebar', {
       this.userPanelVisible=false
       this.addTab(api.getUrl(api.API_URL.user.account))
     },
+    openGroupHelp(){
+      ipc.send('addTab',{url:'https://www.yuque.com/tswork/ngd5zk/rls0pi'})
+    },
     addNewTask(e){
       ipc.send('addNewTask')
       this.$message.success({content:'成功添加一个新标签组到左侧栏。'})
