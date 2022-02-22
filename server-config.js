@@ -32,6 +32,7 @@ const api = {
       login: `/login?response_type=${appConfig.response_type}&client_id=${appConfig.client_id}&state=${appConfig.state}`, //登录页面
       home: '/', //用户主页
       profile: '/user/info', //用户资料
+      space:'/user',//用户主页
       account: '/user/account-info', //帐号信息
       AUTO_LOGIN: '/autologin',   //短说免登跳转路由
       CIRCLE: '/forum',    //短说圈子主页

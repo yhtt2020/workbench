@@ -1,6 +1,7 @@
 //定义一个TaskList来接收tasks类型的数据
 const groupApi = require('../util/api/groupApi')
 const userStatsModel = require('../util/model/userStatsModel')
+const userApi = require('../util/api/userApi')
 class TasksList {
 	constructor() {
 		this.tasks = []
@@ -90,7 +91,12 @@ window.onload = function() {
 			user:{//当前用户
 				uid:0,
 				nickname:"立即登录",
-				avatar:"../../icons/browser.ico"
+				avatar:"../../icons/browser.ico",
+        fans:0,
+        follow:0,
+        grade:{
+          grade:0
+        }
 			},
       myGroups: []
 		},
@@ -198,6 +204,25 @@ window.onload = function() {
       //设置我的团队列表
       SET_MYGROUPS: (state, myGroups) => {
         state.myGroups = myGroups
+      },
+      set_user_info:(state,data)=>{
+        let userInfo=data.data
+        if(!!!userInfo){
+          userInfo={
+            fans:0,
+            postCount:0,
+            grade:{
+              grade:0
+            },
+            follow:0,
+            signature:''
+          }
+        }
+        state.user.fans=userInfo.fans
+        state.user.postCount=userInfo.post_count
+        state.user.grade=userInfo.grade
+        state.user.follow=userInfo.follow
+        state.user.signature=userInfo.signature
       },
 			//设置置顶区域的item
 			savePinItems(state, pinItems) {
@@ -322,6 +347,12 @@ window.onload = function() {
         const result = await groupApi.getGroups()
         if(result.code === 1000) {
           commit('SET_MYGROUPS', result.data)
+        }
+      },
+      async getUserInfo({commit},userInfo){
+        const result=await userApi.getUserInfo()
+        if(result.code===1000){
+          commit('set_user_info',result.data)
         }
       }
     }

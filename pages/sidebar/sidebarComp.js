@@ -81,8 +81,6 @@ Vue.component('sidebar', {
     //mark插入对password的数据统计
     let passwordList = await ipc.invoke('credentialStoreGetCredentials')
     await userStatsModel.setValue('password', passwordList.length)
-
-    console.log(this.apps)
 		// let item = {
 		// 	title: '打开标签', //名称，用于显示提示
 		// 	index: 0, //索引
@@ -168,7 +166,18 @@ Vue.component('sidebar', {
       this.userPanelVisible = false
       this.addTab(api.getUrl(api.API_URL.user.CIRCLE))
     },
-
+    // openPost() {
+    //   this.userPanelVisible = false
+    //   this.addTab(api.getUrl(api.API_URL.user.CIRCLE))
+    // },
+    // openFollow() {
+    //   this.userPanelVisible = false
+    //   this.addTab(api.getUrl(api.API_URL.user.CIRCLE))
+    // },
+    // openFans() {
+    //   this.userPanelVisible = false
+    //   this.addTab(api.getUrl(api.API_URL.user.CIRCLE))
+    // },
     openCircleSetting() {
       ipc.send('osxOpenCircleSetting')
     },
@@ -358,6 +367,10 @@ Vue.component('sidebar', {
       this.userPanelVisible=false
       this.addTab(api.getUrl(api.API_URL.user.login))
     },
+    goSpace(){
+      this.userPanelVisible=false
+      this.addTab(api.getUrl(api.API_URL.user.space))
+    },
     goProfile(){
       this.userPanelVisible=false
       this.addTab(api.getUrl(api.API_URL.user.profile))
@@ -369,6 +382,9 @@ Vue.component('sidebar', {
     goAccount(){
       this.userPanelVisible=false
       this.addTab(api.getUrl(api.API_URL.user.account))
+    },
+    openGroupHelp(){
+      ipc.send('addTab',{url:'https://www.yuque.com/tswork/ngd5zk/rls0pi'})
     },
     addNewTask(e){
       ipc.send('addNewTask')
