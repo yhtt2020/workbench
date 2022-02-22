@@ -13,7 +13,8 @@ const config = {
     FRONT_URL:"http://im.xiangtian.ren",
     FRONT_URL_DEV:"http://im.xiangtian.ren",
     //FRONT_URL_DEV:"http://127.0.0.1:8000",
-    AUTO_LOGIN: '/auto-login'      //免登等待路由
+    AUTO_LOGIN: '/auto-login',      //免登等待路由
+    BOOT_ROUTE: '/boot-route'     //引导路由页面
   }
 }
 
