@@ -3,7 +3,7 @@ const xss = require("xss");
 const tsbSdk = {
   isThirdApp: Boolean,
   //初始化监听
-  listener: function () {
+  listener: function (Dep) {
     if (window.hasOwnProperty("tsbSaApp")) {
       window.tsbSaApp.isSystemApp
         ? Object.defineProperty(tsbSdk, "isThirdApp", {
@@ -49,6 +49,8 @@ const tsbSdk = {
           e.data.options.body = xss(e.data.options.body);
           //console.log(e.data.options.body, '输出转码后的')
           tsbSdk.noticeApp(e.data.options);
+        case "autoLoginSysApp":
+          Dep[0].func(Dep[0].host)
       }
     });
     console.log("挂载了SDK");
@@ -144,7 +146,7 @@ const tsbSdk = {
         hashId: window.tsbSDK.hashId,
       });
     }
-  },
+  }
 };
 
 module.exports = tsbSdk;

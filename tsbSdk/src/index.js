@@ -142,4 +142,22 @@ export default class tsbk {
       })
     }
   }
+
+  //登录想天内置应用的免登 //todo 未来还要单独做一套第三方应用的免登
+  static autoLoginSysApp(options) {
+    if(options && tsbk.sdkSwitch) {
+      window.postMessage({
+        eventName: 'autoLoginSysApp'
+      })
+      options.hasOwnProperty("success") ? options.success() : false;
+    } else {
+      if(!tsbk.sdkSwitch) {
+        options.hasOwnProperty("fail") ? options.fail() : false;
+        return
+      }
+      window.postMessage({
+        eventName: 'autoLoginSysApp'
+      })
+    }
+  }
 }
