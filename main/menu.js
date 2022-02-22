@@ -397,6 +397,12 @@ function buildAppMenu (options = {}) {
             openTabInWindow('https://apps.vip')
           }
         },
+        {
+          label:'检测升级',
+          click:function(){
+            loadUpdate(updateData)
+          }
+        },
         ...(process.platform !== 'darwin' ? [{ type: 'separator' }] : []),
         ...(process.platform !== 'darwin' ? [{
           label: l('appMenuAbout').replace('%n', app.name),
