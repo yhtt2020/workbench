@@ -834,17 +834,19 @@ function createAllAppsWindow(){
     allAppsWindow.hide()
   })
   setTimeout(()=>{
-    mainWindow.on('close',()=>{
-      forceClose=true
-      allAppsWindow.close()
-      allAppsWindow=null
-    })
+    if(mainWindow){
+      mainWindow.on('close',()=>{
+        forceClose=true
+        if(allAppsWindow && !allAppsWindow.isDestroyed())
+          allAppsWindow.close()
+        allAppsWindow=null
+      })
+    }
+
   },2000)
 
 }
-app.whenReady().then(()=>{
-  createAllAppsWindow()
-})
+
 ipc.on('showAllSaApps',(event,args)=>{
   if(allAppsWindow===null){
     createAllAppsWindow()
