@@ -28,7 +28,6 @@ const handleAxios =  {
           storage.setItem(`refreshToken`, result.data.refreshToken)
           storage.setItem(`expire_deadtime`, new Date().getTime() + result.data.expire * 1000)
           storage.setItem(`refreshExpire_deadtime`, new Date().getTime() + result.data.refreshExpire * 1000)
-          console.log(result.data.userInfo)
           storage.setItem(`userInfo`, result.data.userInfo)
         }
         event.reply('callback-loginBrowser', result)
