@@ -5,7 +5,7 @@ const ipc = electron.ipcRenderer
 const { db } = require('../../js/util/database.js')
 window.mainWindowId = 0 //主窗体id
 window.l = l
-window.db= db
+window.db = db
 const {
   contextBridge
 } = require('electron')
@@ -14,7 +14,7 @@ window.l = l
 window.ipc = ipc
 // contextBridge.exposeInMainWorld('l', l)
 // contextBridge.exposeInMainWorld('ipc', ipc)
-if(!!!localStorage.getItem('firstRun')) {
+if (!!!localStorage.getItem('firstRun')) {
   ipc.send('wizard')
 }
 
@@ -68,10 +68,10 @@ window.addEventListener('message', function (e) {
       break
     case 'mobile':
       ipc.send('openMobile')
-      break;
+      break
     case 'addTab':
       ipc.send('addTab', { 'url': e.data.url })
-      break;
+      break
   }
 
 })
@@ -105,7 +105,7 @@ ipc.on('addItem', function (e, data) {
   window.$store.state.items.push(data.item)
 })
 
-ipc.on('refreshMyGroups', async ()=> {
+ipc.on('refreshMyGroups', async () => {
   const currentUser = await db.system.where('name').equals('currentUser').first()
   await window.$store.dispatch('getGroups', {
     token: currentUser.value.token
@@ -113,8 +113,8 @@ ipc.on('refreshMyGroups', async ()=> {
 })
 
 //读入当前登录的帐号
-function getCurrentUser () {
-  db.system.get({ 'name': 'currentUser' }).then((item) => {
+ function  getCurrentUser () {
+  db.system.get({ 'name': 'currentUser' }).then(async(item) => {
       let user = {}
       if (typeof (item) == 'undefined') {
         //如果还没有当前用户，则插入一个默认用户
@@ -122,6 +122,9 @@ function getCurrentUser () {
       } else {
         user = item.value
         window.$store.state.user = user
+        await window.$store.dispatch('getUserInfo', {
+          token: user.token
+        })
       }
     }
   ).catch((err) => {
@@ -136,24 +139,33 @@ async function insertDefaultUser (code) {
     nickname: '立即登录',
     avatar: '../../icons/browser.ico'
   }
-  if(code) {
+  if (code) {
     await db.accounts.where('code').equals(code).delete()
   }
-  await db.system.where('name').equals('currentUser').modify({value: defaultUser})
-  window.$store.state.user= null
+  await db.system.where('name').equals('currentUser').modify({ value: defaultUser })
+  window.$store.state.user = null
   window.$store.state.user = defaultUser
   return defaultUser
 }
-window.insertDefaultUser=insertDefaultUser
+
+window.insertDefaultUser = insertDefaultUser
 
 //sidebar的数据依托于vuex，每次preload载入需要重新getCurrentUser
 setTimeout(getCurrentUser, 1000)
 ipc.on('userLogin', function (e, data) {
+  //todo 单独通过接口获取用户信息
+
   let user = {
     uid: data.userInfo.uid,
     nickname: data.userInfo.nickname,
     avatar: data.userInfo.avatar,
     token: data.token,
+    fans: data.userInfo.fans || 0,
+    postCount: data.userInfo.post_count || 0,
+    follow: data.userInfo.follow || 0,
+    grade: data.userInfo.grade || {
+      grade: 0
+    },
     refreshToken: data.refreshToken,
     expire_deadtime: new Date().getTime() + data.expire * 1000,
     refreshExpire_deadtime: new Date().getTime() + data.refreshExpire * 1000,
@@ -161,9 +173,9 @@ ipc.on('userLogin', function (e, data) {
   }
   window.$store.state.user = user
   // 设置当前登录帐号为此帐号
-  db.system.where({name:'currentUser'}).delete()
+  db.system.where({ name: 'currentUser' }).delete()
   db.system.put({
-    name:'currentUser',
+    name: 'currentUser',
     value: user
   }).then(async (msg) => {
     console.log(msg)
@@ -173,12 +185,18 @@ ipc.on('userLogin', function (e, data) {
       avatar: user.avatar,
       lastLoginTime: new Date().getTime(),
       token: user.token,
+      // fans: data.userInfo.fans || 0,
+      // follow: data.userInfo.follow || 0,
+      // postCount: data.userInfo.post_count || 0,
+      // grade: data.userInfo.grade || {
+      //   grade: 0
+      // },
       refreshToken: user.refreshToken,
       expire_deadtime: user.expire_deadtime,
       refreshExpire_deadtime: user.refreshExpire_deadtime,
       code: user.code
     })
-    await window.$store.dispatch('getGroups', {
+    await window.$store.dispatch('getUserInfo', {
       token: user.token
     })
   }).catch((err) => {

@@ -5,7 +5,8 @@ const url = {
   loginBrowser: '/app/loginBrowser',
   shareTasks: '/app/createTask',
   autoLogin: '/app/autoLogin',
-  imAutoLogin: '/app/imAutoLogin'
+  imAutoLogin: '/app/imAutoLogin',
+  getUserInfo:'/app/getUserInfo'
 }
 const authApi = {
   async loginBrowser(info) {
