@@ -463,7 +463,6 @@ const appManager = {
     }
   },
   loadView (saApp, appWindow) {
-    saApp.isSystemApp=saApp.id<10
     let webPreferences = {
       preload: saApp.isSystemApp ? path.join(__dirname + saApp.preload) : path.join(__dirname + '/pages/saApp/appPreload.js'),//后者是所有web应用公用的preload
       nodeIntegration: saApp.isSystemApp,
@@ -491,7 +490,6 @@ const appManager = {
     /**
      * 在dev模式下，group引用开发环境
      */
-
     if (saApp.package === 'com.thisky.group' && isDevelopmentMode) {
       // 当为开发环境下的时候，将团队强行更改为本地开发
       //todo 根据实际需求更改
@@ -589,7 +587,6 @@ const appManager = {
    * @param background 是否后台运行，是则运行后不显示
    */
   executeApp (saApp, background = false) {
-    saApp.isSystemApp = saApp.id < 10 //todo 加入更加安全的系统应用判断方式
     saApp.settings=saApp.settings?saApp.settings:{}
     if (1) {
       //todo 判断一下是不是独立窗体模式
