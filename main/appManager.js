@@ -468,7 +468,6 @@ app.whenReady().then(() => {
       }
     },
     loadView (saApp, appWindow) {
-      saApp.isSystemApp=saApp.id<10
       let webPreferences = {
         preload: saApp.isSystemApp ? path.join(__dirname + saApp.preload) : path.join(__dirname + '/pages/saApp/appPreload.js'),//后者是所有web应用公用的preload
         nodeIntegration: saApp.isSystemApp,
@@ -594,7 +593,6 @@ app.whenReady().then(() => {
      * @param background 是否后台运行，是则运行后不显示
      */
     executeApp (saApp, background = false) {
-      saApp.isSystemApp = saApp.id < 10 //todo 加入更加安全的系统应用判断方式
       saApp.settings=saApp.settings?saApp.settings:{}
       if (1) {
         //todo 判断一下是不是独立窗体模式

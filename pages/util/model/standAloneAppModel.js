@@ -1,5 +1,9 @@
 const db = require('../../../js/util/database.js').db
 const serverConfig = require('../../../server-config.js').config
+const systemAppPackage=[
+  'com.thisky.group',
+  'com.thisky.fav'
+]  //包名为上述包名的判定为系统应用
 const standAloneAppModel = {
   async initialize() {
     await db.standAloneApps.count().then((result) => {
@@ -98,6 +102,7 @@ const standAloneAppModel = {
       site:app.site?app.site:'',
       url: url,
       preload: '',
+      package:app.package || '',
       themeColor: app.themeColor || '#ccc',
       userThemeColor: '',
       createTime: Date.now(),
@@ -122,6 +127,7 @@ const standAloneAppModel = {
 
     result.forEach((app) => {
       app.capture = ''
+      app.isSystemApp=standAloneAppModel.isSystemApp(app)
       app.settings =app.settings? JSON.parse(app.settings):{}
     })
     return result
@@ -131,10 +137,15 @@ const standAloneAppModel = {
     await db.standAloneApps.get(id).then((result) => {
       data = result
       data.settings=JSON.parse(data.settings)
+      data.isSystemApp=standAloneAppModel.isSystemApp(data)
     }, (err) => {
       data = false
     })
     return data
+  },
+  isSystemApp(app){
+    app.package=app.package||''
+    return systemAppPackage.indexOf(app.package)>-1
   },
   async update(id,object){
     return await db.standAloneApps.update(id,object)
