@@ -249,12 +249,11 @@
                   class="icon"
                   :src="user.avatar"
                 ></a-avatar>
-                <a-avatar
-                  v-if="user.uid===0"
+                <a-badge v-if="user.uid===0" count="登录" :offset="[-15,30]" :number-style="{'font-size':'12px'}"><a-avatar
                   style=" background-color: white; color: #aaa;width: 28px;height: 28px"
                   class="icon"
                   src="../../icons/user.svg"
-                ></a-avatar>
+                ></a-avatar></a-badge>
 
                 <!-- <a-badge :count="0" :dot="true" status="processing"
                                 :style="{position: 'absolute',right:  '-2px',top:'-13px'}" />
