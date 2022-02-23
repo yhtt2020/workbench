@@ -197,9 +197,7 @@ Vue.component('sidebar', {
       ipc.send('executeApp',{app:app})
     },
 		toggleUserPanel(){
-			console.log('toggele')
 			this.userPanelVisible=!this.userPanelVisible
-			console.log(this.userPanelVisible)
 		},
 		switchTask(id, index) {
 			postMessage({
@@ -532,7 +530,6 @@ ipc.on('closeApp',function (event,args){
       app.processing=false
       //从正在运行的app里移除掉该id
       let appIndex=appVue.$refs.sidePanel.runningApps.indexOf(args.id)
-      console.log(appVue.$refs.sidePanel.runningApps)
       if(appIndex>-1)
         appVue.$refs.sidePanel.runningApps.splice(appIndex,1)
     }
@@ -601,7 +598,6 @@ ipc.on('installApp',function (event,args){
 })
 
 ipc.on('runAutoRunApps',function(event,args){
-  console.log('尝试启用自启动应用')
   appVue.$refs.sidePanel.apps.forEach(app=>{
     if(app.settings.autoRun){
       ipc.send('executeApp',{app:app,background:true})
@@ -613,7 +609,6 @@ ipc.on('runAutoRunApps',function(event,args){
 })
 
 ipc.on('appBadge',function (event,args){
-  console.log(args)
   appVue.$refs.sidePanel.apps.forEach(app=>{
     if(app.id===args.id){
       if(args.add){
@@ -622,7 +617,6 @@ ipc.on('appBadge',function (event,args){
       }else{
         app.badge=args.badge
       }
-      console.log(app)
     }
 
   })

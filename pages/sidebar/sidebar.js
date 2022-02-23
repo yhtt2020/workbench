@@ -239,31 +239,8 @@ window.onload = function() {
 
 			//从任务组读入置顶区域，目前还不支持存档，每次进去会重新填充一次
 			initItems: state => {
-
 				state.pinItems = []
 				state.items = []
-        //在置顶区域插入一个收藏夹的图标按钮
-        // let item = {
-        //   title: '收藏夹', //名称，用于显示提示
-        //   index: 0, //索引
-        //   id: 1, //id
-        //   icon: "../../icons/fav.svg", //图标
-        //   draggable: true, //是否允许拖拽
-        //   ext: '', //额外的信息
-        //   fixed: true, //锁定，不让它移动
-        //   type: 'system-bookmark',
-        //   count: 0
-        // }
-				// state.pinItems.push(item)
-				// if (tasks != null) {
-				// 	//从任务当中取得任务的小组
-				// 	let tasksArray = tasks.getAll()
-				// 	let that = this
-				// 	tasks.forEach(function(task, index) {
-				// 		let item = store.getters.getItemFromTask(task)
-				// 		state.items.push(item)
-				// 	})
-				// }
 			},
 			//将任务填充到item列表当中，系统会自动刷新一次列表。
 			//算法主要是遍历两个组，然后将task按顺序填充进去，如果有多的，就在队列尾部插入（应对插入新组的情况），如果有少的，则从队尾删除相应数量（应对删除任务的情况）
@@ -369,11 +346,11 @@ window.onload = function() {
 		},
 		data: {
       mod:'auto',
-			message: 'Hello Vue!',
 			window: window
 		},
 		mounted: function() {
 			window.$store = store
+      getCurrentUser()
 		}
 	})
 	window.appVue=appVue
