@@ -528,7 +528,7 @@ Vue.component('sidebar', {
       if(this.resizing){
         let movedY=e.clientY-this.startY
         if(movedY<0){
-          document.getElementById('saApp-box').style.height='0px'
+          document.getElementById('saApp-box').style.height=this.startHeight
         }
         if(movedY+this.startHeight>= document.getElementById('pinGroup').scrollHeight){
           document.getElementById('saApp-box').style.height=document.getElementById('pinGroup').offsetHeight+'px'
