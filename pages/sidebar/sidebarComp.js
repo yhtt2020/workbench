@@ -4,6 +4,9 @@ const standAloneAppModel=require('../util/model/standAloneAppModel.js')
 Vue.component('sidebar', {
 	data: function() {
 		return {
+      resize:false,
+      startY:0,
+
       apps:[],
       runningApps:[],//运行中的应用
       mod:'auto',//auto open close
@@ -77,7 +80,7 @@ Vue.component('sidebar', {
     await standAloneAppModel.initialize()
     this.apps=await standAloneAppModel.getAllApps()
     ipc.send('getRunningApps')
-
+    document.getElementById('saApp-box').style.height=(localStorage.getItem('sidebarDividerY') || '200')+'px'
     //mark插入对password的数据统计
     let passwordList = await ipc.invoke('credentialStoreGetCredentials')
     await userStatsModel.setValue('password', passwordList.length)
@@ -495,6 +498,35 @@ Vue.component('sidebar', {
         for(let i=0;i<popovers.length;i++){
           popovers[i].style.display='none'
         }
+      }
+    },
+    dividerResizeStart(e){
+      console.log(this.startY)
+      this.startY=e.clientY
+      this.resizing=true
+      this.startHeight=document.getElementById('saApp-box').offsetHeight
+      document.onmousemove=this.dividerResizing
+      document.onmouseup=this.dividerResizeEnd
+      document.body.style.userSelect='none'
+    },
+    dividerResizeEnd(){
+      this.resizing=false
+      localStorage.setItem('sidebarDividerY',document.getElementById('saApp-box').offsetHeight)
+    },
+    dividerResizing(e){
+      if(this.resizing){
+        let movedY=e.clientY-this.startY
+        console.log(movedY)
+        if(movedY<0){
+          document.getElementById('saApp-box').style.height='0px'
+        }
+        if(movedY+this.startHeight>= document.getElementById('pinGroup').scrollHeight){
+          document.getElementById('saApp-box').style.height=document.getElementById('pinGroup').offsetHeight+'px'
+          return
+        }else{
+          document.getElementById('saApp-box').style.height=movedY+this.startHeight+'px'
+        }
+
       }
     }
 	}
