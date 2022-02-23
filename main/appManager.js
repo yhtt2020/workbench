@@ -413,7 +413,6 @@ function download(){
       safeDialogs:false,
       safeDialogsMessage:false,
       partition:null,
-
     }
   })
 
@@ -427,27 +426,53 @@ function download(){
   // })
 }
 
-let {ipcMain} = require('electron')
 
-ipcMain.on('show-context-menu', (event) => {
+let {ipcMain} = require('electron')
+ipcMain.on('show-context-menuing', (event,args) => {
+console.log(args)
   const template = [
     {
-      label: '启动',
-      click: () => { event.sender.send('context-menu-command', 'menu-item-1') }
+      label: ( args === true) ? '继续下载' : '暂停下载',
+      click: () => {
+        if(this.label === '继续下载'){
+          event.sender.send('context-menudone-start')
+        }
+        if(this.label === '暂停下载'){
+          event.sender.send('context-menudone-stop')
+        }
+      }
     },
-
-    { label: '打开文件夹', },
-
-    { label: '打开下载页', },
     { label: '分享', },
-    { label: '复制下载链接', },
-    { label: '删除', }
+
+    { label: '打开下载页面', },
+
+    { label: '删除任务', }
   ]
+
   const menu = Menu.buildFromTemplate(template)
   menu.popup(BrowserWindow.fromWebContents(event.sender))
-
 })
 
 
+ipcMain.on('show-context-menudone', (event) => {
+  const template = [
+    {
+      label: '打开',
+      click: () => { event.sender.send('context-menudone-open')}
+    },
 
+    { label: '打开文件夹',
+      click: () => { event.sender.send('context-menudone-openpath')}
+    },
+    { label: '复制下载链接',
+
+      click: () => { event.sender.send('context-menudone-Url')}
+    },
+    { label: '删除',
+      click: () => { event.sender.send('context-menudone-delete')}
+    }
+  ]
+  const menu = Menu.buildFromTemplate(template)
+  menu.popup(BrowserWindow.fromWebContents(event.sender))
+})
 

@@ -22,19 +22,24 @@
            </a-badge>
         下载中
       </span>
-          <div v-for="(list,index) in lists" v-bind:key="index">
-            <div style="margin-top: 0;width: 100%;height: 55px;background-color: azure ">
+          <div id="downing" v-for="(list,index) in lists" v-bind:key="index"  @contextmenu="menuing(index)" @click="change(index)"  :class="{active : active === index,
+         active1:active1===index}"
+               @mouseover="mouseOver(index)"
+               @mouseleave="mouseLeave">
+            <div style="margin-top: 0;width: 100%;height: 55px;">
               <div style="width: 34px;height: 40px;position: absolute;margin-top: 8px;margin-left: 5px;" >
                 <a-icon type="file-text" style="fontSize:30px"></a-icon>
               </div>
-              <a-popconfirm
-                title="文件正在下载中，确定删除?"
-                ok-text="删除"
-                cancel-text="取消"
-                @confirm="del(lists.splice(index, 1))"
-              >
-                <a style="float: right;" href="#">删除</a>
-              </a-popconfirm>
+
+              <div>
+                <a-button type="link" style="float: right" @click="showModal(index)">
+                  删除
+                </a-button>
+                <a-modal v-model="visibleing" title="删除下载任务" ok-text="确认" cancel-text="取消" @ok="hideModal(index)">
+                  <p>文件正在下载中，确认删除</p>
+                </a-modal>
+              </div>
+
               <div v-if="list.status === 'progressing'" >
                 <div v-if="list.loadstate" >
                   <a-button style="position: absolute;margin-left: 270px;margin-top: 14px" type="link" @click="resume(index)" >
@@ -58,27 +63,32 @@
         </a-tab-pane>
 
         <a-tab-pane key="2" tab="已完成" force-render>
-          <div v-for="(donelist,index) in donelists" v-bind:key="index">
-            <div style="width: 100%;height: 45px;background-color: azure">
+          <div id="downdone" v-for="(donelist,index) in donelists" v-bind:key="index" @click="change(index)"  @contextmenu="menudone(index)"  :class="{active : active === index,
+         active1:active1===index}"
+               @mouseover="mouseOver(index)"
+               @mouseleave="mouseLeave">
+            <div style="width: 100%;height: 45px;">
               <div style="width: 34px;height: 40px;position: absolute;margin-top: 8px;margin-left: 5px;" >
                 <a-icon type="file-text" style="fontSize:30px"></a-icon>
               </div>
-              <a-popconfirm
-                title="文件下载已完成，确定删除?"
-                ok-text="删除"
-                cancel-text="取消"
-                @confirm="del(donelists.splice(index, 1))"
-              >
-                <a style="float: right;" href="#">删除</a>
-              </a-popconfirm>
-              <div>
+                <div>
+                  <a-button type="link" style="float: right" @click="showdoneModal(index)">
+                    删除
+                  </a-button>
+                  <a-modal v-model="visible" title="删除下载任务" ok-text="确认" cancel-text="取消" @ok="hideModaldone(index)">
+                    <p>文件下载已完成，确认删除</p>
+                    <a-checkbox @change="doneChange">
+                      同时删除下载文件
+                    </a-checkbox>
+                  </a-modal>
+                </div>
+
               <a-button style="position: absolute;margin-left: 200px;margin-top: 5px" type="link" @click="openFileHandler(index)" >
                 打开
               </a-button>
                 <a-button style="position: absolute;margin-left: 240px;margin-top: 5px" type="link" @click="showFileHandler(index)" >
                   打开文件夹
                 </a-button>
-            </div>
               <div style="margin-left: 50px;font-size: 15px;font-weight: bold ;">{{donelist.title}}</div>
               <div style="margin-left: 50px;font-size: 12px;width: 150px;">{{donelist.total}}  MB</div>
 
@@ -103,20 +113,34 @@
 
 
 <script type="module">
+  const { clipboard } = require('electron')
   const { shell } = require('electron')
   const fs = require('fs')
   let {ipcMain} = require('electron')
   let {ipcRenderer} = require('electron')
-  window.addEventListener('contextmenu', (e) => {
-    e.preventDefault()
-    ipcRenderer.send('show-context-menu')
+
+  ipcRenderer.on('context-menuding-start', (e) => {
+
   })
 
-
-  ipcRenderer.on('context-menu-command', (e, command) => {
-    console.log(123)
+  ipcRenderer.on('context-menudone-open', (e) => {
+    const {shell} = require('electron')
+    shell.openPath(appVue.selectlist.path)
   })
 
+  ipcRenderer.on('context-menudone-openpath', (e) => {
+    const {shell} = require('electron')
+    shell.showItemInFolder(appVue.selectlist.path)
+  })
+
+  ipcRenderer.on('context-menudone-Url', (e) => {
+    clipboard.writeText( appVue.selectlist.Url)
+  })
+
+  // ipcRenderer.on('context-menudone-delete', (e) => {
+  //   fs.unlinkSync(appVue.selectlist.path)
+  //   // appVue.donelists.splice(index, 1)
+  // })
 
   ipcRenderer.on('download-info', (event, args) => {
     let aname;
@@ -126,6 +150,7 @@
 
     if(args.status ==='start'){
       appVue.lists.push({
+        id:appVue.id++,
         title:aname,
         received:'',
         realdata:'',
@@ -133,7 +158,8 @@
         progressnuw:0,
         startTime:args.startTime,
         path:'',
-        loadstate:false
+        loadstate:false,
+        Url:args.Url
       })
     }
 
@@ -147,66 +173,122 @@
           item.progressnuw = Math.round(args.progressnuw);
           item.path=args.path
           item.status=args.status
+            if(item.progressnuw===100){
+              appVue.lists.splice(index,1)
+            }
         }
        })
       console.log(appVue.lists)
     }
 
-      if(args.status === 'completed' && args.path !== '' ) {
-        appVue.lists.splice(0, 1)
+      if(args.status === 'completed' && args.path !== '' && appVue.lists.startTime === args.startTime) {
         appVue.donelists.push({
-          id1: appVue.nextTodoId1++,
           title: aname,
           total:((args.size.total)/1024/1024).toFixed(2),
-          path:args.path
+          path:args.path,
+          Url:args.Url
         })
-       appVue.pathlist.push({
-         path:args.path
-       })
   }
-      console.log(appVue.donelists)
   })
 
    let appVue = new Vue({
     el: '#appVue',
      data: {
+       visibleing:false,
+       visible: false,
        lists:[],
        donelists:[],
        deletelists:[],
-       nextTodoId1:0,
        nextTodoId2:0,
        progressnuw:0,
        startTime: '',
        pathlist:[],
-       loadstate:[]
+       loadstate:[],
+       deleconfirm:'',
+       id:'0',
+       active :'',
+       active1:'',
+       selectlist:[],
+       Url:''
      },
 
     methods: {
-      callback(key) {
+      menuing(index){
+        ipcRenderer.send('show-context-menuing',this.lists[index].loadstate)
+        this.active = index;
       },
-      del() {
-        this.deletelists.push({
-          id2: this.nextTodoId2++,
-        })
+      menudone(index){
+        ipcRenderer.send('show-context-menudone')
+        this.selectlist=this.donelists[index]
+        this.active = index;
       },
-      resume(index){
-        ipcRenderer.send('resumeDownload',this.lists[index].path)
-        this.lists[index].loadstate=false
+      mouseOver(index){
+        this.active1 = index;
       },
-      stop(index) {
-        ipcRenderer.send('stopDownload',this.lists[index].path)
-          this.lists[index].loadstate=true
+      mouseLeave(){
+        this.active1 = '';
+      },
+      change(index){
+        this.active = index;
+      },
+      showModal() {
+        this.visibleing = true;
+      },
+      showdoneModal(index) {
+        this.visible = true;
+        this.deleconfirm=false
+        console.log(this.donelists[index])
       },
 
-    openFileHandler(index){
-      const { shell } = require('electron')
-      console.log(this.pathlist[index].path)
-      shell.openPath(this.pathlist[index].path)
-    },
+      hideModal(index) {
+        ipcRenderer.send('deleteDownload', this.lists[index].path)
+        this.lists.splice(index, 1)
+        this.visible = false;
+      },
+
+      doneChange(e){
+        if(e.target.checked === true){
+          this.deleconfirm = true
+        }
+        if (e.target.checked === false){
+          this.deleconfirm = false
+        }
+      },
+      callback(key){
+      },
+
+      hideModaldone(index){
+        console.log(this.donelists[index])
+        if(this.deleconfirm === true) {
+          fs.unlinkSync(this.donelists[index].path)
+          this.donelists.splice(index, 1)
+          this.visible = false;
+        }
+        if(this.deleconfirm === false){
+          this.donelists.splice(index, 1)
+          this.visible = false;
+        }
+      },
+
+      resume(index) {
+        ipcRenderer.send('resumeDownload', this.lists[index].path)
+        this.lists[index].loadstate = false
+      },
+      stop(index) {
+        ipcRenderer.send('stopDownload', this.lists[index].path)
+        this.lists[index].loadstate = true
+      },
+
+      openFileHandler(index) {
+        const {shell} = require('electron')
+        console.log(this.donelists[index].path)
+        shell.openPath(this.donelists[index].path)
+      },
+
       showFileHandler(index) {
-        const { shell } = require('electron')
-        console.log(this.pathlist[index].path)
-        shell.showItemInFolder(this.pathlist[index].path)
+        const {shell} = require('electron')
+        console.log(this.donelists[index].path)
+        shell.showItemInFolder(this.donelists[index].path)
       },
     }
    })
@@ -221,8 +303,12 @@
   margin-left: 60px;
   margin-top: 10px;
 }
-
-
+.active {
+  background: #e6e6e6;
+}
+.active1{
+  background: #e8f2ff;
+}
 </style>
 
 </html>

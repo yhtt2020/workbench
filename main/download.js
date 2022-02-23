@@ -1,11 +1,11 @@
 
 const currrentDownloadItems = {}
 
-ipc.on('cancelDownload', function (e, path) {
-  if (currrentDownloadItems[path]) {
-    currrentDownloadItems[path].cancel()
-  }
-})
+// ipc.on('cancelDownload', function (e, path) {
+//   if (currrentDownloadItems[path]) {
+//     currrentDownloadItems[path].cancel()
+//   }
+// })
 
 ipc.on('stopDownload',function (e,path){
   if (currrentDownloadItems[path]) {
@@ -16,6 +16,12 @@ ipc.on('stopDownload',function (e,path){
 ipc.on('resumeDownload',function (e,path){
   if (currrentDownloadItems[path]) {
     currrentDownloadItems[path].resume()
+  }
+})
+
+ipc.on('deleteDownload',function (e,path){
+  if (currrentDownloadItems[path]) {
+    currrentDownloadItems[path].cancel()
   }
 })
 
@@ -55,7 +61,7 @@ function downloadHandler (event, item, webContents) {
       size: { received: 0, total: item.getTotalBytes() },
       paused: item.isPaused(),
       startTime:item.getStartTime(),
-
+      Url:item.getURL()
     })
 
 
@@ -105,12 +111,12 @@ function downloadHandler (event, item, webContents) {
         path: item.getSavePath(),
         name: savePathFilename,
         status: state,
+        Url:item.getURL(),
           size: { received: item.getTotalBytes(), total: item.getTotalBytes() }
       })
     })
   }
   return true
-
 
 }
 
