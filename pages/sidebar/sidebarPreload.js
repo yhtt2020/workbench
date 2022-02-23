@@ -122,9 +122,14 @@ ipc.on('refreshMyGroups', async () => {
       } else {
         user = item.value
         window.$store.state.user = user
-        await window.$store.dispatch('getUserInfo', {
-          token: user.token
-        })
+        try{
+          await window.$store.dispatch('getUserInfo', {
+            token: user.token
+          })
+        }
+        catch (e){
+          console.log(e)
+        }
       }
     }
   ).catch((err) => {

@@ -207,7 +207,7 @@ window.onload = function() {
       },
       set_user_info:(state,data)=>{
         let userInfo=data.data
-        if(!!!userInfo){
+        if(!!!userInfo || !!!userInfo.grade){
           userInfo={
             fans:0,
             postCount:0,
@@ -351,6 +351,7 @@ window.onload = function() {
       },
       async getUserInfo({commit},userInfo){
         const result=await userApi.getUserInfo()
+        console.log(result)
         if(result.code===1000){
           commit('set_user_info',result.data)
         }
