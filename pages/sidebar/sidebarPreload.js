@@ -12,8 +12,6 @@ const {
 //将语言包的接口暴露给里面的页面
 window.l = l
 window.ipc = ipc
-// contextBridge.exposeInMainWorld('l', l)
-// contextBridge.exposeInMainWorld('ipc', ipc)
 if (!!!localStorage.getItem('firstRun')) {
   ipc.send('wizard')
 }
@@ -113,29 +111,29 @@ ipc.on('refreshMyGroups', async () => {
 })
 
 //读入当前登录的帐号
- function  getCurrentUser () {
-  db.system.get({ 'name': 'currentUser' }).then(async(item) => {
-      let user = {}
+window.getCurrentUser= async function  getCurrentUser () {
+   let user = {}
+   db.system.get({ 'name': 'currentUser' }).then(async(item) => {
       if (typeof (item) == 'undefined') {
         //如果还没有当前用户，则插入一个默认用户
         user = insertDefaultUser()
       } else {
         user = item.value
         window.$store.state.user = user
-        try{
-          await window.$store.dispatch('getUserInfo', {
-            token: user.token
-          })
-        }
-        catch (e){
-          console.log(e)
-        }
       }
     }
   ).catch((err) => {
     console.log('获取当前用户失败')
     console.log(err)
   })
+   try{
+     await window.$store.dispatch('getUserInfo', {
+       token: user.token
+     })
+   }
+   catch (e){
+     console.log(e)
+   }
 }
 
 async function insertDefaultUser (code) {
@@ -155,11 +153,8 @@ async function insertDefaultUser (code) {
 
 window.insertDefaultUser = insertDefaultUser
 
-//sidebar的数据依托于vuex，每次preload载入需要重新getCurrentUser
-setTimeout(getCurrentUser, 1000)
 ipc.on('userLogin', function (e, data) {
-  //todo 单独通过接口获取用户信息
-
+  //此处是用户触发自动登录后的回调地址
   let user = {
     uid: data.userInfo.uid,
     nickname: data.userInfo.nickname,
@@ -183,19 +178,12 @@ ipc.on('userLogin', function (e, data) {
     name: 'currentUser',
     value: user
   }).then(async (msg) => {
-    console.log(msg)
     db.accounts.put({
       uid: user.uid,
       nickname: user.nickname,
       avatar: user.avatar,
       lastLoginTime: new Date().getTime(),
       token: user.token,
-      // fans: data.userInfo.fans || 0,
-      // follow: data.userInfo.follow || 0,
-      // postCount: data.userInfo.post_count || 0,
-      // grade: data.userInfo.grade || {
-      //   grade: 0
-      // },
       refreshToken: user.refreshToken,
       expire_deadtime: user.expire_deadtime,
       refreshExpire_deadtime: user.refreshExpire_deadtime,
