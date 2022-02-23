@@ -383,12 +383,19 @@
         </ul>
       </div>
 
-
-      <div @mousedown="dividerResizeStart" style="cursor: n-resize;padding: 10px 0;">
+      <a-tooltip
+        placement="right"
+        :auto-adjust-overflow="true"
+      >
+        <div slot="title">
+         拖动：手动，自由调节应用栏高度，可通过滚轮滚动显示隐藏应用；<br>双击：自动，根据应用数量自动调节高度，显示全部内应用
+        </div>
+      <div @dblclick.prevent="fitSize" @mousedown="dividerResizeStart" style="cursor: n-resize;padding: 10px 0;">
         <div  style="width: 100%;
     height: 1px;
     background: rgba(199,199,199,0.65);"></div>
       </div>
+      </a-tooltip>
 
       <div class="app-box">
         <ul id="appGroup" style="user-select: none" class="app-task app-items" @dblclick.prevent="addNewTask">
