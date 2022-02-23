@@ -1,34 +1,44 @@
 const { autoUpdater } = require('electron-updater')
 let updaterWindow=null
 function loadUpdate(updateInfo){
-  updaterWindow= new BrowserWindow({
-    parent: mainWindow,
-    width: 500,
-    height: 580,
-    resizable: false,
-    visible:false,
-    acceptFirstMouse: true,
-    webPreferences: {
-      //preload: path.join(__dirname, '/pages/update/inde.js'),
-      nodeIntegration: true,
-      contextIsolation: false,
-      additionalArguments: [
-        '--user-data-path=' + userDataPath,
-        '--app-version=' + app.getVersion(),
-        '--app-name=' + app.getName(),
-        ...((isDevelopmentMode ? ['--development-mode'] : [])),
-      ]
-    }
-  })
-  updaterWindow.setMenu(null)
-  updaterWindow.webContents.loadURL('file://' + __dirname + "/pages/update/index.html")
-  updaterWindow.on('ready-to-show',()=>{
-    updaterWindow.show()
-    updaterWindow.webContents.send('getInfo',updateInfo)
+  if(!updaterWindow){
+    updaterWindow= new BrowserWindow({
+      parent: mainWindow,
+      width: 500,
+      height: 580,
+      resizable: false,
+      visible:false,
+      acceptFirstMouse: true,
+      webPreferences: {
+        //preload: path.join(__dirname, '/pages/update/inde.js'),
+        nodeIntegration: true,
+        contextIsolation: false,
+        additionalArguments: [
+          '--user-data-path=' + userDataPath,
+          '--app-version=' + app.getVersion(),
+          '--app-name=' + app.getName(),
+          ...((isDevelopmentMode ? ['--development-mode'] : [])),
+        ]
+      }
+    })
+    updaterWindow.on('close',()=>updaterWindow=null)
+    updaterWindow.setMenu(null)
+    updaterWindow.webContents.loadURL('file://' + __dirname + "/pages/update/index.html")
+    updaterWindow.on('ready-to-show',()=>{
+      updaterWindow.show()
+      updaterWindow.webContents.send('getInfo',{updateInfo:updateInfo,currentVersion: app.getVersion()})
+      if(isDevelopmentMode){
+        updaterWindow.openDevTools()
+      }
 
-  })
-  updaterWindow.focus()
+    })
+    updaterWindow.focus()
+  }else{
+    updaterWindow.focus()
+  }
+
 }
+let updateData={}
 //app.whenReady().then(()=>loadUpdate())
 // 自动检测升级机制
 function checkUpdate(){
@@ -36,7 +46,6 @@ function checkUpdate(){
     //如果是开发环境，直接不检测，如需调试升级工具，将此处return注释掉即可
     //return
   }
-  let updateInfo={}
   autoUpdater.logger=electronLog
   function showError(error,tag='check'){
     if(!electron.net.online){
@@ -56,12 +65,14 @@ function checkUpdate(){
       })
     }
   }
-  autoUpdater.checkForUpdates().then((updateInfo)=>{
+  autoUpdater.checkForUpdates().then((checkResult)=>{
     //检测到可以升级，则发送升级的信息到updateWindow
-    updateInfo={
-      version:updateInfo.updateInfo.version,
-      releaseDate:updateInfo.updateInfo.releaseDate
+    updateData={
+      version:checkResult.updateInfo.version,
+      releaseDate:checkResult.updateInfo.releaseDate
     }
+    console.log(updateData)
+
   }).catch((error)=> {
     showError(error,'checkError')
   })
