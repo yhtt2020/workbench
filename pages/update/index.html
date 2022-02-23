@@ -124,7 +124,7 @@
     appVue.info=args.updateInfo
     appVue.currentVersion=args.currentVersion
     console.log(cpr_version(args.updateInfo.version,args.currentVersion)+'==='+args.updateInfo.version)
-    appVue.canUpdate=cpr_version(args.updateInfo.version,args.currentVersion)===args.updateInfo.version
+    appVue.canUpdate=(cpr_version(args.updateInfo.version,args.currentVersion)===args.updateInfo.version) && args.updateInfo.version!==args.currentVersion
     if(appVue.canUpdate){
       appVue.tip='您有新的升级可用'
     }else{
