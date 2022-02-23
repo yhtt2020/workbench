@@ -67,7 +67,7 @@
 <template id="sidebarTpl">
   <div id="sidebar" class="side-container">
     <div id="itemsEl" class="side-items">
-      <ul id="pinGroup" class="app-task" style="margin-bottom: 0; overflow: hidden">
+      <ul class="app-task">
         <li @click="toggleUserPanel" class="" style="position: relative;">
           <template>
             <a-drawer class="user-panel"
@@ -99,9 +99,9 @@
                       <a-row>
                         <a-col :span="8" style="text-align: center">
                           <a-avatar style="position: relative;cursor: pointer"
-                            @click="userClick"
-                            :size="60"
-                            :src="user.avatar"
+                                    @click="userClick"
+                                    :size="60"
+                                    :src="user.avatar"
                           >
                           </a-avatar>
                           <div class="level">{{user.grade.grade}}</div>
@@ -267,118 +267,128 @@
         <li>
           <app-manager ref="appManager" :apps="apps" :running-apps="runningApps"></app-manager>
         </li>
-        <li v-for="app in apps" @click="executeApp(app)" @mouseenter="hoverApp($event,app)" @contextmenu="createMenu(app.id,app)" v-if="app.processing || app.settings.showInSideBar">
-          <a-popover  placement="right" :mouse-enter-delay="0.3"
-                     overlay-class-name="tips"  @visible-change="">
-            <template slot="title" >
-              <span class="app-name-popover"> {{app.name}} </span>
-            </template>
-            <template slot="content" v-if="app.processing">
-              <div class="app-capture">
-                <img  :src="'file://'+app.capture" onerror="this.src='../../icons/svg/empty.svg'">
-              </div>
-            </template>
-            <template slot="content" v-else>
-              {{app.summary}}
-            </template>
-          <div class="wrapper sa-app-wrapper" >
-            <div v-if="app.processing" class="processing"></div>
-            <div class="item-icon">
-              <a-badge
-                :count="app.badge">
-<!--                :style="{position: 'absolute',right:  '-2px',visibility:'visible'}"-->
-
-                <img onerror="this.src='../../icons/default.svg'" class="icon sa-app" :style="app.processing? {'border-color':app.userThemeColor!==''?app.userThemeColor:app.themeColor}:{}" :src="app.logo"/>
-
-              </a-badge>
-            </div>
-            <div class="item-title">{{app.name}} </div>
-          </div>
-          </a-popover>
-        </li>
-<!--        <li-->
-<!--          @click="openCom()"-->
-<!--          style="position: relative"-->
-<!--        >-->
-<!--          &lt;!&ndash;              <a-popover&ndash;&gt;-->
-<!--          &lt;!&ndash;                title="团队协作"&ndash;&gt;-->
-<!--          &lt;!&ndash;                placement="right"&ndash;&gt;-->
-<!--          &lt;!&ndash;                :mouse-enter-delay="0.1"&ndash;&gt;-->
-<!--          &lt;!&ndash;                :mouse-leave-delay="0.1"&ndash;&gt;-->
-<!--          &lt;!&ndash;                :destroy-tooltip-on-hide="true"&ndash;&gt;-->
-<!--          &lt;!&ndash;                overlay-class-name="tips">&ndash;&gt;-->
-<!--          &lt;!&ndash;                <template slot="content">&ndash;&gt;-->
-
-<!--          &lt;!&ndash;                </template>&ndash;&gt;-->
-<!--          <div class="wrapper" @dblclick.stop="closeItem(item)">-->
-<!--            <div class="item-icon">-->
-<!--              <img class="icon" style="border-color:#12a900" src="../../icons/svg/com.svg"/>-->
-<!--              <a-badge-->
-<!--                count="0"-->
-<!--                :dot="true"-->
-<!--                :style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:'visible'}"-->
-<!--              >-->
-<!--              </a-badge>-->
-<!--            </div>-->
-<!--            <div class="item-title">效率社区</div>-->
-<!--          </div>-->
-<!--          &lt;!&ndash;              </a-popover>&ndash;&gt;-->
-<!--        </li>-->
-        <draggable
-          v-model="getPinItems"
-          group="sideBtn"
-          animation="300"
-          dragClass="dragClass"
-          ghostClass="ghostClass"
-          chosenClass="chosenClass"
-          @start="onStart"
-          @end="onEnd"
-        >
-          <transition-group>
-            <li
-              v-for="(item,i) in this.$store.getters.getPinItems"
-              :key="item.id"
-              @click="openPinItem(item.id,i)"
-              :class="isActive(item.id)"
-              style="position: relative"
-              :item-id="item.id"
-            >
-              <a-popover
-                :title="item.count>5?item.title+' -- 高负载（5+）':item.title"
-                placement="right"
-                :mouse-enter-delay="0.1"
-                :mouse-leave-delay="0.2"
-                :destroy-tooltip-on-hide="true"
-                overlay-class-name="tips"
-              >
-                <template slot="content">
-                  <ul class="tabs">
-                    <li class="tab-title" :class="{'active':tab.selected}" v-for="(tab,j) in item.tabs" :key="tab.id">
-                      <img class="tab-icon" :src="tab.icon"/> {{ tab.title }}
-                    </li>
-                  </ul>
-                </template>
-                <div class="wrapper" @dblclick.stop="closeItem(item)">
-                  <div class="item-icon">
-                    <img class="icon" :src="item.icon"/>
-                    <a-badge
-                      :count="item.count"
-                      :dot="true"
-                      status="processing"
-                      :style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:item.count>5?'visible':'hidden'}"
-                    >
-                    </a-badge>
-                  </div>
-
-                  <div class="item-title">{{ item.title }}</div>
-                </div>
-              </a-popover>
-            </li>
-          </transition-group>
-        </draggable>
       </ul>
+      <div id="saApp-box" class="app-box" style="height: 200px;overflow-x: hidden;overflow-y: hidden;flex:none">
+        <ul id="pinGroup" class="app-task app-items" style="margin-bottom: 0; ">
 
-      <div class="divider"></div>
+          <li v-for="app in apps" @click="executeApp(app)" @mouseenter="hoverApp($event,app)" @contextmenu="createMenu(app.id,app)" v-if="app.processing || app.settings.showInSideBar">
+            <a-popover  placement="right" :mouse-enter-delay="0.3"
+                        overlay-class-name="tips"  @visible-change="">
+              <template slot="title" >
+                <span class="app-name-popover"> {{app.name}} </span>
+              </template>
+              <template slot="content" v-if="app.processing">
+                <div class="app-capture">
+                  <img  :src="'file://'+app.capture" onerror="this.src='../../icons/svg/empty.svg'">
+                </div>
+              </template>
+              <template slot="content" v-else>
+                {{app.summary}}
+              </template>
+              <div class="wrapper sa-app-wrapper" >
+                <div v-if="app.processing" class="processing"></div>
+                <div class="item-icon">
+                  <a-badge
+                    :count="app.badge">
+                    <!--                :style="{position: 'absolute',right:  '-2px',visibility:'visible'}"-->
+
+                    <img onerror="this.src='../../icons/default.svg'" class="icon sa-app" :style="app.processing? {'border-color':app.userThemeColor!==''?app.userThemeColor:app.themeColor}:{}" :src="app.logo"/>
+
+                  </a-badge>
+                </div>
+                <div class="item-title">{{app.name}} </div>
+              </div>
+            </a-popover>
+          </li>
+          <!--        <li-->
+          <!--          @click="openCom()"-->
+          <!--          style="position: relative"-->
+          <!--        >-->
+          <!--          &lt;!&ndash;              <a-popover&ndash;&gt;-->
+          <!--          &lt;!&ndash;                title="团队协作"&ndash;&gt;-->
+          <!--          &lt;!&ndash;                placement="right"&ndash;&gt;-->
+          <!--          &lt;!&ndash;                :mouse-enter-delay="0.1"&ndash;&gt;-->
+          <!--          &lt;!&ndash;                :mouse-leave-delay="0.1"&ndash;&gt;-->
+          <!--          &lt;!&ndash;                :destroy-tooltip-on-hide="true"&ndash;&gt;-->
+          <!--          &lt;!&ndash;                overlay-class-name="tips">&ndash;&gt;-->
+          <!--          &lt;!&ndash;                <template slot="content">&ndash;&gt;-->
+
+          <!--          &lt;!&ndash;                </template>&ndash;&gt;-->
+          <!--          <div class="wrapper" @dblclick.stop="closeItem(item)">-->
+          <!--            <div class="item-icon">-->
+          <!--              <img class="icon" style="border-color:#12a900" src="../../icons/svg/com.svg"/>-->
+          <!--              <a-badge-->
+          <!--                count="0"-->
+          <!--                :dot="true"-->
+          <!--                :style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:'visible'}"-->
+          <!--              >-->
+          <!--              </a-badge>-->
+          <!--            </div>-->
+          <!--            <div class="item-title">效率社区</div>-->
+          <!--          </div>-->
+          <!--          &lt;!&ndash;              </a-popover>&ndash;&gt;-->
+          <!--        </li>-->
+          <draggable
+            v-model="getPinItems"
+            group="sideBtn"
+            animation="300"
+            dragClass="dragClass"
+            ghostClass="ghostClass"
+            chosenClass="chosenClass"
+            @start="onStart"
+            @end="onEnd"
+          >
+            <transition-group>
+              <li
+                v-for="(item,i) in this.$store.getters.getPinItems"
+                :key="item.id"
+                @click="openPinItem(item.id,i)"
+                :class="isActive(item.id)"
+                style="position: relative"
+                :item-id="item.id"
+              >
+                <a-popover
+                  :title="item.count>5?item.title+' -- 高负载（5+）':item.title"
+                  placement="right"
+                  :mouse-enter-delay="0.1"
+                  :mouse-leave-delay="0.2"
+                  :destroy-tooltip-on-hide="true"
+                  overlay-class-name="tips"
+                >
+                  <template slot="content">
+                    <ul class="tabs">
+                      <li class="tab-title" :class="{'active':tab.selected}" v-for="(tab,j) in item.tabs" :key="tab.id">
+                        <img class="tab-icon" :src="tab.icon"/> {{ tab.title }}
+                      </li>
+                    </ul>
+                  </template>
+                  <div class="wrapper" @dblclick.stop="closeItem(item)">
+                    <div class="item-icon">
+                      <img class="icon" :src="item.icon"/>
+                      <a-badge
+                        :count="item.count"
+                        :dot="true"
+                        status="processing"
+                        :style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:item.count>5?'visible':'hidden'}"
+                      >
+                      </a-badge>
+                    </div>
+
+                    <div class="item-title">{{ item.title }}</div>
+                  </div>
+                </a-popover>
+              </li>
+            </transition-group>
+          </draggable>
+        </ul>
+      </div>
+
+
+      <div @mousedown="dividerResizeStart" style="cursor: n-resize;padding: 10px 0;">
+        <div  style="width: 100%;
+    height: 1px;
+    background: rgba(199,199,199,0.65);"></div>
+      </div>
 
       <div class="app-box">
         <ul id="appGroup" style="user-select: none" class="app-task app-items" @dblclick.prevent="addNewTask">
