@@ -512,11 +512,12 @@ Vue.component('sidebar', {
     dividerResizeStart(e){
       this.startY=e.clientY
       this.resizing=true
+      document.getElementById('saApp-box').style.height=document.getElementById('pinGroup').clientHeight+'px'
+      document.getElementById('pinGroup').style.position='absolute'
       this.startHeight=document.getElementById('saApp-box').offsetHeight
       document.onmousemove=this.dividerResizing
       document.onmouseup=this.dividerResizeEnd
       document.body.style.userSelect='none'
-      document.getElementById('pinGroup').style.position='absolute'
       localStorage.setItem('sidebarDividerMod','manual')
       appVue.$message.info({content:'应用栏的高度模式更改为手动调整。双击分隔条可切换回自动模式。',key:'dividerMod'})
     },
@@ -540,8 +541,9 @@ Vue.component('sidebar', {
       }
     },
     fitSize(){
-      document.getElementById('saApp-box').style.height=document.getElementById('pinGroup').scrollHeight+'px'
+      document.getElementById('saApp-box').style.height='auto'
       document.getElementById('pinGroup').style.position='relative'
+      document.getElementById('pinGroup').style.height='auto'
       localStorage.setItem('sidebarDividerMod','auto')
       appVue.$message.info({content:'应用栏的高度模式更改为自动模式。拖动分隔条可更改为手动模式。',key:'dividerMod'})
 
