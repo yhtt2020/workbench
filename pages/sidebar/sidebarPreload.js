@@ -119,6 +119,13 @@ window.getCurrentUser= async function  getCurrentUser () {
         user = insertDefaultUser()
       } else {
         user = item.value
+        //兼容老版本优化
+        user.fans=user.fans || 0
+        user.postCount=user.post_count || 0
+        user.follow=user.follow || 0
+        user.grade= user.grade || {
+          grade: 1
+        }
         window.$store.state.user = user
       }
     }
