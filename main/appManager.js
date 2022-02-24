@@ -511,14 +511,45 @@ const appManager = {
       })
     })
 
-    appView.webContents.on('new-window', (event, url) => {
-      event.preventDefault()
-      appView.webContents.loadURL(url)
-      appWindow.webContents.send('updateView', {
-        url: url,
-        canGoBack: appView.webContents.canGoBack(),
-        canGoForward: appView.webContents.canGoForward()
-      })
+    appView.webContents.on('new-window',(event, url, frameName, disposition, options, additionalFeatures, referrer, postBody) => {
+      if(!!!saApp.openNewWindow || saApp.openNewWindow==='redirect'){
+        //默认为重定向
+        event.preventDefault()
+        appView.webContents.loadURL(url)
+        appWindow.webContents.send('updateView', {
+          url: url,
+          canGoBack: appView.webContents.canGoBack(),
+          canGoForward: appView.webContents.canGoForward()
+        })
+      }else if(saApp.openNewWindow==='allow'){
+        event.preventDefault()
+        //允许，则不修改默认事件
+        const win = new BrowserWindow({
+          webContents: options.webContents, // use existing webContents if provided
+          show: false
+        })
+        win.webContents.on('new-window',(event,url)=>{
+          event.preventDefault()
+          win.webContents.loadURL(url)
+        })
+        win.once('ready-to-show', () => win.show())
+        win.setMenu(null)
+        if (!options.webContents) {
+          const loadOptions = {
+            httpReferrer: referrer
+          }
+          if (postBody != null) {
+            const {data, contentType, boundary} = postBody
+            loadOptions.postData = postBody.data
+            loadOptions.extraHeaders = `content-type: ${contentType}; boundary=${boundary}`
+          }
+          win.loadURL(url, loadOptions)
+        }
+        event.newGuest = win
+      }else if(saApp.openNewWindow==='deny'){
+        //禁止打开
+        event.preventDefault()
+      }
     })
 
     let saAppObject = saApp
