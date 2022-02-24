@@ -64,8 +64,8 @@ const standAloneAppModel = {
           lastExecuteTime: Date.now(),
           settings: JSON.stringify({
             bounds: {
-              width: 920,
-              height: 720
+              width: 650,
+              height: 700
             },
             showInSideBar:true
           }),
