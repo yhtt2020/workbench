@@ -153,4 +153,57 @@ app.whenReady().then(() => {
     viewCodeWindow.webContents.loadURL('file://' + __dirname + '/pages/userScript/code.html')
   })
 
+  /**
+   * 导入密码
+   */
+  ipc.on('importPwd', (event, args) => {
+    let existsCount = 0
+    let imported = 0
+    let existsFilename = []
+    const files = dialog.showOpenDialogSync({
+      userScriptWindow,
+      filters: [
+        { name: '密码导出文件', extensions: ['csv'] }
+      ], properties: ['openFile']
+    })
+    if(!!!files){
+      return
+    }
+    const csv=require('csvtojson')
+    let importedPwds=[]
+    files.forEach((file) => {
+      const converter=csv().fromFile(file).then(json=>{
+        // {
+        // [1]     name: 'miwifi.com',
+        // [1]     url: 'http://miwifi.com/cgi-bin/luci/web',
+        // [1]     username: '',
+        // [1]     password: 'chenyixiao1'
+        // [1]   }  edge导入格式
+        //{"domain":"passport.aliyun.com","username":"thisky","password":"Xiangtian1!"}  文件存储格式
+        json.forEach(item=>{
+          let account={
+            domain:item.name,
+            username:item.username,
+            password:item.password,
+            alias:item.url
+          }
+          credentialStoreSetPassword(account)
+          importedPwds.push(account)
+        })
+        if(importedPwds.length===0){
+          event.reply('importPwdFailed',{message:'无任何密码需要导入。'})
+        }else{
+          event.reply('importPwdSuccess',{imported:importedPwds.length,importedPwds:importedPwds})
+        }
+      }).catch((err)=>{
+        event.reply('importPwdFailed',{message:'解析密码文件失败。'})
+      })
+    })
+
+
+
+
+
+  })
+
 })

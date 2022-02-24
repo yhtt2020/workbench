@@ -588,7 +588,7 @@ const appManager = {
       //todo 判断linux
     })
     if (isDevelopmentMode){
-      //appView.webContents.openDevTools()
+      appView.webContents.openDevTools()
     }
     return appView
 
