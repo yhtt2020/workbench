@@ -67,7 +67,9 @@ if (isDevelopmentMode) {
 	app.setPath('userData', app.getPath('userData') + '-development')
 }
 electronLog.transports.file.file=app.getPath('userData')+'/myLog.log'
-electronLog.transports.file.level = "info"
+
+electronLog.transports.file.level = "debug"
+electronLog.transports.console.level='debug'
 // workaround for flicker when focusing app (https://github.com/electron/electron/issues/17942)
 app.commandLine.appendSwitch('disable-backgrounding-occluded-windows', 'true')
 
