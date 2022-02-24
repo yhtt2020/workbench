@@ -395,8 +395,8 @@
       </div>
       </a-tooltip>
 
-      <div class="app-box">
-        <ul id="appGroup" style="user-select: none" class="app-task app-items" @dblclick.prevent="addNewTask">
+      <div class="app-box" >
+        <ul id="appGroup" style="user-select: none;padding-bottom: 20px" class="app-task app-items" @dblclick.prevent="addNewTask">
           <draggable
             v-model="getItems"
             group="sideBtn"
