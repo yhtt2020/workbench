@@ -397,7 +397,6 @@ app.whenReady().then(()=>{
 let downloadWindow
 function download(){
   downloadWindow = new BrowserWindow({
-    parent: mainWindow,
     width: 390,
     height: 465,
     resizable:false,
@@ -415,6 +414,10 @@ function download(){
       partition:null,
     }
   })
+  downloadWindow.on("close", (evt) => {
+    evt.preventDefault();
+    downloadWindow.hide();
+  });
 
   // downloadWindow.loadFile('pages/download/index.html').whenReady().then(() =>{
   //   download()
@@ -433,20 +436,18 @@ console.log(args)
   const template = [
     {
       label: ( args === true) ? '继续下载' : '暂停下载',
-      click: () => {
-        if(this.label === '继续下载'){
-          event.sender.send('context-menudone-start')
-        }
-        if(this.label === '暂停下载'){
-          event.sender.send('context-menudone-stop')
-        }
-      }
+      click: () => { event.sender.send('context-menuing-start') }
     },
-    { label: '分享', },
 
-    { label: '打开下载页面', },
+    { label: '分享'},
 
-    { label: '删除任务', }
+    { label: '复制下载链接' ,
+      click: () => { event.sender.send('context-menuing-Url') }
+    },
+
+    { label: '删除任务',
+      click: () => { event.sender.send('context-menuing-delete') }
+    }
   ]
 
   const menu = Menu.buildFromTemplate(template)

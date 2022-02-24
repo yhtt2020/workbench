@@ -61,7 +61,8 @@ function downloadHandler (event, item, webContents) {
       size: { received: 0, total: item.getTotalBytes() },
       paused: item.isPaused(),
       startTime:item.getStartTime(),
-      Url:item.getURL()
+      Url:item.getURL(),
+      ChainUrl:item.getURLChain()
     })
 
 

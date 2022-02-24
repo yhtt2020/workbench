@@ -17,7 +17,7 @@
       <a-tabs default-active-key="1" @change="callback">
         <a-tab-pane key="1" >
         <span slot="tab">
-           <a-badge count="1" id="bq">
+           <a-badge :count="count" id="bq">
              <a href="#" class="head-example"></a>
            </a-badge>
         下载中
@@ -119,8 +119,25 @@
   let {ipcMain} = require('electron')
   let {ipcRenderer} = require('electron')
 
-  ipcRenderer.on('context-menuding-start', (e) => {
+  ipcRenderer.on('context-menuing-start', (e,args) => {
+    if(appVue.selectinglist.loadstate === true){
+      console.log(appVue.selectinglist.loadstate)
+      ipcRenderer.send('resumeDownload', appVue.selectinglist.path)
+      appVue.selectinglist.loadstate = false
+    }else {
+      console.log(appVue.selectinglist.loadstate)
+      ipcRenderer.send('stopDownload', appVue.selectinglist.path)
+      appVue.selectinglist.loadstate = true
+    }
+  })
 
+  ipcRenderer.on('context-menuing-Url', (e) => {
+    clipboard.writeText( appVue.selectinglist.Url)
+    appVue.$message.success('已复制到剪切板');
+  })
+
+  ipcRenderer.on('context-menuing-delete', (e) => {
+    appVue.visibleing = true;
   })
 
   ipcRenderer.on('context-menudone-open', (e) => {
@@ -135,12 +152,13 @@
 
   ipcRenderer.on('context-menudone-Url', (e) => {
     clipboard.writeText( appVue.selectlist.Url)
+    appVue.$message.success('已复制到剪切板');
   })
 
-  // ipcRenderer.on('context-menudone-delete', (e) => {
-  //   fs.unlinkSync(appVue.selectlist.path)
-  //   // appVue.donelists.splice(index, 1)
-  // })
+  ipcRenderer.on('context-menudone-delete', (e) => {
+    appVue.visible = true;
+    appVue.deleconfirm=false
+  })
 
   ipcRenderer.on('download-info', (event, args) => {
     let aname;
@@ -159,8 +177,9 @@
         startTime:args.startTime,
         path:'',
         loadstate:false,
-        Url:args.Url
+        Url:args.Url,
       })
+      appVue.count++
     }
 
     if (args.status === 'progressing' && args.path !== '' ) {
@@ -178,7 +197,6 @@
             }
         }
        })
-      console.log(appVue.lists)
     }
 
       if(args.status === 'completed' && args.path !== '' && appVue.lists.startTime === args.startTime) {
@@ -188,12 +206,14 @@
           path:args.path,
           Url:args.Url
         })
+        appVue.count--
   }
   })
 
    let appVue = new Vue({
     el: '#appVue',
      data: {
+       count:'0',
        visibleing:false,
        visible: false,
        lists:[],
@@ -209,12 +229,14 @@
        active :'',
        active1:'',
        selectlist:[],
-       Url:''
+       selectinglist:[],
+       Url:'',
      },
 
     methods: {
       menuing(index){
         ipcRenderer.send('show-context-menuing',this.lists[index].loadstate)
+        this.selectinglist=this.lists[index]
         this.active = index;
       },
       menudone(index){
@@ -260,6 +282,8 @@
       hideModaldone(index){
         console.log(this.donelists[index])
         if(this.deleconfirm === true) {
+          // const {shell} = require('electron')
+          // shell.trashItem(this.donelists[index].path)
           fs.unlinkSync(this.donelists[index].path)
           this.donelists.splice(index, 1)
           this.visible = false;
