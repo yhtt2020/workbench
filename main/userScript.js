@@ -179,21 +179,63 @@ app.whenReady().then(() => {
         // [1]     username: '',
         // [1]     password: 'chenyixiao1'
         // [1]   }  edge导入格式
-        //{"domain":"passport.aliyun.com","username":"thisky","password":"Xiangtian1!"}  文件存储格式
-        json.forEach(item=>{
-          let account={
-            domain:item.name,
+        function convertFromChrome(item){
+          return {
+            domain: item.name,
+            username: item.username,
+            password: item.password,
+            alias: item.url
+          }
+          //从chrome、edge导入密码
+        }
+        function convertFromSafari(item){
+          let domain=item.Url.replace('http://','').replace('https://','').replace('/','')//清理掉http和https
+          return {
+            domain:domain,
+            username:item.Username,
+            password:item.Password,
+            alias:item.Title
+          }
+        }
+        function convertFromFirefox(item){
+          let domain=item.url.replace('http://','').replace('https://','').replace('/','')//清理掉http和https
+          return {
+            domain:domain,
             username:item.username,
             password:item.password,
-            alias:item.url
+            alias:item.formActionOrigin
           }
-          credentialStoreSetPassword(account)
-          importedPwds.push(account)
-        })
+        }
+        let from='Chrome或Edge'
+        try{
+          //{"domain":"passport.aliyun.com","username":"thisky","password":"Xiangtian1!"}  文件存储格式
+          json.forEach(item=>{
+            let account={}
+            let isSafari=(typeof item.OTPAuth !=='undefined')
+            let isFirefox=(typeof item.formActionOrigin!=='undefined')
+            if(isSafari){
+              //是safari
+              from='Safari'
+              account=convertFromSafari(item)
+            }else if(isFirefox) {
+              from='Firefox'
+              account=convertFromFirefox(item)
+              //是火狐
+            }else {
+              account = convertFromChrome(item)
+            }
+            credentialStoreSetPassword(account)
+            importedPwds.push(account)
+          })
+        }catch (e){
+          event.reply('importPwdFailed',{message:'解析密码文件失败。'})
+          return
+        }
+
         if(importedPwds.length===0){
           event.reply('importPwdFailed',{message:'无任何密码需要导入。'})
         }else{
-          event.reply('importPwdSuccess',{imported:importedPwds.length,importedPwds:importedPwds})
+          event.reply('importPwdSuccess',{imported:importedPwds.length,importedPwds:importedPwds,from:from})
         }
       }).catch((err)=>{
         event.reply('importPwdFailed',{message:'解析密码文件失败。'})
