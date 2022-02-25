@@ -42,7 +42,8 @@
             </a-col>
             <a-col :span="13">
               <h2>导入密码 <a href="https://www.yuque.com/tswork/ngd5zk/cdwuvn" target="_blank">如何导出？</a></h2>
-              <p>导出密码为<strong style="color: #333">csv</strong>格式文件，再通过小助手导入到想天浏览器中。<br>相同网站下相同用户名的账号将被覆盖，请注意。</p>
+              <p>导出密码为<strong style="color: #333">csv</strong>格式文件。<br>相同网站下相同用户名的账号将被覆盖，请注意。</p>
+              <p>目前支持Edge、Chrome、Safari、火狐导出格式。</p>
             </a-col>
             <a-col :span="6"  style="text-align: right">
               <a-button @click="ipc.send('importPwd')" type="primary">选择文件导入密码</a-button>
@@ -139,7 +140,6 @@
           }else{
             return '我还不是您的默认浏览器'
           }
-
         }
       }
     },
@@ -168,11 +168,11 @@
     appVue.defaultBrowser=args
   })
   ipc.on('importPwdFailed',(event,args)=>{
-    appVue.$message.error({content:args.message})
+    appVue.$error({title:'导入失败',content:args.message})
   })
   ipc.on('importPwdSuccess',(event,args)=>{
     console.log(args.importedPwds)
-    appVue.$message.success({content:'成功导入（含覆盖）'+args.imported+'个密码。'})
+    appVue.$success({title:'导入成功',content:'成功从 '+args.from+' 导入（含覆盖） '+args.imported+' 个密码。'})
   })
 </script>
 </html>
