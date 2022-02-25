@@ -17,7 +17,7 @@ app.whenReady().then(()=>{
     // [1]   systemVersion: '10.0.19042'
     // [1] }
     if(app.isDefaultProtocolClient('http')){
-      if(args.systemInfo.platform==='win32'){
+      if(process.platform==='win32'){
         try {
           registryInstaller.uninstall()
           event.reply('setBrowserReturn',{type:'delete',success:true,info:'注册表清理成功'})
@@ -38,7 +38,7 @@ app.whenReady().then(()=>{
       }
       app.removeAsDefaultProtocolClient('http')
     }else{
-      if(args.systemInfo.platform==='win32'){
+      if(process.platform==='win32'){
         try {
           registryInstaller.install()
           event.reply('setBrowserReturn',{type:'reg',success:true,info:'注册表添加成功'})

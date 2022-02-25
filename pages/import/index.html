@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>导入小助手</title>
+  <script src="../../ext/vue/vue.js"></script>
+  <script src="../../ext/vue/antd.min.js"></script>
+  <link rel="stylesheet" href="../../ext/vue/antd.min.css"/>
+  <link rel="icon" type="image/svg+xml" href="./img/logo.svg"/>
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline'"/>
+</head>
+<body style="background-color: #f1f1f1;overflow: hidden">
+<div id="appVue">
+  <div style="padding:15px">
+    <template>
+      <p>欢迎使用导入小助手。<br>
+        小助手可以帮助您将其他浏览器中数据导入到想天浏览器。</p>
+    <div>
+      <h1>1.导入数据</h1>
+      <ul class="import-type">
+        <li>
+          <a-row>
+            <a-col span="4">
+              <img src="./img/fav.svg">
+
+            </a-col>
+            <a-col :span="13">
+      <h2>导入书签 <a href="https://www.yuque.com/tswork/ngd5zk/wwylnh" target="_blank">如何导出？</a></h2>
+              <p>导出书签为<strong style="color: #333">html</strong>格式文件，再通过小助手导入到想天浏览器的<strong>收藏夹应用</strong>中。<br>相同目录相同地址的书签将被覆盖，请注意。</p>
+
+            </a-col>
+            <a-col :span="6" style="text-align: right">
+              <a-button @click="importBookmarks"  type="default">选择文件导入</a-button>
+            </a-col>
+          </a-row>
+        </li>
+        <li>
+          <a-row>
+            <a-col :span="4">
+              <img src="./img/pwd.svg">
+
+            </a-col>
+            <a-col :span="13">
+              <h2>导入密码 <a href="https://www.yuque.com/tswork/ngd5zk/cdwuvn" target="_blank">如何导出？</a></h2>
+              <p>导出密码为<strong style="color: #333">csv</strong>格式文件，再通过小助手导入到想天浏览器中。<br>相同网站下相同用户名的账号将被覆盖，请注意。</p>
+            </a-col>
+            <a-col :span="6"  style="text-align: right">
+              <a-button @click="ipc.send('importPwd')" type="primary">选择文件导入密码</a-button>
+            </a-col>
+          </a-row>
+        </li>
+      </ul>
+      <a-divider></a-divider>
+      <h1>2.设置为默认浏览器</h1>
+      <div style="width: 340px;margin: auto;margin-bottom: 20px">
+        <a-row>
+          <a-col :span="16">
+            <div style="padding: 10px;border-radius: 6px;background-color: white;width: auto;text-align: center">
+              {{word}}</div>
+          </a-col>
+          <a-col :span="1">
+
+          </a-col>
+          <a-col :span="7">
+            <img style="width: 40px" :src="faceUrl">
+          </a-col>
+        </a-row>
+
+      </div>
+      <div  v-if="!defaultBrowser" style="text-align: center;margin-bottom: 20px">
+        请注意，部分安全软件会违背用户意愿，<strong>强制阻止更改默认浏览器</strong>。<br>
+        如果您设置后仍无反应，或打开网站仍未其他浏览器，可查看下方帮助。
+      </div>
+      <div style="text-align: center">
+        <a v-if="!defaultBrowser" href="https://www.yuque.com/tswork/ngd5zk/ntebh1" target="_blank">如何解锁？</a>
+        <a-button :loading="loading" v-if="!defaultBrowser" type="primary" @mouseenter.prevent="hover=true" @mouseleave.prevent="hover=false;word='我还不是您的默认浏览器'" @click="setDefaultBrowser">设置为默认浏览器</a-button>
+      </div>
+    </div>
+    </template>
+  </div>
+
+</div>
+<style>
+  h1{
+    font-size: 18px;
+  }
+.import-type li{
+  list-style: none;
+}
+.import-type h2{
+  font-size: 16px;
+}
+.import-type h2 a{
+  font-size: 14px;
+}
+.import-type p{
+  color: #666;
+}
+</style>
+</body>
+<script>
+
+  Vue.use(antd)
+  const electron = require('electron')
+  const ipc = electron.ipcRenderer
+  let tools = require('../util/util.js').tools
+  const appVue = new Vue({
+    el: '#appVue',
+    data () {
+      return {
+        ipc,
+        face:'cry',
+        defaultBrowser:false,
+        hover:false,
+        loading:false
+      }
+    },
+    computed: {
+      faceUrl(){
+        console.log(this.defaultBrowser)
+        if(!this.defaultBrowser){
+          if(this.hover && !this.defaultBrowser)
+            this.face='ding'
+          else{
+            this.face='cry'
+          }
+          return './img/'+this.face+'.svg'
+        }else{
+          //this.word='感谢主人宠信，真开心'
+          return './img/happy.svg'
+        }
+      },
+      word(){
+        if(this.defaultBrowser){
+          return '我是您的默认浏览器，真开心'
+        }else{
+          if(this.hover){
+            return '真的要宠幸我吗？好激动'
+          }else{
+            return '我还不是您的默认浏览器'
+          }
+
+        }
+      }
+    },
+    mounted () {
+      ipc.send('getIsDefaulBrowser')
+      setInterval(()=>{
+          ipc.send('getIsDefaulBrowser')
+        },1000)
+    },
+    methods: {
+      importBookmarks(){
+          appVue.$message.info({content:'暂时还不支持导入书签。'})
+      },
+      setDefaultBrowser(){
+        this.loading=true
+        ipc.send('callSetOrRemoveDefaultBrowser')
+        let that=this
+        setTimeout(()=>{
+          that.loading=false
+        },3000)
+      }
+    }
+  })
+  ipc.on('returnIsDefaultBrowser',(event,args)=>{
+    console.log('get Default browser',args)
+    appVue.defaultBrowser=args
+  })
+  ipc.on('importPwdFailed',(event,args)=>{
+    appVue.$message.error({content:args.message})
+  })
+  ipc.on('importPwdSuccess',(event,args)=>{
+    console.log(args.importedPwds)
+    appVue.$message.success({content:'成功导入（含覆盖）'+args.imported+'个密码。'})
+  })
+</script>
+</html>

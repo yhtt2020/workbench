@@ -2,7 +2,8 @@ const db = require('../../../js/util/database.js').db
 const serverConfig = require('../../../server-config.js').config
 const systemAppPackage=[
   'com.thisky.group',
-  'com.thisky.fav'
+  'com.thisky.fav',
+  'com.thisky.import'
 ]  //包名为上述包名的判定为系统应用
 const standAloneAppModel = {
   async initialize() {
@@ -39,6 +40,40 @@ const standAloneAppModel = {
     db.standAloneApps.update(2,{package:'com.thisky.com','name':'元社区','url':'https://s.apps.vip','logo':'../../icons/apps/yuan.png'})
     await db.standAloneApps.update(2,{themeColor:'#4188ff'})
     await db.standAloneApps.update(3,{themeColor:'#8618d2'})
+
+    let importHelper=await  db.standAloneApps.get({package:'com.thisky.import'})
+    let importHelperApp=  {
+      name: '导入助手',
+      logo: '../../pages/import/img/logo.svg',
+      summary: '快速导入其他浏览器的书签、密码，设置为您的默认浏览器。',
+      type: 'local',
+      url: '/pages/import/index.html',
+      preload: '/pages/group/imPreload.js',
+      package:'com.thisky.import',
+      themeColor: '#689aff',
+      userThemeColor: '',
+      createTime: Date.now(),
+      updateTime: Date.now(),
+      accountAvatar: '',
+      order: 0,
+      useCount: 0,
+      openNewWindow:'allow',//allow deny redirect 默认为redirect
+      lastExecuteTime: Date.now(),
+      settings: JSON.stringify({
+        bounds: {
+          width: 650,
+          height: 700
+        },
+        showInSideBar:true
+      }),
+      unreadCount: 1,
+    }
+    if(!!!importHelper){
+      db.standAloneApps.add(importHelperApp)
+    }else{
+      db.standAloneApps.update(importHelper.id,importHelperApp)
+    }
+
   },
   async find(word,option){
     let result= await db.standAloneApps.orderBy(option.order).toArray()
@@ -202,6 +237,32 @@ const standAloneAppModel = {
           showInSideBar:true
         }),
         unreadCount: 0,
+      },
+      {
+        name: '导入助手',
+        logo: '../../icons/apps/import.svg',
+        summary: '快速导入其他浏览器的书签、密码，设置为您的默认浏览器。',
+        type: 'local',
+        //url: serverConfig.IM.FRONT_URL+ serverConfig.IM.AUTO_LOGIN,
+        url: '/pages/import/index.html',
+        preload: '/pages/group/imPreload.js',
+        package:'com.thisky.group',
+        themeColor: '#689aff',
+        userThemeColor: '',
+        createTime: Date.now(),
+        updateTime: Date.now(),
+        accountAvatar: '',
+        order: 0,
+        useCount: 0,
+        lastExecuteTime: Date.now(),
+        settings: JSON.stringify({
+          bounds: {
+            width: 920,
+            height: 720
+          },
+          showInSideBar:true
+        }),
+        unreadCount: 1,
       },
       {
         name: '元社区',
