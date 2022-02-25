@@ -218,6 +218,8 @@ window.onload = function() {
             signature:''
           }
         }
+        state.user.nickname=userInfo.nickname
+        state.user.avatar=userInfo.avatar
         state.user.fans=userInfo.fans
         state.user.postCount=userInfo.post_count
         state.user.grade=userInfo.grade
