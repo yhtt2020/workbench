@@ -1,6 +1,8 @@
 const baseApi = require('./baseApi.js')
 
 const url = {
+  joinedCircle: '/app/browser/group/getJoinedCircle',
+  managerCircle: '/app/browser/group/getMyCircle',
   groupList: '/app/browser/group/list',
   navsList: '/app/browser/appGroupList/list',
   addNav: '/app/browser/appGroupList/add',
@@ -16,6 +18,18 @@ const groupApi = {
   async getGroups () {
     await baseApi.init()
     return baseApi.axios(url.groupList)
+  },
+
+  //获取我参与的圈子列表
+  async getJoinedCircle(params) {
+    await baseApi.init()
+    return baseApi.axios(url.joinedCircle, params, 'get')
+  },
+
+  //获取我管理的圈子列表
+  async getMyCircle(params) {
+    await baseApi.init()
+    return baseApi.axios(url.managerCircle, params, 'get')
   },
 
   /**

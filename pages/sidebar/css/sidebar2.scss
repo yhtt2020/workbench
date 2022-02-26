@@ -33,18 +33,25 @@
       border: 1px solid #1890ff;
       transition: all .3s cubic-bezier(.645,.045,.355,1);
       background-color: rgba(3, 167, 248, 0.1);
+      // .cb-top-word {
+      //   color: #1890ff;
+      // }
     }
     .cb-top {
+      position: relative;
       padding-left: 10px;
       width: 100%;
       height: 46px;
       border-bottom: 1px solid rgb(226, 221, 221);
       img {
-        padding-right: 10px;
+        margin-right: 10px;
         width: 32px;
         height: 32px;
+        object-fit: cover;
+        border-radius: 5px;
       }
       .cb-top-word {
+        width: 120px;
         font-size: 14px;
         font-weight: 500;
         text-overflow: ellipsis;
@@ -53,6 +60,12 @@
         -webkit-line-clamp: 1;
         -webkit-box-orient: vertical;
       }
+      .cb-top-tag {
+        position: absolute;
+        right: 0px;
+        top: 10px;
+      }
+
     }
     .cb-bottom {
       width: 100%;

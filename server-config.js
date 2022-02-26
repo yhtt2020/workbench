@@ -5,22 +5,22 @@ const config = {
   SERVER_BASE_URL: 'https://s.apps.vip',
   DEV_NODE_SERVER_BASE_URL: 'http://test.com:8001',
   PROD_NODE_SERVER_BASE_URL: 'https://apps.vip',
-  //NODE_SERVER_BASE_URL: isDevelopmentMode ? 'http://test.com:8001' : 'https://apps.vip',
-  NODE_SERVER_BASE_URL: isDevelopmentMode ? 'https://apps.vip' : 'https://apps.vip',  //老板你本地用这个，注释上面这个
+  NODE_SERVER_BASE_URL: isDevelopmentMode ? 'http://test.com:8001' : 'https://apps.vip',
+  //NODE_SERVER_BASE_URL: isDevelopmentMode ? 'https://apps.vip' : 'https://apps.vip',  //老板你本地用这个，注释上面这个
   IM:{
     API_BASE_URL:"http://im-serve.xiangtian.ren",
     WEB_SOCKET_URL:"ws://im-socket.xiangtian.ren/socket.io",
     FRONT_URL:"http://im.xiangtian.ren",
-    FRONT_URL_DEV:"http://im.xiangtian.ren",
-    //FRONT_URL_DEV:"http://127.0.0.1:8000",
+    //FRONT_URL_DEV:"http://im.xiangtian.ren",
+    FRONT_URL_DEV:"http://127.0.0.1:8000",
     AUTO_LOGIN: '/auto-login',      //免登等待路由
     BOOT_ROUTE: '/boot-route'     //引导路由页面
   }
 }
 
 const appConfig = {
-  //client_id: isDevelopmentMode ? 10003 : 10001,
-  client_id: isDevelopmentMode ? 10001 : 10001,     //老板你本地用这个，注释上面这个
+  client_id: isDevelopmentMode ? 10003 : 10001,
+  //client_id: isDevelopmentMode ? 10001 : 10001,     //老板你本地用这个，注释上面这个
   bind_im_id: 10002,  //lumen id
   state: 1,
   response_type: 'code',

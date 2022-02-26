@@ -7,6 +7,7 @@ app.on('ready', () => {
   let osxSearchMember = null
   let osxInviteMember = null
   let osxCircleSetting = null
+  let osxCreateCircle = null
   ipc.on('createGroup', (event, arg) => {
     if (createGroupWindow !== null ) {
       createGroupWindow.focus()
@@ -162,11 +163,12 @@ app.on('ready', () => {
     osxCircleSetting = new BrowserWindow({
       minimizable: false,
       parent: null,
-      width: 640,
+      width: 780,
       height: 660,
       maximizable:false,
       resizable: false,
       webPreferences: {
+        partition: 'persist:webcontent',
         devTools: true,
         nodeIntegration: true,
         contextIsolation: false,
@@ -179,8 +181,51 @@ app.on('ready', () => {
       }
     })
     const { api } = require(path.join(__dirname, '//server-config.js'))
-    osxCircleSetting.webContents.loadURL(api.getUrl(api.API_URL.user.CIRCLE_SETTING))
+    osxCircleSetting.webContents.loadURL(`${api.getUrl(api.API_URL.user.CIRCLE_SETTING)}?type=edit&id=${args}&index=0&forumName=info`)
     osxCircleSetting.on('close', () => osxCircleSetting = null)
+  })
+
+  //创建圈子
+  ipc.on('osxCreateCircle', (event, args) => {
+    if(osxCreateCircle !== null) {
+      osxCreateCircle.focus()
+      return
+    }
+    osxCreateCircle = new BrowserWindow({
+      minimizable: false,
+      parent: null,
+      width: 780,
+      height: 660,
+      maximizable:false,
+      resizable: false,
+      webPreferences: {
+        partition: 'persist:webcontent',
+        devTools: true,
+        nodeIntegration: true,
+        contextIsolation: false,
+        additionalArguments: [
+          '--user-data-path=' + userDataPath,
+          '--app-version=' + app.getVersion(),
+          '--app-name=' + app.getName(),
+          ...((isDevelopmentMode ? ['--development-mode'] : [])),
+        ]
+      }
+    })
+    const { api } = require(path.join(__dirname, '//server-config.js'))
+    osxCreateCircle.webContents.loadURL(api.getUrl(api.API_URL.user.CIRCLE_SETTING))
+    osxCreateCircle.webContents.executeJavaScript(`
+      const btn = document.getElementsByClassName('form-item')[0].childNodes[0]
+      let confirmBtn = null
+      btn.addEventListener('click', () => {
+        confirmBtn = document.getElementsByClassName('button-box')[0] ? document.getElementsByClassName('button-box')[0].childNodes[2] : null
+        if(confirmBtn) {
+          confirmBtn.onclick = () => {
+            window.close()
+          }
+        }
+      })
+    `, true)
+    osxCreateCircle.on('close', () => osxCreateCircle = null)
   })
 
 })
