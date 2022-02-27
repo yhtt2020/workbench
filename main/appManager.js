@@ -17,6 +17,7 @@ function apLog (e) {
 const appManager = {
   dockBadge: 0,
   settingWindow: null,
+  protocolManager:require('./js/main/protocolManager'),
   /**
    * 单个更新app信息
    * @param id
@@ -653,9 +654,10 @@ const appManager = {
     } else {
         let window=appManager.getWindowByAppId(saApp.id)
         appManager.focusWindow(saApp.windowId)
+
         if(option){
-          if(option.action==='redirect'){
-            window.view.webContents.loadURL(option.url)
+          if(option.action){
+            appManager.protocolManager.handleAction(window,option.action,option)
           }
         }
         appManager.clearAppBadge(saApp.id)
@@ -855,8 +857,8 @@ const appManager = {
 
       appWindow.view=appView
       if(option){
-        if(option.action==='redirect'){
-          appView.webContents.loadURL(option.url)
+        if(option.action){
+          appManager.protocolManager.handleAction(appWindow,option.action,option)
         }
       }
       processingAppWindows.push({
@@ -1176,30 +1178,13 @@ app.whenReady().then(() => {
     appManager.getWindowByAppId(args.appId).hide()
   })
 
+  ipc.on('handleFileAssign',(event,args)=>{
+    //转发到sidePanel
+    appManager.protocolManager.handleFileAssign(args.type,args.args,args.target)
+  })
+
   app.whenReady().then(() => {
     //注册tsb协议
-    protocol.registerFileProtocol('tsb', (request, callback) => {
-      try{
-        const url = request.url
-        const urlObj = new URL(url); // sunan://222?aa=bb&cc=dd
-        const { searchParams } = urlObj;
-        if(urlObj.hostname==='app')
-        {
-          //是app协议
-          let action=urlObj.pathname.split('/')[1]
-          if(action==='redirect'){
-            SidePanel.send('appRedirect',{
-              package:searchParams.get('package'),
-              url:searchParams.get('url'),
-              background:searchParams.get('background')!==null?searchParams.get('background'):true}
-            )
-            console.log('是重定向协议')
-            console.log('url=',searchParams.get('url'))
-          }
-        }
-      }catch(e){
-        electronLog.error(e)
-      }
-    })
+    appManager.protocolManager.initialize(SidePanel)
   })
 })

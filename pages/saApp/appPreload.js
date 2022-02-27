@@ -49,7 +49,12 @@ let sdkObject = {
 }
 sdkObject.on('ready',(saApp)=>{console.log(saApp)}) //测试挂载
 contextBridge.exposeInMainWorld('tsbSDK', sdkObject)
-
+ipc.on('fileAssign',(event,args)=>{
+  window.postMessage({
+    eventName: "fileAssign",
+    filePath:args.filePath})
+  console.log('请求处理文件关联',args)
+})
 ipc.on('init', (event, args) => {
   contextBridge.exposeInMainWorld('tsbSaApp', args.saApp)
   sdkObject.emit('ready',{saApp:args.saApp}) //在此处触发sdkBoject的ready，以确保获取到
@@ -87,7 +92,7 @@ ipc.on('init', (event, args) => {
         } else {
           console.error('验证错误！')
         }
-
+        break
     }
     console.log(ipc, '无ipc的三方应用也被监听中。。。。')
   })
