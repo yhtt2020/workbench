@@ -9,6 +9,7 @@ const pageTranslations = require('pageTranslations.js')
 
 const remoteMenu = require('remoteMenuRenderer.js')
 const { db } = require('./util/database')
+const localCacheManager = require("./main/localCacheManager");
 
 const webviewMenu = {
   menuData: null,
@@ -161,6 +162,20 @@ const webviewMenu = {
           label: l('saveImageAs'),
           click: function () {
             ipc.invoke('downloadURL', mediaURL)
+          }
+        },
+        {
+          label:'编辑图片',
+          click:async function (){
+            const localCacheManager=require('./main/localCacheManager')
+            let imagePath=await localCacheManager.getWithoutCache(mediaURL)
+            if(imagePath){
+                ipc.send('handleFileAssign',{type:'image',args:{filePath:imagePath}})
+            }else{
+              ipc.send('message',{type:'error',config:{content:'下载图片失败。'}})
+            }
+            console.log(localCacheManager.urlToFilePath(mediaURL))
+           // appManager.protocolManager.handleFileAssign('image',{})
           }
         }
       ])
