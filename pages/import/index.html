@@ -25,7 +25,7 @@
 
             </a-col>
             <a-col :span="13">
-      <h2>导入书签 <a href="https://www.yuque.com/tswork/ngd5zk/wwylnh" target="_blank">如何导出？</a></h2>
+      <h2>导入书签 <a href="tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/ngd5zk/wwylnh" target="_blank">如何导出？</a></h2>
               <p>导出书签为<strong style="color: #333">html</strong>格式文件，再通过小助手导入到想天浏览器的<strong>收藏夹应用</strong>中。<br>相同目录相同地址的书签将被覆盖，请注意。</p>
 
             </a-col>
@@ -41,7 +41,7 @@
 
             </a-col>
             <a-col :span="13">
-              <h2>导入密码 <a href="https://www.yuque.com/tswork/ngd5zk/cdwuvn" target="_blank">如何导出？</a></h2>
+              <h2>导入密码 <a href="tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/ngd5zk/cdwuvn" target="_blank">如何导出？</a></h2>
               <p>导出密码为<strong style="color: #333">csv</strong>格式文件。<br>相同网站下相同用户名的账号将被覆盖，请注意。</p>
               <p>目前支持Edge、Chrome、Safari、火狐导出格式。</p>
             </a-col>
@@ -73,7 +73,7 @@
         如果您设置后仍无反应，或打开网站仍未其他浏览器，可查看下方帮助。
       </div>
       <div style="text-align: center">
-        <a v-if="!defaultBrowser" href="https://www.yuque.com/tswork/ngd5zk/ntebh1" target="_blank">如何解锁？</a>
+        <a v-if="!defaultBrowser" href="tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/ngd5zk/ntebh1" target="_blank">如何解锁？</a>
         <a-button :loading="loading" v-if="!defaultBrowser" type="primary" @mouseenter.prevent="hover=true" @mouseleave.prevent="hover=false;word='我还不是您的默认浏览器'" @click="setDefaultBrowser">设置为默认浏览器</a-button>
       </div>
     </div>

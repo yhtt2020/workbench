@@ -74,6 +74,31 @@ const standAloneAppModel = {
       db.standAloneApps.update(importHelper.id,importHelperApp)
     }
 
+    let helper= await db.standAloneApps.get({package:'com.thisky.helper'})
+    if(!!!helper){
+      db.standAloneApps.add( {
+        name: '帮助教程',
+        logo: '../../icons/apps/help.png',
+        url: 'https://www.yuque.com/tswork/ngd5zk/iuguin',
+        package:'com.thisky.helper',
+        themeColor: '#ff7b42',
+        author: '想天软件',
+        site: 'https://apps.vip/',
+        checked: true,
+        summary: '帮助手册，让你从零开始学会掌握想天浏览器。',
+        settings: JSON.stringify({
+          bounds: {
+            width: 1200,
+            height: 800
+          },
+          alwaysTop: false,
+          showInSideBar: true,
+        })
+      })
+    }else{
+
+    }
+
   },
   async find(word,option){
     let result= await db.standAloneApps.orderBy(option.order).toArray()
@@ -177,6 +202,9 @@ const standAloneAppModel = {
       data = false
     })
     return data
+  },
+  async getFromPackage(packageName){
+    return await db.standAloneApps.where({package:packageName}).first()
   },
   isSystemApp(app){
     app.package=app.package||''
