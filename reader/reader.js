@@ -205,10 +205,40 @@ function setReaderFrameSize () {
 }
 
 function startReaderView (article, date) {
-  var readerContent = "<link rel='stylesheet' href='readerContent.css'>"
+  var readerContent = "<link rel='stylesheet' href='readerContent.css'>" +
+    "<link rel='stylesheet' href='annotation.css'>" +
+    "<link rel='stylesheet' href='setting.css'>" +
+`<link rel='stylesheet' href='../ext/element-plus/element-plus.css'>
+<script src="../ext/vue/vue3.js"></script>
+<script src="../ext/element-plus/element-plus.js"></script>
+<script src="js-mark.js"></script>
+<style>
+.content{
+position: relative;
+}
+.ignore,
+        .ignore1 {
+            user-select: none;
+            background: rgb(245, 245, 245);
+        }
+         .block {
+            display: inline-block;
+        }
+        .textDesc {
+            border: 0;
+            border-radius: 5px;
+            width: 100%;
+            height: 51px;
+            padding: 5px;
+            resize: none;
+            box-sizing: border-box;
+            line-height: 1;
+        }
+</style>
+   `
 
   if (!article) { // we couln't parse an article
-    readerContent += "<div class='reader-main'><em>No article found.</em></div>"
+    readerContent += "<div class='reader-main'><em>未识别文章内容。</em></div>"
   } else {
     if (article.title) {
       document.title = article.title
@@ -218,18 +248,43 @@ function startReaderView (article, date) {
 
     var readerDomain = articleLocation.hostname
 
-    readerContent += "<div class='reader-main' domain='" + readerDomain + "'>" + "<h1 class='article-title'>" + (article.title || '') + '</h1>'
+    readerContent += "<div id=\"app\" class='content'><div id='reader-main' class='reader-main' domain='" + readerDomain + "'>" + "<h1 class='article-title'>" + (article.title || '') + '</h1>'
 
     if (article.byline || date) {
       readerContent += "<h2 class='article-authors'>" + (article.byline ? article.byline : '') + (date ? ' (' + date + ')' : '') + '</h2>'
     }
 
-    readerContent += article.content + '</div>'
+    readerContent += article.content + ''
+    readerContent+=`</div>
+    <div class="annotation marked" v-for="item in antRecords" :data-uid="item.uid">
+                <template v-if="!item.isEdit">
+                    {{item.desc}}
+                </template>
+                <template v-else>
+                    <span class="label">标注</span>
+                    <div>
+                        <template v-for="(className,i) in cssStyle">
+                            <span class="block color-block" :class="className"
+                                @click="setMarkClass($event,className,item.uid)"></span>
+                        </template>
+                    </div>
+
+                    <textarea class="textDesc" placeholder="备注" v-model="textDesc"></textarea>
+                    <div>
+                        <span class="block save" @click="save(item.uid)">保存</span>
+                        <span class=" block delete" @click="deleteAnnotation(item.uid)">删除</span>
+                    </div>
+                </template>
+            </div>
+           </div>
+</div>
+<script type="module" src="index.js" setup></script>`
+
   }
 
   window.rframe = document.createElement('iframe')
   rframe.classList.add('reader-frame')
-  rframe.sandbox = 'allow-same-origin allow-top-navigation allow-modals'
+  //rframe.sandbox = 'allow-same-origin allow-top-navigation allow-modals allow-scripts'
   rframe.srcdoc = readerContent
 
   // set an initial height equal to the available space in the window
@@ -362,6 +417,7 @@ function processArticle (data) {
     }
 
     document.body.removeChild(parserframe)
+
   }
 }
 
