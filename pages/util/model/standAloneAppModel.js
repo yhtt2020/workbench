@@ -95,8 +95,10 @@ const standAloneAppModel = {
           showInSideBar: true,
         })
       })
-    }else{
-
+    }
+    let imageEditor = await db.standAloneApps.get({name:'图片编辑器'})
+    if(imageEditor){
+      db.standAloneApps.update(imageEditor.id,{package:'com.thisky.imageEditor',fileAssign:['image']})
     }
 
   },
@@ -373,6 +375,9 @@ const standAloneAppModel = {
   },
   async countApps() {
     return await db.standAloneApps.count()
+  },
+  async getFileAssginApps(fileType){
+    return await db.standAloneApps.where('fileAssign').equals(fileType).toArray()
   }
 
 }
