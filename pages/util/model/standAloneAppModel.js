@@ -344,6 +344,17 @@ const standAloneAppModel = {
           showInSideBar:true,
         }),
         unreadCount: 0,
+      },
+      {
+        name: '图片编辑器',
+        themeColor: 'rgb(90,170,60)',
+        author: '想天软件',
+        site: 'http://apps.vip',
+        logo: 'http://d.xiangtian.ren/apps/imageEditor/icon.svg',
+        url: 'http://d.xiangtian.ren/apps/imageEditor/',
+        package: 'com.thisky.imageEditor',
+        summary: '可以为您的图片增加相框、贴纸、文字、进行简单裁减、旋转，还可以添加滤镜。',
+        fileAssign:['image']
       }
     ]
     return await db.standAloneApps.bulkAdd(defaultApps)
@@ -378,7 +389,14 @@ const standAloneAppModel = {
     return await db.standAloneApps.count()
   },
   async getFileAssginApps(fileType){
-    return await db.standAloneApps.where('fileAssign').equals(fileType).toArray()
+    let assigned=await db.standAloneApps.where('fileAssign').equals(fileType).toArray()
+    if(assigned){
+      assigned.forEach(item=>{
+        item.isSystemApp=standAloneAppModel.isSystemApp(item)
+      })
+    }
+
+    return assigned
   }
 
 }

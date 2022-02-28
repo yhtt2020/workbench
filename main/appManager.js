@@ -463,9 +463,19 @@ const appManager = {
       SidePanel.send('closeApp', { id: appId })
     }
   },
-  loadView (saApp, appWindow) {
+  loadView (saApp, appWindow,option) {
+    let preload=''
+    if(saApp.isSystemApp){
+      if(!!!saApp.preload || saApp.preload===''){
+        preload=path.join(__dirname + '/pages/saApp/appPreload.js')
+      }else{
+        preload=path.join(__dirname + saApp.preload)
+      }
+    }else{
+      preload=path.join(__dirname + '/pages/saApp/appPreload.js')
+    }
     let webPreferences = {
-      preload: saApp.isSystemApp ? path.join(__dirname + saApp.preload) : path.join(__dirname + '/pages/saApp/appPreload.js'),//后者是所有web应用公用的preload
+      preload: preload,//后者是所有web应用公用的preload
       nodeIntegration: saApp.isSystemApp,
       contextIsolation: !saApp.isSystemApp,
       enableRemoteModule: true,
@@ -598,7 +608,13 @@ const appManager = {
     let saAppObject = saApp
     delete saAppObject.window
     appView.webContents.send('init', { saApp: saAppObject })
-
+    appView.webContents.on('dom-ready',()=>{
+      if(option){
+        if(option.action){
+          appManager.protocolManager.handleAction(appWindow,option.action,option)
+        }
+      }
+    })
 
     // appView.webContents.on('found-in-page',(event,result)=>{
     //   appWindow.webContents.send('found-in-page',{data:result})
@@ -722,7 +738,7 @@ const appManager = {
       // if (process.platform !== 'darwin') {
       //   appWindow.setMenuBarVisibility(false)
       // }
-      let appView = appManager.loadView(saApp, appWindow)
+      let appView = appManager.loadView(saApp, appWindow,option)
       appWindow.setBrowserView(appView)
 
       appView.setBounds({
@@ -856,11 +872,7 @@ const appManager = {
       })
 
       appWindow.view=appView
-      if(option){
-        if(option.action){
-          appManager.protocolManager.handleAction(appWindow,option.action,option)
-        }
-      }
+
       processingAppWindows.push({
         window: appWindow,//在本地的对象中插入window对象，方便后续操作
         saApp: saApp
