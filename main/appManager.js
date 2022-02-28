@@ -608,7 +608,7 @@ const appManager = {
     let saAppObject = saApp
     delete saAppObject.window
     appView.webContents.send('init', { saApp: saAppObject })
-    appView.webContents.on('dom-ready',()=>{
+    appView.webContents.once('dom-ready',()=>{
       if(option){
         if(option.action){
           appManager.protocolManager.handleAction(appWindow,option.action,option)
