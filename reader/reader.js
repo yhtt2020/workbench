@@ -213,27 +213,7 @@ function startReaderView (article, date) {
 <script src="../ext/element-plus/element-plus.js"></script>
 <script src="js-mark.js"></script>
 <style>
-.content{
-position: relative;
-}
-.ignore,
-        .ignore1 {
-            user-select: none;
-            background: rgb(245, 245, 245);
-        }
-         .block {
-            display: inline-block;
-        }
-        .textDesc {
-            border: 0;
-            border-radius: 5px;
-            width: 100%;
-            height: 51px;
-            padding: 5px;
-            resize: none;
-            box-sizing: border-box;
-            line-height: 1;
-        }
+
 </style>
    `
 

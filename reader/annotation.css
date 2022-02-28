@@ -25,6 +25,7 @@
   color: #333;
   width: 200px;
   border-left: 8px solid #fff;
+
   padding-left: 5px;
   border-color: rgba(0, 0, 255, 0.3);
   box-sizing: border-box;
@@ -45,22 +46,54 @@
   margin-right: 1px;
   width: 19px;
   height: 19px;
+  border-radius: 50%;
   border-bottom: 2px solid #fff;
 }
 
 .annotation .save {
   font-size: 13px;
   text-decoration: none;
-  color: #0768fd;
-  padding-top: 8px;
-  padding-right: 15px;
+  background: #1E90FF;
+  color:#fff;
   cursor: pointer;
+  border:solid 1px #1E90FF;
+  line-height: 18px;
+  padding: 3px;
+  border-radius: 4px;
+  margin-right: 10px;
+  margin-bottom: 5px;
 }
 
 .annotation .delete {
   cursor: pointer;
   font-size: 13px;
   text-decoration: none;
-  padding-top: 8px;
-  padding-right: 15px;
+  border:solid 1px #ccc;
+  line-height: 18px;
+  padding: 3px;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+
+.content{
+  position: relative;
+}
+.ignore,
+.ignore1 {
+  user-select: none;
+  background: rgb(245, 245, 245);
+}
+.block {
+  display: inline-block;
+}
+.textDesc {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 90%;
+  height: 51px;
+  padding: 5px;
+  resize: none;
+  box-sizing: border-box;
+  line-height: 1;
 }
