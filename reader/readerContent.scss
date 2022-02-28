@@ -27,8 +27,8 @@ html[theme='light'] .reader-main{
   border-radius: 4px;
 }
 .reader-main {
-  padding: 1.5em 1.5em;
-  max-width: 650px;
+  padding: 1.8em 1.8em;
+  max-width: 890px;
   display: block;
   margin: auto;
   margin-top: 1em;
@@ -49,7 +49,7 @@ h1.article-title {
   margin: 0;
   font-size: 24px;
   font-weight: 500;
-  margin-bottom: 2em;
+  margin-bottom: 1em;
 }
 h2.article-authors {
   padding: 0;
@@ -173,7 +173,7 @@ q,
 blockquote{
   position: relative;
   display: block;
-  margin: 37px auto;
+  margin: 15px auto;
   border-left: 2px solid #fd281a;
   font-style: normal;
   text-align: left;
