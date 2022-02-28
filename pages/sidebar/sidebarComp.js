@@ -704,3 +704,18 @@ ipc.on('blur',(event,args)=>{
   //todo 关闭左侧栏的展开
   appVue.$refs.sidePanel.blur()
 })
+
+ipc.on('appRedirect',async (event,args)=>{
+  let app=await standAloneAppModel.getFromPackage(args.package)
+  if(app){
+    ipc.send('executeApp',{
+      app,
+      background:args.background?args.background==='true':true,
+      option:{
+        action:'redirect',
+        url:args.url
+      }
+    })
+  }
+  console.log(args)
+})

@@ -7,7 +7,6 @@ var urlParser = require('util/urlParser.js')
 var { db } = require('util/database.js')
 
 var readerDecision = require('readerDecision.js')
-
 var readerView = {
   readerURL: urlParser.getFileURL(__dirname + '/reader/index.html'),
   getReaderURL: function (url) {
@@ -16,6 +15,16 @@ var readerView = {
   isReader: function (tabId) {
     return tabs.get(tabId).url.indexOf(readerView.readerURL) === 0
   },
+  currentTabId: 0,
+  onClickToolbar (e) {
+    e.stopPropagation()
+    let tabId = readerView.currentTabId
+    if (readerView.isReader(tabId)) {
+      readerView.exit(tabId)
+    } else {
+      readerView.enter(tabId)
+    }
+  },
   getButton: function (tabId) {
     // TODO better icon
     var button = document.createElement('button')
@@ -23,36 +32,62 @@ var readerView = {
 
     button.setAttribute('data-tab', tabId)
     button.setAttribute('role', 'button')
+    var buttonToolbar = document.getElementById('read-toolbar')
 
-    button.addEventListener('click', function (e) {
+    function onClick (e) {
       e.stopPropagation()
-
       if (readerView.isReader(tabId)) {
         readerView.exit(tabId)
       } else {
         readerView.enter(tabId)
       }
-    })
+    }
+    readerView.currentTabId = tabId
+    buttonToolbar.removeEventListener('click', readerView.onClickToolbar)
+    buttonToolbar.addEventListener('click', readerView.onClickToolbar)
+    button.addEventListener('click', onClick)
 
     readerView.updateButton(tabId, button)
 
     return button
   },
   updateButton: function (tabId, button) {
-    var button = button || document.querySelector('.reader-button[data-tab="{id}"]'.replace('{id}', tabId))
+    readerView.currentTabId=tabId
     var tab = tabs.get(tabId)
-
-    if (readerView.isReader(tabId)) {
-      button.classList.add('is-reader')
-      button.setAttribute('title', l('exitReaderView'))
-    } else {
-      button.classList.remove('is-reader')
-      button.setAttribute('title', l('enterReaderView'))
-
-      if (tab.readerable) {
-        button.classList.add('can-reader')
+    if ($toolbar.expanded) {
+      let button = document.getElementById('read-toolbar')
+      let bandage = document.getElementById('canRead')
+      if (readerView.isReader(tabId)) {
+        button.classList.add('is-reader')
+        button.setAttribute('title', l('exitReaderView'))
+        bandage.hidden = true
+        bandage.innerHTML = ''
       } else {
-        button.classList.remove('can-reader')
+        button.classList.remove('is-reader')
+        button.setAttribute('title', '进入阅读模式')
+
+        if (tab.readerable) {
+          bandage.hidden = false
+          bandage.innerHTML = '可'
+        } else {
+          bandage.hidden = true
+          bandage.innerHTML = ''
+        }
+      }
+    } else {
+      var button = button || document.querySelector('.reader-button[data-tab="{id}"]'.replace('{id}', tabId))
+      if (readerView.isReader(tabId)) {
+        button.classList.add('is-reader')
+        button.setAttribute('title', l('exitReaderView'))
+      } else {
+        button.classList.remove('is-reader')
+        button.setAttribute('title', l('enterReaderView'))
+
+        if (tab.readerable) {
+          button.classList.add('can-reader')
+        } else {
+          button.classList.remove('can-reader')
+        }
       }
     }
   },
@@ -70,7 +105,7 @@ var readerView = {
   },
   printArticle: function (tabId) {
     if (!readerView.isReader(tabId)) {
-      throw new Error("attempting to print in a tab that isn't a reader page")
+      throw new Error('attempting to print in a tab that isn\'t a reader page')
     }
 
     webviews.callAsync(tabs.getSelected(), 'executeJavaScript', 'parentProcessActions.printArticle()')

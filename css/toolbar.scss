@@ -15,8 +15,21 @@
     vertical-align: top;
     border-radius: 4px;
   }
+  .app{
+    padding: 2px;
+    width: 32px;
+    height: 32px;
+    margin-top: 4px;
+  }
   .action:hover{
     background: rgba(238, 238, 238, 0.8);
+
+  }
+  .is-reader{
+    img{
+      border: 1px solid #1E90FF;
+      border-radius: 50%;
+    }
 
   }
   .action-wrapper{

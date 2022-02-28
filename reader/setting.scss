@@ -1,0 +1,40 @@
+.setting {
+  position: fixed;
+  height: 100%;
+  width: 300px;
+  /* border:1px solid; */
+  left: -300px;
+  top: 0;
+  z-index: 2;
+  transition: left 0.5s;
+  box-shadow: 0 4px 4px rgb(0 0 0 / 6%), 0 4px 16px rgb(0 0 0 / 5%);
+}
+
+.setting .switch {
+  position: absolute;
+  height: 100px;
+  width: 110px;
+  left: 300px;
+  top: 100px;
+  background: #fff;
+  border: solid 1px #333;
+  border-left: none;
+  cursor: pointer;
+  box-shadow: 4px 5px 4px 0px rgb(144 144 144 / 29%);
+  border-radius: 0px 10px 10px 0;
+  padding:20px;
+  box-sizing: border-box;
+  text-align: right;
+}
+
+
+.switch .svg{
+  display: block;
+  margin-left:auto;
+  margin-bottom: 10px;
+}
+
+.switch .title{
+  font-family: Circular,"Segoe UI",Helvetica,Arial,sans-serif;
+  font-size: 17px;
+}
