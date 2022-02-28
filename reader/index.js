@@ -11,6 +11,8 @@ const cssStyle = [
   "annotator-hl",
   "annotator-h2",
   "annotator-h3",
+  "annotator-h4",
+  "annotator-h5",
 ];
 
 const { ref, onMounted, nextTick } = Vue;

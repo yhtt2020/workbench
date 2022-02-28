@@ -236,6 +236,9 @@ function startReaderView (article, date) {
 
     readerContent += article.content + ''
     readerContent+=`</div>
+       <div style="box-shadow:0 0 6px rgba(86,86,86,0.22);line-height: 20px;border:none;border-radius: 6px;padding: 10px;text-align: center;width: auto;margin-right: 10px;margin-top: 10px" class="annotation marked">
+       本页面共 <strong>{{antRecords.length}}</strong> 条标注
+</div>
     <div class="annotation marked" v-for="item in antRecords" :data-uid="item.uid">
                 <template v-if="!item.isEdit">
                     {{item.desc}}

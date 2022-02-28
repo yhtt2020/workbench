@@ -17,6 +17,14 @@
   cursor: pointer;
   background:rgba(255, 0, 0, 0.3);
 }
+.annotator-h4 {
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.3);
+}
+.annotator-h5 {
+  cursor: pointer;
+  background: rgba(0, 91, 84, 0.3);
+}
 
 .annotation {
   position: absolute;
