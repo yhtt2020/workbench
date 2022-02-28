@@ -1,17 +1,19 @@
-body,
-html {
+body,html {
   padding: 0;
   margin: 0;
-  font-size: 19.5px;
-  color: rgb(15, 15, 15);
+  font-size: 16px;
+  line-height: 2em;
 }
-
-body[theme="dark"] {
+body[theme='light'],html[theme='light'] {
+  background: #f1f1f1;
+  color:rgb(76, 78, 77);
+}
+html[theme='dark'],body[theme="dark"] {
   background-color: rgb(36, 41, 47);
   color: rgb(180, 180, 180);
 }
 
-body[theme="sepia"] {
+html[theme="sepia"],body[theme="sepia"] {
   background-color: rgb(247, 231, 199);
   color: rgb(56, 40, 28);
 }
@@ -19,11 +21,17 @@ body[theme="sepia"] {
 iframe {
   display: none;
 }
+html[theme='light'] .reader-main{
+  background: white;
+  box-shadow: 0 0 12px #0000001f;
+  border-radius: 4px;
+}
 .reader-main {
-  padding: 0.75em 1em;
+  padding: 1.5em 1.5em;
   max-width: 650px;
   display: block;
   margin: auto;
+  margin-top: 1em;
 }
 
 
@@ -31,19 +39,23 @@ iframe {
 .visually-hidden {
   display: none;
 }
+html[theme='light']
+h1.article-title{
+  color:#292525;
+}
 h1.article-title {
   padding-bottom: 0.5rem;
   margin-top: 1rem;
   margin: 0;
-  font-size: 2em;
+  font-size: 24px;
   font-weight: 500;
+  margin-bottom: 2em;
 }
 h2.article-authors {
   padding: 0;
   font-size: 1.2em;
   font-weight: 400;
   margin: 0;
-  font-style: italic;
 }
 
 /* small windows */
@@ -58,13 +70,14 @@ h2.article-authors {
 }
 h1,
 h2 {
-  font-weight: inherit;
+  font-weight: 700;
+  font-size: 20px;
 }
 h3,
 h4 {
-  margin: 1em 0 0.5em 0;
-  font-size: 1.3em;
-  font-weight: 500;
+  font-weight: 700;
+  margin-top: 30px;
+  margin-bottom: 10px;
 }
 h4 {
   font-size: 1.25em;
@@ -157,13 +170,18 @@ body[theme="dark"] pre {
 }
 
 q,
-blockquote {
+blockquote{
+  position: relative;
   display: block;
-  border-left: 1px currentColor solid;
-  padding-left: 0.5em;
-  font-size: 1.15em;
-  line-height: 1.5em;
-  margin: 1.5em 0;
+  margin: 37px auto;
+  border-left: 2px solid #fd281a;
+  font-style: normal;
+  text-align: left;
+  color: #6c6c6c;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 2em;
+  padding: 0 12px;
 }
 
 table {

@@ -6,9 +6,7 @@
   left: -300px;
   top: 0;
   z-index: 2;
-  transition: left 0.5s;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.05);
-}
+  transition: left 0.5s; }
 
 .setting .switch {
   position: absolute;
@@ -20,22 +18,17 @@
   border: solid 1px #333;
   border-left: none;
   cursor: pointer;
-  box-shadow: 4px 5px 4px 0px rgba(144, 144, 144, 0.29);
-  border-radius: 0px 10px 10px 0;
+  border-radius: 0 10px 10px 0;
   padding: 20px;
   box-sizing: border-box;
-  text-align: right;
-}
+  text-align: right; }
 
 .switch .svg {
   display: block;
   margin-left: auto;
-  margin-bottom: 10px;
-}
+  margin-bottom: 10px; }
 
 .switch .title {
-  font-family: Circular, "Segoe UI", Helvetica, Arial, sans-serif;
-  font-size: 17px;
-}
+  font-size: 17px; }
 
 /*# sourceMappingURL=setting.css.map */
