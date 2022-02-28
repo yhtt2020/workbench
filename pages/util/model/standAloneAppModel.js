@@ -270,32 +270,6 @@ const standAloneAppModel = {
         unreadCount: 0,
       },
       {
-        name: '导入助手',
-        logo: '../../icons/apps/import.svg',
-        summary: '快速导入其他浏览器的书签、密码，设置为您的默认浏览器。',
-        type: 'local',
-        //url: serverConfig.IM.FRONT_URL+ serverConfig.IM.AUTO_LOGIN,
-        url: '/pages/import/index.html',
-        preload: '/pages/group/imPreload.js',
-        package:'com.thisky.group',
-        themeColor: '#689aff',
-        userThemeColor: '',
-        createTime: Date.now(),
-        updateTime: Date.now(),
-        accountAvatar: '',
-        order: 0,
-        useCount: 0,
-        lastExecuteTime: Date.now(),
-        settings: JSON.stringify({
-          bounds: {
-            width: 920,
-            height: 720
-          },
-          showInSideBar:true
-        }),
-        unreadCount: 1,
-      },
-      {
         name: '元社区',
         logo: '../../icons/apps/yuan.png',
         package:'com.thisky.com',
@@ -344,6 +318,32 @@ const standAloneAppModel = {
           showInSideBar:true,
         }),
         unreadCount: 0,
+      },
+      {
+        name: '导入助手',
+        logo: '../../icons/apps/import.svg',
+        summary: '快速导入其他浏览器的书签、密码，设置为您的默认浏览器。',
+        type: 'local',
+        //url: serverConfig.IM.FRONT_URL+ serverConfig.IM.AUTO_LOGIN,
+        url: '/pages/import/index.html',
+        preload: '/pages/group/imPreload.js',
+        package:'com.thisky.group',
+        themeColor: '#689aff',
+        userThemeColor: '',
+        createTime: Date.now(),
+        updateTime: Date.now(),
+        accountAvatar: '',
+        order: 0,
+        useCount: 0,
+        lastExecuteTime: Date.now(),
+        settings: JSON.stringify({
+          bounds: {
+            width: 920,
+            height: 720
+          },
+          showInSideBar:true
+        }),
+        unreadCount: 1,
       },
       {
         name: '图片编辑器',
