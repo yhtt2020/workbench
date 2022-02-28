@@ -6,12 +6,11 @@ export function setLocal(markData) {
   }else{
     data.push(markData);
   }
-
-  localStorage.setItem("data", JSON.stringify(data));
+  localStorage.setItem("data_"+window.parent.location.href, JSON.stringify(data));
 }
 
 export function getLocal() {
-  return JSON.parse(localStorage.getItem("data")) || [];
+  return JSON.parse(localStorage.getItem("data_"+window.parent.location.href)) || [];
 }
 
 export function clearItemLocal(id) {
