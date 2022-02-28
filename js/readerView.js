@@ -42,8 +42,6 @@ var readerView = {
         readerView.enter(tabId)
       }
     }
-
-    console.log('get button')
     readerView.currentTabId = tabId
     buttonToolbar.removeEventListener('click', readerView.onClickToolbar)
     buttonToolbar.addEventListener('click', readerView.onClickToolbar)

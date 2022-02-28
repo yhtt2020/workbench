@@ -1193,8 +1193,6 @@ app.whenReady().then(() => {
               url:searchParams.get('url'),
               background:searchParams.get('background')!==null?searchParams.get('background'):true}
             )
-            console.log('是重定向协议')
-            console.log('url=',searchParams.get('url'))
           }
         }
       }catch(e){
