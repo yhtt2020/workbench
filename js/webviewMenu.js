@@ -165,7 +165,7 @@ const webviewMenu = {
           }
         },
         {
-          label:'使用编辑器处理图片',
+          label:'使用【编辑器】处理图片',
           click:async function (){
             //const localCacheManager=require('./main/localCacheManager')
             //let imagePath=await localCacheManager.getWithoutCache(mediaURL)
