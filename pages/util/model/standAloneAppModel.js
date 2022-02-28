@@ -3,7 +3,9 @@ const serverConfig = require('../../../server-config.js').config
 const systemAppPackage=[
   'com.thisky.group',
   'com.thisky.fav',
-  'com.thisky.import'
+  'com.thisky.import',
+  'com.thisky.helper',
+  'com.thisky.imageEditor'
 ]  //包名为上述包名的判定为系统应用
 const standAloneAppModel = {
   async initialize() {
@@ -40,7 +42,6 @@ const standAloneAppModel = {
     db.standAloneApps.update(2,{package:'com.thisky.com','name':'元社区','url':'https://s.apps.vip','logo':'../../icons/apps/yuan.png'})
     await db.standAloneApps.update(2,{themeColor:'#4188ff'})
     await db.standAloneApps.update(3,{themeColor:'#8618d2'})
-
     let importHelper=await  db.standAloneApps.get({package:'com.thisky.import'})
     let importHelperApp=  {
       name: '导入助手',
