@@ -32,10 +32,10 @@
               </div>
 
               <div>
-                <a-button type="link" style="float: right" @click="showModal(index)">
+                <a-button type="link" style="float: right" @click="showModal(list.id)">
                   删除
                 </a-button>
-                <a-modal v-model="visibleing" title="删除下载任务" ok-text="确认" cancel-text="取消" @ok="hideModal(index)">
+                <a-modal v-model="visibleing" title="删除下载任务" ok-text="确认" cancel-text="取消" @ok="hideModal(bid)">
                   <p>文件正在下载中，确认删除</p>
                 </a-modal>
               </div>
@@ -72,10 +72,10 @@
                 <a-icon type="file-text" style="fontSize:30px"></a-icon>
               </div>
                 <div>
-                  <a-button type="link" style="float: right" @click="showdoneModal(index)">
+                  <a-button type="link" style="float: right" @click="showdoneModal(donelist.id)">
                     删除
                   </a-button>
-                  <a-modal v-model="visible" title="删除下载任务" ok-text="确认" cancel-text="取消" @ok="hideModaldone(index)">
+                  <a-modal v-model="visible" title="删除下载任务" ok-text="确认" cancel-text="取消" @ok="hideModaldone(sid)">
                     <p>文件下载已完成，确认删除</p>
                     <a-checkbox @change="doneChange">
                       同时删除下载文件
@@ -110,14 +110,20 @@
 
 </div>
 
-
-
 <script type="module">
+
+  const Dexie = require('dexie');
   const { clipboard } = require('electron')
   const { shell } = require('electron')
   const fs = require('fs')
   let {ipcMain} = require('electron')
   let {ipcRenderer} = require('electron')
+
+  const db = new Dexie("test_db");
+  db.version(1).stores({
+    student: 'name,age'
+  });
+  db.open()
 
   ipcRenderer.on('context-menuing-start', (e,args) => {
     if(appVue.selectinglist.loadstate === true){
@@ -150,6 +156,10 @@
     shell.showItemInFolder(appVue.selectlist.path)
   })
 
+  ipcRenderer.on('context-menudone-downloadUrl', (e) => {
+    ipc.send('addTab',{url:''})
+  })
+
   ipcRenderer.on('context-menudone-Url', (e) => {
     clipboard.writeText( appVue.selectlist.Url)
     appVue.$message.success('已复制到剪切板');
@@ -160,54 +170,57 @@
     appVue.deleconfirm=false
   })
 
-  ipcRenderer.on('download-info', (event, args) => {
+  ipcRenderer.on('download-info', async (event, args) => {
     let aname;
     if (args.name.length >= 20) {
-      aname = args.name.substring(0, 15)+'...';
-    }else (aname=args.name)
+      aname = args.name.substring(0, 15) + '...';
+    } else (aname = args.name)
 
-    if(args.status ==='start'){
+    if (args.status === 'start') {
       appVue.lists.push({
-        id:appVue.id++,
-        title:aname,
-        received:'',
-        realdata:'',
-        total:'',
-        progressnuw:0,
-        startTime:args.startTime,
-        path:'',
-        loadstate:false,
-        Url:args.Url,
+        id: appVue.id++,
+        title: aname,
+        received: '',
+        realdata: '',
+        total: '',
+        progressnuw: 0,
+        startTime: args.startTime,
+        path: '',
+        loadstate: false,
+        Url: args.Url,
       })
       appVue.count++
+      console.log(args.ChainUrl)
     }
 
-    if (args.status === 'progressing' && args.path !== '' ) {
-        appVue.lists.forEach(function(item,index,arr){
-          if(item.startTime===args.startTime){
+    if (args.status === 'progressing' && args.path !== '') {
+      appVue.lists.forEach(function (item, index, arr) {
+        if (item.startTime === args.startTime) {
           item.title = aname;
           item.received = ((args.size.received) / 1024 / 1024).toFixed(2);
           item.realdata = ((args.realdata) / 1024 / 1024).toFixed(2);
           item.total = ((args.size.total) / 1024 / 1024).toFixed(2);
           item.progressnuw = Math.round(args.progressnuw);
-          item.path=args.path
-          item.status=args.status
-            if(item.progressnuw===100){
-              appVue.lists.splice(index,1)
-            }
+          item.path = args.path
+          item.status = args.status
+          if (item.progressnuw === 100) {
+            appVue.lists.splice(index, 1)
+          }
         }
-       })
+      })
     }
 
-      if(args.status === 'completed' && args.path !== '' && appVue.lists.startTime === args.startTime) {
-        appVue.donelists.push({
-          title: aname,
-          total:((args.size.total)/1024/1024).toFixed(2),
-          path:args.path,
-          Url:args.Url
-        })
-        appVue.count--
-  }
+    if (args.status === 'completed' && args.path !== '' && appVue.lists.startTime === args.startTime) {
+      appVue.donelists.push({
+        id:appVue.doneid++,
+        title: aname,
+        total: ((args.size.total) / 1024 / 1024).toFixed(2),
+        path: args.path,
+        Url: args.Url
+      })
+      appVue.count--
+      db.student.add(args)
+    }
   })
 
    let appVue = new Vue({
@@ -231,9 +244,24 @@
        selectlist:[],
        selectinglist:[],
        Url:'',
+       doneid:'0',
+       sid:'0',
+       bid:'0'
      },
-
-    methods: {
+    // created() {
+    //    db.student.toArray().then(clist => {
+    //      for(let i=0; i<=clist.length; i++){
+    //      console.log(clist[i].name)
+    //      appVue.donelists.push({
+    //        title:clist[i].name,
+    //        total: ((clist[i].size.total) / 1024 / 1024).toFixed(2),
+    //        path: clist[i].path,
+    //        Url: clist[i].Url
+    //      })
+    //    }
+    //    })
+    //   },
+     methods: {
       menuing(index){
         ipcRenderer.send('show-context-menuing',this.lists[index].loadstate)
         this.selectinglist=this.lists[index]
@@ -253,19 +281,30 @@
       change(index){
         this.active = index;
       },
-      showModal() {
+      showModal(id) {
+        let index = null;
+        index = this.lists.findIndex(list =>{
+          if(list.id === id) return true;
+        })
+        this.bid = index;
         this.visibleing = true;
       },
-      showdoneModal(index) {
+      showdoneModal(id) {
+        let index = null;
+        index = this.donelists.findIndex(donelist =>{
+          if(donelist.id === id) return true;
+        })
+        this.sid = index;
         this.visible = true;
         this.deleconfirm=false
-        console.log(this.donelists[index])
       },
 
-      hideModal(index) {
-        ipcRenderer.send('deleteDownload', this.lists[index].path)
-        this.lists.splice(index, 1)
+      hideModal(bid) {
+        console.log(this.lists[bid].path)
+        ipcRenderer.send('deleteDownload', this.lists[bid].path)
+        this.lists.splice(bid, 1)
         this.visible = false;
+        this.count--
       },
 
       doneChange(e){
@@ -279,17 +318,15 @@
       callback(key){
       },
 
-      hideModaldone(index){
-        console.log(this.donelists[index])
+      hideModaldone(sid){
+        console.log(sid)
         if(this.deleconfirm === true) {
-          // const {shell} = require('electron')
-          // shell.trashItem(this.donelists[index].path)
-          fs.unlinkSync(this.donelists[index].path)
-          this.donelists.splice(index, 1)
+          fs.unlinkSync(this.donelists[sid].path)
+          this.donelists.splice(sid, 1)
           this.visible = false;
         }
         if(this.deleconfirm === false){
-          this.donelists.splice(index, 1)
+          this.donelists.splice(sid, 1)
           this.visible = false;
         }
       },
