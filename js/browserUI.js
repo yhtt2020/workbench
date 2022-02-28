@@ -183,6 +183,7 @@ function switchToTab (id, options) {
 
   tabs.setSelected(id)
   tabBar.setActiveTab(id)
+  require('js/readerView').updateButton(id) //即时更新阅读按钮
   webviews.setSelected(id, {
     //focus: options.focusWebview !== false
   })

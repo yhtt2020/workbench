@@ -16,8 +16,18 @@
   vertical-align: top;
   border-radius: 4px;
 }
+#toolbar .app {
+  padding: 2px;
+  width: 32px;
+  height: 32px;
+  margin-top: 4px;
+}
 #toolbar .action:hover {
   background: rgba(238, 238, 238, 0.8);
+}
+#toolbar .is-reader img {
+  border: 1px solid #1E90FF;
+  border-radius: 50%;
 }
 #toolbar .action-wrapper {
   width: 40px;
