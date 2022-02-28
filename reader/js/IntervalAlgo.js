@@ -19,14 +19,14 @@ export default function algo(newArr, noOverlapArr, spacing = 0) {
   }
 
   insetIndex = insetIndex == -1 ? noOverlapArr.length : insetIndex;
-  console.log(noOverlapArr);
-  console.log(insetIndex);
+  // console.log(noOverlapArr);
+  // console.log(insetIndex);
   if (insetIndex !== 0 && noOverlapArr[insetIndex - 1][1] > start) {
     let i = insetIndex - 1;
     //插入的区间正好在要插入索引前一个区间中（发生重叠）
     //把重叠区域向前做最小迁移
     let moveStep = noOverlapArr[i][1] - start + spacing;
-    console.log("moveStep", moveStep);
+    // console.log("moveStep", moveStep);
     while (i >= 0 && moveStep > 0) {
       noOverlapArr[i][0] -= moveStep;
       noOverlapArr[i][1] -= moveStep;
