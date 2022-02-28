@@ -165,16 +165,16 @@ const webviewMenu = {
           }
         },
         {
-          label:'编辑图片',
+          label:'使用编辑器处理图片',
           click:async function (){
-            const localCacheManager=require('./main/localCacheManager')
-            let imagePath=await localCacheManager.getWithoutCache(mediaURL)
-            if(imagePath){
-                ipc.send('handleFileAssign',{type:'image',args:{filePath:imagePath}})
+            //const localCacheManager=require('./main/localCacheManager')
+            //let imagePath=await localCacheManager.getWithoutCache(mediaURL)
+            if(mediaURL){
+                ipc.send('handleFileAssign',{type:'image',args:{filePath:mediaURL}})
             }else{
-              ipc.send('message',{type:'error',config:{content:'下载图片失败。'}})
+              ipc.send('message',{type:'error',config:{content:'编辑图片失败。'}})
             }
-            console.log(localCacheManager.urlToFilePath(mediaURL))
+            //console.log(localCacheManager.urlToFilePath(mediaURL))
            // appManager.protocolManager.handleFileAssign('image',{})
           }
         }
