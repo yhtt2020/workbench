@@ -26,7 +26,8 @@
 #### 3、使用说明📖
 
 ##### 步骤一、💥引入tsbSdk
-`import tsbk from 路径地址`
+`import tsbk from 路径地址`  ES module引入
+`<script src="路径文件"></script>`  script标签引入 对象在全局tsbk.default中
 
 ##### 步骤二、💥通过config接口注入权限验证配置
 第三方应用需要使用tsb-SDK的页面必须先注入config配置信息，否则将无法调用。对于变化url的SPA的web app可在每次url变化时注入config配置信息。

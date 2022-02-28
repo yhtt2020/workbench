@@ -67,17 +67,23 @@
       el: "#appVue",
       data() {
         return {
-
+          groupId: 0
         }
       },
       methods: {
         searchMember() {
+          //todo 然后这里利用groupid，打开这个新的团队
           ipc.send('osxOpenSearchMember')
         },
         inviteMember() {
           ipc.send('osxOpenInviteMember')
         }
       }
+    })
+    window.$teamTip = appVue
+    ipc.on('circleId', (event, args) => {
+      console.log(args, '@@@@@@@@')
+      window.$teamTip.$data.groupId = args
     })
   </script>
 </body>

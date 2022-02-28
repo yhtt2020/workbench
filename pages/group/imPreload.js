@@ -34,39 +34,33 @@ const server = {
   },
 }
 
-// ipc.invoke('imPreloadReady').then((args) => {
-//   window.tsbSaApp = args   //内置应用只需要挂个saApp的信息就可以了不需要像appPreload一样去挂tsbSDK
+ipc.invoke('imPreloadReady').then((args) => {
+  window.tsbSaApp = args   //内置应用只需要挂个saApp的信息就可以了不需要像appPreload一样去挂tsbSDK
 
-//   //定制好订阅器
-//   let DepList = []
-//   DepList.push({
-//     func: server.beforeInit,
-//     host: isDevelopmentMode ? config.IM.FRONT_URL_DEV : config.IM.FRONT_URL
-//   })
+  //定制好订阅器
+  let DepList = []
+  DepList.push({
+    func: server.beforeInit,
+    host: isDevelopmentMode ? config.IM.FRONT_URL_DEV : config.IM.FRONT_URL
+  })
 
-//   tsbSdk.listener(DepList)
+  tsbSdk.listener(DepList)
 
-//   console.log(href, '???????????')
+  if(href === config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN) {
+    server.beforeInit(config.IM.FRONT_URL_DEV)
+  } else if (href === config.IM.FRONT_URL + config.IM.AUTO_LOGIN) {
+    server.beforeInit(config.IM.FRONT_URL)
+  }
+})
 
-//   if(href === config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN) {
-//     console.log('走到这里了@1')
-//     server.beforeInit(config.IM.FRONT_URL_DEV)
-//   } else if (href === config.IM.FRONT_URL + config.IM.AUTO_LOGIN) {
-//     console.log('走到这里了@2')
-//     server.beforeInit(config.IM.FRONT_URL)
-//   }
-
-//   console.log('走到这里了')
-// })
-
-console.log(href, '???????????')
-if(href === config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN) {
-  console.log('走到这里了@1')
-  server.beforeInit(config.IM.FRONT_URL_DEV)
-} else if (href === config.IM.FRONT_URL + config.IM.AUTO_LOGIN) {
-  console.log('走到这里了@2')
-  server.beforeInit(config.IM.FRONT_URL)
-}
+// console.log(href, '???????????')
+// if(href === config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN) {
+//   server.beforeInit(config.IM.FRONT_URL_DEV)
+// } else if (href === config.IM.FRONT_URL + config.IM.AUTO_LOGIN) {
+//   server.beforeInit(config.IM.FRONT_URL)
+// } else {
+//   console.log('############')
+// }
 
 ipc.on('imLogout', () => {
   let host = isDevelopmentMode ? config.IM.FRONT_URL_DEV : config.IM.FRONT_URL

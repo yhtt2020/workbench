@@ -76,7 +76,6 @@ app.on('ready', () => {
       maximizable:false,
       resizable: false,
       webPreferences: {
-        //preload: path.join(__dirname, ''),
         devTools: true,
         nodeIntegration: true,
         contextIsolation: false,
@@ -88,8 +87,11 @@ app.on('ready', () => {
         ]
       }
     })
-    teamTip.webContents.loadURL('file://' + __dirname + '/pages/group/teamTip/index.html')
+    teamTip.webContents.loadURL('file://' + __dirname + '/pages/circle/teamTip/index.html')
     teamTip.on('close', () => teamTip = null)
+    teamTip.webContents.on('did-finish-load', () => {
+      teamTip.webContents.send('circleId', args)
+    })
   })
 
   //圈子搜索添加成员
@@ -102,11 +104,12 @@ app.on('ready', () => {
       minimizable: false,
       parent: null,
       width: 500,
-      height: 620,
+      height: 600,
       maximizable:false,
       resizable: false,
       webPreferences: {
         devTools: true,
+        partition: 'persist:webcontent',
         nodeIntegration: true,
         contextIsolation: false,
         additionalArguments: [
@@ -133,11 +136,12 @@ app.on('ready', () => {
       minimizable: false,
       parent: null,
       width: 420,
-      height: 300,
+      height: 250,
       maximizable:false,
       resizable: false,
       webPreferences: {
         devTools: true,
+        partition: 'persist:webcontent',
         nodeIntegration: true,
         contextIsolation: false,
         additionalArguments: [
@@ -199,6 +203,7 @@ app.on('ready', () => {
       maximizable:false,
       resizable: false,
       webPreferences: {
+        preload: __dirname + '/pages/circle/createPreload.js',
         partition: 'persist:webcontent',
         devTools: true,
         nodeIntegration: true,
@@ -217,12 +222,22 @@ app.on('ready', () => {
       const btn = document.getElementsByClassName('form-item')[0].childNodes[0]
       let confirmBtn = null
       btn.addEventListener('click', () => {
-        confirmBtn = document.getElementsByClassName('button-box')[0] ? document.getElementsByClassName('button-box')[0].childNodes[2] : null
-        if(confirmBtn) {
-          confirmBtn.onclick = () => {
-            window.close()
-          }
-        }
+        window.$ipc.send('teamTip')
+        // confirmBtn = document.getElementsByClassName('button-box')[0] ? document.getElementsByClassName('button-box')[0].childNodes[2] : null
+        // if(confirmBtn) {
+        //   confirmBtn.onclick = () => {
+        //     let toastel
+        //     let interval = setInterval(() => {
+        //       toastel = document.getElementsByClassName('xm-toast')[0]
+        //       if (toastel && toastel.innerText === '创建成功') {
+        //         clearInterval(interval)
+        //         setTimeout(() => {
+        //           window.close()
+        //         }, 1000)
+        //       }
+        //     }, 200)
+        //   }
+        // }
       })
     `, true)
     osxCreateCircle.on('close', () => osxCreateCircle = null)
