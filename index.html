@@ -168,7 +168,7 @@
 <!--            </div>-->
 
           </div>
-          <div style="display: flex;width: 260px" >
+          <div style="display: flex;width: 274px" >
             <div class="action-wrapper" >
                 <span onclick="ipc.send('openSwitch')" title="快速切换（Ctrl+Tab）" id="switch-toolbar"><img class="action" src="./icons/toolbar/switch.svg">
                 </span>
@@ -177,25 +177,29 @@
                 <span onclick="ipc.send('openMobile')" title="手机浏览工具" id="mobile-toolbar"><img class="action" src="./icons/toolbar/smartphone.svg">
                 </span>
             </div>
-            <div class="action-wrapper" style="text-align: center;width: 10px">
-              <div style="border-right: 1px solid #cacaca;display: inline-block;height: 16px;vertical-align: middle;width: 0;margin-top: -3px"></div>
+            <div class="action-wrapper" style="text-align: center;">
+              <div style="margin-right:8px;border-right: 1px solid #cacaca;display: inline-block;height: 16px;vertical-align: middle;width: 0;margin-top: -3px"></div>
+            </div>
+            <div  class="action-wrapper" >
+                <span title="阅读模式" id="read-toolbar"><img class="action app" src="./icons/toolbar/apps/read.svg">
+                <span hidden class="bandage" id="canRead">0</span>
+                </span>
             </div>
               <div  class="action-wrapper" >
-                <span onclick="ipc.send('openPwdManager',{tabData:tabs.get(tabs.getSelected())})" title="密码管理" id="pwd-toolbar"><img class="action" src="./icons/svg/lock.svg">
+                <span onclick="ipc.send('openPwdManager',{tabData:tabs.get(tabs.getSelected())})" title="密码管理" id="pwd-toolbar"><img class="action app" src="./icons/toolbar/apps/pwd.svg">
                 <span hidden class="bandage" id="pwdCount">0</span>
                 </span>
               </div>
               <div class="action-wrapper" >
-                <span onclick="ipc.send('openHome')" title="导航管理" id="nav-toolbar"><img class="action" src="./icons/svg/cloud.svg"></span>
+                <span onclick="ipc.send('openHome')" title="导航管理" id="nav-toolbar"><img class="action app" src="./icons/toolbar/apps/fav.svg"></span>
               </div>
             <div class="action-wrapper" >
-              <span onclick="ipc.send('openScriptManager')" title="管理脚本插件" id="userscript-toolbar"><img class="action" src="./icons/toolbar/code.svg">
+              <span onclick="ipc.send('openScriptManager')" title="管理脚本插件" id="userscript-toolbar"><img class="action app" src="./icons/toolbar/apps/code.svg">
               <span hidden title="当前页面有3个脚本正在启用" class="bandage" id="scriptCount">3</span>
               </span>
-
             </div>
             <div class="action-wrapper">
-              <img title="收起地址栏，使用精简模式"  id="collapse-button-toolbar" class="action"  src="./icons/toolbar/chevronsup.svg">
+              <img title="收起地址栏，使用精简模式"  id="collapse-button-toolbar" class="action "  src="./icons/toolbar/chevronsup.svg">
              </div>
           </div>
         </div>
