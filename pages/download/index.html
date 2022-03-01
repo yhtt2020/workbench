@@ -121,7 +121,7 @@
 
   const db = new Dexie("test_db");
   db.version(1).stores({
-    student: 'name,age'
+    student: 'path,age'
   });
   db.open()
 
@@ -157,7 +157,7 @@
   })
 
   ipcRenderer.on('context-menudone-downloadUrl', (e) => {
-    ipc.send('addTab',{url:''})
+    ipcRenderer.send('addTab',{url:''})
   })
 
   ipcRenderer.on('context-menudone-Url', (e) => {
@@ -248,19 +248,18 @@
        sid:'0',
        bid:'0'
      },
-    // created() {
-    //    db.student.toArray().then(clist => {
-    //      for(let i=0; i<=clist.length; i++){
-    //      console.log(clist[i].name)
-    //      appVue.donelists.push({
-    //        title:clist[i].name,
-    //        total: ((clist[i].size.total) / 1024 / 1024).toFixed(2),
-    //        path: clist[i].path,
-    //        Url: clist[i].Url
-    //      })
-    //    }
-    //    })
-    //   },
+    created() {
+       db.student.toArray().then(clist => {
+         for(let i=0; i<=clist.length; i++){
+         appVue.donelists.push({
+           title:clist[i].name,
+           total: ((clist[i].size.total) / 1024 / 1024).toFixed(2),
+           path: clist[i].path,
+           Url: clist[i].Url
+         })
+       }
+       })
+      },
      methods: {
       menuing(index){
         ipcRenderer.send('show-context-menuing',this.lists[index].loadstate)
@@ -319,7 +318,8 @@
       },
 
       hideModaldone(sid){
-        console.log(sid)
+        db.student.delete(appVue.donelists[sid].path);
+
         if(this.deleconfirm === true) {
           fs.unlinkSync(this.donelists[sid].path)
           this.donelists.splice(sid, 1)

@@ -82,7 +82,6 @@ function downloadHandler (event, item, webContents) {
       }
 
       downloadWindow.setProgressBar(item.getReceivedBytes() / item.getTotalBytes())
-
       sendIPCToDownloadWindow('download-info', {
         path: item.getSavePath(),
         name: savePathFilename,

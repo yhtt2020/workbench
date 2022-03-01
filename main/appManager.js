@@ -465,10 +465,15 @@ ipcMain.on('show-context-menudone', (event) => {
     { label: '打开文件夹',
       click: () => { event.sender.send('context-menudone-openpath')}
     },
+    { label: '打开下载页',
+
+      click: () => { event.sender.send('context-menudone-downloadUrl')}
+    },
     { label: '复制下载链接',
 
       click: () => { event.sender.send('context-menudone-Url')}
     },
+
     { label: '删除',
       click: () => { event.sender.send('context-menudone-delete')}
     }

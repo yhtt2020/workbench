@@ -353,6 +353,7 @@ ipc.on('sideSetClose',(event,args)=>{
   console.log('close')
   appVue.mod='close'
   localStorage.setItem('sideMode','close')
+
 })
 
 ipc.on('sideSetAuto',(event,args)=>{
