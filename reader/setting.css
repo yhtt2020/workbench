@@ -6,8 +6,7 @@
   left: -300px;
   top: 0;
   z-index: 2;
-  transition: left 0.5s;
-}
+  transition: left 0.5s; }
 
 .setting .switch {
   position: absolute;
@@ -20,18 +19,16 @@
   border-left: none;
   cursor: pointer;
   border-radius: 0 10px 10px 0;
-  padding:20px;
+  padding: 20px;
   box-sizing: border-box;
-  text-align: right;
-}
+  text-align: right; }
 
-
-.switch .svg{
+.switch .svg {
   display: block;
-  margin-left:auto;
-  margin-bottom: 10px;
-}
+  margin-left: auto;
+  margin-bottom: 10px; }
 
-.switch .title{
-  font-size: 17px;
-}
+.switch .title {
+  font-size: 17px; }
+
+/*# sourceMappingURL=setting.css.map */

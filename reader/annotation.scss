@@ -15,10 +15,12 @@
 
 .annotator-h3 {
   cursor: pointer;
-  background:rgba(255, 0, 0, 0.3);
+  color: #ffffff;
+  background: rgba(255, 0, 0, 0.55);
 }
 .annotator-h4 {
   cursor: pointer;
+  color:white;
   background: rgba(0, 0, 0, 0.3);
 }
 .annotator-h5 {
@@ -33,7 +35,6 @@
   color: #333;
   width: 200px;
   border-left: 8px solid #fff;
-
   padding-left: 5px;
   border-color: rgba(0, 0, 255, 0.3);
   box-sizing: border-box;
@@ -50,6 +51,7 @@
 
 
 .annotation .color-block {
+  margin-top: 5px;
   cursor: pointer;
   margin-right: 1px;
   width: 19px;
@@ -59,13 +61,17 @@
 }
 
 .annotation .save {
-  font-size: 13px;
+  &:hover{
+    box-shadow: 0 0 3px rgb(104, 154, 255);
+    color: white;
+  }
+  font-size: 12px;
   text-decoration: none;
   background: #1E90FF;
-  color:#fff;
+  color: rgba(255, 255, 255, 0.69);
   cursor: pointer;
   border:solid 1px #1E90FF;
-  line-height: 18px;
+  line-height: 16px;
   padding: 3px;
   border-radius: 4px;
   margin-right: 10px;
@@ -73,14 +79,20 @@
 }
 
 .annotation .delete {
+  &:hover{
+    box-shadow: 0 0 3px rgba(108, 108, 108, 0.34);
+    color: #333;
+  }
   cursor: pointer;
-  font-size: 13px;
+  font-size: 12px;
   text-decoration: none;
   border:solid 1px #ccc;
-  line-height: 18px;
+  line-height: 16px;
   padding: 3px;
   border-radius: 4px;
   margin-right: 10px;
+  color: #666;
+
 }
 
 

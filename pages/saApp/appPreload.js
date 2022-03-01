@@ -48,10 +48,15 @@ let sdkObject = {
   }
 }
 sdkObject.on('ready',(saApp)=>{console.log(saApp)}) //测试挂载
-contextBridge.exposeInMainWorld('tsbSDK', sdkObject)
-
+//contextBridge.exposeInMainWorld('tsbSDK', sdkObject) //todo 此处要考虑如何兼容不需要本地sdk的系统应用
+ipc.on('fileAssign',(event,args)=>{
+  window.postMessage({
+    eventName: "fileAssign",
+    filePath:args.filePath})
+  console.log('请求处理文件关联',args)
+})
 ipc.on('init', (event, args) => {
-  contextBridge.exposeInMainWorld('tsbSaApp', args.saApp)
+  //contextBridge.exposeInMainWorld('tsbSaApp', args.saApp) //todo 此处要考虑如何兼容不需要本地sdk的系统应用
   sdkObject.emit('ready',{saApp:args.saApp}) //在此处触发sdkBoject的ready，以确保获取到
 
   window.addEventListener('message', function(e) {
@@ -87,7 +92,7 @@ ipc.on('init', (event, args) => {
         } else {
           console.error('验证错误！')
         }
-
+        break
     }
     console.log(ipc, '无ipc的三方应用也被监听中。。。。')
   })

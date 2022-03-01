@@ -16,5 +16,5 @@ export function getLocal() {
 export function clearItemLocal(id) {
   let data = getLocal();
   data = data.filter((item) => item.uid !== id);
-  localStorage.setItem("data", JSON.stringify(data));
+  localStorage.setItem("data_"+window.parent.location.href, JSON.stringify(data));
 }

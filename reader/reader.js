@@ -308,11 +308,16 @@ function startReaderView (article, date) {
 
 function processArticle (data) {
   var parserframe = document.createElement('iframe')
+  data=data.replace( /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '').replace( /<link\b[^<]*\/>/gi, '');
+  data=data.replace(/ src="\/\//g,' src="'+ articleLocation.protocol+'//').replace(/"\/\//g,'"'+ articleLocation.protocol+'//')
+  console.log(data)
   parserframe.className = 'temporary-frame'
-  parserframe.sandbox = 'allow-same-origin'
+  parserframe.sandbox = 'allow-same-origin allow-scripts'
   document.body.appendChild(parserframe)
 
   parserframe.srcdoc = data
+
+
 
   parserframe.onload = function () {
     // allow readability to parse relative links correctly
@@ -391,7 +396,6 @@ function processArticle (data) {
     var date = extractDate(doc)
 
     var article = new Readability(doc).parse()
-    console.log(article)
     startReaderView(article, date)
 
     if (article) {
@@ -436,7 +440,7 @@ fetch(articleURL, {
     console.warn('request failed with error', data)
 
     startReaderView({
-      content: '<em>Failed to load article.</em>'
+      content: '<em>读取文章失败。</em>'
     })
   })
 
