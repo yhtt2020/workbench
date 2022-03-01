@@ -10,8 +10,7 @@ const url = {
 }
 const authApi = {
   async loginBrowser(info) {
-    await baseApi.init()
-    return baseApi.axios(url.loginBrowser, info)
+    return baseApi.axios(url.loginBrowser, info, 'post', true)
   },
   async logoutBrowser (info) {
     await baseApi.init()
@@ -19,11 +18,19 @@ const authApi = {
   },
   async shareTasks(info) {
     await baseApi.init()
-    const data = {
-      uid: baseApi.uid === 0 ? null : baseApi.uid,
-      site_list: info
+    if(baseApi.uid !== 0) {
+      const data = {
+        uid: baseApi.uid,
+        site_list: info
+      }
+      return baseApi.axios(url.shareTasks, data)
+    } else {
+      const data = {
+        uid: null,
+        site_list: info
+      }      
+      return baseApi.axios(url.shareTasks, data, 'post', true)
     }
-    return baseApi.axios(url.shareTasks, data)
   },
   async autoLogin() {
     await baseApi.init()
