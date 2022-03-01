@@ -198,10 +198,17 @@ function destroyView(id) {
   if (!viewMap[id]) {
     return
   }
-  if (viewMap[id] === mainWindow.getBrowserView()) {
-    mainWindow.setBrowserView(null)
-    selectedView = null
-  }
+  let bvs=mainWindow.getBrowserViews()
+  bvs.forEach(bv=>{
+    if(bv.webContents.id===viewMap[id].webContents.id){
+      mainWindow.removeBrowserView(bv)
+      selectedView = null
+    }
+  })
+  // if (viewMap[id] === mainWindow.getBrowserView()) {
+  //   mainWindow.setBrowserView(null)
+  //   selectedView = null
+  // }
   // else if(viewMap[id]===sidebarView)//如果是侧边栏的view，则直接将其置顶起来
   // {
   //  console.log('阻止一次被消耗')
@@ -224,7 +231,17 @@ function destroyAllViews() {
 
 function setView(id) {
   if (viewStateMap[id].loadedInitialURL) {
-    mainWindow.setBrowserView(viewMap[id])
+    //let needRemove=mainWindow.getBrowserView()
+    let bvs=mainWindow.getBrowserViews()
+    let hasFinded=false
+    bvs.forEach(bv=>{
+      if(bv.webContents.id===viewMap[id].webContents.id){
+        mainWindow.setTopBrowserView(bv)
+        hasFinded=true
+      }
+    })
+    if (!hasFinded) mainWindow.addBrowserView(viewMap[id])
+    //mainWindow.removeBrowserView(needRemove)
   } else {
     mainWindow.setBrowserView(null)
   }
