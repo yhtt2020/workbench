@@ -32,14 +32,13 @@
               </div>
 
               <div>
-                <a-button type="link" style="float: right" @click="showModal(list.id)">
-                  删除
-                </a-button>
+<!--                <a-button type="link" style="float: right" @click="showModal(list.id)">-->
+<!--                  删除-->
+<!--                </a-button>-->
                 <a-modal v-model="visibleing" title="删除下载任务" ok-text="确认" cancel-text="取消" @ok="hideModal(bid)">
                   <p>文件正在下载中，确认删除</p>
                 </a-modal>
               </div>
-
               <div v-if="list.status === 'progressing'" >
                 <div v-if="list.loadstate" >
                   <a-button style="position: absolute;margin-left: 270px;margin-top: 14px" type="link" @click="resume(index)" >
@@ -72,9 +71,9 @@
                 <a-icon type="file-text" style="fontSize:30px"></a-icon>
               </div>
                 <div>
-                  <a-button type="link" style="float: right" @click="showdoneModal(donelist.id)">
-                    删除
-                  </a-button>
+<!--                  <a-button type="link" style="float: right" @click="showdoneModal(donelist.id)">-->
+<!--                 -->
+<!--                  </a-button>-->
                   <a-modal v-model="visible" title="删除下载任务" ok-text="确认" cancel-text="取消" @ok="hideModaldone(sid)">
                     <p>文件下载已完成，确认删除</p>
                     <a-checkbox @change="doneChange">
@@ -118,12 +117,13 @@
   const fs = require('fs')
   let {ipcMain} = require('electron')
   let {ipcRenderer} = require('electron')
-
-  const db = new Dexie("test_db");
+  //  db = require('../../../js/util/database').db
+  //
+  var db = new Dexie('test')
   db.version(1).stores({
-    student: 'path,age'
+    download: 'path'
   });
-  db.open()
+
 
   ipcRenderer.on('context-menuing-start', (e,args) => {
     if(appVue.selectinglist.loadstate === true){
@@ -144,6 +144,7 @@
 
   ipcRenderer.on('context-menuing-delete', (e) => {
     appVue.visibleing = true;
+
   })
 
   ipcRenderer.on('context-menudone-open', (e) => {
@@ -219,7 +220,7 @@
         Url: args.Url
       })
       appVue.count--
-      db.student.add(args)
+      db.download.add(args)
     }
   })
 
@@ -237,7 +238,6 @@
        startTime: '',
        pathlist:[],
        loadstate:[],
-       deleconfirm:'',
        id:'0',
        active :'',
        active1:'',
@@ -246,10 +246,11 @@
        Url:'',
        doneid:'0',
        sid:'0',
-       bid:'0'
+       bid:'0',
+       deleconfirm:false
      },
     created() {
-       db.student.toArray().then(clist => {
+       db.download.toArray().then(clist => {
          for(let i=0; i<=clist.length; i++){
          appVue.donelists.push({
            title:clist[i].name,
@@ -280,29 +281,13 @@
       change(index){
         this.active = index;
       },
-      showModal(id) {
-        let index = null;
-        index = this.lists.findIndex(list =>{
-          if(list.id === id) return true;
-        })
-        this.bid = index;
-        this.visibleing = true;
-      },
-      showdoneModal(id) {
-        let index = null;
-        index = this.donelists.findIndex(donelist =>{
-          if(donelist.id === id) return true;
-        })
-        this.sid = index;
-        this.visible = true;
-        this.deleconfirm=false
-      },
 
-      hideModal(bid) {
-        console.log(this.lists[bid].path)
-        ipcRenderer.send('deleteDownload', this.lists[bid].path)
-        this.lists.splice(bid, 1)
-        this.visible = false;
+
+      hideModal() {
+        console.log(this.selectinglist.path)
+        ipcRenderer.send('deleteDownload', this.selectinglist.path)
+        this.lists.splice(this.lists.indexOf(this.selectinglist), 1)
+        this.visibleing = false;
         this.count--
       },
 
@@ -317,16 +302,15 @@
       callback(key){
       },
 
-      hideModaldone(sid){
-        db.student.delete(appVue.donelists[sid].path);
-
+      hideModaldone(){
+        db.download.delete(appVue.selectlist.path);
         if(this.deleconfirm === true) {
-          fs.unlinkSync(this.donelists[sid].path)
-          this.donelists.splice(sid, 1)
+          fs.unlinkSync(this.selectlist.path)
+          this.donelists.splice(this.donelists.indexOf(this.selectlist), 1)
           this.visible = false;
         }
         if(this.deleconfirm === false){
-          this.donelists.splice(sid, 1)
+          this.donelists.splice(this.donelists.indexOf(this.selectlist), 1)
           this.visible = false;
         }
       },
