@@ -251,7 +251,7 @@ function createWindowWithBounds(bounds) {
   mainWindow.on('ready-to-show',()=>{
     mainWindow.show()
     loadSidePanel()
-    createAllAppsWindow()
+    getAllAppsWindow()
   })
 
 	// Emitted when the window is closed.
