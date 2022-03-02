@@ -2,10 +2,11 @@ const xss = require("xss");
 
 const tsbSdk = {
   isThirdApp: Boolean,
+  tsbSaApp: JSON.parse(localStorage.getItem('TSB_SAAPP')),
   //初始化监听
   listener: function (Dep) {
-    if (window.hasOwnProperty("tsbSaApp")) {
-      window.tsbSaApp.isSystemApp
+    if (tsbSdk.tsbSaApp) {
+      tsbSdk.tsbSaApp.isSystemApp
         ? Object.defineProperty(tsbSdk, "isThirdApp", {
             writable: false,
             value: false,
@@ -49,11 +50,15 @@ const tsbSdk = {
           e.data.options.body = xss(e.data.options.body);
           //console.log(e.data.options.body, '输出转码后的')
           tsbSdk.noticeApp(e.data.options);
+          break;
         case "autoLoginSysApp":
           Dep[0].func(Dep[0].host)
+          break;
+        default:
+          console.log(messageEvent, '未命中🎯')
       }
     });
-    console.log("挂载了SDK");
+    console.log( tsbSdk.tsbSaApp, tsbSdk, "挂载了SDK");
   },
 
   handleCheckAuth: function (data) {
@@ -104,7 +109,7 @@ const tsbSdk = {
 
   handleHideApp: function () {
     if (!tsbSdk.isThirdApp) {
-      ipc.send("saAppHide", { appId: window.tsbSaApp.id });
+      ipc.send("saAppHide", { appId: tsbSdk.tsbSaApp.id });
     } else {
       window.postMessage({
         eventName: "saAppHide",
@@ -134,13 +139,14 @@ const tsbSdk = {
   noticeApp: function (options) {
     if (!tsbSdk.isThirdApp) {
       if (options.title.length > 0 && options.body.length > 0) {
-        ipc.send("saAppNotice", { options, saAppId: window.tsbSaApp.id });
+        ipc.send("saAppNotice", { options, saAppId: tsbSdk.tsbSaApp.id });
       } else {
         return;
       }
-    } else {
+    }
+    else {
       window.postMessage({
-        eventName: "saAppNotice",
+        eventName: "thirdSaAppNotice",
         options,
         saApp: window.tsbSaApp,
         hashId: window.tsbSDK.hashId,

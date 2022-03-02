@@ -504,7 +504,7 @@ const appManager = {
     if (saApp.package === 'com.thisky.group' && isDevelopmentMode) {
       // 当为开发环境下的时候，将团队强行更改为本地开发
       //todo 根据实际需求更改
-      //saApp.url = config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN
+      saApp.url = config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN
     }
 
     remote.enable(appView.webContents)
@@ -607,6 +607,9 @@ const appManager = {
     // appView.webContents.on('will-redirect', _handleExternalProtocol)
     let saAppObject = saApp
     delete saAppObject.window
+    if(saApp.id === 1) {
+      appView.webContents.send('initLumen', saApp)
+    }
     appView.webContents.send('init', { saApp: saAppObject })
     appView.webContents.once('dom-ready',()=>{
       if(option){
@@ -1136,9 +1139,6 @@ app.whenReady().then(() => {
     appManager.getWindowByAppId(args.id).setFullScreen(args.flag)
 
   })
-  ipc.handle('imPreloadReady', () => {
-    return appManager.getSaAppByAppId(1)
-  })
 
   ipc.on('saAppGoBack', (event, args) => {
     appManager.getWindowByAppId(args.id).view.webContents.goBack()
@@ -1175,7 +1175,6 @@ app.whenReady().then(() => {
 
 
   ipc.on('saAppNotice', (event, args) => {
-
     appManager.notification(args.saAppId, {
       title: args.options.title,
       body: args.options.body,

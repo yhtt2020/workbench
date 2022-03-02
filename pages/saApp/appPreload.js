@@ -86,7 +86,7 @@ ipc.on('init', (event, args) => {
           console.error('验证错误！')
         }
         break;
-      case 'saAppNotice':
+      case 'thirdSaAppNotice':
         if(e.data.hashId === sdkObject.hashId) {
           ipc.send('saAppNotice', {options: e.data.options, saAppId: e.data.saApp.id})
         } else {
