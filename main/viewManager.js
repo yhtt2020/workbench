@@ -39,6 +39,11 @@ function createView(existingViewId, id, webPreferencesString, boundsString, even
   } else {
     view = new BrowserView({webPreferences: Object.assign({}, defaultViewWebPreferences, JSON.parse(webPreferencesString))})
 
+    view.webContents.on('did-finish-load', () => {
+      //页面注入白色背景，防止因为背景未设置而导致view穿透
+      view.webContents.insertCSS('html { background-color: #fff; }')
+    })
+
     //mark插入对webviewInk的数据统计 但在主进程中，需要发送一个ipc到sidebar常驻子进程中去db操作
     SidePanel.send('countWebviewInk')
 
@@ -240,7 +245,9 @@ function setView(id) {
         hasFinded=true
       }
     })
-    if (!hasFinded) mainWindow.addBrowserView(viewMap[id])
+    if (!hasFinded) {
+      mainWindow.addBrowserView(viewMap[id])
+    }
     //mainWindow.removeBrowserView(needRemove)
   } else {
     mainWindow.setBrowserView(null)
