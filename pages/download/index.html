@@ -117,10 +117,10 @@
   const fs = require('fs')
   let {ipcMain} = require('electron')
   let {ipcRenderer} = require('electron')
-  //  db = require('../../../js/util/database').db
-  //
-  var db = new Dexie('test')
-  db.version(1).stores({
+
+
+  const db = new Dexie('browsingData2');
+  db.version(138).stores({
     download: 'path'
   });
 
@@ -174,7 +174,7 @@
   ipcRenderer.on('download-info', async (event, args) => {
     let aname;
     if (args.name.length >= 20) {
-      aname = args.name.substring(0, 15) + '...';
+      aname = args.name.substring(0, 7) + '...' + args.name.substring(args.name.length-6,args.name.length);
     } else (aname = args.name)
 
     if (args.status === 'start') {
@@ -191,7 +191,6 @@
         Url: args.Url,
       })
       appVue.count++
-      console.log(args.ChainUrl)
     }
 
     if (args.status === 'progressing' && args.path !== '') {
@@ -220,7 +219,12 @@
         Url: args.Url
       })
       appVue.count--
-      db.download.add(args)
+      db.download.add({
+        title:args.name,
+        total:((args.size.total) / 1024 / 1024).toFixed(2),
+        path:args.path,
+        Url:args.Url
+      })
     }
   })
 
@@ -245,18 +249,24 @@
        selectinglist:[],
        Url:'',
        doneid:'0',
-       sid:'0',
-       bid:'0',
+       sid:'0',//标记数据库中的id
        deleconfirm:false
      },
     created() {
        db.download.toArray().then(clist => {
+         console.log(clist)
          for(let i=0; i<=clist.length; i++){
+           let aname;
+           if (clist[i].title.length >= 20) {
+             aname = clist[i].title.substring(0, 7) + '...' + clist[i].title.substring(clist[i].title.length-6,clist[i].title.length);
+           } else (aname = clist[i].title)
          appVue.donelists.push({
-           title:clist[i].name,
-           total: ((clist[i].size.total) / 1024 / 1024).toFixed(2),
+           id:appVue.doneid++,
+           title:aname,
+           total: clist[i].total,
            path: clist[i].path,
-           Url: clist[i].Url
+           Url: clist[i].Url,
+           sid:clist[i].id
          })
        }
        })
@@ -282,7 +292,6 @@
         this.active = index;
       },
 
-
       hideModal() {
         console.log(this.selectinglist.path)
         ipcRenderer.send('deleteDownload', this.selectinglist.path)
@@ -303,7 +312,7 @@
       },
 
       hideModaldone(){
-        db.download.delete(appVue.selectlist.path);
+        db.download.delete(appVue.selectlist.sid);
         if(this.deleconfirm === true) {
           fs.unlinkSync(this.selectlist.path)
           this.donelists.splice(this.donelists.indexOf(this.selectlist), 1)
