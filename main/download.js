@@ -29,15 +29,21 @@ function isAttachment (header) {
   return /^\s*attache*?ment/i.test(header)
 }
 
+function createDownloadWindow() {
+  ipc.send('openDownloadManager')
+}
+
 function sendIPCToDownloadWindow(action, data) {
   // if there are no windows, create a new one
-  if (!downloadWindow) {
-    createWindow(function() {
-      downloadWindow.webContents.send(action, data || {})
-    })
-  } else {
-    downloadWindow.webContents.send(action, data || {})
-  }
+
+  // let downloadWindow;
+  // if (!downloadWindow) {
+  //   createDownloadWindow(function() {
+  //     downloadWindow.webContents.send(action, data || {})
+  //   })
+  // } else {
+  //   downloadWindow.webContents.send(action, data || {})
+  // }
 }
 
 function downloadHandler (event, item, webContents) {
