@@ -38,11 +38,8 @@ function createView(existingViewId, id, webPreferencesString, boundsString, even
     viewStateMap[id].loadedInitialURL = true
   } else {
     view = new BrowserView({webPreferences: Object.assign({}, defaultViewWebPreferences, JSON.parse(webPreferencesString))})
+    view.setBackgroundColor('#fff')
 
-    view.webContents.on('did-finish-load', () => {
-      //页面注入白色背景，防止因为背景未设置而导致view穿透
-      view.webContents.insertCSS('html { background-color: #fff; }')
-    })
 
     //mark插入对webviewInk的数据统计 但在主进程中，需要发送一个ipc到sidebar常驻子进程中去db操作
     SidePanel.send('countWebviewInk')
@@ -239,12 +236,19 @@ function setView(id) {
     //let needRemove=mainWindow.getBrowserView()
     let bvs=mainWindow.getBrowserViews()
     let hasFinded=false
+    let findedView=null
     bvs.forEach(bv=>{
       if(bv.webContents.id===viewMap[id].webContents.id){
-        mainWindow.setTopBrowserView(bv)
+        findedView=bv
         hasFinded=true
+      }else{
+        bv.setBounds({width:0,height:0,x:0,y:0})
       }
     })
+    if(findedView!==null){
+      //findedView.setBounds({width:mainWindow.getBounds().width})
+      mainWindow.setTopBrowserView(findedView)
+    }
     if (!hasFinded) {
       mainWindow.addBrowserView(viewMap[id])
     }
@@ -307,8 +311,9 @@ ipc.on('destroyAllViews', function () {
 })
 
 ipc.on('setView', function (e, args) {
-  setView(args.id)
   setBounds(args.id, args.bounds)
+  setView(args.id)
+
   if (args.focus) {
     if (SidePanel.alive() && sidePanel.get().isFocused()) {
       //如果侧边栏是焦点状态，则不去聚焦
