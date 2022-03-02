@@ -39,7 +39,7 @@
         <div class="block">
           <p>社区</p>
           <div class="selection-array">
-            <div class="select-btn">
+            <div class="select-btn" @click="openCircleHome">
               <img src="../../../icons/svg/com.svg" alt="">
               <div class="select-btn-word" >设置团队圈子</div>
             </div>
@@ -63,6 +63,7 @@
   </div>
   <script>
     const ipc = require("electron").ipcRenderer;
+    const { api } = require('../../../server-config')
     const appVue = new Vue({
       el: "#appVue",
       data() {
@@ -73,16 +74,18 @@
       methods: {
         searchMember() {
           //todo 然后这里利用groupid，打开这个新的团队
-          ipc.send('osxOpenSearchMember')
+          ipc.send('osxOpenSearchMember', this.groupId)
         },
         inviteMember() {
-          ipc.send('osxOpenInviteMember')
+          ipc.send('osxOpenInviteMember', this.groupId)
+        },
+        openCircleHome() {
+          ipc.send('addTab',{url: `${api.getUrl(api.API_URL.user.CIRCLE)}?id=${this.groupId}`})
         }
       }
     })
     window.$teamTip = appVue
     ipc.on('circleId', (event, args) => {
-      console.log(args, '@@@@@@@@')
       window.$teamTip.$data.groupId = args
     })
   </script>

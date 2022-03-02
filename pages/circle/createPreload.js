@@ -15,10 +15,8 @@ window.XMLHttpRequest.prototype.open = function (
   this.addEventListener("load", function () {
     if (url === `${config.SERVER_BACKEND_URL}${config.OSX.CREATE_CIRCLE}`) {
       var resObj = JSON.parse(this.responseText);
-      console.log(resObj, '????????');
       if(resObj.code == 200 && resObj.msg == 'ok') {
-        //todo 等志杰完成对id的返回
-        ipc.send('teamTip', resObj.data)
+        ipc.send('teamTip', Number(resObj.data.id))
       }
     }
   });

@@ -120,9 +120,8 @@ app.on('ready', () => {
         ]
       }
     })
-    //todo  圈子搜索添加成员url
     const { api } = require(path.join(__dirname, '//server-config.js'))
-    osxSearchMember.webContents.loadURL(api.getUrl(api.API_URL.user.CIRCLE_ADD_USER))
+    osxSearchMember.webContents.loadURL(`${api.getUrl(api.API_URL.user.CIRCLE_ADD_USER)}?id=${args}`)
     osxSearchMember.on('close', () => osxSearchMember = null)
   })
 
@@ -152,9 +151,8 @@ app.on('ready', () => {
         ]
       }
     })
-    //todo 圈子邀请添加成员url
     const { api } = require(path.join(__dirname, '//server-config.js'))
-    osxInviteMember.webContents.loadURL(api.getUrl(api.API_URL.user.CIRCLE_INVITELINK))
+    osxInviteMember.webContents.loadURL(`${api.getUrl(api.API_URL.user.CIRCLE_INVITELINK)}?id=${args}`)
     osxInviteMember.on('close', () => osxInviteMember = null)
   })
 
@@ -222,22 +220,22 @@ app.on('ready', () => {
       const btn = document.getElementsByClassName('form-item')[0].childNodes[0]
       let confirmBtn = null
       btn.addEventListener('click', () => {
-        window.$ipc.send('teamTip')
-        // confirmBtn = document.getElementsByClassName('button-box')[0] ? document.getElementsByClassName('button-box')[0].childNodes[2] : null
-        // if(confirmBtn) {
-        //   confirmBtn.onclick = () => {
-        //     let toastel
-        //     let interval = setInterval(() => {
-        //       toastel = document.getElementsByClassName('xm-toast')[0]
-        //       if (toastel && toastel.innerText === '创建成功') {
-        //         clearInterval(interval)
-        //         setTimeout(() => {
-        //           window.close()
-        //         }, 1000)
-        //       }
-        //     }, 200)
-        //   }
-        // }
+        //window.$ipc.send('teamTip')
+        confirmBtn = document.getElementsByClassName('button-box')[0] ? document.getElementsByClassName('button-box')[0].childNodes[2] : null
+        if(confirmBtn) {
+          confirmBtn.onclick = () => {
+            let toastel
+            let interval = setInterval(() => {
+              toastel = document.getElementsByClassName('xm-toast')[0]
+              if (toastel && toastel.innerText === '创建成功') {
+                clearInterval(interval)
+                setTimeout(() => {
+                  window.close()
+                }, 1000)
+              }
+            }, 200)
+          }
+        }
       })
     `, true)
     osxCreateCircle.on('close', () => osxCreateCircle = null)
