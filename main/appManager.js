@@ -504,7 +504,7 @@ const appManager = {
     if (saApp.package === 'com.thisky.group' && isDevelopmentMode) {
       // 当为开发环境下的时候，将团队强行更改为本地开发
       //todo 根据实际需求更改
-      saApp.url = config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN
+      //saApp.url = config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN
     }
 
     remote.enable(appView.webContents)
