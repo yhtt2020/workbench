@@ -9,7 +9,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, '../dist'),
     filename: "tsbSdk.js",
-    library: 'tsb-SDK',
+    library: 'tsbk',
     libraryTarget: 'umd',
     globalObject: 'this'
   },

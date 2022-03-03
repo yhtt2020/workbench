@@ -17,6 +17,7 @@ function apLog (e) {
 const appManager = {
   dockBadge: 0,
   settingWindow: null,
+  protocolManager:require('./js/main/protocolManager'),
   /**
    * 单个更新app信息
    * @param id
@@ -462,9 +463,19 @@ const appManager = {
       SidePanel.send('closeApp', { id: appId })
     }
   },
-  loadView (saApp, appWindow) {
+  loadView (saApp, appWindow,option) {
+    let preload=''
+    if(saApp.isSystemApp){
+      if(!!!saApp.preload || saApp.preload===''){
+        preload=path.join(__dirname + '/pages/saApp/appPreload.js')
+      }else{
+        preload=path.join(__dirname + saApp.preload)
+      }
+    }else{
+      preload=path.join(__dirname + '/pages/saApp/appPreload.js')
+    }
     let webPreferences = {
-      preload: saApp.isSystemApp ? path.join(__dirname + saApp.preload) : path.join(__dirname + '/pages/saApp/appPreload.js'),//后者是所有web应用公用的preload
+      preload: preload,//后者是所有web应用公用的preload
       nodeIntegration: saApp.isSystemApp,
       contextIsolation: !saApp.isSystemApp,
       enableRemoteModule: true,
@@ -597,7 +608,13 @@ const appManager = {
     let saAppObject = saApp
     delete saAppObject.window
     appView.webContents.send('init', { saApp: saAppObject })
-
+    appView.webContents.once('dom-ready',()=>{
+      if(option){
+        if(option.action){
+          appManager.protocolManager.handleAction(appWindow,option.action,option)
+        }
+      }
+    })
 
     // appView.webContents.on('found-in-page',(event,result)=>{
     //   appWindow.webContents.send('found-in-page',{data:result})
@@ -653,9 +670,10 @@ const appManager = {
     } else {
         let window=appManager.getWindowByAppId(saApp.id)
         appManager.focusWindow(saApp.windowId)
+
         if(option){
-          if(option.action==='redirect'){
-            window.view.webContents.loadURL(option.url)
+          if(option.action){
+            appManager.protocolManager.handleAction(window,option.action,option)
           }
         }
         appManager.clearAppBadge(saApp.id)
@@ -720,7 +738,7 @@ const appManager = {
       // if (process.platform !== 'darwin') {
       //   appWindow.setMenuBarVisibility(false)
       // }
-      let appView = appManager.loadView(saApp, appWindow)
+      let appView = appManager.loadView(saApp, appWindow,option)
       appWindow.setBrowserView(appView)
 
       appView.setBounds({
@@ -854,11 +872,7 @@ const appManager = {
       })
 
       appWindow.view=appView
-      if(option){
-        if(option.action==='redirect'){
-          appView.webContents.loadURL(option.url)
-        }
-      }
+
       processingAppWindows.push({
         window: appWindow,//在本地的对象中插入window对象，方便后续操作
         saApp: saApp
@@ -1176,28 +1190,13 @@ app.whenReady().then(() => {
     appManager.getWindowByAppId(args.appId).hide()
   })
 
+  ipc.on('handleFileAssign',(event,args)=>{
+    //转发到sidePanel
+    appManager.protocolManager.handleFileAssign(args.type,args.args,args.target)
+  })
+
   app.whenReady().then(() => {
     //注册tsb协议
-    protocol.registerFileProtocol('tsb', (request, callback) => {
-      try{
-        const url = request.url
-        const urlObj = new URL(url); // sunan://222?aa=bb&cc=dd
-        const { searchParams } = urlObj;
-        if(urlObj.hostname==='app')
-        {
-          //是app协议
-          let action=urlObj.pathname.split('/')[1]
-          if(action==='redirect'){
-            SidePanel.send('appRedirect',{
-              package:searchParams.get('package'),
-              url:searchParams.get('url'),
-              background:searchParams.get('background')!==null?searchParams.get('background'):true}
-            )
-          }
-        }
-      }catch(e){
-        electronLog.error(e)
-      }
-    })
+    appManager.protocolManager.initialize(SidePanel)
   })
 })

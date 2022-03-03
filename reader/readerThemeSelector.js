@@ -14,8 +14,10 @@ function isNight () {
 }
 
 function setTheme (theme) {
+  document.documentElement.setAttribute('theme',theme)
   document.body.setAttribute('theme', theme)
   if (window.rframe && window.rframe.contentDocument) {
+    rframe.contentDocument.documentElement.setAttribute('theme',theme)
     rframe.contentDocument.body.setAttribute('theme', theme)
   }
 

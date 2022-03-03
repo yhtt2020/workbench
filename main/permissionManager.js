@@ -32,6 +32,17 @@ Was permission already granted for this tab and URL?
 function isPermissionGrantedForContents (requestContents, requestPermission, requestDetails) {
   var requestOrigin = new URL(requestDetails.requestingUrl).hostname
 
+  //强制放行  //todo需要加上权限管理
+  let allowPermissions=[
+    'notifications',
+    'fullscreen',
+    'clipboard-sanitized-write',
+    'clipboard-read',
+    'media']
+  if(allowPermissions.indexOf(requestPermission)>-1)
+  {
+    return true
+  }
   for (var i = 0; i < grantedPermissions.length; i++) {
     var grantedOrigin = new URL(grantedPermissions[i].details.requestingUrl).hostname
 
@@ -101,7 +112,8 @@ function pagePermissionRequestHandler (webContents, permission, callback, detail
   const permissions=[
      'notifications',
      'fullscreen',
-    // 'clipboard-sanitized-write',
+     'clipboard-sanitized-write',
+     'clipboard-read',
     'media'
   ]
 
@@ -162,12 +174,13 @@ function pagePermissionRequestHandler (webContents, permission, callback, detail
 }
 
 function pagePermissionCheckHandler (webContents, permission, requestingOrigin, details) {
-  if (!details.isMainFrame) {
-    return false
-  }
+  // if (!details.isMainFrame) {
+  //   return false
+  // }
   // starting in Electron 13, this will sometimes be called with no URL. TODO figure out why
   if (!details.requestingUrl) {
-    return false
+    //return false
+    details.requestingUrl=requestingOrigin
   }
 
   if (permission === 'clipboard-sanitized-write') {
@@ -177,14 +190,20 @@ function pagePermissionCheckHandler (webContents, permission, requestingOrigin, 
   return isPermissionGrantedForContents(webContents, permission, details)
 }
 
+function devicePermissionHandler(details){
+  return true
+}
+
 app.once('ready', function () {
   session.defaultSession.setPermissionRequestHandler(pagePermissionRequestHandler)
   session.defaultSession.setPermissionCheckHandler(pagePermissionCheckHandler)
+  session.defaultSession.setDevicePermissionHandler(devicePermissionHandler)
 })
 
 app.on('session-created', function (session) {
   session.setPermissionRequestHandler(pagePermissionRequestHandler)
   session.setPermissionCheckHandler(pagePermissionCheckHandler)
+  session.setDevicePermissionHandler(devicePermissionHandler)
 })
 
 ipc.on('permissionGranted', function (e, permissionId) {

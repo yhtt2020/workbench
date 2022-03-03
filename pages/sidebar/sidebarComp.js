@@ -719,3 +719,39 @@ ipc.on('appRedirect',async (event,args)=>{
   }
   console.log(args)
 })
+/**
+ * 处理各种文件关联
+ */
+ipc.on('handleFileAssign',async (event,args)=>{
+  let app=null
+  if(args.target){
+    //已经指定了运行的方式
+  }else{
+    let assignApps=await standAloneAppModel.getFileAssginApps(args.type)
+    if(assignApps.length===0){
+      ipc.send('message',{type:'error',config:{content:'不存在可执行的相关应用'}})
+    }
+  if(assignApps.length>1){
+    //todo 选择一个app
+  }else{
+    ipc.send('executeApp',{
+      app:assignApps[0],
+      background:false,
+      option:{
+        action:'fileAssign',
+        filePath:args.args.filePath
+      }
+    })
+    console.log('sended',{
+      app:assignApps[0],
+      background:false,
+      option:{
+        action:'fileAssign',
+        filePath:args.args.filePath
+      }
+    })
+  }
+  }
+  console.log(args)
+  console.log('assigneApps',assignApps)
+})
