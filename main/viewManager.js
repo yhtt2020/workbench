@@ -9,7 +9,7 @@ var temporaryPopupViews = {} // id: view
 var viewBounds = {}
 var sidebarBounds = {}
 
-var defaultBrowserViewBg='#ffffff'
+var defaultBrowserViewBg='#620909'
 
 const defaultViewWebPreferences = {
   nodeIntegration: false,
@@ -327,6 +327,11 @@ ipc.on('hideCurrentView', function (e) {
   //onHideCurrentView()
 })
 function setCurrentBrowserView(needSetBrowserView){
+  if(process.platform==='win32'){
+    //windows上存在背景色bug，只能牺牲体验追求正确性
+    mainWindow.setBrowserView(needSetBrowserView)
+    return
+  }
   let bvs=mainWindow.getBrowserViews()
   let hasFinded=false
   let findedView=null
