@@ -9,7 +9,7 @@ var temporaryPopupViews = {} // id: view
 var viewBounds = {}
 var sidebarBounds = {}
 
-var defaultBrowserViewBg='#620909'
+var defaultBrowserViewBg='#ffffff'
 
 const defaultViewWebPreferences = {
   nodeIntegration: false,
