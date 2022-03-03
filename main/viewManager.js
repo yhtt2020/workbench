@@ -233,7 +233,10 @@ function setView(id) {
 
 function setBounds(id, bounds) {
   if (viewMap[id]) {
-    viewMap[id].setBounds(bounds)
+    let bvs=mainWindow.getBrowserViews()
+    bvs.forEach(bv=>{
+      bv.setBounds(bounds)
+    })
   }
   viewBounds = bounds
   // sidebarBounds={x:0,y:bounds.y,width:45,height:bounds.height}
