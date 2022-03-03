@@ -9,6 +9,8 @@ var temporaryPopupViews = {} // id: view
 var viewBounds = {}
 var sidebarBounds = {}
 
+var defaultBrowserViewBg='#ffffff'
+
 const defaultViewWebPreferences = {
   nodeIntegration: false,
   nodeIntegrationInSubFrames: true,
@@ -34,11 +36,11 @@ function createView(existingViewId, id, webPreferencesString, boundsString, even
     delete temporaryPopupViews[existingViewId]
 
     // the initial URL has already been loaded, so set the background color
-    view.setBackgroundColor('#fff')
+    view.setBackgroundColor(defaultBrowserViewBg)
     viewStateMap[id].loadedInitialURL = true
   } else {
     view = new BrowserView({webPreferences: Object.assign({}, defaultViewWebPreferences, JSON.parse(webPreferencesString))})
-    view.setBackgroundColor('#fff')
+    view.setBackgroundColor(defaultBrowserViewBg)
 
 
     //mark插入对webviewInk的数据统计 但在主进程中，需要发送一个ipc到sidebar常驻子进程中去db操作
@@ -233,25 +235,8 @@ function destroyAllViews() {
 
 function setView(id) {
   if (viewStateMap[id].loadedInitialURL) {
-    //let needRemove=mainWindow.getBrowserView()
-    let bvs=mainWindow.getBrowserViews()
-    let hasFinded=false
-    let findedView=null
-    bvs.forEach(bv=>{
-      if(bv.webContents.id===viewMap[id].webContents.id){
-        findedView=bv
-        hasFinded=true
-      }else{
-        bv.setBounds({width:0,height:0,x:0,y:0})
-      }
-    })
-    if(findedView!==null){
-      //findedView.setBounds({width:mainWindow.getBounds().width})
-      mainWindow.setTopBrowserView(findedView)
-    }
-    if (!hasFinded) {
-      mainWindow.addBrowserView(viewMap[id])
-    }
+    setCurrentBrowserView(viewMap[id])
+
     //mainWindow.removeBrowserView(needRemove)
   } else {
     mainWindow.setBrowserView(null)
@@ -311,9 +296,8 @@ ipc.on('destroyAllViews', function () {
 })
 
 ipc.on('setView', function (e, args) {
-  setBounds(args.id, args.bounds)
   setView(args.id)
-
+  setBounds(args.id, args.bounds)
   if (args.focus) {
     if (SidePanel.alive() && sidePanel.get().isFocused()) {
       //如果侧边栏是焦点状态，则不去聚焦
@@ -339,11 +323,31 @@ ipc.on('hideCurrentView', function (e) {
   //调用隐藏当前视图的回调到sidebar
   //onHideCurrentView()
 })
+function setCurrentBrowserView(needSetBrowserView){
+  let bvs=mainWindow.getBrowserViews()
+  let hasFinded=false
+  let findedView=null
+  bvs.forEach(bv=>{
+    if(bv.webContents.id===needSetBrowserView.webContents.id){
+      //如果是要设置的view则跳过
+      findedView=bv
+      hasFinded=true
+    }
+  })
+  if (!hasFinded) {
+    //如果不存在要寻找的view，则将view添加上去
+    mainWindow.addBrowserView(needSetBrowserView)
+  }else{
+    //mainWindow.addBrowserView(viewMap[id])
+    mainWindow.setTopBrowserView(findedView)
+  }
+}
+
 
 ipc.on('loadURLInView', function (e, args) {
   // wait until the first URL is loaded to set the background color so that new tabs can use a custom background
   if (!viewStateMap[args.id].loadedInitialURL) {
-    viewMap[args.id].setBackgroundColor('#fff')
+    viewMap[args.id].setBackgroundColor(defaultBrowserViewBg)
     // If the view has no URL, it won't be attached yet
     if (args.id === selectedView) {
       mainWindow.setBrowserView(viewMap[args.id])
