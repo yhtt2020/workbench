@@ -803,6 +803,12 @@ ipc.on('captureDeskScreen',(event,args)=>{
   })
 })
 let allAppsWindow=null
+function getAllAppsWindow(){
+  if(allAppsWindow===null){
+    createAllAppsWindow()
+  }
+  return allAppsWindow
+}
 function createAllAppsWindow(){
   allAppsWindow=new BrowserWindow({
     width: 600,
@@ -856,11 +862,9 @@ function createAllAppsWindow(){
 }
 
 ipc.on('showAllSaApps',(event,args)=>{
-  if(allAppsWindow===null){
-    createAllAppsWindow()
-  }else{
-    allAppsWindow.webContents.send('refresh')
-  }
+  getAllAppsWindow()
+  allAppsWindow.webContents.send('refresh')
+
   let mainBounds=mainWindow.getBounds()
   allAppsWindow.setBounds({
     x:mainBounds.x+170,

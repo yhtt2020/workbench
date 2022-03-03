@@ -99,9 +99,12 @@ const PasswordModel = {
         pwds.item.push(pwd)
       }
       if(includeRoot){
-        if(pwd.domain.indexOf(rootDomain)>-1){
-          pwds.rootItem.push(pwd)
+        if(pwd.domain){
+          if(pwd.domain.indexOf(rootDomain)>-1){
+            pwds.rootItem.push(pwd)
+          }
         }
+
       }
     })
     return pwds

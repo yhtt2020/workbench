@@ -19,7 +19,7 @@ files:
     - api/*
     - img/*.jpg
     - img/*.jpeg
-    - reader/*
+    - reader/**/*
     - resources/**/*
 dmg:
     sign: false

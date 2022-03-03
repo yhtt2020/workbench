@@ -14,13 +14,16 @@ body[theme="sepia"] {
   background-color: rgb(247, 231, 199);
   color: rgba(80, 55, 35, 1);
 }
-
+body[theme='light'] #auto-redirect-banner{
+  background: rgba(245, 245, 245, 0.58);
+  box-shadow: 0 0 3px rgba(42, 42, 42, 0.2);
+}
 #auto-redirect-banner {
-  max-width: 650px;
+  max-width: 890px;
   margin: 1em auto;
   border: 1px #ddd solid;
   padding: 0.5em;
-  border-radius: 3px;
+  border-radius: 6px;
   color: #333;
 }
 
@@ -38,7 +41,7 @@ body[theme="dark"] #auto-redirect-banner {
 }
 
 body[theme="dark"] #auto-redirect-button-area button {
-  color: dodgerblue;
+  color: #d2d2d2;
 }
 
 #auto-redirect-button-area {
@@ -49,11 +52,11 @@ body[theme="dark"] #auto-redirect-button-area button {
 #auto-redirect-button-area button {
   padding: 0.5em;
   margin-top: -0.5em;
-  color: royalblue;
+  color: #5d5d5d;
 }
 
 .dark-mode #auto-redirect-button-area button {
-  color: dodgerblue;
+  color: #494949;
 }
 
 #auto-redirect-button-area button:active {
@@ -61,14 +64,15 @@ body[theme="dark"] #auto-redirect-button-area button {
 }
 
 #backtoarticle {
-  max-width: 650px;
+  max-width: 890px;
   margin: auto;
   padding-top: 1.5em;
+  margin-bottom: 1em;
 }
 #backtoarticle-link {
-  color: dodgerblue;
+  color: #686868;
   cursor: pointer;
-  font-family: system-ui, ".SFNSText-Regular", sans-serif;
+  font-size: .9em;
   display: inline-block;
   padding: 1em;
   margin: -1em;

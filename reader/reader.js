@@ -205,10 +205,20 @@ function setReaderFrameSize () {
 }
 
 function startReaderView (article, date) {
-  var readerContent = "<link rel='stylesheet' href='readerContent.css'>"
+  var readerContent = "<link rel='stylesheet' href='readerContent.css'>" +
+    "<link rel='stylesheet' href='annotation.css'>" +
+    "<link rel='stylesheet' href='setting.css'>" +
+`<link rel='stylesheet' href='../ext/element-plus/element-plus.css'>
+<script src="../ext/vue/vue3.js"></script>
+<script src="../ext/element-plus/element-plus.js"></script>
+<script src="js-mark.js"></script>
+<style>
+
+</style>
+   `
 
   if (!article) { // we couln't parse an article
-    readerContent += "<div class='reader-main'><em>No article found.</em></div>"
+    readerContent += "<div class='reader-main'><em>未识别文章内容。</em></div>"
   } else {
     if (article.title) {
       document.title = article.title
@@ -218,18 +228,46 @@ function startReaderView (article, date) {
 
     var readerDomain = articleLocation.hostname
 
-    readerContent += "<div class='reader-main' domain='" + readerDomain + "'>" + "<h1 class='article-title'>" + (article.title || '') + '</h1>'
+    readerContent += "<div id=\"app\" class='content'><div id='reader-main' class='reader-main' domain='" + readerDomain + "'>" + "<h1 class='article-title'>" + (article.title || '') + '</h1>'
 
     if (article.byline || date) {
       readerContent += "<h2 class='article-authors'>" + (article.byline ? article.byline : '') + (date ? ' (' + date + ')' : '') + '</h2>'
     }
 
-    readerContent += article.content + '</div>'
+    readerContent += article.content + ''
+    readerContent+=`</div>
+       <div style="box-shadow:0 0 6px rgba(86,86,86,0.22);line-height: 20px;border:none;border-radius: 6px;padding: 10px;text-align: center;width: auto;margin-right: 10px;margin-top: 10px" class="annotation marked">
+       本页面共 <strong>{{antRecords.length}}</strong> 条标注
+</div>
+    <div class="annotation marked" v-for="item in antRecords" :data-uid="item.uid">
+                <template v-if="!item.isEdit">
+                    {{item.desc}}
+                </template>
+                <template v-else>
+                    <span class="label">标注</span>
+                    <div>
+                        <template v-for="(className,i) in cssStyle">
+                            <span class="block color-block" :class="className"
+                                @click="setMarkClass($event,className,item.uid)"></span>
+                        </template>
+                    </div>
+
+                    <textarea class="textDesc" placeholder="备注" v-model="textDesc"></textarea>
+                    <div>
+                        <span class="block save" @click="save(item.uid)">保存</span>
+                        <span class=" block delete" @click="deleteAnnotation(item.uid)">删除</span>
+                    </div>
+                </template>
+            </div>
+           </div>
+</div>
+<script type="module" src="index.js" setup></script>`
+
   }
 
   window.rframe = document.createElement('iframe')
   rframe.classList.add('reader-frame')
-  rframe.sandbox = 'allow-same-origin allow-top-navigation allow-modals'
+  //rframe.sandbox = 'allow-same-origin allow-top-navigation allow-modals allow-scripts'
   rframe.srcdoc = readerContent
 
   // set an initial height equal to the available space in the window
@@ -270,11 +308,16 @@ function startReaderView (article, date) {
 
 function processArticle (data) {
   var parserframe = document.createElement('iframe')
+  data=data.replace( /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '').replace( /<link\b[^<]*\/>/gi, '');
+  data=data.replace(/ src="\/\//g,' src="'+ articleLocation.protocol+'//').replace(/"\/\//g,'"'+ articleLocation.protocol+'//')
+  console.log(data)
   parserframe.className = 'temporary-frame'
-  parserframe.sandbox = 'allow-same-origin'
+  parserframe.sandbox = 'allow-same-origin allow-scripts'
   document.body.appendChild(parserframe)
 
   parserframe.srcdoc = data
+
+
 
   parserframe.onload = function () {
     // allow readability to parse relative links correctly
@@ -353,7 +396,6 @@ function processArticle (data) {
     var date = extractDate(doc)
 
     var article = new Readability(doc).parse()
-    console.log(article)
     startReaderView(article, date)
 
     if (article) {
@@ -362,6 +404,7 @@ function processArticle (data) {
     }
 
     document.body.removeChild(parserframe)
+
   }
 }
 
@@ -397,7 +440,7 @@ fetch(articleURL, {
     console.warn('request failed with error', data)
 
     startReaderView({
-      content: '<em>Failed to load article.</em>'
+      content: '<em>读取文章失败。</em>'
     })
   })
 

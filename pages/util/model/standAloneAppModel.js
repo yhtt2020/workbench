@@ -3,7 +3,9 @@ const serverConfig = require('../../../server-config.js').config
 const systemAppPackage=[
   'com.thisky.group',
   'com.thisky.fav',
-  'com.thisky.import'
+  'com.thisky.import',
+  'com.thisky.helper',
+  'com.thisky.imageEditor'
 ]  //包名为上述包名的判定为系统应用
 const standAloneAppModel = {
   async initialize() {
@@ -40,7 +42,6 @@ const standAloneAppModel = {
     db.standAloneApps.update(2,{package:'com.thisky.com','name':'元社区','url':'https://s.apps.vip','logo':'../../icons/apps/yuan.png'})
     await db.standAloneApps.update(2,{themeColor:'#4188ff'})
     await db.standAloneApps.update(3,{themeColor:'#8618d2'})
-
     let importHelper=await  db.standAloneApps.get({package:'com.thisky.import'})
     let importHelperApp=  {
       name: '导入助手',
@@ -70,8 +71,38 @@ const standAloneAppModel = {
     }
     if(!!!importHelper){
       db.standAloneApps.add(importHelperApp)
-    }else{
-      db.standAloneApps.update(importHelper.id,importHelperApp)
+    }
+    let timer= await db.standAloneApps.get({package:'com.thisky.timer'})
+    if(timer){
+      await db.standAloneApps.update(timer.id,{url:'https://a.apps.vip/timer',logo:'https://a.apps.vip/timer/icon.svg'})
+    }
+
+
+    let helper= await db.standAloneApps.get({package:'com.thisky.helper'})
+    if(!!!helper){
+      db.standAloneApps.add( {
+        name: '帮助教程',
+        logo: '../../icons/apps/help.png',
+        url: 'https://www.yuque.com/tswork/ngd5zk/iuguin',
+        package:'com.thisky.helper',
+        themeColor: '#ff7b42',
+        author: '想天软件',
+        site: 'https://apps.vip/',
+        checked: true,
+        summary: '帮助手册，让你从零开始学会掌握想天浏览器。',
+        settings: JSON.stringify({
+          bounds: {
+            width: 1200,
+            height: 800
+          },
+          alwaysTop: false,
+          showInSideBar: true,
+        })
+      })
+    }
+    let imageEditor = await db.standAloneApps.get({name:'图片编辑器'})
+    if(imageEditor){
+     await  db.standAloneApps.update(imageEditor.id,{package:'com.thisky.imageEditor',fileAssign:['image'],url:'https://a.apps.vip/imageEditor/','logo':'https://a.apps.vip/imageEditor/icon.svg'})
     }
 
   },
@@ -178,6 +209,9 @@ const standAloneAppModel = {
     })
     return data
   },
+  async getFromPackage(packageName){
+    return await db.standAloneApps.where({package:packageName}).first()
+  },
   isSystemApp(app){
     app.package=app.package||''
     return systemAppPackage.indexOf(app.package)>-1
@@ -212,6 +246,7 @@ const standAloneAppModel = {
   async insertDefaultApps() {
     const defaultApps = [
       {
+        id:1,
         name: '团队协作',
         logo: '../../icons/svg/chat.svg',
         summary: '团队协作，与团队成员高效协作',
@@ -239,32 +274,7 @@ const standAloneAppModel = {
         unreadCount: 0,
       },
       {
-        name: '导入助手',
-        logo: '../../icons/apps/import.svg',
-        summary: '快速导入其他浏览器的书签、密码，设置为您的默认浏览器。',
-        type: 'local',
-        //url: serverConfig.IM.FRONT_URL+ serverConfig.IM.AUTO_LOGIN,
-        url: '/pages/import/index.html',
-        preload: '/pages/group/imPreload.js',
-        package:'com.thisky.group',
-        themeColor: '#689aff',
-        userThemeColor: '',
-        createTime: Date.now(),
-        updateTime: Date.now(),
-        accountAvatar: '',
-        order: 0,
-        useCount: 0,
-        lastExecuteTime: Date.now(),
-        settings: JSON.stringify({
-          bounds: {
-            width: 920,
-            height: 720
-          },
-          showInSideBar:true
-        }),
-        unreadCount: 1,
-      },
-      {
+        id:2,
         name: '元社区',
         logo: '../../icons/apps/yuan.png',
         package:'com.thisky.com',
@@ -290,6 +300,7 @@ const standAloneAppModel = {
         unreadCount: 0,
       },
       {
+        id:3,
         name: '收藏夹',
         logo: '../../icons/svg/apps.svg',
         summary: '收集你的灵感，集锦',
@@ -313,6 +324,65 @@ const standAloneAppModel = {
           showInSideBar:true,
         }),
         unreadCount: 0,
+      },
+      {
+        id:4,
+        name: '导入助手',
+        logo: '../../icons/apps/import.svg',
+        summary: '快速导入其他浏览器的书签、密码，设置为您的默认浏览器。',
+        type: 'local',
+        //url: serverConfig.IM.FRONT_URL+ serverConfig.IM.AUTO_LOGIN,
+        url: '/pages/import/index.html',
+        preload: '/pages/group/imPreload.js',
+        package:'com.thisky.import',
+        themeColor: '#689aff',
+        userThemeColor: '',
+        createTime: Date.now(),
+        updateTime: Date.now(),
+        accountAvatar: '',
+        order: 0,
+        useCount: 0,
+        lastExecuteTime: Date.now(),
+        settings: JSON.stringify({
+          bounds: {
+            width: 920,
+            height: 720
+          },
+          showInSideBar:true
+        }),
+        unreadCount: 1,
+      },
+      {
+        id:5,
+        name: '图片编辑器',
+        themeColor: 'rgb(90,170,60)',
+        author: '想天软件',
+        site: 'http://apps.vip',
+        logo: 'https://a.apps.vip/imageEditor/icon.svg',
+        url: 'https://a.apps.vip/imageEditor/',
+        package: 'com.thisky.imageEditor',
+        summary: '可以为您的图片增加相框、贴纸、文字、进行简单裁减、旋转，还可以添加滤镜。',
+        fileAssign:['image']
+      },
+      {
+        id:7,
+        name: '帮助教程',
+        logo: '../../icons/apps/help.png',
+        url: 'https://www.yuque.com/tswork/ngd5zk/iuguin',
+        package:'com.thisky.helper',
+        themeColor: '#ff7b42',
+        author: '想天软件',
+        site: 'https://apps.vip/',
+        checked: true,
+        summary: '帮助手册，让你从零开始学会掌握想天浏览器。',
+        settings: JSON.stringify({
+          bounds: {
+            width: 1200,
+            height: 800
+          },
+          alwaysTop: false,
+          showInSideBar: true,
+        })
       }
     ]
     return await db.standAloneApps.bulkAdd(defaultApps)
@@ -345,6 +415,16 @@ const standAloneAppModel = {
   },
   async countApps() {
     return await db.standAloneApps.count()
+  },
+  async getFileAssginApps(fileType){
+    let assigned=await db.standAloneApps.where('fileAssign').equals(fileType).toArray()
+    if(assigned){
+      assigned.forEach(item=>{
+        item.isSystemApp=standAloneAppModel.isSystemApp(item)
+      })
+    }
+
+    return assigned
   }
 
 }

@@ -17,6 +17,7 @@ function apLog (e) {
 const appManager = {
   dockBadge: 0,
   settingWindow: null,
+  protocolManager:require('./js/main/protocolManager'),
   /**
    * 单个更新app信息
    * @param id
@@ -462,9 +463,19 @@ const appManager = {
       SidePanel.send('closeApp', { id: appId })
     }
   },
-  loadView (saApp, appWindow) {
+  loadView (saApp, appWindow,option) {
+    let preload=''
+    if(saApp.isSystemApp){
+      if(!!!saApp.preload || saApp.preload===''){
+        preload=path.join(__dirname + '/pages/saApp/appPreload.js')
+      }else{
+        preload=path.join(__dirname + saApp.preload)
+      }
+    }else{
+      preload=path.join(__dirname + '/pages/saApp/appPreload.js')
+    }
     let webPreferences = {
-      preload: saApp.isSystemApp ? path.join(__dirname + saApp.preload) : path.join(__dirname + '/pages/saApp/appPreload.js'),//后者是所有web应用公用的preload
+      preload: preload,//后者是所有web应用公用的preload
       nodeIntegration: saApp.isSystemApp,
       contextIsolation: !saApp.isSystemApp,
       enableRemoteModule: true,
@@ -551,11 +562,59 @@ const appManager = {
         event.preventDefault()
       }
     })
-
+    // function _handleExternalProtocol(e, url, isInPlace, isMainFrame, frameProcessId, frameRoutingId){
+    //   console.log(url)
+    //   var knownProtocols = ['http', 'https', 'file', 'min', 'about', 'data', 'javascript', 'chrome','tsb'] // TODO anything else? tsb是新增的协议
+    //   console.log('url=',url)
+    //   if (!knownProtocols.includes(url.split(':')[0])) {
+    //     var externalApp = app.getApplicationNameForProtocol(url)
+    //     if (externalApp) {
+    //       // TODO find a better way to do this
+    //       // (the reason to use executeJS instead of the Electron dialog API is so we get the "prevent this page from creating additional dialogs" checkbox)
+    //       var sanitizedName = externalApp.replace(/[^a-zA-Z0-9.]/g, '')
+    //       if (appView.webContents.getURL()) {
+    //         appView.webContents.executeJavaScript('confirm("' + l('openExternalApp').replace('%s', sanitizedName) + '")').then(function (result) {
+    //           if (result === true) {
+    //             electron.shell.openExternal(url)
+    //           }
+    //         })
+    //       } else {
+    //         // the code above tries to show the dialog in a browserview, but if the view has no URL, this won't work.
+    //         // so show the dialog globally as a fallback
+    //         var result = electron.dialog.showMessageBoxSync({
+    //           type: 'question',
+    //           buttons: ['OK', 'Cancel'],
+    //           message: l('openExternalApp').replace('%s', sanitizedName).replace(/\\/g, '')
+    //         })
+    //
+    //         if (result === 0) {
+    //           electron.shell.openExternal(url)
+    //         }
+    //       }
+    //     }
+    //   }
+    //   else {
+    //     console.log('else=',url)
+    //
+    //   }
+    // }
+    // appView.webContents.on('did-start-navigation', _handleExternalProtocol)
+    // /*
+    // It's possible for an HTTP request to redirect to an external app link
+    // (primary use case for this is OAuth from desktop app > browser > back to app)
+    // and did-start-navigation isn't (always?) emitted for redirects, so we need this handler as well
+    // */
+    // appView.webContents.on('will-redirect', _handleExternalProtocol)
     let saAppObject = saApp
     delete saAppObject.window
     appView.webContents.send('init', { saApp: saAppObject })
-
+    appView.webContents.once('dom-ready',()=>{
+      if(option){
+        if(option.action){
+          appManager.protocolManager.handleAction(appWindow,option.action,option)
+        }
+      }
+    })
 
     // appView.webContents.on('found-in-page',(event,result)=>{
     //   appWindow.webContents.send('found-in-page',{data:result})
@@ -588,17 +647,19 @@ const appManager = {
       //todo 判断linux
     })
     if (isDevelopmentMode){
-      appView.webContents.openDevTools()
+      //appView.webContents.openDevTools()
     }
     return appView
 
   },
-  openApp(appId,background=false,app){
+
+
+  openApp(appId,background=false,app,option={}){
     let saApp = appManager.getSaAppByAppId(appId)
     if (!!!saApp) {
       //首先必须是没运行的
       saApp = app
-      appManager.executeApp(saApp,background)
+      appManager.executeApp(saApp,background,option)
       // if (!saApp) {
       //   //如果不存在，直接运行
       //   appManager.executeApp(saApp, background)
@@ -607,8 +668,14 @@ const appManager = {
       //   appManager.executeApp(saApp, background)
       // }
     } else {
-        appManager.getWindowByAppId(saApp.id)
+        let window=appManager.getWindowByAppId(saApp.id)
         appManager.focusWindow(saApp.windowId)
+
+        if(option){
+          if(option.action){
+            appManager.protocolManager.handleAction(window,option.action,option)
+          }
+        }
         appManager.clearAppBadge(saApp.id)
     }
   },
@@ -617,7 +684,7 @@ const appManager = {
    * @param saApp 一个应用实体
    * @param background 是否后台运行，是则运行后不显示
    */
-  executeApp (saApp, background = false) {
+  executeApp (saApp, background = false,option) {
     saApp.settings=saApp.settings?saApp.settings:{}
     if (1) {
       //todo 判断一下是不是独立窗体模式
@@ -671,7 +738,7 @@ const appManager = {
       // if (process.platform !== 'darwin') {
       //   appWindow.setMenuBarVisibility(false)
       // }
-      let appView = appManager.loadView(saApp, appWindow)
+      let appView = appManager.loadView(saApp, appWindow,option)
       appWindow.setBrowserView(appView)
 
       appView.setBounds({
@@ -805,6 +872,7 @@ const appManager = {
       })
 
       appWindow.view=appView
+
       processingAppWindows.push({
         window: appWindow,//在本地的对象中插入window对象，方便后续操作
         saApp: saApp
@@ -827,7 +895,12 @@ app.whenReady().then(() => {
 
   ipc.on('executeApp', (event, args) => {
     //这里传app，代表app未运行则直接执行起来
-    appManager.openApp(args.app.id,args.background,args.app)
+    try{
+      appManager.openApp(args.app.id,args.background,args.app,args.option)
+    }catch(e){
+      electronLog.error(e)
+    }
+
   })
   ipc.on(ipcMessageMain.saApps.createAppMenu, (event, args) => {
     let appId = args.id
@@ -1117,4 +1190,13 @@ app.whenReady().then(() => {
     appManager.getWindowByAppId(args.appId).hide()
   })
 
+  ipc.on('handleFileAssign',(event,args)=>{
+    //转发到sidePanel
+    appManager.protocolManager.handleFileAssign(args.type,args.args,args.target)
+  })
+
+  app.whenReady().then(() => {
+    //注册tsb协议
+    appManager.protocolManager.initialize(SidePanel)
+  })
 })
