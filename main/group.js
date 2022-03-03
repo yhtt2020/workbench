@@ -77,6 +77,7 @@ app.on('ready', () => {
       resizable: false,
       webPreferences: {
         devTools: true,
+        preload: __dirname + '/pages/circle/teamTip/teamTipPreload.js',
         nodeIntegration: true,
         contextIsolation: false,
         additionalArguments: [
@@ -220,7 +221,7 @@ app.on('ready', () => {
       const btn = document.getElementsByClassName('form-item')[0].childNodes[0]
       let confirmBtn = null
       btn.addEventListener('click', () => {
-        //window.$ipc.send('teamTip')
+        window.$ipc.send('teamTip')
         confirmBtn = document.getElementsByClassName('button-box')[0] ? document.getElementsByClassName('button-box')[0].childNodes[2] : null
         if(confirmBtn) {
           confirmBtn.onclick = () => {
