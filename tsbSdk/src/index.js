@@ -160,4 +160,18 @@ export default class tsbk {
       })
     }
   }
+
+  //打开内置某个应用,并Lumen支持跳转具体链接(可选)
+  static openSysApp(options) {
+    if(options && tsbk.sdkSwitch) {
+      window.postMessage({
+        eventName: 'openSysApp',
+        options: options
+      })
+      options.hasOwnProperty('success') ? options.success() : false
+    } else {
+      options.hasOwnProperty("fail") ? options.fail() : false;
+      return
+    }
+  }
 }

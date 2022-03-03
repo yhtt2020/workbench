@@ -2,11 +2,11 @@
 `npm run build`
 
 ###### 1、进入到electron-app/tsbSdk中执行上面的命令
-###### 2、SDK文件在browser项目中采用一异步引入的方式，避免资源对项目资源的竞争
+###### 2、SDK文件支持ES Module、CommonJS、AMD的调用
 ###### 3、目前预留了(支持sdk鉴权的设计)，后续需配合后端完善
 ###### 4、设计大致参考[微信JSSDK](https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/JS-SDK.html#1)
-###### 5、第三方应用需要使用tsb-SDK的页面必须先注入config配置信息，否则将无法调用
-###### 6、如需全局应用，在mixin或main文件中相应的created方法中预先注入config配置信息，在其他页面文件中就无需重复注入了
+###### 5、在类似Vue的SPA单页面项目中使用需注意：要使用tsb-SDK的页面必须先注入config配置信息，否则将无法调用。如需全局应用，在mixin或main文件中相应的created方法中预先注入config配置信息，在其他页面文件中就无需重复注入。
+###### 6、在html文件中直接使用需注意：script标签中引入sdk，在window.onload方法上挂上tsbk.default.config配置信息。再具体的事件上调用tsbk.default.ready()和tabk.default.xx方法。
 ###### 7、完善后建包发布npm
 
 #### 【Mark此部分内容是平台侧的知识点，应用侧开发无需阅读】
@@ -27,7 +27,7 @@
 
 ##### 步骤一、💥引入tsbSdk
 `import tsbk from 路径地址`  ES module引入
-`<script src="路径文件"></script>`  script标签引入 对象在全局tsbk.default中
+`<script src="路径文件"></script>`  script标签引入 ❗️对象在全局tsbk.default中
 
 ##### 步骤二、💥通过config接口注入权限验证配置
 第三方应用需要使用tsb-SDK的页面必须先注入config配置信息，否则将无法调用。对于变化url的SPA的web app可在每次url变化时注入config配置信息。
@@ -63,20 +63,20 @@ wx.error(function(res){
 
 ```
 
-#### 4、接口调用说明📖 
+#### 4、接口调用说明📖
 ##### 🤔通用参数，可选
 所有接口通过tsbk对象来调用，参数是一个对象，除了每个接口本身需要传的参数之外，还有以下通用参数：
 >- success：接口调用成功时执行的回调函数。
 >- fail：接口调用失败时执行的回调函数。
 
-##### 一、💥隐藏第三方应用(后台常驻) hideApp方法
+##### 一、🧊隐藏第三方应用(后台常驻) hideApp方法
 示例
 ```
 tsbk.ready(function() {
   tsbk.hideApp()
 })
 ```
-##### 二、💥新启动一个指定url的标签页 tabLinkJump方法
+##### 二、🧊新启动一个指定url的标签页 tabLinkJump方法
 ###### 参数: 1、必填【url: String】
 示例
 ```
@@ -87,7 +87,7 @@ tsbk.ready(function() {
 })
 
 ```
-##### 三、💥销毁第三方应用 destoryApp方法
+##### 三、🧊销毁第三方应用 destoryApp方法
 示例
 ```
 tsbk.ready(function() {
@@ -95,7 +95,7 @@ tsbk.ready(function() {
 })
 ```
 
-##### 四、💥系统消息提示
+##### 四、🧊系统消息提示
 示例
 ```
 tsbk.ready(function() {
@@ -106,11 +106,24 @@ tsbk.ready(function() {
 })
 ```
 
-##### 五、💥想天内置应用的免登
+##### 五、🧊想天内置应用的免登
 示例
 ```
 tsbk.ready(function() {
   tsbk.autoLoginSysApp()
+})
+```
+
+##### 六、🧊唤醒想天内置应用【仅支持后台休眠的内置应用】
+###### 参数: 1、必填【appName: String】,目前想天内置应用名单【团队协作、元社区、收藏夹、导入助手】
+###### 参数：2、可选【url: String】，内置应用跳转链接path和parameters组成部分，目前仅支持元社区和团队协作的跳转
+示例
+```
+tsbk.ready(function() {
+  tsbk.openSysApp({
+    appName: '团队协作',
+    url: '....'
+  })
 })
 ```
 
