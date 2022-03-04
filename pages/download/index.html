@@ -120,7 +120,7 @@
 
 
   const db = new Dexie('browsingData2');
-  db.version(138).stores({
+  db.version(140).stores({
     download: 'path'
   });
 
@@ -223,7 +223,7 @@
         title:args.name,
         total:((args.size.total) / 1024 / 1024).toFixed(2),
         path:args.path,
-        Url:args.Url
+        Url:args.Url,
       })
     }
   })

@@ -61,7 +61,6 @@ function createSiteCardWin (args) {
     siteCardWindow.on('show', () => {
       siteCardWindow.focus()
     })
-
   } else {
     siteCardWindow.close()
     siteCardWindow = null

@@ -16,29 +16,17 @@ function createDownloadWin () {
         contextIsolation: false,
       }
     })
+    // downloadWindow.on('close', (e) => {
+    //     e.preventDefault();
+    //     downloadWindow.hide();
+    // });
 
-    var parent_x = mainWindow.getPosition()[0]
-    var parent_y = mainWindow.getPosition()[1]
-    var parent_size_x = mainWindow.getSize()[0]
-    var parent_size_y = mainWindow.getSize()[1]
-    var siteCardWindow_size_x = siteCardWindow.getSize()[0]
-    var siteCardWindow_size_y = siteCardWindow.getSize()[1]
-    var siteCardWindows_new_x = parent_x + (parent_size_x - siteCardWindow_size_x) / 2
-    var siteCardWindow_new_y = parent_y + (parent_size_y - siteCardWindow_size_y) / 2
-    siteCardWindow.setPosition(parseInt(siteCardWindows_new_x), parseInt(siteCardWindow_new_y), false)
-
-
-    downloadWindow.on('close', () => downloadWindow = null)
-    downloadWindow.on('show', () => {
-      downloadWindow.focus()
-    })
     downloadWindow.webContents.loadURL('file://' + __dirname + '/pages/download/index.html')
   } else {
-    userScriptWindow.close()
-    userScriptWindow = null
+    downloadWindow.close()
+    downloadWindow = null
   }
 }
-
 
 app.whenReady().then(() => {
 
@@ -48,9 +36,7 @@ app.whenReady().then(() => {
 
 })
 
-
-let {ipcMain} = require('electron')
-ipcMain.on('show-context-menuing', (event,args) => {
+ipc.on('show-context-menuing', (event,args) => {
   console.log(args)
   const template = [
     {
@@ -74,7 +60,7 @@ ipcMain.on('show-context-menuing', (event,args) => {
 })
 
 
-ipcMain.on('show-context-menudone', (event) => {
+ipc.on('show-context-menudone', (event) => {
   const template = [
     {
       label: '打开',

@@ -14,6 +14,7 @@ const modules = [
   'main/bindIPC.js',
   'main/appManager.js',
   'main/siteCard.js',
+  'main/downloadCard.js',
   'main/userScript.js',
   'main/handleAxios.js',
   'main/group.js',

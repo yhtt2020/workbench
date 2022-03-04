@@ -227,7 +227,7 @@ db.version(139).stores({
 
 
 
-db.version(138).stores({
+db.version(140).stores({
   /*
   color - the main color of the page, extracted from the page icon
   pageHTML - a saved copy of the page's HTML, when it was last visited. Removed in 1.6.0, so all pages visited after then will have an empty string in this field.
@@ -245,7 +245,7 @@ db.version(138).stores({
   system: '++id,&name,value',
   dockApps:'++id,name,url,icon,order',
   appList:'++id,name,createTime,updateTime,order,summary,appsCount,parentId,type,path,sort',//应用列表 type:0.默认，大图标,1.小图标,2.列表  path存储路径树，便于后面查询
-  download:'title,total,path,Url'
+  download:'++id,title,total,path,Url'
 })
 
 
