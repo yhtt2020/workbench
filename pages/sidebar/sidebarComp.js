@@ -194,8 +194,8 @@ Vue.component('sidebar', {
     openCircleSetting(args) {
       ipc.send('osxOpenCircleSetting', args)
     },
-    openLumen() {
-      ipc.send('saAppOpen', {saAppId: 1})
+    openLumen(id) {
+      ipc.send('saAppOpen', {saAppId: 1, options: {circleId: id}})
     },
     /**
      * app浮窗显示隐藏

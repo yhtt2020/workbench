@@ -116,13 +116,24 @@ tsbk.ready(function() {
 
 ##### 六、🧊唤醒想天内置应用【仅支持后台休眠的内置应用】
 ###### 参数: 1、必填【appName: String】,目前想天内置应用名单【团队协作、元社区、收藏夹、导入助手】
-###### 参数：2、可选【url: String】，内置应用跳转链接path和parameters组成部分，目前仅支持元社区和团队协作的跳转
+###### 参数：2、可选【url: String】，内置应用跳转链接path和parameters组成部分(不包含第一个'/')，目前仅支持元社区和团队协作的跳转
 示例
 ```
 tsbk.ready(function() {
   tsbk.openSysApp({
     appName: '团队协作',
-    url: '....'
+    url: '?fid=xxxxxxx'
+  })
+})
+```
+
+#####  七、🧊创建短说圈子邀请链接窗体
+###### 参数: 1、必填【groupId: Number】,圈子的id
+示例
+```
+tsbk.ready(function() {
+  tsbk.openOsxInviteMember({
+    groupId: 424
   })
 })
 ```

@@ -161,11 +161,25 @@ export default class tsbk {
     }
   }
 
-  //打开内置某个应用,并Lumen支持跳转具体链接(可选)
+  //打开内置某个应用,元社区和团队协作支持跳转具体链接(可选)
   static openSysApp(options) {
     if(options && tsbk.sdkSwitch) {
       window.postMessage({
         eventName: 'openSysApp',
+        options: options
+      })
+      options.hasOwnProperty('success') ? options.success() : false
+    } else {
+      options.hasOwnProperty("fail") ? options.fail() : false;
+      return
+    }
+  }
+
+  //创建短说圈子邀请链接窗体
+  static openOsxInviteMember(options) {
+    if(options && tsbk.sdkSwitch) {
+      window.postMessage({
+        eventName: 'openOsxInviteMember',
         options: options
       })
       options.hasOwnProperty('success') ? options.success() : false

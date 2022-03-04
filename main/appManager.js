@@ -1183,6 +1183,11 @@ app.whenReady().then(() => {
 
   ipc.on('saAppOpen', (event, args) => {
     appManager.showAppWindow(args.saAppId)
+    const appInfo = appManager.getSaAppByAppId(args.saAppId)
+    const reg = /^http(s)?:\/\/(.*?)\//
+    const host = reg.exec(appInfo.url)[0]
+    appManager.getWindowByAppId(args.saAppId).view.webContents.loadURL(`${host}?fid=${args.options.circleId}`)
+
   })
 
   ipc.on('saAppTabNavigate', (event, args) => {

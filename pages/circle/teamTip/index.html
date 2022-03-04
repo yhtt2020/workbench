@@ -93,7 +93,8 @@
         openLumen() {
           tsbk.default.ready(function() {
           tsbk.default.openSysApp({
-            appName: '团队协作'
+            appName: '团队协作',
+            url: `?fid=${this.groupId}`
           })
         });
         }

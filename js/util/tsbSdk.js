@@ -57,6 +57,9 @@ const tsbSdk = {
         case "openSysApp":
           tsbSdk.openSysApp(e.data.options);
           break;
+        case 'openOsxInviteMember':
+          tsbSdk.openOsxInviteMember(e.data.options)
+          break;
         default:
           console.log(messageEvent, "未命中🎯");
       }
@@ -187,6 +190,23 @@ const tsbSdk = {
       });
     }
   },
+
+  openOsxInviteMember: function (options) {
+    if (Object.keys(options).length === 0) return;
+
+    if(!options.groupId) return;
+
+    if (!tsbSdk.isThirdApp) {
+      ipc.send('osxOpenInviteMember', options.groupId)
+    } else {
+      window.postMessage({
+        eventName: 'thirdOsxOpenInviteMember',
+        options,
+        saApp: window.tsbSaApp,
+        hashId: window.tsbSDK.hashId,
+      })
+    }
+  }
 };
 
 module.exports = tsbSdk;
