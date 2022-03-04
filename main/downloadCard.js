@@ -1,12 +1,17 @@
-let downloadWindow = null
-
+let downloadWindow=null
+function getdownloadWindow(){
+  if(downloadWindow===null){
+    createDownloadWin()
+  }
+  return downloadWindow
+}
 function createDownloadWin () {
-  if (downloadWindow === null) {
     downloadWindow = new BrowserWindow({
       frame: true,
       width: 390,
       height: 465,
       resizable: false,
+
       parent: mainWindow,
       acceptFirstMouse: true,
       maximizable: false,
@@ -16,22 +21,37 @@ function createDownloadWin () {
         contextIsolation: false,
       }
     })
-    // downloadWindow.on('close', (e) => {
-    //     e.preventDefault();
-    //     downloadWindow.hide();
-    // });
 
-    downloadWindow.webContents.loadURL('file://' + __dirname + '/pages/download/index.html')
-  } else {
-    downloadWindow.close()
-    downloadWindow = null
-  }
+  downloadWindow.webContents.loadURL('file://' + __dirname + '/pages/download/index.html')
+
+  downloadWindow.on('close',(event)=> {
+    if (forceClose) {
+      downloadWindow = null
+    } else {
+      downloadWindow.hide()
+      event.preventDefault()
+    }
+  })
+
+  setTimeout(()=>{
+    if(mainWindow){
+      mainWindow.on('close',()=>{
+        forceClose=true
+        if(downloadWindow && !downloadWindow.isDestroyed())
+          downloadWindow.close()
+        downloadWindow=null
+      })
+    }
+
+  },2000)
 }
 
 app.whenReady().then(() => {
 
   ipc.on('openDownload', () => {
-    createDownloadWin()
+    getdownloadWindow()
+    downloadWindow.show()
+    downloadWindow.focus()
   })
 
 })

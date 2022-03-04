@@ -33,13 +33,16 @@ function isAttachment (header) {
 function sendIPCToDownloadWindow(action, data) {
   // if there are no windows, create a new one
 
-  if (!downloadWindow) {
-    createDownloadWin(function() {
+  if (downloadWindow===null) {
+    getdownloadWindow(function() {
       downloadWindow.webContents.send(action, data || {})
     })
-  } else {
+  }
+  else {
+    // downloadWindow.show()
     downloadWindow.webContents.send(action, data || {})
   }
+
 }
 
 function downloadHandler (event, item, webContents) {
@@ -57,6 +60,7 @@ function downloadHandler (event, item, webContents) {
 
     // send info to download manager
     sendIPCToDownloadWindow('download-info', {
+
       path: item.getSavePath(),
       name: item.getFilename(),
       status: 'start',
@@ -93,7 +97,6 @@ function downloadHandler (event, item, webContents) {
         progressnuw:((prevReceivedBytes/item.getTotalBytes()).toFixed(2))*100,
         paused: item.isPaused(),
         startTime:item.getStartTime()
-
       })
 
       console.log({
@@ -111,6 +114,7 @@ function downloadHandler (event, item, webContents) {
       }
       sendIPCToDownloadWindow( 'download-info', {
         path: item.getSavePath(),
+        startTime:item.getStartTime(),
         name: savePathFilename,
         status: state,
         Url:item.getURL(),
