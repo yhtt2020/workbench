@@ -71,9 +71,6 @@
                 <a-icon type="file-text" style="fontSize:30px"></a-icon>
               </div>
                 <div>
-<!--                  <a-button type="link" style="float: right" @click="showdoneModal(donelist.id)">-->
-<!--                 -->
-<!--                  </a-button>-->
                   <a-modal v-model="visible" title="删除下载任务" ok-text="确认" cancel-text="取消" @ok="hideModaldone()">
                     <p>文件下载已完成，确认删除</p>
                     <a-checkbox @change="doneChange">
@@ -111,18 +108,12 @@
 
 <script type="module">
 
-  const Dexie = require('dexie');
   const { clipboard } = require('electron')
   const { shell } = require('electron')
   const fs = require('fs')
   let {ipcMain} = require('electron')
   let {ipcRenderer} = require('electron')
-
-
-  const db = new Dexie('browsingData2');
-  db.version(140).stores({
-    download: 'startTime,path,Url,total,title'
-  });
+  const {db} = require('../../js/util/database')
 
 
   ipcRenderer.on('context-menuing-start', (e,args) => {
@@ -315,7 +306,7 @@
 
       hideModaldone(){
         console.log(appVue.selectlist.startTime)
-      db.download.delete(appVue.selectlist.startTime)
+         db.download.delete(appVue.selectlist.startTime)
         if(this.deleconfirm === true) {
           fs.unlinkSync(this.selectlist.path)
           this.donelists.splice(this.donelists.indexOf(this.selectlist), 1)

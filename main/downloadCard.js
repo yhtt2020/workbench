@@ -11,7 +11,7 @@ function createDownloadWin () {
       width: 390,
       height: 465,
       resizable: false,
-
+      autoHideMenuBar:true,
       parent: mainWindow,
       acceptFirstMouse: true,
       maximizable: false,
@@ -105,4 +105,5 @@ ipc.on('show-context-menudone', (event) => {
   ]
   const menu = Menu.buildFromTemplate(template)
   menu.popup(BrowserWindow.fromWebContents(event.sender))
+
 })
