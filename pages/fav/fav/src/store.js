@@ -4,6 +4,27 @@ import { createStore } from 'vuex'
 const store = createStore({
   state () {
     return {
+      /**
+       * 列表的尺寸
+       */
+      itemSize:100,
+      subFolders:[{
+        cover:'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?undefined',
+        name:'产品设计',
+        contentsCount:13
+      },
+        {
+          cover:'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?undefined',
+          name:'产品战略',
+          contentsCount:22
+        }],
+      contents:[{
+
+      }],
+
+
+
+
       currentTab:{
         name:'all',
       },
@@ -41,6 +62,9 @@ const store = createStore({
     },
     setTab(state,tab){
       state.currentTab=tab
+    },
+    setItemSize(state,size){
+      state.itemSize=size
     }
   }
 })

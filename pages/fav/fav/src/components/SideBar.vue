@@ -26,24 +26,39 @@
         <span>最近</span>
       </a-menu-item>
     </a-menu>
-    <h3>重要类型</h3>
-    <div>
-      <a-row class="content-types" type="flex">
-        <a-col v-for="content in contentTypes" :key="content" :span="12">
-          <div class="type" :class="{'active':content.tab===tab[0]}" type="link" @click="setTab(content.tab)"><FolderOutlined/> {{ content.name }}</div>
-        </a-col>
-      </a-row>
-    </div>
-    <h3>文件夹</h3>
-    <TreeList></TreeList>
-    <h3>团队文件夹</h3>
-    <TreeList></TreeList>
+
+    <a-collapse class="tab-wrapper" v-model:activeKey="collapseContentType" :bordered="false" :ghost="true" >
+      <a-collapse-panel key="contentType" header="内容类型">
+        <div>
+          <a-row class="content-types" type="flex">
+            <a-col v-for="content in contentTypes" :key="content" :span="12">
+              <div class="type" :class="{'active':content.tab===tab[0]}" type="link" @click="setTab(content.tab)"><FolderOutlined/> {{ content.name }}</div>
+            </a-col>
+          </a-row>
+        </div>
+      </a-collapse-panel>
+    </a-collapse>
+    <a-collapse class="tab-wrapper" v-model:activeKey="collapseFolder" :bordered="false" :ghost="true" >
+      <a-collapse-panel key="folder" header="文件夹">
+        <div>
+          <TreeList></TreeList>
+        </div>
+        <template #extra><PlusOutlined  @click="handleClick" /></template>
+      </a-collapse-panel>
+    </a-collapse>
+    <a-collapse class="tab-wrapper"  v-model:activeKey="collapseGroupFolder" :bordered="false" :ghost="true">
+      <a-collapse-panel key="groupFolder" header="团队文件夹">
+        <div>
+          <TreeList></TreeList>
+        </div>
+      </a-collapse-panel>
+    </a-collapse>
   </div>
 
 </template>
 
 <script>
-import {AppstoreOutlined, InboxOutlined, ClockCircleOutlined,FolderOutlined} from '@ant-design/icons-vue';
+import {AppstoreOutlined, InboxOutlined, ClockCircleOutlined,FolderOutlined,PlusOutlined} from '@ant-design/icons-vue';
 import TreeList from './TreeList.vue'
 
 export default {
@@ -53,6 +68,9 @@ export default {
   },
   data() {
     return {
+      collapseContentType:['contentType'],
+      collapseFolder:['folder'],
+      collapseGroupFolder:['groupFolder'],
       contentTypes: [
         {
           name: '书签',
@@ -110,6 +128,7 @@ export default {
     InboxOutlined,
     ClockCircleOutlined,
     FolderOutlined,
+    PlusOutlined,
     TreeList,
 
   }

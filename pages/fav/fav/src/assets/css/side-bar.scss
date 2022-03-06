@@ -1,47 +1,85 @@
-h3{
+h3 {
   font-size: 12px;
   margin-top: 20px;
   margin-bottom: 15px;
-  color: #999;
+  color: #999 !important;
 }
-.side-bar{
+
+.side-bar {
   padding: 15px;
 }
 
 
-.nav{
-  .ant-menu-item{
+.nav {
+  .ant-menu-item {
     line-height: 28px !important;
     height: 28px !important;
     border-radius: 4px;
     padding: 4px !important;
     padding-left: 8px !important;
-    &:hover{
-      color:#333 !important;
+
+    &:hover {
+      color: #333 !important;
     }
-    &::after{
-      border-right:none !important;
+
+    &::after {
+      border-right: none !important;
     }
   }
 
-  .ant-menu-item-selected{
+  .ant-menu-item-selected {
     background-color: #e1e1e1 !important;
-    color:#333;
-    border-right :none!important;
+    color: #333;
+    border-right: none !important;
   }
 }
 
+.tab-wrapper {
+  margin-bottom: 10px !important;
+  background: none !important;
+  border-bottom: none !important;
 
-.content-types{
+  .ant-collapse-header {
+
+    padding: 0 !important;
+    color: #999 !important;
+    font-size: 12px;
+
+  }
+  &:hover > .ant-collapse-item > .ant-collapse-header .ant-collapse-arrow{
+    visibility: visible;
+  }
+  > .ant-collapse-item > .ant-collapse-header .ant-collapse-arrow{
+    visibility: hidden;
+    left: 70px !important;
+  }
+  .ant-collapse-item{
+    border-bottom: none !important;
+  }
+  .ant-collapse-content-box {
+    padding: 0 !important;
+    border-bottom: none !important;
+  }
+
+  .ant-collapse-content {
+    border-bottom: none !important;
+  }
+
+  padding: 0;
+}
+
+.content-types {
   cursor: pointer;
-  .type{
+
+  .type {
     margin: 3px;
     display: block;
     padding: 4px;
     padding-left: 8px;
     border-radius: 4px;
   }
-  .active{
+
+  .active {
     background-color: #e1e1e1;
 
   }

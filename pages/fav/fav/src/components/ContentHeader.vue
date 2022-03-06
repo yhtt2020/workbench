@@ -7,6 +7,8 @@
       @back="() => $router.go(-1)"
     >
       <template #extra>
+
+        <a-slider v-model:value="itemSize" :min="50" :max="300" />
         <a-dropdown>
           <template #overlay>
             <a-menu @click="handleMenuClick">
@@ -62,6 +64,16 @@ export default {
     BorderOuterOutlined
   },
   computed:{
+    itemSize: {
+      // getter
+      get() {
+        return this.$store.state.itemSize
+      },
+      // setter
+      set(newValue) {
+       this.$store.commit('setItemSize',newValue)
+      }
+    },
     ...mapState(['currentFolder'])
   },
   data() {

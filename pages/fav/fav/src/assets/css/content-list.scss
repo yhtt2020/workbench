@@ -1,0 +1,39 @@
+.sub-folder-cover {
+  width: 300px;
+  height: 300px;
+  position: absolute;
+  left: 5px;
+  top: -10px;
+  border-radius: 4px;
+  border: 1px solid #c1c1c1;
+}
+
+.cover-wrapper {
+  margin-bottom: 20px;
+}
+
+.sub-folder-frame {
+  border: 1px solid #c1c1c1;
+  position: absolute;
+  border-radius: 4px;
+  left: -5px;
+  top: -5px;
+  background: #f1f1f1;
+}
+
+.folder-name {
+  text-align: center;
+  margin: 5px;
+}
+
+.inner-content-count {
+  text-align: center;
+  font-size: 12px;
+  color: #999;
+}
+
+.sub-folder-wrapper {
+  display: inline-block;
+  position: relative;
+  margin: 2%;
+}

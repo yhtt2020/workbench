@@ -2,7 +2,7 @@ h3 {
   font-size: 12px;
   margin-top: 20px;
   margin-bottom: 15px;
-  color: #999; }
+  color: #999 !important; }
 
 .side-bar {
   padding: 15px; }
@@ -21,6 +21,28 @@ h3 {
   background-color: #e1e1e1 !important;
   color: #333;
   border-right: none !important; }
+
+.tab-wrapper {
+  margin-bottom: 10px !important;
+  background: none !important;
+  border-bottom: none !important;
+  padding: 0; }
+  .tab-wrapper .ant-collapse-header {
+    padding: 0 !important;
+    color: #999 !important;
+    font-size: 12px; }
+  .tab-wrapper:hover > .ant-collapse-item > .ant-collapse-header .ant-collapse-arrow {
+    visibility: visible; }
+  .tab-wrapper > .ant-collapse-item > .ant-collapse-header .ant-collapse-arrow {
+    visibility: hidden;
+    left: 70px !important; }
+  .tab-wrapper .ant-collapse-item {
+    border-bottom: none !important; }
+  .tab-wrapper .ant-collapse-content-box {
+    padding: 0 !important;
+    border-bottom: none !important; }
+  .tab-wrapper .ant-collapse-content {
+    border-bottom: none !important; }
 
 .content-types {
   cursor: pointer; }

@@ -25,12 +25,12 @@
       ></a-select>
       <a-input v-model:value="selectedContentInfo.remark" placeholder="备注备注" />
       <a-input v-model:value="selectedContentInfo.href" placeholder="网址网址" />
-      <a-rate :value="4" allow-half />
+      <a-rate style="margin-bottom: 10px" :value="4" allow-half />
       <a-select
         :options="options"
         mode="tags"
         :size="size"
-        placeholder="Please select"
+        placeholder="标记为"
         style="width: 100%"
       ></a-select>
     </div>
@@ -45,6 +45,7 @@
         添加时间：{{this.dateStr(selectedContentInfo.baseInfo.addTime)}}
         <br>
         修改时间：{{this.dateStr(selectedContentInfo.baseInfo.modifyTime)}}
+        <br>
         文件路径：{{selectedContentInfo.baseInfo.path}}/{{selectedContentInfo.baseInfo.filename}}
       </div>
     </div>

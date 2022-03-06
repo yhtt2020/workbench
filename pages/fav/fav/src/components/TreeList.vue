@@ -14,26 +14,26 @@
 <script>
 import { defineComponent, ref, watch } from 'vue';
 const treeData = [{
-  title: 'parent 1',
+  title: '常用收藏',
   key: '0-0',
   children: [{
-    title: 'parent 1-0',
+    title: '产品经理',
     key: '0-0-0',
     disabled: true,
     children: [{
-      title: 'leaf',
+      title: '产品设计',
       key: '0-0-0-0',
       disableCheckbox: true,
     }, {
-      title: 'leaf',
+      title: '产品战略',
       key: '0-0-0-1',
     }],
   }, {
-    title: 'parent 1-1',
+    title: '运营素材',
     key: '0-0-1',
     children: [{
       key: '0-0-1-0',
-      title: 'sss',
+      title: '常用头像',
     }],
   }],
 }];
