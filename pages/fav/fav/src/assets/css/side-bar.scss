@@ -86,19 +86,21 @@ h3 {
 
 }
 
+.side-bar{
+  .ant-tree.ant-tree-directory > li.ant-tree-treenode-selected > span.ant-tree-node-content-wrapper::before, .ant-tree.ant-tree-directory .ant-tree-child-tree > li.ant-tree-treenode-selected > span.ant-tree-node-content-wrapper::before{
+    background: #e1e1e1 !important;
+    border-radius: 4px;
+    color: #999 !important;
+  }
+  .ant-tree-title{
+    color: #333;
+  }
+  .ant-tree-switcher_open,.ant-tree-switcher-noop,.ant-tree.ant-tree-show-line li span.ant-tree-switcher{
+    background: none !important;
+  }
+  .anticon svg path{
+    color: #333 !important;
+  }
 
+}
 
-.ant-tree.ant-tree-directory > li.ant-tree-treenode-selected > span.ant-tree-node-content-wrapper::before, .ant-tree.ant-tree-directory .ant-tree-child-tree > li.ant-tree-treenode-selected > span.ant-tree-node-content-wrapper::before{
-  background: #e1e1e1 !important;
-  border-radius: 4px;
-  color: #999 !important;
-}
-.ant-tree-title{
-  color: #333;
-}
-.ant-tree-switcher_open,.ant-tree-switcher-noop,.ant-tree.ant-tree-show-line li span.ant-tree-switcher{
-  background: none !important;
-}
-.anticon svg path{
-  color: #333 !important;
-}
