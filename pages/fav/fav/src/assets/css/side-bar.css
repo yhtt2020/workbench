@@ -1,0 +1,21 @@
+h3 {
+  font-size: 12px;
+  margin-top: 20px;
+  margin-bottom: 15px;
+  color: #999; }
+
+.side-bar {
+  padding: 15px; }
+
+.nav .ant-menu-item {
+  line-height: 28px !important;
+  height: 28px !important;
+  border-radius: 4px;
+  padding: 3px !important;
+  margin: 0 !important; }
+  .nav .ant-menu-item::after {
+    border-right: none !important; }
+.nav .ant-menu-item-selected {
+  border-right: none !important; }
+
+/*# sourceMappingURL=side-bar.css.map */
