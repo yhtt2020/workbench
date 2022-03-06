@@ -1,2 +1,21 @@
 @import "side-bar";
 @import "content-list";
+.wrapper-scroller::-webkit-scrollbar-track
+{
+  border-radius: 10px;
+  background-color: white;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.wrapper-scroller::-webkit-scrollbar
+{
+  width: 6px;
+  background-color: white;
+}
+
+.wrapper-scroller::-webkit-scrollbar-thumb
+{
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.15);
+}

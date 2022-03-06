@@ -37,3 +37,17 @@
   position: relative;
   margin: 2%;
 }
+
+
+.content-header{
+
+
+  &.ant-page-header{
+    padding: 10px;
+    padding-bottom: 0;
+    background: white;
+    .ant-page-header-heading-extra{
+      width: 300px;
+    }
+  }
+}

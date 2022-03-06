@@ -1,15 +1,15 @@
 <template>
   <a-layout>
-    <a-layout-sider theme="light" :style="{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0 ,background:'#f1f1f1'}">
+    <a-layout-sider class="wrapper-scroller" theme="light" :style="{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0 ,background:'#f1f1f1'}">
       <SideBar />
     </a-layout-sider>
-    <a-layout :style="{ marginLeft: '200px',marginRight:'240px',height:'100vh' }">
+    <a-layout  class="wrapper-scroller" :style="{ marginLeft: '200px',marginRight:'240px',height:'100vh', position: 'fixed',width:'calc(100vw - 440px)',overflowY:'auto' }">
       <ContentHeader/>
       <a-layout-content style="background: white;padding: 20px">
         <ContentList/>
       </a-layout-content>
     </a-layout>
-    <a-layout-sider theme="light" :width="240" style="background: #f1f1f1;height: 100vh;position: fixed;overflow: auto;right: 0">
+    <a-layout-sider  class="wrapper-scroller" theme="light" :width="240" style="background: #f1f1f1;height: 100vh;position: fixed;overflow: auto;right: 0">
       <ContentInfo/>
     </a-layout-sider>
   </a-layout>

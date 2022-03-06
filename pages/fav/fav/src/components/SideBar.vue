@@ -1,9 +1,9 @@
 <template>
-  <div class="side-bar">
+  <div class="side-bar "  style="overflow-x: hidden">
     <a-menu class="nav"
       v-model:openKeys="openKeys"
       v-model:selectedKeys="tab"
-      style="width: 180px;background: none"
+      style="background: none;"
       mode="inline"
       @click="handleNavClick"
     >
@@ -32,7 +32,7 @@
         <div>
           <a-row class="content-types" type="flex">
             <a-col v-for="content in contentTypes" :key="content" :span="12">
-              <div class="type" :class="{'active':content.tab===tab[0]}" type="link" @click="setTab(content.tab)"><FolderOutlined/> {{ content.name }}</div>
+              <div class="type" :class="{'active':content.tab===tab[0]}" type="link" @click="setTab(content.tab,content.name)"><FolderOutlined/> {{ content.name }}</div>
             </a-col>
           </a-row>
         </div>
@@ -48,9 +48,11 @@
     </a-collapse>
     <a-collapse class="tab-wrapper"  v-model:activeKey="collapseGroupFolder" :bordered="false" :ghost="true">
       <a-collapse-panel key="groupFolder" header="团队文件夹">
-        <div>
+        <div v-for="group in groups" v-bind:key="group">
+          <div style="margin-top: 10px"><a-avatar shape="square" :size="18" :src="group.icon"></a-avatar> {{group.name}}</div>
           <TreeList></TreeList>
         </div>
+        <template #extra><PlusOutlined  @click="handleClick" /></template>
       </a-collapse-panel>
     </a-collapse>
   </div>
@@ -60,6 +62,7 @@
 <script>
 import {AppstoreOutlined, InboxOutlined, ClockCircleOutlined,FolderOutlined,PlusOutlined} from '@ant-design/icons-vue';
 import TreeList from './TreeList.vue'
+import {mapState} from 'vuex'
 
 export default {
   name: 'SideBar',
@@ -77,16 +80,20 @@ export default {
           tab:'bookmark'
         },
         {
+          name: '应用',
+          tab:'app'
+        },
+        {
+          name: '密码',
+          tab:'pwd'
+        },
+        {
           name: '图片',
           tab:'pic'
         },
         {
           name: '文字',
           tab:'text'
-        },
-        {
-          name: '密码',
-          tab:'pwd'
         },
         {
           name: '视频',
@@ -106,20 +113,29 @@ export default {
     tab(){
       return [this.$store.state.currentTab.name]
       //return this.$store.state.currentTab.name
-    }
+    },
+    ...mapState([
+      'groups'
+    ])
   },
   methods:{
     handleNavClick(e){
       console.log(e)
-      this.setTab(e.key)
+      const tabs= {
+        'all': '全部',
+        'collection':'收集箱',
+        'latest':'最近'
+      }
+      this.setTab(e.key,tabs[e.key])
     },
     titleClick(e){
       console.log(e)
       this.setTab(e.key)
     },
-    setTab(tabName){
+    setTab(tabName,alias){
       this.$store.commit('setTab',{
-        name:tabName
+        name:tabName,
+        alias:alias
       })
     }
   },

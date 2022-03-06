@@ -1,14 +1,14 @@
 <template>
-  <a-tree
+  <a-directory-tree
     v-model:expandedKeys="expandedKeys"
     v-model:selectedKeys="selectedKeys"
     :tree-data="treeData"
   >
     <template #title="{ title, key }">
-      <span v-if="key === '0-0-1-0'" style="color: #1890ff">{{ title }}</span>
+      <span v-if="key === '0-0-1-0'" >{{ title }}</span>
       <template v-else>{{ title }}</template>
     </template>
-  </a-tree>
+  </a-directory-tree>
 </template>
 
 <script>
@@ -19,11 +19,9 @@ const treeData = [{
   children: [{
     title: '产品经理',
     key: '0-0-0',
-    disabled: true,
     children: [{
       title: '产品设计',
       key: '0-0-0-0',
-      disableCheckbox: true,
     }, {
       title: '产品战略',
       key: '0-0-0-1',

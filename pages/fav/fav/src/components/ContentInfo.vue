@@ -20,11 +20,11 @@
         :options="options"
         mode="tags"
         :size="size"
-        placeholder="Please select"
+        placeholder="选择标签"
         style="width: 100%"
       ></a-select>
       <a-input v-model:value="selectedContentInfo.remark" placeholder="备注备注" />
-      <a-input v-model:value="selectedContentInfo.href" placeholder="网址网址" />
+      <a-input style="margin-bottom: 0" v-model:value="selectedContentInfo.href" placeholder="网址网址" />
       <a-rate style="margin-bottom: 10px" :value="4" allow-half />
       <a-select
         :options="options"
@@ -33,9 +33,6 @@
         placeholder="标记为"
         style="width: 100%"
       ></a-select>
-    </div>
-    <div>
-
     </div>
     <div style="margin-bottom: 10px">
       <h4>基本信息</h4>
