@@ -166,6 +166,12 @@ function buildAppMenu (options = {}) {
             sendIPCToWindow(window, 'print')
           }
         },
+        {
+          label:'打开用户数据目录',
+          click: function () {
+            electron.shell.openPath(app.getPath('userData'))
+          }
+        },
         ...(!options.secondary && process.platform === 'linux' ? [{ type: 'separator' }] : []),
         ...(!options.secondary && process.platform === 'linux' ? [quitAction] : [])
       ]
