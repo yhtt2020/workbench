@@ -30,9 +30,12 @@ const tabBar = {
   containerInner: document.getElementById('tabs-inner'),
   tabElementMap: {}, // tabId: tab element
   events: new EventEmitter(),
+
   dragulaInstance: dragula([document.getElementById('tabs-inner')], {
+    mirrorContainer:document.getElementById('dragContainer'),
     direction: 'horizontal',
     slideFactorX: 25,
+    slideFactorY:25
   }),
   getTab: function (tabId) {
     return tabBar.tabElementMap[tabId]

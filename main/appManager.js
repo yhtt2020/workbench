@@ -498,6 +498,7 @@ const appManager = {
       height: appWindow.getBounds().height - 70,
       webPreferences: webPreferences
     })
+    appView.setBackgroundColor('#ffffff')
     /**
      * 在dev模式下，group引用开发环境
      */
