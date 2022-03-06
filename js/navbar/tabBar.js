@@ -827,12 +827,14 @@ const tabBar = {
     let tabEl=tabBar.tabElementMap[id]
     let closeEl=tabEl.querySelector('.tab-close-button')
     if(tab.lock === true) {
-      tabs.update(tab.id,{ lock:!tab.lock })
+      tabs.update(tab.id,{ lock:!tab.lock ,startPage:null })
+      $toolbar.updateStartPage()
       closeEl.style.display=""
       ipc.send('message', {type: 'success', config: {content: '标签锁定解除'}})
     }else {
       closeEl.style.display="none"
-      tabs.update(tab.id,{ lock:!tab.lock })
+      tabs.update(tab.id,{ lock:!tab.lock ,startPage:tab.url })
+      $toolbar.updateStartPage()
       ipc.send('message', {type: 'success', config: {content: '标签锁定成功'}})
     }
 },
@@ -1010,7 +1012,7 @@ ipc.on('toggleLockTab',(event,args)=>{
 ipc.on('lockTask',(event,args)=>{
   let tabs=tasks.get(args.id)
   tabs.tabs.forEach((item,index)=>{
-    tabs.tabs.update(item.id, { lock:true })
+    tabs.tabs.update(item.id, { lock:true ,startPage:item.url})
   })
 })
 
