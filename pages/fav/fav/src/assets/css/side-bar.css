@@ -11,11 +11,26 @@ h3 {
   line-height: 28px !important;
   height: 28px !important;
   border-radius: 4px;
-  padding: 3px !important;
-  margin: 0 !important; }
+  padding: 4px !important;
+  padding-left: 8px !important; }
+  .nav .ant-menu-item:hover {
+    color: #333 !important; }
   .nav .ant-menu-item::after {
     border-right: none !important; }
 .nav .ant-menu-item-selected {
+  background-color: #e1e1e1 !important;
+  color: #333;
   border-right: none !important; }
+
+.content-types {
+  cursor: pointer; }
+  .content-types .type {
+    margin: 3px;
+    display: block;
+    padding: 4px;
+    padding-left: 8px;
+    border-radius: 4px; }
+  .content-types .active {
+    background-color: #e1e1e1; }
 
 /*# sourceMappingURL=side-bar.css.map */

@@ -14,14 +14,35 @@ h3{
     line-height: 28px !important;
     height: 28px !important;
     border-radius: 4px;
-    padding: 3px !important;
+    padding: 4px !important;
+    padding-left: 8px !important;
+    &:hover{
+      color:#333 !important;
+    }
     &::after{
       border-right:none !important;
     }
-    margin: 0 !important;
   }
-  .ant-menu-item-selected{
 
+  .ant-menu-item-selected{
+    background-color: #e1e1e1 !important;
+    color:#333;
     border-right :none!important;
+  }
+}
+
+
+.content-types{
+  cursor: pointer;
+  .type{
+    margin: 3px;
+    display: block;
+    padding: 4px;
+    padding-left: 8px;
+    border-radius: 4px;
+  }
+  .active{
+    background-color: #e1e1e1;
+
   }
 }

@@ -1,26 +1,25 @@
 <template>
   <div class="side-bar">
     <a-menu class="nav"
-      id="dddddd"
       v-model:openKeys="openKeys"
-      v-model:selectedKeys="selectedKeys"
+      v-model:selectedKeys="tab"
       style="width: 180px;background: none"
       mode="inline"
-      @click="handleClick"
+      @click="handleNavClick"
     >
-      <a-menu-item key="sub1" @titleClick="titleClick">
+      <a-menu-item key="all" @titleClick="titleClick">
         <template #icon>
           <AppstoreOutlined/>
         </template>
         <span>全部</span>
       </a-menu-item>
-      <a-menu-item key="sub2" @titleClick="titleClick">
+      <a-menu-item key="collection" @titleClick="titleClick">
         <template #icon>
           <InboxOutlined/>
         </template>
         <span>收集箱</span>
       </a-menu-item>
-      <a-menu-item key="sub4">
+      <a-menu-item key="latest">
         <template #icon>
           <ClockCircleOutlined/>
         </template>
@@ -29,9 +28,9 @@
     </a-menu>
     <h3>重要类型</h3>
     <div>
-      <a-row type="flex">
+      <a-row class="content-types" type="flex">
         <a-col v-for="content in contentTypes" :key="content" :span="12">
-          <a-button>{{ content.name }}</a-button>
+          <div class="type" :class="{'active':content.tab===tab[0]}" type="link" @click="setTab(content.tab)"><FolderOutlined/> {{ content.name }}</div>
         </a-col>
       </a-row>
     </div>
@@ -44,7 +43,7 @@
 </template>
 
 <script>
-import {AppstoreOutlined, InboxOutlined, ClockCircleOutlined} from '@ant-design/icons-vue';
+import {AppstoreOutlined, InboxOutlined, ClockCircleOutlined,FolderOutlined} from '@ant-design/icons-vue';
 import TreeList from './TreeList.vue'
 
 export default {
@@ -57,32 +56,62 @@ export default {
       contentTypes: [
         {
           name: '书签',
+          tab:'bookmark'
         },
         {
-          name: '图片'
+          name: '图片',
+          tab:'pic'
         },
         {
-          name: '文字'
+          name: '文字',
+          tab:'text'
         },
         {
-          name: '密码'
+          name: '密码',
+          tab:'pwd'
         },
         {
-          name: '视频'
+          name: '视频',
+          tab:'video'
         },
         {
-          name: '文件'
+          name: '文件',
+          tab:'file'
         }, {
-          name: '下载'
+          name: '下载',
+          tab:'download'
         }
       ]
+    }
+  },
+  computed:{
+    tab(){
+      return [this.$store.state.currentTab.name]
+      //return this.$store.state.currentTab.name
+    }
+  },
+  methods:{
+    handleNavClick(e){
+      console.log(e)
+      this.setTab(e.key)
+    },
+    titleClick(e){
+      console.log(e)
+      this.setTab(e.key)
+    },
+    setTab(tabName){
+      this.$store.commit('setTab',{
+        name:tabName
+      })
     }
   },
   components: {
     AppstoreOutlined,
     InboxOutlined,
     ClockCircleOutlined,
-    TreeList
+    FolderOutlined,
+    TreeList,
+
   }
 }
 </script>

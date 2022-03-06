@@ -3,7 +3,7 @@
     <a-page-header
       class="demo-page-header"
       style="border: 1px solid rgb(235, 237, 240)"
-      sub-title="文件夹名称"
+      :sub-title="currentFolder.name"
       @back="() => $router.go(-1)"
     >
       <template #extra>
@@ -32,11 +32,19 @@
                 刷新
               </a-menu-item>
             </a-menu>
+
           </template>
           <a-button size="small" shape="circle">
             <BorderOuterOutlined />
           </a-button>
+
         </a-dropdown>
+        <a-input-search
+          v-model:value="value" size="small"
+          placeholder="搜索"
+          style="width: 200px"
+          @search="onSearch"
+        />
       </template>
     </a-page-header>
   </div>
@@ -44,6 +52,7 @@
 
 <script>
 import {  BorderOuterOutlined } from '@ant-design/icons-vue';
+import { mapState } from 'vuex'
 export default {
   name: 'ContentHeader',
   props: {
@@ -51,6 +60,9 @@ export default {
   },
   components:{
     BorderOuterOutlined
+  },
+  computed:{
+    ...mapState(['currentFolder'])
   },
   data() {
     return {
