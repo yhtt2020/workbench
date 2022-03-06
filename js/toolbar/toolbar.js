@@ -223,7 +223,7 @@ const toolbar = {
       if(tabData.startPage){
         webviews.update(tabs.getSelected(), tabData.startPage)
       }else{
-        if(confirm('此锁定在返回起始页功能推出前，无法返回到起始页。是否将当前位置设置为起始页？')){
+        if(confirm('此标签锁定在返回起始页功能推出前，无法返回到起始页。是否将当前位置设置为起始页？')){
           tabs.update(tabs.getSelected(),{startPage:tabData.url})
         }
       }
