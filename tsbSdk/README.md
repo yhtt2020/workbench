@@ -46,17 +46,22 @@ tsbk.config({
 })
 ```
 
+部分环境下需要增加eslint文件忽略
+```
+/* eslint-disable */
+```
+
 ##### 步骤三、💥通过ready,error接口处理验证
 ```
 #ready接口处理成功验证
-wx.ready(function(){
+tsbk.ready(function(){
   // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，任何sdk接口的调用，须把相关接口放在ready函数中调用来确保正确执行。
 })
 ```
 
 ```
 #error接口处理失败验证
-wx.error(function(res){
+tsbk.error(function(res){
   // config信息验证失败会执行error函数，错误可以在返回的res参数中查看，对于SPA可以在这里更新签名。
 })
 
@@ -112,4 +117,37 @@ tsbk.ready(function() {
   tsbk.autoLoginSysApp()
 })
 ```
+#### 六、🧊唤醒想天内置应用【仅支持后台休眠的内置应用】
+参数: 1、必填【appName: String】,目前想天内置应用名单【团队协作、元社区、收藏夹、导入助手】
 
+参数：2、可选options: Object【url: String】，内置应用跳转链接path和parameters组成部分，目前仅支持元社区和团队协作的跳转
+```
+tsbk.ready(function() {
+  tsbk.openSysApp({
+    appName: '团队协作',
+    options: {
+      url: '......'
+    }
+  })
+})
+```
+####七、使用便捷的消息接收机制
+```
+import tsbk from '@/core/tsbSdk'
+let app=createApp(App).use(Antd).use(store).mount('#app')
+window.tsbk=tsbk
+tsbk.config({
+  signature: "ts"
+})
+tsbk.on('gotUserInfo',(event,args)=> {
+  let user =args.user 
+  app.$store.commit('saveUserInfo',user)
+})
+tsbk.ready()
+window.appReady()
+```
+
+preload往客户端发消息
+```
+tsbSdk.send('gotUserInfo',args)
+```
