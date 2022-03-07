@@ -607,9 +607,6 @@ const appManager = {
     // appView.webContents.on('will-redirect', _handleExternalProtocol)
     let saAppObject = saApp
     delete saAppObject.window
-    if(saApp.id === 1) {
-      appView.webContents.send('initLumen', saApp)
-    }
     appView.webContents.send('init', { saApp: saAppObject })
     appView.webContents.once('dom-ready',()=>{
       if(option){
@@ -1173,6 +1170,9 @@ app.whenReady().then(() => {
     appManager.releaseFocus(args.id)
   })
 
+  ipc.handle('imPreloadReady', () => {
+    return appManager.getSaAppByAppId(1)
+  })
 
   ipc.on('saAppNotice', (event, args) => {
     appManager.notification(args.saAppId, {

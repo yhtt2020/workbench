@@ -370,7 +370,6 @@ window.onload = function() {
       async getJoinedCircle({commit}, options) {
         const result = await groupApi.getJoinedCircle(options)
         if(result.code === 1000) {
-          console.log(result, '????????')
           const data = toString.call(result.data) === '[object Array]' ? [] : result.data.list
           commit('SET_JOINED_CIRCLE', data)
         }
@@ -378,7 +377,6 @@ window.onload = function() {
       async getMyCircle({commit}, options) {
         const result = await groupApi.getMyCircle(options)
         if(result.code === 1000) {
-          console.log(result, '!!!!!!')
           commit('SET_MANAGER_CIRCLE', result.data)
         }
       }
