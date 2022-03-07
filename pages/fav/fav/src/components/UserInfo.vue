@@ -8,7 +8,7 @@
       <a-col flex="auto">
         <div><a :href="getComProtocolUrl(config.userSpaceUrl)" target="_blank" class="nickname">{{ userInfo.nickname }}</a></div>
         <div>
-          <a-progress title="剩余空间100%" :percent="100" size="small"/>
+          <a-progress title="剩余空间99%" :percent="99" size="small"/>
         </div>
         <div><span class="logout" @click="logout()">登出</span></div>
       </a-col>
