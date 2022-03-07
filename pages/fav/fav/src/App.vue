@@ -1,5 +1,15 @@
 <template>
-  <a-layout>
+  <template v-if="!isApp && userInfo.uid===0">
+    <a-result status="403" title="403" sub-title="此站点需要登录后使用，请点击登录后再访问。">
+      <template #extra>
+        <a-button type="primary" @click="goLogin()" >
+          点击登录
+        </a-button>
+        <!--//todo 此处要后续继续完善纯web端的同步登陆机制-->
+      </template>
+    </a-result>
+  </template>
+  <a-layout v-else>
     <a-layout-sider class="wrapper-scroller" theme="light" :style="{ overflow: 'auto', height: '100vh', position: 'fixed', left: 0 ,background:'#f1f1f1'}">
       <SideBar />
     </a-layout-sider>
@@ -25,6 +35,7 @@ import SideBar from './components/SideBar.vue'
 import ContentHeader from './components/ContentHeader.vue'
 import ContentInfo from './components/ContentInfo.vue'
 import ContentList from './components/ContentList.vue'
+import { mapState } from 'vuex'
 export default {
   name: 'App',
   components: {
@@ -33,6 +44,22 @@ export default {
     ContentHeader,
     ContentInfo,
     ContentList
+  },
+  data(){
+    return{
+      isApp:window.isApp
+    }
+  },
+  computed:{
+    ...mapState([
+      'userInfo',
+      'config'
+    ])
+  },
+  methods:{
+    goLogin(){
+      location.href=this.$store.state.config.loginUrl
+    }
   }
 }
 </script>

@@ -1,9 +1,14 @@
 import {createStore} from 'vuex'
-
+const host='https://s.apps.vip/'
+const clientId='10001'
 // 创建一个新的 store 实例
 const store = createStore({
   state() {
     return {
+      config:{
+        loginUrl:host+'login?response_type=code&client_id='+clientId+'&state=1',
+        userSpaceUrl:host+'user'
+      },
       userInfo:{
         nickname:'想天浏览器',
         avatar:'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?undefined',
