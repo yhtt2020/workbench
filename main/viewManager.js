@@ -9,6 +9,8 @@ var temporaryPopupViews = {} // id: view
 var viewBounds = {}
 var sidebarBounds = {}
 
+var defaultBrowserViewBg='#ffffff'
+
 const defaultViewWebPreferences = {
   nodeIntegration: false,
   nodeIntegrationInSubFrames: true,
@@ -34,10 +36,12 @@ function createView(existingViewId, id, webPreferencesString, boundsString, even
     delete temporaryPopupViews[existingViewId]
 
     // the initial URL has already been loaded, so set the background color
-    view.setBackgroundColor('#fff')
+    view.setBackgroundColor(defaultBrowserViewBg)
     viewStateMap[id].loadedInitialURL = true
   } else {
     view = new BrowserView({webPreferences: Object.assign({}, defaultViewWebPreferences, JSON.parse(webPreferencesString))})
+    view.setBackgroundColor(defaultBrowserViewBg)
+
 
     //mark插入对webviewInk的数据统计 但在主进程中，需要发送一个ipc到sidebar常驻子进程中去db操作
     SidePanel.send('countWebviewInk')
@@ -231,16 +235,8 @@ function destroyAllViews() {
 
 function setView(id) {
   if (viewStateMap[id].loadedInitialURL) {
-    //let needRemove=mainWindow.getBrowserView()
-    let bvs=mainWindow.getBrowserViews()
-    let hasFinded=false
-    bvs.forEach(bv=>{
-      if(bv.webContents.id===viewMap[id].webContents.id){
-        mainWindow.setTopBrowserView(bv)
-        hasFinded=true
-      }
-    })
-    if (!hasFinded) mainWindow.addBrowserView(viewMap[id])
+    setCurrentBrowserView(viewMap[id])
+
     //mainWindow.removeBrowserView(needRemove)
   } else {
     mainWindow.setBrowserView(null)
@@ -250,7 +246,10 @@ function setView(id) {
 
 function setBounds(id, bounds) {
   if (viewMap[id]) {
-    viewMap[id].setBounds(bounds)
+    let bvs=mainWindow.getBrowserViews()
+    bvs.forEach(bv=>{
+      bv.setBounds(bounds)
+    })
   }
   viewBounds = bounds
   // sidebarBounds={x:0,y:bounds.y,width:45,height:bounds.height}
@@ -327,11 +326,36 @@ ipc.on('hideCurrentView', function (e) {
   //调用隐藏当前视图的回调到sidebar
   //onHideCurrentView()
 })
+function setCurrentBrowserView(needSetBrowserView){
+  if(process.platform==='win32'){
+    //windows上存在背景色bug，只能牺牲体验追求正确性
+    mainWindow.setBrowserView(needSetBrowserView)
+    return
+  }
+  let bvs=mainWindow.getBrowserViews()
+  let hasFinded=false
+  let findedView=null
+  bvs.forEach(bv=>{
+    if(bv.webContents.id===needSetBrowserView.webContents.id){
+      //如果是要设置的view则跳过
+      findedView=bv
+      hasFinded=true
+    }
+  })
+  if (!hasFinded) {
+    //如果不存在要寻找的view，则将view添加上去
+    mainWindow.addBrowserView(needSetBrowserView)
+  }else{
+    //mainWindow.addBrowserView(viewMap[id])
+    mainWindow.setTopBrowserView(findedView)
+  }
+}
+
 
 ipc.on('loadURLInView', function (e, args) {
   // wait until the first URL is loaded to set the background color so that new tabs can use a custom background
   if (!viewStateMap[args.id].loadedInitialURL) {
-    viewMap[args.id].setBackgroundColor('#fff')
+    viewMap[args.id].setBackgroundColor(defaultBrowserViewBg)
     // If the view has no URL, it won't be attached yet
     if (args.id === selectedView) {
       mainWindow.setBrowserView(viewMap[args.id])
