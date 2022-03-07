@@ -1,4 +1,5 @@
 export default class tsbk {
+  static events=[]
   //web项目中嵌入另一个第三方web项目。利用iFrame.contentWindow.postMessage解决同源策略限制
   constructor(config, self) {
     this.self = self;
@@ -60,6 +61,18 @@ export default class tsbk {
   static ready(fn) {
     tsbk.config().then((res) => {
       fn();
+    });
+    window.addEventListener("message", function (e) {
+      let channel = e.data.eventName;
+      let args=e.data.args
+      if(channel){
+        tsbk.events.forEach(event=>{
+          if(channel===event.event){
+            event.callBack(e,args)
+            //console.log('---------执行回调函数绑定',e,args)
+          }
+        })
+      }
     });
   }
 
@@ -160,4 +173,13 @@ export default class tsbk {
       })
     }
   }
+
+  static on(event,listener){
+    tsbk.events.push({
+      event:event,
+      callBack:listener
+    })
+  }
+
+
 }
