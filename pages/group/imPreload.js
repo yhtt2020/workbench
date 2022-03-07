@@ -33,24 +33,26 @@ const server = {
   },
 }
 
-ipc.invoke('imPreloadReady').then((args) => {
-  window.tsbSaApp = args   //内置应用只需要挂个saApp的信息就可以了不需要像appPreload一样去挂tsbSDK
+ipc.on('initLumen', (event, args) => {
+  localStorage.setItem('TSB_SAAPP', JSON.stringify(args))
+})
 
+//todo这个listener挂载的时机还是有问题的，但不延迟会导致挂不上
+setTimeout(() => {
   //定制好订阅器
   let DepList = []
   DepList.push({
     func: server.beforeInit,
     host: isDevelopmentMode ? config.IM.FRONT_URL_DEV : config.IM.FRONT_URL
   })
-
   tsbSdk.listener(DepList)
+}, 3000)
 
-  if(href === config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN) {
-    server.beforeInit(config.IM.FRONT_URL_DEV)
-  } else if (href === config.IM.FRONT_URL + config.IM.AUTO_LOGIN) {
-    server.beforeInit(config.IM.FRONT_URL)
-  }
-})
+if(href === config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN) {
+  server.beforeInit(config.IM.FRONT_URL_DEV)
+} else if (href === config.IM.FRONT_URL + config.IM.AUTO_LOGIN) {
+  server.beforeInit(config.IM.FRONT_URL)
+}
 
 ipc.on('imLogout', () => {
   let host = isDevelopmentMode ? config.IM.FRONT_URL_DEV : config.IM.FRONT_URL
