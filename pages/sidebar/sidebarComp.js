@@ -685,10 +685,14 @@ ipc.on('countWebviewInk', async () => {
 })
 
 ipc.on('countScript', () => {
-  let num = require('../util/model/userScriptModel').countScript(window.globalArgs['user-data-path'])
-  setTimeout(async () => {
-    await userStatsModel.setValue('scripts', num)
-  }, 10000)
+  try {
+    let num = require('../util/model/userScriptModel').countScript(window.globalArgs['user-data-path'])
+    setTimeout(async () => {
+      await userStatsModel.setValue('scripts', num)
+    }, 10000)
+  } catch (err) {
+    console.warn(err)
+  }
 })
 
 ipc.on('defaultBrowser', (event, args) => {
