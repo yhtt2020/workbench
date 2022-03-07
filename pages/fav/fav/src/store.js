@@ -97,6 +97,17 @@ const store = createStore({
             pwd:'chenyixiao1'
           },
           href:'zt.xiangtian.ren'
+        },
+        {
+          name:'统计图',
+          type:'pic',
+          ext:'png',
+          cover:'https://image.yunyingpai.com/wp/2022/03/huY0LrwISqalenLZ3tgE.png',
+          extData:{
+            width:'900',
+            height:'420'
+          },
+          href:'http://www.woshipm.com/pd/5336668.html'
         }],
 
       groups: [

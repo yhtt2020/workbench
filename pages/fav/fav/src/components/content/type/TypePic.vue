@@ -1,21 +1,21 @@
 <template>
   <div class="cover-wrapper" style="position: relative" :style="{width:itemSize+'px',height:itemSize+'px'}">
-    <div class="type-label">密码</div>
-    <a-image :style="{width:itemSize+'px',height:itemSize+'px'}"
+    <div class="type-label">图片</div>
+    <a-image :style="{width:itemSize+'px',height:itemSize+'px',objectFit:'cover'}"
              :preview="false" style="background: #f1f1f1"
              class="sub-folder-cover"
-             src="./img/type/pwd.svg">
+             :src="content.cover">
     </a-image>
 
   </div>
-  <div class="folder-name">{{content.name}}-{{content.extData.username}}</div>
-  <div class="ext">{{content.extData.domain}}</div>
+  <div class="folder-name">{{content.name}}.{{content.ext}}</div>
+  <div class="ext">{{ content.extData.width}} X {{content.extData.height}}</div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 export default {
-  name: 'TypePwd',
+  name: 'TypePic',
   props: {
     content: Object
   },
