@@ -35,7 +35,6 @@ const server = {
 
 ipc.invoke('imPreloadReady').then((args) => {
   localStorage.setItem('TSB_SAAPP', JSON.stringify(args))
-
   //定制好订阅器
   let DepList = []
   DepList.push({
@@ -43,13 +42,13 @@ ipc.invoke('imPreloadReady').then((args) => {
     host: isDevelopmentMode ? config.IM.FRONT_URL_DEV : config.IM.FRONT_URL
   })
   tsbSdk.listener(DepList)
-})
 
-if(href === config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN) {
-  server.beforeInit(config.IM.FRONT_URL_DEV)
-} else if (href === config.IM.FRONT_URL + config.IM.AUTO_LOGIN) {
-  server.beforeInit(config.IM.FRONT_URL)
-}
+  if(href === config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN) {
+    server.beforeInit(config.IM.FRONT_URL_DEV)
+  } else if (href === config.IM.FRONT_URL + config.IM.AUTO_LOGIN) {
+    server.beforeInit(config.IM.FRONT_URL)
+  }
+})
 
 ipc.on('imLogout', () => {
   let host = isDevelopmentMode ? config.IM.FRONT_URL_DEV : config.IM.FRONT_URL

@@ -192,11 +192,13 @@ const tsbSdk = {
   },
 
   openOsxInviteMember: function (options) {
+    console.log('收到了!!', options)
     if (Object.keys(options).length === 0) return;
 
     if(!options.groupId) return;
 
     if (!tsbSdk.isThirdApp) {
+      console.log('收到了', options)
       ipc.send('osxOpenInviteMember', options.groupId)
     } else {
       window.postMessage({
