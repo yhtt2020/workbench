@@ -4,6 +4,13 @@ import {createStore} from 'vuex'
 const store = createStore({
   state() {
     return {
+      userInfo:{
+        nickname:'想天浏览器',
+        avatar:'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?undefined',
+        uid:1,
+        spaceUrl:'https://s.apps.vip/user',
+        userToken:'',
+      },
       /**
        * 列表的尺寸
        */

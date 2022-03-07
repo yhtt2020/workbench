@@ -1,5 +1,6 @@
 <template>
   <div class="side-bar "  style="overflow-x: hidden">
+    <UserInfo/>
     <a-menu class="nav"
       v-model:openKeys="openKeys"
       v-model:selectedKeys="tab"
@@ -63,6 +64,7 @@
 import {AppstoreOutlined, InboxOutlined, ClockCircleOutlined,FolderOutlined,PlusOutlined} from '@ant-design/icons-vue';
 import TreeList from './TreeList.vue'
 import {mapState} from 'vuex'
+import UserInfo from '@/components/UserInfo'
 
 export default {
   name: 'SideBar',
@@ -140,6 +142,7 @@ export default {
     }
   },
   components: {
+    UserInfo,
     AppstoreOutlined,
     InboxOutlined,
     ClockCircleOutlined,
