@@ -1,5 +1,5 @@
 <template>
-  <a-directory-tree
+  <a-directory-tree class="tree"
     v-model:expandedKeys="expandedKeys"
     v-model:selectedKeys="selectedKeys"
     :tree-data="treeData"

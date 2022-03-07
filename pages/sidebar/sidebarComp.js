@@ -755,3 +755,10 @@ ipc.on('handleFileAssign',async (event,args)=>{
   console.log(args)
   console.log('assigneApps',assignApps)
 })
+
+ipc.on('getUserInfo',async (event,args)=>{
+  let user=await db.system.where("name").equals("currentUser").first();
+  ipc.sendTo(args.webContentsId,'gotUserInfo',{user:user})
+
+  console.log(window.$store.state.user)
+})

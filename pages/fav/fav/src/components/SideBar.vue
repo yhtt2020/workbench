@@ -122,7 +122,6 @@ export default {
   },
   methods:{
     handleNavClick(e){
-      console.log(e)
       const tabs= {
         'all': '全部',
         'collection':'收集箱',
@@ -131,7 +130,6 @@ export default {
       this.setTab(e.key,tabs[e.key])
     },
     titleClick(e){
-      console.log(e)
       this.setTab(e.key)
     },
     setTab(tabName,alias){

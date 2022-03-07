@@ -41,7 +41,6 @@ const standAloneAppModel = {
     }
     db.standAloneApps.update(2,{package:'com.thisky.com','name':'元社区','url':'https://s.apps.vip','logo':'../../icons/apps/yuan.png'})
     await db.standAloneApps.update(2,{themeColor:'#4188ff'})
-    await db.standAloneApps.update(3,{themeColor:'#8618d2'})
     let importHelper=await  db.standAloneApps.get({package:'com.thisky.import'})
     let importHelperApp=  {
       name: '导入助手',
@@ -302,13 +301,13 @@ const standAloneAppModel = {
       {
         id:3,
         name: '收藏夹',
-        logo: '../../icons/svg/apps.svg',
+        logo: '../../pages/fav/fav.svg',
         summary: '收集你的灵感，集锦',
-        preload: '/pages/apps/preload.js',
-        type: 'local',
+        preload: '/pages/fav/preload.js',
+        type: 'web',
         package: 'com.thisky.fav',
-        url: '/pages/apps/index.html',
-        themeColor: '#ecbfff9c',
+        url: 'http://localhost:8080/',
+        themeColor: '#ffbe41',
         userThemeColor: '',
         createTime: Date.now(),
         updateTime: Date.now(),
