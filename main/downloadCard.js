@@ -12,6 +12,7 @@ function createDownloadWin () {
       height: 465,
       resizable: false,
       autoHideMenuBar:true,
+      show:false,
       parent: mainWindow,
       acceptFirstMouse: true,
       maximizable: false,
@@ -51,27 +52,31 @@ app.whenReady().then(() => {
   ipc.on('openDownload', () => {
     getdownloadWindow()
     downloadWindow.show()
-    downloadWindow.focus()
   })
 
 })
 
-ipc.on('show-context-menuing', (event,args) => {
+ipc.on('willDownload',()=>{
+  downloadWindow.show()
+  downloadWindow.focus()
+})
+
+ipc.on('showMenuIng', (event,args) => {
   console.log(args)
   const template = [
     {
       label: ( args === true) ? '继续下载' : '暂停下载',
-      click: () => { event.sender.send('context-menuing-start') }
+      click: () => { event.sender.send('menuIngStart') }
     },
 
     { label: '分享'},
 
     { label: '复制下载链接' ,
-      click: () => { event.sender.send('context-menuing-Url') }
+      click: () => { event.sender.send('menuIngUrl') }
     },
 
     { label: '删除任务',
-      click: () => { event.sender.send('context-menuing-delete') }
+      click: () => { event.sender.send('menuIngDelete') }
     }
   ]
 
@@ -80,27 +85,27 @@ ipc.on('show-context-menuing', (event,args) => {
 })
 
 
-ipc.on('show-context-menudone', (event) => {
+ipc.on('showMenuDone', (event) => {
   const template = [
     {
       label: '打开',
-      click: () => { event.sender.send('context-menudone-open')}
+      click: () => { event.sender.send('menuDoneOpen')}
     },
 
     { label: '打开文件夹',
-      click: () => { event.sender.send('context-menudone-openpath')}
+      click: () => { event.sender.send('menuDoneOpenPath')}
     },
     { label: '打开下载页',
 
-      click: () => { event.sender.send('context-menudone-downloadUrl')}
+      click: () => { event.sender.send('menuDoneOpenPage')}
     },
     { label: '复制下载链接',
 
-      click: () => { event.sender.send('context-menudone-Url')}
+      click: () => { event.sender.send('menuDoneUrl')}
     },
 
     { label: '删除',
-      click: () => { event.sender.send('context-menudone-delete')}
+      click: () => { event.sender.send('menuDoneDelete')}
     }
   ]
   const menu = Menu.buildFromTemplate(template)

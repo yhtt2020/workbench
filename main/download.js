@@ -39,7 +39,6 @@ function sendIPCToDownloadWindow(action, data) {
     })
   }
   else {
-    // downloadWindow.show()
     downloadWindow.webContents.send(action, data || {})
   }
 
@@ -60,14 +59,13 @@ function downloadHandler (event, item, webContents) {
 
     // send info to download manager
     sendIPCToDownloadWindow('download-info', {
-
       path: item.getSavePath(),
       name: item.getFilename(),
       status: 'start',
       size: { received: 0, total: item.getTotalBytes() },
       paused: item.isPaused(),
       startTime:item.getStartTime(),
-      Url:item.getURL(),
+      url:item.getURL(),
       ChainUrl:item.getURLChain()
     })
 
@@ -99,12 +97,6 @@ function downloadHandler (event, item, webContents) {
         startTime:item.getStartTime()
       })
 
-      console.log({
-        realdata:item.speed,
-        progressnuw:((prevReceivedBytes/item.getTotalBytes()).toFixed(2))*100,
-        paused:item.isPaused()
-      })
-
     })
 
     item.once('done', function (e, state) {
@@ -112,12 +104,13 @@ function downloadHandler (event, item, webContents) {
       if (!downloadWindow.isDestroyed()) {
         downloadWindow.setProgressBar(-1);
       }
+
       sendIPCToDownloadWindow( 'download-info', {
         path: item.getSavePath(),
         startTime:item.getStartTime(),
         name: savePathFilename,
         status: state,
-        Url:item.getURL(),
+        url:item.getURL(),
           size: { received: item.getTotalBytes(), total: item.getTotalBytes() }
       })
     })
