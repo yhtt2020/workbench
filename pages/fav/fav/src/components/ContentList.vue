@@ -3,22 +3,21 @@
     <SubFolderList/>
   </div>
   <div>
-    <h3>内容(23)</h3>
-    <div>
-
-    </div>
+    <ContentItemList/>
   </div>
 </template>
 
 <script>
 import SubFolderList from './content/SubFolderList.vue'
+import ContentItemList from './content/ContentItemList.vue'
 export default {
   name: 'ContentList',
   props: {
     msg: String
   },
   components:{
-    SubFolderList
+    SubFolderList,
+    ContentItemList
   }
 }
 </script>

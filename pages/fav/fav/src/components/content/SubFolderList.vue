@@ -1,7 +1,6 @@
 <template>
   <div>
     <h3 style="margin-bottom:10px">文件夹（{{ subFolders.length }}）
-
     </h3>
     <div style="min-height:150px">
       <div class="sub-folder-wrapper" :style="{width:itemSize+'px',height:itemSize+50+'px'}" style="" v-for="folder in subFolders" v-bind:key="folder">

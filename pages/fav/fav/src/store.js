@@ -68,7 +68,36 @@ const store = createStore({
           name: '产品战略',
           contentsCount: 22
         }],
-      contents: [{},],
+      contents: [{
+        name:'我的密码',
+        type:'pwd',
+        extData:{
+          domain:'zt.xiangtian.ren',
+          username:'cyx',
+          pwd:'chenyixiao1'
+        },
+        href:'zt.xiangtian.ren'
+      },
+        {
+          name:'我的密码',
+          type:'pwd',
+          extData:{
+            domain:'zt.xiangtian.ren',
+            username:'admin',
+            pwd:'chenyixiao1'
+          },
+          href:'zt.xiangtian.ren'
+        },
+        {
+          name:'我的密码',
+          type:'pwd',
+          extData:{
+            domain:'zt.xiangtian.ren',
+            username:'root',
+            pwd:'chenyixiao1'
+          },
+          href:'zt.xiangtian.ren'
+        }],
 
       groups: [
         {
