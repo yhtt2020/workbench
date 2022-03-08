@@ -2,16 +2,31 @@
   <div>
     <a-page-header
       class="content-header"
-      :sub-title="currentTab.alias+' / '  +currentFolder.name"
-      @back="() => $router.go(-1)"
+      @back=""
     >
+      <template #subTitle>
+
+        <a-tooltip  v-if="isApp && currentTab.path" placement="bottom" :overlayStyle="{maxWidth:'1000px'}">
+          <template #title>
+            <span >点击打开完整路径：{{ currentTab.path }} </span>
+          </template>
+          <span @click="openDir(currentTab.path)">{{currentTab.alias}} <login-outlined /></span>
+        </a-tooltip>
+        <span v-else>
+          {{currentTab.alias}}
+        </span>
+          {{currentFolder.name}}
+
+      </template>
       <template #extra >
+
       <div style="display: flex;vertical-align: center">
         <div style="flex: 200px;padding-right: 10px">
           <a-slider v-model:value="itemSize" :min="60" :step="5" :max="300" />
         </div>
         <div style="flex: auto"></div>
         <div style="flex: 120px;padding-top: 7px">
+          <RedoOutlined  />
           <a-dropdown>
             <template #overlay>
               <a-menu>
@@ -59,18 +74,26 @@
 </template>
 
 <script>
-import {  BorderOuterOutlined } from '@ant-design/icons-vue';
+import { RedoOutlined, BorderOuterOutlined,LoginOutlined } from '@ant-design/icons-vue';
 import { mapState } from 'vuex'
+import ipc from '@/utils/ipc'
 export default {
   name: 'ContentHeader',
   props: {
-    msg: String
   },
   mounted(){
     this.$store.commit('ui/setItemSize',Number(localStorage.getItem('itemSize')))
   },
   components:{
-    BorderOuterOutlined
+    BorderOuterOutlined,
+    RedoOutlined,
+    LoginOutlined
+  },
+  methods:{
+    openDir(dir){
+      console.log('我想打开')
+      ipc.openDir(dir)
+    },
   },
   computed:{
     itemSize: {
@@ -85,6 +108,7 @@ export default {
       }
     },
     ...mapState({
+      isApp:state=>state.config.isApp,
       currentFolder:state=>state.ui.currentFolder,
       currentTab:state=>state.ui.currentTab
     })

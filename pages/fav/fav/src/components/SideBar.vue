@@ -152,7 +152,7 @@ export default {
       this.setTab(e.key)
     },
     setTab (tabName, alias) {
-      this.$store.commit('ui/setTab', {
+      this.$store.dispatch('ui/changeTab', {
         name: tabName,
         alias: alias
       })

@@ -1,3 +1,5 @@
+import contentListModel from '@/models/contentListModel'
+
 /**
  * ui模块
  * @type {{mutations: {updateContents(*, *): void}, state: (function(): {contents: [{extData: {domain: string, pwd: string, username: string}, name: string, href: string, type: string}]}), getters: {}}}
@@ -10,7 +12,8 @@ const ui = {
     //当前选项卡
     currentTab: {
       name: 'all',
-      alias: '全部'
+      alias: '全部',
+      path:''
     },
     /**
      * 当前文件夹
@@ -56,8 +59,49 @@ const ui = {
     setTab (state, tab) {
       state.currentTab = tab
     },
+    setCurrentFolder(state,folder){
+      state.currentFolder=folder
+    }
   },
-  getters: {}
+  getters: {},
+  actions:{
+    changeFolder(context,folder){
+      //是本地，则进行本地文件的导入。
+      let files= contentListModel.loadLocalStoreContents(folder.path)
+      let contents=[]
+      files.forEach(file=>{
+        let filename=file.filename
+        //const fileInfo=fs.statSync(file)
+        contents.push(
+          {
+            name:file.filename,
+            type:'pic',
+            ext:'png',
+            cover:'file://'+file.path+filename,
+            extData:{
+              width:'900',
+              height:'420'
+            },
+            href:'http://www.woshipm.com/pd/5336668.html'
+          })
+      })
+      context.commit('content/updateContents',contents,{root:true})
+      context.commit('setCurrentFolder',folder)
+    },
+    changeTab(context,tab){
+      switch (tab.name){
+        case 'all':
+          tab.path=context.rootState.config.storePath
+          //todo 重新载入目录
+          context.dispatch('changeFolder',{
+            path:context.rootState.config.storePath,
+            name:''
+          })
+
+      }
+      context.commit('setTab',tab)
+    }
+  }
 }
 
 export default ui

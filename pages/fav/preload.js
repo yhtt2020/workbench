@@ -9,8 +9,7 @@ window.isApp=true
 window.tsbSdk=tsbSdk
 let href = window.location.href
 ipc.on('gotUserInfo',(event,args)=>{
-  tsbSdk.send('gotUserInfo',args)
-  console.log('收到，并回发消息',args)
+  tsbSdk.send('gotUserInfo',args)//收到侧边栏发来的用户信息，并传消息给应用主界面
 })
 window.appReady=function(){
   ipc.send('getUserInfo')

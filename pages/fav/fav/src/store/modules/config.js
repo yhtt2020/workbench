@@ -16,6 +16,7 @@ const config = {
     },
     //当前存储空间，默认为用户数据目录下的tmpStore 意思是临时存储
     storePath: '',
+    isApp:false,
   }),
   mutations: {
     /**
@@ -26,6 +27,9 @@ const config = {
     setStorePath (state, path) {
       state.storePath = path
     },
+    setIsApp(state,isApp){
+      state.isApp=isApp
+    }
   },
   getters: {}
 }

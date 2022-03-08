@@ -1,4 +1,5 @@
 let localCacheManager=require(path.join(__dirname,'/js/main/localCacheManager.js'))
+const { shell } = require('electron')
 app.whenReady().then(()=>{
   console.log('ipcon')
   const defaultStorePath=app.getPath('userData')+'/tmpStore'
@@ -26,5 +27,9 @@ app.whenReady().then(()=>{
       console.log(args)
     }
 
+  })
+
+  ipc.on('openDir',(event,args)=>{
+    shell.openPath(args.dir)
   })
 })

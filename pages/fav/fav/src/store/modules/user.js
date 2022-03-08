@@ -46,6 +46,8 @@ const user= {
   },
   getters:{
 
+  },
+  actions:{
   }
 }
 

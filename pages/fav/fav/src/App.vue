@@ -66,27 +66,12 @@ export default {
   mounted () {
     //初始化，设置默认的StorePath，这里还需要//todo 读入用户设置的本地路径
     this.$store.commit('config/setStorePath',defaultStorePath)
-    if(this.isApp){
-      //是本地，则进行本地文件的导入。
-      let files= contentListModel.loadLocalStoreContents(this.$store.state.config.storePath)
-      let contents=[]
-      files.forEach(file=>{
-        let filename=file.filename
-        //const fileInfo=fs.statSync(file)
-        contents.push(
-        {
-          name:file.filename,
-          type:'pic',
-          ext:'png',
-          cover:'file://'+file.path+filename,
-          extData:{
-          width:'900',
-            height:'420'
-        },
-          href:'http://www.woshipm.com/pd/5336668.html'
-        })
+    if(window.isApp){
+      this.$store.commit('config/setIsApp',this.isApp) //设置当前为应用模式，全局统一维护这个配置
+      this.$store.dispatch('ui/changeTab',{
+        name:'all',
+        alias:'全部'
       })
-      this.$store.commit('content/updateContents',contents)
 
     }
   },
