@@ -863,10 +863,6 @@ const appManager = {
 
       })
       appWindow.view = appView
-      //test
-      // setInterval(() => {
-      //   appManager.notification(saApp.id,  {title:'测试消息标题', body: '测试内容' })
-      // }, 1000)
 
       ipc.on('getSaApp', (event, args) => {
         event.reply('callback-getSaApp', { saApp })
