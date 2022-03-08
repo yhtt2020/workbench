@@ -8,7 +8,7 @@
       <template #extra >
       <div style="display: flex;vertical-align: center">
         <div style="flex: 200px;padding-right: 10px">
-          <a-slider v-model:value="itemSize" :min="50" :step="5" :max="300" />
+          <a-slider v-model:value="itemSize" :min="60" :step="5" :max="300" />
         </div>
         <div style="flex: auto"></div>
         <div style="flex: 120px;padding-top: 7px">
@@ -67,6 +67,9 @@ export default {
   props: {
     msg: String
   },
+  mounted(){
+    this.$store.commit('setItemSize',Number(localStorage.getItem('itemSize')))
+  },
   components:{
     BorderOuterOutlined
   },
@@ -79,6 +82,7 @@ export default {
       // setter
       set(newValue) {
        this.$store.commit('setItemSize',newValue)
+        localStorage.setItem('itemSize',newValue)
       }
     },
     ...mapState(['currentFolder','currentTab'])
