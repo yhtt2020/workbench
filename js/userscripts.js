@@ -71,6 +71,7 @@ function urlMatchesPattern (url, pattern) {
 
 const userscripts = {
   scripts: [], // {options: {}, content}
+  systemScripts:[],//系统级脚本，目前主要使用fav脚本
   loadScripts: function () {
     userscripts.scripts = []
 
@@ -85,51 +86,59 @@ const userscripts = {
       // store the scripts in memory
       files.forEach(function (filename) {
         if (filename.endsWith('.js')) {
-          fs.readFile(path.join(scriptDir, filename), 'utf-8', function (err, file) {
-            if (err || !file) {
-              return
-            }
-
-            var domain = filename.slice(0, -3)
-            if (domain.startsWith('www.')) {
-              domain = domain.slice(4)
-            }
-            if (!domain) {
-              return
-            }
-
-            var tampermonkeyFeatures = parseTampermonkeyFeatures(file)
-            if (tampermonkeyFeatures) {
-              var scriptName = tampermonkeyFeatures['name:local'] || tampermonkeyFeatures.name
-              if (scriptName) {
-                scriptName = scriptName[0]
-              } else {
-                scriptName = filename
-              }
-              userscripts.scripts.push({ options: tampermonkeyFeatures, content: file, name: scriptName })
-            } else {
-              // legacy script
-              if (domain === 'global') {
-                userscripts.scripts.push({
-                  options: {
-                    match: ['*']
-                  },
-                  content: file,
-                  name: filename
-                })
-              } else {
-                userscripts.scripts.push({
-                  options: {
-                    match: ['*://' + domain]
-                  },
-                  content: file,
-                  name: filename
-                })
-              }
-            }
-          })
+          userscripts.loadScriptFile(path.join(scriptDir, filename))
         }
       })
+    })
+  },
+  /**
+   * 根据路径读入单个脚本到内存中
+   * @param path
+   * @param pushArray
+   */
+  loadScriptFile(path,pushArray=userscripts.scripts){
+    fs.readFile(path, 'utf-8', function (err, file) {
+      if (err || !file) {
+        return
+      }
+      let filename=path.substr(path.replace('\\','/').lastIndexOf('/'))
+      var domain = filename.slice(0, -3)
+      if (domain.startsWith('www.')) {
+        domain = domain.slice(4)
+      }
+      if (!domain) {
+        return
+      }
+
+      var tampermonkeyFeatures = parseTampermonkeyFeatures(file)
+      if (tampermonkeyFeatures) {
+        var scriptName = tampermonkeyFeatures['name:local'] || tampermonkeyFeatures.name
+        if (scriptName) {
+          scriptName = scriptName[0]
+        } else {
+          scriptName = filename
+        }
+        pushArray.push({ options: tampermonkeyFeatures, content: file, name: scriptName })
+      } else {
+        // legacy script
+        if (domain === 'global') {
+          pushArray.push({
+            options: {
+              match: ['*']
+            },
+            content: file,
+            name: filename
+          })
+        } else {
+          pushArray.push({
+            options: {
+              match: ['*://' + domain]
+            },
+            content: file,
+            name: filename
+          })
+        }
+      }
     })
   },
   getMatchingScripts: function (src) {
@@ -175,7 +184,7 @@ const userscripts = {
       //如果存在require 则同步下载所有js，下载完成后再执行主体js
 
       for (const js of script.options.require) {
-        console.log('用户脚本要求require外部js：'+js)
+        //console.log('用户脚本要求require外部js：'+js)
         const jsHex =hash(js)
         const jsCache = jsCachePath + '/' + jsHex + '.js'
         if (!fs.existsSync(jsCache)) {
@@ -191,15 +200,15 @@ const userscripts = {
           //const data=downloadResult.data
           await fs.promises.writeFile(jsCache, data, 'binary')
           webviews.callAsync(tabId, 'executeJavaScript', [fs.readFileSync(jsCache,{encoding:'utf8'})])
-          console.log('外部require缓存未命中，根据自定义脚本的规则下载并require外部js：' +js)
+          //console.log('外部require缓存未命中，根据自定义脚本的规则下载并require外部js：' +js)
           excuted.push(jsCache)
         } else {
           webviews.callAsync(tabId, 'executeJavaScript',[fs.readFileSync(jsCache,{encoding:'utf8'})])
           excuted.push(jsCache)
-          console.log('外部require缓存命中，require已缓存的外部js：' +js)
+          //console.log('外部require缓存命中，require已缓存的外部js：' +js)
         }
         if(excuted.length===script.options.require.length){
-          console.log('excuted all then excute mainjs')
+          //console.log('excuted all then excute mainjs')
           webviews.callAsync(tabId, 'executeJavaScript', [script.content, false, null])
         }
       }
@@ -212,12 +221,12 @@ const userscripts = {
   prepareGMEnv(tabId,script){
     //1.注册函数 //todo 兼容油猴常用函数
     //兼容GM_addStyle
-    console.log(script)
+    //console.log(script)
     if(!!script.options){
       if(!!script.options.grant){
         script.options.grant.forEach((grant)=>{
           if($matchedScriptsForSiteGM[tabId]['grant'].includes(grant)){
-            console.log(grant+'已被其他脚本注册，无需重复注册')
+            //console.log(grant+'已被其他脚本注册，无需重复注册')
           }
           //todo 实现油猴函数的代理
           switch(grant){
@@ -234,7 +243,7 @@ return ele
               `
               webviews.callAsync(tabId, 'executeJavaScript', [jsGM_addStyle])
               $matchedScriptsForSiteGM[tabId]['grant'].push(grant)
-              console.log('注册'+grant+'函数成功')
+              //console.log('注册'+grant+'函数成功')
               break
             case 'GM_setValue':
               const jsGM_setValue=`
@@ -245,7 +254,7 @@ return ele
               window.$matchedScriptsForSiteGM.values={}
               webviews.callAsync(tabId, 'executeJavaScript', [jsGM_setValue])
               $matchedScriptsForSiteGM[tabId]['grant'].push(grant)
-              console.log('注册'+grant+'函数成功')
+              //console.log('注册'+grant+'函数成功')
               //todo GM_setValue
               break
             case 'GM_getValue':
@@ -258,11 +267,11 @@ return ele
               `
               window.$matchedScriptsForSiteGM.values={}
               webviews.callAsync(tabId, 'executeJavaScript', [jsGM_getValue])
-              console.log('注册'+grant+'函数成功')
+              //console.log('注册'+grant+'函数成功')
               //todo GM_getValue
               break
             default:
-              console.log(grant+'函数暂不支持，请等待系统更新后支持')
+              //console.log(grant+'函数暂不支持，请等待系统更新后支持')
           }
           $matchedScriptsForSiteGM[tabId]['grant'].push(grant)
         })
@@ -295,6 +304,15 @@ return ele
     })
   },
   initialize: function () {
+    userscripts.loadScriptFile(path.join(__dirname,'/pages/fav/content.js'),userscripts.systemScripts)
+    webviews.bindEvent('dom-ready', (tabId)=>{
+      userscripts.systemScripts.forEach((script)=>{
+        userscripts.runScript(tabId, script)
+        console.log('运行了系统脚本',script)
+      })
+    })
+
+
     statistics.registerGetter('userscriptCount', function () {
       return userscripts.scripts.length
     })
@@ -309,6 +327,8 @@ return ele
       }
     })
     webviews.bindEvent('dom-ready', userscripts.onPageLoad)
+    //额外添加我们的强制脚本
+
 
     bangsPlugin.registerCustomBang({
       phrase: '!run',

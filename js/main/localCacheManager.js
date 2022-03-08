@@ -1,4 +1,5 @@
 const axios = require("axios");
+const fs=require('fs')
 const config = {
   expireTime: 24 * 60 * 60, //默认缓存有效期为24小时
   cacheExts: [
@@ -15,11 +16,11 @@ if(typeof electronLog!=='undefined'){
   el=electronLog
 }
 let userDataPath=''
-if(typeof app !=='undefined'){
-  //如果是主进程下，有app对象
-  userDataPath=app.getPath('userData')
-}else{
+if(typeof window !=='undefined'){
+  //如果是主进程下，有app对象\
   userDataPath=window.globalArgs['user-data-path']
+}else{
+  userDataPath=require('electron').app.getPath('userData')
 }
 const  cachePath=userDataPath + '/localCache'
 let localCacheManager = {
@@ -136,6 +137,7 @@ let localCacheManager = {
    */
   async fetchUrl(url, path = localCacheManager.tmpPath) {
     //直接下载到本地，不考虑缓存
+
     let {data} = await axios({
       url: url,
       headers: {
