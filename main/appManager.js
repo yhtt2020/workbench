@@ -1188,7 +1188,6 @@ app.whenReady().then(() => {
       const appInfo = appManager.getSaAppByAppId(args.saAppId)
       const reg = /^http(s)?:\/\/(.*?)\//
       const host = reg.exec(appInfo.url)[0]
-      console.log(`${host}?fid=${args.options.circleId}`, '!!!!!')
       appManager.getWindowByAppId(args.saAppId).view.webContents.loadURL(`${host}?fid=${args.options.circleId}`)
     } else {
       sidePanel.get().webContents.send('message',{type:"error",config:{content:'Lumen团队协作未运行!',key: Date.now()}})
