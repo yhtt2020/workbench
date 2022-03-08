@@ -2,6 +2,7 @@ const electron = require('electron')
 const fs = require('fs')
 const path = require('path')
 const electronLog=require('electron-log')
+const {default: installExtension,VUEJS3_DEVTOOLS }=require('electron-devtools-installer')
 let forceClose = false //是否强制退出应用
 const {
   app, // Module to control application life.
@@ -515,3 +516,9 @@ app.on('ready', function() {
 // 	sendIPCToWindow(mainWindow,'showBookmarks')
 
 // })
+app.whenReady().then(()=>{
+  if(isDevelopmentMode){
+    installExtension(VUEJS3_DEVTOOLS).then((name) => console.log(`Added Extension:  ${name}`))
+      .catch((err) => console.log('An error occurred: ', err));
+  }
+})
