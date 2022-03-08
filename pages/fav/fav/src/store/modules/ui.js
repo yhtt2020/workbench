@@ -27,22 +27,22 @@ const ui = {
     /**
      * 当前选中的文件的信息
      */
-    selectedContentInfo: {
-      cover: '',
-      name: '名称名称',
-      remark: '备注备注',
-      href: 'http://apps.vip',
-      rate: 4.5,
-
-      //基本信息
-      baseInfo: {
-        filename: '',
-        path: '',
-        createTime: Date.now(),
-        modifyTime: Date.now(),
-        addTime: Date.now(),
-      }
-    }
+    // selectedContentInfo: {
+    //   cover: '',
+    //   name: '名称名称',
+    //   remark: '备注备注',
+    //   href: 'http://apps.vip',
+    //   rate: 4.5,
+    //
+    //   //基本信息
+    //   baseInfo: {
+    //     filename: '',
+    //     path: '',
+    //     createTime: Date.now(),
+    //     modifyTime: Date.now(),
+    //     addTime: Date.now(),
+    //   }
+    // }
   }),
   mutations: {
     /**
@@ -96,7 +96,7 @@ const ui = {
             baseInfo: {
               path: file.path,
               filename: filename,
-              createTime: fileInfo.ctimeMs,
+              createTime: fileInfo.birthtimeMs,
               addTime: fileInfo.ctimeMs,
               modifyTime: fileInfo.mtimeMs,
               size: tools.convertToText(fileInfo.size)
@@ -106,9 +106,6 @@ const ui = {
       })
       context.commit('content/updateContents', contents, { root: true })
       context.commit('setCurrentFolder', folder)
-      if (contents.length > 0) {
-        context.commit('setSelectedContent',contents[0])
-      }
     },
     changeTab (context, tab) {
       switch (tab.name) {

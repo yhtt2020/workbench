@@ -26,7 +26,18 @@ const group = {
       state.contents = contents
     },
   },
-  getters: {}
+  getters: {
+    contentsOrderByCreateTime(state){
+      function compare(property){
+        return function(a,b){
+          var value1 = a.baseInfo[property];
+          var value2 = b.baseInfo[property];
+          return  value2-value1;
+        }
+      }
+      return state.contents.sort(compare('createTime'))
+    }
+  }
 }
 
 export default group

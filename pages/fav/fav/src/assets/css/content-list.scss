@@ -5,9 +5,13 @@
   left: 5px;
   top: -10px;
   border-radius: 4px;
-  border: 1px solid #c1c1c1;
+  //border: 1px solid #c1c1c1;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.32);
+  overflow: hidden;
 }
-
+.selected .sub-folder-cover{
+ border: 4px solid rgb(99, 161, 255);
+}
 .cover-wrapper {
   margin-bottom: 20px;
   position: relative;

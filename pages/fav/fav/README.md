@@ -1,3 +1,10 @@
+##词汇表
+```
+content 内容
+subFolder 子文件夹
+```
+
+
 # fav
 
 ## Project setup

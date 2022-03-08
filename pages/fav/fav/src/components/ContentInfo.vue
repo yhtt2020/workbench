@@ -1,5 +1,5 @@
 <template>
-  <div class="content-info">
+  <div class="content-info" v-if="selectedContentInfo">
     <div style="margin-bottom: 10px">
       <a-image
         :width="200" style="max-height: 300px"
@@ -50,6 +50,9 @@
       <a-button block>导出文件</a-button>
     </div>
   </div>
+  <div v-else>
+    未选择
+  </div>
 </template>
 
 <script>
@@ -76,11 +79,9 @@ export default defineComponent({
     dateStr (date) {
       //获取js 时间戳
       var time = new Date().getTime()
-      console.log(date)
-      console.log(time)
+      date=parseInt(date.toFixed(0))/1000
       //去掉 js 时间戳后三位，与php 时间戳保持一致
       time = parseInt((time - date * 1000) / 1000)
-
       //存储转换值
       var s
       if (time < 60 * 10) {//十分钟内
