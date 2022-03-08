@@ -14,6 +14,7 @@ const user= {
       token:'',
       userData:{}
     },
+    folders:[]
   }),
   mutations:{
     /**

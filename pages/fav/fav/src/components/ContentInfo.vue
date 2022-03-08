@@ -19,7 +19,6 @@
       <a-select
         :options="options"
         mode="tags"
-        :size="size"
         placeholder="选择标签"
         style="width: 100%"
       ></a-select>
@@ -29,7 +28,6 @@
       <a-select
         :options="options"
         mode="tags"
-        :size="size"
         placeholder="标记为"
         style="width: 100%"
       ></a-select>

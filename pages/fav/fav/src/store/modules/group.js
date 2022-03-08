@@ -9,16 +9,19 @@ const userModule = {
       {
         icon: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?undefined',
         name: '想天软件',
+        folders:[],
         foldersCount: 4,
       },
       {
         icon: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?undefined',
         name: '浏览器研发组',
+        folders:[],
         foldersCount: 7,
       },
       {
         icon: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?undefined',
         name: '头条运营组',
+        folders:[],
         foldersCount: 3,
       }
     ],
