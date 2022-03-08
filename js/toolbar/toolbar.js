@@ -116,6 +116,7 @@ const toolbar = {
   forwardButton: document.getElementById('forward-button-toolbar'),
   backButton: document.getElementById('back-button-toolbar'),
   collapseButton: document.getElementById('collapse-button-toolbar'),
+  startPageButton:document.getElementById('start-button-toolbar'),
   //地址输入框焦点
   focusInput () {
     if ($toolbar.expanded && document.getElementById('searchbar').hidden) {
@@ -135,6 +136,19 @@ const toolbar = {
       mobileEl.style.opacity = 1
       mobileEl.title = '手机浏览模式'
       mobileEl.disable = false
+    }
+  },
+  updateStartPage(){
+    let tabData=tabs.get(tabs.getSelected())
+    if(tabData.lock){
+      toolbar.startPageButton.parentElement.hidden=false
+      if(tabData.startPage===tabData.url){
+        toolbar.startPageButton.classList.add('disable')
+      }else{
+        toolbar.startPageButton.classList.remove('disable')
+      }
+    }else{
+      toolbar.startPageButton.parentElement.hidden=true
     }
   },
   updateScriptsCountTip (tabId = tabs.getSelected().id) {
@@ -200,6 +214,20 @@ const toolbar = {
       document.getElementById('toolbar-navigation-buttons').hidden = true
     }
     toolbar.adjustSideBar()
+
+    toolbar.startPageButton.addEventListener('click',()=>{
+      if(toolbar.startPageButton.classList.contains('disable')){
+        return
+      }
+      let tabData=tabs.get(tabs.getSelected())
+      if(tabData.startPage){
+        webviews.update(tabs.getSelected(), tabData.startPage)
+      }else{
+        if(confirm('此标签锁定在返回起始页功能推出前，无法返回到起始页。是否将当前位置设置为起始页？')){
+          tabs.update(tabs.getSelected(),{startPage:tabData.url})
+        }
+      }
+    })
   },
   adjustSideBar () {
     let sideMode = localStorage.getItem('sideMode')

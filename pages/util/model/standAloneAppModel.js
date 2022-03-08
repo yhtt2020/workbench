@@ -72,6 +72,11 @@ const standAloneAppModel = {
     if(!!!importHelper){
       db.standAloneApps.add(importHelperApp)
     }
+    let timer= await db.standAloneApps.get({package:'com.thisky.timer'})
+    if(timer){
+      await db.standAloneApps.update(timer.id,{url:'https://a.apps.vip/timer',logo:'https://a.apps.vip/timer/icon.svg'})
+    }
+
 
     let helper= await db.standAloneApps.get({package:'com.thisky.helper'})
     if(!!!helper){
@@ -97,7 +102,7 @@ const standAloneAppModel = {
     }
     let imageEditor = await db.standAloneApps.get({name:'图片编辑器'})
     if(imageEditor){
-      db.standAloneApps.update(imageEditor.id,{package:'com.thisky.imageEditor',fileAssign:['image']})
+     await  db.standAloneApps.update(imageEditor.id,{package:'com.thisky.imageEditor',fileAssign:['image'],url:'https://a.apps.vip/imageEditor/','logo':'https://a.apps.vip/imageEditor/icon.svg'})
     }
 
   },
@@ -353,8 +358,8 @@ const standAloneAppModel = {
         themeColor: 'rgb(90,170,60)',
         author: '想天软件',
         site: 'http://apps.vip',
-        logo: 'http://d.xiangtian.ren/apps/imageEditor/icon.svg',
-        url: 'http://d.xiangtian.ren/apps/imageEditor/',
+        logo: 'https://a.apps.vip/imageEditor/icon.svg',
+        url: 'https://a.apps.vip/imageEditor/',
         package: 'com.thisky.imageEditor',
         summary: '可以为您的图片增加相框、贴纸、文字、进行简单裁减、旋转，还可以添加滤镜。',
         fileAssign:['image']
