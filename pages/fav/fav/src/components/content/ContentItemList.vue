@@ -21,11 +21,13 @@ export default {
     msg: String
   },
   computed:{
-    ...mapState([
-      'subFolders',
-      'itemSize',
-      'contents'
-    ])
+    ...mapState(
+      {
+        subFolders:state=>state.subFolder.subFolders,
+        itemSize:state=>state.ui.itemSize,
+        contents:state=>state.content.contents
+      }
+    )
   }
 }
 </script>

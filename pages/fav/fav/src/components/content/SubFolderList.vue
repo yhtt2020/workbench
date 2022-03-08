@@ -24,10 +24,10 @@ export default {
     msg: String
   },
   computed:{
-    ...mapState([
-      'subFolders',
-      'itemSize'
-    ])
+    ...mapState({
+      subFolders:state=>state.subFolder.subFolders,
+      itemSize:state=>state.ui.itemSize
+    })
   }
 }
 </script>

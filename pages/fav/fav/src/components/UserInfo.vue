@@ -3,10 +3,10 @@
 
     <a-row v-if="userInfo.uid">
       <a-col flex="60px">
-        <a :href="getComProtocolUrl(config.userSpaceUrl)"><a-avatar :src="userInfo.avatar" :size="50"></a-avatar></a>
+        <a :href="getComProtocolUrl(server.userSpaceUrl)"><a-avatar :src="userInfo.avatar" :size="50"></a-avatar></a>
       </a-col>
       <a-col flex="auto">
-        <div><a :href="getComProtocolUrl(config.userSpaceUrl)" target="_blank" class="nickname">{{ userInfo.nickname }}</a></div>
+        <div><a :href="getComProtocolUrl(server.userSpaceUrl)" target="_blank" class="nickname">{{ userInfo.nickname }}</a></div>
         <div>
           <a-progress title="剩余空间99%" :percent="99" size="small"/>
         </div>
@@ -46,19 +46,19 @@ export default {
     }
   },
   computed: {
-    ...mapState([
-      'userInfo',
-      'config'
-    ])
+    ...mapState({
+      userInfo: state => state.user.userInfo,
+      server: state=>state.config.server
+    })
   },
   methods: {
     getComProtocolUrl:tools.getComProtocolUrl,
     logout () {
-      this.$store.commit('saveUserInfo', { uid: 0 })
+      this.$store.commit('user/setUserInfo', { uid: 0 })
     },
     goAppLogin () {
       //开始循环监听登录事件，直至登录成功。清理掉监听器。
-      window.ipc.send('addTab', { url: this.config.loginUrl })
+      window.ipc.send('addTab', { url: this.server.loginUrl })
       let timer = setInterval(() => {
         window.ipc.send('getUserInfo')
         if (this.userInfo.uid !== 0) {

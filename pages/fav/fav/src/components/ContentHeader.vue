@@ -14,7 +14,7 @@
         <div style="flex: 120px;padding-top: 7px">
           <a-dropdown>
             <template #overlay>
-              <a-menu @click="handleMenuClick">
+              <a-menu>
                 <a-sub-menu key="info" title="显示信息">
                   <a-menu-item> <a-checkbox  >名称</a-checkbox></a-menu-item>
                   <a-menu-item><a-checkbox  >扩展名</a-checkbox></a-menu-item>
@@ -45,10 +45,9 @@
 
           </a-dropdown>
           <a-input-search
-            v-model:value="value" size="small"
+            size="small"
             placeholder="搜索"
             style="width: 100px"
-            @search="onSearch"
           />
         </div>
       </div>
@@ -68,7 +67,7 @@ export default {
     msg: String
   },
   mounted(){
-    this.$store.commit('setItemSize',Number(localStorage.getItem('itemSize')))
+    this.$store.commit('ui/setItemSize',Number(localStorage.getItem('itemSize')))
   },
   components:{
     BorderOuterOutlined
@@ -77,15 +76,18 @@ export default {
     itemSize: {
       // getter
       get() {
-        return this.$store.state.itemSize
+        return this.$store.state.ui.itemSize
       },
       // setter
       set(newValue) {
-       this.$store.commit('setItemSize',newValue)
+       this.$store.commit('ui/setItemSize',newValue)
         localStorage.setItem('itemSize',newValue)
       }
     },
-    ...mapState(['currentFolder','currentTab'])
+    ...mapState({
+      currentFolder:state=>state.ui.currentFolder,
+      currentTab:state=>state.ui.currentTab
+    })
   },
   data() {
     return {

@@ -20,7 +20,9 @@ export default {
     content: Object
   },
   computed:{
-    ...mapState(['itemSize'])
+    ...mapState({
+      itemSize:state=>state.ui.itemSize
+    })
   }
 }
 </script>

@@ -2,7 +2,6 @@
   <div class="side-bar "  style="overflow-x: hidden">
     <UserInfo/>
     <a-menu class="nav"
-      v-model:openKeys="openKeys"
       v-model:selectedKeys="tab"
       style="background: none;"
       mode="inline"
@@ -44,7 +43,7 @@
         <div>
           <TreeList></TreeList>
         </div>
-        <template #extra><PlusOutlined  @click="handleClick" /></template>
+        <template #extra><PlusOutlined  /></template>
       </a-collapse-panel>
     </a-collapse>
     <a-collapse class="tab-wrapper"  v-model:activeKey="collapseGroupFolder" :bordered="false" :ghost="true">
@@ -53,7 +52,7 @@
           <div style="margin-top: 10px"><a-avatar shape="square" :size="18" :src="group.icon"></a-avatar> {{group.name}}</div>
           <TreeList></TreeList>
         </div>
-        <template #extra><PlusOutlined  @click="handleClick" /></template>
+        <template #extra><PlusOutlined /></template>
       </a-collapse-panel>
     </a-collapse>
   </div>
@@ -113,7 +112,7 @@ export default {
   },
   computed:{
     tab(){
-      return [this.$store.state.currentTab.name]
+      return [this.$store.state.ui.currentTab.name]
       //return this.$store.state.currentTab.name
     },
     ...mapState([
@@ -133,7 +132,7 @@ export default {
       this.setTab(e.key)
     },
     setTab(tabName,alias){
-      this.$store.commit('setTab',{
+      this.$store.commit('ui/setTab',{
         name:tabName,
         alias:alias
       })

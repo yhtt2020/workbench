@@ -3,7 +3,7 @@ import Antd from 'ant-design-vue'
 import App from './App.vue'
 import './assets/css/main.css'
 import 'ant-design-vue/dist/antd.css'
-import store from './store'
+import store from './store/index'
 import tsbk from '@/core/tsbSdk'
 let app=createApp(App).use(Antd).use(store).mount('#app')
 if(window.tsbSdk){
@@ -14,7 +14,7 @@ if(window.tsbSdk){
   })
   tsbk.on('gotUserInfo',(event,args)=> {
     let user =args.user.value
-    app.$store.commit('saveUserInfo',user)
+    app.$store.commit('user/setUserInfo',user)
   })
   tsbk.ready()
   window.appReady()
