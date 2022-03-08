@@ -1,8 +1,8 @@
 <template>
-  <div class="cover-wrapper" style="position: relative" :style="{width:itemSize+'px',height:itemSize+'px'}">
+  <div @click="setSelectedContent(content)" class="cover-wrapper" style="position: relative" :style="{width:itemSize+'px',height:itemSize+'px'}">
     <div class="type-label">图片</div>
     <a-image :style="{width:itemSize+'px',height:itemSize+'px',objectFit:'cover'}"
-             style="background: #f1f1f1"
+             :preview="false" style="background: #f1f1f1"
              class="sub-folder-cover"
              :src="content.cover">
     </a-image>
@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState,mapMutations } from 'vuex'
 
 export default {
   name: 'TypePic',
@@ -26,6 +26,11 @@ export default {
         itemSize: state => state.ui.itemSize
       }
     )
+  },
+  methods:{
+    ...mapMutations({
+      setSelectedContent:'ui/setSelectedContent'
+    })
   }
 }
 </script>

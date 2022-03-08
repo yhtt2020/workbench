@@ -32,4 +32,7 @@ app.whenReady().then(()=>{
   ipc.on('openDir',(event,args)=>{
     shell.openPath(args.dir)
   })
+  ipc.on('showItemInFolder',(event,args)=>{
+    shell.showItemInFolder(args.fullPath)
+  })
 })

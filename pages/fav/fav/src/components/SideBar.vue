@@ -58,12 +58,11 @@
           <div style="margin-top: 10px">
             <a-avatar shape="square" :size="18" :src="group.icon"></a-avatar>
             {{ group.name }}
+            <span style="float:right;"> <PlusOutlined style="color:#999;font-size: 12px"/></span>
+
           </div>
           <TreeList :treeData="group.folders"></TreeList>
         </div>
-        <template #extra>
-          <PlusOutlined/>
-        </template>
       </a-collapse-panel>
     </a-collapse>
   </div>

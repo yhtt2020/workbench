@@ -18,12 +18,6 @@ const userModule = {
         folders:[],
         foldersCount: 7,
       },
-      {
-        icon: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?undefined',
-        name: '头条运营组',
-        folders:[],
-        foldersCount: 3,
-      }
     ],
   }),
   mutations: {

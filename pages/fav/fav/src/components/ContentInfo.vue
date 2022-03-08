@@ -3,7 +3,7 @@
     <div style="margin-bottom: 10px">
       <a-image
         :width="200" style="max-height: 300px"
-        :src="`https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?${random}`"
+        :src="selectedContentInfo.cover"
       >
         <template #placeholder>
           <a-image
@@ -15,14 +15,14 @@
       </a-image>
     </div>
     <div style="margin-bottom: 10px">
-      <a-input v-model:value="selectedContentInfo.name" placeholder="标题标题"/>
+      <a-input v-model:value="selectedContentInfo.name" placeholder="标题"/>
       <a-select
         :options="options"
         mode="tags"
         placeholder="选择标签"
         style="width: 100%"
       ></a-select>
-      <a-input v-model:value="selectedContentInfo.remark" placeholder="备注备注"/>
+      <a-input v-model:value="selectedContentInfo.remark" placeholder="备注"/>
       <a-input style="margin-bottom: 0" v-model:value="selectedContentInfo.href" placeholder="网址网址"/>
       <a-rate style="margin-bottom: 10px" :value="4" allow-half/>
       <a-select
@@ -41,7 +41,9 @@
         <br>
         修改时间：{{ this.dateStr(selectedContentInfo.baseInfo.modifyTime) }}
         <br>
-        文件路径：{{ selectedContentInfo.baseInfo.path }}/{{ selectedContentInfo.baseInfo.filename }}
+        文件路径：<br><span title="点击定位到文件" @click="ipc.showItemInFolder(selectedContentInfo.baseInfo.path+selectedContentInfo.baseInfo.filename)" style="color: #999;cursor:pointer;">{{ selectedContentInfo.baseInfo.path }}{{ selectedContentInfo.baseInfo.filename }}</span>
+        <br/>
+        文件大小：{{selectedContentInfo.baseInfo.size}}
       </div>
     </div>
     <div>
@@ -53,12 +55,14 @@
 <script>
 import { ref, defineComponent } from 'vue'
 import { mapState } from 'vuex'
+import ipc from '@/utils/ipc'
 
 export default defineComponent({
   name: 'ContentInfo',
   props: {},
   data () {
     return {
+      ipc,
       value3: ref(['a1', 'b2']),
       options: [
         { value: '稍后读' },
@@ -72,6 +76,8 @@ export default defineComponent({
     dateStr (date) {
       //获取js 时间戳
       var time = new Date().getTime()
+      console.log(date)
+      console.log(time)
       //去掉 js 时间戳后三位，与php 时间戳保持一致
       time = parseInt((time - date * 1000) / 1000)
 

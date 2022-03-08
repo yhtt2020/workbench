@@ -26,7 +26,7 @@
         </div>
         <div style="flex: auto"></div>
         <div style="flex: 120px;padding-top: 7px">
-          <RedoOutlined  />
+          <RedoOutlined @click="changeTab('all')" style="margin-right: 10px" />
           <a-dropdown>
             <template #overlay>
               <a-menu>
@@ -75,7 +75,7 @@
 
 <script>
 import { RedoOutlined, BorderOuterOutlined,LoginOutlined } from '@ant-design/icons-vue';
-import { mapState } from 'vuex'
+import { mapState,mapActions } from 'vuex'
 import ipc from '@/utils/ipc'
 export default {
   name: 'ContentHeader',
@@ -91,9 +91,11 @@ export default {
   },
   methods:{
     openDir(dir){
-      console.log('我想打开')
       ipc.openDir(dir)
     },
+    changeTab(){
+      this.$store.dispatch('ui/changeTab',{name:'all'})
+    }
   },
   computed:{
     itemSize: {

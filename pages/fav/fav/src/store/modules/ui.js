@@ -1,11 +1,13 @@
 import contentListModel from '@/models/contentListModel'
+import tools from '@/utils/tools'
 
+const fs = eval('require')('fs')
 /**
  * ui模块
  * @type {{mutations: {updateContents(*, *): void}, state: (function(): {contents: [{extData: {domain: string, pwd: string, username: string}, name: string, href: string, type: string}]}), getters: {}}}
  */
 const ui = {
-  namespaced:true,
+  namespaced: true,
   state: () => ({
     //列表项宽度
     itemSize: 100,
@@ -13,7 +15,7 @@ const ui = {
     currentTab: {
       name: 'all',
       alias: '全部',
-      path:''
+      path: ''
     },
     /**
      * 当前文件夹
@@ -59,47 +61,68 @@ const ui = {
     setTab (state, tab) {
       state.currentTab = tab
     },
-    setCurrentFolder(state,folder){
-      state.currentFolder=folder
+    setCurrentFolder (state, folder) {
+      state.currentFolder = folder
+    },
+    /**
+     * 设置当前选中的内容
+     * @param state
+     * @param content
+     */
+    setSelectedContent (state, content) {
+      state.selectedContentInfo = content
     }
   },
   getters: {},
-  actions:{
-    changeFolder(context,folder){
+  actions: {
+    changeFolder (context, folder) {
       //是本地，则进行本地文件的导入。
-      let files= contentListModel.loadLocalStoreContents(folder.path)
-      let contents=[]
-      files.forEach(file=>{
-        let filename=file.filename
-        //const fileInfo=fs.statSync(file)
+      let files = contentListModel.loadLocalStoreContents(folder.path)
+      let contents = []
+      files.forEach(file => {
+        let filename = file.filename
+        const fileInfo = fs.statSync(folder.path + file.filename)
+        console.log(fileInfo)
         contents.push(
           {
-            name:file.filename,
-            type:'pic',
-            ext:'png',
-            cover:'file://'+file.path+filename,
-            extData:{
-              width:'900',
-              height:'420'
+            name: file.filename,
+            type: 'pic',
+            ext: 'png',
+            cover: 'file://' + file.path + filename,
+            extData: {
+              width: '900',
+              height: '420'
             },
-            href:'http://www.woshipm.com/pd/5336668.html'
+            baseInfo: {
+              path: file.path,
+              filename: filename,
+              createTime: fileInfo.ctimeMs,
+              addTime: fileInfo.ctimeMs,
+              modifyTime: fileInfo.mtimeMs,
+              size: tools.convertToText(fileInfo.size)
+            },
+            href: 'http://www.woshipm.com/pd/5336668.html'
           })
       })
-      context.commit('content/updateContents',contents,{root:true})
-      context.commit('setCurrentFolder',folder)
+      context.commit('content/updateContents', contents, { root: true })
+      context.commit('setCurrentFolder', folder)
+      if (contents.length > 0) {
+        context.commit('setSelectedContent',contents[0])
+      }
     },
-    changeTab(context,tab){
-      switch (tab.name){
+    changeTab (context, tab) {
+      switch (tab.name) {
         case 'all':
-          tab.path=context.rootState.config.storePath
+          tab.alias='全部'
+          tab.path = context.rootState.config.storePath
           //todo 重新载入目录
-          context.dispatch('changeFolder',{
-            path:context.rootState.config.storePath,
-            name:''
+          context.dispatch('changeFolder', {
+            path: context.rootState.config.storePath,
+            name: ''
           })
 
       }
-      context.commit('setTab',tab)
+      context.commit('setTab', tab)
     }
   }
 }

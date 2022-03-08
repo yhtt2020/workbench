@@ -1,5 +1,4 @@
-
-const tools={
+const tools = {
   getAppProtocolUrl (pkg, url) {
     return `tsb://app/redirect/?package=${pkg}&url=${url}`
   },
@@ -65,6 +64,17 @@ const tools={
     var ele = document.createElement('span')
     ele.innerHTML = str
     return ele.textContent
+  },
+
+  convertToText (size) {
+    let mb = (size / 1024 / 1024).toFixed(2)
+    if (mb < 1) {
+      return (size / 1024).toFixed(1) + 'KB'
+    } else if (mb > 1024) {
+      return (size / 1024 / 1024 / 1024).toFixed(2) + 'GB'
+    } else {
+      return mb + 'MB'
+    }
   }
 }
 

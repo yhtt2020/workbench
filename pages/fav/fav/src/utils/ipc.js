@@ -9,6 +9,9 @@ const ipc = {
   openDir (dir) {
     ipcSender.send('openDir', { dir })
     console.log('我欲打开dir',{dir})
+  },
+  showItemInFolder(fullPath){
+    ipcSender.send('showItemInFolder', { fullPath })
   }
 }
 
