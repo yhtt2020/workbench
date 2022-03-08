@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="subFolders.length>0">
     <h3 style="margin-bottom:10px">文件夹（{{ subFolders.length }}）
     </h3>
     <div style="min-height:150px">

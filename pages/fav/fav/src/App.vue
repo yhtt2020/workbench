@@ -36,6 +36,11 @@ import ContentHeader from './components/ContentHeader.vue'
 import ContentInfo from './components/ContentInfo.vue'
 import ContentList from './components/ContentList.vue'
 import { mapState } from 'vuex'
+import contentListModel from '@/models/contentListModel'
+import tools from '@/utils/tools'
+tools.getWindowArgs(window)
+const defaultStorePath = window.globalArgs['user-data-dir'] + '/tmpStore/'
+
 export default {
   name: 'App',
   components: {
@@ -53,8 +58,36 @@ export default {
   computed:{
     ...mapState([
       'userInfo',
-      'config'
+      'config',
+      'storePath'
     ])
+  },
+  mounted () {
+    this.$store.commit('setStorePath',defaultStorePath)
+    if(this.isApp){
+      //是本地，则进行本地文件的导入。
+      console.log(this.$store.state.storePath)
+      let files= contentListModel.loadLocalStoreContents(this.$store.state.storePath)
+      let contents=[]
+      files.forEach(file=>{
+        let filename=file.filename
+        //const fileInfo=fs.statSync(file)
+        contents.push(
+        {
+          name:file.filename,
+          type:'pic',
+          ext:'png',
+          cover:'file://'+file.path+filename,
+          extData:{
+          width:'900',
+            height:'420'
+        },
+          href:'http://www.woshipm.com/pd/5336668.html'
+        })
+      })
+      this.$store.commit('updateContents',contents)
+
+    }
   },
   methods:{
     goLogin(){

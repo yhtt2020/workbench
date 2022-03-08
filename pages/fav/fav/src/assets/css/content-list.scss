@@ -10,6 +10,21 @@
 
 .cover-wrapper {
   margin-bottom: 20px;
+  position: relative;
+
+  .type-label {
+    position: absolute;
+    right: 0px;
+    top: 10px;
+    padding: 2px;
+    line-height: 14px;
+    font-size: 12px;
+    background-color: rgba(0, 0, 0, 0.54);
+    color: white;
+    border-radius: 4px;
+    z-index: 20;
+    display: inline-block;
+  }
 }
 
 .sub-folder-frame {
@@ -23,7 +38,21 @@
 
 .folder-name {
   text-align: center;
+  font-size: 12px;
   margin: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-break: break-word;
+}
+.ext{
+  text-align: center;
+  font-size: 12px;
+  color: #999;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-break: break-word;
 }
 
 .inner-content-count {
@@ -39,14 +68,15 @@
 }
 
 
-.content-header{
+.content-header {
 
 
-  &.ant-page-header{
+  &.ant-page-header {
     padding: 10px;
     padding-bottom: 0;
     background: white;
-    .ant-page-header-heading-extra{
+
+    .ant-page-header-heading-extra {
       width: 300px;
     }
   }

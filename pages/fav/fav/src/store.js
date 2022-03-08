@@ -9,6 +9,7 @@ const store = createStore({
         loginUrl:host+'login?response_type=code&client_id='+clientId+'&state=1',
         userSpaceUrl:host+'user'
       },
+      storePath:'',
       userInfo:{
         nickname:'想天浏览器',
         avatar:'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?undefined',
@@ -22,52 +23,53 @@ const store = createStore({
        * 列表的尺寸
        */
       itemSize: 100,
-      subFolders: [{
-        cover: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?undefined',
-        name: '产品设计',
-        contentsCount: 13
-      },
-        {
-          cover: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?undefined',
-          name: '产品战略',
-          contentsCount: 22
-        }, {
-          cover: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?undefined',
-          name: '产品设计',
-          contentsCount: 13
-        },
-        {
-          cover: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?undefined',
-          name: '产品战略',
-          contentsCount: 22
-        }, {
-          cover: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?undefined',
-          name: '产品设计',
-          contentsCount: 13
-        },
-        {
-          cover: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?undefined',
-          name: '产品战略',
-          contentsCount: 22
-        }, {
-          cover: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?undefined',
-          name: '产品设计',
-          contentsCount: 13
-        },
-        {
-          cover: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?undefined',
-          name: '产品战略',
-          contentsCount: 22
-        }, {
-          cover: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?undefined',
-          name: '产品设计',
-          contentsCount: 13
-        },
-        {
-          cover: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?undefined',
-          name: '产品战略',
-          contentsCount: 22
-        }],
+      subFolders:[],
+      // subFolders: [{
+      //   cover: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?undefined',
+      //   name: '产品设计',
+      //   contentsCount: 13
+      // },
+      //   {
+      //     cover: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?undefined',
+      //     name: '产品战略',
+      //     contentsCount: 22
+      //   }, {
+      //     cover: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?undefined',
+      //     name: '产品设计',
+      //     contentsCount: 13
+      //   },
+      //   {
+      //     cover: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?undefined',
+      //     name: '产品战略',
+      //     contentsCount: 22
+      //   }, {
+      //     cover: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?undefined',
+      //     name: '产品设计',
+      //     contentsCount: 13
+      //   },
+      //   {
+      //     cover: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?undefined',
+      //     name: '产品战略',
+      //     contentsCount: 22
+      //   }, {
+      //     cover: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?undefined',
+      //     name: '产品设计',
+      //     contentsCount: 13
+      //   },
+      //   {
+      //     cover: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?undefined',
+      //     name: '产品战略',
+      //     contentsCount: 22
+      //   }, {
+      //     cover: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?undefined',
+      //     name: '产品设计',
+      //     contentsCount: 13
+      //   },
+      //   {
+      //     cover: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png?undefined',
+      //     name: '产品战略',
+      //     contentsCount: 22
+      //   }],
       contents: [{
         name:'我的密码',
         type:'pwd',
@@ -162,8 +164,11 @@ const store = createStore({
     }
   },
   mutations: {
-    increment(state) {
-      state.count++
+    setStorePath(state,path){
+      state.storePath=path
+    },
+    updateContents(state,contents){
+      state.contents=contents
     },
     setTab(state, tab) {
       state.currentTab = tab
@@ -191,7 +196,6 @@ const store = createStore({
           userData:null
         }
       }
-
     }
   }
 })

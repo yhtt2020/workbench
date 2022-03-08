@@ -2,7 +2,7 @@
   <div class="cover-wrapper" style="position: relative" :style="{width:itemSize+'px',height:itemSize+'px'}">
     <div class="type-label">图片</div>
     <a-image :style="{width:itemSize+'px',height:itemSize+'px',objectFit:'cover'}"
-             :preview="false" style="background: #f1f1f1"
+              style="background: #f1f1f1"
              class="sub-folder-cover"
              :src="content.cover">
     </a-image>
