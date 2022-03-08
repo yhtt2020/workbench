@@ -13,7 +13,7 @@
 <div id="appVue">
   <template>
     <div class="toggle">
-      <a-tabs default-active-key="1" @change="callback">
+      <a-tabs default-active-key='1' @change="callback">
         <a-tab-pane key="1" >
         <span slot="tab">
            <a-badge :count="count" id="tag">
@@ -31,13 +31,11 @@
               </div>
 
               <div>
-<!--                <a-button type="link" style="float: right" @click="showModal(list.id)">-->
-<!--                  删除-->
-<!--                </a-button>-->
                 <a-modal v-model="visibleIng" title="删除下载任务" ok-text="确认" cancel-text="取消" @ok="hideModal()">
                   <p>文件正在下载中，确认删除</p>
                 </a-modal>
               </div>
+
               <div v-if="list.status === 'progressing'" >
                 <div v-if="list.loadstate" >
                   <a-button style="position: absolute;margin-left: 270px;margin-top: 14px" type="link" @click="resume(index)" >
@@ -50,12 +48,37 @@
                   </a-button>
                 </div>
               </div>
-           <div>
-            <div style="margin-left: 50px;font-size: 15px;font-weight: bold ;">{{list.title}}</div>
-            <div style="margin-left: 50px;font-size: 12px;width: 150px;">{{list.received}}  MB  /  {{list.total}}  MB</div>
-            <div style="position: absolute;margin-left: 220px;width: 50px;margin-top: -20px" >{{list.realdata}}/MB</div>
-           </div>
-            <a-progress style="position: absolute;width: 95%;padding-left: 50px;margin-top: -6px"  :percent="list.progressnuw"></a-progress>
+<!--           <div>-->
+<!--            <div style="margin-left: 50px;font-size: 15px;font-weight: bold ;">{{list.title}}</div>-->
+<!--            <div style="margin-left: 50px;font-size: 12px;width: 150px;">{{list.received}}  MB  /  {{list.total}}  MB</div>-->
+<!--            <div style="position: absolute;margin-left: 220px;width: 50px;margin-top: -20px" >{{list.realdata}}/MB</div>-->
+<!--           </div>-->
+<!--            <a-progress style="position: absolute;width: 95%;padding-left: 50px;margin-top: -6px"  :percent="list.progressnuw"></a-progress>-->
+<!--            -->
+
+<!--              <div v-if="list.status === ' progressing ' ">-->
+<!--              <div>-->
+<!--                <div style="margin-left: 50px;font-size: 15px;font-weight: bold ;">{{list.title}}</div>-->
+<!--                <div style="margin-left: 50px;font-size: 12px;width: 150px;">{{list.received}}  MB  /  {{list.total}}  MB</div>-->
+<!--                <div style="position: absolute;margin-left: 220px;width: 50px;margin-top: -20px" >{{list.realdata}}/MB</div>-->
+<!--              </div>-->
+<!--              <a-progress style="position: absolute;width: 95%;padding-left: 50px;margin-top: -6px"  :percent="list.progressnuw"></a-progress>-->
+<!--              </div>-->
+              <div v-if="list.status === 'start'">
+                 <div style="margin-left: 50px;font-size: 15px;font-weight: bold ;">{{list.title}}</div>
+                 <div style="margin-left: 50px;font-size: 12px;width: 150px;">{{list.total}}  MB</div>
+                 <div style="position: absolute;margin-left: 200px;width: 100px;margin-top: -25px">文件等待下载中</div>
+             </div>
+              <div v-else >
+                <div>
+              <div style="margin-left: 50px;font-size: 15px;font-weight: bold ;">{{list.title}}</div>
+              <div style="margin-left: 50px;font-size: 12px;width: 150px;">{{list.received}}  MB  /  {{list.total}}  MB</div>
+               <div style="position: absolute;margin-left: 220px;width: 50px;margin-top: -20px" >{{list.realdata}}/MB</div>
+              </div>
+                <a-progress style="position: absolute;width: 95%;padding-left: 50px;margin-top: -6px"  :percent="list.progressnuw"></a-progress>
+               </div>
+
+
             </div>
           </div>
         </a-tab-pane>
@@ -158,28 +181,24 @@
     appVue.deleconfirm=false
   })
 
-  ipcRenderer.on('cancelSave',()=>{
-    console.log('123')
-  })
-
   ipcRenderer.on('download-info', async (event, args) => {
     let simpleName;
     if (args.name.length >= 20) {
       simpleName = args.name.substring(0, 7) + '...' + args.name.substring(args.name.length-6,args.name.length);
     } else (simpleName = args.name)
-
     if (args.status === 'start') {
       appVue.lists.push({
         id: appVue.id++,
         title: simpleName,
         received: '',
         realdata: '',
-        total: '',
+        total: ((args.size.total) / 1024 / 1024).toFixed(2),
         progressnuw: 0,
         startTime: args.startTime,
         path: '',
         loadstate: false,
         url: args.url,
+        status:args.status,
       })
       appVue.count++
       ipcRenderer.send('willDownload')
@@ -207,14 +226,16 @@
     }
 
     if (args.status === 'completed' && args.path !== '' ) {
-      appVue.doneLists.push({
-        id:appVue.doneId++,
-        title: simpleName,
-        total: ((args.size.total) / 1024 / 1024).toFixed(2),
-        path: args.path,
-        url: args.url,
-        startTime:args.startTime
-      })
+          appVue.doneLists.push({
+            id: appVue.doneId++,
+            title: simpleName,
+            total: ((args.size.total) / 1024 / 1024).toFixed(2),
+            path: args.path,
+            url: args.url,
+            startTime: args.startTime
+          })
+      appVue.$message.success('一个文件已下载完成',1);
+      shell.beep()
       appVue.count--
       db.download.add({
         title:args.name,
