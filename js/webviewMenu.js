@@ -11,6 +11,17 @@ const remoteMenu = require('remoteMenuRenderer.js')
 const { db } = require('./util/database')
 const localCacheManager = require("./main/localCacheManager");
 
+function setWallPaper(mediaURL,tip=true){
+  require('../pages/util/theme').wallPaper.setUrlWallPaper(mediaURL).then(()=>{
+    if(tip)
+      ipc.send('message',{type:'success',config:{content:'设置新标签页默认壁纸成功，可在新建标签中查看效果。（如果当前桌面有壁纸，则仍然显示原壁纸）'}})
+  }).catch(err=>{
+    console.log(err)
+  })
+}
+ipc.on('setWallPaper',(event,args)=>{
+  setWallPaper(args.wallPaper,args.tip)
+})
 const webviewMenu = {
   menuData: null,
   showMenu: function (data, extraData) { // data comes from a context-menu event
@@ -145,13 +156,9 @@ const webviewMenu = {
 
 
       imageActions.push({
-        label: "设为新标签页壁纸",
+        label: "设为新标签页默认壁纸",
         click: async function () {
-          require('../pages/util/theme').wallPaper.setUrlWallPaper(mediaURL).then(()=>{
-            ipc.send('message',{type:'success',config:{content:'设置成功，可在新建标签中查看效果。'}})
-          }).catch(err=>{
-            console.log(err)
-          })
+          setWallPaper(mediaURL)
         }
       })
 

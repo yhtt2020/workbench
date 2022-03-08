@@ -38,4 +38,7 @@ app.whenReady().then(()=>{
   ipc.on('openExternal',(event,args)=>{
     shell.openExternal('file://'+args.fullPath)
   })
+  ipc.on('setWallPaper',(event,args)=>{
+    sendIPCToWindow(mainWindow,'setWallPaper',{wallPaper:args.wallPaper,tip:false})
+  })
 })

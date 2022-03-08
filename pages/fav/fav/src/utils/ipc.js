@@ -18,6 +18,9 @@ const ipc = {
   },
   handleFileAssign (type,args) {
     ipcSender.send('handleFileAssign', { type: type, args: { filePath: args.filePath } })
+  },
+  setWallPaper(wallPaper){
+    ipcSender.send('setWallPaper',{wallPaper:wallPaper})
   }
 }
 

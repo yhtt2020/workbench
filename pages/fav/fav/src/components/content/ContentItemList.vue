@@ -17,6 +17,7 @@
               <a-menu-item key="openPath" @click="open(content.baseInfo.path+content.baseInfo.filename)" >打开</a-menu-item>
               <a-menu-item key="find" @click="showItemInFolder(content.baseInfo.path+content.baseInfo.filename)">查看所在位置</a-menu-item>
               <a-menu-item v-if="content.type==='pic'" key="edit" @click="editPicture(content.baseInfo.path+content.baseInfo.filename)">编辑图片</a-menu-item>
+              <a-menu-item v-if="content.type==='pic'" key="setWallpaper" @click="setWallPaper(content.baseInfo.path+content.baseInfo.filename)">设为新标签页默认壁纸</a-menu-item>
             </a-menu>
           </template>
         </a-dropdown>
@@ -45,6 +46,10 @@ export default {
   methods:{
     open:ipc.openExternal,
     showItemInFolder:ipc.showItemInFolder,
+    setWallPaper(wallPaper){
+      ipc.setWallPaper(wallPaper)
+      this.$message.success('设置为桌面默认壁纸成功，如果当前桌面单独设置了壁纸，则仍然以原壁纸显示。未设置单独壁纸的桌面将以新壁纸显示。')
+    },
     editPicture(src){
       ipc.handleFileAssign('image',{filePath:'file://'+src})
     }
