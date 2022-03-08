@@ -35,4 +35,7 @@ app.whenReady().then(()=>{
   ipc.on('showItemInFolder',(event,args)=>{
     shell.showItemInFolder(args.fullPath)
   })
+  ipc.on('openExternal',(event,args)=>{
+    shell.openExternal('file://'+args.fullPath)
+  })
 })

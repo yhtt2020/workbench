@@ -81,8 +81,8 @@ const ui = {
       let contents = []
       files.forEach(file => {
         let filename = file.filename
+        if(filename.startsWith('.DS_Store')) return
         const fileInfo = fs.statSync(folder.path + file.filename)
-        console.log(fileInfo)
         contents.push(
           {
             name: file.filename,
