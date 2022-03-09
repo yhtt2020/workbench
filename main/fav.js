@@ -44,4 +44,18 @@ app.whenReady().then(()=>{
   ipc.on('trashItem',(event,args)=>{
     shell.trashItem(args.fullPath)
   })
+  ipc.on('createDir',(event,args)=>{
+    try{
+      if(fs.existsSync(args.path+'/'+args.dirName)){
+        event.reply('createDirResult',{result:'false',message:'存在同名文件夹。'})
+        return
+      }
+      fs.mkdirSync(args.path+'/'+args.dirName)
+      if(fs.existsSync(args.path+'/'+args.dirName)){
+        event.reply('createDirResult',{result:'true',message:'创建文件夹成功。'})
+      }
+    }catch(e){
+      event.reply('createDirResult',{result:'false',message:'请检查输入是否符合规范。'})
+    }
+  })
 })

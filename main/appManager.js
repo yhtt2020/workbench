@@ -507,6 +507,11 @@ const appManager = {
       //todo 根据实际需求更改
       //saApp.url = config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN
     }
+    if (saApp.name === '超级收藏夹' && isDevelopmentMode) {
+      // 当为开发环境下的时候，将团队强行更改为本地开发
+      //todo 根据实际需求更改
+      saApp.url = 'http://localhost:8080'
+    }
 
     remote.enable(appView.webContents)
     if (saApp.type === 'local') {
