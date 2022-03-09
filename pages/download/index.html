@@ -77,8 +77,6 @@
               </div>
                 <a-progress style="position: absolute;width: 95%;padding-left: 50px;margin-top: -6px"  :percent="list.progressnuw"></a-progress>
                </div>
-
-
             </div>
           </div>
         </a-tab-pane>
@@ -168,7 +166,7 @@
   })
 
   ipcRenderer.on('menuDoneOpenPage', (e) => {
-    ipcRenderer.send('addTab',{url:''})
+    // require('../../js/browserUI.js').closeTab(data.id)
   })
 
   ipcRenderer.on('menuDoneUrl', (e) => {
@@ -182,6 +180,7 @@
   })
 
   ipcRenderer.on('download-info', async (event, args) => {
+
     let simpleName;
     if (args.name.length >= 20) {
       simpleName = args.name.substring(0, 7) + '...' + args.name.substring(args.name.length-6,args.name.length);
@@ -202,6 +201,8 @@
       })
       appVue.count++
       ipcRenderer.send('willDownload')
+      ipcRenderer.send('downloadcount')
+
     }
      if(args.status ==='cancelled'){
        appVue.lists.splice(appVue.lists.indexOf(args), 1)
@@ -225,7 +226,7 @@
       })
     }
 
-    if (args.status === 'completed' && args.path !== '' ) {
+    if (args.status === 'completed' ) {
           appVue.doneLists.push({
             id: appVue.doneId++,
             title: simpleName,
@@ -234,7 +235,7 @@
             url: args.url,
             startTime: args.startTime
           })
-      appVue.$message.success('一个文件已下载完成',1);
+      appVue.$message.success('一个文件已下载完成',0.05);
       shell.beep()
       appVue.count--
       db.download.add({
@@ -245,121 +246,136 @@
         startTime:args.startTime
       })
     }
+
   })
 
    let appVue = new Vue({
-    el: '#appVue',
+     el: '#appVue',
      data: {
-       count:'0',
-       visibleIng:false,
+       count: '0',
+       visibleIng: false,
        visible: false,
-       lists:[],
-       doneLists:[],
-       deletelists:[],
-       nextTodoId2:0,
-       progressnuw:0,
+       lists: [],
+       doneLists: [],
+       deletelists: [],
+       nextTodoId2: 0,
+       progressnuw: 0,
        startTime: '',
-       pathlist:[],
-       loadstate:[],
-       id:'0',
-       active :'',
-       clickActive:'',
-       selectList:[],
-       selectIngList:[],
-       url:'',
-       doneId:'0',
-       deleconfirm:false,
+       pathlist: [],
+       loadstate: [],
+       id: '0',
+       active: '',
+       clickActive: '',
+       selectList: [],
+       selectIngList: [],
+       url: '',
+       doneId: '0',
+       deleconfirm: false,
      },
-    created() {
+     created() {
        db.download.toArray().then(dblist => {
-         for(let i=0; i<=dblist.length; i++){
+         for (let i = 0; i <= dblist.length; i++) {
            let simpleName;
            if (dblist[i].title.length >= 20) {
-             simpleName = dblist[i].title.substring(0, 7) + '...' + dblist[i].title.substring(dblist[i].title.length-6,dblist[i].title.length);
+             simpleName = dblist[i].title.substring(0, 7) + '...' + dblist[i].title.substring(dblist[i].title.length - 6, dblist[i].title.length);
            } else (simpleName = dblist[i].title)
-         appVue.doneLists.push({
-           id:appVue.doneId++,
-           title:simpleName,
-           total: dblist[i].total,
-           path: dblist[i].path,
-           url: dblist[i].url,
-           startTime:dblist[i].startTime,
-         })
-       }
+           appVue.doneLists.push({
+             id: appVue.doneId++,
+             title: simpleName,
+             total: dblist[i].total,
+             path: dblist[i].path,
+             url: dblist[i].url,
+             startTime: dblist[i].startTime,
+           })
+         }
        })
-      },
+     },
      methods: {
-      menuIng(index){
-        ipcRenderer.send('showMenuIng',this.lists[index].loadstate)
-        this.selectIngList=this.lists[index]
-        this.active = index;
-      },
-      menuDone(index){
-        ipcRenderer.send('showMenuDone')
-        this.selectList=this.doneLists[index]
-        this.active = index;
-      },
-      mouseOver(index){
-        this.clickActive = index;
-      },
-      mouseLeave(){
-        this.clickActive = '';
-      },
-      change(index){
-        this.active = index;
-      },
+       menuIng(index) {
+         ipcRenderer.send('showMenuIng', this.lists[index].loadstate)
+         this.selectIngList = this.lists[index]
+         this.active = index;
+       },
+       menuDone(index) {
+         ipcRenderer.send('showMenuDone')
+         this.selectList = this.doneLists[index]
+         this.active = index;
+       },
+       mouseOver(index) {
+         this.clickActive = index;
+       },
+       mouseLeave() {
+         this.clickActive = '';
+       },
+       change(index) {
+         this.active = index;
+       },
 
-      hideModal() {
-        ipcRenderer.send('deleteDownload', this.selectIngList.path)
-        this.lists.splice(this.lists.indexOf(this.selectIngList), 1)
-        this.visibleIng = false;
-        this.count--
-      },
+       hideModal() {
+         ipcRenderer.send('deleteDownload', this.selectIngList.path)
+         this.lists.splice(this.lists.indexOf(this.selectIngList), 1)
+         this.visibleIng = false;
+         this.count--
+       },
 
-      doneChange(e){
-        if(e.target.checked === true){
-          this.deleconfirm = true
-        }
-        if (e.target.checked === false){
-          this.deleconfirm = false
-        }
-      },
-      callback(key){
-      },
+       doneChange(e) {
+         if (e.target.checked === true) {
+           this.deleconfirm = true
+         }
+         if (e.target.checked === false) {
+           this.deleconfirm = false
+         }
+       },
+       callback(key) {
+       },
 
-      hideModalDone(){
+       hideModalDone() {
          db.download.delete(appVue.selectList.startTime)
-        if(this.deleconfirm === true) {
-          fs.unlinkSync(this.selectList.path)
-          this.doneLists.splice(this.doneLists.indexOf(this.selectList), 1)
-          this.visible = false;
-        }
-        if(this.deleconfirm === false){
-          this.doneLists.splice(this.doneLists.indexOf(this.selectList), 1)
-          this.visible = false;
-        }
-      },
-      resume(index) {
-        ipcRenderer.send('resumeDownload', this.lists[index].path)
-        this.lists[index].loadstate = false
-      },
-      stop(index) {
-        ipcRenderer.send('stopDownload', this.lists[index].path)
-        this.lists[index].loadstate = true
-      },
+         if (this.deleconfirm === true) {
+           const f = this.selectList.path;
+           fs.exists(f, function (flag) {
+             if (flag) {
+               fs.unlinkSync(appVue.selectList.path)
+               appVue.doneLists.splice(appVue.doneLists.indexOf(appVue.selectList), 1)
+               appVue.visible = false;
+             } else {
+               appVue.doneLists.splice(appVue.doneLists.indexOf(appVue.selectList), 1)
+               appVue.visible = false;
+             }
+           })
+         }
+         if (this.deleconfirm === false) {
+           this.doneLists.splice(this.doneLists.indexOf(this.selectList), 1)
+           this.visible = false;
+         }
+       },
+       resume(index) {
+         ipcRenderer.send('resumeDownload', this.lists[index].path)
+         this.lists[index].loadstate = false
+       },
+       stop(index) {
+         ipcRenderer.send('stopDownload', this.lists[index].path)
+         this.lists[index].loadstate = true
+       },
 
-      openFileHandler(index) {
-        const {shell} = require('electron')
-        shell.openPath(this.doneLists[index].path)
-      },
+       openFileHandler(index) {
+         const {shell} = require('electron')
+         shell.openPath(this.doneLists[index].path)
+       },
 
-      showFileHandler(index) {
-        const {shell} = require('electron')
-        shell.showItemInFolder(this.doneLists[index].path)
-      },
-    }
+       showFileHandler(index) {
+         const {shell} = require('electron')
+         const f = this.doneLists[index].path;
+         fs.exists(f, function (flag) {
+           if (flag) {
+             shell.showItemInFolder(appVue.doneLists[index].path)
+           } else {
+             appVue.$message.success('文件已被删除或位置被移动',1)
+           }
+         })
+       },
+     }
    })
-
 </script>
 
 </body>

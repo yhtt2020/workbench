@@ -187,7 +187,7 @@
             </div>
             <div  class="action-wrapper" >
                 <span onclick="ipc.send('openDownload')" title="下载助手" id="download-toolbar"><img class="action app" src="./icons/toolbar/apps/download.svg">
-                <span hidden class="bandage" id="downloadCount">0</span>
+                <span class="bandage" id="downloadCount">0</span>
                 </span>
             </div>
               <div  class="action-wrapper" >
@@ -329,6 +329,7 @@
 
 		<script src="dist/bundle.js"></script>
     <script>
+
       ipc.on('clearCurrentUser', async (event, args) => {
         const {db} = require('./js/util/database.js')
         await db.system.where('name').equals('currentUser').modify({value: {
@@ -337,6 +338,12 @@
           avatar: './icons/browser.ico'
         }})
       })
+
+
+        //
+        // count = 0
+        // document.getElementById("downloadCount").innerHTML = count
+
 
       ipc.on('remakeCurrentUser', async (event, args) => {
         const {db} = require('./js/util/database.js')
