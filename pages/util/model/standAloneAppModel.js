@@ -5,7 +5,8 @@ const systemAppPackage=[
   'com.thisky.fav',
   'com.thisky.import',
   'com.thisky.helper',
-  'com.thisky.imageEditor'
+  'com.thisky.imageEditor',
+  'com.thisky.nav'
 ]  //包名为上述包名的判定为系统应用
 const standAloneAppModel = {
   async initialize() {
@@ -17,28 +18,65 @@ const standAloneAppModel = {
 
 
     let group =await db.standAloneApps.get({name:'团队协作'})
-    if(!!!group.package){
-      await standAloneAppModel.setAppSetting(group.id, { autoRun: true ,showInSideBar:true})
-      db.standAloneApps.update(group.id,{id:1,package:'com.thisky.group'})
-
-      let com=await db.standAloneApps.get({name:'效率社区'})
-      db.standAloneApps.update(com.id,{id:2,package:'s.apps.vip'})
-      await standAloneAppModel.setAppSetting(com.id,{showInSideBar:true})
-
-      let file=await db.standAloneApps.get({name:'文件小助手'})
-      await standAloneAppModel.setAppSetting(file.id,{showInSideBar:true,alwaysTop:true})
-      db.standAloneApps.update(file.id,{id:101,package:''})
-
-      let nav = await  db.standAloneApps.get({name:'收藏夹'})
-      await standAloneAppModel.setAppSetting(nav.id,{showInSideBar:true})
-      db.standAloneApps.update(nav.id,{id:3,package:'com.thisky.nav'})
-    }
+    // if(!!!group || !!!group.package){
+    //   await standAloneAppModel.setAppSetting(group.id, { autoRun: true ,showInSideBar:true})
+    //   db.standAloneApps.update(group.id,{id:1,package:'com.thisky.group'})
+    //
+    //   let com=await db.standAloneApps.get({name:'效率社区'})
+    //   db.standAloneApps.update(com.id,{id:2,package:'s.apps.vip'})
+    //   await standAloneAppModel.setAppSetting(com.id,{showInSideBar:true})
+    //
+    //   let file=await db.standAloneApps.get({name:'文件小助手'})
+    //   await standAloneAppModel.setAppSetting(file.id,{showInSideBar:true,alwaysTop:true})
+    //   db.standAloneApps.update(file.id,{id:101,package:''})
+    //
+    //   let nav = await  db.standAloneApps.get({name:'收藏夹'})
+    //   await standAloneAppModel.setAppSetting(nav.id,{showInSideBar:true})
+    //   db.standAloneApps.update(nav.id,{id:3,package:'com.thisky.nav'})
+    // }
     let nav = await  db.standAloneApps.get({name:'收藏夹'})
-    db.standAloneApps.update(nav.id,{id:3,package:'com.thisky.fav'})
-    if(group.url===serverConfig.IM.FRONT_URL_DEV + serverConfig.IM.AUTO_LOGIN){
-      await db.standAloneApps.update(1,{url:serverConfig.IM.FRONT_URL + serverConfig.IM.AUTO_LOGIN})
-
+    db.standAloneApps.update(nav.id,{
+      package:'com.thisky.nav',
+      url: '/pages/apps/index.html',
+    })
+    if(group){
+      db.standAloneApps.update(group.id,{
+        name:'团队沟通',
+        logo:'../../pages/group/group.svg'
+      })
     }
+
+    let fav = await  db.standAloneApps.get({name:'超级收藏夹'})
+    db.standAloneApps.put({
+      id:fav?fav.id:8,
+      name: '超级收藏夹',
+      logo: '../../pages/fav/fav.svg',
+      summary: '整理你的超级资料库',
+      preload: '/pages/fav/preload.js',
+      type: 'web',
+      package: 'com.thisky.fav',
+      url: 'http://a.apps.vip/fav/',
+      themeColor: '#3c78d8',
+      userThemeColor: '',
+      createTime: Date.now(),
+      updateTime: Date.now(),
+      accountAvatar: '',
+      order: 0,
+      useCount: 0,
+      lastExecuteTime: Date.now(),
+      settings: JSON.stringify({
+        bounds: {
+          width: 1200,
+          height: 800
+        },
+        showInSideBar:true,
+      }),
+      unreadCount: 0,
+    })
+    // if(group.url===serverConfig.IM.FRONT_URL_DEV + serverConfig.IM.AUTO_LOGIN){
+    //   await db.standAloneApps.update(1,{url:serverConfig.IM.FRONT_URL + serverConfig.IM.AUTO_LOGIN})
+    //
+    // }
     db.standAloneApps.update(2,{package:'com.thisky.com','name':'元社区','url':'https://s.apps.vip','logo':'../../icons/apps/yuan.png'})
     await db.standAloneApps.update(2,{themeColor:'#4188ff'})
     let importHelper=await  db.standAloneApps.get({package:'com.thisky.import'})
@@ -246,9 +284,9 @@ const standAloneAppModel = {
     const defaultApps = [
       {
         id:1,
-        name: '团队协作',
-        logo: '../../icons/svg/chat.svg',
-        summary: '团队协作，与团队成员高效协作',
+        name: '团队沟通',
+        logo: '../../pages/group/group.svg',
+        summary: '团队沟通，随时与团队成员实时沟通',
         type: 'web',
         //url: serverConfig.IM.FRONT_URL+ serverConfig.IM.AUTO_LOGIN,
         url: serverConfig.IM.FRONT_URL + serverConfig.IM.AUTO_LOGIN,
@@ -301,13 +339,39 @@ const standAloneAppModel = {
       {
         id:3,
         name: '收藏夹',
-        logo: '../../pages/fav/fav.svg',
+        logo: '../../icons/svg/apps.svg',
         summary: '收集你的灵感，集锦',
+        preload: '/pages/apps/preload.js',
+        type: 'local',
+        package: 'com.thisky.nav',
+        url: '/pages/apps/index.html',
+        themeColor: '#7c1ad0',
+        userThemeColor: '',
+        createTime: Date.now(),
+        updateTime: Date.now(),
+        accountAvatar: '',
+        order: 0,
+        useCount: 0,
+        lastExecuteTime: Date.now(),
+        settings: JSON.stringify({
+          bounds: {
+            width: 1200,
+            height: 800
+          },
+          showInSideBar:true,
+        }),
+        unreadCount: 0,
+      },
+      {
+        id:8,
+        name: '超级收藏夹',
+        logo: '../../pages/fav/fav.svg',
+        summary: '整理你的超级资料库',
         preload: '/pages/fav/preload.js',
         type: 'web',
         package: 'com.thisky.fav',
-        url: 'http://localhost:8080/',
-        themeColor: '#ffbe41',
+        url: 'http://a.apps.vip/fav/',
+        themeColor: '#3c78d8',
         userThemeColor: '',
         createTime: Date.now(),
         updateTime: Date.now(),

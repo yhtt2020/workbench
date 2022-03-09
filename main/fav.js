@@ -2,7 +2,7 @@ let localCacheManager=require(path.join(__dirname,'/js/main/localCacheManager.js
 const { shell } = require('electron')
 app.whenReady().then(()=>{
   console.log('ipcon')
-  const defaultStorePath=app.getPath('userData')+'/tmpStore'
+  const defaultStorePath=app.getPath('userData')+'/收藏夹.lab'
   if(!fs.existsSync(defaultStorePath)) fs.mkdirSync(defaultStorePath)
   ipc.on('getUserInfo',(event,args)=>{
     SidePanel.send('getUserInfo',{webContentsId:event.sender.id})

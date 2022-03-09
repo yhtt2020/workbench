@@ -162,6 +162,9 @@ const userscripts = {
     }
     //新增 判断js缓存目录是否存在，不存在则自动创建缓存目录
     var scriptDir = path.join(window.globalArgs['user-data-path'], 'userscripts')
+    if (!fs.existsSync(scriptDir)) {
+      fs.mkdirSync(scriptDir)
+    }
     const cachePath = scriptDir + '/cache/'
     if (!fs.existsSync(cachePath)) {
       fs.mkdirSync(cachePath)
