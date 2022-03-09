@@ -41,4 +41,7 @@ app.whenReady().then(()=>{
   ipc.on('setWallPaper',(event,args)=>{
     sendIPCToWindow(mainWindow,'setWallPaper',{wallPaper:args.wallPaper,tip:false})
   })
+  ipc.on('trashItem',(event,args)=>{
+    shell.trashItem(args.fullPath)
+  })
 })
