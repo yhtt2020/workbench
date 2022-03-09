@@ -7,6 +7,7 @@ app.on('ready', () => {
   let osxSearchMember = null
   let osxInviteMember = null
   let osxCircleSetting = null
+  let osxCreateCircle = null
   ipc.on('createGroup', (event, arg) => {
     if (createGroupWindow !== null ) {
       createGroupWindow.focus()
@@ -75,7 +76,6 @@ app.on('ready', () => {
       maximizable:false,
       resizable: false,
       webPreferences: {
-        //preload: path.join(__dirname, ''),
         devTools: true,
         nodeIntegration: true,
         contextIsolation: false,
@@ -87,8 +87,11 @@ app.on('ready', () => {
         ]
       }
     })
-    teamTip.webContents.loadURL('file://' + __dirname + '/pages/group/teamTip/index.html')
+    teamTip.webContents.loadURL('file://' + __dirname + '/pages/circle/teamTip/index.html')
     teamTip.on('close', () => teamTip = null)
+    teamTip.webContents.on('did-finish-load', () => {
+      teamTip.webContents.send('circleId', args)
+    })
   })
 
   //圈子搜索添加成员
@@ -101,11 +104,12 @@ app.on('ready', () => {
       minimizable: false,
       parent: null,
       width: 500,
-      height: 620,
+      height: 600,
       maximizable:false,
       resizable: false,
       webPreferences: {
         devTools: true,
+        partition: 'persist:webcontent',
         nodeIntegration: true,
         contextIsolation: false,
         additionalArguments: [
@@ -116,9 +120,8 @@ app.on('ready', () => {
         ]
       }
     })
-    //todo  圈子搜索添加成员url
     const { api } = require(path.join(__dirname, '//server-config.js'))
-    osxSearchMember.webContents.loadURL(api.getUrl(api.API_URL.user.CIRCLE_ADD_USER))
+    osxSearchMember.webContents.loadURL(`${api.getUrl(api.API_URL.user.CIRCLE_ADD_USER)}?id=${args}`)
     osxSearchMember.on('close', () => osxSearchMember = null)
   })
 
@@ -132,11 +135,12 @@ app.on('ready', () => {
       minimizable: false,
       parent: null,
       width: 420,
-      height: 300,
+      height: 250,
       maximizable:false,
       resizable: false,
       webPreferences: {
         devTools: true,
+        partition: 'persist:webcontent',
         nodeIntegration: true,
         contextIsolation: false,
         additionalArguments: [
@@ -147,9 +151,8 @@ app.on('ready', () => {
         ]
       }
     })
-    //todo 圈子邀请添加成员url
     const { api } = require(path.join(__dirname, '//server-config.js'))
-    osxInviteMember.webContents.loadURL(api.getUrl(api.API_URL.user.CIRCLE_INVITELINK))
+    osxInviteMember.webContents.loadURL(`${api.getUrl(api.API_URL.user.CIRCLE_INVITELINK)}?id=${args}`)
     osxInviteMember.on('close', () => osxInviteMember = null)
   })
 
@@ -162,11 +165,12 @@ app.on('ready', () => {
     osxCircleSetting = new BrowserWindow({
       minimizable: false,
       parent: null,
-      width: 640,
+      width: 780,
       height: 660,
       maximizable:false,
       resizable: false,
       webPreferences: {
+        partition: 'persist:webcontent',
         devTools: true,
         nodeIntegration: true,
         contextIsolation: false,
@@ -179,8 +183,62 @@ app.on('ready', () => {
       }
     })
     const { api } = require(path.join(__dirname, '//server-config.js'))
-    osxCircleSetting.webContents.loadURL(api.getUrl(api.API_URL.user.CIRCLE_SETTING))
+    osxCircleSetting.webContents.loadURL(`${api.getUrl(api.API_URL.user.CIRCLE_SETTING)}?type=edit&id=${args}&index=0&forumName=info`)
     osxCircleSetting.on('close', () => osxCircleSetting = null)
+  })
+
+  //创建圈子
+  ipc.on('osxCreateCircle', (event, args) => {
+    if(osxCreateCircle !== null) {
+      osxCreateCircle.focus()
+      return
+    }
+    osxCreateCircle = new BrowserWindow({
+      minimizable: false,
+      parent: null,
+      width: 780,
+      height: 660,
+      maximizable:false,
+      resizable: false,
+      webPreferences: {
+        preload: __dirname + '/pages/circle/createPreload.js',
+        partition: 'persist:webcontent',
+        devTools: true,
+        nodeIntegration: true,
+        contextIsolation: false,
+        additionalArguments: [
+          '--user-data-path=' + userDataPath,
+          '--app-version=' + app.getVersion(),
+          '--app-name=' + app.getName(),
+          ...((isDevelopmentMode ? ['--development-mode'] : [])),
+        ]
+      }
+    })
+    const { api } = require(path.join(__dirname, '//server-config.js'))
+    osxCreateCircle.webContents.loadURL(api.getUrl(api.API_URL.user.CIRCLE_SETTING))
+    osxCreateCircle.webContents.executeJavaScript(`
+      const btn = document.getElementsByClassName('form-item')[0].childNodes[0]
+      let confirmBtn = null
+      btn.addEventListener('click', () => {
+        //window.$ipc.send('teamTip')
+        confirmBtn = document.getElementsByClassName('button-box')[0] ? document.getElementsByClassName('button-box')[0].childNodes[2] : null
+        if(confirmBtn) {
+          confirmBtn.onclick = () => {
+            let toastel
+            let interval = setInterval(() => {
+              toastel = document.getElementsByClassName('xm-toast')[0]
+              if (toastel && toastel.innerText === '创建成功') {
+                clearInterval(interval)
+                setTimeout(() => {
+                  window.close()
+                }, 1000)
+              }
+            }, 200)
+          }
+        }
+      })
+    `, true)
+    osxCreateCircle.on('close', () => osxCreateCircle = null)
   })
 
 })

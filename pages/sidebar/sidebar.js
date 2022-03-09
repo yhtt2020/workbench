@@ -98,11 +98,35 @@ window.onload = function() {
           grade:0
         }
 			},
-      myGroups: []
+      myGroups: [],
+      joinedGroups: [],
+      managerGroups: []
 		},
 		getters: {
       getMyGroups: state => {
         return state.myGroups
+      },
+      getAllCircle: state => {
+        let allCircle = []
+        state.managerGroups.forEach(e => {
+          allCircle.push(e)
+        })
+        state.joinedGroups.forEach(e => {
+          if(!state.managerGroups.some(v => v.id === e.id)) {
+            allCircle.push(e)
+          }
+        })
+        // let managerGroupsId = []
+        // state.managerGroups.forEach(e => {
+        //   allCircle.push(e)
+        //   managerGroupsId.push(e.id)
+        // })
+        // state.joinedGroups.forEach(e => {
+        //   if(!managerGroupsId.includes(e.id)) {
+        //     allCircle.push(e)
+        //   }
+        // })
+        return allCircle
       },
 			getAll: state => {
 				if (state.pinItems == null) { //还未初始化
@@ -204,6 +228,14 @@ window.onload = function() {
       //设置我的团队列表
       SET_MYGROUPS: (state, myGroups) => {
         state.myGroups = myGroups
+      },
+      //同步我加入的圈子
+      SET_JOINED_CIRCLE: (state, groups) => {
+        state.joinedGroups = groups
+      },
+      //同步我管理的圈子
+      SET_MANAGER_CIRCLE: (state, groups) => {
+        state.managerGroups = groups
       },
       set_user_info:(state,data)=>{
         let userInfo=data.data
@@ -322,7 +354,7 @@ window.onload = function() {
 
 		},
     actions: {
-      async getGroups({ commit }, userInfo) {
+      async getGroups({ commit }) {
         const result = await groupApi.getGroups()
         if(result.code === 1000) {
           commit('SET_MYGROUPS', result.data)
@@ -334,7 +366,21 @@ window.onload = function() {
         if(result.code===1000){
           commit('set_user_info',result.data)
         }
+      },
+      async getJoinedCircle({commit}, options) {
+        const result = await groupApi.getJoinedCircle(options)
+        if(result.code === 1000) {
+          const data = toString.call(result.data) === '[object Array]' ? [] : result.data.list
+          commit('SET_JOINED_CIRCLE', data)
+        }
+      },
+      async getMyCircle({commit}, options) {
+        const result = await groupApi.getMyCircle(options)
+        if(result.code === 1000) {
+          commit('SET_MANAGER_CIRCLE', result.data)
+        }
       }
+
     }
 	})
 
