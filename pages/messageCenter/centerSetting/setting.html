@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="../../../ext/reset.css"/>
+  <link rel="stylesheet" href="../../../ext/flex-class.css"/>
+  <script src="../../../ext/vue/vue.js"></script>
+  <script src="../../../ext/vue/antd.min.js"></script>
+  <link rel="stylesheet" href="../../../ext/vue/antd.min.css"/>
+</head>
+<body>
+  <script>
+    Vue.use(antd);
+    const ipc = require("electron").ipcRenderer;
+  </script>
+  <div id="setting" class="flex flex-direction">
+    <template>
+      <div class="top">
+        <a-icon type="appstore" />
+        <span>系统应用消息</span>
+        <span>自定义应用的消息请在应用设置中开启</span>
+      </div>
+      <div class="mid"></div>
+      <div class="bottom"></div>
+    </template>
+  </div>
+</body>
+</html>

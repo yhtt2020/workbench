@@ -1,0 +1,120 @@
+body,
+html {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: '.SFNSText-Regular', 'Helvetica Neue', 'Arial', sans-serif;
+  background-color: rgba(0,0,0,0);
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+#message {
+  width: 100%;
+  height: 100%;
+  border: 1px solid #dddcdc;
+  border-radius: 10px;
+  background-color: #FFFFFF;
+  .top {
+    width: 100%;
+    height: 50px;
+    font-weight: 800;
+    border-bottom: 1px solid #dddcdc;
+    .top-lf {
+      width: 40%;
+      height: 100%;
+      span {
+        padding-left: 5px;
+      }
+    }
+    .top-rg {
+      width: 30%;
+      height: 100%;
+      margin-right: 10px;
+    }
+    .icon-class {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .mid {
+    width: 100%;
+    height: 82%;
+    .lumen {
+      width: 100%;
+      height: 56%;
+      .lumen-top {
+        width: 100%;
+        height: 22%;
+        border-bottom: 1px solid #dddcdc;
+        .lumen-top-lf {
+          width: 34%;
+          margin-left: 8px;
+          font-weight: 800;
+        }
+        .lumen-top-rg {
+          margin-right: 16px;
+        }
+      }
+      .lumen-content {
+        height: 78%;
+        background-color: #F6F6F6;
+        width: 100%;
+        overflow: auto;
+        margin: 0px;  //消除被antd污染的ul标签的margin-bottom
+        border-bottom: 2px solid #dddcdc;
+        &::-webkit-scrollbar {
+          width: 0 !important
+        }
+        li {
+          width: 94%;
+          height: 50%;
+          padding: 10px 0px;
+          border-bottom: 1px solid #dddcdc;
+        }
+      }
+    }
+    .webos {
+      width: 100%;
+      height: 44%;
+      .webos-top {
+        width: 100%;
+        height: 30%;
+        border-bottom: 1px solid #dddcdc;
+        font-weight: 800;
+      }
+      .webos-content {
+        height: 70%;
+        background-color: #F6F6F6;
+        overflow: auto;
+        width: 100%;
+        margin: 0px;
+        border-bottom: 2px solid #dddcdc;
+        &::-webkit-scrollbar {
+          width: 0 !important
+        }
+        li {
+          width: 94%;
+          padding: 10px 0px;
+          border-bottom: 1px solid #dddcdc;
+          height: 80px;
+        }
+      }
+    }
+  }
+  .bottom {
+    //position: fixed;
+    //bottom: 0px;
+    width: 100%;
+    //height: 58px;
+    background-color: #F6F6F6;
+    border-radius: 0px 0px 10px 10px;
+  }
+}
