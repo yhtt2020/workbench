@@ -412,17 +412,20 @@ ipc.on('sideSetOpen',(event,args)=>{
   console.log('open')
   document.getElementById('clickThroughElement').style.left = '155px'
   appVue.mod='open'
+  appVue.$children[0].mod = 'open'
   localStorage.setItem('sideMode','open')
 })
 ipc.on('sideSetClose',(event,args)=>{
   document.getElementById('clickThroughElement').style.left = '55px'
   console.log('close')
   appVue.mod='close'
+  appVue.$children[0].mod = 'close'
   localStorage.setItem('sideMode','close')
 })
 ipc.on('sideSetAuto',(event,args)=>{
   console.log('auto')
   document.getElementById('clickThroughElement').style.left = '55px'
   appVue.mod='auto'
+  appVue.$children[0].mod = 'auto'
   localStorage.setItem('sideMode','auto')
 })

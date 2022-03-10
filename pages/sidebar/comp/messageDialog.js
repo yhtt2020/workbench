@@ -1,33 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <link rel="stylesheet" href="../../../ext/reset.css"/>
-  <link rel="stylesheet" href="../../../ext/flex-class.css"/>
-  <script src="../../../ext/vue/vue.js"></script>
-  <script src="../../../ext/vue/antd.min.js"></script>
-  <link rel="stylesheet" href="../../../ext/vue/antd.min.css"/>
-  <link rel="stylesheet" href="./style.css"/>
-
-
-</head>
-<body>
-  <script>
-    Vue.use(antd);
-    const ipc = require("electron").ipcRenderer;
-  </script>
-  <div id="message" class="flex flex-direction">
-    <template>
+const messageTempl = `
+  <div class="message-wrap" v-show="visible">
+    <div class="message-mask" @click="clkmask"></div>
+    <div class="message-dialog flex flex-direction">
       <div class="top flex justify-between align-center flex-shrink-0">
         <div class="top-lf flex justify-center align-center text-black-lg">
           <a-icon type="bell" :style="{ fontSize: '16px' }"></a-icon>
           <span>通知中心</span>
         </div>
         <div class="top-rg flex justify-around align-center">
-          <img src="../assets/clean.svg" alt="" style="width: 18px; height: 18px;">
+          <img src="./assets/clean.svg" alt="" style="width: 18px; height: 18px;">
           <a-icon type="setting" :style="{ fontSize: '16px', color: '#8c8c8c' }" @click="openMsmSetting"></a-icon>
           <a-icon type="pushpin" :style="{ fontSize: '16px', color: '#8c8c8c' }"></a-icon>
         </div>
@@ -36,7 +17,7 @@
         <div class="lumen flex flex-direction justify-between align-center">
           <div class="lumen-top flex justify-between align-center">
             <div class="lumen-top-lf flex justify-around align-center text-black">
-              <img src="../../../icons/svg/chat.svg" style="width: 30px; height: 30px;">
+              <img src="../../icons/svg/chat.svg" style="width: 30px; height: 30px;">
               <span>团队</span>
               <a-icon type="export" :style="{ fontSize: '16px', color: '#8c8c8c' }"></a-icon>
             </div>
@@ -62,7 +43,7 @@
         </div>
         <div class="webos flex flex-direction justify-between align-center">
           <div class="webos-top flex justify-start align-center text-black">
-            <img src="../assets/network.svg" style="width: 30px; height: 30px; margin: 0px 10px;">
+            <img src="./assets/network.svg" style="width: 30px; height: 30px; margin: 0px 10px;">
             <span>来自网页的消息</span>
           </div>
           <ul class="webos-content flex flex-direction justify-start align-center">
@@ -93,14 +74,53 @@
         </div>
       </div>
       <div class="bottom flex justify-start align-center flex-grow-1">
-        <img src="../assets/nodisturb.svg" style="width: 34px; height: 34px; margin: 0px 10px;">
+        <img src="./assets/nodisturb.svg" style="width: 34px; height: 34px; margin: 0px 10px;">
         <div class="flex flex-direction justify-center align-start">
           <span class="text-black" style="font-weight: 500;">勿扰模式</span>
           <span class="text-grey-sm sg-omit-sm">关闭系统消息提醒,不显示侧边栏红色</span>
         </div>
       </div>
-    </template>
+    </div>
   </div>
-  <script src="./messageVue.js"></script>
-</body>
-</html>
+`
+
+Vue.component('message-center',{
+  template: messageTempl,
+  props: {
+    visible: {
+      type: Boolean,
+      default: false
+    },
+    mod: {
+      type: String
+    }
+  },
+  data() {
+    return {
+
+    }
+  },
+  methods: {
+    clkmask() {
+      this.$emit('closeMessage')
+    },
+    openMsmSetting() {
+      ipc.send('openMsmSetting')
+    }
+  },
+  watch: {
+    mod: {
+      handler(val) {
+        if(val === 'auto' || val === 'open') {
+          document.getElementsByClassName('message-dialog')[0].style.left = '145px'
+        } else {
+          document.getElementsByClassName('message-dialog')[0].style.left = '45px'
+        }
+      }
+    },
+    deep: true
+  },
+  created() {
+    console.log(this)
+  }
+})
