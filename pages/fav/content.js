@@ -9,12 +9,14 @@
 // @require      https://unpkg.com/axios/dist/axios.min.js
 // @grant        GM_addStyle
 // ==/UserScript==
+window.jQuery.noConflict(true)
 
-(function () {
+
+window.jQuery(function () {
   let inserted = false
-  let dragImage=$('<div id=\'drag-images\' style=\'position: fixed; top: -100000px;\'></div>')
+  let dragImage=window.jQuery('<div id=\'drag-images\' style=\'position: fixed; top: -100000px;\'></div>')
   'use strict'
-  let tpl = $(`
+  let tpl = window.jQuery(`
 <!--<div  id="_fav-modal" style="z-index: 99999999 !important; position: fixed !important; top: 0; left: 0; right: 0; bottom: 0;background: rgba(0,0,0,0.32)">-->
 <!--  -->
 <!--</div>-->
@@ -41,44 +43,42 @@
     </div>
   </div>
 `)
-  $(()=>{
+  window.jQuery(()=>{
     /**
      * 创建放置区域
      */
     function createDropArea(){
       if (!inserted) {
         tpl.hide()
-        $('body').append(tpl)
-        $('body').append(dragImage)
+        window.jQuery('body').append(tpl)
+        window.jQuery('body').append(dragImage)
         inserted = true
         console.log('插入了可拖放区域')
       }
       /*设置各个背景处理事件*/
-      $('#_fav_drag_box').on('mouseenter',function(){
+      window.jQuery('#_fav_drag_box').on('mouseenter',function(){
         console.log('mousenter')
         this.style['background']='#eaeaea'
       })
-      $('#_fav_drag_box').on('mouseleave',function(){
+      window.jQuery('#_fav_drag_box').on('mouseleave',function(){
         console.log('mouseleave')
         this.style['background']='#f1f2f4'
       })
-      $('.folder').on('mouseenter',function(){
+      window.jQuery('.folder').on('mouseenter',function(){
         this.style['background']='#eaeaea'
       })
-      $('.folder').on('mouseleave',function(){
+      window.jQuery('.folder').on('mouseleave',function(){
         this.style['background']='white'
       })
       /*设置各个背景处理事件end*/
-      $('#_fav_drag_box').on('dragover',function(event){
+      window.jQuery('#_fav_drag_box').on('dragover',function(event){
         event.preventDefault()
       })
-      $('#_fav_drag_box').on('drop',function(event){
+      window.jQuery('#_fav_drag_box').on('drop',function(event){
         event.preventDefault()
         var data = event.dataTransfer || event.originalEvent.dataTransfer
         console.log('打算获取图片',data.getData('Text'))
         console.log('放到了收集箱')
-        console.log(axios)
-
         //直传给preload，让它处理
         window.postMessage({
           event:'getContentForFav',
@@ -87,18 +87,17 @@
             src:data.getData('Text')
           }
         })
-        //axios.get('tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/gynywc')
       })
 
-      $('img').attr('draggable',true)
+      window.jQuery('img').attr('draggable',true)
 
 
     }
     createDropArea()
 
-    $(document).bind('dragstart','img',(e)=>{
+    window.jQuery(document).bind('dragstart','img',(e)=>{
       setTimeout(()=>{
-        $('#_fav-modal').show()
+        window.jQuery('#_fav-modal').show()
       },200)
       var data = event.dataTransfer || event.originalEvent.dataTransfer
       data.setData("Text",e.target.src);
@@ -107,18 +106,18 @@
       if (dragElement.naturalWidth > 140) {
         var u = 140 / dragElement.width * dragElement.height, canvas = document.createElement('canvas')
         canvas.width = 140, canvas.height = u, canvas.getContext('2d').drawImage(dragElement, 0, 0, 140, u),
-          $('#drag-images').empty().append(canvas),
+          window.jQuery('#drag-images').empty().append(canvas),
           data.setDragImage(canvas, 0, 0)
       }
       console.log('开始拖拽')
       //todo 功能代码
 
-      //$('_fav-modal').show()
+      //window.jQuery('_fav-modal').show()
     })
-    $(document).bind('dragend',(e)=>{
-        $('#_fav-modal').hide()
+    window.jQuery(document).bind('dragend',(e)=>{
+        window.jQuery('#_fav-modal').hide()
         console.log('拖拽结束')
-        // $('#_fav-modal').hide()
+        // jQuery('#_fav-modal').hide()
       }
     )
   })
@@ -142,9 +141,9 @@
   //
   // setTimeout(()=>{
   //   //点击全屏按钮、打印按钮后隐藏登录框
-  //   $('.newbtn_fullscreen , #fixedFullScreen, .newbtn_print, #fixedPrint, #contextmenudivmouseup, #contextmenudiv').click(function(){
-  //     $('#registerOrLoginLayer').hide();
-  //     $('[style*="background: rgb(0, 0, 0); position: fixed; opacity: 0.5;"] , [style*="background: rgb(0, 0, 0); opacity: 0.5;"]').hide();
+  //   jQuery('.newbtn_fullscreen , #fixedFullScreen, .newbtn_print, #fixedPrint, #contextmenudivmouseup, #contextmenudiv').click(function(){
+  //     jQuery('#registerOrLoginLayer').hide();
+  //     jQuery('[style*="background: rgb(0, 0, 0); position: fixed; opacity: 0.5;"] , [style*="background: rgb(0, 0, 0); opacity: 0.5;"]').hide();
   //   });
   // },1500);
   //
@@ -162,10 +161,10 @@
   //   "resources.pomoho.com", "pps.tv", "pcauto.com.cn", "news.cn", "ku6.com", "jxyinyue.com", "hunantv.com", "hualu5.com", "dv.ce.cn",
   //   "cri.cn yntv.cn", "cntv.cn", "client.joy.cn", "bdchina.com", "6.cn", "21cn.com", "m.docin.com", "m.doc88.com", "wk.baidu.com"];
   //
-  // $('#articlecontent a').click(function(){
-  //   let href = $(this).attr('href');
+  // jQuery('#articlecontent a').click(function(){
+  //   let href = jQuery(this).attr('href');
   //   let isTrusted = false;
-  //   $.each(domainlist, function(index, value) {
+  //   jQuery.each(domainlist, function(index, value) {
   //     if (href.indexOf(value) > -1) {
   //       isTrusted = true;
   //     }
@@ -177,102 +176,102 @@
   //   }
   // });
   //
-  // $('.a_left').width($('.doc360article_content').width()-100);
-  // $('#bgchange').width($('.doc360article_content').width()-100);
-  // $('.article_showall + table').width($('.doc360article_content').width()-100);
-  // $('#artContent').attr('style','max-width:'+ ($('.doc360article_content').width()-100) + 'px，width:'+ ($('.doc360article_content').width()-100) + 'px');
-  // $('#artContent + div').width($('.doc360article_content').width()-100);
+  // jQuery('.a_left').width(jQuery('.doc360article_content').width()-100);
+  // jQuery('#bgchange').width(jQuery('.doc360article_content').width()-100);
+  // jQuery('.article_showall + table').width(jQuery('.doc360article_content').width()-100);
+  // jQuery('#artContent').attr('style','max-width:'+ (jQuery('.doc360article_content').width()-100) + 'px，width:'+ (jQuery('.doc360article_content').width()-100) + 'px');
+  // jQuery('#artContent + div').width(jQuery('.doc360article_content').width()-100);
   //
   //
   // setInterval(()=>{
-  //   $('body').removeClass('articleMaxH'); //自动展开全文
+  //   jQuery('body').removeClass('articleMaxH'); //自动展开全文
   //
   //   //文章内打印按钮
-  //   $('.newbtn_print').show();
-  //   if($('.newbtn_print').length>0 && $('.newbtn_print').attr('onclick').indexOf('PrintObj.print()') == -1)
+  //   jQuery('.newbtn_print').show();
+  //   if(jQuery('.newbtn_print').length>0 && jQuery('.newbtn_print').attr('onclick').indexOf('PrintObj.print()') == -1)
   //   {
-  //     $('.newbtn_print').attr('onclick',$('.newbtn_print').attr('onclick')+'PrintObj.print();');
+  //     jQuery('.newbtn_print').attr('onclick',jQuery('.newbtn_print').attr('onclick')+'PrintObj.print();');
   //   }
   //
   //   //顶部打印按钮
-  //   if($('.atfixednav').css('display')=='block')
+  //   if(jQuery('.atfixednav').css('display')=='block')
   //   {
-  //     $('#fixedPrint').show();
-  //     if($('#fixedPrint a').length>0 && $('#fixedPrint a').attr('onclick').indexOf('PrintObj.print()') == -1)
+  //     jQuery('#fixedPrint').show();
+  //     if(jQuery('#fixedPrint a').length>0 && jQuery('#fixedPrint a').attr('onclick').indexOf('PrintObj.print()') == -1)
   //     {
-  //       $('#fixedPrint a').attr('onclick',$('#fixedPrint a').attr('onclick')+'PrintObj.print();');
+  //       jQuery('#fixedPrint a').attr('onclick',jQuery('#fixedPrint a').attr('onclick')+'PrintObj.print();');
   //     }
   //   }
   //
   //   //右键菜单打印按钮
-  //   if($('#contextmenudiv').css('display')=='block')
+  //   if(jQuery('#contextmenudiv').css('display')=='block')
   //   {
-  //     if($('#contextmenudiv li:nth-of-type(2) a').length>0 && $('#contextmenudiv li:nth-of-type(2) a').attr('onclick').indexOf('PrintObj.print()') == -1)
+  //     if(jQuery('#contextmenudiv li:nth-of-type(2) a').length>0 && jQuery('#contextmenudiv li:nth-of-type(2) a').attr('onclick').indexOf('PrintObj.print()') == -1)
   //     {
-  //       $('#contextmenudiv li:nth-of-type(2) a').attr('onclick',$('#contextmenudiv li:nth-of-type(2) a').attr('onclick')+'PrintObj.print();');
+  //       jQuery('#contextmenudiv li:nth-of-type(2) a').attr('onclick',jQuery('#contextmenudiv li:nth-of-type(2) a').attr('onclick')+'PrintObj.print();');
   //     }
   //   }
   //
   //   //文章内转word按钮
-  //   $('.newbtn_word').show();
-  //   if($('.newbtn_word').length>0 && $('.newbtn_word').attr('onclick').indexOf('WordObj.htmlToWord()') == -1)
+  //   jQuery('.newbtn_word').show();
+  //   if(jQuery('.newbtn_word').length>0 && jQuery('.newbtn_word').attr('onclick').indexOf('WordObj.htmlToWord()') == -1)
   //   {
-  //     $('.newbtn_word').attr('onclick',$('.newbtn_word').attr('onclick')+';WordObj.htmlToWord();');
+  //     jQuery('.newbtn_word').attr('onclick',jQuery('.newbtn_word').attr('onclick')+';WordObj.htmlToWord();');
   //   }
   //
   //   //顶部转word按钮
-  //   if($('.atfixednav').css('display')=='block')
+  //   if(jQuery('.atfixednav').css('display')=='block')
   //   {
-  //     $('#fixedWord').show();
-  //     if($('#fixedWord a').length>0 && $('#fixedWord a').attr('onclick').indexOf('WordObj.htmlToWord()') == -1)
+  //     jQuery('#fixedWord').show();
+  //     if(jQuery('#fixedWord a').length>0 && jQuery('#fixedWord a').attr('onclick').indexOf('WordObj.htmlToWord()') == -1)
   //     {
-  //       $('#fixedWord a').attr('onclick',$('#fixedWord a').attr('onclick')+'WordObj.htmlToWord();');
+  //       jQuery('#fixedWord a').attr('onclick',jQuery('#fixedWord a').attr('onclick')+'WordObj.htmlToWord();');
   //     }
   //   }
   //
-  //   if(!$('#topnickname a').hasClass('full'))
+  //   if(!jQuery('#topnickname a').hasClass('full'))
   //   {
-  //     $('#topnickname a').text($('#topnickname a').attr('title'));
-  //     $('#topnickname a').addClass('full');
+  //     jQuery('#topnickname a').text(jQuery('#topnickname a').attr('title'));
+  //     jQuery('#topnickname a').addClass('full');
   //   }
   //
   //
-  //   $('#ac_buybook').hide();
-  //   $('.floatqrcode').hide();
-  //   $('#doc360outlinkpop').hide();
-  //   $('#adarttopgoogle').hide();
-  //   $('#outerdivifartad1').hide();
-  //   $('.str_border').hide();
-  //   $('#recommendArt .his_her_div').hide();
-  //   $('.clear360doc').hide();
-  //   $('newsfeed').hide();
-  //   $('#topref').parent().hide();
-  //   $('.prev_next').hide();
-  //   $('#oranuserinfo').hide();
-  //   $('#divreward').hide();
-  //   $('#ifartaddiv').hide();
-  //   $('#divadright').hide();
-  //   $('.index_app2d').hide();
-  //   $('.index_app2dclose').hide();
-  //   $('.a_right').hide();
-  //   $('#goTop2').hide();
-  //   $('#arttopbdad').hide();
+  //   jQuery('#ac_buybook').hide();
+  //   jQuery('.floatqrcode').hide();
+  //   jQuery('#doc360outlinkpop').hide();
+  //   jQuery('#adarttopgoogle').hide();
+  //   jQuery('#outerdivifartad1').hide();
+  //   jQuery('.str_border').hide();
+  //   jQuery('#recommendArt .his_her_div').hide();
+  //   jQuery('.clear360doc').hide();
+  //   jQuery('newsfeed').hide();
+  //   jQuery('#topref').parent().hide();
+  //   jQuery('.prev_next').hide();
+  //   jQuery('#oranuserinfo').hide();
+  //   jQuery('#divreward').hide();
+  //   jQuery('#ifartaddiv').hide();
+  //   jQuery('#divadright').hide();
+  //   jQuery('.index_app2d').hide();
+  //   jQuery('.index_app2dclose').hide();
+  //   jQuery('.a_right').hide();
+  //   jQuery('#goTop2').hide();
+  //   jQuery('#arttopbdad').hide();
   //
-  //   $('.head2020_mask + div').hide();
-  //   $('#divtort + div').hide();
-  //   $('.yc_user').hide();
-  //   $('.youlike').hide();
-  //   $('.lswztit').hide();
-  //   $('.like_content').hide();
-  //   $('#relearticle').hide();
-  //   $('#relevantmorediv').hide();
-  //   $('#currbackgroudcolor > div:nth-child(6)').hide();
+  //   jQuery('.head2020_mask + div').hide();
+  //   jQuery('#divtort + div').hide();
+  //   jQuery('.yc_user').hide();
+  //   jQuery('.youlike').hide();
+  //   jQuery('.lswztit').hide();
+  //   jQuery('.like_content').hide();
+  //   jQuery('#relearticle').hide();
+  //   jQuery('#relevantmorediv').hide();
+  //   jQuery('#currbackgroudcolor > div:nth-child(6)').hide();
   // },100);
   //
   // setTimeout(function(){
-  //   if(window.location.href.indexOf('www.360doc.cn')>-1 && $('.article_showall a').length>0)
+  //   if(window.location.href.indexOf('www.360doc.cn')>-1 && jQuery('.article_showall a').length>0)
   //   {
-  //     $('.article_showall a').get(0).click();
+  //     jQuery('.article_showall a').get(0).click();
   //     ReShowAll();
   //     closedialog2();
   //   }
