@@ -1,21 +1,53 @@
 let localCacheManager=require(path.join(__dirname,'/js/main/localCacheManager.js'))
 const { shell } = require('electron')
 app.whenReady().then(()=>{
-  console.log('ipcon')
+  //设置默认的本地收藏夹位置
   const defaultStorePath=app.getPath('userData')+'/收藏夹.lab'
   if(!fs.existsSync(defaultStorePath)) fs.mkdirSync(defaultStorePath)
   ipc.on('getUserInfo',(event,args)=>{
     SidePanel.send('getUserInfo',{webContentsId:event.sender.id})
   })
-  console.log('ipcon')
-  ipc.on('getFavContent',(event,args)=>{
+  //采集到的内容本地下载下来保存
+  ipc.on('getFavContent',async(event,args)=>{
     console.log('收到采集内容的ipc',args)
     const content=args.content
-    if(content.type==='pic'){
-      let filename=content.src.substr(content.src.lastIndexOf('/'))
+    let filename=Date.now().toString()//content.src.substr(content.src.lastIndexOf('/'))
+    if(content.type==='img'){
+      console.log(content)
+      content.src.substr(content.src.lastIndexOf('/'))
+      if(filename.length>30){
+        if(filename.indexOf('?')){
+          filename=filename.substr(0,filename.indexOf('?'))
+        }
+        filename=filename.substr(0,30)+filename.substr(filename.indexOf('.'))
+      }
       let fullPath= path.join(defaultStorePath,filename)
-      localCacheManager.fetchUrl(content.src,fullPath).then(()=>{
-        if(fs.existsSync(fullPath)){
+      localCacheManager.fetchContentWithType(content.src,fullPath).then((header)=>{
+        let ext=header.substr(header.lastIndexOf('/')+1)
+        if(ext==='svg+xml'){
+          ext='svg'
+        }
+        console.log(ext)
+        let newFileName=''
+        if(content.alt!==''){
+          newFileName=content.alt.length>20?content.alt.substr(0,20)+'.'+ext:content.alt+'.'+ext
+        }else{
+          newFileName=content.title.length>20?content.title.substr(0,20)+'.'+ext:content.title+'.'+ext
+        }
+        console.log('newfilename',newFileName)
+        let i=0
+        let testFileName=newFileName
+        while(fs.existsSync(path.join(defaultStorePath,testFileName))){
+          i++
+          testFileName=newFileName.substr(0,newFileName.lastIndexOf('.'))+'-'+i.toString()+newFileName.substr(newFileName.lastIndexOf('.'))
+          console.log('testFilename=',testFileName)
+        }
+        let lastPath=testFileName
+        console.log(path.join(defaultStorePath,filename),path.join(defaultStorePath,lastPath))
+        fs.renameSync(path.join(defaultStorePath,filename),path.join(defaultStorePath,lastPath))
+
+        console.log(ext)
+        if(fs.existsSync(path.join(defaultStorePath,newFileName))){
           sidePanel.get().webContents.send('message', {type:'success',config:{content:'收藏到本地成功。'}})
         }else{
           sidePanel.get().webContents.send('message', {type:'error',config:{content:'收藏失败，请检查网络。'}})

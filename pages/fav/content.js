@@ -80,11 +80,15 @@ window.jQuery(function () {
         console.log('打算获取图片',data.getData('Text'))
         console.log('放到了收集箱')
         //直传给preload，让它处理
+        let parsedData=JSON.parse(data.getData('Text'))
         window.postMessage({
           event:'getContentForFav',
           content:{
-            type:'pic',
-            src:data.getData('Text')
+            type:'img',
+            src:parsedData.src,
+            width:parsedData.width,
+            height:parsedData.height,
+            alt:parsedData.alt
           }
         })
       })
@@ -100,7 +104,12 @@ window.jQuery(function () {
         window.jQuery('#_fav-modal').show()
       },200)
       var data = event.dataTransfer || event.originalEvent.dataTransfer
-      data.setData("Text",e.target.src);
+      data.setData("Text",JSON.stringify({
+        src:e.target.src,
+        width:e.target.naturalWidth,
+        height:e.target.naturalHeight,
+        alt:e.target.alt
+      }));
       console.log(e.target.src)
       let dragElement=e.target
       if (dragElement.naturalWidth > 140) {

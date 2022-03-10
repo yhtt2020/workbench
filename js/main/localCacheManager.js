@@ -140,13 +140,37 @@ let localCacheManager = {
 
     let {data} = await axios({
       url: url,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+      method:'get',
       responseType: 'arraybuffer',
     })
-    await fs.promises.writeFile(path, data, 'binary')
+    console.log(data)
+    try {
+      await fs.promises.writeFile(path, data, 'binary')
+    }catch (e) {
+      console.log(e)
+    }
   },
+
+  /**
+   * 获取内容并写到本地后，取得内容的类型
+   * @param url
+   * @param path
+   * @returns {Promise<string>}
+   */
+  async fetchContentWithType(url,path){
+    let {data,headers} = await axios({
+      url: url,
+      method:'get',
+      responseType: 'arraybuffer'
+    })
+    try {
+      await fs.promises.writeFile(path, data, 'binary')
+      return headers['content-type']
+    }catch (e) {
+      console.log(e)
+    }
+  },
+
   async downloadFile(url, path) {
 
   },
