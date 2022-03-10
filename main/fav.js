@@ -65,16 +65,34 @@ app.whenReady().then(()=>{
     shell.openPath(args.dir)
   })
   ipc.on('showItemInFolder',(event,args)=>{
-    shell.showItemInFolder(args.fullPath)
+    let filePath=args.fullPath
+    if(process.platform==='win32'){
+      filePath=filePath.replaceAll('/','\\')
+    }
+    shell.showItemInFolder(filePath)
   })
-  ipc.on('openExternal',(event,args)=>{
-    shell.openExternal('file://'+args.fullPath)
+  ipc.on('openExternal',async(event,args)=>{
+    try{
+      let filePath=args.fullPath
+      if(process.platform==='win32'){
+        filePath=filePath.replaceAll('/','\\')
+      }
+      await shell.openPath(filePath).catch((e)=>console.log(e))
+      console.log(filePath)
+    }catch (e) {
+      console.log(e)
+    }
+
   })
   ipc.on('setWallPaper',(event,args)=>{
     sendIPCToWindow(mainWindow,'setWallPaper',{wallPaper:args.wallPaper,tip:false})
   })
   ipc.on('trashItem',(event,args)=>{
-    shell.trashItem(args.fullPath)
+    let filePath=args.fullPath
+    if(process.platform==='win32'){
+      filePath=filePath.replaceAll('/','\\')
+    }
+    shell.trashItem(filePath)
   })
   ipc.on('createDir',(event,args)=>{
     try{
