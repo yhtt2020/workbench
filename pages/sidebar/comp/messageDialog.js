@@ -10,7 +10,7 @@ const messageTempl = `
         <div class="top-rg flex justify-around align-center">
           <img src="./assets/clean.svg" alt="" style="width: 18px; height: 18px;">
           <a-icon type="setting" :style="{ fontSize: '16px', color: '#8c8c8c' }" @click="openMsmSetting"></a-icon>
-          <a-icon type="pushpin" :style="{ fontSize: '16px', color: '#8c8c8c' }"></a-icon>
+          <a-icon type="pushpin" :style="{ fontSize: '16px', color: '#8c8c8c' }" @click="fixedMessage"></a-icon>
         </div>
       </div>
       <div class="mid flex-shrink-0">
@@ -88,8 +88,7 @@ Vue.component('message-center',{
   template: messageTempl,
   props: {
     visible: {
-      type: Boolean,
-      default: false
+      type: Boolean
     },
     mod: {
       type: String
@@ -97,15 +96,33 @@ Vue.component('message-center',{
   },
   data() {
     return {
-
+      fixed: localStorage.getItem('ISMESSAGE_FIXED') == 'true' ? true : false
     }
   },
   methods: {
     clkmask() {
       this.$emit('closeMessage')
+      localStorage.setItem('ISMESSAGE_FIXED', false)
     },
     openMsmSetting() {
       ipc.send('openMsmSetting')
+    },
+    fixedMessage() {
+      if(this.mod !== 'auto' && !this.fixed) {
+        let $style = document.getElementsByClassName('message-dialog')[0].style
+        $style.height = '100vh'
+        $style.borderRadius = '0px'
+        this.fixed = true
+        localStorage.setItem('ISMESSAGE_FIXED', true)
+      } else if(this.mod !== 'auto' && this.fixed) {
+        let $style = document.getElementsByClassName('message-dialog')[0].style
+        $style.height = '600px'
+        $style.borderRadius = '10px'
+        this.fixed = false
+        localStorage.setItem('ISMESSAGE_FIXED', false)
+      } else {
+        ipc.send('message',{type:"error",config:{content:'auto模式下无法固定消息中心位置,请切换侧边栏其余两种模式!'}})
+      }
     }
   },
   watch: {
@@ -116,11 +133,40 @@ Vue.component('message-center',{
         } else {
           document.getElementsByClassName('message-dialog')[0].style.left = '45px'
         }
-      }
+      },
+      deep: true
     },
-    deep: true
+    fixed: {
+      handler(val) {
+        if(val === true) {
+          document.getElementsByClassName('message-mask')[0].style.display = 'none'
+          ipc.send('channelFixed')
+        } else {
+          document.getElementsByClassName('message-mask')[0].style.display = 'block'
+          ipc.send('channelFreeFixed')
+        }
+      },
+      deep: true
+    }
   },
-  created() {
-    console.log(this)
+  mounted() {
+    if(this.mod === 'auto' || this.mod === 'open') {
+      document.getElementsByClassName('message-dialog')[0].style.left = '145px'
+    } else {
+      document.getElementsByClassName('message-dialog')[0].style.left = '45px'
+    }
+    if(this.fixed) {
+      this.$emit('updateVisible', true)
+      let $style = document.getElementsByClassName('message-dialog')[0].style
+      $style.height = '100vh'
+      $style.borderRadius = '0px'
+      document.getElementsByClassName('message-mask')[0].style.display = 'none'
+    } else {
+      this.$emit('updateVisible', false)
+      let $style = document.getElementsByClassName('message-dialog')[0].style
+      $style.height = '600px'
+      $style.borderRadius = '10px'
+      document.getElementsByClassName('message-mask')[0].style.display = 'block'
+    }
   }
 })

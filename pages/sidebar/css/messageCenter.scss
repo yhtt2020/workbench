@@ -42,13 +42,13 @@
 
   .mid {
     width: 100%;
-    height: 82%;
+    height: calc(100% - 50px - 58px);
     .lumen {
       width: 100%;
       height: 56%;
       .lumen-top {
         width: 100%;
-        height: 22%;
+        height: 60px;
         border-bottom: 1px solid #dddcdc;
         .lumen-top-lf {
           width: 34%;
@@ -60,7 +60,7 @@
         }
       }
       .lumen-content {
-        height: 78%;
+        height: calc(100% - 60px);
         background-color: #F6F6F6;
         width: 100%;
         overflow: auto;
@@ -82,12 +82,12 @@
       height: 44%;
       .webos-top {
         width: 100%;
-        height: 30%;
+        height: 60px;
         border-bottom: 1px solid #dddcdc;
         font-weight: 800;
       }
       .webos-content {
-        height: 70%;
+        height: calc(100% - 60px);
         background-color: #F6F6F6;
         overflow: auto;
         width: 100%;
@@ -109,7 +109,7 @@
     //position: fixed;
     //bottom: 0px;
     width: 100%;
-    //height: 58px;
+    height: 58px;
     background-color: #F6F6F6;
     border-radius: 0px 0px 10px 10px;
   }
