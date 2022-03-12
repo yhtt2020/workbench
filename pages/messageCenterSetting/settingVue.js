@@ -12,6 +12,12 @@ new Vue({
         {
           link: 'app.vipssss'
         },
+        {
+          link: 'app.vipsss'
+        },
+        {
+          link: 'app.vipssss'
+        }
 
       ],
       appMessage: [

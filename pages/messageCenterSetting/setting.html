@@ -29,27 +29,31 @@
           <span class="text-black" style="margin-left: 10px;">系统应用</span>
           <span class="text-black" style="margin-right: 70px;">允许通知</span>
         </div>
-        <ul class="asb-content flex flex-direction ">
-          <li class="asb-content-tree" v-for="(item, index) in appMessage" :key="index">
-            <div class="tree-parent flex justify-between align-center">
-              <div class="tree-parent-lf flex justify-start align-center">
-                <span @click="changeTree(index)">
-                  <a-icon type="plus-square" v-if="!item.childsShow"></a-icon>
-                  <a-icon type="minus-square" v-else></a-icon>
-                </span>
-                <img :src="item.url" style="width: 30px; height: 30px;">
-                <span class="text-black" style="font-weight: 600;">{{item.title}}</span>
+        <div class="asb-content flex flex-direction ">
+          <ul>
+            <li class="asb-content-tree" v-for="(item, index) in appMessage" :key="index">
+              <div class="tree-parent flex justify-between align-center">
+                <div class="tree-parent-lf flex justify-start align-center">
+                  <span @click="changeTree(index)">
+                    <a-icon type="plus-square" v-if="!item.childsShow"></a-icon>
+                    <a-icon type="minus-square" v-else></a-icon>
+                  </span>
+                  <img :src="item.url" style="width: 30px; height: 30px;">
+                  <span class="text-black" style="font-weight: 600;">{{item.title}}</span>
+                </div>
+                <a-switch class="tree-parent-rg" :checked="item.notice" default-checked @change="parentOnChange" :data-index="index"></a-switch>
               </div>
-              <a-switch class="tree-parent-rg" :checked="item.notice" default-checked @change="parentOnChange" :data-index="index"></a-switch>
-            </div>
-            <ul class="tree-child flex flex-direction" v-show="item.childsShow">
-              <li class="flex justify-between align-center" v-for="(child, rindex) in item.childs" :key="rindex">
-                <span class="tree-child-lf text-grey">{{child.title}}</span>
-                <a-switch class="tree-parent-rg" :checked="child.notice" default-checked @change="childOnChange" :data-index="index" :data-rindex="rindex"></a-switch>
-              </li>
-            </ul>
-          </li>
-        </ul>
+              <div class="tree-child flex flex-direction" v-show="item.childsShow">
+                <ul>
+                  <li class="flex justify-between align-center" v-for="(child, rindex) in item.childs" :key="rindex">
+                    <span class="tree-child-lf text-grey">{{child.title}}</span>
+                    <a-switch class="tree-parent-rg" :checked="child.notice" default-checked @change="childOnChange" :data-index="index" :data-rindex="rindex"></a-switch>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
     <div class="web-sms flex flex-direction">
@@ -62,14 +66,16 @@
           <span class="text-black" style="margin-left: 10px;">网页</span>
           <span class="text-black" style="margin-right: 70px;">操作</span>
         </div>
-        <ul class="wsb-content flex flex-direction">
-          <li class="flex justify-between align-center" v-for="(item, index) in webMessage" :key="index">
-            <span class="text-grey">{{item.link}}</span>
-            <a-button type="link" style="margin-right: 50px;" @click="() => webMessage.splice(index, 1)">
-              移除
-            </a-button>
-          </li>
-        </ul>
+        <div class="wsb-content flex flex-direction">
+          <ul>
+            <li class="flex justify-between align-center" v-for="(item, index) in webMessage" :key="index">
+              <span class="text-grey">{{item.link}}</span>
+              <a-button type="link" style="margin-right: 50px;" @click="() => webMessage.splice(index, 1)">
+                移除
+              </a-button>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>

@@ -40,7 +40,6 @@ html {
         height: calc(100% - 50px);
         width: 100%;
         overflow: auto;
-        margin-bottom: 0px;
         &::-webkit-scrollbar {
           width: 6px;
           height: 6px;
@@ -117,7 +116,6 @@ html {
         width: 100%;
         height: calc(100% - 50px);
         overflow: auto;
-        margin-bottom: 0px;
         &::-webkit-scrollbar {
           width: 6px;
           height: 6px;
@@ -138,7 +136,7 @@ html {
         }
         li {
           width: 100%;
-          min-height: 50px;
+          height: 50px;
           border-bottom: 2px solid #f9f6f6;
           span {
             margin-left: 10px;
