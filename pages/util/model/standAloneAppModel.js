@@ -391,7 +391,7 @@ const standAloneAppModel = {
       {
         id:4,
         name: '导入助手',
-        logo: '../../icons/apps/import.svg',
+        logo: '../../pages/import/img/logo.svg',
         summary: '快速导入其他浏览器的书签、密码，设置为您的默认浏览器。',
         type: 'local',
         //url: serverConfig.IM.FRONT_URL+ serverConfig.IM.AUTO_LOGIN,
