@@ -16,7 +16,7 @@ app.whenReady().then(() => {
       minimizable: false,
       parent: null,
       width: 660,
-      height: 800,
+      height: 860,
       maximizable:false,
       resizable: false,
       title: '通知中心设置',
