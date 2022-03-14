@@ -1200,8 +1200,13 @@ app.whenReady().then(() => {
     appManager.protocolManager.handleFileAssign(args.type,args.args,args.target)
   })
 
+  //处理TSB协议，对象传入url参数即可
+  ipc.on("handleTsbProtocol",(event,args)=>{
+    appManager.protocolManager.handleProtocol(args.url)
+  })
+
   app.whenReady().then(() => {
     //注册tsb协议
-    appManager.protocolManager.initialize(SidePanel)
+    appManager.protocolManager.initialize(SidePanel,electronLog)
   })
 })

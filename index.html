@@ -194,7 +194,7 @@
                 </span>
               </div>
               <div class="action-wrapper" >
-                <span onclick="ipc.send('openHome')" title="导航管理" id="nav-toolbar"><img class="action app" src="./icons/toolbar/apps/fav.svg"></span>
+                <span onclick="ipc.send('handleTsbProtocol',{url:'tsb://app/redirect/?package=com.thisky.fav&url=/'})" title="收藏夹" id="nav-toolbar"><img class="action app" src="./icons/toolbar/apps/fav.svg"></span>
               </div>
             <div class="action-wrapper" >
               <span onclick="ipc.send('openScriptManager')" title="管理脚本插件" id="userscript-toolbar"><img class="action app" src="./icons/toolbar/apps/code.svg">
