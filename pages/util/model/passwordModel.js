@@ -78,6 +78,16 @@ const PasswordModel = {
     //获取到真实在用的密码管理器
     PasswordModel.activeManager = await PasswordModel.getConfiguredPasswordManager()
   },
+  async getAllPwds(){
+    await PasswordModel.initialize()
+    const domain=tools.getDomainFromUrl(siteUrl)
+    const rootDomain=tools.getRootDomain(siteUrl)
+    let pwds= {
+      item:[],
+      rootItem:[]
+    }
+    return pwds
+  },
   getSiteCredit :async function(siteUrl,includeRoot=false) {
     await PasswordModel.initialize()
     const domain=tools.getDomainFromUrl(siteUrl)
