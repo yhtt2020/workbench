@@ -93,6 +93,9 @@ window.jQuery(function () {
         })
       })
 
+      // window.postMessage({
+      //   // event:''
+      // })
       window.jQuery('img').attr('draggable',true)
 
 

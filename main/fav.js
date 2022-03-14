@@ -4,12 +4,8 @@ const { shell } = require('electron')
 
 app.whenReady().then(() => {
   //设置默认的本地收藏夹位置
-  console.log(app.getPath('userData'))
   configDb.init(app.getPath('userData'))
   const defaultStorePath = configDb.getStorePath()
-  console.log(configDb.getStorePath())
-  console.log('准备获得示例')
-  //configDb.setStorePath()
 
   if (!fs.existsSync(defaultStorePath)) fs.mkdirSync(defaultStorePath)
   ipc.on('getUserInfo', (event, args) => {
@@ -35,36 +31,30 @@ app.whenReady().then(() => {
         if (ext === 'svg+xml') {
           ext = 'svg'
         }
-        console.log(ext)
         let newFileName = ''
         if (content.alt !== '') {
           newFileName = content.alt.length > 20 ? content.alt.substr(0, 20) + '.' + ext : content.alt + '.' + ext
         } else {
           newFileName = content.title.length > 20 ? content.title.substr(0, 20) + '.' + ext : content.title + '.' + ext
         }
-        console.log('newfilename', newFileName)
         let i = 0
         let testFileName = newFileName
         while (fs.existsSync(path.join(defaultStorePath, testFileName))) {
           i++
           testFileName = newFileName.substr(0, newFileName.lastIndexOf('.')) + '-' + i.toString() + newFileName.substr(newFileName.lastIndexOf('.'))
-          console.log('testFilename=', testFileName)
         }
         let lastPath = testFileName
         console.log(path.join(defaultStorePath, filename), path.join(defaultStorePath, lastPath))
         fs.renameSync(path.join(defaultStorePath, filename), path.join(defaultStorePath, lastPath))
 
-        console.log(ext)
         if (fs.existsSync(path.join(defaultStorePath, newFileName))) {
           sidePanel.get().webContents.send('message', { type: 'success', config: { content: '收藏到本地成功。' } })
         } else {
           sidePanel.get().webContents.send('message', { type: 'error', config: { content: '收藏失败，请检查网络。' } })
         }
-        console.log('下载成功', fullPath)
       }).catch(e => {
         sidePanel.get().webContents.send('message', { type: 'error', config: { content: '收藏失败，请检查网络。' } })
       })
-      console.log(args)
     }
 
   })
@@ -115,5 +105,26 @@ app.whenReady().then(() => {
     } catch (e) {
       event.reply('createDirResult', { result: 'false', message: '请检查输入是否符合规范。' })
     }
+  })
+
+  ipc.on('favContextMenu', (event, args) => {
+    let menuTemplate = [{
+      label: '将网页保存至收藏夹',
+      click: () => {
+      }
+    }, {
+      type: 'separator'
+    },
+      {
+        label: '整页截图保存'
+      },
+      {
+        label: '此页面禁用拖拽保存'
+      },
+      {
+        label: '此域名下禁用拖拽保存'
+      }]
+    let menu = require('electron').Menu.buildFromTemplate(menuTemplate)
+    menu.popup()
   })
 })

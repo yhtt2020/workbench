@@ -66,10 +66,16 @@ protocolManager={
    * @param option
    */
   handleAction(window,action,option){
-    console.log('action',action,'option',option)
+
    switch(action){
         case 'redirect':
+          if(option.url.startsWith('/')){
+            //相对路径的话，直接用js重定向,这种方法会有跳转的
+            window.view.webContents.executeJavaScript(`window.location.href='${option.url}'`)
+          }else{
           window.view.webContents.loadURL(option.url)
+        }
+
           break
         case 'fileAssign':
           window.view.webContents.send('fileAssign',{filePath:option.filePath})
