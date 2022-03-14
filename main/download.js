@@ -34,7 +34,7 @@ function sendIPCToDownloadWindow(action, data) {
   // if there are no windows, create a new one
 
   if (downloadWindow===null) {
-    getdownloadWindow(function() {
+    getDownloadWindow(function() {
       downloadWindow.webContents.send(action, data || {})
     })
   }

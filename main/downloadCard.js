@@ -1,5 +1,5 @@
 let downloadWindow=null
-function getdownloadWindow(){
+function getDownloadWindow(){
   if(downloadWindow===null){
     createDownloadWin()
   }
@@ -13,7 +13,6 @@ function createDownloadWin () {
       resizable: false,
       autoHideMenuBar:true,
       show:false,
-      parent: mainWindow,
       acceptFirstMouse: true,
       maximizable: false,
       alwaysOnTop: true,
@@ -50,7 +49,7 @@ function createDownloadWin () {
 app.whenReady().then(() => {
 
   ipc.on('openDownload', () => {
-    getdownloadWindow()
+    getDownloadWindow()
     downloadWindow.show()
   })
 
@@ -62,7 +61,6 @@ ipc.on('willDownload',()=>{
 })
 
 ipc.on('showMenuIng', (event,args) => {
-  console.log(args)
   const template = [
     {
       label: ( args === true) ? '继续下载' : '暂停下载',
