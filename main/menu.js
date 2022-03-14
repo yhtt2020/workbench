@@ -277,6 +277,21 @@ function buildAppMenu (options = {}) {
           }
         },
         {
+          label: '工具栏',
+          accelerator: undefined,
+          type: 'checkbox',
+          checked: false,
+          click: function (item, window) {
+            if (isToolbar) {
+              isToolbar = false
+              sendIPCToWindow(window, 'hiddenToolbar')
+            } else {
+              isToolbar = true
+              sendIPCToWindow(window, 'openToolbar')
+            }
+          }
+        },
+        {
           label: l('appMenuFullScreen'),
           accelerator: (function () {
             if (process.platform == 'darwin') { return 'Ctrl+Command+F' } else { return 'F11' }

@@ -13,7 +13,6 @@ function createDownloadWin () {
       resizable: false,
       autoHideMenuBar:true,
       show:false,
-      parent: mainWindow,
       acceptFirstMouse: true,
       maximizable: false,
       alwaysOnTop: true,
