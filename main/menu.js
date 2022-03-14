@@ -95,6 +95,11 @@ function buildAppMenu (options = {}) {
     }
   }
 
+  ipc.on('changeToolbar',()=>{
+    isToolbar = false
+
+  })
+
   var template = [
     ...(options.secondary ? tabTaskActions : []),
     ...(options.secondary ? [{ type: 'separator' }] : []),
@@ -284,7 +289,7 @@ function buildAppMenu (options = {}) {
           click: function (item, window) {
             if (isToolbar) {
               isToolbar = false
-              sendIPCToWindow(window, 'hiddenToolbar')
+              sendIPCToWindow(window, 'hideToolbar')
             } else {
               isToolbar = true
               sendIPCToWindow(window, 'openToolbar')
@@ -441,6 +446,7 @@ function buildAppMenu (options = {}) {
   ]
   return Menu.buildFromTemplate(template)
 }
+
 
 function createDockMenu () {
   // create the menu. based on example from https://github.com/electron/electron/blob/master/docs/tutorial/desktop-environment-integration.md#custom-dock-menu-macos

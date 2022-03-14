@@ -106,6 +106,33 @@ const sideBar = {
     // document.getElementById('webview-placeholder').style.left='45px'
   }
 }
+let isToolbar = true
+ipc.on('openToolbar',()=>{
+  toolbar.expanded = true
+  toolbar.toolbarEl.hidden = false
+  document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px + 40px )`
+  document.getElementById('tab-editor').hidden = false
+  // document.getElementById('tabs').insertBefore(document.getElementById('tab-editor'), document.getElementById('tabs').children[0]).hidden = true
+  webviews.viewMargins = [document.getElementById('toolbar').hidden ? 0 : 40, 0, 0, 45]
+  webviews.adjustMargin([0, 0, 0, 0])
+  document.getElementById('address-bar').appendChild(document.getElementById('tab-editor'))
+  document.getElementById('toolbar-navigation-buttons').hidden = true
+})
+
+ipc.on('hideToolbar',()=>{
+  setTimeout(function () {
+    ipc.invoke('showToolbarDialog1')
+  }, 16)
+  toolbar.expanded = false
+  toolbar.toolbarEl.hidden = true
+  document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px )`
+  document.getElementById('tab-editor').hidden = true
+  document.getElementById('tabs').insertBefore(document.getElementById('tab-editor'), document.getElementById('tabs').children[0])
+  webviews.viewMargins = [document.getElementById('toolbar').hidden ? 0 : 40, 0, 0, 45]
+  webviews.adjustMargin([0, 0, 0, 0])
+  document.getElementById('toolbar-navigation-buttons').hidden = false
+})
+
 
 const toolbar = {
   expanded: true,
@@ -165,6 +192,8 @@ const toolbar = {
   setElOpacity (el, opacity = 1) {
     el.style.opacity = opacity
   },
+
+
   initialize: function () {
     window.$toolbar = toolbar
     toolbar.homeButton.addEventListener('click', () => {
@@ -184,6 +213,10 @@ const toolbar = {
     toolbar.sideModeButton.addEventListener('click', sideBar.switchSideMod)
 
     toolbar.collapseButton.addEventListener('click', () => {
+      ipc.send('changeToolbar')
+      setTimeout(function () {
+        ipc.invoke('showToolbarDialog')
+      }, 16)
       toolbar.expanded = false
       toolbar.toolbarEl.hidden = true
       document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px )`
@@ -201,6 +234,7 @@ const toolbar = {
     }
     toolbar.adjustSideBar()
   },
+
   adjustSideBar () {
     let sideMode = localStorage.getItem('sideMode')
     sideMode = sideMode || 'auto'

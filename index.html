@@ -168,7 +168,7 @@
 <!--            </div>-->
 
           </div>
-          <div style="display: flex;width: 300px" >
+          <div style="display: flex;width: 330px" >
             <div class="action-wrapper" >
                 <span onclick="ipc.send('openSwitch')" title="快速切换（Ctrl+Tab）" id="switch-toolbar"><img class="action" src="./icons/toolbar/switch.svg">
                 </span>
@@ -343,7 +343,18 @@
         //
         // count = 0
         // document.getElementById("downloadCount").innerHTML = count
-
+      //
+      // ipc.on('openToolbar',()=>{
+      //   toolbar.expanded = true
+      //   document.getElementById('toolbar').hidden = false
+      //   document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px + 40px )`
+      //   document.getElementById('tab-editor').hidden = false
+      //   document.getElementById('tabs').insertBefore(document.getElementById('tab-editor'), document.getElementById('tabs').children[0]).hidden = true
+      //   webviews.viewMargins = [document.getElementById('toolbar').hidden ? 0 : 40, 0, 0, 45]
+      //   webviews.adjustMargin([0, 0, 0, 0])
+      //   document.getElementById('address-bar').appendChild(document.getElementById('tab-editor'))
+      //   document.getElementById('toolbar-navigation-buttons').hidden = true
+      // })
 
       ipc.on('remakeCurrentUser', async (event, args) => {
         const {db} = require('./js/util/database.js')
