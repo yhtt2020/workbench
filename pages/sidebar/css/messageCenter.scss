@@ -43,64 +43,100 @@
   .mid {
     width: 100%;
     height: calc(100% - 50px - 58px);
+    overflow: auto;
+    &::-webkit-scrollbar {
+      width: 0 !important
+    }
     .lumen {
       width: 100%;
-      height: 56%;
       .lumen-top {
         width: 100%;
         height: 60px;
         border-bottom: 1px solid #dddcdc;
         .lumen-top-lf {
-          width: 34%;
-          margin-left: 8px;
           font-weight: 800;
+          margin-left: 5px;
+          & > * {
+            margin-left: 10px;
+          }
         }
         .lumen-top-rg {
           margin-right: 16px;
         }
       }
       .lumen-content {
-        height: calc(100% - 60px);
         background-color: #F6F6F6;
         width: 100%;
-        overflow: auto;
-        margin: 0px;  //消除被antd污染的ul标签的margin-bottom
         border-bottom: 2px solid #dddcdc;
-        &::-webkit-scrollbar {
-          width: 0 !important
-        }
-        li {
+        ul {
           width: 94%;
-          height: 50%;
-          padding: 10px 0px;
-          border-bottom: 1px solid #dddcdc;
+          li {
+            height: 50%;
+            padding: 10px 0px;
+            border-bottom: 1px solid #dddcdc;
+          }
+        }
+      }
+    }
+    .osx {
+      width: 100%;
+      .osx-top {
+        width: 100%;
+        height: 60px;
+        border-bottom: 1px solid #dddcdc;
+        .osx-top-lf {
+          font-weight: 800;
+          margin-left: 5px;
+          & > * {
+            margin-left: 10px;
+          }
+        }
+        .osx-top-rg {
+          margin-right: 16px;
+        }
+      }
+      .osx-content {
+        background-color: #F6F6F6;
+        width: 100%;
+        border-bottom: 2px solid #dddcdc;
+        ul {
+          width: 94%;
+          li {
+            height: 50%;
+            padding: 10px 0px;
+            border-bottom: 1px solid #dddcdc;
+          }
         }
       }
     }
     .webos {
       width: 100%;
-      height: 44%;
       .webos-top {
         width: 100%;
         height: 60px;
         border-bottom: 1px solid #dddcdc;
-        font-weight: 800;
+        .webos-top-lf {
+          font-weight: 800;
+          margin-left: 5px;
+          & > * {
+            margin-left: 10px;
+          }
+        }
+        .webos-top-rg {
+          margin-right: 16px;
+        }
       }
       .webos-content {
-        height: calc(100% - 60px);
         background-color: #F6F6F6;
-        overflow: auto;
         width: 100%;
-        margin: 0px;
         border-bottom: 2px solid #dddcdc;
-        &::-webkit-scrollbar {
-          width: 0 !important
-        }
-        li {
+        ul {
           width: 94%;
-          padding: 10px 0px;
-          border-bottom: 1px solid #dddcdc;
-          height: 80px;
+          li {
+            padding: 10px 0px;
+            border-bottom: 1px solid #dddcdc;
+            height: 80px;
+          }
         }
       }
     }

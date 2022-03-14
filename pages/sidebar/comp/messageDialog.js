@@ -2,7 +2,7 @@ const messageTempl = `
   <div class="message-wrap" v-show="visible">
     <div class="message-mask" @click="clkmask"></div>
     <div class="message-dialog flex flex-direction">
-      <div class="top flex justify-between align-center flex-shrink-0">
+      <div class="top flex justify-between align-center">
         <div class="top-lf flex justify-center align-center text-black-lg">
           <a-icon type="bell" :style="{ fontSize: '16px' }"></a-icon>
           <span>通知中心</span>
@@ -13,67 +13,85 @@ const messageTempl = `
           <a-icon type="pushpin" :style="{ fontSize: '16px', color: '#8c8c8c' }" @click="fixedMessage"></a-icon>
         </div>
       </div>
-      <div class="mid flex-shrink-0">
+      <div class="mid">
         <div class="lumen flex flex-direction justify-between align-center">
           <div class="lumen-top flex justify-between align-center">
-            <div class="lumen-top-lf flex justify-around align-center text-black">
+            <div class="lumen-top-lf flex justify-start align-center text-black">
               <img src="../../icons/svg/chat.svg" style="width: 30px; height: 30px;">
               <span>团队</span>
               <a-icon type="export" :style="{ fontSize: '16px', color: '#8c8c8c' }"></a-icon>
             </div>
             <a-icon class="lumen-top-rg" type="close-circle" theme="filled" :style="{ fontSize: '16px' }"></a-icon>
           </div>
-          <ul class="lumen-content flex flex-direction justify-start align-center">
-            <li class="lc-li flex flex-direction justify-between align-start">
-              <span class="text-black" style="font-weight: 500;">设计研究院</span>
-              <span class="text-grey-sm sg-omit2-sm">鹿灵：灵感时业务员这的专属大额，的粉丝发生纠纷第三届福建省妇女时代峰峻或许是对分身乏术的防晒服的沙发舒服的方式对</span>
-              <span class="text-grey-sm">上午08:00</span>
-            </li>
-            <li class="lc-li flex flex-direction justify-between align-start">
-              <span class="text-black" style="font-weight: 500;">设计研究院</span>
-              <span class="text-grey-sm sg-omit2-sm">鹿灵：灵感时业务员这的专属大额，的粉丝发生纠纷第三届福建省妇女时代峰峻或许是对分身乏术的防晒服的沙发舒服的方式对</span>
-              <span class="text-grey-sm">上午08:00</span>
-            </li>
-            <li class="lc-li flex flex-direction justify-between align-start">
-              <span class="text-black" style="font-weight: 500;">设计研究院</span>
-              <span class="text-grey-sm sg-omit2-sm">鹿灵：灵感时业务员这的专属大额，的粉丝发生纠纷第三届福建省妇女时代峰峻或许是对分身乏术的防晒服的沙发舒服的方式对</span>
-              <span class="text-grey-sm">上午08:00</span>
-            </li>
-          </ul>
-        </div>
-        <div class="webos flex flex-direction justify-between align-center">
-          <div class="webos-top flex justify-start align-center text-black">
-            <img src="./assets/network.svg" style="width: 30px; height: 30px; margin: 0px 10px;">
-            <span>来自网页的消息</span>
+          <div class="lumen-content flex flex-direction justify-center align-center">
+            <ul>
+              <li class="flex flex-direction justify-between align-start" v-for="(item, index) in lumenMessage" :key="index">
+                <span class="text-black" style="font-weight: 500;">{{item.title}}</span>
+                <span class="text-grey-sm sg-omit2-sm">{{item.body}}</span>
+                <span class="text-grey-sm">{{item.time}}</span>
+              </li>
+            </ul>
           </div>
-          <ul class="webos-content flex flex-direction justify-start align-center">
-            <template>
-              <a-dropdown :trigger="['contextmenu']">
+        </div>
+        <div class="osx flex flex-direction justify-center align-center">
+          <div class="osx-top flex justify-between align-center">
+            <div class="osx-top-lf flex justify-start align-center text-black">
+              <img src="./assets/osx.svg" style="width: 30px; height: 30px;">
+              <span>团队</span>
+            </div>
+            <a-icon class="osx-top-rg" type="close-circle" theme="filled" :style="{ fontSize: '16px' }"></a-icon>
+          </div>
+          <div class="osx-content flex flex-direction justify-center align-center">
+            <ul>
                 <li class="flex justify-between align-center" ref="test">
                   <div class="flex flex-direction justify-around align-start">
-                    <span class="text-black" style="font-weight: 500;">轻流www.haha.com</span>
-                    <span class="text-grey-sm sg-omit-sm">收到一条抄送通知！</span>
+                    <span class="text-black" style="font-weight: 500;">新动态</span>
+                    <span class="text-grey-sm sg-omit-sm" style="width: 90%">短说小芋头发布了短说社区研发日报水电费水电费冯绍峰舒服的方式释放</span>
                     <span class="text-grey-sm">上午08:00</span>
                   </div>
-                  <a-icon class="lumen-top-rg" type="close-circle" theme="filled" :style="{ fontSize: '16px' }"></a-icon>
+                  <a-icon type="close-circle" theme="filled" :style="{ fontSize: '16px' }"></a-icon>
                 </li>
-                <a-menu slot="overlay">
-                  <a-menu-item key="1">
-                    打开
-                  </a-menu-item>
-                  <a-menu-item key="2">
-                    删除
-                  </a-menu-item>
-                  <a-menu-item key="3">
-                    不再接收该网页消息
-                  </a-menu-item>
-                </a-menu>
-              </a-dropdown>
-            </template>
-          </ul>
+            </ul>
+          </div>
+        </div>
+        <div class="webos flex flex-direction justify-between align-center">
+          <div class="webos-top flex justify-between align-center text-black">
+            <div class="webos-top-lf flex justify-start align-center text-black">
+              <img src="./assets/network.svg" style="width: 30px; height: 30px;">
+              <span>来自网页的消息</span>
+            </div>
+            <a-icon class="webos-top-rg" type="close-circle" theme="filled" :style="{ fontSize: '16px' }"></a-icon>
+          </div>
+          <div class="webos-content flex flex-direction justify-center align-center">
+            <ul>
+              <template>
+                <a-dropdown :trigger="['contextmenu']">
+                  <li class="flex justify-between align-center" ref="test">
+                    <div class="flex flex-direction justify-around align-start">
+                      <span class="text-black" style="font-weight: 500;">轻流www.haha.com</span>
+                      <span class="text-grey-sm sg-omit-sm" style="width: 90%">收到一条抄送通知！</span>
+                      <span class="text-grey-sm">上午08:00</span>
+                    </div>
+                    <a-icon type="close-circle" theme="filled" :style="{ fontSize: '16px' }"></a-icon>
+                  </li>
+                  <a-menu slot="overlay">
+                    <a-menu-item key="1">
+                      打开
+                    </a-menu-item>
+                    <a-menu-item key="2">
+                      删除
+                    </a-menu-item>
+                    <a-menu-item key="3">
+                      不再接收该网页消息
+                    </a-menu-item>
+                  </a-menu>
+                </a-dropdown>
+              </template>
+            </ul>
+          </div>
         </div>
       </div>
-      <div class="bottom flex justify-start align-center flex-grow-1">
+      <div class="bottom flex justify-start align-center">
         <img src="./assets/nodisturb.svg" style="width: 34px; height: 34px; margin: 0px 10px;">
         <div class="flex flex-direction justify-center align-start">
           <span class="text-black" style="font-weight: 500;">勿扰模式</span>
@@ -97,6 +115,11 @@ Vue.component('message-center',{
   data() {
     return {
       fixed: localStorage.getItem('ISMESSAGE_FIXED') == 'true' ? true : false
+    }
+  },
+  computed: {
+    lumenMessage() {
+      return this.$store.getters.getAllMessages.filter(v => v.messageType === 'lumen')
     }
   },
   methods: {

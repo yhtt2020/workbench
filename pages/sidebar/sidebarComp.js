@@ -529,6 +529,8 @@ Vue.component('sidebar', {
     }
     appVue.mod=sideMode
     this.mod= sideMode
+
+    await this.$store.dispatch('getAllMessage')
 	},
 	computed: {
 		user(){

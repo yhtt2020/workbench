@@ -60,8 +60,11 @@ const appManager = {
     if(process.platform==='win32'){
       defaultNotificationIcon=path.join(__dirname,'/icons/logo128.png')
     }
+    if(appId == 1) {
+      option.type = 'lumen'
+      SidePanel.send('storeMessage', option)
+    }
     option.icon = option.icon?option.icon:nativeImage.createFromPath(defaultNotificationIcon)
-    //todo 将消息体存入本地的消息中心
     let saAppWindow=appManager.getWindowByAppId(appId)
     if(ignoreWhenFocus && saAppWindow.isFocused())
     {
