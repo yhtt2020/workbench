@@ -247,7 +247,13 @@ const standAloneAppModel = {
     return data
   },
   async getFromPackage(packageName){
-    return await db.standAloneApps.where({package:packageName}).first()
+    let app= await db.standAloneApps.where({package:packageName}).first()
+    if(!!!app){
+      return false
+    }
+    app.settings=JSON.parse(app.settings)
+    app.isSystemApp=standAloneAppModel.isSystemApp(app)
+    return app
   },
   isSystemApp(app){
     app.package=app.package||''
