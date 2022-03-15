@@ -305,12 +305,16 @@ const webviews = {
    if(urlParser.getSourceURL(tabData.url).startsWith('ts://')){
      $toolbar.setPwdCanUse(false)
      $toolbar.setMobileCanUse(false)
-
+     $toolbar.setPwdCanRead(false)
    }else{
      $toolbar.setPwdCanUse(true)
      $toolbar.setMobileCanUse(true)
+     $toolbar.setPwdCanRead(true)
    }
   },
+
+
+
   updateAppStatus(tabData){
     // 添加密码数量显示
     const passwordModel = require('../pages/util/model/passwordModel')

@@ -106,7 +106,7 @@ const sideBar = {
     // document.getElementById('webview-placeholder').style.left='45px'
   }
 }
-let isToolbar = true
+
 ipc.on('openToolbar',()=>{
   toolbar.expanded = true
   toolbar.toolbarEl.hidden = false
@@ -143,6 +143,7 @@ const toolbar = {
   forwardButton: document.getElementById('forward-button-toolbar'),
   backButton: document.getElementById('back-button-toolbar'),
   collapseButton: document.getElementById('collapse-button-toolbar'),
+  readEl : document.getElementById('read-toolbar'),
   //地址输入框焦点
   focusInput () {
     if ($toolbar.expanded && document.getElementById('searchbar').hidden) {
@@ -180,17 +181,32 @@ const toolbar = {
     if (!canUse) {
       toolbar.setElOpacity(pwdEl, 0.5)
       pwdEl.title = '密码管理器（内部页面不可用）'
-      pwdEl.disabled = true
+      pwdEl.style.pointerEvents='none'
     } else {
       toolbar.setElOpacity(pwdEl, 1)
       pwdEl.style.opacity = 1
       pwdEl.title = '密码管理器'
-      pwdEl.disabled = false
+      pwdEl.style.pointerEvents='auto'
     }
   },
   //设置一个元素的透明度
   setElOpacity (el, opacity = 1) {
     el.style.opacity = opacity
+  },
+
+  //设置阅读模式是否可用
+  setPwdCanRead (canRead) {
+
+    if (!canRead) {
+      toolbar.setElOpacity(toolbar.readEl, 0.5)
+      toolbar.readEl.title = '阅读模式（内部页面不可用）'
+      toolbar.readEl.style.pointerEvents='none'
+    } else {
+      toolbar.readEl.style.pointerEvents='auto'
+      toolbar.setElOpacity(toolbar.readEl, 1)
+      toolbar.readEl.style.opacity = 1
+      toolbar.readEl.title = '阅读模式'
+    }
   },
 
 
