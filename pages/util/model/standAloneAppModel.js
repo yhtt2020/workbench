@@ -17,28 +17,30 @@ const standAloneAppModel = {
 
 
     let group =await db.standAloneApps.get({name:'团队协作'})
-    if(!!!group.package){
-      await standAloneAppModel.setAppSetting(group.id, { autoRun: true ,showInSideBar:true})
-      db.standAloneApps.update(group.id,{id:1,package:'com.thisky.group'})
-
-      let com=await db.standAloneApps.get({name:'效率社区'})
-      db.standAloneApps.update(com.id,{id:2,package:'s.apps.vip'})
-      await standAloneAppModel.setAppSetting(com.id,{showInSideBar:true})
-
-      let file=await db.standAloneApps.get({name:'文件小助手'})
-      await standAloneAppModel.setAppSetting(file.id,{showInSideBar:true,alwaysTop:true})
-      db.standAloneApps.update(file.id,{id:101,package:''})
-
-      let nav = await  db.standAloneApps.get({name:'收藏夹'})
-      await standAloneAppModel.setAppSetting(nav.id,{showInSideBar:true})
-      db.standAloneApps.update(nav.id,{id:3,package:'com.thisky.nav'})
-    }
+    // if(group){
+    //   if(!!!group.package){
+    //     await standAloneAppModel.setAppSetting(group.id, { autoRun: true ,showInSideBar:true})
+    //     db.standAloneApps.update(group.id,{id:1,package:'com.thisky.group'})
+    //
+    //     let com=await db.standAloneApps.get({name:'效率社区'})
+    //     db.standAloneApps.update(com.id,{id:2,package:'s.apps.vip'})
+    //     await standAloneAppModel.setAppSetting(com.id,{showInSideBar:true})
+    //
+    //     let file=await db.standAloneApps.get({name:'文件小助手'})
+    //     await standAloneAppModel.setAppSetting(file.id,{showInSideBar:true,alwaysTop:true})
+    //     db.standAloneApps.update(file.id,{id:101,package:''})
+    //
+    //     let nav = await  db.standAloneApps.get({name:'收藏夹'})
+    //     await standAloneAppModel.setAppSetting(nav.id,{showInSideBar:true})
+    //     db.standAloneApps.update(nav.id,{id:3,package:'com.thisky.nav'})
+    //   }
+    // }
     let nav = await  db.standAloneApps.get({name:'收藏夹'})
     db.standAloneApps.update(nav.id,{id:3,package:'com.thisky.fav'})
-    if(group.url===serverConfig.IM.FRONT_URL_DEV + serverConfig.IM.AUTO_LOGIN){
-      await db.standAloneApps.update(1,{url:serverConfig.IM.FRONT_URL + serverConfig.IM.AUTO_LOGIN})
-
-    }
+    // if(group.url===serverConfig.IM.FRONT_URL_DEV + serverConfig.IM.AUTO_LOGIN){
+    //   await db.standAloneApps.update(1,{url:serverConfig.IM.FRONT_URL + serverConfig.IM.AUTO_LOGIN})
+    //
+    // }
     db.standAloneApps.update(2,{package:'com.thisky.com','name':'元社区','url':'https://s.apps.vip','logo':'../../icons/apps/yuan.png'})
     await db.standAloneApps.update(2,{themeColor:'#4188ff'})
     await db.standAloneApps.update(3,{themeColor:'#8618d2'})
