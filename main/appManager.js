@@ -505,7 +505,7 @@ const appManager = {
     if (saApp.package === 'com.thisky.group' && isDevelopmentMode) {
       // 当为开发环境下的时候，将团队强行更改为本地开发
       //todo 根据实际需求更改
-      //saApp.url = config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN
+      saApp.url = config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN
     }
 
     remote.enable(appView.webContents)
@@ -608,9 +608,6 @@ const appManager = {
     // appView.webContents.on('will-redirect', _handleExternalProtocol)
     let saAppObject = saApp
     delete saAppObject.window
-    if(saApp.id === 1) {
-      appView.webContents.send('initLumen', saApp)
-    }
     appView.webContents.send('init', { saApp: saAppObject })
     appView.webContents.once('dom-ready',()=>{
       if(option){
@@ -1174,12 +1171,29 @@ app.whenReady().then(() => {
     appManager.releaseFocus(args.id)
   })
 
+  ipc.handle('imPreloadReady', () => {
+    return appManager.getSaAppByAppId(1)
+  })
 
   ipc.on('saAppNotice', (event, args) => {
     appManager.notification(args.saAppId, {
       title: args.options.title,
       body: args.options.body,
     },typeof args.ignoreWhenFocus == 'undefined'?false:args.ignoreWhenFocus)
+  })
+
+  ipc.on('saAppOpen', (event, args) => {
+    if(appManager.isAppProcessing(args.saAppId)) {
+      appManager.showAppWindow(args.saAppId)
+      const appInfo = appManager.getSaAppByAppId(args.saAppId)
+      const reg = /^http(s)?:\/\/(.*?)\//
+      const host = reg.exec(appInfo.url)[0]
+      appManager.getWindowByAppId(args.saAppId).view.webContents.loadURL(`${host}?fid=${args.options.circleId}`)
+    } else {
+      sidePanel.get().webContents.send('message',{type:"error",config:{content:'团队沟通未运行',key: Date.now()}})
+    }
+
+
   })
 
   ipc.on('saAppTabNavigate', (event, args) => {

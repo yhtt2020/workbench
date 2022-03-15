@@ -93,6 +93,13 @@ ipc.on('init', (event, args) => {
           console.error('验证错误！')
         }
         break
+      case 'thirdSaAppOpen':
+        if(e.data.hashId === sdkObject.hashId) {
+          ipc.send("saAppOpen", { options: e.data.options, saAppId: e.data.saApp.id });
+        } else {
+          console.error('验证错误！')
+        }
+        break
     }
     console.log(ipc, '无ipc的三方应用也被监听中。。。。')
   })

@@ -77,6 +77,7 @@ app.on('ready', () => {
       resizable: false,
       webPreferences: {
         devTools: true,
+        preload: __dirname + '/pages/circle/teamTip/teamTipPreload.js',
         nodeIntegration: true,
         contextIsolation: false,
         additionalArguments: [
