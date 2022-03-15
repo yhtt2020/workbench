@@ -14,7 +14,7 @@ const messageTempl = `
         </div>
       </div>
       <div class="mid">
-        <div class="lumen flex flex-direction justify-between align-center">
+        <div class="lumen flex flex-direction justify-between align-center" v-show="lumenMessage.length > 0">
           <div class="lumen-top flex justify-between align-center">
             <div class="lumen-top-lf flex justify-start align-center text-black">
               <img src="../../icons/svg/chat.svg" style="width: 30px; height: 30px;">
@@ -25,11 +25,26 @@ const messageTempl = `
           </div>
           <div class="lumen-content flex flex-direction justify-center align-center">
             <ul>
-              <li class="flex flex-direction justify-between align-start" v-for="(item, index) in lumenMessage" :key="index">
-                <span class="text-black" style="font-weight: 500;">{{item.title}}</span>
-                <span class="text-grey-sm sg-omit2-sm">{{item.body}}</span>
-                <span class="text-grey-sm">{{item.time}}</span>
-              </li>
+              <template>
+                <a-dropdown :trigger="['contextmenu']" class="flex justify-between align-center" v-for="(item, index) in lumenMessage" :key="index">
+                  <li>
+                    <div class="flex flex-direction justify-around align-start">
+                      <span class="text-black" style="font-weight: 500;">{{item.title}}</span>
+                      <span class="text-grey-sm sg-omit2-sm">{{item.body}}</span>
+                      <span class="text-grey-sm">{{item.time}}</span>
+                    </div>
+                    <a-icon class="closex" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click="removeMessage(item.id)"></a-icon>
+                  </li>
+                  <a-menu slot="overlay" :data-id="item.id" @click="lumenMenuClick">
+                    <a-menu-item key="1">
+                      打开
+                    </a-menu-item>
+                    <a-menu-item key="2">
+                      删除
+                    </a-menu-item>
+                  </a-menu>
+                </a-dropdown>
+              </template>
             </ul>
           </div>
         </div>
@@ -49,7 +64,7 @@ const messageTempl = `
                     <span class="text-grey-sm sg-omit-sm" style="width: 90%">短说小芋头发布了短说社区研发日报水电费水电费冯绍峰舒服的方式释放</span>
                     <span class="text-grey-sm">上午08:00</span>
                   </div>
-                  <a-icon type="close-circle" theme="filled" :style="{ fontSize: '16px' }"></a-icon>
+                  <a-icon class="closex" type="close-circle" theme="filled" :style="{ fontSize: '16px' }"></a-icon>
                 </li>
             </ul>
           </div>
@@ -72,7 +87,7 @@ const messageTempl = `
                       <span class="text-grey-sm sg-omit-sm" style="width: 90%">收到一条抄送通知！</span>
                       <span class="text-grey-sm">上午08:00</span>
                     </div>
-                    <a-icon type="close-circle" theme="filled" :style="{ fontSize: '16px' }"></a-icon>
+                    <a-icon class="closex" type="close-circle" theme="filled" :style="{ fontSize: '16px' }"></a-icon>
                   </li>
                   <a-menu slot="overlay">
                     <a-menu-item key="1">
@@ -123,6 +138,18 @@ Vue.component('message-center',{
     }
   },
   methods: {
+    lumenMenuClick({ key }, $event) {
+      console.log(key, $event, '????????')
+      // if(key == 2) {
+      //   //删除消息
+      //   this.$store.dispatch('deleteMessageById', id)
+      // } else {
+      //   //打开消息并定位到消息
+      // }
+    },
+    removeMessage(id) {
+      this.$store.dispatch('deleteMessageById', id)
+    },
     clkmask() {
       this.$emit('closeMessage')
       localStorage.setItem('ISMESSAGE_FIXED', false)

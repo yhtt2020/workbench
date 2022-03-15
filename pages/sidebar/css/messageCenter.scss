@@ -62,9 +62,16 @@
         }
         .lumen-top-rg {
           margin-right: 16px;
+          visibility: hidden;
+        }
+        &:hover {
+          .lumen-top-rg {
+            visibility: visible;
+          }
         }
       }
       .lumen-content {
+        //user-select: none;
         background-color: #F6F6F6;
         width: 100%;
         border-bottom: 2px solid #dddcdc;
@@ -74,6 +81,14 @@
             height: 50%;
             padding: 10px 0px;
             border-bottom: 1px solid #dddcdc;
+            .closex {
+              visibility: hidden;
+            }
+            &:hover {
+              .closex {
+                visibility: visible;
+              }
+            }
           }
         }
       }
@@ -93,6 +108,12 @@
         }
         .osx-top-rg {
           margin-right: 16px;
+          visibility: hidden;
+        }
+        &:hover {
+          .osx-top-rg {
+            visibility: visible;
+          }
         }
       }
       .osx-content {
@@ -105,6 +126,14 @@
             height: 50%;
             padding: 10px 0px;
             border-bottom: 1px solid #dddcdc;
+            .closex {
+              visibility: hidden;
+            }
+            &:hover {
+              .closex {
+                visibility: visible;
+              }
+            }
           }
         }
       }
@@ -136,6 +165,14 @@
             padding: 10px 0px;
             border-bottom: 1px solid #dddcdc;
             height: 80px;
+            .closex {
+              visibility: hidden;
+            }
+            &:hover {
+              .closex {
+                visibility: visible;
+              }
+            }
           }
         }
       }
