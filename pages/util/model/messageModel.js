@@ -10,7 +10,7 @@ const messageModel = {
    * @param {String} type 查询的消息类型
    */
   async findListByType(type) {
-    const result = await db.messages.where('messageType').eaquals(type).orderBy('timestamp').desc().toArray()
+    const result = await db.messages.where('messageType').equals(type).orderBy('timestamp').desc().toArray()
     return result
   },
 
@@ -39,7 +39,7 @@ const messageModel = {
    * @param {string} type 删除的消息类型
    */
   async deleteByType(type) {
-    await db.messages.where('messageType').eaquals(type).delete()
+    await db.messages.where('messageType').equals(type).delete()
   }
 }
 

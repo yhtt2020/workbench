@@ -61,7 +61,7 @@ const appManager = {
       defaultNotificationIcon=path.join(__dirname,'/icons/logo128.png')
     }
     if(appId == 1) {
-      option.type = 'lumen'
+      option.type = 'groupChat'
       SidePanel.send('storeMessage', option)
     }
     option.icon = option.icon?option.icon:nativeImage.createFromPath(defaultNotificationIcon)

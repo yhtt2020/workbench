@@ -14,33 +14,36 @@ const messageTempl = `
         </div>
       </div>
       <div class="mid">
-        <div class="lumen flex flex-direction justify-between align-center" v-show="lumenMessage.length > 0">
+        <div class="lumen flex flex-direction justify-between align-center" v-show="groupMessage.length > 0">
           <div class="lumen-top flex justify-between align-center">
             <div class="lumen-top-lf flex justify-start align-center text-black">
               <img src="../../icons/svg/chat.svg" style="width: 30px; height: 30px;">
               <span>团队</span>
               <a-icon type="export" :style="{ fontSize: '16px', color: '#8c8c8c' }"></a-icon>
             </div>
-            <a-icon class="lumen-top-rg" type="close-circle" theme="filled" :style="{ fontSize: '16px' }"></a-icon>
+            <a-icon class="lumen-top-rg" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click="removeAllMessage('groupChat')"></a-icon>
           </div>
           <div class="lumen-content flex flex-direction justify-center align-center">
             <ul>
               <template>
-                <a-dropdown :trigger="['contextmenu']" class="flex justify-between align-center" v-for="(item, index) in lumenMessage" :key="index">
+                <a-dropdown :trigger="['contextmenu']" class="flex justify-between align-center" v-for="(item, index) in groupMessage" :key="index">
                   <li>
                     <div class="flex flex-direction justify-around align-start">
                       <span class="text-black" style="font-weight: 500;">{{item.title}}</span>
-                      <span class="text-grey-sm sg-omit2-sm">{{item.body}}</span>
+                      <span class="text-grey-sm sg-omit2-sm" style="width: 94%">{{item.body}}</span>
                       <span class="text-grey-sm">{{item.time}}</span>
                     </div>
                     <a-icon class="closex" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click="removeMessage(item.id)"></a-icon>
                   </li>
-                  <a-menu slot="overlay" :data-id="item.id" @click="lumenMenuClick">
-                    <a-menu-item key="1">
+                  <a-menu slot="overlay">
+                    <a-menu-item key="1"  @click="openMenuClick(item.id)">
                       打开
                     </a-menu-item>
-                    <a-menu-item key="2">
+                    <a-menu-item key="2" @click="delMenuClick(item.id)">
                       删除
+                    </a-menu-item>
+                    <a-menu-item key="3">
+                      不再接收团队消息
                     </a-menu-item>
                   </a-menu>
                 </a-dropdown>
@@ -48,52 +51,67 @@ const messageTempl = `
             </ul>
           </div>
         </div>
-        <div class="osx flex flex-direction justify-center align-center">
+        <div class="osx flex flex-direction justify-center align-center" v-show="communityMessage.length > 0">
           <div class="osx-top flex justify-between align-center">
             <div class="osx-top-lf flex justify-start align-center text-black">
               <img src="./assets/osx.svg" style="width: 30px; height: 30px;">
-              <span>团队</span>
+              <span>社区</span>
             </div>
-            <a-icon class="osx-top-rg" type="close-circle" theme="filled" :style="{ fontSize: '16px' }"></a-icon>
+            <a-icon class="osx-top-rg" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click="removeAllMessage('community')"></a-icon>
           </div>
           <div class="osx-content flex flex-direction justify-center align-center">
             <ul>
-                <li class="flex justify-between align-center" ref="test">
-                  <div class="flex flex-direction justify-around align-start">
-                    <span class="text-black" style="font-weight: 500;">新动态</span>
-                    <span class="text-grey-sm sg-omit-sm" style="width: 90%">短说小芋头发布了短说社区研发日报水电费水电费冯绍峰舒服的方式释放</span>
-                    <span class="text-grey-sm">上午08:00</span>
-                  </div>
-                  <a-icon class="closex" type="close-circle" theme="filled" :style="{ fontSize: '16px' }"></a-icon>
-                </li>
+              <template>
+                <a-dropdown :trigger="['contextmenu']" class="flex justify-between align-center" v-for="(item, index) in communityMessage" :key="index">
+                  <li>
+                    <div class="flex flex-direction justify-around align-start">
+                      <span class="text-black" style="font-weight: 500;">{{item.title}}新动态</span>
+                      <span class="text-grey-sm sg-omit2-sm" style="width: 94%">{{item.body}}</span>
+                      <span class="text-grey-sm">{{item.time}}</span>
+                    </div>
+                    <a-icon class="closex" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click="removeMessage(item.id)"></a-icon>
+                  </li>
+                  <a-menu slot="overlay">
+                    <a-menu-item key="1" @click="openMenuClick(item.id)">
+                      打开
+                    </a-menu-item>
+                    <a-menu-item key="2" @click="delMenuClick(item.id)">
+                      删除
+                    </a-menu-item>
+                    <a-menu-item key="3">
+                      不再接收社区消息
+                    </a-menu-item>
+                  </a-menu>
+                </a-dropdown>
+              </template>
             </ul>
           </div>
         </div>
-        <div class="webos flex flex-direction justify-between align-center">
+        <div class="webos flex flex-direction justify-between align-center" v-show="webOsMessage.length > 0">
           <div class="webos-top flex justify-between align-center text-black">
             <div class="webos-top-lf flex justify-start align-center text-black">
               <img src="./assets/network.svg" style="width: 30px; height: 30px;">
               <span>来自网页的消息</span>
             </div>
-            <a-icon class="webos-top-rg" type="close-circle" theme="filled" :style="{ fontSize: '16px' }"></a-icon>
+            <a-icon class="webos-top-rg" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click="removeAllMessage('webOs')"></a-icon>
           </div>
           <div class="webos-content flex flex-direction justify-center align-center">
             <ul>
               <template>
-                <a-dropdown :trigger="['contextmenu']">
-                  <li class="flex justify-between align-center" ref="test">
+                <a-dropdown :trigger="['contextmenu']" class="flex justify-between align-center" v-for="(item, index) in webOsMessage" :key="index">
+                  <li>
                     <div class="flex flex-direction justify-around align-start">
-                      <span class="text-black" style="font-weight: 500;">轻流www.haha.com</span>
-                      <span class="text-grey-sm sg-omit-sm" style="width: 90%">收到一条抄送通知！</span>
-                      <span class="text-grey-sm">上午08:00</span>
+                      <span class="text-black" style="font-weight: 500;">{{item.title}}</span>
+                      <span class="text-grey-sm sg-omit-sm" style="width: 94%">收到一条抄送通知！</span>
+                      <span class="text-grey-sm">{{item.time}}</span>
                     </div>
-                    <a-icon class="closex" type="close-circle" theme="filled" :style="{ fontSize: '16px' }"></a-icon>
+                    <a-icon class="closex" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click="removeMessage(item.id)"></a-icon>
                   </li>
                   <a-menu slot="overlay">
-                    <a-menu-item key="1">
+                    <a-menu-item key="1" @click="openMenuClick(item.id)">
                       打开
                     </a-menu-item>
-                    <a-menu-item key="2">
+                    <a-menu-item key="2" @click="delMenuClick(item.id)">
                       删除
                     </a-menu-item>
                     <a-menu-item key="3">
@@ -133,19 +151,25 @@ Vue.component('message-center',{
     }
   },
   computed: {
-    lumenMessage() {
-      return this.$store.getters.getAllMessages.filter(v => v.messageType === 'lumen')
+    groupMessage() {
+      return this.$store.getters.getAllMessages.filter(v => v.messageType === 'groupChat')
+    },
+    communityMessage() {
+      return this.$store.getters.getAllMessages.filter(v => v.messageType === 'community')
+    },
+    webOsMessage() {
+      return this.$store.getters.getAllMessages.filter(v => v.messageType === 'webOs')
     }
   },
   methods: {
-    lumenMenuClick({ key }, $event) {
-      console.log(key, $event, '????????')
-      // if(key == 2) {
-      //   //删除消息
-      //   this.$store.dispatch('deleteMessageById', id)
-      // } else {
-      //   //打开消息并定位到消息
-      // }
+    delMenuClick(id) {
+      this.$store.dispatch('deleteMessageById', id)
+    },
+    openMenuClick(id) {
+      //todo
+    },
+    removeAllMessage(type) {
+      this.$store.dispatch('deleteMessageByType', type)
     },
     removeMessage(id) {
       this.$store.dispatch('deleteMessageById', id)

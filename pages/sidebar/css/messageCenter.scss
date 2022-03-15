@@ -153,6 +153,12 @@
         }
         .webos-top-rg {
           margin-right: 16px;
+          visibility: hidden;
+        }
+        &:hover {
+          .webos-top-rg {
+            visibility: visible;
+          }
         }
       }
       .webos-content {
