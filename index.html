@@ -171,7 +171,7 @@
 <!--            </div>-->
 
           </div>
-          <div style="display: flex;width: 274px" >
+          <div style="display: flex;width: 300px" >
             <div class="action-wrapper" >
                 <span onclick="ipc.send('openSwitch')" title="快速切换（Ctrl+Tab）" id="switch-toolbar"><img class="action" src="./icons/toolbar/switch.svg">
                 </span>
@@ -186,6 +186,11 @@
             <div  class="action-wrapper" >
                 <span title="阅读模式" id="read-toolbar"><img class="action app" src="./icons/toolbar/apps/read.svg">
                 <span hidden class="bandage" id="canRead">0</span>
+                </span>
+            </div>
+            <div  class="action-wrapper" >
+                <span onclick="ipc.send('openDownload')" title="下载助手" id="download-toolbar"><img class="action app" src="./icons/toolbar/apps/download.svg">
+                <span hidden class="bandage" id="downloadCount">0</span>
                 </span>
             </div>
               <div  class="action-wrapper" >

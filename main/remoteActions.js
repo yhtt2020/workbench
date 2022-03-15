@@ -47,6 +47,7 @@ ipc.handle('showSaveDialog', async function (e, options) {
   return result.filePath
 })
 
+
 ipc.handle('addWordToSpellCheckerDictionary', function (e, word) {
   session.fromPartition('persist:webcontent').addWordToSpellCheckerDictionary(word)
 })
