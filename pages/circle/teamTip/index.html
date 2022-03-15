@@ -15,6 +15,7 @@
   <script>
     Vue.use(antd);
   </script>
+  <script src="../../../tsbSdk/dist/tsbSdk.js"></script>
   <div id="appVue">
     <div class="main flex flex-direction">
       <p style="height: 40px; padding-left: 20px; padding-top: 30px; font-size: 14px; font-weight: 500;">团队创建成功，您现在可以进行以下操作：</p>
@@ -30,7 +31,7 @@
               <img src="../../../icons/svg/chat.svg" alt="">
               <div class="select-btn-word" >搜索添加成员</div>
             </div>
-            <div class="select-btn">
+            <div class="select-btn" @click="openGroup">
               <img src="../../../icons/svg/chat.svg" alt="">
               <div class="select-btn-word" >设置团队群聊</div>
             </div>
@@ -62,6 +63,13 @@
     </div>
   </div>
   <script>
+    window.onload = () => {
+      tsbk.default.config({
+        signature: "ts"
+      })
+    }
+  </script>
+  <script>
     const ipc = require("electron").ipcRenderer;
     const { api } = require('../../../server-config')
     const appVue = new Vue({
@@ -81,6 +89,14 @@
         },
         openCircleHome() {
           ipc.send('addTab',{url: `${api.getUrl(api.API_URL.user.CIRCLE)}?id=${this.groupId}`})
+        },
+        openGroup() {
+          tsbk.default.ready(function() {
+          tsbk.default.openSysApp({
+            appName: '团队协作',
+            url: `?fid=${this.groupId}`
+          })
+        });
         }
       }
     })
