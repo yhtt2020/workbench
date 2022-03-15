@@ -2,7 +2,7 @@ const xss = require("xss");
 
 const tsbSdk = {
   isThirdApp: Boolean,
-  tsbSaApp: JSON.parse(localStorage.getItem("TSB_SAAPP")),
+  tsbSaApp: JSON.parse(localStorage.getItem("tsbSaApp")),
   //初始化监听
   listener: function (Dep) {
     if (tsbSdk.tsbSaApp) {
@@ -192,13 +192,9 @@ const tsbSdk = {
   },
 
   openOsxInviteMember: function (options) {
-    console.log('收到了!!', options)
     if (Object.keys(options).length === 0) return;
-
     if(!options.groupId) return;
-
     if (!tsbSdk.isThirdApp) {
-      console.log('收到了', options)
       ipc.send('osxOpenInviteMember', options.groupId)
     } else {
       window.postMessage({

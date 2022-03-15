@@ -194,7 +194,7 @@ Vue.component('sidebar', {
     openCircleSetting(args) {
       ipc.send('osxOpenCircleSetting', args)
     },
-    openLumen(id) {
+    openGroup(id) {
       ipc.send('saAppOpen', {saAppId: 1, options: {circleId: id}})
     },
     /**

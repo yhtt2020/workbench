@@ -1190,7 +1190,7 @@ app.whenReady().then(() => {
       const host = reg.exec(appInfo.url)[0]
       appManager.getWindowByAppId(args.saAppId).view.webContents.loadURL(`${host}?fid=${args.options.circleId}`)
     } else {
-      sidePanel.get().webContents.send('message',{type:"error",config:{content:'Lumen团队协作未运行!',key: Date.now()}})
+      sidePanel.get().webContents.send('message',{type:"error",config:{content:'团队沟通未运行',key: Date.now()}})
     }
 
 

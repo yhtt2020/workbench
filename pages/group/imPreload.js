@@ -34,7 +34,7 @@ const server = {
 }
 
 ipc.invoke('imPreloadReady').then((args) => {
-  localStorage.setItem('TSB_SAAPP', JSON.stringify(args))
+  localStorage.setItem('tsbSaApp', JSON.stringify(args))
   //定制好订阅器
   let DepList = []
   DepList.push({
