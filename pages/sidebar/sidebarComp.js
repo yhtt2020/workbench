@@ -118,10 +118,11 @@ Vue.component('sidebar', {
     const currentUser = await db.system.where('name').equals('currentUser').first()
     if(currentUser.value.uid !== 0 ) {
       try {
-        await this.$store.dispatch('getGroups', {
-          token: currentUser.value.token
-        })
+        //await this.$store.dispatch('getGroups')
+        await this.$store.dispatch('getJoinedCircle', {page: 1, row: 500})
+        await this.$store.dispatch('getMyCircle', {page: 1, row: 500})
       } catch(err) {
+        console.log(err)
         console.log('团队列表接口错误!')
       }
     }
@@ -174,9 +175,9 @@ Vue.component('sidebar', {
 	},
 	template: '#sidebarTpl',
 	methods: {
-    openCircle() {
+    openCircle(args) {
       this.userPanelVisible = false
-      this.addTab(api.getUrl(api.API_URL.user.CIRCLE))
+      this.addTab(`${api.getUrl(api.API_URL.user.CIRCLE)}?id=${args}`)
     },
     // openPost() {
     //   this.userPanelVisible = false
@@ -190,8 +191,11 @@ Vue.component('sidebar', {
     //   this.userPanelVisible = false
     //   this.addTab(api.getUrl(api.API_URL.user.CIRCLE))
     // },
-    openCircleSetting() {
-      ipc.send('osxOpenCircleSetting')
+    openCircleSetting(args) {
+      ipc.send('osxOpenCircleSetting', args)
+    },
+    openGroupChat(id) {
+      ipc.send('saAppOpen', {saAppId: 1, options: {circleId: id}})
     },
     /**
      * app浮窗显示隐藏
@@ -418,7 +422,8 @@ Vue.component('sidebar', {
       }
     },
     createGroup(){
-      ipc.send('createGroup')
+      //ipc.send('createGroup')   //原方案废弃
+      ipc.send('osxCreateCircle')
     },
     changePopoverVisible(visible){
       this.isPopoverShowing=visible
@@ -680,10 +685,14 @@ ipc.on('countWebviewInk', async () => {
 })
 
 ipc.on('countScript', () => {
-  let num = require('../util/model/userScriptModel').countScript(window.globalArgs['user-data-path'])
-  setTimeout(async () => {
-    await userStatsModel.setValue('scripts', num)
-  }, 10000)
+  try {
+    let num = require('../util/model/userScriptModel').countScript(window.globalArgs['user-data-path'])
+    setTimeout(async () => {
+      await userStatsModel.setValue('scripts', num)
+    }, 10000)
+  } catch (err) {
+    console.warn(err)
+  }
 })
 
 ipc.on('defaultBrowser', (event, args) => {

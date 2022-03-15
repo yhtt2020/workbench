@@ -227,7 +227,7 @@ db.version(139).stores({
 
 
 
-db.version(140).stores({
+db.version(141).stores({
   /*
   color - the main color of the page, extracted from the page icon
   pageHTML - a saved copy of the page's HTML, when it was last visited. Removed in 1.6.0, so all pages visited after then will have an empty string in this field.

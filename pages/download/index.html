@@ -39,7 +39,7 @@
                 </a-modal>
               </div>
               <div v-if="list.status === 'progressing'" >
-                <div v-if="list.loadstate" >
+                <div v-if="list.loadState" >
                   <a-button style="position: absolute;margin-left: 270px;margin-top: 14px" type="link" @click="resume(index)" >
                      开始
                   </a-button>
@@ -92,7 +92,7 @@
         </a-tab-pane>
 
 <!--        <a-tab-pane key="3" tab="回收站">-->
-<!--          <div v-for="(deletelist,index) in deletelists" v-bind:key="index">-->
+<!--          <div v-for="(deletelist,index) in deleteLists" v-bind:key="index">-->
 <!--            <div style="width: 100%;height: 45px;background-color: #8c8c8c">-->
 <!--              <div style="margin-left: 50px">{{deletelist.title}}</div>-->
 <!--              <div style="margin-left: 50px">{{deletelist.title}}</div>-->
@@ -116,17 +116,17 @@
 
 
   ipcRenderer.on('menuIngStart', (e,args) => {
-    if(appVue.selectIngList.loadstate === true){
-      ipcRenderer.send('resumeDownload', appVue.selectIngList.path)
-      appVue.selectIngList.loadstate = false
+    if(appVue.selectingList.loadState === true){
+      ipcRenderer.send('resumeDownload', appVue.selectingList.path)
+      appVue.selectingList.loadState = false
     }else {
-      ipcRenderer.send('stopDownload', appVue.selectIngList.path)
-      appVue.selectIngList.loadstate = true
+      ipcRenderer.send('stopDownload', appVue.selectingList.path)
+      appVue.selectingList.loadState = true
     }
   })
 
   ipcRenderer.on('menuIngUrl', (e) => {
-    clipboard.writeText( appVue.selectIngList.url)
+    clipboard.writeText( appVue.selectingList.url)
     appVue.$message.success('已复制到剪切板');
   })
 
@@ -178,7 +178,7 @@
         progressnuw: 0,
         startTime: args.startTime,
         path: '',
-        loadstate: false,
+        loadState: false,
         url: args.url,
       })
       appVue.count++
@@ -234,17 +234,16 @@
        visible: false,
        lists:[],
        doneLists:[],
-       deletelists:[],
-       nextTodoId2:0,
+       deleteLists:[],
        progressnuw:0,
        startTime: '',
-       pathlist:[],
-       loadstate:[],
+       pathList:[],
+       loadState:[],
        id:'0',
        active :'',
        clickActive:'',
        selectList:[],
-       selectIngList:[],
+       selectingList:[],
        url:'',
        doneId:'0',
        deleconfirm:false,
@@ -269,8 +268,8 @@
       },
      methods: {
       menuIng(index){
-        ipcRenderer.send('showMenuIng',this.lists[index].loadstate)
-        this.selectIngList=this.lists[index]
+        ipcRenderer.send('showMenuIng',this.lists[index].loadState)
+        this.selectingList=this.lists[index]
         this.active = index;
       },
       menuDone(index){
@@ -289,8 +288,8 @@
       },
 
       hideModal() {
-        ipcRenderer.send('deleteDownload', this.selectIngList.path)
-        this.lists.splice(this.lists.indexOf(this.selectIngList), 1)
+        ipcRenderer.send('deleteDownload', this.selectingList.path)
+        this.lists.splice(this.lists.indexOf(this.selectingList), 1)
         this.visibleIng = false;
         this.count--
       },
@@ -320,11 +319,11 @@
       },
       resume(index) {
         ipcRenderer.send('resumeDownload', this.lists[index].path)
-        this.lists[index].loadstate = false
+        this.lists[index].loadState = false
       },
       stop(index) {
         ipcRenderer.send('stopDownload', this.lists[index].path)
-        this.lists[index].loadstate = true
+        this.lists[index].loadState = true
       },
 
       openFileHandler(index) {

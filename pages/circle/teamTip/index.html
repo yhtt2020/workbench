@@ -15,6 +15,7 @@
   <script>
     Vue.use(antd);
   </script>
+  <script src="../../../tsbSdk/dist/tsbSdk.js"></script>
   <div id="appVue">
     <div class="main flex flex-direction">
       <p style="height: 40px; padding-left: 20px; padding-top: 30px; font-size: 14px; font-weight: 500;">团队创建成功，您现在可以进行以下操作：</p>
@@ -30,7 +31,7 @@
               <img src="../../../icons/svg/chat.svg" alt="">
               <div class="select-btn-word" >搜索添加成员</div>
             </div>
-            <div class="select-btn">
+            <div class="select-btn" @click="openGroupChat">
               <img src="../../../icons/svg/chat.svg" alt="">
               <div class="select-btn-word" >设置团队群聊</div>
             </div>
@@ -39,7 +40,7 @@
         <div class="block">
           <p>社区</p>
           <div class="selection-array">
-            <div class="select-btn">
+            <div class="select-btn" @click="openCircleHome">
               <img src="../../../icons/svg/com.svg" alt="">
               <div class="select-btn-word" >设置团队圈子</div>
             </div>
@@ -62,22 +63,46 @@
     </div>
   </div>
   <script>
+    window.onload = () => {
+      tsbk.default.config({
+        signature: "ts"
+      })
+    }
+  </script>
+  <script>
     const ipc = require("electron").ipcRenderer;
+    const { api } = require('../../../server-config')
     const appVue = new Vue({
       el: "#appVue",
       data() {
         return {
-
+          groupId: 0
         }
       },
       methods: {
         searchMember() {
-          ipc.send('osxOpenSearchMember')
+          //todo 然后这里利用groupid，打开这个新的团队
+          ipc.send('osxOpenSearchMember', this.groupId)
         },
         inviteMember() {
-          ipc.send('osxOpenInviteMember')
+          ipc.send('osxOpenInviteMember', this.groupId)
+        },
+        openCircleHome() {
+          ipc.send('addTab',{url: `${api.getUrl(api.API_URL.user.CIRCLE)}?id=${this.groupId}`})
+        },
+        openGroupChat() {
+          tsbk.default.ready(function() {
+          tsbk.default.openSysApp({
+            appName: '团队协作',
+            url: `?fid=${this.groupId}`
+          })
+        });
         }
       }
+    })
+    window.$teamTip = appVue
+    ipc.on('circleId', (event, args) => {
+      window.$teamTip.$data.groupId = args
     })
   </script>
 </body>

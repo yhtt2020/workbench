@@ -2,10 +2,11 @@ const xss = require("xss");
 
 const tsbSdk = {
   isThirdApp: Boolean,
+  tsbSaApp: JSON.parse(localStorage.getItem("tsbSaApp")),
   //初始化监听
   listener: function (Dep) {
-    if (window.hasOwnProperty("tsbSaApp")) {
-      window.tsbSaApp.isSystemApp
+    if (tsbSdk.tsbSaApp) {
+      tsbSdk.tsbSaApp.isSystemApp
         ? Object.defineProperty(tsbSdk, "isThirdApp", {
             writable: false,
             value: false,
@@ -49,11 +50,21 @@ const tsbSdk = {
           e.data.options.body = xss(e.data.options.body);
           //console.log(e.data.options.body, '输出转码后的')
           tsbSdk.noticeApp(e.data.options);
+          break;
         case "autoLoginSysApp":
-          Dep[0].func(Dep[0].host)
+          Dep[0].func(Dep[0].host);
+          break;
+        case "openSysApp":
+          tsbSdk.openSysApp(e.data.options);
+          break;
+        case 'openOsxInviteMember':
+          tsbSdk.openOsxInviteMember(e.data.options)
+          break;
+        default:
+          console.log(messageEvent, "未命中🎯");
       }
     });
-    console.log("挂载了SDK");
+    console.log(tsbSdk.tsbSaApp, tsbSdk, "挂载了SDK");
   },
 
   handleCheckAuth: function (data) {
@@ -104,7 +115,7 @@ const tsbSdk = {
 
   handleHideApp: function () {
     if (!tsbSdk.isThirdApp) {
-      ipc.send("saAppHide", { appId: window.tsbSaApp.id });
+      ipc.send("saAppHide", { appId: tsbSdk.tsbSaApp.id });
     } else {
       window.postMessage({
         eventName: "saAppHide",
@@ -133,18 +144,65 @@ const tsbSdk = {
 
   noticeApp: function (options) {
     if (!tsbSdk.isThirdApp) {
-      if (options.title.length > 0 && options.body.length > 0) {
-        ipc.send("saAppNotice", { options, saAppId: window.tsbSaApp.id });
+      if (
+        Object.keys(options).length > 0 &&
+        options.title.length > 0 &&
+        options.body.length > 0
+      ) {
+        ipc.send("saAppNotice", { options, saAppId: tsbSdk.tsbSaApp.id });
       } else {
         return;
       }
     } else {
       window.postMessage({
-        eventName: "saAppNotice",
+        eventName: "thirdSaAppNotice",
         options,
         saApp: window.tsbSaApp,
         hashId: window.tsbSDK.hashId,
       });
+    }
+  },
+
+  openSysApp: function (options) {
+    const sysApp = [
+      { appName: "团队协作", id: 1 },
+      { appName: "元社区", id: 2 },
+      { appName: "收藏夹", id: 3 },
+      { appName: "导入助手", id: 4 },
+    ];
+
+    if (Object.keys(options).length === 0) return;
+
+    if ((options.url && options.url.length === 0) || !options.appName) return;
+
+    if (!sysApp.some((v) => v.appName === options.appName)) return;
+
+    let sysAppIndex = sysApp.findIndex((v) => v.appName === options.appName);
+
+    if (!tsbSdk.isThirdApp) {
+      ipc.send("saAppOpen", { options, saAppId: sysApp[`${sysAppIndex}`].id });
+    } else {
+      window.postMessage({
+        eventName: "thirdSaAppOpen",
+        options,
+        saApp: window.tsbSaApp,
+        hashId: window.tsbSDK.hashId,
+      });
+    }
+  },
+
+  openOsxInviteMember: function (options) {
+    if (Object.keys(options).length === 0) return;
+    if(!options.groupId) return;
+    if (!tsbSdk.isThirdApp) {
+      ipc.send('osxOpenInviteMember', options.groupId)
+    } else {
+      window.postMessage({
+        eventName: 'thirdOsxOpenInviteMember',
+        options,
+        saApp: window.tsbSaApp,
+        hashId: window.tsbSDK.hashId,
+      })
     }
   }
 };

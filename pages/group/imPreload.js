@@ -34,15 +34,13 @@ const server = {
 }
 
 ipc.invoke('imPreloadReady').then((args) => {
-  window.tsbSaApp = args   //内置应用只需要挂个saApp的信息就可以了不需要像appPreload一样去挂tsbSDK
-
+  localStorage.setItem('tsbSaApp', JSON.stringify(args))
   //定制好订阅器
   let DepList = []
   DepList.push({
     func: server.beforeInit,
     host: isDevelopmentMode ? config.IM.FRONT_URL_DEV : config.IM.FRONT_URL
   })
-
   tsbSdk.listener(DepList)
 
   if(href === config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN) {

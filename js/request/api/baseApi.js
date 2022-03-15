@@ -56,25 +56,33 @@ const baseApi = {
    * @param {String} method  请求方式默认为post
    * @returns Promise
    */
-  axios: async (url, params, method = "post") => {
+  axios: async (url, params, method = "post", min = false) => {
     let data = {};
     if (method === "get") data = { params };
     if (method === "post" || method === "put" || method === "delete")
       data = { data: params };
     //todo cache请求缓存后期做一下，防止在1000毫秒内重复请求设置
-    return axios({
-      method: method,
-      url: url,
-      headers: { Authorization: baseApi.token },
-      ...data,
-      expireInfo: {
-        token: baseApi.token,
-        refreshToken: baseApi.refreshToken,
-        expire_deadtime: baseApi.expire_deadtime,
-        refreshExpire_deadtime: baseApi.refreshExpire_deadtime,
-        inMain: baseApi.inMain
-      }
-    });
+    if(!min) {
+      return axios({
+        method: method,
+        url: url,
+        headers: { Authorization: baseApi.token },
+        ...data,
+        expireInfo: {
+          token: baseApi.token,
+          refreshToken: baseApi.refreshToken,
+          expire_deadtime: baseApi.expire_deadtime,
+          refreshExpire_deadtime: baseApi.refreshExpire_deadtime,
+          inMain: baseApi.inMain
+        }
+      });
+    } else {
+      return axios({
+        method: method,
+        url: url,
+        ...data,
+      });      
+    }
   },
 };
 module.exports = baseApi;

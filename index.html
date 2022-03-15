@@ -67,7 +67,7 @@
 				</g>
 			</svg>
 		</button>
-
+    <div id="dragContainer" class="drag-container" ></div>
 		<div id="navbar" class="theme-background-color theme-text-color windowDragHandle" tabindex="-1">
 			<button id="menu-button" class="navbar-action-button i carbon:overflow-menu-vertical" data-label="openMenu"
 				tabindex="-1"></button>
@@ -137,10 +137,13 @@
     <div id="appVue">
       <div id="toolbar">
         <div  style="display: flex;justify-content: flex-start;flex-direction:row" type="flex">
-          <div style="width:200px" >
+          <div style="width:auto" >
             <div style="display: flex;justify-content: flex-start;flex-direction:row" type="flex">
               <div class="action-wrapper" >
-                <img title="当前模式：自动展开收起；点击切换收起左侧栏，不再自动展开" id="side-mod-button-toolbar" class="action"  src="./icons/toolbar/sideauto.svg">
+                <img title="当前模式：自动展开收起；点击切换收起左侧栏，不再自动展开" id="side-mod-button-toolbar" class="action "  src="./icons/toolbar/sideauto.svg">
+              </div>
+              <div class="action-wrapper">
+                <img title="返回起始页：锁定标签时的网页地址" id="start-button-toolbar" class="action start-page"  src="./icons/toolbar/startpage.svg">
               </div>
               <div class="action-wrapper" >
                 <img title="后退（⌘←）" id="back-button-toolbar" class="action"  src="./icons/toolbar/arrowleft.svg">

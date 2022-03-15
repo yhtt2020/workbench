@@ -2,7 +2,10 @@
 //也可以直接require进去(在非preload当中）
 let isDevelopmentMode = process.argv.some(arg=>arg==='--development-mode')
 const config = {
-  SERVER_BASE_URL: 'https://s.apps.vip',
+  //SERVER_BASE_URL: 'http://pc2.mark.opensns.cn',  //测试站
+  SERVER_BASE_URL: 'https://s.apps.vip',   //老板你本地用这个，注释上面这个
+  //SERVER_BACKEND_URL: isDevelopmentMode ? 'https://osxbenew.mark.opensns.cn' : 'https://sad.apps.vip',
+  SERVER_BACKEND_URL: isDevelopmentMode ? 'https://sad.apps.vip' : 'https://sad.apps.vip',   //老板你本地用这个，注释上面这个
   DEV_NODE_SERVER_BASE_URL: 'http://test.com:8001',
   PROD_NODE_SERVER_BASE_URL: 'https://apps.vip',
   //NODE_SERVER_BASE_URL: isDevelopmentMode ? 'http://test.com:8001' : 'https://apps.vip',
@@ -15,12 +18,14 @@ const config = {
     //FRONT_URL_DEV:"http://127.0.0.1:8000",
     AUTO_LOGIN: '/auto-login',      //免登等待路由
     BOOT_ROUTE: '/boot-route'     //引导路由页面
+  },
+  OSX: {
+    CREATE_CIRCLE: '/osapi/com/createUpdateCircle'
   }
 }
 
 const appConfig = {
-  //client_id: isDevelopmentMode ? 10003 : 10001,
-  client_id: isDevelopmentMode ? 10001 : 10001,     //老板你本地用这个，注释上面这个
+  client_id: isDevelopmentMode ? 10001 : 10001,
   bind_im_id: 10002,  //lumen id
   state: 1,
   response_type: 'code',
