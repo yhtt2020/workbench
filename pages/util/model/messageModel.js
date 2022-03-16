@@ -40,6 +40,13 @@ const messageModel = {
    */
   async deleteByType(type) {
     await db.messages.where('messageType').equals(type).delete()
+  },
+
+  /**
+   * 清空dexie消息表单
+   */
+  async clearTable() {
+    await db.messages.clear()
   }
 }
 

@@ -8,7 +8,7 @@ const messageTempl = `
           <span>通知中心</span>
         </div>
         <div class="top-rg flex justify-around align-center">
-          <img src="./assets/clean.svg" alt="" style="width: 18px; height: 18px;">
+          <img src="./assets/clean.svg" alt="" style="width: 18px; height: 18px;" @click="clearMessages">
           <a-icon type="setting" :style="{ fontSize: '16px', color: '#8c8c8c' }" @click="openMsmSetting"></a-icon>
           <a-icon type="pushpin" :style="{ fontSize: '16px', color: '#8c8c8c' }" @click="fixedMessage"></a-icon>
         </div>
@@ -133,114 +133,193 @@ const messageTempl = `
       </div>
     </div>
   </div>
-`
+`;
 
-Vue.component('message-center',{
+Vue.component("message-center", {
   template: messageTempl,
   props: {
     visible: {
-      type: Boolean
+      type: Boolean,
     },
     mod: {
-      type: String
-    }
+      type: String,
+    },
   },
   data() {
     return {
-      fixed: localStorage.getItem('ISMESSAGE_FIXED') == 'true' ? true : false
-    }
+      fixed: localStorage.getItem("ISMESSAGE_FIXED") == "true" ? true : false,
+    };
   },
   computed: {
     groupMessage() {
-      return this.$store.getters.getAllMessages.filter(v => v.messageType === 'groupChat')
+      return this.$store.getters.getAllMessages.filter(
+        (v) => v.messageType === "groupChat"
+      );
     },
     communityMessage() {
-      return this.$store.getters.getAllMessages.filter(v => v.messageType === 'community')
+      return this.$store.getters.getAllMessages.filter(
+        (v) => v.messageType === "community"
+      );
     },
     webOsMessage() {
-      return this.$store.getters.getAllMessages.filter(v => v.messageType === 'webOs')
-    }
+      return this.$store.getters.getAllMessages.filter(
+        (v) => v.messageType === "webOs"
+      );
+    },
   },
   methods: {
+    clearMessages() {
+      this.$store.dispatch("deleteAllMessages");
+    },
     delMenuClick(id) {
-      this.$store.dispatch('deleteMessageById', id)
+      this.$store.dispatch("deleteMessageById", id);
     },
     openMenuClick(id) {
       //todo
     },
     removeAllMessage(type) {
-      this.$store.dispatch('deleteMessageByType', type)
+      this.$store.dispatch("deleteMessageByType", type);
     },
     removeMessage(id) {
-      this.$store.dispatch('deleteMessageById', id)
+      this.$store.dispatch("deleteMessageById", id);
     },
     clkmask() {
-      this.$emit('closeMessage')
-      localStorage.setItem('ISMESSAGE_FIXED', false)
+      this.$emit("closeMessage");
+      localStorage.setItem("ISMESSAGE_FIXED", false);
     },
     openMsmSetting() {
-      ipc.send('openMsmSetting')
+      ipc.send("openMsmSetting");
     },
     fixedMessage() {
-      if(this.mod !== 'auto' && !this.fixed) {
-        let $style = document.getElementsByClassName('message-dialog')[0].style
-        $style.height = '100vh'
-        $style.borderRadius = '0px'
-        this.fixed = true
-        localStorage.setItem('ISMESSAGE_FIXED', true)
-      } else if(this.mod !== 'auto' && this.fixed) {
-        let $style = document.getElementsByClassName('message-dialog')[0].style
-        $style.height = '600px'
-        $style.borderRadius = '10px'
-        this.fixed = false
-        localStorage.setItem('ISMESSAGE_FIXED', false)
+      if (this.mod !== "auto" && !this.fixed) {
+        let $style = document.getElementsByClassName("message-dialog")[0].style;
+        $style.height = "100vh";
+        $style.borderRadius = "0px";
+        this.fixed = true;
+        localStorage.setItem("ISMESSAGE_FIXED", true);
+      } else if (this.mod !== "auto" && this.fixed) {
+        let $style = document.getElementsByClassName("message-dialog")[0].style;
+        $style.height = "600px";
+        $style.borderRadius = "10px";
+        this.fixed = false;
+        localStorage.setItem("ISMESSAGE_FIXED", false);
       } else {
-        ipc.send('message',{type:"error",config:{content:'auto模式下无法固定消息中心位置,请切换侧边栏其余两种模式!'}})
+        ipc.send("message", {
+          type: "error",
+          config: {
+            content: "auto模式下无法固定消息中心位置,请切换侧边栏其余两种模式!",
+          },
+        });
       }
-    }
+    },
   },
   watch: {
     mod: {
       handler(val) {
-        if(val === 'auto' || val === 'open') {
-          document.getElementsByClassName('message-dialog')[0].style.left = '145px'
+        if (val === "auto" || val === "open") {
+          document.getElementsByClassName("message-dialog")[0].style.left =
+            "145px";
         } else {
-          document.getElementsByClassName('message-dialog')[0].style.left = '45px'
+          document.getElementsByClassName("message-dialog")[0].style.left =
+            "45px";
         }
       },
-      deep: true
+      deep: true,
     },
     fixed: {
       handler(val) {
-        if(val === true) {
-          document.getElementsByClassName('message-mask')[0].style.display = 'none'
-          ipc.send('channelFixed')
+        if (val === true) {
+          document.getElementsByClassName("message-mask")[0].style.display =
+            "none";
+          ipc.send("channelFixed");
         } else {
-          document.getElementsByClassName('message-mask')[0].style.display = 'block'
-          ipc.send('channelFreeFixed')
+          document.getElementsByClassName("message-mask")[0].style.display =
+            "block";
+          ipc.send("channelFreeFixed");
         }
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   mounted() {
-    if(this.mod === 'auto' || this.mod === 'open') {
-      document.getElementsByClassName('message-dialog')[0].style.left = '145px'
+    if (this.mod === "auto" || this.mod === "open") {
+      document.getElementsByClassName("message-dialog")[0].style.left = "145px";
     } else {
-      document.getElementsByClassName('message-dialog')[0].style.left = '45px'
+      document.getElementsByClassName("message-dialog")[0].style.left = "45px";
     }
-    if(this.fixed) {
-      this.$emit('updateVisible', true)
-      let $style = document.getElementsByClassName('message-dialog')[0].style
-      $style.height = '100vh'
-      $style.borderRadius = '0px'
-      document.getElementsByClassName('message-mask')[0].style.display = 'none'
+    if (this.fixed) {
+      this.$emit("updateVisible", true);
+      let $style = document.getElementsByClassName("message-dialog")[0].style;
+      $style.height = "100vh";
+      $style.borderRadius = "0px";
+      document.getElementsByClassName("message-mask")[0].style.display = "none";
     } else {
-      this.$emit('updateVisible', false)
-      let $style = document.getElementsByClassName('message-dialog')[0].style
-      $style.height = '600px'
-      $style.borderRadius = '10px'
-      document.getElementsByClassName('message-mask')[0].style.display = 'block'
+      this.$emit("updateVisible", false);
+      let $style = document.getElementsByClassName("message-dialog")[0].style;
+      $style.height = "600px";
+      $style.borderRadius = "10px";
+      document.getElementsByClassName("message-mask")[0].style.display =
+        "block";
     }
-  }
-})
+
+    if (localStorage.getItem("messageSetting")) {
+      ipc.send("notificationSettingStatus", JSON.parse(localStorage.getItem('messageSetting')))
+    } else {
+      const list = [
+        {
+          title: "浏览器",
+          appId: 0,
+          url: "../sidebar/assets/network.svg",
+          notice: true,
+          childsShow: true,
+          childs: [
+            {
+              title: "网页消息",
+              notice: true,
+            },
+          ],
+        },
+        {
+          title: "团队",
+          appId: 1,
+          url: "../../icons/svg/chat.svg",
+          notice: true,
+          childsShow: true,
+          childs: [
+            {
+              title: "聊天",
+              notice: true,
+            },
+            {
+              title: "好友申请",
+              notice: true,
+            },
+          ],
+        },
+        {
+          title: "社区",
+          appId: 2,
+          url: "../sidebar/assets/osx.svg",
+          notice: true,
+          childsShow: true,
+          childs: [
+            {
+              title: "互动消息",
+              notice: true,
+            },
+            {
+              title: "关注消息",
+              notice: true,
+            },
+            {
+              title: "应用消息",
+              notice: true,
+            },
+          ],
+        },
+      ];
+      localStorage.setItem(JSON.stringify(list));
+      ipc.send("notificationSettingStatus", list)
+    }
+  },
+});

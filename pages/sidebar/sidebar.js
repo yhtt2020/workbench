@@ -231,7 +231,7 @@ window.onload = function() {
       },
       //添加消息
       ADD_MESSAGE: (state, message) => {
-        state.allMessages.push(message)
+        state.allMessages.unshift(message)
       },
       //根据id删除单个消息
       DEL_MESSAGE_BYID: (state, id) => {
@@ -242,6 +242,10 @@ window.onload = function() {
       DEL_MESSAGES_BYTYPE: (state, type) => {
         const result = state.allMessages.filter(v => v.messageType !== type)
         state.allMessages = result
+      },
+      //删除所有消息
+      DEL_ALLMESSAGES: (state) => {
+        state.allMessages = []
       },
       //设置我的团队列表
       SET_MYGROUPS: (state, myGroups) => {
@@ -409,6 +413,10 @@ window.onload = function() {
       async deleteMessageByType({commit}, options) {
         await messageModel.deleteByType(options)
         commit('DEL_MESSAGES_BYTYPE', options)
+      },
+      async deleteAllMessages({commit}) {
+        await messageModel.clearTable()
+        commit('DEL_ALLMESSAGES')
       }
 
     }

@@ -14,6 +14,8 @@ function apLog (e) {
   }
 }
 
+let notificationSettingStatus = null
+
 const appManager = {
   dockBadge: 0,
   settingWindow: null,
@@ -47,6 +49,41 @@ const appManager = {
     })
   },
   /**
+   * 消息提示的前置处理，决定是否弹窗提示
+   * @param {array} settingStatus 消息设置状态 (notificationSettingStatus对象)
+   * @param {object} message 消息体
+   */
+  beforeEachNotification(settingStatus, message) {
+    //消息中心的收录做在这里
+    if(message.saAppId == 1) {
+      SidePanel.send('storeMessage', {
+        title: message.options.title,
+        body: message.options.body,
+        type: 'groupChat'
+      })
+    } else if(message.saAppId == 2) {
+      SidePanel.send('storeMessage', {
+        title: message.options.title,
+        body: message.options.body,
+        type: 'community'
+      })
+    } else if(message.saAppId == 0) {
+      SidePanel.send('storeMessage', {
+        title: message.options.title,
+        body: message.options.body,
+        type: 'webOs'
+      })
+    }
+
+    //前置判断
+    let index = settingStatus.findIndex(v => v.appId === message.saAppId)
+    let childIndex = settingStatus[index].childs.findIndex(v => v.title === message.options.category)
+    if(settingStatus[index].notice && settingStatus[index].childs[childIndex].notice) {
+      return true
+    }
+    return false
+  },
+  /**
    * 发送应用消息，进行提示，并给应用加上图标
    * @param appId
    * @param option  option.body为消息体  可参考此处参数说明 https://www.electronjs.org/zh/docs/latest/api/notification
@@ -59,10 +96,6 @@ const appManager = {
     let defaultNotificationIcon=path.join(__dirname,'/icons/logo1024.png')
     if(process.platform==='win32'){
       defaultNotificationIcon=path.join(__dirname,'/icons/logo128.png')
-    }
-    if(appId == 1) {
-      option.type = 'groupChat'
-      SidePanel.send('storeMessage', option)
     }
     option.icon = option.icon?option.icon:nativeImage.createFromPath(defaultNotificationIcon)
     let saAppWindow=appManager.getWindowByAppId(appId)
@@ -1175,10 +1208,21 @@ app.whenReady().then(() => {
   })
 
   ipc.on('saAppNotice', (event, args) => {
-    appManager.notification(args.saAppId, {
-      title: args.options.title,
-      body: args.options.body,
-    },typeof args.ignoreWhenFocus == 'undefined'?false:args.ignoreWhenFocus)
+    //需要前置处理消息设置的状态决定到底发不发消息
+    const result = appManager.beforeEachNotification(notificationSettingStatus, args)
+    if(result) {
+      appManager.notification(args.saAppId, {
+        title: args.options.title,
+        body: args.options.body,
+      },typeof args.ignoreWhenFocus == 'undefined'?false:args.ignoreWhenFocus)
+    } else {
+      return
+    }
+  })
+
+  ipc.on('notificationSettingStatus', (event, args) => {
+    console.log(JSON.stringify(args), '!!!!!!!!!!!!!!')
+    notificationSettingStatus = args
   })
 
   ipc.on('saAppOpen', (event, args) => {

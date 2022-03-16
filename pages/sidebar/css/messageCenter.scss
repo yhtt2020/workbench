@@ -33,10 +33,11 @@
       width: 30%;
       height: 100%;
       margin-right: 10px;
-    }
-    .icon-class {
-      width: 20px;
-      height: 20px;
+      img {
+        &:hover {
+          cursor: pointer;
+        }
+      }
     }
   }
 

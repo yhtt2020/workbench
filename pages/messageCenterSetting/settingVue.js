@@ -4,131 +4,51 @@ new Vue({
     return {
       webMessage: [
         {
-          link: 'app.vipss'
+          link: "app.vipss",
         },
         {
-          link: 'app.vipsss'
+          link: "app.vipsss",
         },
         {
-          link: 'app.vipssss'
+          link: "app.vipssss",
         },
         {
-          link: 'app.vipsss'
+          link: "app.vipsss",
         },
         {
-          link: 'app.vipssss'
-        }
-
+          link: "app.vipssss",
+        },
       ],
-      appMessage: [
-        {
-          title: '浏览器',
-          url: '../sidebar/assets/network.svg',
-          notice: true,
-          childsShow: true,
-          childs: [
-            {
-              title: '网页消息',
-              notice: true
-            }
-          ]
-        },
-        {
-          title: '团队',
-          url: '../../icons/svg/chat.svg',
-          notice: true,
-          childsShow: true,
-          childs: [
-            {
-              title: '聊天',
-              notice: true
-            },
-            {
-              title: '好友申请',
-              notice: true
-            }
-          ]
-        },
-        {
-          title: '社区',
-          url: '../../icons/svg/chat.svg',
-          notice: true,
-          childsShow: true,
-          childs: [
-            {
-              title: '互动消息',
-              notice: true
-            },
-            {
-              title: '关注消息',
-              notice: true
-            },
-            {
-              title: '应用消息',
-              notice: true
-            }
-          ]
-        },
-        {
-          title: '社区',
-          url: '../../icons/svg/chat.svg',
-          notice: true,
-          childsShow: true,
-          childs: [
-            {
-              title: '互动消息',
-              notice: true
-            },
-            {
-              title: '关注消息',
-              notice: true
-            },
-            {
-              title: '应用消息',
-              notice: true
-            }
-          ]
-        },
-        {
-          title: '社区',
-          url: '../../icons/svg/chat.svg',
-          notice: true,
-          childsShow: true,
-          childs: [
-            {
-              title: '互动消息',
-              notice: true
-            },
-            {
-              title: '关注消息',
-              notice: true
-            },
-            {
-              title: '应用消息',
-              notice: true
-            }
-          ]
-        }
-      ]
-    }
+      appMessage: localStorage.getItem("messageSetting")
+    };
   },
   methods: {
     changeTree(index) {
-      this.appMessage[index].childsShow = !this.appMessage[index].childsShow
+      this.appMessage[index].childsShow = !this.appMessage[index].childsShow;
+
+      ipc.send("notificationSettingStatus", this.appMessage);
+      localStorage.setItem('messageSetting', JSON.stringify(this.appMessage))
     },
     parentOnChange(checked, $event) {
-      let index = parseInt($event.currentTarget.dataset.index)
-      this.appMessage[index].notice = checked
-      this.appMessage[index].childs.forEach(v => {
-        v.notice = checked
+      let index = parseInt($event.currentTarget.dataset.index);
+      this.appMessage[index].notice = checked;
+      this.appMessage[index].childs.forEach((v) => {
+        v.notice = checked;
       });
-      console.log(this.appMessage[index])
+      console.log(this.appMessage[index]);
+
+      //把整个消息通知的设置状态发过去，且状态永久化存储
+      ipc.send("notificationSettingStatus", this.appMessage);
+      localStorage.setItem('messageSetting', JSON.stringify(this.appMessage))
     },
     childOnChange(checked, $event) {
-      console.log($event)
-      let index = parseInt($event.currentTarget.dataset.index)
-      let rindex = parseInt($event.currentTarget.dataset.rindex)
-      this.appMessage[index].childs[rindex].notice = checked
+      console.log($event);
+      let index = parseInt($event.currentTarget.dataset.index);
+      let rindex = parseInt($event.currentTarget.dataset.rindex);
+      this.appMessage[index].childs[rindex].notice = checked;
+
+      ipc.send("notificationSettingStatus", this.appMessage);
+      localStorage.setItem('messageSetting', JSON.stringify(this.appMessage))
     },
-  },
+  }
 });
