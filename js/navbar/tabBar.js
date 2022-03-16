@@ -1047,8 +1047,14 @@ ipc.on('tabNavigateTo', function(e, data) {
   require('browserUI.js').addTab(newTab, { enterEditMode: false})
 })
 
+/**
+ * 获取添加到收藏夹的信息，同时会发送一个获取高清截图的请求到主进程。
+ * 故信息和截图两边是分开发送的
+ */
 ipc.on('getAddPageInfo',(event,args)=>{
-  ipc.send('getHDCapture',{id:tabs.getSelected(),favWindowId:args.favWindowId})
-  ipc.sendTo(args.favWindowId,'gotAddPageInfo',tabs.get(tabs.getSelected()))
+  ipc.send('getHDCapture',{id:tabs.getSelected(),favWindowId:args.favWindowId}) //发送给主进程，要求捕获一个高清截图
+  let tabInfo=tabs.get(tabs.getSelected())
+  tabInfo.url=urlParser.getSourceURL(tabInfo.url)
+  ipc.sendTo(args.favWindowId,'gotAddPageInfo',tabInfo) //直接回传消息给收藏夹的渲染进程
 })
 module.exports = tabBar

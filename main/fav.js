@@ -134,6 +134,15 @@ app.whenReady().then(() => {
       },
       {
         label: '此域名下禁用拖拽保存'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label:'打开超级收藏夹',
+        click(){
+          protocolManager.handleProtocol('tsb://app/redirect/?package=com.thisky.fav&url=/')
+        }
       }]
     let menu = require('electron').Menu.buildFromTemplate(menuTemplate)
     menu.popup()
