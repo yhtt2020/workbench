@@ -33,12 +33,8 @@ const server = {
   },
 }
 
-ipc.on('initLumen', (event, args) => {
-  localStorage.setItem('TSB_SAAPP', JSON.stringify(args))
-})
-
-//todo这个listener挂载的时机还是有问题的，但不延迟会导致挂不上
-setTimeout(() => {
+ipc.invoke('imPreloadReady').then((args) => {
+  localStorage.setItem('tsbSaApp', JSON.stringify(args))
   //定制好订阅器
   let DepList = []
   DepList.push({
@@ -46,13 +42,13 @@ setTimeout(() => {
     host: isDevelopmentMode ? config.IM.FRONT_URL_DEV : config.IM.FRONT_URL
   })
   tsbSdk.listener(DepList)
-}, 3000)
 
-if(href === config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN) {
-  server.beforeInit(config.IM.FRONT_URL_DEV)
-} else if (href === config.IM.FRONT_URL + config.IM.AUTO_LOGIN) {
-  server.beforeInit(config.IM.FRONT_URL)
-}
+  if(href === config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN) {
+    server.beforeInit(config.IM.FRONT_URL_DEV)
+  } else if (href === config.IM.FRONT_URL + config.IM.AUTO_LOGIN) {
+    server.beforeInit(config.IM.FRONT_URL)
+  }
+})
 
 ipc.on('imLogout', () => {
   let host = isDevelopmentMode ? config.IM.FRONT_URL_DEV : config.IM.FRONT_URL
