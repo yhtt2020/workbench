@@ -426,3 +426,7 @@ ipc.on('sideSetAuto',(event,args)=>{
   appVue.mod='auto'
   localStorage.setItem('sideMode','auto')
 })
+ipc.on('refreshCircleList', async (event, args) => {
+  await window.$store.dispatch('getJoinedCircle', {page: 1, row: 500})
+  await window.$store.dispatch('getMyCircle', {page: 1, row: 500})
+})
