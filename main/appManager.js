@@ -510,7 +510,7 @@ const appManager = {
     if (saApp.package === 'com.thisky.fav' && isDevelopmentMode) {
       // 当为开发环境下的时候，将团队强行更改为本地开发
       //todo 根据实际需求更改
-      saApp.url = 'http://localhost:8080/#/popSaveToFolder'
+      saApp.url = 'http://localhost:8080/'
     }
 
     remote.enable(appView.webContents)

@@ -13,6 +13,7 @@ const modules = [
   'main/sidePanel.js',
   'main/bindIPC.js',
   'main/appManager.js',
+  'main/popManager.js',
   'main/siteCard.js',
   'main/downloadCard.js',
   'main/userScript.js',

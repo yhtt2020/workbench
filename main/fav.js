@@ -1,7 +1,6 @@
 let localCacheManager = require(path.join(__dirname, '/js/main/localCacheManager.js'))
 const configDb = require(path.join(__dirname, '/pages/util/db/configDb.js'))
 const { shell } = require('electron')
-
 app.whenReady().then(() => {
   //设置默认的本地收藏夹位置
   configDb.init(app.getPath('userData'))
@@ -111,6 +110,14 @@ app.whenReady().then(() => {
     let menuTemplate = [{
       label: '将网页保存至收藏夹',
       click: () => {
+        let url='https://a.apps.vip/fav/#/popSaveToFolder' //开发环境测试环境，提交到版本库前注释掉
+        if(isDevelopmentMode){
+          url='http://localhost:8080/#/popSaveToFolder'
+        }
+        const bounds=mainWindow.getBounds()
+        let currentBounds={width:500,height:500,x:bounds.x+bounds.width-510,y:bounds.y+85}
+        let popWindow=popManager.openPop('favSaveToFolder',url,currentBounds)
+        popWindow.setBounds(currentBounds)  //重新调整位置，不然会保持在首次创建的位置不再变化
       }
     }, {
       type: 'separator'
@@ -127,4 +134,9 @@ app.whenReady().then(() => {
     let menu = require('electron').Menu.buildFromTemplate(menuTemplate)
     menu.popup()
   })
+
+
+  ipc.on('openPopSaveToFolder',(event,args)=>{
+  })
+
 })

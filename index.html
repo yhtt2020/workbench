@@ -199,7 +199,7 @@
                 </span>
               </div>
               <div class="action-wrapper" >
-                <span oncontextmenu="ipc.send('favContextMenu')" onclick="ipc.send('handleTsbProtocol',{url:'tsb://app/redirect/?package=com.thisky.fav&url='+encodeURIComponent('/')})" title="收藏夹" id="nav-toolbar"><img class="action app" src="./icons/toolbar/apps/fav.svg"></span>
+                <span oncontextmenu="ipc.send('favContextMenu')" onclick="ipc.send('openPopSaveToFolder')" title="收藏夹" id="nav-toolbar"><img class="action app" src="./icons/toolbar/apps/fav.svg"></span>
               </div>
             <div class="action-wrapper" >
               <span onclick="ipc.send('openScriptManager')" title="管理脚本插件" id="userscript-toolbar"><img class="action app" src="./icons/toolbar/apps/code.svg">
