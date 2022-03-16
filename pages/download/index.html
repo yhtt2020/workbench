@@ -162,10 +162,6 @@
     appVue.deleconfirm=false
   })
 
-  ipcRenderer.on('cancelSave',()=>{
-    console.log('123')
-  })
-
   ipcRenderer.on('download-info', async (event, args) => {
     let simpleName;
     if (args.name.length >= 20) {
@@ -293,9 +289,9 @@
 
       hideModal() {
         ipcRenderer.send('deleteDownload', this.selectingList.path)
-        this.lists.splice(this.lists.indexOf(this.selectingList), 1)
+        // this.lists.splice(this.lists.indexOf(this.selectingList), 1)
         this.visibleIng = false;
-        this.count--
+        // this.count = this.count-1
       },
 
       doneChange(e){
@@ -341,6 +337,7 @@
       },
     }
    })
+
 
 </script>
 

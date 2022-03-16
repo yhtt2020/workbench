@@ -121,7 +121,7 @@ ipc.on('openToolbar',()=>{
 
 ipc.on('hideToolbar',()=>{
   setTimeout(function () {
-    ipc.invoke('showToolbarDialog1')
+    ipc.invoke('showToolbarDialog')
   }, 16)
   toolbar.expanded = false
   toolbar.toolbarEl.hidden = true
