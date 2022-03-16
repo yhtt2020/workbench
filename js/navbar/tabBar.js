@@ -1047,4 +1047,8 @@ ipc.on('tabNavigateTo', function(e, data) {
   require('browserUI.js').addTab(newTab, { enterEditMode: false})
 })
 
+ipc.on('getAddPageInfo',(event,args)=>{
+  ipc.send('getHDCapture',{id:tabs.getSelected(),favWindowId:args.favWindowId})
+  ipc.sendTo(args.favWindowId,'gotAddPageInfo',tabs.get(tabs.getSelected()))
+})
 module.exports = tabBar

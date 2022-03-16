@@ -39,6 +39,7 @@ const popManager = {
       safeDialogs: false,
       safeDialogsMessage: false,
       partition: null,
+      webSecurity:false,
       additionalArguments: [
         '--user-data-path=' + userDataPath,
         '--app-version=' + app.getVersion(),

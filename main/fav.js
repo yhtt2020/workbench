@@ -116,8 +116,12 @@ app.whenReady().then(() => {
         }
         const bounds=mainWindow.getBounds()
         let currentBounds={width:500,height:500,x:bounds.x+bounds.width-510,y:bounds.y+85}
-        let popWindow=popManager.openPop('favSaveToFolder',url,currentBounds)
+        if(!popManager.get('favSaveToFolder')){
+          ipc.on('addPageReady',()=>popWindow.window.webContents.send('addPage'))//首次准备好之后再发消息获取图片，防止过早获取，应用未准备好接收
+        }
+        let popWindow=popManager.openPop('favSaveToFolder',url,{},{preload:__dirname+'/pages/fav/preload.js'})
         popWindow.setBounds(currentBounds)  //重新调整位置，不然会保持在首次创建的位置不再变化
+        popWindow.window.webContents.send('addPage')
       }
     }, {
       type: 'separator'
@@ -135,8 +139,10 @@ app.whenReady().then(() => {
     menu.popup()
   })
 
-
-  ipc.on('openPopSaveToFolder',(event,args)=>{
+  ipc.on('getAddPageInfo',(event,args)=>{
+    sendIPCToWindow(mainWindow,'getAddPageInfo',{favWindowId:event.sender.id})
   })
+
+
 
 })

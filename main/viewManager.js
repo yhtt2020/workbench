@@ -434,6 +434,34 @@ ipc.on('getCapture', function (e, data) {
   })
 })
 
+/**
+ * 获得高清的截图，并回传给收藏夹添加页面的fav让它去挂载截图
+ */
+ipc.on('getHDCapture',(event,args)=>{
+  var view = viewMap[args.id]
+  if (!view) {
+    return
+  }
+
+  view.webContents.capturePage().then(function (img) {
+    var size = img.getSize()
+    if (size.width === 0 && size.height === 0) {
+      return
+    }
+    const dir=app.getPath('userData')+'/captureTmp/'
+    const filename=dir+Date.now()+'.jpg'
+    if(!fs.existsSync(dir)){
+      fs.mkdirSync(dir)
+    }
+    fs.writeFileSync(filename,img.toJPEG(100))
+    if(args.favWindowId){
+      //如果收藏夹id存在，则直发过去
+      webContents.fromId(args.favWindowId).send('gotHdCaptureData', {id: args.id, url: filename})
+    }
+    mainWindow.webContents.send('hDCaptureData', {id: args.id, url: filename})
+  })
+})
+
 ipc.on('saveViewCapture', function (e, data) {
   var view = viewMap[data.id]
   if (!view) {

@@ -13,4 +13,9 @@ ipc.on('gotUserInfo',(event,args)=>{
 })
 window.appReady=function(){
   ipc.send('getUserInfo')
+  ipc.send('favInit')
 }
+
+ipc.on('addPage',()=>{
+  window.addPageCallback()
+})//挂载添加页面到收藏夹的回调，去调取回传数据的方法，这个方法来自于添加页面的mounted挂载
