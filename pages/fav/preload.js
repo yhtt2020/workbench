@@ -15,7 +15,14 @@ window.appReady=function(){
   ipc.send('getUserInfo')
   ipc.send('favInit')
 }
-
+let timer=null
 ipc.on('addPage',()=>{
-  window.addPageCallback()
+  timer=setInterval(()=>{
+    if(window.addPageCallback){
+      window.addPageCallback()
+      clearInterval(timer)
+    }else{
+      console.log('waiting ready')
+    }
+  },200)
 })//挂载添加页面到收藏夹的回调，去调取回传数据的方法，这个方法来自于添加页面的mounted挂载
