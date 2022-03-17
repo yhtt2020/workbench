@@ -479,3 +479,14 @@ ipc.on('storeMessage', async (event, args) => {
   this.$store.commit('ADD_MESSAGE', message)
   console.log(this.$store.getters.getAllMessages, '??????')
 })
+
+ipc.on('webOsNotice', async(event, args) => {
+  let message = {}
+  message.messageType = 'webOs'
+  message.timestamp = Date.now()
+  message.title = args.url
+  message.body = `${args.title}【${args.body}】`
+  await messageModel.add(message)
+
+  this.$store.commit('ADD_MESSAGE', message)
+})

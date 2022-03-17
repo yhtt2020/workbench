@@ -67,12 +67,6 @@ const appManager = {
         body: message.options.body,
         type: 'community'
       })
-    } else if(message.saAppId == 0) {
-      SidePanel.send('storeMessage', {
-        title: message.options.title,
-        body: message.options.body,
-        type: 'webOs'
-      })
     }
 
     //前置判断
@@ -1220,8 +1214,13 @@ app.whenReady().then(() => {
     }
   })
 
+  ipc.on('webOsNotice', (event, args) => {
+    console.log(args, '%%%%%%%%%%%%%%%%')
+    SidePanel.send('webOsNotice', args)
+  })
+
   ipc.on('notificationSettingStatus', (event, args) => {
-    console.log(JSON.stringify(args), '!!!!!!!!!!!!!!')
+    // console.log(JSON.stringify(args), '!!!!!!!!!!!!!!')
     notificationSettingStatus = args
   })
 

@@ -102,7 +102,7 @@ const messageTempl = `
                   <li>
                     <div class="flex flex-direction justify-around align-start">
                       <span class="text-black" style="font-weight: 500;">{{item.title}}</span>
-                      <span class="text-grey-sm sg-omit-sm" style="width: 94%">收到一条抄送通知！</span>
+                      <span class="text-grey-sm sg-omit-sm" style="width: 94%">{{item.body}}</span>
                       <span class="text-grey-sm">{{item.time}}</span>
                     </div>
                     <a-icon class="closex" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click="removeMessage(item.id)"></a-icon>
