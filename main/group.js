@@ -222,6 +222,7 @@ app.on('ready', () => {
       let confirmBtn = null
       btn.addEventListener('click', () => {
         //window.$ipc.send('teamTip')
+        //window.$ipc.send('refreshCircle')
         confirmBtn = document.getElementsByClassName('button-box')[0] ? document.getElementsByClassName('button-box')[0].childNodes[2] : null
         if(confirmBtn) {
           confirmBtn.onclick = () => {
@@ -240,6 +241,10 @@ app.on('ready', () => {
       })
     `, true)
     osxCreateCircle.on('close', () => osxCreateCircle = null)
+  })
+
+  ipc.on('refreshCircle', (event, args) => {
+    SidePanel.send('refreshCircleList')
   })
 
 })
