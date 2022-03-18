@@ -17,12 +17,19 @@ window.appReady=function(){
 }
 let timer=null
 ipc.on('addPage',()=>{
-  timer=setInterval(()=>{
-    if(window.addPageCallback){
-      window.addPageCallback()
-      clearInterval(timer)
-    }else{
-      console.log('waiting ready')
-    }
-  },200)
+  if(window.getAddPageInfo){
+    window.getAddPageInfo()
+    return
+  }
+  if(!timer){
+    timer=setInterval(()=>{
+      if(window.getAddPageInfo){
+        window.getAddPageInfo()
+        clearInterval(timer)
+      }else{
+        console.log('waiting ready')
+      }
+    },200)
+  }
+
 })//挂载添加页面到收藏夹的回调，去调取回传数据的方法，这个方法来自于添加页面的mounted挂载

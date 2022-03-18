@@ -105,7 +105,7 @@ app.whenReady().then(() => {
       event.reply('createDirResult', { result: 'false', message: '请检查输入是否符合规范。' })
     }
   })
-
+ let popWindow=null
   ipc.on('favContextMenu', (event, args) => {
     let menuTemplate = [{
       label: '将网页保存至收藏夹',
@@ -119,7 +119,7 @@ app.whenReady().then(() => {
         if(!popManager.get('favSaveToFolder')){
           ipc.on('addPageReady',()=>popWindow.window.webContents.send('addPage'))//首次准备好之后再发消息获取图片，防止过早获取，应用未准备好接收
         }
-        let popWindow=popManager.openPop('favSaveToFolder',url,{},{preload:__dirname+'/pages/fav/preload.js'})
+        popWindow=popManager.openPop('favSaveToFolder',url,{},{preload:__dirname+'/pages/fav/preload.js'})
         popWindow.setBounds(currentBounds)  //重新调整位置，不然会保持在首次创建的位置不再变化
         popWindow.window.webContents.send('addPage')
       }
@@ -152,6 +152,10 @@ app.whenReady().then(() => {
     sendIPCToWindow(mainWindow,'getAddPageInfo',{favWindowId:event.sender.id})
   })
 
-
+  ipc.on('hideFavPop',()=>{
+    if(popWindow){
+      popWindow.window.hide()
+    }
+  })
 
 })
