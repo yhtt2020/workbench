@@ -89,8 +89,8 @@ const sideBar = {
     document.getElementById('password-capture-bar').style.left = postLeftCss
     document.getElementById('password-capture-bar').style.width = 'calc(100% - ' + postLeftCss + ')'
     //调整下载框的左侧位置
-    document.getElementById('download-bar').style.left = postLeftCss
-    document.getElementById('download-bar').style.width = 'calc(100% - ' + postLeftCss + ')'
+    // document.getElementById('download-bar').style.left = postLeftCss
+    // document.getElementById('download-bar').style.width = 'calc(100% - ' + postLeftCss + ')'
   },
   setToMin () {
     let posLeft = sideBar.minWidth
@@ -108,29 +108,56 @@ const sideBar = {
 }
 
 ipc.on('openToolbar',()=>{
-  toolbar.expanded = true
-  toolbar.toolbarEl.hidden = false
-  document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px + 40px )`
-  document.getElementById('tab-editor').hidden = false
-  // document.getElementById('tabs').insertBefore(document.getElementById('tab-editor'), document.getElementById('tabs').children[0]).hidden = true
-  webviews.viewMargins = [document.getElementById('toolbar').hidden ? 0 : 40, 0, 0, 45]
-  webviews.adjustMargin([0, 0, 0, 0])
-  document.getElementById('address-bar').appendChild(document.getElementById('tab-editor'))
-  document.getElementById('toolbar-navigation-buttons').hidden = true
+  document.getElementById('password-capture-bar').style.top = -36+'px'
+  if (sideBar.mod==='close'){
+    toolbar.expanded = true
+    toolbar.toolbarEl.hidden = false
+    document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px + 40px )`
+    document.getElementById('tab-editor').hidden = false
+    // document.getElementById('tabs').insertBefore(document.getElementById('tab-editor'), document.getElementById('tabs').children[0]).hidden = true
+    webviews.viewMargins = [document.getElementById('toolbar').hidden ? 0 : 40, 0, 0, 45]
+    webviews.adjustMargin([0, 0, 0, 0])
+    document.getElementById('address-bar').appendChild(document.getElementById('tab-editor'))
+    document.getElementById('toolbar-navigation-buttons').hidden = true
+  }
+  if(sideBar.mod==='open' || sideBar.mod==='auto'){
+    toolbar.expanded = true
+    toolbar.toolbarEl.hidden = false
+    document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px + 40px )`
+    document.getElementById('tab-editor').hidden = false
+    // document.getElementById('tabs').insertBefore(document.getElementById('tab-editor'), document.getElementById('tabs').children[0]).hidden = true
+    webviews.viewMargins = [document.getElementById('toolbar').hidden ? 0 : 40, 0, 0, 45]
+    webviews.adjustMargin([0, 0, 0,100])
+    document.getElementById('address-bar').appendChild(document.getElementById('tab-editor'))
+    document.getElementById('toolbar-navigation-buttons').hidden = true
+  }
+
 })
 
 ipc.on('hideToolbar',()=>{
   setTimeout(function () {
     ipc.invoke('showToolbarDialog')
   }, 16)
-  toolbar.expanded = false
-  toolbar.toolbarEl.hidden = true
-  document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px )`
-  document.getElementById('tab-editor').hidden = true
-  document.getElementById('tabs').insertBefore(document.getElementById('tab-editor'), document.getElementById('tabs').children[0])
-  webviews.viewMargins = [document.getElementById('toolbar').hidden ? 0 : 40, 0, 0, 45]
-  webviews.adjustMargin([0, 0, 0, 0])
-  document.getElementById('toolbar-navigation-buttons').hidden = false
+  if(sideBar.mod==='close'){
+    toolbar.expanded = false
+    toolbar.toolbarEl.hidden = true
+    document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px )`
+    document.getElementById('tab-editor').hidden = true
+    document.getElementById('tabs').insertBefore(document.getElementById('tab-editor'), document.getElementById('tabs').children[0])
+    webviews.viewMargins = [document.getElementById('toolbar').hidden ? 0 : 40, 0, 0, 45]
+    webviews.adjustMargin([0, 0, 0, 0])
+    document.getElementById('toolbar-navigation-buttons').hidden = false
+  }
+  if(sideBar.mod==='open' || sideBar.mod==='auto'){
+    toolbar.expanded = false
+    toolbar.toolbarEl.hidden = true
+    document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px )`
+    document.getElementById('tab-editor').hidden = true
+    document.getElementById('tabs').insertBefore(document.getElementById('tab-editor'), document.getElementById('tabs').children[0])
+    webviews.viewMargins = [document.getElementById('toolbar').hidden ? 0 : 40, 0,0,45]
+    webviews.adjustMargin([0, 0, 0, 100])
+    document.getElementById('toolbar-navigation-buttons').hidden = false
+  }
 })
 
 
@@ -195,7 +222,7 @@ const toolbar = {
   },
 
   //设置阅读模式是否可用
-  setPwdCanRead (canRead) {
+  setCanRead (canRead) {
 
     if (!canRead) {
       toolbar.setElOpacity(toolbar.readEl, 0.5)
@@ -233,14 +260,27 @@ const toolbar = {
       setTimeout(function () {
         ipc.invoke('showToolbarDialog')
       }, 16)
-      toolbar.expanded = false
-      toolbar.toolbarEl.hidden = true
-      document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px )`
-      document.getElementById('tab-editor').hidden = true
-      document.getElementById('tabs').insertBefore(document.getElementById('tab-editor'), document.getElementById('tabs').children[0])
-      webviews.viewMargins = [document.getElementById('toolbar').hidden ? 0 : 40, 0, 0, 45]
-      webviews.adjustMargin([0, 0, 0, 0])
-      document.getElementById('toolbar-navigation-buttons').hidden = false
+      document.getElementById('password-capture-bar').style.top = 36+'px'
+      if(sideBar.mod==='close'){
+        toolbar.expanded = false
+        toolbar.toolbarEl.hidden = true
+        document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px )`
+        document.getElementById('tab-editor').hidden = true
+        document.getElementById('tabs').insertBefore(document.getElementById('tab-editor'), document.getElementById('tabs').children[0])
+        webviews.viewMargins = [document.getElementById('toolbar').hidden ? 0 : 40, 0, 0, 45]
+        webviews.adjustMargin([0, 0, 0, 0])
+        document.getElementById('toolbar-navigation-buttons').hidden = false
+      }
+      if(sideBar.mod==='open' || sideBar.mod==='auto'){
+        toolbar.expanded = false
+        toolbar.toolbarEl.hidden = true
+        document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px )`
+        document.getElementById('tab-editor').hidden = true
+        document.getElementById('tabs').insertBefore(document.getElementById('tab-editor'), document.getElementById('tabs').children[0])
+        webviews.viewMargins = [document.getElementById('toolbar').hidden ? 0 : 40, 0,0,45]
+        webviews.adjustMargin([0, 0, 0, 100])
+        document.getElementById('toolbar-navigation-buttons').hidden = false
+      }
     })
     if (toolbar.expanded) {
       document.getElementById('address-bar').appendChild(document.getElementById('tab-editor'))

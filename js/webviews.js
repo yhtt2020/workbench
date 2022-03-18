@@ -305,11 +305,11 @@ const webviews = {
    if(urlParser.getSourceURL(tabData.url).startsWith('ts://')){
      $toolbar.setPwdCanUse(false)
      $toolbar.setMobileCanUse(false)
-     $toolbar.setPwdCanRead(false)
+     $toolbar.setCanRead(false)
    }else{
      $toolbar.setPwdCanUse(true)
      $toolbar.setMobileCanUse(true)
-     $toolbar.setPwdCanRead(true)
+     $toolbar.setCanRead(true)
    }
   },
   updateAppStatus(tabData){
