@@ -201,8 +201,10 @@ ipc.on('userLogin', function (e, data) {
     await window.$store.dispatch('getUserInfo', {
       token: user.token
     })
-    //首次登录获取团队列表放在这里
-    await window.$store.dispatch('getGroups')
+    //await window.$store.dispatch('getGroups')  //老的团队获取接口
+
+    await window.$store.dispatch('getJoinedCircle', {page: 1, row: 500})
+    await window.$store.dispatch('getMyCircle', {page: 1, row: 500})
   }).catch((err) => {
     console.log('登录后设置当前用户失败')
     console.log(err)
