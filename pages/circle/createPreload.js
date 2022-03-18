@@ -15,8 +15,9 @@ window.XMLHttpRequest.prototype.open = function (
   this.addEventListener("load", function () {
     if (url === `${config.SERVER_BACKEND_URL}${config.OSX.CREATE_CIRCLE}`) {
       var resObj = JSON.parse(this.responseText);
-      if(resObj.code == 200 && resObj.msg == 'ok') {
+      if(resObj.code == 200) {
         ipc.send('teamTip', Number(resObj.data.id))
+        ipc.send('refreshCircle')
       }
     }
   });

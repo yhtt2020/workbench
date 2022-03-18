@@ -118,7 +118,7 @@ Vue.component('sidebar', {
     const currentUser = await db.system.where('name').equals('currentUser').first()
     if(currentUser.value.uid !== 0 ) {
       try {
-        //await this.$store.dispatch('getGroups')
+        //await this.$store.dispatch('getGroups')  //老的团队获取接口
         await this.$store.dispatch('getJoinedCircle', {page: 1, row: 500})
         await this.$store.dispatch('getMyCircle', {page: 1, row: 500})
       } catch(err) {
