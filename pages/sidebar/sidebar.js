@@ -481,12 +481,25 @@ ipc.on('storeMessage', async (event, args) => {
 })
 
 ipc.on('webOsNotice', async(event, args) => {
-  let message = {}
-  message.messageType = 'webOs'
-  message.timestamp = Date.now()
-  message.title = args.url
-  message.body = `${args.title}【${args.body}】`
-  await messageModel.add(message)
+  const settingStatus = JSON.parse(localStorage.getItem('messageSetting'))
+  let index = settingStatus.findIndex(v => v.title === '浏览器')
+  let childIndex = settingStatus[index].childs.findIndex(v => v.title === '网页消息')
+  if(settingStatus[index].notice && settingStatus[index].childs[childIndex].notice) {
+    //如果允许通知，存入dexie和vuex
+    let message = {}
+    message.messageType = 'webOs'
+    message.timestamp = Date.now()
+    message.title = args.url
+    message.body = `${args.title}【${args.body}】`
+    await messageModel.add(message)
 
-  this.$store.commit('ADD_MESSAGE', message)
+    this.$store.commit('ADD_MESSAGE', message)
+  } else {
+    return
+  }
+})
+
+ipc.on('isSilent', (event, args) => {
+  let index = this.appVue.$children[0].$children.findIndex(v => v.hasOwnProperty('$tag') && v.$tag === 'message-center')
+  this.appVue.$children[0].$children[index].isSilent = args
 })

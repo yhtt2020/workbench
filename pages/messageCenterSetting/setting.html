@@ -16,6 +16,10 @@
   <script>
     Vue.use(antd);
     const ipc = require("electron").ipcRenderer;
+    const fs=require('fs')
+    const tools = require('../util/util.js').tools
+    tools.getWindowArgs(window)
+    let settings=require('../../js/util/settings/settings')
   </script>
   <div id="setting" class="flex flex-direction">
     <div class="app-msm flex flex-direction">
@@ -70,8 +74,8 @@
           <ul>
             <li class="flex justify-between align-center" v-for="(item, index) in webMessage" :key="index">
               <span class="text-grey">{{item.link}}</span>
-              <a-button type="link" style="margin-right: 50px;" @click="() => webMessage.splice(index, 1)">
-                移除
+              <a-button type="link" style="margin-right: 50px;" @click="removeWebLink(index)">
+                {{item.notice ? '点击后不接受此网页消息' : '移除'}}
               </a-button>
             </li>
           </ul>

@@ -13,7 +13,7 @@ const messageTempl = `
           <a-icon type="pushpin" :style="{ fontSize: '16px', color: '#8c8c8c' }" @click="fixedMessage"></a-icon>
         </div>
       </div>
-      <div class="mid">
+      <div class="mid" :class="{'silent' : !isSilent}">
         <div class="lumen flex flex-direction justify-between align-center" v-show="groupMessage.length > 0">
           <div class="lumen-top flex justify-between align-center">
             <div class="lumen-top-lf flex justify-start align-center text-black">
@@ -124,7 +124,7 @@ const messageTempl = `
           </div>
         </div>
       </div>
-      <div class="bottom flex justify-start align-center">
+      <div class="bottom flex justify-start align-center" v-show="isSilent">
         <img src="./assets/nodisturb.svg" style="width: 34px; height: 34px; margin: 0px 10px;">
         <div class="flex flex-direction justify-center align-start">
           <span class="text-black" style="font-weight: 500;">勿扰模式</span>
@@ -148,6 +148,7 @@ Vue.component("message-center", {
   data() {
     return {
       fixed: localStorage.getItem("ISMESSAGE_FIXED") == "true" ? true : false,
+      silent: false
     };
   },
   computed: {
@@ -166,8 +167,26 @@ Vue.component("message-center", {
         (v) => v.messageType === "webOs"
       );
     },
+    isSilent: {
+      get() {
+        return this.silent
+      },
+      set(val) {
+        this.silent = val
+      }
+    }
   },
   methods: {
+    mountedIsSilent() {
+      let messageSetting = JSON.parse(localStorage.getItem("messageSetting"))
+      let index = messageSetting.findIndex(v => v.appId === 1)
+      let childRes = messageSetting[index].childs.some(v => v.notice === true)
+      if(messageSetting[index].notice || childRes) {
+        this.silent =  false
+      } else {
+        this.silent = true
+      }
+    },
     clearMessages() {
       this.$store.dispatch("deleteAllMessages");
     },
@@ -242,6 +261,9 @@ Vue.component("message-center", {
     },
   },
   mounted() {
+    this.$tag = 'message-center'
+    this.mountedIsSilent()
+
     if (this.mod === "auto" || this.mod === "open") {
       document.getElementsByClassName("message-dialog")[0].style.left = "145px";
     } else {
@@ -318,7 +340,7 @@ Vue.component("message-center", {
           ],
         },
       ];
-      localStorage.setItem(JSON.stringify(list));
+      localStorage.setItem("messageSetting", JSON.stringify(list));
       ipc.send("notificationSettingStatus", list)
     }
   },

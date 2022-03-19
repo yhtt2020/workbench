@@ -1215,12 +1215,15 @@ app.whenReady().then(() => {
   })
 
   ipc.on('webOsNotice', (event, args) => {
-    console.log(args, '%%%%%%%%%%%%%%%%')
-    SidePanel.send('webOsNotice', args)
+    //只有存在且notice为true，才允许转发webOsNotice到vuex处理
+    let noticeWebOrigin = settings.get('noticeWebOrigin')
+    let index = noticeWebOrigin.findIndex(v => v.link === args.url)
+    if(index >= 0 && noticeWebOrigin[index].notice) {
+      SidePanel.send('webOsNotice', args)
+    }
   })
 
   ipc.on('notificationSettingStatus', (event, args) => {
-    // console.log(JSON.stringify(args), '!!!!!!!!!!!!!!')
     notificationSettingStatus = args
   })
 
@@ -1232,7 +1235,7 @@ app.whenReady().then(() => {
       const host = reg.exec(appInfo.url)[0]
       appManager.getWindowByAppId(args.saAppId).view.webContents.loadURL(`${host}?fid=${args.options.circleId}`)
     } else {
-      sidePanel.get().webContents.send('message',{type:"error",config:{content:'Lumen团队协作未运行!',key: Date.now()}})
+      sidePanel.get().webContents.send('message',{type:"error",config:{content:'Lumen团队协作未运行',key: Date.now()}})
     }
 
 

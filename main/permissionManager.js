@@ -1,6 +1,22 @@
 var pendingPermissions = []
 var grantedPermissions = []
 var nextPermissionId = 1
+//默认放行的权限管理
+let allowPermissions=[
+  'notifications',
+  'fullscreen',
+  'clipboard-sanitized-write',
+  'clipboard-read',
+  'media'
+]
+
+if(!settings.get('allowPermissions')) {
+  settings.set('allowPermissions', allowPermissions)
+}
+
+if(!settings.get('noticeWebOrigin')) {
+  settings.set('noticeWebOrigin', [])
+}
 
 /*
 All permission requests are given to the renderer on each change,
@@ -31,15 +47,24 @@ Was permission already granted for this tab and URL?
 */
 function isPermissionGrantedForContents (requestContents, requestPermission, requestDetails) {
   var requestOrigin = new URL(requestDetails.requestingUrl).hostname
+  if(requestPermission === 'notifications') {
+    let result = settings.get('noticeWebOrigin')
+    let index  = result.findIndex(v => v.link === requestOrigin)
 
-  //强制放行  //todo需要加上权限管理
-  let allowPermissions=[
-    'notifications',
-    'fullscreen',
-    'clipboard-sanitized-write',
-    'clipboard-read',
-    'media']
-  if(allowPermissions.indexOf(requestPermission)>-1)
+    if(index >= 0 && !result[index].notice) {
+      return false
+    }
+
+    if(index < 0) {
+      result.push({
+        link: requestOrigin,
+        notice: true
+      })
+      settings.set('noticeWebOrigin', result)
+    }
+  }
+
+  if(settings.get('allowPermissions').indexOf(requestPermission)>-1)
   {
     return true
   }
@@ -216,6 +241,25 @@ ipc.on('permissionGranted', function (e, permissionId) {
 
       sendPermissionsToRenderer()
       break
+    }
+  }
+})
+
+ipc.on('allowPermissionsControl', (event, args) => {
+  let result = settings.get('allowPermissions')
+  if(args.status) {
+    if(result.findIndex(v => v === args.permission) >= 0) {
+      return
+    }else {
+      result.push(args.permission)
+      settings.set('allowPermissions', result)
+    }
+  } else {
+    if(result.findIndex(v => v === args.permission) >= 0) {
+      result = result.filter(v => v !== args.permission)
+      settings.set('allowPermissions', result)
+    } else {
+      return
     }
   }
 })

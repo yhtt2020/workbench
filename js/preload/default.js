@@ -46,16 +46,16 @@ ipc.on('enterPictureInPicture', function (event, data) {
 })
 
 window.addEventListener('message', function (e) {
+  if(e.data && e.data.eventName && e.data.eventName === 'webNotice') {
+    ipc.send('webOsNotice', e.data)
+  }
+
   if (!e.origin.startsWith('file://')) {
     return
   }
 
   if (e.data && e.data.message && e.data.message === 'showCredentialList') {
     ipc.send('showCredentialList')
-  }
-
-  if(e.data && e.data.eventName && e.data.eventName === 'webNotice') {
-    ipc.send('webOsNotice', e.data)
   }
 })
 
@@ -94,7 +94,7 @@ electron.webFrame.executeJavaScript(`
     new oldNotice(title, options)
     window.postMessage({
       eventName: 'webNotice',
-      url: window.origin,
+      url: new URL(window.origin).hostname,
       title: arguments[0],
       body: arguments[1].body,
       icon: arguments[1].hasOwnProperty('icon') ? arguments[1].icon : null

@@ -45,6 +45,11 @@
     width: 100%;
     height: calc(100% - 50px - 58px);
     overflow: auto;
+    &.silent {
+      width: 100%;
+      height: calc(100% - 50px);
+      overflow: auto;
+    }
     &::-webkit-scrollbar {
       width: 0 !important
     }
@@ -94,6 +99,9 @@
               }
             }
           }
+          :last-child {
+            border-bottom: 0px;
+          }
         }
       }
     }
@@ -142,6 +150,9 @@
               }
             }
           }
+          :last-child {
+            border-bottom: 0px;
+          }
         }
       }
     }
@@ -189,6 +200,9 @@
                 visibility: visible;
               }
             }
+          }
+          :last-child {
+            border-bottom: 0px;
           }
         }
       }

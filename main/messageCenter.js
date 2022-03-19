@@ -19,7 +19,6 @@ app.whenReady().then(() => {
       height: 860,
       maximizable:false,
       resizable: false,
-      title: '通知中心设置',
       webPreferences: {
         devTools: true,
         nodeIntegration: true,
@@ -34,5 +33,9 @@ app.whenReady().then(() => {
     })
     msmSetting.webContents.loadURL('file://' + __dirname + '/pages/messageCenterSetting/setting.html')
     msmSetting.on('close', () => msmSetting = null)
+  })
+
+  ipc.on('mainIsSilent', (event, args) => {
+    SidePanel.send('isSilent', args)
   })
 })
