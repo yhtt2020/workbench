@@ -503,3 +503,8 @@ ipc.on('isSilent', (event, args) => {
   let index = this.appVue.$children[0].$children.findIndex(v => v.hasOwnProperty('$tag') && v.$tag === 'message-center')
   this.appVue.$children[0].$children[index].isSilent = args
 })
+
+ipc.on('refreshCircleList', async (event, args) => {
+  await window.$store.dispatch('getJoinedCircle', {page: 1, row: 500})
+  await window.$store.dispatch('getMyCircle', {page: 1, row: 500})
+})

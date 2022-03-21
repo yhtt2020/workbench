@@ -31,7 +31,7 @@
               <img src="../../../icons/svg/chat.svg" alt="">
               <div class="select-btn-word" >搜索添加成员</div>
             </div>
-            <div class="select-btn" @click="openLumen">
+            <div class="select-btn" @click="openGroupChat">
               <img src="../../../icons/svg/chat.svg" alt="">
               <div class="select-btn-word" >设置团队群聊</div>
             </div>
@@ -90,7 +90,7 @@
         openCircleHome() {
           ipc.send('addTab',{url: `${api.getUrl(api.API_URL.user.CIRCLE)}?id=${this.groupId}`})
         },
-        openLumen() {
+        openGroupChat() {
           tsbk.default.ready(function() {
           tsbk.default.openSysApp({
             appName: '团队协作',

@@ -115,7 +115,7 @@ const sidebarTpl = `
                               <a-button class="cb-bottom-zone" type="link" icon="team" @click="openCircle(item.id)">
                                 圈子
                               </a-button>
-                              <a-button class="cb-bottom-zone" type="link" icon="message" @click="openLumen(item.id)">
+                              <a-button class="cb-bottom-zone" type="link" icon="message" @click="openGroupChat(item.id)">
                                 群聊
                               </a-button>
                               <a-button class="cb-bottom-zone" type="link" icon="setting"
@@ -510,7 +510,7 @@ Vue.component('sidebar', {
     const currentUser = await db.system.where('name').equals('currentUser').first()
     if(currentUser.value.uid !== 0 ) {
       try {
-        //await this.$store.dispatch('getGroups')
+        //await this.$store.dispatch('getGroups')  //老的团队获取接口
         await this.$store.dispatch('getJoinedCircle', {page: 1, row: 500})
         await this.$store.dispatch('getMyCircle', {page: 1, row: 500})
       } catch(err) {
@@ -591,7 +591,7 @@ Vue.component('sidebar', {
     openCircleSetting(args) {
       ipc.send('osxOpenCircleSetting', args)
     },
-    openLumen(id) {
+    openGroupChat(id) {
       ipc.send('saAppOpen', {saAppId: 1, options: {circleId: id}})
     },
     /**

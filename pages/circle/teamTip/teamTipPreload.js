@@ -2,7 +2,7 @@ var electron = require('electron')
 var ipc = electron.ipcRenderer
 const tsbSdk = require('../../../js/util/tsbSdk.js')
 
-localStorage.setItem('TSB_SAAPP', JSON.stringify({
+localStorage.setItem('tsbSaApp', JSON.stringify({
   isSystemApp: true
 }))
 

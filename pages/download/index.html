@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="">
+<head>
+  <meta charset="UTF-8">
+  <title>下载助手</title>
+  <script  src="../../ext/vue/vue.js"></script>
+  <script  src="../../ext/vue/antd.min.js"></script>
+  <link rel="stylesheet" href="../../ext/vue/antd.min.css"/>
+
+</head>
+<body>
+
+<div id="appVue">
+  <template>
+    <div class="toggle">
+      <a-tabs default-active-key="1" @change="callback">
+        <a-tab-pane key="1" >
+        <span slot="tab">
+           <a-badge :count="count" id="tag">
+             <a href="#" class="head-example"></a>
+           </a-badge>
+        下载中
+      </span>
+          <div id="downloadIng" v-for="(list,index) in lists" v-bind:key="index"
+               @contextmenu="menuIng(index)" @click="change(index)"
+               :class="{active : active === index,
+         clickActive:clickActive===index}"
+               @mouseover="mouseOver(index)"
+               @mouseleave="mouseLeave">
+            <div style="margin-top: 0;width: 100%;height: 55px;">
+              <div style="width: 34px;height: 40px;position: absolute;margin-top: 8px;margin-left: 5px;" >
+                <img src="./icon/white.svg">
+              </div>
+
+              <div>
+<!--                <a-button type="link" style="float: right" @click="showModal(list.id)">-->
+<!--                  删除-->
+<!--                </a-button>-->
+                <a-modal v-model="visibleIng" title="删除下载任务" ok-text="确认" cancel-text="取消" @ok="hideModal()">
+                  <p>文件正在下载中，确认删除</p>
+                </a-modal>
+              </div>
+              <div v-if="list.status === 'progressing'" >
+                <div v-if="list.loadState" >
+                  <a-button style="position: absolute;margin-left: 327px;margin-top: 10px" type="link" @click="resume(index)" >
+                     开始
+                  </a-button>
+                </div>
+                <div v-else>
+                  <a-button style="position: absolute;margin-left: 327px;margin-top: 10px" type="link" @click="stop(index)">
+                    暂停
+                  </a-button>
+                </div>
+              </div>
+           <div>
+            <div style="margin-left: 50px;font-size: 13px;font-weight: bold ;">{{list.title}}</div>
+             <div v-if="list.received" style="margin-left: 50px;font-size: 12px;width: 150px;color:#999">{{list.received}}  MB  /  {{list.total}}  MB</div>
+             <div v-else style="margin-left: 50px;font-size: 12px;width: 150px;color:#999">{{list.received}}  预载中...</div>
+            <div v-if="list.realData" style="position: absolute;margin-left: 220px;width: 50px;margin-top: -20px" >{{list.realData}}MB/s</div>
+             <div v-else></div>
+           </div>
+            <a-progress style="position: absolute;width: 95%;padding-left: 50px;margin-top: -6px;color:#999"  :percent="list.progressnuw"></a-progress>
+            </div>
+          </div>
+        </a-tab-pane>
+
+        <a-tab-pane key="2" tab="已完成" force-render>
+          <div id="downloadDone" v-for="(doneList,index) in doneLists" v-bind:key="index" @click="change(index)"  @contextmenu="menuDone(index)"  :class="{active : active === index,
+         clickActive:clickActive===index}"
+               @mouseover="mouseOver(index)"
+               @mouseleave="mouseLeave">
+            <div style="width: 100%;height: 45px;">
+              <div style="width: 34px;height: 40px;position: absolute;margin-top: 4px;margin-left: 10px;" >
+                <img src="./icon/white.svg">
+              </div>
+                <div>
+                  <a-modal v-model="visible" title="删除下载任务" ok-text="确认" cancel-text="取消" @ok="hideModalDone()">
+                    <p>文件下载已完成，确认删除</p>
+                    <a-checkbox @change="doneChange">
+                      同时删除下载文件
+                    </a-checkbox>
+                  </a-modal>
+                </div>
+
+              <span style="position: absolute;margin-left: 250px;margin-top: 5px;cursor:pointer;"  @click="openFileHandler(index)" >
+                打开
+              </span>
+                <span style="position: absolute;margin-left: 290px;margin-top: 5px;cursor:pointer;"  @click="showFileHandler(index)" >
+                  打开文件夹
+                </span>
+              <div style="margin-left: 50px;font-size: 13px;font-weight: bold ;">{{doneList.title}}</div>
+              <div style="margin-left: 50px;font-size: 12px;width: 150px;color:#999">{{doneList.total}}  MB</div>
+
+            </div>
+          </div>
+        </a-tab-pane>
+
+<!--        <a-tab-pane key="3" tab="回收站">-->
+<!--          <div v-for="(deletelist,index) in deleteLists" v-bind:key="index">-->
+<!--            <div style="width: 100%;height: 45px;background-color: #8c8c8c">-->
+<!--              <div style="margin-left: 50px">{{deletelist.title}}</div>-->
+<!--              <div style="margin-left: 50px">{{deletelist.title}}</div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </a-tab-pane>-->
+      </a-tabs>
+    </div>
+  </template>
+
+</div>
+
+<script type="module">
+
+  const { clipboard } = require('electron')
+  const { shell } = require('electron')
+  const fs = require('fs')
+  let {ipcMain} = require('electron')
+  let {ipcRenderer} = require('electron')
+  const {db} = require('../../js/util/database')
+
+
+  ipcRenderer.on('menuIngStart', (e,args) => {
+    if(appVue.selectingList.loadState === true){
+      ipcRenderer.send('resumeDownload', appVue.selectingList.path)
+      appVue.selectingList.loadState = false
+    }else {
+      ipcRenderer.send('stopDownload', appVue.selectingList.path)
+      appVue.selectingList.loadState = true
+    }
+  })
+
+  ipcRenderer.on('menuIngUrl', (e) => {
+    clipboard.writeText( appVue.selectingList.url)
+    appVue.$message.success('已复制到剪切板');
+  })
+
+  ipcRenderer.on('menuIngDelete', (e) => {
+    appVue.visibleIng = true;
+  })
+
+  ipcRenderer.on('menuDoneOpen', (e) => {
+    const {shell} = require('electron')
+    shell.openPath(appVue.selectList.path)
+  })
+
+  ipcRenderer.on('menuDoneOpenPath', (e) => {
+    const {shell} = require('electron')
+    shell.showItemInFolder(appVue.selectList.path)
+  })
+
+  ipcRenderer.on('menuDoneOpenPage', (e) => {
+    ipcRenderer.send('addTab',{url:''})
+  })
+
+  ipcRenderer.on('menuDoneUrl', (e) => {
+    clipboard.writeText( appVue.selectList.url)
+    appVue.$message.success('已复制到剪切板');
+  })
+
+  ipcRenderer.on('menuDoneDelete', (e) => {
+    appVue.visible = true;
+    appVue.deleconfirm=false
+  })
+
+  ipcRenderer.on('cancelSave',()=>{
+    console.log('123')
+  })
+
+  ipcRenderer.on('download-info', async (event, args) => {
+    let simpleName;
+    if (args.name.length >= 20) {
+      simpleName = args.name.substring(0, 7) + '...' + args.name.substring(args.name.length-6,args.name.length);
+    } else (simpleName = args.name)
+
+    if (args.status === 'start') {
+      appVue.lists.push({
+        id: appVue.id++,
+        title: simpleName,
+        received: '',
+        realData: '',
+        total: '',
+        progressnuw: 0,
+        startTime: args.startTime,
+        path: '',
+        loadState: false,
+        url: args.url,
+      })
+      appVue.count++
+      ipcRenderer.send('willDownload')
+    }
+     if(args.status ==='cancelled'){
+       appVue.lists.splice(appVue.lists.indexOf(args), 1)
+       appVue.count--
+     }
+
+    if (args.status === 'progressing' && args.path !== '') {
+      appVue.lists.forEach(function (item, index, arr) {
+        if (item.startTime === args.startTime) {
+          item.title = simpleName;
+          item.received = ((args.size.received) / 1024 / 1024).toFixed(2);
+          item.realData = ((args.realdata) / 1024 / 1024).toFixed(2);
+          item.total = ((args.size.total) / 1024 / 1024).toFixed(2);
+          item.progressnuw = Math.round(args.progressnuw);
+          item.path = args.path
+          item.status = args.status
+          if (item.progressnuw === 100) {
+            appVue.lists.splice(index, 1)
+          }
+        }
+      })
+    }
+
+    if (args.status === 'completed' && args.path !== '' ) {
+      appVue.doneLists.push({
+        id:appVue.doneId++,
+        title: simpleName,
+        total: ((args.size.total) / 1024 / 1024).toFixed(2),
+        path: args.path,
+        url: args.url,
+        startTime:args.startTime
+      })
+      appVue.count--
+      db.download.add({
+        title:args.name,
+        total:((args.size.total) / 1024 / 1024).toFixed(2),
+        path:args.path,
+        url:args.url,
+        startTime:args.startTime
+      })
+    }
+  })
+
+   let appVue = new Vue({
+    el: '#appVue',
+     data: {
+       count:'0',
+       visibleIng:false,
+       visible: false,
+       lists:[],
+       doneLists:[],
+       deleteLists:[],
+       progressnuw:0,
+       startTime: '',
+       pathList:[],
+       loadState:[],
+       id:'0',
+       active :'',
+       clickActive:'',
+       selectList:[],
+       selectingList:[],
+       url:'',
+       doneId:'0',
+       deleconfirm:false,
+     },
+    created() {
+       db.download.toArray().then(dblist => {
+         for(let i=0; i<=dblist.length; i++){
+           let simpleName;
+           if (dblist[i].title.length >= 20) {
+             simpleName = dblist[i].title.substring(0, 7) + '...' + dblist[i].title.substring(dblist[i].title.length-6,dblist[i].title.length);
+           } else (simpleName = dblist[i].title)
+         appVue.doneLists.push({
+           id:appVue.doneId++,
+           title:simpleName,
+           total: dblist[i].total,
+           path: dblist[i].path,
+           url: dblist[i].url,
+           startTime:dblist[i].startTime,
+         })
+       }
+       })
+      },
+     methods: {
+      menuIng(index){
+        ipcRenderer.send('showMenuIng',this.lists[index].loadState)
+        this.selectingList=this.lists[index]
+        this.active = index;
+      },
+      menuDone(index){
+        ipcRenderer.send('showMenuDone')
+        this.selectList=this.doneLists[index]
+        this.active = index;
+      },
+      mouseOver(index){
+        this.clickActive = index;
+      },
+      mouseLeave(){
+        this.clickActive = '';
+      },
+      change(index){
+        this.active = index;
+      },
+
+      hideModal() {
+        ipcRenderer.send('deleteDownload', this.selectingList.path)
+        this.lists.splice(this.lists.indexOf(this.selectingList), 1)
+        this.visibleIng = false;
+        this.count--
+      },
+
+      doneChange(e){
+        if(e.target.checked === true){
+          this.deleconfirm = true
+        }
+        if (e.target.checked === false){
+          this.deleconfirm = false
+        }
+      },
+      callback(key){
+      },
+
+      hideModalDone(){
+         db.download.delete(appVue.selectList.startTime)
+        if(this.deleconfirm === true) {
+          fs.unlinkSync(this.selectList.path)
+          this.doneLists.splice(this.doneLists.indexOf(this.selectList), 1)
+          this.visible = false;
+        }
+        if(this.deleconfirm === false){
+          this.doneLists.splice(this.doneLists.indexOf(this.selectList), 1)
+          this.visible = false;
+        }
+      },
+      resume(index) {
+        ipcRenderer.send('resumeDownload', this.lists[index].path)
+        this.lists[index].loadState = false
+      },
+      stop(index) {
+        ipcRenderer.send('stopDownload', this.lists[index].path)
+        this.lists[index].loadState = true
+      },
+
+      openFileHandler(index) {
+        const {shell} = require('electron')
+        shell.openPath(this.doneLists[index].path)
+      },
+
+      showFileHandler(index) {
+        const {shell} = require('electron')
+        shell.showItemInFolder(this.doneLists[index].path)
+      },
+    }
+   })
+
+</script>
+
+</body>
+
+<style>
+#tag{
+  position: absolute;
+  margin-left: 60px;
+  margin-top: 10px;
+}
+.active {
+  background: #f7f7f7;
+}
+.clickActive{
+  background: #f7f7f7;
+}
+</style>
+
+</html>
