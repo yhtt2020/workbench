@@ -26,7 +26,7 @@ const popManager = {
       acceptFirstMouse: true,
       alwaysOnTop: true,
       show: false,
-      resizable: false,
+      //resizable: false,  //必须设置为resizeable，无法resize的窗体在window上无边框和阴影
       frame: false,
       webPreferences: webPreferences
     }, options)
@@ -51,6 +51,9 @@ const popManager = {
     pop.loadURL(url)
     pop.on('blur', () => {
       pop.hide()
+    })
+    pop.on('will-resize',(event)=>{
+      event.preventDefault()
     })
     popWindow = {
       name: name,

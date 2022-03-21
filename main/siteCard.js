@@ -12,6 +12,10 @@ function createSiteCardWin (args) {
     title=!!!title?tabData.title:title
     activeTab=!!!activeTab?'base':activeTab
     const siteUrl=parseInnerURL(url)
+    if(siteUrl.startsWith('ts://'))
+    {
+      return //禁止内部页面打开卡片
+    }
     if(!!!pos){
       pos = electron.screen.getCursorScreenPoint()
     }
@@ -33,6 +37,7 @@ function createSiteCardWin (args) {
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
+        sandbox:false,
         additionalArguments: [
           '--user-data-path=' + userDataPath,
           '--app-version=' + app.getVersion(),
