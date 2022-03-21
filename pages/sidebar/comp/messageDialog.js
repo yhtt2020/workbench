@@ -36,13 +36,13 @@ const messageTempl = `
                     <a-icon class="closex" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click="removeMessage(item.id)"></a-icon>
                   </li>
                   <a-menu slot="overlay">
-                    <a-menu-item key="1"  @click="openMenuClick(item.id)">
+                    <a-menu-item key="1"  @click="openMenuClick(item)">
                       打开
                     </a-menu-item>
                     <a-menu-item key="2" @click="delMenuClick(item.id)">
                       删除
                     </a-menu-item>
-                    <a-menu-item key="3">
+                    <a-menu-item key="3" @click="noReceived(item)">
                       不再接收团队消息
                     </a-menu-item>
                   </a-menu>
@@ -108,7 +108,7 @@ const messageTempl = `
                     <a-icon class="closex" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click="removeMessage(item.id)"></a-icon>
                   </li>
                   <a-menu slot="overlay">
-                    <a-menu-item key="1" @click="openMenuClick(item.id)">
+                    <a-menu-item key="1" @click="openMenuClick(item)">
                       打开
                     </a-menu-item>
                     <a-menu-item key="2" @click="delMenuClick(item.id)">
@@ -193,8 +193,34 @@ Vue.component("message-center", {
     delMenuClick(id) {
       this.$store.dispatch("deleteMessageById", id);
     },
-    openMenuClick(id) {
-      //todo
+    openMenuClick(item) {
+      console.log(item, 'okooko')
+      if(item.messageType === 'groupChat') {
+        ipc.send('mesageOpenOperate', {
+          saAppId: 1,
+          type: 'groupChat',
+          indexName: item.indexName
+        })
+      } else if(item.messageType === 'webOs') {
+        ipc.send('addTab',{url: item.title});
+      } else if(item.messageType === 'community') {
+        //todo
+      }
+    },
+    noReceived(item) {
+      if(item.messageType === 'groupChat') {
+        let messageSetting = JSON.parse(localStorage.getItem('messageSetting'))
+        let index = messageSetting.findIndex(v => v.appId === 1)
+        messageSetting[index].notice = false
+        messageSetting[index].childs.forEach(v => {
+          v.notice = false
+        });
+        ipc.send("notificationSettingStatus", messageSetting)
+        localStorage.setItem("messageSetting", JSON.stringify(messageSetting))
+        this.silent = true
+      } else if(item.messageType === 'groupChat') {
+        //todo
+      }
     },
     removeAllMessage(type) {
       this.$store.dispatch("deleteMessageByType", type);

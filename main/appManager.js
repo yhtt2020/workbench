@@ -54,25 +54,26 @@ const appManager = {
    * @param {object} message 消息体
    */
   beforeEachNotification(settingStatus, message) {
-    //消息中心的收录做在这里
-    if(message.saAppId == 1) {
-      SidePanel.send('storeMessage', {
-        title: message.options.title,
-        body: message.options.body,
-        type: 'groupChat'
-      })
-    } else if(message.saAppId == 2) {
-      SidePanel.send('storeMessage', {
-        title: message.options.title,
-        body: message.options.body,
-        type: 'community'
-      })
-    }
-
     //前置判断
     let index = settingStatus.findIndex(v => v.appId === message.saAppId)
     let childIndex = settingStatus[index].childs.findIndex(v => v.title === message.options.category)
     if(settingStatus[index].notice && settingStatus[index].childs[childIndex].notice) {
+      //消息中心的收录做在这里
+      if(message.saAppId == 1) {
+        SidePanel.send('storeMessage', {
+          title: message.options.title,
+          body: message.options.body,
+          indexName: message.options.indexName ?? null,
+          type: 'groupChat'
+        })
+      } else if(message.saAppId == 2) {
+        SidePanel.send('storeMessage', {
+          title: message.options.title,
+          body: message.options.body,
+          type: 'community'
+        })
+      }
+
       return true
     }
     return false
@@ -1229,6 +1230,7 @@ app.whenReady().then(() => {
 
   ipc.on('saAppOpen', (event, args) => {
     if(appManager.isAppProcessing(args.saAppId)) {
+      //通过url跳转的方式
       appManager.showAppWindow(args.saAppId)
       const appInfo = appManager.getSaAppByAppId(args.saAppId)
       const reg = /^http(s)?:\/\/(.*?)\//

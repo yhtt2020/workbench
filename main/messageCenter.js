@@ -38,4 +38,16 @@ app.whenReady().then(() => {
   ipc.on('mainIsSilent', (event, args) => {
     SidePanel.send('isSilent', args)
   })
+
+  ipc.on('mesageOpenOperate', (event, args) => {
+    if(args.type === 'groupChat') {
+      if(appManager.isAppProcessing(args.saAppId)) {
+        //通过借助preload对vue直接clicktab操作
+        appManager.showAppWindow(args.saAppId)
+        appManager.getWindowByAppId(args.saAppId).view.webContents.send('switchChat', args.indexName)
+      } else {
+        sidePanel.get().webContents.send('message',{type:"error",config:{content:'团队沟通未运行',key: Date.now()}})
+      }
+    }
+  })
 })
