@@ -108,7 +108,7 @@ app.whenReady().then(() => {
  let popWindow=null
   ipc.on('favContextMenu', (event, args) => {
     let menuTemplate = [{
-      label: '将网页保存至收藏夹',
+      label: '收藏网页...',
       click: () => {
         let url='https://a.apps.vip/fav/#/popSaveToFolder' //开发环境测试环境，提交到版本库前注释掉
         if(isDevelopmentMode){
@@ -126,18 +126,18 @@ app.whenReady().then(() => {
     }, {
       type: 'separator'
     },
-      {
-        label: '整页截图保存'
-      },
-      {
-        label: '此页面禁用拖拽保存'
-      },
-      {
-        label: '此域名下禁用拖拽保存'
-      },
-      {
-        type: 'separator'
-      },
+      // {
+      //   label: '整页截图保存'
+      // },
+      // {
+      //   label: '此页面禁用拖拽保存'
+      // },
+      // {
+      //   label: '此域名下禁用拖拽保存'
+      // },
+      // {
+      //   type: 'separator'
+      // },
       {
         label:'打开超级收藏夹',
         click(){
