@@ -169,7 +169,7 @@
     } else (simpleName = args.name)
 
     if (args.status === 'start') {
-      appVue.lists.push({
+      appVue.lists.unshift({
         id: appVue.id++,
         title: simpleName,
         received: '',
@@ -185,7 +185,7 @@
       ipcRenderer.send('willDownload')
     }
      if(args.status ==='cancelled'){
-       appVue.lists.splice(appVue.lists.indexOf(args), 1)
+       appVue.lists.splice(0, 1)
        appVue.count--
      }
 
@@ -207,7 +207,7 @@
     }
 
     if (args.status === 'completed' && args.path !== '' ) {
-      appVue.doneLists.push({
+      appVue.doneLists.unshift({
         id:appVue.doneId++,
         title: simpleName,
         total: ((args.size.total) / 1024 / 1024).toFixed(2),
@@ -255,7 +255,7 @@
            if (dblist[i].title.length >= 20) {
              simpleName = dblist[i].title.substring(0, 7) + '...' + dblist[i].title.substring(dblist[i].title.length-6,dblist[i].title.length);
            } else (simpleName = dblist[i].title)
-         appVue.doneLists.push({
+         appVue.doneLists.unshift({
            id:appVue.doneId++,
            title:simpleName,
            total: dblist[i].total,
@@ -307,12 +307,20 @@
 
       hideModalDone(){
          db.download.delete(appVue.selectList.startTime)
-        if(this.deleconfirm === true) {
-          fs.unlinkSync(this.selectList.path)
-          this.doneLists.splice(this.doneLists.indexOf(this.selectList), 1)
-          this.visible = false;
+        if (this.deleconfirm === true) {
+          const f = this.selectList.path;
+          fs.exists(f, function (flag) {
+            if (flag) {
+              fs.unlinkSync(appVue.selectList.path)
+              appVue.doneLists.splice(appVue.doneLists.indexOf(appVue.selectList), 1)
+              appVue.visible = false;
+            } else {
+              appVue.doneLists.splice(appVue.doneLists.indexOf(appVue.selectList), 1)
+              appVue.visible = false;
+            }
+          })
         }
-        if(this.deleconfirm === false){
+        if (this.deleconfirm === false) {
           this.doneLists.splice(this.doneLists.indexOf(this.selectList), 1)
           this.visible = false;
         }
@@ -333,7 +341,14 @@
 
       showFileHandler(index) {
         const {shell} = require('electron')
-        shell.showItemInFolder(this.doneLists[index].path)
+        const f = this.doneLists[index].path;
+        fs.exists(f, function (flag) {
+          if (flag) {
+            shell.showItemInFolder(appVue.doneLists[index].path)
+          } else {
+            appVue.$message.success('文件已被删除或位置被移动', 1)
+          }
+        })
       },
     }
    })
