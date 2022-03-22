@@ -42,12 +42,12 @@
               </div>
               <div v-if="list.status === 'progressing'" >
                 <div v-if="list.loadState" >
-                  <a-button style="position: absolute;margin-left: 327px;margin-top: 10px" type="link" @click="resume(index)" >
+                  <a-button style="position: absolute;margin-left: 270px;margin-top: 14px" type="link" @click="resume(index)" >
                      开始
                   </a-button>
                 </div>
                 <div v-else>
-                  <a-button style="position: absolute;margin-left: 327px;margin-top: 10px" type="link" @click="stop(index)">
+                  <a-button style="position: absolute;margin-left: 270px;margin-top: 14px" type="link" @click="stop(index)">
                     暂停
                   </a-button>
                 </div>
@@ -82,14 +82,14 @@
                   </a-modal>
                 </div>
 
-              <span style="position: absolute;margin-left: 250px;margin-top: 5px;cursor:pointer;"  @click="openFileHandler(index)" >
+              <a-button style="position: absolute;margin-left: 200px;margin-top: 5px" type="link" @click="openFileHandler(index)" >
                 打开
-              </span>
-                <span style="position: absolute;margin-left: 290px;margin-top: 5px;cursor:pointer;"  @click="showFileHandler(index)" >
+              </a-button>
+                <a-button style="position: absolute;margin-left: 240px;margin-top: 5px" type="link" @click="showFileHandler(index)" >
                   打开文件夹
-                </span>
-              <div style="margin-left: 50px;font-size: 13px;font-weight: bold ;">{{doneList.title}}</div>
-              <div style="margin-left: 50px;font-size: 12px;width: 150px;color:#999">{{doneList.total}}  MB</div>
+                </a-button>
+              <div style="margin-left: 50px;font-size: 15px;font-weight: bold ;">{{doneList.title}}</div>
+              <div style="margin-left: 50px;font-size: 12px;width: 150px;">{{doneList.total}}  MB</div>
 
             </div>
           </div>
@@ -160,6 +160,10 @@
   ipcRenderer.on('menuDoneDelete', (e) => {
     appVue.visible = true;
     appVue.deleconfirm=false
+  })
+
+  ipcRenderer.on('cancelSave',()=>{
+    console.log('123')
   })
 
   ipcRenderer.on('download-info', async (event, args) => {
@@ -365,10 +369,10 @@
   margin-top: 10px;
 }
 .active {
-  background: #f7f7f7;
+  background: #e6e6e6;
 }
 .clickActive{
-  background: #f7f7f7;
+  background: #e8f2ff;
 }
 </style>
 
