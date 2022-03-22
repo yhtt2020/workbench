@@ -20,7 +20,7 @@ const sideBar = {
         break
       case 'close':
         if(sideBar.isMessageFixed) {
-          ipc.send('message',{type:"error",config:{content:'消息中心固定状态下无法切换,请取消固定状态!'}})
+          ipc.send('message',{type:"error",config:{content:'消息中心固定状态下无法切换,请取消固定状态'}})
           break
         }
         // 切换到自动模式

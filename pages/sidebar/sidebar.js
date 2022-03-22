@@ -478,7 +478,6 @@ ipc.on('storeMessage', async (event, args) => {
   await messageModel.add(message)
 
   this.$store.commit('ADD_MESSAGE', message)
-  console.log(this.$store.getters.getAllMessages, '??????')
 })
 
 ipc.on('webOsNotice', async(event, args) => {

@@ -1,8 +1,3 @@
-let messageCenter = {
-  lumen: [],
-  webOs: []
-}
-
 let msmSetting = null
 
 app.whenReady().then(() => {

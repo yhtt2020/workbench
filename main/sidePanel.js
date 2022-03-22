@@ -589,7 +589,6 @@ ipc.on('returnTitlebarHeight', function (event, data) {
 })
 
 ipc.on('channelFixed', () => {
-  console.log('youle !!!')
   SidePanel.mainWindowSend('adjustByFixed')
 })
 

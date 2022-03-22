@@ -267,7 +267,7 @@ Vue.component("message-center", {
         ipc.send("message", {
           type: "error",
           config: {
-            content: "auto模式下无法固定消息中心位置,请切换侧边栏其余两种模式!",
+            content: "auto模式下无法固定消息中心位置,请切换侧边栏其余两种模式",
           },
         });
       }
