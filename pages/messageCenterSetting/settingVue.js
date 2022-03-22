@@ -6,6 +6,11 @@ new Vue({
       appMessage: JSON.parse(localStorage.getItem("messageSetting"))
     };
   },
+  computed: {
+    compWebMessage() {
+      return this.webMessage.filter(v => v.notice === false)
+    }
+  },
   methods: {
     changeTree(index) {
       this.appMessage[index].childsShow = !this.appMessage[index].childsShow;
@@ -71,7 +76,7 @@ new Vue({
       }
     },
     removeWebLink(index) {
-      this.webMessage[index].notice ? this.webMessage[index].notice = false : this.webMessage[index].notice = true
+      this.webMessage[index].notice = true
       settings.set('noticeWebOrigin', this.webMessage)
     }
   }

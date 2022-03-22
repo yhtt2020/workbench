@@ -1230,12 +1230,15 @@ app.whenReady().then(() => {
 
   ipc.on('saAppOpen', (event, args) => {
     if(appManager.isAppProcessing(args.saAppId)) {
-      //通过url跳转的方式
       appManager.showAppWindow(args.saAppId)
-      const appInfo = appManager.getSaAppByAppId(args.saAppId)
-      const reg = /^http(s)?:\/\/(.*?)\//
-      const host = reg.exec(appInfo.url)[0]
-      appManager.getWindowByAppId(args.saAppId).view.webContents.loadURL(`${host}?fid=${args.options.circleId}`)
+
+      if(args.hasOwnProperty('options')) {
+        //通过url跳转的方式
+        const appInfo = appManager.getSaAppByAppId(args.saAppId)
+        const reg = /^http(s)?:\/\/(.*?)\//
+        const host = reg.exec(appInfo.url)[0]
+        appManager.getWindowByAppId(args.saAppId).view.webContents.loadURL(`${host}?fid=${args.options.circleId}`)
+      }
     } else {
       sidePanel.get().webContents.send('message',{type:"error",config:{content:'团队沟通未运行',key: Date.now()}})
     }

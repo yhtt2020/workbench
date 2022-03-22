@@ -48,6 +48,10 @@ app.whenReady().then(() => {
       } else {
         sidePanel.get().webContents.send('message',{type:"error",config:{content:'团队沟通未运行',key: Date.now()}})
       }
+    } else if(args.type === 'community') {
+      //todo
     }
   })
+
+  //ipc.on('')
 })

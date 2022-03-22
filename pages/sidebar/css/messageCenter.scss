@@ -68,11 +68,13 @@
         }
         .lumen-top-rg {
           margin-right: 16px;
-          visibility: hidden;
+          visibility: visible;
+          opacity: 0;
         }
         &:hover {
           .lumen-top-rg {
-            visibility: visible;
+            transition: all 2000ms;
+            opacity: 1;
           }
         }
       }
@@ -91,11 +93,13 @@
             padding: 10px 0px;
             border-bottom: 1px solid #dddcdc;
             .closex {
-              visibility: hidden;
+              visibility: visible;
+              opacity: 0;
             }
             &:hover {
               .closex {
-                visibility: visible;
+                transition: all 2000ms;
+                opacity: 1;
               }
             }
           }
@@ -120,11 +124,13 @@
         }
         .osx-top-rg {
           margin-right: 16px;
-          visibility: hidden;
+          visibility: visible;
+          opacity: 0;
         }
         &:hover {
           .osx-top-rg {
-            visibility: visible;
+            transition: all 2000ms;
+            opacity: 1;
           }
         }
       }
@@ -142,11 +148,13 @@
             padding: 10px 0px;
             border-bottom: 1px solid #dddcdc;
             .closex {
-              visibility: hidden;
+              visibility: visible;
+              opacity: 0;
             }
             &:hover {
               .closex {
-                visibility: visible;
+                transition: all 2000ms;
+                opacity: 1;
               }
             }
           }
@@ -171,11 +179,13 @@
         }
         .webos-top-rg {
           margin-right: 16px;
-          visibility: hidden;
+          visibility: visible;
+          opacity: 0;
         }
         &:hover {
           .webos-top-rg {
-            visibility: visible;
+            transition: all 2000ms;
+            opacity: 1;
           }
         }
       }
@@ -193,11 +203,13 @@
             border-bottom: 1px solid #dddcdc;
             height: 50%;
             .closex {
-              visibility: hidden;
+              visibility: visible;
+              opacity: 0;
             }
             &:hover {
               .closex {
-                visibility: visible;
+                transition: all 2000ms;
+                opacity: 1;
               }
             }
           }

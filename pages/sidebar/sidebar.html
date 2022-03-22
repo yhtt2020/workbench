@@ -17,6 +17,9 @@
 </head>
 <body>
 <script>
+  const fs=require('fs')
+  require('../util/util.js').tools.getWindowArgs(window)
+  let settings=require('../../js/util/settings/settings')
   function mousenter (target) {
     if (appVue.mod==='auto') {
       target.setAttribute('class', 'sidebar expanded')

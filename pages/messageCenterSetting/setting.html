@@ -72,10 +72,10 @@
         </div>
         <div class="wsb-content flex flex-direction">
           <ul>
-            <li class="flex justify-between align-center" v-for="(item, index) in webMessage" :key="index">
+            <li class="flex justify-between align-center" v-for="(item, index) in compWebMessage" :key="index">
               <span class="text-grey">{{item.link}}</span>
               <a-button type="link" style="margin-right: 50px;" @click="removeWebLink(index)">
-                {{item.notice ? '点击后不接受此网页消息' : '移除'}}
+                移除
               </a-button>
             </li>
           </ul>

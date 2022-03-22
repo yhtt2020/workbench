@@ -19,7 +19,7 @@ const messageTempl = `
             <div class="lumen-top-lf flex justify-start align-center text-black">
               <img src="../../icons/svg/chat.svg" style="width: 30px; height: 30px;">
               <span>团队</span>
-              <a-icon type="export" :style="{ fontSize: '16px', color: '#8c8c8c' }"></a-icon>
+              <a-icon type="export" :style="{ fontSize: '16px', color: '#8c8c8c' }" @click="showGroup"></a-icon>
             </div>
             <a-icon class="lumen-top-rg" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click="removeAllMessage('groupChat')"></a-icon>
           </div>
@@ -78,7 +78,7 @@ const messageTempl = `
                     <a-menu-item key="2" @click="delMenuClick(item.id)">
                       删除
                     </a-menu-item>
-                    <a-menu-item key="3">
+                    <a-menu-item key="3" @click="noReceived(item)">
                       不再接收社区消息
                     </a-menu-item>
                   </a-menu>
@@ -114,7 +114,7 @@ const messageTempl = `
                     <a-menu-item key="2" @click="delMenuClick(item.id)">
                       删除
                     </a-menu-item>
-                    <a-menu-item key="3">
+                    <a-menu-item key="3" @click="noReceived(item)">
                       不再接收该网页消息
                     </a-menu-item>
                   </a-menu>
@@ -177,6 +177,9 @@ Vue.component("message-center", {
     }
   },
   methods: {
+    showGroup() {
+      ipc.send('saAppOpen', {saAppId: 1})
+    },
     mountedIsSilent() {
       let messageSetting = JSON.parse(localStorage.getItem("messageSetting"))
       let index = messageSetting.findIndex(v => v.appId === 1)
@@ -194,7 +197,6 @@ Vue.component("message-center", {
       this.$store.dispatch("deleteMessageById", id);
     },
     openMenuClick(item) {
-      console.log(item, 'okooko')
       if(item.messageType === 'groupChat') {
         ipc.send('mesageOpenOperate', {
           saAppId: 1,
@@ -220,6 +222,19 @@ Vue.component("message-center", {
         this.silent = true
       } else if(item.messageType === 'groupChat') {
         //todo
+      } else if(item.messageType === 'webOs') {
+        let webMessage = settings.get('noticeWebOrigin')
+        let mapWebMessage = webMessage.map(v => {
+          if(v.link == item.title) {
+            return {
+              link: v.link,
+              notice: false
+            }
+          } else {
+            return v
+          }
+        })
+        settings.set('noticeWebOrigin', mapWebMessage)
       }
     },
     removeAllMessage(type) {

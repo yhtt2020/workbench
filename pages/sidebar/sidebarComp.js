@@ -379,7 +379,9 @@ const sidebarTpl = `
           </div>
         </template>
         <li @click="visibleMessageCenter">
-          <a-button type="default" shape="circle" icon="bell"></a-button>
+          <a-badge :dot="this.$store.getters.getAllMessages.length > 0 ? true : false">
+            <a-button type="default" shape="circle" icon="bell"></a-button>
+          </a-badge>
           <div class="item-title">消息中心</div>
         </li>
         <li @click="openBottom('setting')">
