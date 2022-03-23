@@ -6,7 +6,7 @@ const sidebarTpl = `
   <div id="sidebar" class="side-container">
     <div id="itemsEl" class="side-items">
       <ul class="app-task">
-        <li @click="openUserWindow" class="" style="position: relative;">
+        <li @click="toggleUserPanel" class="" style="position: relative;">
           <template>
             <a-drawer class="user-panel" @mousemove="setSidePanel()" :width="300" :visible="userPanelVisible"
               @close="toggleUserPanel" :mask="false" placement="left">
@@ -35,11 +35,38 @@ const sidebarTpl = `
                           </a-avatar>
                           <div class="level">{{user.grade.grade}}</div>
                         </a-col>
-                        <a-col :span="12">
+                        <a-col :span="15">
                           <a class="nick-name" @click="userClick">{{ user.nickname }}</a>
                           <div class="signature" :title="this.user.signature===''?'这个家伙有点懒，还没有签名~':this.user.signature">
                             签名：{{this.user.signature===''?'这个家伙有点懒，还没有签名~':this.user.signature}}
                           </div>
+                          <div style="margin-top: 10px">
+     <a-dropdown>
+      <template #overlay>
+        <a-menu @click="handleMenuClick">
+          <a-menu-item key="1">
+            <UserOutlined />
+            空间1
+          </a-menu-item>
+          <a-menu-item key="2">
+            <UserOutlined />
+            空间2
+          </a-menu-item>
+          <a-menu-item key="3" @click="openUserWindow">
+            <UserOutlined />
+            选择其他账号空间
+          </a-menu-item>
+        </a-menu>
+      </template>
+      <a-button size="small"  style="font-size: 12px;margin-right: 6px" type="primary">
+        空间1
+        <DownOutlined />
+      </a-button>
+    </a-dropdown>
+    <a-button @click="openUserWindow" style="font-size: 12px" size="small">切换账号</a-button>
+</div>
+
+
                         </a-col>
                       </a-row>
                     </div>

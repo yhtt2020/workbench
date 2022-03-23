@@ -10,94 +10,98 @@
   <script src="../../ext/antd3/antd.min.js"></script>
 
 </head>
-<body style="background: rgba(0,0,0,0.38)">
+<body style="background: #00000000">
 <div id="appVue">
-  <div
-    style="position: fixed;left: 50%;top: 50%;margin-left: -325px;margin-top: -240px;width: 650px;height: 480px;background: white;border-radius: 8px;">
-    <h1 style="font-size: 18px;margin: 20px;text-align: center">
-      选择标签组空间
-    </h1>
-    <p style="text-align: center;color: #999">
-      不同空间的标签组相互隔离
-    </p>
-    <p style="text-align: center;color: #999">
-      适合不同家庭成员、公共电脑快速切换账号。<br>也可用于工作、娱乐等不同场景。
-    </p>
-    <a-row style="width: 80%;margin: auto">
-      <a-col v-for="user in users" :span="12">
-        <a-row class="user-card">
-          <a-col class="avatar-wrapper" :span="8" style="text-align: right">
-            <a-avatar :size="60" :src="user.avatar"></a-avatar>
+
+  <div @click="closeWindow" style="background: rgba(0,0,0,0.38);position: fixed;left: 0;right: 0;bottom: 0;top: 0">
+    <div @click.stop="()=>{}"
+         style="position: fixed;left: 50%;top: 50%;margin-left: -325px;margin-top: -240px;width: 650px;height: 480px;background: white;border-radius: 8px;">
+      <h1 style="font-size: 18px;margin:auto;margin-top: 20px;margin-bottom:10px;text-align: center">
+        选择账号的空间
+      </h1>
+      <p style="text-align: center;color: #333">
+        不同空间的标签组相互隔离
+      </p>
+      <p style="text-align: center;color: #999">
+        适合不同家庭成员、公共电脑快速切换账号。<br>也可用于工作、娱乐等不同场景。
+      </p>
+      <template v-if="loaded">
+        <a-row style="width: 80%;margin: auto">
+          <a-col v-for="user in users" :span="12">
+            <a-row class="user-card">
+              <a-col class="avatar-wrapper" :span="8" style="text-align: right">
+                <a-avatar :size="60" :src="user.avatar"></a-avatar>
+              </a-col>
+              <a-col class="user-info" :span="16">
+                <div>{{user.nickname}}</div>
+                <p class="info-p">{{user.spaces.length}} 空间</p>
+              </a-col>
+            </a-row>
           </a-col>
-          <a-col class="user-info" :span="16">
-            <div>{{user.nickname}}</div>
-            <p class="info-p">{{user.spaces.length}} 空间</p>
+          <a-col :span="12">
+            <a-row class="user-card">
+              <a-col class="avatar-wrapper" :span="8" style="text-align: right">
+                <a-avatar :size="60" style="background-color: #1890ff" ><template #icon>游</template></a-avatar>
+              </a-col>
+              <a-col class="user-info" :span="16" >
+                <div>游客</div>
+                <p class="info-p"> 本地空间</p>
+              </a-col>
+            </a-row>
+          </a-col>
+          <a-col :span="12">
+            <a-row class="user-card" style="border: 1px #ccc dashed">
+              <a-col class="avatar-wrapper" :span="8" style="text-align: right">
+                <a-avatar :size="60" ><template #icon>添</template></a-avatar>
+              </a-col>
+              <a-col class="user-info" :span="16" >
+                <div>添加账号</div>
+                <p class="info-p">添加一个新账号</p>
+              </a-col>
+            </a-row>
           </a-col>
         </a-row>
-      </a-col>
-      <a-col :span="12">
-        <a-row class="user-card" style="border: 1px #ccc dashed">
-          <a-col class="avatar-wrapper" :span="8" style="text-align: right">
-            <a-avatar :size="60" ><template #icon>添</template></a-avatar>
-          </a-col>
-          <a-col class="user-info" :span="16" >
-            <div>添加账号</div>
-            <p class="info-p">添加一个新账号</p>
-          </a-col>
-        </a-row>
-      </a-col>
-    </a-row>
+      </template>
 
-
-    <a-checkbox style="position: absolute;bottom: 20px;right: 20px">每次启动的时候选择</a-checkbox>
-
+      <a-checkbox style="position: absolute;bottom: 20px;right: 20px">每次启动的时候选择</a-checkbox>
+    </div>
   </div>
-
 </div>
 </body>
 <script>dayjs().format()</script>
 <script>
+  window.ipc=require('electron').ipcRenderer
   // 不需要
+  const userModel = require('../util/model/userModel')
   const app = Vue.createApp({
+   async mounted(){
+      this.users=await userModel.getAll()
+     this.loaded=true
+     console.log(this.users)
+    },
+    methods:{
+      closeWindow(){
+        ipc.send('closeUserWindow')
+      }
+    },
     data () {
 
       return {
-        a: 'a32313232123',
-        users: [{
-          nickname: '想天浏览器',
-          avatar: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic65.nipic.com%2Ffile%2F20150415%2F7828787_111539068000_2.jpg',
-          spaces: [
-            {
-              name: '空间1'
-            },
-            {
-              name: '空间2'
-            }
-          ]
-        },
-          {
-            nickname: '想天浏览器',
-            avatar: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic65.nipic.com%2Ffile%2F20150415%2F7828787_111539068000_2.jpg',
-            spaces: [
-              {
-                name: '空间1'
-              },
-              {
-                name: '空间2'
-              }
-            ]
-          },{
-            nickname: '想天浏览器',
-            avatar: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic65.nipic.com%2Ffile%2F20150415%2F7828787_111539068000_2.jpg',
-            spaces: [
-              {
-                name: '空间1'
-              },
-              {
-                name: '空间2'
-              }
-            ]
-          },]
+        loaded:true,
+        users: [
+          // {
+          //   nickname: '想天浏览器',
+          //   avatar: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic65.nipic.com%2Ffile%2F20150415%2F7828787_111539068000_2.jpg',
+          //   spaces: [
+          //     {
+          //       name: '空间1'
+          //     },
+          //     {
+          //       name: '空间2'
+          //     }
+          //   ]
+          // },
+        ]
       }
     }
   }).use(antd).mount('#appVue')

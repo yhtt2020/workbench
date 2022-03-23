@@ -155,7 +155,7 @@ async function insertDefaultUser (code) {
     avatar: '../../icons/browser.ico'
   }
   if (code) {
-    await db.accounts.where('code').equals(code).delete()
+   // await db.accounts.where('code').equals(code).delete()
   }
   await db.system.where('name').equals('currentUser').modify({ value: defaultUser })
   window.$store.state.user = null
@@ -191,6 +191,7 @@ ipc.on('userLogin', function (e, data) {
     value: user
   }).then(async (msg) => {
     db.accounts.put({
+      id:user.uid,
       uid: user.uid,
       nickname: user.nickname,
       avatar: user.avatar,

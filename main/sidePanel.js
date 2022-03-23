@@ -911,13 +911,28 @@ app.whenReady().then(()=>{
         frame:false,
         resizable:false,
         shadow:false,
+        webPreferences:{
+          nodeIntegration: true,
+          contextIsolation: false,
+          additionalArguments: [
+            '--user-data-path=' + userDataPath,
+            '--app-version=' + app.getVersion(),
+            '--app-name=' + app.getName(),
+            ...((isDevelopmentMode ? ['--development-mode'] : [])),
+          ]
+        }
       })
       userWindow.setBounds(bounds)
-      userWindow.loadFile(path.join(__dirname,'/pages/user/index.html'))
+      userWindow.loadURL('file://'+path.join(__dirname,'/pages/user/index.html'))
       userWindow.on('ready-to-show',()=>{
         userWindow.show()
       })
     }
+  })
+
+  ipc.on('closeUserWindow',()=>{
+    userWindow.close()
+    userWindow=null
   })
 })
 
