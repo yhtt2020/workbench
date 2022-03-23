@@ -162,16 +162,14 @@
     appVue.deleconfirm=false
   })
 
-  ipcRenderer.on('cancelSave',()=>{
-    console.log('123')
-  })
 
   ipcRenderer.on('download-info', async (event, args) => {
+
     let simpleName;
     if (args.name.length >= 20) {
       simpleName = args.name.substring(0, 7) + '...' + args.name.substring(args.name.length-6,args.name.length);
     } else (simpleName = args.name)
-
+    // console.log(args)
     if (args.status === 'start') {
       appVue.lists.unshift({
         id: appVue.id++,
@@ -188,10 +186,18 @@
       appVue.count++
       ipcRenderer.send('willDownload')
     }
-     if(args.status ==='cancelled'){
-       appVue.lists.splice(0, 1)
-       appVue.count--
-     }
+
+    if (args.status === 'cancelled') {
+
+      // appVue.lists.splice(0, 1)
+      for (var i = 0; i < appVue.lists.length; i++) {
+        if (appVue.lists[i].startTime === args.startTime) {
+            appVue.deleteid = i
+        }
+      }
+      appVue.lists.splice(appVue.deleteid, 1)
+      appVue.count--
+    }
 
     if (args.status === 'progressing' && args.path !== '') {
       appVue.lists.forEach(function (item, index, arr) {
@@ -242,6 +248,7 @@
        progressnuw:0,
        startTime: '',
        pathList:[],
+       deleteid:'0',
        loadState:[],
        id:'0',
        active :'',
@@ -272,9 +279,11 @@
       },
      methods: {
       menuIng(index){
-        ipcRenderer.send('showMenuIng',this.lists[index].loadState)
         this.selectingList=this.lists[index]
         this.active = index;
+        if(this.selectingList.status === 'progressing'){
+          ipcRenderer.send('showMenuIng',this.lists[index].loadState)
+        }
       },
       menuDone(index){
         ipcRenderer.send('showMenuDone')
