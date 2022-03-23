@@ -60,7 +60,7 @@ const sidebarTpl = `
       </template>
       <a-button size="small"  style="font-size: 12px;margin-right: 6px" type="primary">
         空间1
-        <DownOutlined />
+        <a-icon type="down" /> </a-button>
       </a-button>
     </a-dropdown>
     <a-button @click="openUserWindow" style="font-size: 12px" size="small">切换账号</a-button>
