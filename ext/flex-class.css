@@ -108,3 +108,82 @@
 .justify-around {
   justify-content: space-around;
 }
+
+/* 字体快写 */
+.text-grey-sm {
+  color: #8c8c8c;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.text-grey {
+  color: #8c8c8c;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.text-black-sm {
+  color: #262626;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.text-black-lg {
+  color: #262626;
+  font-size: 16px;
+  line-height: 22px;
+}
+
+.text-black {
+  color: #262626;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.sg-omit {
+  display: inline-block;
+  line-height: 20px;
+  text-overflow: -o-ellipsis-lastline;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+}
+
+.sg-omit-sm {
+  display: inline-block;
+  line-height: 18px;
+  text-overflow: -o-ellipsis-lastline;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+}
+
+.sg-omit2 {
+  display: inline-block;
+  line-height: 20px;
+  text-overflow: -o-ellipsis-lastline;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+}
+
+.sg-omit2-sm {
+  display: inline-block;
+  line-height: 18px;
+  text-overflow: -o-ellipsis-lastline;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+}

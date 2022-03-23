@@ -14,6 +14,8 @@ function apLog (e) {
   }
 }
 
+let notificationSettingStatus = null
+
 const appManager = {
   dockBadge: 0,
   settingWindow: null,
@@ -47,6 +49,36 @@ const appManager = {
     })
   },
   /**
+   * 消息提示的前置处理，决定是否弹窗提示
+   * @param {array} settingStatus 消息设置状态 (notificationSettingStatus对象)
+   * @param {object} message 消息体
+   */
+  beforeEachNotification(settingStatus, message) {
+    //前置判断
+    let index = settingStatus.findIndex(v => v.appId === message.saAppId)
+    let childIndex = settingStatus[index].childs.findIndex(v => v.title === message.options.category)
+    if(settingStatus[index].notice && settingStatus[index].childs[childIndex].notice) {
+      //消息中心的收录做在这里
+      if(message.saAppId == 1) {
+        SidePanel.send('storeMessage', {
+          title: message.options.title,
+          body: message.options.body,
+          indexName: message.options.indexName ?? null,
+          type: 'groupChat'
+        })
+      } else if(message.saAppId == 2) {
+        SidePanel.send('storeMessage', {
+          title: message.options.title,
+          body: message.options.body,
+          type: 'community'
+        })
+      }
+
+      return true
+    }
+    return false
+  },
+  /**
    * 发送应用消息，进行提示，并给应用加上图标
    * @param appId
    * @param option  option.body为消息体  可参考此处参数说明 https://www.electronjs.org/zh/docs/latest/api/notification
@@ -61,7 +93,6 @@ const appManager = {
       defaultNotificationIcon=path.join(__dirname,'/icons/logo128.png')
     }
     option.icon = option.icon?option.icon:nativeImage.createFromPath(defaultNotificationIcon)
-    //todo 将消息体存入本地的消息中心
     let saAppWindow=appManager.getWindowByAppId(appId)
     if(ignoreWhenFocus && saAppWindow.isFocused())
     {
@@ -863,10 +894,6 @@ const appManager = {
 
       })
       appWindow.view = appView
-      //test
-      // setInterval(() => {
-      //   appManager.notification(saApp.id,  {title:'测试消息标题', body: '测试内容' })
-      // }, 1000)
 
       ipc.on('getSaApp', (event, args) => {
         event.reply('callback-getSaApp', { saApp })
@@ -1176,19 +1203,42 @@ app.whenReady().then(() => {
   })
 
   ipc.on('saAppNotice', (event, args) => {
-    appManager.notification(args.saAppId, {
-      title: args.options.title,
-      body: args.options.body,
-    },typeof args.ignoreWhenFocus == 'undefined'?false:args.ignoreWhenFocus)
+    //需要前置处理消息设置的状态决定到底发不发消息
+    const result = appManager.beforeEachNotification(notificationSettingStatus, args)
+    if(result) {
+      appManager.notification(args.saAppId, {
+        title: args.options.title,
+        body: args.options.body,
+      },typeof args.ignoreWhenFocus == 'undefined'?false:args.ignoreWhenFocus)
+    } else {
+      return
+    }
+  })
+
+  ipc.on('webOsNotice', (event, args) => {
+    //只有存在且notice为true，才允许转发webOsNotice到vuex处理
+    let noticeWebOrigin = settings.get('noticeWebOrigin')
+    let index = noticeWebOrigin.findIndex(v => v.link === args.url)
+    if(index >= 0 && noticeWebOrigin[index].notice) {
+      SidePanel.send('webOsNotice', args)
+    }
+  })
+
+  ipc.on('notificationSettingStatus', (event, args) => {
+    notificationSettingStatus = args
   })
 
   ipc.on('saAppOpen', (event, args) => {
     if(appManager.isAppProcessing(args.saAppId)) {
       appManager.showAppWindow(args.saAppId)
-      const appInfo = appManager.getSaAppByAppId(args.saAppId)
-      const reg = /^http(s)?:\/\/(.*?)\//
-      const host = reg.exec(appInfo.url)[0]
-      appManager.getWindowByAppId(args.saAppId).view.webContents.loadURL(`${host}?fid=${args.options.circleId}`)
+
+      if(args.hasOwnProperty('options')) {
+        //通过url跳转的方式
+        const appInfo = appManager.getSaAppByAppId(args.saAppId)
+        const reg = /^http(s)?:\/\/(.*?)\//
+        const host = reg.exec(appInfo.url)[0]
+        appManager.getWindowByAppId(args.saAppId).view.webContents.loadURL(`${host}?fid=${args.options.circleId}`)
+      }
     } else {
       sidePanel.get().webContents.send('message',{type:"error",config:{content:'团队沟通未运行',key: Date.now()}})
     }

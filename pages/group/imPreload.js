@@ -54,3 +54,7 @@ ipc.on('imLogout', () => {
   let host = isDevelopmentMode ? config.IM.FRONT_URL_DEV : config.IM.FRONT_URL
   window.location.href = `${host}${config.IM.BOOT_ROUTE}?removeToken=true`
 })
+
+ipc.on('switchChat', (event, args) => {
+  window.$instance.$children[0].$children[0].clickTab(args)
+})
