@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>选择用户</title>
+  <link rel="stylesheet" href="../../ext/antd3/antd.min.css"/>
+  <link rel="stylesheet" href="./asset/index.css"/>
+  <script src="../../ext/vue3/vue.js"></script>
+  <script src="../../ext/antd3/day.js"></script>
+  <script src="../../ext/antd3/antd.min.js"></script>
+
+</head>
+<body style="background: rgba(0,0,0,0.38)">
+<div id="appVue">
+  <div
+    style="position: fixed;left: 50%;top: 50%;margin-left: -325px;margin-top: -240px;width: 650px;height: 480px;background: white;border-radius: 8px;">
+    <h1 style="font-size: 18px;margin: 20px;text-align: center">
+      选择标签组空间
+    </h1>
+    <p style="text-align: center;color: #999">
+      不同空间的标签组相互隔离
+    </p>
+    <p style="text-align: center;color: #999">
+      适合不同家庭成员、公共电脑快速切换账号。<br>也可用于工作、娱乐等不同场景。
+    </p>
+    <a-row style="width: 80%;margin: auto">
+      <a-col v-for="user in users" :span="12">
+        <a-row class="user-card">
+          <a-col class="avatar-wrapper" :span="8" style="text-align: right">
+            <a-avatar :size="60" :src="user.avatar"></a-avatar>
+          </a-col>
+          <a-col class="user-info" :span="16">
+            <div>{{user.nickname}}</div>
+            <p class="info-p">{{user.spaces.length}} 空间</p>
+          </a-col>
+        </a-row>
+      </a-col>
+      <a-col :span="12">
+        <a-row class="user-card" style="border: 1px #ccc dashed">
+          <a-col class="avatar-wrapper" :span="8" style="text-align: right">
+            <a-avatar :size="60" ><template #icon>添</template></a-avatar>
+          </a-col>
+          <a-col class="user-info" :span="16" >
+            <div>添加账号</div>
+            <p class="info-p">添加一个新账号</p>
+          </a-col>
+        </a-row>
+      </a-col>
+    </a-row>
+
+
+    <a-checkbox style="position: absolute;bottom: 20px;right: 20px">每次启动的时候选择</a-checkbox>
+
+  </div>
+
+</div>
+</body>
+<script>dayjs().format()</script>
+<script>
+  // 不需要
+  const app = Vue.createApp({
+    data () {
+
+      return {
+        a: 'a32313232123',
+        users: [{
+          nickname: '想天浏览器',
+          avatar: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic65.nipic.com%2Ffile%2F20150415%2F7828787_111539068000_2.jpg',
+          spaces: [
+            {
+              name: '空间1'
+            },
+            {
+              name: '空间2'
+            }
+          ]
+        },
+          {
+            nickname: '想天浏览器',
+            avatar: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic65.nipic.com%2Ffile%2F20150415%2F7828787_111539068000_2.jpg',
+            spaces: [
+              {
+                name: '空间1'
+              },
+              {
+                name: '空间2'
+              }
+            ]
+          },{
+            nickname: '想天浏览器',
+            avatar: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic65.nipic.com%2Ffile%2F20150415%2F7828787_111539068000_2.jpg',
+            spaces: [
+              {
+                name: '空间1'
+              },
+              {
+                name: '空间2'
+              }
+            ]
+          },]
+      }
+    }
+  }).use(antd).mount('#appVue')
+</script>
+</html>

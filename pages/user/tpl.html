@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>选择用户</title>
+  <link rel="stylesheet" href="../../ext/antd3/antd.min.css"/>
+  <script src="../../ext/vue3/vue.js"></script>
+  <script src="../../ext/antd3/day.js"></script>
+  <script src="../../ext/antd3/antd.min.js"></script>
+
+</head>
+<body style="background: rgba(0,0,0,0.38)">
+<div id="appVue" >
+  {{ a }}
+  <a-button>ddd</a-button>
+</div>
+</body>
+<script>dayjs().format()</script>
+<script>
+  // 不需要
+  const app=Vue.createApp({
+    data(){
+      return {
+        a:'a32313232123'
+      }
+    }
+  }).use(antd).mount('#appVue')
+</script>
+</html>

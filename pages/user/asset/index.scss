@@ -1,0 +1,21 @@
+.user-card{
+  user-select: none;
+  cursor: pointer;
+  margin-bottom: 10px;
+  &:hover{
+    background-color: #f1f1f1;
+  }
+  width:calc(100% - 15px);
+  height: 100px;
+  border-radius: 6px;
+  .avatar-wrapper{
+    padding-top: 20px;
+  }
+  .user-info{
+    padding: 20px;
+  }
+  .info-p{
+    color: #999;
+    font-size: 12px;
+  }
+}

@@ -890,3 +890,37 @@ ipc.on('showAllSaApps',(event,args)=>{
  allAppsWindow.focus()
 
 })
+
+
+
+
+/*user面板代码*/
+app.whenReady().then(()=>{
+  let userWindow=null
+  ipc.on('showUserWindow',()=>{
+    if(userWindow){
+      userWindow.show()
+      userWindow.focus()
+    }else{
+      let bounds=mainWindow.getBounds()
+      userWindow=new BrowserWindow({
+        backgroundColor:'#00000000',
+        show:false,
+        parent:mainWindow,
+        transparent: true,
+        frame:false,
+        resizable:false,
+        shadow:false,
+      })
+      userWindow.setBounds(bounds)
+      userWindow.loadFile(path.join(__dirname,'/pages/user/index.html'))
+      userWindow.on('ready-to-show',()=>{
+        userWindow.show()
+      })
+    }
+  })
+})
+
+
+
+/*user面板代码end*/

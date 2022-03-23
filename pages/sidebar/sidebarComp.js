@@ -6,7 +6,7 @@ const sidebarTpl = `
   <div id="sidebar" class="side-container">
     <div id="itemsEl" class="side-items">
       <ul class="app-task">
-        <li @click="toggleUserPanel" class="" style="position: relative;">
+        <li @click="openUserWindow" class="" style="position: relative;">
           <template>
             <a-drawer class="user-panel" @mousemove="setSidePanel()" :width="300" :visible="userPanelVisible"
               @close="toggleUserPanel" :mask="false" placement="left">
@@ -571,6 +571,9 @@ Vue.component('sidebar', {
 	},
 	template: sidebarTpl,
 	methods: {
+    openUserWindow(){
+      ipc.send('showUserWindow')
+    },
     visibleMessageCenter() {
       this.messageShow = !this.messageShow
     },
