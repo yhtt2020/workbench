@@ -47,7 +47,10 @@ const tpl = `
           </a-col>
         </a-row>
       </template>
-      <a-checkbox style="position: absolute;bottom: 20px;right: 20px">每次启动的时候选择</a-checkbox>
+       <a-tooltip title="不勾选则每次打开浏览器自动读入上一次离开时的用户空间。" color="blue">
+         <a-checkbox style="position: absolute;bottom: 20px;right: 20px">每次启动的时候选择</a-checkbox>
+      </a-tooltip>
+
 </div>
 `
 const userModel = require('../../util/model/userModel')

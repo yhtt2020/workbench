@@ -930,9 +930,46 @@ app.whenReady().then(()=>{
     }
   })
 
+  let loginWindow=null
   ipc.on('closeUserWindow',()=>{
     userWindow.close()
     userWindow=null
+  })
+
+
+  ipc.on('login',()=>{
+    if(loginWindow){
+      loginWindow.show()
+      loginWindow.focus()
+    }else{
+      let bounds=mainWindow.getBounds()
+      loginWindow=new BrowserWindow({
+        backgroundColor:'#00000000',
+        show:false,
+        parent:mainWindow,
+        webPreferences:{
+          preload:path.join(__dirname,'pages/user/loginPreload.js'),
+          nodeIntegration: true,
+          contextIsolation: false,
+          additionalArguments: [
+            '--user-data-path=' + userDataPath,
+            '--app-version=' + app.getVersion(),
+            '--app-name=' + app.getName(),
+            ...((isDevelopmentMode ? ['--development-mode'] : [])),
+          ]
+        }
+      })
+
+      loginWindow.setBounds(bounds)
+      loginWindow.on('close',()=>{
+        loginWindow=null
+      })
+      api=require(path.join(__dirname,'server-config.js')).api
+      loginWindow.loadURL(api.getUrl(api.API_URL.user.login))
+      loginWindow.on('ready-to-show',()=>{
+        loginWindow.show()
+      })
+    }
   })
 })
 
