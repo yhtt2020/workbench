@@ -46,7 +46,11 @@ function removePermissionsForContents (contents) {
 Was permission already granted for this tab and URL?
 */
 function isPermissionGrantedForContents (requestContents, requestPermission, requestDetails) {
-  var requestOrigin = new URL(requestDetails.requestingUrl).hostname
+  try{
+    var requestOrigin = new URL(requestDetails.requestingUrl).hostname
+  }catch (e){
+    return false
+  }
   if(requestPermission === 'notifications') {
     let result = settings.get('noticeWebOrigin')
     let index  = result.findIndex(v => v.link === requestOrigin)
