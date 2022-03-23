@@ -8,12 +8,15 @@ const messageTempl = `
           <span>通知中心</span>
         </div>
         <div class="top-rg flex justify-around align-center">
-          <img src="./assets/clean.svg" alt="" style="width: 18px; height: 18px;" @click="clearMessages">
-          <a-icon type="setting" :style="{ fontSize: '16px', color: '#8c8c8c' }" @click="openMsmSetting"></a-icon>
-          <a-icon type="pushpin" :style="{ fontSize: '16px', color: '#8c8c8c' }" @click="fixedMessage"></a-icon>
+          <img title="清理全部" src="./assets/clean.svg" alt="" style="width: 18px; height: 18px;" @click="clearMessages">
+          <a-icon title="设置" type="setting" :style="{ fontSize: '16px', color: '#8c8c8c' }" @click="openMsmSetting"></a-icon>
+          <a-icon title="固定" type="pushpin" :style="{ fontSize: '16px', color: '#8c8c8c' }" @click="fixedMessage"></a-icon>
         </div>
       </div>
-      <div class="mid" :class="{'silent' : !isSilent}">
+      <template v-if="this.$store.getters.getAllMessages.length === 0">
+        <a-empty :description="false" class="mid flex  align-center justify-center"></a-empty>
+      </template>
+      <div class="mid" :class="{'silent' : !isSilent}" v-else>
         <div class="lumen flex flex-direction justify-between align-center" v-show="groupMessage.length > 0">
           <div class="lumen-top flex justify-between align-center">
             <div class="lumen-top-lf flex justify-start align-center text-black">
@@ -147,7 +150,7 @@ Vue.component("message-center", {
   },
   data() {
     return {
-      fixed: localStorage.getItem("ISMESSAGE_FIXED") == "true" ? true : false,
+      fixed: localStorage.getItem("isMessageFixed") == "true" ? true : false,
       silent: false
     };
   },
@@ -245,7 +248,7 @@ Vue.component("message-center", {
     },
     clkmask() {
       this.$emit("closeMessage");
-      localStorage.setItem("ISMESSAGE_FIXED", false);
+      localStorage.setItem("isMessageFixed", false);
     },
     openMsmSetting() {
       ipc.send("openMsmSetting");
@@ -256,13 +259,15 @@ Vue.component("message-center", {
         $style.height = "100vh";
         $style.borderRadius = "0px";
         this.fixed = true;
-        localStorage.setItem("ISMESSAGE_FIXED", true);
+        this.mod === 'open' ? $style.left = '145px' : $style.left = '45px'
+        localStorage.setItem("isMessageFixed", true);
       } else if (this.mod !== "auto" && this.fixed) {
         let $style = document.getElementsByClassName("message-dialog")[0].style;
         $style.height = "600px";
         $style.borderRadius = "10px";
+        this.mod === 'open' ? $style.left = '155px' : $style.left = '55px'
         this.fixed = false;
-        localStorage.setItem("ISMESSAGE_FIXED", false);
+        localStorage.setItem("isMessageFixed", false);
       } else {
         ipc.send("message", {
           type: "error",
@@ -277,11 +282,17 @@ Vue.component("message-center", {
     mod: {
       handler(val) {
         if (val === "auto" || val === "open") {
+          this.fixed ?
           document.getElementsByClassName("message-dialog")[0].style.left =
-            "145px";
+            "145px" :
+            document.getElementsByClassName("message-dialog")[0].style.left =
+            "155px"
         } else {
+          this.fixed ?
           document.getElementsByClassName("message-dialog")[0].style.left =
-            "45px";
+            "45px" :
+            document.getElementsByClassName("message-dialog")[0].style.left =
+            "55px"
         }
       },
       deep: true,
@@ -303,26 +314,41 @@ Vue.component("message-center", {
   },
   mounted() {
     this.$tag = 'message-center'
-    this.mountedIsSilent()
 
     if (this.mod === "auto" || this.mod === "open") {
-      document.getElementsByClassName("message-dialog")[0].style.left = "145px";
+      if (this.fixed) {
+        this.$emit("updateVisible", true);
+        let $style = document.getElementsByClassName("message-dialog")[0].style;
+        $style.height = "100vh";
+        $style.borderRadius = "0px";
+        $style.left = '145px'
+        document.getElementsByClassName("message-mask")[0].style.display = "none";
+      } else {
+        this.$emit("updateVisible", false);
+        let $style = document.getElementsByClassName("message-dialog")[0].style;
+        $style.height = "600px";
+        $style.borderRadius = "10px";
+        $style.left = '155px'
+        document.getElementsByClassName("message-mask")[0].style.display =
+          "block";
+      }
     } else {
-      document.getElementsByClassName("message-dialog")[0].style.left = "45px";
-    }
-    if (this.fixed) {
-      this.$emit("updateVisible", true);
-      let $style = document.getElementsByClassName("message-dialog")[0].style;
-      $style.height = "100vh";
-      $style.borderRadius = "0px";
-      document.getElementsByClassName("message-mask")[0].style.display = "none";
-    } else {
-      this.$emit("updateVisible", false);
-      let $style = document.getElementsByClassName("message-dialog")[0].style;
-      $style.height = "600px";
-      $style.borderRadius = "10px";
-      document.getElementsByClassName("message-mask")[0].style.display =
-        "block";
+      if (this.fixed) {
+        this.$emit("updateVisible", true);
+        let $style = document.getElementsByClassName("message-dialog")[0].style;
+        $style.height = "100vh";
+        $style.borderRadius = "0px";
+        $style.left = '45px'
+        document.getElementsByClassName("message-mask")[0].style.display = "none";
+      } else {
+        this.$emit("updateVisible", false);
+        let $style = document.getElementsByClassName("message-dialog")[0].style;
+        $style.height = "600px";
+        $style.borderRadius = "10px";
+        $style.left = '55px'
+        document.getElementsByClassName("message-mask")[0].style.display =
+          "block";
+      }
     }
 
     if (localStorage.getItem("messageSetting")) {
@@ -384,5 +410,7 @@ Vue.component("message-center", {
       localStorage.setItem("messageSetting", JSON.stringify(list));
       ipc.send("notificationSettingStatus", list)
     }
+
+    this.mountedIsSilent()
   },
 });

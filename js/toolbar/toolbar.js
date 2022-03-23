@@ -245,7 +245,7 @@ const toolbar = {
   adjustSideBar () {
     sideBar.mod = localStorage.getItem('sideMode') ?? 'auto'
 
-    sideBar.isMessageFixed = localStorage.getItem('ISMESSAGE_FIXED') == 'true' ? true : false
+    sideBar.isMessageFixed = localStorage.getItem('isMessageFixed') == 'true' ? true : false
     sideBar.syncMod()
   }
 

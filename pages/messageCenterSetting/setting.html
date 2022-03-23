@@ -70,7 +70,10 @@
           <span class="text-black" style="margin-left: 10px;">网页</span>
           <span class="text-black" style="margin-right: 70px;">操作</span>
         </div>
-        <div class="wsb-content flex flex-direction">
+        <template v-if="compWebMessage.length === 0">
+          <a-empty :description="false" class="wsb-content flex  align-center justify-center"></a-empty>
+        </template>
+        <div class="wsb-content flex flex-direction" v-else>
           <ul>
             <li class="flex justify-between align-center" v-for="(item, index) in compWebMessage" :key="index">
               <span class="text-grey">{{item.link}}</span>
