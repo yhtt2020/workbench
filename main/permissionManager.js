@@ -30,7 +30,12 @@ function removePermissionsForContents (contents) {
 Was permission already granted for this tab and URL?
 */
 function isPermissionGrantedForContents (requestContents, requestPermission, requestDetails) {
-  var requestOrigin = new URL(requestDetails.requestingUrl).hostname
+  try{
+    var requestOrigin = new URL(requestDetails.requestingUrl).hostname
+  }catch (e){
+    return false
+  }
+
 
   //强制放行  //todo需要加上权限管理
   let allowPermissions=[
