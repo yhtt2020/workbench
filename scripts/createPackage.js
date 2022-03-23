@@ -60,7 +60,8 @@ var platformOptions = {
     }, {
       name: 'File',
       schemes: ['file']
-    }]
+    }],
+    extendInfo: 'scripts/macInfo.plist'
   },
   darwinArm: {
     platform: 'darwin',
@@ -73,7 +74,8 @@ var platformOptions = {
     }, {
       name: 'File',
       schemes: ['file']
-    }]
+    }],
+    extendInfo: 'scripts/macInfo.plist'
   },
   win32: {
     arch: 'all',
