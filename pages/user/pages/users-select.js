@@ -12,6 +12,7 @@ const tpl = `
       <template v-if="loaded">
         <a-row style="width: 80%;margin: auto">
           <a-col v-for="user in users" :span="12">
+           <a-dropdown :trigger="['contextmenu']">
             <a-row class="user-card">
               <a-col class="avatar-wrapper" :span="8" style="text-align: right">
                 <a-avatar :size="60" :src="user.avatar"></a-avatar>
@@ -21,6 +22,12 @@ const tpl = `
                 <p class="info-p">{{user.spaces.length}} 空间</p>
               </a-col>
             </a-row>
+            <template #overlay>
+      <a-menu>
+        <a-menu-item @click="deleteAccount(user.uid)" key="deleteAccount">删除账号</a-menu-item>
+      </a-menu>
+    </template>
+  </a-dropdown>
           </a-col>
           <a-col :span="12">
             <a-row class="user-card">
@@ -83,6 +90,15 @@ const UsersSelect = {
     methods: {
       goAddAccount(){
         this.$router.push('/add')
+      },
+      deleteAccount(uid){
+        antd.Modal.confirm({
+          title: '删除此账号',
+          content: '删除账号并不会影响账号数据，仅仅是将本地账号退出。但是退出后无法再使用此账号下的所有空间。',
+          centered:true,
+          okText: '确认',
+          cancelText: '取消',
+        });
       }
     }
   }
