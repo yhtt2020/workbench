@@ -10,15 +10,19 @@ const baseApi = {
   getCurrentUser: () => {
     return db.system.where("name").equals("currentUser").first();
   },
-  init: async () => {
-    await baseApi.getCurrentUser().then((user) => {
-      baseApi.currentUser = user;
-      baseApi.token = user.value.token;
-      baseApi.uid = user.value.uid;
-      baseApi.refreshToken = user.value.refreshToken
-      baseApi.expire_deadtime = user.value.expire_deadtime
-      baseApi.refreshExpire_deadtime = user.value.refreshExpire_deadtime
-    });
+  init: async (user=false) => {
+    if(user===false){
+      userData=await baseApi.getCurrentUser()
+      if(userData){
+        user=userData.value
+      }
+    }
+      baseApi.currentUser = {value:user};
+      baseApi.token = user.token;
+      baseApi.uid = user.uid;
+      baseApi.refreshToken = user.refreshToken
+      baseApi.expire_deadtime = user.expire_deadtime
+      baseApi.refreshExpire_deadtime = user.refreshExpire_deadtime
   },
 
   /**
@@ -29,6 +33,7 @@ const baseApi = {
    * @returns Promise
    */
   axios: async (url, params, method = "post") => {
+    console.log(baseApi.token)
     let data = {};
     if (method === "get") data = { params };
     if (method === "post" || method === "put" || method === "delete")

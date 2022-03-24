@@ -8,8 +8,8 @@ const config = {
   SERVER_BACKEND_URL: isDevelopmentMode ? 'https://sad.apps.vip' : 'https://sad.apps.vip',   //老板你本地用这个，注释上面这个
   DEV_NODE_SERVER_BASE_URL: 'http://test.com:8001',
   PROD_NODE_SERVER_BASE_URL: 'https://apps.vip',
-  //NODE_SERVER_BASE_URL: isDevelopmentMode ? 'http://test.com:8001' : 'https://apps.vip',
-  NODE_SERVER_BASE_URL: isDevelopmentMode ? 'https://apps.vip' : 'https://apps.vip',  //老板你本地用这个，注释上面这个
+  NODE_SERVER_BASE_URL: isDevelopmentMode ? 'http://test.com:8001' : 'https://apps.vip',
+  //NODE_SERVER_BASE_URL: isDevelopmentMode ? 'https://apps.vip' : 'https://apps.vip',  //老板你本地用这个，注释上面这个
   IM:{
     API_BASE_URL:"http://im-serve.xiangtian.ren",
     WEB_SOCKET_URL:"ws://im-socket.xiangtian.ren/socket.io",
@@ -25,7 +25,7 @@ const config = {
 }
 
 const appConfig = {
-  client_id: isDevelopmentMode ? 10001 : 10001,
+  client_id: isDevelopmentMode ? 10003 : 10001,
   bind_im_id: 10002,  //lumen id
   state: 1,
   response_type: 'code',

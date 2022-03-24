@@ -52,6 +52,12 @@
     },
     {
       path: '/add', component: require('./pages/add-account')
+    },
+    {
+     name:'enterPwd', path: '/pwd/:uid', component: require('./pages/enter-pwd')
+    },
+    {
+      name:'space', path: '/space/:uid', component: require('./pages/space-select')
     }
   ]
   const router = VueRouter.createRouter({

@@ -11,7 +11,7 @@ const tpl = `
       </p>
       <template v-if="loaded">
         <a-row style="width: 80%;margin: auto">
-          <a-col v-for="user in users" :span="12">
+          <a-col @click="enterAccount(user)" v-for="user in users" :span="12">
            <a-dropdown :trigger="['contextmenu']">
             <a-row class="user-card">
               <a-col class="avatar-wrapper" :span="8" style="text-align: right">
@@ -63,44 +63,50 @@ const tpl = `
 const userModel = require('../../util/model/userModel')
 const UsersSelect = {
   template: tpl,
-    data () {
-      return {
-        loaded: false,
-        users: [
-          // {
-          //   nickname: '想天浏览器',
-          //   avatar: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic65.nipic.com%2Ffile%2F20150415%2F7828787_111539068000_2.jpg',
-          //   spaces: [
-          //     {
-          //       name: '空间1'
-          //     },
-          //     {
-          //       name: '空间2'
-          //     }
-          //   ]
-          // },
-        ]
-      }
+  data () {
+    return {
+      loaded: false,
+      users: [
+        // {
+        //   nickname: '想天浏览器',
+        //   avatar: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fpic65.nipic.com%2Ffile%2F20150415%2F7828787_111539068000_2.jpg',
+        //   spaces: [
+        //     {
+        //       name: '空间1'
+        //     },
+        //     {
+        //       name: '空间2'
+        //     }
+        //   ]
+        // },
+      ]
+    }
+  },
+  async mounted () {
+    this.users = await userModel.getAll()
+    this.loaded = true
+    console.log(this.users)
+  },
+  methods: {
+    goAddAccount () {
+      this.$router.push('/add')
     },
-    async mounted () {
-      this.users = await userModel.getAll()
-      this.loaded = true
-      console.log(this.users)
+    deleteAccount (uid) {
+      antd.Modal.confirm({
+        title: '删除此账号',
+        content: '删除账号并不会影响账号数据，仅仅是将本地账号退出。但是退出后无法再使用此账号下的所有空间。',
+        centered: true,
+        okText: '确认',
+        cancelText: '取消',
+      })
     },
-    methods: {
-      goAddAccount(){
-        this.$router.push('/add')
-      },
-      deleteAccount(uid){
-        antd.Modal.confirm({
-          title: '删除此账号',
-          content: '删除账号并不会影响账号数据，仅仅是将本地账号退出。但是退出后无法再使用此账号下的所有空间。',
-          centered:true,
-          okText: '确认',
-          cancelText: '取消',
-        });
-      }
+    enterAccount (user) {
+      if(!!!user.pwd){
+        this.$router.push({name:'space', params: { uid: user.uid } })
+      }else
+      this.$router.push({ name: 'enterPwd', params: { uid: user.uid } })
     }
   }
+}
 
 module.exports = UsersSelect
