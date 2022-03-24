@@ -2,25 +2,23 @@ const userModel = require('../../util/model/userModel')
 const userApi = require('../../util/api/userApi')
 const tpl = `
 <div>
-  <h1 style="font-size: 18px;margin:auto;margin-top: 20px;margin-bottom:10px;text-align: center">
-
-  </h1>
   <div style="text-align: center">
     <a-avatar :size="60" :src="user.avatar">
     </a-avatar>
-    <div style="margin-bottom: 20px">{{user.nickname}}</div>
+    <div style="margin-bottom: 10px">{{user.nickname}}</div>
+    <p style="text-align: center;font-size: 16px">{{ user.spaces.length }} <span style="color: #999;font-size: 12px">空间</span></p>
   </div>
   <div style="text-align: center">
     <!--      <a-empty text="无空间" v-if="user.spaces.length===0"></a-empty>-->
-    <div style="text-align: left;padding-left: 60px">
-      <a-card v-for="space in user.spaces" hoverable style="width: 250px;display: inline-block;margin-right: 20px">
-        <a-card-meta :title="space.name" :description="space.count_task+ ' 标签组'+ space.count_tab+' 标签'">
+    <div style="text-align: left;overflow-y: auto;max-height: 230px;margin-right: 20px;padding-top: 10px;padding-left: 50px;padding-bottom: 10px" class="scroller">
+      <a-card :style="{'margin-right':index%2===1?'0':'10px'}" v-for="space,index in user.spaces" hoverable style="margin-left:20px;width: 250px;display: inline-block;margin-bottom: 10px;">
+        <a-card-meta :title="space.name" :description="space.count_task+ ' 标签组  '+ space.count_tab+' 标签'">
           <template #avatar>
            <svg t="1648106444295" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="32437" width="32" height="32"><path d="M512 938.666667C276.352 938.666667 85.333333 747.648 85.333333 512S276.352 85.333333 512 85.333333s426.666667 191.018667 426.666667 426.666667-191.018667 426.666667-426.666667 426.666667z m205.653333-210.090667A298.666667 298.666667 0 0 0 385.365333 241.408l41.6 74.88A213.333333 213.333333 0 0 1 725.333333 512h-91.733333a21.333333 21.333333 0 0 0-18.645333 31.701333l102.698666 184.874667z m-120.618666-20.864A213.333333 213.333333 0 0 1 298.666667 512h91.733333a21.333333 21.333333 0 0 0 18.645333-31.701333L306.346667 295.424a298.666667 298.666667 0 0 0 332.288 487.168l-41.6-74.88z" fill="#14D081" p-id="32438"></path></svg>
           </template>
         </a-card-meta>
       </a-card>
-      <a-card @click="showCreateSpace" hoverable style="width: 250px;display: inline-block">
+      <a-card @click="showCreateSpace" hoverable style="width: 250px;display: inline-block;margin-left:20px;">
         <a-card-meta title="创建新空间" description="创建一个全新的空间">
           <template #avatar>
             <a-avatar :size="40" style="background-color: #eeeeee">
@@ -59,7 +57,7 @@ const tpl = `
       @ok="doCreateSpace"
     >
       <p>输入空间名称</p>
-      <p><a-input ref="spaceNameInput" v-model:value="newSpaceName" placeholder="空间名称"></p>
+      <p><a-input ref="spaceNameInput" @keyup.enter="doCreateSpace" v-model:value="newSpaceName" placeholder="空间名称"></p>
       <p></p>
     </a-modal>
 </div>
@@ -81,6 +79,15 @@ const SpaceSelect = {
   async mounted () {
     let user = await userModel.get({ id: this.$route.params.uid })
     if (user) {
+      try{
+        let result=await userApi.spaceListMy(user)
+        if(result.data)
+          user.spaces= result.data
+      }catch (e){
+        window.antd.message.error('获取用户信息失败，用户登录信息已过期。请解绑后重新绑定。')
+      }
+      console.log(user.spaces)
+      if(!!!user.spaces) user.spaces=[]
       this.user = user
     } else {
       console.error('user can\'t find')
@@ -94,11 +101,15 @@ const SpaceSelect = {
     async doCreateSpace(){
       try{
         let result=await userApi.addSpace(this.newSpaceName,this.user)
-        console.log(result)
-        this.newSpaceName=''
-        window.antd.message.success('创建空间成功。')
-        this.user.spaces.push(result.data)
-        this.visibleCreate=false
+        if(result.code===1000){
+          this.newSpaceName=''
+          window.antd.message.success('创建空间成功。')
+          this.user.spaces.push(result.data)
+          this.visibleCreate=false
+        }else{
+          window.antd.message.error('空间名称长度在1-10个汉字，请重新输入。')
+          this.$refs.spaceNameInput.input.select()
+        }
       }catch (e){
         window.antd.message.error('创建空间失败，失败原因：网络请求失败。')
       }

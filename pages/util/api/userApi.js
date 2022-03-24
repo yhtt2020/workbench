@@ -2,7 +2,8 @@ const baseApi = require('./baseApi.js')
 
 const url = {
   getUserInfo: '/app/getUserInfo',
-  addSpace:'/app/addSpace'
+  addSpace:'/app/addSpace',
+  spaceListMy:'/app/spaceListMy'
 }
 
 const userApi = {
@@ -15,6 +16,11 @@ const userApi = {
 
     await baseApi.init(user)
     return baseApi.axios(url.addSpace,{name:name},'post')
+  },
+
+  async spaceListMy(user=false){
+    await baseApi.init(user)
+    return baseApi.axios(url.spaceListMy,null,'get')
   }
 }
 

@@ -20,4 +20,23 @@
   font-size: 12px;
 }
 
+.scroller::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scroller::-webkit-scrollbar-track {
+  background: #f6f6f6;
+  border-radius: 2px;
+}
+.scroller::-webkit-scrollbar-thumb {
+  background: #e9e8e8;
+  border-radius: 20px;
+}
+.scroller::-webkit-scrollbar-thumb:hover {
+  background: #747474;
+}
+.scroller::-webkit-scrollbar-corner {
+  background: #f6f6f6;
+}
+
 /*# sourceMappingURL=index.css.map */
