@@ -43,23 +43,17 @@ const sidebarTpl = `
                           <div style="margin-top: 10px">
      <a-dropdown>
       <template #overlay>
-        <a-menu @click="handleMenuClick">
-          <a-menu-item key="1">
-            <UserOutlined />
-            空间1
+        <a-menu>
+          <a-menu-item v-for="space in spaces" :key="space.nanoid">
+            {{space.name}}
           </a-menu-item>
-          <a-menu-item key="2">
-            <UserOutlined />
-            空间2
-          </a-menu-item>
-          <a-menu-item key="3" @click="openUserWindow">
-            <UserOutlined />
+          <a-menu-item key="other" @click="openUserWindow">
             选择其他账号空间
           </a-menu-item>
         </a-menu>
       </template>
       <a-button size="small"  style="font-size: 12px;margin-right: 6px" type="primary">
-        空间1
+        切换
         <a-icon type="down" /> </a-button>
       </a-button>
     </a-dropdown>
@@ -487,7 +481,8 @@ Vue.component('sidebar', {
 					'avatar':'../../icons/browser.ico'
 				}
 			],
-      sidebarBottom:0
+      sidebarBottom:0,
+      spaces:[]
 		}
 
 	},
@@ -560,6 +555,8 @@ Vue.component('sidebar', {
     this.mod= sideMode
 
     await this.$store.dispatch('getAllMessage')
+    await this.$store.dispatch('getMySpaces')
+    this.spaces=this.$store.state.spaces
 	},
 	computed: {
 		user(){

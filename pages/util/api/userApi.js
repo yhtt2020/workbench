@@ -18,7 +18,7 @@ const userApi = {
     return baseApi.axios(url.addSpace,{name:name},'post')
   },
 
-  async spaceListMy(user=false){
+  async getMySpaceList(user=false){
     await baseApi.init(user)
     return baseApi.axios(url.spaceListMy,null,'get')
   }

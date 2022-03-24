@@ -88,7 +88,7 @@ const SpaceSelect = {
     let user = await userModel.get({ id: this.$route.params.uid })
     if (user) {
       try{
-        let result=await userApi.spaceListMy(user)
+        let result=await userApi.getMySpaceList(user)
         if(result.data)
           user.spaces= result.data
       }catch (e){

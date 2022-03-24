@@ -225,6 +225,9 @@ window.onload = function() {
 
 		},
 		mutations: {
+      set_my_spaces:(state,spaces)=>{
+        state.spaces=spaces
+      },
       //设置全部的消息列表
       SET_ALLMESSAGES: (state, messages) => {
         state.allMessages = messages
@@ -384,7 +387,6 @@ window.onload = function() {
       },
       async getUserInfo({commit},userInfo){
         const result=await userApi.getUserInfo()
-        console.log(result)
         if(result.code===1000){
           commit('set_user_info',result.data)
         }
@@ -417,6 +419,10 @@ window.onload = function() {
       async deleteAllMessages({commit}) {
         await messageModel.clearTable()
         commit('DEL_ALLMESSAGES')
+      },
+      async getMySpaces({commit},options){
+        let spaces= await userApi.getMySpaceList()
+        commit('set_my_spaces',spaces.data)
       }
 
     }
