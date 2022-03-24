@@ -15,7 +15,7 @@
   <div @click="closeWindow" style="background: rgba(0,0,0,0.38);position: fixed;left: 0;right: 0;bottom: 0;top: 0">
     <div @click.stop="()=>{}"
          style="position: fixed;left: 50%;top: 50%;margin-left: -325px;margin-top: -240px;width: 650px;height: 480px;background: white;border-radius: 8px;">
-      <svg v-if="$route.path!=='/'" @click="$router.go(-1)" style="margin: 10px;cursor: pointer" t="1648037736735"
+      <svg v-if="$route.path!=='/'" @click="$router.go(-1)" style="position:absolute;margin: 10px;cursor: pointer;z-index:999" t="1648037736735"
            class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="18922" width="32"
            height="32">
         <path

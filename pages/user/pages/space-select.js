@@ -3,14 +3,22 @@ const userApi = require('../../util/api/userApi')
 const tpl = `
 <div>
   <div style="text-align: center">
-    <a-avatar :size="60" :src="user.avatar">
+  <a-row style="margin-top: 20px">
+  <a-col :span="12" style="text-align: right">
+      <a-avatar :size="60" :src="user.avatar">
     </a-avatar>
-    <div style="margin-bottom: 10px">{{user.nickname}}</div>
-    <p style="text-align: center;font-size: 16px">{{ user.spaces.length }} <span style="color: #999;font-size: 12px">空间</span></p>
+</a-col>
+<a-col :span="12" style="text-align: left;padding-left: 10px">
+ <div style="margin-top: 10px">{{user.nickname}}</div>
+    <p style="text-align: left;font-size: 16px">{{ user.spaces.length }} <span style="color: #999;font-size: 12px">空间</span></p>
+</a-col>
+</a-row>
+
+
   </div>
   <div style="text-align: center">
     <!--      <a-empty text="无空间" v-if="user.spaces.length===0"></a-empty>-->
-    <div style="text-align: left;overflow-y: auto;max-height: 230px;margin-right: 20px;padding-top: 10px;padding-left: 50px;padding-bottom: 10px" class="scroller">
+    <div style="text-align: left;overflow-y: auto;max-height: 310px;margin-right: 20px;padding-top: 10px;padding-left: 40px;padding-bottom: 10px" class="scroller">
       <a-card :style="{'margin-right':index%2===1?'0':'10px'}" v-for="space,index in user.spaces" hoverable style="margin-left:20px;width: 250px;display: inline-block;margin-bottom: 10px;">
         <a-card-meta :title="space.name" :description="space.count_task+ ' 标签组  '+ space.count_tab+' 标签'">
           <template #avatar>
@@ -40,10 +48,10 @@ const tpl = `
   </div>
 
   <div style="position: absolute;bottom: 10px;width: 100%;padding: 10px">
-   <div style="float: left"><a-button size="small" shape="round">隐私空间</a-button></div>
+   <div style="float: left;margin-left: 20px"><a-button size="small" shape="round">隐私空间</a-button></div>
    <div style="float:right;width: 200px;">
    <a-button style="margin-right: 10px">设置密码</a-button>
-   <a-button>解绑账号</a-button>
+   <a-button @click="deleteAccount(user.uid)">解绑账号</a-button>
 </div>
   </div>
 
@@ -120,7 +128,24 @@ const SpaceSelect = {
       setTimeout(()=>{
         this.$refs.spaceNameInput.input.focus()
       },200)
-    }
+    },
+    deleteAccount (uid) {
+      antd.Modal.confirm({
+        title: '解绑此账号',
+        content: '解绑账号并不会影响账号数据，仅仅是将本地账号退出。但是退出后无法再使用此账号下的所有空间。',
+        centered: true,
+        okText: '确认',
+        cancelText: '取消',
+        onOk: () => {
+          let result = userModel.delete( uid ).then(() => {
+            window.antd.message.success('解绑账号成功。')
+            this.$router.replace({path:'/'})
+          }).catch(()=>{
+            window.antd.message.error('解绑账号失败。')
+          })
+        }
+      })
+    },
   }
 }
 

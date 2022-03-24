@@ -24,7 +24,7 @@ const tpl = `
             </a-row>
             <template #overlay>
       <a-menu>
-        <a-menu-item @click="deleteAccount(user.uid)" key="deleteAccount">删除账号</a-menu-item>
+        <a-menu-item @click="deleteAccount(user.uid)" key="deleteAccount">解绑账号</a-menu-item>
       </a-menu>
     </template>
   </a-dropdown>
@@ -93,18 +93,32 @@ const UsersSelect = {
     },
     deleteAccount (uid) {
       antd.Modal.confirm({
-        title: '删除此账号',
-        content: '删除账号并不会影响账号数据，仅仅是将本地账号退出。但是退出后无法再使用此账号下的所有空间。',
+        title: '解绑此账号',
+        content: '解绑账号并不会影响账号数据，仅仅是将本地账号退出。但是退出后无法再使用此账号下的所有空间。',
         centered: true,
         okText: '确认',
         cancelText: '取消',
+        onOk: () => {
+          let result = userModel.delete( uid ).then(() => {
+            window.antd.message.success('解绑账号成功。')
+            this.users.forEach((user, index) => {
+              if (user.uid === uid) {
+                this.users.splice(index, 1)
+                return false
+              }
+
+            })
+          }).catch(()=>{
+            window.antd.message.error('解绑账号失败。')
+          })
+        }
       })
     },
     enterAccount (user) {
-      if(!!!user.pwd){
-        this.$router.push({name:'space', params: { uid: user.uid } })
-      }else
-      this.$router.push({ name: 'enterPwd', params: { uid: user.uid } })
+      if (!!!user.pwd) {
+        this.$router.push({ name: 'space', params: { uid: user.uid } })
+      } else
+        this.$router.push({ name: 'enterPwd', params: { uid: user.uid } })
     }
   }
 }

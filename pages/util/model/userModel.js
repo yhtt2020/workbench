@@ -10,7 +10,6 @@ const userModel={
     return users
   },
   async get(map){
-    console.log(map)
     if(map.id){
       map.id=Number(map.id)
     }
@@ -24,6 +23,11 @@ const userModel={
       return false
     }
   },
+
+  async delete(map){
+    let result=await db.accounts.delete(map)
+    return result
+  }
 
 
 }
