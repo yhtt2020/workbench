@@ -83,7 +83,7 @@ var mainMenu = null
 var secondaryMenu = null
 var isFocusMode = false
 var appIsReady = false
-
+var isToolbar = false
 
 const isFirstInstance = app.requestSingleInstanceLock()
 
@@ -199,7 +199,7 @@ function createWindowWithBounds(bounds) {
 		height: bounds.height,
 		x: bounds.x,
 		y: bounds.y,
-		minWidth: (process.platform === 'win32' ? 400 :
+		minWidth: (process.platform === 'win32' ? 600 :
 			320), // controls take up more horizontal space on Windows
 		minHeight: 350,
 		titleBarStyle: settings.get('useSeparateTitlebar') ? 'default' : 'hidden',
