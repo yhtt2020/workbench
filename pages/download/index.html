@@ -88,9 +88,9 @@
                 <a-button style="position: absolute;margin-left: 240px;margin-top: 5px" type="link" @click="showFileHandler(index)" >
                   打开文件夹
                 </a-button>
+              <div style="position: absolute;margin-left: 140px;margin-top: 21px">{{doneList.doneDate}}</div>
               <div style="margin-left: 50px;font-size: 15px;font-weight: bold ;">{{doneList.title}}</div>
-              <div style="margin-left: 50px;font-size: 12px;width: 150px;">{{doneList.total}}  MB</div>
-
+              <div style="margin-left: 50px;font-size: 12px;width: 50px;">{{doneList.total}}  MB</div>
             </div>
           </div>
         </a-tab-pane>
@@ -188,7 +188,6 @@
     }
 
     if (args.status === 'cancelled') {
-
       // appVue.lists.splice(0, 1)
       for (var i = 0; i < appVue.lists.length; i++) {
         if (appVue.lists[i].startTime === args.startTime) {
@@ -216,23 +215,28 @@
       })
     }
 
-    if (args.status === 'completed' && args.path !== '' ) {
+    if (args.status === 'completed' && args.path !== '') {
+      const myDate = new Date();
+
       appVue.doneLists.unshift({
-        id:appVue.doneId++,
+        id: appVue.doneId++,
         title: simpleName,
         total: ((args.size.total) / 1024 / 1024).toFixed(2),
         path: args.path,
         url: args.url,
-        startTime:args.startTime
+        startTime: args.startTime,
+        doneDate:myDate.toLocaleDateString(),
       })
       appVue.count--
       db.download.add({
-        title:args.name,
-        total:((args.size.total) / 1024 / 1024).toFixed(2),
-        path:args.path,
-        url:args.url,
-        startTime:args.startTime
+        title: args.name,
+        total: ((args.size.total) / 1024 / 1024).toFixed(2),
+        path: args.path,
+        url: args.url,
+        startTime: args.startTime,
+        doneDate:myDate.toLocaleDateString(),
       })
+
     }
   })
 
@@ -240,6 +244,7 @@
     el: '#appVue',
      data: {
        count:'0',
+       doneDate:'',
        visibleIng:false,
        visible: false,
        lists:[],
@@ -273,6 +278,7 @@
            path: dblist[i].path,
            url: dblist[i].url,
            startTime:dblist[i].startTime,
+           doneDate:dblist[i].doneDate,
          })
        }
        })
@@ -324,7 +330,12 @@
           const f = this.selectList.path;
           fs.exists(f, function (flag) {
             if (flag) {
-              fs.unlinkSync(appVue.selectList.path)
+              // const { shell } = require('electron')
+              ipcRenderer.send('deleteFile',appVue.selectList.path)
+              console.log(appVue.selectList.path)
+              // shell.trashItem(appVue.selectList.path)
+              // fs.unlinkSync(appVue.selectList.path)
+              appVue.$message.info('文件已删除', 1)
               appVue.doneLists.splice(appVue.doneLists.indexOf(appVue.selectList), 1)
               appVue.visible = false;
             } else {
@@ -359,7 +370,7 @@
           if (flag) {
             shell.showItemInFolder(appVue.doneLists[index].path)
           } else {
-            appVue.$message.success('文件已被删除或位置被移动', 1)
+            appVue.$message.info('文件已被删除或位置被移动', 1)
           }
         })
       },
