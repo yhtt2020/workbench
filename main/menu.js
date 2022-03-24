@@ -95,6 +95,11 @@ function buildAppMenu (options = {}) {
     }
   }
 
+  ipc.on('changeToolbar',()=>{
+    isToolbar = false
+
+  })
+
   var template = [
     ...(options.secondary ? tabTaskActions : []),
     ...(options.secondary ? [{ type: 'separator' }] : []),
@@ -283,6 +288,21 @@ function buildAppMenu (options = {}) {
           }
         },
         {
+          label: '工具栏',
+          accelerator: undefined,
+          type: 'checkbox',
+          checked: false,
+          click: function (item, window) {
+            if (isToolbar) {
+              isToolbar = false
+              sendIPCToWindow(window, 'hideToolbar')
+            } else {
+              isToolbar = true
+              sendIPCToWindow(window, 'openToolbar')
+            }
+          }
+        },
+        {
           label: l('appMenuFullScreen'),
           accelerator: (function () {
             if (process.platform == 'darwin') { return 'Ctrl+Command+F' } else { return 'F11' }
@@ -432,6 +452,7 @@ function buildAppMenu (options = {}) {
   ]
   return Menu.buildFromTemplate(template)
 }
+
 
 function createDockMenu () {
   // create the menu. based on example from https://github.com/electron/electron/blob/master/docs/tutorial/desktop-environment-integration.md#custom-dock-menu-macos
