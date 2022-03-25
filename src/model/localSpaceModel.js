@@ -58,6 +58,10 @@ const localSpaceModel={
     let currentSpace=ldb.db.get('currentSpace').value()
     console.log(space)
     ldb.db.set('currentSpace.spaceId',space.id).write()
+  },
+  getAll(){
+    ldb.reload()
+    return ldb.db.get('spaces').value()
   }
 }
 

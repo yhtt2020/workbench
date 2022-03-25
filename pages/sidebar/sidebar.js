@@ -4,6 +4,7 @@ const userStatsModel = require('../util/model/userStatsModel')
 const userApi = require('../util/api/userApi')
 const messageModel = require('../util/model/messageModel')
 const {tools} = require('../util/util')
+const spaceModel = require('../../src/model/spaceModel')
 
 class TasksList {
 	constructor() {
@@ -90,6 +91,7 @@ window.onload = function() {
   ldb.load(window.globalArgs['user-data-path']+'/ldb.json')
 	const store = new Vuex.Store({
 		state: {
+      localSpaces:[],
 			pinItems: null, //置顶区域的items，横线上方部分
 			items: null, //普通区域的items
 			selected: '', //当前选中的
@@ -228,6 +230,9 @@ window.onload = function() {
 
 		},
 		mutations: {
+      set_local_spaces:(state,spaces)=>{
+        state.localSpaces=spaces
+      },
       set_my_spaces:(state,spaces)=>{
         state.spaces=spaces
       },
@@ -424,8 +429,21 @@ window.onload = function() {
         commit('DEL_ALLMESSAGES')
       },
       async getMySpaces({commit},options){
-        let spaces= await userApi.getMySpaceList()
-        commit('set_my_spaces',spaces.data)
+        let response= await userApi.getMySpaceList()
+        let mySpaces=response.data
+        if(mySpaces.length>5)
+        {
+          mySpaces.splice(4,mySpaces.length-5)
+        }
+        commit('set_my_spaces',mySpaces)
+      },
+      async getLocalSpaces({commit}){
+        let localSpaces= await spaceModel.getLocalSpaces()
+        if(localSpaces.length>5)
+        {
+          localSpaces.splice(4,localSpaces.length-5)
+        }
+        commit('set_local_spaces',localSpaces)
       }
 
     }

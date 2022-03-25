@@ -1,7 +1,6 @@
 const { db } = require('../../js/util/database')
 const { api } = require('../../server-config')
 const standAloneAppModel = require('../util/model/standAloneAppModel.js')
-const spaceModel = require('../../src/model/spaceModel')
 
 const sidebarTpl = `
   <div id="sidebar" class="side-container">
@@ -309,7 +308,7 @@ const sidebarTpl = `
 
        <div >
 
-        <a-dropdown :trigger="['click']">
+        <a-dropdown :trigger="['click']" @visible-change="()=>{this.$store.dispatch('getLocalSpaces')}" placement="topRight">
       <template #overlay>
         <a-menu>
          <a-menu-item  disabled="" key="current">
@@ -320,11 +319,11 @@ const sidebarTpl = `
             <a-tag color="#108ee9">云端</a-tag>{{space.name}}
           </a-menu-item>
          <a-menu-divider></a-menu-divider>
-          <a-menu-item key="local">
-           <a-tag>本地</a-tag> 临时空间
+          <a-menu-item v-for="space in localSpaces" :key="'local_'+space.id">
+           <a-tag>本地</a-tag> {{space.name}}
           </a-menu-item>
            <a-menu-divider></a-menu-divider>
-            <a-menu-item key="other" @click="openUserWindow">
+            <a-menu-item key="add" @click="openUserWindow">
             <a-icon type="plus" ></a-icon> 创建新空间
           </a-menu-item>
           <a-menu-item key="other" @click="openUserWindow">
@@ -449,6 +448,7 @@ const sidebarTpl = `
 Vue.component('sidebar', {
   data: function () {
     return {
+      localSpaces:[],
       currentSpace:{
         space:{
           name:''
@@ -590,7 +590,9 @@ Vue.component('sidebar', {
 
     await this.$store.dispatch('getAllMessage')
     await this.$store.dispatch('getMySpaces')
+    await this.$store.dispatch('getLocalSpaces')
     this.spaces = this.$store.state.spaces
+    this.localSpaces=this.$store.state.localSpaces
   },
   computed: {
     user () {

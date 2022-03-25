@@ -2,7 +2,7 @@
 if (window) {
   ldb = window.ldb
 }
-
+const localSpaceModel=require('./localSpaceModel')
 
 const spaceModel = {
   type: 'local',
@@ -72,6 +72,9 @@ const spaceModel = {
 
 
 
+  },
+  async getLocalSpaces(){
+    return localSpaceModel.getAll()
   }
 
 }
