@@ -85,7 +85,6 @@ const UsersSelect = {
   async mounted () {
     this.users = await userModel.getAll()
     this.loaded = true
-    console.log(this.users)
   },
   methods: {
     goAddAccount () {

@@ -1,4 +1,6 @@
-let ldb
+if(window){
+  ldb=window.ldb
+}
 const localAdapter={
   name:'localAdapter',
   oldSavePath: window.globalArgs['user-data-path'] + (platformType === 'windows' ? '\\sessionRestore.json' : '/sessionRestore.json'),
@@ -6,9 +8,7 @@ const localAdapter={
   adapter:null,
 
   save(spaceId,saveData){
-    if(window){
-      ldb=window.ldb
-    }
+    ldb.reload()
     let space= ldb.db.get('spaces').find({id:spaceId}).value()
     if(space){
       saveData.update_time=Date.now()
@@ -29,9 +29,7 @@ const localAdapter={
 
   },
   restore(spaceId){
-    if(window){
-      ldb=window.ldb
-    }
+    ldb.reload()
     var savedStringData
     try {
       let space=ldb.db.get('spaces').find({id:spaceId}).value()

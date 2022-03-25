@@ -48,11 +48,11 @@ const tpl = `
     </div>
   </div>
 
-  <div style="position: absolute;bottom: 10px;width: 100%;padding: 10px">
-   <div style="float: left;margin-left: 20px"><a-button size="small" shape="round">隐私空间</a-button></div>
-   <div style="float:right;width: 200px;">
-   <a-button style="margin-right: 10px">设置密码</a-button>
-   <a-button @click="deleteAccount(user.uid)">解绑账号</a-button>
+  <div style="position: absolute;bottom: 10px;width: 100%;padding: 30px;padding-bottom: 15px">
+   <div style="float: left;"><a-button size="small" shape="round">隐私空间</a-button></div>
+   <div style="float:right;width: 200px;text-align: right">
+   <a-button v-if="user.uid!==0" style="margin-right: 10px">设置密码</a-button>
+   <a-button v-if="user.uid!==0" @click="deleteAccount(user.uid)">解绑账号</a-button>
 </div>
   </div>
 
@@ -78,6 +78,7 @@ const SpaceSelect = {
   data () {
     return {
       user: {
+        uid:0,
         spaces: []
       },
       pwd: '',
@@ -86,12 +87,12 @@ const SpaceSelect = {
     }
   },
   async mounted () {
-    console.log(this.$route.params.uid)
     if(!Number(this.$route.params.uid)){
       let user={
         nickname:'本机空间',
         avatar:'../../icons/logo128.png',
-        spaces:[]
+        spaces:[],
+        uid:0
       }
       this.user=user
       let spaces= spaceModel.getUserSpaces(0)
@@ -123,23 +124,34 @@ const SpaceSelect = {
     },
     async doCreateSpace(){
       try{
-        let result=await userApi.addSpace(this.newSpaceName,this.user)
-        if(result.code===1000){
+        let result= await  spaceModel.setUser(this.user).addSpace({name:this.newSpaceName})
+        if(result.status===1){
           this.newSpaceName=''
           window.antd.message.success('创建空间成功。')
           this.user.spaces.push(result.data)
           this.visibleCreate=false
         }else{
-          window.antd.message.error('空间名称长度在1-10个汉字，请重新输入。')
+          window.antd.message.error('空间名称长度在1-10个汉字，请重新输入。')//获取真实的错误信息
           this.$refs.spaceNameInput.input.select()
         }
+
+        //let result=await userApi.addSpace(this.newSpaceName,this.user)
+        // if(result.code===1000){
+        //   this.newSpaceName=''
+        //   window.antd.message.success('创建空间成功。')
+        //   this.user.spaces.push(result.data)
+        //   this.visibleCreate=false
+        // }else{
+        //   window.antd.message.error('空间名称长度在1-10个汉字，请重新输入。')
+        //   this.$refs.spaceNameInput.input.select()
+        // }
       }catch (e){
-        window.antd.message.error('创建空间失败，失败原因：网络请求失败。')
+        window.antd.message.error('创建空间失败，失败原因：')
+        console.log(e)
       }
     },
     showCreateSpace(){
       this.visibleCreate=true
-      console.log(this.$refs)
       setTimeout(()=>{
         this.$refs.spaceNameInput.input.focus()
       },200)

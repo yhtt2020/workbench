@@ -1,18 +1,33 @@
 let ldb
 const spaceModel = {
-  getUserSpaces(uid){
-    if (window) {
-      ldb = window.ldb
+  type: 'local',
+  user: {
+    uid: 0
+  },
+  adapterModel: require('./localSpaceModel'),
+  setUser (user) {
+    spaceModel.user = user
+    if (user.uid === 0) {
+      spaceModel.setAdapter('local')
+    } else {
+      spaceModel.setAdapter('cloud')
     }
-    if(uid===0){
-      //本机
-      return ldb.db.get('spaces').value()
+    return spaceModel
+  },
+  setAdapter (type = 'local') {
+    if (type !== 'local') {
+      spaceModel.type = 'cloud'
+      spaceModel.adapterModel = require('./clouldSpaceModel')
     }
+    return spaceModel
   },
 
+  getUserSpaces (uid = 0) {
+    return spaceModel.adapterModel.getUserSpaces(uid)
+  },
 
   /**
-   * 获取当前数据库
+   * 获取当前空间
    */
   getCurrent () {
     if (window) {
@@ -27,40 +42,27 @@ const spaceModel = {
       }
       ldb.db.set('currentSpace', currentSpace).write()
     }
-    let space
-    spaceModel.getSpace(currentSpace.spaceId, currentSpace.spaceType).then((result) => {
-      space = result
-    })
+    let space = spaceModel.setAdapter(currentSpace.spaceType).getSpace(currentSpace.spaceId)
     if (!space) {
       space = {
         name: '临时空间'
       }
     }
-
     currentSpace.space = space
     return currentSpace
   },
-  async getSpace (id, type = 'local') {
-    if (type === 'local') {
-      return new Promise((resolve) => {
-        resolve(spaceModel.getLocalSpace(id))
-      })
-    } else {
-      return await spaceModel.getCloudSpace(id)
-    }
+  async getSpace (id) {
+    return spaceModel.adapterModel.getSpace(id)
   },
+
+  async addSpace (space) {
+    return spaceModel.adapterModel.addSpace(space, spaceModel.user)
+  },
+
   getCloudSpace (nanoid) {
     return {}
   },
-  getLocalSpace (id) {
-    ldb.reload()
-    let space = ldb.db.get('spaces').find({ id: id }).value()
-    if (space) {
-      return space
-    } else {
-      return null
-    }
-  }
+
 }
 
 module.exports = spaceModel
