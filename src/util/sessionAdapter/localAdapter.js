@@ -1,7 +1,7 @@
 let ldb
 const localAdapter={
   name:'localAdapter',
-  // savePath: window.globalArgs['user-data-path'] + (platformType === 'windows' ? '\\sessionRestore.json' : '/sessionRestore.json'),
+  oldSavePath: window.globalArgs['user-data-path'] + (platformType === 'windows' ? '\\sessionRestore.json' : '/sessionRestore.json'),
   previousState: null,
   adapter:null,
 
@@ -35,7 +35,15 @@ const localAdapter={
     var savedStringData
     try {
       let space=ldb.db.get('spaces').find({id:spaceId}).value()
-      savedStringData=JSON.stringify(space.data)
+      if(!!!space){
+        let savedJson=fs.readFileSync(localAdapter.oldSavePath, 'utf-8')
+        if(savedJson){
+          savedStringData=savedJson
+        }
+      }else{
+        savedStringData=JSON.stringify(space.data)
+      }
+
       //savedStringData = fs.readFileSync(sessionRestore.savePath, 'utf-8')
     } catch (e) {
       console.warn('无法载入空间，空间数据损毁',e)
