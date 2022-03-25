@@ -40,3 +40,13 @@
     background: #f6f6f6;
   }
 }
+
+.online{
+  cursor: pointer;
+  transition: 0.2s;
+  animation: rotate 4s linear infinite;  /*开始动画后无限循环，用来控制rotate*/
+}
+.offline{
+  cursor: pointer;
+  filter: grayscale(1);
+}
