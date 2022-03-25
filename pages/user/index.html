@@ -32,6 +32,10 @@
 <script>
 
   window.ipc = require('electron').ipcRenderer
+  window.ldb=require('../../src/util/ldb')
+  tools=require('../util/util').tools
+  tools.getWindowArgs(window)
+  ldb.loadInWindow()
   // 不需要
   const app = Vue.createApp({
     async mounted () {

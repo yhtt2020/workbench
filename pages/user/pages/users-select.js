@@ -19,7 +19,7 @@ const tpl = `
               </a-col>
               <a-col class="user-info" :span="16">
                 <div>{{user.nickname}}</div>
-                <p class="info-p">{{user.spaces.length}} 空间</p>
+                <p class="info-p">{{user.spaces.length}} 云空间</p>
               </a-col>
             </a-row>
             <template #overlay>
@@ -29,14 +29,14 @@ const tpl = `
     </template>
   </a-dropdown>
           </a-col>
-          <a-col :span="12">
+          <a-col @click="enterAccount({uid:0})" :span="12">
             <a-row class="user-card">
               <a-col class="avatar-wrapper" :span="8" style="text-align: right">
                 <a-avatar :size="60" src="../../icons/logo128.png"></a-avatar>
               </a-col>
               <a-col class="user-info" :span="16" >
-                <div><strong>访客</strong></div>
-                <p class="info-p"> 本地空间</p>
+                <div><strong>本机空间</strong></div>
+                <p class="info-p"> 存储在电脑上的空间</p>
               </a-col>
             </a-row>
           </a-col>

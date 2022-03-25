@@ -7,9 +7,15 @@ const tables= {
     spaceType:'local'
   }
 }
+
 let ldb = {
   db: null,//db实例，为了方便使用，去掉了Instance单词，简化成了db
   dbPath:'',
+  loadInWindow(){
+    if(window){
+      ldb.load(window.globalArgs['user-data-path']+'/ldb.json')
+    }
+  },
   load (dbPath){
     ldb.dbPath=dbPath
     const adapter=new FileSync(ldb.dbPath)

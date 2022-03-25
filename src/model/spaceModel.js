@@ -1,5 +1,16 @@
 let ldb
 const spaceModel = {
+  getUserSpaces(uid){
+    if (window) {
+      ldb = window.ldb
+    }
+    if(uid===0){
+      //本机
+      return ldb.db.get('spaces').value()
+    }
+  },
+
+
   /**
    * 获取当前数据库
    */

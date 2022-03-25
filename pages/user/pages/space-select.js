@@ -1,5 +1,6 @@
 const userModel = require('../../../src/model/userModel')
 const userApi = require('../../util/api/userApi')
+const spaceModel = require('../../../src/model/spaceModel')
 const tpl = `
 <div>
   <div style="text-align: center">
@@ -85,6 +86,20 @@ const SpaceSelect = {
     }
   },
   async mounted () {
+    console.log(this.$route.params.uid)
+    if(!Number(this.$route.params.uid)){
+      let user={
+        nickname:'本机空间',
+        avatar:'../../icons/logo128.png',
+        spaces:[]
+      }
+      this.user=user
+      let spaces= spaceModel.getUserSpaces(0)
+      this.user.spaces=spaces
+      return
+    }
+
+
     let user = await userModel.get({ id: this.$route.params.uid })
     if (user) {
       try{
