@@ -54,10 +54,12 @@ const localSpaceModel={
   },
 
   changeCurrent(space){
-    ldb.reload()
-    let currentSpace=ldb.db.get('currentSpace').value()
-    console.log(space)
-    ldb.db.set('currentSpace.spaceId',space.id).write()
+    // ldb.reload()
+    //
+    // let currentSpace=ldb.db.get('currentSpace').value()
+    // console.log(space)
+    // ldb.db.set('currentSpace.spaceId',space.id).write()
+    ipc.send('changeSpace',{spaceId:space.id,spaceType:'local'})
   },
   getAll(){
     ldb.reload()

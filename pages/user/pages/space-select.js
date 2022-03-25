@@ -184,10 +184,8 @@ const SpaceSelect = {
         onOk: async() => {
 
 
-          await ipc.invoke('closeMainWindow')
             spaceModel.setAdapter(this.user.uid?'cloud':'local').changeCurrent(space)
 
-          await ipc.invoke('loadMainWindow')
         }
       })
     }

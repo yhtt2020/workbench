@@ -935,13 +935,17 @@ app.whenReady().then(()=>{
     userWindow=null
   })
 
-  ipc.handle('closeMainWindow',()=>{
+
+  ipc.on('changeSpace',(event,args)=>{
     mainWindow.close()
+    const ldb=require(__dirname+'/src/util/ldb.js')
+    ldb.load(app.getPath('userData')+'/ldb.json')
+    ldb.db.set('currentSpace.spaceId',args.spaceId).write()
+    ldb.db.set('currentSpace.spaceType',args.spaceType).write()
+    createWindow()
+
   })
 
-  ipc.handle('loadMainWindow',()=>{
-    createWindow()
-  })
 
   ipc.on('login',()=>{
     if(loginWindow){

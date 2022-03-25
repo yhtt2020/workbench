@@ -319,13 +319,14 @@ const sidebarTpl = `
             <a-tag color="#108ee9">云端</a-tag>{{space.name}}
           </a-menu-item>
          <a-menu-divider></a-menu-divider>
-          <a-menu-item v-for="space in localSpaces" :key="'local_'+space.id">
-           <a-tag>本地</a-tag> {{space.name}}
+          <a-menu-item @click="confirmChangeSpace(space.id,'local')"  v-for="space in localSpaces" :key="'local_'+space.id">
+
+ <a-tag>本地</a-tag> {{space.name}}
           </a-menu-item>
            <a-menu-divider></a-menu-divider>
-            <a-menu-item key="add" @click="openUserWindow">
-            <a-icon type="plus" ></a-icon> 创建新空间
-          </a-menu-item>
+<!--            <a-menu-item key="add" @click="openUserWindow">-->
+<!--            <a-icon type="plus" ></a-icon> 创建新空间-->
+<!--          </a-menu-item>-->
           <a-menu-item key="other" @click="openUserWindow">
             <a-icon type="swap" ></a-icon> 选择其他空间
           </a-menu-item>
@@ -631,6 +632,21 @@ Vue.component('sidebar', {
   },
   template: sidebarTpl,
   methods: {
+    confirmChangeSpace(id,type){
+      antd.Modal.confirm({
+        title: '确认',
+        content: '是否更改当前空间，更改空间将重载浏览器，可能导致您网页上未保存的内容丢失，请确认已经保存全部内容。',
+        centered: true,
+        okText: '我已保存，切换空间',
+        cancelText: '取消',
+        onOk: () => {
+          this.changeSpace(id,type)
+          }
+      })
+    },
+    changeSpace(id,type){
+      ipc.send('changeSpace',{spaceId:id,spaceType:type})
+    },
     openUserWindow () {
       ipc.send('showUserWindow')
     },
