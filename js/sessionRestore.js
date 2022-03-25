@@ -171,11 +171,13 @@ const sessionRestore = {
     }
   },
   initialize: function () {
-    let currentSpace=spaceModel.getCurrent()
+    let currentSpace
+    currentSpace= spaceModel.getCurrent()
     sessionRestore.currentSpace=currentSpace
     if(currentSpace.spaceType==='local'){
       sessionRestore.adapter=localAdapter
     }else{
+      console.log('未判断中',currentSpace)
       //sessionRestore.adapter=
       //todo 网络版本
     }

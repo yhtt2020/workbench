@@ -85,6 +85,9 @@ window.onload = function() {
 
 	Vue.prototype.$window = window
 	Vue.use(Vuex)
+
+  window.ldb=require('../../src/util/ldb')
+  ldb.load(window.globalArgs['user-data-path']+'/ldb.json')
 	const store = new Vuex.Store({
 		state: {
 			pinItems: null, //置顶区域的items，横线上方部分

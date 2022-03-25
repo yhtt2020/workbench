@@ -1,6 +1,7 @@
 const { db } = require('../../js/util/database')
 const { api } = require('../../server-config')
 const standAloneAppModel = require('../util/model/standAloneAppModel.js')
+const spaceModel = require('../../src/model/spaceModel')
 
 const sidebarTpl = `
   <div id="sidebar" class="side-container">
@@ -312,7 +313,7 @@ const sidebarTpl = `
       <template #overlay>
         <a-menu>
          <a-menu-item  disabled="" key="current">
-            当前：工作空间
+            当前：{{currentSpace.space.name}}
           </a-menu-item>
              <a-menu-divider></a-menu-divider>
          <a-menu-item v-for="space in spaces" :key="space.nanoid">
@@ -345,7 +346,7 @@ const sidebarTpl = `
        <a-col flex="1">
 
       <div class="space-name"  style="" type="primary">
-        工作空间
+        {{currentSpace.space.name}}
         <a-icon type="down" />
       </div>
    </a-col></a-row>  </a-dropdown></div>
@@ -448,6 +449,11 @@ const sidebarTpl = `
 Vue.component('sidebar', {
   data: function () {
     return {
+      currentSpace:{
+        space:{
+          name:''
+        }
+      },//'当前空间'
       messageShow: false,
       resize: false,
       startY: 0,
@@ -521,6 +527,7 @@ Vue.component('sidebar', {
 
   },
   async mounted () {
+    this.currentSpace=await spaceModel.getCurrent()
     await standAloneAppModel.initialize()
     this.apps = await standAloneAppModel.getAllApps()
     ipc.send('getRunningApps')
