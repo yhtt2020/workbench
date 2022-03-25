@@ -154,7 +154,7 @@ window.addEventListener('load', function() {
 	}, true)
 })
 
-
+window.ldb=require('../src/util/ldb').load(window.globalArgs['user-data-path']+'/ldb.json')
 
 require('tabState.js').initialize()
 require('windowControls.js').initialize()

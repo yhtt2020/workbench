@@ -1,18 +1,24 @@
-var browserUI = require('browserUI.js')
-var webviews = require('webviews.js')
-var tabEditor = require('navbar/tabEditor.js')
-var tabState = require('tabState.js')
-
+const browserUI = require('browserUI.js')
+const tabEditor = require('navbar/tabEditor.js')
+const tabState = require('tabState.js')
+const localAdapter=require('../src/util/sessionAdapter/localAdapter')
+const spaceModel=require('../src/model/spaceModel')
 const sessionRestore = {
-  savePath: window.globalArgs['user-data-path'] + (platformType === 'windows' ? '\\sessionRestore.json' : '/sessionRestore.json'),
-  previousState: null,
-  save: function (forceSave, sync) {
+  adapter:{},
+  currentSpace:{},
+  save: function (forceSave=true, sync=true) {
     var stateString = JSON.stringify(tasks.getStringifyableState())
     var data = {
       version: 2,
       state: JSON.parse(stateString),
       saveTime: Date.now()
     }
+    let count_task=data.state.tasks.length
+    let count_tab=0
+    data.state.tasks.forEach(task=>{
+      count_tab+=task.tabs.length
+    })
+
 
     // save all tabs that aren't private
 
@@ -21,40 +27,34 @@ const sessionRestore = {
         return !tab.private
       })
     }
+    let saveData={
+      count_task:count_task,
+      count_tab:count_tab,
+      data:data
+    }
 
     if (forceSave === true || stateString !== sessionRestore.previousState) {
+
       if (sync === true) {
-        fs.writeFileSync(sessionRestore.savePath, JSON.stringify(data))
+       sessionRestore.adapter.save(sessionRestore.currentSpace.spaceId, saveData)
+        // fs.writeFileSync(sessionRestore.savePath, JSON.stringify(data))
       } else {
-        fs.writeFile(sessionRestore.savePath, JSON.stringify(data), function (err) {
-          if (err) {
-            console.warn(err)
-          }
-        })
+        sessionRestore.adapter.save(sessionRestore.currentSpace.spaceId, saveData)
+        // fs.writeFile(sessionRestore.savePath, JSON.stringify(data), function (err) {
+        //   if (err) {
+        //     console.warn(err)
+        //   }
+        // })
       }
       sessionRestore.previousState = stateString
     }
   },
   restore: function () {
-    var savedStringData
-    try {
-      savedStringData = fs.readFileSync(sessionRestore.savePath, 'utf-8')
-    } catch (e) {
-      console.warn('failed to read session restore data', e)
-    }
-
-    /*
-    Disabled - show a user survey on startup
-    // the survey should only be shown after an upgrade from an earlier version
-    var shouldShowSurvey = false
-    if (savedStringData && !localStorage.getItem('1.15survey')) {
-      shouldShowSurvey = true
-    }
-    localStorage.setItem('1.15survey', 'true')
-    */
+    var savedStringData=   sessionRestore.adapter.restore(sessionRestore.currentSpace.spaceId)
 
     try {
       // first run, show the tour
+      //首次运行，显示官方网站
       if (!savedStringData) {
         tasks.setSelected(tasks.add()) // create a new task
 
@@ -94,7 +94,7 @@ const sessionRestore = {
 
       // switch to the previously selected tasks
 
-      if (tasks.getSelected().tabs.isEmpty() || (!data.saveTime || Date.now() - data.saveTime < 30000)) {
+      if (tasks.getSelected().tabs.isEmpty() || (!data.saveTime || Date.now() - data.saveTime < 5000)) {
         //如果当前选中的任务为空，或（没保存或者保存间隔小于30秒）
         browserUI.switchToTask(data.state.selectedTask)
         if (tasks.getSelected().tabs.isEmpty()) {
@@ -114,7 +114,7 @@ const sessionRestore = {
         //   browserUI.switchToTask(lastTask.id)
         //   tabEditor.show(lastTask.tabs.getSelected())
         // } else {
-            //基本判定是此任务不为空
+        //基本判定是此任务不为空
         //   console.log('failed')
         //   console.log('lasttask=↓')
         //   console.log(lastTask)
@@ -147,9 +147,11 @@ const sessionRestore = {
       }
       */
     } catch (e) {
-      // an error occured while restoring the session data
+      //基本上走不到这里。
 
-      console.error('restoring session failed: ', e)
+      // an error occured while restoring the session data
+      console.error('还原空间数据失败: ', e)
+      //console.error('restoring session failed: ', e)
 
       var backupSavePath = require('path').join(window.globalArgs['user-data-path'], 'sessionRestoreBackup-' + Date.now() + '.json')
 
@@ -169,7 +171,43 @@ const sessionRestore = {
     }
   },
   initialize: function () {
-    setInterval(sessionRestore.save, 30000)
+    let currentSpace=spaceModel.getCurrent()
+    sessionRestore.currentSpace=currentSpace
+    if(currentSpace.spaceType==='local'){
+      sessionRestore.adapter=localAdapter
+    }else{
+      //sessionRestore.adapter=
+      //todo 网络版本
+    }
+    //todo 获取当前的用户，判断如果未登录，则尝试从本地寻找适配器读入空间。
+      /*
+      id: 20
+name: "currentUser"
+value:
+avatar: "https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/base64_upload_536121645792907?upload_type/Tencent_COS"
+code: "13ca7dd95be7caaa8d3b8597d6b6329b"
+expire_deadtime: 1648716570936
+fans: 0
+follow: 0
+grade: {grade: 0}
+nickname: "想天浏览器"
+postCount: 0
+refreshExpire_deadtime: 1650617370936
+refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc1JlZnJlc2giOnRydWUsImNvZGUiOiIxM2NhN2RkOTViZTdjYWFhOGQzYjg1OTdkNmI2MzI5YiIsInVpZCI6NCwiaWF0IjoxNjQ4MTExNzcwLCJleHAiOjE2NTA2MTczNzB9.W5oAT7ESdpOawXdqVDWti8SzBowYmqxrMxyCv2BhHIs"
+token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc1JlZnJlc2giOmZhbHNlLCJjb2RlIjoiMTNjYTdkZDk1YmU3Y2FhYThkM2I4NTk3ZDZiNjMyOWIiLCJ1aWQiOjQsImlhdCI6MTY0ODExMTc3MCwiZXhwIjoxNjQ4NzE2NTcwfQ.oWjgNkRD6eaw3dFxJidL2fMlwVI1jlK-g_-WQ87AdJI"
+uid: 4
+
+
+
+id: 20
+name: "currentUser"
+value:
+avatar: "../../icons/browser.ico"
+nickname: "立即登录"
+uid: 0
+       */
+
+    setInterval(sessionRestore.save, 5000)
 
     window.onbeforeunload = function (e) {
       sessionRestore.save(true, true)
