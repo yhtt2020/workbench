@@ -1,4 +1,9 @@
-let ldb
+
+if (window) {
+  ldb = window.ldb
+}
+
+
 const spaceModel = {
   type: 'local',
   user: {
@@ -29,10 +34,7 @@ const spaceModel = {
   /**
    * 获取当前空间
    */
-  getCurrent () {
-    if (window) {
-      ldb = window.ldb
-    }
+  async getCurrent () {
     ldb.reload()
     let currentSpace = ldb.db.get('currentSpace').value()
     if (!currentSpace) {
@@ -42,7 +44,7 @@ const spaceModel = {
       }
       ldb.db.set('currentSpace', currentSpace).write()
     }
-    let space = spaceModel.setAdapter(currentSpace.spaceType).getSpace(currentSpace.spaceId)
+    let space =await spaceModel.setAdapter(currentSpace.spaceType).getSpace(currentSpace.spaceId)
     if (!space) {
       space = {
         name: '临时空间'
@@ -62,6 +64,15 @@ const spaceModel = {
   getCloudSpace (nanoid) {
     return {}
   },
+
+  async changeCurrent(space){
+    //关闭mainWindow（自动会保存）
+    await spaceModel.adapterModel.changeCurrent(space)
+    //设置数据库中的当前空间
+
+
+
+  }
 
 }
 

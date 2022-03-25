@@ -26,12 +26,21 @@ const localSpaceModel={
      */
     let spaceAdd={
       name:space.name,
-      data:[],
-      count_task:0,
-      count_tab:0,
+      data:{
+        "version": 2,
+        "state": {
+          "tasks": [
+          ],
+          "selectedTask": ""
+        },
+        "saveTime": Date.now()
+      },
+      count_task:1,
+      count_tab:1,
       create_time:Date.now(),
       update_time:Date.now(),
-      uid:0
+      uid:0,
+      id:Date.now()
     }
     ldb.db.get('spaces').push(spaceAdd).write()
     return standReturn.success(spaceAdd)
@@ -42,6 +51,13 @@ const localSpaceModel={
     if(!uid){
       return  ldb.db.get('spaces').value()
     }
+  },
+
+  changeCurrent(space){
+    ldb.reload()
+    let currentSpace=ldb.db.get('currentSpace').value()
+    console.log(space)
+    ldb.db.set('currentSpace.spaceId',space.id).write()
   }
 }
 

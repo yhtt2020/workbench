@@ -20,7 +20,7 @@ const tpl = `
   <div style="text-align: center">
     <!--      <a-empty text="无空间" v-if="user.spaces.length===0"></a-empty>-->
     <div style="text-align: left;overflow-y: auto;max-height: 310px;margin-right: 20px;padding-top: 10px;padding-left: 40px;padding-bottom: 10px" class="scroller">
-      <a-card :style="{'margin-right':index%2===1?'0':'10px'}" v-for="space,index in user.spaces" hoverable style="margin-left:20px;width: 250px;display: inline-block;margin-bottom: 10px;">
+      <a-card @click="switchSpace(space)" :style="{'margin-right':index%2===1?'0':'10px'}" v-for="space,index in user.spaces" hoverable style="margin-left:20px;width: 250px;display: inline-block;margin-bottom: 10px;">
         <a-card-meta :title="space.name" :description="space.count_task+ ' 标签组  '+ space.count_tab+' 标签'">
           <template #avatar>
            <svg :class="{'offline':this.user.uid===0?true:false}" t="1648106444295" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="32437" width="32" height="32"><path d="M512 938.666667C276.352 938.666667 85.333333 747.648 85.333333 512S276.352 85.333333 512 85.333333s426.666667 191.018667 426.666667 426.666667-191.018667 426.666667-426.666667 426.666667z m205.653333-210.090667A298.666667 298.666667 0 0 0 385.365333 241.408l41.6 74.88A213.333333 213.333333 0 0 1 725.333333 512h-91.733333a21.333333 21.333333 0 0 0-18.645333 31.701333l102.698666 184.874667z m-120.618666-20.864A213.333333 213.333333 0 0 1 298.666667 512h91.733333a21.333333 21.333333 0 0 0 18.645333-31.701333L306.346667 295.424a298.666667 298.666667 0 0 0 332.288 487.168l-41.6-74.88z" fill="#14D081" p-id="32438"></path></svg>
@@ -73,6 +73,7 @@ const tpl = `
 </div>
 `
 // const userModel = require('../../util/model/userModel')
+const ipc=require('electron').ipcRenderer
 const SpaceSelect = {
   template: tpl,
   data () {
@@ -173,6 +174,23 @@ const SpaceSelect = {
         }
       })
     },
+    async switchSpace(space){
+      antd.Modal.confirm({
+        title: '确认',
+        content: '是否更改当前空间，更改空间将重载浏览器，可能导致您网页上未保存的内容丢失，请确认已经保存全部内容。',
+        centered: true,
+        okText: '我已保存，切换空间',
+        cancelText: '取消',
+        onOk: async() => {
+
+
+          await ipc.invoke('closeMainWindow')
+            spaceModel.setAdapter(this.user.uid?'cloud':'local').changeCurrent(space)
+
+          await ipc.invoke('loadMainWindow')
+        }
+      })
+    }
   }
 }
 

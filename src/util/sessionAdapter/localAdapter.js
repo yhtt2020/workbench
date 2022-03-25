@@ -9,6 +9,7 @@ const localAdapter={
 
   save(spaceId,saveData){
     ldb.reload()
+    console.log(spaceId)
     let space= ldb.db.get('spaces').find({id:spaceId}).value()
     if(space){
       saveData.update_time=Date.now()
@@ -17,7 +18,7 @@ const localAdapter={
       let space={
         id:spaceId,
         data:saveData.data,
-        name:'临时空间',
+        name:'本机空间',
         count_task:saveData.count_task,
         count_tab:saveData.count_tab,
         create_time:Date.now(),
@@ -38,6 +39,7 @@ const localAdapter={
         if(savedJson){
           savedStringData=savedJson
         }
+        fs.renameSync(localAdapter.oldSavePath,localAdapter.oldSavePath+'.bak')
       }else{
         savedStringData=JSON.stringify(space.data)
       }
@@ -49,6 +51,7 @@ const localAdapter={
       //console.warn('failed to read session restore data', e)
     }
 
+    console.log(savedStringData)
     return savedStringData
 
     /*

@@ -170,10 +170,10 @@ const sessionRestore = {
       browserUI.switchToTab(newSessionErrorTab)
     }
   },
-  initialize: function () {
-    let currentSpace
-    currentSpace= spaceModel.getCurrent()
+  initialize:async function () {
+    let currentSpace= await spaceModel.getCurrent()
     sessionRestore.currentSpace=currentSpace
+    console.log(currentSpace,currentSpace.spaceType)
     if(currentSpace.spaceType==='local'){
       sessionRestore.adapter=localAdapter
     }else{
@@ -181,6 +181,7 @@ const sessionRestore = {
       //sessionRestore.adapter=
       //todo 网络版本
     }
+console.log(sessionRestore.adapter)
     //todo 获取当前的用户，判断如果未登录，则尝试从本地寻找适配器读入空间。
       /*
       id: 20

@@ -906,7 +906,6 @@ app.whenReady().then(()=>{
       userWindow=new BrowserWindow({
         backgroundColor:'#00000000',
         show:false,
-        parent:mainWindow,
         transparent: true,
         frame:false,
         resizable:false,
@@ -936,6 +935,13 @@ app.whenReady().then(()=>{
     userWindow=null
   })
 
+  ipc.handle('closeMainWindow',()=>{
+    mainWindow.close()
+  })
+
+  ipc.handle('loadMainWindow',()=>{
+    createWindow()
+  })
 
   ipc.on('login',()=>{
     if(loginWindow){
