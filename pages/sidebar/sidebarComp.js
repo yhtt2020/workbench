@@ -590,7 +590,12 @@ Vue.component('sidebar', {
     this.mod = sideMode
 
     await this.$store.dispatch('getAllMessage')
-    await this.$store.dispatch('getMySpaces')
+    try{
+      await this.$store.dispatch('getMySpaces')
+    }catch (e){
+      console.log('网络空间获取失败。')
+    }
+
     await this.$store.dispatch('getLocalSpaces')
     this.spaces = this.$store.state.spaces
     this.localSpaces=this.$store.state.localSpaces
