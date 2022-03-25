@@ -60,7 +60,7 @@ const tpl = `
 
 </div>
 `
-const userModel = require('../../util/model/userModel')
+const userModel = require('../../../src/model/userModel')
 const UsersSelect = {
   template: tpl,
   data () {

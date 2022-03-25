@@ -1,4 +1,4 @@
-const db = require('../../../js/util/database.js').db
+const db = require('../../js/util/database.js').db
 const userModel={
   async getAll(){
     let users=await db.accounts.toArray()
@@ -28,8 +28,6 @@ const userModel={
     let result=await db.accounts.delete(map)
     return result
   }
-
-
 }
 
 module.exports=userModel

@@ -1,4 +1,4 @@
-const userModel = require('../../util/model/userModel')
+const userModel = require('../../../src/model/userModel')
 const tpl = `
 <div>
  <h1 style="font-size: 18px;margin:auto;margin-top: 20px;margin-bottom:10px;text-align: center">

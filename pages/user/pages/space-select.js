@@ -1,4 +1,4 @@
-const userModel = require('../../util/model/userModel')
+const userModel = require('../../../src/model/userModel')
 const userApi = require('../../util/api/userApi')
 const tpl = `
 <div>
