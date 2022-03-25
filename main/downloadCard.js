@@ -20,7 +20,7 @@ function createDownloadWin () {
       show: false,
       acceptFirstMouse: true,
       maximizable: false,
-      alwaysOnTop: true,
+      alwaysOnTop: false,//调整窗口层级
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
@@ -61,7 +61,6 @@ app.whenReady().then(() => {
   ipc.on('openDownload', (event,args) => {
     getDownloadWindow()
     downloadWindow.show()
-
 
   })
 
