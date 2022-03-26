@@ -4,7 +4,9 @@ const url = {
   getUserInfo: '/app/getUserInfo',
   addSpace:'/app/addSpace',
   spaceListMy:'/app/spaceListMy',
-  change:'/app/changeSpace'
+  change:'/app/changeSpace',
+  save:'/app/saveSpace',
+  restore:'/app/getSpace'
 }
 
 const spaceApi = {
@@ -19,6 +21,14 @@ const spaceApi = {
   async change(nanoid,clientId,user){
     await baseApi.init(user)
     return baseApi.axios(url.change,{nanoid:nanoid,clientId:clientId,force:true},'post')
+  },
+  async save(nanoid, saveData,user){
+    await baseApi.init(user)
+    return baseApi.axios(url.save,{nanoid:nanoid,saveData:saveData},'post')
+  },
+  async restore(nanoid,user){
+    await baseApi.init(user)
+    return baseApi.axios(url.restore,{nanoid:nanoid},'post')
   }
 }
 

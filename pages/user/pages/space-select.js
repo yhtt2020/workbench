@@ -224,6 +224,7 @@ const SpaceSelect = {
     async doChangeSpaceCloud(space){
       try{
         let result=await spaceModel.setAdapter('cloud').changeCurrent(space)
+        console.log(result)
         if(result.status===1){
           window.antd.message.success('切换使用空间成功。')
           await this.loadSpaces()
@@ -231,7 +232,7 @@ const SpaceSelect = {
           window.antd.message.error('切换使用空间失败。')
         }
       }catch (e) {
-        window.antd.message.error('切换使用空间失败。')
+        window.antd.message.error('切换使用空间失败。意外错误。')
       }
 
     },

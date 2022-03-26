@@ -1,8 +1,7 @@
-
 if (window) {
   ldb = window.ldb
 }
-const localSpaceModel=require('./localSpaceModel')
+const localSpaceModel = require('./localSpaceModel')
 
 const spaceModel = {
   type: 'local',
@@ -11,7 +10,6 @@ const spaceModel = {
   },
   adapterModel: require('./localSpaceModel'),
   setUser (user) {
-    console.log(user)
     spaceModel.user = user
     if (user.uid === 0) {
       spaceModel.setAdapter('local')
@@ -23,15 +21,15 @@ const spaceModel = {
   setAdapter (type = 'local') {
     if (type !== 'local') {
       spaceModel.type = 'cloud'
-      spaceModel.adapterModel = require('./clouldSpaceModel')
-    }else{
+      spaceModel.adapterModel = require('./cloudSpaceModel')
+    } else {
       spaceModel.type = 'local'
       spaceModel.adapterModel = require('./localSpaceModel')
     }
     return spaceModel
   },
 
- async getUserSpaces () {
+  async getUserSpaces () {
     return await spaceModel.adapterModel.getUserSpaces(spaceModel.user)
   },
 
@@ -48,7 +46,15 @@ const spaceModel = {
       }
       ldb.db.set('currentSpace', currentSpace).write()
     }
-    let space =await spaceModel.setAdapter(currentSpace.spaceType).getSpace(currentSpace.spaceId)
+    let space = {}
+    if (currentSpace.spaceType === 'cloud') {
+      let result = await spaceModel.setAdapter(currentSpace.spaceType).getSpace(currentSpace.spaceId, currentSpace.userToken)
+      if (result.status === 1)
+        space = result.data
+    } else {
+      space = await spaceModel.setAdapter(currentSpace.spaceType).getSpace(currentSpace.spaceId)
+    }
+
     if (!space) {
       space = {
         name: '临时空间'
@@ -69,12 +75,12 @@ const spaceModel = {
     return {}
   },
 
-  async changeCurrent(space){
+  async changeCurrent (space) {
     //关闭mainWindow（自动会保存）
-    return  await spaceModel.adapterModel.changeCurrent(space,spaceModel.user)
+    return await spaceModel.adapterModel.changeCurrent(space, spaceModel.user)
     //设置数据库中的当前空间
   },
-  async getLocalSpaces(){
+  async getLocalSpaces () {
     return localSpaceModel.getAll()
   }
 

@@ -14,7 +14,6 @@ const standReturn={
     }
   },
   autoReturn(result){
-    console.log(result)
     if (result.code === 1000) {
       return standReturn.success(result.data)
     } else {

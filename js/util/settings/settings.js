@@ -42,7 +42,6 @@ var settings = {
         console.warn(e)
       }
     }
-    console.log(fileData)
     if (fileData) {
       settings.list = JSON.parse(fileData)
     }

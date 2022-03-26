@@ -59,7 +59,7 @@ const localSpaceModel={
 
   },
 
-  changeCurrent(space){
+  async changeCurrent(space){
     // ldb.reload()
     //
     // let currentSpace=ldb.db.get('currentSpace').value()

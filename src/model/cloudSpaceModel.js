@@ -14,13 +14,25 @@ const cloudSpaceModel={
    */
   async changeCurrent (space, user) {
     let result = await spaceApi.change(space.nanoid,user.clientId, user)
+    ipc.send('changeSpace',{spaceId:space.nanoid,spaceType:'cloud',userInfo:JSON.parse(JSON.stringify(user))})
     return standReturn.autoReturn(result)
-    //ipc.send('changeSpace',{spaceId:space.nanoid,spaceType:'cloud'})
 
+
+  },
+  async getSpace(spaceId,userToken){
+    return await cloudSpaceModel.restore (spaceId, userToken)
   },
   async getUserSpaces(user){
    let result= await spaceApi.getMySpaceList(user)
    return standReturn.autoReturn(result)
+  },
+  async save (spaceId, saveData, userInfo) {
+    let result = await spaceApi.save(spaceId, saveData,userInfo)
+    return standReturn.autoReturn(result)
+  },
+  async restore (spaceId, userInfo) {
+    let result = await spaceApi.restore(spaceId,userInfo)
+    return standReturn.autoReturn(result)
   }
 }
 

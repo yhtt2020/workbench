@@ -9,7 +9,6 @@ const localAdapter={
 
   save(spaceId,saveData){
     ldb.reload()
-    console.log(spaceId)
     let space= ldb.db.get('spaces').find({id:spaceId}).value()
     if(space){
       saveData.update_time=Date.now()
@@ -29,7 +28,7 @@ const localAdapter={
     }
 
   },
-  restore(spaceId){
+  async restore(spaceId){
     ldb.reload()
     var savedStringData
     try {
@@ -51,7 +50,6 @@ const localAdapter={
       //console.warn('failed to read session restore data', e)
     }
 
-    console.log(savedStringData)
     return savedStringData
 
     /*

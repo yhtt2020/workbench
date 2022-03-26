@@ -33,7 +33,6 @@ const baseApi = {
    * @returns Promise
    */
   axios: async (url, params, method = "post") => {
-    console.log(baseApi.token)
     let data = {};
     if (method === "get") data = { params };
     if (method === "post" || method === "put" || method === "delete")

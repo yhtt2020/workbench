@@ -2,6 +2,7 @@ const browserUI = require('browserUI.js')
 const tabEditor = require('navbar/tabEditor.js')
 const tabState = require('tabState.js')
 const localAdapter=require('../src/util/sessionAdapter/localAdapter')
+const cloudAdapter=require('../src/util/sessionAdapter/cloudAdapter')
 const spaceModel=require('../src/model/spaceModel')
 const sessionRestore = {
   adapter:{},
@@ -49,8 +50,8 @@ const sessionRestore = {
       sessionRestore.previousState = stateString
     }
   },
-  restore: function () {
-    var savedStringData=   sessionRestore.adapter.restore(sessionRestore.currentSpace.spaceId)
+   restore:async function () {
+    var savedStringData=  await sessionRestore.adapter.restore(sessionRestore.currentSpace.spaceId)
 
     try {
       // first run, show the tour
@@ -173,15 +174,12 @@ const sessionRestore = {
   initialize:async function () {
     let currentSpace= await spaceModel.getCurrent()
     sessionRestore.currentSpace=currentSpace
-    console.log(currentSpace,currentSpace.spaceType)
     if(currentSpace.spaceType==='local'){
       sessionRestore.adapter=localAdapter
     }else{
-      console.log('未判断中',currentSpace)
-      //sessionRestore.adapter=
+      sessionRestore.adapter=cloudAdapter
       //todo 网络版本
     }
-console.log(sessionRestore.adapter)
     //todo 获取当前的用户，判断如果未登录，则尝试从本地寻找适配器读入空间。
       /*
       id: 20
