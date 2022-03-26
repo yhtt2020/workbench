@@ -390,7 +390,7 @@ const sidebarTpl = `
         </li>
       </ul>
     </div>
-    <message-center :visible="messageShow" :mod="mod" @closeMessage="() => this.messageShow = !this.messageShow" @updateVisible="(val) => this.messageShow = val">
+    <message-center ref="messageRef" :visible="messageShow" :mod="mod" @closeMessage="() => this.messageShow = !this.messageShow" @updateVisible="(val) => this.messageShow = val">
     </message-center>
   </div>
 `
@@ -573,6 +573,13 @@ Vue.component('sidebar', {
 	methods: {
     visibleMessageCenter() {
       this.messageShow = !this.messageShow
+      if(this.$refs.messageRef.fixed) {
+        this.messageShow ? ipc.send('channelTemporaryAdjust', {
+          freeFixed: false
+        }) : ipc.send('channelTemporaryAdjust', {
+          freeFixed: true
+        })
+      }
     },
     openCircle(args) {
       this.userPanelVisible = false
