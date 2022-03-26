@@ -258,6 +258,7 @@ Vue.component("message-center", {
         let $style = document.getElementsByClassName("message-dialog")[0].style;
         $style.height = "100vh";
         $style.borderRadius = "0px";
+        $style.bottom = '0px'
         this.fixed = true;
         this.mod === 'open' ? $style.left = '145px' : $style.left = '45px'
         localStorage.setItem("isMessageFixed", true);
@@ -265,6 +266,7 @@ Vue.component("message-center", {
         let $style = document.getElementsByClassName("message-dialog")[0].style;
         $style.height = "600px";
         $style.borderRadius = "10px";
+        $style.bottom = '10px'
         this.mod === 'open' ? $style.left = '155px' : $style.left = '55px'
         this.fixed = false;
         localStorage.setItem("isMessageFixed", false);
@@ -282,17 +284,21 @@ Vue.component("message-center", {
     mod: {
       handler(val) {
         if (val === "auto" || val === "open") {
-          this.fixed ?
-          document.getElementsByClassName("message-dialog")[0].style.left =
-            "145px" :
-            document.getElementsByClassName("message-dialog")[0].style.left =
-            "155px"
+          if(this.fixed) {
+            document.getElementsByClassName("message-dialog")[0].style.left = "145px"
+            document.getElementsByClassName("message-dialog")[0].style.bottom = "0px"
+          } else {
+            document.getElementsByClassName("message-dialog")[0].style.left = "155px"
+            document.getElementsByClassName("message-dialog")[0].style.bottom = "10px"
+          }
         } else {
-          this.fixed ?
-          document.getElementsByClassName("message-dialog")[0].style.left =
-            "45px" :
-            document.getElementsByClassName("message-dialog")[0].style.left =
-            "55px"
+          if(this.fixed) {
+            document.getElementsByClassName("message-dialog")[0].style.left = "45px"
+            document.getElementsByClassName("message-dialog")[0].style.bottom = "0px"
+          } else {
+            document.getElementsByClassName("message-dialog")[0].style.left = "55px"
+            document.getElementsByClassName("message-dialog")[0].style.bottom = "10px"
+          }
         }
       },
       deep: true,
@@ -322,6 +328,7 @@ Vue.component("message-center", {
         $style.height = "100vh";
         $style.borderRadius = "0px";
         $style.left = '145px'
+        $style.bottom = '0px'
         document.getElementsByClassName("message-mask")[0].style.display = "none";
       } else {
         this.$emit("updateVisible", false);
@@ -329,6 +336,7 @@ Vue.component("message-center", {
         $style.height = "600px";
         $style.borderRadius = "10px";
         $style.left = '155px'
+        $style.bottom = '10px'
         document.getElementsByClassName("message-mask")[0].style.display =
           "block";
       }
@@ -339,6 +347,7 @@ Vue.component("message-center", {
         $style.height = "100vh";
         $style.borderRadius = "0px";
         $style.left = '45px'
+        $style.bottom = '0px'
         document.getElementsByClassName("message-mask")[0].style.display = "none";
       } else {
         this.$emit("updateVisible", false);
@@ -346,6 +355,7 @@ Vue.component("message-center", {
         $style.height = "600px";
         $style.borderRadius = "10px";
         $style.left = '55px'
+        $style.bottom = '10px'
         document.getElementsByClassName("message-mask")[0].style.display =
           "block";
       }
