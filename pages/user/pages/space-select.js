@@ -21,7 +21,12 @@ const tpl = `
     <!--      <a-empty text="无空间" v-if="spaces.length===0"></a-empty>-->
     <div style="text-align: left;overflow-y: auto;max-height: 310px;margin-right: 20px;padding-top: 10px;padding-left: 40px;padding-bottom: 10px" class="scroller">
       <a-card @click="switchSpace(space)" :style="{'margin-right':index%2===1?'0':'10px'}" v-for="space,index in spaces" hoverable style="margin-left:20px;width: 250px;display: inline-block;margin-bottom: 10px;">
-        <a-card-meta :title="space.name" :description="space.count_task+ ' 标签组  '+ space.count_tab+' 标签'">
+        <a-card-meta :title="space.name" >
+        <template #description>
+        <span style="font-size: 12px;color: red;position: absolute;right: 10px;top: 10px" v-if="space.isOtherUsing">其他设备正在使用中</span>
+        <span style="font-size: 12px;color: grey;position: absolute;right: 10px;top: 10px" v-if="space.isSelfUsing">当前使用空间</span>
+        {{space.count_task+ ' 标签组  '+ space.count_tab+' 标签'}}
+</template>
           <template #avatar>
            <svg :class="{'offline':this.user.uid===0?true:false}" t="1648106444295" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="32437" width="32" height="32"><path d="M512 938.666667C276.352 938.666667 85.333333 747.648 85.333333 512S276.352 85.333333 512 85.333333s426.666667 191.018667 426.666667 426.666667-191.018667 426.666667-426.666667 426.666667z m205.653333-210.090667A298.666667 298.666667 0 0 0 385.365333 241.408l41.6 74.88A213.333333 213.333333 0 0 1 725.333333 512h-91.733333a21.333333 21.333333 0 0 0-18.645333 31.701333l102.698666 184.874667z m-120.618666-20.864A213.333333 213.333333 0 0 1 298.666667 512h91.733333a21.333333 21.333333 0 0 0 18.645333-31.701333L306.346667 295.424a298.666667 298.666667 0 0 0 332.288 487.168l-41.6-74.88z" fill="#14D081" p-id="32438"></path></svg>
           </template>
@@ -80,12 +85,14 @@ const SpaceSelect = {
     return {
       user: {
         uid:0,
-        spaces: []
+        spaces: [],
+        clientId:''
       },
       spaces:[],
       pwd: '',
       visibleCreate:false,
-      newSpaceName:''
+      newSpaceName:'',
+      clientId:''
     }
   },
   async mounted () {
@@ -106,22 +113,10 @@ const SpaceSelect = {
       }else{
         window.antd.message.error('获取用户信息失败，登录信息过期或用户账号异常。')
       }
+
     }
-    let spaces=[]
-    //下面开始获取用户空间
-    try{
-      console.log(this.user)
-      let result= await spaceModel.setUser(this.user).getUserSpaces()
-      if(result.status===1){
-        spaces= result.data
-      }else{
-        window.antd.message.error('获取用户空间失败。失败原因：'+result.info)
-      }
-    }
-    catch (e) {
-      window.antd.message.error('获取用户空间失败，未知异常。')
-    }
-    this.spaces=spaces
+    this.user.clientId=userModel.getClientId()
+    await this.loadSpaces()
 
     //获取网络空间用户信息
 
@@ -146,6 +141,31 @@ const SpaceSelect = {
     // }
   },
   methods: {
+    async loadSpaces(){
+      let spaces=[]
+      //下面开始获取用户空间
+      try{
+        let result= await spaceModel.setUser(this.user).getUserSpaces()
+        if(result.status===1){
+          spaces= result.data
+          spaces.forEach(space=>{
+            if(space.client_id && space.client_id !==this.user.clientId){
+              space.isOtherUsing=true
+            }else if((space.client_id===this.user.clientId)){
+              space.isSelfUsing=true
+            }else{
+              space.isUsing=false
+            }
+          })
+        }else{
+          window.antd.message.error('获取用户空间失败。失败原因：'+result.info)
+        }
+      }
+      catch (e) {
+        window.antd.message.error('获取用户空间失败，未知异常。')
+      }
+      this.spaces=spaces
+    },
     goLogin () {
       ipc.send('login')
       //https://s.apps.vip/login?response_type=code&client_id=10001&state=1
@@ -201,6 +221,20 @@ const SpaceSelect = {
         }
       })
     },
+    async doChangeSpaceCloud(space){
+      try{
+        let result=await spaceModel.setAdapter('cloud').changeCurrent(space)
+        if(result.status===1){
+          window.antd.message.success('切换使用空间成功。')
+          await this.loadSpaces()
+        }else{
+          window.antd.message.error('切换使用空间失败。')
+        }
+      }catch (e) {
+        window.antd.message.error('切换使用空间失败。')
+      }
+
+    },
     async switchSpace(space){
       if(this.user.uid===0){
         antd.Modal.confirm({
@@ -210,20 +244,34 @@ const SpaceSelect = {
           okText: '我已保存，切换空间',
           cancelText: '取消',
           onOk: async() => {
-            spaceModel.setAdapter('local').changeCurrent(space)
+              spaceModel.setAdapter('local').changeCurrent(space)
           }
         })
       }else{
-        antd.Modal.confirm({
-          title: '切换到云端空间',
-          content: '是否切换到云端空间？切换到云端空间后会同时更换当前账号到此账号。请务必确认您网页上的内容已经保存。否则可能丢失未保存内容。',
-          centered: true,
-          okText: '我已保存，切换空间',
-          cancelText: '取消',
-          onOk: async() => {
-            spaceModel.setAdapter('cloud').changeCurrent(space)
-          }
-        })
+        if(space.isOtherUsing){
+          antd.Modal.confirm({
+            title: '此空间正忙',
+            content: '此空间正在被其他设备使用，如若切换到此空间，可能造成其他设备未同步的标签组丢失。是否仍然要强行切换？这将导致该设备上的浏览器强制下线。',
+            centered: true,
+            okText: '我已明确，切换空间',
+            cancelText: '取消',
+            onOk: async() => {
+             this.doChangeSpaceCloud(space)
+            }
+          })
+        }else{
+          antd.Modal.confirm({
+            title: '切换到云端空间',
+            content: '是否切换到云端空间？切换到云端空间后会同时更换当前账号到此账号。请务必确认您网页上的内容已经保存。否则可能丢失未保存内容。',
+            centered: true,
+            okText: '我已保存，切换空间',
+            cancelText: '取消',
+            onOk: async() => {
+              this.doChangeSpaceCloud(space)
+            }
+          })
+        }
+
       }
 
     }

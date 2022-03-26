@@ -24,6 +24,13 @@ const userModel={
     }
   },
 
+  getClientId(){
+    const settings=require('../../js/util/settings/settings.js')
+    console.log(window.globalArgs['user-data-path'] + (process.platform === 'win32' ? '\\' : '/') + 'settings.json')
+    console.log(settings.list)
+    return settings.get('clientID')
+  },
+
   async delete(map){
     let result=await db.accounts.delete(map)
     return result

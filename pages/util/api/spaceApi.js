@@ -16,9 +16,9 @@ const spaceApi = {
     await baseApi.init(user)
     return baseApi.axios(url.spaceListMy,{},'get')
   },
-  async change(nanoid,user){
-      await baseApi.init(user)
-    return baseApi.axios(url.change,{nanoid:nanoid},'post')
+  async change(nanoid,clientId,user){
+    await baseApi.init(user)
+    return baseApi.axios(url.change,{nanoid:nanoid,clientId:clientId,force:true},'post')
   }
 }
 

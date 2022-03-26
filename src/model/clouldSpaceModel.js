@@ -6,14 +6,15 @@ const cloudSpaceModel={
    let result= await spaceApi.addSpace(space.name,user)
    return standReturn.autoReturn(result)
   },
+  /**
+   * 修改当前的空间
+   * @param space
+   * @param user
+   * @returns {Promise<{data: *, status: number}|{data: *, status: number, info: *}>}
+   */
   async changeCurrent (space, user) {
-    let result = await spaceApi.change(space.uuid, user)
+    let result = await spaceApi.change(space.nanoid,user.clientId, user)
     return standReturn.autoReturn(result)
-    // ldb.reload()
-    //
-    // let currentSpace=ldb.db.get('currentSpace').value()
-    // console.log(space)
-    // ldb.db.set('currentSpace.spaceId',space.id).write()
     //ipc.send('changeSpace',{spaceId:space.nanoid,spaceType:'cloud'})
 
   },

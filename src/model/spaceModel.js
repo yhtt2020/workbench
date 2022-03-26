@@ -71,7 +71,7 @@ const spaceModel = {
 
   async changeCurrent(space){
     //关闭mainWindow（自动会保存）
-    await spaceModel.adapterModel.changeCurrent(space)
+    return  await spaceModel.adapterModel.changeCurrent(space,spaceModel.user)
     //设置数据库中的当前空间
   },
   async getLocalSpaces(){

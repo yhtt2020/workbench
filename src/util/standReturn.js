@@ -1,6 +1,6 @@
 const standReturn={
 
-  success(data){
+  success(data={}){
     return {
       status:1,
       data

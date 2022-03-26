@@ -1,3 +1,6 @@
+if(typeof fs ==='undefined'){
+  var fs=require('fs')
+}
 var settings = {
   filePath: window.globalArgs['user-data-path'] + (process.platform === 'win32' ? '\\' : '/') + 'settings.json',
   list: {},
@@ -39,6 +42,7 @@ var settings = {
         console.warn(e)
       }
     }
+    console.log(fileData)
     if (fileData) {
       settings.list = JSON.parse(fileData)
     }
@@ -49,7 +53,7 @@ var settings = {
       settings.list[key] = value
       settings.runChangeCallbacks(key)
     })
-	
+
 	ipc.on('returnIsDefaultBrowser',function(e,value){
 		console.log(value)
 	})
