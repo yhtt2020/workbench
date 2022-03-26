@@ -11,6 +11,7 @@ const spaceModel = {
   },
   adapterModel: require('./localSpaceModel'),
   setUser (user) {
+    console.log(user)
     spaceModel.user = user
     if (user.uid === 0) {
       spaceModel.setAdapter('local')
@@ -23,12 +24,15 @@ const spaceModel = {
     if (type !== 'local') {
       spaceModel.type = 'cloud'
       spaceModel.adapterModel = require('./clouldSpaceModel')
+    }else{
+      spaceModel.type = 'local'
+      spaceModel.adapterModel = require('./localSpaceModel')
     }
     return spaceModel
   },
 
-  getUserSpaces (uid = 0) {
-    return spaceModel.adapterModel.getUserSpaces(uid)
+ async getUserSpaces () {
+    return await spaceModel.adapterModel.getUserSpaces(spaceModel.user)
   },
 
   /**
@@ -69,9 +73,6 @@ const spaceModel = {
     //关闭mainWindow（自动会保存）
     await spaceModel.adapterModel.changeCurrent(space)
     //设置数据库中的当前空间
-
-
-
   },
   async getLocalSpaces(){
     return localSpaceModel.getAll()

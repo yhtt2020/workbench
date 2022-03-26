@@ -11,16 +11,16 @@ const tpl = `
 </a-col>
 <a-col :span="12" style="text-align: left;padding-left: 10px">
  <div style="margin-top: 10px">{{user.nickname}}</div>
-    <p style="text-align: left;font-size: 16px">{{ user.spaces.length }} <span style="color: #999;font-size: 12px">空间</span></p>
+    <p style="text-align: left;font-size: 16px">{{ spaces.length }} <span style="color: #999;font-size: 12px">空间</span></p>
 </a-col>
 </a-row>
 
 
   </div>
   <div style="text-align: center">
-    <!--      <a-empty text="无空间" v-if="user.spaces.length===0"></a-empty>-->
+    <!--      <a-empty text="无空间" v-if="spaces.length===0"></a-empty>-->
     <div style="text-align: left;overflow-y: auto;max-height: 310px;margin-right: 20px;padding-top: 10px;padding-left: 40px;padding-bottom: 10px" class="scroller">
-      <a-card @click="switchSpace(space)" :style="{'margin-right':index%2===1?'0':'10px'}" v-for="space,index in user.spaces" hoverable style="margin-left:20px;width: 250px;display: inline-block;margin-bottom: 10px;">
+      <a-card @click="switchSpace(space)" :style="{'margin-right':index%2===1?'0':'10px'}" v-for="space,index in spaces" hoverable style="margin-left:20px;width: 250px;display: inline-block;margin-bottom: 10px;">
         <a-card-meta :title="space.name" :description="space.count_task+ ' 标签组  '+ space.count_tab+' 标签'">
           <template #avatar>
            <svg :class="{'offline':this.user.uid===0?true:false}" t="1648106444295" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="32437" width="32" height="32"><path d="M512 938.666667C276.352 938.666667 85.333333 747.648 85.333333 512S276.352 85.333333 512 85.333333s426.666667 191.018667 426.666667 426.666667-191.018667 426.666667-426.666667 426.666667z m205.653333-210.090667A298.666667 298.666667 0 0 0 385.365333 241.408l41.6 74.88A213.333333 213.333333 0 0 1 725.333333 512h-91.733333a21.333333 21.333333 0 0 0-18.645333 31.701333l102.698666 184.874667z m-120.618666-20.864A213.333333 213.333333 0 0 1 298.666667 512h91.733333a21.333333 21.333333 0 0 0 18.645333-31.701333L306.346667 295.424a298.666667 298.666667 0 0 0 332.288 487.168l-41.6-74.88z" fill="#14D081" p-id="32438"></path></svg>
@@ -66,7 +66,7 @@ const tpl = `
       @ok="doCreateSpace"
     >
       <p>输入空间名称</p>
-      <p><a-input ref="spaceNameInput" @keyup.enter="doCreateSpace" v-model:value="newSpaceName" placeholder="空间名称"></p>
+      <p><a-input ref="spaceNameInput" @keyup.enter="doCreateSpace" v-model:value="newSpaceName" placeholder="空间名称"></a-input></p>
       <p></p>
     </a-modal>
 </div>
@@ -82,41 +82,68 @@ const SpaceSelect = {
         uid:0,
         spaces: []
       },
+      spaces:[],
       pwd: '',
       visibleCreate:false,
       newSpaceName:''
     }
   },
   async mounted () {
+    let user={}
     if(!Number(this.$route.params.uid)){
-      let user={
+       user={
         nickname:'本机空间',
         avatar:'../../icons/logo128.png',
         spaces:[],
         uid:0
       }
       this.user=user
-      let spaces= spaceModel.getUserSpaces(0)
-      this.user.spaces=spaces
-      return
-    }
-
-
-    let user = await userModel.get({ id: this.$route.params.uid })
-    if (user) {
-      try{
-        let result=await userApi.getMySpaceList(user)
-        if(result.data)
-          user.spaces= result.data
-      }catch (e){
-        window.antd.message.error('获取用户信息失败，用户登录信息已过期。请解绑后重新绑定。')
+    }else{
+      //网络用户
+     user = await userModel.get({ id: this.$route.params.uid })
+      if(user){
+        this.user = user
+      }else{
+        window.antd.message.error('获取用户信息失败，登录信息过期或用户账号异常。')
       }
-      console.log(user.spaces)
-      if(!!!user.spaces) user.spaces=[]
-      this.user = user
-    } else {
-      console.error('user can\'t find')
     }
+    let spaces=[]
+    //下面开始获取用户空间
+    try{
+      console.log(this.user)
+      let result= await spaceModel.setUser(this.user).getUserSpaces()
+      if(result.status===1){
+        spaces= result.data
+      }else{
+        window.antd.message.error('获取用户空间失败。失败原因：'+result.info)
+      }
+    }
+    catch (e) {
+      window.antd.message.error('获取用户空间失败，未知异常。')
+    }
+    this.spaces=spaces
+
+    //获取网络空间用户信息
+
+    // if (user) {
+    //
+    //   try{
+    //     let result=await spaceModel.setUser(user).getUserSpaces(user.uid)
+    //     //let result=await userApi.getMySpaceList(user)
+    //     if(result.status===1){
+    //       this.spaces= result.data
+    //       console.log('result',result)
+    //     }else{
+    //       console.log('result',result)
+    //       window.antd.message.error('获取用户空间失败。')
+    //     }
+    //   }catch (e){
+    //     console.log('result',e)
+    //     window.antd.message.error('获取用户空间失败，未知异常。')
+    //   }
+    // } else {
+    //   console.error('user can\'t find')
+    // }
   },
   methods: {
     goLogin () {
@@ -129,7 +156,7 @@ const SpaceSelect = {
         if(result.status===1){
           this.newSpaceName=''
           window.antd.message.success('创建空间成功。')
-          this.user.spaces.push(result.data)
+          this.spaces.push(result.data)
           this.visibleCreate=false
         }else{
           window.antd.message.error('空间名称长度在1-10个汉字，请重新输入。')//获取真实的错误信息
@@ -140,7 +167,7 @@ const SpaceSelect = {
         // if(result.code===1000){
         //   this.newSpaceName=''
         //   window.antd.message.success('创建空间成功。')
-        //   this.user.spaces.push(result.data)
+        //   this.spaces.push(result.data)
         //   this.visibleCreate=false
         // }else{
         //   window.antd.message.error('空间名称长度在1-10个汉字，请重新输入。')
@@ -175,19 +202,30 @@ const SpaceSelect = {
       })
     },
     async switchSpace(space){
-      antd.Modal.confirm({
-        title: '确认',
-        content: '是否更改当前空间，更改空间将重载浏览器，可能导致您网页上未保存的内容丢失，请确认已经保存全部内容。',
-        centered: true,
-        okText: '我已保存，切换空间',
-        cancelText: '取消',
-        onOk: async() => {
+      if(this.user.uid===0){
+        antd.Modal.confirm({
+          title: '切换到本地空间',
+          content: '是否更改当前空间，更改空间将重载浏览器，可能导致您网页上未保存的内容丢失，请确认已经保存全部内容。切换本地空间并不会更改当前登录账号。',
+          centered: true,
+          okText: '我已保存，切换空间',
+          cancelText: '取消',
+          onOk: async() => {
+            spaceModel.setAdapter('local').changeCurrent(space)
+          }
+        })
+      }else{
+        antd.Modal.confirm({
+          title: '切换到云端空间',
+          content: '是否切换到云端空间？切换到云端空间后会同时更换当前账号到此账号。请务必确认您网页上的内容已经保存。否则可能丢失未保存内容。',
+          centered: true,
+          okText: '我已保存，切换空间',
+          cancelText: '取消',
+          onOk: async() => {
+            spaceModel.setAdapter('cloud').changeCurrent(space)
+          }
+        })
+      }
 
-
-            spaceModel.setAdapter(this.user.uid?'cloud':'local').changeCurrent(space)
-
-        }
-      })
     }
   }
 }

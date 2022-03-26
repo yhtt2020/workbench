@@ -46,11 +46,17 @@ const localSpaceModel={
     return standReturn.success(spaceAdd)
   },
 
-  getUserSpaces(uid){
+  async getUserSpaces(user){
     ldb.reload()
-    if(!uid){
-      return  ldb.db.get('spaces').value()
+    try{
+      let spaces=[]
+     spaces =  ldb.db.get('spaces').value()
+     return  standReturn.success(spaces)
+    }catch (e){
+     return  standReturn.failure([],'无法读取本地空间。')
     }
+
+
   },
 
   changeCurrent(space){
