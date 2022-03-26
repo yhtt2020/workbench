@@ -115,10 +115,12 @@ const sidebarTpl = `
                               <a-button class="cb-bottom-zone" type="link" icon="team" @click="openCircle(item.id)">
                                 圈子
                               </a-button>
+                              <div style="border-right: 1px solid #cacaca; height: 60%;"></div>
                               <a-button class="cb-bottom-zone" type="link" icon="message" @click="openGroupChat(item.id)">
                                 群聊
                               </a-button>
-                              <a-button class="cb-bottom-zone" type="link" icon="setting"
+                              <div style="border-right: 1px solid #cacaca; height: 60%;" v-show="item.lord"></div>
+                              <a-button class="cb-bottom-zone" type="link" icon="setting" v-show="item.lord"
                                 @click="openCircleSetting(item.id)">
                                 设置
                               </a-button>
