@@ -19,7 +19,7 @@ const tpl = `
               </a-col>
               <a-col class="user-info" :span="16">
                 <div>{{user.nickname}}</div>
-                <p class="info-p">{{user.spaces.length}} 云空间</p>
+                <p class="info-p" style="color: #1E90FF">云端空间</p>
               </a-col>
             </a-row>
             <template #overlay>
