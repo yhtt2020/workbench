@@ -8,7 +8,8 @@ const messageTempl = `
           <span>通知中心</span>
         </div>
         <div class="top-rg flex justify-around align-center">
-          <img title="清理全部" src="./assets/clean.svg" alt="" style="width: 18px; height: 18px;" @click="clearMessages">
+          <img title="清理全部" src="./assets/clean.svg" alt="" style="width: 18px; height: 18px;" @click="clearMessages" v-if="this.$store.getters.getAllMessages.length > 0">
+          <div style="width: 18px; height: 18px;" v-else></div>
           <a-icon title="设置" type="setting" :style="{ fontSize: '16px', color: '#8c8c8c' }" @click="openMsmSetting"></a-icon>
           <a-icon title="固定" type="pushpin" :style="{ fontSize: '16px', color: '#8c8c8c' }" @click="fixedMessage"></a-icon>
         </div>
