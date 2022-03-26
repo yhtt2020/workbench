@@ -910,6 +910,7 @@ app.whenReady().then(()=>{
         frame:false,
         resizable:false,
         shadow:false,
+        alwaysOnTop:true,
         webPreferences:{
           nodeIntegration: true,
           contextIsolation: false,
@@ -926,13 +927,15 @@ app.whenReady().then(()=>{
       userWindow.on('ready-to-show',()=>{
         userWindow.show()
       })
+      userWindow.on('close',()=>{
+        userWindow=null
+      })
     }
   })
 
   let loginWindow=null
   ipc.on('closeUserWindow',()=>{
     userWindow.close()
-    userWindow=null
   })
 
 
