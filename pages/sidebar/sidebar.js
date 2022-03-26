@@ -428,8 +428,8 @@ window.onload = function() {
         await messageModel.clearTable()
         commit('DEL_ALLMESSAGES')
       },
-      async getMySpaces({commit},options){
-        let response= await userApi.getMySpaceList()
+      async getCloudSpaces({commit},user){
+        let response= await spaceModel.setUser(user).getUserSpaces()
         let mySpaces=response.data
         if(mySpaces.length>5)
         {

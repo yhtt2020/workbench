@@ -308,14 +308,14 @@ const sidebarTpl = `
 
        <div >
 
-        <a-dropdown :trigger="['click']" @visible-change="()=>{this.$store.dispatch('getLocalSpaces')}" placement="topRight">
+        <a-dropdown :trigger="['click']" @visible-change="()=>{this.$store.dispatch('getLocalSpaces')}" >
       <template #overlay>
         <a-menu>
          <a-menu-item  disabled="" key="current">
             当前：{{currentSpace.space.name}}
           </a-menu-item>
              <a-menu-divider></a-menu-divider>
-         <a-menu-item v-for="space in spaces" :key="space.nanoid">
+         <a-menu-item  @click="confirmChangeSpace(space.nanoid,'cloud')" v-for="space in spaces" :key="space.nanoid">
             <a-tag color="#108ee9">云端</a-tag>{{space.name}}
           </a-menu-item>
          <a-menu-divider></a-menu-divider>
@@ -591,7 +591,7 @@ Vue.component('sidebar', {
 
     await this.$store.dispatch('getAllMessage')
     try{
-      await this.$store.dispatch('getMySpaces')
+      await this.$store.dispatch('getCloudSpaces',this.$store.state.user)
     }catch (e){
       console.log('网络空间获取失败。')
     }
@@ -650,6 +650,9 @@ Vue.component('sidebar', {
       })
     },
     changeSpace(id,type){
+      if(type==='cloud'){
+        ipc.send('changeSpace',{spaceId:id,spaceType:type,userInfo:this.user})
+      }else
       ipc.send('changeSpace',{spaceId:id,spaceType:type})
     },
     openUserWindow () {
