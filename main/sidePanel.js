@@ -893,10 +893,10 @@ ipc.on('showAllSaApps',(event,args)=>{
 
 
 
-
+let userWindow=null
+let changingSpace=false
 /*user面板代码*/
 app.whenReady().then(()=>{
-  let userWindow=null
   ipc.on('showUserWindow',()=>{
     if(userWindow){
       userWindow.show()
@@ -940,6 +940,7 @@ app.whenReady().then(()=>{
 
 
   ipc.on('changeSpace',(event,args)=>{
+    changingSpace=true
     mainWindow.close()
     const ldb=require(__dirname+'/src/util/ldb.js')
     ldb.load(app.getPath('userData')+'/ldb.json')

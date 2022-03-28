@@ -252,6 +252,7 @@ function createWindowWithBounds(bounds) {
     mainWindow.show()
     loadSidePanel()
     getAllAppsWindow()
+    changingSpace=false
   })
 
 	// Emitted when the window is closed.
@@ -261,10 +262,12 @@ function createWindowWithBounds(bounds) {
 		// when you should delete the corresponding element.
 		mainWindow = null
 		mainWindowIsMinimized = false
-    if(process.platform==='win32' && userWindow.isDestroyed()){
-      console.log('windows上强制终止app')
-        //todo 如果做了托盘菜单，这里不需要直接退出app
-      app.quit()
+    console.log(changingSpace)
+    if(process.platform==='win32' && !changingSpace){
+     //windows上，且不是在切换空间，则关闭整个应用
+      // todo 如果做了托盘菜单，这里不需要直接退出app
+     app.quit()
+
     }
 	})
 
@@ -358,7 +361,7 @@ function createWindowWithBounds(bounds) {
 app.on('window-all-closed', function() {
 	// On OS X it is common for applications and their menu bar
 	// to stay active until the user quits explicitly with Cmd + Q
-	if (process.platform !== 'darwin') {
+	if (process.platform !== 'darwin' && !changingSpace) {
 		app.quit()
 	}
 })
