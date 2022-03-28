@@ -42,12 +42,12 @@
               </div>
               <div v-if="list.status === 'progressing'" >
                 <div v-if="list.loadState" >
-                  <a-button style="position: absolute;margin-left: 270px;margin-top: 14px" type="link" @click="resume(index)" >
+                  <a-button style="position: absolute;margin-left: 327px;margin-top: 10px" type="link" @click="resume(index)" >
                      开始
                   </a-button>
                 </div>
                 <div v-else>
-                  <a-button style="position: absolute;margin-left: 270px;margin-top: 14px" type="link" @click="stop(index)">
+                  <a-button style="position: absolute;margin-left: 327px;margin-top: 10px" type="link" @click="stop(index)">
                     暂停
                   </a-button>
                 </div>
@@ -82,15 +82,15 @@
                   </a-modal>
                 </div>
 
-              <a-button style="position: absolute;margin-left: 200px;margin-top: 5px" type="link" @click="openFileHandler(index)" >
+              <a-button style="position: absolute;margin-left: 250px;margin-top: 5px;cursor:pointer" type="link" @click="openFileHandler(index)" >
                 打开
               </a-button>
-                <a-button style="position: absolute;margin-left: 240px;margin-top: 5px" type="link" @click="showFileHandler(index)" >
+                <a-button style="position: absolute;margin-left: 290px;margin-top: 5px;cursor:pointer;" type="link" @click="showFileHandler(index)" >
                   打开文件夹
                 </a-button>
-              <div style="position: absolute;margin-left: 145px;margin-top: 21px">{{doneList.doneDate}}</div>
-              <div style="margin-left: 50px;font-size: 15px;font-weight: bold ;">{{doneList.title}}</div>
-              <div style="margin-left: 50px;font-size: 12px;width: 65px;">{{doneList.total}}  MB</div>
+              <div style="position: absolute;font-size: 13px;margin-left: 145px;margin-top: 19px">{{doneList.doneDate}}</div>
+              <div style="margin-left: 50px;font-size: 13px;font-weight: bold ;">{{doneList.title}}</div>
+              <div style="margin-left: 50px;font-size: 12px;width: 65px;color:#999">{{doneList.total}}  MB</div>
             </div>
           </div>
         </a-tab-pane>
@@ -105,7 +105,7 @@
                 <img src="./icon/white.svg">
               </div>
               <div style="position: absolute;margin-left: 270px;margin-top: 14px">文件已被删除</div>
-              <div style="margin-left: 50px;font-size: 15px;font-weight: bold ;">{{deleteList.title}}</div>
+              <div style="margin-left: 50px;font-size: 13px;font-weight: bold ;">{{deleteList.title}}</div>
               <div style="margin-left: 50px;font-size: 12px;width: 65px;">{{deleteList.total}}  MB</div>
             </div>
           </div>
@@ -456,10 +456,10 @@
   margin-top: 10px;
 }
 .active {
-  background: #e6e6e6;
+  background: #f7f7f7;
 }
 .clickActive{
-  background: #e8f2ff;
+  background: #f7f7f7;
 }
 </style>
 
