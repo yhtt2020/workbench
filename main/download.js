@@ -50,8 +50,7 @@ function downloadHandler (event, item, webContents) {
   var attachment = isAttachment(item.getContentDisposition())
 
 
-  let Name = item.getFilename()
-  let suffixName = Name.substring(Name.lastIndexOf('.')+1,Name.length)
+  let suffixName = item.getFilename().substring(item.getFilename().lastIndexOf('.')+1,item.getFilename().length)
   savePathFilename =  path.basename(item.getSavePath())
 
   if (item.getMimeType() === 'application/pdf' && itemURL.indexOf('blob:') !== 0 && itemURL.indexOf('#pdfjs.action=download') === -1 && !attachment) { // clicking the download button in the viewer opens a blob url, so we don't want to open those in the viewer (since that would make it impossible to download a PDF)
@@ -80,7 +79,6 @@ function downloadHandler (event, item, webContents) {
       paused: item.isPaused(),
       startTime: item.getStartTime(),
       url: item.getURL(),
-      ChainUrl: item.getURLChain(),
     })
 
 
