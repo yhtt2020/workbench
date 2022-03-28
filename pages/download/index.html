@@ -332,7 +332,6 @@
             if (flag) {
               // const { shell } = require('electron')
               ipcRenderer.send('deleteFile',appVue.selectList.path)
-              console.log(appVue.selectList.path)
               // shell.trashItem(appVue.selectList.path)
               // fs.unlinkSync(appVue.selectList.path)
               appVue.$message.info('文件已删除', 1)
