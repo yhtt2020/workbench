@@ -95,8 +95,8 @@
           </div>
         </a-tab-pane>
 
-        <a-tab-pane key="3" tab="回收站">
-          <div v-for="(deleteList,index) in deleteLists" v-bind:key="index" @click="change(index)"  @contextmenu="menuDone(index)"  :class="{active : active === index,
+        <a-tab-pane key="3" tab="已删除">
+          <div v-for="(deleteList,index) in deleteLists" v-bind:key="index" @click="change(index)"  @contextmenu="menuDel(index)"  :class="{active : active === index,
          clickActive:clickActive===index}"
                @mouseover="mouseOver(index)"
                @mouseleave="mouseLeave">
@@ -170,6 +170,23 @@
     appVue.deleconfirm=false
   })
 
+  ipcRenderer.on('menuDelAgain', (e) => {
+    ipcRenderer.send('addTab',{url:appVue.selectDelList.url})
+  })
+
+  ipcRenderer.on('menuDelOpenPage', (e) => {
+
+  })
+
+  ipcRenderer.on('menuDelUrl', (e) => {
+    clipboard.writeText( appVue.selectDelList.url)
+    appVue.$message.success('已复制到剪切板');
+  })
+
+  ipcRenderer.on('menuDelDelete', (e) => {
+    appVue.deleteLists.splice(appVue.deleteLists.indexOf(appVue.selectDelList), 1)
+    db.delDownload.delete(appVue.selectDelList.startTime)
+  })
 
   ipcRenderer.on('download-info', async (event, args) => {
     let simpleName;
@@ -307,7 +324,7 @@
         }
     })
 },
-     methods: {
+ methods: {
       menuIng(index){
         this.selectingList=this.lists[index]
         this.active = index;
@@ -318,6 +335,11 @@
       menuDone(index){
         ipcRenderer.send('showMenuDone')
         this.selectList=this.doneLists[index]
+        this.active = index;
+      },
+      menuDel(index){
+        ipcRenderer.send('showMenuDel')
+        this.selectDelList=this.deleteLists[index]
         this.active = index;
       },
       mouseOver(index){
