@@ -19,11 +19,15 @@ const tpl = `
     <!--      <a-empty text="无空间" v-if="spaces.length===0"></a-empty>-->
     <div style="text-align: left;overflow-y: auto;max-height: 310px;margin-right: 20px;padding-top: 10px;padding-left: 40px;padding-bottom: 10px" class="scroller">
       <a-dropdown v-for="space,index in spaces" :trigger="['contextmenu']">
+         <a-tooltip placement="bottom">
+    <template #title>保存时间：{{dateTime(space.sync_time)}}<br>修改时间：{{dateTime(space.update_time)}}<br>创建时间：{{dateTime(space.create_time)}} </template>
         <a-card @click="switchSpace(space)" :style="{'margin-right':index%2===1?'0':'10px'}"  hoverable style="margin-left:20px;width: 250px;display: inline-block;margin-bottom: 10px;">
           <a-card-meta :title="space.name" >
             <template #description>
+
               <span style="font-size: 12px;color: red;position: absolute;right: 10px;top: 10px" v-if="space.isOtherUsing">其他设备正在使用中</span>
               <span style="font-size: 12px;color: red;position: absolute;right: 10px;top: 10px" v-if="space.isSelfUsing">当前使用空间</span>
+
               {{space.count_task+ ' 标签组  '+ space.count_tab+' 标签'}}
             </template>
             <template #avatar>
@@ -31,6 +35,7 @@ const tpl = `
             </template>
           </a-card-meta>
         </a-card>
+            </a-tooltip>
         <template #overlay>
           <a-menu>
             <a-menu-item @click="deleteSpace(space)" :key="'delete_'+index">删除空间</a-menu-item>
@@ -147,6 +152,12 @@ const SpaceSelect = {
     // }
   },
   methods: {
+    dateTime(time){
+      let date=new Date(time)
+      console.log(time)
+      //return date.getFullYear()+'年'+date.getMonth()+'月'+date.getDate()+'日 '+date.getHours()+':'+date.getMinutes()
+      return date.toLocaleString()
+    },
     async loadSpaces(){
       let spaces=[]
       //下面开始获取用户空间
