@@ -17,10 +17,16 @@ let ldb = {
     }
   },
   load (dbPath){
-    ldb.dbPath=dbPath
-    const adapter=new FileSync(ldb.dbPath)
-    ldb.db=low(adapter)
-    ldb.initDb()
+    try{
+      ldb.dbPath=dbPath
+      const adapter=new FileSync(ldb.dbPath)
+      ldb.db=low(adapter)
+      ldb.initDb()
+    }catch (e) {
+      console.log(fs.readFileSync(ldb.dbPath, 'utf-8').trim())
+      console.log(e)
+    }
+
     return ldb
   },
   initDb(){

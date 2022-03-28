@@ -1,4 +1,3 @@
-const userApi = require('../../pages/util/api/userApi')
 const standReturn = require('../util/standReturn')
 const spaceApi = require('../../pages/util/api/spaceApi')
 const cloudSpaceModel={
@@ -16,11 +15,9 @@ const cloudSpaceModel={
     let result = await spaceApi.change(space.nanoid,user.clientId, user)
     ipc.send('changeSpace',{spaceId:space.nanoid,spaceType:'cloud',userInfo:JSON.parse(JSON.stringify(user))})
     return standReturn.autoReturn(result)
-
-
   },
-  async getSpace(spaceId,userToken){
-    return await cloudSpaceModel.restore (spaceId, userToken)
+  async getSpace(spaceId,userInfo){
+    return await cloudSpaceModel.restore (spaceId, userInfo)
   },
   async getUserSpaces(user){
    let result= await spaceApi.getMySpaceList(user)

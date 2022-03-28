@@ -39,7 +39,7 @@ const spaceModel = {
   async getCurrent () {
     ldb.reload()
     let currentSpace = ldb.db.get('currentSpace').value()
-    if (!currentSpace) {
+    if (!currentSpace) { //如果是首次读入，不存在currentSpace就插入一个默认的值
       currentSpace = {
         spaceId: 1,
         spaceType: 'local'
@@ -48,7 +48,8 @@ const spaceModel = {
     }
     let space = {}
     if (currentSpace.spaceType === 'cloud') {
-      let result = await spaceModel.setAdapter(currentSpace.spaceType).getSpace(currentSpace.spaceId, currentSpace.userToken)
+      console.log(currentSpace.userInfo)
+      let result = await spaceModel.setAdapter('cloud').getSpace(currentSpace.spaceId,currentSpace.userInfo)
       if (result.status === 1)
         space = result.data
     } else {
@@ -63,8 +64,8 @@ const spaceModel = {
     currentSpace.space = space
     return currentSpace
   },
-  async getSpace (id) {
-    return spaceModel.adapterModel.getSpace(id)
+  async getSpace (id,user) {
+    return spaceModel.adapterModel.getSpace(id,user)
   },
 
   async addSpace (space) {
@@ -77,7 +78,9 @@ const spaceModel = {
 
   async changeCurrent (space) {
     //关闭mainWindow（自动会保存）
-    return await spaceModel.adapterModel.changeCurrent(space, spaceModel.user)
+    await spaceModel.adapterModel.changeCurrent(space, spaceModel.user)
+    ipc.send('closeUserWindow')
+
     //设置数据库中的当前空间
   },
   async getLocalSpaces () {

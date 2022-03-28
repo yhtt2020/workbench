@@ -3,11 +3,18 @@ const tpl = `
  <h1 style="font-size: 18px;margin:auto;margin-top: 20px;margin-bottom:10px;text-align: center">
         选择账号的空间
       </h1>
-      <p style="text-align: center;color: #333">
-        不同空间的标签组相互隔离
-      </p>
+
       <p style="text-align: center;color: #999">
+      <span v-if="tip" style="color: red">
+      {{tip}}
+</span>
+      <span v-else>
+       <span style="text-align: center;color: #333">
+        不同空间的标签组相互隔离<br>
+      </span>
         适合不同家庭成员、公共电脑快速切换账号。<br>也可用于工作、娱乐等不同场景。
+</span>
+
       </p>
       <template v-if="loaded">
         <a-row style="width: 80%;margin: auto">
@@ -32,11 +39,11 @@ const tpl = `
           <a-col @click="enterAccount({uid:0})" :span="12">
             <a-row class="user-card">
               <a-col class="avatar-wrapper" :span="8" style="text-align: right">
-                <a-avatar :size="60" src="../../icons/logo128.png"></a-avatar>
+                <a-avatar style="filter: grayscale(100%);" :size="60" src="../../icons/logo128.png"></a-avatar>
               </a-col>
               <a-col class="user-info" :span="16" >
                 <div><strong>本机空间</strong></div>
-                <p class="info-p"> 存储在电脑上的空间</p>
+                <p class="info-p">不与云端同步</p>
               </a-col>
             </a-row>
           </a-col>
@@ -65,6 +72,7 @@ const UsersSelect = {
   template: tpl,
   data () {
     return {
+      tip:'',
       loaded: false,
       users: [
         // {
@@ -85,6 +93,9 @@ const UsersSelect = {
   async mounted () {
     this.users = await userModel.getAll()
     this.loaded = true
+    if(window.globalArgs['tip']){
+      this.tip=window.globalArgs['tip']
+    }
   },
   methods: {
     goAddAccount () {

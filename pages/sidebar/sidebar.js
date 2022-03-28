@@ -91,6 +91,7 @@ window.onload = function() {
   ldb.load(window.globalArgs['user-data-path']+'/ldb.json')
 	const store = new Vuex.Store({
 		state: {
+      cloudSpaces:[],
       localSpaces:[],
 			pinItems: null, //置顶区域的items，横线上方部分
 			items: null, //普通区域的items
@@ -233,8 +234,8 @@ window.onload = function() {
       set_local_spaces:(state,spaces)=>{
         state.localSpaces=spaces
       },
-      set_my_spaces:(state,spaces)=>{
-        state.spaces=spaces
+      set_cloud_spaces:(state,spaces)=>{
+        state.cloudSpaces=spaces
       },
       //设置全部的消息列表
       SET_ALLMESSAGES: (state, messages) => {
@@ -429,13 +430,24 @@ window.onload = function() {
         commit('DEL_ALLMESSAGES')
       },
       async getCloudSpaces({commit},user){
-        let response= await spaceModel.setUser(user).getUserSpaces()
-        let mySpaces=response.data
-        if(mySpaces.length>5)
-        {
-          mySpaces.splice(4,mySpaces.length-5)
+        console.log(user)
+        try{
+          let response= await spaceModel.setUser(user).getUserSpaces()
+          console.log(response)
+          if(response.status){
+            let mySpaces=response.data
+            if(mySpaces.length>5)
+            {
+              mySpaces.splice(4,mySpaces.length-5)
+            }
+            commit('set_cloud_spaces',mySpaces)
+          }else{
+            window.appVue.$message.error('获取云空间失败。')
+          }
+        }catch (e){
+          console.log(e)
         }
-        commit('set_my_spaces',mySpaces)
+
       },
       async getLocalSpaces({commit}){
         let localSpaces= await spaceModel.getLocalSpaces()

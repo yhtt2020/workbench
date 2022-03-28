@@ -897,11 +897,18 @@ let userWindow=null
 let changingSpace=false
 /*user面板代码*/
 app.whenReady().then(()=>{
-  ipc.on('showUserWindow',()=>{
+  ipc.on('showUserWindow',(event,args)=>{
     if(userWindow){
       userWindow.show()
       userWindow.focus()
     }else{
+      let tip=''
+      let modal=false
+      if(args){
+        tip=args.tip?args.tip:''
+        modal=!!args.modal
+      }
+
       let bounds=mainWindow.getBounds()
       userWindow=new BrowserWindow({
         backgroundColor:'#00000000',
@@ -919,6 +926,8 @@ app.whenReady().then(()=>{
             '--app-version=' + app.getVersion(),
             '--app-name=' + app.getName(),
             ...((isDevelopmentMode ? ['--development-mode'] : [])),
+            '--tip='+tip,
+            '--modal='+modal
           ]
         }
       })
@@ -937,11 +946,15 @@ app.whenReady().then(()=>{
   ipc.on('closeUserWindow',()=>{
     userWindow.close()
   })
-
+  // ipc.on('closeMainWindow',()=>{
+  //   mainWindow.close()
+  // })
 
   ipc.on('changeSpace',(event,args)=>{
     changingSpace=true
-    mainWindow.close()
+    if(mainWindow && !mainWindow.isDestroyed()){
+      mainWindow.close()
+    }
     const ldb=require(__dirname+'/src/util/ldb.js')
     ldb.load(app.getPath('userData')+'/ldb.json')
     ldb.db.set('currentSpace.spaceId',args.spaceId).write()

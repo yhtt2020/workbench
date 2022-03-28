@@ -3,8 +3,8 @@ const standReturn = require('../../../src/util/standReturn')
 if(window){
   ldb=window.ldb
 }
-const localAdapter={
-  name:'localAdapter',
+const cloudAdapter={
+  name:'cloudAdapter',
   userToken:'',
   previousState: null,
   adapter:null,
@@ -58,4 +58,4 @@ const localAdapter={
   }
 }
 
-module.exports=localAdapter
+module.exports=cloudAdapter

@@ -51,7 +51,12 @@ const sessionRestore = {
     }
   },
    restore:async function () {
-    var savedStringData=  await sessionRestore.adapter.restore(sessionRestore.currentSpace.spaceId)
+     var savedStringData=''
+    try{
+      savedStringData=  await sessionRestore.adapter.restore(sessionRestore.currentSpace.spaceId)
+    }catch (e) {
+      console.log('获取存储的空间信息失败')
+    }
 
     try {
       // first run, show the tour
@@ -95,7 +100,7 @@ const sessionRestore = {
 
       // switch to the previously selected tasks
 
-      if (tasks.getSelected().tabs.isEmpty() || (!data.saveTime || Date.now() - data.saveTime < 5000)) {
+      if (tasks.getSelected().tabs.isEmpty() || (!data.saveTime || Date.now() - data.saveTime < 30000)) {
         //如果当前选中的任务为空，或（没保存或者保存间隔小于30秒）
         browserUI.switchToTask(data.state.selectedTask)
         if (tasks.getSelected().tabs.isEmpty()) {
@@ -172,13 +177,29 @@ const sessionRestore = {
     }
   },
   initialize:async function () {
-    let currentSpace= await spaceModel.getCurrent()
+    let currentSpace={}
+    try{
+     currentSpace= await spaceModel.getCurrent()
+    }catch (e) {
+      // currentSpace={
+      //   spaceId:1,
+      //   spaceType:'local'
+      // }
+       //ipc.send('showUserWindow',{tip:'无法成功读入存储的空间，请选择其他空间登录。',modal:true})
+       //ipc.send('closeMainWindow')
+
+      // ipc.send('message',{type:'error',config:{content:'网络原因无法读取云端空间，已为您切换到本地空间。'}})
+      console.error(e)
+      console.log('获取当前空间失败',e)
+      return
+    }
+    console.log(currentSpace)
+
     sessionRestore.currentSpace=currentSpace
     if(currentSpace.spaceType==='local'){
       sessionRestore.adapter=localAdapter
     }else{
       sessionRestore.adapter=cloudAdapter
-      //todo 网络版本
     }
     //todo 获取当前的用户，判断如果未登录，则尝试从本地寻找适配器读入空间。
       /*
@@ -208,7 +229,7 @@ nickname: "立即登录"
 uid: 0
        */
 
-    setInterval(sessionRestore.save, 5000)
+    setInterval(sessionRestore.save, 30000)
 
     window.onbeforeunload = function (e) {
       sessionRestore.save(true, true)

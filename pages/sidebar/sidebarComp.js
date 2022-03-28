@@ -181,7 +181,7 @@ const sidebarTpl = `
               </div>
               <div v-if="user.uid!==0">用户信息</div>
             </template>
-            <div @contextmenu="toggleUserPanel()" class="wrapper" block>
+            <div @contextmenu="openUserWindow" class="wrapper" block>
               <div class="item-icon">
                 <a-avatar v-if="user.uid!==0"
                   style="border: 1px solid #cfcfcf; background-color: white;width: 28px;height: 28px" class="icon"
@@ -311,17 +311,16 @@ const sidebarTpl = `
         <a-dropdown :trigger="['click']" @visible-change="()=>{this.$store.dispatch('getLocalSpaces')}" >
       <template #overlay>
         <a-menu>
-         <a-menu-item  disabled="" key="current">
-            当前：{{currentSpace.space.name}}
+             <a-menu-item v-if="cloudSpaces.length===0"  disabled="" key="current">
+            登录后使用云空间
           </a-menu-item>
-             <a-menu-divider></a-menu-divider>
-         <a-menu-item  @click="confirmChangeSpace(space.nanoid,'cloud')" v-for="space in spaces" :key="space.nanoid">
-            <a-tag color="#108ee9">云端</a-tag>{{space.name}}
+         <a-menu-item v-else  @click="confirmChangeSpace(space.nanoid,'cloud')" v-for="space in cloudSpaces" :key="space.nanoid">
+            <a-tag color="green" v-if="currentSpace.space.nanoid===space.nanoid">当前</a-tag><a-tag v-else color="#108ee9">云端</a-tag>{{space.name}}
           </a-menu-item>
          <a-menu-divider></a-menu-divider>
           <a-menu-item @click="confirmChangeSpace(space.id,'local')"  v-for="space in localSpaces" :key="'local_'+space.id">
 
- <a-tag>本地</a-tag> {{space.name}}
+ <a-tag color="green" v-if="currentSpace.space.id===space.id">当前</a-tag><a-tag v-else>本机</a-tag> {{space.name}}
           </a-menu-item>
            <a-menu-divider></a-menu-divider>
 <!--            <a-menu-item key="add" @click="openUserWindow">-->
@@ -518,7 +517,7 @@ Vue.component('sidebar', {
         }
       ],
       sidebarBottom: 0,
-      spaces: []
+      cloudSpaces: []
     }
 
   },
@@ -590,16 +589,20 @@ Vue.component('sidebar', {
     appVue.mod = sideMode
     this.mod = sideMode
 
-    await this.$store.dispatch('getAllMessage')
-    try{
-      await this.$store.dispatch('getCloudSpaces',this.$store.state.user)
-    }catch (e){
-      console.log('网络空间获取失败。')
-    }
 
-    await this.$store.dispatch('getLocalSpaces')
-    this.spaces = this.$store.state.spaces
-    this.localSpaces=this.$store.state.localSpaces
+    await this.$store.dispatch('getAllMessage')
+    //如果用户已登录，则获取云端的空间
+    try{
+
+      if(currentUser.value.uid){
+        await this.$store.dispatch('getCloudSpaces',currentUser.value)
+      }
+      await this.$store.dispatch('getLocalSpaces')
+      this.cloudSpaces = this.$store.state.cloudSpaces
+      this.localSpaces=this.$store.state.localSpaces
+    }catch (e){
+      console.log('空间获取失败。')
+    }
   },
   computed: {
     user () {
@@ -858,6 +861,7 @@ Vue.component('sidebar', {
     },
     async logout () {
       const result = await db.system.where('name').equals('currentUser').first()
+      await db.accounts.where({id:this.user.uid}).delete()
       ipc.send('logoutBrowser', result.value.code)
       await window.insertDefaultUser(result.value.code)
       //下面这步在insertDefaultUser方法中有
