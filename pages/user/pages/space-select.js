@@ -1,5 +1,4 @@
 const userModel = require('../../../src/model/userModel')
-const userApi = require('../../util/api/userApi')
 const spaceModel = require('../../../src/model/spaceModel')
 const tpl = `
 <div>
@@ -108,7 +107,8 @@ const SpaceSelect = {
   },
   async mounted () {
     let user={}
-    if(!Number(this.$route.params.uid)){
+    let uid=Number(this.$route.params.uid)
+    if(!uid){
        user={
         nickname:'本机空间',
         avatar:'../../icons/logo128.png',
@@ -122,12 +122,21 @@ const SpaceSelect = {
       if(user){
         this.user = user
       }else{
-        window.antd.message.error('获取用户信息失败，登录信息过期或用户账号异常。')
+        window.antd.message.error('获取用户信息失败，登录信息过期或用户账号异常。请尝试解绑用户后重新登陆账号。')
+        this.$router.go(-1)
+        return //如果异常，退回上一页，防止后续出错
       }
 
     }
+    console.log(Number(this.$route.params.uid))
     this.user.clientId=userModel.getClientId()
-    this.currentSpace=await spaceModel.getCurrent()
+    try{
+      this.currentSpace=await spaceModel.getCurrent()
+    }catch (e) {
+
+    }
+
+    console.log(this.user)
     await this.loadSpaces()
     //获取网络空间用户信息
 
@@ -186,10 +195,14 @@ const SpaceSelect = {
           })
         }else{
           window.antd.message.error('获取用户空间失败。失败原因：'+result.info)
+          this.$router.go(-1)
+          return
         }
       }
       catch (e) {
         window.antd.message.error('获取用户空间失败，未知异常。')
+        this.$router.go(-1)
+        return
       }
       this.spaces=spaces
     },
