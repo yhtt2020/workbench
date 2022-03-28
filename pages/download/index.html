@@ -95,14 +95,21 @@
           </div>
         </a-tab-pane>
 
-<!--        <a-tab-pane key="3" tab="回收站">-->
-<!--          <div v-for="(deletelist,index) in deleteLists" v-bind:key="index">-->
-<!--            <div style="width: 100%;height: 45px;background-color: #8c8c8c">-->
-<!--              <div style="margin-left: 50px"></div>-->
-<!--              <div style="margin-left: 50px"></div>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </a-tab-pane>-->
+        <a-tab-pane key="3" tab="回收站">
+          <div v-for="(deleteList,index) in deleteLists" v-bind:key="index" @click="change(index)"  @contextmenu="menuDone(index)"  :class="{active : active === index,
+         clickActive:clickActive===index}"
+               @mouseover="mouseOver(index)"
+               @mouseleave="mouseLeave">
+            <div style="width: 100%;height: 45px;">
+              <div style="width: 34px;height: 40px;position: absolute;margin-top: 4px;margin-left: 10px;" >
+                <img src="./icon/white.svg">
+              </div>
+              <div style="position: absolute;margin-left: 270px;margin-top: 14px">文件已被删除</div>
+              <div style="margin-left: 50px;font-size: 15px;font-weight: bold ;">{{deleteList.title}}</div>
+              <div style="margin-left: 50px;font-size: 12px;width: 65px;">{{deleteList.total}}  MB</div>
+            </div>
+          </div>
+        </a-tab-pane>
 
       </a-tabs>
     </div>
@@ -171,7 +178,6 @@
     } else (simpleName = args.name)
 
     if (args.status === 'start') {
-
       appVue.lists.unshift({
         id: appVue.id++,
         title: simpleName,
@@ -191,15 +197,14 @@
     if (args.status === 'cancelled') {
       for (var i = 0; i < appVue.lists.length; i++) {
         if (appVue.lists[i].startTime === args.startTime) {
-            appVue.deleteid = i
+            appVue.deleteId = i
         }
       }
-      appVue.lists.splice(appVue.deleteid, 1)
+      appVue.lists.splice(appVue.deleteId, 1)
       appVue.count--
     }
 
     if (args.status === 'progressing' && args.path !== '') {
-
       appVue.lists.forEach(function (item, index, arr) {
         if (item.startTime === args.startTime) {
           item.title = simpleName;
@@ -253,7 +258,7 @@
        progressnuw:0,
        startTime: '',
        pathList:[],
-       deleteid:'0',
+       deleteId:'0',
        loadState:[],
        id:'0',
        active :'',
@@ -263,6 +268,8 @@
        url:'',
        doneId:'0',
        deleconfirm:false,
+       deleteList:[],
+       delId:'0',
      },
     created() {
        db.download.toArray().then(dblist => {
@@ -282,7 +289,24 @@
          })
        }
        })
-      },
+
+        db.delDownload.toArray().then(dbDelList =>{
+            for(let i=0; i<=dbDelList.length; i++){
+              let simpleName;
+              if (dbDelList[i].delTitle.length >= 20) {
+                simpleName = dbDelList[i].delTitle.substring(0, 7) + '...' + dbDelList[i].delTitle.substring(dbDelList[i].delTitle.length-6,dbDelList[i].title.length);
+              } else (simpleName = dbDelList[i].delTitle)
+              appVue.deleteLists.unshift({
+                id:appVue.delId++,
+                title:simpleName,
+                total: dbDelList[i].delTotal,
+                path: dbDelList[i].delPath,
+                url: dbDelList[i].delUrl,
+                startTime:dbDelList[i].delStartTime,
+              })
+        }
+    })
+},
      methods: {
       menuIng(index){
         this.selectingList=this.lists[index]
@@ -330,6 +354,29 @@
           const f = this.selectList.path;
           fs.exists(f, function (flag) {
             if (flag) {
+              db.delDownload.add({
+                delTitle: appVue.selectList.title,
+                delTotal: appVue.selectList.total,
+                delPath: appVue.selectList.path,
+                delUrl: appVue.selectList.url,
+                delStartTime: appVue.selectList.startTime
+              })
+                appVue.deleteLists.unshift({
+                  id: appVue.delId++,
+                  title: appVue.selectList.title,
+                  total: appVue.selectList.total,
+                  path: appVue.selectList.path,
+                  url: appVue.selectList.url,
+                  startTime: appVue.selectList.startTime,
+                })
+                // db.delDownload.add({
+                //   delTitle: appVue.deleteLists.title,
+                //   delTotal: appVue.deleteLists.total,
+                //   delPath: appVue.deleteLists.path,
+                //   delUrl: appVue.deleteLists.url,
+                //   delStartTime: appVue.deleteLists.startTime
+                // })
+
               ipcRenderer.send('deleteFile',appVue.selectList.path)
               appVue.$message.info('文件已删除', 1)
               appVue.doneLists.splice(appVue.doneLists.indexOf(appVue.selectList), 1)

@@ -245,7 +245,8 @@ db.version(141).stores({
   system: '++id,&name,value',
   dockApps:'++id,name,url,icon,order',
   appList:'++id,name,createTime,updateTime,order,summary,appsCount,parentId,type,path,sort',//应用列表 type:0.默认，大图标,1.小图标,2.列表  path存储路径树，便于后面查询
-  download:'&startTime,title,total,path,url,doneDate'
+  download:'&startTime,title,total,path,url,doneDate',
+  delDownload:'delStartTime,delTitle,delTotal,delPath,delUrl'
 })
 
 

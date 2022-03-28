@@ -130,3 +130,26 @@ ipc.on('showMenuDone', (event) => {
 
 })
 
+ipc.on('showMenuDel', (event) => {
+  const template = [
+
+    { label: '重新下载',
+      click: () => { event.sender.send('menuDelAgain')}
+    },
+    { label: '打开下载页',
+
+      click: () => { event.sender.send('menuDelOpenPage')}
+    },
+    { label: '复制下载链接',
+
+      click: () => { event.sender.send('menuDelUrl')}
+    },
+
+    { label: '删除记录',
+      click: () => { event.sender.send('menuDelDelete')}
+    }
+  ]
+  const menu = Menu.buildFromTemplate(template)
+  menu.popup(BrowserWindow.fromWebContents(event.sender))
+
+})
