@@ -30,6 +30,10 @@ const cloudSpaceModel={
   async restore (spaceId, userInfo) {
     let result = await spaceApi.restore(spaceId,userInfo)
     return standReturn.autoReturn(result)
+  },
+  async deleteSpace(space,userInfo){
+    let result = await spaceApi.delete(space.nanoid,userInfo)
+    return standReturn.autoReturn(result)
   }
 }
 

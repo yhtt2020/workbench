@@ -20,11 +20,12 @@ const tpl = `
   <div style="text-align: center">
     <!--      <a-empty text="无空间" v-if="spaces.length===0"></a-empty>-->
     <div style="text-align: left;overflow-y: auto;max-height: 310px;margin-right: 20px;padding-top: 10px;padding-left: 40px;padding-bottom: 10px" class="scroller">
-      <a-card @click="switchSpace(space)" :style="{'margin-right':index%2===1?'0':'10px'}" v-for="space,index in spaces" hoverable style="margin-left:20px;width: 250px;display: inline-block;margin-bottom: 10px;">
+    <a-dropdown v-for="space,index in spaces" :trigger="['contextmenu']">
+            <a-card @click="switchSpace(space)" :style="{'margin-right':index%2===1?'0':'10px'}"  hoverable style="margin-left:20px;width: 250px;display: inline-block;margin-bottom: 10px;">
         <a-card-meta :title="space.name" >
         <template #description>
         <span style="font-size: 12px;color: red;position: absolute;right: 10px;top: 10px" v-if="space.isOtherUsing">其他设备正在使用中</span>
-        <span style="font-size: 12px;color: grey;position: absolute;right: 10px;top: 10px" v-if="space.isSelfUsing">当前使用空间</span>
+        <span style="font-size: 12px;color: red;position: absolute;right: 10px;top: 10px" v-if="space.isSelfUsing">当前使用空间</span>
         {{space.count_task+ ' 标签组  '+ space.count_tab+' 标签'}}
 </template>
           <template #avatar>
@@ -32,6 +33,13 @@ const tpl = `
           </template>
         </a-card-meta>
       </a-card>
+            <template #overlay>
+      <a-menu>
+        <a-menu-item @click="deleteSpace(space)" :key="'delete_'+index">删除空间</a-menu-item>
+      </a-menu>
+    </template>
+  </a-dropdown>
+
       <a-card @click="showCreateSpace" hoverable style="width: 250px;display: inline-block;margin-left:20px;">
         <a-card-meta title="创建新空间" description="创建一个全新的空间">
           <template #avatar>
@@ -92,7 +100,8 @@ const SpaceSelect = {
       pwd: '',
       visibleCreate:false,
       newSpaceName:'',
-      clientId:''
+      clientId:'',
+      currentSpace:{}
     }
   },
   async mounted () {
@@ -116,8 +125,8 @@ const SpaceSelect = {
 
     }
     this.user.clientId=userModel.getClientId()
+    this.currentSpace=await spaceModel.getCurrent()
     await this.loadSpaces()
-
     //获取网络空间用户信息
 
     // if (user) {
@@ -149,13 +158,23 @@ const SpaceSelect = {
         if(result.status===1){
           spaces= result.data
           spaces.forEach(space=>{
-            if(space.client_id && space.client_id !==this.user.clientId){
-              space.isOtherUsing=true
-            }else if((space.client_id===this.user.clientId)){
-              space.isSelfUsing=true
+            if(this.user.uid){ //云端判断逻辑
+              if(space.client_id && space.client_id !==this.user.clientId){
+                space.isOtherUsing=true
+                space.isUsing=true
+              }else if((space.client_id===this.user.clientId)){
+                space.isSelfUsing=true
+                space.isUsing=true
+              }else{
+                space.isUsing=false
+              }
             }else{
-              space.isUsing=false
+              if(space.id ===this.currentSpace.spaceId){
+                space.isSelfUsing=true
+                space.isUsing=true
+              }
             }
+
           })
         }else{
           window.antd.message.error('获取用户空间失败。失败原因：'+result.info)
@@ -204,20 +223,38 @@ const SpaceSelect = {
         this.$refs.spaceNameInput.input.focus()
       },200)
     },
-    deleteAccount (uid) {
+     deleteSpace (space) {
+       if(space.isUsing || space.isOtherUsing){
+         window.antd.message.info('不可删除正在使用中的空间。')
+         return
+       }
+
       antd.Modal.confirm({
-        title: '解绑此账号',
-        content: '解绑账号并不会影响账号数据，仅仅是将本地账号退出。但是退出后无法再使用此账号下的所有空间。',
+        title: '删除空间确认',
+        content: '是否确认删除 【'+space.name+'】 ？空间一旦被删除将无法恢复，所有标签组的设置将丢失。请务必确认后果。',
         centered: true,
-        okText: '确认',
+        okText: '我已知晓后果，仍要删除',
         cancelText: '取消',
-        onOk: () => {
-          let result = userModel.delete( uid ).then(() => {
-            window.antd.message.success('解绑账号成功。')
-            this.$router.replace({path:'/'})
-          }).catch(()=>{
-            window.antd.message.error('解绑账号失败。')
-          })
+        onOk:async () => {
+          try{
+            let result= await spaceModel.setUser(this.user).deleteSpace(space)
+            if(result.status){
+              window.antd.message.success('删除空间成功。')
+              let find=-1
+              this.spaces.forEach((sp,index)=>{
+                if(sp.id===space.id){
+                  find=index
+                }
+              })
+              this.spaces.splice(find,1)
+            }else{
+              window.antd.message.error('删除空间失败。')
+            }
+          }
+          catch(e){
+            console.log(e)
+            window.antd.message.error('删除空间失败。未知异常。')
+          }
         }
       })
     },

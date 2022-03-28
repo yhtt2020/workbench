@@ -58,7 +58,8 @@ const spaceModel = {
 
     if (!space) {
       space = {
-        name: '临时空间'
+        name: '临时空间',
+        id:1
       }
     }
     currentSpace.space = space
@@ -85,6 +86,9 @@ const spaceModel = {
   },
   async getLocalSpaces () {
     return localSpaceModel.getAll()
+  },
+  async deleteSpace(space){
+   return await spaceModel.adapterModel.deleteSpace(space,spaceModel.user)
   }
 
 }

@@ -71,6 +71,12 @@ const localSpaceModel={
   getAll(){
     ldb.reload()
     return ldb.db.get('spaces').value()
+  },
+
+  async deleteSpace(space){
+    ldb.reload()
+    ldb.db.get('spaces').remove({id:space.id}).write()
+    return standReturn.success()
   }
 }
 

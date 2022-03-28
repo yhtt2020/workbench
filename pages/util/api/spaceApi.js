@@ -6,7 +6,8 @@ const url = {
   spaceListMy:'/app/spaceListMy',
   change:'/app/changeSpace',
   save:'/app/saveSpace',
-  restore:'/app/getSpace'
+  restore:'/app/getSpace',
+  delete:'/app/deleteSpace'
 }
 
 const spaceApi = {
@@ -29,6 +30,10 @@ const spaceApi = {
   async restore(nanoid,user){
     await baseApi.init(user)
     return baseApi.axios(url.restore,{nanoid:nanoid},'post')
+  },
+  async delete(nanoid,user){
+    await baseApi.init(user)
+    return baseApi.axios(url.delete,{nanoid:nanoid},'post')
   }
 }
 
