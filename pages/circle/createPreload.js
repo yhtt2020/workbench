@@ -18,6 +18,7 @@ window.XMLHttpRequest.prototype.open = function (
       if(resObj.code == 200) {
         ipc.send('teamTip', Number(resObj.data.id))
         ipc.send('refreshCircle')
+        ipc.send('channelReloadGroup')
       }
     }
   });
