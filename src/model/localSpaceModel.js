@@ -50,7 +50,7 @@ const localSpaceModel={
     ldb.reload()
     try{
       let spaces=[]
-     spaces =  ldb.db.get('spaces').value()
+     spaces =  ldb.db.get('spaces').orderBy('update_time','desc').value()
      return  standReturn.success(spaces)
     }catch (e){
      return  standReturn.failure([],'无法读取本地空间。')
@@ -77,7 +77,15 @@ const localSpaceModel={
     ldb.reload()
     ldb.db.get('spaces').remove({id:space.id}).write()
     return standReturn.success()
+  },
+  async renameSpace(newName,space){
+    ldb.reload()
+    console.log(newName,space)
+    ldb.db.get('spaces').find({id:space.id}).assign({name:newName,update_time:Date.now()}).write()
+    return standReturn.success()
   }
+
+
 }
 
 module.exports = localSpaceModel

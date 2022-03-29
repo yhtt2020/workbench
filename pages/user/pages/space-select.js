@@ -39,6 +39,7 @@ const tpl = `
             </a-tooltip>
         <template #overlay>
           <a-menu>
+            <a-menu-item @click="showRenameSpace(space)" :key="'rename_'+index">重命名</a-menu-item>
             <a-menu-item @click="deleteSpace(space)" :key="'delete_'+index">删除空间</a-menu-item>
           </a-menu>
         </template>
@@ -72,7 +73,19 @@ const tpl = `
       <a-button v-if="user.uid!==0" @click="deleteAccount(user.uid)">解绑账号</a-button>
     </div>
   </div>
-
+ <a-modal
+    centered
+    v-model:visible="visibleRename"
+    title="空间重命名"
+    ok-text="修改"
+    cancel-text="取消"
+    width="300px"
+    @ok="doRenameSpace"
+  >
+    <p>输入空间新名称</p>
+    <p><a-input ref="spaceRenameInput" @keyup.enter="doRenameSpace" v-model:value="spaceRename" placeholder="新空间名"></a-input></p>
+    <p></p>
+  </a-modal>
   <a-modal
     centered
     v-model:visible="visibleCreate"
@@ -131,6 +144,12 @@ const SpaceSelect = {
       //创建
       visibleCreate: false,
       newSpaceName: '',
+
+      //修改<a-modal
+
+      visibleRename:false,
+      renamingSpace:null,
+      spaceRename:'',
 
       clientId: ''
     }
@@ -319,6 +338,57 @@ const SpaceSelect = {
         this.$refs.spaceNameInput.input.focus()
       }, 200)
     },
+
+    showRenameSpace(space){
+      this.visibleRename=true
+      this.spaceRename=space.name
+      this.renamingSpace=space
+      setTimeout(() => {
+        this.$refs.spaceRenameInput.input.select()
+      }, 200)
+      //     centered
+      //     v-model:visible="visibleRenameCreate"
+      //     title="空间重命名"
+      //     ok-text="修改"
+      //     cancel-text="取消"
+      //     width="300px"
+      //     @ok="doCreateSpace"
+      //   >
+      //     <p>输入空间新名称</p>
+      //     <p><a-input ref="spaceRenameInput" @keyup.enter="doRenameSpace" v-model:value="spaceRename" placeholder="新空间名"></a-input></p>
+      //     <p></p>
+      //   </a-modal>
+    },
+    async doRenameSpace(){
+      try {
+        if(this.spaceRename===this.renamingSpace.name){
+          window.antd.message.error('重命名的名称和原名称一致，请修改新名称。')
+          return
+        }
+        if(this.spaceRename.trim()===''){
+          window.antd.message.error('名称不能为空。')
+          return
+        }
+        if(this.spaceRename.trim().length>10){
+          window.antd.message.error('名称不能超过10个汉字。')
+          return
+        }
+        let result = await spaceModel.setUser(this.user).renameSpace( this.spaceRename.trim(),this.renamingSpace )
+        if (result.status === 1) {
+          window.antd.message.success('重命名空间成功。')
+          this.loadSpaces()
+          this.visibleRename = false
+        } else {
+          window.antd.message.error('空间名称长度在1-10个汉字，请重新输入。')//获取真实的错误信息
+          this.$refs.spaceRenameInput.input.select()
+        }
+      } catch (e) {
+        window.antd.message.error('重命名空间失败，未知错误。')
+        console.log(e)
+
+      }
+    },
+
     deleteSpace (space) {
       if (space.isUsing || space.isOtherUsing) {
         window.antd.message.info('不可删除正在使用中的空间。')

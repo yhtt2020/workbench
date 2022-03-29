@@ -91,6 +91,9 @@ const spaceModel = {
   },
   async importFromLocal(spaces){
     return await spaceModel.adapterModel.importFromLocal(spaces,spaceModel.user)
+  },
+  async renameSpace(newName,space){
+    return await spaceModel.adapterModel.renameSpace(newName,space,spaceModel.user)
   }
 
 }
