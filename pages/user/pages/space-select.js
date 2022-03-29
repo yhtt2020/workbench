@@ -69,7 +69,7 @@ const tpl = `
   <div style="position: absolute;bottom: 10px;width: 100%;padding: 30px;padding-bottom: 15px">
     <div style="float: left;"><a-button size="small" shape="round">隐私空间</a-button></div>
     <div style="float:right;width: 200px;text-align: right">
-      <a-button v-if="user.uid!==0" style="margin-right: 10px">设置密码</a-button>
+      <a-button v-if="user.uid!==0" @click="setEnterPwd()" style="margin-right: 10px">设置密码</a-button>
       <a-button v-if="user.uid!==0" @click="deleteAccount(user.uid)">解绑账号</a-button>
     </div>
   </div>
@@ -99,7 +99,19 @@ const tpl = `
     <p><a-input ref="spaceNameInput" @keyup.enter="doCreateSpace" v-model:value="newSpaceName" placeholder="空间名称"></a-input></p>
     <p></p>
   </a-modal>
-
+  <a-modal
+    centered
+    v-model:visible="visibleSetEnterPwd"
+    title="设置空间密码"
+    ok-text="设置"
+    cancel-text="取消"
+    width="300px"
+    @ok="doSetEnterPwd"
+  >
+    <p>请设置新的空间密码，留空则不再使用空间密码。</p>
+    <p><a-input-password ref="enterPwdInput" @keyup.enter="doSetEnterPwd" v-model:value="newEnterPwd" placeholder="留空不使用"></a-input-password></p>
+    <p></p>
+  </a-modal>
    <a-modal
     centered
     v-model:visible="visibleImport"
@@ -150,6 +162,11 @@ const SpaceSelect = {
       visibleRename:false,
       renamingSpace:null,
       spaceRename:'',
+
+      //设置空间密码
+      visibleSetEnterPwd:false,
+      showSetEnterPwd:true,
+      newEnterPwd:'',
 
       clientId: ''
     }
@@ -207,6 +224,53 @@ const SpaceSelect = {
     // }
   },
   methods: {
+     setEnterPwd(){
+      this.visibleSetEnterPwd=true
+    },
+    doSetEnterPwd(){
+       if(this.newEnterPwd!==''){
+         antd.Modal.confirm({
+           title: '修改密码确认',
+           content: '是否确认设置新的密码？请牢记密码，一旦忘记，则只能解绑后重新绑定账号。',
+           centered: true,
+           okText: '确认设置密码',
+           cancelText: '取消',
+           onOk: async () => {
+             try {
+               userModel.setEnterPwd(this.newEnterPwd,this.user.uid)
+               this.user.enterPwd=this.newEnterPwd
+               this.visibleSetEnterPwd=false
+               window.antd.message.success('访问密码设置成功。')
+
+             } catch (e) {
+               console.log(e)
+               window.antd.message.error('设置访问密码失败。未知异常。')
+             }
+           }
+         })
+      }else if(this.newEnterPwd==='' && this.user.enterPwd!==''){
+         //原来有密码，清空了密码
+         antd.Modal.confirm({
+           title: '删除密码确认',
+           content: '是否确认删除空间密码？',
+           centered: true,
+           okText: '删除',
+           cancelText: '取消',
+           onOk: async () => {
+             try {
+               userModel.setEnterPwd(this.newEnterPwd,this.user.uid)
+               this.user.enterPwd=this.newEnterPwd
+               this.visibleSetEnterPwd=false
+               window.antd.message.success('删除访问密码成功。')
+
+             } catch (e) {
+               console.log(e)
+               window.antd.message.error('删除访问密码失败。未知异常。')
+             }
+           }
+         })
+       }
+    },
     /**
      * 导入本机空间
      */

@@ -11,15 +11,11 @@ const tpl = `
 <div>{{user.nickname}}</div>
 </div>
       <p style="text-align: center;color: #999;margin-top: 20px;">
-        <a-input placeholder="输入快捷密码" ref="pwdInput" v-model:pwd="pwd" style="width: 150px">
-         <template #suffix>
-        <a-tooltip title="确认密码">
-          <svg t="1648091812193" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="21174" width="32" height="32"><path d="M161.536 523.52a42.666667 42.666667 0 0 1 42.666667-42.666667l518.058666 0.085334-228.266666-228.266667a42.666667 42.666667 0 0 1 60.373333-60.373333l301.653333 301.696a42.666667 42.666667 0 0 1 0 60.373333l-301.653333 301.653333a42.666667 42.666667 0 0 1-60.373333-60.330666l229.546666-229.418667-519.338666-0.042667a42.666667 42.666667 0 0 1-42.666667-42.666666z" fill="#2c2c2c" p-id="21175"></path></svg>
-        </a-tooltip>
-      </template>
-</a-input>
+        <a-input-password :style="{'margin-left': shake+'px'}" placeholder="输入访问密码" @keyup.enter="doEnter" ref="pwdInput" v-model:value="pwd" style="width: 200px">
+</a-input-password>
       </p>
       <div style="text-align: center">
+      <a-button @click="doEnter" :disabled="this.pwd===''" :type="this.pwd!==''?'primary':'default'">确认密码</a-button>
       </div>
 </div>
 `
@@ -29,7 +25,8 @@ const EnterPwd = {
     data () {
       return {
         user:{},
-        pwd:''
+        pwd:'',
+        shake:0
       }
     },
     async mounted () {
@@ -43,6 +40,26 @@ const EnterPwd = {
       this.$refs['pwdInput'].input.focus()
     },
     methods: {
+      doEnter(){
+        let right=userModel.compareEnterPwd(this.pwd,this.user.uid)
+        console.log(right)
+        if(right){
+          this.$router.replace({ name: 'space', params: { uid: this.user.uid } })
+        }else{
+          let timer
+          let i=0
+          timer = setInterval(()=>{
+            this.shake = (( i % 3 ) - 1) * 60;
+            console.log(this.shake)
+            i++
+            if(i===5){
+              clearInterval(timer);
+            }
+          },50);
+
+        }
+      },
+
       goLogin(){
         ipc.send('login')
       //https://s.apps.vip/login?response_type=code&client_id=10001&state=1

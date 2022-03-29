@@ -132,7 +132,7 @@ const UsersSelect = {
       })
     },
     enterAccount (user) {
-      if (!!!user.pwd) {
+      if (!!!user.enterPwd) {
         this.$router.push({ name: 'space', params: { uid: user.uid } })
       } else
         this.$router.push({ name: 'enterPwd', params: { uid: user.uid } })

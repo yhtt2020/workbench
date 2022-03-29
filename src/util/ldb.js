@@ -5,7 +5,9 @@ const tables= {
   currentSpace:{
     spaceId:1,
     spaceType:'local'
-  }
+  },
+  users:[],
+  config:{}
 }
 
 let ldb = {

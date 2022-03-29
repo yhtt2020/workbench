@@ -49,9 +49,12 @@ app.whenReady().then(()=>{
     const ldb=require(__dirname+'/src/util/ldb.js')
     ldb.load(app.getPath('userData')+'/ldb.json')
     let firstSpace=ldb.db.get('spaces')[0].value()
+    let oldUser=ldb.db.get('currentSpace.userInfo').value()
+    console.log(oldUser)
     ldb.db.set('currentSpace.spaceId',firstSpace['id']).write()
     ldb.db.set('currentSpace.spaceType','local').write()
     ldb.db.set('currentSpace.userInfo', {}).write()
+    ldb.db.get('users').remove({uid:oldUser.uid}).write()
     //1是往lumen发消息，让lumen退出
     appManager.getWindowByAppId(1).view.webContents.send('imLogout')
   })

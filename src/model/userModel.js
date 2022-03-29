@@ -1,12 +1,19 @@
+const crypto = require('crypto')
 const db = require('../../js/util/database.js').db
+if (typeof window !=='undefined') {
+  ldb = window.ldb
+}
 const userModel={
+
   async getAll(){
+    ldb.reload()
     let users=await db.accounts.toArray()
-    users.forEach(user=>{
-      if(!!!user.spaces){
-        user.spaces=[]
-      }
+    users.forEach(item=>{
+      let userLdb=ldb.db.get('users').find({uid:item.uid}).value()
+      Object.assign(item,userLdb)
+      console.log(item)
     })
+
     return users
   },
   async get(map){
@@ -15,9 +22,9 @@ const userModel={
     }
     let user=await db.accounts.where(map).first()
     if(user){
-      if(!!!user.spaces){
-        user.spaces=[]
-      }
+     ldb.reload()
+      let userLdb=ldb.db.get('users').find({uid:map.id}).value()
+      user=Object.assign(user,userLdb)
       return user
     }else{
       return false
@@ -26,13 +33,43 @@ const userModel={
 
   getClientId(){
     const settings=require('../../js/util/settings/settings.js')
-    console.log(window.globalArgs['user-data-path'] + (process.platform === 'win32' ? '\\' : '/') + 'settings.json')
-    console.log(settings.list)
     return settings.get('clientID')
   },
 
   async delete(map){
+    ldb.reload()
+    ldb.db.get('users').remove({uid:map.uid}).write()
     return await db.accounts.where(map).delete(map)
+  },
+  sha(text){
+    const crypto = require('crypto')
+    const sha = crypto.createHash('sha1')
+    sha.update(text);
+    return sha.digest('hex')
+  },
+
+  setEnterPwd(enterPwd,uid){
+    ldb.reload()
+    let user=ldb.db.get('users').find({uid:uid}).value()
+    if(enterPwd!==''){
+      enterPwd=userModel.sha(enterPwd)
+    }
+    if(!!!user){
+      ldb.db.get('users').push({
+        id:uid,
+        uid:uid,
+        enterPwd:enterPwd
+      }).write()
+    }else{
+      ldb.db.get('users').find({uid:uid}).assign({'enterPwd':enterPwd}).write()
+    }
+  },
+
+  compareEnterPwd(pwd,uid){
+    ldb.reload()
+    let pwdSha= userModel.sha(pwd)
+    let user =ldb.db.get('users').find({uid:uid}).value()
+    return user.enterPwd === pwdSha
   }
 }
 

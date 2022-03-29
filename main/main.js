@@ -252,7 +252,6 @@ function createWindowWithBounds(bounds) {
     mainWindow.show()
     loadSidePanel()
     getAllAppsWindow()
-    callWetherShowUserWindow()
     changingSpace=false
   })
 
@@ -426,6 +425,7 @@ app.on('ready', function() {
 				global.URLToOpen = null
 			}
 		})
+    callWetherShowUserWindow()
 	})
 
 
@@ -433,6 +433,7 @@ app.on('ready', function() {
 	mainMenu = buildAppMenu()
 	Menu.setApplicationMenu(mainMenu)
 	createDockMenu()
+
 
 
 })
