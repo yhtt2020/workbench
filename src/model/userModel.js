@@ -32,8 +32,7 @@ const userModel={
   },
 
   async delete(map){
-    let result=await db.accounts.delete(map)
-    return result
+    return await db.accounts.where(map).delete(map)
   }
 }
 
