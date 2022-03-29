@@ -28,8 +28,8 @@ function createDownloadWin () {
     })
 
 
-  let downloadWindow_x = (mainWindow.getBounds().x + mainWindow.getBounds().width - downloadWindow.getBounds().width - 15)
-  downloadWindow.setPosition(downloadWindow_x,mainWindow.getBounds().y+90)
+  let x = (mainWindow.getBounds().x + mainWindow.getBounds().width - downloadWindow.getBounds().width - 15)
+  downloadWindow.setPosition(x,mainWindow.getBounds().y+90)
 
   downloadWindow.webContents.loadURL('file://' + __dirname + '/pages/download/index.html')
 
