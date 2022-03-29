@@ -8,6 +8,10 @@ var tabEditor = require('navbar/tabEditor.js')
 
 const defaultKeybindings = {
   initialize: function () {
+    keybindings.defineShortcut('globalSearch', function (e) {
+      ipc.send('openGlobalSearch')
+    })
+
     keybindings.defineShortcut('quitMin', function () {
       ipc.send('quit')
     })

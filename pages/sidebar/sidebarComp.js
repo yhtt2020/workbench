@@ -380,6 +380,10 @@ const sidebarTpl = `
             </a-collapse>
           </div>
         </template>
+        <li @click="visibleGlobalSearch">
+          <a-button type="default" shape="circle" icon="search"></a-button>
+          <div class="item-title">搜索</div>
+        </li>
         <li @click="visibleMessageCenter">
           <a-badge :dot="this.$store.getters.getAllMessages.length > 0 ? true : false">
             <a-button type="default" shape="circle" icon="bell"></a-button>
@@ -394,6 +398,7 @@ const sidebarTpl = `
     </div>
     <message-center ref="messageRef" :visible="messageShow" :mod="mod" @closeMessage="() => this.messageShow = !this.messageShow" @updateVisible="(val) => this.messageShow = val">
     </message-center>
+    <global-search :visible="globalSearchShow" @closeGlobalSearch="() => this.globalSearchShow = !this.globalSearchShow"></global-search>
   </div>
 `
 
@@ -401,6 +406,7 @@ Vue.component('sidebar', {
 	data: function() {
 		return {
       messageShow: false,
+      globalSearchShow: false,
       resize:false,
       startY:0,
       apps:[],
@@ -582,6 +588,9 @@ Vue.component('sidebar', {
           freeFixed: true
         })
       }
+    },
+    visibleGlobalSearch() {
+      this.globalSearchShow = !this.globalSearchShow
     },
     openCircle(args) {
       this.userPanelVisible = false

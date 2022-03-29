@@ -105,6 +105,36 @@ const tools = {
       );
     }
   },
+
+  /**
+   * 防抖
+   *
+   * @param {Function} func 执行的函数
+   * @param {Number} wait 防抖秒数
+   * @param {Boolean} immediate  是否立即
+   * @returns
+   */
+  debounce(func, wait, immediate = false) {
+    let timeout;
+
+    return function () {
+      let context = this;
+      let args = arguments;
+
+      if (timeout) clearTimeout(timeout); // timeout 不为null
+      if (immediate) {
+        let callNow = !timeout; // 第一次会立即执行，以后只有事件执行后才会再次触发
+        timeout = setTimeout(function () {
+          timeout = null;
+        }, wait);
+        if (callNow) func.apply(context, args);
+      } else {
+        timeout = setTimeout(function () {
+          func.apply(context, args);
+        }, wait);
+      }
+    };
+  },
 };
 
 module.exports = { tools };

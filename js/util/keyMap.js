@@ -1,4 +1,5 @@
 var defaultKeyMap = {
+  globalSearch: 'mod+f',
   quitMin: 'mod+q',
   addTab: 'mod+t',
   addPrivateTab: 'shift+mod+p',

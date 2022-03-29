@@ -124,6 +124,7 @@ function initialize () {
       expectedKeys++
     }
 
+    console.log(shortcutsList, '??????????????')
     shortcutsList.forEach(function (shortcut) {
       if ((shortcut.keyUp && input.type !== 'keyUp') || (!shortcut.keyUp && input.type !== 'keyDown')) {
         return
