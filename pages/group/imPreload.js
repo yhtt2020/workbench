@@ -58,3 +58,7 @@ ipc.on('imLogout', () => {
 ipc.on('switchChat', (event, args) => {
   window.$instance.$children[0].$children[0].clickTab(args)
 })
+
+ipc.on('reloadGroup', () => {
+  window.location.reload()
+})

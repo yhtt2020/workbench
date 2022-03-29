@@ -125,9 +125,11 @@ window.onload = function() {
       getAllCircle: state => {
         let allCircle = []
         state.managerGroups.forEach(e => {
+          e.lord = true
           allCircle.push(e)
         })
         state.joinedGroups.forEach(e => {
+          e.lord = false
           if(!state.managerGroups.some(v => v.id === e.id)) {
             allCircle.push(e)
           }

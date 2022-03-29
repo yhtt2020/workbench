@@ -596,6 +596,10 @@ ipc.on('channelFreeFixed', () => {
   SidePanel.mainWindowSend('freeAdjustByFixed')
 })
 
+ipc.on('channelTemporaryAdjust', (event, args) => {
+  SidePanel.mainWindowSend('temporaryAdjust', args)
+})
+
 var count = 0
 ipc.on('showSidePanel', function () {
   loadSidePanel()

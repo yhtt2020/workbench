@@ -360,4 +360,28 @@ ipc.on('freeAdjustByFixed', () => {
   }
 })
 
+ipc.on('temporaryAdjust', (event, args) => {
+  if(args.freeFixed) {
+    if(sideBar.mod === 'open') {
+      sideBar.isMessageFixed = false
+      localStorage.setItem("isMessageFixed", false)
+      sideBar.setToMax()
+    } else {
+      sideBar.isMessageFixed = false
+      localStorage.setItem("isMessageFixed", false)
+      sideBar.setToMin()
+    }
+  } else {
+    if(sideBar.mod === 'open') {
+      sideBar.isMessageFixed = true
+      localStorage.setItem("isMessageFixed", true)
+      sideBar.setToMax()
+    } else {
+      sideBar.isMessageFixed = true
+      localStorage.setItem("isMessageFixed", true)
+      sideBar.setToMin()
+    }
+  }
+})
+
 module.exports = toolbar
