@@ -8,7 +8,8 @@ const url = {
   save:'/app/saveSpace',
   restore:'/app/getSpace',
   delete:'/app/deleteSpace',
-  import:'/app/importSpaces'
+  import:'/app/importSpaces',
+  rename:'/app/renameSpace'
 }
 
 const spaceApi = {
@@ -40,6 +41,10 @@ const spaceApi = {
     await baseApi.init(user)
     return baseApi.axios(url.import,{spaces:spaces},'post')
   },
+  async rename(newName,nanoid,user){
+    await baseApi.init(user)
+    return baseApi.axios(url.rename,{newName:newName,nanoid:nanoid},'post')
+  }
 }
 
 

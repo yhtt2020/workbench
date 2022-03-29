@@ -44,6 +44,10 @@ const cloudSpaceModel={
   async importFromLocal(spaces,userInfo){
     let result =await spaceApi.importFromLocal(spaces,userInfo)
     return standReturn.autoReturn(result)
+  },
+  async renameSpace(newName,space,userInfo){
+    let result =await spaceApi.rename(newName,space.nanoid,userInfo)
+    return standReturn.autoReturn(result)
   }
 }
 

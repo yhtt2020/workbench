@@ -15,7 +15,7 @@ const tpl = `
     </a-row>
 
   </div>
-  <div style="float: right;position: absolute;right: 20px;top: 20px;" ><a-button @click="importFromLocal" size="small">导入</a-button></div>
+  <div v-if="user.uid" style="float: right;position: absolute;right: 20px;top: 20px;" ><a-button @click="importFromLocal" size="small">导入</a-button></div>
   <div style="text-align: center">
     <!--      <a-empty text="无空间" v-if="spaces.length===0"></a-empty>-->
     <div style="text-align: left;overflow-y: auto;max-height: 310px;margin-right: 20px;padding-top: 10px;padding-left: 40px;padding-bottom: 10px" class="scroller">
