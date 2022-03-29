@@ -109,7 +109,7 @@ const UsersSelect = {
         okText: '确认',
         cancelText: '取消',
         onOk: () => {
-          let result = userModel.delete( uid ).then(() => {
+          userModel.delete( {uid:uid} ).then(() => {
             window.antd.message.success('解绑账号成功。')
             this.users.forEach((user, index) => {
               if (user.uid === uid) {
