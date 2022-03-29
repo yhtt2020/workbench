@@ -1242,8 +1242,12 @@ app.whenReady().then(() => {
     } else {
       sidePanel.get().webContents.send('message',{type:"error",config:{content:'团队沟通未运行',key: Date.now()}})
     }
+  })
 
-
+  ipc.on('channelReloadGroup', () => {
+    if(appManager.isAppProcessing(1)) {
+      appManager.getWindowByAppId(1).view.webContents.send('reloadGroup')
+    }
   })
 
   ipc.on('saAppTabNavigate', (event, args) => {

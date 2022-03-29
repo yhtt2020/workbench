@@ -115,10 +115,12 @@ const sidebarTpl = `
                               <a-button class="cb-bottom-zone" type="link" icon="team" @click="openCircle(item.id)">
                                 圈子
                               </a-button>
+                              <div style="border-right: 1px solid #cacaca; height: 60%;"></div>
                               <a-button class="cb-bottom-zone" type="link" icon="message" @click="openGroupChat(item.id)">
                                 群聊
                               </a-button>
-                              <a-button class="cb-bottom-zone" type="link" icon="setting"
+                              <div style="border-right: 1px solid #cacaca; height: 60%;" v-show="item.lord"></div>
+                              <a-button class="cb-bottom-zone" type="link" icon="setting" v-show="item.lord"
                                 @click="openCircleSetting(item.id)">
                                 设置
                               </a-button>
@@ -390,7 +392,7 @@ const sidebarTpl = `
         </li>
       </ul>
     </div>
-    <message-center :visible="messageShow" :mod="mod" @closeMessage="() => this.messageShow = !this.messageShow" @updateVisible="(val) => this.messageShow = val">
+    <message-center ref="messageRef" :visible="messageShow" :mod="mod" @closeMessage="() => this.messageShow = !this.messageShow" @updateVisible="(val) => this.messageShow = val">
     </message-center>
   </div>
 `
@@ -573,6 +575,13 @@ Vue.component('sidebar', {
 	methods: {
     visibleMessageCenter() {
       this.messageShow = !this.messageShow
+      if(this.$refs.messageRef.fixed) {
+        this.messageShow ? ipc.send('channelTemporaryAdjust', {
+          freeFixed: false
+        }) : ipc.send('channelTemporaryAdjust', {
+          freeFixed: true
+        })
+      }
     },
     openCircle(args) {
       this.userPanelVisible = false
