@@ -316,7 +316,7 @@ const sidebarTpl = `
              <a-menu-item v-if="cloudSpaces.length===0"  disabled="" key="current">
             登录后使用云空间
           </a-menu-item>
-         <a-menu-item v-else  @click="confirmChangeSpace(space.nanoid,'cloud')" v-for="space in cloudSpaces" :key="space.nanoid">
+         <a-menu-item v-else  @click="confirmChangeSpace(space.nanoid,'cloud')" v-for="space in cloudSpaces" :key="space.nanoid" :disable="space['client_id']!=='' && currentSpace.space.nanoid!==space.nanoid">
             <a-tag color="green" v-if="currentSpace.space.nanoid===space.nanoid">当前</a-tag><a-tag v-else color="#108ee9">云端</a-tag>{{space.name}}
           </a-menu-item>
          <a-menu-divider></a-menu-divider>

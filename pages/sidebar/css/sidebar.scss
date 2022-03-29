@@ -405,7 +405,7 @@ body {
   cursor: pointer;
   font-size: 12px;
   margin-right: 6px;
-  width: 100%;
+  width: 90px;
   color: #999;
   padding: 2px;
   padding-top: 8px;
@@ -427,11 +427,13 @@ body {
 }
 
 .online{
+  outline: none;
   cursor: pointer;
   transition: 0.2s;
   animation: rotate 4s linear infinite;  /*开始动画后无限循环，用来控制rotate*/
 }
 .offline{
+  outline: none;
   cursor: pointer;
   filter: grayscale(1);
 }
