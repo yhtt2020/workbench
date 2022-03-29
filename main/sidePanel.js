@@ -895,55 +895,65 @@ ipc.on('showAllSaApps',(event,args)=>{
 
 })
 
-
-
+const configModel = require(__dirname+'/src/model/configModel')
 let userWindow=null
 let changingSpace=false
+function showUserWindow(args){
+  if(userWindow){
+    userWindow.show()
+    userWindow.focus()
+  }else{
+    let tip=''
+    let modal=false
+    if(args){
+      tip=args.tip?args.tip:''
+      modal=!!args.modal
+    }
+
+    let bounds=mainWindow.getBounds()
+    userWindow=new BrowserWindow({
+      backgroundColor:'#00000000',
+      show:false,
+      transparent: true,
+      frame:false,
+      resizable:false,
+      shadow:false,
+      alwaysOnTop:true,
+      webPreferences:{
+        nodeIntegration: true,
+        contextIsolation: false,
+        additionalArguments: [
+          '--user-data-path=' + userDataPath,
+          '--app-version=' + app.getVersion(),
+          '--app-name=' + app.getName(),
+          ...((isDevelopmentMode ? ['--development-mode'] : [])),
+          '--tip='+tip,
+          '--modal='+modal
+        ]
+      }
+    })
+    userWindow.setBounds(bounds)
+    userWindow.loadURL('file://'+path.join(__dirname,'/pages/user/index.html'))
+    userWindow.on('ready-to-show',()=>{
+      userWindow.show()
+    })
+    userWindow.on('close',()=>{
+      userWindow=null
+    })
+  }
+}
+
+function callWetherShowUserWindow(){
+  if(configModel.getShowOnStart())
+  {
+    showUserWindow()
+  }
+}
 /*user面板代码*/
 app.whenReady().then(()=>{
-  ipc.on('showUserWindow',(event,args)=>{
-    if(userWindow){
-      userWindow.show()
-      userWindow.focus()
-    }else{
-      let tip=''
-      let modal=false
-      if(args){
-        tip=args.tip?args.tip:''
-        modal=!!args.modal
-      }
 
-      let bounds=mainWindow.getBounds()
-      userWindow=new BrowserWindow({
-        backgroundColor:'#00000000',
-        show:false,
-        transparent: true,
-        frame:false,
-        resizable:false,
-        shadow:false,
-        alwaysOnTop:true,
-        webPreferences:{
-          nodeIntegration: true,
-          contextIsolation: false,
-          additionalArguments: [
-            '--user-data-path=' + userDataPath,
-            '--app-version=' + app.getVersion(),
-            '--app-name=' + app.getName(),
-            ...((isDevelopmentMode ? ['--development-mode'] : [])),
-            '--tip='+tip,
-            '--modal='+modal
-          ]
-        }
-      })
-      userWindow.setBounds(bounds)
-      userWindow.loadURL('file://'+path.join(__dirname,'/pages/user/index.html'))
-      userWindow.on('ready-to-show',()=>{
-        userWindow.show()
-      })
-      userWindow.on('close',()=>{
-        userWindow=null
-      })
-    }
+  ipc.on('showUserWindow',(event,args)=>{
+    showUserWindow(args)
   })
 
   let loginWindow=null

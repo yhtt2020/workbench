@@ -62,12 +62,13 @@ const tpl = `
         </a-row>
       </template>
        <a-tooltip title="不勾选则每次打开浏览器自动读入上一次离开时的用户空间。" color="blue">
-         <a-checkbox style="position: absolute;bottom: 20px;right: 20px">每次启动的时候选择</a-checkbox>
+         <a-checkbox @change="switchShowOnStart" v-model:checked="showOnStart" style="position: absolute;bottom: 20px;right: 20px">每次启动的时候选择</a-checkbox>
       </a-tooltip>
 
 </div>
 `
 const userModel = require('../../../src/model/userModel')
+const configModel = require('../../../src/model/configModel')
 const UsersSelect = {
   template: tpl,
   data () {
@@ -87,7 +88,8 @@ const UsersSelect = {
         //     }
         //   ]
         // },
-      ]
+      ],
+      showOnStart:false
     }
   },
   async mounted () {
@@ -96,8 +98,13 @@ const UsersSelect = {
     if(window.globalArgs['tip']){
       this.tip=window.globalArgs['tip']
     }
+
+    this.showOnStart= configModel.getShowOnStart()
   },
   methods: {
+    switchShowOnStart(){
+      configModel.setShowOnStart(this.showOnStart)
+    },
     goAddAccount () {
       this.$router.push('/add')
     },

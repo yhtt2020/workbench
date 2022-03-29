@@ -252,6 +252,7 @@ function createWindowWithBounds(bounds) {
     mainWindow.show()
     loadSidePanel()
     getAllAppsWindow()
+    callWetherShowUserWindow()
     changingSpace=false
   })
 
@@ -262,7 +263,6 @@ function createWindowWithBounds(bounds) {
 		// when you should delete the corresponding element.
 		mainWindow = null
 		mainWindowIsMinimized = false
-    console.log(changingSpace)
     if(process.platform==='win32' && !changingSpace){
      //windows上，且不是在切换空间，则关闭整个应用
       // todo 如果做了托盘菜单，这里不需要直接退出app
@@ -316,7 +316,6 @@ function createWindowWithBounds(bounds) {
 
 	mainWindow.on('showBookmarks',function(){
 		sendIPCToWindow(mainWindow,'showBookmarks')
-		console.log('showboom')
 	})
 
 	//loadSidebar()

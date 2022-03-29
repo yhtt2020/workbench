@@ -1,4 +1,4 @@
-if (window) {
+if (typeof window !=='undefined') {
   ldb = window.ldb
 }
 const localSpaceModel = require('./localSpaceModel')
