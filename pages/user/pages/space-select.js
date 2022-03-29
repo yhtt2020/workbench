@@ -469,7 +469,25 @@ const SpaceSelect = {
           })
         }
       }
-    }
+    },
+
+    deleteAccount (uid) {
+      antd.Modal.confirm({
+        title: '解绑此账号',
+        content: '解绑账号并不会影响账号数据，仅仅是将本地账号退出。但是退出后无法再使用此账号下的所有空间。',
+        centered: true,
+        okText: '确认',
+        cancelText: '取消',
+        onOk: () => {
+          userModel.delete( {uid:uid} ).then(() => {
+            window.antd.message.success('解绑账号成功。')
+            this.$router.replace('/')
+          }).catch(()=>{
+            window.antd.message.error('解绑账号失败。')
+          })
+        }
+      })
+    },
   }
 }
 
