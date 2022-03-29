@@ -1,3 +1,4 @@
+
 let downloadWindow=null
 function getDownloadWindow(){
   if(downloadWindow===null){
@@ -5,14 +6,18 @@ function getDownloadWindow(){
   }
   return downloadWindow
 }
+
+
 function createDownloadWin () {
     downloadWindow = new BrowserWindow({
       frame: true,
       width: 390,
       height: 465,
+      sandbox:false,
+      // disableDialogs:true,
       resizable: false,
-      autoHideMenuBar:true,
-      show:false,
+      autoHideMenuBar: true,
+      show: false,
       acceptFirstMouse: true,
       maximizable: false,
       alwaysOnTop: true,
@@ -22,7 +27,12 @@ function createDownloadWin () {
       }
     })
 
+
+  let x = (mainWindow.getBounds().x + mainWindow.getBounds().width - downloadWindow.getBounds().width - 15)
+  downloadWindow.setPosition(x,mainWindow.getBounds().y+90)
+
   downloadWindow.webContents.loadURL('file://' + __dirname + '/pages/download/index.html')
+
 
   downloadWindow.on('close',(event)=> {
     if (forceClose) {
@@ -48,9 +58,19 @@ function createDownloadWin () {
 
 app.whenReady().then(() => {
 
-  ipc.on('openDownload', () => {
+  ipc.on('openDownload', (event,args) => {
     getDownloadWindow()
     downloadWindow.show()
+
+
+  })
+
+})
+
+ipc.on('deleteFile',function (e,deletepath){
+  const { shell } = require('electron')
+  shell.trashItem(deletepath).then(() =>{
+   return true
   })
 
 })
@@ -110,3 +130,4 @@ ipc.on('showMenuDone', (event) => {
   menu.popup(BrowserWindow.fromWebContents(event.sender))
 
 })
+
