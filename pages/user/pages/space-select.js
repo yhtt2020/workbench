@@ -227,6 +227,7 @@ const SpaceSelect = {
         let result = await spaceModel.setUser(this.user).importFromLocal(selectedSpaces)
         if (result.status === 1) {
           window.antd.message.success('导入空间成功。')
+          this.visibleImport = false
           await this.loadSpaces()
         } else {
           window.antd.message.error('导入空间失败。'+result.data)
