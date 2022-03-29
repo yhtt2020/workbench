@@ -29,7 +29,7 @@
                @mouseleave="mouseLeave">
             <div style="margin-top: 0;width: 100%;height: 55px;">
               <div style="width: 34px;height: 40px;position: absolute;margin-top: 8px;margin-left: 5px;" >
-                <img src="./icon/white.svg">
+                <img src="../../icons/white.svg">
               </div>
 
               <div>
@@ -71,7 +71,7 @@
                @mouseleave="mouseLeave">
             <div style="width: 100%;height: 45px;">
               <div style="width: 34px;height: 40px;position: absolute;margin-top: 4px;margin-left: 10px;" >
-                <img src="./icon/white.svg">
+                <img src="../../icons/white.svg">
               </div>
                 <div>
                   <a-modal v-model="visible" title="删除下载任务" ok-text="确认" cancel-text="取消" @ok="hideModalDone()">
@@ -102,7 +102,7 @@
                @mouseleave="mouseLeave">
             <div style="width: 100%;height: 45px;">
               <div style="width: 34px;height: 40px;position: absolute;margin-top: 4px;margin-left: 10px;" >
-                <img src="./icon/white.svg">
+                <img src="../../icons/white.svg">
               </div>
               <div style="position: absolute;margin-left: 270px;margin-top: 14px">文件已被删除</div>
               <div style="margin-left: 50px;font-size: 13px;font-weight: bold ;">{{deleteList.title}}</div>
@@ -396,7 +396,7 @@
                   total: appVue.selectList.total,
                   path: appVue.selectList.path,
                    url: appVue.selectList.url,
-                  doneDate:myDate.toLocaleDateString(),
+
                   status:'已删除',
               })
                 appVue.deleteLists.unshift({
