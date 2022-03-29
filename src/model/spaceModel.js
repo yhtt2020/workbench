@@ -48,7 +48,6 @@ const spaceModel = {
     }
     let space = {}
     if (currentSpace.spaceType === 'cloud') {
-      console.log(currentSpace.userInfo)
       let result = await spaceModel.setAdapter('cloud').getSpace(currentSpace.spaceId,currentSpace.userInfo)
       if (result.status === 1)
         space = result.data
@@ -89,6 +88,9 @@ const spaceModel = {
   },
   async deleteSpace(space){
    return await spaceModel.adapterModel.deleteSpace(space,spaceModel.user)
+  },
+  async importFromLocal(spaces){
+    return await spaceModel.adapterModel.importFromLocal(spaces,spaceModel.user)
   }
 
 }

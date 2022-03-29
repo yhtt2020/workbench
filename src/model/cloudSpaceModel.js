@@ -34,6 +34,16 @@ const cloudSpaceModel={
   async deleteSpace(space,userInfo){
     let result = await spaceApi.delete(space.nanoid,userInfo)
     return standReturn.autoReturn(result)
+  },
+  /**
+   * 导入本机空间到云端
+   * @param spaces
+   * @param userInfo
+   * @returns {Promise<{data: {}, status: number}|{data: *, status: number, info: *}>}
+   */
+  async importFromLocal(spaces,userInfo){
+    let result =await spaceApi.importFromLocal(spaces,userInfo)
+    return standReturn.autoReturn(result)
   }
 }
 

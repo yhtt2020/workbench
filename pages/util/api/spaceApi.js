@@ -7,7 +7,8 @@ const url = {
   change:'/app/changeSpace',
   save:'/app/saveSpace',
   restore:'/app/getSpace',
-  delete:'/app/deleteSpace'
+  delete:'/app/deleteSpace',
+  import:'/app/importSpaces'
 }
 
 const spaceApi = {
@@ -34,7 +35,11 @@ const spaceApi = {
   async delete(nanoid,user){
     await baseApi.init(user)
     return baseApi.axios(url.delete,{nanoid:nanoid},'post')
-  }
+  },
+  async importFromLocal(spaces,user){
+    await baseApi.init(user)
+    return baseApi.axios(url.import,{spaces:spaces},'post')
+  },
 }
 
 

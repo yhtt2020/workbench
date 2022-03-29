@@ -2,7 +2,7 @@ const userModel = require('../../../src/model/userModel')
 const spaceModel = require('../../../src/model/spaceModel')
 const tpl = `
 <div>
-  <div style="text-align: center">
+  <div style="text-align: center" >
     <a-row style="margin-top: 20px">
       <a-col :span="12" style="text-align: right">
         <a-avatar :size="60" :src="user.avatar">
@@ -10,10 +10,12 @@ const tpl = `
       </a-col>
       <a-col :span="12" style="text-align: left;padding-left: 10px">
         <div style="margin-top: 10px">{{user.nickname}}</div>
-        <p style="text-align: left;font-size: 16px">{{ spaces.length }} <span style="color: #999;font-size: 12px">空间</span></p>
+        <p style="font-size: 16px">{{ spaces.length }} <span style="color: #999;font-size: 12px">空间</span></p>
       </a-col>
     </a-row>
+
   </div>
+  <div style="float: right;position: absolute;right: 20px;top: 20px;" ><a-button @click="importFromLocal" size="small">导入</a-button></div>
   <div style="text-align: center">
     <!--      <a-empty text="无空间" v-if="spaces.length===0"></a-empty>-->
     <div style="text-align: left;overflow-y: auto;max-height: 310px;margin-right: 20px;padding-top: 10px;padding-left: 40px;padding-bottom: 10px" class="scroller">
@@ -84,59 +86,84 @@ const tpl = `
     <p><a-input ref="spaceNameInput" @keyup.enter="doCreateSpace" v-model:value="newSpaceName" placeholder="空间名称"></a-input></p>
     <p></p>
   </a-modal>
+
+   <a-modal
+    centered
+    v-model:visible="visibleImport"
+    title="导入本机空间"
+    ok-text="导入"
+    cancel-text="取消"
+    width="400px"
+    @ok="doImportSpaces"
+  >
+    <p>请选择本机空间导入，可一次导入多个空间。注意：不可导入使用中的空间。</p>
+    <p><a-select
+    v-model:value="value"
+    mode="multiple"
+    placeholder="可多选"
+    style="width: 100%"
+    v-model:value="selectedImportSpaces"
+    :options="localOptions"
+  ></a-select></p>
+  </a-modal>
 </div>
 `
 // const userModel = require('../../util/model/userModel')
-const ipc=require('electron').ipcRenderer
+const ipc = require('electron').ipcRenderer
 const SpaceSelect = {
   template: tpl,
   data () {
     return {
       user: {
-        uid:0,
+        uid: 0,
         spaces: [],
-        clientId:''
+        clientId: ''
       },
-      spaces:[],
+      spaces: [],
+      currentSpace: {},
       pwd: '',
-      visibleCreate:false,
-      newSpaceName:'',
-      clientId:'',
-      currentSpace:{}
+      //导入
+      visibleImport: false,
+      localSpaces: [],
+      localOptions: [],
+      selectedImportSpaces: [],
+
+      //创建
+      visibleCreate: false,
+      newSpaceName: '',
+
+      clientId: ''
     }
   },
   async mounted () {
-    let user={}
-    let uid=Number(this.$route.params.uid)
-    if(!uid){
-       user={
-        nickname:'本机空间',
-        avatar:'../../icons/logo128.png',
-        spaces:[],
-        uid:0
+    let user = {}
+    let uid = Number(this.$route.params.uid)
+    if (!uid) {
+      user = {
+        nickname: '本机空间',
+        avatar: '../../icons/logo128.png',
+        spaces: [],
+        uid: 0
       }
-      this.user=user
-    }else{
+      this.user = user
+    } else {
       //网络用户
-     user = await userModel.get({ id: this.$route.params.uid })
-      if(user){
+      user = await userModel.get({ id: this.$route.params.uid })
+      if (user) {
         this.user = user
-      }else{
+      } else {
         window.antd.message.error('获取用户信息失败，登录信息过期或用户账号异常。请尝试解绑用户后重新登陆账号。')
         this.$router.go(-1)
         return //如果异常，退回上一页，防止后续出错
       }
 
     }
-    console.log(Number(this.$route.params.uid))
-    this.user.clientId=userModel.getClientId()
-    try{
-      this.currentSpace=await spaceModel.getCurrent()
-    }catch (e) {
+    this.user.clientId = userModel.getClientId()
+    try {
+      this.currentSpace = await spaceModel.getCurrent()
+    } catch (e) {
 
     }
-
-    console.log(this.user)
     await this.loadSpaces()
     //获取网络空间用户信息
 
@@ -161,64 +188,110 @@ const SpaceSelect = {
     // }
   },
   methods: {
-    dateTime(time){
-      let date=new Date(time)
-      console.log(time)
+    /**
+     * 导入本机空间
+     */
+    async importFromLocal () {
+      //todo loadLocalSpaces()
+      this.localSpaces = await spaceModel.getLocalSpaces()
+      this.localOptions = this.localSpaces.map((space) => {
+        return { label: space.name +'（ '+ space.data.state.tasks.length+' 标签组）', value: space.id }
+      })
+      for(let i=0;i<this.localOptions.length;i++){
+        if(this.localOptions[i].value===this.currentSpace.spaceId){
+          this.localOptions.splice(i,1)
+          break
+        }
+      }
+      this.visibleImport = true
+    },
+    /**
+     * 导入空间
+     * @returns {Promise<void>}
+     */
+    async doImportSpaces () {
+      try {
+        let selectedSpaces=this.selectedImportSpaces.map(space=>{
+          let item=this.localSpaces.find((item)=>{
+            return item.id===space
+          })
+          return {
+            data:item.data,
+            name:item.name+'_导入'
+          }
+        })
+        if(selectedSpaces.length===0){
+          window.antd.message.error('请选择需要导入的空间。')
+          return
+        }
+        let result = await spaceModel.setUser(this.user).importFromLocal(selectedSpaces)
+        if (result.status === 1) {
+          window.antd.message.success('导入空间成功。')
+          await this.loadSpaces()
+        } else {
+          window.antd.message.error('导入空间失败。'+result.data)
+        }
+      } catch (e) {
+        console.log(e)
+        window.antd.message.error('导入空间失败。未知异常。')
+      }
+    },
+    dateTime (time) {
+      let date = new Date(time)
       //return date.getFullYear()+'年'+date.getMonth()+'月'+date.getDate()+'日 '+date.getHours()+':'+date.getMinutes()
       return date.toLocaleString()
     },
-    async loadSpaces(){
-      let spaces=[]
+    async loadSpaces () {
+      let spaces = []
       //下面开始获取用户空间
-      try{
-        let result= await spaceModel.setUser(this.user).getUserSpaces()
-        if(result.status===1){
-          spaces= result.data
-          spaces.forEach(space=>{
-            if(this.user.uid){ //云端判断逻辑
-              if(space.client_id && space.client_id !==this.user.clientId){
-                space.isOtherUsing=true
-                space.isUsing=true
-              }else if((space.client_id===this.user.clientId)){
-                space.isSelfUsing=true
-                space.isUsing=true
-              }else{
-                space.isUsing=false
+      try {
+        let result = await spaceModel.setUser(this.user).getUserSpaces()
+        if (result.status === 1) {
+          spaces = result.data
+          spaces.forEach(space => {
+            if (this.user.uid) { //云端判断逻辑
+              if (space.client_id && space.client_id !== this.user.clientId) {
+                space.isOtherUsing = true
+                space.isUsing = true
+              } else if ((space.client_id === this.user.clientId)) {
+                space.isSelfUsing = true
+                space.isUsing = true
+              } else {
+                space.isUsing = false
               }
-            }else{
-              if(space.id ===this.currentSpace.spaceId){
-                space.isSelfUsing=true
-                space.isUsing=true
+            } else {
+              if (space.id === this.currentSpace.spaceId) {
+                space.isSelfUsing = true
+                space.isUsing = true
               }
             }
 
           })
-        }else{
-          window.antd.message.error('获取用户空间失败。失败原因：'+result.info)
+        } else {
+          window.antd.message.error('获取用户空间失败。失败原因：' + result.info)
           this.$router.go(-1)
           return
         }
-      }
-      catch (e) {
+      } catch (e) {
         window.antd.message.error('获取用户空间失败，未知异常。')
         this.$router.go(-1)
         return
       }
-      this.spaces=spaces
+      this.spaces = spaces
     },
     goLogin () {
       ipc.send('login')
       //https://s.apps.vip/login?response_type=code&client_id=10001&state=1
     },
-    async doCreateSpace(){
-      try{
-        let result= await  spaceModel.setUser(this.user).addSpace({name:this.newSpaceName})
-        if(result.status===1){
-          this.newSpaceName=''
+    async doCreateSpace () {
+      try {
+        let result = await spaceModel.setUser(this.user).addSpace({ name: this.newSpaceName })
+        if (result.status === 1) {
+          this.newSpaceName = ''
           window.antd.message.success('创建空间成功。')
           this.spaces.push(result.data)
-          this.visibleCreate=false
-        }else{
+          this.visibleCreate = false
+        } else {
           window.antd.message.error('空间名称长度在1-10个汉字，请重新输入。')//获取真实的错误信息
           this.$refs.spaceNameInput.input.select()
         }
@@ -233,106 +306,98 @@ const SpaceSelect = {
         //   window.antd.message.error('空间名称长度在1-10个汉字，请重新输入。')
         //   this.$refs.spaceNameInput.input.select()
         // }
-      }catch (e){
+      } catch (e) {
         window.antd.message.error('创建空间失败，失败原因：')
         console.log(e)
+
       }
     },
-    showCreateSpace(){
-      this.visibleCreate=true
-      setTimeout(()=>{
+    showCreateSpace () {
+      this.visibleCreate = true
+      setTimeout(() => {
         this.$refs.spaceNameInput.input.focus()
-      },200)
+      }, 200)
     },
-     deleteSpace (space) {
-       if(space.isUsing || space.isOtherUsing){
-         window.antd.message.info('不可删除正在使用中的空间。')
-         return
-       }
+    deleteSpace (space) {
+      if (space.isUsing || space.isOtherUsing) {
+        window.antd.message.info('不可删除正在使用中的空间。')
+        return
+      }
 
       antd.Modal.confirm({
         title: '删除空间确认',
-        content: '是否确认删除 【'+space.name+'】 ？空间一旦被删除将无法恢复，所有标签组的设置将丢失。请务必确认后果。',
+        content: '是否确认删除 【' + space.name + '】 ？空间一旦被删除将无法恢复，所有标签组的设置将丢失。请务必确认后果。',
         centered: true,
         okText: '我已知晓后果，仍要删除',
         cancelText: '取消',
-        onOk:async () => {
-          try{
-            let result= await spaceModel.setUser(this.user).deleteSpace(space)
-            if(result.status){
+        onOk: async () => {
+          try {
+            let result = await spaceModel.setUser(this.user).deleteSpace(space)
+            if (result.status) {
               window.antd.message.success('删除空间成功。')
-              let find=-1
-              this.spaces.forEach((sp,index)=>{
-                if(sp.id===space.id){
-                  find=index
-                }
-              })
-              this.spaces.splice(find,1)
-            }else{
+              await this.loadSpaces()
+            } else {
               window.antd.message.error('删除空间失败。')
             }
-          }
-          catch(e){
+          } catch (e) {
             console.log(e)
             window.antd.message.error('删除空间失败。未知异常。')
           }
         }
       })
     },
-    async doChangeSpaceCloud(space){
-      try{
-        let result=await spaceModel.setAdapter('cloud').changeCurrent(space)
+    async doChangeSpaceCloud (space) {
+      try {
+        let result = await spaceModel.setAdapter('cloud').changeCurrent(space)
         console.log(result)
-        if(result.status===1){
+        if (result.status === 1) {
           window.antd.message.success('切换使用空间成功。')
           await this.loadSpaces()
-        }else{
+        } else {
           window.antd.message.error('切换使用空间失败。')
         }
-      }catch (e) {
+      } catch (e) {
         window.antd.message.error('切换使用空间失败。意外错误。')
       }
 
     },
-    async switchSpace(space){
-      if(this.user.uid===0){
+    async switchSpace (space) {
+      if (this.user.uid === 0) {
         antd.Modal.confirm({
           title: '切换到本地空间',
           content: '是否更改当前空间，更改空间将重载浏览器，可能导致您网页上未保存的内容丢失，请确认已经保存全部内容。切换本地空间并不会更改当前登录账号。',
           centered: true,
           okText: '我已保存，切换空间',
           cancelText: '取消',
-          onOk: async() => {
-              spaceModel.setAdapter('local').changeCurrent(space)
+          onOk: async () => {
+            spaceModel.setAdapter('local').changeCurrent(space)
           }
         })
-      }else{
-        if(space.isOtherUsing){
+      } else {
+        if (space.isOtherUsing) {
           antd.Modal.confirm({
             title: '此空间正忙',
             content: '此空间正在被其他设备使用，如若切换到此空间，可能造成其他设备未同步的标签组丢失。是否仍然要强行切换？这将导致该设备上的浏览器强制下线。',
             centered: true,
             okText: '我已明确，切换空间',
             cancelText: '取消',
-            onOk: async() => {
-             this.doChangeSpaceCloud(space)
+            onOk: async () => {
+              this.doChangeSpaceCloud(space)
             }
           })
-        }else{
+        } else {
           antd.Modal.confirm({
             title: '切换到云端空间',
             content: '是否切换到云端空间？切换到云端空间后会同时更换当前账号到此账号。请务必确认您网页上的内容已经保存。否则可能丢失未保存内容。',
             centered: true,
             okText: '我已保存，切换空间',
             cancelText: '取消',
-            onOk: async() => {
+            onOk: async () => {
               this.doChangeSpaceCloud(space)
             }
           })
         }
-
       }
-
     }
   }
 }
