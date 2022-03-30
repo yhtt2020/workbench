@@ -5,83 +5,64 @@
   margin-bottom: 10px;
   width: calc(100% - 15px);
   height: 100px;
-  border-radius: 6px;
-}
-.user-card:hover {
-  background-color: rgba(241, 241, 241, 0.37);
-}
-.user-card .avatar-wrapper {
-  padding-top: 20px;
-}
-.user-card .user-info {
-  padding: 20px;
-}
-.user-card .info-p {
-  color: #999;
-  font-size: 12px;
-}
+  border-radius: 6px; }
+  .user-card:hover {
+    background-color: rgba(241, 241, 241, 0.37); }
+  .user-card .avatar-wrapper {
+    padding-top: 20px; }
+  .user-card .user-info {
+    padding: 20px; }
+  .user-card .info-p {
+    color: #999;
+    font-size: 12px; }
 
 .scroller::-webkit-scrollbar {
   width: 6px;
-  height: 6px;
-}
+  height: 6px; }
 .scroller::-webkit-scrollbar-track {
   background: #f6f6f6;
-  border-radius: 2px;
-}
+  border-radius: 2px; }
 .scroller::-webkit-scrollbar-thumb {
   background: #e9e8e8;
-  border-radius: 20px;
-}
+  border-radius: 20px; }
 .scroller::-webkit-scrollbar-thumb:hover {
-  background: #747474;
-}
+  background: #747474; }
 .scroller::-webkit-scrollbar-corner {
-  background: #f6f6f6;
-}
+  background: #f6f6f6; }
 
 .online {
   cursor: pointer;
   transition: 0.2s;
   animation: rotate 4s linear infinite;
-  /*开始动画后无限循环，用来控制rotate*/
-}
+  /*开始动画后无限循环，用来控制rotate*/ }
 
 .offline {
   cursor: pointer;
-  filter: grayscale(1);
-}
+  filter: grayscale(1); }
 
 .other-using {
   border: solid red 1px;
-  background-color: rgba(255, 0, 0, 0.05);
-}
-.other-using:hover {
-  border: solid red 1px;
-  background-color: rgba(255, 0, 0, 0.05);
-}
-.other-using .using-bandage {
-  color: red;
-}
+  background-color: rgba(255, 0, 0, 0.05); }
+  .other-using:hover {
+    border: solid red 1px;
+    background-color: rgba(255, 0, 0, 0.05); }
+  .other-using .using-bandage {
+    color: red; }
 
 .self-using {
   border: solid #02c022 1px;
-  background-color: rgba(2, 192, 34, 0.05);
-}
-.self-using:hover {
-  border: solid #02c022 1px;
-  background-color: rgba(2, 192, 34, 0.05);
-}
-.self-using .using-bandage {
-  color: #02c022;
-}
+  background-color: rgba(2, 192, 34, 0.05); }
+  .self-using:hover {
+    border: solid #02c022 1px;
+    background-color: rgba(2, 192, 34, 0.05); }
+  .self-using .using-bandage {
+    color: #02c022; }
 
 .using-bandage {
   font-size: 12px;
   color: red;
   position: absolute;
   right: 10px;
-  top: 10px;
-}
+  top: 10px; }
 
 /*# sourceMappingURL=index.css.map */

@@ -307,10 +307,7 @@ const sidebarTpl = `
     background: rgba(199,199,199,0.65);"></div>
         </div>
       </a-tooltip>
-
-       <div >
-
-        <a-popover placement="right" :mouse-enter-delay="0.3" overlay-class-name="tips" @visible-change="()=>{this.$store.dispatch('getLocalSpaces')}" >
+ <a-popover placement="right" :mouse-enter-delay="0.3" overlay-class-name="tips" @visible-change="()=>{this.$store.dispatch('getLocalSpaces')}" >
   <template slot="title">
              更换标签组空间
             </template>
@@ -344,20 +341,25 @@ const sidebarTpl = `
           </li>
         </ul>
         </template>
-       <a-row type="flex" style="width: 145px">
-       <a-col flex="45px" style="text-align: center" >
+<div  style="width: 100%;overflow: hidden;height:30px;">
+
+       <div style="width:145px;">
+       <div style="display: inline-block;width:45px;text-align: center">
        <svg id="savingIcon" :class="{'online':currentSpace.space.nanoid,'offline':!currentSpace.space.nanoid}" style="width: 24px" t="1648106444295"  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="32437" width="32" height="32"><path d="M512 938.666667C276.352 938.666667 85.333333 747.648 85.333333 512S276.352 85.333333 512 85.333333s426.666667 191.018667 426.666667 426.666667-191.018667 426.666667-426.666667 426.666667z m205.653333-210.090667A298.666667 298.666667 0 0 0 385.365333 241.408l41.6 74.88A213.333333 213.333333 0 0 1 725.333333 512h-91.733333a21.333333 21.333333 0 0 0-18.645333 31.701333l102.698666 184.874667z m-120.618666-20.864A213.333333 213.333333 0 0 1 298.666667 512h91.733333a21.333333 21.333333 0 0 0 18.645333-31.701333L306.346667 295.424a298.666667 298.666667 0 0 0 332.288 487.168l-41.6-74.88z" fill="#14D081" p-id="32438"></path></svg>
 
 <!--       <a-icon type="loading" ></a-icon>-->
-       </a-col>
-       <a-col flex="1">
+       </div>
+       <div style="display: inline-block;width:96px;text-align: left">
 
-      <div class="space-name"  style="" type="primary">
+      <div class="space-name" type="primary">
         {{currentSpace.space.name}}
-        <a-icon type="down" />
+        <a-icon type="right" />
       </div>
-   </a-col></a-row>  </a-popover></div>
+   </div>
+   </div>
 
+   </div>
+</a-popover>
       <div class="app-box">
         <ul id="appGroup" style="user-select: none;padding-bottom: 20px" class="app-task app-items"
           @dblclick.prevent="addNewTask">
