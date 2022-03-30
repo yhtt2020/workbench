@@ -458,7 +458,8 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  user-select: none; }
+  user-select: none;
+  font-weight: bold; }
 
 @keyframes rotate {
   0% {
