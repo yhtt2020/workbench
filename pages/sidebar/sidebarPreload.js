@@ -58,6 +58,9 @@ window.addEventListener('message', function (e) {
     case 'setting':
       ipc.send('openSetting')
       break
+    case 'bell':
+      ipc.send('openMessageCenter')
+      break
     case 'home':
       ipc.send('openHome')
       break

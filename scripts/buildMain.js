@@ -31,7 +31,8 @@ const modules = [
   'main/keychainService.js',
   'js/util/proxy.js',
   'main/mobileMod.js',
-  'main/wizard.js'
+  'main/wizard.js',
+  'main/messageCenter.js'
 ]
 
 function buildMain () {

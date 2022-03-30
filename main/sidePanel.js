@@ -60,6 +60,14 @@ class SidePanel {
       sidePanel.get().webContents.send(channel,args)
     }
   }
+
+  //mainWindow往webview子进程发送消息的方法
+  static mainWindowSend(eventName, args) {
+    if(SidePanel.alive()) {
+      mainWindow.webContents.send(eventName, args)
+    }
+  }
+
   isVisible () {
     return this._sidePanel.isVisible()
   }
@@ -578,6 +586,18 @@ ipc.on('returnTitlebarHeight', function (event, data) {
     sidePanel.titlebarHeight = data.titlebarHeight
     sidePanel.syncSize()
   }
+})
+
+ipc.on('channelFixed', () => {
+  SidePanel.mainWindowSend('adjustByFixed')
+})
+
+ipc.on('channelFreeFixed', () => {
+  SidePanel.mainWindowSend('freeAdjustByFixed')
+})
+
+ipc.on('channelTemporaryAdjust', (event, args) => {
+  SidePanel.mainWindowSend('temporaryAdjust', args)
 })
 
 var count = 0

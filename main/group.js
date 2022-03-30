@@ -129,8 +129,7 @@ app.on('ready', () => {
   //圈子邀请添加成员
   ipc.on('osxOpenInviteMember', (event, args) => {
     if(osxInviteMember !== null) {
-      osxInviteMember.focus()
-      return
+      osxInviteMember.close()
     }
     osxInviteMember = new BrowserWindow({
       minimizable: false,
@@ -160,8 +159,7 @@ app.on('ready', () => {
   //圈子设置
   ipc.on('osxOpenCircleSetting', (event, args) => {
     if(osxCircleSetting !== null) {
-      osxCircleSetting.focus()
-      return
+      osxCircleSetting.close()
     }
     osxCircleSetting = new BrowserWindow({
       minimizable: false,
