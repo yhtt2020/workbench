@@ -21,13 +21,17 @@ const tpl = `
     <div style="text-align: left;overflow-y: auto;max-height: 310px;margin-right: 20px;padding-top: 10px;padding-left: 40px;padding-bottom: 10px" class="scroller">
       <a-dropdown v-for="space,index in spaces" :trigger="['contextmenu']">
          <a-tooltip placement="bottom">
-    <template #title>保存时间：{{dateTime(space.sync_time)}}<br>修改时间：{{dateTime(space.update_time)}}<br>创建时间：{{dateTime(space.create_time)}} </template>
-        <a-card @click="switchSpace(space)" :style="{'margin-right':index%2===1?'0':'10px'}"  hoverable style="margin-left:20px;width: 250px;display: inline-block;margin-bottom: 10px;">
+    <template #title>保存时间：{{dateTime(space.sync_time)}}<br>修改时间：{{dateTime(space.update_time)}}<br>创建时间：{{dateTime(space.create_time)}}<br>
+     <span v-if="space.client_id !==''">设备ID：{{space.client_id}}</span>
+     </template>
+        <a-card @click="switchSpace(space)" :style="{'margin-right':index%2===1?'0':'10px'}"
+         :class="{'other-using':space.isOtherUsing,'self-using':space.isSelfUsing}"
+         hoverable style="margin-left:20px;width: 250px;display: inline-block;margin-bottom: 10px;">
           <a-card-meta :title="space.name" >
             <template #description>
 
-              <span style="font-size: 12px;color: red;position: absolute;right: 10px;top: 10px" v-if="space.isOtherUsing">其他设备正在使用中</span>
-              <span style="font-size: 12px;color: red;position: absolute;right: 10px;top: 10px" v-if="space.isSelfUsing">当前使用空间</span>
+              <span class="using-bandage" v-if="space.isOtherUsing">其他设备使用中</span>
+              <span class="using-bandage" v-if="space.isSelfUsing">当前使用中</span>
 
               {{space.count_task+ ' 标签组  '+ space.count_tab+' 标签'}}
             </template>

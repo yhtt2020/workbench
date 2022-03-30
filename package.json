@@ -1,6 +1,6 @@
 {
-  "name": "tsbrowser_dev",
-  "productName": "想天浏览器开发版",
+  "name": "tsbrowser",
+  "productName": "想天浏览器",
   "author": "Thisky",
   "version": "2.9.7",
   "description": "一款针对工作场景的极简浏览器，帮助你提升效率，保持专注",

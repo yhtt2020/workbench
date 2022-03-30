@@ -52,4 +52,36 @@
   filter: grayscale(1);
 }
 
+.other-using {
+  border: solid red 1px;
+  background-color: rgba(255, 0, 0, 0.05);
+}
+.other-using:hover {
+  border: solid red 1px;
+  background-color: rgba(255, 0, 0, 0.05);
+}
+.other-using .using-bandage {
+  color: red;
+}
+
+.self-using {
+  border: solid #02c022 1px;
+  background-color: rgba(2, 192, 34, 0.05);
+}
+.self-using:hover {
+  border: solid #02c022 1px;
+  background-color: rgba(2, 192, 34, 0.05);
+}
+.self-using .using-bandage {
+  color: #02c022;
+}
+
+.using-bandage {
+  font-size: 12px;
+  color: red;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
 /*# sourceMappingURL=index.css.map */
