@@ -46,6 +46,10 @@ ipc.on('enterPictureInPicture', function (event, data) {
 })
 
 window.addEventListener('message', function (e) {
+  if(e.data && e.data.eventName && e.data.eventName === 'webNotice') {
+    ipc.send('webOsNotice', e.data)
+  }
+
   if (!e.origin.startsWith('file://')) {
     return
   }
@@ -54,3 +58,53 @@ window.addEventListener('message', function (e) {
     ipc.send('showCredentialList')
   }
 })
+
+
+electron.webFrame.executeJavaScript(`
+  function copyData(obj, cache = []) {
+    // 如果obj是不可变值，就返回
+    if (obj === null || typeof obj !== 'object') {
+      return obj;
+    }
+
+    // 如果obj被击中，则为圆形结构
+    const hit = find(cache, c => c.original === obj);
+    if (hit) {
+      return hit.copy;
+    }
+
+    const copy = Array.isArray(obj) ? [] : {};
+    // 先把副本放到缓存里
+    // 因为我们想在copyData递归中引用它
+    cache.push({
+      original: obj,
+      copy
+    });
+
+    Object.keys(obj).forEach(key => {
+      copy[key] = copyData(obj[key], cache);
+    });
+
+    return copy;
+  }
+
+  let oldNotice = copyData(window.Notification)
+  Notification = function(title, options) {
+    //oldNotice.call(this, title, options)
+    new oldNotice(title, options)
+    window.postMessage({
+      eventName: 'webNotice',
+      url: new URL(window.origin).hostname,
+      title: arguments[0],
+      body: arguments[1].body,
+      icon: arguments[1].hasOwnProperty('icon') ? arguments[1].icon : null
+    })
+  }
+
+  let prototype = Object(oldNotice.prototype);
+  let requestPermission = copyData(oldNotice.requestPermission)
+  prototype.constructor = Notification;
+  Notification.prototype = prototype;
+  Notification.requestPermission = requestPermission
+  Notification.permission = 'granted'
+`)

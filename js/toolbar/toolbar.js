@@ -7,6 +7,7 @@ const sideBar = {
   maxWidth: 145,
   expandWidth: 100,
   mod: 'auto',// auto.自动展开收起, open.一直展开 ,最小化。
+  isMessageFixed: false,
   //切换侧边栏模式
   switchSideMod () {
 
@@ -18,6 +19,10 @@ const sideBar = {
         sideBar.mod = 'open'
         break
       case 'close':
+        if(sideBar.isMessageFixed) {
+          ipc.send('message',{type:"error",config:{content:'消息中心固定状态下无法切换,请取消固定状态'}})
+          break
+        }
         // 切换到自动模式
         ipc.send('sideSetAuto')
         //更换图标
@@ -71,14 +76,21 @@ const sideBar = {
   },
   setLayoutLeft (posLeft) {
     let postLeftCss = String(posLeft) + 'px'
-    document.getElementById('mouseRcoverArea').style.width = postLeftCss//调整左侧的感应区大小
     //调整主界面中各个组件的位置
+    if(sideBar.isMessageFixed) {
+      postLeftCss = String(posLeft + 300) + 'px'
+      //设置webviews位置
+      const adjustLeft = posLeft - webviews.viewMargins[3] + 300
+      webviews.adjustMargin([0, 0, 0, adjustLeft])//调整工具栏左侧
+    } else {
+      //设置webviews位置
+      const adjustLeft = posLeft - webviews.viewMargins[3]
+      webviews.adjustMargin([0, 0, 0, adjustLeft])//调整工具栏左侧
+    }
+    document.getElementById('mouseRcoverArea').style.width = postLeftCss//调整左侧的感应区大小
     //设置工具栏位置
     toolbar.toolbarEl.style.left = postLeftCss//调整webviews框的位置
     toolbar.toolbarEl.style.width = 'calc(100vw - ' + postLeftCss + ')'
-    //设置webviews位置
-    const adjustLeft = posLeft - webviews.viewMargins[3]
-    webviews.adjustMargin([0, 0, 0, adjustLeft])//调整工具栏左侧
     //设置搜索栏的左侧位置
     document.getElementById('searchbar').style.left = 'calc((100% - ' + postLeftCss + ' )*0.02 + ' + postLeftCss + ' )'
     document.getElementById('searchbar').style.width = 'calc( (100% - ' + postLeftCss + ' ) * 0.96)'
@@ -321,12 +333,55 @@ const toolbar = {
   },
 
   adjustSideBar () {
-    let sideMode = localStorage.getItem('sideMode')
-    sideMode = sideMode || 'auto'
-    sideBar.mod = sideMode
+    sideBar.mod = localStorage.getItem('sideMode') ?? 'auto'
+
+    sideBar.isMessageFixed = localStorage.getItem('isMessageFixed') == 'true' ? true : false
     sideBar.syncMod()
   }
+
 }
 toolbar.initialize()
+
+ipc.on('adjustByFixed', () => {
+  sideBar.isMessageFixed = true
+  if(sideBar.mod === 'open') {
+    sideBar.setToMax()
+  } else {
+    sideBar.setToMin()
+  }
+})
+
+ipc.on('freeAdjustByFixed', () => {
+  sideBar.isMessageFixed = false
+  if(sideBar.mod === 'open') {
+    sideBar.setToMax()
+  } else {
+    sideBar.setToMin()
+  }
+})
+
+ipc.on('temporaryAdjust', (event, args) => {
+  if(args.freeFixed) {
+    if(sideBar.mod === 'open') {
+      sideBar.isMessageFixed = false
+      localStorage.setItem("isMessageFixed", false)
+      sideBar.setToMax()
+    } else {
+      sideBar.isMessageFixed = false
+      localStorage.setItem("isMessageFixed", false)
+      sideBar.setToMin()
+    }
+  } else {
+    if(sideBar.mod === 'open') {
+      sideBar.isMessageFixed = true
+      localStorage.setItem("isMessageFixed", true)
+      sideBar.setToMax()
+    } else {
+      sideBar.isMessageFixed = true
+      localStorage.setItem("isMessageFixed", true)
+      sideBar.setToMin()
+    }
+  }
+})
 
 module.exports = toolbar

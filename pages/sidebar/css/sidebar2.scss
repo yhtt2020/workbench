@@ -72,10 +72,10 @@
       height: 46px;
       .cb-bottom-zone {
         color: rgb(121, 118, 118);
-        &:nth-child(2) {
-          border-right: 1px solid rgb(226, 221, 221);
-          border-left: 1px solid rgb(226, 221, 221);
-        }
+        // &:nth-child(2) {
+        //   border-right: 1px solid rgb(226, 221, 221);
+        //   border-left: 1px solid rgb(226, 221, 221);
+        // }
         &:hover {
           color: #1890ff;
         }
