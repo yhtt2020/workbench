@@ -382,7 +382,7 @@ const sidebarTpl = `
         </template>
         <li @click="visibleGlobalSearch">
           <a-button type="default" shape="circle" icon="search"></a-button>
-          <div class="item-title">搜索</div>
+          <div class="item-title">全局搜索</div>
         </li>
         <li @click="visibleMessageCenter">
           <a-badge :dot="this.$store.getters.getAllMessages.length > 0 ? true : false">

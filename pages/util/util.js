@@ -135,6 +135,16 @@ const tools = {
       }
     };
   },
+
+  /**
+   * 取网站域名
+   * @param {String} url
+   * @returns
+   */
+  execDomain(url) {
+    let urlReg = /[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?/
+    return urlReg.exec(url)[0]
+  }
 };
 
 module.exports = { tools };
