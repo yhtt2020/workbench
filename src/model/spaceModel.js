@@ -78,9 +78,12 @@ const spaceModel = {
 
   async changeCurrent (space) {
     //关闭mainWindow（自动会保存）
-    await spaceModel.adapterModel.changeCurrent(space, spaceModel.user)
+    let result =await spaceModel.adapterModel.changeCurrent(space, spaceModel.user)
     ipc.send('closeUserWindow')
-
+    if(result.status)
+    {
+      return result.data
+    }
     //设置数据库中的当前空间
   },
   async getLocalSpaces () {
@@ -94,6 +97,9 @@ const spaceModel = {
   },
   async renameSpace(newName,space){
     return await spaceModel.adapterModel.renameSpace(newName,space,spaceModel.user)
+  },
+  async getLastSyncSpace(){
+    return await spaceModel.adapterModel.getLastSyncSpace()
   }
 
 }

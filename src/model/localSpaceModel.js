@@ -1,4 +1,5 @@
 const standReturn = require('../util/standReturn')
+const { nanoid } = require('nanoid')
 if (window) {
   ldb = window.ldb
 }
@@ -9,6 +10,23 @@ const localSpaceModel={
     if (space) {
       return space
     } else {
+      return null
+    }
+  },
+  /**
+   * 获得最后同步的空间
+   * @returns {null|*}
+   */
+  getLastSyncSpace(){
+    ldb.reload()
+    let spaces = ldb.db.get('spaces').orderBy('sync_time','desc').value()
+    if(spaces.length>0){
+      // if(!!!spaces[0].id){
+      //   //ldb.db.get('spaces').remove({create_time:spaces[0]['create_time']}).write()
+      //   return localSpaceModel.getLastSyncSpace()
+      // }
+      return spaces[0]
+    }else{
       return null
     }
   },
@@ -33,14 +51,15 @@ const localSpaceModel={
           ],
           "selectedTask": ""
         },
-        "saveTime": Date.now()
+        "saveTime": Date.now(),
       },
       count_task:1,
       count_tab:1,
       create_time:Date.now(),
       update_time:Date.now(),
+      sync_time:Date.now(),
       uid:0,
-      id:Date.now()
+      id:nanoid()
     }
     ldb.db.get('spaces').push(spaceAdd).write()
     return standReturn.success(spaceAdd)
@@ -65,8 +84,9 @@ const localSpaceModel={
     // let currentSpace=ldb.db.get('currentSpace').value()
     // console.log(space)
     // ldb.db.set('currentSpace.spaceId',space.id).write()
-    ipc.send('changeSpace',{spaceId:space.id,spaceType:'local'})
-    return standReturn.success()
+    let currentSpace={spaceId:space.id,spaceType:'local'}
+    ipc.send('changeSpace',currentSpace)
+    return standReturn.success(currentSpace)
   },
   getAll(){
     ldb.reload()
@@ -80,7 +100,6 @@ const localSpaceModel={
   },
   async renameSpace(newName,space){
     ldb.reload()
-    console.log(newName,space)
     ldb.db.get('spaces').find({id:space.id}).assign({name:newName,update_time:Date.now()}).write()
     return standReturn.success()
   }

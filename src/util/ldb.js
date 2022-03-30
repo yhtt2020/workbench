@@ -1,5 +1,6 @@
 const low = require('lowdb')
 const FileSync = require('lowdb/adapters/FileSync')
+const { nanoid } = require('nanoid')
 const tables= {
   spaces:[],
   currentSpace:{
@@ -25,7 +26,7 @@ let ldb = {
       ldb.db=low(adapter)
       ldb.initDb()
     }catch (e) {
-      console.log(fs.readFileSync(ldb.dbPath, 'utf-8').trim())
+      console.log(require('fs').readFileSync(ldb.dbPath, 'utf-8').trim())
       console.log(e)
     }
 
@@ -40,7 +41,13 @@ let ldb = {
    * 修复数据库的数据
    */
   repaireDb(){
-
+    ldb.db.get('spaces').filter((item)=>{
+      if(!item.id){
+        return true
+      }
+    }).each((space)=>{
+      space.id=nanoid()
+    }).write()
   },
   /**
    * 重载最新的数据

@@ -15,6 +15,9 @@ const localAdapter={
       saveData.sync_time=Date.now()
       ldb.db.get('spaces').find({id:spaceId}).assign(saveData).write()
     }else{
+      if(!spaceId){
+        spaceId=Date.now()
+      }
       let space={
         id:spaceId,
         data:saveData.data,

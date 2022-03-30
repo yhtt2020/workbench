@@ -181,17 +181,20 @@ const sessionRestore = {
     try{
      currentSpace= await spaceModel.getCurrent()
     }catch (e) {
-      // currentSpace={
-      //   spaceId:1,
-      //   spaceType:'local'
-      // }
-       //ipc.send('showUserWindow',{tip:'无法成功读入存储的空间，请选择其他空间登录。',modal:true})
-       //ipc.send('closeMainWindow')
+      //ipc.send('message',{type:'error',config:{content:'网络原因无法读取云端空间，已为您切换到本地空间。'}})
+      let lastSpace=await spaceModel.setAdapter('local').getLastSyncSpace()
+      if(lastSpace===null){
+        ipc.send('closeMainWindow')
+        ipc.send('showUserWindow',{tip:'网络原因无法读取云端空间，请选择其他空间登录。',modal:true})
+        return
+      }
 
-      // ipc.send('message',{type:'error',config:{content:'网络原因无法读取云端空间，已为您切换到本地空间。'}})
+      console.log(lastSpace)
+      await spaceModel.setAdapter('local').changeCurrent({id:lastSpace.id})
+      ipc.send('showUserWindow',{tip:'网络原因无法读取云端空间，请选择其他空间登录。',modal:true})
       console.error(e)
       console.log('获取当前空间失败',e)
-      return
+      //return
     }
     console.log(currentSpace)
 
