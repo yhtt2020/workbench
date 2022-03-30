@@ -247,7 +247,7 @@ db.version(141).stores({
   appList:'++id,name,createTime,updateTime,order,summary,appsCount,parentId,type,path,sort',//应用列表 type:0.默认，大图标,1.小图标,2.列表  path存储路径树，便于后面查询
   standAloneApps:'++id,name,package,logo,summary,type,url,themeColor,userThemeColor,createTime,updateTime,accountAvatar,order,useCount,lastExecuteTime,settings,unreadCount,*fileAssign',
   userStats: '++id,scripts,apps,appsExecutedCounts,blockAds,tasks,tabs,webviewsInk,password,defaultBrowser,searchCounts,translateCounts,startTime,appList,myApps',  //脚本数，应用数，开启应用的次数，广告拦截数，标签组数，标签数，访问网站累计数，密码数，是否是默认浏览器，搜索数（只对用tab栏选中后输入搜索内容用默认搜索引擎进行搜索的统计），翻译次数， 此次开始时间，本地导航列表数，本地导航应用app数
-  download:'startTime,title,total,path,url'
+  download:'&startTime,title,total,path,url,doneDate,status',
 }).upgrade(trans=> {
   // return trans.standAloneApps.modify (item => {
   //   if(!!!item.type){
@@ -277,14 +277,14 @@ db.version(142).stores({
   standAloneApps:'++id,name,package,logo,summary,type,url,themeColor,userThemeColor,createTime,updateTime,accountAvatar,order,useCount,lastExecuteTime,settings,unreadCount,*fileAssign',
   userStats: '++id,scripts,apps,appsExecutedCounts,blockAds,tasks,tabs,webviewsInk,password,defaultBrowser,searchCounts,translateCounts,startTime,appList,myApps',  //脚本数，应用数，开启应用的次数，广告拦截数，标签组数，标签数，访问网站累计数，密码数，是否是默认浏览器，搜索数（只对用tab栏选中后输入搜索内容用默认搜索引擎进行搜索的统计），翻译次数， 此次开始时间，本地导航列表数，本地导航应用app数
   messages: '++id,messageType,title,body,indexName,timestamp',
-  download:'startTime,title,total,path,url'
+  download:'&startTime,title,total,path,url,doneDate,status',
 }).upgrade(trans=> {
   // return trans.standAloneApps.modify (item => {
   //   if(!!!item.type){
   //     item.type=0
   //   }
   // })
-  download:'&startTime,title,total,path,url,doneDate,status',
+
 
 })
 
