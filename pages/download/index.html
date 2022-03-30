@@ -189,11 +189,12 @@
   })
 
   ipcRenderer.on('download-info', async (event, args) => {
+
     let simpleName;
     if (args.name.length >= 20) {
       simpleName = args.name.substring(0, 7) + '...' + args.name.substring(args.name.length-6,args.name.length);
     } else (simpleName = args.name)
-
+    // console.log(args)
     if (args.status === 'start') {
       appVue.lists.unshift({
         id: appVue.id++,
@@ -212,6 +213,7 @@
     }
 
     if (args.status === 'cancelled') {
+      // appVue.lists.splice(0, 1)
       for (var i = 0; i < appVue.lists.length; i++) {
         if (appVue.lists[i].startTime === args.startTime) {
             appVue.deleteId = i
@@ -240,6 +242,7 @@
 
     if (args.status === 'completed' && args.path !== '') {
       const myDate = new Date();
+
       appVue.doneLists.unshift({
         id: appVue.doneId++,
         title: simpleName,
@@ -446,8 +449,6 @@
             shell.showItemInFolder(appVue.doneLists[index].path)
           } else {
             appVue.$message.info('文件已被删除或位置被移动', 1)
-            db.download.delete(appVue.doneLists[index].startTime)
-            appVue.doneLists.splice(appVue.doneLists.indexOf(appVue.doneLists[index]), 1)
           }
         })
       },
