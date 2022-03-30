@@ -1006,6 +1006,7 @@ app.whenReady().then(()=>{
         }
       })
 
+      loginWindow.setMenu(null)
       loginWindow.setBounds(bounds)
       loginWindow.on('close',()=>{
         loginWindow=null
