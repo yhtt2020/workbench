@@ -4,6 +4,8 @@ const tabState = require('tabState.js')
 const localAdapter=require('../src/util/sessionAdapter/localAdapter')
 const cloudAdapter=require('../src/util/sessionAdapter/cloudAdapter')
 const spaceModel=require('../src/model/spaceModel')
+const ipc= require('electron').ipcRenderer
+const SYNC_INTERVAL=30
 const sessionRestore = {
   adapter:{},
   currentSpace:{},
@@ -14,10 +16,10 @@ const sessionRestore = {
       state: JSON.parse(stateString),
       saveTime: Date.now()
     }
-    let count_task=data.state.tasks.length
-    let count_tab=0
+    let countTask=data.state.tasks.length
+    let countTab=0
     data.state.tasks.forEach(task=>{
-      count_tab+=task.tabs.length
+      countTab+=task.tabs.length
     })
 
 
@@ -29,13 +31,15 @@ const sessionRestore = {
       })
     }
     let saveData={
-      count_task:count_task,
-      count_tab:count_tab,
+      count_task:countTask,
+      count_tab:countTab,
       data:data
     }
 
     if (forceSave === true || stateString !== sessionRestore.previousState) {
-
+      if(sessionRestore.currentSpace.spaceType==='cloud'){
+        ipc.send('saving')
+      }
       if (sync === true) {
        sessionRestore.adapter.save(sessionRestore.currentSpace.spaceId, saveData)
         // fs.writeFileSync(sessionRestore.savePath, JSON.stringify(data))
@@ -100,7 +104,7 @@ const sessionRestore = {
 
       // switch to the previously selected tasks
 
-      if (tasks.getSelected().tabs.isEmpty() || (!data.saveTime || Date.now() - data.saveTime < 30000)) {
+      if (tasks.getSelected().tabs.isEmpty() || (!data.saveTime || Date.now() - data.saveTime < SYNC_INTERVAL*1000)) {
         //如果当前选中的任务为空，或（没保存或者保存间隔小于30秒）
         browserUI.switchToTask(data.state.selectedTask)
         if (tasks.getSelected().tabs.isEmpty()) {
@@ -181,7 +185,6 @@ const sessionRestore = {
     try{
      currentSpace= await spaceModel.getCurrent()
     }catch (e) {
-      //ipc.send('message',{type:'error',config:{content:'网络原因无法读取云端空间，已为您切换到本地空间。'}})
       let lastSpace=await spaceModel.setAdapter('local').getLastSyncSpace()
       if(lastSpace===null){
         ipc.send('closeMainWindow')
@@ -232,7 +235,7 @@ nickname: "立即登录"
 uid: 0
        */
 
-    setInterval(sessionRestore.save, 30000)
+    setInterval(sessionRestore.save, SYNC_INTERVAL*1000)
 
     window.onbeforeunload = function (e) {
       sessionRestore.save(true, true)

@@ -337,10 +337,10 @@ const sidebarTpl = `
        <a-col flex="45px" style="text-align: center" >
        <a-tooltip placement="right">
         <template slot="title">
-          <span v-if="currentSpace.space.nanoid">当前为云端空间，实时保存至云端，可更换设备后登录同一空间继续使用。</span>
+          <span v-if="currentSpace.space.nanoid">当前为云端空间，每隔30秒自动备份至云端，此时图标会转动。可更换设备后登录同一空间继续使用。</span>
           <span v-else>当前为本地空间，不与云端同步，请切换到云端空间以防止标签组丢失。</span>
         </template>
-       <svg :class="{'online':currentSpace.space.nanoid,'offline':!currentSpace.space.nanoid}" style="width: 24px" t="1648106444295"  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="32437" width="32" height="32"><path d="M512 938.666667C276.352 938.666667 85.333333 747.648 85.333333 512S276.352 85.333333 512 85.333333s426.666667 191.018667 426.666667 426.666667-191.018667 426.666667-426.666667 426.666667z m205.653333-210.090667A298.666667 298.666667 0 0 0 385.365333 241.408l41.6 74.88A213.333333 213.333333 0 0 1 725.333333 512h-91.733333a21.333333 21.333333 0 0 0-18.645333 31.701333l102.698666 184.874667z m-120.618666-20.864A213.333333 213.333333 0 0 1 298.666667 512h91.733333a21.333333 21.333333 0 0 0 18.645333-31.701333L306.346667 295.424a298.666667 298.666667 0 0 0 332.288 487.168l-41.6-74.88z" fill="#14D081" p-id="32438"></path></svg>
+       <svg id="savingIcon" :class="{'online':currentSpace.space.nanoid,'offline':!currentSpace.space.nanoid}" style="width: 24px" t="1648106444295"  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="32437" width="32" height="32"><path d="M512 938.666667C276.352 938.666667 85.333333 747.648 85.333333 512S276.352 85.333333 512 85.333333s426.666667 191.018667 426.666667 426.666667-191.018667 426.666667-426.666667 426.666667z m205.653333-210.090667A298.666667 298.666667 0 0 0 385.365333 241.408l41.6 74.88A213.333333 213.333333 0 0 1 725.333333 512h-91.733333a21.333333 21.333333 0 0 0-18.645333 31.701333l102.698666 184.874667z m-120.618666-20.864A213.333333 213.333333 0 0 1 298.666667 512h91.733333a21.333333 21.333333 0 0 0 18.645333-31.701333L306.346667 295.424a298.666667 298.666667 0 0 0 332.288 487.168l-41.6-74.88z" fill="#14D081" p-id="32438"></path></svg>
 
 </a-tooltip>
 <!--       <a-icon type="loading" ></a-icon>-->
@@ -1260,4 +1260,11 @@ ipc.on('handleFileAssign', async (event, args) => {
   }
   console.log(args)
   console.log('assigneApps', assignApps)
+})
+ipc.on('saving',()=>{
+  let savingIcon=document.getElementById('savingIcon')
+  savingIcon.classList.add('saving')
+  setTimeout(()=>{
+    savingIcon.classList.remove('saving')
+  },2000)
 })

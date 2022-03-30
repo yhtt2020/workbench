@@ -978,6 +978,9 @@ app.whenReady().then(()=>{
 
   })
 
+  ipc.on('saving',()=>{
+    SidePanel.send('saving')
+  })
 
   ipc.on('login',()=>{
     if(loginWindow){
