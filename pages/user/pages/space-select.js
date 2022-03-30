@@ -67,7 +67,7 @@ const tpl = `
   </div>
 
   <div style="position: absolute;bottom: 10px;width: 100%;padding: 30px;padding-bottom: 15px">
-    <div style="float: left;"><a-button size="small" shape="round">隐私空间</a-button></div>
+<!--    <div style="float: left;"><a-button size="small" shape="round">隐私空间</a-button></div>-->
     <div style="float:right;width: 200px;text-align: right">
       <a-button v-if="user.uid!==0" @click="setEnterPwd()" style="margin-right: 10px">设置密码</a-button>
       <a-button v-if="user.uid!==0" @click="deleteAccount(user.uid)">解绑账号</a-button>
