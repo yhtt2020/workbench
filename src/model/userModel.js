@@ -30,6 +30,13 @@ const userModel={
       return false
     }
   },
+  async change(user){
+    await db.system.where({ name: 'currentUser' }).delete()
+    await db.system.put({
+      name: 'currentUser',
+      value: user
+    })
+  },
 
   getClientId(){
     const settings=require('../../js/util/settings/settings.js')
