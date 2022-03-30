@@ -184,6 +184,9 @@ const sessionRestore = {
     let currentSpace={}
     try{
      currentSpace= await spaceModel.getCurrent()
+      if(currentSpace.spaceType==='cloud'){
+        await spaceModel.setUser(currentSpace.userInfo).clientOnline(currentSpace.spaceId)
+      }
     }catch (e) {
       let lastSpace=await spaceModel.setAdapter('local').getLastSyncSpace()
       if(lastSpace===null){
@@ -199,7 +202,6 @@ const sessionRestore = {
       console.log('获取当前空间失败',e)
       //return
     }
-    console.log(currentSpace)
 
     sessionRestore.currentSpace=currentSpace
     if(currentSpace.spaceType==='local'){
@@ -239,6 +241,9 @@ uid: 0
 
     window.onbeforeunload = function (e) {
       sessionRestore.save(true, true)
+      if(sessionRestore.currentSpace.spaceType==='cloud'){
+        spaceModel.setUser(sessionRestore.currentSpace.userInfo).clientOffline()
+      }
     }
   }
 }

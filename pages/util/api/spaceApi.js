@@ -9,7 +9,9 @@ const url = {
   restore:'/app/getSpace',
   delete:'/app/deleteSpace',
   import:'/app/importSpaces',
-  rename:'/app/renameSpace'
+  rename:'/app/renameSpace',
+  clientOffline:'/app/clientOffline',
+  clientOnline:'/app/clientOnline'
 }
 
 const spaceApi = {
@@ -44,6 +46,14 @@ const spaceApi = {
   async rename(newName,nanoid,user){
     await baseApi.init(user)
     return baseApi.axios(url.rename,{newName:newName,nanoid:nanoid},'post')
+  },
+  async clientOffline(clientId,user){
+    await baseApi.init(user)
+    return baseApi.axios(url.clientOffline,{clientId:clientId},'post')
+  },
+  async clientOnline(nanoid,clientId,user){
+    await baseApi.init(user)
+    return baseApi.axios(url.clientOnline,{nanoid,clientId:clientId},'post')
   }
 }
 

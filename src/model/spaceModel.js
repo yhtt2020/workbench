@@ -100,6 +100,12 @@ const spaceModel = {
   },
   async getLastSyncSpace(){
     return await spaceModel.adapterModel.getLastSyncSpace()
+  },
+  async clientOffline(){
+    return await spaceModel.adapterModel.clientOffline(spaceModel.user)
+  },
+  async clientOnline(nanoid){
+    return await spaceModel.adapterModel.clientOnline(nanoid,spaceModel.user)
   }
 
 }

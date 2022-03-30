@@ -50,6 +50,14 @@ const cloudSpaceModel={
   async renameSpace(newName,space,userInfo){
     let result =await spaceApi.rename(newName,space.nanoid,userInfo)
     return standReturn.autoReturn(result)
+  },
+  async clientOffline(userInfo){
+    let result =await spaceApi.clientOffline(userInfo.clientId,userInfo)
+    return standReturn.autoReturn(result)
+  },
+  async clientOnline(nanoid,userInfo){
+    let result =await spaceApi.clientOnline(nanoid,userInfo.clientId,userInfo)
+    return standReturn.autoReturn(result)
   }
 }
 
