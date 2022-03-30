@@ -991,6 +991,7 @@ app.whenReady().then(()=>{
       loginWindow=new BrowserWindow({
         backgroundColor:'#00000000',
         show:false,
+        alwaysOnTop:true,
         parent:mainWindow,
         webPreferences:{
           preload:path.join(__dirname,'pages/user/loginPreload.js'),
@@ -1012,7 +1013,18 @@ app.whenReady().then(()=>{
       api=require(path.join(__dirname,'server-config.js')).api
       loginWindow.loadURL(api.getUrl(api.API_URL.user.login))
       loginWindow.on('ready-to-show',()=>{
+        if(userWindow && !userWindow.isDestroyed())
+        {
+          userWindow.setAlwaysOnTop(false)
+        }
         loginWindow.show()
+        loginWindow.focus()
+      })
+      loginWindow.on('close',()=>{
+        if(userWindow && !userWindow.isDestroyed())
+        {
+          userWindow.setAlwaysOnTop(true)
+        }
       })
     }
   })

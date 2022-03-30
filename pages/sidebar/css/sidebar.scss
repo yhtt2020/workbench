@@ -232,6 +232,7 @@ body {
   bottom: 0;
   width: 45px;
   overflow: hidden;
+  user-select: none;
 }
 
 
@@ -438,4 +439,34 @@ body {
   outline: none;
   cursor: pointer;
   filter: grayscale(1);
+}
+.space-selector{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  li{
+    user-select: none;
+    cursor: pointer;
+    &:hover{
+      background-color: #f1f1f1;
+    }
+    line-height: 28px;
+    padding:2px 5px ;
+    border-radius: 4px;
+    margin: 2px;
+  }
+  .active{
+    background-color: #f1f1f1;
+  }
+  .divider{
+
+    border-bottom: 1px solid rgba(241, 241, 241, 0.24);
+    border-radius: 0;
+    height: 0;
+    width: 95%;
+    padding: 0;
+    &:hover{
+      background-color: #fff;
+    }
+  }
 }

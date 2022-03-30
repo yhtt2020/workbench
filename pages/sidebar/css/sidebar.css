@@ -389,6 +389,7 @@ body {
   bottom: 0;
   width: 45px;
   overflow: hidden;
+  user-select: none;
 }
 
 .bottom-container .ant-collapse {
@@ -576,6 +577,36 @@ body {
   outline: none;
   cursor: pointer;
   filter: grayscale(1);
+}
+
+.space-selector {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.space-selector li {
+  user-select: none;
+  cursor: pointer;
+  line-height: 28px;
+  padding: 2px 5px;
+  border-radius: 4px;
+  margin: 2px;
+}
+.space-selector li:hover {
+  background-color: #f1f1f1;
+}
+.space-selector .active {
+  background-color: #f1f1f1;
+}
+.space-selector .divider {
+  border-bottom: 1px solid rgba(241, 241, 241, 0.24);
+  border-radius: 0;
+  height: 0;
+  width: 95%;
+  padding: 0;
+}
+.space-selector .divider:hover {
+  background-color: #fff;
 }
 
 /*# sourceMappingURL=sidebar.css.map */

@@ -310,39 +310,44 @@ const sidebarTpl = `
 
        <div >
 
-        <a-dropdown :trigger="['click']" @visible-change="()=>{this.$store.dispatch('getLocalSpaces')}" >
-      <template #overlay>
-        <a-menu>
-             <a-menu-item v-if="cloudSpaces.length===0"  disabled="" key="current">
-            登录后使用云空间
-          </a-menu-item>
-         <a-menu-item v-else  @click="confirmChangeSpace(space.nanoid,'cloud')" v-for="space in cloudSpaces" :key="space.nanoid" :disable="space['client_id']!=='' && currentSpace.space.nanoid!==space.nanoid">
-            <a-tag color="green" v-if="currentSpace.space.nanoid===space.nanoid">当前</a-tag><a-tag v-else color="#108ee9">云端</a-tag>{{space.name}}
-          </a-menu-item>
-         <a-menu-divider></a-menu-divider>
-          <a-menu-item @click="confirmChangeSpace(space.id,'local')"  v-for="space in localSpaces" :key="'local_'+space.id">
+        <a-popover placement="right" :mouse-enter-delay="0.3" overlay-class-name="tips" @visible-change="()=>{this.$store.dispatch('getLocalSpaces')}" >
+  <template slot="title">
+             更换标签组空间
+            </template>
+            <template slot="content">
+             <p style="width: 200px;font-size: 12px">
+              <span v-if="currentSpace.space.nanoid">当前为云端空间。<br>每30秒自动备份，此时图标会转动。</span>
+          <span v-else>当前为本地空间，不与云端同步，请切换到云端空间以防止标签组丢失。</span>
+</p>
 
- <a-tag color="green" v-if="currentSpace.space.id===space.id">当前</a-tag><a-tag v-else>本机</a-tag> {{space.name}}
-          </a-menu-item>
-           <a-menu-divider></a-menu-divider>
+        <ul class="space-selector">
+             <li v-if="cloudSpaces.length===0"  disabled="" key="current">
+            请<a @click="login()">登录</a>后使用云空间
+          </li>
+         <li title="云端空间" :class="{'active':currentSpace.space.nanoid===space.nanoid}" v-else  @click="confirmChangeSpace(space.nanoid,'cloud')" v-for="space in cloudSpaces" :key="space.nanoid" :disable="space['client_id']!=='' && currentSpace.space.nanoid!==space.nanoid">
+            <a-icon type="sync" v-if="currentSpace.space.nanoid===space.nanoid" style="color: #00bb00" spin></a-icon>
+            <a-icon style="color: #00bb00" v-else type="sync"></a-icon>
+            {{space.name}}
+          </li>
+          <li class="divider"></li>
+          <li :class="{'active':currentSpace.space.id===space.id}" title="本地空间" @click="confirmChangeSpace(space.id,'local')"  v-for="space in localSpaces" :key="'local_'+space.id">
+
+           <a-icon type="sync" v-if="currentSpace.space.id===space.id"  spin></a-icon>
+            <a-icon  v-else type="sync"></a-icon> {{space.name}}
+            </li>
+
 <!--            <a-menu-item key="add" @click="openUserWindow">-->
 <!--            <a-icon type="plus" ></a-icon> 创建新空间-->
 <!--          </a-menu-item>-->
-          <a-menu-item key="other" @click="openUserWindow">
+          <li  key="other" @click="openUserWindow">
             <a-icon type="swap" ></a-icon> 选择其他空间
-          </a-menu-item>
-        </a-menu>
-      </template>
+          </li>
+        </ul>
+        </template>
        <a-row type="flex" style="width: 145px">
        <a-col flex="45px" style="text-align: center" >
-       <a-tooltip placement="right">
-        <template slot="title">
-          <span v-if="currentSpace.space.nanoid">当前为云端空间，每隔30秒自动备份至云端，此时图标会转动。可更换设备后登录同一空间继续使用。</span>
-          <span v-else>当前为本地空间，不与云端同步，请切换到云端空间以防止标签组丢失。</span>
-        </template>
        <svg id="savingIcon" :class="{'online':currentSpace.space.nanoid,'offline':!currentSpace.space.nanoid}" style="width: 24px" t="1648106444295"  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="32437" width="32" height="32"><path d="M512 938.666667C276.352 938.666667 85.333333 747.648 85.333333 512S276.352 85.333333 512 85.333333s426.666667 191.018667 426.666667 426.666667-191.018667 426.666667-426.666667 426.666667z m205.653333-210.090667A298.666667 298.666667 0 0 0 385.365333 241.408l41.6 74.88A213.333333 213.333333 0 0 1 725.333333 512h-91.733333a21.333333 21.333333 0 0 0-18.645333 31.701333l102.698666 184.874667z m-120.618666-20.864A213.333333 213.333333 0 0 1 298.666667 512h91.733333a21.333333 21.333333 0 0 0 18.645333-31.701333L306.346667 295.424a298.666667 298.666667 0 0 0 332.288 487.168l-41.6-74.88z" fill="#14D081" p-id="32438"></path></svg>
 
-</a-tooltip>
 <!--       <a-icon type="loading" ></a-icon>-->
        </a-col>
        <a-col flex="1">
@@ -351,7 +356,7 @@ const sidebarTpl = `
         {{currentSpace.space.name}}
         <a-icon type="down" />
       </div>
-   </a-col></a-row>  </a-dropdown></div>
+   </a-col></a-row>  </a-popover></div>
 
       <div class="app-box">
         <ul id="appGroup" style="user-select: none;padding-bottom: 20px" class="app-task app-items"
@@ -643,6 +648,9 @@ Vue.component('sidebar', {
   },
   template: sidebarTpl,
   methods: {
+    login(){
+      ipc.send('login')
+    },
     confirmChangeSpace(id,type){
       antd.Modal.confirm({
         title: '确认',

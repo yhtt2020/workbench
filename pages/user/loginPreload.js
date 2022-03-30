@@ -45,7 +45,8 @@ const server = {
         if(arg.code === 1000 ) {
           ipc.send('userLogin', arg.data)
           setTimeout(() => {
-            window.location.href = api.getUrl(api.API_URL.group.index)
+            window.close()
+            //window.location.href = api.getUrl(api.API_URL.group.index)
           }, 500)
         } else {
           console.log(arg.message)
