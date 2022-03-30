@@ -27,9 +27,10 @@ function createDownloadWin () {
       }
     })
 
-
-  let x = (mainWindow.getBounds().x + mainWindow.getBounds().width - downloadWindow.getBounds().width - 15)
-  downloadWindow.setPosition(x,mainWindow.getBounds().y+90)
+  if(mainWindow!=null && !mainWindow.isDestroyed()){
+    let x = (mainWindow.getBounds().x + mainWindow.getBounds().width - downloadWindow.getBounds().width - 15)
+    downloadWindow.setPosition(x,mainWindow.getBounds().y+90)
+  }
 
   downloadWindow.webContents.loadURL('file://' + __dirname + '/pages/download/index.html')
 
@@ -61,7 +62,6 @@ app.whenReady().then(() => {
   ipc.on('openDownload', (event,args) => {
     getDownloadWindow()
     downloadWindow.show()
-
   })
 
 })
