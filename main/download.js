@@ -99,19 +99,19 @@ function downloadHandler (event, item, webContents) {
       if (item.getSavePath()) {
         currrentDownloadItems[item.getSavePath()] = item
       }
-
-      downloadWindow.setProgressBar(item.getReceivedBytes() / item.getTotalBytes())
-      sendIPCToDownloadWindow('download-info', {
-        path: item.getSavePath(),
-        name: savePathFilename,
-        status: state,
-        size: {received: item.getReceivedBytes(), total: item.getTotalBytes()},
-        realdata: item.speed,
-        progressnuw: ((prevReceivedBytes / item.getTotalBytes()).toFixed(2)) * 100,
-        paused: item.isPaused(),
-        startTime: item.getStartTime()
-      })
-
+      if(downloadWindow && !downloadWindow.isDestroyed()){
+        downloadWindow.setProgressBar(item.getReceivedBytes() / item.getTotalBytes())
+        sendIPCToDownloadWindow('download-info', {
+          path: item.getSavePath(),
+          name: savePathFilename,
+          status: state,
+          size: {received: item.getReceivedBytes(), total: item.getTotalBytes()},
+          realdata: item.speed,
+          progressnuw: ((prevReceivedBytes / item.getTotalBytes()).toFixed(2)) * 100,
+          paused: item.isPaused(),
+          startTime: item.getStartTime()
+        })
+      }
     })
 
     item.once('done', function (e, state) {
