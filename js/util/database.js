@@ -222,10 +222,6 @@ db.version(139).stores({
   //   }
   // })
 })
-/*system的keyalue的值备注*/
-//currentUser 当前登录的user
-
-
 
 db.version(141).stores({
   /*

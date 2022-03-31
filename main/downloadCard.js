@@ -14,8 +14,11 @@ function createDownloadWin () {
       width: 390,
       height: 465,
       sandbox:false,
+      maxWidth:390,
+      maxHeight:465,
+      minWidth:390,
       // disableDialogs:true,
-      resizable: false,
+      // resizable: false,
       autoHideMenuBar: true,
       show: false,
       acceptFirstMouse: true,
@@ -28,9 +31,6 @@ function createDownloadWin () {
     })
 
 
-  let x = (mainWindow.getBounds().x + mainWindow.getBounds().width - downloadWindow.getBounds().width - 15)
-  downloadWindow.setPosition(x,mainWindow.getBounds().y+90)
-
   downloadWindow.webContents.loadURL('file://' + __dirname + '/pages/download/index.html')
 
 
@@ -42,6 +42,7 @@ function createDownloadWin () {
       event.preventDefault()
     }
   })
+
 
   setTimeout(()=>{
     if(mainWindow){
@@ -60,8 +61,11 @@ app.whenReady().then(() => {
 
   ipc.on('openDownload', (event,args) => {
     getDownloadWindow()
+    if(mainWindow!=null && !mainWindow.isDestroyed()){
+      let x = (mainWindow.getBounds().x + mainWindow.getBounds().width - downloadWindow.getBounds().width - 15)
+      downloadWindow.setPosition(x,mainWindow.getBounds().y+90)
+    }
     downloadWindow.show()
-
   })
 
 })
@@ -78,6 +82,8 @@ ipc.on('willDownload',()=>{
   downloadWindow.show()
   downloadWindow.focus()
 })
+
+
 
 ipc.on('showMenuIng', (event,args) => {
   const template = [
@@ -130,3 +136,26 @@ ipc.on('showMenuDone', (event) => {
 
 })
 
+ipc.on('showMenuTrash', (event) => {
+  const template = [
+
+    { label: '重新下载',
+      click: () => { event.sender.send('menuTrashAgain')}
+    },
+    { label: '打开下载页',
+
+      click: () => { event.sender.send('menuTrashOpenPage')}
+    },
+    { label: '复制下载链接',
+
+      click: () => { event.sender.send('menuTrashUrl')}
+    },
+
+    { label: '删除记录',
+      click: () => { event.sender.send('menuTrashDelete')}
+    }
+  ]
+  const menu = Menu.buildFromTemplate(template)
+  menu.popup(BrowserWindow.fromWebContents(event.sender))
+
+})
