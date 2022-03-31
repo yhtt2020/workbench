@@ -60,6 +60,7 @@ function downloadHandler (event, item, webContents) {
       tabId: getViewIDFromWebContents(webContents)
     })
   } else {
+
     item.setSaveDialogOptions({
       title: '选择保存地址',
       filters: [
