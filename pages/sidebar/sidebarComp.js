@@ -398,7 +398,7 @@ const sidebarTpl = `
     </div>
     <message-center ref="messageRef" :visible="messageShow" :mod="mod" @closeMessage="() => this.messageShow = !this.messageShow" @updateVisible="(val) => this.messageShow = val">
     </message-center>
-    <global-search :visible="globalSearchShow" @closeGlobalSearch="() => this.globalSearchShow = !this.globalSearchShow"></global-search>
+    <global-search :currentTaskId="this.$store.state.selected" :visible="globalSearchShow" @closeGlobalSearch="() => this.globalSearchShow = !this.globalSearchShow"></global-search>
   </div>
 `
 
@@ -413,7 +413,7 @@ Vue.component('sidebar', {
       runningApps:[],//运行中的应用
       mod:'auto',//auto open close
       isPopoverShowing:false,
-      lastOpenId:0,
+      lastOpenId: this.$store.state.selected,
 			drag: false,
 			remote: {},
 			loginPanelTitle:"登录帐号免费体验完整功能",

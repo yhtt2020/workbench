@@ -14,7 +14,7 @@
   top: 25%;
   margin-left: -300px;
   width: 600px;
-  min-height: 200px;
+  min-height: 150px;
   max-height: 400px;
   border: 1px solid #dddcdc;
   box-shadow: 2px 2px 2px #00000012;
@@ -40,9 +40,11 @@
     height: 50px;
   }
   .content {
-    min-height: 100px;
+    min-height: 50px;
     max-height: 300px;
     overflow-y: scroll;
+    width: 100%;
+    border-radius: 0px 0px 10px 10px;
     &::-webkit-scrollbar {
       width: 0 !important
     }
@@ -55,10 +57,16 @@
         &:hover {
           background-color: #F6F6F6;
           border-left: 3px solid #508BFE;
+          cursor: pointer;
         }
       }
-      :last-child {
-        border-radius: 0px 0px 10px 10px;
+      // :last-child {
+      //   border-radius: 0px 0px 10px 10px;
+      // }
+      .li-ready {
+        background-color: #F6F6F6;
+        border-left: 3px solid #508BFE;
+        cursor: pointer;
       }
     }
   }
