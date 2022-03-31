@@ -171,7 +171,7 @@
 <!--            </div>-->
 
           </div>
-          <div style="display: flex;width: 300px" >
+          <div style="display: flex;width: 330px" >
             <div class="action-wrapper" >
                 <span onclick="ipc.send('openSwitch')" title="快速切换（Ctrl+Tab）" id="switch-toolbar"><img class="action" src="./icons/toolbar/switch.svg">
                 </span>
@@ -332,6 +332,7 @@
 
 		<script src="dist/bundle.js"></script>
     <script>
+
       ipc.on('clearCurrentUser', async (event, args) => {
         const {db} = require('./js/util/database.js')
         await db.system.where('name').equals('currentUser').modify({value: {
@@ -340,6 +341,7 @@
           avatar: './icons/browser.ico'
         }})
       })
+
 
       ipc.on('remakeCurrentUser', async (event, args) => {
         const {db} = require('./js/util/database.js')

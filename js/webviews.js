@@ -297,24 +297,20 @@ const webviews = {
    * @param tabData tab的信息
    */
   updateToolBarStatus(tabData){
-    if(tabData.id===tabs.getSelected()){
-      require('js/navbar/tabEditor').updateUrl(urlParser.getSourceURL(tabData.url))
-      webviews.updateToolbarSecure(tabData.secure)
-      require('./navbar/tabEditor').updateTool(tabData.id)
-      webviews.updateAppStatus(tabData)
-      $toolbar.updateStartPage()
-      if(urlParser.getSourceURL(tabData.url).startsWith('ts://')){
-        $toolbar.setPwdCanUse(false)
-        $toolbar.setMobileCanUse(false)
+    require('js/navbar/tabEditor').updateUrl(urlParser.getSourceURL(tabData.url))
+    webviews.updateToolbarSecure(tabData.secure)
+    require('./navbar/tabEditor').updateTool(tabData.id)
+    webviews.updateAppStatus(tabData)
 
-      }else{
-        $toolbar.setPwdCanUse(true)
-        $toolbar.setMobileCanUse(true)
-      }
-    }else{
-      console.log('update了一个非选中的tab信息')
-    }
-
+   if(urlParser.getSourceURL(tabData.url).startsWith('ts://')){
+     $toolbar.setPwdCanUse(false)
+     $toolbar.setMobileCanUse(false)
+     $toolbar.setCanRead(false)
+   }else{
+     $toolbar.setPwdCanUse(true)
+     $toolbar.setMobileCanUse(true)
+     $toolbar.setCanRead(true)
+   }
   },
   updateAppStatus(tabData){
     // 添加密码数量显示

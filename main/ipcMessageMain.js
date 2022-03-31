@@ -21,7 +21,13 @@ const ipcMessageMain={
     /**
      * 接收到Global消息
      */
-    receiveGlobal:'receiveGlobal'
+    receiveGlobal:'receiveGlobal',
+
+    //打开消息中心窗体
+    openMessageCenter: 'openMessageCenter',
+
+    //打开通知中心设置
+    openMsmSetting: 'openMsmSetting'
   },
   /**
    * 主界面使用ipc

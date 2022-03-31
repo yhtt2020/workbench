@@ -33,6 +33,7 @@ const modules = [
   'js/util/proxy.js',
   'main/mobileMod.js',
   'main/wizard.js',
+  'main/messageCenter.js',
   'main/fav.js'
 ]
 

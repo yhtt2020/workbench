@@ -37,6 +37,16 @@ ipc.handle('showFocusModeDialog2', function () {
   })
 })
 
+ipc.handle('showToolbarDialog', function () {
+  dialog.showMessageBox({
+    type: 'info',
+    buttons: [l('closeDialog')],
+    message: '已收起工具栏',
+    detail: '如要显示工具栏，请到【菜单】-【查看】-【工具栏】中勾选显示。'
+  })
+})
+
+
 ipc.handle('showOpenDialog', async function (e, options) {
   const result = await dialog.showOpenDialog(mainWindow, options)
   return result.filePaths

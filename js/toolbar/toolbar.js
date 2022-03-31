@@ -7,6 +7,7 @@ const sideBar = {
   maxWidth: 145,
   expandWidth: 100,
   mod: 'auto',// auto.自动展开收起, open.一直展开 ,最小化。
+  isMessageFixed: false,
   //切换侧边栏模式
   switchSideMod () {
 
@@ -18,6 +19,10 @@ const sideBar = {
         sideBar.mod = 'open'
         break
       case 'close':
+        if(sideBar.isMessageFixed) {
+          ipc.send('message',{type:"error",config:{content:'消息中心固定状态下无法切换,请取消固定状态'}})
+          break
+        }
         // 切换到自动模式
         ipc.send('sideSetAuto')
         //更换图标
@@ -71,14 +76,21 @@ const sideBar = {
   },
   setLayoutLeft (posLeft) {
     let postLeftCss = String(posLeft) + 'px'
-    document.getElementById('mouseRcoverArea').style.width = postLeftCss//调整左侧的感应区大小
     //调整主界面中各个组件的位置
+    if(sideBar.isMessageFixed) {
+      postLeftCss = String(posLeft + 300) + 'px'
+      //设置webviews位置
+      const adjustLeft = posLeft - webviews.viewMargins[3] + 300
+      webviews.adjustMargin([0, 0, 0, adjustLeft])//调整工具栏左侧
+    } else {
+      //设置webviews位置
+      const adjustLeft = posLeft - webviews.viewMargins[3]
+      webviews.adjustMargin([0, 0, 0, adjustLeft])//调整工具栏左侧
+    }
+    document.getElementById('mouseRcoverArea').style.width = postLeftCss//调整左侧的感应区大小
     //设置工具栏位置
     toolbar.toolbarEl.style.left = postLeftCss//调整webviews框的位置
     toolbar.toolbarEl.style.width = 'calc(100vw - ' + postLeftCss + ')'
-    //设置webviews位置
-    const adjustLeft = posLeft - webviews.viewMargins[3]
-    webviews.adjustMargin([0, 0, 0, adjustLeft])//调整工具栏左侧
     //设置搜索栏的左侧位置
     document.getElementById('searchbar').style.left = 'calc((100% - ' + postLeftCss + ' )*0.02 + ' + postLeftCss + ' )'
     document.getElementById('searchbar').style.width = 'calc( (100% - ' + postLeftCss + ' ) * 0.96)'
@@ -89,8 +101,8 @@ const sideBar = {
     document.getElementById('password-capture-bar').style.left = postLeftCss
     document.getElementById('password-capture-bar').style.width = 'calc(100% - ' + postLeftCss + ')'
     //调整下载框的左侧位置
-    document.getElementById('download-bar').style.left = postLeftCss
-    document.getElementById('download-bar').style.width = 'calc(100% - ' + postLeftCss + ')'
+    // document.getElementById('download-bar').style.left = postLeftCss
+    // document.getElementById('download-bar').style.width = 'calc(100% - ' + postLeftCss + ')'
   },
   setToMin () {
     let posLeft = sideBar.minWidth
@@ -107,6 +119,60 @@ const sideBar = {
   }
 }
 
+ipc.on('openToolbar',()=>{
+  document.getElementById('password-capture-bar').style.top = -36+'px'
+  if (sideBar.mod==='close'){
+    toolbar.expanded = true
+    toolbar.toolbarEl.hidden = false
+    document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px + 40px )`
+    document.getElementById('tab-editor').hidden = false
+    // document.getElementById('tabs').insertBefore(document.getElementById('tab-editor'), document.getElementById('tabs').children[0]).hidden = true
+    webviews.viewMargins = [document.getElementById('toolbar').hidden ? 0 : 40, 0, 0, 45]
+    webviews.adjustMargin([0, 0, 0, 0])
+    document.getElementById('address-bar').appendChild(document.getElementById('tab-editor'))
+    document.getElementById('toolbar-navigation-buttons').hidden = true
+  }
+  if(sideBar.mod==='open' || sideBar.mod==='auto'){
+    toolbar.expanded = true
+    toolbar.toolbarEl.hidden = false
+    document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px + 40px )`
+    document.getElementById('tab-editor').hidden = false
+    // document.getElementById('tabs').insertBefore(document.getElementById('tab-editor'), document.getElementById('tabs').children[0]).hidden = true
+    webviews.viewMargins = [document.getElementById('toolbar').hidden ? 0 : 40, 0, 0, 45]
+    webviews.adjustMargin([0, 0, 0,100])
+    document.getElementById('address-bar').appendChild(document.getElementById('tab-editor'))
+    document.getElementById('toolbar-navigation-buttons').hidden = true
+  }
+
+})
+
+ipc.on('hideToolbar',()=>{
+  setTimeout(function () {
+    ipc.invoke('showToolbarDialog')
+  }, 16)
+  if(sideBar.mod==='close'){
+    toolbar.expanded = false
+    toolbar.toolbarEl.hidden = true
+    document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px )`
+    document.getElementById('tab-editor').hidden = true
+    document.getElementById('tabs').insertBefore(document.getElementById('tab-editor'), document.getElementById('tabs').children[0])
+    webviews.viewMargins = [document.getElementById('toolbar').hidden ? 0 : 40, 0, 0, 45]
+    webviews.adjustMargin([0, 0, 0, 0])
+    document.getElementById('toolbar-navigation-buttons').hidden = false
+  }
+  if(sideBar.mod==='open' || sideBar.mod==='auto'){
+    toolbar.expanded = false
+    toolbar.toolbarEl.hidden = true
+    document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px )`
+    document.getElementById('tab-editor').hidden = true
+    document.getElementById('tabs').insertBefore(document.getElementById('tab-editor'), document.getElementById('tabs').children[0])
+    webviews.viewMargins = [document.getElementById('toolbar').hidden ? 0 : 40, 0,0,45]
+    webviews.adjustMargin([0, 0, 0, 100])
+    document.getElementById('toolbar-navigation-buttons').hidden = false
+  }
+})
+
+
 const toolbar = {
   expanded: true,
   sideModeButton: document.getElementById('side-mod-button-toolbar'),
@@ -117,6 +183,7 @@ const toolbar = {
   backButton: document.getElementById('back-button-toolbar'),
   collapseButton: document.getElementById('collapse-button-toolbar'),
   startPageButton:document.getElementById('start-button-toolbar'),
+  readEl : document.getElementById('read-toolbar'),
   //地址输入框焦点
   focusInput () {
     if ($toolbar.expanded && document.getElementById('searchbar').hidden) {
@@ -167,18 +234,35 @@ const toolbar = {
     if (!canUse) {
       toolbar.setElOpacity(pwdEl, 0.5)
       pwdEl.title = '密码管理器（内部页面不可用）'
-      pwdEl.disabled = true
+      pwdEl.style.pointerEvents='none'
     } else {
       toolbar.setElOpacity(pwdEl, 1)
       pwdEl.style.opacity = 1
       pwdEl.title = '密码管理器'
-      pwdEl.disabled = false
+      pwdEl.style.pointerEvents='auto'
     }
   },
   //设置一个元素的透明度
   setElOpacity (el, opacity = 1) {
     el.style.opacity = opacity
   },
+
+  //设置阅读模式是否可用
+  setCanRead (canRead) {
+
+    if (!canRead) {
+      toolbar.setElOpacity(toolbar.readEl, 0.5)
+      toolbar.readEl.title = '阅读模式（内部页面不可用）'
+      toolbar.readEl.style.pointerEvents='none'
+    } else {
+      toolbar.readEl.style.pointerEvents='auto'
+      toolbar.setElOpacity(toolbar.readEl, 1)
+      toolbar.readEl.style.opacity = 1
+      toolbar.readEl.title = '阅读模式'
+    }
+  },
+
+
   initialize: function () {
     window.$toolbar = toolbar
     toolbar.homeButton.addEventListener('click', () => {
@@ -198,14 +282,31 @@ const toolbar = {
     toolbar.sideModeButton.addEventListener('click', sideBar.switchSideMod)
 
     toolbar.collapseButton.addEventListener('click', () => {
-      toolbar.expanded = false
-      toolbar.toolbarEl.hidden = true
-      document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px )`
-      document.getElementById('tab-editor').hidden = true
-      document.getElementById('tabs').insertBefore(document.getElementById('tab-editor'), document.getElementById('tabs').children[0])
-      webviews.viewMargins = [document.getElementById('toolbar').hidden ? 0 : 40, 0, 0, 45]
-      webviews.adjustMargin([0, 0, 0, 0])
-      document.getElementById('toolbar-navigation-buttons').hidden = false
+      ipc.send('changeToolbar')
+      setTimeout(function () {
+        ipc.invoke('showToolbarDialog')
+      }, 16)
+      document.getElementById('password-capture-bar').style.top = 36+'px'
+      if(sideBar.mod==='close'){
+        toolbar.expanded = false
+        toolbar.toolbarEl.hidden = true
+        document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px )`
+        document.getElementById('tab-editor').hidden = true
+        document.getElementById('tabs').insertBefore(document.getElementById('tab-editor'), document.getElementById('tabs').children[0])
+        webviews.viewMargins = [document.getElementById('toolbar').hidden ? 0 : 40, 0, 0, 45]
+        webviews.adjustMargin([0, 0, 0, 0])
+        document.getElementById('toolbar-navigation-buttons').hidden = false
+      }
+      if(sideBar.mod==='open' || sideBar.mod==='auto'){
+        toolbar.expanded = false
+        toolbar.toolbarEl.hidden = true
+        document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px )`
+        document.getElementById('tab-editor').hidden = true
+        document.getElementById('tabs').insertBefore(document.getElementById('tab-editor'), document.getElementById('tabs').children[0])
+        webviews.viewMargins = [document.getElementById('toolbar').hidden ? 0 : 40, 0,0,45]
+        webviews.adjustMargin([0, 0, 0, 100])
+        document.getElementById('toolbar-navigation-buttons').hidden = false
+      }
     })
     if (toolbar.expanded) {
       document.getElementById('address-bar').appendChild(document.getElementById('tab-editor'))
@@ -228,14 +329,59 @@ const toolbar = {
         }
       }
     })
+
   },
+
   adjustSideBar () {
-    let sideMode = localStorage.getItem('sideMode')
-    sideMode = sideMode || 'auto'
-    sideBar.mod = sideMode
+    sideBar.mod = localStorage.getItem('sideMode') ?? 'auto'
+
+    sideBar.isMessageFixed = localStorage.getItem('isMessageFixed') == 'true' ? true : false
     sideBar.syncMod()
   }
+
 }
 toolbar.initialize()
+
+ipc.on('adjustByFixed', () => {
+  sideBar.isMessageFixed = true
+  if(sideBar.mod === 'open') {
+    sideBar.setToMax()
+  } else {
+    sideBar.setToMin()
+  }
+})
+
+ipc.on('freeAdjustByFixed', () => {
+  sideBar.isMessageFixed = false
+  if(sideBar.mod === 'open') {
+    sideBar.setToMax()
+  } else {
+    sideBar.setToMin()
+  }
+})
+
+ipc.on('temporaryAdjust', (event, args) => {
+  if(args.freeFixed) {
+    if(sideBar.mod === 'open') {
+      sideBar.isMessageFixed = false
+      localStorage.setItem("isMessageFixed", false)
+      sideBar.setToMax()
+    } else {
+      sideBar.isMessageFixed = false
+      localStorage.setItem("isMessageFixed", false)
+      sideBar.setToMin()
+    }
+  } else {
+    if(sideBar.mod === 'open') {
+      sideBar.isMessageFixed = true
+      localStorage.setItem("isMessageFixed", true)
+      sideBar.setToMax()
+    } else {
+      sideBar.isMessageFixed = true
+      localStorage.setItem("isMessageFixed", true)
+      sideBar.setToMin()
+    }
+  }
+})
 
 module.exports = toolbar

@@ -2,6 +2,9 @@
 const groupApi = require('../util/api/groupApi')
 const userStatsModel = require('../util/model/userStatsModel')
 const userApi = require('../util/api/userApi')
+const messageModel = require('../util/model/messageModel')
+const {tools} = require('../util/util')
+
 class TasksList {
 	constructor() {
 		this.tasks = []
@@ -100,32 +103,31 @@ window.onload = function() {
 			},
       myGroups: [],
       joinedGroups: [],
-      managerGroups: []
+      managerGroups: [],
+      allMessages: []
 		},
 		getters: {
+      getAllMessages: state => {
+        state.allMessages.forEach(v => {
+          v.time = tools.formatTime(v.timestamp)
+        });
+        return state.allMessages
+      },
       getMyGroups: state => {
         return state.myGroups
       },
       getAllCircle: state => {
         let allCircle = []
         state.managerGroups.forEach(e => {
+          e.lord = true
           allCircle.push(e)
         })
         state.joinedGroups.forEach(e => {
+          e.lord = false
           if(!state.managerGroups.some(v => v.id === e.id)) {
             allCircle.push(e)
           }
         })
-        // let managerGroupsId = []
-        // state.managerGroups.forEach(e => {
-        //   allCircle.push(e)
-        //   managerGroupsId.push(e.id)
-        // })
-        // state.joinedGroups.forEach(e => {
-        //   if(!managerGroupsId.includes(e.id)) {
-        //     allCircle.push(e)
-        //   }
-        // })
         return allCircle
       },
 			getAll: state => {
@@ -225,6 +227,28 @@ window.onload = function() {
 
 		},
 		mutations: {
+      //设置全部的消息列表
+      SET_ALLMESSAGES: (state, messages) => {
+        state.allMessages = messages
+      },
+      //添加消息
+      ADD_MESSAGE: (state, message) => {
+        state.allMessages.unshift(message)
+      },
+      //根据id删除单个消息
+      DEL_MESSAGE_BYID: (state, id) => {
+        const index = state.allMessages.findIndex(v => v.id === id)
+        state.allMessages.splice(index, 1)
+      },
+      //根据type删除消息
+      DEL_MESSAGES_BYTYPE: (state, type) => {
+        const result = state.allMessages.filter(v => v.messageType !== type)
+        state.allMessages = result
+      },
+      //删除所有消息
+      DEL_ALLMESSAGES: (state) => {
+        state.allMessages = []
+      },
       //设置我的团队列表
       SET_MYGROUPS: (state, myGroups) => {
         state.myGroups = myGroups
@@ -379,6 +403,22 @@ window.onload = function() {
         if(result.code === 1000) {
           commit('SET_MANAGER_CIRCLE', result.data)
         }
+      },
+      async getAllMessage({commit}) {
+        const result = await messageModel.allList()
+        commit('SET_ALLMESSAGES', result)
+      },
+      async deleteMessageById({commit}, options) {
+        await messageModel.deleteById(options)
+        commit('DEL_MESSAGE_BYID', options)
+      },
+      async deleteMessageByType({commit}, options) {
+        await messageModel.deleteByType(options)
+        commit('DEL_MESSAGES_BYTYPE', options)
+      },
+      async deleteAllMessages({commit}) {
+        await messageModel.clearTable()
+        commit('DEL_ALLMESSAGES')
       }
 
     }
@@ -412,20 +452,61 @@ ipc.on('sideSetOpen',(event,args)=>{
   console.log('open')
   document.getElementById('clickThroughElement').style.left = '155px'
   appVue.mod='open'
+  appVue.$children[0].mod = 'open'
   localStorage.setItem('sideMode','open')
 })
 ipc.on('sideSetClose',(event,args)=>{
   document.getElementById('clickThroughElement').style.left = '55px'
   console.log('close')
   appVue.mod='close'
+  appVue.$children[0].mod = 'close'
   localStorage.setItem('sideMode','close')
 })
 ipc.on('sideSetAuto',(event,args)=>{
   console.log('auto')
   document.getElementById('clickThroughElement').style.left = '55px'
   appVue.mod='auto'
+  appVue.$children[0].mod = 'auto'
   localStorage.setItem('sideMode','auto')
 })
+
+ipc.on('storeMessage', async (event, args) => {
+  let message = {}
+  message.messageType = args.type
+  message.timestamp = Date.now()
+  message.title = args.title
+  message.body = args.body
+  message.indexName = args.indexName ?? null
+  await messageModel.add(message)
+
+  this.$store.commit('ADD_MESSAGE', message)
+})
+
+ipc.on('webOsNotice', async(event, args) => {
+  const settingStatus = JSON.parse(localStorage.getItem('messageSetting'))
+  let index = settingStatus.findIndex(v => v.title === '浏览器')
+  let childIndex = settingStatus[index].childs.findIndex(v => v.title === '网页消息')
+  if(settingStatus[index].notice && settingStatus[index].childs[childIndex].notice) {
+    //如果允许通知，存入dexie和vuex
+    let message = {}
+    message.messageType = 'webOs'
+    message.timestamp = Date.now()
+    message.title = args.url
+    message.body = `${args.title}【${args.body}】`
+    message.indexName = null
+    await messageModel.add(message)
+
+    this.$store.commit('ADD_MESSAGE', message)
+  } else {
+    return
+  }
+})
+
+ipc.on('isSilent', (event, args) => {
+  let index = this.appVue.$children[0].$children.findIndex(v => v.hasOwnProperty('$tag') && v.$tag === 'message-center')
+  this.appVue.$children[0].$children[index].isSilent = args
+})
+
 ipc.on('refreshCircleList', async (event, args) => {
   await window.$store.dispatch('getJoinedCircle', {page: 1, row: 500})
   await window.$store.dispatch('getMyCircle', {page: 1, row: 500})

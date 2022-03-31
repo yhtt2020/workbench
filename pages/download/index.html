@@ -42,12 +42,12 @@
               </div>
               <div v-if="list.status === 'progressing'" >
                 <div v-if="list.loadState" >
-                  <a-button style="position: absolute;margin-left: 327px;margin-top: 10px" type="link" @click="resume(index)" >
+                  <a-button style="position: absolute;margin-left: 270px;margin-top: 14px" type="link" @click="resume(index)" >
                      开始
                   </a-button>
                 </div>
                 <div v-else>
-                  <a-button style="position: absolute;margin-left: 327px;margin-top: 10px" type="link" @click="stop(index)">
+                  <a-button style="position: absolute;margin-left: 270px;margin-top: 14px" type="link" @click="stop(index)">
                     暂停
                   </a-button>
                 </div>
@@ -82,15 +82,15 @@
                   </a-modal>
                 </div>
 
-              <span style="position: absolute;margin-left: 250px;margin-top: 5px;cursor:pointer;"  @click="openFileHandler(index)" >
+              <a-button style="position: absolute;margin-left: 200px;margin-top: 5px" type="link" @click="openFileHandler(index)" >
                 打开
-              </span>
-                <span style="position: absolute;margin-left: 290px;margin-top: 5px;cursor:pointer;"  @click="showFileHandler(index)" >
+              </a-button>
+                <a-button style="position: absolute;margin-left: 240px;margin-top: 5px" type="link" @click="showFileHandler(index)" >
                   打开文件夹
-                </span>
-              <div style="margin-left: 50px;font-size: 13px;font-weight: bold ;">{{doneList.title}}</div>
-              <div style="margin-left: 50px;font-size: 12px;width: 150px;color:#999">{{doneList.total}}  MB</div>
-
+                </a-button>
+              <div style="position: absolute;margin-left: 140px;margin-top: 21px">{{doneList.doneDate}}</div>
+              <div style="margin-left: 50px;font-size: 15px;font-weight: bold ;">{{doneList.title}}</div>
+              <div style="margin-left: 50px;font-size: 12px;width: 50px;">{{doneList.total}}  MB</div>
             </div>
           </div>
         </a-tab-pane>
@@ -162,18 +162,16 @@
     appVue.deleconfirm=false
   })
 
-  ipcRenderer.on('cancelSave',()=>{
-    console.log('123')
-  })
 
   ipcRenderer.on('download-info', async (event, args) => {
+
     let simpleName;
     if (args.name.length >= 20) {
       simpleName = args.name.substring(0, 7) + '...' + args.name.substring(args.name.length-6,args.name.length);
     } else (simpleName = args.name)
-
+    // console.log(args)
     if (args.status === 'start') {
-      appVue.lists.push({
+      appVue.lists.unshift({
         id: appVue.id++,
         title: simpleName,
         received: '',
@@ -188,10 +186,17 @@
       appVue.count++
       ipcRenderer.send('willDownload')
     }
-     if(args.status ==='cancelled'){
-       appVue.lists.splice(appVue.lists.indexOf(args), 1)
-       appVue.count--
-     }
+
+    if (args.status === 'cancelled') {
+      // appVue.lists.splice(0, 1)
+      for (var i = 0; i < appVue.lists.length; i++) {
+        if (appVue.lists[i].startTime === args.startTime) {
+            appVue.deleteid = i
+        }
+      }
+      appVue.lists.splice(appVue.deleteid, 1)
+      appVue.count--
+    }
 
     if (args.status === 'progressing' && args.path !== '') {
       appVue.lists.forEach(function (item, index, arr) {
@@ -210,23 +215,28 @@
       })
     }
 
-    if (args.status === 'completed' && args.path !== '' ) {
-      appVue.doneLists.push({
-        id:appVue.doneId++,
+    if (args.status === 'completed' && args.path !== '') {
+      const myDate = new Date();
+
+      appVue.doneLists.unshift({
+        id: appVue.doneId++,
         title: simpleName,
         total: ((args.size.total) / 1024 / 1024).toFixed(2),
         path: args.path,
         url: args.url,
-        startTime:args.startTime
+        startTime: args.startTime,
+        doneDate:myDate.toLocaleDateString(),
       })
       appVue.count--
       db.download.add({
-        title:args.name,
-        total:((args.size.total) / 1024 / 1024).toFixed(2),
-        path:args.path,
-        url:args.url,
-        startTime:args.startTime
+        title: args.name,
+        total: ((args.size.total) / 1024 / 1024).toFixed(2),
+        path: args.path,
+        url: args.url,
+        startTime: args.startTime,
+        doneDate:myDate.toLocaleDateString(),
       })
+
     }
   })
 
@@ -234,6 +244,7 @@
     el: '#appVue',
      data: {
        count:'0',
+       doneDate:'',
        visibleIng:false,
        visible: false,
        lists:[],
@@ -242,6 +253,7 @@
        progressnuw:0,
        startTime: '',
        pathList:[],
+       deleteid:'0',
        loadState:[],
        id:'0',
        active :'',
@@ -259,22 +271,25 @@
            if (dblist[i].title.length >= 20) {
              simpleName = dblist[i].title.substring(0, 7) + '...' + dblist[i].title.substring(dblist[i].title.length-6,dblist[i].title.length);
            } else (simpleName = dblist[i].title)
-         appVue.doneLists.push({
+         appVue.doneLists.unshift({
            id:appVue.doneId++,
            title:simpleName,
            total: dblist[i].total,
            path: dblist[i].path,
            url: dblist[i].url,
            startTime:dblist[i].startTime,
+           doneDate:dblist[i].doneDate,
          })
        }
        })
       },
      methods: {
       menuIng(index){
-        ipcRenderer.send('showMenuIng',this.lists[index].loadState)
         this.selectingList=this.lists[index]
         this.active = index;
+        if(this.selectingList.status === 'progressing'){
+          ipcRenderer.send('showMenuIng',this.lists[index].loadState)
+        }
       },
       menuDone(index){
         ipcRenderer.send('showMenuDone')
@@ -293,9 +308,9 @@
 
       hideModal() {
         ipcRenderer.send('deleteDownload', this.selectingList.path)
-        this.lists.splice(this.lists.indexOf(this.selectingList), 1)
+        // this.lists.splice(this.lists.indexOf(this.selectingList), 1)
         this.visibleIng = false;
-        this.count--
+        // this.count = this.count-1
       },
 
       doneChange(e){
@@ -311,12 +326,24 @@
 
       hideModalDone(){
          db.download.delete(appVue.selectList.startTime)
-        if(this.deleconfirm === true) {
-          fs.unlinkSync(this.selectList.path)
-          this.doneLists.splice(this.doneLists.indexOf(this.selectList), 1)
-          this.visible = false;
+        if (this.deleconfirm === true) {
+          const f = this.selectList.path;
+          fs.exists(f, function (flag) {
+            if (flag) {
+              // const { shell } = require('electron')
+              ipcRenderer.send('deleteFile',appVue.selectList.path)
+              // shell.trashItem(appVue.selectList.path)
+              // fs.unlinkSync(appVue.selectList.path)
+              appVue.$message.info('文件已删除', 1)
+              appVue.doneLists.splice(appVue.doneLists.indexOf(appVue.selectList), 1)
+              appVue.visible = false;
+            } else {
+              appVue.doneLists.splice(appVue.doneLists.indexOf(appVue.selectList), 1)
+              appVue.visible = false;
+            }
+          })
         }
-        if(this.deleconfirm === false){
+        if (this.deleconfirm === false) {
           this.doneLists.splice(this.doneLists.indexOf(this.selectList), 1)
           this.visible = false;
         }
@@ -337,10 +364,18 @@
 
       showFileHandler(index) {
         const {shell} = require('electron')
-        shell.showItemInFolder(this.doneLists[index].path)
+        const f = this.doneLists[index].path;
+        fs.exists(f, function (flag) {
+          if (flag) {
+            shell.showItemInFolder(appVue.doneLists[index].path)
+          } else {
+            appVue.$message.info('文件已被删除或位置被移动', 1)
+          }
+        })
       },
     }
    })
+
 
 </script>
 
@@ -353,10 +388,10 @@
   margin-top: 10px;
 }
 .active {
-  background: #f7f7f7;
+  background: #e6e6e6;
 }
 .clickActive{
-  background: #f7f7f7;
+  background: #e8f2ff;
 }
 </style>
 

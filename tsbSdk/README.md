@@ -101,12 +101,16 @@ tsbk.ready(function() {
 ```
 
 ##### 四、🧊系统消息提示
+###### 参数: 1、必填【title: String】消息标题
+###### 参数: 2、必填【body: String】消息内容
+###### 参数: 3、必填【category: String】消息类型  (lumen存在以下：【聊天、入群邀请、好友申请】，短说存在以下：【互动消息、关注消息、应用消息】)
 示例
 ```
 tsbk.ready(function() {
   tsbk.notice({
     title: '标题',
-    body: '消息内容'
+    body: '消息内容',
+    category: '好友申请'
   })
 })
 ```
