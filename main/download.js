@@ -45,28 +45,40 @@ function sendIPCToDownloadWindow(action, data) {
 }
 
 function downloadHandler (event, item, webContents) {
+
   var itemURL = item.getURL()
   var attachment = isAttachment(item.getContentDisposition())
 
+
+  let suffixName = item.getFilename().substring(item.getFilename().lastIndexOf('.')+1,item.getFilename().length)
+  savePathFilename =  path.basename(item.getSavePath())
+
   if (item.getMimeType() === 'application/pdf' && itemURL.indexOf('blob:') !== 0 && itemURL.indexOf('#pdfjs.action=download') === -1 && !attachment) { // clicking the download button in the viewer opens a blob url, so we don't want to open those in the viewer (since that would make it impossible to download a PDF)
     event.preventDefault()
-    sendIPCToDownloadWindow( 'openPDF', {
+    sendIPCToDownloadWindow('openPDF', {
       url: itemURL,
       tabId: getViewIDFromWebContents(webContents)
     })
   } else {
+    item.setSaveDialogOptions({
+      title: '选择保存地址',
+      filters: [
+        { name: suffixName, extensions: [suffixName] },
+        { name: '自定义', extensions: ['*'] }
+      ]
+    })
+    // event.preventDefault()
     var savePathFilename
 
-    // send info to download manager
+
     sendIPCToDownloadWindow('download-info', {
       path: item.getSavePath(),
       name: item.getFilename(),
       status: 'start',
-      size: { received: 0, total: item.getTotalBytes() },
+      size: {received: 0, total: item.getTotalBytes()},
       paused: item.isPaused(),
-      startTime:item.getStartTime(),
-      url:item.getURL(),
-      ChainUrl:item.getURLChain()
+      startTime: item.getStartTime(),
+      url: item.getURL(),
     })
 
 
@@ -77,8 +89,10 @@ function downloadHandler (event, item, webContents) {
       item.speed = receivedBytes - prevReceivedBytes
       prevReceivedBytes = receivedBytes
 
+      let updateName;
       if (!savePathFilename) {
-        savePathFilename = path.basename(item.getSavePath())
+        updateName = path.basename(item.getSavePath())
+        savePathFilename = updateName
       }
 
       if (item.getSavePath()) {
@@ -90,11 +104,11 @@ function downloadHandler (event, item, webContents) {
         path: item.getSavePath(),
         name: savePathFilename,
         status: state,
-        size: { received: item.getReceivedBytes(), total: item.getTotalBytes() },
-        realdata:item.speed,
-        progressnuw:((prevReceivedBytes/item.getTotalBytes()).toFixed(2))*100,
+        size: {received: item.getReceivedBytes(), total: item.getTotalBytes()},
+        realdata: item.speed,
+        progressnuw: ((prevReceivedBytes / item.getTotalBytes()).toFixed(2)) * 100,
         paused: item.isPaused(),
-        startTime:item.getStartTime()
+        startTime: item.getStartTime()
       })
 
     })
@@ -105,13 +119,15 @@ function downloadHandler (event, item, webContents) {
         downloadWindow.setProgressBar(-1);
       }
 
-      sendIPCToDownloadWindow( 'download-info', {
+
+
+      sendIPCToDownloadWindow('download-info', {
         path: item.getSavePath(),
-        startTime:item.getStartTime(),
+        startTime: item.getStartTime(),
         name: savePathFilename,
         status: state,
-        url:item.getURL(),
-          size: { received: item.getTotalBytes(), total: item.getTotalBytes() }
+        url: item.getURL(),
+        size: {received: item.getTotalBytes(), total: item.getTotalBytes()}
       })
     })
   }
@@ -120,11 +136,13 @@ function downloadHandler (event, item, webContents) {
 }
 
 function listenForDownloadHeaders (ses) {
+
   ses.webRequest.onHeadersReceived(function (details, callback) {
     if (details.resourceType === 'mainFrame' && details.responseHeaders) {
       // workaround for https://github.com/electron/electron/issues/24334
       var typeHeader = details.responseHeaders[Object.keys(details.responseHeaders).filter(k => k.toLowerCase() === 'content-type')]
       var attachment = isAttachment(details.responseHeaders[Object.keys(details.responseHeaders).filter(k => k.toLowerCase() === 'content-disposition')])
+
 
       if (typeHeader instanceof Array && typeHeader.filter(t => t.includes('application/pdf')).length > 0 && details.url.indexOf('#pdfjs.action=download') === -1 && !attachment) {
       // open in PDF viewer instead
@@ -161,5 +179,6 @@ app.on('session-created', function (session) {
   session.on('will-download', downloadHandler)
   listenForDownloadHeaders(session)
 })
+
 
 

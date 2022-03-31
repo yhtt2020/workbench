@@ -88,9 +88,9 @@
                 <a-button style="position: absolute;margin-left: 240px;margin-top: 5px" type="link" @click="showFileHandler(index)" >
                   打开文件夹
                 </a-button>
-              <div style="position: absolute;margin-left: 140px;margin-top: 21px">{{doneList.doneDate}}</div>
+              <div style="position: absolute;margin-left: 145px;margin-top: 21px">{{doneList.doneDate}}</div>
               <div style="margin-left: 50px;font-size: 15px;font-weight: bold ;">{{doneList.title}}</div>
-              <div style="margin-left: 50px;font-size: 12px;width: 50px;">{{doneList.total}}  MB</div>
+              <div style="margin-left: 50px;font-size: 12px;width: 65px;">{{doneList.total}}  MB</div>
             </div>
           </div>
         </a-tab-pane>
@@ -332,6 +332,7 @@
             if (flag) {
               // const { shell } = require('electron')
               ipcRenderer.send('deleteFile',appVue.selectList.path)
+
               // shell.trashItem(appVue.selectList.path)
               // fs.unlinkSync(appVue.selectList.path)
               appVue.$message.info('文件已删除', 1)
