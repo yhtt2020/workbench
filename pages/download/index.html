@@ -29,7 +29,7 @@
                @mouseleave="mouseLeave">
             <div style="margin-top: 0;width: 100%;height: 55px;">
               <div style="width: 34px;height: 40px;position: absolute;margin-top: 8px;margin-left: 5px;" >
-                <img src="white.svg">
+                <img src="./icon/white.svg">
               </div>
 
               <div>
@@ -71,7 +71,7 @@
                @mouseleave="mouseLeave">
             <div style="width: 100%;height: 45px;">
               <div style="width: 34px;height: 40px;position: absolute;margin-top: 4px;margin-left: 10px;" >
-                <img src="white.svg">
+                <img src="./icon/white.svg">
               </div>
                 <div>
                   <a-modal v-model="visible" title="删除下载任务" ok-text="确认" cancel-text="取消" @ok="hideModalDone()">
@@ -322,25 +322,8 @@
            }
          }
        })
-
-    //     db.delDownload.toArray().then(dbDelList =>{
-    //         for(let i=0; i<=dbDelList.length; i++){
-    //           let simpleName;
-    //           if (dbDelList[i].delTitle.length >= 20) {
-    //             simpleName = dbDelList[i].delTitle.substring(0, 7) + '...' + dbDelList[i].delTitle.substring(dbDelList[i].delTitle.length-6,dbDelList[i].title.length);
-    //           } else (simpleName = dbDelList[i].delTitle)
-    //           appVue.deleteLists.unshift({
-    //             id:appVue.delId++,
-    //             title:simpleName,
-    //             total: dbDelList[i].delTotal,
-    //             path: dbDelList[i].delPath,
-    //             url: dbDelList[i].delUrl,
-    //             startTime:dbDelList[i].delStartTime,
-    //           })
-    //     }
-    // })
-},
- methods: {
+      },
+     methods: {
       menuIng(index){
         this.selectingList=this.lists[index]
         this.active = index;
