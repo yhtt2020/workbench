@@ -125,6 +125,7 @@ Vue.component("global-search", {
       console.log(this.currentTaskId, '>>>>>>>>')
       if(item.tag === 'tab') {
         this.$parent.openPopoverTab(item.taskId, item.tabId)
+        this.clkmask()
       }
     },
     calculateHeight() {
