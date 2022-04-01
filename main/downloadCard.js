@@ -30,7 +30,6 @@ function createDownloadWin () {
       }
     })
 
-
   downloadWindow.webContents.loadURL('file://' + __dirname + '/pages/download/index.html')
 
 
@@ -75,14 +74,20 @@ ipc.on('deleteFile',function (e,deletepath){
   shell.trashItem(deletepath).then(() =>{
    return true
   })
-
 })
+
+// ipc.on('originalPage',(args)=>{
+//   let originalPageUrl = args
+// })
+//
+// ipc.on('addOriginal',()=>{
+//   ipc.send('addTab',{url:originalPageUrl})
+// })
 
 ipc.on('willDownload',()=>{
   downloadWindow.show()
   downloadWindow.focus()
 })
-
 
 
 ipc.on('showMenuIng', (event,args) => {
@@ -102,7 +107,6 @@ ipc.on('showMenuIng', (event,args) => {
       click: () => { event.sender.send('menuIngDelete') }
     }
   ]
-
   const menu = Menu.buildFromTemplate(template)
   menu.popup(BrowserWindow.fromWebContents(event.sender))
 })

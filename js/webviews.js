@@ -621,7 +621,27 @@ webviews.bindIPC('scroll-position-change', function (tabId, args) {
 
 ipc.on('view-event', function (e, args) {
   webviews.emitEvent(args.event, args.viewId, args.args)
+  let originalUrl;
+  let originalId;
+  if (args.event === 'new-tab') {
+    originalId = args.viewId
+    console.log(args)
+    console.log(originalId)
+  }
+
+  for (let i = 0; i < tabs.tabs.length; i++) {
+    if (tabs.tabs[i].id === originalId) {
+      originalUrl = tabs.tabs[i].url
+      // console.log(originalUrl)
+      // tabs.tabs.originalUrl=originalUrl
+      ipc.send('originalPage',originalUrl)
+      console.log(originalUrl)
+    }
+  }
+
+  // require('browserUI.js').closeTab()
 })
+
 
 ipc.on('async-call-result', function (e, args) {
   webviews.asyncCallbacks[args.callId](args.error, args.result)
