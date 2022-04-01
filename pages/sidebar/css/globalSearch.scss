@@ -39,6 +39,62 @@
     padding: 0px 20px;
     height: 50px;
   }
+  .apps {
+    width: 100%;
+    padding: 10px 20px;
+    height: 140px;
+    .apps-content {
+      height: 90px;
+      width: 100%;
+      overflow: scroll;
+      &::-webkit-scrollbar {
+        width: 0 !important
+      }
+      ul {
+        li {
+          height: 100%;
+          margin-right: 34px;
+          width: 60px;
+          cursor: pointer;
+          img {
+            width: 44px;
+            height: 44px;
+            padding: 2px;
+            border: 2px solid;
+            border-radius: 50%;
+          }
+        }
+      }
+    }
+  }
+  .recent-open {
+    padding: 0px 20px;
+    width: 100%;
+    border-radius: 0px 0px 10px 10px;
+    span {
+      height: 30px;
+    }
+    .recent-open-content {
+      min-height: 120px;
+      max-height: 316px;
+      overflow: scroll;
+      &::-webkit-scrollbar {
+        width: 0 !important
+      }
+      ul {
+        width: 100%;
+        li {
+          width: 100%;
+          height: 50px;
+          padding: 0px 20px;
+          &:hover {
+            background-color: #F6F6F6;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
   .content {
     min-height: 50px;
     max-height: 300px;
@@ -70,4 +126,7 @@
       }
     }
   }
+}
+.first-gs-dialog {
+  max-height: 540px;
 }

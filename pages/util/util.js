@@ -144,6 +144,26 @@ const tools = {
   execDomain(url) {
     let urlReg = /[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?/
     return urlReg.exec(url)[0]
+  },
+
+  /**
+   * 升级冒泡排序
+   * @param {Array} arr 数组
+   * @param {String} attr 比较的属性
+   * @returns
+   */
+  bubbleSort(arr, attr) {
+    var len = arr.length;
+    for (var i = 0; i < len - 1; i++) {
+        for (var j = 0; j < len - 1 - i; j++) {
+            if (arr[j][`${attr}`] > arr[j+1][`${attr}`]) {        // 相邻元素两两对比
+                var temp = arr[j+1];        // 元素交换
+                arr[j+1] = arr[j];
+                arr[j] = temp;
+            }
+        }
+    }
+    return arr;
   }
 };
 

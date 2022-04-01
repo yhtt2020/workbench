@@ -1,15 +1,28 @@
 const globalSearchTempl = /*html*/`
   <div class="gs-wrap" v-show="visible">
     <div class="gs-mask" @click="clkmask"></div>
-    <div class="gs-dialog">
+    <div class="gs-dialog" :class="{'first-gs-dialog': openFirst}">
       <div class="search flex justify-between align-center">
         <a-icon class="search-lf" type="search" :style="{ fontSize: '26px' }"></a-icon>
         <input tabindex=-1 type="text" class="search-rg" :value="searchWord" @input="handleInput($event)" style="font-size: 20px" />
       </div>
-      <div class="category flex justify-between align-center">
+      <div class="apps flex flex-direction justify-between align-start" v-if="openFirst">
+        <span class="text-grey">推荐</span>
+        <div class="apps-content flex">
+          <ul class="flex">
+            <template v-for="(app, index) in apps">
+              <li :key="index" class="flex flex-direction justify-around align-center" @click="executeApp(app)">
+                <img onerror="this.src='../../icons/default.svg'" :src="app.logo" alt="" :style="{'border-color':app.userThemeColor?app.userThemeColor:app.themeColor}" shape="circle">
+                <span class="text-black sg-omit-sm flex justify-center align-center">{{app.name}}</span>
+              </li>
+            </template>
+          </ul>
+        </div>
+      </div>
+      <div class="category flex justify-between align-center" v-else>
         <div class="category-lf">
           <template v-for="(tag, index) in tags">
-            <a-tag :key="index" :color="tag.checked ? 'blue' : ''" @click="handleChange(tag, index)">
+            <a-tag :key="index" :color="tag.checked ? 'blue' : ''" @click="handleChange(tag, index)" style="font-size: 15px; border-radius: 10px">
               {{tag.label}}
             </a-tag>
           </template>
@@ -19,7 +32,24 @@ const globalSearchTempl = /*html*/`
           <div class="flex align-center justify-center" style="padding-left: 5px">按下Tab键切换类型</div>
         </div>
       </div>
-      <div class="content flex justify-center list-hook">
+
+      <div class="recent-open flex flex-direction justify-between" v-if="openFirst">
+        <span class="text-grey">最近打开</span>
+        <div class="recent-open-content flex flex-direction">
+          <ul>
+            <template v-for="(tab, index) in compRecentOpenedTabs">
+              <li :key="index" class="flex justify-start align-center">
+                <img :src="tab.icon" style="width: 30px; height: 30px;">
+                <div class="flex flex-direction justify-around align-start" style="padding-left: 20px; height: 100%">
+                  <div class="text-black-lg sg-omit-sm">{{tab.title}}</div>
+                  <div class="text-grey-sm sg-omit-sm">{{tab.attached}}</div>
+                </div>
+              </li>
+            </template>
+          </ul>
+        </div>
+      </div>
+      <div class="content flex justify-center list-hook" v-else>
         <template v-if="contentLoading">
           <div>
             <a-spin>
@@ -31,12 +61,13 @@ const globalSearchTempl = /*html*/`
           <template v-for="(item, index) in compSearchResult">
             <li class="flex justify-start align-center" :class="{'li-ready': itemReadyedIndex === index}" :key="index" @click="clkli(item)">
               <img :src="item.icon" style="width: 30px; height: 30px;">
-              <div class="flex flex-direction justify-center align-start" style="padding-left: 20px">
-                <div>{{item.title}}</div>
-                <div>{{item.attached}}</div>
+              <div class="flex flex-direction justify-around align-start" style="padding-left: 20px; height: 100%">
+                <div class="text-black-lg sg-omit-sm">{{item.title}}</div>
+                <div class="text-grey-sm sg-omit-sm">{{item.attached}}</div>
               </div>
             </li>
           </template>
+          <div v-show="compSearchResult.length === 0 && !openFirst" class="text-grey flex justify-center align-center" style="width: 100%; height: 50px">未找到任何结果</div>
         </ul>
       </div>
     </div>
@@ -96,7 +127,10 @@ Vue.component("global-search", {
       ],
       searchResult: [],
       itemReadyedIndex: 0,
-      itemReadyedItem: {}
+      itemReadyedItem: {},
+      openFirst: true,
+      apps: [],
+      recentOpenedTabs: []
     };
   },
   computed: {
@@ -117,14 +151,42 @@ Vue.component("global-search", {
         this.itemReadyedItem = filterRes[0]
         return filterRes
       }
+    },
+    compRecentOpenedTabs() {
+      console.log(tools.bubbleSort(this.recentOpenedTabs, 'lastActivity').reverse(), '!!!!!!!!!!!')
+      return tools.bubbleSort(this.recentOpenedTabs, 'lastActivity').reverse()
     }
   },
   methods: {
+    handleRecentOpenedTabs() {
+      let mapTabs = []
+      this.$store.getters.getItems.forEach(v => {
+        v.tabs.forEach(k => {
+          mapTabs.push({
+            title: k.title,
+            icon: k.icon,
+            taskId: v.id,
+            tabId: k.id,
+            url: k.hasOwnProperty('url') ? k.url : null,
+            tag: 'tab',
+            lastActivity: k.lastActivity,
+            attached: `${v.name}·` + tools.execDomain(k.url)
+          })
+        })
+      })
+      return mapTabs
+    },
+    executeApp(app){
+      ipc.send('executeApp',{app:app})
+    },
     clkli(item) {
       console.log(item)
       console.log(this.currentTaskId, '>>>>>>>>')
       if(item.tag === 'tab') {
         this.$parent.openPopoverTab(item.taskId, item.tabId)
+        this.clkmask()
+      } else if(item.tag === 'task') {
+        this.$parent.openItem(item.taskId)
         this.clkmask()
       }
     },
@@ -169,6 +231,8 @@ Vue.component("global-search", {
           } else {
             this.handleChange(this.tags, 0)
           }
+        } else if(e.keyCode === 13 && Object.keys(this.itemReadyedItem).length > 0) {
+          this.clkli(this.itemReadyedItem)
         }
       }
     },
@@ -184,6 +248,9 @@ Vue.component("global-search", {
         e.checked = false
       })
       this.tags[index].checked = !tag.checked
+    },
+    async getAllApps() {
+      this.apps = await saAppModel.getAllApps()
     },
     searchApp() {
 
@@ -217,15 +284,18 @@ Vue.component("global-search", {
           })
         })
       })
-      return mapTabs.filter(v => v.title.includes(word) || v.url.includes(word))
+      return mapTabs.filter(v => v.title.includes(word) || v.url.includes(word) )
     }
   },
-  mounted () {
+  async mounted () {
     //document.getElementsByClassName('list-hook')[0].addEventListener('scroll', (pos) => {console.log(pos.y)})
+    await this.getAllApps()
     this.bindKeys()
     console.log(tools);
     setTimeout(() => {
       console.log(this.$store.getters.getItems)
+      this.recentOpenedTabs = this.handleRecentOpenedTabs()
+      console.log(this.recentOpenedTabs, 'recentOpenedTabs')
     }, 2000)
   },
 })

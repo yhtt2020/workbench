@@ -381,17 +381,17 @@ const sidebarTpl = `
           </div>
         </template>
         <li @click="visibleGlobalSearch">
-          <a-button type="default" shape="circle" icon="search"></a-button>
+          <a-button type="default" shape="circle" icon="search" tabindex=-1></a-button>
           <div class="item-title">全局搜索</div>
         </li>
         <li @click="visibleMessageCenter">
           <a-badge :dot="this.$store.getters.getAllMessages.length > 0 ? true : false">
-            <a-button type="default" shape="circle" icon="bell"></a-button>
+            <a-button type="default" shape="circle" icon="bell" tabindex=-1></a-button>
           </a-badge>
           <div class="item-title">消息中心</div>
         </li>
         <li @click="openBottom('setting')">
-          <a-button type="default" shape="circle" icon="setting"></a-button>
+          <a-button type="default" shape="circle" icon="setting" tabindex=-1></a-button>
           <div class="item-title">偏好设置</div>
         </li>
       </ul>
