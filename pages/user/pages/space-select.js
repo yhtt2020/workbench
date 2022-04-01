@@ -1,5 +1,6 @@
 const userModel = require('../../../src/model/userModel')
 const spaceModel = require('../../../src/model/spaceModel')
+const { createVNode } = require('../../../ext/vue/vue3')
 const tpl = `
 <div>
   <div style="text-align: center" >
@@ -30,7 +31,13 @@ const tpl = `
           <a-card-meta :title="space.name" >
             <template #description>
 
-              <span class="using-bandage" v-if="space.isOtherUsing">其他设备使用中</span>
+              <span class="using-bandage" v-if="space.isOtherUsing">
+              <span v-if="space.online">
+              其他设备使用中
+</span><span v-else>
+离线设备锁定中
+</span>
+</span>
               <span class="using-bandage" v-if="space.isSelfUsing">当前使用中</span>
 
               {{space.count_task+ ' 标签组  '+ space.count_tab+' 标签'}}
@@ -340,6 +347,11 @@ const SpaceSelect = {
             if (this.user.uid) { //云端判断逻辑
               if (space.client_id && space.client_id !== this.user.clientId) {
                 space.isOtherUsing = true
+                if(Date.now()-space.sync_time>30000){
+                  space.online=false
+                }else{
+                  space.online=true
+                }
                 space.isUsing = true
               } else if ((space.client_id === this.user.clientId)) {
                 space.isSelfUsing = true
@@ -513,17 +525,43 @@ const SpaceSelect = {
           }
         })
       } else {
+        if(space.isSelfUsing){
+          window.antd.message.info('不可切换到当前使用中的空间。')
+          return
+        }
         if (space.isOtherUsing) {
-          antd.Modal.confirm({
-            title: '此空间正忙',
-            content: '此空间正在被其他设备使用，如若切换到此空间，可能造成其他设备未同步的标签组丢失。是否仍然要强行切换？这将导致该设备上的浏览器强制下线。',
-            centered: true,
-            okText: '我已明确，切换空间',
-            cancelText: '取消',
-            onOk: async () => {
-              this.doChangeSpaceCloud(space)
-            }
-          })
+          if(space.online){
+            antd.Modal.confirm({
+              title: '此空间正忙',
+              content: '此空间正在被其他设备使用，如若切换到此空间，可能造成其他设备未同步的标签组丢失。是否仍然要强行切换？这将导致该设备上的浏览器强制下线。',
+              centered: true,
+              okText: '我已明确，切换空间',
+              cancelText: '取消',
+              onOk: async () => {
+                this.doChangeSpaceCloud(space)
+              }
+            })
+          }else{
+            antd.Modal.confirm({
+              title: '此空间使用设备异常离线',
+              content: Vue.createVNode('div',{},
+                [
+                  Vue.createVNode('p',{},'此空间正在被其他设备使用，但是系统检测到此设备可能已经因为网络或者其他原因而离线。'),
+                  Vue.createVNode('p',{},'所以此设备上可能存在未保存的标签组。如果切换到此空间，可能造成未保存的内容丢失。'),
+                  Vue.createVNode('p',{},'建议到此设备商重新连接后正常关闭浏览器，以防止数据冲突。'),
+                  Vue.createVNode('p',{},'如果您确认已无法恢复此设备的连接，则可切换到此设备在离线前最后一次保存的空间。'),
+                  Vue.createVNode('p',{},'当此设备再次连接网络，会自动将无法保存的空间保存为本地空间做备份。')
+                ]
+              ),
+              centered: true,
+              okText: '我已明确，切换空间',
+              cancelText: '取消',
+              onOk: async () => {
+                this.doChangeSpaceCloud(space)
+              }
+            })
+          }
+
         } else {
           antd.Modal.confirm({
             title: '切换到云端空间',
