@@ -5,7 +5,7 @@ const localAdapter=require('../src/util/sessionAdapter/localAdapter')
 const cloudAdapter=require('../src/util/sessionAdapter/cloudAdapter')
 const spaceModel=require('../src/model/spaceModel')
 const ipc= require('electron').ipcRenderer
-const SYNC_INTERVAL=30
+const SYNC_INTERVAL=5
 const sessionRestore = {
   adapter:{},
   currentSpace:{},
@@ -33,24 +33,43 @@ const sessionRestore = {
     let saveData={
       count_task:countTask,
       count_tab:countTab,
-      data:data
+      data:data,
     }
 
     if (forceSave === true || stateString !== sessionRestore.previousState) {
-      if(sessionRestore.currentSpace.spaceType==='cloud'){
-        ipc.send('saving')
+      let space={
+        id:sessionRestore.currentSpace.spaceId,
+        name:sessionRestore.currentSpace.name,
+        uid:sessionRestore.currentSpace.userInfo.uid,
+        type:sessionRestore.currentSpace.spaceType
       }
+      localAdapter.save(space, saveData)
       if (sync === true) {
+        //本地存储是必须存的，并且还要夹带type
+       saveData.type=sessionRestore.currentSpace.spaceType
        sessionRestore.adapter.save(sessionRestore.currentSpace.spaceId, saveData)
+        console.log(saveData)
+        console.log('成功存入到本地space空间')
         // fs.writeFileSync(sessionRestore.savePath, JSON.stringify(data))
-      } else {
-        sessionRestore.adapter.save(sessionRestore.currentSpace.spaceId, saveData)
+      }
+      //如果是云端，还需去云端同步
+      try{
+        if(sessionRestore.currentSpace.spaceType==='cloud'){
+          sessionRestore.adapter.save(sessionRestore.currentSpace.spaceId, saveData)
+          ipc.send('saving')
+          console.log('成功存入云端空间')
+        }
+      }catch (e) {
+        //todo 走备份空间流程
+      }
+
+
         // fs.writeFile(sessionRestore.savePath, JSON.stringify(data), function (err) {
         //   if (err) {
         //     console.warn(err)
         //   }
         // })
-      }
+
       sessionRestore.previousState = stateString
     }
   },

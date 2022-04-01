@@ -59,6 +59,7 @@ const localSpaceModel={
       update_time:Date.now(),
       sync_time:Date.now(),
       uid:0,
+      type:'local',
       id:nanoid()
     }
     ldb.db.get('spaces').push(spaceAdd).write()
@@ -69,7 +70,9 @@ const localSpaceModel={
     ldb.reload()
     try{
       let spaces=[]
-     spaces =  ldb.db.get('spaces').orderBy('update_time','desc').value()
+     spaces =  ldb.db.get('spaces').filter((sp)=>{
+       return sp.type==='local' || !sp.type
+     }).orderBy('update_time','desc').value()
      return  standReturn.success(spaces)
     }catch (e){
      return  standReturn.failure([],'无法读取本地空间。')
@@ -102,6 +105,34 @@ const localSpaceModel={
     ldb.reload()
     ldb.db.get('spaces').find({id:space.id}).assign({name:newName,update_time:Date.now()}).write()
     return standReturn.success()
+  },
+  save(space,saveData){
+    ldb.reload()
+    let foundSpace= ldb.db.get('spaces').find({id:space.id}).value()
+    if(foundSpace){
+      saveData.update_time=Date.now()
+      saveData.sync_time=Date.now()
+      saveData.name=space.name
+      saveData.type=space.type
+      ldb.db.get('spaces').find({id:space.id}).assign(saveData).write()
+    }else{
+      if(!space.id){
+        space.id=nanoid()
+      }
+      let newSpace={
+        id:space.id,
+        data:saveData.data,
+        name:space.name||'本机空间',
+        count_task:saveData.count_task,
+        count_tab:saveData.count_tab,
+        create_time:Date.now(),
+        update_time:Date.now(),
+        sync_time:Date.now(),
+        type:space.type,
+        uid:space.uid
+      }
+      ldb.db.get('spaces').push(newSpace).write()
+    }
   }
 
 

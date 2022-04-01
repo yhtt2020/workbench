@@ -42,7 +42,11 @@ const spaceModel = {
     if (!currentSpace) { //如果是首次读入，不存在currentSpace就插入一个默认的值
       currentSpace = {
         spaceId: 1,
-        spaceType: 'local'
+        spaceType: 'local',
+        name:'本机空间',
+        userInfo:{
+          uid:0
+        }
       }
       ldb.db.set('currentSpace', currentSpace).write()
     }
@@ -62,6 +66,7 @@ const spaceModel = {
       }
     }
     currentSpace.space = space
+    ldb.db.set('currentSpace.name',space.name).write()
     return currentSpace
   },
   async getSpace (id,user) {

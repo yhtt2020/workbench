@@ -1,3 +1,4 @@
+localSpaceModel=require('../../model/localSpaceModel')
 if(window){
   ldb=window.ldb
 }
@@ -7,30 +8,8 @@ const localAdapter={
   previousState: null,
   adapter:null,
 
-  save(spaceId,saveData){
-    ldb.reload()
-    let space= ldb.db.get('spaces').find({id:spaceId}).value()
-    if(space){
-      saveData.update_time=Date.now()
-      saveData.sync_time=Date.now()
-      ldb.db.get('spaces').find({id:spaceId}).assign(saveData).write()
-    }else{
-      if(!spaceId){
-        spaceId=Date.now()
-      }
-      let space={
-        id:spaceId,
-        data:saveData.data,
-        name:'本机空间',
-        count_task:saveData.count_task,
-        count_tab:saveData.count_tab,
-        create_time:Date.now(),
-        update_time:Date.now(),
-      }
-      ldb.db.get('spaces').push(space).write()
-      console.log(space)
-    }
-
+  save(space,saveData){
+    localSpaceModel.save(space,saveData)
   },
   async restore(spaceId){
     ldb.reload()
