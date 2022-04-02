@@ -893,7 +893,3 @@ ipc.on('showAllSaApps',(event,args)=>{
  allAppsWindow.show()
  allAppsWindow.focus()
 })
-
-ipc.on('openGlobalSearch', () => {
-  console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
-})

@@ -1,89 +1,16 @@
-const globalSearchTempl = /*html*/`
-  <div class="gs-wrap" v-show="visible">
-    <div class="gs-mask" @click="clkmask"></div>
-    <div class="gs-dialog" :class="{'first-gs-dialog': openFirst}">
-      <div class="search flex justify-between align-center">
-        <a-icon class="search-lf" type="search" :style="{ fontSize: '26px' }"></a-icon>
-        <input id="myTextField" tabindex=-1 type="text" class="search-rg" :value="searchWord" @input="handleInput($event)" style="font-size: 20px" />
-      </div>
-      <div class="apps flex flex-direction justify-between align-start" v-if="openFirst">
-        <span class="text-grey">推荐</span>
-        <div class="apps-content flex">
-          <ul class="flex">
-            <template v-for="(app, index) in apps">
-              <li :key="index" class="flex flex-direction justify-around align-center" @click="executeApp(app)">
-                <img onerror="this.src='../../icons/default.svg'" :src="app.logo" alt="" :style="{'border-color':app.userThemeColor?app.userThemeColor:app.themeColor}" shape="circle">
-                <span class="text-black sg-omit-sm flex justify-center align-center">{{app.name}}</span>
-              </li>
-            </template>
-          </ul>
-        </div>
-      </div>
-      <div class="category flex justify-between align-center" v-else>
-        <div class="category-lf">
-          <template v-for="(tag, index) in tags">
-            <a-tag :key="index" :color="tag.checked ? 'blue' : ''" @click="handleChange(tag, index)" style="font-size: 15px; border-radius: 10px">
-              {{tag.label}}
-            </a-tag>
-          </template>
-        </div>
-        <div class="category-rg flex justify-around align-center">
-          <a-icon type="smile"></a-icon>
-          <div class="flex align-center justify-center" style="padding-left: 5px">按下Tab键切换类型</div>
-        </div>
-      </div>
+const store = require('./store.js')
 
-      <div class="recent-open flex flex-direction justify-between" v-if="openFirst">
-        <span class="text-grey">最近打开</span>
-        <div class="recent-open-content flex flex-direction">
-          <ul>
-            <template v-for="(tab, index) in compRecentOpenedTabs">
-              <li :key="index" class="flex justify-start align-center" @click="clikRecentTab(tab)">
-                <img :src="tab.icon" style="width: 30px; height: 30px;">
-                <div class="flex flex-direction justify-around align-start" style="padding-left: 20px; height: 100%">
-                  <div class="text-black-lg sg-omit-sm">{{tab.title}}</div>
-                  <div class="text-grey-sm sg-omit-sm">{{tab.attached}}</div>
-                </div>
-              </li>
-            </template>
-          </ul>
-        </div>
-      </div>
-      <div class="content flex justify-center list-hook" v-else>
-        <template v-if="contentLoading">
-          <div>
-            <a-spin>
-              <a-icon slot="indicator" type="loading" style="font-size: 40px" spin></a-icon>
-            </a-spin>
-          </div>
-        </template>
-        <ul v-else>
-          <template v-for="(item, index) in compSearchResult">
-            <li class="flex justify-start align-center" :class="{'li-ready': itemReadyedIndex === index}" :key="index" @click="clkli(item)">
-              <img :src="item.icon" style="width: 30px; height: 30px;">
-              <div class="flex flex-direction justify-around align-start" style="padding-left: 20px; height: 100%">
-                <div class="text-black-lg sg-omit-sm">{{item.title}}</div>
-                <div class="text-grey-sm sg-omit-sm">{{item.attached}}</div>
-              </div>
-            </li>
-          </template>
-          <div v-show="compSearchResult.length === 0 && !openFirst" class="text-grey flex justify-center align-center" style="width: 100%; height: 50px">未找到任何结果</div>
-        </ul>
-      </div>
-    </div>
-  </div>
-`
-
-Vue.component("global-search", {
-  template: globalSearchTempl,
-  props: {
-    visible: {
-      type: Boolean,
-    },
-    currentTaskId: {
-      type: String
-    }
-  },
+const globalSearch = new Vue({
+  el: "#globalSearch",
+  store: store,
+  // props: {
+  //   visible: {
+  //     type: Boolean,
+  //   },
+  //   currentTaskId: {
+  //     type: String
+  //   }
+  // },
   watch: {
     searchWord: {
       handler: tools.debounce(async function (newValue, oldValue) {
@@ -106,15 +33,15 @@ Vue.component("global-search", {
       }, 200),
       deep: true
     },
-    visible: {
-      handler: function(newValue, oldValue) {
-        if(newValue === true) {
-          this.$nextTick(() => {
-            document.getElementById("myTextField").focus();
-          })
-        }
-      }
-    }
+    // visible: {
+    //   handler: function(newValue, oldValue) {
+    //     if(newValue === true) {
+    //       this.$nextTick(() => {
+    //         document.getElementById("myTextField").focus();
+    //       })
+    //     }
+    //   }
+    // }
   },
   data() {
     return {
@@ -144,7 +71,8 @@ Vue.component("global-search", {
       itemReadyedItem: {},
       openFirst: true,
       apps: [],
-      recentOpenedTabs: []
+      recentOpenedTabs: [],
+      //visible: false
     };
   },
   computed: {
@@ -179,7 +107,7 @@ Vue.component("global-search", {
   methods: {
     handleRecentOpenedTabs() {
       let mapTabs = []
-      this.$store.getters.getItems.forEach(v => {
+      this.$store.getters.getAllTasks.forEach(v => {
         v.tabs.forEach(k => {
           mapTabs.push({
             title: k.title,
@@ -203,8 +131,6 @@ Vue.component("global-search", {
       this.clkmask()
     },
     clkli(item) {
-      //console.log(item)
-      //console.log(this.currentTaskId, '>>>>>>>>')
       if(item.tag === 'tab') {
         this.$parent.openPopoverTab(item.taskId, item.tabId)
         this.clkmask()
@@ -316,7 +242,7 @@ Vue.component("global-search", {
       })
     },
     searchTask(word) {
-      let mapTasks = this.$store.getters.getItems.map(v => {
+      let mapTasks = this.$store.getters.getAllTasks.map(v => {
         return {
           title: v.name,
           icon: v.icon,
@@ -332,7 +258,7 @@ Vue.component("global-search", {
     },
     searchTab(word) {
       let mapTabs = []
-      this.$store.getters.getItems.forEach(v => {
+      this.$store.getters.getAllTasks.forEach(v => {
         v.tabs.forEach(k => {
           mapTabs.push({
             title: k.title,
@@ -353,9 +279,10 @@ Vue.component("global-search", {
     await this.getAllApps()
     this.bindKeys()
     setTimeout(() => {
-      console.log(this.$store.getters.getItems)
       this.recentOpenedTabs = this.handleRecentOpenedTabs()
       console.log(this.recentOpenedTabs, 'recentOpenedTabs')
     }, 2000)
   },
-})
+});
+
+window.$globalSearch = globalSearch

@@ -590,7 +590,7 @@ Vue.component('sidebar', {
       }
     },
     visibleGlobalSearch() {
-      this.globalSearchShow = !this.globalSearchShow
+      ipc.send('openGlobalSearch')
     },
     openCircle(args) {
       this.userPanelVisible = false
