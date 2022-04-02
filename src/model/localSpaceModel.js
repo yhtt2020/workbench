@@ -134,8 +134,6 @@ const localSpaceModel={
       ldb.db.get('spaces').push(newSpace).write()
     }
   }
-
-
 }
 
 module.exports = localSpaceModel

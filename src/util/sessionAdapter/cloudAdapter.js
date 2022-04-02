@@ -9,17 +9,31 @@ const cloudAdapter={
   previousState: null,
   adapter:null,
 
-  save(spaceId,saveData){
+  async save(spaceId,saveData){
     ldb.reload()
     try{
       let userInfo=ldb.db.get('currentSpace.userInfo').value()
-      let result= cloudSpaceModel.save(spaceId,saveData,userInfo)
+      let result=await cloudSpaceModel.save(spaceId,saveData,userInfo,false)
+      console.log(result)
       if(result.status===1){
         console.log('自动备份到云端')
+        console.log(result)
+        if(result.data==='-1'){
+          //todo 空间不存在
+        }
+        if(result.data==='-2'){
+          //todo 保存失败，冲突
+          ipc.send('showUserWindow',{conflict:true,modal:true})
+          console.log('fail',result)
+        }
       }else{
+
+        //保存失败，冲突
         return standReturn.failure('',result.data)
       }
     }catch (e) {
+
+
       console.log(e)
     }
 

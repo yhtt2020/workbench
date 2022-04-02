@@ -27,9 +27,9 @@ const spaceApi = {
     await baseApi.init(user)
     return baseApi.axios(url.change,{nanoid:nanoid,clientId:clientId,force:true},'post')
   },
-  async save(nanoid, saveData,user){
+  async save(nanoid,clientId, saveData,user,force=false){
     await baseApi.init(user)
-    return baseApi.axios(url.save,{nanoid:nanoid,saveData:saveData},'post')
+    return baseApi.axios(url.save,{nanoid,clientId,saveData,force},'post')
   },
   async restore(nanoid,user){
     await baseApi.init(user)

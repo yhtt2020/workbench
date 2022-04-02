@@ -897,18 +897,35 @@ ipc.on('showAllSaApps',(event,args)=>{
 
 const configModel = require(__dirname+'/src/model/configModel')
 let userWindow=null
+let lastWindowArgs={}
 let changingSpace=false
 function showUserWindow(args){
+  const _=require('lodash')
   if(userWindow){
+    if(lastWindowArgs.conflict){
+      return
+    }
     userWindow.show()
     userWindow.focus()
   }else{
-    let tip=''
-    let modal=false
-    if(args){
-      tip=args.tip?args.tip:''
-      modal=!!args.modal
+    let defaultArgs={
+      tip:'',
+      modal:false
     }
+    if(typeof args==='undefined'){
+      args={}
+    }
+    let additionalArgs= Object.assign(defaultArgs,args)
+    lastWindowArgs=additionalArgs
+    console.log(additionalArgs)
+    let formatArgs=[]
+
+    _.mapKeys(additionalArgs,(value,key)=>{
+      formatArgs.push('--'+key+'='+value)
+    })
+    console.log(formatArgs)
+
+
 
     let bounds=mainWindow.getBounds()
     userWindow=new BrowserWindow({
@@ -927,8 +944,7 @@ function showUserWindow(args){
           '--app-version=' + app.getVersion(),
           '--app-name=' + app.getName(),
           ...((isDevelopmentMode ? ['--development-mode'] : [])),
-          '--tip='+tip,
-          '--modal='+modal
+          ...formatArgs
         ]
       }
     })
@@ -975,8 +991,8 @@ app.whenReady().then(()=>{
     ldb.db.set('currentSpace.spaceType',args.spaceType).write()
     ldb.db.set('currentSpace.userInfo',args.userInfo).write()
     createWindow()
-
   })
+
 
   ipc.on('saving',()=>{
     SidePanel.send('saving')

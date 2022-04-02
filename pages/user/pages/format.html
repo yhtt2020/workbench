@@ -1,81 +1,62 @@
 <div>
-  <div style="text-align: center">
-    <a-row style="margin-top: 20px">
-      <a-col :span="12" style="text-align: right">
-        <a-avatar :size="60" :src="user.avatar">
-        </a-avatar>
+  <h1 style="font-size: 18px;margin:auto;margin-top: 20px;margin-bottom:10px;text-align: center">
+    保存冲突，无法保存空间至云端
+  </h1>
+  <p style="text-align: center;color: #999">
+      <span style="color: #333">
+      系统检测到当前空间已被<strong>其他设备占用</strong>。无法再保存当前空间。
+您可以选择放弃此备份空间，或者将备份空间以新空间的形式存储到云端或本地。
+</span>
+  </p>
+  <a-row>
+    <a-col>
+      <div>
+        <a-avatar :src="user.avatar"></a-avatar>
+      </div>
+      <div>
+        {{user.nickname}}
+      </div>
+    </a-col>
+    <a-col>
+      <div>
+        <a-input v-mode:value="space.name"></a-input>
+      </div>
+      <div>
+        {{space.count_task}} 标签组 {{space.count_tab}}标签
+      </div>
+      <div>
+        最后成功同步时间：{{space.sync_time}}
+      </div>
+
+    </a-col>
+
+  </a-row>
+  <div>
+
+    <a-checkbox v-model:checked="save" default-value="true">将备份保存至 <a-select
+      ref="select"
+      v-model:value="savePosition"
+      style="width: 120px"
+      @focus="focus"
+    >
+      <a-select-option value="cloud">云端空间</a-select-option>
+      <a-select-option value="local">本地空间</a-select-option>
+    </a-select></a-checkbox>
+  </div>
+  <div>
+    <a-row>
+      <a-col style="text-align: center">
+        <a-popconfirm v-if="!save" placement="top" ok-text="确定放弃" cancel-text="再考虑一下" @confirm="confirm">
+          <template #title>
+            <p>您是否确定放弃保存本地备份空间？此操作将删除本地备份空间。建议您将当前空间保存至云端备份。</p>
+          </template>
+          <a-button type="primary">切换到最新的云端空间</a-button>
+        </a-popconfirm>
+        <a-button v-else type="primary">切换到最新的云端空间</a-button>
       </a-col>
-      <a-col :span="12" style="text-align: left;padding-left: 10px">
-        <div style="margin-top: 10px">{{user.nickname}}</div>
-        <p style="text-align: left;font-size: 16px">{{ spaces.length }} <span style="color: #999;font-size: 12px">空间</span></p>
+      <a-col style="text-align: center">
+        <a-button v-if="save">切换到保存的备份空间</a-button>
       </a-col>
     </a-row>
-
-
   </div>
-  <div style="text-align: center">
-    <!--      <a-empty text="无空间" v-if="spaces.length===0"></a-empty>-->
-    <div style="text-align: left;overflow-y: auto;max-height: 310px;margin-right: 20px;padding-top: 10px;padding-left: 40px;padding-bottom: 10px" class="scroller">
-      <a-dropdown v-for="space,index in spaces" :trigger="['contextmenu']">
-        <a-card @click="switchSpace(space)" :style="{'margin-right':index%2===1?'0':'10px'}"  hoverable style="margin-left:20px;width: 250px;display: inline-block;margin-bottom: 10px;">
-          <a-card-meta :title="space.name" >
-            <template #description>
-              <span style="font-size: 12px;color: red;position: absolute;right: 10px;top: 10px" v-if="space.isOtherUsing">其他设备正在使用中</span>
-              <span style="font-size: 12px;color: red;position: absolute;right: 10px;top: 10px" v-if="space.isSelfUsing">当前使用空间</span>
-              {{space.count_task+ ' 标签组  '+ space.count_tab+' 标签'}}
-            </template>
-            <template #avatar>
-              <svg :class="{'offline':this.user.uid===0?true:false}" t="1648106444295" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="32437" width="32" height="32"><path d="M512 938.666667C276.352 938.666667 85.333333 747.648 85.333333 512S276.352 85.333333 512 85.333333s426.666667 191.018667 426.666667 426.666667-191.018667 426.666667-426.666667 426.666667z m205.653333-210.090667A298.666667 298.666667 0 0 0 385.365333 241.408l41.6 74.88A213.333333 213.333333 0 0 1 725.333333 512h-91.733333a21.333333 21.333333 0 0 0-18.645333 31.701333l102.698666 184.874667z m-120.618666-20.864A213.333333 213.333333 0 0 1 298.666667 512h91.733333a21.333333 21.333333 0 0 0 18.645333-31.701333L306.346667 295.424a298.666667 298.666667 0 0 0 332.288 487.168l-41.6-74.88z" fill="#14D081" p-id="32438"></path></svg>
-            </template>
-          </a-card-meta>
-        </a-card>
-        <template #overlay>
-          <a-menu>
-            <a-menu-item @click="deleteSpace(space)" :key="'delete_'+index">删除空间</a-menu-item>
-          </a-menu>
-        </template>
-      </a-dropdown>
-
-      <a-card @click="showCreateSpace" hoverable style="width: 250px;display: inline-block;margin-left:20px;">
-        <a-card-meta title="创建新空间" description="创建一个全新的空间">
-          <template #avatar>
-            <a-avatar :size="40" style="background-color: #eeeeee">
-              <template #icon>
-                <svg style="margin-top: 3px;width: 30px" t="1648099588078" class="icon" viewBox="0 0 1024 1024"
-                     version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="21372" width="36" height="36">
-                  <path
-                    d="M512 42.666667c259.2 0 469.333333 210.133333 469.333333 469.333333s-210.133333 469.333333-469.333333 469.333333S42.666667 771.2 42.666667 512 252.8 42.666667 512 42.666667z m0 85.333333a384 384 0 1 0 0 768 384 384 0 0 0 0-768z m0 170.666667a42.666667 42.666667 0 0 1 42.666667 42.666666v128h128a42.666667 42.666667 0 0 1 0 85.333334h-128v128a42.666667 42.666667 0 0 1-85.333334 0v-128H341.333333a42.666667 42.666667 0 0 1 0-85.333334h128V341.333333a42.666667 42.666667 0 0 1 42.666667-42.666666z"
-                    fill="#666666" p-id="21373"></path>
-                </svg>
-              </template>
-            </a-avatar>
-          </template>
-        </a-card-meta>
-      </a-card>
-      <div>
-      </div>
-    </div>
-  </div>
-
-  <div style="position: absolute;bottom: 10px;width: 100%;padding: 30px;padding-bottom: 15px">
-    <div style="float: left;"><a-button size="small" shape="round">隐私空间</a-button></div>
-    <div style="float:right;width: 200px;text-align: right">
-      <a-button v-if="user.uid!==0" style="margin-right: 10px">设置密码</a-button>
-      <a-button v-if="user.uid!==0" @click="deleteAccount(user.uid)">解绑账号</a-button>
-    </div>
-  </div>
-
-  <a-modal
-    centered
-    v-model:visible="visibleCreate"
-    title="创建空间"
-    ok-text="创建"
-    cancel-text="取消"
-    width="300px"
-    @ok="doCreateSpace"
-  >
-    <p>输入空间名称</p>
-    <p><a-input ref="spaceNameInput" @keyup.enter="doCreateSpace" v-model:value="newSpaceName" placeholder="空间名称"></a-input></p>
-    <p></p>
-  </a-modal>
 </div>

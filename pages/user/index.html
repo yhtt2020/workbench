@@ -15,7 +15,7 @@
   <div @click="closeWindow" style="position: fixed;left: 0;right: 0;bottom: 0;top: 0" :style="{'background-color':'rgba(0,0,0,0.38)'}"><!--this.modal?'#00000000':-->
     <div @click.stop="()=>{}"
          style="position: fixed;left: 50%;top: 50%;margin-left: -325px;margin-top: -240px;width: 650px;height: 480px;background: white;border-radius: 8px;">
-      <svg v-if="$route.path!=='/'" @click="$router.go(-1)" style="position:absolute;margin: 10px;cursor: pointer;z-index:999" t="1648037736735"
+      <svg v-if="['/','/conflict'].indexOf($route.path)===-1" @click="$router.go(-1)" style="position:absolute;margin: 10px;cursor: pointer;z-index:999" t="1648037736735"
            class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="18922" width="32"
            height="32">
         <path
@@ -29,7 +29,6 @@
 </body>
 <script>dayjs().format()</script>
 <script>
-
   window.ipc = require('electron').ipcRenderer
   window.ldb=require('../../src/util/ldb')
   tools=require('../util/util').tools
@@ -38,10 +37,11 @@
   // 不需要
   const app = Vue.createApp({
     async mounted () {
-
       if(window.globalArgs['modal']){
         this.modal=window.globalArgs['modal']==='true'
-        console.log(this.modal)
+      }
+      if(window.globalArgs['conflict']){
+        this.$router.push({name:'conflict'})
       }
     },
     methods: {
@@ -70,6 +70,9 @@
     },
     {
       name:'space', path: '/space/:uid', component: require('./pages/space-select')
+    },
+    {
+      name:'conflict',path:'/conflict',component:require('./pages/conflict')
     }
   ]
   const router = VueRouter.createRouter({
@@ -77,7 +80,5 @@
     routes
   })
   app.use(router).mount('#appVue')
-
-
 </script>
 </html>
