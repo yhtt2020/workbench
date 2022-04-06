@@ -50,7 +50,7 @@ const tpl = `
         <a-dropdown>
     <template #overlay>
       <a-menu @click="handleMenuClick">
-        <a-menu-item key="1">切换到其他空间</a-menu-item>
+        <a-menu-item @click="switchToOtherSpace" key="1">切换到其他空间</a-menu-item>
       </a-menu>
     </template>
       <a-button @click="switchToBackup">继续离线使用 <DownOutlined /></a-button>

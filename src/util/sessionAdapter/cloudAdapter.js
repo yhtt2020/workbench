@@ -72,7 +72,7 @@ const cloudAdapter={
       console.warn('云端存储全局意外错误返回')
       return standReturn.failure('云端存储全局意外错误返回')
     }
-    return standReturn.failure('由于各种预料之内的问题，未能成功保存到云端')
+    return standReturn.success('成功保存至云端，保存时间：'+new Date(Date.now()).toLocaleString())
   },
   async restore(spaceId){
     ldb.reload()

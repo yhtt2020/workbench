@@ -6,6 +6,7 @@ const cloudAdapter=require('../src/util/sessionAdapter/cloudAdapter')
 const spaceModel=require('../src/model/spaceModel')
 const ipc= require('electron').ipcRenderer
 const SYNC_INTERVAL=5
+let autoSaver=null
 const sessionRestore = {
   adapter:{},
   currentSpace:{},
@@ -242,7 +243,7 @@ const sessionRestore = {
         //先从云端接口拉取一下空间信息
         //let cloudSpace=await spaceModel.setUser(sessionRestore.currentSpace.userInfo).getSpace(currentSpace.spaceId)
         let backupSpace=await localSpaceModel.getSpace(currentSpace.spaceId) //获取本地的备份空间
-        if(backupSpace){
+        if(!!backupSpace){
           if(!backupSpace.userInfo){
             //如果这个空间信息不存在用户的信息，主要是一些老的空间，可能还没存用户信息
             console.log('不存在用户信息，但是本地要尝试从当前用户信息中获取用户信息')
@@ -348,7 +349,7 @@ nickname: "立即登录"
 uid: 0
        */
 
-    setInterval(sessionRestore.save, SYNC_INTERVAL*1000)
+    autoSaver=setInterval(sessionRestore.save, SYNC_INTERVAL*1000)
 
     window.onbeforeunload = function (e) {
       sessionRestore.save(true, true)
