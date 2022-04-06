@@ -339,7 +339,10 @@ const sidebarTpl = `
                         @mouseenter="showHoverLock(tab)" @mouseleave="hideHoverLock(tab)" v-for="(tab,j) in item.tabs"
                         :key="tab.id">
                         <div class="tab-title" @click="openPopoverTab(item.id, tab.id)">
-                          <img class="tab-icon" :src="tab.icon"
+                        <span @click="toggleCloseTab(tab.id,item.id)" style="float: left;cursor: pointer"  title="关闭该标签" :id="'close'+tab.id" hidden  class="closeTab">
+                             <a-icon type="close-circle"></a-icon>
+                         </span>
+                          <img class="tab-icon" :src="tab.icon" style="margin-left: 8px"
                             onerror="this.src='../../icons/default.svg'" />&nbsp;{{ tab.title }}
                         </div>
                         <span @click="toggleLockTab(tab.id,item.id)" :id="'hoverLock'+tab.id" :hidden="tab.lock!==true"
@@ -851,10 +854,17 @@ Vue.component('sidebar', {
     toggleLockTab(id,taskId){
       ipc.sendTo(mainWindowId,'toggleLockTab',{id:id,taskId:taskId})
     },
+    toggleCloseTab(id,taskId){
+      ipc.sendTo(mainWindowId,'toggleCloseTab',{id:id,taskId:taskId})
+    },
+
     showHoverLock(tab){
       document.getElementById('hoverLock'+tab.id).hidden=false
+      document.getElementById('close'+tab.id).hidden=false
     },
+
     hideHoverLock(tab){
+      document.getElementById('close'+tab.id).hidden=true
       if(!(tab.lock===true)){
         document.getElementById('hoverLock'+tab.id).hidden=true
       }
