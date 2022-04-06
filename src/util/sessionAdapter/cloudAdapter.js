@@ -47,19 +47,23 @@ const cloudAdapter={
           console.log('自动备份到云端')
           console.log(result)
           if(result.data==='-1'){
+            ipc.send('showUserWindow',{modal:true,title:'无法成功保存空间',description:'云端空间已不存在。',fatal:true})
             //todo 空间不存在
+            console.warn('fail','远端空间不存在，导致存储失败')
+            console.log(saveData)
           }
           if(result.data==='-2'){
             //todo 保存失败，冲突
-            ipc.send('showUserWindow',{conflict:true,modal:true})
-            console.log('fail',result)
+            ipc.send('showUserWindow',{modal:true,title:'无法成功保存空间',description:'云端空间已被其他设备抢占，当前空间已无法存入。',fatal:true})
+            console.warn('fail','设备冲突导致云端存储失败')
+            console.log(saveData)
           }
         }else{
-
           //保存失败，冲突
           return standReturn.failure('',result.data)
         }
       }catch (e) {
+        ipc.send('showUserWindow',{modal:true,title:'无法连接',description:'无法连接云端。',disconnect:true})
         console.warn('存储到云端失败，接口请求失败。')
         console.log(e)
       }

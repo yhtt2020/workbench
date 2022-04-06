@@ -1,17 +1,20 @@
 const tpl = `
 <div>
   <h1 style="font-size: 18px;margin:auto;margin-top: 40px;margin-bottom:10px;text-align: center">
-    保存冲突，无法保存空间至云端
+   {{title}}
   </h1>
   <p style="text-align: center;color: #999;padding: 20px">
       <span style="color: #333">
-      系统检测到当前空间已被<strong>其他设备占用</strong>。无法再保存当前空间。<br>
+<!--      系统检测到当前空间已被<strong>其他设备占用</strong>。无法再保存当前空间。-->
+{{description}}
+
+      <br>
 您可以选择放弃此备份空间，或者将备份空间以新空间的形式存储到云端或本地。
 </span>
   </p>
-  <div style="width: 400px;margin: auto;margin-bottom: 20px;background-color: rgba(241,241,241,0.48);padding: 10px;border-radius: 10px;">
-  <a-row s>
-    <a-col :span="8" style="padding-right: 20px;text-align: center;padding-top: 10px">
+  <div  v-if="user || space" style="width: 400px;margin: auto;margin-bottom: 20px;background-color: rgba(241,241,241,0.48);padding: 10px;border-radius: 10px;">
+  <a-row >
+    <a-col v-if="user" :span="8" style="padding-right: 20px;text-align: center;padding-top: 10px">
       <div>
         <a-avatar :size="50" :src="user.avatar"></a-avatar>
       </div>
@@ -19,17 +22,16 @@ const tpl = `
         {{user.nickname}}
       </div>
     </a-col>
-    <a-col :span="16" style="padding: 10px">
+    <a-col v-if="space" :span="16" style="padding: 10px">
       <div style="margin-bottom: 10px">
-        <a-input :bordered="false"  size="small" v-model:value="space.name"></a-input>
+        <a-input style="padding-left: 0" :bordered="false"  size="small" v-model:value="space.name"></a-input>
       </div>
       <div style="margin-bottom: 10px;font-size: 12px;color: #999">
         {{space.count_task}} 标签组 {{space.count_tab}}标签
       </div>
       <div style="margin-bottom: 10px;font-size: 12px">
-        <span style="color: #999">最后成功同步时间：</span>{{new Date(space.sync_time).toLocaleString()}}
+        <span style="color: #999">最后成功同步时间：</span>{{new Date(space.sync_time).toLocaleString(undefined,{ month: 'long', day: 'numeric',hour: 'numeric', minute: 'numeric', second: 'numeric' })}}
       </div>
-
     </a-col>
   </a-row>
 </div>
@@ -70,26 +72,37 @@ const tpl = `
 `
 
 const spaceModel = require('../../../src/model/spaceModel')
-const conflict = {
+const fatal = {
   template: tpl,
   data () {
     return {
       save: true,
       savePosition: 'cloud',
-      user: { uid: 0 },
-      space: {}
+      user: null,
+      space: null,
+      title: '',
+      fatal:true,//非致命意外
+      description: ''
     }
   },
   async mounted () {
-    let space = await spaceModel.getCurrent()
-    this.space = space.space
-    this.user = space.userInfo
+    try{
+      let space = await spaceModel.getSpace(window.globalArgs['spaceId'])
+      this.space = space
+      this.user = space.userInfo
+      console.log(space)
+    }catch (e) {
+      console.warn('无法获取到space')
+    }
+    this.title = window.globalArgs['title'] || '保存冲突，无法保存空间至云端'
+    this.description = window.globalArgs['description'] || '系统检测到当前空间已被<strong>其他设备占用</strong>。无法再保存当前空间。'
+
   },
   methods: {
     /**
      * 切换到云空间，不保存
      */
-    async changeWithoutSave(){
+    async changeWithoutSave () {
       await spaceModel.setUser(this.user).changeCurrent(this.space)
       ipc.send('closeUserWindow')
     },
@@ -105,8 +118,8 @@ const conflict = {
     /**
      * 不保存直接
      */
-    switchToOtherSpace(){
-        this.$router.replace('/')
+    switchToOtherSpace () {
+      this.$router.replace('/')
     },
     switchToBackup () {
       //todo 添加新一个空间到本地
@@ -117,4 +130,4 @@ const conflict = {
   }
 }
 
-module.exports = conflict
+module.exports = fatal

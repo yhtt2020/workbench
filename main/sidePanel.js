@@ -901,8 +901,9 @@ let lastWindowArgs={}
 let changingSpace=false
 function showUserWindow(args){
   const _=require('lodash')
+  console.log('显示用户窗体',args)
   if(userWindow){
-    if(lastWindowArgs.conflict){
+    if(masked){
       return
     }
     userWindow.show()
@@ -927,7 +928,6 @@ function showUserWindow(args){
 
 
 
-    let bounds=mainWindow.getBounds()
     userWindow=new BrowserWindow({
       backgroundColor:'#00000000',
       show:false,
@@ -936,6 +936,8 @@ function showUserWindow(args){
       resizable:false,
       shadow:false,
       alwaysOnTop:true,
+      width:700,
+      height:530,
       webPreferences:{
         nodeIntegration: true,
         contextIsolation: false,
@@ -948,10 +950,26 @@ function showUserWindow(args){
         ]
       }
     })
-    userWindow.setBounds(bounds)
+    function computeBounds(parentBounds,selfBounds){
+      let bounds={}
+      bounds.x=parseInt((parentBounds.x+parentBounds.x+parentBounds.width)/2-selfBounds.width/2,0)
+      bounds.y=parseInt((parentBounds.y+parentBounds.y+parentBounds.height)/2-selfBounds.height/2)
+      bounds.width=parseInt(selfBounds.width)
+      bounds.height=parseInt(selfBounds.height)
+      return bounds
+    }
+
     userWindow.loadURL('file://'+path.join(__dirname,'/pages/user/index.html'))
     userWindow.on('ready-to-show',()=>{
       userWindow.show()
+      if(mainWindow && !mainWindow.isDestroyed())
+        userWindow.setBounds(computeBounds(mainWindow.getBounds(),userWindow.getBounds()))
+      else{
+      }
+      if(additionalArgs.modal){
+        callModal(userWindow)
+      }
+
     })
     userWindow.on('close',()=>{
       userWindow=null
@@ -965,6 +983,79 @@ function callWetherShowUserWindow(){
     showUserWindow()
   }
 }
+
+let masked=false
+let inseartedCSS=[]
+/**
+ * 调用模态方法，给所有窗体添加模态
+ * @param window
+ */
+function callModal(win){
+  if(masked){
+    return
+  }
+  win.setSkipTaskbar(true)
+  let css=`._mask{
+     position:fixed;
+     top:0;
+     left: 0;
+     right: 0;
+     bottom: 0;
+     background-color: #00000033;
+     z-index: 9999999;
+     display:block;
+     }`
+  let code=`
+  let div=document.createElement('div');
+  div.id='_modalWindowMask';
+  div.classList.add('_mask');
+  //div.hidden=true;
+  document.body.appendChild(div);
+  `
+  webContents.getAllWebContents().forEach(async wb=>{
+    if(wb.id===win.webContents.id) return ;
+    inseartedCSS.push({id:wb.id,cssHandler:await wb.insertCSS(css)})
+    await wb.executeJavaScript(code)
+  })
+  if(mainWindow && !mainWindow.isDestroyed()){
+    mainWindow.setMinimizable(false)
+    mainWindow.setClosable(false)
+    mainWindow.setMaximizable(false)
+  }
+  masked=true
+  //
+  // BrowserWindow.getAllWindows().forEach(async w=>{
+  //   if(w.id===win.id) return ;
+  //   await w.webContents.insertCSS(css)
+  //   await w.webContents.executeJavaScript(code)
+  // })
+
+}
+
+function callUnModal(win){
+  if(masked){
+    webContents.getAllWebContents().forEach(async wb=>{
+      try{
+        if(wb.id===win.webContents.id) return ;
+        let handler= inseartedCSS.find((item)=>{
+          return item.id===wb.id
+        })
+        wb.removeInsertedCSS(handler)
+        await wb.executeJavaScript('document.body.removeChild(document.getElementById(\'_modalWindowMask\'))')
+      }catch (e) {
+      }
+    })
+    if(mainWindow && !mainWindow.isDestroyed()){
+      mainWindow.setMinimizable(true)
+      mainWindow.setClosable(true)
+      mainWindow.setMaximizable(true)
+    }
+    inseartedCSS=[]
+    masked=false
+
+  }
+}
+
 /*user面板代码*/
 app.whenReady().then(()=>{
 
@@ -974,15 +1065,18 @@ app.whenReady().then(()=>{
 
   let loginWindow=null
   ipc.on('closeUserWindow',()=>{
+    callUnModal(userWindow)
     userWindow.close()
   })
-  // ipc.on('closeMainWindow',()=>{
-  //   mainWindow.close()
-  // })
+  ipc.on('closeMainWindow',()=>{
+      mainWindow.setClosable(true)
+     mainWindow.close()
+   })
 
   ipc.on('changeSpace',(event,args)=>{
     changingSpace=true
     if(mainWindow && !mainWindow.isDestroyed()){
+      mainWindow.setClosable(true)
       mainWindow.close()
     }
     const ldb=require(__dirname+'/src/util/ldb.js')

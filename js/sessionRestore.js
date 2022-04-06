@@ -9,7 +9,7 @@ const SYNC_INTERVAL=5
 const sessionRestore = {
   adapter:{},
   currentSpace:{},
-  save: function (forceSave=true, sync=true) {
+  save:async function (forceSave=true, sync=true) {
     var stateString = JSON.stringify(tasks.getStringifyableState())
     var data = {
       version: 2,
@@ -37,16 +37,21 @@ const sessionRestore = {
     }
 
     if (forceSave === true || stateString !== sessionRestore.previousState) {
+      let uid = typeof sessionRestore.currentSpace.userInfo==='undefined'?0 :sessionRestore.currentSpace.userInfo.uid
       let space={
         id:sessionRestore.currentSpace.spaceId,
         name:sessionRestore.currentSpace.name,
-        uid:sessionRestore.currentSpace.userInfo.uid,
+        uid:uid,
         type:sessionRestore.currentSpace.spaceType
       }
       localAdapter.save(space, saveData)
       if (sync === true) {
         //本地存储是必须存的，并且还要夹带type
        saveData.type=sessionRestore.currentSpace.spaceType
+       if(sessionRestore.currentSpace.spaceType==='cloud'){
+         //如果是云端空间，还需要将此用户的信息存储下来，避免后面切换空间后导致当前用户信息丢失之后，无法再通过接口交互。
+         saveData.userInfo=sessionRestore.userInfo
+       }
        sessionRestore.adapter.save(sessionRestore.currentSpace.spaceId, saveData)
         console.log(saveData)
         console.log('成功存入到本地space空间')
@@ -55,9 +60,15 @@ const sessionRestore = {
       //如果是云端，还需去云端同步
       try{
         if(sessionRestore.currentSpace.spaceType==='cloud'){
-          sessionRestore.adapter.save(sessionRestore.currentSpace.spaceId, saveData)
-          ipc.send('saving')
-          console.log('成功存入云端空间')
+         let cloudResult=await sessionRestore.adapter.save(sessionRestore.currentSpace.spaceId, saveData)
+          if(cloudResult.status===1){
+            ipc.send('saving')
+            console.log('顺利保存至云端')
+          }else{
+            console.warn('未能顺利保存至云端，但仍然可控，失败原因如下：')
+            //todo 如果走到这里，其实意味着这个备份空间已经无法恢复了，需要走备份损坏（冲突模式）模式。
+            console.log(cloudResult.data)
+          }
         }
       }catch (e) {
         //todo 走备份空间流程
@@ -101,7 +112,6 @@ const sessionRestore = {
       // the data isn't restorable
       if ((data.version && data.version !== 2) || (data.state && data.state.tasks && data.state.tasks.length === 0)) {
         tasks.setSelected(tasks.add())
-
         browserUI.addTab(tasks.getSelected().tabs.add())
         return
       }
@@ -203,22 +213,48 @@ const sessionRestore = {
     let currentSpace={}
     try{
      currentSpace= await spaceModel.getCurrent()
+      let space=await spaceModel.getSpace(currentSpace.spaceId)
       if(currentSpace.spaceType==='cloud'){
-        await spaceModel.setUser(currentSpace.userInfo).clientOnline(currentSpace.spaceId)
+        if(space.userInfo){
+          try{
+            let result=await spaceModel.setUser(space.userInfo).clientOnline(space.id,false)
+            if(result.status===1){
+              if(result.data==='-1'){
+                ipc.send('showUserWindow',{spaceId:currentSpace.spaceId,modal:true,title:'无法读入云端空间',description:'云端空间已被删除，无法读入。',fatal:true})
+              }
+              if(result.data==='-2'){
+                ipc.send('showUserWindow',{spaceId:currentSpace.spaceId,modal:true,title:'无法成功上线设备',description:'云端空间已被其他设备抢占，导致无法成功取得空间使用权。',fatal:true})
+              }
+              else{
+                //正常登录
+              }
+            }
+          }catch (e) {
+            console.warn(e)
+            ipc.send('showUserWindow',{spaceId:currentSpace.spaceId,modal:true,title:'无法取得云端空间信息',description:'由于意外情况导致无法连接远端空间。',disconnect:true})
+          }
+        }else{
+          ipc.send('showUserWindow',{spaceId:currentSpace.spaceId,modal:true,title:'备份空间用户凭证失效',description:'备份空间的用户凭证失效，无法保存至云端。',fatal:true})
+        }
+
       }
     }catch (e) {
-      let lastSpace=await spaceModel.setAdapter('local').getLastSyncSpace()
-      if(lastSpace===null){
-        ipc.send('closeMainWindow')
-        ipc.send('showUserWindow',{tip:'网络原因无法读取云端空间，请选择其他空间登录。',modal:true})
-        return
-      }
+      //let lastSpace=await spaceModel.setAdapter('local').getLastSyncSpace()
 
-      console.log(lastSpace)
-      await spaceModel.setAdapter('local').changeCurrent({id:lastSpace.id})
-      ipc.send('showUserWindow',{tip:'网络原因无法读取云端空间，请选择其他空间登录。',modal:true})
-      console.error(e)
-      console.log('获取当前空间失败',e)
+      ipc.send('showUserWindow',{spaceId:currentSpace.spaceId,modal:true,title:'意外原因无法读取云端空间',description:'由于意外情况导致无法连接远端空间。',disconnect:true})
+
+      // if(lastSpace===null){
+      //   ipc.send('closeMainWindow')
+      //   ipc.send('showUserWindow',{tip:'网络原因无法读取云端空间，请选择其他空间登录。',modal:true})
+      //
+      //   return
+      // }
+      //
+      // console.log(lastSpace)
+      // await spaceModel.setAdapter('local').changeCurrent({id:lastSpace.id})
+      // ipc.send('showUserWindow',{tip:'网络原因无法读取云端空间，请选择其他空间登录。',modal:true})
+      // console.error(e)
+      // console.log('获取当前空间失败',e)
       //return
     }
 
