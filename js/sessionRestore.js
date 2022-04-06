@@ -266,7 +266,6 @@ const sessionRestore = {
             } else {
               localAdapter.update(backupSpace) //此处是容错部分，主要用于兼容以前没有存下userInfo的，立马存一个userInfo进去。
             }
-
           }
           space.userInfo=backupSpace.userInfo
           //新的备份空间都已经具备了用户信息字段了
