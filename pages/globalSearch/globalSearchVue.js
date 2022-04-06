@@ -4,9 +4,6 @@ const globalSearch = new Vue({
   el: "#globalSearch",
   store: store,
   // props: {
-  //   visible: {
-  //     type: Boolean,
-  //   },
   //   currentTaskId: {
   //     type: String
   //   }
@@ -20,7 +17,6 @@ const globalSearch = new Vue({
         if(newValue.length > 0) {
           this.openFirst = false
           let appresult = await this.searchApp(newValue)
-          console.log(appresult, '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
           this.searchResult = this.searchResult.concat(this.searchTab(newValue), this.searchTask(newValue), appresult)
           this.itemReadyedIndex = 0
           this.itemReadyedItem = this.searchResult[0]
@@ -33,15 +29,15 @@ const globalSearch = new Vue({
       }, 200),
       deep: true
     },
-    // visible: {
-    //   handler: function(newValue, oldValue) {
-    //     if(newValue === true) {
-    //       this.$nextTick(() => {
-    //         document.getElementById("myTextField").focus();
-    //       })
-    //     }
-    //   }
-    // }
+    visible: {
+      handler: function(newValue, oldValue) {
+        if(newValue === true) {
+          this.$nextTick(() => {
+            document.getElementById("myTextField").focus();
+          })
+        }
+      }
+    }
   },
   data() {
     return {
@@ -71,8 +67,7 @@ const globalSearch = new Vue({
       itemReadyedItem: {},
       openFirst: true,
       apps: [],
-      recentOpenedTabs: [],
-      //visible: false
+      visible: false
     };
   },
   computed: {
@@ -81,30 +76,69 @@ const globalSearch = new Vue({
       if(findResult.label === '全部') {
         this.itemReadyedIndex = 0
         this.itemReadyedItem = this.searchResult[0]
+        this.calculateAreaHeight(this.searchResult)
         return this.searchResult
       } else if (findResult.label === '网页') {
         let filterRes = this.searchResult.filter(v => v.tag === 'tab')
         this.itemReadyedIndex = 0
         this.itemReadyedItem = filterRes[0]
+        this.calculateAreaHeight(filterRes)
         return filterRes
       } else if (findResult.label === '标签组') {
         let filterRes = this.searchResult.filter(v => v.tag === 'task')
         this.itemReadyedIndex = 0
         this.itemReadyedItem = filterRes[0]
+        this.calculateAreaHeight(filterRes)
         return filterRes
       } else if (findResult.label === '应用') {
         let filterRes = this.searchResult.filter(v => v.tag === 'app')
         this.itemReadyedIndex = 0
         this.itemReadyedItem = filterRes[0]
+        this.calculateAreaHeight(filterRes)
         return filterRes
       }
     },
     compRecentOpenedTabs() {
-      //console.log(tools.bubbleSort(this.recentOpenedTabs, 'lastActivity').reverse(), '!!!!!!!!!!!')
-      return tools.bubbleSort(this.recentOpenedTabs, 'lastActivity').reverse()
+      let recentOpenedTabs = this.handleRecentOpenedTabs()
+      let recentResult = tools.bubbleSort(recentOpenedTabs, 'lastActivity').reverse()
+      this.calculateAreaHeight(recentResult)
+      return recentResult
     }
   },
   methods: {
+    calculateAreaHeight(res) {
+      //计算搜索结果区域的高度，传给main变换窗体高度
+      let num = res.length
+      if(this.openFirst) {
+        if(num >= 6) {
+          ipc.send('changeBrowserWindowHeight', 530)
+        } else if(num === 5) {
+          ipc.send('changeBrowserWindowHeight', 480)
+        } else if(num === 4) {
+          ipc.send('changeBrowserWindowHeight', 430)
+        } else if(num === 3) {
+          ipc.send('changeBrowserWindowHeight', 380)
+        } else if(num === 2) {
+          ipc.send('changeBrowserWindowHeight', 330)
+        } else {
+          ipc.send('changeBrowserWindowHeight', 280)
+        }
+      } else {
+        if(num >= 6) {
+          ipc.send('changeBrowserWindowHeight', 400)
+        } else if(num === 5) {
+          ipc.send('changeBrowserWindowHeight', 350)
+        } else if(num === 4) {
+          ipc.send('changeBrowserWindowHeight', 300)
+        } else if(num === 3) {
+          ipc.send('changeBrowserWindowHeight', 250)
+        } else if(num === 2) {
+          ipc.send('changeBrowserWindowHeight', 200)
+        } else {
+          ipc.send('changeBrowserWindowHeight', 150)
+        }
+      }
+    },
     handleRecentOpenedTabs() {
       let mapTabs = []
       this.$store.getters.getAllTasks.forEach(v => {
@@ -127,19 +161,27 @@ const globalSearch = new Vue({
       ipc.send('executeApp',{app:app})
     },
     clikRecentTab(item) {
-      this.$parent.openPopoverTab(item.taskId, item.tabId)
-      this.clkmask()
+      ipc.send('switchToTab', {
+        taskId: item.taskId,
+        tabId: item.tabId
+      })
+      ipc.send('closeGlobalSearch')
     },
     clkli(item) {
       if(item.tag === 'tab') {
-        this.$parent.openPopoverTab(item.taskId, item.tabId)
-        this.clkmask()
+        ipc.send('switchToTab', {
+          taskId: item.taskId,
+          tabId: item.tabId
+        })
+        ipc.send('closeGlobalSearch')
       } else if(item.tag === 'task') {
-        this.$parent.openItem(item.taskId)
-        this.clkmask()
+        ipc.send('switchToTask', {
+          id: item.taskId,
+        })
+        ipc.send('closeGlobalSearch')
       } else if(item.tag === 'app') {
         this.executeApp(item.app)
-        this.clkmask()
+        ipc.send('closeGlobalSearch')
       }
     },
     calculateHeight() {
@@ -278,10 +320,6 @@ const globalSearch = new Vue({
   async mounted () {
     await this.getAllApps()
     this.bindKeys()
-    setTimeout(() => {
-      this.recentOpenedTabs = this.handleRecentOpenedTabs()
-      console.log(this.recentOpenedTabs, 'recentOpenedTabs')
-    }, 2000)
   },
 });
 

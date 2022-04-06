@@ -80,9 +80,9 @@ html {
       height: 30px;
     }
     .recent-open-content {
-      min-height: 120px;
-      max-height: 316px;
-      overflow: scroll;
+      min-height: 50px;
+      max-height: 300px;
+      overflow-y: scroll;
       &::-webkit-scrollbar {
         width: 0 !important
       }
@@ -133,5 +133,9 @@ html {
   }
 }
 .first-gs-dialog {
-  max-height: 540px;
+  max-height: 530px;
+}
+
+ul {
+  margin: 0px;
 }
