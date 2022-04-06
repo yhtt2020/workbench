@@ -19,7 +19,7 @@ const cloudSpaceModel={
     return standReturn.autoReturn(result)
   },
   async getSpace(spaceId,userInfo){
-    return await cloudSpaceModel.restore (spaceId, userInfo)
+    return await cloudSpaceModel.restore(spaceId, userInfo)
   },
   async getUserSpaces(user){
    let result= await spaceApi.getMySpaceList(user)

@@ -52,7 +52,7 @@ const spaceModel = {
     }
     let space = {}
     if (currentSpace.spaceType === 'cloud') {
-      let result = await spaceModel.setAdapter('cloud').getSpace(currentSpace.spaceId,currentSpace.userInfo)
+      let result = await spaceModel.setUser(currentSpace.userInfo).getSpace(currentSpace.spaceId)
       if (result.status === 1)
         space = result.data
     } else {
@@ -69,8 +69,8 @@ const spaceModel = {
     ldb.db.set('currentSpace.name',space.name).write()
     return currentSpace
   },
-  async getSpace (id,user) {
-    return spaceModel.adapterModel.getSpace(id,user)
+  async getSpace (id) {
+    return spaceModel.adapterModel.getSpace(id,spaceModel.user)
   },
 
   async addSpace (space) {
