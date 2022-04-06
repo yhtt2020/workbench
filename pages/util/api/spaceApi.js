@@ -51,9 +51,9 @@ const spaceApi = {
     await baseApi.init(user)
     return baseApi.axios(url.clientOffline,{clientId:clientId},'post')
   },
-  async clientOnline(nanoid,clientId,user){
+  async clientOnline(nanoid,force=false,clientId,user){
     await baseApi.init(user)
-    return baseApi.axios(url.clientOnline,{nanoid,clientId:clientId},'post')
+    return baseApi.axios(url.clientOnline,{nanoid,force:force,clientId:clientId},'post')
   }
 }
 

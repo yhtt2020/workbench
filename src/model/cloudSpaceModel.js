@@ -55,8 +55,8 @@ const cloudSpaceModel={
     let result =await spaceApi.clientOffline(userInfo.clientId,userInfo)
     return standReturn.autoReturn(result)
   },
-  async clientOnline(nanoid,userInfo){
-    let result =await spaceApi.clientOnline(nanoid,userInfo.clientId,userInfo)
+  async clientOnline(nanoid,force=false,userInfo){
+    let result =await spaceApi.clientOnline(nanoid,force,userInfo.clientId,userInfo)
     return standReturn.autoReturn(result)
   }
 }

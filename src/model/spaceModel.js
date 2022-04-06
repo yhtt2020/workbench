@@ -109,8 +109,8 @@ const spaceModel = {
   async clientOffline(){
     return await spaceModel.adapterModel.clientOffline(spaceModel.user)
   },
-  async clientOnline(nanoid){
-    return await spaceModel.adapterModel.clientOnline(nanoid,spaceModel.user)
+  async clientOnline(nanoid,force=false){
+    return await spaceModel.adapterModel.clientOnline(nanoid,force,spaceModel.user)
   }
 
 }
