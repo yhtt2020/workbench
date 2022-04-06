@@ -1077,14 +1077,17 @@ app.whenReady().then(()=>{
     changingSpace=true
     if(mainWindow && !mainWindow.isDestroyed()){
       mainWindow.setClosable(true)
+      mainWindow.once('closed',()=>{
+        const ldb=require(__dirname+'/src/util/ldb.js')
+        ldb.load(app.getPath('userData')+'/ldb.json')
+        ldb.db.set('currentSpace.spaceId',args.spaceId).write()
+        ldb.db.set('currentSpace.spaceType',args.spaceType).write()
+        ldb.db.set('currentSpace.userInfo',args.userInfo).write()
+        createWindow()
+      })
       mainWindow.close()
     }
-    const ldb=require(__dirname+'/src/util/ldb.js')
-    ldb.load(app.getPath('userData')+'/ldb.json')
-    ldb.db.set('currentSpace.spaceId',args.spaceId).write()
-    ldb.db.set('currentSpace.spaceType',args.spaceType).write()
-    ldb.db.set('currentSpace.userInfo',args.userInfo).write()
-    createWindow()
+
   })
 
 
