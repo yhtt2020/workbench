@@ -219,12 +219,12 @@
   })
 
   ipcRenderer.on('download-info', async (event, args) => {
-
+// console.log(args)
     let simpleName;
     if (args.name.length >= 20) {
       simpleName = args.name.substring(0, 7) + '...' + args.name.substring(args.name.length-6,args.name.length);
     } else (simpleName = args.name)
-    // console.log(args)
+    // console.log(args.chainUrl)
     if (args.status === 'start') {
       appVue.lists.unshift({
         id: appVue.id++,
@@ -238,14 +238,13 @@
         loadState: false,
         url: args.url,
       })
-
       appVue.listId++
       appVue.count++
       ipcRenderer.send('willDownload')
     }
 
     if (args.status === 'cancelled') {
-      // appVue.lists.splice(0, 1)
+      ipcRenderer.send('emptyPageUrl',args.chainUrl)
       for (var i = 0; i < appVue.lists.length; i++) {
         if (appVue.lists[i].startTime === args.startTime) {
             appVue.deleteId = i
@@ -253,9 +252,11 @@
       }
       appVue.lists.splice(appVue.deleteId, 1)
       appVue.count--
+      appVue.listId--
     }
 
     if (args.status === 'progressing' && args.path !== '') {
+      ipcRenderer.send('emptyPageUrl',args.chainUrl)
       appVue.lists.forEach(function (item, index, arr) {
         if (item.startTime === args.startTime) {
           item.title = simpleName;
@@ -273,8 +274,8 @@
     }
 
     if (args.status === 'completed' && args.path !== '') {
+      // ipcRenderer.send('emptyPageUrl',args.chainUrl)
       const myDate = new Date();
-      console.log(args.chainUrl)
       appVue.doneLists.unshift({
         id: appVue.doneId++,
         title: simpleName,

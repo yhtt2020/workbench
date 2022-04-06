@@ -49,12 +49,14 @@ let originalPageUrl
 ipc.on('originalPage',(event,args)=>{
    originalPageUrl = args
 })
+// let emptyPageUrl
+// ipc.on('emptyPage',(event,args)=>{
+//    emptyPageUrl = args
+// })
 
-ipc.on('closeEmpty',(event,args)=>{
-
-  console.log(args)
+ipc.on('emptyPageUrl',(event,args)=>{
+  mainWindow.webContents.send('closeEmptyPage',args)
 })
-
 
 
 function downloadHandler (event, item, webContents) {
@@ -108,7 +110,8 @@ function downloadHandler (event, item, webContents) {
       paused: item.isPaused(),
       startTime: item.getStartTime(),
       url: item.getURL(),
-      href:originalPageUrl
+      href:originalPageUrl,
+      chainUrl:item.getURLChain()
     })
 
 
@@ -143,7 +146,8 @@ function downloadHandler (event, item, webContents) {
         realData: conver(item.speed),
         progressnuw: ((prevReceivedBytes / item.getTotalBytes()).toFixed(2)) * 100,
         paused: item.isPaused(),
-        startTime: item.getStartTime()
+        startTime: item.getStartTime(),
+        chainUrl:item.getURLChain()
       })
 
     })
