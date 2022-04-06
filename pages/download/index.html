@@ -21,7 +21,7 @@
            </a-badge>
         下载中
       </span>
-          <div v-show="listId===0" style="margin-top: 50px">
+          <div v-show="listCount===0" style="margin-top: 50px">
             <a-empty description="暂无下载任务"></a-empty>
           </div>
           <div id="downloadIng" v-for="(list,index) in lists" v-bind:key="index"
@@ -69,7 +69,7 @@
         </a-tab-pane>
 
         <a-tab-pane key="2" tab="已完成" force-render>
-          <div v-show="listDoneId===0" style="margin-top: 50px">
+          <div v-show="listDoneCount===0" style="margin-top: 50px">
             <a-empty description="暂无完成任务"></a-empty>
           </div>
           <div id="downloadDone" v-for="(doneList,index) in doneLists" v-bind:key="index" @click="change(index)"  @contextmenu="menuDone(index)"  :class="{active : active === index,
@@ -103,7 +103,7 @@
         </a-tab-pane>
 
         <a-tab-pane key="3" tab="回收站">
-          <div v-show="listTrashId===0" style="margin-top: 50px">
+          <div v-show="listTrashCount===0" style="margin-top: 50px">
             <a-empty description="暂无记录"></a-empty>
           </div>
           <div v-for="(deleteList,index) in deleteLists" v-bind:key="index" @click="change(index)"  @contextmenu="menuDel(index)"  :class="{active : active === index,
@@ -158,8 +158,7 @@
 
   ipcRenderer.on('menuDoneOpen', (e) => {
     const {shell} = require('electron')
-    const f = appVue.selectList.path;
-    fs.exists(f, function (flag) {
+    fs.exists(appVue.selectList.path, function (flag) {
       if (flag) {
         shell.openPath(appVue.selectList.path)
       } else {
@@ -172,8 +171,8 @@
 
   ipcRenderer.on('menuDoneOpenPath', (e) => {
     const {shell} = require('electron')
-    const f = appVue.selectList.path;
-    fs.exists(f, function (flag) {
+
+    fs.exists(appVue.selectList.path, function (flag) {
       if (flag) {
         shell.showItemInFolder(appVue.selectList.path)
       } else {
@@ -215,7 +214,7 @@
   ipcRenderer.on('menuTrashDelete', (e) => {
     appVue.deleteLists.splice(appVue.deleteLists.indexOf(appVue.selectDelList), 1)
     db.download.delete(appVue.selectDelList.startTime)
-    appVue.listTrashId--
+    appVue.listTrashCount--
   })
 
   ipcRenderer.on('download-info', async (event, args) => {
@@ -238,7 +237,7 @@
         loadState: false,
         url: args.url,
       })
-      appVue.listId++
+      appVue.listCount++
       appVue.count++
       ipcRenderer.send('willDownload')
     }
@@ -252,7 +251,7 @@
       }
       appVue.lists.splice(appVue.deleteId, 1)
       appVue.count--
-      appVue.listId--
+      appVue.listCount--
     }
 
     if (args.status === 'progressing' && args.path !== '') {
@@ -286,9 +285,9 @@
         doneDate:myDate.toLocaleString('chinese', { hour12: false }),
         href:args.href
       })
-      appVue.listId--
+      appVue.listCount--
       appVue.count--
-      appVue.listDoneId++
+      appVue.listDoneCount++
       db.download.add({
         title: args.name,
         total: args.size.total,
@@ -306,9 +305,9 @@
    let appVue = new Vue({
     el: '#appVue',
      data: {
-       listId:0,
-       listDoneId:0,
-       listTrashId:0,
+       listCount:0,
+       listDoneCount:0,
+       listTrashCount:0,
        count:'0',
        doneDate:'',
        visibleIng:false,
@@ -350,7 +349,7 @@
           doneDate:dblist[i].doneDate,
           href:dblist[i].href
         })
-        appVue.listDoneId++
+        appVue.listDoneCount++
       }
            if(dblist[i].status<0){
              appVue.deleteLists.unshift({
@@ -363,7 +362,7 @@
                statusText:dblist[i].statusText,
                href:dblist[i].href
              })
-             appVue.listTrashId++
+             appVue.listTrashCount++
            }
          }
        })
@@ -415,11 +414,11 @@
       },
 
       hideModalDone(){
-        appVue.listDoneId--
-        appVue.listTrashId++
+        appVue.listDoneCount--
+        appVue.listTrashCount++
         if (this.deleconfirm === true) {
-          const f = this.selectList.path;
-          fs.exists(f, function (flag) {
+          // const f = this.selectList.path;
+          fs.exists(this.selectList.path, function (flag) {
             if (flag) {
               db.download.put({
                 startTime:appVue.selectList.startTime,
@@ -504,8 +503,7 @@
 
       showFileHandler(index) {
         const {shell} = require('electron')
-        const f = this.doneLists[index].path;
-        fs.exists(f, function (flag) {
+        fs.exists(this.doneLists[index].path, function (flag) {
           if (flag) {
             shell.showItemInFolder(appVue.doneLists[index].path)
           } else {
