@@ -29,8 +29,8 @@ const spaceModel = {
     return spaceModel
   },
 
-  async getUserSpaces () {
-    return await spaceModel.adapterModel.getUserSpaces(spaceModel.user)
+  async getUserSpaces (option) {
+    return await spaceModel.adapterModel.getUserSpaces(spaceModel.user,option)
   },
 
   /**

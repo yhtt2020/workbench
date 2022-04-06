@@ -17,6 +17,7 @@ const tpl = `
 
   </div>
   <div v-if="user.uid" style="float: right;position: absolute;right: 20px;top: 20px;" ><a-button @click="importFromLocal" size="small">导入</a-button></div>
+    <div v-else style="float: right;position: absolute;right: 20px;top: 20px;" ><a-checkbox @change="loadSpaces" v-model:checked="showBackup">显示备份空间</a-checkbox></div>
   <div style="text-align: center">
     <!--      <a-empty text="无空间" v-if="spaces.length===0"></a-empty>-->
     <div style="text-align: left;overflow-y: auto;max-height: 310px;margin-right: 20px;padding-top: 10px;padding-left: 40px;padding-bottom: 10px" class="scroller">
@@ -28,17 +29,26 @@ const tpl = `
         <a-card @click="switchSpace(space)" :style="{'margin-right':index%2===1?'0':'10px'}"
          :class="{'other-using':space.isOtherUsing,'self-using':space.isSelfUsing}"
          hoverable style="margin-left:20px;width: 250px;display: inline-block;margin-bottom: 10px;">
-          <a-card-meta :title="space.name" >
-            <template #description>
+          <a-card-meta  >
+          <template #title>
+          <span v-if="space.type==='cloud'">【备份】</span> {{space.name}}
 
+</template>
+            <template #description>
               <span class="using-bandage" v-if="space.isOtherUsing">
-              <span v-if="space.online">
-              其他设备使用中
+              <span v-if="space.disconnect">
+              其他设备离线使用中
 </span><span v-else>
-离线设备锁定中
+其他设备使用中
 </span>
 </span>
-              <span class="using-bandage" v-if="space.isSelfUsing">当前使用中</span>
+              <span class="using-bandage" v-if="space.isSelfUsing">
+              <span v-if="space.disconnect">
+         当前设备离线使用中
+</span><span v-else>
+当前使用中
+</span>
+</span>
 
               {{space.count_task+ ' 标签组  '+ space.count_tab+' 标签'}}
             </template>
@@ -179,7 +189,10 @@ const SpaceSelect = {
       showSetEnterPwd:true,
       newEnterPwd:'',
 
-      clientId: ''
+      clientId: '',
+
+
+      showBackup:false,//默认不显示备份空间
     }
   },
   async mounted () {
@@ -340,18 +353,13 @@ const SpaceSelect = {
       let spaces = []
       //下面开始获取用户空间
       try {
-        let result = await spaceModel.setUser(this.user).getUserSpaces()
+        let result = await spaceModel.setUser(this.user).getUserSpaces({showBackup:this.showBackup})
         if (result.status === 1) {
           spaces = result.data
           spaces.forEach(space => {
             if (this.user.uid) { //云端判断逻辑
               if (space.client_id && space.client_id !== this.user.clientId) {
                 space.isOtherUsing = true
-                if(Date.now()-space.sync_time>30000){
-                  space.online=false
-                }else{
-                  space.online=true
-                }
                 space.isUsing = true
               } else if ((space.client_id === this.user.clientId)) {
                 space.isSelfUsing = true
@@ -359,12 +367,18 @@ const SpaceSelect = {
               } else {
                 space.isUsing = false
               }
+              if(Date.now()-space.sync_time>30000){
+                space.disconnect=true
+              }else{
+                space.disconnect=false
+              }
             } else {
               if (space.id === this.currentSpace.spaceId) {
                 space.isSelfUsing = true
                 space.isUsing = true
               }
             }
+
 
           })
         } else {
@@ -526,7 +540,20 @@ const SpaceSelect = {
         })
       } else {
         if(space.isSelfUsing){
-          window.antd.message.info('不可切换到当前使用中的空间。')
+          if(space.disconnect){
+            antd.Modal.confirm({
+              title: '重新连接',
+              content: '是否尝试重新连接此空间？',
+              centered: true,
+              okText: '重新连接',
+              cancelText: '取消',
+              onOk: async () => {
+                spaceModel.setAdapter('local').changeCurrent(space)
+              }
+            })
+          }else{
+            window.antd.message.info('不可切换到当前使用中的空间。')
+          }
           return
         }
         if (space.isOtherUsing) {

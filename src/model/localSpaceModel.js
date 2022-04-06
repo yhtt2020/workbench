@@ -7,7 +7,12 @@ const localSpaceModel={
   getSpace(id){
     ldb.reload()
     let space = ldb.db.get('spaces').find({ id: id }).value()
+    console.log('读入本地空间',space)
     if (space) {
+      if(space.type==='cloud' && space.nanoid)
+      {
+        space.id=space.nanoid
+      }
       return space
     } else {
       return null
@@ -66,12 +71,12 @@ const localSpaceModel={
     return standReturn.success(spaceAdd)
   },
 
-  async getUserSpaces(user){
+  async getUserSpaces(user,option){
     ldb.reload()
     try{
       let spaces=[]
      spaces =  ldb.db.get('spaces').filter((sp)=>{
-       return sp.type==='local' || !sp.type
+       return option.showBackup || sp.type==='local' || !sp.type
      }).orderBy('update_time','desc').value()
      return  standReturn.success(spaces)
     }catch (e){
@@ -105,6 +110,22 @@ const localSpaceModel={
     ldb.reload()
     ldb.db.get('spaces').find({id:space.id}).assign({name:newName,update_time:Date.now()}).write()
     return standReturn.success()
+  },
+  update(space){
+    ldb.reload()
+    let foundSpace= ldb.db.get('spaces').find({id:space.id}).value()
+    if(foundSpace){
+      let saveData={}
+      saveData.update_time=Date.now()
+      saveData.sync_time=Date.now()
+      saveData.name=space.name
+      saveData.type=space.type
+      saveData.user=space.user
+      ldb.db.get('spaces').find({id:space.id}).assign(saveData).write()
+      standReturn.success('更新空间信息成功')
+    }else{
+     standReturn.failure('不存在空间。')
+    }
   },
   save(space,saveData){
     ldb.reload()

@@ -37,10 +37,11 @@ const tpl = `
 </div>
 
   <div style="text-align: center;margin-bottom: 40px">
-    <a-checkbox v-model:checked="save" size="small" default-value="true">将备份保存至</a-checkbox> <a-select size="small"
+    <a-checkbox v-model:checked="save" size="small" default-value="true">将备份保存至</a-checkbox>
+    <a-select size="small"
       v-model:value="savePosition"
       style="width: 120px">
-      <a-select-option value="cloud">云端空间</a-select-option>
+      <a-select-option value="cloud" disabled="!canSaveToCloud">云端空间</a-select-option>
       <a-select-option value="local">本地空间</a-select-option>
     </a-select>
   </div>
@@ -82,6 +83,7 @@ const fatal = {
       space: null,
       title: '',
       fatal:true,//非致命意外
+      canSaveToCloud:true,//是否可以保存到云端，当出现账号凭证错误的时候是无法保存至云端的。
       description: ''
     }
   },
@@ -95,6 +97,14 @@ const fatal = {
       console.warn('无法获取到space')
     }
     this.title = window.globalArgs['title'] || '保存冲突，无法保存空间至云端'
+    this.canSaveToCloud=window.globalArgs['canSaveToCloud']==='true'
+    if(!this.canSaveToCloud)
+    {
+      this.savePosition='local'
+      console.log('local',this.savePosition)
+    }
+    console.log(this.canSaveToCloud)
+    console.log(this.savePosition)
     this.description = window.globalArgs['description'] || '系统检测到当前空间已被<strong>其他设备占用</strong>。无法再保存当前空间。'
 
   },

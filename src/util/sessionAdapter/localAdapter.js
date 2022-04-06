@@ -11,6 +11,9 @@ const localAdapter={
   save(space,saveData){
     localSpaceModel.save(space,saveData)
   },
+  update(space){
+    localSpaceModel.update(space)
+  },
   async restore(spaceId){
     ldb.reload()
     var savedStringData
