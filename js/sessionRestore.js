@@ -219,11 +219,11 @@ const sessionRestore = {
       if(currentSpace.spaceType==='cloud'){
         let spaceResult=await spaceModel.setUser(currentSpace.userInfo).getSpace(currentSpace.spaceId) //先尝试获取一次最新的空间
         if(spaceResult.status===1){
-          if(spaceResult.data==='-1'){
+          if(String(spaceResult.data.id)==='-1'){
             ipc.send('showUserWindow',{spaceId:currentSpace.spaceId,modal:true,title:'无法读入云端空间',description:'云端空间已被删除，无法读入。',fatal:true})
             return
           }
-          if(spaceResult.data==='-2'){
+          if(String(spaceResult.data.id)==='-2'){
             ipc.send('showUserWindow',{spaceId:currentSpace.spaceId,modal:true,title:'无法读入云端空间',description:'云端空间已被其他设备抢占，导致无法成功取得空间使用权。',fatal:true})
             return
           }
@@ -235,8 +235,6 @@ const sessionRestore = {
       }else{
         space=await spaceModel.setUser(currentSpace.userInfo).getSpace(currentSpace.spaceId) //先尝试获取一次最新的空间
       }
-
-      console.log(space)
       //判断空间类型
       if(currentSpace.spaceType==='cloud'){
         space.id=space.nanoid
@@ -268,10 +266,10 @@ const sessionRestore = {
             } else {
               localAdapter.update(backupSpace) //此处是容错部分，主要用于兼容以前没有存下userInfo的，立马存一个userInfo进去。
             }
-            space.userInfo=backupSpace.userInfo
-          }else {
-            //新的备份空间都已经具备了用户信息字段了
+
           }
+          space.userInfo=backupSpace.userInfo
+          //新的备份空间都已经具备了用户信息字段了
         }else{
             //如果还不存在备份空间，应该是老版本，从未保存本地备份，这种场景可以不处理，下次自动保存一次就好了
           space.userInfo=currentSpace.userInfo
@@ -279,11 +277,14 @@ const sessionRestore = {
           //设备上线 ↓
           try{
             let result=await spaceModel.setUser(space.userInfo).clientOnline(space.id,false)
+            console.log('设备上线前取得的userINfo',space.userInfo)
             if(result.status===1){
-              if(result.data==='-1'){
+              console.log(space )
+              console.log(result)
+              if(result.data.toString()==='-1'){
                 ipc.send('showUserWindow',{spaceId:currentSpace.spaceId,modal:true,title:'无法成功上线设备',description:'云端空间已被删除，无法读入。',fatal:true})
               }
-              if(result.data==='-2'){
+              if(result.data.toString()==='-2'){
                 ipc.send('showUserWindow',{spaceId:currentSpace.spaceId,modal:true,title:'无法成功上线设备',description:'云端空间已被其他设备抢占，导致无法成功取得空间使用权。',fatal:true})
               }
               else{

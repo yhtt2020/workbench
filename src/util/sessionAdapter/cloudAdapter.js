@@ -30,6 +30,7 @@ const cloudAdapter={
          var currentUser=ldb.db.get('currentSpace.userInfo').value()
          if(currentUser){
            userInfo=currentUser //如果是本地用户了，那也确认丢失了
+           ldb.db.get('spaces').find({id:spaceId}).assign({userInfo:userInfo}).write()
          }
        }catch (e) {
          console.warn('无法从本地当前用户中中获取到用户信息')
