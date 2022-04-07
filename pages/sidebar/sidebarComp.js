@@ -339,10 +339,10 @@ const sidebarTpl = `
                         @mouseenter="showHoverLock(tab)" @mouseleave="hideHoverLock(tab)" v-for="(tab,j) in item.tabs"
                         :key="tab.id">
                         <div class="tab-title" @click="openPopoverTab(item.id, tab.id)">
-                        <span @click="toggleCloseTab(tab.id,item.id)" style="float: left;cursor: pointer"  title="关闭该标签" :id="'close'+tab.id" hidden  class="closeTab">
+                        <span @click="closeTab(tab.id,item.id)" style="float: left;cursor: pointer"  title="关闭该标签" :id="'close'+tab.id" hidden  class="closeTab">
                            <img src="assets/close-box.svg"  style="margin-left: 9px;width: 22px;height: 22px">
                          </span>
-                          <img class="tab-icon" :id="'tab-icon'+tab.id"  :src="tab.icon" style="margin-left: 8px"
+                          <img class="tab-icon" :id="'tabIcon'+tab.id"  :src="tab.icon" style="margin-left: 8px"
                             onerror="this.src='../../icons/default.svg'" />&nbsp;{{ tab.title }}
                         </div>
                         <span @click="toggleLockTab(tab.id,item.id)" :id="'hoverLock'+tab.id" :hidden="tab.lock!==true"
@@ -853,19 +853,19 @@ Vue.component('sidebar', {
     toggleLockTab(id,taskId){
       ipc.sendTo(mainWindowId,'toggleLockTab',{id:id,taskId:taskId})
     },
-    toggleCloseTab(id,taskId){
-      ipc.sendTo(mainWindowId,'toggleCloseTab',{id:id,taskId:taskId})
+    closeTab(id,taskId){
+      ipc.sendTo(mainWindowId,'closeTab',{id:id,taskId:taskId})
     },
 
     showHoverLock(tab){
       document.getElementById('hoverLock'+tab.id).hidden=false
       document.getElementById('close'+tab.id).hidden=false
-      document.getElementById('tab-icon'+tab.id).hidden=true
+      document.getElementById('tabIcon'+tab.id).hidden=true
     },
 
     hideHoverLock(tab){
       document.getElementById('close'+tab.id).hidden=true
-      document.getElementById('tab-icon'+tab.id).hidden=false
+      document.getElementById('tabIcon'+tab.id).hidden=false
       if(!(tab.lock===true)){
         document.getElementById('hoverLock'+tab.id).hidden=true
       }
