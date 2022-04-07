@@ -32,6 +32,7 @@ const cloudSpaceModel={
   },
   async save (spaceId, saveData, userInfo,force=false) {
     let result = await spaceApi.save(spaceId,userInfo.clientId, saveData,userInfo,force)
+
     return standReturn.autoReturn(result)
   },
   async restore (spaceId, userInfo) {

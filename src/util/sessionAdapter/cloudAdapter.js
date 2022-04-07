@@ -1,4 +1,5 @@
 const cloudSpaceModel = require('../../../src/model/cloudSpaceModel')
+const backupSpaceModel = require('../../../src/model/backupSpaceModel')
 const standReturn = require('../../../src/util/standReturn')
 if(window){
   ldb=window.ldb
@@ -8,6 +9,7 @@ function fatal(option){
 }
 
 function disconnect(option){
+  option.space=backupSpaceModel.getSpace(option.spaceId)
   return standReturn.failure({action:'disconnect',option:option})
 }
 
@@ -57,8 +59,6 @@ const cloudAdapter={
       try{
         let result=await cloudSpaceModel.save(spaceId,saveData,userInfo,false)
         if(result.status===1){
-          console.log('自动备份到云端')
-          console.log(result)
           if(result.data==='-1'){
             //todo 空间不存在
             console.warn('fail','远端空间不存在，导致存储失败')
@@ -71,6 +71,8 @@ const cloudAdapter={
             console.log(saveData)
             return fatal({modal:true,title:'无法成功保存空间',description:'云端空间已被其他设备抢占，当前空间已无法存入。',fatal:true})
           }
+
+          backupSpaceModel.cancelOfflineUse(spaceId)
         }else{
           //保存失败，冲突
           noAction(result.data)
@@ -78,7 +80,7 @@ const cloudAdapter={
       }catch (e) {
         console.warn('存储到云端失败，接口请求失败。')
         console.log(e)
-        return disconnect({modal:true,title:'无法连接',description:'无法连接云端。',disconnect:true})
+        return disconnect({modal:true,title:'无法连接',description:'无法连接云端。',disconnect:true,spaceId:spaceId})
       }
     }catch (e) {
       console.log(e)

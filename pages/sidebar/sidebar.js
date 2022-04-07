@@ -434,6 +434,9 @@ window.onload = function() {
       async getCloudSpaces({commit},user){
         console.log(user)
         try{
+          if(!!!user){
+            user= appVue.$store.state.user
+          }
           let response= await spaceModel.setUser(user).getUserSpaces()
           console.log(response)
           if(response.status){
@@ -453,11 +456,14 @@ window.onload = function() {
       },
       async getLocalSpaces({commit}){
         let localSpaces= await spaceModel.getLocalSpaces()
-        if(localSpaces.length>5)
+        let spaces=localSpaces.filter(sp=>{
+          return sp.type==='local'
+        })
+        if(spaces.length>5)
         {
-          localSpaces.splice(4,localSpaces.length-5)
+          spaces.splice(4,spaces.length-5)
         }
-        commit('set_local_spaces',localSpaces)
+        commit('set_local_spaces',spaces)
       }
 
     }

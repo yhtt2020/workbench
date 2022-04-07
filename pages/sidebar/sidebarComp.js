@@ -313,8 +313,9 @@ const sidebarTpl = `
             </template>
             <template slot="content">
              <p style="width: 200px;font-size: 12px">
-              <span v-if="currentSpace.space.nanoid">当前为云端空间。<br>每30秒自动备份，此时图标会转动。</span>
-          <span v-else>当前为本地空间，不与云端同步，请切换到云端空间以防止标签组丢失。</span>
+              <span v-if="currentSpace.space">当前为云端空间。<br>每30秒自动备份，此时图标会转动。</span>
+                <span v-else-if="currentSpace.space.type==='cloud'">当前为离线模式。系统会自动尝试同步连接，直至连接成功。</span>
+                <span v-else>当前为本地空间，不与云端同步，建议导入到云端空间以防止标签组丢失。</span>
 </p>
 
         <ul class="space-selector">
@@ -1274,6 +1275,13 @@ ipc.on('handleFileAssign', async (event, args) => {
 ipc.on('saving',()=>{
   let savingIcon=document.getElementById('savingIcon')
   savingIcon.classList.add('saving')
+  if(savingIcon.classList.contains('offline')){
+    appVue.$message.success('云空间重新连接成功，已为您实时保持同步。')
+    console.log('重新获取云端空间')
+    appVue.$store.dispatch('getCloudSpaces')
+    savingIcon.classList.remove('offline')
+    savingIcon.classList.add('online')
+  }
   setTimeout(()=>{
     savingIcon.classList.remove('saving')
   },2000)
