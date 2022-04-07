@@ -76,6 +76,7 @@ window.addEventListener('message', async function(e) {
 		}
 		tasksList.init(e.data.data.tasks)
 		await $store.commit('fillTasksToItems', tasksList)
+    ipc.send('transmitTaskList', $store.getters.getItems)
 		//console.log('同步'+count+++"次")
 	}
 

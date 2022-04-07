@@ -398,7 +398,10 @@ const sidebarTpl = `
                         @mouseenter="showHoverLock(tab)" @mouseleave="hideHoverLock(tab)" v-for="(tab,j) in item.tabs"
                         :key="tab.id">
                         <div class="tab-title" @click="openPopoverTab(item.id, tab.id)">
-                          <img class="tab-icon" :src="tab.icon"
+                        <span @click="closeTab(tab.id,item.id)" style="float: left;cursor: pointer"  title="关闭该标签" :id="'close'+tab.id" hidden  class="closeTab">
+                           <img src="assets/close-box.svg"  style="margin-left: 9px;width: 22px;height: 22px">
+                         </span>
+                          <img class="tab-icon" :id="'tabIcon'+tab.id"  :src="tab.icon" style="margin-left: 8px"
                             onerror="this.src='../../icons/default.svg'" />&nbsp;{{ tab.title }}
                         </div>
                         <span @click="toggleLockTab(tab.id,item.id)" :id="'hoverLock'+tab.id" :hidden="tab.lock!==true"
@@ -439,14 +442,18 @@ const sidebarTpl = `
             </a-collapse>
           </div>
         </template>
+        <li @click="visibleGlobalSearch">
+          <a-button type="default" shape="circle" icon="search" tabindex=-1></a-button>
+          <div class="item-title">全局搜索</div>
+        </li>
         <li @click="visibleMessageCenter">
           <a-badge :dot="this.$store.getters.getAllMessages.length > 0 ? true : false">
-            <a-button type="default" shape="circle" icon="bell"></a-button>
+            <a-button type="default" shape="circle" icon="bell" tabindex=-1></a-button>
           </a-badge>
           <div class="item-title">消息中心</div>
         </li>
         <li @click="openBottom('setting')">
-          <a-button type="default" shape="circle" icon="setting"></a-button>
+          <a-button type="default" shape="circle" icon="setting" tabindex=-1></a-button>
           <div class="item-title">偏好设置</div>
         </li>
       </ul>
@@ -472,10 +479,10 @@ Vue.component('sidebar', {
       runningApps: [],//运行中的应用
       mod: 'auto',//auto open close
       isPopoverShowing: false,
-      lastOpenId: 0,
+      lastOpenId: this.$store.state.selected,
       drag: false,
       remote: {},
-      loginPanelTitle: '登录帐号免费体验完整功能',
+      loginPanelTitle: "登录帐号免费体验完整功能",
       loginPanelContent: ``,
       userPanelVisible: false,
       devices: [{
@@ -685,6 +692,9 @@ Vue.component('sidebar', {
         })
       }
     },
+    visibleGlobalSearch() {
+      ipc.send('openGlobalSearch')
+    },
     openCircle (args) {
       this.userPanelVisible = false
       this.addTab(`${api.getUrl(api.API_URL.user.CIRCLE)}?id=${args}`)
@@ -772,7 +782,6 @@ Vue.component('sidebar', {
       postMessage({
         message: action
       })
-
     },
     openGroup () {
       ipc.send('openGroup')
@@ -954,12 +963,19 @@ Vue.component('sidebar', {
     toggleLockTab (id, taskId) {
       ipc.sendTo(mainWindowId, 'toggleLockTab', { id: id, taskId: taskId })
     },
+    closeTab(id,taskId){
+      ipc.sendTo(mainWindowId,'closeTab',{id:id,taskId:taskId})
+    },
     showHoverLock (tab) {
       document.getElementById('hoverLock' + tab.id).hidden = false
+      document.getElementById('close'+tab.id).hidden=false
+      document.getElementById('tabIcon'+tab.id).hidden=true
     },
     hideHoverLock (tab) {
-      if (!(tab.lock === true)) {
-        document.getElementById('hoverLock' + tab.id).hidden = true
+      document.getElementById('close'+tab.id).hidden=true
+      document.getElementById('tabIcon'+tab.id).hidden=false
+      if(!(tab.lock===true)){
+        document.getElementById('hoverLock'+tab.id).hidden=true
       }
     },
     clearTaskUnlock (task) {

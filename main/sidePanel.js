@@ -892,7 +892,6 @@ ipc.on('showAllSaApps',(event,args)=>{
   })
  allAppsWindow.show()
  allAppsWindow.focus()
-
 })
 
 const configModel = require(__dirname+'/src/model/configModel')
