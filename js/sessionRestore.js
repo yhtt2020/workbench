@@ -1,38 +1,37 @@
 const browserUI = require('browserUI.js')
 const tabEditor = require('navbar/tabEditor.js')
 const tabState = require('tabState.js')
-const localAdapter=require('../src/util/sessionAdapter/localAdapter')
-const cloudAdapter=require('../src/util/sessionAdapter/cloudAdapter')
-const spaceModel=require('../src/model/spaceModel')
-const ipc= require('electron').ipcRenderer
-const SYNC_INTERVAL=5
-let autoSaver=null
-function fatalStop(options){
-  ipc.send('showUserWindow',options)
+const localAdapter = require('../src/util/sessionAdapter/localAdapter')
+const cloudAdapter = require('../src/util/sessionAdapter/cloudAdapter')
+const spaceModel = require('../src/model/spaceModel')
+const ipc = require('electron').ipcRenderer
+const SYNC_INTERVAL = 5
+let autoSaver = null
+
+function fatalStop (options) {
+  ipc.send('showUserWindow', options)
   sessionRestore.stopAutoSave()//如果是致命问题，则不再自动保存了，否则还是容易出错。
 }
 
-function disconnect(options){
-  ipc.send('showUserWindow',options)
+function disconnect (options) {
+  ipc.send('showUserWindow', options)
 }
 
-
 const sessionRestore = {
-  adapter:{},
-  currentSpace:{},
-  save:async function (forceSave=true, sync=true) {
+  adapter: {},
+  currentSpace: {},
+  save: async function (forceSave = true, sync = true) {
     var stateString = JSON.stringify(tasks.getStringifyableState())
     var data = {
       version: 2,
       state: JSON.parse(stateString),
       saveTime: Date.now()
     }
-    let countTask=data.state.tasks.length
-    let countTab=0
-    data.state.tasks.forEach(task=>{
-      countTab+=task.tabs.length
+    let countTask = data.state.tasks.length
+    let countTab = 0
+    data.state.tasks.forEach(task => {
+      countTab += task.tabs.length
     })
-
 
     // save all tabs that aren't private
 
@@ -41,68 +40,67 @@ const sessionRestore = {
         return !tab.private
       })
     }
-    let saveData={
-      count_task:countTask,
-      count_tab:countTab,
-      data:data,
-      name:sessionRestore.currentSpace.name,
-      type:sessionRestore.spaceType
+    let saveData = {
+      count_task: countTask,
+      count_tab: countTab,
+      data: data,
+      name: sessionRestore.currentSpace.name,
+      type: sessionRestore.spaceType
     }
 
     if (forceSave === true || stateString !== sessionRestore.previousState) {
-      let uid = typeof sessionRestore.currentSpace.userInfo==='undefined'?0 :sessionRestore.currentSpace.userInfo.uid
-      let space={
-        id:sessionRestore.currentSpace.spaceId,
-        name:sessionRestore.currentSpace.name,
-        uid:uid,
-        type:sessionRestore.currentSpace.spaceType
+      let uid = typeof sessionRestore.currentSpace.userInfo === 'undefined' ? 0 : sessionRestore.currentSpace.userInfo.uid
+      let space = {
+        id: sessionRestore.currentSpace.spaceId,
+        name: sessionRestore.currentSpace.name,
+        uid: uid,
+        type: sessionRestore.currentSpace.spaceType
       }
 
       console.log('成功存入到本地space空间')
       if (sync === true) {
         //本地存储是必须存的，并且还要夹带type
-       saveData.type=sessionRestore.currentSpace.spaceType
-       if(sessionRestore.currentSpace.spaceType==='cloud'){
-         //如果是云端空间，还需要将此用户的信息存储下来，避免后面切换空间后导致当前用户信息丢失之后，无法再通过接口交互。
-         saveData.userInfo=sessionRestore.currentSpace.userInfo
-       }
-       //sessionRestore.adapter.save(sessionRestore.currentSpace.spaceId, saveData)
+        saveData.type = sessionRestore.currentSpace.spaceType
+        if (sessionRestore.currentSpace.spaceType === 'cloud') {
+          //如果是云端空间，还需要将此用户的信息存储下来，避免后面切换空间后导致当前用户信息丢失之后，无法再通过接口交互。
+          saveData.userInfo = sessionRestore.currentSpace.userInfo
+        }
+        //sessionRestore.adapter.save(sessionRestore.currentSpace.spaceId, saveData)
         console.log(saveData)
         localAdapter.save(space, saveData)
         // fs.writeFileSync(sessionRestore.savePath, JSON.stringify(data))
       }
       //如果是云端，还需去云端同步
-      try{
-        if(sessionRestore.currentSpace.spaceType==='cloud'){
-         let cloudResult=await sessionRestore.adapter.save(sessionRestore.currentSpace.spaceId, saveData)
-          if(cloudResult.status===1){
+      try {
+        if (sessionRestore.currentSpace.spaceType === 'cloud') {
+          let cloudResult = await sessionRestore.adapter.save(sessionRestore.currentSpace.spaceId, saveData)
+          if (cloudResult.status === 1) {
             ipc.send('saving')
             console.log('顺利保存至云端')
-          }else{
-            console.warn('未能顺利保存至云端，但仍然可控，失败原因如下：')
+          } else {
+            console.warn('保存至云端失败，但仍然可控，失败原因如下：')
             //todo 如果走到这里，其实意味着这个备份空间已经无法恢复了，需要走备份损坏（冲突模式）模式。
             console.log(cloudResult.data)
           }
         }
-      }catch (e) {
+      } catch (e) {
         //todo 走备份空间流程
       }
 
-
-        // fs.writeFile(sessionRestore.savePath, JSON.stringify(data), function (err) {
-        //   if (err) {
-        //     console.warn(err)
-        //   }
-        // })
+      // fs.writeFile(sessionRestore.savePath, JSON.stringify(data), function (err) {
+      //   if (err) {
+      //     console.warn(err)
+      //   }
+      // })
 
       sessionRestore.previousState = stateString
     }
   },
-   restore:async function () {
-     var savedStringData=''
-    try{
-      savedStringData=  await sessionRestore.adapter.restore(sessionRestore.currentSpace.spaceId)
-    }catch (e) {
+  restore: async function () {
+    var savedStringData = ''
+    try {
+      savedStringData = await sessionRestore.adapter.restore(sessionRestore.currentSpace.spaceId)
+    } catch (e) {
       console.log('获取存储的空间信息失败')
     }
 
@@ -147,7 +145,7 @@ const sessionRestore = {
 
       // switch to the previously selected tasks
 
-      if (tasks.getSelected().tabs.isEmpty() || (!data.saveTime || Date.now() - data.saveTime < SYNC_INTERVAL*1000)) {
+      if (tasks.getSelected().tabs.isEmpty() || (!data.saveTime || Date.now() - data.saveTime < SYNC_INTERVAL * 1000)) {
         //如果当前选中的任务为空，或（没保存或者保存间隔小于30秒）
         browserUI.switchToTask(data.state.selectedTask)
         if (tasks.getSelected().tabs.isEmpty()) {
@@ -157,7 +155,7 @@ const sessionRestore = {
         //window.createdNewTaskOnStartup = true
         // try to reuse a previous empty task
         var lastTask = tasks.byIndex(tasks.getLength() - 1)
-        if(lastTask){
+        if (lastTask) {
           browserUI.switchToTask(lastTask.id)
         }
 
@@ -223,44 +221,55 @@ const sessionRestore = {
       browserUI.switchToTab(newSessionErrorTab)
     }
   },
-  initialize:async function () {
-    let currentSpace={}
-    try{
-      currentSpace= await spaceModel.getCurrent()
+  initialize: async function () {
+    let currentSpace = {}
+    try {
+      currentSpace = await spaceModel.getCurrent()
       console.log(currentSpace)
-      let space={}
-      if(currentSpace.spaceType==='cloud'){
-        let spaceResult=await spaceModel.setUser(currentSpace.userInfo).getSpace(currentSpace.spaceId) //先尝试获取一次最新的空间
-        if(spaceResult.status===1){
-          if(String(spaceResult.data.id)==='-1'){
-            fatalStop({spaceId:currentSpace.spaceId,modal:true,title:'无法读入云端空间',description:'云端空间已被删除，无法读入。',fatal:true})
+      let space = {}
+      if (currentSpace.spaceType === 'cloud') {
+        let spaceResult = await spaceModel.setUser(currentSpace.userInfo).getSpace(currentSpace.spaceId) //先尝试获取一次最新的空间
+        if (spaceResult.status === 1) {
+          if (String(spaceResult.data.id) === '-1') {
+            fatalStop({
+              spaceId: currentSpace.spaceId,
+              modal: true,
+              title: '无法读入云端空间',
+              description: '云端空间已被删除，无法读入。',
+              fatal: true
+            })
             return
           }
-          if(String(spaceResult.data.id)==='-2'){
-            fatalStop({spaceId:currentSpace.spaceId,modal:true,title:'无法读入云端空间',description:'云端空间已被其他设备抢占，导致无法成功取得空间使用权。',fatal:true})
+          if (String(spaceResult.data.id) === '-2') {
+            fatalStop({
+              spaceId: currentSpace.spaceId,
+              modal: true,
+              title: '无法读入云端空间',
+              description: '云端空间已被其他设备抢占，导致无法成功取得空间使用权。',
+              fatal: true
+            })
             return
-          }
-          else{
+          } else {
             //正常登录
-            space=spaceResult.data
+            space = spaceResult.data
           }
         }
-      }else{
-        if(currentSpace.spaceType==='local'){
-          space=await localSpaceModel.getSpace(currentSpace.spaceId) //先尝试获取一次最新的空间
-        }else{
-          space=await spaceModel.setUser(currentSpace.userInfo).getSpace(currentSpace.spaceId) //先尝试获取一次最新的空间
+      } else {
+        if (currentSpace.spaceType === 'local') {
+          space = await localSpaceModel.getSpace(currentSpace.spaceId) //先尝试获取一次最新的空间
+        } else {
+          space = await spaceModel.setUser(currentSpace.userInfo).getSpace(currentSpace.spaceId) //先尝试获取一次最新的空间
         }
 
       }
       //判断空间类型
-      if(currentSpace.spaceType==='cloud'){
-        space.id=space.nanoid
+      if (currentSpace.spaceType === 'cloud') {
+        space.id = space.nanoid
         //先从云端接口拉取一下空间信息
         //let cloudSpace=await spaceModel.setUser(sessionRestore.currentSpace.userInfo).getSpace(currentSpace.spaceId)
-        let backupSpace=await localSpaceModel.getSpace(currentSpace.spaceId) //获取本地的备份空间
-        if(!!backupSpace){
-          if(!backupSpace.userInfo){
+        let backupSpace = await localSpaceModel.getSpace(currentSpace.spaceId) //获取本地的备份空间
+        if (!!backupSpace) {
+          if (!backupSpace.userInfo) {
             //如果这个空间信息不存在用户的信息，主要是一些老的空间，可能还没存用户信息
             console.log('不存在用户信息，但是本地要尝试从当前用户信息中获取用户信息')
             let uid = typeof currentSpace.userInfo === 'undefined' ? 0 : currentSpace.userInfo.uid
@@ -285,38 +294,61 @@ const sessionRestore = {
               localAdapter.update(backupSpace) //此处是容错部分，主要用于兼容以前没有存下userInfo的，立马存一个userInfo进去。
             }
           }
-          space.userInfo=backupSpace.userInfo
+          space.userInfo = backupSpace.userInfo
           //新的备份空间都已经具备了用户信息字段了
-        }else{
-            //如果还不存在备份空间，应该是老版本，从未保存本地备份，这种场景可以不处理，下次自动保存一次就好了
-          space.userInfo=currentSpace.userInfo
+        } else {
+          //如果还不存在备份空间，应该是老版本，从未保存本地备份，这种场景可以不处理，下次自动保存一次就好了
+          space.userInfo = currentSpace.userInfo
         }
-          //设备上线 ↓
-          try{
-            let result=await spaceModel.setUser(space.userInfo).clientOnline(space.id,false)
-            console.log('设备上线前取得的userINfo',space.userInfo)
-            if(result.status===1){
-              console.log(space )
-              console.log(result)
-              if(result.data.toString()==='-1'){
-                fatalStop({spaceId:currentSpace.spaceId,modal:true,title:'无法成功上线设备',description:'云端空间已被删除，无法读入。',fatal:true})
-              }
-              if(result.data.toString()==='-2'){
-                fatalStop({spaceId:currentSpace.spaceId,modal:true,title:'无法成功上线设备',description:'云端空间已被其他设备抢占，导致无法成功取得空间使用权。',fatal:true})
-              }
-              else{
-                //正常登录
-              }
+        //设备上线 ↓
+        try {
+          let result = await spaceModel.setUser(space.userInfo).clientOnline(space.id, false)
+          console.log('设备上线前取得的userINfo', space.userInfo)
+          if (result.status === 1) {
+            console.log(space)
+            console.log(result)
+            if (result.data.toString() === '-1') {
+              fatalStop({
+                spaceId: currentSpace.spaceId,
+                modal: true,
+                title: '无法成功上线设备',
+                description: '云端空间已被删除，无法读入。',
+                fatal: true
+              })
             }
-          }catch (e) {
-            console.warn(e)
-            disconnect({spaceId:currentSpace.spaceId,modal:true,title:'无法取得云端空间信息',description:'由于意外情况导致无法连接远端空间。',disconnect:true})
+            if (result.data.toString() === '-2') {
+              fatalStop({
+                spaceId: currentSpace.spaceId,
+                modal: true,
+                title: '无法成功上线设备',
+                description: '云端空间已被其他设备抢占，导致无法成功取得空间使用权。',
+                fatal: true
+              })
+            } else {
+              //正常登录
+            }
           }
+        } catch (e) {
+          console.warn(e)
+          disconnect({
+            spaceId: currentSpace.spaceId,
+            modal: true,
+            title: '无法取得云端空间信息',
+            description: '由于意外情况导致无法连接远端空间。',
+            disconnect: true
+          })
+        }
       }
-    }catch (e) {
+    } catch (e) {
       //let lastSpace=await spaceModel.setAdapter('local').getLastSyncSpace()
       console.warn(e)
-      disconnect({spaceId:currentSpace.spaceId,modal:true,title:'意外原因无法读取云端空间',description:'由于意外情况导致无法连接远端空间。',disconnect:true})
+      disconnect({
+        spaceId: currentSpace.spaceId,
+        modal: true,
+        title: '意外原因无法读取云端空间',
+        description: '由于意外情况导致无法连接远端空间。',
+        disconnect: true
+      })
 
       // if(lastSpace===null){
       //   ipc.send('closeMainWindow')
@@ -333,15 +365,15 @@ const sessionRestore = {
       //return
     }
 
-    sessionRestore.currentSpace=currentSpace
-    if(currentSpace.spaceType==='local'){
-      sessionRestore.adapter=localAdapter
-    }else{
-      sessionRestore.adapter=cloudAdapter
+    sessionRestore.currentSpace = currentSpace
+    if (currentSpace.spaceType === 'local') {
+      sessionRestore.adapter = localAdapter
+    } else {
+      sessionRestore.adapter = cloudAdapter
     }
     //todo 获取当前的用户，判断如果未登录，则尝试从本地寻找适配器读入空间。
-      /*
-      id: 20
+    /*
+    id: 20
 name: "currentUser"
 value:
 avatar: "https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/base64_upload_536121645792907?upload_type/Tencent_COS"
@@ -365,20 +397,20 @@ value:
 avatar: "../../icons/browser.ico"
 nickname: "立即登录"
 uid: 0
-       */
+     */
 
     sessionRestore.startAutoSave()
     window.onbeforeunload = function (e) {
       sessionRestore.save(true, true)
-      if(sessionRestore.currentSpace.spaceType==='cloud'){
+      if (sessionRestore.currentSpace.spaceType === 'cloud') {
         spaceModel.setUser(sessionRestore.currentSpace.userInfo).clientOffline()
       }
     }
   },
-  startAutoSave:()=>{
-    autoSaver=setInterval(sessionRestore.save, SYNC_INTERVAL*1000)
+  startAutoSave: () => {
+    autoSaver = setInterval(sessionRestore.save, SYNC_INTERVAL * 1000)
   },
-  stopAutoSave:()=>{
+  stopAutoSave: () => {
     clearInterval(autoSaver)
   }
 }
