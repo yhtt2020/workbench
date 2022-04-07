@@ -14,9 +14,14 @@ const cloudSpaceModel={
    */
   async changeCurrent (space, user) {
     let result = await spaceApi.change(space.nanoid,user.clientId, user)
-    await userModel.change(user)
-    ipc.send('changeSpace',{spaceId:space.nanoid,spaceType:'cloud',userInfo:JSON.parse(JSON.stringify(user))})
-    return standReturn.autoReturn(result)
+    if(result.code===1000){
+      await userModel.change(user)
+      ipc.send('changeSpace',{spaceId:space.nanoid,spaceType:'cloud',userInfo:JSON.parse(JSON.stringify(user))})
+      return standReturn.autoReturn(result)
+    }else{
+      return standReturn.failure('重新连接失败')
+    }
+
   },
   async getSpace(spaceId,userInfo){
     return await cloudSpaceModel.restore(spaceId, userInfo)

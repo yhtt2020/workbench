@@ -513,11 +513,10 @@ const SpaceSelect = {
     },
     async doChangeSpaceCloud (space) {
       try {
-        let result = await spaceModel.setAdapter('cloud').changeCurrent(space)
+        let result = await spaceModel.setUser(this.user).changeCurrent(space)
         console.log(result)
         if (result.status === 1) {
           window.antd.message.success('切换使用空间成功。')
-          await this.loadSpaces()
         } else {
           window.antd.message.error('切换使用空间失败。')
         }
@@ -548,7 +547,7 @@ const SpaceSelect = {
               okText: '重新连接',
               cancelText: '取消',
               onOk: async () => {
-                spaceModel.setAdapter('local').changeCurrent(space)
+                this.doChangeSpaceCloud(space)
               }
             })
           }else{

@@ -4,17 +4,32 @@ const tabState = require('tabState.js')
 const localAdapter = require('../src/util/sessionAdapter/localAdapter')
 const cloudAdapter = require('../src/util/sessionAdapter/cloudAdapter')
 const spaceModel = require('../src/model/spaceModel')
+const localSpaceModel = require('../src/model/localSpaceModel')
+const backupSpaceModel = require('../src/model/backupSpaceModel')
 const ipc = require('electron').ipcRenderer
 const SYNC_INTERVAL = 5
 let autoSaver = null
 
+/**
+ * 致命中断
+ * @param options
+ */
 function fatalStop (options) {
   ipc.send('showUserWindow', options)
   sessionRestore.stopAutoSave()//如果是致命问题，则不再自动保存了，否则还是容易出错。
 }
 
+/**
+ * 设为离线
+ * @param options
+ */
 function disconnect (options) {
-  ipc.send('showUserWindow', options)
+  if (!backupSpaceModel.getOfflineUse(options.spaceId)) {
+    //如果不是离线使用中
+    ipc.send('showUserWindow', options)
+  } else {
+    console.log('离线使用同步1次')
+  }
 }
 
 const sessionRestore = {
@@ -34,7 +49,6 @@ const sessionRestore = {
     })
 
     // save all tabs that aren't private
-
     for (var i = 0; i < data.state.tasks.length; i++) {
       data.state.tasks[i].tabs = data.state.tasks[i].tabs.filter(function (tab) {
         return !tab.private
@@ -56,19 +70,17 @@ const sessionRestore = {
         uid: uid,
         type: sessionRestore.currentSpace.spaceType
       }
-
-      console.log('成功存入到本地space空间')
       if (sync === true) {
-        //本地存储是必须存的，并且还要夹带type
+        //本地存储逻辑，这个是必须存储的，哪怕是云端也要存一个备份空间
         saveData.type = sessionRestore.currentSpace.spaceType
         if (sessionRestore.currentSpace.spaceType === 'cloud') {
-          //如果是云端空间，还需要将此用户的信息存储下来，避免后面切换空间后导致当前用户信息丢失之后，无法再通过接口交互。
           saveData.userInfo = sessionRestore.currentSpace.userInfo
+          //备份空间需要额外夹带一个最新的用户信息
+          //如果是云端空间，还需要将此用户的信息存储下来，避免后面切换空间后导致当前用户信息丢失之后，无法再通过接口交互。
+          backupSpaceModel.save(space, saveData)
+        } else {
+          localSpaceModel.save(space, saveData)
         }
-        //sessionRestore.adapter.save(sessionRestore.currentSpace.spaceId, saveData)
-        console.log(saveData)
-        localAdapter.save(space, saveData)
-        // fs.writeFileSync(sessionRestore.savePath, JSON.stringify(data))
       }
       //如果是云端，还需去云端同步
       try {
@@ -76,24 +88,25 @@ const sessionRestore = {
           let cloudResult = await sessionRestore.adapter.save(sessionRestore.currentSpace.spaceId, saveData)
           if (cloudResult.status === 1) {
             ipc.send('saving')
-            console.log('顺利保存至云端')
           } else {
-            console.warn('保存至云端失败，但仍然可控，失败原因如下：')
-            //todo 如果走到这里，其实意味着这个备份空间已经无法恢复了，需要走备份损坏（冲突模式）模式。
-            console.log(cloudResult.data)
+            if (cloudResult.data.action === 'fatal') {
+              fatalStop(cloudResult.data.option)
+              console.warn('保存至云端失败，产生致命错误：')
+              //todo 如果走到这里，其实意味着这个备份空间已经无法恢复了，需要走备份损坏（冲突模式）模式。
+              console.log(cloudResult.data)
+            } else if (cloudResult.data.action === 'disconnect') {
+              console.warn('保存至云端失败，但无需紧张')
+              disconnect(cloudResult.data.option)
+            } else {
+              console.warn('保存至云端失败，但是无需做任何反馈')
+            }
+
           }
         }
       } catch (e) {
         //todo 走备份空间流程
       }
-
-      // fs.writeFile(sessionRestore.savePath, JSON.stringify(data), function (err) {
-      //   if (err) {
-      //     console.warn(err)
-      //   }
-      // })
-
-      sessionRestore.previousState = stateString
+      sessionRestore.previousState = stateString //存储上一次的样本
     }
   },
   restore: async function () {
@@ -225,10 +238,11 @@ const sessionRestore = {
     let currentSpace = {}
     try {
       currentSpace = await spaceModel.getCurrent()
-      console.log(currentSpace)
       let space = {}
       if (currentSpace.spaceType === 'cloud') {
+        console.log(currentSpace)
         let spaceResult = await spaceModel.setUser(currentSpace.userInfo).getSpace(currentSpace.spaceId) //先尝试获取一次最新的空间
+        console.log(spaceResult)
         if (spaceResult.status === 1) {
           if (String(spaceResult.data.id) === '-1') {
             fatalStop({
@@ -303,10 +317,7 @@ const sessionRestore = {
         //设备上线 ↓
         try {
           let result = await spaceModel.setUser(space.userInfo).clientOnline(space.id, false)
-          console.log('设备上线前取得的userINfo', space.userInfo)
           if (result.status === 1) {
-            console.log(space)
-            console.log(result)
             if (result.data.toString() === '-1') {
               fatalStop({
                 spaceId: currentSpace.spaceId,

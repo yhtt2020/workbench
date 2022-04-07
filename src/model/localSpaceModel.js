@@ -7,7 +7,6 @@ const localSpaceModel={
   getSpace(id){
     ldb.reload()
     let space = ldb.db.get('spaces').find({ id: id }).value()
-    console.log('读入本地空间',space)
     if (space) {
       if(space.type==='cloud' && space.nanoid)
       {
@@ -136,7 +135,7 @@ const localSpaceModel={
       ldb.db.get('spaces').find({id:space.id}).assign(saveData).write()
     }else{
       if(!space.id){
-        space.id=nanoid()
+        throw Error('本地空间ID不存在')
       }
       let newSpace={
         id:space.id,
@@ -147,7 +146,7 @@ const localSpaceModel={
         create_time:Date.now(),
         update_time:Date.now(),
         sync_time:Date.now(),
-        type:space.type,
+        type:'local',
         uid:space.uid
       }
       ldb.db.get('spaces').push(newSpace).write()

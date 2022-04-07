@@ -61,8 +61,8 @@ const tpl = `
 </div>
 
 `
-
 const spaceModel = require('../../../src/model/spaceModel')
+const backupSpaceModel = require('../../../src/model/backupSpaceModel')
 const ipc=require('electron').ipcRenderer
 const disconnect = {
   template: tpl,
@@ -74,11 +74,13 @@ const disconnect = {
       space: null,
       title: '',
       fatal: true,//非致命意外
-      description: ''
+      description: '',
+      spaceId:0
     }
   },
   async mounted () {
     try {
+      this.spaceId=window.globalArgs['spaceId']
       let space = await spaceModel.getSpace(window.globalArgs['spaceId'])
       this.space = space
       this.user = space.userInfo
@@ -120,6 +122,7 @@ const disconnect = {
       //todo 关闭当前窗体
     },
     continueUse(){
+      backupSpaceModel.setOfflineUse(this.spaceId)
       ipc.send('closeUserWindow')
     }
   }

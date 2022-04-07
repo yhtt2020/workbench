@@ -20,11 +20,15 @@ const localAdapter={
     try {
       let space=ldb.db.get('spaces').find({id:spaceId}).value()
       if(!!!space){
-        let savedJson=fs.readFileSync(localAdapter.oldSavePath, 'utf-8')
-        if(savedJson){
-          savedStringData=savedJson
+        if(fs.existsSync(localAdapter.oldSavePath)){
+          let savedJson=fs.readFileSync(localAdapter.oldSavePath, 'utf-8')
+          if(savedJson){
+            savedStringData=savedJson
+          }
+          fs.renameSync(localAdapter.oldSavePath,localAdapter.oldSavePath+'.bak')
+        }else{
+          return false
         }
-        fs.renameSync(localAdapter.oldSavePath,localAdapter.oldSavePath+'.bak')
       }else{
         savedStringData=JSON.stringify(space.data)
       }

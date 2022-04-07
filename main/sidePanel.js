@@ -1083,6 +1083,7 @@ app.whenReady().then(()=>{
         ldb.db.set('currentSpace.spaceId',args.spaceId).write()
         ldb.db.set('currentSpace.spaceType',args.spaceType).write()
         ldb.db.set('currentSpace.userInfo',args.userInfo).write()
+        console.log(args)
         createWindow()
       })
       mainWindow.close()
