@@ -179,8 +179,6 @@ const globalSearch = new Vue({
       }
     },
     calculateHeight() {
-      // let viewHeight = document.getElementsByClassName('list-hook')[0].offsetHeight
-      // let scrollHeight = document.getElementsByClassName('list-hook')[0].scrollHeight
       let currentHeight = 0
       if(this.itemReadyedIndex > 5) {
         currentHeight = (this.itemReadyedIndex - 5) * 50
