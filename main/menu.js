@@ -222,7 +222,7 @@ function buildAppMenu (options = {}) {
         },
         {
           label: l('appMenuFind'),
-          accelerator: 'Shift+CmdOrCtrl+F',
+          accelerator: 'CmdOrCtrl+F',
           click: function (item, window) {
             sendIPCToWindow(window, 'findInPage')
           }
