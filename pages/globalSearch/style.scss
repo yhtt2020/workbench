@@ -6,7 +6,7 @@ html {
   margin: 0;
   box-sizing: border-box;
   font-family: '.SFNSText-Regular', 'Helvetica Neue', 'Arial', sans-serif;
-  background-color: #FFFFFF;
+  background-color: rgba(0, 0, 0, 0);
   -webkit-app-region: drag;   //使整个窗口可拖拽
   button {
     -webkit-app-region: no-drag;  //如果您使整个窗口都可拖拽，则必须将其中的按钮标记为不可拖拽，否则用户将无法点击它们

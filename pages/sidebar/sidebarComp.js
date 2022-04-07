@@ -398,7 +398,6 @@ const sidebarTpl = `
     </div>
     <message-center ref="messageRef" :visible="messageShow" :mod="mod" @closeMessage="() => this.messageShow = !this.messageShow" @updateVisible="(val) => this.messageShow = val">
     </message-center>
-    <global-search :currentTaskId="this.$store.state.selected" :visible="globalSearchShow" @closeGlobalSearch="() => this.globalSearchShow = !this.globalSearchShow"></global-search>
   </div>
 `
 
@@ -406,7 +405,6 @@ Vue.component('sidebar', {
 	data: function() {
 		return {
       messageShow: false,
-      globalSearchShow: false,
       resize:false,
       startY:0,
       apps:[],

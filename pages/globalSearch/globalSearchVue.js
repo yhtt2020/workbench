@@ -3,15 +3,9 @@ const store = require('./store.js')
 const globalSearch = new Vue({
   el: "#globalSearch",
   store: store,
-  // props: {
-  //   currentTaskId: {
-  //     type: String
-  //   }
-  // },
   watch: {
     searchWord: {
       handler: tools.debounce(async function (newValue, oldValue) {
-        console.log(newValue)
         this.searchResult = []
 
         if(newValue.length > 0) {
@@ -256,9 +250,6 @@ const globalSearch = new Vue({
       this.searchWord = e.target.value
       this.contentLoading = true
     },
-    clkmask() {
-      this.$emit("closeGlobalSearch");
-    },
     handleChange(tag, index) {
       this.tags.forEach(e => {
         e.checked = false
@@ -314,7 +305,7 @@ const globalSearch = new Vue({
           })
         })
       })
-      return mapTabs.filter(v => v.title.includes(word) || v.url.includes(word) )
+      return mapTabs.filter(v => v.title.includes(word) || tools.execDomain(v.url).includes(word) || tools.pinyinMatch(v.title, word))
     }
   },
   async mounted () {

@@ -1,3 +1,5 @@
+const { pinyin } = require('pinyin-pro');
+
 const tools = {
   getWindowArgs: (window) => {
     window.globalArgs = {};
@@ -142,8 +144,9 @@ const tools = {
    * @returns
    */
   execDomain(url) {
-    let urlReg = /[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?/
-    return urlReg.exec(url)[0]
+    let urlReg =
+      /[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?/;
+    return urlReg.exec(url)[0];
   },
 
   /**
@@ -155,16 +158,56 @@ const tools = {
   bubbleSort(arr, attr) {
     var len = arr.length;
     for (var i = 0; i < len - 1; i++) {
-        for (var j = 0; j < len - 1 - i; j++) {
-            if (arr[j][`${attr}`] > arr[j+1][`${attr}`]) {        // 相邻元素两两对比
-                var temp = arr[j+1];        // 元素交换
-                arr[j+1] = arr[j];
-                arr[j] = temp;
-            }
+      for (var j = 0; j < len - 1 - i; j++) {
+        if (arr[j][`${attr}`] > arr[j + 1][`${attr}`]) {
+          // 相邻元素两两对比
+          var temp = arr[j + 1]; // 元素交换
+          arr[j + 1] = arr[j];
+          arr[j] = temp;
         }
+      }
     }
     return arr;
-  }
+  },
+
+  /**
+   * 拼音模糊匹配
+   * 支持全拼和首字母拼音的匹配
+   * 1、单字拼音命中算成功（支持冗余多打的情况）
+   * 2、全部中字拼音全命中算成功
+   * 3、首拼按顺序命中2个及以上算成功
+   * @param {String} str 被匹配对象
+   * @param {String} word 匹配的拼音
+   * @returns Boolean值结果
+   */
+  pinyinMatch(str, word) {
+    //先用正则把需要匹配的中文抠出来
+    //然后匹配全拼和首字母拼
+    let result = false;
+    if (!str.match(/[\u4e00-\u9fa5]/g)) {
+      return result;
+    }
+    let chinese = str.match(/[\u4e00-\u9fa5]/g).join(""); //抠出的数组中字用join变字符串
+    const quanPin = pinyin(chinese, { toneType: "none", type: "array" }); // 获取数组形式不带声调的拼音
+    const firstPin = pinyin(chinese, {
+      pattern: "first",
+      toneType: "none",
+      type: "array",
+    }); // 获取数组形式不带音调拼音首字母
+    quanPin.forEach((v) => {
+      if (v === word) {
+        result = true;
+      } else if (quanPin.join("") === word) {
+        result = true;
+      } else if (word.includes(v) && word.length > 1) {
+        result = true;
+      }
+    });
+    if (word.length > 1 && firstPin.join("").includes(word)) {
+      result = true;
+    }
+    return result;
+  },
 };
 
 module.exports = { tools };
