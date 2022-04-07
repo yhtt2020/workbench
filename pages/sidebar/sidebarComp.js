@@ -374,7 +374,8 @@ const sidebarTpl = `
           <div>
             <a-collapse default-active-key="0" :active-key="sidebarBottom" :bordered="false" @change="changeBottomSize">
               <a-collapse-panel key="1">
-                <li @click="openBottom('help')">
+<!--                <li @click="openBottom('help')">-->
+                 <li @click="openHelp(apps)">
                   <a-button type="default" shape="circle" icon="question-circle"></a-button>
                   <div class="item-title">帮助中心</div>
                 </li>
@@ -590,6 +591,15 @@ Vue.component('sidebar', {
       this.userPanelVisible = false
       this.addTab(`${api.getUrl(api.API_URL.user.CIRCLE)}?id=${args}`)
     },
+    openHelp(apps){
+      let j
+      for (let i=0;i<apps.length;i++){
+        if(apps[i].id===7){
+          j=i
+        }
+      }
+      ipc.send('executeApp',{app:apps[j]})
+    },
     // openPost() {
     //   this.userPanelVisible = false
     //   this.addTab(api.getUrl(api.API_URL.user.CIRCLE))
@@ -621,6 +631,7 @@ Vue.component('sidebar', {
       //   ipc.send('executeApp',{app:app})
       // }
       // 判断单例的问题留给主进程处理
+      // console.log(app)
       ipc.send('executeApp',{app:app})
     },
 		toggleUserPanel(){
