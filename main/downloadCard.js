@@ -1,3 +1,4 @@
+
 let downloadWindow=null
 function getDownloadWindow(){
   if(downloadWindow===null){
@@ -5,17 +6,24 @@ function getDownloadWindow(){
   }
   return downloadWindow
 }
+
+
 function createDownloadWin () {
     downloadWindow = new BrowserWindow({
       frame: true,
       width: 390,
       height: 465,
-      resizable: false,
-      autoHideMenuBar:true,
-      show:false,
+      sandbox:false,
+      maxWidth:390,
+      maxHeight:465,
+      minWidth:390,
+      // disableDialogs:true,
+      // resizable: false,
+      autoHideMenuBar: true,
+      show: false,
       acceptFirstMouse: true,
       maximizable: false,
-      alwaysOnTop: true,
+      alwaysOnTop: false,//调整窗口层级
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
@@ -23,6 +31,7 @@ function createDownloadWin () {
     })
 
   downloadWindow.webContents.loadURL('file://' + __dirname + '/pages/download/index.html')
+
 
   downloadWindow.on('close',(event)=> {
     if (forceClose) {
@@ -32,6 +41,7 @@ function createDownloadWin () {
       event.preventDefault()
     }
   })
+
 
   setTimeout(()=>{
     if(mainWindow){
@@ -48,17 +58,37 @@ function createDownloadWin () {
 
 app.whenReady().then(() => {
 
-  ipc.on('openDownload', () => {
+  ipc.on('openDownload', (event,args) => {
     getDownloadWindow()
+    if(mainWindow!=null && !mainWindow.isDestroyed()){
+      let x = (mainWindow.getBounds().x + mainWindow.getBounds().width - downloadWindow.getBounds().width - 15)
+      downloadWindow.setPosition(x,mainWindow.getBounds().y+90)
+    }
     downloadWindow.show()
   })
 
 })
 
+ipc.on('deleteFile',function (e,deletepath){
+  const { shell } = require('electron')
+  shell.trashItem(deletepath).then(() =>{
+   return true
+  })
+})
+
+// ipc.on('originalPage',(args)=>{
+//   let originalPageUrl = args
+// })
+//
+// ipc.on('addOriginal',()=>{
+//   ipc.send('addTab',{url:originalPageUrl})
+// })
+
 ipc.on('willDownload',()=>{
   downloadWindow.show()
   downloadWindow.focus()
 })
+
 
 ipc.on('showMenuIng', (event,args) => {
   const template = [
@@ -77,7 +107,6 @@ ipc.on('showMenuIng', (event,args) => {
       click: () => { event.sender.send('menuIngDelete') }
     }
   ]
-
   const menu = Menu.buildFromTemplate(template)
   menu.popup(BrowserWindow.fromWebContents(event.sender))
 })
@@ -104,6 +133,30 @@ ipc.on('showMenuDone', (event) => {
 
     { label: '删除',
       click: () => { event.sender.send('menuDoneDelete')}
+    }
+  ]
+  const menu = Menu.buildFromTemplate(template)
+  menu.popup(BrowserWindow.fromWebContents(event.sender))
+
+})
+
+ipc.on('showMenuTrash', (event) => {
+  const template = [
+
+    { label: '重新下载',
+      click: () => { event.sender.send('menuTrashAgain')}
+    },
+    { label: '打开下载页',
+
+      click: () => { event.sender.send('menuTrashOpenPage')}
+    },
+    { label: '复制下载链接',
+
+      click: () => { event.sender.send('menuTrashUrl')}
+    },
+
+    { label: '删除记录',
+      click: () => { event.sender.send('menuTrashDelete')}
     }
   ]
   const menu = Menu.buildFromTemplate(template)

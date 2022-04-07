@@ -42,59 +42,112 @@ function sendIPCToDownloadWindow(action, data) {
     downloadWindow.webContents.send(action, data || {})
   }
 
+
 }
+
+let originalPageUrl
+ipc.on('originalPage',(event,args)=>{
+   originalPageUrl = args
+})
+// let emptyPageUrl
+// ipc.on('emptyPage',(event,args)=>{
+//    emptyPageUrl = args
+// })
+
+ipc.on('emptyPageUrl',(event,args)=>{
+  mainWindow.webContents.send('closeEmptyPage',args)
+})
+
 
 function downloadHandler (event, item, webContents) {
   var itemURL = item.getURL()
   var attachment = isAttachment(item.getContentDisposition())
+  let suffixName = item.getFilename().substring(item.getFilename().lastIndexOf('.')+1,item.getFilename().length)
+  savePathFilename =  path.basename(item.getSavePath())
+
 
   if (item.getMimeType() === 'application/pdf' && itemURL.indexOf('blob:') !== 0 && itemURL.indexOf('#pdfjs.action=download') === -1 && !attachment) { // clicking the download button in the viewer opens a blob url, so we don't want to open those in the viewer (since that would make it impossible to download a PDF)
     event.preventDefault()
-    sendIPCToDownloadWindow( 'openPDF', {
+    sendIPCToDownloadWindow('openPDF', {
       url: itemURL,
       tabId: getViewIDFromWebContents(webContents)
     })
   } else {
-    var savePathFilename
 
-    // send info to download manager
+    item.setSaveDialogOptions({
+      title: '选择保存地址',
+      filters: [
+        { name: suffixName, extensions: [suffixName] },
+        { name: '自定义', extensions: ['*'] }
+      ]
+    })
+    // event.preventDefault()
+
+    var savePathFilename
+    function conver(limit){
+      var size;
+      if(limit < 1024 * 1024 ){
+        size = (limit / 1024).toFixed(2) + "KB";
+      }else if(limit < 1024 * 1024 * 1024){
+        size = (limit / (1024 * 1024)).toFixed(2) + "MB";
+      }else{
+        size = (limit / (1024 * 1024 * 1024)).toFixed(2) + "GB";
+      }
+      var sizeStr = size + "";
+      var len = sizeStr.indexOf("\.");
+      var dec = sizeStr.substr(len + 1, 2);
+      if(dec === "00"){//当小数点后为00时 去掉小数部分
+        return sizeStr.substring(0,len) + sizeStr.substr(len + 3,2);
+      }
+      return sizeStr;
+    }
+
     sendIPCToDownloadWindow('download-info', {
       path: item.getSavePath(),
       name: item.getFilename(),
       status: 'start',
-      size: { received: 0, total: item.getTotalBytes() },
+      size: {received: 0, total: conver(item.getTotalBytes())},
       paused: item.isPaused(),
-      startTime:item.getStartTime(),
-      url:item.getURL(),
-      ChainUrl:item.getURLChain()
+      startTime: item.getStartTime(),
+      url: item.getURL(),
+      href:originalPageUrl,
+      chainUrl:item.getURLChain()
     })
 
 
     let prevReceivedBytes = 0
     item.on('updated', function (e, state) {
+
       const receivedBytes = item.getReceivedBytes()
       // 计算每秒下载的速度
       item.speed = receivedBytes - prevReceivedBytes
       prevReceivedBytes = receivedBytes
 
+      let updateName;
       if (!savePathFilename) {
-        savePathFilename = path.basename(item.getSavePath())
+        updateName = path.basename(item.getSavePath())
+        savePathFilename = updateName
       }
 
       if (item.getSavePath()) {
         currrentDownloadItems[item.getSavePath()] = item
       }
 
-      downloadWindow.setProgressBar(item.getReceivedBytes() / item.getTotalBytes())
+      if(downloadWindow!=null && !downloadWindow.isDestroyed()) {
+        downloadWindow.setProgressBar(item.getReceivedBytes() / item.getTotalBytes())
+      }
+
       sendIPCToDownloadWindow('download-info', {
         path: item.getSavePath(),
         name: savePathFilename,
         status: state,
-        size: { received: item.getReceivedBytes(), total: item.getTotalBytes() },
-        realdata:item.speed,
-        progressnuw:((prevReceivedBytes/item.getTotalBytes()).toFixed(2))*100,
+        size: {received: conver(item.getReceivedBytes()),total:conver(item.getTotalBytes()) },
+        // realdata1:item.speed,
+        realData: conver(item.speed),
+        progressnuw: ((prevReceivedBytes / item.getTotalBytes()).toFixed(2)) * 100,
         paused: item.isPaused(),
-        startTime:item.getStartTime()
+        startTime: item.getStartTime(),
+        chainUrl:item.getURLChain()
       })
 
     })
@@ -105,13 +158,15 @@ function downloadHandler (event, item, webContents) {
         downloadWindow.setProgressBar(-1);
       }
 
-      sendIPCToDownloadWindow( 'download-info', {
+      sendIPCToDownloadWindow('download-info', {
         path: item.getSavePath(),
-        startTime:item.getStartTime(),
+        startTime: item.getStartTime(),
         name: savePathFilename,
         status: state,
-        url:item.getURL(),
-          size: { received: item.getTotalBytes(), total: item.getTotalBytes() }
+        url: item.getURL(),
+        size: {received: conver(item.getTotalBytes()), total: conver(item.getTotalBytes()) },
+        href:originalPageUrl,
+        chainUrl:item.getURLChain()
       })
     })
   }
@@ -119,12 +174,16 @@ function downloadHandler (event, item, webContents) {
 
 }
 
+
+
 function listenForDownloadHeaders (ses) {
+
   ses.webRequest.onHeadersReceived(function (details, callback) {
     if (details.resourceType === 'mainFrame' && details.responseHeaders) {
       // workaround for https://github.com/electron/electron/issues/24334
       var typeHeader = details.responseHeaders[Object.keys(details.responseHeaders).filter(k => k.toLowerCase() === 'content-type')]
       var attachment = isAttachment(details.responseHeaders[Object.keys(details.responseHeaders).filter(k => k.toLowerCase() === 'content-disposition')])
+
 
       if (typeHeader instanceof Array && typeHeader.filter(t => t.includes('application/pdf')).length > 0 && details.url.indexOf('#pdfjs.action=download') === -1 && !attachment) {
       // open in PDF viewer instead
@@ -161,5 +220,6 @@ app.on('session-created', function (session) {
   session.on('will-download', downloadHandler)
   listenForDownloadHeaders(session)
 })
+
 
 
