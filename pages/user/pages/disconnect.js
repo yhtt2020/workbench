@@ -53,7 +53,7 @@ const tpl = `
         <a-menu-item @click="switchToOtherSpace" key="1">切换到其他空间</a-menu-item>
       </a-menu>
     </template>
-      <a-button @click="switchToBackup">继续离线使用 <DownOutlined /></a-button>
+      <a-button @click="continueUse">继续离线使用 <DownOutlined /></a-button>
   </a-dropdown>
       </a-col>
     </a-row>
@@ -63,6 +63,7 @@ const tpl = `
 `
 
 const spaceModel = require('../../../src/model/spaceModel')
+const ipc=require('electron').ipcRenderer
 const disconnect = {
   template: tpl,
   data () {
@@ -117,6 +118,9 @@ const disconnect = {
       //todo 写入一次空间内容
       //todo 切换到这个空间
       //todo 关闭当前窗体
+    },
+    continueUse(){
+      ipc.send('closeUserWindow')
     }
   }
 }

@@ -133,8 +133,6 @@ const localSpaceModel={
     if(foundSpace){
       saveData.update_time=Date.now()
       saveData.sync_time=Date.now()
-      saveData.name=space.name
-      saveData.type=space.type
       ldb.db.get('spaces').find({id:space.id}).assign(saveData).write()
     }else{
       if(!space.id){
