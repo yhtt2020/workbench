@@ -40,7 +40,7 @@ const tpl = `
   <div>
     <a-row justify="center">
       <a-col  :span="6" style="text-align: center">
-        <a-button type="primary"  @click="saveAndChange">尝试重新连接</a-button>
+        <a-button type="primary"  @click="reconnect">尝试重新连接</a-button>
       </a-col>
       <a-col  :span="6"  style="text-align: center">
 
@@ -103,11 +103,48 @@ const disconnect = {
     /**
      * 切换到云空间，保存
      */
-    saveAndChange () {
-      //todo 添加新一个空间到云端
-      //todo 写入一次空间内容
-      //todo 切换到这个空间
-      //todo 关闭当前窗体
+    async reconnect () {
+      try{
+        let result=await spaceModel.setUser(this.user).clientOnline(this.spaceId)
+        console.log(result)
+        if(result.status===1){
+          if(result.data==='-1'){
+            antd.Modal.confirm({
+              title: '云空间已被删除',
+              content: '云空间已被删除，无法再连接，为了不丢失您的离线空间，点击确定进入恢复备份操作。',
+              centered: true,
+              okText: '确定',
+              cancelText: '取消',
+              onOk: async () => {
+                //todo 切换到致命错误
+              }
+            })
+          }else if(result.data==='-2'){
+            antd.Modal.confirm({
+              title: '云空间已被其他设备占用',
+              content: '云空间已被其他设备占用，为了不丢失您的离线空间，点击确定进入恢复备份操作。',
+              centered: true,
+              okText: '确定',
+              cancelText: '取消',
+              onOk: async () => {
+                //todo 切换到致命错误
+              }
+            })
+          }else{
+            //连接成功
+            antd.Modal.success({
+              title: '重连成功，点击确定关闭窗口',
+              content: Vue.h('div', {}, [Vue.h('p', '重连成功')]),
+              onOk:async ()=>{
+                ipc.send('closeUserWindow')
+              }
+            });
+          }
+        }
+      }catch (e) {
+        window.antd.message.error('重连失败，请稍后再试。')
+      }
+
     },
     /**
      * 不保存直接
