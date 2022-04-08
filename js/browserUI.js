@@ -151,10 +151,12 @@ function closeTab (tabId,taskId) {
   } else {
     tasks.get(taskId).tabs.destroy(tabId)
     tabBar.removeTab(tabId)
-    webviews.destroy(tabId) // remove the webview
-    // console.log(tasks.get(taskId).tabs.tabs.length)
-  }
+    webviews.destroy(tabId)
 
+  }
+  if(tasks.get(taskId).tabs.tabs.length===0){
+    tasks.get(taskId).tabs.add()
+  }
 }
 
 /* changes the currently-selected task and updates the UI */
