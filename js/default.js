@@ -91,11 +91,15 @@ window.throttle = function(fn, threshhold, scope) {
 }
 
 ipc.on('getGlobal',function(event,args){
-	ipc.send('receiveGlobal',{
-		tasks:tasks.getStringifyableState(),
-		tabs:tabs.getStringifyableState(),
-    callbackWin:args.callbackWin
-		})
+  try{
+    ipc.send('receiveGlobal',{
+      tasks:tasks.getStringifyableState(),
+      tabs:tabs.getStringifyableState(),
+      callbackWin:args.callbackWin
+    })
+  }catch (e) {
+
+  }
 })
 // https://remysharp.com/2010/07/21/throttling-function-calls
 
