@@ -14,7 +14,6 @@ const backupSpaceModel={
   setOfflineUse(spaceId){
     ldb.reload()
     ldb.db.get('spaces').find({id:spaceId}).assign({'offlineUse':true}).write()
-    console.log('设置离线使用',spaceId)
   },
   /**
    * 设置空间未离线使用
@@ -23,7 +22,6 @@ const backupSpaceModel={
   cancelOfflineUse(spaceId){
     ldb.reload()
     ldb.db.get('spaces').find({id:spaceId}).assign({'offlineUse':false}).write()
-    console.log('设置离线使用',spaceId)
   },
   /**
    * 获得某个空间是否是离线可用

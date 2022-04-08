@@ -11,7 +11,6 @@ const userModel={
     users.forEach(item=>{
       let userLdb=ldb.db.get('users').find({uid:item.uid}).value()
       Object.assign(item,userLdb)
-      console.log(item)
     })
 
     return users

@@ -378,8 +378,6 @@ const SpaceSelect = {
                 space.isUsing = true
               }
             }
-
-
           })
         } else {
           window.antd.message.error('获取用户空间失败。失败原因：' + result.info)
@@ -387,7 +385,12 @@ const SpaceSelect = {
           return
         }
       } catch (e) {
-        window.antd.message.error('获取用户空间失败，未知异常。')
+        if(e.toString().indexOf('ECONNREFUSED')){
+          window.antd.message.error('无法连接到服务器，服务器异常，请稍后再试。')
+        }else{
+          window.antd.message.error('获取用户空间失败，可尝试在账号上右键，选择【解绑账户】，解绑后再重新登录。')
+        }
+
         this.$router.go(-1)
         return
       }
