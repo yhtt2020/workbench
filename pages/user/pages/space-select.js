@@ -21,14 +21,54 @@ const tpl = `
   <div style="text-align: center">
     <!--      <a-empty text="无空间" v-if="spaces.length===0"></a-empty>-->
     <div style="text-align: left;overflow-y: auto;max-height: 310px;margin-right: 20px;padding-top: 10px;padding-left: 40px;padding-bottom: 10px" class="scroller">
+    <a-tooltip v-for="space,index in spaces" placement="bottom">
+    <template #title>保存时间：{{dateTime(space.sync_time)}}<br>修改时间：{{dateTime(space.update_time)}}<br>创建时间：{{dateTime(space.create_time)}}<br>
+     <span v-if="space.client_id !==''">设备ID：{{space.client_id}}</span>
+     </template>
+        <a-card  v-if="space.type==='cloud'"
+         :class="{'other-using':space.isOtherUsing,'self-using':space.isSelfUsing}"
+          style="margin-left:20px;width: 250px;display: inline-block;margin-bottom: 10px;background-color: rgba(241,241,241,0.29)">
+          <a-card-meta  >
+          <template #title>
+          <span v-if="space.type==='cloud'">【备份】</span> {{space.name}}
+
+</template>
+            <template #description>
+              <span class="using-bandage" v-if="space.isOtherUsing">
+              <span v-if="space.disconnect">
+              其他设备离线使用中
+</span><span v-else>
+其他设备使用中
+</span>
+</span>
+              <span class="using-bandage" v-if="space.isSelfUsing">
+              <span v-if="space.disconnect">
+         当前设备离线使用中
+</span><span v-else>
+当前使用中
+</span>
+</span>
+
+              {{space.count_task+ ' 标签组  '+ space.count_tab+' 标签'}}
+            </template>
+            <template #avatar>
+              <svg :class="{'offline':this.user.uid===0?true:false}" t="1648106444295" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="32437" width="32" height="32"><path d="M512 938.666667C276.352 938.666667 85.333333 747.648 85.333333 512S276.352 85.333333 512 85.333333s426.666667 191.018667 426.666667 426.666667-191.018667 426.666667-426.666667 426.666667z m205.653333-210.090667A298.666667 298.666667 0 0 0 385.365333 241.408l41.6 74.88A213.333333 213.333333 0 0 1 725.333333 512h-91.733333a21.333333 21.333333 0 0 0-18.645333 31.701333l102.698666 184.874667z m-120.618666-20.864A213.333333 213.333333 0 0 1 298.666667 512h91.733333a21.333333 21.333333 0 0 0 18.645333-31.701333L306.346667 295.424a298.666667 298.666667 0 0 0 332.288 487.168l-41.6-74.88z" fill="#14D081" p-id="32438"></path></svg>
+            </template>
+          </a-card-meta>
+        </a-card>
+            </a-tooltip>
+
+
+
+
       <a-dropdown v-for="space,index in spaces" :trigger="['contextmenu']">
          <a-tooltip placement="bottom">
     <template #title>保存时间：{{dateTime(space.sync_time)}}<br>修改时间：{{dateTime(space.update_time)}}<br>创建时间：{{dateTime(space.create_time)}}<br>
      <span v-if="space.client_id !==''">设备ID：{{space.client_id}}</span>
      </template>
-        <a-card @click="switchSpace(space)" :style="{'margin-right':index%2===1?'0':'10px'}"
+        <a-card  v-if="space.type==='local'" @click="switchSpace(space)"
          :class="{'other-using':space.isOtherUsing,'self-using':space.isSelfUsing}"
-         hoverable style="margin-left:20px;width: 250px;display: inline-block;margin-bottom: 10px;">
+         hoverable style="margin-left:20px;width: 250px;display: inline-block;margin-bottom: 10px">
           <a-card-meta  >
           <template #title>
           <span v-if="space.type==='cloud'">【备份】</span> {{space.name}}
