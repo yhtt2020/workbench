@@ -854,6 +854,7 @@ Vue.component('sidebar', {
       ipc.sendTo(mainWindowId,'toggleLockTab',{id:id,taskId:taskId})
     },
     closeTab(id,taskId){
+      event.stopPropagation()
       ipc.sendTo(mainWindowId,'closeTab',{id:id,taskId:taskId})
     },
 

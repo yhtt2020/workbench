@@ -119,23 +119,28 @@ function closeTask (taskId) {
 
 /* destroys a tab, and either switches to the next tab or creates a new one */
 
-function closeTab (tabId) {
+function closeTab (tabId,taskId) {
   /* disabled in focus mode */
   if (focusMode.enabled()) {
     focusMode.warn()
     return
   }
 
-  if(!!tabs.get(tabId).lock){
-    ipc.send('message',{type:'info',config:{content:'该标签为锁定标签，无法直接关闭，请解锁后再关闭。',key:'lockTip'}})
-    return
+  for( let i=0;i<tasks.tasks.length;i++){
+    for (let j=0;j<tasks.tasks[i].tabs.tabs.length;j++){
+      if(tasks.tasks[i].tabs.tabs[j].id===tabId){
+        if(tasks.tasks[i].tabs.tabs[j].lock){
+          ipc.send('message',{type:'info',config:{content:'该标签为锁定标签，无法直接关闭，请解锁后再关闭。',key:'lockTip'}})
+          return
+        }
+      }
+    }
   }
 
   if (tabId === tabs.getSelected()) {
     var currentIndex = tabs.getIndex(tabs.getSelected())
     var nextTab =
     tabs.getAtIndex(currentIndex - 1) || tabs.getAtIndex(currentIndex + 1)
-
     destroyTab(tabId)
 
     if (nextTab) {
@@ -144,8 +149,12 @@ function closeTab (tabId) {
       addTab()
     }
   } else {
-    destroyTab(tabId)
+    tasks.get(taskId).tabs.destroy(tabId)
+    tabBar.removeTab(tabId)
+    webviews.destroy(tabId) // remove the webview
+    // console.log(tasks.get(taskId).tabs.tabs.length)
   }
+
 }
 
 /* changes the currently-selected task and updates the UI */
