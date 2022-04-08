@@ -8,9 +8,7 @@ const tpl = `
 <!--      系统检测到当前空间已被<strong>其他设备占用</strong>。无法再保存当前空间。-->
 {{description}}
       <br>
-      您可以尝试重新连接，或者：<br>
-离线使用：您可以使用离线模式继续使用空间，系统在后台自动尝试重连，成功后会恢复同步。<br>
-切换到其他空间：下次切换到此空间时，系统会尝试将本地备份上传至云端。
+      请尝试重新连接或者离线使用。
 </span>
   </p>
   <div  v-if="user || space" style="width: 400px;margin: auto;margin-bottom: 40px;background-color: rgba(241,241,241,0.48);padding: 10px;border-radius: 10px;">
@@ -53,7 +51,7 @@ const tpl = `
         <a-menu-item @click="switchToOtherSpace" key="1">切换到其他空间</a-menu-item>
       </a-menu>
     </template>
-      <a-button @click="continueUse">继续离线使用 <DownOutlined /></a-button>
+      <a-button @click="continueUse">离线使用</a-button>
   </a-dropdown>
       </a-col>
     </a-row>
@@ -150,7 +148,18 @@ const disconnect = {
      * 不保存直接
      */
     switchToOtherSpace () {
-      this.$router.replace('/')
+      antd.Modal.confirm({
+        title: '确认切换到其他空间？',
+        content: '不再使用此空间，更换到其他空间。',
+        centered: true,
+        okText: '确定',
+        cancelText: '取消',
+        onOk: async () => {
+          backupSpaceModel.setOfflineUse(this.spaceId)
+          this.$router.replace('/')
+        }
+      })
+
     },
     switchToBackup () {
       //todo 添加新一个空间到本地
@@ -159,8 +168,17 @@ const disconnect = {
       //todo 关闭当前窗体
     },
     continueUse(){
-      backupSpaceModel.setOfflineUse(this.spaceId)
-      ipc.send('closeUserWindow')
+      antd.Modal.confirm({
+        title: '离线使用空间？',
+        content: '此模式下依然可使用空间。系统会在后台尝试重连，一旦成功连接会自动转入线上空间并将离线改动同步上去。可放心使用。',
+        centered: true,
+        okText: '确定',
+        cancelText: '取消',
+        onOk: async () => {
+          backupSpaceModel.setOfflineUse(this.spaceId)
+          ipc.send('closeUserWindow')
+        }
+      })
     }
   }
 }

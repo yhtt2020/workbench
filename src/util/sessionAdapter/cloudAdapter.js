@@ -1,6 +1,7 @@
 const cloudSpaceModel = require('../../../src/model/cloudSpaceModel')
 const backupSpaceModel = require('../../../src/model/backupSpaceModel')
 const standReturn = require('../../../src/util/standReturn')
+const ipc = require('electron').ipcRenderer
 if(window){
   ldb=window.ldb
 }
@@ -10,6 +11,7 @@ function fatal(option){
 
 function disconnect(option){
   option.space=backupSpaceModel.getSpace(option.spaceId)
+  ipc.send('disconnect')
   return standReturn.failure({action:'disconnect',option:option})
 }
 
@@ -80,7 +82,7 @@ const cloudAdapter={
       }catch (e) {
         console.warn('存储到云端失败，接口请求失败。')
         console.log(e)
-        return disconnect({modal:true,title:'无法连接',description:'无法连接云端。',disconnect:true,spaceId:spaceId})
+        return disconnect({modal:true,title:'无法连接到服务器',description:'暂时无法连接到服务器。',disconnect:true,spaceId:spaceId})
       }
     }catch (e) {
       console.log(e)

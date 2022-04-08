@@ -1302,3 +1302,12 @@ ipc.on('saving',()=>{
     savingIcon.classList.remove('saving')
   },2000)
 })
+
+ipc.on('disconnect',()=>{
+  let savingIcon=document.getElementById('savingIcon')
+  if(savingIcon.classList.contains('online')){
+    appVue.$message.success('云空间失去连接，转入离线模式。')
+    savingIcon.classList.remove('online')
+    savingIcon.classList.add('offline')
+  }
+})
