@@ -39,6 +39,7 @@ const baseApi = {
       data = { data: params };
     //todo cache请求缓存后期做一下，防止在1000毫秒内重复请求设置
     return axios({
+      timeout:5000,//设置默认3秒钟超时
       method: method,
       url: url,
       headers: { Authorization: baseApi.token },
