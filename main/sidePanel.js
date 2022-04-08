@@ -1098,7 +1098,7 @@ app.whenReady().then(()=>{
     SidePanel.send('saving')
   })
 
-  ipc.on('login',()=>{
+  ipc.on('login',(event,args)=>{
     if(loginWindow){
       loginWindow.show()
       loginWindow.focus()
@@ -1118,6 +1118,7 @@ app.whenReady().then(()=>{
             '--app-version=' + app.getVersion(),
             '--app-name=' + app.getName(),
             ...((isDevelopmentMode ? ['--development-mode'] : [])),
+            '--callWindow='+event.sender.id
           ]
         }
       })

@@ -2,6 +2,8 @@
 const {api,config} =require('../../server-config')
 const ipc=require('electron').ipcRenderer
 let href = window.location.href
+const tools=require('../util/util').tools
+tools.getWindowArgs(window)
 const server = {
   //osx端说pc登录是否已掉的前置判断
   beforeInit() {
@@ -40,10 +42,16 @@ const server = {
 	login() {
     if(window.location.href.includes('code=')) {
       const code = server.matchIntercept(window.location.href, 'code', '\\&')
-      ipc.send('loginBrowser', code)
       ipc.on('callback-loginBrowser', (event, arg) => {
         if(arg.code === 1000 ) {
           ipc.send('userLogin', arg.data)
+          try{
+            if(window.globalArgs['callWindow']){
+              ipc.sendTo(Number(window.globalArgs['callWindow']),'loginCallback',{data:arg.data})
+            }
+          }catch (e) {
+
+          }
           setTimeout(() => {
             window.close()
             //window.location.href = api.getUrl(api.API_URL.group.index)
@@ -53,6 +61,8 @@ const server = {
           window.location.href = api.getUrl(api.API_URL.user.login)
         }
       })
+      ipc.send('loginBrowser', code)
+
     }
 	},
   /**

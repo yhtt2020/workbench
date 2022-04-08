@@ -15,6 +15,9 @@
   <div @click="closeWindow" style="position: fixed;left: 0;right: 0;bottom: 0;top: 0" :style="{'background-color':'rgba(0,0,0,0.38)'}"><!--this.modal?'#00000000':-->
     <div @click.stop="()=>{}"
          style="position: fixed;left: 50%;top: 50%;margin-left: -325px;margin-top: -240px;width: 650px;height: 480px;background: white;border-radius: 8px;">
+      <div v-if="!modal" @click="closeWindow" style="position:absolute;cursor: pointer;z-index:999;right: -10px;top: -10px">
+        <svg style="width: 30px;height:30px;background-color: white;border-radius: 100%;padding: 0" t="1649408599467" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="14092" width="32" height="32"><path d="M512.001 15.678C237.414 15.678 14.82 238.273 14.82 512.86S237.414 1010.04 512 1010.04s497.18-222.593 497.18-497.18S786.589 15.678 512.002 15.678z m213.211 645.937c17.798 17.803 17.798 46.657 0 64.456-17.798 17.797-46.658 17.797-64.456 0L512.001 577.315 363.241 726.07c-17.799 17.797-46.652 17.797-64.45 0-17.804-17.799-17.804-46.653 0-64.456L447.545 512.86 298.79 364.104c-17.803-17.798-17.803-46.657 0-64.455 17.799-17.798 46.652-17.798 64.45 0l148.761 148.755 148.755-148.755c17.798-17.798 46.658-17.798 64.456 0 17.798 17.798 17.798 46.657 0 64.455L576.456 512.86l148.756 148.755z m0 0" fill="#707070" p-id="14093"></path></svg>
+      </div>
       <svg v-if="['/','/fatal','/disconnect'].indexOf($route.path)===-1" @click="$router.go(-1)" style="position:absolute;margin: 10px;cursor: pointer;z-index:999" t="1648037736735"
            class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="18922" width="32"
            height="32">
@@ -81,10 +84,15 @@
       name:'disconnect',path:'/disconnect',component:require('./pages/disconnect')
     }
   ]
+
   const router = VueRouter.createRouter({
     history: VueRouter.createWebHashHistory(),
     routes
   })
   app.use(router).mount('#appVue')
+  ipc.on('loginCallback',(e,args)=>{
+    window.antd.message.success('成功添加账号。')
+    router.replace('/')
+  })
 </script>
 </html>
