@@ -124,49 +124,55 @@ const standAloneAppModel = {
       }
     }
 
+    function matchChinese(str) {
+      return str.match(/[\u4e00-\u9fa5]/g)
+    }
+
     result.forEach(item => {
-      let quanPinName = pinyin(item.name.match(/[\u4e00-\u9fa5]/g).join(''), { toneType: 'none', type: 'array' })   // 获取数组形式不带声调的拼音
-      let firstPinName = pinyin(item.name.match(/[\u4e00-\u9fa5]/g).join(''), { pattern: 'first', toneType: 'none', type: 'array' })   // 获取数组形式不带音调拼音首字母
-      let quanPinSummary = pinyin(item.summary.match(/[\u4e00-\u9fa5]/g).join(''), { toneType: 'none', type: 'array' })   // 获取数组形式不带声调的拼音
-      let firstPinSummary = pinyin(item.summary.match(/[\u4e00-\u9fa5]/g).join(''), { pattern: 'first', toneType: 'none', type: 'array' })
+      if(matchChinese(item.name) && matchChinese(item.summary)) {
+        let quanPinName = pinyin(matchChinese(item.name).join(''), { toneType: 'none', type: 'array' })   // 获取数组形式不带声调的拼音
+        let firstPinName = pinyin(matchChinese(item.name).join(''), { pattern: 'first', toneType: 'none', type: 'array' })   // 获取数组形式不带音调拼音首字母
+        let quanPinSummary = pinyin(matchChinese(item.summary).join(''), { toneType: 'none', type: 'array' })   // 获取数组形式不带声调的拼音
+        let firstPinSummary = pinyin(matchChinese(item.summary).join(''), { pattern: 'first', toneType: 'none', type: 'array' })
 
-      if(item.name.includes(word) || item.summary.includes(word) && !checkMatched(item)) {
-        dealItem(item)
-        searchResult.push(item)
-      }
-
-      quanPinName.forEach(v => {
-        if(v === word && !checkMatched(item)) {
-          dealItem(item)
-          searchResult.push(item)
-        } else if (quanPinName.join('') === word && !checkMatched(item)) {
-          dealItem(item)
-          searchResult.push(item)
-        } else if (word.includes(v) && word.length > 1 && !checkMatched(item)) {
+        if(item.name.includes(word) || item.summary.includes(word) && !checkMatched(item)) {
           dealItem(item)
           searchResult.push(item)
         }
-      })
-      if(word.length > 1 && firstPinName.join('').includes(word) && !checkMatched(item)) {
-        dealItem(item)
-        searchResult.push(item)
-      }
 
-      quanPinSummary.forEach(v => {
-        if(v === word && !checkMatched(item)) {
-          dealItem(item)
-          searchResult.push(item)
-        } else if (quanPinSummary.join('') === word && !checkMatched(item)) {
-          dealItem(item)
-          searchResult.push(item)
-        } else if (word.includes(v) && word.length > 1 && !checkMatched(item)) {
+        quanPinName.forEach(v => {
+          if(v === word && !checkMatched(item)) {
+            dealItem(item)
+            searchResult.push(item)
+          } else if (quanPinName.join('') === word && !checkMatched(item)) {
+            dealItem(item)
+            searchResult.push(item)
+          } else if (word.includes(v) && word.length > 1 && !checkMatched(item)) {
+            dealItem(item)
+            searchResult.push(item)
+          }
+        })
+        if(word.length > 1 && firstPinName.join('').includes(word) && !checkMatched(item)) {
           dealItem(item)
           searchResult.push(item)
         }
-      })
-      if(word.length > 1 && firstPinSummary.join('').includes(word) && !checkMatched(item)) {
-        dealItem(item)
-        searchResult.push(item)
+
+        quanPinSummary.forEach(v => {
+          if(v === word && !checkMatched(item)) {
+            dealItem(item)
+            searchResult.push(item)
+          } else if (quanPinSummary.join('') === word && !checkMatched(item)) {
+            dealItem(item)
+            searchResult.push(item)
+          } else if (word.includes(v) && word.length > 1 && !checkMatched(item)) {
+            dealItem(item)
+            searchResult.push(item)
+          }
+        })
+        if(word.length > 1 && firstPinSummary.join('').includes(word) && !checkMatched(item)) {
+          dealItem(item)
+          searchResult.push(item)
+        }
       }
     })
     return searchResult
