@@ -3,7 +3,12 @@ let globalSearch = null
 const globalSearchMod = {
   init: function() {
     if(globalSearch !== null) {
-      globalSearch.close()
+      if(globalSearch.isFocused()) {
+        globalSearch.hide()
+      } else {
+        globalSearch.show()
+        globalSearch.focus()
+      }
       return
     }
     globalSearch = new BrowserWindow({
@@ -39,9 +44,9 @@ const globalSearchMod = {
       globalSearch.webContents.send('viewLoaded')
     })
 
-    // globalSearch.on('blur', () => {
-    //   globalSearch.close()
-    // })
+    globalSearch.on('blur', () => {
+      globalSearch.hide()
+    })
   }
 }
 
@@ -68,7 +73,7 @@ app.whenReady().then(() => {
   })
 
   ipc.on('closeGlobalSearch', () => {
-    globalSearch.close()
+    globalSearch.hide()
   })
 
 })
