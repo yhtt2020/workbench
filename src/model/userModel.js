@@ -19,6 +19,9 @@ const userModel={
     if(map.id){
       map.id=Number(map.id)
     }
+    if(map.uid){
+      map.uid=Number(map.uid)
+    }
     let user=await db.accounts.where(map).first()
     if(user){
      ldb.reload()

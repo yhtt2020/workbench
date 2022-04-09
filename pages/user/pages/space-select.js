@@ -66,7 +66,7 @@ const tpl = `
     <template #title>保存时间：{{dateTime(space.sync_time)}}<br>修改时间：{{dateTime(space.update_time)}}<br>创建时间：{{dateTime(space.create_time)}}<br>
      <span v-if="space.client_id !==''">设备ID：{{space.client_id}}</span>
      </template>
-        <a-card  v-if="space.type==='local'" @click="switchSpace(space)"
+        <a-card  v-if="space.type!=='cloud'" @click="switchSpace(space)"
          :class="{'other-using':space.isOtherUsing,'self-using':space.isSelfUsing}"
          hoverable style="margin-left:20px;width: 250px;display: inline-block;margin-bottom: 10px">
           <a-card-meta  >
@@ -248,10 +248,11 @@ const SpaceSelect = {
       this.user = user
     } else {
       //网络用户
-      user = await userModel.get({ id: this.$route.params.uid })
+      user = await userModel.get({ uid: this.$route.params.uid })
       if (user) {
         this.user = user
       } else {
+        console.warn(user)
         window.antd.message.error('获取用户信息失败，登录信息过期或用户账号异常。请尝试解绑用户后重新登陆账号。')
         this.$router.go(-1)
         return //如果异常，退回上一页，防止后续出错
@@ -425,7 +426,8 @@ const SpaceSelect = {
           return
         }
       } catch (e) {
-        if(e.toString().indexOf('ECONNREFUSED')){
+        if(e.toString().indexOf('ECONNREFUSED')>-1){
+          console.warn(e)
           window.antd.message.error('无法连接到服务器，服务器异常，请稍后再试。')
         }else{
           window.antd.message.error('获取用户空间失败，可尝试在账号上右键，选择【解绑账户】，解绑后再重新登录。')

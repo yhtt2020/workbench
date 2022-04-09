@@ -37,7 +37,7 @@ const spaceModel = {
   /**
    * 获取当前空间
    */
-  async getCurrent () {
+  async getCurrent (needDetail=false) {
     ldb.reload()
     let currentSpace = ldb.db.get('currentSpace').value()
     if (!currentSpace) { //如果是首次读入，不存在currentSpace就插入一个默认的值
@@ -80,20 +80,20 @@ const spaceModel = {
       }
     } else {
       space = await spaceModel.setAdapter('local').getSpace(currentSpace.spaceId)
-    }
-    if (!!!space) {
-      space = {
-        name: '本机空间',
-        id: nanoid()
+      if (!!!space) {
+        space = {
+          name: '本机空间',
+          id: nanoid()
+        }
+        console.error('意外未能获得当前空间')
       }
-      console.error('意外未能获得当前空间')
+      currentSpace.space = space
+      currentSpace.spaceId = space.id
+      currentSpace.name = space.name
+      ldb.db.set('currentSpace.space', space).write()
+      ldb.db.set('currentSpace.name', space.name).write()
+      ldb.db.set('currentSpace.spaceId', space.id).write()
     }
-    currentSpace.space = space
-    currentSpace.spaceId = space.id
-    currentSpace.name = space.name
-    ldb.db.set('currentSpace.space', space).write()
-    ldb.db.set('currentSpace.name', space.name).write()
-    ldb.db.set('currentSpace.spaceId', space.id).write()
     return currentSpace
   },
   async getSpace (id) {
