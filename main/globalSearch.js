@@ -12,7 +12,7 @@ const globalSearchMod = {
       return
     }
     globalSearch = new BrowserWindow({
-      alwaysOnTop: false,
+      alwaysOnTop: true,
       minimizable: false,
       parent: null,
       width: 600,
