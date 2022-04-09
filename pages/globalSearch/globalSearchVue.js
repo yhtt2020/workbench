@@ -28,6 +28,7 @@ const globalSearch = new Vue({
         if(newValue === true) {
           this.$nextTick(() => {
             document.getElementById("myTextField").focus();
+            //document.getElementById("myTextField").event.currentTarget.select()
           })
         }
       }
@@ -309,6 +310,10 @@ const globalSearch = new Vue({
   async mounted () {
     await this.getAllApps()
     this.bindKeys()
+    document.addEventListener('contextmenu',function(e){
+      // 右键事件触发
+      e.preventDefault();
+    })
   },
 });
 
