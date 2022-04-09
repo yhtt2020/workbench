@@ -22,7 +22,7 @@
   </script>
   <div id="globalSearch" class="gs-wrap">
     <div class="gs-dialog" :class="{'first-gs-dialog': openFirst}">
-      <div class="search flex justify-between align-center">
+      <div class="search flex justify-start align-center">
         <a-icon class="search-lf" type="search" :style="{ fontSize: '26px' }"></a-icon>
         <input id="myTextField" tabindex=-1 type="text" class="search-rg" :value="searchWord" @input="handleInput($event)" style="font-size: 20px" />
       </div>
