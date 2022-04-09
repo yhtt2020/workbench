@@ -119,7 +119,7 @@ function closeTask (taskId) {
 
 /* destroys a tab, and either switches to the next tab or creates a new one */
 
-function closeTab (tabId,taskId) {
+function closeTab (tabId) {
   /* disabled in focus mode */
   if (focusMode.enabled()) {
     focusMode.warn()
@@ -133,31 +133,54 @@ function closeTab (tabId,taskId) {
           ipc.send('message',{type:'info',config:{content:'该标签为锁定标签，无法直接关闭，请解锁后再关闭。',key:'lockTip'}})
           return
         }
+        if (tabId === tabs.getSelected()) {
+          var currentIndex = tabs.getIndex(tabs.getSelected())
+          var nextTab =
+            tabs.getAtIndex(currentIndex - 1) || tabs.getAtIndex(currentIndex + 1)
+          destroyTab(tabId)
+
+          if (nextTab) {
+            switchToTab(nextTab.id)
+          } else {
+            addTab()
+          }
+        } else {
+          tasks.tasks[i].tabs.destroy(tabId)
+          tabBar.removeTab(tabId)
+          webviews.destroy(tabId)
+
+        }
+        if( tasks.tasks[i].tabs.tabs.length===0){
+          tasks.tasks[i].tabs.add()
+        }
+      }
+
       }
     }
   }
 
-  if (tabId === tabs.getSelected()) {
-    var currentIndex = tabs.getIndex(tabs.getSelected())
-    var nextTab =
-    tabs.getAtIndex(currentIndex - 1) || tabs.getAtIndex(currentIndex + 1)
-    destroyTab(tabId)
-
-    if (nextTab) {
-      switchToTab(nextTab.id)
-    } else {
-      addTab()
-    }
-  } else {
-    tasks.get(taskId).tabs.destroy(tabId)
-    tabBar.removeTab(tabId)
-    webviews.destroy(tabId)
-
-  }
-  if(tasks.get(taskId).tabs.tabs.length===0){
-    tasks.get(taskId).tabs.add()
-  }
-}
+//   if (tabId === tabs.getSelected()) {
+//     var currentIndex = tabs.getIndex(tabs.getSelected())
+//     var nextTab =
+//     tabs.getAtIndex(currentIndex - 1) || tabs.getAtIndex(currentIndex + 1)
+//     destroyTab(tabId)
+//
+//     if (nextTab) {
+//       switchToTab(nextTab.id)
+//     } else {
+//       addTab()
+//     }
+//   } else {
+//
+//     // tasks.get(taskId).tabs.destroy(tabId)
+//     // tabBar.removeTab(tabId)
+//     // webviews.destroy(tabId)
+//
+//   }
+//   // if(tasks.get(taskId).tabs.tabs.length===0){
+//   //   tasks.get(taskId).tabs.add()
+//   // }
+// }
 
 /* changes the currently-selected task and updates the UI */
 

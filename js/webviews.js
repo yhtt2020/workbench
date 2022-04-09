@@ -643,16 +643,16 @@ ipc.on('closeEmptyPage',(event,args)=>{
   for(let i=0;i<tabs.tabs.length;i++){
     for(let j=0;j<args.length;j++){
       if(tabs.tabs[i].url===args[j]){
-        // console.log(tabs.tabs[i].id)
+        console.log(tabs.tabs[i].id)
         if(args.length!==1){
-          require('browserUI.js').closeTab(tabs.tabs[i].id)//找id
+          // require('browserUI.js').closeTab(tabs.tabs[i].id)//找id
         }
       }
     }
   }
 })
 ipc.on('closeTab',(event,args)=>{
-    require('browserUI.js').closeTab(args.id,args.taskId)
+    require('browserUI.js').closeTab(args.id)
 })
 
 
