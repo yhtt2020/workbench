@@ -59,7 +59,7 @@
           <ul>
             <template v-for="(tab, index) in compRecentOpenedTabs">
               <li :key="index" class="flex justify-start align-center" @click="clikRecentTab(tab)">
-                <img :src="tab.icon" style="width: 30px; height: 30px;">
+                <img onerror="this.src='../../icons/default.svg'" :src="tab.icon" style="width: 30px; height: 30px;">
                 <div class="flex flex-direction justify-around align-start" style="padding-left: 20px; height: 100%">
                   <div class="text-black-lg sg-omit-sm">{{tab.title}}</div>
                   <div class="text-grey-sm sg-omit-sm">{{tab.attached}}</div>
@@ -80,7 +80,7 @@
         <ul v-else>
           <template v-for="(item, index) in compSearchResult">
             <li class="flex justify-start align-center" :class="{'li-ready': itemReadyedIndex === index}" :key="index" @click="clkli(item)">
-              <img :src="item.icon" style="width: 30px; height: 30px;">
+              <img onerror="this.src='../../icons/default.svg'" :src="item.icon" style="width: 30px; height: 30px;">
               <div class="flex flex-direction justify-around align-start" style="padding-left: 20px; height: 100%">
                 <div class="text-black-lg sg-omit-sm">{{item.title}}</div>
                 <div class="text-grey-sm sg-omit-sm">{{item.attached}}</div>
