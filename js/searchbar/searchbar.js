@@ -45,6 +45,8 @@ var searchbar = {
       realText = text
     }
 
+    console.log(realText, searchbar.associatedInput, event, '!!!!!!!!!!!!!!!!!')
+
     searchbarPlugins.run(realText, searchbar.associatedInput, event)
   },
   openURL: function (url, event) {

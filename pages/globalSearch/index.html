@@ -57,12 +57,12 @@
         <span class="text-grey">最近打开</span>
         <div class="recent-open-content flex flex-direction">
           <ul>
-            <template v-for="(tab, index) in compRecentOpenedTabs">
-              <li :key="index" class="flex justify-start align-center" @click="clikRecentTab(tab)">
-                <img onerror="this.src='../../icons/default.svg'" :src="tab.icon" style="width: 30px; height: 30px;">
+            <template v-for="(item, index) in recentOpenedHistory">
+              <li :key="index" class="flex justify-start align-center" @click="clikRecentHistory(item)">
+                <img src="../../icons/default.svg" style="width: 30px; height: 30px;">
                 <div class="flex flex-direction justify-around align-start" style="padding-left: 20px; height: 100%">
-                  <div class="text-black-lg sg-omit-sm">{{tab.title}}</div>
-                  <div class="text-grey-sm sg-omit-sm">{{tab.attached}}</div>
+                  <div class="text-black-lg sg-omit-sm">{{item.title}}</div>
+                  <div class="text-grey-sm sg-omit-sm">{{item.url}}</div>
                 </div>
               </li>
             </template>

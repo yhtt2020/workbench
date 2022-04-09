@@ -145,6 +145,7 @@ const searchbarPlugins = {
       try {
         if (plugins[i].showResults && (!plugins[i].trigger || plugins[i].trigger(text))) {
           plugins[i].showResults(text, input, event)
+          console.log(plugins[i].showResults(text, input, event), '????????????')
         } else {
           searchbarPlugins.reset(plugins[i].name)
         }

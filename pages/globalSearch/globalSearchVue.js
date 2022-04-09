@@ -1,4 +1,5 @@
 const store = require('./store.js')
+const placesModel = require('../util/model/placesModel')
 
 const globalSearch = new Vue({
   el: "#globalSearch",
@@ -17,9 +18,9 @@ const globalSearch = new Vue({
           console.log(this.searchResult)
         } else {
           this.openFirst = true
+          this.calculateAreaHeight(this.recentOpenedHistory)
         }
         this.contentLoading = false
-
       }, 200),
       deep: true
     },
@@ -28,7 +29,6 @@ const globalSearch = new Vue({
         if(newValue === true) {
           this.$nextTick(() => {
             document.getElementById("myTextField").focus();
-            //document.getElementById("myTextField").event.currentTarget.select()
           })
         }
       }
@@ -62,7 +62,8 @@ const globalSearch = new Vue({
       itemReadyedItem: {},
       openFirst: true,
       apps: [],
-      visible: false
+      visible: false,
+      recentOpenedHistory: []
     };
   },
   computed: {
@@ -92,12 +93,6 @@ const globalSearch = new Vue({
         this.calculateAreaHeight(filterRes)
         return filterRes
       }
-    },
-    compRecentOpenedTabs() {
-      let recentOpenedTabs = this.handleRecentOpenedTabs()
-      let recentResult = tools.bubbleSort(recentOpenedTabs, 'lastActivity').reverse()
-      this.calculateAreaHeight(recentResult)
-      return recentResult
     }
   },
   methods: {
@@ -134,32 +129,28 @@ const globalSearch = new Vue({
         }
       }
     },
-    handleRecentOpenedTabs() {
-      let mapTabs = []
-      this.$store.getters.getAllTasks.forEach(v => {
-        v.tabs.forEach(k => {
-          mapTabs.push({
-            title: k.title,
-            icon: k.icon,
-            taskId: v.id,
-            tabId: k.id,
-            url: k.hasOwnProperty('url') ? k.url : null,
-            tag: 'tab',
-            lastActivity: k.lastActivity,
-            attached: `${v.name}·` + tools.execDomain(k.url)
-          })
+    async handleRecentOpenedHistory() {
+      let mapHistory = []
+      let history = await placesModel.getAllHistory()
+      history.forEach(v => {
+        mapHistory.push({
+          title: v.title,
+          icon: null,
+          taskId: null,
+          tabId: null,
+          url: v.url,
+          searchIndex: v.searchIndex,
+          lastVisit: v.lastVisit,
+          tag: 'history'
         })
       })
-      return mapTabs
+      return mapHistory
     },
     executeApp(app){
       ipc.send('executeApp',{app:app})
     },
-    clikRecentTab(item) {
-      ipc.send('switchToTab', {
-        taskId: item.taskId,
-        tabId: item.tabId
-      })
+    clikRecentHistory(item) {
+      ipc.send('addTab',{url: item.url});
       ipc.send('closeGlobalSearch')
     },
     clkli(item) {
@@ -311,9 +302,10 @@ const globalSearch = new Vue({
     await this.getAllApps()
     this.bindKeys()
     document.addEventListener('contextmenu',function(e){
-      // 右键事件触发
-      e.preventDefault();
+      e.preventDefault();       // 右键事件触发
     })
+    this.recentOpenedHistory = await this.handleRecentOpenedHistory()
+    this.calculateAreaHeight(this.recentOpenedHistory)
   },
 });
 
