@@ -236,6 +236,7 @@
         path: '',
         loadState: false,
         url: args.url,
+        href:args.href
       })
       appVue.listCount++
       appVue.count++
@@ -243,6 +244,7 @@
     }
 
     if (args.status === 'cancelled') {
+      console.log(args.chainUrl)
       ipcRenderer.send('emptyPageUrl',args.chainUrl)
       for (var i = 0; i < appVue.lists.length; i++) {
         if (appVue.lists[i].startTime === args.startTime) {
@@ -396,10 +398,32 @@
       },
 
       hideModal() {
+        appVue.listTrashCount++
+        db.download.put({
+          startTime:appVue.selectingList.startTime,
+          title: appVue.selectingList.title,
+          total: appVue.selectingList.total,
+          path: appVue.selectingList.path,
+          url: appVue.selectingList.url,
+          status:'-2',//删除包括文件
+          statusText:'文件已被删除',
+          doneDate:appVue.selectingList.doneDate,
+          href:appVue.selectingList.href
+        })
+        appVue.deleteLists.unshift({
+          id: appVue.delId++,
+          title: appVue.selectingList.title,
+          total: appVue.selectingList.total,
+          path: appVue.selectingList.path,
+          url: appVue.selectingList.url,
+          startTime: appVue.selectingList.startTime,
+          statusText:'文件已被删除',
+          href:appVue.selectingList.href
+        })
         ipcRenderer.send('deleteDownload', this.selectingList.path)
-        // this.lists.splice(this.lists.indexOf(this.selectingList), 1)
-        this.visibleIng = false;
-        // this.count = this.count-1
+        this.visibleIng = false
+
+        console.log(appVue.listCount)
       },
 
       doneChange(e){
