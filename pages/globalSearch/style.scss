@@ -57,6 +57,7 @@ html {
       height: 90px;
       width: 100%;
       overflow: scroll;
+      -webkit-app-region: no-drag;
       &::-webkit-scrollbar {
         width: 0 !important
       }
@@ -88,6 +89,7 @@ html {
       min-height: 50px;
       max-height: 300px;
       overflow-y: scroll;
+      -webkit-app-region: no-drag;
       &::-webkit-scrollbar {
         width: 0 !important
       }
@@ -111,6 +113,7 @@ html {
     overflow-y: scroll;
     width: 100%;
     border-radius: 0px 0px 10px 10px;
+    -webkit-app-region: no-drag;
     &::-webkit-scrollbar {
       width: 0 !important
     }
