@@ -45,6 +45,9 @@ html {
     width: 100%;
     padding: 0px 20px;
     height: 50px;
+    .category-lf {
+      -webkit-app-region: no-drag;
+    }
   }
   .apps {
     width: 100%;
