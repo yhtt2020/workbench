@@ -104,39 +104,77 @@ const standAloneAppModel = {
     }
     let imageEditor = await db.standAloneApps.get({name:'图片编辑器'})
     if(imageEditor){
-     await  db.standAloneApps.update(imageEditor.id,{package:'com.thisky.imageEditor',fileAssign:['image'],url:'https://a.apps.vip/imageEditor/','logo':'https://a.apps.vip/imageEditor/icon.svg'})
+      await  db.standAloneApps.update(imageEditor.id,{package:'com.thisky.imageEditor',fileAssign:['image'],url:'https://a.apps.vip/imageEditor/','logo':'https://a.apps.vip/imageEditor/icon.svg'})
     }
 
   },
   async find(word,option){
     let result= await db.standAloneApps.orderBy(option.order).toArray()
     let searchResult=[]
-    const pyjs=require('js-pinyin')
-    result.forEach(item=>{
-      let pinyin=pyjs.getFullChars(item.name).toLowerCase()
-      function testWords(sourceStr,findWords){
-        for(let i=0;i<findWords.length;i++){
-          if(sourceStr.indexOf(findWords.charAt(i))===-1){
-           return false
-          }
-        }
-        return true
-      }
 
-      if(item.name.indexOf(word)>-1 ||
-        item.url.indexOf(word)>-1 ||
-        item.summary.indexOf(word)>-1 ||
-        testWords(pinyin,word)
-      ){
+    const { pinyin } = require('pinyin-pro');
+
+    function checkMatched(item) {
+      return searchResult.some(v => v.name === item.name)
+    }
+
+    function dealItem(item) {
+      if(item.hasOwnProperty('settings')) {
         item.settings=JSON.parse(item.settings)
-        searchResult.push(item)
+      }
+    }
+
+    function matchChinese(str) {
+      return str.match(/[\u4e00-\u9fa5]/g)
+    }
+
+    result.forEach(item => {
+      if(matchChinese(item.name) && matchChinese(item.summary)) {
+        let quanPinName = pinyin(matchChinese(item.name).join(''), { toneType: 'none', type: 'array' })   // 获取数组形式不带声调的拼音
+        let firstPinName = pinyin(matchChinese(item.name).join(''), { pattern: 'first', toneType: 'none', type: 'array' })   // 获取数组形式不带音调拼音首字母
+        let quanPinSummary = pinyin(matchChinese(item.summary).join(''), { toneType: 'none', type: 'array' })   // 获取数组形式不带声调的拼音
+        let firstPinSummary = pinyin(matchChinese(item.summary).join(''), { pattern: 'first', toneType: 'none', type: 'array' })
+
+        if(item.name.includes(word) || item.summary.includes(word) && !checkMatched(item)) {
+          dealItem(item)
+          searchResult.push(item)
+        }
+
+        quanPinName.forEach(v => {
+          if(v === word && !checkMatched(item)) {
+            dealItem(item)
+            searchResult.push(item)
+          } else if (quanPinName.join('') === word && !checkMatched(item)) {
+            dealItem(item)
+            searchResult.push(item)
+          } else if (word.includes(v) && word.length > 1 && !checkMatched(item)) {
+            dealItem(item)
+            searchResult.push(item)
+          }
+        })
+        if(word.length > 1 && firstPinName.join('').includes(word) && !checkMatched(item)) {
+          dealItem(item)
+          searchResult.push(item)
+        }
+
+        quanPinSummary.forEach(v => {
+          if(v === word && !checkMatched(item)) {
+            dealItem(item)
+            searchResult.push(item)
+          } else if (quanPinSummary.join('') === word && !checkMatched(item)) {
+            dealItem(item)
+            searchResult.push(item)
+          } else if (word.includes(v) && word.length > 1 && !checkMatched(item)) {
+            dealItem(item)
+            searchResult.push(item)
+          }
+        })
+        if(word.length > 1 && firstPinSummary.join('').includes(word) && !checkMatched(item)) {
+          dealItem(item)
+          searchResult.push(item)
+        }
       }
     })
-    // for(let i=0;i<result.length;i++){
-    //   if(result[i].name.indexOf(word)>-1 || result[i].url.indexOf(word)>-1 || result[i].summary.indexOf(word)>-1){
-    //     searchResult.push(result[i])
-    //   }
-    // }
     return searchResult
   },
   async put(id,data){
