@@ -599,13 +599,7 @@ Vue.component('sidebar', {
       this.addTab(`${api.getUrl(api.API_URL.user.CIRCLE)}?id=${args}`)
     },
     openHelp(apps){
-      let j
-      for (let i=0;i<apps.length;i++){
-        if(apps[i].id===7){
-          j=i
-        }
-      }
-      ipc.send('executeApp',{app:apps[j]})
+      ipc.send('handleTsbProtocol',{url:'tsb://app/redirect/?package=com.thisky.helper&url=/'})
     },
     // openPost() {
     //   this.userPanelVisible = false
