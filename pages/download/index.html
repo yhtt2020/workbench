@@ -45,7 +45,7 @@
               </div>
               <div v-if="list.status === 'progressing'" >
                 <div v-if="list.loadState" >
-                  <a-button style="position: absolute;margin-left: 327px;margin-top: 10px" type="link" @click="resume(index)" >
+                  <a-button style="position: absolute;margin-left: 300px;margin-top: 10px" type="link" @click="resume(index)" >
                      开始
                   </a-button>
                 </div>
@@ -165,13 +165,13 @@
         appVue.$message.info('文件已被删除或位置被移动', 1)
         db.download.delete(appVue.selectList.startTime)
         appVue.doneLists.splice(appVue.doneLists.indexOf(appVue.selectList), 1)
+        appVue.listDoneCount--
       }
     })
   })
 
   ipcRenderer.on('menuDoneOpenPath', (e) => {
     const {shell} = require('electron')
-
     fs.exists(appVue.selectList.path, function (flag) {
       if (flag) {
         shell.showItemInFolder(appVue.selectList.path)
@@ -179,6 +179,7 @@
         appVue.$message.info('文件已被删除或位置被移动', 1)
         db.download.delete(appVue.selectList.startTime)
         appVue.doneLists.splice(appVue.doneLists.indexOf(appVue.selectList), 1)
+        appVue.listDoneCount--
       }
     })
 
@@ -218,7 +219,7 @@
   })
 
   ipcRenderer.on('download-info', async (event, args) => {
-// console.log(args)
+console.log(args)
     let simpleName;
     if (args.name.length >= 20) {
       simpleName = args.name.substring(0, 7) + '...' + args.name.substring(args.name.length-6,args.name.length);
@@ -441,7 +442,6 @@
         appVue.listDoneCount--
         appVue.listTrashCount++
         if (this.deleconfirm === true) {
-          // const f = this.selectList.path;
           fs.exists(this.selectList.path, function (flag) {
             if (flag) {
               db.download.put({
@@ -521,22 +521,35 @@
       },
 
       openFileHandler(index) {
+        // const {shell} = require('electron')
+        // shell.openPath(this.doneLists[index].path)
         const {shell} = require('electron')
-        shell.openPath(this.doneLists[index].path)
-      },
-
-      showFileHandler(index) {
-        const {shell} = require('electron')
-        fs.exists(this.doneLists[index].path, function (flag) {
+        fs.exists(appVue.selectList.path, function (flag) {
           if (flag) {
-            shell.showItemInFolder(appVue.doneLists[index].path)
+            shell.openPath(this.doneLists[index].path)
           } else {
             appVue.$message.info('文件已被删除或位置被移动', 1)
             db.download.delete(appVue.doneLists[index].startTime)
             appVue.doneLists.splice(appVue.doneLists.indexOf(appVue.selectList), 1)
+            appVue.listDoneCount--
           }
         })
       },
+
+      // showFileHandler(index) {
+      //   const {shell} = require('electron')
+      //   fs.exists(this.selectList.path, function (flag) {
+      //     if (flag) {
+      //       shell.showItemInFolder(this.doneLists[index].path)
+      //     } else {
+      //       console.log('123')
+      //      //  this.$message.info('文件已被删除或位置被移动', 1)
+      //      //  db.download.delete(this.doneLists[index].startTime)
+      //      //  this.doneLists.splice(this.doneLists.indexOf(this.selectList), 1)
+      //      // this.listDoneCount--
+      //     }
+      //   })
+      // },
     }
    })
 
