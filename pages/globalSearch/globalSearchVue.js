@@ -12,7 +12,7 @@ const globalSearch = new Vue({
         if(newValue.length > 0) {
           this.openFirst = false
           let appresult = await this.searchApp(newValue)
-          this.searchResult = this.searchResult.concat(this.searchTab(newValue), this.searchTask(newValue), appresult)
+          this.searchResult = this.searchResult.concat(appresult, this.searchTab(newValue), this.searchTask(newValue))
           this.itemReadyedIndex = 0
           this.itemReadyedItem = this.searchResult[0]
           console.log(this.searchResult)
@@ -155,7 +155,6 @@ const globalSearch = new Vue({
       ipc.send('executeApp',{app:app})
     },
     clikRecentHistory(item) {
-      console.log(item, '?????????')
       ipc.send('addTab',{url: item.url});
       ipc.send('closeGlobalSearch')
     },
