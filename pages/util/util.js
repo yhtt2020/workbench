@@ -1,4 +1,4 @@
-const { pinyin } = require('pinyin-pro');
+const { pinyin } = require("pinyin-pro");
 
 const tools = {
   getWindowArgs: (window) => {
@@ -194,16 +194,66 @@ const tools = {
       toneType: "none",
       type: "array",
     }); // 获取数组形式不带音调拼音首字母
-    quanPin.forEach((v) => {
+
+    /**
+     * 简评智能匹配
+     * @param {Array} arr 首字母简拼数组
+     * @param {String} word 输入的内容
+     * @returns
+     */
+     function intelligentMatch(arr, word) {
+      if (word.length <= 1) return false
+      if (!/^[\u4e00-\u9fa5_a-zA-Z]+$/.test(word)) return false
+      let result = false
+      let stop = false
+      let wordArr = word.split("")
+
+      function recur(arr1, arr2, num1, num2) {
+        if (stop === false && arr2.length <= arr1.length && arr2[num2 + 1]) {
+          if (arr1[num1 + 1] === arr2[num2 + 1]) {
+            result = true
+          } else {
+            result = false
+            stop = true
+          }
+          recur(arr1, arr2, num1 + 1, num2 + 1)
+        }
+      }
+
+      let arrIndex = 0
+      let arr2Index = 0
+      let needToRecur = false
+      for (let i = 0; i < arr.length; i++) {
+        if (needToRecur) break
+        for (let j = 0; j < wordArr.length; j++) {
+          if (needToRecur) break
+          if (wordArr[j] === arr[i] && arr[i + 1]) {
+            arrIndex = i
+            arr2Index = j
+            needToRecur = true
+          }
+        }
+      }
+
+      if (needToRecur) {
+        recur(arr, wordArr, arrIndex, arr2Index)
+      }
+      return result
+    }
+
+    quanPin.forEach((v, index) => {
       if (v === word) {
         result = true;
       } else if (quanPin.join("") === word) {
         result = true;
-      } else if (word.includes(v) && word.length > 1) {
+      } else if (
+        index <= quanPin.length - 2 &&
+        word.includes(v.concat(quanPin[index + 1]))
+      ) {
         result = true;
       }
     });
-    if (word.length > 1 && firstPin.join("").includes(word)) {
+    if (intelligentMatch(firstPin, word)) {
       result = true;
     }
     return result;
