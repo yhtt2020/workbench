@@ -1288,13 +1288,14 @@ ipc.on('handleFileAssign', async (event, args) => {
   console.log(args)
   console.log('assigneApps', assignApps)
 })
-ipc.on('saving',()=>{
+ipc.on('saving',async ()=>{
   let savingIcon=document.getElementById('savingIcon')
   savingIcon.classList.add('saving')
   if(savingIcon.classList.contains('offline')){
     appVue.$message.success('云空间重新连接成功，已为您实时保持同步。')
     console.log('重新获取云端空间')
-    appVue.$store.dispatch('getCloudSpaces')
+    await appVue.$store.dispatch('getCloudSpaces')
+    appVue.$refs.sidePanel.cloudSpaces=this.$store.state.cloudSpaces
     savingIcon.classList.remove('offline')
     savingIcon.classList.add('online')
   }
@@ -1303,11 +1304,12 @@ ipc.on('saving',()=>{
   },2000)
 })
 
-ipc.on('disconnect',()=>{
+ipc.on('disconnect',async ()=>{
   let savingIcon=document.getElementById('savingIcon')
   if(savingIcon.classList.contains('online')){
     appVue.$message.success('云空间失去连接，转入离线模式。')
     savingIcon.classList.remove('online')
     savingIcon.classList.add('offline')
+    appVue.$refs.sidePanel.cloudSpaces=[]
   }
 })
