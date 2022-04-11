@@ -214,7 +214,9 @@ const globalSearch = new Vue({
         } else if (e.keyCode === 9) {
           //按下tab键切换类型
           if(this.openFirst) {
-
+            setTimeout(()=> {
+              document.getElementById("myTextField").focus();
+            }, 500)
           } else {
             let index = this.tags.findIndex(v => v.checked == true)
             if(index < 3) {
