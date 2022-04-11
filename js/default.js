@@ -182,7 +182,7 @@ require('autofillSetup.js').initialize()
 require('passwordManager/passwordManager.js').initialize()
 require('passwordManager/passwordCapture.js').initialize()
 require('passwordManager/passwordViewer.js').initialize()
-require('util/theme.js').initialize()
+
 require('userscripts.js').initialize()
 require('statistics.js').initialize()
 require('taskOverlay/taskOverlay.js').initialize()
@@ -208,7 +208,7 @@ require('sessionRestore.js').initialize().then(()=>{
   require('searchbar/shortcutButtons.js').initialize()
   require('searchbar/calculatorPlugin.js').initialize()
   require('sessionRestore.js').restore()
-
+  require('util/theme.js').initialize()
 //通用工具类(copy实现、深拷贝命中)
   require('util/tools.js').initialize()
 

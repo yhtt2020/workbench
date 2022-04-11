@@ -113,6 +113,24 @@ const sessionRestore = {
     var savedStringData = ''
     try {
       savedStringData = await sessionRestore.adapter.restore(sessionRestore.currentSpace.spaceId)
+      if(!savedStringData && sessionRestore.currentSpace.spaceType==='cloud'){
+        //当云端空间无法正常读入的时候，尝试从备份空间获取
+        try{
+          let backupSpace=await backupSpaceModel.getSpace(sessionRestore.currentSpace.spaceId)
+          if(backupSpace){
+            savedStringData=JSON.stringify(backupSpace.data)
+            setTimeout(()=>{
+              ipc.send('message',{type:'info',config:{content:'无法连接至云端，当前工作在离线模式下。连接恢复后会自动转入在线模式。'}})
+            },3000)
+          }else{
+            console.warn('从本地获取的时候，本地备份不存在')
+          }
+        }catch (e) {
+          savedStringData=false
+          console.warn('当远端无法获取，尝试从本地备份空间恢复时意外报错')
+          console.warn(e)
+        }
+      }
     } catch (e) {
       console.log('获取存储的空间信息失败')
     }
