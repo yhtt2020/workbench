@@ -18,7 +18,10 @@ const globalSearch = new Vue({
           console.log(this.searchResult)
         } else {
           this.openFirst = true
+          this.recentOpenedHistory = await this.handleRecentOpenedHistory()
           this.calculateAreaHeight(this.recentOpenedHistory)
+          this.recentReadyedIndex = 0
+          this.recentReadyedItem = this.recentOpenedHistory[0]
         }
         this.contentLoading = false
       }, 200),
@@ -63,7 +66,9 @@ const globalSearch = new Vue({
       openFirst: true,
       apps: [],
       visible: false,
-      recentOpenedHistory: []
+      recentOpenedHistory: [],
+      recentReadyedItem: {},
+      recentReadyedIndex: 0
     };
   },
   computed: {
@@ -150,6 +155,7 @@ const globalSearch = new Vue({
       ipc.send('executeApp',{app:app})
     },
     clikRecentHistory(item) {
+      console.log(item, '?????????')
       ipc.send('addTab',{url: item.url});
       ipc.send('closeGlobalSearch')
     },
@@ -172,8 +178,14 @@ const globalSearch = new Vue({
     },
     calculateHeight() {
       let currentHeight = 0
-      if(this.itemReadyedIndex > 5) {
-        currentHeight = (this.itemReadyedIndex - 5) * 50
+      if(this.openFirst) {
+        if(this.recentReadyedIndex > 5) {
+          currentHeight = (this.recentReadyedIndex - 5) * 50
+        }
+      } else {
+        if(this.itemReadyedIndex > 5) {
+          currentHeight = (this.itemReadyedIndex - 5) * 50
+        }
       }
       return currentHeight
     },
@@ -183,7 +195,15 @@ const globalSearch = new Vue({
           // 向下键切换li
           if(this.openFirst) {
             //如果是在初始页
-
+            if(this.recentReadyedIndex + 1 < this.recentOpenedHistory.length) {
+              this.recentReadyedIndex = this.recentReadyedIndex + 1
+              this.recentReadyedItem = this.recentOpenedHistory[this.recentReadyedIndex]
+              document.getElementsByClassName('recent-list-hook')[0].scrollTop = this.calculateHeight()
+            } else {
+              this.recentReadyedIndex = 0
+              this.recentReadyedItem = this.recentOpenedHistory[0]
+              document.getElementsByClassName('recent-list-hook')[0].scrollTop = this.calculateHeight()
+            }
           } else {
             if(this.itemReadyedIndex + 1 < this.compSearchResult.length) {
               this.itemReadyedIndex = this.itemReadyedIndex + 1
@@ -199,7 +219,15 @@ const globalSearch = new Vue({
           //向上键切换li
           if(this.openFirst) {
             //如果是在初始页
-
+            if(this.recentReadyedIndex + 1 <= this.recentOpenedHistory.length && this.recentReadyedIndex !== 0) {
+              this.recentReadyedIndex = this.recentReadyedIndex - 1
+              this.recentReadyedItem = this.recentOpenedHistory[this.recentReadyedIndex]
+              document.getElementsByClassName('recent-list-hook')[0].scrollTop = this.calculateHeight()
+            } else {
+              this.recentReadyedIndex = 0
+              this.recentReadyedItem = this.recentOpenedHistory[0]
+              document.getElementsByClassName('recent-list-hook')[0].scrollTop = this.calculateHeight()
+            }
           } else {
             if(this.itemReadyedIndex + 1 <= this.compSearchResult.length && this.itemReadyedIndex !== 0) {
               this.itemReadyedIndex = this.itemReadyedIndex - 1
@@ -228,10 +256,10 @@ const globalSearch = new Vue({
               document.getElementById("myTextField").focus();
             }, 500)
           }
-        } else if(e.keyCode === 13 && Object.keys(this.itemReadyedItem).length > 0) {
+        } else if(e.keyCode === 13 && (Object.keys(this.itemReadyedItem).length > 0 || Object.keys(this.recentReadyedItem).length > 0)) {
           //回车按键
           if(this.openFirst) {
-
+            this.clikRecentHistory(this.recentReadyedItem)
           } else {
             this.clkli(this.itemReadyedItem)
           }
@@ -307,6 +335,7 @@ const globalSearch = new Vue({
       e.preventDefault();       // 右键事件触发
     })
     this.recentOpenedHistory = await this.handleRecentOpenedHistory()
+    this.recentReadyedItem = this.recentOpenedHistory[0]
     this.calculateAreaHeight(this.recentOpenedHistory)
   },
 });
