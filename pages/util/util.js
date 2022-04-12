@@ -1,4 +1,4 @@
-const { pinyin } = require('pinyin-pro');
+const { pinyin } = require("pinyin-pro");
 
 const tools = {
   getWindowArgs: (window) => {
@@ -172,10 +172,9 @@ const tools = {
 
   /**
    * 拼音模糊匹配
-   * 支持全拼和首字母拼音的匹配
-   * 1、单字拼音命中算成功（支持冗余多打的情况）
-   * 2、全部中字拼音全命中算成功
-   * 3、首拼按顺序命中2个及以上算成功
+   * 支持全拼（非全）和首字母拼音的匹配
+   * 1、全拼命中2个以上成功（支持冗余多打的情况）
+   * 2、首拼命中2个以上成功（不支持冗余多打的情况）
    * @param {String} str 被匹配对象
    * @param {String} word 匹配的拼音
    * @returns Boolean值结果
@@ -194,16 +193,66 @@ const tools = {
       toneType: "none",
       type: "array",
     }); // 获取数组形式不带音调拼音首字母
-    quanPin.forEach((v) => {
+
+    /**
+     * 首字母简拼智能匹配
+     * @param {Array} arr 首字母简拼数组
+     * @param {String} word 输入的内容
+     * @returns
+     */
+    function intelligentMatch(arr, word) {
+      if (word.length <= 1) return false;
+      if (!/^[\u4e00-\u9fa5_a-zA-Z]+$/.test(word)) return false;
+      let result = false;
+      let stop = false;
+      let wordArr = word.split("");
+
+      function recur(targetArrParam, wordArrParam, targetIndexParam, wordArrIndexParam) {
+        if (stop === false && wordArrParam.length <= targetArrParam.length && wordArrParam[wordArrIndexParam + 1]) {
+          if (targetArrParam[targetIndexParam + 1] === wordArrParam[wordArrIndexParam + 1]) {
+            result = true;
+          } else {
+            result = false;
+            stop = true;
+          }
+          recur(targetArrParam, wordArrParam, targetIndexParam + 1, wordArrIndexParam + 1);
+        }
+      }
+
+      let arrIndex = 0;
+      let wordArrIndex = 0;
+      let needToRecur = false;
+      for (let i = 0; i < arr.length; i++) {
+        if (needToRecur) break;
+        for (let j = 0; j < wordArr.length; j++) {
+          if (needToRecur) break;
+          if (wordArr[j] === arr[i] && arr[i + 1]) {
+            arrIndex = i;
+            wordArrIndex = j;
+            needToRecur = true;
+          }
+        }
+      }
+
+      if (needToRecur) {
+        recur(arr, wordArr, arrIndex, wordArrIndex);
+      }
+      return result;
+    }
+
+    quanPin.forEach((v, index) => {
       if (v === word) {
         result = true;
       } else if (quanPin.join("") === word) {
         result = true;
-      } else if (word.includes(v) && word.length > 1) {
+      } else if (
+        index <= quanPin.length - 2 &&
+        word.includes(v.concat(quanPin[index + 1]))
+      ) {
         result = true;
       }
     });
-    if (word.length > 1 && firstPin.join("").includes(word)) {
+    if (intelligentMatch(firstPin, word)) {
       result = true;
     }
     return result;
