@@ -132,17 +132,39 @@ const standAloneAppModel = {
       if (word.length <= 1) return false;
       if (!/^[\u4e00-\u9fa5_a-zA-Z]+$/.test(word)) return false;
       let result = false;
+      let stop = false;
       let wordArr = word.split("");
-      arr.forEach((v, index) => {
-        wordArr.forEach((k, kindex) => {
-          if (v === k && arr[index + 1]) {
-            if (arr[index + 1] === wordArr[kindex + 1]) {
-              result = true;
-              return false;
-            }
+
+      function recur(targetArrParam, wordArrParam, targetIndexParam, wordArrIndexParam) {
+        if (stop === false && wordArrParam.length <= targetArrParam.length && wordArrParam[wordArrIndexParam + 1]) {
+          if (targetArrParam[targetIndexParam + 1] === wordArrParam[wordArrIndexParam + 1]) {
+            result = true;
+          } else {
+            result = false;
+            stop = true;
           }
-        });
-      });
+          recur(targetArrParam, wordArrParam, targetIndexParam + 1, wordArrIndexParam + 1);
+        }
+      }
+
+      let arrIndex = 0;
+      let wordArrIndex = 0;
+      let needToRecur = false;
+      for (let i = 0; i < arr.length; i++) {
+        if (needToRecur) break;
+        for (let j = 0; j < wordArr.length; j++) {
+          if (needToRecur) break;
+          if (wordArr[j] === arr[i] && arr[i + 1]) {
+            arrIndex = i;
+            wordArrIndex = j;
+            needToRecur = true;
+          }
+        }
+      }
+
+      if (needToRecur) {
+        recur(arr, wordArr, arrIndex, wordArrIndex);
+      }
       return result;
     }
 

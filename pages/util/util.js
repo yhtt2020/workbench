@@ -172,7 +172,7 @@ const tools = {
 
   /**
    * 拼音模糊匹配
-   * 支持全拼和首字母拼音的匹配
+   * 支持全拼（非全）和首字母拼音的匹配
    * 1、单字拼音命中算成功（支持冗余多打的情况）
    * 2、全部中字拼音全命中算成功
    * 3、首拼按顺序命中2个及以上算成功
@@ -196,49 +196,49 @@ const tools = {
     }); // 获取数组形式不带音调拼音首字母
 
     /**
-     * 简评智能匹配
+     * 首字母简拼智能匹配
      * @param {Array} arr 首字母简拼数组
      * @param {String} word 输入的内容
      * @returns
      */
-     function intelligentMatch(arr, word) {
-      if (word.length <= 1) return false
-      if (!/^[\u4e00-\u9fa5_a-zA-Z]+$/.test(word)) return false
-      let result = false
-      let stop = false
-      let wordArr = word.split("")
+    function intelligentMatch(arr, word) {
+      if (word.length <= 1) return false;
+      if (!/^[\u4e00-\u9fa5_a-zA-Z]+$/.test(word)) return false;
+      let result = false;
+      let stop = false;
+      let wordArr = word.split("");
 
-      function recur(arr1, arr2, num1, num2) {
-        if (stop === false && arr2.length <= arr1.length && arr2[num2 + 1]) {
-          if (arr1[num1 + 1] === arr2[num2 + 1]) {
-            result = true
+      function recur(targetArrParam, wordArrParam, targetIndexParam, wordArrIndexParam) {
+        if (stop === false && wordArrParam.length <= targetArrParam.length && wordArrParam[wordArrIndexParam + 1]) {
+          if (targetArrParam[targetIndexParam + 1] === wordArrParam[wordArrIndexParam + 1]) {
+            result = true;
           } else {
-            result = false
-            stop = true
+            result = false;
+            stop = true;
           }
-          recur(arr1, arr2, num1 + 1, num2 + 1)
+          recur(targetArrParam, wordArrParam, targetIndexParam + 1, wordArrIndexParam + 1);
         }
       }
 
-      let arrIndex = 0
-      let arr2Index = 0
-      let needToRecur = false
+      let arrIndex = 0;
+      let wordArrIndex = 0;
+      let needToRecur = false;
       for (let i = 0; i < arr.length; i++) {
-        if (needToRecur) break
+        if (needToRecur) break;
         for (let j = 0; j < wordArr.length; j++) {
-          if (needToRecur) break
+          if (needToRecur) break;
           if (wordArr[j] === arr[i] && arr[i + 1]) {
-            arrIndex = i
-            arr2Index = j
-            needToRecur = true
+            arrIndex = i;
+            wordArrIndex = j;
+            needToRecur = true;
           }
         }
       }
 
       if (needToRecur) {
-        recur(arr, wordArr, arrIndex, arr2Index)
+        recur(arr, wordArr, arrIndex, wordArrIndex);
       }
-      return result
+      return result;
     }
 
     quanPin.forEach((v, index) => {
