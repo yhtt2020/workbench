@@ -287,6 +287,10 @@ const sessionRestore = {
           } else {
             //正常登录
             space = spaceResult.data
+            space.id=space.nanoid
+            //正常登录需要使用线上版本的空间来更新一下本地的备份空间
+            backupSpaceModel.save(space,{data:space.data,count_task: space.count_task,count_tab: space.count_tab,})
+            spaceModel.setCurrentSpace(space)
           }
         }
       } else {
@@ -299,14 +303,11 @@ const sessionRestore = {
       }
       //判断空间类型
       if (currentSpace.spaceType === 'cloud') {
-        space.id = space.nanoid
-        //先从云端接口拉取一下空间信息
-        //let cloudSpace=await spaceModel.setUser(sessionRestore.currentSpace.userInfo).getSpace(currentSpace.spaceId)
-        let backupSpace = await localSpaceModel.getSpace(currentSpace.spaceId) //获取本地的备份空间
+        //取出本地备份空间
+        let backupSpace = await backupSpaceModel.getSpace(currentSpace.spaceId) //获取本地的备份空间
         if (!!backupSpace) {
           if (!backupSpace.userInfo) {
             //如果这个空间信息不存在用户的信息，主要是一些老的空间，可能还没存用户信息
-            console.log('不存在用户信息，但是本地要尝试从当前用户信息中获取用户信息')
             let uid = typeof currentSpace.userInfo === 'undefined' ? 0 : currentSpace.userInfo.uid
             let backupSpace = {
               id: currentSpace.spaceId,

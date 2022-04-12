@@ -139,6 +139,13 @@ const spaceModel = {
   },
   async clientOnline (nanoid, force = false) {
     return await spaceModel.adapterModel.clientOnline(nanoid, force, spaceModel.user)
+  },
+
+  setCurrentSpace(space){
+    ldb.reload()
+    ldb.db.set('currentSpace.space', space).write()
+    ldb.db.set('currentSpace.name', space.name).write()
+    ldb.db.set('currentSpace.spaceId', space.id).write()
   }
 
 }
