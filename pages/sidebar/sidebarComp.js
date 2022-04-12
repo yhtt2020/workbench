@@ -204,8 +204,8 @@ const sidebarTpl = `
 
           <li v-for="app in apps" @click="executeApp(app)" @mouseenter="hoverApp($event,app)"
             @contextmenu="createMenu(app.id,app)" v-if="app.processing || app.settings.showInSideBar">
-            <a-popover placement="right" :mouse-enter-delay="0.3" overlay-class-name="tips" @visible-change="">
-              <template slot="title">
+            <a-popover placement="right"  :mouse-enter-delay="0.3" overlay-class-name="tips" @visible-change="">
+              <template  slot="title">
                 <span class="app-name-popover"> {{app.name}} </span>
               </template>
               <template slot="content" v-if="app.processing">
@@ -214,7 +214,7 @@ const sidebarTpl = `
                 </div>
               </template>
               <template slot="content" v-else>
-                {{app.summary}}
+              <div style="max-width: 400px">{{app.summary}}</div>
               </template>
               <div class="wrapper sa-app-wrapper">
                 <div v-if="app.processing" class="processing"></div>
