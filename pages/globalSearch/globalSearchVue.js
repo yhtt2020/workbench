@@ -153,6 +153,7 @@ const globalSearch = new Vue({
     },
     executeApp(app){
       ipc.send('executeApp',{app:app})
+      ipc.send('closeGlobalSearch')
     },
     clikRecentHistory(item) {
       ipc.send('addTab',{url: item.url});
