@@ -11,13 +11,18 @@ const url = {
   import:'/app/importSpaces',
   rename:'/app/renameSpace',
   clientOffline:'/app/clientOffline',
-  clientOnline:'/app/clientOnline'
+  clientOnline:'/app/clientOnline',
+  copy:'/app/copySpace'
 }
 
 const spaceApi = {
     async addSpace(name,user=false){
     await baseApi.init(user)
     return baseApi.axios(url.addSpace,{name:name},'post')
+  },
+  async copy(nanoid,user){
+    await baseApi.init(user)
+    return baseApi.axios(url.copy,{nanoid:nanoid},'post')
   },
   async getMySpaceList(user=false){
     await baseApi.init(user)

@@ -1,6 +1,7 @@
 const standReturn = require('../util/standReturn')
 const spaceApi = require('../../pages/util/api/spaceApi')
 const userModel = require('./userModel')
+const { nanoid } = require('nanoid')
 const cloudSpaceModel={
   async addSpace(space,user){
    let result= await spaceApi.addSpace(space.name,user)
@@ -32,7 +33,10 @@ const cloudSpaceModel={
   },
   async save (spaceId, saveData, userInfo,force=false) {
     let result = await spaceApi.save(spaceId,userInfo.clientId, saveData,userInfo,force)
-
+    return standReturn.autoReturn(result)
+  },
+  async copy(space,userInfo){
+    let result = await spaceApi.copy(space.nanoid,userInfo)
     return standReturn.autoReturn(result)
   },
   async restore (spaceId, userInfo) {
