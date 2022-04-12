@@ -45,7 +45,7 @@ const tpl = `
     <a-select size="small"
       v-model:value="savePosition"
       style="width: 120px">
-      <a-select-option value="cloud" disabled="!canSaveToCloud">云端空间</a-select-option>
+      <a-select-option value="cloud" :disabled="!canSaveToCloud">云端空间</a-select-option>
       <a-select-option value="local">本地空间</a-select-option>
     </a-select>
   </div>
@@ -56,13 +56,13 @@ const tpl = `
           <template #title>
             <p>您是否确定放弃保存本地备份空间？<br>此操作将<strong style="color: red">删除本地备份</strong>空间。<br>建议您将当前空间保存至云端备份。</p>
           </template>
-          <a-button type="primary">切换到最新的云端空间</a-button>
+          <a-button>切换到最新的云端空间</a-button>
         </a-popconfirm>
-        <a-button v-else type="primary" @click="saveAndChange">切换到最新的云端空间</a-button>
+        <a-button v-else  @click="saveAndChange">切换到最新的云端空间</a-button>
       </a-col>
       <a-col  :span="6" ></a-col>
       <a-col  :span="6"  style="text-align: center">
-        <a-button v-if="save" @click="switchToBackup">切换到保存的备份空间</a-button>
+        <a-button type="primary" v-if="save" @click="switchToBackup">切换到保存的备份空间</a-button>
          <a-popconfirm v-if="!save" placement="top" ok-text="确定放弃" cancel-text="再考虑一下" @confirm="switchToOtherSpace">
           <template #title>
             <p>您是否确定放弃保存本地备份空间？<br>此操作将<strong style="color: red">删除本地备份</strong>空间。<br>建议您将当前空间保存至云端备份。</p>
@@ -122,9 +122,9 @@ const fatal = {
     }
   },
   async mounted () {
-
     try {
       let space = await backupSpaceModel.getSpace(window.globalArgs['spaceId'])
+      await backupSpaceModel.setOfflineUse(this.spaceId)
       if (!!!space) {
         this.isDestroyed = true
       } else {
@@ -144,13 +144,10 @@ const fatal = {
       console.warn('无法获取到space')
     }
     this.title = window.globalArgs['title'] || '保存冲突，无法保存空间至云端'
-    this.canSaveToCloud = window.globalArgs['canSaveToCloud'] === 'true'
+    this.canSaveToCloud =!(window.globalArgs['canSaveToCloud'] === 'false')
     if (!this.canSaveToCloud) {
       this.savePosition = 'local'
-      console.log('local', this.savePosition)
     }
-    console.log(this.canSaveToCloud)
-    console.log(this.savePosition)
     this.description = window.globalArgs['description'] || '系统检测到当前空间已被<strong>其他设备占用</strong>。无法再保存当前空间。'
 
   },
@@ -178,7 +175,6 @@ const fatal = {
       this.$router.replace('/')
     },
     async saveAndChangeToLocal () {
-      //todo 添加新一个空间到本地
       if (this.backupName.trim() === '') {
         antd.message.error('空间名必填')
         return
@@ -203,6 +199,34 @@ const fatal = {
       } catch (e) {
         console.warn(e)
         antd.message.error('复制备份空间失败。非常遗憾，备份空间损坏。请不勾选备份保存，放弃保存后切换到其他空间。')
+      }
+    },
+    async saveAndChangeToCloud() {
+      if (this.backupName.trim() === '') {
+        antd.message.error('空间名必填')
+        return
+      }
+      try {
+        let result = await backupSpaceModel.copyToCloudById(this.spaceId, this.backupName)
+        if (result.status) {
+          try {
+            let resultChange = await spaceModel.setUser(this.user).changeCurrent(result.data)
+            if (resultChange.status === 1) {
+              //会自动关闭窗体
+            } else {
+              window.antd.message.error('切换使用空间失败。')
+            }
+          } catch (e) {
+            console.warn(e)
+            window.antd.message.error('切换使用空间失败。意外错误。')
+          }
+        } else {
+          console.warn(this.space)
+          antd.message.error('复制备份空间失败。请尝试更改备份到本地，再重试。')
+        }
+      } catch (e) {
+        console.warn(e)
+        antd.message.error('意外错误，复制备份空间失败。请尝试更改备份到本地，再重试。')
       }
     },
     switchToBackup () {

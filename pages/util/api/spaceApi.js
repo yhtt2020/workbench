@@ -12,7 +12,8 @@ const url = {
   rename:'/app/renameSpace',
   clientOffline:'/app/clientOffline',
   clientOnline:'/app/clientOnline',
-  copy:'/app/copySpace'
+  copy:'/app/copySpace',
+  copyBySpace:'/app/copySpaceBySpace'
 }
 
 const spaceApi = {
@@ -47,6 +48,10 @@ const spaceApi = {
   async importFromLocal(spaces,user){
     await baseApi.init(user)
     return baseApi.axios(url.import,{spaces:spaces},'post')
+  },
+  async copyBySpace(space,user){
+    await baseApi.init(user)
+    return baseApi.axios(url.copyBySpace,{space:space},'post')
   },
   async rename(newName,nanoid,user){
     await baseApi.init(user)
