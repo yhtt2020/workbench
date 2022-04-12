@@ -339,7 +339,7 @@ const sidebarTpl = `
                         @mouseenter="showHoverLock(tab)" @mouseleave="hideHoverLock(tab)" v-for="(tab,j) in item.tabs"
                         :key="tab.id">
                         <div class="tab-title" @click="openPopoverTab(item.id, tab.id)">
-                        <span @click="closeTab(tab.id,item.id)" style="float: left;cursor: pointer"  title="关闭该标签" :id="'close'+tab.id" hidden  class="closeTab">
+                        <span @click.stop="closeTab(tab.id,item.id)" style="float: left;cursor: pointer"  title="关闭该标签" :id="'close'+tab.id" hidden  class="closeTab">
                            <img src="assets/close-box.svg"  style="margin-left: 9px;width: 22px;height: 22px">
                          </span>
                           <img class="tab-icon" :id="'tabIcon'+tab.id"  :src="tab.icon" style="margin-left: 8px"
@@ -628,6 +628,7 @@ Vue.component('sidebar', {
       //   ipc.send('executeApp',{app:app})
       // }
       // 判断单例的问题留给主进程处理
+      // console.log(app)
       ipc.send('executeApp',{app:app})
     },
 		toggleUserPanel(){
@@ -861,7 +862,7 @@ Vue.component('sidebar', {
       ipc.sendTo(mainWindowId,'toggleLockTab',{id:id,taskId:taskId})
     },
     closeTab(id,taskId){
-      event.stopPropagation()
+
       ipc.sendTo(mainWindowId,'closeTab',{id:id,taskId:taskId})
     },
 
