@@ -288,8 +288,8 @@ const sessionRestore = {
             //正常登录
             space = spaceResult.data
             space.id=space.nanoid
-            //正常登录需要使用线上版本的空间来更新一下本地的备份空间
-            backupSpaceModel.save(space,{data:space.data,count_task: space.count_task,count_tab: space.count_tab,})
+            //正常登录需要使用线上版本的空间来更新一下本地的备份空间，此时是最佳的更新备份空间时机
+            backupSpaceModel.save(space,{data:space.data,count_task: space.count_task,count_tab: space.count_tab,userInfo:currentSpace.userInfo})
             spaceModel.setCurrentSpace(space)
           }
         }

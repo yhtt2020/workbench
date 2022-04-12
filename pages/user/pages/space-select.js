@@ -580,6 +580,7 @@ const SpaceSelect = {
           window.antd.message.error('切换使用空间失败。')
         }
       } catch (e) {
+        console.warn(e)
         window.antd.message.error('切换使用空间失败。意外错误。')
       }
 
