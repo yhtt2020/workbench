@@ -1,4 +1,5 @@
 const { nanoid } = require('nanoid')
+const standReturn = require('../util/standReturn')
 if (typeof window !=='undefined') {
   ldb = window.ldb
 }
@@ -78,7 +79,24 @@ const backupSpaceModel={
       }
       ldb.db.get('spaces').push(newSpace).write()
     }
-  }
+  },
+  copyById(spaceId,name){
+    ldb.reload()
+    let sourceSpace=backupSpaceModel.getSpace(spaceId)
+    if(!!!sourceSpace){
+      return standReturn.failure('空间不存在')
+    }
+    let targetSpace= JSON.parse(JSON.stringify(sourceSpace))
+    targetSpace.id=nanoid()
+    targetSpace.type='local'
+    targetSpace.name=name || targetSpace.name+'_副本'
+    targetSpace.uid=0
+    delete targetSpace.userInfo
+    delete targetSpace.offlineUse
+    targetSpace.update_time=Date.now()
+    ldb.db.get('spaces').push(targetSpace).write()
+    return standReturn.success(targetSpace)
+  },
 }
 
 

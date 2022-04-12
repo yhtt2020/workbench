@@ -37,7 +37,7 @@ const localSpaceModel={
   copy(space){
     ldb.reload()
     let sourceSpace=localSpaceModel.getSpace(space.id)
-    if(!!!space){
+    if(!!!sourceSpace){
       return standReturn.failure('空间不存在')
     }
     let targetSpace= JSON.parse(JSON.stringify(sourceSpace))

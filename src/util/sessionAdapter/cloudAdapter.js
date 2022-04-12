@@ -71,7 +71,7 @@ const cloudAdapter={
             //todo 保存失败，冲突
             console.warn('fail','设备冲突导致云端存储失败')
             console.log(saveData)
-            return fatal({modal:true,title:'无法成功保存空间',description:'云端空间已被其他设备抢占，当前空间已无法存入。',fatal:true})
+            return fatal({spaceId:spaceId,modal:true,title:'无法成功保存空间',description:'云端空间已被其他设备抢占，当前空间已无法存入。',fatal:true})
           }
 
           backupSpaceModel.cancelOfflineUse(spaceId)
