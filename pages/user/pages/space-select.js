@@ -101,7 +101,8 @@ const tpl = `
         <template #overlay>
           <a-menu>
             <a-menu-item @click="showRenameSpace(space)" :key="'rename_'+index">重命名</a-menu-item>
-            <a-menu-item @click="deleteSpace(space)" :key="'delete_'+index">删除空间</a-menu-item>
+            <a-menu-item @click="copySpace(space)" :key="'rename_'+index">复制</a-menu-item>
+            <a-menu-item @click="deleteSpace(space)" :key="'delete_'+index">删除</a-menu-item>
           </a-menu>
         </template>
       </a-dropdown>
@@ -528,6 +529,19 @@ const SpaceSelect = {
       }
     },
 
+    /**
+     * 复制一个空间，右键菜单
+     * @param space
+     */
+    async copySpace (space) {
+      let result=await spaceModel.setUser(this.user).copy(space)
+      if(result.status===1){
+        window.antd.message.success('复制空间成功')
+        this.loadSpaces()
+      }else{
+        window.antd.message.error('复制空间失败。')
+      }
+    },
     deleteSpace (space) {
       if (space.isUsing || space.isOtherUsing) {
         window.antd.message.info('不可删除正在使用中的空间。')

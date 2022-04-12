@@ -99,7 +99,9 @@ const spaceModel = {
   async getSpace (id) {
     return spaceModel.adapterModel.getSpace(id, spaceModel.user)
   },
-
+  async copy(space) {
+    return spaceModel.adapterModel.copy(space, spaceModel.user)
+  },
   async addSpace (space) {
     return spaceModel.adapterModel.addSpace(space, spaceModel.user)
   },

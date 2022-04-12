@@ -34,7 +34,19 @@ const localSpaceModel={
       return null
     }
   },
-
+  copy(space){
+    ldb.reload()
+    let sourceSpace=localSpaceModel.getSpace(space.id)
+    if(!!!space){
+      return standReturn.failure('空间不存在')
+    }
+    let targetSpace= JSON.parse(JSON.stringify(sourceSpace))
+    targetSpace.id=nanoid()
+    targetSpace.name=targetSpace.name+'_副本'
+    targetSpace.update_time=Date.now()
+    ldb.db.get('spaces').push(targetSpace).write()
+    return standReturn.success(targetSpace)
+  },
   addSpace(space,user){
     ldb.reload()
     /*
