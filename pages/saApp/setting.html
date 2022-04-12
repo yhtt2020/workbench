@@ -111,7 +111,7 @@
           'summary',
           { rules: [{ required: true, message: '请输入应用说明' }] },
         ]"
-                      placeholder="输入应用说明"
+                      placeholder="输入应用说明" maxlength="50"
                     />
                   </a-form-item>
                   <a-form-item
@@ -120,11 +120,13 @@
                     label="主题色"
                   >
 <!--                    -->
-                    <div>
-                      <span class="theme-color" :style="{'background-color':this.saApp.themeColor} "></span>&nbsp; 图标背景色
+                    <div >
+                      <span class="theme-color" :style="{'background-color':this.saApp.themeColor} "></span>
+                      <div style="margin-left: 50px;margin-top: -35px">图标背景色</div>
                     </div>
-                    <div><v-swatches class="color-select" @input="userThemeColorChanged" shapes="circles" v-model="saApp.userThemeColor" popover-x="left" popover-y="bottom" show-fallback swatches="text-advanced" fallback-input-type="color"></v-swatches> &nbsp;自定义背景色
-                    <a-button type="default" size="small" @click="saApp.userThemeColor='';userThemeColorChanged('')">重置</a-button>
+                    <div style="margin-top: 18px"><v-swatches class="color-select" @input="userThemeColorChanged" shapes="circles" v-model="saApp.userThemeColor" popover-x="left" popover-y="bottom" show-fallback swatches="text-advanced" fallback-input-type="color"></v-swatches>
+                      <div style="margin-left: 50px;margin-top: -33px">自定义背景色</div>
+                    <a-button style="position: absolute;margin-left: 140px;margin-top: -21px" type="default" size="small" @click="saApp.userThemeColor='';userThemeColorChanged('')">重置</a-button>
                     </div>
                   </a-form-item>
 
