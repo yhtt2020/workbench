@@ -22,7 +22,9 @@ const tpl = `
     <!--      <a-empty text="无空间" v-if="spaces.length===0"></a-empty>-->
     <div style="text-align: left;overflow-y: auto;max-height: 310px;margin-right: 20px;padding-top: 10px;padding-left: 40px;padding-bottom: 10px" class="scroller">
     <a-tooltip v-for="space,index in spaces" placement="bottom">
-    <template #title>保存时间：{{dateTime(space.sync_time)}}<br>修改时间：{{dateTime(space.update_time)}}<br>创建时间：{{dateTime(space.create_time)}}<br>
+    <template #title>
+    名称：{{space.name}}<br>
+    保存时间：{{dateTime(space.sync_time)}}<br>修改时间：{{dateTime(space.update_time)}}<br>创建时间：{{dateTime(space.create_time)}}<br>
      <span v-if="space.client_id !==''">设备ID：{{space.client_id}}</span>
      </template>
         <a-card  v-if="space.type==='cloud'"
@@ -63,7 +65,9 @@ const tpl = `
 
       <a-dropdown v-for="space,index in spaces" :trigger="['contextmenu']">
          <a-tooltip placement="bottom">
-    <template #title>保存时间：{{dateTime(space.sync_time)}}<br>修改时间：{{dateTime(space.update_time)}}<br>创建时间：{{dateTime(space.create_time)}}<br>
+    <template #title>
+    名称：{{space.name}}<br>
+    保存时间：{{dateTime(space.sync_time)}}<br>修改时间：{{dateTime(space.update_time)}}<br>创建时间：{{dateTime(space.create_time)}}<br>
      <span v-if="space.client_id !==''">设备ID：{{space.client_id}}</span>
      </template>
         <a-card  v-if="space.type!=='cloud'" @click="switchSpace(space)"
