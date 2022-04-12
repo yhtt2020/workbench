@@ -331,9 +331,6 @@ const globalSearch = new Vue({
   async mounted () {
     await this.getAllApps()
     this.bindKeys()
-    document.addEventListener('contextmenu',function(e){
-      e.preventDefault();       // 右键事件触发
-    })
     this.recentOpenedHistory = await this.handleRecentOpenedHistory()
     this.recentReadyedItem = this.recentOpenedHistory[0]
     this.calculateAreaHeight(this.recentOpenedHistory)

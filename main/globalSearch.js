@@ -44,9 +44,9 @@ const globalSearchMod = {
       globalSearch.webContents.send('viewLoaded')
     })
 
-    // globalSearch.on('blur', () => {
-    //   globalSearch.hide()
-    // })
+    globalSearch.on('blur', () => {
+      globalSearch.hide()
+    })
   }
 }
 
