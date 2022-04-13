@@ -626,6 +626,14 @@ ipc.on('view-event', function (e, args) {
     originalId = args.viewId
   }
 
+  if (args.event === 'dom-ready') {
+    for(let i =0;i<tabs.tabs.length;i++){
+      if(tabs.tabs[i].id===args.viewId){
+        tabs.tabs[i].domRead=true
+
+      }
+    }
+  }
   for (let i = 0; i < tabs.tabs.length; i++) {
     originalId = args.viewId
     if (tabs.tabs[i].id === originalId) {
@@ -642,7 +650,7 @@ ipc.on('closeEmptyPage',(event,args)=>{
     for(let j=0;j<args.length;j++){
       if(tabs.tabs[i].url===args[j]){
         console.log(tabs.tabs[i].id)
-        if(args.length!==1){
+        if(args.length!==1 && tabs.tabs[i].domRead!==true){
           require('browserUI.js').closeTab(tabs.tabs[i].id)
         }
       }
