@@ -8,8 +8,8 @@ const messageTempl = /* html */`
           <span>通知中心</span>
         </div>
         <div class="top-rg flex justify-around align-center">
-          <div class="top-rg-block flex justify-center align-center" style="width: 24px; height: 24px;" >
-            <img title="清理全部" src="./assets/clean.svg" alt="" style="width: 18px; height: 18px;" @click="clearMessages" v-if="this.$store.getters.getAllMessages.length > 0">
+          <div class="top-rg-block flex justify-center align-center" style="width: 24px; height: 24px;" v-if="this.$store.getters.getAllMessages.length > 0">
+            <img title="清理全部" src="./assets/clean.svg" alt="" style="width: 18px; height: 18px;" @click="clearMessages">
           </div>
           <div style="width: 24px; height: 24px;" v-else></div>
           <div class="top-rg-block flex justify-center align-center" style="width: 24px; height: 24px;" >
