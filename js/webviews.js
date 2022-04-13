@@ -630,7 +630,7 @@ ipc.on('view-event', function (e, args) {
     for(let i =0;i<tabs.tabs.length;i++){
       if(tabs.tabs[i].id===args.viewId){
         tabs.tabs[i].domRead=true
-        console.log(tabs.tabs[i])
+
       }
     }
   }
