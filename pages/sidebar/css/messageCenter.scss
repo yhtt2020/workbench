@@ -34,6 +34,13 @@
       width: 30%;
       height: 100%;
       margin-right: 10px;
+      .top-rg-block {
+        border-radius: 5px;
+        transition: all 1000ms;
+        &:hover {
+          background-color: #918e8e4b;
+        }
+      }
       img {
         &:hover {
           cursor: pointer;

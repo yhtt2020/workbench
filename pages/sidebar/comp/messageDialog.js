@@ -1,4 +1,4 @@
-const messageTempl = `
+const messageTempl = /* html */`
   <div class="message-wrap" v-show="visible">
     <div class="message-mask" @click="clkmask"></div>
     <div class="message-dialog flex flex-direction">
@@ -8,10 +8,16 @@ const messageTempl = `
           <span>通知中心</span>
         </div>
         <div class="top-rg flex justify-around align-center">
-          <img title="清理全部" src="./assets/clean.svg" alt="" style="width: 18px; height: 18px;" @click="clearMessages" v-if="this.$store.getters.getAllMessages.length > 0">
-          <div style="width: 18px; height: 18px;" v-else></div>
-          <a-icon title="设置" type="setting" :style="{ fontSize: '16px', color: '#8c8c8c' }" @click="openMsmSetting"></a-icon>
-          <a-icon title="固定" type="pushpin" :style="{ fontSize: '16px', color: '#8c8c8c' }" @click="fixedMessage" :theme="fixed ? 'filled' : 'outlined'"></a-icon>
+          <div class="top-rg-block flex justify-center align-center" style="width: 24px; height: 24px;" >
+            <img title="清理全部" src="./assets/clean.svg" alt="" style="width: 18px; height: 18px;" @click="clearMessages" v-if="this.$store.getters.getAllMessages.length > 0">
+          </div>
+          <div style="width: 24px; height: 24px;" v-else></div>
+          <div class="top-rg-block flex justify-center align-center" style="width: 24px; height: 24px;" >
+            <a-icon title="设置" type="setting" :style="{ fontSize: '16px', color: '#8c8c8c' }" @click="openMsmSetting"></a-icon>
+          </div>
+          <div class="top-rg-block flex justify-center align-center" style="width: 24px; height: 24px;" >
+            <a-icon title="固定" type="pushpin" :style="{ fontSize: '16px', color: '#8c8c8c' }" @click="fixedMessage" :theme="fixed ? 'filled' : 'outlined'"></a-icon>
+          </div>
         </div>
       </div>
       <template v-if="this.$store.getters.getAllMessages.length === 0">
