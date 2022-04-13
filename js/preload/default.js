@@ -47,6 +47,7 @@ ipc.on('enterPictureInPicture', function (event, data) {
 
 window.addEventListener('message', function (e) {
   if(e.data && e.data.eventName && e.data.eventName === 'webNotice') {
+    console.log(e, '????')
     ipc.send('webOsNotice', e.data)
   }
 
@@ -88,6 +89,19 @@ electron.webFrame.executeJavaScript(`
     return copy;
   }
 
+  function getFavicon(){
+    var favicon = undefined;
+    var nodeList = document.getElementsByTagName("link");
+    for (var i = 0; i < nodeList.length; i++)
+    {
+      if((nodeList[i].getAttribute("rel") == "icon")||(nodeList[i].getAttribute("rel") == "shortcut icon"))
+      {
+        favicon = nodeList[i].getAttribute("href");
+      }
+    }
+    return favicon;
+  }
+
   let oldNotice = copyData(window.Notification)
   Notification = function(title, options) {
     //oldNotice.call(this, title, options)
@@ -97,7 +111,8 @@ electron.webFrame.executeJavaScript(`
       url: new URL(window.origin).hostname,
       title: arguments[0],
       body: arguments[1].body,
-      icon: arguments[1].hasOwnProperty('icon') ? arguments[1].icon : null
+      icon: arguments[1].hasOwnProperty('icon') ? arguments[1].icon : null,
+      favicon: getFavicon() ? getFavicon() : null
     })
   }
 

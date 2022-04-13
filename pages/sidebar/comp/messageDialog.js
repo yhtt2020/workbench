@@ -39,7 +39,10 @@ const messageTempl = /* html */`
                 <a-dropdown :trigger="['contextmenu']" class="flex justify-between align-center" v-for="(item, index) in groupMessage" :key="index">
                   <li>
                     <div class="flex flex-direction justify-around align-start">
-                      <span class="text-black" style="font-weight: 500;">{{item.title}}</span>
+                      <div class="flex justify-start align-center">
+                        <img @error="errorPic($event, item)" :src="item.avatar.length > 0 ? item.avatar : item.indexName.startsWith('1_') ? 'https://apps.vip/img/anonymity.png' : '../../icons/svg/chat.svg'" alt="" style="width: 20px; height: 20px; margin-right: 8px; border-radius: 5px; object-fit: cover;">
+                        <span class="text-black" style="font-weight: 500;">{{item.title}}</span>
+                      </div>
                       <span class="text-grey-sm sg-omit2-sm" style="width: 94%">{{item.body}}</span>
                       <span class="text-grey-sm">{{item.time}}</span>
                     </div>
@@ -75,7 +78,10 @@ const messageTempl = /* html */`
                 <a-dropdown :trigger="['contextmenu']" class="flex justify-between align-center" v-for="(item, index) in communityMessage" :key="index">
                   <li>
                     <div class="flex flex-direction justify-around align-start">
-                      <span class="text-black" style="font-weight: 500;">{{item.title}}新动态</span>
+                      <div class="flex justify-start align-center">
+                        <img onerror="this.src='./assets/osx.svg'" :src="item.avatar.length > 0 ? item.avatar : './assets/osx.svg'" alt="" style="width: 20px; height: 20px; margin-right: 8px; border-radius: 5px; object-fit: cover;">
+                        <span class="text-black" style="font-weight: 500;">{{item.title}}新动态</span>
+                      </div>
                       <span class="text-grey-sm sg-omit2-sm" style="width: 94%">{{item.body}}</span>
                       <span class="text-grey-sm">{{item.time}}</span>
                     </div>
@@ -111,7 +117,10 @@ const messageTempl = /* html */`
                 <a-dropdown :trigger="['contextmenu']" class="flex justify-between align-center" v-for="(item, index) in webOsMessage" :key="index">
                   <li>
                     <div class="flex flex-direction justify-around align-start">
-                      <span class="text-black" style="font-weight: 500;">{{item.title}}</span>
+                      <div class="flex justify-start align-center">
+                        <img onerror="this.src='../../icons/default.svg'" :src="item.avatar.length > 0 ? item.avatar : '../../icons/default.svg'" alt="" style="width: 20px; height: 20px; margin-right: 8px; border-radius: 5px; object-fit: cover;">
+                        <span class="text-black" style="font-weight: 500;">{{item.title}}</span>
+                      </div>
                       <span class="text-grey-sm sg-omit-sm" style="width: 94%">{{item.body}}</span>
                       <span class="text-grey-sm">{{item.time}}</span>
                     </div>
@@ -187,6 +196,11 @@ Vue.component("message-center", {
     }
   },
   methods: {
+    errorPic(event, item) {
+      let img = event.srcElement;   //当前元素
+      img.src = item.indexName.startsWith('1_') ? 'https://apps.vip/img/anonymity.png' : '../../icons/svg/chat.svg';
+      img.onerror = null; //防止闪图
+    },
     showGroup() {
       ipc.send('saAppOpen', {saAppId: 1})
     },

@@ -57,8 +57,8 @@ const tsbSdk = {
         case "openSysApp":
           tsbSdk.openSysApp(e.data.options);
           break;
-        case 'openOsxInviteMember':
-          tsbSdk.openOsxInviteMember(e.data.options)
+        case "openOsxInviteMember":
+          tsbSdk.openOsxInviteMember(e.data.options);
           break;
         default:
           console.log(messageEvent, "未命中🎯");
@@ -143,16 +143,16 @@ const tsbSdk = {
   },
 
   noticeApp: function (options) {
+    if (
+      !options.hasOwnProperty("title") ||
+      !options.hasOwnProperty("body") ||
+      !options.hasOwnProperty("avatar") ||
+      Object.keys(options).length <= 0
+    )
+      return;
+
     if (!tsbSdk.isThirdApp) {
-      if (
-        Object.keys(options).length > 0 &&
-        options.title.length > 0 &&
-        options.body.length > 0
-      ) {
-        ipc.send("saAppNotice", { options, saAppId: tsbSdk.tsbSaApp.id });
-      } else {
-        return;
-      }
+      ipc.send("saAppNotice", { options, saAppId: tsbSdk.tsbSaApp.id });
     } else {
       window.postMessage({
         eventName: "thirdSaAppNotice",
@@ -193,18 +193,18 @@ const tsbSdk = {
 
   openOsxInviteMember: function (options) {
     if (Object.keys(options).length === 0) return;
-    if(!options.groupId) return;
+    if (!options.groupId) return;
     if (!tsbSdk.isThirdApp) {
-      ipc.send('osxOpenInviteMember', options.groupId)
+      ipc.send("osxOpenInviteMember", options.groupId);
     } else {
       window.postMessage({
-        eventName: 'thirdOsxOpenInviteMember',
+        eventName: "thirdOsxOpenInviteMember",
         options,
         saApp: window.tsbSaApp,
         hashId: window.tsbSDK.hashId,
-      })
+      });
     }
-  }
+  },
 };
 
 module.exports = tsbSdk;
