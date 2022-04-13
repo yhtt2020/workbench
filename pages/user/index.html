@@ -12,7 +12,7 @@
 </head>
 <body style="background: #00000000">
 <div id="appVue">
-  <div style="position: fixed;left: 0;right: 0;bottom: 0;top: 0" :style="{'background-color':'rgba(0,0,0,0.38)'}"><!--this.modal?'#00000000':-->
+  <div style="position: fixed;left: 0;right: 0;bottom: 0;top: 0;border-radius: 12px" :style="{'background-color':'rgba(0,0,0,0.38)'}"><!--this.modal?'#00000000':-->
     <div @click.stop="()=>{}"
          style="position: fixed;left: 50%;top: 50%;margin-left: -325px;margin-top: -240px;width: 650px;height: 480px;background: white;border-radius: 8px;">
       <div v-if="!modal" @click="closeWindow" style="position:absolute;cursor: pointer;z-index:999;right: -10px;top: -10px">
