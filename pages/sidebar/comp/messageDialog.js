@@ -1,4 +1,4 @@
-const messageTempl = `
+const messageTempl = /* html */`
   <div class="message-wrap" v-show="visible">
     <div class="message-mask" @click="clkmask"></div>
     <div class="message-dialog flex flex-direction">
@@ -8,10 +8,16 @@ const messageTempl = `
           <span>通知中心</span>
         </div>
         <div class="top-rg flex justify-around align-center">
-          <img title="清理全部" src="./assets/clean.svg" alt="" style="width: 18px; height: 18px;" @click="clearMessages" v-if="this.$store.getters.getAllMessages.length > 0">
-          <div style="width: 18px; height: 18px;" v-else></div>
-          <a-icon title="设置" type="setting" :style="{ fontSize: '16px', color: '#8c8c8c' }" @click="openMsmSetting"></a-icon>
-          <a-icon title="固定" type="pushpin" :style="{ fontSize: '16px', color: '#8c8c8c' }" @click="fixedMessage" :theme="fixed ? 'filled' : 'outlined'"></a-icon>
+          <div class="top-rg-block flex justify-center align-center" style="width: 24px; height: 24px;" v-if="this.$store.getters.getAllMessages.length > 0">
+            <img title="清理全部" src="./assets/clean.svg" alt="" style="width: 18px; height: 18px;" @click="clearMessages">
+          </div>
+          <div style="width: 24px; height: 24px;" v-else></div>
+          <div class="top-rg-block flex justify-center align-center" style="width: 24px; height: 24px;" >
+            <a-icon title="设置" type="setting" :style="{ fontSize: '16px', color: '#8c8c8c' }" @click="openMsmSetting"></a-icon>
+          </div>
+          <div class="top-rg-block flex justify-center align-center" style="width: 24px; height: 24px;" >
+            <a-icon title="固定" type="pushpin" :style="{ fontSize: '16px', color: '#8c8c8c' }" @click="fixedMessage" :theme="fixed ? 'filled' : 'outlined'"></a-icon>
+          </div>
         </div>
       </div>
       <template v-if="this.$store.getters.getAllMessages.length === 0">
@@ -19,26 +25,31 @@ const messageTempl = `
       </template>
       <div class="mid" :class="{'silent' : !isSilent}" v-else>
         <div class="lumen flex flex-direction justify-between align-center" v-show="groupMessage.length > 0">
-          <div class="lumen-top flex justify-between align-center">
+          <div class="lumen-top flex justify-between align-center" @click="handleMessageListStatus('groupChat')">
             <div class="lumen-top-lf flex justify-start align-center text-black">
               <img src="../../icons/svg/chat.svg" style="width: 30px; height: 30px;">
               <span>团队</span>
-              <a-icon type="export" :style="{ fontSize: '16px', color: '#8c8c8c' }" @click="showGroup"></a-icon>
+              <a-icon type="export" :style="{ fontSize: '16px', color: '#8c8c8c' }" @click.stop="showGroup"></a-icon>
             </div>
-            <a-icon class="lumen-top-rg" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click="removeAllMessage('groupChat')"></a-icon>
+            <a-icon class="lumen-top-rg" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click.stop="removeAllMessage('groupChat')"></a-icon>
           </div>
-          <div class="lumen-content flex flex-direction justify-center align-center">
+          <div class="lumen-content flex flex-direction justify-center align-center" v-show="!messageListStatus.groupChat.fold">
             <ul>
               <template>
-                <a-dropdown :trigger="['contextmenu']" class="flex justify-between align-center" v-for="(item, index) in groupMessage" :key="index">
-                  <li>
-                    <div class="flex flex-direction justify-around align-start">
-                      <span class="text-black" style="font-weight: 500;">{{item.title}}</span>
-                      <span class="text-grey-sm sg-omit2-sm" style="width: 94%">{{item.body}}</span>
-                      <span class="text-grey-sm">{{item.time}}</span>
-                    </div>
-                    <a-icon class="closex" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click="removeMessage(item.id)"></a-icon>
-                  </li>
+                <a-dropdown :trigger="['contextmenu']" class="flex justify-between align-center" v-for="(item, index) in groupMessage" :key="item.id">
+                  <transition name="slide-fade">
+                    <li @click="openMenuClick(item)">
+                      <div class="flex flex-direction justify-around align-start">
+                        <div class="flex justify-start align-center">
+                          <img @error="errorPic($event, item)" :src="item.avatar.length > 0 ? item.avatar : item.indexName.startsWith('1_') ? 'https://apps.vip/img/anonymity.png' : '../../icons/svg/chat.svg'" alt="" style="width: 20px; height: 20px; margin-right: 8px; border-radius: 5px; object-fit: cover;">
+                          <span class="text-black" style="font-weight: 500;">{{item.title}}</span>
+                        </div>
+                        <span class="text-grey-sm sg-omit2-sm" style="width: 94%">{{item.body}}</span>
+                        <span class="text-grey-sm">{{item.time}}</span>
+                      </div>
+                      <a-icon class="closex" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click.stop="removeMessage(item.id)"></a-icon>
+                    </li>
+                  </transition>
                   <a-menu slot="overlay">
                     <a-menu-item key="1"  @click="openMenuClick(item)">
                       打开
@@ -56,25 +67,30 @@ const messageTempl = `
           </div>
         </div>
         <div class="osx flex flex-direction justify-center align-center" v-show="communityMessage.length > 0">
-          <div class="osx-top flex justify-between align-center">
+          <div class="osx-top flex justify-between align-center" @click="handleMessageListStatus('community')">
             <div class="osx-top-lf flex justify-start align-center text-black">
               <img src="./assets/osx.svg" style="width: 30px; height: 30px;">
               <span>社区</span>
             </div>
-            <a-icon class="osx-top-rg" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click="removeAllMessage('community')"></a-icon>
+            <a-icon class="osx-top-rg" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click.stop="removeAllMessage('community')"></a-icon>
           </div>
-          <div class="osx-content flex flex-direction justify-center align-center">
+          <div class="osx-content flex flex-direction justify-center align-center" v-show="!messageListStatus.community.fold">
             <ul>
               <template>
-                <a-dropdown :trigger="['contextmenu']" class="flex justify-between align-center" v-for="(item, index) in communityMessage" :key="index">
-                  <li>
-                    <div class="flex flex-direction justify-around align-start">
-                      <span class="text-black" style="font-weight: 500;">{{item.title}}新动态</span>
-                      <span class="text-grey-sm sg-omit2-sm" style="width: 94%">{{item.body}}</span>
-                      <span class="text-grey-sm">{{item.time}}</span>
-                    </div>
-                    <a-icon class="closex" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click="removeMessage(item.id)"></a-icon>
-                  </li>
+                <a-dropdown :trigger="['contextmenu']" class="flex justify-between align-center" v-for="(item, index) in communityMessage" :key="item.id">
+                  <transition name="slide-fade">
+                    <li>
+                      <div class="flex flex-direction justify-around align-start">
+                        <div class="flex justify-start align-center">
+                          <img onerror="this.src='./assets/osx.svg'" :src="item.avatar.length > 0 ? item.avatar : './assets/osx.svg'" alt="" style="width: 20px; height: 20px; margin-right: 8px; border-radius: 5px; object-fit: cover;">
+                          <span class="text-black" style="font-weight: 500;">{{item.title}}新动态</span>
+                        </div>
+                        <span class="text-grey-sm sg-omit2-sm" style="width: 94%">{{item.body}}</span>
+                        <span class="text-grey-sm">{{item.time}}</span>
+                      </div>
+                      <a-icon class="closex" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click.stop="removeMessage(item.id)"></a-icon>
+                    </li>
+                  </transition>
                   <a-menu slot="overlay">
                     <a-menu-item key="1" @click="openMenuClick(item.id)">
                       打开
@@ -92,25 +108,30 @@ const messageTempl = `
           </div>
         </div>
         <div class="webos flex flex-direction justify-between align-center" v-show="webOsMessage.length > 0">
-          <div class="webos-top flex justify-between align-center text-black">
+          <div class="webos-top flex justify-between align-center text-black" @click="handleMessageListStatus('webOs')">
             <div class="webos-top-lf flex justify-start align-center text-black">
               <img src="./assets/network.svg" style="width: 30px; height: 30px;">
               <span>来自网页的消息</span>
             </div>
-            <a-icon class="webos-top-rg" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click="removeAllMessage('webOs')"></a-icon>
+            <a-icon class="webos-top-rg" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click.stop="removeAllMessage('webOs')"></a-icon>
           </div>
-          <div class="webos-content flex flex-direction justify-center align-center">
+          <div class="webos-content flex flex-direction justify-center align-center" v-show="!messageListStatus.webOs.fold">
             <ul>
               <template>
-                <a-dropdown :trigger="['contextmenu']" class="flex justify-between align-center" v-for="(item, index) in webOsMessage" :key="index">
-                  <li>
-                    <div class="flex flex-direction justify-around align-start">
-                      <span class="text-black" style="font-weight: 500;">{{item.title}}</span>
-                      <span class="text-grey-sm sg-omit-sm" style="width: 94%">{{item.body}}</span>
-                      <span class="text-grey-sm">{{item.time}}</span>
-                    </div>
-                    <a-icon class="closex" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click="removeMessage(item.id)"></a-icon>
-                  </li>
+                <a-dropdown :trigger="['contextmenu']" class="flex justify-between align-center" v-for="(item, index) in webOsMessage" :key="item.id">
+                  <transition name="slide-fade">
+                    <li @click="openMenuClick(item)">
+                      <div class="flex flex-direction justify-around align-start">
+                        <div class="flex justify-start align-center">
+                          <img onerror="this.src='../../icons/default.svg'" :src="item.avatar.length > 0 ? item.avatar : '../../icons/default.svg'" alt="" style="width: 20px; height: 20px; margin-right: 8px; border-radius: 5px; object-fit: cover;">
+                          <span class="text-black" style="font-weight: 500;">{{item.title}}</span>
+                        </div>
+                        <span class="text-grey-sm sg-omit-sm" style="width: 94%">{{item.body}}</span>
+                        <span class="text-grey-sm">{{item.time}}</span>
+                      </div>
+                      <a-icon class="closex" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click.stop="removeMessage(item.id)"></a-icon>
+                    </li>
+                  </transition>
                   <a-menu slot="overlay">
                     <a-menu-item key="1" @click="openMenuClick(item)">
                       打开
@@ -152,7 +173,18 @@ Vue.component("message-center", {
   data() {
     return {
       fixed: localStorage.getItem("isMessageFixed") == "true" ? true : false,
-      silent: false
+      silent: false,
+      messageListStatus: {
+        groupChat: {
+          fold: false
+        },
+        community: {
+          fold: false
+        },
+        webOs: {
+          fold: false
+        }
+      }
     };
   },
   computed: {
@@ -181,6 +213,20 @@ Vue.component("message-center", {
     }
   },
   methods: {
+    handleMessageListStatus(type) {
+      if(type === 'groupChat') {
+        this.messageListStatus.groupChat.fold = !this.messageListStatus.groupChat.fold
+      } else if (type === 'community') {
+        this.messageListStatus.community.fold = !this.messageListStatus.community.fold
+      } else if (type === 'webOs') {
+        this.messageListStatus.webOs.fold = !this.messageListStatus.webOs.fold
+      }
+    },
+    errorPic(event, item) {
+      let img = event.srcElement;   //当前元素
+      img.src = item.indexName.startsWith('1_') ? 'https://apps.vip/img/anonymity.png' : '../../icons/svg/chat.svg';
+      img.onerror = null; //防止闪图
+    },
     showGroup() {
       ipc.send('saAppOpen', {saAppId: 1})
     },

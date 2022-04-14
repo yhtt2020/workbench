@@ -523,6 +523,7 @@ ipc.on('storeMessage', async (event, args) => {
   message.title = args.title
   message.body = args.body
   message.indexName = args.indexName ?? null
+  message.avatar = args.avatar
   await messageModel.add(message)
 
   this.$store.commit('ADD_MESSAGE', message)
@@ -539,7 +540,8 @@ ipc.on('webOsNotice', async(event, args) => {
     message.timestamp = Date.now()
     message.title = args.url
     message.body = `${args.title}【${args.body}】`
-    message.indexName = null
+    message.indexName = null,
+    message.avatar = args.icon ? args.icon : args.favicon
     await messageModel.add(message)
 
     this.$store.commit('ADD_MESSAGE', message)
