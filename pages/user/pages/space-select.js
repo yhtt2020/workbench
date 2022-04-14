@@ -346,9 +346,13 @@ const SpaceSelect = {
      */
     async importFromLocal () {
       //todo loadLocalSpaces()
-      this.localSpaces = await spaceModel.getLocalSpaces()
-      this.localOptions = this.localSpaces.map((space) => {
-        return { label: space.name +'（ '+ space.data.state.tasks.length+' 标签组）', value: space.id }
+      let spaces= await spaceModel.getLocalSpaces()
+      spaces.forEach((space) => {
+        if(space.data){
+          this.localOptions.push({ label: space.name +'（ '+ space.data.state.tasks.length+' 标签组）', value: space.id })
+          this.localSpaces.push(space)
+        }
+
       })
       for(let i=0;i<this.localOptions.length;i++){
         if(this.localOptions[i].value===this.currentSpace.spaceId){
