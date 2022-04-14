@@ -13,16 +13,16 @@
 <div id="appVue">
   <template>
     <div class="toggle">
-      <a-tabs default-active-key="1" @change="callback">
-        <a-tab-pane key="1" >
-        <span slot="tab">
+      <a-tabs default-active-key="1" @change="callback" >
+        <a-tab-pane key="1">
+        <span slot="tab" style="user-select:none" >
            <a-badge :count="count" id="tag">
              <a href="#" class="head-example"></a>
            </a-badge>
         下载中
       </span>
           <div v-show="listCount===0" style="margin-top: 50px">
-            <a-empty description="暂无下载任务"></a-empty>
+            <a-empty description="暂无下载任务" style="user-select:none"></a-empty>
           </div>
           <div id="downloadIng" v-for="(list,index) in lists" v-bind:key="index"
                @contextmenu="menuIng(index)" @click="change(index)"
@@ -31,7 +31,7 @@
                @mouseover="mouseOver(index)"
                @mouseleave="mouseLeave">
             <div style="margin-top: 0;width: 100%;height: 55px;">
-              <div style="width: 34px;height: 40px;position: absolute;margin-top: 8px;margin-left: 5px;" >
+              <div style="width: 34px;height: 40px;position: absolute;margin-top: 8px;margin-left: 5px; user-select:none" >
                 <img src="icon/white.svg">
               </div>
 
@@ -68,16 +68,20 @@
 
         </a-tab-pane>
 
-        <a-tab-pane key="2" tab="已完成" force-render>
+        <a-tab-pane key="2"  force-render>
+           <span slot="tab" style="user-select:none" >
+            已完成
+             </span>
           <div v-show="listDoneCount===0" style="margin-top: 50px">
-            <a-empty description="暂无完成任务"></a-empty>
+            <a-empty description="暂无完成任务" style="user-select:none" ></a-empty>
           </div>
-          <div id="downloadDone" v-for="(doneList,index) in doneLists" v-bind:key="index" @click="change(index)"  @contextmenu="menuDone(index)"  :class="{active : active === index,
+          <div id="downloadDone" v-for="(doneList,index) in doneLists" v-bind:key="index" @click="change(index)" @dblclick="openFileHandler(index)" @contextmenu="menuDone(index)"  :class="{active : active === index,
          clickActive:clickActive===index}"
                @mouseover="mouseOver(index)"
-               @mouseleave="mouseLeave">
+               @mouseleave="mouseLeave"
+                >
             <div style="width: 100%;height: 45px;">
-              <div style="width: 34px;height: 40px;position: absolute;margin-top: 4px;margin-left: 10px;" >
+              <div style="width: 34px;height: 40px;position: absolute;margin-top: 4px;margin-left: 10px; user-select:none" >
                 <img src="icon/white.svg">
               </div>
                 <div>
@@ -89,29 +93,32 @@
                   </a-modal>
                 </div>
 
-              <a-button style="position: absolute;margin-left: 290px;margin-top: 5px;cursor:pointer" type="link" @click="openFileHandler(index)" >
+              <a-button style="position: absolute;margin-left: 300px;margin-top: 5px;cursor:pointer;" type="link" @click="openFileHandler(index)" >
                 打开
               </a-button>
 <!--                <a-button style="position: absolute;margin-left: 290px;margin-top: 5px;cursor:pointer;" type="link" @click="showFileHandler(index)" >-->
 <!--                  打开文件夹-->
 <!--                </a-button>-->
-              <div style="position: absolute;font-size: 13px;margin-left: 145px;margin-top: 19px">{{doneList.doneDate}}</div>
+              <div style="position: absolute;font-size: 13px;margin-left: 145px;margin-top: 19px; user-select:none">{{doneList.doneDate}}</div>
               <div style="margin-left: 50px;font-size: 13px;font-weight: bold ;">{{doneList.title}}</div>
               <div style="margin-left: 50px;font-size: 12px;width: 65px;color:#999">{{doneList.total}} </div>
             </div>
           </div>
         </a-tab-pane>
 
-        <a-tab-pane key="3" tab="回收站">
+        <a-tab-pane key="3">
+           <span slot="tab" style="user-select:none" >
+            回收站
+           </span>
           <div v-show="listTrashCount===0" style="margin-top: 50px">
-            <a-empty description="暂无记录"></a-empty>
+            <a-empty description="暂无记录" style="user-select:none"></a-empty>
           </div>
           <div v-for="(deleteList,index) in deleteLists" v-bind:key="index" @click="change(index)"  @contextmenu="menuDel(index)"  :class="{active : active === index,
          clickActive:clickActive===index}"
                @mouseover="mouseOver(index)"
                @mouseleave="mouseLeave">
             <div style="width: 100%;height: 45px;">
-              <div style="width: 34px;height: 40px;position: absolute;margin-top: 4px;margin-left: 10px;" >
+              <div style="width: 34px;height: 40px;position: absolute;margin-top: 4px;margin-left: 10px;user-select:none" >
                 <img src="icon/white.svg">
               </div>
               <div style="position: absolute;margin-left: 270px;margin-top: 14px">{{deleteList.statusText}}</div>
@@ -245,7 +252,6 @@ console.log(args)
     }
 
     if (args.status === 'cancelled') {
-      console.log(args.chainUrl)
       ipcRenderer.send('emptyPageUrl',args.chainUrl)
       for (var i = 0; i < appVue.lists.length; i++) {
         if (appVue.lists[i].startTime === args.startTime) {
@@ -257,8 +263,10 @@ console.log(args)
       appVue.listCount--
     }
 
+
     if (args.status === 'progressing' && args.path !== '') {
-      ipcRenderer.send('emptyPageUrl',args.chainUrl)
+      // ipcRenderer.send('willDownload')
+      ipcRenderer.send('emptyPageUrl', args.chainUrl)
       appVue.lists.forEach(function (item, index, arr) {
         if (item.startTime === args.startTime) {
           item.title = simpleName;
@@ -276,7 +284,7 @@ console.log(args)
     }
 
     if (args.status === 'completed' && args.path !== '') {
-      // ipcRenderer.send('emptyPageUrl',args.chainUrl)
+      ipcRenderer.send('emptyPageUrl',args.chainUrl)
       const myDate = new Date();
       appVue.doneLists.unshift({
         id: appVue.doneId++,
@@ -524,9 +532,9 @@ console.log(args)
         // const {shell} = require('electron')
         // shell.openPath(this.doneLists[index].path)
         const {shell} = require('electron')
-        fs.exists(appVue.selectList.path, function (flag) {
+        fs.exists(this.doneLists[index].path, function (flag) {
           if (flag) {
-            shell.openPath(this.doneLists[index].path)
+            shell.openPath(appVue.doneLists[index].path)
           } else {
             appVue.$message.info('文件已被删除或位置被移动', 1)
             db.download.delete(appVue.doneLists[index].startTime)

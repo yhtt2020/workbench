@@ -804,7 +804,11 @@ Vue.component('sidebar', {
       this.addTab(`${api.getUrl(api.API_URL.user.CIRCLE)}?id=${args}`)
     },
     openHelp(apps){
-      ipc.send('handleTsbProtocol',{url:'tsb://app/redirect/?package=com.thisky.helper&url=/'})
+      function checkAdult(apps){
+        return apps.package=== 'com.thisky.helper'
+      }
+      ipc.send('executeApp',{app:apps.find(checkAdult)})
+      // ipc.send('handleTsbProtocol',{url:'tsb://app/redirect/?package=com.thisky.helper&url=/'})
     },
     // openPost() {
     //   this.userPanelVisible = false
