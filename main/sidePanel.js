@@ -640,7 +640,9 @@ ipc.on('selectTask', function (event, arg) {
     selectTaskWindow.webContents.send('fromTabBarOp', arg)
   }
 })
-
+ipc.on('getTasks',()=>{
+  mainWindow.webContents.send('getTasks',{id:selectTaskWindow.webContents.id})
+})
 ipc.on('closeTaskSelect', function () {
   selectTaskWindow.close()
 })
