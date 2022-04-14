@@ -226,7 +226,7 @@
   })
 
   ipcRenderer.on('download-info', async (event, args) => {
-console.log(args)
+
     let simpleName;
     if (args.name.length >= 20) {
       simpleName = args.name.substring(0, 7) + '...' + args.name.substring(args.name.length-6,args.name.length);
@@ -432,7 +432,7 @@ console.log(args)
         ipcRenderer.send('deleteDownload', this.selectingList.path)
         this.visibleIng = false
 
-        console.log(appVue.listCount)
+
       },
 
       doneChange(e){
