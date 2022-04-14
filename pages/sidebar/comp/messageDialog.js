@@ -38,7 +38,7 @@ const messageTempl = /* html */`
               <template>
                 <a-dropdown :trigger="['contextmenu']" class="flex justify-between align-center" v-for="(item, index) in groupMessage" :key="item.id">
                   <transition name="slide-fade">
-                    <li>
+                    <li @click="openMenuClick(item)">
                       <div class="flex flex-direction justify-around align-start">
                         <div class="flex justify-start align-center">
                           <img @error="errorPic($event, item)" :src="item.avatar.length > 0 ? item.avatar : item.indexName.startsWith('1_') ? 'https://apps.vip/img/anonymity.png' : '../../icons/svg/chat.svg'" alt="" style="width: 20px; height: 20px; margin-right: 8px; border-radius: 5px; object-fit: cover;">
@@ -47,7 +47,7 @@ const messageTempl = /* html */`
                         <span class="text-grey-sm sg-omit2-sm" style="width: 94%">{{item.body}}</span>
                         <span class="text-grey-sm">{{item.time}}</span>
                       </div>
-                      <a-icon class="closex" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click="removeMessage(item.id)"></a-icon>
+                      <a-icon class="closex" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click.stop="removeMessage(item.id)"></a-icon>
                     </li>
                   </transition>
                   <a-menu slot="overlay">
@@ -88,7 +88,7 @@ const messageTempl = /* html */`
                         <span class="text-grey-sm sg-omit2-sm" style="width: 94%">{{item.body}}</span>
                         <span class="text-grey-sm">{{item.time}}</span>
                       </div>
-                      <a-icon class="closex" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click="removeMessage(item.id)"></a-icon>
+                      <a-icon class="closex" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click.stop="removeMessage(item.id)"></a-icon>
                     </li>
                   </transition>
                   <a-menu slot="overlay">
@@ -120,7 +120,7 @@ const messageTempl = /* html */`
               <template>
                 <a-dropdown :trigger="['contextmenu']" class="flex justify-between align-center" v-for="(item, index) in webOsMessage" :key="item.id">
                   <transition name="slide-fade">
-                    <li>
+                    <li @click="openMenuClick(item)">
                       <div class="flex flex-direction justify-around align-start">
                         <div class="flex justify-start align-center">
                           <img onerror="this.src='../../icons/default.svg'" :src="item.avatar.length > 0 ? item.avatar : '../../icons/default.svg'" alt="" style="width: 20px; height: 20px; margin-right: 8px; border-radius: 5px; object-fit: cover;">
@@ -129,7 +129,7 @@ const messageTempl = /* html */`
                         <span class="text-grey-sm sg-omit-sm" style="width: 94%">{{item.body}}</span>
                         <span class="text-grey-sm">{{item.time}}</span>
                       </div>
-                      <a-icon class="closex" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click="removeMessage(item.id)"></a-icon>
+                      <a-icon class="closex" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click.stop="removeMessage(item.id)"></a-icon>
                     </li>
                   </transition>
                   <a-menu slot="overlay">
