@@ -17,8 +17,10 @@ const tpl = `
 
   </div>
   <div v-if="user.uid" style="float: right;position: absolute;right: 20px;top: 20px;" ><a-button @click="importFromLocal" size="small">导入</a-button></div>
-    <div v-else style="float: right;position: absolute;right: 20px;top: 20px;" ><a-checkbox @change="loadSpaces" v-model:checked="showBackup">显示备份空间</a-checkbox></div>
-  <div style="text-align: center">
+  <div v-else style="float: right;position: absolute;right: 20px;top: 20px;" ><a-checkbox @change="loadSpaces" v-model:checked="showBackup">显示备份空间</a-checkbox></div>
+  <div v-if="loading">
+  </div>
+  <div v-else style="text-align: center">
     <!--      <a-empty text="无空间" v-if="spaces.length===0"></a-empty>-->
     <div style="text-align: left;overflow-y: auto;max-height: 310px;margin-right: 20px;padding-top: 10px;padding-left: 40px;padding-bottom: 10px" class="scroller">
     <a-tooltip v-for="space,index in spaces" placement="bottom">
@@ -238,6 +240,7 @@ const SpaceSelect = {
 
 
       showBackup:false,//默认不显示备份空间
+      loading:true
     }
   },
   async mounted () {
@@ -271,6 +274,7 @@ const SpaceSelect = {
 
     }
     await this.loadSpaces()
+    this.loading=false
     //获取网络空间用户信息
 
     // if (user) {
