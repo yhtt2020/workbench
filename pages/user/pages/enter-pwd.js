@@ -1,6 +1,6 @@
 const userModel = require('../../../src/model/userModel')
 const tpl = `
-<div>
+<div style="margin-top: 100px">
  <h1 style="font-size: 18px;margin:auto;margin-top: 20px;margin-bottom:10px;text-align: center">
 
       </h1>
@@ -15,7 +15,7 @@ const tpl = `
 </a-input-password>
       </p>
       <div style="text-align: center">
-      <a-button @click="doEnter" :disabled="this.pwd===''" :type="this.pwd!==''?'primary':'default'">确认密码</a-button>
+      <a-button @click="doEnter" :disabled="this.pwd===''" :type="this.pwd!==''?'primary':'default'">确定</a-button>
       </div>
 </div>
 `
