@@ -47,7 +47,6 @@ ipc.on('enterPictureInPicture', function (event, data) {
 
 window.addEventListener('message', function (e) {
   if(e.data && e.data.eventName && e.data.eventName === 'webNotice') {
-    console.log(e, '????')
     ipc.send('webOsNotice', e.data)
   }
 
