@@ -57,6 +57,11 @@ ipc.on('getTitlebarHeight',function(){
 	})
 
 })
+ipc.on('getTasks',(event,args)=>{
+  if(window.tasks){
+   ipc.sendTo(args.id,'gotTasks',{tasksState:window.tasks.getStringifyableState()})
+  }
+})
 ipc.send('returnTitlebarHeight',{
 	 		titlebarHeight:mouseRcoverAreaElement.offsetTop,
 })
