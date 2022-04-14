@@ -10,15 +10,19 @@ const baseApi = {
   getCurrentUser: () => {
     return db.system.where("name").equals("currentUser").first();
   },
-  init: async () => {
-    await baseApi.getCurrentUser().then((user) => {
-      baseApi.currentUser = user;
-      baseApi.token = user.value.token;
-      baseApi.uid = user.value.uid;
-      baseApi.refreshToken = user.value.refreshToken
-      baseApi.expire_deadtime = user.value.expire_deadtime
-      baseApi.refreshExpire_deadtime = user.value.refreshExpire_deadtime
-    });
+  init: async (user=false) => {
+    if(user===false){
+      userData=await baseApi.getCurrentUser()
+      if(userData){
+        user=userData.value
+      }
+    }
+      baseApi.currentUser = {value:user};
+      baseApi.token = user.token;
+      baseApi.uid = user.uid;
+      baseApi.refreshToken = user.refreshToken
+      baseApi.expire_deadtime = user.expire_deadtime
+      baseApi.refreshExpire_deadtime = user.refreshExpire_deadtime
   },
 
   /**
@@ -35,6 +39,7 @@ const baseApi = {
       data = { data: params };
     //todo cache请求缓存后期做一下，防止在1000毫秒内重复请求设置
     return axios({
+      timeout:5000,//设置默认3秒钟超时
       method: method,
       url: url,
       headers: { Authorization: baseApi.token },
