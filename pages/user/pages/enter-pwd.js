@@ -11,7 +11,7 @@ const tpl = `
 <div>{{user.nickname}}</div>
 </div>
       <p style="text-align: center;color: #999;margin-top: 20px;">
-        <a-input-password :style="{'margin-left': shake+'px'}" placeholder="输入访问密码" @keyup.enter="doEnter" ref="pwdInput" v-model:value="pwd" style="width: 200px">
+        <a-input-password :style="{'margin-left': shake+'px'}" placeholder="输入访问密码" @keyup.enter="doEnter" id="pwdInput" v-model:value="pwd" style="width: 200px">
 </a-input-password>
       </p>
       <div style="text-align: center">
@@ -36,8 +36,9 @@ const EnterPwd = {
       }else{
         console.error('user can\'t find')
       }
-      console.log(this.$refs['pwdInput'])
-      this.$refs['pwdInput'].input.focus()
+      setTimeout(()=>{
+        document.getElementById('pwdInput').focus()
+      },200)
     },
     methods: {
       doEnter(){
