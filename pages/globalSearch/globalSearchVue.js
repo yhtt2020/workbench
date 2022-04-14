@@ -1,4 +1,5 @@
 const store = require('./store.js')
+const placesModel = require('../util/model/placesModel')
 
 const globalSearch = new Vue({
   el: "#globalSearch",
@@ -11,15 +12,18 @@ const globalSearch = new Vue({
         if(newValue.length > 0) {
           this.openFirst = false
           let appresult = await this.searchApp(newValue)
-          this.searchResult = this.searchResult.concat(this.searchTab(newValue), this.searchTask(newValue), appresult)
+          this.searchResult = this.searchResult.concat(appresult, this.searchTab(newValue), this.searchTask(newValue))
           this.itemReadyedIndex = 0
           this.itemReadyedItem = this.searchResult[0]
           console.log(this.searchResult)
         } else {
           this.openFirst = true
+          this.recentOpenedHistory = await this.handleRecentOpenedHistory()
+          this.calculateAreaHeight(this.recentOpenedHistory)
+          this.recentReadyedIndex = 0
+          this.recentReadyedItem = this.recentOpenedHistory[0]
         }
         this.contentLoading = false
-
       }, 200),
       deep: true
     },
@@ -61,7 +65,10 @@ const globalSearch = new Vue({
       itemReadyedItem: {},
       openFirst: true,
       apps: [],
-      visible: false
+      visible: false,
+      recentOpenedHistory: [],
+      recentReadyedItem: {},
+      recentReadyedIndex: 0
     };
   },
   computed: {
@@ -91,12 +98,6 @@ const globalSearch = new Vue({
         this.calculateAreaHeight(filterRes)
         return filterRes
       }
-    },
-    compRecentOpenedTabs() {
-      let recentOpenedTabs = this.handleRecentOpenedTabs()
-      let recentResult = tools.bubbleSort(recentOpenedTabs, 'lastActivity').reverse()
-      this.calculateAreaHeight(recentResult)
-      return recentResult
     }
   },
   methods: {
@@ -133,32 +134,29 @@ const globalSearch = new Vue({
         }
       }
     },
-    handleRecentOpenedTabs() {
-      let mapTabs = []
-      this.$store.getters.getAllTasks.forEach(v => {
-        v.tabs.forEach(k => {
-          mapTabs.push({
-            title: k.title,
-            icon: k.icon,
-            taskId: v.id,
-            tabId: k.id,
-            url: k.hasOwnProperty('url') ? k.url : null,
-            tag: 'tab',
-            lastActivity: k.lastActivity,
-            attached: `${v.name}·` + tools.execDomain(k.url)
-          })
+    async handleRecentOpenedHistory() {
+      let mapHistory = []
+      let history = await placesModel.getAllHistory()
+      history.forEach(v => {
+        mapHistory.push({
+          title: v.title,
+          icon: null,
+          taskId: null,
+          tabId: null,
+          url: v.url,
+          searchIndex: v.searchIndex,
+          lastVisit: v.lastVisit,
+          tag: 'history'
         })
       })
-      return mapTabs
+      return mapHistory
     },
     executeApp(app){
       ipc.send('executeApp',{app:app})
+      ipc.send('closeGlobalSearch')
     },
-    clikRecentTab(item) {
-      ipc.send('switchToTab', {
-        taskId: item.taskId,
-        tabId: item.tabId
-      })
+    clikRecentHistory(item) {
+      ipc.send('addTab',{url: item.url});
       ipc.send('closeGlobalSearch')
     },
     clkli(item) {
@@ -180,8 +178,14 @@ const globalSearch = new Vue({
     },
     calculateHeight() {
       let currentHeight = 0
-      if(this.itemReadyedIndex > 5) {
-        currentHeight = (this.itemReadyedIndex - 5) * 50
+      if(this.openFirst) {
+        if(this.recentReadyedIndex > 5) {
+          currentHeight = (this.recentReadyedIndex - 5) * 50
+        }
+      } else {
+        if(this.itemReadyedIndex > 5) {
+          currentHeight = (this.itemReadyedIndex - 5) * 50
+        }
       }
       return currentHeight
     },
@@ -191,7 +195,15 @@ const globalSearch = new Vue({
           // 向下键切换li
           if(this.openFirst) {
             //如果是在初始页
-
+            if(this.recentReadyedIndex + 1 < this.recentOpenedHistory.length) {
+              this.recentReadyedIndex = this.recentReadyedIndex + 1
+              this.recentReadyedItem = this.recentOpenedHistory[this.recentReadyedIndex]
+              document.getElementsByClassName('recent-list-hook')[0].scrollTop = this.calculateHeight()
+            } else {
+              this.recentReadyedIndex = 0
+              this.recentReadyedItem = this.recentOpenedHistory[0]
+              document.getElementsByClassName('recent-list-hook')[0].scrollTop = this.calculateHeight()
+            }
           } else {
             if(this.itemReadyedIndex + 1 < this.compSearchResult.length) {
               this.itemReadyedIndex = this.itemReadyedIndex + 1
@@ -207,7 +219,15 @@ const globalSearch = new Vue({
           //向上键切换li
           if(this.openFirst) {
             //如果是在初始页
-
+            if(this.recentReadyedIndex + 1 <= this.recentOpenedHistory.length && this.recentReadyedIndex !== 0) {
+              this.recentReadyedIndex = this.recentReadyedIndex - 1
+              this.recentReadyedItem = this.recentOpenedHistory[this.recentReadyedIndex]
+              document.getElementsByClassName('recent-list-hook')[0].scrollTop = this.calculateHeight()
+            } else {
+              this.recentReadyedIndex = 0
+              this.recentReadyedItem = this.recentOpenedHistory[0]
+              document.getElementsByClassName('recent-list-hook')[0].scrollTop = this.calculateHeight()
+            }
           } else {
             if(this.itemReadyedIndex + 1 <= this.compSearchResult.length && this.itemReadyedIndex !== 0) {
               this.itemReadyedIndex = this.itemReadyedIndex - 1
@@ -222,7 +242,9 @@ const globalSearch = new Vue({
         } else if (e.keyCode === 9) {
           //按下tab键切换类型
           if(this.openFirst) {
-
+            setTimeout(()=> {
+              document.getElementById("myTextField").focus();
+            }, 500)
           } else {
             let index = this.tags.findIndex(v => v.checked == true)
             if(index < 3) {
@@ -234,10 +256,10 @@ const globalSearch = new Vue({
               document.getElementById("myTextField").focus();
             }, 500)
           }
-        } else if(e.keyCode === 13 && Object.keys(this.itemReadyedItem).length > 0) {
+        } else if(e.keyCode === 13 && (Object.keys(this.itemReadyedItem).length > 0 || Object.keys(this.recentReadyedItem).length > 0)) {
           //回车按键
           if(this.openFirst) {
-
+            this.clikRecentHistory(this.recentReadyedItem)
           } else {
             this.clkli(this.itemReadyedItem)
           }
@@ -309,6 +331,9 @@ const globalSearch = new Vue({
   async mounted () {
     await this.getAllApps()
     this.bindKeys()
+    this.recentOpenedHistory = await this.handleRecentOpenedHistory()
+    this.recentReadyedItem = this.recentOpenedHistory[0]
+    this.calculateAreaHeight(this.recentOpenedHistory)
   },
 });
 

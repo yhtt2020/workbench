@@ -237,7 +237,7 @@ const webviews = {
       allowPopups:true
     }
   }
-
+  // console.log(newTabEvent)
 
     if(sourceUrl==='ts://apps' || sourceUrl ==='ts://newtab'){
       webPreferences.partition=null
@@ -618,10 +618,13 @@ webviews.bindIPC('scroll-position-change', function (tabId, args) {
     scrollPosition: args[0]
   })
 })
+
 let originalUrl;
 let originalId;
 ipc.on('view-event', function (e, args) {
   webviews.emitEvent(args.event, args.viewId, args.args)
+  // console.log(args)
+
   if (args.event === 'new-tab') {
     originalId = args.viewId
   }
@@ -640,7 +643,6 @@ ipc.on('view-event', function (e, args) {
       ipc.send('originalPage',originalUrl)
     }
   }
-
 })
 
 ipc.on('closeEmptyPage',(event,args)=>{
