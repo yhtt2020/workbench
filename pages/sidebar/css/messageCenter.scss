@@ -239,3 +239,15 @@
     border-radius: 0px 0px 10px 10px;
   }
 }
+
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+.slide-fade-leave-active {
+  transition: all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-leave-to {
+  transform: translateX(80px);
+  opacity: 0;
+}
+
