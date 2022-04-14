@@ -439,13 +439,13 @@ window.onload = function() {
             user= appVue.$store.state.user
           }
           let response= await spaceModel.setUser(user).getUserSpaces()
-          console.log(response)
           if(response.status){
             let mySpaces=response.data
             if(mySpaces.length>5)
             {
               mySpaces.splice(4,mySpaces.length-5)
             }
+            console.log(mySpaces)
             commit('set_cloud_spaces',mySpaces)
           }else{
             window.appVue.$message.error('获取云空间失败。')
