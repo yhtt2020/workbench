@@ -25,15 +25,15 @@ const messageTempl = /* html */`
       </template>
       <div class="mid" :class="{'silent' : !isSilent}" v-else>
         <div class="lumen flex flex-direction justify-between align-center" v-show="groupMessage.length > 0">
-          <div class="lumen-top flex justify-between align-center">
+          <div class="lumen-top flex justify-between align-center" @click="handleMessageListStatus('groupChat')">
             <div class="lumen-top-lf flex justify-start align-center text-black">
               <img src="../../icons/svg/chat.svg" style="width: 30px; height: 30px;">
               <span>团队</span>
-              <a-icon type="export" :style="{ fontSize: '16px', color: '#8c8c8c' }" @click="showGroup"></a-icon>
+              <a-icon type="export" :style="{ fontSize: '16px', color: '#8c8c8c' }" @click.stop="showGroup"></a-icon>
             </div>
-            <a-icon class="lumen-top-rg" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click="removeAllMessage('groupChat')"></a-icon>
+            <a-icon class="lumen-top-rg" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click.stop="removeAllMessage('groupChat')"></a-icon>
           </div>
-          <div class="lumen-content flex flex-direction justify-center align-center">
+          <div class="lumen-content flex flex-direction justify-center align-center" v-show="!messageListStatus.groupChat.fold">
             <ul>
               <template>
                 <a-dropdown :trigger="['contextmenu']" class="flex justify-between align-center" v-for="(item, index) in groupMessage" :key="index">
@@ -65,14 +65,14 @@ const messageTempl = /* html */`
           </div>
         </div>
         <div class="osx flex flex-direction justify-center align-center" v-show="communityMessage.length > 0">
-          <div class="osx-top flex justify-between align-center">
+          <div class="osx-top flex justify-between align-center" @click="handleMessageListStatus('community')">
             <div class="osx-top-lf flex justify-start align-center text-black">
               <img src="./assets/osx.svg" style="width: 30px; height: 30px;">
               <span>社区</span>
             </div>
-            <a-icon class="osx-top-rg" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click="removeAllMessage('community')"></a-icon>
+            <a-icon class="osx-top-rg" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click.stop="removeAllMessage('community')"></a-icon>
           </div>
-          <div class="osx-content flex flex-direction justify-center align-center">
+          <div class="osx-content flex flex-direction justify-center align-center" v-show="!messageListStatus.community.fold">
             <ul>
               <template>
                 <a-dropdown :trigger="['contextmenu']" class="flex justify-between align-center" v-for="(item, index) in communityMessage" :key="index">
@@ -104,14 +104,14 @@ const messageTempl = /* html */`
           </div>
         </div>
         <div class="webos flex flex-direction justify-between align-center" v-show="webOsMessage.length > 0">
-          <div class="webos-top flex justify-between align-center text-black">
+          <div class="webos-top flex justify-between align-center text-black" @click="handleMessageListStatus('webOs')">
             <div class="webos-top-lf flex justify-start align-center text-black">
               <img src="./assets/network.svg" style="width: 30px; height: 30px;">
               <span>来自网页的消息</span>
             </div>
-            <a-icon class="webos-top-rg" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click="removeAllMessage('webOs')"></a-icon>
+            <a-icon class="webos-top-rg" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click.stop="removeAllMessage('webOs')"></a-icon>
           </div>
-          <div class="webos-content flex flex-direction justify-center align-center">
+          <div class="webos-content flex flex-direction justify-center align-center" v-show="!messageListStatus.webOs.fold">
             <ul>
               <template>
                 <a-dropdown :trigger="['contextmenu']" class="flex justify-between align-center" v-for="(item, index) in webOsMessage" :key="index">
@@ -167,7 +167,18 @@ Vue.component("message-center", {
   data() {
     return {
       fixed: localStorage.getItem("isMessageFixed") == "true" ? true : false,
-      silent: false
+      silent: false,
+      messageListStatus: {
+        groupChat: {
+          fold: false
+        },
+        community: {
+          fold: false
+        },
+        webOs: {
+          fold: false
+        }
+      }
     };
   },
   computed: {
@@ -196,6 +207,15 @@ Vue.component("message-center", {
     }
   },
   methods: {
+    handleMessageListStatus(type) {
+      if(type === 'groupChat') {
+        this.messageListStatus.groupChat.fold = !this.messageListStatus.groupChat.fold
+      } else if (type === 'community') {
+        this.messageListStatus.community.fold = !this.messageListStatus.community.fold
+      } else if (type === 'webOs') {
+        this.messageListStatus.webOs.fold = !this.messageListStatus.webOs.fold
+      }
+    },
     errorPic(event, item) {
       let img = event.srcElement;   //当前元素
       img.src = item.indexName.startsWith('1_') ? 'https://apps.vip/img/anonymity.png' : '../../icons/svg/chat.svg';
