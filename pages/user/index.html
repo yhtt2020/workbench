@@ -89,7 +89,13 @@
     routes
   })
   app.use(router).mount('#appVue')
+  // router.afterEach((to,from,failure)=>{
+  //   if(to.path==='/'){
+  //     console.log('回到起始')
+  //   }
+  // })
   ipc.on('loginCallback',(e,args)=>{
+    console.log('登录成功')
     window.antd.message.success('成功添加账号。')
     router.replace('/')
   })
