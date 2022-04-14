@@ -6,6 +6,7 @@ const cloudAdapter = require('../src/util/sessionAdapter/cloudAdapter')
 const spaceModel = require('../src/model/spaceModel')
 const localSpaceModel = require('../src/model/localSpaceModel')
 const backupSpaceModel = require('../src/model/backupSpaceModel')
+const urlParser=require('../js/util/urlParser')
 const ipc = require('electron').ipcRenderer
 let SYNC_INTERVAL=30 //普通模式下，同步间隔为30秒
 if('development-mode' in window.globalArgs){
@@ -31,7 +32,6 @@ function disconnect (options) {
     //如果不是离线使用中
     ipc.send('showUserWindow', options)
   } else {
-    console.log('离线使用同步1次')
   }
 }
 
@@ -49,6 +49,9 @@ const sessionRestore = {
     let countTab = 0
     data.state.tasks.forEach(task => {
       countTab += task.tabs.length
+      task.tabs.forEach(tab=>{
+        tab.url=urlParser.getSourceURL(tab.url)
+      })
     })
 
     // save all tabs that aren't private
@@ -96,7 +99,6 @@ const sessionRestore = {
               fatalStop(cloudResult.data.option)
               console.warn('保存至云端失败，产生致命错误：')
               //todo 如果走到这里，其实意味着这个备份空间已经无法恢复了，需要走备份损坏（冲突模式）模式。
-              console.log(cloudResult.data)
             } else if (cloudResult.data.action === 'disconnect') {
               console.warn('保存至云端失败，但无需紧张')
               disconnect(cloudResult.data.option)
@@ -135,7 +137,8 @@ const sessionRestore = {
         }
       }
     } catch (e) {
-      console.log('获取存储的空间信息失败')
+      console.warn(e)
+      console.warn('获取存储的空间信息失败')
     }
 
     try {
@@ -166,6 +169,9 @@ const sessionRestore = {
 
       data.state.tasks.forEach(function (task) {
         // restore the task item
+        task.tabs.forEach(tab=>{
+          tab.url=urlParser.parse(tab.url)
+        })
         tasks.add(task)
 
         /*
@@ -261,9 +267,7 @@ const sessionRestore = {
       currentSpace = await spaceModel.getCurrent()
       let space = {}
       if (currentSpace.spaceType === 'cloud') {
-        console.log(currentSpace)
         let spaceResult = await spaceModel.setUser(currentSpace.userInfo).getSpace(currentSpace.spaceId) //先尝试获取一次最新的空间
-        console.log(spaceResult)
         if (spaceResult.status === 1) {
           if (String(spaceResult.data.id) === '-1') {
             fatalStop({
