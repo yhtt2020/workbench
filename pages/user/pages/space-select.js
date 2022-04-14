@@ -348,7 +348,7 @@ const SpaceSelect = {
       //todo loadLocalSpaces()
       let spaces= await spaceModel.getLocalSpaces()
       spaces.forEach((space) => {
-        if(space.data){
+        if(space.data && space.type!=='cloud'){
           this.localOptions.push({ label: space.name +'（ '+ space.data.state.tasks.length+' 标签组）', value: space.id })
           this.localSpaces.push(space)
         }
