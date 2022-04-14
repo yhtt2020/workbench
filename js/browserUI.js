@@ -126,27 +126,61 @@ function closeTab (tabId) {
     return
   }
 
-  if(!!tabs.get(tabId).lock){
-    ipc.send('message',{type:'info',config:{content:'该标签为锁定标签，无法直接关闭，请解锁后再关闭。',key:'lockTip'}})
-    return
-  }
+  for( let i=0;i<tasks.tasks.length;i++){
+    for (let j=0;j<tasks.tasks[i].tabs.tabs.length;j++){
+      if(tasks.tasks[i].tabs.tabs[j].id===tabId){
+        if(tasks.tasks[i].tabs.tabs[j].lock){
+          ipc.send('message',{type:'info',config:{content:'该标签为锁定标签，无法直接关闭，请解锁后再关闭。',key:'lockTip'}})
+          return
+        }
+        if (tabId === tabs.getSelected()) {
+          var currentIndex = tabs.getIndex(tabs.getSelected())
+          var nextTab =
+            tabs.getAtIndex(currentIndex - 1) || tabs.getAtIndex(currentIndex + 1)
+          destroyTab(tabId)
 
-  if (tabId === tabs.getSelected()) {
-    var currentIndex = tabs.getIndex(tabs.getSelected())
-    var nextTab =
-    tabs.getAtIndex(currentIndex - 1) || tabs.getAtIndex(currentIndex + 1)
+          if (nextTab) {
+            switchToTab(nextTab.id)
+          } else {
+            addTab()
+          }
+        } else {
+          tasks.tasks[i].tabs.destroy(tabId)
+          tabBar.removeTab(tabId)
+          webviews.destroy(tabId)
 
-    destroyTab(tabId)
+        }
+        if( tasks.tasks[i].tabs.tabs.length===0){
+          tasks.tasks[i].tabs.add()
+        }
+      }
 
-    if (nextTab) {
-      switchToTab(nextTab.id)
-    } else {
-      addTab()
+      }
     }
-  } else {
-    destroyTab(tabId)
   }
-}
+
+//   if (tabId === tabs.getSelected()) {
+//     var currentIndex = tabs.getIndex(tabs.getSelected())
+//     var nextTab =
+//     tabs.getAtIndex(currentIndex - 1) || tabs.getAtIndex(currentIndex + 1)
+//     destroyTab(tabId)
+//
+//     if (nextTab) {
+//       switchToTab(nextTab.id)
+//     } else {
+//       addTab()
+//     }
+//   } else {
+//
+//     // tasks.get(taskId).tabs.destroy(tabId)
+//     // tabBar.removeTab(tabId)
+//     // webviews.destroy(tabId)
+//
+//   }
+//   // if(tasks.get(taskId).tabs.tabs.length===0){
+//   //   tasks.get(taskId).tabs.add()
+//   // }
+// }
 
 /* changes the currently-selected task and updates the UI */
 
