@@ -26,8 +26,6 @@ let ldb = {
       ldb.db=low(adapter)
       ldb.initDb()
     }catch (e) {
-      console.log(require('fs').readFileSync(ldb.dbPath, 'utf-8').trim())
-      console.log(e)
     }
 
     return ldb

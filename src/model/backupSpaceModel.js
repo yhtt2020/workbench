@@ -42,7 +42,6 @@ const backupSpaceModel = {
   getSpace (id) {
     ldb.reload()
     let space = ldb.db.get('spaces').find({ id: id }).value()
-    console.log('读入备份空间', space)
     if (space) {
       if (space.type === 'cloud' && space.nanoid) {
         space.id = space.nanoid

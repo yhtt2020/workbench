@@ -59,7 +59,6 @@ const spaceModel = {
       //如果是云端，则从云端取
       try {
         let result = await spaceModel.setUser(currentSpace.userInfo).getSpace(currentSpace.spaceId)
-        console.log(result)
         if (result.status === 1){
           if(result.data.id==='-1'){
             throw '云端空间已被删除'

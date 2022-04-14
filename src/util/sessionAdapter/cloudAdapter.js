@@ -37,7 +37,6 @@ const cloudAdapter={
         }
       }catch (e) {
         console.warn('无法从space中获取到用户信息')
-        console.log(backupSpace)
       }
       //如果上一步没有获取到用户信息
      if(!!!userInfo){
@@ -50,7 +49,6 @@ const cloudAdapter={
          }
        }catch (e) {
          console.warn('无法从本地当前用户中中获取到用户信息')
-         console.log(currentUser)
        }
       }
       if(!!!userInfo){
@@ -64,13 +62,11 @@ const cloudAdapter={
           if(result.data==='-1'){
             //todo 空间不存在
             console.warn('fail','远端空间不存在，导致存储失败')
-            console.log(saveData)
             return fatal({modal:true,title:'无法成功保存空间',description:'云端空间已不存在。',fatal:true})
           }
           if(result.data==='-2'){
             //todo 保存失败，冲突
             console.warn('fail','设备冲突导致云端存储失败')
-            console.log(saveData)
             return fatal({spaceId:spaceId,modal:true,title:'无法成功保存空间',description:'云端空间已被其他设备抢占，当前空间已无法存入。',fatal:true})
           }
 
@@ -81,11 +77,9 @@ const cloudAdapter={
         }
       }catch (e) {
         console.warn('存储到云端失败，接口请求失败。')
-        console.log(e)
         return disconnect({modal:true,title:'无法连接到服务器',description:'暂时无法连接到服务器。',disconnect:true,spaceId:spaceId})
       }
     }catch (e) {
-      console.log(e)
       console.warn('云端存储全局意外错误返回')
       return standReturn.failure('云端存储全局意外错误返回')
     }
@@ -97,7 +91,6 @@ const cloudAdapter={
     try {
       let userInfo=ldb.db.get('currentSpace.userInfo').value()
       let result =await cloudSpaceModel.restore(spaceId,userInfo)
-      console.log('获得远端恢复返回',result)
       if(result.status===1){
         savedStringData=JSON.stringify(result.data.data)
       }

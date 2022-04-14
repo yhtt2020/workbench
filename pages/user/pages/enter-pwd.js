@@ -43,7 +43,6 @@ const EnterPwd = {
     methods: {
       doEnter(){
         let right=userModel.compareEnterPwd(this.pwd,this.user.uid)
-        console.log(right)
         if(right){
           this.$router.replace({ name: 'space', params: { uid: this.user.uid } })
         }else{
@@ -51,7 +50,6 @@ const EnterPwd = {
           let i=0
           timer = setInterval(()=>{
             this.shake = (( i % 3 ) - 1) * 60;
-            console.log(this.shake)
             i++
             if(i===5){
               clearInterval(timer);
@@ -63,7 +61,6 @@ const EnterPwd = {
 
       goLogin(){
         ipc.send('login')
-      //https://s.apps.vip/login?response_type=code&client_id=10001&state=1
       }
     }
   }

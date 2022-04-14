@@ -82,7 +82,6 @@ const disconnect = {
       let space = await spaceModel.getSpace(window.globalArgs['spaceId'])
       this.space = space
       this.user = space.userInfo
-      console.log(space)
     } catch (e) {
       console.warn('无法获取到space')
     }
@@ -104,7 +103,6 @@ const disconnect = {
     async reconnect () {
       try{
         let result=await spaceModel.setUser(this.user).clientOnline(this.spaceId)
-        console.log(result)
         if(result.status===1){
           if(result.data==='-1'){
             antd.Modal.confirm({

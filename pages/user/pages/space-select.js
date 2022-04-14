@@ -275,27 +275,6 @@ const SpaceSelect = {
     }
     await this.loadSpaces()
     this.loading=false
-    //获取网络空间用户信息
-
-    // if (user) {
-    //
-    //   try{
-    //     let result=await spaceModel.setUser(user).getUserSpaces(user.uid)
-    //     //let result=await userApi.getMySpaceList(user)
-    //     if(result.status===1){
-    //       this.spaces= result.data
-    //       console.log('result',result)
-    //     }else{
-    //       console.log('result',result)
-    //       window.antd.message.error('获取用户空间失败。')
-    //     }
-    //   }catch (e){
-    //     console.log('result',e)
-    //     window.antd.message.error('获取用户空间失败，未知异常。')
-    //   }
-    // } else {
-    //   console.error('user can\'t find')
-    // }
   },
   methods: {
      setEnterPwd(){
@@ -317,7 +296,7 @@ const SpaceSelect = {
                window.antd.message.success('访问密码设置成功。')
 
              } catch (e) {
-               console.log(e)
+               console.warn(e)
                window.antd.message.error('设置访问密码失败。未知异常。')
              }
            }
@@ -338,7 +317,7 @@ const SpaceSelect = {
                window.antd.message.success('删除访问密码成功。')
 
              } catch (e) {
-               console.log(e)
+               console.warn(e)
                window.antd.message.error('删除访问密码失败。未知异常。')
              }
            }
@@ -394,7 +373,7 @@ const SpaceSelect = {
           window.antd.message.error('导入空间失败。'+result.data)
         }
       } catch (e) {
-        console.log(e)
+        console.warn(e)
         window.antd.message.error('导入空间失败。未知异常。')
       }
     },
@@ -480,7 +459,7 @@ const SpaceSelect = {
         // }
       } catch (e) {
         window.antd.message.error('创建空间失败，失败原因：')
-        console.log(e)
+        console.warn(e)
 
       }
     },
@@ -536,7 +515,7 @@ const SpaceSelect = {
         }
       } catch (e) {
         window.antd.message.error('重命名空间失败，未知错误。')
-        console.log(e)
+        console.warn(e)
 
       }
     },
@@ -576,7 +555,7 @@ const SpaceSelect = {
               window.antd.message.error('删除空间失败。')
             }
           } catch (e) {
-            console.log(e)
+            console.warn(e)
             window.antd.message.error('删除空间失败。未知异常。')
           }
         }
@@ -585,7 +564,6 @@ const SpaceSelect = {
     async doChangeSpaceCloud (space) {
       try {
         let result = await spaceModel.setUser(this.user).changeCurrent(space)
-        console.log(result)
         if (result.status === 1) {
           window.antd.message.success('切换使用空间成功。')
         } else {
