@@ -57,6 +57,11 @@ ipc.on('getTitlebarHeight',function(){
 	})
 
 })
+ipc.on('getTasks',(event,args)=>{
+  if(window.tasks){
+   ipc.sendTo(args.id,'gotTasks',{tasksState:window.tasks.getStringifyableState()})
+  }
+})
 ipc.send('returnTitlebarHeight',{
 	 		titlebarHeight:mouseRcoverAreaElement.offsetTop,
 })
@@ -91,11 +96,15 @@ window.throttle = function(fn, threshhold, scope) {
 }
 
 ipc.on('getGlobal',function(event,args){
-	ipc.send('receiveGlobal',{
-		tasks:tasks.getStringifyableState(),
-		tabs:tabs.getStringifyableState(),
-    callbackWin:args.callbackWin
-		})
+  try{
+    ipc.send('receiveGlobal',{
+      tasks:tasks.getStringifyableState(),
+      tabs:tabs.getStringifyableState(),
+      callbackWin:args.callbackWin
+    })
+  }catch (e) {
+
+  }
 })
 // https://remysharp.com/2010/07/21/throttling-function-calls
 
@@ -154,7 +163,7 @@ window.addEventListener('load', function() {
 	}, true)
 })
 
-
+window.ldb=require('../src/util/ldb').load(window.globalArgs['user-data-path']+'/ldb.json')
 
 require('tabState.js').initialize()
 require('windowControls.js').initialize()
@@ -165,6 +174,7 @@ require('navbar/tabColor.js').initialize()
 require('navbar/navigationButtons.js').initialize()
 //加入工具栏
 require('toolbar/toolbar')
+const searchbar = require('searchbar/searchbar.js')
 
 
 require('downloadManager.js').initialize()
@@ -177,37 +187,40 @@ require('autofillSetup.js').initialize()
 require('passwordManager/passwordManager.js').initialize()
 require('passwordManager/passwordCapture.js').initialize()
 require('passwordManager/passwordViewer.js').initialize()
-require('util/theme.js').initialize()
+
 require('userscripts.js').initialize()
 require('statistics.js').initialize()
 require('taskOverlay/taskOverlay.js').initialize()
 require('pageTranslations.js').initialize()
-require('sessionRestore.js').initialize()
-require('bookmarkConverter.js').initialize()
-require('newTabPage.js').initialize()
+require('sessionRestore.js').initialize().then(()=>{
+  require('bookmarkConverter.js').initialize()
+  require('newTabPage.js').initialize()
 
 // default searchbar plugins
 
-require('searchbar/placesPlugin.js').initialize()
-require('searchbar/instantAnswerPlugin.js').initialize()
-require('searchbar/openTabsPlugin.js').initialize()
-require('searchbar/bangsPlugin.js').initialize()
-require('searchbar/customBangs.js').initialize()
-require('searchbar/searchSuggestionsPlugin.js').initialize()
-require('searchbar/placeSuggestionsPlugin.js').initialize()
+  require('searchbar/placesPlugin.js').initialize()
+  require('searchbar/instantAnswerPlugin.js').initialize()
+  require('searchbar/openTabsPlugin.js').initialize()
+  require('searchbar/bangsPlugin.js').initialize()
+  require('searchbar/customBangs.js').initialize()
+  require('searchbar/searchSuggestionsPlugin.js').initialize()
+  require('searchbar/placeSuggestionsPlugin.js').initialize()
 // require('searchbar/updateNotifications.js').initialize() //不再使用浏览器自带的升级提醒
-require('searchbar/restoreTaskPlugin.js').initialize()
-require('searchbar/bookmarkManager.js').initialize()
-require('searchbar/historyViewer.js').initialize()
-require('searchbar/developmentModeNotification.js').initialize()
-require('searchbar/shortcutButtons.js').initialize()
-require('searchbar/calculatorPlugin.js').initialize()
-require('sessionRestore.js').restore()
-
+  require('searchbar/restoreTaskPlugin.js').initialize()
+  require('searchbar/bookmarkManager.js').initialize()
+  require('searchbar/historyViewer.js').initialize()
+  require('searchbar/developmentModeNotification.js').initialize()
+  require('searchbar/shortcutButtons.js').initialize()
+  require('searchbar/calculatorPlugin.js').initialize()
+  require('sessionRestore.js').restore()
+  require('util/theme.js').initialize()
 //通用工具类(copy实现、深拷贝命中)
-require('util/tools.js').initialize()
+  require('util/tools.js').initialize()
 
-const searchbar = require('searchbar/searchbar.js')
-ipc.on('importBookMarks',function(){
-  searchbar.openURL('!importbookmarks', null)
+  const searchbar = require('searchbar/searchbar.js')
+  ipc.on('importBookMarks',function(){
+    searchbar.openURL('!importbookmarks', null)
+  })
+
+
 })

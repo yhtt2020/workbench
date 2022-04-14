@@ -39,7 +39,6 @@ class SidePanel {
    * 返回sidePanel实例
    */
   static getSidePanel () {
-    console.log(BrowserWindow.getAllWindows())
     return sidePanel.get()
   }
 
@@ -640,7 +639,9 @@ ipc.on('selectTask', function (event, arg) {
     selectTaskWindow.webContents.send('fromTabBarOp', arg)
   }
 })
-
+ipc.on('getTasks',()=>{
+  mainWindow.webContents.send('getTasks',{id:selectTaskWindow.webContents.id})
+})
 ipc.on('closeTaskSelect', function () {
   selectTaskWindow.close()
 })
@@ -770,15 +771,12 @@ ipc.on('openTasks',(event,args)=>{
 // })
 //设置侧边栏模式
 ipc.on('sideSetOpen',(event,args)=>{
-  console.log('sideopen')
   SidePanel.send('sideSetOpen')
 })
 ipc.on('sideSetClose',(event,args)=>{
-  console.log('sideclose')
   SidePanel.send('sideSetClose')
 })
 ipc.on('sideSetAuto',(event,args)=>{
-  console.log('auto')
   SidePanel.send('sideSetAuto')
 })
 
@@ -788,7 +786,6 @@ ipc.on('importDesk',(event,args)=>{
     return
   }else{
     event.reply('importDesk',{files:files})
-    console.log(files)
   }
 })
 ipc.on('exportDesk',(event,args)=>{
@@ -893,3 +890,257 @@ ipc.on('showAllSaApps',(event,args)=>{
  allAppsWindow.show()
  allAppsWindow.focus()
 })
+
+const configModel = require(__dirname+'/src/model/configModel')
+let userWindow=null
+let lastWindowArgs={}
+let changingSpace=false
+function showUserWindow(args){
+  const _=require('lodash')
+  if(userWindow){
+    if(masked){
+      return
+    }
+    userWindow.show()
+    userWindow.focus()
+  }else{
+    let defaultArgs={
+      tip:'',
+      modal:false
+    }
+    if(typeof args==='undefined'){
+      args={}
+    }
+    let additionalArgs= Object.assign(defaultArgs,args)
+    lastWindowArgs=additionalArgs
+    let formatArgs=[]
+
+    _.mapKeys(additionalArgs,(value,key)=>{
+      formatArgs.push('--'+key+'='+value)
+    })
+
+
+
+    userWindow=new BrowserWindow({
+      backgroundColor:'#00000000',
+      show:false,
+      transparent: true,
+      frame:false,
+      resizable:false,
+      shadow:false,
+      alwaysOnTop:true,
+      width:700,
+      height:530,
+      webPreferences:{
+        nodeIntegration: true,
+        contextIsolation: false,
+        additionalArguments: [
+          '--user-data-path=' + userDataPath,
+          '--app-version=' + app.getVersion(),
+          '--app-name=' + app.getName(),
+          ...((isDevelopmentMode ? ['--development-mode'] : [])),
+          ...formatArgs
+        ]
+      }
+    })
+    function computeBounds(parentBounds,selfBounds){
+      let bounds={}
+      bounds.x=parseInt((parentBounds.x+parentBounds.x+parentBounds.width)/2-selfBounds.width/2,0)
+      bounds.y=parseInt((parentBounds.y+parentBounds.y+parentBounds.height)/2-selfBounds.height/2)
+      bounds.width=parseInt(selfBounds.width)
+      bounds.height=parseInt(selfBounds.height)
+      return bounds
+    }
+
+    userWindow.loadURL('file://'+path.join(__dirname,'/pages/user/index.html'))
+    userWindow.on('ready-to-show',()=>{
+      userWindow.show()
+      if(mainWindow && !mainWindow.isDestroyed())
+        userWindow.setBounds(computeBounds(mainWindow.getBounds(),userWindow.getBounds()))
+      else{
+      }
+      if(additionalArgs.modal){
+        callModal(userWindow)
+      }
+
+    })
+    userWindow.on('close',()=>{
+      userWindow=null
+    })
+  }
+}
+
+function callWetherShowUserWindow(){
+  if(configModel.getShowOnStart())
+  {
+    showUserWindow()
+  }
+}
+
+let masked=false
+let inseartedCSS=[]
+/**
+ * 调用模态方法，给所有窗体添加模态
+ * @param window
+ */
+function callModal(win){
+  if(masked){
+    return
+  }
+  win.setSkipTaskbar(true)
+  let css=`._mask{
+     position:fixed;
+     top:0;
+     left: 0;
+     right: 0;
+     bottom: 0;
+     background-color: #00000033;
+     z-index: 9999999;
+     display:block;
+     }`
+  let code=`
+  let div=document.createElement('div');
+  div.id='_modalWindowMask';
+  div.classList.add('_mask');
+  //div.hidden=true;
+  document.body.appendChild(div);
+  `
+  webContents.getAllWebContents().forEach(async wb=>{
+    if(wb.id===win.webContents.id) return ;
+    inseartedCSS.push({id:wb.id,cssHandler:await wb.insertCSS(css)})
+    await wb.executeJavaScript(code)
+  })
+  if(mainWindow && !mainWindow.isDestroyed()){
+    mainWindow.setMinimizable(false)
+    mainWindow.setClosable(false)
+    mainWindow.setMaximizable(false)
+  }
+  masked=true
+  //
+  // BrowserWindow.getAllWindows().forEach(async w=>{
+  //   if(w.id===win.id) return ;
+  //   await w.webContents.insertCSS(css)
+  //   await w.webContents.executeJavaScript(code)
+  // })
+
+}
+
+function callUnModal(win){
+  if(masked){
+    webContents.getAllWebContents().forEach(async wb=>{
+      try{
+        if(wb.id===win.webContents.id) return ;
+        let handler= inseartedCSS.find((item)=>{
+          return item.id===wb.id
+        })
+        wb.removeInsertedCSS(handler)
+        await wb.executeJavaScript('document.body.removeChild(document.getElementById(\'_modalWindowMask\'))')
+      }catch (e) {
+      }
+    })
+    if(mainWindow && !mainWindow.isDestroyed()){
+      mainWindow.setMinimizable(true)
+      mainWindow.setClosable(true)
+      mainWindow.setMaximizable(true)
+    }
+    inseartedCSS=[]
+    masked=false
+
+  }
+}
+
+/*user面板代码*/
+app.whenReady().then(()=>{
+
+  ipc.on('showUserWindow',(event,args)=>{
+    showUserWindow(args)
+  })
+
+  let loginWindow=null
+  ipc.on('closeUserWindow',()=>{
+    callUnModal(userWindow)
+    userWindow.close()
+  })
+  ipc.on('closeMainWindow',()=>{
+      mainWindow.setClosable(true)
+     mainWindow.close()
+   })
+
+  ipc.on('changeSpace',(event,args)=>{
+    changingSpace=true
+    if(mainWindow && !mainWindow.isDestroyed()){
+      mainWindow.setClosable(true)
+      mainWindow.once('closed',()=>{
+        const ldb=require(__dirname+'/src/util/ldb.js')
+        ldb.load(app.getPath('userData')+'/ldb.json')
+        ldb.db.set('currentSpace.spaceId',args.spaceId).write()
+        ldb.db.set('currentSpace.spaceType',args.spaceType).write()
+        ldb.db.set('currentSpace.userInfo',args.userInfo).write()
+        createWindow()
+      })
+      mainWindow.close()
+    }
+
+  })
+
+  ipc.on('disconnect',()=>{
+    SidePanel.send('disconnect')
+  })
+
+  ipc.on('saving',()=>{
+    SidePanel.send('saving')
+  })
+
+  ipc.on('login',(event,args)=>{
+    if(loginWindow){
+      loginWindow.show()
+      loginWindow.focus()
+    }else{
+      let bounds=mainWindow.getBounds()
+      loginWindow=new BrowserWindow({
+        backgroundColor:'#00000000',
+        show:false,
+        alwaysOnTop:true,
+        parent:mainWindow,
+        webPreferences:{
+          preload:path.join(__dirname,'pages/user/loginPreload.js'),
+          nodeIntegration: true,
+          contextIsolation: false,
+          additionalArguments: [
+            '--user-data-path=' + userDataPath,
+            '--app-version=' + app.getVersion(),
+            '--app-name=' + app.getName(),
+            ...((isDevelopmentMode ? ['--development-mode'] : [])),
+            '--callWindow='+event.sender.id
+          ]
+        }
+      })
+
+      loginWindow.setMenu(null)
+      loginWindow.setBounds(bounds)
+      loginWindow.on('close',()=>{
+        loginWindow=null
+      })
+      api=require(path.join(__dirname,'server-config.js')).api
+      loginWindow.loadURL(api.getUrl(api.API_URL.user.login))
+      loginWindow.on('ready-to-show',()=>{
+        if(userWindow && !userWindow.isDestroyed())
+        {
+          userWindow.setAlwaysOnTop(false)
+        }
+        loginWindow.show()
+        loginWindow.focus()
+      })
+      loginWindow.on('close',()=>{
+        if(userWindow && !userWindow.isDestroyed())
+        {
+          userWindow.setAlwaysOnTop(true)
+        }
+      })
+    }
+  })
+})
+
+
+
+/*user面板代码end*/

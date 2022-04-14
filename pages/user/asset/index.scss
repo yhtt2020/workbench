@@ -1,0 +1,97 @@
+.user-card {
+  user-select: none;
+  cursor: pointer;
+  margin-bottom: 10px;
+
+  &:hover {
+    background-color: rgba(241, 241, 241, 0.37);
+  }
+
+  width: calc(100% - 15px);
+  height: 100px;
+  border-radius: 6px;
+
+  .avatar-wrapper {
+    padding-top: 20px;
+  }
+
+  .user-info {
+    padding: 20px;
+  }
+
+  .info-p {
+    color: #999;
+    font-size: 12px;
+  }
+
+}
+
+.scroller {
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f6f6f6;
+    border-radius: 2px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgb(233, 232, 232);
+    border-radius: 20px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #747474;
+  }
+
+  &::-webkit-scrollbar-corner {
+    background: #f6f6f6;
+  }
+}
+
+.online {
+  cursor: pointer;
+  transition: 0.2s;
+  animation: rotate 4s linear infinite; /*开始动画后无限循环，用来控制rotate*/
+}
+
+.offline {
+  cursor: pointer;
+  filter: grayscale(1);
+}
+
+.other-using {
+  &:hover{
+    border: solid red 1px;
+    background-color: rgba(255, 0, 0, 0.05);
+  }
+  border: solid red 1px;
+  background-color: rgba(255, 0, 0, 0.05);
+  .using-bandage{
+      color:red
+  }
+
+}
+
+.self-using {
+  &:hover{
+    border: solid #02c022 1px;
+    background-color: rgba(2, 192, 34, 0.05);
+  }
+  border: solid #02c022 1px;
+  background-color: rgba(2, 192, 34, 0.05);
+  .using-bandage{
+    color:#02c022
+  }
+
+}
+
+.using-bandage {
+  font-size: 12px;
+  color: red;
+  position: absolute;
+  right: 10px;
+  top: 5px
+}

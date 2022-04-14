@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>选择用户</title>
+  <link rel="stylesheet" href="../../ext/antd3/antd.min.css"/>
+  <link rel="stylesheet" href="./asset/index.css"/>
+  <script src="../../ext/vue3/vue.js"></script>
+  <script src="../../ext/vue3/vue-router.js"></script>
+  <script src="../../ext/antd3/day.js"></script>
+  <script src="../../ext/antd3/antd.min.js"></script>
+</head>
+<body style="background: #00000000">
+<div id="appVue">
+  <div style="position: fixed;left: 0;right: 0;bottom: 0;top: 0;border-radius: 12px" :style="{'background-color':'rgba(0,0,0,0.38)'}"><!--this.modal?'#00000000':-->
+    <div @click.stop="()=>{}"
+         style="position: fixed;left: 50%;top: 50%;margin-left: -325px;margin-top: -240px;width: 650px;height: 480px;background: white;border-radius: 8px;">
+      <div v-if="!modal" @click="closeWindow" style="position:absolute;cursor: pointer;z-index:999;right: -10px;top: -10px">
+        <svg style="width: 30px;height:30px;background-color: white;border-radius: 100%;padding: 0" t="1649408599467" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="14092" width="32" height="32"><path d="M512.001 15.678C237.414 15.678 14.82 238.273 14.82 512.86S237.414 1010.04 512 1010.04s497.18-222.593 497.18-497.18S786.589 15.678 512.002 15.678z m213.211 645.937c17.798 17.803 17.798 46.657 0 64.456-17.798 17.797-46.658 17.797-64.456 0L512.001 577.315 363.241 726.07c-17.799 17.797-46.652 17.797-64.45 0-17.804-17.799-17.804-46.653 0-64.456L447.545 512.86 298.79 364.104c-17.803-17.798-17.803-46.657 0-64.455 17.799-17.798 46.652-17.798 64.45 0l148.761 148.755 148.755-148.755c17.798-17.798 46.658-17.798 64.456 0 17.798 17.798 17.798 46.657 0 64.455L576.456 512.86l148.756 148.755z m0 0" fill="#707070" p-id="14093"></path></svg>
+      </div>
+      <svg v-if="['/','/fatal','/disconnect'].indexOf($route.path)===-1" @click="$router.go(-1)" style="position:absolute;margin: 10px;cursor: pointer;z-index:999" t="1648037736735"
+           class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="18922" width="32"
+           height="32">
+        <path
+          d="M650.752 278.357333l-241.322667 241.365334 241.322667 241.365333a42.666667 42.666667 0 1 1-60.330667 60.330667l-271.530666-271.530667a42.453333 42.453333 0 0 1-11.818667-22.613333l-0.597333-5.034667v-5.034667a42.496 42.496 0 0 1 12.416-27.648l271.530666-271.530666a42.666667 42.666667 0 0 1 60.330667 60.330666z"
+          fill="#666666" p-id="18923"></path>
+      </svg>
+      <router-view></router-view>
+    </div>
+  </div>
+</div>
+</body>
+<script>dayjs().format()</script>
+<script>
+  window.ipc = require('electron').ipcRenderer
+  window.ldb=require('../../src/util/ldb')
+  tools=require('../util/util').tools
+  tools.getWindowArgs(window)
+  ldb.loadInWindow()
+  const app = Vue.createApp({
+    async mounted () {
+      if(window.globalArgs['modal']){
+        this.modal=window.globalArgs['modal']==='true'
+      }
+      if(window.globalArgs['fatal']){
+        this.$router.push({name:'fatal'})
+      }
+      if(window.globalArgs['disconnect']){
+        this.$router.push({name:'disconnect'})
+      }
+    },
+    methods: {
+      closeWindow () {
+        if(!this.modal){
+          ipc.send('closeUserWindow')
+        }
+      }
+    },
+    data () {
+      return {
+        modal:false,
+      }
+    }
+  }).use(antd)
+  window.app = app
+  const routes = [
+    {
+      path: '/', component: require('./pages/users-select')
+    },
+    {
+      path: '/add', component: require('./pages/add-account')
+    },
+    {
+     name:'enterPwd', path: '/pwd/:uid', component: require('./pages/enter-pwd')
+    },
+    {
+      name:'space', path: '/space/:uid', component: require('./pages/space-select')
+    },
+    {
+      name:'fatal',path:'/fatal',component:require('./pages/fatal')
+    },
+    {
+      name:'disconnect',path:'/disconnect',component:require('./pages/disconnect')
+    }
+  ]
+
+  const router = VueRouter.createRouter({
+    history: VueRouter.createWebHashHistory(),
+    routes
+  })
+  app.use(router).mount('#appVue')
+  ipc.on('loginCallback',(e,args)=>{
+    window.antd.message.success('成功添加账号。')
+    router.replace('/')
+  })
+</script>
+</html>
