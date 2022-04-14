@@ -37,7 +37,6 @@
   tools=require('../util/util').tools
   tools.getWindowArgs(window)
   ldb.loadInWindow()
-  // 不需要
   const app = Vue.createApp({
     async mounted () {
       if(window.globalArgs['modal']){

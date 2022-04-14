@@ -39,7 +39,6 @@ class SidePanel {
    * 返回sidePanel实例
    */
   static getSidePanel () {
-    console.log(BrowserWindow.getAllWindows())
     return sidePanel.get()
   }
 
@@ -772,15 +771,12 @@ ipc.on('openTasks',(event,args)=>{
 // })
 //设置侧边栏模式
 ipc.on('sideSetOpen',(event,args)=>{
-  console.log('sideopen')
   SidePanel.send('sideSetOpen')
 })
 ipc.on('sideSetClose',(event,args)=>{
-  console.log('sideclose')
   SidePanel.send('sideSetClose')
 })
 ipc.on('sideSetAuto',(event,args)=>{
-  console.log('auto')
   SidePanel.send('sideSetAuto')
 })
 
@@ -790,7 +786,6 @@ ipc.on('importDesk',(event,args)=>{
     return
   }else{
     event.reply('importDesk',{files:files})
-    console.log(files)
   }
 })
 ipc.on('exportDesk',(event,args)=>{
@@ -902,7 +897,6 @@ let lastWindowArgs={}
 let changingSpace=false
 function showUserWindow(args){
   const _=require('lodash')
-  console.log('显示用户窗体',args)
   if(userWindow){
     if(masked){
       return
@@ -919,13 +913,11 @@ function showUserWindow(args){
     }
     let additionalArgs= Object.assign(defaultArgs,args)
     lastWindowArgs=additionalArgs
-    console.log(additionalArgs)
     let formatArgs=[]
 
     _.mapKeys(additionalArgs,(value,key)=>{
       formatArgs.push('--'+key+'='+value)
     })
-    console.log(formatArgs)
 
 
 
@@ -1084,7 +1076,6 @@ app.whenReady().then(()=>{
         ldb.db.set('currentSpace.spaceId',args.spaceId).write()
         ldb.db.set('currentSpace.spaceType',args.spaceType).write()
         ldb.db.set('currentSpace.userInfo',args.userInfo).write()
-        console.log(args)
         createWindow()
       })
       mainWindow.close()

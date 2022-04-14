@@ -3,7 +3,7 @@ const tpl = `
   <h1 style="font-size: 18px;margin:auto;margin-top: 40px;text-align: center">
    {{title}}
   </h1>
-  <p style="text-align: left;color: #999;padding: 20px">
+  <p style="text-align: center;color: #999;padding: 20px">
       <span style="color: #333">
 <!--      系统检测到当前空间已被<strong>其他设备占用</strong>。无法再保存当前空间。-->
 {{description}}
