@@ -805,9 +805,14 @@ Vue.component('sidebar', {
     },
     openHelp(apps){
       function checkAdult(apps){
-        return apps.package=== 'com.thisky.helper'
+        return apps.package === 'com.thisky.helper'
       }
-      ipc.send('executeApp',{app:apps.find(checkAdult)})
+      if(apps.find(checkAdult)===undefined){
+        alert('暂时无法打开')
+      }else{
+        ipc.send('executeApp',{app:apps.find(checkAdult)})
+      }
+
       // ipc.send('handleTsbProtocol',{url:'tsb://app/redirect/?package=com.thisky.helper&url=/'})
     },
     // openPost() {
