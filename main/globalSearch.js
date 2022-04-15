@@ -13,35 +13,58 @@ const globalSearchMod = {
       return
     }
     if(isWin) {
-      globalSearchTransparent = false
+      globalSearch = new BrowserWindow({
+        alwaysOnTop: true,
+        minimizable: false,
+        parent: null,
+        width: 600,
+        height: 280,
+        minHeight: 150,
+        maxHeight: 520,
+        maximizable:false,
+        resizable: true,
+        frame: false,
+        backgroundColor: '#fff',
+        webPreferences: {
+          devTools: true,
+          nodeIntegration: true,
+          contextIsolation: false,
+          additionalArguments: [
+            '--user-data-path=' + userDataPath,
+            '--app-version=' + app.getVersion(),
+            '--app-name=' + app.getName(),
+            ...((isDevelopmentMode ? ['--development-mode'] : [])),
+          ]
+        }
+      })
     } else {
-      globalSearchTransparent = true
+      globalSearch = new BrowserWindow({
+        alwaysOnTop: true,
+        minimizable: false,
+        parent: null,
+        width: 600,
+        height: 280,
+        minHeight: 150,
+        maxHeight: 520,
+        maximizable:false,
+        resizable: false,
+        frame: false,
+        backgroundColor: '#00000000',
+        transparent: true,
+        webPreferences: {
+          devTools: true,
+          nodeIntegration: true,
+          contextIsolation: false,
+          additionalArguments: [
+            '--user-data-path=' + userDataPath,
+            '--app-version=' + app.getVersion(),
+            '--app-name=' + app.getName(),
+            ...((isDevelopmentMode ? ['--development-mode'] : [])),
+          ]
+        }
+      })
     }
-    globalSearch = new BrowserWindow({
-      alwaysOnTop: true,
-      minimizable: false,
-      parent: null,
-      width: 600,
-      height: 280,
-      minHeight: 150,
-      maxHeight: 520,
-      maximizable:false,
-      resizable: false,
-      frame: false,
-      backgroundColor: '#00000000',
-      transparent: `${globalSearchTransparent}`,
-      webPreferences: {
-        devTools: true,
-        nodeIntegration: true,
-        contextIsolation: false,
-        additionalArguments: [
-          '--user-data-path=' + userDataPath,
-          '--app-version=' + app.getVersion(),
-          '--app-name=' + app.getName(),
-          ...((isDevelopmentMode ? ['--development-mode'] : [])),
-        ]
-      }
-    })
+
     globalSearch.webContents.loadURL('file://' + __dirname + '/pages/globalSearch/index.html')
 
     globalSearch.on('close', () => globalSearch = null)
@@ -52,6 +75,10 @@ const globalSearchMod = {
 
     globalSearch.on('blur', () => {
       globalSearch.hide()
+    })
+
+    globalSearch.on('will-resize', (event, args) => {
+      event.preventDefault()
     })
   }
 }
