@@ -52,13 +52,14 @@
 
   .mid {
     width: 100%;
-    height: calc(100% - 50px - 58px);
+    height: calc(100% - 50px);
     overflow: auto;
     border-radius: 0px 0px 10px 10px;
     &.silent {
       width: 100%;
-      height: calc(100% - 50px);
+      height: calc(100% - 50px - 58px);
       overflow: auto;
+      border-radius: 0px !important;
     }
     &::-webkit-scrollbar {
       width: 0 !important

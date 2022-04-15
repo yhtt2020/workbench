@@ -23,7 +23,7 @@ const messageTempl = /* html */`
       <template v-if="this.$store.getters.getAllMessages.length === 0">
         <a-empty :description="false" class="mid flex  align-center justify-center"></a-empty>
       </template>
-      <div class="mid" :class="{'silent' : !isSilent}" v-else>
+      <div class="mid" :class="{'silent' : isSilent}" v-else>
         <div class="lumen flex flex-direction justify-between align-center" v-show="groupMessage.length > 0">
           <div class="lumen-top flex justify-between align-center" @click="handleMessageListStatus('groupChat')">
             <div class="lumen-top-lf flex justify-start align-center text-black">
@@ -149,7 +149,7 @@ const messageTempl = /* html */`
           </div>
         </div>
       </div>
-      <div class="bottom flex justify-start align-center" v-show="isSilent">
+      <div class="bottom flex justify-start align-center" v-show="isSilent === true">
         <img src="./assets/nodisturb.svg" style="width: 34px; height: 34px; margin: 0px 10px;">
         <div class="flex flex-direction justify-center align-start">
           <span class="text-black" style="font-weight: 500;">勿扰模式</span>
