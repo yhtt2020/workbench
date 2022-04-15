@@ -16,12 +16,14 @@ const globalSearch = new Vue({
           this.itemReadyedIndex = 0
           this.itemReadyedItem = this.searchResult[0]
           console.log(this.searchResult)
-        } else {
+        } else if (newValue.length === 0) {
           this.openFirst = true
           this.calculateAreaHeight(await this.getHistoryCount())
           this.recentOpenedHistory = await this.handleRecentOpenedHistory()
           this.recentReadyedIndex = 0
           this.recentReadyedItem = this.recentOpenedHistory[0]
+          this.itemReadyedIndex = 0
+          this.itemReadyedItem = {}
         }
         this.contentLoading = false
       }, 200),

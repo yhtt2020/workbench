@@ -1,5 +1,4 @@
 let globalSearch = null
-let globalSearchTransparent
 
 const globalSearchMod = {
   init: function() {
