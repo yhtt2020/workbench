@@ -18,8 +18,8 @@ const globalSearch = new Vue({
           console.log(this.searchResult)
         } else {
           this.openFirst = true
+          this.calculateAreaHeight(await this.getHistoryCount())
           this.recentOpenedHistory = await this.handleRecentOpenedHistory()
-          this.calculateAreaHeight(this.recentOpenedHistory)
           this.recentReadyedIndex = 0
           this.recentReadyedItem = this.recentOpenedHistory[0]
         }
@@ -103,8 +103,9 @@ const globalSearch = new Vue({
   methods: {
     calculateAreaHeight(res) {
       //计算搜索结果区域的高度，传给main变换窗体高度
-      let num = res.length
+      let num
       if(this.openFirst) {
+        num = res
         if(num >= 6) {
           ipc.send('changeBrowserWindowHeight', 530)
         } else if(num === 5) {
@@ -119,6 +120,7 @@ const globalSearch = new Vue({
           ipc.send('changeBrowserWindowHeight', 280)
         }
       } else {
+        num = res.length
         if(num >= 6) {
           ipc.send('changeBrowserWindowHeight', 400)
         } else if(num === 5) {
@@ -276,6 +278,9 @@ const globalSearch = new Vue({
       })
       this.tags[index].checked = !tag.checked
     },
+    async getHistoryCount() {
+      return await placesModel.getHistoryCount()
+    },
     async getAllApps() {
       this.apps = await saAppModel.getAllApps()
     },
@@ -331,9 +336,12 @@ const globalSearch = new Vue({
   async mounted () {
     await this.getAllApps()
     this.bindKeys()
+
+    // console.log(await this.getHistoryCount(), '%%%%%%%%%%%')
+
+    this.calculateAreaHeight(await this.getHistoryCount())
     this.recentOpenedHistory = await this.handleRecentOpenedHistory()
     this.recentReadyedItem = this.recentOpenedHistory[0]
-    this.calculateAreaHeight(this.recentOpenedHistory)
   },
 });
 
