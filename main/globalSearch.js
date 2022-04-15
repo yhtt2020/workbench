@@ -1,4 +1,5 @@
 let globalSearch = null
+let globalSearchTransparent
 
 const globalSearchMod = {
   init: function() {
@@ -11,6 +12,11 @@ const globalSearchMod = {
       }
       return
     }
+    if(isWin) {
+      globalSearchTransparent = false
+    } else {
+      globalSearchTransparent = true
+    }
     globalSearch = new BrowserWindow({
       alwaysOnTop: true,
       minimizable: false,
@@ -18,12 +24,12 @@ const globalSearchMod = {
       width: 600,
       height: 280,
       minHeight: 150,
-      maxHeight: 530,
+      maxHeight: 520,
       maximizable:false,
       resizable: false,
       frame: false,
       backgroundColor: '#00000000',
-      transparent: true,
+      transparent: `${globalSearchTransparent}`,
       webPreferences: {
         devTools: true,
         nodeIntegration: true,

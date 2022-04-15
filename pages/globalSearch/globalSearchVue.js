@@ -107,7 +107,7 @@ const globalSearch = new Vue({
       if(this.openFirst) {
         num = res
         if(num >= 6) {
-          ipc.send('changeBrowserWindowHeight', 530)
+          ipc.send('changeBrowserWindowHeight', 520)
         } else if(num === 5) {
           ipc.send('changeBrowserWindowHeight', 480)
         } else if(num === 4) {
