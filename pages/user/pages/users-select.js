@@ -101,6 +101,10 @@ const UsersSelect = {
 
     this.showOnStart= configModel.getShowOnStart()
   },
+  async beforeRouteEnter(to, from) {
+    console.log('update')
+    this.users = await userModel.getAll()
+  },
   methods: {
     switchShowOnStart(){
       configModel.setShowOnStart(this.showOnStart)
