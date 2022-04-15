@@ -144,9 +144,14 @@ const tools = {
    * @returns
    */
   execDomain(url) {
-    let urlReg =
-      /[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?/;
-    return urlReg.exec(url)[0];
+    try {
+      let urlReg =
+        /[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?/;
+      return urlReg.exec(url)[0];
+    } catch (err) {
+      console.warn(err);
+      return "";
+    }
   },
 
   /**
@@ -180,82 +185,104 @@ const tools = {
    * @returns Boolean值结果
    */
   pinyinMatch(str, word) {
-    //先用正则把需要匹配的中文抠出来
-    //然后匹配全拼和首字母拼
-    let result = false;
-    if (!str.match(/[\u4e00-\u9fa5]/g)) {
-      return result;
-    }
-    let chinese = str.match(/[\u4e00-\u9fa5]/g).join(""); //抠出的数组中字用join变字符串
-    const quanPin = pinyin(chinese, { toneType: "none", type: "array" }); // 获取数组形式不带声调的拼音
-    const firstPin = pinyin(chinese, {
-      pattern: "first",
-      toneType: "none",
-      type: "array",
-    }); // 获取数组形式不带音调拼音首字母
-
-    /**
-     * 首字母简拼智能匹配
-     * @param {Array} arr 首字母简拼数组
-     * @param {String} word 输入的内容
-     * @returns
-     */
-    function intelligentMatch(arr, word) {
-      if (word.length <= 1) return false;
-      if (!/^[\u4e00-\u9fa5_a-zA-Z]+$/.test(word)) return false;
+    try {
+      //先用正则把需要匹配的中文抠出来
+      //然后匹配全拼和首字母拼
       let result = false;
-      let stop = false;
-      let wordArr = word.split("");
-
-      function recur(targetArrParam, wordArrParam, targetIndexParam, wordArrIndexParam) {
-        if (stop === false && wordArrParam.length <= targetArrParam.length && wordArrParam[wordArrIndexParam + 1]) {
-          if (targetArrParam[targetIndexParam + 1] === wordArrParam[wordArrIndexParam + 1]) {
-            result = true;
-          } else {
-            result = false;
-            stop = true;
-          }
-          recur(targetArrParam, wordArrParam, targetIndexParam + 1, wordArrIndexParam + 1);
-        }
+      if (!str.match(/[\u4e00-\u9fa5]/g)) {
+        return result;
       }
+      let chinese = str.match(/[\u4e00-\u9fa5]/g).join(""); //抠出的数组中字用join变字符串
+      const quanPin = pinyin(chinese, { toneType: "none", type: "array" }); // 获取数组形式不带声调的拼音
+      const firstPin = pinyin(chinese, {
+        pattern: "first",
+        toneType: "none",
+        type: "array",
+      }); // 获取数组形式不带音调拼音首字母
 
-      let arrIndex = 0;
-      let wordArrIndex = 0;
-      let needToRecur = false;
-      for (let i = 0; i < arr.length; i++) {
-        if (needToRecur) break;
-        for (let j = 0; j < wordArr.length; j++) {
+      /**
+       * 首字母简拼智能匹配
+       * @param {Array} arr 首字母简拼数组
+       * @param {String} word 输入的内容
+       * @returns
+       */
+      function intelligentMatch(arr, word) {
+        if (word.length <= 1) return false;
+        if (!/^[\u4e00-\u9fa5_a-zA-Z]+$/.test(word)) return false;
+        let result = false;
+        let stop = false;
+        let wordArr = word.split("");
+
+        function recur(
+          targetArrParam,
+          wordArrParam,
+          targetIndexParam,
+          wordArrIndexParam
+        ) {
+          if (
+            stop === false &&
+            wordArrParam.length <= targetArrParam.length &&
+            wordArrParam[wordArrIndexParam + 1]
+          ) {
+            if (
+              targetArrParam[targetIndexParam + 1] ===
+              wordArrParam[wordArrIndexParam + 1]
+            ) {
+              result = true;
+            } else {
+              result = false;
+              stop = true;
+            }
+            recur(
+              targetArrParam,
+              wordArrParam,
+              targetIndexParam + 1,
+              wordArrIndexParam + 1
+            );
+          }
+        }
+
+        let arrIndex = 0;
+        let wordArrIndex = 0;
+        let needToRecur = false;
+        for (let i = 0; i < arr.length; i++) {
           if (needToRecur) break;
-          if (wordArr[j] === arr[i] && arr[i + 1]) {
-            arrIndex = i;
-            wordArrIndex = j;
-            needToRecur = true;
+          for (let j = 0; j < wordArr.length; j++) {
+            if (needToRecur) break;
+            if (wordArr[j] === arr[i] && arr[i + 1]) {
+              arrIndex = i;
+              wordArrIndex = j;
+              needToRecur = true;
+            }
           }
         }
+
+        if (needToRecur) {
+          recur(arr, wordArr, arrIndex, wordArrIndex);
+        }
+        return result;
       }
 
-      if (needToRecur) {
-        recur(arr, wordArr, arrIndex, wordArrIndex);
+      quanPin.forEach((v, index) => {
+        if (v === word) {
+          result = true;
+        } else if (quanPin.join("") === word) {
+          result = true;
+        } else if (
+          index <= quanPin.length - 2 &&
+          word.includes(v.concat(quanPin[index + 1]))
+        ) {
+          result = true;
+        }
+      });
+      if (intelligentMatch(firstPin, word)) {
+        result = true;
       }
       return result;
+    } catch (err) {
+      console.warn(err);
+      return false;
     }
-
-    quanPin.forEach((v, index) => {
-      if (v === word) {
-        result = true;
-      } else if (quanPin.join("") === word) {
-        result = true;
-      } else if (
-        index <= quanPin.length - 2 &&
-        word.includes(v.concat(quanPin[index + 1]))
-      ) {
-        result = true;
-      }
-    });
-    if (intelligentMatch(firstPin, word)) {
-      result = true;
-    }
-    return result;
   },
 };
 
