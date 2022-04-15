@@ -307,12 +307,112 @@ const sidebarTpl = `
     background: rgba(199,199,199,0.65);"></div>
         </div>
       </a-tooltip>
- <a-popover placement="right" :mouse-enter-delay="0.3" overlay-class-name="tips" @visible-change="()=>{appVue.$store.dispatch('getLocalSpaces')}" >
-  <template slot="title">
-             更换标签组空间
-            </template>
-            <template slot="content">
-             <p style="width: 200px;font-size: 12px">
+<!-- <a-popover placement="right" :mouse-enter-delay="0.3" overlay-class-name="tips" @visible-change="()=>{appVue.$store.dispatch('getLocalSpaces')}" >-->
+<!--  <template slot="title">-->
+<!--             更换标签组空间-->
+<!--            </template>-->
+<!--            <template slot="content">-->
+<!--             <p style="width: 200px;font-size: 12px">-->
+<!--              <span v-if="currentSpace.space">当前为云端空间。<br>每30秒自动备份，此时图标会转动。</span>-->
+<!--                <span v-else-if="currentSpace.space.type==='cloud'">当前为离线模式。系统会自动尝试同步连接，直至连接成功。</span>-->
+<!--                <span v-else>当前为本地空间，不与云端同步，建议导入到云端空间以防止标签组丢失。</span>-->
+<!--</p>-->
+
+<!--        <ul class="space-selector">-->
+<!--             <li v-if="cloudSpaces.length===0"  disabled="" key="current">-->
+<!--            请<a @click="login()">登录</a>后使用云空间-->
+<!--          </li>-->
+<!--         <li title="云端空间" :class="{'active':currentSpace.space.nanoid===space.nanoid}" v-else  @click="confirmChangeSpace(space,'cloud')" v-for="space in cloudSpaces" :key="space.nanoid" :disable="space['client_id']!=='' && currentSpace.space.nanoid!==space.nanoid">-->
+<!--            <a-icon type="sync" v-if="currentSpace.space.nanoid===space.nanoid" style="color: #00bb00" spin></a-icon>-->
+<!--            <a-icon style="color: #00bb00" v-else type="sync"></a-icon>-->
+<!--            {{space.name}}-->
+<!--            <span v-if="space.isOtherUsing">-->
+<!--              <span v-if="space.disconnect">-->
+<!--                   <a-badge count="离线"  :number-style="{ backgroundColor: 'red' }"title="其他设备离线使用"> </a-badge>-->
+<!--</span><span v-else>-->
+<!--     <a-badge count="其他"  :number-style="{ backgroundColor: 'red' }"title="其他设备使用中"> </a-badge>-->
+<!--</span>-->
+<!--</span>-->
+<!--              <span  v-if="space.isSelfUsing">-->
+<!--              <span v-if="space.disconnect">-->
+<!--        <a-badge count="离线"  :number-style="{ backgroundColor: '#ccc' }"title="当前设备离线"> </a-badge>-->
+<!--</span><span v-else>-->
+<!--<a-badge count="当前" :number-style="{ backgroundColor: '#52c41a' }" title="当前设备使用中"> </a-badge>-->
+<!--</span>-->
+<!--</span>-->
+<!--          </li>-->
+<!--          <li class="divider"></li>-->
+<!--          <li :class="{'active':currentSpace.space.id===space.id}" title="本地空间" @click="confirmChangeSpace(space,'local')"  v-for="space in localSpaces" :key="'local_'+space.id">-->
+
+<!--           <a-icon type="sync" v-if="currentSpace.space.id===space.id"  spin></a-icon>-->
+<!--            <a-icon  v-else type="sync"></a-icon> {{space.name}}-->
+
+<!--            </li>-->
+<!--&lt;!&ndash;            <a-menu-item key="add" @click="openUserWindow">&ndash;&gt;-->
+<!--&lt;!&ndash;            <a-icon type="plus" ></a-icon> 创建新空间&ndash;&gt;-->
+<!--&lt;!&ndash;          </a-menu-item>&ndash;&gt;-->
+<!--          <li class="divider"></li>-->
+<!--          <li  key="other" @click="openUserWindow">-->
+<!--            <a-icon type="swap" ></a-icon> 选择其他空间-->
+<!--          </li>-->
+<!--        </ul>-->
+<!--        </template>-->
+<!--<div  style="width: 100%;overflow: hidden;height:30px;">-->
+
+<!--       <div style="width:145px;">-->
+<!--       <div style="display: inline-block;width:45px;text-align: center">-->
+<!--       <svg id="savingIcon" :class="{'online':currentSpace.space.nanoid,'offline':!currentSpace.space.nanoid}" style="width: 24px" t="1648106444295"  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="32437" width="32" height="32"><path d="M512 938.666667C276.352 938.666667 85.333333 747.648 85.333333 512S276.352 85.333333 512 85.333333s426.666667 191.018667 426.666667 426.666667-191.018667 426.666667-426.666667 426.666667z m205.653333-210.090667A298.666667 298.666667 0 0 0 385.365333 241.408l41.6 74.88A213.333333 213.333333 0 0 1 725.333333 512h-91.733333a21.333333 21.333333 0 0 0-18.645333 31.701333l102.698666 184.874667z m-120.618666-20.864A213.333333 213.333333 0 0 1 298.666667 512h91.733333a21.333333 21.333333 0 0 0 18.645333-31.701333L306.346667 295.424a298.666667 298.666667 0 0 0 332.288 487.168l-41.6-74.88z" fill="#14D081" p-id="32438"></path></svg>-->
+
+<!--&lt;!&ndash;       <a-icon type="loading" ></a-icon>&ndash;&gt;-->
+<!--       </div>-->
+<!--       <div style="display: inline-block;width:96px;text-align: left">-->
+
+<!--      <div class="space-name" type="primary">-->
+<!--        {{currentSpace.space.name}}-->
+<!--        <a-icon type="right" />-->
+<!--      </div>-->
+<!--   </div>-->
+<!--   </div>-->
+
+<!--   </div>-->
+<!--</a-popover>-->
+<tippy ref="tippy"
+    @show="showPopSpace"
+    boundary="window"
+    interactive
+    :animate-fill="false"
+    placement="right"
+    distant="7"
+    theme="light"
+    :sticky="true"
+    animation="fade"
+    trigger="click mouseenter"
+    :delay="[200,200]"
+    :interactive-border="5"
+    :lazy="false"
+    :interactive-debounce="1"
+    arrow>
+    <!--mouseenter-->
+<template v-slot:trigger>
+<div  style="width: 100%;overflow: hidden;height:30px;text-align: left ">
+
+       <div style="width:145px;">
+       <div style="display: inline-block;width:45px;text-align: center">
+       <svg id="savingIcon" :class="{'online':currentSpace.space.nanoid,'offline':!currentSpace.space.nanoid}" style="width: 24px" t="1648106444295"  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="32437" width="32" height="32"><path d="M512 938.666667C276.352 938.666667 85.333333 747.648 85.333333 512S276.352 85.333333 512 85.333333s426.666667 191.018667 426.666667 426.666667-191.018667 426.666667-426.666667 426.666667z m205.653333-210.090667A298.666667 298.666667 0 0 0 385.365333 241.408l41.6 74.88A213.333333 213.333333 0 0 1 725.333333 512h-91.733333a21.333333 21.333333 0 0 0-18.645333 31.701333l102.698666 184.874667z m-120.618666-20.864A213.333333 213.333333 0 0 1 298.666667 512h91.733333a21.333333 21.333333 0 0 0 18.645333-31.701333L306.346667 295.424a298.666667 298.666667 0 0 0 332.288 487.168l-41.6-74.88z" fill="#14D081" p-id="32438"></path></svg>
+
+<!--       <a-icon type="loading" ></a-icon>-->
+       </div>
+       <div style="display: inline-block;width:96px;text-align: left">
+
+      <div class="space-name" type="primary">
+        {{currentSpace.space.name}}
+        <a-icon type="right" />
+      </div>
+   </div>
+   </div>
+   </div>
+</template>
+  <p style="width: 200px;font-size: 12px">
               <span v-if="currentSpace.space">当前为云端空间。<br>每30秒自动备份，此时图标会转动。</span>
                 <span v-else-if="currentSpace.space.type==='cloud'">当前为离线模式。系统会自动尝试同步连接，直至连接成功。</span>
                 <span v-else>当前为本地空间，不与云端同步，建议导入到云端空间以防止标签组丢失。</span>
@@ -356,26 +456,7 @@ const sidebarTpl = `
             <a-icon type="swap" ></a-icon> 选择其他空间
           </li>
         </ul>
-        </template>
-<div  style="width: 100%;overflow: hidden;height:30px;">
-
-       <div style="width:145px;">
-       <div style="display: inline-block;width:45px;text-align: center">
-       <svg id="savingIcon" :class="{'online':currentSpace.space.nanoid,'offline':!currentSpace.space.nanoid}" style="width: 24px" t="1648106444295"  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="32437" width="32" height="32"><path d="M512 938.666667C276.352 938.666667 85.333333 747.648 85.333333 512S276.352 85.333333 512 85.333333s426.666667 191.018667 426.666667 426.666667-191.018667 426.666667-426.666667 426.666667z m205.653333-210.090667A298.666667 298.666667 0 0 0 385.365333 241.408l41.6 74.88A213.333333 213.333333 0 0 1 725.333333 512h-91.733333a21.333333 21.333333 0 0 0-18.645333 31.701333l102.698666 184.874667z m-120.618666-20.864A213.333333 213.333333 0 0 1 298.666667 512h91.733333a21.333333 21.333333 0 0 0 18.645333-31.701333L306.346667 295.424a298.666667 298.666667 0 0 0 332.288 487.168l-41.6-74.88z" fill="#14D081" p-id="32438"></path></svg>
-
-<!--       <a-icon type="loading" ></a-icon>-->
-       </div>
-       <div style="display: inline-block;width:96px;text-align: left">
-
-      <div class="space-name" type="primary">
-        {{currentSpace.space.name}}
-        <a-icon type="right" />
-      </div>
-   </div>
-   </div>
-
-   </div>
-</a-popover>
+</tippy>
       <div class="app-box">
         <ul id="appGroup" style="user-select: none;padding-bottom: 20px" class="app-task app-items"
           @dblclick.prevent="addNewTask">
@@ -673,6 +754,10 @@ Vue.component('sidebar', {
   },
   template: sidebarTpl,
   methods: {
+    async showPopSpace(){
+      await appVue.$store.dispatch('getCloudSpaces')
+      appVue.$refs.sidePanel.cloudSpaces=this.$store.state.cloudSpaces
+    },
     login(){
       ipc.send('login')
     },
@@ -1133,6 +1218,7 @@ Vue.component('sidebar', {
      * 处理窗体失去焦点事件
      */
     blur () {
+      appVue.$refs.sidePanel.$refs.tippy.tip.hide() //失焦的时候关闭tippy的弹窗
       //处理左侧栏，强制移除expanded样式
       if (appVue.mod === 'auto' || appVue.mod === 'close') {
         document.getElementById('appVue').classList.remove('expanded')

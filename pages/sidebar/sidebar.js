@@ -471,7 +471,7 @@ window.onload = function() {
 	})
 
 	Vue.use(antd);
-
+  Vue.use(VueTippy)
 	var appVue = new Vue({
 		el: '#appVue',
 		store: store,
