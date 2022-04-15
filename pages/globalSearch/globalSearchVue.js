@@ -332,7 +332,7 @@ const globalSearch = new Vue({
           })
         })
       })
-      return mapTabs.filter(v => v.title.includes(word) || tools.execDomain(v.url).includes(word) || tools.pinyinMatch(v.title, word))
+      return mapTabs.filter(v => v.title.toLowerCase().includes(word) || tools.execDomain(v.url).toLowerCase().includes(word) || tools.pinyinMatch(v.title, word))
     }
   },
   async mounted () {
