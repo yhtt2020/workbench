@@ -31,7 +31,39 @@ const spaceModel = {
   },
 
   async getUserSpaces (option) {
-    return await spaceModel.adapterModel.getUserSpaces(spaceModel.user, option)
+    let result=await spaceModel.adapterModel.getUserSpaces(spaceModel.user, option)
+    async function getSpaceState(space){
+      if (spaceModel.user.uid) { //云端判断逻辑
+        if (space.client_id && space.client_id !== spaceModel.user.clientId) {
+          space.isOtherUsing = true
+          space.isUsing = true
+        } else if ((space.client_id === spaceModel.user.clientId)) {
+          space.isSelfUsing = true
+          space.isUsing = true
+        } else {
+          space.isUsing = false
+        }
+        if(Date.now()-space.sync_time>30000){
+          space.disconnect=true
+        }else{
+          space.disconnect=false
+        }
+      } else {
+         await spaceModel.setAdapter('local').getCurrent().then(sp=>{
+          if (space.id === sp.spaceId) {
+            space.isSelfUsing = true
+            space.isUsing = true
+          }
+        })
+      }
+    }
+    if(result.status===1){
+      let spaces=result.data
+      spaces.forEach( (space) =>{
+        getSpaceState(space)
+      })
+    }
+    return result
   },
 
   /**

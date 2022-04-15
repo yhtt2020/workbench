@@ -307,7 +307,7 @@ const sidebarTpl = `
     background: rgba(199,199,199,0.65);"></div>
         </div>
       </a-tooltip>
- <a-popover placement="right" :mouse-enter-delay="0.3" overlay-class-name="tips" @visible-change="()=>{this.$store.dispatch('getLocalSpaces')}" >
+ <a-popover placement="right" :mouse-enter-delay="0.3" overlay-class-name="tips" @visible-change="()=>{appVue.$store.dispatch('getLocalSpaces')}" >
   <template slot="title">
              更换标签组空间
             </template>
@@ -322,21 +322,36 @@ const sidebarTpl = `
              <li v-if="cloudSpaces.length===0"  disabled="" key="current">
             请<a @click="login()">登录</a>后使用云空间
           </li>
-         <li title="云端空间" :class="{'active':currentSpace.space.nanoid===space.nanoid}" v-else  @click="confirmChangeSpace(space.nanoid,'cloud')" v-for="space in cloudSpaces" :key="space.nanoid" :disable="space['client_id']!=='' && currentSpace.space.nanoid!==space.nanoid">
+         <li title="云端空间" :class="{'active':currentSpace.space.nanoid===space.nanoid}" v-else  @click="confirmChangeSpace(space,'cloud')" v-for="space in cloudSpaces" :key="space.nanoid" :disable="space['client_id']!=='' && currentSpace.space.nanoid!==space.nanoid">
             <a-icon type="sync" v-if="currentSpace.space.nanoid===space.nanoid" style="color: #00bb00" spin></a-icon>
             <a-icon style="color: #00bb00" v-else type="sync"></a-icon>
             {{space.name}}
+            <span v-if="space.isOtherUsing">
+              <span v-if="space.disconnect">
+                   <a-badge count="离线"  :number-style="{ backgroundColor: 'red' }"title="其他设备离线使用"> </a-badge>
+</span><span v-else>
+     <a-badge count="其他"  :number-style="{ backgroundColor: 'red' }"title="其他设备使用中"> </a-badge>
+</span>
+</span>
+              <span  v-if="space.isSelfUsing">
+              <span v-if="space.disconnect">
+        <a-badge count="离线"  :number-style="{ backgroundColor: '#ccc' }"title="当前设备离线"> </a-badge>
+</span><span v-else>
+<a-badge count="当前" :number-style="{ backgroundColor: '#52c41a' }" title="当前设备使用中"> </a-badge>
+</span>
+</span>
           </li>
           <li class="divider"></li>
-          <li :class="{'active':currentSpace.space.id===space.id}" title="本地空间" @click="confirmChangeSpace(space.id,'local')"  v-for="space in localSpaces" :key="'local_'+space.id">
+          <li :class="{'active':currentSpace.space.id===space.id}" title="本地空间" @click="confirmChangeSpace(space,'local')"  v-for="space in localSpaces" :key="'local_'+space.id">
 
            <a-icon type="sync" v-if="currentSpace.space.id===space.id"  spin></a-icon>
             <a-icon  v-else type="sync"></a-icon> {{space.name}}
-            </li>
 
+            </li>
 <!--            <a-menu-item key="add" @click="openUserWindow">-->
 <!--            <a-icon type="plus" ></a-icon> 创建新空间-->
 <!--          </a-menu-item>-->
+          <li class="divider"></li>
           <li  key="other" @click="openUserWindow">
             <a-icon type="swap" ></a-icon> 选择其他空间
           </li>
@@ -545,7 +560,7 @@ Vue.component('sidebar', {
 
   },
   async mounted () {
-    this.currentSpace=await spaceModel.getCurrent()
+
     await standAloneAppModel.initialize()
     this.apps = await standAloneAppModel.getAllApps()
     ipc.send('getRunningApps')
@@ -610,7 +625,7 @@ Vue.component('sidebar', {
     await this.$store.dispatch('getAllMessage')
     //如果用户已登录，则获取云端的空间
     try{
-
+      this.currentSpace=await spaceModel.getCurrent()
       if(currentUser.value.uid){
         await this.$store.dispatch('getCloudSpaces',currentUser.value)
       }
@@ -661,17 +676,105 @@ Vue.component('sidebar', {
     login(){
       ipc.send('login')
     },
-    confirmChangeSpace(id,type){
-      antd.Modal.confirm({
-        title: '确认',
-        content: '是否更改当前空间，更改空间将重载浏览器，可能导致您网页上未保存的内容丢失，请确认已经保存全部内容。',
-        centered: true,
-        okText: '我已保存，切换空间',
-        cancelText: '取消',
-        onOk: () => {
-          this.changeSpace(id,type)
+    confirmChangeSpace(space,type){
+      // antd.Modal.confirm({
+      //   title: '确认',
+      //   content: '是否更改当前空间，更改空间将重载浏览器，可能导致您网页上未保存的内容丢失，请确认已经保存全部内容。',
+      //   centered: true,
+      //   okText: '我已保存，切换空间',
+      //   cancelText: '取消',
+      //   onOk: () => {
+      //     this.changeSpace(id,type)
+      //     }
+      // })
+      if (type!=='cloud') {
+        this.$confirm({
+          title: '切换到本地空间',
+          content: '是否更改当前空间，更改空间将重载浏览器，可能导致您网页上未保存的内容丢失，请确认已经保存全部内容。切换本地空间并不会更改当前登录账号。',
+          centered: true,
+          okText: '我已保存，切换空间',
+          cancelText: '取消',
+          onOk: async () => {
+            spaceModel.setAdapter('local').changeCurrent(space)
           }
-      })
+        })
+      } else {
+        if(space.isSelfUsing){
+          if(space.disconnect){
+            antd.Modal.confirm({
+              title: '重新连接',
+              content: '是否尝试重新连接此空间？',
+              centered: true,
+              okText: '重新连接',
+              cancelText: '取消',
+              onOk: async () => {
+                this.doChangeSpaceCloud(space)
+              }
+            })
+          }else{
+            window.antd.message.info('不可切换到当前使用中的空间。')
+          }
+          return
+        }
+        if (space.isOtherUsing) {
+          if(space.online){
+            this.$confirm({
+              title: '此空间正忙',
+              content: '此空间正在被其他设备使用，如若切换到此空间，可能造成其他设备未同步的标签组丢失。是否仍然要强行切换？这将导致该设备上的浏览器强制下线。',
+              centered: true,
+              okText: '我已明确，切换空间',
+              cancelText: '取消',
+              onOk: async () => {
+                this.doChangeSpaceCloud(space)
+              }
+            })
+          }else{
+            this.$confirm({
+              title: '此空间使用设备异常离线',
+              content: appVue.$createElement('div',{},
+                [
+                  appVue.$createElement('p',{},'此空间正在被其他设备使用，但是系统检测到此设备可能已经因为网络或者其他原因而离线。'),
+                  appVue.$createElement('p',{},'所以此设备上可能存在未保存的标签组。如果切换到此空间，可能造成未保存的内容丢失。'),
+                  appVue.$createElement('p',{},'建议到此设备商重新连接后正常关闭浏览器，以防止数据冲突。'),
+                  appVue.$createElement('p',{},'如果您确认已无法恢复此设备的连接，则可切换到此设备在离线前最后一次保存的空间。'),
+                  appVue.$createElement('p',{},'当此设备再次连接网络，会自动将无法保存的空间保存为本地空间做备份。')
+                ]
+              ),
+              centered: true,
+              okText: '我已明确，切换空间',
+              cancelText: '取消',
+              onOk: async () => {
+                this.doChangeSpaceCloud(space)
+              }
+            })
+          }
+
+        } else {
+          this.$confirm({
+            title: '切换到云端空间',
+            content: '是否切换到云端空间？切换到云端空间后会同时更换当前账号到此账号。请务必确认您网页上的内容已经保存。否则可能丢失未保存内容。',
+            centered: true,
+            okText: '我已保存，切换空间',
+            cancelText: '取消',
+            onOk: async () => {
+              this.doChangeSpaceCloud(space)
+            }
+          })
+        }
+      }
+    },
+    async doChangeSpaceCloud (space) {
+      try {
+        let result = await spaceModel.setUser(this.user).changeCurrent(space)
+        if (result.status === 1) {
+        } else {
+          this.$message.error('切换使用空间失败。')
+        }
+      } catch (e) {
+        console.warn(e)
+        this.$message.error('切换使用空间失败。意外错误。')
+      }
+
     },
     changeSpace(id,type){
       if(type==='cloud'){

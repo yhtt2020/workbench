@@ -389,29 +389,6 @@ const SpaceSelect = {
         let result = await spaceModel.setUser(this.user).getUserSpaces({showBackup:this.showBackup})
         if (result.status === 1) {
           spaces = result.data
-          spaces.forEach(space => {
-            if (this.user.uid) { //云端判断逻辑
-              if (space.client_id && space.client_id !== this.user.clientId) {
-                space.isOtherUsing = true
-                space.isUsing = true
-              } else if ((space.client_id === this.user.clientId)) {
-                space.isSelfUsing = true
-                space.isUsing = true
-              } else {
-                space.isUsing = false
-              }
-              if(Date.now()-space.sync_time>30000){
-                space.disconnect=true
-              }else{
-                space.disconnect=false
-              }
-            } else {
-              if (space.id === this.currentSpace.spaceId) {
-                space.isSelfUsing = true
-                space.isUsing = true
-              }
-            }
-          })
         } else {
           window.antd.message.error('获取用户空间失败。失败原因：' + result.info)
           this.$router.go(-1)
