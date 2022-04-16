@@ -128,8 +128,8 @@
       mounted() {
       },
       methods: {
-        loadFromTasks(tasks){
-          this.tasks = tasks
+        loadFromTasks(tasks, currentTaskId){
+          this.tasks = tasks.filter(v => v.id !== currentTaskId)
           let that = this
           this.tasks.forEach(function (task, index) {
             if (task.name == null) task.name = '标签组' + (index + 1)
@@ -202,10 +202,10 @@
           }
         },
         selectTab(task, tab, id, Dindex) {
-          console.log(tab, '__tab__')
-          console.log(task, '__task__')
-          console.log(id, '__id__')
-          console.log(Dindex, '__Dindex__')
+          // console.log(tab, '__tab__')
+          // console.log(task, '__task__')
+          // console.log(id, '__id__')
+          // console.log(Dindex, '__Dindex__')
           this.selectedTab = tab
           this.selectedTask = task
           this.selectedTaskId = id
@@ -232,8 +232,8 @@
       },
     })
     ipc.on('gotTasks',(event,args)=>{
-      appVue.loadFromTasks(args.tasksState.tasks)
-      window.tasks=tasks
+      appVue.loadFromTasks(args.tasksState.tasks, args.tasksState.selectedTask)
+      window.tasks=args.tasksState.task
     })
     ipc.send('getTasks')
   </script>

@@ -39,6 +39,9 @@ html {
       outline: 0 none;
       border: none;
       width: 92%;
+      &::-webkit-input-placeholder{
+        color: #CCCDCD;
+      }
     }
   }
   .category {
