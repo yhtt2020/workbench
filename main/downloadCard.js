@@ -21,6 +21,7 @@ function createDownloadWin () {
       // resizable: false,
       autoHideMenuBar: true,
       show: false,
+      focusable:true,
       acceptFirstMouse: true,
       maximizable: false,
       alwaysOnTop: false,//调整窗口层级
@@ -57,7 +58,6 @@ function createDownloadWin () {
 }
 
 app.whenReady().then(() => {
-
   ipc.on('openDownload', (event,args) => {
     getDownloadWindow()
     if(mainWindow!=null && !mainWindow.isDestroyed()){
@@ -66,7 +66,6 @@ app.whenReady().then(() => {
     }
     downloadWindow.show()
   })
-
 })
 
 ipc.on('deleteFile',function (e,deletepath){
@@ -85,9 +84,16 @@ ipc.on('deleteFile',function (e,deletepath){
 // })
 
 ipc.on('willDownload',()=>{
-  downloadWindow.show()
+  getDownloadWindow()
+  if(mainWindow!=null && !mainWindow.isDestroyed()){
+    let x = (mainWindow.getBounds().x + mainWindow.getBounds().width - downloadWindow.getBounds().width - 15)
+    downloadWindow.setPosition(x,mainWindow.getBounds().y+90)
+  }
   downloadWindow.focus()
+  downloadWindow.show()
+
 })
+
 
 
 ipc.on('showMenuIng', (event,args) => {
