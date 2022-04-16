@@ -24,7 +24,7 @@
     <div class="gs-dialog" :class="{'first-gs-dialog': openFirst}">
       <div class="search flex justify-start align-center">
         <a-icon class="search-lf" type="search" :style="{ fontSize: '26px' }"></a-icon>
-        <input id="myTextField" onfocus="this.select()" tabindex=-1 type="text" class="search-rg" :value="searchWord" @input="handleInput($event)" style="font-size: 20px" />
+        <input placeholder="搜索应用、网页、标签组" spellcheck="false" id="myTextField" onfocus="this.select()" tabindex=-1 type="text" class="search-rg" :value="searchWord" @input="handleInput($event)" style="font-size: 20px" />
       </div>
       <div class="apps flex flex-direction justify-between align-start" v-if="openFirst">
         <span class="text-grey">推荐</span>
