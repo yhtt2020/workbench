@@ -627,14 +627,19 @@ ipc.on('view-event', function (e, args) {
 
   if (args.event === 'new-tab') {
     originalId = args.viewId
-    // ipc.send('emptyPage',args.args[0])
+  }
 
+  if (args.event === 'dom-ready') {
+    for(let i =0;i<tabs.tabs.length;i++){
+      if(tabs.tabs[i].id===args.viewId){
+        tabs.tabs[i].domRead=true
+      }
+    }
   }
   for (let i = 0; i < tabs.tabs.length; i++) {
+    originalId = args.viewId
     if (tabs.tabs[i].id === originalId) {
       originalUrl = tabs.tabs[i].url
-      // console.log(originalUrl)
-      // tabs.tabs.originalUrl=originalUrl
       ipc.send('originalPage',originalUrl)
     }
   }
@@ -645,13 +650,15 @@ ipc.on('closeEmptyPage',(event,args)=>{
   for(let i=0;i<tabs.tabs.length;i++){
     for(let j=0;j<args.length;j++){
       if(tabs.tabs[i].url===args[j]){
-        if(args.length!==1){
-          // require('browserUI.js').closeTab(tabs.tabs[i].id)//找id
+
+        if(args.length!==1 && tabs.tabs[i].domRead!==true){
+          require('browserUI.js').closeTab(tabs.tabs[i].id)
         }
       }
     }
   }
 })
+
 ipc.on('closeTab',(event,args)=>{
     require('browserUI.js').closeTab(args.id)
 })
