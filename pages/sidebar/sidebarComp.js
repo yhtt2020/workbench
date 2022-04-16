@@ -307,12 +307,113 @@ const sidebarTpl = `
     background: rgba(199,199,199,0.65);"></div>
         </div>
       </a-tooltip>
- <a-popover placement="right" :mouse-enter-delay="0.3" overlay-class-name="tips" @visible-change="()=>{appVue.$store.dispatch('getLocalSpaces')}" >
-  <template slot="title">
-             更换标签组空间
-            </template>
-            <template slot="content">
-             <p style="width: 200px;font-size: 12px">
+<!-- <a-popover placement="right" :mouse-enter-delay="0.3" overlay-class-name="tips" @visible-change="()=>{appVue.$store.dispatch('getLocalSpaces')}" >-->
+<!--  <template slot="title">-->
+<!--             更换标签组空间-->
+<!--            </template>-->
+<!--            <template slot="content">-->
+<!--             <p style="width: 200px;font-size: 12px">-->
+<!--              <span v-if="currentSpace.space">当前为云端空间。<br>每30秒自动备份，此时图标会转动。</span>-->
+<!--                <span v-else-if="currentSpace.space.type==='cloud'">当前为离线模式。系统会自动尝试同步连接，直至连接成功。</span>-->
+<!--                <span v-else>当前为本地空间，不与云端同步，建议导入到云端空间以防止标签组丢失。</span>-->
+<!--</p>-->
+
+<!--        <ul class="space-selector">-->
+<!--             <li v-if="cloudSpaces.length===0"  disabled="" key="current">-->
+<!--            请<a @click="login()">登录</a>后使用云空间-->
+<!--          </li>-->
+<!--         <li title="云端空间" :class="{'active':currentSpace.space.nanoid===space.nanoid}" v-else  @click="confirmChangeSpace(space,'cloud')" v-for="space in cloudSpaces" :key="space.nanoid" :disable="space['client_id']!=='' && currentSpace.space.nanoid!==space.nanoid">-->
+<!--            <a-icon type="sync" v-if="currentSpace.space.nanoid===space.nanoid" style="color: #00bb00" spin></a-icon>-->
+<!--            <a-icon style="color: #00bb00" v-else type="sync"></a-icon>-->
+<!--            {{space.name}}-->
+<!--            <span v-if="space.isOtherUsing">-->
+<!--              <span v-if="space.disconnect">-->
+<!--                   <a-badge count="离线"  :number-style="{ backgroundColor: 'red' }"title="其他设备离线使用"> </a-badge>-->
+<!--</span><span v-else>-->
+<!--     <a-badge count="其他"  :number-style="{ backgroundColor: 'red' }"title="其他设备使用中"> </a-badge>-->
+<!--</span>-->
+<!--</span>-->
+<!--              <span  v-if="space.isSelfUsing">-->
+<!--              <span v-if="space.disconnect">-->
+<!--        <a-badge count="离线"  :number-style="{ backgroundColor: '#ccc' }"title="当前设备离线"> </a-badge>-->
+<!--</span><span v-else>-->
+<!--<a-badge count="当前" :number-style="{ backgroundColor: '#52c41a' }" title="当前设备使用中"> </a-badge>-->
+<!--</span>-->
+<!--</span>-->
+<!--          </li>-->
+<!--          <li class="divider"></li>-->
+<!--          <li :class="{'active':currentSpace.space.id===space.id}" title="本地空间" @click="confirmChangeSpace(space,'local')"  v-for="space in localSpaces" :key="'local_'+space.id">-->
+
+<!--           <a-icon type="sync" v-if="currentSpace.space.id===space.id"  spin></a-icon>-->
+<!--            <a-icon  v-else type="sync"></a-icon> {{space.name}}-->
+
+<!--            </li>-->
+<!--&lt;!&ndash;            <a-menu-item key="add" @click="openUserWindow">&ndash;&gt;-->
+<!--&lt;!&ndash;            <a-icon type="plus" ></a-icon> 创建新空间&ndash;&gt;-->
+<!--&lt;!&ndash;          </a-menu-item>&ndash;&gt;-->
+<!--          <li class="divider"></li>-->
+<!--          <li  key="other" @click="openUserWindow">-->
+<!--            <a-icon type="swap" ></a-icon> 选择其他空间-->
+<!--          </li>-->
+<!--        </ul>-->
+<!--        </template>-->
+<!--<div  style="width: 100%;overflow: hidden;height:30px;">-->
+
+<!--       <div style="width:145px;">-->
+<!--       <div style="display: inline-block;width:45px;text-align: center">-->
+<!--       <svg id="savingIcon" :class="{'online':currentSpace.space.nanoid,'offline':!currentSpace.space.nanoid}" style="width: 24px" t="1648106444295"  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="32437" width="32" height="32"><path d="M512 938.666667C276.352 938.666667 85.333333 747.648 85.333333 512S276.352 85.333333 512 85.333333s426.666667 191.018667 426.666667 426.666667-191.018667 426.666667-426.666667 426.666667z m205.653333-210.090667A298.666667 298.666667 0 0 0 385.365333 241.408l41.6 74.88A213.333333 213.333333 0 0 1 725.333333 512h-91.733333a21.333333 21.333333 0 0 0-18.645333 31.701333l102.698666 184.874667z m-120.618666-20.864A213.333333 213.333333 0 0 1 298.666667 512h91.733333a21.333333 21.333333 0 0 0 18.645333-31.701333L306.346667 295.424a298.666667 298.666667 0 0 0 332.288 487.168l-41.6-74.88z" fill="#14D081" p-id="32438"></path></svg>-->
+
+<!--&lt;!&ndash;       <a-icon type="loading" ></a-icon>&ndash;&gt;-->
+<!--       </div>-->
+<!--       <div style="display: inline-block;width:96px;text-align: left">-->
+
+<!--      <div class="space-name" type="primary">-->
+<!--        {{currentSpace.space.name}}-->
+<!--        <a-icon type="right" />-->
+<!--      </div>-->
+<!--   </div>-->
+<!--   </div>-->
+
+<!--   </div>-->
+<!--</a-popover>-->
+<tippy ref="tippy"
+    @show="showPopSpace"
+    boundary="window"
+    interactive
+    :animate-fill="false"
+    placement="right"
+    distant="7"
+    theme="light"
+    :sticky="true"
+    animation="fade"
+    :hideOnClick="false"
+    trigger="mouseenter"
+    :delay="[200,200]"
+    :interactive-border="5"
+    :lazy="false"
+    :interactive-debounce="1"
+    arrow>
+    <!--mouseenter-->
+<template v-slot:trigger>
+<div  style="width: 100%;overflow: hidden;height:30px;text-align: left ">
+
+       <div style="width:145px;">
+       <div style="display: inline-block;width:45px;text-align: center">
+       <svg id="savingIcon" :class="{'online':currentSpace.space.nanoid,'offline':!currentSpace.space.nanoid}" style="width: 24px" t="1648106444295"  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="32437" width="32" height="32"><path d="M512 938.666667C276.352 938.666667 85.333333 747.648 85.333333 512S276.352 85.333333 512 85.333333s426.666667 191.018667 426.666667 426.666667-191.018667 426.666667-426.666667 426.666667z m205.653333-210.090667A298.666667 298.666667 0 0 0 385.365333 241.408l41.6 74.88A213.333333 213.333333 0 0 1 725.333333 512h-91.733333a21.333333 21.333333 0 0 0-18.645333 31.701333l102.698666 184.874667z m-120.618666-20.864A213.333333 213.333333 0 0 1 298.666667 512h91.733333a21.333333 21.333333 0 0 0 18.645333-31.701333L306.346667 295.424a298.666667 298.666667 0 0 0 332.288 487.168l-41.6-74.88z" fill="#14D081" p-id="32438"></path></svg>
+
+<!--       <a-icon type="loading" ></a-icon>-->
+       </div>
+       <div style="display: inline-block;width:96px;text-align: left">
+
+      <div class="space-name" type="primary">
+        {{currentSpace.space.name}}
+        <a-icon type="right" />
+      </div>
+   </div>
+   </div>
+   </div>
+</template>
+  <p style="width: 200px;font-size: 12px">
               <span v-if="currentSpace.space">当前为云端空间。<br>每30秒自动备份，此时图标会转动。</span>
                 <span v-else-if="currentSpace.space.type==='cloud'">当前为离线模式。系统会自动尝试同步连接，直至连接成功。</span>
                 <span v-else>当前为本地空间，不与云端同步，建议导入到云端空间以防止标签组丢失。</span>
@@ -356,27 +457,10 @@ const sidebarTpl = `
             <a-icon type="swap" ></a-icon> 选择其他空间
           </li>
         </ul>
-        </template>
-<div  style="width: 100%;overflow: hidden;height:30px;">
-
-       <div style="width:145px;">
-       <div style="display: inline-block;width:45px;text-align: center">
-       <svg id="savingIcon" :class="{'online':currentSpace.space.nanoid,'offline':!currentSpace.space.nanoid}" style="width: 24px" t="1648106444295"  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="32437" width="32" height="32"><path d="M512 938.666667C276.352 938.666667 85.333333 747.648 85.333333 512S276.352 85.333333 512 85.333333s426.666667 191.018667 426.666667 426.666667-191.018667 426.666667-426.666667 426.666667z m205.653333-210.090667A298.666667 298.666667 0 0 0 385.365333 241.408l41.6 74.88A213.333333 213.333333 0 0 1 725.333333 512h-91.733333a21.333333 21.333333 0 0 0-18.645333 31.701333l102.698666 184.874667z m-120.618666-20.864A213.333333 213.333333 0 0 1 298.666667 512h91.733333a21.333333 21.333333 0 0 0 18.645333-31.701333L306.346667 295.424a298.666667 298.666667 0 0 0 332.288 487.168l-41.6-74.88z" fill="#14D081" p-id="32438"></path></svg>
-
-<!--       <a-icon type="loading" ></a-icon>-->
-       </div>
-       <div style="display: inline-block;width:96px;text-align: left">
-
-      <div class="space-name" type="primary">
-        {{currentSpace.space.name}}
-        <a-icon type="right" />
-      </div>
-   </div>
-   </div>
-
-   </div>
-</a-popover>
+</tippy>
       <div class="app-box">
+
+
         <ul id="appGroup" style="user-select: none;padding-bottom: 20px" class="app-task app-items"
           @dblclick.prevent="addNewTask">
           <draggable v-model="getItems" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass"
@@ -385,9 +469,35 @@ const sidebarTpl = `
               <li @click="openItem(item.id,i)" @dblclick.stop="" v-for="(item,i) in this.$store.getters.getItems"
                 :key="item.id" :visible="item.count>1" data-role="task" :class="isActive(item.id)" :item-id="item.id"
                 style="position: relative">
-                <a-popover placement="right" :mouse-enter-delay="0.1" :mouse-leave-delay="0.2"
-                  :overlay-style="{'width':'305px','height':item.tabs.length*30+50+'px'}" overlay-class-name="tips">
-                  <div slot="title">
+                <tippy :ref="'task_'+item.id"
+    @show="showPopSpace"
+    boundary="window"
+    interactive
+    :animate-fill="false"
+    placement="right"
+    theme="light"
+    :sticky="true"
+    animation="fade"
+    trigger="click mouseenter"
+    :delay="[200,200]"
+    :lazy="false"
+    :hideOnClick="false"
+    :interactive-border="2"
+    arrow>
+    <!--mouseenter-->
+<template v-slot:trigger>
+         <div class="wrapper">
+                    <div class="item-icon">
+                      <img class="icon" :src="item.icon" onerror="this.src='../../icons/default.svg'" />
+                      <a-badge :count="item.count" :dot="true" status="processing"
+                        :style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:item.count>5?'visible':'hidden'}">
+                      </a-badge>
+                    </div>
+                    <div class="item-title">{{ item.title }}</div>
+                  </div>
+
+</template>
+ <div>
                     <span @click.stop="editTaskName(item)" class="task-title"><span class="text"
                         :id="'taskTitle'+item.id">{{ item.count > 5 ? item.title + ' -- 高负载（5+）' : item.title }}
                       </span>
@@ -399,8 +509,7 @@ const sidebarTpl = `
                       <a-icon title="删除标签组" type="close-circle"></a-icon>
                     </span>
                   </div>
-                  <template slot="content">
-                    <div style="text-align: right">
+  <div style="text-align: right">
                       <span class="action" size="small" title="锁定当前标签组内全部标签" @click="lockTask(item.id)">
                         <a-icon type="lock"></a-icon>锁定
                       </span>
@@ -425,17 +534,58 @@ const sidebarTpl = `
                         </span>
                       </li>
                     </ul>
-                  </template>
-                  <div class="wrapper">
-                    <div class="item-icon">
-                      <img class="icon" :src="item.icon" onerror="this.src='../../icons/default.svg'" />
-                      <a-badge :count="item.count" :dot="true" status="processing"
-                        :style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:item.count>5?'visible':'hidden'}">
-                      </a-badge>
-                    </div>
-                    <div class="item-title">{{ item.title }}</div>
-                  </div>
-                </a-popover>
+</tippy>
+<!--                <a-popover placement="right" :mouse-enter-delay="0.1" :mouse-leave-delay="0.2"-->
+<!--                  :overlay-style="{'width':'305px','height':item.tabs.length*30+50+'px'}" overlay-class-name="tips">-->
+<!--                  <div slot="title">-->
+<!--                    <span @click.stop="editTaskName(item)" class="task-title"><span class="text"-->
+<!--                        :id="'taskTitle'+item.id">{{ item.count > 5 ? item.title + ' &#45;&#45; 高负载（5+）' : item.title }}-->
+<!--                      </span>-->
+<!--                      <a-icon :id="'editTip'+item.id" class="edit-tip" type="edit"></a-icon>-->
+<!--                      <a-input @blur="editTaskNameBlur(item)" hidden :id="'taskTitleInput'+item.id" size="small"-->
+<!--                        @keypress.enter="editTaskNameKeyPress($event)" :default-value="item.title"></a-input>-->
+<!--                    </span>-->
+<!--                    <span style="float: right;cursor: pointer" @click="closeItem(item)">-->
+<!--                      <a-icon title="删除标签组" type="close-circle"></a-icon>-->
+<!--                    </span>-->
+<!--                  </div>-->
+<!--                  <template slot="content">-->
+<!--                    <div style="text-align: right">-->
+<!--                      <span class="action" size="small" title="锁定当前标签组内全部标签" @click="lockTask(item.id)">-->
+<!--                        <a-icon type="lock"></a-icon>锁定-->
+<!--                      </span>-->
+<!--                      <span class="action" size="small" title="清理组内全部未锁定标签" @click="clearTaskUnlock(item)">-->
+<!--                        <a-icon type="delete"></a-icon>清理-->
+<!--                      </span>-->
+<!--                    </div>-->
+<!--                    <ul class="tabs" style="margin-top: 5px">-->
+<!--                      <li :class="{'active':(tab.selected )}" style="position:relative;"-->
+<!--                        @mouseenter="showHoverLock(tab)" @mouseleave="hideHoverLock(tab)" v-for="(tab,j) in item.tabs"-->
+<!--                        :key="tab.id">-->
+<!--                        <div class="tab-title" @click="openPopoverTab(item.id, tab.id)">-->
+<!--                        <span @click.stop="closeTab(tab.id,item.id)" style="float: left;cursor: pointer"  title="关闭该标签" :id="'close'+tab.id" hidden  class="closeTab">-->
+<!--                           <img src="assets/close-box.svg"  style="margin-left: 9px;width: 22px;height: 22px">-->
+<!--                         </span>-->
+<!--                          <img class="tab-icon" :id="'tabIcon'+tab.id"  :src="tab.icon" style="margin-left: 8px"-->
+<!--                            onerror="this.src='../../icons/default.svg'" />&nbsp;{{ tab.title }}-->
+<!--                        </div>-->
+<!--                        <span @click="toggleLockTab(tab.id,item.id)" :id="'hoverLock'+tab.id" :hidden="tab.lock!==true"-->
+<!--                          title="锁定当前标签；锁定后，标签将无法随意关闭" class="unlock-tab">-->
+<!--                          <a-icon type="lock"></a-icon>-->
+<!--                        </span>-->
+<!--                      </li>-->
+<!--                    </ul>-->
+<!--                  </template>-->
+<!--                  <div class="wrapper">-->
+<!--                    <div class="item-icon">-->
+<!--                      <img class="icon" :src="item.icon" onerror="this.src='../../icons/default.svg'" />-->
+<!--                      <a-badge :count="item.count" :dot="true" status="processing"-->
+<!--                        :style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:item.count>5?'visible':'hidden'}">-->
+<!--                      </a-badge>-->
+<!--                    </div>-->
+<!--                    <div class="item-title">{{ item.title }}</div>-->
+<!--                  </div>-->
+<!--                </a-popover>-->
               </li>
             </transition-group>
           </draggable>
@@ -482,10 +632,10 @@ const sidebarTpl = `
 Vue.component('sidebar', {
   data: function () {
     return {
-      localSpaces:[],
-      currentSpace:{
-        space:{
-          name:''
+      localSpaces: [],
+      currentSpace: {
+        space: {
+          name: ''
         }
       },//'当前空间'
       messageShow: false,
@@ -498,7 +648,7 @@ Vue.component('sidebar', {
       lastOpenId: this.$store.state.selected,
       drag: false,
       remote: {},
-      loginPanelTitle: "登录帐号免费体验完整功能",
+      loginPanelTitle: '登录帐号免费体验完整功能',
       loginPanelContent: ``,
       userPanelVisible: false,
       devices: [{
@@ -622,18 +772,17 @@ Vue.component('sidebar', {
     appVue.mod = sideMode
     this.mod = sideMode
 
-
     await this.$store.dispatch('getAllMessage')
     //如果用户已登录，则获取云端的空间
-    try{
-      this.currentSpace=await spaceModel.getCurrent()
-      if(currentUser.value.uid){
-        await this.$store.dispatch('getCloudSpaces',currentUser.value)
+    try {
+      this.currentSpace = await spaceModel.getCurrent()
+      if (currentUser.value.uid) {
+        await this.$store.dispatch('getCloudSpaces', currentUser.value)
       }
       await this.$store.dispatch('getLocalSpaces')
       this.cloudSpaces = this.$store.state.cloudSpaces
-      this.localSpaces=this.$store.state.localSpaces
-    }catch (e){
+      this.localSpaces = this.$store.state.localSpaces
+    } catch (e) {
       console.log('空间获取失败。')
     }
   },
@@ -674,10 +823,14 @@ Vue.component('sidebar', {
   },
   template: sidebarTpl,
   methods: {
-    login(){
+    async showPopSpace () {
+      await appVue.$store.dispatch('getCloudSpaces')
+      appVue.$refs.sidePanel.cloudSpaces = this.$store.state.cloudSpaces
+    },
+    login () {
       ipc.send('login')
     },
-    confirmChangeSpace(space,type){
+    confirmChangeSpace (space, type) {
       // antd.Modal.confirm({
       //   title: '确认',
       //   content: '是否更改当前空间，更改空间将重载浏览器，可能导致您网页上未保存的内容丢失，请确认已经保存全部内容。',
@@ -688,7 +841,7 @@ Vue.component('sidebar', {
       //     this.changeSpace(id,type)
       //     }
       // })
-      if (type!=='cloud') {
+      if (type !== 'cloud') {
         this.$confirm({
           title: '切换到本地空间',
           content: '是否更改当前空间，更改空间将重载浏览器，可能导致您网页上未保存的内容丢失，请确认已经保存全部内容。切换本地空间并不会更改当前登录账号。',
@@ -700,8 +853,8 @@ Vue.component('sidebar', {
           }
         })
       } else {
-        if(space.isSelfUsing){
-          if(space.disconnect){
+        if (space.isSelfUsing) {
+          if (space.disconnect) {
             antd.Modal.confirm({
               title: '重新连接',
               content: '是否尝试重新连接此空间？',
@@ -712,13 +865,13 @@ Vue.component('sidebar', {
                 this.doChangeSpaceCloud(space)
               }
             })
-          }else{
+          } else {
             window.antd.message.info('不可切换到当前使用中的空间。')
           }
           return
         }
         if (space.isOtherUsing) {
-          if(space.online){
+          if (space.online) {
             this.$confirm({
               title: '此空间正忙',
               content: '此空间正在被其他设备使用，如若切换到此空间，可能造成其他设备未同步的标签组丢失。是否仍然要强行切换？这将导致该设备上的浏览器强制下线。',
@@ -729,16 +882,16 @@ Vue.component('sidebar', {
                 this.doChangeSpaceCloud(space)
               }
             })
-          }else{
+          } else {
             this.$confirm({
               title: '此空间使用设备异常离线',
-              content: appVue.$createElement('div',{},
+              content: appVue.$createElement('div', {},
                 [
-                  appVue.$createElement('p',{},'此空间正在被其他设备使用，但是系统检测到此设备可能已经因为网络或者其他原因而离线。'),
-                  appVue.$createElement('p',{},'所以此设备上可能存在未保存的标签组。如果切换到此空间，可能造成未保存的内容丢失。'),
-                  appVue.$createElement('p',{},'建议到此设备商重新连接后正常关闭浏览器，以防止数据冲突。'),
-                  appVue.$createElement('p',{},'如果您确认已无法恢复此设备的连接，则可切换到此设备在离线前最后一次保存的空间。'),
-                  appVue.$createElement('p',{},'当此设备再次连接网络，会自动将无法保存的空间保存为本地空间做备份。')
+                  appVue.$createElement('p', {}, '此空间正在被其他设备使用，但是系统检测到此设备可能已经因为网络或者其他原因而离线。'),
+                  appVue.$createElement('p', {}, '所以此设备上可能存在未保存的标签组。如果切换到此空间，可能造成未保存的内容丢失。'),
+                  appVue.$createElement('p', {}, '建议到此设备商重新连接后正常关闭浏览器，以防止数据冲突。'),
+                  appVue.$createElement('p', {}, '如果您确认已无法恢复此设备的连接，则可切换到此设备在离线前最后一次保存的空间。'),
+                  appVue.$createElement('p', {}, '当此设备再次连接网络，会自动将无法保存的空间保存为本地空间做备份。')
                 ]
               ),
               centered: true,
@@ -777,18 +930,18 @@ Vue.component('sidebar', {
       }
 
     },
-    changeSpace(id,type){
-      if(type==='cloud'){
-        ipc.send('changeSpace',{spaceId:id,spaceType:type,userInfo:this.user})
-      }else
-      ipc.send('changeSpace',{spaceId:id,spaceType:type})
+    changeSpace (id, type) {
+      if (type === 'cloud') {
+        ipc.send('changeSpace', { spaceId: id, spaceType: type, userInfo: this.user })
+      } else
+        ipc.send('changeSpace', { spaceId: id, spaceType: type })
     },
     openUserWindow () {
       ipc.send('showUserWindow')
     },
     visibleMessageCenter () {
       this.messageShow = !this.messageShow
-      if(this.$refs.messageRef.fixed) {
+      if (this.$refs.messageRef.fixed) {
         this.messageShow ? ipc.send('channelTemporaryAdjust', {
           freeFixed: false
         }) : ipc.send('channelTemporaryAdjust', {
@@ -796,21 +949,22 @@ Vue.component('sidebar', {
         })
       }
     },
-    visibleGlobalSearch() {
+    visibleGlobalSearch () {
       ipc.send('openGlobalSearch')
     },
     openCircle (args) {
       this.userPanelVisible = false
       this.addTab(`${api.getUrl(api.API_URL.user.CIRCLE)}?id=${args}`)
     },
-    openHelp(apps){
-      function checkAdult(apps){
+    openHelp (apps) {
+      function checkAdult (apps) {
         return apps.package === 'com.thisky.helper'
       }
-      if(apps.find(checkAdult)===undefined){
+
+      if (apps.find(checkAdult) === undefined) {
         alert('暂时无法打开')
-      }else{
-        ipc.send('executeApp',{app:apps.find(checkAdult)})
+      } else {
+        ipc.send('executeApp', { app: apps.find(checkAdult) })
       }
 
       // ipc.send('handleTsbProtocol',{url:'tsb://app/redirect/?package=com.thisky.helper&url=/'})
@@ -1007,7 +1161,7 @@ Vue.component('sidebar', {
     },
     async logout () {
       const result = await db.system.where('name').equals('currentUser').first()
-      await db.accounts.where({id:this.user.uid}).delete()
+      await db.accounts.where({ id: this.user.uid }).delete()
       ipc.send('logoutBrowser', result.value.code)
       await window.insertDefaultUser(result.value.code)
       //下面这步在insertDefaultUser方法中有
@@ -1080,20 +1234,20 @@ Vue.component('sidebar', {
     toggleLockTab (id, taskId) {
       ipc.sendTo(mainWindowId, 'toggleLockTab', { id: id, taskId: taskId })
     },
-    closeTab(id,taskId){
+    closeTab (id, taskId) {
 
-      ipc.sendTo(mainWindowId,'closeTab',{id:id,taskId:taskId})
+      ipc.sendTo(mainWindowId, 'closeTab', { id: id, taskId: taskId })
     },
     showHoverLock (tab) {
       document.getElementById('hoverLock' + tab.id).hidden = false
-      document.getElementById('close'+tab.id).hidden=false
-      document.getElementById('tabIcon'+tab.id).hidden=true
+      document.getElementById('close' + tab.id).hidden = false
+      document.getElementById('tabIcon' + tab.id).hidden = true
     },
     hideHoverLock (tab) {
-      document.getElementById('close'+tab.id).hidden=true
-      document.getElementById('tabIcon'+tab.id).hidden=false
-      if(!(tab.lock===true)){
-        document.getElementById('hoverLock'+tab.id).hidden=true
+      document.getElementById('close' + tab.id).hidden = true
+      document.getElementById('tabIcon' + tab.id).hidden = false
+      if (!(tab.lock === true)) {
+        document.getElementById('hoverLock' + tab.id).hidden = true
       }
     },
     clearTaskUnlock (task) {
@@ -1146,17 +1300,14 @@ Vue.component('sidebar', {
      * 处理窗体失去焦点事件
      */
     blur () {
+      // appVue.$refs.sidePanel.$refs.tippy.tip.hide() //失焦的时候关闭tippy的弹窗
       //处理左侧栏，强制移除expanded样式
       if (appVue.mod === 'auto' || appVue.mod === 'close') {
         document.getElementById('appVue').classList.remove('expanded')
       }
       //处理全部的左侧浮窗，都加上display:none
-      let popovers = document.getElementsByClassName('ant-popover')
-      if (popovers) {
-        for (let i = 0; i < popovers.length; i++) {
-          popovers[i].style.display = 'none'
-        }
-      }
+      this.tasks
+      VueTippy.tippy.hideAll()
     },
     dividerResizeStart (e) {
       this.startY = e.clientY
@@ -1406,28 +1557,28 @@ ipc.on('handleFileAssign', async (event, args) => {
   console.log(args)
   console.log('assigneApps', assignApps)
 })
-ipc.on('saving',async ()=>{
-  let savingIcon=document.getElementById('savingIcon')
+ipc.on('saving', async () => {
+  let savingIcon = document.getElementById('savingIcon')
   savingIcon.classList.add('saving')
-  if(savingIcon.classList.contains('offline')){
+  if (savingIcon.classList.contains('offline')) {
     appVue.$message.success('云空间重新连接成功，已为您实时保持同步。')
     console.log('重新获取云端空间')
     await appVue.$store.dispatch('getCloudSpaces')
-    appVue.$refs.sidePanel.cloudSpaces=this.$store.state.cloudSpaces
+    appVue.$refs.sidePanel.cloudSpaces = this.$store.state.cloudSpaces
     savingIcon.classList.remove('offline')
     savingIcon.classList.add('online')
   }
-  setTimeout(()=>{
+  setTimeout(() => {
     savingIcon.classList.remove('saving')
-  },2000)
+  }, 2000)
 })
 
-ipc.on('disconnect',async ()=>{
-  let savingIcon=document.getElementById('savingIcon')
-  if(savingIcon.classList.contains('online')){
+ipc.on('disconnect', async () => {
+  let savingIcon = document.getElementById('savingIcon')
+  if (savingIcon.classList.contains('online')) {
     appVue.$message.success('云空间失去连接，转入离线模式。')
     savingIcon.classList.remove('online')
     savingIcon.classList.add('offline')
-    appVue.$refs.sidePanel.cloudSpaces=[]
+    appVue.$refs.sidePanel.cloudSpaces = []
   }
 })
