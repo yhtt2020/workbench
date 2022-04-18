@@ -82,11 +82,12 @@ html {
     }
   }
   .recent-open {
-    padding: 0px 20px;
+    //padding: 0px 20px;
     width: 100%;
     border-radius: 0px 0px 10px 10px;
     span {
       height: 30px;
+      padding-left: 20px;
     }
     .recent-open-content {
       min-height: 50px;
