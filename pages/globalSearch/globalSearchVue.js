@@ -267,6 +267,8 @@ const globalSearch = new Vue({
           } else {
             this.clkli(this.itemReadyedItem)
           }
+        } else if(e.keyCode === 27) {
+          this.searchWord.length > 0 ? this.searchWord = '' : ipc.send('closeGlobalSearch')
         }
       }
     },
