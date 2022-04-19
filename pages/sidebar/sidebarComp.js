@@ -9,12 +9,12 @@ const sidebarTpl = `
         <li @click="toggleUserPanel" class="" style="position: relative;">
           <template>
             <a-drawer class="user-panel" @mousemove="setSidePanel()" :width="300" :visible="userPanelVisible"
-              @close="toggleUserPanel" :mask="false" placement="left">
+              @close="closeUserPanel" :mask="false" placement="left">
               <template slot="title">
                 <span v-if="user.uid==0"> 登录帐号免费体验完整功能 </span>
               </template>
               <div v-if="user.uid===0">
-                <a-button @click="userClick" type="primary" block>登录帐号</a-button>
+                <a-button @click="openUserWindow" type="primary" block>登录帐号</a-button>
                 <br /><br />
                 1.跨设备、跨终端同步我的应用和标签组设置<br />
                 2.支持多个空间任意切换<br />
@@ -164,25 +164,6 @@ const sidebarTpl = `
               </div>
             </a-drawer>
           </template>
-          <a-popover @visible-change="changePopoverVisible" placement="right" :mouse-enter-delay="0.3"
-            overlay-class-name="tips">
-            <template slot="title">
-              <span v-if="user.uid==0"> 登录帐号免费体验完整功能 </span>
-              <span v-else> {{ user.nickname }} </span>
-            </template>
-
-            <template slot="content">
-              <div v-if="user.uid===0">
-                1.跨设备、跨终端同步我的应用和标签组设置<br />
-                2.支持多个空间任意切换<br />
-                3.与其他用户在线交流、反馈产品使用建议<br />
-                4.开启更多高级功能<br />
-                &nbsp;① 团队功能，与团队成员共享收藏<br />
-                &nbsp;② 企业社区，支持私密社区，供团队内成员交流<br />
-                &nbsp;③ 全网热议，支持任意网站与其他用户在线沟通
-              </div>
-              <div v-if="user.uid!==0">用户信息</div>
-            </template>
             <div @contextmenu="openUserWindow" class="wrapper" block>
               <div class="item-icon">
                 <a-avatar v-if="user.uid!==0"
@@ -199,7 +180,6 @@ const sidebarTpl = `
               </div>
               <div class="item-title">{{ user.nickname }}</div>
             </div>
-          </a-popover>
         </li>
         <li>
           <app-manager ref="appManager" :apps="apps" :running-apps="runningApps"></app-manager>
@@ -470,7 +450,6 @@ const sidebarTpl = `
                 :key="item.id" :visible="item.count>1" data-role="task" :class="isActive(item.id)" :item-id="item.id"
                 style="position: relative">
                 <tippy :ref="'task_'+item.id"
-    @show="showPopSpace"
     boundary="window"
     interactive
     :animate-fill="false"
@@ -1004,7 +983,14 @@ Vue.component('sidebar', {
       ipc.send('executeApp', { app: app })
     },
     toggleUserPanel () {
-      this.userPanelVisible = !this.userPanelVisible
+      if(this.user.uid===0){
+        this.openUserWindow()
+      }else{
+        this.userPanelVisible = !this.userPanelVisible
+      }
+    },
+    closeUserPanel(){
+      this.userPanelVisible =false
     },
     switchTask (id, index) {
       postMessage({
@@ -1037,7 +1023,6 @@ Vue.component('sidebar', {
         this.switchTask(id, index)
         this.lastOpenId = id
       }
-
     },
     openPopoverTab (taskId, tabId) {
       if (taskId !== this.lastOpenId) {
@@ -1166,6 +1151,7 @@ Vue.component('sidebar', {
       await window.insertDefaultUser(result.value.code)
       //下面这步在insertDefaultUser方法中有
       //db.system.where({name:'currentUser'}).delete()
+      this.closeUserPanel()
       this.$message.info('注销成功！')
     },
     switchAccount () {
