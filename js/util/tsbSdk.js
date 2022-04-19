@@ -205,6 +205,40 @@ const tsbSdk = {
       });
     }
   },
+
+  /**
+   * 向内容页面发送消息，遵循ipc的规则
+   * @param event 消息频道
+   * @param args 数据
+   */
+  send(event,args){
+    window.postMessage({
+      eventName: event,
+      args
+    });
+  },
+
+  getUserProfile: function () {
+    if(!tsbSdk.isThirdApp) {
+      ipc.invoke('saAppGetUserProfile').then(res => {
+        window.postMessage({
+          eventName: 'tsReplyGetUserProfile',
+          resInfo: res
+        })
+      }).catch(err => {
+        window.postMessage({
+          eventName: 'errorSys',
+          errorInfo: err
+        })
+      })
+    } else {
+      window.postMessage({
+        eventName: 'thirdGetUserProfile',
+        saApp: window.tsbSaApp,
+        hashId: window.tsbSDK.hashId
+      })
+    }
+  }
 };
 
 module.exports = tsbSdk;

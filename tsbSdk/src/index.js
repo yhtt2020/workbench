@@ -14,7 +14,10 @@ export default class tsbk {
   }
 
   static secretInfo = {};
-  static sdkSwitch = false;
+  static events = []
+
+  //私有属性无法在实例化之前从外部去主动改变，只能在内部方法中去改变，防止篡改后对api的滥用
+  _sdkSwitch;
 
   //options中必须要的属性 appId:必填，三方应用唯一标识 、timestamp:必填，生成签名的时间戳、 nonceStr: 必填，生成签名的随机串、 signature:必填，签名、 jsApiList:[]必填，需要使用的JS接口列表
   static config(options) {
@@ -39,38 +42,69 @@ export default class tsbk {
 
   static listener(observe, reverse) {
     window.addEventListener("message", function (e) {
-      let messageEvent = e.data.eventName;
-      switch (messageEvent) {
-        case "authResult":
-          if (tsbk.secretInfo.signature === e.data.signature) {
-            tsbk.sdkSwitch = e.data.sdkSwitch;
-            observe(tsbk.sdkSwitch);
-          } else {
-            tsbk.sdkSwitch = false;
-            reverse({
-              code: 401,
-              msg: "SDK接口鉴权失败",
-            });
-          }
-          break;
+      if(e.data.eventName !== "authResult") return
+      if(tsbk.secretInfo.signature !== e.data.signature) {
+        this._sdkSwitch = false;
+        reverse({
+          code: 401,
+          msg: "SDK接口鉴权失败",
+        });
+      } else {
+        this._sdkSwitch = e.data.sdkSwitch;
+        observe(this._sdkSwitch);
       }
     });
   }
 
   static ready(fn) {
     tsbk.config().then((res) => {
-      fn();
+      if(res) {
+        fn();
+      }
+    }).catch(err => {
+      return err
+    })
+    window.addEventListener("message", (e) => {
+      console.log(e, '!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+      let channel = e.data.eventName;
+      if(channel){
+        tsbk.events.forEach((event, index)=>{
+          if(channel===event.eventName){
+            event.callBack(e, e.data.args)
+            tsbk.events.splice(index, 1)
+          }
+        })
+      } else if(channel.startsWith('tsReply')) {
+        tsbk.events.push({
+          eventName: channel,
+          resInfo: e.data.resInfo
+        })
+      } else if(channel === 'errorSys') {
+        tsbk.events.push({
+          eventName: channel,
+          errorInfo: e.data.errorInfo
+        })
+      }
     });
   }
 
+  //主动error接口处理失败验证
   static error(fn) {
     tsbk.config().catch((err) => {
       fn(err);
     });
   }
 
+  //主动去接收消息
+  static on(event,callBack){
+    tsbk.events.push({
+      eventName:event,
+      callBack:callBack
+    })
+  }
+
   static hideApp(options) {
-    if(options && tsbk.sdkSwitch) {
+    if(options && this._sdkSwitch) {
       window.postMessage(
         {
           eventName: "hideApp",
@@ -79,7 +113,7 @@ export default class tsbk {
       );
       options.hasOwnProperty("success") ? options.success() : false;
     } else {
-      if(!tsbk.sdkSwitch) {
+      if(!this._sdkSwitch) {
         options.hasOwnProperty("fail") ? options.fail() : false;
         return
       }
@@ -93,7 +127,7 @@ export default class tsbk {
   }
 
   static tabLinkJump(options) {
-    if(options && tsbk.sdkSwitch) {
+    if(options && this._sdkSwitch) {
       window.postMessage({
         eventName: "tabLinkJump",
         url: options.url ?? "",
@@ -105,34 +139,15 @@ export default class tsbk {
     }
   }
 
-  //暂时废弃
-  // static destoryApp(options) {
-  //   window.postMessage(
-  //     {
-  //       eventName: "destoryApp",
-  //     },
-  //     `${window.origin}`
-  //   );
-  //   if (options) {
-  //     if (tsbk.sdkSwitch) {
-  //       options.hasOwnProperty("success") ? options.success() : false;
-  //     } else {
-  //       options.hasOwnProperty("fail") ? options.fail() : false;
-  //     }
-  //   } else {
-  //     return;
-  //   }
-  // }
-
   static notice(options) {
-    if(options && tsbk.sdkSwitch) {
+    if(options && this._sdkSwitch) {
       window.postMessage({
         eventName: 'saAppNotice',
         options: options
       })
       options.hasOwnProperty("success") ? options.success() : false;
     } else {
-      if(!tsbk.sdkSwitch) {
+      if(!this._sdkSwitch) {
         options.hasOwnProperty("fail") ? options.fail() : false;
         return
       }
@@ -145,13 +160,13 @@ export default class tsbk {
 
   //登录想天内置应用的免登 //todo 未来还要单独做一套第三方应用的免登
   static autoLoginSysApp(options) {
-    if(options && tsbk.sdkSwitch) {
+    if(options && this._sdkSwitch) {
       window.postMessage({
         eventName: 'autoLoginSysApp'
       })
       options.hasOwnProperty("success") ? options.success() : false;
     } else {
-      if(!tsbk.sdkSwitch) {
+      if(!this._sdkSwitch) {
         options.hasOwnProperty("fail") ? options.fail() : false;
         return
       }
@@ -163,7 +178,7 @@ export default class tsbk {
 
   //打开内置某个应用,元社区和团队协作支持跳转具体链接(可选)
   static openSysApp(options) {
-    if(options && tsbk.sdkSwitch) {
+    if(options && this._sdkSwitch) {
       window.postMessage({
         eventName: 'openSysApp',
         options: options
@@ -177,7 +192,7 @@ export default class tsbk {
 
   //创建短说圈子邀请链接窗体
   static openOsxInviteMember(options) {
-    if(options && tsbk.sdkSwitch) {
+    if(options && this._sdkSwitch) {
       window.postMessage({
         eventName: 'openOsxInviteMember',
         options: options
@@ -187,5 +202,42 @@ export default class tsbk {
       options.hasOwnProperty("fail") ? options.fail() : false;
       return
     }
+  }
+
+  //主动获取用户信息
+  static getUserProfile(options) {
+    if(!this._sdkSwitch) {
+      options.hasOwnProperty('fail') ? options.fail() : false
+      return
+    }
+
+    if(!options) {
+      window.postMessage({
+        eventName: 'getUserProfile'
+      })
+      return
+    }
+
+    window.postMessage({
+      eventName: 'getUserProfile',
+    })
+
+    return new Promise((resolve, reject) => {
+      let index = tsbk.events.findIndex(event => event.eventName.startsWith('tsReply'))
+      let errIndex = tsbk.events.findIndex(event => event.eventName === 'errorSys')
+      if(index < 0) {
+        options.hasOwnProperty('fail') ? options.fail() : false
+        if(errIndex !== -1) {
+          reject(tsbk.events[errIndex].errorInfo)
+          tsbk.events.splice(errIndex, 1)
+        }
+      } else {
+        options.hasOwnProperty('success') ? options.success() : false
+        resolve(tsbk.events[index].resInfo)
+        tsbk.events.splice(index, 1)
+        console.log(tsbk.events, '[[[[[[[[[[[[]]]]]]]]]]]]]')
+      }
+    })
+
   }
 }

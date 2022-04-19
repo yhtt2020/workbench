@@ -100,6 +100,22 @@ ipc.on('init', (event, args) => {
           console.error('验证错误！')
         }
         break
+      case 'thirdGetUserProfile':
+        if(e.data.hashId === sdkObject.hashId) {
+          ipc.invoke('saAppGetUserProfile').then(res => {
+            window.postMessage({
+              eventName: 'tsReplyGetUserProfile',
+              resInfo: res
+            })
+          }).catch(err => {
+            window.postMessage({
+              eventName: 'errorSys',
+              errorInfo: err
+            })
+          })
+        } else {
+          console.error('验证错误!')
+        }
     }
     console.log(ipc, '无ipc的三方应用也被监听中。。。。')
   })
