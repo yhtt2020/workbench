@@ -1,5 +1,6 @@
 const db = require('../../../js/util/database.js').db
 const serverConfig = require('../../../server-config.js').config
+const tools = require('../util.js').tools;
 const systemAppPackage=[
   'com.thisky.group',
   'com.thisky.fav',
@@ -175,7 +176,7 @@ const standAloneAppModel = {
         let quanPinSummary = pinyin(matchChinese(item.summary).join(''), { toneType: 'none', type: 'array' })   // 获取数组形式不带声调的拼音
         let firstPinSummary = pinyin(matchChinese(item.summary).join(''), { pattern: 'first', toneType: 'none', type: 'array' })
 
-        if(item.name.includes(word) || item.summary.includes(word) && !checkMatched(item)) {
+        if((item.name.toLowerCase().includes(word) || item.summary.includes(word) || tools.execDomain(item.url).toLowerCase().includes(word)) && !checkMatched(item)) {
           dealItem(item)
           searchResult.push(item)
         }

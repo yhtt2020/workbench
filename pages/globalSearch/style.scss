@@ -67,8 +67,7 @@ html {
       ul {
         li {
           height: 100%;
-          margin-right: 34px;
-          width: 60px;
+          width: 92px;
           cursor: pointer;
           img {
             width: 44px;
@@ -82,11 +81,12 @@ html {
     }
   }
   .recent-open {
-    padding: 0px 20px;
+    //padding: 0px 20px;
     width: 100%;
     border-radius: 0px 0px 10px 10px;
     span {
       height: 30px;
+      padding-left: 20px;
     }
     .recent-open-content {
       min-height: 50px;

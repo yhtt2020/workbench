@@ -196,7 +196,8 @@ const globalSearch = new Vue({
     bindKeys() {
       window.onkeydown = (e) => {
         if (e.keyCode === 40) {
-          // 向下键切换li
+          e.preventDefault()
+         // 向下键切换li
           if(this.openFirst) {
             //如果是在初始页
             if(this.recentReadyedIndex + 1 < this.recentOpenedHistory.length) {
@@ -220,6 +221,7 @@ const globalSearch = new Vue({
             }
           }
         } else if (e.keyCode === 38) {
+          e.preventDefault()
           //向上键切换li
           if(this.openFirst) {
             //如果是在初始页
@@ -267,6 +269,8 @@ const globalSearch = new Vue({
           } else {
             this.clkli(this.itemReadyedItem)
           }
+        } else if(e.keyCode === 27) {
+          this.searchWord.length > 0 ? this.searchWord = '' : ipc.send('closeGlobalSearch')
         }
       }
     },
@@ -284,7 +288,7 @@ const globalSearch = new Vue({
       return await placesModel.getHistoryCount()
     },
     async getAllApps() {
-      this.apps = await saAppModel.getAllApps()
+      this.apps = await saAppModel.getAllApps({order:'lastExecuteTime',limit:6})
     },
     async searchApp(word) {
       let apps = await saAppModel.find(word,{order:'lastExecuteTime'})
