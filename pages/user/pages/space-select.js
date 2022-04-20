@@ -66,7 +66,7 @@ const tpl = `
 
 
       <a-dropdown v-for="space,index in spaces" :trigger="['contextmenu']">
-         <a-tooltip placement="bottom">
+         <a-tooltip placement="bottom" :mouseLeave-delay="0">
     <template #title>
     名称：{{space.name}}<br>
     保存时间：{{dateTime(space.sync_time)}}<br>修改时间：{{dateTime(space.update_time)}}<br>创建时间：{{dateTime(space.create_time)}}<br>
