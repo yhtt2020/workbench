@@ -273,7 +273,9 @@ Vue.component("message-center", {
       } else if(item.messageType === 'groupChat') {
         //todo
       } else if(item.messageType === 'webOs') {
+        console.log(settings, ' label！！！')
         let webMessage = settings.get('noticeWebOrigin')
+        console.log(webMessage, ' label！！！')
         let mapWebMessage = webMessage.map(v => {
           if(v.link == item.title) {
             return {
@@ -284,7 +286,9 @@ Vue.component("message-center", {
             return v
           }
         })
+        console.log(mapWebMessage, ' label！！！')
         settings.set('noticeWebOrigin', mapWebMessage)
+
       }
     },
     removeAllMessage(type) {

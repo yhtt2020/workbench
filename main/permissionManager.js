@@ -15,6 +15,7 @@ if(!settings.get('allowPermissions')) {
 }
 
 if(!settings.get('noticeWebOrigin')) {
+  console.log('被触发了！！！！！')
   settings.set('noticeWebOrigin', [])
 }
 
@@ -51,9 +52,12 @@ function isPermissionGrantedForContents (requestContents, requestPermission, req
   }catch (e){
     return false
   }
+
+  console.log(requestOrigin, settings.get('noticeWebOrigin'), 'laiellaodi************')
+
   if(requestPermission === 'notifications') {
     let result = settings.get('noticeWebOrigin')
-    let index  = result.findIndex(v => v.link === requestOrigin)
+    let index  = result.findIndex(v => v.link == requestOrigin)
 
     if(index >= 0 && !result[index].notice) {
       return false
