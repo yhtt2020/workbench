@@ -95,7 +95,7 @@
   //   }
   // })
   ipc.on('loginCallback',(e,args)=>{
-    window.antd.message.success('成功添加账号。')
+    window.antd.message.success('成功添加帐号。')
     setTimeout(()=>{
       router.replace({ name: 'space', params: { uid: args.data.userInfo.uid } })
     },500)

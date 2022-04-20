@@ -1,7 +1,7 @@
 const tpl = `
 <div>
  <h1 style="font-size: 18px;margin:auto;margin-top: 20px;margin-bottom:10px;text-align: center">
-        选择账号的空间
+        选择帐号的空间
       </h1>
 
       <p style="text-align: center;color: #999">
@@ -12,7 +12,7 @@ const tpl = `
        <span style="text-align: center;color: #333">
         不同空间的标签组相互隔离<br>
       </span>
-        适合不同家庭成员、公共电脑快速切换账号。<br>也可用于工作、娱乐等不同场景。
+        适合不同家庭成员、公共电脑快速切换帐号。<br>也可用于工作、娱乐等不同场景。
 </span>
 
       </p>
@@ -31,7 +31,7 @@ const tpl = `
             </a-row>
             <template #overlay>
       <a-menu>
-        <a-menu-item @click="deleteAccount(user.uid)" key="deleteAccount">解绑账号</a-menu-item>
+        <a-menu-item @click="deleteAccount(user.uid)" key="deleteAccount">解绑帐号</a-menu-item>
       </a-menu>
     </template>
   </a-dropdown>
@@ -53,8 +53,8 @@ const tpl = `
                 <a-avatar :size="60" style="background-color: #eeeeee"><template #icon><svg t="1648034469132" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="19292" width="32" height="32"><path d="M928 736H800V608c0-16-12.8-32-32-32s-32 12.8-32 32v128H608c-16 0-32 12.8-32 32s12.8 32 32 32h128v128c0 16 12.8 32 32 32s32-12.8 32-32V800h128c16 0 32-12.8 32-32s-12.8-32-32-32zM768 320c0-140.8-115.2-256-256-256S256 179.2 256 320c0 89.6 44.8 169.6 115.2 214.4C192 592 64 761.6 64 960h64c0-211.2 172.8-384 384-384 140.8 0 256-115.2 256-256zM512 512c-105.6 0-192-86.4-192-192s86.4-192 192-192 192 86.4 192 192-86.4 192-192 192z" fill="#333333" p-id="19293"></path></svg></template></a-avatar>
               </a-col>
               <a-col class="user-info" :span="16" >
-                <div>添加账号</div>
-                <p class="info-p">添加一个新账号
+                <div>添加帐号</div>
+                <p class="info-p">添加一个新帐号
                 </p>
               </a-col>
             </a-row>
@@ -114,14 +114,14 @@ const UsersSelect = {
     },
     deleteAccount (uid) {
       antd.Modal.confirm({
-        title: '解绑此账号',
-        content: '解绑账号并不会影响账号数据，仅仅是将本地账号退出。但是退出后无法再使用此账号下的所有空间。',
+        title: '解绑此帐号',
+        content: '解绑帐号并不会影响帐号数据，仅仅是将本地帐号退出。但是退出后无法再使用此帐号下的所有空间。',
         centered: true,
         okText: '确认',
         cancelText: '取消',
         onOk: () => {
           userModel.delete( {uid:uid} ).then(() => {
-            window.antd.message.success('解绑账号成功。')
+            window.antd.message.success('解绑帐号成功。')
             this.users.forEach((user, index) => {
               if (user.uid === uid) {
                 this.users.splice(index, 1)
@@ -130,7 +130,7 @@ const UsersSelect = {
 
             })
           }).catch(()=>{
-            window.antd.message.error('解绑账号失败。')
+            window.antd.message.error('解绑帐号失败。')
           })
         }
       })

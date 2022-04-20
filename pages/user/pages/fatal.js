@@ -114,7 +114,7 @@ const fatal = {
       space: null,
       title: '',
       fatal: true,//非致命意外
-      canSaveToCloud: true,//是否可以保存到云端，当出现账号凭证错误的时候是无法保存至云端的。
+      canSaveToCloud: true,//是否可以保存到云端，当出现帐号凭证错误的时候是无法保存至云端的。
       description: '',
       spaceId: 0,
       backupName: '', //备份空间名称输入框

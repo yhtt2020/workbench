@@ -42,7 +42,7 @@ const sidebarTpl = `
                           </div>
                           <div style="margin-top: 10px">
 
-    <a-button @click="openUserWindow" style="font-size: 12px" size="small">切换账号</a-button>
+    <a-button @click="openUserWindow" style="font-size: 12px" size="small">切换帐号</a-button>
 </div>
 
 
@@ -823,7 +823,7 @@ Vue.component('sidebar', {
       if (type !== 'cloud') {
         this.$confirm({
           title: '切换到本地空间',
-          content: '是否更改当前空间，更改空间将重载浏览器，可能导致您网页上未保存的内容丢失，请确认已经保存全部内容。切换本地空间并不会更改当前登录账号。',
+          content: '是否更改当前空间，更改空间将重载浏览器，可能导致您网页上未保存的内容丢失，请确认已经保存全部内容。切换本地空间并不会更改当前登录帐号。',
           centered: true,
           okText: '我已保存，切换空间',
           cancelText: '取消',
@@ -885,7 +885,7 @@ Vue.component('sidebar', {
         } else {
           this.$confirm({
             title: '切换到云端空间',
-            content: '是否切换到云端空间？切换到云端空间后会同时更换当前账号到此账号。请务必确认您网页上的内容已经保存。否则可能丢失未保存内容。',
+            content: '是否切换到云端空间？切换到云端空间后会同时更换当前帐号到此帐号。请务必确认您网页上的内容已经保存。否则可能丢失未保存内容。',
             centered: true,
             okText: '我已保存，切换空间',
             cancelText: '取消',
