@@ -401,7 +401,7 @@ const sidebarTpl = `
 
         <ul class="space-selector">
              <li v-if="cloudSpaces.length===0"  disabled="" key="current">
-            请<a @click="login()">登录</a>后使用云空间
+            请<a @click="openUserWindow">登录</a>后使用云空间
           </li>
          <li title="云端空间" :class="{'active':currentSpace.space.nanoid===space.nanoid}" v-else  @click="confirmChangeSpace(space,'cloud')" v-for="space in cloudSpaces" :key="space.nanoid" :disable="space['client_id']!=='' && currentSpace.space.nanoid!==space.nanoid">
             <a-icon type="sync" v-if="currentSpace.space.nanoid===space.nanoid" style="color: #00bb00" spin></a-icon>

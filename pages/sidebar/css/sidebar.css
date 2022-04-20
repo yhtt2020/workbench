@@ -472,7 +472,6 @@ body {
 
 .expanded .wrapper {
   width: 142px;
-  overflow: hidden;
   transition: width 0.1s;
 }
 
