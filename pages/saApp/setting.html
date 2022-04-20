@@ -97,7 +97,8 @@
                     :wrapper-col="formItemLayout.wrapperCol"
                     label="应用起始地址："
                   >
-                    <span class="ant-form-text" style="line-height: 40px">
+                    <span class="ant-form-text" style="line-height: 40px;text-overflow: ellipsis;
+  white-space: nowrap;display: inline-block;max-width: 370px;word-break: break-all; overflow: hidden;">
         {{this.saApp.url}}
       </span>
                   </a-form-item>
