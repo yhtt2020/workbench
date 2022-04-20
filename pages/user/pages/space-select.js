@@ -189,9 +189,8 @@ const tpl = `
     width="400px"
     @ok="doImportSpaces"
   >
-    <p>请选择本机空间导入，可一次导入多个空间。注意：不可导入使用中的空间。</p>
+    <p>请选择本机空间导入，可一次导入多个空间。<br>注意：如果导入<strong>当前使用的空间</strong>，后续的改动<strong>不会被同步</strong>到新导入的云端空间。</p>
     <p><a-select
-    v-model:value="value"
     mode="multiple"
     placeholder="可多选"
     style="width: 100%"
@@ -330,19 +329,17 @@ const SpaceSelect = {
     async importFromLocal () {
       //todo loadLocalSpaces()
       let spaces= await spaceModel.getLocalSpaces()
+      this.localOptions=[]
       spaces.forEach((space) => {
         if(space.data && space.type!=='cloud'){
+          if(space.id===this.currentSpace.spaceId){
+            this.localOptions.push({ label: space.name +'（ '+ space.data.state.tasks.length+' 标签组）← 当前', value: space.id })
+          }else
           this.localOptions.push({ label: space.name +'（ '+ space.data.state.tasks.length+' 标签组）', value: space.id })
           this.localSpaces.push(space)
         }
-
       })
-      for(let i=0;i<this.localOptions.length;i++){
-        if(this.localOptions[i].value===this.currentSpace.spaceId){
-          this.localOptions.splice(i,1)
-          break
-        }
-      }
+
       this.visibleImport = true
     },
     /**
@@ -350,6 +347,7 @@ const SpaceSelect = {
      * @returns {Promise<void>}
      */
     async doImportSpaces () {
+      let currentIndex=undefined
       try {
         let selectedSpaces=this.selectedImportSpaces.map(space=>{
           let item=this.localSpaces.find((item)=>{
@@ -364,11 +362,21 @@ const SpaceSelect = {
           window.antd.message.error('请选择需要导入的空间。')
           return
         }
+        currentIndex=this.selectedImportSpaces.find((op=>{
+          if(op===this.currentSpace.spaceId)
+            return true
+        }))
+
         let result = await spaceModel.setUser(this.user).importFromLocal(selectedSpaces)
         if (result.status === 1) {
-          window.antd.message.success('导入空间成功。')
           this.visibleImport = false
+          this.selectedImportSpaces=[]
           await this.loadSpaces()
+          if(currentIndex){
+            window.antd.Modal.info({title:'空间导入成功',content:'导入空间成功。导入的空间中包括当前使用中的空间，后续对当前空间的改动不会再影响到到导入后的云端空间。'})
+          }else{
+            window.antd.message.success('导入空间成功。')
+          }
         } else {
           window.antd.message.error('导入空间失败。'+result.data)
         }
