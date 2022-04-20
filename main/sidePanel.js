@@ -1059,7 +1059,10 @@ app.whenReady().then(()=>{
   let loginWindow=null
   ipc.on('closeUserWindow',()=>{
     callUnModal(userWindow)
-    userWindow.close()
+    if(userWindow){
+      if(userWindow.isDestroyed()===false)
+        userWindow.close()
+    }
   })
   ipc.on('closeMainWindow',()=>{
       mainWindow.setClosable(true)
