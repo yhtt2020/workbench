@@ -34,14 +34,13 @@ const server = {
 }
 
 ipc.invoke('imPreloadReady').then((args) => {
-  localStorage.setItem('tsbSaApp', JSON.stringify(args))
   //定制好订阅器
   let DepList = []
   DepList.push({
     func: server.beforeInit,
     host: isDevelopmentMode ? config.IM.FRONT_URL_DEV : config.IM.FRONT_URL
   })
-  tsbSdk.listener(DepList)
+  tsbSdk.listener(args, DepList)
 
   if(href === config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN) {
     server.beforeInit(config.IM.FRONT_URL_DEV)

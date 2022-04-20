@@ -21,6 +21,7 @@ export default class tsbk {
 
   //options中必须要的属性 appId:必填，三方应用唯一标识 、timestamp:必填，生成签名的时间戳、 nonceStr: 必填，生成签名的随机串、 signature:必填，签名、 jsApiList:[]必填，需要使用的JS接口列表
   static config(options) {
+    console.log(tsbk.secretInfo, 'tsbk.secretInfo??????????????')
     if (Object.keys(tsbk.secretInfo).length > 0) {
       return new Promise((resolve, reject) => {
         window.postMessage(
@@ -33,6 +34,10 @@ export default class tsbk {
         tsbk.listener(resolve, reject);
       });
     } else {
+      if(!options) return Promise.reject({
+        code: 401,
+        msg: "SDK接口鉴权失败",
+      })
       const keyNames = Object.keys(options);
       for (let i = 0; i < keyNames.length; i++) {
         tsbk.secretInfo[keyNames[i]] = options[keyNames[i]];
@@ -41,15 +46,17 @@ export default class tsbk {
   }
 
   static listener(observe, reverse) {
-    window.addEventListener("message", function (e) {
+    window.addEventListener("message", (e) => {
       if(e.data.eventName !== "authResult") return
       if(tsbk.secretInfo.signature !== e.data.signature) {
+        console.log('进1', e)
         this._sdkSwitch = false;
         reverse({
           code: 401,
           msg: "SDK接口鉴权失败",
         });
       } else {
+        console.log('进2', e)
         this._sdkSwitch = e.data.sdkSwitch;
         observe(this._sdkSwitch);
       }
@@ -62,10 +69,10 @@ export default class tsbk {
         fn();
       }
     }).catch(err => {
-      return err
+      //验证失败直接丢出错误！
+      throw err
     })
     window.addEventListener("message", (e) => {
-      console.log(e, '!!!!!!!!!!!!!!!!!!!!!!!!!!!')
       let channel = e.data.eventName;
       if(channel){
         tsbk.events.forEach((event, index)=>{
@@ -206,15 +213,9 @@ export default class tsbk {
 
   //主动获取用户信息
   static getUserProfile(options) {
+    console.log(this._sdkSwitch, 'this._sdkSwitch！！！！！！！！！！！！！！！')
     if(!this._sdkSwitch) {
       options.hasOwnProperty('fail') ? options.fail() : false
-      return
-    }
-
-    if(!options) {
-      window.postMessage({
-        eventName: 'getUserProfile'
-      })
       return
     }
 
@@ -222,21 +223,24 @@ export default class tsbk {
       eventName: 'getUserProfile',
     })
 
+    //todo
+
     return new Promise((resolve, reject) => {
+
       let index = tsbk.events.findIndex(event => event.eventName.startsWith('tsReply'))
       let errIndex = tsbk.events.findIndex(event => event.eventName === 'errorSys')
-      if(index < 0) {
+      if(index < 0 && errIndex !== -1) {
+        console.log('走到了这里！！！！！！！！！！！')
         options.hasOwnProperty('fail') ? options.fail() : false
-        if(errIndex !== -1) {
-          reject(tsbk.events[errIndex].errorInfo)
-          tsbk.events.splice(errIndex, 1)
-        }
-      } else {
+        reject(tsbk.events[errIndex].errorInfo)
+        tsbk.events.splice(errIndex, 1)
+      }
+      if(index > -1) {
         options.hasOwnProperty('success') ? options.success() : false
         resolve(tsbk.events[index].resInfo)
         tsbk.events.splice(index, 1)
-        console.log(tsbk.events, '[[[[[[[[[[[[]]]]]]]]]]]]]')
       }
+
     })
 
   }

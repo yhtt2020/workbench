@@ -2,25 +2,22 @@ const xss = require("xss");
 
 const tsbSdk = {
   isThirdApp: Boolean,
-  tsbSaApp: JSON.parse(localStorage.getItem("tsbSaApp")),
+  tsbSaApp: null,
   //初始化监听
-  listener: function (Dep) {
-    if (tsbSdk.tsbSaApp) {
+  listener: function (saApp, Dep) {
+    if(saApp) {
+      tsbSdk.tsbSaApp = saApp
       tsbSdk.tsbSaApp.isSystemApp
-        ? Object.defineProperty(tsbSdk, "isThirdApp", {
-            writable: false,
-            value: false,
-          })
-        : Object.defineProperty(tsbSdk, "isThirdApp", {
-            writable: false,
-            value: true,
-          });
-    } else {
-      Object.defineProperty(tsbSdk, "isThirdApp", {
-        writable: false,
-        value: true,
-      });
+      ? Object.defineProperty(tsbSdk, "isThirdApp", {
+          writable: false,
+          value: false,
+        })
+      : Object.defineProperty(tsbSdk, "isThirdApp", {
+          writable: false,
+          value: true,
+        });
     }
+
     window.addEventListener("message", function (e) {
       let messageEvent = e.data.eventName;
       switch (messageEvent) {
@@ -59,6 +56,9 @@ const tsbSdk = {
           break;
         case "openOsxInviteMember":
           tsbSdk.openOsxInviteMember(e.data.options);
+          break;
+        case 'getUserProfile':
+          tsbSdk.getUserProfile()
           break;
         default:
           console.log(messageEvent, "未命中🎯");
@@ -119,8 +119,8 @@ const tsbSdk = {
     } else {
       window.postMessage({
         eventName: "saAppHide",
-        saApp: window.tsbSaApp,
-        hashId: window.tsbSDK.hashId,
+        saApp: tsbSdk.tsbSaApp,
+        hashId: tsbSdk.tsbSaApp.hashId,
       });
     }
   },
@@ -136,8 +136,8 @@ const tsbSdk = {
       window.postMessage({
         eventName: "saAppTabNavigate",
         options,
-        saApp: window.tsbSaApp,
-        hashId: window.tsbSDK.hashId,
+        saApp: tsbSdk.tsbSaApp,
+        hashId: tsbSdk.tsbSaApp.hashId,
       });
     }
   },
@@ -157,8 +157,8 @@ const tsbSdk = {
       window.postMessage({
         eventName: "thirdSaAppNotice",
         options,
-        saApp: window.tsbSaApp,
-        hashId: window.tsbSDK.hashId,
+        saApp: tsbSdk.tsbSaApp,
+        hashId: tsbSdk.tsbSaApp.hashId,
       });
     }
   },
@@ -185,8 +185,8 @@ const tsbSdk = {
       window.postMessage({
         eventName: "thirdSaAppOpen",
         options,
-        saApp: window.tsbSaApp,
-        hashId: window.tsbSDK.hashId,
+        saApp: tsbSdk.tsbSaApp,
+        hashId: tsbSdk.tsbSaApp.hashId,
       });
     }
   },
@@ -200,8 +200,8 @@ const tsbSdk = {
       window.postMessage({
         eventName: "thirdOsxOpenInviteMember",
         options,
-        saApp: window.tsbSaApp,
-        hashId: window.tsbSDK.hashId,
+        saApp: tsbSdk.tsbSaApp,
+        hashId: tsbSdk.tsbSaApp.hashId,
       });
     }
   },
@@ -234,8 +234,8 @@ const tsbSdk = {
     } else {
       window.postMessage({
         eventName: 'thirdGetUserProfile',
-        saApp: window.tsbSaApp,
-        hashId: window.tsbSDK.hashId
+        saApp: tsbSdk.tsbSaApp,
+        hashId: tsbSdk.tsbSaApp.hashId
       })
     }
   }

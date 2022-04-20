@@ -1167,6 +1167,10 @@ app.whenReady().then(() => {
 
   })
 
+  ipc.handle('saAppGetUserProfile', () => {
+    return storage.getItem('userInfo')
+  })
+
   ipc.on('saAppGoBack', (event, args) => {
     appManager.getWindowByAppId(args.id).view.webContents.goBack()
   })

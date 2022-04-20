@@ -13,42 +13,13 @@ ipc.on('findInPage', () => {
 })
 window = tools.getWindowArgs(window)
 
-//通过内容暴露给window一些应用信息
+//通过内容暴露给 window/浏览器侧sdk 一些应用信息
 let sdkObject = {
   hashId: nanoid(),
   has: true,
   globalArgs: window.globalArgs,
   platform: window.platformType,
-  on (name, fn) {
-    if (!sdkObject[name]) {
-      sdkObject[name] = []
-    }
-    sdkObject[name].push(fn)
-  },
-
-  emit (name, val) {
-    if (sdkObject[name]) {
-      sdkObject[name].map((fn) => {
-        fn(val)
-      })
-    }
-  },
-  off (name, fn) {
-    if (sdkObject[name]) {
-      if (fn) {
-        let index = sdkObject[name].indexOf(fn)
-        if (index > -1) {
-          sdkObject[name].splice(index, 1)
-        }
-      } else {
-        sdkObject[name].length = 0
-        //设长度为0比obj[name] = []更优，因为如果是空数组则又开辟了一个新空间，设长度为0则不必开辟新空间
-      }
-    }
-  }
 }
-sdkObject.on('ready',(saApp)=>{console.log(saApp)}) //测试挂载
-//contextBridge.exposeInMainWorld('tsbSDK', sdkObject) //todo 此处要考虑如何兼容不需要本地sdk的系统应用
 ipc.on('fileAssign',(event,args)=>{
   window.postMessage({
     eventName: "fileAssign",
@@ -56,8 +27,8 @@ ipc.on('fileAssign',(event,args)=>{
   console.log('请求处理文件关联',args)
 })
 ipc.on('init', (event, args) => {
-  //contextBridge.exposeInMainWorld('tsbSaApp', args.saApp) //todo 此处要考虑如何兼容不需要本地sdk的系统应用
-  sdkObject.emit('ready',{saApp:args.saApp}) //在此处触发sdkBoject的ready，以确保获取到
+  tsbSdk.listener(sdkObject) //浏览器侧sdk   //todo 暂cgz个人认为下面的contextBridge.exposeInMainWorld不再需要
+  //contextBridge.exposeInMainWorld('tsbSaApp', sdkObject) //todo 此处要考虑如何兼容不需要本地sdk的系统应用
 
   window.addEventListener('message', function(e) {
     let messageEvent = e.data.eventName
@@ -103,6 +74,7 @@ ipc.on('init', (event, args) => {
       case 'thirdGetUserProfile':
         if(e.data.hashId === sdkObject.hashId) {
           ipc.invoke('saAppGetUserProfile').then(res => {
+            console.log(res, '^^^^^^^^^^^^^^^')
             window.postMessage({
               eventName: 'tsReplyGetUserProfile',
               resInfo: res
@@ -119,22 +91,4 @@ ipc.on('init', (event, args) => {
     }
     console.log(ipc, '无ipc的三方应用也被监听中。。。。')
   })
-
-
-  tsbSdk.listener() //浏览器侧sdk
 })
-
-
-
-
-
-
-
-//todo 网页右键菜单实现
-//todo 密码自动填充
-
-// var option = {
-//   title: '温馨提示',
-//   body: '不要天天坐在电脑前，要早点休息！'
-// };
-// var myNotification = new window.Notification(option.title, option)
