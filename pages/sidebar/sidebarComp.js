@@ -489,6 +489,9 @@ const sidebarTpl = `
                     </span>
                   </div>
   <div style="text-align: right">
+                        <span class="action" size="small" title="分享整组标签" @click="shareTask(item)">
+                        <a-icon type="share-alt"></a-icon>分享
+                      </span>
                       <span class="action" size="small" title="锁定当前标签组内全部标签" @click="lockTask(item.id)">
                         <a-icon type="lock"></a-icon>锁定
                       </span>
@@ -1204,6 +1207,26 @@ Vue.component('sidebar', {
     },
     changePopoverVisible (visible) {
       this.isPopoverShowing = visible
+    },
+    shareTask(item){
+      console.log(item)
+      let tabs = item.tabs
+      let filterList =  tabs.filter(e => !e.url.startsWith('file:///'))    //过滤掉file层面的tab
+      let args = []
+      for(let i = 0; i < filterList.length; i++) {
+        const obj = {
+          url: filterList[i].url,
+          favicon: filterList[i].favicon === null ? '/shareTask/default.svg' : filterList[i].favicon.url,
+          title: filterList[i].title
+        }
+        args.push(obj)
+      }
+      if(args.length===0){
+        appVue.$message.error('排除系统页面后，没有其他页面，无法分享。')
+        return
+      }
+      console.log(args)
+      ipc.send( 'shareTask', args)
     },
     /**
      * 锁定任务
