@@ -69,11 +69,12 @@ const tpl = `
 `
 const userModel = require('../../../src/model/userModel')
 const configModel = require('../../../src/model/configModel')
+const spaceModel = require('../../../src/model/spaceModel')
 const UsersSelect = {
   template: tpl,
   data () {
     return {
-      tip:'',
+      tip: '',
       loaded: false,
       users: [
         // {
@@ -89,24 +90,24 @@ const UsersSelect = {
         //   ]
         // },
       ],
-      showOnStart:false
+      showOnStart: false
     }
   },
   async mounted () {
     this.users = await userModel.getAll()
     this.loaded = true
-    if(window.globalArgs['tip']){
-      this.tip=window.globalArgs['tip']
+    if (window.globalArgs['tip']) {
+      this.tip = window.globalArgs['tip']
     }
 
-    this.showOnStart= configModel.getShowOnStart()
+    this.showOnStart = configModel.getShowOnStart()
   },
-  async beforeRouteEnter(to, from) {
+  async beforeRouteEnter (to, from) {
     console.log('update')
     this.users = await userModel.getAll()
   },
   methods: {
-    switchShowOnStart(){
+    switchShowOnStart () {
       configModel.setShowOnStart(this.showOnStart)
     },
     goAddAccount () {
@@ -120,7 +121,7 @@ const UsersSelect = {
         okText: '确认',
         cancelText: '取消',
         onOk: () => {
-          userModel.delete( {uid:uid} ).then(() => {
+          userModel.delete({ uid: uid }).then(() => {
             window.antd.message.success('解绑帐号成功。')
             this.users.forEach((user, index) => {
               if (user.uid === uid) {
@@ -129,17 +130,48 @@ const UsersSelect = {
               }
 
             })
-          }).catch(()=>{
+          }).catch(() => {
             window.antd.message.error('解绑帐号失败。')
           })
         }
       })
     },
-    enterAccount (user) {
-      if (!!!user.enterPwd) {
-        this.$router.push({ name: 'space', params: { uid: user.uid } })
-      } else
-        this.$router.push({ name: 'enterPwd', params: { uid: user.uid } })
+    async enterAccount (user) {
+      //todo 先获取账号信息，确认账号可正常登录
+      //网络用户
+      if (user.uid) {
+        try {
+          let userInfo = await userModel.get({ uid: user.uid })
+          if (userInfo) {
+            let spacesResult = await spaceModel.setUser(userInfo).getUserSpaces()
+            if (spacesResult.status !== 1) {
+              window.antd.message.error('服务器繁忙，获取用户空间失败，请10分钟后后再试。')
+              return
+            }else{
+              if (!!!user.enterPwd) {
+                this.$router.push({ name: 'space', params: { uid: user.uid } })
+              } else
+                this.$router.push({ name: 'enterPwd', params: { uid: user.uid } })
+            }
+          } else {
+            console.warn(user)
+            window.antd.message.error('获取用户信息失败，登录信息过期或用户帐号异常。请尝试解绑用户后重新登陆帐号。')
+            return //如果异常，退回上一页，防止后续出错
+          }
+        } catch (e) {
+          console.warn(e)
+          if (e.code && e.code === 'ECONNREFUSED') {
+            window.antd.Modal.info({title:'服务器维护',content:'服务器维护中，建议10分钟后再试。您可以先工作在本地空间。后续可手动导入本地空间到云端。',okText:'确定'})
+            return
+          }
+          if (e.response && e.response.data.code === 1001) {
+            window.antd.message.error('用户登录信息过期，请点击【添加账号】重新登录。')
+            return
+          }
+          window.antd.message.error('意外错误。')
+          return
+        }
+      }
     }
   }
 }
