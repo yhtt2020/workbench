@@ -18,11 +18,12 @@ const tsbSdk = {
         });
     }
 
-    window.addEventListener("message", function (e) {
+    window.addEventListener("message", async function (e) {
       let messageEvent = e.data.eventName;
+      let id = e.data.id;
       switch (messageEvent) {
         case "checkAuth":
-          tsbSdk.handleCheckAuth(e.data);
+          tsbSdk.handleCheckAuth(id);
           break;
         case "hideApp":
           tsbSdk.handleHideApp();
@@ -33,14 +34,6 @@ const tsbSdk = {
           break;
         case "destoryApp":
           tsbSdk.handleDestoryApp();
-          break;
-        case "preloadAuthResult":
-          //todo后面根据preload的真正返回data返回
-          window.postMessage({
-            eventName: "authResult",
-            signature: "ts",
-            sdkSwitch: true,
-          });
           break;
         case "saAppNotice":
           e.data.options.title = xss(e.data.options.title);
@@ -58,7 +51,7 @@ const tsbSdk = {
           tsbSdk.openOsxInviteMember(e.data.options);
           break;
         case 'getUserProfile':
-          tsbSdk.getUserProfile()
+          tsbSdk.getUserProfile(id)
           break;
         default:
           console.log(messageEvent, "未命中🎯");
@@ -67,50 +60,38 @@ const tsbSdk = {
     console.log(tsbSdk.tsbSaApp, tsbSdk, "挂载了SDK");
   },
 
-  handleCheckAuth: function (data) {
-    //const { appId, timestamp, nonceStr, signature, jsApiList } = data.secretInfo
-    //解密signature，sha1方法
-    //校验解密出来的timestamp、nonceStr是否一致
-    //然后再进一步远程ts服务器校验(jsapi_ticket, origin)是否过期，不过期返回一个true，过期返回false
-    //const axios = require('axios')
+  handleCheckAuth: function (id) {
+    window.postMessage({
+      eventName: 'authResult',
+      auth: true,
+      id
+    })
+
+    // const { appId, timestamp, nonceStr, signature, jsApiList } = data.secretInfo
+    // 解密signature，sha1方法
+    // 校验解密出来的timestamp、nonceStr是否一致，初步校验signature是否为被伪造
+    // 是伪造的话直接就return 一个错误，在web一侧的sdk收到这个errorSys，直接reject鉴权失败
+    // 然后再进一步远程ts服务器校验(jsapi_ticket, origin)是否过期，不过期返回一个true，过期返回false
+    // const axios = require('axios')
     // axios.post().then(res => {
     //   if(res.code === 200) {
     //     window.postMessage({
     //       eventName: 'authResult',
-    //       signature: signature,
-    //       sdkSwitch: true
+    //       auth: true
     //     })
     //   } else {
     //     window.postMessage({
     //       eventName: 'authResult',
-    //       signature: signature,
-    //       sdkSwitch: false
+    //       auth: false
     //     })
     //   }
     // }).catch(err => {
     //   window.postMessage({
     //     eventName: 'authResult',
-    //     signature: signature,
-    //     sdkSwitch: false
+    //     auth: false
     //   })
     // })
-    //-------------------------------------->
-
-    //检测是否时第三方应用 isThirdApp是一个不可修改属性，不用担心串改安全性
-    if (tsbSdk.isThirdApp) {
-      //如果是第三方应用在转发一层到appPreload中去校验
-      window.postMessage({
-        eventName: "preloadAuth",
-        checkData: data,
-      });
-    } else {
-      //如果不是第三方应用，在tsbSdk中直接校验就行
-      window.postMessage({
-        eventName: "authResult",
-        signature: "ts",
-        sdkSwitch: true,
-      });
-    }
+    // -------------------------------------->
   },
 
   handleHideApp: function () {
@@ -218,24 +199,27 @@ const tsbSdk = {
     });
   },
 
-  getUserProfile: function () {
+  getUserProfile: function (id) {
     if(!tsbSdk.isThirdApp) {
-      ipc.invoke('saAppGetUserProfile').then(res => {
+        ipc.invoke('saAppGetUserProfile').then(res => {
         window.postMessage({
           eventName: 'tsReplyGetUserProfile',
-          resInfo: res
+          resInfo: res,
+          id
         })
       }).catch(err => {
         window.postMessage({
           eventName: 'errorSys',
-          errorInfo: err
+          errorInfo: err,
+          id
         })
       })
     } else {
       window.postMessage({
         eventName: 'thirdGetUserProfile',
         saApp: tsbSdk.tsbSaApp,
-        hashId: tsbSdk.tsbSaApp.hashId
+        hashId: tsbSdk.tsbSaApp.hashId,
+        id
       })
     }
   }
