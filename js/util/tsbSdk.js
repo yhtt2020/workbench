@@ -187,18 +187,6 @@ const tsbSdk = {
     }
   },
 
-  /**
-   * 向内容页面发送消息，遵循ipc的规则
-   * @param event 消息频道
-   * @param args 数据
-   */
-  send(event,args){
-    window.postMessage({
-      eventName: event,
-      args
-    });
-  },
-
   getUserProfile: function (id) {
     if(!tsbSdk.isThirdApp) {
         ipc.invoke('saAppGetUserProfile').then(res => {

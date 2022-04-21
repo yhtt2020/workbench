@@ -76,6 +76,7 @@ export default class tsbk {
   /**
    * ready准备函数，每次调用都会重新去执行config鉴权函数
    * @param {function} fn 回调函数，具体方法执行的函数
+   * @param {boolean} autoRefresh 是否自动刷新续签
    */
   static ready(fn, autoRefresh = false) {
     tsbk.config(tsbk.secretInfo).then(() => {
