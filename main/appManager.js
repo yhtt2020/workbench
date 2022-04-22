@@ -543,6 +543,8 @@ const appManager = {
     if (saApp.package === 'com.thisky.fav' && isDevelopmentMode) {
       // 当为开发环境下的时候，将团队强行更改为本地开发
       //todo 根据实际需求更改
+      //saApp.url ='/pages/fav/index.html'
+      //saApp.type='local'
       saApp.url = 'http://localhost:8080/'
     }
 
@@ -551,6 +553,9 @@ const appManager = {
       appView.webContents.loadURL('file://' + path.join(__dirname, saApp.url))
     } else {
       appView.webContents.loadURL(saApp.url)
+    }
+    if (saApp.package === 'com.thisky.fav' && isDevelopmentMode) {
+      appView.webContents.openDevTools()
     }
     appView.webContents.on('did-navigate-in-page', (event, url) => {
       if(!appWindow.webContents.isDestroyed())
