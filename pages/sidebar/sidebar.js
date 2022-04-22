@@ -485,7 +485,17 @@ window.onload = function() {
 			window: window
 		},
 		mounted: function() {
-			window.$store = store
+      let sideMode = localStorage.getItem('sideMode')
+      sideMode = sideMode || 'auto'
+      if (sideMode === 'close' || sideMode === 'auto') {
+        document.getElementById('clickThroughElement').style.left = '55px'
+      } else if (sideMode === 'open') {
+        console.log(document.getElementById('appVue').classList)
+        document.getElementById('clickThroughElement').style.left = '155px'
+
+      }
+      this.mod = sideMode
+      window.$store = store
       getCurrentUser()
 		}
 	})
