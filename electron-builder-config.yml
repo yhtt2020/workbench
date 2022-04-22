@@ -21,6 +21,7 @@ files:
     - img/*.jpeg
     - reader/**/*
     - resources/**/*
+    - src/**/*
 dmg:
     sign: false
 

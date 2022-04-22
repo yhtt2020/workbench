@@ -27,7 +27,10 @@ const ipcMessageMain={
     openMessageCenter: 'openMessageCenter',
 
     //打开通知中心设置
-    openMsmSetting: 'openMsmSetting'
+    openMsmSetting: 'openMsmSetting',
+
+    //打开全局搜索
+    openGlobalSearch: 'openGlobalSearch'
   },
   /**
    * 主界面使用ipc

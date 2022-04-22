@@ -237,7 +237,7 @@ const webviews = {
       allowPopups:true
     }
   }
-
+  // console.log(newTabEvent)
 
     if(sourceUrl==='ts://apps' || sourceUrl ==='ts://newtab'){
       webPreferences.partition=null
@@ -297,20 +297,24 @@ const webviews = {
    * @param tabData tab的信息
    */
   updateToolBarStatus(tabData){
-    require('js/navbar/tabEditor').updateUrl(urlParser.getSourceURL(tabData.url))
-    webviews.updateToolbarSecure(tabData.secure)
-    require('./navbar/tabEditor').updateTool(tabData.id)
-    webviews.updateAppStatus(tabData)
-
-   if(urlParser.getSourceURL(tabData.url).startsWith('ts://')){
-     $toolbar.setPwdCanUse(false)
-     $toolbar.setMobileCanUse(false)
-     $toolbar.setCanRead(false)
-   }else{
-     $toolbar.setPwdCanUse(true)
-     $toolbar.setMobileCanUse(true)
-     $toolbar.setCanRead(true)
-   }
+    if(tabData.id===tabs.getSelected()){
+      require('js/navbar/tabEditor').updateUrl(urlParser.getSourceURL(tabData.url))
+      webviews.updateToolbarSecure(tabData.secure)
+      require('./navbar/tabEditor').updateTool(tabData.id)
+      webviews.updateAppStatus(tabData)
+      $toolbar.updateStartPage()
+      if(urlParser.getSourceURL(tabData.url).startsWith('ts://')){
+        $toolbar.setPwdCanUse(false)
+        $toolbar.setMobileCanUse(false)
+        $toolbar.setCanRead(false)
+      }else{
+        $toolbar.setPwdCanUse(true)
+        $toolbar.setMobileCanUse(true)
+        $toolbar.setCanRead(true)
+      }
+    }else{
+      console.log('update了一个非选中的tab信息')
+    }
   },
   updateAppStatus(tabData){
     // 添加密码数量显示
@@ -615,9 +619,50 @@ webviews.bindIPC('scroll-position-change', function (tabId, args) {
   })
 })
 
+let originalUrl;
+let originalId;
 ipc.on('view-event', function (e, args) {
   webviews.emitEvent(args.event, args.viewId, args.args)
+  // console.log(args)
+
+  if (args.event === 'new-tab') {
+    originalId = args.viewId
+  }
+
+  if (args.event === 'dom-ready') {
+    for(let i =0;i<tabs.tabs.length;i++){
+      if(tabs.tabs[i].id===args.viewId){
+        tabs.tabs[i].domRead=true
+      }
+    }
+  }
+  for (let i = 0; i < tabs.tabs.length; i++) {
+    originalId = args.viewId
+    if (tabs.tabs[i].id === originalId) {
+      originalUrl = tabs.tabs[i].url
+      ipc.send('originalPage',originalUrl)
+    }
+  }
 })
+
+ipc.on('closeEmptyPage',(event,args)=>{
+  // require('browserUI.js').closeTab(args)
+  for(let i=0;i<tabs.tabs.length;i++){
+    for(let j=0;j<args.length;j++){
+      if(tabs.tabs[i].url===args[j]){
+
+        if(args.length!==1 && tabs.tabs[i].domRead!==true){
+          require('browserUI.js').closeTab(tabs.tabs[i].id)
+        }
+      }
+    }
+  }
+})
+
+ipc.on('closeTab',(event,args)=>{
+    require('browserUI.js').closeTab(args.id)
+})
+
 
 ipc.on('async-call-result', function (e, args) {
   webviews.asyncCallbacks[args.callId](args.error, args.result)

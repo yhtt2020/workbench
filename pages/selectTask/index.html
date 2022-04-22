@@ -18,7 +18,7 @@
     </script>
     <div id="appVue">
 
-<!--      <template>-->
+      <template>
       <div style="padding-bottom:60px;">
         <div style="background-color: #ececec; padding: 20px;height: 100%; ">
           <a-row :gutter="16">
@@ -90,13 +90,14 @@
           </a-row>
         </div>
       </div>
+      </template>
 <!--      </a-affix>-->
     </div>
   </body>
   <script>
 
     Vue.prototype.$form = antd.Form
-    var appVue = new Vue({
+    window.appVue = new Vue({
       el: '#appVue',
       data() {
         return {
@@ -125,16 +126,18 @@
         },
       },
       mounted() {
-        this.tasks = window.tasks
-        let that = this
-        this.tasks.forEach(function (task, index) {
-          if (task.name == null) task.name = '标签组' + (index + 1)
-          task.icon = that.getIcon(task.tabs[0].favicon)
-        })
-        //从preload拿到选中的App
-        this.selectedApps = window.selectedApps
       },
       methods: {
+        loadFromTasks(tasks, currentTaskId){
+          this.tasks = tasks.filter(v => v.id !== currentTaskId)
+          let that = this
+          this.tasks.forEach(function (task, index) {
+            if (task.name == null) task.name = '标签组' + (index + 1)
+            task.icon = that.getIcon(task.tabs[0].favicon)
+          })
+          //从preload拿到选中的App
+          this.selectedApps = window.selectedApps
+        },
         //插入在前面
         setBefore() {
           if(toString.call(this.selectedApps) === '[object Array]') {
@@ -199,10 +202,10 @@
           }
         },
         selectTab(task, tab, id, Dindex) {
-          console.log(tab, '__tab__')
-          console.log(task, '__task__')
-          console.log(id, '__id__')
-          console.log(Dindex, '__Dindex__')
+          // console.log(tab, '__tab__')
+          // console.log(task, '__task__')
+          // console.log(id, '__id__')
+          // console.log(Dindex, '__Dindex__')
           this.selectedTab = tab
           this.selectedTask = task
           this.selectedTaskId = id
@@ -228,5 +231,10 @@
         },
       },
     })
+    ipc.on('gotTasks',(event,args)=>{
+      appVue.loadFromTasks(args.tasksState.tasks, args.tasksState.selectedTask)
+      window.tasks=args.tasksState.task
+    })
+    ipc.send('getTasks')
   </script>
 </html>

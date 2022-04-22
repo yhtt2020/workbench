@@ -34,7 +34,8 @@ const modules = [
   'main/mobileMod.js',
   'main/wizard.js',
   'main/messageCenter.js',
-  'main/fav.js'
+  'main/fav.js',
+  'main/globalSearch.js'
 ]
 
 function buildMain () {

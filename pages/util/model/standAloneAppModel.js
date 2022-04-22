@@ -1,5 +1,6 @@
 const db = require('../../../js/util/database.js').db
 const serverConfig = require('../../../server-config.js').config
+const tools = require('../util.js').tools;
 const systemAppPackage=[
   'com.thisky.group',
   'com.thisky.fav',
@@ -139,39 +140,117 @@ const standAloneAppModel = {
     }
     let imageEditor = await db.standAloneApps.get({name:'图片编辑器'})
     if(imageEditor){
-     await  db.standAloneApps.update(imageEditor.id,{package:'com.thisky.imageEditor',fileAssign:['image'],url:'https://a.apps.vip/imageEditor/','logo':'https://a.apps.vip/imageEditor/icon.svg'})
+      await  db.standAloneApps.update(imageEditor.id,{package:'com.thisky.imageEditor',fileAssign:['image'],url:'https://a.apps.vip/imageEditor/','logo':'https://a.apps.vip/imageEditor/icon.svg'})
     }
 
   },
   async find(word,option){
     let result= await db.standAloneApps.orderBy(option.order).toArray()
     let searchResult=[]
-    const pyjs=require('js-pinyin')
-    result.forEach(item=>{
-      let pinyin=pyjs.getFullChars(item.name).toLowerCase()
-      function testWords(sourceStr,findWords){
-        for(let i=0;i<findWords.length;i++){
-          if(sourceStr.indexOf(findWords.charAt(i))===-1){
-           return false
+
+    const { pinyin } = require('pinyin-pro');
+
+    function checkMatched(item) {
+      return searchResult.some(v => v.name === item.name)
+    }
+
+    function dealItem(item) {
+      if(item.hasOwnProperty('settings')) {
+        item.settings=JSON.parse(item.settings)
+      }
+    }
+
+    function matchChinese(str) {
+      return str.match(/[\u4e00-\u9fa5]/g)
+    }
+
+    function intelligentMatch(arr, word) {
+      if (word.length <= 1) return false;
+      if (!/^[\u4e00-\u9fa5_a-zA-Z]+$/.test(word)) return false;
+      let result = false;
+      let stop = false;
+      let wordArr = word.split("");
+
+      function recur(targetArrParam, wordArrParam, targetIndexParam, wordArrIndexParam) {
+        if (stop === false && wordArrParam.length <= targetArrParam.length && wordArrParam[wordArrIndexParam + 1]) {
+          if (targetArrParam[targetIndexParam + 1] === wordArrParam[wordArrIndexParam + 1]) {
+            result = true;
+          } else {
+            result = false;
+            stop = true;
           }
+          recur(targetArrParam, wordArrParam, targetIndexParam + 1, wordArrIndexParam + 1);
         }
-        return true
       }
 
-      if(item.name.indexOf(word)>-1 ||
-        item.url.indexOf(word)>-1 ||
-        item.summary.indexOf(word)>-1 ||
-        testWords(pinyin,word)
-      ){
-        item.settings=JSON.parse(item.settings)
-        searchResult.push(item)
+      let arrIndex = 0;
+      let wordArrIndex = 0;
+      let needToRecur = false;
+      for (let i = 0; i < arr.length; i++) {
+        if (needToRecur) break;
+        for (let j = 0; j < wordArr.length; j++) {
+          if (needToRecur) break;
+          if (wordArr[j] === arr[i] && arr[i + 1]) {
+            arrIndex = i;
+            wordArrIndex = j;
+            needToRecur = true;
+          }
+        }
+      }
+
+      if (needToRecur) {
+        recur(arr, wordArr, arrIndex, wordArrIndex);
+      }
+      return result;
+    }
+
+    result.forEach(item => {
+      if(matchChinese(item.name) && matchChinese(item.summary)) {
+        let quanPinName = pinyin(matchChinese(item.name).join(''), { toneType: 'none', type: 'array' })   // 获取数组形式不带声调的拼音
+        let firstPinName = pinyin(matchChinese(item.name).join(''), { pattern: 'first', toneType: 'none', type: 'array' })   // 获取数组形式不带音调拼音首字母
+        let quanPinSummary = pinyin(matchChinese(item.summary).join(''), { toneType: 'none', type: 'array' })   // 获取数组形式不带声调的拼音
+        let firstPinSummary = pinyin(matchChinese(item.summary).join(''), { pattern: 'first', toneType: 'none', type: 'array' })
+
+        if((item.name.toLowerCase().includes(word) || item.summary.includes(word) || tools.execDomain(item.url).toLowerCase().includes(word)) && !checkMatched(item)) {
+          dealItem(item)
+          searchResult.push(item)
+        }
+
+        quanPinName.forEach((v, index) => {
+          if(v === word && !checkMatched(item)) {
+            dealItem(item)
+            searchResult.push(item)
+          } else if (quanPinName.join('') === word && !checkMatched(item)) {
+            dealItem(item)
+            searchResult.push(item)
+          } else if (index <= quanPinName.length -2 && word.includes(v.concat(quanPinName[index +1])) && !checkMatched(item)) {
+            dealItem(item)
+            searchResult.push(item)
+          }
+        })
+        if(intelligentMatch(firstPinName, word) && !checkMatched(item)) {
+          dealItem(item)
+          searchResult.push(item)
+        }
+
+        quanPinSummary.forEach((v, index) => {
+          if(v === word && !checkMatched(item)) {
+            dealItem(item)
+            searchResult.push(item)
+          } else if (quanPinSummary.join('') === word && !checkMatched(item)) {
+            dealItem(item)
+            searchResult.push(item)
+          } else if (index <= quanPinSummary.length -2 && word.includes(v.concat(quanPinSummary[index +1])) && !checkMatched(item)) {
+            dealItem(item)
+            searchResult.push(item)
+          }
+        })
+        if(intelligentMatch(firstPinSummary, word) && !checkMatched(item)) {
+          dealItem(item)
+          searchResult.push(item)
+        }
       }
     })
-    // for(let i=0;i<result.length;i++){
-    //   if(result[i].name.indexOf(word)>-1 || result[i].url.indexOf(word)>-1 || result[i].summary.indexOf(word)>-1){
-    //     searchResult.push(result[i])
-    //   }
-    // }
     return searchResult
   },
   async put(id,data){

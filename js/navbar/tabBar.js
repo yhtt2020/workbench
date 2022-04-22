@@ -151,9 +151,10 @@ const tabBar = {
   //移动到其他标签组
   insertTabToTask(tabId) {
     let previousTask = tasks.getSelected()
-    //移除旧标签组中的tab，且拿到oldTab的信息
-    let oldTab = previousTask.tabs.splice(previousTask.tabs.getIndex(tabId), 1)[0]
-    ipc.send('selectTask', oldTab)   //呼出面板
+    let currentTabIndex = previousTask.tabs.getIndex(tabId)
+    //拿到oldTab的信息
+    let oldTab = previousTask.tabs.tabs[currentTabIndex]
+    ipc.send('selectTask', oldTab)   //呼出面板,并把oldtab的应用地址对象传过去
   },
 
   /**

@@ -18,7 +18,7 @@ const config = {
     //FRONT_URL_DEV:"http://127.0.0.1:8000",
     AUTO_LOGIN: '/auto-login',      //免登等待路由
     BOOT_ROUTE: '/boot-route'     //引导路由页面
-   },
+  },
   OSX: {
     CREATE_CIRCLE: '/osapi/com/createUpdateCircle'
   }

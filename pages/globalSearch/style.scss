@@ -1,0 +1,157 @@
+body,
+html {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: '.SFNSText-Regular', 'Helvetica Neue', 'Arial', sans-serif;
+  background-color: rgba(0, 0, 0, 0);
+  -webkit-app-region: drag;   //使整个窗口可拖拽
+  button {
+    -webkit-app-region: no-drag;  //如果您使整个窗口都可拖拽，则必须将其中的按钮标记为不可拖拽，否则用户将无法点击它们
+  }
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+.gs-dialog {
+  width: 600px;
+  min-height: 150px;
+  max-height: 400px;
+  //border: 1px solid #dddcdc;
+  border-radius: 10px;
+  background-color: #FFFFFF;
+  .search {
+    border-radius: 10px 10px 0px 0px;
+    background-color: #F5F6F6;
+    width: 100%;
+    height: 50px;
+    padding: 0px 20px;
+    input {
+      -webkit-app-region: no-drag;
+      margin-left: 10px;
+      background-color: #F5F6F6;
+      outline: 0 none;
+      border: none;
+      width: 92%;
+      &::-webkit-input-placeholder{
+        color: #CCCDCD;
+      }
+    }
+  }
+  .category {
+    width: 100%;
+    padding: 0px 20px;
+    height: 50px;
+    .category-lf {
+      -webkit-app-region: no-drag;
+    }
+  }
+  .apps {
+    width: 100%;
+    padding: 10px 20px;
+    height: 140px;
+    .apps-content {
+      height: 90px;
+      width: 100%;
+      overflow: scroll;
+      -webkit-app-region: no-drag;
+      &::-webkit-scrollbar {
+        width: 0 !important
+      }
+      ul {
+        li {
+          height: 100%;
+          width: 92px;
+          cursor: pointer;
+          img {
+            width: 44px;
+            height: 44px;
+            padding: 2px;
+            border: 2px solid;
+            border-radius: 50%;
+          }
+        }
+      }
+    }
+  }
+  .recent-open {
+    //padding: 0px 20px;
+    width: 100%;
+    border-radius: 0px 0px 10px 10px;
+    span {
+      height: 30px;
+      padding-left: 20px;
+    }
+    .recent-open-content {
+      min-height: 50px;
+      max-height: 300px;
+      overflow-y: scroll;
+      -webkit-app-region: no-drag;
+      &::-webkit-scrollbar {
+        width: 0 !important
+      }
+      ul {
+        width: 100%;
+        li {
+          width: 100%;
+          height: 50px;
+          padding: 0px 20px;
+          &:hover {
+            background-color: #F6F6F6;
+            cursor: pointer;
+          }
+        }
+        .li-ready {
+          background-color: #F6F6F6;
+          border-left: 3px solid #508BFE;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+  .content {
+    min-height: 50px;
+    max-height: 300px;
+    overflow-y: scroll;
+    width: 100%;
+    border-radius: 0px 0px 10px 10px;
+    -webkit-app-region: no-drag;
+    &::-webkit-scrollbar {
+      width: 0 !important
+    }
+    ul {
+      width: 100%;
+      li {
+        width: 100%;
+        height: 50px;
+        padding: 0px 20px;
+        &:hover {
+          background-color: #F6F6F6;
+          border-left: 3px solid #508BFE;
+          cursor: pointer;
+        }
+      }
+      // :last-child {
+      //   border-radius: 0px 0px 10px 10px;
+      // }
+      .li-ready {
+        background-color: #F6F6F6;
+        border-left: 3px solid #508BFE;
+        cursor: pointer;
+      }
+    }
+  }
+}
+.first-gs-dialog {
+  max-height: 530px;
+}
+
+ul {
+  margin: 0px;
+}

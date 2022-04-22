@@ -2,7 +2,7 @@ cloudTpl = `
 <div style="width: 100%">
   <a-layout>
     <a-layout-header style="background: #fff; padding: 0">
-      <a-page-header title="云端团队导航" sub-title="这里是云端团队导航，云端导航与账号绑定，重装系统、更换电脑都可以同步，永不丢失。">
+      <a-page-header title="云端团队导航" sub-title="这里是云端团队导航，云端导航与帐号绑定，重装系统、更换电脑都可以同步，永不丢失。">
         <template slot="extra">
 
           <a-radio-group :value="appList.type" @change="onListTypeChange">
