@@ -93,46 +93,38 @@ tsbk.config({
 })
 ```
 
-##### 步骤三、💥 通过 ready,error 接口处理验证
+##### 步骤三、💥 通过 ready函数
 
 ```
-#ready接口处理成功验证
+#ready准备函数
 wx.ready(function(){
-  // config信息验证后会执行ready方法，所有接口调用都必须在config接口获得结果之后，config是一个客户端的异步操作，任何sdk接口的调用，须把相关接口放在ready函数中调用来确保正确执行。
+  // 必须把相关接口函数放在ready准备函数中执行。
 })
-```
-
-```
-#error接口处理失败验证
-wx.error(function(res){
-  // config信息验证失败会执行error函数，错误可以在返回的res参数中查看，对于SPA可以在这里更新签名。
-})
-
 ```
 
 #### 4、接口调用说明 📖
 
-##### 🤔 通用参数，可选
-
-所有接口通过 tsbk 对象来调用，参数是一个对象，除了每个接口本身需要传的参数之外，还有以下通用参数：
-
-> - success：接口调用成功时执行的回调函数。
-> - fail：接口调用失败时执行的回调函数。
-
-##### 一、🧊 隐藏第三方应用(后台常驻) hideApp 方法
+##### 🤔 所有sdk方法返回Promise，部分方法会回调返回实际的值，你可以处理这些正确的回调返回。
+##### 一、🧊🔧隐藏第三方应用(后台常驻) hideApp 方法
 ###### 无参数
+###### 正确回调返回: `{code: 200, msg: '成功'}`
 
 示例
 
 ```
 tsbk.ready(function() {
-  tsbk.hideApp()
+  tsbk.hideApp().then((res) => {
+    //res {code: 200, msg: '成功'}
+    //do something or nothing
+  }).catch(err => {
+    //do something or nothing
+  })
 })
 ```
 
-##### 二、🧊 新启动一个指定 url 的标签页 tabLinkJump 方法
-
+##### 二、🧊🔧新建一个指定 url 的标签页 tabLinkJump 方法
 ###### 参数: 1、必填【url: String】
+###### 正确回调返回: `{code: 200, msg: '成功'}`
 
 示例
 
@@ -140,22 +132,17 @@ tsbk.ready(function() {
 tsbk.ready(function() {
   tsbk.tabLinkJump({
     url: 'https://s.apps.vip/user/account-info'
+  }).then((res) => {
+    //res {code: 200, msg: '成功'}
+    //do something or nothing
+  }).catch(err => {
+    //do something or nothing
   })
 })
 
 ```
 
-##### 三、🧊 销毁第三方应用 destoryApp 方法
-
-示例
-
-```
-tsbk.ready(function() {
-  tsbk.destoryApp()
-})
-```
-
-##### 四、🧊 系统消息提示
+##### 四、🧊🔧消息推送 notice 方法 【暂面向想天内置应用】
 
 ###### 参数: 1、必填【title: String】消息标题
 
@@ -163,20 +150,27 @@ tsbk.ready(function() {
 
 ###### 参数: 3、必填【category: String】消息类型 (lumen 存在以下：【聊天、入群邀请、好友申请】，短说存在以下：【互动消息、关注消息、应用消息】)
 ###### 参数: 4、选填【indexName: String】消息索引 lumen必填
+###### 正确回调返回: `{code: 200, msg: '成功'}`
 
 示例
 
 ```
 tsbk.ready(function() {
   tsbk.notice({
-    title: '标题',
-    body: '消息内容',
-    category: '好友申请'
+    title: '标题...',
+    body: '消息内容...',
+    category: '好友申请',
+    indexName: '1_12'
+  }).then((res) => {
+    //res {code: 200, msg: '成功'}
+    //do something or nothing
+  }).catch(err => {
+    //do something or nothing
   })
 })
 ```
 
-##### 五、🧊 想天内置应用的免登
+##### 五、🧊🔧想天内置应用的免登 autoLoginSysApp 方法
 
 示例
 
@@ -186,11 +180,10 @@ tsbk.ready(function() {
 })
 ```
 
-##### 六、🧊 唤醒想天内置应用【仅支持后台休眠的内置应用】
-
-###### 参数: 1、必填【appName: String】,目前想天内置应用名单【团队协作、元社区、收藏夹、导入助手】
-
+##### 六、🧊🔧唤醒想天内置应用【仅支持后台休眠的内置应用】openSysApp 方法
+###### 参数: 1、必填【appName: String】,目前想天内置应用有【团队协作、元社区、收藏夹、导入助手】
 ###### 参数：2、可选【url: String】，内置应用跳转链接 path 和 parameters 组成部分(不包含第一个'/')，目前仅支持元社区和团队协作的跳转
+###### 正确回调返回: `{code: 200, msg: '成功'}`
 
 示例
 
@@ -199,13 +192,18 @@ tsbk.ready(function() {
   tsbk.openSysApp({
     appName: '团队协作',
     url: '?fid=xxxxxxx'
+  }).then((res) => {
+    //res {code: 200, msg: '成功'}
+    //do something or nothing
+  }).catch(err => {
+    //do something or nothing
   })
 })
 ```
 
-##### 七、🧊 创建短说圈子邀请链接窗体
-
+##### 七、🧊🔧创建短说圈子邀请链接窗体 openOsxInviteMember 方法
 ###### 参数: 1、必填【groupId: Number】,圈子的 id
+###### 正确回调返回: `{code: 200, msg: '成功'}`
 
 示例
 
@@ -213,13 +211,18 @@ tsbk.ready(function() {
 tsbk.ready(function() {
   tsbk.openOsxInviteMember({
     groupId: 424
+  }).then((res) => {
+    //res {code: 200, msg: '成功'}
+    //do something or nothing
+  }).catch(err => {
+    //do something or nothing
   })
 })
 ```
 
-##### 八、🧊 获取浏览器用户信息
-
-###### 参数: 无 返回:Promise
+##### 八、🧊🔧获取浏览器用户信息
+###### 参数: 无
+###### 正确回调返回: `{当前登录浏览器的用户信息}`
 
 示例
 
@@ -227,9 +230,9 @@ tsbk.ready(function() {
 tsbk.ready(() => {
   tsbk.getUserProfile().then(res => {
     //res 返回的用户信息
-    //do something
+    //do something or nothing
   }).catch(err => {
-    //do something
+    //do something or nothing
   })
 })
 ```
@@ -237,7 +240,8 @@ tsbk.ready(() => {
 
 ### 【此部分内容是平台侧的知识点，应用侧开发无需阅读】
 
-> 1、tsbSdk.listener()监听者有两个参数，
->
+1、tsbSdk.listener()监听者有两个参数，
 > - 第一个参数是必须的，为 saApp 应用的基本信息
 > - 第二个参数是非必须的，为 DepList 订阅器收集，是一个数组，支持往订阅器中注入一个个订阅对象，依据具体情况执行订阅
+
+2、留意区分内置应用和第三方应用的区别,第三方应用需要再转发一层消息到appPreload.js中，用封装好的tsbSdk.bridgeToPreload()方法 
