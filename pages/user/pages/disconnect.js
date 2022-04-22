@@ -128,6 +128,7 @@ const disconnect = {
             })
           }else{
             //连接成功
+            ipc.send('reconnect')
             antd.Modal.success({
               title: '重连成功，点击确定关闭窗口',
               content: Vue.h('div', {}, [Vue.h('p', '重连成功')]),

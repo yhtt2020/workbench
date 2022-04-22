@@ -1591,3 +1591,13 @@ ipc.on('disconnect', async () => {
     appVue.$refs.sidePanel.cloudSpaces = []
   }
 })
+
+ipc.on('reconnect',async()=>{
+  let savingIcon = document.getElementById('savingIcon')
+  if (savingIcon.classList.contains('offline')) {
+    await appVue.$store.dispatch('getCloudSpaces')
+    appVue.$refs.sidePanel.cloudSpaces = this.$store.state.cloudSpaces
+    savingIcon.classList.remove('offline')
+    savingIcon.classList.add('online')
+  }
+})
