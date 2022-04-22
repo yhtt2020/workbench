@@ -120,6 +120,7 @@ wx.error(function(res){
 > - fail：接口调用失败时执行的回调函数。
 
 ##### 一、🧊 隐藏第三方应用(后台常驻) hideApp 方法
+###### 无参数
 
 示例
 
@@ -161,6 +162,7 @@ tsbk.ready(function() {
 ###### 参数: 2、必填【body: String】消息内容
 
 ###### 参数: 3、必填【category: String】消息类型 (lumen 存在以下：【聊天、入群邀请、好友申请】，短说存在以下：【互动消息、关注消息、应用消息】)
+###### 参数: 4、选填【indexName: String】消息索引 lumen必填
 
 示例
 

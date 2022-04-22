@@ -3,6 +3,37 @@ const xss = require("xss");
 const tsbSdk = {
   isThirdApp: Boolean,
   tsbSaApp: null,
+
+  /**
+   * 消息发送桥梁 发送到appPreload的桥梁
+   * @param {Object} {} 属性包含[必填]eventName,[可选]options,[可选]id
+   */
+  bridgeToPreload: function ({eventName, options = null, id = null} = {}) {
+    let newEventName = eventName.replace(/( |^)[a-z]/g, (L) => L.toUpperCase())
+    window.postMessage({
+      eventName: `third${newEventName}`,
+      options,
+      saApp: tsbSdk.tsbSaApp,
+      hashId: tsbSdk.tsbSaApp.hashId,
+      id
+    })
+  },
+
+  /**
+   * 消息发送桥梁 发送到应用侧sdk的桥梁
+   * @param {Object} {} 属性包含[必填]eventName,[必填]id,[可选]resInfo,[可选]errorInfo
+   */
+  bridgeToWeb: function ({eventName, resInfo = null, errorInfo = null, id = null} = {}) {
+    let newEventName = eventName.replace(/( |^)[a-z]/g, (L) => L.toUpperCase())
+    window.postMessage({
+      eventName: eventName === 'errorSys' ? 'errorSys' : `tsReply${newEventName}`,
+      resInfo,
+      errorInfo,
+      id
+    })
+  },
+
+
   //初始化监听
   listener: function (saApp, Dep) {
     if(saApp) {
@@ -19,42 +50,39 @@ const tsbSdk = {
     }
 
     window.addEventListener("message", async function (e) {
-      let messageEvent = e.data.eventName;
+      let eventName = e.data.eventName;
       let id = e.data.id;
-      switch (messageEvent) {
+      switch (eventName) {
         case "checkAuth":
           tsbSdk.handleCheckAuth(id);
           break;
         case "hideApp":
-          tsbSdk.handleHideApp();
+          tsbSdk.hideApp(eventName, id);
           break;
         case "tabLinkJump":
-          e.data.url = xss(e.data.url);
-          tsbSdk.newTabNavigate(e.data);
+          e.data.options.url = xss(e.data.options.url);
+          tsbSdk.tabLinkJump(eventName, id, e.data.options);
           break;
-        case "destoryApp":
-          tsbSdk.handleDestoryApp();
-          break;
-        case "saAppNotice":
+        case "notice":
           e.data.options.title = xss(e.data.options.title);
           e.data.options.body = xss(e.data.options.body);
           //console.log(e.data.options.body, '输出转码后的')
-          tsbSdk.noticeApp(e.data.options);
+          tsbSdk.notice(eventName, id, e.data.options);
           break;
         case "autoLoginSysApp":
           Dep[0].func(Dep[0].host);
           break;
         case "openSysApp":
-          tsbSdk.openSysApp(e.data.options);
+          tsbSdk.openSysApp(eventName, id, e.data.options);
           break;
         case "openOsxInviteMember":
-          tsbSdk.openOsxInviteMember(e.data.options);
+          tsbSdk.openOsxInviteMember(eventName, id, e.data.options);
           break;
         case 'getUserProfile':
-          tsbSdk.getUserProfile(id)
+          tsbSdk.getUserProfile(eventName, id)
           break;
         default:
-          console.log(messageEvent, "未命中🎯");
+          console.log(eventName, "未命中🎯");
       }
     });
     console.log(tsbSdk.tsbSaApp, tsbSdk, "挂载了SDK");
@@ -94,121 +122,87 @@ const tsbSdk = {
     // -------------------------------------->
   },
 
-  handleHideApp: function () {
-    if (!tsbSdk.isThirdApp) {
-      ipc.send("saAppHide", { appId: tsbSdk.tsbSaApp.id });
-    } else {
-      window.postMessage({
-        eventName: "saAppHide",
-        saApp: tsbSdk.tsbSaApp,
-        hashId: tsbSdk.tsbSaApp.hashId,
-      });
-    }
-  },
-
-  newTabNavigate: function (options) {
-    if (!tsbSdk.isThirdApp) {
-      if (options.url.length > 0) {
-        ipc.send("saAppTabNavigate", options);
+  hideApp: function (eventName, id) {
+    try {
+      let options = {}
+      options.appId = tsbSdk.tsbSaApp.id
+      if (!tsbSdk.isThirdApp) {
+        ipc.invoke('saAppHideApp', options).then(res => {
+          tsbSdk.bridgeToWeb({eventName, resInfo: res, id})
+        }).catch(err => {
+          tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: err, id})
+        })
       } else {
-        return;
+        tsbSdk.bridgeToPreload({eventName, options, id})
       }
-    } else {
-      window.postMessage({
-        eventName: "saAppTabNavigate",
-        options,
-        saApp: tsbSdk.tsbSaApp,
-        hashId: tsbSdk.tsbSaApp.hashId,
-      });
+    } catch (error) {
+      tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: error, id})
     }
   },
 
-  noticeApp: function (options) {
-    if (
-      !options.hasOwnProperty("title") ||
-      !options.hasOwnProperty("body") ||
-      !options.hasOwnProperty("avatar") ||
-      Object.keys(options).length <= 0
-    )
-      return;
-
+  tabLinkJump: function (eventName, id, options) {
     if (!tsbSdk.isThirdApp) {
-      ipc.send("saAppNotice", { options, saAppId: tsbSdk.tsbSaApp.id });
-    } else {
-      window.postMessage({
-        eventName: "thirdSaAppNotice",
-        options,
-        saApp: tsbSdk.tsbSaApp,
-        hashId: tsbSdk.tsbSaApp.hashId,
-      });
-    }
-  },
-
-  openSysApp: function (options) {
-    const sysApp = [
-      { appName: "团队协作", id: 1 },
-      { appName: "元社区", id: 2 },
-      { appName: "收藏夹", id: 3 },
-      { appName: "导入助手", id: 4 },
-    ];
-
-    if (Object.keys(options).length === 0) return;
-
-    if ((options.url && options.url.length === 0) || !options.appName) return;
-
-    if (!sysApp.some((v) => v.appName === options.appName)) return;
-
-    let sysAppIndex = sysApp.findIndex((v) => v.appName === options.appName);
-
-    if (!tsbSdk.isThirdApp) {
-      ipc.send("saAppOpen", { options, saAppId: sysApp[`${sysAppIndex}`].id });
-    } else {
-      window.postMessage({
-        eventName: "thirdSaAppOpen",
-        options,
-        saApp: tsbSdk.tsbSaApp,
-        hashId: tsbSdk.tsbSaApp.hashId,
-      });
-    }
-  },
-
-  openOsxInviteMember: function (options) {
-    if (Object.keys(options).length === 0) return;
-    if (!options.groupId) return;
-    if (!tsbSdk.isThirdApp) {
-      ipc.send("osxOpenInviteMember", options.groupId);
-    } else {
-      window.postMessage({
-        eventName: "thirdOsxOpenInviteMember",
-        options,
-        saApp: tsbSdk.tsbSaApp,
-        hashId: tsbSdk.tsbSaApp.hashId,
-      });
-    }
-  },
-
-  getUserProfile: function (id) {
-    if(!tsbSdk.isThirdApp) {
-        ipc.invoke('saAppGetUserProfile').then(res => {
-        window.postMessage({
-          eventName: 'tsReplyGetUserProfile',
-          resInfo: res,
-          id
-        })
+      ipc.invoke('saAppTabLinkJump', options).then(res => {
+        tsbSdk.bridgeToWeb({eventName, resInfo: res, id})
       }).catch(err => {
-        window.postMessage({
-          eventName: 'errorSys',
-          errorInfo: err,
-          id
-        })
+        tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: err, id})
       })
     } else {
-      window.postMessage({
-        eventName: 'thirdGetUserProfile',
-        saApp: tsbSdk.tsbSaApp,
-        hashId: tsbSdk.tsbSaApp.hashId,
-        id
+      tsbSdk.bridgeToPreload({eventName, options, id})
+    }
+  },
+
+  notice: function (eventName, id, options) {
+    try {
+      options.saAppId = tsbSdk.tsbSaApp.id
+
+      if (!tsbSdk.isThirdApp) {
+        ipc.invoke('saAppNotice', options).then(res => {
+          tsbSdk.bridgeToWeb({eventName, resInfo: res, id})
+        }).catch(err => {
+          tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: err, id})
+        })
+      } else {
+        tsbSdk.bridgeToPreload({eventName, options, id})
+      }
+    } catch (error) {
+      tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: error, id})
+    }
+  },
+
+  openSysApp: function (eventName, id, options) {
+    if (!tsbSdk.isThirdApp) {
+      ipc.invoke('saAppOpenSysApp', options).then(res => {
+        tsbSdk.bridgeToWeb({eventName, resInfo: res, id})
+      }).catch(err => {
+        tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: err, id})
       })
+    } else {
+      tsbSdk.bridgeToPreload({eventName, options, id})
+    }
+  },
+
+  openOsxInviteMember: function (eventName, id, options) {
+    if (!tsbSdk.isThirdApp) {
+      ipc.invoke('saAppOsxOpenInviteMember', options.groupId).then(res => {
+        tsbSdk.bridgeToWeb({eventName, resInfo: res, id})
+      }).catch(err => {
+        tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: err, id})
+      })
+    } else {
+      tsbSdk.bridgeToPreload({eventName, options, id})
+    }
+  },
+
+  getUserProfile: function (eventName, id) {
+    if(!tsbSdk.isThirdApp) {
+      ipc.invoke('saAppGetUserProfile').then(res => {
+        tsbSdk.bridgeToWeb({eventName, resInfo: res, id})
+      }).catch(err => {
+        tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: err, id})
+      })
+    } else {
+      tsbSdk.bridgeToPreload({eventName, id})
     }
   }
 };

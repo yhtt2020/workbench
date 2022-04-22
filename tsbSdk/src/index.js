@@ -7,7 +7,7 @@ class EventBus {
       let channel = event.data.eventName;
       if (channel.startsWith('tsReply')) {
         const callback = this.events.get(event.data.id);
-        callback(event.data.resInfo);
+        callback(event.data.resInfo)
         this.events.delete(event.data.id);
       } else if (channel === 'errorSys') {
         const callback = this.events.get(event.data.id);
@@ -21,7 +21,7 @@ class EventBus {
     });
   }
 
-  dispatch(eventName, callBack) {
+  dispatch(eventName, callBack, options) {
     this.id += 1;
     this.events.set(this.id, callBack);
     if(eventName === 'checkAuth') {
@@ -32,7 +32,7 @@ class EventBus {
       })
       return
     }
-    window.postMessage({ eventName, id: this.id });
+    window.postMessage({ eventName, id: this.id, options });
   }
 }
 
@@ -100,60 +100,87 @@ export default class tsbk {
     tsbk.newSecretInfoFunc = fn
   }
 
-  static hideApp(options) {
-    if(options && this._sdkSwitch) {
-      window.postMessage(
-        {
-          eventName: "hideApp",
-        },
-        `${window.origin}`
-      );
-      options.hasOwnProperty("success") ? options.success() : false;
-    } else {
-      if(!this._sdkSwitch) {
-        options.hasOwnProperty("fail") ? options.fail() : false;
-        return
-      }
-      window.postMessage(
-        {
-          eventName: "hideApp",
-        },
-        `${window.origin}`
-      );
-    }
+  static hideApp() {
+    return new Promise((resolve, reject) => {
+      eventBus.dispatch('hideApp', (res, err) => {
+        err ? reject(err) : resolve(res)
+      });
+    })
   }
 
   static tabLinkJump(options) {
-    if(options && this._sdkSwitch) {
-      window.postMessage({
-        eventName: "tabLinkJump",
-        url: options.url ?? "",
-      });
-      options.hasOwnProperty("success") ? options.success() : false;
-    } else {
-      options.hasOwnProperty("fail") ? options.fail() : false;
-      return
-    }
+    return new Promise((resolve, reject) => {
+      if (Object.keys(options).length === 0) { reject({code: 400, msg: '参数不能为空'}) };
+      if (!options.hasOwnProperty("url")) { reject({code: 400, msg: 'url参数不存在'}) };
+      if (options.url.length === 0 ) { reject({code: 400, msg: 'url参数错误'}) };
+
+      eventBus.dispatch('tabLinkJump', (res, err) => {
+        err ? reject(err) : resolve(res)
+      }, options)
+    })
   }
 
   static notice(options) {
-    if(options && this._sdkSwitch) {
-      window.postMessage({
-        eventName: 'saAppNotice',
-        options: options
-      })
-      options.hasOwnProperty("success") ? options.success() : false;
-    } else {
-      if(!this._sdkSwitch) {
-        options.hasOwnProperty("fail") ? options.fail() : false;
-        return
-      }
-      window.postMessage({
-        eventName: 'saAppNotice',
-        options: options
-      })
-    }
+    return new Promise((resolve, reject) => {
+      if (
+        !options.hasOwnProperty("title") ||
+        !options.hasOwnProperty("body") ||
+        !options.hasOwnProperty("avatar") ||
+        Object.keys(options).length === 0
+      ) { reject({code: 400, msg: '参数错误'}) };
+
+      eventBus.dispatch('notice', (res, err) => {
+        err ? reject(err) : resolve(res)
+      }, options)
+    })
   }
+
+  //打开内置某个应用,元社区和团队协作支持跳转具体链接(可选)
+  static openSysApp(options) {
+    return new Promise((resolve, reject) => {
+      const sysApp = [
+        { appName: "团队协作", id: 1 },
+        { appName: "元社区", id: 2 },
+        { appName: "收藏夹", id: 3 },
+        { appName: "导入助手", id: 4 },
+      ];
+
+      if (Object.keys(options).length === 0) { reject({code: 400, msg: '参数不能为空'}) };
+
+      if ((options.url && options.url.length === 0) || !options.appName) { reject({code: 400, msg: 'appName参数或url参数错误'}) };
+
+      if (!sysApp.some((v) => v.appName === options.appName)) { reject({code: 400, msg: 'appName参数错误'}) };
+
+      let sysAppIndex = sysApp.findIndex((v) => v.appName === options.appName);
+
+      options.saAppId = sysApp[sysAppIndex].id
+
+      eventBus.dispatch('openSysApp', (res, err) => {
+        err ? reject(err) : resolve(res)
+      }, options)
+    })
+  }
+
+  //创建短说圈子邀请链接窗体
+  static openOsxInviteMember(options) {
+    return new Promise((resolve, reject) => {
+      if (Object.keys(options).length === 0) { reject({code: 400, msg: '参数不能为空'}) };
+      if (!options.groupId) { reject({code: 400, msg: 'groupId参数错误'}) };
+      eventBus.dispatch('openOsxInviteMember', (res, err) => {
+        err ? reject(err) : resolve(res)
+      }, options)
+    })
+  }
+
+  //主动获取用户信息
+  static getUserProfile() {
+    return new Promise((resolve, reject) => {
+      eventBus.dispatch('getUserProfile', (res, err) => {
+        err ? reject(err) : resolve(res)
+      });
+    });
+  }
+
 
   //登录想天内置应用的免登 //todo 未来还要单独做一套第三方应用的免登
   static autoLoginSysApp(options) {
@@ -171,48 +198,5 @@ export default class tsbk {
         eventName: 'autoLoginSysApp'
       })
     }
-  }
-
-  //打开内置某个应用,元社区和团队协作支持跳转具体链接(可选)
-  static openSysApp(options) {
-    if(options && this._sdkSwitch) {
-      window.postMessage({
-        eventName: 'openSysApp',
-        options: options
-      })
-      options.hasOwnProperty('success') ? options.success() : false
-    } else {
-      options.hasOwnProperty("fail") ? options.fail() : false;
-      return
-    }
-  }
-
-  //创建短说圈子邀请链接窗体
-  static openOsxInviteMember(options) {
-    if(options && this._sdkSwitch) {
-      window.postMessage({
-        eventName: 'openOsxInviteMember',
-        options: options
-      })
-      options.hasOwnProperty('success') ? options.success() : false
-    } else {
-      options.hasOwnProperty("fail") ? options.fail() : false;
-      return
-    }
-  }
-
-  //主动获取用户信息
-  static getUserProfile(options) {
-    return new Promise((resolve, reject) => {
-      eventBus.dispatch('getUserProfile', (res, err) => {
-        if(!res) {
-          options.hasOwnProperty('fail') ? options.fail() : false
-          reject(err)
-        } else {
-          options.hasOwnProperty('success') ? options.success() : false
-          resolve(res)
-        }
-      });
-    });
   }
 }

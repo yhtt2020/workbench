@@ -34,56 +34,54 @@ tsbSdk.listener(sdkObject) //浏览器侧sdk   //todo 暂cgz个人认为下面�
 //移除掉之前的ipc.on 没有意义，而且会导致页面刷新后sdk挂不上的问题
 
 window.addEventListener('message', function(e) {
-  let messageEvent = e.data.eventName
+  let eventName = e.data.eventName
   let id = e.data.id;
-  switch(messageEvent) {
-    case 'saAppHide':
-      if(e.data.hashId === sdkObject.hashId) {
-        ipc.send('sdkHideApp', {appId: e.data.saApp.id})
-      } else {
-        console.error('验证错误！')
-      }
+  let options = e.data.options
+  if(!eventName.startsWith('third')) return
+  if(e.data.hashId !== sdkObject.hashId) { throw ({code: 401, msg: '非安全的第三方应用'}) }
+  switch(eventName) {
+    case 'thirdHideApp':
+      ipc.invoke('saAppHideApp', options).then(res => {
+        tsbSdk.bridgeToWeb({eventName, resInfo: res, id})
+      }).catch(err => {
+        tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: err, id})
+      })
       break;
-    case 'saAppTabNavigate':
-      if(e.data.hashId === sdkObject.hashId) {
-        ipc.send('addTab', { 'url': e.data.options.url })
-      } else {
-        console.error('验证错误！')
-      }
+    case 'thirdTabLinkJump':
+      ipc.invoke('saAppTabLinkJump', options).then(res => {
+        tsbSdk.bridgeToWeb({eventName, resInfo: res, id})
+      }).catch(err => {
+        tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: err, id})
+      })
       break;
-    case 'thirdSaAppNotice':
-      if(e.data.hashId === sdkObject.hashId) {
-        ipc.send('saAppNotice', {options: e.data.options, saAppId: e.data.saApp.id})
-      } else {
-        console.error('验证错误！')
-      }
+    case 'thirdNotice':
+      ipc.invoke('saAppNotice', options).then(res => {
+        tsbSdk.bridgeToWeb({eventName, resInfo: res, id})
+      }).catch(err => {
+        tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: err, id})
+      })
       break
-    case 'thirdSaAppOpen':
-      if(e.data.hashId === sdkObject.hashId) {
-        ipc.send("saAppOpen", { options: e.data.options, saAppId: e.data.saApp.id });
-      } else {
-        console.error('验证错误！')
-      }
+    case 'thirdOpenSysApp':
+      ipc.invoke('saAppOpenSysApp', options).then(res => {
+        tsbSdk.bridgeToWeb({eventName, resInfo: res, id})
+      }).catch(err => {
+        tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: err, id})
+      })
+      break
+    case 'thirdOsxOpenInviteMember':
+      ipc.invoke('saAppOsxOpenInviteMember', options.groupId).then(res => {
+        tsbSdk.bridgeToWeb({eventName, resInfo: res, id})
+      }).catch(err => {
+        tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: err, id})
+      })
       break
     case 'thirdGetUserProfile':
-      if(e.data.hashId === sdkObject.hashId) {
-        ipc.invoke('saAppGetUserProfile').then(res => {
-          console.log(res, '^^^^^^^^^^^^^^^')
-          window.postMessage({
-            eventName: 'tsReplyGetUserProfile',
-            resInfo: res,
-            id
-          })
-        }).catch(err => {
-          window.postMessage({
-            eventName: 'errorSys',
-            errorInfo: err,
-            id
-          })
-        })
-      } else {
-        console.error('验证错误!')
-      }
+      ipc.invoke('saAppGetUserProfile').then(res => {
+        tsbSdk.bridgeToWeb({eventName, resInfo: res, id})
+      }).catch(err => {
+        tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: err, id})
+      })
+      break
   }
-  console.log(ipc, '无ipc的三方应用也被监听中。。。。')
+  console.log(eventName, '无ipc的三方应用也被监听中。。。。')
 })

@@ -56,22 +56,22 @@ const appManager = {
   beforeEachNotification(settingStatus, message) {
     //前置判断
     let index = settingStatus.findIndex(v => v.appId === message.saAppId)
-    let childIndex = settingStatus[index].childs.findIndex(v => v.title === message.options.category)
+    let childIndex = settingStatus[index].childs.findIndex(v => v.title === message.category)
     if(settingStatus[index].notice && settingStatus[index].childs[childIndex].notice) {
       //消息中心的收录做在这里
       if(message.saAppId == 1) {
         SidePanel.send('storeMessage', {
-          title: message.options.title,
-          body: message.options.body,
-          indexName: message.options.indexName ?? null,
-          avatar: message.options.avatar ? message.options.avatar.length > 0  ? message.options.avatar : '' : '',
+          title: message.title,
+          body: message.body,
+          indexName: message.indexName ?? null,
+          avatar: message.avatar ? message.avatar.length > 0  ? message.avatar : '' : '',
           type: 'groupChat'
         })
       } else if(message.saAppId == 2) {
         SidePanel.send('storeMessage', {
-          title: message.options.title,
-          body: message.options.body,
-          avatar: message.options.avatar ? message.options.avatar.length > 0  ? message.options.avatar : '' : '',
+          title: message.title,
+          body: message.body,
+          avatar: message.avatar ? message.avatar.length > 0  ? message.avatar : '' : '',
           type: 'community'
         })
       }
@@ -1208,16 +1208,17 @@ app.whenReady().then(() => {
     return appManager.getSaAppByAppId(1)
   })
 
-  ipc.on('saAppNotice', (event, args) => {
+  ipc.handle('saAppNotice', (event, args) => {
     //需要前置处理消息设置的状态决定到底发不发消息
     const result = appManager.beforeEachNotification(notificationSettingStatus, args)
     if(result) {
       appManager.notification(args.saAppId, {
-        title: args.options.title,
-        body: args.options.body,
+        title: args.title,
+        body: args.body,
       },typeof args.ignoreWhenFocus == 'undefined'?false:args.ignoreWhenFocus)
+      return {code: 200, msg: '成功'}
     } else {
-      return
+      return {code: 500, msg: '失败'}
     }
   })
 
@@ -1234,19 +1235,19 @@ app.whenReady().then(() => {
     notificationSettingStatus = args
   })
 
-  ipc.on('saAppOpen', (event, args) => {
+  ipc.handle('saAppOpenSysApp', (event, args) => {
     if(appManager.isAppProcessing(args.saAppId)) {
       appManager.showAppWindow(args.saAppId)
 
-      if(args.hasOwnProperty('options')) {
-        //通过url跳转的方式
-        const appInfo = appManager.getSaAppByAppId(args.saAppId)
-        const reg = /^http(s)?:\/\/(.*?)\//
-        const host = reg.exec(appInfo.url)[0]
-        appManager.getWindowByAppId(args.saAppId).view.webContents.loadURL(`${host}?fid=${args.options.circleId}`)
-      }
+      //通过url跳转的方式
+      const appInfo = appManager.getSaAppByAppId(args.saAppId)
+      const reg = /^http(s)?:\/\/(.*?)\//
+      const host = reg.exec(appInfo.url)[0]
+      appManager.getWindowByAppId(args.saAppId).view.webContents.loadURL(`${host}?fid=${args.circleId}`)
+      return {code: 200, msg: '成功'}
     } else {
       sidePanel.get().webContents.send('message',{type:"error",config:{content:'团队沟通未运行',key: Date.now()}})
+      return {code: 500, msg: '失败'}
     }
   })
 
@@ -1256,12 +1257,18 @@ app.whenReady().then(() => {
     }
   })
 
-  ipc.on('saAppTabNavigate', (event, args) => {
+  ipc.handle('saAppTabLinkJump', (event, args) => {
     sendIPCToWindow(mainWindow, 'tabNavigateTo', {url: args.url})
+    return {code: 200, msg: '成功'}
   })
 
-  ipc.on('saAppHide', (event, args) => {
-    appManager.getWindowByAppId(args.appId).hide()
+  ipc.handle('saAppHideApp', (event, args) => {
+    try {
+      appManager.getWindowByAppId(args.appId).hide()
+      return {code: 200, msg: '成功'}
+    } catch (err) {
+      return {code: 500, msg: `失败:${err}`}
+    }
   })
 
   ipc.on('handleFileAssign',(event,args)=>{

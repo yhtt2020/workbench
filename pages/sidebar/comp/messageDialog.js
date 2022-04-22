@@ -228,7 +228,7 @@ Vue.component("message-center", {
       img.onerror = null; //防止闪图
     },
     showGroup() {
-      ipc.send('saAppOpen', {saAppId: 1})
+      ipc.invoke('saAppOpenSysApp', {saAppId: 1})
     },
     mountedIsSilent() {
       let messageSetting = JSON.parse(localStorage.getItem("messageSetting"))
