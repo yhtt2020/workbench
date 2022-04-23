@@ -70,7 +70,12 @@ const tsbSdk = {
           tsbSdk.notice(eventName, id, e.data.options);
           break;
         case "autoLoginSysApp":
-          Dep[0].func(Dep[0].host);
+          try {
+            Dep[0].func(Dep[0].host);
+            tsbSdk.bridgeToWeb({eventName, resInfo: {code: 200, msg: '成功'}, id})
+          } catch (error) {
+            tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: {code: 500, msg: `失败${error}`}, id})
+          }
           break;
         case "openSysApp":
           tsbSdk.openSysApp(eventName, id, e.data.options);
@@ -81,10 +86,9 @@ const tsbSdk = {
         case 'getUserProfile':
           tsbSdk.getUserProfile(eventName, id)
           break;
-        default:
-          console.log(eventName, "未命中🎯");
       }
     });
+
     console.log(tsbSdk.tsbSaApp, tsbSdk, "挂载了SDK");
   },
 

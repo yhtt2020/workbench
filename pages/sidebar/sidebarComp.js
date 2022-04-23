@@ -112,10 +112,7 @@ const sidebarTpl = `
                             <div class="cb-top flex align-center justify-start">
                               <img :src="item.logo" alt="">
                               <div class="cb-top-word">{{item.name}}</div>
-                              <a-tag class="cb-top-tag" color="#f50"
-                                v-show="item.hasOwnProperty('status') && item.status === 2 ">审核中</a-tag>
-                              <a-tag class="cb-top-tag" color="#CFD1D0"
-                                v-show="item.hasOwnProperty('status') && item.status === 3 ">申请驳回</a-tag>
+                              <a-icon class="cb-top-tag" type="share-alt" @click="inviteLink(item.id)"></a-icon>
                             </div>
                             <div class="cb-bottom flex align-center justify-around">
                               <a-button class="cb-bottom-zone" type="link" icon="team" @click="openCircle(item.id)">
@@ -823,6 +820,13 @@ Vue.component('sidebar', {
   },
   template: sidebarTpl,
   methods: {
+    inviteLink(id) {
+      tsbk.default.ready(() => {
+        tsbk.default.openOsxInviteMember({
+          groupId: id
+        })
+      })
+    },
     async showPopSpace () {
       await appVue.$store.dispatch('getCloudSpaces')
       appVue.$refs.sidePanel.cloudSpaces = this.$store.state.cloudSpaces

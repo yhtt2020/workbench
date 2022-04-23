@@ -483,6 +483,9 @@ window.onload = function() {
 			window: window
 		},
 		mounted: function() {
+      tsbk.default.config({
+        signature: "ts"
+      })
 			window.$store = store
       getCurrentUser()
 		}

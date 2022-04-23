@@ -5,6 +5,7 @@ const tsbSdk = require('../../js/util/tsbSdk')
 
 window.ipc = ipc
 window.$browser = 'tsbrowser'
+window.$tsVersion = 'v1'
 
 let href = window.location.href
 

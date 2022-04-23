@@ -5,7 +5,7 @@ class EventBus {
   constructor() {
     window.addEventListener('message', event => {
       let channel = event.data.eventName;
-      if (channel.startsWith('tsReply')) {
+      if (channel && channel.startsWith('tsReply')) {
         const callback = this.events.get(event.data.id);
         callback(event.data.resInfo)
         this.events.delete(event.data.id);
@@ -16,6 +16,7 @@ class EventBus {
       } else if (channel === 'authResult') {
         const callback = this.events.get(event.data.id);
         callback(event.data.auth);
+        //if 有真正的鉴权，判断auth返回是否是一个true，不是的话callback(event.data.auth)回调返回的就是一个false
         this.events.delete(event.data.id)
       }
     });
@@ -103,7 +104,7 @@ export default class tsbk {
   static hideApp() {
     return new Promise((resolve, reject) => {
       eventBus.dispatch('hideApp', (res, err) => {
-        err ? reject(err) : resolve(res)
+        res ? resolve(res) : reject(err)
       });
     })
   }
@@ -115,7 +116,7 @@ export default class tsbk {
       if (options.url.length === 0 ) { reject({code: 400, msg: 'url参数错误'}) };
 
       eventBus.dispatch('tabLinkJump', (res, err) => {
-        err ? reject(err) : resolve(res)
+        res ? resolve(res) : reject(err)
       }, options)
     })
   }
@@ -130,7 +131,7 @@ export default class tsbk {
       ) { reject({code: 400, msg: '参数错误'}) };
 
       eventBus.dispatch('notice', (res, err) => {
-        err ? reject(err) : resolve(res)
+        res ? resolve(res) : reject(err)
       }, options)
     })
   }
@@ -156,7 +157,7 @@ export default class tsbk {
       options.saAppId = sysApp[sysAppIndex].id
 
       eventBus.dispatch('openSysApp', (res, err) => {
-        err ? reject(err) : resolve(res)
+        res ? resolve(res) : reject(err)
       }, options)
     })
   }
@@ -167,7 +168,7 @@ export default class tsbk {
       if (Object.keys(options).length === 0) { reject({code: 400, msg: '参数不能为空'}) };
       if (!options.groupId) { reject({code: 400, msg: 'groupId参数错误'}) };
       eventBus.dispatch('openOsxInviteMember', (res, err) => {
-        err ? reject(err) : resolve(res)
+        res ? resolve(res) : reject(err)
       }, options)
     })
   }
@@ -176,27 +177,18 @@ export default class tsbk {
   static getUserProfile() {
     return new Promise((resolve, reject) => {
       eventBus.dispatch('getUserProfile', (res, err) => {
-        err ? reject(err) : resolve(res)
+        res ? resolve(res) : reject(err)
       });
     });
   }
 
 
-  //登录想天内置应用的免登 //todo 未来还要单独做一套第三方应用的免登
-  static autoLoginSysApp(options) {
-    if(options && this._sdkSwitch) {
-      window.postMessage({
-        eventName: 'autoLoginSysApp'
+  //登录想天内置应用的免登
+  static autoLoginSysApp() {
+    return new Promise((resolve, reject) => {
+      eventBus.dispatch('autoLoginSysApp', (res, err) => {
+        res ? resolve(res) : reject(err)
       })
-      options.hasOwnProperty("success") ? options.success() : false;
-    } else {
-      if(!this._sdkSwitch) {
-        options.hasOwnProperty("fail") ? options.fail() : false;
-        return
-      }
-      window.postMessage({
-        eventName: 'autoLoginSysApp'
-      })
-    }
+    })
   }
 }
