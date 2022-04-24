@@ -1077,6 +1077,7 @@ app.whenReady().then(()=>{
         const ldb=require(__dirname+'/src/util/ldb.js')
         ldb.load(app.getPath('userData')+'/ldb.json')
         ldb.db.set('currentSpace.spaceId',args.spaceId).write()
+        ldb.db.set('currentSpace.name',args.name).write()
         ldb.db.set('currentSpace.spaceType',args.spaceType).write()
         ldb.db.set('currentSpace.userInfo',args.userInfo).write()
         createWindow()

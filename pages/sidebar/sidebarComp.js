@@ -379,14 +379,14 @@ const sidebarTpl = `
 
        <div style="width:145px;">
        <div style="display: inline-block;width:45px;text-align: center">
-       <svg id="savingIcon" :class="{'online':currentSpace.space.nanoid,'offline':!currentSpace.space.nanoid}" style="width: 24px" t="1648106444295"  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="32437" width="32" height="32"><path d="M512 938.666667C276.352 938.666667 85.333333 747.648 85.333333 512S276.352 85.333333 512 85.333333s426.666667 191.018667 426.666667 426.666667-191.018667 426.666667-426.666667 426.666667z m205.653333-210.090667A298.666667 298.666667 0 0 0 385.365333 241.408l41.6 74.88A213.333333 213.333333 0 0 1 725.333333 512h-91.733333a21.333333 21.333333 0 0 0-18.645333 31.701333l102.698666 184.874667z m-120.618666-20.864A213.333333 213.333333 0 0 1 298.666667 512h91.733333a21.333333 21.333333 0 0 0 18.645333-31.701333L306.346667 295.424a298.666667 298.666667 0 0 0 332.288 487.168l-41.6-74.88z" fill="#14D081" p-id="32438"></path></svg>
+       <svg id="savingIcon" :class="{'online':currentSpace.spaceType==='cloud','offline':currentSpace.spaceType==='local'}" style="width: 24px" t="1648106444295"  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="32437" width="32" height="32"><path d="M512 938.666667C276.352 938.666667 85.333333 747.648 85.333333 512S276.352 85.333333 512 85.333333s426.666667 191.018667 426.666667 426.666667-191.018667 426.666667-426.666667 426.666667z m205.653333-210.090667A298.666667 298.666667 0 0 0 385.365333 241.408l41.6 74.88A213.333333 213.333333 0 0 1 725.333333 512h-91.733333a21.333333 21.333333 0 0 0-18.645333 31.701333l102.698666 184.874667z m-120.618666-20.864A213.333333 213.333333 0 0 1 298.666667 512h91.733333a21.333333 21.333333 0 0 0 18.645333-31.701333L306.346667 295.424a298.666667 298.666667 0 0 0 332.288 487.168l-41.6-74.88z" fill="#14D081" p-id="32438"></path></svg>
 
 <!--       <a-icon type="loading" ></a-icon>-->
        </div>
        <div style="display: inline-block;width:96px;text-align: left">
 
       <div class="space-name" type="primary">
-        {{currentSpace.space.name}}
+        {{currentSpace.name}}
         <a-icon type="right" />
       </div>
    </div>
@@ -394,8 +394,8 @@ const sidebarTpl = `
    </div>
 </template>
   <p style="width: 200px;font-size: 12px">
-              <span v-if="currentSpace.space">当前为云端空间。<br>每30秒自动备份，此时图标会转动。</span>
-                <span v-else-if="currentSpace.space.type==='cloud'">当前为离线模式。系统会自动尝试同步连接，直至连接成功。</span>
+              <span v-if="currentSpace.spaceType==='cloud'">当前为云端空间。<br>每30秒自动备份，此时图标会转动。</span>
+                <span v-else-if="currentSpace.spaceType==='cloud'">当前为离线模式。系统会自动尝试同步连接，直至连接成功。</span>
                 <span v-else>当前为本地空间，不与云端同步，建议导入到云端空间以防止标签组丢失。</span>
 </p>
 
@@ -403,8 +403,8 @@ const sidebarTpl = `
              <li v-if="cloudSpaces.length===0"  disabled="" key="current">
             请<a @click="openUserWindow">登录</a>后使用云空间
           </li>
-         <li title="云端空间" :class="{'active':currentSpace.space.nanoid===space.nanoid}" v-else  @click="confirmChangeSpace(space,'cloud')" v-for="space in cloudSpaces" :key="space.nanoid" :disable="space['client_id']!=='' && currentSpace.space.nanoid!==space.nanoid">
-            <a-icon type="sync" v-if="currentSpace.space.nanoid===space.nanoid" style="color: #00bb00" spin></a-icon>
+         <li title="云端空间" :class="{'active':currentSpace.spaceId===space.nanoid}" v-else  @click="confirmChangeSpace(space,'cloud')" v-for="space in cloudSpaces" :key="space.nanoid" :disable="space['client_id']!=='' && currentSpace.spaceId!==space.nanoid">
+            <a-icon type="sync" v-if="currentSpace.spaceId===space.nanoid" style="color: #00bb00" spin></a-icon>
             <a-icon style="color: #00bb00" v-else type="sync"></a-icon>
             {{space.name}}
             <span v-if="space.isOtherUsing">
@@ -423,7 +423,7 @@ const sidebarTpl = `
 </span>
           </li>
           <li class="divider"></li>
-          <li :class="{'active':currentSpace.space.id===space.id}" title="本地空间" @click="confirmChangeSpace(space,'local')"  v-for="space in localSpaces" :key="'local_'+space.id">
+          <li :class="{'active':currentSpace.spaceId===space.id}" title="本地空间" @click="confirmChangeSpace(space,'local')"  v-for="space in localSpaces" :key="'local_'+space.id">
 
            <a-icon type="sync" v-if="currentSpace.space.id===space.id"  spin></a-icon>
             <a-icon  v-else type="sync"></a-icon> {{space.name}}
@@ -800,15 +800,17 @@ Vue.component('sidebar', {
           'app-task': true
         }
       }
-
     }
-
   },
   template: sidebarTpl,
   methods: {
     async showPopSpace () {
-      await appVue.$store.dispatch('getCloudSpaces')
-      appVue.$refs.sidePanel.cloudSpaces = this.$store.state.cloudSpaces
+      this.$store.dispatch('getCloudSpaces').then(()=>{
+        appVue.$refs.sidePanel.cloudSpaces = this.$store.state.cloudSpaces
+      })
+      this.$store.dispatch('getLocalSpaces').then(()=>{
+        this.localSpaces = this.$store.state.localSpaces
+      })
     },
     login () {
       ipc.send('login')

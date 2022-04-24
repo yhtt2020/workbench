@@ -26,7 +26,10 @@ const tpl = `
     <a-tooltip v-for="space,index in spaces" placement="bottom">
     <template #title>
     名称：{{space.name}}<br>
-    保存时间：{{dateTime(space.sync_time)}}<br>修改时间：{{dateTime(space.update_time)}}<br>创建时间：{{dateTime(space.create_time)}}<br>
+    空间ID：{{space.id}}<br>
+    保存时间：{{dateTime(space.sync_time)}}<br>
+    修改时间：{{dateTime(space.update_time)}}<br>
+    创建时间：{{dateTime(space.create_time)}}<br>
      <span v-if="space.client_id !==''">设备ID：{{space.client_id}}</span>
      </template>
         <a-card  v-if="space.type==='cloud'"
@@ -69,6 +72,7 @@ const tpl = `
          <a-tooltip placement="bottom" :mouseLeave-delay="0">
     <template #title>
     名称：{{space.name}}<br>
+    空间ID：{{space.id}}<br>
     保存时间：{{dateTime(space.sync_time)}}<br>修改时间：{{dateTime(space.update_time)}}<br>创建时间：{{dateTime(space.create_time)}}<br>
      <span v-if="space.client_id !==''">设备ID：{{space.client_id}}</span>
      </template>
@@ -397,6 +401,12 @@ const SpaceSelect = {
         let result = await spaceModel.setUser(this.user).getUserSpaces({showBackup:this.showBackup})
         if (result.status === 1) {
           spaces = result.data
+          if(this.user.uid){
+            spaces=spaces.map((sp)=>{
+              sp.id=sp.nanoid
+              return sp
+            })
+          }
         } else {
           window.antd.message.error('获取用户空间失败。失败原因：' + result.info)
           this.$router.go(-1)
