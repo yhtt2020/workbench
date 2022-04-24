@@ -10,7 +10,7 @@ const urlParser=require('../js/util/urlParser')
 const ipc = require('electron').ipcRenderer
 let SYNC_INTERVAL=30 //普通模式下，同步间隔为30秒
 if('development-mode' in window.globalArgs){
-  SYNC_INTERVAL = 5 //开发模式下，间隔改为5，方便调试和暴露问题
+  SYNC_INTERVAL = 15 //开发模式下，间隔改为5，方便调试和暴露问题
 }
 let autoSaver = null
 
@@ -267,6 +267,7 @@ const sessionRestore = {
       currentSpace = await spaceModel.getCurrent()
       let space = {}
       if (currentSpace.spaceType === 'cloud') {
+        //todo 如果当前是备份空间，且还有未同步到云端的变更，则需要判断上次断开的时候是不是当前的备份空间
         let spaceResult = await spaceModel.setUser(currentSpace.userInfo).getSpace(currentSpace.spaceId) //先尝试获取一次最新的空间
         if (spaceResult.status === 1) {
           if (String(spaceResult.data.id) === '-1') {
