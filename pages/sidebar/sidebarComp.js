@@ -738,19 +738,23 @@ Vue.component('sidebar', {
     if (currentUser.value.uid !== 0) {
       try {
         //await this.$store.dispatch('getGroups')  //老的团队获取接口
-         this.$store.dispatch('getJoinedCircle', { page: 1, row: 500 })
-         this.$store.dispatch('getMyCircle', { page: 1, row: 500 })
+        this.$store.dispatch('getJoinedCircle', { page: 1, row: 500 })
+        this.$store.dispatch('getMyCircle', { page: 1, row: 500 })
       } catch (err) {
         console.log(err)
         console.log('团队列表接口错误!')
       }
     }
 
+    this.$store.dispatch('getAllMessage')
 
-     this.$store.dispatch('getAllMessage')
+    setInterval(() => {
+      this.$nextTick(() => {
+        this.$store.commit('SET_ALLMESSAGES', this.$store.getters.getAllMessages)
+      })
+    }, 60 * 1000)
 
     try {
-
       if (currentUser.value.uid) {
         //如果用户已登录，则获取云端的空间
         this.$store.dispatch('getCloudSpaces', currentUser.value).then(()=>{
@@ -760,8 +764,6 @@ Vue.component('sidebar', {
       this.$store.dispatch('getLocalSpaces').then(()=>{
         this.localSpaces = this.$store.state.localSpaces
       })
-
-
     } catch (e) {
       console.log('空间获取失败。')
     }
