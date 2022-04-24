@@ -403,6 +403,11 @@ const sidebarTpl = `
 <div style="color: #999;font-size: 13px">无法跨设备使用</div>
 </a-col>
 </a-row>
+<div style="margin-top: 10px">
+   当前空间： <a-tag @click="openUserWindow" color="#108ee9">
+    <strong>{{currentSpace.name}}</strong>
+    </a-tag>
+</div>
 <div  style="line-height:24px;margin-top:15px;background-color:rgba(24,144,255,0.15);padding: 10px;border-radius: 5px;font-size: 13px">
 推荐您使用<strong style="'color:#1890FF">云空间</strong>。<br>
 您可以<strong>登录</strong>后使用云端空间。
@@ -431,7 +436,8 @@ const sidebarTpl = `
 </a-col>
 </a-row>
 <div style="margin-top: 15px">
-点击空间名称更换其他空间。
+当前空间：<a-tag color="#108ee9" @click="openUserWindow"><strong>{{currentSpace.name}}</strong></a-tag><br>
+点击更换其他空间。
 </div>
 <div  style="line-height:24px;margin-top:15px;background-color:rgba(24,144,255,0.15);padding: 10px;border-radius: 5px;font-size: 13px">
 每30秒空间会自动与云端进行同步。
@@ -460,6 +466,7 @@ const sidebarTpl = `
 </a-col>
 </a-row>
 <div style="margin-top: 15px">
+当前空间：<a-tag @click="openUserWindow" color="#108ee9"><strong>{{currentSpace.name}}</strong></a-tag><br>
 正在离线使用云空间。
 </div>
 <div  style="line-height:24px;margin-top:15px;background-color:rgba(24,144,255,0.15);padding: 10px;border-radius: 5px;font-size: 13px">
