@@ -164,7 +164,7 @@ const sidebarTpl = `
             <div @contextmenu="openUserWindow" class="wrapper" block>
               <div class="item-icon">
                 <a-avatar v-if="user.uid!==0"
-                  style="border: 1px solid #cfcfcf; background-color: white;width: 28px;height: 28px" class="icon"
+                  style="background-color: white;width: 28px;height: 28px" class="icon"
                   :src="user.avatar"></a-avatar>
                 <a-badge v-if="user.uid===0" count="登录" :offset="[-15,30]" :number-style="{'font-size':'12px'}">
                   <a-avatar style=" background-color: white; color: #aaa;width: 28px;height: 28px" class="icon"
@@ -486,6 +486,9 @@ const sidebarTpl = `
                     </span>
                   </div>
   <div style="text-align: right">
+                        <span class="action" size="small" title="分享整组标签" @click="shareTask(item)">
+                        <a-icon type="share-alt"></a-icon>分享
+                      </span>
                       <span class="action" size="small" title="锁定当前标签组内全部标签" @click="lockTask(item.id)">
                         <a-icon type="lock"></a-icon>锁定
                       </span>
@@ -687,9 +690,14 @@ Vue.component('sidebar', {
 
   },
   async mounted () {
+    //获取当前左侧栏的状态，并设置
+    this.currentSpace = await spaceModel.getCurrent()
+    this.mod = appVue.mod
 
     await standAloneAppModel.initialize()
-    this.apps = await standAloneAppModel.getAllApps()
+    standAloneAppModel.getAllApps().then(apps=>{
+       this.apps =apps
+    })
     ipc.send('getRunningApps')
 
     if (localStorage.getItem('sidebarDividerMod') === 'auto' || !!!localStorage.getItem('sidebarDividerMod')) {
@@ -730,34 +738,30 @@ Vue.component('sidebar', {
     if (currentUser.value.uid !== 0) {
       try {
         //await this.$store.dispatch('getGroups')  //老的团队获取接口
-        await this.$store.dispatch('getJoinedCircle', { page: 1, row: 500 })
-        await this.$store.dispatch('getMyCircle', { page: 1, row: 500 })
+         this.$store.dispatch('getJoinedCircle', { page: 1, row: 500 })
+         this.$store.dispatch('getMyCircle', { page: 1, row: 500 })
       } catch (err) {
         console.log(err)
         console.log('团队列表接口错误!')
       }
     }
-    let sideMode = localStorage.getItem('sideMode')
-    sideMode = sideMode || 'auto'
-    if (sideMode === 'close' || sideMode === 'auto') {
-      document.getElementById('clickThroughElement').style.left = '55px'
-    } else if (sideMode === 'open') {
-      document.getElementById('appVue').classList.add('expand')
-      document.getElementById('clickThroughElement').style.left = '155px'
-    }
-    appVue.mod = sideMode
-    this.mod = sideMode
 
-    await this.$store.dispatch('getAllMessage')
-    //如果用户已登录，则获取云端的空间
+
+     this.$store.dispatch('getAllMessage')
+
     try {
-      this.currentSpace = await spaceModel.getCurrent()
+
       if (currentUser.value.uid) {
-        await this.$store.dispatch('getCloudSpaces', currentUser.value)
+        //如果用户已登录，则获取云端的空间
+        this.$store.dispatch('getCloudSpaces', currentUser.value).then(()=>{
+          this.cloudSpaces = this.$store.state.cloudSpaces
+        })
       }
-      await this.$store.dispatch('getLocalSpaces')
-      this.cloudSpaces = this.$store.state.cloudSpaces
-      this.localSpaces = this.$store.state.localSpaces
+      this.$store.dispatch('getLocalSpaces').then(()=>{
+        this.localSpaces = this.$store.state.localSpaces
+      })
+
+
     } catch (e) {
       console.log('空间获取失败。')
     }
@@ -1209,6 +1213,26 @@ Vue.component('sidebar', {
     changePopoverVisible (visible) {
       this.isPopoverShowing = visible
     },
+    shareTask(item){
+      console.log(item)
+      let tabs = item.tabs
+      let filterList =  tabs.filter(e => !e.url.startsWith('file:///'))    //过滤掉file层面的tab
+      let args = []
+      for(let i = 0; i < filterList.length; i++) {
+        const obj = {
+          url: filterList[i].url,
+          favicon: filterList[i].favicon === null ? '/shareTask/default.svg' : filterList[i].favicon.url,
+          title: filterList[i].title
+        }
+        args.push(obj)
+      }
+      if(args.length===0){
+        appVue.$message.error('排除系统页面后，没有其他页面，无法分享。')
+        return
+      }
+      console.log(args)
+      ipc.send( 'shareTask', args)
+    },
     /**
      * 锁定任务
      * @param id
@@ -1296,7 +1320,6 @@ Vue.component('sidebar', {
         document.getElementById('appVue').classList.remove('expanded')
       }
       //处理全部的左侧浮窗，都加上display:none
-      this.tasks
       VueTippy.tippy.hideAll()
     },
     dividerResizeStart (e) {
@@ -1570,5 +1593,15 @@ ipc.on('disconnect', async () => {
     savingIcon.classList.remove('online')
     savingIcon.classList.add('offline')
     appVue.$refs.sidePanel.cloudSpaces = []
+  }
+})
+
+ipc.on('reconnect',async()=>{
+  let savingIcon = document.getElementById('savingIcon')
+  if (savingIcon.classList.contains('offline')) {
+    await appVue.$store.dispatch('getCloudSpaces')
+    appVue.$refs.sidePanel.cloudSpaces = this.$store.state.cloudSpaces
+    savingIcon.classList.remove('offline')
+    savingIcon.classList.add('online')
   }
 })

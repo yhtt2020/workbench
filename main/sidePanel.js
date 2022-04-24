@@ -1090,6 +1090,10 @@ app.whenReady().then(()=>{
     SidePanel.send('disconnect')
   })
 
+  ipc.on('reconnect',()=>{
+    SidePanel.send('reconnect')
+  })
+
   ipc.on('saving',()=>{
     SidePanel.send('saving')
   })
