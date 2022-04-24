@@ -267,6 +267,7 @@ const sessionRestore = {
       currentSpace = await spaceModel.getCurrent()
       let space = {}
       if (currentSpace.spaceType === 'cloud') {
+        //todo 如果当前是备份空间，且还有未同步到云端的变更，则需要判断上次断开的时候是不是当前的备份空间
         let spaceResult = await spaceModel.setUser(currentSpace.userInfo).getSpace(currentSpace.spaceId) //先尝试获取一次最新的空间
         if (spaceResult.status === 1) {
           if (String(spaceResult.data.id) === '-1') {
