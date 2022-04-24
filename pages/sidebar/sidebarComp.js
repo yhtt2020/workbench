@@ -717,6 +717,13 @@ Vue.component('sidebar', {
         //await this.$store.dispatch('getGroups')  //老的团队获取接口
         this.$store.dispatch('getJoinedCircle', { page: 1, row: 500 })
         this.$store.dispatch('getMyCircle', { page: 1, row: 500 })
+
+        //1分钟轮训一次短说后端的圈子接口
+        setInterval(() => {
+          this.$store.dispatch('getJoinedCircle', { page: 1, row: 500 })
+          this.$store.dispatch('getMyCircle', { page: 1, row: 500 })
+        }, 60 * 1000)
+
       } catch (err) {
         console.log(err)
         console.log('团队列表接口错误!')
@@ -725,6 +732,7 @@ Vue.component('sidebar', {
 
     this.$store.dispatch('getAllMessage')
 
+    //1分钟同步一次消息的时间处理，这里没有网络资源的开销
     setInterval(() => {
       this.$nextTick(() => {
         this.$store.commit('SET_ALLMESSAGES', this.$store.getters.getAllMessages)
