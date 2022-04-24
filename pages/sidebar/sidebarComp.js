@@ -375,7 +375,7 @@ const sidebarTpl = `
     arrow>
     <!--mouseenter-->
 <template v-slot:trigger>
-<div  style="width: 100%;overflow: hidden;height:30px;text-align: left ">
+<div @click="openUserWindow" title="点击选择其他空间"  style="width: 100%;overflow: hidden;height:30px;text-align: left ">
 
        <div style="width:145px;">
        <div style="display: inline-block;width:45px;text-align: center">
@@ -393,49 +393,28 @@ const sidebarTpl = `
    </div>
    </div>
 </template>
-  <p style="width: 200px;font-size: 12px">
-              <span v-if="currentSpace.spaceType==='cloud'">当前为云端空间。<br>每30秒自动备份，此时图标会转动。</span>
-                <span v-else-if="currentSpace.spaceType==='cloud'">当前为离线模式。系统会自动尝试同步连接，直至连接成功。</span>
-                <span v-else>当前为本地空间，不与云端同步，建议导入到云端空间以防止标签组丢失。</span>
+<p style="font-size: 16px;text-align: center">云空间功能</p>
+  <p style="font-size: 14px">
+<span v-if="currentSpace.spaceType==='cloud'">当前为<strong>云端空间</strong>。<br>每30秒自动备份，此时图标会<strong>转动</strong>。</span>
+<span v-else-if="currentSpace.spaceType==='cloud'">当前为离线模式。系统会自动尝试同步连接，直至连接成功。</span>
+
+<span v-else>当前为本地空间，不与云端同步，建议导入到云端空间以防止标签组丢失。</span>
 </p>
+<a-alert type="info"
+      banner
+      closable
+    >
+    <span slot="message">
+    <p>不同的空间标签组互相隔离。了解更多关于云空间的帮助，请查看<a href="tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/gg7vro" >这里</a>。
+    </p>
+</span>
+</a-alert>
 
         <ul class="space-selector">
-             <li v-if="cloudSpaces.length===0"  disabled="" key="current">
-            请<a @click="openUserWindow">登录</a>后使用云空间
-          </li>
-         <li title="云端空间" :class="{'active':currentSpace.spaceId===space.nanoid}" v-else  @click="confirmChangeSpace(space,'cloud')" v-for="space in cloudSpaces" :key="space.nanoid" :disable="space['client_id']!=='' && currentSpace.spaceId!==space.nanoid">
-            <a-icon type="sync" v-if="currentSpace.spaceId===space.nanoid" style="color: #00bb00" spin></a-icon>
-            <a-icon style="color: #00bb00" v-else type="sync"></a-icon>
-            {{space.name}}
-            <span v-if="space.isOtherUsing">
-              <span v-if="space.disconnect">
-                   <a-badge count="离线"  :number-style="{ backgroundColor: 'red' }"title="其他设备离线使用"> </a-badge>
-</span><span v-else>
-     <a-badge count="其他"  :number-style="{ backgroundColor: 'red' }"title="其他设备使用中"> </a-badge>
-</span>
-</span>
-              <span  v-if="space.isSelfUsing">
-              <span v-if="space.disconnect">
-        <a-badge count="离线"  :number-style="{ backgroundColor: '#ccc' }"title="当前设备离线"> </a-badge>
-</span><span v-else>
-<a-badge count="当前" :number-style="{ backgroundColor: '#52c41a' }" title="当前设备使用中"> </a-badge>
-</span>
-</span>
-          </li>
-          <li class="divider"></li>
-          <li :class="{'active':currentSpace.spaceId===space.id}" title="本地空间" @click="confirmChangeSpace(space,'local')"  v-for="space in localSpaces" :key="'local_'+space.id">
 
-           <a-icon type="sync" v-if="currentSpace.space.id===space.id"  spin></a-icon>
-            <a-icon  v-else type="sync"></a-icon> {{space.name}}
-
-            </li>
-<!--            <a-menu-item key="add" @click="openUserWindow">-->
-<!--            <a-icon type="plus" ></a-icon> 创建新空间-->
-<!--          </a-menu-item>-->
-          <li class="divider"></li>
-          <li  key="other" @click="openUserWindow">
-            <a-icon type="swap" ></a-icon> 选择其他空间
-          </li>
+<!--          <li  key="other" @click="openUserWindow">-->
+<!--            <a-icon type="swap" ></a-icon> 选择其他空间-->
+<!--          </li>-->
         </ul>
 </tippy>
       <div class="app-box">
@@ -580,12 +559,10 @@ const sidebarTpl = `
           <div>
             <a-collapse default-active-key="0" :active-key="sidebarBottom" :bordered="false" @change="changeBottomSize">
               <a-collapse-panel key="1">
-<!--                <li @click="openBottom('help')">-->
-                 <li @click="openHelp(apps)">
+               <li @click="openBottom('help')">
                   <a-button type="default" shape="circle" icon="question-circle"></a-button>
                   <div class="item-title">帮助中心</div>
                 </li>
-
               </a-collapse-panel>
             </a-collapse>
           </div>
@@ -751,23 +728,6 @@ Vue.component('sidebar', {
 
 
      this.$store.dispatch('getAllMessage')
-
-    try {
-
-      if (currentUser.value.uid) {
-        //如果用户已登录，则获取云端的空间
-        this.$store.dispatch('getCloudSpaces', currentUser.value).then(()=>{
-          this.cloudSpaces = this.$store.state.cloudSpaces
-        })
-      }
-      this.$store.dispatch('getLocalSpaces').then(()=>{
-        this.localSpaces = this.$store.state.localSpaces
-      })
-
-
-    } catch (e) {
-      console.log('空间获取失败。')
-    }
   },
   computed: {
     user () {
@@ -805,12 +765,6 @@ Vue.component('sidebar', {
   template: sidebarTpl,
   methods: {
     async showPopSpace () {
-      this.$store.dispatch('getCloudSpaces').then(()=>{
-        appVue.$refs.sidePanel.cloudSpaces = this.$store.state.cloudSpaces
-      })
-      this.$store.dispatch('getLocalSpaces').then(()=>{
-        this.localSpaces = this.$store.state.localSpaces
-      })
     },
     login () {
       ipc.send('login')
@@ -1041,6 +995,12 @@ Vue.component('sidebar', {
       }
     },
     openBottom (action) {
+      console.log(action)
+      if(action==='help'){
+        console.log('help')
+        window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/tmpomo'
+        return
+      }
       postMessage({
         message: action
       })
