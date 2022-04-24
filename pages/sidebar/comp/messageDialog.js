@@ -5,7 +5,7 @@ const messageTempl = /* html */`
       <div class="top flex justify-between align-center">
         <div class="top-lf flex justify-center align-center text-black-lg">
           <a-icon type="bell" :style="{ fontSize: '16px' }"></a-icon>
-          <span>通知中心</span>
+          <span>消息中心</span>
         </div>
         <div class="top-rg flex justify-around align-center">
           <div class="top-rg-block flex justify-center align-center" style="width: 24px; height: 24px;" v-if="this.$store.getters.getAllMessages.length > 0">
