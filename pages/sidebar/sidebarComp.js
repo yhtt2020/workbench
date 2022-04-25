@@ -1026,7 +1026,7 @@ Vue.component('sidebar', {
       ipc.send('osxOpenCircleSetting', args)
     },
     openGroupChat (id) {
-      ipc.invoke('saAppOpenSysApp', { saAppId: 1, options: { circleId: id } })
+      ipc.invoke('saAppOpenSysApp', { saAppId: 1,  circleId: id })
     },
     /**
      * app浮窗显示隐藏
