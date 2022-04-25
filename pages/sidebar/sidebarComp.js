@@ -112,10 +112,7 @@ const sidebarTpl = `
                             <div class="cb-top flex align-center justify-start">
                               <img :src="item.logo" alt="">
                               <div class="cb-top-word">{{item.name}}</div>
-                              <a-tag class="cb-top-tag" color="#f50"
-                                v-show="item.hasOwnProperty('status') && item.status === 2 ">审核中</a-tag>
-                              <a-tag class="cb-top-tag" color="#CFD1D0"
-                                v-show="item.hasOwnProperty('status') && item.status === 3 ">申请驳回</a-tag>
+                              <a-icon class="cb-top-tag" type="share-alt" @click="inviteLink(item.id)"></a-icon>
                             </div>
                             <div class="cb-bottom flex align-center justify-around">
                               <a-button class="cb-bottom-zone" type="link" icon="team" @click="openCircle(item.id)">
@@ -752,7 +749,7 @@ Vue.component('sidebar', {
 
     await standAloneAppModel.initialize()
     standAloneAppModel.getAllApps().then(apps=>{
-       this.apps =apps
+      this.apps =apps
     })
     ipc.send('getRunningApps')
 
@@ -793,17 +790,36 @@ Vue.component('sidebar', {
     const currentUser = await db.system.where('name').equals('currentUser').first()
     if (currentUser.value.uid !== 0) {
       try {
-        //await this.$store.dispatch('getGroups')  //老的团队获取接口
-         this.$store.dispatch('getJoinedCircle', { page: 1, row: 500 })
-         this.$store.dispatch('getMyCircle', { page: 1, row: 500 })
+        this.$store.dispatch('getJoinedCircle', { page: 1, row: 500 })
+        this.$store.dispatch('getMyCircle', { page: 1, row: 500 })
       } catch (err) {
         console.log(err)
-        console.log('团队列表接口错误!')
+        console.log('短说圈子接口获取失败')
       }
     }
 
+    this.$store.dispatch('getAllMessage')
 
-     this.$store.dispatch('getAllMessage')
+    //1分钟同步一次消息的时间处理，这里没有网络资源的开销
+    setInterval(() => {
+      this.$nextTick(() => {
+        this.$store.commit('SET_ALLMESSAGES', this.$store.getters.getAllMessages)
+      })
+    }, 60 * 1000)
+
+    try {
+      if (currentUser.value.uid) {
+        //如果用户已登录，则获取云端的空间
+        this.$store.dispatch('getCloudSpaces', currentUser.value).then(()=>{
+          this.cloudSpaces = this.$store.state.cloudSpaces
+        })
+      }
+      this.$store.dispatch('getLocalSpaces').then(()=>{
+        this.localSpaces = this.$store.state.localSpaces
+      })
+    } catch (e) {
+      console.log('空间获取失败。')
+    }
   },
   computed: {
     user () {
@@ -840,6 +856,13 @@ Vue.component('sidebar', {
   },
   template: sidebarTpl,
   methods: {
+    inviteLink(id) {
+      tsbk.default.ready(() => {
+        tsbk.default.openOsxInviteMember({
+          groupId: id
+        })
+      })
+    },
     learnSpace(){
       window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/gg7vro'
     },
@@ -1003,7 +1026,7 @@ Vue.component('sidebar', {
       ipc.send('osxOpenCircleSetting', args)
     },
     openGroupChat (id) {
-      ipc.send('saAppOpen', { saAppId: 1, options: { circleId: id } })
+      ipc.invoke('saAppOpenSysApp', { saAppId: 1,  circleId: id })
     },
     /**
      * app浮窗显示隐藏
@@ -1026,6 +1049,8 @@ Vue.component('sidebar', {
         this.openUserWindow()
       }else{
         this.userPanelVisible = !this.userPanelVisible
+        this.$store.dispatch('getJoinedCircle', { page: 1, row: 500 })
+        this.$store.dispatch('getMyCircle', { page: 1, row: 500 })
       }
     },
     closeUserPanel(){
