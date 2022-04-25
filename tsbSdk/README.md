@@ -33,7 +33,7 @@
 
 `import tsbk from 路径地址` ES module 引入
 `<script src="路径文件"></script>` script 标签引入 ❗️ 对象在全局 tsbk.default 中
-###### demo
+###### demo in html
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -69,6 +69,44 @@
     };
   </script>
 </html>
+```
+
+###### demo in Vue main.js
+```javascript
+import tsbk from './core/tsbSdk'
+
+Vue.prototype.$tsbk = tsbk
+
+const Instance = new Vue({
+  router,
+  store,
+  mixins: [MainMixin],
+  created() {
+    Vue.prototype.$tsbk.config({
+      signature: "ts"
+    })
+  },
+  render: h => h(App)
+}).$mount('#app')
+```
+```javascript
+//in components just use it
+export default {
+  props: {},
+  data() {
+    return {}
+  },
+  methods: {
+    inviteLink() {
+      this.$tsbk.ready(() => {
+        this.$tsbk.openOsxInviteMember({
+          groupId: this.$store.getters.getFid
+        })
+      })
+    }
+  },
+}
+
 ```
 
 ##### 步骤二、💥 通过 config 接口注入权限验证配置
