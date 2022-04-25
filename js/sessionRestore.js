@@ -6,10 +6,10 @@ const cloudAdapter = require('../src/util/sessionAdapter/cloudAdapter')
 const spaceModel = require('../src/model/spaceModel')
 const localSpaceModel = require('../src/model/localSpaceModel')
 const backupSpaceModel = require('../src/model/backupSpaceModel')
-const urlParser=require('../js/util/urlParser')
+const urlParser = require('../js/util/urlParser')
 const ipc = require('electron').ipcRenderer
-let SYNC_INTERVAL=30 //普通模式下，同步间隔为30秒
-if('development-mode' in window.globalArgs){
+let SYNC_INTERVAL = 30 //普通模式下，同步间隔为30秒
+if ('development-mode' in window.globalArgs) {
   SYNC_INTERVAL = 15 //开发模式下，间隔改为5，方便调试和暴露问题
 }
 let autoSaver = null
@@ -31,7 +31,31 @@ function disconnect (options) {
   if (!backupSpaceModel.getOfflineUse(options.spaceId)) {
     //如果不是离线使用中
     ipc.send('showUserWindow', options)
+    ipc.send('disconnect')
   } else {
+  }
+}
+
+/**
+ * 自动计算，并返回存储用的格式
+ * @param data
+ * @returns {{count_tab: number, data, name, count_task, type: (string|*)}}
+ */
+function getSaveData(data){
+  let countTask = data.state.tasks.length
+  let countTab = 0
+  data.state.tasks.forEach(task => {
+    countTab += task.tabs.length
+    task.tabs.forEach(tab => {
+      tab.url = urlParser.getSourceURL(tab.url)
+    })
+  })
+  return {
+    count_task: countTask,
+    count_tab: countTab,
+    data: data,
+    name: sessionRestore.currentSpace.name,
+    type: sessionRestore.spaceType
   }
 }
 
@@ -40,33 +64,18 @@ const sessionRestore = {
   currentSpace: {},
   save: async function (forceSave = true, sync = true) {
     var stateString = JSON.stringify(tasks.getStringifyableState())
+    // save all tabs that aren't private
     var data = {
       version: 2,
       state: JSON.parse(stateString),
       saveTime: Date.now()
     }
-    let countTask = data.state.tasks.length
-    let countTab = 0
-    data.state.tasks.forEach(task => {
-      countTab += task.tabs.length
-      task.tabs.forEach(tab=>{
-        tab.url=urlParser.getSourceURL(tab.url)
-      })
-    })
-
-    // save all tabs that aren't private
     for (var i = 0; i < data.state.tasks.length; i++) {
       data.state.tasks[i].tabs = data.state.tasks[i].tabs.filter(function (tab) {
         return !tab.private
       })
     }
-    let saveData = {
-      count_task: countTask,
-      count_tab: countTab,
-      data: data,
-      name: sessionRestore.currentSpace.name,
-      type: sessionRestore.spaceType
-    }
+    let saveData=getSaveData(data)
 
     if (forceSave === true || stateString !== sessionRestore.previousState) {
       let uid = typeof sessionRestore.currentSpace.userInfo === 'undefined' ? 0 : sessionRestore.currentSpace.userInfo.uid
@@ -118,20 +127,20 @@ const sessionRestore = {
     var savedStringData = ''
     try {
       savedStringData = await sessionRestore.adapter.restore(sessionRestore.currentSpace.spaceId)
-      if(!savedStringData && sessionRestore.currentSpace.spaceType==='cloud'){
+      if (!savedStringData && sessionRestore.currentSpace.spaceType === 'cloud') {
         //当云端空间无法正常读入的时候，尝试从备份空间获取
-        try{
-          let backupSpace=await backupSpaceModel.getSpace(sessionRestore.currentSpace.spaceId)
-          if(backupSpace){
-            savedStringData=JSON.stringify(backupSpace.data)
-            setTimeout(()=>{
-              ipc.send('message',{type:'info',config:{content:'无法连接至云端，当前工作在离线模式下。连接恢复后会自动转入在线模式。'}})
-            },3000)
-          }else{
+        try {
+          let backupSpace = await backupSpaceModel.getSpace(sessionRestore.currentSpace.spaceId)
+          if (backupSpace) {
+            savedStringData = JSON.stringify(backupSpace.data)
+            setTimeout(() => {
+              ipc.send('message', { type: 'info', config: { content: '无法连接至云端，当前工作在离线模式下。连接恢复后会自动转入在线模式。' } })
+            }, 3000)
+          } else {
             console.warn('从本地获取的时候，本地备份不存在')
           }
-        }catch (e) {
-          savedStringData=false
+        } catch (e) {
+          savedStringData = false
           console.warn('当远端无法获取，尝试从本地备份空间恢复时意外报错')
           console.warn(e)
         }
@@ -169,8 +178,8 @@ const sessionRestore = {
 
       data.state.tasks.forEach(function (task) {
         // restore the task item
-        task.tabs.forEach(tab=>{
-          tab.url=urlParser.parse(tab.url)
+        task.tabs.forEach(tab => {
+          tab.url = urlParser.parse(tab.url)
         })
         tasks.add(task)
 
@@ -263,11 +272,11 @@ const sessionRestore = {
   },
   initialize: async function () {
     let currentSpace = {}
-    try {
-      currentSpace = await spaceModel.getCurrent()
-      let space = {}
-      if (currentSpace.spaceType === 'cloud') {
-        //todo 如果当前是备份空间，且还有未同步到云端的变更，则需要判断上次断开的时候是不是当前的备份空间
+    currentSpace = await spaceModel.getCurrent()
+    let space = {}
+    if (currentSpace.spaceType === 'cloud') {
+      let backupSpace = await backupSpaceModel.getSpace(currentSpace.spaceId) //获取本地的备份空间
+      try {
         let spaceResult = await spaceModel.setUser(currentSpace.userInfo).getSpace(currentSpace.spaceId) //先尝试获取一次最新的空间
         if (spaceResult.status === 1) {
           if (String(spaceResult.data.id) === '-1') {
@@ -292,24 +301,53 @@ const sessionRestore = {
           } else {
             //正常登录
             space = spaceResult.data
-            space.id=space.nanoid
-            //正常登录需要使用线上版本的空间来更新一下本地的备份空间，此时是最佳的更新备份空间时机
-            backupSpaceModel.save(space,{data:space.data,count_task: space.count_task,count_tab: space.count_tab,userInfo:currentSpace.userInfo})
-            spaceModel.setCurrentSpace(space)
+            space.id = space.nanoid
+
+            if (space['client_id'] === currentSpace.userInfo.clientId) {
+              //todo 如果当前是备份空间，且还有未同步到云端的变更，则需要判断上次断开的时候是不是当前的备份空间
+              try {
+                //如果发现是断线重连，需要将本地的存储到线上
+                console.log('发现是断线重连场景')
+                console.log(backupSpace)
+                console.log(backupSpace.data)
+                let cloudResult = await cloudAdapter.save(currentSpace.spaceId, getSaveData(backupSpace.data))
+                console.log('恢复返回', cloudResult)
+                if (cloudResult.status === 1) {
+                  setTimeout(()=>{
+                    ipc.send('reconnect')
+                  },2000)
+                  console.log('将离线空间保存到云端成功。')
+                } else {
+                  if (cloudResult.data.action === 'fatal') {
+                    fatalStop(cloudResult.data.option)
+                    console.warn('离线空间保存至云端失败，产生致命错误：')
+                    //todo 如果走到这里，其实意味着这个备份空间已经无法恢复了，需要走备份损坏（冲突模式）模式。
+                  } else if (cloudResult.data.action === 'disconnect') {
+                    console.warn('保存至云端失败，但无需紧张')
+                    disconnect(cloudResult.data.option)
+                  } else {
+                    console.warn('保存至云端失败，但是无需做任何反馈')
+                  }
+                }
+                console.log('发现当前是离线重新上线成功')
+                spaceModel.setCurrentSpace(backupSpace)
+              } catch (e) {
+                console.warn('恢复离线备份空间到云端失败')
+                console.warn(e)
+              }
+            } else {
+              //正常登录需要使用线上版本的空间来更新一下本地的备份空间，此时是最佳的更新备份空间时机
+              backupSpaceModel.save(space, {
+                data: space.data,
+                count_task: space.count_task,
+                count_tab: space.count_tab,
+                userInfo: currentSpace.userInfo
+              })
+              spaceModel.setCurrentSpace(space)
+            }
           }
         }
-      } else {
-        if (currentSpace.spaceType === 'local') {
-          space = await localSpaceModel.getSpace(currentSpace.spaceId) //先尝试获取一次最新的空间
-        } else {
-          space = await spaceModel.setUser(currentSpace.userInfo).getSpace(currentSpace.spaceId) //先尝试获取一次最新的空间
-        }
-
-      }
-      //判断空间类型
-      if (currentSpace.spaceType === 'cloud') {
-        //取出本地备份空间
-        let backupSpace = await backupSpaceModel.getSpace(currentSpace.spaceId) //获取本地的备份空间
+        //接着云端初始逻辑
         if (!!backupSpace) {
           if (!backupSpace.userInfo) {
             //如果这个空间信息不存在用户的信息，主要是一些老的空间，可能还没存用户信息
@@ -337,10 +375,9 @@ const sessionRestore = {
           }
           space.userInfo = backupSpace.userInfo
           //新的备份空间都已经具备了用户信息字段了
-        } else {
-          //如果还不存在备份空间，应该是老版本，从未保存本地备份，这种场景可以不处理，下次自动保存一次就好了
-          space.userInfo = currentSpace.userInfo
         }
+
+        //如果是云端空间，尝试上线设备
         //设备上线 ↓
         try {
           let result = await spaceModel.setUser(space.userInfo).clientOnline(space.id, false)
@@ -376,65 +413,59 @@ const sessionRestore = {
             disconnect: true
           })
         }
+      } catch (e) {
+        console.warn(e)
+        disconnect({
+          spaceId: currentSpace.spaceId,
+          modal: true,
+          title: '无法取得云端空间信息',
+          description: '由于意外情况导致无法连接远端空间。',
+          disconnect: true
+        })
+        setTimeout(()=>{
+          ipc.send('disconnect')
+        },2000)
       }
-    } catch (e) {
-      //let lastSpace=await spaceModel.setAdapter('local').getLastSyncSpace()
-      console.warn(e)
-      disconnect({
-        spaceId: currentSpace.spaceId,
-        modal: true,
-        title: '意外原因无法读取云端空间',
-        description: '由于意外情况导致无法连接远端空间。',
-        disconnect: true
-      })
-
-      // if(lastSpace===null){
-      //   ipc.send('closeMainWindow')
-      //   ipc.send('showUserWindow',{tip:'网络原因无法读取云端空间，请选择其他空间登录。',modal:true})
-      //
-      //   return
-      // }
-      //
-      // console.log(lastSpace)
-      // await spaceModel.setAdapter('local').changeCurrent({id:lastSpace.id})
-      // ipc.send('showUserWindow',{tip:'网络原因无法读取云端空间，请选择其他空间登录。',modal:true})
-      // console.error(e)
-      // console.log('获取当前空间失败',e)
-      //return
+    } else {
+      //此处为本地空间的初始化逻辑
+      space = await localSpaceModel.getSpace(currentSpace.spaceId) //先尝试获取一次最新的空间
+      //如果还不存在备份空间，应该是老版本，从未保存本地备份，这种场景可以不处理，下次自动保存一次就好了
+      space.userInfo = currentSpace.userInfo
     }
 
     sessionRestore.currentSpace = currentSpace
-    if (currentSpace.spaceType === 'local') {
+    if (currentSpace.spaceType === 'local'
+    ) {
       sessionRestore.adapter = localAdapter
     } else {
       sessionRestore.adapter = cloudAdapter
     }
-    //todo 获取当前的用户，判断如果未登录，则尝试从本地寻找适配器读入空间。
+//todo 获取当前的用户，判断如果未登录，则尝试从本地寻找适配器读入空间。
     /*
     id: 20
-name: "currentUser"
-value:
-avatar: "https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/base64_upload_536121645792907?upload_type/Tencent_COS"
-code: "13ca7dd95be7caaa8d3b8597d6b6329b"
-expire_deadtime: 1648716570936
-fans: 0
-follow: 0
-grade: {grade: 0}
-nickname: "想天浏览器"
-postCount: 0
-refreshExpire_deadtime: 1650617370936
-refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc1JlZnJlc2giOnRydWUsImNvZGUiOiIxM2NhN2RkOTViZTdjYWFhOGQzYjg1OTdkNmI2MzI5YiIsInVpZCI6NCwiaWF0IjoxNjQ4MTExNzcwLCJleHAiOjE2NTA2MTczNzB9.W5oAT7ESdpOawXdqVDWti8SzBowYmqxrMxyCv2BhHIs"
-token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc1JlZnJlc2giOmZhbHNlLCJjb2RlIjoiMTNjYTdkZDk1YmU3Y2FhYThkM2I4NTk3ZDZiNjMyOWIiLCJ1aWQiOjQsImlhdCI6MTY0ODExMTc3MCwiZXhwIjoxNjQ4NzE2NTcwfQ.oWjgNkRD6eaw3dFxJidL2fMlwVI1jlK-g_-WQ87AdJI"
-uid: 4
+    name: "currentUser"
+    value:
+    avatar: "https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/base64_upload_536121645792907?upload_type/Tencent_COS"
+    code: "13ca7dd95be7caaa8d3b8597d6b6329b"
+    expire_deadtime: 1648716570936
+    fans: 0
+    follow: 0
+    grade: {grade: 0}
+    nickname: "想天浏览器"
+    postCount: 0
+    refreshExpire_deadtime: 1650617370936
+    refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc1JlZnJlc2giOnRydWUsImNvZGUiOiIxM2NhN2RkOTViZTdjYWFhOGQzYjg1OTdkNmI2MzI5YiIsInVpZCI6NCwiaWF0IjoxNjQ4MTExNzcwLCJleHAiOjE2NTA2MTczNzB9.W5oAT7ESdpOawXdqVDWti8SzBowYmqxrMxyCv2BhHIs"
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc1JlZnJlc2giOmZhbHNlLCJjb2RlIjoiMTNjYTdkZDk1YmU3Y2FhYThkM2I4NTk3ZDZiNjMyOWIiLCJ1aWQiOjQsImlhdCI6MTY0ODExMTc3MCwiZXhwIjoxNjQ4NzE2NTcwfQ.oWjgNkRD6eaw3dFxJidL2fMlwVI1jlK-g_-WQ87AdJI"
+    uid: 4
 
 
 
-id: 20
-name: "currentUser"
-value:
-avatar: "../../icons/browser.ico"
-nickname: "立即登录"
-uid: 0
+    id: 20
+    name: "currentUser"
+    value:
+    avatar: "../../icons/browser.ico"
+    nickname: "立即登录"
+    uid: 0
      */
 
     sessionRestore.startAutoSave()
@@ -444,7 +475,8 @@ uid: 0
         spaceModel.setUser(sessionRestore.currentSpace.userInfo).clientOffline()
       }
     }
-  },
+  }
+  ,
   startAutoSave: () => {
     autoSaver = setInterval(sessionRestore.save, SYNC_INTERVAL * 1000)
   },

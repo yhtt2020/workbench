@@ -1651,7 +1651,6 @@ ipc.on('saving', async () => {
 ipc.on('disconnect', async () => {
   let savingIcon = document.getElementById('savingIcon')
   if (savingIcon.classList.contains('online')) {
-    appVue.$message.success('云空间失去连接，转入离线模式。')
     appVue.$refs.sidePanel.spaceStatus='offline'
     savingIcon.classList.remove('online')
     savingIcon.classList.add('offline')
@@ -1661,9 +1660,11 @@ ipc.on('disconnect', async () => {
 
 ipc.on('reconnect',async()=>{
   let savingIcon = document.getElementById('savingIcon')
+  appVue.$message.success('云空间重新连接成功，已为您实时保持同步。')
   if (savingIcon.classList.contains('offline')) {
     savingIcon.classList.remove('offline')
     appVue.$refs.sidePanel.spaceStatus='online'
     savingIcon.classList.add('online')
   }
+
 })
