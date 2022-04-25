@@ -673,7 +673,7 @@ Vue.component('sidebar', {
 
     await standAloneAppModel.initialize()
     standAloneAppModel.getAllApps().then(apps=>{
-       this.apps =apps
+      this.apps =apps
     })
     ipc.send('getRunningApps')
 
@@ -714,19 +714,11 @@ Vue.component('sidebar', {
     const currentUser = await db.system.where('name').equals('currentUser').first()
     if (currentUser.value.uid !== 0) {
       try {
-        //await this.$store.dispatch('getGroups')  //老的团队获取接口
         this.$store.dispatch('getJoinedCircle', { page: 1, row: 500 })
         this.$store.dispatch('getMyCircle', { page: 1, row: 500 })
-
-        //1分钟轮训一次短说后端的圈子接口
-        setInterval(() => {
-          this.$store.dispatch('getJoinedCircle', { page: 1, row: 500 })
-          this.$store.dispatch('getMyCircle', { page: 1, row: 500 })
-        }, 60 * 1000)
-
       } catch (err) {
         console.log(err)
-        console.log('团队列表接口错误!')
+        console.log('短说圈子接口获取失败')
       }
     }
 
@@ -978,6 +970,8 @@ Vue.component('sidebar', {
         this.openUserWindow()
       }else{
         this.userPanelVisible = !this.userPanelVisible
+        this.$store.dispatch('getJoinedCircle', { page: 1, row: 500 })
+        this.$store.dispatch('getMyCircle', { page: 1, row: 500 })
       }
     },
     closeUserPanel(){
