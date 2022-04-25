@@ -229,11 +229,11 @@ app.on('ready', () => {
             let toastel
             let interval = setInterval(() => {
               toastel = document.getElementsByClassName('xm-toast')[0]
-              if (toastel && toastel.innerText === '创建成功') {
+              if (toastel && toastel.innerText.includes('成功')) {
                 clearInterval(interval)
                 setTimeout(() => {
                   window.close()
-                }, 1000)
+                }, 500)
               }
             }, 200)
           }
