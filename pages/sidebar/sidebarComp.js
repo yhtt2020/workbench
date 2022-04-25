@@ -376,7 +376,7 @@ const sidebarTpl = `
 
        <div style="width:145px;">
        <div style="display: inline-block;width:45px;text-align: center">
-       <svg id="savingIcon" :class="{'online':currentSpace.spaceType==='cloud','offline':currentSpace.spaceType==='local'}" style="width: 24px" t="1648106444295"  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="32437" width="32" height="32"><path d="M512 938.666667C276.352 938.666667 85.333333 747.648 85.333333 512S276.352 85.333333 512 85.333333s426.666667 191.018667 426.666667 426.666667-191.018667 426.666667-426.666667 426.666667z m205.653333-210.090667A298.666667 298.666667 0 0 0 385.365333 241.408l41.6 74.88A213.333333 213.333333 0 0 1 725.333333 512h-91.733333a21.333333 21.333333 0 0 0-18.645333 31.701333l102.698666 184.874667z m-120.618666-20.864A213.333333 213.333333 0 0 1 298.666667 512h91.733333a21.333333 21.333333 0 0 0 18.645333-31.701333L306.346667 295.424a298.666667 298.666667 0 0 0 332.288 487.168l-41.6-74.88z" fill="#14D081" p-id="32438"></path></svg>
+       <img src="./assets/sync.svg" id="savingIcon" :class="{'online':currentSpace.spaceType==='cloud','offline':currentSpace.spaceType==='local'}" style="width: 24px;margin-top: -25px"  width="32" height="32"/>
 
 <!--       <a-icon type="loading" ></a-icon>-->
        </div>
@@ -390,33 +390,100 @@ const sidebarTpl = `
    </div>
    </div>
 </template>
-<p style="font-size: 16px;text-align: center">云空间功能</p>
-  <p style="font-size: 14px">
-<span v-if="currentSpace.spaceType==='cloud'">当前为<strong>云端空间</strong>。<br>每30秒自动备份，此时图标会<strong>转动</strong>。</span>
-<span v-else-if="currentSpace.spaceType==='cloud'">当前为离线模式。系统会自动尝试同步连接，直至连接成功。</span>
-
-<span v-else>当前为本地空间，不与云端同步，建议导入到云端空间以防止标签组丢失。</span>
-</p>
-<a-alert type="info"
-      banner
-      closable
-    >
-    <span slot="message">
-    <p>不同的空间标签组互相隔离。了解更多关于云空间的帮助，请查看<a href="tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/gg7vro" >这里</a>。
-    </p>
-</span>
-</a-alert>
-
-        <ul class="space-selector">
-
-<!--          <li  key="other" @click="openUserWindow">-->
-<!--            <a-icon type="swap" ></a-icon> 选择其他空间-->
-<!--          </li>-->
-        </ul>
+<div v-if="spaceStatus==='local'" style="padding: 15px;width: 300px">
+<a-row>
+<a-col :span="8" style="text-align: right">
+<img src="./assets/local.svg" style="width: 68px;margin-right: 10px">
+</a-col>
+<a-col :span="16" style="padding-top: 10px">
+<div style="color: #333;font-size: 16px;margin-bottom: 5px">本地空间使用中</div>
+<div style="color: #999;font-size: 13px">无法跨设备使用</div>
+</a-col>
+</a-row>
+<div style="margin-top: 10px">
+   当前空间： <a-tag @click="openUserWindow" color="#108ee9">
+    <strong>{{currentSpace.name}}</strong>
+    </a-tag>
+</div>
+<div  style="line-height:24px;margin-top:15px;background-color:rgba(24,144,255,0.15);padding: 10px;border-radius: 5px;font-size: 13px">
+推荐您使用<strong style="'color:#1890FF">云空间</strong>。<br>
+您可以<strong>登录</strong>后使用云端空间。
+在<strong>不同设备</strong>上使用您的标签组。
+</div>
+<div style="margin-top: 15px">
+<a-row>
+<a-col :span="11">
+<a-button @click="learnSpace" block>了解云空间</a-button>
+</a-col>
+<a-col :span="2"></a-col>
+<a-col :span="11">
+<a-button  @click="openUserWindow" type="primary" block>选择空间</a-button>
+</a-col>
+</a-row>
+</div>
+</div>
+<div v-else-if="spaceStatus==='online'" style="padding: 15px;width: 300px">
+<a-row>
+<a-col :span="8" style="text-align: right">
+<img src="./assets/online.svg" style="width: 68px;margin-right: 10px">
+</a-col>
+<a-col :span="16" style="padding-top: 10px">
+<div style="color: #333;font-size: 16px;margin-bottom: 5px">云空间使用中</div>
+<div style="color: #03B615;font-size: 13px">正在与云端保持同步</div>
+</a-col>
+</a-row>
+<div style="margin-top: 15px">
+当前空间：<a-tag color="#108ee9" @click="openUserWindow"><strong>{{currentSpace.name}}</strong></a-tag><br>
+点击更换其他空间。
+</div>
+<div  style="line-height:24px;margin-top:15px;background-color:rgba(24,144,255,0.15);padding: 10px;border-radius: 5px;font-size: 13px">
+每30秒空间会自动与云端进行同步。
+如果成功同步，图标 <img style="width: 25px" src="./assets/sync.svg"> 会转动一次。
+</div>
+<div style="margin-top: 15px">
+<a-row>
+<a-col :span="11">
+<a-button @click="learnSpace" block>了解云空间</a-button>
+</a-col>
+<a-col :span="2"></a-col>
+<a-col :span="11">
+<a-button  @click="openUserWindow" type="primary" block>更换空间</a-button>
+</a-col>
+</a-row>
+</div>
+</div>
+<div v-else style="padding: 15px;width: 300px">
+<a-row>
+<a-col :span="8" style="text-align: right">
+<img src="./assets/offline.svg" style="width: 68px;margin-right: 10px">
+</a-col>
+<a-col :span="16" style="padding-top: 10px">
+<div style="color: #333;font-size: 16px;margin-bottom: 5px">云空间离线使用中</div>
+<div style="color: #999;font-size: 13px">暂时无法与服务器连接</div>
+</a-col>
+</a-row>
+<div style="margin-top: 15px">
+当前空间：<a-tag @click="openUserWindow" color="#108ee9"><strong>{{currentSpace.name}}</strong></a-tag><br>
+正在离线使用云空间。
+</div>
+<div  style="line-height:24px;margin-top:15px;background-color:rgba(24,144,255,0.15);padding: 10px;border-radius: 5px;font-size: 13px">
+系统将自动在后台尝试重连。
+连接成功后，同步图标<img style="width: 25px" src="./assets/sync.svg">将恢复绿色。
+</div>
+<div style="margin-top: 15px">
+<a-row>
+<a-col :span="11">
+<a-button @click="learnSpace" block>了解云空间</a-button>
+</a-col>
+<a-col :span="2"></a-col>
+<a-col :span="11">
+<a-button  @click="openUserWindow" type="primary" block>更换空间</a-button>
+</a-col>
+</a-row>
+</div>
+</div>
 </tippy>
       <div class="app-box">
-
-
         <ul id="appGroup" style="user-select: none;padding-bottom: 20px" class="app-task app-items"
           @dblclick.prevent="addNewTask">
           <draggable v-model="getItems" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass"
@@ -588,6 +655,7 @@ const sidebarTpl = `
 Vue.component('sidebar', {
   data: function () {
     return {
+      spaceStatus:'local',
       localSpaces: [],
       currentSpace: {
         space: {
@@ -668,7 +736,15 @@ Vue.component('sidebar', {
   },
   async mounted () {
     //获取当前左侧栏的状态，并设置
-    this.currentSpace = await spaceModel.getCurrent()
+   spaceModel.getCurrent().then((space)=>{
+        this.currentSpace =space
+     if(space.spaceType==='local')
+     {
+       this.spaceStatus='local'
+     }else{
+       this.spaceStatus='online'
+     }
+   })
     this.mod = appVue.mod
 
     await standAloneAppModel.initialize()
@@ -786,6 +862,9 @@ Vue.component('sidebar', {
           groupId: id
         })
       })
+    },
+    learnSpace(){
+      window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/gg7vro'
     },
     async showPopSpace () {
     },
@@ -1573,18 +1652,18 @@ ipc.on('disconnect', async () => {
   let savingIcon = document.getElementById('savingIcon')
   if (savingIcon.classList.contains('online')) {
     appVue.$message.success('云空间失去连接，转入离线模式。')
+    appVue.$refs.sidePanel.spaceStatus='offline'
     savingIcon.classList.remove('online')
     savingIcon.classList.add('offline')
-    appVue.$refs.sidePanel.cloudSpaces = []
+
   }
 })
 
 ipc.on('reconnect',async()=>{
   let savingIcon = document.getElementById('savingIcon')
   if (savingIcon.classList.contains('offline')) {
-    await appVue.$store.dispatch('getCloudSpaces')
-    appVue.$refs.sidePanel.cloudSpaces = this.$store.state.cloudSpaces
     savingIcon.classList.remove('offline')
+    appVue.$refs.sidePanel.spaceStatus='online'
     savingIcon.classList.add('online')
   }
 })
