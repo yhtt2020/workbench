@@ -102,13 +102,15 @@ module.exports = {
       if(arg.tab.id) {
         //右键移动的操作
         let newTask = tasks.get(arg.taskId)
+
+        //移除老的
+        let previousTask = tasks.getSelected()
+        previousTask.tabs.splice(previousTask.tabs.getIndex(arg.tab.id), 1)
+
+        //插入新的
         newTask.tabs.splice(arg.tabIndex + 1, 0, arg.tab)
         ipc.send('closeTaskSelect')
-        browserUI.switchToTask(tasks.getSelected().id)
-
-        // 不能这么调用，会导致左侧的sidebar被切换的两者无法再来回点击
-        // browserUI.switchToTask(arg.taskId)
-        // browserUI.switchToTab(arg.tab.id)
+        browserUI.switchToTask(arg.taskId)
 
       } else {
         //购物车应用的操作

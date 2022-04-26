@@ -90,9 +90,8 @@ body {
 }
 
 .sidebar .active {
-  border-left: #1B74BB solid 3px;
-  padding-left: -3px;
-  background-color: #f1f1f1;
+  overflow: hidden;
+  background-color: #e3e3e3;
   box-sizing: content-box;
   color: #1E90FF;
 }
@@ -247,6 +246,7 @@ body {
 
 .expanded .wrapper {
   width: 142px;
+  overflow: hidden;
   transition: width 0.1s;
 }
 
@@ -273,7 +273,7 @@ body {
 }
 
 .expanded .app-task {
-  width: 162px;
+  width: 145px;
   transition: width 0.1s;
 }
 

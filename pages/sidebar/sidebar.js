@@ -306,6 +306,7 @@ window.onload = function() {
 			},
 			setSelected(state, selected) {
 				state.selected = selected
+        window.appVue.$refs.sidePanel.lastOpenId=selected
 			},
 
 			//从任务组读入置顶区域，目前还不支持存档，每次进去会重新填充一次
@@ -373,6 +374,7 @@ window.onload = function() {
 				state.items = newItems
 
 				state.selected = tasksList.selected
+        window.appVue.$refs.sidePanel.lastOpenId=tasksList.selected
 				let newTasksList = tasksList
 				state.tasks = null
 				state.tasks = newTasksList
@@ -471,7 +473,7 @@ window.onload = function() {
 	})
 
 	Vue.use(antd);
-
+  Vue.use(VueTippy)
 	var appVue = new Vue({
 		el: '#appVue',
 		store: store,

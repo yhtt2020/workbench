@@ -176,6 +176,7 @@
     "settingsNoProxy": "不使用代理",
     "settingsManualProxy": "手动设置代理",
     "settingsAutomaticProxy": "启用预设代理",
+    "settingsSystemProxy": "使用系统代理",
     "settingsProxyRules": "代理服务器地址",
     "settingsProxyBypassRules": "不使用代理服务器访问以下地址（以逗号分隔多个地址）",
     "settingsProxyConfigurationURL": "PAC文件地址",

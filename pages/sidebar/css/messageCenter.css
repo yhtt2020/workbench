@@ -50,14 +50,15 @@
 }
 .message-dialog .mid {
   width: 100%;
-  height: calc(100% - 50px - 58px);
+  height: calc(100% - 50px);
   overflow: auto;
   border-radius: 0px 0px 10px 10px;
 }
 .message-dialog .mid.silent {
   width: 100%;
-  height: calc(100% - 50px);
+  height: calc(100% - 50px - 58px);
   overflow: auto;
+  border-radius: 0px !important;
 }
 .message-dialog .mid::-webkit-scrollbar {
   width: 0 !important;
