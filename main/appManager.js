@@ -64,12 +64,14 @@ const appManager = {
           title: message.options.title,
           body: message.options.body,
           indexName: message.options.indexName ?? null,
+          avatar: message.options.avatar ? message.options.avatar.length > 0  ? message.options.avatar : '' : '',
           type: 'groupChat'
         })
       } else if(message.saAppId == 2) {
         SidePanel.send('storeMessage', {
           title: message.options.title,
           body: message.options.body,
+          avatar: message.options.avatar ? message.options.avatar.length > 0  ? message.options.avatar : '' : '',
           type: 'community'
         })
       }

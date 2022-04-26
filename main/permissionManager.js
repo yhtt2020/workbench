@@ -139,10 +139,10 @@ function pagePermissionRequestHandler (webContents, permission, callback, detail
   //   openExternal - Request to open links in external applications.
   //   unknown - An unrecognized permission request
   const permissions=[
-     'notifications',
-     'fullscreen',
-     'clipboard-sanitized-write',
-     'clipboard-read',
+    'notifications',
+    'fullscreen',
+    'clipboard-sanitized-write',
+    'clipboard-read',
     'media'
   ]
 

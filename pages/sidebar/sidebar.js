@@ -4,6 +4,7 @@ const userStatsModel = require('../util/model/userStatsModel')
 const userApi = require('../util/api/userApi')
 const messageModel = require('../util/model/messageModel')
 const {tools} = require('../util/util')
+const spaceModel = require('../../src/model/spaceModel')
 
 class TasksList {
 	constructor() {
@@ -86,8 +87,13 @@ window.onload = function() {
 
 	Vue.prototype.$window = window
 	Vue.use(Vuex)
+
+  window.ldb=require('../../src/util/ldb')
+  ldb.load(window.globalArgs['user-data-path']+'/ldb.json')
 	const store = new Vuex.Store({
 		state: {
+      cloudSpaces:[],
+      localSpaces:[],
 			pinItems: null, //置顶区域的items，横线上方部分
 			items: null, //普通区域的items
 			selected: '', //当前选中的
@@ -228,6 +234,12 @@ window.onload = function() {
 
 		},
 		mutations: {
+      set_local_spaces:(state,spaces)=>{
+        state.localSpaces=spaces
+      },
+      set_cloud_spaces:(state,spaces)=>{
+        state.cloudSpaces=spaces
+      },
       //设置全部的消息列表
       SET_ALLMESSAGES: (state, messages) => {
         state.allMessages = messages
@@ -387,7 +399,6 @@ window.onload = function() {
       },
       async getUserInfo({commit},userInfo){
         const result=await userApi.getUserInfo()
-        console.log(result)
         if(result.code===1000){
           commit('set_user_info',result.data)
         }
@@ -420,6 +431,40 @@ window.onload = function() {
       async deleteAllMessages({commit}) {
         await messageModel.clearTable()
         commit('DEL_ALLMESSAGES')
+      },
+      async getCloudSpaces({commit},user){
+        console.log(user)
+        try{
+          if(!!!user){
+            user= appVue.$store.state.user
+          }
+          let response= await spaceModel.setUser(user).getUserSpaces()
+          if(response.status){
+            let mySpaces=response.data
+            if(mySpaces.length>5)
+            {
+              mySpaces.splice(4,mySpaces.length-5)
+            }
+            console.log(mySpaces)
+            commit('set_cloud_spaces',mySpaces)
+          }else{
+            window.appVue.$message.error('获取云空间失败。')
+          }
+        }catch (e){
+          console.log(e)
+        }
+
+      },
+      async getLocalSpaces({commit}){
+        let localSpaces= await spaceModel.getLocalSpaces()
+        let spaces=localSpaces.filter(sp=>{
+          return sp.type==='local'
+        })
+        if(spaces.length>5)
+        {
+          spaces.splice(4,spaces.length-5)
+        }
+        commit('set_local_spaces',spaces)
       }
 
     }
@@ -478,6 +523,7 @@ ipc.on('storeMessage', async (event, args) => {
   message.title = args.title
   message.body = args.body
   message.indexName = args.indexName ?? null
+  message.avatar = args.avatar
   await messageModel.add(message)
 
   this.$store.commit('ADD_MESSAGE', message)
@@ -494,7 +540,8 @@ ipc.on('webOsNotice', async(event, args) => {
     message.timestamp = Date.now()
     message.title = args.url
     message.body = `${args.title}【${args.body}】`
-    message.indexName = null
+    message.indexName = null,
+    message.avatar = args.icon ? args.icon : args.favicon
     await messageModel.add(message)
 
     this.$store.commit('ADD_MESSAGE', message)

@@ -623,6 +623,8 @@ let originalUrl;
 let originalId;
 ipc.on('view-event', function (e, args) {
   webviews.emitEvent(args.event, args.viewId, args.args)
+  // console.log(args)
+
   if (args.event === 'new-tab') {
     originalId = args.viewId
   }

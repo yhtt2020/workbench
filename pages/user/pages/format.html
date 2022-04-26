@@ -1,0 +1,62 @@
+<div>
+  <h1 style="font-size: 18px;margin:auto;margin-top: 20px;margin-bottom:10px;text-align: center">
+    保存冲突，无法保存空间至云端
+  </h1>
+  <p style="text-align: center;color: #999">
+      <span style="color: #333">
+      系统检测到当前空间已被<strong>其他设备占用</strong>。无法再保存当前空间。
+您可以选择放弃此备份空间，或者将备份空间以新空间的形式存储到云端或本地。
+</span>
+  </p>
+  <a-row>
+    <a-col>
+      <div>
+        <a-avatar :src="user.avatar"></a-avatar>
+      </div>
+      <div>
+        {{user.nickname}}
+      </div>
+    </a-col>
+    <a-col>
+      <div>
+        <a-input v-mode:value="space.name"></a-input>
+      </div>
+      <div>
+        {{space.count_task}} 标签组 {{space.count_tab}}标签
+      </div>
+      <div>
+        最后成功同步时间：{{space.sync_time}}
+      </div>
+
+    </a-col>
+
+  </a-row>
+  <div>
+
+    <a-checkbox v-model:checked="save" default-value="true">将备份保存至 <a-select
+      ref="select"
+      v-model:value="savePosition"
+      style="width: 120px"
+      @focus="focus"
+    >
+      <a-select-option value="cloud">云端空间</a-select-option>
+      <a-select-option value="local">本地空间</a-select-option>
+    </a-select></a-checkbox>
+  </div>
+  <div>
+    <a-row>
+      <a-col style="text-align: center">
+        <a-popconfirm v-if="!save" placement="top" ok-text="确定放弃" cancel-text="再考虑一下" @confirm="confirm">
+          <template #title>
+            <p>您是否确定放弃保存本地备份空间？此操作将删除本地备份空间。建议您将当前空间保存至云端备份。</p>
+          </template>
+          <a-button type="primary">切换到最新的云端空间</a-button>
+        </a-popconfirm>
+        <a-button v-else type="primary">切换到最新的云端空间</a-button>
+      </a-col>
+      <a-col style="text-align: center">
+        <a-button v-if="save">切换到保存的备份空间</a-button>
+      </a-col>
+    </a-row>
+  </div>
+</div>
