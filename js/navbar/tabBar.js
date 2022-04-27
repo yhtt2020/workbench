@@ -356,7 +356,7 @@ const tabBar = {
 
     iconArea.appendChild(closeTabButton)
 
-    tabEl.appendChild(iconArea)
+
 
     // title
 
@@ -364,7 +364,7 @@ const tabBar = {
     title.className = 'title'
 
     tabEl.appendChild(title)
-
+    tabEl.appendChild(iconArea)
     // click to enter edit mode or switch to a tab
     tabEl.addEventListener('click', function (e) {
       if (tabs.getSelected() !== data.id) {
@@ -815,12 +815,16 @@ const tabBar = {
     }
   },
 
-  addTab: function (tabId) {
+  addTab: function (tabId,last=false) {
     var tab = tabs.get(tabId)
     var index = tabs.getIndex(tabId)
     var tabEl = tabBar.createTab(tab)
     //修复插入位置错误，不知为什么多了俩，需要+2才行
-    tabBar.containerInner.insertBefore(tabEl, tabBar.containerInner.childNodes[index + 3])
+    if(last){
+      tabBar.containerInner.insertBefore(tabEl,tabBar.containerInner.childNodes[tabBar.containerInner.childNodes.length-1])
+      console.log(tabBar.containerInner.childNodes.length)
+    }else
+    tabBar.containerInner.insertBefore(tabEl, tabBar.containerInner.childNodes[index])
 
     tabBar.tabElementMap[tabId] = tabEl
   },
