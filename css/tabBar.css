@@ -127,7 +127,7 @@ body.linux #menu-button {
   overflow: hidden;
   word-break: break-all;
   position: relative;
-  padding: 0 10px;
+  /*padding: 0 10px;*/
   border-radius: 6px;
   margin: 6px ;
 }
@@ -157,7 +157,6 @@ body.linux #menu-button {
 
 .tab-item .tab-icon-area {
   float: right;
-  margin-right: -0.3em;
 }
 .tab-item .tab-icon {
   position: relative;
@@ -250,6 +249,7 @@ body.linux #menu-button {
 	width: 18px;
 	height: 18px;
 	margin-right: 10px;
+  margin-left: 10px;
 	vertical-align: text-bottom;
 	background: #ffffffbb;
 	border-radius: 6px;

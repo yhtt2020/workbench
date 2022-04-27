@@ -83,13 +83,16 @@
 				</div>
 				<div id="tabs-inner" role="tablist" class="has-thin-scrollbar">
           <!--<div style="flex-grow:1;-webkit-app-region:drag ;"></div> 暂时先注释掉这个空白可拖拽填充区域，这个场景目前似乎不存在-->
-          <div id="add-btn-wrapper" class="navbar-right-actions">
+          <div id="add-btn-wrapper" style="margin-left: 4px" class="navbar-right-actions">
             <button id="add-tab-button" class="navbar-action-button i carbon:add" data-label="newTabAction"
                     tabindex="-1"></button>
           </div>
         </div>
 			</div>
-
+      <button title="分享全部的标签" id="share-button" class="right-button navbar-action-button theme-text-color windowDragHandle i"
+              tabindex="-1">
+        <svg t="1651036076897" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="40845" width="22" height="22"><path d="M292 392.8c32.1 0 62.2 12.5 84.9 35.1 22.7 22.7 35.1 52.8 35.1 84.9s-12.5 62.2-35.1 84.9c-22.7 22.7-52.8 35.1-84.9 35.1s-62.2-12.5-84.9-35.1C184.4 575 172 544.9 172 512.8s12.5-62.2 35.1-84.9c22.7-22.7 52.8-35.1 84.9-35.1m0-60c-99.4 0-180 80.6-180 180s80.6 180 180 180 180-80.6 180-180-80.6-180-180-180zM732 172c32.1 0 62.2 12.5 84.9 35.1 22.7 22.7 35.1 52.8 35.1 84.9s-12.5 62.2-35.1 84.9C794.2 399.5 764.1 412 732 412s-62.2-12.5-84.9-35.1C624.5 354.2 612 324.1 612 292s12.5-62.2 35.1-84.9c22.7-22.6 52.8-35.1 84.9-35.1m0-60c-99.4 0-180 80.6-180 180s80.6 180 180 180 180-80.6 180-180-80.6-180-180-180zM732 612c32.1 0 62.2 12.5 84.9 35.1 22.7 22.7 35.1 52.8 35.1 84.9s-12.5 62.2-35.1 84.9C794.2 839.5 764.1 852 732 852s-62.2-12.5-84.9-35.1C624.5 794.2 612 764.1 612 732s12.5-62.2 35.1-84.9c22.7-22.6 52.8-35.1 84.9-35.1m0-60c-99.4 0-180 80.6-180 180s80.6 180 180 180 180-80.6 180-180-80.6-180-180-180z" fill="#ffffff" p-id="40846"></path><path d="M417.993 401.245l164.367-94.9 30 51.96-164.367 94.9zM599.01 718.246l-180.994-104.5 30-51.96 180.994 104.5z" fill="#ffffff" p-id="40847"></path></svg>
+      </button>
 		</div>
     <style>
     #tabs-inner {
@@ -100,16 +103,9 @@
     }
     </style>
 
-		<button id="switch-task-button" hidden class="navbar-action-button theme-text-color windowDragHandle i"
+
+		<button id="switch-task-button" hidden class=" right-button navbar-action-button theme-text-color windowDragHandle i"
 			data-label="viewTasks" tabindex="-1">
-<!--			<svg version="1.1" viewBox="0.0 0.0 26.0 26.0" fill="none" stroke="none" stroke-linecap="square"-->
-<!--				stroke-miterlimit="10" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">-->
-<!--				<g clip-path="url(#p.0)">-->
-<!--					<path fill="currentColor" d="m0 0l32 0l0 4l-32 0z" fill-rule="evenodd" />-->
-<!--					<path fill="currentColor" d="m0 11l32 0l0 4l-32 0z" fill-rule="evenodd" />-->
-<!--					<path fill="currentColor" d="m0 22l32 0l0 4l-32 0z" fill-rule="evenodd" />-->
-<!--				</g>-->
-<!--			</svg>-->
       <svg t="1651031163391" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2209" width="30" height="30"><path d="M864 128H160c-17.6 0-32 14.4-32 32v704c0 17.6 14.4 32 32 32h704c17.6 0 32-14.4 32-32V160c0-17.6-14.4-32-32-32zM750.4 705.6l-45.6 45.6L512 557.6 318.4 750.4l-45.6-45.6L467.2 512 273.6 318.4l45.6-45.6L512 467.2l193.6-193.6 45.6 45.6L557.6 512l192.8 193.6z" p-id="2210" fill="#d81e06"></path></svg>
 		</button>
 		<script>
