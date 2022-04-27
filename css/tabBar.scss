@@ -10,6 +10,7 @@
   padding-top: var(--control-space-top);
   padding-left: var(--control-space-left);
   padding-right: var(--control-space-right);
+  -webkit-app-region: drag;
 }
 /*.drag-container .tab-item.active{*/
 /*  background: rgb(69, 132, 250) !important;*/
@@ -104,6 +105,7 @@ body.linux #menu-button {
   position: relative;
   overflow: hidden;
   margin-right: 35px;
+
 }
 #tabs #tabs-inner {
   display: inline-flex;
@@ -208,10 +210,15 @@ body.linux #menu-button {
   color: white;
   /*text-shadow: 0 0 3px rgba(107, 107, 107, 0.42);*/
 }
-
+.use-theme.theme-background-low-contrast  .tab-item.active:not(:only-child ){
+  background: rgb(69, 132, 250);
+  color: #fff !important;
+}
+.use-theme.theme-background-low-contrast .active .theme-text-color{
+  color: #fff !important;
+}
 .use-theme .tab-item.active:not(:only-child ) {
-  background: rgba(110, 110, 110, 0.47);
-  color: #ffffff;
+  background: rgba(208, 208, 208, 0.2);
 }
 
 .dark-theme .tab-item.active:not(:only-child) {
@@ -269,7 +276,22 @@ body.linux #menu-button {
 
 
 /* buttons */
+.windows .no-drag{
+  position: absolute;
+  right: 0;
+  width: 138px;
+  height: 36px;
+}
+.window-drag-area{
+  -webkit-app-region: drag;
+}
+.no-drag{
 
+  -webkit-app-region: no-drag;
+}
+.windows-caption-buttons,body.windows:not(.separate-titlebar) .windows-caption-buttons{
+  -webkit-app-region: no-drag;
+}
 .navbar-action-button {
   padding: 0 1rem;
   height:26px;
@@ -278,6 +300,7 @@ body.linux #menu-button {
   background: rgba(229, 229, 229, 0.14);
   border-radius: 4px;
   margin-top: 6px;
+  -webkit-app-region: no-drag;
 }
 body.windows .navbar-action-button:not(:disabled):hover {
   background-color: rgba(0, 0, 0, 0.075);
@@ -299,7 +322,10 @@ body.windows.dark-theme .navbar-action-button:not(:disabled):hover {
   padding: 0;
   width: 28px;
   font-size: 1.6em !important;
+  -webkit-app-region: none;
 }
+
+
 
 /* audio button */
 .tab-item .tab-audio-button {

@@ -35,7 +35,13 @@ const tabBar = {
     mirrorContainer: document.getElementById('dragContainer'),
     direction: 'horizontal',
     slideFactorX: 25,
-    slideFactorY: 25
+    slideFactorY: 25,
+    invalid: function (el, handle) {
+      return el.id === 'add-btn-wrapper';
+    },
+    accepts:function(el, target, source, sibling){
+      return !(sibling===null)
+    }
   }),
   getTab: function (tabId) {
     return tabBar.tabElementMap[tabId]
@@ -361,7 +367,7 @@ const tabBar = {
     // title
 
     var title = document.createElement('span')
-    title.className = 'title'
+    title.className = 'title theme-text-color'
 
     tabEl.appendChild(title)
     tabEl.appendChild(iconArea)
