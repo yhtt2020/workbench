@@ -795,7 +795,9 @@ const tabBar = {
     // }
   },
   updateAll: function () {
+    let addBtnWrapper=document.getElementById('add-btn-wrapper')
     empty(tabBar.containerInner)
+
     tabBar.tabElementMap = {}
 
     tabs.get().forEach(function (tab) {
@@ -807,6 +809,7 @@ const tabBar = {
     if (tabs.getSelected()) {
       tabBar.setActiveTab(tabs.getSelected())
     }
+    tabBar.containerInner.appendChild(addBtnWrapper)
   },
 
   lockTab: function (id) {
