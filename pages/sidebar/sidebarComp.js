@@ -3,7 +3,7 @@ const { api } = require('../../server-config')
 const standAloneAppModel = require('../util/model/standAloneAppModel.js')
 
 const sidebarTpl = `
-  <div id="sidebar" class="side-container">
+  <div id="sidebar" class="side-container" @contextmenu="openSidebarMenu">
     <div id="itemsEl" class="side-items">
       <ul class="app-task">
         <li @click="toggleUserPanel" class="" style="position: relative;">
@@ -856,6 +856,9 @@ Vue.component('sidebar', {
   },
   template: sidebarTpl,
   methods: {
+    openSidebarMenu(){
+      ipc.send('openSidebarMenu')
+    },
     inviteLink(id) {
       tsbk.default.ready(() => {
         tsbk.default.openOsxInviteMember({

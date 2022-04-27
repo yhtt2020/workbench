@@ -757,6 +757,19 @@ ipc.on('closeSwitch',()=>{
     switchWindow.close()
   }
 })
+ipc.on('openSidebarMenu',()=>{
+  const tpl=[
+    {
+      label: '管理标签组',
+      click () {
+        sendIPCToWindow(mainWindow,'showTasks')
+      }
+    }
+  ]
+  let menu = require('electron').Menu.buildFromTemplate(tpl)
+
+  menu.popup()
+})
 ipc.on('switchToTab',(event,args)=>{
   sendIPCToWindow(mainWindow,'switchToTab',args)
 })

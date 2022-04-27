@@ -61,11 +61,11 @@
 }
 
 #switch-task-button svg {
-  width: 1em;
+  width: 24px;
   /* height: 1em; */
   display: block;
-  margin-top: -9px;
-  margin-left: -6px;
+  margin-top: -12px;
+  margin-left: -11px;
 }
 
 #task-overlay {
