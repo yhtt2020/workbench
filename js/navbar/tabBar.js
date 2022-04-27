@@ -825,13 +825,10 @@ const tabBar = {
     var tab = tabs.get(tabId)
     var index = tabs.getIndex(tabId)
     var tabEl = tabBar.createTab(tab)
-    //修复插入位置错误，不知为什么多了俩，需要+2才行
     if(last){
       tabBar.containerInner.insertBefore(tabEl,tabBar.containerInner.childNodes[tabBar.containerInner.childNodes.length-1])
-      console.log(tabBar.containerInner.childNodes.length)
     }else
     tabBar.containerInner.insertBefore(tabEl, tabBar.containerInner.childNodes[index])
-
     tabBar.tabElementMap[tabId] = tabEl
   },
 
