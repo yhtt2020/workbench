@@ -93,14 +93,20 @@ const spaceModel = {
         let result = await spaceModel.setUser(currentSpace.userInfo).getSpace(currentSpace.spaceId)
         if (result.status === 1){
           if(result.data.id==='-1'){
-            throw '云端空间已被删除'
+            space=backupSpaceModel.getSpace(currentSpace.spaceId)
+            console.error('云端空间已被删除，读入备份空间')
+            //throw '云端空间已被删除'
+          }else{
+            space = result.data
+            space.id=space.nanoid
           }
-          space = result.data
-          space.id=space.nanoid
+        }else{
+          console.error('请求服务器空间失败，读入备份空间')
+          space=backupSpaceModel.getSpace(currentSpace.spaceId)
         }
-        else{
-          throw '云端获取空间失败，网络错误'
-        }
+        // else{
+        //   throw '云端获取空间失败，网络错误'
+        // }
       } catch (e) {
         //如果没取成，则取备份空间
         space = backupSpaceModel.getSpace(currentSpace.spaceId)

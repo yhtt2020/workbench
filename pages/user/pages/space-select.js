@@ -26,7 +26,10 @@ const tpl = `
     <a-tooltip v-for="space,index in spaces" placement="bottom">
     <template #title>
     名称：{{space.name}}<br>
-    保存时间：{{dateTime(space.sync_time)}}<br>修改时间：{{dateTime(space.update_time)}}<br>创建时间：{{dateTime(space.create_time)}}<br>
+    空间ID：{{space.id}}<br>
+    保存时间：{{dateTime(space.sync_time)}}<br>
+    修改时间：{{dateTime(space.update_time)}}<br>
+    创建时间：{{dateTime(space.create_time)}}<br>
      <span v-if="space.client_id !==''">设备ID：{{space.client_id}}</span>
      </template>
         <a-card  v-if="space.type==='cloud'"
@@ -66,9 +69,10 @@ const tpl = `
 
 
       <a-dropdown v-for="space,index in spaces" :trigger="['contextmenu']">
-         <a-tooltip placement="bottom">
+         <a-tooltip placement="bottom" :mouseLeave-delay="0">
     <template #title>
     名称：{{space.name}}<br>
+    空间ID：{{space.id}}<br>
     保存时间：{{dateTime(space.sync_time)}}<br>修改时间：{{dateTime(space.update_time)}}<br>创建时间：{{dateTime(space.create_time)}}<br>
      <span v-if="space.client_id !==''">设备ID：{{space.client_id}}</span>
      </template>
@@ -138,7 +142,7 @@ const tpl = `
 <!--    <div style="float: left;"><a-button size="small" shape="round">隐私空间</a-button></div>-->
     <div style="float:right;width: 200px;text-align: right">
       <a-button v-if="user.uid!==0" @click="setEnterPwd()" style="margin-right: 10px">设置密码</a-button>
-      <a-button v-if="user.uid!==0" @click="deleteAccount(user.uid)">解绑账号</a-button>
+      <a-button v-if="user.uid!==0" @click="deleteAccount(user.uid)">解绑帐号</a-button>
     </div>
   </div>
  <a-modal
@@ -189,9 +193,8 @@ const tpl = `
     width="400px"
     @ok="doImportSpaces"
   >
-    <p>请选择本机空间导入，可一次导入多个空间。注意：不可导入使用中的空间。</p>
+    <p>请选择本机空间导入，可一次导入多个空间。<br>注意：如果导入<strong>当前使用的空间</strong>，后续的改动<strong>不会被同步</strong>到新导入的云端空间。</p>
     <p><a-select
-    v-model:value="value"
     mode="multiple"
     placeholder="可多选"
     style="width: 100%"
@@ -261,7 +264,7 @@ const SpaceSelect = {
         this.user = user
       } else {
         console.warn(user)
-        window.antd.message.error('获取用户信息失败，登录信息过期或用户账号异常。请尝试解绑用户后重新登陆账号。')
+        window.antd.message.error('获取用户信息失败，登录信息过期或用户帐号异常。请尝试解绑用户后重新登陆帐号。')
         this.$router.go(-1)
         return //如果异常，退回上一页，防止后续出错
       }
@@ -284,7 +287,7 @@ const SpaceSelect = {
        if(this.newEnterPwd!==''){
          antd.Modal.confirm({
            title: '修改密码确认',
-           content: '是否确认设置新的密码？请牢记密码，一旦忘记，则只能解绑后重新绑定账号。',
+           content: '是否确认设置新的密码？请牢记密码，一旦忘记，则只能解绑后重新绑定帐号。',
            centered: true,
            okText: '确认设置密码',
            cancelText: '取消',
@@ -330,19 +333,17 @@ const SpaceSelect = {
     async importFromLocal () {
       //todo loadLocalSpaces()
       let spaces= await spaceModel.getLocalSpaces()
+      this.localOptions=[]
       spaces.forEach((space) => {
         if(space.data && space.type!=='cloud'){
+          if(space.id===this.currentSpace.spaceId){
+            this.localOptions.push({ label: space.name +'（ '+ space.data.state.tasks.length+' 标签组）← 当前', value: space.id })
+          }else
           this.localOptions.push({ label: space.name +'（ '+ space.data.state.tasks.length+' 标签组）', value: space.id })
           this.localSpaces.push(space)
         }
-
       })
-      for(let i=0;i<this.localOptions.length;i++){
-        if(this.localOptions[i].value===this.currentSpace.spaceId){
-          this.localOptions.splice(i,1)
-          break
-        }
-      }
+
       this.visibleImport = true
     },
     /**
@@ -350,6 +351,7 @@ const SpaceSelect = {
      * @returns {Promise<void>}
      */
     async doImportSpaces () {
+      let currentIndex=undefined
       try {
         let selectedSpaces=this.selectedImportSpaces.map(space=>{
           let item=this.localSpaces.find((item)=>{
@@ -364,11 +366,21 @@ const SpaceSelect = {
           window.antd.message.error('请选择需要导入的空间。')
           return
         }
+        currentIndex=this.selectedImportSpaces.find((op=>{
+          if(op===this.currentSpace.spaceId)
+            return true
+        }))
+
         let result = await spaceModel.setUser(this.user).importFromLocal(selectedSpaces)
         if (result.status === 1) {
-          window.antd.message.success('导入空间成功。')
           this.visibleImport = false
+          this.selectedImportSpaces=[]
           await this.loadSpaces()
+          if(currentIndex){
+            window.antd.Modal.info({title:'空间导入成功',content:'导入空间成功。导入的空间中包括当前使用中的空间，后续对当前空间的改动不会再影响到到导入后的云端空间。'})
+          }else{
+            window.antd.message.success('导入空间成功。')
+          }
         } else {
           window.antd.message.error('导入空间失败。'+result.data)
         }
@@ -389,6 +401,12 @@ const SpaceSelect = {
         let result = await spaceModel.setUser(this.user).getUserSpaces({showBackup:this.showBackup})
         if (result.status === 1) {
           spaces = result.data
+          if(this.user.uid){
+            spaces=spaces.map((sp)=>{
+              sp.id=sp.nanoid
+              return sp
+            })
+          }
         } else {
           window.antd.message.error('获取用户空间失败。失败原因：' + result.info)
           this.$router.go(-1)
@@ -399,7 +417,7 @@ const SpaceSelect = {
           console.warn(e)
           window.antd.message.error('无法连接到服务器，服务器异常，请稍后再试。')
         }else{
-          window.antd.message.error('获取用户空间失败，可尝试在账号上右键，选择【解绑账户】，解绑后再重新登录。')
+          window.antd.message.error('获取用户空间失败，可尝试在帐号上右键，选择【解绑账户】，解绑后再重新登录。')
         }
 
         this.$router.go(-1)
@@ -556,7 +574,7 @@ const SpaceSelect = {
       if (this.user.uid === 0) {
         antd.Modal.confirm({
           title: '切换到本地空间',
-          content: '是否更改当前空间，更改空间将重载浏览器，可能导致您网页上未保存的内容丢失，请确认已经保存全部内容。切换本地空间并不会更改当前登录账号。',
+          content: '是否更改当前空间，更改空间将重载浏览器，可能导致您网页上未保存的内容丢失，请确认已经保存全部内容。切换本地空间并不会更改当前登录帐号。',
           centered: true,
           okText: '我已保存，切换空间',
           cancelText: '取消',
@@ -618,7 +636,7 @@ const SpaceSelect = {
         } else {
           antd.Modal.confirm({
             title: '切换到云端空间',
-            content: '是否切换到云端空间？切换到云端空间后会同时更换当前账号到此账号。请务必确认您网页上的内容已经保存。否则可能丢失未保存内容。',
+            content: '是否切换到云端空间？切换到云端空间后会同时更换当前帐号到此帐号。请务必确认您网页上的内容已经保存。否则可能丢失未保存内容。',
             centered: true,
             okText: '我已保存，切换空间',
             cancelText: '取消',
@@ -632,17 +650,17 @@ const SpaceSelect = {
 
     deleteAccount (uid) {
       antd.Modal.confirm({
-        title: '解绑此账号',
-        content: '解绑账号并不会影响账号数据，仅仅是将本地账号退出。但是退出后无法再使用此账号下的所有空间。',
+        title: '解绑此帐号',
+        content: '解绑帐号并不会影响帐号数据，仅仅是将本地帐号退出。但是退出后无法再使用此帐号下的所有空间。',
         centered: true,
         okText: '确认',
         cancelText: '取消',
         onOk: () => {
           userModel.delete( {uid:uid} ).then(() => {
-            window.antd.message.success('解绑账号成功。')
+            window.antd.message.success('解绑帐号成功。')
             this.$router.replace('/')
           }).catch(()=>{
-            window.antd.message.error('解绑账号失败。')
+            window.antd.message.error('解绑帐号失败。')
           })
         }
       })

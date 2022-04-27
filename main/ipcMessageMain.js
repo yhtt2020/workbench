@@ -26,7 +26,7 @@ const ipcMessageMain={
     //打开消息中心窗体
     openMessageCenter: 'openMessageCenter',
 
-    //打开通知中心设置
+    //打开消息中心设置
     openMsmSetting: 'openMsmSetting',
 
     //打开全局搜索

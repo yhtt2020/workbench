@@ -1,4 +1,3 @@
-@charset "UTF-8";
 #navbar {
   display: flex;
   height: calc(36px + var(--control-space-top));
@@ -12,7 +11,6 @@
   padding-left: var(--control-space-left);
   padding-right: var(--control-space-right);
 }
-
 /*.drag-container .tab-item.active{*/
 /*  background: rgb(69, 132, 250) !important;*/
 /*}*/
@@ -20,16 +18,17 @@
   margin: 4px !important;
   top: var(--control-space-top) !important;
   opacity: 1;
-  background: white !important;
+  background: rgba(255, 255, 255, 1) !important;
   color: #333 !important;
   box-shadow: 0 0 5px rgba(80, 80, 80, 0.42);
 }
 
-.gu-transit {
+.gu-transit{
   opacity: 0 !important;
 }
 
 /* when the tab-group is white, we need a line to separate it from the webviews */
+
 #navbar:before {
   content: "";
   width: 100vw;
@@ -41,15 +40,16 @@
 }
 
 /* dark colors don't need to be darkened as much for contrast */
+
 .dark-theme #navbar:before {
   background: rgba(0, 0, 0, 0.04);
 }
-
 .dark-theme.is-edit-mode #navbar:before {
   background: none;
 }
 
 /* navbar buttons */
+
 #toolbar-navigation-buttons {
   width: 2.375rem;
   transition: 0.1s width;
@@ -70,19 +70,15 @@ body.is-edit-mode #toolbar-navigation-buttons {
   transition: none;
   padding: 0 0.6rem;
 }
-
-.navbar-action-button:hover {
+.navbar-action-button:hover{
   background: #ffffff63;
 }
-
 #back-button {
   padding-left: 0.4rem;
 }
-
 #forward-button {
   margin-left: -0.75em;
 }
-
 #back-button:disabled, #forward-button:disabled {
   opacity: 0.2;
 }
@@ -102,13 +98,13 @@ body.linux #menu-button {
 }
 
 /* tab layout */
+
 #navbar #tabs {
   display: flex;
   position: relative;
   overflow: hidden;
   margin-right: 35px;
 }
-
 #tabs #tabs-inner {
   display: inline-flex;
   width: 100%;
@@ -122,7 +118,7 @@ body.linux #menu-button {
 }
 
 .tab-item {
-  flex: 1;
+  flex:1;
   display: flex;
   width: 230px;
   min-width: 0px;
@@ -134,13 +130,12 @@ body.linux #menu-button {
   position: relative;
   /*padding: 0 10px;*/
   border-radius: 6px;
-  margin: 6px;
+  margin: 6px ;
 }
 
 #navbar.show-dividers .tab-item:not(:last-child) {
   border-right: 1px solid rgba(0, 0, 0, 0.15);
 }
-
 .dark-theme #navbar.show-dividers .tab-item:not(:last-child) {
   border-right-color: rgba(255, 255, 255, 0.4);
 }
@@ -152,21 +147,19 @@ body.linux #menu-button {
 .tab-item:not(.active):hover {
   background-color: rgba(0, 0, 0, 0.03);
 }
-
 .dark-theme .tab-item:not(.active):hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
-
 .dark-theme.theme-background-low-contrast .tab-item:not(.active):hover {
   background-color: rgba(255, 255, 255, 0.15);
 }
 
 /* icons */
+
 .tab-item .tab-icon-area {
   margin-left: auto;
   margin-right: 5px;
-}
-
+  }
 .tab-item .tab-icon {
   position: relative;
   font-size: 0.7em;
@@ -174,7 +167,6 @@ body.linux #menu-button {
   box-sizing: content-box;
   margin-left: 5px;
 }
-
 .tab-item .tab-icon:not(.permission-request-icon):hover:after {
   content: "";
   width: 20px;
@@ -186,25 +178,21 @@ body.linux #menu-button {
   left: -3px;
   z-index: -1;
 }
-
 .tab-item .tab-icon:is(.tab-close-button):hover:after {
   background: rgba(245, 27, 27, 0.78) !important;
   top: 0;
   left: -1px;
 }
-
-.windows .tab-item .tab-icon:is(.tab-close-button):hover:after {
-  top: 2px;
-  left: -1px;
+.windows .tab-item .tab-icon:is(.tab-close-button):hover:after{
+      top: 2px;
+      left: -1px;
 }
-
 .tab-item .tab-icon:is(.tab-close-button):hover:after {
   background: rgba(245, 27, 27, 0.78) !important;
   top: 0;
   left: -1px;
 }
-
-.tab-item .tab-icon:is(.tab-close-button):hover:before {
+.tab-item .tab-icon:is(.tab-close-button):hover:before{
   z-index: 2;
   color: white;
   top: -5px;
@@ -214,15 +202,14 @@ body.linux #menu-button {
 .dark-theme .tab-item .tab-icon:hover:after {
   background: rgba(255, 255, 255, 0.15);
 }
-
-.tab-item.active:not(:only-child) {
+.tab-item.active:not(:only-child ) {
   /*background: rgba(0, 0, 0, 0.06);*/
-  background: #4584fa;
+  background: rgb(69, 132, 250);
   color: white;
   /*text-shadow: 0 0 3px rgba(107, 107, 107, 0.42);*/
 }
 
-.use-theme .tab-item.active:not(:only-child) {
+.use-theme .tab-item.active:not(:only-child ) {
   background: rgba(110, 110, 110, 0.47);
   color: #ffffff;
 }
@@ -230,15 +217,13 @@ body.linux #menu-button {
 .dark-theme .tab-item.active:not(:only-child) {
   background: rgba(255, 255, 255, 0.2);
 }
-
 .dark-theme.theme-background-low-contrast .tab-item.active:not(:only-child) {
   background: rgba(255, 255, 255, 0.1);
-}
 
+}
 .tab-item.fade {
   opacity: 0.55;
 }
-
 .tab-item.fade:hover {
   opacity: 1;
 }
@@ -248,19 +233,19 @@ body.linux #menu-button {
 }
 
 /* hide tabs when tab editor is open */
+
 .is-edit-mode .tab-item {
   opacity: 0;
 }
 
 /* hide the lock icon unless its the current tab */
+
 .tab-item:not(.active) .icon-tab-not-secure {
   display: none;
 }
-
-.tab-item:hover .title {
+.tab-item:hover .title{
   max-width: calc(100% - 10px);
 }
-
 .tab-item .title {
   font-size: 13px;
   max-width: 100%;
@@ -270,50 +255,44 @@ body.linux #menu-button {
   display: inline-block;
   overflow: hidden;
   /* 添加上favicon*/
-}
-.tab-item .title .icon {
-  width: 18px;
-  height: 18px;
-  margin-right: 5px;
-  margin-left: 5px;
-  background: #ffffffbb;
-  border-radius: 6px;
-  margin-top: -3px;
-  vertical-align: middle;
+  .icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 5px;
+    margin-left: 5px;
+    background: #ffffffbb;
+    border-radius: 6px;
+    margin-top: -3px;
+    vertical-align: middle;
+  }
 }
 
+
 /* buttons */
+
 .navbar-action-button {
   padding: 0 1rem;
-  height: 26px;
+  height:26px;
   width: 26px;
   font-size: 1.4em !important;
   background: rgba(229, 229, 229, 0.14);
   border-radius: 4px;
   margin-top: 6px;
 }
-
 body.windows .navbar-action-button:not(:disabled):hover {
   background-color: rgba(0, 0, 0, 0.075);
 }
-
 body.windows.dark-theme .navbar-action-button:not(:disabled):hover {
   background: rgba(255, 255, 255, 0.075);
 }
-
 .navbar-action-button.invisible {
   visibility: hidden;
 }
-
 .navbar-action-button + .navbar-action-button {
   padding-left: 0.5em;
 }
-
 .navbar-right-actions {
   margin-right: 2.3em;
-}
-.windows #add-tab-button,.windows #share-button{
-  -webkit-app-region: none;
 }
 
 .navbar-right-actions #add-tab-button {
@@ -326,31 +305,30 @@ body.windows.dark-theme .navbar-action-button:not(:disabled):hover {
 .tab-item .tab-audio-button {
   vertical-align: text-bottom;
   padding: 0 0.5em 0 0;
-  font-size: 0.9em !important;
+  font-size: .9em !important;
 }
-
-.tab-item .tab-audio-button:hover:before {
-  top: 10px !important;
-  left: 7px !important;
+.tab-item .tab-audio-button:hover:before{
+    top: 10px !important;
+    left: 7px !important;
 }
 
 /* reader button */
+
 .tab-item .reader-button {
   display: none;
   vertical-align: text-bottom;
   padding: 0 0.5em 0 0;
   font-size: 1.1em !important;
 }
-
 .tab-item.active .reader-button.can-reader {
   display: inline-block;
 }
-
 .tab-item.active .reader-button.is-reader {
   display: inline-block;
 }
 
 /* permission request buttons */
+
 .tab-item .tab-icon.permission-request-icon {
   border: 1px rgba(0, 0, 0, 0.3) solid;
   padding: 0.15em 0.17em;
@@ -359,31 +337,25 @@ body.windows.dark-theme .navbar-action-button:not(:disabled):hover {
   margin-left: -0.3em;
   border-radius: 0.75em;
 }
-
 .tab-item .tab-icon.permission-request-icon .i {
   vertical-align: middle;
   margin-top: -3px;
   display: inline-block;
 }
-
 .dark-theme .tab-item .tab-icon.permission-request-icon {
   border-color: rgba(255, 255, 255, 0.5);
 }
-
 .tab-item .tab-icon.permission-request-icon:hover {
   background-color: rgba(0, 0, 0, 0.075);
 }
-
 .dark-theme .tab-item .tab-icon.permission-request-icon:hover {
   background-color: rgba(255, 255, 255, 0.15);
 }
-
 .tab-item .tab-icon.permission-request-icon.active {
   background-color: rgba(0, 0, 0, 0.66);
   border-color: transparent;
   color: white;
 }
-
 .dark-theme .tab-item .tab-icon.permission-request-icon.active {
   background-color: rgba(255, 255, 255, 0.9);
   border-color: transparent;
@@ -397,25 +369,24 @@ body.windows.dark-theme .navbar-action-button:not(:disabled):hover {
 /* in Carbon, close icon is a bit smaller than other icons, enlarge it in order to match with other icons */
 .tab-item .tab-close-button {
   font-size: 1.13em;
-  padding: 0.1em 0.1em 0.1em 0em;
+  padding:0.1em 0.1em 0.1em 0.0em;
   margin-top: 0.15em;
 }
 
-.tab-item .tab-item:hover .tab-close-button:after {
+.tab-item  .tab-item:hover .tab-close-button:after {
   top: 4px !important;
   left: 7px !important;
   font-size: 0.9em;
 }
 
 /* when the tab is hovered, hide info buttons and show the close button */
+
 body:not(.touch) .tab-item:hover .tab-info-icon {
   display: none;
 }
-
 body:not(.touch) .tab-item .tab-close-button {
   display: none;
 }
-
 body:not(.touch) .tab-item:hover .tab-close-button {
   display: inline-block;
   z-index: 1;
@@ -426,6 +397,7 @@ body.is-focus-mode .navbar-action-button:not(#menu-button) {
 }
 
 /* progress bar */
+
 .progress-bar-container {
   height: 2px;
   width: 100%;
@@ -460,4 +432,3 @@ body:not(.dark-theme) .progress-bar {
   transition: transform 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/*# sourceMappingURL=tabBar.css.map */

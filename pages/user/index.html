@@ -95,9 +95,16 @@
   //   }
   // })
   ipc.on('loginCallback',(e,args)=>{
-    console.log('登录成功')
-    window.antd.message.success('成功添加账号。')
-    router.replace('/')
+    window.antd.message.success('成功添加帐号。')
+    setTimeout(()=>{
+      router.replace({ name: 'space', params: { uid: args.data.userInfo.uid } })
+    },500)
+
   })
 </script>
+<style>
+  .ant-dropdown{
+    z-index: 999999 !important;
+  }
+</style>
 </html>

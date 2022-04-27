@@ -238,49 +238,74 @@ body {
   border-radius: 0;
 
 }
+.init-expanded{
+  width: 145px;
+  transition: none;
+  .wrapper {
+    width: 142px;
+    transition: none;
+  }
+  .side-container .side-items {
+    width: 145px;
+    transition: none;
 
+  }
+  .bottom-container {
+    width: 145px;
+    transition: none;
+  }
+  .side-items .app-items {
+    width: 162px;
+    transition: none;
+  }
+  .app-box {
+    width: 145px;
+    transition: none;
+  }
+  .app-task {
+    width: 145px;
+    transition: none;
+  }
+  .ant-collapse > .ant-collapse-item > .ant-collapse-header .ant-collapse-arrow {
+    left: 68px;
+    transition: none;
+  }
+}
 .expanded {
   width: 145px;
   transition: width 0.1s;
+  .wrapper {
+    width: 142px;
+    transition: width 0.1s;
+  }
+  .side-container .side-items {
+    width: 145px;
+    transition: width 0.1s;
+
+  }
+  .bottom-container {
+    width: 145px;
+    transition: width 0.1s;
+  }
+  .side-items .app-items {
+    width: 162px;
+    transition: width 0.1s;
+  }
+  .app-box {
+    width: 145px;
+    transition: width 0.1s;
+  }
+  .app-task {
+    width: 145px;
+    transition: width 0.1s;
+  }
+  .ant-collapse > .ant-collapse-item > .ant-collapse-header .ant-collapse-arrow {
+    left: 68px;
+    transition: width 0.1s;
+  }
 }
 
-.expanded .wrapper {
-  width: 142px;
-  overflow: hidden;
-  transition: width 0.1s;
-}
 
-.expanded .side-container .side-items {
-  width: 145px;
-  transition: width 0.1s;
-
-}
-
-.expanded .bottom-container {
-  width: 145px;
-  transition: width 0.1s;
-}
-
-
-.expanded .side-items .app-items {
-  width: 162px;
-  transition: width 0.1s;
-}
-
-.expanded .app-box {
-  width: 145px;
-  transition: width 0.1s;
-}
-
-.expanded .app-task {
-  width: 145px;
-  transition: width 0.1s;
-}
-
-.expanded .ant-collapse > .ant-collapse-item > .ant-collapse-header .ant-collapse-arrow {
-  left: 68px;
-  transition: width 0.1s;
-}
 
 .divider {
   border-top: 1px solid lightgrey;

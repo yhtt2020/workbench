@@ -115,9 +115,6 @@ window.onload = function() {
 		},
 		getters: {
       getAllMessages: state => {
-        state.allMessages.forEach(v => {
-          v.time = tools.formatTime(v.timestamp)
-        });
         return state.allMessages
       },
       getMyGroups: state => {
@@ -242,11 +239,15 @@ window.onload = function() {
       },
       //设置全部的消息列表
       SET_ALLMESSAGES: (state, messages) => {
+        messages.forEach(v => {
+          v.time = tools.formatTime(v.timestamp)
+        });
         state.allMessages = messages
       },
       //添加消息
-      ADD_MESSAGE: (state, message) => {
-        state.allMessages.unshift(message)
+      ADD_MESSAGE: (state, messages) => {
+        messages.time = tools.formatTime(messages.timestamp)
+        state.allMessages.unshift(messages)
       },
       //根据id删除单个消息
       DEL_MESSAGE_BYID: (state, id) => {
@@ -485,7 +486,20 @@ window.onload = function() {
 			window: window
 		},
 		mounted: function() {
+      tsbk.default.config({
+        signature: "ts"
+      })
 			window.$store = store
+      let sideMode = localStorage.getItem('sideMode')
+      sideMode = sideMode || 'auto'
+      if (sideMode === 'close' || sideMode === 'auto') {
+        document.getElementById('clickThroughElement').style.left = '55px'
+      } else if (sideMode === 'open') {
+        console.log(document.getElementById('appVue').classList)
+        document.getElementById('clickThroughElement').style.left = '155px'
+
+      }
+      this.mod = sideMode
       getCurrentUser()
 		}
 	})

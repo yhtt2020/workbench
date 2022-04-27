@@ -1,1 +1,154 @@
-body,html{width:100%;height:100%;padding:0;margin:0;box-sizing:border-box;font-family:".SFNSText-Regular","Helvetica Neue","Arial",sans-serif;background-color:rgba(0,0,0,0);-webkit-app-region:drag}body button,html button{-webkit-app-region:no-drag}*,*:before,*:after{box-sizing:inherit}.gs-dialog{width:600px;min-height:150px;max-height:400px;border-radius:10px;background-color:#fff}.gs-dialog .search{border-radius:10px 10px 0px 0px;background-color:#f5f6f6;width:100%;height:50px;padding:0px 20px}.gs-dialog .search input{-webkit-app-region:no-drag;margin-left:10px;background-color:#f5f6f6;outline:0 none;border:none;width:92%}.gs-dialog .search input::-webkit-input-placeholder{color:#cccdcd}.gs-dialog .category{width:100%;padding:0px 20px;height:50px}.gs-dialog .category .category-lf{-webkit-app-region:no-drag}.gs-dialog .apps{width:100%;padding:10px 20px;height:140px}.gs-dialog .apps .apps-content{height:90px;width:100%;overflow:scroll;-webkit-app-region:no-drag}.gs-dialog .apps .apps-content::-webkit-scrollbar{width:0 !important}.gs-dialog .apps .apps-content ul li{height:100%;width:92px;cursor:pointer}.gs-dialog .apps .apps-content ul li img{width:44px;height:44px;padding:2px;border:2px solid;border-radius:50%}.gs-dialog .recent-open{width:100%;border-radius:0px 0px 10px 10px}.gs-dialog .recent-open span{height:30px;padding-left:20px}.gs-dialog .recent-open .recent-open-content{min-height:50px;max-height:300px;overflow-y:scroll;-webkit-app-region:no-drag}.gs-dialog .recent-open .recent-open-content::-webkit-scrollbar{width:0 !important}.gs-dialog .recent-open .recent-open-content ul{width:100%}.gs-dialog .recent-open .recent-open-content ul li{width:100%;height:50px;padding:0px 20px}.gs-dialog .recent-open .recent-open-content ul li:hover{background-color:#f6f6f6;cursor:pointer}.gs-dialog .recent-open .recent-open-content ul .li-ready{background-color:#f6f6f6;border-left:3px solid #508bfe;cursor:pointer}.gs-dialog .content{min-height:50px;max-height:300px;overflow-y:scroll;width:100%;border-radius:0px 0px 10px 10px;-webkit-app-region:no-drag}.gs-dialog .content::-webkit-scrollbar{width:0 !important}.gs-dialog .content ul{width:100%}.gs-dialog .content ul li{width:100%;height:50px;padding:0px 20px}.gs-dialog .content ul li:hover{background-color:#f6f6f6;border-left:3px solid #508bfe;cursor:pointer}.gs-dialog .content ul .li-ready{background-color:#f6f6f6;border-left:3px solid #508bfe;cursor:pointer}.first-gs-dialog{max-height:530px}ul{margin:0px}
+body,
+html {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: ".SFNSText-Regular", "Helvetica Neue", "Arial", sans-serif;
+  background-color: rgba(0, 0, 0, 0);
+  -webkit-app-region: drag;
+}
+body button,
+html button {
+  -webkit-app-region: no-drag;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+.gs-dialog {
+  width: 600px;
+  min-height: 150px;
+  max-height: 400px;
+  border-radius: 10px;
+  background-color: #FFFFFF;
+}
+.gs-dialog .search {
+  border-radius: 10px 10px 0px 0px;
+  background-color: #F5F6F6;
+  width: 100%;
+  height: 50px;
+  padding: 0px 20px;
+}
+.gs-dialog .search input {
+  -webkit-app-region: no-drag;
+  margin-left: 10px;
+  background-color: #F5F6F6;
+  outline: 0 none;
+  border: none;
+  width: 92%;
+}
+.gs-dialog .search input::-webkit-input-placeholder {
+  color: #CCCDCD;
+}
+.gs-dialog .category {
+  width: 100%;
+  padding: 0px 20px;
+  height: 50px;
+}
+.gs-dialog .category .category-lf {
+  -webkit-app-region: no-drag;
+}
+.gs-dialog .apps {
+  width: 100%;
+  padding: 10px 20px;
+  height: 140px;
+}
+.gs-dialog .apps .apps-content {
+  height: 90px;
+  width: 100%;
+  overflow: scroll;
+  -webkit-app-region: no-drag;
+}
+.gs-dialog .apps .apps-content::-webkit-scrollbar {
+  width: 0 !important;
+}
+.gs-dialog .apps .apps-content ul li {
+  height: 100%;
+  width: 92px;
+  cursor: pointer;
+}
+.gs-dialog .apps .apps-content ul li img {
+  width: 44px;
+  height: 44px;
+  padding: 2px;
+  border: 2px solid;
+  border-radius: 50%;
+}
+.gs-dialog .recent-open {
+  width: 100%;
+  border-radius: 0px 0px 10px 10px;
+}
+.gs-dialog .recent-open span {
+  height: 30px;
+  padding-left: 20px;
+}
+.gs-dialog .recent-open .recent-open-content {
+  min-height: 50px;
+  max-height: 300px;
+  overflow-y: scroll;
+  -webkit-app-region: no-drag;
+}
+.gs-dialog .recent-open .recent-open-content::-webkit-scrollbar {
+  width: 0 !important;
+}
+.gs-dialog .recent-open .recent-open-content ul {
+  width: 100%;
+}
+.gs-dialog .recent-open .recent-open-content ul li {
+  width: 100%;
+  height: 50px;
+  padding: 0px 20px;
+}
+.gs-dialog .recent-open .recent-open-content ul li:hover {
+  background-color: #F6F6F6;
+  cursor: pointer;
+}
+.gs-dialog .recent-open .recent-open-content ul .li-ready {
+  background-color: #F6F6F6;
+  border-left: 3px solid #508BFE;
+  cursor: pointer;
+}
+.gs-dialog .content {
+  min-height: 50px;
+  max-height: 300px;
+  overflow-y: scroll;
+  width: 100%;
+  border-radius: 0px 0px 10px 10px;
+  -webkit-app-region: no-drag;
+}
+.gs-dialog .content::-webkit-scrollbar {
+  width: 0 !important;
+}
+.gs-dialog .content ul {
+  width: 100%;
+}
+.gs-dialog .content ul li {
+  width: 100%;
+  height: 50px;
+  padding: 0px 20px;
+}
+.gs-dialog .content ul li:hover {
+  background-color: #F6F6F6;
+  border-left: 3px solid #508BFE;
+  cursor: pointer;
+}
+.gs-dialog .content ul .li-ready {
+  background-color: #F6F6F6;
+  border-left: 3px solid #508BFE;
+  cursor: pointer;
+}
+
+.first-gs-dialog {
+  max-height: 530px;
+}
+
+ul {
+  margin: 0px;
+}
+
+/*# sourceMappingURL=style.css.map */

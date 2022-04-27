@@ -185,7 +185,7 @@ function getBestInput (names, exclusionNames, types) {
 // Shortcut to get username fields from a page.
 // 从页面里获取用户名字段
 function getBestUsernameField () {
-  const input=getBestInput(['user', 'name', 'mail', 'login', 'auth', 'identifier','account','phone','用户名','手机','邮箱','账号','帐号','email'], ['confirm', 'filename'], ['text', 'email'])
+  const input=getBestInput(['user', 'name', 'mail', 'login', 'auth', 'identifier','account','phone','用户名','手机','邮箱','帐号','帐号','email'], ['confirm', 'filename'], ['text', 'email'])
   if(!!input){
     log('获取到匹配的用户名字段')
     log(input)
@@ -306,7 +306,7 @@ function addFocusListener (element, credentials) {
     const container = buildContainer()
     const inputWidth=e.target.offsetWidth
     console.log()
-    container.innerHTML=`<div style="padding: 5px;border-bottom: 1px solid #c1c1c1;color: grey;width:${inputWidth}px"> ${lockIcon} 个人账号</div>`
+    container.innerHTML=`<div style="padding: 5px;border-bottom: 1px solid #c1c1c1;color: grey;width:${inputWidth}px"> ${lockIcon} 个人帐号</div>`
     for (const cred of credentials) {
       addOption(container, cred.username)
     }
@@ -434,7 +434,7 @@ window.addEventListener('load', function (event) {
 })
 
 // send passwords back to the main process so they can be saved to storage
-// 将账号密码送回主进程以保存
+// 将帐号密码送回主进程以保存
 function handleFormSubmit () {
   var usernameValue = getBestUsernameField()?.value
   var passwordValue = getBestPasswordField()?.value

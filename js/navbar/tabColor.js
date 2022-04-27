@@ -161,6 +161,10 @@ function setColor (bg, fg, isLowContrast) {
   }
 
   for (let i = 0; i < textElements.length; i++) {
+    if(textElements[i].id==='share-button'){
+      textElements[i].children[0].children[0].setAttribute('fill',fg)
+      textElements[i].children[0].children[1].setAttribute('fill',fg)
+    }
     textElements[i].style.color = fg
   }
 
