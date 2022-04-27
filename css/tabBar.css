@@ -312,6 +312,9 @@ body.windows.dark-theme .navbar-action-button:not(:disabled):hover {
 .navbar-right-actions {
   margin-right: 2.3em;
 }
+.windows #add-tab-button,.windows #share-button{
+  -webkit-app-region: none;
+}
 
 .navbar-right-actions #add-tab-button {
   padding: 0;
