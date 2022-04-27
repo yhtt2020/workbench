@@ -456,14 +456,6 @@ const tabBar = {
       let template = [
         [
           {
-            id: 'open',
-            label: '创建一个新组',
-            click: function () {
-              require('browserUI.js').addTask()
-              //$store.getters.fillTasksToItems
-            },
-          },
-          {
             id: 'addToDesk',
             label: '添加到桌面',
             submenu: addToDeskMenus
@@ -474,7 +466,9 @@ const tabBar = {
             click: function () {
               tabBar.addToApps(data.id)
             },
-          },
+          }
+          ],
+        [
           {
             id: 'open',
             label: '打开新标签',
@@ -559,18 +553,7 @@ const tabBar = {
                 },
               },
             ],
-          },
-          {
-            label: '分享整组',
-            submenu: [
-              {
-                label: '复制链接',
-                click: function () {
-                  tabBar.shareTask()
-                }
-              },
-            ],
-          },
+          }
         ],
       ]
 
@@ -693,7 +676,11 @@ const tabBar = {
         // console.log(showSiglAppGroupNav, 'showSiglAppGroupNav__')
       }
 
-      await handleGroupNav()
+      try{
+        await handleGroupNav()
+      }catch (e) {
+
+      }
 
       //处理本地导航的列表呈现
       const localAppsMenu = async () => {
@@ -716,8 +703,7 @@ const tabBar = {
           })
         })
       }
-
-      await localAppsMenu()
+        await localAppsMenu()
 
       const onlineTempl = [
         {
