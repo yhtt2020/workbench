@@ -123,6 +123,7 @@ body.linux #menu-button {
 
 .tab-item {
   flex: 1;
+  display: flex;
   width: 230px;
   min-width: 0px;
   transition: 0.2s transform;
@@ -162,8 +163,8 @@ body.linux #menu-button {
 
 /* icons */
 .tab-item .tab-icon-area {
-  position: absolute;
-  right: 0;
+  margin-left: auto;
+  margin-right: 5px;
 }
 
 .tab-item .tab-icon {
@@ -171,6 +172,7 @@ body.linux #menu-button {
   font-size: 0.7em;
   padding: 0 0;
   box-sizing: content-box;
+  margin-left: 5px;
 }
 
 .tab-item .tab-icon:not(.permission-request-icon):hover:after {
@@ -180,7 +182,7 @@ body.linux #menu-button {
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.075);
   position: absolute;
-  top: -5px;
+  top: 2px;
   left: -3px;
   z-index: -1;
 }
@@ -262,22 +264,22 @@ body.linux #menu-button {
 .tab-item .title {
   font-size: 13px;
   max-width: 100%;
-  overflow-x: hidden;
   overflow-wrap: break-word;
   white-space: nowrap;
   text-overflow: ellipsis;
   display: inline-block;
+  overflow: hidden;
+  /* 添加上favicon*/
 }
-
-/* 添加上favicon*/
-.tab-item .icon {
+.tab-item .title .icon {
   width: 18px;
   height: 18px;
-  margin-right: 10px;
-  margin-left: 10px;
-  vertical-align: text-bottom;
+  margin-right: 5px;
+  margin-left: 5px;
   background: #ffffffbb;
   border-radius: 6px;
+  margin-top: -3px;
+  vertical-align: middle;
 }
 
 /* buttons */
@@ -322,6 +324,11 @@ body.windows.dark-theme .navbar-action-button:not(:disabled):hover {
   vertical-align: text-bottom;
   padding: 0 0.5em 0 0;
   font-size: 0.9em !important;
+}
+
+.tab-item .tab-audio-button:hover:before {
+  top: 10px !important;
+  left: 7px !important;
 }
 
 /* reader button */
