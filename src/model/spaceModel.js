@@ -66,22 +66,51 @@ const spaceModel = {
     return result
   },
 
+  insertFirstSpace(data={
+    "version": 2,
+    "state": {
+      "tasks": [
+      ],
+      "selectedTask": ""
+    },
+    "saveTime": Date.now(),
+  }){
+    ldb.reload()
+    let spaceAdd={
+      name:'默认空间',
+      data:data,
+      count_task:1,
+      count_tab:1,
+      create_time:Date.now(),
+      update_time:Date.now(),
+      sync_time:Date.now(),
+      uid:0,
+      type:'local',
+      id:nanoid()
+    }
+    ldb.db.get('spaces').push(spaceAdd).write()
+    console.warn('插入了默认空间',spaceAdd)
+    let currentSpace = {
+      spaceId:spaceAdd.id,
+      spaceType: 'local',
+      name: spaceAdd.name,
+      userInfo: {
+        uid: 0
+      },
+      space:spaceAdd
+    }
+    ldb.db.set('currentSpace', currentSpace).write()
+    return currentSpace
+  },
   /**
    * 获取当前空间
    */
   async getCurrent (needDetail=false) {
     ldb.reload()
     let currentSpace = ldb.db.get('currentSpace').value()
-    if (!currentSpace) { //如果是首次读入，不存在currentSpace就插入一个默认的值
-      currentSpace = {
-        spaceId: nanoid(),
-        spaceType: 'local',
-        name: '默认空间',
-        userInfo: {
-          uid: 0
-        }
-      }
-      ldb.db.set('currentSpace', currentSpace).write()
+    if (!!!currentSpace) { //如果是首次读入，不存在currentSpace就插入一个默认的值
+      console.warn('空间损坏，基本不会走这条路线')
+       return false
     }
     if(currentSpace.spaceId===-1){
       throw '空间id无效'
@@ -93,14 +122,20 @@ const spaceModel = {
         let result = await spaceModel.setUser(currentSpace.userInfo).getSpace(currentSpace.spaceId)
         if (result.status === 1){
           if(result.data.id==='-1'){
-            throw '云端空间已被删除'
+            space=backupSpaceModel.getSpace(currentSpace.spaceId)
+            console.error('云端空间已被删除，读入备份空间')
+            //throw '云端空间已被删除'
+          }else{
+            space = result.data
+            space.id=space.nanoid
           }
-          space = result.data
-          space.id=space.nanoid
+        }else{
+          console.error('请求服务器空间失败，读入备份空间')
+          space=backupSpaceModel.getSpace(currentSpace.spaceId)
         }
-        else{
-          throw '云端获取空间失败，网络错误'
-        }
+        // else{
+        //   throw '云端获取空间失败，网络错误'
+        // }
       } catch (e) {
         //如果没取成，则取备份空间
         space = backupSpaceModel.getSpace(currentSpace.spaceId)

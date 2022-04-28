@@ -757,6 +757,19 @@ ipc.on('closeSwitch',()=>{
     switchWindow.close()
   }
 })
+ipc.on('openSidebarMenu',()=>{
+  const tpl=[
+    {
+      label: '管理标签组',
+      click () {
+        sendIPCToWindow(mainWindow,'showTasks')
+      }
+    }
+  ]
+  let menu = require('electron').Menu.buildFromTemplate(tpl)
+
+  menu.popup()
+})
 ipc.on('switchToTab',(event,args)=>{
   sendIPCToWindow(mainWindow,'switchToTab',args)
 })
@@ -1080,6 +1093,7 @@ app.whenReady().then(()=>{
         const ldb=require(__dirname+'/src/util/ldb.js')
         ldb.load(app.getPath('userData')+'/ldb.json')
         ldb.db.set('currentSpace.spaceId',args.spaceId).write()
+        ldb.db.set('currentSpace.name',args.name).write()
         ldb.db.set('currentSpace.spaceType',args.spaceType).write()
         ldb.db.set('currentSpace.userInfo',args.userInfo).write()
         createWindow()
@@ -1091,6 +1105,10 @@ app.whenReady().then(()=>{
 
   ipc.on('disconnect',()=>{
     SidePanel.send('disconnect')
+  })
+
+  ipc.on('reconnect',()=>{
+    SidePanel.send('reconnect')
   })
 
   ipc.on('saving',()=>{

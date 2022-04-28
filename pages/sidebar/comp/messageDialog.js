@@ -5,7 +5,7 @@ const messageTempl = /* html */`
       <div class="top flex justify-between align-center">
         <div class="top-lf flex justify-center align-center text-black-lg">
           <a-icon type="bell" :style="{ fontSize: '16px' }"></a-icon>
-          <span>通知中心</span>
+          <span>消息中心</span>
         </div>
         <div class="top-rg flex justify-around align-center">
           <div class="top-rg-block flex justify-center align-center" style="width: 24px; height: 24px;" v-if="this.$store.getters.getAllMessages.length > 0">
@@ -228,7 +228,7 @@ Vue.component("message-center", {
       img.onerror = null; //防止闪图
     },
     showGroup() {
-      ipc.send('saAppOpen', {saAppId: 1})
+      ipc.invoke('saAppOpenSysApp', {saAppId: 1})
     },
     mountedIsSilent() {
       let messageSetting = JSON.parse(localStorage.getItem("messageSetting"))
@@ -273,7 +273,9 @@ Vue.component("message-center", {
       } else if(item.messageType === 'groupChat') {
         //todo
       } else if(item.messageType === 'webOs') {
+        //console.log(settings, ' label！！！')
         let webMessage = settings.get('noticeWebOrigin')
+        //console.log(webMessage, ' label！！！')
         let mapWebMessage = webMessage.map(v => {
           if(v.link == item.title) {
             return {
@@ -284,7 +286,9 @@ Vue.component("message-center", {
             return v
           }
         })
+        //console.log(mapWebMessage, ' label！！！')
         settings.set('noticeWebOrigin', mapWebMessage)
+
       }
     },
     removeAllMessage(type) {

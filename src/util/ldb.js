@@ -3,10 +3,7 @@ const FileSync = require('lowdb/adapters/FileSync')
 const { nanoid } = require('nanoid')
 const tables= {
   spaces:[],
-  currentSpace:{
-    spaceId:1,
-    spaceType:'local'
-  },
+  currentSpace:{},
   users:[],
   config:{}
 }

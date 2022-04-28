@@ -127,7 +127,7 @@ app.on('ready', () => {
   })
 
   //圈子邀请添加成员
-  ipc.on('osxOpenInviteMember', (event, args) => {
+  ipc.handle('saAppOsxOpenInviteMember', (event, args) => {
     if(osxInviteMember !== null) {
       osxInviteMember.close()
     }
@@ -154,6 +154,7 @@ app.on('ready', () => {
     const { api } = require(path.join(__dirname, '//server-config.js'))
     osxInviteMember.webContents.loadURL(`${api.getUrl(api.API_URL.user.CIRCLE_INVITELINK)}?id=${args}`)
     osxInviteMember.on('close', () => osxInviteMember = null)
+    return {code: 200, msg: '成功'}
   })
 
   //圈子设置
@@ -227,11 +228,11 @@ app.on('ready', () => {
             let toastel
             let interval = setInterval(() => {
               toastel = document.getElementsByClassName('xm-toast')[0]
-              if (toastel && toastel.innerText === '创建成功') {
+              if (toastel && toastel.innerText.includes('成功')) {
                 clearInterval(interval)
                 setTimeout(() => {
                   window.close()
-                }, 1000)
+                }, 500)
               }
             }, 200)
           }
