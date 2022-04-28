@@ -14,25 +14,32 @@ const localAdapter={
   update(space){
     localSpaceModel.update(space)
   },
+  /**
+   * 从本地读入老的空间存储
+   * @returns {boolean|*}
+   */
+  loadOldRestore(){
+    if(fs.existsSync(localAdapter.oldSavePath)){
+      let savedJson=fs.readFileSync(localAdapter.oldSavePath, 'utf-8')
+      if(savedJson){
+        //fs.renameSync(localAdapter.oldSavePath,localAdapter.oldSavePath+'.bak')
+        return savedJson
+      }
+    }else{
+      return false
+    }
+  },
   async restore(spaceId){
     ldb.reload()
     var savedStringData
     try {
       let space=ldb.db.get('spaces').find({id:spaceId}).value()
       if(!!!space){
-        if(fs.existsSync(localAdapter.oldSavePath)){
-          let savedJson=fs.readFileSync(localAdapter.oldSavePath, 'utf-8')
-          if(savedJson){
-            savedStringData=savedJson
-          }
-          fs.renameSync(localAdapter.oldSavePath,localAdapter.oldSavePath+'.bak')
-        }else{
-          return false
-        }
+        //一般这条路径也走不到的，会被前面的初始化查询处理掉。
+        savedStringData=localAdapter.loadOldRestore()
       }else{
         savedStringData=JSON.stringify(space.data)
       }
-
       //savedStringData = fs.readFileSync(sessionRestore.savePath, 'utf-8')
     } catch (e) {
       console.warn('无法载入空间，空间数据损毁',e)
