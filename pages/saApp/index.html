@@ -183,7 +183,7 @@
     let id = 0
     let nameEl = document.getElementById('appName')
     let currentUrl = ''
-    clipboard = require('electron').clipboard
+    let clipboard = require('electron').clipboard
     if (process.platform === 'darwin') {
       document.body.classList.add('mac')
       document.getElementById('windows-control').style.display = 'none'
