@@ -186,7 +186,7 @@ const sidebarTpl = `
         <ul id="pinGroup" class="app-task app-items" style="margin-bottom: 0; ">
 
           <li v-for="app in apps" @click="executeApp(app)" @mouseenter="hoverApp($event,app)"
-            @contextmenu="createMenu(app.id,app)" v-if="app.processing || app.settings.showInSideBar">
+            @contextmenu.stop="createMenu(app.id,app)" v-if="app.processing || app.settings.showInSideBar">
             <a-popover placement="right" :mouse-enter-delay="0.3" overlay-class-name="tips" @visible-change="">
               <template slot="title">
                 <span class="app-name-popover"> {{app.name}} </span>

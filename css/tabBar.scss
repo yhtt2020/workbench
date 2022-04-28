@@ -136,10 +136,10 @@ body.linux #menu-button {
 }
 
 #navbar.show-dividers .tab-item:not(:last-child) {
-  border-right: 1px solid rgba(0, 0, 0, 0.15);
+  border:1px solid  rgba(128, 128, 128, 0.5);
 }
 .dark-theme #navbar.show-dividers .tab-item:not(:last-child) {
-  border-right-color: rgba(255, 255, 255, 0.4);
+  border:1px solid rgba(255, 255, 255, 0.58);
 }
 
 #navbar.show-dividers:before {
@@ -206,7 +206,7 @@ body.linux #menu-button {
 }
 .tab-item.active:not(:only-child ) {
   /*background: rgba(0, 0, 0, 0.06);*/
-  background: rgb(69, 132, 250);
+  background: rgba(211, 211, 211, 0.84);
   color: white;
   /*text-shadow: 0 0 3px rgba(107, 107, 107, 0.42);*/
 }
