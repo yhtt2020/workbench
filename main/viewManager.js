@@ -115,6 +115,7 @@ function createView(existingViewId, id, webPreferencesString, boundsString, even
   })
 
   view.webContents.on('ipc-message', function (e, channel, data) {
+    if(mainWindow && !mainWindow.isDestroyed())
     mainWindow.webContents.send('view-ipc', {
       id: id,
       name: channel,

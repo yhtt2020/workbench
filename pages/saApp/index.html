@@ -99,6 +99,63 @@
       background-color: rgba(232, 17, 35, 0.6);
     }
 
+    .lds-ellipsis {
+      display: inline-block;
+      position: relative;
+      width: 80px;
+      height: 80px;
+    }
+    .lds-ellipsis div {
+      position: absolute;
+      top: 33px;
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      background: #ffffff;
+      animation-timing-function: cubic-bezier(0, 1, 1, 0);
+    }
+    .lds-ellipsis div:nth-child(1) {
+      left: 8px;
+      animation: lds-ellipsis1 0.6s infinite;
+    }
+    .lds-ellipsis div:nth-child(2) {
+      left: 8px;
+      animation: lds-ellipsis2 0.6s infinite;
+    }
+    .lds-ellipsis div:nth-child(3) {
+      left: 32px;
+      animation: lds-ellipsis2 0.6s infinite;
+    }
+    .lds-ellipsis div:nth-child(4) {
+      left: 56px;
+      animation: lds-ellipsis3 0.6s infinite;
+    }
+    @keyframes lds-ellipsis1 {
+      0% {
+        transform: scale(0);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    @keyframes lds-ellipsis3 {
+      0% {
+        transform: scale(1);
+      }
+      100% {
+        transform: scale(0);
+      }
+    }
+    @keyframes lds-ellipsis2 {
+      0% {
+        transform: translate(0, 0);
+      }
+      100% {
+        transform: translate(24px, 0);
+      }
+    }
+
+
   </style>
 </head>
 <body class="dark-theme" style="padding: 0;margin:0;background-color: white">
@@ -172,9 +229,6 @@
       </div>
     </div>
   </div>
-  <style>
-
-  </style>
 
   <script>
     require('../../dist/localization.build.js')
@@ -183,7 +237,7 @@
     let id = 0
     let nameEl = document.getElementById('appName')
     let currentUrl = ''
-    let clipboard = require('electron').clipboard
+    const clipboard = require('electron').clipboard
     if (process.platform === 'darwin') {
       document.body.classList.add('mac')
       document.getElementById('windows-control').style.display = 'none'
@@ -220,6 +274,7 @@
       document.getElementById('addressWrapper').style.display = 'none'
       document.title = args.title
       document.body.style.backgroundColor = args.app.userThemeColor ? args.app.userThemeColor : args.app.themeColor
+      document.querySelectorAll('.lds-ellipsis div').forEach((el)=>{el.style.backgroundColor= args.app.userThemeColor ? args.app.userThemeColor : args.app.themeColor})
       document.getElementById('appLogo').src = args.app.logo
       nameEl.innerText = args.app.name
       nameEl.title = '网址：' + encodeURI(args.url) + '（双击复制）'
@@ -336,6 +391,11 @@
 
     initialize()
   </script>
+</div>
+<div style="background-color: white;position: fixed;top: 41px;left: 0;right: 0;bottom: 0" >
+  <div hidden style="margin: auto;width: 200px;height: 200px;margin-top: calc( (100vh - 41px) / 2 - 100px);text-align: center" >
+  <div id="loadingEl" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+  </div>
 </div>
 </body>
 </html>
