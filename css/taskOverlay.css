@@ -48,7 +48,15 @@
 	}
 }
 
-#switch-task-button {
+#share-button svg{
+  margin-top: -9px;
+}
+.theme-background-low-contrast #share-button svg path{
+  fill: black !important;
+  color: dodgerblue;
+}
+
+.right-button {
 	position: absolute;
 	top: var(--control-space-top);
 	right: var(--control-space-right);
@@ -56,15 +64,16 @@
 	padding: 0.5em;
 }
 
-#switch-task-button.active {
+.right-button.active {
 	color: royalblue !important;
 }
 
-#switch-task-button svg {
-  width: 1em;
+.right-button svg {
+  width: 24px;
   /* height: 1em; */
   display: block;
-  margin-top: -5px;
+  margin-top: -12px;
+  margin-left: -11px;
 }
 
 #task-overlay {

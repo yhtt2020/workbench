@@ -3,7 +3,7 @@ const { api } = require('../../server-config')
 const standAloneAppModel = require('../util/model/standAloneAppModel.js')
 
 const sidebarTpl = `
-  <div id="sidebar" class="side-container">
+  <div id="sidebar" class="side-container" @contextmenu="openSidebarMenu">
     <div id="itemsEl" class="side-items">
       <ul class="app-task">
         <li @click="toggleUserPanel" class="" style="position: relative;">
@@ -186,7 +186,7 @@ const sidebarTpl = `
         <ul id="pinGroup" class="app-task app-items" style="margin-bottom: 0; ">
 
           <li v-for="app in apps" @click="executeApp(app)" @mouseenter="hoverApp($event,app)"
-            @contextmenu="createMenu(app.id,app)" v-if="app.processing || app.settings.showInSideBar">
+            @contextmenu.stop="createMenu(app.id,app)" v-if="app.processing || app.settings.showInSideBar">
             <a-popover placement="right" :mouse-enter-delay="0.3" overlay-class-name="tips" @visible-change="">
               <template slot="title">
                 <span class="app-name-popover"> {{app.name}} </span>
@@ -856,6 +856,9 @@ Vue.component('sidebar', {
   },
   template: sidebarTpl,
   methods: {
+    openSidebarMenu(){
+      ipc.send('openSidebarMenu')
+    },
     inviteLink(id) {
       tsbk.default.ready(() => {
         tsbk.default.openOsxInviteMember({
@@ -1651,7 +1654,6 @@ ipc.on('saving', async () => {
 ipc.on('disconnect', async () => {
   let savingIcon = document.getElementById('savingIcon')
   if (savingIcon.classList.contains('online')) {
-    appVue.$message.success('云空间失去连接，转入离线模式。')
     appVue.$refs.sidePanel.spaceStatus='offline'
     savingIcon.classList.remove('online')
     savingIcon.classList.add('offline')
@@ -1661,9 +1663,11 @@ ipc.on('disconnect', async () => {
 
 ipc.on('reconnect',async()=>{
   let savingIcon = document.getElementById('savingIcon')
+  appVue.$message.success('云空间重新连接成功，已为您实时保持同步。')
   if (savingIcon.classList.contains('offline')) {
     savingIcon.classList.remove('offline')
     appVue.$refs.sidePanel.spaceStatus='online'
     savingIcon.classList.add('online')
   }
+
 })

@@ -23,7 +23,7 @@ const appManagerTpl =
              <li  v-for="(appId,index) in runningApps" >
              <div class="app-title">
              <span style="cursor:pointer" @click="executeApp(getApp(appId))">
-             <img :src="getApp(appId).logo" class="app-logo"><span class="app-name">{{getApp(appId).name}}</span></span>
+             <img :src="getApp(appId).logo" class="app-logo" onerror="this.src='../../icons/default.svg'"><span class="app-name">{{getApp(appId).name}}</span></span>
              <span style="float: right"><a-icon title="设置" @click.stop="openSetting(appId)" type="setting"></a-icon>&nbsp;&nbsp; <a-icon title="彻底退出" @click.stop="closeApp(appId)" type="poweroff"></a-icon> </span>
 </div>
              <div>

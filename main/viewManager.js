@@ -97,6 +97,20 @@ function createView(existingViewId, id, webPreferencesString, boundsString, even
 
   view.webContents.removeAllListeners('-add-new-contents')
 
+  // view.webContents.on('devtools-opened',()=>{
+  //   console.log('devtools-opends')
+  //
+  //   view.webContents.devToolsWebContents.setWindowOpenHandler((details)=>{
+  //     console.log('open')
+  //     sendIPCToWindow(mainWindow,'addTab',{url:details.url})
+  //   })
+  //   // view.webContents.devToolsWebContents.on('new-window',(event, url, frameName, disposition, options, additionalFeatures, referrer, postBody) => {
+  //   //   console.log('devtools-new-window')
+  //   //   event.preventDefault()
+  //   //   sendIPCToWindow(mainWindow,'addTab',{url:url})
+  //   // })
+  // })
+
   view.webContents.on('-add-new-contents', function (e, webContents, disposition, _userGesture, _left, _top, _width, _height, url, frameName, referrer, rawFeatures, postData) {
     if (!filterPopups(url)) {
       return
@@ -115,6 +129,7 @@ function createView(existingViewId, id, webPreferencesString, boundsString, even
   })
 
   view.webContents.on('ipc-message', function (e, channel, data) {
+    if(mainWindow && !mainWindow.isDestroyed())
     mainWindow.webContents.send('view-ipc', {
       id: id,
       name: channel,
