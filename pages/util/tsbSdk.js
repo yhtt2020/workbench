@@ -350,6 +350,51 @@ var tsbk = /*#__PURE__*/function () {
           res ? resolve(res) : reject(err);
         });
       });
+    } //第三方应用免登获取免登凭证
+
+  }, {
+    key: "autoLoginEntityApp",
+    value: function autoLoginEntityApp(options) {
+      return new Promise(function (resolve, reject) {
+        if (Object.keys(options).length === 0) {
+          reject({
+            code: 400,
+            msg: '参数不能为空'
+          });
+        }
+
+        if (!options.hasOwnProperty('clientId') && !options.hasOwnProperty('bindId') && !options.hasOwnProperty('accessToken')) {
+          reject({
+            code: 400,
+            msg: '参数不全'
+          });
+        }
+
+        if (options.clientId.length === 0) {
+          reject({
+            code: 400,
+            msg: 'clientId参数不能为空'
+          });
+        }
+
+        if (options.bindId.length === 0) {
+          reject({
+            code: 400,
+            msg: 'bindId参数不能为空'
+          });
+        }
+
+        if (options.accessToken.length === 0) {
+          reject({
+            code: 400,
+            msg: 'accessToken参数不能为空'
+          });
+        }
+
+        eventBus.dispatch('autoLoginEntityApp', function (res, err) {
+          res ? resolve(res) : reject(err);
+        }, options);
+      });
     }
   }]);
 

@@ -1168,7 +1168,15 @@ app.whenReady().then(() => {
   })
 
   ipc.handle('saAppGetUserProfile', () => {
-    return storage.getItem('userInfo')
+    try {
+      return {
+        code: 200,
+        msg: '成功',
+        data: Object.assign(storage.getItem('userInfo'), {accessToken: storage.getItem('userToken')})
+      }
+    } catch (err) {
+      return {code: 500, msg: `失败:${err}`}
+    }
   })
 
   ipc.on('saAppGoBack', (event, args) => {

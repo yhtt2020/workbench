@@ -1,4 +1,10 @@
 const xss = require("xss");
+const axios = require('axios')
+const { config, api } = require('../../server-config')
+
+axios.defaults.baseURL = config.NODE_SERVER_BASE_URL;
+axios.defaults.adapter = require('axios/lib/adapters/http');
+
 
 const tsbSdk = {
   isThirdApp: Boolean,
@@ -85,6 +91,9 @@ const tsbSdk = {
           break;
         case 'getUserProfile':
           tsbSdk.getUserProfile(eventName, id)
+          break;
+        case 'autoLoginEntityApp':
+          tsbSdk.autoLoginEntityApp(eventName, id, e.data.options)
           break;
       }
     });
@@ -208,6 +217,31 @@ const tsbSdk = {
     } else {
       tsbSdk.bridgeToPreload({eventName, id})
     }
+  },
+
+  autoLoginEntityApp: function (eventName, id, options) {
+    //这个接口一定是第三方应用的，不要区分tsbSdk.isThirdApp
+    axios({
+      timeout:5000,
+      method: 'post',
+      url: api.NODE_API_URL.ENTITY_APP.AUTO_LOGIN,
+      headers: { Authorization: options.accessToken },
+      data: {
+        client_id: options.clientId,
+        bind_id: options.bindId
+      }
+    }).then(res => {
+      console.log(res, '第一层res')
+      if(res.status === 200 && res.data.code === 1000) {
+        tsbSdk.bridgeToWeb({eventName, resInfo: {code: 200, msg: '成功', data: res.data.data}, id})
+      }
+    }).catch(err => {
+      if(err.response && err.response.status >= 401 && err.response.status < 500) {
+        tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: {code: err.response.status, msg: 'code凭证获取失败,请重新获取access_token'}, id})
+      } else {
+        tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: err, id})
+      }
+    })
   }
 };
 

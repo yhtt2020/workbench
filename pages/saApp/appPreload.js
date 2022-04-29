@@ -28,7 +28,7 @@ ipc.on('fileAssign',(event,args)=>{
 })
 
 tsbSdk.listener(sdkObject) //浏览器侧sdk   //todo 暂cgz个人认为下面的contextBridge.exposeInMainWorld不再需要
-//contextBridge.exposeInMainWorld('tsbSaApp', sdkObject) //todo 此处要考虑如何兼容不需要本地sdk的系统应用
+contextBridge.exposeInMainWorld('$browser', 'tsbrowser') //此处挂载上browserTag //todo 此处要考虑如何兼容不需要本地sdk的系统应用
 
 
 //移除掉之前的ipc.on 没有意义，而且会导致页面刷新后sdk挂不上的问题
@@ -37,6 +37,7 @@ window.addEventListener('message', function(e) {
   let eventName = e.data.eventName
   let id = e.data.id;
   let options = e.data.options
+  if(!eventName) return
   if(!eventName.startsWith('third')) return
   if(e.data.hashId !== sdkObject.hashId) { throw ({code: 401, msg: '非安全的第三方应用'}) }
   switch(eventName) {

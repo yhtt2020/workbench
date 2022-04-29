@@ -2,20 +2,20 @@
 //也可以直接require进去(在非preload当中）
 let isDevelopmentMode = process.argv.some(arg=>arg==='--development-mode')
 const config = {
-  //SERVER_BASE_URL: 'http://pc2.mark.opensns.cn',  //测试站
-  SERVER_BASE_URL: 'https://s.apps.vip',   //老板你本地用这个，注释上面这个
-  //SERVER_BACKEND_URL: isDevelopmentMode ? 'https://osxbenew.mark.opensns.cn' : 'https://sad.apps.vip',
-  SERVER_BACKEND_URL: isDevelopmentMode ? 'https://sad.apps.vip' : 'https://sad.apps.vip',   //老板你本地用这个，注释上面这个
+  SERVER_BASE_URL: 'http://pc2.mark.opensns.cn',  //测试站
+  //SERVER_BASE_URL: 'https://s.apps.vip',   //老板你本地用这个，注释上面这个
+  SERVER_BACKEND_URL: isDevelopmentMode ? 'https://osxbenew.mark.opensns.cn' : 'https://sad.apps.vip',
+  //SERVER_BACKEND_URL: isDevelopmentMode ? 'https://sad.apps.vip' : 'https://sad.apps.vip',   //老板你本地用这个，注释上面这个
   DEV_NODE_SERVER_BASE_URL: 'http://test.com:8001',
   PROD_NODE_SERVER_BASE_URL: 'https://apps.vip',
-  //NODE_SERVER_BASE_URL: isDevelopmentMode ? 'http://test.com:8001' : 'https://apps.vip',
-  NODE_SERVER_BASE_URL: isDevelopmentMode ? 'https://apps.vip' : 'https://apps.vip',  //老板你本地用这个，注释上面这个
+  NODE_SERVER_BASE_URL: isDevelopmentMode ? 'http://test.com:8001' : 'https://apps.vip',
+  //NODE_SERVER_BASE_URL: isDevelopmentMode ? 'https://apps.vip' : 'https://apps.vip',  //老板你本地用这个，注释上面这个
   IM:{
     API_BASE_URL:"http://im-serve.xiangtian.ren",
     WEB_SOCKET_URL:"ws://im-socket.xiangtian.ren/socket.io",
     FRONT_URL:"http://im.xiangtian.ren",
-    FRONT_URL_DEV:"http://im.xiangtian.ren",
-    //FRONT_URL_DEV:"http://127.0.0.1:8000",
+    //FRONT_URL_DEV:"http://im.xiangtian.ren",
+    FRONT_URL_DEV:"http://127.0.0.1:8000",
     AUTO_LOGIN: '/auto-login',      //免登等待路由
     BOOT_ROUTE: '/boot-route'     //引导路由页面
   },
@@ -32,6 +32,7 @@ const appConfig = {
 }
 
 const api = {
+  //短说侧需要用到的api接口
   API_URL: {
     user: {
       login: `/login?response_type=${appConfig.response_type}&client_id=${appConfig.client_id}&state=${appConfig.state}`, //登录页面
@@ -49,12 +50,19 @@ const api = {
       index: '/groups', //群组
     },
   },
+
+  //node侧需要用到的接口
   NODE_API_URL: {
     USER: {
       CODE: '/app/authorizeCode', //code截取url
       REFRESH_TOKEN: '/app/refreshBrowserToken'
     },
+    //第三方应用需要调用的接口
+    ENTITY_APP: {
+      AUTO_LOGIN: '/app/appAutoLogin'
+    }
   },
+
   getUrl(path) {
     return config.SERVER_BASE_URL + path
   },
