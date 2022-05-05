@@ -226,13 +226,20 @@
   })
 
   ipcRenderer.on('download-info', async (event, args) => {
-
+    let i;
+// console.log(args)
     let simpleName;
     if (args.name.length >= 20) {
       simpleName = args.name.substring(0, 7) + '...' + args.name.substring(args.name.length-6,args.name.length);
     } else (simpleName = args.name)
-    // console.log(args.chainUrl)
+
     if (args.status === 'start') {
+      appVue.lists.forEach(item=>{
+        if(item.startTime===args.startTime){
+          appVue.lists.splice(appVue.lists.indexOf(args.startTime), 1)
+          appVue.count--
+        }
+      })
       appVue.lists.unshift({
         id: appVue.id++,
         title: simpleName,
@@ -246,6 +253,11 @@
         url: args.url,
         href:args.href
       })
+      // appVue.lists.forEach(item=>{
+      //   if(item.startTime===args.startTime){
+      //     appVue.lists.splice(appVue.lists.indexOf(args.startTime), 1)
+      //   }
+      // })
       appVue.listCount++
       appVue.count++
       ipcRenderer.send('willDownload')
@@ -253,13 +265,16 @@
 
     if (args.status === 'cancelled') {
       ipcRenderer.send('emptyPageUrl',args.chainUrl)
-      for (var i = 0; i < appVue.lists.length; i++) {
+      for (i = 0; i < appVue.lists.length; i++) {
         if (appVue.lists[i].startTime === args.startTime) {
             appVue.deleteId = i
         }
       }
       appVue.lists.splice(appVue.deleteId, 1)
       appVue.count--
+      if(appVue.count<0){
+        appVue.count=0
+      }
       appVue.listCount--
     }
 
@@ -286,6 +301,12 @@
     if (args.status === 'completed' && args.path !== '') {
       ipcRenderer.send('emptyPageUrl',args.chainUrl)
       const myDate = new Date();
+      appVue.doneLists.forEach(item=>{
+        if(item.startTime===args.startTime){
+          appVue.doneLists.splice(appVue.doneLists.indexOf(args.startTime), 1)
+          appVue.count++
+        }
+      })
       appVue.doneLists.unshift({
         id: appVue.doneId++,
         title: simpleName,
