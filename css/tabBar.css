@@ -218,9 +218,11 @@ body.linux #menu-button {
 
 .tab-item.active:not(:only-child) {
   /*background: rgba(0, 0, 0, 0.06);*/
-  background: rgba(211, 211, 211, 0.84);
-  color: white;
+  background: #4584fa;
   /*text-shadow: 0 0 3px rgba(107, 107, 107, 0.42);*/
+}
+.tab-item.active:not(:only-child) .title {
+  color: white !important;
 }
 
 .use-theme.theme-background-low-contrast .tab-item.active:not(:only-child) {
@@ -322,10 +324,12 @@ body.linux #menu-button {
 }
 
 body.windows .navbar-action-button:not(:disabled):hover {
-  background-color: rgba(0, 0, 0, 0.15); }
+  background-color: rgba(0, 0, 0, 0.15);
+}
 
 body.windows.dark-theme .navbar-action-button:not(:disabled):hover {
-  background: rgba(255, 255, 255, 0.15); }
+  background: rgba(255, 255, 255, 0.15);
+}
 
 .navbar-action-button.invisible {
   visibility: hidden;
