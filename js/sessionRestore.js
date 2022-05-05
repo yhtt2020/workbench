@@ -300,6 +300,7 @@ const sessionRestore = {
     let space = {}
     if (currentSpace.spaceType === 'cloud') {
       let backupSpace = await backupSpaceModel.getSpace(currentSpace.spaceId) //获取本地的备份空间
+
       try {
         let spaceResult = await spaceModel.setUser(currentSpace.userInfo).getSpace(currentSpace.spaceId) //先尝试获取一次最新的空间
         if (spaceResult.status === 1) {
@@ -327,6 +328,15 @@ const sessionRestore = {
             space = spaceResult.data
             space.id = space.nanoid
 
+            console.log('backupSpace=',backupSpace)
+            if(!!!backupSpace){
+              //如果backupSpace还不存在，则需要将成功获取的网络当做备份空间
+              //注意，如果是切换过来的空间，因为在切换之前就会读入一次最新的作为备份空间，反倒不会走这个步骤
+              console.log('发现本地的备份空间还不存在，自动将远端保存为备份空间')
+              space.userInfo=currentSpace.userInfo
+              backupSpaceModel.save(space,space)
+              backupSpace=space
+            }
             if (space['client_id'] === currentSpace.userInfo.clientId) {
               //todo 如果当前是备份空间，且还有未同步到云端的变更，则需要判断上次断开的时候是不是当前的备份空间
               try {
