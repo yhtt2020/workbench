@@ -32,7 +32,16 @@
                @mouseleave="mouseLeave">
             <div style="margin-top: 0;width: 100%;height: 55px;">
               <div style="width: 34px;height: 40px;position: absolute;margin-top: 8px;margin-left: 5px; user-select:none" >
-                <img src="icon/white.svg">
+                <img src="icon/exe.svg" style="width: 100%;height: 100%" v-if="list.title.indexOf('exe')>0">
+                <img src="icon/jpg.svg" style="width: 100%;height: 100%" v-else-if="list.title.indexOf('jpg')>0">
+                <img src="icon/jpg.svg" style="width: 100%;height: 100%" v-else-if="list.title.indexOf('jpeg')>0">
+                <img src="icon/zip.svg" style="width: 100%;height: 100%" v-else-if="list.title.indexOf('zip')>0">
+                <img src="icon/word.svg" style="width: 100%;height: 100%" v-else-if="list.title.indexOf('docx')>0">
+                <img src="icon/word.svg" style="width: 100%;height: 100%" v-else-if="list.title.indexOf('doc')>0">
+                <img src="icon/txt.svg" style="width: 100%;height: 100%" v-else-if="list.title.indexOf('txt')>0">
+                <img src="icon/video.svg" style="width: 100%;height: 100%" v-else-if="list.title.indexOf('mp4')>0">
+                <img src="icon/mp3.svg" style="width: 100%;height: 100%" v-else-if="list.title.indexOf('mp3')>0">
+                <img src="icon/white.svg" style="width: 100%;height: 100%" v-else>
               </div>
 
               <div>
@@ -82,7 +91,16 @@
                 >
             <div style="width: 100%;height: 45px;">
               <div style="width: 34px;height: 40px;position: absolute;margin-top: 4px;margin-left: 10px; user-select:none" >
-                <img src="icon/white.svg">
+                <img src="icon/exe.svg" style="width: 100%;height: 100%" v-if="doneList.title.indexOf('exe')>0">
+                <img src="icon/jpg.svg" style="width: 100%;height: 100%" v-else-if="doneList.title.indexOf('jpg')>0">
+                <img src="icon/jpg.svg" style="width: 100%;height: 100%" v-else-if="doneList.title.indexOf('jpeg')>0">
+                <img src="icon/zip.svg" style="width: 100%;height: 100%" v-else-if="doneList.title.indexOf('zip')>0">
+                <img src="icon/word.svg" style="width: 100%;height: 100%" v-else-if="doneList.title.indexOf('docx')>0">
+                <img src="icon/word.svg" style="width: 100%;height: 100%" v-else-if="doneList.title.indexOf('doc')>0">
+                <img src="icon/txt.svg" style="width: 100%;height: 100%" v-else-if="doneList.title.indexOf('txt')>0">
+                <img src="icon/video.svg" style="width: 100%;height: 100%" v-else-if="doneList.title.indexOf('mp4')>0">
+                <img src="icon/mp3.svg" style="width: 100%;height: 100%" v-else-if="doneList.title.indexOf('mp3')>0">
+                <img src="icon/white.svg" style="width: 100%;height: 100%" v-else>
               </div>
                 <div>
                   <a-modal v-model="visible" title="删除下载任务" ok-text="确认" cancel-text="取消" @ok="hideModalDone()">
@@ -119,7 +137,7 @@
                @mouseleave="mouseLeave">
             <div style="width: 100%;height: 45px;">
               <div style="width: 34px;height: 40px;position: absolute;margin-top: 4px;margin-left: 10px;user-select:none" >
-                <img src="icon/white.svg">
+                <img src="icon/delete.svg" style="width: 100%;height: 100%">
               </div>
               <div style="position: absolute;margin-left: 270px;margin-top: 14px">{{deleteList.statusText}}</div>
               <div style="margin-left: 50px;font-size: 13px;font-weight: bold;text-decoration:line-through">{{deleteList.title}}</div>
