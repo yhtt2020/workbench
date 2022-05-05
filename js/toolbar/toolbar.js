@@ -120,6 +120,7 @@ const sideBar = {
 }
 
 ipc.on('openToolbar',()=>{
+
   document.getElementById('password-capture-bar').style.top = -36+'px'
   if (sideBar.mod==='close' || sideBar.mod==='auto'){
     toolbar.expanded = true
@@ -147,6 +148,7 @@ ipc.on('openToolbar',()=>{
 })
 
 ipc.on('hideToolbar',()=>{
+
   setTimeout(function () {
     ipc.invoke('showToolbarDialog')
   }, 16)
