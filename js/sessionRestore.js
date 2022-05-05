@@ -10,7 +10,7 @@ const urlParser = require('../js/util/urlParser')
 const ipc = require('electron').ipcRenderer
 let SYNC_INTERVAL = 30 //普通模式下，同步间隔为30秒
 if ('development-mode' in window.globalArgs) {
-  SYNC_INTERVAL = 15 //开发模式下，间隔改为5，方便调试和暴露问题
+  SYNC_INTERVAL = 300000 //开发模式下，间隔改为5，方便调试和暴露问题
 }
 let autoSaver = null
 
@@ -41,7 +41,7 @@ function disconnect (options) {
  * @param data
  * @returns {{count_tab: number, data, name, count_task, type: (string|*)}}
  */
-function getSaveData(data){
+function getSaveData (data) {
   let countTask = data.state.tasks.length
   let countTab = 0
   data.state.tasks.forEach(task => {
@@ -75,7 +75,7 @@ const sessionRestore = {
         return !tab.private
       })
     }
-    let saveData=getSaveData(data)
+    let saveData = getSaveData(data)
 
     if (forceSave === true || stateString !== sessionRestore.previousState) {
       let uid = typeof sessionRestore.currentSpace.userInfo === 'undefined' ? 0 : sessionRestore.currentSpace.userInfo.uid
@@ -92,8 +92,10 @@ const sessionRestore = {
           saveData.userInfo = sessionRestore.currentSpace.userInfo
           //备份空间需要额外夹带一个最新的用户信息
           //如果是云端空间，还需要将此用户的信息存储下来，避免后面切换空间后导致当前用户信息丢失之后，无法再通过接口交互。
+          console.log('离线保存成功', space, saveData)
           backupSpaceModel.save(space, saveData)
         } else {
+          console.log('本地空间保存成功', space, saveData)
           localSpaceModel.save(space, saveData)
         }
       }
@@ -270,7 +272,29 @@ const sessionRestore = {
       browserUI.switchToTab(newSessionErrorTab)
     }
   },
+  init () {
+    //如果是则判断是否是老浏览器，如果是则从老空间恢复，否则直接插入一个新空间。
+    ldb.reload()
+    let currentSpace = ldb.db.get('currentSpace').value()
+    console.log(currentSpace)
+    if (typeof currentSpace.spaceId === 'undefined') {
+      console.warn('检测到是首次运行')
+      //不存在当前空间，则认为是新的
+      let loadedData = localAdapter.loadOldRestore()
+      if (loadedData) {
+        console.warn('读入老的数据')
+        //如果存在老的数据
+        spaceModel.insertFirstSpace(JSON.parse(loadedData))
+      } else {
+        console.warn('初始全新')
+        spaceModel.insertFirstSpace()
+        //确定是全新用户
+      }
+    }
+  },
   initialize: async function () {
+    //检查是否是第一次运行，如果是，则进行初始化
+    sessionRestore.init()
     let currentSpace = {}
     currentSpace = await spaceModel.getCurrent()
     let space = {}
@@ -313,9 +337,9 @@ const sessionRestore = {
                 let cloudResult = await cloudAdapter.save(currentSpace.spaceId, getSaveData(backupSpace.data))
                 console.log('恢复返回', cloudResult)
                 if (cloudResult.status === 1) {
-                  setTimeout(()=>{
+                  setTimeout(() => {
                     ipc.send('reconnect')
-                  },2000)
+                  }, 2000)
                   console.log('将离线空间保存到云端成功。')
                 } else {
                   if (cloudResult.data.action === 'fatal') {
@@ -422,9 +446,9 @@ const sessionRestore = {
           description: '由于意外情况导致无法连接远端空间。',
           disconnect: true
         })
-        setTimeout(()=>{
+        setTimeout(() => {
           ipc.send('disconnect')
-        },2000)
+        }, 2000)
       }
     } else {
       //此处为本地空间的初始化逻辑
