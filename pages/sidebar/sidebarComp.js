@@ -187,8 +187,8 @@ const sidebarTpl = `
 
           <li v-for="app in apps" @click="executeApp(app)" @mouseenter="hoverApp($event,app)"
             @contextmenu.stop="createMenu(app.id,app)" v-if="app.processing || app.settings.showInSideBar">
-            <a-popover placement="right" :mouse-enter-delay="0.3" overlay-class-name="tips" @visible-change="">
-              <template slot="title">
+            <a-popover placement="right"  :mouse-enter-delay="0.3" overlay-class-name="tips" @visible-change="">
+              <template  slot="title">
                 <span class="app-name-popover"> {{app.name}} </span>
               </template>
               <template slot="content" v-if="app.processing">
@@ -197,7 +197,7 @@ const sidebarTpl = `
                 </div>
               </template>
               <template slot="content" v-else>
-                {{app.summary}}
+              <div style="max-width: 400px">{{app.summary}}</div>
               </template>
               <div class="wrapper sa-app-wrapper">
                 <div v-if="app.processing" class="processing"></div>
@@ -548,9 +548,9 @@ const sidebarTpl = `
                         :key="tab.id">
                         <div class="tab-title" @click="openPopoverTab(item.id, tab.id)">
                         <span @click.stop="closeTab(tab.id,item.id)" style="float: left;cursor: pointer"  title="关闭该标签" :id="'close'+tab.id" hidden  class="closeTab">
-                           <img src="assets/close-box.svg"  style="margin-left: 9px;width: 22px;height: 22px">
-                         </span>
-                          <img class="tab-icon" :id="'tabIcon'+tab.id"  :src="tab.icon" style="margin-left: 8px"
+                           <img src="assets/close-box.svg"  style="margin-left: 8px;width: 25px;height: 20px;">
+                        </span>
+                          <img class="tab-icon" :id="'tabIcon'+tab.id"  :src="tab.icon" style="margin-left: 8px;"
                             onerror="this.src='../../icons/default.svg'" />&nbsp;{{ tab.title }}
                         </div>
                         <span @click="toggleLockTab(tab.id,item.id)" :id="'hoverLock'+tab.id" :hidden="tab.lock!==true"
