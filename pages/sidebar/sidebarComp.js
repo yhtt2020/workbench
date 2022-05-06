@@ -547,8 +547,8 @@ const sidebarTpl = `
                         @mouseenter="showHoverLock(tab)" @mouseleave="hideHoverLock(tab)" v-for="(tab,j) in item.tabs"
                         :key="tab.id">
                         <div class="tab-title" @click="openPopoverTab(item.id, tab.id)">
-                        <span @click.stop="closeTab(tab.id,item.id)" style="float: left;cursor: pointer"  title="关闭该标签" :id="'close'+tab.id" hidden  class="closeTab">
-                           <img src="assets/close-box.svg"  style="margin-left: 8px;width: 25px;height: 20px;">
+                        <span @click.stop="closeTab(tab.id,item.id)" style="float: left;cursor: pointer;padding-left: 6px;width: 33px;"  title="关闭该标签" :id="'close'+tab.id" hidden  class="closeTab">
+                           <img src="assets/close-box.svg" style="width: 100%;height: 20px">
                         </span>
                           <img class="tab-icon" :id="'tabIcon'+tab.id"  :src="tab.icon" style="margin-left: 8px;"
                             onerror="this.src='../../icons/default.svg'" />&nbsp;{{ tab.title }}
