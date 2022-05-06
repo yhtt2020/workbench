@@ -73,7 +73,7 @@ body.is-edit-mode #toolbar-navigation-buttons {
 }
 
 .navbar-action-button:hover {
-  background: rgba(255, 255, 255, 0.47);
+  background: rgba(215, 215, 215, 0.47);
 }
 
 #back-button {
