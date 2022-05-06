@@ -546,6 +546,9 @@ const appManager = {
       //saApp.url ='/pages/fav/index.html'
       //saApp.type='local'
       saApp.url = 'http://localhost:8080/'
+    }else if(saApp.package==='com.thisky.fav'){
+      saApp.url='/pages/fav/index.html'
+      saApp.type='local'
     }
 
     remote.enable(appView.webContents)
