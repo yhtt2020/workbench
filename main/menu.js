@@ -95,18 +95,18 @@ function buildAppMenu (options = {}) {
     }
   }
 
+
+  let isToolbar = true;
   ipc.on('changeToolbar',()=>{
     isToolbar = false
-
   })
-
   var template = [
     ...(options.secondary ? tabTaskActions : []),
-    ...(options.secondary ? [{ type: 'separator' }] : []),
+    ...(options.secondary ? [{type: 'separator'}] : []),
     ...(options.secondary ? personalDataItems : []),
-    ...(options.secondary ? [{ type: 'separator' }] : []),
+    ...(options.secondary ? [{type: 'separator'}] : []),
     ...(options.secondary ? [preferencesAction] : []),
-    ...(options.secondary ? [{ type: 'separator' }] : []),
+    ...(options.secondary ? [{type: 'separator'}] : []),
     ...(process.platform === 'darwin'
       ? [
         {
@@ -153,7 +153,7 @@ function buildAppMenu (options = {}) {
       label: l('appMenuFile'),
       submenu: [
         ...(!options.secondary ? tabTaskActions : []),
-        ...(!options.secondary ? [{ type: 'separator' }] : []),
+        ...(!options.secondary ? [{type: 'separator'}] : []),
         {
           label: l('appMenuSavePageAs'),
           accelerator: 'CmdOrCtrl+s',
@@ -172,12 +172,12 @@ function buildAppMenu (options = {}) {
           }
         },
         {
-          label:'打开用户数据目录',
+          label: '打开用户数据目录',
           click: function () {
             electron.shell.openPath(app.getPath('userData'))
           }
         },
-        ...(!options.secondary && process.platform === 'linux' ? [{ type: 'separator' }] : []),
+        ...(!options.secondary && process.platform === 'linux' ? [{type: 'separator'}] : []),
         ...(!options.secondary && process.platform === 'linux' ? [quitAction] : [])
       ]
     },
@@ -227,7 +227,7 @@ function buildAppMenu (options = {}) {
             sendIPCToWindow(window, 'findInPage')
           }
         },
-        ...(!options.secondary && process.platform !== 'darwin' ? [{ type: 'separator' }] : []),
+        ...(!options.secondary && process.platform !== 'darwin' ? [{type: 'separator'}] : []),
         ...(!options.secondary && process.platform !== 'darwin' ? [preferencesAction] : [])
       ]
     },
@@ -237,7 +237,7 @@ function buildAppMenu (options = {}) {
         {
           label: "选择器",
           accelerator: 'Ctrl+tab',
-          click:function(item,window){
+          click: function (item, window) {
             createSwitchTask()
           }
         }
@@ -247,7 +247,7 @@ function buildAppMenu (options = {}) {
       label: l('appMenuView'),
       submenu: [
         ...(!options.secondary ? personalDataItems : []),
-        ...(!options.secondary ? [{ type: 'separator' }] : []),
+        ...(!options.secondary ? [{type: 'separator'}] : []),
         {
           label: l('appMenuZoomIn'),
           accelerator: 'CmdOrCtrl+Plus',
@@ -291,7 +291,7 @@ function buildAppMenu (options = {}) {
           label: '工具栏',
           accelerator: undefined,
           type: 'checkbox',
-          checked: false,
+          checked:isToolbar,
           click: function (item, window) {
             if (isToolbar) {
               isToolbar = false
@@ -305,7 +305,11 @@ function buildAppMenu (options = {}) {
         {
           label: l('appMenuFullScreen'),
           accelerator: (function () {
-            if (process.platform == 'darwin') { return 'Ctrl+Command+F' } else { return 'F11' }
+            if (process.platform == 'darwin') {
+              return 'Ctrl+Command+F'
+            } else {
+              return 'F11'
+            }
           })(),
           role: 'togglefullscreen'
         }
@@ -317,7 +321,11 @@ function buildAppMenu (options = {}) {
         {
           label: l('appMenuInspectPage'),
           accelerator: (function () {
-            if (process.platform == 'darwin') { return 'F12' } else { return 'F12' }
+            if (process.platform == 'darwin') {
+              return 'F12'
+            } else {
+              return 'F12'
+            }
           })(),
           click: function (item, window) {
             sendIPCToWindow(window, 'inspectPage')
@@ -339,7 +347,11 @@ function buildAppMenu (options = {}) {
         {
           label: l('appMenuInspectBrowser'),
           accelerator: (function () {
-            if (process.platform === 'darwin') { return 'Shift+Cmd+Alt+I' } else { return 'Ctrl+Shift+Alt+I' }
+            if (process.platform === 'darwin') {
+              return 'Shift+Cmd+Alt+I'
+            } else {
+              return 'Ctrl+Shift+Alt+I'
+            }
           })(),
           click: function (item, focusedWindow) {
             if (focusedWindow) focusedWindow.toggleDevTools()
@@ -371,7 +383,7 @@ function buildAppMenu (options = {}) {
                   }
                 }
               }
-            // otherwise, this event will be handled in the main window
+              // otherwise, this event will be handled in the main window
             }
           },
           {
@@ -424,12 +436,12 @@ function buildAppMenu (options = {}) {
           }
         },
         {
-          label:'检测升级',
-          click:function(){
+          label: '检测升级',
+          click: function () {
             loadUpdate(updateData)
           }
         },
-        ...(process.platform !== 'darwin' ? [{ type: 'separator' }] : []),
+        ...(process.platform !== 'darwin' ? [{type: 'separator'}] : []),
         ...(process.platform !== 'darwin' ? [{
           label: l('appMenuAbout').replace('%n', app.name),
           click: function (item, window) {
@@ -447,7 +459,7 @@ function buildAppMenu (options = {}) {
         }] : [])
       ]
     },
-    ...(options.secondary && process.platform !== 'darwin' ? [{ type: 'separator' }] : []),
+    ...(options.secondary && process.platform !== 'darwin' ? [{type: 'separator'}] : []),
     ...(options.secondary && process.platform !== 'darwin' ? [quitAction] : [])
   ]
   return Menu.buildFromTemplate(template)

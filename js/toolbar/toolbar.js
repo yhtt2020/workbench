@@ -120,8 +120,9 @@ const sideBar = {
 }
 
 ipc.on('openToolbar',()=>{
+
   document.getElementById('password-capture-bar').style.top = -36+'px'
-  if (sideBar.mod==='close'){
+  if (sideBar.mod==='close' || sideBar.mod==='auto'){
     toolbar.expanded = true
     toolbar.toolbarEl.hidden = false
     document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px + 40px )`
@@ -132,7 +133,7 @@ ipc.on('openToolbar',()=>{
     document.getElementById('address-bar').appendChild(document.getElementById('tab-editor'))
     document.getElementById('toolbar-navigation-buttons').hidden = true
   }
-  if(sideBar.mod==='open' || sideBar.mod==='auto'){
+  if(sideBar.mod==='open'){
     toolbar.expanded = true
     toolbar.toolbarEl.hidden = false
     document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px + 40px )`
@@ -147,10 +148,11 @@ ipc.on('openToolbar',()=>{
 })
 
 ipc.on('hideToolbar',()=>{
+
   setTimeout(function () {
     ipc.invoke('showToolbarDialog')
   }, 16)
-  if(sideBar.mod==='close'){
+  if(sideBar.mod==='close' || sideBar.mod==='auto'){
     toolbar.expanded = false
     toolbar.toolbarEl.hidden = true
     document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px )`
@@ -160,7 +162,7 @@ ipc.on('hideToolbar',()=>{
     webviews.adjustMargin([0, 0, 0, 0])
     document.getElementById('toolbar-navigation-buttons').hidden = false
   }
-  if(sideBar.mod==='open' || sideBar.mod==='auto'){
+  if(sideBar.mod==='open'){
     toolbar.expanded = false
     toolbar.toolbarEl.hidden = true
     document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px )`
@@ -287,7 +289,7 @@ const toolbar = {
         ipc.invoke('showToolbarDialog')
       }, 16)
       document.getElementById('password-capture-bar').style.top = 36+'px'
-      if(sideBar.mod==='close'){
+      if(sideBar.mod==='close' || sideBar.mod==='auto'){
         toolbar.expanded = false
         toolbar.toolbarEl.hidden = true
         document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px )`
@@ -297,7 +299,7 @@ const toolbar = {
         webviews.adjustMargin([0, 0, 0, 0])
         document.getElementById('toolbar-navigation-buttons').hidden = false
       }
-      if(sideBar.mod==='open' || sideBar.mod==='auto'){
+      if(sideBar.mod==='open' ){
         toolbar.expanded = false
         toolbar.toolbarEl.hidden = true
         document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px )`
