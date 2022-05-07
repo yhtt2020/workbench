@@ -747,11 +747,13 @@ Vue.component('sidebar', {
    })
     this.mod = appVue.mod
 
-    await standAloneAppModel.initialize()
-    standAloneAppModel.getAllApps().then(apps=>{
-      this.apps =apps
+    await standAloneAppModel.initialize().then(()=>{
+      standAloneAppModel.getAllApps().then(apps=>{
+        console.log(apps)
+        this.apps =apps
+        ipc.send('getRunningApps')
+      })
     })
-    ipc.send('getRunningApps')
 
     if (localStorage.getItem('sidebarDividerMod') === 'auto' || !!!localStorage.getItem('sidebarDividerMod')) {
       document.getElementById('pinGroup').style.position = 'relative'

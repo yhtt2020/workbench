@@ -117,7 +117,9 @@ ipc.handle('unmaximize', function (e) {
 })
 
 ipc.handle('close', function (e) {
-  mainWindow.close()
+  //mainWindow.close()
+  //更改为安全关闭
+  safeCloseMainWindow()
 })
 
 ipc.handle('setFullScreen', function (e, fullScreen) {

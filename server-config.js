@@ -1,6 +1,7 @@
 //本代码会同时被preoload.js合并进去
 //也可以直接require进去(在非preload当中）
 let isDevelopmentMode = process.argv.some(arg=>arg==='--development-mode')
+const localNode=true //设置为true则使用本地的node配置
 const config = {
   //SERVER_BASE_URL: 'http://pc2.mark.opensns.cn',  //测试站
   SERVER_BASE_URL: 'https://s.apps.vip',   //老板你本地用这个，注释上面这个
@@ -8,7 +9,6 @@ const config = {
   SERVER_BACKEND_URL: isDevelopmentMode ? 'https://sad.apps.vip' : 'https://sad.apps.vip',   //老板你本地用这个，注释上面这个
   DEV_NODE_SERVER_BASE_URL: 'http://test.com:8001',
   PROD_NODE_SERVER_BASE_URL: 'https://apps.vip',
-  //NODE_SERVER_BASE_URL: isDevelopmentMode ? 'http://test.com:8001' : 'https://apps.vip',
   NODE_SERVER_BASE_URL: isDevelopmentMode ? 'https://apps.vip' : 'https://apps.vip',  //老板你本地用这个，注释上面这个
   IM:{
     API_BASE_URL:"http://im-serve.xiangtian.ren",
@@ -25,10 +25,16 @@ const config = {
 }
 
 const appConfig = {
-  client_id: isDevelopmentMode ? 10001 : 10001,
+  client_id: 10001,
   bind_im_id: 10002,  //lumen id
   state: 1,
   response_type: 'code',
+}
+//如果是本地node,则修改相应的配置项
+if(localNode && isDevelopmentMode){
+  //本地环境下的配置项重置
+  config.NODE_SERVER_BASE_URL='http://test.com:8001'
+  appConfig.client_id=10003
 }
 
 const api = {

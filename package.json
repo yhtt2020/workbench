@@ -2,7 +2,7 @@
   "name": "tsbrowser",
   "productName": "想天浏览器",
   "author": "Thisky",
-  "version": "2.9.30",
+  "version": "2.9.32",
   "description": "一款针对工作场景的极简浏览器，帮助你提升效率，保持专注",
   "electronVersion": "16.0.10",
   "main": "main.build.js",
@@ -101,8 +101,10 @@
     "updateSuffixes": "node ./ext/publicSuffixes/updateSuffixes.js",
     "lint": "prettier --write **/**/*.css **/**/*.md **/**/*.html **/**/*.json && standard --fix js/**/*.js main/*.js | snazzy",
     "package": "npm run build && ./node_modules/.bin/electron-builder --config electron-builder-config.yml --publish never",
+    "packagePrd": "npm run build && ./node_modules/.bin/electron-builder --config electron-builder-config-prd.yml --publish never",
     "packMacIntel": "npm run build && ./node_modules/.bin/electron-builder --mac --x64 --config electron-builder-config.yml --publish never",
-    "postinstall": "./node_modules/.bin/electron-builder install-app-deps"
+    "postinstall": "./node_modules/.bin/electron-builder install-app-deps",
+    "packagePrdMacAll": "yarn run packagePrd --macos --x64 && yarn run packagePrd"
   },
   "repository": {
     "type": "git",

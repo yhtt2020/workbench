@@ -72,7 +72,7 @@ body.is-edit-mode #toolbar-navigation-buttons {
   padding: 0 0.6rem;
 }
 .navbar-action-button:hover{
-  background: rgba(255, 255, 255, 0.47);
+  background: rgba(215, 215, 215, 0.47);
 }
 #back-button {
   padding-left: 0.4rem;
@@ -206,8 +206,14 @@ body.linux #menu-button {
 }
 .tab-item.active:not(:only-child ) {
   /*background: rgba(0, 0, 0, 0.06);*/
-  background: rgba(211, 211, 211, 0.84);
-  color: white;
+  //background: rgba(211, 211, 211, 0.84);
+  //color: white;
+  //background: rgba(255, 255, 255, 0.2);
+  background: rgb(69, 132, 250);
+  //修改为蓝色
+  .title{
+    color: white !important;
+  }
   /*text-shadow: 0 0 3px rgba(107, 107, 107, 0.42);*/
 }
 .use-theme.theme-background-low-contrast  .tab-item.active:not(:only-child ){
