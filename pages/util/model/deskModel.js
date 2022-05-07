@@ -91,7 +91,7 @@ const deskModel={
       console.log(e)
     }
     if(!!!desks){
-      defaultDesks=[{"icon":"bulb","name":"新桌面","id":1644396372459,"layout":[],"createTime":1644396372459,"updateTime":1644396404065,"wallPaper":'../../img/wallPaper.jpeg'}]
+      defaultDesks=[{"icon":"bulb","name":"新桌面","id":1644396372459,"layout":[],"createTime":1644396372459,"updateTime":1644396404065,"wallPaper":'../../img/wallpaper.jpeg'}]
       defaultDesk=[{"x":6,"y":1,"w":4,"h":1,"i":1644397673066,"isResizable":true,"maxH":1,"element":{"type":"search","data":{}},"moved":false},{"x":3,"y":1,"w":3,"h":1,"i":1644397677136,"element":{"type":"clock","data":{"type":2,"color":"black"}},"moved":false}]
       localStorage.setItem('desks',JSON.stringify(defaultDesks))
       localStorage.setItem('desk_1644396372459',JSON.stringify(defaultDesk))

@@ -465,42 +465,67 @@ body {
   border-radius: 0;
 }
 
+.init-expanded {
+  width: 145px;
+  transition: none;
+}
+.init-expanded .wrapper {
+  width: 142px;
+  transition: none;
+}
+.init-expanded .side-container .side-items {
+  width: 145px;
+  transition: none;
+}
+.init-expanded .bottom-container {
+  width: 145px;
+  transition: none;
+}
+.init-expanded .side-items .app-items {
+  width: 162px;
+  transition: none;
+}
+.init-expanded .app-box {
+  width: 145px;
+  transition: none;
+}
+.init-expanded .app-task {
+  width: 145px;
+  transition: none;
+}
+.init-expanded .ant-collapse > .ant-collapse-item > .ant-collapse-header .ant-collapse-arrow {
+  left: 68px;
+  transition: none;
+}
+
 .expanded {
   width: 145px;
   transition: width 0.1s;
 }
-
 .expanded .wrapper {
   width: 142px;
-  overflow: hidden;
   transition: width 0.1s;
 }
-
 .expanded .side-container .side-items {
   width: 145px;
   transition: width 0.1s;
 }
-
 .expanded .bottom-container {
   width: 145px;
   transition: width 0.1s;
 }
-
 .expanded .side-items .app-items {
   width: 162px;
   transition: width 0.1s;
 }
-
 .expanded .app-box {
   width: 145px;
   transition: width 0.1s;
 }
-
 .expanded .app-task {
   width: 145px;
   transition: width 0.1s;
 }
-
 .expanded .ant-collapse > .ant-collapse-item > .ant-collapse-header .ant-collapse-arrow {
   left: 68px;
   transition: width 0.1s;

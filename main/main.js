@@ -518,3 +518,20 @@ app.on('ready', function() {
 // 	sendIPCToWindow(mainWindow,'showBookmarks')
 
 // })
+/**
+ * 安全关闭主窗体，主窗体会先同步完成空间保存，之后再发送ipc告诉主进程进行安全关闭
+ */
+function safeCloseMainWindow(){
+  sendIPCToWindow(mainWindow,'safeClose')
+}
+
+ipc.on('closeMainWindow',()=>{
+  mainWindow.setClosable(true)
+  mainWindow.close()
+})
+
+let canQuit=false
+ipc.on('quitApp',()=>{
+  canQuit=true
+  app.quit()
+})

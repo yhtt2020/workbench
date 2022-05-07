@@ -15,7 +15,7 @@
   <script>
     Vue.use(antd);
   </script>
-  <script src="../../../tsbSdk/dist/tsbSdk.js"></script>
+  <script src="../../util/tsbSdk.js"></script>
   <div id="appVue">
     <div class="main flex flex-direction">
       <p style="height: 40px; padding-left: 20px; padding-top: 30px; font-size: 14px; font-weight: 500;">团队创建成功，您现在可以进行以下操作：</p>
@@ -81,11 +81,10 @@
       },
       methods: {
         searchMember() {
-          //todo 然后这里利用groupid，打开这个新的团队
           ipc.send('osxOpenSearchMember', this.groupId)
         },
         inviteMember() {
-          ipc.send('osxOpenInviteMember', this.groupId)
+          ipc.invoke('saAppOsxOpenInviteMember', this.groupId)
         },
         openCircleHome() {
           ipc.send('addTab',{url: `${api.getUrl(api.API_URL.user.CIRCLE)}?id=${this.groupId}`})

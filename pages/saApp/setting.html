@@ -37,23 +37,23 @@
                 <a-menu-item key="2" >
                   <a href="#optimize">体验优化</a>
                 </a-menu-item>
-                <a-menu-item key="3">
-                  <a href="#permission">权限管理</a>
-                </a-menu-item>
+<!--                <a-menu-item key="3">-->
+<!--                  <a href="#permission">权限管理</a>-->
+<!--                </a-menu-item>-->
               </a-sub-menu>
-              <a-menu-item key="fenshen">
-                <a-icon type="user"></a-icon>
-                应用分身
-              </a-menu-item>
-              <a-sub-menu key="dev">
-                <span slot="title"><a-icon type="laptop"></a-icon>深度集成</span>
-                <a-menu-item key="5">
-                  菜单管理
-                </a-menu-item>
-                <a-menu-item key="6">
-                  接口对接
-                </a-menu-item>
-              </a-sub-menu>
+<!--              <a-menu-item key="fenshen">-->
+<!--                <a-icon type="user"></a-icon>-->
+<!--                应用分身-->
+<!--              </a-menu-item>-->
+<!--              <a-sub-menu key="dev">-->
+<!--                <span slot="title"><a-icon type="laptop"></a-icon>深度集成</span>-->
+<!--                <a-menu-item key="5">-->
+<!--                  菜单管理-->
+<!--                </a-menu-item>-->
+<!--                <a-menu-item key="6">-->
+<!--                  接口对接-->
+<!--                </a-menu-item>-->
+<!--              </a-sub-menu>-->
 
             </a-menu>
           </a-layout-sider>
@@ -97,7 +97,8 @@
                     :wrapper-col="formItemLayout.wrapperCol"
                     label="应用起始地址："
                   >
-                    <span class="ant-form-text" style="line-height: 40px">
+                    <span class="ant-form-text" style="line-height: 40px;text-overflow: ellipsis;
+  white-space: nowrap;display: inline-block;max-width: 370px;word-break: break-all; overflow: hidden;">
         {{this.saApp.url}}
       </span>
                   </a-form-item>
@@ -111,7 +112,7 @@
           'summary',
           { rules: [{ required: true, message: '请输入应用说明' }] },
         ]"
-                      placeholder="输入应用说明"
+                      placeholder="输入应用说明" maxlength="50"
                     />
                   </a-form-item>
                   <a-form-item
@@ -120,11 +121,13 @@
                     label="主题色"
                   >
 <!--                    -->
-                    <div>
-                      <span class="theme-color" :style="{'background-color':this.saApp.themeColor} "></span>&nbsp; 图标背景色
+                    <div >
+                      <span class="theme-color" :style="{'background-color':this.saApp.themeColor} "></span>
+                      <div style="margin-left: 50px;margin-top: -35px">图标背景色</div>
                     </div>
-                    <div><v-swatches class="color-select" @input="userThemeColorChanged" shapes="circles" v-model="saApp.userThemeColor" popover-x="left" popover-y="bottom" show-fallback swatches="text-advanced" fallback-input-type="color"></v-swatches> &nbsp;自定义背景色
-                    <a-button type="default" size="small" @click="saApp.userThemeColor='';userThemeColorChanged('')">重置</a-button>
+                    <div style="margin-top: 18px"><v-swatches class="color-select" @input="userThemeColorChanged" shapes="circles" v-model="saApp.userThemeColor" popover-x="left" popover-y="bottom" show-fallback swatches="text-advanced" fallback-input-type="color"></v-swatches>
+                      <div style="margin-left: 50px;margin-top: -33px">自定义背景色</div>
+                    <a-button style="position: absolute;margin-left: 140px;margin-top: -21px" type="default" size="small" @click="saApp.userThemeColor='';userThemeColorChanged('')">重置</a-button>
                     </div>
                   </a-form-item>
 
@@ -144,16 +147,16 @@
                             保持运行
                           </a-checkbox>
                         </a-col>
-                        <a-col :span="8">
-                          <a-checkbox value="theme">
-                            沉浸式主题色
-                          </a-checkbox>
-                        </a-col>
-                        <a-col :span="8">
-                          <a-checkbox value="desktop">
-                            桌面快捷方式
-                          </a-checkbox>
-                        </a-col>
+<!--                        <a-col :span="8">-->
+<!--                          <a-checkbox value="theme">-->
+<!--                            沉浸式主题色-->
+<!--                          </a-checkbox>-->
+<!--                        </a-col>-->
+<!--                        <a-col :span="8">-->
+<!--                          <a-checkbox value="desktop">-->
+<!--                            桌面快捷方式-->
+<!--                          </a-checkbox>-->
+<!--                        </a-col>-->
                         <a-col :span="8">
                           <a-checkbox value="showInSideBar">
                             保持在左侧栏
@@ -167,57 +170,57 @@
                       </a-row>
                     </a-checkbox-group>
                   </a-form-item>
-                  <a-form-item id="permission" label="权限管理">
-                    <a-checkbox-group
-                      v-decorator="['功能优化', { initialValue: ['A', 'B'] }]"
-                      style="width: 100%;"
-                    >
-                      <!--                    // clipboard-read - Request access to read from the clipboard.-->
-                      <!--                    //   media - Request access to media devices such as camera, microphone and speakers.-->
-                      <!--                    //   display-capture - Request access to capture the screen.-->
-                      <!--                    //   mediaKeySystem - Request access to DRM protected content.-->
-                      <!--                    //   geolocation - Request access to user's current location.-->
-                      <!--                    // notifications - Request notification creation and the ability to display them in the user's system tray.-->
-                      <!--                    // midi - Request MIDI access in the webmidi API.-->
-                      <!--                    //   midiSysex - Request the use of system exclusive messages in the webmidi API.-->
-                      <!--                    //   pointerLock - Request to directly interpret mouse movements as an input method. Click here to know more.-->
-                      <!--                    //   fullscreen - Request for the app to enter fullscreen mode.-->
-                      <!--                    //   openExternal - Request to open links in external applications.-->
-                      <!--                    //   unknown - An unrecognized permission request-->
-                      <a-row class="setting-check-boxes">
-                        <a-col :span="8">
-                          <a-checkbox value="media">
-                            多媒体（音频、麦克风、摄像头）
-                          </a-checkbox>
-                        </a-col>
-                        <a-col :span="8">
-                          <a-checkbox value="geolocation">
-                            地理位置
-                          </a-checkbox>
-                        </a-col>
-                        <a-col :span="8">
-                          <a-checkbox value="notifications">
-                            消息通知
-                          </a-checkbox>
-                        </a-col>
-                        <a-col :span="8">
-                          <a-checkbox value="fullscreen">
-                            全屏
-                          </a-checkbox>
-                        </a-col>
-                        <a-col :span="8">
-                          <a-checkbox value="openExternal">
-                            打开外部链接
-                          </a-checkbox>
-                        </a-col>
-                        <a-col :span="8">
-                          <a-checkbox value="alwaysTop">
-                            剪切板
-                          </a-checkbox>
-                        </a-col>
-                      </a-row>
-                    </a-checkbox-group>
-                  </a-form-item>
+<!--                  <a-form-item id="permission" label="权限管理">-->
+<!--                    <a-checkbox-group-->
+<!--                      v-decorator="['功能优化', { initialValue: ['A', 'B'] }]"-->
+<!--                      style="width: 100%;"-->
+<!--                    >-->
+<!--                      &lt;!&ndash;                    // clipboard-read - Request access to read from the clipboard.&ndash;&gt;-->
+<!--                      &lt;!&ndash;                    //   media - Request access to media devices such as camera, microphone and speakers.&ndash;&gt;-->
+<!--                      &lt;!&ndash;                    //   display-capture - Request access to capture the screen.&ndash;&gt;-->
+<!--                      &lt;!&ndash;                    //   mediaKeySystem - Request access to DRM protected content.&ndash;&gt;-->
+<!--                      &lt;!&ndash;                    //   geolocation - Request access to user's current location.&ndash;&gt;-->
+<!--                      &lt;!&ndash;                    // notifications - Request notification creation and the ability to display them in the user's system tray.&ndash;&gt;-->
+<!--                      &lt;!&ndash;                    // midi - Request MIDI access in the webmidi API.&ndash;&gt;-->
+<!--                      &lt;!&ndash;                    //   midiSysex - Request the use of system exclusive messages in the webmidi API.&ndash;&gt;-->
+<!--                      &lt;!&ndash;                    //   pointerLock - Request to directly interpret mouse movements as an input method. Click here to know more.&ndash;&gt;-->
+<!--                      &lt;!&ndash;                    //   fullscreen - Request for the app to enter fullscreen mode.&ndash;&gt;-->
+<!--                      &lt;!&ndash;                    //   openExternal - Request to open links in external applications.&ndash;&gt;-->
+<!--                      &lt;!&ndash;                    //   unknown - An unrecognized permission request&ndash;&gt;-->
+<!--                      <a-row class="setting-check-boxes">-->
+<!--                        <a-col :span="8">-->
+<!--                          <a-checkbox value="media">-->
+<!--                            多媒体（音频、麦克风、摄像头）-->
+<!--                          </a-checkbox>-->
+<!--                        </a-col>-->
+<!--                        <a-col :span="8">-->
+<!--                          <a-checkbox value="geolocation">-->
+<!--                            地理位置-->
+<!--                          </a-checkbox>-->
+<!--                        </a-col>-->
+<!--                        <a-col :span="8">-->
+<!--                          <a-checkbox value="notifications">-->
+<!--                            消息通知-->
+<!--                          </a-checkbox>-->
+<!--                        </a-col>-->
+<!--                        <a-col :span="8">-->
+<!--                          <a-checkbox value="fullscreen">-->
+<!--                            全屏-->
+<!--                          </a-checkbox>-->
+<!--                        </a-col>-->
+<!--                        <a-col :span="8">-->
+<!--                          <a-checkbox value="openExternal">-->
+<!--                            打开外部链接-->
+<!--                          </a-checkbox>-->
+<!--                        </a-col>-->
+<!--                        <a-col :span="8">-->
+<!--                          <a-checkbox value="alwaysTop">-->
+<!--                            剪切板-->
+<!--                          </a-checkbox>-->
+<!--                        </a-col>-->
+<!--                      </a-row>-->
+<!--                    </a-checkbox-group>-->
+<!--                  </a-form-item>-->
                 </a-form>
               </template>
             </a-layout-content>

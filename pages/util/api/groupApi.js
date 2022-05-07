@@ -15,6 +15,7 @@ const url = {
   updateApp: '/app/browser/groupApps/update'
 }
 const groupApi = {
+  //老团队接口
   async getGroups () {
     await baseApi.init()
     return baseApi.axios(url.groupList)

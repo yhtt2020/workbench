@@ -18,15 +18,18 @@ const cloudSpaceModel={
   async changeCurrent (space, user) {
     let result = await spaceApi.change(space.nanoid,user.clientId, user)
     if(result.code===1000){
+      //切换当前用户到对应空间的所属用户
       await userModel.change(user)
       space.id=space.nanoid
+      //获取最新的要切换过去的空间
       let cloudSpaceResult=await cloudSpaceModel.getSpace(space.id,user)
       if(cloudSpaceResult.status===1){
         let cloudSpace=cloudSpaceResult.data
         cloudSpace.id=cloudSpace.nanoid
+        cloudSpace.userInfo=user
         //正常登录需要使用线上版本的空间来更新一下本地的备份空间，此时是最佳的更新备份空间时机
         backupSpaceModel.save(cloudSpace,{name:cloudSpace.name,data:cloudSpace.data,count_task: cloudSpace.count_task,count_tab: cloudSpace.count_tab,userInfo:JSON.parse(JSON.stringify(user))})
-        ipc.send('changeSpace',{spaceId:space.nanoid,spaceType:'cloud',userInfo:JSON.parse(JSON.stringify(user))})
+        ipc.send('changeSpace',{spaceId:space.nanoid,spaceType:'cloud',name:cloudSpace.name,userInfo:JSON.parse(JSON.stringify(user))})
       }else{
         return standReturn.failure('空间异常')
       }

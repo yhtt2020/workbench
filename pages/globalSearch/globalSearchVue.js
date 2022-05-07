@@ -8,7 +8,6 @@ const globalSearch = new Vue({
     searchWord: {
       handler: tools.debounce(async function (newValue, oldValue) {
         this.searchResult = []
-
         if(newValue.length > 0) {
           this.openFirst = false
           let appresult = await this.searchApp(newValue)
@@ -26,7 +25,7 @@ const globalSearch = new Vue({
           this.itemReadyedItem = {}
         }
         this.contentLoading = false
-      }, 200),
+      }, 500),
       deep: true
     },
     visible: {
@@ -194,6 +193,15 @@ const globalSearch = new Vue({
       return currentHeight
     },
     bindKeys() {
+      window.onkeyup = async (e) => {
+        if(e.keyCode === 13) {
+          let appresult = await this.searchApp(e.target.value)
+          this.searchResult = this.searchResult.concat(appresult, this.searchTab(e.target.value), this.searchTask(e.target.value))
+          this.itemReadyedIndex = 0
+          this.itemReadyedItem = this.searchResult[0]
+          this.contentLoading = false
+        }
+      }
       window.onkeydown = (e) => {
         if (e.keyCode === 40) {
           e.preventDefault()
@@ -270,6 +278,7 @@ const globalSearch = new Vue({
             this.clkli(this.itemReadyedItem)
           }
         } else if(e.keyCode === 27) {
+          //退出键
           this.searchWord.length > 0 ? this.searchWord = '' : ipc.send('closeGlobalSearch')
         }
       }

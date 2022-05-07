@@ -37,7 +37,7 @@ const searchTpl = `
               style="font-size: 20px"
               @keypress.enter="enterSubmit"
             />
-            <div @click="clklogo" style="color: #606266">
+            <div @click="clklogo" style="color: #606266;width: 18px;margin-right: 10px" >
               <a-icon  type="search" class="search-logo"></a-icon>
             </div>
           </div>
