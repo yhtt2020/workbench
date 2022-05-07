@@ -185,7 +185,7 @@
             </div>
             <div  class="action-wrapper" >
                 <span onclick="ipc.send('openDownload')" title="下载助手" id="download-toolbar"><img class="action app" src="./icons/toolbar/apps/download.svg">
-                <span hidden class="bandage" id="downloadCount">0</span>
+                <span  class="bandage" id="downloadCount">0</span>
                 </span>
             </div>
               <div  class="action-wrapper" >
@@ -337,6 +337,30 @@
         }})
       })
 
+      let downloadCount = 0;
+      document.getElementById('downloadCount').hidden=true
+      ipc.on('downloadCountAdd',(event,args)=>{
+        document.getElementById('downloadCount').hidden=false
+        downloadCount++
+        if(downloadCount>9){
+          document.getElementById('downloadCount').innerText='9+'
+        }else{
+          document.getElementById('downloadCount').innerText=downloadCount
+        }
+      })
+
+      ipc.on('downloadCountCut',(event,args)=>{
+        downloadCount--
+        // console.log(downloadCount)
+        if(downloadCount === 0){
+          document.getElementById('downloadCount').hidden=true
+        }
+        if(downloadCount>9){
+          document.getElementById('downloadCount').innerText='9+'
+        }else{
+          document.getElementById('downloadCount').innerText=downloadCount
+        }
+      })
 
       ipc.on('remakeCurrentUser', async (event, args) => {
         const {db} = require('./js/util/database.js')

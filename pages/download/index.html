@@ -41,6 +41,7 @@
                 <img src="icon/txt.svg" style="width: 100%;height: 100%" v-else-if="list.title.indexOf('txt')>0">
                 <img src="icon/video.svg" style="width: 100%;height: 100%" v-else-if="list.title.indexOf('mp4')>0">
                 <img src="icon/mp3.svg" style="width: 100%;height: 100%" v-else-if="list.title.indexOf('mp3')>0">
+                <img src="icon/psd.svg" style="width: 100%;height: 100%" v-else-if="list.title.indexOf('psd')>0">
                 <img src="icon/white.svg" style="width: 100%;height: 100%" v-else>
               </div>
 
@@ -100,6 +101,7 @@
                 <img src="icon/txt.svg" style="width: 100%;height: 100%" v-else-if="doneList.title.indexOf('txt')>0">
                 <img src="icon/video.svg" style="width: 100%;height: 100%" v-else-if="doneList.title.indexOf('mp4')>0">
                 <img src="icon/mp3.svg" style="width: 100%;height: 100%" v-else-if="doneList.title.indexOf('mp3')>0">
+                <img src="icon/psd.svg" style="width: 100%;height: 100%" v-else-if="doneList.title.indexOf('psd')>0">
                 <img src="icon/white.svg" style="width: 100%;height: 100%" v-else>
               </div>
                 <div>
@@ -271,14 +273,10 @@
         url: args.url,
         href:args.href
       })
-      // appVue.lists.forEach(item=>{
-      //   if(item.startTime===args.startTime){
-      //     appVue.lists.splice(appVue.lists.indexOf(args.startTime), 1)
-      //   }
-      // })
       appVue.listCount++
       appVue.count++
       ipcRenderer.send('willDownload')
+      ipcRenderer.send('downloading')
     }
 
     if (args.status === 'cancelled') {
@@ -288,6 +286,7 @@
             appVue.deleteId = i
         }
       }
+      ipcRenderer.send('downloadEnd')
       appVue.lists.splice(appVue.deleteId, 1)
       appVue.count--
       if(appVue.count<0){
@@ -349,6 +348,7 @@
         href:args.href
       })
       ipcRenderer.send('closeEmpty',args.chainUrl)
+      ipcRenderer.send('downloadEnd')
     }
   })
 
