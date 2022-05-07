@@ -1585,6 +1585,11 @@ ipc.on('blur', (event, args) => {
   appVue.$refs.sidePanel.blur()
 })
 
+//左侧栏最小化后会有失去焦点穿透问题，最小化前先收起左侧栏
+ipc.on('closeSidePanel',(event,args)=>{
+ appVue.$refs.sidePanel.userPanelVisible=false
+})
+
 ipc.on('appRedirect', async (event, args) => {
   let app = await standAloneAppModel.getFromPackage(args.package)
   if (app) {
