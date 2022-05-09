@@ -1339,7 +1339,11 @@ app.whenReady().then(() => {
     })
     saAppApplyPermission.setMenu(null)
     saAppApplyPermission.webContents.loadURL('file://' + __dirname + '/pages/saApp/applyPermission/index.html')
-    saAppApplyPermission.on('close', () => saAppApplyPermission = null)
+    saAppApplyPermission.on('close', () => {
+      saAppApplyPermission = null
+      appManager.getWindowByWindowId(args.windowId).view.webContents.send('ipcEventRemove', {id: args.id})
+      appManager.getWindowByWindowId(args.windowId).view.webContents.send('ipcDestoryWindowListener')
+    })
 
     ipc.on('entityLogin', (event2, args2) => {
       let premissionedData = {}
@@ -1347,7 +1351,7 @@ app.whenReady().then(() => {
         premissionedData.userInfo = storage.getItem('userInfo')
       }
       //if todo //args2之所以一定要把permission传过来 为未来具体授权内容进行不同的返回
-      appManager.getWindowByWindowId(args.windowId).view.webContents.send('selectedPermission', {
+      appManager.getWindowByWindowId(args.windowId).view.webContents.send('replySaAppApplyPermission', {
         userToken: storage.getItem('userToken'),
         clientId: args.clientId,
         bindId: args.bindId,
@@ -1357,9 +1361,10 @@ app.whenReady().then(() => {
 
     ipc.on('closePermissionWin', () => {
       console.log('检验收到了')
-      if(saAppApplyPermission) {
-        saAppApplyPermission.close()
-      }
+      saAppApplyPermission.close()
+      // if(saAppApplyPermission) {
+      //   saAppApplyPermission.close()
+      // }
       appManager.getWindowByWindowId(args.windowId).focus()
     })
   })

@@ -5,6 +5,7 @@ let FindInPage = require('electron-find').FindInPage
 const tsbSdk = require('../../js/util/tsbSdk')
 let tools = require('../util/util').tools
 const { nanoid } = require('nanoid')
+const EventIpc = require('../util/eventIpc')
 
 const axios = require('axios')
 const { config, api } = require('../../server-config')
@@ -38,6 +39,8 @@ ipc.on('init', (event, args) => {
 
   tsbSdk.listener(assignSdkObject) //浏览器侧sdk挂载
   contextBridge.exposeInMainWorld('$browser', 'tsbrowser') //此处挂载上browserTag //todo 此处要考虑如何兼容不需要本地sdk的系统应用
+
+  const eventIpc = new EventIpc(tsbSdk)
 
   window.addEventListener('message', function(e) {
     let eventName = e.data.eventName
@@ -97,8 +100,7 @@ ipc.on('init', (event, args) => {
         })
         break
       case 'thirdApplyPermission':
-        ipc.send('saAppApplyPermission', options)
-        ipc.on('selectedPermission', async (event, args) => {
+        const eventReplyCallback = async (event, args) => {
           try {
             const result = await axios({
               timeout:5000,
@@ -112,6 +114,7 @@ ipc.on('init', (event, args) => {
             })
             if(result.status === 200 && result.data.code === 1000) {
               tsbSdk.bridgeToWeb({eventName, resInfo: {code: 200, msg: '成功', data: Object.assign(result.data.data, args.premissionedData.userInfo) }, id})
+              console.log('yayaya进来了')
               ipc.send('closePermissionWin')
             } else {
               tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: {code: 500, msg: '授权登录失败'}, id})
@@ -119,7 +122,33 @@ ipc.on('init', (event, args) => {
           } catch (err) {
             tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: {code: 500, msg: '授权登录失败'}, id})
           }
-        })
+        }
+        eventIpc.dispatch('saAppApplyPermission', options, eventReplyCallback, tsbSdk, id)
+
+
+        // ipc.send('saAppApplyPermission', options)
+        // ipc.on('selectedPermission', async (event, args) => {
+        //   try {
+        //     const result = await axios({
+        //       timeout:5000,
+        //       method: 'post',
+        //       url: api.NODE_API_URL.ENTITY_APP.AUTO_LOGIN,
+        //       headers: { Authorization: args.userToken },
+        //       data: {
+        //         client_id: args.clientId,
+        //         bind_id: args.bindId
+        //       }
+        //     })
+        //     if(result.status === 200 && result.data.code === 1000) {
+        //       tsbSdk.bridgeToWeb({eventName, resInfo: {code: 200, msg: '成功', data: Object.assign(result.data.data, args.premissionedData.userInfo) }, id})
+        //       ipc.send('closePermissionWin')
+        //     } else {
+        //       tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: {code: 500, msg: '授权登录失败'}, id})
+        //     }
+        //   } catch (err) {
+        //     tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: {code: 500, msg: '授权登录失败'}, id})
+        //   }
+        // })
         break;
     }
     console.log(eventName, '无ipc的三方应用也被监听中。。。。')

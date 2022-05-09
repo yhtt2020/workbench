@@ -39,6 +39,17 @@ const tsbSdk = {
     })
   },
 
+  /**
+   * 销毁事件侦听器
+   */
+  bridgeDestoryListener: function({id = null} = {}) {
+    console.log('执行了！！！！！', id)
+    window.postMessage({
+      eventName: 'distoryListener',
+      id
+    })
+  },
+
 
   //初始化监听
   listener: function (saApp, Dep) {
@@ -265,29 +276,29 @@ const tsbSdk = {
     options.windowId = tsbSdk.tsbSaApp.windowId
     options.favicon = tsbSdk.tsbSaApp.logo
     if(!tsbSdk.isThirdApp) {
-      ipc.send('saAppApplyPermission', options)
-      ipc.on('selectedPermission', async (event, args) => {
-        try {
-          const result = await axios({
-            timeout:5000,
-            method: 'post',
-            url: api.NODE_API_URL.ENTITY_APP.AUTO_LOGIN,
-            headers: { Authorization: args.userToken },
-            data: {
-              client_id: args.clientId,
-              bind_id: args.bindId
-            }
-          })
-          if(result.status === 200 && result.data.code === 1000) {
-            tsbSdk.bridgeToWeb({eventName, resInfo: {code: 200, msg: '成功', data: Object.assign(result.data.data, args.premissionedData.userInfo) }, id})
-            ipc.send('closePermissionWin')
-          } else {
-            tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: {code: 500, msg: '授权登录失败'}, id})
-          }
-        } catch (err) {
-          tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: {code: 500, msg: '授权登录失败'}, id})
-        }
-      })
+      // ipc.send('saAppApplyPermission', options)
+      // ipc.on('selectedPermission', async (event, args) => {
+      //   try {
+      //     const result = await axios({
+      //       timeout:5000,
+      //       method: 'post',
+      //       url: api.NODE_API_URL.ENTITY_APP.AUTO_LOGIN,
+      //       headers: { Authorization: args.userToken },
+      //       data: {
+      //         client_id: args.clientId,
+      //         bind_id: args.bindId
+      //       }
+      //     })
+      //     if(result.status === 200 && result.data.code === 1000) {
+      //       tsbSdk.bridgeToWeb({eventName, resInfo: {code: 200, msg: '成功', data: Object.assign(result.data.data, args.premissionedData.userInfo) }, id})
+      //       ipc.send('closePermissionWin')
+      //     } else {
+      //       tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: {code: 500, msg: '授权登录失败'}, id})
+      //     }
+      //   } catch (err) {
+      //     tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: {code: 500, msg: '授权登录失败'}, id})
+      //   }
+      // })
     } else {
       tsbSdk.bridgeToPreload({eventName, options, id})
     }

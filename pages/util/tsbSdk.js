@@ -66,7 +66,7 @@ var EventBus = /*#__PURE__*/function () {
 
     _defineProperty(this, "events", new Map());
 
-    window.addEventListener('message', function (event) {
+    var handler = function handler(event) {
       var channel = event.data.eventName;
 
       if (channel && channel.startsWith('tsReply')) {
@@ -93,8 +93,13 @@ var EventBus = /*#__PURE__*/function () {
 
 
         _this.events["delete"](event.data.id);
+      } else if (channel == 'distoryListener') {
+        console.log('zzjjzjzjzjz');
+        window.removeEventListener('message', handler);
       }
-    });
+    };
+
+    window.addEventListener('message', handler);
   }
 
   _createClass(EventBus, [{
