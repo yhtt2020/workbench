@@ -114,6 +114,7 @@ body {
   display: inline-block;
   min-width: 20px;
   max-width: 240px;
+  font-weight: bold;
 
   .text {
     display: inline-block;
@@ -122,21 +123,18 @@ body {
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-
+  .edit-tip {
+    vertical-align: text-top;
+    margin-top: -3px;
+    display: inline-block;
+  }
   &:hover {
     color: grey;
 
-    .edit-tip {
-      vertical-align: text-top;
-      margin-top: -3px;
-      display: inline-block;
 
-    }
   }
 
-  .edit-tip {
-    display: none;
-  }
+
 }
 
 .action {
@@ -146,6 +144,17 @@ body {
   &:hover {
     background: rgba(224, 224, 224, 0.35);
     border-radius: 4px;
+    .tip{
+      display: inline-block;
+    }
+  }
+  .tip{
+    display: none;
+  }
+}
+.close-task-btn{
+  &:hover{
+    color: red;
   }
 }
 

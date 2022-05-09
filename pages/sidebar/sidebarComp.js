@@ -520,26 +520,27 @@ const sidebarTpl = `
 
 </template>
  <div>
-                    <span @click.stop="editTaskName(item)" class="task-title"><span class="text"
+                    <span @click.stop="editTaskName(item)" class="task-title">      <a-icon :id="'editTip'+item.id" class="edit-tip" type="edit"></a-icon> <span class="text"
                         :id="'taskTitle'+item.id">{{ item.count > 5 ? item.title + ' -- 高负载（5+）' : item.title }}
                       </span>
-                      <a-icon :id="'editTip'+item.id" class="edit-tip" type="edit"></a-icon>
+
                       <a-input @blur="editTaskNameBlur(item)" hidden :id="'taskTitleInput'+item.id" size="small"
                         @keypress.enter="editTaskNameKeyPress($event)" :default-value="item.title"></a-input>
                     </span>
                     <span style="float: right;cursor: pointer" @click="closeItem(item)">
-                      <a-icon title="删除标签组" type="close-circle"></a-icon>
+                      <a-icon class="close-task-btn" title="删除标签组" type="close-circle"></a-icon>
                     </span>
                   </div>
   <div style="text-align: right">
                         <span class="action" size="small" title="分享整组标签" @click="shareTask(item)">
-                        <a-icon type="share-alt"></a-icon>分享
+
+                        <a-icon type="share-alt"></a-icon><span class="tip">分享</span>
                       </span>
                       <span class="action" size="small" title="锁定当前标签组内全部标签" @click="lockTask(item.id)">
-                        <a-icon type="lock"></a-icon>锁定
+                        <a-icon type="lock"></a-icon><span class="tip">锁定</span>
                       </span>
                       <span class="action" size="small" title="清理组内全部未锁定标签" @click="clearTaskUnlock(item)">
-                        <a-icon type="delete"></a-icon>清理
+                        <a-icon type="delete"></a-icon><span class="tip">清理</span>
                       </span>
                     </div>
                     <ul class="tabs" style="margin-top: 5px">
