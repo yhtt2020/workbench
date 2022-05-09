@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>授权</title>
+  <link rel="stylesheet" href="../../../ext/reset.css"/>
+  <link rel="stylesheet" href="../../../ext/flex-class.css"/>
+  <script src="../../../ext/vue/vue.js"></script>
+  <script src="../../../ext/vue/antd.min.js"></script>
+  <link rel="stylesheet" href="../../../ext/vue/antd.min.css" />
+  <link rel="stylesheet" href="./index.css" />
+</head>
+<body>
+  <script>
+    Vue.use(antd);
+  </script>
+  <script src="../../util/tsbSdk.js"></script>
+  <div id="appVue">
+    <div class="main flex flex-direction justify-around">
+      <div class="main-top flex justify-start align-center">
+        <img :src="appIcon" alt="" style="width: 28px; height: 28px;" onerror="this.src='../../../icons/default.svg'">
+        <div class="main-top-font text-black-lg flex justify-center align-center" style="font-weight:500;">{{appName}} 申请以下权限:</div>
+      </div>
+      <div class="main-content">
+        <div class="content-user flex justify-start">
+          <a-checkbox @change="onChange" style="color: #8c8c8c;">
+            获得你的公开信息(昵称、头像等)
+          </a-checkbox>
+        </div>
+      </div>
+      <div class="main-bottom flex justify-around align-center">
+        <a-button type="primary" style="background-color: gray; border-color: gray; width: 160px;" @click="cancelWin">
+          取消
+        </a-button>
+        <a-button type="primary" :loading="loading" style="width: 160px;" @click="entityLogin">
+          确认登录
+        </a-button>
+      </div>
+    </div>
+  </div>
+  <script>
+    window.onload = () => {
+      tsbk.default.config({
+        signature: "ts"
+      })
+    }
+  </script>
+  <script>
+    const ipc = require("electron").ipcRenderer;
+    const { api } = require('../../../server-config')
+    const tools = require('../../util/util.js').tools
+    const appVue = new Vue({
+      el: "#appVue",
+      data() {
+        return {
+          appName: '',
+          appIcon: '',
+          loading: false,
+          permissions: []
+        }
+      },
+      methods: {
+        onChange(e) {
+          if(e.target.checked) {
+            this.permissions.push('publicUserInfo')
+          } else {
+            let index = this.permissions.findIndex(v => v === 'publicUserInfo')
+            this.permissions.splice(index, 1)
+          }
+        },
+        entityLogin() {
+          if(this.permissions.length !== 0 && this.permissions.findIndex(v => v === 'publicUserInfo') !== -1) {
+            ipc.send('entityLogin', this.permissions)
+          } else {
+            this.$message.warn('请先勾选授权')
+          }
+        },
+        cancelWin() {
+          ipc.send('closePermissionWin')
+        }
+      },
+      mounted() {
+        tools.getWindowArgs(window)
+        this.appName = window.globalArgs.saAppName
+        this.appIcon = window.globalArgs.saAppFavicon
+      }
+    })
+  </script>
+</body>
+</html>

@@ -95,6 +95,12 @@ const tsbSdk = {
         case 'autoLoginEntityApp':
           tsbSdk.autoLoginEntityApp(eventName, id, e.data.options)
           break;
+        case 'checkBrowserLogin':
+          tsbSdk.checkBrowserLogin(eventName, id)
+          break;
+        case 'applyPermission':
+          tsbSdk.applyPermission(eventName, id, e.data.options)
+          break;
       }
     });
 
@@ -219,6 +225,18 @@ const tsbSdk = {
     }
   },
 
+  checkBrowserLogin: function (eventName, id) {
+    if(!tsbSdk.isThirdApp) {
+      ipc.invoke('saAppCheckBrowserLogin').then(res => {
+        tsbSdk.bridgeToWeb({eventName, resInfo: res, id})
+      }).catch(err => {
+        tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: err, id})
+      })
+    } else {
+      tsbSdk.bridgeToPreload({eventName, id})
+    }
+  },
+
   autoLoginEntityApp: function (eventName, id, options) {
     //这个接口一定是第三方应用的，不要区分tsbSdk.isThirdApp
     axios({
@@ -231,7 +249,6 @@ const tsbSdk = {
         bind_id: options.bindId
       }
     }).then(res => {
-      console.log(res, '第一层res')
       if(res.status === 200 && res.data.code === 1000) {
         tsbSdk.bridgeToWeb({eventName, resInfo: {code: 200, msg: '成功', data: res.data.data}, id})
       }
@@ -242,6 +259,38 @@ const tsbSdk = {
         tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: err, id})
       }
     })
+  },
+
+  applyPermission: function (eventName, id, options) {
+    options.windowId = tsbSdk.tsbSaApp.windowId
+    options.favicon = tsbSdk.tsbSaApp.logo
+    if(!tsbSdk.isThirdApp) {
+      ipc.send('saAppApplyPermission', options)
+      ipc.on('selectedPermission', async (event, args) => {
+        try {
+          const result = await axios({
+            timeout:5000,
+            method: 'post',
+            url: api.NODE_API_URL.ENTITY_APP.AUTO_LOGIN,
+            headers: { Authorization: args.userToken },
+            data: {
+              client_id: args.clientId,
+              bind_id: args.bindId
+            }
+          })
+          if(result.status === 200 && result.data.code === 1000) {
+            tsbSdk.bridgeToWeb({eventName, resInfo: {code: 200, msg: '成功', data: Object.assign(result.data.data, args.premissionedData.userInfo) }, id})
+            ipc.send('closePermissionWin')
+          } else {
+            tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: {code: 500, msg: '授权登录失败'}, id})
+          }
+        } catch (err) {
+          tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: {code: 500, msg: '授权登录失败'}, id})
+        }
+      })
+    } else {
+      tsbSdk.bridgeToPreload({eventName, options, id})
+    }
   }
 };
 

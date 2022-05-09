@@ -72,17 +72,22 @@ var EventBus = /*#__PURE__*/function () {
       if (channel && channel.startsWith('tsReply')) {
         var callback = _this.events.get(event.data.id);
 
-        callback(event.data.resInfo);
+        if (!callback) return;
+        event.data.resInfo.code === 500 ? callback(null, event.data.resInfo) : callback(event.data.resInfo);
 
         _this.events["delete"](event.data.id);
       } else if (channel === 'errorSys') {
         var _callback = _this.events.get(event.data.id);
+
+        if (!_callback) return;
 
         _callback(null, event.data.errorInfo);
 
         _this.events["delete"](event.data.id);
       } else if (channel === 'authResult') {
         var _callback2 = _this.events.get(event.data.id);
+
+        if (!_callback2) return;
 
         _callback2(event.data.auth); //if 有真正的鉴权，判断auth返回是否是一个true，不是的话callback(event.data.auth)回调返回的就是一个false
 
@@ -330,6 +335,61 @@ var tsbk = /*#__PURE__*/function () {
           res ? resolve(res) : reject(err);
         }, options);
       });
+    } //检测浏览器器是否已登录
+
+  }, {
+    key: "checkBrowserLogin",
+    value: function checkBrowserLogin() {
+      return new Promise(function (resolve, reject) {
+        eventBus.dispatch('checkBrowserLogin', function (res, err) {
+          res ? resolve(res) : reject(err);
+        });
+      });
+    } //申请权限统一接口(包含授权登录code的返回)
+
+  }, {
+    key: "applyPermission",
+    value: function applyPermission(options) {
+      return new Promise(function (resolve, reject) {
+        if (Object.keys(options).length === 0) {
+          reject({
+            code: 400,
+            msg: '参数不能为空'
+          });
+        }
+
+        if (!options.hasOwnProperty('clientId') && !options.hasOwnProperty('bindId') && !options.hasOwnProperty('appName')) {
+          reject({
+            code: 400,
+            msg: '参数不全'
+          });
+        }
+
+        if (options.clientId.length === 0) {
+          reject({
+            code: 400,
+            msg: 'clientId参数不能为空'
+          });
+        }
+
+        if (options.bindId.length === 0) {
+          reject({
+            code: 400,
+            msg: 'bindId参数不能为空'
+          });
+        }
+
+        if (options.appName.length === 0) {
+          reject({
+            code: 400,
+            msg: 'appName参数不能为空'
+          });
+        }
+
+        eventBus.dispatch('applyPermission', function (res, err) {
+          res ? resolve(res) : reject(err);
+        }, options);
+      });
     } //主动获取用户信息
 
   }, {
@@ -402,8 +462,6 @@ var tsbk = /*#__PURE__*/function () {
 }();
 
 _defineProperty(tsbk, "secretInfo", {});
-
-_defineProperty(tsbk, "events", []);
 
 _defineProperty(tsbk, "newSecretInfoFunc", function () {});
 
