@@ -1,7 +1,7 @@
 //本代码会同时被preoload.js合并进去
 //也可以直接require进去(在非preload当中）
 let isDevelopmentMode = process.argv.some(arg=>arg==='--development-mode')
-const localNode=true //设置为true则使用本地的node配置
+const localNode=false //设置为true则使用本地的node配置
 const config = {
   //SERVER_BASE_URL: 'http://pc2.mark.opensns.cn',  //测试站
   SERVER_BASE_URL: 'https://s.apps.vip',   //老板你本地用这个，注释上面这个
