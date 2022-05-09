@@ -11,7 +11,7 @@ const ipc = require('electron').ipcRenderer
 let SYNC_INTERVAL = 30 //普通模式下，同步间隔为30秒
 let safeClose=false
 if ('development-mode' in window.globalArgs) {
-  SYNC_INTERVAL = 300000 //开发模式下，间隔改为5，方便调试和暴露问题
+  SYNC_INTERVAL = 5 //开发模式下，间隔改为5，方便调试和暴露问题
 }
 let autoSaver = null
 /**

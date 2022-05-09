@@ -103,7 +103,6 @@ const UsersSelect = {
     this.showOnStart = configModel.getShowOnStart()
   },
   async beforeRouteEnter (to, from) {
-    console.log('update')
     this.users = await userModel.getAll()
   },
   methods: {
@@ -128,7 +127,6 @@ const UsersSelect = {
                 this.users.splice(index, 1)
                 return false
               }
-
             })
           }).catch(() => {
             window.antd.message.error('解绑帐号失败。')
