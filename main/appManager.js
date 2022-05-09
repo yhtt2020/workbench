@@ -1342,7 +1342,7 @@ app.whenReady().then(() => {
     saAppApplyPermission.on('close', () => {
       saAppApplyPermission = null
       appManager.getWindowByWindowId(args.windowId).view.webContents.send('ipcEventRemove', {id: args.id})
-      appManager.getWindowByWindowId(args.windowId).view.webContents.send('ipcDestoryWindowListener')
+      appManager.getWindowByWindowId(args.windowId).view.webContents.send('errorOperate')
     })
 
     ipc.on('entityLogin', (event2, args2) => {
@@ -1361,10 +1361,9 @@ app.whenReady().then(() => {
 
     ipc.on('closePermissionWin', () => {
       console.log('检验收到了')
-      saAppApplyPermission.close()
-      // if(saAppApplyPermission) {
-      //   saAppApplyPermission.close()
-      // }
+      if(saAppApplyPermission) {
+        saAppApplyPermission.close()
+      }
       appManager.getWindowByWindowId(args.windowId).focus()
     })
   })

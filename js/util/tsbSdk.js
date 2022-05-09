@@ -39,18 +39,6 @@ const tsbSdk = {
     })
   },
 
-  /**
-   * 销毁事件侦听器
-   */
-  bridgeDestoryListener: function({id = null} = {}) {
-    console.log('执行了！！！！！', id)
-    window.postMessage({
-      eventName: 'distoryListener',
-      id
-    })
-  },
-
-
   //初始化监听
   listener: function (saApp, Dep) {
     if(saApp) {

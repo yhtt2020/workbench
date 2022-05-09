@@ -93,9 +93,6 @@ var EventBus = /*#__PURE__*/function () {
 
 
         _this.events["delete"](event.data.id);
-      } else if (channel == 'distoryListener') {
-        console.log('zzjjzjzjzjz');
-        window.removeEventListener('message', handler);
       }
     };
 

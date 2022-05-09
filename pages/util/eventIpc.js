@@ -24,8 +24,8 @@ class EventIpc {
     ipc.send(eventName, options)
     let newEventName = eventName.replace(/( |^)[a-z]/g, (L) => L.toUpperCase())
     ipc.on(`reply${newEventName}`, eventReplyCallback)
-    ipc.on('ipcDestoryWindowListener', () => {
-      tsbSdk.bridgeDestoryListener({id: eventBusId})
+    ipc.on('errorOperate', () => {
+      tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: {code: 500, msg: `授权窗口已关闭`}, id: eventBusId})
     })
   }
 }
