@@ -36,7 +36,7 @@ const tpl = `
 
 </div>
 <div style="margin: auto;width:250px;margin-bottom: 30px">
-<a-checkbox default-value="true" v-model="dontShowDisconnect">
+<a-checkbox v-model:checked="dontShowDisconnect">
 以后离线不再询问，直接离线使用
 </a-checkbox>
 </div>
@@ -84,7 +84,7 @@ const disconnect = {
       fatal: true,//非致命意外
       description: '',
       spaceId:0,
-      dontShowDisconnect:true //不再询问
+      dontShowDisconnect:false //不再询问
     }
   },
   async mounted () {
@@ -169,7 +169,6 @@ const disconnect = {
         okText: '确定',
         cancelText: '取消',
         onOk: async () => {
-          backupSpaceModel.setOfflineUse(this.spaceId)
           this.$router.replace('/')
         }
       })
@@ -189,7 +188,6 @@ const disconnect = {
         okText: '确定',
         cancelText: '取消',
         onOk: async () => {
-          backupSpaceModel.setOfflineUse(this.spaceId)
           this.closeAndSaveCnf()
         }
       })
