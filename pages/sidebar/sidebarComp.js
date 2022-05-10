@@ -462,6 +462,7 @@ const sidebarTpl = `
 <a-col :span="16" style="padding-top: 10px">
 <div style="color: #333;font-size: 16px;margin-bottom: 5px">云空间使用中</div>
 <div style="color: #03B615;font-size: 13px">正在与云端保持同步</div>
+<div style="font-size: 12px;color:#999" title="最后一次成功同步时间">{{getSyncTimeStr()}}</div>
 </a-col>
 </a-row>
 <div style="margin-top: 15px">
@@ -492,6 +493,7 @@ const sidebarTpl = `
 <a-col :span="16" style="padding-top: 10px">
 <div style="color: #333;font-size: 16px;margin-bottom: 5px">云空间离线使用中</div>
 <div style="color: #999;font-size: 13px">暂时无法与服务器连接</div>
+<div style="font-size: 12px;color:#999" title="最后一次成功同步时间">{{getSyncTimeStr()}}</div>
 </a-col>
 </a-row>
 <div style="margin-top: 15px">
@@ -580,8 +582,8 @@ const sidebarTpl = `
                         @mouseenter="showHoverLock(tab)" @mouseleave="hideHoverLock(tab)" v-for="(tab,j) in item.tabs"
                         :key="tab.id">
                         <div class="tab-title" @click="openPopoverTab(item.id, tab.id)">
-                        <span @click.stop="closeTab(tab.id,item.id)" style="float: left;cursor: pointer;padding-left: 6px;width: 33px;"  title="关闭该标签" :id="'close'+tab.id" hidden  class="closeTab">
-                           <img src="assets/close-box.svg" style="width: 100%;height: 20px">
+                        <span @click.stop="closeTab(tab.id,item.id)" style="float: left;cursor: pointer"  title="关闭该标签" :id="'close'+tab.id" hidden  class="closeTab">
+                           <img src="assets/close-box.svg"  style="margin-left: 5px;width: 25px;height: 20px;margin-right: 3px">
                         </span>
                           <img class="tab-icon" :id="'tabIcon'+tab.id"  :src="tab.icon" style="margin-left: 8px;"
                             onerror="this.src='../../icons/default.svg'" />&nbsp;{{ tab.title }}
@@ -684,10 +686,11 @@ const sidebarTpl = `
     </message-center>
   </div>
 `
-
+const backupSpaceModel=require('../../src/model/backupSpaceModel')
 Vue.component('sidebar', {
   data: function () {
     return {
+      lastSync:Date.now(),//最后一次同步时间
       spaceStatus:'local',
       OPENList:[],
       localSpaces: [],
@@ -791,6 +794,8 @@ Vue.component('sidebar', {
        this.spaceStatus='local'
      }else{
        this.spaceStatus='online'
+       let backupSpace= backupSpaceModel.getSpace(space.spaceId)
+       this.lastSync=backupSpace.sync_time
      }
    })
     this.mod = appVue.mod
@@ -905,6 +910,9 @@ Vue.component('sidebar', {
   },
   template: sidebarTpl,
   methods: {
+    getSyncTimeStr(){
+      return new Date(this.lastSync).toLocaleString()
+    },
     handleChange(tag, index) {
       this.tags.forEach(e => {
         e.checked = false
@@ -1710,9 +1718,12 @@ ipc.on('handleFileAssign', async (event, args) => {
 ipc.on('saving', async () => {
   let savingIcon = document.getElementById('savingIcon')
   savingIcon.classList.add('saving')
+  appVue.$refs.sidePanel.lastSync=Date.now()
   if (savingIcon.classList.contains('offline')) {
     appVue.$message.success('云空间重新连接成功，已为您实时保持同步。')
     console.log('重新获取云端空间')
+    appVue.$refs.sidePanel.spaceStatus='online'
+
     await appVue.$store.dispatch('getCloudSpaces')
     appVue.$refs.sidePanel.cloudSpaces = this.$store.state.cloudSpaces
     savingIcon.classList.remove('offline')

@@ -207,7 +207,9 @@ body {
 
 }
 
-
+.app-task{
+  width: 45px; /*修复左侧栏收起状态下的错位问题*/
+}
 .wrapper {
   width: 42px;
   height: 42px;
