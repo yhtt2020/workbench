@@ -107,8 +107,40 @@ const sidebarTpl = `
                               </a-button>
                             </a-empty>
                           </template>
-                          <div class="mg-content-btn flex flex-direction"
-                            v-for="(item, index) in this.$store.getters.getAllCircle" :key="item.id">
+<!--                          <div class="mg-content-btn flex flex-direction"-->
+<!--                            v-for="(item, index) in this.$store.getters.getAllCircle" :key="item.id">-->
+<!--                            <div class="cb-top flex align-center justify-start">-->
+<!--                              <img :src="item.logo" alt="">-->
+<!--                              <div class="cb-top-word">{{item.name}}</div>-->
+<!--                              <a-icon class="cb-top-tag" type="share-alt" @click="inviteLink(item.id)"></a-icon>-->
+<!--                            </div>-->
+<!--                            <div class="cb-bottom flex align-center justify-around">-->
+<!--                              <a-button class="cb-bottom-zone" type="link" icon="team" @click="openCircle(item.id)">-->
+<!--                                圈子-->
+<!--                              </a-button>-->
+<!--                              <div style="border-right: 1px solid #cacaca; height: 60%;"></div>-->
+<!--                              <a-button class="cb-bottom-zone" type="link" icon="message" @click="openGroupChat(item.id)">-->
+<!--                                群聊-->
+<!--                              </a-button>-->
+<!--                              <div style="border-right: 1px solid #cacaca; height: 60%;" v-show="item.lord"></div>-->
+<!--                              <a-button class="cb-bottom-zone" type="link" icon="setting" v-show="item.lord"-->
+<!--                                @click="openCircleSetting(item.id)">-->
+<!--                                设置-->
+<!--                              </a-button>-->
+<!--                            </div>-->
+<!--                          </div>-->
+
+        <div>
+          <template v-for="(tag, index) in tags">
+            <a-tag :key="index" :color="tag.checked ? 'blue' : ''"  @click="handleChange(tag, index)"  style="margin-left:15px;font-size: 15px; border-radius: 10px">
+              {{tag.label}}
+            </a-tag>
+          </template>
+        </div>
+
+
+                            <div class="mg-content-btn flex flex-direction"
+                          v-for="(item, index) in teamList" :key="item.id" >
                             <div class="cb-top flex align-center justify-start">
                               <img :src="item.logo" alt="">
                               <div class="cb-top-word">{{item.name}}</div>
@@ -657,6 +689,7 @@ Vue.component('sidebar', {
   data: function () {
     return {
       spaceStatus:'local',
+      OPENList:[],
       localSpaces: [],
       currentSpace: {
         space: {
@@ -676,6 +709,21 @@ Vue.component('sidebar', {
       loginPanelTitle: '登录帐号免费体验完整功能',
       loginPanelContent: ``,
       userPanelVisible: false,
+      teamList:[],
+      tags: [
+        {
+          label: '公开',
+          checked: true
+        },
+        {
+          label: '私密',
+          checked: false
+        },
+        {
+          label: '审核中',
+          checked: false
+        },
+      ],
       devices: [{
         'name': 'IphoneX',
         'width': 375,
@@ -733,7 +781,6 @@ Vue.component('sidebar', {
     this.form = this.$form.createForm(this, {
       name: 'validate_other'
     })
-
   },
   async mounted () {
     //获取当前左侧栏的状态，并设置
@@ -747,7 +794,6 @@ Vue.component('sidebar', {
      }
    })
     this.mod = appVue.mod
-
     await standAloneAppModel.initialize().then(()=>{
       standAloneAppModel.getAllApps().then(apps=>{
         console.log(apps)
@@ -859,6 +905,22 @@ Vue.component('sidebar', {
   },
   template: sidebarTpl,
   methods: {
+    handleChange(tag, index) {
+      this.tags.forEach(e => {
+        e.checked = false
+      })
+      this.tags[index].checked = !tag.checked
+        if (this.tags[index].label === '公开') {
+          this.passList = this.$store.getters.getAllCircle.filter(v => v.status !==3 && v.status !==2 )
+          this.teamList = this.passList.filter(v => v.property === 0 ||  v.property===1)
+        }
+        if (this.tags[index].label === '私密') {
+          this.teamList = this.$store.getters.getAllCircle.filter(v => v.property === 2)
+        }
+        if (this.tags[index].label === '审核中') {
+          this.teamList = this.$store.getters.getAllCircle.filter(v => v.status === 2)
+        }
+    },
     openSidebarMenu(){
       ipc.send('openSidebarMenu')
     },
@@ -1051,6 +1113,8 @@ Vue.component('sidebar', {
       ipc.send('executeApp', { app: app })
     },
     toggleUserPanel () {
+      this.passList = this.$store.getters.getAllCircle.filter(v => v.status !==3 && v.status !==2 )
+      this.teamList = this.passList.filter(v => v.property === 0 ||  v.property===1)
       if(this.user.uid===0){
         this.openUserWindow()
       }else{
