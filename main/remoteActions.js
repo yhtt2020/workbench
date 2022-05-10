@@ -99,7 +99,7 @@ ipc.handle('clearStorageData', function () {
 
 ipc.handle('minimize', function (e) {
   mainWindow.minimize()
-  SidePanel.send('closeSidePanel')
+
   // workaround for https://github.com/minbrowser/min/issues/1662
   mainWindow.webContents.send('minimize')
 })
