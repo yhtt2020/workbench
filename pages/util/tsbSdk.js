@@ -97,7 +97,8 @@ var EventBus = /*#__PURE__*/function () {
     };
 
     window.addEventListener('message', handler);
-  }
+  } //一般用dispatch就能满足传讯式的sdk交互
+
 
   _createClass(EventBus, [{
     key: "dispatch",
@@ -118,6 +119,17 @@ var EventBus = /*#__PURE__*/function () {
         eventName: eventName,
         id: this.id,
         options: options
+      });
+    } //等待浏览器侧sdk的被动通讯式交互，执行一次事件侦听器的挂载
+
+  }, {
+    key: "accept",
+    value: function accept(eventName, callback) {
+      if (!eventName || !callback) return;
+      window.addEventListener('message', function (event) {
+        if (event.data.eventName === eventName) {
+          event.data.resInfo.code === 500 ? callback(null, event.data.resInfo) : callback(event.data.resInfo);
+        }
       });
     }
   }]);
@@ -347,11 +359,11 @@ var tsbk = /*#__PURE__*/function () {
           res ? resolve(res) : reject(err);
         });
       });
-    } //申请权限统一接口(包含授权登录code的返回)
+    } //打开授权窗体
 
   }, {
-    key: "applyPermission",
-    value: function applyPermission(options) {
+    key: "openPermissionWindow",
+    value: function openPermissionWindow(options) {
       return new Promise(function (resolve, reject) {
         if (Object.keys(options).length === 0) {
           reject({
@@ -388,11 +400,21 @@ var tsbk = /*#__PURE__*/function () {
           });
         }
 
-        eventBus.dispatch('applyPermission', function (res, err) {
+        eventBus.dispatch('openPermissionWindow', function (res, err) {
           res ? resolve(res) : reject(err);
         }, options);
       });
-    } //主动获取用户信息
+    } //主动接受授权结果操作(授权免登)
+
+  }, {
+    key: "receivePermission",
+    value: function receivePermission() {
+      return new Promise(function (resolve, reject) {
+        eventBus.accept('receivePermission', function (res, err) {
+          res ? resolve(res) : reject(err);
+        });
+      });
+    } //主动获取用户信息(返回含浏览器access_token)
 
   }, {
     key: "getUserProfile",
@@ -411,51 +433,6 @@ var tsbk = /*#__PURE__*/function () {
         eventBus.dispatch('autoLoginSysApp', function (res, err) {
           res ? resolve(res) : reject(err);
         });
-      });
-    } //第三方应用免登获取免登凭证
-
-  }, {
-    key: "autoLoginEntityApp",
-    value: function autoLoginEntityApp(options) {
-      return new Promise(function (resolve, reject) {
-        if (Object.keys(options).length === 0) {
-          reject({
-            code: 400,
-            msg: '参数不能为空'
-          });
-        }
-
-        if (!options.hasOwnProperty('clientId') && !options.hasOwnProperty('bindId') && !options.hasOwnProperty('accessToken')) {
-          reject({
-            code: 400,
-            msg: '参数不全'
-          });
-        }
-
-        if (options.clientId.length === 0) {
-          reject({
-            code: 400,
-            msg: 'clientId参数不能为空'
-          });
-        }
-
-        if (options.bindId.length === 0) {
-          reject({
-            code: 400,
-            msg: 'bindId参数不能为空'
-          });
-        }
-
-        if (options.accessToken.length === 0) {
-          reject({
-            code: 400,
-            msg: 'accessToken参数不能为空'
-          });
-        }
-
-        eventBus.dispatch('autoLoginEntityApp', function (res, err) {
-          res ? resolve(res) : reject(err);
-        }, options);
       });
     }
   }]);

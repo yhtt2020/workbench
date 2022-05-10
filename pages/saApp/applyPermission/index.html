@@ -15,7 +15,6 @@
   <script>
     Vue.use(antd);
   </script>
-  <script src="../../util/tsbSdk.js"></script>
   <div id="appVue">
     <div class="main flex flex-direction justify-around">
       <div class="main-top flex justify-start align-center">
@@ -39,13 +38,6 @@
       </div>
     </div>
   </div>
-  <script>
-    window.onload = () => {
-      tsbk.default.config({
-        signature: "ts"
-      })
-    }
-  </script>
   <script>
     const ipc = require("electron").ipcRenderer;
     const { api } = require('../../../server-config')

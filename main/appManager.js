@@ -1191,12 +1191,12 @@ app.whenReady().then(() => {
   ipc.handle('saAppCheckBrowserLogin', () => {
     try {
       if(Object.keys(storage.getItem('userInfo')).length === 0) {
-        return {code: 500, msg: '未登录'}
+        return {code: 500, msg: '浏览器未登录'}
       } else {
-        return {code: 200, msg: '已登录'}
+        return {code: 200, msg: '浏览器已登录'}
       }
     } catch (err) {
-      return {code: 500, msg: '未登录'}
+      return {code: 500, msg: '浏览器未登录'}
     }
   })
 
@@ -1310,61 +1310,65 @@ app.whenReady().then(() => {
     appManager.protocolManager.initialize(SidePanel)
   })
 
-  ipc.on('saAppApplyPermission', (event, args) => {
-    if(saAppApplyPermission !== null) {
-      saAppApplyPermission.close()
-    }
-    saAppApplyPermission = new BrowserWindow({
-      minimizable: false,
-      parent: mainWindow,
-      width: 420,
-      height: 250,
-      maximizable:false,
-      resizable: false,
-      preload: __dirname + '/pages/saApp/applyPermission/preload.js',
-      webPreferences: {
-        devTools: true,
-        partition: 'persist:webcontent',
-        nodeIntegration: true,
-        contextIsolation: false,
-        additionalArguments: [
-          '--user-data-path=' + userDataPath,
-          '--app-version=' + app.getVersion(),
-          '--app-name=' + app.getName(),
-          ...((isDevelopmentMode ? ['--development-mode'] : [])),
-          '--saAppName=' + args.appName,
-          '--saAppFavicon=' + args.favicon
-        ]
-      }
-    })
-    saAppApplyPermission.setMenu(null)
-    saAppApplyPermission.webContents.loadURL('file://' + __dirname + '/pages/saApp/applyPermission/index.html')
-    saAppApplyPermission.on('close', () => {
-      saAppApplyPermission = null
-      appManager.getWindowByWindowId(args.windowId).view.webContents.send('ipcEventRemove', {id: args.id})
-      appManager.getWindowByWindowId(args.windowId).view.webContents.send('errorOperate')
-    })
 
-    ipc.on('entityLogin', (event2, args2) => {
-      let premissionedData = {}
-      if(args2.includes('publicUserInfo')) {
-        premissionedData.userInfo = storage.getItem('userInfo')
-      }
-      //if todo //args2之所以一定要把permission传过来 为未来具体授权内容进行不同的返回
-      appManager.getWindowByWindowId(args.windowId).view.webContents.send('replySaAppApplyPermission', {
-        userToken: storage.getItem('userToken'),
-        clientId: args.clientId,
-        bindId: args.bindId,
-        premissionedData
-      })
-    })
-
-    ipc.on('closePermissionWin', () => {
-      console.log('检验收到了')
-      if(saAppApplyPermission) {
+  let ApplyPermissionOptions
+  ipc.handle('saAppOpenPermissionWindow', (event, args) => {
+    try {
+      if(saAppApplyPermission !== null) {
         saAppApplyPermission.close()
       }
-      appManager.getWindowByWindowId(args.windowId).focus()
+      saAppApplyPermission = new BrowserWindow({
+        minimizable: false,
+        parent: mainWindow,
+        width: 420,
+        height: 250,
+        maximizable:false,
+        resizable: false,
+        preload: __dirname + '/pages/saApp/applyPermission/preload.js',
+        webPreferences: {
+          devTools: true,
+          partition: 'persist:webcontent',
+          nodeIntegration: true,
+          contextIsolation: false,
+          additionalArguments: [
+            '--user-data-path=' + userDataPath,
+            '--app-version=' + app.getVersion(),
+            '--app-name=' + app.getName(),
+            ...((isDevelopmentMode ? ['--development-mode'] : [])),
+            '--saAppName=' + args.appName,
+            '--saAppFavicon=' + args.favicon
+          ]
+        }
+      })
+      saAppApplyPermission.setMenu(null)
+      saAppApplyPermission.webContents.loadURL('file://' + __dirname + '/pages/saApp/applyPermission/index.html')
+      saAppApplyPermission.on('close', () => {
+        saAppApplyPermission = null
+        appManager.getWindowByWindowId(args.windowId).focus()
+      })
+      ApplyPermissionOptions = args
+      return {code: 200, msg: '授权窗口打开成功'}
+    } catch (err) {
+      return {code: 500, msg: '授权窗口打开失败'}
+    }
+  })
+
+  ipc.on('entityLogin', (event, args) => {
+    let premissionedData = {}
+    if(args.includes('publicUserInfo')) {
+      premissionedData.userInfo = storage.getItem('userInfo')
+    }
+    //if todo //args之所以一定要把permission传过来 为未来具体授权内容进行不同的返回
+    appManager.getWindowByWindowId(ApplyPermissionOptions.windowId).view.webContents.send('replyEntityLogin', {
+      userToken: storage.getItem('userToken'),
+      clientId: ApplyPermissionOptions.clientId,
+      bindId: ApplyPermissionOptions.bindId,
+      premissionedData
     })
   })
+
+  ipc.on('closePermissionWin', () => {
+    saAppApplyPermission.close()
+  })
+
 })
