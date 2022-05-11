@@ -1661,7 +1661,7 @@ ipc.on('blur', (event, args) => {
 })
 
 //左侧栏最小化后会有失去焦点穿透问题，最小化前先收起左侧栏
-ipc.on('closeSidePanel',(event,args)=>{
+ipc.on('closeUserSidePanel',(event,args)=>{
  appVue.$refs.sidePanel.userPanelVisible=false
 })
 
