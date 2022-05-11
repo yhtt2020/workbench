@@ -109,7 +109,7 @@ body.linux #menu-button {
 }
 #tabs #tabs-inner {
   display: inline-flex;
-  width: 100%;
+  width: calc(100% - 30px);
   overflow-x: visible;
   height: 36px;
   overflow-y: visible;
