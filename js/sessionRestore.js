@@ -546,12 +546,19 @@ async function safeCloseSave() {
 }
 ipc.on('safeClose', async () => {
   //安全关闭，先完成保存后再关闭
-  await safeCloseSave()
+  try{
+    await safeCloseSave()
+  }catch (e) {
+    console.warn('存储失败')
+  }
   ipc.send('closeMainWindow')
 })
 
 ipc.on('safeQuitApp',async ()=>{
-  await  safeCloseSave()
-  ipc.send('quitApp')
+  try{
+    await  safeCloseSave()
+  }catch (e) {
+    ipc.send('quitApp')
+  }
 })
 module.exports = sessionRestore
