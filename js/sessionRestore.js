@@ -7,13 +7,14 @@ const spaceModel = require('../src/model/spaceModel')
 const localSpaceModel = require('../src/model/localSpaceModel')
 const backupSpaceModel = require('../src/model/backupSpaceModel')
 const urlParser = require('../js/util/urlParser')
+const configModel = require('../src/model/configModel')
 const ipc = require('electron').ipcRenderer
 let SYNC_INTERVAL = 30 //普通模式下，同步间隔为30秒
+let safeClose=false
 if ('development-mode' in window.globalArgs) {
-  SYNC_INTERVAL = 300000 //开发模式下，间隔改为5，方便调试和暴露问题
+  SYNC_INTERVAL = 5 //开发模式下，间隔改为5，方便调试和暴露问题
 }
 let autoSaver = null
-
 /**
  * 致命中断
  * @param options
@@ -28,11 +29,20 @@ function fatalStop (options) {
  * @param options
  */
 function disconnect (options) {
-  if (!backupSpaceModel.getOfflineUse(options.spaceId)) {
-    //如果不是离线使用中
-    ipc.send('showUserWindow', options)
-    ipc.send('disconnect')
+  if (backupSpaceModel.getOfflineUse(options.spaceId)) {
+    //如果是离线使用
+    //ipc.send('message',{type:'warn',config:{content:'与服务器失去连接，自动转入离线空间'}})
   } else {
+    //如果还未设置离线使用
+    if(configModel.get('dontShowDisconnect')===false) {
+      //如果已经设置了不提示，则手动处理
+      backupSpaceModel.setOfflineUse(options.spaceId)
+      ipc.send('showUserWindow', options)
+      ipc.send('disconnect')
+    }else{
+      backupSpaceModel.setOfflineUse(options.spaceId)
+      ipc.send('message',{type:'warn',config:{content:'与服务器失去连接，自动转入离线空间'}})
+    }
   }
 }
 
@@ -104,6 +114,8 @@ const sessionRestore = {
         if (sessionRestore.currentSpace.spaceType === 'cloud') {
           let cloudResult = await sessionRestore.adapter.save(sessionRestore.currentSpace.spaceId, saveData)
           if (cloudResult.status === 1) {
+            saveData.sync_time=Date.now()
+            backupSpaceModel.save(space,saveData) //更新一下最后保存时间
             ipc.send('saving')
           } else {
             if (cloudResult.data.action === 'fatal') {
@@ -135,9 +147,9 @@ const sessionRestore = {
           let backupSpace = await backupSpaceModel.getSpace(sessionRestore.currentSpace.spaceId)
           if (backupSpace) {
             savedStringData = JSON.stringify(backupSpace.data)
-            setTimeout(() => {
-              ipc.send('message', { type: 'info', config: { content: '无法连接至云端，当前工作在离线模式下。连接恢复后会自动转入在线模式。' } })
-            }, 3000)
+            // setTimeout(() => {
+            //   ipc.send('message', { type: 'info', config: { content: '无法连接至云端，当前工作在离线模式下。连接恢复后会自动转入在线模式。' } })
+            // }, 3000)
           } else {
             console.warn('从本地获取的时候，本地备份不存在')
           }
@@ -328,14 +340,14 @@ const sessionRestore = {
             space = spaceResult.data
             space.id = space.nanoid
 
-            console.log('backupSpace=',backupSpace)
-            if(!!!backupSpace){
+            console.log('backupSpace=', backupSpace)
+            if (!!!backupSpace) {
               //如果backupSpace还不存在，则需要将成功获取的网络当做备份空间
               //注意，如果是切换过来的空间，因为在切换之前就会读入一次最新的作为备份空间，反倒不会走这个步骤
               console.log('发现本地的备份空间还不存在，自动将远端保存为备份空间')
-              space.userInfo=currentSpace.userInfo
-              backupSpaceModel.save(space,space)
-              backupSpace=space
+              space.userInfo = currentSpace.userInfo
+              backupSpaceModel.save(space, space)
+              backupSpace = space
             }
             if (space['client_id'] === currentSpace.userInfo.clientId) {
               //todo 如果当前是备份空间，且还有未同步到云端的变更，则需要判断上次断开的时候是不是当前的备份空间
@@ -504,9 +516,14 @@ const sessionRestore = {
 
     sessionRestore.startAutoSave()
     window.onbeforeunload = function (e) {
-      sessionRestore.save(true, true)
-      if (sessionRestore.currentSpace.spaceType === 'cloud') {
-        spaceModel.setUser(sessionRestore.currentSpace.userInfo).clientOffline()
+      //这里只是用于意外关闭的情况，由于unload事件无法保证全部执行完毕，所以这个方法不被依赖，仅用于意外情况下的补救。正常的关闭走ipc的safeClose消息或者主进程对应的safeCloseMainWindow()
+      if(safeClose===false){
+        sessionRestore.stopAutoSave()
+        sessionRestore.save(true, true).then(()=>{
+          if (sessionRestore.currentSpace.spaceType === 'cloud') {
+            spaceModel.setUser(sessionRestore.currentSpace.userInfo).clientOffline()
+          }
+        })
       }
     }
   }
@@ -518,5 +535,23 @@ const sessionRestore = {
     clearInterval(autoSaver)
   }
 }
+async function safeCloseSave() {
+  //这里的关闭特意做成同步方法，避免顺序错误导致无法保存
+  sessionRestore.stopAutoSave()
+  await sessionRestore.save(false, true)
+  if (sessionRestore.currentSpace.spaceType === 'cloud') {
+    await spaceModel.setUser(sessionRestore.currentSpace.userInfo).clientOffline()
+  }
+  safeClose=true
+}
+ipc.on('safeClose', async () => {
+  //安全关闭，先完成保存后再关闭
+  await safeCloseSave()
+  ipc.send('closeMainWindow')
+})
 
+ipc.on('safeQuitApp',async ()=>{
+  await  safeCloseSave()
+  ipc.send('quitApp')
+})
 module.exports = sessionRestore

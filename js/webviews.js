@@ -237,7 +237,7 @@ const webviews = {
       allowPopups:true
     }
   }
-  // console.log(newTabEvent)
+
 
     if(sourceUrl==='ts://apps' || sourceUrl ==='ts://newtab'){
       webPreferences.partition=null
@@ -628,11 +628,11 @@ ipc.on('view-event', function (e, args) {
   if (args.event === 'new-tab') {
     originalId = args.viewId
   }
-
   if (args.event === 'dom-ready') {
     for(let i =0;i<tabs.tabs.length;i++){
       if(tabs.tabs[i].id===args.viewId){
         tabs.tabs[i].domRead=true
+
       }
     }
   }
@@ -650,8 +650,7 @@ ipc.on('closeEmptyPage',(event,args)=>{
   for(let i=0;i<tabs.tabs.length;i++){
     for(let j=0;j<args.length;j++){
       if(tabs.tabs[i].url===args[j]){
-
-        if(args.length!==1 && tabs.tabs[i].domRead!==true){
+        if(args.length!==1 &&  tabs.tabs[i].domRead!==true){
           require('browserUI.js').closeTab(tabs.tabs[i].id)
         }
       }

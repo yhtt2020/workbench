@@ -1080,10 +1080,6 @@ app.whenReady().then(()=>{
         userWindow.close()
     }
   })
-  ipc.on('closeMainWindow',()=>{
-      mainWindow.setClosable(true)
-     mainWindow.close()
-   })
 
   ipc.on('changeSpace',(event,args)=>{
     changingSpace=true
@@ -1098,7 +1094,8 @@ app.whenReady().then(()=>{
         ldb.db.set('currentSpace.userInfo',args.userInfo).write()
         createWindow()
       })
-      mainWindow.close()
+      safeCloseMainWindow()
+      // mainWindow.close()
     }
 
   })

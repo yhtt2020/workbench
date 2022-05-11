@@ -13,8 +13,17 @@ const configModel = {
     return ldb.db.set('config.showOnstart', value).write()
   },
   getShowOnStart () {
+    ldb.reload()
     return ldb.db.get('config.showOnstart').value()
   },
+  set(key,value){
+    ldb.reload()
+    return ldb.db.set(`config.${key}`,value).write()
+  },
+  get(key){
+    ldb.reload()
+    return ldb.db.get(`config.${key}`).value()
+  }
 }
 
 module.exports = configModel
