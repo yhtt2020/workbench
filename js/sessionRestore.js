@@ -73,6 +73,7 @@ const sessionRestore = {
   adapter: {},
   currentSpace: {},
   save: async function (forceSave = true, sync = true) {
+    sessionRestore.currentSpace=await spaceModel.getCurrent()
     var stateString = JSON.stringify(tasks.getStringifyableState())
     // save all tabs that aren't private
     var data = {
