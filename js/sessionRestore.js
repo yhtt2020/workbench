@@ -558,7 +558,7 @@ ipc.on('safeQuitApp',async ()=>{
   try{
     await  safeCloseSave()
   }catch (e) {
-    ipc.send('quitApp')
   }
+  ipc.send('quitApp')
 })
 module.exports = sessionRestore
