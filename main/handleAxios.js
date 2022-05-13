@@ -16,11 +16,12 @@ global.sharedPath = {extra:storage.getStoragePath()}   //remote官方建议弃�
 app.whenReady().then(()=>{
   //游览器登录
   ipc.on('loginBrowser', async (event, arg) => {
+    let result={}
     try {
       const data = {
         code: arg
       }
-      const result = await authApi.loginBrowser(data)
+      result = await authApi.loginBrowser(data)
       if(result.code === 1000) {
         storage.setItem(`userToken`, result.data.token)
         storage.setItem(`refreshToken`, result.data.refreshToken)

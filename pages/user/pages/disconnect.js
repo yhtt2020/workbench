@@ -154,7 +154,15 @@ const disconnect = {
           }
         }
       }catch (e) {
-        window.antd.message.error('重连失败，请稍后再试。')
+        try{
+          if(e.response.status===401){
+            window.antd.message.error('账号信息失效，请先离线使用，然后重新登录此账号，即可恢复空间连接。')
+          }else{
+            window.antd.message.error('重连失败，请稍后再试。')
+          }
+        }catch (e) {
+          window.antd.message.error('重连失败，请稍后再试。')
+        }
       }
 
     },

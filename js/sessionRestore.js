@@ -73,6 +73,7 @@ const sessionRestore = {
   adapter: {},
   currentSpace: {},
   save: async function (forceSave = true, sync = true) {
+    sessionRestore.currentSpace=await spaceModel.getCurrent()
     var stateString = JSON.stringify(tasks.getStringifyableState())
     // save all tabs that aren't private
     var data = {
@@ -546,12 +547,19 @@ async function safeCloseSave() {
 }
 ipc.on('safeClose', async () => {
   //安全关闭，先完成保存后再关闭
-  await safeCloseSave()
+  try{
+    await safeCloseSave()
+  }catch (e) {
+    console.warn('存储失败')
+  }
   ipc.send('closeMainWindow')
 })
 
 ipc.on('safeQuitApp',async ()=>{
-  await  safeCloseSave()
+  try{
+    await  safeCloseSave()
+  }catch (e) {
+  }
   ipc.send('quitApp')
 })
 module.exports = sessionRestore
