@@ -223,6 +223,7 @@ body.linux #menu-button {
 }
 .tab-item.active:not(:only-child) .title {
   color: white !important;
+  text-shadow: 0 0 3px black;
 }
 
 .use-theme.theme-background-low-contrast .tab-item.active:not(:only-child) {
