@@ -3,6 +3,7 @@ if (typeof window !== 'undefined') {
 }
 const localSpaceModel = require('./localSpaceModel')
 const backupSpaceModel = require('./backupSpaceModel')
+const userModel = require('./userModel')
 const { nanoid } = require('nanoid')
 const spaceModel = {
   type: 'local',
@@ -10,6 +11,37 @@ const spaceModel = {
     uid: 0
   },
   adapterModel: require('./localSpaceModel'),
+  /**
+   * 使用最新的登录用户的凭证去刷新每个空间和当前空间的用户凭证
+   */
+  async updateSpaceInfo () {
+    //仅对登录成功做更新操作
+    ldb.reload()
+    let db = ldb.db
+    try {
+      //将全部的空间的用户凭证修改为最新登录的凭证
+      let currentSpace = db.get('currentSpace').value()
+      let userInfo = await userModel.get({ uid: currentSpace.userInfo.uid })
+      userInfo.clientId=userModel.getClientId()
+      db.get('spaces').filter({ 'type': 'cloud', uid: userInfo.uid }).each((sp) => {
+        sp.userInfo = userInfo
+      }).write()
+
+      if (currentSpace.spaceType === 'cloud' && currentSpace.userInfo.uid === userInfo.uid) {
+        //当前空间为云空间，且登录用户为当前登录的用户，则去刷新这个空间
+        let backupSpace = db.get('spaces').find({ id: currentSpace.spaceId })
+        if (!!!backupSpace) {
+          //如果没找到备份空间，就只更新一下用户信息
+          db.get('currentSpace').assign({ userInfo: userInfo }).write()
+        } else {
+          //更新一下用户信息和当前的空间信息
+          db.get('currentSpace').assign({ userInfo: userInfo, space: backupSpace }).write()
+        }
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  },
   setUser (user) {
     spaceModel.user = user
     if (user.uid === 0) {
@@ -31,8 +63,9 @@ const spaceModel = {
   },
 
   async getUserSpaces (option) {
-    let result=await spaceModel.adapterModel.getUserSpaces(spaceModel.user, option)
-    async function getSpaceState(space){
+    let result = await spaceModel.adapterModel.getUserSpaces(spaceModel.user, option)
+
+    async function getSpaceState (space) {
       if (spaceModel.user.uid) { //云端判断逻辑
         if (space.client_id && space.client_id !== spaceModel.user.clientId) {
           space.isOtherUsing = true
@@ -43,13 +76,13 @@ const spaceModel = {
         } else {
           space.isUsing = false
         }
-        if(Date.now()-space.sync_time>30000){
-          space.disconnect=true
-        }else{
-          space.disconnect=false
+        if (Date.now() - space.sync_time > 30000) {
+          space.disconnect = true
+        } else {
+          space.disconnect = false
         }
       } else {
-         await spaceModel.setAdapter('local').getCurrent().then(sp=>{
+        await spaceModel.setAdapter('local').getCurrent().then(sp => {
           if (space.id === sp.spaceId) {
             space.isSelfUsing = true
             space.isUsing = true
@@ -57,47 +90,47 @@ const spaceModel = {
         })
       }
     }
-    if(result.status===1){
-      let spaces=result.data
-      spaces.forEach( (space) =>{
+
+    if (result.status === 1) {
+      let spaces = result.data
+      spaces.forEach((space) => {
         getSpaceState(space)
       })
     }
     return result
   },
 
-  insertFirstSpace(data={
-    "version": 2,
-    "state": {
-      "tasks": [
-      ],
-      "selectedTask": ""
+  insertFirstSpace (data = {
+    'version': 2,
+    'state': {
+      'tasks': [],
+      'selectedTask': ''
     },
-    "saveTime": Date.now(),
-  }){
+    'saveTime': Date.now(),
+  }) {
     ldb.reload()
-    let spaceAdd={
-      name:'默认空间',
-      data:data,
-      count_task:1,
-      count_tab:1,
-      create_time:Date.now(),
-      update_time:Date.now(),
-      sync_time:Date.now(),
-      uid:0,
-      type:'local',
-      id:nanoid()
+    let spaceAdd = {
+      name: '默认空间',
+      data: data,
+      count_task: 1,
+      count_tab: 1,
+      create_time: Date.now(),
+      update_time: Date.now(),
+      sync_time: Date.now(),
+      uid: 0,
+      type: 'local',
+      id: nanoid()
     }
     ldb.db.get('spaces').push(spaceAdd).write()
-    console.warn('插入了默认空间',spaceAdd)
+    console.warn('插入了默认空间', spaceAdd)
     let currentSpace = {
-      spaceId:spaceAdd.id,
+      spaceId: spaceAdd.id,
       spaceType: 'local',
       name: spaceAdd.name,
       userInfo: {
         uid: 0
       },
-      space:spaceAdd
+      space: spaceAdd
     }
     ldb.db.set('currentSpace', currentSpace).write()
     return currentSpace
@@ -105,14 +138,14 @@ const spaceModel = {
   /**
    * 获取当前空间
    */
-  async getCurrent (needDetail=false) {
+  async getCurrent (needDetail = false) {
     ldb.reload()
     let currentSpace = ldb.db.get('currentSpace').value()
     if (!!!currentSpace) { //如果是首次读入，不存在currentSpace就插入一个默认的值
       console.warn('空间损坏，基本不会走这条路线')
-       return false
+      return false
     }
-    if(currentSpace.spaceId===-1){
+    if (currentSpace.spaceId === -1) {
       throw '空间id无效'
     }
     let space = {}
@@ -120,18 +153,18 @@ const spaceModel = {
       //如果是云端，则从云端取
       try {
         let result = await spaceModel.setUser(currentSpace.userInfo).getSpace(currentSpace.spaceId)
-        if (result.status === 1){
-          if(result.data.id==='-1'){
-            space=backupSpaceModel.getSpace(currentSpace.spaceId)
+        if (result.status === 1) {
+          if (result.data.id === '-1') {
+            space = backupSpaceModel.getSpace(currentSpace.spaceId)
             console.error('云端空间已被删除，读入备份空间')
             //throw '云端空间已被删除'
-          }else{
+          } else {
             space = result.data
-            space.id=space.nanoid
+            space.id = space.nanoid
           }
-        }else{
+        } else {
           console.error('请求服务器空间失败，读入备份空间')
-          space=backupSpaceModel.getSpace(currentSpace.spaceId)
+          space = backupSpaceModel.getSpace(currentSpace.spaceId)
         }
         // else{
         //   throw '云端获取空间失败，网络错误'
@@ -139,7 +172,7 @@ const spaceModel = {
       } catch (e) {
         //如果没取成，则取备份空间
         space = backupSpaceModel.getSpace(currentSpace.spaceId)
-        if(!!!space){
+        if (!!!space) {
           console.error('致命错误，本地空间备份丢失')
           throw '本地备份空间丢失或不存在'
         }
@@ -160,12 +193,13 @@ const spaceModel = {
       ldb.db.set('currentSpace.name', space.name).write()
       ldb.db.set('currentSpace.spaceId', space.id).write()
     }
+    console.log('currentSpace=',currentSpace)
     return currentSpace
   },
   async getSpace (id) {
     return spaceModel.adapterModel.getSpace(id, spaceModel.user)
   },
-  async copy(space) {
+  async copy (space) {
     return spaceModel.adapterModel.copy(space, spaceModel.user)
   },
   async addSpace (space) {
@@ -207,7 +241,7 @@ const spaceModel = {
     return await spaceModel.adapterModel.clientOnline(nanoid, force, spaceModel.user)
   },
 
-  setCurrentSpace(space){
+  setCurrentSpace (space) {
     ldb.reload()
     ldb.db.set('currentSpace.space', space).write()
     ldb.db.set('currentSpace.name', space.name).write()
