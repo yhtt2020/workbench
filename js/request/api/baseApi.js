@@ -54,6 +54,7 @@ const baseApi = {
    * @param {String} url 请求url
    * @param {Object} params  请求体body或query对象, body中请传入类似data:{...}的格式，query中请传入{...}的格式。
    * @param {String} method  请求方式默认为post
+   * @param {Boolean} min  是否为登录状态下发起的请求，默认是登录状态下
    * @returns Promise
    */
   axios: async (url, params, method = "post", min = false) => {
@@ -81,7 +82,7 @@ const baseApi = {
         method: method,
         url: url,
         ...data,
-      });      
+      });
     }
   },
 };
