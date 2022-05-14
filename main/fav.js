@@ -1,6 +1,8 @@
 let localCacheManager = require(path.join(__dirname, '/js/main/localCacheManager.js'))
 const configDb = require(path.join(__dirname, '/pages/util/db/configDb.js'))
 const { shell } = require('electron')
+const fsExtra=require('fs-extra')
+const ElectronLog = require('electron-log')
 app.whenReady().then(() => {
   //设置默认的本地收藏夹位置
   configDb.init(app.getPath('userData'))
@@ -157,5 +159,48 @@ app.whenReady().then(() => {
       popWindow.window.hide()
     }
   })
+
+  ipc.on('exportFile',(event,args)=>{
+    console.log(args)
+   let defaultPath= args.parentPath || args.path
+    let filePath
+    filePath= dialog.showSaveDialogSync({
+      title:'导出内容',
+      defaultPath:defaultPath,
+      properties:[
+        'openDirectory'
+      ]
+    })
+    // if(args.parentPath){
+    //    filePath= dialog.showOpenDialogSync({
+    //     title:'导出内容',
+    //     defaultPath:defaultPath,
+    //      properties:[
+    //        'openDirectory'
+    //      ]
+    //   })
+    // }else{
+    //
+    // }
+    const storePath=configDb.getStorePath()
+    if(filePath.startsWith(storePath))
+    {
+      event.reply('error',{message:'导出文件不能导出到收藏夹内。'})
+      return
+    }
+    if(!!filePath){
+      try{
+        fsExtra.copySync(args.path,filePath)
+        shell.showItemInFolder(filePath)
+        event.reply('success',{message:'导出成功。'})
+      }catch (e) {
+        event.reply('error',{message:'导出失败，失败原因：'+e.message})
+        ElectronLog.log(e)
+      }
+    }
+  })
+
+
+
 
 })
