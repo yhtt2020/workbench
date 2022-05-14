@@ -1,7 +1,7 @@
 //本代码会同时被preoload.js合并进去
 //也可以直接require进去(在非preload当中）
 let isDevelopmentMode = process.argv.some(arg=>arg==='--development-mode')
-const localNode=true //设置为true则使用本地的node配置
+const localNode=false //设置为true则使用本地的node配置
 const config = {
   SERVER_BASE_URL: 'https://s.apps.vip',
   SERVER_BACKEND_URL: 'https://sad.apps.vip',
@@ -12,8 +12,8 @@ const config = {
     API_BASE_URL:"http://im-serve.xiangtian.ren",
     WEB_SOCKET_URL:"ws://im-socket.xiangtian.ren/socket.io",
     FRONT_URL:"http://im.xiangtian.ren",
-    //FRONT_URL_DEV:"http://im.xiangtian.ren",
-    FRONT_URL_DEV:"http://127.0.0.1:8000",
+    FRONT_URL_DEV:"http://im.xiangtian.ren",
+    //FRONT_URL_DEV:"http://127.0.0.1:8000",
     AUTO_LOGIN: '/auto-login',      //免登等待路由
     BOOT_ROUTE: '/boot-route'     //引导路由页面
   },

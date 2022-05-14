@@ -44,24 +44,24 @@ axios.interceptors.request.use(
           }
         }
 
-        refreshFuncList.push(async user => {
-          if(config.expireInfo.inMain) {
-            //根据进程类型执行不同的重制用户标识 //情况一主进程中触发的，修改主进程中storage中的用户标识，并通过ipc传到渲染进程
-            storage.setStoragePath(global.sharedPath.extra)
-            storage.setItem(`userToken`, user.token)
-            storage.setItem(`refreshToken`, user.refreshToken)
-            storage.setItem(`expire_deadtime`, new Date().getTime() + user.expire * 1000)
-            storage.setItem(`refreshExpire_deadtime`, new Date().getTime() + user.refreshExpire * 1000)
-            storage.setItem(`userInfo`, user.userInfo)
-            global.utilWindow.webContents.send('remakeCurrentUser', user)
-          } else {
-            //根据进程类型执行不同的重制用户标识 //情况二渲染进程中触发的，通过ipc通知主进程去修改，并还会再发到渲染进程
-            ipc.send('updateStorageInfo', user)
-          }
-        })
-
         //是否在刷新中
         if(!isRefreshing) {
+          refreshFuncList.push(async user => {
+            if(config.expireInfo.inMain) {
+              //根据进程类型执行不同的重制用户标识 //情况一主进程中触发的，修改主进程中storage中的用户标识，并通过ipc传到渲染进程
+              storage.setStoragePath(global.sharedPath.extra)
+              storage.setItem(`userToken`, user.token)
+              storage.setItem(`refreshToken`, user.refreshToken)
+              storage.setItem(`expire_deadtime`, new Date().getTime() + user.expire * 1000)
+              storage.setItem(`refreshExpire_deadtime`, new Date().getTime() + user.refreshExpire * 1000)
+              storage.setItem(`userInfo`, user.userInfo)
+              global.utilWindow.webContents.send('remakeCurrentUser', user)
+            } else {
+              //根据进程类型执行不同的重制用户标识 //情况二渲染进程中触发的，通过ipc通知主进程去修改，并还会再发到渲染进程
+              ipc.send('updateStorageInfo', user)
+            }
+          })
+
           isRefreshing = true
 
           axios.post(`${api.NODE_API_URL.USER.REFRESH_TOKEN}`, {

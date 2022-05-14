@@ -37,7 +37,6 @@ app.whenReady().then(()=>{
   })
   //游览器登出
   ipc.on('logoutBrowser', async() => {
-    await authApi.logoutBrowser()
     storage.removeItem(`userToken`);
     storage.removeItem(`userInfo`)
     storage.removeItem(`refreshToken`)
@@ -55,6 +54,8 @@ app.whenReady().then(()=>{
     ldb.db.get('users').remove({uid:oldUser.uid}).write()
     //1是往lumen发消息，让lumen退出
     appManager.getWindowByAppId(1).view.webContents.send('imLogout')
+
+    await authApi.logoutBrowser()
   })
 
   //分享组
