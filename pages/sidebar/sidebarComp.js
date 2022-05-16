@@ -1231,7 +1231,7 @@ Vue.component('sidebar', {
     async logout () {
       const result = await db.system.where('name').equals('currentUser').first()
       await db.accounts.where({ id: this.user.uid }).delete()
-      ipc.send('logoutBrowser', result.value.code)
+      ipc.send('logoutBrowser')
       await window.insertDefaultUser(result.value.code)
       //下面这步在insertDefaultUser方法中有
       //db.system.where({name:'currentUser'}).delete()
