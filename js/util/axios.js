@@ -10,6 +10,22 @@ axios.defaults.baseURL = config.NODE_SERVER_BASE_URL;
 //<!--强制使用node模块。-->
 axios.defaults.adapter = require('axios/lib/adapters/http');
 
+function execRefreshToken(config, refreshFuncList) {
+  axios.post(`${api.NODE_API_URL.USER.REFRESH_TOKEN}`, {
+    refreshToken: config.expireInfo.refreshToken + 'z'
+  }).then(res => {
+    if(res.code === 1000) {
+      refreshFuncList.forEach(cb => cb(res.data))
+      refreshFuncList = []
+      isRefreshing = false
+    } else {
+      ipc ? ipc.send('message',{type:'error',config:{content: '令牌刷新失败', key: Date.now()}}) : sidePanel.get().webContents.send('message',{type:"error",config:{content: '令牌刷新失败', key: Date.now()}})
+    }
+  }).catch(err => {
+    ipc ? ipc.send('message',{type:'error',config:{content: '令牌刷新失败', key: Date.now()}}) : sidePanel.get().webContents.send('message',{type:"error",config:{content: '令牌刷新失败', key: Date.now()}})
+  })
+}
+
 let refreshFuncList = []    //刷新令牌时需要操作的函数队列
 let isRefreshing = false   //是否正在刷新的标记
 
@@ -64,15 +80,7 @@ axios.interceptors.request.use(
 
           isRefreshing = true
 
-          axios.post(`${api.NODE_API_URL.USER.REFRESH_TOKEN}`, {
-            refreshToken: config.expireInfo.refreshToken
-          }).then(res => {
-            if(res.code === 1000) {
-              refreshFuncList.forEach(cb => cb(res.data))
-              refreshFuncList = []
-              isRefreshing = false
-            }
-          })
+          execRefreshToken(config, refreshFuncList)
         }
 
       }
@@ -124,8 +132,7 @@ axios.interceptors.response.use(
   },
   error => {
     if(error.code === 'ENOTFOUND' && error.isAxiosError) {
-      ipc ? ipc.send('message',{type:'error',config:{content: '请检查网络!', key: Date.now()}})
-      : sidePanel.get().webContents.send('message',{type:"error",config:{content: '请检查网络!', key: Date.now()}})
+      console.warn('请检查网络....')
       return ({
         code: error.code,
         error_data: error
