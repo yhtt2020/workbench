@@ -97,7 +97,7 @@ var EventBus = /*#__PURE__*/function () {
     };
 
     window.addEventListener('message', handler);
-  } //一般用dispatch就能满足传讯式的sdk交互
+  } //一般用dispatch就能满足立即双向传讯式的sdk交互
 
 
   _createClass(EventBus, [{
@@ -152,6 +152,8 @@ var tsbk = /*#__PURE__*/function () {
     //签名生成规则如下：参与签名的字段包括noncestr（随机字符串）, 有效的jsapi_ticket, timestamp（时间戳）, url（第三方开发商网站的Origin）
     //对所有待签名参数按照字段名的ASCII 码从小到大排序（字典序）后，使用URL键值对的格式（即key1=value1&key2=value2…）拼接成字符串string
     //对string进行sha1签名，得到signature
+    //最终版本鉴权放在应用侧sdk，直接用XMLHttpRequest发起服务器鉴权(需后端cros解除跨域)，不再往浏览器侧sdk发起。
+    //至于window.postMessage被伪造的话，到时候寻找解决方法
   }
 
   _createClass(tsbk, null, [{
