@@ -76,7 +76,15 @@ const cloudAdapter={
         }
       }catch (e) {
         console.warn('存储到云端失败，接口请求失败。')
-        return disconnect({modal:true,title:'无法连接到服务器',description:'暂时无法连接到服务器。',disconnect:true,spaceId:spaceId})
+        try{
+          if(e.response.status===401){
+            return disconnect({modal:true,title:'账号信息失效',description:'请先离线使用，然后重新登录此账号，即可恢复空间连接。',disconnect:true,spaceId:spaceId})
+          }else{
+            return disconnect({modal:true,title:'无法连接到服务器',description:'暂时无法连接到服务器。',disconnect:true,spaceId:spaceId})
+          }
+        }catch (e) {
+          return disconnect({modal:true,title:'无法连接到服务器',description:'暂时无法连接到服务器。',disconnect:true,spaceId:spaceId})
+        }
       }
     }catch (e) {
       console.warn('云端存储全局意外错误返回')

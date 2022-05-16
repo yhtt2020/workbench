@@ -2,8 +2,6 @@ const axios = require('axios')
 const { config, api } = require('../../server-config')
 const storage = require('electron-localstorage');
 
-//因为我这里本地环境测试就算用户注销但拿到的code是体验站上的code
-//会出现退出失败，redis无法清除，本地storage也无法清除
 //本地下面代码强制清除storage
 //console.log(storage.getAll())
 //storage.clear();
@@ -12,16 +10,36 @@ axios.defaults.baseURL = config.NODE_SERVER_BASE_URL;
 //<!--强制使用node模块。-->
 axios.defaults.adapter = require('axios/lib/adapters/http');
 
-let requests = []
-let isRefreshing = false
+function execRefreshToken(config, refreshFuncList) {
+  axios.post(`${api.NODE_API_URL.USER.REFRESH_TOKEN}`, {
+    refreshToken: config.expireInfo.refreshToken + 'z'
+  }).then(res => {
+    if(res.code === 1000) {
+      refreshFuncList.forEach(cb => cb(res.data))
+      refreshFuncList = []
+      isRefreshing = false
+    } else {
+      ipc ? ipc.send('message',{type:'error',config:{content: '令牌刷新失败', key: Date.now()}}) : sidePanel.get().webContents.send('message',{type:"error",config:{content: '令牌刷新失败', key: Date.now()}})
+    }
+  }).catch(err => {
+    ipc ? ipc.send('message',{type:'error',config:{content: '令牌刷新失败', key: Date.now()}}) : sidePanel.get().webContents.send('message',{type:"error",config:{content: '令牌刷新失败', key: Date.now()}})
+  })
+}
+
+let refreshFuncList = []    //刷新令牌时需要操作的函数队列
+let isRefreshing = false   //是否正在刷新的标记
 
 axios.interceptors.request.use(
   async config => {
     // Do something before request is sent
-   // console.log(config, '拦截的config')
+    // console.log(config, '拦截的config')
+    // if(config.hasOwnProperty('expireInfo')) {
+    //   console.log(config.expireInfo.inMain, '是否在主进程发起的本次请求')
+    // }
 
-    //config.expireInfo.token或者刷新令牌接口才走这里存在才执行下面
+    //登录状态下发起的请求 或 刷新令牌接口才执行下面
     if((config.hasOwnProperty('expireInfo') && config.expireInfo.token.length > 0) || config.url.includes("refreshBrowserToken")) {
+
       //说明此请求正在请求刷新令牌，直接return出去
 			if (config.url.includes("refreshBrowserToken")) {
 				return config;
@@ -32,43 +50,21 @@ axios.interceptors.request.use(
         //判断refreshToken是否过期
         if(config.expireInfo.refreshExpire_deadtime - new Date().getTime() <= 8000) {
           if(config.expireInfo.inMain) {
-            //在主进程中的请求时发现过期，清空用户标识
+            //在主进程请求时发现refreshToken过期，清空storage用户标识，也要转发到渲染进程清空dexie中的用户标识
             storage.setStoragePath(global.sharedPath.extra)
             storage.clear()
             global.utilWindow.webContents.send('clearCurrentUser')
           } else {
-            //在渲染进程中请求时发现过期，清空dexie的currentUser
-            const {db} = require('./database.js')
-            await db.system.where('name').equals('currentUser').modify({value: {
-              uid: 0,
-              nickname: '立即登录',
-              avatar: '../../../icons/browser.ico'
-            }})
+            //在渲染进程请求时发现refreshToken过期
+            ipc.send('clearStorageInfo')
           }
         }
 
         //是否在刷新中
         if(!isRefreshing) {
-          isRefreshing = true
-
-          axios.post(`${api.NODE_API_URL.USER.REFRESH_TOKEN}`, {
-            refreshToken: config.expireInfo.refreshToken
-          }).then(res => {
-            if(res.code === 1000) {
-              requests.forEach(cb => cb(res.data))
-              requests = []
-              isRefreshing = false
-            } else {
-              return config
-            }
-          })
-        }
-
-        return new Promise(resolve => {
-          //继续请求
-          requests.push(async user => {
-            //根据进程类型执行不同的重制用户标识
+          refreshFuncList.push(async user => {
             if(config.expireInfo.inMain) {
+              //根据进程类型执行不同的重制用户标识 //情况一主进程中触发的，修改主进程中storage中的用户标识，并通过ipc传到渲染进程
               storage.setStoragePath(global.sharedPath.extra)
               storage.setItem(`userToken`, user.token)
               storage.setItem(`refreshToken`, user.refreshToken)
@@ -77,21 +73,16 @@ axios.interceptors.request.use(
               storage.setItem(`userInfo`, user.userInfo)
               global.utilWindow.webContents.send('remakeCurrentUser', user)
             } else {
-              const {db} = require('./database.js')
-              await db.system.where('name').equals('currentUser').modify({value: {
-                uid: user.userInfo.uid,
-                nickname: user.userInfo.nickname,
-                avatar: user.userInfo.avatar,
-                token: user.token,
-                refreshToken: user.refreshToken,
-                expire_deadtime: new Date().getTime() + user.expire * 1000,
-                refreshExpire_deadtime: new Date().getTime() + user.refreshExpire * 1000,
-                code: user.code
-              }})
+              //根据进程类型执行不同的重制用户标识 //情况二渲染进程中触发的，通过ipc通知主进程去修改，并还会再发到渲染进程
+              ipc.send('updateStorageInfo', user)
             }
-            resolve(config)
           })
-        })
+
+          isRefreshing = true
+
+          execRefreshToken(config, refreshFuncList)
+        }
+
       }
     }
 
@@ -141,8 +132,7 @@ axios.interceptors.response.use(
   },
   error => {
     if(error.code === 'ENOTFOUND' && error.isAxiosError) {
-      ipc ? ipc.send('message',{type:'error',config:{content: '请检查网络!', key: Date.now()}})
-      : sidePanel.get().webContents.send('message',{type:"error",config:{content: '请检查网络!', key: Date.now()}})
+      console.warn('请检查网络....')
       return ({
         code: error.code,
         error_data: error

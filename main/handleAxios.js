@@ -16,11 +16,12 @@ global.sharedPath = {extra:storage.getStoragePath()}   //remote官方建议弃�
 app.whenReady().then(()=>{
   //游览器登录
   ipc.on('loginBrowser', async (event, arg) => {
+    let result={}
     try {
       const data = {
         code: arg
       }
-      const result = await authApi.loginBrowser(data)
+      result = await authApi.loginBrowser(data)
       if(result.code === 1000) {
         storage.setItem(`userToken`, result.data.token)
         storage.setItem(`refreshToken`, result.data.refreshToken)
@@ -35,11 +36,7 @@ app.whenReady().then(()=>{
 
   })
   //游览器登出
-  ipc.on('logoutBrowser', async(event, arg) => {
-    const data = {
-      code: arg
-    }
-    await authApi.logoutBrowser(data)
+  ipc.on('logoutBrowser', async() => {
     storage.removeItem(`userToken`);
     storage.removeItem(`userInfo`)
     storage.removeItem(`refreshToken`)
@@ -57,6 +54,8 @@ app.whenReady().then(()=>{
     ldb.db.get('users').remove({uid:oldUser.uid}).write()
     //1是往lumen发消息，让lumen退出
     appManager.getWindowByAppId(1).view.webContents.send('imLogout')
+
+    await authApi.logoutBrowser()
   })
 
   //分享组
@@ -93,6 +92,24 @@ app.whenReady().then(()=>{
   ipc.on('imAutoLogin', async(event, args) => {
     const result = await authApi.imAutoLogin()
     event.reply('callback-imAutoLogin', result)
+  })
+
+  //主进程的refreshToken成功后   主进程更新storage中的信息，并传到子进程中修改用户标识信息
+  ipc.on('updateStorageInfo', (event, user) => {
+    storage.setStoragePath(global.sharedPath.extra)
+    storage.setItem(`userToken`, user.token)
+    storage.setItem(`refreshToken`, user.refreshToken)
+    storage.setItem(`expire_deadtime`, new Date().getTime() + user.expire * 1000)
+    storage.setItem(`refreshExpire_deadtime`, new Date().getTime() + user.refreshExpire * 1000)
+    storage.setItem(`userInfo`, user.userInfo)
+    global.utilWindow.webContents.send('remakeCurrentUser', user)
+  })
+
+  //主进程的refreshToken也过期的时候 清空主进程中storage的信息，并传到子进程中修改用户标识信息
+  ipc.on('clearStorageInfo', () => {
+    storage.setStoragePath(global.sharedPath.extra)
+    storage.clear()
+    global.utilWindow.webContents.send('clearCurrentUser')
   })
 })
 
