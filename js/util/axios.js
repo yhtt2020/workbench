@@ -12,7 +12,7 @@ axios.defaults.adapter = require('axios/lib/adapters/http');
 
 function execRefreshToken(config, refreshFuncList) {
   axios.post(`${api.NODE_API_URL.USER.REFRESH_TOKEN}`, {
-    refreshToken: config.expireInfo.refreshToken + 'z'
+    refreshToken: config.expireInfo.refreshToken
   }).then(res => {
     if(res.code === 1000) {
       refreshFuncList.forEach(cb => cb(res.data))
