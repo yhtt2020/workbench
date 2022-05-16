@@ -1715,6 +1715,7 @@ ipc.on('handleFileAssign', async (event, args) => {
   console.log(args)
   console.log('assigneApps', assignApps)
 })
+
 ipc.on('saving', async () => {
   let savingIcon = document.getElementById('savingIcon')
   savingIcon.classList.add('saving')
