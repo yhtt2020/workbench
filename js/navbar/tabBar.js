@@ -367,7 +367,7 @@ const tabBar = {
     // title
 
     var title = document.createElement('span')
-    title.className = 'title theme-text-color'
+    title.className = 'title'
 
     tabEl.appendChild(title)
     tabEl.appendChild(iconArea)
