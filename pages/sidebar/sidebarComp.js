@@ -692,7 +692,6 @@ Vue.component('sidebar', {
     return {
       lastSync:Date.now(),//最后一次同步时间
       spaceStatus:'local',
-      OPENList:[],
       localSpaces: [],
       currentSpace: {
         space: {
@@ -716,15 +715,18 @@ Vue.component('sidebar', {
       tags: [
         {
           label: '公开',
-          checked: true
+          checked: true,
+          tag:1
         },
         {
           label: '私密',
-          checked: false
+          checked: false,
+          tag:0
         },
         {
           label: '审核中',
-          checked: false
+          checked: false,
+          tag:-1
         },
       ],
       devices: [{
@@ -918,14 +920,14 @@ Vue.component('sidebar', {
         e.checked = false
       })
       this.tags[index].checked = !tag.checked
-        if (this.tags[index].label === '公开') {
+        if (this.tags[index].tag === 1) {
           this.passList = this.$store.getters.getAllCircle.filter(v => v.status !==3 && v.status !==2 )
           this.teamList = this.passList.filter(v => v.property === 0 ||  v.property===1)
         }
-        if (this.tags[index].label === '私密') {
+        if (this.tags[index].tag === 0) {
           this.teamList = this.$store.getters.getAllCircle.filter(v => v.property === 2)
         }
-        if (this.tags[index].label === '审核中') {
+        if (this.tags[index].tag === -1) {
           this.teamList = this.$store.getters.getAllCircle.filter(v => v.status === 2)
         }
     },

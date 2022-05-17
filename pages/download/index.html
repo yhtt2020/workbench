@@ -32,17 +32,17 @@
                @mouseleave="mouseLeave">
             <div style="margin-top: 0;width: 100%;height: 55px;">
               <div style="width: 34px;height: 40px;position: absolute;margin-top: 8px;margin-left: 5px; user-select:none" >
-                <img src="icon/exe.svg" style="width: 100%;height: 100%" v-if="list.title.indexOf('exe')>0">
-                <img src="icon/jpg.svg" style="width: 100%;height: 100%" v-else-if="list.title.indexOf('jpg')>0">
-                <img src="icon/jpg.svg" style="width: 100%;height: 100%" v-else-if="list.title.indexOf('jpeg')>0">
-                <img src="icon/zip.svg" style="width: 100%;height: 100%" v-else-if="list.title.indexOf('zip')>0">
-                <img src="icon/word.svg" style="width: 100%;height: 100%" v-else-if="list.title.indexOf('docx')>0">
-                <img src="icon/word.svg" style="width: 100%;height: 100%" v-else-if="list.title.indexOf('doc')>0">
-                <img src="icon/txt.svg" style="width: 100%;height: 100%" v-else-if="list.title.indexOf('txt')>0">
-                <img src="icon/video.svg" style="width: 100%;height: 100%" v-else-if="list.title.indexOf('mp4')>0">
-                <img src="icon/mp3.svg" style="width: 100%;height: 100%" v-else-if="list.title.indexOf('mp3')>0">
-                <img src="icon/psd.svg" style="width: 100%;height: 100%" v-else-if="list.title.indexOf('psd')>0">
-                <img src="icon/white.svg" style="width: 100%;height: 100%" v-else>
+                <img src="icon/exe.svg" class="icon" v-if="list.title.indexOf('exe')>0">
+                <img src="icon/jpg.svg" class="icon" v-else-if="list.title.indexOf('jpg')>0">
+                <img src="icon/jpg.svg" class="icon" v-else-if="list.title.indexOf('jpeg')>0">
+                <img src="icon/zip.svg" class="icon" v-else-if="list.title.indexOf('zip')>0">
+                <img src="icon/word.svg" class="icon" v-else-if="list.title.indexOf('docx')>0">
+                <img src="icon/word.svg" class="icon" v-else-if="list.title.indexOf('doc')>0">
+                <img src="icon/txt.svg" class="icon" v-else-if="list.title.indexOf('txt')>0">
+                <img src="icon/video.svg" class="icon" v-else-if="list.title.indexOf('mp4')>0">
+                <img src="icon/mp3.svg" class="icon" v-else-if="list.title.indexOf('mp3')>0">
+                <img src="icon/psd.svg" class="icon" v-else-if="list.title.indexOf('psd')>0">
+                <img src="icon/white.svg" class="icon" v-else>
               </div>
 
               <div>
@@ -93,17 +93,17 @@
 
             <div style="width: 100%;height: 45px;">
               <div style="width: 34px;height: 40px;position: absolute;margin-top: 4px;margin-left: 10px; user-select:none" >
-                <img src="icon/exe.svg" style="width: 100%;height: 100%" v-if="doneList.title.indexOf('exe')>0">
-                <img src="icon/jpg.svg" style="width: 100%;height: 100%" v-else-if="doneList.title.indexOf('jpg')>0">
-                <img src="icon/jpg.svg" style="width: 100%;height: 100%" v-else-if="doneList.title.indexOf('jpeg')>0">
-                <img src="icon/zip.svg" style="width: 100%;height: 100%" v-else-if="doneList.title.indexOf('zip')>0">
-                <img src="icon/word.svg" style="width: 100%;height: 100%" v-else-if="doneList.title.indexOf('docx')>0">
-                <img src="icon/word.svg" style="width: 100%;height: 100%" v-else-if="doneList.title.indexOf('doc')>0">
-                <img src="icon/txt.svg" style="width: 100%;height: 100%" v-else-if="doneList.title.indexOf('txt')>0">
-                <img src="icon/video.svg" style="width: 100%;height: 100%" v-else-if="doneList.title.indexOf('mp4')>0">
-                <img src="icon/mp3.svg" style="width: 100%;height: 100%" v-else-if="doneList.title.indexOf('mp3')>0">
-                <img src="icon/psd.svg" style="width: 100%;height: 100%" v-else-if="doneList.title.indexOf('psd')>0">
-                <img src="icon/white.svg" style="width: 100%;height: 100%" v-else>
+                <img src="icon/exe.svg" class="icon" v-if="doneList.title.indexOf('exe')>0">
+                <img src="icon/jpg.svg" class="icon" v-else-if="doneList.title.indexOf('jpg')>0">
+                <img src="icon/jpg.svg" class="icon" v-else-if="doneList.title.indexOf('jpeg')>0">
+                <img src="icon/zip.svg" class="icon" v-else-if="doneList.title.indexOf('zip')>0">
+                <img src="icon/word.svg" class="icon" v-else-if="doneList.title.indexOf('docx')>0">
+                <img src="icon/word.svg" class="icon" v-else-if="doneList.title.indexOf('doc')>0">
+                <img src="icon/txt.svg" class="icon" v-else-if="doneList.title.indexOf('txt')>0">
+                <img src="icon/video.svg" class="icon" v-else-if="doneList.title.indexOf('mp4')>0">
+                <img src="icon/mp3.svg" class="icon" v-else-if="doneList.title.indexOf('mp3')>0">
+                <img src="icon/psd.svg" class="icon" v-else-if="doneList.title.indexOf('psd')>0">
+                <img src="icon/white.svg" class="icon" v-else>
               </div>
                 <div>
                   <a-modal v-model="visible" title="删除下载任务" ok-text="确认" cancel-text="取消" @ok="hideModalDone()">
@@ -140,7 +140,7 @@
                @mouseleave="mouseLeave">
             <div style="width: 100%;height: 45px;">
               <div style="width: 34px;height: 40px;position: absolute;margin-top: 4px;margin-left: 10px;user-select:none" >
-                <img src="icon/delete.svg" style="width: 100%;height: 100%">
+                <img src="icon/delete.svg" class="icon">
               </div>
               <div style="position: absolute;margin-left: 270px;margin-top: 14px">{{deleteList.statusText}}</div>
               <div style="margin-left: 50px;font-size: 13px;font-weight: bold;text-decoration:line-through">{{deleteList.title}}</div>
@@ -248,7 +248,7 @@
 
   ipcRenderer.on('download-info', async (event, args) => {
     let i;
-// console.log(args)
+
     let simpleName;
     if (args.name.length >= 20) {
       simpleName = args.name.substring(0, 7) + '...' + args.name.substring(args.name.length-6,args.name.length);
@@ -317,6 +317,7 @@
     }
 
     if (args.status === 'completed' && args.path !== '') {
+
       ipcRenderer.send('emptyPageUrl',args.chainUrl)
       const myDate = new Date();
       appVue.doneLists.forEach(item=>{
@@ -383,6 +384,30 @@
        delId:'0',
      },
     created() {
+
+      // let newArr = [];
+      // //通过forEach循环数组
+      // this.dataAll.forEach((item, i) => {
+      //   let index = -1;
+      //   //然后在跑到这里筛选 根据不同的时间放置不同的数组    some（）用来查找数组中是否存在某个值  如果存在 就return true
+      //   let isExists = newArr.some((newItem, j) => {
+      //     if(item.addtime == newItem.addtime) {
+      //       index = j;
+      //       return true;
+      //     }
+      //   })
+      //   //代码是先跑这里的if条件判读
+      //   if(!isExists) {
+      //     newArr.push({
+      //       addtime: item.addtime,
+      //       subList: [item]
+      //     })
+      //   } else {
+      //     newArr[index].subList.push(item);
+      //   }
+      //   this.Data = newArr
+      // })
+
        db.download.toArray().then(dblist => {
          for(let i=0; i<=dblist.length; i++){
            let simpleName;
@@ -470,8 +495,6 @@
         })
         ipcRenderer.send('deleteDownload', this.selectingList.path)
         this.visibleIng = false
-
-
       },
 
       doneChange(e){
@@ -602,6 +625,10 @@
 }
 .clickActive{
   background: #f7f7f7;
+}
+.icon{
+  width: 100%;
+  height: 100%;
 }
 </style>
 

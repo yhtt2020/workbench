@@ -337,29 +337,29 @@
         }})
       })
 
-      let downloadCount = 0;
-      document.getElementById('downloadCount').hidden=true
-      ipc.on('downloadCountAdd',(event,args)=>{
-        document.getElementById('downloadCount').hidden=false
-        downloadCount++
-        if(downloadCount>9){
-          document.getElementById('downloadCount').innerText='9+'
-        }else{
-          document.getElementById('downloadCount').innerText=downloadCount
-        }
-      })
 
-      ipc.on('downloadCountCut',(event,args)=>{
-        downloadCount--
+      function calculate(a){
+          if(a>9){
+            return '9+'
+          }else{
+            return a
+          }
+      }
+      let count = 0;
+      downloadCount = document.getElementById('downloadCount')
+      downloadCount.hidden=true
+      ipc.on('downloadCountAdd',()=>{
+        downloadCount.hidden=false
+        count++
+        downloadCount.innerText=calculate(count)
+      })
+      ipc.on('downloadCountCut',()=>{
+        count--
         // console.log(downloadCount)
-        if(downloadCount === 0){
-          document.getElementById('downloadCount').hidden=true
+        if(count === 0){
+          downloadCount.hidden=true
         }
-        if(downloadCount>9){
-          document.getElementById('downloadCount').innerText='9+'
-        }else{
-          document.getElementById('downloadCount').innerText=downloadCount
-        }
+        downloadCount.innerText=calculate(count)
       })
 
       ipc.on('remakeCurrentUser', async (event, args) => {
