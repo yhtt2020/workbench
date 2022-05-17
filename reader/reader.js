@@ -201,7 +201,7 @@ function setReaderFrameSize () {
   // it's possible to end up in a loop where resizing creates an extra scrollbar, which increases the height,
   // and then on the next resize, the frame gets taller, which makes the scrollbar go away, decreasing the height...
   // adding an extra 1% of space fixes this
-  rframe.height = (rframe.contentDocument.body.querySelector('.reader-main').scrollHeight * 1.01) + 'px'
+  rframe.height = (rframe.contentDocument.body.querySelector('.reader-main').scrollHeight * 1+40) + 'px'
 }
 
 function startReaderView (article, date) {

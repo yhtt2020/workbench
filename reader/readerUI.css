@@ -4,7 +4,9 @@ html {
   overflow: auto;
   min-height: 100vh;
 }
-
+body[theme='light']{
+  background: #f1f1f1;
+}
 body[theme="dark"] {
   background-color: rgb(36, 41, 47);
   color: rgb(180, 180, 180);
