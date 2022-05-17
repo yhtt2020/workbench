@@ -339,27 +339,31 @@
 
 
       function calculate(a){
-          if(a>9){
+
+          if(a>=10){
             return '9+'
-          }else{
+          }
+          if(a<0){
+            return 0
+          } else{
             return a
           }
       }
       let count = 0;
-      downloadCount = document.getElementById('downloadCount')
-      downloadCount.hidden=true
+      downloadCountEl = document.getElementById('downloadCount')
+      downloadCountEl.hidden=true
       ipc.on('downloadCountAdd',()=>{
-        downloadCount.hidden=false
+        downloadCountEl.hidden=false
         count++
-        downloadCount.innerText=calculate(count)
+        downloadCountEl.innerText=calculate(count)
       })
       ipc.on('downloadCountCut',()=>{
         count--
         // console.log(downloadCount)
         if(count === 0){
-          downloadCount.hidden=true
+          downloadCountEl.hidden=true
         }
-        downloadCount.innerText=calculate(count)
+        downloadCountEl.innerText=calculate(count)
       })
 
       ipc.on('remakeCurrentUser', async (event, args) => {
