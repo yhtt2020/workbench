@@ -57,7 +57,12 @@ ipc.on('originalPage',(event,args)=>{
 ipc.on('emptyPageUrl',(event,args)=>{
   mainWindow.webContents.send('closeEmptyPage',args)
 })
-
+ipc.on('downloading',(event,args)=>{
+  mainWindow.send('downloadCountAdd')
+})
+ipc.on('downloadEnd',(event,args)=>{
+  mainWindow.send('downloadCountCut')
+})
 
 function downloadHandler (event, item, webContents) {
   var itemURL = item.getURL()
