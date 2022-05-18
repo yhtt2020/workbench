@@ -19,10 +19,10 @@ function execRefreshToken(config, refreshFuncList) {
       refreshFuncList = []
       isRefreshing = false
     } else {
-      ipc ? ipc.send('message',{type:'error',config:{content: '令牌刷新失败', key: Date.now()}}) : sidePanel.get().webContents.send('message',{type:"error",config:{content: '令牌刷新失败', key: Date.now()}})
+      ipc ? ipc.send('message',{type:'error',config:{content: '登录信息过期，请重新登录', key: Date.now()}}) : sidePanel.get().webContents.send('message',{type:"error",config:{content: '登录信息过期，请重新登录', key: Date.now()}})
     }
   }).catch(err => {
-    ipc ? ipc.send('message',{type:'error',config:{content: '令牌刷新失败', key: Date.now()}}) : sidePanel.get().webContents.send('message',{type:"error",config:{content: '令牌刷新失败', key: Date.now()}})
+    ipc ? ipc.send('message',{type:'error',config:{content: '登录信息过期，请重新登录', key: Date.now()}}) : sidePanel.get().webContents.send('message',{type:"error",config:{content: '登录信息过期，请重新登录', key: Date.now()}})
   })
 }
 

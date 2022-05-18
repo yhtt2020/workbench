@@ -39,6 +39,24 @@ const tsbSdk = {
     })
   },
 
+  defaultEventName: [
+    'hideApp',
+    "openSysApp",
+    "openOsxInviteMember",
+    'getUserProfile',
+    'checkBrowserLogin',
+    'openPermissionWindow',
+  ],
+
+  handleSdkEvent(eventName, id, e) {
+    if(this.defaultEventName.includes(eventName)) {
+      e.data.options ?
+      this[eventName](eventName, id, e.data.options) : this[eventName](eventName, id)
+    } else {
+      return
+    }
+  },
+
   //初始化监听
   listener: function (saApp, Dep) {
     if(saApp) {
@@ -61,9 +79,6 @@ const tsbSdk = {
         case "checkAuth":
           tsbSdk.handleCheckAuth(id);
           break;
-        case "hideApp":
-          tsbSdk.hideApp(eventName, id);
-          break;
         case "tabLinkJump":
           e.data.options.url = xss(e.data.options.url);
           tsbSdk.tabLinkJump(eventName, id, e.data.options);
@@ -82,21 +97,8 @@ const tsbSdk = {
             tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: {code: 500, msg: `失败${error}`}, id})
           }
           break;
-        case "openSysApp":
-          tsbSdk.openSysApp(eventName, id, e.data.options);
-          break;
-        case "openOsxInviteMember":
-          tsbSdk.openOsxInviteMember(eventName, id, e.data.options);
-          break;
-        case 'getUserProfile':
-          tsbSdk.getUserProfile(eventName, id)
-          break;
-        case 'checkBrowserLogin':
-          tsbSdk.checkBrowserLogin(eventName, id)
-          break;
-        case 'openPermissionWindow':
-          tsbSdk.openPermissionWindow(eventName, id, e.data.options)
-          break;
+        default:
+          tsbSdk.handleSdkEvent(eventName, id, e)
       }
     });
 
