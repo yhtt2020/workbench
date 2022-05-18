@@ -98,6 +98,14 @@ const sidebarTpl = `
                           <div class="mg-top-lf">我加入的团队({{this.$store.getters.getAllCircle.length}})</div>
                           <a-button class="mg-top-right" type="primary" icon="plus" size="small" @click="createGroup" />
                         </div>
+
+        <div style="margin-top: 10px">
+          <template v-for="(tag, index) in tags">
+            <a-tag :key="index" :color="tag.checked ? 'blue' : ''"  @click="handleChange(tag, index)"  style="margin-left:5px;font-size: 12px; border-radius: 10px">
+              {{tag.label}}
+            </a-tag>
+          </template>
+        </div>
                         <div class="mg-content flex flex-direction">
                           <template v-if="this.$store.getters.getAllCircle.length===0">
                             <a-empty style="margin-top: 10px">
@@ -130,14 +138,13 @@ const sidebarTpl = `
 <!--                            </div>-->
 <!--                          </div>-->
 
-        <div>
-          <template v-for="(tag, index) in tags">
-            <a-tag :key="index" :color="tag.checked ? 'blue' : ''"  @click="handleChange(tag, index)"  style="margin-left:5px;font-size: 12px; border-radius: 10px">
-              {{tag.label}}
-            </a-tag>
-          </template>
-        </div>
-
+<!--        <div>-->
+<!--          <template v-for="(tag, index) in tags">-->
+<!--            <a-tag :key="index" :color="tag.checked ? 'blue' : ''"  @click="handleChange(tag, index)"  style="margin-left:5px;font-size: 12px; border-radius: 10px">-->
+<!--              {{tag.label}}-->
+<!--            </a-tag>-->
+<!--          </template>-->
+<!--        </div>-->
 
                             <div class="mg-content-btn flex flex-direction"
                           v-for="(item, index) in teamList" :key="item.id" >

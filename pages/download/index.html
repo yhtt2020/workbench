@@ -90,9 +90,6 @@
          clickActive:clickActive===index}"
                @mouseover="mouseOver(index)"
                @mouseleave="mouseLeave">
-            <div >
-              {{doneList.doneDate}}
-            </div>
             <div style="width: 100%;height: 45px;">
               <div style="width: 34px;height: 40px;position: absolute;margin-top: 4px;margin-left: 10px; user-select:none" >
                 <img src="icon/exe.svg" class="icon" v-if="doneList.title.indexOf('exe')>0">
