@@ -33,8 +33,17 @@ const tpl = `
       </div>
     </a-col>
   </a-row>
+
+</div>
+<div style="margin: auto;width:250px;margin-bottom: 30px">
+<a-checkbox v-model:checked="dontShowDisconnect">
+以后离线不再询问，直接离线使用
+</a-checkbox>
 </div>
 
+<div>
+
+</div>
   <div>
     <a-row justify="center">
       <a-col  :span="6" style="text-align: center">
@@ -61,6 +70,7 @@ const tpl = `
 `
 const spaceModel = require('../../../src/model/spaceModel')
 const backupSpaceModel = require('../../../src/model/backupSpaceModel')
+const configModel = require('../../../src/model/configModel')
 const ipc=require('electron').ipcRenderer
 const disconnect = {
   template: tpl,
@@ -73,7 +83,8 @@ const disconnect = {
       title: '',
       fatal: true,//非致命意外
       description: '',
-      spaceId:0
+      spaceId:0,
+      dontShowDisconnect:false //不再询问
     }
   },
   async mounted () {
@@ -90,12 +101,16 @@ const disconnect = {
 
   },
   methods: {
+    closeAndSaveCnf(){
+      configModel.set('dontShowDisconnect',this.dontShowDisconnect)
+      ipc.send('closeUserWindow')
+    },
     /**
      * 切换到云空间，不保存
      */
     async changeWithoutSave () {
       await spaceModel.setUser(this.user).changeCurrent(this.space)
-      ipc.send('closeUserWindow')
+      this.closeAndSaveCnf()
     },
     /**
      * 切换到云空间，保存
@@ -133,13 +148,21 @@ const disconnect = {
               title: '重连成功，点击确定关闭窗口',
               content: Vue.h('div', {}, [Vue.h('p', '重连成功')]),
               onOk:async ()=>{
-                ipc.send('closeUserWindow')
+                this.closeAndSaveCnf()
               }
             });
           }
         }
       }catch (e) {
-        window.antd.message.error('重连失败，请稍后再试。')
+        try{
+          if(e.response.status===401){
+            window.antd.message.error('账号信息失效，请先离线使用，然后重新登录此账号，即可恢复空间连接。')
+          }else{
+            window.antd.message.error('重连失败，请稍后再试。')
+          }
+        }catch (e) {
+          window.antd.message.error('重连失败，请稍后再试。')
+        }
       }
 
     },
@@ -154,7 +177,6 @@ const disconnect = {
         okText: '确定',
         cancelText: '取消',
         onOk: async () => {
-          backupSpaceModel.setOfflineUse(this.spaceId)
           this.$router.replace('/')
         }
       })
@@ -174,8 +196,7 @@ const disconnect = {
         okText: '确定',
         cancelText: '取消',
         onOk: async () => {
-          backupSpaceModel.setOfflineUse(this.spaceId)
-          ipc.send('closeUserWindow')
+          this.closeAndSaveCnf()
         }
       })
     }

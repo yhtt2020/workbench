@@ -35,6 +35,7 @@
   window.ipc = require('electron').ipcRenderer
   window.ldb=require('../../src/util/ldb')
   tools=require('../util/util').tools
+  const spaceModel = require('../../src/model/spaceModel')
   tools.getWindowArgs(window)
   ldb.loadInWindow()
   const app = Vue.createApp({
@@ -96,7 +97,8 @@
   // })
   ipc.on('loginCallback',(e,args)=>{
     window.antd.message.success('成功添加帐号。')
-    setTimeout(()=>{
+    setTimeout(async ()=>{
+      await spaceModel.updateSpaceInfo()
       router.replace({ name: 'space', params: { uid: args.data.userInfo.uid } })
     },500)
 

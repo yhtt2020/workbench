@@ -112,7 +112,7 @@ body.linux #menu-button {
 
 #tabs #tabs-inner {
   display: inline-flex;
-  width: 100%;
+  width: calc(100% - 30px);
   overflow-x: visible;
   height: 36px;
   overflow-y: visible;
@@ -223,6 +223,7 @@ body.linux #menu-button {
 }
 .tab-item.active:not(:only-child) .title {
   color: white !important;
+  text-shadow: 0 0 3px black;
 }
 
 .use-theme.theme-background-low-contrast .tab-item.active:not(:only-child) {

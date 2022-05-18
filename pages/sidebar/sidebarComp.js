@@ -430,6 +430,7 @@ const sidebarTpl = `
 <a-col :span="16" style="padding-top: 10px">
 <div style="color: #333;font-size: 16px;margin-bottom: 5px">云空间使用中</div>
 <div style="color: #03B615;font-size: 13px">正在与云端保持同步</div>
+<div style="font-size: 12px;color:#999" title="最后一次成功同步时间">{{getSyncTimeStr()}}</div>
 </a-col>
 </a-row>
 <div style="margin-top: 15px">
@@ -460,6 +461,7 @@ const sidebarTpl = `
 <a-col :span="16" style="padding-top: 10px">
 <div style="color: #333;font-size: 16px;margin-bottom: 5px">云空间离线使用中</div>
 <div style="color: #999;font-size: 13px">暂时无法与服务器连接</div>
+<div style="font-size: 12px;color:#999" title="最后一次成功同步时间">{{getSyncTimeStr()}}</div>
 </a-col>
 </a-row>
 <div style="margin-top: 15px">
@@ -520,26 +522,27 @@ const sidebarTpl = `
 
 </template>
  <div>
-                    <span @click.stop="editTaskName(item)" class="task-title"><span class="text"
+                    <span @click.stop="editTaskName(item)" class="task-title">      <a-icon :id="'editTip'+item.id" class="edit-tip" type="edit"></a-icon> <span class="text"
                         :id="'taskTitle'+item.id">{{ item.count > 5 ? item.title + ' -- 高负载（5+）' : item.title }}
                       </span>
-                      <a-icon :id="'editTip'+item.id" class="edit-tip" type="edit"></a-icon>
+
                       <a-input @blur="editTaskNameBlur(item)" hidden :id="'taskTitleInput'+item.id" size="small"
                         @keypress.enter="editTaskNameKeyPress($event)" :default-value="item.title"></a-input>
                     </span>
                     <span style="float: right;cursor: pointer" @click="closeItem(item)">
-                      <a-icon title="删除标签组" type="close-circle"></a-icon>
+                      <a-icon class="close-task-btn" title="删除标签组" type="close-circle"></a-icon>
                     </span>
                   </div>
   <div style="text-align: right">
                         <span class="action" size="small" title="分享整组标签" @click="shareTask(item)">
-                        <a-icon type="share-alt"></a-icon>分享
+
+                        <a-icon type="share-alt"></a-icon><span class="tip">分享</span>
                       </span>
                       <span class="action" size="small" title="锁定当前标签组内全部标签" @click="lockTask(item.id)">
-                        <a-icon type="lock"></a-icon>锁定
+                        <a-icon type="lock"></a-icon><span class="tip">锁定</span>
                       </span>
                       <span class="action" size="small" title="清理组内全部未锁定标签" @click="clearTaskUnlock(item)">
-                        <a-icon type="delete"></a-icon>清理
+                        <a-icon type="delete"></a-icon><span class="tip">清理</span>
                       </span>
                     </div>
                     <ul class="tabs" style="margin-top: 5px">
@@ -548,7 +551,7 @@ const sidebarTpl = `
                         :key="tab.id">
                         <div class="tab-title" @click="openPopoverTab(item.id, tab.id)">
                         <span @click.stop="closeTab(tab.id,item.id)" style="float: left;cursor: pointer"  title="关闭该标签" :id="'close'+tab.id" hidden  class="closeTab">
-                           <img src="assets/close-box.svg"  style="margin-left: 8px;width: 25px;height: 20px;">
+                           <img src="assets/close-box.svg"  style="margin-left: 5px;width: 25px;height: 20px;margin-right: 3px">
                         </span>
                           <img class="tab-icon" :id="'tabIcon'+tab.id"  :src="tab.icon" style="margin-left: 8px;"
                             onerror="this.src='../../icons/default.svg'" />&nbsp;{{ tab.title }}
@@ -651,10 +654,11 @@ const sidebarTpl = `
     </message-center>
   </div>
 `
-
+const backupSpaceModel=require('../../src/model/backupSpaceModel')
 Vue.component('sidebar', {
   data: function () {
     return {
+      lastSync:Date.now(),//最后一次同步时间
       spaceStatus:'local',
       localSpaces: [],
       currentSpace: {
@@ -743,6 +747,8 @@ Vue.component('sidebar', {
        this.spaceStatus='local'
      }else{
        this.spaceStatus='online'
+       let backupSpace= backupSpaceModel.getSpace(space.spaceId)
+       this.lastSync=backupSpace.sync_time
      }
    })
     this.mod = appVue.mod
@@ -858,6 +864,9 @@ Vue.component('sidebar', {
   },
   template: sidebarTpl,
   methods: {
+    getSyncTimeStr(){
+      return new Date(this.lastSync).toLocaleString()
+    },
     openSidebarMenu(){
       ipc.send('openSidebarMenu')
     },
@@ -1222,7 +1231,7 @@ Vue.component('sidebar', {
     async logout () {
       const result = await db.system.where('name').equals('currentUser').first()
       await db.accounts.where({ id: this.user.uid }).delete()
-      ipc.send('logoutBrowser', result.value.code)
+      ipc.send('logoutBrowser')
       await window.insertDefaultUser(result.value.code)
       //下面这步在insertDefaultUser方法中有
       //db.system.where({name:'currentUser'}).delete()
@@ -1640,9 +1649,12 @@ ipc.on('handleFileAssign', async (event, args) => {
 ipc.on('saving', async () => {
   let savingIcon = document.getElementById('savingIcon')
   savingIcon.classList.add('saving')
+  appVue.$refs.sidePanel.lastSync=Date.now()
   if (savingIcon.classList.contains('offline')) {
     appVue.$message.success('云空间重新连接成功，已为您实时保持同步。')
     console.log('重新获取云端空间')
+    appVue.$refs.sidePanel.spaceStatus='online'
+
     await appVue.$store.dispatch('getCloudSpaces')
     appVue.$refs.sidePanel.cloudSpaces = this.$store.state.cloudSpaces
     savingIcon.classList.remove('offline')

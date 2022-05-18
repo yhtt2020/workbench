@@ -361,6 +361,7 @@ body {
   display: inline-block;
   min-width: 20px;
   max-width: 240px;
+  font-weight: bold;
 }
 .task-title .text {
   display: inline-block;
@@ -369,16 +370,13 @@ body {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.task-title:hover {
-  color: grey;
-}
-.task-title:hover .edit-tip {
+.task-title .edit-tip {
   vertical-align: text-top;
   margin-top: -3px;
   display: inline-block;
 }
-.task-title .edit-tip {
-  display: none;
+.task-title:hover {
+  color: grey;
 }
 
 .action {
@@ -388,6 +386,16 @@ body {
 .action:hover {
   background: rgba(224, 224, 224, 0.35);
   border-radius: 4px;
+}
+.action:hover .tip {
+  display: inline-block;
+}
+.action .tip {
+  display: none;
+}
+
+.close-task-btn:hover {
+  color: red;
 }
 
 .tabs {
@@ -426,6 +434,11 @@ body {
 .tabs .unlock-tab:hover {
   background: #f1f1f1;
   border-radius: 3px;
+}
+
+.app-task {
+  width: 45px;
+  /*修复左侧栏收起状态下的错位问题*/
 }
 
 .wrapper {

@@ -57,7 +57,6 @@ const backupSpaceModel = {
     let foundSpace = ldb.db.get('spaces').find({ id: space.id }).value()
     if (foundSpace) {
       saveData.update_time = Date.now()
-      saveData.sync_time = Date.now()
       ldb.db.get('spaces').find({ id: space.id }).assign(saveData).write()
     } else {
       if (!space.id) {
