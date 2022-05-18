@@ -132,7 +132,7 @@ const sidebarTpl = `
 
         <div>
           <template v-for="(tag, index) in tags">
-            <a-tag :key="index" :color="tag.checked ? 'blue' : ''"  @click="handleChange(tag, index)"  style="margin-left:15px;font-size: 15px; border-radius: 10px">
+            <a-tag :key="index" :color="tag.checked ? 'blue' : ''"  @click="handleChange(tag, index)"  style="margin-left:5px;font-size: 12px; border-radius: 10px">
               {{tag.label}}
             </a-tag>
           </template>
