@@ -652,7 +652,11 @@ ipc.on('closeEmptyPage',(event,args)=>{
       if(tabs.tabs[i].url===args[j]){
         if(args.length!==1 &&  tabs.tabs[i].domRead!==true){
           require('browserUI.js').closeTab(tabs.tabs[i].id)
+          ipc.send('willDownload')
         }
+        // if(args.length===1){
+        //   ipc.send('willDownload')
+        // }
       }
     }
   }
