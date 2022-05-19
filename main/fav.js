@@ -112,10 +112,10 @@ app.whenReady().then(() => {
     let menuTemplate = [{
       label: '收藏网页...',
       click: () => {
-        let url='https://a.apps.vip/fav/#/popSaveToFolder' //开发环境测试环境，提交到版本库前注释掉
-        if(isDevelopmentMode){
+        let url='file://'+path.join(__dirname,'/pages/fav/index.html?=/#/popSaveToFolder') //开发环境测试环境，提交到版本库前注释掉
+         if(isDevelopmentMode){
           url='http://localhost:8080/#/popSaveToFolder'
-        }
+         }
         const bounds=mainWindow.getBounds()
         let currentBounds={width:500,height:500,x:bounds.x+bounds.width-510,y:bounds.y+85}
         if(!popManager.get('favSaveToFolder')){
