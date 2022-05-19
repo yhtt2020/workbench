@@ -7,68 +7,84 @@
   position: fixed;
   height: 40px;
   background: #fff;
-  border-bottom: 1px solid #e3e3e3; }
-  #toolbar .action {
-    padding: 6px;
-    width: 30px;
-    height: 30px;
-    margin: 4px;
-    vertical-align: top;
-    border-radius: 4px; }
-  #toolbar .start-page {
-    background-color: rgba(227, 227, 227, 0.27); }
-  #toolbar .app {
-    padding: 2px;
-    width: 32px;
-    height: 32px;
-    margin-top: 4px; }
-  #toolbar .action:hover {
-    background: rgba(238, 238, 238, 0.8); }
-  #toolbar .is-reader img {
-    border: 1px solid #1E90FF;
-    border-radius: 50%; }
-  #toolbar .action-wrapper {
-    width: 40px;
-    position: relative; }
-    #toolbar .action-wrapper .bandage {
-      position: absolute;
-      display: inline-block;
-      font-size: 10px;
-      background: #52c41a;
-      color: white;
-      border-radius: 100%;
-      width: 14px;
-      height: 14px;
-      right: 7px;
-      top: 7px;
-      text-align: center;
-      line-height: 14px; }
-  #toolbar .disable {
-    opacity: 0.3; }
-  #toolbar .disable:hover {
-    background: none; }
-  #toolbar .site-card {
-    cursor: pointer;
-    vertical-align: middle;
-    width: 28px;
-    margin-top: -5px; }
-  #toolbar .site-card:hover {
-    opacity: 0.8; }
-  #toolbar #tab-editor {
-    left: 35px;
-    width: calc(100% - 35px); }
-  #toolbar #tab-editor-input {
-    font-size: 14px; }
-  #toolbar #address-bar {
-    background: rgba(201, 201, 201, 0.35);
-    display: block;
-    height: 28px;
-    margin: 6px;
-    line-height: 30px;
-    border-radius: 150px;
-    padding-left: 3px; }
+  border-bottom: 1px solid #e3e3e3;
+}
+#toolbar .action {
+  padding: 6px;
+  width: 30px;
+  height: 30px;
+  margin: 4px;
+  vertical-align: top;
+  border-radius: 4px;
+}
+#toolbar .start-page {
+  background-color: rgba(227, 227, 227, 0.27);
+}
+#toolbar .app {
+  padding: 2px;
+  width: 32px;
+  height: 32px;
+  margin-top: 4px;
+}
+#toolbar .action:hover {
+  background: rgba(238, 238, 238, 0.8);
+}
+#toolbar .is-reader img {
+  border: 1px solid #1E90FF;
+  border-radius: 50%;
+}
+#toolbar .action-wrapper {
+  width: 40px;
+  position: relative;
+}
+#toolbar .action-wrapper .bandage {
+  position: absolute;
+  display: inline-block;
+  font-size: 10px;
+  background: #52c41a;
+  color: white;
+  border-radius: 100%;
+  width: 14px;
+  height: 14px;
+  right: 7px;
+  top: 7px;
+  text-align: center;
+  line-height: 14px;
+}
+#toolbar .disable {
+  opacity: 0.3;
+}
+#toolbar .disable:hover {
+  background: none;
+}
+#toolbar .site-card {
+  cursor: pointer;
+  vertical-align: middle;
+  width: 28px;
+  margin-top: -5px;
+}
+#toolbar .site-card:hover {
+  opacity: 0.8;
+}
+#toolbar #tab-editor {
+  left: 35px;
+  width: calc(100% - 35px);
+}
+#toolbar #tab-editor-input {
+  font-size: 14px;
+}
+#toolbar #address-bar {
+  background: rgba(201, 201, 201, 0.35);
+  display: block;
+  height: 28px;
+  margin: 6px;
+  line-height: 30px;
+  border-radius: 150px;
+  padding-left: 3px;
+}
 
 #tab-editor .tab-editor-button:hover {
-  line-height: 1em; }
+  line-height: 1em;
+}
 
 /*# sourceMappingURL=toolbar.css.map */

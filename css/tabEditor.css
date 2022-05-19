@@ -21,6 +21,7 @@
   flex: 1;
   height: 1.5em;
   outline: none;
+  color: #333;
   -webkit-user-select: auto;
   -webkit-app-region: no-drag;
 }

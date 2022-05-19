@@ -136,6 +136,48 @@ body.linux #menu-button {
   /*padding: 0 10px;*/
   border-radius: 6px;
   margin: 6px;
+  /* icons */
+}
+.tab-item:not(.active):hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+.tab-item .tab-icon-area {
+  margin-left: auto;
+  margin-right: 5px;
+}
+.tab-item .tab-icon {
+  position: relative;
+  font-size: 0.7em;
+  padding: 0 0;
+  box-sizing: content-box;
+  margin-left: 5px;
+}
+.tab-item .tab-icon:is(.tab-close-button):hover:after {
+  background: rgba(245, 27, 27, 0.78) !important;
+  top: 0;
+  left: -1px;
+}
+.tab-item .tab-icon:not(.permission-request-icon):hover:after {
+  content: "";
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.075);
+  position: absolute;
+  top: 2px;
+  left: -3px;
+  z-index: -1;
+}
+.tab-item .tab-icon:is(.tab-close-button):hover:after {
+  background: rgba(245, 27, 27, 0.78) !important;
+  top: 0;
+  left: -1px;
+}
+.tab-item .tab-icon:is(.tab-close-button):hover:before {
+  z-index: 2;
+  color: white;
+  top: -5px;
+  left: -3px;
 }
 
 #navbar.show-dividers .tab-item:not(:last-child) {
@@ -150,10 +192,6 @@ body.linux #menu-button {
   background: rgba(182, 182, 182, 0.5);
 }
 
-.tab-item:not(.active):hover {
-  background-color: rgba(0, 0, 0, 0.03);
-}
-
 .dark-theme .tab-item:not(.active):hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
@@ -162,54 +200,9 @@ body.linux #menu-button {
   background-color: rgba(255, 255, 255, 0.15);
 }
 
-/* icons */
-.tab-item .tab-icon-area {
-  margin-left: auto;
-  margin-right: 5px;
-}
-
-.tab-item .tab-icon {
-  position: relative;
-  font-size: 0.7em;
-  padding: 0 0;
-  box-sizing: content-box;
-  margin-left: 5px;
-}
-
-.tab-item .tab-icon:not(.permission-request-icon):hover:after {
-  content: "";
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.075);
-  position: absolute;
-  top: 2px;
-  left: -3px;
-  z-index: -1;
-}
-
-.tab-item .tab-icon:is(.tab-close-button):hover:after {
-  background: rgba(245, 27, 27, 0.78) !important;
-  top: 0;
-  left: -1px;
-}
-
 .windows .tab-item .tab-icon:is(.tab-close-button):hover:after {
   top: 2px;
   left: -1px;
-}
-
-.tab-item .tab-icon:is(.tab-close-button):hover:after {
-  background: rgba(245, 27, 27, 0.78) !important;
-  top: 0;
-  left: -1px;
-}
-
-.tab-item .tab-icon:is(.tab-close-button):hover:before {
-  z-index: 2;
-  color: white;
-  top: -5px;
-  left: -3px;
 }
 
 .dark-theme .tab-item .tab-icon:hover:after {
@@ -219,31 +212,34 @@ body.linux #menu-button {
 .tab-item.active:not(:only-child) {
   /*background: rgba(0, 0, 0, 0.06);*/
   background: #4584fa;
+  color: white;
   /*text-shadow: 0 0 3px rgba(107, 107, 107, 0.42);*/
-}
-.tab-item.active:not(:only-child) .title {
-  color: white !important;
-  text-shadow: 0 0 3px black;
 }
 
 .use-theme.theme-background-low-contrast .tab-item.active:not(:only-child) {
   background: #4584fa;
-  color: #fff !important;
 }
-
-.use-theme.theme-background-low-contrast .active .theme-text-color {
-  color: #fff !important;
+.use-theme.theme-background-low-contrast .tab-item.active:not(:only-child) .title {
+  color: #fff;
 }
-
+.use-theme.theme-background-low-contrast .tab-item.active:not(:only-child) .active .theme-text-color {
+  color: #fff;
+}
 .use-theme .tab-item.active:not(:only-child) {
-  background: rgba(208, 208, 208, 0.2);
+  background: white;
+}
+.use-theme .tab-item.active:not(:only-child) .title {
+  color: #333;
 }
 
 .dark-theme .tab-item.active:not(:only-child) {
-  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  background: white;
 }
-
-.dark-theme.theme-background-low-contrast .tab-item.active:not(:only-child) {
+.dark-theme .tab-item.active:not(:only-child) .title {
+  color: #333;
+}
+.dark-theme .tab-item.active:not(:only-child).theme-background-low-contrast .tab-item.active:not(:only-child) {
   background: rgba(255, 255, 255, 0.1);
 }
 

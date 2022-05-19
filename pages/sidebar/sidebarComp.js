@@ -716,17 +716,17 @@ Vue.component('sidebar', {
         {
           label: '公开',
           checked: true,
-          tag:1
+          name:'public'
         },
         {
           label: '私密',
           checked: false,
-          tag:0
+          name:'private'
         },
         {
           label: '审核中',
           checked: false,
-          tag:-1
+          name:'auditing'
         },
       ],
       devices: [{
@@ -920,14 +920,14 @@ Vue.component('sidebar', {
         e.checked = false
       })
       this.tags[index].checked = !tag.checked
-        if (this.tags[index].tag === 1) {
+        if (this.tags[index].name === 'public') {
           this.passList = this.$store.getters.getAllCircle.filter(v => v.status !==3 && v.status !==2 )
           this.teamList = this.passList.filter(v => v.property === 0 ||  v.property===1)
         }
-        if (this.tags[index].tag === 0) {
+        if (this.tags[index].name === 'private') {
           this.teamList = this.$store.getters.getAllCircle.filter(v => v.property === 2)
         }
-        if (this.tags[index].tag === -1) {
+        if (this.tags[index].name === 'auditing') {
           this.teamList = this.$store.getters.getAllCircle.filter(v => v.status === 2)
         }
     },
@@ -1297,7 +1297,7 @@ Vue.component('sidebar', {
     async logout () {
       const result = await db.system.where('name').equals('currentUser').first()
       await db.accounts.where({ id: this.user.uid }).delete()
-      ipc.send('logoutBrowser', result.value.code)
+      ipc.send('logoutBrowser')
       await window.insertDefaultUser(result.value.code)
       //下面这步在insertDefaultUser方法中有
       //db.system.where({name:'currentUser'}).delete()
