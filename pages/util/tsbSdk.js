@@ -66,17 +66,20 @@ var EventBus = /*#__PURE__*/function () {
 
     _defineProperty(this, "events", new Map());
 
-    window.addEventListener('message', function (event) {
+    var handler = function handler(event) {
       var channel = event.data.eventName;
 
       if (channel && channel.startsWith('tsReply')) {
         var callback = _this.events.get(event.data.id);
 
-        callback(event.data.resInfo);
+        if (!callback) return;
+        event.data.resInfo.code === 500 ? callback(null, event.data.resInfo) : callback(event.data.resInfo);
 
         _this.events["delete"](event.data.id);
       } else if (channel === 'errorSys') {
         var _callback = _this.events.get(event.data.id);
+
+        if (!_callback) return;
 
         _callback(null, event.data.errorInfo);
 
@@ -84,13 +87,18 @@ var EventBus = /*#__PURE__*/function () {
       } else if (channel === 'authResult') {
         var _callback2 = _this.events.get(event.data.id);
 
+        if (!_callback2) return;
+
         _callback2(event.data.auth); //if 有真正的鉴权，判断auth返回是否是一个true，不是的话callback(event.data.auth)回调返回的就是一个false
 
 
         _this.events["delete"](event.data.id);
       }
-    });
-  }
+    };
+
+    window.addEventListener('message', handler);
+  } //一般用dispatch就能满足立即双向传讯式的sdk交互
+
 
   _createClass(EventBus, [{
     key: "dispatch",
@@ -111,6 +119,17 @@ var EventBus = /*#__PURE__*/function () {
         eventName: eventName,
         id: this.id,
         options: options
+      });
+    } //等待浏览器侧sdk的被动通讯式交互，执行一次事件侦听器的挂载
+
+  }, {
+    key: "accept",
+    value: function accept(eventName, callback) {
+      if (!eventName || !callback) return;
+      window.addEventListener('message', function (event) {
+        if (event.data.eventName === eventName) {
+          event.data.resInfo.code === 500 ? callback(null, event.data.resInfo) : callback(event.data.resInfo);
+        }
       });
     }
   }]);
@@ -133,6 +152,8 @@ var tsbk = /*#__PURE__*/function () {
     //签名生成规则如下：参与签名的字段包括noncestr（随机字符串）, 有效的jsapi_ticket, timestamp（时间戳）, url（第三方开发商网站的Origin）
     //对所有待签名参数按照字段名的ASCII 码从小到大排序（字典序）后，使用URL键值对的格式（即key1=value1&key2=value2…）拼接成字符串string
     //对string进行sha1签名，得到signature
+    //最终版本鉴权放在应用侧sdk，直接用XMLHttpRequest发起服务器鉴权(需后端cros解除跨域)，不再往浏览器侧sdk发起。
+    //至于window.postMessage被伪造的话，到时候寻找解决方法
   }
 
   _createClass(tsbk, null, [{
@@ -330,7 +351,72 @@ var tsbk = /*#__PURE__*/function () {
           res ? resolve(res) : reject(err);
         }, options);
       });
-    } //主动获取用户信息
+    } //检测浏览器器是否已登录
+
+  }, {
+    key: "checkBrowserLogin",
+    value: function checkBrowserLogin() {
+      return new Promise(function (resolve, reject) {
+        eventBus.dispatch('checkBrowserLogin', function (res, err) {
+          res ? resolve(res) : reject(err);
+        });
+      });
+    } //打开授权窗体
+
+  }, {
+    key: "openPermissionWindow",
+    value: function openPermissionWindow(options) {
+      return new Promise(function (resolve, reject) {
+        if (Object.keys(options).length === 0) {
+          reject({
+            code: 400,
+            msg: '参数不能为空'
+          });
+        }
+
+        if (!options.hasOwnProperty('clientId') && !options.hasOwnProperty('bindId') && !options.hasOwnProperty('appName')) {
+          reject({
+            code: 400,
+            msg: '参数不全'
+          });
+        }
+
+        if (options.clientId.length === 0) {
+          reject({
+            code: 400,
+            msg: 'clientId参数不能为空'
+          });
+        }
+
+        if (options.bindId.length === 0) {
+          reject({
+            code: 400,
+            msg: 'bindId参数不能为空'
+          });
+        }
+
+        if (options.appName.length === 0) {
+          reject({
+            code: 400,
+            msg: 'appName参数不能为空'
+          });
+        }
+
+        eventBus.dispatch('openPermissionWindow', function (res, err) {
+          res ? resolve(res) : reject(err);
+        }, options);
+      });
+    } //主动接受授权结果操作(授权免登)
+
+  }, {
+    key: "receivePermission",
+    value: function receivePermission() {
+      return new Promise(function (resolve, reject) {
+        eventBus.accept('receivePermission', function (res, err) {
+          res ? resolve(res) : reject(err);
+        });
+      });
+    } //主动获取用户信息(返回含浏览器access_token)
 
   }, {
     key: "getUserProfile",
@@ -357,8 +443,6 @@ var tsbk = /*#__PURE__*/function () {
 }();
 
 _defineProperty(tsbk, "secretInfo", {});
-
-_defineProperty(tsbk, "events", []);
 
 _defineProperty(tsbk, "newSecretInfoFunc", function () {});
 
