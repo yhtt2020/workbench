@@ -654,9 +654,9 @@ ipc.on('closeEmptyPage',(event,args)=>{
           require('browserUI.js').closeTab(tabs.tabs[i].id)
           ipc.send('willDownload')
         }
-        if(args.length===1){
-          ipc.send('willDownload')
-        }
+        // if(args.length===1){
+        //   ipc.send('willDownload')
+        // }
       }
     }
   }
