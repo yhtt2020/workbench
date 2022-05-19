@@ -20,9 +20,7 @@ const bookmarkStar = {
   },
   onClick: function (star) {
     var tabId = star.getAttribute('data-tab')
-
     searchbarPlugins.clearAll()
-
     places.updateItem(tabs.get(tabId).url, {
       isBookmarked: true,
       title: tabs.get(tabId).title // if this page is open in a private tab, the title may not be saved already, so it needs to be included here

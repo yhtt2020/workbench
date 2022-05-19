@@ -375,7 +375,7 @@ function addMainWindowEventListener () {
 
   //最小化、恢复事件
   mainWindow.on('minimize', () => {
-
+    SidePanel.send('closeUserSidePanel')
     if(!isWin()){
       closeSidePanel()
     }

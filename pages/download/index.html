@@ -24,7 +24,7 @@
           <div v-show="listCount===0" style="margin-top: 50px">
             <a-empty description="暂无下载任务" style="user-select:none"></a-empty>
           </div>
-          <div id="downloadIng" v-for="(list,index) in lists" v-bind:key="index"
+          <div id="downloadIng" v-for="(list,index) in lists" v-bind:key="index" style="margin-top: 10px"
                @contextmenu="menuIng(index)" @click="change(index)"
                :class="{active : active === index,
          clickActive:clickActive===index}"
@@ -32,7 +32,17 @@
                @mouseleave="mouseLeave">
             <div style="margin-top: 0;width: 100%;height: 55px;">
               <div style="width: 34px;height: 40px;position: absolute;margin-top: 8px;margin-left: 5px; user-select:none" >
-                <img src="icon/white.svg">
+                <img src="icon/exe.svg" class="icon" v-if="list.title.indexOf('exe')>0">
+                <img src="icon/jpg.svg" class="icon" v-else-if="list.title.indexOf('jpg')>0">
+                <img src="icon/jpg.svg" class="icon" v-else-if="list.title.indexOf('jpeg')>0">
+                <img src="icon/zip.svg" class="icon" v-else-if="list.title.indexOf('zip')>0">
+                <img src="icon/word.svg" class="icon" v-else-if="list.title.indexOf('docx')>0">
+                <img src="icon/word.svg" class="icon" v-else-if="list.title.indexOf('doc')>0">
+                <img src="icon/txt.svg" class="icon" v-else-if="list.title.indexOf('txt')>0">
+                <img src="icon/video.svg" class="icon" v-else-if="list.title.indexOf('mp4')>0">
+                <img src="icon/mp3.svg" class="icon" v-else-if="list.title.indexOf('mp3')>0">
+                <img src="icon/psd.svg" class="icon" v-else-if="list.title.indexOf('psd')>0">
+                <img src="icon/white.svg" class="icon" v-else>
               </div>
 
               <div>
@@ -68,21 +78,32 @@
 
         </a-tab-pane>
 
-        <a-tab-pane key="2"  force-render>
+        <a-tab-pane key="2"  force-render >
            <span slot="tab" style="user-select:none" >
             已完成
-             </span>
+           </span>
           <div v-show="listDoneCount===0" style="margin-top: 50px">
             <a-empty description="暂无完成任务" style="user-select:none" ></a-empty>
           </div>
-          <div id="downloadDone" v-for="(doneList,index) in doneLists" v-bind:key="index" @click="change(index)" @dblclick="openFileHandler(index)" @contextmenu="menuDone(index)"  :class="{active : active === index,
+
+          <div id="downloadDone"  v-for="(doneList,index) in doneLists"  style="margin-top: 10px"  v-bind:key="index"  @click.stop="change(index)" @dblclick="openFileHandler(index)" @contextmenu="menuDone(index)"  :class="{active : active === index,
          clickActive:clickActive===index}"
                @mouseover="mouseOver(index)"
-               @mouseleave="mouseLeave"
-                >
+               @mouseleave="mouseLeave">
+
             <div style="width: 100%;height: 45px;">
               <div style="width: 34px;height: 40px;position: absolute;margin-top: 4px;margin-left: 10px; user-select:none" >
-                <img src="icon/white.svg">
+                <img src="icon/exe.svg" class="icon" v-if="doneList.title.indexOf('exe')>0">
+                <img src="icon/jpg.svg" class="icon" v-else-if="doneList.title.indexOf('jpg')>0">
+                <img src="icon/jpg.svg" class="icon" v-else-if="doneList.title.indexOf('jpeg')>0">
+                <img src="icon/zip.svg" class="icon" v-else-if="doneList.title.indexOf('zip')>0">
+                <img src="icon/word.svg" class="icon" v-else-if="doneList.title.indexOf('docx')>0">
+                <img src="icon/word.svg" class="icon" v-else-if="doneList.title.indexOf('doc')>0">
+                <img src="icon/txt.svg" class="icon" v-else-if="doneList.title.indexOf('txt')>0">
+                <img src="icon/video.svg" class="icon" v-else-if="doneList.title.indexOf('mp4')>0">
+                <img src="icon/mp3.svg" class="icon" v-else-if="doneList.title.indexOf('mp3')>0">
+                <img src="icon/psd.svg" class="icon" v-else-if="doneList.title.indexOf('psd')>0">
+                <img src="icon/white.svg" class="icon" v-else>
               </div>
                 <div>
                   <a-modal v-model="visible" title="删除下载任务" ok-text="确认" cancel-text="取消" @ok="hideModalDone()">
@@ -113,13 +134,13 @@
           <div v-show="listTrashCount===0" style="margin-top: 50px">
             <a-empty description="暂无记录" style="user-select:none"></a-empty>
           </div>
-          <div v-for="(deleteList,index) in deleteLists" v-bind:key="index" @click="change(index)"  @contextmenu="menuDel(index)"  :class="{active : active === index,
+          <div v-for="(deleteList,index) in deleteLists" v-bind:key="index" @click="change(index)" style="margin-top: 10px"   @contextmenu="menuDel(index)"  :class="{active : active === index,
          clickActive:clickActive===index}"
                @mouseover="mouseOver(index)"
                @mouseleave="mouseLeave">
             <div style="width: 100%;height: 45px;">
               <div style="width: 34px;height: 40px;position: absolute;margin-top: 4px;margin-left: 10px;user-select:none" >
-                <img src="icon/white.svg">
+                <img src="icon/delete.svg" class="icon">
               </div>
               <div style="position: absolute;margin-left: 270px;margin-top: 14px">{{deleteList.statusText}}</div>
               <div style="margin-left: 50px;font-size: 13px;font-weight: bold;text-decoration:line-through">{{deleteList.title}}</div>
@@ -226,13 +247,20 @@
   })
 
   ipcRenderer.on('download-info', async (event, args) => {
+    let i;
 
     let simpleName;
     if (args.name.length >= 20) {
       simpleName = args.name.substring(0, 7) + '...' + args.name.substring(args.name.length-6,args.name.length);
     } else (simpleName = args.name)
-    // console.log(args.chainUrl)
+
     if (args.status === 'start') {
+      appVue.lists.forEach(item=>{
+        if(item.startTime===args.startTime){
+          appVue.lists.splice(appVue.lists.indexOf(args.startTime), 1)
+          appVue.count--
+        }
+      })
       appVue.lists.unshift({
         id: appVue.id++,
         title: simpleName,
@@ -249,17 +277,22 @@
       appVue.listCount++
       appVue.count++
       ipcRenderer.send('willDownload')
+      ipcRenderer.send('downloading')
     }
 
     if (args.status === 'cancelled') {
       ipcRenderer.send('emptyPageUrl',args.chainUrl)
-      for (var i = 0; i < appVue.lists.length; i++) {
+      for (i = 0; i < appVue.lists.length; i++) {
         if (appVue.lists[i].startTime === args.startTime) {
             appVue.deleteId = i
         }
       }
+      ipcRenderer.send('downloadEnd')
       appVue.lists.splice(appVue.deleteId, 1)
       appVue.count--
+      if(appVue.count<0){
+        appVue.count=0
+      }
       appVue.listCount--
     }
 
@@ -284,8 +317,15 @@
     }
 
     if (args.status === 'completed' && args.path !== '') {
+
       ipcRenderer.send('emptyPageUrl',args.chainUrl)
       const myDate = new Date();
+      appVue.doneLists.forEach(item=>{
+        if(item.startTime===args.startTime){
+          appVue.doneLists.splice(appVue.doneLists.indexOf(args.startTime), 1)
+          appVue.count++
+        }
+      })
       appVue.doneLists.unshift({
         id: appVue.doneId++,
         title: simpleName,
@@ -310,6 +350,7 @@
         href:args.href
       })
       ipcRenderer.send('closeEmpty',args.chainUrl)
+      ipcRenderer.send('downloadEnd')
     }
   })
 
@@ -343,6 +384,30 @@
        delId:'0',
      },
     created() {
+
+      // let newArr = [];
+      // //通过forEach循环数组
+      // this.dataAll.forEach((item, i) => {
+      //   let index = -1;
+      //   //然后在跑到这里筛选 根据不同的时间放置不同的数组    some（）用来查找数组中是否存在某个值  如果存在 就return true
+      //   let isExists = newArr.some((newItem, j) => {
+      //     if(item.addtime == newItem.addtime) {
+      //       index = j;
+      //       return true;
+      //     }
+      //   })
+      //   //代码是先跑这里的if条件判读
+      //   if(!isExists) {
+      //     newArr.push({
+      //       addtime: item.addtime,
+      //       subList: [item]
+      //     })
+      //   } else {
+      //     newArr[index].subList.push(item);
+      //   }
+      //   this.Data = newArr
+      // })
+
        db.download.toArray().then(dblist => {
          for(let i=0; i<=dblist.length; i++){
            let simpleName;
@@ -402,10 +467,9 @@
       mouseLeave(){
         this.clickActive = '';
       },
-      change(index){
-        this.active = index;
-      },
-
+       change (index) {
+         this.active = index
+       },
       hideModal() {
         appVue.listTrashCount++
         db.download.put({
@@ -431,8 +495,6 @@
         })
         ipcRenderer.send('deleteDownload', this.selectingList.path)
         this.visibleIng = false
-
-
       },
 
       doneChange(e){
@@ -543,23 +605,9 @@
           }
         })
       },
-
-      // showFileHandler(index) {
-      //   const {shell} = require('electron')
-      //   fs.exists(this.selectList.path, function (flag) {
-      //     if (flag) {
-      //       shell.showItemInFolder(this.doneLists[index].path)
-      //     } else {
-      //       console.log('123')
-      //      //  this.$message.info('文件已被删除或位置被移动', 1)
-      //      //  db.download.delete(this.doneLists[index].startTime)
-      //      //  this.doneLists.splice(this.doneLists.indexOf(this.selectList), 1)
-      //      // this.listDoneCount--
-      //     }
-      //   })
-      // },
     }
    })
+
 
 
 </script>
@@ -577,6 +625,10 @@
 }
 .clickActive{
   background: #f7f7f7;
+}
+.icon{
+  width: 100%;
+  height: 100%;
 }
 </style>
 
