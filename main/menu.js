@@ -550,16 +550,18 @@ function installDevPlugin (plugin) {
   installExtension(plugin).then((ext) => {
     sendMessage({
       type: 'success',
-      config: { content: '安装插件成功，重新打开开发者工具后生效。', key: 'install' }
+      config: { content: '安装插件成功，插件生效需如此操作：①关闭原调试工具，②按F5刷新调试页面，③按F12再次打开调试工具。', key: 'install', duration: 10  }
     })
     devPlugin[plugin.id].installed = true
     Menu.setApplicationMenu(buildAppMenu())
     const _=require('lodash')
     let extension =_.find(session.defaultSession.getAllExtensions(),{name:ext})
     sessions.forEach(ses=>{
-      console.log(ses.getAllExtensions())
       if(!ses.getExtension(extension.id)){
-        ses.loadExtension(extension.path)
+        ses.loadExtension(extension.path).catch(e=>{
+          console.log(e)
+        })
+        console.log('added ',extension.path)
       }
     })
   })
