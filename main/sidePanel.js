@@ -760,6 +760,12 @@ ipc.on('closeSwitch',()=>{
 ipc.on('openSidebarMenu',()=>{
   const tpl=[
     {
+      label: '新建标签组',
+      click() {
+       sendIPCToWindow(mainWindow, 'addTask')
+     }
+    },
+    {
       label: '管理标签组',
       click () {
         sendIPCToWindow(mainWindow,'showTasks')

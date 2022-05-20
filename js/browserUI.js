@@ -35,7 +35,9 @@ function addTab (tabId = tabs.add(), options = {},last=false) {
   * The current tab is an empty, non-private tab, and the new tab is private
   * The current tab is empty, and the new tab has a URL
   */
-
+    tabs.update(tabId,{
+      backgroundColor:tabs.get(tabs.getSelected()).backgroundColor||'#fff'
+    })
   if (!options.openInBackground && !tabs.get(tabs.getSelected()).url && ((!tabs.get(tabs.getSelected()).private && tabs.get(tabId).private) || tabs.get(tabId).url)) {
     destroyTab(tabs.getSelected())
   }

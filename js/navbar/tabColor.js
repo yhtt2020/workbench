@@ -155,7 +155,6 @@ function getLuminance (c) {
 function setColor (bg, fg, isLowContrast) {
   const backgroundElements = document.getElementsByClassName('theme-background-color')
   const textElements = document.getElementsByClassName('theme-text-color')
-
   for (let i = 0; i < backgroundElements.length; i++) {
     backgroundElements[i].style.backgroundColor = bg
   }
@@ -184,7 +183,6 @@ const tabColor = {
   useSiteTheme: true,
   initialize: function () {
     webviews.bindEvent('page-favicon-updated', function (tabId, favicons) {
-
       tabColor.updateFromImage(favicons, tabId, function () {
         if (tabId === tabs.getSelected()) {
           tabColor.updateColors()
@@ -218,7 +216,7 @@ const tabColor = {
     this is needed to go back to default colors in case this page doesn't specify one
      */
     webviews.bindEvent('did-finish-load', function (tabId) {
-      tabColor.updateColors()
+      //tabColor.updateColors()
     })
 
     // theme changes can affect the tab colors
@@ -263,7 +261,6 @@ const tabColor = {
     if (tabs.get(tabId).private === true) {
       return
     }
-
     requestIdleCallback(function () {
       colorExtractorImage.onload = function (e) {
         const backgroundColor = getColorFromImage(colorExtractorImage)
