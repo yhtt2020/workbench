@@ -516,7 +516,8 @@ function willNavigate(tabId, url, isInPlace, isMainFrame, frameProcessId, frameR
   if(currentTab.url===urlParser.parse('ts://newtab') && url!==urlParser.parse('ts://newtab')){
     var newTab = tabs.add({
       url: url,
-      private: currentTab.private
+      private: currentTab.private,
+      backgroundColor:currentTab.backgroundColor||'#fff'
     })
     require('./browserUI.js').addTab(newTab, {
       enterEditMode: false
