@@ -154,6 +154,7 @@ body.linux #menu-button {
 }
 .tab-item .tab-icon:is(.tab-close-button):hover:after {
   background: rgba(245, 27, 27, 0.78) !important;
+  color: white !important;
   top: 0;
   left: -1px;
 }
@@ -170,6 +171,7 @@ body.linux #menu-button {
 }
 .tab-item .tab-icon:is(.tab-close-button):hover:after {
   background: rgba(245, 27, 27, 0.78) !important;
+  color: white !important;
   top: 0;
   left: -1px;
 }
@@ -424,6 +426,7 @@ body.windows.dark-theme .navbar-action-button:not(:disabled):hover {
   font-size: 1.13em;
   padding: 0.1em 0.1em 0.1em 0em;
   margin-top: 0.15em;
+  color: #ffb8b8;
 }
 
 .tab-item .tab-item:hover .tab-close-button:after {
