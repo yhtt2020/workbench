@@ -1,3 +1,16 @@
+const {
+  default: installExtension,
+  VUEJS3_DEVTOOLS,
+  VUEJS_DEVTOOLS,
+  REACT_DEVELOPER_TOOLS
+} = require('electron-devtools-installer')
+
+const devPlugin = {}
+
+devPlugin[VUEJS3_DEVTOOLS.id] = { installed: false }
+devPlugin[VUEJS_DEVTOOLS.id] = { installed: false }
+devPlugin[REACT_DEVELOPER_TOOLS.id] = { installed: false }
+
 function buildAppMenu (options = {}) {
   function getFormattedKeyMapEntry (keybinding) {
     const value = settings.get('keyMap')?.[keybinding]
@@ -344,6 +357,39 @@ function buildAppMenu (options = {}) {
           click: function (item, focusedWindow) {
             if (focusedWindow) focusedWindow.toggleDevTools()
           }
+        },
+        {
+          type: 'separator'
+        },
+        {
+          label: '一键启用开发扩展',
+          submenu: [
+            {
+              label: '⭐⭐⭐️安装插件需要挂梯子⭐⭐⭐️',
+            },
+            {
+              label: 'Vue2扩展',
+              type:'checkbox',
+              checked: devPlugin[VUEJS_DEVTOOLS.id].installed,
+              click: function () {
+                installDevPlugin(VUEJS_DEVTOOLS)
+              }
+            }, {
+              label: 'Vue3扩展',
+              type:'checkbox',
+              checked: devPlugin[VUEJS3_DEVTOOLS.id].installed,
+              click: () => {
+                installDevPlugin(VUEJS3_DEVTOOLS)
+              }
+            },
+            {
+              label: 'React扩展',
+              type:'checkbox',
+              checked: devPlugin[REACT_DEVELOPER_TOOLS.id].installed,
+              click: () => {
+                installDevPlugin(REACT_DEVELOPER_TOOLS)
+              }
+            }]
         }
       ]
     },
@@ -483,4 +529,33 @@ function createDockMenu () {
     var dockMenu = Menu.buildFromTemplate(template)
     app.dock.setMenu(dockMenu)
   }
+}
+function installDevPlugin (plugin) {
+  sendMessage({
+    type: 'loading',
+    config: { content: '正在后台安装插件，请勿关闭浏览器。如果长时间无法成功，请挂梯子后重试。', key: 'install', duration: 5 }
+  })
+  installExtension(plugin).then(() => {
+    console.log('installed')
+    console.log(plugin)
+    sendMessage({
+      type: 'success',
+      config: { content: '安装插件成功，重新打开开发者工具后生效。', key: 'install' }
+    })
+    devPlugin[plugin.id].installed = true
+    Menu.setApplicationMenu(buildAppMenu())
+  })
+    .catch((err) => {
+      console.log('installed failed' + err)
+      sendMessage({
+        type: 'error',
+        config: { content: '安装插件失败，失败原因：' + err + '，请检查网络后再试，必要情况下请挂梯子。', key: 'install' }
+      })
+    }).finally(() => {
+    if (devPlugin[plugin].installed === false)
+      sendMessage({
+        type: 'info',
+        config: { content: '后台安装任务结束。', key: 'install' }
+      })
+  })
 }
