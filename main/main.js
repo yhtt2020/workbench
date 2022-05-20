@@ -502,7 +502,7 @@ ipc.on('showSecondaryMenu', function(event, data) {
 ipc.on('quit', function() {
 	app.quit()
 })
-
+var sessions=[]
 app.on('ready', function() {
   nativeTheme.on('updated', function () {
     settings.set('systemShouldUseDarkColors', electron.nativeTheme.shouldUseDarkColors)
@@ -511,6 +511,10 @@ app.on('ready', function() {
   if (electron.nativeTheme.shouldUseDarkColors !== settings.get('systemShouldUseDarkColors')) {
     settings.set('systemShouldUseDarkColors', electron.nativeTheme.shouldUseDarkColors)
   }
+
+app.on('session-created',(session)=>{
+  sessions.push(session)
+})
 })
 
 // ipc.on('showBookmarks',function(){
@@ -535,4 +539,3 @@ ipc.on('quitApp',()=>{
   canQuit=true
   app.quit()
 })
-

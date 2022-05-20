@@ -546,24 +546,31 @@ function installDevPlugin (plugin) {
     type: 'loading',
     config: { content: '正在后台安装插件，请勿关闭浏览器。如果长时间无法成功，请挂梯子后重试。', key: 'install', duration: 5 }
   })
-  installExtension(plugin).then(() => {
-    console.log('installed')
-    console.log(plugin)
+  installExtension(plugin).then((ext) => {
     sendMessage({
       type: 'success',
-      config: { content: '安装插件成功，重新打开开发者工具后生效。', key: 'install' }
+      config: { content: '安装插件成功，插件生效需如此操作：①关闭原调试工具，②按F5刷新调试页面，③按F12再次打开调试工具。', key: 'install', duration: 10  }
     })
     devPlugin[plugin.id].installed = true
     Menu.setApplicationMenu(buildAppMenu())
+    const _=require('lodash')
+    let extension =_.find(session.defaultSession.getAllExtensions(),{name:ext})
+    sessions.forEach(ses=>{
+      if(!ses.getExtension(extension.id)){
+        ses.loadExtension(extension.path).catch(e=>{
+          console.log(e)
+        })
+        console.log('added ',extension.path)
+      }
+    })
   })
     .catch((err) => {
-      console.log('installed failed' + err)
       sendMessage({
         type: 'error',
         config: { content: '安装插件失败，失败原因：' + err + '，请检查网络后再试，必要情况下请挂梯子。', key: 'install' }
       })
     }).finally(() => {
-    if (devPlugin[plugin].installed === false)
+    if (devPlugin[plugin.id].installed === false)
       sendMessage({
         type: 'info',
         config: { content: '后台安装任务结束。', key: 'install' }
