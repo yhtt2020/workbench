@@ -33,14 +33,38 @@
             <div style="margin-top: 0;width: 100%;height: 55px;">
               <div style="width: 34px;height: 40px;position: absolute;margin-top: 8px;margin-left: 5px; user-select:none" >
                 <img src="icon/exe.svg" class="icon" v-if="list.title.indexOf('exe')>0">
+                <img src="icon/html.svg" class="icon" v-else-if="list.title.indexOf('html')>0">
+                <img src="icon/html.svg" class="icon" v-else-if="list.title.indexOf('js')>0">
+                <img src="icon/html.svg" class="icon" v-else-if="list.title.indexOf('php')>0">
+                <img src="icon/html.svg" class="icon" v-else-if="list.title.indexOf('java')>0">
+                <img src="icon/html.svg" class="icon" v-else-if="list.title.indexOf('json')>0">
+                <img src="icon/html.svg" class="icon" v-else-if="list.title.indexOf('css')>0">
+                <img src="icon/ai.svg" class="icon" v-else-if="list.title.indexOf('ai')>0">
+                <img src="icon/excel.svg" class="icon" v-else-if="list.title.indexOf('xls')>0">
+                <img src="icon/excel.svg" class="icon" v-else-if="list.title.indexOf('xlsx')>0">
+                <img src="icon/gif.svg" class="icon" v-else-if="list.title.indexOf('gif')>0">
                 <img src="icon/jpg.svg" class="icon" v-else-if="list.title.indexOf('jpg')>0">
                 <img src="icon/jpg.svg" class="icon" v-else-if="list.title.indexOf('jpeg')>0">
+                <img src="icon/jpg.svg" class="icon" v-else-if="list.title.indexOf('webp')>0">
+                <img src="icon/jpg.svg" class="icon" v-else-if="list.title.indexOf('svg')>0">
                 <img src="icon/zip.svg" class="icon" v-else-if="list.title.indexOf('zip')>0">
+                <img src="icon/zip.svg" class="icon" v-else-if="list.title.indexOf('7z')>0">
+                <img src="icon/zip.svg" class="icon" v-else-if="list.title.indexOf('rar')>0">
                 <img src="icon/word.svg" class="icon" v-else-if="list.title.indexOf('docx')>0">
                 <img src="icon/word.svg" class="icon" v-else-if="list.title.indexOf('doc')>0">
                 <img src="icon/txt.svg" class="icon" v-else-if="list.title.indexOf('txt')>0">
                 <img src="icon/video.svg" class="icon" v-else-if="list.title.indexOf('mp4')>0">
+                <img src="icon/video.svg" class="icon" v-else-if="list.title.indexOf('avi')>0">
+                <img src="icon/video.svg" class="icon" v-else-if="list.title.indexOf('wmv')>0">
+                <img src="icon/video.svg" class="icon" v-else-if="list.title.indexOf('rmvb')>0">
+                <img src="icon/video.svg" class="icon" v-else-if="list.title.indexOf('mkv')>0">
+                <img src="icon/video.svg" class="icon" v-else-if="list.title.indexOf('mpeg')>0">
                 <img src="icon/mp3.svg" class="icon" v-else-if="list.title.indexOf('mp3')>0">
+                <img src="icon/mp3.svg" class="icon" v-else-if="list.title.indexOf('wma')>0">
+                <img src="icon/mp3.svg" class="icon" v-else-if="list.title.indexOf('aac')>0">
+                <img src="icon/pdf.svg" class="icon" v-else-if="list.title.indexOf('pdf')>0">
+                <img src="icon/png.svg" class="icon" v-else-if="list.title.indexOf('png')>0">
+                <img src="icon/png.svg" class="icon" v-else-if="list.title.indexOf('apng')>0">
                 <img src="icon/psd.svg" class="icon" v-else-if="list.title.indexOf('psd')>0">
                 <img src="icon/white.svg" class="icon" v-else>
               </div>
@@ -86,22 +110,46 @@
             <a-empty description="暂无完成任务" style="user-select:none" ></a-empty>
           </div>
 
+
           <div id="downloadDone"  v-for="(doneList,index) in doneLists"  style="margin-top: 10px"  v-bind:key="index"  @click.stop="change(index)" @dblclick="openFileHandler(index)" @contextmenu="menuDone(index)"  :class="{active : active === index,
          clickActive:clickActive===index}"
                @mouseover="mouseOver(index)"
                @mouseleave="mouseLeave">
-
             <div style="width: 100%;height: 45px;">
               <div style="width: 34px;height: 40px;position: absolute;margin-top: 4px;margin-left: 10px; user-select:none" >
                 <img src="icon/exe.svg" class="icon" v-if="doneList.title.indexOf('exe')>0">
+                <img src="icon/html.svg" class="icon" v-else-if="doneList.title.indexOf('html')>0">
+                <img src="icon/html.svg" class="icon" v-else-if="doneList.title.indexOf('js')>0">
+                <img src="icon/html.svg" class="icon" v-else-if="doneList.title.indexOf('php')>0">
+                <img src="icon/html.svg" class="icon" v-else-if="doneList.title.indexOf('java')>0">
+                <img src="icon/html.svg" class="icon" v-else-if="doneList.title.indexOf('json')>0">
+                <img src="icon/html.svg" class="icon" v-else-if="doneList.title.indexOf('css')>0">
+                <img src="icon/ai.svg" class="icon" v-else-if="doneList.title.indexOf('ai')>0">
+                <img src="icon/excel.svg" class="icon" v-else-if="doneList.title.indexOf('xls')>0">
+                <img src="icon/excel.svg" class="icon" v-else-if="doneList.title.indexOf('xlsx')>0">
+                <img src="icon/gif.svg" class="icon" v-else-if="doneList.title.indexOf('gif')>0">
                 <img src="icon/jpg.svg" class="icon" v-else-if="doneList.title.indexOf('jpg')>0">
                 <img src="icon/jpg.svg" class="icon" v-else-if="doneList.title.indexOf('jpeg')>0">
+                <img src="icon/jpg.svg" class="icon" v-else-if="doneList.title.indexOf('webp')>0">
+                <img src="icon/jpg.svg" class="icon" v-else-if="doneList.title.indexOf('svg')>0">
                 <img src="icon/zip.svg" class="icon" v-else-if="doneList.title.indexOf('zip')>0">
+                <img src="icon/zip.svg" class="icon" v-else-if="doneList.title.indexOf('7z')>0">
+                <img src="icon/zip.svg" class="icon" v-else-if="doneList.title.indexOf('rar')>0">
                 <img src="icon/word.svg" class="icon" v-else-if="doneList.title.indexOf('docx')>0">
                 <img src="icon/word.svg" class="icon" v-else-if="doneList.title.indexOf('doc')>0">
                 <img src="icon/txt.svg" class="icon" v-else-if="doneList.title.indexOf('txt')>0">
                 <img src="icon/video.svg" class="icon" v-else-if="doneList.title.indexOf('mp4')>0">
+                <img src="icon/video.svg" class="icon" v-else-if="doneList.title.indexOf('avi')>0">
+                <img src="icon/video.svg" class="icon" v-else-if="doneList.title.indexOf('wmv')>0">
+                <img src="icon/video.svg" class="icon" v-else-if="doneList.title.indexOf('rmvb')>0">
+                <img src="icon/video.svg" class="icon" v-else-if="doneList.title.indexOf('mkv')>0">
+                <img src="icon/video.svg" class="icon" v-else-if="doneList.title.indexOf('mpeg')>0">
                 <img src="icon/mp3.svg" class="icon" v-else-if="doneList.title.indexOf('mp3')>0">
+                <img src="icon/mp3.svg" class="icon" v-else-if="doneList.title.indexOf('wma')>0">
+                <img src="icon/mp3.svg" class="icon" v-else-if="doneList.title.indexOf('aac')>0">
+                <img src="icon/pdf.svg" class="icon" v-else-if="doneList.title.indexOf('pdf')>0">
+                <img src="icon/png.svg" class="icon" v-else-if="doneList.title.indexOf('png')>0">
+                <img src="icon/png.svg" class="icon" v-else-if="doneList.title.indexOf('apng')>0">
                 <img src="icon/psd.svg" class="icon" v-else-if="doneList.title.indexOf('psd')>0">
                 <img src="icon/white.svg" class="icon" v-else>
               </div>
@@ -125,6 +173,7 @@
               <div style="margin-left: 50px;font-size: 12px;width: 65px;color:#999">{{doneList.total}} </div>
             </div>
           </div>
+
         </a-tab-pane>
 
         <a-tab-pane key="3">
@@ -349,6 +398,7 @@
         status:'1',
         href:args.href
       })
+
       ipcRenderer.send('closeEmpty',args.chainUrl)
       ipcRenderer.send('downloadEnd')
     }
