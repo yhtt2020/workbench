@@ -72,9 +72,9 @@ const globalSearchMod = {
       globalSearch.webContents.send('viewLoaded')
     })
 
-    // globalSearch.on('blur', () => {
-    //   globalSearch.hide()
-    // })
+    globalSearch.on('blur', () => {
+      globalSearch.hide()
+    })
 
     globalSearch.on('will-resize', (event, args) => {
       event.preventDefault()

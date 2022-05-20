@@ -69,7 +69,6 @@ const cloudAdapter={
             console.warn('fail','设备冲突导致云端存储失败')
             return fatal({spaceId:spaceId,modal:true,title:'无法成功保存空间',description:'云端空间已被其他设备抢占，当前空间已无法存入。',fatal:true})
           }
-
           backupSpaceModel.cancelOfflineUse(spaceId)
         }else{
           //保存失败，冲突
@@ -77,7 +76,15 @@ const cloudAdapter={
         }
       }catch (e) {
         console.warn('存储到云端失败，接口请求失败。')
-        return disconnect({modal:true,title:'无法连接到服务器',description:'暂时无法连接到服务器。',disconnect:true,spaceId:spaceId})
+        try{
+          if(e.response.status===401){
+            return disconnect({modal:true,title:'账号信息失效',description:'请先离线使用，然后重新登录此账号，即可恢复空间连接。',disconnect:true,spaceId:spaceId})
+          }else{
+            return disconnect({modal:true,title:'无法连接到服务器',description:'暂时无法连接到服务器。',disconnect:true,spaceId:spaceId})
+          }
+        }catch (e) {
+          return disconnect({modal:true,title:'无法连接到服务器',description:'暂时无法连接到服务器。',disconnect:true,spaceId:spaceId})
+        }
       }
     }catch (e) {
       console.warn('云端存储全局意外错误返回')
@@ -92,6 +99,7 @@ const cloudAdapter={
       let userInfo=ldb.db.get('currentSpace.userInfo').value()
       let result =await cloudSpaceModel.restore(spaceId,userInfo)
       if(result.status===1){
+        console.log('获得云端数据',result.data.data)
         savedStringData=JSON.stringify(result.data.data)
       }
       //savedStringData = fs.readFileSync(sessionRestore.savePath, 'utf-8')

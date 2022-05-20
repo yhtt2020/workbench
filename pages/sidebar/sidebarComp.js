@@ -3,7 +3,7 @@ const { api } = require('../../server-config')
 const standAloneAppModel = require('../util/model/standAloneAppModel.js')
 
 const sidebarTpl = `
-  <div id="sidebar" class="side-container">
+  <div id="sidebar" class="side-container" @contextmenu="openSidebarMenu">
     <div id="itemsEl" class="side-items">
       <ul class="app-task">
         <li @click="toggleUserPanel" class="" style="position: relative;">
@@ -42,7 +42,7 @@ const sidebarTpl = `
                           </div>
                           <div style="margin-top: 10px">
 
-    <a-button @click="openUserWindow" style="font-size: 12px" size="small">切换账号</a-button>
+    <a-button @click="openUserWindow" style="font-size: 12px" size="small">切换帐号</a-button>
 </div>
 
 
@@ -112,10 +112,7 @@ const sidebarTpl = `
                             <div class="cb-top flex align-center justify-start">
                               <img :src="item.logo" alt="">
                               <div class="cb-top-word">{{item.name}}</div>
-                              <a-tag class="cb-top-tag" color="#f50"
-                                v-show="item.hasOwnProperty('status') && item.status === 2 ">审核中</a-tag>
-                              <a-tag class="cb-top-tag" color="#CFD1D0"
-                                v-show="item.hasOwnProperty('status') && item.status === 3 ">申请驳回</a-tag>
+                              <a-icon class="cb-top-tag" type="share-alt" @click="inviteLink(item.id)"></a-icon>
                             </div>
                             <div class="cb-bottom flex align-center justify-around">
                               <a-button class="cb-bottom-zone" type="link" icon="team" @click="openCircle(item.id)">
@@ -167,7 +164,7 @@ const sidebarTpl = `
             <div @contextmenu="openUserWindow" class="wrapper" block>
               <div class="item-icon">
                 <a-avatar v-if="user.uid!==0"
-                  style="border: 1px solid #cfcfcf; background-color: white;width: 28px;height: 28px" class="icon"
+                  style="background-color: white;width: 28px;height: 28px" class="icon"
                   :src="user.avatar"></a-avatar>
                 <a-badge v-if="user.uid===0" count="登录" :offset="[-15,30]" :number-style="{'font-size':'12px'}">
                   <a-avatar style=" background-color: white; color: #aaa;width: 28px;height: 28px" class="icon"
@@ -189,9 +186,9 @@ const sidebarTpl = `
         <ul id="pinGroup" class="app-task app-items" style="margin-bottom: 0; ">
 
           <li v-for="app in apps" @click="executeApp(app)" @mouseenter="hoverApp($event,app)"
-            @contextmenu="createMenu(app.id,app)" v-if="app.processing || app.settings.showInSideBar">
-            <a-popover placement="right" :mouse-enter-delay="0.3" overlay-class-name="tips" @visible-change="">
-              <template slot="title">
+            @contextmenu.stop="createMenu(app.id,app)" v-if="app.processing || app.settings.showInSideBar">
+            <a-popover placement="right"  :mouse-enter-delay="0.3" overlay-class-name="tips" @visible-change="">
+              <template  slot="title">
                 <span class="app-name-popover"> {{app.name}} </span>
               </template>
               <template slot="content" v-if="app.processing">
@@ -200,7 +197,7 @@ const sidebarTpl = `
                 </div>
               </template>
               <template slot="content" v-else>
-                {{app.summary}}
+              <div style="max-width: 400px">{{app.summary}}</div>
               </template>
               <div class="wrapper sa-app-wrapper">
                 <div v-if="app.processing" class="processing"></div>
@@ -375,72 +372,120 @@ const sidebarTpl = `
     arrow>
     <!--mouseenter-->
 <template v-slot:trigger>
-<div  style="width: 100%;overflow: hidden;height:30px;text-align: left ">
+<div @click="openUserWindow" title="点击选择其他空间"  style="width: 100%;overflow: hidden;height:30px;text-align: left ">
 
        <div style="width:145px;">
        <div style="display: inline-block;width:45px;text-align: center">
-       <svg id="savingIcon" :class="{'online':currentSpace.space.nanoid,'offline':!currentSpace.space.nanoid}" style="width: 24px" t="1648106444295"  viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="32437" width="32" height="32"><path d="M512 938.666667C276.352 938.666667 85.333333 747.648 85.333333 512S276.352 85.333333 512 85.333333s426.666667 191.018667 426.666667 426.666667-191.018667 426.666667-426.666667 426.666667z m205.653333-210.090667A298.666667 298.666667 0 0 0 385.365333 241.408l41.6 74.88A213.333333 213.333333 0 0 1 725.333333 512h-91.733333a21.333333 21.333333 0 0 0-18.645333 31.701333l102.698666 184.874667z m-120.618666-20.864A213.333333 213.333333 0 0 1 298.666667 512h91.733333a21.333333 21.333333 0 0 0 18.645333-31.701333L306.346667 295.424a298.666667 298.666667 0 0 0 332.288 487.168l-41.6-74.88z" fill="#14D081" p-id="32438"></path></svg>
+       <img src="./assets/sync.svg" id="savingIcon" :class="{'online':currentSpace.spaceType==='cloud','offline':currentSpace.spaceType==='local'}" style="width: 24px;margin-top: -25px"  width="32" height="32"/>
 
 <!--       <a-icon type="loading" ></a-icon>-->
        </div>
        <div style="display: inline-block;width:96px;text-align: left">
 
       <div class="space-name" type="primary">
-        {{currentSpace.space.name}}
+        {{currentSpace.name}}
         <a-icon type="right" />
       </div>
    </div>
    </div>
    </div>
 </template>
-  <p style="width: 200px;font-size: 12px">
-              <span v-if="currentSpace.space">当前为云端空间。<br>每30秒自动备份，此时图标会转动。</span>
-                <span v-else-if="currentSpace.space.type==='cloud'">当前为离线模式。系统会自动尝试同步连接，直至连接成功。</span>
-                <span v-else>当前为本地空间，不与云端同步，建议导入到云端空间以防止标签组丢失。</span>
-</p>
-
-        <ul class="space-selector">
-             <li v-if="cloudSpaces.length===0"  disabled="" key="current">
-            请<a @click="login()">登录</a>后使用云空间
-          </li>
-         <li title="云端空间" :class="{'active':currentSpace.space.nanoid===space.nanoid}" v-else  @click="confirmChangeSpace(space,'cloud')" v-for="space in cloudSpaces" :key="space.nanoid" :disable="space['client_id']!=='' && currentSpace.space.nanoid!==space.nanoid">
-            <a-icon type="sync" v-if="currentSpace.space.nanoid===space.nanoid" style="color: #00bb00" spin></a-icon>
-            <a-icon style="color: #00bb00" v-else type="sync"></a-icon>
-            {{space.name}}
-            <span v-if="space.isOtherUsing">
-              <span v-if="space.disconnect">
-                   <a-badge count="离线"  :number-style="{ backgroundColor: 'red' }"title="其他设备离线使用"> </a-badge>
-</span><span v-else>
-     <a-badge count="其他"  :number-style="{ backgroundColor: 'red' }"title="其他设备使用中"> </a-badge>
-</span>
-</span>
-              <span  v-if="space.isSelfUsing">
-              <span v-if="space.disconnect">
-        <a-badge count="离线"  :number-style="{ backgroundColor: '#ccc' }"title="当前设备离线"> </a-badge>
-</span><span v-else>
-<a-badge count="当前" :number-style="{ backgroundColor: '#52c41a' }" title="当前设备使用中"> </a-badge>
-</span>
-</span>
-          </li>
-          <li class="divider"></li>
-          <li :class="{'active':currentSpace.space.id===space.id}" title="本地空间" @click="confirmChangeSpace(space,'local')"  v-for="space in localSpaces" :key="'local_'+space.id">
-
-           <a-icon type="sync" v-if="currentSpace.space.id===space.id"  spin></a-icon>
-            <a-icon  v-else type="sync"></a-icon> {{space.name}}
-
-            </li>
-<!--            <a-menu-item key="add" @click="openUserWindow">-->
-<!--            <a-icon type="plus" ></a-icon> 创建新空间-->
-<!--          </a-menu-item>-->
-          <li class="divider"></li>
-          <li  key="other" @click="openUserWindow">
-            <a-icon type="swap" ></a-icon> 选择其他空间
-          </li>
-        </ul>
+<div v-if="spaceStatus==='local'" style="padding: 15px;width: 300px">
+<a-row>
+<a-col :span="8" style="text-align: right">
+<img src="./assets/local.svg" style="width: 68px;margin-right: 10px">
+</a-col>
+<a-col :span="16" style="padding-top: 10px">
+<div style="color: #333;font-size: 16px;margin-bottom: 5px">本地空间使用中</div>
+<div style="color: #999;font-size: 13px">无法跨设备使用</div>
+</a-col>
+</a-row>
+<div style="margin-top: 10px">
+   当前空间： <a-tag @click="openUserWindow" color="#108ee9">
+    <strong>{{currentSpace.name}}</strong>
+    </a-tag>
+</div>
+<div  style="line-height:24px;margin-top:15px;background-color:rgba(24,144,255,0.15);padding: 10px;border-radius: 5px;font-size: 13px">
+推荐您使用<strong style="'color:#1890FF">云空间</strong>。<br>
+您可以<strong>登录</strong>后使用云端空间。
+在<strong>不同设备</strong>上使用您的标签组。
+</div>
+<div style="margin-top: 15px">
+<a-row>
+<a-col :span="11">
+<a-button @click="learnSpace" block>了解云空间</a-button>
+</a-col>
+<a-col :span="2"></a-col>
+<a-col :span="11">
+<a-button  @click="openUserWindow" type="primary" block>选择空间</a-button>
+</a-col>
+</a-row>
+</div>
+</div>
+<div v-else-if="spaceStatus==='online'" style="padding: 15px;width: 300px">
+<a-row>
+<a-col :span="8" style="text-align: right">
+<img src="./assets/online.svg" style="width: 68px;margin-right: 10px">
+</a-col>
+<a-col :span="16" style="padding-top: 10px">
+<div style="color: #333;font-size: 16px;margin-bottom: 5px">云空间使用中</div>
+<div style="color: #03B615;font-size: 13px">正在与云端保持同步</div>
+<div style="font-size: 12px;color:#999" title="最后一次成功同步时间">{{getSyncTimeStr()}}</div>
+</a-col>
+</a-row>
+<div style="margin-top: 15px">
+当前空间：<a-tag color="#108ee9" @click="openUserWindow"><strong>{{currentSpace.name}}</strong></a-tag><br>
+点击更换其他空间。
+</div>
+<div  style="line-height:24px;margin-top:15px;background-color:rgba(24,144,255,0.15);padding: 10px;border-radius: 5px;font-size: 13px">
+每30秒空间会自动与云端进行同步。
+如果成功同步，图标 <img style="width: 25px" src="./assets/sync.svg"> 会转动一次。
+</div>
+<div style="margin-top: 15px">
+<a-row>
+<a-col :span="11">
+<a-button @click="learnSpace" block>了解云空间</a-button>
+</a-col>
+<a-col :span="2"></a-col>
+<a-col :span="11">
+<a-button  @click="openUserWindow" type="primary" block>更换空间</a-button>
+</a-col>
+</a-row>
+</div>
+</div>
+<div v-else style="padding: 15px;width: 300px">
+<a-row>
+<a-col :span="8" style="text-align: right">
+<img src="./assets/offline.svg" style="width: 68px;margin-right: 10px">
+</a-col>
+<a-col :span="16" style="padding-top: 10px">
+<div style="color: #333;font-size: 16px;margin-bottom: 5px">云空间离线使用中</div>
+<div style="color: #999;font-size: 13px">暂时无法与服务器连接</div>
+<div style="font-size: 12px;color:#999" title="最后一次成功同步时间">{{getSyncTimeStr()}}</div>
+</a-col>
+</a-row>
+<div style="margin-top: 15px">
+当前空间：<a-tag @click="openUserWindow" color="#108ee9"><strong>{{currentSpace.name}}</strong></a-tag><br>
+正在离线使用云空间。
+</div>
+<div  style="line-height:24px;margin-top:15px;background-color:rgba(24,144,255,0.15);padding: 10px;border-radius: 5px;font-size: 13px">
+系统将自动在后台尝试重连。
+连接成功后，同步图标<img style="width: 25px" src="./assets/sync.svg">将恢复绿色。
+</div>
+<div style="margin-top: 15px">
+<a-row>
+<a-col :span="11">
+<a-button @click="learnSpace" block>了解云空间</a-button>
+</a-col>
+<a-col :span="2"></a-col>
+<a-col :span="11">
+<a-button  @click="openUserWindow" type="primary" block>更换空间</a-button>
+</a-col>
+</a-row>
+</div>
+</div>
 </tippy>
       <div class="app-box">
-
-
         <ul id="appGroup" style="user-select: none;padding-bottom: 20px" class="app-task app-items"
           @dblclick.prevent="addNewTask">
           <draggable v-model="getItems" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass"
@@ -477,23 +522,27 @@ const sidebarTpl = `
 
 </template>
  <div>
-                    <span @click.stop="editTaskName(item)" class="task-title"><span class="text"
+                    <span @click.stop="editTaskName(item)" class="task-title">      <a-icon :id="'editTip'+item.id" class="edit-tip" type="edit"></a-icon> <span class="text"
                         :id="'taskTitle'+item.id">{{ item.count > 5 ? item.title + ' -- 高负载（5+）' : item.title }}
                       </span>
-                      <a-icon :id="'editTip'+item.id" class="edit-tip" type="edit"></a-icon>
+
                       <a-input @blur="editTaskNameBlur(item)" hidden :id="'taskTitleInput'+item.id" size="small"
                         @keypress.enter="editTaskNameKeyPress($event)" :default-value="item.title"></a-input>
                     </span>
                     <span style="float: right;cursor: pointer" @click="closeItem(item)">
-                      <a-icon title="删除标签组" type="close-circle"></a-icon>
+                      <a-icon class="close-task-btn" title="删除标签组" type="close-circle"></a-icon>
                     </span>
                   </div>
   <div style="text-align: right">
+                        <span class="action" size="small" title="分享整组标签" @click="shareTask(item)">
+
+                        <a-icon type="share-alt"></a-icon><span class="tip">分享</span>
+                      </span>
                       <span class="action" size="small" title="锁定当前标签组内全部标签" @click="lockTask(item.id)">
-                        <a-icon type="lock"></a-icon>锁定
+                        <a-icon type="lock"></a-icon><span class="tip">锁定</span>
                       </span>
                       <span class="action" size="small" title="清理组内全部未锁定标签" @click="clearTaskUnlock(item)">
-                        <a-icon type="delete"></a-icon>清理
+                        <a-icon type="delete"></a-icon><span class="tip">清理</span>
                       </span>
                     </div>
                     <ul class="tabs" style="margin-top: 5px">
@@ -502,9 +551,9 @@ const sidebarTpl = `
                         :key="tab.id">
                         <div class="tab-title" @click="openPopoverTab(item.id, tab.id)">
                         <span @click.stop="closeTab(tab.id,item.id)" style="float: left;cursor: pointer"  title="关闭该标签" :id="'close'+tab.id" hidden  class="closeTab">
-                           <img src="assets/close-box.svg"  style="margin-left: 9px;width: 22px;height: 22px">
-                         </span>
-                          <img class="tab-icon" :id="'tabIcon'+tab.id"  :src="tab.icon" style="margin-left: 8px"
+                           <img src="assets/close-box.svg"  style="margin-left: 5px;width: 25px;height: 20px;margin-right: 3px">
+                        </span>
+                          <img class="tab-icon" :id="'tabIcon'+tab.id"  :src="tab.icon" style="margin-left: 8px;"
                             onerror="this.src='../../icons/default.svg'" />&nbsp;{{ tab.title }}
                         </div>
                         <span @click="toggleLockTab(tab.id,item.id)" :id="'hoverLock'+tab.id" :hidden="tab.lock!==true"
@@ -577,12 +626,10 @@ const sidebarTpl = `
           <div>
             <a-collapse default-active-key="0" :active-key="sidebarBottom" :bordered="false" @change="changeBottomSize">
               <a-collapse-panel key="1">
-<!--                <li @click="openBottom('help')">-->
-                 <li @click="openHelp(apps)">
+               <li @click="openBottom('help')">
                   <a-button type="default" shape="circle" icon="question-circle"></a-button>
                   <div class="item-title">帮助中心</div>
                 </li>
-
               </a-collapse-panel>
             </a-collapse>
           </div>
@@ -607,10 +654,12 @@ const sidebarTpl = `
     </message-center>
   </div>
 `
-
+const backupSpaceModel=require('../../src/model/backupSpaceModel')
 Vue.component('sidebar', {
   data: function () {
     return {
+      lastSync:Date.now(),//最后一次同步时间
+      spaceStatus:'local',
       localSpaces: [],
       currentSpace: {
         space: {
@@ -690,10 +739,27 @@ Vue.component('sidebar', {
 
   },
   async mounted () {
+    //获取当前左侧栏的状态，并设置
+   spaceModel.getCurrent().then((space)=>{
+        this.currentSpace =space
+     if(space.spaceType==='local')
+     {
+       this.spaceStatus='local'
+     }else{
+       this.spaceStatus='online'
+       let backupSpace= backupSpaceModel.getSpace(space.spaceId)
+       this.lastSync=backupSpace.sync_time
+     }
+   })
+    this.mod = appVue.mod
 
-    await standAloneAppModel.initialize()
-    this.apps = await standAloneAppModel.getAllApps()
-    ipc.send('getRunningApps')
+    await standAloneAppModel.initialize().then(()=>{
+      standAloneAppModel.getAllApps().then(apps=>{
+        console.log(apps)
+        this.apps =apps
+        ipc.send('getRunningApps')
+      })
+    })
 
     if (localStorage.getItem('sidebarDividerMod') === 'auto' || !!!localStorage.getItem('sidebarDividerMod')) {
       document.getElementById('pinGroup').style.position = 'relative'
@@ -732,35 +798,33 @@ Vue.component('sidebar', {
     const currentUser = await db.system.where('name').equals('currentUser').first()
     if (currentUser.value.uid !== 0) {
       try {
-        //await this.$store.dispatch('getGroups')  //老的团队获取接口
-        await this.$store.dispatch('getJoinedCircle', { page: 1, row: 500 })
-        await this.$store.dispatch('getMyCircle', { page: 1, row: 500 })
+        this.$store.dispatch('getJoinedCircle', { page: 1, row: 500 })
+        this.$store.dispatch('getMyCircle', { page: 1, row: 500 })
       } catch (err) {
         console.log(err)
-        console.log('团队列表接口错误!')
+        console.log('短说圈子接口获取失败')
       }
     }
-    let sideMode = localStorage.getItem('sideMode')
-    sideMode = sideMode || 'auto'
-    if (sideMode === 'close' || sideMode === 'auto') {
-      document.getElementById('clickThroughElement').style.left = '55px'
-    } else if (sideMode === 'open') {
-      document.getElementById('appVue').classList.add('expand')
-      document.getElementById('clickThroughElement').style.left = '155px'
-    }
-    appVue.mod = sideMode
-    this.mod = sideMode
 
-    await this.$store.dispatch('getAllMessage')
-    //如果用户已登录，则获取云端的空间
+    this.$store.dispatch('getAllMessage')
+
+    //1分钟同步一次消息的时间处理，这里没有网络资源的开销
+    setInterval(() => {
+      this.$nextTick(() => {
+        this.$store.commit('SET_ALLMESSAGES', this.$store.getters.getAllMessages)
+      })
+    }, 60 * 1000)
+
     try {
-      this.currentSpace = await spaceModel.getCurrent()
       if (currentUser.value.uid) {
-        await this.$store.dispatch('getCloudSpaces', currentUser.value)
+        //如果用户已登录，则获取云端的空间
+        this.$store.dispatch('getCloudSpaces', currentUser.value).then(()=>{
+          this.cloudSpaces = this.$store.state.cloudSpaces
+        })
       }
-      await this.$store.dispatch('getLocalSpaces')
-      this.cloudSpaces = this.$store.state.cloudSpaces
-      this.localSpaces = this.$store.state.localSpaces
+      this.$store.dispatch('getLocalSpaces').then(()=>{
+        this.localSpaces = this.$store.state.localSpaces
+      })
     } catch (e) {
       console.log('空间获取失败。')
     }
@@ -796,15 +860,27 @@ Vue.component('sidebar', {
           'app-task': true
         }
       }
-
     }
-
   },
   template: sidebarTpl,
   methods: {
+    getSyncTimeStr(){
+      return new Date(this.lastSync).toLocaleString()
+    },
+    openSidebarMenu(){
+      ipc.send('openSidebarMenu')
+    },
+    inviteLink(id) {
+      tsbk.default.ready(() => {
+        tsbk.default.openOsxInviteMember({
+          groupId: id
+        })
+      })
+    },
+    learnSpace(){
+      window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/gg7vro'
+    },
     async showPopSpace () {
-      await appVue.$store.dispatch('getCloudSpaces')
-      appVue.$refs.sidePanel.cloudSpaces = this.$store.state.cloudSpaces
     },
     login () {
       ipc.send('login')
@@ -823,7 +899,7 @@ Vue.component('sidebar', {
       if (type !== 'cloud') {
         this.$confirm({
           title: '切换到本地空间',
-          content: '是否更改当前空间，更改空间将重载浏览器，可能导致您网页上未保存的内容丢失，请确认已经保存全部内容。切换本地空间并不会更改当前登录账号。',
+          content: '是否更改当前空间，更改空间将重载浏览器，可能导致您网页上未保存的内容丢失，请确认已经保存全部内容。切换本地空间并不会更改当前登录帐号。',
           centered: true,
           okText: '我已保存，切换空间',
           cancelText: '取消',
@@ -885,7 +961,7 @@ Vue.component('sidebar', {
         } else {
           this.$confirm({
             title: '切换到云端空间',
-            content: '是否切换到云端空间？切换到云端空间后会同时更换当前账号到此账号。请务必确认您网页上的内容已经保存。否则可能丢失未保存内容。',
+            content: '是否切换到云端空间？切换到云端空间后会同时更换当前帐号到此帐号。请务必确认您网页上的内容已经保存。否则可能丢失未保存内容。',
             centered: true,
             okText: '我已保存，切换空间',
             cancelText: '取消',
@@ -964,7 +1040,7 @@ Vue.component('sidebar', {
       ipc.send('osxOpenCircleSetting', args)
     },
     openGroupChat (id) {
-      ipc.send('saAppOpen', { saAppId: 1, options: { circleId: id } })
+      ipc.invoke('saAppOpenSysApp', { saAppId: 1,  circleId: id })
     },
     /**
      * app浮窗显示隐藏
@@ -987,6 +1063,8 @@ Vue.component('sidebar', {
         this.openUserWindow()
       }else{
         this.userPanelVisible = !this.userPanelVisible
+        this.$store.dispatch('getJoinedCircle', { page: 1, row: 500 })
+        this.$store.dispatch('getMyCircle', { page: 1, row: 500 })
       }
     },
     closeUserPanel(){
@@ -1035,6 +1113,12 @@ Vue.component('sidebar', {
       }
     },
     openBottom (action) {
+      console.log(action)
+      if(action==='help'){
+        console.log('help')
+        window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/tmpomo'
+        return
+      }
       postMessage({
         message: action
       })
@@ -1147,7 +1231,7 @@ Vue.component('sidebar', {
     async logout () {
       const result = await db.system.where('name').equals('currentUser').first()
       await db.accounts.where({ id: this.user.uid }).delete()
-      ipc.send('logoutBrowser', result.value.code)
+      ipc.send('logoutBrowser')
       await window.insertDefaultUser(result.value.code)
       //下面这步在insertDefaultUser方法中有
       //db.system.where({name:'currentUser'}).delete()
@@ -1204,6 +1288,26 @@ Vue.component('sidebar', {
     },
     changePopoverVisible (visible) {
       this.isPopoverShowing = visible
+    },
+    shareTask(item){
+      console.log(item)
+      let tabs = item.tabs
+      let filterList =  tabs.filter(e => !e.url.startsWith('file:///'))    //过滤掉file层面的tab
+      let args = []
+      for(let i = 0; i < filterList.length; i++) {
+        const obj = {
+          url: filterList[i].url,
+          favicon: filterList[i].favicon === null ? '/shareTask/default.svg' : filterList[i].favicon.url,
+          title: filterList[i].title
+        }
+        args.push(obj)
+      }
+      if(args.length===0){
+        appVue.$message.error('排除系统页面后，没有其他页面，无法分享。')
+        return
+      }
+      console.log(args)
+      ipc.send( 'shareTask', args)
     },
     /**
      * 锁定任务
@@ -1292,7 +1396,6 @@ Vue.component('sidebar', {
         document.getElementById('appVue').classList.remove('expanded')
       }
       //处理全部的左侧浮窗，都加上display:none
-      this.tasks
       VueTippy.tippy.hideAll()
     },
     dividerResizeStart (e) {
@@ -1546,9 +1649,12 @@ ipc.on('handleFileAssign', async (event, args) => {
 ipc.on('saving', async () => {
   let savingIcon = document.getElementById('savingIcon')
   savingIcon.classList.add('saving')
+  appVue.$refs.sidePanel.lastSync=Date.now()
   if (savingIcon.classList.contains('offline')) {
     appVue.$message.success('云空间重新连接成功，已为您实时保持同步。')
     console.log('重新获取云端空间')
+    appVue.$refs.sidePanel.spaceStatus='online'
+
     await appVue.$store.dispatch('getCloudSpaces')
     appVue.$refs.sidePanel.cloudSpaces = this.$store.state.cloudSpaces
     savingIcon.classList.remove('offline')
@@ -1562,9 +1668,20 @@ ipc.on('saving', async () => {
 ipc.on('disconnect', async () => {
   let savingIcon = document.getElementById('savingIcon')
   if (savingIcon.classList.contains('online')) {
-    appVue.$message.success('云空间失去连接，转入离线模式。')
+    appVue.$refs.sidePanel.spaceStatus='offline'
     savingIcon.classList.remove('online')
     savingIcon.classList.add('offline')
-    appVue.$refs.sidePanel.cloudSpaces = []
+
   }
+})
+
+ipc.on('reconnect',async()=>{
+  let savingIcon = document.getElementById('savingIcon')
+  appVue.$message.success('云空间重新连接成功，已为您实时保持同步。')
+  if (savingIcon.classList.contains('offline')) {
+    savingIcon.classList.remove('offline')
+    appVue.$refs.sidePanel.spaceStatus='online'
+    savingIcon.classList.add('online')
+  }
+
 })

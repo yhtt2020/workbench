@@ -2,6 +2,12 @@ require('../../dist/localization.build.js')
 
 const electron = require('electron')
 const ipc = electron.ipcRenderer
+
+const tsbSdk = require('../../js/util/tsbSdk.js')
+
+tsbSdk.listener({isSystemApp: true})
+
+
 const { db } = require('../../js/util/database.js')
 window.mainWindowId = 0 //主窗体id
 window.l = l

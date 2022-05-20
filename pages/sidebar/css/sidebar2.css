@@ -1,63 +1,77 @@
 .mg-content {
-  max-height: calc( 100vh - 345px);
+  max-height: calc(100vh - 376px);
   overflow-y: auto;
   overflow-x: hidden;
-  margin-top: 10px; }
-  .mg-content::-webkit-scrollbar {
-    width: 6px;
-    height: 6px; }
-  .mg-content::-webkit-scrollbar-track {
-    background: #f6f6f6;
-    border-radius: 2px; }
-  .mg-content::-webkit-scrollbar-thumb {
-    background: #e9e8e8;
-    border-radius: 20px; }
-  .mg-content::-webkit-scrollbar-thumb:hover {
-    background: #747474; }
-  .mg-content::-webkit-scrollbar-corner {
-    background: #f6f6f6; }
-  .mg-content .mg-content-btn {
-    background: white;
-    margin-top: 6px;
-    height: 92px;
-    width: 100%;
-    border: 1px solid #e2dddd;
-    border-radius: 8px; }
-    .mg-content .mg-content-btn:hover {
-      border: 1px solid #1890ff;
-      transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-      background-color: rgba(3, 167, 248, 0.1); }
-    .mg-content .mg-content-btn .cb-top {
-      position: relative;
-      padding-left: 10px;
-      width: 100%;
-      height: 46px;
-      border-bottom: 1px solid #e2dddd; }
-      .mg-content .mg-content-btn .cb-top img {
-        margin-right: 10px;
-        width: 32px;
-        height: 32px;
-        object-fit: cover;
-        border-radius: 5px; }
-      .mg-content .mg-content-btn .cb-top .cb-top-word {
-        width: 120px;
-        font-size: 14px;
-        font-weight: 500;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-line-clamp: 1;
-        -webkit-box-orient: vertical; }
-      .mg-content .mg-content-btn .cb-top .cb-top-tag {
-        position: absolute;
-        right: 0px;
-        top: 10px; }
-    .mg-content .mg-content-btn .cb-bottom {
-      width: 100%;
-      height: 46px; }
-      .mg-content .mg-content-btn .cb-bottom .cb-bottom-zone {
-        color: #797676; }
-        .mg-content .mg-content-btn .cb-bottom .cb-bottom-zone:hover {
-          color: #1890ff; }
+  margin-top: 10px;
+}
+.mg-content::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.mg-content::-webkit-scrollbar-track {
+  background: #f6f6f6;
+  border-radius: 2px;
+}
+.mg-content::-webkit-scrollbar-thumb {
+  background: #e9e8e8;
+  border-radius: 20px;
+}
+.mg-content::-webkit-scrollbar-thumb:hover {
+  background: #747474;
+}
+.mg-content::-webkit-scrollbar-corner {
+  background: #f6f6f6;
+}
+.mg-content .mg-content-btn {
+  background: white;
+  margin-top: 13px;
+  height: 92px;
+  width: 100%;
+  border: 1px solid #e2dddd;
+  border-radius: 8px;
+}
+.mg-content .mg-content-btn:hover {
+  border: 1px solid #1890ff;
+  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  background-color: rgba(3, 167, 248, 0.1);
+}
+.mg-content .mg-content-btn .cb-top {
+  position: relative;
+  padding-left: 10px;
+  width: 100%;
+  height: 46px;
+  border-bottom: 1px solid #e2dddd;
+}
+.mg-content .mg-content-btn .cb-top img {
+  margin-right: 10px;
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+.mg-content .mg-content-btn .cb-top .cb-top-word {
+  width: 120px;
+  font-size: 14px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+.mg-content .mg-content-btn .cb-top .cb-top-tag {
+  margin-left: 40px;
+  cursor: pointer;
+}
+.mg-content .mg-content-btn .cb-bottom {
+  width: 100%;
+  height: 46px;
+}
+.mg-content .mg-content-btn .cb-bottom .cb-bottom-zone {
+  color: #797676;
+}
+.mg-content .mg-content-btn .cb-bottom .cb-bottom-zone:hover {
+  color: #1890ff;
+}
 
 /*# sourceMappingURL=sidebar2.css.map */
