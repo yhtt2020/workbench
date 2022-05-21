@@ -2,7 +2,7 @@
 //也可以直接require进去(在非preload当中）
 let isDevelopmentMode = process.argv.some(arg=>arg==='--development-mode')
 const localNode = false  //设置为true， cyx则使用本地的node配置
-const localServer = false  //设置为true， cgz则使用本地的node配置 //两者不能同时为true
+const localServer = true  //设置为true， cgz则使用本地的node配置 //两者不能同时为true
 
 const config = {
   SERVER_BASE_URL: 'https://s.apps.vip',

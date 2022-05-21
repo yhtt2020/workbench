@@ -111,9 +111,20 @@ window.onload = function() {
       myGroups: [],
       joinedGroups: [],
       managerGroups: [],
-      allMessages: []
+      allMessages: [],
+      tsGrade: {
+        crown: [],
+        sun: [],
+        moon: [],
+        star: [],
+        lv: 0,
+        cumulativeHours: 0
+      }
 		},
 		getters: {
+      getTsGrade: state => {
+        return state.tsGrade
+      },
       getAllMessages: state => {
         return state.allMessages
       },
@@ -275,6 +286,34 @@ window.onload = function() {
       SET_MANAGER_CIRCLE: (state, groups) => {
         state.managerGroups = groups
       },
+      //同步浏览器等级
+      SET_TSGRADE: (state, data) => {
+        let userInfo=data.data
+        //还需要特殊处理一下浏览器等级
+        function handleGrade(name) {
+          for(let i = 0; i < userInfo.tsGrade[name]; i++) {
+            state.tsGrade[name].push({
+              icon: `./assets/${name}.svg`
+            })
+          }
+        }
+
+        Object.keys(userInfo.tsGrade).forEach(v => handleGrade(v))
+        state.tsGrade.lv = userInfo.tsGradeExtra.lv
+        state.tsGrade.cumulativeHours = userInfo.tsGradeExtra.cumulativeHours
+        console.log(state.tsGrade, '!!!!!!!')
+      },
+      //清空浏览器等级相关
+      SET_RESET_TSGRADE: (state) => {
+        state.tsGrade = {
+          crown: [],
+          sun: [],
+          moon: [],
+          star: [],
+          lv: 0,
+          cumulativeHours: 0
+        }
+      },
       set_user_info:(state,data)=>{
         let userInfo=data.data
         if(!!!userInfo || !!!userInfo.grade){
@@ -400,10 +439,12 @@ window.onload = function() {
           commit('SET_MYGROUPS', result.data)
         }
       },
-      async getUserInfo({commit},userInfo){
+      async getUserInfo({commit}){
         const result=await userApi.getUserInfo()
+        console.log(result, '@@@@@@@@@@@@')
         if(result.code===1000){
           commit('set_user_info',result.data)
+          commit('SET_TSGRADE', result.data)
         }
       },
       async getJoinedCircle({commit}, options) {
