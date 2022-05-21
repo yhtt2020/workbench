@@ -28,7 +28,7 @@ function loadUpdate(updateInfo){
       updaterWindow.show()
       updaterWindow.webContents.send('getInfo',{updateInfo:updateInfo,currentVersion: app.getVersion()})
       if(isDevelopmentMode){
-        updaterWindow.openDevTools()
+        //updaterWindow.openDevTools()
       }
 
     })
