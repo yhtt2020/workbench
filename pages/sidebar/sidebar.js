@@ -301,7 +301,6 @@ window.onload = function() {
         Object.keys(userInfo.tsGrade).forEach(v => handleGrade(v))
         state.tsGrade.lv = userInfo.tsGradeExtra.lv
         state.tsGrade.cumulativeHours = userInfo.tsGradeExtra.cumulativeHours
-        console.log(state.tsGrade, '!!!!!!!')
       },
       //清空浏览器等级相关
       SET_RESET_TSGRADE: (state) => {
@@ -441,7 +440,6 @@ window.onload = function() {
       },
       async getUserInfo({commit}){
         const result=await userApi.getUserInfo()
-        console.log(result, '@@@@@@@@@@@@')
         if(result.code===1000){
           commit('set_user_info',result.data)
           commit('SET_TSGRADE', result.data)
