@@ -338,6 +338,19 @@ ipc.on('focusView', function (e, id) {
   focusView(id)
 })
 
+ipc.on('printToPDF',(e,args)=>{
+  viewMap[args.id].webContents.printToPDF({}).then(data => {
+    fs.writeFile(args.savePath, data, (error) => {
+      if (error) throw error
+      sendMessage({type:'success',config:{content:'保存为PDF成功。'}})
+      require('electron').shell.showItemInFolder(args.savePath)
+    })
+  }).catch(error => {
+    console.log(`Failed to write PDF to ${pdfPath}: `, error)
+    sendMessage({type:'error',config:{content:'保存为PDF失败。'}})
+  })
+})
+
 ipc.on('hideCurrentView', function (e) {
   hideCurrentView()
   //调用隐藏当前视图的回调到sidebar

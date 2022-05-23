@@ -169,10 +169,22 @@ function buildAppMenu (options = {}) {
         ...(!options.secondary ? [{type: 'separator'}] : []),
         {
           label: l('appMenuSavePageAs'),
-          accelerator: 'CmdOrCtrl+s',
-          click: function (item, window) {
-            sendIPCToWindow(window, 'saveCurrentPage')
-          }
+          submenu:[
+            {
+              label:'文件',
+              accelerator: 'CmdOrCtrl+s',
+              click: function (item, window) {
+                sendIPCToWindow(window, 'saveCurrentPage')
+              }
+            },
+            {
+              label:'PDF',
+              click: function (item, window) {
+                sendIPCToWindow(window, 'saveCurrentPageToPdf')
+              }
+            }
+          ]
+
         },
         {
           type: 'separator'
