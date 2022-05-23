@@ -516,7 +516,8 @@ function willNavigate(tabId, url, isInPlace, isMainFrame, frameProcessId, frameR
   if(currentTab.url===urlParser.parse('ts://newtab') && url!==urlParser.parse('ts://newtab')){
     var newTab = tabs.add({
       url: url,
-      private: currentTab.private
+      private: currentTab.private,
+      backgroundColor:currentTab.backgroundColor||'#fff'
     })
     require('./browserUI.js').addTab(newTab, {
       enterEditMode: false
@@ -652,7 +653,11 @@ ipc.on('closeEmptyPage',(event,args)=>{
       if(tabs.tabs[i].url===args[j]){
         if(args.length!==1 &&  tabs.tabs[i].domRead!==true){
           require('browserUI.js').closeTab(tabs.tabs[i].id)
+          ipc.send('willDownload')
         }
+        // if(args.length===1){
+        //   ipc.send('willDownload')
+        // }
       }
     }
   }

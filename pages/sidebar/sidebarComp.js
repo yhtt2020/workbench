@@ -98,6 +98,14 @@ const sidebarTpl = `
                           <div class="mg-top-lf">我加入的团队({{this.$store.getters.getAllCircle.length}})</div>
                           <a-button class="mg-top-right" type="primary" icon="plus" size="small" @click="createGroup" />
                         </div>
+
+        <div style="margin-top: 10px">
+          <template v-for="(tag, index) in tags">
+            <a-tag :key="index" :color="tag.checked ? 'blue' : ''"  @click="handleChange(tag, index)"  style="margin-left:5px;font-size: 12px; border-radius: 10px">
+              {{tag.label}}
+            </a-tag>
+          </template>
+        </div>
                         <div class="mg-content flex flex-direction">
                           <template v-if="this.$store.getters.getAllCircle.length===0">
                             <a-empty style="margin-top: 10px">
@@ -107,8 +115,39 @@ const sidebarTpl = `
                               </a-button>
                             </a-empty>
                           </template>
-                          <div class="mg-content-btn flex flex-direction"
-                            v-for="(item, index) in this.$store.getters.getAllCircle" :key="item.id">
+<!--                          <div class="mg-content-btn flex flex-direction"-->
+<!--                            v-for="(item, index) in this.$store.getters.getAllCircle" :key="item.id">-->
+<!--                            <div class="cb-top flex align-center justify-start">-->
+<!--                              <img :src="item.logo" alt="">-->
+<!--                              <div class="cb-top-word">{{item.name}}</div>-->
+<!--                              <a-icon class="cb-top-tag" type="share-alt" @click="inviteLink(item.id)"></a-icon>-->
+<!--                            </div>-->
+<!--                            <div class="cb-bottom flex align-center justify-around">-->
+<!--                              <a-button class="cb-bottom-zone" type="link" icon="team" @click="openCircle(item.id)">-->
+<!--                                圈子-->
+<!--                              </a-button>-->
+<!--                              <div style="border-right: 1px solid #cacaca; height: 60%;"></div>-->
+<!--                              <a-button class="cb-bottom-zone" type="link" icon="message" @click="openGroupChat(item.id)">-->
+<!--                                群聊-->
+<!--                              </a-button>-->
+<!--                              <div style="border-right: 1px solid #cacaca; height: 60%;" v-show="item.lord"></div>-->
+<!--                              <a-button class="cb-bottom-zone" type="link" icon="setting" v-show="item.lord"-->
+<!--                                @click="openCircleSetting(item.id)">-->
+<!--                                设置-->
+<!--                              </a-button>-->
+<!--                            </div>-->
+<!--                          </div>-->
+
+<!--        <div>-->
+<!--          <template v-for="(tag, index) in tags">-->
+<!--            <a-tag :key="index" :color="tag.checked ? 'blue' : ''"  @click="handleChange(tag, index)"  style="margin-left:5px;font-size: 12px; border-radius: 10px">-->
+<!--              {{tag.label}}-->
+<!--            </a-tag>-->
+<!--          </template>-->
+<!--        </div>-->
+
+                            <div class="mg-content-btn flex flex-direction"
+                          v-for="(item, index) in teamList" :key="item.id" >
                             <div class="cb-top flex align-center justify-start">
                               <img :src="item.logo" alt="">
                               <div class="cb-top-word">{{item.name}}</div>
@@ -679,6 +718,24 @@ Vue.component('sidebar', {
       loginPanelTitle: '登录帐号免费体验完整功能',
       loginPanelContent: ``,
       userPanelVisible: false,
+      teamList:[],
+      tags: [
+        {
+          label: '公开',
+          checked: true,
+          name:'public'
+        },
+        {
+          label: '私密',
+          checked: false,
+          name:'private'
+        },
+        {
+          label: '审核中',
+          checked: false,
+          name:'auditing'
+        },
+      ],
       devices: [{
         'name': 'IphoneX',
         'width': 375,
@@ -736,7 +793,6 @@ Vue.component('sidebar', {
     this.form = this.$form.createForm(this, {
       name: 'validate_other'
     })
-
   },
   async mounted () {
     //获取当前左侧栏的状态，并设置
@@ -752,7 +808,6 @@ Vue.component('sidebar', {
      }
    })
     this.mod = appVue.mod
-
     await standAloneAppModel.initialize().then(()=>{
       standAloneAppModel.getAllApps().then(apps=>{
         console.log(apps)
@@ -866,6 +921,22 @@ Vue.component('sidebar', {
   methods: {
     getSyncTimeStr(){
       return new Date(this.lastSync).toLocaleString()
+    },
+    handleChange(tag, index) {
+      this.tags.forEach(e => {
+        e.checked = false
+      })
+      this.tags[index].checked = !tag.checked
+        if (this.tags[index].name === 'public') {
+          this.passList = this.$store.getters.getAllCircle.filter(v => v.status !==3 && v.status !==2 )
+          this.teamList = this.passList.filter(v => v.property === 0 ||  v.property===1)
+        }
+        if (this.tags[index].name === 'private') {
+          this.teamList = this.$store.getters.getAllCircle.filter(v => v.property === 2)
+        }
+        if (this.tags[index].name === 'auditing') {
+          this.teamList = this.$store.getters.getAllCircle.filter(v => v.status === 2)
+        }
     },
     openSidebarMenu(){
       ipc.send('openSidebarMenu')
@@ -1059,6 +1130,8 @@ Vue.component('sidebar', {
       ipc.send('executeApp', { app: app })
     },
     toggleUserPanel () {
+      this.passList = this.$store.getters.getAllCircle.filter(v => v.status !==3 && v.status !==2 )
+      this.teamList = this.passList.filter(v => v.property === 0 ||  v.property===1)
       if(this.user.uid===0){
         this.openUserWindow()
       }else{
@@ -1596,6 +1669,11 @@ ipc.on('blur', (event, args) => {
   appVue.$refs.sidePanel.blur()
 })
 
+//左侧栏最小化后会有失去焦点穿透问题，最小化前先收起左侧栏
+ipc.on('closeUserSidePanel',(event,args)=>{
+ appVue.$refs.sidePanel.userPanelVisible=false
+})
+
 ipc.on('appRedirect', async (event, args) => {
   let app = await standAloneAppModel.getFromPackage(args.package)
   if (app) {
@@ -1646,6 +1724,7 @@ ipc.on('handleFileAssign', async (event, args) => {
   console.log(args)
   console.log('assigneApps', assignApps)
 })
+
 ipc.on('saving', async () => {
   let savingIcon = document.getElementById('savingIcon')
   savingIcon.classList.add('saving')

@@ -375,7 +375,7 @@ function addMainWindowEventListener () {
 
   //最小化、恢复事件
   mainWindow.on('minimize', () => {
-
+    SidePanel.send('closeUserSidePanel')
     if(!isWin()){
       closeSidePanel()
     }
@@ -759,6 +759,12 @@ ipc.on('closeSwitch',()=>{
 })
 ipc.on('openSidebarMenu',()=>{
   const tpl=[
+    {
+      label: '新建标签组',
+      click() {
+       sendIPCToWindow(mainWindow, 'addTask')
+     }
+    },
     {
       label: '管理标签组',
       click () {

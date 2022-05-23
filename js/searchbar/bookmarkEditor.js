@@ -34,7 +34,7 @@ const bookmarkEditor = {
     editor.className = 'bookmark-editor searchbar-item'
 
     if (options.simplified) {
-      editor.className += ' simplified'
+      editor.className += 'simplified'
     }
 
     if (!options.simplified) {
