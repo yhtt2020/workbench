@@ -54,9 +54,9 @@ const popManager = {
     }else{
       pop.loadFile(url,fileOption)
     }
-    // pop.on('blur', () => {
-    //   pop.hide()
-    // })
+    pop.on('blur', () => {
+      pop.hide()
+    })
     pop.on('will-resize',(event)=>{
       event.preventDefault()
     })
