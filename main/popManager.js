@@ -12,7 +12,7 @@ const popManager = {
   /**
    * 准备窗体
    */
-  preparePop (name = Date.now().toString(), url, options = {}, webPreferences = {}) {
+  preparePop (name = Date.now().toString(), url, options = {}, webPreferences = {},fileOption) {
     if (popRegistered.indexOf(name) === -1) {
       return false //如果不在注册的弹窗清单中，则直接返回假
     }
@@ -48,10 +48,15 @@ const popManager = {
     }, webPreferences)
     options.webPreferences = webPreferences
     let pop = new BrowserWindow(options)
-    pop.loadURL(url)
-    pop.on('blur', () => {
-      pop.hide()
-    })
+    console.log(url)
+    if(url.startsWith('http') || url.startsWith('https')){
+      pop.loadURL(url)
+    }else{
+      pop.loadFile(url,fileOption)
+    }
+    // pop.on('blur', () => {
+    //   pop.hide()
+    // })
     pop.on('will-resize',(event)=>{
       event.preventDefault()
     })
@@ -109,8 +114,8 @@ const popManager = {
    * @param webPreferences
    * @returns {BrowserWindow}
    */
-  openPop (name = Date.now().toString(), url, options = {}, webPreferences = {}) {
-    let popWindow = popManager.preparePop(name, url, options, webPreferences)
+  openPop (name = Date.now().toString(), url, options = {}, webPreferences = {},fileOptions) {
+    let popWindow = popManager.preparePop(name, url, options, webPreferences,fileOptions)
     if (popWindow) {
       popWindow.window.show()
       return popWindow
