@@ -122,6 +122,12 @@
   line-height: 20px;
 }
 
+.text-grey-lg {
+  color: #8c8c8c;
+  font-size: 16px;
+  line-height: 22px;
+}
+
 .text-black-sm {
   color: #262626;
   font-size: 12px;
