@@ -112,7 +112,7 @@ window.onload = function() {
       joinedGroups: [],
       managerGroups: [],
       allMessages: [],
-      tsGrade: {
+      browserGrade: {
         crown: [],
         sun: [],
         moon: [],
@@ -123,7 +123,7 @@ window.onload = function() {
 		},
 		getters: {
       getTsGrade: state => {
-        return state.tsGrade
+        return state.browserGrade
       },
       getAllMessages: state => {
         return state.allMessages
@@ -291,20 +291,20 @@ window.onload = function() {
         let userInfo=data.data
         //还需要特殊处理一下浏览器等级
         function handleGrade(name) {
-          for(let i = 0; i < userInfo.tsGrade[name]; i++) {
-            state.tsGrade[name].push({
+          for(let i = 0; i < userInfo.browserGrade[name]; i++) {
+            state.browserGrade[name].push({
               icon: `./assets/${name}.svg`
             })
           }
         }
 
-        Object.keys(userInfo.tsGrade).forEach(v => handleGrade(v))
-        state.tsGrade.lv = userInfo.tsGradeExtra.lv
-        state.tsGrade.cumulativeHours = userInfo.tsGradeExtra.cumulativeHours
+        Object.keys(userInfo.browserGrade).forEach(v => handleGrade(v))
+        state.browserGrade.lv = userInfo.browserGradeExtra.lv
+        state.browserGrade.cumulativeHours = userInfo.browserGradeExtra.cumulativeHours
       },
       //清空浏览器等级相关
       SET_RESET_TSGRADE: (state) => {
-        state.tsGrade = {
+        state.browserGrade = {
           crown: [],
           sun: [],
           moon: [],
