@@ -254,7 +254,7 @@ pdfjsLib.getDocument({ url: url, withCredentials: true }).promise.then(async fun
   }
 
   pdf.getMetadata().then(function (metadata) {
-    document.title = metadata.Title || url.split('/').slice(-1)
+    document.title = metadata.Title || decodeURI(url.split('/').slice(-1))
   })
 
   for (var i = 1; i <= pageCount; i++) {
