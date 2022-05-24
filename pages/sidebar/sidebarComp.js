@@ -694,6 +694,7 @@ const sidebarTpl = `
   </div>
 `
 const backupSpaceModel=require('../../src/model/backupSpaceModel')
+const _=require('lodash')
 Vue.component('sidebar', {
   data: function () {
     return {
@@ -810,7 +811,6 @@ Vue.component('sidebar', {
     this.mod = appVue.mod
     await standAloneAppModel.initialize().then(()=>{
       standAloneAppModel.getAllApps().then(apps=>{
-        console.log(apps)
         this.apps =apps
         ipc.send('getRunningApps')
       })
@@ -919,6 +919,12 @@ Vue.component('sidebar', {
   },
   template: sidebarTpl,
   methods: {
+    sortApps(){
+      let sorted=_.orderBy(this.apps,(app)=>{
+        return [app.processing?1:0,app.lastExecuteTime]
+      },['desc','desc'])
+      this.apps=sorted
+    },
     getSyncTimeStr(){
       return new Date(this.lastSync).toLocaleString()
     },
@@ -1522,14 +1528,17 @@ ipc.on('message', function (event, args) {
 })
 
 ipc.on('executedAppSuccess', async function (event, args) {
+  let now=Date.now()
   appVue.$refs.sidePanel.apps.forEach(app => {
     if (app.id === args.app.id) {
       app.processing = true
       app.windowId = args.app.windowId
+      app.lastExecuteTime=now
     }
   })
   appVue.$refs.sidePanel.runningApps.push(args.app.id)
-  standAloneAppModel.update(args.app.id, { lastExecuteTime: Date.now() }).then((res) => {
+  appVue.$refs.sidePanel.sortApps()
+  standAloneAppModel.update(args.app.id, { lastExecuteTime: now }).then((res) => {
   })
 
   //mark插入对appsExecutedCounts的数据统计
@@ -1545,6 +1554,7 @@ ipc.on('closeApp', function (event, args) {
       let appIndex = appVue.$refs.sidePanel.runningApps.indexOf(args.id)
       if (appIndex > -1)
         appVue.$refs.sidePanel.runningApps.splice(appIndex, 1)
+      appVue.$refs.sidePanel.sortApps()
     }
   })
 })
@@ -1565,6 +1575,7 @@ ipc.on('updateRunningApps', function (event, args) {
       ipc.send('getAppRunningInfo', { id: app.id })
     }
   })
+  appVue.$refs.sidePanel.sortApps()
 })
 
 ipc.on('updateSetting', function (event, args) {
