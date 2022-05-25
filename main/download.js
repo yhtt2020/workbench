@@ -73,7 +73,7 @@ function downloadHandler (event, item, webContents) {
 
   if (item.getMimeType() === 'application/pdf' && itemURL.indexOf('blob:') !== 0 && itemURL.indexOf('#pdfjs.action=download') === -1 && !attachment) { // clicking the download button in the viewer opens a blob url, so we don't want to open those in the viewer (since that would make it impossible to download a PDF)
     event.preventDefault()
-    sendIPCToDownloadWindow('openPDF', {
+    sendIPCToWindow(mainWindow, 'openPDF', {
       url: itemURL,
       tabId: getViewIDFromWebContents(webContents)
     })
@@ -193,7 +193,7 @@ function listenForDownloadHeaders (ses) {
       if (typeHeader instanceof Array && typeHeader.filter(t => t.includes('application/pdf')).length > 0 && details.url.indexOf('#pdfjs.action=download') === -1 && !attachment) {
       // open in PDF viewer instead
         callback({ cancel: true })
-        sendIPCToDownloadWindow( 'openPDF', {
+        sendIPCToWindow(mainWindow, 'openPDF', {
           url: details.url,
           tabId: null
         })
