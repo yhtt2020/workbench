@@ -188,7 +188,6 @@ const userscripts = {
             },
             responseType: 'arraybuffer',
           })
-          //const data=downloadResult.data
           await fs.promises.writeFile(jsCache, data, 'binary')
           webviews.callAsync(tabId, 'executeJavaScript', [fs.readFileSync(jsCache,{encoding:'utf8'})])
           console.log('外部require缓存未命中，根据自定义脚本的规则下载并require外部js：' +js)
@@ -260,6 +259,19 @@ return ele
               webviews.callAsync(tabId, 'executeJavaScript', [jsGM_getValue])
               console.log('注册'+grant+'函数成功')
               //todo GM_getValue
+              break
+            case 'GM_info':
+              console.log(script)
+              const jsGM_info=`
+              const GM_info={
+                 script:{
+
+                version:'${script.options.version[0]}',
+                name:'${script.name}'
+                 }
+               }
+              `
+              webviews.callAsync(tabId, 'executeJavaScript', [jsGM_info])
               break
             default:
               console.log(grant+'函数暂不支持，请等待系统更新后支持')
