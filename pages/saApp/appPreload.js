@@ -33,7 +33,7 @@ ipc.on('fileAssign',(event,args)=>{
   console.log('请求处理文件关联',args)
 })
 
-ipc.on('init', (event, args) => {
+ipc.invoke('appPreloadReady', tools.execDomain(location.href)).then(args => {
   let assignSdkObject =  Object.assign(sdkObject, args.saApp)
 
   tsbSdk.listener(assignSdkObject) //浏览器侧sdk挂载
