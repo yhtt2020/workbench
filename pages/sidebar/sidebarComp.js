@@ -872,6 +872,9 @@ Vue.component('sidebar', {
     const currentUser = await db.system.where('name').equals('currentUser').first()
     if (currentUser.value.uid !== 0) {
       try {
+        //侧边栏重载的时候也同步一下本地文件的用户标识
+        ipc.send('syncCurrentUser', currentUser.value)
+
         this.$store.dispatch('getJoinedCircle', { page: 1, row: 500 })
         this.$store.dispatch('getMyCircle', { page: 1, row: 500 })
       } catch (err) {

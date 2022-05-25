@@ -58,6 +58,19 @@ app.whenReady().then(()=>{
     await authApi.logoutBrowser()
   })
 
+  //同步主进程本地文件的用户标识
+  ipc.on('syncCurrentUser', (event, args) => {
+    storage.setItem(`userToken`, args.token)
+    storage.setItem(`refreshToken`, args.refreshToken)
+    storage.setItem(`expire_deadtime`, args.expire_deadtime)
+    storage.setItem(`refreshExpire_deadtime`, args.refreshExpire_deadtime)
+    storage.setItem(`userInfo`, {
+      avatar: args.avatar,
+      id: args.id,
+      uid: args.uid
+    })
+  })
+
   //分享组
   ipc.on('shareTask', async (event, arg) => {
     sidePanel.get().webContents.send('message',{type:'loading',config:{content:'正在生成分享链接。',key:"shareTask"}})
