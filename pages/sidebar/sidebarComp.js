@@ -80,7 +80,7 @@ const sidebarTpl = /*html*/`
                                   </div>
                                 </div>
                               </template>
-                              <div class="ts-grade flex justify-start align-center">
+                              <div class="ts-grade flex justify-start align-center" style="margin-top: 4px">
                                 <div class="ts-grade-crown" v-for="item in this.$store.getters.getTsGrade.crown">
                                   <img :src="item.icon" alt="" style="width: 20px; height: 20px">
                                 </div>
