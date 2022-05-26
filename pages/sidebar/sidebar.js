@@ -71,13 +71,11 @@ window.addEventListener('message', async function(e) {
 	if (e.data.message && e.data.message === 'receiveGlobal') {
 		let tasksList = new TasksList()
 		if ($store.state.pinItems == null) {
-			console.log('还未初始化')
 			return
 		}
 		tasksList.init(e.data.data.tasks)
 		await $store.commit('fillTasksToItems', tasksList)
     ipc.send('transmitTaskList', $store.getters.getItems)
-		//console.log('同步'+count+++"次")
 	}
 
 })
@@ -111,9 +109,20 @@ window.onload = function() {
       myGroups: [],
       joinedGroups: [],
       managerGroups: [],
-      allMessages: []
+      allMessages: [],
+      onlineGrade: {
+        crown: [],
+        sun: [],
+        moon: [],
+        star: [],
+        lv: 0,
+        cumulativeHours: 0
+      }
 		},
 		getters: {
+      getTsGrade: state => {
+        return state.onlineGrade
+      },
       getAllMessages: state => {
         return state.allMessages
       },
@@ -275,6 +284,33 @@ window.onload = function() {
       SET_MANAGER_CIRCLE: (state, groups) => {
         state.managerGroups = groups
       },
+      //同步浏览器等级
+      SET_TSGRADE: (state, data) => {
+        let userInfo=data.data
+        //还需要特殊处理一下浏览器等级
+        function handleGrade(name) {
+          for(let i = 0; i < userInfo.onlineGrade[name]; i++) {
+            state.onlineGrade[name].push({
+              icon: `./assets/${name}.svg`
+            })
+          }
+        }
+
+        Object.keys(userInfo.onlineGrade).forEach(v => handleGrade(v))
+        state.onlineGrade.lv = userInfo.onlineGradeExtra.lv
+        state.onlineGrade.cumulativeHours = userInfo.onlineGradeExtra.cumulativeHours
+      },
+      //清空浏览器等级相关
+      SET_RESET_TSGRADE: (state) => {
+        state.onlineGrade = {
+          crown: [],
+          sun: [],
+          moon: [],
+          star: [],
+          lv: 0,
+          cumulativeHours: 0
+        }
+      },
       set_user_info:(state,data)=>{
         let userInfo=data.data
         if(!!!userInfo || !!!userInfo.grade){
@@ -400,10 +436,11 @@ window.onload = function() {
           commit('SET_MYGROUPS', result.data)
         }
       },
-      async getUserInfo({commit},userInfo){
+      async getUserInfo({commit}){
         const result=await userApi.getUserInfo()
         if(result.code===1000){
           commit('set_user_info',result.data)
+          commit('SET_TSGRADE', result.data)
         }
       },
       async getJoinedCircle({commit}, options) {
@@ -436,7 +473,6 @@ window.onload = function() {
         commit('DEL_ALLMESSAGES')
       },
       async getCloudSpaces({commit},user){
-        console.log(user)
         try{
           if(!!!user){
             user= appVue.$store.state.user
@@ -448,13 +484,12 @@ window.onload = function() {
             {
               mySpaces.splice(4,mySpaces.length-5)
             }
-            console.log(mySpaces)
             commit('set_cloud_spaces',mySpaces)
           }else{
             window.appVue.$message.error('获取云空间失败。')
           }
         }catch (e){
-          console.log(e)
+          console.warn(e)
         }
 
       },
@@ -495,7 +530,6 @@ window.onload = function() {
       if (sideMode === 'close' || sideMode === 'auto') {
         document.getElementById('clickThroughElement').style.left = '55px'
       } else if (sideMode === 'open') {
-        console.log(document.getElementById('appVue').classList)
         document.getElementById('clickThroughElement').style.left = '155px'
 
       }
@@ -511,7 +545,6 @@ window.onload = function() {
 }
 
 ipc.on('sideSetOpen',(event,args)=>{
-  console.log('open')
   document.getElementById('clickThroughElement').style.left = '155px'
   appVue.mod='open'
   appVue.$children[0].mod = 'open'
@@ -519,13 +552,11 @@ ipc.on('sideSetOpen',(event,args)=>{
 })
 ipc.on('sideSetClose',(event,args)=>{
   document.getElementById('clickThroughElement').style.left = '55px'
-  console.log('close')
   appVue.mod='close'
   appVue.$children[0].mod = 'close'
   localStorage.setItem('sideMode','close')
 })
 ipc.on('sideSetAuto',(event,args)=>{
-  console.log('auto')
   document.getElementById('clickThroughElement').style.left = '55px'
   appVue.mod='auto'
   appVue.$children[0].mod = 'auto'

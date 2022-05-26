@@ -321,6 +321,19 @@ const appManager = {
     return null
   },
   /**
+   * 获取saApp信息，通过domain
+   * @param {string} domian 主域名
+   * @returns
+   */
+  getSaAppByDomian(domain) {
+    for (let i = 0; i < processingAppWindows.length; i++) {
+      if (processingAppWindows[i].saApp.url.includes(domain)) {
+        return processingAppWindows[i].saApp
+      }
+    }
+    return null
+  },
+  /**
    * 通过appid获取到对应的运行的window对象
    * @param appId
    * @returns {null|*}
@@ -328,6 +341,19 @@ const appManager = {
   getWindowByAppId (appId) {
     for (let i = 0; i < processingAppWindows.length; i++) {
       if (processingAppWindows[i].saApp.id === appId) {
+        return processingAppWindows[i].window
+      }
+    }
+    return null
+  },
+  /**
+   * 通过windowId获取到对应的运行的window对象
+   * @param windowId
+   * @returns {null|*}
+   */
+  getWindowByWindowId (windowId) {
+    for (let i = 0; i < processingAppWindows.length; i++) {
+      if (processingAppWindows[i].saApp.windowId === windowId) {
         return processingAppWindows[i].window
       }
     }
@@ -639,9 +665,7 @@ const appManager = {
     // and did-start-navigation isn't (always?) emitted for redirects, so we need this handler as well
     // */
     // appView.webContents.on('will-redirect', _handleExternalProtocol)
-    let saAppObject = saApp
-    delete saAppObject.window
-    appView.webContents.send('init', { saApp: saAppObject })
+
     appView.webContents.once('dom-ready',()=>{
       if(option){
         if(option.action){
@@ -896,13 +920,6 @@ const appManager = {
 
       })
       appWindow.view = appView
-
-      ipc.on('getSaApp', (event, args) => {
-        event.reply('callback-getSaApp', { saApp })
-      })
-
-      appWindow.view=appView
-
       processingAppWindows.push({
         window: appWindow,//在本地的对象中插入window对象，方便后续操作
         saApp: saApp
@@ -917,6 +934,8 @@ const appManager = {
  * 执行一个应用
  */
 app.whenReady().then(() => {
+  let saAppApplyPermission = null
+
   remote.initialize()
 
   setTimeout(() => {
@@ -1168,7 +1187,27 @@ app.whenReady().then(() => {
   })
 
   ipc.handle('saAppGetUserProfile', () => {
-    return storage.getItem('userInfo')
+    try {
+      return {
+        code: 200,
+        msg: '成功',
+        data: Object.assign(storage.getItem('userInfo'), {accessToken: storage.getItem('userToken')})
+      }
+    } catch (err) {
+      return {code: 500, msg: '失败'}
+    }
+  })
+
+  ipc.handle('saAppCheckBrowserLogin', () => {
+    try {
+      if(Object.keys(storage.getItem('userInfo')).length === 0) {
+        return {code: 500, msg: '浏览器未登录'}
+      } else {
+        return {code: 200, msg: '浏览器已登录'}
+      }
+    } catch (err) {
+      return {code: 500, msg: '浏览器未登录'}
+    }
   })
 
   ipc.on('saAppGoBack', (event, args) => {
@@ -1206,6 +1245,13 @@ app.whenReady().then(() => {
 
   ipc.handle('imPreloadReady', () => {
     return appManager.getSaAppByAppId(1)
+  })
+
+  //暂时先用domain去判断第三方应用的saApp，后续应用市场完全后前置一个用groupName去判断saApp
+  ipc.handle('appPreloadReady', (event, args) => {
+    return {
+      saApp: appManager.getSaAppByDomian(args)
+    }
   })
 
   ipc.handle('saAppNotice', (event, args) => {
@@ -1267,7 +1313,7 @@ app.whenReady().then(() => {
       appManager.getWindowByAppId(args.appId).hide()
       return {code: 200, msg: '成功'}
     } catch (err) {
-      return {code: 500, msg: `失败:${err}`}
+      return {code: 500, msg: '失败'}
     }
   })
 
@@ -1280,4 +1326,68 @@ app.whenReady().then(() => {
     //注册tsb协议
     appManager.protocolManager.initialize(SidePanel)
   })
+
+
+  let ApplyPermissionOptions
+  ipc.handle('saAppOpenPermissionWindow', (event, args) => {
+    try {
+      if(saAppApplyPermission !== null) {
+        saAppApplyPermission.close()
+      }
+      saAppApplyPermission = new BrowserWindow({
+        minimizable: false,
+        parent: mainWindow,
+        width: 420,
+        height: 250,
+        maximizable:false,
+        resizable: false,
+        preload: __dirname + '/pages/saApp/applyPermission/preload.js',
+        webPreferences: {
+          devTools: true,
+          partition: 'persist:webcontent',
+          nodeIntegration: true,
+          contextIsolation: false,
+          additionalArguments: [
+            '--user-data-path=' + userDataPath,
+            '--app-version=' + app.getVersion(),
+            '--app-name=' + app.getName(),
+            ...((isDevelopmentMode ? ['--development-mode'] : [])),
+            '--saAppName=' + args.appName,
+            '--saAppFavicon=' + args.favicon
+          ]
+        }
+      })
+      saAppApplyPermission.setMenu(null)
+      saAppApplyPermission.webContents.loadURL('file://' + __dirname + '/pages/saApp/applyPermission/index.html')
+      saAppApplyPermission.on('close', () => {
+        saAppApplyPermission = null
+        appManager.getWindowByWindowId(args.windowId).focus()
+      })
+      ApplyPermissionOptions = args
+      return {code: 200, msg: '授权窗口打开成功'}
+    } catch (err) {
+      return {code: 500, msg: '授权窗口打开失败'}
+    }
+  })
+
+  ipc.on('entityLogin', (event, args) => {
+    let premissionedData = {}
+    if(args.includes('publicUserInfo')) {
+      premissionedData.userInfo = storage.getItem('userInfo')
+    }
+    //if todo //args之所以一定要把permission传过来 为未来具体授权内容进行不同的返回
+    appManager.getWindowByWindowId(ApplyPermissionOptions.windowId).view.webContents.send('replyEntityLogin', {
+      userToken: storage.getItem('userToken'),
+      clientId: ApplyPermissionOptions.clientId,
+      bindId: ApplyPermissionOptions.bindId,
+      premissionedData
+    })
+  })
+
+  ipc.on('closePermissionWin', () => {
+    saAppApplyPermission.close()
+  })
+
+
+
 })

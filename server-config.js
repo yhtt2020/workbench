@@ -46,6 +46,7 @@ if(localServer && isDevelopmentMode){
 }
 
 const api = {
+  //短说侧需要用到的api接口
   API_URL: {
     user: {
       login: `/login?response_type=${appConfig.response_type}&client_id=${appConfig.client_id}&state=${appConfig.state}`, //登录页面
@@ -63,12 +64,19 @@ const api = {
       index: '/groups', //群组
     },
   },
+
+  //node侧需要用到的接口
   NODE_API_URL: {
     USER: {
       CODE: '/app/authorizeCode', //code截取url
       REFRESH_TOKEN: '/app/refreshBrowserToken'
     },
+    //第三方应用需要调用的接口
+    ENTITY_APP: {
+      AUTO_LOGIN: '/app/appAutoLogin'
+    }
   },
+
   getUrl(path) {
     return config.SERVER_BASE_URL + path
   },

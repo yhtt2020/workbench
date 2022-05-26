@@ -156,7 +156,37 @@ module.exports = {
         }
       }
     })
+    ipc.on('saveCurrentPageToPdf', async function () {
+      var currentTab = tabs.get(tabs.getSelected())
 
+      // new tabs cannot be saved
+      if (!currentTab.url) {
+        return
+      }
+
+      // if the current tab is a PDF, let the PDF viewer handle saving the document
+      if (PDFViewer.isPDFViewer(tabs.getSelected())) {
+        PDFViewer.savePDF(tabs.getSelected())
+        return
+      }
+
+      if (tabs.get(tabs.getSelected()).isFileView) {
+        webviews.callAsync(tabs.getSelected(), 'downloadURL', [tabs.get(tabs.getSelected()).url])
+      } else {
+        var savePath = await ipc.invoke('showSaveDialog', {
+          defaultPath: currentTab.title.replace(/[/\\]/g, '_')+'.pdf'
+        })
+
+        // savePath will be undefined if the save dialog is canceled
+        if (savePath) {
+          if (!savePath.endsWith('.pdf')) {
+            savePath = savePath + '.pdf'
+          }
+          // webviews.callAsync(tabs.getSelected(), 'printToPDF', [savePath])
+          ipc.send('printToPDF',{'id':tabs.getSelected(),savePath})
+        }
+      }
+    })
     ipc.on('addPrivateTab', function () {
       /* new tabs can't be created in modal mode */
       if (modalMode.enabled()) {

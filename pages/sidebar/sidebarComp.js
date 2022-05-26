@@ -2,7 +2,7 @@ const { db } = require('../../js/util/database')
 const { api } = require('../../server-config')
 const standAloneAppModel = require('../util/model/standAloneAppModel.js')
 
-const sidebarTpl = `
+const sidebarTpl = /*html*/`
   <div id="sidebar" class="side-container" @contextmenu="openSidebarMenu">
     <div id="itemsEl" class="side-items">
       <ul class="app-task">
@@ -30,73 +30,100 @@ const sidebarTpl = `
                     <div style="text-align: left">
                       <a-row>
                         <a-col :span="8" style="text-align: center">
-                          <a-avatar style="position: relative;cursor: pointer" @click="userClick" :size="60"
+                          <a-avatar style="position: relative;cursor: pointer" @click="userClick" :size="50"
                             :src="user.avatar">
                           </a-avatar>
                           <div class="level">{{user.grade.grade}}</div>
                         </a-col>
                         <a-col :span="15">
-                          <a class="nick-name" @click="userClick">{{ user.nickname }}</a>
-                          <div class="signature" :title="this.user.signature===''?'这个家伙有点懒，还没有签名~':this.user.signature">
-                            签名：{{this.user.signature===''?'这个家伙有点懒，还没有签名~':this.user.signature}}
-                          </div>
-                          <div style="margin-top: 10px">
-
-    <a-button @click="openUserWindow" style="font-size: 12px" size="small">切换帐号</a-button>
-</div>
-
-
+                          <template>
+                            <a-popover>
+                              <template slot="content">
+                                <div class="flex flex-direction justify-around align-start" style="width: 120px; height: 140px">
+                                  <div class="text-grey" style="cursor: pointer;" @click="goProfile">
+                                    <a-icon type="user" style="margin-right: 5px"></a-icon>
+                                    个人资料
+                                  </div>
+                                  <div class="text-grey" style="cursor: pointer;" @click="goAccount">
+                                    <a-icon type="safety" style="margin-right: 5px"></a-icon>
+                                    账号安全
+                                  </div>
+                                  <div class="text-grey" style="cursor: pointer;" @click="openUserWindow">
+                                    <a-icon type="swap" style="margin-right: 5px"></a-icon>
+                                    切换账号
+                                  </div>
+                                  <div class="text-grey" style="cursor: pointer;" @click="logout">
+                                    <a-icon type="poweroff" style="margin-right: 5px"></a-icon>
+                                    注销账号
+                                  </div>
+                                </div>
+                              </template>
+                              <a-button size="small">
+                                {{user.nickname}}<a-icon type="swap" /></a-icon>
+                              </a-button>
+                            </a-popover>
+                          </template>
+                          <template>
+                            <a-popover placement="bottomLeft">
+                              <template slot="content">
+                                <div class="flex flex-direction justify-around align-start" style="width: 100%; height: 120px">
+                                  <div class="text-black">等级: {{this.$store.getters.getTsGrade.lv}}级</div>
+                                  <div class="text-black">累计在线时长{{this.$store.getters.getTsGrade.cumulativeHours}}小时</div>
+                                  <div class="text-grey">
+                                    <img src="./assets/sun.svg" alt="" style="width: 20px; height: 20px"> = 16级
+                                  </div>
+                                  <div class="text-grey">
+                                    <img src="./assets/moon.svg" alt="" style="width: 20px; height: 20px"> = 4级
+                                  </div>
+                                  <div class="text-grey">
+                                    <img src="./assets/star.svg" alt="" style="width: 20px; height: 20px"> = 1级
+                                  </div>
+                                </div>
+                              </template>
+                              <div class="ts-grade flex justify-start align-center" style="margin-top: 4px">
+                                <div class="ts-grade-crown" v-for="item in this.$store.getters.getTsGrade.crown">
+                                  <img :src="item.icon" alt="" style="width: 20px; height: 20px">
+                                </div>
+                                <div class="ts-grade-sun" v-for="item in this.$store.getters.getTsGrade.sun">
+                                  <img :src="item.icon" alt="" style="width: 20px; height: 20px">
+                                </div>
+                                <div class="ts-grade-moon" v-for="item in this.$store.getters.getTsGrade.moon">
+                                  <img :src="item.icon" alt="" style="width: 20px; height: 20px">
+                                </div>
+                                <div class="ts-grade-star" v-for="item in this.$store.getters.getTsGrade.star">
+                                  <img :src="item.icon" alt="" style="width: 20px; height: 20px">
+                                </div>
+                              </div>
+                            </a-popover>
+                          </template>
                         </a-col>
                       </a-row>
                     </div>
-                    <div style="margin-bottom: 10px">
-                      <template>
-                        <a-row class="user-data">
-                          <a-col :span="8">
-                            <div @click="goSpace" class="num">{{user.postCount}}</div>
-                            <div class="data-name">内容</div>
-                          </a-col>
-                          <a-col :span="8">
-                            <div @click="goSpace" class="num">{{user.fans}}</div>
-                            <div class="data-name">粉丝</div>
-                          </a-col>
-                          <a-col :span="8">
-                            <div @click="goSpace" class="num">{{user.follow}}</div>
-                            <div class="data-name">关注</div>
-                          </a-col>
-
-                        </a-row>
-                        <a-row class="actions">
-
-                          <a-col @click="goProfile" class="action" :span="8">
-                            <a-tooltip title="个人资料">
-                              <a-icon style="font-size: 24px" type="profile"></a-icon>
-                              <div>资料</div>
-                            </a-tooltip>
-                          </a-col>
-                          <a-col @click="goGroup" class="action" :span="8">
-                            <a-tooltip title="团队">
-                              <a-icon style="font-size: 24px" type="team"></a-icon>
-                              <div>团队</div>
-                            </a-tooltip>
-                          </a-col>
-                          <a-col @click="goAccount" class="action" :span="6">
-                            <a-tooltip title="帐号管理">
-                              <a-icon style="font-size: 24px" type="idcard"></a-icon>
-                              <div>帐号</div>
-                            </a-tooltip>
-                          </a-col>
-                          <!--                              <a-col  class="action" :span="8">-->
-
-                          <!--                              </a-col>-->
-                        </a-row>
-                      </template>
+                    <div style="margin-bottom: 10px" class="actions flex flex-direction justify-between align-center">
+                      <div class="actions-top flex justify-start  align-center">
+                        <img src="./assets/tizi.svg" alt="" style="width: 16px; height: 16px">
+                        <div class="text-grey" style="margin-left: 6px">我的元社区</div>
+                      </div>
+                      <div class="actions-bottom flex justify-around align-center">
+                        <div class="action-bottom-action flex flex-direction justify-around align-center">
+                          <div style="font-weight: 700;">{{user.postCount}}</div>
+                          <div class="text-grey">内容</div>
+                        </div>
+                        <div class="action-bottom-action flex flex-direction justify-around align-center">
+                          <div style="font-weight: 700;">{{user.fans}}</div>
+                          <div class="text-grey">粉丝</div>
+                        </div>
+                        <div class="action-bottom-action flex flex-direction justify-around align-center">
+                          <div style="font-weight: 700;">{{user.follow}}</div>
+                          <div class="text-grey">关注</div>
+                        </div>
+                      </div>
                     </div>
-                    <div class="my-group">
+                    <div class="my-group" style="margin-top: 20px;">
                       <template>
                         <div class="mg-top flex justify-between align-center">
-                          <div class="mg-top-lf">我加入的团队({{this.$store.getters.getAllCircle.length}})</div>
-                          <a-button class="mg-top-right" type="primary" icon="plus" size="small" @click="createGroup" />
+                          <div class="mg-top-lf text-black" style="font-weight: 400;">我加入的团队({{this.$store.getters.getAllCircle.length}})</div>
+                          <a-button class="mg-top-right" style="border-radius: 50%;" type="primary" icon="plus" size="small" @click="createGroup" />
                         </div>
 
         <div style="margin-top: 10px">
@@ -187,14 +214,6 @@ const sidebarTpl = `
                     <!--                            <a-icon type="down"></a-icon>-->
                     <!--                          </a-button>-->
                     <!--                        </a-dropdown>-->
-                  </div>
-                  <div>
-                    <div style="position: absolute; bottom: 10px; width: 250px">
-                      <a-button @click="logout" block>
-                        <a-icon type="poweroff"></a-icon>
-                        注销
-                      </a-button>
-                    </div>
                   </div>
                 </template>
               </div>
@@ -694,6 +713,7 @@ const sidebarTpl = `
   </div>
 `
 const backupSpaceModel=require('../../src/model/backupSpaceModel')
+const _=require('lodash')
 Vue.component('sidebar', {
   data: function () {
     return {
@@ -810,7 +830,6 @@ Vue.component('sidebar', {
     this.mod = appVue.mod
     await standAloneAppModel.initialize().then(()=>{
       standAloneAppModel.getAllApps().then(apps=>{
-        console.log(apps)
         this.apps =apps
         ipc.send('getRunningApps')
       })
@@ -853,6 +872,9 @@ Vue.component('sidebar', {
     const currentUser = await db.system.where('name').equals('currentUser').first()
     if (currentUser.value.uid !== 0) {
       try {
+        //侧边栏重载的时候也同步一下本地文件的用户标识
+        ipc.send('syncCurrentUser', currentUser.value)
+
         this.$store.dispatch('getJoinedCircle', { page: 1, row: 500 })
         this.$store.dispatch('getMyCircle', { page: 1, row: 500 })
       } catch (err) {
@@ -919,6 +941,12 @@ Vue.component('sidebar', {
   },
   template: sidebarTpl,
   methods: {
+    sortApps(){
+      let sorted=_.orderBy(this.apps,(app)=>{
+        return [app.processing?1:0,app.lastExecuteTime]
+      },['desc','desc'])
+      this.apps=sorted
+    },
     getSyncTimeStr(){
       return new Date(this.lastSync).toLocaleString()
     },
@@ -1309,6 +1337,7 @@ Vue.component('sidebar', {
       //下面这步在insertDefaultUser方法中有
       //db.system.where({name:'currentUser'}).delete()
       this.closeUserPanel()
+      this.$store.commit('SET_RESET_TSGRADE')
       this.$message.info('注销成功！')
     },
     switchAccount () {
@@ -1522,14 +1551,17 @@ ipc.on('message', function (event, args) {
 })
 
 ipc.on('executedAppSuccess', async function (event, args) {
+  let now=Date.now()
   appVue.$refs.sidePanel.apps.forEach(app => {
     if (app.id === args.app.id) {
       app.processing = true
       app.windowId = args.app.windowId
+      app.lastExecuteTime=now
     }
   })
   appVue.$refs.sidePanel.runningApps.push(args.app.id)
-  standAloneAppModel.update(args.app.id, { lastExecuteTime: Date.now() }).then((res) => {
+  appVue.$refs.sidePanel.sortApps()
+  standAloneAppModel.update(args.app.id, { lastExecuteTime: now }).then((res) => {
   })
 
   //mark插入对appsExecutedCounts的数据统计
@@ -1545,6 +1577,7 @@ ipc.on('closeApp', function (event, args) {
       let appIndex = appVue.$refs.sidePanel.runningApps.indexOf(args.id)
       if (appIndex > -1)
         appVue.$refs.sidePanel.runningApps.splice(appIndex, 1)
+      appVue.$refs.sidePanel.sortApps()
     }
   })
 })
@@ -1565,6 +1598,7 @@ ipc.on('updateRunningApps', function (event, args) {
       ipc.send('getAppRunningInfo', { id: app.id })
     }
   })
+  appVue.$refs.sidePanel.sortApps()
 })
 
 ipc.on('updateSetting', function (event, args) {

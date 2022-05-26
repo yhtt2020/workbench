@@ -1,4 +1,10 @@
 const xss = require("xss");
+const axios = require('axios')
+const { config, api } = require('../../server-config')
+
+axios.defaults.baseURL = config.NODE_SERVER_BASE_URL;
+axios.defaults.adapter = require('axios/lib/adapters/http');
+
 
 const tsbSdk = {
   isThirdApp: Boolean,
@@ -26,13 +32,30 @@ const tsbSdk = {
   bridgeToWeb: function ({eventName, resInfo = null, errorInfo = null, id = null} = {}) {
     let newEventName = eventName.replace(/( |^)[a-z]/g, (L) => L.toUpperCase())
     window.postMessage({
-      eventName: eventName === 'errorSys' ? 'errorSys' : `tsReply${newEventName}`,
+      eventName: eventName === 'receivePermission' ? 'receivePermission' : eventName === 'errorSys' ? 'errorSys' : `tsReply${newEventName}`,
       resInfo,
       errorInfo,
       id
     })
   },
 
+  defaultEventName: [
+    'hideApp',
+    "openSysApp",
+    "openOsxInviteMember",
+    'getUserProfile',
+    'checkBrowserLogin',
+    'openPermissionWindow',
+  ],
+
+  handleSdkEvent(eventName, id, e) {
+    if(this.defaultEventName.includes(eventName)) {
+      e.data.options ?
+      this[eventName](eventName, id, e.data.options) : this[eventName](eventName, id)
+    } else {
+      return
+    }
+  },
 
   //初始化监听
   listener: function (saApp, Dep) {
@@ -56,9 +79,6 @@ const tsbSdk = {
         case "checkAuth":
           tsbSdk.handleCheckAuth(id);
           break;
-        case "hideApp":
-          tsbSdk.hideApp(eventName, id);
-          break;
         case "tabLinkJump":
           e.data.options.url = xss(e.data.options.url);
           tsbSdk.tabLinkJump(eventName, id, e.data.options);
@@ -77,15 +97,8 @@ const tsbSdk = {
             tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: {code: 500, msg: `失败${error}`}, id})
           }
           break;
-        case "openSysApp":
-          tsbSdk.openSysApp(eventName, id, e.data.options);
-          break;
-        case "openOsxInviteMember":
-          tsbSdk.openOsxInviteMember(eventName, id, e.data.options);
-          break;
-        case 'getUserProfile':
-          tsbSdk.getUserProfile(eventName, id)
-          break;
+        default:
+          tsbSdk.handleSdkEvent(eventName, id, e)
       }
     });
 
@@ -208,6 +221,59 @@ const tsbSdk = {
     } else {
       tsbSdk.bridgeToPreload({eventName, id})
     }
+  },
+
+  checkBrowserLogin: function (eventName, id) {
+    if(!tsbSdk.isThirdApp) {
+      ipc.invoke('saAppCheckBrowserLogin').then(res => {
+        tsbSdk.bridgeToWeb({eventName, resInfo: res, id})
+      }).catch(err => {
+        tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: err, id})
+      })
+    } else {
+      tsbSdk.bridgeToPreload({eventName, id})
+    }
+  },
+
+  openPermissionWindow: function (eventName, id, options) {
+    options.windowId = tsbSdk.tsbSaApp.windowId
+    options.favicon = tsbSdk.tsbSaApp.logo
+    if(!tsbSdk.isThirdApp) {
+      ipc.invoke('saAppOpenPermissionWindow', options).then(res => {
+        tsbSdk.bridgeToWeb({eventName, resInfo: res, id})
+      }).catch(err => {
+        tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: err, id})
+      })
+    } else {
+      tsbSdk.bridgeToPreload({eventName, options, id})
+    }
+  },
+
+  onThirdAutoLogin: function(ipc) {
+    //这个方法调用的时候浏览器侧的sdk是没有ipc环境，只能从appPreload中传入
+    const eventReplyCallback = async (event, args) => {
+      try {
+        const result = await axios({
+          timeout:5000,
+          method: 'post',
+          url: api.NODE_API_URL.ENTITY_APP.AUTO_LOGIN,
+          headers: { Authorization: args.userToken },
+          data: {
+            client_id: args.clientId,
+            bind_id: args.bindId
+          }
+        })
+        if(result.status === 200 && result.data.code === 1000) {
+          tsbSdk.bridgeToWeb({eventName: 'receivePermission', resInfo: {code: 200, msg: '成功', data: Object.assign(result.data.data, args.premissionedData.userInfo) }})
+          ipc.send('closePermissionWin')
+        } else {
+          tsbSdk.bridgeToWeb({eventName: 'receivePermission', resInfo: {code: 500, msg: '授权登录失败'}})
+        }
+      } catch (err) {
+        tsbSdk.bridgeToWeb({eventName: 'receivePermission', resInfo: {code: 500, msg: '授权登录失败'}})
+      }
+    }
+    ipc.on('replyEntityLogin', eventReplyCallback)
   }
 };
 
