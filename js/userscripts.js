@@ -175,7 +175,7 @@ const userscripts = {
       //如果存在require 则同步下载所有js，下载完成后再执行主体js
 
       for (const js of script.options.require) {
-        console.log('用户脚本要求require外部js：'+js)
+        //console.log('用户脚本要求require外部js：'+js)
         const jsHex =hash(js)
         const jsCache = jsCachePath + '/' + jsHex + '.js'
         if (!fs.existsSync(jsCache)) {
@@ -188,23 +188,22 @@ const userscripts = {
             },
             responseType: 'arraybuffer',
           })
-          //const data=downloadResult.data
           await fs.promises.writeFile(jsCache, data, 'binary')
           webviews.callAsync(tabId, 'executeJavaScript', [fs.readFileSync(jsCache,{encoding:'utf8'})])
-          console.log('外部require缓存未命中，根据自定义脚本的规则下载并require外部js：' +js)
+          //console.log('外部require缓存未命中，根据自定义脚本的规则下载并require外部js：' +js)
           excuted.push(jsCache)
         } else {
           webviews.callAsync(tabId, 'executeJavaScript',[fs.readFileSync(jsCache,{encoding:'utf8'})])
           excuted.push(jsCache)
-          console.log('外部require缓存命中，require已缓存的外部js：' +js)
+          //console.log('外部require缓存命中，require已缓存的外部js：' +js)
         }
         if(excuted.length===script.options.require.length){
-          console.log('excuted all then excute mainjs')
+          //console.log('excuted all then excute mainjs')
           webviews.callAsync(tabId, 'executeJavaScript', [script.content, false, null])
         }
       }
     }else{
-      console.log('no require ')
+      //console.log('no require ')
       webviews.callAsync(tabId, 'executeJavaScript', [script.content, false, null])
     }
 
@@ -212,12 +211,12 @@ const userscripts = {
   prepareGMEnv(tabId,script){
     //1.注册函数 //todo 兼容油猴常用函数
     //兼容GM_addStyle
-    console.log(script)
+    //console.log(script)
     if(!!script.options){
       if(!!script.options.grant){
         script.options.grant.forEach((grant)=>{
           if($matchedScriptsForSiteGM[tabId]['grant'].includes(grant)){
-            console.log(grant+'已被其他脚本注册，无需重复注册')
+            //console.log(grant+'已被其他脚本注册，无需重复注册')
           }
           //todo 实现油猴函数的代理
           switch(grant){
@@ -234,7 +233,7 @@ return ele
               `
               webviews.callAsync(tabId, 'executeJavaScript', [jsGM_addStyle])
               $matchedScriptsForSiteGM[tabId]['grant'].push(grant)
-              console.log('注册'+grant+'函数成功')
+              //console.log('注册'+grant+'函数成功')
               break
             case 'GM_setValue':
               const jsGM_setValue=`
@@ -245,7 +244,7 @@ return ele
               window.$matchedScriptsForSiteGM.values={}
               webviews.callAsync(tabId, 'executeJavaScript', [jsGM_setValue])
               $matchedScriptsForSiteGM[tabId]['grant'].push(grant)
-              console.log('注册'+grant+'函数成功')
+              //console.log('注册'+grant+'函数成功')
               //todo GM_setValue
               break
             case 'GM_getValue':
@@ -258,11 +257,24 @@ return ele
               `
               window.$matchedScriptsForSiteGM.values={}
               webviews.callAsync(tabId, 'executeJavaScript', [jsGM_getValue])
-              console.log('注册'+grant+'函数成功')
+              //console.log('注册'+grant+'函数成功')
               //todo GM_getValue
               break
+            case 'GM_info':
+              //console.log(script)
+              const jsGM_info=`
+              const GM_info={
+                 script:{
+
+                version:'${script.options.version[0]}',
+                name:'${script.name}'
+                 }
+               }
+              `
+              webviews.callAsync(tabId, 'executeJavaScript', [jsGM_info])
+              break
             default:
-              console.log(grant+'函数暂不支持，请等待系统更新后支持')
+              //console.log(grant+'函数暂不支持，请等待系统更新后支持')
           }
           $matchedScriptsForSiteGM[tabId]['grant'].push(grant)
         })
