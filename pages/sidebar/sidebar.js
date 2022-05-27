@@ -71,13 +71,11 @@ window.addEventListener('message', async function(e) {
 	if (e.data.message && e.data.message === 'receiveGlobal') {
 		let tasksList = new TasksList()
 		if ($store.state.pinItems == null) {
-			console.log('还未初始化')
 			return
 		}
 		tasksList.init(e.data.data.tasks)
 		await $store.commit('fillTasksToItems', tasksList)
     ipc.send('transmitTaskList', $store.getters.getItems)
-		//console.log('同步'+count+++"次")
 	}
 
 })
@@ -475,7 +473,6 @@ window.onload = function() {
         commit('DEL_ALLMESSAGES')
       },
       async getCloudSpaces({commit},user){
-        console.log(user)
         try{
           if(!!!user){
             user= appVue.$store.state.user
@@ -487,13 +484,12 @@ window.onload = function() {
             {
               mySpaces.splice(4,mySpaces.length-5)
             }
-            console.log(mySpaces)
             commit('set_cloud_spaces',mySpaces)
           }else{
             window.appVue.$message.error('获取云空间失败。')
           }
         }catch (e){
-          console.log(e)
+          console.warn(e)
         }
 
       },
@@ -534,7 +530,6 @@ window.onload = function() {
       if (sideMode === 'close' || sideMode === 'auto') {
         document.getElementById('clickThroughElement').style.left = '55px'
       } else if (sideMode === 'open') {
-        console.log(document.getElementById('appVue').classList)
         document.getElementById('clickThroughElement').style.left = '155px'
 
       }
@@ -550,7 +545,6 @@ window.onload = function() {
 }
 
 ipc.on('sideSetOpen',(event,args)=>{
-  console.log('open')
   document.getElementById('clickThroughElement').style.left = '155px'
   appVue.mod='open'
   appVue.$children[0].mod = 'open'
@@ -558,13 +552,11 @@ ipc.on('sideSetOpen',(event,args)=>{
 })
 ipc.on('sideSetClose',(event,args)=>{
   document.getElementById('clickThroughElement').style.left = '55px'
-  console.log('close')
   appVue.mod='close'
   appVue.$children[0].mod = 'close'
   localStorage.setItem('sideMode','close')
 })
 ipc.on('sideSetAuto',(event,args)=>{
-  console.log('auto')
   document.getElementById('clickThroughElement').style.left = '55px'
   appVue.mod='auto'
   appVue.$children[0].mod = 'auto'
