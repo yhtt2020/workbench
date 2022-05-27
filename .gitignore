@@ -9,3 +9,5 @@ yarn.lock
 /.idea
 /yarn-error.log
 /setup
+/setup-x64/
+/setup-ia32/

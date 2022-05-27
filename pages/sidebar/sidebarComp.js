@@ -80,7 +80,7 @@ const sidebarTpl = /*html*/`
                                   </div>
                                 </div>
                               </template>
-                              <div class="ts-grade flex justify-start align-center">
+                              <div class="ts-grade flex justify-start align-center" style="margin-top: 4px">
                                 <div class="ts-grade-crown" v-for="item in this.$store.getters.getTsGrade.crown">
                                   <img :src="item.icon" alt="" style="width: 20px; height: 20px">
                                 </div>
@@ -845,8 +845,12 @@ Vue.component('sidebar', {
     }
 
     //mark插入对password的数据统计
-    let passwordList = await ipc.invoke('credentialStoreGetCredentials')
-    await userStatsModel.setValue('password', passwordList.length)
+    try {
+      let passwordList = await ipc.invoke('credentialStoreGetCredentials')
+      await userStatsModel.setValue('password', passwordList.length)
+    } catch (err) {
+      await userStatsModel.setValue('password', 0)
+    }
     // let item = {
     // 	title: '打开标签', //名称，用于显示提示
     // 	index: 0, //索引
@@ -872,6 +876,9 @@ Vue.component('sidebar', {
     const currentUser = await db.system.where('name').equals('currentUser').first()
     if (currentUser.value.uid !== 0) {
       try {
+        //侧边栏重载的时候也同步一下本地文件的用户标识
+        ipc.send('syncCurrentUser', currentUser.value)
+
         this.$store.dispatch('getJoinedCircle', { page: 1, row: 500 })
         this.$store.dispatch('getMyCircle', { page: 1, row: 500 })
       } catch (err) {
@@ -1670,14 +1677,14 @@ ipc.on('countWebviewInk', async () => {
   }, 2000)
 })
 
-ipc.on('countScript', () => {
+ipc.on('countScript', async () => {
   try {
     let num = require('../util/model/userScriptModel').countScript(window.globalArgs['user-data-path'])
     setTimeout(async () => {
       await userStatsModel.setValue('scripts', num)
     }, 10000)
   } catch (err) {
-    console.warn(err)
+    await userStatsModel.setValue('scripts', 0)
   }
 })
 

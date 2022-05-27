@@ -23,7 +23,7 @@
       </div>
       <div class="main-content">
         <div class="content-user flex justify-start">
-          <a-checkbox @change="onChange" style="color: #8c8c8c;">
+          <a-checkbox @change="onChange" style="color: #8c8c8c;" default-checked>
             获得你的公开信息(昵称、头像等)
           </a-checkbox>
         </div>
@@ -49,7 +49,7 @@
           appName: '',
           appIcon: '',
           loading: false,
-          permissions: []
+          permissions: ['publicUserInfo']
         }
       },
       methods: {

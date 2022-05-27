@@ -321,6 +321,19 @@ const appManager = {
     return null
   },
   /**
+   * 获取saApp信息，通过domain
+   * @param {string} domian 主域名
+   * @returns
+   */
+  getSaAppByDomian(domain) {
+    for (let i = 0; i < processingAppWindows.length; i++) {
+      if (processingAppWindows[i].saApp.url.includes(domain)) {
+        return processingAppWindows[i].saApp
+      }
+    }
+    return null
+  },
+  /**
    * 通过appid获取到对应的运行的window对象
    * @param appId
    * @returns {null|*}
@@ -666,9 +679,6 @@ const appManager = {
     // */
     // appView.webContents.on('will-redirect', _handleExternalProtocol)
 
-    let saAppObject = JSON.parse(JSON.stringify(saApp))
-
-    appView.webContents.send('init', { saApp: saAppObject })
     appView.webContents.once('dom-ready',()=>{
       if(option){
         if(option.action){
@@ -1250,6 +1260,13 @@ app.whenReady().then(() => {
     return appManager.getSaAppByAppId(1)
   })
 
+  //暂时先用domain去判断第三方应用的saApp，后续应用市场完全后前置一个用groupName去判断saApp
+  ipc.handle('appPreloadReady', (event, args) => {
+    return {
+      saApp: appManager.getSaAppByDomian(args)
+    }
+  })
+
   ipc.handle('saAppNotice', (event, args) => {
     //需要前置处理消息设置的状态决定到底发不发消息
     const result = appManager.beforeEachNotification(notificationSettingStatus, args)
@@ -1388,5 +1405,7 @@ app.whenReady().then(() => {
   ipc.on('closePermissionWin', () => {
     saAppApplyPermission.close()
   })
+
+
 
 })
