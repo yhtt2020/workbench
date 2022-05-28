@@ -4,6 +4,8 @@ const authApi = require(path.join(__dirname, './js/request/api/authApi.js'))
 const storage = require('electron-localstorage');
 const _path= path.join(app.getPath("userData"), app.getName()+"/", 'userConfig.json');
 const _path_dir = path.dirname(_path);
+const { nanoid } = require('nanoid')
+
 if(!fs.existsSync(_path_dir)){
   try{
     fs.mkdirSync(_path_dir)
@@ -14,6 +16,36 @@ storage.setStoragePath(_path);
 global.sharedPath = {extra:storage.getStoragePath()}   //remote官方建议弃用，全局变量在渲染进程中暂时没找到可以替换获取的方法，但是在主进程中全局electronGlobal对象能获取到
 
 app.whenReady().then(()=>{
+  //初始化一下此设备浏览器的新手引导进度信息
+  const markdb = require(__dirname + '/src/util/markdb.js')
+  markdb.init(app.getPath('userData'))
+  const guideRes = markdb.db.get('guideSchedule.hashId').value()
+  if(!guideRes) {
+    markdb.db.set('guideSchedule', {
+      hashId: nanoid(),
+      modules: {
+        tsBrowser: {
+          aboutTsBrowser: false
+        },
+        noobGuide: {
+          accountLogin: false,
+          career: false,
+          migration: false,
+          adBlocking: false,
+          personalise: false
+        },
+        feature: {
+          tasks: false,
+          globalSearch: false,
+          desktop: false,
+          userSpace: false,
+          apps: false,
+          team: false
+        }
+      }
+    }).write()
+  }
+
   //游览器登录
   ipc.on('loginBrowser', async (event, arg) => {
     let result={}
@@ -124,5 +156,11 @@ app.whenReady().then(()=>{
     storage.clear()
     global.utilWindow.webContents.send('clearCurrentUser')
   })
+
+  //获取本地存储的当前设备新手引导进度信息
+  ipc.handle('getNoobGuideSchedule', () => {
+    return markdb.db.get('guideSchedule').value()
+  })
+
 })
 
