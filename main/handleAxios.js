@@ -24,9 +24,6 @@ app.whenReady().then(()=>{
     markdb.db.set('guideSchedule', {
       hashId: nanoid(),
       modules: {
-        tsBrowser: {
-          aboutTsBrowser: false
-        },
         noobGuide: {
           accountLogin: false,
           career: false,
@@ -62,6 +59,8 @@ app.whenReady().then(()=>{
         storage.setItem(`userInfo`, result.data.userInfo)
       }
       event.reply('callback-loginBrowser', result)
+      afterGuide('guideSchedule.modules.noobGuide.accountLogin')
+
     } catch (err) {
       dlog.error(err)
     }
@@ -157,10 +156,35 @@ app.whenReady().then(()=>{
     global.utilWindow.webContents.send('clearCurrentUser')
   })
 
+  //------------------------------------------------------->以下用户引导通信部分
   //获取本地存储的当前设备新手引导进度信息
-  ipc.handle('getNoobGuideSchedule', () => {
+  ipc.handle('getNoobGuideSchedule', (event, args) => {
+    //全局储存新手引导页窗体render的信息，后面需要用这个通道主动发回
+    global.fromRender = {
+      guide: event.sender
+    }
     return markdb.db.get('guideSchedule').value()
   })
+
+  ipc.on('guideGlobalSearch', () => {
+    console.log('收到了1######')
+  })
+
+  ipc.on('guideDesktop', () => {
+    console.log('收到了2。。。。')
+  })
+
+
+  /**
+   * 浏览器主进程中各任务完成后需要调用的函数
+   * @param {string} guideName lowdb中set的键名 如'guideSchedule.modules.noobGuide.accountLogin'
+   */
+  function afterGuide(guideName) {
+    markdb.db.set(guideName, true).write()
+    if(global.fromRender && global.fromRender.guide) {
+      global.fromRender.guide.send('scheduleRefresh', markdb.db.get('guideSchedule').value())
+    }
+  }
 
 })
 
