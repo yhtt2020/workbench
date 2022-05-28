@@ -87,10 +87,13 @@ const PasswordModel = {
       rootItem:[]
     }
 
-    let result=await PasswordModel.activeManager.getAllCredentials().catch((err)=>{return []})
-    // passwords.forEach((pwd)=>{
-    //   console.log(pwd)
-    // })
+    let result
+    try {
+      result = await PasswordModel.activeManager.getAllCredentials()
+    } catch (err) {
+      result = []
+    }
+
     if(!!!result){
       return []
     }

@@ -35,13 +35,14 @@ const tabEditor = {
     if(!toolbar.expanded) {
       document.body.classList.add('is-edit-mode')
     }
-    console.log(editingValue || currentURL)
     tabEditor.updateUrl(editingValue || currentURL)
     if(!toolbar.expanded){
       tabEditor.input.focus()
     }
     if (!editingValue) {
-      tabEditor.input.select()
+      setTimeout(()=>{
+        tabEditor.input.select()
+      },200)
     }
     // https://github.com/minbrowser/min/discussions/1506
     tabEditor.input.scrollLeft = 0
