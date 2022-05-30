@@ -39,7 +39,11 @@ class SidePanel {
    * 返回sidePanel实例
    */
   static getSidePanel () {
-    return sidePanel.get()
+    if(SidePanel.alive()){
+      return sidePanel.get()
+    }else{
+      return null
+    }
   }
 
   //判断是否存在sidebar
@@ -536,7 +540,7 @@ ipc.on(ipcMessageMain.sidePanel.receiveGlobal, function (event, args) {
   args.mainWindowId = mainWindow.webContents.id
   if (!!!args.callbackWin) {
     if (sidePanel != null && mainWindow != null) {
-      sidePanel.get().webContents.send('receiveGlobal', args)
+      SidePanel.send('receiveGlobal', args)
     }
   } else {
     if (args.callbackWin === 'switchWin')
@@ -659,7 +663,7 @@ ipc.on('insertTab', (event, arg) => {
 })
 
 ipc.on('userLogin', function (event, data) {
-  sidePanel.get().webContents.send('userLogin', data)
+  SidePanel.send('userLogin',data)
 })
 
 ipc.on('importBookMarks', function () {
@@ -670,10 +674,10 @@ ipc.on('importBookMarks', function () {
  * 发送消息到sidebar，进行全局提示
  */
 ipc.on('message', function (event, args) {
-  sidePanel.get().webContents.send('message', args)
+  SidePanel.send('message', args)
 })
 function sendMessage(args){
-  sidePanel.get().webContents.send('message', args)
+  SidePanel.send('message', args)
 }
 
 ipc.on('closeTask', function (event, args) {
