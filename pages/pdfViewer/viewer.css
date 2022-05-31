@@ -141,12 +141,17 @@
     contain: strict;
   }
 
-  .textLayer > span {
+  .textLayer span {
     color: transparent;
     position: absolute;
     white-space: pre;
     cursor: text;
     transform-origin: top left;
+  }
+
+  .textLayer span.markedContent {
+    top: 0;
+    height: 0;
   }
 
   .annotationLayer img,
@@ -163,7 +168,7 @@
     position: absolute;
     text-align: initial;
   }
-  
+
   .annotationLayer .linkAnnotation > a,a {
     position: absolute;
     font-size: 1em;
@@ -172,7 +177,7 @@
     width: 100%;
     height: 100%;
   }
-  
+
   .annotationLayer .linkAnnotation > a:hover {
     opacity: 0.2;
     background: rgba(255, 255, 0, 1);
