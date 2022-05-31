@@ -83,12 +83,10 @@ const PasswordManagers = {
   // Binds IPC events.
   initialize: function () {
     // Called when page preload script detects a form with username and password.
-    webviews.bindIPC('password-autofill', function (tab, args, frameId) {
-      // We expect hostname of the source page/frame as a parameter.
-      if (args.length === 0) {
-        return
-      }
-      const hostname = args[0]
+    webviews.bindIPC('password-autofill', function (tab, args, frameId, frameURL) {
+      // it's important to use frameURL here and not the tab URL, because the domain of the
+      // requesting iframe may not match the domain of the top-level page
+      const hostname = new URL(frameURL).hostname
 
       PasswordManagers.getConfiguredPasswordManager().then(async (manager) => {
         if (!manager) {
@@ -101,12 +99,12 @@ const PasswordManagers = {
         }
 
         // 去除域名里的www，根域名用同一套帐号
-        var domain = hostname
-        if (domain.startsWith('www.')) {
-          domain = domain.slice(4)
+        var formattedHostname = hostname
+        if (formattedHostname.startsWith('www.')) {
+          formattedHostname = formattedHostname.slice(4)
         }
 
-        manager.getSuggestions(domain).then(credentials => {
+        manager.getSuggestions(formattedHostname).then(credentials => {
           //console.log(credentials)
           // 增加对找回密码数量的提示，减少认知成本
           // if(credentials.length===0){
@@ -127,7 +125,6 @@ const PasswordManagers = {
                 topLevelDomain = topLevelDomain.slice(4)
               }
               if (domain !== topLevelDomain) {
-                ipc.send('message',{type:'error',config:{content:"自动填充密码不支持第三方框架。"}})
                 console.warn("autofill isn't supported for 3rd-party frames")
                 return
               }
@@ -136,6 +133,10 @@ const PasswordManagers = {
                 hostname
               }])
             })
+            webviews.callAsync(tab, 'sendToFrame', [frameId, 'password-autofill-match', {
+              credentials,
+              hostname
+            }])
           }
         }).catch(e => {
           ipc.send('message',{type:'error',config:{content:"获取自动填充密码失败。"}})
