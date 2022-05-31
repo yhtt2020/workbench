@@ -7,6 +7,7 @@ const tabAudio = require('tabAudio.js')
 const dragula = require('dragula')
 const settings = require('util/settings/settings.js')
 const urlParser = require('util/urlParser.js')
+const keybindings = require('keybindings.js')
 
 const tabEditor = require('navbar/tabEditor.js')
 const progressBar = require('navbar/progressBar.js')
@@ -31,18 +32,7 @@ const tabBar = {
   tabElementMap: {}, // tabId: tab element
   events: new EventEmitter(),
 
-  dragulaInstance: dragula([document.getElementById('tabs-inner')], {
-    mirrorContainer: document.getElementById('dragContainer'),
-    direction: 'horizontal',
-    slideFactorX: 25,
-    slideFactorY: 25,
-    invalid: function (el, handle) {
-      return el.id === 'add-btn-wrapper';
-    },
-    accepts:function(el, target, source, sibling){
-      return !(sibling===null)
-    }
-  }),
+  dragulaInstance: null,
   getTab: function (tabId) {
     return tabBar.tabElementMap[tabId]
   },
@@ -848,6 +838,45 @@ const tabBar = {
       tabBar.navBar.classList.remove('show-dividers')
     }
   },
+  initializeTabDragging: function () {
+    tabBar.dragulaInstance = dragula([], {
+      mirrorContainer: document.getElementById('dragContainer'),
+      direction: 'horizontal',
+      slideFactorX: 25,
+      slideFactorY: 25,
+      invalid: function (el, handle) {
+        return el.id === 'add-btn-wrapper';
+      },
+      accepts:function(el, target, source, sibling){
+        return !(sibling===null)
+      }
+    })
+
+    tabBar.dragulaInstance.on('drop', function (el, target, source, sibling) {
+      var tabId = el.getAttribute('data-tab')
+      if (sibling) {
+        var adjacentTabId = sibling.getAttribute('data-tab')
+      }
+
+      var oldTab = tabs.splice(tabs.getIndex(tabId), 1)[0]
+
+      var newIdx
+      if (adjacentTabId) {
+        newIdx = tabs.getIndex(adjacentTabId)
+      } else {
+        // tab was inserted at end
+        newIdx = tabs.count()
+      }
+
+      tabs.splice(newIdx, 0, oldTab)
+    })
+  },
+  enableTabDragging: function () {
+    tabBar.dragulaInstance.containers = [document.getElementById('tabs-inner')]
+  },
+  disableTabDragging: function () {
+    tabBar.dragulaInstance.containers = []
+  },
   /**
    * 添加一个应用
    * @param id
@@ -938,8 +967,20 @@ permissionRequests.onChange(function (tabId) {
   tabBar.updateTab(tabId)
 })
 
+tabBar.initializeTabDragging()
+
 if (window.platformType === 'mac') {
   tabBar.dragulaInstance.containers = []
+  keybindings.defineShortcut({ keys: 'mod' }, function () {
+    tabBar.enableTabDragging()
+    console.log('mod')
+    document.body.classList.add('disable-window-drag')
+  })
+
+  keybindings.defineShortcut({ keys: 'mod' }, function () {
+    tabBar.disableTabDragging()
+    document.body.classList.remove('disable-window-drag')
+  }, { keyUp: true })
 } else {
   tabBar.dragulaInstance.on('drop', function (el, target, source, sibling) {
     var tabId = el.getAttribute('data-tab')
@@ -959,6 +1000,7 @@ if (window.platformType === 'mac') {
 
     tabs.splice(newIdx, 0, oldTab)
   })
+  tabBar.enableTabDragging()
 }
 
 tabBar.container.addEventListener('dragover', (e) => e.preventDefault())
