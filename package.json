@@ -34,7 +34,7 @@
     "axios": "^0.24.0",
     "csvtojson": "^2.0.10",
     "dexie": "^3.0.3",
-    "dragula": "^3.7.3",
+    "dragula": "github:minbrowser/dragula",
     "electron-devtools-installer": "^3.2.0",
     "electron-find": "^1.0.7",
     "electron-localstorage": "^1.0.5",
