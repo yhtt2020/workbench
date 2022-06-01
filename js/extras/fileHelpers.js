@@ -1,4 +1,4 @@
-import { Stats, exists, lstat, mkdirSync, readFile, readdir, unlink, writeFile } from "fs";
+const { exists, mkdirSync, readFile, unlink, writeFile } = require("fs");
 
 
 const fileHelpers = {

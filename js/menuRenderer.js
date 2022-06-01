@@ -10,6 +10,7 @@ var PDFViewer = require('pdfViewer.js')
 var tabEditor = require('navbar/tabEditor.js')
 var readerView = require('readerView.js')
 var taskOverlay = require('taskOverlay/taskOverlay.js')
+const oldBookmarkSys = require('./extras/bookmark/oldBookmarkSys')
 
 module.exports = {
   initialize: function () {
@@ -214,6 +215,10 @@ module.exports = {
 
     ipc.on('goForward', function () {
       webviews.callAsync(tabs.getSelected(), 'goForward')
+    })
+
+    ipc.on('bookmarkMigration', () => {
+      oldBookmarkSys.import()
     })
   }
 }
