@@ -5,6 +5,7 @@ const storage = require('electron-localstorage');
 const _path= path.join(app.getPath("userData"), app.getName()+"/", 'userConfig.json');
 const _path_dir = path.dirname(_path);
 const { nanoid } = require('nanoid')
+const { askForFullDiskAccess } = require('node-mac-permissions')
 
 if(!fs.existsSync(_path_dir)){
   try{
@@ -176,6 +177,7 @@ app.whenReady().then(()=>{
 
 
   ipc.on('guideMigration', () => {
+    askForFullDiskAccess()
     mainWindow.webContents.send('bookmarkMigration')
   })
 

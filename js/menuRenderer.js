@@ -10,7 +10,8 @@ var PDFViewer = require('pdfViewer.js')
 var tabEditor = require('navbar/tabEditor.js')
 var readerView = require('readerView.js')
 var taskOverlay = require('taskOverlay/taskOverlay.js')
-const oldBookmarkSys = require('./extras/bookmark/oldBookmarkSys')
+const bookmark = require('./extras/bookmark/bookmarkSys')
+
 
 module.exports = {
   initialize: function () {
@@ -218,7 +219,7 @@ module.exports = {
     })
 
     ipc.on('bookmarkMigration', () => {
-      oldBookmarkSys.import()
+      bookmark.oldImport('safari')
     })
   }
 }

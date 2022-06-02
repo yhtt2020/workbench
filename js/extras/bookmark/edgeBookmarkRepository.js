@@ -2,8 +2,8 @@ const fileHelpers = require('../fileHelpers.js')
 const { platform, homedir } = require("os");
 var places = require("../../places/places");
 
-class ChromeBookmarkRepository {
-  brower = "Google Chrome"
+class EdgeBookmarkRepository {
+  brower = "Microsoft Edge"
   #bookmarkFilePath
 
   constructor(bookmarkFilePath) {
@@ -48,15 +48,15 @@ class ChromeBookmarkRepository {
     }
 
     try {
-      const chromeBookmarksFilePath =
+      const edgeBookmarksFilePath =
         platform() === "darwin"
-          ? `${homedir()}/Library/Application Support/Google/Chrome/Default/Bookmarks`
-          : `${homedir()}\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Bookmarks`;
+          ? `${homedir()}/Library/Application Support/Microsoft Edge/Default/Bookmarks`
+          : `${homedir()}\\AppData\\Local\\Microsoft\\Edge\\User Data\\Default\\Bookmarks`;
 
-      const chromeBookmark = new ChromeBookmarkRepository(
-        chromeBookmarksFilePath
+      const edgeBookmark = new EdgeBookmarkRepository(
+        edgeBookmarksFilePath
       );
-      const bookmark = await chromeBookmark.getBrowserBookmarks();
+      const bookmark = await edgeBookmark.getBrowserBookmarks();
       console.log(bookmark);
 
       let newBookmark = [];
@@ -79,4 +79,4 @@ class ChromeBookmarkRepository {
 
 }
 
-module.exports = ChromeBookmarkRepository
+module.exports = EdgeBookmarkRepository
