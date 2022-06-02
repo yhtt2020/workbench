@@ -25,5 +25,7 @@
             </array>
         </dict>
     </array>
+    <key>NSSystemAdministrationUsageDescription</key>
+    <string>Your reason for wanting Full Disk Access</string>
 </dict>
 </plist>
