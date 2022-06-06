@@ -123,7 +123,7 @@ const sidebarTpl = /*html*/`
                       <template>
                         <div class="mg-top flex justify-between align-center">
                           <div class="mg-top-lf text-black" style="font-weight: 400;">我加入的团队({{this.$store.getters.getAllCircle.length}})</div>
-                          <a-button class="mg-top-right" style="border-radius: 50%;" type="primary" icon="plus" size="small" @click="createGroup" />
+                          <a-button id="guide5" class="mg-top-right" style="border-radius: 50%;" type="primary" icon="plus" size="small" @click="createGroup" />
                         </div>
 
         <div style="margin-top: 10px">
@@ -236,7 +236,7 @@ const sidebarTpl = /*html*/`
               <div class="item-title">{{ user.nickname }}</div>
             </div>
         </li>
-        <li>
+        <li id="guideApplySecond">
           <app-manager ref="appManager" :apps="apps" :running-apps="runningApps"></app-manager>
         </li>
       </ul>
@@ -430,11 +430,11 @@ const sidebarTpl = /*html*/`
     arrow>
     <!--mouseenter-->
 <template v-slot:trigger>
-<div @click="openUserWindow" title="点击选择其他空间"  style="width: 100%;overflow: hidden;height:30px;text-align: left ">
+<div @click="openUserWindow" title="点击选择其他空间" class="guide3"  style="width: 100%;overflow: hidden;height:30px;text-align: left ">
 
        <div style="width:145px;">
        <div style="display: inline-block;width:45px;text-align: center">
-       <img src="./assets/sync.svg" id="savingIcon" :class="{'online':currentSpace.spaceType==='cloud','offline':currentSpace.spaceType==='local'}" style="width: 24px;margin-top: -25px"  width="32" height="32"/>
+       <img  src="./assets/sync.svg" id="savingIcon" :class="{'online':currentSpace.spaceType==='cloud','offline':currentSpace.spaceType==='local'}" style="width: 24px;margin-top: -25px"  width="32" height="32"/>
 
 <!--       <a-icon type="loading" ></a-icon>-->
        </div>
@@ -569,7 +569,7 @@ const sidebarTpl = /*html*/`
     <!--mouseenter-->
 <template v-slot:trigger>
          <div class="wrapper">
-                    <div class="item-icon">
+                    <div id="guide0"  class="item-icon">
                       <img class="icon" :src="item.icon" onerror="this.src='../../icons/default.svg'" />
                       <a-badge :count="item.count" :dot="true" status="processing"
                         :style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:item.count>5?'visible':'hidden'}">
@@ -603,7 +603,7 @@ const sidebarTpl = /*html*/`
                         <a-icon type="delete"></a-icon><span class="tip">清理</span>
                       </span>
                     </div>
-                    <ul class="tabs" style="margin-top: 5px">
+                    <ul class="tabs" style=" margin-top: 5px">
                       <li :class="{'active':(tab.selected )}" style="position:relative;"
                         @mouseenter="showHoverLock(tab)" @mouseleave="hideHoverLock(tab)" v-for="(tab,j) in item.tabs"
                         :key="tab.id">
@@ -684,7 +684,7 @@ const sidebarTpl = /*html*/`
           <div>
             <a-collapse default-active-key="0" :active-key="sidebarBottom" :bordered="false" @change="changeBottomSize">
               <a-collapse-panel key="1">
-               <li @click="openBottom('help')">
+               <li  @click="openBottom('help')">
                   <a-button type="default" shape="circle" icon="question-circle"></a-button>
                   <div class="item-title">帮助中心</div>
                 </li>
@@ -692,15 +692,15 @@ const sidebarTpl = /*html*/`
             </a-collapse>
           </div>
         </template>
-        <li @click="visibleGlobalSearch">
-          <a-button type="default" shape="circle" icon="search" tabindex=-1></a-button>
+        <li id="guide1" @click="visibleGlobalSearch">
+          <a-button  type="default" shape="circle" icon="search" tabindex=-1></a-button>
           <div class="item-title">全局搜索</div>
         </li>
         <li @click="visibleMessageCenter">
           <a-badge :dot="this.$store.getters.getAllMessages.length > 0 ? true : false">
             <a-button type="default" shape="circle" icon="bell" tabindex=-1></a-button>
           </a-badge>
-          <div class="item-title">消息中心</div>
+          <div class="item-title">消息中心</div >
         </li>
         <li @click="openBottom('setting')">
           <a-button type="default" shape="circle" icon="setting" tabindex=-1></a-button>
@@ -712,11 +712,15 @@ const sidebarTpl = /*html*/`
     </message-center>
   </div>
 `
+
 const backupSpaceModel=require('../../src/model/backupSpaceModel')
 const _=require('lodash')
+
+
 Vue.component('sidebar', {
   data: function () {
     return {
+
       lastSync:Date.now(),//最后一次同步时间
       spaceStatus:'local',
       localSpaces: [],
@@ -945,6 +949,164 @@ Vue.component('sidebar', {
   },
   template: sidebarTpl,
   methods: {
+    guide(a){
+      const stepsList=[
+        {
+          text: `<div>每一个打开网页都属于一个标签组，试试<b>双击</b>侧边栏空白处创建一个新的组</div>`, attachTo: {element: '#guide0', on: 'right'},
+          buttons: [
+            {action: function () {
+                window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/yglkui'
+              }, secondary: true, text: '了解更多'},
+            {action: function () {return this.cancel();}, text: '好的'}],
+          id: 'welcome'    // 用于Shepherd step的唯一标识符
+        },
+        {
+          text: `<div>点击这里，或着按下<b>Alt + F</b>键打开全局搜索</div>`, attachTo: {element: '#guide1', on: 'right'},
+          buttons: [
+            {action: function () {
+                window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/zp48yn'
+              }, secondary: true, text: '了解更多'},
+            {action: function () {return this.cancel();}, text: '好的'}],
+          id: 'welcome'    // 用于Shepherd step的唯一标识符
+        },
+        {//占位
+        },
+        {
+          text: `<div>在这里创建或选择您想要的空间</div>`, attachTo: {element: '.guide3', on: 'right'},
+          buttons: [
+            {action: function () {
+                window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/gg7vro'
+              }, secondary: true, text: '了解更多'},
+            {action: function () {return this.cancel();}, text: '好的'}],
+          id: 'welcome'    // 用于Shepherd step的唯一标识符
+        },
+        {//占位
+        },
+        {
+          text: `<div>点击这里可以创建你的团队</div>`, attachTo: {element: '#guide5', on: 'right'},
+          buttons: [
+            {action: function () {
+                window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/rls0pi'
+              }, secondary: true, text: '了解更多'},
+            {action: function () {
+                appVue.$refs.sidePanel.userPanelVisible=false
+                this.cancel()
+              }, text: '好的'}],
+          id: 'welcome'    // 用于Shepherd step的唯一标识符
+        },
+      ]
+        const shepherd = new Shepherd.Tour({
+          // 设置默认引导配置
+          useModalOverlay: true,
+          defaultStepOptions: {
+            // 引导左上角取消按钮图标的配置
+            cancelIcon: {
+              enabled: false, // 默认为true
+            },
+            // 指定引导盒子的类名, 用于后续自定义样式, 类名可叠加
+            classes: 'custom1',
+            // 滚动方式
+            scrollTo: {
+              behavior: 'smooth',
+              block: 'center'
+            }
+          },
+          // 添加第一步引导
+          steps: [stepsList[a]]
+        });
+        shepherd.start();
+      },
+    guideApplyFirst(){
+      const applyShepherd = new Shepherd.Tour({
+        // 设置默认引导配置
+        useModalOverlay: true,
+        defaultStepOptions: {
+          // 引导左上角取消按钮图标的配置
+          cancelIcon: {
+            enabled: false, // 默认为true
+          },
+          // 指定引导盒子的类名, 用于后续自定义样式, 类名可叠加
+          classes: 'custom2',
+          // 滚动方式
+          scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+          }
+        },
+        // 添加第一步引导
+        steps: [{
+          text: '右键网页标签，选择安装到应用', attachTo: {element: '.wrapper', on: 'bottom'},
+          buttons: [
+            {action: function () { this.cancel(); appVue.$refs.sidePanel.guideApplySecond()}, text: '下一步'}],
+          id: 'welcome'    // 用于Shepherd step的唯一标识符
+        }]
+      });
+      applyShepherd.start();
+    },
+    guideApplySecond(){
+      const applySecondShepherd = new Shepherd.Tour({
+        // 设置默认引导配置
+        useModalOverlay: true,
+        defaultStepOptions: {
+          // 引导左上角取消按钮图标的配置
+          cancelIcon: {
+            enabled: false, // 默认为true
+          },
+          // 指定引导盒子的类名, 用于后续自定义样式, 类名可叠加
+          classes: 'custom3',
+          // 滚动方式
+          scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+          }
+        },
+        // 添加第一步引导
+        steps: [{
+          text: '点击这里可以管理你安装的所有应用', attachTo: {element: '#guideApplySecond', on: 'right'},
+          buttons: [
+            {action: function () {
+                window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/mmcfd7'
+              }, text: '了解更多',classes:'button1'},
+            {action: function () { this.cancel();appVue.$refs.sidePanel.guideApplyFirst()}, text: '上一步',classes:'button2'},
+            {action: function () {return this.next();}, text: '下一步',classes:'button3'}],
+          id: 'first'    // 用于Shepherd step的唯一标识符
+        },{
+          text: '安装的应用会显示在这里，左键打开或右键进行更多设置', attachTo: {element: '#saApp-box', on: 'right'},
+          buttons: [
+            {action: function () {return this.back();},text: '上一步',classes:'button2'},
+            {action: function () {return this.cancel();}, text: '好的'}],
+          id: 'second'    // 用于Shepherd step的唯一标识符
+        },]
+      });
+      applySecondShepherd.start();
+    },
+    guideDesktop(){
+      const guideDesktop = new Shepherd.Tour({
+        // 设置默认引导配置
+        useModalOverlay: true,
+        classes: 'custom4',
+        defaultStepOptions: {
+          // 引导左上角取消按钮图标的配置
+          cancelIcon: {
+            enabled: false, // 默认为true
+          },
+          // 滚动方式
+          scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+          }
+        },
+        // 添加第一步引导
+        steps: [{
+          text: '点击这里可以管理你安装的所有应用', attachTo: {element: '#appVue', on:'bottom'},
+          buttons: [
+            {action: function () { this.cancel();}, text: '上一步',classes:'button2'},
+            {action: function () { this.cancel()}, text: '下一步',classes:'button3'}],
+          id: 'first'    // 用于Shepherd step的唯一标识符
+        }]
+      });
+      guideDesktop.start();
+    },
     sortApps(){
       let sorted=_.orderBy(this.apps,(app)=>{
         return [app.processing?1:0,app.lastExecuteTime]
@@ -1161,6 +1323,9 @@ Vue.component('sidebar', {
       // console.log(app)
       ipc.send('executeApp', { app: app })
     },
+    focus(){
+      ipc.send('sidePanelFocus')
+    },
     toggleUserPanel () {
       this.passList = this.$store.getters.getAllCircle.filter(v => v.status !==3 && v.status !==2 )
       this.teamList = this.passList.filter(v => v.property === 0 ||  v.property===1)
@@ -1218,15 +1383,16 @@ Vue.component('sidebar', {
       }
     },
     openBottom (action) {
-      console.log(action)
+
       if(action==='help'){
-        console.log('help')
         window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/tmpomo'
         return
       }
-      postMessage({
-        message: action
-      })
+      if(action==='setting'){
+        postMessage({
+          message: action
+        })
+      }
     },
     openGroup () {
       ipc.send('openGroup')
@@ -1710,6 +1876,31 @@ ipc.on('blur', (event, args) => {
 //左侧栏最小化后会有失去焦点穿透问题，最小化前先收起左侧栏
 ipc.on('closeUserSidePanel',(event,args)=>{
  appVue.$refs.sidePanel.userPanelVisible=false
+})
+
+ipc.on('guide',(event,args)=>{
+    if(args===5){
+      appVue.$refs.sidePanel.toggleUserPanel()
+      // appVue.$refs.sidePanel.userPanelVisible=true
+      setTimeout(()=>{
+        appVue.$refs.sidePanel.focus()
+        appVue.$refs.sidePanel.guide(args)
+      },500)
+    }
+    else {
+      appVue.$refs.sidePanel.focus()
+      appVue.$refs.sidePanel.guide(args)
+    }
+})
+
+ipc.on('guideApplyFirst',()=>{
+  appVue.$refs.sidePanel.focus()
+  appVue.$refs.sidePanel.guideApplyFirst()
+})
+
+ipc.on('guideDesktop',()=>{
+  appVue.$refs.sidePanel.focus()
+  appVue.$refs.sidePanel.guideDesktop()
 })
 
 ipc.on('appRedirect', async (event, args) => {

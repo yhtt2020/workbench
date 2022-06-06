@@ -681,6 +681,7 @@ ipc.on('closeEmptyPage',(event,args)=>{
   }
 })
 
+
 ipc.on('closeTab',(event,args)=>{
     require('browserUI.js').closeTab(args.id)
 })

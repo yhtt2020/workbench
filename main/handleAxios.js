@@ -4,7 +4,8 @@ const authApi = require(path.join(__dirname, './js/request/api/authApi.js'))
 const storage = require('electron-localstorage');
 const _path= path.join(app.getPath("userData"), app.getName()+"/", 'userConfig.json');
 const _path_dir = path.dirname(_path);
-const { nanoid } = require('nanoid')
+const { nanoid } = require('nanoid');
+
 
 if(!fs.existsSync(_path_dir)){
   try{
@@ -166,14 +167,28 @@ app.whenReady().then(()=>{
     return markdb.db.get('guideSchedule').value()
   })
 
+  ipc.on('guideTasks', () => {
+    sidePanel.get().webContents.send('guide',0)
+  })
+
   ipc.on('guideGlobalSearch', () => {
-    console.log('收到了1######')
+    sidePanel.get().webContents.send('guide',1)
   })
-
   ipc.on('guideDesktop', () => {
-    console.log('收到了2。。。。')
+    mainWindow.webContents.send('addTab','ts://newtab')
+    setTimeout(()=>{
+      sidePanel.get().webContents.send('guideDesktop')
+    },1000)
   })
-
+  ipc.on('guideSpace', () => {
+    sidePanel.get().webContents.send('guide',3)
+  })
+  ipc.on('guideApply', () => {
+    sidePanel.get().webContents.send('guideApplyFirst')
+  })
+  ipc.on('guideTeam', () => {
+    sidePanel.get().webContents.send('guide',5)
+  })
 
   /**
    * 浏览器主进程中各任务完成后需要调用的函数
@@ -185,6 +200,7 @@ app.whenReady().then(()=>{
       global.fromRender.guide.send('scheduleRefresh', markdb.db.get('guideSchedule').value())
     }
   }
+
 
 })
 
