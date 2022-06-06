@@ -603,7 +603,7 @@ const sidebarTpl = /*html*/`
                         <a-icon type="delete"></a-icon><span class="tip">清理</span>
                       </span>
                     </div>
-                    <ul class="tabs" style=" margin-top: 5px">
+                    <ul class="tabs" style=" margin-top: 5px;min-height:180px">
                       <li :class="{'active':(tab.selected )}" style="position:relative;"
                         @mouseenter="showHoverLock(tab)" @mouseleave="hideHoverLock(tab)" v-for="(tab,j) in item.tabs"
                         :key="tab.id">
