@@ -10,6 +10,7 @@ var PDFViewer = require('pdfViewer.js')
 var tabEditor = require('navbar/tabEditor.js')
 var readerView = require('readerView.js')
 var taskOverlay = require('taskOverlay/taskOverlay.js')
+const { ipcRenderer } = require('electron')
 
 module.exports = {
   initialize: function () {
@@ -156,6 +157,15 @@ module.exports = {
         }
       }
     })
+
+    ipc.on('saveViewCapture',()=>{
+      ipc.send('saveViewCapture', { id: tabs.getSelected() })
+    })
+
+    ipc.on('saveViewFullCapture',()=>{
+      ipc.send('saveViewFullCapture', { id: tabs.getSelected() })
+    })
+
     ipc.on('saveCurrentPageToPdf', async function () {
       var currentTab = tabs.get(tabs.getSelected())
 

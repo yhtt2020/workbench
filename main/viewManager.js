@@ -1,3 +1,5 @@
+
+
 const BrowserView = electron.BrowserView
 
 var viewMap = {} // id: view
@@ -475,6 +477,31 @@ ipc.on('saveViewCapture', function (e, data) {
     view.webContents.downloadURL(image.toDataURL())
   })
 })
+
+ipc.on('saveViewFullCapture',function (e,data){
+  var view = viewMap[data.id]
+  if (!view) {
+    // view could have been destroyed
+  }
+
+  view.captureFullPage(function(imageStream){
+    // return an image Stream
+    const dir=app.getPath('userData')+'/pageCapture'
+    if(!fs.existsSync(dir))
+    {
+      fs.mkdirSync(dir)
+    }
+    let time=String(Date.now())
+    let path=dir+'/capture'+time.substr(time.length-4,time.length)+'.png'
+    imageStream.pipe(fs.createWriteStream(path));
+    //let image=require('electron').nativeImage.createFromPath(app.getPath('userData')+'/page.png')
+    imageStream.on('end',()=>{
+      view.webContents.downloadURL('file://'+path)
+    })
+  })
+})
+
+
 
 global.getView = getView
 var emulationViews = []

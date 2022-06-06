@@ -51,6 +51,7 @@
     "node-abi": "^3.2.0",
     "pdfjs-dist": "2.12.313",
     "pinyin-pro": "^3.8.3",
+    "pixelsmith": "^2.6.0",
     "regedit": "^5.0.0",
     "stemmer": "^1.0.5",
     "string_score": "^0.1.22",
