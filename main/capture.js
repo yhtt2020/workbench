@@ -28,7 +28,6 @@ ipc.on('return-move-page', function (events, page) {
     width: contentSize.windowWidth,
     height: contentSize.windowHeight
   }
-  console.log('op=',options)
   if (page === captureTimes) {
     options.height = contentSize.height - ((captureTimes - 1) * contentSize.windowHeight)
     options.y = contentSize.windowHeight - options.height
@@ -41,11 +40,9 @@ ipc.on('return-move-page', function (events, page) {
       console.log('create ',tempDir)
       fs.writeFile(tempDir + '/' + page + '.png', image.toPNG(), function(err){
         if (page !== captureTimes) {
-          console.log('next ',page + 1)
           targetWindow.webContents.send('move-page-to', page + 1)
 
         } else {
-          console.log('flatten ')
           flattenPNG()
         }
       })

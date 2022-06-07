@@ -148,29 +148,28 @@ function getFixed(){
       fixedElements.push(elems[i])
     }
   }
-  console.log(fixedElements)
 }
-/**
- * 判断元素是否可见
- * @param el{dom}: dom元素
- * @eg: isVisible(document.querySelector(cssSelector));
- **/
-function isVisible(el) {
-  var loopable = true,
-    visible = window.getComputedStyle(el).display != 'none' && window.getComputedStyle(el).visibility != 'hidden';
-
-  while(loopable && visible) {
-    el = el.parentNode;
-
-    if(el && el != document.body) {
-      visible = window.getComputedStyle(el).display != 'none' && window.getComputedStyle(el).visibility != 'hidden';
-    }else {
-      loopable = false;
-    }
-  }
-
-  return visible;
-}
+// /**
+//  * 判断元素是否可见
+//  * @param el{dom}: dom元素
+//  * @eg: isVisible(document.querySelector(cssSelector));
+//  **/
+// function isVisible(el) {
+//   var loopable = true,
+//     visible = window.getComputedStyle(el).display != 'none' && window.getComputedStyle(el).visibility != 'hidden';
+//
+//   while(loopable && visible) {
+//     el = el.parentNode;
+//
+//     if(el && el != document.body) {
+//       visible = window.getComputedStyle(el).display != 'none' && window.getComputedStyle(el).visibility != 'hidden';
+//     }else {
+//       loopable = false;
+//     }
+//   }
+//
+//   return visible;
+// }
 ipc.on('move-page-to', function(events, page) {
   var height = Math.max( document.body.scrollHeight, document.body.offsetHeight,
     document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight );
@@ -178,7 +177,6 @@ ipc.on('move-page-to', function(events, page) {
     getFixed()
   }else if(page>1 && window.innerHeight * page <=height){
     //隐藏页面元素
-    console.log(fixedElements)
     fixedElements.forEach(ele=>{
         ele.hidden=true
         needShow.push(ele)

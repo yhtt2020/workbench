@@ -4,7 +4,6 @@ const {
   VUEJS_DEVTOOLS,
   REACT_DEVELOPER_TOOLS
 } = require('electron-devtools-installer')
-const { ipcRenderer } = require('electron')
 
 const devPlugin = {}
 

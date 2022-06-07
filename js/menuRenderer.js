@@ -10,7 +10,6 @@ var PDFViewer = require('pdfViewer.js')
 var tabEditor = require('navbar/tabEditor.js')
 var readerView = require('readerView.js')
 var taskOverlay = require('taskOverlay/taskOverlay.js')
-const { ipcRenderer } = require('electron')
 
 module.exports = {
   initialize: function () {
