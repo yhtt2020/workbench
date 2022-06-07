@@ -162,11 +162,29 @@ function buildAppMenu (options = {}) {
           ]
         }
       ] : []),
+
     {
       label: l('appMenuFile'),
       submenu: [
         ...(!options.secondary ? tabTaskActions : []),
         ...(!options.secondary ? [{type: 'separator'}] : []),
+        {
+          label:'截图',
+          submenu:[
+            {
+            label:'可见区域',
+            click:()=>{
+              sendIPCToWindow(mainWindow,'saveViewCapture')
+            }
+          },
+            {
+              label:'整页',
+              click:()=>{
+                sendIPCToWindow(mainWindow,'saveViewFullCapture')
+              }
+            },
+          ],
+        },
         {
           label: l('appMenuSavePageAs'),
           submenu:[
