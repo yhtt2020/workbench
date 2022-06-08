@@ -1084,12 +1084,13 @@ Vue.component('sidebar', {
       const guideDesktop = new Shepherd.Tour({
         // 设置默认引导配置
         useModalOverlay: true,
-        classes: 'custom4',
+
         defaultStepOptions: {
           // 引导左上角取消按钮图标的配置
           cancelIcon: {
             enabled: false, // 默认为true
           },
+          classes:'custom4',
           // 滚动方式
           scrollTo: {
             behavior: 'smooth',
@@ -1098,10 +1099,15 @@ Vue.component('sidebar', {
         },
         // 添加第一步引导
         steps: [{
-          text: '点击这里可以管理你安装的所有应用', attachTo: {element: '#appVue', on:'bottom'},
+          text: '右键点击可以删除示例桌面', attachTo: {element: '#appVue', on:'bottom'},
           buttons: [
-            {action: function () { this.cancel();}, text: '上一步',classes:'button2'},
-            {action: function () { this.cancel()}, text: '下一步',classes:'button3'}],
+            {action: function () {
+                window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/sv8ozw'
+              }, text: '了解更多',classes:'button2'},
+            {action: function () {
+              this.cancel();
+                mainWindow.webContents.send('closeGuideDesktop')
+              }, text: '好 的',classes:'button3'}],
           id: 'first'    // 用于Shepherd step的唯一标识符
         }]
       });
