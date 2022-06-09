@@ -62,7 +62,7 @@ mac:
       - provider : generic
         url: http://d.xiangtian.ren/update/browser/mac-${arch}/
         channel: latest
-
+    extendInfo: scripts/macInfo.plist
 
 nsis:
     allowToChangeInstallationDirectory: true

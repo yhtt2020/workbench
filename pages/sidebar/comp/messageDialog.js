@@ -1,6 +1,6 @@
 const messageTempl = /* html */`
-  <div class="message-wrap" v-show="visible">
-    <div class="message-mask" @click="clkmask"></div>
+  <div @contextmenu.stop="()=>{}" class="message-wrap" v-show="visible">
+    <div class="message-mask" @click.stop="clkmask"></div>
     <div class="message-dialog flex flex-direction">
       <div class="top flex justify-between align-center">
         <div class="top-lf flex justify-center align-center text-black-lg">
