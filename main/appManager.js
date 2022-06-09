@@ -1336,7 +1336,7 @@ app.whenReady().then(() => {
       }
       saAppApplyPermission = new BrowserWindow({
         minimizable: false,
-        parent: mainWindow,
+        parent: appManager.getWindowByWindowId(args.windowId),
         width: 420,
         height: 250,
         maximizable:false,
@@ -1361,7 +1361,6 @@ app.whenReady().then(() => {
       saAppApplyPermission.webContents.loadURL('file://' + __dirname + '/pages/saApp/applyPermission/index.html')
       saAppApplyPermission.on('close', () => {
         saAppApplyPermission = null
-        appManager.getWindowByWindowId(args.windowId).focus()
       })
       ApplyPermissionOptions = args
       return {code: 200, msg: '授权窗口打开成功'}
