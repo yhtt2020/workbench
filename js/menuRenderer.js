@@ -218,8 +218,8 @@ module.exports = {
       webviews.callAsync(tabs.getSelected(), 'goForward')
     })
 
-    ipc.on('bookmarkMigration', () => {
-      bookmark.oldImport('safari')
+    ipc.on('bookmarkMigration', (event, args) => {
+      bookmark.oldImport(args)
     })
   }
 }

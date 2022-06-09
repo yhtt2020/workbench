@@ -1,5 +1,3 @@
-// var urlParser = require("util/urlParser.js");
-// var settings = require("util/settings/settings.js");
 const ChromeBookmarkRepository = require("./chromeBookmarkRepository");
 const SafariBookmarkRepository = require('./safariBookmarkRepository')
 const EdgeBookmarkRepository = require('./edgeBookmarkRepository')

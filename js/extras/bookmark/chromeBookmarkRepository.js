@@ -1,6 +1,7 @@
 const fileHelpers = require('../fileHelpers.js')
 const { platform, homedir } = require("os");
 var places = require("../../places/places");
+const ipc = require('electron').ipcRenderer
 
 class ChromeBookmarkRepository {
   brower = "Google Chrome"
@@ -72,8 +73,11 @@ class ChromeBookmarkRepository {
         };
         places.updateItem(v.url, data, () => {});
       });
+      setTimeout(() => {
+        ipc.send('message',{type:'success',config:{content: 'Chrome书签导入成功', key: Date.now()}})
+      }, 5000)
     } catch (error) {
-      console.log(error, '书签导入失败')
+      ipc.send('message',{type:'error',config:{content: 'Chrome书签导入失败', key: Date.now()}})
     }
   }
 
