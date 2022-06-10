@@ -265,7 +265,7 @@ const sidebarTpl = /*html*/`
 
                     <img onerror="this.src='../../icons/default.svg'" class="icon sa-app"
                       :style="app.processing? {'border-color':app.userThemeColor!==''?app.userThemeColor:app.themeColor}:{}"
-                      :src="app.logo" />
+                      :src="app.logo" :class="{running:app.processing?true:false}" />
 
                   </a-badge>
                 </div>
