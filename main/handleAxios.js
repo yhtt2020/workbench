@@ -177,6 +177,9 @@ app.whenReady().then(()=>{
 
   ipc.on('guideMigration', (event, args) => {
     mainWindow.webContents.send('bookmarkMigration', args)
+    ipc.on('afterMigration', () => {
+      afterGuide('guideSchedule.modules.noobGuide.migration')
+    })
   })
 
   /**

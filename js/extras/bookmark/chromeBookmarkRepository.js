@@ -75,9 +75,10 @@ class ChromeBookmarkRepository {
       });
       setTimeout(() => {
         ipc.send('message',{type:'success',config:{content: 'Chrome书签导入成功', key: Date.now()}})
+        ipc.send('afterMigration')
       }, 5000)
     } catch (error) {
-      ipc.send('message',{type:'error',config:{content: 'Chrome书签导入失败', key: Date.now()}})
+      ipc.send('message',{type:'error',config:{content: `Chrome书签导入失败!${error}!`, key: Date.now()}})
     }
   }
 

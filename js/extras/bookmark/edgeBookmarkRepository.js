@@ -75,9 +75,10 @@ class EdgeBookmarkRepository {
       });
       setTimeout(() => {
         ipc.send('message',{type:'success',config:{content: 'Edge书签导入成功', key: Date.now()}})
+        ipc.send('afterMigration')
       }, 5000)
     } catch (error) {
-      ipc.send('message',{type:'error',config:{content: 'Edge书签导入失败', key: Date.now()}})
+      ipc.send('message',{type:'error',config:{content: `Edge书签导入失败!${error}!`, key: Date.now()}})
     }
   }
 
