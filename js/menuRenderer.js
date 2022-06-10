@@ -10,6 +10,7 @@ var PDFViewer = require('pdfViewer.js')
 var tabEditor = require('navbar/tabEditor.js')
 var readerView = require('readerView.js')
 var taskOverlay = require('taskOverlay/taskOverlay.js')
+var settings = require('util/settings/settingsContent')
 
 module.exports = {
   initialize: function () {
@@ -124,6 +125,21 @@ module.exports = {
           openInBackground: !settings.get('openTabsInForeground')
         })
       }
+    })
+
+    function changeBlockingLevel (level) {
+      settings.get('filtering', function (value) {
+        if (!value) {
+          value = {}
+        }
+        value.blockingLevel = level
+        settings.set('filtering', value)
+        updateBlockingLevelUI(level)
+      })
+    }
+
+    ipc.on('blockSetting',(event,args)=>{
+      changeBlockingLevel(args)
     })
 
     ipc.on('saveCurrentPage', async function () {

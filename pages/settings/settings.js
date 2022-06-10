@@ -43,7 +43,6 @@ settings.listen('filteringBlockedCount', function (value) {
 function updateBlockingLevelUI (level) {
   var radio = trackingLevelOptions[level]
   radio.checked = true
-
   if (level === 0) {
     blockingExceptionsContainer.hidden = true
   } else {

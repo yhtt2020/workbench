@@ -22,6 +22,8 @@ function addTask () {
   addTab()
 }
 
+
+
 /* creates a new tab */
 
 /*
@@ -313,9 +315,59 @@ ipc.on('addTaskFromApps',function(e,data){
 	  title:data.name
     }
 	tasks.get(tid).tabs.add(newTab)
-
-
 })
+
+ipc.on('addTaskCareer',function(e,data){
+
+  if(data.task.length===2) {
+    let newTaskFirst = {
+      name: data.task[0].taskName,
+      collapsed: false
+    }
+      let taskFirst=tasks.add(newTaskFirst)
+    for (let i = 0; i <= data.task[0].url.length; i++) {
+      let newTabFirst = {
+        url: data.task[0].url[i],
+      }
+      tasks.get(taskFirst).tabs.add(newTabFirst)
+    }
+  }
+    let newTaskSecond = {
+      name: data.task[1].taskName,
+      collapsed:false
+    }
+    let taskSecond=tasks.add(newTaskSecond)
+    for(let i=0;i<=data.task[1].url.length;i++){
+      let newTabSecond= {
+
+        url: data.task[1].url[i]
+      }
+      tasks.get(taskSecond).tabs.add(newTabSecond)
+    }
+
+  if(data.task.length===1){
+    let newTaskFirst = {
+      name: data.task[0].taskName,
+      collapsed:false
+    }
+    let taskFirst=tasks.add(newTaskFirst)
+    for(let i=0;i<= data.task[0].url.length;i++){
+      let newTabFirst= {
+        // title: data.task[0].tabTitle[i],
+        url: data.task[0].url[i]
+      }
+      tasks.get(taskFirst).tabs.add(newTabFirst)
+    }
+  }
+  setTimeout(()=>{
+    for(let i=1;i<tasks.tasks.length;i++){
+      let emptyTabList = tasks.tasks[i].tabs.tabs.filter(item=>item.url==='ts://newtab')
+      closeTab(emptyTabList[0].id)
+    }
+  },100)
+})
+
+
 ipc.on('openApps',function(){
 	// let url= 'ts://apps'//左斜杠三条是为了统一判断里tab的三条左斜杠，不知道为什么会这样
 	// let findout=false
