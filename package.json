@@ -52,6 +52,7 @@
     "node-abi": "^3.2.0",
     "pdfjs-dist": "2.12.313",
     "pinyin-pro": "^3.8.3",
+    "plist": "^3.0.5",
     "regedit": "^5.0.0",
     "shepherd.js": "^9.1.1",
     "stemmer": "^1.0.5",
