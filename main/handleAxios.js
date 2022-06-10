@@ -306,7 +306,34 @@ app.whenReady().then(()=>{
     mainWindow.webContents.send('blockSetting',args)
   })
 
+//--------------------------------------------------------->myf状态管理部分
+  ipc.on('careerState',()=>{
+    afterGuide('guideSchedule.modules.noobGuide.career')
+  })
+  ipc.on('migrationState',()=>{
+    afterGuide('guideSchedule.modules.noobGuide.migration')
+  })
+  ipc.on('adBlockingState',()=>{
+    afterGuide('guideSchedule.modules.noobGuide.adBlocking')
+  })
 
-
+  ipc.on('tasksState',()=>{
+    afterGuide('guideSchedule.modules.feature.tasks')
+  })
+  ipc.on('searchState',()=>{
+    afterGuide('guideSchedule.modules.feature.globalSearch')
+  })
+  ipc.on('appState',()=>{
+    afterGuide('guideSchedule.modules.feature.apps')
+  })
+  ipc.on('desktopState',()=>{
+    afterGuide('guideSchedule.modules.feature.desktop')
+  })
+  ipc.on('spaceState',()=>{
+    afterGuide('guideSchedule.modules.feature.userSpace')
+  })
+  ipc.on('teamState',()=>{
+    afterGuide('guideSchedule.modules.feature.team')
+  })
 })
 

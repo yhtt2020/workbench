@@ -123,7 +123,7 @@ const sidebarTpl = /*html*/`
                       <template>
                         <div class="mg-top flex justify-between align-center">
                           <div class="mg-top-lf text-black" style="font-weight: 400;">我加入的团队({{this.$store.getters.getAllCircle.length}})</div>
-                          <a-button id="guide5" class="mg-top-right" style="border-radius: 50%;" type="primary" icon="plus" size="small" @click="createGroup" />
+                          <a-button id="guideTeam" class="mg-top-right" style="border-radius: 50%;" type="primary" icon="plus" size="small" @click="createGroup" />
                         </div>
 
         <div style="margin-top: 10px">
@@ -430,7 +430,7 @@ const sidebarTpl = /*html*/`
     arrow>
     <!--mouseenter-->
 <template v-slot:trigger>
-<div @click="openUserWindow" title="点击选择其他空间" class="guide3"  style="width: 100%;overflow: hidden;height:30px;text-align: left ">
+<div @click="openUserWindow" title="点击选择其他空间" class="guideSpace"  style="width: 100%;overflow: hidden;height:30px;text-align: left ">
 
        <div style="width:145px;">
        <div style="display: inline-block;width:45px;text-align: center">
@@ -569,7 +569,7 @@ const sidebarTpl = /*html*/`
     <!--mouseenter-->
 <template v-slot:trigger>
          <div class="wrapper">
-                    <div id="guide0"  class="item-icon">
+                    <div id="guideTasks"  class="item-icon">
                       <img class="icon" :src="item.icon" onerror="this.src='../../icons/default.svg'" />
                       <a-badge :count="item.count" :dot="true" status="processing"
                         :style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:item.count>5?'visible':'hidden'}">
@@ -692,7 +692,7 @@ const sidebarTpl = /*html*/`
             </a-collapse>
           </div>
         </template>
-        <li id="guide1" @click="visibleGlobalSearch">
+        <li id="guideSearch" @click="visibleGlobalSearch">
           <a-button  type="default" shape="circle" icon="search" tabindex=-1></a-button>
           <div class="item-title">全局搜索</div>
         </li>
@@ -952,38 +952,47 @@ Vue.component('sidebar', {
     guide(a){
       const stepsList=[
         {
-          text: `<div>每一个打开网页都属于一个标签组，试试<b>双击</b>侧边栏空白处创建一个新的组</div>`, attachTo: {element: '#guide0', on: 'right'},
+          text: `<div>每一个打开网页都属于一个标签组，试试<b>双击</b>侧边栏空白处创建一个新的组</div>`, attachTo: {element: '#guideTasks', on: 'right'},
           buttons: [
             {action: function () {
                 window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/yglkui'
               }, secondary: true, text: '了解更多'},
-            {action: function () {return this.cancel();}, text: '好的'}],
+            {action: function () {
+                this.cancel();
+                ipc.send('tasksState')
+              }, text: '好的'}],
           id: 'welcome'    // 用于Shepherd step的唯一标识符
         },
         {
-          text: `<div>点击这里，或着按下<b>Alt + F</b>键打开全局搜索</div>`, attachTo: {element: '#guide1', on: 'right'},
+          text: `<div>点击这里，或着按下<b>Alt + F</b>键打开全局搜索</div>`, attachTo: {element: '#guideSearch', on: 'right'},
           buttons: [
             {action: function () {
                 window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/zp48yn'
               }, secondary: true, text: '了解更多'},
-            {action: function () {return this.cancel();}, text: '好的'}],
+            {action: function () {
+                this.cancel()
+                ipc.send('searchState')
+              }, text: '好的'}],
           id: 'welcome'    // 用于Shepherd step的唯一标识符
         },
         {//占位
         },
         {
-          text: `<div>在这里创建或选择您想要的空间</div>`, attachTo: {element: '.guide3', on: 'right'},
+          text: `<div>在这里创建或选择您想要的空间</div>`, attachTo: {element: '.guideSpace', on: 'right'},
           buttons: [
             {action: function () {
                 window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/gg7vro'
               }, secondary: true, text: '了解更多'},
-            {action: function () {return this.cancel();}, text: '好的'}],
+            {action: function () {
+              this.cancel()
+                ipc.send('spaceState')
+              }, text: '好的'}],
           id: 'welcome'    // 用于Shepherd step的唯一标识符
         },
         {//占位
         },
         {
-          text: `<div>点击这里可以创建你的团队</div>`, attachTo: {element: '#guide5', on: 'right'},
+          text: `<div>点击这里可以创建你的团队</div>`, attachTo: {element: '#guideTeam', on: 'right'},
           buttons: [
             {action: function () {
                 window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/rls0pi'
@@ -991,6 +1000,7 @@ Vue.component('sidebar', {
             {action: function () {
                 appVue.$refs.sidePanel.userPanelVisible=false
                 this.cancel()
+                ipc.send('teamState')
               }, text: '好的'}],
           id: 'welcome'    // 用于Shepherd step的唯一标识符
         },
@@ -1074,7 +1084,10 @@ Vue.component('sidebar', {
           text: '安装的应用会显示在这里，左键打开或右键进行更多设置', attachTo: {element: '#saApp-box', on: 'right'},
           buttons: [
             {action: function () {return this.back();},text: '上一步',classes:'button2'},
-            {action: function () {return this.cancel();}, text: '好的'}],
+            {action: function () {
+                this.cancel()
+                ipc.send('appState')
+              }, text: '好的'}],
           id: 'second'    // 用于Shepherd step的唯一标识符
         },]
       });
@@ -1106,7 +1119,7 @@ Vue.component('sidebar', {
               }, text: '了解更多',classes:'button2'},
             {action: function () {
               this.cancel();
-                mainWindow.webContents.send('closeGuideDesktop')
+                ipc.send('desktopState')
               }, text: '好 的',classes:'button3'}],
           id: 'first'    // 用于Shepherd step的唯一标识符
         }]
