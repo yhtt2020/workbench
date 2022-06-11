@@ -953,6 +953,7 @@ Vue.component('sidebar', {
      * 监听全部的隐藏，目前只支持应用底部阴影
      */
     watchAllHasMore(){
+      console.log('更新全部的滚动条')
       this.watchHasMore(document.getElementById('pinGroup'),document.getElementById('divider-inner'))
     },
     sortApps(){
@@ -1596,7 +1597,9 @@ ipc.on('executedAppSuccess', async function (event, args) {
   appVue.$refs.sidePanel.sortApps()
   standAloneAppModel.update(args.app.id, { lastExecuteTime: now }).then((res) => {
   })
-
+  setTimeout(()=>{
+    appVue.$refs.sidePanel.watchAllHasMore()
+  },300)
   //mark插入对appsExecutedCounts的数据统计
   setTimeout(async () => {
     await userStatsModel.incrementValue('appsExecutedCounts')
@@ -1632,6 +1635,9 @@ ipc.on('updateRunningApps', function (event, args) {
     }
   })
   appVue.$refs.sidePanel.sortApps()
+  setTimeout(()=>{
+    appVue.$refs.sidePanel.watchAllHasMore()
+  },300)
 })
 
 ipc.on('updateSetting', function (event, args) {
