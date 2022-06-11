@@ -818,7 +818,9 @@ Vue.component('sidebar', {
       name: 'validate_other'
     })
   },
+
   async mounted () {
+    this.watchAllHasMore()
     //获取当前左侧栏的状态，并设置
    spaceModel.getCurrent().then((space)=>{
         this.currentSpace =space
@@ -947,6 +949,12 @@ Vue.component('sidebar', {
   },
   template: sidebarTpl,
   methods: {
+    /**
+     * 监听全部的隐藏，目前只支持应用底部阴影
+     */
+    watchAllHasMore(){
+      this.watchHasMore(document.getElementById('pinGroup'),document.getElementById('divider-inner'))
+    },
     sortApps(){
       let sorted=_.orderBy(this.apps,(app)=>{
         return [app.processing?1:0,app.lastExecuteTime]
@@ -1551,7 +1559,7 @@ Vue.component('sidebar', {
         } else {
           document.getElementById('saApp-box').style.height = movedY + this.startHeight + 'px'
         }
-        this.watchHasMore(document.getElementById('pinGroup'),document.getElementById('divider-inner'))
+        this.watchAllHasMore()
         //this.watchHasMore(document.getElementById('appGroup'),document.getElementById('appGroupInner'))
       }
     },
@@ -1560,6 +1568,7 @@ Vue.component('sidebar', {
       document.getElementById('pinGroup').style.position = 'relative'
       document.getElementById('pinGroup').style.height = 'auto'
       localStorage.setItem('sidebarDividerMod', 'auto')
+      this.watchAllHasMore()
       appVue.$message.info({ content: '应用栏的高度模式更改为自动模式。拖动分隔条可更改为手动模式。', key: 'dividerMod' })
 
     }
