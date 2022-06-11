@@ -240,8 +240,8 @@ const sidebarTpl = /*html*/`
           <app-manager ref="appManager" :apps="apps" :running-apps="runningApps"></app-manager>
         </li>
       </ul>
-      <div id="saApp-box" class="app-box" style="height: 200px;overflow-x: hidden;overflow-y: hidden;flex:none">
-        <ul id="pinGroup" class="app-task app-items" style="margin-bottom: 0; ">
+      <div id="saApp-box"  class="app-box" style="height: 200px;overflow-x: hidden;overflow-y: hidden;flex:none">
+        <ul id="pinGroup" @scroll="onScroll($event,'divider-inner')" class="app-task app-items" style="margin-bottom: 0; ">
 
           <li v-for="app in apps" @click="executeApp(app)" @mouseenter="hoverApp($event,app)"
             @contextmenu.stop="createMenu(app.id,app)" v-if="app.processing || app.settings.showInSideBar">
@@ -336,8 +336,8 @@ const sidebarTpl = /*html*/`
         <div slot="title">
           拖动：手动，自由调节应用栏高度，可通过滚轮滚动显示隐藏应用；<br>双击：自动，根据应用数量自动调节高度，显示全部内应用
         </div>
-        <div @dblclick.prevent="fitSize" @mousedown="dividerResizeStart" style="cursor: n-resize;padding: 10px 0;">
-          <div style="width: 100%;
+        <div @dblclick.prevent="fitSize" @mousedown="dividerResizeStart" style="cursor: n-resize;padding: 10px 0;position: relative;margin-top: -10px">
+          <div id="divider-inner" class="has-more" style="width: 100%;
     height: 1px;
     background: rgba(199,199,199,0.65);"></div>
         </div>
@@ -678,7 +678,11 @@ const sidebarTpl = /*html*/`
         </ul>
       </div>
     </div>
+
     <div id="bottomsEl" class="bottom-container">
+<!--     <div id="appGroupBottom" style="position: relative;bottom:">-->
+<!--    <div id="appGroupInner"></div>-->
+<!--</div>-->
       <ul class="bottomBar">
         <template>
           <div>
@@ -861,8 +865,6 @@ Vue.component('sidebar', {
     // 	fixed: false //固定
     // }
     if (window.sidebarData === false) {
-      console.log('comp loaded fail')
-      console.log(window.sidebarData)
       this.$store.commit('initItems')
     } else {
       this.$store.state.pinItems = window.sidebarData.state.sidebar.pinItems
@@ -1218,9 +1220,7 @@ Vue.component('sidebar', {
       }
     },
     openBottom (action) {
-      console.log(action)
       if(action==='help'){
-        console.log('help')
         window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/tmpomo'
         return
       }
@@ -1253,6 +1253,27 @@ Vue.component('sidebar', {
         'droppedTaskId': droppedTaskId,
         'adjacentTaskId': adjacentTaskId
       })
+
+    },
+    watchHasMore(scroller,hasMoreEl){
+      var scrollTop = scroller.scrollTop
+//变量windowHeight是可视区的高度
+      var windowHeight = scroller.clientHeight
+//变量scrollHeight是滚动条的总高度
+      var scrollHeight = scroller.scrollHeight;
+      //滚动条到底部的条件
+      if(scrollTop+windowHeight>=scrollHeight-10){
+        hasMoreEl.classList.remove('has-more')
+        //写后台加载数据的函数
+      }else{
+        if(!hasMoreEl.classList.contains('has-more')){
+          hasMoreEl.classList.add('has-more')
+        }
+      }
+    },
+    onScroll(event,hasMoreElSelector){
+     let hasMoreEl= document.getElementById(hasMoreElSelector)
+      this.watchHasMore(event.target,hasMoreEl)
 
     },
     onMove ({
@@ -1396,7 +1417,6 @@ Vue.component('sidebar', {
       this.isPopoverShowing = visible
     },
     shareTask(item){
-      console.log(item)
       let tabs = item.tabs
       let filterList =  tabs.filter(e => !e.url.startsWith('file:///'))    //过滤掉file层面的tab
       let args = []
@@ -1412,7 +1432,6 @@ Vue.component('sidebar', {
         appVue.$message.error('排除系统页面后，没有其他页面，无法分享。')
         return
       }
-      console.log(args)
       ipc.send( 'shareTask', args)
     },
     /**
@@ -1532,7 +1551,8 @@ Vue.component('sidebar', {
         } else {
           document.getElementById('saApp-box').style.height = movedY + this.startHeight + 'px'
         }
-
+        this.watchHasMore(document.getElementById('pinGroup'),document.getElementById('divider-inner'))
+        //this.watchHasMore(document.getElementById('appGroup'),document.getElementById('appGroupInner'))
       }
     },
     fitSize () {
@@ -1724,7 +1744,6 @@ ipc.on('appRedirect', async (event, args) => {
       }
     })
   }
-  console.log(args)
 })
 /**
  * 处理各种文件关联
@@ -1749,18 +1768,8 @@ ipc.on('handleFileAssign', async (event, args) => {
           filePath: args.args.filePath
         }
       })
-      console.log('sended', {
-        app: assignApps[0],
-        background: false,
-        option: {
-          action: 'fileAssign',
-          filePath: args.args.filePath
-        }
-      })
     }
   }
-  console.log(args)
-  console.log('assigneApps', assignApps)
 })
 
 ipc.on('saving', async () => {
@@ -1769,7 +1778,6 @@ ipc.on('saving', async () => {
   appVue.$refs.sidePanel.lastSync=Date.now()
   if (savingIcon.classList.contains('offline')) {
     appVue.$message.success('云空间重新连接成功，已为您实时保持同步。')
-    console.log('重新获取云端空间')
     appVue.$refs.sidePanel.spaceStatus='online'
 
     await appVue.$store.dispatch('getCloudSpaces')
@@ -1802,3 +1810,5 @@ ipc.on('reconnect',async()=>{
   }
 
 })
+
+
