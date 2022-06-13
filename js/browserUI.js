@@ -318,43 +318,46 @@ ipc.on('addTaskFromApps',function(e,data){
 })
 
 ipc.on('addTaskCareer',function(e,data){
-
-  if(data.task.length===2) {
+  console.log(data)
+  if (data.length === 2) {
     let newTaskFirst = {
-      name: data.task[0].taskName,
+      icon:'icons/taskIcon.svg',
+      name: data[0].taskName,
       collapsed: false
     }
-      let taskFirst=tasks.add(newTaskFirst)
-    for (let i = 0; i <= data.task[0].url.length; i++) {
+    let taskFirst = tasks.add(newTaskFirst)
+    for (let i = 0; i <= data[0].url.length; i++) {
       let newTabFirst = {
-        url: data.task[0].url[i],
+        icon: 'icons/tabIcon.svg',
+        title:data[0].tabTitle[i],
+        url: data[0].url[i],
       }
       tasks.get(taskFirst).tabs.add(newTabFirst)
     }
-  }
-    let newTaskSecond = {
-      name: data.task[1].taskName,
-      collapsed:false
-    }
-    let taskSecond=tasks.add(newTaskSecond)
-    for(let i=0;i<=data.task[1].url.length;i++){
-      let newTabSecond= {
 
-        url: data.task[1].url[i]
+    let newTaskSecond = {
+      name: data[1].taskName,
+      collapsed: false
+    }
+    let taskSecond = tasks.add(newTaskSecond)
+    for (let i = 0; i <= data[1].url.length; i++) {
+      let newTabSecond = {
+        url: data[1].url[i],
+        title:data[1].tabTitle[i],
       }
       tasks.get(taskSecond).tabs.add(newTabSecond)
     }
-
-  if(data.task.length===1){
+  }
+  if(data.length===1){
     let newTaskFirst = {
-      name: data.task[0].taskName,
+      name: data[0].taskName,
       collapsed:false
     }
     let taskFirst=tasks.add(newTaskFirst)
-    for(let i=0;i<= data.task[0].url.length;i++){
+    for(let i=0;i<= data[0].url.length;i++){
       let newTabFirst= {
-        // title: data.task[0].tabTitle[i],
-        url: data.task[0].url[i]
+        title:data[0].tabTitle[i],
+        url: data[0].url[i]
       }
       tasks.get(taskFirst).tabs.add(newTabFirst)
     }

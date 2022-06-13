@@ -11,8 +11,8 @@ var tabEditor = require('navbar/tabEditor.js')
 var readerView = require('readerView.js')
 var taskOverlay = require('taskOverlay/taskOverlay.js')
 const bookmark = require('./extras/bookmark/bookmarkSys')
+let settings=require('../js/util/settings/settings')
 
-var settings = require('util/settings/settingsContent')
 
 module.exports = {
   initialize: function () {
@@ -129,19 +129,23 @@ module.exports = {
       }
     })
 
-    function changeBlockingLevel (level) {
-      settings.get('filtering', function (value) {
-        if (!value) {
-          value = {}
-        }
-        value.blockingLevel = level
-        settings.set('filtering', value)
-        updateBlockingLevelUI(level)
-      })
-    }
+    // function changeBlockingLevel (level) {
+    //   settings.get('filtering', function (value) {
+    //     if (!value) {
+    //       value = {}
+    //     }
+    //     value.blockingLevel = level
+    //     settings.set('filtering', value)
+    //     updateBlockingLevelUI(level)
+    //   })
+    // }
 
     ipc.on('blockSetting',(event,args)=>{
-      changeBlockingLevel(args)
+
+      let value = {}
+      value.blockingLevel = args
+      settings.set('filtering', value)
+      updateBlockingLevelUI(args)
     })
 
     ipc.on('saveCurrentPage', async function () {

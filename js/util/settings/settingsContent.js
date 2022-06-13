@@ -87,4 +87,4 @@ window.addEventListener('message', function (e) {
 })
 
 settings.load()
-module.exports = settings
+
