@@ -606,3 +606,7 @@ ipc.on('refreshCircleList', async (event, args) => {
   await window.$store.dispatch('getJoinedCircle', {page: 1, row: 500})
   await window.$store.dispatch('getMyCircle', {page: 1, row: 500})
 })
+
+ipc.on('handleProtocol', (event, args) => {
+  window.location.href = args
+})

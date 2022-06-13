@@ -4,7 +4,7 @@ const { homedir } = require("os");
 var places = require("../../places/places");
 
 class SafariBookmarkRepository {
-  brower = "Safari"
+  browser = "Safari"
   #bookmarkFilePath
 
   constructor(bookmarkFilePath) {
