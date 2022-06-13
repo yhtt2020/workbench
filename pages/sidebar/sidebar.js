@@ -610,3 +610,12 @@ ipc.on('refreshCircleList', async (event, args) => {
 ipc.on('handleProtocol', (event, args) => {
   window.location.href = args
 })
+
+ipc.on('execImportHelper', async () => {
+  let saApp=await require('../util/model/standAloneAppModel.js').get(4)
+  if(saApp){
+    ipc.send('executeApp',{app:saApp})
+  }else{
+    appVue.$message.error({content:'此应用已经被卸载。无法打开。'})
+  }
+})

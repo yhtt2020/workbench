@@ -179,6 +179,10 @@ app.whenReady().then(()=>{
     SidePanel.send('handleProtocol', args)
   })
 
+  ipc.on('openImportHelper', () => {
+    SidePanel.send('execImportHelper')
+  })
+
   /**
    * 浏览器主进程中各任务完成后需要调用的函数
    * @param {string} guideName lowdb中set的键名 如'guideSchedule.modules.noobGuide.accountLogin'
