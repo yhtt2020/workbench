@@ -22,6 +22,8 @@ function addTask () {
   addTab()
 }
 
+
+
 /* creates a new tab */
 
 /*
@@ -310,12 +312,69 @@ ipc.on('addTaskFromApps',function(e,data){
 	let tid=tasks.add(newTask)
 	let newTab= {
       url: data.url || '',
-	  title:data.name
+	    title:data.name
     }
 	tasks.get(tid).tabs.add(newTab)
-
-
 })
+
+ipc.on('addTaskCareer',function(e,data){
+  console.log(data)
+
+  if(data.id===4 || data.id===6 || data.id===8){
+    let newTaskFirst = {
+      name: data.tasks[0].name,
+      collapsed:false
+    }
+    let taskFirst=tasks.add(newTaskFirst)
+
+    data.tasks[0].tabs.forEach(e => {
+      let newTabFirst = {
+        title: e.title,
+        url: e.url
+      }
+      tasks.get(taskFirst).tabs.add(newTabFirst)
+    })
+  }
+  else {
+    let newTaskFirst = {
+      previewImage: 'icons/taskIcon.svg',
+      name: data.tasks[0].name,
+      collapsed: false
+    }
+    let taskFirst = tasks.add(newTaskFirst)
+
+    data.tasks[0].tabs.forEach(e => {
+      let newTabFirst = {
+        title: e.title,
+        url: e.url
+      }
+      tasks.get(taskFirst).tabs.add(newTabFirst)
+    })
+
+
+    let newTaskSecond = {
+      name: data.tasks[1].name,
+      collapsed: false
+    }
+    let taskSecond = tasks.add(newTaskSecond)
+    data.tasks[1].tabs.forEach(e => {
+      let newTabSecond = {
+        title: e.title,
+        url: e.url
+      }
+      tasks.get(taskSecond).tabs.add(newTabSecond)
+    })
+  }
+
+  // setTimeout(()=>{
+  //   for(let i=1;i<tasks.tasks.length;i++){
+  //     let emptyTabList = tasks.tasks[i].tabs.tabs.filter(item=>item.url==='ts://newtab')
+  //     closeTab(emptyTabList[0].id)
+  //   }
+  // },100)
+})
+
+
 ipc.on('openApps',function(){
 	// let url= 'ts://apps'//左斜杠三条是为了统一判断里tab的三条左斜杠，不知道为什么会这样
 	// let findout=false

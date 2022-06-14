@@ -121,7 +121,7 @@ var urlParser = {
         representedURL = new URLSearchParams(new URL(url).search).get('url')
       } catch (e) {}
       if (representedURL) {
-        return representedURL
+        return decodeURI(representedURL) //调整，去除对url的转码，重新转出来以提升其可读性
       } else {
         try {
           var pageName = url.match(/\/pages\/([a-zA-Z]+)\//)

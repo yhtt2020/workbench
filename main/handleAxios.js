@@ -4,6 +4,9 @@ const authApi = require(path.join(__dirname, './js/request/api/authApi.js'))
 const storage = require('electron-localstorage');
 const _path= path.join(app.getPath("userData"), app.getName()+"/", 'userConfig.json');
 const _path_dir = path.dirname(_path);
+const { nanoid } = require('nanoid');
+
+
 if(!fs.existsSync(_path_dir)){
   try{
     fs.mkdirSync(_path_dir)
@@ -14,6 +17,34 @@ storage.setStoragePath(_path);
 global.sharedPath = {extra:storage.getStoragePath()}   //remote官方建议弃用，全局变量在渲染进程中暂时没找到可以替换获取的方法，但是在主进程中全局electronGlobal对象能获取到
 
 app.whenReady().then(()=>{
+  //初始化一下此设备浏览器的新手引导进度信息
+  const markDb = require(__dirname + '/src/util/markdb.js')
+  markDb.init(app.getPath('userData'))
+  const guideRes = markDb.db.get('guideSchedule.hashId').value()
+  if(!guideRes) {
+    markDb.db.set('guideSchedule', {
+      hashId: nanoid(),
+      medal: false,
+      modules: {
+        noobGuide: {
+          accountLogin: false,
+          career: false,
+          migration: false,
+          adBlocking: false,
+          personalise: false
+        },
+        feature: {
+          tasks: false,
+          globalSearch: false,
+          desktop: false,
+          userSpace: false,
+          apps: false,
+          team: false
+        }
+      }
+    }).write()
+  }
+
   //游览器登录
   ipc.on('loginBrowser', async (event, arg) => {
     let result={}
@@ -30,6 +61,8 @@ app.whenReady().then(()=>{
         storage.setItem(`userInfo`, result.data.userInfo)
       }
       event.reply('callback-loginBrowser', result)
+      afterGuide('guideSchedule.modules.noobGuide.accountLogin')
+
     } catch (err) {
       dlog.error(err)
     }
@@ -123,6 +156,137 @@ app.whenReady().then(()=>{
     storage.setStoragePath(global.sharedPath.extra)
     storage.clear()
     global.utilWindow.webContents.send('clearCurrentUser')
+  })
+
+  //------------------------------------------------------->以下用户引导通信部分
+  //获取本地存储的当前设备新手引导进度信息
+  ipc.handle('getNoobGuideSchedule', (event, args) => {
+    //全局储存新手引导页窗体render的信息，后面需要用这个通道主动发回
+    global.fromRender = {
+      guide: event.sender
+    }
+    return markDb.db.get('guideSchedule').value()
+  })
+
+
+  ipc.on('guideMigration', (event, args) => {
+    mainWindow.webContents.send('bookmarkMigration', args)
+    ipc.on('afterMigration', () => {
+      afterGuide('guideSchedule.modules.noobGuide.migration')
+    })
+  })
+
+  ipc.on('openRedirectApps', (event, args) => {
+    SidePanel.send('handleProtocol', args)
+  })
+
+  ipc.on('openImportHelper', () => {
+    SidePanel.send('execImportHelper')
+  })
+
+  let firstGuideVideo = null
+  ipc.on('firstGuideVideo', () => {
+    firstGuideVideo = new BrowserWindow({
+      parent: mainWindow,
+      titleBarStyle: 'hidden',  //windows下隐藏菜单栏
+      width: 800,
+      height: 450,
+      webPreferences: {
+        nodeIntegration: false
+      }
+    })
+    firstGuideVideo.loadURL('https://up.apps.vip/app.mp4')
+    firstGuideVideo.on('ready-to-show',()=>{
+      firstGuideVideo.show()
+      callModal(firstGuideVideo)
+    })
+    firstGuideVideo.on('close', () => {
+      callUnModal(firstGuideVideo)
+      firstGuideVideo = null
+    })
+  })
+
+  ipc.on('getMedal', () => {
+    markDb.db.set('guideSchedule.medal', true).write()
+  })
+
+  /**
+   * 浏览器主进程中各任务完成后需要调用的函数
+   * @param {string} guideName lowdb中set的键名 如'guideSchedule.modules.noobGuide.accountLogin'
+   */
+  function afterGuide(guideName) {
+    markDb.db.set(guideName, true).write()
+    if(global.fromRender && global.fromRender.guide) {
+      global.fromRender.guide.send('scheduleRefresh', markDb.db.get('guideSchedule').value())
+    }
+  }
+
+  //--------------------------------------------------------------------->以下myf
+
+  function sendIPCToMainWindow(action, data) {
+    mainWindow.webContents.send(action, data || {})
+  }
+
+  ipc.on('guideTasks', () => {
+    SidePanel.send('guide',0)
+  })
+
+  ipc.on('guideGlobalSearch', () => {
+    SidePanel.send('guide',1)
+  })
+  ipc.on('guideDesktop', () => {
+    mainWindow.webContents.send('addTab','ts://newtab')
+    setTimeout(()=>{
+      SidePanel.send('guideDesktop')
+    },1000)
+  })
+  ipc.on('guideSpace', () => {
+    SidePanel.send('guide',3)
+  })
+  ipc.on('guideApply', () => {
+    SidePanel.send('guideApplyFirst')
+  })
+  ipc.on('guideTeam', () => {
+    SidePanel.send('guide',5)
+  })
+
+  ipc.on('addTaskCareer',(event,args)=>{
+    sendIPCToMainWindow('addTaskCareer',args)
+  })
+  ipc.on('blockSelect',(event,args)=>{
+    mainWindow.webContents.send('blockSetting',args)
+  })
+
+//--------------------------------------------------------->myf状态管理部分
+  ipc.on('careerState',()=>{
+    afterGuide('guideSchedule.modules.noobGuide.career')
+  })
+  ipc.on('migrationState',()=>{
+    afterGuide('guideSchedule.modules.noobGuide.migration')
+  })
+  ipc.on('adBlockingState',()=>{
+    afterGuide('guideSchedule.modules.noobGuide.adBlocking')
+  })
+  ipc.on('personaliseState',()=>{
+    afterGuide('guideSchedule.modules.noobGuide.personalise')
+  })
+  ipc.on('tasksState',()=>{
+    afterGuide('guideSchedule.modules.feature.tasks')
+  })
+  ipc.on('searchState',()=>{
+    afterGuide('guideSchedule.modules.feature.globalSearch')
+  })
+  ipc.on('appState',()=>{
+    afterGuide('guideSchedule.modules.feature.apps')
+  })
+  ipc.on('desktopState',()=>{
+    afterGuide('guideSchedule.modules.feature.desktop')
+  })
+  ipc.on('spaceState',()=>{
+    afterGuide('guideSchedule.modules.feature.userSpace')
+  })
+  ipc.on('teamState',()=>{
+    afterGuide('guideSchedule.modules.feature.team')
   })
 })
 

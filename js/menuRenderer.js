@@ -10,6 +10,9 @@ var PDFViewer = require('pdfViewer.js')
 var tabEditor = require('navbar/tabEditor.js')
 var readerView = require('readerView.js')
 var taskOverlay = require('taskOverlay/taskOverlay.js')
+const bookmark = require('./extras/bookmark/bookmarkSys')
+let settings=require('../js/util/settings/settings')
+
 
 module.exports = {
   initialize: function () {
@@ -126,6 +129,25 @@ module.exports = {
       }
     })
 
+    // function changeBlockingLevel (level) {
+    //   settings.get('filtering', function (value) {
+    //     if (!value) {
+    //       value = {}
+    //     }
+    //     value.blockingLevel = level
+    //     settings.set('filtering', value)
+    //     updateBlockingLevelUI(level)
+    //   })
+    // }
+
+    ipc.on('blockSetting',(event,args)=>{
+
+      let value = {}
+      value.blockingLevel = args
+      settings.set('filtering', value)
+      updateBlockingLevelUI(args)
+    })
+
     ipc.on('saveCurrentPage', async function () {
       var currentTab = tabs.get(tabs.getSelected())
 
@@ -223,6 +245,10 @@ module.exports = {
 
     ipc.on('goForward', function () {
       webviews.callAsync(tabs.getSelected(), 'goForward')
+    })
+
+    ipc.on('bookmarkMigration', (event, args) => {
+      bookmark.oldImport(args)
     })
   }
 }

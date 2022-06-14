@@ -656,6 +656,9 @@ ipc.on('addTab', function (event, data) {
   })
 })
 
+
+
+
 //可以尝试移动到browserUI中有tab和task的环境，而且能直接捕获从preload传出来的ipc
 //选择到对应的task，再在对应的位置执行addTab
 ipc.on('insertTab', (event, arg) => {
@@ -756,6 +759,9 @@ function createSwitchTask () {
 ipc.on('openSwitch',()=>{
   createSwitchTask()
 })
+
+
+
 ipc.on('closeSwitch',()=>{
   if(switchWindow!==null){
     switchWindow.close()
@@ -780,6 +786,11 @@ ipc.on('openSidebarMenu',()=>{
 
   menu.popup()
 })
+
+ipc.on('sidePanelFocus',()=>{
+ sidePanel.setMouseEnable()
+})
+
 ipc.on('switchToTab',(event,args)=>{
   sendIPCToWindow(mainWindow,'switchToTab',args)
 })
