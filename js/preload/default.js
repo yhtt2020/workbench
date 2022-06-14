@@ -122,3 +122,73 @@ electron.webFrame.executeJavaScript(`
   Notification.requestPermission = requestPermission
   Notification.permission = 'granted'
 `)
+
+
+
+ipc.on('get-content-size', function() {
+  var height = Math.max( document.body.scrollHeight, document.body.offsetHeight,
+    document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight );
+  ipc.send('return-content-size', {
+    width: window.innerWidth,
+    height: height,
+    windowHeight: window.innerHeight,
+    windowWidth: window.innerWidth,
+    scrollBarWidth: window.innerWidth - document.body.clientWidth
+  });
+});
+let fixedElements=[]
+let needShow=[]
+function getFixed(){
+  fixedElements=[]
+  needShow=[]
+  var elems = document.body.getElementsByTagName("*");
+  var len = elems.length
+  for (var i=0;i<len;i++) {
+    if (window.getComputedStyle(elems[i],null).getPropertyValue('position') == 'fixed') {
+      fixedElements.push(elems[i])
+    }
+  }
+}
+// /**
+//  * 判断元素是否可见
+//  * @param el{dom}: dom元素
+//  * @eg: isVisible(document.querySelector(cssSelector));
+//  **/
+// function isVisible(el) {
+//   var loopable = true,
+//     visible = window.getComputedStyle(el).display != 'none' && window.getComputedStyle(el).visibility != 'hidden';
+//
+//   while(loopable && visible) {
+//     el = el.parentNode;
+//
+//     if(el && el != document.body) {
+//       visible = window.getComputedStyle(el).display != 'none' && window.getComputedStyle(el).visibility != 'hidden';
+//     }else {
+//       loopable = false;
+//     }
+//   }
+//
+//   return visible;
+// }
+ipc.on('move-page-to', function(events, page) {
+  var height = Math.max( document.body.scrollHeight, document.body.offsetHeight,
+    document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight );
+  if(page===1){
+    getFixed()
+  }else if(page>1 && window.innerHeight * page <=height){
+    //隐藏页面元素
+    fixedElements.forEach(ele=>{
+        ele.hidden=true
+        needShow.push(ele)
+    })
+  }else{
+    needShow.forEach(ele=>{
+      ele.hidden=false
+    })
+  }
+
+  window.scrollTo(0, window.innerHeight * (page - 1) )
+  setTimeout(function() {
+    ipc.send('return-move-page', page);
+  }, 100)
+});

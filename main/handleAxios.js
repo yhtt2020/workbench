@@ -18,12 +18,13 @@ global.sharedPath = {extra:storage.getStoragePath()}   //remote官方建议弃�
 
 app.whenReady().then(()=>{
   //初始化一下此设备浏览器的新手引导进度信息
-  const markdb = require(__dirname + '/src/util/markdb.js')
-  markdb.init(app.getPath('userData'))
-  const guideRes = markdb.db.get('guideSchedule.hashId').value()
+  const markDb = require(__dirname + '/src/util/markdb.js')
+  markDb.init(app.getPath('userData'))
+  const guideRes = markDb.db.get('guideSchedule.hashId').value()
   if(!guideRes) {
-    markdb.db.set('guideSchedule', {
+    markDb.db.set('guideSchedule', {
       hashId: nanoid(),
+      medal: false,
       modules: {
         noobGuide: {
           accountLogin: false,
@@ -164,7 +165,7 @@ app.whenReady().then(()=>{
     global.fromRender = {
       guide: event.sender
     }
-    return markdb.db.get('guideSchedule').value()
+    return markDb.db.get('guideSchedule').value()
   })
 
 
@@ -175,14 +176,48 @@ app.whenReady().then(()=>{
     })
   })
 
+  ipc.on('openRedirectApps', (event, args) => {
+    SidePanel.send('handleProtocol', args)
+  })
+
+  ipc.on('openImportHelper', () => {
+    SidePanel.send('execImportHelper')
+  })
+
+  let firstGuideVideo = null
+  ipc.on('firstGuideVideo', () => {
+    firstGuideVideo = new BrowserWindow({
+      parent: mainWindow,
+      titleBarStyle: 'hidden',  //windows下隐藏菜单栏
+      width: 800,
+      height: 450,
+      webPreferences: {
+        nodeIntegration: false
+      }
+    })
+    firstGuideVideo.loadURL('https://up.apps.vip/app.mp4')
+    firstGuideVideo.on('ready-to-show',()=>{
+      firstGuideVideo.show()
+      callModal(firstGuideVideo)
+    })
+    firstGuideVideo.on('close', () => {
+      callUnModal(firstGuideVideo)
+      firstGuideVideo = null
+    })
+  })
+
+  ipc.on('getMedal', () => {
+    markDb.db.set('guideSchedule.medal', true).write()
+  })
+
   /**
    * 浏览器主进程中各任务完成后需要调用的函数
    * @param {string} guideName lowdb中set的键名 如'guideSchedule.modules.noobGuide.accountLogin'
    */
   function afterGuide(guideName) {
-    markdb.db.set(guideName, true).write()
+    markDb.db.set(guideName, true).write()
     if(global.fromRender && global.fromRender.guide) {
-      global.fromRender.guide.send('scheduleRefresh', markdb.db.get('guideSchedule').value())
+      global.fromRender.guide.send('scheduleRefresh', markDb.db.get('guideSchedule').value())
     }
   }
 
@@ -193,26 +228,26 @@ app.whenReady().then(()=>{
   }
 
   ipc.on('guideTasks', () => {
-    sidePanel.get().webContents.send('guide',0)
+    SidePanel.send('guide',0)
   })
 
   ipc.on('guideGlobalSearch', () => {
-    sidePanel.get().webContents.send('guide',1)
+    SidePanel.send('guide',1)
   })
   ipc.on('guideDesktop', () => {
     mainWindow.webContents.send('addTab','ts://newtab')
     setTimeout(()=>{
-      sidePanel.get().webContents.send('guideDesktop')
+      SidePanel.send('guideDesktop')
     },1000)
   })
   ipc.on('guideSpace', () => {
-    sidePanel.get().webContents.send('guide',3)
+    SidePanel.send('guide',3)
   })
   ipc.on('guideApply', () => {
-    sidePanel.get().webContents.send('guideApplyFirst')
+    SidePanel.send('guideApplyFirst')
   })
   ipc.on('guideTeam', () => {
-    sidePanel.get().webContents.send('guide',5)
+    SidePanel.send('guide',5)
   })
 
   ipc.on('addTaskCareer',(event,args)=>{

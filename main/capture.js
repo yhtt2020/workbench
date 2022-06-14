@@ -79,7 +79,6 @@ function flattenPNG () {
   })
 }
 
-
 require('electron').BrowserView.prototype.captureFullPage = function(_callback, _options){
   targetWindow = this
   callback = _callback

@@ -4,7 +4,7 @@ var places = require("../../places/places");
 const ipc = require('electron').ipcRenderer
 
 class EdgeBookmarkRepository {
-  brower = "Microsoft Edge"
+  browser = "Microsoft Edge"
   #bookmarkFilePath
 
   constructor(bookmarkFilePath) {
@@ -37,13 +37,13 @@ class EdgeBookmarkRepository {
   //min旧书签方式导入
   static async oldBookmarkImport() {
     //递归处理层级书签
-    function recur(arr, newarr, tag) {
+    function recur(arr, newArr, tag) {
       arr.forEach((e) => {
         if (e.children) {
-          recur(e.children, newarr, e.name);
+          recur(e.children, newArr, e.name);
         } else {
           e.tag = tag ?? "";
-          newarr.push(e);
+          newArr.push(e);
         }
       });
     }
@@ -58,7 +58,6 @@ class EdgeBookmarkRepository {
         edgeBookmarksFilePath
       );
       const bookmark = await edgeBookmark.getBrowserBookmarks();
-      console.log(bookmark);
 
       let newBookmark = [];
       recur(bookmark.children, newBookmark);

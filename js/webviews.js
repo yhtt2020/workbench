@@ -236,9 +236,9 @@ const webviews = {
       ],
       allowPopups:true
     }
-  } else if(sourceUrl == 'ts://noobGuide') {
+  } else if(sourceUrl == 'ts://guide') {
     webPreferences={
-      preload: __dirname + '/pages/noobGuide/preload.js',
+      preload: __dirname + '/pages/guide/preload.js',
       nodeIntegration: true, //node集成开高了
       contextIsolation:false,
       enableRemoteModule: true,
@@ -257,7 +257,7 @@ const webviews = {
   }
   else if(sourceUrl.startsWith('http://localhost:5008/')) {
     webPreferences={
-      preload: __dirname + '/pages/noobGuide/preload.js',
+      preload: __dirname + '/pages/guide/preload.js',
       nodeIntegration: true, //node集成开高了
       contextIsolation:false,
       enableRemoteModule: true,
