@@ -183,6 +183,28 @@ app.whenReady().then(()=>{
     SidePanel.send('execImportHelper')
   })
 
+  let firstGuideVideo = null
+  ipc.on('firstGuideVideo', () => {
+    firstGuideVideo = new BrowserWindow({
+      parent: mainWindow,
+      titleBarStyle: 'hidden',  //windows下隐藏菜单栏
+      width: 800,
+      height: 450,
+      webPreferences: {
+        nodeIntegration: false
+      }
+    })
+    firstGuideVideo.loadURL('https://up.apps.vip/app.mp4')
+    firstGuideVideo.on('ready-to-show',()=>{
+      firstGuideVideo.show()
+      callModal(firstGuideVideo)
+    })
+    firstGuideVideo.on('close', () => {
+      callUnModal(firstGuideVideo)
+      firstGuideVideo = null
+    })
+  })
+
   /**
    * 浏览器主进程中各任务完成后需要调用的函数
    * @param {string} guideName lowdb中set的键名 如'guideSchedule.modules.noobGuide.accountLogin'
