@@ -1413,7 +1413,7 @@ Vue.component('sidebar', {
       }
     },
     openHelpCenter() {
-      this.addTab('ts://noobGuide')
+      this.addTab('ts://guide')
     },
     openGroup () {
       ipc.send('openGroup')
