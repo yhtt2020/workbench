@@ -181,6 +181,7 @@ app.whenReady().then(() => {
         'openDirectory'
       ]
     })
+    if(!!!filePath) return
     // if(args.parentPath){
     //    filePath= dialog.showOpenDialogSync({
     //     title:'导出内容',
