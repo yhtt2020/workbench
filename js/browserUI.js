@@ -312,62 +312,66 @@ ipc.on('addTaskFromApps',function(e,data){
 	let tid=tasks.add(newTask)
 	let newTab= {
       url: data.url || '',
-	  title:data.name
+	    title:data.name
     }
 	tasks.get(tid).tabs.add(newTab)
 })
 
 ipc.on('addTaskCareer',function(e,data){
   console.log(data)
-  if (data.length === 2) {
-    let newTaskFirst = {
-      icon:'icons/taskIcon.svg',
-      name: data[0].taskName,
-      collapsed: false
-    }
-    let taskFirst = tasks.add(newTaskFirst)
-    for (let i = 0; i <= data[0].url.length; i++) {
-      let newTabFirst = {
-        icon: 'icons/tabIcon.svg',
-        title:data[0].tabTitle[i],
-        url: data[0].url[i],
-      }
-      tasks.get(taskFirst).tabs.add(newTabFirst)
-    }
 
-    let newTaskSecond = {
-      name: data[1].taskName,
-      collapsed: false
-    }
-    let taskSecond = tasks.add(newTaskSecond)
-    for (let i = 0; i <= data[1].url.length; i++) {
-      let newTabSecond = {
-        url: data[1].url[i],
-        title:data[1].tabTitle[i],
-      }
-      tasks.get(taskSecond).tabs.add(newTabSecond)
-    }
-  }
-  if(data.length===1){
+  if(data.id===4 || data.id===6 || data.id===8){
     let newTaskFirst = {
-      name: data[0].taskName,
+      name: data.tasks[0].name,
       collapsed:false
     }
     let taskFirst=tasks.add(newTaskFirst)
-    for(let i=0;i<= data[0].url.length;i++){
-      let newTabFirst= {
-        title:data[0].tabTitle[i],
-        url: data[0].url[i]
+
+    data.tasks[0].tabs.forEach(e => {
+      let newTabFirst = {
+        title: e.title,
+        url: e.url
       }
       tasks.get(taskFirst).tabs.add(newTabFirst)
-    }
+    })
   }
-  setTimeout(()=>{
-    for(let i=1;i<tasks.tasks.length;i++){
-      let emptyTabList = tasks.tasks[i].tabs.tabs.filter(item=>item.url==='ts://newtab')
-      closeTab(emptyTabList[0].id)
+  else {
+    let newTaskFirst = {
+      previewImage: 'icons/taskIcon.svg',
+      name: data.tasks[0].name,
+      collapsed: false
     }
-  },100)
+    let taskFirst = tasks.add(newTaskFirst)
+
+    data.tasks[0].tabs.forEach(e => {
+      let newTabFirst = {
+        title: e.title,
+        url: e.url
+      }
+      tasks.get(taskFirst).tabs.add(newTabFirst)
+    })
+
+
+    let newTaskSecond = {
+      name: data.tasks[1].name,
+      collapsed: false
+    }
+    let taskSecond = tasks.add(newTaskSecond)
+    data.tasks[1].tabs.forEach(e => {
+      let newTabSecond = {
+        title: e.title,
+        url: e.url
+      }
+      tasks.get(taskSecond).tabs.add(newTabSecond)
+    })
+  }
+
+  // setTimeout(()=>{
+  //   for(let i=1;i<tasks.tasks.length;i++){
+  //     let emptyTabList = tasks.tasks[i].tabs.tabs.filter(item=>item.url==='ts://newtab')
+  //     closeTab(emptyTabList[0].id)
+  //   }
+  // },100)
 })
 
 
