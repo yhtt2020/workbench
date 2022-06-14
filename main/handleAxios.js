@@ -24,6 +24,7 @@ app.whenReady().then(()=>{
   if(!guideRes) {
     markDb.db.set('guideSchedule', {
       hashId: nanoid(),
+      medal: false,
       modules: {
         noobGuide: {
           accountLogin: false,
@@ -203,6 +204,10 @@ app.whenReady().then(()=>{
       callUnModal(firstGuideVideo)
       firstGuideVideo = null
     })
+  })
+
+  ipc.on('getMedal', () => {
+    markDb.db.set('guideSchedule.medal', true).write()
   })
 
   /**
