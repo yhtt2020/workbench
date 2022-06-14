@@ -612,7 +612,7 @@ ipc.on('handleProtocol', (event, args) => {
 })
 
 ipc.on('execImportHelper', async () => {
-  let saApp=await require('../util/model/standAloneAppModel.js').get(4)
+  let saApp=await require('../util/model/standAloneAppModel.js').getFromPackage('com.thisky.import')
   if(saApp){
     ipc.send('executeApp',{app:saApp})
   }else{

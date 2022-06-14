@@ -178,6 +178,15 @@ module.exports = {
         }
       }
     })
+
+    ipc.on('saveViewCapture',()=>{
+      ipc.send('saveViewCapture', { id: tabs.getSelected() })
+    })
+
+    ipc.on('saveViewFullCapture',()=>{
+      ipc.send('saveViewFullCapture', { id: tabs.getSelected() })
+    })
+
     ipc.on('saveCurrentPageToPdf', async function () {
       var currentTab = tabs.get(tabs.getSelected())
 
