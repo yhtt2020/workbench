@@ -684,7 +684,7 @@ const sidebarTpl = /*html*/`
           <div>
             <a-collapse default-active-key="0" :active-key="sidebarBottom" :bordered="false" @change="changeBottomSize">
               <a-collapse-panel key="1">
-               <li  @click="openBottom('help')">
+               <li  @click="openHelpCenter">
                   <a-button type="default" shape="circle" icon="question-circle"></a-button>
                   <div class="item-title">帮助中心</div>
                 </li>
@@ -1402,7 +1402,6 @@ Vue.component('sidebar', {
       }
     },
     openBottom (action) {
-
       if(action==='help'){
         window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/tmpomo'
         return
@@ -1412,6 +1411,9 @@ Vue.component('sidebar', {
           message: action
         })
       }
+    },
+    openHelpCenter() {
+      this.addTab('ts://noobGuide')
     },
     openGroup () {
       ipc.send('openGroup')
