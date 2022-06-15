@@ -3,7 +3,9 @@ let href = window.location.href
 let { config, api, appConfig }=require('../../server-config.js')
 const tsbSdk = require('../../js/util/tsbSdk.js')
 let ipc=require('electron').ipcRenderer
-const preload = {
+//这个预载入文件用于与服务器进行交互，仅适用于项目路径
+let href = window.location.href
+const server = {
   //osx端说pc登录是否已掉的前置判断
   beforeInit() {
     //先检测node是否登录
@@ -26,8 +28,8 @@ const preload = {
       }
     })
   },
-	init(path) {
-		switch (path) {
+  init(path) {
+    switch (path) {
       case api.getProdNodeUrl(api.NODE_API_URL.USER.CODE):
         this.login()
         break
@@ -36,11 +38,11 @@ const preload = {
         break
       default:
         console.log('在server网站下，但未命中任何预加载处理路径:'+path)
-		}
-	},
-	login() {
+    }
+  },
+  login() {
     if(window.location.href.includes('code=')) {
-      const code = preload.matchIntercept(window.location.href, 'code', '\\&')
+      const code = server.matchIntercept(window.location.href, 'code', '\\&')
       ipc.send('loginBrowser', code)
       ipc.on('callback-loginBrowser', (event, arg) => {
         if(arg.code === 1000 ) {
@@ -54,7 +56,7 @@ const preload = {
         }
       })
     }
-	},
+  },
   /**
    * 正则匹配标记之间的内容，进一次，特殊字符请添加\\
    * @param {String} url
@@ -68,23 +70,17 @@ const preload = {
   }
 }
 
-ipc.on('init', (event, args) => {
-  window.tsbSaApp = args.saApp   //内置应用只需要挂个saApp的信息就可以了不需要像appPreload一样去挂tsbSDK
+if(href.startsWith(config.SERVER_BASE_URL) && !href.startsWith(config.SERVER_BASE_URL + api.API_URL.user.AUTO_LOGIN))
+{
+  server.beforeInit()
+  server.init(href)
+} else if (href.startsWith(config.DEV_NODE_SERVER_BASE_URL)) {
+  const newUrl = window.location.origin + window.location.pathname
+  server.init(newUrl)
+} else if (href.startsWith(config.PROD_NODE_SERVER_BASE_URL)) {
+  const newUrl = window.location.origin + window.location.pathname
+  server.init(newUrl)
+}
 
-  if(href.startsWith(config.SERVER_BASE_URL) && !href.startsWith(config.SERVER_BASE_URL + api.API_URL.user.AUTO_LOGIN))
-  {
-    preload.beforeInit()
-    preload.init(href)
-    tsbSdk.listener()
-  } else if (href.startsWith(config.DEV_NODE_SERVER_BASE_URL)) {
-    const newUrl = window.location.origin + window.location.pathname
-    preload.init(newUrl)
-    tsbSdk.listener()
-  } else if (href.startsWith(config.PROD_NODE_SERVER_BASE_URL)) {
-    const newUrl = window.location.origin + window.location.pathname
-    preload.init(newUrl)
-    tsbSdk.listener()
-  }
-})
 
 

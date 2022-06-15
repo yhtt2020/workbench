@@ -4,32 +4,42 @@ let protocol=require('electron').protocol
  * @type {{initialize(): void}}
  */
 protocolManager={
-  initialize(SidePanel){
-    protocolManager.SidePanel=SidePanel
+  sidePanel:null,
+  electronLog:null,
+  initialize(sidePanel,electronLog){
+    protocolManager.sidePanel=sidePanel
+    protocolManager.electronLog=electronLog
     protocol.registerFileProtocol('tsb', (request, callback) => {
-      try{
-        const url = request.url
-        const urlObj = new URL(url); // sunan://222?aa=bb&cc=dd
-        const { searchParams } = urlObj;
-        if(urlObj.hostname==='app')
-        {
-          //是app协议
-          let action=urlObj.pathname.split('/')[1]
-          if(action==='redirect'){
-            SidePanel.send('appRedirect',{
-              package:searchParams.get('package'),
-              url:searchParams.get('url'),
-              background:searchParams.get('background')!==null?searchParams.get('background'):true}
-            )
-            console.log('是重定向协议')
-            console.log('url=',searchParams.get('url'))
-          }
-        }
-      }catch(e){
-        electronLog.error(e)
-      }
+        protocolManager.handleProtocol(request.url)
     })
   },
+  /**
+   * 处理协议，传递一个实际的协议
+   * @param url
+   */
+  handleProtocol(url){
+    try{
+      const urlObj = new URL(url); // sunan://222?aa=bb&cc=dd
+      const { searchParams } = urlObj;
+      if(urlObj.hostname==='app')
+      {
+        //是app协议
+        let action=urlObj.pathname.split('/')[1]
+        if(action==='redirect'){
+          protocolManager.sidePanel.send('appRedirect',{
+            package:searchParams.get('package'),
+            url:searchParams.get('url'),
+            background:searchParams.get('background')!==null?searchParams.get('background'):true}
+          )
+          // console.log('是重定向协议')
+          // console.log('url=',searchParams.get('url'))
+        }
+      }
+    }catch(e){
+      protocolManager.electronLog.error(e)
+    }
+  },
+
   /**
    * type image,text,link,file
    * @param type image,text,link,file
@@ -56,7 +66,7 @@ protocolManager={
    * @param option
    */
   handleAction(window,action,option){
-    console.log('action',action,'option',option)
+
    switch(action){
         case 'redirect':
           window.view.webContents.loadURL(option.url)

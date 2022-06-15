@@ -240,8 +240,8 @@ const sidebarTpl = /*html*/`
           <app-manager ref="appManager" :apps="apps" :running-apps="runningApps"></app-manager>
         </li>
       </ul>
-      <div id="saApp-box" class="app-box" style="height: 200px;overflow-x: hidden;overflow-y: hidden;flex:none">
-        <ul id="pinGroup" class="app-task app-items" style="margin-bottom: 0; ">
+      <div id="saApp-box"  class="app-box" style="height: 200px;overflow-x: hidden;overflow-y: hidden;flex:none">
+        <ul id="pinGroup" @scroll="onScroll($event,'divider-inner')" class="app-task app-items" style="margin-bottom: 0; ">
 
           <li v-for="app in apps" @click="executeApp(app)" @mouseenter="hoverApp($event,app)"
             @contextmenu.stop="createMenu(app.id,app)" v-if="app.processing || app.settings.showInSideBar">
@@ -265,7 +265,7 @@ const sidebarTpl = /*html*/`
 
                     <img onerror="this.src='../../icons/default.svg'" class="icon sa-app"
                       :style="app.processing? {'border-color':app.userThemeColor!==''?app.userThemeColor:app.themeColor}:{}"
-                      :src="app.logo" />
+                      :src="app.logo" :class="{running:app.processing?true:false}" />
 
                   </a-badge>
                 </div>
@@ -336,8 +336,8 @@ const sidebarTpl = /*html*/`
         <div slot="title">
           拖动：手动，自由调节应用栏高度，可通过滚轮滚动显示隐藏应用；<br>双击：自动，根据应用数量自动调节高度，显示全部内应用
         </div>
-        <div @dblclick.prevent="fitSize" @mousedown="dividerResizeStart" style="cursor: n-resize;padding: 10px 0;">
-          <div style="width: 100%;
+        <div @dblclick.prevent="fitSize" @mousedown="dividerResizeStart" style="cursor: n-resize;padding: 10px 0;position: relative;margin-top: -10px">
+          <div id="divider-inner" class="has-more" style="width: 100%;
     height: 1px;
     background: rgba(199,199,199,0.65);"></div>
         </div>
@@ -678,7 +678,11 @@ const sidebarTpl = /*html*/`
         </ul>
       </div>
     </div>
+
     <div id="bottomsEl" class="bottom-container">
+<!--     <div id="appGroupBottom" style="position: relative;bottom:">-->
+<!--    <div id="appGroupInner"></div>-->
+<!--</div>-->
       <ul class="bottomBar">
         <template>
           <div>
@@ -818,7 +822,9 @@ Vue.component('sidebar', {
       name: 'validate_other'
     })
   },
+
   async mounted () {
+    this.watchAllHasMore()
     //获取当前左侧栏的状态，并设置
    spaceModel.getCurrent().then((space)=>{
         this.currentSpace =space
@@ -865,8 +871,6 @@ Vue.component('sidebar', {
     // 	fixed: false //固定
     // }
     if (window.sidebarData === false) {
-      console.log('comp loaded fail')
-      console.log(window.sidebarData)
       this.$store.commit('initItems')
     } else {
       this.$store.state.pinItems = window.sidebarData.state.sidebar.pinItems
@@ -949,6 +953,12 @@ Vue.component('sidebar', {
   },
   template: sidebarTpl,
   methods: {
+    /**
+     * 监听全部的隐藏，目前只支持应用底部阴影
+     */
+    watchAllHasMore(){
+      this.watchHasMore(document.getElementById('pinGroup'),document.getElementById('divider-inner'))
+    },
     guide(a){
       const stepsList=[
         {
@@ -1442,6 +1452,27 @@ Vue.component('sidebar', {
       })
 
     },
+    watchHasMore(scroller,hasMoreEl){
+      var scrollTop = scroller.scrollTop
+//变量windowHeight是可视区的高度
+      var windowHeight = scroller.clientHeight
+//变量scrollHeight是滚动条的总高度
+      var scrollHeight = scroller.scrollHeight;
+      //滚动条到底部的条件
+      if(scrollTop+windowHeight>=scrollHeight-10){
+        hasMoreEl.classList.remove('has-more')
+        //写后台加载数据的函数
+      }else{
+        if(!hasMoreEl.classList.contains('has-more')){
+          hasMoreEl.classList.add('has-more')
+        }
+      }
+    },
+    onScroll(event,hasMoreElSelector){
+     let hasMoreEl= document.getElementById(hasMoreElSelector)
+      this.watchHasMore(event.target,hasMoreEl)
+
+    },
     onMove ({
       relatedContext,
       draggedContext
@@ -1583,7 +1614,6 @@ Vue.component('sidebar', {
       this.isPopoverShowing = visible
     },
     shareTask(item){
-      console.log(item)
       let tabs = item.tabs
       let filterList =  tabs.filter(e => !e.url.startsWith('file:///'))    //过滤掉file层面的tab
       let args = []
@@ -1599,7 +1629,6 @@ Vue.component('sidebar', {
         appVue.$message.error('排除系统页面后，没有其他页面，无法分享。')
         return
       }
-      console.log(args)
       ipc.send( 'shareTask', args)
     },
     /**
@@ -1719,7 +1748,8 @@ Vue.component('sidebar', {
         } else {
           document.getElementById('saApp-box').style.height = movedY + this.startHeight + 'px'
         }
-
+        this.watchAllHasMore()
+        //this.watchHasMore(document.getElementById('appGroup'),document.getElementById('appGroupInner'))
       }
     },
     fitSize () {
@@ -1727,6 +1757,7 @@ Vue.component('sidebar', {
       document.getElementById('pinGroup').style.position = 'relative'
       document.getElementById('pinGroup').style.height = 'auto'
       localStorage.setItem('sidebarDividerMod', 'auto')
+      this.watchAllHasMore()
       appVue.$message.info({ content: '应用栏的高度模式更改为自动模式。拖动分隔条可更改为手动模式。', key: 'dividerMod' })
 
     }
@@ -1754,7 +1785,9 @@ ipc.on('executedAppSuccess', async function (event, args) {
   appVue.$refs.sidePanel.sortApps()
   standAloneAppModel.update(args.app.id, { lastExecuteTime: now }).then((res) => {
   })
-
+  setTimeout(()=>{
+    appVue.$refs.sidePanel.watchAllHasMore()
+  },300)
   //mark插入对appsExecutedCounts的数据统计
   setTimeout(async () => {
     await userStatsModel.incrementValue('appsExecutedCounts')
@@ -1790,6 +1823,9 @@ ipc.on('updateRunningApps', function (event, args) {
     }
   })
   appVue.$refs.sidePanel.sortApps()
+  setTimeout(()=>{
+    appVue.$refs.sidePanel.watchAllHasMore()
+  },300)
 })
 
 ipc.on('updateSetting', function (event, args) {
@@ -1936,7 +1972,6 @@ ipc.on('appRedirect', async (event, args) => {
       }
     })
   }
-  console.log(args)
 })
 /**
  * 处理各种文件关联
@@ -1961,18 +1996,8 @@ ipc.on('handleFileAssign', async (event, args) => {
           filePath: args.args.filePath
         }
       })
-      console.log('sended', {
-        app: assignApps[0],
-        background: false,
-        option: {
-          action: 'fileAssign',
-          filePath: args.args.filePath
-        }
-      })
     }
   }
-  console.log(args)
-  console.log('assigneApps', assignApps)
 })
 
 ipc.on('saving', async () => {
@@ -1981,7 +2006,6 @@ ipc.on('saving', async () => {
   appVue.$refs.sidePanel.lastSync=Date.now()
   if (savingIcon.classList.contains('offline')) {
     appVue.$message.success('云空间重新连接成功，已为您实时保持同步。')
-    console.log('重新获取云端空间')
     appVue.$refs.sidePanel.spaceStatus='online'
 
     await appVue.$store.dispatch('getCloudSpaces')
@@ -2013,4 +2037,10 @@ ipc.on('reconnect',async()=>{
     savingIcon.classList.add('online')
   }
 
+})
+
+
+ipc.on('getUserInfo',async (event,args)=>{
+  let user=await db.system.where("name").equals("currentUser").first();
+  ipc.sendTo(args.webContentsId,'gotUserInfo',{user:user})
 })

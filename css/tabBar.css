@@ -11,7 +11,8 @@
   padding-top: var(--control-space-top);
   padding-left: var(--control-space-left);
   padding-right: var(--control-space-right);
-  -webkit-app-region: drag; }
+  -webkit-app-region: drag;
+}
 
 /*.drag-container .tab-item.active{*/
 /*  background: rgb(69, 132, 250) !important;*/
@@ -22,10 +23,12 @@
   opacity: 1;
   background: white !important;
   color: #333 !important;
-  box-shadow: 0 0 5px rgba(80, 80, 80, 0.42); }
+  box-shadow: 0 0 5px rgba(80, 80, 80, 0.42);
+}
 
 .gu-transit {
-  opacity: 0 !important; }
+  opacity: 0 !important;
+}
 
 .tab-item.gu-mirror {
   top: var(--control-space-top) !important;
@@ -34,17 +37,21 @@
   line-height: 26px !important;
   margin-top: 6px !important;
   opacity: 1;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25); }
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
+}
 
 .dark-mode .tab-item.gu-mirror {
   background: #545b64 !important;
-  color: white !important; }
+  color: white !important;
+}
 
 .tab-item.gu-transit {
-  opacity: 0 !important; }
+  opacity: 0 !important;
+}
 
 .tab-item.gu-mirror .tab-icon-area {
-  display: none; }
+  display: none;
+}
 
 /* when the tab-group is white, we need a line to separate it from the webviews */
 #navbar:before {
@@ -54,72 +61,89 @@
   position: absolute;
   bottom: 0;
   left: 0;
-  background: rgba(0, 0, 0, 0.075); }
+  background: rgba(0, 0, 0, 0.075);
+}
 
 /* dark colors don't need to be darkened as much for contrast */
 .dark-theme #navbar:before {
-  background: rgba(0, 0, 0, 0.04); }
+  background: rgba(0, 0, 0, 0.04);
+}
 
 .dark-theme.is-edit-mode #navbar:before {
-  background: none; }
+  background: none;
+}
 
 /* navbar buttons */
 #toolbar-navigation-buttons {
   width: 2.375rem;
   transition: 0.1s width;
   white-space: nowrap;
-  overflow: hidden; }
+  overflow: hidden;
+}
 
 #toolbar-navigation-buttons.can-go-forward:hover {
-  width: 4.25rem; }
+  width: 4.25rem;
+}
 
 body.is-edit-mode #toolbar-navigation-buttons {
-  display: none; }
+  display: none;
+}
 
 #back-button, #forward-button {
   opacity: 1;
   transition: none;
-  padding: 0 0.6rem; }
+  padding: 0 0.6rem;
+}
 
 .navbar-action-button:hover {
-  background: rgba(215, 215, 215, 0.47); }
+  background: rgba(215, 215, 215, 0.47);
+}
 
 #back-button {
-  padding-left: 0.4rem; }
+  padding-left: 0.4rem;
+}
 
 #forward-button {
-  margin-left: -0.75em; }
+  margin-left: -0.75em;
+}
 
 #back-button:disabled, #forward-button:disabled {
-  opacity: 0.2; }
+  opacity: 0.2;
+}
 
 #menu-button {
   width: 36px;
-  padding: 0; }
+  padding: 0;
+}
 
 #menu-button {
-  display: none; }
+  display: none;
+}
 
 body.windows #menu-button,
 body.linux #menu-button {
-  display: inline-block; }
+  display: inline-block;
+}
 
 /* tab layout */
 #navbar #tabs {
   display: flex;
   position: relative;
   overflow: hidden;
-  margin-right: 35px; }
+  margin-right: 35px;
+}
 
 #tabs #tabs-inner {
   display: inline-flex;
   width: calc(100% - 30px);
   overflow-x: visible;
   height: 36px;
-  overflow-y: visible; }
+  overflow-y: visible;
+}
 
 #tabs #tabs-inner.disable-scroll {
-  overflow-x: hidden; }
+  overflow-x: hidden;
+}
 
 .tab-item {
   flex: 1;
@@ -135,108 +159,140 @@ body.linux #menu-button {
   /*padding: 0 10px;*/
   border-radius: 6px;
   margin: 6px;
-  /* icons */ }
-  .tab-item:not(.active):hover {
-    background-color: rgba(0, 0, 0, 0.03); }
-  .tab-item .tab-icon-area {
-    margin-left: auto;
-    margin-right: 5px; }
-  .tab-item .tab-icon {
-    position: relative;
-    font-size: 0.7em;
-    padding: 0 0;
-    box-sizing: content-box;
-    margin-left: 5px; }
-    .tab-item .tab-icon:is(.tab-close-button):hover:after {
-      background: rgba(245, 27, 27, 0.78) !important;
-      top: 0;
-      left: -1px; }
-    .tab-item .tab-icon:not(.permission-request-icon):hover:after {
-      content: "";
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: rgba(0, 0, 0, 0.075);
-      position: absolute;
-      top: 2px;
-      left: -3px;
-      z-index: -1; }
-    .tab-item .tab-icon:is(.tab-close-button):hover:after {
-      background: rgba(245, 27, 27, 0.78) !important;
-      top: 0;
-      left: -1px; }
-    .tab-item .tab-icon:is(.tab-close-button):hover:before {
-      z-index: 2;
-      color: white;
-      top: -5px;
-      left: -3px; }
+  /* icons */
+}
+.tab-item:not(.active):hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+.tab-item .tab-icon-area {
+  margin-left: auto;
+  margin-right: 5px;
+}
+.tab-item .tab-icon {
+  position: relative;
+  font-size: 0.7em;
+  padding: 0 0;
+  box-sizing: content-box;
+  margin-left: 5px;
+}
+.tab-item .tab-icon:is(.tab-close-button):hover:after {
+  background: rgba(245, 27, 27, 0.78) !important;
+  color: white !important;
+  top: 0;
+  left: -1px;
+}
+.tab-item .tab-icon:not(.permission-request-icon):hover:after {
+  content: "";
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.075);
+  position: absolute;
+  top: 2px;
+  left: -3px;
+  z-index: -1;
+}
+.tab-item .tab-icon:is(.tab-close-button):hover:after {
+  background: rgba(245, 27, 27, 0.78) !important;
+  color: white !important;
+  top: 0;
+  left: -1px;
+}
+.tab-item .tab-icon:is(.tab-close-button):hover:before {
+  z-index: 2;
+  color: white;
+  top: -5px;
+  left: -3px;
+}
 
 #navbar.show-dividers .tab-item:not(:last-child) {
-  border: 1px solid rgba(128, 128, 128, 0.5); }
+  border: 1px solid rgba(128, 128, 128, 0.5);
+}
 
 .dark-theme #navbar.show-dividers .tab-item:not(:last-child) {
-  border: 1px solid rgba(255, 255, 255, 0.58); }
+  border: 1px solid rgba(255, 255, 255, 0.58);
+}
 
 #navbar.show-dividers:before {
-  background: rgba(182, 182, 182, 0.5); }
+  background: rgba(182, 182, 182, 0.5);
+}
 
 .dark-theme .tab-item:not(.active):hover {
-  background-color: rgba(255, 255, 255, 0.1); }
+  background-color: rgba(255, 255, 255, 0.1);
+}
 
 .dark-theme.theme-background-low-contrast .tab-item:not(.active):hover {
-  background-color: rgba(255, 255, 255, 0.15); }
+  background-color: rgba(255, 255, 255, 0.15);
+}
 
 .windows .tab-item .tab-icon:is(.tab-close-button):hover:after {
   top: 2px;
-  left: -1px; }
+  left: -1px;
+}
 
 .dark-theme .tab-item .tab-icon:hover:after {
-  background: rgba(255, 255, 255, 0.15); }
+  background: rgba(255, 255, 255, 0.15);
+}
 
 .tab-item.active:not(:only-child) {
   /*background: rgba(0, 0, 0, 0.06);*/
   background: #4584fa;
   color: white;
-  /*text-shadow: 0 0 3px rgba(107, 107, 107, 0.42);*/ }
+  /*text-shadow: 0 0 3px rgba(107, 107, 107, 0.42);*/
+}
 
 .use-theme.theme-background-low-contrast .tab-item.active:not(:only-child) {
-  background: #4584fa; }
-  .use-theme.theme-background-low-contrast .tab-item.active:not(:only-child) .title {
-    color: #fff; }
-  .use-theme.theme-background-low-contrast .tab-item.active:not(:only-child) .active .theme-text-color {
-    color: #fff; }
+  background: #4584fa;
+}
+.use-theme.theme-background-low-contrast .tab-item.active:not(:only-child) .title {
+  color: #fff;
+}
+.use-theme.theme-background-low-contrast .tab-item.active:not(:only-child) .active .theme-text-color {
+  color: #fff;
+}
 .use-theme .tab-item.active:not(:only-child) {
-  background: white; }
-  .use-theme .tab-item.active:not(:only-child) .title {
-    color: #333; }
+  background: white;
+}
+.use-theme .tab-item.active:not(:only-child) .title {
+  color: #333;
+}
 
 .dark-theme .tab-item.active:not(:only-child) {
   border: none;
-  background: white; }
-  .dark-theme .tab-item.active:not(:only-child) .title {
-    color: #333; }
-  .dark-theme .tab-item.active:not(:only-child).theme-background-low-contrast .tab-item.active:not(:only-child) {
-    background: rgba(255, 255, 255, 0.1); }
+  background: white;
+}
+.dark-theme .tab-item.active:not(:only-child) .title {
+  color: #333;
+}
+.dark-theme .tab-item.active:not(:only-child).theme-background-low-contrast .tab-item.active:not(:only-child) {
+  background: rgba(255, 255, 255, 0.1);
+}
 
 .tab-item.fade {
-  opacity: 0.55; }
+  opacity: 0.55;
+}
 
 .tab-item.fade:hover {
-  opacity: 1; }
+  opacity: 1;
+}
 
 .is-edit-mode #navbar #tabs-inner::-webkit-scrollbar {
-  height: 0; }
+  height: 0;
+}
 
 /* hide tabs when tab editor is open */
 .is-edit-mode .tab-item {
-  opacity: 0; }
+  opacity: 0;
+}
 
 /* hide the lock icon unless its the current tab */
 .tab-item:not(.active) .icon-tab-not-secure {
-  display: none; }
+  display: none;
+}
 
 .tab-item:hover .title {
-  max-width: calc(100% - 10px); }
+  max-width: calc(100% - 10px);
+}
 
 .tab-item .title {
   font-size: 13px;
@@ -246,32 +302,38 @@ body.linux #menu-button {
   text-overflow: ellipsis;
   display: inline-block;
   overflow: hidden;
-  /* 添加上favicon*/ }
-  .tab-item .title .icon {
-    width: 18px;
-    height: 18px;
-    margin-right: 5px;
-    margin-left: 5px;
-    background: #ffffffbb;
-    border-radius: 6px;
-    margin-top: -3px;
-    vertical-align: middle; }
+  /* 添加上favicon*/
+}
+.tab-item .title .icon {
+  width: 18px;
+  height: 18px;
+  margin-right: 5px;
+  margin-left: 5px;
+  background: #ffffffbb;
+  border-radius: 6px;
+  margin-top: -3px;
+  vertical-align: middle;
+}
 
 /* buttons */
 .windows .no-drag {
   position: absolute;
   right: 0;
   width: 138px;
-  height: 36px; }
+  height: 36px;
+}
 
 .window-drag-area {
-  -webkit-app-region: drag; }
+  -webkit-app-region: drag;
+}
 
 .no-drag {
-  -webkit-app-region: no-drag; }
+  -webkit-app-region: no-drag;
+}
 
 .windows-caption-buttons, body.windows:not(.separate-titlebar) .windows-caption-buttons {
-  -webkit-app-region: no-drag; }
+  -webkit-app-region: no-drag;
+}
 
 .navbar-action-button {
   padding: 0 1rem;
@@ -280,54 +342,67 @@ body.linux #menu-button {
   font-size: 1.4em !important;
   border-radius: 4px;
   margin-top: 6px;
-  -webkit-app-region: no-drag; }
+  -webkit-app-region: no-drag;
+}
 
 body.windows .navbar-action-button:not(:disabled):hover {
-  background-color: rgba(0, 0, 0, 0.15); }
+  background-color: rgba(0, 0, 0, 0.15);
+}
 
 body.windows.dark-theme .navbar-action-button:not(:disabled):hover {
-  background: rgba(255, 255, 255, 0.15); }
+  background: rgba(255, 255, 255, 0.15);
+}
 
 .navbar-action-button.invisible {
-  visibility: hidden; }
+  visibility: hidden;
+}
 
 .navbar-action-button + .navbar-action-button {
-  padding-left: 0.5em; }
+  padding-left: 0.5em;
+}
 
 .navbar-right-actions {
-  margin-right: 2.3em; }
+  margin-right: 2.3em;
+}
 
 .navbar-right-actions #add-tab-button {
   padding: 0;
   width: 28px;
   font-size: 1.6em !important;
-  -webkit-app-region: none; }
+  -webkit-app-region: none;
+}
 
 /* audio button */
 .use-theme .tab-item .tab-audio-button {
-  color: #333; }
+  color: #333;
+}
 
 .tab-item .tab-audio-button {
   vertical-align: text-bottom;
   padding: 0 0.5em 0 0;
-  font-size: .9em !important; }
+  font-size: 0.9em !important;
+}
 
 .tab-item .tab-audio-button:hover:before {
   top: 10px !important;
-  left: 7px !important; }
+  left: 7px !important;
+}
 
 /* reader button */
 .tab-item .reader-button {
   display: none;
   vertical-align: text-bottom;
   padding: 0 0.5em 0 0;
-  font-size: 1.1em !important; }
+  font-size: 1.1em !important;
+}
 
 .tab-item.active .reader-button.can-reader {
-  display: inline-block; }
+  display: inline-block;
+}
 
 .tab-item.active .reader-button.is-reader {
-  display: inline-block; }
+  display: inline-block;
+}
 
 /* permission request buttons */
 .tab-item .tab-icon.permission-request-icon {
@@ -336,59 +411,74 @@ body.windows.dark-theme .navbar-action-button:not(:disabled):hover {
   margin-right: 0.66em;
   margin-top: -0.2em;
   margin-left: -0.3em;
-  border-radius: 0.75em; }
+  border-radius: 0.75em;
+}
 
 .tab-item .tab-icon.permission-request-icon .i {
   vertical-align: middle;
   margin-top: -3px;
-  display: inline-block; }
+  display: inline-block;
+}
 
 .dark-theme .tab-item .tab-icon.permission-request-icon {
-  border-color: rgba(255, 255, 255, 0.5); }
+  border-color: rgba(255, 255, 255, 0.5);
+}
 
 .tab-item .tab-icon.permission-request-icon:hover {
-  background-color: rgba(0, 0, 0, 0.075); }
+  background-color: rgba(0, 0, 0, 0.075);
+}
 
 .dark-theme .tab-item .tab-icon.permission-request-icon:hover {
-  background-color: rgba(255, 255, 255, 0.15); }
+  background-color: rgba(255, 255, 255, 0.15);
+}
 
 .tab-item .tab-icon.permission-request-icon.active {
   background-color: rgba(0, 0, 0, 0.66);
   border-color: transparent;
-  color: white; }
+  color: white;
+}
 
 .dark-theme .tab-item .tab-icon.permission-request-icon.active {
   background-color: rgba(255, 255, 255, 0.9);
   border-color: transparent;
-  color: black; }
+  color: black;
+}
 
 .tab-item:not(.active) .permission-request-icon:not(.active) {
-  display: none; }
+  display: none;
+}
 
 /* in Carbon, close icon is a bit smaller than other icons, enlarge it in order to match with other icons */
 .tab-item .tab-close-button {
   font-size: 1.13em;
-  padding: 0.1em 0.1em 0.1em 0.0em;
-  margin-top: 0.15em; }
+  padding: 0.1em 0.1em 0.1em 0em;
+  margin-top: 0.15em;
+  color: #ffb8b8;
+}
 
 .tab-item .tab-item:hover .tab-close-button:after {
   top: 4px !important;
   left: 7px !important;
-  font-size: 0.9em; }
+  font-size: 0.9em;
+}
 
 /* when the tab is hovered, hide info buttons and show the close button */
 body:not(.touch) .tab-item:hover .tab-info-icon {
-  display: none; }
+  display: none;
+}
 
 body:not(.touch) .tab-item .tab-close-button {
-  display: none; }
+  display: none;
+}
 
 body:not(.touch) .tab-item:hover .tab-close-button {
   display: inline-block;
-  z-index: 1; }
+  z-index: 1;
+}
 
 body.is-focus-mode .navbar-action-button:not(#menu-button) {
-  display: none; }
+  display: none;
+}
 
 /* progress bar */
 .progress-bar-container {
@@ -398,25 +488,31 @@ body.is-focus-mode .navbar-action-button:not(#menu-button) {
   top: 0;
   left: 0;
   margin: 0 0.8em;
-  overflow: hidden; }
+  overflow: hidden;
+}
 
 .progress-bar {
   height: 2px;
   width: 100%;
-  background-color: currentColor; }
+  background-color: currentColor;
+}
 
 body:not(.dark-theme) .progress-bar {
-  opacity: 0.8; }
+  opacity: 0.8;
+}
 
 .p0 {
-  transform: translateX(-100%); }
+  transform: translateX(-100%);
+}
 
 .p25 {
   transform: translateX(-75%);
-  transition: transform 4s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+  transition: transform 4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
 
 .p100 {
   transform: translateX(0%);
-  transition: transform 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+  transition: transform 500ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
 
 /*# sourceMappingURL=tabBar.css.map */

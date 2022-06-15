@@ -71,6 +71,7 @@ function urlMatchesPattern (url, pattern) {
 
 const userscripts = {
   scripts: [], // {options: {}, content}
+  systemScripts:[],//系统级脚本，目前主要使用fav脚本
   loadScripts: function () {
     userscripts.scripts = []
 
@@ -85,51 +86,59 @@ const userscripts = {
       // store the scripts in memory
       files.forEach(function (filename) {
         if (filename.endsWith('.js')) {
-          fs.readFile(path.join(scriptDir, filename), 'utf-8', function (err, file) {
-            if (err || !file) {
-              return
-            }
-
-            var domain = filename.slice(0, -3)
-            if (domain.startsWith('www.')) {
-              domain = domain.slice(4)
-            }
-            if (!domain) {
-              return
-            }
-
-            var tampermonkeyFeatures = parseTampermonkeyFeatures(file)
-            if (tampermonkeyFeatures) {
-              var scriptName = tampermonkeyFeatures['name:local'] || tampermonkeyFeatures.name
-              if (scriptName) {
-                scriptName = scriptName[0]
-              } else {
-                scriptName = filename
-              }
-              userscripts.scripts.push({ options: tampermonkeyFeatures, content: file, name: scriptName })
-            } else {
-              // legacy script
-              if (domain === 'global') {
-                userscripts.scripts.push({
-                  options: {
-                    match: ['*']
-                  },
-                  content: file,
-                  name: filename
-                })
-              } else {
-                userscripts.scripts.push({
-                  options: {
-                    match: ['*://' + domain]
-                  },
-                  content: file,
-                  name: filename
-                })
-              }
-            }
-          })
+          userscripts.loadScriptFile(path.join(scriptDir, filename))
         }
       })
+    })
+  },
+  /**
+   * 根据路径读入单个脚本到内存中
+   * @param path
+   * @param pushArray
+   */
+  loadScriptFile(path,pushArray=userscripts.scripts){
+    fs.readFile(path, 'utf-8', function (err, file) {
+      if (err || !file) {
+        return
+      }
+      let filename=path.substr(path.replace('\\','/').lastIndexOf('/'))
+      var domain = filename.slice(0, -3)
+      if (domain.startsWith('www.')) {
+        domain = domain.slice(4)
+      }
+      if (!domain) {
+        return
+      }
+
+      var tampermonkeyFeatures = parseTampermonkeyFeatures(file)
+      if (tampermonkeyFeatures) {
+        var scriptName = tampermonkeyFeatures['name:local'] || tampermonkeyFeatures.name
+        if (scriptName) {
+          scriptName = scriptName[0]
+        } else {
+          scriptName = filename
+        }
+        pushArray.push({ options: tampermonkeyFeatures, content: file, name: scriptName })
+      } else {
+        // legacy script
+        if (domain === 'global') {
+          pushArray.push({
+            options: {
+              match: ['*']
+            },
+            content: file,
+            name: filename
+          })
+        } else {
+          pushArray.push({
+            options: {
+              match: ['*://' + domain]
+            },
+            content: file,
+            name: filename
+          })
+        }
+      }
     })
   },
   getMatchingScripts: function (src) {
@@ -153,6 +162,9 @@ const userscripts = {
     }
     //新增 判断js缓存目录是否存在，不存在则自动创建缓存目录
     var scriptDir = path.join(window.globalArgs['user-data-path'], 'userscripts')
+    if (!fs.existsSync(scriptDir)) {
+      fs.mkdirSync(scriptDir)
+    }
     const cachePath = scriptDir + '/cache/'
     if (!fs.existsSync(cachePath)) {
       fs.mkdirSync(cachePath)
@@ -307,6 +319,15 @@ return ele
     })
   },
   initialize: function () {
+    userscripts.loadScriptFile(path.join(__dirname,'/pages/fav/content.js'),userscripts.systemScripts)
+    webviews.bindEvent('dom-ready', (tabId)=>{
+      userscripts.systemScripts.forEach((script)=>{
+        userscripts.runScript(tabId, script)
+        console.log('运行了系统脚本',script)
+      })
+    })
+
+
     statistics.registerGetter('userscriptCount', function () {
       return userscripts.scripts.length
     })
@@ -321,6 +342,8 @@ return ele
       }
     })
     webviews.bindEvent('dom-ready', userscripts.onPageLoad)
+    //额外添加我们的强制脚本
+
 
     bangsPlugin.registerCustomBang({
       phrase: '!run',

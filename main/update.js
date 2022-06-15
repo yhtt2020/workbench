@@ -44,7 +44,7 @@ let updateData={}
 function checkUpdate(){
   if(isDevelopmentMode){
     //如果是开发环境，直接不检测，如需调试升级工具，将此处return注释掉即可
-    //return
+    return
   }
   autoUpdater.logger=electronLog
   function showError(error,tag='check'){

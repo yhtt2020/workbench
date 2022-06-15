@@ -867,7 +867,7 @@ function createAllAppsWindow(){
     acceptFirstMouse: true,
     alwaysOnTop: true,
     show:false,
-    resizable:false,
+   // resizable:false,
     frame:false,
     webPreferences: {
       //preload: __dirname+'/pages/saApp/settingPreload.js',
@@ -884,6 +884,9 @@ function createAllAppsWindow(){
         '--app-name=' + app.getName()
       ]
     }
+  })
+  allAppsWindow.on('will-resize',(event)=>{
+    event.preventDefault()
   })
   allAppsWindow.loadURL('file://'+path.join(__dirname,'/pages/saApp/list.html'))
   allAppsWindow.on('close',(event)=>{

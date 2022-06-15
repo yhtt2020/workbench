@@ -539,5 +539,3 @@ ipc.on('quitApp',()=>{
   canQuit=true
   app.quit()
 })
-
-
