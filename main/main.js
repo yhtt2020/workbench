@@ -188,6 +188,8 @@ function createWindow(cb) {
 	})
 }
 
+var clipboardContent=''
+
 function createWindowWithBounds(bounds) {
   let icon=__dirname + '/icons/logo1024.png'
 
@@ -254,6 +256,23 @@ function createWindowWithBounds(bounds) {
     getAllAppsWindow()
     changingSpace=false
   })
+
+  mainWindow.on('focus',()=>{
+    let latestClipboardContent=clipboard.readText()
+    if(latestClipboardContent!==clipboardContent && latestClipboardContent.startsWith('http://') || latestClipboardContent.startsWith('https://'))
+    {
+      clipboardContent=latestClipboardContent
+      dialog.showMessageBox(undefined,{
+        message:'检测到剪贴板存在网址，是否使用新标签打开？',
+        buttons:['是','否']
+      }).then((userSelect)=>{
+        if(userSelect.response===0){
+          sendIPCToWindow(mainWindow,'addTab',{url:latestClipboardContent})
+        }
+      })
+    }
+  })
+
 
 	// Emitted when the window is closed.
 	mainWindow.on('closed', function() {
