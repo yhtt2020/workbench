@@ -48,7 +48,6 @@ const popManager = {
     }, webPreferences)
     options.webPreferences = webPreferences
     let pop = new BrowserWindow(options)
-    console.log(url)
     if(url.startsWith('http') || url.startsWith('https')){
       pop.loadURL(url)
     }else{

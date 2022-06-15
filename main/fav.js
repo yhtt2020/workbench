@@ -14,11 +14,9 @@ app.whenReady().then(() => {
   })
   //采集到的内容本地下载下来保存
   ipc.on('getFavContent', async (event, args) => {
-    console.log('收到采集内容的ipc', args)
     const content = args.content
     let filename = Date.now().toString()//content.src.substr(content.src.lastIndexOf('/'))
     if (content.type === 'img') {
-      console.log(content)
       content.src.substr(content.src.lastIndexOf('/'))
       if (filename.length > 30) {
         if (filename.indexOf('?')) {
@@ -45,7 +43,6 @@ app.whenReady().then(() => {
           testFileName = newFileName.substr(0, newFileName.lastIndexOf('.')) + '-' + i.toString() + newFileName.substr(newFileName.lastIndexOf('.'))
         }
         let lastPath = testFileName
-        console.log(path.join(defaultStorePath, filename), path.join(defaultStorePath, lastPath))
         fs.renameSync(path.join(defaultStorePath, filename), path.join(defaultStorePath, lastPath))
 
         if (fs.existsSync(path.join(defaultStorePath, newFileName))) {
@@ -76,10 +73,9 @@ app.whenReady().then(() => {
       if (process.platform === 'win32') {
         filePath = filePath.replaceAll('/', '\\')
       }
-      await shell.openPath(filePath).catch((e) => console.log(e))
-      console.log(filePath)
+      await shell.openPath(filePath).catch((e) => console.warn(e))
     } catch (e) {
-      console.log(e)
+      console.warn(e)
     }
 
   })
@@ -171,7 +167,6 @@ app.whenReady().then(() => {
   })
 
   ipc.on('exportFile',(event,args)=>{
-    console.log(args)
    let defaultPath= args.parentPath || args.path
     let filePath
     filePath= dialog.showSaveDialogSync({

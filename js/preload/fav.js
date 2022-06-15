@@ -5,8 +5,6 @@ window.addEventListener('message', function (e) {
       ...e.data.content,
       title:window.document.title
     }
-    console.log('最终得到的采集内容', content)
     ipc.send('getFavContent', {content: content})
   }
 })
-console.log('监听fav的preload')
