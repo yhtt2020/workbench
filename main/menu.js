@@ -521,8 +521,8 @@ function buildAppMenu (options = {}) {
           label: l('appMenuAbout').replace('%n', app.name),
           click: function (item, window) {
             var info = [
-              'Min v' + app.getVersion(),
-              'Chromium v' + process.versions.chrome
+              '想天浏览器版本： v' + app.getVersion(),
+              'Chromium内核版本： v' + process.versions.chrome
             ]
             electron.dialog.showMessageBox({
               type: 'info',
