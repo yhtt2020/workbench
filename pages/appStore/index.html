@@ -65,7 +65,7 @@
                   <a-icon type="fire"></a-icon>
         热门应用 ({{getCheckedCount('hot')}})
       </span>
-            <p>推荐应用是我们为您推荐的应用，默认不会安装。</p>
+            <p>推荐应用是我们为您推荐的应用。</p>
             <a-row>
               <a-col :span="3">
                 <a-checkbox  :default-checked="false"
@@ -188,6 +188,23 @@
       }
     ],
     suggest: [
+      {
+        name: 'Dootask',
+        logo: 'https://task.xiangtian.ren/favicon.ico',
+        url: 'https://task.xiangtian.ren/manage/dashboard',
+        installed: '65.9',
+        themeColor: 'rgb(140, 205, 110)',
+        author: '官方集成',
+        site: 'https://www.dootask.com/',
+        checked: true,
+        summary: '一个非常好用的、免费的看板管理系统，可与您的团队方便地开展合作。',
+        settings: {
+          bounds: {
+            width: 1300,
+            height: 800
+          }
+        }
+      },
       {
         name: '文件小助手',
         logo: '../../icons/apps/wechatfile.png',
