@@ -262,6 +262,12 @@ app.whenReady().then(()=>{
   ipc.on('blockSelect',(event,args)=>{
     mainWindow.webContents.send('blockSetting',args)
   })
+  ipc.on('siteTheme',(event,args)=>{
+    mainWindow.webContents.send('themeSelect',args)
+  })
+  ipc.on('selectEngine',(event,args)=>{
+    mainWindow.webContents.send('selectEngine',args)
+  })
 
 //--------------------------------------------------------->myf状态管理部分
   ipc.on('careerState',()=>{

@@ -141,12 +141,44 @@ module.exports = {
     // }
 
     ipc.on('blockSetting',(event,args)=>{
-
       let value = {}
       value.blockingLevel = args
       settings.set('filtering', value)
       updateBlockingLevelUI(args)
     })
+
+    settings.get('siteTheme', function (value) {
+      if (value === true || value === undefined) {
+        siteThemeCheckbox.checked = true
+      } else {
+        siteThemeCheckbox.checked = false
+      }
+    })
+
+    ipc.on('themeSelect',(event,args)=>{
+      let themeSelect;
+      if (args === 1) {
+        themeSelect = true
+      } else {
+        themeSelect = false
+      }
+      settings.set('siteTheme', themeSelect)
+    })
+
+    ipc.on('selectEngine',(event,args)=>{
+      settings.get('searchEngine')
+
+      let engine;
+      if (args === 0) {
+        engine = 'Baidu'
+      }else if(args===1){
+        engine = 'Bing'
+      }else {
+        engine = 'Google'
+      }
+      settings.set('searchEngine',{ name: engine })
+    })
+
 
     ipc.on('saveCurrentPage', async function () {
       var currentTab = tabs.get(tabs.getSelected())

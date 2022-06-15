@@ -60,30 +60,38 @@
           color: #1890ff; }
 
 .shepherd-element.custom1.shepherd-enabled {
-  max-width: 290px;
+  max-width: 190px;
   inset: 0 0 auto 11px !important; }
+  .shepherd-element.custom1.shepherd-enabled .shepherd-text {
+    font-size: 14px; }
   .shepherd-element.custom1.shepherd-enabled .shepherd-button {
     padding: 0.2rem 1rem; }
   .shepherd-element.custom1.shepherd-enabled .shepherd-footer .shepherd-button:last-child {
-    margin-right: 20px; }
+    margin-right: 1px; }
   .shepherd-element.custom1.shepherd-enabled .shepherd-button.shepherd-button-secondary {
     background: #FFFFFF !important;
-    margin-right: 60px !important;
+    padding-left: 1px;
+    margin-right: 32px !important;
     color: #508bfe !important; }
 
 .shepherd-element.custom2.shepherd-enabled {
-  max-width: 290px;
-  inset: -30px 0 auto 43px !important; }
+  max-width: 190px;
+  inset: -33px 0 auto 128px !important; }
+  .shepherd-element.custom2.shepherd-enabled .shepherd-text {
+    font-size: 14px; }
   .shepherd-element.custom2.shepherd-enabled .shepherd-button {
-    padding: 0.2rem 1rem; }
+    padding: 5px 5px; }
   .shepherd-element.custom2.shepherd-enabled .shepherd-footer .shepherd-button:last-child {
-    margin-right: 20px; }
+    margin-right: 1px; }
 
 .shepherd-element.custom3.shepherd-enabled {
-  max-width: 326px;
+  max-width: 230px;
   inset: 0px 0 auto 12px !important; }
+  .shepherd-element.custom3.shepherd-enabled .shepherd-text {
+    font-size: 14px; }
   .shepherd-element.custom3.shepherd-enabled .shepherd-button {
-    padding: 0.2rem 1rem; }
+    padding: 8px 8px;
+    margin-right: 5px; }
   .shepherd-element.custom3.shepherd-enabled .button1.shepherd-button {
     background: #FFFFFF !important;
     color: #508bfe !important; }
@@ -92,18 +100,23 @@
     color: #508bfe !important; }
 
 .shepherd-element.custom4.shepherd-enabled {
-  max-width: 270px;
+  max-width: 190px;
   left: 50% !important;
   top: 10% !important;
   transform: translate(0px, 0px) !important; }
   .shepherd-element.custom4.shepherd-enabled .shepherd-button {
     padding: 0.2rem 1rem; }
+  .shepherd-element.custom4.shepherd-enabled .shepherd-text {
+    font-size: 14px; }
+  .shepherd-element.custom4.shepherd-enabled .shepherd-arrow {
+    display: none !important; }
   .shepherd-element.custom4.shepherd-enabled .button2.shepherd-button {
     background: #FFFFFF !important;
-    margin-right: 60px !important;
+    padding-left: 1px;
+    margin-right: 28px !important;
     color: #508bfe !important; }
   .shepherd-element.custom4.shepherd-enabled .button3.shepherd-button {
-    margin-right: 20px; }
+    margin-right: 1px; }
 
 .shepherd-modal-overlay-container.shepherd-modal-is-visible {
   opacity: 0.1 !important; }
