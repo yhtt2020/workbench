@@ -169,9 +169,9 @@ module.exports = {
       settings.get('searchEngine')
 
       let engine;
-      if (args === 1) {
+      if (args === 0) {
         engine = 'Baidu'
-      }else if(args===2){
+      }else if(args===1){
         engine = 'Bing'
       }else {
         engine = 'Google'

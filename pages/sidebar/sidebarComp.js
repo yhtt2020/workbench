@@ -1087,7 +1087,7 @@ Vue.component('sidebar', {
             {action: function () {
                 this.cancel()
                 ipc.send('appState')
-              }, text: '好的'}],
+              }, text: '好 的'}],
           id: 'second'    // 用于Shepherd step的唯一标识符
         },]
       });
