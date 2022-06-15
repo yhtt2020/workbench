@@ -13,7 +13,8 @@ const modules = [
   'js/preload/passwordFill.js',
   'js/preload/translate.js',
   'server-config.js',
-  'js/preload/server.js'
+  'js/preload/server.js',
+  'js/preload/fav.js'
 ]
 
 function buildPreload() {

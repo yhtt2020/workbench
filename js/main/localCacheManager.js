@@ -1,4 +1,5 @@
 const axios = require("axios");
+const fs=require('fs')
 const config = {
   expireTime: 24 * 60 * 60, //默认缓存有效期为24小时
   cacheExts: [
@@ -15,11 +16,11 @@ if(typeof electronLog!=='undefined'){
   el=electronLog
 }
 let userDataPath=''
-if(typeof app !=='undefined'){
-  //如果是主进程下，有app对象
-  userDataPath=app.getPath('userData')
-}else{
+if(typeof window !=='undefined'){
+  //如果是主进程下，有app对象\
   userDataPath=window.globalArgs['user-data-path']
+}else{
+  userDataPath=require('electron').app.getPath('userData')
 }
 const  cachePath=userDataPath + '/localCache'
 let localCacheManager = {
@@ -136,15 +137,40 @@ let localCacheManager = {
    */
   async fetchUrl(url, path = localCacheManager.tmpPath) {
     //直接下载到本地，不考虑缓存
+
     let {data} = await axios({
       url: url,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+      method:'get',
       responseType: 'arraybuffer',
     })
-    await fs.promises.writeFile(path, data, 'binary')
+    console.log(data)
+    try {
+      await fs.promises.writeFile(path, data, 'binary')
+    }catch (e) {
+      console.log(e)
+    }
   },
+
+  /**
+   * 获取内容并写到本地后，取得内容的类型
+   * @param url
+   * @param path
+   * @returns {Promise<string>}
+   */
+  async fetchContentWithType(url,path){
+    let {data,headers} = await axios({
+      url: url,
+      method:'get',
+      responseType: 'arraybuffer'
+    })
+    try {
+      await fs.promises.writeFile(path, data, 'binary')
+      return headers['content-type']
+    }catch (e) {
+      console.log(e)
+    }
+  },
+
   async downloadFile(url, path) {
 
   },

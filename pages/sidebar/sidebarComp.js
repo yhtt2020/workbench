@@ -1827,3 +1827,7 @@ ipc.on('reconnect',async()=>{
 })
 
 
+ipc.on('getUserInfo',async (event,args)=>{
+  let user=await db.system.where("name").equals("currentUser").first();
+  ipc.sendTo(args.webContentsId,'gotUserInfo',{user:user})
+})
