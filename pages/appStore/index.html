@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>应用市场</title>
+  <script src="../../ext/vue/vue.js"></script>
+  <script src="../../ext/vue/antd.min.js"></script>
+  <link rel="stylesheet" href="../../ext/vue/antd.min.css"/>
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline'"/>
+  <link rel="stylesheet" href="./wizard.css"/>
+</head>
+<body>
+
+<div id="app" style="padding-bottom: 52px">
+  <div id="stepWizard" class="step-wizard">
+    <template>
+      <a-alert v-if="!!!this.isRead" type="info" show-icon closable:after-close="handleClose">
+        <div slot="message">应用推荐</div>
+        <div slot="description">
+          <p style="line-height: 28px">独立应用功能是想天浏览器独有的特色功能，这是一种将网页应用转变为接近桌面客户端的技术。
+            从而<strong>无需安装软件</strong>就可以以独立窗体运行网页。
+            <br>
+            安装应用<strong>不会在您的电脑中下载和安装任何软件</strong>，仅在浏览器左侧栏中加入应用图标以便于您方便使用。
+            <br>详细了解想天浏览器的功能请<a target="_blank" href="https://www.yuque.com/tswork/ngd5zk/mmcfd7">查看这里</a>。
+          </p>
+        </div>
+      </a-alert>
+    </template>
+    <template>
+      <div>
+        <a-tabs default-active-key="2">
+          <a-tab-pane key="2" force-render>
+                 <span slot="tab">
+                  <a-icon type="like"></a-icon>
+        推荐应用 ({{getCheckedCount('suggest')}})
+      </span>
+            <p>强烈推荐应用是我们精选的应用，这些应用可以满足您日常办公效率所需。</p>
+            <a-row class="app" v-for="app in apps.suggest">
+              <a-col class="app-check" :span="2">
+                <a-checkbox :disabled='app.isInstalled' :default-checked="true" :checked="app.checked || app.isInstalled"
+                            @change="onChangeCheck($event,app)"></a-checkbox>
+              </a-col>
+              <a-col :span="3">
+                <img :style="{'border-color':app.themeColor}" class="app-logo" :src="app.logo"/>
+              </a-col>
+              <a-col :span="16">
+                <div class="app-name">{{app.name}} <a target="_blank" v-if="app.author"
+                                                      :href="app.site">（{{app.author}}）</a><span
+                  v-else>(第三方)</span><span class="app-installed">{{app.installed}}%的用户选择安装</span></div>
+                <p class="app-summary">{{app.summary}}</p>
+                <p v-if="Object.keys(app.settings).length>0">
+                  默认设置：
+                  <a-tag v-for="(value,name) in app.settings">
+                    {{settingToWords(name)}}
+                  </a-tag>
+                </p>
+              </a-col>
+              <a-col :span="2">
+                <a-button target="_blank" :href="app.url"> 预览</a-button>
+              </a-col>
+            </a-row>
+          </a-tab-pane>
+          <a-tab-pane key="3">
+                <span slot="tab">
+                  <a-icon type="fire"></a-icon>
+        热门应用 ({{getCheckedCount('hot')}})
+      </span>
+            <p>推荐应用是我们为您推荐的应用，默认不会安装。</p>
+            <a-row>
+              <a-col :span="3">
+                <a-checkbox  :default-checked="false"
+                            @change="onCheckAll($event,'hot')">全选
+                </a-checkbox>
+              </a-col>
+            </a-row>
+            <a-row class="app" v-for="app in apps.hot">
+              <a-col class="app-check" :span="2">
+                <a-checkbox :disabled='app.isInstalled' :default-checked="false" :checked="app.checked || app.isInstalled"
+                            @change="onChangeCheck($event,app)"></a-checkbox>
+              </a-col>
+              <a-col :span="3">
+                <img :style="{'border-color':app.themeColor}" class="app-logo" :src="app.logo"/>
+              </a-col>
+              <a-col :span="16">
+                <div class="app-name">{{app.name}}<a target="_blank" v-if="app.author"
+                                                     :href="app.site">（{{app.author}}）</a><span v-else>(第三方)</span>
+                </div>
+                <p class="app-summary">{{app.summary}}</p>
+              </a-col>
+              <a-col :span="2">
+                <a-button target="_blank" :href="app.url"> 预览</a-button>
+              </a-col>
+            </a-row>
+          </a-tab-pane>
+          <a-tab-pane key="4">
+                <span slot="tab">
+                  <a-icon type="desktop"></a-icon>
+                系统应用
+                </span>
+            <p>系统应用是保障您可以完整使用想天浏览器基础性应用。</p>
+            <a-row class="app" v-for="app in apps.system">
+              <a-col :span="2" class="app-check">
+              </a-col>
+              <a-col :span="3">
+                <img :style="{'border-color':app.themeColor}" class="app-logo" :src="app.logo"/>
+              </a-col>
+              <a-col :span="19">
+                <div class="app-name">{{app.name}} <strong style="font-size: 14px">（已安装）</strong></div>
+                <p class="app-summary">{{app.summary}}</p>
+              </a-col>
+            </a-row>
+          </a-tab-pane>
+        </a-tabs>
+      </div>
+      <div
+        style="text-align: center;position: fixed;bottom: 0;left:0;padding-bottom:20px;padding-top:20px;width: 100vw;background: rgba(243,243,243,0.55);border-top: 1px solid rgba(232,232,232,0.47)">
+        <a-button :loading="installing" type="primary" @click="install()" v-if="this.getCheckedCount()>0">绿色安装 ({{getCheckedCount()}})</a-button>
+      </div>
+    </template>
+  </div>
+</div>
+<script>
+  window.ipc=require('electron').ipcRenderer
+  Vue.use(antd)
+  const tools = require('../util/util.js').tools
+  tools.getWindowArgs(window)
+  const standAloneAppModel = require('../util/model/standAloneAppModel')
+  const storeApps= {
+    system: [
+      {
+        name: '团队协作',
+        logo: '../../icons/svg/chat.svg',
+        themeColor: '#6fafff',
+        summary: '一款具备私聊、群聊、文件分享、投票、随手记等功能的沟通工具。\n' +
+          '                          通过团队协作，您可以与您的团队伙伴共享、协作各种资源。'
+      },
+      {
+        name: '图片编辑器',
+        themeColor: 'rgb(90,170,60)',
+        author: '想天软件',
+        site: 'https://apps.vip',
+        logo: 'https://a.apps.vip/imageEditor/icon.svg',
+        url: 'https://a.apps.vip/imageEditor/',
+        package: 'com.thisky.imageEditor',
+        installed: '85.5',
+        checked: true,
+        summary: '可以为您的图片增加相框、贴纸、文字、进行简单裁减、旋转，还可以添加滤镜。',
+        fileAssign:['image']
+      },
+      {
+        name: '收藏夹',
+        logo: '../../icons/svg/apps.svg',
+        themeColor: '#8618d2',
+        summary: '通过收藏夹，您可以便捷地管理您的书签，构建您自己的个人主页。通过分享功能，可以将收藏内容同步到团队。'
+      },
+      {
+        name: '元社区',
+        logo: '../../icons/apps/yuan.png',
+        themeColor: '#4188ff',
+        summary: '您可以随时免费创建属于您的元社区，元社区可以作为企业内部沟通平台、也可以作为行业交流平台、产品社区。'
+      },
+      {
+        name: '导入助手',
+        logo: '../../pages/import/img/logo.svg',
+        themeColor: '#689aff',
+        summary: '快速导入其他浏览器的书签、密码，设置为您的默认浏览器。'
+      },
+
+      {
+        name: '帮助教程',
+        logo: '../../icons/apps/help.png',
+        url: 'https://www.yuque.com/tswork/ngd5zk/iuguin',
+        package:'com.thisky.helper',
+        installed: '99.9',
+        themeColor: '#ff7b42',
+        author: '想天软件',
+        site: 'https://apps.vip/',
+        checked: true,
+        summary: '帮助手册，让你从零开始学会掌握想天浏览器。',
+        settings: {
+          bounds: {
+            width: 1200,
+            height: 800
+          },
+          alwaysTop: false,
+          showInSideBar: true,
+        }
+      }
+    ],
+    suggest: [
+      {
+        name: '文件小助手',
+        logo: '../../icons/apps/wechatfile.png',
+        url: 'https://filehelper.weixin.qq.com/',
+        installed: '99.5',
+        themeColor: '#07c160',
+        author: '微信官方',
+        site: 'https://weixin.qq.com/',
+        checked: true,
+        summary: '微信官方文件小助手，扫码即可与微信互传文件，非常便捷。',
+        settings: {
+          bounds: {
+            width: 540,
+            height: 540
+          },
+          alwaysTop: true,
+          showInSideBar: true,
+        }
+      },
+      {
+        name: '小小时光机',
+        themeColor: 'rgb(35,205,120)',
+        author: '想天软件',
+        site: 'https://apps.vip',
+        logo: 'https://a.apps.vip/timer/icon.svg',
+        url: 'https://a.apps.vip/timer',
+        installed: '95.1',
+        package: 'com.thisky.timer',
+        checked: true,
+        summary: '免费、简约的倒计时工具，具备常规倒计时功能，并将不断加入番茄钟、纪念日倒计时等功能，是您时间管理的神器。',
+        settings: {
+          bounds: {
+            width: 500,
+            height: 370
+          },
+          alwaysTop: true,
+          showInSideBar: true,
+        }
+      },
+      {
+        name: '网易云音乐',
+        author: '网易',
+        installed: '71.3',
+        site: 'https://corp.163.com/gb/about/overview.html',
+        logo: 'https://s1.music.126.net/style/favicon.ico',
+        themeColor: 'rgb(220,0,25)',
+        checked: true,
+        url: 'https://music.163.com/',
+        summary: '有态度的音乐网站。',
+        settings: {
+        }
+      },
+    ],
+    hot: [
+      {
+        name: '轻流',
+        logo: 'data:image/png;base64,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',
+        themeColor: '#256AEA',
+        author: '轻流',
+        site: 'https://qingflow.com',
+        url: 'https://qingflow.com/promo/96c2244c/想天浏览器',
+        checked: false,
+        summary: '一款业务流程管理系统，可以通过可视化的方法创建、管理你的审批流程。10人以内免费使用。',
+      },
+      {
+        name: '小鹅通管理后台',
+        logo: 'https://admin.xiaoe-tech.com/logo-64.ico',
+        author: '小鹅通',
+        site: 'https://www.xiaoe-tech.com/',
+        themeColor: '#256AEA',
+        checked: false,
+        url: 'https://admin.xiaoe-tech.com/login_page?channel=5670-8121#/register',
+        summary: '常用的saas应用管理后台，可以快速开通和管理你的知识店铺。'
+      },
+
+      {
+        name: '万年历',
+        logo: 'https://qq.ip138.com/favicon.ico',
+        themeColor: 'rgb(110,180,55)',
+        checked: false,
+        url: 'https://qq.ip138.com/day/',
+        summary: '可以显示全年日历，结合法定节假日显示，让你的工作更有盼头。'
+      },
+
+      {
+        name: '证件加水印',
+        logo: '../../icons/default.svg',
+        themeColor: '#1155cc',
+        checked: false,
+        url: 'http://watermark.dxcweb.com/',
+        summary: '一键给证件加上水印，纯前端实现，开源免费。'
+      },
+      {
+        name: '为知笔记',
+        logo: 'https://www.wiz.cn/favicon.ico',
+        themeColor: 'rgb(70,140,255)',
+        checked: false,
+        url: 'https://www.wiz.cn/xapp/',
+        summary: '一款好用的在线笔记软件。'
+      }, {
+        name: '即时设计',
+        logo: 'https://img.js.design/assets/webImg/favicon.ico',
+        themeColor: 'rgb(25,30,40)',
+        checked: false,
+        url: 'https://js.design/workspace',
+        summary: '在同一个地方，构思、设计、协作，让你和团队更加高效。'
+      },
+    ]
+  }
+  var appVue = new Vue({
+    el: '#app',
+    data () {
+      return {
+        isRead:'',
+        ipc: window.ipc,
+        current: 0,
+        installing:false,
+        apps:{}
+      }
+    },
+    computed:{
+
+    },
+    beforeCreate () {
+    },
+    mounted () {
+      this.isRead=localStorage.getItem('hasRead')
+      this.reload()
+    },
+    methods: {
+      async reload(){
+        let temp=storeApps
+        for (const app of temp.suggest) {
+          app.isInstalled=await this.checkInstalled(app)
+        }
+        for (const app of temp.hot) {
+          app.isInstalled=await this.checkInstalled(app)
+        }
+
+        this.apps=[]
+        this.apps=temp
+      },
+      async checkInstalled(app){
+
+        if(app.package){
+          return await standAloneAppModel.isInstalled(app.package)
+        }else{
+          return await standAloneAppModel.isInstalledByUrl(app.url)
+        }
+      },
+      handleClose(){
+        localStorage.setItem('hasRead','true')
+      },
+      settingToWords (setting) {
+        return standAloneAppModel.settingToWords(setting)
+      },
+      async install () {
+        this.installing=true
+        //找出选中的
+        let needInstallApps = []
+        this.apps.suggest.forEach((item) => {
+          if (item.checked && item.isInstalled===false) {
+            let needInstallApp = {...item}
+            delete needInstallApp.installed
+            delete needInstallApp.checked
+            needInstallApps.push(needInstallApp)
+          }
+        })
+        this.apps.hot.forEach((item) => {
+          if (item.checked && item.isInstalled===false) {
+            let needInstallAppHot = {...item}
+            delete needInstallAppHot.checked
+            needInstallApps.push(needInstallAppHot)
+          }
+        })
+        appVue.$message.loading({content:'正在安装选择的应用，请稍候。', duration:0,key:'install'})
+        let installed = []
+        for(let i=0;i<needInstallApps.length;i++){
+          needInstallApps[i].id=1001+i
+          installed.push(await standAloneAppModel.install(needInstallApps[i].url, needInstallApps[i]))
+        }
+        installed.forEach(appId=>{
+          ipc.send('installApp',{id:appId,background:true})
+        })
+        appVue.$message.info({type:'success',content:'成功安装'+installed.length+'个独立应用到左侧栏。', duration:3000,key:'install'})
+        this.reload()
+        this.installing=false
+      },
+      //选中全部
+      onCheckAll (e, type) {
+        this.apps[type].forEach(item => {
+          item.checked = e.target.checked
+        })
+      },
+      //获取选中的数量
+      getCheckedCount (type = '') {
+        let count = 0
+        if (type === '') {
+          this.apps.suggest.forEach((item) => {
+            if (item.checked && item.isInstalled===false) {
+              count++
+            }
+          })
+          this.apps.hot.forEach((item) => {
+            if (item.checked && item.isInstalled===false) {
+              count++
+            }
+          })
+        } else {
+          this.apps[type].forEach((item) => {
+            if (item.checked  && item.isInstalled===false) {
+              count++
+            }
+          })
+        }
+        return count
+      },
+      //checkbox选择回调
+      onChangeCheck (event, app) {
+        app.checked = event.target.checked
+      },
+      dontInstall(){
+        localStorage.setItem('suggest', '1')
+        this.close()
+      },
+      close () {
+        ipc.send('closeWizard')
+      }
+    }
+  })
+</script>
+
+
+<style>
+  .app {
+    border-bottom: 1px solid #ddd;
+    padding-top: 10px;
+    font-size: 13px;
+  }
+
+  .app-name {
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .app-summary {
+    color: #999;
+    height: 38px;
+  }
+
+  .app-installed {
+    font-size: 15px;
+    font-weight: normal;
+    padding-left: 15px;
+  }
+
+  .app-check {
+    padding-top: 13px;
+  }
+
+  .app-logo {
+    background: white;
+    width: 48px;
+    height: 48px;
+    border-radius: 100%;
+    padding: 2px;
+    border: 3px solid #ccc;
+  }
+</style>
+</body>
+</html>
