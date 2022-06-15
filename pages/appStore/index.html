@@ -14,7 +14,7 @@
 <div id="app" style="padding-bottom: 52px">
   <div id="stepWizard" class="step-wizard">
     <template>
-      <a-alert v-if="!!!this.isRead" type="info" show-icon closable:after-close="handleClose">
+      <a-alert v-if="!this.hasRead" closable type="info" show-icon  :after-close="handleClose">
         <div slot="message">应用推荐</div>
         <div slot="description">
           <p style="line-height: 28px">独立应用功能是想天浏览器独有的特色功能，这是一种将网页应用转变为接近桌面客户端的技术。
@@ -301,7 +301,7 @@
     el: '#app',
     data () {
       return {
-        isRead:'',
+        hasRead:'',
         ipc: window.ipc,
         current: 0,
         installing:false,
@@ -314,7 +314,7 @@
     beforeCreate () {
     },
     mounted () {
-      this.isRead=localStorage.getItem('hasRead')
+      this.hasRead=localStorage.getItem('hasRead')
       this.reload()
     },
     methods: {
@@ -339,6 +339,8 @@
         }
       },
       handleClose(){
+        console.log('st')
+        this.hasRead='true'
         localStorage.setItem('hasRead','true')
       },
       settingToWords (setting) {
