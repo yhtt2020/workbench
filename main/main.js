@@ -3,6 +3,7 @@ const fs = require('fs')
 const path = require('path')
 const electronLog=require('electron-log')
 let forceClose = false //是否强制退出应用
+var clipboardContent=''
 const {
   app, // Module to control application life.
   protocol, // Module to control protocol handling
@@ -188,7 +189,7 @@ function createWindow(cb) {
 	})
 }
 
-var clipboardContent=''
+
 
 function createWindowWithBounds(bounds) {
   let icon=__dirname + '/icons/logo1024.png'
@@ -259,7 +260,7 @@ function createWindowWithBounds(bounds) {
 
   mainWindow.on('focus',()=>{
     let latestClipboardContent=clipboard.readText()
-    if(latestClipboardContent!==clipboardContent && latestClipboardContent.startsWith('http://') || latestClipboardContent.startsWith('https://'))
+    if(latestClipboardContent!==clipboardContent && (latestClipboardContent.startsWith('http://') || latestClipboardContent.startsWith('https://')))
     {
       clipboardContent=latestClipboardContent
       dialog.showMessageBox(undefined,{

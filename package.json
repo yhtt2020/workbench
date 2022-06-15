@@ -1,8 +1,8 @@
 {
-  "name": "tsbrowser_dev1",
+  "name": "tsbrowser",
   "productName": "想天浏览器",
   "author": "Thisky",
-  "version": "3.1.10",
+  "version": "3.1.23",
   "description": "一款针对工作场景的极简浏览器，帮助你提升效率，保持专注",
   "electronVersion": "19.0.0",
   "main": "main.build.js",
