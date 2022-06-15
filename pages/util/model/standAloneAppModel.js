@@ -1,3 +1,4 @@
+const appStoreData = require('../../appStore/app.js')
 const db = require('../../../js/util/database.js').db
 const serverConfig = require('../../../server-config.js').config
 const tools = require('../util.js').tools;
@@ -112,6 +113,10 @@ const standAloneAppModel = {
       await db.standAloneApps.update(timer.id,{url:'https://a.apps.vip/timer',logo:'https://a.apps.vip/timer/icon.svg'})
     }
 
+    if(!await standAloneAppModel.isInstalled('com.thisky.appStore')){
+      let appStoreData=require('../../appStore/app.js')
+      standAloneAppModel.installFromJson(appStoreData)
+    }
 
     let helper= await db.standAloneApps.get({package:'com.thisky.helper'})
     if(!!!helper){
