@@ -1,11 +1,12 @@
 @charset "UTF-8";
 .sa-app {
   border-radius: 50%;
-  border: 2px solid rgba(176, 176, 176, 0.53);
   padding: 1px;
   width: 30px !important;
   height: 30px !important;
   object-fit: cover; }
+  .sa-app.running {
+    border: 2px solid white; }
 
 .app-name-popover {
   overflow: hidden;

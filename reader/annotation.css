@@ -1,0 +1,106 @@
+.annotator-hl {
+  cursor: pointer;
+  background: rgba(255, 255, 0, 0.3); }
+
+.annotator-h1 {
+  cursor: pointer;
+  background: rgba(0, 0, 255, 0.3); }
+
+.annotator-h2 {
+  cursor: pointer;
+  background: rgba(0, 255, 127, 0.3); }
+
+.annotator-h3 {
+  cursor: pointer;
+  color: #ffffff;
+  background: rgba(255, 0, 0, 0.55); }
+
+.annotator-h4 {
+  cursor: pointer;
+  color: white;
+  background: rgba(0, 0, 0, 0.3); }
+
+.annotator-h5 {
+  cursor: pointer;
+  background: rgba(0, 91, 84, 0.3); }
+
+.annotation {
+  position: absolute;
+  right: 0;
+  top: 0;
+  color: #333;
+  width: 200px;
+  border-left: 8px solid #fff;
+  padding-left: 5px;
+  border-color: rgba(0, 0, 255, 0.3);
+  box-sizing: border-box;
+  font-family: "Segoe UI", "Helvetica Neue", "Helvetica", Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.428571429;
+  background: white !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* transition: top .1s; */ }
+
+.annotation .color-block {
+  margin-top: 5px;
+  cursor: pointer;
+  margin-right: 1px;
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  border-bottom: 2px solid #fff; }
+
+.annotation .save {
+  font-size: 12px;
+  text-decoration: none;
+  background: #1E90FF;
+  color: rgba(255, 255, 255, 0.69);
+  cursor: pointer;
+  border: solid 1px #1E90FF;
+  line-height: 16px;
+  padding: 3px;
+  border-radius: 4px;
+  margin-right: 10px;
+  margin-bottom: 5px; }
+  .annotation .save:hover {
+    box-shadow: 0 0 3px #689aff;
+    color: white; }
+
+.annotation .delete {
+  cursor: pointer;
+  font-size: 12px;
+  text-decoration: none;
+  border: solid 1px #ccc;
+  line-height: 16px;
+  padding: 3px;
+  border-radius: 4px;
+  margin-right: 10px;
+  color: #666; }
+  .annotation .delete:hover {
+    box-shadow: 0 0 3px rgba(108, 108, 108, 0.34);
+    color: #333; }
+
+.content {
+  position: relative; }
+
+.ignore,
+.ignore1 {
+  user-select: none;
+  background: whitesmoke; }
+
+.block {
+  display: inline-block; }
+
+.textDesc {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 90%;
+  height: 51px;
+  padding: 5px;
+  resize: none;
+  box-sizing: border-box;
+  line-height: 1; }
+
+/*# sourceMappingURL=annotation.css.map */

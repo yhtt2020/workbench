@@ -200,9 +200,15 @@ app.whenReady().then(()=>{
       firstGuideVideo.show()
       callModal(firstGuideVideo)
     })
-    firstGuideVideo.on('close', () => {
+    function closeGuideVideo(){
       callUnModal(firstGuideVideo)
       firstGuideVideo = null
+    }
+    firstGuideVideo.on('close', () => {
+      closeGuideVideo()
+    })
+    firstGuideVideo.on('blur',()=>{
+      closeGuideVideo()
     })
   })
 

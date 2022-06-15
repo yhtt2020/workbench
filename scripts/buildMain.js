@@ -14,6 +14,7 @@ const modules = [
   'main/sidePanel.js',
   'main/bindIPC.js',
   'main/appManager.js',
+  'main/popManager.js',
   'main/siteCard.js',
   'main/downloadCard.js',
   'main/userScript.js',
@@ -34,6 +35,7 @@ const modules = [
   'main/mobileMod.js',
   'main/wizard.js',
   'main/messageCenter.js',
+  'main/fav.js',
   'main/globalSearch.js'
 ]
 

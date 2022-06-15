@@ -566,12 +566,25 @@ const appManager = {
       //todo 根据实际需求更改
       saApp.url = config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN
     }
+    if (saApp.package === 'com.thisky.fav' && isDevelopmentMode) {
+      // 当为开发环境下的时候，将团队强行更改为本地开发
+      //todo 根据实际需求更改
+      //saApp.url ='/pages/fav/index.html'
+      //saApp.type='local'
+      saApp.url = 'http://localhost:8080/'
+    }else if(saApp.package==='com.thisky.fav'){
+      saApp.url='/pages/fav/index.html'
+      saApp.type='local'
+    }
 
     remote.enable(appView.webContents)
     if (saApp.type === 'local') {
       appView.webContents.loadURL('file://' + path.join(__dirname, saApp.url))
     } else {
       appView.webContents.loadURL(saApp.url)
+    }
+    if (saApp.package === 'com.thisky.fav' && isDevelopmentMode) {
+      appView.webContents.openDevTools()
     }
     appView.webContents.on('did-navigate-in-page', (event, url) => {
       if(!appWindow.webContents.isDestroyed())
@@ -1322,9 +1335,14 @@ app.whenReady().then(() => {
     appManager.protocolManager.handleFileAssign(args.type,args.args,args.target)
   })
 
+  //处理TSB协议，对象传入url参数即可
+  ipc.on("handleTsbProtocol",(event,args)=>{
+    appManager.protocolManager.handleProtocol(args.url)
+  })
+
   app.whenReady().then(() => {
     //注册tsb协议
-    appManager.protocolManager.initialize(SidePanel)
+    appManager.protocolManager.initialize(SidePanel,electronLog)
   })
 
 

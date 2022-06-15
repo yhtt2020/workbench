@@ -165,7 +165,7 @@ function createView(existingViewId, id, webPreferencesString, boundsString, even
   // show an "open in app" prompt for external protocols
 
   function handleExternalProtocol(e, url, isInPlace, isMainFrame, frameProcessId, frameRoutingId) {
-    var knownProtocols = ['http', 'https', 'file', 'min', 'about', 'data', 'javascript', 'chrome'] // TODO anything else? tsb是新增的协议
+    var knownProtocols = ['http', 'https', 'file', 'min', 'about', 'data', 'javascript', 'chrome','tsb'] // TODO anything else? tsb是新增的协议
     if (!knownProtocols.includes(url.split(':')[0])) {
       var externalApp = app.getApplicationNameForProtocol(url)
       if (externalApp) {
@@ -464,6 +464,34 @@ ipc.on('getCapture', function (e, data) {
     }
     img = img.resize({width: data.width, height: data.height})
     mainWindow.webContents.send('captureData', {id: data.id, url: img.toDataURL()})
+  })
+})
+
+/**
+ * 获得高清的截图，并回传给收藏夹添加页面的fav让它去挂载截图
+ */
+ipc.on('getHDCapture',(event,args)=>{
+  var view = viewMap[args.id]
+  if (!view) {
+    return
+  }
+
+  view.webContents.capturePage().then(function (img) {
+    var size = img.getSize()
+    if (size.width === 0 && size.height === 0) {
+      return
+    }
+    const dir=app.getPath('userData')+'/captureTmp/'
+    const filename=dir+Date.now()+'.jpg'
+    if(!fs.existsSync(dir)){
+      fs.mkdirSync(dir)
+    }
+    fs.writeFileSync(filename,img.toJPEG(100))
+    if(args.favWindowId){
+      //如果收藏夹id存在，则直发过去
+      webContents.fromId(args.favWindowId).send('gotHdCaptureData', {id: args.id, url: filename})
+    }
+    mainWindow.webContents.send('hDCaptureData', {id: args.id, url: filename})
   })
 })
 
