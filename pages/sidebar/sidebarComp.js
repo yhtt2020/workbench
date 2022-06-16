@@ -969,6 +969,7 @@ Vue.component('sidebar', {
               }, secondary: true, text: '了解更多'},
             {action: function () {
                 this.cancel();
+                ipc.send('exitGuide')
                 ipc.send('tasksState')
               }, text: '好的'}],
           id: 'welcome'    // 用于Shepherd step的唯一标识符
@@ -981,6 +982,7 @@ Vue.component('sidebar', {
               }, secondary: true, text: '了解更多'},
             {action: function () {
                 this.cancel()
+                ipc.send('exitGuide')
                 ipc.send('searchState')
               }, text: '好的'}],
           id: 'welcome'    // 用于Shepherd step的唯一标识符
@@ -995,6 +997,7 @@ Vue.component('sidebar', {
               }, secondary: true, text: '了解更多'},
             {action: function () {
               this.cancel()
+                ipc.send('exitGuide')
                 ipc.send('spaceState')
               }, text: '好的'}],
           id: 'welcome'    // 用于Shepherd step的唯一标识符
@@ -1010,6 +1013,7 @@ Vue.component('sidebar', {
             {action: function () {
                 appVue.$refs.sidePanel.userPanelVisible=false
                 this.cancel()
+                ipc.send('exitGuide')
                 ipc.send('teamState')
               }, text: '好的'}],
           id: 'welcome'    // 用于Shepherd step的唯一标识符
@@ -1096,6 +1100,7 @@ Vue.component('sidebar', {
             {action: function () {return this.back();},text: '上一步',classes:'button2'},
             {action: function () {
                 this.cancel()
+                ipc.send('exitGuide')
                 ipc.send('appState')
               }, text: '好 的'}],
           id: 'second'    // 用于Shepherd step的唯一标识符
@@ -1129,6 +1134,7 @@ Vue.component('sidebar', {
               }, text: '了解更多',classes:'button2'},
             {action: function () {
               this.cancel();
+                ipc.send('exitGuide')
                 ipc.send('desktopState')
               }, text: '好 的',classes:'button3'}],
           id: 'first'    // 用于Shepherd step的唯一标识符
@@ -1935,27 +1941,39 @@ ipc.on('closeUserSidePanel',(event,args)=>{
  appVue.$refs.sidePanel.userPanelVisible=false
 })
 
-ipc.on('guide',(event,args)=>{
-    if(args===5){
+ipc.on('guide',async (event, args) => {
+  let current;
+  if (args === 5) {
+    current = await db.system.where('name').equals('currentUser').first()
+    if(current.value.uid !== 0){
       appVue.$refs.sidePanel.toggleUserPanel()
-      // appVue.$refs.sidePanel.userPanelVisible=true
-      setTimeout(()=>{
+      setTimeout(() => {
         appVue.$refs.sidePanel.focus()
         appVue.$refs.sidePanel.guide(args)
-      },500)
+        ipc.send('enterGuide')
+      }, 500)
     }
-    else {
-      appVue.$refs.sidePanel.focus()
-      appVue.$refs.sidePanel.guide(args)
+    if(current.value.uid === 0){
+     console.log('请先登录')
     }
+    // appVue.$refs.sidePanel.userPanelVisible=true
+  } else {
+    ipc.send('enterGuide')
+    appVue.$refs.sidePanel.focus()
+    appVue.$refs.sidePanel.guide(args)
+  }
 })
 
 ipc.on('guideApplyFirst',()=>{
+  ipc.send('enterGuide')
   appVue.$refs.sidePanel.focus()
   appVue.$refs.sidePanel.guideApplyFirst()
 })
 
 ipc.on('guideDesktop',()=>{
+  setTimeout(() => {
+    ipc.send('enterGuide')
+  }, 1200)
   appVue.$refs.sidePanel.focus()
   appVue.$refs.sidePanel.guideDesktop()
 })

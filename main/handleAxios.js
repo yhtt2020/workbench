@@ -268,7 +268,12 @@ app.whenReady().then(()=>{
   ipc.on('selectEngine',(event,args)=>{
     mainWindow.webContents.send('selectEngine',args)
   })
-
+  ipc.on('enterGuide',(item,window)=>{
+    sendIPCToWindow(window, 'enterGuide')
+  })
+  ipc.on('exitGuide',(item,window)=>{
+    sendIPCToWindow(window, 'exitGuide')
+  })
 //--------------------------------------------------------->myf状态管理部分
   ipc.on('careerState',()=>{
     afterGuide('guideSchedule.modules.noobGuide.career')

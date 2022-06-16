@@ -322,8 +322,10 @@ function buildAppMenu (options = {}) {
           click: function (item, window) {
             if (isFocusMode) {
               isFocusMode = false
+              console.log(window)
               sendIPCToWindow(window, 'exitFocusMode')
             } else {
+              console.log(window)
               isFocusMode = true
               sendIPCToWindow(window, 'enterFocusMode')
             }

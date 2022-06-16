@@ -330,7 +330,8 @@ ipc.on('addTaskCareer',function(e,data){
     data.tasks[0].tabs.forEach(e => {
       let newTabFirst = {
         title: e.title,
-        url: e.url
+        url: e.url,
+
       }
       tasks.get(taskFirst).tabs.add(newTabFirst)
     })
