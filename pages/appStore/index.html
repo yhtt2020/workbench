@@ -29,7 +29,7 @@
     <template>
       <div>
         <a-tabs default-active-key="2">
-          <a-tab-pane key="2" force-render>
+          <a-tab-pane v-if="apps" key="2" force-render>
                  <span slot="tab">
                   <a-icon type="like"></a-icon>
         推荐应用 ({{getCheckedCount('suggest')}})
@@ -60,7 +60,7 @@
               </a-col>
             </a-row>
           </a-tab-pane>
-          <a-tab-pane key="3">
+          <a-tab-pane v-if="apps" key="3">
                 <span slot="tab">
                   <a-icon type="fire"></a-icon>
         热门应用 ({{getCheckedCount('hot')}})
@@ -92,7 +92,7 @@
               </a-col>
             </a-row>
           </a-tab-pane>
-          <a-tab-pane key="4">
+          <a-tab-pane v-if="apps" key="4">
                 <span slot="tab">
                   <a-icon type="desktop"></a-icon>
                 系统应用
@@ -112,7 +112,7 @@
           </a-tab-pane>
         </a-tabs>
       </div>
-      <div
+      <div v-if="this.getCheckedCount()>0"
         style="text-align: center;position: fixed;bottom: 0;left:0;padding-bottom:20px;padding-top:20px;width: 100vw;background: rgba(243,243,243,0.55);border-top: 1px solid rgba(232,232,232,0.47)">
         <a-button :loading="installing" type="primary" @click="install()" v-if="this.getCheckedCount()>0">绿色安装 ({{getCheckedCount()}})</a-button>
       </div>
@@ -132,7 +132,8 @@
         logo: '../../icons/svg/chat.svg',
         themeColor: '#6fafff',
         summary: '一款具备私聊、群聊、文件分享、投票、随手记等功能的沟通工具。\n' +
-          '                          通过团队协作，您可以与您的团队伙伴共享、协作各种资源。'
+          '                          通过团队协作，您可以与您的团队伙伴共享、协作各种资源。',
+        package:'com.thisky.dootask'
       },
       {
         name: '图片编辑器',
@@ -322,13 +323,11 @@
         ipc: window.ipc,
         current: 0,
         installing:false,
-        apps:{}
+        apps:null
       }
     },
     computed:{
 
-    },
-    beforeCreate () {
     },
     mounted () {
       this.hasRead=localStorage.getItem('hasRead')
@@ -384,13 +383,12 @@
         appVue.$message.loading({content:'正在安装选择的应用，请稍候。', duration:0,key:'install'})
         let installed = []
         for(let i=0;i<needInstallApps.length;i++){
-          needInstallApps[i].id=1001+i
           installed.push(await standAloneAppModel.install(needInstallApps[i].url, needInstallApps[i]))
         }
         installed.forEach(appId=>{
           ipc.send('installApp',{id:appId,background:true})
         })
-        appVue.$message.info({type:'success',content:'成功安装'+installed.length+'个独立应用到左侧栏。', duration:3000,key:'install'})
+        appVue.$message.open({type:'success',content:'成功安装'+installed.length+'个独立应用到左侧栏。', duration:3000,key:'install'})
         this.reload()
         this.installing=false
       },
@@ -402,6 +400,9 @@
       },
       //获取选中的数量
       getCheckedCount (type = '') {
+        if(!!!this.apps){
+          return 0
+        }
         let count = 0
         if (type === '') {
           this.apps.suggest.forEach((item) => {
@@ -426,10 +427,6 @@
       //checkbox选择回调
       onChangeCheck (event, app) {
         app.checked = event.target.checked
-      },
-      dontInstall(){
-        localStorage.setItem('suggest', '1')
-        this.close()
       },
       close () {
         ipc.send('closeWizard')
