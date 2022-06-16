@@ -75,7 +75,6 @@
 
 /* navbar buttons */
 #toolbar-navigation-buttons {
-  width: 2.375rem;
   transition: 0.1s width;
   white-space: nowrap;
   overflow: hidden;
@@ -92,7 +91,7 @@ body.is-edit-mode #toolbar-navigation-buttons {
 #back-button, #forward-button {
   opacity: 1;
   transition: none;
-  padding: 0 0.6rem;
+  padding: 0 0rem;
 }
 
 .navbar-action-button:hover {
@@ -100,11 +99,11 @@ body.is-edit-mode #toolbar-navigation-buttons {
 }
 
 #back-button {
-  padding-left: 0.4rem;
+  padding-left: 0rem;
 }
 
 #forward-button {
-  margin-left: -0.75em;
+  margin-left: 0em;
 }
 
 #back-button:disabled, #forward-button:disabled {
