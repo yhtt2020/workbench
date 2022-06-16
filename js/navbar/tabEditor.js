@@ -84,7 +84,7 @@ const tabEditor = {
   hide: function () {
     if(!toolbar.expanded){
       tabEditor.container.hidden = true
-      tabEditor.addButton.hidden=true
+      tabEditor.addButton.hidden=false
       tabEditor.tabsEl.classList.remove('fixWidth')
     }
     tabEditor.container.removeAttribute('style')
