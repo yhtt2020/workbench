@@ -222,7 +222,7 @@ app.whenReady().then(()=>{
    */
   function afterGuide(guideName) {
     markDb.db.set(guideName, true).write()
-    if(global.fromRender && global.fromRender.guide) {
+    if(global.fromRender && !global.fromRender.guide.isDestroyed()) {
       global.fromRender.guide.send('scheduleRefresh', markDb.db.get('guideSchedule').value())
     }
   }
