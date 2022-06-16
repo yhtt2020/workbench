@@ -450,6 +450,9 @@ body.windows.dark-theme .navbar-action-button:not(:disabled):hover {
   margin-top: 0.15em;
   color: #ffb8b8;
 }
+.windows .tab-item .tab-close-button{
+  margin-top: 1px;
+}
 
 .tab-item  .tab-item:hover .tab-close-button:after {
   top: 4px !important;
