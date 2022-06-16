@@ -1,7 +1,7 @@
 
 const { config } = require(path.join(__dirname, '//server-config.js'))
 const remote = require('@electron/remote/main')
-
+const _ =require('lodash')
 /**
  * 运行中的应用窗体，结构{window:窗体对象,saApp:独立窗体app对象}
  * @type {*[]}
@@ -20,6 +20,20 @@ const appManager = {
   dockBadge: 0,
   settingWindow: null,
   protocolManager:require('./js/main/protocolManager'),
+  /**
+   * 朝运行中的应用发送IPC
+   * @param pkg
+   * @param event
+   * @param args
+   */
+  sendIPCToApp(pkg,event,args){
+    let win=appManager.getWindowByPackage(pkg)
+    if(win){
+      win.window.view.webContents.send(event,args)
+    }else{
+      return false
+    }
+  },
   /**
    * 单个更新app信息
    * @param id
@@ -332,6 +346,15 @@ const appManager = {
       }
     }
     return null
+  },
+  /**
+   * 根据包名获得运行中的窗体
+   * @param pkg
+   */
+  getWindowByPackage(pkg){
+    return _.find(processingAppWindows,(win)=>{
+      return win.saApp.package===pkg
+    })
   },
   /**
    * 通过appid获取到对应的运行的window对象
