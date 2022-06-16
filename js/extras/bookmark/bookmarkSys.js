@@ -5,11 +5,9 @@ const EdgeBookmarkRepository = require('./edgeBookmarkRepository')
 const bookmark = {
   oldImport(name) {
     if(name === 'chrome') {
-      ChromeBookmarkRepository.oldBookmarkImport()
+      ChromeBookmarkRepository.newBookmarkImport()
     } else if(name === 'edge') {
-      EdgeBookmarkRepository.oldBookmarkImport()
-    } else if(name === 'safari') {
-      SafariBookmarkRepository.oldBookmarkImport()
+      EdgeBookmarkRepository.newBookmarkImport()
     }
   }
 };

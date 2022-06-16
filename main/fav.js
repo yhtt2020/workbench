@@ -8,6 +8,20 @@ app.whenReady().then(() => {
   configDb.init(app.getPath('userData'))
   const defaultStorePath = configDb.getStorePath()
 
+  //------------------>
+  let canCloseInterval = false
+  ipc.on('canCloseInterval', (event, args) => {
+    canCloseInterval = true
+  })
+  let interval = setInterval(() => {
+    mainWindow.webContents.send('getUserDataPath', defaultStorePath)
+    if(canCloseInterval) {
+      clearInterval(interval)
+    }
+  }, 5000)
+  //以上部分解决子进程中无法获得到当前收藏夹的storePath路径的问题
+  //-----------------
+
   if (!fs.existsSync(defaultStorePath)) fs.mkdirSync(defaultStorePath)
   ipc.on('getUserInfo', (event, args) => {
     SidePanel.send('getUserInfo', { webContentsId: event.sender.id })

@@ -1,5 +1,11 @@
 const { exists, mkdirSync, readFile, unlink, writeFile } = require("fs");
-
+const ipc = require('electron').ipcRenderer
+let favStorePath = ''
+ipc.on('getUserDataPath', (event, args) => {
+  favStorePath = args
+  console.log(favStorePath, '哈哈啊哈哈啊哈哈')
+  ipc.send('canCloseInterval')
+})
 
 const fileHelpers = {
   //异步封装   判断文件是否存在函数
@@ -59,6 +65,48 @@ const fileHelpers = {
         }
       }).catch(error => reject(error))
     })
+  },
+
+  //---------------------------------收藏夹书签的耦合api>
+  //创建一个url后缀类型的文件
+  addUrlFile(title, url, folderPath) {
+    const ext = '.url'
+    let urlTpl = `
+      [DEFAULT]
+      [InternetShortcut]
+      URL=${url}
+    `
+    fs.writeFileSync((favStorePath + folderPath + '/' + title + ext).replaceAll('//', '/'), urlTpl, 'utf-8')
+  },
+
+  //创建书签文件夹
+  addBookmarkFolder(folderPath) {
+    if(!fs.existsSync((favStorePath + folderPath).replaceAll('//', '/'))) {
+      mkdirSync((favStorePath + folderPath).replaceAll('//', '/'))
+    }
+  },
+
+  //创建书签根目录和改变favStorePath
+  addRootFolder(fileName) {
+    if(!fs.existsSync((favStorePath + '/' + fileName).replaceAll('//', '/'))) {
+      mkdirSync((favStorePath + '/' + fileName).replaceAll('//', '/'))
+      favStorePath = `${favStorePath}/${fileName}`
+    }
+  },
+
+  //递归处理原始书签(edge、chrome)
+  recurBookmark(bookmarkObj, prevFolderName = null) {
+    let currentFloderName
+    if(bookmarkObj.type === 'url') {
+      currentFloderName = prevFolderName ?? '/'
+      fileHelpers.addUrlFile(bookmarkObj.name.replaceAll('/', '!'), bookmarkObj.url, currentFloderName)
+    } else {
+      currentFloderName = prevFolderName ? `${prevFolderName}/${bookmarkObj.name}` : `/${bookmarkObj.name}`
+      fileHelpers.addBookmarkFolder(currentFloderName)
+      bookmarkObj.children.forEach(v => {
+        fileHelpers.recurBookmark(v, currentFloderName)
+      })
+    }
   }
 
 };

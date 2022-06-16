@@ -81,6 +81,39 @@ class ChromeBookmarkRepository {
     }
   }
 
+  //收藏夹书签方式导入
+  static async newBookmarkImport() {
+
+    try {
+      const chromeBookmarksFilePath =
+        platform() === "darwin"
+          ? `${homedir()}/Library/Application Support/Google/Chrome/Default/Bookmarks`
+          : `${homedir()}\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Bookmarks`;
+
+      const chromeBookmark = new ChromeBookmarkRepository(
+        chromeBookmarksFilePath
+      );
+      const bookmark = await chromeBookmark.getBrowserBookmarks();
+
+      //创建书签根目录
+      fileHelpers.addRootFolder(`Chrome${new Date().getMonth() + 1}月${new Date().getDate()}日导入`)
+
+      //往收藏夹的文件目录写入书签文件
+      bookmark.children.forEach(v => {
+        fileHelpers.recurBookmark(v)
+      })
+
+      setTimeout(() => {
+        ipc.send('message',{type:'success',config:{content: 'Chrome书签导入成功', key: Date.now()}})
+        ipc.send('afterMigration')
+        ipc.send('reloadFav')
+      }, 5000)
+    } catch (error) {
+      console.log(error)
+      ipc.send('message',{type:'error',config:{content: `Chrome书签导入失败!${error}!`, key: Date.now()}})
+    }
+  }
+
 }
 
 module.exports = ChromeBookmarkRepository
