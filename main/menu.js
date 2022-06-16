@@ -6,7 +6,6 @@ const {
 } = require('electron-devtools-installer')
 
 const devPlugin = {}
-
 devPlugin[VUEJS3_DEVTOOLS.id] = { installed: false }
 devPlugin[VUEJS_DEVTOOLS.id] = { installed: false }
 devPlugin[REACT_DEVELOPER_TOOLS.id] = { installed: false }
@@ -108,7 +107,7 @@ function buildAppMenu (options = {}) {
     }
   }
 
-  let isToolbar = true
+
   ipc.on('changeToolbar', () => {
     isToolbar = false
   })
