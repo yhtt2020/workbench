@@ -1881,9 +1881,9 @@ ipc.on('runAutoRunApps', function (event, args) {
       ipc.send('executeApp', { app: app, background: true })
     }
   })
-  if (!localStorage.getItem('suggest')) {
-    ipc.send('wizard', { page: 'apps' })
-  }
+  // if (!localStorage.getItem('suggest')) {
+  //   ipc.send('wizard', { page: 'apps' })
+  // }
 })
 
 ipc.on('appBadge', function (event, args) {

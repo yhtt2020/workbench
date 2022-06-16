@@ -1,3 +1,4 @@
+const appStoreData = require('../../appStore/app.js')
 const db = require('../../../js/util/database.js').db
 const serverConfig = require('../../../server-config.js').config
 const tools = require('../util.js').tools;
@@ -7,7 +8,9 @@ const systemAppPackage=[
   'com.thisky.import',
   'com.thisky.helper',
   'com.thisky.imageEditor',
-  'com.thisky.nav'
+  'com.thisky.nav',
+  'com.thisky.appStore',
+  'com.thisky.com'
 ]  //包名为上述包名的判定为系统应用
 const standAloneAppModel = {
   async initialize() {
@@ -35,11 +38,6 @@ const standAloneAppModel = {
     //   await standAloneAppModel.setAppSetting(nav.id,{showInSideBar:true})
     //   db.standAloneApps.update(nav.id,{id:3,package:'com.thisky.nav'})
     // }
-    let nav = await  db.standAloneApps.get({name:'收藏夹'})
-    db.standAloneApps.update(nav.id,{
-      package:'com.thisky.nav',
-      url: '/pages/apps/index.html',
-    })
     if(group){
       db.standAloneApps.update(group.id,{
         name:'团队沟通',
@@ -115,6 +113,10 @@ const standAloneAppModel = {
       await db.standAloneApps.update(timer.id,{url:'https://a.apps.vip/timer',logo:'https://a.apps.vip/timer/icon.svg'})
     }
 
+    if(!await standAloneAppModel.isInstalled('com.thisky.appStore')){
+      let appStoreData=require('../../appStore/app.js')
+      standAloneAppModel.installFromJson(appStoreData)
+    }
 
     let helper= await db.standAloneApps.get({package:'com.thisky.helper'})
     if(!!!helper){
@@ -267,6 +269,21 @@ const standAloneAppModel = {
     return await db.standAloneApps.delete(appId)
   },
   /**
+   * 从json安装应用
+   * @param json
+   * @returns {Promise<void>}
+   */
+  async installFromJson(json){
+    return await standAloneAppModel.install(json.url,json)
+  },
+  async isInstalled (package) {
+    let app = await standAloneAppModel.getFromPackage(package)
+    return !!app
+  },
+  async isInstalledByUrl(url){
+    return !! await db.standAloneApps.get({'url':url})
+  },
+  /**
    * 安装应用
    * @param url 安装的web应用地址
    * @param app 配置参数
@@ -297,7 +314,17 @@ const standAloneAppModel = {
       unreadCount: 0,
       showInSideBar: app.showInSideBar || false
     }
+    let hasInstalled=false
+    if(app.package){
+      hasInstalled=standAloneAppModel.isInstalled(app.package)
+      if(!hasInstalled)
+      {
+        return false
+      }
+    }
+
     return await db.standAloneApps.put(appInstall)
+
   },
   async getAllApps(option={}) {
     let result=[]
@@ -350,14 +377,14 @@ const standAloneAppModel = {
   async setAppSetting(id, settings) {
     let app = await db.standAloneApps.get(id)
     if (!!!app) {
-      console.log('app不存在')
+      console.warn('app不存在')
     } else {
       let DBSavedSettings = JSON.parse(app.settings)
       let newSettings = Object.assign(DBSavedSettings, settings)
       await db.standAloneApps.update(id, {"settings": JSON.stringify(newSettings)}).then((result) => {
         return true
       }).catch((err) => {
-        console.log('存储app的setting失败')
+        console.warn('存储app的setting失败')
       })
     }
   },
@@ -422,32 +449,6 @@ const standAloneAppModel = {
         unreadCount: 0,
       },
       {
-        id:3,
-        name: '收藏夹',
-        logo: '../../icons/svg/apps.svg',
-        summary: '收集你的灵感，集锦',
-        preload: '/pages/apps/preload.js',
-        type: 'local',
-        package: 'com.thisky.nav',
-        url: '/pages/apps/index.html',
-        themeColor: '#7c1ad0',
-        userThemeColor: '',
-        createTime: Date.now(),
-        updateTime: Date.now(),
-        accountAvatar: '',
-        order: 0,
-        useCount: 0,
-        lastExecuteTime: Date.now(),
-        settings: JSON.stringify({
-          bounds: {
-            width: 1200,
-            height: 800
-          },
-          showInSideBar:true,
-        }),
-        unreadCount: 0,
-      },
-      {
         id:8,
         name: '超级收藏夹',
         logo: '../../pages/fav/fav.svg',
@@ -469,7 +470,7 @@ const standAloneAppModel = {
             width: 1200,
             height: 800
           },
-          showInSideBar:true,
+          showInSideBar:false,
         }),
         unreadCount: 0,
       },
@@ -496,7 +497,7 @@ const standAloneAppModel = {
             width: 920,
             height: 720
           },
-          showInSideBar:true
+          showInSideBar:false
         }),
         unreadCount: 1,
       },
@@ -529,10 +530,15 @@ const standAloneAppModel = {
             height: 800
           },
           alwaysTop: false,
-          showInSideBar: true,
-        })
+          showInSideBar: false,
+        }),
       }
     ]
+    let appStoreData=require('../../appStore/app.js')
+    await standAloneAppModel.installFromJson(appStoreData)
+
+
+
     return await db.standAloneApps.bulkAdd(defaultApps)
   },
   /**

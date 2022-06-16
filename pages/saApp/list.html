@@ -57,7 +57,7 @@ text-overflow:ellipsis; ">
             </div>
             <a-menu slot="overlay" >
               <a-menu-item @click="openSetting(app.id)" key="setting"> <a-icon type="setting"></a-icon>设置</a-menu-item>
-              <a-menu-item @click="uninstall(app.id)" v-if="app.id>10" key="uninstall"> <a-icon type="delete"></a-icon>卸载 </a-menu-item>
+              <a-menu-item @click="uninstall(app.id)" v-if="!app.isSystemApp" key="uninstall"> <a-icon type="delete"></a-icon>卸载 </a-menu-item>
             </a-menu>
             </a-dropdown>
           </a-col>
@@ -84,7 +84,7 @@ text-overflow:ellipsis; ">
 
                 <a-menu slot="overlay" >
                   <a-menu-item @click="openSetting(app.id)" key="setting"> <a-icon type="setting"></a-icon>设置</a-menu-item>
-                  <a-menu-item @click="uninstall(app.id)" v-if="app.id>10" key="uninstall"> <a-icon type="delete"></a-icon>卸载 </a-menu-item>
+                  <a-menu-item @click="uninstall(app.id)" v-if="!app.isSystemApp" key="uninstall"> <a-icon type="delete"></a-icon>卸载 </a-menu-item>
                 </a-menu>
             </a-dropdown>
               </div>
@@ -111,7 +111,7 @@ text-overflow:ellipsis; ">
               </div>
             <a-menu slot="overlay" >
               <a-menu-item @click="openSetting(app.id)" key="setting"> <a-icon type="setting"></a-icon>设置</a-menu-item>
-              <a-menu-item @click="uninstall(app.id)" v-if="app.id>10" key="uninstall"> <a-icon type="delete"></a-icon>卸载 </a-menu-item>
+              <a-menu-item @click="uninstall(app.id)" v-if="!app.isSystemApp" key="uninstall"> <a-icon type="delete"></a-icon>卸载 </a-menu-item>
             </a-menu>
             </a-dropdown>
 
@@ -189,12 +189,12 @@ text-overflow:ellipsis; ">
           saAppModel.getAllApps({order:'lastExecuteTime',limit:6}).then((data) => {
             appVue.appsRecently = data
           })
+
         },
         executeApp(app){
           ipc.send('executeApp',{app:app})
           //this.searchWords=''
           appVue.searchWords=''
-          console.log('a')
         },
         openSetting(appId){
           ipc.send('saAppOpenSetting',{id:appId})

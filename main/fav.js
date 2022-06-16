@@ -165,6 +165,9 @@ app.whenReady().then(() => {
       popWindow.window.hide()
     }
   })
+  ipc.on('reloadFav',()=>{
+    appManager.sendIPCToApp('com.thisky.fav','reload')
+  })
 
   ipc.on('exportFile',(event,args)=>{
    let defaultPath= args.parentPath || args.path

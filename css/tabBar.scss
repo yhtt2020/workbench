@@ -73,10 +73,10 @@
 /* navbar buttons */
 
 #toolbar-navigation-buttons {
-  width: 2.375rem;
   transition: 0.1s width;
   white-space: nowrap;
   overflow: hidden;
+  min-width: 60px;
 }
 
 #toolbar-navigation-buttons.can-go-forward:hover {
@@ -90,16 +90,16 @@ body.is-edit-mode #toolbar-navigation-buttons {
 #back-button, #forward-button {
   opacity: 1;
   transition: none;
-  padding: 0 0.6rem;
+  padding: 0 0rem;
 }
 .navbar-action-button:hover{
   background: rgba(215, 215, 215, 0.47);
 }
 #back-button {
-  padding-left: 0.4rem;
+  padding-left: 0rem;
 }
 #forward-button {
-  margin-left: -0.75em;
+  margin-left: -0em;
 }
 #back-button:disabled, #forward-button:disabled {
   opacity: 0.2;
@@ -126,7 +126,9 @@ body.linux #menu-button {
   position: relative;
   overflow: hidden;
   margin-right: 35px;
-
+  &.fixWidth{
+    width: 100%;
+  }
 }
 #tabs #tabs-inner {
   display: inline-flex;
@@ -372,6 +374,9 @@ body.windows.dark-theme .navbar-action-button:not(:disabled):hover {
 
 /* audio button */
 .use-theme .tab-item .tab-audio-button{
+  color: #333;
+}
+.use-theme .tab-item .reader-button{
   color: #333;
 }
 .tab-item .tab-audio-button {
