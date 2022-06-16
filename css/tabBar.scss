@@ -141,7 +141,9 @@ body.linux #menu-button {
 #tabs #tabs-inner.disable-scroll {
   overflow-x: hidden;
 }
-
+.mac .tab-item{
+  margin:5px
+}
 .tab-item {
   flex:1;
   display: flex;
