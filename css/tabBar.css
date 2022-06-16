@@ -176,10 +176,25 @@ body.linux #menu-button {
       left: -3px; }
 
 #navbar.show-dividers .tab-item:not(:last-child) {
-  border: 1px solid rgba(128, 128, 128, 0.5); }
+  border-right: 1px solid #d2d2d2;
+  border-radius: 0;
+  margin-right: 0;
+  margin-left: 0;
+  margin-bottom: 0;
+  height: 37px;
+  margin-top: 0;
+  line-height: 37px;
+  padding-left: 5px;
+  padding-right: 5px; }
+  #navbar.show-dividers .tab-item:not(:last-child).active {
+    border-right: none;
+    margin-left: -1px; }
 
 .dark-theme #navbar.show-dividers .tab-item:not(:last-child) {
-  border: 1px solid rgba(255, 255, 255, 0.58); }
+  border-right: 1px solid #d2d2d2;
+  border-radius: 0;
+  margin-right: 0;
+  margin-left: 0; }
 
 #navbar.show-dividers:before {
   background: rgba(182, 182, 182, 0.5); }
@@ -378,6 +393,9 @@ body.windows.dark-theme .navbar-action-button:not(:disabled):hover {
   padding: 0.1em 0.1em 0.1em 0.0em;
   margin-top: 0.15em;
   color: #ffb8b8; }
+
+.windows .tab-item .tab-close-button {
+  margin-top: 1px; }
 
 .tab-item .tab-item:hover .tab-close-button:after {
   top: 4px !important;
