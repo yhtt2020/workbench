@@ -37,6 +37,15 @@ ipc.handle('showFocusModeDialog2', function () {
   })
 })
 
+ipc.handle('showGuideDialog', function () {
+  dialog.showMessageBox({
+    type: 'info',
+    buttons: [l('closeDialog')],
+    message: '当前处于引导模式',
+    detail: '请先完成或退出引导'
+  })
+})
+
 ipc.handle('showToolbarDialog', function () {
   dialog.showMessageBox({
     type: 'info',

@@ -91,6 +91,7 @@
     inset: 0 0 auto 11px !important;
   .shepherd-button{
     padding: 0.2rem 1rem;
+    transition: 0s !important;
   }
   .shepherd-footer .shepherd-button:last-child {
     margin-right: 1px;
@@ -102,8 +103,6 @@
     color: rgba(80, 139, 254, 1) !important;
   }
 }
-
-
 .shepherd-element.custom2.shepherd-enabled{
   max-width: 190px;
   //margin-right: 78px !important;
@@ -112,11 +111,13 @@
   }
   inset: -33px 0 auto 128px !important;
   .shepherd-button{
-    padding: 5px 5px;
+    padding: 3px 6px;
+    transition: 0s !important;
   }
   .shepherd-footer .shepherd-button:last-child {
     margin-right: 1px;
   }
+
 }
 
 
@@ -127,12 +128,14 @@
   }
   inset: 0px 0 auto 12px !important;
   .shepherd-button{
-    padding: 8px  8px ;
-    margin-right: 5px;
+    padding: 3px  6px ;
+    margin-right: 11px;
+    transition: 0s !important;
   }
   .button1.shepherd-button {
     background: #FFFFFF !important;
     color: rgba(80, 139, 254, 1) !important;
+    padding-left: 1px;
   }
   .button2.shepherd-button {
     background: #FFFFFF !important;
@@ -143,6 +146,7 @@
 .shepherd-element.custom4.shepherd-enabled{
   .shepherd-button{
     padding: 0.2rem 1rem;
+    transition: 0s !important;
   }
   .shepherd-text{
     font-size: 14px;
@@ -166,7 +170,7 @@
 }
 
 .shepherd-modal-overlay-container.shepherd-modal-is-visible{
-  opacity: 0.1!important;
+  opacity: 0.0001 !important;
 }
 
 .has-more{
