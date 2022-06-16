@@ -125,7 +125,9 @@ body.linux #menu-button {
   position: relative;
   overflow: hidden;
   margin-right: 35px;
-
+  &.fixWidth{
+    width: 100%;
+  }
 }
 #tabs #tabs-inner {
   display: inline-flex;

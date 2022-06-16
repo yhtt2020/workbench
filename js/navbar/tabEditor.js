@@ -9,6 +9,8 @@ var toolbar=require('toolbar/toolbar.js')
 const tabEditor = {
   container: document.getElementById('tab-editor'),
   input: document.getElementById('tab-editor-input'),
+  addButton:document.getElementById('add-btn-wrapper'),
+  tabsEl:document.getElementById('tabs'),
   star: null,
 
   updateUrl:function(url){
@@ -37,7 +39,9 @@ const tabEditor = {
     }
     tabEditor.updateUrl(editingValue || currentURL)
     if(!toolbar.expanded){
+      tabEditor.addButton.hidden=true
       tabEditor.input.focus()
+      tabEditor.tabsEl.classList.add('fixWidth')
     }
     if (!editingValue) {
       setTimeout(()=>{
@@ -80,6 +84,8 @@ const tabEditor = {
   hide: function () {
     if(!toolbar.expanded){
       tabEditor.container.hidden = true
+      tabEditor.addButton.hidden=true
+      tabEditor.tabsEl.classList.remove('fixWidth')
     }
     tabEditor.container.removeAttribute('style')
 
