@@ -38,6 +38,15 @@ const standAloneAppModel = {
     //   await standAloneAppModel.setAppSetting(nav.id,{showInSideBar:true})
     //   db.standAloneApps.update(nav.id,{id:3,package:'com.thisky.nav'})
     // }
+    let nav = await  db.standAloneApps.get({name:'收藏夹'})
+    if(nav){
+      db.standAloneApps.update(nav.id,{
+        package:'com.thisky.nav',
+        url: '/pages/apps/index.html',
+      })
+    }
+
+
     if(group){
       db.standAloneApps.update(group.id,{
         name:'团队沟通',
