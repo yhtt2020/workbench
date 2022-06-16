@@ -11,7 +11,7 @@ body {
 
 body.windows:not(.maximized):not(.fullscreen):not(.separate-titlebar),
 body.linux:not(.maximized):not(.fullscreen):not(.separate-titlebar) {
-  --control-space-top: 12px;
+  --control-space-top: 0px;
 }
 
 /* On Windows, draggable regions aren't clickable, so the drag region is a separate area above the tabstrip */

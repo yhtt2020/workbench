@@ -51,11 +51,9 @@ ipc.on('unmaximize', function() {
 let mouseRcoverAreaElement = document.getElementById('mouseRcoverArea')
 
 ipc.on('getTitlebarHeight',function(){
-	console.log(mouseRcoverAreaElement.offsetTop)
 	ipc.send('returnTitlebarHeight',{
 			titlebarHeight:mouseRcoverAreaElement.offsetTop,
 	})
-
 })
 ipc.on('getTasks',(event,args)=>{
   if(window.tasks){
@@ -63,7 +61,7 @@ ipc.on('getTasks',(event,args)=>{
   }
 })
 ipc.send('returnTitlebarHeight',{
-	 		titlebarHeight:mouseRcoverAreaElement.offsetTop,
+	 	titlebarHeight:mouseRcoverAreaElement.offsetTop,
 })
 setTimeout(()=>{
 	ipc.send('returnTitlebarHeight',{
