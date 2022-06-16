@@ -32,7 +32,7 @@
           <a-tab-pane v-if="apps" key="2" force-render>
                  <span slot="tab">
                   <a-icon type="like"></a-icon>
-        推荐应用 ({{getCheckedCount('suggest')}})
+        推荐应用
       </span>
             <p>强烈推荐应用是我们精选的应用，这些应用可以满足您日常办公效率所需。</p>
             <a-row class="app" v-for="app in apps.suggest">
@@ -63,7 +63,7 @@
           <a-tab-pane v-if="apps" key="3">
                 <span slot="tab">
                   <a-icon type="fire"></a-icon>
-        热门应用 ({{getCheckedCount('hot')}})
+        热门应用
       </span>
             <p>推荐应用是我们为您推荐的应用。</p>
             <a-row>
