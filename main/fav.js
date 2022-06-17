@@ -4,6 +4,7 @@ const { shell } = require('electron')
 const fsExtra=require('fs-extra')
 const ElectronLog = require('electron-log')
 app.whenReady().then(() => {
+  const FAV_PACKAGE='com.thisky.fav'
   //设置默认的本地收藏夹位置
   configDb.init(app.getPath('userData'))
   const defaultStorePath = configDb.getStorePath()
@@ -65,6 +66,16 @@ app.whenReady().then(() => {
   })
   //采集到的内容本地下载下来保存
   ipc.on('getFavContent', async (event, args) => {
+    function filterFilename (filename, replaceHolder = ' ') {
+      const map = [
+        '/', '\\', '|', '?', '"', '*', ':', '<', '>', '\n'
+      ]
+      map.forEach(replace => {
+         filename = filename.replaceAll(replace, replaceHolder)
+      })
+      return filename
+    }
+    SidePanel.send('executeAppByPackage',{package:FAV_PACKAGE,background:true})
     const content = args.content
     let filename = Date.now().toString()//content.src.substr(content.src.lastIndexOf('/'))
     if (content.type === 'img') {
@@ -75,6 +86,7 @@ app.whenReady().then(() => {
         }
         filename = filename.substr(0, 30) + filename.substr(filename.indexOf('.'))
       }
+
       let fullPath = path.join(defaultStorePath, filename)
       localCacheManager.fetchContentWithType(content.src, fullPath).then((header) => {
         let ext = header.substr(header.lastIndexOf('/') + 1)
@@ -94,15 +106,34 @@ app.whenReady().then(() => {
           testFileName = newFileName.substr(0, newFileName.lastIndexOf('.')) + '-' + i.toString() + newFileName.substr(newFileName.lastIndexOf('.'))
         }
         let lastPath = testFileName
-        fs.renameSync(path.join(defaultStorePath, filename), path.join(defaultStorePath, lastPath))
-
+        lastPath=filterFilename(lastPath)
+        let storePath=path.join(defaultStorePath, lastPath)//存储的实际文件名
+        fs.renameSync(path.join(defaultStorePath, filename),storePath )
         if (fs.existsSync(path.join(defaultStorePath, newFileName))) {
-          sidePanel.get().webContents.send('message', { type: 'success', config: { content: '收藏到本地成功。' } })
+          //此时已经保存成功，需要发送消息告诉fav，要更新了
+          let timeout=5000
+          let timeGone=0
+          let timer=setInterval(()=>{
+            if(timeGone>=timeout){
+              //超时终止
+              clearInterval(timer)
+            }
+            if(appManager.getWindowByPackage(FAV_PACKAGE)){
+              appManager.sendIPCToApp(FAV_PACKAGE,'addImageMeta',{
+                storePath:storePath,
+                href:content.href
+              })
+              clearInterval(timer)
+            }else{
+              timeGone+=200
+            }
+          },200)
+          SidePanel.send('message', { type: 'success', config: { content: '收藏到本地成功。' } })
         } else {
-          sidePanel.get().webContents.send('message', { type: 'error', config: { content: '收藏失败，请检查网络。' } })
+          SidePanel.send('message', { type: 'error', config: { content: '收藏失败，请检查网络。' } })
         }
       }).catch(e => {
-        sidePanel.get().webContents.send('message', { type: 'error', config: { content: '收藏失败，请检查网络。' } })
+        SidePanel.send('message', { type: 'error', config: { content: '收藏失败，请检查网络。' } })
       })
     }
 
