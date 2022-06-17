@@ -298,11 +298,22 @@ ipc.on('reloadTask', () => {
   switchToTask(tasks.getSelected().id)
 })
 
+
 //定位到task组的某tabid，往后插入创建tab
 //browserUI中有tab和task的环境，而且能直接捕获从preload传出来的ipc，也能拿到tabBar的环境
 // ipc.on('toTask-addTab', (event, arg) => {
 //   console.log(arg, '---------------@@@@@')
 // })
+
+ipc.on('closeGuide',()=>{
+  let closeGuideTab = tabs.tabs.filter((e)=>{
+   return  e.selected = true
+  })
+
+  closeTab(closeGuideTab[0].id)
+})
+
+
 
 ipc.on('addTaskFromApps',function(e,data){
 	let newTask = {

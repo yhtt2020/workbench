@@ -99,6 +99,11 @@ const sidebarTpl = /*html*/`
                         </a-col>
                       </a-row>
                     </div>
+                    <div v-show="isMedals" class="medals" style="height: 30px;">
+                       <div style="margin-top: 8px;margin-left: 15px;width: 32px;height: 35px;" >
+                       <img  src="../../img/silver-b.png" style="width: 100%;height: 100%">
+</div>
+</div>
                     <div style="margin-bottom: 10px" class="actions flex flex-direction justify-between align-center">
                       <div class="actions-top flex justify-start  align-center">
                         <img src="./assets/tizi.svg" alt="" style="width: 16px; height: 16px">
@@ -133,7 +138,7 @@ const sidebarTpl = /*html*/`
             </a-tag>
           </template>
         </div>
-                        <div class="mg-content flex flex-direction">
+                        <div class="mg-content flex flex-direction" :class="{ active: isMedals === false }">
                           <template v-if="this.$store.getters.getAllCircle.length===0">
                             <a-empty style="margin-top: 10px">
                               <span slot="description"> 暂无团队， <a @click="openGroupHelp">了解团队功能</a> </span>
@@ -543,13 +548,13 @@ const sidebarTpl = /*html*/`
 </div>
 </div>
 </tippy>
-      <div class="app-box">
+      <div id="appbox" class="app-box">
         <ul id="appGroup" style="user-select: none;padding-bottom: 20px" class="app-task app-items"
           @dblclick.prevent="addNewTask">
           <draggable v-model="getItems" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass"
             chosenClass="chosenClass" @start="onStart" @end="onEnd">
             <transition-group>
-              <li @click="openItem(item.id,i)" @dblclick.stop="" v-for="(item,i) in this.$store.getters.getItems"
+              <li id="guideAddTasks"  @click="openItem(item.id,i)" @dblclick.stop="" v-for="(item,i) in this.$store.getters.getItems"
                 :key="item.id" :visible="item.count>1" data-role="task" :class="isActive(item.id)" :item-id="item.id"
                 style="position: relative">
                 <tippy :ref="'task_'+item.id"
@@ -724,7 +729,7 @@ const _=require('lodash')
 Vue.component('sidebar', {
   data: function () {
     return {
-
+      isMedals:false,
       lastSync:Date.now(),//最后一次同步时间
       spaceStatus:'local',
       localSpaces: [],
@@ -824,6 +829,13 @@ Vue.component('sidebar', {
   },
 
   async mounted () {
+    ipc.on('callBackMedal',(event,args)=>{
+      this.$nextTick(()=>{
+        appVue.$refs.sidePanel.isMedals = args
+      })
+    })
+
+    ipc.send('isMedal')
     this.watchAllHasMore()
     //获取当前左侧栏的状态，并设置
    spaceModel.getCurrent().then((space)=>{
@@ -1142,6 +1154,34 @@ Vue.component('sidebar', {
       });
       guideDesktop.start();
     },
+    guideAddTasks(){
+      const guideAddTasks = new Shepherd.Tour({
+        // 设置默认引导配置
+        useModalOverlay: true,
+
+        defaultStepOptions: {
+          // 引导左上角取消按钮图标的配置
+          cancelIcon: {
+            enabled: false, // 默认为true
+          },
+          classes:'custom5',
+          // 滚动方式
+          scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+          }
+        },
+        // 添加第一步引导
+        steps: [{
+          text: '已为您添加推荐标签组', attachTo: {element: '#guideAddTasks', on:'right'},
+          buttons: [
+            {action: function () {return  this.cancel();}, text: '好 的',classes:'button'}],
+          id: 'first'    // 用于Shepherd step的唯一标识符
+        }]
+      });
+      guideAddTasks.start();
+    },
+
     sortApps(){
       let sorted=_.orderBy(this.apps,(app)=>{
         return [app.processing?1:0,app.lastExecuteTime]
@@ -1958,10 +1998,10 @@ ipc.on('guide',async (event, args) => {
         appVue.$refs.sidePanel.focus()
         appVue.$refs.sidePanel.guide(args)
         ipc.send('enterGuide')
-      }, 500)
+      }, 100)
     }
     if(current.value.uid === 0){
-     console.log('请先登录')
+      appVue.$message.error('登录后才能使用团队功能');
     }
     // appVue.$refs.sidePanel.userPanelVisible=true
   } else {
