@@ -8,7 +8,58 @@ app.whenReady().then(() => {
   configDb.init(app.getPath('userData'))
   const defaultStorePath = configDb.getStorePath()
 
-  if (!fs.existsSync(defaultStorePath)) fs.mkdirSync(defaultStorePath)
+  //------------------>
+  let canCloseInterval = false
+  ipc.on('canCloseInterval', (event, args) => {
+    canCloseInterval = true
+  })
+  let interval = setInterval(() => {
+    mainWindow.webContents.send('getUserDataPath', defaultStorePath)
+    if(canCloseInterval) {
+      clearInterval(interval)
+    }
+  }, 5000)
+  //以上部分解决子进程中无法获得到当前收藏夹的storePath路径的问题
+  //-----------------
+
+  if (!fs.existsSync(defaultStorePath))
+  {
+    /**
+     * 初始化收藏夹
+     * @param defaultStorePath
+     */
+    function initLib(defaultStorePath){
+      fs.mkdirSync(defaultStorePath)
+      function createDir(parentPath,dirname){
+        if(!fs.existsSync(parentPath)){
+          return false
+        }else{
+          fs.mkdirSync(path.join(parentPath,dirname))
+        }
+      }
+      let commonFolder=[
+        '书签','图片','视频','音频','密码','笔记'
+      ]
+      let jobFolder= {
+        'develop':[
+
+        ],
+        'pm':[
+
+        ],
+        'designer':[
+
+        ],
+        'salse':[
+
+        ]
+      }
+      commonFolder.forEach(folder=>{
+        createDir(defaultStorePath,folder)
+      })
+    }
+    initLib(defaultStorePath)
+  }
   ipc.on('getUserInfo', (event, args) => {
     SidePanel.send('getUserInfo', { webContentsId: event.sender.id })
   })
