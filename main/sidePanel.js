@@ -1032,7 +1032,7 @@ function callModal(win){
      left: 0;
      right: 0;
      bottom: 0;
-     background-color: #00000033;
+     background-color: #00000090;
      z-index: 9999999;
      display:block;
      }`
