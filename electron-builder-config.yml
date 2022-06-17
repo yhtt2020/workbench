@@ -19,6 +19,7 @@ files:
     - api/*
     - img/*.jpg
     - img/*.jpeg
+    - img/*.png
     - reader/**/*
     - resources/**/*
     - src/**/*

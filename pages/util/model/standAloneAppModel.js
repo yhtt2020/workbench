@@ -542,12 +542,9 @@ const standAloneAppModel = {
         }),
       }
     ]
+    await db.standAloneApps.bulkAdd(defaultApps)
     let appStoreData=require('../../appStore/app.js')
     await standAloneAppModel.installFromJson(appStoreData)
-
-
-
-    return await db.standAloneApps.bulkAdd(defaultApps)
   },
   /**
    * 设置转中文表达
