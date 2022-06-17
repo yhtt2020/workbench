@@ -49,9 +49,18 @@
                   v-else>(第三方)</span><span class="app-installed">{{app.installed}}%的用户选择安装</span></div>
                 <p class="app-summary">{{app.summary}}</p>
                 <p v-if="Object.keys(app.settings).length>0">
-                  默认设置：
-                  <a-tag v-for="(value,name) in app.settings">
-                    {{settingToWords(name)}}
+                默认设置：
+                <a-tag v-for="(value,name) in app.settings">
+                  {{settingToWords(name)}}
+                </a-tag>
+              </p>
+                <p v-if="app.auth && Object.keys(app.auth).length>0">
+                  权限要求：
+                  <a-tag v-for="(value) in app.auth.base">
+                    {{authToWords(value)}}
+                  </a-tag>
+                  <a-tag v-for="(value) in app.auth.app">
+                    {{authToWords(value)}}
                   </a-tag>
                 </p>
               </a-col>
@@ -204,6 +213,35 @@
             width: 1300,
             height: 800
           }
+        }
+      },
+      {
+        "name": "one-wallheaven",
+        "version": "1.0.0",
+        "themeColor": "#1b608e",
+        "author": "白云苍狗",
+        installed:'90.3',
+        checked:true,
+        "site": "https://github.com/MaLuns/wallhaven-electron",
+        "logo": "https://a.apps.vip/wallpaper/favicon.png",
+        "type": "web",
+        "url": "http://localhost:8080",
+        "package": "com.thisky.wallpaper",
+        "summary": "一个基于Wallheaven的壁纸应用，由想天改造成应用，版权归原作者所有。下载壁纸、设置壁纸，需要开启本地权限。",
+        "settings": {
+          bounds: {
+            width: 1000,
+            height: 800
+          },
+          disableWebSecurity:true
+        },
+        "auth": {
+          base: [
+            'webSecure','download'
+          ],
+          app: [
+            'setWallpaper'
+          ]
         }
       },
       {
@@ -360,6 +398,9 @@
       },
       settingToWords (setting) {
         return standAloneAppModel.settingToWords(setting)
+      },
+      authToWords (setting) {
+        return standAloneAppModel.authToWords(setting)
       },
       async install () {
         this.installing=true

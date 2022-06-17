@@ -319,6 +319,7 @@ const standAloneAppModel = {
       useCount: 0,
       lastExecuteTime: Date.now(),
       settings:app.settings? JSON.stringify(app.settings):'[]',
+      auth:app.auth?JSON.stringify(app.auth):'[]',
       unreadCount: 0,
       showInSideBar: app.showInSideBar || false
     }
@@ -569,6 +570,23 @@ const standAloneAppModel = {
       case 'autoRun':
         words='自动运行'
         break
+      case 'disableWebSecurity':
+        words='本地权限'
+        break
+    }
+    return words
+  },
+  authToWords(auth){
+    let words=''
+    switch (auth){
+      case 'webSecure':
+        words='跨域请求'
+        break
+      case 'setWallpaper':
+        words='设置壁纸'
+        break
+      case 'download':
+        words='下载文件'
     }
     return words
   },
