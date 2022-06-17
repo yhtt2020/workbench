@@ -305,11 +305,6 @@ app.whenReady().then(()=>{
     sendIPCToMainWindow('addTaskCareer',args)
   })
 
-  ipc.on('returnIsDefaultBrowser',(event,args)=>{
-    console.log(args)
-  })
-
-
   ipc.on('blockSelect',(event,args)=>{
     mainWindow.webContents.send('blockSetting',args)
   })
