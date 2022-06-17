@@ -1059,7 +1059,7 @@ Vue.component('sidebar', {
         },
         // 添加第一步引导
         steps: [{
-          text: '右键网页标签，选择安装到应用', attachTo: {element: '.wrapper', on: 'bottom'},
+          text: '右键网页标签，选择安装到应用', attachTo: {element: '#guideApplySecond', on: 'bottom'},
           buttons: [
             {action: function () { this.cancel(); appVue.$refs.sidePanel.guideApplySecond()}, text: '下一步'}],
           id: 'welcome'    // 用于Shepherd step的唯一标识符
@@ -1973,10 +1973,16 @@ ipc.on('guideApplyFirst',()=>{
 ipc.on('guideDesktop',()=>{
   setTimeout(() => {
     ipc.send('enterGuide')
-  }, 1200)
+  }, 1000)
   appVue.$refs.sidePanel.focus()
   appVue.$refs.sidePanel.guideDesktop()
 })
+
+ipc.on('guideLogin',()=>{
+  appVue.$refs.sidePanel.focus()
+  appVue.$refs.sidePanel.toggleUserPanel()
+})
+
 
 ipc.on('appRedirect', async (event, args) => {
   let app = await standAloneAppModel.getFromPackage(args.package)

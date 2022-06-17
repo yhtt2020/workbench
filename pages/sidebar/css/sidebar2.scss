@@ -83,9 +83,6 @@
   }
 }
 
-.shepherd-modal-overlay-container.shepherd-modal-is-visible{
-  opacity: 0.1 !important;
-}
 
 .shepherd-element.custom1.shepherd-enabled {
   .shepherd-text{
@@ -113,17 +110,18 @@
   .shepherd-text{
     font-size: 14px;
   }
-  inset: -33px 0 auto 128px !important;
+  inset: -71px 0 auto 0px !important;
   .shepherd-button{
     padding: 3px 6px;
     transition: 0s !important;
   }
+  .shepherd-arrow{
+    transform:translate(151px,0px) !important;
+  }
   .shepherd-footer .shepherd-button:last-child {
     margin-right: 1px;
   }
-
 }
-
 
 .shepherd-element.custom3.shepherd-enabled{
   max-width: 230px;
@@ -172,8 +170,9 @@
     margin-right: 1px;
   }
 }
-
-
+.shepherd-modal-overlay-container.shepherd-modal-is-visible {
+  opacity: 0.4 !important;
+}
 
 .has-more{
   &:before{
