@@ -255,7 +255,7 @@ const sidebarTpl = /*html*/`
                 </div>
               </template>
               <template slot="content" v-else>
-              <div style="max-width: 400px">{{app.summary}}</div>
+              <div style="max-width: 240px">{{app.summary}}</div>
               </template>
               <div class="wrapper sa-app-wrapper">
                 <div v-if="app.processing" class="processing"></div>

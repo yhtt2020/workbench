@@ -51,31 +51,6 @@
           </a-row>
         </li>
       </ul>
-      <a-divider></a-divider>
-      <h1>2.设置为默认浏览器</h1>
-      <div style="width: 340px;margin: auto;margin-bottom: 20px">
-        <a-row>
-          <a-col :span="16">
-            <div style="padding: 10px;border-radius: 6px;background-color: white;width: auto;text-align: center">
-              {{word}}</div>
-          </a-col>
-          <a-col :span="1">
-
-          </a-col>
-          <a-col :span="7">
-            <img style="width: 40px" :src="faceUrl">
-          </a-col>
-        </a-row>
-
-      </div>
-      <div  v-if="!defaultBrowser" style="text-align: center;margin-bottom: 20px">
-        请注意，部分安全软件会违背用户意愿，<strong>强制阻止更改默认浏览器</strong>。<br>
-        如果您设置后仍无反应，或打开网站仍未其他浏览器，可查看下方帮助。
-      </div>
-      <div style="text-align: center">
-        <a v-if="!defaultBrowser" href="tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/ngd5zk/ntebh1" target="_blank">如何解锁？</a>
-        <a-button :loading="loading" v-if="!defaultBrowser" type="primary" @mouseenter.prevent="hover=true" @mouseleave.prevent="hover=false;word='我还不是您的默认浏览器'" @click="setDefaultBrowser">设置为默认浏览器</a-button>
-      </div>
     </div>
     </template>
   </div>
@@ -117,31 +92,6 @@
       }
     },
     computed: {
-      faceUrl(){
-        console.log(this.defaultBrowser)
-        if(!this.defaultBrowser){
-          if(this.hover && !this.defaultBrowser)
-            this.face='ding'
-          else{
-            this.face='cry'
-          }
-          return './img/'+this.face+'.svg'
-        }else{
-          //this.word='感谢主人宠信，真开心'
-          return './img/happy.svg'
-        }
-      },
-      word(){
-        if(this.defaultBrowser){
-          return '我是您的默认浏览器，真开心'
-        }else{
-          if(this.hover){
-            return '真的要宠幸我吗？好激动'
-          }else{
-            return '我还不是您的默认浏览器'
-          }
-        }
-      }
     },
     mounted () {
       ipc.send('getIsDefaulBrowser')
@@ -152,21 +102,10 @@
     methods: {
       importBookmarks(){
           appVue.$message.info({content:'暂时还不支持导入书签。'})
-      },
-      setDefaultBrowser(){
-        this.loading=true
-        ipc.send('callSetOrRemoveDefaultBrowser')
-        let that=this
-        setTimeout(()=>{
-          that.loading=false
-        },3000)
       }
     }
   })
-  ipc.on('returnIsDefaultBrowser',(event,args)=>{
-    console.log('get Default browser',args)
-    appVue.defaultBrowser=args
-  })
+
   ipc.on('importPwdFailed',(event,args)=>{
     appVue.$error({title:'导入失败',content:args.message})
   })
