@@ -1,9 +1,9 @@
 const { exists, mkdirSync, readFile, unlink, writeFile } = require("fs");
 const ipc = require('electron').ipcRenderer
+let baseStorePath = ''
 let favStorePath = ''
 ipc.on('getUserDataPath', (event, args) => {
-  favStorePath = args
-  console.log(favStorePath, '哈哈啊哈哈啊哈哈')
+  baseStorePath = args
   ipc.send('canCloseInterval')
 })
 
@@ -88,10 +88,17 @@ const fileHelpers = {
 
   //创建书签根目录和改变favStorePath
   addRootFolder(fileName) {
-    if(!fs.existsSync((favStorePath + '/' + fileName).replaceAll('//', '/'))) {
-      mkdirSync((favStorePath + '/' + fileName).replaceAll('//', '/'))
-      favStorePath = `${favStorePath}/${fileName}`
+    if(!fs.existsSync((baseStorePath + '/' + fileName).replaceAll('//', '/'))) {
+      mkdirSync((baseStorePath + '/' + fileName).replaceAll('//', '/'))
+      favStorePath = `${baseStorePath}/${fileName}`
+    } else {
+      throw '书签根目录已存在'
     }
+  },
+
+  //一次导入后还原favStorePath的初始路径
+  restFavStorePath() {
+    favStorePath = baseStorePath
   },
 
   //递归处理原始书签(edge、chrome)

@@ -41,6 +41,10 @@ app.whenReady().then(()=>{
           apps: false,
           team: false
         }
+      },
+      migration: {
+        chrome: false,
+        edge: false
       }
     }).write()
   }
@@ -171,8 +175,15 @@ app.whenReady().then(()=>{
 
   ipc.on('guideMigration', (event, args) => {
     mainWindow.webContents.send('bookmarkMigration', args)
-    ipc.on('afterMigration', () => {
+    ipc.on('afterMigration', (event, args) => {
       afterGuide('guideSchedule.modules.noobGuide.migration')
+      if(global.fromRender && !global.fromRender.guide.isDestroyed()) {
+        markDb.db.set(`guideSchedule.migration.${args}`, true).write()
+        global.fromRender.guide.send('specificBrowserMigrationState', {
+          browser: args,
+          status: true
+        })
+      }
     })
   })
 
@@ -182,6 +193,10 @@ app.whenReady().then(()=>{
 
   ipc.on('openImportHelper', () => {
     SidePanel.send('execImportHelper')
+  })
+
+  ipc.on('activeComplete', (event, args) => {
+    afterGuide(`guideSchedule.modules.${args.moduleName}.${args.childName}`)
   })
 
   let firstGuideVideo = null

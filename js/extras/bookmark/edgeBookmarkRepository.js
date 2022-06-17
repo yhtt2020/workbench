@@ -104,11 +104,11 @@ class EdgeBookmarkRepository {
 
       setTimeout(() => {
         ipc.send('message',{type:'success',config:{content: 'Edge书签导入成功', key: Date.now()}})
-        ipc.send('afterMigration')
+        ipc.send('afterMigration', 'edge')
         ipc.send('reloadFav')
+        fileHelpers.restFavStorePath()
       }, 5000)
     } catch (error) {
-      console.log(error)
       ipc.send('message',{type:'error',config:{content: `Edge书签导入失败!${error}!`, key: Date.now()}})
     }
   }

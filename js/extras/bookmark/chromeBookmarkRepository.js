@@ -105,11 +105,11 @@ class ChromeBookmarkRepository {
 
       setTimeout(() => {
         ipc.send('message',{type:'success',config:{content: 'Chrome书签导入成功', key: Date.now()}})
-        ipc.send('afterMigration')
+        ipc.send('afterMigration', 'chrome')
         ipc.send('reloadFav')
+        fileHelpers.restFavStorePath()
       }, 5000)
     } catch (error) {
-      console.log(error)
       ipc.send('message',{type:'error',config:{content: `Chrome书签导入失败!${error}!`, key: Date.now()}})
     }
   }
