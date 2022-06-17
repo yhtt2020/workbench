@@ -109,6 +109,7 @@ class EdgeBookmarkRepository {
         fileHelpers.restFavStorePath()
       }, 5000)
     } catch (error) {
+      fileHelpers.restFavStorePath()
       ipc.send('message',{type:'error',config:{content: `Edge书签导入失败!${error}!`, key: Date.now()}})
     }
   }

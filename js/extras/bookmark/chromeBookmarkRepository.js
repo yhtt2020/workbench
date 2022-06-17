@@ -110,6 +110,7 @@ class ChromeBookmarkRepository {
         fileHelpers.restFavStorePath()
       }, 5000)
     } catch (error) {
+      fileHelpers.restFavStorePath()
       ipc.send('message',{type:'error',config:{content: `Chrome书签导入失败!${error}!`, key: Date.now()}})
     }
   }
