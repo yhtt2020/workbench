@@ -177,7 +177,7 @@
               <div style="margin-right:8px;border-right: 1px solid #cacaca;display: inline-block;height: 16px;vertical-align: middle;width: 0;margin-top: -3px"></div>
             </div>
             <div class="action-wrapper" >
-              <span oncontextmenu="ipc.send('favContextMenu')" onclick="ipc.send('openPopSaveToFolder')" title="收藏夹" id="nav-toolbar"><img class="action app" src="./icons/toolbar/apps/fav.svg"></span>
+              <span oncontextmenu="ipc.send('favContextMenu')" onclick="ipc.send('handleTsbProtocol',{url:'tsb://app/redirect/?package=com.thisky.fav&url=/'})" title="收藏夹" id="nav-toolbar"><img class="action app" src="./icons/toolbar/apps/fav.svg"></span>
             </div>
             <div  class="action-wrapper" >
                 <span title="阅读模式" id="read-toolbar"><img class="action app" src="./icons/toolbar/apps/read.svg">
