@@ -226,7 +226,6 @@ app.whenReady().then(()=>{
       return bounds
     }
 
-
     firstGuideVideo.setWindowButtonVisibility(false)
     firstGuideVideo.loadURL('file://'+path.join(__dirname,'/pages/mvideo/index.html'))
     firstGuideVideo.on('ready-to-show',()=>{
