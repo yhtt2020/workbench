@@ -77,12 +77,14 @@
 
 .shepherd-element.custom2.shepherd-enabled {
   max-width: 190px;
-  inset: -33px 0 auto 128px !important; }
+  inset: -71px 0 auto 0px !important; }
   .shepherd-element.custom2.shepherd-enabled .shepherd-text {
     font-size: 14px; }
   .shepherd-element.custom2.shepherd-enabled .shepherd-button {
     padding: 3px 6px;
     transition: 0s !important; }
+  .shepherd-element.custom2.shepherd-enabled .shepherd-arrow {
+    transform: translate(151px, 0px) !important; }
   .shepherd-element.custom2.shepherd-enabled .shepherd-footer .shepherd-button:last-child {
     margin-right: 1px; }
 
@@ -124,7 +126,7 @@
     margin-right: 1px; }
 
 .shepherd-modal-overlay-container.shepherd-modal-is-visible {
-  opacity: 0.0001 !important; }
+  opacity: 0.4 !important; }
 
 .has-more:before {
   position: absolute;
