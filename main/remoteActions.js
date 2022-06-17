@@ -51,7 +51,7 @@ ipc.handle('showToolbarDialog', function () {
     type: 'info',
     buttons: [l('closeDialog')],
     message: '已收起工具栏',
-    detail: '如要显示工具栏，请到【菜单】-【查看】-【工具栏】中勾选显示。'
+    detail: '如要显示工具栏，请到【菜单】-【查看】-【显示/隐藏工具栏】中勾选显示。'
   })
 })
 

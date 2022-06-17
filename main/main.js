@@ -84,7 +84,7 @@ var mainMenu = null
 var secondaryMenu = null
 var isFocusMode = false
 var appIsReady = false
-var isToolbar = false
+var isToolbar = true
 
 const isFirstInstance = app.requestSingleInstanceLock()
 
