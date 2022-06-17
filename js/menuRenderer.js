@@ -59,7 +59,8 @@ module.exports = {
     })
 
     ipc.on('showBookmarks', function () {
-      tabEditor.show(tabs.getSelected(), '!bookmarks ')
+      ipc.send('handleTsbProtocol',{url:'tsb://app/redirect/?package=com.thisky.fav&url=/'})
+      //tabEditor.show(tabs.getSelected(), '!bookmarks ')
     })
 
     ipc.on('showHistory', function () {
