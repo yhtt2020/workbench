@@ -229,8 +229,8 @@ app.whenReady().then(()=>{
       bounds.height=parseInt(selfBounds.height)
       return bounds
     }
-
-    firstGuideVideo.setWindowButtonVisibility(false)
+    if(process.platform==='darwin')
+      firstGuideVideo.setWindowButtonVisibility(false)
     firstGuideVideo.loadURL('file://'+path.join(__dirname,'/pages/mvideo/index.html'))
     firstGuideVideo.on('ready-to-show',()=>{
       firstGuideVideo.show()
