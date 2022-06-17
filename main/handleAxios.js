@@ -195,36 +195,56 @@ app.whenReady().then(()=>{
     SidePanel.send('execImportHelper')
   })
 
+  ipc.on('openFav', () => {
+    SidePanel.send('execFav')
+  })
+
   ipc.on('activeComplete', (event, args) => {
     afterGuide(`guideSchedule.modules.${args.moduleName}.${args.childName}`)
   })
 
-  let firstGuideVideo = null
+  let firstGuideVideo
   ipc.on('firstGuideVideo', () => {
     firstGuideVideo = new BrowserWindow({
+      show:false,
+      backgroundColor:'#00000000',
+      transparent: true,
+      resizable:false,
       parent: mainWindow,
-      titleBarStyle: 'hidden',  //windows下隐藏菜单栏
+      frame: false,
+      titleBarStyle: 'hidden',
       width: 800,
-      height: 450,
+      height: 490,
       webPreferences: {
-        nodeIntegration: false
+        nodeIntegration: true,
+        contextIsolation: false,
       }
     })
-    firstGuideVideo.loadURL('https://up.apps.vip/app.mp4')
+
+    function computeBounds(parentBounds,selfBounds){
+      let bounds={}
+      bounds.x=parseInt((parentBounds.x+parentBounds.x+parentBounds.width)/2-selfBounds.width/2,0)
+      bounds.y=parseInt((parentBounds.y+parentBounds.y+parentBounds.height)/2-selfBounds.height/2)
+      bounds.width=parseInt(selfBounds.width)
+      bounds.height=parseInt(selfBounds.height)
+      return bounds
+    }
+
+    firstGuideVideo.setWindowButtonVisibility(false)
+    firstGuideVideo.loadURL('file://'+path.join(__dirname,'/pages/mvideo/index.html'))
     firstGuideVideo.on('ready-to-show',()=>{
       firstGuideVideo.show()
+      firstGuideVideo.setBounds(computeBounds(mainWindow.getBounds(),firstGuideVideo.getBounds()))
       callModal(firstGuideVideo)
     })
-    function closeGuideVideo(){
+    firstGuideVideo.on('close', () => {
       callUnModal(firstGuideVideo)
       firstGuideVideo = null
-    }
-    firstGuideVideo.on('close', () => {
-      closeGuideVideo()
     })
-    firstGuideVideo.on('blur',()=>{
-      closeGuideVideo()
-    })
+  })
+
+  ipc.on('closeMvideo', () => {
+    firstGuideVideo.close()
   })
 
   ipc.on('getMedal', () => {
@@ -284,11 +304,6 @@ app.whenReady().then(()=>{
   ipc.on('addTaskCareer',(event,args)=>{
     sendIPCToMainWindow('addTaskCareer',args)
   })
-
-  ipc.on('returnIsDefaultBrowser',(event,args)=>{
-    console.log(args)
-  })
-
 
   ipc.on('blockSelect',(event,args)=>{
     mainWindow.webContents.send('blockSetting',args)
