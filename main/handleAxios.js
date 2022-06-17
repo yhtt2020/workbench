@@ -274,7 +274,14 @@ app.whenReady().then(()=>{
   ipc.on('exitGuide',(item,window)=>{
     sendIPCToWindow(window, 'exitGuide')
   })
+
+  ipc.on('guideLogin',()=>{
+    SidePanel.send('guideLogin')
+  })
+
 //--------------------------------------------------------->myf状态管理部分
+
+
   ipc.on('careerState',()=>{
     afterGuide('guideSchedule.modules.noobGuide.career')
   })

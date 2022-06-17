@@ -1059,7 +1059,7 @@ Vue.component('sidebar', {
         },
         // 添加第一步引导
         steps: [{
-          text: '右键网页标签，选择安装到应用', attachTo: {element: '.wrapper', on: 'bottom'},
+          text: '右键网页标签，选择安装到应用', attachTo: {element: '#guideApplySecond', on: 'bottom'},
           buttons: [
             {action: function () { this.cancel(); appVue.$refs.sidePanel.guideApplySecond()}, text: '下一步'}],
           id: 'welcome'    // 用于Shepherd step的唯一标识符
@@ -1127,7 +1127,7 @@ Vue.component('sidebar', {
         },
         // 添加第一步引导
         steps: [{
-          text: '右键点击可以删除示例桌面', attachTo: {element: '#appVue', on:'bottom'},
+          text: '在这里可以创建你的专属桌面，支持导出和导入桌面文件，方便与他人分享', attachTo: {element: '#appVue', on:'bottom'},
           buttons: [
             {action: function () {
                 window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/sv8ozw'
@@ -1973,10 +1973,16 @@ ipc.on('guideApplyFirst',()=>{
 ipc.on('guideDesktop',()=>{
   setTimeout(() => {
     ipc.send('enterGuide')
-  }, 1200)
+  }, 1000)
   appVue.$refs.sidePanel.focus()
   appVue.$refs.sidePanel.guideDesktop()
 })
+
+ipc.on('guideLogin',()=>{
+  appVue.$refs.sidePanel.focus()
+  appVue.$refs.sidePanel.toggleUserPanel()
+})
+
 
 ipc.on('appRedirect', async (event, args) => {
   let app = await standAloneAppModel.getFromPackage(args.package)

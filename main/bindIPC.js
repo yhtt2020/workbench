@@ -3,7 +3,7 @@ app.whenReady().then(()=>{
 //获取默认浏览器
   ipc.on('getIsDefaulBrowser',function(event){
     let isDefault=app.isDefaultProtocolClient('http')
-    //console.log('返回是不是默认浏览器'+isDefault)
+    // console.log('返回是不是默认浏览器'+isDefault)
     event.reply('returnIsDefaultBrowser',isDefault)
   })
 //移除默认浏览器
