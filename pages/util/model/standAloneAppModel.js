@@ -76,8 +76,7 @@ const standAloneAppModel = {
         bounds: {
           width: 1200,
           height: 800
-        },
-        showInSideBar:true,
+        }
       }),
       unreadCount: 0,
     })
