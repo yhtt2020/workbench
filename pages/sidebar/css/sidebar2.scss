@@ -1,9 +1,12 @@
 .mg-content {
-  max-height: calc( 100vh - 300px);
+  max-height: calc( 100vh - 330px);
   overflow-y: auto;
   overflow-x: hidden;
   margin-top: 10px;
   // padding: 10px;
+  &.active{
+    max-height: calc( 100vh - 300px);
+  }
   &::-webkit-scrollbar {
     width: 6px;
     height: 6px;
