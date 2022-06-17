@@ -107,6 +107,7 @@ class EdgeBookmarkRepository {
         ipc.send('afterMigration', 'edge')
         ipc.send('reloadFav')
         fileHelpers.restFavStorePath()
+        ipc.send('openFav')
       }, 5000)
     } catch (error) {
       fileHelpers.restFavStorePath()

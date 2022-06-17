@@ -619,3 +619,12 @@ ipc.on('execImportHelper', async () => {
     appVue.$message.error({content:'此应用已经被卸载。无法打开。'})
   }
 })
+
+ipc.on('execFav', async () => {
+  let saApp=await require('../util/model/standAloneAppModel.js').getFromPackage('com.thisky.fav')
+  if(saApp){
+    ipc.send('executeApp',{app:saApp})
+  }else{
+    appVue.$message.error({content:'此应用已经被卸载。无法打开。'})
+  }
+})

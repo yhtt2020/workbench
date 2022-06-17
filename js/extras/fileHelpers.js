@@ -106,7 +106,7 @@ const fileHelpers = {
     let currentFloderName
     if(bookmarkObj.type === 'url') {
       currentFloderName = prevFolderName ?? '/'
-      fileHelpers.addUrlFile(bookmarkObj.name.replaceAll('/', '!'), bookmarkObj.url, currentFloderName)
+      fileHelpers.addUrlFile(fileHelpers.filterName(bookmarkObj.name), bookmarkObj.url, currentFloderName)
     } else {
       currentFloderName = prevFolderName ? `${prevFolderName}/${bookmarkObj.name}` : `/${bookmarkObj.name}`
       fileHelpers.addBookmarkFolder(currentFloderName)
@@ -114,6 +114,19 @@ const fileHelpers = {
         fileHelpers.recurBookmark(v, currentFloderName)
       })
     }
+  },
+
+  //处理非法违规字符
+  filterName(name) {
+    const illegal = [
+      '/', '\\', '|', '?', '"', '*', ':', '<', '>', '\n'
+    ]
+    illegal.forEach(v => {
+      if(name.indexOf(v) > -1) {
+        name = name.replaceAll(v, ' ')
+      }
+    })
+    return name
   }
 
 };

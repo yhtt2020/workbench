@@ -103,11 +103,12 @@ class ChromeBookmarkRepository {
         fileHelpers.recurBookmark(v)
       })
 
-      setTimeout(() => {
+      setTimeout( () => {
         ipc.send('message',{type:'success',config:{content: 'Chrome书签导入成功', key: Date.now()}})
         ipc.send('afterMigration', 'chrome')
         ipc.send('reloadFav')
         fileHelpers.restFavStorePath()
+        ipc.send('openFav')
       }, 5000)
     } catch (error) {
       fileHelpers.restFavStorePath()

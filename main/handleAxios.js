@@ -195,6 +195,10 @@ app.whenReady().then(()=>{
     SidePanel.send('execImportHelper')
   })
 
+  ipc.on('openFav', () => {
+    SidePanel.send('execFav')
+  })
+
   ipc.on('activeComplete', (event, args) => {
     afterGuide(`guideSchedule.modules.${args.moduleName}.${args.childName}`)
   })
