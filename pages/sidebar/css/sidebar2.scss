@@ -83,6 +83,10 @@
   }
 }
 
+.shepherd-modal-overlay-container.shepherd-modal-is-visible{
+  opacity: 0.1 !important;
+}
+
 .shepherd-element.custom1.shepherd-enabled {
   .shepherd-text{
     font-size: 14px;
@@ -169,9 +173,7 @@
   }
 }
 
-.shepherd-modal-overlay-container.shepherd-modal-is-visible{
-  opacity: 0.0001 !important;
-}
+
 
 .has-more{
   &:before{

@@ -59,6 +59,9 @@
         .mg-content .mg-content-btn .cb-bottom .cb-bottom-zone:hover {
           color: #1890ff; }
 
+.shepherd-modal-overlay-container.shepherd-modal-is-visible {
+  opacity: 0.1 !important; }
+
 .shepherd-element.custom1.shepherd-enabled {
   max-width: 190px;
   inset: 0 0 auto 11px !important; }
@@ -122,9 +125,6 @@
     color: #508bfe !important; }
   .shepherd-element.custom4.shepherd-enabled .button3.shepherd-button {
     margin-right: 1px; }
-
-.shepherd-modal-overlay-container.shepherd-modal-is-visible {
-  opacity: 0.0001 !important; }
 
 .has-more:before {
   position: absolute;

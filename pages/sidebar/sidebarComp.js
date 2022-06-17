@@ -1127,7 +1127,7 @@ Vue.component('sidebar', {
         },
         // 添加第一步引导
         steps: [{
-          text: '右键点击可以删除示例桌面', attachTo: {element: '#appVue', on:'bottom'},
+          text: '在这里可以创建你的专属桌面，支持导出和导入桌面文件，方便与他人分享', attachTo: {element: '#appVue', on:'bottom'},
           buttons: [
             {action: function () {
                 window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/sv8ozw'
