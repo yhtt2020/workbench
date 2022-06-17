@@ -254,8 +254,25 @@ const webviews = {
       ],
       allowPopups:true
     }
-  }
-  else if(sourceUrl.startsWith('http://localhost:5008/')) {
+  } else if(sourceUrl.startsWith('http://localhost:5008/')) {
+    webPreferences={
+      preload: __dirname + '/pages/guide/preload.js',
+      nodeIntegration: true, //node集成开高了
+      contextIsolation:false,
+      enableRemoteModule: true,
+      scrollBounce: false,
+      sandbox: false,
+      safeDialogs:false,
+      safeDialogsMessage:false,
+      additionalArguments: [
+        '--user-data-path=' + window.globalArgs['user-data-path'],
+        '--app-version=' + window.globalArgs['app-version'],
+        '--app-name=' +  window.globalArgs['app-name'],
+        //'--is-Dev='+window.globalArgs['development--mode']
+      ],
+      allowPopups:true
+    }
+  } else if(sourceUrl.startsWith('http://localhost:8080')) {
     webPreferences={
       preload: __dirname + '/pages/guide/preload.js',
       nodeIntegration: true, //node集成开高了
@@ -274,7 +291,6 @@ const webviews = {
       allowPopups:true
     }
   }
-
 
     if(sourceUrl==='ts://apps' || sourceUrl ==='ts://newtab'){
       webPreferences.partition=null

@@ -81,6 +81,40 @@ class EdgeBookmarkRepository {
     }
   }
 
+  //收藏夹书签方式导入
+  static async newBookmarkImport() {
+    try {
+      const edgeBookmarksFilePath =
+        platform() === "darwin"
+          ? `${homedir()}/Library/Application Support/Microsoft Edge/Default/Bookmarks`
+          : `${homedir()}\\AppData\\Local\\Microsoft\\Edge\\User Data\\Default\\Bookmarks`;
+
+      const edgeBookmark = new EdgeBookmarkRepository(
+        edgeBookmarksFilePath
+      );
+      const bookmark = await edgeBookmark.getBrowserBookmarks();
+
+      //创建书签根目录
+      fileHelpers.addRootFolder(`Edge${new Date().getMonth() + 1}月${new Date().getDate()}日导入`)
+
+      //往收藏夹的文件目录写入书签文件
+      bookmark.children.forEach(v => {
+        fileHelpers.recurBookmark(v)
+      })
+
+      setTimeout(() => {
+        ipc.send('message',{type:'success',config:{content: 'Edge书签导入成功', key: Date.now()}})
+        ipc.send('afterMigration', 'edge')
+        ipc.send('reloadFav')
+        fileHelpers.restFavStorePath()
+      }, 5000)
+    } catch (error) {
+      fileHelpers.restFavStorePath()
+      ipc.send('message',{type:'error',config:{content: `Edge书签导入失败!${error}!`, key: Date.now()}})
+    }
+  }
+
+
 }
 
 module.exports = EdgeBookmarkRepository

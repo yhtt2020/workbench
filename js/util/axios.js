@@ -38,7 +38,7 @@ axios.interceptors.request.use(
     // }
 
     //登录状态下发起的请求 或 刷新令牌接口才执行下面
-    if((config.hasOwnProperty('expireInfo') && config.expireInfo.token.length > 0) || config.url.includes("refreshBrowserToken")) {
+    if((config.hasOwnProperty('expireInfo') && config.expireInfo && config.expireInfo.token.length > 0) || config.url.includes("refreshBrowserToken")) {
 
       //说明此请求正在请求刷新令牌，直接return出去
 			if (config.url.includes("refreshBrowserToken")) {
