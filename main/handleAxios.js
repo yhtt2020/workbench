@@ -216,6 +216,10 @@ app.whenReady().then(()=>{
     markDb.db.set('guideSchedule.medal', true).write()
   })
 
+  ipc.on('isMedal',()=>{
+    let isMedal = markDb.db.get('guideSchedule.medal').value()
+    SidePanel.send('callBackMedal', isMedal)
+  })
   /**
    * 浏览器主进程中各任务完成后需要调用的函数
    * @param {string} guideName lowdb中set的键名 如'guideSchedule.modules.noobGuide.accountLogin'
@@ -256,9 +260,21 @@ app.whenReady().then(()=>{
     SidePanel.send('guide',5)
   })
 
+  // ipc.on('addTasks', () => {
+  //   setTimeout(()=>{
+  //    SidePanel.send('guide',6)
+  //   },1000)
+  // })
+
   ipc.on('addTaskCareer',(event,args)=>{
     sendIPCToMainWindow('addTaskCareer',args)
   })
+
+  ipc.on('returnIsDefaultBrowser',(event,args)=>{
+    console.log(args)
+  })
+
+
   ipc.on('blockSelect',(event,args)=>{
     mainWindow.webContents.send('blockSetting',args)
   })
@@ -278,7 +294,9 @@ app.whenReady().then(()=>{
   ipc.on('guideLogin',()=>{
     SidePanel.send('guideLogin')
   })
-
+  ipc.on('guideClose',()=>{
+    mainWindow.webContents.send('closeGuide')
+  })
 //--------------------------------------------------------->myf状态管理部分
 
 
