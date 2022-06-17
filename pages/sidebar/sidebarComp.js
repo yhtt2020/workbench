@@ -1926,6 +1926,13 @@ ipc.on('runAutoRunApps', function (event, args) {
   // }
 })
 
+ipc.on('executeAppByPackage',async (event,args)=>{
+   let app=await standAloneAppModel.getFromPackage(args.package)
+    if(app){
+      ipc.send('executeApp', { app: app, background: args.background?args.background:false })
+    }
+})
+
 ipc.on('appBadge', function (event, args) {
   appVue.$refs.sidePanel.apps.forEach(app => {
     if (app.id === args.id) {
