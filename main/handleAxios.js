@@ -293,6 +293,7 @@ app.whenReady().then(()=>{
   })
   ipc.on('guideTeam', () => {
     SidePanel.send('guide',5)
+
   })
 
   // ipc.on('addTasks', () => {

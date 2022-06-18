@@ -1997,7 +1997,7 @@ ipc.on('guide',async (event, args) => {
         appVue.$refs.sidePanel.focus()
         appVue.$refs.sidePanel.guide(args)
         ipc.send('enterGuide')
-      }, 100)
+      }, 800)
     }
     if(current.value.uid === 0){
       appVue.$message.error('登录后才能使用团队功能');
@@ -2019,7 +2019,7 @@ ipc.on('guideApplyFirst',()=>{
 ipc.on('guideDesktop',()=>{
   setTimeout(() => {
     ipc.send('enterGuide')
-  }, 1000)
+  }, 300)
   appVue.$refs.sidePanel.focus()
   appVue.$refs.sidePanel.guideDesktop()
 })
