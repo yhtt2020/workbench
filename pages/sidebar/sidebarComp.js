@@ -834,8 +834,6 @@ Vue.component('sidebar', {
         appVue.$refs.sidePanel.isMedals = args
       })
     })
-
-    ipc.send('isMedal')
     this.watchAllHasMore()
     //获取当前左侧栏的状态，并设置
    spaceModel.getCurrent().then((space)=>{
@@ -1402,6 +1400,7 @@ Vue.component('sidebar', {
       ipc.send('sidePanelFocus')
     },
     toggleUserPanel () {
+      ipc.send('isMedal')
       this.passList = this.$store.getters.getAllCircle.filter(v => v.status !==3 && v.status !==2 )
       this.teamList = this.passList.filter(v => v.property === 0 ||  v.property===1)
       if(this.user.uid===0){
