@@ -9,6 +9,28 @@ app.whenReady().then(() => {
   configDb.init(app.getPath('userData'))
   const defaultStorePath = configDb.getStorePath()
 
+  ipc.on('downloadAndSetWallpaper',(event,args)=>{
+    try{
+      const savePath=path.join(defaultStorePath,'壁纸')
+      if(!fs.existsSync(savePath)){
+        fs.mkdirSync(savePath)
+      }
+      let filename=localCacheManager.getHash(args.url).substr(0,5)
+      const filePath=path.join(savePath,filename)
+      localCacheManager.fetchContentWithType(args.url, filePath).then((header) => {
+        let ext = header.substr(header.lastIndexOf('/') + 1)
+        if (ext === 'svg+xml') {
+          ext = 'svg'
+        }
+        fs.renameSync(filePath,filePath+'.'+ext)
+        const wallpaper = require('wallpaper')
+        wallpaper.set(filePath+'.'+ext)
+        event.reply('setWallPaper',{status:1})
+      })
+    }catch(e){
+      event.reply('setWallPaper',{status:0})
+    }
+  })
   //------------------>
   let canCloseInterval = false
   ipc.on('canCloseInterval', (event, args) => {
