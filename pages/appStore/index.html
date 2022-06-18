@@ -225,19 +225,19 @@
         "site": "https://github.com/MaLuns/wallhaven-electron",
         "logo": "https://a.apps.vip/wallpaper/favicon.png",
         "type": "web",
-        "url": "http://localhost:8080",
+        "url": "http://a.apps.vip/wallpaper",
         "package": "com.thisky.wallpaper",
         "summary": "一个基于Wallheaven的壁纸应用，由想天改造成应用，版权归原作者所有。下载壁纸、设置壁纸，需要开启本地权限。",
         "settings": {
           bounds: {
-            width: 1000,
-            height: 800
-          },
-          disableWebSecurity:true
+            width: 1200,
+            height: 1000
+          }
         },
         "auth": {
           base: [
-            'webSecure','download'
+            'webSecure','download',
+            'node'
           ],
           app: [
             'setWallpaper'

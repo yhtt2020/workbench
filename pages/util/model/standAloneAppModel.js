@@ -587,6 +587,9 @@ const standAloneAppModel = {
         break
       case 'download':
         words='下载文件'
+          break
+      case 'node':
+        words='Node集成'
     }
     return words
   },

@@ -556,17 +556,35 @@ const appManager = {
     }else{
       preload=path.join(__dirname + '/pages/saApp/appPreload.js')
     }
+    console.log(saApp)
+    let auth=[]
+    if(saApp.auth){
+      saApp.auth=JSON.parse(saApp.auth)
+      if(saApp.auth.base){
+        auth=auth.concat(...saApp.auth.base)
+      }
+      if(saApp.auth.app){
+        auth= auth.concat(...saApp.auth.app)
+      }
+    }
+    let partition='persist:webcontent'
+    if(saApp.isSystemApp){
+      partition=null
+    }else if(auth.indexOf('node')>-1){
+      partition='persist:'+ saApp.package
+    }
+
     let webPreferences = {
       preload: preload,//后者是所有web应用公用的preload
-      nodeIntegration: saApp.isSystemApp,
-      contextIsolation: !saApp.isSystemApp,
+      nodeIntegration: saApp.isSystemApp || auth.indexOf('node')>-1,
+      contextIsolation: !saApp.isSystemApp && auth.indexOf('webSecure')===-1,
       enableRemoteModule: true,
       sandbox: false,
       safeDialogs: false,
       backgroundColor: 'white',
       safeDialogsMessage: false,
-      webSecurity:!saApp.isSystemApp, //系统应用关闭同源策略，不开启会报cros
-      partition: saApp.isSystemApp ? null : 'persist:webcontent',
+      webSecurity:!saApp.isSystemApp && auth.indexOf('webSecure')===-1, //系统应用关闭同源策略，不开启会报cros
+      partition: partition,
       additionalArguments: [
         '--user-data-path=' + userDataPath,
         '--app-version=' + app.getVersion(),
