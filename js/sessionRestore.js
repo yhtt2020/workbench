@@ -173,7 +173,7 @@ const sessionRestore = {
       //首次运行，显示官方网站
       console.log(savedStringData)
       var data = JSON.parse(savedStringData)
-      if (data.state.tasks.length===0) {
+      if (data=== false || data.state.tasks.length===0) {
         tasks.setSelected(tasks.add()) // create a new task
 
         var newTab = tasks.getSelected().tabs.add({
@@ -481,7 +481,8 @@ const sessionRestore = {
       //此处为本地空间的初始化逻辑
       space = await localSpaceModel.getSpace(currentSpace.spaceId) //先尝试获取一次最新的空间
       //如果还不存在备份空间，应该是老版本，从未保存本地备份，这种场景可以不处理，下次自动保存一次就好了
-      space.userInfo = currentSpace.userInfo
+      if(space)
+        space.userInfo = currentSpace.userInfo
     }
 
     sessionRestore.currentSpace = currentSpace

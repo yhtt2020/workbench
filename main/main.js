@@ -148,8 +148,8 @@ function handleCommandLineArguments(argv) {
 function createWindow(cb) {
 	fs.readFile(path.join(userDataPath, 'windowBounds.json'), 'utf-8', function(e, data) {
 		var bounds
-
-		if (data) {
+    let displayBounds
+    if (data) {
 			try {
 				bounds = JSON.parse(data)
 			} catch (e) {
@@ -158,26 +158,39 @@ function createWindow(cb) {
 		}
 		if (e || !data || !bounds) { // there was an error, probably because the file doesn't exist
 			var size = electron.screen.getPrimaryDisplay().workAreaSize
+      const initWidth=1366
+      const initHeight=950
+      let width=size.width>initWidth?initWidth:size.width
+      let height=size.width>initWidth?initHeight:size.height
+
 			bounds = {
-				x: 0,
-				y: 0,
-				width: size.width,
-				height: size.height,
-				maximized: true
+        x:size.width/2-width/2,
+        y:size.height/2-height/2,
+				width: width,
+				height: height,
+				maximized: false
 			}
+      displayBounds={
+        x: 0,
+        y: 0,
+        width: size.width,
+        height: size.height,
+      }
 		}
+
+
 
 		// make the bounds fit inside a currently-active screen
 		// (since the screen Min was previously open on could have been removed)
 		// see: https://github.com/minbrowser/min/issues/904
-		var containingRect = electron.screen.getDisplayMatching(bounds).workArea
+		var containingRect = electron.screen.getDisplayMatching(displayBounds).workArea
 
+    console.log(bounds)
 		bounds = {
-			x: clamp(bounds.x, containingRect.x, (containingRect.x + containingRect.width) - bounds.width),
-			y: clamp(bounds.y, containingRect.y, (containingRect.y + containingRect.height) - bounds
-				.height),
-			width: clamp(bounds.width, 0, containingRect.width),
-			height: clamp(bounds.height, 0, containingRect.height),
+      x:containingRect.width/2-bounds.width/2,
+      y:containingRect/2-bounds.height/2,
+			width: bounds.width,
+			height: bounds.height,
 			maximized: bounds.maximized
 		}
 
