@@ -46,8 +46,10 @@
             <a-dropdown :trigger="['contextmenu']">
             <div style="margin-bottom: 15px;text-align: center;">
               <div style="margin-bottom: 10px">
+                <a-badge  :dot="app.isNew">
                 <img @click="executeApp(app)" onerror="this.src='../../icons/default.svg'" shape="circle" class="logo clickable" :src="app.logo"
                      :style="{'border-color':app.userThemeColor?app.userThemeColor:app.themeColor}">
+                </a-badge>
               </div>
               <div class="clickable"  @click="executeApp(app)" style="white-space:nowrap;
 overflow:hidden;
@@ -71,9 +73,15 @@ text-overflow:ellipsis; ">
 
               <div style="margin-bottom: 15px;text-align: center">
                 <a-dropdown :trigger="['contextmenu']">
-                  <div> <div style="margin-bottom: 10px">
+                  <div>
+
+                    <div style="margin-bottom: 10px">
+                      <a-badge  :dot="app.isNew">
                     <img onerror="this.src='../../icons/default.svg'" @click="executeApp(app)" shape="circle" class="logo clickable" :src="app.logo"
                           :style="{'border-color':app.userThemeColor?app.userThemeColor:app.themeColor}">
+
+
+                      </a-badge>
                   </div>
                     <div class="clickable"  @click="executeApp(app)" style="white-space:nowrap;
 overflow:hidden;
@@ -81,6 +89,7 @@ text-overflow:ellipsis; ">
                       {{app.name}}
                     </div>
                   </div>
+
 
                 <a-menu slot="overlay" >
                   <a-menu-item @click="openSetting(app.id)" key="setting"> <a-icon type="setting"></a-icon>设置</a-menu-item>
@@ -100,8 +109,10 @@ text-overflow:ellipsis; ">
             <a-dropdown :trigger="['contextmenu']">
               <div style="margin-bottom: 15px;text-align: center">
                 <div style="margin-bottom: 10px">
+                  <a-badge  :dot="app.isNew">
                   <img onerror="this.src='../../icons/default.svg'"  @click="executeApp(app)" shape="circle" class="logo clickable"  :src="app.logo"
                         :style="{'border-color':app.userThemeColor?app.userThemeColor:app.themeColor}">
+                  </a-badge>
                 </div>
                 <div class="clickable"  @click="executeApp(app)" style="white-space:nowrap;
 overflow:hidden;
@@ -183,7 +194,7 @@ text-overflow:ellipsis; ">
           //
         },
         refresh(){
-          saAppModel.getAllApps().then((data) => {
+          saAppModel.getAllApps({order:'createTime'}).then((data) => {
             appVue.apps = data
           })
           saAppModel.getAllApps({order:'lastExecuteTime',limit:6}).then((data) => {

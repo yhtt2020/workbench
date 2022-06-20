@@ -1144,6 +1144,8 @@ app.whenReady().then(()=>{
         backgroundColor:'#00000000',
         show:false,
         alwaysOnTop:true,
+        width:550,
+        height:730,
         parent:mainWindow,
         webPreferences:{
           preload:path.join(__dirname,'pages/user/loginPreload.js'),
@@ -1154,17 +1156,16 @@ app.whenReady().then(()=>{
             '--app-version=' + app.getVersion(),
             '--app-name=' + app.getName(),
             ...((isDevelopmentMode ? ['--development-mode'] : [])),
-            '--callWindow='+event.sender.id
-          ]
+            '--callWindow='+event.sender.id,
+          ],
+          partition:'login'
         }
       })
-
       loginWindow.setMenu(null)
-      loginWindow.setBounds(bounds)
       loginWindow.on('close',()=>{
         loginWindow=null
       })
-      api=require(path.join(__dirname,'server-config.js')).api
+      let api=require(path.join(__dirname,'server-config.js')).api
       loginWindow.loadURL(api.getUrl(api.API_URL.user.login))
       loginWindow.on('ready-to-show',()=>{
         if(userWindow && !userWindow.isDestroyed())

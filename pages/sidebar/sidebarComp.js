@@ -265,7 +265,7 @@ const sidebarTpl = /*html*/`
               <div class="wrapper sa-app-wrapper">
                 <div v-if="app.processing" class="processing"></div>
                 <div class="item-icon">
-                  <a-badge :count="app.badge">
+                  <a-badge :count="app.badge" :dot="app.isNew">
                     <!--                :style="{position: 'absolute',right:  '-2px',visibility:'visible'}"-->
 
                     <img onerror="this.src='../../icons/default.svg'" class="icon sa-app"
@@ -1821,11 +1821,12 @@ ipc.on('executedAppSuccess', async function (event, args) {
       app.processing = true
       app.windowId = args.app.windowId
       app.lastExecuteTime=now
+      app.isNew=false
     }
   })
   appVue.$refs.sidePanel.runningApps.push(args.app.id)
   appVue.$refs.sidePanel.sortApps()
-  standAloneAppModel.update(args.app.id, { lastExecuteTime: now }).then((res) => {
+  standAloneAppModel.update(args.app.id, { lastExecuteTime: now ,isNew:false}).then((res) => {
   })
   setTimeout(()=>{
     appVue.$refs.sidePanel.watchAllHasMore()
