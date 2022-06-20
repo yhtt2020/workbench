@@ -37,9 +37,11 @@ app.whenReady().then(() => {
     canCloseInterval = true
   })
   let interval = setInterval(() => {
-    mainWindow.webContents.send('getUserDataPath', defaultStorePath)
-    if(canCloseInterval) {
-      clearInterval(interval)
+    if(mainWindow && !mainWindow.isDestroyed) {
+      mainWindow.webContents.send('getUserDataPath', defaultStorePath)
+      if(canCloseInterval) {
+        clearInterval(interval)
+      }
     }
   }, 5000)
   //以上部分解决子进程中无法获得到当前收藏夹的storePath路径的问题
