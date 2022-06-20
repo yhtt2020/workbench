@@ -337,11 +337,14 @@ const standAloneAppModel = {
   },
   async getAllApps(option={}) {
     let result=[]
+    let query=db.standAloneApps
     if(option.order){
-      result = await db.standAloneApps.orderBy(option.order).reverse().limit(option.limit).toArray()
-    }else{
-      result = await db.standAloneApps.toArray()
+      query = query.orderBy(option.order).reverse()
     }
+    if(option.limit){
+      query = query.limit(option.limit)
+    }
+    result=await query.toArray()
 
     result.forEach((app) => {
       app.capture = ''

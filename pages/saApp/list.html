@@ -183,7 +183,7 @@ text-overflow:ellipsis; ">
           //
         },
         refresh(){
-          saAppModel.getAllApps().then((data) => {
+          saAppModel.getAllApps({order:'createTime'}).then((data) => {
             appVue.apps = data
           })
           saAppModel.getAllApps({order:'lastExecuteTime',limit:6}).then((data) => {
