@@ -161,7 +161,7 @@ function createWindow(cb) {
       const initWidth=1366
       const initHeight=950
       let width=size.width>initWidth?initWidth:size.width
-      let height=size.width>initWidth?initHeight:size.height
+      let height=(size.width>initWidth && initHeight<size.height)?initHeight:size.height
 
 			bounds = {
         x:size.width/2-width/2,
@@ -176,7 +176,9 @@ function createWindow(cb) {
         width: size.width,
         height: size.height,
       }
-		}
+		}else{
+      displayBounds=bounds
+    }
 
 
 
@@ -185,7 +187,6 @@ function createWindow(cb) {
 		// see: https://github.com/minbrowser/min/issues/904
 		var containingRect = electron.screen.getDisplayMatching(displayBounds).workArea
 
-    console.log(bounds)
 		bounds = {
       x:containingRect.width/2-bounds.width/2,
       y:containingRect/2-bounds.height/2,

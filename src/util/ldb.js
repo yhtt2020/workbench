@@ -41,7 +41,10 @@ let ldb = {
       let dbParent=dbPath.substring(0,dbPath.lastIndexOf('/'))
       let dbName=dbPath.substring(dbPath.lastIndexOf('/')+1,dbPath.lastIndexOf('.'))
       let bkPath=path.join(dbParent,dbName+'_bk_'+Date.now()+'.json')
-      fs.cpSync(dbPath,bkPath)
+      if(fs.existsSync(dbPath)){
+        fs.cpSync(dbPath,bkPath)
+      }
+
     }
   },
   initDb(){
