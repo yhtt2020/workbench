@@ -1154,11 +1154,11 @@ app.whenReady().then(()=>{
             '--app-version=' + app.getVersion(),
             '--app-name=' + app.getName(),
             ...((isDevelopmentMode ? ['--development-mode'] : [])),
-            '--callWindow='+event.sender.id
-          ]
+            '--callWindow='+event.sender.id,
+          ],
+          partition:'login'
         }
       })
-
       loginWindow.setMenu(null)
       loginWindow.setBounds(bounds)
       loginWindow.on('close',()=>{
