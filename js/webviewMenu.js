@@ -19,8 +19,18 @@ function setWallPaper(mediaURL,tip=true){
     console.log(err)
   })
 }
-ipc.on('setWallPaper',(event,args)=>{
+ipc.on('setNewTabWallPaper',(event,args)=>{
   setWallPaper(args.wallPaper,args.tip)
+})
+/**
+ * 回调消息
+ */
+ipc.on('setWallPaper',(event,args)=>{
+  if(args.status===1){
+    ipc.send('message',{type:'success',config:{content:'设置为桌面壁纸成功。',key:'wallpaper'}})
+  }else{
+    ipc.send('message',{type:'error',config:{content:'设置为桌面壁纸失败，请检查网络。',key:'wallpaper'}})
+  }
 })
 const webviewMenu = {
   menuData: null,
@@ -183,6 +193,7 @@ const webviewMenu = {
           {
             label: "添加到【收藏夹】并设置为【桌面壁纸】",
             click: async function () {
+              ipc.send('message',{type:'info',config:{content:'正在下载并保存至收藏夹，请稍候…',key:'wallpaper'}})
               ipc.send('downloadAndSetWallpaper',{url:mediaURL})
             }
           },

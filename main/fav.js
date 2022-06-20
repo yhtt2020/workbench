@@ -189,7 +189,7 @@ app.whenReady().then(() => {
 
   })
   ipc.on('setWallPaper', (event, args) => {
-    sendIPCToWindow(mainWindow, 'setWallPaper', { wallPaper: args.wallPaper, tip: false })
+    sendIPCToWindow(mainWindow, 'setNewTabWallPaper', { wallPaper: args.wallPaper, tip: false })
   })
   ipc.on('trashItem', (event, args) => {
     let filePath = args.fullPath
