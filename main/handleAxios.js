@@ -296,11 +296,11 @@ app.whenReady().then(()=>{
 
   })
 
-  // ipc.on('addTasks', () => {
-  //   setTimeout(()=>{
-  //    SidePanel.send('guide',6)
-  //   },1000)
-  // })
+  ipc.on('addTasks', () => {
+    setTimeout(()=>{
+     SidePanel.send('guide',6)
+    },800)
+  })
 
   ipc.on('addTaskCareer',(event,args)=>{
     sendIPCToMainWindow('addTaskCareer',args)

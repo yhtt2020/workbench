@@ -99,11 +99,18 @@ const sidebarTpl = /*html*/`
                         </a-col>
                       </a-row>
                     </div>
+
                     <div v-show="isMedals" class="medals" style="height: 30px;">
                        <div style="margin-top: 8px;margin-left: 15px;width: 32px;height: 35px;" >
-                       <img  src="../../img/silver-b.png" style="width: 100%;height: 100%">
-</div>
-</div>
+                        <a-popover placement="topLeft" arrow-point-at-center>
+                           <template slot="content">
+                             <h2 style="font-size: 14px;margin-left: 25px">创始用户</h2>
+                             <p style="font-size: 12px;margin-bottom: 0px">完成新手引导后获得</p>
+                           </template>
+                           <img  src="../../img/silver-b.png" style="width: 100%;height: 100%">
+                        </a-popover>
+                       </div>
+                    </div>
                     <div style="margin-bottom: 10px" class="actions flex flex-direction justify-between align-center">
                       <div class="actions-top flex justify-start  align-center">
                         <img src="./assets/tizi.svg" alt="" style="width: 16px; height: 16px">
@@ -551,7 +558,7 @@ const sidebarTpl = /*html*/`
       <div id="appbox" class="app-box">
         <ul id="appGroup" style="user-select: none;padding-bottom: 20px" class="app-task app-items"
           @dblclick.prevent="addNewTask">
-          <draggable v-model="getItems" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass"
+          <draggable id="addTaskCareer" v-model="getItems" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass"
             chosenClass="chosenClass" @start="onStart" @end="onEnd">
             <transition-group>
               <li id="guideAddTasks"  @click="openItem(item.id,i)" @dblclick.stop="" v-for="(item,i) in this.$store.getters.getItems"
@@ -1171,7 +1178,7 @@ Vue.component('sidebar', {
         },
         // 添加第一步引导
         steps: [{
-          text: '已为您添加推荐标签组', attachTo: {element: '#guideAddTasks', on:'right'},
+          text: '已为您添加推荐标签组', attachTo: {element: '#addTaskCareer', on:'right'},
           buttons: [
             {action: function () {return  this.cancel();}, text: '好 的',classes:'button'}],
           id: 'first'    // 用于Shepherd step的唯一标识符
@@ -2003,7 +2010,11 @@ ipc.on('guide',async (event, args) => {
       appVue.$message.error('登录后才能使用团队功能');
     }
     // appVue.$refs.sidePanel.userPanelVisible=true
-  } else {
+  }else if(args===6){
+    appVue.$refs.sidePanel.focus()
+    appVue.$refs.sidePanel.guideAddTasks()
+  }
+  else {
     ipc.send('enterGuide')
     appVue.$refs.sidePanel.focus()
     appVue.$refs.sidePanel.guide(args)
