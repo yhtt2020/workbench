@@ -159,6 +159,8 @@ const sessionRestore = {
           console.warn('当远端无法获取，尝试从本地备份空间恢复时意外报错')
           console.warn(e)
         }
+      }else{
+        console.log('本地次运行1')
       }
     } catch (e) {
       console.warn(e)
@@ -166,21 +168,23 @@ const sessionRestore = {
     }
 
     try {
+      console.log('首次运行2')
       // first run, show the tour
       //首次运行，显示官方网站
-      if (!savedStringData) {
+      console.log(savedStringData)
+      var data = JSON.parse(savedStringData)
+      if (data.state.tasks.length===0) {
         tasks.setSelected(tasks.add()) // create a new task
 
         var newTab = tasks.getSelected().tabs.add({
-          url: 'https://apps.vip'
+          url: urlParser.getSourceURL('ts://guide')
         })
+        console.log(newTab)
         browserUI.addTab(newTab, {
           enterEditMode: false
         })
         return
       }
-
-      var data = JSON.parse(savedStringData)
 
       // the data isn't restorable
       if ((data.version && data.version !== 2) || (data.state && data.state.tasks && data.state.tasks.length === 0)) {
