@@ -187,6 +187,17 @@ app.whenReady().then(()=>{
     })
   })
 
+  function calcGuideScedule() {
+    const guideScedule = markDb.db.get('guideSchedule').value()
+    let totalChildrenObj = Object.assign(guideScedule.modules.noobGuide, guideScedule.modules.feature)
+    let percentage = Math.floor((Object.entries(totalChildrenObj).filter(v => v[1] === true).length) / (Object.keys(totalChildrenObj).length) * 100)
+    return percentage
+  }
+
+  ipc.handle('getSidebarGuideScedule', () => {
+    return calcGuideScedule()
+  })
+
   ipc.on('openRedirectApps', (event, args) => {
     SidePanel.send('handleProtocol', args)
   })
@@ -263,6 +274,7 @@ app.whenReady().then(()=>{
     markDb.db.set(guideName, true).write()
     if(global.fromRender && !global.fromRender.guide.isDestroyed()) {
       global.fromRender.guide.send('scheduleRefresh', markDb.db.get('guideSchedule').value())
+      SidePanel.send('updateSidebarGuideScedule', calcGuideScedule())
     }
   }
 
