@@ -127,6 +127,16 @@
   .shepherd-element.custom4.shepherd-enabled .button3.shepherd-button {
     margin-right: 1px; }
 
+.shepherd-element.custom5.shepherd-enabled {
+  max-width: 168px;
+  inset: 0px 0 auto 12px !important; }
+  .shepherd-element.custom5.shepherd-enabled .shepherd-text {
+    font-size: 14px; }
+  .shepherd-element.custom5.shepherd-enabled .shepherd-button {
+    padding: 3px 13px;
+    margin-right: 7px;
+    transition: 0s !important; }
+
 .shepherd-modal-overlay-container.shepherd-modal-is-visible {
   opacity: 0.4 !important; }
 
