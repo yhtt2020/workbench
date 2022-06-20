@@ -306,11 +306,14 @@ ipc.on('reloadTask', () => {
 // })
 
 ipc.on('closeGuide',()=>{
-  let closeGuideTab = tabs.tabs.filter((e)=>{
-   return  e.selected = true
+  let closeGuideTab;
+  tabs.tabs.filter((e)=>{
+    if (e.selected == true) {
+      closeGuideTab = e.id
+    }
   })
 
-  closeTab(closeGuideTab[0].id)
+  closeTab(closeGuideTab)
 })
 
 
