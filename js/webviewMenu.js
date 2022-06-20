@@ -126,7 +126,7 @@ const webviewMenu = {
 
       var imageActions = [
         {
-          label: (mediaURL.length > 60) ? mediaURL.substring(0, 60) + '...' : mediaURL,
+          label: (mediaURL.length > 30) ? mediaURL.substring(0, 30) + '...' : mediaURL,
           enabled: false
         }
       ]
@@ -155,11 +155,52 @@ const webviewMenu = {
       })
 
 
+      imageActions.push(
+        {
+          label:'收藏到收藏夹…',
+          click:()=>{
+              ipc.send('getFavContent',{
+                content:{
+                  src:mediaURL,
+                  type:'img',
+                  alt:'',
+                  title:tabs.get(tabs.getSelected()).title,
+                  href:tabs.get(tabs.getSelected()).url
+                }
+              })
+          }
+        })
+
       imageActions.push({
-        label: "设为新标签页默认壁纸",
-        click: async function () {
-          setWallPaper(mediaURL)
-        }
+        label:'更多…',
+        submenu:[
+          {
+            label: "设为【新标签页】的【默认壁纸】",
+            click: async function () {
+              setWallPaper(mediaURL)
+            }
+          },
+          {
+            label: "添加到【收藏夹】并设置为【桌面壁纸】",
+            click: async function () {
+              ipc.send('downloadAndSetWallpaper',{url:mediaURL})
+            }
+          },
+          {
+            label:'使用【编辑器】处理图片',
+            click:async function (){
+              //const localCacheManager=require('./main/localCacheManager')
+              //let imagePath=await localCacheManager.getWithoutCache(mediaURL)
+              if(mediaURL){
+                ipc.send('handleFileAssign',{type:'image',args:{filePath:mediaURL}})
+              }else{
+                ipc.send('message',{type:'error',config:{content:'编辑图片失败。'}})
+              }
+              //console.log(localCacheManager.urlToFilePath(mediaURL))
+              // appManager.protocolManager.handleFileAssign('image',{})
+            }
+          }
+        ]
       })
 
       menuSections.push(imageActions)
@@ -171,20 +212,7 @@ const webviewMenu = {
             ipc.invoke('downloadURL', mediaURL)
           }
         },
-        {
-          label:'使用【编辑器】处理图片',
-          click:async function (){
-            //const localCacheManager=require('./main/localCacheManager')
-            //let imagePath=await localCacheManager.getWithoutCache(mediaURL)
-            if(mediaURL){
-                ipc.send('handleFileAssign',{type:'image',args:{filePath:mediaURL}})
-            }else{
-              ipc.send('message',{type:'error',config:{content:'编辑图片失败。'}})
-            }
-            //console.log(localCacheManager.urlToFilePath(mediaURL))
-           // appManager.protocolManager.handleFileAssign('image',{})
-          }
-        }
+
       ])
 
 
