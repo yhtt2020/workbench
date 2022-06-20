@@ -321,7 +321,7 @@ const standAloneAppModel = {
       settings:app.settings? JSON.stringify(app.settings):'[]',
       auth:app.auth?JSON.stringify(app.auth):'[]',
       unreadCount: 0,
-      showInSideBar: app.showInSideBar || false
+      isNew:true
     }
     let hasInstalled=false
     if(app.package){
@@ -331,10 +331,13 @@ const standAloneAppModel = {
         return false
       }
     }
-
     return await db.standAloneApps.put(appInstall)
-
   },
+  /**
+   *
+   * @param option  order,limit
+   * @returns {Promise<*>}
+   */
   async getAllApps(option={}) {
     let result=[]
     let query=db.standAloneApps
@@ -432,6 +435,7 @@ const standAloneAppModel = {
           autoRun: true,
           showInSideBar:true
         }),
+        isNew:true,
         unreadCount: 0,
       },
       {
@@ -458,6 +462,7 @@ const standAloneAppModel = {
           },
           showInSideBar: true
         }),
+        isNew:true,
         unreadCount: 0,
       },
       {
@@ -484,6 +489,7 @@ const standAloneAppModel = {
           },
           showInSideBar:false,
         }),
+        isNew:true,
         unreadCount: 0,
       },
       {
@@ -511,7 +517,7 @@ const standAloneAppModel = {
           },
           showInSideBar:false
         }),
-        unreadCount: 1,
+        isNew:true
       },
       {
         id:5,
@@ -522,7 +528,11 @@ const standAloneAppModel = {
         logo: 'https://a.apps.vip/imageEditor/icon.svg',
         url: 'https://a.apps.vip/imageEditor/',
         package: 'com.thisky.imageEditor',
+        createTime: Date.now(),
+        updateTime: Date.now(),
         summary: '可以为您的图片增加相框、贴纸、文字、进行简单裁减、旋转，还可以添加滤镜。',
+        isNew:true,
+        settings:'[]',
         fileAssign:['image']
       },
       {
@@ -532,10 +542,13 @@ const standAloneAppModel = {
         url: 'https://www.yuque.com/tswork/ngd5zk/iuguin',
         package:'com.thisky.helper',
         themeColor: '#ff7b42',
+        createTime: Date.now(),
+        updateTime: Date.now(),
         author: '想天软件',
         site: 'https://apps.vip/',
         checked: true,
         summary: '帮助手册，让你从零开始学会掌握想天浏览器。',
+        isNew:true,
         settings: JSON.stringify({
           bounds: {
             width: 1200,
