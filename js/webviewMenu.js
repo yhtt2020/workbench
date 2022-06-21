@@ -8,8 +8,6 @@ const settings = require('util/settings/settings.js')
 const pageTranslations = require('pageTranslations.js')
 
 const remoteMenu = require('remoteMenuRenderer.js')
-const { db } = require('./util/database')
-const localCacheManager = require("./main/localCacheManager");
 
 function setWallPaper(mediaURL,tip=true){
   require('../pages/util/theme').wallPaper.setUrlWallPaper(mediaURL).then(()=>{
@@ -168,7 +166,7 @@ const webviewMenu = {
       imageActions.push(
         {
           label:'添加到收藏夹…',
-          icon:'./pages/fav/fav.png',
+          icon:__dirname+'/pages/fav/fav.png',
           click:()=>{
               ipc.send('getFavContent',{
                 content:{
