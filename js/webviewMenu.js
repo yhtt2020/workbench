@@ -8,8 +8,6 @@ const settings = require('util/settings/settings.js')
 const pageTranslations = require('pageTranslations.js')
 
 const remoteMenu = require('remoteMenuRenderer.js')
-const { db } = require('./util/database')
-const localCacheManager = require("./main/localCacheManager");
 
 function setWallPaper(mediaURL,tip=true){
   require('../pages/util/theme').wallPaper.setUrlWallPaper(mediaURL).then(()=>{
@@ -19,8 +17,18 @@ function setWallPaper(mediaURL,tip=true){
     console.log(err)
   })
 }
-ipc.on('setWallPaper',(event,args)=>{
+ipc.on('setNewTabWallPaper',(event,args)=>{
   setWallPaper(args.wallPaper,args.tip)
+})
+/**
+ * 回调消息
+ */
+ipc.on('setWallPaper',(event,args)=>{
+  if(args.status===1){
+    ipc.send('message',{type:'success',config:{content:'设置为桌面壁纸成功。',key:'wallpaper'}})
+  }else{
+    ipc.send('message',{type:'error',config:{content:'设置为桌面壁纸失败，请检查网络。',key:'wallpaper'}})
+  }
 })
 const webviewMenu = {
   menuData: null,
@@ -126,7 +134,7 @@ const webviewMenu = {
 
       var imageActions = [
         {
-          label: (mediaURL.length > 60) ? mediaURL.substring(0, 60) + '...' : mediaURL,
+          label: (mediaURL.length > 30) ? mediaURL.substring(0, 30) + '...' : mediaURL,
           enabled: false
         }
       ]
@@ -155,11 +163,54 @@ const webviewMenu = {
       })
 
 
+      imageActions.push(
+        {
+          label:'添加到收藏夹…',
+          icon:__dirname+'/pages/fav/fav.png',
+          click:()=>{
+              ipc.send('getFavContent',{
+                content:{
+                  src:mediaURL,
+                  type:'img',
+                  alt:'',
+                  title:tabs.get(tabs.getSelected()).title,
+                  href:tabs.get(tabs.getSelected()).url
+                }
+              })
+          }
+        })
+
       imageActions.push({
-        label: "设为新标签页默认壁纸",
-        click: async function () {
-          setWallPaper(mediaURL)
-        }
+        label:'更多…',
+        submenu:[
+          {
+            label: "设为【新标签页】的【默认壁纸】",
+            click: async function () {
+              setWallPaper(mediaURL)
+            }
+          },
+          {
+            label: "添加到【收藏夹】并设置为【桌面壁纸】",
+            click: async function () {
+              ipc.send('message',{type:'info',config:{content:'正在下载并保存至收藏夹，请稍候…',key:'wallpaper'}})
+              ipc.send('downloadAndSetWallpaper',{url:mediaURL})
+            }
+          },
+          {
+            label:'使用【编辑器】处理图片',
+            click:async function (){
+              //const localCacheManager=require('./main/localCacheManager')
+              //let imagePath=await localCacheManager.getWithoutCache(mediaURL)
+              if(mediaURL){
+                ipc.send('handleFileAssign',{type:'image',args:{filePath:mediaURL}})
+              }else{
+                ipc.send('message',{type:'error',config:{content:'编辑图片失败。'}})
+              }
+              //console.log(localCacheManager.urlToFilePath(mediaURL))
+              // appManager.protocolManager.handleFileAssign('image',{})
+            }
+          }
+        ]
       })
 
       menuSections.push(imageActions)
@@ -171,20 +222,7 @@ const webviewMenu = {
             ipc.invoke('downloadURL', mediaURL)
           }
         },
-        {
-          label:'使用【编辑器】处理图片',
-          click:async function (){
-            //const localCacheManager=require('./main/localCacheManager')
-            //let imagePath=await localCacheManager.getWithoutCache(mediaURL)
-            if(mediaURL){
-                ipc.send('handleFileAssign',{type:'image',args:{filePath:mediaURL}})
-            }else{
-              ipc.send('message',{type:'error',config:{content:'编辑图片失败。'}})
-            }
-            //console.log(localCacheManager.urlToFilePath(mediaURL))
-           // appManager.protocolManager.handleFileAssign('image',{})
-          }
-        }
+
       ])
 
 

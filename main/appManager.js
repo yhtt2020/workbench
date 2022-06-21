@@ -135,8 +135,7 @@ const appManager = {
     processingAppWindows.forEach(processApp => {
       if (processApp.saApp.id === appId) {
         processApp.saApp.badge = processApp.saApp.badge ? processApp.saApp.badge + add : add
-        console.log(processApp.saApp.badge) //todo这里输出看起来会触发两次，说明foreach遍历有两次是processApp.saApp.id === appId
-      }
+     }
     })
     SidePanel.send('appBadge', { id: appId, add: add })
     appManager.updateDockBadge()
@@ -150,7 +149,6 @@ const appManager = {
     processingAppWindows.forEach(processApp => {
       if (processApp.saApp.id === appId) {
         processApp.saApp.badge = 0
-        console.log(processApp.saApp.badge) //todo这里输出看起来会触发两次，说明foreach遍历有两次是processApp.saApp.id === appId
       }
     })
     SidePanel.send('appBadge', { id: appId, badge: 0 })
@@ -556,7 +554,7 @@ const appManager = {
     }else{
       preload=path.join(__dirname + '/pages/saApp/appPreload.js')
     }
-    console.log(saApp)
+
     let auth=[]
     if(saApp.auth){
       saApp.auth=JSON.parse(saApp.auth)
@@ -1223,7 +1221,6 @@ app.whenReady().then(() => {
   })
 
   ipc.handle('minimizeAppWindow', (event, args) => {
-    console.log(args.id)
     appManager.getWindowByAppId(args.id).minimize()
   })
   ipc.handle('closeAppWindow', (event, args) => {
@@ -1278,7 +1275,6 @@ app.whenReady().then(() => {
 
   ipc.on('saAppHome', (event, args) => {
     let saApp = appManager.getSaAppByAppId(args.id)
-    console.log(saApp.url)
     appManager.getWindowByAppId(args.id).view.webContents.loadURL(saApp.url)
   })
  // ipc.on('saAppFindInPage',(event,args)=>{

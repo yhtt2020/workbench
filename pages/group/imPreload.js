@@ -27,7 +27,7 @@ const server = {
         })
       } else {
         //浏览器未登录，lumen跳到一个引导页且实现登出，里面布局一个按钮，sdk触发免登的跳转
-        ipc.send('message',{type:'error',config:{content: '请先登录浏览器!', key: Date.now()}})
+        //ipc.send('message',{type:'error',config:{content: '请先登录浏览器!', key: Date.now()}})
         window.location.href = `${host}${config.IM.BOOT_ROUTE}?removeToken=true`
       }
     })

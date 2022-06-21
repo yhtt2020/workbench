@@ -272,7 +272,7 @@ const sidebarTpl = /*html*/`
               <div class="wrapper sa-app-wrapper">
                 <div v-if="app.processing" class="processing"></div>
                 <div class="item-icon">
-                  <a-badge :count="app.badge">
+                  <a-badge :count="app.badge" :dot="app.isNew">
                     <!--                :style="{position: 'absolute',right:  '-2px',visibility:'visible'}"-->
 
                     <img onerror="this.src='../../icons/default.svg'" class="icon sa-app"
@@ -700,10 +700,6 @@ const sidebarTpl = /*html*/`
           <div>
             <a-collapse default-active-key="0" :active-key="sidebarBottom" :bordered="false" @change="changeBottomSize">
               <a-collapse-panel key="1">
-               <li  @click="openHelpCenter">
-                  <a-button type="default" shape="circle" icon="question-circle"></a-button>
-                  <div class="item-title">帮助中心</div>
-                </li>
               </a-collapse-panel>
             </a-collapse>
           </div>
@@ -718,9 +714,10 @@ const sidebarTpl = /*html*/`
           </a-badge>
           <div class="item-title">消息中心</div >
         </li>
-        <li @click="openBottom('setting')">
-          <a-button type="default" shape="circle" icon="setting" tabindex=-1></a-button>
-          <div class="item-title">偏好设置</div>
+        <li  @click="openHelpCenter" style="position: relative">
+          <a-progress :width="30" type="circle" :percent="this.$store.getters.getGuideScedule" :showInfo="false" :strokeWidth="11"></a-progress>
+          <a-icon type="question-circle" style="position: absolute; top: 14.5px; right: 14.5px; font-size: 16px;"></a-icon>
+          <div class="item-title">帮助中心</div>
         </li>
       </ul>
     </div>
@@ -1821,11 +1818,12 @@ ipc.on('executedAppSuccess', async function (event, args) {
       app.processing = true
       app.windowId = args.app.windowId
       app.lastExecuteTime=now
+      app.isNew=false
     }
   })
   appVue.$refs.sidePanel.runningApps.push(args.app.id)
   appVue.$refs.sidePanel.sortApps()
-  standAloneAppModel.update(args.app.id, { lastExecuteTime: now }).then((res) => {
+  standAloneAppModel.update(args.app.id, { lastExecuteTime: now ,isNew:false}).then((res) => {
   })
   setTimeout(()=>{
     appVue.$refs.sidePanel.watchAllHasMore()

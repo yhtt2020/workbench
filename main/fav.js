@@ -37,9 +37,11 @@ app.whenReady().then(() => {
     canCloseInterval = true
   })
   let interval = setInterval(() => {
-    mainWindow.webContents.send('getUserDataPath', defaultStorePath)
-    if(canCloseInterval) {
-      clearInterval(interval)
+    if(mainWindow && !mainWindow.isDestroyed) {
+      mainWindow.webContents.send('getUserDataPath', defaultStorePath)
+      if(canCloseInterval) {
+        clearInterval(interval)
+      }
     }
   }, 5000)
   //以上部分解决子进程中无法获得到当前收藏夹的storePath路径的问题
@@ -88,6 +90,7 @@ app.whenReady().then(() => {
   })
   //采集到的内容本地下载下来保存
   ipc.on('getFavContent', async (event, args) => {
+    SidePanel.send('message', { type: 'info', config: { content: '开始下载图片到收藏夹，请稍候…' ,key:'fav'} })
     function filterFilename (filename, replaceHolder = ' ') {
       const map = [
         '/', '\\', '|', '?', '"', '*', ':', '<', '>', '\n'
@@ -118,9 +121,12 @@ app.whenReady().then(() => {
         let newFileName = ''
         if (content.alt !== '') {
           newFileName = content.alt.length > 20 ? content.alt.substr(0, 20) + '.' + ext : content.alt + '.' + ext
-        } else {
+        } else if(content.title!=='') {
           newFileName = content.title.length > 20 ? content.title.substr(0, 20) + '.' + ext : content.title + '.' + ext
+        }else{
+          newFileName= Date.now()+'.'+ext
         }
+        newFileName=filterFilename(newFileName) //过滤一下文件名
         let i = 0
         let testFileName = newFileName
         while (fs.existsSync(path.join(defaultStorePath, testFileName))) {
@@ -128,7 +134,7 @@ app.whenReady().then(() => {
           testFileName = newFileName.substr(0, newFileName.lastIndexOf('.')) + '-' + i.toString() + newFileName.substr(newFileName.lastIndexOf('.'))
         }
         let lastPath = testFileName
-        lastPath=filterFilename(lastPath)
+        lastPath=lastPath
         let storePath=path.join(defaultStorePath, lastPath)//存储的实际文件名
         fs.renameSync(path.join(defaultStorePath, filename),storePath )
         if (fs.existsSync(path.join(defaultStorePath, newFileName))) {
@@ -150,12 +156,13 @@ app.whenReady().then(() => {
               timeGone+=200
             }
           },200)
-          SidePanel.send('message', { type: 'success', config: { content: '收藏到本地成功。' } })
+          SidePanel.send('message', { type: 'success', config: { content: '收藏到本地成功。' ,key:'fav'} })
         } else {
-          SidePanel.send('message', { type: 'error', config: { content: '收藏失败，请检查网络。' } })
+          SidePanel.send('message', { type: 'error', config: { content: '收藏失败，请检查网络。',key:'fav' } })
         }
       }).catch(e => {
-        SidePanel.send('message', { type: 'error', config: { content: '收藏失败，请检查网络。' } })
+        console.warn(e)
+        SidePanel.send('message', { type: 'error', config: { content: '收藏失败，意外错误。',key:'fav' } })
       })
     }
 
@@ -184,7 +191,7 @@ app.whenReady().then(() => {
 
   })
   ipc.on('setWallPaper', (event, args) => {
-    sendIPCToWindow(mainWindow, 'setWallPaper', { wallPaper: args.wallPaper, tip: false })
+    sendIPCToWindow(mainWindow, 'setNewTabWallPaper', { wallPaper: args.wallPaper, tip: false })
   })
   ipc.on('trashItem', (event, args) => {
     let filePath = args.fullPath
