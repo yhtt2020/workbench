@@ -12,7 +12,7 @@ var readerView = require('readerView.js')
 var taskOverlay = require('taskOverlay/taskOverlay.js')
 const bookmark = require('./extras/bookmark/bookmarkSys')
 let settings=require('../js/util/settings/settings')
-
+window.waitOpenTabs=[]
 
 module.exports = {
   initialize: function () {
@@ -91,14 +91,19 @@ module.exports = {
         focusMode.warn()
         return
       }
+      if(!tabs){
+        window.waitOpenTabs.push(data.url)
+        //如果还没有初始化好tabs，则将此tab放置到要初始化的tabs队列
+      }else{
+        var newTab = tabs.add({
+          url: data.url || ''
+        })
 
-      var newTab = tabs.add({
-        url: data.url || ''
-      })
+        browserUI.addTab(newTab, {
+          enterEditMode: !data.url // only enter edit mode if the new tab is empty
+        })
+      }
 
-      browserUI.addTab(newTab, {
-        enterEditMode: !data.url // only enter edit mode if the new tab is empty
-      })
     })
 
     //定位到task组的某tabid，往后插入创建tab

@@ -168,10 +168,8 @@ const sessionRestore = {
     }
 
     try {
-      console.log('首次运行2')
       // first run, show the tour
       //首次运行，显示官方网站
-      console.log(savedStringData)
       var data = JSON.parse(savedStringData)
       if (data=== false || data.state.tasks.length===0) {
         tasks.setSelected(tasks.add()) // create a new task
@@ -477,6 +475,28 @@ const sessionRestore = {
           ipc.send('disconnect')
         }, 2000)
       }
+      //打开需要打开的网页
+      let  timer=setInterval(()=>{
+        if(window.waitOpenTabs && window.waitOpenTabs.length>0){
+          if(tabs){
+            window.waitOpenTabs.forEach((url)=>{
+              var newTab = tabs.add({
+                url: url || ''
+              })
+
+              browserUI.addTab(newTab, {
+                enterEditMode: !url // only enter edit mode if the new tab is empty
+              })
+            })
+            window.waitOpenTabs=[]
+            clearInterval(timer)
+          }
+        }
+      },1000)
+
+
+
+
     } else {
       //此处为本地空间的初始化逻辑
       space = await localSpaceModel.getSpace(currentSpace.spaceId) //先尝试获取一次最新的空间

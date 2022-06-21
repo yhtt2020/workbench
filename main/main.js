@@ -449,7 +449,6 @@ app.on('ready', function() {
 		mainWindow.webContents.on('did-finish-load', function() {
 			// if a URL was passed as a command line argument (probably because Min is set as the default browser on Linux), open it.
 			handleCommandLineArguments(process.argv)
-
 			// there is a URL from an "open-url" event (on Mac)
 			if (global.URLToOpen) {
 				// if there is a previously set URL to open (probably from opening a link on macOS), open it
