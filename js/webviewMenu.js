@@ -167,7 +167,8 @@ const webviewMenu = {
 
       imageActions.push(
         {
-          label:'收藏到收藏夹…',
+          label:'添加到收藏夹…',
+          icon:'./pages/fav/fav.png',
           click:()=>{
               ipc.send('getFavContent',{
                 content:{
