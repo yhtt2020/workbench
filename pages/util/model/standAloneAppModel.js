@@ -151,6 +151,22 @@ const standAloneAppModel = {
     let imageEditor = await db.standAloneApps.get({name:'图片编辑器'})
     if(imageEditor){
       await  db.standAloneApps.update(imageEditor.id,{package:'com.thisky.imageEditor',fileAssign:['image'],url:'https://a.apps.vip/imageEditor/','logo':'https://a.apps.vip/imageEditor/icon.svg'})
+    }else{
+      await db.standAloneApps.add({
+        name: '图片编辑器',
+        themeColor: 'rgb(90,170,60)',
+        author: '想天软件',
+        site: 'http://apps.vip',
+        logo: 'https://a.apps.vip/imageEditor/icon.svg',
+        url: 'https://a.apps.vip/imageEditor/',
+        package: 'com.thisky.imageEditor',
+        createTime: Date.now(),
+        updateTime: Date.now(),
+        summary: '可以为您的图片增加相框、贴纸、文字、进行简单裁减、旋转，还可以添加滤镜。',
+        isNew:true,
+        settings:'[]',
+        fileAssign:['image']
+      })
     }
 
   },
