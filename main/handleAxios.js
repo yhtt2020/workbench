@@ -189,7 +189,9 @@ app.whenReady().then(()=>{
 
   function calcGuideScedule() {
     const guideScedule = markDb.db.get('guideSchedule').value()
-    let totalChildrenObj = Object.assign(guideScedule.modules.noobGuide, guideScedule.modules.feature)
+    let noobGuideObj = JSON.parse(JSON.stringify(guideScedule.modules.noobGuide))
+    let featureObj = JSON.parse(JSON.stringify(guideScedule.modules.feature))
+    let totalChildrenObj = Object.assign(noobGuideObj, featureObj)
     let percentage = Math.floor((Object.entries(totalChildrenObj).filter(v => v[1] === true).length) / (Object.keys(totalChildrenObj).length) * 100)
     return percentage
   }

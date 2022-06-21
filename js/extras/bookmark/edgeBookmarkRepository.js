@@ -110,6 +110,7 @@ class EdgeBookmarkRepository {
         ipc.send('openFav')
       }, 5000)
     } catch (error) {
+      console.log(error, '&&&&&&&&&&&&&')
       fileHelpers.restFavStorePath()
       ipc.send('message',{type:'error',config:{content: `Edge书签导入失败!${error}!`, key: Date.now()}})
     }
