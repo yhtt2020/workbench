@@ -977,17 +977,22 @@ Vue.component('sidebar', {
     guide(a){
       const stepsList=[
         {
-          text: `<div>每一个打开网页都属于一个标签组，试试<b>双击</b>侧边栏空白处创建一个新的组</div>`, attachTo: {element: '#guideTasks', on: 'right'},
+          text: `<div>每一个打开网页都属于一个标签组，试试<b>双击</b>侧边栏空白处创建一个新的组</div>`, attachTo: {element: '#addTaskCareer', on: 'right'},
           buttons: [
-            {action: function () {
+            {
+              action: function () {
                 window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/yglkui'
-              }, secondary: true, text: '了解更多'},
-            {action: function () {
+              },
+              secondary: true, text: '了解更多'
+            },
+            {
+              action: function () {
                 this.cancel();
                 ipc.send('exitGuide')
                 ipc.send('tasksState')
-              }, text: '好的'}],
-          id: 'welcome'    // 用于Shepherd step的唯一标识符
+              }, text: '好的'
+            }],
+          id: 'taskGuide'    // 用于Shepherd step的唯一标识符
         },
         {
           text: `<div>点击这里，或着按下<b>Alt + F</b>键打开全局搜索</div>`, attachTo: {element: '#guideSearch', on: 'right'},
@@ -1000,22 +1005,26 @@ Vue.component('sidebar', {
                 ipc.send('exitGuide')
                 ipc.send('searchState')
               }, text: '好的'}],
-          id: 'welcome'    // 用于Shepherd step的唯一标识符
+          id: 'searchGuide'
         },
         {//占位
         },
         {
           text: `<div>在这里创建或选择您想要的空间</div>`, attachTo: {element: '.guideSpace', on: 'right'},
           buttons: [
-            {action: function () {
+            {
+              action: function () {
                 window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/gg7vro'
-              }, secondary: true, text: '了解更多'},
-            {action: function () {
+              },
+              secondary: true, text: '了解更多'
+            },
+            {
+              action: function () {
               this.cancel()
                 ipc.send('exitGuide')
                 ipc.send('spaceState')
               }, text: '好的'}],
-          id: 'welcome'    // 用于Shepherd step的唯一标识符
+          id: 'cloudGuide'
         },
         {//占位
         },
@@ -1031,7 +1040,7 @@ Vue.component('sidebar', {
                 ipc.send('exitGuide')
                 ipc.send('teamState')
               }, text: '好的'}],
-          id: 'welcome'    // 用于Shepherd step的唯一标识符
+          id: 'teamGudie'    // 用于Shepherd step的唯一标识符
         },
       ]
         const shepherd = new Shepherd.Tour({
@@ -1043,7 +1052,7 @@ Vue.component('sidebar', {
               enabled: false, // 默认为true
             },
             // 指定引导盒子的类名, 用于后续自定义样式, 类名可叠加
-            classes: 'custom1',
+            classes: 'group',//标签组，全局搜索，空间，团队四个引导统一样式
             // 滚动方式
             scrollTo: {
               behavior: 'smooth',
@@ -1057,49 +1066,41 @@ Vue.component('sidebar', {
       },
     guideApplyFirst(){
       const applyShepherd = new Shepherd.Tour({
-        // 设置默认引导配置
         useModalOverlay: true,
         defaultStepOptions: {
-          // 引导左上角取消按钮图标的配置
           cancelIcon: {
-            enabled: false, // 默认为true
+            enabled: false,
           },
-          // 指定引导盒子的类名, 用于后续自定义样式, 类名可叠加
-          classes: 'custom2',
-          // 滚动方式
+          classes: 'appFirst',//应用引导分两步，这是第一步引导
           scrollTo: {
             behavior: 'smooth',
             block: 'center'
           }
         },
-        // 添加第一步引导
         steps: [{
           text: '右键网页标签，选择安装到应用', attachTo: {element: '#guideApplySecond', on: 'bottom'},
-          buttons: [
-            {action: function () { this.cancel(); appVue.$refs.sidePanel.guideApplySecond()}, text: '下一步'}],
-          id: 'welcome'    // 用于Shepherd step的唯一标识符
+          buttons:
+            [{
+              action: function () { this.cancel(); appVue.$refs.sidePanel.guideApplySecond()}, text: '下一步'
+            }],
+          id: 'appGuide'    // 用于Shepherd step的唯一标识符
         }]
-      });
+      })
       applyShepherd.start();
     },
     guideApplySecond(){
       const applySecondShepherd = new Shepherd.Tour({
-        // 设置默认引导配置
         useModalOverlay: true,
         defaultStepOptions: {
-          // 引导左上角取消按钮图标的配置
           cancelIcon: {
-            enabled: false, // 默认为true
+            enabled: false,
           },
-          // 指定引导盒子的类名, 用于后续自定义样式, 类名可叠加
-          classes: 'custom3',
-          // 滚动方式
+          classes: 'appSecond',//应用引导第二步
           scrollTo: {
             behavior: 'smooth',
             block: 'center'
           }
         },
-        // 添加第一步引导
         steps: [{
           text: '点击这里可以管理你安装的所有应用', attachTo: {element: '#guideApplySecond', on: 'right'},
           buttons: [
@@ -1108,7 +1109,7 @@ Vue.component('sidebar', {
               }, text: '了解更多',classes:'button1'},
             {action: function () { this.cancel();appVue.$refs.sidePanel.guideApplyFirst()}, text: '上一步',classes:'button2'},
             {action: function () {return this.next();}, text: '下一步',classes:'button3'}],
-          id: 'first'    // 用于Shepherd step的唯一标识符
+          id: 'first'
         },{
           text: '安装的应用会显示在这里，左键打开或右键进行更多设置', attachTo: {element: '#saApp-box', on: 'right'},
           buttons: [
@@ -1118,29 +1119,24 @@ Vue.component('sidebar', {
                 ipc.send('exitGuide')
                 ipc.send('appState')
               }, text: '好 的'}],
-          id: 'second'    // 用于Shepherd step的唯一标识符
+          id: 'appSecondGuide'    // 用于Shepherd step的唯一标识符
         },]
       });
       applySecondShepherd.start();
     },
     guideDesktop(){
       const guideDesktop = new Shepherd.Tour({
-        // 设置默认引导配置
         useModalOverlay: true,
-
         defaultStepOptions: {
-          // 引导左上角取消按钮图标的配置
           cancelIcon: {
-            enabled: false, // 默认为true
+            enabled: false,
           },
-          classes:'custom4',
-          // 滚动方式
+          classes:'desk',//桌面引导
           scrollTo: {
             behavior: 'smooth',
             block: 'center'
           }
         },
-        // 添加第一步引导
         steps: [{
           text: '在这里可以创建你的专属桌面，支持导出和导入桌面文件，方便与他人分享', attachTo: {element: '#appVue', on:'bottom'},
           buttons: [
@@ -1152,39 +1148,33 @@ Vue.component('sidebar', {
                 ipc.send('exitGuide')
                 ipc.send('desktopState')
               }, text: '好 的',classes:'button3'}],
-          id: 'first'    // 用于Shepherd step的唯一标识符
+          id: 'first'
         }]
       });
       guideDesktop.start();
     },
     guideAddTasks(){
       const guideAddTasks = new Shepherd.Tour({
-        // 设置默认引导配置
         useModalOverlay: true,
-
         defaultStepOptions: {
-          // 引导左上角取消按钮图标的配置
           cancelIcon: {
-            enabled: false, // 默认为true
+            enabled: false,
           },
-          classes:'custom5',
-          // 滚动方式
+          classes:'taskAdd',//添加标签组完成后的引导
           scrollTo: {
             behavior: 'smooth',
             block: 'center'
           }
         },
-        // 添加第一步引导
         steps: [{
           text: '已为您添加推荐标签组', attachTo: {element: '#addTaskCareer', on:'right'},
           buttons: [
             {action: function () {return  this.cancel();}, text: '好 的',classes:'button'}],
-          id: 'first'    // 用于Shepherd step的唯一标识符
+          id: 'taskGuide'    // 用于Shepherd step的唯一标识符
         }]
       });
       guideAddTasks.start();
     },
-
     sortApps(){
       let sorted=_.orderBy(this.apps,(app)=>{
         return [app.processing?1:0,app.lastExecuteTime]
