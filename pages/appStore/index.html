@@ -114,7 +114,7 @@
               <a-col :span="2" class="app-check">
               </a-col>
               <a-col :span="3">
-                <img :style="{'border-color':app.themeColor}" class="app-logo" :src="app.logo"/>
+                <img class="app-logo" :src="app.logo"/>
               </a-col>
               <a-col :span="19">
                 <div class="app-name">{{app.name}} <strong style="font-size: 14px">（已安装）</strong></div>
@@ -255,7 +255,7 @@
         themeColor: '#07c160',
         author: '微信官方',
         site: 'https://weixin.qq.com/',
-        checked: true,
+        checked: false,
         summary: '微信官方文件小助手，扫码即可与微信互传文件，非常便捷。',
         settings: {
           bounds: {
@@ -275,7 +275,7 @@
         url: 'https://a.apps.vip/timer',
         installed: '95.1',
         package: 'com.thisky.timer',
-        checked: true,
+        checked: false,
         summary: '免费、简约的倒计时工具，具备常规倒计时功能，并将不断加入番茄钟、纪念日倒计时等功能，是您时间管理的神器。',
         settings: {
           bounds: {
@@ -293,7 +293,7 @@
         site: 'https://www.shensuantang.com',
         logo: 'https://up.apps.vip/logo/cfcc35d9-9750-4cce-b369-17d4413be0f7.jpg',
         themeColor: 'rgb(220,0,25)',
-        checked: true,
+        checked: false,
         url: 'https://www.shensuantang.com/h5/',
         summary: '旗峰网络出品的神算堂老黄历，包含万年历、每日黄历、每日宜忌、择日等实用功能。',
         settings: {
@@ -312,7 +312,7 @@
         themeColor: '#256AEA',
         author: '轻流',
         site: 'https://qingflow.com',
-        url: 'https://qingflow.com/promo/96c2244c/想天浏览器',
+        url: 'https://qingflow.com/',
         checked: false,
         summary: '一款业务流程管理系统，可以通过可视化的方法创建、管理你的审批流程。10人以内免费使用。',
       },
@@ -326,6 +326,17 @@
         checked: false,
         url: 'https://music.163.com/',
         summary: '有态度的音乐网站。',
+      },
+      {
+        name:'滴答清单',
+        url:'https://www.dida365.com/webapp/#q/all/tasks',
+        author:'杭州随笔记网络技术有限公司',
+        installed: '30.5',
+        themeColor: '#4772fa',
+        logo:'https://cdn.dida365.com/static/img/apple-touch-icon-180x180.png',
+        checked: false,
+        site:'https://www.dida365.com/home',
+        summary:'非常好用的个人任务、清单管理工具。'
       },
       {
         name: '小鹅通管理后台',
@@ -529,7 +540,6 @@
     height: 48px;
     border-radius: 100%;
     padding: 2px;
-    border: 3px solid #ccc;
   }
 </style>
 </body>
