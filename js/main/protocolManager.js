@@ -57,7 +57,7 @@ protocolManager={
         fileDefaultTarget=defaultTarget[type]
       }
     }
-    protocolManager.SidePanel.send('handleFileAssign',{type,args,target,fileDefaultTarget})
+    protocolManager.sidePanel.send('handleFileAssign',{type,args,target,fileDefaultTarget})
   },
   /**
    * 处理行为
