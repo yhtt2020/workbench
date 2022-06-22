@@ -584,8 +584,9 @@ const sidebarTpl = /*html*/`
                       <a-badge :count="item.count" :dot="true" status="processing"
                         :style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:item.count>5?'visible':'hidden'}">
                       </a-badge>
+                      <img class="single-avatar" v-if="item.partition !=='persist:webcontent'"  src="../../icons/svg/randomuser.svg">
                     </div>
-                    <div class="item-title">{{ item.title }}</div>
+                    <div class="item-title">{{ item.title }} </div>
                   </div>
 
 </template>

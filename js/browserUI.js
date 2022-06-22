@@ -22,6 +22,16 @@ function addTask () {
   addTab()
 }
 
+/**
+ * 添加独立会话分组
+ */
+function addSingleTask(){
+  tasks.setSelected(tasks.add({
+    partition:'persist:webcontent_'+Date.now()
+  }))
+  tabBar.updateAll()
+  addTab()
+}
 
 
 /* creates a new tab */
@@ -189,6 +199,7 @@ function closeTab (tabId) {
 /* changes the currently-selected task and updates the UI */
 
 function switchToTask (id) {
+  require('./taskOverlay/taskOverlay').hide()
   tasks.setSelected(id)
 
   tabBar.updateAll()
@@ -477,6 +488,7 @@ tabBar.events.on('tab-closed', function (id) {
 
 module.exports = {
   addTask,
+  addSingleTask,
   addTab,
   destroyTask,
   destroyTab,

@@ -118,6 +118,7 @@ const sideBar = {
     // document.getElementById('webview-placeholder').style.left='45px'
   }
 }
+window.sideBar=sideBar
 
 ipc.on('openToolbar',()=>{
 
