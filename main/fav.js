@@ -37,7 +37,7 @@ app.whenReady().then(() => {
     canCloseInterval = true
   })
   let interval = setInterval(() => {
-    if(mainWindow && !mainWindow.isDestroyed) {
+    if(mainWindow && !mainWindow.isDestroyed()) {
       mainWindow.webContents.send('getUserDataPath', defaultStorePath)
       if(canCloseInterval) {
         clearInterval(interval)

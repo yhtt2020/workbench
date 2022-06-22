@@ -49,6 +49,10 @@ app.whenReady().then(()=>{
     }).write()
   }
 
+  if(storage.getItem(`userToken`)) {
+    markDb.db.set('guideSchedule.modules.noobGuide.accountLogin', true).write()
+  }
+
   //游览器登录
   ipc.on('loginBrowser', async (event, arg) => {
     let result={}
@@ -172,6 +176,15 @@ app.whenReady().then(()=>{
     return markDb.db.get('guideSchedule').value()
   })
 
+  ipc.handle('getOtherStatus', () => {
+    let data = {
+      adBlockingLevel: settings.get('filtering') ? settings.get('filtering').blockingLevel : 0,
+      siteTheme: settings.get('siteTheme') ? settings.get('siteTheme') : true,
+      searchEngine: settings.get('searchEngine') ? settings.get('searchEngine').name : 'Bing'
+    }
+    return data
+  })
+
 
   ipc.on('guideMigration', (event, args) => {
     mainWindow.webContents.send('bookmarkMigration', args)
@@ -189,7 +202,9 @@ app.whenReady().then(()=>{
 
   function calcGuideScedule() {
     const guideScedule = markDb.db.get('guideSchedule').value()
-    let totalChildrenObj = Object.assign(guideScedule.modules.noobGuide, guideScedule.modules.feature)
+    let noobGuideObj = JSON.parse(JSON.stringify(guideScedule.modules.noobGuide))
+    let featureObj = JSON.parse(JSON.stringify(guideScedule.modules.feature))
+    let totalChildrenObj = Object.assign(noobGuideObj, featureObj)
     let percentage = Math.floor((Object.entries(totalChildrenObj).filter(v => v[1] === true).length) / (Object.keys(totalChildrenObj).length) * 100)
     return percentage
   }
@@ -355,6 +370,12 @@ app.whenReady().then(()=>{
 
   ipc.on('blockSelect',(event,args)=>{
     mainWindow.webContents.send('blockSetting',args)
+    if(global.fromRender && !global.fromRender.guide.isDestroyed()) {
+      global.fromRender.guide.send('updateSpecificItem', {
+        name: 'adBlockingLevel',
+        value: args
+      })
+    }
   })
   ipc.on('siteTheme',(event,args)=>{
     mainWindow.webContents.send('themeSelect',args)
