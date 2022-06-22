@@ -49,6 +49,10 @@ app.whenReady().then(()=>{
     }).write()
   }
 
+  if(storage.getItem(`userToken`)) {
+    markDb.db.set('guideSchedule.modules.noobGuide.accountLogin', true).write()
+  }
+
   //游览器登录
   ipc.on('loginBrowser', async (event, arg) => {
     let result={}
