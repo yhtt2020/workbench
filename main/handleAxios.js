@@ -49,6 +49,10 @@ app.whenReady().then(()=>{
     }).write()
   }
 
+  if(storage.getItem(`userToken`)) {
+    markDb.db.set('guideSchedule.modules.noobGuide.accountLogin', true).write()
+  }
+
   //游览器登录
   ipc.on('loginBrowser', async (event, arg) => {
     let result={}
@@ -170,6 +174,15 @@ app.whenReady().then(()=>{
       guide: event.sender
     }
     return markDb.db.get('guideSchedule').value()
+  })
+
+  ipc.handle('getOtherStatus', () => {
+    let data = {
+      adBlockingLevel: settings.get('filtering') ? settings.get('filtering').blockingLevel : 0,
+      siteTheme: settings.get('siteTheme') ? settings.get('siteTheme') : true,
+      searchEngine: settings.get('searchEngine') ? settings.get('searchEngine').name : 'Bing'
+    }
+    return data
   })
 
 
@@ -357,6 +370,12 @@ app.whenReady().then(()=>{
 
   ipc.on('blockSelect',(event,args)=>{
     mainWindow.webContents.send('blockSetting',args)
+    if(global.fromRender && !global.fromRender.guide.isDestroyed()) {
+      global.fromRender.guide.send('updateSpecificItem', {
+        name: 'adBlockingLevel',
+        value: args
+      })
+    }
   })
   ipc.on('siteTheme',(event,args)=>{
     mainWindow.webContents.send('themeSelect',args)

@@ -802,13 +802,12 @@ const appManager = {
         width: 1200,
         height: 800,
         minWidth: 380,
+        trafficLightPosition:{
+          x:10,y:7
+        },
         show: !background,
         frame: false,
         acceptFirstMouse: true,
-        trafficLightPosition: {
-          x: 12,
-          y: 14
-        },
         titleBarStyle: 'hidden',
         alwaysOnTop: saApp.settings.alwaysTop?saApp.settings.alwaysTop:false,
         webPreferences: {
@@ -851,11 +850,13 @@ const appManager = {
       let appView = appManager.loadView(saApp, appWindow,option)
       appWindow.setBrowserView(appView)
 
+      const titleBarHeight=30
+
       appView.setBounds({
         x: 0,
-        y: 40,
+        y: titleBarHeight,
         width: appWindow.getBounds().width,
-        height: appWindow.getBounds().height - 40
+        height: appWindow.getBounds().height - titleBarHeight
       })
       // appWindow.webContents.on('ipc-message', function (e, channel, data) {
       //   mainWindow.webContents.send('view-ipc', {
@@ -872,9 +873,9 @@ const appManager = {
         appManager.setAppSettings(saApp.id, { bounds: appWindow.getBounds() })
         appView.setBounds({
           x: 0,
-          y: 40,
+          y: titleBarHeight,
           width: appWindow.getBounds().width,
-          height: appWindow.getBounds().height - 40
+          height: appWindow.getBounds().height - titleBarHeight
         })
       })
       appWindow.webContents.on('before-input-event', (event, input) => {
