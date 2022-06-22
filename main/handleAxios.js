@@ -299,6 +299,41 @@ app.whenReady().then(()=>{
     mainWindow.webContents.send(action, data || {})
   }
 
+  ipc.on('guideTasksFirst',()=>{
+    if(markDb.db.get('guideSchedule.modules.feature.tasks').value()===false){
+      SidePanel.send('guide',0)
+    }
+  })
+  ipc.on('guideGlobalSearchFirst',()=>{
+    if(markDb.db.get('guideSchedule.modules.feature.globalSearch').value()===false){
+      SidePanel.send('guide',1)
+    }
+  })
+  ipc.on('guideDesktopFirst',()=>{
+    if(markDb.db.get('guideSchedule.modules.feature.desktop').value()===false){
+      mainWindow.webContents.send('addTab','ts://newtab')
+      setTimeout(()=>{
+        SidePanel.send('guideDesktop')
+      },1000)
+    }
+  })
+  ipc.on('guideSpaceFirst',()=>{
+    if(markDb.db.get('guideSchedule.modules.feature.userSpace').value()===false){
+      SidePanel.send('guide',3)
+    }
+  })
+
+  ipc.on('guideApplyFirst',()=>{
+    if(markDb.db.get('guideSchedule.modules.feature.apps').value()===false){
+      SidePanel.send('guideApplyFirst')
+    }
+  })
+  ipc.on('guideTeamFirst',()=>{
+    if(markDb.db.get('guideSchedule.modules.feature.team').value()===false){
+      SidePanel.send('guide',5)
+    }
+  })
+
   ipc.on('guideTasks', () => {
     SidePanel.send('guide',0)
   })
