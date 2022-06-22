@@ -783,7 +783,7 @@ ipc.on('openSidebarMenu',()=>{
       }
     },
     {
-      label: '管理标签组',
+      label: '整理标签组…',
       click () {
         sendIPCToWindow(mainWindow,'showTasks')
       }
