@@ -176,6 +176,15 @@ app.whenReady().then(()=>{
     return markDb.db.get('guideSchedule').value()
   })
 
+  ipc.handle('getOtherStatus', () => {
+    let data = {
+      adBlockingLevel: settings.get('filtering') ? settings.get('filtering').blockingLevel : 0,
+      siteTheme: settings.get('siteTheme') ? settings.get('siteTheme') : true,
+      searchEngine: settings.get('searchEngine') ? settings.get('searchEngine').name : 'Bing'
+    }
+    return data
+  })
+
 
   ipc.on('guideMigration', (event, args) => {
     mainWindow.webContents.send('bookmarkMigration', args)
@@ -326,6 +335,12 @@ app.whenReady().then(()=>{
 
   ipc.on('blockSelect',(event,args)=>{
     mainWindow.webContents.send('blockSetting',args)
+    if(global.fromRender && !global.fromRender.guide.isDestroyed()) {
+      global.fromRender.guide.send('updateSpecificItem', {
+        name: 'adBlockingLevel',
+        value: args
+      })
+    }
   })
   ipc.on('siteTheme',(event,args)=>{
     mainWindow.webContents.send('themeSelect',args)

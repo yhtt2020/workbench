@@ -86,7 +86,7 @@ settings.get('filtering', function (value) {
   if (value && value.blockingLevel !== undefined) {
     updateBlockingLevelUI(value.blockingLevel)
   } else {
-    updateBlockingLevelUI(1)
+    updateBlockingLevelUI(0)
   }
 
   if (value && value.exceptionDomains && value.exceptionDomains.length > 0) {
