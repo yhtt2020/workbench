@@ -18,7 +18,7 @@ class TabList {
       id: tabId,
       favicon: {
         luminance: 116.550,
-        url: 'file://./icons/tabIcon.svg'
+        url: 'file://' + __dirname + '/js/icons/tabIcon.svg'
       },
       lastActivity: tab.lastActivity || Date.now(),
       secure: tab.secure,
@@ -44,8 +44,6 @@ class TabList {
     }
 
     this.parentTaskList.emit('tab-added', tabId)
-
-
     return tabId
   }
 

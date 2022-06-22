@@ -639,7 +639,7 @@ ipc.on('execFav', async () => {
 ipc.invoke('getSidebarGuideScedule').then(res => {
   //这里有可能$store还没挂载上的情况，延迟2000毫秒
   setTimeout(() => {
-    window.$store.commit('UPDATE_GUIDE_SCEDULE', res)
+    window.$store.commit('UPDATE_GUIDE_SCEDULE', res + 1)
   }, 2000)
 })
 

@@ -38,7 +38,10 @@ class TaskList {
       tabs: new TabList(task.tabs, this),
       tabHistory: new TabStack(task.tabHistory),
       collapsed: task.collapsed, // this property must stay undefined if it is already (since there is a difference between "explicitly uncollapsed" and "never collapsed")
-      id: task.id || String(TaskList.getRandomId())
+      id: task.id || String(TaskList.getRandomId()),
+      favicon: {
+        url: 'file://' + __dirname + '/js/icons/taskIcon.svg'
+      },
     }
 
     if (index) {

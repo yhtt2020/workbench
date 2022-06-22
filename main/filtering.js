@@ -1,5 +1,5 @@
 var defaultFilteringSettings = {
-  blockingLevel: 1,
+  blockingLevel: 0,
   contentTypes: [],
   exceptionDomains: []
 }
