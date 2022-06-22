@@ -386,7 +386,13 @@ body {
     border-radius: 10px;
     margin-top: 20px;
     margin-bottom: 20px;
-
+    border: 1px solid rgb(226, 221, 221);
+    &:hover{
+      cursor:pointer;
+      border: 1px solid #1890ff;
+      transition: all .3s cubic-bezier(.645,.045,.355,1);
+      background-color: rgba(3, 167, 248, 0.1);
+    }
     .action {
       text-align: center;
       padding: 10px;

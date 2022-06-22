@@ -501,7 +501,13 @@ body {
   background: white;
   border-radius: 10px;
   margin-top: 20px;
-  margin-bottom: 20px; }
+  margin-bottom: 20px;
+  border: 1px solid #e2dddd; }
+  .user-panel .actions:hover {
+    cursor: pointer;
+    border: 1px solid #1890ff;
+    transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    background-color: rgba(3, 167, 248, 0.1); }
   .user-panel .actions .action {
     text-align: center;
     padding: 10px;

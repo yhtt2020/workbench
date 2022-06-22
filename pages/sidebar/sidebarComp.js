@@ -66,8 +66,9 @@ const sidebarTpl = /*html*/`
                           <template>
                             <a-popover placement="bottomLeft">
                               <template slot="content">
-                                <div class="flex flex-direction justify-around align-start" style="width: 100%; height: 120px">
+                                <div class="flex flex-direction justify-around align-start" style="width: 100%; height: 185px">
                                   <div class="text-black">等级: {{this.$store.getters.getTsGrade.lv}}级</div>
+                                  <div class="text-black">距离下一级还需要: 小时</div>
                                   <div class="text-black">累计在线时长{{this.$store.getters.getTsGrade.cumulativeHours}}小时</div>
                                   <div class="text-grey">
                                     <img src="./assets/sun.svg" alt="" style="width: 20px; height: 20px"> = 16级
@@ -78,6 +79,10 @@ const sidebarTpl = /*html*/`
                                   <div class="text-grey">
                                     <img src="./assets/star.svg" alt="" style="width: 20px; height: 20px"> = 1级
                                   </div>
+                                  <div class="text-help"  @click="gradeHelp()" style="display: flex;flex-direction: row;color: rgba(0, 0, 0, 0.25);margin-left: 2px;cursor:pointer;">
+ <a-icon type="question-circle" style="margin-top: 3px"></a-icon>
+ <span style="margin-left: 6px;font-size: 12px;margin-bottom: -8px">关于等级</span>
+</div>
                                 </div>
                               </template>
                               <div class="ts-grade flex justify-start align-center" style="margin-top: 4px">
@@ -111,7 +116,7 @@ const sidebarTpl = /*html*/`
                         </a-popover>
                        </div>
                     </div>
-                    <div style="margin-bottom: 10px" class="actions flex flex-direction justify-between align-center">
+                    <div style="margin-bottom: 10px" @click="myCommunity" class="actions flex flex-direction justify-between align-center">
                       <div class="actions-top flex justify-start  align-center">
                         <img src="./assets/tizi.svg" alt="" style="width: 16px; height: 16px">
                         <div class="text-grey" style="margin-left: 6px">我的元社区</div>
@@ -177,13 +182,6 @@ const sidebarTpl = /*html*/`
 <!--                            </div>-->
 <!--                          </div>-->
 
-<!--        <div>-->
-<!--          <template v-for="(tag, index) in tags">-->
-<!--            <a-tag :key="index" :color="tag.checked ? 'blue' : ''"  @click="handleChange(tag, index)"  style="margin-left:5px;font-size: 12px; border-radius: 10px">-->
-<!--              {{tag.label}}-->
-<!--            </a-tag>-->
-<!--          </template>-->
-<!--        </div>-->
 
                             <div class="mg-content-btn flex flex-direction"
                           v-for="(item, index) in teamList" :key="item.id" >
@@ -973,6 +971,12 @@ Vue.component('sidebar', {
     watchAllHasMore(){
       this.watchHasMore(document.getElementById('pinGroup'),document.getElementById('divider-inner'))
     },
+    gradeHelp(){
+      window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/gd9qad'
+    },
+    myCommunity(){
+      window.location.href='tsb://app/redirect/?package=com.thisky.com'
+    },
     guide(a){
       const stepsList=[
         {
@@ -1397,6 +1401,9 @@ Vue.component('sidebar', {
       ipc.send('isMedal')
       this.passList = this.$store.getters.getAllCircle.filter(v => v.status !==3 && v.status !==2 )
       this.teamList = this.passList.filter(v => v.property === 0 ||  v.property===1)
+        appVue.$refs.sidePanel.tags[0].checked=true
+        appVue.$refs.sidePanel.tags[1].checked=false
+        appVue.$refs.sidePanel.tags[2].checked=false
       if(this.user.uid===0){
         this.openUserWindow()
       }else{
