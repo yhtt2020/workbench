@@ -190,9 +190,12 @@ const webviews = {
 
     // if the tab is private, we want to partition it. See http://electron.atom.io/docs/v0.34.0/api/web-view-tag/#partition
     // since tab IDs are unique, we can use them as partition names
+    var partition=tasks.getSelected().partition
+    console.log(partition)
     if (tabData.private === true) {
-      var partition = tabId.toString() // options.tabId is a number, which remote.session.fromPartition won't accept. It must be converted to a string first
+      partition= tabId.toString() // options.tabId is a number, which remote.session.fromPartition won't accept. It must be converted to a string first
     }
+
 
 	/*对特殊的内部webview做处理，增加一些额外的权限*/
 	let webPreferences={}

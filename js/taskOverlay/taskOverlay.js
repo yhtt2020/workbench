@@ -37,7 +37,19 @@ function addTaskFromMenu () {
   //   tabEditor.show(tabs.getSelected())
   // }, 600)
 }
+function addSingleTask(){
+  if (modalMode.enabled()) {
+    return
+  }
 
+  /* new tasks can't be created in focus mode or modal mode */
+  if (focusMode.enabled()) {
+    focusMode.warn()
+    return
+  }
+
+  browserUI.addSingleTask()
+}
 function getTaskContainer (id) {
   return document.querySelector('.task-container[data-task="{id}"]'.replace('{id}', id))
 }
@@ -332,6 +344,7 @@ var taskOverlay = {
 
     keybindings.defineShortcut('addTask', addTaskFromMenu)
     ipcRenderer.on('addTask', addTaskFromMenu) // for menu item
+    ipcRenderer.on('addSingleTask',addSingleTask)
 
     /* rearrange tabs when they are dropped */
 
