@@ -61,78 +61,78 @@
         .mg-content .mg-content-btn .cb-bottom .cb-bottom-zone:hover {
           color: #1890ff; }
 
-.shepherd-element.custom1.shepherd-enabled {
+.shepherd-element.group.shepherd-enabled {
   max-width: 190px;
   inset: 0 0 auto 11px !important; }
-  .shepherd-element.custom1.shepherd-enabled .shepherd-text {
+  .shepherd-element.group.shepherd-enabled .shepherd-text {
     font-size: 14px; }
-  .shepherd-element.custom1.shepherd-enabled .shepherd-button {
+  .shepherd-element.group.shepherd-enabled .shepherd-button {
     padding: 0.2rem 1rem;
     transition: 0s !important; }
-  .shepherd-element.custom1.shepherd-enabled .shepherd-footer .shepherd-button:last-child {
+  .shepherd-element.group.shepherd-enabled .shepherd-footer .shepherd-button:last-child {
     margin-right: 1px; }
-  .shepherd-element.custom1.shepherd-enabled .shepherd-button.shepherd-button-secondary {
+  .shepherd-element.group.shepherd-enabled .shepherd-button.shepherd-button-secondary {
     background: #FFFFFF !important;
     padding-left: 1px;
     margin-right: 32px !important;
     color: #508bfe !important; }
 
-.shepherd-element.custom2.shepherd-enabled {
+.shepherd-element.appFirst.shepherd-enabled {
   max-width: 190px;
   inset: -71px 0 auto 0px !important; }
-  .shepherd-element.custom2.shepherd-enabled .shepherd-text {
+  .shepherd-element.appFirst.shepherd-enabled .shepherd-text {
     font-size: 14px; }
-  .shepherd-element.custom2.shepherd-enabled .shepherd-button {
+  .shepherd-element.appFirst.shepherd-enabled .shepherd-button {
     padding: 3px 6px;
     transition: 0s !important; }
-  .shepherd-element.custom2.shepherd-enabled .shepherd-arrow {
+  .shepherd-element.appFirst.shepherd-enabled .shepherd-arrow {
     transform: translate(151px, 0px) !important; }
-  .shepherd-element.custom2.shepherd-enabled .shepherd-footer .shepherd-button:last-child {
+  .shepherd-element.appFirst.shepherd-enabled .shepherd-footer .shepherd-button:last-child {
     margin-right: 1px; }
 
-.shepherd-element.custom3.shepherd-enabled {
+.shepherd-element.appSecond.shepherd-enabled {
   max-width: 230px;
   inset: 0px 0 auto 12px !important; }
-  .shepherd-element.custom3.shepherd-enabled .shepherd-text {
+  .shepherd-element.appSecond.shepherd-enabled .shepherd-text {
     font-size: 14px; }
-  .shepherd-element.custom3.shepherd-enabled .shepherd-button {
+  .shepherd-element.appSecond.shepherd-enabled .shepherd-button {
     padding: 3px 6px;
     margin-right: 11px;
     transition: 0s !important; }
-  .shepherd-element.custom3.shepherd-enabled .button1.shepherd-button {
+  .shepherd-element.appSecond.shepherd-enabled .button1.shepherd-button {
     background: #FFFFFF !important;
     color: #508bfe !important;
     padding-left: 1px; }
-  .shepherd-element.custom3.shepherd-enabled .button2.shepherd-button {
+  .shepherd-element.appSecond.shepherd-enabled .button2.shepherd-button {
     background: #FFFFFF !important;
     color: #508bfe !important; }
 
-.shepherd-element.custom4.shepherd-enabled {
+.shepherd-element.desk.shepherd-enabled {
   max-width: 190px;
   left: 50% !important;
   top: 10% !important;
   transform: translate(0px, 0px) !important; }
-  .shepherd-element.custom4.shepherd-enabled .shepherd-button {
+  .shepherd-element.desk.shepherd-enabled .shepherd-button {
     padding: 0.2rem 1rem;
     transition: 0s !important; }
-  .shepherd-element.custom4.shepherd-enabled .shepherd-text {
+  .shepherd-element.desk.shepherd-enabled .shepherd-text {
     font-size: 14px; }
-  .shepherd-element.custom4.shepherd-enabled .shepherd-arrow {
+  .shepherd-element.desk.shepherd-enabled .shepherd-arrow {
     display: none !important; }
-  .shepherd-element.custom4.shepherd-enabled .button2.shepherd-button {
+  .shepherd-element.desk.shepherd-enabled .button2.shepherd-button {
     background: #FFFFFF !important;
     padding-left: 1px;
     margin-right: 28px !important;
     color: #508bfe !important; }
-  .shepherd-element.custom4.shepherd-enabled .button3.shepherd-button {
+  .shepherd-element.desk.shepherd-enabled .button3.shepherd-button {
     margin-right: 1px; }
 
-.shepherd-element.custom5.shepherd-enabled {
+.shepherd-element.taskAdd.shepherd-enabled {
   max-width: 168px;
   inset: 0px 0 auto 12px !important; }
-  .shepherd-element.custom5.shepherd-enabled .shepherd-text {
+  .shepherd-element.taskAdd.shepherd-enabled .shepherd-text {
     font-size: 14px; }
-  .shepherd-element.custom5.shepherd-enabled .shepherd-button {
+  .shepherd-element.taskAdd.shepherd-enabled .shepherd-button {
     padding: 3px 13px;
     margin-right: 7px;
     transition: 0s !important; }
