@@ -115,6 +115,11 @@ var taskOverlay = {
   }),
   show: function () {
 
+    if(window.sideBar.mod==='open'){
+      document.getElementById('task-area').style.marginLeft='155px'
+    }else{
+      document.getElementById('task-area').style.marginLeft='55px'
+    }
     /* disabled in focus mode */
     if (focusMode.enabled()) {
       focusMode.warn()

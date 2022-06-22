@@ -199,6 +199,7 @@ function closeTab (tabId) {
 /* changes the currently-selected task and updates the UI */
 
 function switchToTask (id) {
+  require('./taskOverlay/taskOverlay').hide()
   tasks.setSelected(id)
 
   tabBar.updateAll()
