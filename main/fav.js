@@ -218,7 +218,8 @@ app.whenReady().then(() => {
   function showAddPage(){
     let url='pages/fav/index.html'//decodeURI('file://'+path.join(__dirname,'/pages/fav/index.html?=#/popSaveToFolder'))//开发环境测试环境，提交到版本库前注释掉
     let options={
-      hash:'popSaveToFolder'
+      hash:'popSaveToFolder',
+      enableRemoteModule:true
     }
     if(isDevelopmentMode){
       url='http://localhost:8080/#/popSaveToFolder'
@@ -231,6 +232,8 @@ app.whenReady().then(() => {
     }
     popWindow=popManager.openPop('favSaveToFolder',url,{},{preload:__dirname+'/pages/fav/preload.js'},options)
     popWindow.setBounds(currentBounds)  //重新调整位置，不然会保持在首次创建的位置不再变化
+
+    require("@electron/remote/main").enable(popWindow.window.webContents)
     popWindow.window.webContents.send('addPage')
   }
   ipc.on('openPopSaveToFolder',()=>{
