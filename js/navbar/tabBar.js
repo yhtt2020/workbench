@@ -681,39 +681,6 @@ const tabBar = {
         })
       }
       await localAppsMenu()
-
-      const onlineTempl = [
-        {
-          label: '添加到本地导航',
-          submenu: handleSingleTab
-        },
-        {
-          label: '整组添加到本地导航',
-          submenu: handleAllTab
-        },
-        {
-          label: '添加到云端用户导航',
-          submenu: showSiglAppUserNav
-        },
-        {
-          label: '整组添加到云端用户导航',
-          submenu: showMulAppUserNav
-        },
-        {
-          label: '添加到云端团队导航',
-          submenu: showSiglAppGroupNav
-        },
-        {
-          label: '整组添加到云端团队导航',
-          submenu: showMulAppGrouprNav
-        }
-      ]
-      template.push(
-        [{
-          label: '添加到收藏夹',
-          submenu: onlineTempl
-        }]
-      )
       // template.splice(3, 0, onlineTempl)
 
       remoteMenu.open(template)
