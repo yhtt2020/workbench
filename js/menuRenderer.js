@@ -162,27 +162,13 @@ module.exports = {
     })
 
     ipc.on('themeSelect',(event,args)=>{
-      let themeSelect;
-      if (args === 1) {
-        themeSelect = true
-      } else {
-        themeSelect = false
-      }
-      settings.set('siteTheme', themeSelect)
+      settings.set('siteTheme', args)
     })
 
     ipc.on('selectEngine',(event,args)=>{
       settings.get('searchEngine')
 
-      let engine;
-      if (args === 0) {
-        engine = 'Baidu'
-      }else if(args===1){
-        engine = 'Bing'
-      }else {
-        engine = 'Google'
-      }
-      settings.set('searchEngine',{ name: engine })
+      settings.set('searchEngine',{ name: args })
     })
 
 
