@@ -754,6 +754,7 @@ Vue.component('sidebar', {
       loginPanelTitle: '登录帐号免费体验完整功能',
       loginPanelContent: ``,
       userPanelVisible: false,
+      teamLock:false,//防止团队引导多次触发
       teamList:[],
       tags: [
         {
@@ -976,7 +977,7 @@ Vue.component('sidebar', {
       window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/gd9qad'
     },
     myCommunity(){
-      window.location.href='tsb://app/redirect/?package=com.thisky.com'
+      window.location.href='tsb://app/redirect/?package=com.thisky.com&url=https://s.apps.vip'
     },
     guide(a){
       const stepsList=[
@@ -1040,6 +1041,7 @@ Vue.component('sidebar', {
               }, secondary: true, text: '了解更多'},
             {action: function () {
                 appVue.$refs.sidePanel.userPanelVisible=false
+                appVue.$refs.sidePanel.teamLock=false
                 this.cancel()
                 ipc.send('exitGuide')
                 ipc.send('teamState')
@@ -1994,13 +1996,17 @@ ipc.on('guide',async (event, args) => {
   let current;
   if (args === 5) {
     current = await db.system.where('name').equals('currentUser').first()
-    if(current.value.uid !== 0){
-      appVue.$refs.sidePanel.toggleUserPanel()
-      setTimeout(() => {
-        appVue.$refs.sidePanel.focus()
-        appVue.$refs.sidePanel.guide(args)
-        ipc.send('enterGuide')
-      }, 800)
+    if(current.value.uid !== 0 ){
+      if(appVue.$refs.sidePanel.teamLock===false){
+        appVue.$refs.sidePanel.toggleUserPanel()
+        appVue.$refs.sidePanel.teamLock=true
+        setTimeout(() => {
+          appVue.$refs.sidePanel.focus()
+          appVue.$refs.sidePanel.guide(args)
+          ipc.send('enterGuide')
+        }, 800)
+      }
+
     }
     if(current.value.uid === 0){
       appVue.$message.error('登录后才能使用团队功能');

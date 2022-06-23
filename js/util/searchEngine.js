@@ -8,7 +8,7 @@ var currentSearchEngine = {
   searchURL: '%s'
 }
 
-var defaultSearchEngine = 'Bing'
+var defaultSearchEngine = 'Baidu'
 
 var searchEngines = {
   Bing: {
@@ -32,14 +32,14 @@ var searchEngines = {
     searchURL: 'https://www.google.com/search?q=%s',
     queryParam: 'q'
   },
-  
+
   Yahoo: {
     name: 'Yahoo',
     searchURL: 'https://search.yahoo.com/yhs/search?p=%s',
     suggestionsURL: 'https://search.yahoo.com/sugg/os?command=%s&output=fxjson',
     queryParam: 'p'
   },
-  
+
   StartPage: {
     name: 'StartPage',
     searchURL: 'https://www.startpage.com/do/search?q=%s',
