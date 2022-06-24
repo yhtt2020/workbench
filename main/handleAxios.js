@@ -301,7 +301,7 @@ app.whenReady().then(()=>{
 
   ipc.on('guideTasksFirst',()=>{
     if(markDb.db.get('guideSchedule.modules.feature.tasks').value()===false){
-      SidePanel.send('guide',0)
+      SidePanel.send('guideTasks')
     }
   })
   ipc.on('guideGlobalSearchFirst',()=>{
@@ -335,7 +335,7 @@ app.whenReady().then(()=>{
   })
 
   ipc.on('guideTasks', () => {
-    SidePanel.send('guide',0)
+    SidePanel.send('guideTasks')
   })
 
   ipc.on('guideGlobalSearch', () => {
@@ -364,8 +364,15 @@ app.whenReady().then(()=>{
     },800)
   })
 
+  ipc.on('helpGuide',()=>{
+    SidePanel.send('guide',7)
+  })
+
   ipc.on('addTaskCareer',(event,args)=>{
     sendIPCToMainWindow('addTaskCareer',args)
+  })
+  ipc.on('openNewBackTab',()=>{
+    sendIPCToMainWindow('openNewBackTab')
   })
 
   ipc.on('blockSelect',(event,args)=>{
@@ -377,11 +384,18 @@ app.whenReady().then(()=>{
       })
     }
   })
+
   ipc.on('siteTheme',(event,args)=>{
     mainWindow.webContents.send('themeSelect',args)
   })
   ipc.on('selectEngine',(event,args)=>{
     mainWindow.webContents.send('selectEngine',args)
+    if(global.fromRender && !global.fromRender.guide.isDestroyed()) {
+      global.fromRender.guide.send('updateSpecificEngine', {
+        name: 'searchEngine',
+        value: args
+      })
+    }
   })
   ipc.on('enterGuide',(item,window)=>{
     sendIPCToWindow(window, 'enterGuide')

@@ -77,6 +77,27 @@
     margin-right: 32px !important;
     color: #508bfe !important; }
 
+.shepherd-element.guideTask.shepherd-enabled {
+  max-width: 210px;
+  inset: 0 0 auto 11px !important; }
+  .shepherd-element.guideTask.shepherd-enabled .shepherd-text {
+    font-size: 15px; }
+  .shepherd-element.guideTask.shepherd-enabled .shepherd-button {
+    padding: 0.2rem 1rem;
+    transition: 0s !important; }
+  .shepherd-element.guideTask.shepherd-enabled .shepherd-footer .shepherd-button:last-child {
+    margin-right: 1px; }
+  .shepherd-element.guideTask.shepherd-enabled .shepherd-button.shepherd-button-secondary {
+    background: #FFFFFF !important;
+    padding-left: 1px;
+    margin-right: 32px !important;
+    color: #508bfe !important; }
+  .shepherd-element.guideTask.shepherd-enabled .button2.shepherd-button {
+    background: #FFFFFF !important;
+    padding-left: 1px;
+    margin-right: 32px !important;
+    color: #508bfe !important; }
+
 .shepherd-element.appFirst.shepherd-enabled {
   max-width: 190px;
   inset: -71px 0 auto 0px !important; }
