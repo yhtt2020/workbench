@@ -68,7 +68,7 @@ const sidebarTpl = /*html*/`
                               <template slot="content">
                                 <div class="flex flex-direction justify-around align-start" style="width: 100%; height: 185px">
                                   <div class="text-black">等级: {{this.$store.getters.getTsGrade.lv}}级</div>
-                                  <div class="text-black">距离下一级还需要: 小时</div>
+                                  <div class="text-black">距离下一级还需要: {{remainTime}} 小时</div>
                                   <div class="text-black">累计在线时长{{this.$store.getters.getTsGrade.cumulativeHours}}小时</div>
                                   <div class="text-grey">
                                     <img src="./assets/sun.svg" alt="" style="width: 20px; height: 20px"> = 16级
@@ -713,7 +713,7 @@ const sidebarTpl = /*html*/`
           </a-badge>
           <div class="item-title">消息中心</div >
         </li>
-        <li  @click="openHelpCenter" style="position: relative">
+        <li class="helpCenter" @click="openHelpCenter" style="position: relative">
           <a-progress :width="32" type="circle" :percent="this.$store.getters.getGuideScedule" :showInfo="false" :strokeWidth="11"></a-progress>
           <a-icon type="question-circle" style="position: absolute; top: 14.5px; right: 14.5px; font-size: 16px;"></a-icon>
           <div class="item-title">帮助中心</div>
@@ -756,6 +756,7 @@ Vue.component('sidebar', {
       userPanelVisible: false,
       teamLock:false,//防止团队引导多次触发
       teamList:[],
+      remainTime:'',
       tags: [
         {
           label: '公开',
@@ -979,25 +980,26 @@ Vue.component('sidebar', {
     myCommunity(){
       window.location.href='tsb://app/redirect/?package=com.thisky.com&url=https://s.apps.vip'
     },
+    gradeTableGenerate(num) {
+      let lvSys = {}
+      for(let i = 0; i < num + 1; i++) {
+        let arrLef = 0
+        let arrRg = 0
+        for (let j = 0; j < i; j++) {
+          arrLef += 10 * (j + 2)
+        }
+        for (let k = 0; k < i + 1; k++) {
+          arrRg += 10 * ( k + 2 )
+        }
+        arrRg -= 1
+        lvSys[`${i}`] = [arrLef, arrRg]
+      }
+      delete lvSys['lv0']
+      return lvSys
+    },
     guide(a){
       const stepsList=[
         {
-          text: `<div>每一个打开网页都属于一个标签组，试试<b>双击</b>侧边栏空白处创建一个新的组</div>`, attachTo: {element: '#addTaskCareer', on: 'right'},
-          buttons: [
-            {
-              action: function () {
-                window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/yglkui'
-              },
-              secondary: true, text: '了解更多'
-            },
-            {
-              action: function () {
-                this.cancel();
-                ipc.send('exitGuide')
-                ipc.send('tasksState')
-              }, text: '好的'
-            }],
-          id: 'taskGuide'    // 用于Shepherd step的唯一标识符
         },
         {
           text: `<div>点击这里，或着按下<b>Alt + F</b>键打开全局搜索</div>`, attachTo: {element: '#guideSearch', on: 'right'},
@@ -1045,6 +1047,17 @@ Vue.component('sidebar', {
                 this.cancel()
                 ipc.send('exitGuide')
                 ipc.send('teamState')
+              }, text: '好的'}],
+          id: 'teamGudie'    // 用于Shepherd step的唯一标识符
+        },
+        {//占位
+        },
+        {
+          text: `<div>您可以在这里打开帮助中心，查看更多引导帮助</div>`, attachTo: {element: '.helpCenter', on: 'right'},
+          buttons: [
+            {action: function () {
+                this.cancel()
+                ipc.send('exitGuide')
               }, text: '好的'}],
           id: 'teamGudie'    // 用于Shepherd step的唯一标识符
         },
@@ -1158,6 +1171,47 @@ Vue.component('sidebar', {
         }]
       });
       guideDesktop.start();
+    },
+    guideTasks(){
+      const guideTaskShepherd = new Shepherd.Tour({
+        useModalOverlay: true,
+        defaultStepOptions: {
+          cancelIcon: {
+            enabled: false,
+          },
+          classes: 'guideTask',
+          scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+          }
+        },
+        steps: [{
+          text: `<div>每一个打开网页都属于一个标签组，试试<b>双击（或右键菜单）</b>侧边栏空白处创建一个新的组。</div>`, attachTo: {element: '#addTaskCareer', on: 'right'},
+          buttons: [
+            {
+              action: function () {
+                window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/yglkui'
+              },
+              secondary: true, text: '了解更多'
+            },
+            {
+              action: function () {
+                return this.next();
+              }, text: '下一步',classes:'button1'
+            }],
+        },{
+          text: `<div><b>右键</b>空白处能够创建独立标签组，不同的独立标签组之间具有会话隔离的特点，轻松实现网站账号多开。</div>`, attachTo: {element: '#addTaskCareer', on: 'right'},
+          buttons: [
+            {action: function () {return this.back();},text: '上一步',classes:'button2'},
+            {action: function () {
+                this.cancel()
+                ipc.send('exitGuide')
+                ipc.send('tasksState')
+              }, text: '好 的'}],
+          id: 'guideTask'    // 用于Shepherd step的唯一标识符
+        },]
+      });
+      guideTaskShepherd.start();
     },
     guideAddTasks(){
       const guideAddTasks = new Shepherd.Tour({
@@ -1401,6 +1455,9 @@ Vue.component('sidebar', {
       ipc.send('sidePanelFocus')
     },
     toggleUserPanel () {
+      let lv = this.$store.getters.getTsGrade.lv
+      let section = this.gradeTableGenerate(64)[lv+1]
+       this.remainTime = section[0] - this.$store.getters.getTsGrade.cumulativeHours
       ipc.send('isMedal')
       this.passList = this.$store.getters.getAllCircle.filter(v => v.status !==3 && v.status !==2 )
       this.teamList = this.passList.filter(v => v.property === 0 ||  v.property===1)
@@ -2021,6 +2078,12 @@ ipc.on('guide',async (event, args) => {
     appVue.$refs.sidePanel.focus()
     appVue.$refs.sidePanel.guide(args)
   }
+})
+
+ipc.on('guideTasks',()=>{
+  ipc.send('enterGuide')
+  appVue.$refs.sidePanel.focus()
+  appVue.$refs.sidePanel.guideTasks()
 })
 
 ipc.on('guideApplyFirst',()=>{

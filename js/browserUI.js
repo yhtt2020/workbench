@@ -327,6 +327,9 @@ ipc.on('closeGuide',()=>{
   closeTab(closeGuideTab)
 })
 
+ipc.on('openNewBackTab',function (){
+  addTab(tabs.add(),{ openInBackground:true})
+})
 
 
 ipc.on('addTaskFromApps',function(e,data){
@@ -343,7 +346,6 @@ ipc.on('addTaskFromApps',function(e,data){
 })
 
 ipc.on('addTaskCareer',function(e,data){
-  console.log(data)
 
   if(data.id===4 || data.id===6 || data.id===8){
     let newTaskFirst = {
