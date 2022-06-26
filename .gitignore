@@ -11,3 +11,5 @@ yarn.lock
 /setup
 /setup-x64/
 /setup-ia32/
+/packages/node_modules/
+/vite/.vscode/

@@ -16,6 +16,20 @@ let dev={
     await this.server.listen()
     this.server.printUrls()
   },
+
+  getEnvScript(){
+    let env=require("./dev/env.js")
+    env.WEB_PORT=this.serverPort
+    env.RES_DIR=path.join(process.cwd(),"resource/release")
+    let script=""
+    for(let v in env)
+    {
+      script+='process.env.${v}="${env[v]}";'
+    }
+    return script
+  },
+
+
   async start(){
     await this.createServer()
   }
