@@ -7,7 +7,7 @@ const render={
    */
   getUrl(url){
     if(isDevelopmentMode){
-      return `http://localhost:1600/#${url}`
+      return `http://localhost:1600/${url}`
     }else{
       return `tsbapp://.index.html/#${url}` //todo 需要验证正式环境的协议情况
     }
@@ -20,9 +20,9 @@ const render={
       if(regStats){
         console.log('准备打开一个渲染界面')
         setTimeout(()=>{
-          let win=this.openRenderWindow('/',{
-            width:300,
-            height:400
+          let win=this.openRenderWindow('icon.html',{
+            width:390,
+            height:320
           })
 
         },2000)
