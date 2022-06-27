@@ -45,7 +45,9 @@ class Win{
   }
 }
 class Pop{
+  id
   win
+  callerId //呼叫这个pop的调取者的windowId，用于直发消息
   constructor () {
     let config={}
     config.frame=false
@@ -64,6 +66,7 @@ class Pop{
     this.win=new BrowserWindow(config)
     this.initEvent()
     this.win.loadURL('/blank')
+    this.id=this.win.webContents.id
     this.url='/blank'
   }
   initEvent(){
@@ -72,7 +75,7 @@ class Pop{
       pool.pop.splice(index,1)
     })
     this.win.on('blur',()=>{
-      this.win.close()
+      //this.win.close()
     })
     this.win.on('maximize',()=>{
       this.win.webContents.send('windowMaximized')
@@ -81,9 +84,10 @@ class Pop{
       this.win.webContents.send('windowUnmaximize')
     })
   }
-  async use(param){
+  async use(param,callerId){
     this.url=param.url
     this.width=param.width
+    this.callerId=callerId
     this.x=param.x
     this.y=param.y
     this.height=param.height
@@ -100,6 +104,7 @@ class Pop{
 class Pool {
   dic=[]
   pop=[]
+
   async init(){
     this.dic.push(new Win())
     this.pop.push(new Pop())
@@ -108,8 +113,20 @@ class Pool {
     ipc.handle('loadWindow',async(e,param)=>{
      await this.use(param)
     })
+    ipc.handle('getPopCallerId',(e,param)=>{
+      return pool.getPop(e.sender.id).callerId
+    })
   }
-  async use(param){
+
+  /**
+   * 获得当前存在的Pop
+   * @returns {*}
+   * @param id
+   */
+  getPop(id){
+    return this.pop.find(v=>v.id===id)
+  }
+  async use(param,callerId){
     let oldObj=this.dic.find(v=>v.url===param.url)
     if(oldObj){
       oldObj.win.show()
@@ -120,7 +137,7 @@ class Pool {
     await blankObj.use(param)
     this.dic.splice(0,0,new Win())
   }
-  async usePop(param){
+  async usePop(param,callerId){
     let oldObj=this.pop.find(v=>v.url===param.url)
     if(oldObj){
       oldObj.win.show()
@@ -128,7 +145,7 @@ class Pool {
       return oldObj
     }
     let blankObj=this.pop.find(v=>v.url==='/blank')
-    await blankObj.use(param)
+    await blankObj.use(param,callerId)
     this.pop.splice(0,0,new Pop())
     return  blankObj
   }
@@ -266,11 +283,13 @@ const render={
    * @returns {string}
    */
   getUrl(url){
-    if(isDevelopmentMode){
-      return `http://localhost:1600/${url}`
+    let protocolUrl
+    if(0){
+      protocolUrl =`http://localhost:1600/${url}`
     }else{
-      return `tsbapp://.index.html/#${url}` //todo 需要验证正式环境的协议情况
+      protocolUrl =`tsbapp://./${url}` //todo 需要验证正式环境的协议情况
     }
+    return protocolUrl
   },
   init(){
     app.on('ready',()=>{
@@ -293,7 +312,7 @@ const render={
     let extension=path.extname(pathName).toLowerCase()
     if(!extension) return
     pathName=decodeURI(pathName)
-    let filePath=path.join(__dirname,pathName)
+    let filePath=path.join(__dirname,'vite','dist',pathName)
     fs.readFile(filePath,(error,data)=>{
       if(error) return
       let mimeType=''
@@ -319,10 +338,8 @@ const render={
   openRenderTab(url){
     let realUrl=this.getUrl(url)
     sendIPCToWindow(mainWindow,'addTab',{url:realUrl})
-    console.log('发送ipc打开新标签页',realUrl)
   },
   openRenderWindow(url,windowArgs,webPreferences){
-    console.log('创建一个渲染窗口')
     const defaultWebPreferences={
       nodeIntegration: true,
       contextIsolation: false,
@@ -343,7 +360,6 @@ const render={
       show:false
     }
     let windowA=Object.assign(defaultWindowArgs,windowArgs)
-    console.log(windowA)
     let win =new BrowserWindow(windowA)
     win.on('ready-to-show',()=> {
       win.show()
@@ -359,7 +375,7 @@ const renderPage={
   init(){
 
   },
-  openIconSelector(pos){
+  openIconSelector(pos,windowId){
     if(!this.iconSelector){
       pool.usePop({
         url:render.getUrl('icon.html'),
@@ -367,7 +383,7 @@ const renderPage={
         height:320,
         x:pos.x,
         y:pos.y,
-      }).then(win=>console.log(win))
+      },windowId).then(win=>console.log(win))
     }
   }
 }
