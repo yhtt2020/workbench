@@ -1,9 +1,12 @@
 .mg-content {
-  max-height: calc( 100vh - 300px);
+  max-height: calc( 100vh - 330px);
   overflow-y: auto;
   overflow-x: hidden;
   margin-top: 10px;
   // padding: 10px;
+  &.active{
+    max-height: calc( 100vh - 300px);
+  }
   &::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -84,6 +87,138 @@
 }
 
 
+.shepherd-element.group.shepherd-enabled {
+  .shepherd-text{
+    font-size: 14px;
+  }
+    max-width: 190px;
+    inset: 0 0 auto 11px !important;
+  .shepherd-button{
+    padding: 0.2rem 1rem;
+    transition: 0s !important;
+  }
+  .shepherd-footer .shepherd-button:last-child {
+    margin-right: 1px;
+  }
+  .shepherd-button.shepherd-button-secondary{
+    background: #FFFFFF !important;
+    padding-left: 1px;
+    margin-right: 32px !important;
+    color: rgba(80, 139, 254, 1) !important;
+  }
+}
+
+.shepherd-element.guideTask.shepherd-enabled {
+  .shepherd-text{
+    font-size: 15px;
+  }
+  max-width: 210px;
+  inset: 0 0 auto 11px !important;
+  .shepherd-button{
+    padding: 0.2rem 1rem;
+    transition: 0s !important;
+  }
+  .shepherd-footer .shepherd-button:last-child {
+    margin-right: 1px;
+  }
+  .shepherd-button.shepherd-button-secondary{
+    background: #FFFFFF !important;
+    padding-left: 1px;
+    margin-right: 32px !important;
+    color: rgba(80, 139, 254, 1) !important;
+  }
+  .button2.shepherd-button {
+    background: #FFFFFF !important;
+    padding-left: 1px;
+    margin-right: 32px !important;
+    color: rgba(80, 139, 254, 1) !important;
+  }
+}
+
+.shepherd-element.appFirst.shepherd-enabled{
+  max-width: 190px;
+  //margin-right: 78px !important;
+  .shepherd-text{
+    font-size: 14px;
+  }
+  inset: -71px 0 auto 0px !important;
+  .shepherd-button{
+    padding: 3px 6px;
+    transition: 0s !important;
+  }
+  .shepherd-arrow{
+    transform:translate(151px,0px) !important;
+  }
+  .shepherd-footer .shepherd-button:last-child {
+    margin-right: 1px;
+  }
+}
+
+.shepherd-element.appSecond.shepherd-enabled{
+  max-width: 230px;
+  .shepherd-text{
+    font-size: 14px;
+  }
+  inset: 0px 0 auto 12px !important;
+  .shepherd-button{
+    padding: 3px  6px ;
+    margin-right: 11px;
+    transition: 0s !important;
+  }
+  .button1.shepherd-button {
+    background: #FFFFFF !important;
+    color: rgba(80, 139, 254, 1) !important;
+    padding-left: 1px;
+  }
+  .button2.shepherd-button {
+    background: #FFFFFF !important;
+    color: rgba(80, 139, 254, 1) !important;
+  }
+}
+
+.shepherd-element.desk.shepherd-enabled{
+  .shepherd-button{
+    padding: 0.2rem 1rem;
+    transition: 0s !important;
+  }
+  .shepherd-text{
+    font-size: 14px;
+  }
+  .shepherd-arrow{
+    display: none!important;
+  }
+  max-width: 190px;
+  left: 50%!important;
+  top: 10% !important;
+  transform: translate(0px,0px)!important;
+  .button2.shepherd-button{
+    background: #FFFFFF !important;
+    padding-left: 1px;
+    margin-right: 28px !important;
+    color: rgba(80, 139, 254, 1) !important;
+  }
+  .button3.shepherd-button{
+    margin-right: 1px;
+  }
+}
+
+.shepherd-element.taskAdd.shepherd-enabled{
+  max-width: 168px;
+  .shepherd-text{
+    font-size: 14px;
+  }
+  inset: 0px 0 auto 12px !important;
+  .shepherd-button{
+    padding: 3px  13px ;
+    margin-right: 7px;
+    transition: 0s !important;
+  }
+}
+
+.shepherd-modal-overlay-container.shepherd-modal-is-visible {
+  opacity: 0.4 !important;
+}
+
 .has-more{
   &:before{
     position: absolute;
@@ -96,4 +231,12 @@
     z-index: 2;
     background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), #1a1a1a38);
   }
+}
+.single-avatar{
+  position: absolute;
+  right: 2px;
+  bottom: 4px;
+  background: #b6b6b6;
+  border-radius: 100%;
+  width: 20px;
 }

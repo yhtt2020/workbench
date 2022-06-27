@@ -1,3 +1,4 @@
+const appStoreData = require('../../appStore/app.js')
 const db = require('../../../js/util/database.js').db
 const serverConfig = require('../../../server-config.js').config
 const tools = require('../util.js').tools;
@@ -7,7 +8,9 @@ const systemAppPackage=[
   'com.thisky.import',
   'com.thisky.helper',
   'com.thisky.imageEditor',
-  'com.thisky.nav'
+  'com.thisky.nav',
+  'com.thisky.appStore',
+  'com.thisky.com'
 ]  //包名为上述包名的判定为系统应用
 const standAloneAppModel = {
   async initialize() {
@@ -36,10 +39,14 @@ const standAloneAppModel = {
     //   db.standAloneApps.update(nav.id,{id:3,package:'com.thisky.nav'})
     // }
     let nav = await  db.standAloneApps.get({name:'收藏夹'})
-    db.standAloneApps.update(nav.id,{
-      package:'com.thisky.nav',
-      url: '/pages/apps/index.html',
-    })
+    if(nav){
+      db.standAloneApps.update(nav.id,{
+        package:'com.thisky.nav',
+        url: '/pages/apps/index.html',
+      })
+    }
+
+
     if(group){
       db.standAloneApps.update(group.id,{
         name:'团队沟通',
@@ -69,8 +76,7 @@ const standAloneAppModel = {
         bounds: {
           width: 1200,
           height: 800
-        },
-        showInSideBar:true,
+        }
       }),
       unreadCount: 0,
     })
@@ -115,6 +121,10 @@ const standAloneAppModel = {
       await db.standAloneApps.update(timer.id,{url:'https://a.apps.vip/timer',logo:'https://a.apps.vip/timer/icon.svg'})
     }
 
+    if(!await standAloneAppModel.isInstalled('com.thisky.appStore')){
+      let appStoreData=require('../../appStore/app.js')
+      standAloneAppModel.installFromJson(appStoreData)
+    }
 
     let helper= await db.standAloneApps.get({package:'com.thisky.helper'})
     if(!!!helper){
@@ -141,6 +151,22 @@ const standAloneAppModel = {
     let imageEditor = await db.standAloneApps.get({name:'图片编辑器'})
     if(imageEditor){
       await  db.standAloneApps.update(imageEditor.id,{package:'com.thisky.imageEditor',fileAssign:['image'],url:'https://a.apps.vip/imageEditor/','logo':'https://a.apps.vip/imageEditor/icon.svg'})
+    }else{
+      await db.standAloneApps.add({
+        name: '图片编辑器',
+        themeColor: 'rgb(90,170,60)',
+        author: '想天软件',
+        site: 'http://apps.vip',
+        logo: 'https://a.apps.vip/imageEditor/icon.svg',
+        url: 'https://a.apps.vip/imageEditor/',
+        package: 'com.thisky.imageEditor',
+        createTime: Date.now(),
+        updateTime: Date.now(),
+        summary: '可以为您的图片增加相框、贴纸、文字、进行简单裁减、旋转，还可以添加滤镜。',
+        isNew:true,
+        settings:'[]',
+        fileAssign:['image']
+      })
     }
 
   },
@@ -267,6 +293,21 @@ const standAloneAppModel = {
     return await db.standAloneApps.delete(appId)
   },
   /**
+   * 从json安装应用
+   * @param json
+   * @returns {Promise<void>}
+   */
+  async installFromJson(json){
+    return await standAloneAppModel.install(json.url,json)
+  },
+  async isInstalled (package) {
+    let app = await standAloneAppModel.getFromPackage(package)
+    return !!app
+  },
+  async isInstalledByUrl(url){
+    return !! await db.standAloneApps.get({'url':url})
+  },
+  /**
    * 安装应用
    * @param url 安装的web应用地址
    * @param app 配置参数
@@ -294,18 +335,35 @@ const standAloneAppModel = {
       useCount: 0,
       lastExecuteTime: Date.now(),
       settings:app.settings? JSON.stringify(app.settings):'[]',
+      auth:app.auth?JSON.stringify(app.auth):'[]',
       unreadCount: 0,
-      showInSideBar: app.showInSideBar || false
+      isNew:true
+    }
+    let hasInstalled=false
+    if(app.package){
+      hasInstalled=standAloneAppModel.isInstalled(app.package)
+      if(!hasInstalled)
+      {
+        return false
+      }
     }
     return await db.standAloneApps.put(appInstall)
   },
+  /**
+   *
+   * @param option  order,limit
+   * @returns {Promise<*>}
+   */
   async getAllApps(option={}) {
     let result=[]
+    let query=db.standAloneApps
     if(option.order){
-      result = await db.standAloneApps.orderBy(option.order).reverse().limit(option.limit).toArray()
-    }else{
-      result = await db.standAloneApps.toArray()
+      query = query.orderBy(option.order).reverse()
     }
+    if(option.limit){
+      query = query.limit(option.limit)
+    }
+    result=await query.toArray()
 
     result.forEach((app) => {
       app.capture = ''
@@ -350,14 +408,14 @@ const standAloneAppModel = {
   async setAppSetting(id, settings) {
     let app = await db.standAloneApps.get(id)
     if (!!!app) {
-      console.log('app不存在')
+      console.warn('app不存在')
     } else {
       let DBSavedSettings = JSON.parse(app.settings)
       let newSettings = Object.assign(DBSavedSettings, settings)
       await db.standAloneApps.update(id, {"settings": JSON.stringify(newSettings)}).then((result) => {
         return true
       }).catch((err) => {
-        console.log('存储app的setting失败')
+        console.warn('存储app的setting失败')
       })
     }
   },
@@ -393,6 +451,7 @@ const standAloneAppModel = {
           autoRun: true,
           showInSideBar:true
         }),
+        isNew:true,
         unreadCount: 0,
       },
       {
@@ -414,37 +473,12 @@ const standAloneAppModel = {
         lastExecuteTime: Date.now(),
         settings: JSON.stringify({
           bounds: {
-            width: 1100,
+            width: 1200,
             height: 800
           },
           showInSideBar: true
         }),
-        unreadCount: 0,
-      },
-      {
-        id:3,
-        name: '收藏夹',
-        logo: '../../icons/svg/apps.svg',
-        summary: '收集你的灵感，集锦',
-        preload: '/pages/apps/preload.js',
-        type: 'local',
-        package: 'com.thisky.nav',
-        url: '/pages/apps/index.html',
-        themeColor: '#7c1ad0',
-        userThemeColor: '',
-        createTime: Date.now(),
-        updateTime: Date.now(),
-        accountAvatar: '',
-        order: 0,
-        useCount: 0,
-        lastExecuteTime: Date.now(),
-        settings: JSON.stringify({
-          bounds: {
-            width: 1200,
-            height: 800
-          },
-          showInSideBar:true,
-        }),
+        isNew:true,
         unreadCount: 0,
       },
       {
@@ -469,8 +503,9 @@ const standAloneAppModel = {
             width: 1200,
             height: 800
           },
-          showInSideBar:true,
+          showInSideBar:false,
         }),
+        isNew:true,
         unreadCount: 0,
       },
       {
@@ -493,12 +528,12 @@ const standAloneAppModel = {
         lastExecuteTime: Date.now(),
         settings: JSON.stringify({
           bounds: {
-            width: 920,
-            height: 720
+            width: 645,
+            height: 415
           },
-          showInSideBar:true
+          showInSideBar:false
         }),
-        unreadCount: 1,
+        isNew:true
       },
       {
         id:5,
@@ -509,7 +544,11 @@ const standAloneAppModel = {
         logo: 'https://a.apps.vip/imageEditor/icon.svg',
         url: 'https://a.apps.vip/imageEditor/',
         package: 'com.thisky.imageEditor',
+        createTime: Date.now(),
+        updateTime: Date.now(),
         summary: '可以为您的图片增加相框、贴纸、文字、进行简单裁减、旋转，还可以添加滤镜。',
+        isNew:true,
+        settings:'[]',
         fileAssign:['image']
       },
       {
@@ -519,21 +558,26 @@ const standAloneAppModel = {
         url: 'https://www.yuque.com/tswork/ngd5zk/iuguin',
         package:'com.thisky.helper',
         themeColor: '#ff7b42',
+        createTime: Date.now(),
+        updateTime: Date.now(),
         author: '想天软件',
         site: 'https://apps.vip/',
         checked: true,
         summary: '帮助手册，让你从零开始学会掌握想天浏览器。',
+        isNew:true,
         settings: JSON.stringify({
           bounds: {
             width: 1200,
             height: 800
           },
           alwaysTop: false,
-          showInSideBar: true,
-        })
+          showInSideBar: false,
+        }),
       }
     ]
-    return await db.standAloneApps.bulkAdd(defaultApps)
+    await db.standAloneApps.bulkAdd(defaultApps)
+    let appStoreData=require('../../appStore/app.js')
+    await standAloneAppModel.installFromJson(appStoreData)
   },
   /**
    * 设置转中文表达
@@ -558,6 +602,26 @@ const standAloneAppModel = {
       case 'autoRun':
         words='自动运行'
         break
+      case 'disableWebSecurity':
+        words='本地权限'
+        break
+    }
+    return words
+  },
+  authToWords(auth){
+    let words=''
+    switch (auth){
+      case 'webSecure':
+        words='跨域请求'
+        break
+      case 'setWallpaper':
+        words='设置壁纸'
+        break
+      case 'download':
+        words='下载文件'
+          break
+      case 'node':
+        words='Node集成'
     }
     return words
   },

@@ -205,7 +205,11 @@ const tabColor = {
     webviews.bindEvent('did-start-navigation', function (tabId, url, isInPlace, isMainFrame, frameProcessId, frameRoutingId) {
       if (isMainFrame) {
         tabs.update(tabId, {
-          backgroundColor: null,
+          backgroundColor: {
+            color: "#DFDFE3",
+            isLowContrast: false,
+            textColor: "black"
+          },
           favicon: null
         })
       }

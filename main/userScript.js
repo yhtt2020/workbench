@@ -157,9 +157,6 @@ app.whenReady().then(() => {
    * 导入密码
    */
   ipc.on('importPwd', (event, args) => {
-    let existsCount = 0
-    let imported = 0
-    let existsFilename = []
     const files = dialog.showOpenDialogSync({
       userScriptWindow,
       filters: [
@@ -172,7 +169,7 @@ app.whenReady().then(() => {
     const csv=require('csvtojson')
     let importedPwds=[]
     files.forEach((file) => {
-      const converter=csv().fromFile(file).then(json=>{
+      csv().fromFile(file).then(json=>{
         // {
         // [1]     name: 'miwifi.com',
         // [1]     url: 'http://miwifi.com/cgi-bin/luci/web',
@@ -189,7 +186,7 @@ app.whenReady().then(() => {
           //从chrome、edge导入密码
         }
         function convertFromSafari(item){
-          let domain=item.Url.replace('http://','').replace('https://','').replace('/','')//清理掉http和https
+          let domain=item.URL.replace('http://','').replace('https://','').replace('/','')//清理掉http和https
           return {
             domain:domain,
             username:item.Username,
@@ -241,11 +238,5 @@ app.whenReady().then(() => {
         event.reply('importPwdFailed',{message:'解析密码文件失败。'})
       })
     })
-
-
-
-
-
   })
-
 })

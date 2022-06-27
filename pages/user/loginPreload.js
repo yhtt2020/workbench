@@ -4,6 +4,7 @@ const ipc=require('electron').ipcRenderer
 let href = window.location.href
 const tools=require('../util/util').tools
 tools.getWindowArgs(window)
+localStorage.clear()
 const server = {
   //osx端说pc登录是否已掉的前置判断
   beforeInit() {

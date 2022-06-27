@@ -46,8 +46,10 @@
             <a-dropdown :trigger="['contextmenu']">
             <div style="margin-bottom: 15px;text-align: center;">
               <div style="margin-bottom: 10px">
+                <a-badge  :dot="app.isNew">
                 <img @click="executeApp(app)" onerror="this.src='../../icons/default.svg'" shape="circle" class="logo clickable" :src="app.logo"
                      :style="{'border-color':app.userThemeColor?app.userThemeColor:app.themeColor}">
+                </a-badge>
               </div>
               <div class="clickable"  @click="executeApp(app)" style="white-space:nowrap;
 overflow:hidden;
@@ -57,7 +59,7 @@ text-overflow:ellipsis; ">
             </div>
             <a-menu slot="overlay" >
               <a-menu-item @click="openSetting(app.id)" key="setting"> <a-icon type="setting"></a-icon>设置</a-menu-item>
-              <a-menu-item @click="uninstall(app.id)" v-if="app.id>10" key="uninstall"> <a-icon type="delete"></a-icon>卸载 </a-menu-item>
+              <a-menu-item @click="uninstall(app.id)" v-if="!app.isSystemApp" key="uninstall"> <a-icon type="delete"></a-icon>卸载 </a-menu-item>
             </a-menu>
             </a-dropdown>
           </a-col>
@@ -71,9 +73,15 @@ text-overflow:ellipsis; ">
 
               <div style="margin-bottom: 15px;text-align: center">
                 <a-dropdown :trigger="['contextmenu']">
-                  <div> <div style="margin-bottom: 10px">
+                  <div>
+
+                    <div style="margin-bottom: 10px">
+                      <a-badge  :dot="app.isNew">
                     <img onerror="this.src='../../icons/default.svg'" @click="executeApp(app)" shape="circle" class="logo clickable" :src="app.logo"
                           :style="{'border-color':app.userThemeColor?app.userThemeColor:app.themeColor}">
+
+
+                      </a-badge>
                   </div>
                     <div class="clickable"  @click="executeApp(app)" style="white-space:nowrap;
 overflow:hidden;
@@ -82,9 +90,10 @@ text-overflow:ellipsis; ">
                     </div>
                   </div>
 
+
                 <a-menu slot="overlay" >
                   <a-menu-item @click="openSetting(app.id)" key="setting"> <a-icon type="setting"></a-icon>设置</a-menu-item>
-                  <a-menu-item @click="uninstall(app.id)" v-if="app.id>10" key="uninstall"> <a-icon type="delete"></a-icon>卸载 </a-menu-item>
+                  <a-menu-item @click="uninstall(app.id)" v-if="!app.isSystemApp" key="uninstall"> <a-icon type="delete"></a-icon>卸载 </a-menu-item>
                 </a-menu>
             </a-dropdown>
               </div>
@@ -100,8 +109,10 @@ text-overflow:ellipsis; ">
             <a-dropdown :trigger="['contextmenu']">
               <div style="margin-bottom: 15px;text-align: center">
                 <div style="margin-bottom: 10px">
+                  <a-badge  :dot="app.isNew">
                   <img onerror="this.src='../../icons/default.svg'"  @click="executeApp(app)" shape="circle" class="logo clickable"  :src="app.logo"
                         :style="{'border-color':app.userThemeColor?app.userThemeColor:app.themeColor}">
+                  </a-badge>
                 </div>
                 <div class="clickable"  @click="executeApp(app)" style="white-space:nowrap;
 overflow:hidden;
@@ -111,7 +122,7 @@ text-overflow:ellipsis; ">
               </div>
             <a-menu slot="overlay" >
               <a-menu-item @click="openSetting(app.id)" key="setting"> <a-icon type="setting"></a-icon>设置</a-menu-item>
-              <a-menu-item @click="uninstall(app.id)" v-if="app.id>10" key="uninstall"> <a-icon type="delete"></a-icon>卸载 </a-menu-item>
+              <a-menu-item @click="uninstall(app.id)" v-if="!app.isSystemApp" key="uninstall"> <a-icon type="delete"></a-icon>卸载 </a-menu-item>
             </a-menu>
             </a-dropdown>
 
@@ -183,18 +194,18 @@ text-overflow:ellipsis; ">
           //
         },
         refresh(){
-          saAppModel.getAllApps().then((data) => {
+          saAppModel.getAllApps({order:'createTime'}).then((data) => {
             appVue.apps = data
           })
           saAppModel.getAllApps({order:'lastExecuteTime',limit:6}).then((data) => {
             appVue.appsRecently = data
           })
+
         },
         executeApp(app){
           ipc.send('executeApp',{app:app})
           //this.searchWords=''
           appVue.searchWords=''
-          console.log('a')
         },
         openSetting(appId){
           ipc.send('saAppOpenSetting',{id:appId})

@@ -193,7 +193,8 @@ class SidePanel {
       setHeight -= 1
     }
     if(isWin()){
-      setHeight+=1
+      setHeight+=2
+      setX-=1
       if(process.getSystemVersion().startsWith('6.1')){//win7少也要少一个像素
         setHeight-=1
       }
@@ -656,6 +657,9 @@ ipc.on('addTab', function (event, data) {
   })
 })
 
+
+
+
 //可以尝试移动到browserUI中有tab和task的环境，而且能直接捕获从preload传出来的ipc
 //选择到对应的task，再在对应的位置执行addTab
 ipc.on('insertTab', (event, arg) => {
@@ -756,6 +760,9 @@ function createSwitchTask () {
 ipc.on('openSwitch',()=>{
   createSwitchTask()
 })
+
+
+
 ipc.on('closeSwitch',()=>{
   if(switchWindow!==null){
     switchWindow.close()
@@ -770,7 +777,13 @@ ipc.on('openSidebarMenu',()=>{
      }
     },
     {
-      label: '管理标签组',
+      label: '新建独立标签组',
+      click() {
+        sendIPCToWindow(mainWindow, 'addSingleTask')
+      }
+    },
+    {
+      label: '整理标签组…',
       click () {
         sendIPCToWindow(mainWindow,'showTasks')
       }
@@ -780,6 +793,11 @@ ipc.on('openSidebarMenu',()=>{
 
   menu.popup()
 })
+
+ipc.on('sidePanelFocus',()=>{
+ sidePanel.setMouseEnable()
+})
+
 ipc.on('switchToTab',(event,args)=>{
   sendIPCToWindow(mainWindow,'switchToTab',args)
 })
@@ -1020,7 +1038,7 @@ function callModal(win){
      left: 0;
      right: 0;
      bottom: 0;
-     background-color: #00000033;
+     background-color: #00000090;
      z-index: 9999999;
      display:block;
      }`
@@ -1132,6 +1150,8 @@ app.whenReady().then(()=>{
         backgroundColor:'#00000000',
         show:false,
         alwaysOnTop:true,
+        width:550,
+        height:730,
         parent:mainWindow,
         webPreferences:{
           preload:path.join(__dirname,'pages/user/loginPreload.js'),
@@ -1142,17 +1162,16 @@ app.whenReady().then(()=>{
             '--app-version=' + app.getVersion(),
             '--app-name=' + app.getName(),
             ...((isDevelopmentMode ? ['--development-mode'] : [])),
-            '--callWindow='+event.sender.id
-          ]
+            '--callWindow='+event.sender.id,
+          ],
+          partition:'login'
         }
       })
-
       loginWindow.setMenu(null)
-      loginWindow.setBounds(bounds)
       loginWindow.on('close',()=>{
         loginWindow=null
       })
-      api=require(path.join(__dirname,'server-config.js')).api
+      let api=require(path.join(__dirname,'server-config.js')).api
       loginWindow.loadURL(api.getUrl(api.API_URL.user.login))
       loginWindow.on('ready-to-show',()=>{
         if(userWindow && !userWindow.isDestroyed())

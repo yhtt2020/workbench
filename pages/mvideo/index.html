@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../../ext/reset.css"/>
+  <title>视频</title>
+</head>
+<body>
+  <div class="ly">
+    <video autoplay controls muted id="video" src="https://up.apps.vip/startVideo.mp4" type="video/mp4"></video>
+    <span onclick="closeMvideo()">跳过</span>
+  </div>
+</body>
+<script>
+  const ipc = require("electron").ipcRenderer;
+</script>
+<script>
+  function closeMvideo() {
+    ipc.send('closeMvideo')
+  }
+</script>
+<style>
+  html,body {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    background: rgba(0, 0, 0, 0);
+  }
+  *,*:before,*:after {
+    box-sizing: inherit;
+  }
+  .ly {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0);
+  }
+  .ly #video {
+    width: 100%;
+    height: 90%;
+    object-fit: cover;
+    z-index: 999;
+    border-radius: 8px;
+  }
+  .ly #video:focus-visible {
+    outline: none;
+  }
+  .ly span {
+    position: absolute;
+    bottom: 0px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+  }
+</style>
+</html>

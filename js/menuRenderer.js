@@ -10,6 +10,9 @@ var PDFViewer = require('pdfViewer.js')
 var tabEditor = require('navbar/tabEditor.js')
 var readerView = require('readerView.js')
 var taskOverlay = require('taskOverlay/taskOverlay.js')
+const bookmark = require('./extras/bookmark/bookmarkSys')
+let settings=require('../js/util/settings/settings')
+window.waitOpenTabs=[]
 
 module.exports = {
   initialize: function () {
@@ -56,7 +59,8 @@ module.exports = {
     })
 
     ipc.on('showBookmarks', function () {
-      tabEditor.show(tabs.getSelected(), '!bookmarks ')
+      ipc.send('handleTsbProtocol',{url:'tsb://app/redirect/?package=com.thisky.fav&url=/'})
+      //tabEditor.show(tabs.getSelected(), '!bookmarks ')
     })
 
     ipc.on('showHistory', function () {
@@ -87,14 +91,19 @@ module.exports = {
         focusMode.warn()
         return
       }
+      if(!tabs){
+        window.waitOpenTabs.push(data.url)
+        //如果还没有初始化好tabs，则将此tab放置到要初始化的tabs队列
+      }else{
+        var newTab = tabs.add({
+          url: data.url || ''
+        })
 
-      var newTab = tabs.add({
-        url: data.url || ''
-      })
+        browserUI.addTab(newTab, {
+          enterEditMode: !data.url // only enter edit mode if the new tab is empty
+        })
+      }
 
-      browserUI.addTab(newTab, {
-        enterEditMode: !data.url // only enter edit mode if the new tab is empty
-      })
     })
 
     //定位到task组的某tabid，往后插入创建tab
@@ -125,6 +134,43 @@ module.exports = {
         })
       }
     })
+
+    // function changeBlockingLevel (level) {
+    //   settings.get('filtering', function (value) {
+    //     if (!value) {
+    //       value = {}
+    //     }
+    //     value.blockingLevel = level
+    //     settings.set('filtering', value)
+    //     updateBlockingLevelUI(level)
+    //   })
+    // }
+
+    ipc.on('blockSetting',(event,args)=>{
+      let value = {}
+      value.blockingLevel = args
+      settings.set('filtering', value)
+      updateBlockingLevelUI(args)
+    })
+
+    settings.get('siteTheme', function (value) {
+      if (value === true || value === undefined) {
+        siteThemeCheckbox.checked = true
+      } else {
+        siteThemeCheckbox.checked = false
+      }
+    })
+
+    ipc.on('themeSelect',(event,args)=>{
+      settings.set('siteTheme', args)
+    })
+
+    ipc.on('selectEngine',(event,args)=>{
+      settings.get('searchEngine')
+
+      settings.set('searchEngine',{ name: args })
+    })
+
 
     ipc.on('saveCurrentPage', async function () {
       var currentTab = tabs.get(tabs.getSelected())
@@ -223,6 +269,10 @@ module.exports = {
 
     ipc.on('goForward', function () {
       webviews.callAsync(tabs.getSelected(), 'goForward')
+    })
+
+    ipc.on('bookmarkMigration', (event, args) => {
+      bookmark.oldImport(args)
     })
   }
 }

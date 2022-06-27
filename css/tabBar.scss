@@ -73,10 +73,10 @@
 /* navbar buttons */
 
 #toolbar-navigation-buttons {
-  width: 2.375rem;
   transition: 0.1s width;
   white-space: nowrap;
   overflow: hidden;
+  min-width: 60px;
 }
 
 #toolbar-navigation-buttons.can-go-forward:hover {
@@ -90,16 +90,16 @@ body.is-edit-mode #toolbar-navigation-buttons {
 #back-button, #forward-button {
   opacity: 1;
   transition: none;
-  padding: 0 0.6rem;
+  padding: 0 0rem;
 }
 .navbar-action-button:hover{
   background: rgba(215, 215, 215, 0.47);
 }
 #back-button {
-  padding-left: 0.4rem;
+  padding-left: 0rem;
 }
 #forward-button {
-  margin-left: -0.75em;
+  margin-left: -0em;
 }
 #back-button:disabled, #forward-button:disabled {
   opacity: 0.2;
@@ -126,7 +126,9 @@ body.linux #menu-button {
   position: relative;
   overflow: hidden;
   margin-right: 35px;
-
+  &.fixWidth{
+    width: 100%;
+  }
 }
 #tabs #tabs-inner {
   display: inline-flex;
@@ -139,7 +141,9 @@ body.linux #menu-button {
 #tabs #tabs-inner.disable-scroll {
   overflow-x: hidden;
 }
-
+.mac .tab-item{
+  margin:5px
+}
 .tab-item {
   flex:1;
   display: flex;
@@ -203,10 +207,27 @@ body.linux #menu-button {
 }
 
 #navbar.show-dividers .tab-item:not(:last-child) {
-  border:1px solid  rgba(128, 128, 128, 0.5);
+  &.active{
+    border-right: none;
+    margin-left: -1px;
+  }
+
+  border-right:1px solid #d2d2d2;
+  border-radius: 0;
+  margin-right: 0;
+  margin-left: 0;
+  margin-bottom: 0;
+  height: 37px;
+  margin-top: 0;
+  line-height: 37px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 .dark-theme #navbar.show-dividers .tab-item:not(:last-child) {
-  border:1px solid rgba(255, 255, 255, 0.58);
+  border-right:1px solid rgb(210, 210, 210);
+  border-radius: 0;
+  margin-right: 0;
+  margin-left: 0;
 }
 
 #navbar.show-dividers:before {
@@ -374,6 +395,9 @@ body.windows.dark-theme .navbar-action-button:not(:disabled):hover {
 .use-theme .tab-item .tab-audio-button{
   color: #333;
 }
+.use-theme .tab-item .reader-button{
+  color: #333;
+}
 .tab-item .tab-audio-button {
   vertical-align: text-bottom;
   padding: 0 0.5em 0 0;
@@ -444,6 +468,9 @@ body.windows.dark-theme .navbar-action-button:not(:disabled):hover {
   padding:0.1em 0.1em 0.1em 0.0em;
   margin-top: 0.15em;
   color: #ffb8b8;
+}
+.windows .tab-item .tab-close-button{
+  margin-top: 1px;
 }
 
 .tab-item  .tab-item:hover .tab-close-button:after {

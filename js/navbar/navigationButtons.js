@@ -70,20 +70,20 @@ var navigationButtons = {
       webviews.callAsync(tabs.getSelected(), 'goForward')
     })
 
-    navigationButtons.container.addEventListener('mouseenter', function () {
-      /*
-      Prevent scrollbars from showing up when hovering the navigation buttons, if one isn't already shown
-      This also works around a chromium bug where a flickering scrollbar is shown during the expanding animation:
-      https://github.com/minbrowser/min/pull/1665#issuecomment-868551126
-      */
-      if (navigationButtons.tabsList.scrollWidth <= navigationButtons.tabsList.clientWidth) {
-        navigationButtons.tabsList.classList.add('disable-scroll')
-      }
-    })
-
-    navigationButtons.container.addEventListener('mouseleave', function () {
-      navigationButtons.tabsList.classList.remove('disable-scroll')
-    })
+    // navigationButtons.container.addEventListener('mouseenter', function () {
+    //   /*
+    //   Prevent scrollbars from showing up when hovering the navigation buttons, if one isn't already shown
+    //   This also works around a chromium bug where a flickering scrollbar is shown during the expanding animation:
+    //   https://github.com/minbrowser/min/pull/1665#issuecomment-868551126
+    //   */
+    //   if (navigationButtons.tabsList.scrollWidth <= navigationButtons.tabsList.clientWidth) {
+    //     navigationButtons.tabsList.classList.add('disable-scroll')
+    //   }
+    // })
+    //
+    // navigationButtons.container.addEventListener('mouseleave', function () {
+    //   navigationButtons.tabsList.classList.remove('disable-scroll')
+    // })
 
     tasks.on('tab-selected', this.update)
     webviews.bindEvent('did-navigate', this.update)

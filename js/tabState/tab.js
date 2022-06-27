@@ -16,6 +16,10 @@ class TabList {
       url: tab.url || 'ts://newtab',//修改默认页面为newtab
       title: tab.title || '',
       id: tabId,
+      favicon: {
+        luminance: 116.550,
+        url: 'file://' + __dirname + '/js/icons/tabIcon.svg'
+      },
       lastActivity: tab.lastActivity || Date.now(),
       secure: tab.secure,
       private: tab.private || false,
@@ -40,8 +44,6 @@ class TabList {
     }
 
     this.parentTaskList.emit('tab-added', tabId)
-
-
     return tabId
   }
 
