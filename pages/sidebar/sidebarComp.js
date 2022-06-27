@@ -580,7 +580,11 @@ const sidebarTpl = /*html*/`
 <template v-slot:trigger>
          <div class="wrapper" @contextmenu.stop="openTaskMenu(item)">
                     <div id="guideTasks"  class="item-icon">
-                      <img class="icon" :src="item.icon" onerror="this.src='../../icons/default.svg'" />
+                       <svg  v-if="item.userIcon" class="icon task-icon" aria-hidden="true">
+            <use v-bind:xlink:href="'#icon-'+getUserIconName(item.userIcon)"></use>
+          </svg>
+          <img v-else class="icon" :src="item.icon" onerror="this.src='../../icons/default.svg'" />
+
                       <a-badge :count="item.count" :dot="true" status="processing"
                         :style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:item.count>5?'visible':'hidden'}">
                       </a-badge>
@@ -727,7 +731,7 @@ const sidebarTpl = /*html*/`
 
 const backupSpaceModel=require('../../src/model/backupSpaceModel')
 const _=require('lodash')
-
+window.selectedTask=null
 
 Vue.component('sidebar', {
   data: function () {
@@ -968,6 +972,10 @@ Vue.component('sidebar', {
   },
   template: sidebarTpl,
   methods: {
+    getUserIconName(userIcon){
+      let iconPath=userIcon.split('.')
+      return iconPath[2]
+    },
     /**
      * 监听全部的隐藏，目前只支持应用底部阴影
      */
@@ -1264,6 +1272,7 @@ Vue.component('sidebar', {
       ipc.send('openSidebarMenu')
     },
     openTaskMenu(task){
+      window.selectedTask=task
       ipc.send('openTaskMenu',{task:task})
     },
     inviteLink(id) {
@@ -2192,4 +2201,11 @@ ipc.on('reconnect',async()=>{
 ipc.on('getUserInfo',async (event,args)=>{
   let user=await db.system.where("name").equals("currentUser").first();
   ipc.sendTo(args.webContentsId,'gotUserInfo',{user:user})
+})
+
+
+ipc.on('selectedIcon',(event,args)=>{
+  console.log('选中的任务',window.selectedTask)
+  console.log('设置任务的icon',args)
+  ipc.sendTo(mainWindowId, 'changeTaskIcon', { id: window.selectedTask.id, icon:args.icon })
 })

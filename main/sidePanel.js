@@ -770,6 +770,7 @@ ipc.on('closeSwitch',()=>{
 })
 ipc.on('openTaskMenu',(event,args)=>{
   let task=args.task
+  let pos=require('electron').screen.getCursorScreenPoint()
   const tpl=[
     {
       label:task.title,
@@ -778,11 +779,10 @@ ipc.on('openTaskMenu',(event,args)=>{
     {
       label: '更改标签组图标',
       click() {
-        let pos= require('electron').screen.getCursorScreenPoint()
         renderPage.openIconSelector({
           x:pos.x,
           y:pos.y
-        })
+        },event.sender.id)
       }
     },{
       type:'separator'

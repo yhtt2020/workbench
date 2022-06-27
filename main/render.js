@@ -75,7 +75,7 @@ class Pop{
       pool.pop.splice(index,1)
     })
     this.win.on('blur',()=>{
-      //this.win.close()
+      this.win.close()
     })
     this.win.on('maximize',()=>{
       this.win.webContents.send('windowMaximized')
@@ -284,7 +284,7 @@ const render={
    */
   getUrl(url){
     let protocolUrl
-    if(0){
+    if(isDevelopmentMode){
       protocolUrl =`http://localhost:1600/${url}`
     }else{
       protocolUrl =`tsbapp://./${url}` //todo 需要验证正式环境的协议情况
@@ -375,6 +375,11 @@ const renderPage={
   init(){
 
   },
+  /**
+   * 启动图片选择器
+   * @param pos 位置
+   * @param windowId 启动者的WebContents的id，用于渲染进程获取交互句柄
+   */
   openIconSelector(pos,windowId){
     if(!this.iconSelector){
       pool.usePop({
@@ -383,7 +388,7 @@ const renderPage={
         height:320,
         x:pos.x,
         y:pos.y,
-      },windowId).then(win=>console.log(win))
+      },windowId).then()
     }
   }
 }

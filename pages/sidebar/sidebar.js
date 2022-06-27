@@ -235,6 +235,7 @@ window.onload = function() {
 					type: 'task',
 					tabs: task.tabs,
           partition:task.partition,
+          userIcon:task.userIcon,
 					count: 0
 				}
 				addItem.count = task.tabs.length
