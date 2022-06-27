@@ -778,7 +778,11 @@ ipc.on('openTaskMenu',(event,args)=>{
     {
       label: '更改标签组图标',
       click() {
-        renderPage.openIconSelector()
+        let pos= require('electron').screen.getCursorScreenPoint()
+        renderPage.openIconSelector({
+          x:pos.x,
+          y:pos.y
+        })
       }
     },{
       type:'separator'
