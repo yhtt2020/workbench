@@ -52,6 +52,8 @@ class Pop{
     let config={}
     config.frame=false
     config.show=false
+    config.skipTaskbar =true
+    config.parent=mainWindow
     config.webPreferences={
       nodeIntegration: true,
       contextIsolation: false,
@@ -75,7 +77,7 @@ class Pop{
       pool.pop.splice(index,1)
     })
     this.win.on('blur',()=>{
-      this.win.close()
+     // this.win.close()
     })
     this.win.on('maximize',()=>{
       this.win.webContents.send('windowMaximized')
