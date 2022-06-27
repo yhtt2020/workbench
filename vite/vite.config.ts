@@ -7,7 +7,8 @@ export default defineConfig({
   build:{
     rollupOptions:{
       input :{
-        icon:[path.resolve(__dirname,'icon.html')]
+        'icon':path.resolve(__dirname,'icon.html'),
+        'index':path.resolve(__dirname,'index.html')
       }
     }
   }
