@@ -117,9 +117,11 @@ window.onload = function() {
         star: [],
         lv: 0,
         cumulativeHours: 0
-      }
+      },
+      guideScedule: 0
 		},
 		getters: {
+      getGuideScedule: (state) => state.guideScedule,
       getTsGrade: state => {
         return state.onlineGrade
       },
@@ -232,6 +234,7 @@ window.onload = function() {
 					fixed: false,
 					type: 'task',
 					tabs: task.tabs,
+          partition:task.partition,
 					count: 0
 				}
 				addItem.count = task.tabs.length
@@ -240,6 +243,10 @@ window.onload = function() {
 
 		},
 		mutations: {
+      //更新新手引导进度值
+      UPDATE_GUIDE_SCEDULE: (state, scedule) => {
+        state.guideScedule = scedule
+      },
       set_local_spaces:(state,spaces)=>{
         state.localSpaces=spaces
       },
@@ -605,4 +612,37 @@ ipc.on('isSilent', (event, args) => {
 ipc.on('refreshCircleList', async (event, args) => {
   await window.$store.dispatch('getJoinedCircle', {page: 1, row: 500})
   await window.$store.dispatch('getMyCircle', {page: 1, row: 500})
+})
+
+ipc.on('handleProtocol', (event, args) => {
+  window.location.href = args
+})
+
+ipc.on('execImportHelper', async () => {
+  let saApp=await require('../util/model/standAloneAppModel.js').getFromPackage('com.thisky.import')
+  if(saApp){
+    ipc.send('executeApp',{app:saApp})
+  }else{
+    appVue.$message.error({content:'此应用已经被卸载。无法打开。'})
+  }
+})
+
+ipc.on('execFav', async () => {
+  let saApp=await require('../util/model/standAloneAppModel.js').getFromPackage('com.thisky.fav')
+  if(saApp){
+    ipc.send('executeApp',{app:saApp})
+  }else{
+    appVue.$message.error({content:'此应用已经被卸载。无法打开。'})
+  }
+})
+
+ipc.invoke('getSidebarGuideScedule').then(res => {
+  //这里有可能$store还没挂载上的情况，延迟2000毫秒
+  setTimeout(() => {
+    window.$store.commit('UPDATE_GUIDE_SCEDULE', res + 1)
+  }, 2000)
+})
+
+ipc.on('updateSidebarGuideScedule', (event, args) => {
+  window.$store.commit('UPDATE_GUIDE_SCEDULE', args)
 })

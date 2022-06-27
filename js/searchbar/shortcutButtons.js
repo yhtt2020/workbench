@@ -31,6 +31,10 @@ function showShortcutButtons (text, input, event) {
     el.innerHTML =" "+ shortcut.title
     el.tabIndex = -1
     el.addEventListener('click', function () {
+      if(shortcut.text==='!bookmarks '){
+        ipc.send('handleTsbProtocol',{url:'tsb://app/redirect/?package=com.thisky.fav&url=/'})
+        return
+      }
       input.value = shortcut.text
       input.focus()
       searchbar.showResults(shortcut.text)

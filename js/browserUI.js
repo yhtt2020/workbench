@@ -22,6 +22,18 @@ function addTask () {
   addTab()
 }
 
+/**
+ * 添加独立会话分组
+ */
+function addSingleTask(){
+  tasks.setSelected(tasks.add({
+    partition:'persist:webcontent_'+Date.now()
+  }))
+  tabBar.updateAll()
+  addTab()
+}
+
+
 /* creates a new tab */
 
 /*
@@ -187,6 +199,7 @@ function closeTab (tabId) {
 /* changes the currently-selected task and updates the UI */
 
 function switchToTask (id) {
+  require('./taskOverlay/taskOverlay').hide()
   tasks.setSelected(id)
 
   tabBar.updateAll()
@@ -296,11 +309,28 @@ ipc.on('reloadTask', () => {
   switchToTask(tasks.getSelected().id)
 })
 
+
 //定位到task组的某tabid，往后插入创建tab
 //browserUI中有tab和task的环境，而且能直接捕获从preload传出来的ipc，也能拿到tabBar的环境
 // ipc.on('toTask-addTab', (event, arg) => {
 //   console.log(arg, '---------------@@@@@')
 // })
+
+ipc.on('closeGuide',()=>{
+  let closeGuideTab;
+  tabs.tabs.filter((e)=>{
+    if (e.selected == true) {
+      closeGuideTab = e.id
+    }
+  })
+
+  closeTab(closeGuideTab)
+})
+
+ipc.on('openNewBackTab',function (){
+  addTab(tabs.add(),{ openInBackground:true})
+})
+
 
 ipc.on('addTaskFromApps',function(e,data){
 	let newTask = {
@@ -310,12 +340,69 @@ ipc.on('addTaskFromApps',function(e,data){
 	let tid=tasks.add(newTask)
 	let newTab= {
       url: data.url || '',
-	  title:data.name
+	    title:data.name
     }
 	tasks.get(tid).tabs.add(newTab)
-
-
 })
+
+ipc.on('addTaskCareer',function(e,data){
+
+  if(data.id===4 || data.id===6 || data.id===8){
+    let newTaskFirst = {
+      name: data.tasks[0].name,
+      collapsed:false
+    }
+    let taskFirst=tasks.add(newTaskFirst)
+
+    data.tasks[0].tabs.forEach(e => {
+      let newTabFirst = {
+        title: e.title,
+        url: e.url,
+
+      }
+      tasks.get(taskFirst).tabs.add(newTabFirst)
+    })
+  }
+  else {
+    let newTaskFirst = {
+      previewImage: 'icons/taskIcon.svg',
+      name: data.tasks[0].name,
+      collapsed: false
+    }
+    let taskFirst = tasks.add(newTaskFirst)
+
+    data.tasks[0].tabs.forEach(e => {
+      let newTabFirst = {
+        title: e.title,
+        url: e.url
+      }
+      tasks.get(taskFirst).tabs.add(newTabFirst)
+    })
+
+
+    let newTaskSecond = {
+      name: data.tasks[1].name,
+      collapsed: false
+    }
+    let taskSecond = tasks.add(newTaskSecond)
+    data.tasks[1].tabs.forEach(e => {
+      let newTabSecond = {
+        title: e.title,
+        url: e.url
+      }
+      tasks.get(taskSecond).tabs.add(newTabSecond)
+    })
+  }
+
+  // setTimeout(()=>{
+  //   for(let i=1;i<tasks.tasks.length;i++){
+  //     let emptyTabList = tasks.tasks[i].tabs.tabs.filter(item=>item.url==='ts://newtab')
+  //     closeTab(emptyTabList[0].id)
+  //   }
+  // },100)
+})
+
+
 ipc.on('openApps',function(){
 	// let url= 'ts://apps'//左斜杠三条是为了统一判断里tab的三条左斜杠，不知道为什么会这样
 	// let findout=false
@@ -403,6 +490,7 @@ tabBar.events.on('tab-closed', function (id) {
 
 module.exports = {
   addTask,
+  addSingleTask,
   addTab,
   destroyTask,
   destroyTab,

@@ -1,7 +1,155 @@
+@charset "UTF-8";
 .sa-app {
   border-radius: 50%;
-  border: 2px solid grey;
   padding: 1px;
-}
+  width: 30px !important;
+  height: 30px !important;
+  object-fit: cover; }
+  .sa-app.running {
+    border: 2px solid white; }
+
+.app-name-popover {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 270px;
+  display: inline-block; }
+
+/*外框*/
+.wrapper {
+  user-select: none;
+  position: relative; }
+  .wrapper .processing {
+    display: inline-block;
+    position: absolute;
+    left: 2px;
+    top: 50%;
+    height: 3px;
+    width: 3px;
+    z-index: 4;
+    border-radius: 100%;
+    background-color: rgba(0, 0, 0, 0.68); }
+
+.app-capture {
+  width: 270px;
+  height: 130px;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(117, 117, 117, 0.58);
+  position: relative;
+  overflow: hidden; }
+  .app-capture:hover .app-info {
+    display: block; }
+  .app-capture img {
+    width: 270px;
+    height: auto;
+    display: block;
+    overflow: hidden;
+    position: relative; }
+  .app-capture .overlay {
+    position: absolute;
+    bottom: 0;
+    width: 270px;
+    height: 30px;
+    left: 0;
+    z-index: 10;
+    background: linear-gradient(to top, rgba(9, 6, 6, 0.11), transparent); }
+
+.app-manager-overlay {
+  width: 340px; }
+  .app-manager-overlay .app-manager-title {
+    background-color: rgba(234, 234, 234, 0.41);
+    border-radius: 8px 8px 0 0;
+    padding: 8px; }
+  .app-manager-overlay .ant-popover-title {
+    padding: 0; }
+  .app-manager-overlay .ant-popover-inner-content {
+    padding: 0; }
+    .app-manager-overlay .ant-popover-inner-content .in-process-app {
+      padding: 0 0 0 10px; }
+      .app-manager-overlay .ant-popover-inner-content .in-process-app .scroller-wrapper {
+        padding: 10px;
+        overflow-y: auto;
+        max-height: calc(100vh - 50px); }
+        .app-manager-overlay .ant-popover-inner-content .in-process-app .scroller-wrapper::-webkit-scrollbar-track {
+          border-radius: 10px;
+          background-color: white; }
+        .app-manager-overlay .ant-popover-inner-content .in-process-app .scroller-wrapper::-webkit-scrollbar {
+          width: 6px;
+          background-color: #F5F5F5; }
+        .app-manager-overlay .ant-popover-inner-content .in-process-app .scroller-wrapper::-webkit-scrollbar-thumb {
+          border-radius: 10px;
+          background-color: rgba(0, 0, 0, 0.5); }
+      .app-manager-overlay .ant-popover-inner-content .in-process-app .app-list {
+        list-style: none;
+        padding-left: 0; }
+        .app-manager-overlay .ant-popover-inner-content .in-process-app .app-list li {
+          padding: 10px;
+          border-radius: 4px;
+          margin-bottom: 5px; }
+        .app-manager-overlay .ant-popover-inner-content .in-process-app .app-list .active, .app-manager-overlay .ant-popover-inner-content .in-process-app .app-list li:hover {
+          background-color: rgba(204, 204, 204, 0.31); }
+        .app-manager-overlay .ant-popover-inner-content .in-process-app .app-list .app-title {
+          margin-bottom: 10px;
+          vertical-align: middle; }
+          .app-manager-overlay .ant-popover-inner-content .in-process-app .app-list .app-title .app-logo {
+            padding-left: 0;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            vertical-align: middle;
+            margin-top: -10px; }
+          .app-manager-overlay .ant-popover-inner-content .in-process-app .app-list .app-title .app-name {
+            display: inline-block;
+            font-weight: bold;
+            margin-left: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 180px;
+            word-break: break-all; }
+    .app-manager-overlay .ant-popover-inner-content .more-app {
+      padding: 10px;
+      border-left: 1px solid #e7e7e7; }
+      .app-manager-overlay .ant-popover-inner-content .more-app .other-app-list {
+        text-align: center;
+        list-style: none;
+        margin: 0;
+        padding: 0; }
+        .app-manager-overlay .ant-popover-inner-content .more-app .other-app-list li {
+          cursor: pointer;
+          padding: 0; }
+          .app-manager-overlay .ant-popover-inner-content .more-app .other-app-list li：hover {
+            background-color: rgba(126, 126, 126, 0.84); }
+        .app-manager-overlay .ant-popover-inner-content .more-app .other-app-list .logo {
+          width: 28px;
+          height: 28px;
+          border-radius: 50%; }
+        .app-manager-overlay .ant-popover-inner-content .more-app .other-app-list .title {
+          font-size: 11px;
+          margin-top: 5px;
+          margin-bottom: 10px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          max-width: 48px; }
+
+.app-info {
+  display: none;
+  background-color: rgba(0, 0, 0, 0.54);
+  color: white;
+  position: absolute;
+  width: 270px;
+  padding: 10px;
+  height: 130px;
+  font-size: 12px;
+  left: 0;
+  top: 0;
+  text-align: left;
+  z-index: 3;
+  line-height: 28px; }
+  .app-info .value {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap; }
 
 /*# sourceMappingURL=sa-app.css.map */

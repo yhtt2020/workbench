@@ -162,7 +162,7 @@ const webviews = {
       }
     } else {
       if (!hasSeparateTitlebar && (window.platformType === 'linux' || window.platformType === 'windows') && !windowIsMaximized && !windowIsFullscreen) {
-        var navbarHeight = 48
+        var navbarHeight = 36
       } else {
         var navbarHeight = 36
       }
@@ -190,9 +190,12 @@ const webviews = {
 
     // if the tab is private, we want to partition it. See http://electron.atom.io/docs/v0.34.0/api/web-view-tag/#partition
     // since tab IDs are unique, we can use them as partition names
+    var partition=tasks.getSelected().partition
+    console.log(partition)
     if (tabData.private === true) {
-      var partition = tabId.toString() // options.tabId is a number, which remote.session.fromPartition won't accept. It must be converted to a string first
+      partition= tabId.toString() // options.tabId is a number, which remote.session.fromPartition won't accept. It must be converted to a string first
     }
+
 
 	/*对特殊的内部webview做处理，增加一些额外的权限*/
 	let webPreferences={}
@@ -236,8 +239,61 @@ const webviews = {
       ],
       allowPopups:true
     }
+  } else if(sourceUrl == 'ts://guide') {
+    webPreferences={
+      preload: __dirname + '/pages/guide/preload.js',
+      nodeIntegration: true, //node集成开高了
+      contextIsolation:false,
+      enableRemoteModule: true,
+      scrollBounce: false,
+      sandbox: false,
+      safeDialogs:false,
+      safeDialogsMessage:false,
+      additionalArguments: [
+        '--user-data-path=' + window.globalArgs['user-data-path'],
+        '--app-version=' + window.globalArgs['app-version'],
+        '--app-name=' +  window.globalArgs['app-name'],
+        //'--is-Dev='+window.globalArgs['development--mode']
+      ],
+      allowPopups:true
+    }
+  } else if(sourceUrl.startsWith('http://localhost:5008/')) {
+    webPreferences={
+      preload: __dirname + '/pages/guide/preload.js',
+      nodeIntegration: true, //node集成开高了
+      contextIsolation:false,
+      enableRemoteModule: true,
+      scrollBounce: false,
+      sandbox: false,
+      safeDialogs:false,
+      safeDialogsMessage:false,
+      additionalArguments: [
+        '--user-data-path=' + window.globalArgs['user-data-path'],
+        '--app-version=' + window.globalArgs['app-version'],
+        '--app-name=' +  window.globalArgs['app-name'],
+        //'--is-Dev='+window.globalArgs['development--mode']
+      ],
+      allowPopups:true
+    }
+  } else if(sourceUrl.startsWith('http://localhost:8080')) {
+    webPreferences={
+      preload: __dirname + '/pages/guide/preload.js',
+      nodeIntegration: true, //node集成开高了
+      contextIsolation:false,
+      enableRemoteModule: true,
+      scrollBounce: false,
+      sandbox: false,
+      safeDialogs:false,
+      safeDialogsMessage:false,
+      additionalArguments: [
+        '--user-data-path=' + window.globalArgs['user-data-path'],
+        '--app-version=' + window.globalArgs['app-version'],
+        '--app-name=' +  window.globalArgs['app-name'],
+        //'--is-Dev='+window.globalArgs['development--mode']
+      ],
+      allowPopups:true
+    }
   }
-
 
     if(sourceUrl==='ts://apps' || sourceUrl ==='ts://newtab'){
       webPreferences.partition=null
@@ -662,6 +718,7 @@ ipc.on('closeEmptyPage',(event,args)=>{
     }
   }
 })
+
 
 ipc.on('closeTab',(event,args)=>{
     require('browserUI.js').closeTab(args.id)

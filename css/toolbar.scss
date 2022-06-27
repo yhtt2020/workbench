@@ -1,4 +1,7 @@
 #toolbar{
+  img{
+    -webkit-user-drag: none;
+  }
   line-height: 40px;
   z-index: 2;
   top: calc(36px + var(--control-space-top));

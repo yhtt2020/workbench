@@ -4,16 +4,103 @@ const { shell } = require('electron')
 const fsExtra=require('fs-extra')
 const ElectronLog = require('electron-log')
 app.whenReady().then(() => {
+  const FAV_PACKAGE='com.thisky.fav'
   //设置默认的本地收藏夹位置
   configDb.init(app.getPath('userData'))
   const defaultStorePath = configDb.getStorePath()
 
-  if (!fs.existsSync(defaultStorePath)) fs.mkdirSync(defaultStorePath)
+  ipc.on('downloadAndSetWallpaper',(event,args)=>{
+    try{
+      const savePath=path.join(defaultStorePath,'壁纸')
+      if(!fs.existsSync(savePath)){
+        fs.mkdirSync(savePath)
+      }
+      let filename=localCacheManager.getHash(args.url).substr(0,5)
+      const filePath=path.join(savePath,filename)
+      localCacheManager.fetchContentWithType(args.url, filePath).then((header) => {
+        let ext = header.substr(header.lastIndexOf('/') + 1)
+        if (ext === 'svg+xml') {
+          ext = 'svg'
+        }
+        fs.renameSync(filePath,filePath+'.'+ext)
+        const wallpaper = require('wallpaper')
+        wallpaper.set(filePath+'.'+ext)
+        event.reply('setWallPaper',{status:1})
+      })
+    }catch(e){
+      event.reply('setWallPaper',{status:0})
+    }
+  })
+  //------------------>
+  let canCloseInterval = false
+  ipc.on('canCloseInterval', (event, args) => {
+    canCloseInterval = true
+  })
+  let interval = setInterval(() => {
+    if(mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.send('getUserDataPath', defaultStorePath)
+      if(canCloseInterval) {
+        clearInterval(interval)
+      }
+    }
+  }, 5000)
+  //以上部分解决子进程中无法获得到当前收藏夹的storePath路径的问题
+  //-----------------
+
+  if (!fs.existsSync(defaultStorePath))
+  {
+    /**
+     * 初始化收藏夹
+     * @param defaultStorePath
+     */
+    function initLib(defaultStorePath){
+      fs.mkdirSync(defaultStorePath)
+      function createDir(parentPath,dirname){
+        if(!fs.existsSync(parentPath)){
+          return false
+        }else{
+          fs.mkdirSync(path.join(parentPath,dirname))
+        }
+      }
+      let commonFolder=[
+        '书签','图片','视频','音频','密码','笔记'
+      ]
+      let jobFolder= {
+        'develop':[
+
+        ],
+        'pm':[
+
+        ],
+        'designer':[
+
+        ],
+        'salse':[
+
+        ]
+      }
+      commonFolder.forEach(folder=>{
+        createDir(defaultStorePath,folder)
+      })
+    }
+    initLib(defaultStorePath)
+  }
   ipc.on('getUserInfo', (event, args) => {
     SidePanel.send('getUserInfo', { webContentsId: event.sender.id })
   })
   //采集到的内容本地下载下来保存
   ipc.on('getFavContent', async (event, args) => {
+    SidePanel.send('message', { type: 'info', config: { content: '开始下载图片到收藏夹，请稍候…' ,key:'fav'} })
+    function filterFilename (filename, replaceHolder = ' ') {
+      const map = [
+        '/', '\\', '|', '?', '"', '*', ':', '<', '>', '\n'
+      ]
+      map.forEach(replace => {
+         filename = filename.replaceAll(replace, replaceHolder)
+      })
+      return filename
+    }
+    SidePanel.send('executeAppByPackage',{package:FAV_PACKAGE,background:true})
     const content = args.content
     let filename = Date.now().toString()//content.src.substr(content.src.lastIndexOf('/'))
     if (content.type === 'img') {
@@ -24,6 +111,7 @@ app.whenReady().then(() => {
         }
         filename = filename.substr(0, 30) + filename.substr(filename.indexOf('.'))
       }
+
       let fullPath = path.join(defaultStorePath, filename)
       localCacheManager.fetchContentWithType(content.src, fullPath).then((header) => {
         let ext = header.substr(header.lastIndexOf('/') + 1)
@@ -33,9 +121,12 @@ app.whenReady().then(() => {
         let newFileName = ''
         if (content.alt !== '') {
           newFileName = content.alt.length > 20 ? content.alt.substr(0, 20) + '.' + ext : content.alt + '.' + ext
-        } else {
+        } else if(content.title!=='') {
           newFileName = content.title.length > 20 ? content.title.substr(0, 20) + '.' + ext : content.title + '.' + ext
+        }else{
+          newFileName= Date.now()+'.'+ext
         }
+        newFileName=filterFilename(newFileName) //过滤一下文件名
         let i = 0
         let testFileName = newFileName
         while (fs.existsSync(path.join(defaultStorePath, testFileName))) {
@@ -43,15 +134,35 @@ app.whenReady().then(() => {
           testFileName = newFileName.substr(0, newFileName.lastIndexOf('.')) + '-' + i.toString() + newFileName.substr(newFileName.lastIndexOf('.'))
         }
         let lastPath = testFileName
-        fs.renameSync(path.join(defaultStorePath, filename), path.join(defaultStorePath, lastPath))
-
+        lastPath=lastPath
+        let storePath=path.join(defaultStorePath, lastPath)//存储的实际文件名
+        fs.renameSync(path.join(defaultStorePath, filename),storePath )
         if (fs.existsSync(path.join(defaultStorePath, newFileName))) {
-          sidePanel.get().webContents.send('message', { type: 'success', config: { content: '收藏到本地成功。' } })
+          //此时已经保存成功，需要发送消息告诉fav，要更新了
+          let timeout=5000
+          let timeGone=0
+          let timer=setInterval(()=>{
+            if(timeGone>=timeout){
+              //超时终止
+              clearInterval(timer)
+            }
+            if(appManager.getWindowByPackage(FAV_PACKAGE)){
+              appManager.sendIPCToApp(FAV_PACKAGE,'addImageMeta',{
+                storePath:storePath,
+                href:content.href
+              })
+              clearInterval(timer)
+            }else{
+              timeGone+=200
+            }
+          },200)
+          SidePanel.send('message', { type: 'success', config: { content: '收藏到本地成功。' ,key:'fav'} })
         } else {
-          sidePanel.get().webContents.send('message', { type: 'error', config: { content: '收藏失败，请检查网络。' } })
+          SidePanel.send('message', { type: 'error', config: { content: '收藏失败，请检查网络。',key:'fav' } })
         }
       }).catch(e => {
-        sidePanel.get().webContents.send('message', { type: 'error', config: { content: '收藏失败，请检查网络。' } })
+        console.warn(e)
+        SidePanel.send('message', { type: 'error', config: { content: '收藏失败，意外错误。',key:'fav' } })
       })
     }
 
@@ -80,7 +191,7 @@ app.whenReady().then(() => {
 
   })
   ipc.on('setWallPaper', (event, args) => {
-    sendIPCToWindow(mainWindow, 'setWallPaper', { wallPaper: args.wallPaper, tip: false })
+    sendIPCToWindow(mainWindow, 'setNewTabWallPaper', { wallPaper: args.wallPaper, tip: false })
   })
   ipc.on('trashItem', (event, args) => {
     let filePath = args.fullPath
@@ -107,7 +218,8 @@ app.whenReady().then(() => {
   function showAddPage(){
     let url='pages/fav/index.html'//decodeURI('file://'+path.join(__dirname,'/pages/fav/index.html?=#/popSaveToFolder'))//开发环境测试环境，提交到版本库前注释掉
     let options={
-      hash:'popSaveToFolder'
+      hash:'popSaveToFolder',
+      enableRemoteModule:true
     }
     if(isDevelopmentMode){
       url='http://localhost:8080/#/popSaveToFolder'
@@ -120,6 +232,8 @@ app.whenReady().then(() => {
     }
     popWindow=popManager.openPop('favSaveToFolder',url,{},{preload:__dirname+'/pages/fav/preload.js'},options)
     popWindow.setBounds(currentBounds)  //重新调整位置，不然会保持在首次创建的位置不再变化
+
+    require("@electron/remote/main").enable(popWindow.window.webContents)
     popWindow.window.webContents.send('addPage')
   }
   ipc.on('openPopSaveToFolder',()=>{
@@ -164,6 +278,9 @@ app.whenReady().then(() => {
     if(popWindow){
       popWindow.window.hide()
     }
+  })
+  ipc.on('reloadFav',()=>{
+    appManager.sendIPCToApp('com.thisky.fav','reload')
   })
 
   ipc.on('exportFile',(event,args)=>{

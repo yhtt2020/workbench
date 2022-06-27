@@ -89,6 +89,7 @@ CPU:
                 </template>
                 <div class="wrapper"  @click="showAllSaApps">
                   <div class="item-icon ">
+                   <a-badge :dot="hasNew">
                     <img class="icon" style="width: 32px !important;height: 32px !important;" src="../../icons/svg/control.svg"/>
 <!--                    <a-badge-->
 <!--                      :count="item.count"-->
@@ -97,6 +98,7 @@ CPU:
 <!--                      :style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:item.count>5?'visible':'hidden'}"-->
 <!--                    >-->
 <!--                    </a-badge>-->
+</a-badge>
                   </div>
                   <div class="item-title">应用管理</div>
                 </div>
@@ -127,7 +129,9 @@ Vue.component('app-manager', {
     }
   },
   mounted () {
+
   },
+
   methods: {
 
     startStat(id){
@@ -197,7 +201,11 @@ Vue.component('app-manager', {
       ipc.send('showAllSaApps')
     }
   },
-  computed:{
-
+  computed: {
+    hasNew () {
+      return this.apps.some((app) => {
+        return app.isNew
+      })
+    }
   }
 })

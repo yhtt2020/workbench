@@ -50,7 +50,7 @@
 <!--          </a-popover>-->
 
         </div>
-        <div v-for="desk in desks">
+        <div  v-for="desk in desks">
           <a-dropdown :trigger="['contextmenu']">
             <a-popover  :mouse-leave-delay="0" overlay-class-name="desk-preview"  v-if="!isSelectedDesk(desk.id)">
               <template slot="content" >

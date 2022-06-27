@@ -6,7 +6,6 @@ const {
 } = require('electron-devtools-installer')
 
 const devPlugin = {}
-
 devPlugin[VUEJS3_DEVTOOLS.id] = { installed: false }
 devPlugin[VUEJS_DEVTOOLS.id] = { installed: false }
 devPlugin[REACT_DEVELOPER_TOOLS.id] = { installed: false }
@@ -108,7 +107,7 @@ function buildAppMenu (options = {}) {
     }
   }
 
-  let isToolbar = true
+
   ipc.on('changeToolbar', () => {
     isToolbar = false
   })
@@ -330,10 +329,8 @@ function buildAppMenu (options = {}) {
           }
         },
         {
-          label: '工具栏',
+          label: '显示/隐藏工具栏',
           accelerator: undefined,
-          type: 'checkbox',
-          checked: isToolbar,
           click: function (item, window) {
             if (isToolbar) {
               isToolbar = false
@@ -521,8 +518,8 @@ function buildAppMenu (options = {}) {
           label: l('appMenuAbout').replace('%n', app.name),
           click: function (item, window) {
             var info = [
-              'Min v' + app.getVersion(),
-              'Chromium v' + process.versions.chrome
+              '想天浏览器版本： v' + app.getVersion(),
+              'Chromium内核版本： v' + process.versions.chrome
             ]
             electron.dialog.showMessageBox({
               type: 'info',

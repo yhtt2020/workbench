@@ -159,6 +159,8 @@ const sessionRestore = {
           console.warn('当远端无法获取，尝试从本地备份空间恢复时意外报错')
           console.warn(e)
         }
+      }else{
+        console.log('本地次运行1')
       }
     } catch (e) {
       console.warn(e)
@@ -168,19 +170,19 @@ const sessionRestore = {
     try {
       // first run, show the tour
       //首次运行，显示官方网站
-      if (!savedStringData) {
+      var data = JSON.parse(savedStringData)
+      if (data=== false || data.state.tasks.length===0) {
         tasks.setSelected(tasks.add()) // create a new task
 
         var newTab = tasks.getSelected().tabs.add({
-          url: 'https://apps.vip'
+          url: urlParser.getSourceURL('ts://guide')
         })
+        console.log(newTab)
         browserUI.addTab(newTab, {
           enterEditMode: false
         })
         return
       }
-
-      var data = JSON.parse(savedStringData)
 
       // the data isn't restorable
       if ((data.version && data.version !== 2) || (data.state && data.state.tasks && data.state.tasks.length === 0)) {
@@ -473,11 +475,34 @@ const sessionRestore = {
           ipc.send('disconnect')
         }, 2000)
       }
+      //打开需要打开的网页
+      let  timer=setInterval(()=>{
+        if(window.waitOpenTabs && window.waitOpenTabs.length>0){
+          if(tabs){
+            window.waitOpenTabs.forEach((url)=>{
+              var newTab = tabs.add({
+                url: url || ''
+              })
+
+              browserUI.addTab(newTab, {
+                enterEditMode: !url // only enter edit mode if the new tab is empty
+              })
+            })
+            window.waitOpenTabs=[]
+            clearInterval(timer)
+          }
+        }
+      },1000)
+
+
+
+
     } else {
       //此处为本地空间的初始化逻辑
       space = await localSpaceModel.getSpace(currentSpace.spaceId) //先尝试获取一次最新的空间
       //如果还不存在备份空间，应该是老版本，从未保存本地备份，这种场景可以不处理，下次自动保存一次就好了
-      space.userInfo = currentSpace.userInfo
+      if(space)
+        space.userInfo = currentSpace.userInfo
     }
 
     sessionRestore.currentSpace = currentSpace

@@ -19,9 +19,16 @@ files:
     - api/*
     - img/*.jpg
     - img/*.jpeg
+    - img/*.png
     - reader/**/*
     - resources/**/*
     - src/**/*
+
+fileAssociations:
+  ext:
+   - html
+   - xhtml
+   - pdf
 dmg:
     sign: false
 
@@ -62,7 +69,14 @@ mac:
       - provider : generic
         url: http://d.xiangtian.ren/update/browser/mac-${arch}/
         channel: latest
-
+#   extendInfo:
+#      - CFBundleDocumentTypes:
+#        - CFBundleTypeName: HTML document
+#          CFBundleTypeRole: Viewer
+#          LSItemContentTypes: public.html
+#        - CFBundleTypeName: XHTML document
+#          CFBundleTypeRole: Viewer
+#          LSItemContentTypes: public.xhtml
 
 nsis:
     allowToChangeInstallationDirectory: true

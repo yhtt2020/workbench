@@ -1,6 +1,8 @@
 const low = require('lowdb')
 const FileSync = require('lowdb/adapters/FileSync')
 const { nanoid } = require('nanoid')
+const fs=require('fs')
+const path=require('path')
 const tables= {
   spaces:[],
   currentSpace:{},
@@ -23,9 +25,27 @@ let ldb = {
       ldb.db=low(adapter)
       ldb.initDb()
     }catch (e) {
+      //todo 这里应该做备份还原的操作
+      ldb.backUp(ldb.dbPath)
+      fs.rmSync(ldb.dbPath)
+      const adapter=new FileSync(ldb.dbPath)
+      ldb.db=low(adapter)
+      ldb.initDb()
     }
 
     return ldb
+  },
+  backUp(dbPath){
+    if(fs.existsSync(dbPath)){
+      dbPath=dbPath.replaceAll('\\','/')
+      let dbParent=dbPath.substring(0,dbPath.lastIndexOf('/'))
+      let dbName=dbPath.substring(dbPath.lastIndexOf('/')+1,dbPath.lastIndexOf('.'))
+      let bkPath=path.join(dbParent,dbName+'_bk_'+Date.now()+'.json')
+      if(fs.existsSync(dbPath)){
+        fs.cpSync(dbPath,bkPath)
+      }
+
+    }
   },
   initDb(){
     ldb.db.defaults(tables).write()

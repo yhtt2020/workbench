@@ -1,5 +1,6 @@
 const { autoUpdater } = require('electron-updater')
 let updaterWindow=null
+let  showedError=false
 function loadUpdate(updateInfo){
   if(!updaterWindow){
     updaterWindow= new BrowserWindow({
@@ -58,8 +59,9 @@ function checkUpdate(){
     if(error.code===2){
       errInfo="软件包名无法验证"
     }
-    if(SidePanel.alive()){
+    if(SidePanel.alive() && showedError === false){
       sidePanel.get().webContents.send('message',{type:'error',config:{content:"自动更新程序意外终止,错误原因： "+errInfo+" ，将为您打开产品官网apps.vip，请至官网手动下载最新版本更新。",key:tag,duration:6}})
+      showedError=true
       sendIPCToWindow(mainWindow, 'addTab', {
         url: 'https://apps.vip/#download'
       })

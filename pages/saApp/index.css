@@ -109,8 +109,8 @@ body.windows:not(.separate-titlebar) .windows-caption-buttons {
 
 .windows-caption-buttons .element {
   -webkit-app-region: none;
-  line-height: 36px;
-  width: 36px;
+  line-height: 30px;
+  width: 30px;
   stroke: #000;
   padding: 0 5px;
   box-sizing: content-box;
@@ -160,17 +160,18 @@ body:not(.task-overlay-is-shown).dark-theme .action-icon path {
 
 .action {
   position: relative;
-  width: 40px;
+  width: 30px;
   text-align: center;
-  line-height: 40px;
+  line-height: 30px;
 }
 
 .action-icon {
-  padding: 6px;
-  width: 20px;
-  height: 20px;
+  padding: 3px;
+  width: 18px;
+  height: 18px;
   vertical-align: middle;
-  border-radius: 5px;
+  border-radius: 3px;
+  margin-top: -3px;
 }
 
 .action-icon:hover {

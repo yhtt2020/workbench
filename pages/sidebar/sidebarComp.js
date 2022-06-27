@@ -66,8 +66,9 @@ const sidebarTpl = /*html*/`
                           <template>
                             <a-popover placement="bottomLeft">
                               <template slot="content">
-                                <div class="flex flex-direction justify-around align-start" style="width: 100%; height: 120px">
+                                <div class="flex flex-direction justify-around align-start" style="width: 100%; height: 185px">
                                   <div class="text-black">等级: {{this.$store.getters.getTsGrade.lv}}级</div>
+                                  <div class="text-black">距离下一级还需要: {{remainTime}} 小时</div>
                                   <div class="text-black">累计在线时长{{this.$store.getters.getTsGrade.cumulativeHours}}小时</div>
                                   <div class="text-grey">
                                     <img src="./assets/sun.svg" alt="" style="width: 20px; height: 20px"> = 16级
@@ -78,6 +79,10 @@ const sidebarTpl = /*html*/`
                                   <div class="text-grey">
                                     <img src="./assets/star.svg" alt="" style="width: 20px; height: 20px"> = 1级
                                   </div>
+                                  <div class="text-help"  @click="gradeHelp()" style="display: flex;flex-direction: row;color: rgba(0, 0, 0, 0.25);margin-left: 2px;cursor:pointer;">
+ <a-icon type="question-circle" style="margin-top: 3px"></a-icon>
+ <span style="margin-left: 6px;font-size: 12px;margin-bottom: -8px">关于等级</span>
+</div>
                                 </div>
                               </template>
                               <div class="ts-grade flex justify-start align-center" style="margin-top: 4px">
@@ -99,7 +104,19 @@ const sidebarTpl = /*html*/`
                         </a-col>
                       </a-row>
                     </div>
-                    <div style="margin-bottom: 10px" class="actions flex flex-direction justify-between align-center">
+
+                    <div v-show="isMedals" class="medals" style="height: 30px;">
+                       <div style="margin-top: 8px;margin-left: 15px;width: 32px;height: 35px;" >
+                        <a-popover placement="topLeft" arrow-point-at-center>
+                           <template slot="content">
+                             <h2 style="font-size: 14px;margin-left: 25px">创始用户</h2>
+                             <p style="font-size: 12px;margin-bottom: 0px">完成新手引导后获得</p>
+                           </template>
+                           <img  src="../../img/silver-b.png" style="width: 100%;height: 100%">
+                        </a-popover>
+                       </div>
+                    </div>
+                    <div style="margin-bottom: 10px" @click="myCommunity" class="actions flex flex-direction justify-between align-center">
                       <div class="actions-top flex justify-start  align-center">
                         <img src="./assets/tizi.svg" alt="" style="width: 16px; height: 16px">
                         <div class="text-grey" style="margin-left: 6px">我的元社区</div>
@@ -123,7 +140,7 @@ const sidebarTpl = /*html*/`
                       <template>
                         <div class="mg-top flex justify-between align-center">
                           <div class="mg-top-lf text-black" style="font-weight: 400;">我加入的团队({{this.$store.getters.getAllCircle.length}})</div>
-                          <a-button class="mg-top-right" style="border-radius: 50%;" type="primary" icon="plus" size="small" @click="createGroup" />
+                          <a-button id="guideTeam" class="mg-top-right" style="border-radius: 50%;" type="primary" icon="plus" size="small" @click="createGroup" />
                         </div>
 
         <div style="margin-top: 10px">
@@ -133,7 +150,7 @@ const sidebarTpl = /*html*/`
             </a-tag>
           </template>
         </div>
-                        <div class="mg-content flex flex-direction">
+                        <div class="mg-content flex flex-direction" :class="{ active: isMedals === false }">
                           <template v-if="this.$store.getters.getAllCircle.length===0">
                             <a-empty style="margin-top: 10px">
                               <span slot="description"> 暂无团队， <a @click="openGroupHelp">了解团队功能</a> </span>
@@ -165,13 +182,6 @@ const sidebarTpl = /*html*/`
 <!--                            </div>-->
 <!--                          </div>-->
 
-<!--        <div>-->
-<!--          <template v-for="(tag, index) in tags">-->
-<!--            <a-tag :key="index" :color="tag.checked ? 'blue' : ''"  @click="handleChange(tag, index)"  style="margin-left:5px;font-size: 12px; border-radius: 10px">-->
-<!--              {{tag.label}}-->
-<!--            </a-tag>-->
-<!--          </template>-->
-<!--        </div>-->
 
                             <div class="mg-content-btn flex flex-direction"
                           v-for="(item, index) in teamList" :key="item.id" >
@@ -236,7 +246,7 @@ const sidebarTpl = /*html*/`
               <div class="item-title">{{ user.nickname }}</div>
             </div>
         </li>
-        <li>
+        <li id="guideApplySecond">
           <app-manager ref="appManager" :apps="apps" :running-apps="runningApps"></app-manager>
         </li>
       </ul>
@@ -255,12 +265,12 @@ const sidebarTpl = /*html*/`
                 </div>
               </template>
               <template slot="content" v-else>
-              <div style="max-width: 400px">{{app.summary}}</div>
+              <div style="max-width: 240px">{{app.summary}}</div>
               </template>
               <div class="wrapper sa-app-wrapper">
                 <div v-if="app.processing" class="processing"></div>
                 <div class="item-icon">
-                  <a-badge :count="app.badge">
+                  <a-badge :count="app.badge" :dot="app.isNew">
                     <!--                :style="{position: 'absolute',right:  '-2px',visibility:'visible'}"-->
 
                     <img onerror="this.src='../../icons/default.svg'" class="icon sa-app"
@@ -430,11 +440,11 @@ const sidebarTpl = /*html*/`
     arrow>
     <!--mouseenter-->
 <template v-slot:trigger>
-<div @click="openUserWindow" title="点击选择其他空间"  style="width: 100%;overflow: hidden;height:30px;text-align: left ">
+<div @click="openUserWindow" title="点击选择其他空间" class="guideSpace"  style="width: 100%;overflow: hidden;height:30px;text-align: left ">
 
        <div style="width:145px;">
        <div style="display: inline-block;width:45px;text-align: center">
-       <img src="./assets/sync.svg" id="savingIcon" :class="{'online':currentSpace.spaceType==='cloud','offline':currentSpace.spaceType==='local'}" style="width: 24px;margin-top: -25px"  width="32" height="32"/>
+       <img  src="./assets/sync.svg" id="savingIcon" :class="{'online':currentSpace.spaceType==='cloud','offline':currentSpace.spaceType==='local'}" style="width: 24px;margin-top: -25px"  width="32" height="32"/>
 
 <!--       <a-icon type="loading" ></a-icon>-->
        </div>
@@ -543,13 +553,13 @@ const sidebarTpl = /*html*/`
 </div>
 </div>
 </tippy>
-      <div class="app-box">
+      <div id="appbox" class="app-box">
         <ul id="appGroup" style="user-select: none;padding-bottom: 20px" class="app-task app-items"
           @dblclick.prevent="addNewTask">
-          <draggable v-model="getItems" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass"
+          <draggable id="addTaskCareer" v-model="getItems" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass"
             chosenClass="chosenClass" @start="onStart" @end="onEnd">
             <transition-group>
-              <li @click="openItem(item.id,i)" @dblclick.stop="" v-for="(item,i) in this.$store.getters.getItems"
+              <li id="guideAddTasks"  @click="openItem(item.id,i)" @dblclick.stop="" v-for="(item,i) in this.$store.getters.getItems"
                 :key="item.id" :visible="item.count>1" data-role="task" :class="isActive(item.id)" :item-id="item.id"
                 style="position: relative">
                 <tippy :ref="'task_'+item.id"
@@ -569,13 +579,14 @@ const sidebarTpl = /*html*/`
     <!--mouseenter-->
 <template v-slot:trigger>
          <div class="wrapper">
-                    <div class="item-icon">
+                    <div id="guideTasks"  class="item-icon">
                       <img class="icon" :src="item.icon" onerror="this.src='../../icons/default.svg'" />
                       <a-badge :count="item.count" :dot="true" status="processing"
                         :style="{position: 'absolute',right:  '-2px',top:'-13px',visibility:item.count>5?'visible':'hidden'}">
                       </a-badge>
+                      <img class="single-avatar" v-if="item.partition !=='persist:webcontent'"  src="../../icons/svg/randomuser.svg">
                     </div>
-                    <div class="item-title">{{ item.title }}</div>
+                    <div class="item-title">{{ item.title }} </div>
                   </div>
 
 </template>
@@ -603,7 +614,7 @@ const sidebarTpl = /*html*/`
                         <a-icon type="delete"></a-icon><span class="tip">清理</span>
                       </span>
                     </div>
-                    <ul class="tabs" style="margin-top: 5px;min-height:180px">
+                    <ul class="tabs" style=" margin-top: 5px;min-height:180px">
                       <li :class="{'active':(tab.selected )}" style="position:relative;"
                         @mouseenter="showHoverLock(tab)" @mouseleave="hideHoverLock(tab)" v-for="(tab,j) in item.tabs"
                         :key="tab.id">
@@ -688,27 +699,24 @@ const sidebarTpl = /*html*/`
           <div>
             <a-collapse default-active-key="0" :active-key="sidebarBottom" :bordered="false" @change="changeBottomSize">
               <a-collapse-panel key="1">
-               <li @click="openBottom('help')">
-                  <a-button type="default" shape="circle" icon="question-circle"></a-button>
-                  <div class="item-title">帮助中心</div>
-                </li>
               </a-collapse-panel>
             </a-collapse>
           </div>
         </template>
-        <li @click="visibleGlobalSearch">
-          <a-button type="default" shape="circle" icon="search" tabindex=-1></a-button>
+        <li id="guideSearch" @click="visibleGlobalSearch">
+          <a-button  type="default" shape="circle" icon="search" tabindex=-1></a-button>
           <div class="item-title">全局搜索</div>
         </li>
         <li @click="visibleMessageCenter">
           <a-badge :dot="this.$store.getters.getAllMessages.length > 0 ? true : false">
             <a-button type="default" shape="circle" icon="bell" tabindex=-1></a-button>
           </a-badge>
-          <div class="item-title">消息中心</div>
+          <div class="item-title">消息中心</div >
         </li>
-        <li @click="openBottom('setting')">
-          <a-button type="default" shape="circle" icon="setting" tabindex=-1></a-button>
-          <div class="item-title">偏好设置</div>
+        <li class="helpCenter" @click="openHelpCenter" style="position: relative">
+          <a-progress :width="32" type="circle" :percent="this.$store.getters.getGuideScedule" :showInfo="false" :strokeWidth="11"></a-progress>
+          <a-icon type="question-circle" style="position: absolute; top: 14.5px; right: 14.5px; font-size: 16px;"></a-icon>
+          <div class="item-title">帮助中心</div>
         </li>
       </ul>
     </div>
@@ -716,11 +724,15 @@ const sidebarTpl = /*html*/`
     </message-center>
   </div>
 `
+
 const backupSpaceModel=require('../../src/model/backupSpaceModel')
 const _=require('lodash')
+
+
 Vue.component('sidebar', {
   data: function () {
     return {
+      isMedals:false,
       lastSync:Date.now(),//最后一次同步时间
       spaceStatus:'local',
       localSpaces: [],
@@ -742,7 +754,9 @@ Vue.component('sidebar', {
       loginPanelTitle: '登录帐号免费体验完整功能',
       loginPanelContent: ``,
       userPanelVisible: false,
+      teamLock:false,//防止团队引导多次触发
       teamList:[],
+      remainTime:'',
       tags: [
         {
           label: '公开',
@@ -820,6 +834,11 @@ Vue.component('sidebar', {
   },
 
   async mounted () {
+    ipc.on('callBackMedal',(event,args)=>{
+      this.$nextTick(()=>{
+        appVue.$refs.sidePanel.isMedals = args
+      })
+    })
     this.watchAllHasMore()
     //获取当前左侧栏的状态，并设置
    spaceModel.getCurrent().then((space)=>{
@@ -953,8 +972,268 @@ Vue.component('sidebar', {
      * 监听全部的隐藏，目前只支持应用底部阴影
      */
     watchAllHasMore(){
-      console.log('更新全部的滚动条')
       this.watchHasMore(document.getElementById('pinGroup'),document.getElementById('divider-inner'))
+    },
+    gradeHelp(){
+      window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/gd9qad'
+    },
+    myCommunity(){
+      window.location.href='tsb://app/redirect/?package=com.thisky.com&url=https://s.apps.vip'
+    },
+    gradeTableGenerate(num) {
+      let lvSys = {}
+      for(let i = 0; i < num + 1; i++) {
+        let arrLef = 0
+        let arrRg = 0
+        for (let j = 0; j < i; j++) {
+          arrLef += 10 * (j + 2)
+        }
+        for (let k = 0; k < i + 1; k++) {
+          arrRg += 10 * ( k + 2 )
+        }
+        arrRg -= 1
+        lvSys[`${i}`] = [arrLef, arrRg]
+      }
+      delete lvSys['lv0']
+      return lvSys
+    },
+    guide(a){
+      const stepsList=[
+        {
+        },
+        {
+          text: `<div>点击这里，或着按下<b>Alt + F</b>键打开全局搜索</div>`, attachTo: {element: '#guideSearch', on: 'right'},
+          buttons: [
+            {action: function () {
+                window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/zp48yn'
+              }, secondary: true, text: '了解更多'},
+            {action: function () {
+                this.cancel()
+                ipc.send('exitGuide')
+                ipc.send('searchState')
+              }, text: '好的'}],
+          id: 'searchGuide'
+        },
+        {//占位
+        },
+        {
+          text: `<div>在这里创建或选择您想要的空间</div>`, attachTo: {element: '.guideSpace', on: 'right'},
+          buttons: [
+            {
+              action: function () {
+                window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/gg7vro'
+              },
+              secondary: true, text: '了解更多'
+            },
+            {
+              action: function () {
+              this.cancel()
+                ipc.send('exitGuide')
+                ipc.send('spaceState')
+              }, text: '好的'}],
+          id: 'cloudGuide'
+        },
+        {//占位
+        },
+        {
+          text: `<div>点击这里可以创建你的团队</div>`, attachTo: {element: '#guideTeam', on: 'right'},
+          buttons: [
+            {action: function () {
+                window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/rls0pi'
+              }, secondary: true, text: '了解更多'},
+            {action: function () {
+                appVue.$refs.sidePanel.userPanelVisible=false
+                appVue.$refs.sidePanel.teamLock=false
+                this.cancel()
+                ipc.send('exitGuide')
+                ipc.send('teamState')
+              }, text: '好的'}],
+          id: 'teamGudie'    // 用于Shepherd step的唯一标识符
+        },
+        {//占位
+        },
+        {
+          text: `<div>您可以在这里打开帮助中心，查看更多引导帮助</div>`, attachTo: {element: '.helpCenter', on: 'right'},
+          buttons: [
+            {action: function () {
+                this.cancel()
+                ipc.send('exitGuide')
+              }, text: '好的'}],
+          id: 'teamGudie'    // 用于Shepherd step的唯一标识符
+        },
+      ]
+        const shepherd = new Shepherd.Tour({
+          // 设置默认引导配置
+          useModalOverlay: true,
+          defaultStepOptions: {
+            // 引导左上角取消按钮图标的配置
+            cancelIcon: {
+              enabled: false, // 默认为true
+            },
+            // 指定引导盒子的类名, 用于后续自定义样式, 类名可叠加
+            classes: 'group',//标签组，全局搜索，空间，团队四个引导统一样式
+            // 滚动方式
+            scrollTo: {
+              behavior: 'smooth',
+              block: 'center'
+            }
+          },
+          // 添加第一步引导
+          steps: [stepsList[a]]
+        });
+        shepherd.start();
+      },
+    guideApplyFirst(){
+      const applyShepherd = new Shepherd.Tour({
+        useModalOverlay: true,
+        defaultStepOptions: {
+          cancelIcon: {
+            enabled: false,
+          },
+          classes: 'appFirst',//应用引导分两步，这是第一步引导
+          scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+          }
+        },
+        steps: [{
+          text: '右键网页标签，选择安装到应用', attachTo: {element: '#guideApplySecond', on: 'bottom'},
+          buttons:
+            [{
+              action: function () { this.cancel(); appVue.$refs.sidePanel.guideApplySecond()}, text: '下一步'
+            }],
+          id: 'appGuide'    // 用于Shepherd step的唯一标识符
+        }]
+      })
+      applyShepherd.start();
+    },
+    guideApplySecond(){
+      const applySecondShepherd = new Shepherd.Tour({
+        useModalOverlay: true,
+        defaultStepOptions: {
+          cancelIcon: {
+            enabled: false,
+          },
+          classes: 'appSecond',//应用引导第二步
+          scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+          }
+        },
+        steps: [{
+          text: '点击这里可以管理你安装的所有应用', attachTo: {element: '#guideApplySecond', on: 'right'},
+          buttons: [
+            {action: function () {
+                window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/mmcfd7'
+              }, text: '了解更多',classes:'button1'},
+            {action: function () { this.cancel();appVue.$refs.sidePanel.guideApplyFirst()}, text: '上一步',classes:'button2'},
+            {action: function () {return this.next();}, text: '下一步',classes:'button3'}],
+          id: 'first'
+        },{
+          text: '安装的应用会显示在这里，左键打开或右键进行更多设置', attachTo: {element: '#saApp-box', on: 'right'},
+          buttons: [
+            {action: function () {return this.back();},text: '上一步',classes:'button2'},
+            {action: function () {
+                this.cancel()
+                ipc.send('exitGuide')
+                ipc.send('appState')
+              }, text: '好 的'}],
+          id: 'appSecondGuide'    // 用于Shepherd step的唯一标识符
+        },]
+      });
+      applySecondShepherd.start();
+    },
+    guideDesktop(){
+      const guideDesktop = new Shepherd.Tour({
+        useModalOverlay: true,
+        defaultStepOptions: {
+          cancelIcon: {
+            enabled: false,
+          },
+          classes:'desk',//桌面引导
+          scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+          }
+        },
+        steps: [{
+          text: '在这里可以创建你的专属桌面，支持导出和导入桌面文件，方便与他人分享', attachTo: {element: '#appVue', on:'bottom'},
+          buttons: [
+            {action: function () {
+                window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/sv8ozw'
+              }, text: '了解更多',classes:'button2'},
+            {action: function () {
+              this.cancel();
+                ipc.send('exitGuide')
+                ipc.send('desktopState')
+              }, text: '好 的',classes:'button3'}],
+          id: 'first'
+        }]
+      });
+      guideDesktop.start();
+    },
+    guideTasks(){
+      const guideTaskShepherd = new Shepherd.Tour({
+        useModalOverlay: true,
+        defaultStepOptions: {
+          cancelIcon: {
+            enabled: false,
+          },
+          classes: 'guideTask',
+          scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+          }
+        },
+        steps: [{
+          text: `<div>每一个打开网页都属于一个标签组，试试<b>双击（或右键菜单）</b>侧边栏空白处创建一个新的组。</div>`, attachTo: {element: '#addTaskCareer', on: 'right'},
+          buttons: [
+            {
+              action: function () {
+                window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/yglkui'
+              },
+              secondary: true, text: '了解更多'
+            },
+            {
+              action: function () {
+                return this.next();
+              }, text: '下一步',classes:'button1'
+            }],
+        },{
+          text: `<div><b>右键</b>空白处能够创建独立标签组，不同的独立标签组之间具有会话隔离的特点，轻松实现网站账号多开。</div>`, attachTo: {element: '#addTaskCareer', on: 'right'},
+          buttons: [
+            {action: function () {return this.back();},text: '上一步',classes:'button2'},
+            {action: function () {
+                this.cancel()
+                ipc.send('exitGuide')
+                ipc.send('tasksState')
+              }, text: '好 的'}],
+          id: 'guideTask'    // 用于Shepherd step的唯一标识符
+        },]
+      });
+      guideTaskShepherd.start();
+    },
+    guideAddTasks(){
+      const guideAddTasks = new Shepherd.Tour({
+        useModalOverlay: true,
+        defaultStepOptions: {
+          cancelIcon: {
+            enabled: false,
+          },
+          classes:'taskAdd',//添加标签组完成后的引导
+          scrollTo: {
+            behavior: 'smooth',
+            block: 'center'
+          }
+        },
+        steps: [{
+          text: '已为您添加推荐标签组', attachTo: {element: '#addTaskCareer', on:'right'},
+          buttons: [
+            {action: function () {return  this.cancel();}, text: '好 的',classes:'button'}],
+          id: 'taskGuide'    // 用于Shepherd step的唯一标识符
+        }]
+      });
+      guideAddTasks.start();
     },
     sortApps(){
       let sorted=_.orderBy(this.apps,(app)=>{
@@ -1172,9 +1451,19 @@ Vue.component('sidebar', {
       // console.log(app)
       ipc.send('executeApp', { app: app })
     },
+    focus(){
+      ipc.send('sidePanelFocus')
+    },
     toggleUserPanel () {
+      let lv = this.$store.getters.getTsGrade.lv
+      let section = this.gradeTableGenerate(64)[lv+1]
+       this.remainTime = section[0] - this.$store.getters.getTsGrade.cumulativeHours
+      ipc.send('isMedal')
       this.passList = this.$store.getters.getAllCircle.filter(v => v.status !==3 && v.status !==2 )
       this.teamList = this.passList.filter(v => v.property === 0 ||  v.property===1)
+        appVue.$refs.sidePanel.tags[0].checked=true
+        appVue.$refs.sidePanel.tags[1].checked=false
+        appVue.$refs.sidePanel.tags[2].checked=false
       if(this.user.uid===0){
         this.openUserWindow()
       }else{
@@ -1233,9 +1522,14 @@ Vue.component('sidebar', {
         window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/tmpomo'
         return
       }
-      postMessage({
-        message: action
-      })
+      if(action==='setting'){
+        postMessage({
+          message: action
+        })
+      }
+    },
+    openHelpCenter() {
+      this.addTab('ts://guide')
     },
     openGroup () {
       ipc.send('openGroup')
@@ -1591,11 +1885,12 @@ ipc.on('executedAppSuccess', async function (event, args) {
       app.processing = true
       app.windowId = args.app.windowId
       app.lastExecuteTime=now
+      app.isNew=false
     }
   })
   appVue.$refs.sidePanel.runningApps.push(args.app.id)
   appVue.$refs.sidePanel.sortApps()
-  standAloneAppModel.update(args.app.id, { lastExecuteTime: now }).then((res) => {
+  standAloneAppModel.update(args.app.id, { lastExecuteTime: now ,isNew:false}).then((res) => {
   })
   setTimeout(()=>{
     appVue.$refs.sidePanel.watchAllHasMore()
@@ -1687,9 +1982,16 @@ ipc.on('runAutoRunApps', function (event, args) {
       ipc.send('executeApp', { app: app, background: true })
     }
   })
-  if (!localStorage.getItem('suggest')) {
-    ipc.send('wizard', { page: 'apps' })
-  }
+  // if (!localStorage.getItem('suggest')) {
+  //   ipc.send('wizard', { page: 'apps' })
+  // }
+})
+
+ipc.on('executeAppByPackage',async (event,args)=>{
+   let app=await standAloneAppModel.getFromPackage(args.package)
+    if(app){
+      ipc.send('executeApp', { app: app, background: args.background?args.background:false })
+    }
 })
 
 ipc.on('appBadge', function (event, args) {
@@ -1746,6 +2048,63 @@ ipc.on('blur', (event, args) => {
 ipc.on('closeUserSidePanel',(event,args)=>{
  appVue.$refs.sidePanel.userPanelVisible=false
 })
+
+ipc.on('guide',async (event, args) => {
+  let current;
+  if (args === 5) {
+    current = await db.system.where('name').equals('currentUser').first()
+    if(current.value.uid !== 0 ){
+      if(appVue.$refs.sidePanel.teamLock===false){
+        appVue.$refs.sidePanel.toggleUserPanel()
+        appVue.$refs.sidePanel.teamLock=true
+        setTimeout(() => {
+          appVue.$refs.sidePanel.focus()
+          appVue.$refs.sidePanel.guide(args)
+          ipc.send('enterGuide')
+        }, 800)
+      }
+
+    }
+    if(current.value.uid === 0){
+      appVue.$message.error('登录后才能使用团队功能');
+    }
+    // appVue.$refs.sidePanel.userPanelVisible=true
+  }else if(args===6){
+    appVue.$refs.sidePanel.focus()
+    appVue.$refs.sidePanel.guideAddTasks()
+  }
+  else {
+    ipc.send('enterGuide')
+    appVue.$refs.sidePanel.focus()
+    appVue.$refs.sidePanel.guide(args)
+  }
+})
+
+ipc.on('guideTasks',()=>{
+  ipc.send('enterGuide')
+  appVue.$refs.sidePanel.focus()
+  appVue.$refs.sidePanel.guideTasks()
+})
+
+ipc.on('guideApplyFirst',()=>{
+  ipc.send('enterGuide')
+  appVue.$refs.sidePanel.focus()
+  appVue.$refs.sidePanel.guideApplyFirst()
+})
+
+ipc.on('guideDesktop',()=>{
+  setTimeout(() => {
+    ipc.send('enterGuide')
+  }, 300)
+  appVue.$refs.sidePanel.focus()
+  appVue.$refs.sidePanel.guideDesktop()
+})
+
+ipc.on('guideLogin',()=>{
+  appVue.$refs.sidePanel.focus()
+  appVue.$refs.sidePanel.toggleUserPanel()
+})
+
 
 ipc.on('appRedirect', async (event, args) => {
   let app = await standAloneAppModel.getFromPackage(args.package)

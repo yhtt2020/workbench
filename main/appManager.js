@@ -1,7 +1,7 @@
 
 const { config } = require(path.join(__dirname, '//server-config.js'))
 const remote = require('@electron/remote/main')
-
+const _ =require('lodash')
 /**
  * 运行中的应用窗体，结构{window:窗体对象,saApp:独立窗体app对象}
  * @type {*[]}
@@ -20,6 +20,20 @@ const appManager = {
   dockBadge: 0,
   settingWindow: null,
   protocolManager:require('./js/main/protocolManager'),
+  /**
+   * 朝运行中的应用发送IPC
+   * @param pkg
+   * @param event
+   * @param args
+   */
+  sendIPCToApp(pkg,event,args){
+    let win=appManager.getWindowByPackage(pkg)
+    if(win){
+      win.window.view.webContents.send(event,args)
+    }else{
+      return false
+    }
+  },
   /**
    * 单个更新app信息
    * @param id
@@ -121,8 +135,7 @@ const appManager = {
     processingAppWindows.forEach(processApp => {
       if (processApp.saApp.id === appId) {
         processApp.saApp.badge = processApp.saApp.badge ? processApp.saApp.badge + add : add
-        console.log(processApp.saApp.badge) //todo这里输出看起来会触发两次，说明foreach遍历有两次是processApp.saApp.id === appId
-      }
+     }
     })
     SidePanel.send('appBadge', { id: appId, add: add })
     appManager.updateDockBadge()
@@ -136,7 +149,6 @@ const appManager = {
     processingAppWindows.forEach(processApp => {
       if (processApp.saApp.id === appId) {
         processApp.saApp.badge = 0
-        console.log(processApp.saApp.badge) //todo这里输出看起来会触发两次，说明foreach遍历有两次是processApp.saApp.id === appId
       }
     })
     SidePanel.send('appBadge', { id: appId, badge: 0 })
@@ -332,6 +344,15 @@ const appManager = {
       }
     }
     return null
+  },
+  /**
+   * 根据包名获得运行中的窗体
+   * @param pkg
+   */
+  getWindowByPackage(pkg){
+    return _.find(processingAppWindows,(win)=>{
+      return win.saApp.package===pkg
+    })
   },
   /**
    * 通过appid获取到对应的运行的window对象
@@ -533,17 +554,35 @@ const appManager = {
     }else{
       preload=path.join(__dirname + '/pages/saApp/appPreload.js')
     }
+
+    let auth=[]
+    if(saApp.auth){
+      saApp.auth=JSON.parse(saApp.auth)
+      if(saApp.auth.base){
+        auth=auth.concat(...saApp.auth.base)
+      }
+      if(saApp.auth.app){
+        auth= auth.concat(...saApp.auth.app)
+      }
+    }
+    let partition='persist:webcontent'
+    if(saApp.isSystemApp){
+      partition=null
+    }else if(auth.indexOf('node')>-1){
+      partition='persist:'+ saApp.package
+    }
+
     let webPreferences = {
       preload: preload,//后者是所有web应用公用的preload
-      nodeIntegration: saApp.isSystemApp,
-      contextIsolation: !saApp.isSystemApp,
+      nodeIntegration: saApp.isSystemApp || auth.indexOf('node')>-1,
+      contextIsolation: !saApp.isSystemApp && auth.indexOf('webSecure')===-1,
       enableRemoteModule: true,
       sandbox: false,
       safeDialogs: false,
       backgroundColor: 'white',
       safeDialogsMessage: false,
-      webSecurity:!saApp.isSystemApp, //系统应用关闭同源策略，不开启会报cros
-      partition: saApp.isSystemApp ? null : 'persist:webcontent',
+      webSecurity:!saApp.isSystemApp && auth.indexOf('webSecure')===-1, //系统应用关闭同源策略，不开启会报cros
+      partition: partition,
       additionalArguments: [
         '--user-data-path=' + userDataPath,
         '--app-version=' + app.getVersion(),
@@ -569,8 +608,8 @@ const appManager = {
     if (saApp.package === 'com.thisky.fav' && isDevelopmentMode) {
       // 当为开发环境下的时候，将团队强行更改为本地开发
       //todo 根据实际需求更改
-      //saApp.url ='/pages/fav/index.html'
-      //saApp.type='local'
+      // saApp.url ='/pages/fav/index.html'
+      // saApp.type='local'
       saApp.url = 'http://localhost:8080/'
     }else if(saApp.package==='com.thisky.fav'){
       saApp.url='/pages/fav/index.html'
@@ -763,13 +802,12 @@ const appManager = {
         width: 1200,
         height: 800,
         minWidth: 380,
+        trafficLightPosition:{
+          x:10,y:7
+        },
         show: !background,
         frame: false,
         acceptFirstMouse: true,
-        trafficLightPosition: {
-          x: 12,
-          y: 14
-        },
         titleBarStyle: 'hidden',
         alwaysOnTop: saApp.settings.alwaysTop?saApp.settings.alwaysTop:false,
         webPreferences: {
@@ -812,11 +850,13 @@ const appManager = {
       let appView = appManager.loadView(saApp, appWindow,option)
       appWindow.setBrowserView(appView)
 
+      const titleBarHeight=30
+
       appView.setBounds({
         x: 0,
-        y: 40,
+        y: titleBarHeight,
         width: appWindow.getBounds().width,
-        height: appWindow.getBounds().height - 40
+        height: appWindow.getBounds().height - titleBarHeight
       })
       // appWindow.webContents.on('ipc-message', function (e, channel, data) {
       //   mainWindow.webContents.send('view-ipc', {
@@ -833,9 +873,9 @@ const appManager = {
         appManager.setAppSettings(saApp.id, { bounds: appWindow.getBounds() })
         appView.setBounds({
           x: 0,
-          y: 40,
+          y: titleBarHeight,
           width: appWindow.getBounds().width,
-          height: appWindow.getBounds().height - 40
+          height: appWindow.getBounds().height - titleBarHeight
         })
       })
       appWindow.webContents.on('before-input-event', (event, input) => {
@@ -1182,7 +1222,6 @@ app.whenReady().then(() => {
   })
 
   ipc.handle('minimizeAppWindow', (event, args) => {
-    console.log(args.id)
     appManager.getWindowByAppId(args.id).minimize()
   })
   ipc.handle('closeAppWindow', (event, args) => {
@@ -1237,7 +1276,6 @@ app.whenReady().then(() => {
 
   ipc.on('saAppHome', (event, args) => {
     let saApp = appManager.getSaAppByAppId(args.id)
-    console.log(saApp.url)
     appManager.getWindowByAppId(args.id).view.webContents.loadURL(saApp.url)
   })
  // ipc.on('saAppFindInPage',(event,args)=>{
@@ -1354,7 +1392,7 @@ app.whenReady().then(() => {
       }
       saAppApplyPermission = new BrowserWindow({
         minimizable: false,
-        parent: mainWindow,
+        parent: appManager.getWindowByWindowId(args.windowId),
         width: 420,
         height: 250,
         maximizable:false,
@@ -1379,7 +1417,6 @@ app.whenReady().then(() => {
       saAppApplyPermission.webContents.loadURL('file://' + __dirname + '/pages/saApp/applyPermission/index.html')
       saAppApplyPermission.on('close', () => {
         saAppApplyPermission = null
-        appManager.getWindowByWindowId(args.windowId).focus()
       })
       ApplyPermissionOptions = args
       return {code: 200, msg: '授权窗口打开成功'}
