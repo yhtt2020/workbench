@@ -3,7 +3,7 @@ const { api } = require('../../server-config')
 const standAloneAppModel = require('../util/model/standAloneAppModel.js')
 
 const sidebarTpl = /*html*/`
-  <div id="sidebar" class="side-container" @contextmenu="openSidebarMenu">
+  <div id="sidebar" class="side-container" @contextmenu.stop="openSidebarMenu">
     <div id="itemsEl" class="side-items">
       <ul class="app-task">
         <li @click="toggleUserPanel" class="" style="position: relative;">
@@ -578,7 +578,7 @@ const sidebarTpl = /*html*/`
     arrow>
     <!--mouseenter-->
 <template v-slot:trigger>
-         <div class="wrapper">
+         <div class="wrapper" @contextmenu.stop="openTaskMenu(item)">
                     <div id="guideTasks"  class="item-icon">
                       <img class="icon" :src="item.icon" onerror="this.src='../../icons/default.svg'" />
                       <a-badge :count="item.count" :dot="true" status="processing"
@@ -1262,6 +1262,9 @@ Vue.component('sidebar', {
     },
     openSidebarMenu(){
       ipc.send('openSidebarMenu')
+    },
+    openTaskMenu(task){
+      ipc.send('openTaskMenu',{task:task})
     },
     inviteLink(id) {
       tsbk.default.ready(() => {

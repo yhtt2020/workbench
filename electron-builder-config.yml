@@ -23,6 +23,7 @@ files:
     - reader/**/*
     - resources/**/*
     - src/**/*
+    - vite/dist/**/* #增加渲染进程
 
 fileAssociations:
   ext:

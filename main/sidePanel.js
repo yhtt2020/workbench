@@ -768,6 +768,36 @@ ipc.on('closeSwitch',()=>{
     switchWindow.close()
   }
 })
+ipc.on('openTaskMenu',(event,args)=>{
+  let task=args.task
+  const tpl=[
+    {
+      label:task.title,
+      enabled:false
+    },
+    {
+      label: '更改标签组图标',
+      click() {
+        let pos= require('electron').screen.getCursorScreenPoint()
+        renderPage.openIconSelector({
+          x:pos.x,
+          y:pos.y
+        })
+      }
+    },{
+      type:'separator'
+    },
+    {
+      label: '关闭标签组',
+      click() {
+        sendIPCToWindow(mainWindow, 'closeTask', {tabId:task.id})
+      }
+    }
+  ]
+  let menu = require('electron').Menu.buildFromTemplate(tpl)
+
+  menu.popup()
+})
 ipc.on('openSidebarMenu',()=>{
   const tpl=[
     {
@@ -786,6 +816,7 @@ ipc.on('openSidebarMenu',()=>{
       label: '整理标签组…',
       click () {
         sendIPCToWindow(mainWindow,'showTasks')
+        mainWindow.focus()
       }
     }
   ]

@@ -1,0 +1,203 @@
+{
+  "key": "fruit",
+  "alias": "水果",
+  "icon": "pingguo",
+  "list": [
+    {
+      "name": "caomei",
+      "alias": "草莓"
+    },
+    {
+      "name": "ningmeng",
+      "alias": "柠檬"
+    },
+    {
+      "name": "shanzhu",
+      "alias": "山竹"
+    },
+    {
+      "name": "taozi",
+      "alias": "桃子"
+    },
+    {
+      "name": "hongluobu",
+      "alias": "红萝卜"
+    },
+    {
+      "name": "putao",
+      "alias": "葡萄"
+    },
+    {
+      "name": "qingpingguo",
+      "alias": "青苹果"
+    },
+    {
+      "name": "xigua",
+      "alias": "西瓜"
+    },
+    {
+      "name": "xiangjiao",
+      "alias": "香蕉"
+    },
+    {
+      "name": "juzi",
+      "alias": "橘子"
+    },
+    {
+      "name": "li",
+      "alias": "梨子"
+    },
+    {
+      "name": "pingguo",
+      "alias": "苹果"
+    },
+    {
+      "name": "shiliu",
+      "alias": "石榴"
+    },
+    {
+      "name": "boluo",
+      "alias": "菠萝"
+    },
+    {
+      "name": "chelizi",
+      "alias": "车厘子"
+    },
+    {
+      "name": "liulian",
+      "alias": "榴莲"
+    },
+    {
+      "name": "pipa",
+      "alias": "枇杷"
+    },
+    {
+      "name": "xing",
+      "alias": "杏"
+    },
+    {
+      "name": "hamigua",
+      "alias": "哈密瓜"
+    },
+    {
+      "name": "hetao",
+      "alias": "核桃"
+    },
+    {
+      "name": "shanzha",
+      "alias": "山楂"
+    },
+    {
+      "name": "shizi",
+      "alias": "柿子"
+    },
+    {
+      "name": "lanmei",
+      "alias": "蓝莓"
+    },
+    {
+      "name": "niuyouguo",
+      "alias": "牛油果"
+    },
+    {
+      "name": "yingtao",
+      "alias": "樱桃"
+    },
+    {
+      "name": "youzi",
+      "alias": "柚子"
+    },
+    {
+      "name": "huolongguo",
+      "alias": "火龙果"
+    },
+    {
+      "name": "mangguo",
+      "alias": "芒果"
+    },
+    {
+      "name": "lizi",
+      "alias": "李子"
+    },
+    {
+      "name": "huluobu",
+      "alias": "胡萝卜"
+    },
+    {
+      "name": "qingli",
+      "alias": "青梨"
+    },
+    {
+      "name": "tudou",
+      "alias": "土豆"
+    },
+    {
+      "name": "xihongshi",
+      "alias": "西红柿"
+    },
+    {
+      "name": "mihoutao",
+      "alias": "猕猴桃"
+    },
+    {
+      "name": "yangtao",
+      "alias": "阳桃"
+    },
+    {
+      "name": "baixiangguo",
+      "alias": "百香果"
+    },
+    {
+      "name": "juqi",
+      "alias": "枸杞"
+    },
+    {
+      "name": "yezi",
+      "alias": "椰子"
+    },
+    {
+      "name": "biji",
+      "alias": "荸荠"
+    },
+    {
+      "name": "mugua",
+      "alias": "木瓜"
+    },
+    {
+      "name": "sangshen",
+      "alias": "桑葚"
+    },
+    {
+      "name": "shengnvguo",
+      "alias": "圣女果"
+    },
+    {
+      "name": "wuhuaguo",
+      "alias": "无花果"
+    },
+    {
+      "name": "huanggua",
+      "alias": "黄瓜"
+    },
+    {
+      "name": "longyan",
+      "alias": "龙眼"
+    },
+    {
+      "name": "xuelianguo",
+      "alias": "雪莲果"
+    },
+    {
+      "name": "yangmei",
+      "alias": "杨梅"
+    },
+    {
+      "name": "huangtao",
+      "alias": "黄桃"
+    },
+    {
+      "name": "dasuan",
+      "alias": "大蒜"
+    }
+  ]
+}
