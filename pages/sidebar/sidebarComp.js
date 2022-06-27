@@ -2205,7 +2205,5 @@ ipc.on('getUserInfo',async (event,args)=>{
 
 
 ipc.on('selectedIcon',(event,args)=>{
-  console.log('选中的任务',window.selectedTask)
-  console.log('设置任务的icon',args)
   ipc.sendTo(mainWindowId, 'changeTaskIcon', { id: window.selectedTask.id, icon:args.icon })
 })
