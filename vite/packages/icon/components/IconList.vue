@@ -17,7 +17,6 @@ export default {
   },
   mounted(){
      ipc.invoke('getPopCallerId').then((data)=>{
-       console.log('got callerId',data)
       this.callerId=data
     })
   },
@@ -28,7 +27,6 @@ export default {
         name:icon.name,
         alias:icon.alias
       }
-      console.log(param)
       ipc.sendTo(this.callerId, 'selectedIcon',{
         icon:param
       })

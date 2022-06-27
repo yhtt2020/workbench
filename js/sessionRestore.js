@@ -12,7 +12,7 @@ const ipc = require('electron').ipcRenderer
 let SYNC_INTERVAL = 30 //普通模式下，同步间隔为30秒
 let safeClose=false
 if ('development-mode' in window.globalArgs) {
-  SYNC_INTERVAL = 5 //开发模式下，间隔改为5，方便调试和暴露问题
+  SYNC_INTERVAL = 30 //开发模式下，间隔改为5，方便调试和暴露问题
 }
 let autoSaver = null
 /**
@@ -167,6 +167,7 @@ const sessionRestore = {
       console.warn('获取存储的空间信息失败')
     }
 
+    console.log('获取到存储的数据',savedStringData)
     try {
       // first run, show the tour
       //首次运行，显示官方网站
