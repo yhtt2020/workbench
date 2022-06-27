@@ -1,0 +1,197 @@
+{
+  "key": "jingling",
+  "alias": "宠物小精灵",
+  "icon": "psyduck",
+  "list": [
+    {
+      "name": "backpack",
+      "alias": "背包"
+    },
+    {
+      "name": "abra",
+      "alias": "凯西"
+    },
+    {
+      "name": "bellsprout",
+      "alias": "喇叭芽"
+    },
+    {
+      "name": "bracelet",
+      "alias": "挂饰"
+    },
+    {
+      "name": "battle",
+      "alias": "战斗"
+    },
+    {
+      "name": "blue-team",
+      "alias": "蓝队"
+    },
+    {
+      "name": "camera",
+      "alias": "照相机"
+    },
+    {
+      "name": "bullbasaur",
+      "alias": "妙蛙种子"
+    },
+    {
+      "name": "charmander",
+      "alias": "小火龙"
+    },
+    {
+      "name": "combat-power",
+      "alias": "战斗力"
+    },
+    {
+      "name": "caterpie",
+      "alias": "绿毛虫"
+    },
+    {
+      "name": "crown",
+      "alias": "冠军"
+    },
+    {
+      "name": "clock",
+      "alias": "时钟"
+    },
+    {
+      "name": "dratini",
+      "alias": "迷你龙"
+    },
+    {
+      "name": "egg-",
+      "alias": "精灵蛋"
+    },
+    {
+      "name": "compass",
+      "alias": "指南针"
+    },
+    {
+      "name": "egg",
+      "alias": "精灵蛋"
+    },
+    {
+      "name": "eevee",
+      "alias": "伊布"
+    },
+    {
+      "name": "fist",
+      "alias": "拳头"
+    },
+    {
+      "name": "gear",
+      "alias": "设置"
+    },
+    {
+      "name": "instinct",
+      "alias": "雷电鸟"
+    },
+    {
+      "name": "insignia",
+      "alias": "徽章"
+    },
+    {
+      "name": "jigglypuff",
+      "alias": "皮皮"
+    },
+    {
+      "name": "mega-ball",
+      "alias": "大师球"
+    },
+    {
+      "name": "mankey",
+      "alias": "火爆猴"
+    },
+    {
+      "name": "mew",
+      "alias": "梦幻"
+    },
+    {
+      "name": "meowth",
+      "alias": "喵喵"
+    },
+    {
+      "name": "mystic",
+      "alias": "急冻鸟"
+    },
+    {
+      "name": "money-bag",
+      "alias": "钱袋子"
+    },
+    {
+      "name": "pikachu",
+      "alias": "皮卡丘"
+    },
+    {
+      "name": "pidgey",
+      "alias": "波波"
+    },  {
+      "name": "pikachu",
+      "alias": "皮卡丘"
+    },
+    {
+      "name": "pikachu-1",
+      "alias": "皮卡丘"
+    },
+    {
+      "name": "pokeball",
+      "alias": "精灵球"
+    },
+    {
+      "name": "pokebag",
+      "alias": "球包"
+    },
+    {
+      "name": "pokeballs",
+      "alias": "精灵球*3"
+    },
+    {
+      "name": "pokecoin",
+      "alias": "精灵币"
+    },
+    {
+      "name": "psyduck",
+      "alias": "可达鸭"
+    },
+    {
+      "name": "rattata",
+      "alias": "小拉达"
+    },
+    {
+      "name": "smartphone",
+      "alias": "手机"
+    },
+    {
+      "name": "snorlax",
+      "alias": "卡比兽"
+    },
+    {
+      "name": "star-",
+      "alias": "星星"
+    },  {
+      "name": "squirtle",
+      "alias": "杰尼龟"
+    },
+    {
+      "name": "superball",
+      "alias": "超级球"
+    },
+    {
+      "name": "ultra-ball",
+      "alias": "高级球"
+    },
+    {
+      "name": "venonat",
+      "alias": "毛球"
+    },
+    {
+      "name": "zubat",
+      "alias": "超音蝠"
+    },
+    {
+      "name": "weedle",
+      "alias": "独角兽"
+    }
+  ]
+}

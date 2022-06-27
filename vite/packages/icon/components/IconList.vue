@@ -1,7 +1,8 @@
 <script lang="ts">
 import twoColor from '../../../public/iconLists/twoColor.json'
 import fruit from '../../../public/iconLists/fruit.json'
-
+import animal from '../../../public/iconLists/animal.json'
+import jingling from '../../../public/iconLists/jingling.json'
 const ipc = eval('require')('electron').ipcRenderer
 export default {
   data() {
@@ -11,7 +12,9 @@ export default {
 
       iconLists: [
         twoColor,
-        fruit
+        fruit,
+        animal,
+        jingling
       ]
     }
   },

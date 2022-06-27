@@ -77,7 +77,7 @@ class Pop{
       pool.pop.splice(index,1)
     })
     this.win.on('blur',()=>{
-     // this.win.close()
+      this.win.close()
     })
     this.win.on('maximize',()=>{
       this.win.webContents.send('windowMaximized')
