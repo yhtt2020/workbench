@@ -7,3 +7,4 @@ createApp(App).use(Antd).mount('#app')
 tools.getWindowArgs(window)
 console.log(window.globalArgs)
 
+

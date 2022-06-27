@@ -1,11 +1,12 @@
 <script lang="ts">
-import twoColor from './IconListData/twoColor'
-import fruit from './IconListData/fruit'
+import twoColor from '../../../public/iconLists/twoColor.json'
+import fruit from '../../../public/iconLists/fruit.json'
 
 const ipc = eval('require')('electron').ipcRenderer
 export default {
   data() {
     return {
+      callerId:0,
       activeKey: 'twoColor',
 
       iconLists: [
@@ -14,9 +15,23 @@ export default {
       ]
     }
   },
+  mounted(){
+     ipc.invoke('getPopCallerId').then((data)=>{
+       console.log('got callerId',data)
+      this.callerId=data
+    })
+  },
   methods: {
-    selectIcon(icon) {
-      ipc.sendTo(window.$fromWindow, 'selectIcon')
+    selectIcon(icon,iconList) {
+      let param={
+        list:iconList.key,
+        name:icon.name,
+        alias:icon.alias
+      }
+      console.log(param)
+      ipc.sendTo(this.callerId, 'selectedIcon',{
+        icon:param
+      })
     }
   }
 }
@@ -43,7 +58,7 @@ export default {
             <template #title>
               <span style="user-select: none">{{ icon.alias }}</span>
             </template>
-        <div>
+        <div @click="selectIcon(icon,iconList)">
           <svg class="icon" aria-hidden="true">
             <use v-bind:xlink:href="'#icon-'+icon.name"></use>
           </svg>
