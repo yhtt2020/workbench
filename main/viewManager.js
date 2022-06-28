@@ -215,6 +215,10 @@ function createView(existingViewId, id, webPreferencesString, boundsString, even
   // })
   //end
 
+  //同步extension的tab
+  browser.extensions.addTab(view.webContents, mainWindow)
+
+
   return view
 }
 

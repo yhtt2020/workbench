@@ -1,5 +1,7 @@
 const { ElectronChromeExtensions } = require('electron-chrome-extensions')
 const { buildChromeContextMenu } = require('electron-chrome-context-menu')
+let browser
+let extensionsMenu=[]
 app.on('session-created', (session) => {
   if (session !== require('electron').session.defaultSession) {
     browser = new Browser(session)
@@ -25,25 +27,26 @@ class Browser {
 
   async onWebContentsCreated (event, webContents) {
     webContents.on('context-menu', (event, params) => {
-      const menu = buildChromeContextMenu({
-        params,
-        webContents,
-        extensionMenuItems: this.extensions.getContextMenuItems(webContents, params),
-        openLink: (url, disposition) => {
-          const win = this.getFocusedWindow()
-
-          switch (disposition) {
-            case 'new-window':
-              this.createWindow({ initialUrl: url })
-              break
-            default:
-              const tab = win.tabs.create()
-              tab.loadURL(url)
-          }
-        },
-      })
-
-      menu.popup()
+      console.log('触发右键菜单在extension中')
+       extensionsMenu=this.extensions.getContextMenuItems(webContents, params)
+      console.log('扩展的菜单项', extensionsMenu)
+      // const menu = buildChromeContextMenu({
+      //   params,
+      //   webContents,
+      //   extensionMenuItems: this.extensions.getContextMenuItems(webContents, params),
+      //   openLink: (url, disposition) => {
+      //     const win = this.getFocusedWindow()
+      //
+      //     switch (disposition) {
+      //       case 'new-window':
+      //         this.createWindow({ initialUrl: url })
+      //         break
+      //       default:
+      //         const tab = win.tabs.create()
+      //         tab.loadURL(url)
+      //     }
+      //   },
+      // })
     })
   }
 
@@ -54,6 +57,7 @@ class Browser {
       session: this.session,
 
       createTab: (details) => {
+        console.log('触发了createTab')
         const win =
           typeof details.windowId === 'number' &&
           this.windows.find((w) => w.id === details.windowId)
@@ -70,8 +74,9 @@ class Browser {
         return [tab.webContents, tab.window]
       },
       selectTab: (tab, browserWindow) => {
-        const win = this.getWindowFromBrowserWindow(browserWindow)
-        win?.tabs.select(tab.id)
+        //console.log(tab,brwoserWindow)
+        // const win = this.getWindowFromBrowserWindow(browserWindow)
+        // win?.tabs.select(tab.id)
       },
       removeTab: (tab, browserWindow) => {
         const win = this.getWindowFromBrowserWindow(browserWindow)
@@ -100,7 +105,7 @@ class Browser {
   }
 }
 
-let browser
+
 
 const manifestExists = async (dirPath) => {
   if (!dirPath) return false
