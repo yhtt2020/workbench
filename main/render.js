@@ -25,7 +25,7 @@ class Win{
     this.resizable=param.resizable
     this.extraData=param.extraData
     this.alwaysTop=param.alwaysTop
-    await this.win.loadURL(this.url)
+    this.win.loadURL(this.url)
     this.win.setSize(this.width,this.height)
     this.win.setAlwaysOnTop(!!this.alwaysTop)
     this.win.center()
@@ -44,6 +44,7 @@ class Win{
     })
   }
 }
+const PopCacheTime=300000 //弹窗缓存时长，默认为30秒，期间只会隐藏，而不会直接关闭
 class Pop{
   id
   win
@@ -76,7 +77,17 @@ class Pop{
       pool.pop.splice(index,1)
     })
     this.win.on('blur',()=>{
-      this.win.close()
+      this.win.hide()
+      //缓存1分钟，超过1分钟再自动关闭
+      setTimeout(()=>{
+        if(!this.win.isDestroyed()){
+          if(!this.win.isVisible()){
+            this.win.close()
+            return
+          }
+        }
+      },PopCacheTime)
+
     })
     this.win.on('maximize',()=>{
       this.win.webContents.send('windowMaximized')
@@ -95,7 +106,7 @@ class Pop{
     this.resizable=param.resizable
     this.extraData=param.extraData
     this.alwaysTop=param.alwaysTop
-    await this.win.loadURL(this.url)
+    this.win.loadURL(this.url)
     this.win.setSize(this.width,this.height)
     this.win.setPosition(this.x,this.y)
     this.win.setAlwaysOnTop(!!this.alwaysTop)
