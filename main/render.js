@@ -53,7 +53,6 @@ class Pop{
     config.frame=false
     config.show=false
     config.skipTaskbar =true
-    config.parent=mainWindow
     config.webPreferences={
       nodeIntegration: true,
       contextIsolation: false,
@@ -148,7 +147,7 @@ class Pool {
     }
     let blankObj=this.pop.find(v=>v.url==='/blank')
     await blankObj.use(param,callerId)
-    this.pop.splice(0,0,new Pop())
+    this.pop.push(new Pop())
     return  blankObj
   }
 }
