@@ -21,7 +21,7 @@ const defaultViewWebPreferences = {
   safeDialogsMessage: 'Prevent this page from creating additional dialogs',
   preload: __dirname + '/dist/preload.js',
   contextIsolation: true,
-  sandbox: false,
+  sandbox: true,
   enableRemoteModule: false,
   allowPopups: false,
   // partition: partition || 'persist:webcontent',
@@ -93,7 +93,7 @@ function createView(existingViewId, id, webPreferencesString, boundsString, even
         args: [details.url, !(details.disposition === 'background-tab')]
       })
       return {
-        action: 'deny'
+        action: 'allow'
       }
     }
 
@@ -226,7 +226,6 @@ function createView(existingViewId, id, webPreferencesString, boundsString, even
   if(waitingSyncId!==0){
     tabs[waitingSyncId]=view.webContents
     waitingSyncId=0
-    console.log('成功创建，并赋值webcontents')
   }
   return view
 }
