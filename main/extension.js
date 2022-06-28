@@ -2,7 +2,6 @@ const { ElectronChromeExtensions } = require('electron-chrome-extensions')
 const { buildChromeContextMenu } = require('electron-chrome-context-menu')
 app.on('session-created', (session) => {
   if (session !== require('electron').session.defaultSession) {
-    console.log('初始化全部插件')
     browser = new Browser(session)
     //this.init.bind(this)
   }else{
@@ -26,8 +25,6 @@ class Browser {
 
   async onWebContentsCreated (event, webContents) {
     webContents.on('context-menu', (event, params) => {
-      console.log('extension里的菜单')
-      console.log(this.session.getAllExtensions())
       const menu = buildChromeContextMenu({
         params,
         webContents,
@@ -155,7 +152,6 @@ async function loadExtensions (session, extensionsPath) {
 
   for (const extPath of extensionDirectories.filter(Boolean)) {
     try {
-      let session = require('electron').session.defaultSession
       const extensionInfo = await session.loadExtension(extPath)
       results.push(extensionInfo)
     } catch (e) {
