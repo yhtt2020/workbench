@@ -21,7 +21,7 @@ const defaultViewWebPreferences = {
   safeDialogsMessage: 'Prevent this page from creating additional dialogs',
   preload: __dirname + '/dist/preload.js',
   contextIsolation: true,
-  sandbox: true,
+  sandbox: false,
   enableRemoteModule: false,
   allowPopups: false,
   // partition: partition || 'persist:webcontent',
@@ -31,6 +31,11 @@ const defaultViewWebPreferences = {
   minimumFontSize: 6
 }
 
+function createTab(){
+  let tabId=Date.now()
+  createView(undefined,tabId,)
+
+}
 function createView(existingViewId, id, webPreferencesString, boundsString, events) {
   viewStateMap[id] = {loadedInitialURL: false}
 
@@ -218,7 +223,11 @@ function createView(existingViewId, id, webPreferencesString, boundsString, even
   //同步extension的tab
   browser.extensions.addTab(view.webContents, mainWindow)
 
-
+  if(waitingSyncId!==0){
+    tabs[waitingSyncId]=view.webContents
+    waitingSyncId=0
+    console.log('成功创建，并赋值webcontents')
+  }
   return view
 }
 

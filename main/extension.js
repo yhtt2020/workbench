@@ -11,6 +11,8 @@ app.on('session-created', (session) => {
   }
 
 })
+let tabs=[]
+let waitingSyncId=0
 class Browser {
   session = null
 
@@ -27,9 +29,7 @@ class Browser {
 
   async onWebContentsCreated (event, webContents) {
     webContents.on('context-menu', (event, params) => {
-      console.log('触发右键菜单在extension中')
        extensionsMenu=this.extensions.getContextMenuItems(webContents, params)
-      console.log('扩展的菜单项', extensionsMenu)
       // const menu = buildChromeContextMenu({
       //   params,
       //   webContents,
@@ -56,31 +56,20 @@ class Browser {
     this.extensions = new ElectronChromeExtensions({
       session: this.session,
 
-      createTab: (details) => {
-        console.log('触发了createTab')
-        const win =
-          typeof details.windowId === 'number' &&
-          this.windows.find((w) => w.id === details.windowId)
-
-        if (!win) {
-          throw new Error(`Unable to find windowId=${details.windowId}`)
-        }
-
-        const tab = win.tabs.create()
-
-        if (details.url) tab.loadURL(details.url || newTabUrl)
-        if (typeof details.active === 'boolean' ? details.active : true) win.tabs.select(tab.id)
-
-        return [tab.webContents, tab.window]
+       createTab:  (details) => {
+        waitingSyncId=Date.now()
+        sendIPCToWindow(mainWindow,'addTab',{url:details.url})
+         tabs[waitingSyncId]={}//赋值一个空对象,先返回，再通过完成创建的时候修改这个对象的指向来更新对象
+        return [tabs[waitingSyncId],mainWindow]
       },
       selectTab: (tab, browserWindow) => {
-        //console.log(tab,brwoserWindow)
-        // const win = this.getWindowFromBrowserWindow(browserWindow)
-        // win?.tabs.select(tab.id)
+        let id= getViewIDFromWebContents(tab)
+        sendIPCToWindow(mainWindow,'switchToTab',{tabId:id})
+
       },
       removeTab: (tab, browserWindow) => {
-        const win = this.getWindowFromBrowserWindow(browserWindow)
-        win?.tabs.remove(tab.id)
+        let id= getViewIDFromWebContents(tab)
+        sendIPCToWindow(mainWindow,'closeTab',{id:id})
       },
 
       createWindow: (details) => {
