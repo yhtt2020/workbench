@@ -19,11 +19,17 @@ export default {
     }
   },
   mounted(){
-     ipc.invoke('getPopCallerId').then((data)=>{
-      this.callerId=data
+    ipc.on('show',()=>{
+      this.getCaller()
     })
   },
   methods: {
+    getCaller(){
+      ipc.invoke('getPopCallerId').then((data)=>{
+        console.log(data)
+        this.callerId=data
+      })
+    },
     selectIcon(icon,iconList) {
       let param={
         list:iconList.key,
