@@ -5,6 +5,7 @@ const userApi = require('../util/api/userApi')
 const messageModel = require('../util/model/messageModel')
 const {tools} = require('../util/util')
 const spaceModel = require('../../src/model/spaceModel')
+const statsh = require('../../js/util/statsh/statsh')
 
 class TasksList {
 	constructor() {
@@ -432,6 +433,18 @@ window.onload = function() {
           tabsNum += v.tabs.length
         });
         await userStatsModel.setValue('tabs', tabsNum)
+
+        //statsh
+        statsh.do({
+          action: 'set',
+          key: 'tabs',
+          value: tabsNum
+        })
+        statsh.do({
+          action: 'set',
+          key: 'tasks',
+          value: state.tasks.tasks.length
+        })
 
 			}
 

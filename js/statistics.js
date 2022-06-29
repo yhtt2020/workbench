@@ -1,4 +1,5 @@
 const settings = require('util/settings/settings.js')
+const statsh = require('util/statsh/statsh.js')
 const axios = require('./util/axios')
 const { db } = require('./util/database');
 
@@ -51,9 +52,23 @@ const statistics = {
     let appNum = await standAloneAppModel.countApps()
     await userStatsModel.setValue('apps', appNum)
 
+    //statsh
+    statsh.do({
+      action: 'set',
+      key: 'apps',
+      value: appNum
+    })
+
     //mark插入对blockAds的数据统计
     let currentBlockAds = settings.get('filteringBlockedCount')
     await userStatsModel.setValue('blockAds', currentBlockAds)
+
+    //statsh
+    statsh.do({
+      action: 'set',
+      key: 'blockAds',
+      value: currentBlockAds
+    })
 
     let osVersion = process.getSystemVersion()
     const options = {

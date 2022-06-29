@@ -2011,9 +2011,18 @@ ipc.on('appBadge', function (event, args) {
   })
 })
 
-ipc.on('countWebviewInk', async () => {
+ipc.on('countWebviewInk', () => {
   setTimeout(async () => {
     await userStatsModel.incrementValue('webviewsInk')
+  }, 2000)
+
+  //statsh
+  setTimeout(() => {
+    statsh.do({
+      action: 'increase',
+      key: 'webviewsInk',
+      value: 1
+    })
   }, 2000)
 })
 

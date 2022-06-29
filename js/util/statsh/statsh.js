@@ -25,17 +25,25 @@ var statsh = {
     if (
       buryObj.hasOwnProperty("action") &&
       buryObj.action === "increase" &&
-      (!statsh.get(buryObj.key) || typeof buryObj.value !== number)
+      typeof buryObj.value !== 'number'
     )
       return;
     if (buryObj.hasOwnProperty("action") && buryObj.action === "increase") {
-      statsh.list[buryObj.key] = statsh.get(buryObj.key) + buryObj.value;
+      console.log(
+        'yeyeyeyeyeye'
+      )
+      let prevValue = statsh.get(buryObj.key) ?? 0
+      statsh.list[buryObj.key] = prevValue + buryObj.value;
     }
     if (buryObj.hasOwnProperty("action") && buryObj.action === "set") {
       statsh.list[buryObj.key] = buryObj.value;
     }
 
     ipc.send("statshChanged", buryObj);
+  },
+  reset: function () {
+    statsh.list = {}
+    ipc.send('statshReset')
   },
   initialize: function () {
     var fileData;
@@ -61,3 +69,6 @@ var statsh = {
     });
   },
 };
+
+statsh.initialize();
+module.exports = statsh;

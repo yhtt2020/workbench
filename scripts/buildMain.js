@@ -36,7 +36,8 @@ const modules = [
   'main/wizard.js',
   'main/messageCenter.js',
   'main/fav.js',
-  'main/globalSearch.js'
+  'main/globalSearch.js',
+  'js/util/statsh/statshMain.js'
 ]
 
 function buildMain () {

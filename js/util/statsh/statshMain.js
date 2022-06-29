@@ -1,4 +1,5 @@
 var statsh = {
+  lock: false,
   filePath:
     userDataPath + (process.platform === "win32" ? "\\" : "/") + "statsh.json",
   fileWritePromise: null,
@@ -47,12 +48,15 @@ var statsh = {
       statsh.list[buryObj.key] = buryObj.value;
     }
 
-    statsh.writeFile();
-    if (mainWindow) {
-      mainWindow.webContents.send("statshChanged", buryObj);
+    if(!statsh.lock) {
+      statsh.writeFile();
+      if (mainWindow) {
+        mainWindow.webContents.send("statshChanged", buryObj);
+      }
     }
   },
   initialize: function () {
+    console.log('执行了！！！！！！！！', statsh.filePath)
     var fileData;
     try {
       fileData = fs.readFileSync(statsh.filePath, "utf-8");
@@ -68,14 +72,25 @@ var statsh = {
     //这里是在主进程中接收来自子进程的同步
     ipc.on("statshChanged", function (e, buryObj) {
       if (buryObj.hasOwnProperty("action") && buryObj.action === "increase") {
-        statsh.list[buryObj.key] = statsh.get(buryObj.key) + buryObj.value;
+        let prevValue = statsh.get(buryObj.key) ?? 0
+        statsh.list[buryObj.key] = prevValue + buryObj.value;
       }
       if (buryObj.hasOwnProperty("action") && buryObj.action === "set") {
         statsh.list[buryObj.key] = buryObj.value;
       }
 
-      statsh.writeFile();
+      if(!statsh.lock) {
+        statsh.writeFile();
+      }
     });
+
+    //重置的监听
+    ipc.on('statshReset', () => {
+      statsh.lock = true
+      statsh.fileWritePromise = null
+      fs.writeFileSync(statsh.filePath, JSON.stringify({}))
+      statsh.lock = false
+    })
   },
 };
 
