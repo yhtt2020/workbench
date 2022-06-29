@@ -18,10 +18,8 @@
 <!--          <a-menu-item key="2" @click="openShop('edge')" > <a-icon type="windows" ></a-icon>去Edge商店安装 </a-menu-item>-->
           <a-menu-item key="3" @click="openShop('crx')" > <a-icon type="file-zip" ></a-icon>安装crx文件</a-menu-item>
         </a-menu>
+        <a-button style="position:absolute;right: 150px;top: 20px" @click="openShop('chrome')" > 安装插件 <a-icon type="down" /> </a-button>
       </a-dropdown>
-      <a-button title="去谷歌商店安装插件"  type="primary"
-                icon="download">安装插件
-      </a-button>
       <a-button title="导入外部用户脚本" @click="importScript" style="position:absolute;right: 20px;top: 20px" type="primary"
                 icon="download">导入脚本
       </a-button>
