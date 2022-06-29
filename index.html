@@ -164,7 +164,7 @@
 <!--            </div>-->
 
           </div>
-          <div style="display: flex;width: 330px" >
+          <div style="display: flex;" >
             <div class="action-wrapper" >
                 <span onclick="ipc.send('openSwitch')" title="快速切换（Ctrl+Tab）" id="switch-toolbar"><img class="action" src="./icons/toolbar/switch.svg">
                 </span>
@@ -173,7 +173,8 @@
                 <span onclick="ipc.send('openMobile')" title="手机浏览工具" id="mobile-toolbar"><img class="action" src="./icons/toolbar/smartphone.svg">
                 </span>
             </div>
-            <div class="action-wrapper" style="text-align: center;">
+            <browser-action-list partition="persist:webcontent" id="actions"></browser-action-list>
+            <div class="action-wrapper" style="text-align: center;width: 18px;margin-left: 5px">
               <div style="margin-right:8px;border-right: 1px solid #cacaca;display: inline-block;height: 16px;vertical-align: middle;width: 0;margin-top: -3px"></div>
             </div>
             <div class="action-wrapper" >
@@ -380,5 +381,12 @@
       })
     </script>
 
+  <style>
+    browser-action-list::part(action) {
+      width: 32px !important;
+      height:32px !important;
+      margin:3px !important;
+    }
+  </style>
 	</body>
 </html>

@@ -230,6 +230,7 @@ function createWindowWithBounds(bounds) {
 		alwaysOnTop: settings.get('windowAlwaysOnTop'),
 		backgroundColor: '#fff',//backgroundColor: '#fff', // the value of this is ignored, but setting it seems to work around https://github.com/electron/electron/issues/10559
 		webPreferences: {
+      preload: __dirname + '/js/defaultPreload.js',
 			nodeIntegration: true,
 			contextIsolation: false,
 			nodeIntegrationInWorker: true, // used by ProcessSpawner
@@ -248,9 +249,20 @@ function createWindowWithBounds(bounds) {
 	if (process.platform !== 'darwin') {
 		mainWindow.setMenuBarVisibility(false)
 	}
+  browser = new Browser(electron.session.fromPartition('persist:webcontent'))
 
+
+
+  let timer=setInterval(()=>{
+    console.log('检查会话是否注册了协议',require('electron').session.defaultSession.protocol.isProtocolRegistered('crx'))
+    if(require('electron').session.defaultSession.protocol.isProtocolRegistered('crx'))
+    {
+      mainWindow.loadURL(browserPage)
+      clearInterval(timer)
+    }
+  },100)
 	// and load the index.html of the app.
-	mainWindow.loadURL(browserPage)
+
 
 	if (bounds.maximized) {
 		mainWindow.maximize()

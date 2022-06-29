@@ -31,11 +31,7 @@ const defaultViewWebPreferences = {
   minimumFontSize: 6
 }
 
-function createTab(){
-  let tabId=Date.now()
-  createView(undefined,tabId,)
 
-}
 function createView(existingViewId, id, webPreferencesString, boundsString, events) {
   viewStateMap[id] = {loadedInitialURL: false}
 
@@ -274,6 +270,8 @@ function setView(id) {
   } else {
     mainWindow.setBrowserView(null)
   }
+  browser.extensions.selectTab(viewMap[id].webContents)
+  sendIPCToWindow(mainWindow,'setActionListTab',{id:viewMap[id].webContents.id})
   selectedView = id
 }
 

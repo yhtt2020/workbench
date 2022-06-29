@@ -1,24 +1,17 @@
 const { ElectronChromeExtensions } = require('electron-chrome-extensions')
 const { buildChromeContextMenu } = require('electron-chrome-context-menu')
 let browser
-let extensionsMenu=[]
-app.on('session-created', (session) => {
-  if (session !== require('electron').session.defaultSession) {
-    browser = new Browser(session)
-    //this.init.bind(this)
-  }else{
-    console.log('没有初始化全部插件')
-  }
+let extensionsMenu = []
 
-})
-let tabs=[]
-let waitingSyncId=0
+let tabs = []
+let waitingSyncId = 0
+
 class Browser {
   session = null
 
   constructor (session) {
     let app = require('electron').app
-    this.session=session
+    this.session = session
     this.init()
     app.on('web-contents-created', this.onWebContentsCreated.bind(this))
   }
@@ -28,8 +21,21 @@ class Browser {
   }
 
   async onWebContentsCreated (event, webContents) {
+    // webContents.on('new-window', (event, url, frameName, disposition, options) => {
+    //   // event.preventDefault()
+    //
+    //   switch (disposition) {
+    //     case 'foreground-tab':
+    //     case 'background-tab':
+    //     case 'new-window':
+    //       const win = this.getIpcWindow(event)
+    //       const tab = win.tabs.create()
+    //       tab.loadURL(url)
+    //       break
+    //   }
+    // })
     webContents.on('context-menu', (event, params) => {
-       extensionsMenu=this.extensions.getContextMenuItems(webContents, params)
+      extensionsMenu = this.extensions.getContextMenuItems(webContents, params)
       // const menu = buildChromeContextMenu({
       //   params,
       //   webContents,
@@ -56,34 +62,35 @@ class Browser {
     this.extensions = new ElectronChromeExtensions({
       session: this.session,
 
-       createTab:  (details) => {
-        waitingSyncId=Date.now()
-        sendIPCToWindow(mainWindow,'addTab',{url:details.url})
-         tabs[waitingSyncId]={}//赋值一个空对象,先返回，再通过完成创建的时候修改这个对象的指向来更新对象
-        return [tabs[waitingSyncId],mainWindow]
+     // mainSession:require('electron').session.defaultSession,//提交一个主会话
+      createTab: (details) => {
+        waitingSyncId = Date.now()
+        sendIPCToWindow(mainWindow, 'addTab', { url: details.url })
+        tabs[waitingSyncId] = {}//赋值一个空对象,先返回，再通过完成创建的时候修改这个对象的指向来更新对象
+        return [tabs[waitingSyncId], mainWindow]
       },
       selectTab: (tab, browserWindow) => {
-        let id= getViewIDFromWebContents(tab)
-        sendIPCToWindow(mainWindow,'switchToTab',{tabId:id})
-
+        let id = getViewIDFromWebContents(tab)
+        //sendIPCToWindow(mainWindow,'switchToTab',{tabId:id})
       },
       removeTab: (tab, browserWindow) => {
-        let id= getViewIDFromWebContents(tab)
-        sendIPCToWindow(mainWindow,'closeTab',{id:id})
+        let id = getViewIDFromWebContents(tab)
+        sendIPCToWindow(mainWindow, 'closeTab', { id: id })
       },
 
       createWindow: (details) => {
-        const win = this.createWindow({
-          initialUrl: details.url || newTabUrl,
-        })
+        // const win = this.createWindow({
+        //   initialUrl: details.url || newTabUrl,
+        // })
         // if (details.active) tabs.select(tab.id)
-        return win.window
+        return mainWindow
       },
       removeWindow: (browserWindow) => {
         const win = this.getWindowFromBrowserWindow(browserWindow)
         win?.destroy()
       },
     })
+
     const extensionPath = path.join(userDataPath, 'extensions')
     if (!fs.existsSync(extensionPath)) {
       fs.mkdirSync(extensionPath)
@@ -91,10 +98,91 @@ class Browser {
     const installedExtensions = await loadExtensions(
       this.session, extensionPath
     )
+    this.extensions.setupProtocol(require('electron').session.defaultSession)
+
+
+    // const extensions=new ElectronChromeExtensions({session:require('electron').session.defaultSession})
+    // extensions.addTab(mainWindow.webContents, mainWindow)
+    // await loadExtensions(
+    //   require('electron').session.defaultSession, extensionPath
+    // )
+    // console.log(require('electron').session.defaultSession.getAllExtensions())
+    sendIPCToWindow(mainWindow, 'loadedExtensions')
   }
+
+  // setupProtocol () {
+  //   let mainSession = require('electron').session.defaultSession
+  //   mainSession.registerBufferProtocol('crx',(request,callback)=>{
+  //     let response: Electron.ProtocolResponse
+  //
+  //     try {
+  //       const url = new URL(request.url)
+  //       const { hostname: requestType } = url
+  //
+  //       switch (requestType) {
+  //         case 'extension-icon': {
+  //           const tabId = url.searchParams.get('tabId')
+  //
+  //           const fragments = url.pathname.split('/')
+  //           const extensionId = fragments[1]
+  //           const imageSize = parseInt(fragments[2], 10)
+  //           const resizeType = parseInt(fragments[3], 10) || ResizeType.Up
+  //
+  //           const extension = this.session.getExtension(extensionId)
+  //
+  //           let iconDetails: chrome.browserAction.TabIconDetails | undefined
+  //
+  //           const action = this.actionMap.get(extensionId)
+  //           if (action) {
+  //             iconDetails = (tabId && action.tabs[tabId]?.icon) || action.icon
+  //           }
+  //
+  //           let iconImage
+  //
+  //           if (extension && iconDetails) {
+  //             if (typeof iconDetails.path === 'string') {
+  //               const iconAbsPath = resolveExtensionPath(extension, iconDetails.path)
+  //               if (iconAbsPath) iconImage = nativeImage.createFromPath(iconAbsPath)
+  //             } else if (typeof iconDetails.path === 'object') {
+  //               const imagePath = matchSize(iconDetails.path, imageSize, resizeType)
+  //               const iconAbsPath = imagePath && resolveExtensionPath(extension, imagePath)
+  //               if (iconAbsPath) iconImage = nativeImage.createFromPath(iconAbsPath)
+  //             } else if (typeof iconDetails.imageData === 'string') {
+  //               iconImage = nativeImage.createFromDataURL(iconDetails.imageData)
+  //             } else if (typeof iconDetails.imageData === 'object') {
+  //               const imageData = matchSize(iconDetails.imageData as any, imageSize, resizeType)
+  //               iconImage = imageData ? nativeImage.createFromDataURL(imageData) : undefined
+  //             }
+  //           }
+  //
+  //           if (iconImage) {
+  //             response = {
+  //               statusCode: 200,
+  //               mimeType: 'image/png',
+  //               data: iconImage.toPNG(),
+  //             }
+  //           } else {
+  //             response = { statusCode: 400 }
+  //           }
+  //
+  //           break
+  //         }
+  //         default: {
+  //           response = { statusCode: 400 }
+  //         }
+  //       }
+  //     } catch (e) {
+  //       console.error(e)
+  //
+  //       response = {
+  //         statusCode: 500,
+  //       }
+  //     }
+  //
+  //     callback(response)
+  //   })
+  // }
 }
-
-
 
 const manifestExists = async (dirPath) => {
   if (!dirPath) return false
@@ -171,3 +259,6 @@ const getParentWindowOfTab = (tab) => {
 }
 
 
+app.whenReady().then(()=>{
+
+})
