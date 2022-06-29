@@ -60,7 +60,7 @@ var urlParser = {
 
       return 'view-source:' + urlParser.parse(realURL)
     }
-    if(url.startsWith('chrome-extension')){
+    if(url.startsWith('chrome-extension') ){
       return url
     }
 

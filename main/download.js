@@ -1,4 +1,10 @@
-
+const { extname, resolve,join } =require( 'path')
+const {promises} =require('fs')
+const parseCrx = require('./js/main/crx.js')
+const extractZip =require('./js/main/zip.js')
+const { getPath} = require('./js/main/paths')
+const {makeId} =require('./js/main/string')
+const { pathExists } = require('./js/main/files')
 const currrentDownloadItems = {}
 
 // ipc.on('cancelDownload', function (e, path) {
@@ -89,20 +95,21 @@ function downloadHandler (event, item, webContents) {
     // event.preventDefault()
 
     var savePathFilename
-    function conver(limit){
+
+    function conver (limit) {
       var size;
-      if(limit < 1024 * 1024 ){
+      if (limit < 1024 * 1024) {
         size = (limit / 1024).toFixed(2) + "KB";
-      }else if(limit < 1024 * 1024 * 1024){
+      } else if (limit < 1024 * 1024 * 1024) {
         size = (limit / (1024 * 1024)).toFixed(2) + "MB";
-      }else{
+      } else {
         size = (limit / (1024 * 1024 * 1024)).toFixed(2) + "GB";
       }
       var sizeStr = size + "";
       var len = sizeStr.indexOf("\.");
       var dec = sizeStr.substr(len + 1, 2);
-      if(dec === "00"){//当小数点后为00时 去掉小数部分
-        return sizeStr.substring(0,len) + sizeStr.substr(len + 3,2);
+      if (dec === "00") {//当小数点后为00时 去掉小数部分
+        return sizeStr.substring(0, len) + sizeStr.substr(len + 3, 2);
       }
       return sizeStr;
     }
@@ -111,14 +118,13 @@ function downloadHandler (event, item, webContents) {
       path: item.getSavePath(),
       name: item.getFilename(),
       status: 'start',
-      size: {received: 0, total: conver(item.getTotalBytes())},
+      size: { received: 0, total: conver(item.getTotalBytes()) },
       paused: item.isPaused(),
       startTime: item.getStartTime(),
       url: item.getURL(),
-      href:originalPageUrl,
-      chainUrl:item.getURLChain()
+      href: originalPageUrl,
+      chainUrl: item.getURLChain()
     })
-
 
     let prevReceivedBytes = 0
     item.on('updated', function (e, state) {
@@ -138,7 +144,7 @@ function downloadHandler (event, item, webContents) {
         currrentDownloadItems[item.getSavePath()] = item
       }
 
-      if(downloadWindow!=null && !downloadWindow.isDestroyed()) {
+      if (downloadWindow != null && !downloadWindow.isDestroyed()) {
         downloadWindow.setProgressBar(item.getReceivedBytes() / item.getTotalBytes())
       }
 
@@ -146,18 +152,18 @@ function downloadHandler (event, item, webContents) {
         path: item.getSavePath(),
         name: savePathFilename,
         status: state,
-        size: {received: conver(item.getReceivedBytes()),total:conver(item.getTotalBytes()) },
+        size: { received: conver(item.getReceivedBytes()), total: conver(item.getTotalBytes()) },
         // realdata1:item.speed,
         realData: conver(item.speed),
         progressnuw: ((prevReceivedBytes / item.getTotalBytes()).toFixed(2)) * 100,
         paused: item.isPaused(),
         startTime: item.getStartTime(),
-        chainUrl:item.getURLChain()
+        chainUrl: item.getURLChain()
       })
 
     })
 
-    item.once('done', function (e, state) {
+    item.once('done', async function (e, state) {
       delete currrentDownloadItems[item.getSavePath()]
       if (!downloadWindow.isDestroyed()) {
         downloadWindow.setProgressBar(-1);
@@ -169,14 +175,56 @@ function downloadHandler (event, item, webContents) {
         name: savePathFilename,
         status: state,
         url: item.getURL(),
-        size: {received: conver(item.getTotalBytes()), total: conver(item.getTotalBytes()) },
-        href:originalPageUrl,
-        chainUrl:item.getURLChain()
+        size: { received: conver(item.getTotalBytes()), total: conver(item.getTotalBytes()) },
+        href: originalPageUrl,
+        chainUrl: item.getURLChain()
       })
-    })
-  }
-  return true
 
+      if (extname(savePathFilename) === '.crx') {
+        console.log('识别到crx', savePathFilename)
+        const crxBuf = await promises.readFile(item.savePath);
+        const crxInfo = parseCrx(crxBuf);
+
+        if (!crxInfo.id) {
+          crxInfo.id = makeId(32);
+        }
+
+        const extensionsPath = join(userDataPath,'extensions')
+        const path = resolve(extensionsPath, crxInfo.id);
+        const manifestPath = resolve(path, 'manifest.json');
+
+        if (await pathExists(path)) {
+          console.log('插件已经安装');
+          return;
+        }
+        console.log('解压', crxInfo)
+        await extractZip(crxInfo.zip, path);
+        console.log('安装extension', savePathFilename)
+        const extension = await electron.session.fromPartition('persist:webcontent').loadExtension(path);
+
+        if (crxInfo.publicKey) {
+          const manifest = JSON.parse(
+            await promises.readFile(manifestPath, 'utf8'),
+          );
+
+          manifest.key = crxInfo.publicKey.toString('base64');
+          console.log('获得key',  manifest.key )
+          await promises.writeFile(
+            manifestPath,
+            JSON.stringify(manifest, null, 2),
+          );
+
+          console.log('安装的扩展', extension)
+
+          // window.send('load-browserAction', extension);
+        }
+
+      }
+
+    })
+
+    return true
+  }
 }
 
 

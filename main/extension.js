@@ -1,5 +1,4 @@
 const { ElectronChromeExtensions } = require('electron-chrome-extensions')
-const { buildChromeContextMenu } = require('electron-chrome-context-menu')
 let browser
 let extensionsMenu = []
 
@@ -260,5 +259,10 @@ const getParentWindowOfTab = (tab) => {
 
 
 app.whenReady().then(()=>{
-
+  ipc.on('openExtShop',(e,a)=>{
+    if(a.name==='chrome'){
+      sendIPCToWindow(mainWindow,'addTab',{url:'https://chrome.google.com/webstore/category/extensions'})
+      mainWindow.focus()
+    }
+  })
 })
