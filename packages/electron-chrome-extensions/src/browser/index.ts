@@ -91,6 +91,10 @@ export class ElectronChromeExtensions extends EventEmitter {
     this.prependPreload()
   }
 
+  public setupProtocol(session:Electron.Session){
+    this.api.browserAction.setupProtocol(session)
+  }
+
   private async prependPreload() {
     const { session } = this.ctx
     let preloads = session.getPreloads()

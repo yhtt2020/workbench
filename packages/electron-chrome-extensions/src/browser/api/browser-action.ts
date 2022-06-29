@@ -194,6 +194,11 @@ export class BrowserActionAPI {
     session.protocol.registerBufferProtocol('crx', this.handleCrxRequest)
   }
 
+  public setupProtocol(session:Electron.Session){
+    const result=session.protocol.registerBufferProtocol('crx', this.handleCrxRequest)
+    return result
+  }
+
   private handleCrxRequest = (
     request: Electron.ProtocolRequest,
     callback: (response: Electron.ProtocolResponse) => void
