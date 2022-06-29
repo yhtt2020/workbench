@@ -12,6 +12,6 @@ exports.default = async function notarizing(context) {
     appBundleId: 'com.thisky.browser',
     appPath: `${appOutDir}/${appName}.app`,
     appleId: 'appstore@thisky.com',
-    appleIdPassword: 'elrb-fhob-kdbx-cslg',
+    appleIdPassword: 'dyke-eukd-rgyj-orin',
   });
 }
