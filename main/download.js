@@ -182,42 +182,7 @@ function downloadHandler (event, item, webContents) {
 
       if (extname(savePathFilename) === '.crx') {
         console.log('识别到crx', savePathFilename)
-        const crxBuf = await promises.readFile(item.savePath);
-        const crxInfo = parseCrx(crxBuf);
-
-        if (!crxInfo.id) {
-          crxInfo.id = makeId(32);
-        }
-
-        const extensionsPath = join(userDataPath,'extensions')
-        const path = resolve(extensionsPath, crxInfo.id);
-        const manifestPath = resolve(path, 'manifest.json');
-
-        if (await pathExists(path)) {
-          console.log('插件已经安装');
-          return;
-        }
-        console.log('解压', crxInfo)
-        await extractZip(crxInfo.zip, path);
-        console.log('安装extension', savePathFilename)
-        const extension = await electron.session.fromPartition('persist:webcontent').loadExtension(path);
-
-        if (crxInfo.publicKey) {
-          const manifest = JSON.parse(
-            await promises.readFile(manifestPath, 'utf8'),
-          );
-
-          manifest.key = crxInfo.publicKey.toString('base64');
-          console.log('获得key',  manifest.key )
-          await promises.writeFile(
-            manifestPath,
-            JSON.stringify(manifest, null, 2),
-          );
-
-          console.log('安装的扩展', extension)
-
-          // window.send('load-browserAction', extension);
-        }
+        installCrx(item.savePath)
 
       }
 
@@ -276,3 +241,44 @@ app.on('session-created', function (session) {
 
 
 
+
+
+async function installCrx(filePath){
+  const crxBuf = await promises.readFile(filePath);
+  const crxInfo = parseCrx(crxBuf);
+
+  if (!crxInfo.id) {
+    crxInfo.id = makeId(32);
+  }
+
+  const extensionsPath = join(userDataPath,'extensions')
+  const path = resolve(extensionsPath, crxInfo.id);
+  const manifestPath = resolve(path, 'manifest.json');
+
+  if (await pathExists(path)) {
+    return {
+      status:-1
+    }
+  }
+  await extractZip(crxInfo.zip, path);
+  const extension = await electron.session.fromPartition('persist:webcontent').loadExtension(path);
+
+  if (crxInfo.publicKey) {
+    const manifest = JSON.parse(
+      await promises.readFile(manifestPath, 'utf8'),
+    );
+
+    manifest.key = crxInfo.publicKey.toString('base64');
+    await promises.writeFile(
+      manifestPath,
+      JSON.stringify(manifest, null, 2),
+    );
+
+    return {
+      status:1,
+      extension
+    }
+
+    // window.send('load-browserAction', extension);
+  }
+}

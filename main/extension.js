@@ -259,10 +259,38 @@ const getParentWindowOfTab = (tab) => {
 
 
 app.whenReady().then(()=>{
-  ipc.on('openExtShop',(e,a)=>{
+  ipc.on('openExtShop',async (e,a)=>{
     if(a.name==='chrome'){
       sendIPCToWindow(mainWindow,'addTab',{url:'https://chrome.google.com/webstore/category/extensions'})
       mainWindow.focus()
+    }else if(a.name==="edge"){
+      sendIPCToWindow(mainWindow,'addTab',{url:'https://microsoftedge.microsoft.com/addons'})
+      mainWindow.focus()
+    }else{
+      const files = dialog.showOpenDialogSync({
+        userScriptWindow,
+        filters: [
+          { name: '扩展插件', extensions: ['crx'] }
+        ], properties: ['openFile', 'multiSelections']
+      })
+      if(!!!files){
+        return
+      }
+    let installed=0
+      let exists=0
+      for(let i=0;i<files.length;i++){
+        let result=await installCrx(files[i])
+        if(result.status===1){
+          installed++
+        }else if(result.status===-1){
+          exists++
+        }
+      }
+      let content= installed>0?'成功安装'+installed+'个插件。':''
+      content+=exists>0? exists+'个插件未安装，因为这些插件已经安装。':''
+      console.log(content)
+
+      sendMessage({type:'success',config:{content: content }})
     }
   })
 })
