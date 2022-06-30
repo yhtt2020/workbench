@@ -156,7 +156,36 @@ const tabEditor = {
     })
   }
 }
+let tipEl=document.getElementById('clipboardTip')
+tipEl.addEventListener('click',()=>{
+  var newTab = tabs.add({
+    url: tipEl.getAttribute('title')
+  })
+  require('../browserUI').addTab(newTab,{
+    enterEditMode:false
+  })
+  tipEl.hidden=true
+})
+let tick=0
+let timerShowClipTip=null
+ipc.on('showClipboard',(event,args)=>{
 
+  tipEl.setAttribute('title',args.url)
+  tipEl.hidden=false
+  if(tick>0){
+    tick=10
+    return
+  }
+  tick=10
+  timerShowClipTip=setInterval(()=>{
+    tick--
+    if(tick<=0){
+      tipEl.hidden=true
+      clearInterval(timerShowClipTip)
+      timerShowClipTip=null
+    }
+  },1000)
+})
 tabEditor.initialize()
 
 module.exports = tabEditor
