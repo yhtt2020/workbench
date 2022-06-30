@@ -83,11 +83,11 @@ function createView(existingViewId, id, webPreferencesString, boundsString, even
       (https://github.com/minbrowser/min/issues/1835)
     */
     if (!details.features) {
-      mainWindow.webContents.send('view-event', {
-        viewId: id,
-        event: 'new-tab',
-        args: [details.url, !(details.disposition === 'background-tab')]
-      })
+      // mainWindow.webContents.send('view-event', {
+      //   viewId: id,
+      //   event: 'new-tab',
+      //   args: [details.url, !(details.disposition === 'background-tab')]
+      // })
       return {
         //如果这里return  deny，则禁止任何形式的弹窗
         action: 'allow'
