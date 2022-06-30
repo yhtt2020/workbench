@@ -9,6 +9,7 @@
   align-items: center;
   transform-origin: top left;
   z-index: 1;
+  cursor: pointer;
 }
 
 #tab-editor-input {
