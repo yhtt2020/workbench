@@ -277,14 +277,15 @@ function createWindowWithBounds(bounds) {
     if(latestClipboardContent!==clipboardContent && (latestClipboardContent.startsWith('http://') || latestClipboardContent.startsWith('https://')))
     {
       clipboardContent=latestClipboardContent
-      dialog.showMessageBox(undefined,{
-        message:'检测到剪贴板存在网址，是否使用新标签打开？',
-        buttons:['是','否']
-      }).then((userSelect)=>{
-        if(userSelect.response===0){
-          sendIPCToWindow(mainWindow,'addTab',{url:latestClipboardContent})
-        }
-      })
+      sendIPCToWindow(mainWindow,'showClipboard',{url:latestClipboardContent})
+      // dialog.showMessageBox(undefined,{
+      //   message:'检测到剪贴板存在网址，是否使用新标签打开？',
+      //   buttons:['是','否']
+      // }).then((userSelect)=>{
+      //   if(userSelect.response===0){
+      //     sendIPCToWindow(mainWindow,'addTab',{url:latestClipboardContent})
+      //   }
+      // })
     }
   })
 
