@@ -249,18 +249,21 @@ function createWindowWithBounds(bounds) {
 	if (process.platform !== 'darwin') {
 		mainWindow.setMenuBarVisibility(false)
 	}
-  browser = new Browser(electron.session.fromPartition('persist:webcontent'))
+  if(require('electron').session.defaultSession.protocol.isProtocolRegistered('crx')===false){
+    browser = new Browser(electron.session.fromPartition('persist:webcontent'))
+    let timer=setInterval(()=>{
+      console.log('检查会话是否注册了协议',require('electron').session.defaultSession.protocol.isProtocolRegistered('crx'))
+      if(require('electron').session.defaultSession.protocol.isProtocolRegistered('crx'))
+      {
+        mainWindow.loadURL(browserPage)
+        clearInterval(timer)
+      }
+    },100)
+  }else{
+    browser = new Browser(electron.session.fromPartition('persist:webcontent'))
+    mainWindow.loadURL(browserPage)
+  }
 
-
-
-  let timer=setInterval(()=>{
-    console.log('检查会话是否注册了协议',require('electron').session.defaultSession.protocol.isProtocolRegistered('crx'))
-    if(require('electron').session.defaultSession.protocol.isProtocolRegistered('crx'))
-    {
-      mainWindow.loadURL(browserPage)
-      clearInterval(timer)
-    }
-  },100)
 	// and load the index.html of the app.
 
 

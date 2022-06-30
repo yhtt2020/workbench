@@ -1,7 +1,7 @@
 const { ElectronChromeExtensions } = require('electron-chrome-extensions')
 let browser
 let extensionsMenu = []
-
+let extensions=null
 let tabs = []
 let waitingSyncId = 0
 
@@ -9,10 +9,14 @@ class Browser {
   session = null
 
   constructor (session) {
-    let app = require('electron').app
     this.session = session
-    this.init()
-    app.on('web-contents-created', this.onWebContentsCreated.bind(this))
+    if(extensions){
+      this.extensions=extensions
+      sendIPCToWindow(mainWindow, 'loadedExtensions')
+    }else{
+      this.init()
+      require('electron').app.on('web-contents-created', this.onWebContentsCreated.bind(this))
+    }
   }
 
   initSession () {
@@ -78,6 +82,7 @@ class Browser {
       },
 
       createWindow: (details) => {
+        conosle.log('触发createWindow')
         // const win = this.createWindow({
         //   initialUrl: details.url || newTabUrl,
         // })
@@ -85,11 +90,13 @@ class Browser {
         return mainWindow
       },
       removeWindow: (browserWindow) => {
+        conosle.log('触发removeWindow')
         const win = this.getWindowFromBrowserWindow(browserWindow)
         win?.destroy()
       },
     })
 
+    extensions=this.extensions
     const extensionPath = path.join(userDataPath, 'extensions')
     if (!fs.existsSync(extensionPath)) {
       fs.mkdirSync(extensionPath)
@@ -97,7 +104,8 @@ class Browser {
     const installedExtensions = await loadExtensions(
       this.session, extensionPath
     )
-    this.extensions.setupProtocol(require('electron').session.defaultSession)
+    if(!require('electron').session.defaultSession.protocol.isProtocolRegistered('crx'))
+      this.extensions.setupProtocol(require('electron').session.defaultSession)
 
 
     // const extensions=new ElectronChromeExtensions({session:require('electron').session.defaultSession})
