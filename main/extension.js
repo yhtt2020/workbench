@@ -208,7 +208,6 @@ const manifestExists = async (dirPath) => {
  * @returns {Promise<[]>}
  */
 async function loadExtensions (session, extensionsPath) {
-  console.log('开始读入', extensionsPath)
   const subDirectories = await fs.readdirSync(extensionsPath, {
     withFileTypes: true,
   })
@@ -278,27 +277,15 @@ app.whenReady().then(()=>{
       const files = dialog.showOpenDialogSync({
         userScriptWindow,
         filters: [
-          { name: '扩展插件', extensions: ['crx'] }
+          { name: '扩展插件', extensions: ['crx']}
         ], properties: ['openFile']
       })
       if(!!!files){
         return
       }
-    let installed=0
-      let exists=0
       for(let i=0;i<files.length;i++){
-        let result=await installCrx(files[i])
-        if(result.status===1){
-          installed++
-        }else if(result.status===-1){
-          exists++
-        }
+        await installCrx(files[i])
       }
-      let content= installed>0?'成功安装'+installed+'个插件。':''
-      content+=exists>0? exists+'个插件未安装，因为这些插件已经安装。':''
-      console.log(content)
-
-      sendMessage({type:'success',config:{content: content }})
     }
   })
 })

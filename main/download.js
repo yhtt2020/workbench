@@ -237,7 +237,10 @@ async function askInstall (manifestPath, crxInfo) {
 }
 
 ipc.on('doInstallCrx', (event, args) => {
-  doInstallCrx(args.manifestPath,args.crxInfo)
+  doInstallCrx(args.manifestPath,{
+    id:args.crxInfo.id,
+    publicKey:args.crxInfo.publicKey
+  })
 })
 
 async function doInstallCrx (manifestPath, crxInfo) {
@@ -258,10 +261,8 @@ async function doInstallCrx (manifestPath, crxInfo) {
       manifestPath,
       JSON.stringify(manifest, null, 2),
     )
-    return {
-      status: 1,
-      extension
-    }
+    let content= '成功安装插件。'
+    sendMessage({type:'success',config:{content: content ,key:'extension'}})
   }
 
 

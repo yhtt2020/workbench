@@ -86,19 +86,18 @@ class Pop {
       let index = pool.pop.findIndex(v => v.url === this.url)
       pool.pop.splice(index, 1)
     })
-    // this.win.on('blur', () => {
-    //   this.win.hide()
-    //   //缓存1分钟，超过1分钟再自动关闭
-    //   setTimeout(() => {
-    //     if (!this.win.isDestroyed()) {
-    //       if (!this.win.isVisible()) {
-    //         this.win.close()
-    //         return
-    //       }
-    //     }
-    //   }, PopCacheTime)
-    //
-    // })
+    this.win.on('blur', () => {
+      this.win.hide()
+      //缓存1分钟，超过1分钟再自动关闭
+      setTimeout(() => {
+        if (!this.win.isDestroyed()) {
+          if (!this.win.isVisible()) {
+            this.win.close()
+            return
+          }
+        }
+      }, PopCacheTime)
+    })
     this.win.on('maximize', () => {
       this.win.webContents.send('windowMaximized')
     })
@@ -147,7 +146,6 @@ class Pool {
       return pool.getPop(e.sender.id).callerId
     })
     ipc.handle('getPopArgs', (e, param) => {
-      console.log(pool.getPop(e.sender.id).args)
       return pool.getPop(e.sender.id).args
     })
   }
@@ -446,8 +444,8 @@ const renderPage = {
   },
   getMainWindowCenterBounds (width, height) {
     let mainBounds = mainWindow.getBounds()
-    let x = mainBounds.x + (mainBounds.width - width) / 2
-    let y = mainBounds.y + (mainBounds.height - height) / 2
+    let x = parseInt(mainBounds.x + (mainBounds.width - width) / 2)
+    let y = parseInt(mainBounds.y + (mainBounds.height - height) / 2)
     return { x, y, width, height }
   }
 
