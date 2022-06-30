@@ -7,6 +7,7 @@ class Win {
   extraData
   alwaysTop
   callerId
+
   constructor () {
     let config = {}
     config.maximizable = true
@@ -19,14 +20,14 @@ class Win {
     //protocol.load(this.win,'/blank')
   }
 
-  async use (param,callerId) {
+  async use (param, callerId) {
     this.url = param.url
     this.width = param.width
     this.height = param.height
     this.resizable = param.resizable
     this.extraData = param.extraData
     this.alwaysTop = param.alwaysTop
-    this.callerId=callerId
+    this.callerId = callerId
     this.win.loadURL(this.url)
     this.win.setSize(this.width, this.height)
     this.win.setAlwaysOnTop(!!this.alwaysTop)
@@ -52,15 +53,19 @@ const PopCacheTime = 300000 //弹窗缓存时长，默认为30秒，期间只会
 class Pop {
   id
   win
+  args
   callerId //呼叫这个pop的调取者的windowId，用于直发消息
   constructor () {
     let config = {}
     config.frame = false
     config.show = false
+    config.resizable=false
     config.skipTaskbar = true
     config.webPreferences = {
       nodeIntegration: true,
       contextIsolation: false,
+      sandbox: false,
+      webSecurity: false,
       nodeIntegrationInWorker: true, // used by ProcessSpawner
       additionalArguments: [
         '--user-data-path=' + userDataPath,
@@ -81,19 +86,19 @@ class Pop {
       let index = pool.pop.findIndex(v => v.url === this.url)
       pool.pop.splice(index, 1)
     })
-    this.win.on('blur', () => {
-      this.win.hide()
-      //缓存1分钟，超过1分钟再自动关闭
-      setTimeout(() => {
-        if (!this.win.isDestroyed()) {
-          if (!this.win.isVisible()) {
-            this.win.close()
-            return
-          }
-        }
-      }, PopCacheTime)
-
-    })
+    // this.win.on('blur', () => {
+    //   this.win.hide()
+    //   //缓存1分钟，超过1分钟再自动关闭
+    //   setTimeout(() => {
+    //     if (!this.win.isDestroyed()) {
+    //       if (!this.win.isVisible()) {
+    //         this.win.close()
+    //         return
+    //       }
+    //     }
+    //   }, PopCacheTime)
+    //
+    // })
     this.win.on('maximize', () => {
       this.win.webContents.send('windowMaximized')
     })
@@ -110,6 +115,7 @@ class Pop {
     this.url = param.url
     this.width = param.width
     this.callerId = callerId
+    this.args = param.args || {}
     this.x = param.x
     this.y = param.y
     this.height = param.height
@@ -140,6 +146,10 @@ class Pool {
     ipc.handle('getPopCallerId', (e, param) => {
       return pool.getPop(e.sender.id).callerId
     })
+    ipc.handle('getPopArgs', (e, param) => {
+      console.log(pool.getPop(e.sender.id).args)
+      return pool.getPop(e.sender.id).args
+    })
   }
 
   /**
@@ -160,11 +170,11 @@ class Pool {
       return
     }
     let blankObj = this.dic.find(v => v.url === '/blank')
-    await blankObj.use(param,callerId)
+    await blankObj.use(param, callerId)
     this.dic.splice(0, 0, new Win())
   }
 
-  async usePop (param, callerId) {
+  async usePop (param, callerId = -1) {
     let oldObj = this.pop.find(v => v.url === param.url)
     if (oldObj) {
       oldObj.callerId = callerId
@@ -330,6 +340,9 @@ const render = {
       ipc.on('addRenderTab', (event, args) => {
         this.openRenderTab(args.url)
       })
+      ipc.on('closeSelf',(event,args)=>{
+        BrowserWindow.fromWebContents(event.sender).close()
+      })
     })
 
   },
@@ -396,7 +409,8 @@ const render = {
 }
 
 const renderPage = {
-  iconSelector: null,
+  iconSelector: null, //图标选择器
+  installExtension: null, //安装插件
   init () {
 
   },
@@ -413,7 +427,30 @@ const renderPage = {
       x: pos.x,
       y: pos.y,
     }, windowId).then()
+  },
+  openInstallExtension (args) {
+    let pos = renderPage.getMainWindowCenterBounds(448, 300)
+    pool.usePop({
+      url: render.getUrl('extension.html#/install'),
+      width: pos.width,
+      height: pos.height,
+      x: pos.x,
+      y: pos.y,
+      args: {
+        manifest: { ...args.manifest },
+        id: args.crxInfo.id,
+        crxInfo:args.crxInfo,
+        manifestPath:args.manifestPath
+      }
+    }).then()
+  },
+  getMainWindowCenterBounds (width, height) {
+    let mainBounds = mainWindow.getBounds()
+    let x = mainBounds.x + (mainBounds.width - width) / 2
+    let y = mainBounds.y + (mainBounds.height - height) / 2
+    return { x, y, width, height }
   }
+
 }
 
-  render.init()
+render.init()

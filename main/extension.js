@@ -279,7 +279,7 @@ app.whenReady().then(()=>{
         userScriptWindow,
         filters: [
           { name: '扩展插件', extensions: ['crx'] }
-        ], properties: ['openFile', 'multiSelections']
+        ], properties: ['openFile']
       })
       if(!!!files){
         return

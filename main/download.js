@@ -1,9 +1,9 @@
-const { extname, resolve,join } =require( 'path')
-const {promises} =require('fs')
+const { extname, resolve, join } = require('path')
+const { promises } = require('fs')
 const parseCrx = require('./js/main/crx.js')
-const extractZip =require('./js/main/zip.js')
-const { getPath} = require('./js/main/paths')
-const {makeId} =require('./js/main/string')
+const extractZip = require('./js/main/zip.js')
+const { getPath } = require('./js/main/paths')
+const { makeId } = require('./js/main/string')
 const { pathExists } = require('./js/main/files')
 const currrentDownloadItems = {}
 
@@ -13,19 +13,19 @@ const currrentDownloadItems = {}
 //   }
 // })
 
-ipc.on('stopDownload',function (e,path){
+ipc.on('stopDownload', function (e, path) {
   if (currrentDownloadItems[path]) {
     currrentDownloadItems[path].pause()
   }
 })
 
-ipc.on('resumeDownload',function (e,path){
+ipc.on('resumeDownload', function (e, path) {
   if (currrentDownloadItems[path]) {
     currrentDownloadItems[path].resume()
   }
 })
 
-ipc.on('deleteDownload',function (e,path){
+ipc.on('deleteDownload', function (e, path) {
   if (currrentDownloadItems[path]) {
     currrentDownloadItems[path].cancel()
   }
@@ -35,47 +35,43 @@ function isAttachment (header) {
   return /^\s*attache*?ment/i.test(header)
 }
 
-
-function sendIPCToDownloadWindow(action, data) {
+function sendIPCToDownloadWindow (action, data) {
   // if there are no windows, create a new one
 
-  if (downloadWindow===null) {
-    getDownloadWindow(function() {
+  if (downloadWindow === null) {
+    getDownloadWindow(function () {
       downloadWindow.webContents.send(action, data || {})
     })
-  }
-  else {
+  } else {
     downloadWindow.webContents.send(action, data || {})
   }
-
 
 }
 
 let originalPageUrl
-ipc.on('originalPage',(event,args)=>{
-   originalPageUrl = args
+ipc.on('originalPage', (event, args) => {
+  originalPageUrl = args
 })
 // let emptyPageUrl
 // ipc.on('emptyPage',(event,args)=>{
 //    emptyPageUrl = args
 // })
 
-ipc.on('emptyPageUrl',(event,args)=>{
-  mainWindow.webContents.send('closeEmptyPage',args)
+ipc.on('emptyPageUrl', (event, args) => {
+  mainWindow.webContents.send('closeEmptyPage', args)
 })
-ipc.on('downloading',(event,args)=>{
+ipc.on('downloading', (event, args) => {
   mainWindow.send('downloadCountAdd')
 })
-ipc.on('downloadEnd',(event,args)=>{
+ipc.on('downloadEnd', (event, args) => {
   mainWindow.send('downloadCountCut')
 })
 
 function downloadHandler (event, item, webContents) {
   var itemURL = item.getURL()
   var attachment = isAttachment(item.getContentDisposition())
-  let suffixName = item.getFilename().substring(item.getFilename().lastIndexOf('.')+1,item.getFilename().length)
-  savePathFilename =  path.basename(item.getSavePath())
-
+  let suffixName = item.getFilename().substring(item.getFilename().lastIndexOf('.') + 1, item.getFilename().length)
+  savePathFilename = path.basename(item.getSavePath())
 
   if (item.getMimeType() === 'application/pdf' && itemURL.indexOf('blob:') !== 0 && itemURL.indexOf('#pdfjs.action=download') === -1 && !attachment) { // clicking the download button in the viewer opens a blob url, so we don't want to open those in the viewer (since that would make it impossible to download a PDF)
     event.preventDefault()
@@ -97,21 +93,21 @@ function downloadHandler (event, item, webContents) {
     var savePathFilename
 
     function conver (limit) {
-      var size;
+      var size
       if (limit < 1024 * 1024) {
-        size = (limit / 1024).toFixed(2) + "KB";
+        size = (limit / 1024).toFixed(2) + 'KB'
       } else if (limit < 1024 * 1024 * 1024) {
-        size = (limit / (1024 * 1024)).toFixed(2) + "MB";
+        size = (limit / (1024 * 1024)).toFixed(2) + 'MB'
       } else {
-        size = (limit / (1024 * 1024 * 1024)).toFixed(2) + "GB";
+        size = (limit / (1024 * 1024 * 1024)).toFixed(2) + 'GB'
       }
-      var sizeStr = size + "";
-      var len = sizeStr.indexOf("\.");
-      var dec = sizeStr.substr(len + 1, 2);
-      if (dec === "00") {//当小数点后为00时 去掉小数部分
-        return sizeStr.substring(0, len) + sizeStr.substr(len + 3, 2);
+      var sizeStr = size + ''
+      var len = sizeStr.indexOf('\.')
+      var dec = sizeStr.substr(len + 1, 2)
+      if (dec === '00') {//当小数点后为00时 去掉小数部分
+        return sizeStr.substring(0, len) + sizeStr.substr(len + 3, 2)
       }
-      return sizeStr;
+      return sizeStr
     }
 
     sendIPCToDownloadWindow('download-info', {
@@ -134,7 +130,7 @@ function downloadHandler (event, item, webContents) {
       item.speed = receivedBytes - prevReceivedBytes
       prevReceivedBytes = receivedBytes
 
-      let updateName;
+      let updateName
       if (!savePathFilename) {
         updateName = path.basename(item.getSavePath())
         savePathFilename = updateName
@@ -166,7 +162,7 @@ function downloadHandler (event, item, webContents) {
     item.once('done', async function (e, state) {
       delete currrentDownloadItems[item.getSavePath()]
       if (!downloadWindow.isDestroyed()) {
-        downloadWindow.setProgressBar(-1);
+        downloadWindow.setProgressBar(-1)
       }
 
       sendIPCToDownloadWindow('download-info', {
@@ -181,9 +177,7 @@ function downloadHandler (event, item, webContents) {
       })
 
       if (extname(savePathFilename) === '.crx') {
-        console.log('识别到crx', savePathFilename)
         installCrx(item.savePath)
-
       }
 
     })
@@ -191,8 +185,6 @@ function downloadHandler (event, item, webContents) {
     return true
   }
 }
-
-
 
 function listenForDownloadHeaders (ses) {
 
@@ -202,9 +194,8 @@ function listenForDownloadHeaders (ses) {
       var typeHeader = details.responseHeaders[Object.keys(details.responseHeaders).filter(k => k.toLowerCase() === 'content-type')]
       var attachment = isAttachment(details.responseHeaders[Object.keys(details.responseHeaders).filter(k => k.toLowerCase() === 'content-disposition')])
 
-
       if (typeHeader instanceof Array && typeHeader.filter(t => t.includes('application/pdf')).length > 0 && details.url.indexOf('#pdfjs.action=download') === -1 && !attachment) {
-      // open in PDF viewer instead
+        // open in PDF viewer instead
         callback({ cancel: true })
         sendIPCToWindow(mainWindow, 'openPDF', {
           url: details.url,
@@ -218,7 +209,7 @@ function listenForDownloadHeaders (ses) {
       // It doesn't make much sense to have this here, but only one onHeadersReceived instance can be created per session
       const isFileView = typeHeader instanceof Array && !typeHeader.some(t => t.includes('text/html'))
 
-      sendIPCToDownloadWindow( 'set-file-view', {
+      sendIPCToDownloadWindow('set-file-view', {
         url: details.url,
         isFileView
       })
@@ -233,52 +224,80 @@ app.once('ready', function () {
   listenForDownloadHeaders(session.defaultSession)
 })
 
-
 app.on('session-created', function (session) {
   session.on('will-download', downloadHandler)
   listenForDownloadHeaders(session)
 })
 
+async function askInstall (manifestPath, crxInfo) {
+  const manifest = JSON.parse(
+    await promises.readFile(manifestPath, 'utf8'),
+  )
+  renderPage.openInstallExtension({ manifest, crxInfo ,manifestPath})
+}
 
+ipc.on('doInstallCrx', (event, args) => {
+  doInstallCrx(args.manifestPath,args.crxInfo)
+})
 
-
-
-async function installCrx(filePath){
-  const crxBuf = await promises.readFile(filePath);
-  const crxInfo = parseCrx(crxBuf);
-
-  if (!crxInfo.id) {
-    crxInfo.id = makeId(32);
-  }
-
-  const extensionsPath = join(userDataPath,'extensions')
-  const path = resolve(extensionsPath, crxInfo.id);
-  const manifestPath = resolve(path, 'manifest.json');
-
-  if (await pathExists(path)) {
-    return {
-      status:-1
-    }
-  }
-  await extractZip(crxInfo.zip, path);
-  const extension = await electron.session.fromPartition('persist:webcontent').loadExtension(path);
+async function doInstallCrx (manifestPath, crxInfo) {
+  const extensionsPath = join(userDataPath, 'extensions')
+  const tempPath = join(userDataPath, 'temp_extensions')
+  const tempCrxPath = resolve(tempPath, crxInfo.id)
+  let installPath = resolve(extensionsPath, crxInfo.id)
+  require('fs-extra').copySync(tempCrxPath,installPath)
+  const extension = await electron.session.fromPartition('persist:webcontent').loadExtension(installPath)
 
   if (crxInfo.publicKey) {
     const manifest = JSON.parse(
       await promises.readFile(manifestPath, 'utf8'),
-    );
+    )
 
-    manifest.key = crxInfo.publicKey.toString('base64');
+    manifest.key = crxInfo.publicKey.toString('base64')
     await promises.writeFile(
       manifestPath,
       JSON.stringify(manifest, null, 2),
-    );
-
+    )
     return {
-      status:1,
+      status: 1,
       extension
     }
-
-    // window.send('load-browserAction', extension);
   }
+
+
+}
+async function installCrx (filePath) {
+  const crxBuf = await promises.readFile(filePath)
+  const crxInfo = parseCrx(crxBuf)
+
+  if (!crxInfo.id) {
+    crxInfo.id = makeId(32)
+  }
+
+  //先解压到临时安装目录
+  const tempPath = join(userDataPath, 'temp_extensions')
+
+  const extensionsPath = join(userDataPath, 'extensions')
+  const path = resolve(extensionsPath, crxInfo.id)
+
+
+  if (await pathExists(path)) {
+    //插件已存在，阻止安装
+    sendMessage({ type: 'error', config: { content: '插件已存在。' } })
+    return
+  }
+  let tempCrxPath = resolve(tempPath, crxInfo.id)
+  if (!fs.existsSync(resolve(tempPath))) {
+    //不存在则创建一个临时目录
+    fs.mkdirSync(tempPath)
+  }
+  if (fs.existsSync(tempCrxPath)) {
+    //如果已经存在这个插件，直接删除掉这个插件的缓存
+    require('fs-extra').removeSync(tempCrxPath)
+  }
+
+  await extractZip(crxInfo.zip, tempCrxPath)//解压到临时目录
+  const manifestPath = resolve(tempCrxPath, 'manifest.json')
+  askInstall(manifestPath, crxInfo)
+  // window.send('load-browserAction', extension);
 }
