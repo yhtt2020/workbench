@@ -118,7 +118,7 @@
     "packagePrd": "npm run build && ./node_modules/.bin/electron-builder --config electron-builder-config-prd.yml --publish never",
     "packMacIntel": "npm run build && ./node_modules/.bin/electron-builder --mac --x64 --config electron-builder-config.yml --publish never",
     "postinstall": "./node_modules/.bin/electron-builder install-app-deps",
-    "packagePrdMacAll": "yarn run packagePrd --macos --x64 && yarn run packagePrd",
+    "packagePrdMacAll": "yarn run packagePrd --macos --x64 && yarn run packagePrd --macos --arm64",
     "gongzheng": "node ./scripts/justNotarize.js"
   },
   "repository": {
