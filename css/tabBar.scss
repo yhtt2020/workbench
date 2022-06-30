@@ -1,3 +1,68 @@
+.clip-tip{
+  position: absolute;
+  border-radius: 8px;
+  background: #3a8ee6;
+  /* padding: 0px; */
+  font-size: 12px;
+  color: white;
+  width: 100px;
+  text-align: center;
+  right: 6px;
+  border-radius: 30px;
+  /* border: 1px solid; */
+  box-shadow: 0 0 10px #3a8ee699;
+  height: 28px;
+}
+.sweep-light{
+  position: absolute;
+  left: 0;
+  right: 20px;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  pointer-events: none;
+  background-color: rgba(255,255,255,.4);
+  -webkit-border-radius: 100%;
+  -moz-border-radius: 100%;
+  -o-border-radius: 100%;
+  -ms-border-radius: 100%;
+  border-radius: 100%;
+  -webkit-animation-fill-mode: both;
+  -moz-animation-fill-mode: both;
+  -ms-animation-fill-mode: both;
+  -o-animation-fill-mode: both;
+  animation-fill-mode: both;
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  -webkit-animation: ball-scale 1s 0s ease-in-out infinite;
+  -moz-animation: ball-scale 1s 0s ease-in-out infinite;
+  -ms-animation: ball-scale 1s 0s ease-in-out infinite;
+  -o-animation: ball-scale 1s 0s ease-in-out infinite;
+  animation: ball-scale 1s 0s ease-in-out infinite;
+}
+@-webkit-keyframes ball-scale {
+  0% {
+    -webkit-transform: scale(0);
+    transform: scale(0)
+  }
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    opacity: 0
+  }
+}
+@keyframes ball-scale {
+  0% {
+    -webkit-transform: scale(0);
+    transform: scale(0)
+  }
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    opacity: 0
+  }
+}
 #navbar {
   display: flex;
   height: calc(36px + var(--control-space-top));
