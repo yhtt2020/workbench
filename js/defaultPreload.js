@@ -11,4 +11,26 @@ ipc.on('setActionListPartition',(event,args)=>{
 ipc.on('loadedExtensions',()=>{
   injectBrowserAction()
   window.actionListEl=document.getElementById('actions')
+  setTimeout(()=>{
+    updateHideExtensions()
+  },1000)
+})
+ipc.on('hideExtension',(event,args)=>{
+  updateHideExtensions()
+})
+function updateHideExtensions(){
+  ipc.invoke('getHideExtensions').then(data=>{
+    let childNodes= document.querySelector("#actions").shadowRoot.childNodes
+    childNodes.forEach(node=>{
+      let hide= data.some(hideExt=>{
+        return node.id===hideExt
+      })
+      node.hidden=hide
+    })
+
+    window.actionListEl=document.getElementById('actions').hidden=false
+  })
+}
+ipc.on('showExtension',(event,args)=>{
+  updateHideExtensions()
 })

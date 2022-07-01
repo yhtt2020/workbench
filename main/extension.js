@@ -6,7 +6,7 @@ const { makeId } = require('./js/main/string')
 const { pathExists } = require('./js/main/files')
 let browser
 let extensionsMenu = []
-let extensions=null
+let extensions = null
 let tabs = []
 let waitingSyncId = 0
 
@@ -15,10 +15,10 @@ class Browser {
 
   constructor (session) {
     this.session = session
-    if(extensions){
-      this.extensions=extensions
+    if (extensions) {
+      this.extensions = extensions
       sendIPCToWindow(mainWindow, 'loadedExtensions')
-    }else{
+    } else {
       this.init()
       require('electron').app.on('web-contents-created', this.onWebContentsCreated.bind(this))
     }
@@ -70,7 +70,7 @@ class Browser {
     this.extensions = new ElectronChromeExtensions({
       session: this.session,
 
-     // mainSession:require('electron').session.defaultSession,//提交一个主会话
+      // mainSession:require('electron').session.defaultSession,//提交一个主会话
       createTab: (details) => {
         waitingSyncId = Date.now()
         sendIPCToWindow(mainWindow, 'addTab', { url: details.url })
@@ -101,7 +101,7 @@ class Browser {
       },
     })
 
-    extensions=this.extensions
+    extensions = this.extensions
     const extensionPath = path.join(userDataPath, 'extensions')
     if (!fs.existsSync(extensionPath)) {
       fs.mkdirSync(extensionPath)
@@ -109,9 +109,8 @@ class Browser {
     const installedExtensions = await loadExtensions(
       this.session, extensionPath
     )
-    if(!require('electron').session.defaultSession.protocol.isProtocolRegistered('crx'))
+    if (!require('electron').session.defaultSession.protocol.isProtocolRegistered('crx'))
       this.extensions.setupProtocol(require('electron').session.defaultSession)
-
 
     // const extensions=new ElectronChromeExtensions({session:require('electron').session.defaultSession})
     // extensions.addTab(mainWindow.webContents, mainWindow)
@@ -274,7 +273,7 @@ async function doInstallCrx (manifestPath, crxInfo) {
   const tempPath = join(userDataPath, 'temp_extensions')
   const tempCrxPath = resolve(tempPath, crxInfo.id)
   let installPath = resolve(extensionsPath, crxInfo.id)
-  require('fs-extra').copySync(tempCrxPath,installPath)
+  require('fs-extra').copySync(tempCrxPath, installPath)
   const extension = await electron.session.fromPartition('persist:webcontent').loadExtension(installPath)
 
   if (crxInfo.publicKey) {
@@ -287,12 +286,12 @@ async function doInstallCrx (manifestPath, crxInfo) {
       manifestPath,
       JSON.stringify(manifest, null, 2),
     )
-    let content= '成功安装插件。'
-    sendMessage({type:'success',config:{content: content ,key:'extension'}})
+    let content = '成功安装插件。'
+    sendMessage({ type: 'success', config: { content: content, key: 'extension' } })
   }
 
-
 }
+
 async function installCrx (filePath) {
   const crxBuf = await promises.readFile(filePath)
   const crxInfo = parseCrx(crxBuf)
@@ -306,7 +305,6 @@ async function installCrx (filePath) {
 
   const extensionsPath = join(userDataPath, 'extensions')
   const path = resolve(extensionsPath, crxInfo.id)
-
 
   if (await pathExists(path)) {
     //插件已存在，阻止安装
@@ -329,28 +327,84 @@ async function installCrx (filePath) {
   // window.send('load-browserAction', extension);
 }
 
-app.whenReady().then(()=>{
-  ipc.on('showPopList',()=>{
+app.whenReady().then(() => {
+  ipc.on('hideExtension', (event, args) => {
+    let hideExtensions = configDb.dbInstance.get('hideExtensions').value()
+    if (!!!hideExtensions) {
+      configDb.dbInstance.set('hideExtensions', [args.baseName]).write()
+      return
+    }
+    if (hideExtensions && hideExtensions.indexOf(args.baseName) === -1) {
+      hideExtensions.push(args.baseName)
+      configDb.dbInstance.set('hideExtensions', hideExtensions).write()
+    }
+    sendIPCToWindow(mainWindow,'hideExtension',{baseName:args.baseName})
+
+  })
+  ipc.on('showExtension', (event, args) => {
+    let hideExtensions = configDb.dbInstance.get('hideExtensions').value()
+    if (hideExtensions && hideExtensions.indexOf(args.baseName) > -1) {
+      hideExtensions.splice(hideExtensions.indexOf(args.baseName), 1)
+      configDb.dbInstance.set('hideExtensions', hideExtensions).write()
+    }
+    sendIPCToWindow(mainWindow,'showExtension',{baseName:args.baseName})
+  })
+
+  ipc.handle('getHideExtensions', (event) => {
+    let hideBaseNames=configDb.dbInstance.get('hideExtensions').value()
+    let installed = require('electron').session.fromPartition('persist:webcontent').getAllExtensions()
+    let hideIds=[]
+    installed.forEach(ext=>{
+      ext.hide= hideBaseNames.some(hideExt=>{
+        return ext.path.indexOf(hideExt)>-1
+      })
+      if(ext.hide){
+       hideIds.push(ext.id)
+      }
+    })
+    return hideIds
+  })
+
+  ipc.handle('getInstalledExtensions', (event) => {
+    let installed = require('electron').session.fromPartition('persist:webcontent').getAllExtensions()
+    let hide = configDb.dbInstance.get('hideExtensions').value()
+    if (!!!hide) {
+      installed.forEach(ext => {
+        ext.hide = false
+      })
+    } else {
+      installed.forEach(ext => {
+        ext.hide = hide.some(hideBaseName => {
+          return ext.path.indexOf(hideBaseName) > -1
+        })
+      })
+    }
+
+    console.log(installed)
+    return installed
+  })
+
+  ipc.on('showPopList', () => {
     renderPage.openExtensionPopList()
   })
-  ipc.on('openExtShop',async (e,a)=>{
-    if(a.name==='chrome'){
-      sendIPCToWindow(mainWindow,'addTab',{url:'https://chrome.google.com/webstore/category/extensions'})
+  ipc.on('openExtShop', async (e, a) => {
+    if (a.name === 'chrome') {
+      sendIPCToWindow(mainWindow, 'addTab', { url: 'https://chrome.google.com/webstore/category/extensions' })
       mainWindow.focus()
-    }else if(a.name==="edge"){
-      sendIPCToWindow(mainWindow,'addTab',{url:'https://microsoftedge.microsoft.com/addons'})
+    } else if (a.name === 'edge') {
+      sendIPCToWindow(mainWindow, 'addTab', { url: 'https://microsoftedge.microsoft.com/addons' })
       mainWindow.focus()
-    }else{
+    } else {
       const files = dialog.showOpenDialogSync({
         userScriptWindow,
         filters: [
-          { name: '扩展插件', extensions: ['crx']}
+          { name: '扩展插件', extensions: ['crx'] }
         ], properties: ['openFile']
       })
-      if(!!!files){
+      if (!!!files) {
         return
       }
-      for(let i=0;i<files.length;i++){
+      for (let i = 0; i < files.length; i++) {
         await installCrx(files[i])
       }
     }

@@ -1,11 +1,11 @@
 <script lang="ts">
 import extension from '../../../src/util/extension'
-import {PlusOutlined,AppstoreAddOutlined,FolderOpenOutlined,ChromeOutlined,EyeOutlined,EllipsisOutlined} from '@ant-design/icons-vue '
+import {PlusOutlined,AppstoreAddOutlined,FolderOpenOutlined,ChromeOutlined,EyeOutlined,EllipsisOutlined,EyeInvisibleOutlined} from '@ant-design/icons-vue '
 const path=eval('require')('path')
 const fs=eval('require')('fs')
 export default {
   components:{
-    PlusOutlined,AppstoreAddOutlined,FolderOpenOutlined,ChromeOutlined,EyeOutlined,EllipsisOutlined
+    PlusOutlined,AppstoreAddOutlined,FolderOpenOutlined,ChromeOutlined,EyeOutlined,EllipsisOutlined,EyeInvisibleOutlined
   },
   data() {
     return {
@@ -13,21 +13,61 @@ export default {
       userDataPath:'',
       extensionPath:'',
       ipc:null,
+      installedExts:[]//已经加载的插件，这里和实际目录下的插件不一定对的起来，并且如果做了插件开关，这里的也可能少于实际的插件数。
     }
   },
   async mounted(){
     this.ipc= eval('require')('electron').ipcRenderer
+    const { injectBrowserAction } = eval('require')('electron-chrome-extensions/dist/browser-action.js')
+    this.installedExts=await this.ipc.invoke('getInstalledExtensions')
+    injectBrowserAction()
+
     this.exts=[]
     this.extensionPath=path.join(window.globalArgs['user-data-path'],'extensions')
     await  this.loadAllExtensions( this.extensionPath).then(data=>{
-     console.log(data)
       this.exts=[...data]
-     console.log(this.exts,this.exts.length)
+      this.exts.forEach((ext)=>{
+        let installed=this.installedExts.find(installedExt=>{
+          return installedExt.path.indexOf(ext.baseName)>-1
+        })
+        if(installed){
+          ext.id=installed.id //id不靠谱
+          ext.hide=installed.hide
+          ext.installed=true
+        }else{
+          ext.installed=false
+        }
+      })
     })
-
   },
   methods: {
+    getId(){
 
+    },
+    hide(ext){
+      // let id= this.getEl(index).getAttribute('id')\
+      ext.hide=true
+      this.ipc.send('hideExtension',{baseName:ext.baseName})
+    },
+    show(ext){
+      ext.hide=false
+      this.ipc.send('showExtension',{baseName:ext.baseName})
+    },
+    onClick(index){
+     this.getEl(index).click()
+    },
+    getEl(index){
+      let actionListEl=document.getElementById('actions')
+      console.log(actionListEl)
+      let shadow=actionListEl.shadowRoot
+      let btnEl= document.querySelector("#actions").shadowRoot.childNodes[index+1]
+      return  btnEl
+    },
+    // onContextMenu(index){
+    //  // this.getEl(index).contextmenu()
+    //   this.getEl(index).dispatchEvent(new MouseEvent('contextmenu', { 'bubbles': true ,clientXArg:333,clientYArg:333 }))
+    //   //document.getElementById(id).context()
+    // },
     loadAllExtensions:extension.loadAllExtensions,
 
     openShop(name='chrome'){
@@ -70,10 +110,11 @@ export default {
     </h3>
     <div class="scroller-wrapper plugins-list" style="padding: 10px;padding-top: 0;padding-bottom: 0">
 
-
+      <browser-action-list style="display: none" partition="persist:webcontent" id="actions"></browser-action-list>
 
       <a-empty description="暂无插件" v-if="exts.length===0" style="margin-top: 80px"></a-empty>
-      <a-row class="item-line" v-else v-for="ext in exts">
+      <a-row @click="onClick(index)" class="item-line" v-else v-for="(ext,index) in exts">
+<!--         @contextmenu="onContextMenu(index)"-->
         <a-col style="width: 50px;text-align: center">
           <a-avatar :src="'file://'+ext.displayIcon"></a-avatar>
         </a-col>
@@ -84,7 +125,9 @@ export default {
         </a-col>
         <a-col style="width: 120px;text-align: right">
           <div>
-            <a-button type="text"> <eye-outlined /></a-button> <a-button type="text"><ellipsis-outlined /></a-button>
+            <a-button v-if="!ext.hide" type="text" @click.stop="hide(ext)"> <eye-outlined /></a-button>
+            <a-button style="color: red" v-else type="text" @click.stop="show(ext)"> <EyeInvisibleOutlined /></a-button>
+            <a-button type="text"><ellipsis-outlined /></a-button>
           </div>
         </a-col>
       </a-row>

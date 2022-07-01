@@ -79,7 +79,8 @@ const extension ={
       let extensionInfo = JSON.parse(
         await promises.readFile(manifestPath, 'utf8'),
       )
-
+      extensionInfo.path=dir
+      extensionInfo.baseName=path.basename(dir)
       extensionInfo.localeName=extension.getName(extensionInfo,dir)
       extensionInfo.displayIcon=extension.getIcon(extensionInfo,dir)
       return extensionInfo
