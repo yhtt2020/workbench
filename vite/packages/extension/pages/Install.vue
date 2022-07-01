@@ -1,5 +1,5 @@
 <script lang="ts">
-import extentsion  from '../../../src/util/extension.js'
+import extension  from '../../../src/util/extension.js'
 export default {
   data() {
     return {
@@ -34,7 +34,7 @@ export default {
 
   },
   methods: {
-    convertPermissionsToText:extentsion.convertPermissionsToText,
+    convertPermissionsToText:extension.convertPermissionsToText,
     close(){
       eval('require')('electron').ipcRenderer.send('closeSelf')
     },

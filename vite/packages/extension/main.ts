@@ -22,7 +22,6 @@ const router=createRouter({
   routes
 })
 ipc.invoke('getPopCallerId').then((data)=>{
-  console.log(data)
   window.callerId=data
 })
 tools.getWindowArgs(window).globalArgs

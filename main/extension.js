@@ -1,4 +1,9 @@
 const { ElectronChromeExtensions } = require('electron-chrome-extensions')
+const parseCrx = require('./js/main/crx.js')
+const extractZip = require('./js/main/zip.js')
+const { getPath } = require('./js/main/paths')
+const { makeId } = require('./js/main/string')
+const { pathExists } = require('./js/main/files')
 let browser
 let extensionsMenu = []
 let extensions=null
@@ -264,6 +269,65 @@ const getParentWindowOfTab = (tab) => {
   }
 }
 
+async function doInstallCrx (manifestPath, crxInfo) {
+  const extensionsPath = join(userDataPath, 'extensions')
+  const tempPath = join(userDataPath, 'temp_extensions')
+  const tempCrxPath = resolve(tempPath, crxInfo.id)
+  let installPath = resolve(extensionsPath, crxInfo.id)
+  require('fs-extra').copySync(tempCrxPath,installPath)
+  const extension = await electron.session.fromPartition('persist:webcontent').loadExtension(installPath)
+
+  if (crxInfo.publicKey) {
+    const manifest = JSON.parse(
+      await promises.readFile(manifestPath, 'utf8'),
+    )
+
+    manifest.key = crxInfo.publicKey.toString('base64')
+    await promises.writeFile(
+      manifestPath,
+      JSON.stringify(manifest, null, 2),
+    )
+    let content= '成功安装插件。'
+    sendMessage({type:'success',config:{content: content ,key:'extension'}})
+  }
+
+
+}
+async function installCrx (filePath) {
+  const crxBuf = await promises.readFile(filePath)
+  const crxInfo = parseCrx(crxBuf)
+
+  if (!crxInfo.id) {
+    crxInfo.id = makeId(32)
+  }
+
+  //先解压到临时安装目录
+  const tempPath = join(userDataPath, 'temp_extensions')
+
+  const extensionsPath = join(userDataPath, 'extensions')
+  const path = resolve(extensionsPath, crxInfo.id)
+
+
+  if (await pathExists(path)) {
+    //插件已存在，阻止安装
+    sendMessage({ type: 'error', config: { content: '插件已存在。' } })
+    return
+  }
+  let tempCrxPath = resolve(tempPath, crxInfo.id)
+  if (!fs.existsSync(resolve(tempPath))) {
+    //不存在则创建一个临时目录
+    fs.mkdirSync(tempPath)
+  }
+  if (fs.existsSync(tempCrxPath)) {
+    //如果已经存在这个插件，直接删除掉这个插件的缓存
+    require('fs-extra').removeSync(tempCrxPath)
+  }
+
+  await extractZip(crxInfo.zip, tempCrxPath)//解压到临时目录
+  const manifestPath = resolve(tempCrxPath, 'manifest.json')
+  askInstall(manifestPath, crxInfo)
+  // window.send('load-browserAction', extension);
+}
 
 app.whenReady().then(()=>{
   ipc.on('showPopList',()=>{

@@ -175,6 +175,16 @@
                 </span>
             </div>
             <browser-action-list partition="persist:webcontent" id="actions"></browser-action-list>
+            <div class="action-wrapper" >
+              <span onclick="ipc.send('openScriptManager')" title="管理脚本插件" id="userscript-toolbar"><img class="action app" src="./icons/toolbar/apps/code.svg">
+              <span hidden title="当前页面有3个脚本正在启用" class="bandage" id="scriptCount">3</span>
+              </span>
+            </div>
+            <div class="action-wrapper" >
+                <span onclick="ipc.send('showPopList')" title="管理插件" id="plugin-toolbar"><img class="action" src="./icons/toolbar/list.svg">
+                </span>
+            </div>
+
             <div class="action-wrapper" style="text-align: center;width: 18px;margin-left: 5px">
               <div style="margin-right:8px;border-right: 1px solid #cacaca;display: inline-block;height: 16px;vertical-align: middle;width: 0;margin-top: -3px"></div>
             </div>
@@ -197,11 +207,7 @@
                 </span>
               </div>
 
-            <div class="action-wrapper" >
-              <span onclick="ipc.send('openScriptManager')" title="管理脚本插件" id="userscript-toolbar"><img class="action app" src="./icons/toolbar/apps/code.svg">
-              <span hidden title="当前页面有3个脚本正在启用" class="bandage" id="scriptCount">3</span>
-              </span>
-            </div>
+
             <div class="action-wrapper">
               <img title="收起地址栏，使用精简模式"  id="collapse-button-toolbar" class="action "  src="./icons/toolbar/chevronsup.svg">
              </div>

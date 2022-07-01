@@ -1,30 +1,35 @@
 <script lang="ts">
-import tools from '../../../src/util/tools'
-import {PlusOutlined,AppstoreAddOutlined,FolderOpenOutlined} from '@ant-design/icons-vue '
+import extension from '../../../src/util/extension'
+import {PlusOutlined,AppstoreAddOutlined,FolderOpenOutlined,ChromeOutlined,EyeOutlined,EllipsisOutlined} from '@ant-design/icons-vue '
+const path=eval('require')('path')
+const fs=eval('require')('fs')
 export default {
   components:{
-    PlusOutlined,AppstoreAddOutlined,FolderOpenOutlined
+    PlusOutlined,AppstoreAddOutlined,FolderOpenOutlined,ChromeOutlined,EyeOutlined,EllipsisOutlined
   },
   data() {
     return {
-      manifest:{
-        icon:'',
-        permissions:[]
-      },
+      exts:[],
       userDataPath:'',
-      manifestPath:'',
-      crxInfo:[],
-      id:'',
-      name:'',
-      permissionText:[],
-      savePath:'',
+      extensionPath:'',
       ipc:null,
     }
   },
-  mounted(){
+  async mounted(){
     this.ipc= eval('require')('electron').ipcRenderer
+    this.exts=[]
+    this.extensionPath=path.join(window.globalArgs['user-data-path'],'extensions')
+    await  this.loadAllExtensions( this.extensionPath).then(data=>{
+     console.log(data)
+      this.exts=[...data]
+     console.log(this.exts,this.exts.length)
+    })
+
   },
   methods: {
+
+    loadAllExtensions:extension.loadAllExtensions,
+
     openShop(name='chrome'){
       ipc.send('openExtShop',{
         name
@@ -64,26 +69,27 @@ export default {
 
     </h3>
     <div class="scroller-wrapper plugins-list" style="padding: 10px">
-      <a-row>
-        <a-col style="width: 50px">
-          <a-avatar :src="savePath+icon"></a-avatar>
+      <a-empty description="暂无插件" v-if="exts.length===0" style="margin-top: 80px"></a-empty>
+      <a-row class="item-line" v-else v-for="ext in exts">
+        <a-col style="width: 50px;text-align: center">
+          <a-avatar :src="'file://'+ext.displayIcon"></a-avatar>
         </a-col>
-        <a-col style="width: 120px">
-          <p>
-            <strong> 谷歌翻译 </strong>
-          </p>
+        <a-col style="width: 130px">
+          <div>
+            <strong> {{ext.localeName}} </strong>
+          </div>
         </a-col>
-        <a-col style="width: 130px;text-align: right">
-          <p>
-            眼睛 按钮
-          </p>
+        <a-col style="width: 120px;text-align: right">
+          <div>
+            <a-button type="text"> <eye-outlined /></a-button> &nbsp; <a-button type="text"><ellipsis-outlined /></a-button>
+          </div>
         </a-col>
       </a-row>
     </div>
 
     <div style="text-align: right;padding-top:10px;width: 100%;border-top: 1px solid #f1f1f1">
       <a-row type="flex">
-        <a-col style="text-align: center" flex="50"><a-button @click="openShop('chrome')" type="primary">去Chrome商店安装</a-button></a-col>
+        <a-col style="text-align: center" flex="50"><a-button @click="openShop('chrome')" type="text"><ChromeOutlined/> 去Chrome商店安装</a-button></a-col>
 <!--        <a-col style="text-align: center" flex="50"><a-button @click="setup" type="primary">去Edge商店安装</a-button></a-col>-->
       </a-row>
     </div>
@@ -121,5 +127,11 @@ export default {
         background: #f6f6f6;
       }
     }
-
+    .item-line{
+      border-radius: 4px;
+      &:hover{
+        background: #f1f1f1;
+      }
+      padding: 8px;
+    }
 </style>
