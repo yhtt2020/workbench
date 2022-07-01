@@ -1,5 +1,5 @@
 <script lang="ts">
-import tools from '../../../src/util/tools'
+import extentsion  from '../../../src/util/extension.js'
 export default {
   data() {
     return {
@@ -17,7 +17,7 @@ export default {
     }
   },
   mounted(){
-   let args=  tools.getWindowArgs(window).globalArgs
+   let args=  window.globalArgs
     this.userDataPath=args['user-data-path']
    eval('require')('electron').ipcRenderer.invoke('getPopArgs').then(data=>{
      this.manifest=data.manifest
@@ -28,57 +28,17 @@ export default {
      this.extensionPath=this.userDataPath+'/temp_extensions/'+this.id+'/'
      let icons=Object.values(this.manifest.icons)
      this.icon=icons[icons.length-1]
-     this.convertToText()
+     this.permissionText=this.convertPermissionsToText(this.manifest.permissions)
      this.getName()
     })
 
   },
   methods: {
+    convertPermissionsToText:extentsion.convertPermissionsToText,
     close(){
       eval('require')('electron').ipcRenderer.send('closeSelf')
     },
-    convertToText(){
-      this.permissionText= this.manifest.permissions.map(p=>{
-        switch (p){
-          case 'activeTab':
-            return '激活标签'
-          case 'contextMenus':
-            return '网页菜单'
-          case 'storage':
-            return '存储'
-          case "clipboardWrite":
-            return '读写剪切板'
-          case 'unlimitedStorage':
-            return '完全存储'
-          case "notifications":
-            return '消息通知'
-          case 'webRequest':
-            return '网络请求'
-          case 'webRequestBlocking':
-            return '网络请求拦截'
-          case 'tabs':
-            return '标签管理'
-          case 'cookies':
-            return 'cookies管理'
-          case 'declarativeContent':
-            return '声明内容'
-          case '<all_urls>':
-            return '全部网页'
-          case 'webNavigation':
-            return '网页导航'
-          case 'background':
-            return '后台'
-          case 'pageCapture':
-            return '网页截图'
-          case 'printerProvider':
-            return '打印'
-          case 'identity':
-            return '身份'
-          default :
-            return p
-        }
-      })
-    },
+
     getName(){
       const fs=eval('require')('fs')
       const path=eval('require')('path')

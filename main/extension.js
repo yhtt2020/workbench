@@ -266,6 +266,9 @@ const getParentWindowOfTab = (tab) => {
 
 
 app.whenReady().then(()=>{
+  ipc.on('showPopList',()=>{
+    renderPage.openExtensionPopList()
+  })
   ipc.on('openExtShop',async (e,a)=>{
     if(a.name==='chrome'){
       sendIPCToWindow(mainWindow,'addTab',{url:'https://chrome.google.com/webstore/category/extensions'})
