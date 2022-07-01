@@ -68,26 +68,29 @@ export default {
       </a-dropdown>
 
     </h3>
-    <div class="scroller-wrapper plugins-list" style="padding: 10px">
+    <div class="scroller-wrapper plugins-list" style="padding: 10px;padding-top: 0;padding-bottom: 0">
+
+
+
       <a-empty description="暂无插件" v-if="exts.length===0" style="margin-top: 80px"></a-empty>
       <a-row class="item-line" v-else v-for="ext in exts">
         <a-col style="width: 50px;text-align: center">
           <a-avatar :src="'file://'+ext.displayIcon"></a-avatar>
         </a-col>
-        <a-col style="width: 130px">
+        <a-col style="width: 138px">
           <div>
             <strong> {{ext.localeName}} </strong>
           </div>
         </a-col>
         <a-col style="width: 120px;text-align: right">
           <div>
-            <a-button type="text"> <eye-outlined /></a-button> &nbsp; <a-button type="text"><ellipsis-outlined /></a-button>
+            <a-button type="text"> <eye-outlined /></a-button> <a-button type="text"><ellipsis-outlined /></a-button>
           </div>
         </a-col>
       </a-row>
     </div>
 
-    <div style="text-align: right;padding-top:5px;width: 100%;border-top: 1px solid #f1f1f1">
+    <div style="text-align: right;padding-top:0px;width: 100%;border-top: 1px solid #f1f1f1">
       <a-row type="flex">
         <a-col style="text-align: center" flex="50"><a-button @click="openShop('chrome')" type="text"><ChromeOutlined/> 去Chrome商店安装</a-button></a-col>
 <!--        <a-col style="text-align: center" flex="50"><a-button @click="setup" type="primary">去Edge商店安装</a-button></a-col>-->
@@ -102,7 +105,7 @@ export default {
     }
     .plugins-list{
       overflow-y: auto;
-      height: calc(100vh - 110px);
+      height: calc(100vh - 90px);
     }
     .scroller-wrapper{
       &::-webkit-scrollbar {
