@@ -87,7 +87,7 @@ export default {
       </a-row>
     </div>
 
-    <div style="text-align: right;padding-top:10px;width: 100%;border-top: 1px solid #f1f1f1">
+    <div style="text-align: right;padding-top:5px;width: 100%;border-top: 1px solid #f1f1f1">
       <a-row type="flex">
         <a-col style="text-align: center" flex="50"><a-button @click="openShop('chrome')" type="text"><ChromeOutlined/> 去Chrome商店安装</a-button></a-col>
 <!--        <a-col style="text-align: center" flex="50"><a-button @click="setup" type="primary">去Edge商店安装</a-button></a-col>-->
@@ -101,7 +101,8 @@ export default {
       overflow: hidden;
     }
     .plugins-list{
-      height: calc(100vh - 115px);
+      overflow-y: auto;
+      height: calc(100vh - 110px);
     }
     .scroller-wrapper{
       &::-webkit-scrollbar {
