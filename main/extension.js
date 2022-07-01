@@ -352,6 +352,9 @@ app.whenReady().then(() => {
 
   ipc.handle('getHideExtensions', (event) => {
     let hideBaseNames=configDb.dbInstance.get('hideExtensions').value()
+    if(!!!hideBaseNames){
+      hideBaseNames=[]
+    }
     let installed = require('electron').session.fromPartition('persist:webcontent').getAllExtensions()
     let hideIds=[]
     installed.forEach(ext=>{
