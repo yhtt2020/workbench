@@ -235,7 +235,9 @@ async function askInstall (manifestPath, crxInfo) {
   )
   renderPage.openInstallExtension({ manifest, crxInfo ,manifestPath})
 }
-
+ipc.on('installCrx',(event,args)=>{
+  installCrx(args.path)
+})
 ipc.on('doInstallCrx', (event, args) => {
   doInstallCrx(args.manifestPath,{
     id:args.crxInfo.id,

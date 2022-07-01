@@ -111,7 +111,7 @@
           </div>
 
 
-          <div id="downloadDone"  v-for="(doneList,index) in doneLists"  style="margin-top: 10px"  v-bind:key="index"  @click.stop="change(index)" @dblclick="openFileHandler(index)" @contextmenu="menuDone(index)"  :class="{active : active === index,
+          <div id="downloadDone"  v-for="(doneList,index) in doneLists"  style="margin-top: 10px"  v-bind:key="index"  @click.stop="change(index)" @dblclick="openFileHandler(doneList,index)" @contextmenu="menuDone(index)"  :class="{active : active === index,
          clickActive:clickActive===index}"
                @mouseover="mouseOver(index)"
                @mouseleave="mouseLeave">
@@ -162,7 +162,7 @@
                   </a-modal>
                 </div>
 
-              <a-button style="position: absolute;margin-left: 300px;margin-top: 5px;cursor:pointer;" type="link" @click="openFileHandler(index)" >
+              <a-button style="position: absolute;margin-left: 300px;margin-top: 5px;cursor:pointer;" type="link" @click="openFileHandler(doneList,index)" >
                 打开
               </a-button>
 <!--                <a-button style="position: absolute;margin-left: 290px;margin-top: 5px;cursor:pointer;" type="link" @click="showFileHandler(index)" >-->
@@ -237,7 +237,11 @@
     const {shell} = require('electron')
     fs.exists(appVue.selectList.path, function (flag) {
       if (flag) {
-        shell.openPath(appVue.selectList.path)
+        if(require('path').extname(appVue.selectList.path)==='.crx'){
+          ipcRenderer.send('installCrx',{path:appVue.selectList.path})
+        }else{
+          shell.openPath(appVue.selectList.path)
+        }
       } else {
         appVue.$message.info('文件已被删除或位置被移动', 1)
         db.download.delete(appVue.selectList.startTime)
@@ -640,17 +644,22 @@
         this.lists[index].loadState = true
       },
 
-      openFileHandler(index) {
+      openFileHandler(file,index) {
         // const {shell} = require('electron')
         // shell.openPath(this.doneLists[index].path)
         const {shell} = require('electron')
-        fs.exists(this.doneLists[index].path, function (flag) {
+        let filePath=file.path
+        fs.exists(filePath, function (flag) {
           if (flag) {
-            shell.openPath(appVue.doneLists[index].path)
+            if(require('path').extname(filePath)==='.crx'){
+                ipcRenderer.send('installCrx',{path:filePath})
+            }else{
+              shell.openPath(filePath)
+            }
           } else {
             appVue.$message.info('文件已被删除或位置被移动', 1)
-            db.download.delete(appVue.doneLists[index].startTime)
-            appVue.doneLists.splice(appVue.doneLists.indexOf(appVue.selectList), 1)
+            db.download.delete(file.startTime)
+            appVue.doneLists.splice(index, 1)
             appVue.listDoneCount--
           }
         })
