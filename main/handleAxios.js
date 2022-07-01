@@ -228,6 +228,9 @@ app.whenReady().then(()=>{
   ipc.on('activeComplete', (event, args) => {
     afterGuide(`guideSchedule.modules.${args.moduleName}.${args.childName}`)
   })
+  ipc.on('enterFirstGuide',(item,window)=>{
+    sendIPCToWindow(window, 'enterFirstGuide')
+  })
 
   let firstGuideVideo
   ipc.on('firstGuideVideo', () => {
@@ -403,6 +406,8 @@ app.whenReady().then(()=>{
   ipc.on('exitGuide',(item,window)=>{
     sendIPCToWindow(window, 'exitGuide')
   })
+
+
 
   ipc.on('guideLogin',()=>{
     SidePanel.send('guideLogin')
