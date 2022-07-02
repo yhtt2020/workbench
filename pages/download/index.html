@@ -287,7 +287,8 @@
     }
 
     if (args.status === 'completed' && args.path !== '') {
-      // ipcRenderer.send('emptyPageUrl',args.chainUrl)
+     ipcRenderer.send('inform')
+      ipcRenderer.send('emptyPageUrl',args.chainUrl)
       const myDate = new Date();
       appVue.doneList.forEach(item=>{
         if(item.startTime===args.startTime){
