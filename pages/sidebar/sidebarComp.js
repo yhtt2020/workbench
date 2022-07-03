@@ -590,7 +590,10 @@ const sidebarTpl = /*html*/`
                   </div>
 
 </template>
- <div>
+<div style="padding: 10px">
+
+
+ <div >
                     <span @click.stop="editTaskName(item)" class="task-title">      <a-icon :id="'editTip'+item.id" class="edit-tip" type="edit"></a-icon> <span class="text"
                         :id="'taskTitle'+item.id">{{ item.count > 5 ? item.title + ' -- 高负载（5+）' : item.title }}
                       </span>
@@ -631,6 +634,7 @@ const sidebarTpl = /*html*/`
                         </span>
                       </li>
                     </ul>
+                    </div>
 </tippy>
 <!--                <a-popover placement="right" :mouse-enter-delay="0.1" :mouse-leave-delay="0.2"-->
 <!--                  :overlay-style="{'width':'305px','height':item.tabs.length*30+50+'px'}" overlay-class-name="tips">-->
