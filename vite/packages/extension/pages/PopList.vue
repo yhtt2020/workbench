@@ -130,6 +130,9 @@ export default {
         name
       })
     },
+    installFold(){
+      ipc.send('installExtensionFolder')
+    },
     close() {
       eval('require')('electron').ipcRenderer.send('closeSelf')
     },
@@ -158,7 +161,7 @@ export default {
               <appstore-add-outlined/>
               安装crx插件
             </a-menu-item>
-            <a-menu-item key="2">
+            <a-menu-item key="2" @click="installFold('crx')">
               <folder-open-outlined/>
               加载解压缩的插件
             </a-menu-item>
