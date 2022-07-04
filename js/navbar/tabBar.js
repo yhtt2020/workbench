@@ -69,9 +69,7 @@ const tabBar = {
         } else {
           needDestroy.push(tab.id)
         }
-
       }
-
     })
     tabBar.closeTabsById(needDestroy, lockCount)
     //$store.getters.fillTasksToItems
@@ -463,6 +461,13 @@ const tabBar = {
           }
         ],
         [
+          {
+            id:'duplicateTab',
+            label:'复制标签',
+            click:function(){
+              require('browserUI.js').duplicateTab(tabs.get(data.id))
+            }
+          },
           {
             id: 'lockTab',
             label: tabs.get(data.id).lock === true ? '解锁标签' : '锁定标签',
