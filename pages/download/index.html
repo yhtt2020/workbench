@@ -11,6 +11,21 @@
 <body>
 
 <div id="appVue">
+  <div>
+    <a-modal v-model="visible" title="删除下载任务" ok-text="确认" cancel-text="取消" @ok="hideModalDone()">
+      <p>文件下载已完成，确认删除</p>
+      <a-checkbox @change="doneChange">
+        同时删除下载文件
+      </a-checkbox>
+    </a-modal>
+  </div>
+  <div>
+    <a-modal v-model="visibleIng" title="删除下载任务" ok-text="确认" cancel-text="取消" @ok="hideModal()">
+      <p>文件正在下载中，确认删除</p>
+    </a-modal>
+  </div>
+
+
   <template>
     <div class="toggle">
       <a-tabs default-active-key="1" @change="callback" >
@@ -33,15 +48,6 @@
             <div style="margin-top: 0;width: 100%;height: 55px;">
               <div style="width: 34px;height: 40px;position: absolute;margin-top: 8px;margin-left: 5px; user-select:none" >
                 <img :src="url=(`./icon/${matchFileSuffixType(item.name)}.svg`)" style="height: 100%;width: 100%"/>
-              </div>
-
-              <div>
-<!--                <a-button type="link" style="float: right" @click="showModal(list.id)">-->
-<!--                  删除-->
-<!--                </a-button>-->
-                <a-modal v-model="visibleIng" title="删除下载任务" ok-text="确认" cancel-text="取消" @ok="hideModal()">
-                  <p>文件正在下载中，确认删除</p>
-                </a-modal>
               </div>
               <div v-if="item.status === 'progressing'" >
                 <div v-if="item.loadState" >
@@ -76,7 +82,6 @@
             <a-empty description="暂无完成任务" style="user-select:none" ></a-empty>
           </div>
 
-
           <div class="downloadDone"  v-for="(item,index) in doneList"  style="margin-top: 10px"  v-bind:key="index"  @click.stop="change(index)" @dblclick="openFileHandler(item)" @contextmenu="menuDone(item,index)"  :class="{active : active === index,
          clickActive:clickActive===index}"
                @mouseover="mouseOver(index)"
@@ -85,14 +90,6 @@
               <div style="width: 34px;height: 40px;position: absolute;margin-top: 4px;margin-left: 10px; user-select:none" >
                 <img :src="url=(`./icon/${matchFileSuffixType(item.name)}.svg`)" style="height: 100%;width: 100%"/>
               </div>
-                <div>
-                  <a-modal v-model="visible" title="删除下载任务" ok-text="确认" cancel-text="取消" @ok="hideModalDone()">
-                    <p>文件下载已完成，确认删除</p>
-                    <a-checkbox @change="doneChange">
-                      同时删除下载文件
-                    </a-checkbox>
-                  </a-modal>
-                </div>
 
               <a-button style="position: absolute;margin-left: 300px;margin-top: 5px;cursor:pointer;" type="link" @click="openFileHandler(item)" >
                 打开
@@ -308,7 +305,6 @@
         href:args.href,
         suffixal:path.extname(args.name)
       })
-      console.log(appVue.doneList)
       appVue.listCount--
       appVue.count--
       appVue.listDoneCount++
