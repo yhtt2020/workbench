@@ -17,60 +17,60 @@ export function matchFileSuffixType(fileName) {
 
   var typeList = [
     {
-      type:'html',
-      suffixList:['html','js','php','java','json','css']
+      name:'html',
+      exts:['html','js','php','java','json','css']
     },
     {
-      type:'exe',
-      suffixList:['exe']
+      name:'exe',
+      exts:['exe']
     },
     {
-      type:'excel',
-      suffixList:['xls','xlsx']
+      name:'excel',
+      exts:['xls','xlsx']
     },
     {
-      type:'ai',
-      suffixList:['ai']
+      name:'ai',
+      exts:['ai']
     },
     {
-      type:'gif',
-      suffixList:['gif']
+      name:'gif',
+      exts:['gif']
     },
     {
-      type:'jpg',
-      suffixList:['webp', 'jpg', 'jpeg', 'svg']
+      name:'jpg',
+      exts:['webp', 'jpg', 'jpeg', 'svg']
     },
     {
-      type:'zip',
-      suffixList:['zip','rar','jar','7z','tar','gzip']
+      name:'zip',
+      exts:['zip','rar','jar','7z','tar','gzip']
     },
     {
-      type:'txt',
-      suffixList:['txt']
+      name:'txt',
+      exts:['txt']
     },
     {
-      type:'video',
-      suffixList:['mp4', 'm2v', 'mkv','avi','rmvb']
+      name:'video',
+      exts:['mp4', 'm2v', 'mkv','avi','rmvb']
     },
     {
-      type:'doc',
-      suffixList:['doc','docx']
+      name:'doc',
+      exts:['doc','docx']
     },
     {
-      type:'mp3',
-      suffixList:['mp3', 'wav', 'wmv','aac']
+      name:'mp3',
+      exts:['mp3', 'wav', 'wmv','aac']
     },
     {
-      type:'png',
-      suffixList:['png', 'apng', 'psd']
+      name:'png',
+      exts:['png', 'apng', 'psd']
     },
   ]
   for (let i = 0; i < typeList.length; i++) {
-    result = typeList[i].suffixList.some(function (item) {
+    result = typeList[i].exts.some(function (item) {
         return item == suffix
       })
       if (result) {
-        result = typeList[i].type
+        result = typeList[i].name
         return result
       }
   }
