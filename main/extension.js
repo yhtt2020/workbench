@@ -394,6 +394,9 @@ app.whenReady().then(() => {
     if (a.name === 'chrome') {
       sendIPCToWindow(mainWindow, 'addTab', { url: 'https://chrome.google.com/webstore/category/extensions' })
       mainWindow.focus()
+    }else if(a.name==='crxsoso'){
+      sendIPCToWindow(mainWindow, 'addTab', { url: 'https://www.crxsoso.com/' })
+      mainWindow.focus()
     } else if (a.name === 'edge') {
       sendIPCToWindow(mainWindow, 'addTab', { url: 'https://microsoftedge.microsoft.com/addons' })
       mainWindow.focus()
