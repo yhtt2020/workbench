@@ -12,7 +12,6 @@ const extension ={
         return false
       }
     }
-    console.log(dir)
     const subDirectories = fs.readdirSync(dir, {
       withFileTypes: true,
     })

@@ -52,7 +52,6 @@ export default {
   },
   methods: {
     remove(ext){
-      console.log(ext)
       Modal.confirm({
         title: '确认卸载插件？',
         icon: createVNode(ExclamationCircleOutlined),
@@ -61,7 +60,6 @@ export default {
         okType: 'danger',
         cancelText: '取消',
         onOk:() =>{
-          console.log('removeExtension',ext.baseName)
           this.ipc.send('removeExtension',{baseName:ext.baseName})
         },
         onCancel() {
@@ -135,9 +133,6 @@ export default {
       }
       eval('require')('electron').ipcRenderer.send('doInstallCrx', args)
       eval('require')('electron').ipcRenderer.send('closeSelf', args)
-    },
-    getContainer(){
-      return document.getElementById('extensionList')
     }
   }
 }
@@ -145,7 +140,6 @@ export default {
 
 <template>
   <div class="card-container" style="padding:0px;overflow: hidden">
-
     <h3 style="padding:10px;border-bottom: 1px solid #f1f1f1">快速管理插件
       <a-dropdown>
         <template #overlay>
@@ -194,7 +188,7 @@ export default {
             <a-button title="当前：不显示到工具栏" style="color: red" v-else type="text" @click.stop="show(ext)">
               <EyeInvisibleOutlined/>
             </a-button>
-            <a-dropdown :getPopupContainer="getContainer" @click.stop="()=>{}">
+            <a-dropdown @click.stop="()=>{}">
               <template #overlay>
                 <a-menu>
                   <a-menu-item key="remove" @click="remove(ext)">
