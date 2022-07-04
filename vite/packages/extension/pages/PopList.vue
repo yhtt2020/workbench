@@ -67,6 +67,9 @@ export default {
       });
     },
     changeEnable(ext){
+      if(ext.enable===true){
+        ext.hide=false
+      }
       this.ipc.send('setExtensionEnable',{baseName:ext.baseName,enable:ext.enable})
     },
     async getList() {
@@ -188,7 +191,7 @@ export default {
           <a-switch @change="changeEnable(ext)" title="是否启用" v-model:checked="ext.enable" size="small"></a-switch>
         </a-col>
         <a-col style="width: 120px;text-align: right">
-          <div>
+          <div v-show="ext.enable">
             <a-button title="当前：显示到工具栏" v-if="!ext.hide" type="text" @click.stop="hide(ext)">
               <eye-outlined/>
             </a-button>

@@ -383,7 +383,7 @@ app.whenReady().then(() => {
   ipc.handle('getInstalledExtensions', (event) => {
     let installed = require('electron').session.fromPartition('persist:webcontent').getAllExtensions()
     let hide = configDb.dbInstance.get('hideExtensions').value()
-    if (!!!hide) {
+    if (!!!hide) { //如果没有隐藏的，所有的都不是hide
       installed.forEach(ext => {
         ext.hide = false
       })
@@ -436,10 +436,12 @@ app.whenReady().then(() => {
     })
   })
   ipc.on('removeExtension', (event, args) => {
+    console.log('removeExtension')
     extensionManager.remove(args.baseName)
   })
   ipc.on('setExtensionEnable', (event, args) => {
     extensionManager.setEnable(args.baseName, args.enable)
+
   })
 })
 
@@ -464,6 +466,10 @@ const extensionManager = {
       this.config.setEnable(baseName)
       sendIPCToWindow(mainWindow, 'loadedExtensions')
       messager.success({ content: '已为您启用插件，您可能需要刷新网页方可正常使用。' })
+      // setTimeout(()=>{
+      //   renderPage.sendIPC('extensionList', 'reload')
+      // },200)
+
     }
   },
   /**
@@ -500,15 +506,16 @@ const extensionManager = {
    */
   remove (baseName) {
     extensionManager.unloadAllSessionExtension(baseName, (ext) => {
-      this.config.clearHide(baseName)
-      require('fs-extra').remove(ext.path).then(() => {
-        sendIPCToWindow(mainWindow, 'removeExtension', { id: ext.id })
-        renderPage.sendIPC('extensionList', 'reload')
-        sendMessage({
-          type: 'success', config: {
-            content: '卸载插件"' + ext.name + '"成功。'
-          }
-        })
+      sendIPCToWindow(mainWindow, 'removeExtension', { id: ext.id })
+    })
+    this.config.clearHide(baseName)//清理
+    this.config.setEnable(baseName)//清理
+    require('fs-extra').remove(path.join(this.extensionsPath,baseName)).then(() => {
+      renderPage.sendIPC('extensionList', 'reload')
+      sendMessage({
+        type: 'success', config: {
+          content: '卸载插件"' + ext.name + '"成功。'
+        }
       })
     })
   },
@@ -519,6 +526,7 @@ const extensionManager = {
      */
     setDisable (baseName) {
       let disableExtensions = configDb.dbInstance.get('disableExtensions').value()
+      this.clearHide(baseName)//清理掉隐藏属性
       if (!!!disableExtensions) {
         configDb.dbInstance.set('disableExtensions', [baseName]).write()
         return
