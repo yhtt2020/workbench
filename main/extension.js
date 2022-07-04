@@ -4,6 +4,8 @@ const extractZip = require('./js/main/zip.js')
 const { getPath } = require('./js/main/paths')
 const { makeId } = require('./js/main/string')
 const { pathExists } = require('./js/main/files')
+const { promises } = require('fs')
+const { extname, resolve, join } = require('path')
 let browser
 let extensionsMenu = []
 let extensions = null
@@ -220,6 +222,8 @@ async function loadExtensions (session, extensionsPath) {
     subDirectories
       .filter((dirEnt) => dirEnt.isDirectory())
       .map(async (dirEnt) => {
+
+
         const extPath = path.join(extensionsPath, dirEnt.name)
 
         if (await manifestExists(extPath)) {
@@ -241,9 +245,17 @@ async function loadExtensions (session, extensionsPath) {
       })
   )
   const results = []
-
+  let disabledExtensions=extensionManager.config.getDisabledExtBaseNames()
   for (const extPath of extensionDirectories.filter(Boolean)) {
     try {
+      //检测一下是否禁用了这个插件，如果被禁用了，则跳过载入流程，不载入
+      let isDisabled= disabledExtensions.some((disExt)=>{
+        if(extPath.indexOf(disExt)>-1){
+          return true
+        }
+      })
+      if(isDisabled) continue
+      //检测end
       const extensionInfo = await session.loadExtension(extPath)
       results.push(extensionInfo)
     } catch (e) {
@@ -287,6 +299,7 @@ async function doInstallCrx (manifestPath, crxInfo) {
       JSON.stringify(manifest, null, 2),
     )
     let content = '成功安装插件。'
+    renderPage.sendIPC('extensionList', 'reload')
     sendMessage({ type: 'success', config: { content: content, key: 'extension' } })
   }
 
@@ -302,7 +315,6 @@ async function installCrx (filePath) {
 
   //先解压到临时安装目录
   const tempPath = join(userDataPath, 'temp_extensions')
-
   const extensionsPath = join(userDataPath, 'extensions')
   const path = resolve(extensionsPath, crxInfo.id)
 
@@ -338,7 +350,7 @@ app.whenReady().then(() => {
       hideExtensions.push(args.baseName)
       configDb.dbInstance.set('hideExtensions', hideExtensions).write()
     }
-    sendIPCToWindow(mainWindow,'hideExtension',{baseName:args.baseName})
+    sendIPCToWindow(mainWindow, 'hideExtension', { baseName: args.baseName })
 
   })
   ipc.on('showExtension', (event, args) => {
@@ -347,22 +359,22 @@ app.whenReady().then(() => {
       hideExtensions.splice(hideExtensions.indexOf(args.baseName), 1)
       configDb.dbInstance.set('hideExtensions', hideExtensions).write()
     }
-    sendIPCToWindow(mainWindow,'showExtension',{baseName:args.baseName})
+    sendIPCToWindow(mainWindow, 'showExtension', { baseName: args.baseName })
   })
 
   ipc.handle('getHideExtensions', (event) => {
-    let hideBaseNames=configDb.dbInstance.get('hideExtensions').value()
-    if(!!!hideBaseNames){
-      hideBaseNames=[]
+    let hideBaseNames = configDb.dbInstance.get('hideExtensions').value()
+    if (!!!hideBaseNames) {
+      hideBaseNames = []
     }
     let installed = require('electron').session.fromPartition('persist:webcontent').getAllExtensions()
-    let hideIds=[]
-    installed.forEach(ext=>{
-      ext.hide= hideBaseNames.some(hideExt=>{
-        return ext.path.indexOf(hideExt)>-1
+    let hideIds = []
+    installed.forEach(ext => {
+      ext.hide = hideBaseNames.some(hideExt => {
+        return ext.path.indexOf(hideExt) > -1
       })
-      if(ext.hide){
-       hideIds.push(ext.id)
+      if (ext.hide) {
+        hideIds.push(ext.id)
       }
     })
     return hideIds
@@ -371,7 +383,7 @@ app.whenReady().then(() => {
   ipc.handle('getInstalledExtensions', (event) => {
     let installed = require('electron').session.fromPartition('persist:webcontent').getAllExtensions()
     let hide = configDb.dbInstance.get('hideExtensions').value()
-    if (!!!hide) {
+    if (!!!hide) { //如果没有隐藏的，所有的都不是hide
       installed.forEach(ext => {
         ext.hide = false
       })
@@ -382,8 +394,6 @@ app.whenReady().then(() => {
         })
       })
     }
-
-    console.log(installed)
     return installed
   })
 
@@ -393,6 +403,9 @@ app.whenReady().then(() => {
   ipc.on('openExtShop', async (e, a) => {
     if (a.name === 'chrome') {
       sendIPCToWindow(mainWindow, 'addTab', { url: 'https://chrome.google.com/webstore/category/extensions' })
+      mainWindow.focus()
+    } else if (a.name === 'crxsoso') {
+      sendIPCToWindow(mainWindow, 'addTab', { url: 'https://www.crxsoso.com/' })
       mainWindow.focus()
     } else if (a.name === 'edge') {
       sendIPCToWindow(mainWindow, 'addTab', { url: 'https://microsoftedge.microsoft.com/addons' })
@@ -412,4 +425,150 @@ app.whenReady().then(() => {
       }
     }
   })
+
+  ipc.on('installCrx', (event, args) => {
+    installCrx(args.path)
+  })
+  ipc.on('doInstallCrx', (event, args) => {
+    doInstallCrx(args.manifestPath, {
+      id: args.crxInfo.id,
+      publicKey: args.crxInfo.publicKey
+    })
+  })
+  ipc.on('removeExtension', (event, args) => {
+    console.log('removeExtension')
+    extensionManager.remove(args.baseName)
+  })
+  ipc.on('setExtensionEnable', (event, args) => {
+    extensionManager.setEnable(args.baseName, args.enable)
+
+  })
 })
+
+async function askInstall (manifestPath, crxInfo) {
+  const manifest = JSON.parse(
+    await promises.readFile(manifestPath, 'utf8'),
+  )
+  renderPage.openInstallExtension({ manifest, crxInfo, manifestPath })
+}
+
+const extensionManager = {
+  extensionsPath: path.join(userDataPath, 'extensions'),
+  setEnable (baseName, enable) {
+    if (enable === false) {
+      this.unloadAllSessionExtension(baseName, (ext) => {
+        sendIPCToWindow(mainWindow, 'removeExtension', { id: ext.id })
+        this.config.setDisable(baseName)
+        messager.success({ content: '禁用插件成功，插件将不再生效。' })
+      })
+    } else {
+      this.loadAllSessionExtension(baseName)
+      this.config.setEnable(baseName)
+      sendIPCToWindow(mainWindow, 'loadedExtensions')
+      messager.success({ content: '已为您启用插件，您可能需要刷新网页方可正常使用。' })
+      // setTimeout(()=>{
+      //   renderPage.sendIPC('extensionList', 'reload')
+      // },200)
+
+    }
+  },
+  /**
+   * 卸载全部会话里的插件，如果这个会话安装了这个插件
+   * @param baseName
+   * @param callback
+   */
+  unloadAllSessionExtension (baseName, callback = (ext) => {}) {
+    sessions.forEach((ses) => {
+      let installedExtensions = ses.getAllExtensions()
+      installedExtensions.forEach((ext) => {
+        if (ext.path.indexOf(baseName) > -1) {
+          ses.removeExtension(ext.id)
+          callback(ext)
+        }
+      })
+
+    })
+  },
+  /**
+   * 在除了default以外的会话载入插件
+   * @param baseName
+   */
+  loadAllSessionExtension (baseName) {
+    sessions.forEach(async ses => {
+      if (ses !== electron.session.defaultSession) {
+        return await ses.loadExtension(path.join(this.extensionsPath, baseName))
+      }
+    })
+  },
+  /**
+   * 移除插件
+   * @param baseName
+   */
+  remove (baseName) {
+    extensionManager.unloadAllSessionExtension(baseName, (ext) => {
+      sendIPCToWindow(mainWindow, 'removeExtension', { id: ext.id })
+    })
+    this.config.clearHide(baseName)//清理
+    this.config.setEnable(baseName)//清理
+    require('fs-extra').remove(path.join(this.extensionsPath,baseName)).then(() => {
+      renderPage.sendIPC('extensionList', 'reload')
+      sendMessage({
+        type: 'success', config: {
+          content: '卸载插件"' + ext.name + '"成功。'
+        }
+      })
+    })
+  },
+  config: {
+    /**
+     * 设置一个扩展禁用
+     * @param baseName
+     */
+    setDisable (baseName) {
+      let disableExtensions = configDb.dbInstance.get('disableExtensions').value()
+      this.clearHide(baseName)//清理掉隐藏属性
+      if (!!!disableExtensions) {
+        configDb.dbInstance.set('disableExtensions', [baseName]).write()
+        return
+      }
+      if (disableExtensions && disableExtensions.indexOf(baseName) === -1) {
+        disableExtensions.push(baseName)
+        configDb.dbInstance.set('disableExtensions', disableExtensions).write()
+      }
+    },
+    /**
+     * 设置一个扩展启用
+     * @param baseName
+     */
+    setEnable (baseName) {
+      let disableExtensions = configDb.dbInstance.get('disableExtensions').value()
+      if (disableExtensions && disableExtensions.indexOf(baseName) > -1) {
+        disableExtensions.splice(disableExtensions.indexOf(baseName), 1)
+        configDb.dbInstance.set('disableExtensions', disableExtensions).write()
+      }
+    },
+    /**
+     * 获被禁用的扩展的baseName
+     * @returns {*[]|*}
+     */
+    getDisabledExtBaseNames(){
+      let disableExtensions = configDb.dbInstance.get('disableExtensions').value()
+      if(disableExtensions){
+        return disableExtensions
+      }else{
+        return []
+      }
+    },
+    /**
+     * 移除某个插件的隐藏设置，防止数据库产生脏数据
+     * @param baseName
+     */
+    clearHide (baseName) {
+      let hideExtensions = configDb.dbInstance.get('hideExtensions').value()
+      if (hideExtensions && hideExtensions.indexOf(baseName) > -1) {
+        hideExtensions.splice(hideExtensions.indexOf(baseName), 1)
+        configDb.dbInstance.set('hideExtensions', hideExtensions).write()
+      }
+    }
+  }
+}

@@ -681,7 +681,24 @@ ipc.on('message', function (event, args) {
   SidePanel.send('message', args)
 })
 function sendMessage(args){
-  SidePanel.send('message', args)
+  messager.send(args)
+}
+const messager={
+  send(args){
+    SidePanel.send('message', args)
+  },
+  success(config){
+    SidePanel.send('message', {
+      type:'success',
+      config:config
+    })
+  },
+  error(config){
+    SidePanel.send('message', {
+      type:'error',
+      config:config
+    })
+  }
 }
 
 ipc.on('closeTask', function (event, args) {

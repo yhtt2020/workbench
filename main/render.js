@@ -412,8 +412,14 @@ const render = {
 const renderPage = {
   iconSelector: null, //图标选择器
   installExtension: null, //安装插件
+  extensionList:null,//扩展列表
   init () {
 
+  },
+  sendIPC(page,event,args){
+    if(this[page] && this[page].win.isDestroyed()===false){
+      this[page].win.webContents.send(event,args)
+    }
   },
   /**
    * 启动图片选择器
@@ -451,10 +457,10 @@ const renderPage = {
     let y = parseInt(mainBounds.y + (mainBounds.height - height) / 2)
     return { x, y, width, height }
   },
-  openExtensionPopList(){
-    let bounds= renderPage.getMainWindowCenterBounds(350,500)
-    pool.usePop({
-      url:render.getUrl('extension.html#/pop'),
+  async openExtensionPopList () {
+    let bounds = renderPage.getMainWindowCenterBounds(450, 500)
+    this.extensionList = await pool.usePop({
+      url: render.getUrl('extension.html#/pop'),
       bounds
     })
   }
