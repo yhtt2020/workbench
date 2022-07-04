@@ -1,6 +1,6 @@
 const { extname, resolve, join } = require('path')
 const { promises } = require('fs')
-
+const { Notification } = require('electron')
 const currrentDownloadItems = {}
 
 // ipc.on('cancelDownload', function (e, path) {
@@ -59,6 +59,16 @@ ipc.on('emptyPageUrl', (event, args) => {
 ipc.on('downloading', (event, args) => {
   mainWindow.send('downloadCountAdd')
 })
+
+
+ipc.on('inform',()=>{
+  new Notification({
+    title:"完成提示",
+    body:"您有一项下载任务已经完成",
+  }).show();
+})
+
+
 ipc.on('downloadEnd', (event, args) => {
   mainWindow.send('downloadCountCut')
 })
