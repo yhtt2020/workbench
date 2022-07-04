@@ -289,7 +289,7 @@ async function doInstallCrx (manifestPath, crxInfo) {
       JSON.stringify(manifest, null, 2),
     )
     let content = '成功安装插件。'
-    renderPage.sendIPC('extensionList','reload')
+    renderPage.sendIPC('extensionList', 'reload')
     sendMessage({ type: 'success', config: { content: content, key: 'extension' } })
   }
 
@@ -340,7 +340,7 @@ app.whenReady().then(() => {
       hideExtensions.push(args.baseName)
       configDb.dbInstance.set('hideExtensions', hideExtensions).write()
     }
-    sendIPCToWindow(mainWindow,'hideExtension',{baseName:args.baseName})
+    sendIPCToWindow(mainWindow, 'hideExtension', { baseName: args.baseName })
 
   })
   ipc.on('showExtension', (event, args) => {
@@ -349,22 +349,22 @@ app.whenReady().then(() => {
       hideExtensions.splice(hideExtensions.indexOf(args.baseName), 1)
       configDb.dbInstance.set('hideExtensions', hideExtensions).write()
     }
-    sendIPCToWindow(mainWindow,'showExtension',{baseName:args.baseName})
+    sendIPCToWindow(mainWindow, 'showExtension', { baseName: args.baseName })
   })
 
   ipc.handle('getHideExtensions', (event) => {
-    let hideBaseNames=configDb.dbInstance.get('hideExtensions').value()
-    if(!!!hideBaseNames){
-      hideBaseNames=[]
+    let hideBaseNames = configDb.dbInstance.get('hideExtensions').value()
+    if (!!!hideBaseNames) {
+      hideBaseNames = []
     }
     let installed = require('electron').session.fromPartition('persist:webcontent').getAllExtensions()
-    let hideIds=[]
-    installed.forEach(ext=>{
-      ext.hide= hideBaseNames.some(hideExt=>{
-        return ext.path.indexOf(hideExt)>-1
+    let hideIds = []
+    installed.forEach(ext => {
+      ext.hide = hideBaseNames.some(hideExt => {
+        return ext.path.indexOf(hideExt) > -1
       })
-      if(ext.hide){
-       hideIds.push(ext.id)
+      if (ext.hide) {
+        hideIds.push(ext.id)
       }
     })
     return hideIds
@@ -394,7 +394,7 @@ app.whenReady().then(() => {
     if (a.name === 'chrome') {
       sendIPCToWindow(mainWindow, 'addTab', { url: 'https://chrome.google.com/webstore/category/extensions' })
       mainWindow.focus()
-    }else if(a.name==='crxsoso'){
+    } else if (a.name === 'crxsoso') {
       sendIPCToWindow(mainWindow, 'addTab', { url: 'https://www.crxsoso.com/' })
       mainWindow.focus()
     } else if (a.name === 'edge') {
@@ -416,20 +416,69 @@ app.whenReady().then(() => {
     }
   })
 
-  ipc.on('installCrx',(event,args)=>{
+  ipc.on('installCrx', (event, args) => {
     installCrx(args.path)
   })
   ipc.on('doInstallCrx', (event, args) => {
-    doInstallCrx(args.manifestPath,{
-      id:args.crxInfo.id,
-      publicKey:args.crxInfo.publicKey
+    doInstallCrx(args.manifestPath, {
+      id: args.crxInfo.id,
+      publicKey: args.crxInfo.publicKey
     })
+  })
+  ipc.on('removeExtension', (event, args) => {
+    extensionManager.doRemoveExtension(args.baseName)
   })
 
 })
+
 async function askInstall (manifestPath, crxInfo) {
   const manifest = JSON.parse(
     await promises.readFile(manifestPath, 'utf8'),
   )
-  renderPage.openInstallExtension({ manifest, crxInfo ,manifestPath})
+  renderPage.openInstallExtension({ manifest, crxInfo, manifestPath })
+}
+
+const extensionManager = {
+  /**
+   * 移除某个插件的隐藏设置，防止数据库产生脏数据
+   * @param baseName
+   */
+  removeHideConfig (baseName) {
+    let hideExtensions = configDb.dbInstance.get('hideExtensions').value()
+    if (hideExtensions && hideExtensions.indexOf(baseName) > -1) {
+      hideExtensions.splice(hideExtensions.indexOf(baseName), 1)
+      configDb.dbInstance.set('hideExtensions', hideExtensions).write()
+    }
+  },
+  /**
+   * 卸载全部会话里的插件
+   * @param baseName
+   * @param callback
+   */
+  unloadAllSessionExtension (baseName, callback = (ext) => {}) {
+    sessions.forEach((ses) => {
+      let installedExtensions = ses.getAllExtensions()
+      installedExtensions.forEach((ext) => {
+        if (ext.path.indexOf(baseName) > -1) {
+          ses.removeExtension(ext.id)
+          callback(ext)
+        }
+      })
+
+    })
+  },
+  doRemoveExtension (baseName) {
+    extensionManager.unloadAllSessionExtension(baseName, (ext) => {
+      this.removeHideConfig(baseName)
+      require('fs-extra').remove(ext.path).then(() => {
+        sendIPCToWindow(mainWindow, 'removeExtension', { id: ext.id })
+        renderPage.sendIPC('extensionList', 'reload')
+        sendMessage({
+          type: 'success', config: {
+            content: '卸载插件"' + ext.name + '"成功。'
+          }
+        })
+      })
+    })
+  }
 }

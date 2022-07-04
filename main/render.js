@@ -417,8 +417,8 @@ const renderPage = {
 
   },
   sendIPC(page,event,args){
-    if(this[page] && this[page].isDestroyed()===false){
-      this[page].webContents.send(event,args)
+    if(this[page] && this[page].win.isDestroyed()===false){
+      this[page].win.webContents.send(event,args)
     }
   },
   /**
@@ -457,10 +457,10 @@ const renderPage = {
     let y = parseInt(mainBounds.y + (mainBounds.height - height) / 2)
     return { x, y, width, height }
   },
-  openExtensionPopList(){
-    let bounds= renderPage.getMainWindowCenterBounds(350,500)
-    this.extensionList = pool.usePop({
-      url:render.getUrl('extension.html#/pop'),
+  async openExtensionPopList () {
+    let bounds = renderPage.getMainWindowCenterBounds(450, 500)
+    this.extensionList = await pool.usePop({
+      url: render.getUrl('extension.html#/pop'),
       bounds
     })
   }

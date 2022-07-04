@@ -34,3 +34,7 @@ function updateHideExtensions(){
 ipc.on('showExtension',(event,args)=>{
   updateHideExtensions()
 })
+
+ipc.on('removeExtension',(event,args)=>{
+  document.querySelector("#actions").shadowRoot.getElementById(args.id).remove()
+})
