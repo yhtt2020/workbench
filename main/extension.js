@@ -251,7 +251,6 @@ async function loadExtensions (session, extensionsPath) {
       //检测一下是否禁用了这个插件，如果被禁用了，则跳过载入流程，不载入
       let isDisabled= disabledExtensions.some((disExt)=>{
         if(extPath.indexOf(disExt)>-1){
-          console.log('此插件禁用，不载入',extPath)
           return true
         }
       })
@@ -493,7 +492,6 @@ const extensionManager = {
       if (ses !== electron.session.defaultSession) {
         return await ses.loadExtension(path.join(this.extensionsPath, baseName))
       }
-      console.log(ses)
     })
   },
   /**

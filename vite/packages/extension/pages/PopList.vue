@@ -67,7 +67,6 @@ export default {
       });
     },
     changeEnable(ext){
-      console.log(ext.enable)
       this.ipc.send('setExtensionEnable',{baseName:ext.baseName,enable:ext.enable})
     },
     async getList() {
