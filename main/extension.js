@@ -428,8 +428,8 @@ app.whenReady().then(() => {
   ipc.on('removeExtension', (event, args) => {
     extensionManager.remove(args.baseName)
   })
-  ipc.on('setExtensionEnable',(event,args)=>{
-    extensionManager.setEnable(args.baseName,args.enable)
+  ipc.on('setExtensionEnable', (event, args) => {
+    extensionManager.setEnable(args.baseName, args.enable)
   })
 })
 
@@ -441,29 +441,19 @@ async function askInstall (manifestPath, crxInfo) {
 }
 
 const extensionManager = {
-  extensionsPath:path.join(userDataPath,'extensions'),
-  setEnable(baseName,enable){
-    if(enable===false){
-      this.unloadAllSessionExtension(baseName,(ext)=>{
+  extensionsPath: path.join(userDataPath, 'extensions'),
+  setEnable (baseName, enable) {
+    if (enable === false) {
+      this.unloadAllSessionExtension(baseName, (ext) => {
         sendIPCToWindow(mainWindow, 'removeExtension', { id: ext.id })
-        messager.success({content:'禁用插件成功，插件将不再生效。'})
+        this.config.setDisable(baseName)
+        messager.success({ content: '禁用插件成功，插件将不再生效。' })
       })
-    }else{
+    } else {
       this.loadAllSessionExtension(baseName)
+      this.config.setEnable(baseName)
       sendIPCToWindow(mainWindow, 'loadedExtensions')
-      messager.success({content:'已为您启用插件，您可能需要刷新网页方可正常使用。'})
-    }
-  },
-
-  /**
-   * 移除某个插件的隐藏设置，防止数据库产生脏数据
-   * @param baseName
-   */
-  removeHideConfig (baseName) {
-    let hideExtensions = configDb.dbInstance.get('hideExtensions').value()
-    if (hideExtensions && hideExtensions.indexOf(baseName) > -1) {
-      hideExtensions.splice(hideExtensions.indexOf(baseName), 1)
-      configDb.dbInstance.set('hideExtensions', hideExtensions).write()
+      messager.success({ content: '已为您启用插件，您可能需要刷新网页方可正常使用。' })
     }
   },
   /**
@@ -487,10 +477,10 @@ const extensionManager = {
    * 在除了default以外的会话载入插件
    * @param baseName
    */
-   loadAllSessionExtension(baseName){
-    sessions.forEach(async ses=>{
-      if(ses!==electron.session.defaultSession){
-        return await ses.loadExtension(path.join(this.extensionsPath,baseName))
+  loadAllSessionExtension (baseName) {
+    sessions.forEach(async ses => {
+      if (ses !== electron.session.defaultSession) {
+        return await ses.loadExtension(path.join(this.extensionsPath, baseName))
       }
       console.log(ses)
     })
@@ -501,7 +491,7 @@ const extensionManager = {
    */
   remove (baseName) {
     extensionManager.unloadAllSessionExtension(baseName, (ext) => {
-      this.removeHideConfig(baseName)
+      this.config.clearHide(baseName)
       require('fs-extra').remove(ext.path).then(() => {
         sendIPCToWindow(mainWindow, 'removeExtension', { id: ext.id })
         renderPage.sendIPC('extensionList', 'reload')
@@ -512,5 +502,56 @@ const extensionManager = {
         })
       })
     })
+  },
+  config: {
+    /**
+     * 设置一个扩展禁用
+     * @param baseName
+     */
+    setDisable (baseName) {
+      let disableExtensions = configDb.dbInstance.get('disableExtensions').value()
+      if (!!!disableExtensions) {
+        configDb.dbInstance.set('disableExtensions', [baseName]).write()
+        return
+      }
+      if (disableExtensions && disableExtensions.indexOf(baseName) === -1) {
+        disableExtensions.push(baseName)
+        configDb.dbInstance.set('disableExtensions', disableExtensions).write()
+      }
+    },
+    /**
+     * 设置一个扩展启用
+     * @param baseName
+     */
+    setEnable (baseName) {
+      let disableExtensions = configDb.dbInstance.get('disableExtensions').value()
+      if (disableExtensions && disableExtensions.indexOf(baseName) > -1) {
+        disableExtensions.splice(disableExtensions.indexOf(baseName), 1)
+        configDb.dbInstance.set('disableExtensions', disableExtensions).write()
+      }
+    },
+    /**
+     * 获被禁用的扩展的baseName
+     * @returns {*[]|*}
+     */
+    getDisabledExtBaseNames(){
+      let disableExtensions = configDb.dbInstance.get('disableExtensions').value()
+      if(disableExtensions){
+        return disableExtensions
+      }else{
+        return []
+      }
+    },
+    /**
+     * 移除某个插件的隐藏设置，防止数据库产生脏数据
+     * @param baseName
+     */
+    clearHide (baseName) {
+      let hideExtensions = configDb.dbInstance.get('hideExtensions').value()
+      if (hideExtensions && hideExtensions.indexOf(baseName) > -1) {
+        hideExtensions.splice(hideExtensions.indexOf(baseName), 1)
+        configDb.dbInstance.set('hideExtensions', hideExtensions).write()
+      }
+    }
   }
 }
