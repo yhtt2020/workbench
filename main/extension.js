@@ -222,6 +222,8 @@ async function loadExtensions (session, extensionsPath) {
     subDirectories
       .filter((dirEnt) => dirEnt.isDirectory())
       .map(async (dirEnt) => {
+
+
         const extPath = path.join(extensionsPath, dirEnt.name)
 
         if (await manifestExists(extPath)) {
@@ -243,9 +245,18 @@ async function loadExtensions (session, extensionsPath) {
       })
   )
   const results = []
-
+  let disabledExtensions=extensionManager.config.getDisabledExtBaseNames()
   for (const extPath of extensionDirectories.filter(Boolean)) {
     try {
+      //检测一下是否禁用了这个插件，如果被禁用了，则跳过载入流程，不载入
+      let isDisabled= disabledExtensions.some((disExt)=>{
+        if(extPath.indexOf(disExt)>-1){
+          console.log('此插件禁用，不载入',extPath)
+          return true
+        }
+      })
+      if(isDisabled) continue
+      //检测end
       const extensionInfo = await session.loadExtension(extPath)
       results.push(extensionInfo)
     } catch (e) {
