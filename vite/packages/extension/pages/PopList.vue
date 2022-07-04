@@ -135,6 +135,9 @@ export default {
       }
       eval('require')('electron').ipcRenderer.send('doInstallCrx', args)
       eval('require')('electron').ipcRenderer.send('closeSelf', args)
+    },
+    getContainer(){
+      return document.getElementById('extensionList')
     }
   }
 }
@@ -164,7 +167,7 @@ export default {
       </a-dropdown>
 
     </h3>
-    <div class="scroller-wrapper plugins-list" style="padding: 10px;padding-top: 0;padding-bottom: 0">
+    <div id="extensionList" class="scroller-wrapper plugins-list" style="padding: 10px;padding-top: 0;padding-bottom: 0">
 
       <browser-action-list style="display: none" partition="persist:webcontent" id="actions"></browser-action-list>
 
@@ -191,7 +194,7 @@ export default {
             <a-button title="当前：不显示到工具栏" style="color: red" v-else type="text" @click.stop="show(ext)">
               <EyeInvisibleOutlined/>
             </a-button>
-            <a-dropdown @click.stop="()=>{}">
+            <a-dropdown :getPopupContainer="getContainer" @click.stop="()=>{}">
               <template #overlay>
                 <a-menu>
                   <a-menu-item key="remove" @click="remove(ext)">
@@ -228,11 +231,12 @@ export default {
     </div>
   </div>
 </template>
-
-<style scoped lang="scss">
+<style>
 html, body {
-  overflow: hidden;
+  overflow: hidden !important;
 }
+</style>
+<style scoped lang="scss">
 
 .plugins-list {
   overflow-y: auto;
