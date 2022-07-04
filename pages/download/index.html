@@ -141,7 +141,7 @@
   let {ipcRenderer} = require('electron')
   const {db} = require('../../js/util/database')
   const path = require('path')
-  import {matchFileSuffixType} from './matchIcon.js'
+  import {matchFileSuffixType} from './typeHelper.js'
 
   ipcRenderer.on('menuIngStart', (e,args) => {
     if(appVue.selectingList.loadState === true){
@@ -308,7 +308,6 @@
         href:args.href,
         suffixal:path.extname(args.name)
       })
-      console.log(appVue.doneList)
       appVue.listCount--
       appVue.count--
       appVue.listDoneCount++
