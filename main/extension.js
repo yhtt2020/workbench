@@ -2,7 +2,6 @@ const { ElectronChromeExtensions } = require('electron-chrome-extensions')
 const parseCrx = require('./js/main/crx.js')
 const extractZip = require('./js/main/zip.js')
 const { getPath } = require('./js/main/paths')
-const { makeId } = require('./js/main/string')
 const { pathExists } = require('./js/main/files')
 const { promises } = require('fs')
 const { extname, resolve, join } = require('path')
@@ -11,6 +10,17 @@ let extensionsMenu = []
 let extensions = null
 let tabs = []
 let waitingSyncId = 0
+
+function makeId (
+  length,
+  possible = 'abcdefghijklmnopqrstuvwxyz',
+) {
+  let id = ''
+  for (let i = 0; i < length; i++) {
+    id += possible.charAt(Math.floor(Math.random() * possible.length))
+  }
+  return id
+}
 
 class Browser {
   session = null
@@ -223,7 +233,6 @@ async function loadExtensions (session, extensionsPath) {
       .filter((dirEnt) => dirEnt.isDirectory())
       .map(async (dirEnt) => {
 
-
         const extPath = path.join(extensionsPath, dirEnt.name)
 
         if (await manifestExists(extPath)) {
@@ -245,16 +254,16 @@ async function loadExtensions (session, extensionsPath) {
       })
   )
   const results = []
-  let disabledExtensions=extensionManager.config.getDisabledExtBaseNames()
+  let disabledExtensions = extensionManager.config.getDisabledExtBaseNames()
   for (const extPath of extensionDirectories.filter(Boolean)) {
     try {
       //检测一下是否禁用了这个插件，如果被禁用了，则跳过载入流程，不载入
-      let isDisabled= disabledExtensions.some((disExt)=>{
-        if(extPath.indexOf(disExt)>-1){
+      let isDisabled = disabledExtensions.some((disExt) => {
+        if (extPath.indexOf(disExt) > -1) {
           return true
         }
       })
-      if(isDisabled) continue
+      if (isDisabled) continue
       //检测end
       const extensionInfo = await session.loadExtension(extPath)
       results.push(extensionInfo)
@@ -282,27 +291,25 @@ const getParentWindowOfTab = (tab) => {
 
 async function doInstallCrx (manifestPath, crxInfo) {
   const extensionsPath = join(userDataPath, 'extensions')
-  const tempPath = join(userDataPath, 'temp_extensions')
-  const tempCrxPath = resolve(tempPath, crxInfo.id)
+  const manifestFolder = path.dirname(manifestPath)
   let installPath = resolve(extensionsPath, crxInfo.id)
-  require('fs-extra').copySync(tempCrxPath, installPath)
+  require('fs-extra').copySync(manifestFolder, installPath)
   const extension = await electron.session.fromPartition('persist:webcontent').loadExtension(installPath)
-
+  const manifest = JSON.parse(
+    await promises.readFile(manifestPath, 'utf8'),
+  )
   if (crxInfo.publicKey) {
-    const manifest = JSON.parse(
-      await promises.readFile(manifestPath, 'utf8'),
-    )
-
     manifest.key = crxInfo.publicKey.toString('base64')
     await promises.writeFile(
       manifestPath,
       JSON.stringify(manifest, null, 2),
     )
-    let content = '成功安装插件。'
-    renderPage.sendIPC('extensionList', 'reload')
-    sendMessage({ type: 'success', config: { content: content, key: 'extension' } })
+  } else {
+    //无公钥
   }
-
+  let content = '成功安装插件。'
+  renderPage.sendIPC('extensionList', 'reload')
+  sendMessage({ type: 'success', config: { content: content, key: 'extension' } })
 }
 
 async function installCrx (filePath) {
@@ -429,6 +436,21 @@ app.whenReady().then(() => {
   ipc.on('installCrx', (event, args) => {
     installCrx(args.path)
   })
+  ipc.on('installExtensionFolder', async () => {
+    const folders = dialog.showOpenDialogSync({
+      userScriptWindow,
+      filters: [
+        { name: '扩展插件', extensions: ['crx'] }
+      ], properties: ['openDirectory']
+    })
+    if (!!!folders) {
+      return
+    }
+    for (let i = 0; i < folders.length; i++) {
+      await extensionManager.installFromFolder(folders[i])
+    }
+
+  })
   ipc.on('doInstallCrx', (event, args) => {
     doInstallCrx(args.manifestPath, {
       id: args.crxInfo.id,
@@ -446,14 +468,36 @@ app.whenReady().then(() => {
 })
 
 async function askInstall (manifestPath, crxInfo) {
-  const manifest = JSON.parse(
-    await promises.readFile(manifestPath, 'utf8'),
-  )
-  renderPage.openInstallExtension({ manifest, crxInfo, manifestPath })
+  try {
+    const manifest = JSON.parse(
+      await promises.readFile(manifestPath, 'utf8'),
+    )
+    renderPage.openInstallExtension({ manifest, crxInfo, manifestPath })
+  } catch (e) {
+    messager.error({ content: '插件信息读取失败，安装终止。' })
+  }
 }
 
 const extensionManager = {
   extensionsPath: path.join(userDataPath, 'extensions'),
+  async installFromFolder (folder) {
+    const manifestPath = resolve(folder, 'manifest.json')
+    if (!fs.existsSync(manifestPath)) {
+      messager.error({ content: '插件格式错误，请重新选择。' })
+      return
+    }
+    let crxId = makeId(32)
+    //先解压到临时安装目录
+    const extensionsPath = join(userDataPath, 'extensions')
+    const path = resolve(extensionsPath, crxId)
+
+    if (await pathExists(path)) {
+      //插件已存在，阻止安装
+      sendMessage({ type: 'error', config: { content: '插件已存在。' } })
+      return
+    }
+    askInstall(manifestPath, { id: crxId })
+  },
   setEnable (baseName, enable) {
     if (enable === false) {
       this.unloadAllSessionExtension(baseName, (ext) => {
@@ -510,7 +554,7 @@ const extensionManager = {
     })
     this.config.clearHide(baseName)//清理
     this.config.setEnable(baseName)//清理
-    require('fs-extra').remove(path.join(this.extensionsPath,baseName)).then(() => {
+    require('fs-extra').remove(path.join(this.extensionsPath, baseName)).then(() => {
       renderPage.sendIPC('extensionList', 'reload')
       sendMessage({
         type: 'success', config: {
@@ -551,11 +595,11 @@ const extensionManager = {
      * 获被禁用的扩展的baseName
      * @returns {*[]|*}
      */
-    getDisabledExtBaseNames(){
+    getDisabledExtBaseNames () {
       let disableExtensions = configDb.dbInstance.get('disableExtensions').value()
-      if(disableExtensions){
+      if (disableExtensions) {
         return disableExtensions
-      }else{
+      } else {
         return []
       }
     },

@@ -13,21 +13,22 @@ export default {
       id:'',
       name:'',
       permissionText:[],
-      savePath:''
+      iconPath:''
     }
   },
   mounted(){
    let args=  window.globalArgs
     this.userDataPath=args['user-data-path']
    eval('require')('electron').ipcRenderer.invoke('getPopArgs').then(data=>{
+     const path=eval('require')('path')
      this.manifest=data.manifest
      this.manifestPath=data.manifestPath
+     this.extensionPath=path.dirname(this.manifestPath)
      this.crxInfo=data.crxInfo
      this.id=data.id
-     this.savePath= 'file://'+this.userDataPath+'/temp_extensions/'+this.id+'/'
-     this.extensionPath=this.userDataPath+'/temp_extensions/'+this.id+'/'
      let icons=Object.values(this.manifest.icons)
      this.icon=icons[icons.length-1]
+     this.iconPath='file://'+path.join(this.extensionPath,this.icon)
      this.permissionText=this.convertPermissionsToText(this.manifest.permissions)
      this.getName()
     })
@@ -57,7 +58,6 @@ export default {
         }
         let locale= JSON.parse(fs.readFileSync(messageName,'utf8'))
         this.name=locale[name]['message']
-
       }else{
         this.name=name
       }
@@ -81,7 +81,7 @@ export default {
   <div class="card-container" style="padding:20px;overflow: hidden">
    <a-row>
      <a-col style="width: 50px">
-       <a-avatar :src="savePath+icon"></a-avatar>
+       <a-avatar shape="square" :src="iconPath"></a-avatar>
      </a-col>
      <a-col style="width: 350px">
        <p>
