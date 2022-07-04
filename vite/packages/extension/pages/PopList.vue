@@ -66,6 +66,10 @@ export default {
         },
       });
     },
+    changeEnable(ext){
+      console.log(ext.enable)
+      this.ipc.send('setExtensionEnable',{baseName:ext.baseName,enable:ext.enable})
+    },
     async getList() {
       this.installedExts = await this.ipc.invoke('getInstalledExtensions')
       this.exts = []
@@ -80,7 +84,11 @@ export default {
             ext.id = installed.id //id不靠谱
             ext.hide = installed.hide
             ext.installed = true
-            ext.enable= true
+            if(installed.id){
+              ext.enable = true
+            }else{
+              ext.enable = false
+            }
           } else {
             ext.installed = false
           }
@@ -178,7 +186,7 @@ export default {
           </div>
         </a-col>
         <a-col style="padding-top: 5px">
-          <a-switch title="是否启用" v-model:checked="ext.enable" size="small"></a-switch>
+          <a-switch @change="changeEnable(ext)" title="是否启用" v-model:checked="ext.enable" size="small"></a-switch>
         </a-col>
         <a-col style="width: 120px;text-align: right">
           <div>

@@ -426,9 +426,11 @@ app.whenReady().then(() => {
     })
   })
   ipc.on('removeExtension', (event, args) => {
-    extensionManager.doRemoveExtension(args.baseName)
+    extensionManager.remove(args.baseName)
   })
-
+  ipc.on('setExtensionEnable',(event,args)=>{
+    extensionManager.setEnable(args.baseName,args.enable)
+  })
 })
 
 async function askInstall (manifestPath, crxInfo) {
@@ -439,6 +441,20 @@ async function askInstall (manifestPath, crxInfo) {
 }
 
 const extensionManager = {
+  extensionsPath:path.join(userDataPath,'extensions'),
+  setEnable(baseName,enable){
+    if(enable===false){
+      this.unloadAllSessionExtension(baseName,(ext)=>{
+        sendIPCToWindow(mainWindow, 'removeExtension', { id: ext.id })
+        messager.success({content:'禁用插件成功，插件将不再生效。'})
+      })
+    }else{
+      this.loadAllSessionExtension(baseName)
+      sendIPCToWindow(mainWindow, 'loadedExtensions')
+      messager.success({content:'已为您启用插件，您可能需要刷新网页方可正常使用。'})
+    }
+  },
+
   /**
    * 移除某个插件的隐藏设置，防止数据库产生脏数据
    * @param baseName
@@ -451,7 +467,7 @@ const extensionManager = {
     }
   },
   /**
-   * 卸载全部会话里的插件
+   * 卸载全部会话里的插件，如果这个会话安装了这个插件
    * @param baseName
    * @param callback
    */
@@ -467,7 +483,23 @@ const extensionManager = {
 
     })
   },
-  doRemoveExtension (baseName) {
+  /**
+   * 在除了default以外的会话载入插件
+   * @param baseName
+   */
+   loadAllSessionExtension(baseName){
+    sessions.forEach(async ses=>{
+      if(ses!==electron.session.defaultSession){
+        return await ses.loadExtension(path.join(this.extensionsPath,baseName))
+      }
+      console.log(ses)
+    })
+  },
+  /**
+   * 移除插件
+   * @param baseName
+   */
+  remove (baseName) {
     extensionManager.unloadAllSessionExtension(baseName, (ext) => {
       this.removeHideConfig(baseName)
       require('fs-extra').remove(ext.path).then(() => {
