@@ -412,8 +412,14 @@ const render = {
 const renderPage = {
   iconSelector: null, //图标选择器
   installExtension: null, //安装插件
+  extensionList:null,//扩展列表
   init () {
 
+  },
+  sendIPC(page,event,args){
+    if(this[page] && this[page].isDestroyed()===false){
+      this[page].webContents.send(event,args)
+    }
   },
   /**
    * 启动图片选择器
@@ -453,7 +459,7 @@ const renderPage = {
   },
   openExtensionPopList(){
     let bounds= renderPage.getMainWindowCenterBounds(350,500)
-    pool.usePop({
+    this.extensionList = pool.usePop({
       url:render.getUrl('extension.html#/pop'),
       bounds
     })

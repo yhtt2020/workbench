@@ -4,6 +4,8 @@ const extractZip = require('./js/main/zip.js')
 const { getPath } = require('./js/main/paths')
 const { makeId } = require('./js/main/string')
 const { pathExists } = require('./js/main/files')
+const { promises } = require('fs')
+const { extname, resolve, join } = require('path')
 let browser
 let extensionsMenu = []
 let extensions = null
@@ -287,6 +289,7 @@ async function doInstallCrx (manifestPath, crxInfo) {
       JSON.stringify(manifest, null, 2),
     )
     let content = '成功安装插件。'
+    renderPage.sendIPC('extensionList','reload')
     sendMessage({ type: 'success', config: { content: content, key: 'extension' } })
   }
 
@@ -302,7 +305,6 @@ async function installCrx (filePath) {
 
   //先解压到临时安装目录
   const tempPath = join(userDataPath, 'temp_extensions')
-
   const extensionsPath = join(userDataPath, 'extensions')
   const path = resolve(extensionsPath, crxInfo.id)
 
@@ -382,8 +384,6 @@ app.whenReady().then(() => {
         })
       })
     }
-
-    console.log(installed)
     return installed
   })
 
@@ -412,4 +412,21 @@ app.whenReady().then(() => {
       }
     }
   })
+
+  ipc.on('installCrx',(event,args)=>{
+    installCrx(args.path)
+  })
+  ipc.on('doInstallCrx', (event, args) => {
+    doInstallCrx(args.manifestPath,{
+      id:args.crxInfo.id,
+      publicKey:args.crxInfo.publicKey
+    })
+  })
+
 })
+async function askInstall (manifestPath, crxInfo) {
+  const manifest = JSON.parse(
+    await promises.readFile(manifestPath, 'utf8'),
+  )
+  renderPage.openInstallExtension({ manifest, crxInfo ,manifestPath})
+}

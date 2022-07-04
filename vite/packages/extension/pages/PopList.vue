@@ -17,30 +17,38 @@ export default {
     }
   },
   async mounted(){
-    this.ipc= eval('require')('electron').ipcRenderer
     const { injectBrowserAction } = eval('require')('electron-chrome-extensions/dist/browser-action.js')
-    this.installedExts=await this.ipc.invoke('getInstalledExtensions')
     injectBrowserAction()
-
-    this.exts=[]
-    this.extensionPath=path.join(window.globalArgs['user-data-path'],'extensions')
-    await  this.loadAllExtensions( this.extensionPath).then(data=>{
-      this.exts=[...data]
-      this.exts.forEach((ext)=>{
-        let installed=this.installedExts.find(installedExt=>{
-          return installedExt.path.indexOf(ext.baseName)>-1
-        })
-        if(installed){
-          ext.id=installed.id //id不靠谱
-          ext.hide=installed.hide
-          ext.installed=true
-        }else{
-          ext.installed=false
-        }
-      })
+    this.ipc= eval('require')('electron').ipcRenderer
+    this.ipc.on('show',()=>{
+      this.getList()
+    })
+    this.ipc.on('reload',()=>{
+      this.getList()
     })
   },
   methods: {
+    async getList(){
+
+      this.installedExts=await this.ipc.invoke('getInstalledExtensions')
+      this.exts=[]
+      this.extensionPath=path.join(window.globalArgs['user-data-path'],'extensions')
+      await  this.loadAllExtensions( this.extensionPath).then(data=>{
+        this.exts=[...data]
+        this.exts.forEach((ext)=>{
+          let installed=this.installedExts.find(installedExt=>{
+            return installedExt.path.indexOf(ext.baseName)>-1
+          })
+          if(installed){
+            ext.id=installed.id //id不靠谱
+            ext.hide=installed.hide
+            ext.installed=true
+          }else{
+            ext.installed=false
+          }
+        })
+      })
+    },
     getId(){
 
     },

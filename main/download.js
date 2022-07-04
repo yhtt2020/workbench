@@ -1,5 +1,5 @@
-const { extname, resolve, join } = require('path')
-const { promises } = require('fs')
+
+
 
 const currrentDownloadItems = {}
 
@@ -225,19 +225,4 @@ app.on('session-created', function (session) {
   listenForDownloadHeaders(session)
 })
 
-async function askInstall (manifestPath, crxInfo) {
-  const manifest = JSON.parse(
-    await promises.readFile(manifestPath, 'utf8'),
-  )
-  renderPage.openInstallExtension({ manifest, crxInfo ,manifestPath})
-}
-ipc.on('installCrx',(event,args)=>{
-  installCrx(args.path)
-})
-ipc.on('doInstallCrx', (event, args) => {
-  doInstallCrx(args.manifestPath,{
-    id:args.crxInfo.id,
-    publicKey:args.crxInfo.publicKey
-  })
-})
 
