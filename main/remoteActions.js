@@ -37,6 +37,21 @@ ipc.handle('showFocusModeDialog2', function () {
   })
 })
 
+ipc.handle('showFirstGuideDialog', function () {
+  dialog.showMessageBox({
+    type: 'info',
+    buttons: ['确定退出','继续完成'],
+    message: '这是首次新手引导',
+    detail: '新手引导可以使您快速了解想天浏览器的功能，强烈建议完成引导'
+  }).then((index) => {
+    if (index.response === 0) {
+      mainWindow.send('exitFirstGuide')
+      mainWindow.send('closeGuide')
+      SidePanel.send('guide',7)
+    }
+  });
+})
+
 ipc.handle('showGuideDialog', function () {
   dialog.showMessageBox({
     type: 'info',
@@ -45,7 +60,6 @@ ipc.handle('showGuideDialog', function () {
     detail: '请先完成或退出引导'
   })
 })
-
 ipc.handle('showToolbarDialog', function () {
   dialog.showMessageBox({
     type: 'info',

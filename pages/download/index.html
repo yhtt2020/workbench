@@ -370,7 +370,7 @@
     }
 
     if (args.status === 'completed' && args.path !== '') {
-
+     ipcRenderer.send('inform')
       ipcRenderer.send('emptyPageUrl',args.chainUrl)
       const myDate = new Date();
       appVue.doneLists.forEach(item=>{
