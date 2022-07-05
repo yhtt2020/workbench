@@ -5,6 +5,7 @@ const { getPath } = require('./js/main/paths')
 const { pathExists } = require('./js/main/files')
 const { promises } = require('fs')
 const { extname, resolve, join } = require('path')
+const jsonStrip=require('strip-json-comments')
 let browser
 let extensionsMenu = []
 let extensions = null
@@ -293,20 +294,20 @@ async function doInstallCrx (manifestPath, crxInfo) {
   const extensionsPath = join(userDataPath, 'extensions')
   const manifestFolder = path.dirname(manifestPath)
   let installPath = resolve(extensionsPath, crxInfo.id)
-  require('fs-extra').copySync(manifestFolder, installPath)
-  const extension = await electron.session.fromPartition('persist:webcontent').loadExtension(installPath)
   const manifest = JSON.parse(
-    await promises.readFile(manifestPath, 'utf8'),
+    jsonStrip(await promises.readFile(manifestPath, 'utf8'))
   )
+  await promises.writeFile(
+    manifestPath,
+    JSON.stringify(manifest, null, 2),
+  ) //重新写回没有注释的版本到文件中，在复制过去，以便于后续读取不出错
   if (crxInfo.publicKey) {
     manifest.key = crxInfo.publicKey.toString('base64')
-    await promises.writeFile(
-      manifestPath,
-      JSON.stringify(manifest, null, 2),
-    )
   } else {
     //无公钥
   }
+  require('fs-extra').copySync(manifestFolder, installPath)
+  const extension = await electron.session.fromPartition('persist:webcontent').loadExtension(installPath)
   let content = '成功安装插件。'
   renderPage.sendIPC('extensionList', 'reload')
   sendMessage({ type: 'success', config: { content: content, key: 'extension' } })
@@ -469,11 +470,13 @@ app.whenReady().then(() => {
 
 async function askInstall (manifestPath, crxInfo) {
   try {
+
     const manifest = JSON.parse(
-      await promises.readFile(manifestPath, 'utf8'),
+      jsonStrip(await promises.readFile(manifestPath, 'utf8'))
     )
     renderPage.openInstallExtension({ manifest, crxInfo, manifestPath })
   } catch (e) {
+    console.log(e)
     messager.error({ content: '插件信息读取失败，安装终止。' })
   }
 }
