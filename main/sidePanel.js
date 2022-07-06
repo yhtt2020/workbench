@@ -814,6 +814,7 @@ ipc.on('openTaskMenu',(event,args)=>{
         },{
           text:true,
             shape:'none',
+            originalIcon:task.icon,
             defaultIcon:defaultIcon,
             defaultText:task.title,
         },event.sender.id)

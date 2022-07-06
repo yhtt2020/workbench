@@ -34,6 +34,7 @@ export default {
       defaultText:'',
       inputText:'',
       changed:false,
+      originalIcon:'',
     }
   },
   mounted(){
@@ -51,6 +52,13 @@ export default {
         this.changed=true
       }
     },
+    clearIcon(){
+      this.selectedIcon={
+        type:'img',
+        url:this.originalIcon
+      }
+      this.changed=true
+    },
     getCaller(){
       this.changed=false
       ipc.invoke('getPopArgs').then(args=>{
@@ -61,6 +69,7 @@ export default {
         this.defaultText=args.defaultText
         this.defaultIcon=args.defaultIcon
         this.inputText=args.defaultText
+        this.originalIcon=args.originalIcon //最原始的图标
         if(args.defaultIcon.type==='fontIcon'){
           this.selectedIcon=this.parseFontIcon(args.defaultIcon.icon)
         }else{
@@ -118,11 +127,14 @@ export default {
 <template>
   <div v-if="this.args.text" style="margin-bottom: 10px;padding-top: 10px;width: 100%">
     <a-row  style="padding: 4px;" >
-      <a-col flex="60px" style="text-align: center">
-        <a-avatar v-if="this.selectedIcon.type==='img'" :shape="args.shape" :src="defaultIcon.icon.url"></a-avatar>
+      <a-col class="set-icon" flex="60px" style="text-align: center">
+        <a-avatar v-if="this.selectedIcon.type==='img'" :shape="args.shape" :src="selectedIcon.url"></a-avatar>
         <svg v-else style="width: 30px;height: 30px" class="icon group-icon" aria-hidden="true">
           <use v-bind:xlink:href="'#icon-'+this.selectedIcon.name"></use>
         </svg>
+        <div @click="clearIcon()" class="clear-mask" :class="{'square':this.args.shape==='square'}" style="" >
+          <close-outlined style="color: white;font-size: 18px;padding-top: 8px"></close-outlined>
+        </div>
       </a-col>
       <a-col flex="1" style="padding-right:50px">
         <a-input @change="onChanged" v-model:value="inputText" id="textInput" size="small" placeholder="输入名称" style="width: 200px"></a-input>
@@ -284,6 +296,20 @@ html{
 .scrollbar {
 
 }
-
+.set-icon{
+  &:hover{
+    .clear-mask{
+      visibility: visible;
+    }
+  }
+}
+.clear-mask{
+  visibility: hidden;
+  &.square{
+    border-radius: 4px;
+  }
+  border-radius: 50%;
+  position:absolute;background:rgba(0,0,0,0.51);width: 30px;height: 30px;top: 0;left:calc(50% - 15px)
+}
 
 </style>

@@ -332,7 +332,11 @@ ipc.on('changeTaskIcon',(event,args)=>{
   const icon=args.icon
   const id=args.id
   let task=tasks.get(id)
-  task.userIcon=`icon.${icon.list}.${icon.name}`
+  if(icon.type==='img'){
+    delete task.userIcon
+  }else{
+    task.userIcon=`icon.${icon.list}.${icon.name}`
+  }
 })
 
 //定位到task组的某tabid，往后插入创建tab

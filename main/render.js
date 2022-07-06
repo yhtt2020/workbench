@@ -87,16 +87,16 @@ class Pop {
       pool.pop.splice(index, 1)
     })
     this.win.on('blur', () => {
-      this.win.hide()
-      //缓存1分钟，超过1分钟再自动关闭
-      setTimeout(() => {
-        if (!this.win.isDestroyed()) {
-          if (!this.win.isVisible()) {
-            this.win.close()
-            return
-          }
-        }
-      }, PopCacheTime)
+      // this.win.hide()
+      // //缓存1分钟，超过1分钟再自动关闭
+      // setTimeout(() => {
+      //   if (!this.win.isDestroyed()) {
+      //     if (!this.win.isVisible()) {
+      //       this.win.close()
+      //       return
+      //     }
+      //   }
+      // }, PopCacheTime)
     })
     this.win.on('maximize', () => {
       this.win.webContents.send('windowMaximized')
@@ -180,6 +180,8 @@ class Pool {
     if (oldObj) {
       oldObj.args=param.args
       oldObj.callerId = callerId
+      if(oldObj.win.isVisible())
+        oldObj.win.webContents.send('show')
       oldObj.win.show()
       oldObj.win.moveTop()
       return oldObj

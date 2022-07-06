@@ -2214,4 +2214,7 @@ ipc.on('selectedIcon',(event,args)=>{
   }
   if(args.icon.type==='fontIcon')
     ipc.sendTo(mainWindowId, 'changeTaskIcon', { id: window.selectedTask.id, icon:args.icon })
+  else{
+    ipc.sendTo(mainWindowId, 'changeTaskIcon', { id: window.selectedTask.id, icon:args.icon })
+  }
 })
