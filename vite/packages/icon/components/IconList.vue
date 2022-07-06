@@ -70,10 +70,14 @@ export default {
         this.defaultIcon=args.defaultIcon
         this.inputText=args.defaultText
         this.originalIcon=args.originalIcon //最原始的图标
+        console.log(args)
         if(args.defaultIcon.type==='fontIcon'){
           this.selectedIcon=this.parseFontIcon(args.defaultIcon.icon)
         }else{
-          this.selectedIcon=this.defaultIcon
+          this.selectedIcon={
+            type:'img',
+            url:args.defaultIcon.icon.url
+          }
         }
         this.$nextTick(()=>{
           document.getElementById('textInput').select()
