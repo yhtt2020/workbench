@@ -286,22 +286,25 @@ function createWindowWithBounds(bounds) {
     getAllAppsWindow()
     changingSpace=false
   })
-
-  mainWindow.on('focus',()=>{
+  function checkClipboard(){
     let latestClipboardContent=clipboard.readText()
     if(latestClipboardContent!==clipboardContent && (latestClipboardContent.startsWith('http://') || latestClipboardContent.startsWith('https://')))
     {
       clipboardContent=latestClipboardContent
       sendIPCToWindow(mainWindow,'showClipboard',{url:latestClipboardContent})
-      // dialog.showMessageBox(undefined,{
-      //   message:'检测到剪贴板存在网址，是否使用新标签打开？',
-      //   buttons:['是','否']
-      // }).then((userSelect)=>{
-      //   if(userSelect.response===0){
-      //     sendIPCToWindow(mainWindow,'addTab',{url:latestClipboardContent})
-      //   }
-      // })
     }
+  }
+  let ClipTimer=setInterval(()=>{
+    if(mainWindow){
+      if(!mainWindow.isDestroyed()){
+        if(mainWindow.isFocused() && mainWindow.isVisible()){
+          checkClipboard()
+        }
+      }
+    }
+  },1000)
+  mainWindow.on('focus',()=>{
+    checkClipboard()
   })
 
 
