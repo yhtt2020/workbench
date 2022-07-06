@@ -178,7 +178,10 @@ class Pool {
     }
     let oldObj = this.pop.find(v => v.url === param.url)
     if (oldObj) {
+      oldObj.args=param.args
       oldObj.callerId = callerId
+      if(oldObj.win.isVisible())
+        oldObj.win.webContents.send('show')
       oldObj.win.show()
       oldObj.win.moveTop()
       return oldObj
@@ -424,15 +427,27 @@ const renderPage = {
   /**
    * 启动图片选择器
    * @param pos 位置
+   * @param args
    * @param windowId 启动者的WebContents的id，用于渲染进程获取交互句柄
    */
-  openIconSelector (pos, windowId) {
+  openIconSelector (pos,args, windowId) {
+    let bounds={
+      width:390,
+      height:320
+    }
+    if(args.text){
+      bounds={
+        width: 390,
+        height: 380
+      }
+    }
     pool.usePop({
       url: render.getUrl('icon.html'),
-      width: 390,
-      height: 320,
+      width: bounds.width,
+      height: bounds.height,
       x: pos.x,
       y: pos.y,
+      args:args,
     }, windowId).then()
   },
   openInstallExtension (args) {

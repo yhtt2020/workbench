@@ -794,11 +794,29 @@ ipc.on('openTaskMenu',(event,args)=>{
       enabled:false
     },
     {
-      label: '更改标签组图标',
+      label: '重命名标签组',
       click() {
+        let defaultIcon={
+          type:'img',
+          icon:{
+            url:task.icon
+          }
+        }
+        if(task.userIcon){
+          defaultIcon={
+            type:'fontIcon',
+            icon:task.userIcon
+          }
+        }
         renderPage.openIconSelector({
           x:pos.x,
-          y:pos.y
+          y:pos.y,
+        },{
+          text:true,
+            shape:'none',
+            originalIcon:task.icon,
+            defaultIcon:defaultIcon,
+            defaultText:task.title,
         },event.sender.id)
       }
     },{
