@@ -5,6 +5,5 @@ import App from './App.vue'
 import tools from '../../src/util/tools.js'
 createApp(App).use(Antd).mount('#app')
 tools.getWindowArgs(window)
-console.log(window.globalArgs)
 
 

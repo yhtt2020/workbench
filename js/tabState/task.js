@@ -35,6 +35,7 @@ class TaskList {
     const newTask = {
       name: task.name || null,
       partition: task.partition|| 'persist:webcontent',
+      userIcon:task.userIcon,
       tabs: new TabList(task.tabs, this),
       tabHistory: new TabStack(task.tabHistory),
       collapsed: task.collapsed, // this property must stay undefined if it is already (since there is a difference between "explicitly uncollapsed" and "never collapsed")

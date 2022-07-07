@@ -1,7 +1,8 @@
 <script lang="ts">
 import twoColor from '../../../public/iconLists/twoColor.json'
 import fruit from '../../../public/iconLists/fruit.json'
-
+import animal from '../../../public/iconLists/animal.json'
+import jingling from '../../../public/iconLists/jingling.json'
 const ipc = eval('require')('electron').ipcRenderer
 export default {
   data() {
@@ -11,24 +12,30 @@ export default {
 
       iconLists: [
         twoColor,
-        fruit
+        fruit,
+        animal,
+        jingling
       ]
     }
   },
   mounted(){
-     ipc.invoke('getPopCallerId').then((data)=>{
-       console.log('got callerId',data)
-      this.callerId=data
+    ipc.on('show',()=>{
+      this.getCaller()
     })
   },
   methods: {
+    getCaller(){
+      ipc.invoke('getPopCallerId').then((data)=>{
+        console.log(data)
+        this.callerId=data
+      })
+    },
     selectIcon(icon,iconList) {
       let param={
         list:iconList.key,
         name:icon.name,
         alias:icon.alias
       }
-      console.log(param)
       ipc.sendTo(this.callerId, 'selectedIcon',{
         icon:param
       })

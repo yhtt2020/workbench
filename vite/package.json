@@ -12,6 +12,7 @@
   "dependencies": {
     "@types/node": "^18.0.0",
     "ant-design-vue": "^3.2.9",
+    "sass": "^1.53.0",
     "unplugin-vue-components": "^0.20.1",
     "vue": "^3.2.25",
     "vue-router": "4"
