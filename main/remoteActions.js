@@ -41,6 +41,7 @@ ipc.handle('showFirstGuideDialog', function () {
   dialog.showMessageBox({
     type: 'info',
     buttons: ['确定退出','继续完成'],
+    noLink:true,
     message: '这是首次新手引导',
     detail: '新手引导可以使您快速了解想天浏览器的功能，强烈建议完成引导'
   }).then((index) => {
@@ -51,6 +52,18 @@ ipc.handle('showFirstGuideDialog', function () {
     }
   });
 })
+
+
+ipc.handle('openBlockTips', function () {
+  dialog.showMessageBox({
+    type: 'info',
+    buttons: ['确定退出','继续完成'],
+    noLink:true,
+    message: '这是首次新手引导',
+    detail: '新手引导可以使您快速了解想天浏览器的功能，强烈建议完成引导'
+  })
+})
+
 
 ipc.handle('showGuideDialog', function () {
   dialog.showMessageBox({

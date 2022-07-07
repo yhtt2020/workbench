@@ -303,7 +303,6 @@ app.whenReady().then(()=>{
   }
 
 
-
   ipc.on('guideTasksFirst',()=>{
     if(markDb.db.get('guideSchedule.modules.feature.tasks').value()===false){
       SidePanel.send('guideTasks')
@@ -421,6 +420,10 @@ app.whenReady().then(()=>{
   })
   ipc.on('guideClose',()=>{
     mainWindow.webContents.send('closeGuide')
+  })
+
+  ipc.on('valueCount',(event,args)=>{
+    mainWindow.webContents.send('valueCount',args)
   })
 
 //--------------------------------------------------------->myf状态管理部分

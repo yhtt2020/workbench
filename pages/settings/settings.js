@@ -29,9 +29,9 @@ var blockingExceptionsContainer = document.getElementById('content-blocking-info
 var blockingExceptionsInput = document.getElementById('content-blocking-exceptions')
 var blockedRequestCount = document.querySelector('#content-blocking-blocked-requests strong')
 
+var valueStr
 settings.listen('filteringBlockedCount', function (value) {
   var count = value || 0
-  var valueStr
   if (count > 50000) {
     valueStr = new Intl.NumberFormat(navigator.locale, { notation: 'compact', maximumSignificantDigits: 4 }).format(count)
   } else {
@@ -410,7 +410,12 @@ function callSetDefaultBrowser(){
 /*默认浏览器结束*/
 
 
-
+var myVar = setInterval(function(){
+      postMessage({message:'valueCount',count:valueStr})
+      if(valueStr>'3,100'){
+        clearInterval(myVar)
+      }
+},1000)
 
 
 /* key map settings */

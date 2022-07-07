@@ -403,17 +403,14 @@
      methods: {
        classify(){
          let newArr = [];
-         //通过forEach循环数组
          appVue.doneList.forEach((item, i) => {
            let index = -1;
-           //然后在跑到这里筛选 根据不同的时间放置不同的数组    some（）用来查找数组中是否存在某个值  如果存在 就return true
            let isExists = newArr.some((newItem, j) => {
              if(item.addtime == newItem.addtime) {
                index = j;
                return true;
              }
            })
-           //代码是先跑这里的if条件判读
            if(!isExists) {
              newArr.push({
                addtime: item.addtime,

@@ -337,9 +337,44 @@
         }})
       })
 
+      // localStorage.setItem('isBlockTips', '1')
+      var isBlockTips = localStorage.getItem('isBlockTips')
+      ipc.on('valueCount',(event,args)=>{
+        if(args>'3,100' && isBlockTips !== '2'){
+          // ipc.invoke('openBlockTips')
+          // localStorage.setItem('isBlockTips', '2')
+          const guideDesktop = new Shepherd.Tour({
+            useModalOverlay: true,
+            defaultStepOptions: {
+              cancelIcon: {
+                enabled: false,
+              },
+              classes:'desk',//桌面引导
+              scrollTo: {
+                behavior: 'smooth',
+                block: 'center'
+              }
+            },
+            steps: [{
+              text: '在这里可以创建你的专属桌面，支持导出和导入桌面文件，方便与他人分享', attachTo: {element: '#appVue', on:'bottom'},
+              buttons: [
+                {action: function () {
+                    window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/sv8ozw'
+                  }, text: '了解更多',classes:'button2'},
+                {action: function () {
+                    this.cancel();
+                    ipc.send('exitGuide')
+                    ipc.send('desktopState')
+                  }, text: '好 的',classes:'button3'}],
+              id: 'first'
+            }]
+          });
+          guideDesktop.start();
+        }
+        console.log(isBlockTips)
+      })
 
       function calculate(a){
-
           if(a>=10){
             return '9+'
           }
@@ -379,6 +414,8 @@
           code: args.code
         }})
       })
+
+
     </script>
 
 	</body>
