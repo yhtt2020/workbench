@@ -56,12 +56,16 @@ ipc.handle('showFirstGuideDialog', function () {
 
 ipc.handle('openBlockTips', function () {
   dialog.showMessageBox({
-    type: 'info',
-    buttons: ['确定退出','继续完成'],
+    // type: 'info',
+    buttons: ['忽略','查看引导'],
     noLink:true,
-    message: '这是首次新手引导',
-    detail: '新手引导可以使您快速了解想天浏览器的功能，强烈建议完成引导'
-  })
+    defaultId:1,
+    detail: '检测到当前网站有多个广告或行为被拦截器拦截，如果影响正常浏览体验，请将该网站加入白名单'
+  }).then((index) => {
+    if (index.response === 1) {
+      mainWindow.webContents.send('blockGuide')
+    }
+  });
 })
 
 
