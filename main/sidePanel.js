@@ -881,7 +881,7 @@ ipc.on('openSidebarMenu',(e,args)=>{
       submenu:[
         {
           type:'checkbox',
-          label:'自动模式',
+          label:'自动伸缩',
           checked:checkAuto,
           click(){
             setSideMod('Auto')
@@ -889,14 +889,14 @@ ipc.on('openSidebarMenu',(e,args)=>{
         },
         {
           type:'checkbox',
-          label:'精简模式',
+          label:'收起',
           checked:checkClose,
           click(){
             setSideMod('Close')
           }
         },{
           type:'checkbox',
-          label:'展开模式',
+          label:'展开',
           checked:checkOpen,
           click(){
             setSideMod('Open')
