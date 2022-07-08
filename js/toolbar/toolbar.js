@@ -6,7 +6,7 @@ const sideBar = {
   minWidth: 45,
   maxWidth: 145,
   expandWidth: 100,
-  mod: 'auto',// auto.自动展开收起, open.一直展开 ,最小化。
+  mod: 'close',// auto.自动展开收起, open.一直展开 ,最小化。
   isMessageFixed: false,
   //切换侧边栏模式
   switchSideMod () {
