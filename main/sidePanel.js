@@ -901,16 +901,16 @@ ipc.on('openSidebarMenu',(e,args)=>{
           click(){
             setSideMod('Open')
           }
-        },
-        {
-          type:'separator'
-        },
-        {
-          label:!checkHide?'隐藏侧边栏':'显示侧边栏',
-          click(){
-            setSideMod('Hide')
-          }
         }
+        // , {
+        //   type:'separator'
+        // },
+        // {
+        //   label:!checkHide?'隐藏侧边栏':'显示侧边栏',
+        //   click(){
+        //     setSideMod('Hide')
+        //   }
+        // }
       ]
     }
   ]
