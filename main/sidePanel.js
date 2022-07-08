@@ -833,7 +833,26 @@ ipc.on('openTaskMenu',(event,args)=>{
 
   menu.popup()
 })
-ipc.on('openSidebarMenu',()=>{
+ipc.on('openSidebarMenu',(e,args)=>{
+  let checkAuto,checkClose,checkOpen,checkHide=false
+  switch(args.mod){
+    case 'auto':
+      checkAuto=true
+      break
+    case 'close':
+      checkClose=true
+      break
+    case 'hide':
+      checkHide=true
+      break
+    default :
+      checkOpen=true
+  }
+  function setSideMod(mod){
+    SidePanel.send('sideSet'+mod)
+    sendIPCToWindow(mainWindow,'sideSetMod',{mod:mod.toLowerCase()})
+
+  }
   const tpl=[
     {
       label: '新建标签组',
@@ -853,6 +872,46 @@ ipc.on('openSidebarMenu',()=>{
         sendIPCToWindow(mainWindow,'showTasks')
         mainWindow.focus()
       }
+    },
+    {
+      type:'separator'
+    },
+    {
+      label: '侧边栏模式',
+      submenu:[
+        {
+          type:'checkbox',
+          label:'自动模式',
+          checked:checkAuto,
+          click(){
+            setSideMod('Auto')
+          }
+        },
+        {
+          type:'checkbox',
+          label:'精简模式',
+          checked:checkClose,
+          click(){
+            setSideMod('Close')
+          }
+        },{
+          type:'checkbox',
+          label:'展开模式',
+          checked:checkOpen,
+          click(){
+            setSideMod('Open')
+          }
+        },
+        {
+          type:'separator'
+        },
+        {
+          label:!checkHide?'隐藏侧边栏':'显示侧边栏',
+          click(){
+            setSideMod('Hide')
+          }
+        }
+      ]
     }
   ]
   let menu = require('electron').Menu.buildFromTemplate(tpl)
