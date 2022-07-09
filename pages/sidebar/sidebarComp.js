@@ -67,7 +67,7 @@ const sidebarTpl = /*html*/`
                             <a-popover placement="bottomLeft">
                               <template slot="content">
                                 <div class="flex flex-direction justify-around align-start" style="width: 100%; height: 185px">
-                                  <div class="text-black">等级: {{this.$store.getters.getTsGrade.lv}}级</div>
+                                  <div class="text-black">在线等级: {{this.$store.getters.getTsGrade.lv}}级</div>
                                   <div class="text-black">距离下一级还需要: {{remainTime}} 小时</div>
                                   <div class="text-black">累计在线时长{{this.$store.getters.getTsGrade.cumulativeHours}}小时</div>
                                   <div class="text-grey">

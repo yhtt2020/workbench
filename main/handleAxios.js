@@ -302,6 +302,8 @@ app.whenReady().then(()=>{
     mainWindow.webContents.send(action, data || {})
   }
 
+
+
   ipc.on('guideTasksFirst',()=>{
     if(markDb.db.get('guideSchedule.modules.feature.tasks').value()===false){
       SidePanel.send('guideTasks')
@@ -406,8 +408,13 @@ app.whenReady().then(()=>{
   ipc.on('exitGuide',(item,window)=>{
     sendIPCToWindow(window, 'exitGuide')
   })
+  ipc.on('exitFirstGuide',()=>{
+    mainWindow.webContents.send('exitFirstGuide')
+  })
 
-
+  ipc.on('closeGuide',()=>{
+    mainWindow.webContents.send('closeGuide')
+  })
 
   ipc.on('guideLogin',()=>{
     SidePanel.send('guideLogin')
@@ -415,6 +422,7 @@ app.whenReady().then(()=>{
   ipc.on('guideClose',()=>{
     mainWindow.webContents.send('closeGuide')
   })
+
 //--------------------------------------------------------->myf状态管理部分
 
 

@@ -50,14 +50,11 @@ let originalPageUrl
 ipc.on('originalPage',(event,args)=>{
    originalPageUrl = args
 })
-// let emptyPageUrl
-// ipc.on('emptyPage',(event,args)=>{
-//    emptyPageUrl = args
-// })
 
-ipc.on('emptyPageUrl',(event,args)=>{
-  mainWindow.webContents.send('closeEmptyPage',args)
+ipc.on('closeEmpty',()=>{
+  mainWindow.webContents.send('closeEmptyPage')
 })
+
 ipc.on('downloading',(event,args)=>{
   mainWindow.send('downloadCountAdd')
 })
@@ -81,7 +78,7 @@ function downloadHandler (event, item, webContents) {
   let suffixName = item.getFilename().substring(item.getFilename().lastIndexOf('.')+1,item.getFilename().length)
   savePathFilename =  path.basename(item.getSavePath())
 
-
+  mainWindow.webContents.send('isDownload')
   if (item.getMimeType() === 'application/pdf' && itemURL.indexOf('blob:') !== 0 && itemURL.indexOf('#pdfjs.action=download') === -1 && !attachment) { // clicking the download button in the viewer opens a blob url, so we don't want to open those in the viewer (since that would make it impossible to download a PDF)
     event.preventDefault()
     sendIPCToWindow(mainWindow, 'openPDF', {

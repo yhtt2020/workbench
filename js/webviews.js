@@ -676,48 +676,65 @@ webviews.bindIPC('scroll-position-change', function (tabId, args) {
   })
 })
 
+let isDownload = false
+let download = false
+ipc.on('isDownload',()=>{
+  isDownload=true
+  download=true
+})
+
 let originalUrl;
 let originalId;
+let emptyUrl
+let closeGuideTab=''
 ipc.on('view-event', function (e, args) {
   webviews.emitEvent(args.event, args.viewId, args.args)
-  // console.log(args)
 
-  if (args.event === 'new-tab') {
-    originalId = args.viewId
-  }
-  if (args.event === 'dom-ready') {
-    for(let i =0;i<tabs.tabs.length;i++){
-      if(tabs.tabs[i].id===args.viewId){
-        tabs.tabs[i].domRead=true
+  setTimeout(()=>{
+    if (args.event === 'new-tab' && download === true) {
+      originalId = args.viewId
+      emptyUrl = args.args[0]
+      tabs.tabs.filter((e)=>{
+        if (e.url === emptyUrl) {
+          closeGuideTab = e.id
+        }
+      })
+    }
+  },30)
 
+  setTimeout(()=>{
+    for (let i = 0; i < tabs.tabs.length; i++) {
+      if (tabs.tabs[i].id === originalId && isDownload ===true) {
+        originalUrl = tabs.tabs[i].url
+        ipc.send('originalPage',originalUrl)
+        isDownload=false
       }
     }
-  }
-  for (let i = 0; i < tabs.tabs.length; i++) {
-    originalId = args.viewId
-    if (tabs.tabs[i].id === originalId) {
-      originalUrl = tabs.tabs[i].url
-      ipc.send('originalPage',originalUrl)
-    }
-  }
+  },50)
 })
 
 ipc.on('closeEmptyPage',(event,args)=>{
-  // require('browserUI.js').closeTab(args)
-  for(let i=0;i<tabs.tabs.length;i++){
-    for(let j=0;j<args.length;j++){
-      if(tabs.tabs[i].url===args[j]){
-        if(args.length!==1 &&  tabs.tabs[i].domRead!==true){
-          require('browserUI.js').closeTab(tabs.tabs[i].id)
-          ipc.send('willDownload')
-        }
-        // if(args.length===1){
-        //   ipc.send('willDownload')
-        // }
-      }
-    }
-  }
+  require('browserUI.js').closeTab(closeGuideTab)
+  closeGuideTab=''
 })
+
+
+// ipc.on('closeEmptyPage',(event,args)=>{
+//   // require('browserUI.js').closeTab(args)
+//   for(let i=0;i<tabs.tabs.length;i++){
+//     for(let j=0;j<args.length;j++){
+//       if(tabs.tabs[i].url===args[j]){
+//         if(args.length!==1){
+//           require('browserUI.js').closeTab(tabs.tabs[i].id)
+//           ipc.send('willDownload')
+//         }
+//         // if(args.length===1){
+//         //   ipc.send('willDownload')
+//         // }
+//       }
+//     }
+//   }
+// })
 
 
 ipc.on('closeTab',(event,args)=>{
