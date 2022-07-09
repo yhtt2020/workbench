@@ -364,7 +364,7 @@
         localStorage.setItem('isBlockTips', '1')
       }
       ipc.on('valueCount',(event,args)=>{
-        if(args>'3,640' && isBlockTips === '1') {
+        if(args>'2,000' && isBlockTips === '1') {
           ipc.invoke('openBlockTips')
           localStorage.setItem('isBlockTips', '2')
         }

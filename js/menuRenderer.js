@@ -149,7 +149,7 @@ module.exports = {
         }
       })
       ipc.send('valueCount',valueStr)
-      if(valueStr>'3,640'){
+      if(valueStr>'2,000'){
         clearInterval(myVar)
       }
     },1000)
