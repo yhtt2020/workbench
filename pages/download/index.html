@@ -82,7 +82,7 @@
 
           <div  v-for="timeGroup in showList">
             <div class="time" style="margin-top: 5px;font-size: 15px;">
-              <span style="margin-left: 30px;color: #000000;">{{timeGroup.addtime}}</span>
+              <span style="margin-left: 30px;color: #000000;">{{timeGroup.addTime}}</span>
             </div>
           <div class="downloadDone"  v-for="(item,index) in timeGroup.subList"  style="margin-top: 10px"  v-bind:key="item.id"  @click.stop="change(item.id)" @dblclick="openFileHandler(item)" @contextmenu="menuDone(item,item.id,timeGroup)"  :class="{active : active === item.id,
          clickActive:clickActive===item.id}"
@@ -304,7 +304,7 @@
         startTime: args.startTime,
         doneDate:myDate.toLocaleString('chinese', { hour12: false }),
         href:args.href,
-        addtime:myDate.toLocaleDateString(),
+        addTime:myDate.toLocaleDateString(),
       })
       appVue.listCount--
       appVue.count--
@@ -319,7 +319,7 @@
         doneDate:myDate.toLocaleString('chinese', { hour12: false }),
         status:'1',
         href:args.href,
-        addtime:myDate.toLocaleDateString(),
+        addTime:myDate.toLocaleDateString(),
       })
       ipcRenderer.send('closeEmpty',args.chainUrl)
       ipcRenderer.send('downloadEnd')
@@ -378,7 +378,7 @@
           startTime:dblist[i].startTime,
           doneDate:dblist[i].doneDate,
           href:dblist[i].href,
-          addtime:dblist[i].addtime
+          addTime:dblist[i].addTime
         })
         appVue.listDoneCount++
           appVue.classify()
@@ -408,7 +408,7 @@
            let index = -1;
            //然后在跑到这里筛选 根据不同的时间放置不同的数组    some（）用来查找数组中是否存在某个值  如果存在 就return true
            let isExists = newArr.some((newItem, j) => {
-             if(item.addtime == newItem.addtime) {
+             if(item.addTime == newItem.addTime) {
                index = j;
                return true;
              }
@@ -416,7 +416,7 @@
            //代码是先跑这里的if条件判读
            if(!isExists) {
              newArr.push({
-               addtime: item.addtime,
+               addTime: item.addTime,
                subList: [item]
              })
            } else {
