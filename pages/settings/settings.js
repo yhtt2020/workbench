@@ -548,8 +548,7 @@ const setProxy = (key, value) => {
 
 settings.get('proxy', (proxy = {}) => {
   toggleProxyOptions(proxy.type)
-
-  proxyTypeInput.options.selectedIndex = proxy.type || 0
+  proxyTypeInput.options.selectedIndex = proxy.type || 3
   proxyInputs.forEach(item => item.value = proxy[item.name] || '')
 })
 

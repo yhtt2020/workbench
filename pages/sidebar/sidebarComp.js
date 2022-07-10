@@ -1273,7 +1273,9 @@ Vue.component('sidebar', {
         }
     },
     openSidebarMenu(){
-      ipc.send('openSidebarMenu')
+      ipc.send('openSidebarMenu',{
+        mod:appVue.mod
+      })
     },
     openTaskMenu(task){
       window.selectedTask=task
