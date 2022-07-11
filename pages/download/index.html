@@ -81,10 +81,10 @@
           </div>
 
           <div  v-for="timeGroup in showList">
-            <div class="time" style="margin-top: 5px;font-size: 15px;">
+            <div class="time" style="margin-top: 5px;font-size: 15px;font-weight: 500">
               <span style="margin-left: 30px;color: #000000;">{{timeGroup.addTime}}</span>
             </div>
-          <div class="downloadDone"  v-for="(item,index) in timeGroup.subList"  style="margin-top: 10px"  v-bind:key="item.id"  @click.stop="change(item.id)" @dblclick="openFileHandler(item)" @contextmenu="menuDone(item,item.id,timeGroup)"  :class="{active : active === item.id,
+          <div class="downloadDone"  v-for="(item,index) in timeGroup.subList"  style="margin-top: 5px"  v-bind:key="item.id"  @click.stop="change(item.id)" @dblclick="openFileHandler(item)" @contextmenu="menuDone(item,item.id,timeGroup)"  :class="{active : active === item.id,
          clickActive:clickActive===item.id}"
                @mouseover="mouseOver(item.id)"
                @mouseleave="mouseLeave">
@@ -304,7 +304,8 @@
         startTime: args.startTime,
         doneDate:myDate.toLocaleString('chinese', { hour12: false }),
         href:args.href,
-        addTime:myDate.toLocaleDateString(),
+        addTime:appVue.transDate(myDate.toLocaleDateString()),
+        // addTime:myDate.toLocaleDateString(),
       })
       appVue.listCount--
       appVue.count--
@@ -324,6 +325,7 @@
       ipcRenderer.send('closeEmpty',args.chainUrl)
       ipcRenderer.send('downloadEnd')
       appVue.classify()
+     console.log(appVue.doneList)
     }
   })
 
@@ -378,7 +380,7 @@
           startTime:dblist[i].startTime,
           doneDate:dblist[i].doneDate,
           href:dblist[i].href,
-          addTime:dblist[i].addTime
+          addTime:appVue.transDate(dblist[i].addTime)
         })
         appVue.listDoneCount++
           appVue.classify()
@@ -401,6 +403,32 @@
        })
     },
      methods: {
+       transDate(strtime) {
+         var date = new Date(strtime.replace(/-/g, '/'));
+         date=Date.parse(date);
+         var tt = new Date(parseInt(date));
+         var days = parseInt((new Date().getTime() - date) / 86400000);
+         var today = new Date().getDate();
+         var year = tt.getFullYear();
+         var mouth = tt.getMonth() + 1;
+         var day = tt.getDate();
+         // var time = tt.getHours() < 10 ? "0" + tt.getHours() : tt.getHours();
+         // var min = tt.getMinutes() < 10 ? "0" + tt.getMinutes() : tt.getMinutes();
+         var result, offset;
+         offset = Math.abs(today - day);
+         if (days < 4&&offset<4) {
+           if (offset === 0) {
+             result = "今天"
+           } else if (offset === 1) {
+             result = "昨天"
+           } else if (offset === 2) {
+             result = "前天"
+           }
+         } else {
+           result = year + "-" + mouth + "-" + day
+         }
+         return result
+       },
        classify(){
          let newArr = [];
          appVue.doneList.forEach((item, i) => {
