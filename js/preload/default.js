@@ -289,3 +289,11 @@ if(location.href.startsWith('https://chrome.google.com/webstore')){
   }
   injectChromeWebstoreInstallButton()
 }
+document.ondrop=function (e){
+  console.log(e.dataTransfer.getData('url'))
+  ipc.send('onDropUrl', { url:e.dataTransfer.getData('url') })
+}
+
+document.ondragover=function (e){
+  e.preventDefault()
+}
