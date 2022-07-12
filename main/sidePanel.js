@@ -778,7 +778,9 @@ ipc.on('openSwitch',()=>{
   createSwitchTask()
 })
 
-
+ipc.on('addSingleTaskGuide',()=>{
+  sendIPCToWindow(mainWindow, 'addSingleTask')
+})
 
 ipc.on('closeSwitch',()=>{
   if(switchWindow!==null){

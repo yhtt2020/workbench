@@ -106,7 +106,7 @@ const sessionRestore = {
           console.log('离线保存成功', space, saveData)
           backupSpaceModel.save(space, saveData)
         } else {
-          console.log('本地空间保存成功', space, saveData)
+          // console.log('本地空间保存成功', space, saveData)
           localSpaceModel.save(space, saveData)
         }
       }

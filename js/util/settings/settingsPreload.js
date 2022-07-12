@@ -22,9 +22,12 @@ window.addEventListener('message', function (e) {
 
 	//询问主进程，是否是默认浏览器
 	if(e.data.message=='getIsDefaulBrowser'){
-		ipc.send('getIsDefaulBrowser' )
+		ipc.send('getIsDefaulBrowser')
 	}
 
+  if(e.data.message=='valueCount'){
+    ipc.send('valueCount',e.data.count)
+  }
 })
 
 ipc.on('returnIsDefaultBrowser',function(e,data){
