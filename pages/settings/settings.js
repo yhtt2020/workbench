@@ -30,8 +30,8 @@ var blockingExceptionsInput = document.getElementById('content-blocking-exceptio
 var blockedRequestCount = document.querySelector('#content-blocking-blocked-requests strong')
 
 settings.listen('filteringBlockedCount', function (value) {
-  var count = value || 0
   var valueStr
+  var count = value || 0
   if (count > 50000) {
     valueStr = new Intl.NumberFormat(navigator.locale, { notation: 'compact', maximumSignificantDigits: 4 }).format(count)
   } else {
@@ -409,8 +409,13 @@ function callSetDefaultBrowser(){
 }
 /*默认浏览器结束*/
 
-
-
+//
+// var myVar = setInterval(function(){
+//       postMessage({message:'valueCount',count:valueStr})
+//       if(valueStr>'3,430'){
+//         clearInterval(myVar)
+//       }
+// },1000)
 
 
 /* key map settings */

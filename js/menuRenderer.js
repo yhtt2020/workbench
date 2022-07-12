@@ -137,16 +137,24 @@ module.exports = {
       }
     })
 
-    // function changeBlockingLevel (level) {
-    //   settings.get('filtering', function (value) {
-    //     if (!value) {
-    //       value = {}
-    //     }
-    //     value.blockingLevel = level
-    //     settings.set('filtering', value)
-    //     updateBlockingLevelUI(level)
-    //   })
-    // }
+
+    var myVar = setInterval(function(){
+      var valueStr
+      settings.listen('filteringBlockedCount', function (value) {
+        var count = value || 0
+        if (count > 50000) {
+          valueStr = new Intl.NumberFormat(navigator.locale, { notation: 'compact', maximumSignificantDigits: 4 }).format(count)
+        } else {
+          valueStr = new Intl.NumberFormat().format(count)
+        }
+      })
+      ipc.send('valueCount',valueStr.replace(/[,]/g,""))
+      if(valueStr.replace(/[,]/g,"")> 2000 ){
+        clearInterval(myVar)
+      }
+    },1000)
+
+
 
     ipc.on('blockSetting',(event,args)=>{
       let value = {}

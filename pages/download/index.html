@@ -81,10 +81,10 @@
           </div>
 
           <div  v-for="timeGroup in showList">
-            <div class="time" style="margin-top: 5px;font-size: 15px;">
+            <div class="time" style="margin-top: 5px;font-size: 15px;font-weight: 500">
               <span style="margin-left: 30px;color: #000000;">{{timeGroup.addTime}}</span>
             </div>
-          <div class="downloadDone"  v-for="(item,index) in timeGroup.subList"  style="margin-top: 10px"  v-bind:key="item.id"  @click.stop="change(item.id)" @dblclick="openFileHandler(item)" @contextmenu="menuDone(item,item.id,timeGroup)"  :class="{active : active === item.id,
+          <div class="downloadDone"  v-for="(item,index) in timeGroup.subList"  style="margin-top: 5px"  v-bind:key="item.id"  @click.stop="change(item.id)" @dblclick="openFileHandler(item)" @contextmenu="menuDone(item,item.id,timeGroup)"  :class="{active : active === item.id,
          clickActive:clickActive===item.id}"
                @mouseover="mouseOver(item.id)"
                @mouseleave="mouseLeave">
@@ -304,7 +304,8 @@
         startTime: args.startTime,
         doneDate:myDate.toLocaleString('chinese', { hour12: false }),
         href:args.href,
-        addTime:myDate.toLocaleDateString(),
+        addTime:appVue.transDate(myDate.toLocaleDateString()),
+        // addTime:myDate.toLocaleDateString(),
       })
       appVue.listCount--
       appVue.count--
@@ -378,7 +379,7 @@
           startTime:dblist[i].startTime,
           doneDate:dblist[i].doneDate,
           href:dblist[i].href,
-          addTime:dblist[i].addTime
+          addTime:appVue.transDate(dblist[i].addTime)
         })
         appVue.listDoneCount++
           appVue.classify()
@@ -401,19 +402,42 @@
        })
     },
      methods: {
+       transDate(strtime) {
+         var date = new Date(strtime.replace(/-/g, '/'));
+         date=Date.parse(date);
+         var tt = new Date(parseInt(date));
+         var days = parseInt((new Date().getTime() - date) / 86400000);
+         var today = new Date().getDate();
+         var year = tt.getFullYear();
+         var month = tt.getMonth() + 1;
+         var day = tt.getDate();
+         // var time = tt.getHours() < 10 ? "0" + tt.getHours() : tt.getHours();
+         // var min = tt.getMinutes() < 10 ? "0" + tt.getMinutes() : tt.getMinutes();
+         var result, offset;
+         offset = Math.abs(today - day);
+         if (days < 4&&offset<4) {
+           if (offset === 0) {
+             result = "今天"
+           } else if (offset === 1) {
+             result = "昨天"
+           } else if (offset === 2) {
+             result = "前天"
+           }
+         } else {
+           result = year + "-" + month + "-" + day
+         }
+         return result
+       },
        classify(){
          let newArr = [];
-         //通过forEach循环数组
          appVue.doneList.forEach((item, i) => {
            let index = -1;
-           //然后在跑到这里筛选 根据不同的时间放置不同的数组    some（）用来查找数组中是否存在某个值  如果存在 就return true
            let isExists = newArr.some((newItem, j) => {
              if(item.addTime == newItem.addTime) {
                index = j;
                return true;
              }
            })
-           //代码是先跑这里的if条件判读
            if(!isExists) {
              newArr.push({
                addTime: item.addTime,
