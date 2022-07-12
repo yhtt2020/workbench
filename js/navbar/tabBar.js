@@ -320,6 +320,11 @@ const tabBar = {
     tabEl.appendChild(tabAudio.getButton(data.id))
     tabEl.appendChild(progressBar.create())
 
+    tabEl.addEventListener('dblclick',(e)=>{
+      ipc.send('dbClickClose',{id:data.id})
+      e.stopPropagation()
+      e.preventDefault()
+    })
     // icons
 
     var iconArea = document.createElement('span')

@@ -31,7 +31,6 @@ const mobileMod = {
     let mobileWindow = new BrowserWindow({
       frame: true,
       backgroundColor: 'white',
-      parent: mainWindow,
       modal: false,
       hasShadow: true,
       x: pos.x,

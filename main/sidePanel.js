@@ -1316,6 +1316,46 @@ app.whenReady().then(()=>{
   })
 })
 
+ipc.on('onDropUrl',(e,args)=>{
+  if(args.url){
+    let set=settings.get('dropOpenLink')
+    if(!!!set){
+      dialog.showMessageBox(mainWindow, {
+        message:'检测到您首次拖放网页链接，请选择您的默认拖放链接行为，您也可以后续在设置中修改行为。',
+        buttons:['新标签打开链接','不做任何行为']
+    }).then((res)=>{
+      if(res.response===0){
+        sendIPCToWindow(mainWindow,'addTab',{url:args.url})
+        settings.set('dropOpenLink','true')
+      }else{
+        settings.set('dropOpenLink','false')
+      }
+      })
+    }else if(set==='true'){
+      sendIPCToWindow(mainWindow,'addTab',{url:args.url})
+    }
+  }
+})
 
+ipc.on('dbClickClose',(e,args)=>{
+  if(args.id){
+    let set=settings.get('dbClickClose')
+    if(!!!set){
+      dialog.showMessageBox(mainWindow, {
+        message:'检测到您首次双击标签，请根据习惯选择您的默认行为，您也可以后续在设置中修改此行为。',
+        buttons:['关闭标签','不做任何行为']
+      }).then((res)=>{
+        if(res.response===0){
+          sendIPCToWindow(mainWindow,'closeTab',{id:args.id})
+          settings.set('dbClickClose','true')
+        }else{
+          settings.set('dbClickClose','false')
+        }
+      })
+    }else if(set==='true'){
+      sendIPCToWindow(mainWindow,'closeTab',{id:args.id})
+    }
+  }
+})
 
 /*user面板代码end*/
