@@ -325,7 +325,6 @@
       ipcRenderer.send('closeEmpty',args.chainUrl)
       ipcRenderer.send('downloadEnd')
       appVue.classify()
-     console.log(appVue.doneList)
     }
   })
 
@@ -410,7 +409,7 @@
          var days = parseInt((new Date().getTime() - date) / 86400000);
          var today = new Date().getDate();
          var year = tt.getFullYear();
-         var mouth = tt.getMonth() + 1;
+         var month = tt.getMonth() + 1;
          var day = tt.getDate();
          // var time = tt.getHours() < 10 ? "0" + tt.getHours() : tt.getHours();
          // var min = tt.getMinutes() < 10 ? "0" + tt.getMinutes() : tt.getMinutes();
@@ -425,7 +424,7 @@
              result = "前天"
            }
          } else {
-           result = year + "-" + mouth + "-" + day
+           result = year + "-" + month + "-" + day
          }
          return result
        },

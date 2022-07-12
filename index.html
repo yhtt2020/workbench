@@ -364,7 +364,7 @@
         localStorage.setItem('isBlockTips', '1')
       }
       ipc.on('valueCount',(event,args)=>{
-        if(args>'2,000' && isBlockTips === '1') {
+        if(args>2000 && isBlockTips === '1') {
           ipc.invoke('openBlockTips')
           localStorage.setItem('isBlockTips', '2')
         }
@@ -384,7 +384,7 @@
             }
           },
           steps: [{
-            text: '您可以点击该图标取消网站的广告拦截', attachTo: {element: '#closeBlockGuide', on:'right'},
+            text: '您可以点击该图标取消当前网站的广告拦截', attachTo: {element: '#closeBlockGuide', on:'right'},
             buttons: [
               {action: function () {return  this.cancel();}, text: '好 的',classes:'button'}],
             id: 'blockGuide'    // 用于Shepherd step的唯一标识符

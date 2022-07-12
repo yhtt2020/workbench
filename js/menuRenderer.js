@@ -148,8 +148,8 @@ module.exports = {
           valueStr = new Intl.NumberFormat().format(count)
         }
       })
-      ipc.send('valueCount',valueStr)
-      if(valueStr>'2,000'){
+      ipc.send('valueCount',valueStr.replace(/[,]/g,""))
+      if(valueStr.replace(/[,]/g,"")> 2000 ){
         clearInterval(myVar)
       }
     },1000)
