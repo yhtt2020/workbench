@@ -1,0 +1,9 @@
+.dark-theme .tab-item.active:not(:only-child) {
+  border: none;
+  background: #3f3f3f; }
+  .dark-theme .tab-item.active:not(:only-child) .title {
+    color: #cecece; }
+  .dark-theme .tab-item.active:not(:only-child).theme-background-low-contrast .tab-item.active:not(:only-child) {
+    background: rgba(255, 255, 255, 0.1); }
+
+/*# sourceMappingURL=darkMod.css.map */
