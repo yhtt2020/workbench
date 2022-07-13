@@ -64,7 +64,7 @@ function initialize () {
 }
 
 if (typeof module !== 'undefined') {
-  module.exports = { initialize }
+  module.exports = { initialize ,enableDarkMode,disableDarkMode}
 } else {
   initialize()
 }
