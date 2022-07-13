@@ -842,6 +842,9 @@ Vue.component('sidebar', {
   },
 
   async mounted () {
+    if(process.platform==='darwin'){
+      document.getElementById('appVue').style.borderRadius='0 0 0 10px'
+    }
     ipc.on('callBackMedal',(event,args)=>{
       this.$nextTick(()=>{
         appVue.$refs.sidePanel.isMedals = args
