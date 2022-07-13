@@ -1,7 +1,8 @@
-#toolbar{
-  img{
+#toolbar {
+  img {
     -webkit-user-drag: none;
   }
+
   line-height: 40px;
   z-index: 2;
   top: calc(36px + var(--control-space-top));
@@ -11,38 +12,45 @@
   height: 40px;
   background: #fff;
   border-bottom: 1px solid #e3e3e3;
-  .action{
+
+  .action {
     padding: 6px;
     width: 30px;
     height: 30px;
-    margin:4px;
+    margin: 4px;
     vertical-align: top;
     border-radius: 4px;
   }
+
   .start-page {
-     background-color: rgba(227, 227, 227, 0.27);
+    background-color: rgba(227, 227, 227, 0.27);
   }
-  .app{
+
+  .app {
     padding: 2px;
     width: 32px;
     height: 32px;
     margin-top: 4px;
   }
-  .action:hover{
+
+  .action:hover {
     background: rgba(238, 238, 238, 0.8);
 
   }
-  .is-reader{
-    img{
+
+  .is-reader {
+    img {
       border: 1px solid #1E90FF;
       border-radius: 50%;
     }
 
   }
-  .action-wrapper{
+
+  .action-wrapper {
     width: 40px;
     position: relative;
-    .bandage{
+
+    .bandage {
       position: absolute;
       display: inline-block;
       font-size: 10px;
@@ -53,34 +61,41 @@
       height: 14px;
       right: 7px;
       top: 7px;
-      text-align: center;line-height: 14px;
+      text-align: center;
+      line-height: 14px;
     }
   }
 
-  .disable{
-      opacity: 0.3;
+  .disable {
+    opacity: 0.3;
   }
-  .disable:hover{
+
+  .disable:hover {
     background: none;
   }
-  .site-card{
+
+  .site-card {
     cursor: pointer;
     vertical-align: middle;
     width: 28px;
     margin-top: -5px;
   }
-  .site-card:hover{
+
+  .site-card:hover {
     opacity: 0.8;
   }
-  #tab-editor{
+
+  #tab-editor {
     left: 35px;
     width: calc(100% - 35px);
   }
-  #tab-editor-input{
+
+  #tab-editor-input {
     font-size: 14px;
 
   }
-  #address-bar{
+
+  #address-bar {
     background: rgba(201, 201, 201, 0.35);
     display: block;
     height: 28px;
@@ -90,7 +105,17 @@
     padding-left: 3px;
   }
 
+  .split {
+    margin-right: 8px;
+    border-right: 1px solid #cacaca;
+    display: inline-block;
+    height: 16px;
+    vertical-align: middle;
+    width: 0;
+    margin-top: -3px
+  }
 }
-#tab-editor .tab-editor-button:hover{
+
+#tab-editor .tab-editor-button:hover {
   line-height: 1em;
 }

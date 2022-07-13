@@ -1,4 +1,30 @@
 @charset "UTF-8";
+.dark-theme #toolbar {
+  background: #202020;
+  border-color: #202020; }
+  .dark-theme #toolbar .action:hover {
+    background: #3f3f3f; }
+  .dark-theme #toolbar #tab-editor-input {
+    color: #d2d2d2; }
+  .dark-theme #toolbar .app-tool {
+    opacity: 0.6; }
+  .dark-theme #toolbar svg path {
+    fill: #d2d2d2 !important;
+    color: #d2d2d2; }
+  .dark-theme #toolbar .split {
+    border-color: #3f3f3f; }
+.dark-theme #toolbar #address-bar {
+  background: #3f3f3f; }
+.dark-theme .tab-item .title {
+  color: #bdbdbd; }
+.dark-theme .tab-item.active:not(:only-child) {
+  border: none;
+  background: #3f3f3f; }
+  .dark-theme .tab-item.active:not(:only-child) .title {
+    color: #cecece; }
+  .dark-theme .tab-item.active:not(:only-child).theme-background-low-contrast .tab-item.active:not(:only-child) {
+    background: rgba(255, 255, 255, 0.1); }
+
 #navbar {
   display: flex;
   height: calc(36px + var(--control-space-top));
@@ -231,14 +257,6 @@ body.linux #menu-button {
   background: white; }
   .use-theme .tab-item.active:not(:only-child) .title {
     color: #333; }
-
-.dark-theme .tab-item.active:not(:only-child) {
-  border: none;
-  background: white; }
-  .dark-theme .tab-item.active:not(:only-child) .title {
-    color: #333; }
-  .dark-theme .tab-item.active:not(:only-child).theme-background-low-contrast .tab-item.active:not(:only-child) {
-    background: rgba(255, 255, 255, 0.1); }
 
 .tab-item.fade {
   opacity: 0.55; }
