@@ -285,11 +285,47 @@
   border-color: rgba(27, 28, 28, 0.7725490196);
   color: #d5d5d5;
 }
-.dark-mode .sidebar .side-container .side-items .app-task .icon {
-  opacity: 0.6 !important;
-}
 .dark-mode .divider {
   border-color: rgba(161, 161, 161, 0.368627451);
+}
+.dark-mode .processing {
+  background-color: rgb(210, 210, 210);
+}
+.dark-mode .user-panel .mg-content .mg-content-btn .cb-top {
+  border-bottom: none;
+}
+.dark-mode .user-panel .info-num {
+  color: rgb(210, 210, 210);
+}
+.dark-mode .user-panel .cb-top-word {
+  color: rgb(210, 210, 210);
+}
+.dark-mode .user-panel .my-info-panel {
+  border: rgb(210, 210, 210);
+  background: rgb(63, 63, 63);
+}
+.dark-mode .user-panel .title-my-group {
+  color: rgb(210, 210, 210);
+}
+.dark-mode .user-panel .nickname {
+  color: rgb(210, 210, 210);
+}
+.dark-mode .user-panel [data-icon=close] path {
+  fill: rgb(210, 210, 210) !important;
+  color: rgb(210, 210, 210);
+}
+.dark-mode .user-panel .ant-drawer-body {
+  background-color: rgb(32, 32, 32) !important;
+}
+.dark-mode .mg-content .mg-content-btn {
+  background: rgb(63, 63, 63);
+  border: none;
+}
+.dark-mode .mg-content .mg-content-btn .ant-btn {
+  border: none;
+}
+.dark-mode .mg-content .mg-content-btn .ant-btn:hover {
+  border: none;
 }
 
 body {
