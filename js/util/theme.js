@@ -17,7 +17,10 @@ function enableDarkMode () {
   requestAnimationFrame(function () {
     window.dispatchEvent(new CustomEvent('themechange'))
   })
-  ipc.send('themeChange',{status:'enable'})
+  window.postMessage({
+    message:'themeChange',
+    status:'enable'
+  })
 }
 
 function disableDarkMode () {
@@ -26,7 +29,11 @@ function disableDarkMode () {
   requestAnimationFrame(function () {
     window.dispatchEvent(new CustomEvent('themechange'))
   })
-  ipc.send('themeChange',{status:'disable'})
+  window.postMessage({
+      message:'themeChange',
+      status:'disable'
+    })
+
 }
 
 var themeInterval = null
