@@ -74,7 +74,9 @@ const sessionRestore = {
   currentSpace: {},
   save: async function (forceSave = true, sync = true) {
     sessionRestore.currentSpace=await spaceModel.getCurrent()
-    var stateString = JSON.stringify(tasks.getStringifyableState())
+    let currentState=tasks.getStringifyableState()
+    console.log('当前状态为 currentStat=',currentState)
+    var stateString = JSON.stringify(currentState)
     // save all tabs that aren't private
     var data = {
       version: 2,
@@ -114,6 +116,7 @@ const sessionRestore = {
       try {
         if (sessionRestore.currentSpace.spaceType === 'cloud') {
           let cloudResult = await sessionRestore.adapter.save(sessionRestore.currentSpace.spaceId, saveData)
+          console.log('云端保存结果cloudResult=',cloudResult)
           if (cloudResult.status === 1) {
             saveData.sync_time=Date.now()
             backupSpaceModel.save(space,saveData) //更新一下最后保存时间
@@ -129,8 +132,8 @@ const sessionRestore = {
             } else {
               console.warn('保存至云端失败，但是无需做任何反馈')
             }
-
           }
+
         }
       } catch (e) {
         //todo 走备份空间流程
@@ -565,7 +568,7 @@ const sessionRestore = {
 async function safeCloseSave() {
   //这里的关闭特意做成同步方法，避免顺序错误导致无法保存
   sessionRestore.stopAutoSave()
-  await sessionRestore.save(false, true)
+  await sessionRestore.save(true, true)
   if (sessionRestore.currentSpace.spaceType === 'cloud') {
     await spaceModel.setUser(sessionRestore.currentSpace.userInfo).clientOffline()
   }
@@ -575,10 +578,11 @@ ipc.on('safeClose', async () => {
   //安全关闭，先完成保存后再关闭
   try{
     await safeCloseSave()
+    //ipc.send('closeMainWindow')
   }catch (e) {
     console.warn('存储失败')
   }
-  ipc.send('closeMainWindow')
+
 })
 
 ipc.on('safeQuitApp',async ()=>{
