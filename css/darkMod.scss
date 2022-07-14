@@ -2,7 +2,7 @@ $dark-bg: rgb(32, 32, 32);
 $dark-second-bg:rgb(63,63,63);
 $dark-primary-color: rgb(210, 210, 210);
 $dark-second-color: rgb(189, 189, 189);
-.dark-theme {
+.dark-mode {
   #toolbar{
     background: $dark-bg;
     border-color: $dark-bg;
@@ -11,9 +11,6 @@ $dark-second-color: rgb(189, 189, 189);
     }
     #tab-editor-input{
       color: $dark-primary-color;
-    }
-    .app-tool{
-      opacity: 0.6;
     }
     svg{
 
@@ -38,10 +35,8 @@ $dark-second-color: rgb(189, 189, 189);
     .title {
       color: #cecece;
     }
-
     &.theme-background-low-contrast .tab-item.active:not(:only-child) {
       background: rgba(255, 255, 255, 0.1);
-
     }
   }
 }

@@ -324,10 +324,9 @@ const render = {
    */
   getUrl (url) {
     let protocolUrl
+    protocolUrl = `tsbapp://./${url}` //todo 需要验证正式环境的协议情况
     if (isDevelopmentMode) {
-      protocolUrl = `http://localhost:1600/${url}`
-    } else {
-      protocolUrl = `tsbapp://./${url}` //todo 需要验证正式环境的协议情况
+      //protocolUrl = `http://localhost:1600/${url}`
     }
     return protocolUrl
   },

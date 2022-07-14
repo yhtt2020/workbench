@@ -722,7 +722,7 @@ const sidebarTpl = /*html*/`
           <div class="item-title">消息中心</div >
         </li>
         <li class="helpCenter" @click="openHelpCenter" style="position: relative">
-          <a-progress :width="32" type="circle" :percent="this.$store.getters.getGuideScedule" :showInfo="false" :strokeWidth="11"></a-progress>
+          <a-progress v-show="this.$store.getters.getGuideScedule < 100" :width="32" type="circle" :percent="this.$store.getters.getGuideScedule" :showInfo="false" :strokeWidth="11"></a-progress>
           <a-icon type="question-circle" style="position: absolute; top: 14.5px; right: 14.5px; font-size: 16px;"></a-icon>
           <div class="item-title">帮助中心</div>
         </li>
@@ -842,6 +842,9 @@ Vue.component('sidebar', {
   },
 
   async mounted () {
+    if(process.platform==='darwin'){
+      document.getElementById('appVue').style.borderRadius='0 0 0 10px'
+    }
     ipc.on('callBackMedal',(event,args)=>{
       this.$nextTick(()=>{
         appVue.$refs.sidePanel.isMedals = args

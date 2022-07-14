@@ -657,6 +657,10 @@ ipc.on('addTab', function (event, data) {
   })
 })
 
+ipc.on('themeChange',(e,a)=>{
+  SidePanel.send('themeChange',a)
+})
+
 
 
 
