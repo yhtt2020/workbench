@@ -825,7 +825,14 @@ ipc.on('openTaskMenu',(event,args)=>{
             defaultText:task.title,
         },event.sender.id)
       }
-    },{
+    },
+    {
+      label:'暂存标签组…',
+      click(){
+        sendIPCToWindow(mainWindow,'stashTask',{id:task.id})
+      }
+    },
+    {
       type:'separator'
     },
     {
@@ -879,6 +886,7 @@ ipc.on('openSidebarMenu',(e,args)=>{
         mainWindow.focus()
       }
     },
+
     {
       type:'separator'
     },

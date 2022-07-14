@@ -836,6 +836,20 @@ ipc.on('refresh', () => {
   webviews.update(tabs.getSelected(), tasks.getSelected().tabs.get(tabs.getSelected()).url)
 })
 
+ipc.on('stashTask',(e,args)=>{
+  const db=require('../util/database').db
+  const task=tasks.get(args.id)
+  db.taskStash.add({
+    taskData:JSON.stringify(tasks.getStringify(task.id)),
+    createTime:Date.now()
+  }).then(res=>{
+    ipc.send('message',{type:'success',config:{content:'暂存标签组成功，您可随时导入此暂存标签组到任何空间。'}})
+    tasks.destroy(args.id)
+  }).catch((e)=>{
+    console.warn(res)
+  })
+})
+
 ipc.on('toggleLockTab', (event, args) => {
   const tab = tasks.get(args.taskId).tabs.get(args.id)
   if (args.taskId === tasks.getSelected().id) {
