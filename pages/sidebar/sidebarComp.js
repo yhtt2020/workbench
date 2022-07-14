@@ -58,7 +58,7 @@ const sidebarTpl = /*html*/`
                                   </div>
                                 </div>
                               </template>
-                              <a-button size="small">
+                              <a-button class="nickname" size="small">
                                 {{user.nickname}}<a-icon type="swap" /></a-icon>
                               </a-button>
                             </a-popover>
@@ -116,22 +116,22 @@ const sidebarTpl = /*html*/`
                         </a-popover>
                        </div>
                     </div>
-                    <div style="margin-bottom: 10px" @click="myCommunity" class="actions flex flex-direction justify-between align-center">
+                    <div style="margin-bottom: 10px" @click="myCommunity" class="my-info-panel actions flex flex-direction justify-between align-center">
                       <div class="actions-top flex justify-start  align-center">
                         <img src="./assets/tizi.svg" alt="" style="width: 16px; height: 16px">
                         <div class="text-grey" style="margin-left: 6px">我的元社区</div>
                       </div>
                       <div class="actions-bottom flex justify-around align-center">
                         <div class="action-bottom-action flex flex-direction justify-around align-center">
-                          <div style="font-weight: 700;">{{user.postCount}}</div>
+                          <div class="info-num" style="font-weight: 700;">{{user.postCount}}</div>
                           <div class="text-grey">内容</div>
                         </div>
                         <div class="action-bottom-action flex flex-direction justify-around align-center">
-                          <div style="font-weight: 700;">{{user.fans}}</div>
+                          <div class="info-num"  style="font-weight: 700;">{{user.fans}}</div>
                           <div class="text-grey">粉丝</div>
                         </div>
                         <div class="action-bottom-action flex flex-direction justify-around align-center">
-                          <div style="font-weight: 700;">{{user.follow}}</div>
+                          <div class="info-num"  style="font-weight: 700;">{{user.follow}}</div>
                           <div class="text-grey">关注</div>
                         </div>
                       </div>
@@ -139,7 +139,7 @@ const sidebarTpl = /*html*/`
                     <div class="my-group" style="margin-top: 20px;">
                       <template>
                         <div class="mg-top flex justify-between align-center">
-                          <div class="mg-top-lf text-black" style="font-weight: 400;">我加入的团队({{this.$store.getters.getAllCircle.length}})</div>
+                          <div class="mg-top-lf text-black title-my-group" style="font-weight: 400;">我加入的团队({{this.$store.getters.getAllCircle.length}})</div>
                           <a-button id="guideTeam" class="mg-top-right" style="border-radius: 50%;" type="primary" icon="plus" size="small" @click="createGroup" />
                         </div>
 
@@ -2222,4 +2222,12 @@ ipc.on('selectedIcon',(event,args)=>{
   else{
     ipc.sendTo(mainWindowId, 'changeTaskIcon', { id: window.selectedTask.id, icon:args.icon })
   }
+
+})
+
+ipc.on('getStashTasks',async (event, args) => {
+  let tasks=await db.taskStash.toArray()
+  console.log(tasks)
+
+  ipc.sendTo(event.senderId,'gotStashTasks', { tasks })
 })
