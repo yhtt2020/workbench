@@ -2,7 +2,11 @@ if (typeof require !== 'undefined') {
   var settings = require('./settings.js')
 }
 
-function shouldEnableDarkMode () {
+function systemShouldEnableDarkMode () {
+  return settings.list.systemShouldUseDarkColors
+}
+
+function isNightTime () {
   var hours = new Date().getHours()
   return (hours > 21 || hours < 6)
 }
@@ -13,6 +17,10 @@ function enableDarkMode () {
   requestAnimationFrame(function () {
     window.dispatchEvent(new CustomEvent('themechange'))
   })
+  window.postMessage({
+    message:'themeChange',
+    status:'enable'
+  })
 }
 
 function disableDarkMode () {
@@ -21,12 +29,26 @@ function disableDarkMode () {
   requestAnimationFrame(function () {
     window.dispatchEvent(new CustomEvent('themechange'))
   })
+  window.postMessage({
+    message:'themeChange',
+    status:'disable'
+  })
+
 }
 
 var themeInterval = null
 
 function initialize () {
-  settings.listen('darkMode', function (value) {
+  function themeSettingsChanged (value) {
+    /*
+    value is the value of the darkMode pref
+    0 - automatic dark mode
+    -1: never
+    0: at night
+    1: always
+    2: follow system (default)
+    true / false: legacy pref values, translate to always/system
+    */
     clearInterval(themeInterval)
 
     // 1 or true: dark mode is always enabled
@@ -35,17 +57,17 @@ function initialize () {
       return
     }
 
-    // 0 or undefined: automatic dark mode
-    if ( value === 0 || value === false) {
-      // If it is night and darkMode is set to auto/default
-      if (shouldEnableDarkMode()) {
+    // 2, undefined, or false: automatic dark mode following system
+    //移除undefined和false
+    if (value === 2 ) {
+      if (systemShouldEnableDarkMode()) {
         enableDarkMode()
       } else {
         disableDarkMode()
       }
 
       themeInterval = setInterval(function () {
-        if (shouldEnableDarkMode()) {
+        if (systemShouldEnableDarkMode()) {
           if (!window.isDarkMode) {
             enableDarkMode()
           }
@@ -53,12 +75,36 @@ function initialize () {
           disableDarkMode()
         }
       }, 10000)
-    }
+    } else if (value === 0) {
+      // 0: automatic dark mode at night
+      if (isNightTime()) {
+        enableDarkMode()
+      } else {
+        disableDarkMode()
+      }
 
-    // -1: never enable
-
-    if (value === -1  || value === undefined) {
+      themeInterval = setInterval(function () {
+        if (isNightTime()) {
+          if (!window.isDarkMode) {
+            enableDarkMode()
+          }
+        } else if (window.isDarkMode) {
+          disableDarkMode()
+        }
+      }, 10000)
+      //undefined和false都默认和永久禁用一致
+    } else if (value === undefined || value === -1 || value === false) {
+      // -1: never enable
       disableDarkMode()
+    }
+  }
+  settings.listen('darkMode', themeSettingsChanged)
+  settings.listen('systemShouldUseDarkColors', function () {
+    // the settings API differs between the UI process and tabs
+    if (typeof process === 'undefined') {
+      settings.get('darkMode', themeSettingsChanged)
+    } else {
+      themeSettingsChanged(settings.get('darkMode'))
     }
   })
 }
