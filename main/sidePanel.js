@@ -886,6 +886,12 @@ ipc.on('openSidebarMenu',(e,args)=>{
         mainWindow.focus()
       }
     },
+    {
+      label: '导入标签组…',
+      click () {
+        renderPage.openPopTaskStash()
+      }
+    },
 
     {
       type:'separator'

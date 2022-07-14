@@ -53,6 +53,7 @@ const PopCacheTime = 300000 //弹窗缓存时长，默认为30秒，期间只会
 class Pop {
   id
   win
+  blurClose //失焦自动关闭
   args
   callerId //呼叫这个pop的调取者的windowId，用于直发消息
   constructor () {
@@ -87,16 +88,18 @@ class Pop {
       pool.pop.splice(index, 1)
     })
     this.win.on('blur', () => {
-      this.win.hide()
-      //缓存1分钟，超过1分钟再自动关闭
-      setTimeout(() => {
-        if (!this.win.isDestroyed()) {
-          if (!this.win.isVisible()) {
-            this.win.close()
-            return
+      if(this.blurClose){
+        this.win.hide()
+        //缓存1分钟，超过1分钟再自动关闭
+        setTimeout(() => {
+          if (!this.win.isDestroyed()) {
+            if (!this.win.isVisible()) {
+              this.win.close()
+              return
+            }
           }
-        }
-      }, PopCacheTime)
+        }, PopCacheTime)
+      }
     })
     this.win.on('maximize', () => {
       this.win.webContents.send('windowMaximized')
@@ -180,6 +183,7 @@ class Pool {
     if (oldObj) {
       oldObj.args=param.args
       oldObj.callerId = callerId
+      oldObj.blurClose=param.blurClose || true
       if(oldObj.win.isVisible())
         oldObj.win.webContents.send('show')
       oldObj.win.show()
@@ -326,7 +330,7 @@ const render = {
     let protocolUrl
     protocolUrl = `tsbapp://./${url}` //todo 需要验证正式环境的协议情况
     if (isDevelopmentMode) {
-      //protocolUrl = `http://localhost:1600/${url}`
+      protocolUrl = `http://localhost:1600/${url}`
     }
     return protocolUrl
   },
@@ -423,6 +427,28 @@ const renderPage = {
       this[page].win.webContents.send(event,args)
     }
   },
+  /*
+  打开弹出任务贮存
+   */
+  openPopTaskStash(){
+    let bounds={
+      width:1000,
+      height:670
+    }
+   let pos= renderPage.getMainWindowCenterBounds(bounds.width,bounds.height)
+    pool.usePop(
+      {
+        url:render.getUrl('task.html#/popStash'),
+        width:pos.width,
+        height:pos.height,
+        x:pos.x,
+        y:pos.y,
+        blurClose:false
+      },
+      sidePanel.get().webContents.id
+    )
+  },
+
   /**
    * 启动图片选择器
    * @param pos 位置

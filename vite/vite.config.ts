@@ -10,7 +10,8 @@ export default defineConfig({
       input :{
         'icon':path.resolve(pkg,'icon.html'),
         'index':path.resolve(pkg,'index.html'),
-        'extension':path.resolve(pkg,'extension.html')
+        'extension':path.resolve(pkg,'extension.html'),
+        'task':path.resolve(pkg,'task.html')
       }
     }
   }
