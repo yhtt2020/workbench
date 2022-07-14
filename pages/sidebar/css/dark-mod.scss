@@ -1,5 +1,5 @@
 $dark-bg: rgb(32, 32, 32);
-$dark-second-bg:rgb(63,63,63);
+$dark-second-bg: rgb(63, 63, 63);
 $dark-primary-color: rgb(210, 210, 210);
 
 .dark-mode {
@@ -19,9 +19,11 @@ $dark-primary-color: rgb(210, 210, 210);
     background-color: $dark-second-bg;
     border-color: #d9d9d90f;
   }
-  .sidebar .side-items ul li:hover{
+
+  .sidebar .side-items ul li:hover {
     background: $dark-second-bg;
   }
+
   li:hover {
     background: $dark-second-bg;
     color: #333
@@ -42,12 +44,55 @@ $dark-primary-color: rgb(210, 210, 210);
     color: #d5d5d5;
   }
 
-  .sidebar .side-container .side-items .app-task .icon {
-    opacity: 0.6 !important;
-  }
 
   .divider {
     border-color: #a1a1a15e;
+  }
+
+  .processing {
+    background-color: $dark-primary-color;
+  }
+
+  .user-panel{
+    .mg-content .mg-content-btn .cb-top{
+      border-bottom: none;
+    }
+
+    .info-num{
+      color: $dark-primary-color;
+    }
+    .cb-top-word{
+      color: $dark-primary-color;
+    }
+    .my-info-panel{
+      border: $dark-primary-color;
+      background: $dark-second-bg;
+    }
+    .title-my-group{
+      color: $dark-primary-color;
+    }
+    .nickname{
+      color: $dark-primary-color;
+    }
+    [data-icon="close"]{
+      path {
+        fill: $dark-primary-color !important;
+        color: $dark-primary-color;
+      }
+    }
+  }
+  .user-panel .ant-drawer-body {
+    background-color: $dark-bg !important;
+  }
+  .mg-content .mg-content-btn{
+    .ant-btn{
+      &:hover{
+        border: none;
+      }
+      border: none;
+    }
+    background: $dark-second-bg;
+    border:none;
   }
 
 }
