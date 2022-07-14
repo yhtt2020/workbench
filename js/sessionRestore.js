@@ -214,34 +214,34 @@ const sessionRestore = {
       tasks.setSelected(data.state.selectedTask)
 
       // switch to the previously selected tasks
-
-      if (tasks.getSelected().tabs.isEmpty() || (!data.saveTime || Date.now() - data.saveTime < SYNC_INTERVAL * 1000)) {
-        //如果当前选中的任务为空，或（没保存或者保存间隔小于30秒）
-        browserUI.switchToTask(data.state.selectedTask)
-        if (tasks.getSelected().tabs.isEmpty()) {
-          tabEditor.show(tasks.getSelected().tabs.getSelected())
-        }
-      } else {
-        //window.createdNewTaskOnStartup = true
-        // try to reuse a previous empty task
-        var lastTask = tasks.byIndex(tasks.getLength() - 1)
-        if (lastTask) {
-          browserUI.switchToTask(lastTask.id)
-        }
-
-        //启动创建新任务行为取消，改为选中最后一个任务
-        // if (lastTask && lastTask.tabs.isEmpty() && !lastTask.name) {
-        //  //如果存在最后一个任务，且此任务为空，且此任务未命名
-        //   browserUI.switchToTask(lastTask.id)
-        //   tabEditor.show(lastTask.tabs.getSelected())
-        // } else {
-        //基本判定是此任务不为空
-        //   console.log('failed')
-        //   console.log('lasttask=↓')
-        //   console.log(lastTask)
-        //   browserUI.addTask()
-        // }
-      }
+      browserUI.switchToTask(data.state.selectedTask)
+      // if (tasks.getSelected().tabs.isEmpty() || (!data.saveTime || Date.now() - data.saveTime < SYNC_INTERVAL * 1000)) {
+      //   //如果当前选中的任务为空，或（没保存或者保存间隔小于30秒）
+      //   browserUI.switchToTask(data.state.selectedTask)
+      //   if (tasks.getSelected().tabs.isEmpty()) {
+      //     tabEditor.show(tasks.getSelected().tabs.getSelected())
+      //   }
+      // } else {
+      //   //window.createdNewTaskOnStartup = true
+      //   // try to reuse a previous empty task
+      //   var lastTask = tasks.byIndex(tasks.getLength() - 1)
+      //   if (lastTask) {
+      //     browserUI.switchToTask(lastTask.id)
+      //   }
+      //
+      //   //启动创建新任务行为取消，改为选中最后一个任务
+      //   // if (lastTask && lastTask.tabs.isEmpty() && !lastTask.name) {
+      //   //  //如果存在最后一个任务，且此任务为空，且此任务未命名
+      //   //   browserUI.switchToTask(lastTask.id)
+      //   //   tabEditor.show(lastTask.tabs.getSelected())
+      //   // } else {
+      //   //基本判定是此任务不为空
+      //   //   console.log('failed')
+      //   //   console.log('lasttask=↓')
+      //   //   console.log(lastTask)
+      //   //   browserUI.addTask()
+      //   // }
+      // }
 
       /* Disabled - show user survey
       // if this isn't the first run, and the survey popup hasn't been shown yet, show it
@@ -578,7 +578,7 @@ ipc.on('safeClose', async () => {
   //安全关闭，先完成保存后再关闭
   try{
     await safeCloseSave()
-    //ipc.send('closeMainWindow')
+    ipc.send('closeMainWindow')
   }catch (e) {
     console.warn('存储失败')
   }
