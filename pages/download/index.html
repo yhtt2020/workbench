@@ -368,7 +368,7 @@
            if (dblist[i].title.length >= 20) {
              simpleName = dblist[i].title.substring(0, 7) + '...' + dblist[i].title.substring(dblist[i].title.length-6,dblist[i].title.length);
            } else (simpleName = dblist[i].title)
-      if(dblist[i].status==='1'){
+      if(dblist[i].status==='1' && dblist[i].addTime !==''){
         appVue.doneList.unshift({
           name:dblist[i].name,
           id:appVue.doneId++,
@@ -384,6 +384,34 @@
         appVue.listDoneCount++
           appVue.classify()
       }
+           if(dblist[i].status==='1' && dblist[i].addTime ===''){
+             db.download.put({
+               name:'',
+               startTime:dblist[i].startTime,
+               title: dblist[i].title,
+               total: dblist[i].total,
+               path: dblist[i].path,
+               url: dblist[i].url,
+               status:'1',//删除包括文件
+               doneDate:dblist[i].doneDate,
+               href:dblist[i].href,
+               addTime:'2022/7/01'
+             })
+             appVue.doneList.unshift({
+               name:dblist[i].name,
+               id:appVue.doneId++,
+               title:simpleName,
+               total: dblist[i].total,
+               path: dblist[i].path,
+               url: dblist[i].url,
+               startTime:dblist[i].startTime,
+               doneDate:dblist[i].doneDate,
+               href:dblist[i].href,
+               addTime:appVue.transDate(dblist[i].addTime)
+             })
+             appVue.listDoneCount++
+             appVue.classify()
+           }
            if(dblist[i].status<0){
              appVue.deleteList.unshift({
                name:dblist[i].name,
@@ -403,30 +431,38 @@
     },
      methods: {
        transDate(strtime) {
-         var date = new Date(strtime.replace(/-/g, '/'));
-         date=Date.parse(date);
-         var tt = new Date(parseInt(date));
-         var days = parseInt((new Date().getTime() - date) / 86400000);
-         var today = new Date().getDate();
-         var year = tt.getFullYear();
-         var month = tt.getMonth() + 1;
-         var day = tt.getDate();
-         // var time = tt.getHours() < 10 ? "0" + tt.getHours() : tt.getHours();
-         // var min = tt.getMinutes() < 10 ? "0" + tt.getMinutes() : tt.getMinutes();
          var result, offset;
-         offset = Math.abs(today - day);
-         if (days < 4&&offset<4) {
-           if (offset === 0) {
-             result = "今天"
-           } else if (offset === 1) {
-             result = "昨天"
-           } else if (offset === 2) {
-             result = "前天"
+         if(strtime === '2022/7/01'){
+           result = '原始记录'
+         }
+         if(strtime!=='2022/7/01') {
+           var date = new Date(strtime.replace(/-/g, '/'));
+           date = Date.parse(date);
+           var tt = new Date(parseInt(date));
+           var days = parseInt((new Date().getTime() - date) / 86400000);
+           var today = new Date().getDate();
+           var year = tt.getFullYear();
+           var month = tt.getMonth() + 1;
+           var day = tt.getDate();
+           // var time = tt.getHours() < 10 ? "0" + tt.getHours() : tt.getHours();
+           // var min = tt.getMinutes() < 10 ? "0" + tt.getMinutes() : tt.getMinutes();
+           offset = Math.abs(today - day);
+
+           if (days < 4 && offset < 4) {
+
+             if (offset === 0) {
+               result = "今天"
+             } else if (offset === 1) {
+               result = "昨天"
+             } else if (offset === 2) {
+               result = "前天"
+             }
+           } else {
+             result = year + "-" + month + "-" + day
            }
-         } else {
-           result = year + "-" + month + "-" + day
          }
          return result
+
        },
        classify(){
          let newArr = [];
