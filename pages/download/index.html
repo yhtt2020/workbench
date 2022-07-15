@@ -387,11 +387,9 @@
           } else {
             simpleName = dblist[i].title
           }
-          console.log(dblist[i].addTime)
-          if(dblist[i].status === '1'){
-            console.log(typeof dblist[i].addTime)
+          if (dblist[i].status === '1') {
             if (typeof dblist[i].addTime === 'undefined') {
-              dblist[i].addTime='2022/7/01'
+              dblist[i].addTime = '2022/7/01'
               db.download.put({
                 name: '',
                 startTime: dblist[i].startTime,
@@ -404,33 +402,19 @@
                 href: dblist[i].href,
                 addTime: dblist[i].addTime
               })
-              appVue.doneList.unshift({
-                name: dblist[i].name,
-                id: appVue.doneId++,
-                title: simpleName,
-                total: dblist[i].total,
-                path: dblist[i].path,
-                url: dblist[i].url,
-                startTime: dblist[i].startTime,
-                doneDate: dblist[i].doneDate,
-                href: dblist[i].href,
-                addTime: appVue.transDate(dblist[i].addTime)
-              })
-            }else {
-              appVue.doneList.unshift({
-                name: dblist[i].name,
-                id: appVue.doneId++,
-                title: simpleName,
-                total: dblist[i].total,
-                path: dblist[i].path,
-                url: dblist[i].url,
-                startTime: dblist[i].startTime,
-                doneDate: dblist[i].doneDate,
-                href: dblist[i].href,
-                addTime: appVue.transDate(dblist[i].addTime)
-              })
-
             }
+            appVue.doneList.unshift({
+              name: dblist[i].name,
+              id: appVue.doneId++,
+              title: simpleName,
+              total: dblist[i].total,
+              path: dblist[i].path,
+              url: dblist[i].url,
+              startTime: dblist[i].startTime,
+              doneDate: dblist[i].doneDate,
+              href: dblist[i].href,
+              addTime: appVue.transDate(dblist[i].addTime)
+            })
             appVue.listDoneCount++
             appVue.classify()
           }
@@ -653,9 +637,9 @@
         const { shell } = require('electron')
         fs.exists(item.path, function (flag) {
           if (flag) {
-            if(require('path').extname(item.path)==='.crx'){
-              ipcRenderer.send('installCrx',{path:item.path})
-            }else{
+            if (require('path').extname(item.path) === '.crx') {
+              ipcRenderer.send('installCrx', { path: item.path })
+            } else {
               shell.openPath(item.path)
             }
           } else {
