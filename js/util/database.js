@@ -218,7 +218,7 @@ db.version(156).stores({
   //   }
   // })
 })
-db.version(156).stores({
+db.version(158).stores({
   /*
   color - the main color of the page, extracted from the page icon
   pageHTML - a saved copy of the page's HTML, when it was last visited. Removed in 1.6.0, so all pages visited after then will have an empty string in this field.
@@ -239,7 +239,7 @@ db.version(156).stores({
   standAloneApps:'++id,name,package,logo,summary,type,url,themeColor,userThemeColor,createTime,updateTime,accountAvatar,order,useCount,lastExecuteTime,settings,unreadCount,*fileAssign,auth,isNew',
   userStats: '++id,scripts,apps,appsExecutedCounts,blockAds,tasks,tabs,webviewsInk,password,defaultBrowser,searchCounts,translateCounts,startTime,appList,myApps',  //脚本数，应用数，开启应用的次数，广告拦截数，标签组数，标签数，访问网站累计数，密码数，是否是默认浏览器，搜索数（只对用tab栏选中后输入搜索内容用默认搜索引擎进行搜索的统计），翻译次数， 此次开始时间，本地导航列表数，本地导航应用app数
   messages: '++id,messageType,avatar,title,body,indexName,timestamp',
-  download:'&startTime,title,total,path,url,doneDate,status,href,addtime',
+  download:'&startTime,title,total,path,url,doneDate,status,href,addTime',
   taskStash:'++id,taskData,createTime,remark'
 }).upgrade(trans=> {
   // return trans.standAloneApps.modify (item => {
