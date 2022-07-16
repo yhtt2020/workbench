@@ -80,6 +80,10 @@
   const electron = require('electron')
   const ipc = electron.ipcRenderer
   let tools = require('../util/util.js').tools
+
+  const fileHelper = require('../../js/extras/fileHelpers.js')
+  const baseBookmark = require('../../js/extras/bookmark/baseBookmarkRepository.js')
+
   const appVue = new Vue({
     el: '#appVue',
     data () {
@@ -100,8 +104,14 @@
         },1000)
     },
     methods: {
-      importBookmarks(){
-          appVue.$message.info({content:'暂时还不支持导入书签。'})
+      async importBookmarks(){
+        //appVue.$message.info({content:'暂时还不支持导入书签。'})
+        const fileData = await fileHelper.manualOperateHtml()
+        console.log(fileData, '@@')
+
+        const result = await baseBookmark.importHtml(fileData)
+
+        console.log(result, 'dom@@@@@@@@@@@')
       }
     }
   })
