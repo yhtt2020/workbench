@@ -26,10 +26,15 @@ export default {
         })
       })
     })
-    this.ipc.sendTo(this.callerId,'getStashTasks')
+    this.getTasks()
+    this.ipc.on('show',()=>{
+      this.getTasks()
+    })
   },
   methods: {
-
+    getTasks(){
+      this.ipc.sendTo(this.callerId,'getStashTasks')
+    }
   }
 }
 </script>
