@@ -578,9 +578,11 @@ ipc.on('safeClose', async () => {
   //安全关闭，先完成保存后再关闭
   try{
     await safeCloseSave()
-    ipc.send('closeMainWindow')
+
   }catch (e) {
     console.warn('存储失败')
+  }finally {
+    ipc.send('closeMainWindow')
   }
 
 })
