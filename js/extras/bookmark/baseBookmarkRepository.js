@@ -5,24 +5,80 @@ class baseBookmarkRepository {
   static importHtml(data) {
     let tree = new DOMParser().parseFromString(data, 'text/html')
     console.log(tree, '$$$$$$$$$$')
-    //把tree dom处理成递归文件需要的格式
-    let bookmarksArray = Array.from(tree.getElementsByTagName('dt'))
-    bookmarksArray.reduce((combined, currentVal) => {
-      if(currentVal.childNodes.length === 2 && currentVal.firstChild.nodeName === "A" && currentVal.parentNode.previousElementSibling.innerText === 'Bookmarks') {
-        //这种情况说明是其他书签中的书签，并不是书签栏中的书签
-        combined.children.push({
-          type: 'url',
-          name: currentVal.innerText,
-          url: currentVal.firstChild.href
-        })
-      } else{
-        //这种情况是标准书签夹的中的书签
-        //用递归去处理N层的dom树，需要写个function
-      }
-      return combined
-    }, {children: []})
 
-    return bookmarksArray
+    //递归计算dt的level和parent
+    function recurCalc(dt, levelParam = 1, parentParam = null, typeParam = null, nameParam = null, urlParam = null) {
+      let calcedItem = {}
+      let level = levelParam
+      let parent = parentParam
+      let type = typeParam
+      let name = nameParam
+      let url = urlParam
+      if(dt.firstChild.nodeName === 'H3' && dt.firstChild.attributes[2] && dt.firstChild.attributes[2].name === 'personal_toolbar_folder') {
+        //说明是书签栏 根root dt
+        return
+      }
+      if(dt.childNodes.length === 2 && dt.firstChild.nodeName === "A" && dt.parentNode.previousElementSibling.innerText === 'Bookmarks') {
+        //这种情况说明是其他书签中的书签，并不是书签栏中的书签
+        calcedItem = {
+          type: 'url',
+          name: dt.innerText,
+          url: dt.firstChild.href,
+          level,
+          parent
+        }
+        return calcedItem
+      } else {
+        //这种情况是标准书签夹的中的书签，可能是folder，可能是书签a-link，需要用到递归分析它们的层级和parent
+        if(dt.parentNode.previousElementSibling.nodeName === 'H3' && dt.parentNode.previousElementSibling.attributes[2] && dt.parentNode.previousElementSibling.attributes[2].name === 'personal_toolbar_folder') {
+          //直到父元素的prev元素是h3，且存在personal_toolbar_folder属性，且innerText是书签栏的时候，跳出递归返回calcedItem
+          calcedItem = {
+            type,
+            name,
+            url,
+            level,
+            parent
+          }
+          console.log('进来了的！',calcedItem)
+          return calcedItem
+        }
+
+        if(dt.firstChild.nodeName === 'A' && dt.parentNode.previousElementSibling.nodeName === 'H3' && !dt.parentNode.previousElementSibling.attributes[2]) {
+          //console.log('A 有！！！！！！！！！')
+          //dt中是a标签的情况   a-link的情况
+          parent = parent ? parent : dt.parentNode.previousElementSibling.innerText
+          type = type ? type : 'url'
+          name = name ? name : dt.firstChild.innerText
+          url = url ? url : dt.firstChild.href
+          recurCalc(dt.parentNode.parentNode, level+1, parent, type, name, url)
+        }
+
+        if(dt.firstChild.nodeName === 'H3' && dt.parentNode.previousElementSibling.nodeName === 'H3' && !dt.parentNode.previousElementSibling.attributes[2]) {
+          //console.log('H3 有！！！！！！！！')
+          //dt中是h3的情况 folder的情况
+          parent = parent ? parent : dt.parentNode.previousElementSibling.innerText
+          type = type ? type : 'folder'
+          name = name ? name : dt.firstChild.innerText
+          url = url ? url : null
+          recurCalc(dt.parentNode.parentNode, level+1, parent, type, name, url)
+        }
+      }
+    }
+
+    //把tree dom处理成一个能表示结构的简单数组
+    let bookmarksArray = Array.from(tree.getElementsByTagName('dt'))
+    // let newarr = bookmarksArray.reduce((combined, currentVal) => {
+    //   combined = combined.concat([recurCalc(currentVal)])
+    //   return combined
+    // }, [])
+    let newarr = []
+    bookmarksArray.forEach(v => {
+      console.log(recurCalc(v), '??????')
+      newarr.push(recurCalc(v))
+    })
+
+    console.log(newarr, '!!!!!!!!!')
+    //return bookmarksArray
   }
 }
 
