@@ -201,7 +201,8 @@ class SidePanel {
     }
 	  if(isWin11()){
       //win11要少一个像素
-		setHeight-=1
+		  setHeight-=2
+      setX +=1
 	  }
 
     this._sidePanel.setBounds({
