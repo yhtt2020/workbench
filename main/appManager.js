@@ -202,7 +202,12 @@ const appManager = {
   hideWindow (windowId) {
     processingAppWindows.forEach((item) => {
       if (item.saApp.windowId === windowId) {
-        item.window.hide()
+        if(item.window.isFullScreen()){
+          item.window.setFullScreen(false)
+          setTimeout(()=>{
+            item.window.hide()
+          },600)
+        }
       }
     })
   },
