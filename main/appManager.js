@@ -207,6 +207,8 @@ const appManager = {
           setTimeout(()=>{
             item.window.hide()
           },600)
+        }else{
+          item.window.hide()
         }
       }
     })
