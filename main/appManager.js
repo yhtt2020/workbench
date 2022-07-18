@@ -923,9 +923,21 @@ const appManager = {
        * 只允许通过关闭按钮隐藏，而不是彻底关闭
        */
       appWindow.on('enter-full-screen', () => {
+        appView.setBounds({
+          x: 0,
+          y: 0,
+          width: appWindow.getBounds().width,
+          height: appWindow.getBounds().height
+        })
         appWindow.webContents.send('enter-full-screen')
       })
       appWindow.on('leave-full-screen', () => {
+        appView.setBounds({
+          x: 0,
+          y: titleBarHeight,
+          width: appWindow.getBounds().width,
+          height: appWindow.getBounds().height - titleBarHeight
+        })
         appWindow.webContents.send('leave-full-screen')
       })
 
