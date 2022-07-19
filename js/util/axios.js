@@ -1,6 +1,7 @@
 const axios = require('axios')
 const { config, api } = require('../../server-config')
 const storage = require('electron-localstorage');
+const { ipcRenderer: ipc } = require('electron')
 
 //本地下面代码强制清除storage
 //console.log(storage.getAll())
@@ -138,6 +139,17 @@ axios.interceptors.response.use(
         error_data: error
       })
     } else {
+      if(error.message.endsWith('401')){
+        //此处是登录报401场景
+        if(!!!window){
+          console.log('主进程察觉到掉登录')
+        }else{
+          ipc.send('showUserWindow',{tip:'您的登录信息已过期，请重新登录。'})
+          ipc.send('message',{type:'warn',config:{content:'您的登录信息已过期，请重新登录。',key:"401"}})
+          //todo 通知侧边栏清理掉登录信息，以确保账号信息同步
+          console.log('渲染进程掉登录')
+        }
+      }
       return Promise.reject(error)
     }
   }
