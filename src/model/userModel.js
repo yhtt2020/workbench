@@ -34,6 +34,7 @@ const userModel={
   },
   async change(user){
     await db.system.where({ name: 'currentUser' }).delete()
+    user=JSON.parse(JSON.stringify(user))
     await db.system.put({
       name: 'currentUser',
       value: user

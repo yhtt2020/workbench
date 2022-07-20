@@ -7,6 +7,7 @@ class Win {
   extraData
   alwaysTop
   callerId
+
   constructor () {
     let config = {}
     config.maximizable = true
@@ -19,14 +20,14 @@ class Win {
     //protocol.load(this.win,'/blank')
   }
 
-  async use (param,callerId) {
+  async use (param, callerId) {
     this.url = param.url
     this.width = param.width
     this.height = param.height
     this.resizable = param.resizable
     this.extraData = param.extraData
     this.alwaysTop = param.alwaysTop
-    this.callerId=callerId
+    this.callerId = callerId
     this.win.loadURL(this.url)
     this.win.setSize(this.width, this.height)
     this.win.setAlwaysOnTop(!!this.alwaysTop)
@@ -52,15 +53,20 @@ const PopCacheTime = 300000 //弹窗缓存时长，默认为30秒，期间只会
 class Pop {
   id
   win
+  blurClose //失焦自动关闭
+  args
   callerId //呼叫这个pop的调取者的windowId，用于直发消息
   constructor () {
     let config = {}
     config.frame = false
     config.show = false
+    config.resizable=false
     config.skipTaskbar = true
     config.webPreferences = {
       nodeIntegration: true,
       contextIsolation: false,
+      sandbox: false,
+      webSecurity: false,
       nodeIntegrationInWorker: true, // used by ProcessSpawner
       additionalArguments: [
         '--user-data-path=' + userDataPath,
@@ -82,17 +88,18 @@ class Pop {
       pool.pop.splice(index, 1)
     })
     this.win.on('blur', () => {
-      this.win.hide()
-      //缓存1分钟，超过1分钟再自动关闭
-      setTimeout(() => {
-        if (!this.win.isDestroyed()) {
-          if (!this.win.isVisible()) {
-            this.win.close()
-            return
+      if(this.blurClose){
+        this.win.hide()
+        //缓存1分钟，超过1分钟再自动关闭
+        setTimeout(() => {
+          if (!this.win.isDestroyed()) {
+            if (!this.win.isVisible()) {
+              this.win.close()
+              return
+            }
           }
-        }
-      }, PopCacheTime)
-
+        }, PopCacheTime)
+      }
     })
     this.win.on('maximize', () => {
       this.win.webContents.send('windowMaximized')
@@ -110,6 +117,7 @@ class Pop {
     this.url = param.url
     this.width = param.width
     this.callerId = callerId
+    this.args = param.args || {}
     this.x = param.x
     this.y = param.y
     this.height = param.height
@@ -140,6 +148,9 @@ class Pool {
     ipc.handle('getPopCallerId', (e, param) => {
       return pool.getPop(e.sender.id).callerId
     })
+    ipc.handle('getPopArgs', (e, param) => {
+      return pool.getPop(e.sender.id).args
+    })
   }
 
   /**
@@ -160,14 +171,21 @@ class Pool {
       return
     }
     let blankObj = this.dic.find(v => v.url === '/blank')
-    await blankObj.use(param,callerId)
+    await blankObj.use(param, callerId)
     this.dic.splice(0, 0, new Win())
   }
 
-  async usePop (param, callerId) {
+  async usePop (param, callerId = -1) {
+    if(param.bounds){
+      param=Object.assign(param,param.bounds)
+    }
     let oldObj = this.pop.find(v => v.url === param.url)
     if (oldObj) {
+      oldObj.args=param.args
       oldObj.callerId = callerId
+      oldObj.blurClose=param.blurClose || true
+      if(oldObj.win.isVisible())
+        oldObj.win.webContents.send('show')
       oldObj.win.show()
       oldObj.win.moveTop()
       return oldObj
@@ -310,10 +328,9 @@ const render = {
    */
   getUrl (url) {
     let protocolUrl
+    protocolUrl = `tsbapp://./${url}` //todo 需要验证正式环境的协议情况
     if (isDevelopmentMode) {
       protocolUrl = `http://localhost:1600/${url}`
-    } else {
-      protocolUrl = `tsbapp://./${url}` //todo 需要验证正式环境的协议情况
     }
     return protocolUrl
   },
@@ -329,6 +346,9 @@ const render = {
       }
       ipc.on('addRenderTab', (event, args) => {
         this.openRenderTab(args.url)
+      })
+      ipc.on('closeSelf',(event,args)=>{
+        BrowserWindow.fromWebContents(event.sender).close()
       })
     })
 
@@ -396,24 +416,94 @@ const render = {
 }
 
 const renderPage = {
-  iconSelector: null,
+  iconSelector: null, //图标选择器
+  installExtension: null, //安装插件
+  extensionList:null,//扩展列表
   init () {
 
   },
+  sendIPC(page,event,args){
+    if(this[page] && this[page].win.isDestroyed()===false){
+      this[page].win.webContents.send(event,args)
+    }
+  },
+  /*
+  打开弹出任务贮存
+   */
+  openPopTaskStash(){
+    let bounds={
+      width:1000,
+      height:670
+    }
+   let pos= renderPage.getMainWindowCenterBounds(bounds.width,bounds.height)
+    pool.usePop(
+      {
+        url:render.getUrl('task.html#/popStash'),
+        width:pos.width,
+        height:pos.height,
+        x:pos.x,
+        y:pos.y,
+        blurClose:false
+      },
+      sidePanel.get().webContents.id
+    )
+  },
+
   /**
    * 启动图片选择器
    * @param pos 位置
+   * @param args
    * @param windowId 启动者的WebContents的id，用于渲染进程获取交互句柄
    */
-  openIconSelector (pos, windowId) {
+  openIconSelector (pos,args, windowId) {
+    let bounds={
+      width:390,
+      height:320
+    }
+    if(args.text){
+      bounds={
+        width: 390,
+        height: 380
+      }
+    }
     pool.usePop({
       url: render.getUrl('icon.html'),
-      width: 390,
-      height: 320,
+      width: bounds.width,
+      height: bounds.height,
       x: pos.x,
       y: pos.y,
+      args:args,
     }, windowId).then()
+  },
+  openInstallExtension (args) {
+    let pos = renderPage.getMainWindowCenterBounds(448, 300)
+    pool.usePop({
+      url: render.getUrl('extension.html#/install'),
+      width: pos.width,
+      height: pos.height,
+      x: pos.x,
+      y: pos.y,
+      args: {
+        manifest: { ...args.manifest },
+        id: args.crxInfo.id,
+        crxInfo:args.crxInfo,
+        manifestPath:args.manifestPath
+      }
+    }).then()
+  },
+  getMainWindowCenterBounds (width, height) {
+    let mainBounds = mainWindow.getBounds()
+    let x = parseInt(mainBounds.x + (mainBounds.width - width) / 2)
+    let y = parseInt(mainBounds.y + (mainBounds.height - height) / 2)
+    return { x, y, width, height }
+  },
+  async openExtensionPopList () {
+    let bounds = renderPage.getMainWindowCenterBounds(450, 500)
+    this.extensionList = await pool.usePop({
+      url: render.getUrl('extension.html#/pop'),
+      bounds
+    })
   }
 }
 
-  render.init()
+render.init()

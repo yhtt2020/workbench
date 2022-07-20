@@ -74,7 +74,9 @@ const sessionRestore = {
   currentSpace: {},
   save: async function (forceSave = true, sync = true) {
     sessionRestore.currentSpace=await spaceModel.getCurrent()
-    var stateString = JSON.stringify(tasks.getStringifyableState())
+    let currentState=tasks.getStringifyableState()
+    console.log('当前状态为 currentStat=',currentState)
+    var stateString = JSON.stringify(currentState)
     // save all tabs that aren't private
     var data = {
       version: 2,
@@ -106,7 +108,7 @@ const sessionRestore = {
           console.log('离线保存成功', space, saveData)
           backupSpaceModel.save(space, saveData)
         } else {
-          console.log('本地空间保存成功', space, saveData)
+          // console.log('本地空间保存成功', space, saveData)
           localSpaceModel.save(space, saveData)
         }
       }
@@ -114,6 +116,7 @@ const sessionRestore = {
       try {
         if (sessionRestore.currentSpace.spaceType === 'cloud') {
           let cloudResult = await sessionRestore.adapter.save(sessionRestore.currentSpace.spaceId, saveData)
+          console.log('云端保存结果cloudResult=',cloudResult)
           if (cloudResult.status === 1) {
             saveData.sync_time=Date.now()
             backupSpaceModel.save(space,saveData) //更新一下最后保存时间
@@ -129,8 +132,8 @@ const sessionRestore = {
             } else {
               console.warn('保存至云端失败，但是无需做任何反馈')
             }
-
           }
+
         }
       } catch (e) {
         //todo 走备份空间流程
@@ -211,34 +214,34 @@ const sessionRestore = {
       tasks.setSelected(data.state.selectedTask)
 
       // switch to the previously selected tasks
-
-      if (tasks.getSelected().tabs.isEmpty() || (!data.saveTime || Date.now() - data.saveTime < SYNC_INTERVAL * 1000)) {
-        //如果当前选中的任务为空，或（没保存或者保存间隔小于30秒）
-        browserUI.switchToTask(data.state.selectedTask)
-        if (tasks.getSelected().tabs.isEmpty()) {
-          tabEditor.show(tasks.getSelected().tabs.getSelected())
-        }
-      } else {
-        //window.createdNewTaskOnStartup = true
-        // try to reuse a previous empty task
-        var lastTask = tasks.byIndex(tasks.getLength() - 1)
-        if (lastTask) {
-          browserUI.switchToTask(lastTask.id)
-        }
-
-        //启动创建新任务行为取消，改为选中最后一个任务
-        // if (lastTask && lastTask.tabs.isEmpty() && !lastTask.name) {
-        //  //如果存在最后一个任务，且此任务为空，且此任务未命名
-        //   browserUI.switchToTask(lastTask.id)
-        //   tabEditor.show(lastTask.tabs.getSelected())
-        // } else {
-        //基本判定是此任务不为空
-        //   console.log('failed')
-        //   console.log('lasttask=↓')
-        //   console.log(lastTask)
-        //   browserUI.addTask()
-        // }
-      }
+      browserUI.switchToTask(data.state.selectedTask)
+      // if (tasks.getSelected().tabs.isEmpty() || (!data.saveTime || Date.now() - data.saveTime < SYNC_INTERVAL * 1000)) {
+      //   //如果当前选中的任务为空，或（没保存或者保存间隔小于30秒）
+      //   browserUI.switchToTask(data.state.selectedTask)
+      //   if (tasks.getSelected().tabs.isEmpty()) {
+      //     tabEditor.show(tasks.getSelected().tabs.getSelected())
+      //   }
+      // } else {
+      //   //window.createdNewTaskOnStartup = true
+      //   // try to reuse a previous empty task
+      //   var lastTask = tasks.byIndex(tasks.getLength() - 1)
+      //   if (lastTask) {
+      //     browserUI.switchToTask(lastTask.id)
+      //   }
+      //
+      //   //启动创建新任务行为取消，改为选中最后一个任务
+      //   // if (lastTask && lastTask.tabs.isEmpty() && !lastTask.name) {
+      //   //  //如果存在最后一个任务，且此任务为空，且此任务未命名
+      //   //   browserUI.switchToTask(lastTask.id)
+      //   //   tabEditor.show(lastTask.tabs.getSelected())
+      //   // } else {
+      //   //基本判定是此任务不为空
+      //   //   console.log('failed')
+      //   //   console.log('lasttask=↓')
+      //   //   console.log(lastTask)
+      //   //   browserUI.addTask()
+      //   // }
+      // }
 
       /* Disabled - show user survey
       // if this isn't the first run, and the survey popup hasn't been shown yet, show it
@@ -565,7 +568,7 @@ const sessionRestore = {
 async function safeCloseSave() {
   //这里的关闭特意做成同步方法，避免顺序错误导致无法保存
   sessionRestore.stopAutoSave()
-  await sessionRestore.save(false, true)
+  await sessionRestore.save(true, true)
   if (sessionRestore.currentSpace.spaceType === 'cloud') {
     await spaceModel.setUser(sessionRestore.currentSpace.userInfo).clientOffline()
   }
@@ -575,10 +578,13 @@ ipc.on('safeClose', async () => {
   //安全关闭，先完成保存后再关闭
   try{
     await safeCloseSave()
+
   }catch (e) {
     console.warn('存储失败')
+  }finally {
+    ipc.send('closeMainWindow')
   }
-  ipc.send('closeMainWindow')
+
 })
 
 ipc.on('safeQuitApp',async ()=>{

@@ -201,7 +201,8 @@ class SidePanel {
     }
 	  if(isWin11()){
       //win11要少一个像素
-		setHeight-=1
+		  setHeight-=2
+      setX +=1
 	  }
 
     this._sidePanel.setBounds({
@@ -657,6 +658,10 @@ ipc.on('addTab', function (event, data) {
   })
 })
 
+ipc.on('themeChange',(e,a)=>{
+  SidePanel.send('themeChange',a)
+})
+
 
 
 
@@ -681,7 +686,24 @@ ipc.on('message', function (event, args) {
   SidePanel.send('message', args)
 })
 function sendMessage(args){
-  SidePanel.send('message', args)
+  messager.send(args)
+}
+const messager={
+  send(args){
+    SidePanel.send('message', args)
+  },
+  success(config){
+    SidePanel.send('message', {
+      type:'success',
+      config:config
+    })
+  },
+  error(config){
+    SidePanel.send('message', {
+      type:'error',
+      config:config
+    })
+  }
 }
 
 ipc.on('closeTask', function (event, args) {
@@ -761,7 +783,9 @@ ipc.on('openSwitch',()=>{
   createSwitchTask()
 })
 
-
+ipc.on('addSingleTaskGuide',()=>{
+  sendIPCToWindow(mainWindow, 'addSingleTask')
+})
 
 ipc.on('closeSwitch',()=>{
   if(switchWindow!==null){
@@ -777,14 +801,39 @@ ipc.on('openTaskMenu',(event,args)=>{
       enabled:false
     },
     {
-      label: '更改标签组图标',
+      label: '重命名标签组',
       click() {
+        let defaultIcon={
+          type:'img',
+          icon:{
+            url:task.icon
+          }
+        }
+        if(task.userIcon){
+          defaultIcon={
+            type:'fontIcon',
+            icon:task.userIcon
+          }
+        }
         renderPage.openIconSelector({
           x:pos.x,
-          y:pos.y
+          y:pos.y,
+        },{
+          text:true,
+            shape:'none',
+            originalIcon:task.icon,
+            defaultIcon:defaultIcon,
+            defaultText:task.title,
         },event.sender.id)
       }
-    },{
+    },
+    {
+      label:'暂存标签组…',
+      click(){
+        sendIPCToWindow(mainWindow,'stashTask',{id:task.id})
+      }
+    },
+    {
       type:'separator'
     },
     {
@@ -798,7 +847,26 @@ ipc.on('openTaskMenu',(event,args)=>{
 
   menu.popup()
 })
-ipc.on('openSidebarMenu',()=>{
+ipc.on('openSidebarMenu',(e,args)=>{
+  let checkAuto,checkClose,checkOpen,checkHide=false
+  switch(args.mod){
+    case 'auto':
+      checkAuto=true
+      break
+    case 'close':
+      checkClose=true
+      break
+    case 'hide':
+      checkHide=true
+      break
+    default :
+      checkOpen=true
+  }
+  function setSideMod(mod){
+    SidePanel.send('sideSet'+mod)
+    sendIPCToWindow(mainWindow,'sideSetMod',{mod:mod.toLowerCase()})
+
+  }
   const tpl=[
     {
       label: '新建标签组',
@@ -818,6 +886,53 @@ ipc.on('openSidebarMenu',()=>{
         sendIPCToWindow(mainWindow,'showTasks')
         mainWindow.focus()
       }
+    },
+    {
+      label: '导入标签组…',
+      click () {
+        renderPage.openPopTaskStash()
+      }
+    },
+
+    {
+      type:'separator'
+    },
+    {
+      label: '侧边栏模式',
+      submenu:[
+        {
+          type:'checkbox',
+          label:'自动伸缩',
+          checked:checkAuto,
+          click(){
+            setSideMod('Auto')
+          }
+        },
+        {
+          type:'checkbox',
+          label:'收起',
+          checked:checkClose,
+          click(){
+            setSideMod('Close')
+          }
+        },{
+          type:'checkbox',
+          label:'展开',
+          checked:checkOpen,
+          click(){
+            setSideMod('Open')
+          }
+        }
+        // , {
+        //   type:'separator'
+        // },
+        // {
+        //   label:!checkHide?'隐藏侧边栏':'显示侧边栏',
+        //   click(){
+        //     setSideMod('Hide')
+        //   }
+        // }
+      ]
     }
   ]
   let menu = require('electron').Menu.buildFromTemplate(tpl)
@@ -1222,6 +1337,46 @@ app.whenReady().then(()=>{
   })
 })
 
+ipc.on('onDropUrl',(e,args)=>{
+  if(args.url){
+    let set=settings.get('dropOpenLink')
+    if(!!!set){
+      dialog.showMessageBox(mainWindow, {
+        message:'检测到您首次拖放网页链接，请选择您的默认拖放链接行为，您也可以后续在设置中修改行为。',
+        buttons:['新标签打开链接','不做任何行为']
+    }).then((res)=>{
+      if(res.response===0){
+        sendIPCToWindow(mainWindow,'addTab',{url:args.url})
+        settings.set('dropOpenLink','true')
+      }else{
+        settings.set('dropOpenLink','false')
+      }
+      })
+    }else if(set==='true'){
+      sendIPCToWindow(mainWindow,'addTab',{url:args.url})
+    }
+  }
+})
 
+ipc.on('dbClickClose',(e,args)=>{
+  if(args.id){
+    let set=settings.get('dbClickClose')
+    if(!!!set){
+      dialog.showMessageBox(mainWindow, {
+        message:'检测到您首次双击标签，请根据习惯选择您的默认行为，您也可以后续在设置中修改此行为。',
+        buttons:['关闭标签','不做任何行为']
+      }).then((res)=>{
+        if(res.response===0){
+          sendIPCToWindow(mainWindow,'closeTab',{id:args.id})
+          settings.set('dbClickClose','true')
+        }else{
+          settings.set('dbClickClose','false')
+        }
+      })
+    }else if(set==='true'){
+      sendIPCToWindow(mainWindow,'closeTab',{id:args.id})
+    }
+  }
+})
 
 /*user面板代码end*/

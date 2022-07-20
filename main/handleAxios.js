@@ -232,6 +232,9 @@ app.whenReady().then(()=>{
   ipc.on('activeComplete', (event, args) => {
     afterGuide(`guideSchedule.modules.${args.moduleName}.${args.childName}`)
   })
+  ipc.on('enterFirstGuide',(item,window)=>{
+    sendIPCToWindow(window, 'enterFirstGuide')
+  })
 
   let firstGuideVideo
   ipc.on('firstGuideVideo', () => {
@@ -302,6 +305,7 @@ app.whenReady().then(()=>{
   function sendIPCToMainWindow(action, data) {
     mainWindow.webContents.send(action, data || {})
   }
+
 
   ipc.on('guideTasksFirst',()=>{
     if(markDb.db.get('guideSchedule.modules.feature.tasks').value()===false){
@@ -407,6 +411,13 @@ app.whenReady().then(()=>{
   ipc.on('exitGuide',(item,window)=>{
     sendIPCToWindow(window, 'exitGuide')
   })
+  ipc.on('exitFirstGuide',()=>{
+    mainWindow.webContents.send('exitFirstGuide')
+  })
+
+  ipc.on('closeGuide',()=>{
+    mainWindow.webContents.send('closeGuide')
+  })
 
   ipc.on('guideLogin',()=>{
     SidePanel.send('guideLogin')
@@ -414,6 +425,11 @@ app.whenReady().then(()=>{
   ipc.on('guideClose',()=>{
     mainWindow.webContents.send('closeGuide')
   })
+
+  ipc.on('valueCount',(event,args)=>{
+    mainWindow.webContents.send('valueCount',args)
+  })
+
 //--------------------------------------------------------->myf状态管理部分
 
 

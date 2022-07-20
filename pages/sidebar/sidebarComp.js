@@ -58,7 +58,7 @@ const sidebarTpl = /*html*/`
                                   </div>
                                 </div>
                               </template>
-                              <a-button size="small">
+                              <a-button class="nickname" size="small">
                                 {{user.nickname}}<a-icon type="swap" /></a-icon>
                               </a-button>
                             </a-popover>
@@ -67,7 +67,7 @@ const sidebarTpl = /*html*/`
                             <a-popover placement="bottomLeft">
                               <template slot="content">
                                 <div class="flex flex-direction justify-around align-start" style="width: 100%; height: 185px">
-                                  <div class="text-black">等级: {{this.$store.getters.getTsGrade.lv}}级</div>
+                                  <div class="text-black">在线等级: {{this.$store.getters.getTsGrade.lv}}级</div>
                                   <div class="text-black">距离下一级还需要: {{remainTime}} 小时</div>
                                   <div class="text-black">累计在线时长{{this.$store.getters.getTsGrade.cumulativeHours}}小时</div>
                                   <div class="text-grey">
@@ -116,22 +116,22 @@ const sidebarTpl = /*html*/`
                         </a-popover>
                        </div>
                     </div>
-                    <div style="margin-bottom: 10px" @click="myCommunity" class="actions flex flex-direction justify-between align-center">
+                    <div style="margin-bottom: 10px" @click="myCommunity" class="my-info-panel actions flex flex-direction justify-between align-center">
                       <div class="actions-top flex justify-start  align-center">
                         <img src="./assets/tizi.svg" alt="" style="width: 16px; height: 16px">
                         <div class="text-grey" style="margin-left: 6px">我的元社区</div>
                       </div>
                       <div class="actions-bottom flex justify-around align-center">
                         <div class="action-bottom-action flex flex-direction justify-around align-center">
-                          <div style="font-weight: 700;">{{user.postCount}}</div>
+                          <div class="info-num" style="font-weight: 700;">{{user.postCount}}</div>
                           <div class="text-grey">内容</div>
                         </div>
                         <div class="action-bottom-action flex flex-direction justify-around align-center">
-                          <div style="font-weight: 700;">{{user.fans}}</div>
+                          <div class="info-num"  style="font-weight: 700;">{{user.fans}}</div>
                           <div class="text-grey">粉丝</div>
                         </div>
                         <div class="action-bottom-action flex flex-direction justify-around align-center">
-                          <div style="font-weight: 700;">{{user.follow}}</div>
+                          <div class="info-num"  style="font-weight: 700;">{{user.follow}}</div>
                           <div class="text-grey">关注</div>
                         </div>
                       </div>
@@ -139,7 +139,7 @@ const sidebarTpl = /*html*/`
                     <div class="my-group" style="margin-top: 20px;">
                       <template>
                         <div class="mg-top flex justify-between align-center">
-                          <div class="mg-top-lf text-black" style="font-weight: 400;">我加入的团队({{this.$store.getters.getAllCircle.length}})</div>
+                          <div class="mg-top-lf text-black title-my-group" style="font-weight: 400;">我加入的团队({{this.$store.getters.getAllCircle.length}})</div>
                           <a-button id="guideTeam" class="mg-top-right" style="border-radius: 50%;" type="primary" icon="plus" size="small" @click="createGroup" />
                         </div>
 
@@ -594,7 +594,10 @@ const sidebarTpl = /*html*/`
                   </div>
 
 </template>
- <div>
+<div style="padding: 10px">
+
+
+ <div >
                     <span @click.stop="editTaskName(item)" class="task-title">      <a-icon :id="'editTip'+item.id" class="edit-tip" type="edit"></a-icon> <span class="text"
                         :id="'taskTitle'+item.id">{{ item.count > 5 ? item.title + ' -- 高负载（5+）' : item.title }}
                       </span>
@@ -635,6 +638,7 @@ const sidebarTpl = /*html*/`
                         </span>
                       </li>
                     </ul>
+                    </div>
 </tippy>
 <!--                <a-popover placement="right" :mouse-enter-delay="0.1" :mouse-leave-delay="0.2"-->
 <!--                  :overlay-style="{'width':'305px','height':item.tabs.length*30+50+'px'}" overlay-class-name="tips">-->
@@ -718,7 +722,7 @@ const sidebarTpl = /*html*/`
           <div class="item-title">消息中心</div >
         </li>
         <li class="helpCenter" @click="openHelpCenter" style="position: relative">
-          <a-progress :width="32" type="circle" :percent="this.$store.getters.getGuideScedule" :showInfo="false" :strokeWidth="11"></a-progress>
+          <a-progress v-show="this.$store.getters.getGuideScedule < 100" :width="32" type="circle" :percent="this.$store.getters.getGuideScedule" :showInfo="false" :strokeWidth="11"></a-progress>
           <a-icon type="question-circle" style="position: absolute; top: 14.5px; right: 14.5px; font-size: 16px;"></a-icon>
           <div class="item-title">帮助中心</div>
         </li>
@@ -838,6 +842,9 @@ Vue.component('sidebar', {
   },
 
   async mounted () {
+    if(process.platform==='darwin'){
+      document.getElementById('appVue').style.borderRadius='0 0 0 10px'
+    }
     ipc.on('callBackMedal',(event,args)=>{
       this.$nextTick(()=>{
         appVue.$refs.sidePanel.isMedals = args
@@ -1269,7 +1276,9 @@ Vue.component('sidebar', {
         }
     },
     openSidebarMenu(){
-      ipc.send('openSidebarMenu')
+      ipc.send('openSidebarMenu',{
+        mod:appVue.mod
+      })
     },
     openTaskMenu(task){
       window.selectedTask=task
@@ -2205,5 +2214,20 @@ ipc.on('getUserInfo',async (event,args)=>{
 
 
 ipc.on('selectedIcon',(event,args)=>{
-  ipc.sendTo(mainWindowId, 'changeTaskIcon', { id: window.selectedTask.id, icon:args.icon })
+  if(args.text){
+    ipc.sendTo(mainWindowId, 'renameTask', { id: window.selectedTask.id, newName: args.text })
+  }
+  if(args.icon.type==='fontIcon')
+    ipc.sendTo(mainWindowId, 'changeTaskIcon', { id: window.selectedTask.id, icon:args.icon })
+  else{
+    ipc.sendTo(mainWindowId, 'changeTaskIcon', { id: window.selectedTask.id, icon:args.icon })
+  }
+
+})
+
+ipc.on('getStashTasks',async (event, args) => {
+  let tasks=await db.taskStash.toArray()
+  console.log(tasks)
+
+  ipc.sendTo(event.senderId,'gotStashTasks', { tasks })
 })

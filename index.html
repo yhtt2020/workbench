@@ -7,7 +7,9 @@
 		<title>想天浏览器</title>
 		<link rel="stylesheet" href="dist/bundle.css" />
 		<link rel="stylesheet" href="ext/icons/iconfont.css" />
-	</head>
+    <script src="ext/shepherdjs10/dist/js/shepherd.min.js"></script>
+    <link rel="stylesheet" href="ext/shepherdjs10/dist/css/shepherd.css"/>
+  </head>
 
 	<body>
 		<div class="windows-caption-buttons">
@@ -100,6 +102,26 @@
     .tab-item,#tab-editor,#tab-editor button {
       -webkit-app-region: no-drag;
     }
+    .shepherd-element{
+      max-width: 191px;
+      max-height: 72px;
+      margin-left: -38px!important;
+      margin-top: -17px!important;
+    }
+    .shepherd-text{
+      font-size: 15px;
+    }
+    .shepherd-button{
+      padding: 0.5px 4.5px;
+      margin-top: -19px;
+      margin-right: 3px;
+    }
+    .shepherd-arrow{
+      transform:translate(0px,40px)!important;
+    }
+    .shepherd-modal-is-visible.shepherd-modal-overlay-container{
+     opacity: 0.15;
+    }
     </style>
 
 
@@ -132,8 +154,8 @@
       <div id="toolbar">
         <div  style="display: flex;justify-content: flex-start;flex-direction:row" type="flex">
           <div style="width:auto" >
-            <div style="display: flex;justify-content: flex-start;flex-direction:row" type="flex">
-              <div class="action-wrapper" >
+            <div class="page-operation" style="display: flex;justify-content: flex-start;flex-direction:row" type="flex">
+              <div class="action-wrapper" hidden >
                 <img title="当前模式：自动展开收起；点击切换收起左侧栏，不再自动展开" id="side-mod-button-toolbar" class="action "  src="./icons/toolbar/sideauto.svg">
               </div>
               <div class="action-wrapper">
@@ -165,8 +187,8 @@
 <!--            </div>-->
 
           </div>
-          <div style="display: flex;width: 330px" >
-            <div class="action-wrapper" >
+          <div  style="display: flex;" >
+            <div  id="closeBlockGuide" class="action-wrapper" >
                 <span onclick="ipc.send('openSwitch')" title="快速切换（Ctrl+Tab）" id="switch-toolbar"><img class="action" src="./icons/toolbar/switch.svg">
                 </span>
             </div>
@@ -174,33 +196,40 @@
                 <span onclick="ipc.send('openMobile')" title="手机浏览工具" id="mobile-toolbar"><img class="action" src="./icons/toolbar/smartphone.svg">
                 </span>
             </div>
-            <div class="action-wrapper" style="text-align: center;">
-              <div style="margin-right:8px;border-right: 1px solid #cacaca;display: inline-block;height: 16px;vertical-align: middle;width: 0;margin-top: -3px"></div>
+            <browser-action-list hidden partition="persist:webcontent" id="actions"></browser-action-list>
+            <div class="action-wrapper app-tool" >
+              <span onclick="ipc.send('openScriptManager')" title="管理脚本插件" id="userscript-toolbar"><img class="action app" src="./icons/toolbar/apps/code.svg">
+              <span hidden title="当前页面有3个脚本正在启用" class="bandage" id="scriptCount">3</span>
+              </span>
             </div>
             <div class="action-wrapper" >
+                <span onclick="ipc.send('showPopList')" title="管理插件" id="plugin-toolbar"><img class="action" src="./icons/toolbar/list.svg">
+                </span>
+            </div>
+
+            <div class="action-wrapper" style="text-align: center;width: 18px;margin-left: 5px">
+              <div class="split"></div>
+            </div>
+            <div class="action-wrapper app-tool" >
               <span oncontextmenu="ipc.send('favContextMenu')" onclick="ipc.send('handleTsbProtocol',{url:'tsb://app/redirect/?package=com.thisky.fav&url=/'})" title="收藏夹" id="nav-toolbar"><img class="action app" src="./icons/toolbar/apps/fav.svg"></span>
             </div>
-            <div  class="action-wrapper" >
+            <div  class="action-wrapper app-tool" >
                 <span title="阅读模式" id="read-toolbar"><img class="action app" src="./icons/toolbar/apps/read.svg">
                 <span hidden class="bandage" id="canRead">0</span>
                 </span>
             </div>
-            <div  class="action-wrapper" >
+            <div  class="action-wrapper app-tool" >
                 <span onclick="ipc.send('openDownload')" title="下载助手" id="download-toolbar"><img class="action app" src="./icons/toolbar/apps/download.svg">
                 <span  class="bandage" style="background-color: red" id="downloadCount">0</span>
                 </span>
             </div>
-              <div  class="action-wrapper" >
+              <div  class="action-wrapper app-tool" >
                 <span onclick="ipc.send('openPwdManager',{tabData:tabs.get(tabs.getSelected())})" title="密码管理" id="pwd-toolbar"><img class="action app" src="./icons/toolbar/apps/pwd.svg">
                 <span hidden class="bandage" id="pwdCount">0</span>
                 </span>
               </div>
 
-            <div class="action-wrapper" >
-              <span onclick="ipc.send('openScriptManager')" title="管理脚本插件" id="userscript-toolbar"><img class="action app" src="./icons/toolbar/apps/code.svg">
-              <span hidden title="当前页面有3个脚本正在启用" class="bandage" id="scriptCount">3</span>
-              </span>
-            </div>
+
             <div class="action-wrapper">
               <img title="收起地址栏，使用精简模式"  id="collapse-button-toolbar" class="action "  src="./icons/toolbar/chevronsup.svg">
              </div>
@@ -337,9 +366,41 @@
         }})
       })
 
+      let isBlockTips = localStorage.getItem('isBlockTips')
+      if(!isBlockTips) {
+        localStorage.setItem('isBlockTips', '1')
+      }
+      ipc.on('valueCount',(event,args)=>{
+        if(args>2000 && isBlockTips === '1') {
+          ipc.invoke('openBlockTips')
+          localStorage.setItem('isBlockTips', '2')
+        }
+      })
 
+      ipc.on('blockGuide',()=>{
+        const closeBlockGuide = new Shepherd.Tour({
+          useModalOverlay: true,
+          defaultStepOptions: {
+            cancelIcon: {
+              enabled: false,
+            },
+            classes:'taskAdd',//添加标签组完成后的引导
+            scrollTo: {
+              behavior: 'smooth',
+              block: 'center'
+            }
+          },
+          steps: [{
+            text: '您可以点击该图标取消当前网站的广告拦截', attachTo: {element: '#closeBlockGuide', on:'right'},
+            buttons: [
+              {action: function () {return  this.cancel();}, text: '好 的',classes:'button'}],
+            id: 'blockGuide'    // 用于Shepherd step的唯一标识符
+          }]
+        });
+        closeBlockGuide.start();
+
+      })
       function calculate(a){
-
           if(a>=10){
             return '9+'
           }
@@ -379,7 +440,16 @@
           code: args.code
         }})
       })
+
+
     </script>
 
+  <style>
+    browser-action-list::part(action) {
+      width: 32px !important;
+      height:32px !important;
+      margin:3px !important;
+    }
+  </style>
 	</body>
 </html>

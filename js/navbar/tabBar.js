@@ -69,9 +69,7 @@ const tabBar = {
         } else {
           needDestroy.push(tab.id)
         }
-
       }
-
     })
     tabBar.closeTabsById(needDestroy, lockCount)
     //$store.getters.fillTasksToItems
@@ -322,6 +320,11 @@ const tabBar = {
     tabEl.appendChild(tabAudio.getButton(data.id))
     tabEl.appendChild(progressBar.create())
 
+    tabEl.addEventListener('dblclick',(e)=>{
+      ipc.send('dbClickClose',{id:data.id})
+      e.stopPropagation()
+      e.preventDefault()
+    })
     // icons
 
     var iconArea = document.createElement('span')
@@ -463,6 +466,13 @@ const tabBar = {
           }
         ],
         [
+          {
+            id:'duplicateTab',
+            label:'复制标签',
+            click:function(){
+              require('browserUI.js').duplicateTab(tabs.get(data.id))
+            }
+          },
           {
             id: 'lockTab',
             label: tabs.get(data.id).lock === true ? '解锁标签' : '锁定标签',
@@ -824,6 +834,20 @@ tabBar.container.addEventListener('drop', (e) => {
 })
 ipc.on('refresh', () => {
   webviews.update(tabs.getSelected(), tasks.getSelected().tabs.get(tabs.getSelected()).url)
+})
+
+ipc.on('stashTask',(e,args)=>{
+  const db=require('../util/database').db
+  const task=tasks.get(args.id)
+  db.taskStash.add({
+    taskData:JSON.stringify(tasks.getStringify(task.id)),
+    createTime:Date.now()
+  }).then(res=>{
+    ipc.send('message',{type:'success',config:{content:'暂存标签组成功，您可随时导入此暂存标签组到任何空间。'}})
+    tasks.destroy(args.id)
+  }).catch((e)=>{
+    console.warn(res)
+  })
 })
 
 ipc.on('toggleLockTab', (event, args) => {

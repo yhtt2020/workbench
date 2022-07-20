@@ -5,23 +5,25 @@ directories:
 #可以注释这里，省略公证环节，节省打包时间。此操作可节省2分半。下面 51行也影响打包速度，可以设为null，这样不签名，大幅度提高速度。
 afterSign: scripts/notarize.js
 files:
-    - dist/*.js
-    - dist/*.css
-    - css/*.css
-    - pages/**/*
-    - icons/**/*
-    - icons/*.svg
-    - js/**/*
-    - ./main.build.js
-    - ext/**/*
-    - index.html
-    - server-config.js
-    - api/*
-    - img/*.jpg
-    - img/*.jpeg
-    - reader/**/*
-    - resources/**/*
-    - src/**/*
+  - dist/*.js
+  - dist/*.css
+  - css/*.css
+  - pages/**/*
+  - icons/**/*
+  - icons/*.svg
+  - js/**/*
+  - ./main.build.js
+  - ext/**/*
+  - index.html
+  - server-config.js
+  - api/*
+  - img/*.jpg
+  - img/*.jpeg
+  - img/*.png
+  - reader/**/*
+  - resources/**/*
+  - src/**/*
+  - vite/dist/**/* #增加渲染进程
 dmg:
     sign: false
 

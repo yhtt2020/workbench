@@ -534,7 +534,7 @@ window.onload = function() {
       })
 			window.$store = store
       let sideMode = localStorage.getItem('sideMode')
-      sideMode = sideMode || 'auto'
+      sideMode = sideMode || 'close'
       if (sideMode === 'close' || sideMode === 'auto') {
         document.getElementById('clickThroughElement').style.left = '55px'
       } else if (sideMode === 'open') {

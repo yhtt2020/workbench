@@ -30,8 +30,8 @@ var blockingExceptionsInput = document.getElementById('content-blocking-exceptio
 var blockedRequestCount = document.querySelector('#content-blocking-blocked-requests strong')
 
 settings.listen('filteringBlockedCount', function (value) {
-  var count = value || 0
   var valueStr
+  var count = value || 0
   if (count > 50000) {
     valueStr = new Intl.NumberFormat(navigator.locale, { notation: 'compact', maximumSignificantDigits: 4 }).format(count)
   } else {
@@ -409,8 +409,13 @@ function callSetDefaultBrowser(){
 }
 /*默认浏览器结束*/
 
-
-
+//
+// var myVar = setInterval(function(){
+//       postMessage({message:'valueCount',count:valueStr})
+//       if(valueStr>'3,430'){
+//         clearInterval(myVar)
+//       }
+// },1000)
 
 
 /* key map settings */
@@ -548,8 +553,7 @@ const setProxy = (key, value) => {
 
 settings.get('proxy', (proxy = {}) => {
   toggleProxyOptions(proxy.type)
-
-  proxyTypeInput.options.selectedIndex = proxy.type || 0
+  proxyTypeInput.options.selectedIndex = proxy.type || 3
   proxyInputs.forEach(item => item.value = proxy[item.name] || '')
 })
 
@@ -570,6 +574,29 @@ settings.get('customBangs', (value) => {
     })
   }
 })
+const dolEle=document.getElementById('dropOpenLink')
+settings.get('dropOpenLink',(value)=>{
+  if(value==='true'){
+    dolEle.checked=true
+  }else{
+    dolEle.checked=false
+  }
+})
+dolEle.addEventListener('change', e => {
+  settings.set('dropOpenLink',e.target.checked===true?"true":'false')
+})
+const dccEle=document.getElementById('dbClickClose')
+settings.get('dbClickClose',(value)=>{
+  if(value==='true'){
+    dccEle.checked=true
+  }else{
+    dccEle.checked=false
+  }
+})
+dccEle.addEventListener('change', e => {
+  settings.set('dbClickClose',e.target.checked===true?"true":'false')
+})
+
 
 document.getElementById('add-custom-bang').addEventListener('click', function () {
   const bangslist = document.getElementById('custom-bangs')
