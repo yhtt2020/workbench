@@ -274,5 +274,9 @@ module.exports = {
     ipc.on('bookmarkMigration', (event, args) => {
       bookmark.oldImport(args)
     })
+
+    ipc.on('renderHtmlImport', () => {
+      bookmark.htmlImport()
+    })
   }
 }

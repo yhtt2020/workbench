@@ -104,14 +104,8 @@
         },1000)
     },
     methods: {
-      async importBookmarks(){
-        //appVue.$message.info({content:'暂时还不支持导入书签。'})
-        const fileData = await fileHelper.manualOperateHtml()
-        console.log(fileData, '@@')
-
-        const result = await baseBookmark.importHtml(fileData)
-
-        console.log(result, 'dom@@@@@@@@@@@')
+      importBookmarks(){
+        ipc.send('htmlImport')
       }
     }
   })

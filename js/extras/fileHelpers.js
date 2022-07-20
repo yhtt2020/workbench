@@ -1,4 +1,5 @@
 const { exists, mkdirSync, readFile, unlink, writeFile } = require("fs");
+const fs = require('fs')
 const ipc = require('electron').ipcRenderer
 let baseStorePath = ''
 let favStorePath = ''

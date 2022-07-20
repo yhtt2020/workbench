@@ -2,10 +2,9 @@ const ipc = require('electron').ipcRenderer
 const fileHelpers = require('../fileHelpers.js')
 
 class baseBookmarkRepository {
-  static importHtml(data) {
+  static htmlDeal(data) {
+    ipc.send('message',{type:'loading',config:{content: 'html书签导入中...', duration: 7, key: 1}})
     let tree = new DOMParser().parseFromString(data, 'text/html')
-    console.log(tree, '$$$$$$$$$$')
-
 
     let calcedItem = {}
     //递归计算dt的level和parent
@@ -75,9 +74,6 @@ class baseBookmarkRepository {
       return combined
     }, [])
 
-    console.log(newarray, '!!!!!!!!!')
-
-
     function listLoop(arr, parentName) {
       let newarray = []
       arr.forEach(v => {
@@ -89,11 +85,37 @@ class baseBookmarkRepository {
 
       return newarray
     }
+    let standardList = {
+      children: listLoop(newarray, null)
+    }
 
-    let a = listLoop(newarray, null)
+    return standardList
+  }
 
+  static importHtml(bookmark) {
+    try {
+      //创建书签根目录
+      fileHelpers.addRootFolder(`Html文件${new Date().getMonth() + 1}月${new Date().getDate()}日导入`)
 
-    console.log(a, '$$$$$$$$$$$$')
+      //往收藏夹的文件目录写入书签文件
+      bookmark.children.forEach(v => {
+        fileHelpers.recurBookmark(v)
+      })
+
+      setTimeout( () => {
+        ipc.send('message',{type:'success',config:{content: 'Html文件生成书签成功', key: 1}})
+        ipc.send('reloadFav')
+        fileHelpers.restFavStorePath()
+        ipc.send('openFav')
+      }, 5000)
+    } catch (error) {
+      fileHelpers.restFavStorePath()
+      ipc.send('message',{type:'error',config:{content: `Html文件生成书签失败!${error}!`, key: 1}})
+    }
+  }
+
+  static async readHtmlFile() {
+    return await fileHelpers.manualOperateHtml()
   }
 }
 

@@ -95,23 +95,21 @@ class ChromeBookmarkRepository {
       );
       const bookmark = await chromeBookmark.getBrowserBookmarks();
 
-      console.log(bookmark, '###########')
+      //创建书签根目录
+      fileHelpers.addRootFolder(`Chrome${new Date().getMonth() + 1}月${new Date().getDate()}日导入`)
 
-      // //创建书签根目录
-      // fileHelpers.addRootFolder(`Chrome${new Date().getMonth() + 1}月${new Date().getDate()}日导入`)
+      //往收藏夹的文件目录写入书签文件
+      bookmark.children.forEach(v => {
+        fileHelpers.recurBookmark(v)
+      })
 
-      // //往收藏夹的文件目录写入书签文件
-      // bookmark.children.forEach(v => {
-      //   fileHelpers.recurBookmark(v)
-      // })
-
-      // setTimeout( () => {
-      //   ipc.send('message',{type:'success',config:{content: 'Chrome书签导入成功', key: Date.now()}})
-      //   ipc.send('afterMigration', 'chrome')
-      //   ipc.send('reloadFav')
-      //   fileHelpers.restFavStorePath()
-      //   ipc.send('openFav')
-      // }, 5000)
+      setTimeout( () => {
+        ipc.send('message',{type:'success',config:{content: 'Chrome书签导入成功', key: Date.now()}})
+        ipc.send('afterMigration', 'chrome')
+        ipc.send('reloadFav')
+        fileHelpers.restFavStorePath()
+        ipc.send('openFav')
+      }, 5000)
     } catch (error) {
       fileHelpers.restFavStorePath()
       ipc.send('message',{type:'error',config:{content: `Chrome书签导入失败!${error}!`, key: Date.now()}})

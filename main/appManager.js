@@ -610,6 +610,7 @@ const appManager = {
       //todo 根据实际需求更改
       // saApp.url ='/pages/fav/index.html'
       // saApp.type='local'
+
       saApp.url = 'http://localhost:8080/'
     }else if(saApp.package==='com.thisky.fav'){
       saApp.url='/pages/fav/index.html'
