@@ -11,19 +11,23 @@ axios.defaults.baseURL = config.NODE_SERVER_BASE_URL;
 //<!--强制使用node模块。-->
 axios.defaults.adapter = require('axios/lib/adapters/http');
 
-function execRefreshToken(config, refreshFuncList) {
+function execRefreshToken(config) {
   axios.post(`${api.NODE_API_URL.USER.REFRESH_TOKEN}`, {
     refreshToken: config.expireInfo.refreshToken
   }).then(res => {
     if(res.code === 1000) {
-      refreshFuncList.forEach(cb => cb(res.data))
+      //遍历执行全部绑定的事件
+      refreshFuncList.forEach(cb => {
+        cb(res.data)
+      })
       refreshFuncList = []
-      isRefreshing = false
     } else {
       ipc ? ipc.send('message',{type:'error',config:{content: '登录信息过期，请重新登录', key: Date.now()}}) : sidePanel.get().webContents.send('message',{type:"error",config:{content: '登录信息过期，请重新登录', key: Date.now()}})
     }
   }).catch(err => {
     ipc ? ipc.send('message',{type:'error',config:{content: '登录信息过期，请重新登录', key: Date.now()}}) : sidePanel.get().webContents.send('message',{type:"error",config:{content: '登录信息过期，请重新登录', key: Date.now()}})
+  }).finally(()=>{
+    isRefreshing=false
   })
 }
 
@@ -66,22 +70,18 @@ axios.interceptors.request.use(
           refreshFuncList.push(async user => {
             if(config.expireInfo.inMain) {
               //根据进程类型执行不同的重制用户标识 //情况一主进程中触发的，修改主进程中storage中的用户标识，并通过ipc传到渲染进程
-              storage.setStoragePath(global.sharedPath.extra)
-              storage.setItem(`userToken`, user.token)
-              storage.setItem(`refreshToken`, user.refreshToken)
-              storage.setItem(`expire_deadtime`, new Date().getTime() + user.expire * 1000)
-              storage.setItem(`refreshExpire_deadtime`, new Date().getTime() + user.refreshExpire * 1000)
-              storage.setItem(`userInfo`, user.userInfo)
-              global.utilWindow.webContents.send('remakeCurrentUser', user)
+              updateStorageInfo(user)
+              //todo 发送Ipc去更新空间里的信息
             } else {
               //根据进程类型执行不同的重制用户标识 //情况二渲染进程中触发的，通过ipc通知主进程去修改，并还会再发到渲染进程
-              ipc.send('updateStorageInfo', user)
+              ipc.send('updateUserInfo', user)
+              //todo 去更新空间里的信息
             }
           })
 
           isRefreshing = true
 
-          execRefreshToken(config, refreshFuncList)
+          execRefreshToken(config)
         }
 
       }
@@ -143,8 +143,10 @@ axios.interceptors.response.use(
         //此处是登录报401场景
         if(!!!window){
           console.log('主进程察觉到掉登录')
-        }else{
+        }else if(!isRefreshing){
+          //且不在刷新令牌，证明已经无法刷新令牌了
           ipc.send('showUserWindow',{tip:'您的登录信息已过期，请重新登录。'})
+
           ipc.send('message',{type:'warn',config:{content:'您的登录信息已过期，请重新登录。',key:"401"}})
           //todo 通知侧边栏清理掉登录信息，以确保账号信息同步
           console.log('渲染进程掉登录')

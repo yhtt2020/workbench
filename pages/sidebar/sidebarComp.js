@@ -735,6 +735,7 @@ const sidebarTpl = /*html*/`
 
 const backupSpaceModel=require('../../src/model/backupSpaceModel')
 const _=require('lodash')
+const storage = require('electron-localstorage')
 window.selectedTask=null
 
 Vue.component('sidebar', {
@@ -2227,7 +2228,5 @@ ipc.on('selectedIcon',(event,args)=>{
 
 ipc.on('getStashTasks',async (event, args) => {
   let tasks=await db.taskStash.toArray()
-  console.log(tasks)
-
   ipc.sendTo(event.senderId,'gotStashTasks', { tasks })
 })

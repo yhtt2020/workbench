@@ -28,13 +28,20 @@ function fatalStop (options) {
  * 设为离线
  * @param options
  */
+let disconnectTimes=0 //允许失败两次
+const disconnectTryLimit=2 //重试两次失败，则提示离线
 function disconnect (options) {
+  if(disconnectTimes<disconnectTryLimit){
+    disconnectTimes++
+    return
+  }
+  disconnectTimes=0
   if (backupSpaceModel.getOfflineUse(options.spaceId)) {
     //如果是离线使用
-    //ipc.send('message',{type:'warn',config:{content:'与服务器失去连接，自动转入离线空间'}})
   } else {
     //如果还未设置离线使用
-    if(configModel.get('dontShowDisconnect')===false) {
+    let dontShowConfig=configModel.get('dontShowDisconnect')
+    if(dontShowConfig===false || typeof dontShowConfig==='undefined') {
       //如果已经设置了不提示，则手动处理
       backupSpaceModel.setOfflineUse(options.spaceId)
       ipc.send('showUserWindow', options)
@@ -121,6 +128,7 @@ const sessionRestore = {
             saveData.sync_time=Date.now()
             backupSpaceModel.save(space,saveData) //更新一下最后保存时间
             ipc.send('saving')
+            disconnectTimes=0
           } else {
             if (cloudResult.data.action === 'fatal') {
               fatalStop(cloudResult.data.option)
