@@ -308,12 +308,12 @@
       ipcRenderer.send('inform')
       ipcRenderer.send('emptyPageUrl', args.chainUrl)
       const myDate = new Date()
-      appVue.doneList.forEach(item => {
-        if (item.startTime === args.startTime) {
-          appVue.doneList.splice(appVue.doneList.indexOf(args.startTime), 1)
-          appVue.count++
-        }
-      })
+      // appVue.doneList.forEach(item => {
+      //   if (item.startTime === args.startTime) {
+      //     appVue.doneList.splice(appVue.doneList.indexOf(args.startTime), 1)
+      //     appVue.count++
+      //   }
+      // })
       appVue.doneList.unshift({
         name: args.name,
         id: appVue.doneId++,
@@ -327,6 +327,7 @@
         addTime: appVue.transDate(myDate.toLocaleDateString()),
         // addTime:myDate.toLocaleDateString(),
       })
+      console.log(appVue.doneList)
       appVue.listCount--
       appVue.count--
       appVue.listDoneCount++
@@ -599,8 +600,8 @@
           })
           ipcRenderer.send('deleteFile', appVue.selectList.path)
           appVue.$message.info('文件已删除', 0.5)
-
           appVue.selectTimeGroup.subList.splice(appVue.selectTimeGroup.subList.indexOf(appVue.selectList), 1)
+          appVue.doneList.splice(appVue.doneList.indexOf(appVue.selectList),1)
           if (appVue.selectTimeGroup.subList.length === 0) {
             appVue.showList.splice(appVue.showList.indexOf(appVue.selectTimeGroup), 1)
           }
