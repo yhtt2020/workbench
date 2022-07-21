@@ -62,7 +62,7 @@ const mobileMod = {
         nodeIntegrationInSubFrames: true,
         scrollBounce: true,
         safeDialogs: true,
-        safeDialogsMessage: 'Prevent this page from creating additional dialogs',
+        safeDialogsMessage: '阻止此页面弹窗',
         preload: __dirname + '/dist/preload.js',
         contextIsolation: true,
         sandbox: true,
