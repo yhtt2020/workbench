@@ -14,6 +14,7 @@ const modules = [
   'main/sidePanel.js',
   'main/bindIPC.js',
   'main/appManager.js',
+  'main/appStore.js',
   'main/popManager.js',
   'main/siteCard.js',
   'main/downloadCard.js',
@@ -36,7 +37,8 @@ const modules = [
   'main/wizard.js',
   'main/messageCenter.js',
   'main/fav.js',
-  'main/globalSearch.js'
+  'main/globalSearch.js',
+
 ]
 
 function buildMain () {
