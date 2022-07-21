@@ -734,30 +734,25 @@ const appManager = {
     //   appWindow.webContents.send('found-in-page',{data:result})
     // })
     appView.webContents.on('before-input-event', (event, input) => {
-      if (process.platform === 'darwin') {
-        if (input.meta && input.key.toLowerCase() === 'w') {
+      let keyCtrlOrMeta
+        if (process.platform === 'darwin') {
+          keyCtrlOrMeta=input.meta
+        }else{
+          keyCtrlOrMeta=input.control
+        }
+        if (keyCtrlOrMeta && input.key.toLowerCase() === 'w') {
           appWindow.close()
           event.preventDefault()
-        } else if (input.meta && input.key.toLowerCase() === 'f') {
+        } else if (keyCtrlOrMeta && input.key.toLowerCase() === 'f') {
           appView.webContents.send('findInPage')
           event.preventDefault()
         } else if (input.key.toLowerCase() === 'f12') {
-          appView.webContents.openDevTools()
+          appView.webContents.openDevTools({
+            mode:"detach"
+          })
+          //todo 想办法增加devtool的新菜单打开的事件，目前没有好办法
           event.preventDefault()
         }
-      } else if (process.platform === 'win32') {
-        if (input.control && input.key.toLowerCase() === 'w') {
-          appWindow.close()
-          event.preventDefault()
-        } else if (input.control && input.key.toLowerCase() === 'f') {
-          appView.webContents.send('findInPage')
-          event.preventDefault()
-        }
-        if (input.key.toLowerCase() === 'f12') {
-          appView.webContents.openDevTools()
-          event.preventDefault()
-        }
-      }
       // console.log('press'+input)
       //todo 判断linux
     })
