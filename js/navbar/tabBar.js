@@ -786,7 +786,7 @@ permissionRequests.onChange(function (tabId) {
 
 tabBar.initializeTabDragging()
 
-if (window.platformType === 'mac') {
+if (0) {//window.platformType === 'mac'
   tabBar.dragulaInstance.containers = []
   keybindings.defineShortcut({ keys: 'mod' }, function () {
     tabBar.enableTabDragging()
