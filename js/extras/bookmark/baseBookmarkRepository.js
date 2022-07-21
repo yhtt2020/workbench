@@ -3,7 +3,7 @@ const fileHelpers = require('../fileHelpers.js')
 
 class baseBookmarkRepository {
   static htmlDeal(data) {
-    ipc.send('message',{type:'loading',config:{content: 'html书签导入中...', duration: 7, key: 1}})
+    ipc.send('message',{type:'loading',config:{content: 'html书签导入中...', duration: 7, key: 'baseBookmarkImport'}})
     let tree = new DOMParser().parseFromString(data, 'text/html')
 
     let calcedItem = {}
@@ -67,7 +67,7 @@ class baseBookmarkRepository {
 
     //把tree dom处理成一个能表示结构的简单数组
     let bookmarksArray = Array.from(tree.getElementsByTagName('dt'))
-    let newarray = bookmarksArray.reduce((combined, currentVal) => {
+    let newArray = bookmarksArray.reduce((combined, currentVal) => {
       recurCalc(currentVal)
       combined.push(calcedItem)
       calcedItem = {}
@@ -75,18 +75,18 @@ class baseBookmarkRepository {
     }, [])
 
     function listLoop(arr, parentName) {
-      let newarray = []
+      let newArray = []
       arr.forEach(v => {
         if(v.level > 0 && v.parent === parentName) {
           v.children = listLoop(arr, v.name)
-          newarray.push(v)
+          newArray.push(v)
         }
       })
 
-      return newarray
+      return newArray
     }
     let standardList = {
-      children: listLoop(newarray, null)
+      children: listLoop(newArray, null)
     }
 
     return standardList
@@ -103,14 +103,14 @@ class baseBookmarkRepository {
       })
 
       setTimeout( () => {
-        ipc.send('message',{type:'success',config:{content: 'Html文件生成书签成功', key: 1}})
+        ipc.send('message',{type:'success',config:{content: 'Html文件生成书签成功', key: 'baseBookmarkImport'}})
         ipc.send('reloadFav')
         fileHelpers.restFavStorePath()
         ipc.send('openFav')
       }, 5000)
     } catch (error) {
       fileHelpers.restFavStorePath()
-      ipc.send('message',{type:'error',config:{content: `Html文件生成书签失败!${error}!`, key: 1}})
+      ipc.send('message',{type:'error',config:{content: `Html文件生成书签失败!${error}!`, key: 'baseBookmarkImport'}})
     }
   }
 
