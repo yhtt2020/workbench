@@ -204,6 +204,10 @@ app.whenReady().then(()=>{
     })
   })
 
+  ipc.on('htmlImport', () => {
+    mainWindow.webContents.send('renderHtmlImport')
+  })
+
   function calcGuideScedule() {
     const guideScedule = markDb.db.get('guideSchedule').value()
     let noobGuideObj = JSON.parse(JSON.stringify(guideScedule.modules.noobGuide))

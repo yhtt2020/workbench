@@ -1,4 +1,5 @@
 const { exists, mkdirSync, readFile, unlink, writeFile } = require("fs");
+const fs = require('fs')
 const ipc = require('electron').ipcRenderer
 let baseStorePath = ''
 let favStorePath = ''
@@ -127,6 +128,21 @@ const fileHelpers = {
       }
     })
     return name
+  },
+
+  //手动处理html文件的导入拿到data
+  manualOperateHtml: async function () {
+    let filePath = await ipc.invoke('showOpenDialog', {
+      filters: [
+        { name: 'HTML files', extensions: ['htm', 'html'] }
+      ]
+    })
+
+    if (!filePath) {
+      return
+    }
+
+    return fileHelpers.asyncReadFile(filePath[0])
   }
 
 };
