@@ -458,20 +458,25 @@ const renderPage = {
   openIconSelector (pos,args, windowId) {
     let bounds={
       width:390,
-      height:320
+      height:320,
+      x:pos.x,
+      y:pos.y
     }
     if(args.text){
       bounds={
         width: 390,
-        height: 380
+        height: 380,
+        x:pos.x,
+        y:pos.y
       }
     }
+    bounds= this.getInAreaPos(bounds)
     pool.usePop({
       url: render.getUrl('icon.html'),
       width: bounds.width,
       height: bounds.height,
-      x: pos.x,
-      y: pos.y,
+      x: bounds.x,
+      y: bounds.y,
       args:args,
     }, windowId).then()
   },
@@ -491,6 +496,24 @@ const renderPage = {
       }
     }).then()
   },
+  /**
+   * 获取屏幕内位置，根据屏幕宽高自动修正
+   * @param bounds
+   * @returns {*}
+   */
+  getInAreaPos(bounds){
+    const { screen } = require('electron')
+    const maxWidth=screen.getPrimaryDisplay().workAreaSize.width
+    const maxHeight=screen.getPrimaryDisplay().workAreaSize.height
+    if(bounds.x+bounds.width>maxWidth){
+      bounds.x=maxWidth-bounds.width
+    }
+    if(bounds.y+bounds.height>maxHeight){
+      bounds.y=maxHeight-bounds.height
+    }
+    return bounds
+  },
+
   getMainWindowCenterBounds (width, height) {
     let mainBounds = mainWindow.getBounds()
     let x = parseInt(mainBounds.x + (mainBounds.width - width) / 2)

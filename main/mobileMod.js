@@ -81,7 +81,6 @@ const mobileMod = {
         // ]
       }
     })
-    console.log(path.join(__dirname, '/dist/preload.js'))
     mobileWindow.setBrowserView(view)
     view.setBounds({
       x: 0,
