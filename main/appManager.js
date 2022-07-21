@@ -1,7 +1,6 @@
-
 const { config } = require(path.join(__dirname, '//server-config.js'))
 const remote = require('@electron/remote/main')
-const _ =require('lodash')
+const _ = require('lodash')
 /**
  * 运行中的应用窗体，结构{window:窗体对象,saApp:独立窗体app对象}
  * @type {*[]}
@@ -19,18 +18,18 @@ let notificationSettingStatus = null
 const appManager = {
   dockBadge: 0,
   settingWindow: null,
-  protocolManager:require('./js/main/protocolManager'),
+  protocolManager: require('./js/main/protocolManager'),
   /**
    * 朝运行中的应用发送IPC
    * @param pkg
    * @param event
    * @param args
    */
-  sendIPCToApp(pkg,event,args){
-    let win=appManager.getWindowByPackage(pkg)
-    if(win){
-      win.window.view.webContents.send(event,args)
-    }else{
+  sendIPCToApp (pkg, event, args) {
+    let win = appManager.getWindowByPackage(pkg)
+    if (win) {
+      win.window.view.webContents.send(event, args)
+    } else {
       return false
     }
   },
@@ -67,25 +66,25 @@ const appManager = {
    * @param {array} settingStatus 消息设置状态 (notificationSettingStatus对象)
    * @param {object} message 消息体
    */
-  beforeEachNotification(settingStatus, message) {
+  beforeEachNotification (settingStatus, message) {
     //前置判断
     let index = settingStatus.findIndex(v => v.appId === message.saAppId)
     let childIndex = settingStatus[index].childs.findIndex(v => v.title === message.category)
-    if(settingStatus[index].notice && settingStatus[index].childs[childIndex].notice) {
+    if (settingStatus[index].notice && settingStatus[index].childs[childIndex].notice) {
       //消息中心的收录做在这里
-      if(message.saAppId == 1) {
+      if (message.saAppId == 1) {
         SidePanel.send('storeMessage', {
           title: message.title,
           body: message.body,
           indexName: message.indexName ?? null,
-          avatar: message.avatar ? message.avatar.length > 0  ? message.avatar : '' : '',
+          avatar: message.avatar ? message.avatar.length > 0 ? message.avatar : '' : '',
           type: 'groupChat'
         })
-      } else if(message.saAppId == 2) {
+      } else if (message.saAppId == 2) {
         SidePanel.send('storeMessage', {
           title: message.title,
           body: message.body,
-          avatar: message.avatar ? message.avatar.length > 0  ? message.avatar : '' : '',
+          avatar: message.avatar ? message.avatar.length > 0 ? message.avatar : '' : '',
           type: 'community'
         })
       }
@@ -102,23 +101,21 @@ const appManager = {
    */
   notification (appId = 0, option = {
     title: '应用消息', body: '消息内容'
-  },ignoreWhenFocus=false)
-  {
-    let defaultNotificationIcon=path.join(__dirname,'/icons/logo1024.png')
-    if(process.platform==='win32'){
-      defaultNotificationIcon=path.join(__dirname,'/icons/logo128.png')
+  }, ignoreWhenFocus = false) {
+    let defaultNotificationIcon = path.join(__dirname, '/icons/logo1024.png')
+    if (process.platform === 'win32') {
+      defaultNotificationIcon = path.join(__dirname, '/icons/logo128.png')
     }
-    option.icon = option.icon?option.icon:nativeImage.createFromPath(defaultNotificationIcon)
-    let saAppWindow=appManager.getWindowByAppId(appId)
-    if(ignoreWhenFocus && saAppWindow.isFocused())
-    {
+    option.icon = option.icon ? option.icon : nativeImage.createFromPath(defaultNotificationIcon)
+    let saAppWindow = appManager.getWindowByAppId(appId)
+    if (ignoreWhenFocus && saAppWindow.isFocused()) {
       //不提示，不加badage，仅添加到消息记录
-    }else{
+    } else {
       //否则则推送消息并设置badge
-      let noti=new electron.Notification(option)
-      noti.on('click',()=>{
-        let saApp=appManager.getSaAppByAppId(appId)
-        appManager.openApp(appId,false,saApp)
+      let noti = new electron.Notification(option)
+      noti.on('click', () => {
+        let saApp = appManager.getSaAppByAppId(appId)
+        appManager.openApp(appId, false, saApp)
       })
       noti.show()
       //add给badge进行加减调试，优先使用add，存在add则badge参数无效; badge强行设置badge的值，不推荐使用。
@@ -135,7 +132,7 @@ const appManager = {
     processingAppWindows.forEach(processApp => {
       if (processApp.saApp.id === appId) {
         processApp.saApp.badge = processApp.saApp.badge ? processApp.saApp.badge + add : add
-     }
+      }
     })
     SidePanel.send('appBadge', { id: appId, add: add })
     appManager.updateDockBadge()
@@ -202,12 +199,12 @@ const appManager = {
   hideWindow (windowId) {
     processingAppWindows.forEach((item) => {
       if (item.saApp.windowId === windowId) {
-        if(item.window.isFullScreen()){
+        if (item.window.isFullScreen()) {
           item.window.setFullScreen(false)
-          setTimeout(()=>{
+          setTimeout(() => {
             item.window.hide()
-          },600)
-        }else{
+          }, 600)
+        } else {
           item.window.hide()
         }
       }
@@ -344,7 +341,7 @@ const appManager = {
    * @param {string} domian 主域名
    * @returns
    */
-  getSaAppByDomian(domain) {
+  getSaAppByDomian (domain) {
     for (let i = 0; i < processingAppWindows.length; i++) {
       if (processingAppWindows[i].saApp.url.includes(domain)) {
         return processingAppWindows[i].saApp
@@ -356,9 +353,9 @@ const appManager = {
    * 根据包名获得运行中的窗体
    * @param pkg
    */
-  getWindowByPackage(pkg){
-    return _.find(processingAppWindows,(win)=>{
-      return win.saApp.package===pkg
+  getWindowByPackage (pkg) {
+    return _.find(processingAppWindows, (win) => {
+      return win.saApp.package === pkg
     })
   },
   /**
@@ -445,7 +442,7 @@ const appManager = {
       return
     }
     let capturedImage = await saApp.window.view.webContents.capturePage()
-    if(capturedImage.isEmpty()){
+    if (capturedImage.isEmpty()) {
       //如果截图为空，则直接返回路径，而不进行覆盖，以提升截图成功率
       return imagePath
     }
@@ -490,7 +487,7 @@ const appManager = {
       })
       appManager.settingWindow.setMenu(null)
       appManager.settingWindow.webContents.loadURL('file://' + __dirname + '/pages/saApp/setting.html')
-      if (isDevelopmentMode){
+      if (isDevelopmentMode) {
         //appManager.settingWindow.webContents.openDevTools()
       }
       appManager.settingWindow.on('close', () => {
@@ -521,12 +518,12 @@ const appManager = {
   //   let view=appManager.getWindowByAppId(appId).view
   //   view.webContents.stopFindInPage(action)
   // },
-  releaseFocus(appId){
-    let window=appManager.getWindowByAppId(appId)
+  releaseFocus (appId) {
+    let window = appManager.getWindowByAppId(appId)
     window.webContents.focus()
   },
-  appFocusView(appId){
-    let view=appManager.getWindowByAppId(appId).view
+  appFocusView (appId) {
+    let view = appManager.getWindowByAppId(appId).view
     view.webContents.focus()
   },
   /**
@@ -543,52 +540,52 @@ const appManager = {
     let window = appManager.getWindowByAppId(appId)
     let saApp = appManager.getSaAppByAppId(appId)
     if (window && !window.isDestroyed()) {
-      saApp.canClose=true
+      saApp.canClose = true
       window.view.webContents.destroy()
       window.destroy()
       appManager.removeAppWindow(saApp.windowId)
       SidePanel.send('closeApp', { id: appId })
     }
   },
-  loadView (saApp, appWindow,option) {
-    let preload=''
-    if(saApp.isSystemApp){
-      if(!!!saApp.preload || saApp.preload===''){
-        preload=path.join(__dirname + '/pages/saApp/appPreload.js')
-      }else{
-        preload=path.join(__dirname + saApp.preload)
+  loadView (saApp, appWindow, option) {
+    let preload = ''
+    if (saApp.isSystemApp) {
+      if (!!!saApp.preload || saApp.preload === '') {
+        preload = path.join(__dirname + '/pages/saApp/appPreload.js')
+      } else {
+        preload = path.join(__dirname + saApp.preload)
       }
-    }else{
-      preload=path.join(__dirname + '/pages/saApp/appPreload.js')
+    } else {
+      preload = path.join(__dirname + '/pages/saApp/appPreload.js')
     }
 
-    let auth=[]
-    if(saApp.auth){
-      saApp.auth=JSON.parse(saApp.auth)
-      if(saApp.auth.base){
-        auth=auth.concat(...saApp.auth.base)
+    let auth = []
+    if (saApp.auth) {
+      saApp.auth = JSON.parse(saApp.auth)
+      if (saApp.auth.base) {
+        auth = auth.concat(...saApp.auth.base)
       }
-      if(saApp.auth.app){
-        auth= auth.concat(...saApp.auth.app)
+      if (saApp.auth.app) {
+        auth = auth.concat(...saApp.auth.app)
       }
     }
-    let partition='persist:webcontent'
-    if(saApp.isSystemApp){
-      partition=null
-    }else if(auth.indexOf('node')>-1){
-      partition='persist:'+ saApp.package
+    let partition = 'persist:webcontent'
+    if (saApp.isSystemApp) {
+      partition = null
+    } else if (auth.indexOf('node') > -1) {
+      partition = 'persist:' + saApp.package
     }
 
     let webPreferences = {
       preload: preload,//后者是所有web应用公用的preload
-      nodeIntegration: saApp.isSystemApp || auth.indexOf('node')>-1,
-      contextIsolation: !saApp.isSystemApp && auth.indexOf('webSecure')===-1,
+      nodeIntegration: saApp.isSystemApp || auth.indexOf('node') > -1,
+      contextIsolation: !saApp.isSystemApp && auth.indexOf('webSecure') === -1,
       enableRemoteModule: true,
       sandbox: false,
       safeDialogs: false,
       backgroundColor: 'white',
       safeDialogsMessage: false,
-      webSecurity:!saApp.isSystemApp && auth.indexOf('webSecure')===-1, //系统应用关闭同源策略，不开启会报cros
+      webSecurity: !saApp.isSystemApp && auth.indexOf('webSecure') === -1, //系统应用关闭同源策略，不开启会报cros
       partition: partition,
       additionalArguments: [
         '--user-data-path=' + userDataPath,
@@ -618,9 +615,9 @@ const appManager = {
       // saApp.url ='/pages/fav/index.html'
       // saApp.type='local'
       saApp.url = 'http://localhost:8080/'
-    }else if(saApp.package==='com.thisky.fav'){
-      saApp.url='/pages/fav/index.html'
-      saApp.type='local'
+    } else if (saApp.package === 'com.thisky.fav') {
+      saApp.url = '/pages/fav/index.html'
+      saApp.type = 'local'
     }
 
     remote.enable(appView.webContents)
@@ -633,16 +630,16 @@ const appManager = {
       appView.webContents.openDevTools()
     }
     appView.webContents.on('did-navigate-in-page', (event, url) => {
-      if(!appWindow.webContents.isDestroyed())
-      appWindow.webContents.send('updateView', {
-        url: url,
-        canGoBack: appView.webContents.canGoBack(),
-        canGoForward: appView.webContents.canGoForward()
-      })
+      if (!appWindow.webContents.isDestroyed())
+        appWindow.webContents.send('updateView', {
+          url: url,
+          canGoBack: appView.webContents.canGoBack(),
+          canGoForward: appView.webContents.canGoForward()
+        })
     })
 
-    appView.webContents.on('new-window',(event, url, frameName, disposition, options, additionalFeatures, referrer, postBody) => {
-      if(!!!saApp.openNewWindow || saApp.openNewWindow==='redirect'){
+    appView.webContents.on('new-window', (event, url, frameName, disposition, options, additionalFeatures, referrer, postBody) => {
+      if (!!!saApp.openNewWindow || saApp.openNewWindow === 'redirect') {
         //默认为重定向
         event.preventDefault()
         appView.webContents.loadURL(url)
@@ -651,14 +648,14 @@ const appManager = {
           canGoBack: appView.webContents.canGoBack(),
           canGoForward: appView.webContents.canGoForward()
         })
-      }else if(saApp.openNewWindow==='allow'){
+      } else if (saApp.openNewWindow === 'allow') {
         event.preventDefault()
         //允许，则不修改默认事件
         const win = new BrowserWindow({
           webContents: options.webContents, // use existing webContents if provided
           show: false
         })
-        win.webContents.on('new-window',(event,url)=>{
+        win.webContents.on('new-window', (event, url) => {
           event.preventDefault()
           win.webContents.loadURL(url)
         })
@@ -669,14 +666,14 @@ const appManager = {
             httpReferrer: referrer
           }
           if (postBody != null) {
-            const {data, contentType, boundary} = postBody
+            const { data, contentType, boundary } = postBody
             loadOptions.postData = postBody.data
             loadOptions.extraHeaders = `content-type: ${contentType}; boundary=${boundary}`
           }
           win.loadURL(url, loadOptions)
         }
         event.newGuest = win
-      }else if(saApp.openNewWindow==='deny'){
+      } else if (saApp.openNewWindow === 'deny') {
         //禁止打开
         event.preventDefault()
       }
@@ -725,10 +722,10 @@ const appManager = {
     // */
     // appView.webContents.on('will-redirect', _handleExternalProtocol)
 
-    appView.webContents.once('dom-ready',()=>{
-      if(option){
-        if(option.action){
-          appManager.protocolManager.handleAction(appWindow,option.action,option)
+    appView.webContents.once('dom-ready', () => {
+      if (option) {
+        if (option.action) {
+          appManager.protocolManager.handleAction(appWindow, option.action, option)
         }
       }
     })
@@ -737,25 +734,26 @@ const appManager = {
     //   appWindow.webContents.send('found-in-page',{data:result})
     // })
     appView.webContents.on('before-input-event', (event, input) => {
-      if(process.platform==='darwin'){
-        if(input.meta && input.key.toLowerCase()==='w'){
+      if (process.platform === 'darwin') {
+        if (input.meta && input.key.toLowerCase() === 'w') {
           appWindow.close()
           event.preventDefault()
-        }else if(input.meta && input.key.toLowerCase()==='f'){
+        } else if (input.meta && input.key.toLowerCase() === 'f') {
           appView.webContents.send('findInPage')
           event.preventDefault()
-        }else if(input.key.toLowerCase()==='f12'){
+        } else if (input.key.toLowerCase() === 'f12') {
           appView.webContents.openDevTools()
           event.preventDefault()
         }
-      }else if(process.platform==='win32'){
+      } else if (process.platform === 'win32') {
         if (input.control && input.key.toLowerCase() === 'w') {
           appWindow.close()
           event.preventDefault()
-        }else if(input.control && input.key.toLowerCase()==='f'){
+        } else if (input.control && input.key.toLowerCase() === 'f') {
           appView.webContents.send('findInPage')
           event.preventDefault()
-        }if(input.key.toLowerCase()==='f12'){
+        }
+        if (input.key.toLowerCase() === 'f12') {
           appView.webContents.openDevTools()
           event.preventDefault()
         }
@@ -763,20 +761,19 @@ const appManager = {
       // console.log('press'+input)
       //todo 判断linux
     })
-    if (isDevelopmentMode){
+    if (isDevelopmentMode) {
       //appView.webContents.openDevTools()
     }
     return appView
 
   },
 
-
-  openApp(appId,background=false,app,option={}){
+  openApp (appId, background = false, app, option = {}) {
     let saApp = appManager.getSaAppByAppId(appId)
     if (!!!saApp) {
       //首先必须是没运行的
       saApp = app
-      appManager.executeApp(saApp,background,option)
+      appManager.executeApp(saApp, background, option)
       // if (!saApp) {
       //   //如果不存在，直接运行
       //   appManager.executeApp(saApp, background)
@@ -785,15 +782,15 @@ const appManager = {
       //   appManager.executeApp(saApp, background)
       // }
     } else {
-        let window=appManager.getWindowByAppId(saApp.id)
-        appManager.focusWindow(saApp.windowId)
+      let window = appManager.getWindowByAppId(saApp.id)
+      appManager.focusWindow(saApp.windowId)
 
-        if(option){
-          if(option.action){
-            appManager.protocolManager.handleAction(window,option.action,option)
-          }
+      if (option) {
+        if (option.action) {
+          appManager.protocolManager.handleAction(window, option.action, option)
         }
-        appManager.clearAppBadge(saApp.id)
+      }
+      appManager.clearAppBadge(saApp.id)
     }
   },
   /**
@@ -801,22 +798,22 @@ const appManager = {
    * @param saApp 一个应用实体
    * @param background 是否后台运行，是则运行后不显示
    */
-  executeApp (saApp, background = false,option) {
-    saApp.settings=saApp.settings?saApp.settings:{}
+  executeApp (saApp, background = false, option) {
+    saApp.settings = saApp.settings ? saApp.settings : {}
     if (1) {
       //todo 判断一下是不是独立窗体模式
       let appWindow = new BrowserWindow({
         width: 1200,
         height: 800,
         minWidth: 380,
-        trafficLightPosition:{
-          x:10,y:7
+        trafficLightPosition: {
+          x: 10, y: 7
         },
         show: !background,
         frame: false,
         acceptFirstMouse: true,
         titleBarStyle: 'hidden',
-        alwaysOnTop: saApp.settings.alwaysTop?saApp.settings.alwaysTop:false,
+        alwaysOnTop: saApp.settings.alwaysTop ? saApp.settings.alwaysTop : false,
         webPreferences: {
           nodeIntegration: true,
           contextIsolation: false,
@@ -848,16 +845,16 @@ const appManager = {
           //appWindow.webContents.openDevTools()
         }
       })
-      if(saApp.settings.bounds){
+      if (saApp.settings.bounds) {
         appWindow.setBounds(saApp.settings.bounds)
       }
       // if (process.platform !== 'darwin') {
       //   appWindow.setMenuBarVisibility(false)
       // }
-      let appView = appManager.loadView(saApp, appWindow,option)
+      let appView = appManager.loadView(saApp, appWindow, option)
       appWindow.setBrowserView(appView)
 
-      const titleBarHeight=30
+      const titleBarHeight = 30
 
       appView.setBounds({
         x: 0,
@@ -886,8 +883,8 @@ const appManager = {
         })
       })
       appWindow.webContents.on('before-input-event', (event, input) => {
-        if(process.platform==='darwin'){
-          if(input.meta && input.key.toLowerCase()==='w'){
+        if (process.platform === 'darwin') {
+          if (input.meta && input.key.toLowerCase() === 'w') {
             appWindow.close()
             event.preventDefault()
           }
@@ -895,7 +892,7 @@ const appManager = {
             appView.webContents.send('findInPage')
             event.preventDefault()
           }
-        }else if(process.platform==='win32'){
+        } else if (process.platform === 'win32') {
           if (input.control && input.key.toLowerCase() === 'w') {
             appWindow.close()
             event.preventDefault()
@@ -955,7 +952,7 @@ const appManager = {
         appWindow.webContents.send('unmaximize')
       })
       appWindow.on('close', (event, args) => {
-        if(saApp.canClose){
+        if (saApp.canClose) {
           return
         }
         if (!forceClose) {
@@ -1016,9 +1013,9 @@ app.whenReady().then(() => {
 
   ipc.on('executeApp', (event, args) => {
     //这里传app，代表app未运行则直接执行起来
-    try{
-      appManager.openApp(args.app.id,args.background,args.app,args.option)
-    }catch(e){
+    try {
+      appManager.openApp(args.app.id, args.background, args.app, args.option)
+    } catch (e) {
       electronLog.error(e)
     }
 
@@ -1102,35 +1099,35 @@ app.whenReady().then(() => {
         }
       }
     ]
-    let addToDeskMenus=[]
-    let desks=args.desks
-    if(!!desks){
-      desks.forEach((desk)=>{
+    let addToDeskMenus = []
+    let desks = args.desks
+    if (!!desks) {
+      desks.forEach((desk) => {
         addToDeskMenus.push({
-          id:desk.id,
-          label:desk.name,
-          click:()=>{
-            const appIcon={
-              type:'app',
-              data:{
-                type:'saApp',
-                appId:args.app.id,
-                name:args.app.name,
-                icon:args.app.logo,
-                summary:args.app.summary
+          id: desk.id,
+          label: desk.name,
+          click: () => {
+            const appIcon = {
+              type: 'app',
+              data: {
+                type: 'saApp',
+                appId: args.app.id,
+                name: args.app.name,
+                icon: args.app.logo,
+                summary: args.app.summary
               }
             }
-            SidePanel.send('addToDesk',{app:appIcon,deskId:desk.id})
+            SidePanel.send('addToDesk', { app: appIcon, deskId: desk.id })
 
           }
         })
       })
     }
-      template.push({
-        id: 'addToDesk',
-        label: '添加到桌面',
-        submenu: addToDeskMenus
-      })
+    template.push({
+      id: 'addToDesk',
+      label: '添加到桌面',
+      submenu: addToDeskMenus
+    })
     if (appWindow) {
       if (!appWindow.isDestroyed()) {
         template.unshift(
@@ -1146,23 +1143,21 @@ app.whenReady().then(() => {
           }
         )
 
-      }
-      if (appWindow.isVisible()) {
-        template.push({
-          label: '隐藏',
-          click () {
-            appManager.hideAppWindow(appId)
-          }
-        })
-      } else {
-        template.push({
-          label: '显示',
-          click () {
-            appManager.showAppWindow(appId)
-          }
-        })
-      }
-      if (!appWindow.isDestroyed()) {
+        if (appWindow.isVisible()) {
+          template.push({
+            label: '隐藏',
+            click () {
+              appManager.hideAppWindow(appId)
+            }
+          })
+        } else {
+          template.push({
+            label: '显示',
+            click () {
+              appManager.showAppWindow(appId)
+            }
+          })
+        }
         template.push({
           label: '退出',
           click () {
@@ -1217,16 +1212,16 @@ app.whenReady().then(() => {
   })
   ipc.on(ipcMessageMain.saApps.deleteApp, (event, args) => {
     let appId = args.id
-    if(appManager.settingWindow){
+    if (appManager.settingWindow) {
       appManager.settingWindow.close()
-      appManager.settingWindow=null
+      appManager.settingWindow = null
     }
     mainWindow.focus()
     appManager.deleteApp(appId)
   })
 
   ipc.on(ipcMessageMain.saApps.installApp, (event, args) => {
-    SidePanel.send('installApp', { id: args.id ,background:args.background})
+    SidePanel.send('installApp', { id: args.id, background: args.background })
   })
   /**
    * 应用关闭前，将所有开启的窗体销毁掉
@@ -1262,22 +1257,22 @@ app.whenReady().then(() => {
       return {
         code: 200,
         msg: '成功',
-        data: Object.assign(storage.getItem('userInfo'), {accessToken: storage.getItem('userToken')})
+        data: Object.assign(storage.getItem('userInfo'), { accessToken: storage.getItem('userToken') })
       }
     } catch (err) {
-      return {code: 500, msg: '失败'}
+      return { code: 500, msg: '失败' }
     }
   })
 
   ipc.handle('saAppCheckBrowserLogin', () => {
     try {
-      if(Object.keys(storage.getItem('userInfo')).length === 0) {
-        return {code: 500, msg: '浏览器未登录'}
+      if (Object.keys(storage.getItem('userInfo')).length === 0) {
+        return { code: 500, msg: '浏览器未登录' }
       } else {
-        return {code: 200, msg: '浏览器已登录'}
+        return { code: 200, msg: '浏览器已登录' }
       }
     } catch (err) {
-      return {code: 500, msg: '浏览器未登录'}
+      return { code: 500, msg: '浏览器未登录' }
     }
   })
 
@@ -1297,19 +1292,19 @@ app.whenReady().then(() => {
     let saApp = appManager.getSaAppByAppId(args.id)
     appManager.getWindowByAppId(args.id).view.webContents.loadURL(saApp.url)
   })
- // ipc.on('saAppFindInPage',(event,args)=>{
- //   appManager.findInPage(args.id,args)
- // })
- //
- //  ipc.on('saAppStopFindInPage',(event,args)=>{
- //    appManager.stopFindInPage(args.id,args.action)
- //  })
+  // ipc.on('saAppFindInPage',(event,args)=>{
+  //   appManager.findInPage(args.id,args)
+  // })
+  //
+  //  ipc.on('saAppStopFindInPage',(event,args)=>{
+  //    appManager.stopFindInPage(args.id,args.action)
+  //  })
 
-  ipc.on('saAppFocusView',(event,args)=>{
+  ipc.on('saAppFocusView', (event, args) => {
     appManager.appFocusView(args.id)
   })
 
-  ipc.on('releaseFocus',(event,args)=>{
+  ipc.on('releaseFocus', (event, args) => {
     appManager.releaseFocus(args.id)
   })
 
@@ -1327,14 +1322,14 @@ app.whenReady().then(() => {
   ipc.handle('saAppNotice', (event, args) => {
     //需要前置处理消息设置的状态决定到底发不发消息
     const result = appManager.beforeEachNotification(notificationSettingStatus, args)
-    if(result) {
+    if (result) {
       appManager.notification(args.saAppId, {
         title: args.title,
         body: args.body,
-      },typeof args.ignoreWhenFocus == 'undefined'?false:args.ignoreWhenFocus)
-      return {code: 200, msg: '成功'}
+      }, typeof args.ignoreWhenFocus == 'undefined' ? false : args.ignoreWhenFocus)
+      return { code: 200, msg: '成功' }
     } else {
-      return {code: 500, msg: '失败'}
+      return { code: 500, msg: '失败' }
     }
   })
 
@@ -1342,7 +1337,7 @@ app.whenReady().then(() => {
     //只有存在且notice为true，才允许转发webOsNotice到vuex处理
     let noticeWebOrigin = settings.get('noticeWebOrigin')
     let index = noticeWebOrigin.findIndex(v => v.link === args.url)
-    if(index >= 0 && noticeWebOrigin[index].notice) {
+    if (index >= 0 && noticeWebOrigin[index].notice) {
       SidePanel.send('webOsNotice', args)
     }
   })
@@ -1352,7 +1347,7 @@ app.whenReady().then(() => {
   })
 
   ipc.handle('saAppOpenSysApp', (event, args) => {
-    if(appManager.isAppProcessing(args.saAppId)) {
+    if (appManager.isAppProcessing(args.saAppId)) {
       appManager.showAppWindow(args.saAppId)
 
       //通过url跳转的方式
@@ -1360,53 +1355,52 @@ app.whenReady().then(() => {
       const reg = /^http(s)?:\/\/(.*?)\//
       const host = reg.exec(appInfo.url)[0]
       appManager.getWindowByAppId(args.saAppId).view.webContents.loadURL(`${host}?fid=${args.circleId}`)
-      return {code: 200, msg: '成功'}
+      return { code: 200, msg: '成功' }
     } else {
-      sidePanel.get().webContents.send('message',{type:"error",config:{content:'团队沟通未运行',key: Date.now()}})
-      return {code: 500, msg: '失败'}
+      sidePanel.get().webContents.send('message', { type: 'error', config: { content: '团队沟通未运行', key: Date.now() } })
+      return { code: 500, msg: '失败' }
     }
   })
 
   ipc.on('channelReloadGroup', () => {
-    if(appManager.isAppProcessing(1)) {
+    if (appManager.isAppProcessing(1)) {
       appManager.getWindowByAppId(1).view.webContents.send('reloadGroup')
     }
   })
 
   ipc.handle('saAppTabLinkJump', (event, args) => {
-    sendIPCToWindow(mainWindow, 'tabNavigateTo', {url: args.url})
-    return {code: 200, msg: '成功'}
+    sendIPCToWindow(mainWindow, 'tabNavigateTo', { url: args.url })
+    return { code: 200, msg: '成功' }
   })
 
   ipc.handle('saAppHideApp', (event, args) => {
     try {
       appManager.getWindowByAppId(args.appId).hide()
-      return {code: 200, msg: '成功'}
+      return { code: 200, msg: '成功' }
     } catch (err) {
-      return {code: 500, msg: '失败'}
+      return { code: 500, msg: '失败' }
     }
   })
 
-  ipc.on('handleFileAssign',(event,args)=>{
+  ipc.on('handleFileAssign', (event, args) => {
     //转发到sidePanel
-    appManager.protocolManager.handleFileAssign(args.type,args.args,args.target)
+    appManager.protocolManager.handleFileAssign(args.type, args.args, args.target)
   })
 
   //处理TSB协议，对象传入url参数即可
-  ipc.on("handleTsbProtocol",(event,args)=>{
+  ipc.on('handleTsbProtocol', (event, args) => {
     appManager.protocolManager.handleProtocol(args.url)
   })
 
   app.whenReady().then(() => {
     //注册tsb协议
-    appManager.protocolManager.initialize(SidePanel,electronLog)
+    appManager.protocolManager.initialize(SidePanel, electronLog)
   })
-
 
   let ApplyPermissionOptions
   ipc.handle('saAppOpenPermissionWindow', (event, args) => {
     try {
-      if(saAppApplyPermission !== null) {
+      if (saAppApplyPermission !== null) {
         saAppApplyPermission.close()
       }
       saAppApplyPermission = new BrowserWindow({
@@ -1414,7 +1408,7 @@ app.whenReady().then(() => {
         parent: appManager.getWindowByWindowId(args.windowId),
         width: 420,
         height: 250,
-        maximizable:false,
+        maximizable: false,
         resizable: false,
         preload: __dirname + '/pages/saApp/applyPermission/preload.js',
         webPreferences: {
@@ -1438,15 +1432,15 @@ app.whenReady().then(() => {
         saAppApplyPermission = null
       })
       ApplyPermissionOptions = args
-      return {code: 200, msg: '授权窗口打开成功'}
+      return { code: 200, msg: '授权窗口打开成功' }
     } catch (err) {
-      return {code: 500, msg: '授权窗口打开失败'}
+      return { code: 500, msg: '授权窗口打开失败' }
     }
   })
 
   ipc.on('entityLogin', (event, args) => {
     let premissionedData = {}
-    if(args.includes('publicUserInfo')) {
+    if (args.includes('publicUserInfo')) {
       premissionedData.userInfo = storage.getItem('userInfo')
     }
     //if todo //args之所以一定要把permission传过来 为未来具体授权内容进行不同的返回
@@ -1461,7 +1455,5 @@ app.whenReady().then(() => {
   ipc.on('closePermissionWin', () => {
     saAppApplyPermission.close()
   })
-
-
 
 })
