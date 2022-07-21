@@ -848,7 +848,7 @@ ipc.on('stashTask', (e, args) => {
     createTime: Date.now()
   }).then(res => {
     ipc.send('message', { type: 'success', config: { content: '暂存标签组成功，您可随时导入此暂存标签组到任何空间。' } })
-    tasks.destroy(args.id)
+    require('../browserUI.js').closeTask(args.id)
   }).catch((e) => {
     console.warn(res)
   })
