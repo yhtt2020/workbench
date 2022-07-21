@@ -856,12 +856,16 @@ ipc.on('stashTask', (e, args) => {
 ipc.on('importTasks',async (e, args) => {
   let stashTasks = await db.taskStash.where('id').anyOf(args.ids).toArray()
   let count=0
+  let remove=args.config.removeAfterImported
   stashTasks.forEach(st=>{
     try{
       let task=JSON.parse(st.taskData)
       task.id=Date.now()-Math.round(Math.random()*1000000)
       tasks.add(task)
       count++
+      if(remove){
+        db.taskStash.delete(st.id)
+      }
     }catch (e) {
       console.warn('导入失败',e)
     }

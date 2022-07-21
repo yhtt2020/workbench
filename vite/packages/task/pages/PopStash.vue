@@ -12,6 +12,9 @@ export default {
   },
   data() {
     return {
+      config:{
+        removeAfterImported:false
+      },
       stTasks:[],
       callerId:0,
       selectedKeys:[]
@@ -35,7 +38,7 @@ export default {
   },
   methods: {
     importTasks(){
-      this.ipc.send('importTasks',{ids:JSON.parse(JSON.stringify(this.selectedKeys))})
+      this.ipc.send('importTasks',{ids:JSON.parse(JSON.stringify(this.selectedKeys)),config:JSON.parse(JSON.stringify(this.config))})
       this.ipc.send('closeSelf')
     },
     getTasks(){
@@ -47,10 +50,15 @@ export default {
 
 <template>
   <div style="display: flex;flex-direction: column;height: 100vh">
-    <div style="flex-grow:1;overflow-y: auto;background: #ccc">
+    <div style="flex-grow:1;overflow-y: auto;background: #ececec">
       <TaskList :list="stTasks"  v-model:selectedKeys="selectedKeys"/>
     </div>
-    <div class="bottom-bar" @click="importTasks"><a-button type="primary" :disabled="!selectedKeys.length>0">导入</a-button></div>
+
+    <div @click.stop="()=>{}" class="bottom-bar" >
+      <a-checkbox style="margin-right: 10px" v-model:checked="config.removeAfterImported">导入成功后删除已导入的标签组</a-checkbox>
+      <a-button @click="importTasks" type="primary" :disabled="!selectedKeys.length>0">导入</a-button>
+
+    </div>
 
   </div>
 
