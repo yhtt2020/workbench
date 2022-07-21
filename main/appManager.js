@@ -612,10 +612,10 @@ const appManager = {
     if (saApp.package === 'com.thisky.fav' && isDevelopmentMode) {
       // 当为开发环境下的时候，将团队强行更改为本地开发
       //todo 根据实际需求更改
-      // saApp.url ='/pages/fav/index.html'
-      // saApp.type='local'
+      saApp.url ='/pages/fav/index.html'
+      saApp.type='local'
 
-      saApp.url = 'http://localhost:8080/'
+      //saApp.url = 'http://localhost:8080/'
     } else if (saApp.package === 'com.thisky.fav') {
       saApp.url = '/pages/fav/index.html'
       saApp.type = 'local'
