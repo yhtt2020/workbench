@@ -37,6 +37,12 @@ export default {
     })
   },
   methods: {
+    removeStash(id){
+      this.ipc.send('removeStash',{id:id})
+      this.stTasks.splice(this.stTasks.findIndex((item)=>{
+        return item.id===id
+      }),1)
+    },
     importTasks(){
       this.ipc.send('importTasks',{ids:JSON.parse(JSON.stringify(this.selectedKeys)),config:JSON.parse(JSON.stringify(this.config))})
       this.ipc.send('closeSelf')
@@ -51,7 +57,7 @@ export default {
 <template>
   <div style="display: flex;flex-direction: column;height: 100vh">
     <div style="flex-grow:1;overflow-y: auto;background: #ececec">
-      <TaskList :list="stTasks"  v-model:selectedKeys="selectedKeys"/>
+      <TaskList :config="{canRemove:true}" :list="stTasks"  v-model:selectedKeys="selectedKeys"  @remove="removeStash"/>
     </div>
 
     <div @click.stop="()=>{}" class="bottom-bar" >

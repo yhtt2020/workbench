@@ -944,7 +944,9 @@ ipc.on('openSidebarMenu', (e, args) => {
 ipc.on('importTasks', (e, args) => {
   sendIPCToWindow(mainWindow, 'importTasks', args)
 })
-
+ipc.on('removeStash',(e,args)=>{
+  sendIPCToWindow(mainWindow, 'removeStash', args)
+})
 ipc.on('sidePanelFocus', () => {
   sidePanel.setMouseEnable()
 })

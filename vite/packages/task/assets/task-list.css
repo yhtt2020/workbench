@@ -36,10 +36,19 @@
   margin-left: 6px;
   width: 18px;
 }
+.task .operation {
+  visibility: hidden;
+  cursor: pointer;
+}
 
 .task:hover {
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1882352941);
-  cursor: pointer;
+}
+.task:hover .operation {
+  visibility: visible;
+}
+.task:hover .operation:hover {
+  color: red;
 }
 
 .tab-icon {

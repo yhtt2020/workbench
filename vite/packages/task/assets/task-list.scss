@@ -33,11 +33,20 @@
     margin-left: 6px;
     width: 18px;
   }
+  .operation{
+    visibility: hidden;
+    cursor: pointer;
+  }
 }
 
 .task:hover {
   box-shadow: 0 0 15px #00000030;
-  cursor: pointer;
+  .operation{
+    visibility: visible;
+    &:hover{
+      color: red;
+    }
+  }
 }
 
 

@@ -1,13 +1,15 @@
 <script lang="ts">
-import {CloseOutlined, CheckOutlined} from '@ant-design/icons-vue'
+import {CloseOutlined, CheckOutlined, DeleteOutlined} from '@ant-design/icons-vue'
+
 const ipc = eval('require')('electron').ipcRenderer
 export default {
-  components: {CloseOutlined, CheckOutlined},
+  components: {CloseOutlined, CheckOutlined, DeleteOutlined},
   props: {
     list: Array,
-    selectedKeys: Array
+    selectedKeys: Array,
+    config: Object
   },
-  emits: ['update:selectedKeys'],
+  emits: ['update:selectedKeys','remove'],
   data() {
     return {
       dataList: [],
@@ -23,8 +25,12 @@ export default {
     }
   },
   mounted() {
+    this.ipc = eval('require')('electron').ipcRenderer
   },
   methods: {
+    remove(id){
+      this.$emit('remove',id)
+    },
     getUserIconName(userIcon) {
       let iconPath = userIcon.split('.')
       return iconPath[2]
@@ -37,7 +43,6 @@ export default {
         this.selectedKeysData.push(task.id)
       }
       this.$emit('update:selectedKeys', this.selectedKeysData)
-      console.log(this.selectedKeysData)
     },
     //获取图标的方法
     getIcon(favicon) {
@@ -61,14 +66,21 @@ export default {
         <a-col :span="8" v-for="(task,index) in dataList" :key="index">
           <a-card :class="{'selected':this.selectedKeysData.indexOf(task.id)>-1}" @click="selected(task)"
                   :bordered="false" class="task">
-                <span slot="title" slot-scope="title">
-                   <svg v-if="task.data.userIcon" class="icon task-icon" aria-hidden="true">
-            <use v-bind:xlink:href="'#icon-'+getUserIconName(task.data.userIcon)"></use>
-          </svg>
-          <img v-else class="icon" :src="task.icon" onerror="this.src='/icons/default.svg'"/>
-                  &nbsp; {{ task.data.name || '标签组' }}
-                </span>
-            <img class="single-avatar" v-if="task.data.partition !=='persist:webcontent'"  src="/public/icons/randomuser.svg">
+            <div @click.stop="()=>{}" slot="title" slot-scope="title">
+              <div style="position: relative">
+                <svg v-if="task.data.userIcon" class="icon task-icon" aria-hidden="true">
+                  <use v-bind:xlink:href="'#icon-'+getUserIconName(task.data.userIcon)"></use>
+                </svg>
+                <img v-else class="icon" :src="task.icon" onerror="this.src='/icons/default.svg'"/>
+                &nbsp; {{ task.data.name || '标签组' }}
+
+                <img class="single-avatar" v-if="task.data.partition !=='persist:webcontent'"
+                     src="/public/icons/randomuser.svg">
+                <div class="operation" style="position:absolute;right: 0;top: 0">
+                  <DeleteOutlined @click="remove(task.id)"/>
+                </div>
+              </div>
+            </div>
             <div class="time">{{ new Date(task.createTime).toLocaleString() }}</div>
             <div style="border-top: 1px solid #f1f1f1"></div>
             <ul class="tabs" style="height: 220px; overflow-y: auto; margin-right: -10px">

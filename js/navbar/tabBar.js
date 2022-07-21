@@ -877,6 +877,9 @@ ipc.on('importTasks',async (e, args) => {
   }
 })
 
+ipc.on('removeStash',(e,args)=>{
+  db.taskStash.delete(args.id)
+})
 
 ipc.on('toggleLockTab', (event, args) => {
   const tab = tasks.get(args.taskId).tabs.get(args.id)
