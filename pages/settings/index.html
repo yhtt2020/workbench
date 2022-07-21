@@ -228,20 +228,56 @@
         ></div>
       </div>
     </div>
-  <div class="settings-container" id="browser-settings-container">
+
+    <div class="settings-container" id="browser-settings-container">
       <h3 data-string="settingsBrowserHeading"></h3>
       <p>当前操作系统：<span id="os_name"></span> <span id="os_type"></span></p>
       <div class="setting-section">
-        <input
-          id="custom-browser"
-          style="margin-left: 0.5em; min-width: 325px"
-          hidden
-        />
-		<button style="border-radius: 4px;border: solid 1px #ccc;padding: 5px " id="button-default-browser"  onclick="callSetDefaultBrowser()" ></button>
-
+        <input id="custom-browser" style="margin-left: 0.5em; min-width: 325px" hidden />
+        <button style="border-radius: 4px;border: solid 1px #ccc;padding: 5px " id="button-default-browser" onclick="callSetDefaultBrowser()"></button>
       </div>
     </div>
 
+    <div class="settings-container" id="browser-tab-container">
+      <h3>起始页</h3>
+      <div class="setting-section" id="tab-choose">
+        <div class="setting-option">
+          <input type="radio" name="tabChoosed" id="tstab-input" />
+          <label
+            for="tstab-input"
+          >想天桌面（官方尝鲜版）</label>
+        </div>
+        <div class="setting-option">
+          <input type="radio" name="tabChoosed" id="qingning-input" />
+          <label
+            for="qingning-input"
+          >青柠起始页（极致简约）</label>
+        </div>
+        <div class="setting-option">
+          <input type="radio" name="tabChoosed" id="infinity-input" />
+          <label
+            for="infinity-input"
+          >infinity（功能强大）</label>
+        </div>
+        <div class="setting-option">
+          <input type="radio" name="tabChoosed" id="itab-input" />
+          <label
+            for="itab-input"
+          >iTab（热门新秀）</label>
+        </div>
+        <div class="setting-option">
+          <input type="radio" name="customtab" id="tab-custom-input" />
+          <label
+            for="ab-custom-input"
+          >自定义</label>
+          <input
+          id="tab-text-input"
+          type="text"
+          placeholder="请输入"
+          />
+        </div>
+      </div>
+    </div>
 
     <div class="settings-container" id="password-autofill-container">
       <h3 data-string="settingsPasswordAutoFillHeadline"></h3>

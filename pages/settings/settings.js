@@ -29,6 +29,42 @@ var blockingExceptionsContainer = document.getElementById('content-blocking-info
 var blockingExceptionsInput = document.getElementById('content-blocking-exceptions')
 var blockedRequestCount = document.querySelector('#content-blocking-blocked-requests strong')
 
+/* 起始页 */
+var browserTabContainer = document.querySelector('.tab-choose')
+var browserTabOptions = Array.from(document.querySelectorAll('input[name=tabChoosed]'))
+
+function changeBrowserTab(tabIdx) {
+  settings.get('browserTab', (value) => {
+    if(!value) {
+      value = {}
+    }
+    value.tabIdx = tabIdx
+    settings.set('browserTab', value)
+    updateBrowserTabUI(tabIdx)     //updateUI
+  })
+}
+
+function updateBrowserTabUI(tabIdx) {
+  var radio = browserTabOptions[tabIdx]
+  radio.checked = true
+
+  if (document.querySelector('#tab-choose .setting-option.selected')) {
+    document.querySelector('#tab-choose .setting-option.selected').classList.remove('selected')
+  }
+  radio.parentNode.classList.add('selected')
+
+}
+
+
+browserTabOptions.forEach((item, idx) => {
+  item.addEventListener('change', () => {
+    changeBrowserTab(idx)
+  })
+})
+
+/* 起始页 */
+
+
 settings.listen('filteringBlockedCount', function (value) {
   var count = value || 0
   var valueStr
