@@ -22,6 +22,20 @@
   margin-bottom: 10px;
   border-radius: 4px;
 }
+.task .icon {
+  vertical-align: middle;
+  width: 24px;
+  height: 24px;
+}
+.task .time {
+  font-size: 13px;
+  color: grey;
+  padding-left: 35px;
+}
+.task .single-avatar {
+  margin-left: 6px;
+  width: 18px;
+}
 
 .task:hover {
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1882352941);

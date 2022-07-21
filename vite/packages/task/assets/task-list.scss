@@ -21,7 +21,18 @@
   height: 320px;
   margin-bottom: 10px;
   border-radius: 4px;
-
+  .icon{
+    vertical-align: middle;
+    width: 24px;
+    height: 24px;
+  }
+  .time{
+    font-size: 13px;color: grey;padding-left: 35px;
+  }
+  .single-avatar{
+    margin-left: 6px;
+    width: 18px;
+  }
 }
 
 .task:hover {

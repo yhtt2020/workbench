@@ -1,39 +1,42 @@
 <script lang="ts">
-import {CloseOutlined,CheckOutlined} from '@ant-design/icons-vue'
-import {defineEmits} from 'vue'
+import {CloseOutlined, CheckOutlined} from '@ant-design/icons-vue'
 const ipc = eval('require')('electron').ipcRenderer
 export default {
-  components: {CloseOutlined,CheckOutlined},
-  props:{
-    list:Array,
-    selectedKeys:Array
+  components: {CloseOutlined, CheckOutlined},
+  props: {
+    list: Array,
+    selectedKeys: Array
   },
-  emits:['update:selectedKeys'],
+  emits: ['update:selectedKeys'],
   data() {
     return {
-      dataList:[],
-      selectedKeysData:[]
+      dataList: [],
+      selectedKeysData: []
     }
   },
-  computed:{
-    dataList(){
-      return this.list.map(task=>{
+  computed: {
+    dataList() {
+      return this.list.map(task => {
         task.icon = this.getIcon(task.data.tabs[0].favicon)
         return task
       })
     }
   },
-  mounted(){
+  mounted() {
   },
   methods: {
-    selected(task){
-      let index=this.selectedKeysData.indexOf(task.id)
-      if(index>-1){
-        this.selectedKeysData.splice(index,1)
-      }else{
+    getUserIconName(userIcon) {
+      let iconPath = userIcon.split('.')
+      return iconPath[2]
+    },
+    selected(task) {
+      let index = this.selectedKeysData.indexOf(task.id)
+      if (index > -1) {
+        this.selectedKeysData.splice(index, 1)
+      } else {
         this.selectedKeysData.push(task.id)
       }
-      this.$emit('update:selectedKeys',this.selectedKeysData)
+      this.$emit('update:selectedKeys', this.selectedKeysData)
       console.log(this.selectedKeysData)
     },
     //获取图标的方法
@@ -56,11 +59,18 @@ export default {
     <div style="padding: 20px;height: 100%;">
       <a-row :gutter="16">
         <a-col :span="8" v-for="(task,index) in dataList" :key="index">
-          <a-card :class="{'selected':this.selectedKeysData.indexOf(task.id)>-1}" @click="selected(task)" :bordered="false" class="task">
+          <a-card :class="{'selected':this.selectedKeysData.indexOf(task.id)>-1}" @click="selected(task)"
+                  :bordered="false" class="task">
                 <span slot="title" slot-scope="title">
-                  <a-avatar shape="square" size="small" :src="task.icon"></a-avatar> &nbsp; {{ task.data.name || '标签组'}}
-                  <span>{{new Date(task.createTime).toLocaleString()}}</span>
+                   <svg v-if="task.data.userIcon" class="icon task-icon" aria-hidden="true">
+            <use v-bind:xlink:href="'#icon-'+getUserIconName(task.data.userIcon)"></use>
+          </svg>
+          <img v-else class="icon" :src="task.icon" onerror="this.src='/icons/default.svg'"/>
+                  &nbsp; {{ task.data.name || '标签组' }}
                 </span>
+            <img class="single-avatar" v-if="task.data.partition !=='persist:webcontent'"  src="/public/icons/randomuser.svg">
+            <div class="time">{{ new Date(task.createTime).toLocaleString() }}</div>
+            <div style="border-top: 1px solid #f1f1f1"></div>
             <ul class="tabs" style="height: 220px; overflow-y: auto; margin-right: -10px">
               <li
                 class="tab-title"
@@ -68,8 +78,10 @@ export default {
                 :key="Dindex"
                 @click="selectTab(task, tab, task.id, Dindex)"
               >
-                <a-avatar shape="square" size="small" class="tab-icon" :src="getIcon(tab.favicon)"></a-avatar> {{
-                  tab.title==''?'新标签':tab.title }}
+                <a-avatar shape="square" size="small" class="tab-icon" :src="getIcon(tab.favicon)"></a-avatar>
+                {{
+                  tab.title == '' ? '新标签' : tab.title
+                }}
               </li>
             </ul>
           </a-card>
