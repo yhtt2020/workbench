@@ -4,11 +4,11 @@
   padding: 0
 }
 
-.ant-collapse-content>.ant-collapse-content-box {
+.ant-collapse-content > .ant-collapse-content-box {
   padding: 0;
 }
 
-.ant-collapse-borderless>.ant-collapse-item {
+.ant-collapse-borderless > .ant-collapse-item {
   border-bottom: none;
 }
 
@@ -62,6 +62,21 @@
   overflow: hidden;
   vertical-align: bottom;
 }
-.selected-span-task{
+
+.selected-span-task {
   max-width: 100px;
+}
+
+
+.ant-card.selected {
+  border: 3px solid rgba(0, 0, 0, 0.62);
+}
+
+.bottom-bar {
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.34);
+  width: 100vw;
+  background: white;
+  text-align: right;;
+  padding: 10px;
+  z-index: 9
 }

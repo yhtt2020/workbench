@@ -940,6 +940,11 @@ ipc.on('openSidebarMenu',(e,args)=>{
   menu.popup()
 })
 
+ipc.on('importTasks',(e,args)=>{
+  sendIPCToWindow(mainWindow,'importTasks',args)
+})
+
+
 ipc.on('sidePanelFocus',()=>{
  sidePanel.setMouseEnable()
 })
@@ -1378,5 +1383,6 @@ ipc.on('dbClickClose',(e,args)=>{
     }
   }
 })
+
 
 /*user面板代码end*/

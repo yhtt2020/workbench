@@ -125,6 +125,7 @@ class Pop {
     this.extraData = param.extraData
     this.alwaysTop = param.alwaysTop
     this.win.loadURL(this.url)
+    this.win.setResizable(param.resizable)
     this.win.setSize(this.width, this.height)
     this.win.setPosition(this.x, this.y)
     this.win.setAlwaysOnTop(!!this.alwaysTop)
@@ -441,6 +442,7 @@ const renderPage = {
         url:render.getUrl('task.html#/popStash'),
         width:pos.width,
         height:pos.height,
+        resizable:true,
         x:pos.x,
         y:pos.y,
         blurClose:false

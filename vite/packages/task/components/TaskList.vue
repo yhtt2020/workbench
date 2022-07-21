@@ -1,14 +1,18 @@
 <script lang="ts">
 import {CloseOutlined,CheckOutlined} from '@ant-design/icons-vue'
+import {defineEmits} from 'vue'
 const ipc = eval('require')('electron').ipcRenderer
 export default {
   components: {CloseOutlined,CheckOutlined},
   props:{
-    list:Array
+    list:Array,
+    selectedKeys:Array
   },
+  emits:['update:selectedKeys'],
   data() {
     return {
-      dataList:[]
+      dataList:[],
+      selectedKeysData:[]
     }
   },
   computed:{
@@ -22,6 +26,16 @@ export default {
   mounted(){
   },
   methods: {
+    selected(task){
+      let index=this.selectedKeysData.indexOf(task.id)
+      if(index>-1){
+        this.selectedKeysData.splice(index,1)
+      }else{
+        this.selectedKeysData.push(task.id)
+      }
+      this.$emit('update:selectedKeys',this.selectedKeysData)
+      console.log(this.selectedKeysData)
+    },
     //获取图标的方法
     getIcon(favicon) {
       var defaultIcon = '../../icons/empty.png'
@@ -42,7 +56,7 @@ export default {
     <div style="padding: 20px;height: 100%;">
       <a-row :gutter="16">
         <a-col :span="8" v-for="(task,index) in dataList" :key="index">
-          <a-card :bordered="false" class="task">
+          <a-card :class="{'selected':this.selectedKeysData.indexOf(task.id)>-1}" @click="selected(task)" :bordered="false" class="task">
                 <span slot="title" slot-scope="title">
                   <a-avatar shape="square" size="small" :src="task.icon"></a-avatar> &nbsp; {{ task.data.name || '标签组'}}
                   <span>{{new Date(task.createTime).toLocaleString()}}</span>
@@ -68,5 +82,5 @@ export default {
 
 </style>
 <style scoped lang="scss">
-@import '../assets/task-list';
+
 </style>

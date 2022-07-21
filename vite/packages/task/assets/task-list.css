@@ -65,4 +65,17 @@
   max-width: 100px;
 }
 
+.ant-card.selected {
+  border: 3px solid rgba(0, 0, 0, 0.62);
+}
+
+.bottom-bar {
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.34);
+  width: 100vw;
+  background: white;
+  text-align: right;
+  padding: 10px;
+  z-index: 9;
+}
+
 /*# sourceMappingURL=task-list.css.map */

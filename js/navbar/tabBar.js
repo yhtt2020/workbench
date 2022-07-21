@@ -839,9 +839,8 @@ tabBar.container.addEventListener('drop', (e) => {
 ipc.on('refresh', () => {
   webviews.update(tabs.getSelected(), tasks.getSelected().tabs.get(tabs.getSelected()).url)
 })
-
+const db = require('../util/database').db
 ipc.on('stashTask', (e, args) => {
-  const db = require('../util/database').db
   const task = tasks.get(args.id)
   db.taskStash.add({
     taskData: JSON.stringify(tasks.getStringify(task.id)),
@@ -853,6 +852,27 @@ ipc.on('stashTask', (e, args) => {
     console.warn(res)
   })
 })
+
+ipc.on('importTasks',async (e, args) => {
+  let stashTasks = await db.taskStash.where('id').anyOf(args.ids).toArray()
+  let count=0
+  stashTasks.forEach(st=>{
+    try{
+      let task=JSON.parse(st.taskData)
+      task.id=Date.now()-Math.round(Math.random()*1000000)
+      tasks.add(task)
+      count++
+    }catch (e) {
+      console.warn('导入失败',e)
+    }
+  })
+  if(count>0){
+    ipc.send('message',{type:'success',config:{content:'成功导入'+count+'个标签组。'}})
+  }else{
+    ipc.send('message',{type:'error',config:{content:'导入标签组失败。'}})
+  }
+})
+
 
 ipc.on('toggleLockTab', (event, args) => {
   const tab = tasks.get(args.taskId).tabs.get(args.id)

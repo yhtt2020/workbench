@@ -1,6 +1,7 @@
 <script lang="ts">
 import { createVNode } from 'vue';
 import { Modal } from 'ant-design-vue';
+import '../assets/task-list.css';
 import TaskList from '../components/TaskList.vue'
 
 const path = eval('require')('path')
@@ -12,7 +13,8 @@ export default {
   data() {
     return {
       stTasks:[],
-      callerId:0
+      callerId:0,
+      selectedKeys:[]
     }
   },
   async mounted() {
@@ -32,6 +34,10 @@ export default {
     })
   },
   methods: {
+    importTasks(){
+      this.ipc.send('importTasks',{ids:JSON.parse(JSON.stringify(this.selectedKeys))})
+      this.ipc.send('closeSelf')
+    },
     getTasks(){
       this.ipc.sendTo(this.callerId,'getStashTasks')
     }
@@ -40,8 +46,12 @@ export default {
 </script>
 
 <template>
-  <div style="height: 100vh;overflow-y: auto;background: #ccc">
-    <TaskList :list="stTasks" />
+  <div style="display: flex;flex-direction: column;height: 100vh">
+    <div style="flex-grow:1;overflow-y: auto;background: #ccc">
+      <TaskList :list="stTasks"  v-model:selectedKeys="selectedKeys"/>
+    </div>
+    <div class="bottom-bar" @click="importTasks"><a-button type="primary" :disabled="!selectedKeys.length>0">导入</a-button></div>
+
   </div>
 
 </template>
