@@ -218,6 +218,7 @@
   })
 
   ipcRenderer.on('menuTrashOpenPage', (e) => {
+
     ipcRenderer.send('addTab', { url: appVue.selectDelList.href })
   })
 
@@ -307,12 +308,12 @@
       ipcRenderer.send('inform')
       ipcRenderer.send('emptyPageUrl', args.chainUrl)
       const myDate = new Date()
-      appVue.doneList.forEach(item => {
-        if (item.startTime === args.startTime) {
-          appVue.doneList.splice(appVue.doneList.indexOf(args.startTime), 1)
-          appVue.count++
-        }
-      })
+      // appVue.doneList.forEach(item => {
+      //   if (item.startTime === args.startTime) {
+      //     appVue.doneList.splice(appVue.doneList.indexOf(args.startTime), 1)
+      //     appVue.count++
+      //   }
+      // })
       appVue.doneList.unshift({
         name: args.name,
         id: appVue.doneId++,
@@ -326,6 +327,7 @@
         addTime: appVue.transDate(myDate.toLocaleDateString()),
         // addTime:myDate.toLocaleDateString(),
       })
+
       appVue.listCount--
       appVue.count--
       appVue.listDoneCount++
@@ -397,7 +399,7 @@
                 total: dblist[i].total,
                 path: dblist[i].path,
                 url: dblist[i].url,
-                status: '1',//删除包括文件
+                status: '1',
                 doneDate: dblist[i].doneDate,
                 href: dblist[i].href,
                 addTime: dblist[i].addTime
@@ -453,9 +455,7 @@
           // var time = tt.getHours() < 10 ? "0" + tt.getHours() : tt.getHours();
           // var min = tt.getMinutes() < 10 ? "0" + tt.getMinutes() : tt.getMinutes();
           offset = Math.abs(today - day)
-
           if (days < 4 && offset < 4) {
-
             if (offset === 0) {
               result = '今天'
             } else if (offset === 1) {
@@ -509,6 +509,7 @@
         ipcRenderer.send('showMenuTrash')
         this.selectDelList = item
         this.active = id
+
       },
       mouseOver (id) {
         this.clickActive = id
@@ -559,8 +560,6 @@
       },
 
       hideModalDone () {
-        appVue.listDoneCount--
-        appVue.listTrashCount++
         if (this.deleconfirm === true) {
           db.download.put({
             name: appVue.selectList.name,
@@ -588,12 +587,13 @@
           ipcRenderer.send('deleteFile', appVue.selectList.path)
           appVue.$message.info('文件已删除', 0.5)
           appVue.selectTimeGroup.subList.splice(appVue.selectTimeGroup.subList.indexOf(appVue.selectList), 1)
+          appVue.doneList.splice(appVue.doneList.indexOf(appVue.selectList),1)
           if (appVue.selectTimeGroup.subList.length === 0) {
             appVue.showList.splice(appVue.showList.indexOf(appVue.selectTimeGroup), 1)
           }
           appVue.visible = false
         }
-        if (this.deleconfirm === false) {
+         else {
           db.download.put({
             name: appVue.selectList.name,
             startTime: appVue.selectList.startTime,
@@ -621,8 +621,10 @@
           if (appVue.selectTimeGroup.subList.length === 0) {
             appVue.showList.splice(appVue.showList.indexOf(appVue.selectTimeGroup), 1)
           }
-          this.visible = false
+          appVue.visible = false
         }
+        appVue.listDoneCount--
+        appVue.listTrashCount++
       },
       resume (item) {
         ipcRenderer.send('resumeDownload', item.path)

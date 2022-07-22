@@ -148,8 +148,7 @@ app.whenReady().then(()=>{
     event.reply('callback-imAutoLogin', result)
   })
 
-  //主进程的refreshToken成功后   主进程更新storage中的信息，并传到子进程中修改用户标识信息
-  ipc.on('updateStorageInfo', (event, user) => {
+  function updateStorageInfo(user){
     storage.setStoragePath(global.sharedPath.extra)
     storage.setItem(`userToken`, user.token)
     storage.setItem(`refreshToken`, user.refreshToken)
@@ -157,6 +156,11 @@ app.whenReady().then(()=>{
     storage.setItem(`refreshExpire_deadtime`, new Date().getTime() + user.refreshExpire * 1000)
     storage.setItem(`userInfo`, user.userInfo)
     global.utilWindow.webContents.send('remakeCurrentUser', user)
+    //发送过去更新用户的信息
+  }
+  //主进程的refreshToken成功后   主进程更新storage中的信息，并传到子进程中修改用户标识信息
+  ipc.on('updateUserInfo', (event, user) => {
+    updateStorageInfo(user)
   })
 
   //主进程的refreshToken也过期的时候 清空主进程中storage的信息，并传到子进程中修改用户标识信息

@@ -22,10 +22,33 @@
   margin-bottom: 10px;
   border-radius: 4px;
 }
+.task .icon {
+  vertical-align: middle;
+  width: 24px;
+  height: 24px;
+}
+.task .time {
+  font-size: 13px;
+  color: grey;
+  padding-left: 35px;
+}
+.task .single-avatar {
+  margin-left: 6px;
+  width: 18px;
+}
+.task .operation {
+  visibility: hidden;
+  cursor: pointer;
+}
 
 .task:hover {
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1882352941);
-  cursor: pointer;
+}
+.task:hover .operation {
+  visibility: visible;
+}
+.task:hover .operation:hover {
+  color: red;
 }
 
 .tab-icon {
@@ -63,6 +86,19 @@
 
 .selected-span-task {
   max-width: 100px;
+}
+
+.ant-card.selected {
+  border: 3px solid rgba(0, 0, 0, 0.62);
+}
+
+.bottom-bar {
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.34);
+  width: 100vw;
+  background: white;
+  text-align: right;
+  padding: 10px;
+  z-index: 9;
 }
 
 /*# sourceMappingURL=task-list.css.map */

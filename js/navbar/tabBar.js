@@ -320,8 +320,8 @@ const tabBar = {
     tabEl.appendChild(tabAudio.getButton(data.id))
     tabEl.appendChild(progressBar.create())
 
-    tabEl.addEventListener('dblclick',(e)=>{
-      ipc.send('dbClickClose',{id:data.id})
+    tabEl.addEventListener('dblclick', (e) => {
+      ipc.send('dbClickClose', { id: data.id })
       e.stopPropagation()
       e.preventDefault()
     })
@@ -354,8 +354,6 @@ const tabBar = {
     })
 
     iconArea.appendChild(closeTabButton)
-
-
 
     // title
 
@@ -449,9 +447,10 @@ const tabBar = {
           })
         })
       }
-
-      let template = [
-        [
+      const tab = tabs.get(data.id)
+      let templateAdd = []
+      if (!tab.url.startsWith('file://')) {
+        templateAdd = [[
           {
             id: 'addToDesk',
             label: '添加到桌面',
@@ -459,17 +458,21 @@ const tabBar = {
           },
           {
             id: 'addToApps',
-            label: '安装到应用',
+            label: '添加到我的应用…',
             click: function () {
               tabBar.addToApps(data.id)
             },
           }
-        ],
+        ]
+        ]
+      }
+      let template = templateAdd.concat([
+
         [
           {
-            id:'duplicateTab',
-            label:'复制标签',
-            click:function(){
+            id: 'duplicateTab',
+            label: '复制标签',
+            click: function () {
               require('browserUI.js').duplicateTab(tabs.get(data.id))
             }
           },
@@ -528,7 +531,8 @@ const tabBar = {
             ],
           }
         ],
-      ]
+      ])
+      console.log(template)
       remoteMenu.open(template)
       //绑定代码结束
     })
@@ -624,14 +628,14 @@ const tabBar = {
     }
   },
 
-  addTab: function (tabId,last=false) {
+  addTab: function (tabId, last = false) {
     var tab = tabs.get(tabId)
     var index = tabs.getIndex(tabId)
     var tabEl = tabBar.createTab(tab)
-    if(last){
-      tabBar.containerInner.insertBefore(tabEl,tabBar.containerInner.childNodes[tabBar.containerInner.childNodes.length-1])
-    }else
-    tabBar.containerInner.insertBefore(tabEl, tabBar.containerInner.childNodes[index])
+    if (last) {
+      tabBar.containerInner.insertBefore(tabEl, tabBar.containerInner.childNodes[tabBar.containerInner.childNodes.length - 1])
+    } else
+      tabBar.containerInner.insertBefore(tabEl, tabBar.containerInner.childNodes[index])
     tabBar.tabElementMap[tabId] = tabEl
   },
 
@@ -658,10 +662,10 @@ const tabBar = {
       slideFactorX: 25,
       slideFactorY: 25,
       invalid: function (el, handle) {
-        return el.id === 'add-btn-wrapper';
+        return el.id === 'add-btn-wrapper'
       },
-      accepts:function(el, target, source, sibling){
-        return !(sibling===null)
+      accepts: function (el, target, source, sibling) {
+        return !(sibling === null)
       }
     })
 
@@ -782,7 +786,7 @@ permissionRequests.onChange(function (tabId) {
 
 tabBar.initializeTabDragging()
 
-if (window.platformType === 'mac') {
+if (0) {//window.platformType === 'mac'
   tabBar.dragulaInstance.containers = []
   keybindings.defineShortcut({ keys: 'mod' }, function () {
     tabBar.enableTabDragging()
@@ -835,19 +839,46 @@ tabBar.container.addEventListener('drop', (e) => {
 ipc.on('refresh', () => {
   webviews.update(tabs.getSelected(), tasks.getSelected().tabs.get(tabs.getSelected()).url)
 })
-
-ipc.on('stashTask',(e,args)=>{
-  const db=require('../util/database').db
-  const task=tasks.get(args.id)
+const db = require('../util/database').db
+ipc.on('stashTask', (e, args) => {
+  const task = tasks.get(args.id)
   db.taskStash.add({
-    taskData:JSON.stringify(tasks.getStringify(task.id)),
-    createTime:Date.now()
-  }).then(res=>{
-    ipc.send('message',{type:'success',config:{content:'暂存标签组成功，您可随时导入此暂存标签组到任何空间。'}})
-    tasks.destroy(args.id)
-  }).catch((e)=>{
+    taskData: JSON.stringify(tasks.getStringify(task.id)),
+    createTime: Date.now()
+  }).then(res => {
+    ipc.send('message', { type: 'success', config: { content: '暂存标签组成功，您可随时导入此暂存标签组到任何空间。' } })
+    require('../browserUI.js').closeTask(args.id)
+  }).catch((e) => {
     console.warn(res)
   })
+})
+
+ipc.on('importTasks',async (e, args) => {
+  let stashTasks = await db.taskStash.where('id').anyOf(args.ids).toArray()
+  let count=0
+  let remove=args.config.removeAfterImported
+  stashTasks.forEach(st=>{
+    try{
+      let task=JSON.parse(st.taskData)
+      task.id=Date.now()-Math.round(Math.random()*1000000)
+      tasks.add(task)
+      count++
+      if(remove){
+        db.taskStash.delete(st.id)
+      }
+    }catch (e) {
+      console.warn('导入失败',e)
+    }
+  })
+  if(count>0){
+    ipc.send('message',{type:'success',config:{content:'成功导入'+count+'个标签组。'}})
+  }else{
+    ipc.send('message',{type:'error',config:{content:'导入标签组失败。'}})
+  }
+})
+
+ipc.on('removeStash',(e,args)=>{
+  db.taskStash.delete(args.id)
 })
 
 ipc.on('toggleLockTab', (event, args) => {
@@ -901,10 +932,10 @@ ipc.on('tabNavigateTo', function (e, data) {
  * 获取添加到收藏夹的信息，同时会发送一个获取高清截图的请求到主进程。
  * 故信息和截图两边是分开发送的
  */
-ipc.on('getAddPageInfo',(event,args)=>{
-  ipc.send('getHDCapture',{id:tabs.getSelected(),favWindowId:args.favWindowId}) //发送给主进程，要求捕获一个高清截图
-  let tabInfo=tabs.get(tabs.getSelected())
-  tabInfo.url=urlParser.getSourceURL(tabInfo.url)
-  ipc.sendTo(args.favWindowId,'gotAddPageInfo',tabInfo) //直接回传消息给收藏夹的渲染进程
+ipc.on('getAddPageInfo', (event, args) => {
+  ipc.send('getHDCapture', { id: tabs.getSelected(), favWindowId: args.favWindowId }) //发送给主进程，要求捕获一个高清截图
+  let tabInfo = tabs.get(tabs.getSelected())
+  tabInfo.url = urlParser.getSourceURL(tabInfo.url)
+  ipc.sendTo(args.favWindowId, 'gotAddPageInfo', tabInfo) //直接回传消息给收藏夹的渲染进程
 })
 module.exports = tabBar

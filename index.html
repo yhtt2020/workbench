@@ -439,6 +439,18 @@
           refreshExpire_deadtime: new Date().getTime() + args.refreshExpire * 1000,
           code: args.code
         }})
+
+
+        let updateData={
+          code:args.code,
+          expire_deadtime:new Date().getTime() + args.expire * 1000,
+          refreshExpire_deadtime:new Date().getTime() + args.refreshExpire * 1000,
+          refreshToken:args.refreshToken,
+          token:args.token
+        }
+        db.accounts.update(args.userInfo.uid,updateData) //更新accounts数据
+        const spaceModel=require('./src/model/spaceModel')
+        await spaceModel.updateSpaceInfo()
       })
 
 
