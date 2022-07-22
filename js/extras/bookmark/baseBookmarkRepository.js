@@ -6,8 +6,6 @@ class baseBookmarkRepository {
     ipc.send('message',{type:'loading',config:{content: 'html书签导入中...', duration: 7, key: 'baseBookmarkImport'}})
     let tree = new DOMParser().parseFromString(data, 'text/html')
 
-    console.log(tree, '$$$$$$$$$$')
-
     let calcedItem = {}
     //递归计算dt的level和parent
     function recurCalc(dt, levelParam = 1, parentParam = null, typeParam = null, nameParam = null, urlParam = null) {
