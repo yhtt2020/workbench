@@ -230,13 +230,24 @@
     </div>
 
     <div class="settings-container" id="browser-settings-container">
-      <h3 data-string="settingsBrowserHeading"></h3>
-      <p>当前操作系统：<span id="os_name"></span> <span id="os_type"></span></p>
+      <h3>便捷操作</h3>
       <div class="setting-section">
-        <input id="custom-browser" style="margin-left: 0.5em; min-width: 325px" hidden />
-        <button style="border-radius: 4px;border: solid 1px #ccc;padding: 5px " id="button-default-browser" onclick="callSetDefaultBrowser()"></button>
+        <label><input id="dropOpenLink" type="checkbox"> 拖拽链接以新标签页打开</label>
+        <div class="settings-info-subheading">当拖拽网页中的链接时，以新标签页打开。</div>
+      </div>
+      <div class="setting-section">
+        <label><input id="dbClickClose" type="checkbox"> 双击关闭标签</label>
+        <div class="settings-info-subheading">当双击标签栏的标签时，直接将其关闭（非锁定标签）</div>
       </div>
     </div>
+  <div class="settings-container" id="browser-settings-container">
+    <h3 data-string="settingsBrowserHeading"></h3>
+    <p>当前：<span id="os_name"></span> <span id="os_type"></span></p>
+    <div class="setting-section">
+      <input id="custom-browser" style="margin-left: 0.5em; min-width: 325px" hidden />
+      <button style="border-radius: 4px;border: solid 1px #ccc;padding: 5px " id="button-default-browser" onclick="callSetDefaultBrowser()"></button>
+    </div>
+  </div>
 
     <div class="settings-container" id="browser-tab-container">
       <h3>起始页</h3>

@@ -22,8 +22,16 @@ window.addEventListener('message', function (e) {
 
 	//询问主进程，是否是默认浏览器
 	if(e.data.message=='getIsDefaulBrowser'){
-		ipc.send('getIsDefaulBrowser' )
+		ipc.send('getIsDefaulBrowser')
 	}
+
+  if(e.data.message=='valueCount'){
+    ipc.send('valueCount',e.data.count)
+  }
+
+  if(e.data.message==='themeChange'){
+    ipc.send('themeChange',{status:e.data.status})
+  }
 
 })
 
@@ -32,7 +40,6 @@ ipc.on('returnIsDefaultBrowser',function(e,data){
 })
 
 ipc.on('receiveSettingsData', function (e, data) {
-  console.log(data)
   if (window.location.toString().startsWith('file://')) { // probably redundant, but might as well check
     systemInfo=data.systemInfo
     window.postMessage({ message: 'receiveSettingsData', settings: data }, 'file://')

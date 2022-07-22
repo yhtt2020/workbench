@@ -46,6 +46,16 @@ ipc.on('open-context-menu', function (e, data) {
     menu.append(new MenuItem({ type: 'separator' }))
   })
 
+  //拼接扩展菜单进去
+  if(extensionsMenu.length>0){
+    menu.append(new MenuItem({
+      type:'separator'
+    }))
+    extensionsMenu.forEach(menuItem=>{
+      menu.append(new MenuItem(menuItem))
+    })
+  }
+
 
   // data.template.forEach(function (section) {
   //   section.forEach(function (item) {
@@ -66,6 +76,8 @@ ipc.on('open-context-menu', function (e, data) {
   //   })
   //   menu.append(new MenuItem({ type: 'separator' }))
   // })
+
+
   menu.on('menu-will-close', function () {
     e.sender.send('context-menu-will-close', { menuId: data.id })
   })

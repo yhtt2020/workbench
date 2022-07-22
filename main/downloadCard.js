@@ -118,11 +118,11 @@ ipc.on('showMenuIng', (event,args) => {
 })
 
 
-ipc.on('showMenuDone', (event) => {
+ipc.on('showMenuDone', (event,args) => {
   const template = [
     {
       label: '打开',
-      click: () => { event.sender.send('menuDoneOpen')}
+      click: () => { event.sender.send('menuDoneOpen',args)}
     },
 
     { label: '打开文件夹',

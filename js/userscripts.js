@@ -319,7 +319,7 @@ return ele
     })
   },
   initialize: function () {
-    userscripts.loadScriptFile(path.join(__dirname,'/pages/fav/content.js'),userscripts.systemScripts)
+   //todo 暂时屏蔽拖拽保存图片功能 userscripts.loadScriptFile(path.join(__dirname,'/pages/fav/content.js'),userscripts.systemScripts)
     webviews.bindEvent('dom-ready', (tabId)=>{
       userscripts.systemScripts.forEach((script)=>{
         userscripts.runScript(tabId, script)

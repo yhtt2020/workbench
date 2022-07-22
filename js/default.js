@@ -162,7 +162,7 @@ window.addEventListener('load', function() {
 })
 
 window.ldb=require('../src/util/ldb').load(window.globalArgs['user-data-path']+'/ldb.json')
-
+//require('webUI')
 require('tabState.js').initialize()
 require('windowControls.js').initialize()
 require('navbar/menuButton.js').initialize()

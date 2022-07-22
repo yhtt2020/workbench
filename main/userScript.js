@@ -20,7 +20,6 @@ function createUserScriptWin (args) {
       acceptFirstMouse: true,
       maximizable: false,
       visualEffectState: 'active',
-      alwaysOnTop: true,
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,

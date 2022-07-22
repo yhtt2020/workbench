@@ -126,9 +126,6 @@
     {
       "name": "pidgey",
       "alias": "波波"
-    },  {
-      "name": "pikachu",
-      "alias": "皮卡丘"
     },
     {
       "name": "pikachu-1",
@@ -191,7 +188,7 @@
     },
     {
       "name": "weedle",
-      "alias": "独角兽"
+      "alias": "独角虫"
     }
   ]
 }

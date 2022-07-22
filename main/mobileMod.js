@@ -31,7 +31,6 @@ const mobileMod = {
     let mobileWindow = new BrowserWindow({
       frame: true,
       backgroundColor: 'white',
-      parent: mainWindow,
       modal: false,
       hasShadow: true,
       x: pos.x,
@@ -63,7 +62,7 @@ const mobileMod = {
         nodeIntegrationInSubFrames: true,
         scrollBounce: true,
         safeDialogs: true,
-        safeDialogsMessage: 'Prevent this page from creating additional dialogs',
+        safeDialogsMessage: '阻止此页面弹窗',
         preload: __dirname + '/dist/preload.js',
         contextIsolation: true,
         sandbox: true,
@@ -82,7 +81,6 @@ const mobileMod = {
         // ]
       }
     })
-    console.log(path.join(__dirname, '/dist/preload.js'))
     mobileWindow.setBrowserView(view)
     view.setBounds({
       x: 0,

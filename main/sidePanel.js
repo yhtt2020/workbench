@@ -4,7 +4,7 @@ let sidePanel = null //SidePanel类的存储变量
  */
 function isWin11 () {
   const sysVersion = process.getSystemVersion()
-  return sysVersion.startsWith('10.') && process.platform === 'win32';
+  return sysVersion.startsWith('10.') && process.platform === 'win32'
 }
 
 function log (info) {
@@ -39,9 +39,9 @@ class SidePanel {
    * 返回sidePanel实例
    */
   static getSidePanel () {
-    if(SidePanel.alive()){
+    if (SidePanel.alive()) {
       return sidePanel.get()
-    }else{
+    } else {
       return null
     }
   }
@@ -58,15 +58,15 @@ class SidePanel {
     return true
   }
 
-  static send(channel,args){
-    if(SidePanel.alive()){
-      sidePanel.get().webContents.send(channel,args)
+  static send (channel, args) {
+    if (SidePanel.alive()) {
+      sidePanel.get().webContents.send(channel, args)
     }
   }
 
   //mainWindow往webview子进程发送消息的方法
-  static mainWindowSend(eventName, args) {
-    if(SidePanel.alive()) {
+  static mainWindowSend (eventName, args) {
+    if (SidePanel.alive()) {
       mainWindow.webContents.send(eventName, args)
     }
   }
@@ -115,7 +115,7 @@ class SidePanel {
 
     this.syncSize()
     this.syncTitleBar()
-    this._sidePanel.on('ready-to-show',()=>{
+    this._sidePanel.on('ready-to-show', () => {
       checkUpdate()
     })
 
@@ -131,7 +131,7 @@ class SidePanel {
     })
     sidePanel = this
 
-    this._sidePanel.on('blur',()=>{
+    this._sidePanel.on('blur', () => {
       this._sidePanel.webContents.send('blur')
     })
   }
@@ -182,8 +182,6 @@ class SidePanel {
       this.bounds.height -= 40
     }
 
-
-
     let setX = this.bounds.x
     let setY = !resetY ? this.bounds.y + this.titlebarHeight : this.bounds.y + resetY
     let setHeight = this.bounds.height - this.titlebarHeight
@@ -192,24 +190,25 @@ class SidePanel {
       setX += 1
       setHeight -= 1
     }
-    if(isWin()){
-      setHeight+=2
-      setX-=1
-      if(process.getSystemVersion().startsWith('6.1')){//win7少也要少一个像素
-        setHeight-=1
+    if (isWin()) {
+      setHeight += 2
+      setX -= 1
+      if (process.getSystemVersion().startsWith('6.1')) {//win7少也要少一个像素
+        setHeight -= 1
       }
     }
-	  if(isWin11()){
+    if (isWin11()) {
       //win11要少一个像素
-		setHeight-=1
-	  }
+      setHeight -= 2
+      setX += 1
+    }
 
     this._sidePanel.setBounds({
       x: setX,
       y: setY,
       width: this.bounds.width,
       height: setHeight
-    },false)
+    }, false)
   }
 
   setTop () {
@@ -300,11 +299,10 @@ class SidePanel {
     this._sidePanel.setIgnoreMouseEvents(true, {
       forward: false  //设置为false，如果为true，在windows上鼠标会闪的不行
     })
-    if (BrowserWindow.getFocusedWindow() != null && sidePanel.get().isFocused() ) //如果有任意一个window还有焦点，则聚焦到mainwindow
+    if (BrowserWindow.getFocusedWindow() != null && sidePanel.get().isFocused()) //如果有任意一个window还有焦点，则聚焦到mainwindow
       //有窗体还有焦点 且 只有左侧栏
     {
-      if(process.platform==='darwin')
-      {
+      if (process.platform === 'darwin') {
         mainWindow.setFocusable(true)
       }
       mainWindow.focus()
@@ -320,6 +318,7 @@ class SidePanel {
     log('设置左侧栏感应 鼠标，左侧栏同时获得焦点')
   }
 }
+
 // function onlyFocusedSideBarAndMainWindow(windows=[]){
 //   if(sidePanel.get().isFocused() || mainWindow.isFocused())
 //   {
@@ -381,14 +380,14 @@ function addMainWindowEventListener () {
   //最小化、恢复事件
   mainWindow.on('minimize', () => {
     SidePanel.send('closeUserSidePanel')
-    if(!isWin()){
+    if (!isWin()) {
       closeSidePanel()
     }
   })
   mainWindow.on('restore', () => {
-    if(isWin()){
+    if (isWin()) {
 
-    }else{
+    } else {
       loadSidePanel()
     }
     //
@@ -621,7 +620,7 @@ ipc.on('selectTask', function (event, arg) {
     width: 1000,
     autoHideMenuBar: true,
     height: 700,
-    thickFrame:false,
+    thickFrame: false,
     resizable: false,
     acceptFirstMouse: true,
     visualEffectState: 'active',
@@ -640,12 +639,12 @@ ipc.on('selectTask', function (event, arg) {
   selectTaskWindow.webContents.loadURL('file://' + __dirname + '/pages/selectTask/index.html')
   if (toString.call(arg) === '[object Array]') {
     selectTaskWindow.webContents.send('appsCartList', arg)
-  } else if(toString.call(arg) === '[object Object]') {
+  } else if (toString.call(arg) === '[object Object]') {
     selectTaskWindow.webContents.send('fromTabBarOp', arg)
   }
 })
-ipc.on('getTasks',()=>{
-  mainWindow.webContents.send('getTasks',{id:selectTaskWindow.webContents.id})
+ipc.on('getTasks', () => {
+  mainWindow.webContents.send('getTasks', { id: selectTaskWindow.webContents.id })
 })
 ipc.on('closeTaskSelect', function () {
   selectTaskWindow.close()
@@ -657,8 +656,9 @@ ipc.on('addTab', function (event, data) {
   })
 })
 
-
-
+ipc.on('themeChange', (e, a) => {
+  SidePanel.send('themeChange', a)
+})
 
 //可以尝试移动到browserUI中有tab和task的环境，而且能直接捕获从preload传出来的ipc
 //选择到对应的task，再在对应的位置执行addTab
@@ -667,7 +667,7 @@ ipc.on('insertTab', (event, arg) => {
 })
 
 ipc.on('userLogin', function (event, data) {
-  SidePanel.send('userLogin',data)
+  SidePanel.send('userLogin', data)
 })
 
 ipc.on('importBookMarks', function () {
@@ -680,8 +680,27 @@ ipc.on('importBookMarks', function () {
 ipc.on('message', function (event, args) {
   SidePanel.send('message', args)
 })
-function sendMessage(args){
-  SidePanel.send('message', args)
+
+function sendMessage (args) {
+  messager.send(args)
+}
+
+const messager = {
+  send (args) {
+    SidePanel.send('message', args)
+  },
+  success (config) {
+    SidePanel.send('message', {
+      type: 'success',
+      config: config
+    })
+  },
+  error (config) {
+    SidePanel.send('message', {
+      type: 'error',
+      config: config
+    })
+  }
 }
 
 ipc.on('closeTask', function (event, args) {
@@ -757,40 +776,69 @@ function createSwitchTask () {
   }
 
 }
-ipc.on('openSwitch',()=>{
+
+ipc.on('openSwitch', () => {
   createSwitchTask()
 })
 
+ipc.on('addSingleTaskGuide', () => {
+  sendIPCToWindow(mainWindow, 'addSingleTask')
+})
 
-
-ipc.on('closeSwitch',()=>{
-  if(switchWindow!==null){
+ipc.on('closeSwitch', () => {
+  if (switchWindow !== null) {
     switchWindow.close()
   }
 })
-ipc.on('openTaskMenu',(event,args)=>{
-  let task=args.task
-  let pos=require('electron').screen.getCursorScreenPoint()
-  const tpl=[
+ipc.on('openTaskMenu', (event, args) => {
+  let task = args.task
+  let pos = require('electron').screen.getCursorScreenPoint()
+  const tpl = [
     {
-      label:task.title,
-      enabled:false
+      label: task.title,
+      enabled: false
     },
     {
-      label: '更改标签组图标',
-      click() {
+      label: '重命名标签组',
+      click () {
+        let defaultIcon = {
+          type: 'img',
+          icon: {
+            url: task.icon
+          }
+        }
+        if (task.userIcon) {
+          defaultIcon = {
+            type: 'fontIcon',
+            icon: task.userIcon
+          }
+        }
         renderPage.openIconSelector({
-          x:pos.x,
-          y:pos.y
-        },event.sender.id)
+          x: pos.x,
+          y: pos.y,
+        }, {
+          text: true,
+          shape: 'none',
+          originalIcon: task.icon,
+          defaultIcon: defaultIcon,
+          defaultText: task.title,
+        }, event.sender.id)
       }
-    },{
-      type:'separator'
+    },
+    ,
+    {
+      type: 'separator'
+    },
+    {
+      label: '暂存标签组…',
+      click () {
+        sendIPCToWindow(mainWindow, 'stashTask', { id: task.id })
+      }
     },
     {
       label: '关闭标签组',
-      click() {
-        sendIPCToWindow(mainWindow, 'closeTask', {tabId:task.id})
+      click () {
+        sendIPCToWindow(mainWindow, 'closeTask', { tabId: task.id })
       }
     }
   ]
@@ -798,26 +846,94 @@ ipc.on('openTaskMenu',(event,args)=>{
 
   menu.popup()
 })
-ipc.on('openSidebarMenu',()=>{
-  const tpl=[
+ipc.on('openSidebarMenu', (e, args) => {
+  let checkAuto, checkClose, checkOpen, checkHide = false
+  switch (args.mod) {
+    case 'auto':
+      checkAuto = true
+      break
+    case 'close':
+      checkClose = true
+      break
+    case 'hide':
+      checkHide = true
+      break
+    default :
+      checkOpen = true
+  }
+
+  function setSideMod (mod) {
+    SidePanel.send('sideSet' + mod)
+    sendIPCToWindow(mainWindow, 'sideSetMod', { mod: mod.toLowerCase() })
+
+  }
+
+  const tpl = [
     {
       label: '新建标签组',
-      click() {
-       sendIPCToWindow(mainWindow, 'addTask')
-     }
+      click () {
+        sendIPCToWindow(mainWindow, 'addTask')
+      }
     },
     {
       label: '新建独立标签组',
-      click() {
+      click () {
         sendIPCToWindow(mainWindow, 'addSingleTask')
       }
     },
     {
       label: '整理标签组…',
       click () {
-        sendIPCToWindow(mainWindow,'showTasks')
+        sendIPCToWindow(mainWindow, 'showTasks')
         mainWindow.focus()
       }
+    },
+    {
+      label: '导入标签组…',
+      click () {
+        renderPage.openPopTaskStash()
+      }
+    },
+
+    {
+      type: 'separator'
+    },
+    {
+      label: '侧边栏模式',
+      submenu: [
+        {
+          type: 'checkbox',
+          label: '自动伸缩',
+          checked: checkAuto,
+          click () {
+            setSideMod('Auto')
+          }
+        },
+        {
+          type: 'checkbox',
+          label: '收起',
+          checked: checkClose,
+          click () {
+            setSideMod('Close')
+          }
+        }, {
+          type: 'checkbox',
+          label: '展开',
+          checked: checkOpen,
+          click () {
+            setSideMod('Open')
+          }
+        }
+        // , {
+        //   type:'separator'
+        // },
+        // {
+        //   label:!checkHide?'隐藏侧边栏':'显示侧边栏',
+        //   click(){
+        //     setSideMod('Hide')
+        //   }
+        // }
+      ]
     }
   ]
   let menu = require('electron').Menu.buildFromTemplate(tpl)
@@ -825,88 +941,103 @@ ipc.on('openSidebarMenu',()=>{
   menu.popup()
 })
 
-ipc.on('sidePanelFocus',()=>{
- sidePanel.setMouseEnable()
+ipc.on('importTasks', (e, args) => {
+  sendIPCToWindow(mainWindow, 'importTasks', args)
+})
+ipc.on('removeStash',(e,args)=>{
+  sendIPCToWindow(mainWindow, 'removeStash', args)
+})
+ipc.on('sidePanelFocus', () => {
+  sidePanel.setMouseEnable()
 })
 
-ipc.on('switchToTab',(event,args)=>{
-  sendIPCToWindow(mainWindow,'switchToTab',args)
+ipc.on('switchToTab', (event, args) => {
+  sendIPCToWindow(mainWindow, 'switchToTab', args)
 })
-ipc.on('switchToTask',(event,args)=>{
-  sendIPCToWindow(mainWindow,'switchToTask',args)
+ipc.on('switchToTask', (event, args) => {
+  sendIPCToWindow(mainWindow, 'switchToTask', args)
 })
-ipc.on('openTasks',(event,args)=>{
-  sendIPCToWindow(mainWindow,'showTasks',args)
+ipc.on('openTasks', (event, args) => {
+  sendIPCToWindow(mainWindow, 'showTasks', args)
 })
 // app.whenReady().then(()=>{
 //   createSwitchTask()
 // })
 //设置侧边栏模式
-ipc.on('sideSetOpen',(event,args)=>{
+ipc.on('sideSetOpen', (event, args) => {
   SidePanel.send('sideSetOpen')
 })
-ipc.on('sideSetClose',(event,args)=>{
+ipc.on('sideSetClose', (event, args) => {
   SidePanel.send('sideSetClose')
 })
-ipc.on('sideSetAuto',(event,args)=>{
+ipc.on('sideSetAuto', (event, args) => {
   SidePanel.send('sideSetAuto')
 })
 
-ipc.on('importDesk',(event,args)=>{
-  const files=dialog.showOpenDialogSync(mainWindow,{title:'导入桌面',defaultPath:'.tsbk',filters:[{name:'桌面备份',extensions:['tsbk']}]})
-  if(!!!files){
+ipc.on('importDesk', (event, args) => {
+  const files = dialog.showOpenDialogSync(mainWindow, {
+    title: '导入桌面',
+    defaultPath: '.tsbk',
+    filters: [{ name: '桌面备份', extensions: ['tsbk'] }]
+  })
+  if (!!!files) {
     return
-  }else{
-    event.reply('importDesk',{files:files})
+  } else {
+    event.reply('importDesk', { files: files })
   }
 })
-ipc.on('exportDesk',(event,args)=>{
-  let desk=args.desk
-  desk.layout=args.deskLayout
-  const path=dialog.showSaveDialogSync(mainWindow,{title:'导出桌面',defaultPath:'桌面备份-'+desk.name+'.tsbk',filters:[{name:'桌面备份',extensions:['tsbk']}]})
-  if(!!!path){
+ipc.on('exportDesk', (event, args) => {
+  let desk = args.desk
+  desk.layout = args.deskLayout
+  const path = dialog.showSaveDialogSync(mainWindow, {
+    title: '导出桌面',
+    defaultPath: '桌面备份-' + desk.name + '.tsbk',
+    filters: [{ name: '桌面备份', extensions: ['tsbk'] }]
+  })
+  if (!!!path) {
     return
-  }else{
-    fs.writeFile(path, JSON.stringify(desk),  function(err) {
+  } else {
+    fs.writeFile(path, JSON.stringify(desk), function (err) {
       if (err) {
-        sendMessage({type:'error',config:{content:'备份失败。请重试。'}})
-      }
-      else{
-        sendMessage({type:'success',config:{content:'保存桌面备份成功。'}})
+        sendMessage({ type: 'error', config: { content: '备份失败。请重试。' } })
+      } else {
+        sendMessage({ type: 'success', config: { content: '保存桌面备份成功。' } })
       }
     })
   }
 })
-ipc.on('captureDeskScreen',(event,args)=>{
-  let capturedImage=undefined
-  event.sender.capturePage(args.bounds).then((data)=>{
-    capturedImage=data
-    if(!fs.existsSync(userDataPath+'/desk')){
-      fs.mkdirSync(userDataPath+'/desk')
+ipc.on('captureDeskScreen', (event, args) => {
+  let capturedImage = undefined
+  event.sender.capturePage(args.bounds).then((data) => {
+    capturedImage = data
+    if (!fs.existsSync(userDataPath + '/desk')) {
+      fs.mkdirSync(userDataPath + '/desk')
     }
-    fs.writeFile(path.resolve(userDataPath+'/desk/screen'+args.desk.id+'.jpg'),capturedImage.toJPEG(50),(err)=>{
-        if(!err){
-          event.reply('updateScreen', { id:args.desk.id })
-        }
+    fs.writeFile(path.resolve(userDataPath + '/desk/screen' + args.desk.id + '.jpg'), capturedImage.toJPEG(50), (err) => {
+      if (!err) {
+        event.reply('updateScreen', { id: args.desk.id })
+      }
     })
   })
 })
-let allAppsWindow=null
-function getAllAppsWindow(){
-  if(allAppsWindow===null){
+let allAppsWindow = null
+
+function getAllAppsWindow () {
+  if (allAppsWindow === null) {
     createAllAppsWindow()
   }
   return allAppsWindow
 }
-function createAllAppsWindow(){
-  allAppsWindow=new BrowserWindow({
+
+function createAllAppsWindow () {
+  allAppsWindow = new BrowserWindow({
     width: 600,
     height: 600,
     acceptFirstMouse: true,
     alwaysOnTop: true,
-    show:false,
-   // resizable:false,
-    frame:false,
+    show: false,
+    // resizable:false,
+    frame: false,
     webPreferences: {
       //preload: __dirname+'/pages/saApp/settingPreload.js',
       nodeIntegration: true,
@@ -923,90 +1054,89 @@ function createAllAppsWindow(){
       ]
     }
   })
-  allAppsWindow.on('will-resize',(event)=>{
+  allAppsWindow.on('will-resize', (event) => {
     event.preventDefault()
   })
-  allAppsWindow.loadURL('file://'+path.join(__dirname,'/pages/saApp/list.html'))
-  allAppsWindow.on('close',(event)=>{
-    if(forceClose){
-      allAppsWindow=null
-    }else{
+  allAppsWindow.loadURL('file://' + path.join(__dirname, '/pages/saApp/list.html'))
+  allAppsWindow.on('close', (event) => {
+    if (forceClose) {
+      allAppsWindow = null
+    } else {
       allAppsWindow.hide()
       event.preventDefault()
     }
 
   })
-  allAppsWindow.on('blur',()=>{
+  allAppsWindow.on('blur', () => {
     allAppsWindow.hide()
   })
-  setTimeout(()=>{
-    if(mainWindow){
-      mainWindow.on('close',()=>{
-        forceClose=true
-        if(allAppsWindow && !allAppsWindow.isDestroyed())
+  setTimeout(() => {
+    if (mainWindow) {
+      mainWindow.on('close', () => {
+        forceClose = true
+        if (allAppsWindow && !allAppsWindow.isDestroyed())
           allAppsWindow.close()
-        allAppsWindow=null
+        allAppsWindow = null
       })
     }
 
-  },2000)
+  }, 2000)
 
 }
 
-ipc.on('showAllSaApps',(event,args)=>{
+ipc.on('showAllSaApps', (event, args) => {
   getAllAppsWindow()
   allAppsWindow.webContents.send('refresh')
 
-  let mainBounds=mainWindow.getBounds()
+  let mainBounds = mainWindow.getBounds()
   allAppsWindow.setBounds({
-    x:mainBounds.x+170,
-    y:mainBounds.y+70
+    x: mainBounds.x + 170,
+    y: mainBounds.y + 70
   })
- allAppsWindow.show()
- allAppsWindow.focus()
+  allAppsWindow.show()
+  allAppsWindow.focus()
 })
 
-const configModel = require(__dirname+'/src/model/configModel')
-let userWindow=null
-let lastWindowArgs={}
-let changingSpace=false
-function showUserWindow(args){
-  const _=require('lodash')
-  if(userWindow){
-    if(masked){
+const configModel = require(__dirname + '/src/model/configModel')
+let userWindow = null
+let lastWindowArgs = {}
+let changingSpace = false
+
+function showUserWindow (args) {
+  const _ = require('lodash')
+  if (userWindow) {
+    if (masked) {
       return
     }
     userWindow.show()
     userWindow.focus()
-  }else{
-    let defaultArgs={
-      tip:'',
-      modal:false
+  } else {
+    let defaultArgs = {
+      tip: '',
+      modal: false
     }
-    if(typeof args==='undefined'){
-      args={}
+    if (typeof args === 'undefined') {
+      args = {}
     }
-    let additionalArgs= Object.assign(defaultArgs,args)
-    lastWindowArgs=additionalArgs
-    let formatArgs=[]
+    let additionalArgs = Object.assign(defaultArgs, args)
+    lastWindowArgs = additionalArgs
+    let formatArgs = []
 
-    _.mapKeys(additionalArgs,(value,key)=>{
-      formatArgs.push('--'+key+'='+value)
+    _.mapKeys(additionalArgs, (value, key) => {
+      formatArgs.push('--' + key + '=' + value)
     })
 
-
-
-    userWindow=new BrowserWindow({
-      backgroundColor:'#00000000',
-      show:false,
+    userWindow = new BrowserWindow({
+      backgroundColor: '#00000000',
+      show: false,
       transparent: true,
-      frame:false,
-      resizable:false,
-      shadow:false,
-      alwaysOnTop:true,
-      width:700,
-      height:530,
-      webPreferences:{
+      frame: false,
+      resizable: false,
+      shadow: false,
+      alwaysOnTop: true,
+      width: 700,
+      height: 530,
+      webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
         additionalArguments: [
@@ -1018,52 +1148,53 @@ function showUserWindow(args){
         ]
       }
     })
-    function computeBounds(parentBounds,selfBounds){
-      let bounds={}
-      bounds.x=parseInt((parentBounds.x+parentBounds.x+parentBounds.width)/2-selfBounds.width/2,0)
-      bounds.y=parseInt((parentBounds.y+parentBounds.y+parentBounds.height)/2-selfBounds.height/2)
-      bounds.width=parseInt(selfBounds.width)
-      bounds.height=parseInt(selfBounds.height)
+
+    function computeBounds (parentBounds, selfBounds) {
+      let bounds = {}
+      bounds.x = parseInt((parentBounds.x + parentBounds.x + parentBounds.width) / 2 - selfBounds.width / 2, 0)
+      bounds.y = parseInt((parentBounds.y + parentBounds.y + parentBounds.height) / 2 - selfBounds.height / 2)
+      bounds.width = parseInt(selfBounds.width)
+      bounds.height = parseInt(selfBounds.height)
       return bounds
     }
 
-    userWindow.loadURL('file://'+path.join(__dirname,'/pages/user/index.html'))
-    userWindow.on('ready-to-show',()=>{
+    userWindow.loadURL('file://' + path.join(__dirname, '/pages/user/index.html'))
+    userWindow.on('ready-to-show', () => {
       userWindow.show()
-      if(mainWindow && !mainWindow.isDestroyed())
-        userWindow.setBounds(computeBounds(mainWindow.getBounds(),userWindow.getBounds()))
-      else{
+      if (mainWindow && !mainWindow.isDestroyed())
+        userWindow.setBounds(computeBounds(mainWindow.getBounds(), userWindow.getBounds()))
+      else {
       }
-      if(additionalArgs.modal){
+      if (additionalArgs.modal) {
         callModal(userWindow)
       }
 
     })
-    userWindow.on('close',()=>{
-      userWindow=null
+    userWindow.on('close', () => {
+      userWindow = null
     })
   }
 }
 
-function callWetherShowUserWindow(){
-  if(configModel.getShowOnStart())
-  {
+function callWetherShowUserWindow () {
+  if (configModel.getShowOnStart()) {
     showUserWindow()
   }
 }
 
-let masked=false
-let inseartedCSS=[]
+let masked = false
+let inseartedCSS = []
+
 /**
  * 调用模态方法，给所有窗体添加模态
  * @param window
  */
-function callModal(win){
-  if(masked){
+function callModal (win) {
+  if (masked) {
     return
   }
   win.setSkipTaskbar(true)
-  let css=`._mask{
+  let css = `._mask{
      position:fixed;
      top:0;
      left: 0;
@@ -1073,24 +1204,24 @@ function callModal(win){
      z-index: 9999999;
      display:block;
      }`
-  let code=`
+  let code = `
   let div=document.createElement('div');
   div.id='_modalWindowMask';
   div.classList.add('_mask');
   //div.hidden=true;
   document.body.appendChild(div);
   `
-  webContents.getAllWebContents().forEach(async wb=>{
-    if(wb.id===win.webContents.id) return ;
-    inseartedCSS.push({id:wb.id,cssHandler:await wb.insertCSS(css)})
+  webContents.getAllWebContents().forEach(async wb => {
+    if (wb.id === win.webContents.id) return
+    inseartedCSS.push({ id: wb.id, cssHandler: await wb.insertCSS(css) })
     await wb.executeJavaScript(code)
   })
-  if(mainWindow && !mainWindow.isDestroyed()){
+  if (mainWindow && !mainWindow.isDestroyed()) {
     mainWindow.setMinimizable(false)
     mainWindow.setClosable(false)
     mainWindow.setMaximizable(false)
   }
-  masked=true
+  masked = true
   //
   // BrowserWindow.getAllWindows().forEach(async w=>{
   //   if(w.id===win.id) return ;
@@ -1100,57 +1231,57 @@ function callModal(win){
 
 }
 
-function callUnModal(win){
-  if(masked){
-    webContents.getAllWebContents().forEach(async wb=>{
-      try{
-        if(wb.id===win.webContents.id) return ;
-        let handler= inseartedCSS.find((item)=>{
-          return item.id===wb.id
+function callUnModal (win) {
+  if (masked) {
+    webContents.getAllWebContents().forEach(async wb => {
+      try {
+        if (wb.id === win.webContents.id) return
+        let handler = inseartedCSS.find((item) => {
+          return item.id === wb.id
         })
         wb.removeInsertedCSS(handler)
         await wb.executeJavaScript('document.body.removeChild(document.getElementById(\'_modalWindowMask\'))')
-      }catch (e) {
+      } catch (e) {
       }
     })
-    if(mainWindow && !mainWindow.isDestroyed()){
+    if (mainWindow && !mainWindow.isDestroyed()) {
       mainWindow.setMinimizable(true)
       mainWindow.setClosable(true)
       mainWindow.setMaximizable(true)
     }
-    inseartedCSS=[]
-    masked=false
+    inseartedCSS = []
+    masked = false
 
   }
 }
 
 /*user面板代码*/
-app.whenReady().then(()=>{
+app.whenReady().then(() => {
 
-  ipc.on('showUserWindow',(event,args)=>{
+  ipc.on('showUserWindow', (event, args) => {
     showUserWindow(args)
   })
 
-  let loginWindow=null
-  ipc.on('closeUserWindow',()=>{
+  let loginWindow = null
+  ipc.on('closeUserWindow', () => {
     callUnModal(userWindow)
-    if(userWindow){
-      if(userWindow.isDestroyed()===false)
+    if (userWindow) {
+      if (userWindow.isDestroyed() === false)
         userWindow.close()
     }
   })
 
-  ipc.on('changeSpace',(event,args)=>{
-    changingSpace=true
-    if(mainWindow && !mainWindow.isDestroyed()){
+  ipc.on('changeSpace', (event, args) => {
+    changingSpace = true
+    if (mainWindow && !mainWindow.isDestroyed()) {
       mainWindow.setClosable(true)
-      mainWindow.once('closed',()=>{
-        const ldb=require(__dirname+'/src/util/ldb.js')
-        ldb.load(app.getPath('userData')+'/ldb.json')
-        ldb.db.set('currentSpace.spaceId',args.spaceId).write()
-        ldb.db.set('currentSpace.name',args.name).write()
-        ldb.db.set('currentSpace.spaceType',args.spaceType).write()
-        ldb.db.set('currentSpace.userInfo',args.userInfo).write()
+      mainWindow.once('closed', () => {
+        const ldb = require(__dirname + '/src/util/ldb.js')
+        ldb.load(app.getPath('userData') + '/ldb.json')
+        ldb.db.set('currentSpace.spaceId', args.spaceId).write()
+        ldb.db.set('currentSpace.name', args.name).write()
+        ldb.db.set('currentSpace.spaceType', args.spaceType).write()
+        ldb.db.set('currentSpace.userInfo', args.userInfo).write()
         createWindow()
       })
       safeCloseMainWindow()
@@ -1159,33 +1290,33 @@ app.whenReady().then(()=>{
 
   })
 
-  ipc.on('disconnect',()=>{
+  ipc.on('disconnect', () => {
     SidePanel.send('disconnect')
   })
 
-  ipc.on('reconnect',()=>{
+  ipc.on('reconnect', () => {
     SidePanel.send('reconnect')
   })
 
-  ipc.on('saving',()=>{
+  ipc.on('saving', () => {
     SidePanel.send('saving')
   })
 
-  ipc.on('login',(event,args)=>{
-    if(loginWindow){
+  ipc.on('login', (event, args) => {
+    if (loginWindow) {
       loginWindow.show()
       loginWindow.focus()
-    }else{
-      let bounds=mainWindow.getBounds()
-      loginWindow=new BrowserWindow({
-        backgroundColor:'#00000000',
-        show:false,
-        alwaysOnTop:true,
-        width:550,
-        height:730,
-        parent:mainWindow,
-        webPreferences:{
-          preload:path.join(__dirname,'pages/user/loginPreload.js'),
+    } else {
+      let bounds = mainWindow.getBounds()
+      loginWindow = new BrowserWindow({
+        backgroundColor: '#00000000',
+        show: false,
+        alwaysOnTop: true,
+        width: 550,
+        height: 730,
+        parent: mainWindow,
+        webPreferences: {
+          preload: path.join(__dirname, 'pages/user/loginPreload.js'),
           nodeIntegration: true,
           contextIsolation: false,
           additionalArguments: [
@@ -1193,28 +1324,26 @@ app.whenReady().then(()=>{
             '--app-version=' + app.getVersion(),
             '--app-name=' + app.getName(),
             ...((isDevelopmentMode ? ['--development-mode'] : [])),
-            '--callWindow='+event.sender.id,
+            '--callWindow=' + event.sender.id,
           ],
-          partition:'login'
+          partition: 'login'
         }
       })
       loginWindow.setMenu(null)
-      loginWindow.on('close',()=>{
-        loginWindow=null
+      loginWindow.on('close', () => {
+        loginWindow = null
       })
-      let api=require(path.join(__dirname,'server-config.js')).api
+      let api = require(path.join(__dirname, 'server-config.js')).api
       loginWindow.loadURL(api.getUrl(api.API_URL.user.login))
-      loginWindow.on('ready-to-show',()=>{
-        if(userWindow && !userWindow.isDestroyed())
-        {
+      loginWindow.on('ready-to-show', () => {
+        if (userWindow && !userWindow.isDestroyed()) {
           userWindow.setAlwaysOnTop(false)
         }
         loginWindow.show()
         loginWindow.focus()
       })
-      loginWindow.on('close',()=>{
-        if(userWindow && !userWindow.isDestroyed())
-        {
+      loginWindow.on('close', () => {
+        if (userWindow && !userWindow.isDestroyed()) {
           userWindow.setAlwaysOnTop(true)
         }
       })
@@ -1222,6 +1351,46 @@ app.whenReady().then(()=>{
   })
 })
 
+ipc.on('onDropUrl', (e, args) => {
+  if (args.url) {
+    let set = settings.get('dropOpenLink')
+    if (!!!set) {
+      dialog.showMessageBox(mainWindow, {
+        message: '检测到您首次拖放网页链接，请选择您的默认拖放链接行为，您也可以后续在设置中修改行为。',
+        buttons: ['新标签打开链接', '不做任何行为']
+      }).then((res) => {
+        if (res.response === 0) {
+          sendIPCToWindow(mainWindow, 'addTab', { url: args.url })
+          settings.set('dropOpenLink', 'true')
+        } else {
+          settings.set('dropOpenLink', 'false')
+        }
+      })
+    } else if (set === 'true') {
+      sendIPCToWindow(mainWindow, 'addTab', { url: args.url })
+    }
+  }
+})
 
+ipc.on('dbClickClose', (e, args) => {
+  if (args.id) {
+    let set = settings.get('dbClickClose')
+    if (!!!set) {
+      dialog.showMessageBox(mainWindow, {
+        message: '检测到您首次双击标签，请根据习惯选择您的默认行为，您也可以后续在设置中修改此行为。',
+        buttons: ['关闭标签', '不做任何行为']
+      }).then((res) => {
+        if (res.response === 0) {
+          sendIPCToWindow(mainWindow, 'closeTab', { id: args.id })
+          settings.set('dbClickClose', 'true')
+        } else {
+          settings.set('dbClickClose', 'false')
+        }
+      })
+    } else if (set === 'true') {
+      sendIPCToWindow(mainWindow, 'closeTab', { id: args.id })
+    }
+  }
+})
 
 /*user面板代码end*/

@@ -230,6 +230,7 @@ function createWindowWithBounds(bounds) {
 		alwaysOnTop: settings.get('windowAlwaysOnTop'),
 		backgroundColor: '#fff',//backgroundColor: '#fff', // the value of this is ignored, but setting it seems to work around https://github.com/electron/electron/issues/10559
 		webPreferences: {
+      preload: __dirname + '/js/defaultPreload.js',
 			nodeIntegration: true,
 			contextIsolation: false,
 			nodeIntegrationInWorker: true, // used by ProcessSpawner
@@ -248,9 +249,23 @@ function createWindowWithBounds(bounds) {
 	if (process.platform !== 'darwin') {
 		mainWindow.setMenuBarVisibility(false)
 	}
+  if(require('electron').session.defaultSession.protocol.isProtocolRegistered('crx')===false){
+    browser = new Browser(electron.session.fromPartition('persist:webcontent'))
+    let timer=setInterval(()=>{
+      console.log('检查会话是否注册了协议',require('electron').session.defaultSession.protocol.isProtocolRegistered('crx'))
+      if(require('electron').session.defaultSession.protocol.isProtocolRegistered('crx'))
+      {
+        mainWindow.loadURL(browserPage)
+        clearInterval(timer)
+      }
+    },100)
+  }else{
+    browser = new Browser(electron.session.fromPartition('persist:webcontent'))
+    mainWindow.loadURL(browserPage)
+  }
 
 	// and load the index.html of the app.
-	mainWindow.loadURL(browserPage)
+
 
 	if (bounds.maximized) {
 		mainWindow.maximize()
@@ -260,10 +275,17 @@ function createWindowWithBounds(bounds) {
 		})
 	}
 
-	mainWindow.on('close', function() {
+	mainWindow.on('close', function(e) {
+    if(!canCloseMainWindow){
+      safeCloseMainWindow()//发送给主窗体，告知其需要安全关闭，其准备好关闭后会重新触发
+      e.preventDefault()
+      return
+    }
 		destroyAllViews()
 		// save the window size for the next launch of the app
 		saveWindowBounds()
+
+
 	})
   mainWindow.on('ready-to-show',()=>{
     mainWindow.show()
@@ -271,22 +293,25 @@ function createWindowWithBounds(bounds) {
     getAllAppsWindow()
     changingSpace=false
   })
-
-  mainWindow.on('focus',()=>{
+  function checkClipboard(){
     let latestClipboardContent=clipboard.readText()
     if(latestClipboardContent!==clipboardContent && (latestClipboardContent.startsWith('http://') || latestClipboardContent.startsWith('https://')))
     {
       clipboardContent=latestClipboardContent
       sendIPCToWindow(mainWindow,'showClipboard',{url:latestClipboardContent})
-      // dialog.showMessageBox(undefined,{
-      //   message:'检测到剪贴板存在网址，是否使用新标签打开？',
-      //   buttons:['是','否']
-      // }).then((userSelect)=>{
-      //   if(userSelect.response===0){
-      //     sendIPCToWindow(mainWindow,'addTab',{url:latestClipboardContent})
-      //   }
-      // })
     }
+  }
+  let ClipTimer=setInterval(()=>{
+    if(mainWindow){
+      if(!mainWindow.isDestroyed()){
+        if(mainWindow.isFocused() && mainWindow.isVisible()){
+          checkClipboard()
+        }
+      }
+    }
+  },1000)
+  mainWindow.on('focus',()=>{
+    checkClipboard()
   })
 
 
@@ -562,9 +587,9 @@ app.on('session-created',(session)=>{
 function safeCloseMainWindow(){
   sendIPCToWindow(mainWindow,'safeClose')
 }
-
+let canCloseMainWindow=false
 ipc.on('closeMainWindow',()=>{
-  mainWindow.setClosable(true)
+  canCloseMainWindow=true
   mainWindow.close()
 })
 

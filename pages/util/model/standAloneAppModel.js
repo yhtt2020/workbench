@@ -10,7 +10,8 @@ const systemAppPackage=[
   'com.thisky.imageEditor',
   'com.thisky.nav',
   'com.thisky.appStore',
-  'com.thisky.com'
+  'com.thisky.com',
+  'com.thisky.desk'
 ]  //包名为上述包名的判定为系统应用
 const standAloneAppModel = {
   async initialize() {
@@ -324,7 +325,7 @@ const standAloneAppModel = {
       author:app.author?app.author:'',
       site:app.site?app.site:'',
       url: url,
-      preload: '',
+      preload: app.preload||'',
       package:app.package || '',
       themeColor: app.themeColor || '#ccc',
       userThemeColor: '',
