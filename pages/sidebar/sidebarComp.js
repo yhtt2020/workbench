@@ -1239,6 +1239,34 @@ Vue.component('sidebar', {
       });
       guideAddTasks.start();
     },
+    //应用市场项目所需要的函数
+    addApp (app) {
+      let standAloneAppModel = require('../../pages/util/model/standAloneAppModel.js')
+      let option = {
+        name: app.name,
+        logo: !!!app.icon ? '../../icons/default.svg' :app.icon,
+        summary: '自定义应用',
+        type: 'web',
+        themeColor: !!!app.backgroundColor ? '#000' :app.backgroundColor.color,
+        settings: {
+          bounds: {
+            width: 1000,
+            height: 800
+          }
+        },
+        showInSideBar: false
+      }
+      standAloneAppModel.install(app.url, option).then(success => {
+        console.log(success)
+        ipc.send('message', { type: 'success', config: { content: `添加应用：${app.name} 成功` } })
+        ipc.send('installApp', { id: success })
+      }, err => {
+        ipc.send('message', { type: 'error', config: { content: '添加应用失败' } })
+      })
+    },
+    openSystemApp(args){
+      window.location.href=`tsb://app/redirect/?package=${args.package}&url=${args.url}`
+    },
     sortApps(){
       let sorted=_.orderBy(this.apps,(app)=>{
         return [app.processing?1:0,app.lastExecuteTime]
@@ -1405,8 +1433,10 @@ Vue.component('sidebar', {
       ipc.send('openGlobalSearch')
     },
     openCircle (args) {
+      console.log(args)
       this.userPanelVisible = false
-      this.addTab(`${api.getUrl(api.API_URL.user.CIRCLE)}?id=${args}`)
+      // this.addTab(`${api.getUrl(api.API_URL.user.CIRCLE)}?id=${args}`)
+      window.location.href=`tsb://app/redirect/?package=com.thisky.com&url=${api.getUrl(api.API_URL.user.CIRCLE)}?id=${args}`
     },
     openHelp (apps) {
       function checkAdult (apps) {
@@ -1872,7 +1902,6 @@ Vue.component('sidebar', {
 
     }
   }
-
 })
 
 ipc.on('message', function (event, args) {
@@ -1880,6 +1909,14 @@ ipc.on('message', function (event, args) {
     args.type = 'open'
   }
   appVue.$message[args.type](args.config)
+})
+
+//应用市场项目ipc转发
+ipc.on('addApp',(event,args)=>{
+  appVue.$refs.sidePanel.addApp(args)
+})
+ipc.on('openSystemApp',(event,args)=>{
+  appVue.$refs.sidePanel.openSystemApp(args)
 })
 
 ipc.on('executedAppSuccess', async function (event, args) {
