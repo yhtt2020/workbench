@@ -14,6 +14,8 @@ var searchbar = require('searchbar/searchbar.js')
 const userStatsModel = require('../pages/util/model/userStatsModel')
 const modalMode = require("./modalMode");
 
+const oneTab = require('./extras/newTabs/oneTab.js')
+
 /* creates a new task */
 
 function addTask () {
@@ -63,7 +65,7 @@ function addTab (tabId = tabs.add(), options = {},last=false) {
       focusWebview: options.enterEditMode === false
     })
     if (options.enterEditMode !== false) {
-      if(tabs.get(tabId).url!=="ts://newtab"){
+      if(tabs.get(tabId).url !== oneTab.selectOnetab()){
         //添加新tab不弹窗
         //todo 后续增加配置项，可以选择新标签的功能
         tabEditor.show(tabId)

@@ -1,4 +1,4 @@
-
+const oneTab = require('../extras/newTabs/oneTab.js')
 class TabList {
   constructor (tabs, parentTaskList) {
     this.tabs = tabs || []
@@ -13,7 +13,7 @@ class TabList {
     var tabId = String(tab.id || Math.round(Math.random() * 100000000000000000)) // you can pass an id that will be used, or a random one will be generated.
 
     var newTab = {
-      url: tab.url || 'ts://newtab',//修改默认页面为newtab
+      url: tab.url || oneTab.selectOnetab(),  //'ts://newtab',//修改默认页面为newtab
       title: tab.title || '',
       id: tabId,
       favicon: {
