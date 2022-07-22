@@ -33,7 +33,8 @@ class baseBookmarkRepository {
         //这种情况是标准书签夹的中的书签，可能是folder，可能是书签a-link，需要用到递归分析它们的层级和parent
         if(dt.parentNode.previousElementSibling.nodeName === 'H3' && dt.parentNode.previousElementSibling.attributes[2] && dt.parentNode.previousElementSibling.attributes[2].name === 'personal_toolbar_folder') {
           //直到父元素的prev元素是h3，且存在personal_toolbar_folder属性，且innerText是书签栏的时候，跳出此次递归
-          type = type ? type : 'folder'
+          type = type ? type : dt.firstChild.nodeName === 'A' ? 'url' : 'folder',   //当最外层时，可能是书签可能是文件夹重新赋值一下type
+          url = url ? url : dt.firstChild.nodeName === 'A' ? dt.firstChild.href : null //当最外层时，可能是书签可能是文件夹重新赋值一下url
           name = name ? name : dt.firstChild.innerText
           calcedItem = {
             type,
