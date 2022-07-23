@@ -230,14 +230,14 @@ export class BrowserActionAPI {
           }
 
           let iconImage
-
           if (extension && iconDetails) {
             if (typeof iconDetails.path === 'string') {
               const iconAbsPath = resolveExtensionPath(extension, iconDetails.path)
               if (iconAbsPath) iconImage = nativeImage.createFromPath(iconAbsPath)
             } else if (typeof iconDetails.path === 'object') {
               const imagePath = matchSize(iconDetails.path, imageSize, resizeType)
-              const iconAbsPath = imagePath && resolveExtensionPath(extension, imagePath)
+              let iconAbsPath = imagePath && resolveExtensionPath(extension, imagePath)
+              iconAbsPath=iconAbsPath?.replace('/chrome-extension:/'+extensionId,'') // 修复油猴的图标出不来的问题
               if (iconAbsPath) iconImage = nativeImage.createFromPath(iconAbsPath)
             } else if (typeof iconDetails.imageData === 'string') {
               iconImage = nativeImage.createFromDataURL(iconDetails.imageData)
