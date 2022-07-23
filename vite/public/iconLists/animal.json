@@ -1,0 +1,87 @@
+{
+  "key": "animal",
+  "alias": "动物",
+  "icon": "huli",
+  "list": [
+    {
+      "name": "lang",
+      "alias": "狼"
+    },
+    {
+      "name": "gongji",
+      "alias": "公鸡"
+    },
+    {
+      "name": "maotouying",
+      "alias": "猫头鹰"
+    },
+    {
+      "name": "daxiang",
+      "alias": "大象"
+    },
+    {
+      "name": "lu",
+      "alias": "鹿"
+    },
+    {
+      "name": "hema",
+      "alias": "河马"
+    },
+    {
+      "name": "huli",
+      "alias": "狐狸"
+    },
+    {
+      "name": "ciwei",
+      "alias": "刺猬"
+    },
+    {
+      "name": "jingyu",
+      "alias": "鲸鱼"
+    },
+    {
+      "name": "huhou",
+      "alias": "狐猴"
+    },
+    {
+      "name": "nainiu",
+      "alias": "奶牛"
+    },
+    {
+      "name": "kaola",
+      "alias": "考拉"
+    },
+    {
+      "name": "pangxie",
+      "alias": "螃蟹"
+    },
+    {
+      "name": "xiaoji",
+      "alias": "小鸡"
+    },
+    {
+      "name": "shizi",
+      "alias": "狮子"
+    },
+    {
+      "name": "xiongmao",
+      "alias": "熊猫"
+    },
+    {
+      "name": "zhu",
+      "alias": "猪"
+    },
+    {
+      "name": "laohu",
+      "alias": "老虎"
+    },
+    {
+      "name": "niu",
+      "alias": "牛"
+    },
+    {
+      "name": "banma",
+      "alias": "斑马"
+    }
+  ]
+}

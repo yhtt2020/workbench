@@ -1,0 +1,24 @@
+.card-container > .ant-tabs-card .ant-tabs-content {
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #ffffff;
+    border-radius: 2px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgb(176, 176, 176);
+    border-radius: 20px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #747474;
+  }
+
+  &::-webkit-scrollbar-corner {
+    background: #f6f6f6;
+  }
+}
