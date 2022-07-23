@@ -240,6 +240,9 @@ body {
   width: 25px;
   height: 25px; }
 
+.sidebar .side-container .side-items .app-task .task-icon {
+  margin-top: 10px; }
+
 .item-icon {
   width: 45px;
   position: absolute;

@@ -327,6 +327,12 @@ ipc.on('reloadTask', () => {
   switchToTask(tasks.getSelected().id)
 })
 
+ipc.on('changeTaskIcon',(event,args)=>{
+  const icon=args.icon
+  const id=args.id
+  let task=tasks.get(id)
+  task.userIcon=`icon.${icon.list}.${icon.name}`
+})
 
 //定位到task组的某tabid，往后插入创建tab
 //browserUI中有tab和task的环境，而且能直接捕获从preload传出来的ipc，也能拿到tabBar的环境
