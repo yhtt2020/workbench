@@ -30,8 +30,10 @@ var blockingExceptionsInput = document.getElementById('content-blocking-exceptio
 var blockedRequestCount = document.querySelector('#content-blocking-blocked-requests strong')
 
 /* 起始页 */
+
 var browserTabContainer = document.querySelector('.tab-choose')
 var browserTabOptions = Array.from(document.querySelectorAll('input[name=tabChoosed]'))
+var browserTabExceptionsInput = document.querySelector('#tab-text-input')
 
 function changeBrowserTab(tabIdx) {
   settings.get('browserTab', (value) => {
@@ -48,12 +50,33 @@ function updateBrowserTabUI(tabIdx) {
   var radio = browserTabOptions[tabIdx]
   radio.checked = true
 
+  if(tabIdx === 4) {
+    browserTabExceptionsInput.hidden = false
+  } else {
+    browserTabExceptionsInput.hidden = true
+  }
+
   if (document.querySelector('#tab-choose .setting-option.selected')) {
     document.querySelector('#tab-choose .setting-option.selected').classList.remove('selected')
   }
   radio.parentNode.classList.add('selected')
-
 }
+
+settings.get("browserTab", (value) => {
+  if (value && value.tabIdx !== undefined) {
+    updateBrowserTabUI(value.tabIdx);
+  }
+});
+
+settings.get("customTabUrl", (value) => {
+  if (value) {
+    document.querySelector('#tab-text-input').value = value      //update UI
+  }
+});
+
+browserTabExceptionsInput.addEventListener('input', (event) => {
+  settings.set('customTabUrl', event.target.value)
+})
 
 
 browserTabOptions.forEach((item, idx) => {

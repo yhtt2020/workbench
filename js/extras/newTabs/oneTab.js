@@ -11,12 +11,15 @@ const oneTab = {
   selectOnetab() {
     let selected = ''
     const browserTab = settings.get('browserTab')
+    const customTabUrl = settings.get('customTabUrl')
 
     if(browserTab && browserTab.tabIdx < this.newtabList.length) {
       selected = this.newtabList.find((v, index) => index === browserTab.tabIdx)
-    } else {
-      if(browserTab.custom) {
-        selected = browserTab.custom
+    }
+
+    if(browserTab && browserTab.tabIdx === this.newtabList.length) {
+      if(customTabUrl) {
+        selected = customTabUrl
       }
     }
 
