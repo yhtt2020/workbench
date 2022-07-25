@@ -261,6 +261,15 @@ export const injectExtensionAPIs = () => {
           }
         },
       },
+      //todo 补充权限管理
+      permissions:{
+        factory:(base)=>{
+          return {
+            ...base,
+            contains:invokeExtension('permissions.contains')
+          }
+        }
+      },
 
       extension: {
         factory: (base) => {
