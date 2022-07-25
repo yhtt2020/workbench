@@ -15,6 +15,7 @@ export class TabsAPI {
     const handle = this.ctx.router.apiHandler()
     handle('tabs.get', this.get.bind(this))
     handle('tabs.getAllInWindow', this.getAllInWindow.bind(this))
+    handle('tabs.getSelected', this.getSelected.bind(this))
     handle('tabs.getCurrent', this.getCurrent.bind(this))
     handle('tabs.create', this.create.bind(this))
     handle('tabs.insertCSS', this.insertCSS.bind(this))
@@ -140,6 +141,10 @@ export class TabsAPI {
   private getCurrent(event: ExtensionEvent) {
     const tab = this.ctx.store.getActiveTabFromWebContents(event.sender)
     return tab ? this.getTabDetails(tab) : undefined
+  }
+
+  private async getSelected(event: ExtensionEvent){
+    return this.query(event,{active:true})[0]
   }
 
   private async create(event: ExtensionEvent, details: chrome.tabs.CreateProperties = {}) {

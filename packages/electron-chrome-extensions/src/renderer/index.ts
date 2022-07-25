@@ -267,6 +267,10 @@ export const injectExtensionAPIs = () => {
           return {
             ...base,
             isAllowedIncognitoAccess: () => false,
+            isAllowedFileSchemeAccess:async (callback:Function)=>{
+              return true//todo 此处应该还要兼容一下涉及到的文件协议
+              //callback(true)
+            },
             // TODO: Add native implementation
             getViews: () => [],
           }
@@ -351,6 +355,7 @@ export const injectExtensionAPIs = () => {
               }
             },
             get: invokeExtension('tabs.get'),
+            getSelected:invokeExtension('tabs.getSelected'),//todo 确认是否正确返回
             getCurrent: invokeExtension('tabs.getCurrent'),
             getAllInWindow: invokeExtension('tabs.getAllInWindow'),
             insertCSS: invokeExtension('tabs.insertCSS'),
