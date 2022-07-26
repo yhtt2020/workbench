@@ -842,6 +842,11 @@ Vue.component('sidebar', {
   },
 
   async mounted () {
+    // let standAloneAppModel = require('../../pages/util/model/standAloneAppModel.js')
+    // standAloneAppModel.getAllApps({order:'createTime'}).then((data) => {
+    //   console.log(data)
+    // })
+
     ipc.on('callBackMedal',(event,args)=>{
       this.$nextTick(()=>{
         appVue.$refs.sidePanel.isMedals = args
@@ -1249,7 +1254,7 @@ Vue.component('sidebar', {
     },
     //应用市场项目所需要的函数
     addApp (app) {
-      let standAloneAppModel = require('../../pages/util/model/standAloneAppModel.js')
+
       let option = {
         name: app.name,
         logo: !!!app.icon ? '../../icons/default.svg' :app.icon,
@@ -1274,6 +1279,24 @@ Vue.component('sidebar', {
     },
     openSystemApp(args){
       window.location.href=`tsb://app/redirect/?package=${args.package}&url=${args.url}`
+    },
+
+    async contrast(args) {
+      const installList = args
+       for (const e of args) {
+        if(await standAloneAppModel.isInstalledByUrl(e.url)===true){
+         installList[installList.indexOf(e)].isInstalled = true
+         //  console.log(installList.indexOf(e))
+        }
+      }
+       ipc.send('result', await installList)
+
+    },
+
+    openApp(){
+      standAloneAppModel.getAllApps({order:'createTime'}).then((data) => {
+        ipc.send('openAppList',data)
+      })
     },
     sortApps(){
       let sorted=_.orderBy(this.apps,(app)=>{
@@ -1927,9 +1950,18 @@ ipc.on('message', function (event, args) {
 ipc.on('addApp',(event,args)=>{
   appVue.$refs.sidePanel.addApp(args)
 })
-ipc.on('openSystemApp',(event,args)=>{
+ipc.on('openSystemApp',async (event, args) => {
   appVue.$refs.sidePanel.openSystemApp(args)
 })
+
+ipc.on('contrast',function(event,args){
+  appVue.$refs.sidePanel.contrast(args)
+})
+
+ipc.on('openApp',()=>{
+  appVue.$refs.sidePanel.openApp()
+})
+
 
 ipc.on('executedAppSuccess', async function (event, args) {
   let now=Date.now()
