@@ -25,6 +25,27 @@ const oneTab = {
 
     selected = selected.length > 0 ? selected : 'ts://newtab'
     return selected
+  },
+
+  //处理来自其他页面的设置
+  handleSettings(tabName) {
+    if(tabName === 'tstab') {
+      settings.set('browserTab', {
+        tabIdx: 0
+      })
+    } else if(tabName === 'qntab') {
+      settings.set('browserTab', {
+        tabIdx: 1
+      })
+    } else if(tabName === 'inftab') {
+      settings.set('browserTab', {
+        tabIdx: 2
+      })
+    } else if(tabName === 'itab') {
+      settings.set('browserTab', {
+        tabIdx: 3
+      })
+    }
   }
 }
 
