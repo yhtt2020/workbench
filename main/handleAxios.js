@@ -181,10 +181,23 @@ app.whenReady().then(()=>{
   })
 
   ipc.handle('getOtherStatus', () => {
+    let browserTabData = settings.get('browserTab') || null
+    if(browserTabData && browserTabData.tabIdx === 0) {
+      browserTabData = 'tstab'
+    } else if (browserTabData && browserTabData.tabIdx === 1) {
+      browserTabData = 'qntab'
+    } else if(browserTabData && browserTabData.tabIdx === 2) {
+      browserTabData = 'inftab'
+    } else if(browserTabData && browserTabData.tabIdx === 3) {
+      browserTabData = 'itab'
+    } else {
+      browserTabData = 'custom'
+    }
     let data = {
       adBlockingLevel: settings.get('filtering') ? settings.get('filtering').blockingLevel : 0,
       siteTheme: settings.get('siteTheme') ? settings.get('siteTheme') : true,
-      searchEngine: settings.get('searchEngine') ? settings.get('searchEngine').name : 'Bing'
+      searchEngine: settings.get('searchEngine') ? settings.get('searchEngine').name : 'Bing',
+      newTab: browserTabData ?? 'tstab'
     }
     return data
   })
@@ -291,6 +304,10 @@ app.whenReady().then(()=>{
   ipc.on('isMedal',()=>{
     let isMedal = markDb.db.get('guideSchedule.medal').value()
     SidePanel.send('callBackMedal', isMedal)
+  })
+
+  ipc.on('selectNewTab', (event, args) => {
+    mainWindow.webContents.send('renderSelectNewTab',args)
   })
   /**
    * 浏览器主进程中各任务完成后需要调用的函数
