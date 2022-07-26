@@ -266,7 +266,9 @@ async function loadExtensions (session, extensionsPath) {
       })
       if (isDisabled) continue
       //检测end
-      const extensionInfo = await session.loadExtension(extPath)
+      const extensionInfo = await session.loadExtension(extPath,{
+        allowFileAccess:true //todo 判断fileAccess权限
+      })
       results.push(extensionInfo)
     } catch (e) {
       console.error(e)

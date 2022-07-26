@@ -23,8 +23,6 @@ export class I18nAPI {
       return {}
     }
     let message: String = ''
-    console.log('localePath', localePath)
-    console.log(path.join(localePath, localeName))
     if (fs.existsSync(path.join(localePath, localeName))) {
       //如果存在语言包
       message = path.join(localePath, localeName)

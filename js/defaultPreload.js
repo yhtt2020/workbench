@@ -28,7 +28,7 @@ function updateHideExtensions(){
       node.hidden=hide
     })
 
-    window.actionListEl=document.getElementById('actions').hidden=false
+    document.getElementById('actions').hidden=false
   })
 }
 ipc.on('showExtension',(event,args)=>{
