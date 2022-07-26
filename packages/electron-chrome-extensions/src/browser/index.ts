@@ -17,6 +17,7 @@ import { CommandsAPI } from './api/commands'
 import { ExtensionContext } from './context'
 import { ExtensionRouter } from './router'
 import { PermissionsAPI } from "./api/permissions";
+import { I18nAPI } from './api/i18n';
 
 export interface ChromeExtensionOptions extends ChromeExtensionImpl {
   session?: Electron.Session
@@ -47,6 +48,7 @@ export class ElectronChromeExtensions extends EventEmitter {
     contextMenus: ContextMenusAPI
     commands: CommandsAPI,
     permissions:PermissionsAPI,
+    i18n:I18nAPI,
     cookies: CookiesAPI
     notifications: NotificationsAPI
     runtime: RuntimeAPI
@@ -83,6 +85,7 @@ export class ElectronChromeExtensions extends EventEmitter {
       contextMenus: new ContextMenusAPI(this.ctx),
       commands: new CommandsAPI(this.ctx),
       permissions:new PermissionsAPI(this.ctx),
+      i18n:new I18nAPI(this.ctx),
       cookies: new CookiesAPI(this.ctx),
       notifications: new NotificationsAPI(this.ctx),
       runtime: new RuntimeAPI(this.ctx),

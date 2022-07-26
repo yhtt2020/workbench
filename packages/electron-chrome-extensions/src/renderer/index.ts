@@ -71,10 +71,15 @@ export const injectExtensionAPIs = () => {
     const manifest: chrome.runtime.Manifest =
       (extensionId && chrome.runtime.getManifest()) || ({} as any)
 
+    //取回message的内容，替换掉i18n的本地化方法，因为那个方法有问题
+    let localeMessages:any={}
     const invokeExtension =
       (fnName: string, opts: ExtensionMessageOptions = {}) =>
       (...args: any[]) =>
         electron.invokeExtension(extensionId, fnName, opts, ...args)
+    invokeExtension( 'i18n.getAllMessage')((args:[])=>{
+      localeMessages=args
+    })//取回全部的message
 
     function imageData2base64(imageData: ImageData) {
       const canvas = document.createElement('canvas')
@@ -271,6 +276,41 @@ export const injectExtensionAPIs = () => {
         }
       },
 
+      i18n:{
+        factory:(base)=>{
+          return {
+            ...base,
+            //修复i18n方法
+            getMessage: (messageName:String)=>{
+                let localeJson=localeMessages
+                function getMessage(name:String){
+                  let messageKey = localeJson[name as keyof typeof localeJson]
+                  if (typeof messageKey !== 'undefined') {
+                    //todo 支持匹配变量
+                    return messageKey['message' as keyof typeof messageKey]
+                  } else {
+                    return undefined
+                  }
+                }
+                if(Array.isArray(messageName)){
+                  //如果是数组，则返回一个对应的数组
+                  let rs:any=[]
+                  messageName.forEach(mn=>{
+                    rs.push(getMessage(mn))
+                  })
+                  return rs
+                }else{
+                  //如果不是数组，则直接返回
+                  return getMessage(messageName)
+                }
+            }
+            // getAcceptLanguages: ()=>{
+            //   return ['zh-CN','zh_CN']
+            // }
+          }
+        }
+      },
+
       extension: {
         factory: (base) => {
           return {
@@ -322,6 +362,10 @@ export const injectExtensionAPIs = () => {
           return {
             ...base,
             openOptionsPage: invokeExtension('runtime.openOptionsPage'),
+            // getManifest:()=>{
+            //   manifest.current_locale='zh_CN'
+            //   return manifest
+            // }
           }
         },
       },
@@ -445,7 +489,6 @@ export const injectExtensionAPIs = () => {
 
       // Allow APIs to opt-out of being available in this context.
       if (api.shouldInject && !api.shouldInject()) return
-
       Object.defineProperty(chrome, apiName, {
         value: api.factory(baseApi),
         enumerable: true,
