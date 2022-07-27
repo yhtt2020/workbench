@@ -7,8 +7,13 @@
 		<title>想天浏览器</title>
 		<link rel="stylesheet" href="dist/bundle.css" />
 		<link rel="stylesheet" href="ext/icons/iconfont.css" />
+    <link rel="stylesheet" href="ext/flex-class.css">
     <script src="ext/shepherdjs10/dist/js/shepherd.min.js"></script>
     <link rel="stylesheet" href="ext/shepherdjs10/dist/css/shepherd.css"/>
+    <script src="ext/vue/vue.js"></script>
+    <script src="ext/vue/antd.min.js"></script>
+    <script src="ext/vue/vuex.js"></script>
+    <link rel="stylesheet" href="ext/vue/antd.min.css"/>
   </head>
 
 	<body>
@@ -152,91 +157,126 @@
     <!--toolbar区域-->
     <div id="appVue">
       <div id="toolbar">
-        <div  style="display: flex;justify-content: flex-start;flex-direction:row" type="flex">
-          <div style="width:auto" >
+        <div style="display: flex;justify-content: flex-start;flex-direction:row" type="flex">
+          <div style="width:auto">
             <div class="page-operation" style="display: flex;justify-content: flex-start;flex-direction:row" type="flex">
-              <div class="action-wrapper" hidden >
-                <img title="当前模式：自动展开收起；点击切换收起左侧栏，不再自动展开" id="side-mod-button-toolbar" class="action "  src="./icons/toolbar/sideauto.svg">
+              <div class="action-wrapper" hidden>
+                <img title="当前模式：自动展开收起；点击切换收起左侧栏，不再自动展开" id="side-mod-button-toolbar" class="action "
+                  src="./icons/toolbar/sideauto.svg">
               </div>
               <div class="action-wrapper">
-                <img title="返回起始页：锁定标签时的网页地址" id="start-button-toolbar" class="action start-page"  src="./icons/toolbar/startpage.svg">
-              </div>
-              <div class="action-wrapper" >
-                <img title="后退（⌘←）" id="back-button-toolbar" class="action"  src="./icons/toolbar/arrowleft.svg">
+                <img title="返回起始页：锁定标签时的网页地址" id="start-button-toolbar" class="action start-page"
+                  src="./icons/toolbar/startpage.svg">
               </div>
               <div class="action-wrapper">
-                <img  title="前进（⌘→）" id="forward-button-toolbar" class="action"  src="./icons/toolbar/arrowright.svg">
+                <img title="后退（⌘←）" id="back-button-toolbar" class="action" src="./icons/toolbar/arrowleft.svg">
               </div>
               <div class="action-wrapper">
-                <img title="刷新（⌘R）" id="refresh-button-toolbar" class="action"   src="./icons/toolbar/rotate.svg">
+                <img title="前进（⌘→）" id="forward-button-toolbar" class="action" src="./icons/toolbar/arrowright.svg">
               </div>
               <div class="action-wrapper">
-               <img title="首页"  id="home-button-toolbar" class="action"  src="./icons/toolbar/home.svg">
+                <img title="刷新（⌘R）" id="refresh-button-toolbar" class="action" src="./icons/toolbar/rotate.svg">
+              </div>
+              <div class="action-wrapper">
+                <img title="首页" id="home-button-toolbar" class="action" src="./icons/toolbar/home.svg">
               </div>
             </div>
           </div>
-          <div style="flex-grow:1 ;position:relative;overflow:hidden"   >
+          <div style="flex-grow:1 ;position:relative;overflow:hidden">
             <div id="address-bar" style="overflow: hidden">
-              <img id="site-card" onclick="openSiteCard(this,tabs.get(tabs.getSelected()))" title="网站信息" class="site-card" src="icons/svg/safe.svg" >
+              <img id="site-card" onclick="openSiteCard(this,tabs.get(tabs.getSelected()))" title="网站信息" class="site-card"
+                src="icons/svg/safe.svg">
             </div>
 
-<!--            <a-input style="width: 100%"></a-input>-->
+            <!--            <a-input style="width: 100%"></a-input>-->
 
-<!--            <div id="tab-editor-toolbar">-->
-<!--              <input id="tab-editor-input-toolbar" class="mousetrap" spellcheck="false" />-->
-<!--            </div>-->
+            <!--            <div id="tab-editor-toolbar">-->
+            <!--              <input id="tab-editor-input-toolbar" class="mousetrap" spellcheck="false" />-->
+            <!--            </div>-->
 
           </div>
-          <div  style="display: flex;" >
-            <div  id="closeBlockGuide" class="action-wrapper" >
-                <span onclick="ipc.send('openSwitch')" title="快速切换（Ctrl+Tab）" id="switch-toolbar"><img class="action" src="./icons/toolbar/switch.svg">
-                </span>
-            </div>
-            <div class="action-wrapper" >
-                <span onclick="ipc.send('openMobile')" title="手机浏览工具" id="mobile-toolbar"><img class="action" src="./icons/toolbar/smartphone.svg">
-                </span>
-            </div>
-            <browser-action-list hidden partition="persist:webcontent" id="actions"></browser-action-list>
-            <div class="action-wrapper app-tool" >
-              <span onclick="ipc.send('openScriptManager')" title="管理脚本插件" id="userscript-toolbar"><img class="action app" src="./icons/toolbar/apps/code.svg">
-              <span hidden title="当前页面有3个脚本正在启用" class="bandage" id="scriptCount">3</span>
+          <div style="display: flex;">
+            <div id="closeBlockGuide" class="action-wrapper">
+              <span onclick="ipc.send('openSwitch')" title="快速切换（Ctrl+Tab）" id="switch-toolbar"><img class="action"
+                  src="./icons/toolbar/switch.svg">
               </span>
             </div>
-            <div class="action-wrapper" >
-                <span onclick="ipc.send('showPopList')" title="管理插件" id="plugin-toolbar"><img class="action" src="./icons/toolbar/list.svg">
-                </span>
+            <div class="action-wrapper">
+              <span onclick="ipc.send('openMobile')" title="手机浏览工具" id="mobile-toolbar"><img class="action"
+                  src="./icons/toolbar/smartphone.svg">
+              </span>
+            </div>
+            <browser-action-list hidden partition="persist:webcontent" id="actions"></browser-action-list>
+            <div class="action-wrapper app-tool">
+              <span onclick="ipc.send('openScriptManager')" title="管理脚本插件" id="userscript-toolbar"><img class="action app"
+                  src="./icons/toolbar/apps/code.svg">
+                <span hidden title="当前页面有3个脚本正在启用" class="bandage" id="scriptCount">3</span>
+              </span>
+            </div>
+            <div class="action-wrapper">
+              <span onclick="ipc.send('showPopList')" title="管理插件" id="plugin-toolbar"><img class="action"
+                  src="./icons/toolbar/list.svg">
+              </span>
             </div>
 
             <div class="action-wrapper" style="text-align: center;width: 18px;margin-left: 5px">
               <div class="split"></div>
             </div>
-            <div class="action-wrapper app-tool" >
-              <span oncontextmenu="ipc.send('favContextMenu')" onclick="ipc.send('handleTsbProtocol',{url:'tsb://app/redirect/?package=com.thisky.fav&url=/'})" title="收藏夹" id="nav-toolbar"><img class="action app" src="./icons/toolbar/apps/fav.svg"></span>
+            <div class="action-wrapper app-tool">
+              <span oncontextmenu="ipc.send('favContextMenu')"
+                onclick="ipc.send('handleTsbProtocol',{url:'tsb://app/redirect/?package=com.thisky.fav&url=/'})" title="收藏夹"
+                id="nav-toolbar"><img class="action app" src="./icons/toolbar/apps/fav.svg"></span>
             </div>
-            <div  class="action-wrapper app-tool" >
-                <span title="阅读模式" id="read-toolbar"><img class="action app" src="./icons/toolbar/apps/read.svg">
+            <div class="action-wrapper app-tool">
+              <span title="阅读模式" id="read-toolbar"><img class="action app" src="./icons/toolbar/apps/read.svg">
                 <span hidden class="bandage" id="canRead">0</span>
-                </span>
+              </span>
             </div>
-            <div  class="action-wrapper app-tool" >
-                <span onclick="ipc.send('openDownload')" title="下载助手" id="download-toolbar"><img class="action app" src="./icons/toolbar/apps/download.svg">
-                <span  class="bandage" style="background-color: red" id="downloadCount">0</span>
-                </span>
+            <div class="action-wrapper app-tool">
+              <span onclick="ipc.send('openDownload')" title="下载助手" id="download-toolbar"><img class="action app"
+                  src="./icons/toolbar/apps/download.svg">
+                <span class="bandage" style="background-color: red" id="downloadCount">0</span>
+              </span>
             </div>
-              <div  class="action-wrapper app-tool" >
-                <span onclick="ipc.send('openPwdManager',{tabData:tabs.get(tabs.getSelected())})" title="密码管理" id="pwd-toolbar"><img class="action app" src="./icons/toolbar/apps/pwd.svg">
+            <div class="action-wrapper app-tool">
+              <span onclick="ipc.send('openPwdManager',{tabData:tabs.get(tabs.getSelected())})" title="密码管理"
+                id="pwd-toolbar"><img class="action app" src="./icons/toolbar/apps/pwd.svg">
                 <span hidden class="bandage" id="pwdCount">0</span>
-                </span>
-              </div>
+              </span>
+            </div>
 
 
             <div class="action-wrapper">
-              <img title="收起地址栏，使用精简模式"  id="collapse-button-toolbar" class="action "  src="./icons/toolbar/chevronsup.svg">
-             </div>
+              <img title="收起地址栏，使用精简模式" id="collapse-button-toolbar" class="action " src="./icons/toolbar/chevronsup.svg">
+            </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- 第三栏toolbar区域 -->
+    <div id="third-toolbar" class="flex align-center justify-between">
+      <div class="third-bar-lf flex align-center justify-around">
+        <div class="feature-btn flex justify-center align-center">设置为默认浏览器</div>
+        <div class="feature-btn flex justify-center align-center">导入其他浏览器数据</div>
+      </div>
+      <div class="third-bar-rg flex justify-around align-center">
+        <span class="flex justify-center align-center">
+          完成全部新用户引导即可获得限时纪念勋章：
+          <img src="./img/silver-b.png" alt="" style="width: 20px; height: 20px; margin-right: 5px">
+          创始用户
+        </span>
+        <a-button icon="question-circle" size="small">
+          新手引导
+        </a-button>
+      </div>
+    </div>
+    <script>
+      new Vue({
+        el: '#third-toolbar'
+      })
+    </script>
+
 		<div id="webviews">
 			<div id="leftArrowContainer" class="arrow-indicator">
 				<i id="leftArrow" class="i carbon:chevron-left"></i>

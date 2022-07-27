@@ -1,3 +1,44 @@
+#third-toolbar {
+  line-height: 40px;
+  z-index: 2;
+  top: calc(76px + var(--control-space-top));
+  width: calc(100vw - 45px);
+  left: 45px;
+  position: fixed;
+  height: 40px;
+  background: #fff;
+  border-bottom: 1px solid #e3e3e3;
+  .third-bar-lf {
+    width: 300px;
+    height: 40px;
+    .feature-btn {
+      cursor: pointer;
+      background-color: #F3F3F3;
+      color: rgba(0,0,0,.65);
+      padding: 6px;
+      font-size: 14px;
+      height: 70%;
+      border: 1px solid #e3e3e3;
+      border-radius: 4px;
+      transition: all 1000ms cubic-bezier(0.215, 0.61, 0.355, 1);
+      &:hover {
+        background-color: #dddddd;
+      }
+    }
+  }
+  .third-bar-rg {
+    width: 500px;
+    height: 40px;
+    :nth-child(1) {
+      font-size: 14px;
+      color: rgba(0,0,0,.65);
+    }
+    :nth-child(2) {
+      font-size: 14px;
+    }
+  }
+}
+
 #toolbar {
   img {
     -webkit-user-drag: none;

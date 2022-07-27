@@ -145,7 +145,7 @@ const webviews = {
       fn: fn
     })
   },
-  viewMargins: [document.getElementById('toolbar').hidden?0:40, 0, 0, 45], // top, right, bottom, left
+  viewMargins: [document.getElementById('toolbar').hidden?0:document.getElementById('third-toolbar').hidden?40:80, 0, 0, 45], // top, right, bottom, left
   adjustMargin: function (margins) {
     for (var i = 0; i < margins.length; i++) {
       webviews.viewMargins[i] += margins[i]

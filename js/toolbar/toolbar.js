@@ -91,6 +91,9 @@ const sideBar = {
     //设置工具栏位置
     toolbar.toolbarEl.style.left = postLeftCss//调整webviews框的位置
     toolbar.toolbarEl.style.width = 'calc(100vw - ' + postLeftCss + ')'
+    //设置第三栏的位置
+    toolbar.thirdToolbarEl.style.left = postLeftCss
+    toolbar.thirdToolbarEl.style.width = 'calc(100vw - ' + postLeftCss + ')'
     //设置搜索栏的左侧位置
     document.getElementById('searchbar').style.left = 'calc((100% - ' + postLeftCss + ' )*0.02 + ' + postLeftCss + ' )'
     document.getElementById('searchbar').style.width = 'calc( (100% - ' + postLeftCss + ' ) * 0.96)'
@@ -126,6 +129,7 @@ ipc.on('openToolbar',()=>{
   if (sideBar.mod==='close' || sideBar.mod==='auto'){
     toolbar.expanded = true
     toolbar.toolbarEl.hidden = false
+    toolbar.thirdToolbarEl.hidden = false
     document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px + 40px )`
     document.getElementById('tab-editor').hidden = false
     // document.getElementById('tabs').insertBefore(document.getElementById('tab-editor'), document.getElementById('tabs').children[0]).hidden = true
@@ -137,6 +141,7 @@ ipc.on('openToolbar',()=>{
   if(sideBar.mod==='open'){
     toolbar.expanded = true
     toolbar.toolbarEl.hidden = false
+    toolbar.thirdToolbarEl.hidden = false
     document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px + 40px )`
     document.getElementById('tab-editor').hidden = false
     // document.getElementById('tabs').insertBefore(document.getElementById('tab-editor'), document.getElementById('tabs').children[0]).hidden = true
@@ -156,6 +161,7 @@ ipc.on('hideToolbar',()=>{
   if(sideBar.mod==='close' || sideBar.mod==='auto'){
     toolbar.expanded = false
     toolbar.toolbarEl.hidden = true
+    toolbar.thirdToolbarEl.hidden = true
     document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px )`
     document.getElementById('tab-editor').hidden = true
     document.getElementById('tabs').insertBefore(document.getElementById('tab-editor'), document.getElementById('tabs').children[0])
@@ -166,6 +172,7 @@ ipc.on('hideToolbar',()=>{
   if(sideBar.mod==='open'){
     toolbar.expanded = false
     toolbar.toolbarEl.hidden = true
+    toolbar.thirdToolbarEl.hidden = true
     document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px )`
     document.getElementById('tab-editor').hidden = true
     document.getElementById('tabs').insertBefore(document.getElementById('tab-editor'), document.getElementById('tabs').children[0])
@@ -180,6 +187,7 @@ const toolbar = {
   expanded: true,
   sideModeButton: document.getElementById('side-mod-button-toolbar'),
   toolbarEl: document.getElementById('toolbar'),
+  thirdToolbarEl: document.querySelector('#third-toolbar'),
   homeButton: document.getElementById('home-button-toolbar'),
   refreshButton: document.getElementById('refresh-button-toolbar'),
   forwardButton: document.getElementById('forward-button-toolbar'),
@@ -293,6 +301,7 @@ const toolbar = {
       if(sideBar.mod==='close' || sideBar.mod==='auto'){
         toolbar.expanded = false
         toolbar.toolbarEl.hidden = true
+        toolbar.thirdToolbarEl.hidden = true
         document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px )`
         document.getElementById('tab-editor').hidden = true
         document.getElementById('tabs').insertBefore(document.getElementById('tab-editor'), document.getElementById('tabs').children[0])
@@ -303,6 +312,7 @@ const toolbar = {
       if(sideBar.mod==='open' ){
         toolbar.expanded = false
         toolbar.toolbarEl.hidden = true
+        toolbar.thirdToolbarEl.hidden = true
         document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px )`
         document.getElementById('tab-editor').hidden = true
         document.getElementById('tabs').insertBefore(document.getElementById('tab-editor'), document.getElementById('tabs').children[0])
