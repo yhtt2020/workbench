@@ -415,7 +415,6 @@
         this.apps=temp
       },
       async checkInstalled(app){
-
         if(app.package){
           return await standAloneAppModel.isInstalled(app.package)
         }else{

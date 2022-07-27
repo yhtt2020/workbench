@@ -5,11 +5,27 @@ app.whenReady().then(()=> {
   // ipc.on('openPage', (event, args) => {
   //   mainWindow.webContents.send('addTab', {url: args})
   // })
-  //
-  //
-  ipc.on('addNewApp', (event, args) => {
-    SidePanel.send('addApp',args)
+  let appId
+  let tips
+  ipc.on('installSuccess',(event,args)=>{
+    appId = args.id
+    tips = args.tips
   })
+  ipc.on('installErr',(event,args)=>{
+    appId = args.id
+    tips = args.tips
+  })
+
+  ipc.on('addNewApp',function (event, args){
+    SidePanel.send('addApp',args)
+    if(tips === true){
+      event.reply('installResult',true)
+    }
+    if(tips === false){
+      event.reply('installResult',false)
+    }
+  })
+
   ipc.on('openSystemApp',(event,args)=>{
     SidePanel.send('openSystemApp',args)
   })
@@ -22,23 +38,23 @@ app.whenReady().then(()=> {
   ipc.on('contrast',function(event,args){
     SidePanel.send('contrast',args)
 
-    // setTimeout(()=>{
-    //   event.reply('retrunResult',result)
-    // },10)
     setTimeout(()=>{
-      event.reply('contrast',result)
-    },10)
+      event.reply('result',result)
+    },150)
   })
+
 
   let openAppList
   ipc.on('openAppList',(event,args)=>{
     openAppList = args
+    console.log(openAppList)
   })
 
   ipc.on('needOpenApp',function(event,args){
     SidePanel.send('openApp')
 
     setTimeout(()=>{
+      console.log(openAppList)
       event.reply('openAppList',openAppList)
     },10)
   })

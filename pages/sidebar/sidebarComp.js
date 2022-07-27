@@ -1270,11 +1270,12 @@ Vue.component('sidebar', {
         showInSideBar: false
       }
       standAloneAppModel.install(app.url, option).then(success => {
-        console.log(success)
         ipc.send('message', { type: 'success', config: { content: `添加应用：${app.name} 成功` } })
         ipc.send('installApp', { id: success })
+        ipc.send('installSuccess',{id:success,tips:true})
       }, err => {
         ipc.send('message', { type: 'error', config: { content: '添加应用失败' } })
+        ipc.send('installErr',{id:'',tips:false})
       })
     },
     openSystemApp(args){
