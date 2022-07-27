@@ -12,6 +12,8 @@ var readerView = require('readerView.js')
 var taskOverlay = require('taskOverlay/taskOverlay.js')
 const bookmark = require('./extras/bookmark/bookmarkSys')
 let settings=require('../js/util/settings/settings')
+const oneTab = require('./extras/newTabs/oneTab.js')
+
 window.waitOpenTabs=[]
 
 module.exports = {
@@ -283,6 +285,14 @@ module.exports = {
 
     ipc.on('bookmarkMigration', (event, args) => {
       bookmark.oldImport(args)
+    })
+
+    ipc.on('renderHtmlImport', () => {
+      bookmark.htmlImport()
+    })
+
+    ipc.on('renderSelectNewTab', (event, args) => {
+      oneTab.handleSettings(args)
     })
   }
 }

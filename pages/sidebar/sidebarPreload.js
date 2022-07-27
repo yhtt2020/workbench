@@ -15,6 +15,8 @@ window.db = db
 const {
   contextBridge
 } = require('electron')
+const { themeSetting } = require('../util/theme')
+const theme=require('./theme.js')
 //将语言包的接口暴露给里面的页面
 window.l = l
 window.ipc = ipc
@@ -110,6 +112,14 @@ ipc.on('receiveGlobal', function (e, data) {
 
 ipc.on('addItem', function (e, data) {
   window.$store.state.items.push(data.item)
+})
+ipc.on('themeChange',(e,a)=>{
+  if(a.status==='enable'){
+    theme.enableDarkMode()
+  }else{
+    theme.disableDarkMode()
+  }
+
 })
 
 ipc.on('refreshMyGroups', async () => {

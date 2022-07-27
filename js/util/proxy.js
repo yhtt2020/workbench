@@ -18,10 +18,14 @@ settings.listen('proxy', (proxy = {}) => {
       }
       break
     default:
-      proxyConfig = {}
+      proxyConfig = {
+        mode:'system'
+      }
   }
 
   webContents.getAllWebContents().forEach(wc => wc.session && wc.session.setProxy(proxyConfig))
 })
 
-app.on('session-created', session => session.setProxy(proxyConfig))
+app.on('session-created', session => {
+  session.setProxy(proxyConfig)
+})

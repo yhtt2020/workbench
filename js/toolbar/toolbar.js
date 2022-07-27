@@ -6,7 +6,7 @@ const sideBar = {
   minWidth: 45,
   maxWidth: 145,
   expandWidth: 100,
-  mod: 'auto',// auto.自动展开收起, open.一直展开 ,最小化。
+  mod: 'close',// auto.自动展开收起, open.一直展开 ,最小化。
   isMessageFixed: false,
   //切换侧边栏模式
   switchSideMod () {
@@ -337,7 +337,6 @@ const toolbar = {
 
   adjustSideBar () {
     sideBar.mod = localStorage.getItem('sideMode') ?? 'auto'
-
     sideBar.isMessageFixed = localStorage.getItem('isMessageFixed') == 'true' ? true : false
     sideBar.syncMod()
   }
@@ -362,7 +361,19 @@ ipc.on('freeAdjustByFixed', () => {
     sideBar.setToMin()
   }
 })
-
+ipc.on('sideSetMod',(event,args)=>{
+  switch (args.mod){
+    case 'open':
+      sideBar.setToMax()
+      break
+    case 'close':
+      sideBar.setToMin()
+      break
+    case 'auto':
+      sideBar.setToMin()
+      break
+  }
+})
 ipc.on('temporaryAdjust', (event, args) => {
   if(args.freeFixed) {
     if(sideBar.mod === 'open') {

@@ -1,6 +1,7 @@
 var statistics = require('js/statistics.js')
 var searchEngine = require('js/util/searchEngine.js')
 var urlParser = require('js/util/urlParser.js')
+
 /* common actions that affect different parts of the UI (webviews, tabstrip, etc) */
 
 var settings = require('util/settings/settings.js')
@@ -12,6 +13,8 @@ var searchbar = require('searchbar/searchbar.js')
 
 const userStatsModel = require('../pages/util/model/userStatsModel')
 const modalMode = require("./modalMode");
+
+const oneTab = require('./extras/newTabs/oneTab.js')
 
 /* creates a new task */
 
@@ -62,7 +65,7 @@ function addTab (tabId = tabs.add(), options = {},last=false) {
       focusWebview: options.enterEditMode === false
     })
     if (options.enterEditMode !== false) {
-      if(tabs.get(tabId).url!=="ts://newtab"){
+      if(tabs.get(tabId).url !== oneTab.selectOnetab()){
         //添加新tab不弹窗
         //todo 后续增加配置项，可以选择新标签的功能
         tabEditor.show(tabId)
@@ -331,7 +334,11 @@ ipc.on('changeTaskIcon',(event,args)=>{
   const icon=args.icon
   const id=args.id
   let task=tasks.get(id)
-  task.userIcon=`icon.${icon.list}.${icon.name}`
+  if(icon.type==='img'){
+    delete task.userIcon
+  }else{
+    task.userIcon=`icon.${icon.list}.${icon.name}`
+  }
 })
 
 //定位到task组的某tabid，往后插入创建tab

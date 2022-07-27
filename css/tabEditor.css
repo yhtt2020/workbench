@@ -63,10 +63,13 @@
     opacity: 0
   }
 }
-
+#toolbar #tab-editor-input{
+  width: 100%;
+}
 #tab-editor {
   padding: 0 0.55em;
   position: absolute;
+  overflow:hidden;
   top: 0;
   left: 0;
   width: 100%;

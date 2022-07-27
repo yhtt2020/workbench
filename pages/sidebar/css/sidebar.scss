@@ -1,6 +1,7 @@
 //@import "sidebar2";
 @import "sa-app";
 @import "space";
+@import "dark-mod";
 body {
   background-color: #00000000;
   overflow: hidden;
@@ -21,7 +22,7 @@ body {
 
 .sidebar .side-items {
   bottom: 0;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 .sidebar .side-items ul li {
@@ -100,7 +101,6 @@ body {
 }
 
 .dragClass {
-  background-color: blueviolet !important;
   opacity: 1 !important;
   box-shadow: none !important;
   outline: none !important;
@@ -330,43 +330,6 @@ body {
   background-color: transparent;
 }
 
-.dark-mode .sidebar {
-  background-color: #565656;
-}
-
-.dark-mode .ant-btn {
-  background-color: #ffffff0f;
-  border-color: #d9d9d90f;
-}
-
-.dark-mode .bottomBar li:hover .ant-btn {
-  background-color: #ffffff0f;
-  border-color: #d9d9d90f;
-}
-
-.dark-mode li:hover {
-  color: #333
-}
-
-.dark-mode .ant-btn:hover {
-  color: #9f9f9f;
-  background-color: #ffffff24 !important;
-  border-color: #d7d7d7;
-}
-
-.dark-mode .sidebar .active, .dark-mode .sidebar .side-items ul li:hover {
-  background-color: #f1f1f11f;
-  border-color: #1b1c1cc5;
-  color: #d5d5d5;
-}
-
-.dark-mode .sidebar .side-container .side-items .app-task .icon {
-  opacity: 0.6 !important;
-}
-
-.dark-mode .divider {
-  border-color: #a1a1a15e;
-}
 
 
 .user-panel {

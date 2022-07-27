@@ -58,7 +58,7 @@ const sidebarTpl = /*html*/`
                                   </div>
                                 </div>
                               </template>
-                              <a-button size="small">
+                              <a-button class="nickname" size="small">
                                 {{user.nickname}}<a-icon type="swap" /></a-icon>
                               </a-button>
                             </a-popover>
@@ -116,22 +116,22 @@ const sidebarTpl = /*html*/`
                         </a-popover>
                        </div>
                     </div>
-                    <div style="margin-bottom: 10px" @click="myCommunity" class="actions flex flex-direction justify-between align-center">
+                    <div style="margin-bottom: 10px" @click="myCommunity" class="my-info-panel actions flex flex-direction justify-between align-center">
                       <div class="actions-top flex justify-start  align-center">
                         <img src="./assets/tizi.svg" alt="" style="width: 16px; height: 16px">
                         <div class="text-grey" style="margin-left: 6px">我的元社区</div>
                       </div>
                       <div class="actions-bottom flex justify-around align-center">
                         <div class="action-bottom-action flex flex-direction justify-around align-center">
-                          <div style="font-weight: 700;">{{user.postCount}}</div>
+                          <div class="info-num" style="font-weight: 700;">{{user.postCount}}</div>
                           <div class="text-grey">内容</div>
                         </div>
                         <div class="action-bottom-action flex flex-direction justify-around align-center">
-                          <div style="font-weight: 700;">{{user.fans}}</div>
+                          <div class="info-num"  style="font-weight: 700;">{{user.fans}}</div>
                           <div class="text-grey">粉丝</div>
                         </div>
                         <div class="action-bottom-action flex flex-direction justify-around align-center">
-                          <div style="font-weight: 700;">{{user.follow}}</div>
+                          <div class="info-num"  style="font-weight: 700;">{{user.follow}}</div>
                           <div class="text-grey">关注</div>
                         </div>
                       </div>
@@ -139,7 +139,7 @@ const sidebarTpl = /*html*/`
                     <div class="my-group" style="margin-top: 20px;">
                       <template>
                         <div class="mg-top flex justify-between align-center">
-                          <div class="mg-top-lf text-black" style="font-weight: 400;">我加入的团队({{this.$store.getters.getAllCircle.length}})</div>
+                          <div class="mg-top-lf text-black title-my-group" style="font-weight: 400;">我加入的团队({{this.$store.getters.getAllCircle.length}})</div>
                           <a-button id="guideTeam" class="mg-top-right" style="border-radius: 50%;" type="primary" icon="plus" size="small" @click="createGroup" />
                         </div>
 
@@ -722,7 +722,7 @@ const sidebarTpl = /*html*/`
           <div class="item-title">消息中心</div >
         </li>
         <li class="helpCenter" @click="openHelpCenter" style="position: relative">
-          <a-progress :width="32" type="circle" :percent="this.$store.getters.getGuideScedule" :showInfo="false" :strokeWidth="11"></a-progress>
+          <a-progress v-show="this.$store.getters.getGuideScedule < 100" :width="32" type="circle" :percent="this.$store.getters.getGuideScedule" :showInfo="false" :strokeWidth="11"></a-progress>
           <a-icon type="question-circle" style="position: absolute; top: 14.5px; right: 14.5px; font-size: 16px;"></a-icon>
           <div class="item-title">帮助中心</div>
         </li>
@@ -735,6 +735,7 @@ const sidebarTpl = /*html*/`
 
 const backupSpaceModel=require('../../src/model/backupSpaceModel')
 const _=require('lodash')
+const storage = require('electron-localstorage')
 window.selectedTask=null
 
 Vue.component('sidebar', {
@@ -842,11 +843,9 @@ Vue.component('sidebar', {
   },
 
   async mounted () {
-    // let standAloneAppModel = require('../../pages/util/model/standAloneAppModel.js')
-    // standAloneAppModel.getAllApps({order:'createTime'}).then((data) => {
-    //   console.log(data)
-    // })
-
+    if(process.platform==='darwin'){
+      document.getElementById('appVue').style.borderRadius='0 0 0 10px'
+    }
     ipc.on('callBackMedal',(event,args)=>{
       this.$nextTick(()=>{
         appVue.$refs.sidePanel.isMedals = args
@@ -1252,53 +1251,6 @@ Vue.component('sidebar', {
       });
       guideAddTasks.start();
     },
-    //应用市场项目所需要的函数
-    addApp (app) {
-
-      let option = {
-        name: app.name,
-        logo: !!!app.icon ? '../../icons/default.svg' :app.icon,
-        summary: '自定义应用',
-        type: 'web',
-        themeColor: !!!app.backgroundColor ? '#000' :app.backgroundColor.color,
-        settings: {
-          bounds: {
-            width: 1000,
-            height: 800
-          }
-        },
-        showInSideBar: false
-      }
-      standAloneAppModel.install(app.url, option).then(success => {
-        ipc.send('message', { type: 'success', config: { content: `添加应用：${app.name} 成功` } })
-        ipc.send('installApp', { id: success })
-        ipc.send('installSuccess',{id:success,tips:true})
-      }, err => {
-        ipc.send('message', { type: 'error', config: { content: '添加应用失败' } })
-        ipc.send('installErr',{id:'',tips:false})
-      })
-    },
-    openSystemApp(args){
-      window.location.href=`tsb://app/redirect/?package=${args.package}&url=${args.url}`
-    },
-
-    async contrast(args) {
-      const installList = args
-       for (const e of args) {
-        if(await standAloneAppModel.isInstalledByUrl(e.url)===true){
-         installList[installList.indexOf(e)].isInstalled = true
-         //  console.log(installList.indexOf(e))
-        }
-      }
-       ipc.send('result', await installList)
-
-    },
-
-    openApp(){
-      standAloneAppModel.getAllApps({order:'createTime'}).then((data) => {
-        ipc.send('openAppList',data)
-      })
-    },
     sortApps(){
       let sorted=_.orderBy(this.apps,(app)=>{
         return [app.processing?1:0,app.lastExecuteTime]
@@ -1325,7 +1277,9 @@ Vue.component('sidebar', {
         }
     },
     openSidebarMenu(){
-      ipc.send('openSidebarMenu')
+      ipc.send('openSidebarMenu',{
+        mod:appVue.mod
+      })
     },
     openTaskMenu(task){
       window.selectedTask=task
@@ -1469,10 +1423,8 @@ Vue.component('sidebar', {
       ipc.send('openGlobalSearch')
     },
     openCircle (args) {
-      console.log(args)
       this.userPanelVisible = false
-      // this.addTab(`${api.getUrl(api.API_URL.user.CIRCLE)}?id=${args}`)
-      window.location.href=`tsb://app/redirect/?package=com.thisky.com&url=${api.getUrl(api.API_URL.user.CIRCLE)}?id=${args}`
+      this.addTab(`${api.getUrl(api.API_URL.user.CIRCLE)}?id=${args}`)
     },
     openHelp (apps) {
       function checkAdult (apps) {
@@ -1938,6 +1890,7 @@ Vue.component('sidebar', {
 
     }
   }
+
 })
 
 ipc.on('message', function (event, args) {
@@ -1946,23 +1899,6 @@ ipc.on('message', function (event, args) {
   }
   appVue.$message[args.type](args.config)
 })
-
-//应用市场项目ipc转发
-ipc.on('addApp',(event,args)=>{
-  appVue.$refs.sidePanel.addApp(args)
-})
-ipc.on('openSystemApp',async (event, args) => {
-  appVue.$refs.sidePanel.openSystemApp(args)
-})
-
-ipc.on('contrast',function(event,args){
-  appVue.$refs.sidePanel.contrast(args)
-})
-
-ipc.on('openApp',()=>{
-  appVue.$refs.sidePanel.openApp()
-})
-
 
 ipc.on('executedAppSuccess', async function (event, args) {
   let now=Date.now()
@@ -2279,5 +2215,18 @@ ipc.on('getUserInfo',async (event,args)=>{
 
 
 ipc.on('selectedIcon',(event,args)=>{
-  ipc.sendTo(mainWindowId, 'changeTaskIcon', { id: window.selectedTask.id, icon:args.icon })
+  if(args.text){
+    ipc.sendTo(mainWindowId, 'renameTask', { id: window.selectedTask.id, newName: args.text })
+  }
+  if(args.icon.type==='fontIcon')
+    ipc.sendTo(mainWindowId, 'changeTaskIcon', { id: window.selectedTask.id, icon:args.icon })
+  else{
+    ipc.sendTo(mainWindowId, 'changeTaskIcon', { id: window.selectedTask.id, icon:args.icon })
+  }
+
+})
+
+ipc.on('getStashTasks',async (event, args) => {
+  let tasks=await db.taskStash.toArray()
+  ipc.sendTo(event.senderId,'gotStashTasks', { tasks })
 })

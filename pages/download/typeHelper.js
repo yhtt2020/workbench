@@ -49,6 +49,10 @@ export function matchFileSuffixType(fileName) {
       exts:['txt']
     },
     {
+      name:'crx',
+      exts:['crx']
+    },
+    {
       name:'video',
       exts:['mp4', 'm2v', 'mkv','avi','rmvb']
     },

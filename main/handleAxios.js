@@ -148,8 +148,7 @@ app.whenReady().then(()=>{
     event.reply('callback-imAutoLogin', result)
   })
 
-  //主进程的refreshToken成功后   主进程更新storage中的信息，并传到子进程中修改用户标识信息
-  ipc.on('updateStorageInfo', (event, user) => {
+  function updateStorageInfo(user){
     storage.setStoragePath(global.sharedPath.extra)
     storage.setItem(`userToken`, user.token)
     storage.setItem(`refreshToken`, user.refreshToken)
@@ -157,6 +156,11 @@ app.whenReady().then(()=>{
     storage.setItem(`refreshExpire_deadtime`, new Date().getTime() + user.refreshExpire * 1000)
     storage.setItem(`userInfo`, user.userInfo)
     global.utilWindow.webContents.send('remakeCurrentUser', user)
+    //发送过去更新用户的信息
+  }
+  //主进程的refreshToken成功后   主进程更新storage中的信息，并传到子进程中修改用户标识信息
+  ipc.on('updateUserInfo', (event, user) => {
+    updateStorageInfo(user)
   })
 
   //主进程的refreshToken也过期的时候 清空主进程中storage的信息，并传到子进程中修改用户标识信息
@@ -177,10 +181,23 @@ app.whenReady().then(()=>{
   })
 
   ipc.handle('getOtherStatus', () => {
+    let browserTabData = settings.get('browserTab') || null
+    if(browserTabData && browserTabData.tabIdx === 0) {
+      browserTabData = 'tstab'
+    } else if (browserTabData && browserTabData.tabIdx === 1) {
+      browserTabData = 'qntab'
+    } else if(browserTabData && browserTabData.tabIdx === 2) {
+      browserTabData = 'inftab'
+    } else if(browserTabData && browserTabData.tabIdx === 3) {
+      browserTabData = 'itab'
+    } else {
+      browserTabData = 'custom'
+    }
     let data = {
       adBlockingLevel: settings.get('filtering') ? settings.get('filtering').blockingLevel : 0,
       siteTheme: settings.get('siteTheme') ? settings.get('siteTheme') : true,
-      searchEngine: settings.get('searchEngine') ? settings.get('searchEngine').name : 'Bing'
+      searchEngine: settings.get('searchEngine') ? settings.get('searchEngine').name : 'Bing',
+      newTab: browserTabData ?? 'tstab'
     }
     return data
   })
@@ -198,6 +215,10 @@ app.whenReady().then(()=>{
         })
       }
     })
+  })
+
+  ipc.on('htmlImport', () => {
+    mainWindow.webContents.send('renderHtmlImport')
   })
 
   function calcGuideScedule() {
@@ -283,6 +304,10 @@ app.whenReady().then(()=>{
   ipc.on('isMedal',()=>{
     let isMedal = markDb.db.get('guideSchedule.medal').value()
     SidePanel.send('callBackMedal', isMedal)
+  })
+
+  ipc.on('selectNewTab', (event, args) => {
+    mainWindow.webContents.send('renderSelectNewTab',args)
   })
   /**
    * 浏览器主进程中各任务完成后需要调用的函数

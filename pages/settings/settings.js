@@ -29,6 +29,65 @@ var blockingExceptionsContainer = document.getElementById('content-blocking-info
 var blockingExceptionsInput = document.getElementById('content-blocking-exceptions')
 var blockedRequestCount = document.querySelector('#content-blocking-blocked-requests strong')
 
+/* 起始页 */
+
+var browserTabContainer = document.querySelector('.tab-choose')
+var browserTabOptions = Array.from(document.querySelectorAll('input[name=tabChoosed]'))
+var browserTabExceptionsInput = document.querySelector('#tab-text-input')
+
+function changeBrowserTab(tabIdx) {
+  settings.get('browserTab', (value) => {
+    if(!value) {
+      value = {}
+    }
+    value.tabIdx = tabIdx
+    settings.set('browserTab', value)
+    updateBrowserTabUI(tabIdx)     //updateUI
+  })
+}
+
+function updateBrowserTabUI(tabIdx) {
+  var radio = browserTabOptions[tabIdx]
+  radio.checked = true
+
+  if(tabIdx === 4) {
+    browserTabExceptionsInput.hidden = false
+  } else {
+    browserTabExceptionsInput.hidden = true
+  }
+
+  if (document.querySelector('#tab-choose .setting-option.selected')) {
+    document.querySelector('#tab-choose .setting-option.selected').classList.remove('selected')
+  }
+  radio.parentNode.classList.add('selected')
+}
+
+settings.get("browserTab", (value) => {
+  if (value && value.tabIdx !== undefined) {
+    updateBrowserTabUI(value.tabIdx);
+  }
+});
+
+settings.get("customTabUrl", (value) => {
+  if (value) {
+    document.querySelector('#tab-text-input').value = value      //update UI
+  }
+});
+
+browserTabExceptionsInput.addEventListener('input', (event) => {
+  settings.set('customTabUrl', event.target.value)
+})
+
+
+browserTabOptions.forEach((item, idx) => {
+  item.addEventListener('change', () => {
+    changeBrowserTab(idx)
+  })
+})
+
+/* 起始页 */
+
+
 settings.listen('filteringBlockedCount', function (value) {
   var valueStr
   var count = value || 0
@@ -553,8 +612,7 @@ const setProxy = (key, value) => {
 
 settings.get('proxy', (proxy = {}) => {
   toggleProxyOptions(proxy.type)
-
-  proxyTypeInput.options.selectedIndex = proxy.type || 0
+  proxyTypeInput.options.selectedIndex = proxy.type || 3
   proxyInputs.forEach(item => item.value = proxy[item.name] || '')
 })
 
@@ -575,6 +633,29 @@ settings.get('customBangs', (value) => {
     })
   }
 })
+const dolEle=document.getElementById('dropOpenLink')
+settings.get('dropOpenLink',(value)=>{
+  if(value==='true'){
+    dolEle.checked=true
+  }else{
+    dolEle.checked=false
+  }
+})
+dolEle.addEventListener('change', e => {
+  settings.set('dropOpenLink',e.target.checked===true?"true":'false')
+})
+const dccEle=document.getElementById('dbClickClose')
+settings.get('dbClickClose',(value)=>{
+  if(value==='true'){
+    dccEle.checked=true
+  }else{
+    dccEle.checked=false
+  }
+})
+dccEle.addEventListener('change', e => {
+  settings.set('dbClickClose',e.target.checked===true?"true":'false')
+})
+
 
 document.getElementById('add-custom-bang').addEventListener('click', function () {
   const bangslist = document.getElementById('custom-bangs')

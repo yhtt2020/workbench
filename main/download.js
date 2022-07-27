@@ -1,5 +1,4 @@
 const { Notification } = require('electron')
-
 const currrentDownloadItems = {}
 
 // ipc.on('cancelDownload', function (e, path) {
@@ -8,19 +7,19 @@ const currrentDownloadItems = {}
 //   }
 // })
 
-ipc.on('stopDownload',function (e,path){
+ipc.on('stopDownload', function (e, path) {
   if (currrentDownloadItems[path]) {
     currrentDownloadItems[path].pause()
   }
 })
 
-ipc.on('resumeDownload',function (e,path){
+ipc.on('resumeDownload', function (e, path) {
   if (currrentDownloadItems[path]) {
     currrentDownloadItems[path].resume()
   }
 })
 
-ipc.on('deleteDownload',function (e,path){
+ipc.on('deleteDownload', function (e, path) {
   if (currrentDownloadItems[path]) {
     currrentDownloadItems[path].cancel()
   }
@@ -30,32 +29,29 @@ function isAttachment (header) {
   return /^\s*attache*?ment/i.test(header)
 }
 
-
-function sendIPCToDownloadWindow(action, data) {
+function sendIPCToDownloadWindow (action, data) {
   // if there are no windows, create a new one
 
-  if (downloadWindow===null) {
-    getDownloadWindow(function() {
+  if (downloadWindow === null) {
+    getDownloadWindow(function () {
       downloadWindow.webContents.send(action, data || {})
     })
-  }
-  else {
+  } else {
     downloadWindow.webContents.send(action, data || {})
   }
-
 
 }
 
 let originalPageUrl
-ipc.on('originalPage',(event,args)=>{
-   originalPageUrl = args
+ipc.on('originalPage', (event, args) => {
+  originalPageUrl = args
 })
 
-ipc.on('closeEmpty',()=>{
+ipc.on('closeEmpty',() => {
   mainWindow.webContents.send('closeEmptyPage')
 })
 
-ipc.on('downloading',(event,args)=>{
+ipc.on('downloading', (event, args) => {
   mainWindow.send('downloadCountAdd')
 })
 
@@ -68,15 +64,15 @@ ipc.on('inform',()=>{
 })
 
 
-ipc.on('downloadEnd',(event,args)=>{
+ipc.on('downloadEnd', (event, args) => {
   mainWindow.send('downloadCountCut')
 })
 
 function downloadHandler (event, item, webContents) {
   var itemURL = item.getURL()
   var attachment = isAttachment(item.getContentDisposition())
-  let suffixName = item.getFilename().substring(item.getFilename().lastIndexOf('.')+1,item.getFilename().length)
-  savePathFilename =  path.basename(item.getSavePath())
+  let suffixName = item.getFilename().substring(item.getFilename().lastIndexOf('.') + 1, item.getFilename().length)
+  savePathFilename = path.basename(item.getSavePath())
 
   mainWindow.webContents.send('isDownload')
   if (item.getMimeType() === 'application/pdf' && itemURL.indexOf('blob:') !== 0 && itemURL.indexOf('#pdfjs.action=download') === -1 && !attachment) { // clicking the download button in the viewer opens a blob url, so we don't want to open those in the viewer (since that would make it impossible to download a PDF)
@@ -97,36 +93,36 @@ function downloadHandler (event, item, webContents) {
     // event.preventDefault()
 
     var savePathFilename
-    function conver(limit){
-      var size;
-      if(limit < 1024 * 1024 ){
-        size = (limit / 1024).toFixed(2) + "KB";
-      }else if(limit < 1024 * 1024 * 1024){
-        size = (limit / (1024 * 1024)).toFixed(2) + "MB";
-      }else{
-        size = (limit / (1024 * 1024 * 1024)).toFixed(2) + "GB";
+
+    function conver (limit) {
+      var size
+      if (limit < 1024 * 1024) {
+        size = (limit / 1024).toFixed(2) + 'KB'
+      } else if (limit < 1024 * 1024 * 1024) {
+        size = (limit / (1024 * 1024)).toFixed(2) + 'MB'
+      } else {
+        size = (limit / (1024 * 1024 * 1024)).toFixed(2) + 'GB'
       }
-      var sizeStr = size + "";
-      var len = sizeStr.indexOf("\.");
-      var dec = sizeStr.substr(len + 1, 2);
-      if(dec === "00"){//当小数点后为00时 去掉小数部分
-        return sizeStr.substring(0,len) + sizeStr.substr(len + 3,2);
+      var sizeStr = size + ''
+      var len = sizeStr.indexOf('\.')
+      var dec = sizeStr.substr(len + 1, 2)
+      if (dec === '00') {//当小数点后为00时 去掉小数部分
+        return sizeStr.substring(0, len) + sizeStr.substr(len + 3, 2)
       }
-      return sizeStr;
+      return sizeStr
     }
 
     sendIPCToDownloadWindow('download-info', {
       path: item.getSavePath(),
       name: item.getFilename(),
       status: 'start',
-      size: {received: 0, total: conver(item.getTotalBytes())},
+      size: { received: 0, total: conver(item.getTotalBytes()) },
       paused: item.isPaused(),
       startTime: item.getStartTime(),
       url: item.getURL(),
-      href:originalPageUrl,
-      chainUrl:item.getURLChain()
+      href: originalPageUrl,
+      chainUrl: item.getURLChain()
     })
-
 
     let prevReceivedBytes = 0
     item.on('updated', function (e, state) {
@@ -136,7 +132,7 @@ function downloadHandler (event, item, webContents) {
       item.speed = receivedBytes - prevReceivedBytes
       prevReceivedBytes = receivedBytes
 
-      let updateName;
+      let updateName
       if (!savePathFilename) {
         updateName = path.basename(item.getSavePath())
         savePathFilename = updateName
@@ -146,7 +142,7 @@ function downloadHandler (event, item, webContents) {
         currrentDownloadItems[item.getSavePath()] = item
       }
 
-      if(downloadWindow!=null && !downloadWindow.isDestroyed()) {
+      if (downloadWindow != null && !downloadWindow.isDestroyed()) {
         downloadWindow.setProgressBar(item.getReceivedBytes() / item.getTotalBytes())
       }
 
@@ -154,21 +150,21 @@ function downloadHandler (event, item, webContents) {
         path: item.getSavePath(),
         name: savePathFilename,
         status: state,
-        size: {received: conver(item.getReceivedBytes()),total:conver(item.getTotalBytes()) },
+        size: { received: conver(item.getReceivedBytes()), total: conver(item.getTotalBytes()) },
         // realdata1:item.speed,
         realData: conver(item.speed),
         progressnuw: ((prevReceivedBytes / item.getTotalBytes()).toFixed(2)) * 100,
         paused: item.isPaused(),
         startTime: item.getStartTime(),
-        chainUrl:item.getURLChain()
+        chainUrl: item.getURLChain()
       })
 
     })
 
-    item.once('done', function (e, state) {
+    item.once('done', async function (e, state) {
       delete currrentDownloadItems[item.getSavePath()]
       if (!downloadWindow.isDestroyed()) {
-        downloadWindow.setProgressBar(-1);
+        downloadWindow.setProgressBar(-1)
       }
 
       sendIPCToDownloadWindow('download-info', {
@@ -177,17 +173,20 @@ function downloadHandler (event, item, webContents) {
         name: savePathFilename,
         status: state,
         url: item.getURL(),
-        size: {received: conver(item.getTotalBytes()), total: conver(item.getTotalBytes()) },
-        href:originalPageUrl,
-        chainUrl:item.getURLChain()
+        size: { received: conver(item.getTotalBytes()), total: conver(item.getTotalBytes()) },
+        href: originalPageUrl,
+        chainUrl: item.getURLChain()
       })
+
+      if (extname(savePathFilename) === '.crx') {
+        installCrx(item.savePath)
+      }
+
     })
+
+    return true
   }
-  return true
-
 }
-
-
 
 function listenForDownloadHeaders (ses) {
 
@@ -197,9 +196,8 @@ function listenForDownloadHeaders (ses) {
       var typeHeader = details.responseHeaders[Object.keys(details.responseHeaders).filter(k => k.toLowerCase() === 'content-type')]
       var attachment = isAttachment(details.responseHeaders[Object.keys(details.responseHeaders).filter(k => k.toLowerCase() === 'content-disposition')])
 
-
       if (typeHeader instanceof Array && typeHeader.filter(t => t.includes('application/pdf')).length > 0 && details.url.indexOf('#pdfjs.action=download') === -1 && !attachment) {
-      // open in PDF viewer instead
+        // open in PDF viewer instead
         callback({ cancel: true })
         sendIPCToWindow(mainWindow, 'openPDF', {
           url: details.url,
@@ -213,7 +211,7 @@ function listenForDownloadHeaders (ses) {
       // It doesn't make much sense to have this here, but only one onHeadersReceived instance can be created per session
       const isFileView = typeHeader instanceof Array && !typeHeader.some(t => t.includes('text/html'))
 
-      sendIPCToDownloadWindow( 'set-file-view', {
+      sendIPCToDownloadWindow('set-file-view', {
         url: details.url,
         isFileView
       })
@@ -228,11 +226,9 @@ app.once('ready', function () {
   listenForDownloadHeaders(session.defaultSession)
 })
 
-
 app.on('session-created', function (session) {
   session.on('will-download', downloadHandler)
   listenForDownloadHeaders(session)
 })
-
 
 
