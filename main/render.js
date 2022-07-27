@@ -185,6 +185,11 @@ class Pool {
       oldObj.args=param.args
       oldObj.callerId = callerId
       oldObj.blurClose=param.blurClose || true
+      if(param.x){
+        oldObj.x=param.x
+        oldObj.y=param.y
+        oldObj.win.setPosition(param.x,param.y)
+      }
       if(oldObj.win.isVisible())
         oldObj.win.webContents.send('show')
       oldObj.win.show()
@@ -473,6 +478,7 @@ const renderPage = {
       }
     }
     bounds= this.getInAreaPos(bounds)
+    console.log(bounds)
     pool.usePop({
       url: render.getUrl('icon.html'),
       width: bounds.width,
@@ -480,7 +486,9 @@ const renderPage = {
       x: bounds.x,
       y: bounds.y,
       args:args,
-    }, windowId).then()
+    }, windowId).then((pop)=>{
+      pop.win.setParentWindow(mainWindow)
+    })
   },
   openInstallExtension (args) {
     let pos = renderPage.getMainWindowCenterBounds(448, 300)
