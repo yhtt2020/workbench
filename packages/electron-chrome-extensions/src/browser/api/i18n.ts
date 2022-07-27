@@ -32,7 +32,14 @@ export class I18nAPI {
       message = path.join(localePath, manifest['default_locale'])
     }
     let file = path.join(message, 'messages.json')
-    let localeJson: Object = JSON.parse(fs.readFileSync(file, 'utf8'))
+    let localeJson: Object
+    try{
+      var con=fs.readFileSync(file, 'utf8')
+      localeJson= JSON.parse(con.trim())
+    }catch (e) {
+      console.warn(e)
+      localeJson=[]
+    }
     return localeJson
   }
 }
