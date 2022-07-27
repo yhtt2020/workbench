@@ -281,27 +281,57 @@ export const injectExtensionAPIs = () => {
           return {
             ...base,
             //修复i18n方法
-            getMessage: (messageName:String)=>{
+            getMessage: (messageName:String,substitutions:String[]=[])=>{
                 let localeJson=localeMessages
-                function getMessage(name:String){
+                function getMessage(name:String,substitutions?:String[]){
                   let messageKey = localeJson[name as keyof typeof localeJson]
                   if (typeof messageKey !== 'undefined') {
-                    //todo 支持匹配变量
-                    return messageKey['message' as keyof typeof messageKey]
+                   let result= messageKey['message' as keyof typeof messageKey]
+                    return result
                   } else {
                     return undefined
                   }
                 }
-                if(Array.isArray(messageName)){
+                function preMatch(str:string){
+                  var pattern = /\$.*?\$/g
+                 return pattern.test(str);
+                }
+
+              /**
+               * 匹配变量
+               * @param source
+               * @param scope
+               */
+              function templater(source:String, scope:String[]){
+                const tokenRegex = /\$.*?\$/g;
+                let i=0
+                var result = source.replace(
+                  tokenRegex,
+                  function(match:String, key:any):any {
+                    let rs=typeof scope[i] !== 'undefined' ? scope[i] : match;
+                    i++
+                    return rs
+                  }
+                );
+                return result;
+              }
+                if(!messageName){
                   //如果是数组，则返回一个对应的数组
-                  let rs:any=[]
-                  messageName.forEach(mn=>{
-                    rs.push(getMessage(mn))
-                  })
-                  return rs
+                  return undefined
                 }else{
                   //如果不是数组，则直接返回
-                  return getMessage(messageName)
+                  let gotMessage=getMessage(messageName,substitutions)
+                  let matches=preMatch(gotMessage)
+                  if(matches){
+                    if(substitutions.length===0 || substitutions.length>9){
+                      //替换数组不符合规定
+                      return undefined
+                    }else{
+                      return templater(gotMessage,substitutions)
+
+                    }
+                  }
+                  return gotMessage
                 }
             }
             // getAcceptLanguages: ()=>{
