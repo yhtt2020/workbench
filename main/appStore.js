@@ -47,14 +47,12 @@ app.whenReady().then(()=> {
   let openAppList
   ipc.on('openAppList',(event,args)=>{
     openAppList = args
-    console.log(openAppList)
   })
 
   ipc.on('needOpenApp',function(event,args){
     SidePanel.send('openApp')
 
     setTimeout(()=>{
-      console.log(openAppList)
       event.reply('openAppList',openAppList)
     },10)
   })
