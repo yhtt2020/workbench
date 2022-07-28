@@ -12,6 +12,7 @@ files:
   - icons/**/*
   - icons/*.svg
   #- js/**/*
+  - js/defaultPreload.js
   - js/main/**/*
   - js/request/**/*
   - ./main.build.js
