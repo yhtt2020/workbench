@@ -2,9 +2,7 @@
 
 
 app.whenReady().then(()=> {
-  // ipc.on('openPage', (event, args) => {
-  //   mainWindow.webContents.send('addTab', {url: args})
-  // })
+
   let appId
   let tips
   ipc.on('installSuccess',(event,args)=>{
@@ -54,8 +52,26 @@ app.whenReady().then(()=> {
 
     setTimeout(()=>{
       event.reply('openAppList',openAppList)
-    },10)
+    },50)
   })
 
+
+  ipc.on('openSet',(event,args)=>{
+    SidePanel.send('openSet',args)
+  })
+  ipc.on('uninstallApp',(event,args)=>{
+    SidePanel.send('uninstallApp',args)
+  })
+
+  let allMyApps
+  ipc.on('allMyApps',(event,args)=>{
+    allMyApps = args
+  })
+  ipc.on('myApps',function (event,args){
+    SidePanel.send('myApps')
+    setTimeout(()=>{
+      event.reply('allMyApps',allMyApps)
+    },50)
+  })
 })
 

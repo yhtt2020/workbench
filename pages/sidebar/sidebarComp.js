@@ -736,6 +736,8 @@ const sidebarTpl = /*html*/`
 const backupSpaceModel=require('../../src/model/backupSpaceModel')
 const _=require('lodash')
 const storage = require('electron-localstorage')
+const {ipcRenderer: ipc} = require("electron");
+const saAppModel = require("../util/model/standAloneAppModel");
 window.selectedTask=null
 
 Vue.component('sidebar', {
@@ -1250,6 +1252,88 @@ Vue.component('sidebar', {
         }]
       });
       guideAddTasks.start();
+    },
+    //应用市场项目所需要的函数
+    addApp (app) {
+      let option = {
+        name: app.name,
+        logo: !!!app.icon ? '../../icons/default.svg' :app.icon,
+        summary: '自定义应用',
+        type: 'web',
+        attribute: app.attribute,
+        themeColor: !!!app.backgroundColor ? '#000' :app.backgroundColor.color,
+        settings: {
+          bounds: {
+            width: 1000,
+            height: 800
+          }
+        },
+        showInSideBar: false
+      }
+      standAloneAppModel.install(app.url, option).then(success => {
+        ipc.send('message', { type: 'success', config: { content: `添加应用：${app.name} 成功` } })
+        ipc.send('installApp', { id: success })
+        ipc.send('installSuccess',{id:success,tips:true})
+      }, err => {
+        ipc.send('message', { type: 'error', config: { content: '添加应用失败' } })
+        ipc.send('installErr',{id:'',tips:false})
+      })
+    },
+    openSystemApp(args){
+      window.location.href=`tsb://app/redirect/?package=${args.package}&url=${args.url}`
+    },
+
+    async contrast(args) {
+      const installList = args
+      for (const e of args) {
+        if(await standAloneAppModel.isInstalledByUrl(e.url)===true){
+          installList[installList.indexOf(e)].isInstalled = true
+          //  console.log(installList.indexOf(e))
+        }
+      }
+      ipc.send('result', await installList)
+    },
+
+    openApp(){
+      standAloneAppModel.getAllApps({order:'createTime'}).then((data) => {
+        ipc.send('openAppList',data)
+      })
+    },
+    openSet(args){
+      let appId
+      standAloneAppModel.getAllApps({order:'createTime'}).then((data) => {
+        data.forEach((e)=>{
+          if (e.url === args) {
+            appId = e.id
+          }
+        })
+      })
+      setTimeout(()=>{
+        ipc.send('saAppOpenSetting',{id:appId})
+      },200)
+    },
+    uninstallApp(args){
+      let appId
+      standAloneAppModel.getAllApps({order:'createTime'}).then((data) => {
+        data.forEach((e)=>{
+          if (e.url === args) {
+            appId = e.id
+          }
+        })
+      })
+      setTimeout(()=>{
+        saAppModel.uninstall(appId).then(success=>{
+          ipc.send('message',{type:"success",config:{content:'卸载应用成功。'}})
+          ipc.send('deleteApp',{id:appId})
+        },err=>{
+          ipc.send('message',{type:"success",config:{content:'卸载失败。'}})
+        })
+      },200)
+    },
+    myApps(){
+      standAloneAppModel.getAllApps({order:'createTime'}).then((data) => {
+        ipc.send('allMyApps',data)
+      })
     },
     sortApps(){
       let sorted=_.orderBy(this.apps,(app)=>{
@@ -1898,6 +1982,33 @@ ipc.on('message', function (event, args) {
     args.type = 'open'
   }
   appVue.$message[args.type](args.config)
+})
+
+//应用市场项目ipc转发
+ipc.on('addApp',(event,args)=>{
+  appVue.$refs.sidePanel.addApp(args)
+})
+ipc.on('openSystemApp',async (event, args) => {
+  appVue.$refs.sidePanel.openSystemApp(args)
+})
+
+ipc.on('contrast',function(event,args){
+  appVue.$refs.sidePanel.contrast(args)
+})
+
+ipc.on('openApp',()=>{
+  appVue.$refs.sidePanel.openApp()
+})
+
+ipc.on('openSet',(event,args)=>{
+  appVue.$refs.sidePanel.openSet(args)
+})
+
+ipc.on('uninstallApp',(event,args)=>{
+  appVue.$refs.sidePanel.uninstallApp(args)
+})
+ipc.on('myApps',()=>{
+  appVue.$refs.sidePanel.myApps()
 })
 
 ipc.on('executedAppSuccess', async function (event, args) {

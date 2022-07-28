@@ -72,6 +72,10 @@ const standAloneAppModel = {
       accountAvatar: '',
       order: 0,
       useCount: 0,
+      attribute: {
+        isOffical: 1,
+        integration: 2
+      },
       lastExecuteTime: Date.now(),
       settings: JSON.stringify({
         bounds: {
@@ -329,6 +333,7 @@ const standAloneAppModel = {
       package:app.package || '',
       themeColor: app.themeColor || '#ccc',
       userThemeColor: '',
+      attribute: app.attribute,
       createTime: Date.now(),
       updateTime: Date.now(),
       accountAvatar: '',
@@ -443,6 +448,10 @@ const standAloneAppModel = {
         accountAvatar: '',
         order: 0,
         useCount: 3,
+        attribute: {
+          isOffical: 1,
+          integration: 2
+        },
         lastExecuteTime: Date.now(),
         settings: JSON.stringify({
           bounds: {
@@ -471,6 +480,10 @@ const standAloneAppModel = {
         accountAvatar: '',
         order: 0,
         useCount: 0,
+        attribute: {
+          isOffical: 1,
+          integration: 2
+        },
         lastExecuteTime: Date.now(),
         settings: JSON.stringify({
           bounds: {
@@ -498,6 +511,10 @@ const standAloneAppModel = {
         accountAvatar: '',
         order: 0,
         useCount: 0,
+        attribute: {
+          isOffical: 1,
+          integration: 2
+        },
         lastExecuteTime: Date.now(),
         settings: JSON.stringify({
           bounds: {
@@ -526,6 +543,10 @@ const standAloneAppModel = {
         accountAvatar: '',
         order: 0,
         useCount: 0,
+        attribute: {
+          isOffical: 1,
+          integration: 2
+        },
         lastExecuteTime: Date.now(),
         settings: JSON.stringify({
           bounds: {
@@ -545,6 +566,10 @@ const standAloneAppModel = {
         logo: 'https://a.apps.vip/imageEditor/icon.svg',
         url: 'https://a.apps.vip/imageEditor/',
         package: 'com.thisky.imageEditor',
+        attribute: {
+          isOffical: 1,
+          integration: 2
+        },
         createTime: Date.now(),
         updateTime: Date.now(),
         summary: '可以为您的图片增加相框、贴纸、文字、进行简单裁减、旋转，还可以添加滤镜。',
@@ -559,6 +584,10 @@ const standAloneAppModel = {
         url: 'https://www.yuque.com/tswork/ngd5zk/iuguin',
         package:'com.thisky.helper',
         themeColor: '#ff7b42',
+        attribute: {
+          isOffical: 1,
+          integration: 2
+        },
         createTime: Date.now(),
         updateTime: Date.now(),
         author: '想天软件',
