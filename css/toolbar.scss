@@ -1,10 +1,6 @@
 #third-toolbar {
   line-height: 40px;
-  z-index: 2;
-  top: calc(76px + var(--control-space-top));
-  width: calc(100vw - 45px);
-  left: 45px;
-  position: fixed;
+  width: 100%;
   height: 40px;
   background: #fff;
   border-bottom: 1px solid #e3e3e3;
@@ -33,8 +29,23 @@
       font-size: 14px;
       color: rgba(0,0,0,.65);
     }
-    :nth-child(2) {
-      font-size: 14px;
+    .noob-guide-btn {
+      font-size: 12px;
+      color: rgba(0,0,0,.65);
+      padding: 4px;
+      height: 70%;
+      border: 1px solid #e3e3e3;
+      border-radius: 4px;
+      transition: all 1000ms cubic-bezier(0.215, 0.61, 0.355, 1);
+      span {
+        font-size: 12px;
+        margin-left: 2px;
+      }
+      &:hover {
+        border: 1px solid #1890ff;
+        background-color: rgba(3, 167, 248, 0.1);
+        cursor: pointer;
+      }
     }
   }
 }

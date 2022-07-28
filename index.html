@@ -5,15 +5,12 @@
 		<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline'" />
 
 		<title>想天浏览器</title>
+    <script src="ext/vue/vue.js"></script>
 		<link rel="stylesheet" href="dist/bundle.css" />
 		<link rel="stylesheet" href="ext/icons/iconfont.css" />
     <link rel="stylesheet" href="ext/flex-class.css">
     <script src="ext/shepherdjs10/dist/js/shepherd.min.js"></script>
     <link rel="stylesheet" href="ext/shepherdjs10/dist/css/shepherd.css"/>
-    <script src="ext/vue/vue.js"></script>
-    <script src="ext/vue/antd.min.js"></script>
-    <script src="ext/vue/vuex.js"></script>
-    <link rel="stylesheet" href="ext/vue/antd.min.css"/>
   </head>
 
 	<body>
@@ -125,7 +122,7 @@
       transform:translate(0px,40px)!important;
     }
     .shepherd-modal-is-visible.shepherd-modal-overlay-container{
-     opacity: 0.15;
+      opacity: 0.15;
     }
     </style>
 
@@ -251,31 +248,32 @@
             </div>
           </div>
         </div>
+        <!-- 第三栏toolbar区域 -->
+        <div id="third-toolbar" class="flex align-center justify-between">
+          <div class="third-bar-lf flex align-center justify-around">
+            <div class="feature-btn flex justify-center align-center">设置为默认浏览器</div>
+            <div class="feature-btn flex justify-center align-center">导入其他浏览器数据</div>
+          </div>
+          <div class="third-bar-rg flex justify-around align-center">
+            <span class="flex justify-center align-center">
+              完成全部新用户引导即可获得限时纪念勋章：
+              <img src="./img/silver-b.png" alt="" style="width: 20px; height: 20px; margin-right: 5px">
+              创始用户
+            </span>
+            <div class="noob-guide-btn flex justify-center align-center">
+              <img src="./icons/svg/wenhao.svg" alt="" style="width: 18px; height: 18px">
+              <span>新手引导</span>
+              (1/6)
+            </div>
+          </div>
+        </div>
+        <script>
+          new Vue({
+            el: '#third-toolbar'
+          })
+        </script>
       </div>
     </div>
-
-    <!-- 第三栏toolbar区域 -->
-    <div id="third-toolbar" class="flex align-center justify-between">
-      <div class="third-bar-lf flex align-center justify-around">
-        <div class="feature-btn flex justify-center align-center">设置为默认浏览器</div>
-        <div class="feature-btn flex justify-center align-center">导入其他浏览器数据</div>
-      </div>
-      <div class="third-bar-rg flex justify-around align-center">
-        <span class="flex justify-center align-center">
-          完成全部新用户引导即可获得限时纪念勋章：
-          <img src="./img/silver-b.png" alt="" style="width: 20px; height: 20px; margin-right: 5px">
-          创始用户
-        </span>
-        <a-button icon="question-circle" size="small">
-          新手引导
-        </a-button>
-      </div>
-    </div>
-    <script>
-      new Vue({
-        el: '#third-toolbar'
-      })
-    </script>
 
 		<div id="webviews">
 			<div id="leftArrowContainer" class="arrow-indicator">
