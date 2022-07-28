@@ -11,7 +11,10 @@ files:
     - pages/**/*
     - icons/**/*
     - icons/*.svg
-    - js/**/*
+    #- js/**/*
+    - js/main/**/*
+    - js/request/**/*
+    - js/util/**/*
     - ./main.build.js
     - ext/**/*
     - index.html
