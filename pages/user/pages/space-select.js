@@ -23,14 +23,30 @@ const tpl = `
   <div v-else style="text-align: center">
     <!--      <a-empty text="无空间" v-if="spaces.length===0"></a-empty>-->
     <div style="text-align: left;overflow-y: auto;max-height: 310px;margin-right: 20px;padding-top: 10px;padding-left: 40px;padding-bottom: 10px" class="scroller">
+    <a-card @click="showCreateSpace" hoverable style="width: 250px;display: inline-block;margin-left:20px;">
+        <a-card-meta title="创建新空间" description="创建一个全新的空间">
+          <template #avatar>
+            <a-avatar :size="40" style="background-color: #eeeeee">
+              <template #icon>
+                <svg style="margin-top: 3px;width: 30px" t="1648099588078" class="icon" viewBox="0 0 1024 1024"
+                     version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="21372" width="36" height="36">
+                  <path
+                    d="M512 42.666667c259.2 0 469.333333 210.133333 469.333333 469.333333s-210.133333 469.333333-469.333333 469.333333S42.666667 771.2 42.666667 512 252.8 42.666667 512 42.666667z m0 85.333333a384 384 0 1 0 0 768 384 384 0 0 0 0-768z m0 170.666667a42.666667 42.666667 0 0 1 42.666667 42.666666v128h128a42.666667 42.666667 0 0 1 0 85.333334h-128v128a42.666667 42.666667 0 0 1-85.333334 0v-128H341.333333a42.666667 42.666667 0 0 1 0-85.333334h128V341.333333a42.666667 42.666667 0 0 1 42.666667-42.666666z"
+                    fill="#666666" p-id="21373"></path>
+                </svg>
+              </template>
+            </a-avatar>
+          </template>
+        </a-card-meta>
+      </a-card>
     <a-tooltip v-for="space,index in spaces" placement="bottom">
     <template #title>
     名称：{{space.name}}<br>
-    空间ID：{{space.id}}<br>
+    空间ID：{{space.nanoid}}<br>
     保存时间：{{dateTime(space.sync_time)}}<br>
     修改时间：{{dateTime(space.update_time)}}<br>
     创建时间：{{dateTime(space.create_time)}}<br>
-     <span v-if="space.client_id !==''">设备ID：{{space.client_id}}</span>
+     <span v-if="space.type==='cloud'">设备ID：{{space.client_id}}</span>
      </template>
         <a-card  v-if="space.type==='cloud'"
          :class="{'other-using':space.isOtherUsing,'self-using':space.isSelfUsing}"
@@ -72,9 +88,9 @@ const tpl = `
          <a-tooltip placement="bottom" :mouseLeave-delay="0">
     <template #title>
     名称：{{space.name}}<br>
-    空间ID：{{space.id}}<br>
+    空间ID：{{space.nanoid}}<br>
     保存时间：{{dateTime(space.sync_time)}}<br>修改时间：{{dateTime(space.update_time)}}<br>创建时间：{{dateTime(space.create_time)}}<br>
-     <span v-if="space.client_id !==''">设备ID：{{space.client_id}}</span>
+     <span v-if="space.type==='cloud'">设备ID：{{space.client_id}}</span>
      </template>
         <a-card  v-if="space.type!=='cloud'" @click="switchSpace(space)"
          :class="{'other-using':space.isOtherUsing,'self-using':space.isSelfUsing}"
@@ -117,22 +133,7 @@ const tpl = `
         </template>
       </a-dropdown>
 
-      <a-card @click="showCreateSpace" hoverable style="width: 250px;display: inline-block;margin-left:20px;">
-        <a-card-meta title="创建新空间" description="创建一个全新的空间">
-          <template #avatar>
-            <a-avatar :size="40" style="background-color: #eeeeee">
-              <template #icon>
-                <svg style="margin-top: 3px;width: 30px" t="1648099588078" class="icon" viewBox="0 0 1024 1024"
-                     version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="21372" width="36" height="36">
-                  <path
-                    d="M512 42.666667c259.2 0 469.333333 210.133333 469.333333 469.333333s-210.133333 469.333333-469.333333 469.333333S42.666667 771.2 42.666667 512 252.8 42.666667 512 42.666667z m0 85.333333a384 384 0 1 0 0 768 384 384 0 0 0 0-768z m0 170.666667a42.666667 42.666667 0 0 1 42.666667 42.666666v128h128a42.666667 42.666667 0 0 1 0 85.333334h-128v128a42.666667 42.666667 0 0 1-85.333334 0v-128H341.333333a42.666667 42.666667 0 0 1 0-85.333334h128V341.333333a42.666667 42.666667 0 0 1 42.666667-42.666666z"
-                    fill="#666666" p-id="21373"></path>
-                </svg>
-              </template>
-            </a-avatar>
-          </template>
-        </a-card-meta>
-      </a-card>
+
       <div>
       </div>
     </div>

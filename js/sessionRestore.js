@@ -12,7 +12,7 @@ const ipc = require('electron').ipcRenderer
 let SYNC_INTERVAL = 30 //普通模式下，同步间隔为30秒
 let safeClose=false
 if ('development-mode' in window.globalArgs) {
-  SYNC_INTERVAL = 30 //开发模式下，间隔改为5，方便调试和暴露问题
+  SYNC_INTERVAL = 10 //开发模式下，间隔改为5，方便调试和暴露问题
 }
 let autoSaver = null
 /**
@@ -82,7 +82,6 @@ const sessionRestore = {
   save: async function (forceSave = true, sync = true) {
     sessionRestore.currentSpace=await spaceModel.getCurrent()
     let currentState=tasks.getStringifyableState()
-    console.log('当前状态为 currentStat=',currentState)
     var stateString = JSON.stringify(currentState)
     // save all tabs that aren't private
     var data = {
@@ -101,6 +100,7 @@ const sessionRestore = {
       let uid = typeof sessionRestore.currentSpace.userInfo === 'undefined' ? 0 : sessionRestore.currentSpace.userInfo.uid
       let space = {
         id: sessionRestore.currentSpace.spaceId,
+        nanoid:sessionRestore.currentSpace.spaceId,
         name: sessionRestore.currentSpace.name,
         uid: uid,
         type: sessionRestore.currentSpace.spaceType
@@ -189,7 +189,6 @@ const sessionRestore = {
         var newTab = tasks.getSelected().tabs.add({
           url: urlParser.getSourceURL('ts://guide')
         })
-        console.log(newTab)
         browserUI.addTab(newTab, {
           enterEditMode: false
         })

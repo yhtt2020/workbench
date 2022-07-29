@@ -83,7 +83,7 @@ const spaceModel = {
         }
       } else {
         await spaceModel.setAdapter('local').getCurrent().then(sp => {
-          if (space.id === sp.spaceId) {
+          if (space.nanoid === sp.spaceId) {
             space.isSelfUsing = true
             space.isUsing = true
           }
@@ -182,18 +182,17 @@ const spaceModel = {
       if (!!!space) {
         space = {
           name: '本机空间',
-          id: nanoid()
+          nanoid: nanoid()
         }
         console.error('意外未能获得当前空间')
       }
       currentSpace.space = space
-      currentSpace.spaceId = space.id
+      currentSpace.spaceId = space.nanoid
       currentSpace.name = space.name
       ldb.db.set('currentSpace.space', space).write()
       ldb.db.set('currentSpace.name', space.name).write()
-      ldb.db.set('currentSpace.spaceId', space.id).write()
+      ldb.db.set('currentSpace.spaceId', space.nanoid).write()
     }
-    console.log('currentSpace=',currentSpace)
     return currentSpace
   },
   async getSpace (id) {
@@ -245,7 +244,7 @@ const spaceModel = {
     ldb.reload()
     ldb.db.set('currentSpace.space', space).write()
     ldb.db.set('currentSpace.name', space.name).write()
-    ldb.db.set('currentSpace.spaceId', space.id).write()
+    ldb.db.set('currentSpace.spaceId', space.nanoid).write()
   }
 
 }

@@ -3,52 +3,78 @@ const { nanoid } = require('nanoid')
 if (window) {
   ldb = window.ldb
 }
+const { SqlDb }=require('../util/sqldb')
+let sqlDb=new SqlDb()
 const localSpaceModel={
-  getSpace(id){
-    ldb.reload()
-    let space = ldb.db.get('spaces').find({ id: id }).value()
-    if (space) {
-      if(space.type==='cloud' && space.nanoid)
-      {
-        space.id=space.nanoid
+  /**
+   * 获取空间，
+   * @param id  nanoid，已更新sqldb
+   * @returns {Promise<*|null>}
+   */
+  async getSpace(id){
+    try{
+      let space = await sqlDb.knex('local_space').where({ nanoid: id }).first()
+      if (space) {
+        return space
+      } else {
+        return null
       }
-      return space
-    } else {
+    }catch (e) {
+      console.warn(e)
       return null
     }
+
   },
   /**
-   * 获得最后同步的空间
+   * 获得最后同步的空间，已更新sqldb
    * @returns {null|*}
    */
-  getLastSyncSpace(){
-    ldb.reload()
-    let spaces = ldb.db.get('spaces').orderBy('sync_time','desc').value()
-    if(spaces.length>0){
+  async getLastSyncSpace(){
+    let space = await sqlDb.knex('local_space').orderBy('sync_time','desc').first()
+    if(space){
       // if(!!!spaces[0].id){
       //   //ldb.db.get('spaces').remove({create_time:spaces[0]['create_time']}).write()
       //   return localSpaceModel.getLastSyncSpace()
       // }
-      return spaces[0]
+      return space
     }else{
       return null
     }
   },
-  copy(space){
-    ldb.reload()
-    let sourceSpace=localSpaceModel.getSpace(space.id)
-    if(!!!sourceSpace){
-      return standReturn.failure('空间不存在')
+
+  /**
+   * 复制空间，已更新为sqldb
+   * @param space
+   * @returns {Promise<{data: {}, status: number}|{data: *, status: number, info: string}>}
+   */
+  async copy(space){
+    try{
+      let sourceSpace=await sqlDb.knex('local_space').where({nanoid:space.nanoid}).first()
+      if(!!!sourceSpace){
+        return standReturn.failure('空间不存在')
+      }
+      let targetSpace= JSON.parse(JSON.stringify(sourceSpace))
+      targetSpace.nanoid=nanoid()
+      targetSpace.name=targetSpace.name+'_副本'
+      targetSpace.update_time=Date.now()
+      let result=await sqlDb.knex('local_space').insert(targetSpace)
+      if(result.length>0){
+        return standReturn.success(targetSpace)
+      }
+    }catch (e) {
+      return standReturn.failure()
     }
-    let targetSpace= JSON.parse(JSON.stringify(sourceSpace))
-    targetSpace.id=nanoid()
-    targetSpace.name=targetSpace.name+'_副本'
-    targetSpace.update_time=Date.now()
-    ldb.db.get('spaces').push(targetSpace).write()
-    return standReturn.success(targetSpace)
+
+
   },
-  addSpace(space,user){
-    ldb.reload()
+  /**
+   * 添加空间，已更新为sqldb
+   * @param space
+   * @param user
+   * @returns {Promise<{data: {}, status: number}|{data: *, status: number, info: string}>}
+   */
+  async addSpace(space,user){
+
     /*
      id:spaceId,
         data:saveData.data,
@@ -58,73 +84,121 @@ const localSpaceModel={
         create_time:Date.now(),
         update_time:Date.now(),
      */
-    let spaceAdd={
-      name:space.name,
-      data:{
-        "version": 2,
-        "state": {
-          "tasks": [
-          ],
-          "selectedTask": ""
+    try{
+      let spaceAdd={
+        name:space.name,
+        data:{
+          "version": 2,
+          "state": {
+            "tasks": [
+            ],
+            "selectedTask": ""
+          },
+          "saveTime": Date.now(),
         },
-        "saveTime": Date.now(),
-      },
-      count_task:1,
-      count_tab:1,
-      create_time:Date.now(),
-      update_time:Date.now(),
-      sync_time:Date.now(),
-      uid:0,
-      type:'local',
-      id:nanoid()
+        count_task:1,
+        count_tab:1,
+        create_time:Date.now(),
+        update_time:Date.now(),
+        sync_time:Date.now(),
+        nanoid:nanoid()
+      }
+      let result=await sqlDb.knex('local_space').insert(spaceAdd)
+      if(result.length>0){
+        return standReturn.success(spaceAdd)
+      }else{
+        return standReturn.failure({},'插入失败。')
+      }
+    }catch (e) {
+      return standReturn.failure({},'意外错误')
     }
-    ldb.db.get('spaces').push(spaceAdd).write()
-    return standReturn.success(spaceAdd)
+
+
   },
 
+  /**
+   * 获取用户的全部空间，已经更新为sqldb
+   * @param user
+   * @param option
+   * @returns {Promise<{data: {}, status: number}|{data: *, status: number, info: *}>}
+   */
   async getUserSpaces(user,option){
-    ldb.reload()
     try{
-      let spaces=[]
-     spaces =  ldb.db.get('spaces').filter((sp)=>{
-       return option.showBackup || sp.type==='local' || !sp.type
-     }).orderBy('update_time','desc').value()
-     return  standReturn.success(spaces)
+    let result=[]
+      if(option.showBackup){
+       let backupSpaces=await sqlDb.knex('backup_space').where({uid:user.uid}).orderBy('sync_time','desc','last')
+        result= result.concat(backupSpaces)
+      }
+      let localSpaces=await sqlDb.knex('local_space').orderBy('sync_time','desc','last')
+      result=result.concat(localSpaces)
+      return  standReturn.success(result)
     }catch (e){
+      console.warn(e)
      return  standReturn.failure([],'无法读取本地空间。')
     }
-
-
   },
 
+  /**
+   * 切换空间，已更新
+   * @param space
+   * @returns {Promise<{data: {}, status: number}>}
+   */
   async changeCurrent(space){
-    // ldb.reload()
-    //
-    // let currentSpace=ldb.db.get('currentSpace').value()
-    // console.log(space)
-    // ldb.db.set('currentSpace.spaceId',space.id).write()
-    let currentSpace={spaceId:space.id,spaceType:'local'}
+    let currentSpace={spaceId:space.nanoid,spaceType:'local'}
     ipc.send('changeSpace',currentSpace)
     return standReturn.success(currentSpace)
   },
-  getAll(){
-    ldb.reload()
-    return ldb.db.get('spaces').value()
+
+  /**
+   * 获取全部空间，已更新为sqldb
+   * @returns {Promise<*>}
+   */
+  async getAll(){
+    return await sqlDb.knex('local_space').select()
   },
 
+  /**
+   * 删除空间，已更新为sqldb
+   * @param space
+   * @returns {Promise<{data: {}, status: number}|{data: *, status: number, info: string}>}
+   */
   async deleteSpace(space){
-    ldb.reload()
-    ldb.db.get('spaces').remove({id:space.id}).write()
-    return standReturn.success()
+    try{
+      let result=await  sqlDb.knex('local_space').where({nanoid:space.nanoid}).delete()
+      if(result.length>0){
+        return standReturn.success()
+      }
+    }catch (e) {
+      return standReturn.failure()
+    }
   },
+
+  /**
+   * 重命名空间，已更新为sqldb
+   * @param newName
+   * @param space
+   * @returns {Promise<{data: {}, status: number}|{data: *, status: number, info: string}>}
+   */
   async renameSpace(newName,space){
-    ldb.reload()
-    ldb.db.get('spaces').find({id:space.id}).assign({name:newName,update_time:Date.now()}).write()
-    return standReturn.success()
+    try{
+      await sqlDb.knex('local_space').where({nanoid:space.nanoid}).update({
+        name:newName,update_time:Date.now()
+      })
+      return standReturn.success()
+    }catch (e) {
+      return standReturn.failure()
+    }
+
+
   },
-  update(space){
-    ldb.reload()
-    let foundSpace= ldb.db.get('spaces').find({id:space.id}).value()
+
+  /**
+   * 更新空间，已更新为sqldb
+   * @param space
+   * @returns {Promise<void>}
+   */
+  async update(space){
+    let foundSpace= await sqlDb.knex('local_space').where({nanoid:space.nanoid}).value()
     if(foundSpace){
       let saveData={}
       saveData.update_time=Date.now()
@@ -132,36 +206,44 @@ const localSpaceModel={
       saveData.name=space.name
       saveData.type=space.type
       saveData.user=space.user
-      ldb.db.get('spaces').find({id:space.id}).assign(saveData).write()
+      sqlDb.knex('local_space').where({nanoid:space.nanoid}).update(saveData)
       standReturn.success('更新空间信息成功')
     }else{
      standReturn.failure('不存在空间。')
     }
   },
-  save(space,saveData){
-    ldb.reload()
-    let foundSpace= ldb.db.get('spaces').find({id:space.id}).value()
+
+  /**
+   * 存储空间，已更新为sqldb
+   * @param space
+   * @param saveData
+   * @returns {Promise<{data: *, status: number, info: string}>}
+   */
+  async save(space,saveData){
+    let foundSpace=await sqlDb.knex('local_space').where({nanoid:space.nanoid}).first()
     if(foundSpace){
       saveData.update_time=Date.now()
       saveData.sync_time=Date.now()
-      ldb.db.get('spaces').find({id:space.id}).assign(saveData).write()
+      saveData.data=JSON.stringify(saveData.data)
+      await sqlDb.knex('local_space').where({nanoid:space.nanoid}).update(saveData)
     }else{
-      if(!space.id){
+      if(!space.nanoid){
         throw Error('本地空间ID不存在')
       }
-      let newSpace={
-        id:space.id,
-        data:saveData.data,
-        name:space.name||'本机空间',
-        count_task:saveData.count_task,
-        count_tab:saveData.count_tab,
-        create_time:Date.now(),
-        update_time:Date.now(),
-        sync_time:Date.now(),
-        type:'local',
-        uid:space.uid
-      }
-      ldb.db.get('spaces').push(newSpace).write()
+      return standReturn.failure('空间不存在')
+      // let newSpace={
+      //   nanoid:space.nanoid,
+      //   data:saveData.data,
+      //   name:space.name||'本机空间',
+      //   count_task:saveData.count_task,
+      //   count_tab:saveData.count_tab,
+      //   create_time:Date.now(),
+      //   update_time:Date.now(),
+      //   sync_time:Date.now(),
+      //   type:'local',
+      //   uid:space.uid
+      // }
+      // ldb.db.get('spaces').push(newSpace).write()
     }
   }
 }

@@ -35,8 +35,9 @@
   window.ipc = require('electron').ipcRenderer
   window.ldb=require('../../src/util/ldb')
   tools=require('../util/util').tools
-  const spaceModel = require('../../src/model/spaceModel')
   tools.getWindowArgs(window)
+  const spaceModel = require('../../src/model/spaceModel')
+
   ldb.loadInWindow()
   const app = Vue.createApp({
     async mounted () {
