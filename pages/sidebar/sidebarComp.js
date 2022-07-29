@@ -1330,6 +1330,9 @@ Vue.component('sidebar', {
         })
       },200)
     },
+    openAppCircle(args){
+      window.location.href=`tsb://app/redirect/?package=com.thisky.com&url=${api.getUrl(api.API_URL.user.CIRCLE)}?id=${args}`
+    },
     myApps(){
       standAloneAppModel.getAllApps({order:'createTime'}).then((data) => {
         ipc.send('allMyApps',data)
@@ -1509,6 +1512,7 @@ Vue.component('sidebar', {
     openCircle (args) {
       this.userPanelVisible = false
       this.addTab(`${api.getUrl(api.API_URL.user.CIRCLE)}?id=${args}`)
+      // window.location.href=`tsb://app/redirect/?package=com.thisky.com&url=${api.getUrl(api.API_URL.user.CIRCLE)}?id=${args}`
     },
     openHelp (apps) {
       function checkAdult (apps) {
@@ -2010,6 +2014,10 @@ ipc.on('uninstallApp',(event,args)=>{
 ipc.on('myApps',()=>{
   appVue.$refs.sidePanel.myApps()
 })
+ipc.on('openAppCircle',(event,args)=>{
+  appVue.$refs.sidePanel.openAppCircle(args)
+})
+
 
 ipc.on('executedAppSuccess', async function (event, args) {
   let now=Date.now()

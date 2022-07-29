@@ -4,7 +4,7 @@ let app={
   "themeColor": "#3c78d8",
   "author": "想天软件",
   "site": "https://apps.vip",
-  "logo": "../../pages/appStore/favicon.svg",
+  "logo": "https://up.apps.vip/logo/favicon.svg",
   "type": "local",
   "url": "/pages/appStore/index.html",
   "package": "com.thisky.appStore",

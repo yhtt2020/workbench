@@ -38,7 +38,7 @@ app.whenReady().then(()=> {
 
     setTimeout(()=>{
       event.reply('result',result)
-    },150)
+    },350)
   })
 
 
@@ -73,5 +73,11 @@ app.whenReady().then(()=> {
       event.reply('allMyApps',allMyApps)
     },50)
   })
+
+  ipc.on('openAppCircle',(event,args)=>{
+    SidePanel.send('openAppCircle',args)
+  })
+
+
 })
 
