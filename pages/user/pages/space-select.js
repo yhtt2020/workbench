@@ -335,12 +335,14 @@ const SpaceSelect = {
       //todo loadLocalSpaces()
       let spaces= await spaceModel.getLocalSpaces()
       this.localOptions=[]
+      console.log(spaces)
       spaces.forEach((space) => {
-        if(space.data && space.type!=='cloud'){
-          if(space.id===this.currentSpace.spaceId){
-            this.localOptions.push({ label: space.name +'（ '+ space.data.state.tasks.length+' 标签组）← 当前', value: space.id })
+        space.data=JSON.parse(space.data)
+        if(space.data){
+          if(space.nanoid===this.currentSpace.spaceId){
+            this.localOptions.push({ label: space.name +'（ '+ space.data.state.tasks.length+' 标签组）← 当前', value: space.nanoid })
           }else
-          this.localOptions.push({ label: space.name +'（ '+ space.data.state.tasks.length+' 标签组）', value: space.id })
+          this.localOptions.push({ label: space.name +'（ '+ space.data.state.tasks.length+' 标签组）', value: space.nanoid })
           this.localSpaces.push(space)
         }
       })
@@ -356,7 +358,7 @@ const SpaceSelect = {
       try {
         let selectedSpaces=this.selectedImportSpaces.map(space=>{
           let item=this.localSpaces.find((item)=>{
-            return item.id===space
+            return item.nanoid===space
           })
           return {
             data:item.data,
