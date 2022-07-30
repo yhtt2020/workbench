@@ -16,12 +16,19 @@ app.whenReady().then(()=> {
 
   ipc.on('addNewApp',function (event, args){
     SidePanel.send('addApp',args)
-    if(tips === true){
-      event.reply('installResult',true)
-    }
-    if(tips === false){
-      event.reply('installResult',false)
-    }
+    console.log(tips)
+    const myVar = setInterval(function () {
+      if (tips !== '') {
+        console.log(tips)
+        if(tips === true){
+          event.reply('installResult',true)
+        }
+        if(tips === false){
+          event.reply('installResult',false)
+        }
+        clearInterval(myVar)
+      }
+    }, 20);
   })
 
   ipc.on('openSystemApp',(event,args)=>{
@@ -35,10 +42,12 @@ app.whenReady().then(()=> {
 
   ipc.on('contrast',function(event,args){
     SidePanel.send('contrast',args)
-
-    setTimeout(()=>{
-      event.reply('result',result)
-    },350)
+    const myVar = setInterval(function () {
+      if (result !== undefined) {
+        event.reply('result', result)
+        clearInterval(myVar)
+      }
+    }, 20);
   })
 
 
@@ -49,10 +58,12 @@ app.whenReady().then(()=> {
 
   ipc.on('needOpenApp',function(event,args){
     SidePanel.send('openApp')
-
-    setTimeout(()=>{
-      event.reply('openAppList',openAppList)
-    },50)
+    const myVar = setInterval(function () {
+      if (openAppList !== undefined) {
+        event.reply('openAppList',openAppList)
+        clearInterval(myVar)
+      }
+    }, 20);
   })
 
 
@@ -69,15 +80,20 @@ app.whenReady().then(()=> {
   })
   ipc.on('myApps',function (event,args){
     SidePanel.send('myApps')
-    setTimeout(()=>{
-      event.reply('allMyApps',allMyApps)
-    },50)
+    const myVar = setInterval(function () {
+      if (allMyApps !== '') {
+        event.reply('allMyApps',allMyApps)
+        clearInterval(myVar)
+      }
+    }, 20);
   })
 
   ipc.on('openAppCircle',(event,args)=>{
     SidePanel.send('openAppCircle',args)
   })
 
-
+  ipc.on('openAppGroupChat',(event,args)=>{
+    SidePanel.send('openAppGroupChat',args)
+  })
 })
 

@@ -2017,7 +2017,9 @@ ipc.on('myApps',()=>{
 ipc.on('openAppCircle',(event,args)=>{
   appVue.$refs.sidePanel.openAppCircle(args)
 })
-
+ipc.on('openAppGroupChat',(event,args)=>{
+  appVue.$refs.sidePanel.openGroupChat(args)
+})
 
 ipc.on('executedAppSuccess', async function (event, args) {
   let now=Date.now()
