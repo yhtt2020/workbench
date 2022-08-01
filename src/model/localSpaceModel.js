@@ -1,6 +1,7 @@
 const standReturn = require('../util/standReturn')
 const { nanoid } = require('nanoid')
 const { SqlDb }=require('../util/sqldb')
+const spaceModel=require('./spaceModel')
 let sqlDb=new SqlDb()
 const localSpaceModel={
   /**
@@ -165,9 +166,12 @@ const localSpaceModel={
   async deleteSpace(space){
     try{
       let result=await  sqlDb.knex('local_space').where({nanoid:space.nanoid}).delete()
-      if(result.length>0){
+      if(result){
         return standReturn.success()
+      }else{
+        return standReturn.failure({},'不存在空间')
       }
+
     }catch (e) {
       return standReturn.failure()
     }
@@ -245,6 +249,39 @@ const localSpaceModel={
       // }
       // ldb.db.get('spaces').push(newSpace).write()
     }
+  },
+  async insertDefaultSpace(data = {
+    'version': 2,
+    'state': {
+      'tasks': [],
+      'selectedTask': ''
+    },
+    'saveTime': Date.now(),
+  }) {
+    let spaceAdd = {
+      name: '默认空间',
+      data: data,
+      count_task: 1,
+      count_tab: 1,
+      create_time: Date.now(),
+      update_time: Date.now(),
+      sync_time: Date.now(),
+      nanoid: nanoid()
+    }
+    await sqlDb.knex('local_space').insert(spaceAdd)
+    console.warn('插入了默认空间', spaceAdd)
+    let currentSpace = {
+      spaceId: spaceAdd.nanoid,
+      spaceType: 'local',
+      name: spaceAdd.name,
+      userInfo: {
+        uid: 0
+      },
+      space: spaceAdd
+    }
+    spaceAdd.type='local'
+    await spaceModel.setCurrentSpace(spaceAdd)
+    return currentSpace
   }
 }
 
