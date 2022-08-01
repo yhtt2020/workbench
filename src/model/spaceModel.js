@@ -48,7 +48,7 @@ const spaceModel = {
       spaceModel.setAdapter('local')
     } else {
       spaceModel.setAdapter('cloud')
-      spaceModel.user=user
+      spaceModel.adapterModel.user=user
     }
     return spaceModel
   },

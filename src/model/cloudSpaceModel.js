@@ -32,7 +32,7 @@ const cloudSpaceModel={
         cloudSpace.id=cloudSpace.nanoid
         cloudSpace.userInfo=cloudSpaceModel.user
         //正常登录需要使用线上版本的空间来更新一下本地的备份空间，此时是最佳的更新备份空间时机
-        backupSpaceModel.save(cloudSpace,{name:cloudSpace.name,data:cloudSpace.data,count_task: cloudSpace.count_task,count_tab: cloudSpace.count_tab,userInfo:JSON.parse(JSON.stringify(cloudSpaceModel.user))})
+        await backupSpaceModel.save(cloudSpace,{name:cloudSpace.name,data:cloudSpace.data,count_task: cloudSpace.count_task,count_tab: cloudSpace.count_tab})
         ipc.send('changeSpace',{spaceId:space.nanoid,spaceType:'cloud',name:cloudSpace.name,userInfo:JSON.parse(JSON.stringify(cloudSpaceModel.user))})
       }else{
         return standReturn.failure('空间异常')
