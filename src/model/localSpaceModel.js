@@ -1,8 +1,5 @@
 const standReturn = require('../util/standReturn')
 const { nanoid } = require('nanoid')
-if (window) {
-  ldb = window.ldb
-}
 const { SqlDb }=require('../util/sqldb')
 let sqlDb=new SqlDb()
 const localSpaceModel={
@@ -126,7 +123,10 @@ const localSpaceModel={
     try{
     let result=[]
       if(option.showBackup){
-       let backupSpaces=await sqlDb.knex('backup_space').where({uid:user.uid}).orderBy('sync_time','desc','last')
+       let backupSpaces=await sqlDb.knex('backup_space').orderBy('sync_time','desc','last')
+        backupSpaces.forEach(sp=>{
+          sp.type='cloud'
+        })
         result= result.concat(backupSpaces)
       }
       let localSpaces=await sqlDb.knex('local_space').orderBy('sync_time','desc','last')
@@ -198,7 +198,7 @@ const localSpaceModel={
    * @returns {Promise<void>}
    */
   async update(space){
-    let foundSpace= await sqlDb.knex('local_space').where({nanoid:space.nanoid}).value()
+    let foundSpace= await sqlDb.knex('local_space').where({nanoid:space.nanoid}).first()
     if(foundSpace){
       let saveData={}
       saveData.update_time=Date.now()

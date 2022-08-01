@@ -1,4 +1,4 @@
-const baseApi = require('./baseApi.js')
+const baseApi = require('../../pages/util/api/baseApi.js')
 
 const url = {
   getUserInfo: '/app/getUserInfo',

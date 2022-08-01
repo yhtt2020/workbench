@@ -8,6 +8,7 @@ const localSpaceModel = require('../src/model/localSpaceModel')
 const backupSpaceModel = require('../src/model/backupSpaceModel')
 const urlParser = require('../js/util/urlParser')
 const configModel = require('../src/model/configModel')
+const cloudSpaceModel = require('../src/model/cloudSpaceModel')
 const ipc = require('electron').ipcRenderer
 let SYNC_INTERVAL = 30 //普通模式下，同步间隔为30秒
 let safeClose=false
@@ -112,7 +113,6 @@ const sessionRestore = {
           saveData.userInfo = sessionRestore.currentSpace.userInfo
           //备份空间需要额外夹带一个最新的用户信息
           //如果是云端空间，还需要将此用户的信息存储下来，避免后面切换空间后导致当前用户信息丢失之后，无法再通过接口交互。
-          console.log('离线保存成功', space, saveData)
           backupSpaceModel.save(space, saveData)
         } else {
           // console.log('本地空间保存成功', space, saveData)
@@ -325,10 +325,11 @@ const sessionRestore = {
     currentSpace = await spaceModel.getCurrent()
     let space = {}
     if (currentSpace.spaceType === 'cloud') {
+      cloudSpaceModel.setUser(currentSpace.userInfo)
       let backupSpace = await backupSpaceModel.getSpace(currentSpace.spaceId) //获取本地的备份空间
 
       try {
-        let spaceResult = await spaceModel.setUser(currentSpace.userInfo).getSpace(currentSpace.spaceId) //先尝试获取一次最新的空间
+        let spaceResult = await cloudSpaceModel.getSpace(currentSpace.spaceId) //先尝试获取一次最新的空间
         if (spaceResult.status === 1) {
           if (String(spaceResult.data.id) === '-1') {
             fatalStop({
@@ -360,7 +361,7 @@ const sessionRestore = {
               //注意，如果是切换过来的空间，因为在切换之前就会读入一次最新的作为备份空间，反倒不会走这个步骤
               console.log('发现本地的备份空间还不存在，自动将远端保存为备份空间')
               space.userInfo = currentSpace.userInfo
-              backupSpaceModel.save(space, space)
+              await backupSpaceModel.save(space, space)
               backupSpace = space
             }
             if (space['client_id'] === currentSpace.userInfo.clientId) {
@@ -397,11 +398,10 @@ const sessionRestore = {
               }
             } else {
               //正常登录需要使用线上版本的空间来更新一下本地的备份空间，此时是最佳的更新备份空间时机
-              backupSpaceModel.save(space, {
+              await backupSpaceModel.save(space, {
                 data: space.data,
                 count_task: space.count_task,
-                count_tab: space.count_tab,
-                userInfo: currentSpace.userInfo
+                count_tab: space.count_tab
               })
               spaceModel.setCurrentSpace(space)
             }
@@ -440,7 +440,7 @@ const sessionRestore = {
         //如果是云端空间，尝试上线设备
         //设备上线 ↓
         try {
-          let result = await spaceModel.setUser(space.userInfo).clientOnline(space.id, false)
+          let result = await cloudSpaceModel.clientOnline(space.id, false)
           if (result.status === 1) {
             if (result.data.toString() === '-1') {
               fatalStop({

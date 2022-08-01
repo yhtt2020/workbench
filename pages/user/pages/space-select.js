@@ -17,7 +17,7 @@ const tpl = `
 
   </div>
   <div v-if="user.uid" style="float: right;position: absolute;right: 20px;top: 20px;" ><a-button @click="importFromLocal" size="small">导入</a-button></div>
-  <div v-else style="float: right;position: absolute;right: 20px;top: 20px;" ><a-checkbox @change="loadSpaces" v-model:checked="showBackup">显示备份空间</a-checkbox></div>
+  <div v-else style="float: right;position: absolute;right: 20px;top: 20px;" ><a-checkbox @change="loadSpaces" v-model:checked="showBackup">显示离线空间</a-checkbox></div>
   <div v-if="loading">
   </div>
   <div v-else style="text-align: center">
@@ -53,7 +53,7 @@ const tpl = `
           style="margin-left:20px;width: 250px;display: inline-block;margin-bottom: 10px;background-color: rgba(241,241,241,0.29)">
           <a-card-meta  >
           <template #title>
-          <span v-if="space.type==='cloud'">【备份】</span> {{space.name}}
+          <span v-if="space.type==='cloud'">【离线】</span> {{space.name}}
 
 </template>
             <template #description>

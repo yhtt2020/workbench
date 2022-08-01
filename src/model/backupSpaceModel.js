@@ -1,9 +1,12 @@
 const { nanoid } = require('nanoid')
 const standReturn = require('../util/standReturn')
-const spaceApi = require('../../pages/util/api/spaceApi')
+const spaceApi = require('../api/spaceApi')
 if (typeof window !== 'undefined') {
   ldb = window.ldb
 }
+const { SqlDb }=require('../util/sqldb')
+const userModel = require('./userModel')
+let sqlDb=new SqlDb()
 /**
  * 备份空间，单独列开一个模型，以免与本地空间混淆
  * @type {{setOfflineUse(*=): void}}
@@ -18,52 +21,67 @@ const backupSpaceModel = {
     ldb.db.get('spaces').find({ id: spaceId }).assign({ 'offlineUse': true }).write()
   },
   /**
-   * 设置空间未离线使用
+   * 设置空间未离线使用，更新sqlite
    * @param spaceId
    */
-  cancelOfflineUse (spaceId) {
+  async cancelOfflineUse (spaceId) {
     ldb.reload()
-    ldb.db.get('spaces').find({ id: spaceId }).assign({ 'offlineUse': false }).write()
+    sqlDb.knex('backup_space').where({ nanoid: spaceId }).update({ 'offlineUse': false })
   },
   /**
-   * 获得某个空间是否是离线可用
+   * 获得某个空间是否是离线可用，更新sqlite
    * @param spaceId
    * @returns {boolean}
    */
-  getOfflineUse (spaceId) {
+  async getOfflineUse (spaceId) {
     ldb.reload()
-    let space = ldb.db.get('spaces').find({ id: spaceId }).value()
+    let space = await sqlDb.knex('backup_space').where({ nanoid: spaceId }).first()
     if (!!!space) {
       return false
     }
     return space.offlineUse
   },
 
-  getSpace (id) {
-    ldb.reload()
-    let space = ldb.db.get('spaces').find({ id: id }).value()
+  /**
+   * 获取空间，已更新至sqlite
+   * @param nanoid
+   * @returns {null|*}
+   */
+  async getSpace (nanoid) {
+    let space = await sqlDb.knex('backup_space').where({ nanoid: nanoid }).first()
     if (space) {
-      if (space.type === 'cloud' && space.nanoid) {
-        space.id = space.nanoid
-      }
+      space.userInfo=userModel.get({uid:space.uid})
+      space.userInfo.clientId=userModel.getClientId()
       return space
     } else {
       return null
     }
   },
 
-  save (space, saveData) {
-    ldb.reload()
-    let foundSpace = ldb.db.get('spaces').find({ id: space.id }).value()
+  /**
+   * 存入空间，已更新至sqlite
+   * @param space
+   * @param saveData
+   * @returns {Promise<{nanoid: *, uid: *, count_tab: *, update_time: number, data: *, create_time: number, name, count_task: *, sync_time: number}>}
+   */
+  async save (space, saveData) {
+    let foundSpace = await sqlDb.knex('backup_space').where({ nanoid: space.nanoid }).first()
+    saveData.data
     if (foundSpace) {
-      saveData.update_time = Date.now()
-      ldb.db.get('spaces').find({ id: space.id }).assign(saveData).write()
+      let updateData={
+        update_time: Date.now(),
+        data:JSON.stringify(saveData.data),
+        count_tab:saveData.count_tab,
+        count_task:saveData.count_task,
+        sync_time:saveData.sync_time
+      }
+     await sqlDb.knex('backup_space').where({ nanoid: space.nanoid }).update(updateData)
     } else {
-      if (!space.id) {
+      if (!space.nanoid) {
         throw Error('备份空间id错误')
       }
       let newSpace = {
-        id: space.id,
+        nanoid: space.nanoid,
         data: saveData.data,
         name: space.name || '备份空间',
         count_task: saveData.count_task,
@@ -71,28 +89,39 @@ const backupSpaceModel = {
         create_time: Date.now(),
         update_time: Date.now(),
         sync_time: Date.now(),
-        type: 'cloud',
-        uid: space.uid,
-        userInfo: space.userInfo
+        uid: space.uid
       }
-      ldb.db.get('spaces').push(newSpace).write()
+      try{
+        let result=await sqlDb.knex('backup_space').insert(newSpace)
+        if(result.length>0){
+          return newSpace
+        }
+      }catch (e) {
+        console.warn(e)
+      }
+
     }
   },
-  copyById (spaceId, name) {
-    ldb.reload()
-    let sourceSpace = backupSpaceModel.getSpace(spaceId)
+  /**
+   * 复制到本地空间，更新sqlite
+   * @param spaceId
+   * @param name
+   * @returns {Promise<{data: {}, status: number}|{data: *, status: number, info: string}>}
+   */
+  async copyById (spaceId, name) {
+    let sourceSpace =await backupSpaceModel.getSpace(spaceId)
     if (!!!sourceSpace) {
       return standReturn.failure('空间不存在')
     }
     let targetSpace = JSON.parse(JSON.stringify(sourceSpace))
-    targetSpace.id = nanoid()
-    targetSpace.type = 'local'
+    targetSpace.nanoid = nanoid()
     targetSpace.name = name || targetSpace.name + '_副本'
     targetSpace.uid = 0
+    delete targetSpace.uid
     delete targetSpace.userInfo
     delete targetSpace.offlineUse
     targetSpace.update_time = Date.now()
-    ldb.db.get('spaces').push(targetSpace).write()
+    await sqlDb.knex('local_space').insert(targetSpace)
     return standReturn.success(targetSpace)
   },
   /**

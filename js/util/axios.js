@@ -36,6 +36,7 @@ let isRefreshing = false   //是否正在刷新的标记
 
 axios.interceptors.request.use(
   async config => {
+    require('../../src/util/logger').log('axiosRequest:'+config.url,config)
     // Do something before request is sent
     // console.log(config, '拦截的config')
     // if(config.hasOwnProperty('expireInfo')) {
@@ -98,6 +99,7 @@ axios.interceptors.request.use(
 // 响应拦截  401 token过期处理
 axios.interceptors.response.use(
   response => {
+    require('../../src/util/logger').log('axiosResponse',response)
     if (response.status >= 200 && response.status < 300) {
       if(response.data.code === 1000) {
         return response.data;

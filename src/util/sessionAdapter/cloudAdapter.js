@@ -1,6 +1,7 @@
 const cloudSpaceModel = require('../../../src/model/cloudSpaceModel')
 const backupSpaceModel = require('../../../src/model/backupSpaceModel')
 const standReturn = require('../../../src/util/standReturn')
+const userModel = require('../../model/userModel')
 const ipc = require('electron').ipcRenderer
 if(window){
   ldb=window.ldb
@@ -27,13 +28,16 @@ const cloudAdapter={
   adapter:null,
   async save(spaceId,saveData){
     ldb.reload()
+    var userInfo=null //用户信息，用于发起api请求
     try{
-      let userInfo=null //用户信息，用于发起api请求
       try{
-        var backupSpace=ldb.db.get('spaces').find({id:spaceId}).value()
-        if(backupSpace.userInfo){
+        var backupSpace=await backupSpaceModel.getSpace(spaceId)
+        if(backupSpace.uid){
+          let user=await userModel.get({uid:backupSpace.uid})
+          user.clientId=userModel.getClientId()
+          console.log('user',user)
           //如果空间当时存了用户信息，则赋值过去
-          userInfo=backupSpace.userInfo
+          userInfo=user
         }
       }catch (e) {
         console.warn('无法从space中获取到用户信息')
