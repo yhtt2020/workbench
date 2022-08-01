@@ -86,6 +86,18 @@ ipc.handle('showToolbarDialog', function () {
   })
 })
 
+// ipc.handle('showThirdToolbarDialog', () => {
+//   dialog.showMessageBox({
+//     buttons: ['取消', '确定'],
+//     message: '确定要关闭引导栏吗？',
+//     detail: '完成全部新用户引导即可获得限时纪念勋章'
+//   }).then(index => {
+//     if(index.response === 1) {
+//       mainWindow.webContents.send('hideThirdToolbar')
+//     }
+//   })
+// })
+
 
 ipc.handle('showOpenDialog', async function (e, options) {
   const result = await dialog.showOpenDialog(mainWindow, options)
@@ -164,4 +176,32 @@ ipc.handle('close', function (e) {
 
 ipc.handle('setFullScreen', function (e, fullScreen) {
   mainWindow.setFullScreen(e, fullScreen)
+})
+
+
+ipc.on('openThirdToolbarMenu', () => {
+  let templ = [
+    {
+      label: '关闭',
+      click: () => {
+        dialog.showMessageBox({
+          buttons: ['取消', '确定'],
+          message: '确定要关闭引导栏吗？',
+          detail: '完成全部新用户引导即可获得限时纪念勋章'
+        }).then(index => {
+          if(index.response === 1) {
+            mainWindow.webContents.send('hideThirdToolbar')
+          }
+        })
+      }
+    }
+  ]
+
+  let menu = require('electron').Menu.buildFromTemplate(templ)
+
+  menu.popup()
+})
+
+ipc.on('finishedGuideHiddenThirdToolbar', () => {
+  mainWindow.webContents.send('hideThirdToolbar')
 })

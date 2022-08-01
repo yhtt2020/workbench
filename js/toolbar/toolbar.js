@@ -1,5 +1,7 @@
 const webviews = require('webviews.js')
 const urlParser = require('util/urlParser.js')
+const settings = require('../util/settings/settings.js')
+
 const sideBar = {
   minSizeCss: '45px',
   maxSizeCss: '145px',
@@ -398,5 +400,16 @@ ipc.on('temporaryAdjust', (event, args) => {
     }
   }
 })
+
+ipc.on('hideThirdToolbar', () => {
+  document.querySelector('#third-toolbar').hidden = true
+  settings.set('thirdToolbarHidden', true)
+  webviews.autoAdjustMargin()
+})
+
+if(settings.get('thirdToolbarHidden') === true) {
+  document.querySelector('#third-toolbar').hidden = true
+  webviews.autoAdjustMargin()
+}
 
 module.exports = toolbar

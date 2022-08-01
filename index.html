@@ -249,7 +249,7 @@
           </div>
         </div>
         <!-- 第三栏toolbar区域 -->
-        <div id="third-toolbar" class="flex align-center justify-between">
+        <div id="third-toolbar" class="flex align-center justify-between" @contextmenu.stop="openThirdToolbarMenu">
           <div class="third-bar-lf flex align-center justify-start">
             <div class="feature-btn flex justify-center align-center" v-show="!this.isDefaultBrowser" @click="setDefaultBrowser">设置为默认浏览器</div>
             <div class="feature-btn flex justify-center align-center" @click="openImport">导入其他浏览器数据</div>
@@ -263,7 +263,7 @@
             <div class="noob-guide-btn flex justify-center align-center" @click.stop="openNoobGuide">
               <img src="./icons/svg/wenhao.svg" alt="" style="width: 18px; height: 18px">
               <span>新手引导</span>
-              ({{finishedNoobguideNum}}/6)
+              ({{finishedNoobguideNum}}/5)
             </div>
           </div>
         </div>
@@ -274,6 +274,15 @@
               return {
                 isDefaultBrowser: false,
                 finishedNoobguideNum: 0,
+              }
+            },
+            watch: {
+              finishedNoobguideNum: {
+                handler: function(newValue, oldValue) {
+                  if(newValue === 5) {
+                    ipc.send('finishedGuideHiddenThirdToolbar')
+                  }
+                }
               }
             },
             methods: {
@@ -291,6 +300,9 @@
               },
               openNoobGuide() {
                 ipc.send('addTab', { 'url': 'ts://guide' })
+              },
+              openThirdToolbarMenu() {
+                ipc.send('openThirdToolbarMenu')
               }
             }
           })
@@ -519,17 +531,21 @@
         thirdToolbarVue.$data.isDefaultBrowser = args
       })
 
-      ipc.invoke('toolbarGetNoobGuideSchedule').then(res => {
-        const num = Object.entries(res.modules.noobGuide).filter(v => v[1] === true).length
-        thirdToolbarVue.$data.finishedNoobguideNum = num
-        if(num === Object.entries(res.modules.noobGuide).length) {
-          document.querySelector('#third-toolbar').hidden = true
-        }
-        console.log('res',res)
-      })
+
+      console.log(document.querySelector('#third-toolbar').hidden, '__________')
+      if(document.querySelector('#third-toolbar').hidden === false) {
+          ipc.invoke('toolbarGetNoobGuideSchedule').then(res => {
+          const num = Object.entries(res.modules.noobGuide).filter(v => v[1] === true).length
+          thirdToolbarVue.$data.finishedNoobguideNum = num
+          if(num === Object.entries(res.modules.noobGuide).length) {
+            ipc.send('finishedGuideHiddenThirdToolbar')
+          }
+        })
+      }
 
       ipc.on('scheduleRefresh', (event, args) => {
-        console.log('args',args)
+        const num = Object.entries(args.modules.noobGuide).filter(v => v[1] === true).length
+        thirdToolbarVue.$data.finishedNoobguideNum = num
       })
     </script>
 

@@ -146,6 +146,27 @@ const webviews = {
     })
   },
   viewMargins: [document.getElementById('toolbar').hidden?0:document.getElementById('third-toolbar').hidden?40:80, 0, 0, 45], // top, right, bottom, left
+  autoAdjustMargin: function() {
+    const currentMargins = [
+      document.getElementById("toolbar").hidden
+        ? 0
+        : document.getElementById("third-toolbar").hidden
+        ? 40
+        : 80,
+      0,
+      0,
+      window.sideBar.mod === "close"
+        ? 45
+        : window.sideBar.mod === "open"
+        ? 145
+        : 45,
+    ];
+    console.log("currentMargins", currentMargins);
+    for (var i = 0; i < currentMargins.length; i++) {
+      webviews.viewMargins[i] = currentMargins[i];
+    }
+    webviews.resize();
+  },
   adjustMargin: function (margins) {
     for (var i = 0; i < margins.length; i++) {
       webviews.viewMargins[i] += margins[i]
