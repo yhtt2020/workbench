@@ -82,6 +82,7 @@ const sessionRestore = {
   currentSpace: {},
   save: async function (forceSave = true, sync = true) {
     sessionRestore.currentSpace=await spaceModel.getCurrent()
+    sessionRestore.currentSpace.space.data=JSON.parse(sessionRestore.currentSpace.space.data)
     let currentState=tasks.getStringifyableState()
     var stateString = JSON.stringify(currentState)
     // save all tabs that aren't private
@@ -298,11 +299,17 @@ const sessionRestore = {
       browserUI.switchToTab(newSessionErrorTab)
     }
   },
-  init () {
+  async init () {
     //如果是则判断是否是老浏览器，如果是则从老空间恢复，否则直接插入一个新空间。
-    ldb.reload()
-    let currentSpace = ldb.db.get('currentSpace').value()
+    let currentSpace =await spaceModel.getCurrent()
     console.log(currentSpace)
+
+    if(currentSpace===false){
+      //todo 初始化数据库结构
+      // todo 如果存在本地的空间，则转移本地空间到sqlite
+      await localSpaceModel.insertDefaultSpace()
+      return
+    }
     if (typeof currentSpace.spaceId === 'undefined') {
       console.warn('检测到是首次运行')
       //不存在当前空间，则认为是新的
@@ -320,9 +327,10 @@ const sessionRestore = {
   },
   initialize: async function () {
     //检查是否是第一次运行，如果是，则进行初始化
-    sessionRestore.init()
+    await sessionRestore.init()
     let currentSpace = {}
     currentSpace = await spaceModel.getCurrent()
+    console.log('currentSpace',currentSpace)
     let space = {}
     if (currentSpace.spaceType === 'cloud') {
       cloudSpaceModel.setUser(currentSpace.userInfo)

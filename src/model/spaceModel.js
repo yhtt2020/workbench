@@ -5,6 +5,9 @@ const localSpaceModel = require('./localSpaceModel')
 const backupSpaceModel = require('./backupSpaceModel')
 const userModel = require('./userModel')
 const { nanoid } = require('nanoid')
+const { SqlDb }=require('../util/sqldb')
+const sqlDb=new SqlDb()
+const CURRENT_SPACE_KEY='system.space.currentSpace'
 const spaceModel = {
   type: 'local',
   user: {
@@ -137,11 +140,16 @@ const spaceModel = {
     return currentSpace
   },
   /**
-   * 获取当前空间
+   * 获取当前空间，
    */
   async getCurrent (needDetail = false) {
-    ldb.reload()
-    let currentSpace = ldb.db.get('currentSpace').value()
+
+    let currentSpace = await sqlDb.getConfig(CURRENT_SPACE_KEY,undefined)
+    if(currentSpace===undefined){
+      //初始化
+      console.warn('需要初始化')
+      await sqlDb.setConfig(CURRENT_SPACE_KEY,null,'当前空间，默认为null')
+    }
     if (!!!currentSpace) { //如果是首次读入，不存在currentSpace就插入一个默认的值
       console.warn('空间损坏，基本不会走这条路线')
       return false
@@ -179,7 +187,7 @@ const spaceModel = {
         }
       }
     } else {
-      space = await spaceModel.setAdapter('local').getSpace(currentSpace.spaceId)
+      space = await require('./localSpaceModel').getSpace(currentSpace.spaceId)
       if (!!!space) {
         space = {
           name: '本机空间',
@@ -190,9 +198,6 @@ const spaceModel = {
       currentSpace.space = space
       currentSpace.spaceId = space.nanoid
       currentSpace.name = space.name
-      ldb.db.set('currentSpace.space', space).write()
-      ldb.db.set('currentSpace.name', space.name).write()
-      ldb.db.set('currentSpace.spaceId', space.nanoid).write()
     }
     return currentSpace
   },
@@ -241,11 +246,13 @@ const spaceModel = {
     return await spaceModel.adapterModel.clientOnline(nanoid, force, spaceModel.user)
   },
 
-  setCurrentSpace (space) {
-    ldb.reload()
-    ldb.db.set('currentSpace.space', space).write()
-    ldb.db.set('currentSpace.name', space.name).write()
-    ldb.db.set('currentSpace.spaceId', space.nanoid).write()
+  async setCurrentSpace (space) {
+    await sqlDb.setConfig(CURRENT_SPACE_KEY,{
+      space:space,
+      name:space.name,
+      spaceId:space.nanoid,
+      spaceType:space.type
+    })
   }
 
 }
