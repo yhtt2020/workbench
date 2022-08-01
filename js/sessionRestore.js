@@ -9,6 +9,7 @@ const backupSpaceModel = require('../src/model/backupSpaceModel')
 const urlParser = require('../js/util/urlParser')
 const configModel = require('../src/model/configModel')
 const cloudSpaceModel = require('../src/model/cloudSpaceModel')
+const userModel = require('../src/model/userModel')
 const ipc = require('electron').ipcRenderer
 let SYNC_INTERVAL = 30 //普通模式下，同步间隔为30秒
 let safeClose=false
@@ -77,12 +78,30 @@ function getSaveData (data) {
   }
 }
 
+/**
+ * 过滤出private的标签
+ * @param data
+ * @returns {*}
+ */
+function filterPrivateTabs(data){
+  for (var i = 0; i < data.state.tasks.length; i++) {
+    data.state.tasks[i].tabs = data.state.tasks[i].tabs.filter(function (tab) {
+      return !tab.private
+    })
+  }
+  return data
+}
+
 const sessionRestore = {
   adapter: {},
   currentSpace: {},
   save: async function (forceSave = true, sync = true) {
     sessionRestore.currentSpace=await spaceModel.getCurrent()
-    sessionRestore.currentSpace.space.data=JSON.parse(sessionRestore.currentSpace.space.data)
+    const currentSpace=sessionRestore.currentSpace
+    if(typeof currentSpace.space.data==='string')
+      currentSpace.space.data=JSON.parse(currentSpace.space.data)
+    currentSpace.userInfo=await userModel.get({uid:currentSpace.uid})
+    currentSpace.userInfo.clientId=userModel.getClientId()
     let currentState=tasks.getStringifyableState()
     var stateString = JSON.stringify(currentState)
     // save all tabs that aren't private
@@ -91,15 +110,11 @@ const sessionRestore = {
       state: JSON.parse(stateString),
       saveTime: Date.now()
     }
-    for (var i = 0; i < data.state.tasks.length; i++) {
-      data.state.tasks[i].tabs = data.state.tasks[i].tabs.filter(function (tab) {
-        return !tab.private
-      })
-    }
+    data=filterPrivateTabs(data) //过滤掉隐私标签
     let saveData = getSaveData(data)
 
     if (forceSave === true || stateString !== sessionRestore.previousState) {
-      let uid = typeof sessionRestore.currentSpace.userInfo === 'undefined' ? 0 : sessionRestore.currentSpace.userInfo.uid
+      let uid = sessionRestore.currentSpace.uid
       let space = {
         id: sessionRestore.currentSpace.spaceId,
         nanoid:sessionRestore.currentSpace.spaceId,
@@ -111,20 +126,17 @@ const sessionRestore = {
         //本地存储逻辑，这个是必须存储的，哪怕是云端也要存一个备份空间
         saveData.type = sessionRestore.currentSpace.spaceType
         if (sessionRestore.currentSpace.spaceType === 'cloud') {
-          saveData.userInfo = sessionRestore.currentSpace.userInfo
-          //备份空间需要额外夹带一个最新的用户信息
-          //如果是云端空间，还需要将此用户的信息存储下来，避免后面切换空间后导致当前用户信息丢失之后，无法再通过接口交互。
-          backupSpaceModel.save(space, saveData)
-        } else {
-          // console.log('本地空间保存成功', space, saveData)
-          localSpaceModel.save(space, saveData)
+          //如果是云端，则存入备份空间
+          await backupSpaceModel.save(space, saveData)
+        } else{
+          //如果是本地，则存入本地空间
+          await localSpaceModel.save(space, saveData)
         }
       }
       //如果是云端，还需去云端同步
       try {
         if (sessionRestore.currentSpace.spaceType === 'cloud') {
           let cloudResult = await sessionRestore.adapter.save(sessionRestore.currentSpace.spaceId, saveData)
-          console.log('云端保存结果cloudResult=',cloudResult)
           if (cloudResult.status === 1) {
             saveData.sync_time=Date.now()
             backupSpaceModel.save(space,saveData) //更新一下最后保存时间
@@ -153,7 +165,16 @@ const sessionRestore = {
   restore: async function () {
     var savedStringData = ''
     try {
-      savedStringData = await sessionRestore.adapter.restore(sessionRestore.currentSpace.spaceId)
+      //恢复空间数据
+
+      let currentSpace=sessionRestore.currentSpace
+
+      if(currentSpace.spaceType==='cloud'){
+        savedStringData = await cloudAdapter.restore(sessionRestore.currentSpace.spaceId,currentSpace.uid)
+      }else{
+        savedStringData = await sessionRestore.adapter.restore(sessionRestore.currentSpace.spaceId)
+      }
+
       if (!savedStringData && sessionRestore.currentSpace.spaceType === 'cloud') {
         //当云端空间无法正常读入的时候，尝试从备份空间获取
         try {
@@ -399,7 +420,7 @@ const sessionRestore = {
                   }
                 }
                 console.log('发现当前是离线重新上线成功')
-                spaceModel.setCurrentSpace(backupSpace)
+                await spaceModel.setCurrentSpace(backupSpace)
               } catch (e) {
                 console.warn('恢复离线备份空间到云端失败')
                 console.warn(e)

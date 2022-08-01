@@ -186,6 +186,10 @@ const spaceModel = {
           throw '本地备份空间丢失或不存在'
         }
       }
+      space.type='cloud'
+      currentSpace.userInfo=await userModel.get({uid:currentSpace.uid})
+      currentSpace.userInfo.clientId=userModel.getClientId()
+
     } else {
       space = await require('./localSpaceModel').getSpace(currentSpace.spaceId)
       if (!!!space) {
@@ -247,11 +251,15 @@ const spaceModel = {
   },
 
   async setCurrentSpace (space) {
+    if(space.uid){
+      space.type='cloud'
+    }
     await sqlDb.setConfig(CURRENT_SPACE_KEY,{
       space:space,
       name:space.name,
       spaceId:space.nanoid,
-      spaceType:space.type
+      spaceType:space.type,
+      uid:space.type==="local"?0:space.uid
     })
   }
 

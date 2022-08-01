@@ -30,10 +30,11 @@ const cloudSpaceModel={
       if(cloudSpaceResult.status===1){
         let cloudSpace=cloudSpaceResult.data
         cloudSpace.id=cloudSpace.nanoid
-        cloudSpace.userInfo=cloudSpaceModel.user
         //正常登录需要使用线上版本的空间来更新一下本地的备份空间，此时是最佳的更新备份空间时机
         await backupSpaceModel.save(cloudSpace,{name:cloudSpace.name,data:cloudSpace.data,count_task: cloudSpace.count_task,count_tab: cloudSpace.count_tab})
-        ipc.send('changeSpace',{spaceId:space.nanoid,spaceType:'cloud',name:cloudSpace.name,userInfo:JSON.parse(JSON.stringify(cloudSpaceModel.user))})
+        cloudSpace.type='cloud'
+        cloudSpace.uid=cloudSpaceModel.user.uid
+        ipc.send('changeSpace',JSON.parse(JSON.stringify(cloudSpace)))
       }else{
         return standReturn.failure('空间异常')
       }
@@ -60,7 +61,7 @@ const cloudSpaceModel={
     let result = await spaceApi.copy(space.nanoid,cloudSpaceModel.user)
     return standReturn.autoReturn(result)
   },
-  async restore (spaceId) {
+  async restore (spaceId,userInfo) {
     let result = await spaceApi.restore(spaceId,cloudSpaceModel.user)
     return standReturn.autoReturn(result)
   },
@@ -89,8 +90,18 @@ const cloudSpaceModel={
   async clientOnline(nanoid,force=false,userInfo){
     let result =await spaceApi.clientOnline(nanoid,force,cloudSpaceModel.user.clientId,cloudSpaceModel.user)
     return standReturn.autoReturn(result)
+  },
+  /**
+   * 获取用户信息，用于快速构建需要提交到云端的用户信息，会自动存入cloudSpaceModel的user对象中
+   * @param uid
+   * @returns {Promise<*|boolean>}
+   */
+  async getUserInfo(uid){
+    let userInfo=await userModel.get({uid})
+    userInfo.clientId=userModel.getClientId()
+    cloudSpaceModel.user=userInfo
+    return userInfo
   }
-
 }
 
 module.exports=cloudSpaceModel
