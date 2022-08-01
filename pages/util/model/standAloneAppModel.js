@@ -305,8 +305,8 @@ const standAloneAppModel = {
   async installFromJson(json){
     return await standAloneAppModel.install(json.url,json)
   },
-  async isInstalled (package) {
-    let app = await standAloneAppModel.getFromPackage(package)
+  async isInstalled (packageName) {
+    let app = await standAloneAppModel.getFromPackage(packageName)
     return !!app
   },
   async isInstalledByUrl(url){
