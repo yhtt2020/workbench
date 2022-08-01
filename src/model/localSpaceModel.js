@@ -131,6 +131,9 @@ const localSpaceModel={
         result= result.concat(backupSpaces)
       }
       let localSpaces=await sqlDb.knex('local_space').orderBy('sync_time','desc','last')
+      localSpaces.forEach(sp=>{
+        sp.type='local'
+      })
       result=result.concat(localSpaces)
       return  standReturn.success(result)
     }catch (e){
@@ -144,10 +147,10 @@ const localSpaceModel={
    * @param space
    * @returns {Promise<{data: {}, status: number}>}
    */
-  async changeCurrent(space){
-    let currentSpace={spaceId:space.nanoid,spaceType:'local'}
-    ipc.send('changeSpace',currentSpace)
-    return standReturn.success(currentSpace)
+   changeCurrent(space){
+     space.type='local'
+    ipc.send('changeSpace',JSON.parse(JSON.stringify(space)))
+    return standReturn.success(space)
   },
 
   /**
@@ -208,7 +211,6 @@ const localSpaceModel={
       saveData.update_time=Date.now()
       saveData.sync_time=Date.now()
       saveData.name=space.name
-      saveData.type=space.type
       saveData.user=space.user
       sqlDb.knex('local_space').where({nanoid:space.nanoid}).update(saveData)
       standReturn.success('更新空间信息成功')
@@ -225,6 +227,7 @@ const localSpaceModel={
    */
   async save(space,saveData){
     let foundSpace=await sqlDb.knex('local_space').where({nanoid:space.nanoid}).first()
+    delete saveData.type
     if(foundSpace){
       saveData.update_time=Date.now()
       saveData.sync_time=Date.now()

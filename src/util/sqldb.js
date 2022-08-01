@@ -1,15 +1,16 @@
 const knex = require('knex')
 const { nanoid } = require('nanoid')
-let filename = ''
-if (window) {
+let filename
+if (typeof window !=='undefined') {
   filename = window.globalArgs['user-data-path'] + '/db/db.sqlite'
 } else {
+  const path=require('path')
+  const app=require('electron').app
   filename = path.join(app.getPath('userData'), 'db/db.sqlite')
 }
 
 class SqlDb {
   knex
-
   constructor () {
     this.knex = knex({
       client: 'sqlite3',
