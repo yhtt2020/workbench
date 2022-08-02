@@ -401,6 +401,7 @@ app.whenReady().then(()=>{
 
   ipc.on('helpGuide',()=>{
     SidePanel.send('guide',7)
+    settings.set('hasShowDirection', true)
   })
 
   ipc.on('addTaskCareer',(event,args)=>{

@@ -49,6 +49,7 @@ ipc.handle('showFirstGuideDialog', function () {
       mainWindow.send('exitFirstGuide')
       mainWindow.send('closeGuide')
       SidePanel.send('guide',7)
+      settings.set('hasShowDirection', true)
     }
   });
 })
@@ -178,6 +179,9 @@ ipc.on('openThirdToolbarMenu', () => {
         }).then(index => {
           if(index.response === 1) {
             mainWindow.webContents.send('hideThirdToolbar')
+            if(!settings.get('hasShowDirection') || settings.get('hasShowDirection') === undefined) {
+              SidePanel.send('guide',7)
+            }
           }
         })
       }
