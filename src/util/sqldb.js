@@ -31,7 +31,6 @@ class SqlDb {
     let configData = await this.knex('config').where({
       key
     }).first()
-    console.log('configData',configData)
     if (!!configData) {
       return JSON.parse(configData.value)
     } else {

@@ -256,7 +256,7 @@ async function loadExtensions (session, extensionsPath) {
       })
   )
   const results = []
-  let disabledExtensions = extensionManager.config.getDisabledExtBaseNames()
+  let disabledExtensions =await  extensionManager.config.getDisabledExtBaseNames()
   for (const extPath of extensionDirectories.filter(Boolean)) {
     try {
       //检测一下是否禁用了这个插件，如果被禁用了，则跳过载入流程，不载入
@@ -545,12 +545,12 @@ const extensionManager = {
    * 移除插件
    * @param baseName
    */
-  remove (baseName) {
+  async remove (baseName) {
     extensionManager.unloadAllSessionExtension(baseName, (ext) => {
       sendIPCToWindow(mainWindow, 'removeExtension', { id: ext.id })
     })
-    this.config.clearHide(baseName)//清理
-    this.config.setEnable(baseName)//清理
+    await extensionModel.clearHide(baseName)//清理
+    await extensionModel.enableExt(baseName)//清理
     require('fs-extra').remove(path.join(this.extensionsPath, baseName)).then(() => {
       renderPage.sendIPC('extensionList', 'reload')
       sendMessage({
@@ -565,51 +565,22 @@ const extensionManager = {
      * 设置一个扩展禁用
      * @param baseName
      */
-    setDisable (baseName) {
-      let disableExtensions = configDb.dbInstance.get('disableExtensions').value()
-      this.clearHide(baseName)//清理掉隐藏属性
-      if (!!!disableExtensions) {
-        configDb.dbInstance.set('disableExtensions', [baseName]).write()
-        return
-      }
-      if (disableExtensions && disableExtensions.indexOf(baseName) === -1) {
-        disableExtensions.push(baseName)
-        configDb.dbInstance.set('disableExtensions', disableExtensions).write()
-      }
+    async setDisable (baseName) {
+      await extensionModel.disableExt(baseName)
     },
     /**
      * 设置一个扩展启用
      * @param baseName
      */
-    setEnable (baseName) {
-      let disableExtensions = configDb.dbInstance.get('disableExtensions').value()
-      if (disableExtensions && disableExtensions.indexOf(baseName) > -1) {
-        disableExtensions.splice(disableExtensions.indexOf(baseName), 1)
-        configDb.dbInstance.set('disableExtensions', disableExtensions).write()
-      }
+    async setEnable (baseName) {
+      await extensionModel.enableExt(baseName)
     },
     /**
      * 获被禁用的扩展的baseName
      * @returns {*[]|*}
      */
-    getDisabledExtBaseNames () {
-      let disableExtensions = configDb.dbInstance.get('disableExtensions').value()
-      if (disableExtensions) {
-        return disableExtensions
-      } else {
-        return []
-      }
-    },
-    /**
-     * 移除某个插件的隐藏设置，防止数据库产生脏数据
-     * @param baseName
-     */
-    clearHide (baseName) {
-      let hideExtensions = configDb.dbInstance.get('hideExtensions').value()
-      if (hideExtensions && hideExtensions.indexOf(baseName) > -1) {
-        hideExtensions.splice(hideExtensions.indexOf(baseName), 1)
-        configDb.dbInstance.set('hideExtensions', hideExtensions).write()
-      }
+    async getDisabledExtBaseNames () {
+      return await extensionModel.getDisableExts()
     }
   }
 }
