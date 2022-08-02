@@ -55,6 +55,7 @@ const localSpaceModel={
       targetSpace.nanoid=nanoid()
       targetSpace.name=targetSpace.name+'_副本'
       targetSpace.update_time=Date.now()
+      targetSpace.sync_time=Date.now()
       let result=await sqlDb.knex('local_space').insert(targetSpace)
       if(result.length>0){
         return standReturn.success(targetSpace)
@@ -124,13 +125,13 @@ const localSpaceModel={
     try{
     let result=[]
       if(option.showBackup){
-       let backupSpaces=await sqlDb.knex('backup_space').orderBy('sync_time','desc','last')
+       let backupSpaces=await sqlDb.knex('backup_space').orderBy('sync_time','desc')
         backupSpaces.forEach(sp=>{
           sp.type='cloud'
         })
         result= result.concat(backupSpaces)
       }
-      let localSpaces=await sqlDb.knex('local_space').orderBy('sync_time','desc','last')
+      let localSpaces=await sqlDb.knex('local_space').orderBy('sync_time','desc')
       localSpaces.forEach(sp=>{
         sp.type='local'
       })
@@ -158,7 +159,7 @@ const localSpaceModel={
    * @returns {Promise<*>}
    */
   async getAll(){
-    return await sqlDb.knex('local_space').select()
+    return await sqlDb.knex('local_space').orderBy('sync_time','desc').select()
   },
 
   /**

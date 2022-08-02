@@ -68,7 +68,7 @@ const spaceModel = {
 
   async getUserSpaces (option) {
     let result = await spaceModel.adapterModel.getUserSpaces(spaceModel.user, option)
-
+    let currentSpace=await spaceModel.getCurrent()
     async function getSpaceState (space) {
       if (spaceModel.user.uid) { //云端判断逻辑
         if (space.client_id && space.client_id !== spaceModel.user.clientId) {
@@ -86,8 +86,9 @@ const spaceModel = {
           space.disconnect = false
         }
       } else {
+
         await spaceModel.setAdapter('local').getCurrent().then(sp => {
-          if (space.nanoid === sp.spaceId) {
+          if (space.nanoid === currentSpace.spaceId) {
             space.isSelfUsing = true
             space.isUsing = true
           }

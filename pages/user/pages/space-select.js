@@ -46,7 +46,7 @@ const tpl = `
     保存时间：{{dateTime(space.sync_time)}}<br>
     修改时间：{{dateTime(space.update_time)}}<br>
     创建时间：{{dateTime(space.create_time)}}<br>
-     <span v-if="space.type==='cloud'">设备ID：{{space.client_id}}</span>
+     <span v-if="space.client_id!='' && typeof space.client_id !=='undefined'">设备ID：{{space.client_id}}</span>
      </template>
         <a-card  v-if="space.type==='cloud'"
          :class="{'other-using':space.isOtherUsing,'self-using':space.isSelfUsing}"
@@ -90,7 +90,7 @@ const tpl = `
     名称：{{space.name}}<br>
     空间ID：{{space.nanoid}}<br>
     保存时间：{{dateTime(space.sync_time)}}<br>修改时间：{{dateTime(space.update_time)}}<br>创建时间：{{dateTime(space.create_time)}}<br>
-     <span v-if="space.type==='cloud'">设备ID：{{space.client_id}}</span>
+     <span v-if="space.client_id!='' && typeof space.client_id !=='undefined' ">设备ID：{{space.client_id}}</span>
      </template>
         <a-card  v-if="space.type!=='cloud'" @click="switchSpace(space)"
          :class="{'other-using':space.isOtherUsing,'self-using':space.isSelfUsing}"
@@ -335,7 +335,6 @@ const SpaceSelect = {
       //todo loadLocalSpaces()
       let spaces= await spaceModel.getLocalSpaces()
       this.localOptions=[]
-      console.log(spaces)
       spaces.forEach((space) => {
         space.data=JSON.parse(space.data)
         if(space.data){
@@ -402,6 +401,7 @@ const SpaceSelect = {
       //下面开始获取用户空间
       try {
         let result = await spaceModel.setUser(this.user).getUserSpaces({showBackup:this.showBackup})
+
         if (result.status === 1) {
           spaces = result.data
           if(this.user.uid){
