@@ -6,7 +6,8 @@ let app={
   "site": "https://apps.vip",
   "logo": "https://up.apps.vip/logo/favicon.svg",
   "type": "local",
-  "url": "/pages/appStore/index.html",
+  "url": "http://localhost:5008/",
+  "preload": '/pages/guide/preload.js',
   "package": "com.thisky.appStore",
   "summary": "应用市场，助您发现更大的世界。",
   "attribute": {
@@ -15,8 +16,8 @@ let app={
   },
   "settings": {
     bounds: {
-      width: 600,
-      height: 1800
+      width: 1180,
+      height: 864,
     },
     showInSideBar: true
   }

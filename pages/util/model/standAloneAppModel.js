@@ -54,6 +54,36 @@ const standAloneAppModel = {
         logo:'../../pages/group/group.svg'
       })
     }
+    let appStore = await  db.standAloneApps.get({name:'应用市场'})
+    db.standAloneApps.put({
+      id:appStore?appStore.id:9,
+      name: '应用市场',
+      logo: 'https://up.apps.vip/logo/favicon.svg',
+      summary: '应用市场，助您发现更大的世界。',
+      preload: '/pages/guide/preload.js',
+      type: 'local',
+      package: 'com.thisky.appStore',
+      url: "http://localhost:5008/",
+      themeColor: "#3c78d8",
+      userThemeColor: '',
+      createTime: Date.now(),
+      updateTime: Date.now(),
+      accountAvatar: '',
+      order: 0,
+      useCount: 0,
+      attribute: {
+        isOffical: 1,
+        integration: 2
+      },
+      lastExecuteTime: Date.now(),
+      settings: JSON.stringify({
+        bounds: {
+          width: 1180,
+          height: 864
+        }
+      }),
+      unreadCount: 0,
+    })
 
     let fav = await  db.standAloneApps.get({name:'超级收藏夹'})
     db.standAloneApps.put({

@@ -619,10 +619,16 @@ const appManager = {
     } else if (saApp.package === 'com.thisky.fav') {
       saApp.url = '/pages/fav/index.html'
       saApp.type = 'local'
+    }else if(saApp.package === 'com.thisky.appStore' && isDevelopmentMode){
+      saApp.url = 'http://localhost:5008/'
+      saApp.type = 'local'
     }
 
     remote.enable(appView.webContents)
-    if (saApp.type === 'local') {
+    if(saApp.type === 'local' && saApp.package === 'com.thisky.appStore'){
+      appView.webContents.loadURL(saApp.url)
+    }
+    if (saApp.type === 'local' && saApp.package !== 'com.thisky.appStore') {
       appView.webContents.loadURL('file://' + path.join(__dirname, saApp.url))
     } else {
       appView.webContents.loadURL(saApp.url)
