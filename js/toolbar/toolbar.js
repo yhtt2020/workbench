@@ -403,12 +403,18 @@ ipc.on('temporaryAdjust', (event, args) => {
 
 ipc.on('hideThirdToolbar', () => {
   document.querySelector('#third-toolbar').hidden = true
-  settings.set('thirdToolbarHidden', true)
+  settings.set('thirdToolbar', 'hidden')
   webviews.autoAdjustMargin()
 })
 
-if(settings.get('thirdToolbarHidden') === true) {
-  document.querySelector('#third-toolbar').hidden = true
+ipc.on('showThirdToolbar', () => {
+  document.querySelector('#third-toolbar').hidden = false
+  settings.set('thirdToolbar', 'show')
+  webviews.autoAdjustMargin()
+})
+
+if(settings.get('thirdToolbar') === 'show') {
+  document.querySelector('#third-toolbar').hidden = false
   webviews.autoAdjustMargin()
 }
 
