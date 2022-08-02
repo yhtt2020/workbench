@@ -269,6 +269,14 @@ async function loadExtensions (session, extensionsPath) {
       const extensionInfo = await session.loadExtension(extPath,{
         allowFileAccess:true //todo 判断fileAccess权限
       })
+      //增加对tab设置的支持
+      let overrides=extensionInfo['manifest']['chrome_url_overrides']
+      if(overrides){
+        if(overrides['newtab']){
+          settings.set('browserTab', { tabIdx:4 })
+          settings.set('customTabUrl',extensionInfo['url']+overrides['newtab'])
+        }
+      }
       results.push(extensionInfo)
     } catch (e) {
       console.error(e)
