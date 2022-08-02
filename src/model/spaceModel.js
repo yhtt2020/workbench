@@ -69,12 +69,13 @@ const spaceModel = {
   async getUserSpaces (option) {
     let result = await spaceModel.adapterModel.getUserSpaces(spaceModel.user, option)
     let currentSpace=await spaceModel.getCurrent()
+    let clientId=userModel.getClientId()
     async function getSpaceState (space) {
-      if (spaceModel.user.uid) { //云端判断逻辑
-        if (space.client_id && space.client_id !== spaceModel.user.clientId) {
+      if (spaceModel.type==='cloud') { //云端判断逻辑
+        if (space.client_id && space.client_id !== clientId) {
           space.isOtherUsing = true
           space.isUsing = true
-        } else if ((space.client_id === spaceModel.user.clientId)) {
+        } else if ((space.client_id === clientId)) {
           space.isSelfUsing = true
           space.isUsing = true
         } else {
