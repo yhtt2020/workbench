@@ -853,14 +853,14 @@ Vue.component('sidebar', {
     })
     this.watchAllHasMore()
     //获取当前左侧栏的状态，并设置
-   spaceModel.getCurrent().then((space)=>{
+   spaceModel.getCurrent().then(async (space)=>{
         this.currentSpace =space
      if(space.spaceType==='local')
      {
        this.spaceStatus='local'
      }else{
        this.spaceStatus='online'
-       let backupSpace= backupSpaceModel.getSpace(space.spaceId)
+       let backupSpace= await backupSpaceModel.getSpace(space.spaceId)
        this.lastSync=backupSpace.sync_time
      }
    })
