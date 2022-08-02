@@ -6,6 +6,7 @@ const { pathExists } = require('./js/main/files')
 const { promises } = require('fs')
 const { extname, resolve, join } = require('path')
 const jsonStrip=require('strip-json-comments')
+const extensionModel = require('./src/model/extensionModel')
 let browser
 let extensionsMenu = []
 let extensions = null
@@ -358,33 +359,18 @@ async function installCrx (filePath) {
 }
 
 app.whenReady().then(() => {
-  ipc.on('hideExtension', (event, args) => {
-    let hideExtensions = configDb.dbInstance.get('hideExtensions').value()
-    if (!!!hideExtensions) {
-      configDb.dbInstance.set('hideExtensions', [args.baseName]).write()
-      return
-    }
-    if (hideExtensions && hideExtensions.indexOf(args.baseName) === -1) {
-      hideExtensions.push(args.baseName)
-      configDb.dbInstance.set('hideExtensions', hideExtensions).write()
-    }
+  ipc.on('hideExtension',async (event, args) => {
+    await extensionModel.hideExt(args.baseName)
     sendIPCToWindow(mainWindow, 'hideExtension', { baseName: args.baseName })
 
   })
-  ipc.on('showExtension', (event, args) => {
-    let hideExtensions = configDb.dbInstance.get('hideExtensions').value()
-    if (hideExtensions && hideExtensions.indexOf(args.baseName) > -1) {
-      hideExtensions.splice(hideExtensions.indexOf(args.baseName), 1)
-      configDb.dbInstance.set('hideExtensions', hideExtensions).write()
-    }
+  ipc.on('showExtension', async (event, args) => {
+    await extensionModel.showExt(args.baseName)
     sendIPCToWindow(mainWindow, 'showExtension', { baseName: args.baseName })
   })
 
-  ipc.handle('getHideExtensions', (event) => {
-    let hideBaseNames = configDb.dbInstance.get('hideExtensions').value()
-    if (!!!hideBaseNames) {
-      hideBaseNames = []
-    }
+  ipc.handle('getHideExtensions', async  (event) => {
+    let hideBaseNames = await extensionModel.getHideExts()
     let installed = require('electron').session.fromPartition('persist:webcontent').getAllExtensions()
     let hideIds = []
     installed.forEach(ext => {
@@ -398,9 +384,9 @@ app.whenReady().then(() => {
     return hideIds
   })
 
-  ipc.handle('getInstalledExtensions', (event) => {
+  ipc.handle('getInstalledExtensions',async (event) => {
     let installed = require('electron').session.fromPartition('persist:webcontent').getAllExtensions()
-    let hide = configDb.dbInstance.get('hideExtensions').value()
+    let hide =await extensionModel.getHideExts()
     if (!!!hide) { //如果没有隐藏的，所有的都不是hide
       installed.forEach(ext => {
         ext.hide = false
@@ -469,12 +455,10 @@ app.whenReady().then(() => {
     })
   })
   ipc.on('removeExtension', (event, args) => {
-    console.log('removeExtension')
     extensionManager.remove(args.baseName)
   })
   ipc.on('setExtensionEnable', (event, args) => {
     extensionManager.setEnable(args.baseName, args.enable)
-
   })
 })
 
