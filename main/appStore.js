@@ -16,10 +16,10 @@ app.whenReady().then(()=> {
 
   ipc.on('addNewApp',function (event, args){
     SidePanel.send('addApp',args)
-    console.log(tips)
+
     const myVar = setInterval(function () {
       if (tips !== '') {
-        console.log(tips)
+
         if(tips === true){
           event.reply('installResult',true)
         }

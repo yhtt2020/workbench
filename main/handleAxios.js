@@ -340,7 +340,7 @@ app.whenReady().then(()=>{
   })
   ipc.on('guideDesktopFirst',()=>{
     if(markDb.db.get('guideSchedule.modules.feature.desktop').value()===false){
-      mainWindow.webContents.send('addTab','ts://newtab')
+      mainWindow.send('addTab',{url:'ts://newtab'})
       setTimeout(()=>{
         SidePanel.send('guideDesktop')
       },1000)
@@ -371,7 +371,7 @@ app.whenReady().then(()=>{
     SidePanel.send('guide',1)
   })
   ipc.on('guideDesktop', () => {
-    mainWindow.webContents.send('addTab','ts://newtab')
+    mainWindow.webContents.send('addTab',{url:'ts://newtab'})
     setTimeout(()=>{
       SidePanel.send('guideDesktop')
     },1000)
