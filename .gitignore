@@ -13,3 +13,4 @@ yarn.lock
 /setup-ia32/
 /packages/node_modules/
 /vite/.vscode/
+/pages/guide/static

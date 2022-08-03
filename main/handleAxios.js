@@ -180,6 +180,11 @@ app.whenReady().then(()=>{
     return markDb.db.get('guideSchedule').value()
   })
 
+  //第三栏来获取当前设备的新手引导进度
+  ipc.handle('toolbarGetNoobGuideSchedule', (event, args) => {
+    return markDb.db.get('guideSchedule').value()
+  })
+
   ipc.handle('getOtherStatus', () => {
     let browserTabData = settings.get('browserTab') || null
     if(browserTabData && browserTabData.tabIdx === 0) {
@@ -315,6 +320,7 @@ app.whenReady().then(()=>{
    */
   function afterGuide(guideName) {
     markDb.db.set(guideName, true).write()
+    mainWindow.webContents.send('scheduleRefresh', markDb.db.get('guideSchedule').value())
     if(global.fromRender && !global.fromRender.guide.isDestroyed()) {
       global.fromRender.guide.send('scheduleRefresh', markDb.db.get('guideSchedule').value())
       SidePanel.send('updateSidebarGuideScedule', calcGuideScedule())
@@ -395,6 +401,7 @@ app.whenReady().then(()=>{
 
   ipc.on('helpGuide',()=>{
     SidePanel.send('guide',7)
+    settings.set('hasShowDirection', true)
   })
 
   ipc.on('addTaskCareer',(event,args)=>{
