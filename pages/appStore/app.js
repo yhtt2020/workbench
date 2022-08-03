@@ -6,7 +6,7 @@ let app={
   "site": "https://apps.vip",
   "logo": "https://up.apps.vip/logo/favicon.svg",
   "type": "local",
-  "url": "http://localhost:5008/",
+  "url": "/pages/appStoreNew/index.html",
   "preload": '/pages/guide/preload.js',
   "package": "com.thisky.appStore",
   "summary": "应用市场，助您发现更大的世界。",
