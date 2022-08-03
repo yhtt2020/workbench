@@ -74,6 +74,20 @@ function createView(existingViewId, id, webPreferencesString, boundsString, even
     callback('')
   })
 
+  view.webContents.on('certificate-error', (event, url, error, certificate, callback, isMainFrame) => {
+    const reg = /^http(s)?:\/\/(.*)\.(\w*)/
+    const regedUrl = reg.exec(url)[0]
+    //在这里触发了证书错误引起的回调，把当前url放入白名单，然后放行
+    let whiteCertInvalid = settings.get('whiteCertInvalid')
+    if(whiteCertInvalid.find(v => v === regedUrl)) {
+      //如果白名单中存在，放行
+      event.preventDefault()
+      callback(true)
+    } else {
+      callback(false)
+    }
+  })
+
   view.webContents.setWindowOpenHandler(function (details) {
     /*
       Opening a popup with window.open() generally requires features to be set

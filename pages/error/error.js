@@ -1,5 +1,4 @@
 var searchParams = new URLSearchParams(window.location.search.replace('?', ''))
-
 var h1 = document.getElementById('error-name')
 var h2 = document.getElementById('error-desc')
 var primaryButton = document.getElementById('primary-button')
@@ -339,13 +338,25 @@ if (errDesc && errDesc.secondaryAction) {
 
 // if an ssl error occured, "try again" should go to the http:// version, which might work
 
-if (erorDescriptions[ec] === sslError) {
+if (erorDescriptions[ec] === sslError && ec != -201) {
   url = url.replace('https://', 'http://')
 }
 
 if (url) {
   primaryButton.addEventListener('click', function () {
-    retry()
+    if(ec == -201) {
+      settings.get('whiteCertInvalid', (whiteCertInvalid) => {
+        const reg = /^http(s)?:\/\/(.*)\.(\w*)/
+        const regedUrl = reg.exec(url)[0]
+        whiteCertInvalid.push(regedUrl)
+        settings.set('whiteCertInvalid', whiteCertInvalid)
+      })
+      setTimeout(() => {
+        retry()
+      }, 1000)
+    } else {
+      retry()
+    }
   })
 }
 

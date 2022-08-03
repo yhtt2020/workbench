@@ -124,6 +124,11 @@ const statistics = {
       }
     }, 60 * 1000)
 
+    //初始化的时候检验一下证书过期的白名单是否已经创建
+    if(settings.get('whiteCertInvalid') == undefined) {
+      settings.set('whiteCertInvalid', [])
+    }
+
     /* 注释掉此段关于用户关闭信息收集按钮后的重制设备ID的问题 */
     settings.listen('collectUsageStats', function (value) {
       if (value === false) {

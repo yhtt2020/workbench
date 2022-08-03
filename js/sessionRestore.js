@@ -586,13 +586,14 @@ ipc.on('safeClose', async () => {
   //安全关闭，先完成保存后再关闭
   try{
     await safeCloseSave()
+    //关闭前上报数据
+
 
   }catch (e) {
     console.warn('存储失败')
   }finally {
     ipc.send('closeMainWindow')
   }
-
 })
 
 ipc.on('safeQuitApp',async ()=>{
