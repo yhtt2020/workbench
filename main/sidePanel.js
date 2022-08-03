@@ -1212,7 +1212,7 @@ function callModal (win) {
   document.body.appendChild(div);
   `
   webContents.getAllWebContents().forEach(async wb => {
-    if (wb.id === win.webContents.id) return
+    if (wb.id === win.webContents.id || wb.getURL().startsWith('tsbapp://')) return
     inseartedCSS.push({ id: wb.id, cssHandler: await wb.insertCSS(css) })
     await wb.executeJavaScript(code)
   })
@@ -1235,7 +1235,7 @@ function callUnModal (win) {
   if (masked) {
     webContents.getAllWebContents().forEach(async wb => {
       try {
-        if (wb.id === win.webContents.id) return
+        if (wb.id === win.webContents.id || wb.getURL().startsWith('tsbapp://')) return
         let handler = inseartedCSS.find((item) => {
           return item.id === wb.id
         })
