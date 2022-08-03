@@ -161,7 +161,6 @@ const webviews = {
         ? 145
         : 45,
     ];
-    console.log("currentMargins", currentMargins);
     for (var i = 0; i < currentMargins.length; i++) {
       webviews.viewMargins[i] = currentMargins[i];
     }
