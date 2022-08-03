@@ -88,7 +88,6 @@ class Pop {
       pool.pop.splice(index, 1)
     })
     this.win.on('blur', () => {
-      console.log(this.blurClose)
       if(this.blurClose){
         this.win.hide()
         //缓存1分钟，超过1分钟再自动关闭
