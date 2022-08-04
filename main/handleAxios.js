@@ -405,6 +405,7 @@ app.whenReady().then(()=>{
   })
 
   ipc.on('addTaskCareer',(event,args)=>{
+    settings.set('career', args.title)
     sendIPCToMainWindow('addTaskCareer',args)
   })
   ipc.on('openNewBackTab',()=>{
