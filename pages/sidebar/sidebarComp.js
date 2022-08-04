@@ -1079,6 +1079,17 @@ Vue.component('sidebar', {
               }, text: '好的'}],
           id: 'teamGudie'    // 用于Shepherd step的唯一标识符
         },
+        {
+          text: `<div>您可以在这里打开帮助中心，查看更多引导帮助</div>`, attachTo: {element: '.helpCenter', on: 'right'},
+          buttons: [
+            {action: function () {
+                this.cancel()
+                ipc.send('exitGuide')
+                ipc.send('closeGuide')
+                // ipc.send('addTab',{url:'ts://newtab'})
+              }, text: '好的'}],
+          id: 'teamGudie'    // 用于Shepherd step的唯一标识符
+        },
       ]
         const shepherd = new Shepherd.Tour({
           // 设置默认引导配置

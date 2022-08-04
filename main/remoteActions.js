@@ -37,22 +37,22 @@ ipc.handle('showFocusModeDialog2', function () {
   })
 })
 
-ipc.handle('showFirstGuideDialog', function () {
-  dialog.showMessageBox({
-    type: 'info',
-    buttons: ['确定退出','继续完成'],
-    noLink:true,
-    message: '这是首次新手引导',
-    detail: '新手引导可以使您快速了解想天浏览器的功能，强烈建议完成引导'
-  }).then((index) => {
-    if (index.response === 0) {
-      mainWindow.send('exitFirstGuide')
-      mainWindow.send('closeGuide')
-      SidePanel.send('guide',7)
-      settings.set('hasShowDirection', true)
-    }
-  });
-})
+// ipc.handle('showFirstGuideDialog', function () {
+//   dialog.showMessageBox({
+//     type: 'info',
+//     buttons: ['确定退出','继续完成'],
+//     noLink:true,
+//     message: '这是首次新手引导',
+//     detail: '新手引导可以使您快速了解想天浏览器的功能，强烈建议完成引导'
+//   }).then((index) => {
+//     if (index.response === 0) {
+//       mainWindow.send('exitFirstGuide')
+//       mainWindow.send('closeGuide')
+//       SidePanel.send('guide',7)
+//       settings.set('hasShowDirection', true)
+//     }
+//   });
+// })
 
 
 ipc.handle('openBlockTips', function () {
@@ -201,4 +201,11 @@ ipc.on('unfinishedGuideShowThirdToolbar', () => {
   if(settings.get('thirdToolbar') === undefined) {
     mainWindow.webContents.send('showThirdToolbar')
   }
+
 })
+
+// ipc.handle('toolbarStatus',()=>{
+//   if(settings.get('toolbarStatus') === undefined) {
+//     mainWindow.webContents.send('hideToolbar')
+//   }
+// })
