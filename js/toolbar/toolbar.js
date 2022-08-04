@@ -123,7 +123,6 @@ const sideBar = {
 window.sideBar=sideBar
 
 ipc.on('openToolbar',()=>{
-
   document.getElementById('password-capture-bar').style.top = -36+'px'
   if (sideBar.mod==='close' || sideBar.mod==='auto'){
     toolbar.expanded = true
@@ -146,6 +145,11 @@ ipc.on('openToolbar',()=>{
     webviews.adjustMargin([0, 0, 0,100])
     document.getElementById('address-bar').appendChild(document.getElementById('tab-editor'))
     document.getElementById('toolbar-navigation-buttons').hidden = true
+  }
+
+  if(settings.get('thirdToolbar') == 'show') {
+    document.querySelector('#third-toolbar').hidden = false
+    webviews.autoAdjustMargin()
   }
 
 })
