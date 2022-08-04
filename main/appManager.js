@@ -1159,6 +1159,18 @@ app.whenReady().then(() => {
           })
         }
         template.push({
+          label:'重置窗口',
+          click(){
+            let bounds=renderPage.getMainWindowCenterBounds(appWindow.view.getBounds().width,appWindow.view.getBounds().height)
+            appWindow.setPosition(bounds.x,bounds.y)
+            appWindow.moveTop()
+            appWindow.focus()
+          }
+        })
+        template.push({
+          type:'separator'
+        })
+        template.push({
           label: '退出',
           click () {
             appManager.closeApp(appId)
