@@ -1299,32 +1299,18 @@ Vue.component('sidebar', {
         ipc.send('openAppList',data)
       })
     },
-    openSet(args){
-      let appId
-      standAloneAppModel.getAllApps({order:'createTime'}).then((data) => {
-        data.forEach((e)=>{
-          if (e.url === args) {
-            appId = e.id
-          }
-        })
-      })
-      setTimeout(()=>{
-        ipc.send('saAppOpenSetting',{id:appId})
-      },200)
+    async openSet(args) {
+      let app = await standAloneAppModel.get({url: args})
+      setTimeout(() => {
+        ipc.send('saAppOpenSetting', {id: app.id})
+      }, 200)
     },
-    uninstallApp(args){
-      let appId
-      standAloneAppModel.getAllApps({order:'createTime'}).then((data) => {
-        data.forEach((e)=>{
-          if (e.url === args) {
-            appId = e.id
-          }
-        })
-      })
+    async uninstallApp(args) {
+      let app = await standAloneAppModel.get({url: args})
       setTimeout(()=>{
-        saAppModel.uninstall(appId).then(success=>{
+        saAppModel.uninstall(app.id).then(success=>{
           ipc.send('message',{type:"success",config:{content:'卸载应用成功。'}})
-          ipc.send('deleteApp',{id:appId})
+          ipc.send('deleteApp',{id:app.id})
         },err=>{
           ipc.send('message',{type:"success",config:{content:'卸载失败。'}})
         })

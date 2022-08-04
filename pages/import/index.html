@@ -1,78 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8"/>
+  <meta charset="utf-8" />
   <title>导入小助手</title>
   <script src="../../ext/vue/vue.js"></script>
   <script src="../../ext/vue/antd.min.js"></script>
-  <link rel="stylesheet" href="../../ext/vue/antd.min.css"/>
-  <link rel="icon" type="image/svg+xml" href="./img/logo.svg"/>
-  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline'"/>
+  <link rel="stylesheet" href="../../ext/flex-class.css" />
+  <link rel="stylesheet" href="../../ext/vue/antd.min.css" />
+  <link rel="icon" type="image/svg+xml" href="./img/logo.svg" />
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline'" />
 </head>
+
 <body style="background-color: #f1f1f1;overflow: hidden">
-<div id="appVue">
-  <div style="padding:15px">
-    <template>
-      <p>欢迎使用导入小助手。<br>
-        小助手可以帮助您将其他浏览器中数据导入到想天浏览器。</p>
-    <div>
-      <h1>1.导入数据</h1>
-      <ul class="import-type">
-        <li>
-          <a-row>
-            <a-col span="4">
-              <img src="./img/fav.svg">
-
-            </a-col>
-            <a-col :span="13">
-      <h2>导入书签 <a href="tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/ngd5zk/wwylnh" target="_blank">如何导出？</a></h2>
-              <p>导出书签为<strong style="color: #333">html</strong>格式文件，再通过小助手导入到想天浏览器的<strong>收藏夹应用</strong>中。<br>相同目录相同地址的书签将被覆盖，请注意。</p>
-
-            </a-col>
-            <a-col :span="6" style="text-align: right">
-              <a-button @click="importBookmarks"  type="default">选择文件导入</a-button>
-            </a-col>
-          </a-row>
-        </li>
-        <li>
-          <a-row>
-            <a-col :span="4">
-              <img src="./img/pwd.svg">
-
-            </a-col>
-            <a-col :span="13">
-              <h2>导入密码 <a href="tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/ngd5zk/cdwuvn" target="_blank">如何导出？</a></h2>
-              <p>导出密码为<strong style="color: #333">csv</strong>格式文件。<br>相同网站下相同用户名的帐号将被覆盖，请注意。</p>
-              <p>目前支持Edge、Chrome、Safari、火狐导出格式。</p>
-            </a-col>
-            <a-col :span="6"  style="text-align: right">
-              <a-button @click="ipc.send('importPwd')" type="primary">选择文件导入密码</a-button>
-            </a-col>
-          </a-row>
-        </li>
-      </ul>
-    </div>
-    </template>
+  <div id="appVue" class="flex flex-direction justify-around align-center">
+    <section style="height: 30vh" class="flex justify-between align-center">
+      <div class="top-block flex flex-direction justify-center align-center" @click.stop="migration('edge')">
+        <img src="./img/edge.svg" alt="" style="width: 50px; height: 50px" v-if="!edgeSpining">
+        <a-spin size="large" v-else></a-spin>
+        <h4 v-if="!edgeMigrationed">导入Edge书签数据</h4>
+        <h4 v-else>导入完成</h4>
+      </div>
+      <div class="top-block flex flex-direction justify-center align-center" @click.stop="migration('chrome')">
+        <img src="./img/chrome.svg" alt="" style="width: 50px; height: 50px" v-if="!chromeSpining">
+        <a-spin size="large" v-else></a-spin>
+        <h4 v-if="!chromeMigrationed">导入Chrome书签数据</h4>
+        <h4 v-else>导入完成</h4>
+      </div>
+    </section>
+    <h3 style="height: 8vh; width: 100%; line-height: 8vh;">手动导入书签和密码</h3>
+    <section style="height: 50vh">
+      <div class="bottom-block flex justify-between align-center">
+        <img src="./img/fav.svg" style="width: 50px; height: 50px">
+        <div style="width: 60%;">
+          <h3>导入书签<a style="font-size: 12px; margin-left: 10px" href="tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/ngd5zk/wwylnh" target="_blank">如何导出?</a></h3>
+          <p>导出书签为<strong style="color: #333">html</strong>格式文件，再通过小助手导入到想天浏览器的<strong>超级收藏夹</strong>中。<br>相同目录相同地址的书签将被覆盖，请注意。
+          </p>
+        </div>
+        <div class="import-btn" @click.stop="importBookmarks()">选择文件导入</div>
+      </div>
+      <div class="bottom-block flex justify-between align-center">
+        <img src="./img/pwd.svg" style="width: 50px; height: 50px">
+        <div style="width: 60%;">
+          <h3>导入密码<a style="font-size: 12px; margin-left: 10px" href="tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/ngd5zk/cdwuvn" target="_blank">如何导出?</a></h3>
+          <p>导出密码为<strong style="color: #333">csv</strong>格式文件<br>相同网站下相同用户名的帐号将被覆盖，请注意。<br>目前支持Edge、Chrome、Safari、火狐导出格式。</p>
+        </div>
+        <div class="import-btn" @click="ipc.send('importPwd')">选择文件导入</div>
+      </div>
+    </section>
   </div>
+  <style>
+    #appVue {
+      height: 100%;
+      width: 100%;
+      padding: 20px 40px;
+    }
+    section {
+      width: 100%;
+    }
+    section .top-block {
+      width: 40vw;
+      background-color: #EBEBEB;
+      height: 90%;
+      border-radius: 10px;
+      border: 1px solid #00000000;
+      transition: all 1000ms cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+    section .top-block:hover {
+      border: 1px solid #1890ff;
+      background-color: rgba(3, 167, 248, 0.1);
+      cursor: pointer;
+    }
+    section .top-block h4 {
+      margin-top: 20px;
+    }
 
-</div>
-<style>
-  h1{
-    font-size: 18px;
-  }
-.import-type li{
-  list-style: none;
-}
-.import-type h2{
-  font-size: 16px;
-}
-.import-type h2 a{
-  font-size: 14px;
-}
-.import-type p{
-  color: #666;
-}
-</style>
+    section .bottom-block {
+      height: 50%;
+      width: 100%;
+    }
+    section .import-btn {
+      padding: 4px;
+      background-color: #FFFFFF;
+      border: 1px solid #EAEBEB;
+      transition: all 1000ms cubic-bezier(0.215, 0.61, 0.355, 1);
+      border-radius: 5px;
+      font-size: 12px;
+    }
+    section .import-btn:hover {
+      border: 1px solid #1890ff;
+      background-color: rgba(3, 167, 248, 0.1);
+      cursor: pointer;
+    }
+  </style>
 </body>
 <script>
 
@@ -86,36 +106,52 @@
 
   const appVue = new Vue({
     el: '#appVue',
-    data () {
+    data() {
       return {
         ipc,
-        face:'cry',
-        defaultBrowser:false,
-        hover:false,
-        loading:false
+        defaultBrowser: false,
+        edgeSpining: false,
+        chromeSpining: false,
+        edgeMigrationed: false,
+        chromeMigrationed: false
       }
     },
-    computed: {
-    },
-    mounted () {
+    mounted() {
       ipc.send('getIsDefaulBrowser')
-      setInterval(()=>{
-          ipc.send('getIsDefaulBrowser')
-        },1000)
+      setInterval(() => {
+        ipc.send('getIsDefaulBrowser')
+      }, 1000)
     },
     methods: {
-      importBookmarks(){
+      importBookmarks() {
         ipc.send('htmlImport')
+      },
+      migration(item) {
+        if(item === 'edge' && !this.edgeMigrationed) {
+          ipc.send('guideMigration', 'edge')
+          this.edgeSpining = true
+          setTimeout(() => {
+            this.edgeSpining = false
+            this.edgeMigrationed = true
+          }, 7000)
+        } else if (item === 'chrome' && !this.chromeMigrationed) {
+          ipc.send('guideMigration', 'chrome')
+          this.chromeSpining = true
+          setTimeout(() => {
+            this.chromeSpining = false
+            this.chromeMigrationed = true
+          }, 7000)
+        }
       }
     }
   })
 
-  ipc.on('importPwdFailed',(event,args)=>{
-    appVue.$error({title:'导入失败',content:args.message})
+  ipc.on('importPwdFailed', (event, args) => {
+    appVue.$error({ title: '导入失败', content: args.message })
   })
-  ipc.on('importPwdSuccess',(event,args)=>{
-    console.log(args.importedPwds)
-    appVue.$success({title:'导入成功',content:'成功从 '+args.from+' 导入（含覆盖） '+args.imported+' 个密码。'})
+  ipc.on('importPwdSuccess', (event, args) => {
+    appVue.$success({ title: '导入成功', content: '成功从 ' + args.from + ' 导入（含覆盖） ' + args.imported + ' 个密码。' })
   })
 </script>
+
 </html>
