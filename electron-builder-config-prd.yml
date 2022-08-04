@@ -11,7 +11,10 @@ files:
   - pages/**/*
   - icons/**/*
   - icons/*.svg
-  - js/**/*
+  #- js/**/*
+  - js/defaultPreload.js
+  - js/main/**/*
+  - js/request/**/*
   - ./main.build.js
   - ext/**/*
   - index.html
@@ -24,7 +27,8 @@ files:
   - resources/**/*
   - src/**/*
   - vite/dist/**/* #增加渲染进程
-dmg:
+electron-builder-config-prd:
+  yml:dmg:
     sign: false
 
 win:
