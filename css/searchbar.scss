@@ -1,4 +1,8 @@
 #searchbar {
+  .top-answer-area{
+    padding-left: 40px;
+    background-color: rgba(0, 0, 0, 0.08);
+  }
   z-index: 3;
   position: fixed;
   top: calc(var(--control-space-top) + 36px);
