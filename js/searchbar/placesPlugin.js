@@ -113,6 +113,7 @@ function showSearchbarPlaceResults (text, input, event, pluginName = 'places') {
 function initialize () {
   searchbarPlugins.register('places', {
     index: 1,
+    alias:'位置',
     trigger: function (text) {
       return !!text && text.indexOf('!') !== 0
     },
