@@ -254,9 +254,9 @@ app.whenReady().then(()=>{
   ipc.on('activeComplete', (event, args) => {
     afterGuide(`guideSchedule.modules.${args.moduleName}.${args.childName}`)
   })
-  ipc.on('enterFirstGuide',(item,window)=>{
-    sendIPCToWindow(window, 'enterFirstGuide')
-  })
+  // ipc.on('enterFirstGuide',(item,window)=>{
+  //   sendIPCToWindow(window, 'enterFirstGuide')
+  // })
 
   let firstGuideVideo
   ipc.on('firstGuideVideo', () => {
@@ -404,6 +404,10 @@ app.whenReady().then(()=>{
     settings.set('hasShowDirection', true)
   })
 
+  ipc.on('closeHelpGuide',()=>{
+    SidePanel.send('guide',8)
+  })
+
   ipc.on('addTaskCareer',(event,args)=>{
     sendIPCToMainWindow('addTaskCareer',args)
   })
@@ -439,9 +443,9 @@ app.whenReady().then(()=>{
   ipc.on('exitGuide',(item,window)=>{
     sendIPCToWindow(window, 'exitGuide')
   })
-  ipc.on('exitFirstGuide',()=>{
-    mainWindow.webContents.send('exitFirstGuide')
-  })
+  // ipc.on('exitFirstGuide',()=>{
+  //   mainWindow.webContents.send('exitFirstGuide')
+  // })
 
   ipc.on('closeGuide',()=>{
     mainWindow.webContents.send('closeGuide')
