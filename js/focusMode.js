@@ -17,17 +17,17 @@ ipc.on('exitFocusMode', function () {
 })
 
 
-ipc.on('enterFirstGuide',()=>{
-  isFocusMode = true
-  document.body.classList.add('is-focus-mode')
-  isFirstGuideMode = true
-})
+// ipc.on('enterFirstGuide',()=>{
+//   isFocusMode = true
+//   document.body.classList.add('is-focus-mode')
+//   isFirstGuideMode = true
+// })
 
-ipc.on('exitFirstGuide',()=>{
-  isFocusMode = false
-  isFirstGuideMode= false
-  document.body.classList.remove('is-focus-mode')
-})
+// ipc.on('exitFirstGuide',()=>{
+//   isFocusMode = false
+//   isFirstGuideMode= false
+//   document.body.classList.remove('is-focus-mode')
+// })
 
 ipc.on('enterGuide', function () {
   isFocusMode = true

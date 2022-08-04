@@ -369,6 +369,9 @@ body {
   margin-top: 10px;
 }
 
+.sidebar .side-container .side-items .app-task .task-icon {
+  margin-top: 10px; }
+
 .item-icon {
   width: 45px;
   position: absolute;

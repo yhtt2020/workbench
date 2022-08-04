@@ -44,6 +44,7 @@ function showRestoreTask () {
 function initialize () {
   searchbarPlugins.register('restoreTask', {
     index: 0,
+    alias:'恢复标签组',
     trigger: function (text) {
       return !text && performance.now() < 15000 && tasks.getSelected().tabs.isEmpty() && window.createdNewTaskOnStartup
     },

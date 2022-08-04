@@ -619,10 +619,14 @@ const appManager = {
     } else if (saApp.package === 'com.thisky.fav') {
       saApp.url = '/pages/fav/index.html'
       saApp.type = 'local'
+    }else if(saApp.package === 'com.thisky.appStore'){
+      saApp.url = '/pages/appStoreNew/index.html'
+      saApp.type = 'local'
     }
 
     remote.enable(appView.webContents)
-    if (saApp.type === 'local') {
+
+    if (saApp.type === 'local' && saApp.package) {
       appView.webContents.loadURL('file://' + path.join(__dirname, saApp.url))
     } else {
       appView.webContents.loadURL(saApp.url)
@@ -1154,6 +1158,18 @@ app.whenReady().then(() => {
             }
           })
         }
+        template.push({
+          label:'重置窗口',
+          click(){
+            let bounds=renderPage.getMainWindowCenterBounds(appWindow.view.getBounds().width,appWindow.view.getBounds().height)
+            appWindow.setPosition(bounds.x,bounds.y)
+            appWindow.moveTop()
+            appWindow.focus()
+          }
+        })
+        template.push({
+          type:'separator'
+        })
         template.push({
           label: '退出',
           click () {

@@ -76,7 +76,6 @@ function initAppsData() {
 			}, 5000)
 		})
 
-
 	window.nativeData = JSON.parse(fs.readFileSync(__dirname + apiNative, 'utf-8'))
 
 }

@@ -1,0 +1,15 @@
+.card-container > .ant-tabs-card .ant-tabs-content::-webkit-scrollbar {
+  width: 6px;
+  height: 6px; }
+.card-container > .ant-tabs-card .ant-tabs-content::-webkit-scrollbar-track {
+  background: #ffffff;
+  border-radius: 2px; }
+.card-container > .ant-tabs-card .ant-tabs-content::-webkit-scrollbar-thumb {
+  background: #b0b0b0;
+  border-radius: 20px; }
+.card-container > .ant-tabs-card .ant-tabs-content::-webkit-scrollbar-thumb:hover {
+  background: #747474; }
+.card-container > .ant-tabs-card .ant-tabs-content::-webkit-scrollbar-corner {
+  background: #f6f6f6; }
+
+/*# sourceMappingURL=select.css.map */

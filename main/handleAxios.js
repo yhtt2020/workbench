@@ -254,9 +254,9 @@ app.whenReady().then(()=>{
   ipc.on('activeComplete', (event, args) => {
     afterGuide(`guideSchedule.modules.${args.moduleName}.${args.childName}`)
   })
-  ipc.on('enterFirstGuide',(item,window)=>{
-    sendIPCToWindow(window, 'enterFirstGuide')
-  })
+  // ipc.on('enterFirstGuide',(item,window)=>{
+  //   sendIPCToWindow(window, 'enterFirstGuide')
+  // })
 
   let firstGuideVideo
   ipc.on('firstGuideVideo', () => {
@@ -346,7 +346,7 @@ app.whenReady().then(()=>{
   })
   ipc.on('guideDesktopFirst',()=>{
     if(markDb.db.get('guideSchedule.modules.feature.desktop').value()===false){
-      mainWindow.webContents.send('addTab','ts://newtab')
+      mainWindow.send('addTab',{url:'ts://newtab'})
       setTimeout(()=>{
         SidePanel.send('guideDesktop')
       },1000)
@@ -377,7 +377,7 @@ app.whenReady().then(()=>{
     SidePanel.send('guide',1)
   })
   ipc.on('guideDesktop', () => {
-    mainWindow.webContents.send('addTab','ts://newtab')
+    mainWindow.webContents.send('addTab',{url:'ts://newtab'})
     setTimeout(()=>{
       SidePanel.send('guideDesktop')
     },1000)
@@ -402,6 +402,10 @@ app.whenReady().then(()=>{
   ipc.on('helpGuide',()=>{
     SidePanel.send('guide',7)
     settings.set('hasShowDirection', true)
+  })
+
+  ipc.on('closeHelpGuide',()=>{
+    SidePanel.send('guide',8)
   })
 
   ipc.on('addTaskCareer',(event,args)=>{
@@ -439,9 +443,9 @@ app.whenReady().then(()=>{
   ipc.on('exitGuide',(item,window)=>{
     sendIPCToWindow(window, 'exitGuide')
   })
-  ipc.on('exitFirstGuide',()=>{
-    mainWindow.webContents.send('exitFirstGuide')
-  })
+  // ipc.on('exitFirstGuide',()=>{
+  //   mainWindow.webContents.send('exitFirstGuide')
+  // })
 
   ipc.on('closeGuide',()=>{
     mainWindow.webContents.send('closeGuide')

@@ -12,6 +12,8 @@ files:
     - icons/**/*
     - icons/*.svg
     #- js/**/*
+    - js/places/*
+    - js/defaultPreload.js
     - js/main/**/*
     - js/request/**/*
     - js/util/**/*

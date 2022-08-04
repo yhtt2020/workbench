@@ -150,7 +150,9 @@ const tabEditor = {
         e.preventDefault()
       }
     })
-
+    tabEditor.input.addEventListener('compositionend',function (e){
+      searchbar.showResults(this.value, e)
+    })
     document.getElementById('webviews').addEventListener('click', function () {
       tabEditor.hide()
     })

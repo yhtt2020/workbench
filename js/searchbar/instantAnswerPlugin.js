@@ -184,6 +184,7 @@ function showSearchbarInstantAnswers (text, input, event) {
 function initialize () {
   searchbarPlugins.register('instantAnswers', {
     index: 4,
+    alias:'直接答案',
     trigger: function (text) {
       return text.length > 3 && !urlParser.isPossibleURL(text) && !tabs.get(tabs.getSelected()).private
     },
