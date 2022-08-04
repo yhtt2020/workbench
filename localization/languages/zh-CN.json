@@ -109,7 +109,7 @@
     "offlineErrorTitle": "您处于离线状态",
     "offlineErrorMessage": "重新连接网络并重试。",
     "genericConnectionFail": "无法连接到站点。",
-    "sslTimeErrorMessage": "无法安全地连接到当前站点。您与此网站之间建立的连接不安全，点击重试设置此不安全站点为白名单，继续访问。",
+    "sslTimeErrorMessage": "无法安全地连接到当前站点。您与此网站之间建立的连接不安全，点击继续访问设置此不安全站点为白名单，前往。",
     "addressInvalidTitle": "无效的地址。",
     "genericError": "发生错误",
     /* pages/phishing/index.html */

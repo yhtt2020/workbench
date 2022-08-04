@@ -13,6 +13,12 @@
 
       <button id="secondary-button" class="secondary-button" hidden></button>
       <button
+        id="continue-button"
+        hidden
+      >
+      继续访问
+      </button>
+      <button
         id="primary-button"
         class="primary-button"
         data-string="errorPagePrimaryAction"
@@ -24,4 +30,13 @@
     <script src="../../dist/localization.build.js"></script>
     <script src="error.js"></script>
   </body>
+  <style>
+    #continue-button {
+      background-color: #00000000;
+      color: red;
+    }
+    #continue-button:hover {
+      cursor: pointer;
+    }
+  </style>
 </html>

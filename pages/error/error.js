@@ -3,6 +3,7 @@ var h1 = document.getElementById('error-name')
 var h2 = document.getElementById('error-desc')
 var primaryButton = document.getElementById('primary-button')
 var secondaryButton = document.getElementById('secondary-button')
+var continueButton = document.querySelector('#continue-button')
 
 var ec = searchParams.get('ec')
 var url = searchParams.get('url')
@@ -342,8 +343,15 @@ if (erorDescriptions[ec] === sslError && ec != -201) {
   url = url.replace('https://', 'http://')
 }
 
+if (ec == -201) {
+  continueButton.hidden = false
+}
+
 if (url) {
   primaryButton.addEventListener('click', function () {
+    retry()
+  })
+  continueButton.addEventListener('click', () => {
     if(ec == -201) {
       settings.get('whiteCertInvalid', (whiteCertInvalid) => {
         const reg = /^http(s)?:\/\/(.*)\.(\w*)/
@@ -354,8 +362,6 @@ if (url) {
       setTimeout(() => {
         retry()
       }, 1000)
-    } else {
-      retry()
     }
   })
 }
