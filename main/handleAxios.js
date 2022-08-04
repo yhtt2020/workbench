@@ -148,8 +148,7 @@ app.whenReady().then(()=>{
     event.reply('callback-imAutoLogin', result)
   })
 
-  //主进程的refreshToken成功后   主进程更新storage中的信息，并传到子进程中修改用户标识信息
-  ipc.on('updateStorageInfo', (event, user) => {
+  function updateStorageInfo(user){
     storage.setStoragePath(global.sharedPath.extra)
     storage.setItem(`userToken`, user.token)
     storage.setItem(`refreshToken`, user.refreshToken)
@@ -157,6 +156,11 @@ app.whenReady().then(()=>{
     storage.setItem(`refreshExpire_deadtime`, new Date().getTime() + user.refreshExpire * 1000)
     storage.setItem(`userInfo`, user.userInfo)
     global.utilWindow.webContents.send('remakeCurrentUser', user)
+    //发送过去更新用户的信息
+  }
+  //主进程的refreshToken成功后   主进程更新storage中的信息，并传到子进程中修改用户标识信息
+  ipc.on('updateUserInfo', (event, user) => {
+    updateStorageInfo(user)
   })
 
   //主进程的refreshToken也过期的时候 清空主进程中storage的信息，并传到子进程中修改用户标识信息
@@ -176,11 +180,29 @@ app.whenReady().then(()=>{
     return markDb.db.get('guideSchedule').value()
   })
 
+  //第三栏来获取当前设备的新手引导进度
+  ipc.handle('toolbarGetNoobGuideSchedule', (event, args) => {
+    return markDb.db.get('guideSchedule').value()
+  })
+
   ipc.handle('getOtherStatus', () => {
+    let browserTabData = settings.get('browserTab') || null
+    if(browserTabData && browserTabData.tabIdx === 0) {
+      browserTabData = 'tstab'
+    } else if (browserTabData && browserTabData.tabIdx === 1) {
+      browserTabData = 'qntab'
+    } else if(browserTabData && browserTabData.tabIdx === 2) {
+      browserTabData = 'inftab'
+    } else if(browserTabData && browserTabData.tabIdx === 3) {
+      browserTabData = 'itab'
+    } else {
+      browserTabData = 'custom'
+    }
     let data = {
       adBlockingLevel: settings.get('filtering') ? settings.get('filtering').blockingLevel : 0,
       siteTheme: settings.get('siteTheme') ? settings.get('siteTheme') : true,
-      searchEngine: settings.get('searchEngine') ? settings.get('searchEngine').name : 'Bing'
+      searchEngine: settings.get('searchEngine') ? settings.get('searchEngine').name : 'Bing',
+      newTab: browserTabData ?? 'tstab'
     }
     return data
   })
@@ -198,6 +220,10 @@ app.whenReady().then(()=>{
         })
       }
     })
+  })
+
+  ipc.on('htmlImport', () => {
+    mainWindow.webContents.send('renderHtmlImport')
   })
 
   function calcGuideScedule() {
@@ -228,6 +254,9 @@ app.whenReady().then(()=>{
   ipc.on('activeComplete', (event, args) => {
     afterGuide(`guideSchedule.modules.${args.moduleName}.${args.childName}`)
   })
+  // ipc.on('enterFirstGuide',(item,window)=>{
+  //   sendIPCToWindow(window, 'enterFirstGuide')
+  // })
 
   let firstGuideVideo
   ipc.on('firstGuideVideo', () => {
@@ -281,12 +310,17 @@ app.whenReady().then(()=>{
     let isMedal = markDb.db.get('guideSchedule.medal').value()
     SidePanel.send('callBackMedal', isMedal)
   })
+
+  ipc.on('selectNewTab', (event, args) => {
+    mainWindow.webContents.send('renderSelectNewTab',args)
+  })
   /**
    * 浏览器主进程中各任务完成后需要调用的函数
    * @param {string} guideName lowdb中set的键名 如'guideSchedule.modules.noobGuide.accountLogin'
    */
   function afterGuide(guideName) {
     markDb.db.set(guideName, true).write()
+    mainWindow.webContents.send('scheduleRefresh', markDb.db.get('guideSchedule').value())
     if(global.fromRender && !global.fromRender.guide.isDestroyed()) {
       global.fromRender.guide.send('scheduleRefresh', markDb.db.get('guideSchedule').value())
       SidePanel.send('updateSidebarGuideScedule', calcGuideScedule())
@@ -298,6 +332,7 @@ app.whenReady().then(()=>{
   function sendIPCToMainWindow(action, data) {
     mainWindow.webContents.send(action, data || {})
   }
+
 
   ipc.on('guideTasksFirst',()=>{
     if(markDb.db.get('guideSchedule.modules.feature.tasks').value()===false){
@@ -311,7 +346,7 @@ app.whenReady().then(()=>{
   })
   ipc.on('guideDesktopFirst',()=>{
     if(markDb.db.get('guideSchedule.modules.feature.desktop').value()===false){
-      mainWindow.webContents.send('addTab','ts://newtab')
+      mainWindow.send('addTab',{url:'ts://newtab'})
       setTimeout(()=>{
         SidePanel.send('guideDesktop')
       },1000)
@@ -342,7 +377,7 @@ app.whenReady().then(()=>{
     SidePanel.send('guide',1)
   })
   ipc.on('guideDesktop', () => {
-    mainWindow.webContents.send('addTab','ts://newtab')
+    mainWindow.webContents.send('addTab',{url:'ts://newtab'})
     setTimeout(()=>{
       SidePanel.send('guideDesktop')
     },1000)
@@ -366,6 +401,11 @@ app.whenReady().then(()=>{
 
   ipc.on('helpGuide',()=>{
     SidePanel.send('guide',7)
+    settings.set('hasShowDirection', true)
+  })
+
+  ipc.on('closeHelpGuide',()=>{
+    SidePanel.send('guide',8)
   })
 
   ipc.on('addTaskCareer',(event,args)=>{
@@ -403,6 +443,13 @@ app.whenReady().then(()=>{
   ipc.on('exitGuide',(item,window)=>{
     sendIPCToWindow(window, 'exitGuide')
   })
+  // ipc.on('exitFirstGuide',()=>{
+  //   mainWindow.webContents.send('exitFirstGuide')
+  // })
+
+  ipc.on('closeGuide',()=>{
+    mainWindow.webContents.send('closeGuide')
+  })
 
   ipc.on('guideLogin',()=>{
     SidePanel.send('guideLogin')
@@ -410,6 +457,11 @@ app.whenReady().then(()=>{
   ipc.on('guideClose',()=>{
     mainWindow.webContents.send('closeGuide')
   })
+
+  ipc.on('valueCount',(event,args)=>{
+    mainWindow.webContents.send('valueCount',args)
+  })
+
 //--------------------------------------------------------->myf状态管理部分
 
 

@@ -3,9 +3,7 @@ let href = window.location.href
 let { config, api, appConfig }=require('../../server-config.js')
 const tsbSdk = require('../../js/util/tsbSdk.js')
 let ipc=require('electron').ipcRenderer
-//这个预载入文件用于与服务器进行交互，仅适用于项目路径
-let href = window.location.href
-const server = {
+const preload = {
   //osx端说pc登录是否已掉的前置判断
   beforeInit() {
     //先检测node是否登录
@@ -42,7 +40,7 @@ const server = {
   },
   login() {
     if(window.location.href.includes('code=')) {
-      const code = server.matchIntercept(window.location.href, 'code', '\\&')
+      const code = preload.matchIntercept(window.location.href, 'code', '\\&')
       ipc.send('loginBrowser', code)
       ipc.on('callback-loginBrowser', (event, arg) => {
         if(arg.code === 1000 ) {
@@ -72,14 +70,14 @@ const server = {
 
 if(href.startsWith(config.SERVER_BASE_URL) && !href.startsWith(config.SERVER_BASE_URL + api.API_URL.user.AUTO_LOGIN))
 {
-  server.beforeInit()
-  server.init(href)
+  preload.beforeInit()
+  preload.init(href)
 } else if (href.startsWith(config.DEV_NODE_SERVER_BASE_URL)) {
   const newUrl = window.location.origin + window.location.pathname
-  server.init(newUrl)
+  preload.init(newUrl)
 } else if (href.startsWith(config.PROD_NODE_SERVER_BASE_URL)) {
   const newUrl = window.location.origin + window.location.pathname
-  server.init(newUrl)
+  preload.init(newUrl)
 }
 
 

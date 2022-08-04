@@ -60,6 +60,9 @@ var urlParser = {
 
       return 'view-source:' + urlParser.parse(realURL)
     }
+    if(url.startsWith('chrome-extension') ){
+      return url
+    }
 
     // if the URL is an internal URL, convert it to the correct file:// url
     if (url.startsWith('ts:')) {
@@ -95,6 +98,8 @@ var urlParser = {
       }
       return 'http://' + url
     }
+
+
 
     // else, do a search
     return searchEngine.getCurrent().searchURL.replace('%s', encodeURIComponent(url))

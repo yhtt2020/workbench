@@ -1,4 +1,4 @@
-
+@import "darkMod";
 #navbar {
   display: flex;
   height: calc(36px + var(--control-space-top));
@@ -275,21 +275,6 @@ body.linux #menu-button {
     background: rgba(255, 255, 255, 1);
     .title{
       color: #333 ;
-    }
-  }
-}
-.dark-theme {
-  .tab-item.active:not(:only-child) {
-    border: none;
-    background: rgba(255, 255, 255, 1);
-
-    .title {
-      color: #333;
-    }
-
-    &.theme-background-low-contrast .tab-item.active:not(:only-child) {
-      background: rgba(255, 255, 255, 0.1);
-
     }
   }
 }

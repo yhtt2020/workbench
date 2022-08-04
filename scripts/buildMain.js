@@ -10,16 +10,17 @@ const modules = [
   'main/touchbar.js',
   'main/registryConfig.js',
   'main/main.js',
+  'main/extension.js',
   'main/render.js',
   'main/capture.js',
   'main/sidePanel.js',
   'main/bindIPC.js',
   'main/appManager.js',
+  'main/appStore.js',
   'main/popManager.js',
   'main/siteCard.js',
   'main/downloadCard.js',
   'main/userScript.js',
-  'main/handleAxios.js',
   'main/group.js',
   'main/update.js',
   'js/util/settings/settingsMain.js',
@@ -32,12 +33,14 @@ const modules = [
   'main/remoteMenu.js',
   'main/remoteActions.js',
   'main/keychainService.js',
+  'main/handleAxios.js',
   'js/util/proxy.js',
   'main/mobileMod.js',
   'main/wizard.js',
   'main/messageCenter.js',
   'main/fav.js',
-  'main/globalSearch.js'
+  'main/globalSearch.js',
+
 ]
 
 function buildMain () {

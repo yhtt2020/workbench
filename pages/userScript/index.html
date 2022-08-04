@@ -11,7 +11,7 @@
 <div id="appVue">
   <template>
     <div style="padding: 20px">
-      <h3>当前启用脚本</h3>
+      <h3>当前启用的脚本</h3>
       <a-button title="导入外部用户脚本" @click="importScript" style="position:absolute;right: 20px;top: 20px" type="primary"
                 icon="download">导入脚本
       </a-button>
@@ -81,6 +81,7 @@
 
     },
     methods: {
+
       viewCode (record) {
         ipc.send('viewCode', { file: record })
         console.log(record)

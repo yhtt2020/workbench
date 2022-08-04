@@ -1,0 +1,42 @@
+$dark-bg: rgb(32, 32, 32);
+$dark-second-bg:rgb(63,63,63);
+$dark-primary-color: rgb(210, 210, 210);
+$dark-second-color: rgb(189, 189, 189);
+.dark-mode {
+  #toolbar{
+    background: $dark-bg;
+    border-color: $dark-bg;
+     .action:hover{
+      background: $dark-second-bg;
+    }
+    #tab-editor-input{
+      color: $dark-primary-color;
+    }
+    svg{
+
+    }
+    svg path {
+      fill: $dark-primary-color !important;
+      color: $dark-primary-color;
+    }
+    .split{
+      border-color: $dark-second-bg;
+    }
+  }
+  #toolbar #address-bar{
+    background: $dark-second-bg;
+  }
+  .tab-item .title{
+    color: $dark-second-color;
+  }
+  .tab-item.active:not(:only-child) {
+    border: none;
+    background: rgb(63,63,63);
+    .title {
+      color: #cecece;
+    }
+    &.theme-background-low-contrast .tab-item.active:not(:only-child) {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+}

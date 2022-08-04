@@ -18,7 +18,7 @@ const defaultViewWebPreferences = {
   nodeIntegrationInSubFrames: true,
   scrollBounce: true,
   safeDialogs: true,
-  safeDialogsMessage: 'Prevent this page from creating additional dialogs',
+  safeDialogsMessage: '阻止此页面弹窗',
   preload: __dirname + '/dist/preload.js',
   contextIsolation: true,
   sandbox: true,
@@ -30,6 +30,7 @@ const defaultViewWebPreferences = {
   // match Chrome's default for anti-fingerprinting purposes (Electron defaults to 0)
   minimumFontSize: 6
 }
+
 
 function createView(existingViewId, id, webPreferencesString, boundsString, events) {
   viewStateMap[id] = {loadedInitialURL: false}
@@ -82,13 +83,14 @@ function createView(existingViewId, id, webPreferencesString, boundsString, even
       (https://github.com/minbrowser/min/issues/1835)
     */
     if (!details.features) {
-      mainWindow.webContents.send('view-event', {
-        viewId: id,
-        event: 'new-tab',
-        args: [details.url, !(details.disposition === 'background-tab')]
-      })
+      // mainWindow.webContents.send('view-event', {
+      //   viewId: id,
+      //   event: 'new-tab',
+      //   args: [details.url, !(details.disposition === 'background-tab')]
+      // })
       return {
-        action: 'deny'
+        //如果这里return  deny，则禁止任何形式的弹窗
+        action: 'allow'
       }
     }
 
@@ -215,6 +217,13 @@ function createView(existingViewId, id, webPreferencesString, boundsString, even
   // })
   //end
 
+  //同步extension的tab
+  browser.extensions.addTab(view.webContents, mainWindow)
+
+  if(waitingSyncId!==0){
+    tabs[waitingSyncId]=view.webContents
+    waitingSyncId=0
+  }
   return view
 }
 
@@ -261,6 +270,8 @@ function setView(id) {
   } else {
     mainWindow.setBrowserView(null)
   }
+  browser.extensions.selectTab(viewMap[id].webContents)
+  sendIPCToWindow(mainWindow,'setActionListTab',{id:viewMap[id].webContents.id})
   selectedView = id
 }
 

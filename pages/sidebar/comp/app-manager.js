@@ -27,7 +27,7 @@ const appManagerTpl =
              <span style="float: right"><a-icon title="设置" @click.stop="openSetting(appId)" type="setting"></a-icon>&nbsp;&nbsp; <a-icon title="彻底退出" @click.stop="closeApp(appId)" type="poweroff"></a-icon> </span>
 </div>
              <div>
-             <div class="app-capture" style="position: relative" @mouseenter="startStat(appId)" @mouseleave="stopStat">
+             <div class="app-capture" @click="executeApp(getApp(appId))"  style="position: relative;cursor: pointer" @mouseenter="startStat(appId)" @mouseleave="stopStat">
              <a-row class="app-info">
              <a-col :span="24" style="text-align: center">
              运行情况

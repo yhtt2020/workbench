@@ -105,6 +105,17 @@ const searchbarPlugins = {
       })
     }
 
+    let pluginObject= plugins.find((plg)=>{
+      return plg.name===pluginName
+    })
+
+    if(pluginObject.alias){
+      let el=document.createElement('span')
+      el.classList.add('plugin-alias')
+      el.innerText=pluginObject.alias
+      item.insertBefore(el,item.children[0])
+    }
+
     searchbarPlugins.getContainer(pluginName).appendChild(item)
 
     results[pluginName].push(data)
@@ -132,6 +143,7 @@ const searchbarPlugins = {
 
     plugins.push({
       name: name,
+      alias:object.alias, //加入中文名称，提升可读性
       container: container,
       trigger: object.trigger,
       showResults: object.showResults
