@@ -100,6 +100,7 @@ function showSearchSuggestions (text, input, event) {
 function initialize () {
   searchbarPlugins.register('searchSuggestions', {
     index: 4,
+    alias:'搜索建议',
     trigger: function (text) {
       return !!text && text.indexOf('!') !== 0 && !tabs.get(tabs.getSelected()).private
     },

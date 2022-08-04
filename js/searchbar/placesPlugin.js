@@ -36,7 +36,6 @@ function showSearchbarPlaceResults (text, input, event, pluginName = 'places') {
     searchbarPlugins.reset(pluginName)
 
     results = results.slice(0, resultCount)
-
     results.forEach(function (result, index) {
       var didAutocompleteResult = false
 
@@ -71,7 +70,6 @@ function showSearchbarPlaceResults (text, input, event, pluginName = 'places') {
           }
         }
       }
-
       var data = {
         url: result.url,
         metadata: result.tags,
@@ -79,6 +77,7 @@ function showSearchbarPlaceResults (text, input, event, pluginName = 'places') {
         delete: function () {
           places.deleteHistory(result.url)
         },
+        favicon:result.favicon,
         icon: 'carbon:wikis'
       }
 
@@ -122,6 +121,7 @@ function initialize () {
 
   searchbarPlugins.register('fullTextPlaces', {
     index: 2,
+    alias:'全文搜索',
     trigger: function (text) {
       return !!text && text.indexOf('!') !== 0
     },

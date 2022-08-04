@@ -45,7 +45,6 @@ module.exports = {
           var lazyList = searchbarUtils.createLazyList(container.parentNode)
 
           var lastRelativeDate = '' // used to generate headings
-
           results.sort(function (a, b) {
             // order by last visit
             return b.lastVisit - a.lastVisit
@@ -57,6 +56,7 @@ module.exports = {
             }
             var data = {
               title: result.title,
+              favicon:result.favicon,
               secondaryText: urlParser.getSourceURL(result.url),
               fakeFocus: index === 0 && text,
               icon: (result.isBookmarked ? 'carbon:star' : ''),
@@ -73,6 +73,7 @@ module.exports = {
             lazyList.lazyRenderItem(placeholder, data)
           })
         }, { limit: Infinity })
+
       },
       fn: function (text) {
         if (!text) {

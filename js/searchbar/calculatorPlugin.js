@@ -64,6 +64,7 @@ function doMath (text, input, event) {
 function initialize () {
   searchbarPlugins.register('calculatorPlugin', {
     index: 1,
+    alias:'计算器',
     trigger: function (text) {
       if (text.length < 3 || text.length > 100 || (
         !/__proto__|prototype|constructor/i.test(text) && // dangerous keywords

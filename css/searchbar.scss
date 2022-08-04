@@ -2,37 +2,37 @@
   z-index: 3;
   position: fixed;
   top: calc(var(--control-space-top) + 36px);
-  left: calc((100% - 46px) * 0.02 + 46px);
-  width: calc((100% - 46px) * 0.96);
+  left: calc((100% - 46px )*0.02 + 46px );
+  width: calc( (100% - 46px ) * 0.96);
   background: #fff;
   color: #000;
   -webkit-user-select: none;
   max-height: calc(100% - 125px);
   overflow-y: auto;
-  border-radius: 0px 0px 10px 10px;
+  border-radius:0px 0px 10px 10px;
   padding-bottom: 20px;
   border: 1px solid #e3e3e3;
   border-top: none;
-}
-#searchbar .search-favicon {
-  width: 22px;
-  height: 22px;
-  border-radius: 4px;
-  vertical-align: middle;
-  margin-right: 3px;
-}
-#searchbar .plugin-alias {
-  border: 1px solid #ccc;
-  background: #f2f2f2;
-  font-size: 12px;
-  padding: 2px 5px;
-  border-radius: 20px;
-  margin-right: 5px;
+  .search-favicon{
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    vertical-align: middle;
+    margin-right: 3px;
+  }
+  .plugin-alias{
+    border: 1px solid #ccc;
+    background: #f2f2f2;
+    font-size: 12px;
+    padding: 2px 5px;
+    border-radius: 20px;
+    margin-right: 5px;
+  }
 }
 
 body:not(.is-ntp) #searchbar,
 body.ntp-has-background #searchbar {
-  box-shadow: rgba(0, 0, 0, 0.1) 0 0 8px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 0 8px ;
 }
 
 /* account for menu button */
@@ -65,18 +65,18 @@ body.linux #searchbar {
 }
 
 .searchbar-floating-button:hover {
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: rgba(0, 0, 0, 0.05)
 }
 
 .dark-theme .searchbar-floating-button {
   border-color: white;
 }
-
 .dark-theme .searchbar-floating-button:hover {
-  background-color: rgba(255, 255, 255, 0.075);
+  background-color: rgba(255, 255, 255, 0.075)
 }
 
 /* move the icon when there isn't room to the left of the searchbar */
+
 .fullscreen #searchbar .searchbar-item i,
 body:not(.mac) #searchbar .searchbar-item i,
 .fullscreen #searchbar .searchbar-item .icon-image,
@@ -86,6 +86,7 @@ body:not(.mac) #searchbar .searchbar-item .icon-image {
 }
 
 /* if an action button is visible, the searchbar icon should disappear (if they occupy the same position) */
+
 .fullscreen #searchbar .searchbar-item.has-action-button:hover i,
 body:not(.mac) #searchbar .searchbar-item.has-action-button:hover i,
 .fullscreen #searchbar .searchbar-item.has-action-button:hover .icon-image,
@@ -101,7 +102,6 @@ body:not(.mac) #searchbar .searchbar-item.has-action-button:hover .icon-image {
   border: 1px solid rgba(0, 0, 0, 0.2);
   padding-right: 0.5em;
 }
-
 .dark-theme #searchbar .image.color-circle {
   border-color: rgba(255, 255, 255, 0.2);
 }
@@ -119,24 +119,22 @@ body:not(.mac) #searchbar .searchbar-item.has-action-button:hover .icon-image {
   opacity: 1;
   cursor: pointer;
 }
-
-.searchbar-shortcut.i:before {
+.searchbar-shortcut.i:before{
   font-size: 1.2em;
   vertical-align: middle;
 }
-
 .searchbar-shortcut {
-  font-size: 0.9em !important;
+  font-size:0.9em !important;
   padding: 0.5em 0.66em;
   margin: 1em 0.4em 0.5em 0.4em;
   border-radius: 5px;
   border: 1px rgba(0, 0, 0, 0.15) solid;
   cursor: pointer;
 }
-
 /*.dark-theme .searchbar-shortcut {*/
 /*  border-color: rgba(255, 255, 255, 0.4);*/
 /*}*/
+
 .searchbar-shortcut:hover,
 .searchbar-shortcut:focus {
   background: rgba(0, 0, 0, 0.075);
@@ -154,5 +152,3 @@ body:not(.mac) #searchbar .searchbar-item.has-action-button:hover .icon-image {
 .dark-theme .searchbar-shortcut:active {
   /*background: rgba(255, 255, 255, 0.125);*/
 }
-
-/*# sourceMappingURL=searchbar.css.map */

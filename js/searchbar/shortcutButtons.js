@@ -15,7 +15,7 @@ const shortcuts = [
   {
     icon: 'overflow-menu-horizontal',
     text: '!',
-    title:'超级指令'
+    title:'快捷指令'
   }
 ]
 
