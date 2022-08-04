@@ -14,7 +14,6 @@ const globalSearch = new Vue({
           this.searchResult = this.searchResult.concat(appresult, this.searchTab(newValue), this.searchTask(newValue))
           this.itemReadyedIndex = 0
           this.itemReadyedItem = this.searchResult[0]
-          console.log(this.searchResult)
         } else if (newValue.length === 0) {
           this.openFirst = true
           this.calculateAreaHeight(await this.getHistoryCount())
