@@ -289,7 +289,7 @@
                 handler: function(newValue, oldValue) {
                   if(newValue === 5 && newValue !== oldValue) {
                     ipc.invoke('getInfoBookmarkMigrationed').then(res => {
-                      if(res && isDefaultBrowser) {
+                      if(res && this.isDefaultBrowser) {
                         ipc.send('finishedGuideHiddenThirdToolbar')
                       }
                     })
