@@ -274,6 +274,8 @@
           </div>
         </div>
         <script>
+          const settings = require('./js/util/settings/settingsContent.js')
+
           const thirdToolbarVue = new Vue({
             el: '#third-toolbar',
             data() {
@@ -285,8 +287,12 @@
             watch: {
               finishedNoobguideNum: {
                 handler: function(newValue, oldValue) {
-                  if(newValue === 5) {
-                    ipc.send('finishedGuideHiddenThirdToolbar')
+                  if(newValue === 5 && newValue !== oldValue) {
+                    ipc.invoke('getInfoBookmarkMigrationed').then(res => {
+                      if(res && isDefaultBrowser) {
+                        ipc.send('finishedGuideHiddenThirdToolbar')
+                      }
+                    })
                   }
                 }
               }
@@ -540,10 +546,13 @@
       ipc.invoke('toolbarGetNoobGuideSchedule').then(res => {
         const num = Object.entries(res.modules.noobGuide).filter(v => v[1] === true).length
         thirdToolbarVue.$data.finishedNoobguideNum = num
-        if(num !== Object.entries(res.modules.noobGuide).length) {
-          document.querySelector('#toolbar').style['border-bottom'] = '0px'
-          ipc.send('unfinishedGuideShowThirdToolbar')
-        }
+
+        ipc.invoke('getInfoBookmarkMigrationed').then(migrationedRes => {
+          if(num !== Object.entries(res.modules.noobGuide).length || !migrationedRes || !thirdToolbarVue.$data.isDefaultBrowser) {
+            document.querySelector('#toolbar').style['border-bottom'] = '0px'
+            ipc.send('unfinishedGuideShowThirdToolbar')
+          }
+        })
       })
 
       ipc.on('scheduleRefresh', (event, args) => {

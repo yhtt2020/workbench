@@ -50,6 +50,9 @@
     </section>
   </div>
   <style>
+    body {
+      user-select: none;
+    }
     #appVue {
       height: 100%;
       width: 100%;
@@ -115,12 +118,6 @@
         edgeMigrationed: false,
         chromeMigrationed: false
       }
-    },
-    mounted() {
-      ipc.send('getIsDefaulBrowser')
-      setInterval(() => {
-        ipc.send('getIsDefaulBrowser')
-      }, 1000)
     },
     methods: {
       importBookmarks() {

@@ -85,6 +85,38 @@ const standAloneAppModel = {
       unreadCount: 0,
     })
 
+    let importHel = await db.standAloneApps.get({name:'导入助手'})
+    db.standAloneApps.put({
+      id:importHel?importHel.id:4,
+      name: '导入助手',
+      logo: '../../pages/import/img/logo.svg',
+      summary: '快速导入其他浏览器的书签、密码，设置为您的默认浏览器。',
+      type: 'local',
+      url: '/pages/import/index.html',
+      preload: '/pages/group/imPreload.js',
+      package:'com.thisky.import',
+      themeColor: '#689aff',
+      userThemeColor: '',
+      createTime: Date.now(),
+      updateTime: Date.now(),
+      accountAvatar: '',
+      order: 0,
+      useCount: 0,
+      attribute: {
+        isOffical: 1,
+        integration: 2
+      },
+      lastExecuteTime: Date.now(),
+      settings: JSON.stringify({
+        bounds: {
+          width: 610,
+          height: 500
+        }
+      }),
+      unreadCount: 0,
+    })
+
+
     let fav = await  db.standAloneApps.get({name:'超级收藏夹'})
     db.standAloneApps.put({
       id:fav?fav.id:8,
@@ -141,8 +173,8 @@ const standAloneAppModel = {
       lastExecuteTime: Date.now(),
       settings: JSON.stringify({
         bounds: {
-          width: 650,
-          height: 700
+          width: 610,
+          height: 500
         },
         showInSideBar:true
       }),
@@ -580,8 +612,8 @@ const standAloneAppModel = {
         lastExecuteTime: Date.now(),
         settings: JSON.stringify({
           bounds: {
-            width: 645,
-            height: 415
+            width: 610,
+            height: 500
           },
           showInSideBar:false
         }),

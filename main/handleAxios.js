@@ -207,10 +207,15 @@ app.whenReady().then(()=>{
     return data
   })
 
+  ipc.handle('getInfoBookmarkMigrationed', () => {
+    return settings.get('bookmarkMigrationed')
+  })
+
 
   ipc.on('guideMigration', (event, args) => {
     mainWindow.webContents.send('bookmarkMigration', args)
     ipc.on('afterMigration', (event, args) => {
+      settings.set('bookmarkMigrationed', true)
       afterGuide('guideSchedule.modules.noobGuide.migration')
       if(global.fromRender && !global.fromRender.guide.isDestroyed()) {
         markDb.db.set(`guideSchedule.migration.${args}`, true).write()

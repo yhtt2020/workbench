@@ -68,8 +68,10 @@ const sidebarTpl = /*html*/`
                               <template slot="content">
                                 <div class="flex flex-direction justify-around align-start" style="width: 100%; height: 185px">
                                   <div class="text-black">在线等级: {{this.$store.getters.getTsGrade.lv}}级</div>
-                                  <div class="text-black">距离下一级还需要: {{remainTime}} 小时</div>
-                                  <div class="text-black">累计在线时长{{this.$store.getters.getTsGrade.cumulativeHours}}小时</div>
+                                  <div class="text-black">距离下一级还需要: {{remainHour}}小时{{remainMinute}}分钟</div>
+                                  <div class="text-black">累计在线时长: {{this.$store.getters.getTsGrade.cumulativeHours}}小时</div>
+                                  <div class="text-black" v-if="this.$store.getters.getTsGrade.rank < 300">全网排名: {{this.$store.getters.getTsGrade.rank}}</div>
+                                  <div class="text-black" v-else>全网排名: 超过{{this.$store.getters.getTsGrade.percentage}}%的用户</div>
                                   <div class="text-grey">
                                     <img src="./assets/sun.svg" alt="" style="width: 20px; height: 20px"> = 16级
                                   </div>
@@ -85,7 +87,7 @@ const sidebarTpl = /*html*/`
 </div>
                                 </div>
                               </template>
-                              <div class="ts-grade flex justify-start align-center" style="margin-top: 4px">
+                              <div class="ts-grade flex justify-start align-center" style="margin-top: 4px" v-if="this.$store.getters.getTsGrade.lv > 0">
                                 <div class="ts-grade-crown" v-for="item in this.$store.getters.getTsGrade.crown">
                                   <img :src="item.icon" alt="" style="width: 20px; height: 20px">
                                 </div>
@@ -98,6 +100,9 @@ const sidebarTpl = /*html*/`
                                 <div class="ts-grade-star" v-for="item in this.$store.getters.getTsGrade.star">
                                   <img :src="item.icon" alt="" style="width: 20px; height: 20px">
                                 </div>
+                              </div>
+                              <div v-else class="ts-grade flex justify-start align-center" style="margin-top: 4px; color: #B6B6B6">
+                                剩余{{remainHour}}小时{{remainMinute}}分达到1级
                               </div>
                             </a-popover>
                           </template>
@@ -730,6 +735,7 @@ const sidebarTpl = /*html*/`
     </div>
     <message-center ref="messageRef" :visible="messageShow" :mod="mod" @closeMessage="() => this.messageShow = !this.messageShow" @updateVisible="(val) => this.messageShow = val">
     </message-center>
+    <level-upgrade ref="levelUpgradeRef" :visible="levelUpgradeShow" @closeLevelUpgrade="() => this.levelUpgradeShow = !this.levelUpgradeShow"></level-upgrade>
   </div>
 `
 
@@ -743,6 +749,7 @@ window.selectedTask=null
 Vue.component('sidebar', {
   data: function () {
     return {
+      levelUpgradeShow: false,
       isMedals:false,
       lastSync:Date.now(),//最后一次同步时间
       spaceStatus:'local',
@@ -767,7 +774,8 @@ Vue.component('sidebar', {
       userPanelVisible: false,
       teamLock:false,//防止团队引导多次触发
       teamList:[],
-      remainTime:'',
+      remainHour:'',
+      remainMinute: '',
       tags: [
         {
           label: '公开',
@@ -1564,7 +1572,9 @@ Vue.component('sidebar', {
     toggleUserPanel () {
       let lv = this.$store.getters.getTsGrade.lv
       let section = this.gradeTableGenerate(64)[lv+1]
-       this.remainTime = section[0] - this.$store.getters.getTsGrade.cumulativeHours
+      let remain = section[0]*60 - this.$store.getters.getTsGrade.cumulativeMinute
+      this.remainHour = Math.floor(remain/60)
+      this.remainMinute = remain - (Math.floor(remain/60) * 60)
       ipc.send('isMedal')
       this.passList = this.$store.getters.getAllCircle.filter(v => v.status !==3 && v.status !==2 )
       this.teamList = this.passList.filter(v => v.property === 0 ||  v.property===1)
