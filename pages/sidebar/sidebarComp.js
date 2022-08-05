@@ -1277,7 +1277,7 @@ Vue.component('sidebar', {
       let option = {
         name: app.name,
         logo: !!!app.icon ? '../../icons/default.svg' :app.icon,
-        summary: '自定义应用',
+        summary: app.summary,
         type: 'web',
         attribute: app.attribute,
         themeColor: !!!app.themeColor ? '#000' :app.themeColor,
