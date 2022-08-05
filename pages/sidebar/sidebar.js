@@ -116,7 +116,10 @@ window.onload = function() {
         moon: [],
         star: [],
         lv: 0,
-        cumulativeHours: 0
+        cumulativeHours: 0,
+        cumulativeMinute: 0,
+        rank: 0,
+        percentage: 0,
       },
       guideScedule: 0
 		},
@@ -307,6 +310,9 @@ window.onload = function() {
         Object.keys(userInfo.onlineGrade).forEach(v => handleGrade(v))
         state.onlineGrade.lv = userInfo.onlineGradeExtra.lv
         state.onlineGrade.cumulativeHours = userInfo.onlineGradeExtra.cumulativeHours
+        state.onlineGrade.cumulativeMinute = userInfo.onlineGradeExtra.minutes
+        state.onlineGrade.rank = userInfo.onlineGradeExtra.rank
+        state.onlineGrade.percentage = userInfo.onlineGradeExtra.percentage
       },
       //清空浏览器等级相关
       SET_RESET_TSGRADE: (state) => {
@@ -447,6 +453,7 @@ window.onload = function() {
       async getUserInfo({commit}){
         const result=await userApi.getUserInfo()
         if(result.code===1000){
+          //console.log(result, '_________________')
           commit('set_user_info',result.data)
           commit('SET_TSGRADE', result.data)
         }
