@@ -1,5 +1,5 @@
 var ignoreButton = document.getElementById('ignore-button')
-var continueButton = document.getElementById('continue-button')
+var continueButton = document.getElementById('continueButton')
 
 ignoreButton.addEventListener('click', function () {
   // add the domain to the exception list

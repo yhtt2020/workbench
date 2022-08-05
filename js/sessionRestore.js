@@ -9,6 +9,9 @@ const backupSpaceModel = require('../src/model/backupSpaceModel')
 const urlParser = require('../js/util/urlParser')
 const configModel = require('../src/model/configModel')
 const ipc = require('electron').ipcRenderer
+const statistics = require('./statistics')
+
+
 let SYNC_INTERVAL = 30 //普通模式下，同步间隔为30秒
 let safeClose=false
 if ('development-mode' in window.globalArgs) {
@@ -586,13 +589,13 @@ ipc.on('safeClose', async () => {
   //安全关闭，先完成保存后再关闭
   try{
     await safeCloseSave()
-
+    //关闭前上报数据
+    await statistics.upload()
   }catch (e) {
     console.warn('存储失败')
   }finally {
     ipc.send('closeMainWindow')
   }
-
 })
 
 ipc.on('safeQuitApp',async ()=>{

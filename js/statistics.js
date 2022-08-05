@@ -71,7 +71,6 @@ const statistics = {
       user_stats: await userStatsModel.get(1)
     }
     axios.post('/app/open/usageStats/addStats', options).then(async res => {
-      console.log('posted',options.client_id)
       statistics.usageDataCache = {
         created: Date.now()
       }
@@ -80,6 +79,17 @@ const statistics = {
     }).catch(e => {
       console.warn('failed to send usage statistics', e)
     })
+
+    //职业统计上报 上报完过一次设置为null，除非career再次被赋值才会上报
+    if(settings.get('career')) {
+      axios.post('/app/open/usageStats/addCareer', {
+        career: settings.get('career'),
+        uid: result.value.uid != 0 ? result.value.uid : 0,   //用户uid
+        client_id: settings.get('clientID')   //设备号
+      }).then(res => {
+        settings.set('career', null)
+      })
+    }
   },
 
   async uploadCumulativeTime() {
@@ -123,6 +133,11 @@ const statistics = {
         settings.set('usageData', statistics.usageDataCache)
       }
     }, 60 * 1000)
+
+    //初始化的时候检验一下证书过期的白名单是否已经创建
+    if(settings.get('whiteCertInvalid') == undefined) {
+      settings.set('whiteCertInvalid', [])
+    }
 
     /* 注释掉此段关于用户关闭信息收集按钮后的重制设备ID的问题 */
     settings.listen('collectUsageStats', function (value) {

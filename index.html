@@ -251,19 +251,25 @@
         <!-- 第三栏toolbar区域 -->
         <div id="third-toolbar" class="flex align-center justify-between" @contextmenu.stop="openThirdToolbarMenu" hidden>
           <div class="third-bar-lf flex align-center justify-start">
-            <div class="feature-btn flex justify-center align-center" v-show="!this.isDefaultBrowser" @click="setDefaultBrowser">设置为默认浏览器</div>
-            <div class="feature-btn flex justify-center align-center" @click="openImport">导入其他浏览器数据</div>
+            <div class="feature-btn flex justify-center align-center" v-show="!this.isDefaultBrowser" @click="setDefaultBrowser">
+              <img src="./icons/carry-out.svg" style="width: 18px; height: 18px; margin-right: 4px">
+              <span class="sg-omit-sm">设置为默认浏览器</span>
+            </div>
+            <div class="feature-btn flex justify-center align-center" @click="openImport">
+              <img src="./icons/folder-add.svg" style="width: 18px; height: 18px; margin-right: 4px">
+              <span class="sg-omit-sm">导入其他浏览器数据</span>
+            </div>
           </div>
           <div class="third-bar-rg flex justify-around align-center">
-            <span class="flex justify-center align-center">
-              完成全部新用户引导即可获得限时纪念勋章：
+            <div class="flex justify-center align-center">
+              <span class="sg-omit-sm">完成全部新用户引导即可获得限时纪念勋章：</span>
               <img src="./img/silver-b.png" alt="" style="width: 20px; height: 20px; margin-right: 5px">
-              创始用户
-            </span>
-            <div class="noob-guide-btn flex justify-center align-center" @click.stop="openNoobGuide">
-              <img src="./icons/svg/wenhao.svg" alt="" style="width: 18px; height: 18px">
-              <span>新手引导</span>
-              ({{finishedNoobguideNum}}/5)
+              <span class="sg-omit-sm">创始用户</span>
+            </div>
+            <div class="noob-guide-btn flex justify-around align-center" @click.stop="openNoobGuide">
+              <img src="./icons/svg/wenhao.svg" alt="" style="width: 18px; height: 18px;">
+              <span class="sg-omit-sm">新手引导</span>
+              <span>({{finishedNoobguideNum}}/5)</span>
             </div>
           </div>
         </div>
@@ -535,6 +541,7 @@
         const num = Object.entries(res.modules.noobGuide).filter(v => v[1] === true).length
         thirdToolbarVue.$data.finishedNoobguideNum = num
         if(num !== Object.entries(res.modules.noobGuide).length) {
+          document.querySelector('#toolbar').style['border-bottom'] = '0px'
           ipc.send('unfinishedGuideShowThirdToolbar')
         }
       })
