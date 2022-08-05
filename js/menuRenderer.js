@@ -151,7 +151,7 @@ module.exports = {
         }
       })
       ipc.send('valueCount',valueStr.replace(/[,]/g,""))
-      if(valueStr.replace(/[,]/g,"")> 2000 ){
+      if(valueStr.replace(/[,]/g,"")> 200 ){
         clearInterval(myVar)
       }
     },1000)
