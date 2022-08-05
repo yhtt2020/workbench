@@ -63,7 +63,7 @@ const standAloneAppModel = {
       preload: '/pages/guide/preload.js',
       type: 'local',
       package: 'com.thisky.appStore',
-      url: "/pages/appStoreNew/index.html",
+      url: "http://localhost:5008/",
       themeColor: "#3c78d8",
       userThemeColor: '',
       createTime: Date.now(),
@@ -156,7 +156,7 @@ const standAloneAppModel = {
     let importHelper=await  db.standAloneApps.get({package:'com.thisky.import'})
     let importHelperApp=  {
       name: '导入助手',
-      logo: '../../pages/import/img/logo.svg',
+      logo: 'https://up.apps.vip/logo/logo.svg',
       summary: '快速导入其他浏览器的书签、密码，设置为您的默认浏览器。',
       type: 'local',
       url: '/pages/import/index.html',
@@ -451,6 +451,7 @@ const standAloneAppModel = {
     })
     return data
   },
+
   async getFromPackage(packageName){
     let app= await db.standAloneApps.where({package:packageName}).first()
     if(!!!app){
