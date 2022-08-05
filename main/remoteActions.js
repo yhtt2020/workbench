@@ -201,7 +201,6 @@ ipc.on('unfinishedGuideShowThirdToolbar', () => {
   if(settings.get('thirdToolbar') === undefined) {
     mainWindow.webContents.send('showThirdToolbar')
   }
-
 })
 
 // ipc.handle('toolbarStatus',()=>{
