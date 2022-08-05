@@ -407,6 +407,7 @@ ipc.on('temporaryAdjust', (event, args) => {
 
 ipc.on('hideThirdToolbar', () => {
   document.querySelector('#third-toolbar').hidden = true
+  document.querySelector('#toolbar').style['border-bottom'] = '1px solid #e3e3e3'
   settings.set('thirdToolbar', 'hidden')
   webviews.autoAdjustMargin()
 })
