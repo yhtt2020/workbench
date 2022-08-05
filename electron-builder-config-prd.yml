@@ -17,7 +17,7 @@ files:
   - js/main/**/*
   - js/request/**/*
   - js/util/**/*
-  - js/extras/*
+  - js/extras/**/*
   - ./main.build.js
   - ext/**/*
   - index.html
