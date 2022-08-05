@@ -56,7 +56,7 @@ const standAloneAppModel = {
     }
     let appStore = await  db.standAloneApps.get({package:'com.thisky.appStore'})
     db.standAloneApps.put({
-      id:appStore,
+      id:appStore.id,
       name: '应用市场',
       logo: 'https://up.apps.vip/logo/favicon.svg',
       summary: '应用市场，助您发现更大的世界。',
