@@ -1272,7 +1272,7 @@ Vue.component('sidebar', {
         summary: '自定义应用',
         type: 'web',
         attribute: app.attribute,
-        themeColor: !!!app.backgroundColor ? '#000' :app.backgroundColor.color,
+        themeColor: !!!app.themeColor ? '#000' :app.themeColor,
         settings: {
           bounds: {
             width: 1000,
@@ -1305,10 +1305,9 @@ Vue.component('sidebar', {
       ipc.send('result', await installList)
     },
 
-    openApp(){
-      standAloneAppModel.getAllApps({order:'createTime'}).then((data) => {
-        ipc.send('openAppList',data)
-      })
+    async openApp() {
+      let allApplist = await standAloneAppModel.getAllApps()
+      ipc.send('allAppList', allApplist)
     },
     async openSet(args) {
       let app = await standAloneAppModel.get({url: args})
@@ -1322,6 +1321,7 @@ Vue.component('sidebar', {
         saAppModel.uninstall(app.id).then(success=>{
           ipc.send('message',{type:"success",config:{content:'卸载应用成功。'}})
           ipc.send('deleteApp',{id:app.id})
+          window.location.href=`tsb://app/redirect/?package=com.thisky.appStore`
         },err=>{
           ipc.send('message',{type:"success",config:{content:'卸载失败。'}})
         })
