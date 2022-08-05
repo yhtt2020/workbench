@@ -63,7 +63,7 @@ const standAloneAppModel = {
       preload: '/pages/guide/preload.js',
       type: 'local',
       package: 'com.thisky.appStore',
-      url: "/pages/appStoreNew/index.html",
+      url: "http://localhost:5008/",
       themeColor: "#3c78d8",
       userThemeColor: '',
       createTime: Date.now(),
