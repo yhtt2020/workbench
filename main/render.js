@@ -88,6 +88,7 @@ class Pop {
       pool.pop.splice(index, 1)
     })
     this.win.on('blur', () => {
+      console.log(this.blurClose)
       if(this.blurClose){
         this.win.hide()
         //缓存1分钟，超过1分钟再自动关闭
@@ -118,6 +119,7 @@ class Pop {
     this.width = param.width
     this.callerId = callerId
     this.args = param.args || {}
+    this.blurClose=typeof param.blurClose ==='undefined'? true:param.blurClose
     this.x = param.x
     this.y = param.y
     this.height = param.height
@@ -184,7 +186,7 @@ class Pool {
     if (oldObj) {
       oldObj.args=param.args
       oldObj.callerId = callerId
-      oldObj.blurClose=param.blurClose || true
+      oldObj.blurClose=typeof param.blurClose ==='undefined'? true:param.blurClose
       if(param.x){
         oldObj.x=param.x
         oldObj.y=param.y
@@ -478,7 +480,6 @@ const renderPage = {
       }
     }
     bounds= this.getInAreaPos(bounds)
-    console.log(bounds)
     pool.usePop({
       url: render.getUrl('icon.html'),
       width: bounds.width,
