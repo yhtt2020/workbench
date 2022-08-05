@@ -116,7 +116,10 @@ window.onload = function() {
         moon: [],
         star: [],
         lv: 0,
-        cumulativeHours: 0
+        cumulativeHours: 0,
+        cumulativeMinute: 0,
+        rank: 0,
+        percentage: 0,
       },
       guideScedule: 0
 		},
@@ -307,6 +310,10 @@ window.onload = function() {
         Object.keys(userInfo.onlineGrade).forEach(v => handleGrade(v))
         state.onlineGrade.lv = userInfo.onlineGradeExtra.lv
         state.onlineGrade.cumulativeHours = userInfo.onlineGradeExtra.cumulativeHours
+        state.onlineGrade.cumulativeMinute = userInfo.onlineGradeExtra.minutes
+        state.onlineGrade.rank = userInfo.onlineGradeExtra.rank
+        state.onlineGrade.percentage = userInfo.onlineGradeExtra.percentage
+        window.appVue.lastOpenedLv = userInfo.onlineGradeExtra.lv
       },
       //清空浏览器等级相关
       SET_RESET_TSGRADE: (state) => {
@@ -526,8 +533,17 @@ window.onload = function() {
 		},
 		data: {
       mod:'auto',
-			window: window
+			window: window,
+      lastOpenedLv: -1
 		},
+    watch: {
+      'lastOpenedLv'(newValue, oldValue) {
+        //满足以下表示升级成功了
+        if(oldValue !== -1 && newValue !== oldValue) {
+          window.appVue.$refs.sidePanel.levelUpgradeShow = true
+        }
+      }
+    },
 		mounted: function() {
       tsbk.default.config({
         signature: "ts"
