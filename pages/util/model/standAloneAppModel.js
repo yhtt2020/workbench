@@ -80,7 +80,8 @@ const standAloneAppModel = {
         bounds: {
           width: 1180,
           height: 864
-        }
+        },
+        showInSideBar: true
       }),
       unreadCount: 0,
     })
