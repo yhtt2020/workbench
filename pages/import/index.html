@@ -119,12 +119,6 @@
         chromeMigrationed: false
       }
     },
-    mounted() {
-      ipc.send('getIsDefaulBrowser')
-      setInterval(() => {
-        ipc.send('getIsDefaulBrowser')
-      }, 1000)
-    },
     methods: {
       importBookmarks() {
         ipc.send('htmlImport')
