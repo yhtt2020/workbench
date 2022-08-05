@@ -704,18 +704,15 @@ const sidebarTpl = /*html*/`
     </div>
 
     <div id="bottomsEl" class="bottom-container">
-<!--     <div id="appGroupBottom" style="position: relative;bottom:">-->
-<!--    <div id="appGroupInner"></div>-->
-<!--</div>-->
       <ul class="bottomBar">
-        <template>
+<!--         <template>
           <div>
             <a-collapse default-active-key="0" :active-key="sidebarBottom" :bordered="false" @change="changeBottomSize">
               <a-collapse-panel key="1">
               </a-collapse-panel>
             </a-collapse>
           </div>
-        </template>
+        </template> -->
         <li id="guideSearch" @click="visibleGlobalSearch">
           <a-button  type="default" shape="circle" icon="search" tabindex=-1></a-button>
           <div class="item-title">全局搜索</div>
