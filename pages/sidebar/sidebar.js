@@ -88,6 +88,13 @@ window.onload = function() {
 
   window.ldb=require('../../src/util/ldb')
   ldb.load(window.globalArgs['user-data-path']+'/ldb.json')
+
+  let showUpdateLog= localStorage.getItem('3.2')
+  if(showUpdateLog!=='true'){
+    ipc.send('addTab',{url:"https://www.yuque.com/tswork/browser/ci5kwg"})
+    localStorage.setItem('3.2','true')
+  }
+
 	const store = new Vuex.Store({
 		state: {
       cloudSpaces:[],
