@@ -620,8 +620,8 @@ const appManager = {
       saApp.url = '/pages/fav/index.html'
       saApp.type = 'local'
     }else if(saApp.package === 'com.thisky.appStore'){
-      saApp.url = '/pages/appStoreNew/index.html'
-      saApp.type = 'local'
+      // saApp.url = '/pages/appStoreNew/index.html'
+      // saApp.type = 'local'
     }
 
     remote.enable(appView.webContents)
