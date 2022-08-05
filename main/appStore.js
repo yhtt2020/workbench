@@ -51,19 +51,23 @@ app.whenReady().then(()=> {
   })
 
 
-  let openAppList
-  ipc.on('openAppList',(event,args)=>{
-    openAppList = args
+  let allAppList
+  ipc.on('allAppList',(event,args)=>{
+    allAppList = args
   })
 
   ipc.on('needOpenApp',function(event,args){
     SidePanel.send('openApp')
-    const myVar = setInterval(function () {
-      if (openAppList !== undefined) {
-        event.reply('openAppList',openAppList)
-        clearInterval(myVar)
-      }
-    }, 20);
+    // const myVar = setInterval(function () {
+    //   if (allAppList !== undefined) {
+    //     event.reply('openAppList',allAppList)
+    //     clearInterval(myVar)
+    //   }
+    // }, 20);
+    setTimeout(()=>{
+      event.reply('openAppList',allAppList)
+    },100)
+
   })
 
 
@@ -95,5 +99,7 @@ app.whenReady().then(()=> {
   ipc.on('openAppGroupChat',(event,args)=>{
     SidePanel.send('openAppGroupChat',args)
   })
+
+
 })
 
