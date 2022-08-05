@@ -4,5 +4,26 @@
   height: 100%;
   width: calc(100% - 45px);
   background-color: #00000000;
-  z-index: 99;
+  z-index: 199;
+}
+
+.lv-upgrade-dialog {
+  position: relative;
+  padding: 10px 16px;
+  width: 330px;
+  height: 100px;
+  background-color: #FFFFFF;
+  z-index: 299;
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  border: 1px solid #dddcdc;
+  box-shadow: 2px 2px 2px #00000012;
+  border-radius: 2px;
+  user-select: none;
+  .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 16px;
+  }
 }

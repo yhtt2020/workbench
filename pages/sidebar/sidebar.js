@@ -313,6 +313,7 @@ window.onload = function() {
         state.onlineGrade.cumulativeMinute = userInfo.onlineGradeExtra.minutes
         state.onlineGrade.rank = userInfo.onlineGradeExtra.rank
         state.onlineGrade.percentage = userInfo.onlineGradeExtra.percentage
+        window.appVue.lastOpenedLv = userInfo.onlineGradeExtra.lv
       },
       //清空浏览器等级相关
       SET_RESET_TSGRADE: (state) => {
@@ -453,7 +454,6 @@ window.onload = function() {
       async getUserInfo({commit}){
         const result=await userApi.getUserInfo()
         if(result.code===1000){
-          //console.log(result, '_________________')
           commit('set_user_info',result.data)
           commit('SET_TSGRADE', result.data)
         }
@@ -533,8 +533,17 @@ window.onload = function() {
 		},
 		data: {
       mod:'auto',
-			window: window
+			window: window,
+      lastOpenedLv: -1
 		},
+    watch: {
+      'lastOpenedLv'(newValue, oldValue) {
+        //满足以下表示升级成功了
+        if(oldValue !== -1 && newValue !== oldValue) {
+          window.appVue.$refs.sidePanel.levelUpgradeShow = true
+        }
+      }
+    },
 		mounted: function() {
       tsbk.default.config({
         signature: "ts"

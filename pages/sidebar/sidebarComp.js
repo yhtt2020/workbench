@@ -735,6 +735,7 @@ const sidebarTpl = /*html*/`
     </div>
     <message-center ref="messageRef" :visible="messageShow" :mod="mod" @closeMessage="() => this.messageShow = !this.messageShow" @updateVisible="(val) => this.messageShow = val">
     </message-center>
+    <level-upgrade ref="levelUpgradeRef" :visible="levelUpgradeShow" @closeLevelUpgrade="() => this.levelUpgradeShow = !this.levelUpgradeShow"></level-upgrade>
   </div>
 `
 
@@ -748,6 +749,7 @@ window.selectedTask=null
 Vue.component('sidebar', {
   data: function () {
     return {
+      levelUpgradeShow: false,
       isMedals:false,
       lastSync:Date.now(),//最后一次同步时间
       spaceStatus:'local',
