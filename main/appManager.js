@@ -812,6 +812,7 @@ const appManager = {
         show: !background,
         frame: false,
         acceptFirstMouse: true,
+        resizable:saApp.package !== 'com.thisky.appStore',
         titleBarStyle: 'hidden',
         alwaysOnTop: saApp.settings.alwaysTop ? saApp.settings.alwaysTop : false,
         webPreferences: {
