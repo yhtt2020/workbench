@@ -277,13 +277,13 @@ function createWindowWithBounds(bounds) {
 	mainWindow.on('close', function(e) {
     if(!canCloseMainWindow){
       safeCloseMainWindow()//发送给主窗体，告知其需要安全关闭，其准备好关闭后会重新触发
+      mainWindow.hide()
       e.preventDefault()
       return
     }
 		destroyAllViews()
 		// save the window size for the next launch of the app
 		saveWindowBounds()
-
 
 	})
   mainWindow.on('ready-to-show',()=>{

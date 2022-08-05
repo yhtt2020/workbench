@@ -16,6 +16,8 @@ files:
   - js/defaultPreload.js
   - js/main/**/*
   - js/request/**/*
+  - js/util/**/*
+  - js/extras/**/*
   - ./main.build.js
   - ext/**/*
   - index.html
@@ -28,6 +30,7 @@ files:
   - resources/**/*
   - src/**/*
   - vite/dist/**/* #增加渲染进程
+
 electron-builder-config-prd:
   yml:dmg:
     sign: false
