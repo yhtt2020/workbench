@@ -306,6 +306,11 @@ window.onload = function() {
       SET_TSGRADE: (state, data) => {
         let userInfo=data.data
         //还需要特殊处理一下浏览器等级
+        //处理前无论如何重置一下防止等级标识被累加
+        state.onlineGrade.crown = []
+        state.onlineGrade.sun = []
+        state.onlineGrade.moon = []
+        state.onlineGrade.star = []
         function handleGrade(name) {
           for(let i = 0; i < userInfo.onlineGrade[name]; i++) {
             state.onlineGrade[name].push({
