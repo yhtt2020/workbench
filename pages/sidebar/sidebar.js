@@ -553,6 +553,9 @@ window.onload = function() {
         //满足以下表示升级成功了
         if(oldValue !== -1 && newValue !== oldValue) {
           window.appVue.$refs.sidePanel.levelUpgradeShow = true
+          setTimeout(() => {
+            window.appVue.$refs.sidePanel.levelUpgradeShow = false
+          }, 5000)
         }
       }
     },
