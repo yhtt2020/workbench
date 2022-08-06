@@ -218,9 +218,7 @@ ipc.on('userLogin', function (e, data) {
       refreshExpire_deadtime: user.refreshExpire_deadtime,
       code: user.code
     })
-    await window.$store.dispatch('getUserInfo', {
-      token: user.token
-    })
+    await window.$store.dispatch('getUserInfo')
     //await window.$store.dispatch('getGroups')  //老的团队获取接口
 
     await window.$store.dispatch('getJoinedCircle', {page: 1, row: 500})

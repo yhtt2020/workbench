@@ -1584,6 +1584,7 @@ Vue.component('sidebar', {
         this.userPanelVisible = !this.userPanelVisible
         this.$store.dispatch('getJoinedCircle', { page: 1, row: 500 })
         this.$store.dispatch('getMyCircle', { page: 1, row: 500 })
+        this.$store.dispatch('getUserInfo')
       }
     },
     closeUserPanel(){

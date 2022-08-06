@@ -459,7 +459,7 @@ window.onload = function() {
         }
       },
       async getUserInfo({commit}){
-        const result=await userApi.getUserInfo()
+        const result = await userApi.getUserInfo()
         if(result.code===1000){
           commit('set_user_info',result.data)
           commit('SET_TSGRADE', result.data)
