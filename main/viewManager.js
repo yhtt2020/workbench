@@ -277,16 +277,18 @@ function destroyAllViews() {
 //处理设置当前BrowserView事件，以将sidebarView拿出来
 
 function setView(id) {
-  if (viewStateMap[id].loadedInitialURL) {
-    setCurrentBrowserView(viewMap[id])
+  if(viewStateMap[id]){
+    if (viewStateMap[id].loadedInitialURL) {
+      setCurrentBrowserView(viewMap[id])
 
-    //mainWindow.removeBrowserView(needRemove)
-  } else {
-    mainWindow.setBrowserView(null)
+      //mainWindow.removeBrowserView(needRemove)
+    } else {
+      mainWindow.setBrowserView(null)
+    }
+    browser.extensions.selectTab(viewMap[id].webContents)
+    sendIPCToWindow(mainWindow,'setActionListTab',{id:viewMap[id].webContents.id})
+    selectedView = id
   }
-  browser.extensions.selectTab(viewMap[id].webContents)
-  sendIPCToWindow(mainWindow,'setActionListTab',{id:viewMap[id].webContents.id})
-  selectedView = id
 }
 
 function setBounds(id, bounds) {
