@@ -306,6 +306,11 @@ window.onload = function() {
       SET_TSGRADE: (state, data) => {
         let userInfo=data.data
         //还需要特殊处理一下浏览器等级
+        //处理前无论如何重置一下防止等级标识被累加
+        state.onlineGrade.crown = []
+        state.onlineGrade.sun = []
+        state.onlineGrade.moon = []
+        state.onlineGrade.star = []
         function handleGrade(name) {
           for(let i = 0; i < userInfo.onlineGrade[name]; i++) {
             state.onlineGrade[name].push({
@@ -459,7 +464,7 @@ window.onload = function() {
         }
       },
       async getUserInfo({commit}){
-        const result=await userApi.getUserInfo()
+        const result = await userApi.getUserInfo()
         if(result.code===1000){
           commit('set_user_info',result.data)
           commit('SET_TSGRADE', result.data)
@@ -548,6 +553,9 @@ window.onload = function() {
         //满足以下表示升级成功了
         if(oldValue !== -1 && newValue !== oldValue) {
           window.appVue.$refs.sidePanel.levelUpgradeShow = true
+          setTimeout(() => {
+            window.appVue.$refs.sidePanel.levelUpgradeShow = false
+          }, 5000)
         }
       }
     },
