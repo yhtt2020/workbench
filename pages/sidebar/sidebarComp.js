@@ -2,6 +2,7 @@ const { db } = require('../../js/util/database')
 const { api } = require('../../server-config')
 const standAloneAppModel = require('../util/model/standAloneAppModel.js')
 
+
 const sidebarTpl = /*html*/`
   <div id="sidebar" class="side-container" @contextmenu.stop="openSidebarMenu">
     <div id="itemsEl" class="side-items">
@@ -1084,17 +1085,6 @@ Vue.component('sidebar', {
               }, text: '好的'}],
           id: 'teamGudie'    // 用于Shepherd step的唯一标识符
         },
-        {
-          text: `<div>您可以在这里打开帮助中心，查看更多引导帮助</div>`, attachTo: {element: '.helpCenter', on: 'right'},
-          buttons: [
-            {action: function () {
-                this.cancel()
-                ipc.send('exitGuide')
-                ipc.send('closeGuide')
-                // ipc.send('addTab',{url:'ts://newtab'})
-              }, text: '好的'}],
-          id: 'teamGudie'    // 用于Shepherd step的唯一标识符
-        },
       ]
         const shepherd = new Shepherd.Tour({
           // 设置默认引导配置
@@ -1644,7 +1634,9 @@ Vue.component('sidebar', {
       }
     },
     openHelpCenter() {
-      this.addTab('ts://guide')
+      ipc.send('openNewGuide')
+
+      // this.addTab('ts://guide')
     },
     openGroup () {
       ipc.send('openGroup')

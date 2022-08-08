@@ -409,9 +409,7 @@ app.whenReady().then(()=>{
     settings.set('hasShowDirection', true)
   })
 
-  ipc.on('closeHelpGuide',()=>{
-    SidePanel.send('guide',8)
-  })
+
 
   ipc.on('addTaskCareer',(event,args)=>{
     settings.set('career', args.title)
@@ -466,6 +464,10 @@ app.whenReady().then(()=>{
 
   ipc.on('valueCount',(event,args)=>{
     mainWindow.webContents.send('valueCount',args)
+  })
+
+  ipc.on('openNewGuide',()=>{
+    mainWindow.webContents.send('openNewGuide')
   })
 
 //--------------------------------------------------------->myf状态管理部分
