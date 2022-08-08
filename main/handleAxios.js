@@ -466,6 +466,10 @@ app.whenReady().then(()=>{
     mainWindow.webContents.send('valueCount',args)
   })
 
+  ipc.on('openNewGuide',()=>{
+    mainWindow.webContents.send('openNewGuide')
+  })
+
 //--------------------------------------------------------->myf状态管理部分
 
 

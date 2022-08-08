@@ -2,6 +2,7 @@ const { db } = require('../../js/util/database')
 const { api } = require('../../server-config')
 const standAloneAppModel = require('../util/model/standAloneAppModel.js')
 
+
 const sidebarTpl = /*html*/`
   <div id="sidebar" class="side-container" @contextmenu.stop="openSidebarMenu">
     <div id="itemsEl" class="side-items">
@@ -1632,7 +1633,9 @@ Vue.component('sidebar', {
       }
     },
     openHelpCenter() {
-      this.addTab('ts://guide')
+      ipc.send('openNewGuide')
+
+      // this.addTab('ts://guide')
     },
     openGroup () {
       ipc.send('openGroup')

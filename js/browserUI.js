@@ -347,6 +347,29 @@ ipc.on('changeTaskIcon',(event,args)=>{
 //   console.log(arg, '---------------@@@@@')
 // })
 
+ipc.on('openNewGuide',()=>{
+  var res = tabs.tabs.findIndex((v) => {
+    return  urlParser.getSourceURL(v.url) === 'ts://guide'
+  })
+  let guideTab;
+  tabs.tabs.forEach((v) => {
+    if (urlParser.getSourceURL(v.url) === 'ts://guide') {
+      guideTab = v
+    }
+  })
+  if(res ===-1){
+    ipc.send('addTab',{url:'ts://guide'})
+  }
+  if(res !== -1){
+    tabs.tabs.forEach(v =>{
+      if(v.id === guideTab.id){
+        switchToTab(v.id)//如果新手引导已经存在就直接跳转到该页面
+      }
+    })
+  }
+})
+
+
 ipc.on('closeGuide',()=>{
   let closeGuideTab;
   tabs.tabs.filter((e)=>{
