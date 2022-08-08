@@ -1,13 +1,17 @@
 let systemInfo={}
+let notInner=null
+let settingsOrigin='http://localhost:1600'
+function notInnerPage(e){
+  if(notInner===null)
+    notInner=!e.origin.startsWith('file://') && e.origin!==settingsOrigin
+  return notInner
+}
 window.addEventListener('message', function (e) {
-  if (!e.origin.startsWith('file://')) {
+  if (notInnerPage(e)) {
     return
   }
-
   if (e.data && e.data.message && e.data.message === 'getSettingsData') {
     ipc.send('getSettingsData')
-
-
   }
 
   if (e.data && e.data.message && e.data.message === 'setSetting') {
@@ -40,9 +44,10 @@ ipc.on('returnIsDefaultBrowser',function(e,data){
 })
 
 ipc.on('receiveSettingsData', function (e, data) {
-  if (window.location.toString().startsWith('file://')) { // probably redundant, but might as well check
+  if (!notInnerPage(e)) { // probably redundant, but might as well check
     systemInfo=data.systemInfo
-    window.postMessage({ message: 'receiveSettingsData', settings: data }, 'file://')
+    console.log('回传',data)
+    window.postMessage({ message: 'receiveSettingsData', settings: data })
   }
 })
 ipc.on('setBrowserReturn',(e,args)=>{
