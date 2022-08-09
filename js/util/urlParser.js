@@ -116,11 +116,22 @@ var urlParser = {
     }
   },
   isInternalURL: function (url) {
-    return url.startsWith(urlParser.getFileURL(__dirname))
+    //todo 内部url放行vite
+    function isRenderUrl(url){
+      if('development-mode' in window.globalArgs){
+        return url.startsWith('http://localhost:1600')
+      }else{
+        return url.startsWith('tsbapp://')
+      }
+    }
+    return url.startsWith(urlParser.getFileURL(__dirname)) ||  isRenderUrl(url)
   },
   getSourceURL: function (url) {
     // converts internal URLs (like the PDF viewer or the reader view) to the URL of the page they are displaying
     if (urlParser.isInternalURL(url)) {
+      if(url.startsWith('tsbapp://./')){
+        return url.replace('tsbapp://./','ts://').replace('.html','')
+      }
       var representedURL
       try {
         representedURL = new URLSearchParams(new URL(url).search).get('url')

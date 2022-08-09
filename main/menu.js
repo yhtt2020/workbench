@@ -101,9 +101,7 @@ function buildAppMenu (options = {}) {
     label: l('appMenuPreferences'),
     accelerator: 'CmdOrCtrl+,',
     click: function (item, window) {
-      sendIPCToWindow(window, 'addTab', {
-        url: 'file://' + __dirname + '/pages/settings/index.html'
-      })
+      openSetting()
     }
   }
 

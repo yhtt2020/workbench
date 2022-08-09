@@ -5,10 +5,8 @@ import theme from './theme.js'
 const settingPage = {
   init () {
     locale.init()
-
     document.title = l('settingsPreferencesHeading')
     let settings = window.settings
-    theme.init()
     settings.load()
     var contentTypeBlockingContainer = document.getElementById('content-type-blocking')
     var banner = document.getElementById('restart-required-banner')
@@ -25,7 +23,6 @@ const settingPage = {
       banner.hidden = false
       settings.set('restartNow', true)
     }
-    console.log('断点1')
 
     /* content blocking settings */
 
@@ -40,7 +37,6 @@ const settingPage = {
     var browserTabContainer = document.querySelector('.tab-choose')
     var browserTabOptions = Array.from(document.querySelectorAll('input[name=tabChoosed]'))
     var browserTabExceptionsInput = document.querySelector('#tab-text-input')
-    console.log('断点2')
     passwordManager.init()
     settings.get('restartNow', (value) => {
       if (value === true) {
@@ -74,7 +70,6 @@ const settingPage = {
       }
       radio.parentNode.classList.add('selected')
     }
-    console.log('断点3')
     settings.get('browserTab', (value) => {
       if (value && value.tabIdx !== undefined) {
         updateBrowserTabUI(value.tabIdx)
@@ -98,7 +93,6 @@ const settingPage = {
     })
 
     /* 起始页 */
-    console.log('断点4')
     settings.listen('filteringBlockedCount', function (value) {
       var valueStr
       var count = value || 0
@@ -145,7 +139,6 @@ const settingPage = {
     }
 
     settings.get('filtering', function (value) {
-      console.log('filtering',value)
       // migrate from old settings (<v1.9.0)
       if (value && typeof value.trackers === 'boolean') {
         if (value.trackers === true) {
@@ -197,7 +190,6 @@ const settingPage = {
       scripts: 'script',
       images: 'image'
     }
-    console.log('断点5')
 // used for showing localized strings
     var contentTypeSettingNames = {
       scripts: 'settingsBlockScriptsToggle',
@@ -252,7 +244,6 @@ const settingPage = {
         })
       })(contentType)
     }
-    console.log('断点6')
     /* dark mode setting */
     var darkModeNever = document.getElementById('dark-mode-never')
     var darkModeNight = document.getElementById('dark-mode-night')
@@ -431,7 +422,6 @@ const settingPage = {
 
     searchEngineInput.setAttribute('placeholder', l('customSearchEngineDescription'))
     let currentSearchEngine=window.currentSearchEngine
-    console.log('searchEngines',searchEngines)
     settings.onLoad(function () {
       if (currentSearchEngine.custom) {
         searchEngineInput.hidden = false
@@ -735,8 +725,7 @@ const settingPage = {
 
       return li
     }
-    console.log('settings.load')
-
+    theme.init()
   }
 }
 export default settingPage

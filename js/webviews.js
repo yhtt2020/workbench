@@ -312,7 +312,7 @@ const webviews = {
       ],
       allowPopups:true
     }
-  }else if(sourceUrl.startsWith('http://localhost:1600')){
+  }else if(sourceUrl.startsWith('http://localhost:1600') || sourceUrl==='ts://settings' || sourceUrl==='tsbapp://./settings.html'){
     webPreferences= {
       nodeIntegration: true, //node集成开高了
       contextIsolation:false,
@@ -655,7 +655,7 @@ webviews.bindEvent('crashed', function (tabId, isKilled) {
 })
 
 webviews.bindIPC('getSettingsData', function (tabId, args) {
-  if (!urlParser.isInternalURL(tabs.get(tabId).url) && !tabs.get(tabId).url.startsWith('http://localhost:1600')) {
+  if (!urlParser.isInternalURL(tabs.get(tabId).url) ) {
     throw new Error()
   }
   const systemType=require('./util/systemType.js')

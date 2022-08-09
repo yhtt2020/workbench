@@ -2,8 +2,21 @@
   border:none;
   border-bottom:1px solid #f0f0f0;
   border-right:1px solid #f0f0f0 ;
+
   margin-top: 0 !important;
+}
+.ant-tabs-nav-wrap{
+  border-top:1px solid #f0f0f0 ;
+}
+.ant-tabs-nav{
+  background: rgba(241, 241, 241, 0.63);
 }
 .setting-section {
   font-size: 14px;
+}
+h3{
+  font-size: 22px;
+}
+body{
+  overflow-x: hidden;
 }

@@ -12,7 +12,8 @@ import {
   HomeOutlined,
   LockOutlined,
   NodeIndexOutlined,
-  GoldOutlined
+  GoldOutlined,
+  InsuranceOutlined
 } from '@ant-design/icons-vue'
 import settings from '../../src/settings/settingsContent'
 import settingPage from '../../src/settings/settingPage.js'
@@ -21,7 +22,7 @@ import settingPage from '../../src/settings/settingPage.js'
 export default defineComponent({
   components: {
     EyeOutlined, LayoutOutlined, SearchOutlined, AimOutlined, ControlOutlined, CheckSquareOutlined, HomeOutlined,
-    LockOutlined, NodeIndexOutlined, GoldOutlined
+    LockOutlined, NodeIndexOutlined, GoldOutlined,InsuranceOutlined
   },
   mounted() {
     window.settings = settings
@@ -59,8 +60,8 @@ export default defineComponent({
               style="height: 100vh; "
       >
         <template #leftExtra>
-          <div style="padding-top: 20px;padding-bottom: 20px;">
-            浏览器设置
+          <div style="padding-top: 20px;padding-bottom: 20px;font-size: 20px">
+            <a-avatar style="margin-right: 5px" src="/icons/logo128.png"></a-avatar>设置
           </div>
         </template>
         <a-tab-pane :forceRender="true" key="Privacy">
@@ -74,7 +75,7 @@ export default defineComponent({
             <h3 data-string="settingsPrivacyHeading"></h3>
 
             <div class="settings-info-subheading" id="content-blocking-statistics">
-              <i class="i carbon:manage-protection"></i>
+              <insurance-outlined style="font-size: 24px;vertical-align: middle" />
               <span
                 data-string="settingsBlockedRequestCount"
                 data-allowHTML

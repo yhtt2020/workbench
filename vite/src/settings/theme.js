@@ -100,11 +100,9 @@ const theme={
       settings.listen('darkMode', themeSettingsChanged)
       settings.listen('systemShouldUseDarkColors', function () {
         // the settings API differs between the UI process and tabs
-        if (typeof process === 'undefined') {
+
           settings.get('darkMode', themeSettingsChanged)
-        } else {
-          themeSettingsChanged(settings.get('darkMode'))
-        }
+
       })
     }
     initialize()
