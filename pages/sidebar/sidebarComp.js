@@ -2,6 +2,7 @@ const { db } = require('../../js/util/database')
 const { api } = require('../../server-config')
 const standAloneAppModel = require('../util/model/standAloneAppModel.js')
 
+
 const sidebarTpl = /*html*/`
   <div id="sidebar" class="side-container" @contextmenu.stop="openSidebarMenu">
     <div id="itemsEl" class="side-items">
@@ -72,6 +73,8 @@ const sidebarTpl = /*html*/`
                                   <div class="text-black">累计在线时长: {{this.$store.getters.getTsGrade.cumulativeHours}}小时</div>
                                   <div class="text-black" v-if="this.$store.getters.getTsGrade.rank < 300">全网排名: {{this.$store.getters.getTsGrade.rank}}</div>
                                   <div class="text-black" v-else>全网排名: 超过{{this.$store.getters.getTsGrade.percentage}}%的用户</div>
+                                  <div class="text-grey-sm" v-if="this.$store.getters.getTsGrade.rank < 300">恭喜，您排名在300名以内，已展示实际名次</div>
+                                  <div class="text-grey-sm" v-else>300名以外，仅显示百分比</div>
                                   <div class="text-grey">
                                     <img src="./assets/sun.svg" alt="" style="width: 20px; height: 20px"> = 16级
                                   </div>
@@ -1084,17 +1087,6 @@ Vue.component('sidebar', {
               }, text: '好的'}],
           id: 'teamGudie'    // 用于Shepherd step的唯一标识符
         },
-        {
-          text: `<div>您可以在这里打开帮助中心，查看更多引导帮助</div>`, attachTo: {element: '.helpCenter', on: 'right'},
-          buttons: [
-            {action: function () {
-                this.cancel()
-                ipc.send('exitGuide')
-                ipc.send('closeGuide')
-                // ipc.send('addTab',{url:'ts://newtab'})
-              }, text: '好的'}],
-          id: 'teamGudie'    // 用于Shepherd step的唯一标识符
-        },
       ]
         const shepherd = new Shepherd.Tour({
           // 设置默认引导配置
@@ -1644,7 +1636,9 @@ Vue.component('sidebar', {
       }
     },
     openHelpCenter() {
-      this.addTab('ts://guide')
+      ipc.send('openNewGuide')
+
+      // this.addTab('ts://guide')
     },
     openGroup () {
       ipc.send('openGroup')
