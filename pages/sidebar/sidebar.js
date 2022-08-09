@@ -324,7 +324,7 @@ window.onload = function() {
         state.onlineGrade.cumulativeHours = userInfo.onlineGradeExtra.cumulativeHours
         state.onlineGrade.cumulativeMinute = userInfo.onlineGradeExtra.minutes
         state.onlineGrade.rank = userInfo.onlineGradeExtra.rank
-        state.onlineGrade.percentage = userInfo.onlineGradeExtra.percentage
+        state.onlineGrade.percentage = String(userInfo.onlineGradeExtra.percentage).slice(0, 6) * 100
         window.appVue.lastOpenedLv = userInfo.onlineGradeExtra.lv
       },
       //清空浏览器等级相关
