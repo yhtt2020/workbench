@@ -1,11 +1,13 @@
 import { passwordManager, passwordManagers } from './passwordManager'
-import {searchEnginePage,searchEngine} from './searchEngine.js'
+import { searchEnginePage, searchEngine } from './searchEngine.js'
 import locale from './localization.build'
 import theme from './theme.js'
+import { defaultKeyMap, userKeyMap } from './keyMap'
+
 const settingPage = {
-   callSetDefaultBrowser () {
-  postMessage({ message: 'callSetOrRemoveDefaultBrowser' })
-},
+  callSetDefaultBrowser () {
+    postMessage({ message: 'callSetOrRemoveDefaultBrowser' })
+  },
   init () {
     locale.init()
     document.title = l('settingsPreferencesHeading')
@@ -22,6 +24,7 @@ const settingPage = {
     var userAgentCheckbox = document.getElementById('checkbox-user-agent')
     var userAgentInput = document.getElementById('input-user-agent')
     searchEnginePage.init()
+
     function showRestartRequiredBanner () {
       banner.hidden = false
       settings.set('restartNow', true)
@@ -73,6 +76,7 @@ const settingPage = {
       }
       radio.parentNode.classList.add('selected')
     }
+
     settings.get('browserTab', (value) => {
       if (value && value.tabIdx !== undefined) {
         updateBrowserTabUI(value.tabIdx)
@@ -424,7 +428,7 @@ const settingPage = {
     var searchEngineInput = document.getElementById('custom-search-engine')
 
     searchEngineInput.setAttribute('placeholder', l('customSearchEngineDescription'))
-    let currentSearchEngine=window.currentSearchEngine
+    let currentSearchEngine = window.currentSearchEngine
     settings.onLoad(function () {
       if (currentSearchEngine.custom) {
         searchEngineInput.hidden = false
@@ -467,11 +471,10 @@ const settingPage = {
     /* 默认浏览器设置 */
 //每秒钟循环询问主进程，我是不是默认浏览器，先发消息到渲染preload.js渲染进程
     setInterval(function () {
-      postMessage({ message: 'getIsDefaulBrowser' })
+      postMessage({ message: 'getIsDefaultBrowser' })
     }, 1000)
 
 //先发消息到渲染preload.js渲染进程，因为页面本身无法直接发送ipc消息
-
 
     /*默认浏览器结束*/
 
@@ -726,6 +729,7 @@ const settingPage = {
 
       return li
     }
+
     theme.init()
   }
 }

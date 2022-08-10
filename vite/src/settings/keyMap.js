@@ -1,3 +1,4 @@
+
 var defaultKeyMap = {
   quitMin: 'mod+q',
   addTab: 'mod+t',
@@ -45,7 +46,4 @@ function userKeyMap (settings) {
   }
   return keyMapCopy
 }
-
-if (typeof module !== 'undefined') {
-  module.exports = { defaultKeyMap, userKeyMap }
-}
+export  {defaultKeyMap,userKeyMap}

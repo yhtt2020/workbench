@@ -356,20 +356,28 @@ const render = {
   },
   init () {
     app.on('ready', () => {
-      let regStats = protocol.registerBufferProtocol('tsbapp', (request, response) => {
-        this.regDefaultProtocol(request, response)
-      })
-      const sesWeb = session.fromPartition('persist:webcontent')
-
-      sesWeb.protocol.registerBufferProtocol('tsbapp', (request, response) => {
-        this.regDefaultProtocol(request, response)
-      })
-
-      if (regStats) {
-
-      } else {
-        console.log('注册协议失败')
-      }
+      // function regProtocol(ses){
+      // ses.protocol.registerBufferProtocol('tsbapp', (request, response) => {
+      //     render.regDefaultProtocol(request, response)
+      //   })
+      // }
+      // sessions.forEach(ses=>{
+      //   regProtocol(ses)
+      // })
+      // let regStats = protocol.registerBufferProtocol('tsbapp', (request, response) => {
+      //   this.regDefaultProtocol(request, response)
+      // })
+      // const sesWeb = session.fromPartition('persist:webcontent')
+      //
+      // sesWeb.protocol.registerBufferProtocol('tsbapp', (request, response) => {
+      //   this.regDefaultProtocol(request, response)
+      // })
+      //
+      // if (regStats) {
+      //
+      // } else {
+      //   console.log('注册协议失败')
+      // }
       ipc.on('addRenderTab', (event, args) => {
         this.openRenderTab(args.url)
       })

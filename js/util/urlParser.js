@@ -12,6 +12,54 @@ function removeWWW (domain) {
 function removeTrailingSlash (url) {
   return (url.endsWith('/') ? url.slice(0, -1) : url)
 }
+const specialMaps={
+  'ts://settings':'tsbapp://./settings.html'
+}
+
+/**
+ * 从tsbapp协议转为ts
+ * 'tsbapp://./settings.html' => 'ts://settings'
+ * @param url
+ * @returns {{status: boolean}|{url: string, status: boolean}}
+ */
+function parseSpecialUrl(url){
+  let source=''
+  Object.keys(specialMaps).forEach(key=>{
+    if(specialMaps[key]===url){
+      source=key
+    }
+  })
+  if(source!==''){
+    return {
+      status:true,
+      url:source
+    }
+  }else{
+    return{
+      status:false
+    }
+  }
+}
+
+/**
+ * 从ts转为tsbapp协议
+ * 'ts://settings' => 'tsbapp://./settings.html'
+ * @param url
+ * @returns {{status: boolean}|{url, status: boolean}}
+ */
+function getSourceUrl(url){
+  if(specialMaps[url]){
+    return {
+      status:true,
+      url:specialMaps[url]
+    }
+  }else{
+    return {
+      status:false,
+    }
+  }
+}
+
 
 var urlParser = {
   validIP4Regex: /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/i,
@@ -66,6 +114,10 @@ var urlParser = {
 
     // if the URL is an internal URL, convert it to the correct file:// url
     if (url.startsWith('ts:')) {
+      let map=getSourceUrl(url)
+      if(map.status){
+        return map['url']
+      }
       try {
         var urlObj = new URL(url)
         var pathname = urlObj.pathname.replace('//', '')
@@ -118,19 +170,19 @@ var urlParser = {
   isInternalURL: function (url) {
     //todo 内部url放行vite
     function isRenderUrl(url){
-      if('development-mode' in window.globalArgs){
-        return url.startsWith('http://localhost:1600')
-      }else{
-        return url.startsWith('tsbapp://')
-      }
+      return url.startsWith('http://localhost:1600') || url.startsWith('tsbapp://') || parseSpecialUrl(url).status || getSourceUrl(url).status
     }
     return url.startsWith(urlParser.getFileURL(__dirname)) ||  isRenderUrl(url)
   },
   getSourceURL: function (url) {
     // converts internal URLs (like the PDF viewer or the reader view) to the URL of the page they are displaying
     if (urlParser.isInternalURL(url)) {
-      if(url.startsWith('tsbapp://./')){
-        return url.replace('tsbapp://./','ts://').replace('.html','')
+      // if(url.startsWith('tsbapp://./')){
+      //   return url.replace('tsbapp://./','ts://').replace('.html','')
+      // }
+      let map=parseSpecialUrl(url)
+      if(map.status){
+        return map.url
       }
       var representedURL
       try {

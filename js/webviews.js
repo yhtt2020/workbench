@@ -312,7 +312,7 @@ const webviews = {
       ],
       allowPopups:true
     }
-  }else if(sourceUrl.startsWith('http://localhost:1600') || sourceUrl==='ts://settings' || sourceUrl==='tsbapp://./settings.html'){
+  }else if(urlParser.isInternalURL(sourceUrl)){
     webPreferences= {
       nodeIntegration: true, //node集成开高了
       contextIsolation:false,

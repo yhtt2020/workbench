@@ -18,7 +18,6 @@ import {
 import settings from '../../src/settings/settingsContent'
 import settingPage from '../../src/settings/settingPage.js'
 
-
 export default defineComponent({
   components: {
     EyeOutlined, LayoutOutlined, SearchOutlined, AimOutlined, ControlOutlined, CheckSquareOutlined, HomeOutlined,

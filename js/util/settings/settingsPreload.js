@@ -1,9 +1,18 @@
 let systemInfo={}
 let notInner=null
-let settingsOrigin='http://localhost:1600'
+let allowUrls=[
+  'http://localhost:1600','tsbapp://'
+]
+function allow() {
+  let url=window.location.href
+  return allowUrls.some(allowUrl => {
+    console.log(url,allowUrl,url.startsWith(allowUrl))
+    return url.startsWith(allowUrl)
+  })
+}
 function notInnerPage(e){
   if(notInner===null)
-    notInner=!e.origin.startsWith('file://') && e.origin!==settingsOrigin
+    notInner=!(e.origin.startsWith('file://') || allow())
   return notInner
 }
 window.addEventListener('message', function (e) {
@@ -20,16 +29,16 @@ window.addEventListener('message', function (e) {
 
 
 	//唤起主进程设置默认浏览器的请求，由于设置是异步的，这里只发起请求即可
-	if(e.data.message=='callSetOrRemoveDefaultBrowser'){
+	if(e.data.message==='callSetOrRemoveDefaultBrowser'){
 		ipc.send('callSetOrRemoveDefaultBrowser',{systemInfo:systemInfo})
 	}
 
 	//询问主进程，是否是默认浏览器
-	if(e.data.message=='getIsDefaulBrowser'){
-		ipc.send('getIsDefaulBrowser')
+	if(e.data.message==='getIsDefaultBrowser'){
+		ipc.send('getIsDefaultBrowser')
 	}
 
-  if(e.data.message=='valueCount'){
+  if(e.data.message==='valueCount'){
     ipc.send('valueCount',e.data.count)
   }
 
@@ -46,7 +55,6 @@ ipc.on('returnIsDefaultBrowser',function(e,data){
 ipc.on('receiveSettingsData', function (e, data) {
   if (!notInnerPage(e)) { // probably redundant, but might as well check
     systemInfo=data.systemInfo
-    console.log('回传',data)
     window.postMessage({ message: 'receiveSettingsData', settings: data })
   }
 })
