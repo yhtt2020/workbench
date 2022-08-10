@@ -25,4 +25,9 @@ body {
   overflow-x: hidden;
 }
 
+.ant-tabs-tabpane {
+  height: 100vh;
+  overflow-y: auto;
+}
+
 /*# sourceMappingURL=settings-new.css.map */
