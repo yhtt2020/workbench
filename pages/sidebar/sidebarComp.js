@@ -1274,6 +1274,9 @@ Vue.component('sidebar', {
             height: 800
           }
         },
+        auth:app.auth,
+        site:app.site,
+        author:app.author,
         showInSideBar: false
       }
       standAloneAppModel.install(app.url, option).then(success => {
