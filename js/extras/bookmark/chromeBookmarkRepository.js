@@ -98,6 +98,11 @@ class ChromeBookmarkRepository {
       //创建书签根目录
       fileHelpers.addRootFolder(`Chrome${new Date().getMonth() + 1}月${new Date().getDate()}日导入`)
 
+      //往收藏夹的文件目录写入书签前处理一下有特殊字符的文件夹和书签url
+      bookmark.children.forEach(v => {
+        fileHelpers.recurBookmarkNameObj(v)
+      })
+
       //往收藏夹的文件目录写入书签文件
       bookmark.children.forEach(v => {
         fileHelpers.recurBookmark(v)
