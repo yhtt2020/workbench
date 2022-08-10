@@ -29,7 +29,9 @@ var webviewGestures = {
   },
   zoomWebviewBy: function (tabId, amt) {
     webviews.callAsync(tabId, 'zoomFactor', function (err, oldFactor) {
-      webviews.callAsync(tabId, 'zoomFactor', Math.min(webviewMaxZoom, Math.max(webviewMinZoom, oldFactor + amt)))
+      let zoomLevel=Math.min(webviewMaxZoom, Math.max(webviewMinZoom, oldFactor + amt))
+      ipc.send('message',{type:'success',config:{content:'当前页面缩放比例调整为'+parseInt(zoomLevel*100)+'%',key:'zoomFactor'}})
+      webviews.callAsync(tabId, 'zoomFactor',zoomLevel)
     })
   },
   zoomWebviewIn: function (tabId) {
@@ -116,7 +118,7 @@ webviews.bindIPC('wheel-event', function (tabId, e) {
     (function () {
       var left = 0
       var right = 0
-      
+
       var n = document.elementFromPoint(${e.clientX}, ${e.clientY})
       while (n) {
         if (n.scrollLeft !== undefined) {
@@ -124,7 +126,7 @@ webviews.bindIPC('wheel-event', function (tabId, e) {
             right = Math.max(right, n.scrollWidth - n.clientWidth - n.scrollLeft)
         }
         n = n.parentElement
-      }  
+      }
       return {left, right}
     })()
     `, function (err, result) {
