@@ -572,6 +572,9 @@ app.on('ready', function() {
 
 app.on('session-created',(session)=>{
   sessions.push(session)
+  session.protocol.registerBufferProtocol('tsbapp', (request, response) => {
+    render.regDefaultProtocol(request, response)
+  })
 })
 })
 
