@@ -1267,7 +1267,7 @@ Vue.component('sidebar', {
         name: app.name,
         logo: !!!app.icon ? '../../icons/default.svg' :app.icon,
         summary: app.summary,
-        type: 'web',
+        type: app.type,
         attribute: app.attribute,
         themeColor: !!!app.themeColor ? '#000' :app.themeColor,
         settings: {
@@ -1276,6 +1276,9 @@ Vue.component('sidebar', {
             height: 800
           }
         },
+        auth:app.auth,
+        site:app.site,
+        author:app.author,
         showInSideBar: false
       }
       standAloneAppModel.install(app.url, option).then(success => {
