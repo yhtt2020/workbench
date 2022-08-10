@@ -311,7 +311,7 @@
                 }, 5000)
               },
               openNoobGuide() {
-                ipc.send('addTab', { 'url': 'ts://guide' })
+                ipc.send('openNewGuide')
               },
               openThirdToolbarMenu() {
                 ipc.send('openThirdToolbarMenu')
@@ -559,8 +559,6 @@
         const num = Object.entries(args.modules.noobGuide).filter(v => v[1] === true).length
         thirdToolbarVue.$data.finishedNoobguideNum = num
       })
-
-      // ipc.invoke('toolbarStatus')
 
 
     </script>
