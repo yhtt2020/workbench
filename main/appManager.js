@@ -544,6 +544,7 @@ const appManager = {
       window.view.webContents.destroy()
       window.destroy()
       appManager.removeAppWindow(saApp.windowId)
+      console.log('触发closeApp')
       SidePanel.send('closeApp', { id: appId })
     }
   },
@@ -620,8 +621,8 @@ const appManager = {
       saApp.url = '/pages/fav/index.html'
       saApp.type = 'local'
     }else if(saApp.package === 'com.thisky.appStore' && isDevelopmentMode){
-      saApp.url = 'http://localhost:5008/'
-      saApp.type = 'local'
+      // saApp.url = 'http://localhost:5008/'
+      // saApp.type = 'local'
     }
 
     remote.enable(appView.webContents)
@@ -1247,7 +1248,7 @@ app.whenReady().then(() => {
     forceClose = true
     processingAppWindows.forEach((item) => {
       if (!item.window.isDestroyed()) {
-        item.window.destroy()
+        appManager.closeApp(item.id)
       }
     })
   })
