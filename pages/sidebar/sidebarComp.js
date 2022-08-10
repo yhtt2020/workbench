@@ -1265,7 +1265,7 @@ Vue.component('sidebar', {
         name: app.name,
         logo: !!!app.icon ? '../../icons/default.svg' :app.icon,
         summary: app.summary,
-        type: 'web',
+        type: app.type,
         attribute: app.attribute,
         themeColor: !!!app.themeColor ? '#000' :app.themeColor,
         settings: {
