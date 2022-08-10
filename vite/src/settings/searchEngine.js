@@ -3,7 +3,6 @@ import settings from  './settingsContent'
 // otherwise, assume window.settings exists already
 let searchEnginePage={
   init(){
-    console.log('尝试初始化搜索引擎')
     var currentSearchEngine = {
       name: '',
       searchURL: '%s'

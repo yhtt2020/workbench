@@ -544,7 +544,6 @@ const appManager = {
       window.view.webContents.destroy()
       window.destroy()
       appManager.removeAppWindow(saApp.windowId)
-      console.log('触发closeApp')
       SidePanel.send('closeApp', { id: appId })
     }
   },
