@@ -33,7 +33,13 @@ export default defineComponent({
 
     const activeKey = ref('Privacy')
     return {
-      activeKey
+      activeKey,
+
+    }
+  },
+  methods:{
+    setDefault(){
+      settingPage.callSetDefaultBrowser()
     }
   }
 })
@@ -338,7 +344,7 @@ export default defineComponent({
             <p>当前：<span id="os_name"></span> <span id="os_type"></span></p>
             <div class="setting-section">
               <input id="custom-browser" style="margin-left: 0.5em; min-width: 325px" hidden />
-              <button style="border-radius: 4px;border: solid 1px #ccc;padding: 5px " id="button-default-browser" onclick="callSetDefaultBrowser()"></button>
+              <button style="border-radius: 4px;border: solid 1px #ccc;padding: 5px " id="button-default-browser" @click="setDefault"></button>
             </div>
           </div>
         </a-tab-pane>

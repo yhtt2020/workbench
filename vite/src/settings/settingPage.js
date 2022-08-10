@@ -3,6 +3,9 @@ import {searchEnginePage,searchEngine} from './searchEngine.js'
 import locale from './localization.build'
 import theme from './theme.js'
 const settingPage = {
+   callSetDefaultBrowser () {
+  postMessage({ message: 'callSetOrRemoveDefaultBrowser' })
+},
   init () {
     locale.init()
     document.title = l('settingsPreferencesHeading')
@@ -468,9 +471,7 @@ const settingPage = {
     }, 1000)
 
 //先发消息到渲染preload.js渲染进程，因为页面本身无法直接发送ipc消息
-    function callSetDefaultBrowser () {
-      postMessage({ message: 'callSetOrRemoveDefaultBrowser' })
-    }
+
 
     /*默认浏览器结束*/
 
