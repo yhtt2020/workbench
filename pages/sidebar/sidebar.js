@@ -483,6 +483,12 @@ window.onload = function() {
           commit('SET_MANAGER_CIRCLE', result.data)
         }
       },
+      async getCircleInfoById({commit}, options) {
+        const result = await groupApi.getCircleInfoById(options)
+        if(result.code === 1000) {
+          return result.data
+        }
+      },
       async getAllMessage({commit}) {
         const result = await messageModel.allList()
         commit('SET_ALLMESSAGES', result)

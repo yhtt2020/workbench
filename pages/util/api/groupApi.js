@@ -3,6 +3,7 @@ const baseApi = require('./baseApi.js')
 const url = {
   joinedCircle: '/app/browser/group/getJoinedCircle',
   managerCircle: '/app/browser/group/getMyCircle',
+  circleInfoById: '/app/browser/group/getCircleInfoById',
   groupList: '/app/browser/group/list',
   navsList: '/app/browser/appGroupList/list',
   addNav: '/app/browser/appGroupList/add',
@@ -31,6 +32,12 @@ const groupApi = {
   async getMyCircle(params) {
     await baseApi.init()
     return baseApi.axios(url.managerCircle, params, 'get')
+  },
+
+  //根据圈子id查询端说的圈子
+  async getCircleInfoById(params) {
+    await baseApi.init()
+    return baseApi.axios(url.circleInfoById, params, 'get')
   },
 
   /**

@@ -345,7 +345,8 @@ const standAloneAppModel = {
         }
       }
     })
-    return searchResult
+
+    return result.filter(v => v.name.includes(word) === true) || searchResult
   },
   async put(id,data){
     data.settings=JSON.stringify(data.settings)
