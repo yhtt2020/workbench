@@ -392,6 +392,7 @@ const standAloneAppModel = {
       author:app.author?app.author:'',
       site:app.site?app.site:'',
       url: url,
+      circle:app.circle?app.circle:'',
       preload: app.preload||'',
       package:app.package || '',
       themeColor: app.themeColor || '#ccc',

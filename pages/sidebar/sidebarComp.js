@@ -1276,6 +1276,7 @@ Vue.component('sidebar', {
             height: 800
           }
         },
+        circle:app.circle,
         auth:app.auth,
         site:app.site,
         author:app.author,
