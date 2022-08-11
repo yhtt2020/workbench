@@ -198,7 +198,7 @@ const sidebarTpl = /*html*/`
                               <div class="cb-top-word">{{item.name}}</div>
                               <a-icon class="cb-top-tag" type="share-alt" @click="inviteLink(item.id)"></a-icon>
                             </div>
-                            <div class="cb-bottom flex align-center justify-around">
+                            <div v-show="item.status!==2" class="cb-bottom flex align-center justify-around">
                               <a-button class="cb-bottom-zone" type="link" icon="team" @click="openCircle(item.id)">
                                 圈子
                               </a-button>
@@ -1276,6 +1276,7 @@ Vue.component('sidebar', {
             height: 800
           }
         },
+        circle:app.circle,
         auth:app.auth,
         site:app.site,
         author:app.author,
