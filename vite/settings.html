@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="/icons/setting.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>设置</title>
+    <link rel="stylesheet" href="./packages/settings/assets/base.css" />
+    <link rel="stylesheet" href="./packages/settings/assets/settings.css" />
+    <link rel="stylesheet" href="./packages/settings/assets/settings-new.css" />
+  </head>
+  <body>
+<!--  <div class="short-hero blue-gradient-background">-->
+<!--    <div class="container">-->
+<!--      <h2 data-string="settingsPreferencesHeading"></h2>-->
+<!--    </div>-->
+<!--  </div>-->
+    <div id="app">
+    </div>
+    <!-- this needs to be placed at the bottom so that sticky positioning works correctly -->
+
+    <script>
+      window.ipc= eval('require')('electron').ipcRenderer
+    </script>
+    <script type="module" src="./packages/settings/main.ts"></script>
+  </body>
+</html>

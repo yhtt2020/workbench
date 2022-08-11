@@ -239,7 +239,7 @@ const webviews = {
 			],
 			allowPopups:true
 		}
-  }else if(sourceUrl=='ts://newtab'){
+  }else if(sourceUrl=='ts://newtab'  ){
     //仅仅对apps页面单独开启权限
     webPreferences={
       preload: __dirname + '/pages/newtab/preload.js',
@@ -276,7 +276,7 @@ const webviews = {
       ],
       allowPopups:true
     }
-  } else if(sourceUrl.startsWith('http://localhost:5008/')) {
+  } else if(sourceUrl.startsWith('http://localhost:5008/' )) {
     webPreferences={
       preload: __dirname + '/pages/guide/preload.js',
       nodeIntegration: true, //node集成开高了
@@ -294,7 +294,7 @@ const webviews = {
       ],
       allowPopups:true
     }
-  } else if(sourceUrl.startsWith('http://localhost:8080')) {
+  } else if(sourceUrl.startsWith('http://localhost:8080') ) {
     webPreferences={
       preload: __dirname + '/pages/guide/preload.js',
       nodeIntegration: true, //node集成开高了
@@ -311,6 +311,14 @@ const webviews = {
         //'--is-Dev='+window.globalArgs['development--mode']
       ],
       allowPopups:true
+    }
+  }else if(urlParser.isInternalURL(sourceUrl)){
+    webPreferences= {
+      nodeIntegration: true, //node集成开高了
+      contextIsolation:false,
+      enableRemoteModule: true,
+      scrollBounce: false,
+      sandbox: false,
     }
   }
 
@@ -647,7 +655,7 @@ webviews.bindEvent('crashed', function (tabId, isKilled) {
 })
 
 webviews.bindIPC('getSettingsData', function (tabId, args) {
-  if (!urlParser.isInternalURL(tabs.get(tabId).url)) {
+  if (!urlParser.isInternalURL(tabs.get(tabId).url) ) {
     throw new Error()
   }
   const systemType=require('./util/systemType.js')
