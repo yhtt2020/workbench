@@ -182,6 +182,7 @@ app.on('ready', () => {
         ]
       }
     })
+    osxCircleSetting.setMenu(null)
     const { api } = require(path.join(__dirname, '//server-config.js'))
     osxCircleSetting.webContents.loadURL(`${api.getUrl(api.API_URL.user.CIRCLE_SETTING)}?type=edit&id=${args}&index=0&forumName=info`)
     osxCircleSetting.on('close', () => osxCircleSetting = null)
@@ -214,6 +215,7 @@ app.on('ready', () => {
         ]
       }
     })
+    osxCreateCircle.setMenu(null)
     const { api } = require(path.join(__dirname, '//server-config.js'))
     osxCreateCircle.webContents.loadURL(api.getUrl(api.API_URL.user.CIRCLE_SETTING))
     osxCreateCircle.webContents.executeJavaScript(`

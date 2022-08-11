@@ -10,7 +10,7 @@ const urlParser = require('../js/util/urlParser')
 const configModel = require('../src/model/configModel')
 const ipc = require('electron').ipcRenderer
 const statistics = require('./statistics')
-
+let isLoadedSpaceSuccess=false//是否成功读入空间，如果读入失败，则不做自动保存和关闭前保存，防止丢失空间
 
 let SYNC_INTERVAL = 30 //普通模式下，同步间隔为30秒
 let safeClose=false
@@ -83,6 +83,10 @@ const sessionRestore = {
   adapter: {},
   currentSpace: {},
   save: async function (forceSave = true, sync = true) {
+    if(!isLoadedSpaceSuccess){
+      console.warn('不保存空间，因为当前读入空间失败')
+      return
+    }
     sessionRestore.currentSpace=await spaceModel.getCurrent()
     let currentState=tasks.getStringifyableState()
     console.log('当前状态为 currentStat=',currentState)
@@ -203,6 +207,7 @@ const sessionRestore = {
       if ((data.version && data.version !== 2) || (data.state && data.state.tasks && data.state.tasks.length === 0)) {
         tasks.setSelected(tasks.add())
         browserUI.addTab(tasks.getSelected().tabs.add())
+        isLoadedSpaceSuccess=true //认为成功载入
         return
       }
 
@@ -278,6 +283,7 @@ const sessionRestore = {
         })
       }
       */
+      isLoadedSpaceSuccess=true //认为成功载入
     } catch (e) {
       //基本上走不到这里。
 
@@ -300,6 +306,7 @@ const sessionRestore = {
 
       browserUI.switchToTask(newTask)
       browserUI.switchToTab(newSessionErrorTab)
+      isLoadedSpaceSuccess=true //认为成功载入
     }
   },
   init () {

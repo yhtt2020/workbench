@@ -50,6 +50,7 @@ const api = {
   API_URL: {
     user: {
       login: `/login?response_type=${appConfig.response_type}&client_id=${appConfig.client_id}&state=${appConfig.state}`, //登录页面
+      loginOrigin:'/login',
       home: '/', //用户主页
       profile: '/user/info', //用户资料
       space:'/user',//用户主页
