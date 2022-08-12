@@ -570,11 +570,14 @@ app.on('ready', function() {
     settings.set('systemShouldUseDarkColors', electron.nativeTheme.shouldUseDarkColors)
   }
 
-app.on('session-created',(session)=>{
-  sessions.push(session)
-  session.protocol.registerBufferProtocol('tsbapp', (request, response) => {
+app.on('session-created',async (ses)=>{
+  sessions.push(ses)
+  ses.protocol.registerBufferProtocol('tsbapp', (request, response) => {
     render.regDefaultProtocol(request, response)
   })
+  if(ses!==session.defaultSession && session!==session.fromPartition('persist:webcontent')){
+    await browser.ensureExtension(ses) //如果不是默认会话和网页会话，就载入插件
+  }
 })
 })
 
