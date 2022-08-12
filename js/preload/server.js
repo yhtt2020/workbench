@@ -2,7 +2,6 @@
 let href = window.location.href
 
 window.addEventListener('message',(e)=>{
-  console.log(e)
   if(e.data==='autoLogin'){
     ipc.send('autoLogin')
   }
