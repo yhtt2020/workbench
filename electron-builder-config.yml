@@ -18,6 +18,7 @@ files:
     - js/request/**/*
     - js/util/**/*
     - js/extras/**/*
+    - js/passwordManager/**/*
     - ./main.build.js
     - ext/**/*
     - index.html
