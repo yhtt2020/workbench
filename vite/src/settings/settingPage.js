@@ -731,6 +731,36 @@ const settingPage = {
     }
 
     theme.init()
+    this.watchGesture()
+  },
+  /**
+   * 监听手势
+   */
+  watchGesture(){
+    this.watchCheckBox('gestureBack','true')
+    this.watchCheckBox('gestureZoom','true')
+  },
+  /**
+   * watch一个配置项，id为配置项的名称，页面元素需和配置项同名
+   * @param id
+   * @param defaultValue
+   */
+  watchCheckBox(id,defaultValue='true'){
+    const ele = document.getElementById(id)
+    settings.get(id, (value) => {
+      if(value===undefined){
+        value=defaultValue
+      }
+      if (value === 'true') {
+        ele.checked = true
+      } else {
+        ele.checked = false
+      }
+    })
+    ele.addEventListener('change', e => {
+      settings.set(id, e.target.checked === true ? 'true' : 'false')
+    })
   }
+
 }
 export default settingPage
