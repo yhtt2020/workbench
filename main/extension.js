@@ -25,6 +25,7 @@ function makeId (
 
 class Browser {
   session = null
+  standAloneSessions=[] //独立会话
 
   constructor (session) {
     this.session = session
@@ -114,14 +115,7 @@ class Browser {
       },
     })
 
-    extensions = this.extensions
-    const extensionPath = path.join(userDataPath, 'extensions')
-    if (!fs.existsSync(extensionPath)) {
-      fs.mkdirSync(extensionPath)
-    }
-    const installedExtensions = await loadExtensions(
-      this.session, extensionPath
-    )
+    await this.initSessionExtensions( this.session)
     if (!require('electron').session.defaultSession.protocol.isProtocolRegistered('crx'))
       this.extensions.setupProtocol(require('electron').session.defaultSession)
 
@@ -134,6 +128,33 @@ class Browser {
     sendIPCToWindow(mainWindow, 'loadedExtensions')
   }
 
+  /**
+   * 初始化会话的扩展
+   * @param session
+   * @returns {Promise<void>}
+   */
+  async initSessionExtensions (session) {
+    console.log('初始化一个会话的插件')
+    extensions = this.extensions
+    const extensionPath = path.join(userDataPath, 'extensions')
+    if (!fs.existsSync(extensionPath)) {
+      fs.mkdirSync(extensionPath)
+    }
+    const installedExtensions = await loadExtensions(
+     session, extensionPath
+    )
+  }
+
+  async ensureExtension(ses){
+    if(this.standAloneSessions.indexOf(ses)>-1){
+      //如果已经初始化过了，就不管了
+      return
+    }
+    this.standAloneSessions.push(ses)
+    console.log('载入一个独立会话的插件',ses)
+    await this.initSessionExtensions(ses)
+    console.log(this.standAloneSessions)
+  }
   // setupProtocol () {
   //   let mainSession = require('electron').session.defaultSession
   //   mainSession.registerBufferProtocol('crx',(request,callback)=>{

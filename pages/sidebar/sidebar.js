@@ -452,7 +452,7 @@ window.onload = function() {
           tabsNum += v.tabs.length
         });
         await userStatsModel.setValue('tabs', tabsNum)
-
+        window.computeBottomSize()
 			}
 
 		},
@@ -481,6 +481,12 @@ window.onload = function() {
         const result = await groupApi.getMyCircle(options)
         if(result.code === 1000) {
           commit('SET_MANAGER_CIRCLE', result.data)
+        }
+      },
+      async getCircleInfoById({commit}, options) {
+        const result = await groupApi.getCircleInfoById(options)
+        if(result.code === 1000) {
+          return result.data
         }
       },
       async getAllMessage({commit}) {
