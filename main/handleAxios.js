@@ -409,7 +409,9 @@ app.whenReady().then(()=>{
     settings.set('hasShowDirection', true)
   })
 
-
+  ipc.on('recordCareer', (event, args) => {
+    settings.set('career', args.title)
+  })
 
   ipc.on('addTaskCareer',(event,args)=>{
     settings.set('career', args.title)

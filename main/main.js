@@ -284,7 +284,6 @@ function createWindowWithBounds(bounds) {
 		destroyAllViews()
 		// save the window size for the next launch of the app
 		saveWindowBounds()
-
 	})
   mainWindow.on('ready-to-show',()=>{
     mainWindow.show()
@@ -570,11 +569,15 @@ app.on('ready', function() {
     settings.set('systemShouldUseDarkColors', electron.nativeTheme.shouldUseDarkColors)
   }
 
-app.on('session-created',(session)=>{
-  sessions.push(session)
-  session.protocol.registerBufferProtocol('tsbapp', (request, response) => {
+app.on('session-created',async (ses)=>{
+  sessions.push(ses)
+  ses.protocol.registerBufferProtocol('tsbapp', (request, response) => {
     render.regDefaultProtocol(request, response)
   })
+  if(ses!==session.defaultSession && session!==session.fromPartition('persist:webcontent')){
+    if(typeof browser!=='undefined')
+      await browser.ensureExtension(ses) //如果不是默认会话和网页会话，就载入插件
+  }
 })
 })
 
@@ -599,4 +602,12 @@ let canQuit=false
 ipc.on('quitApp',()=>{
   canQuit=true
   app.quit()
+})
+ipc.on('errorClose',(e,args)=>{
+  //此处为遇到意外的情况下，重新显示mainWindow，并提示用户保存失败。可再次点击关闭。
+  electronLog.error('意外关闭',args.error)
+  if(!mainWindow.isDestroyed()){
+    mainWindow.show()
+    sendMessage({type:'error',config:{content:'关闭保存意外失败，您可以再次点击关闭，在不保存的情况下继续使用，此消息将在10秒后自动消失。',duration:'10'}})
+  }
 })

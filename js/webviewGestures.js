@@ -1,5 +1,5 @@
 var webviews = require('webviews.js')
-
+const settings=require('./util/settings/settings')
 var webviewGestures = {
   showBackArrow: function () {
     // this is temporarily disabled until we find a way to make it work with BrowserViews
@@ -90,6 +90,10 @@ function onSwipeGestureLowVelocity () {
   // swipe to the right to go backwards
   if (horizontalMouseMove + beginningScrollLeft < -150 && Math.abs(horizontalMouseMove / verticalMouseMove) > 3) {
     if (beginningScrollLeft < 5) {
+      if(settings.get('gestureBack')==='false'){
+        //如果禁用手势，则不做任何操作
+        return
+      }
       resetCounters()
       webviews.goBackIgnoringRedirects(tabs.getSelected())
     }
@@ -170,11 +174,19 @@ webviews.bindIPC('wheel-event', function (tabId, e) {
   if (platformZoomKey && initialZoomKeyState) {
     if (verticalMouseMove > 50) {
       verticalMouseMove = -10
+      if(settings.get('gestureZoom')==='false'){
+        //如果禁用手势，则不做任何操作
+        return
+      }
       webviewGestures.zoomWebviewOut(tabs.getSelected())
     }
 
     if (verticalMouseMove < -50) {
       verticalMouseMove = -10
+      if(settings.get('gestureZoom')==='false'){
+        //如果禁用手势，则不做任何操作
+        return
+      }
       webviewGestures.zoomWebviewIn(tabs.getSelected())
     }
   }

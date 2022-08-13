@@ -13,7 +13,9 @@ import {
   LockOutlined,
   NodeIndexOutlined,
   GoldOutlined,
-  InsuranceOutlined
+  InsuranceOutlined,
+  ExpandAltOutlined,
+  ArrowRightOutlined
 } from '@ant-design/icons-vue'
 import settings from '../../src/settings/settingsContent'
 import settingPage from '../../src/settings/settingPage.js'
@@ -21,7 +23,7 @@ import settingPage from '../../src/settings/settingPage.js'
 export default defineComponent({
   components: {
     EyeOutlined, LayoutOutlined, SearchOutlined, AimOutlined, ControlOutlined, CheckSquareOutlined, HomeOutlined,
-    LockOutlined, NodeIndexOutlined, GoldOutlined,InsuranceOutlined
+    LockOutlined, NodeIndexOutlined, GoldOutlined, InsuranceOutlined, ExpandAltOutlined, ArrowRightOutlined
   },
   mounted() {
     window.settings = settings
@@ -36,8 +38,8 @@ export default defineComponent({
 
     }
   },
-  methods:{
-    setDefault(){
+  methods: {
+    setDefault() {
       settingPage.callSetDefaultBrowser()
     }
   }
@@ -66,7 +68,8 @@ export default defineComponent({
       >
         <template #leftExtra>
           <div style="padding-top: 20px;padding-bottom: 20px;font-size: 20px">
-            <a-avatar style="margin-right: 5px" src="/icons/logo128.png"></a-avatar>设置
+            <a-avatar style="margin-right: 5px" src="/icons/logo128.png"></a-avatar>
+            设置
           </div>
         </template>
         <a-tab-pane :forceRender="true" key="Privacy">
@@ -80,7 +83,7 @@ export default defineComponent({
             <h3 data-string="settingsPrivacyHeading"></h3>
 
             <div class="settings-info-subheading" id="content-blocking-statistics">
-              <insurance-outlined style="font-size: 24px;vertical-align: middle" />
+              <insurance-outlined style="font-size: 24px;vertical-align: middle"/>
               <span
                 data-string="settingsBlockedRequestCount"
                 data-allowHTML
@@ -211,7 +214,7 @@ export default defineComponent({
             <h3 data-string="settingsAdditionalFeaturesHeading"></h3>
 
             <div class="setting-section">
-              <input type="checkbox" id="checkbox-userscripts" />
+              <input type="checkbox" id="checkbox-userscripts"/>
               <label
                 for="checkbox-userscripts"
                 data-string="settingsUserscriptsToggle"
@@ -224,7 +227,7 @@ export default defineComponent({
             </div>
 
             <div class="setting-section" hidden id="section-separate-titlebar">
-              <input type="checkbox" id="checkbox-separate-titlebar" />
+              <input type="checkbox" id="checkbox-separate-titlebar"/>
               <label
                 for="checkbox-separate-titlebar"
                 data-string="settingsSeparateTitlebarToggle"
@@ -232,7 +235,7 @@ export default defineComponent({
             </div>
 
             <div class="setting-section" id="section-open-tabs-in-foreground">
-              <input type="checkbox" id="checkbox-open-tabs-in-foreground" />
+              <input type="checkbox" id="checkbox-open-tabs-in-foreground"/>
               <label
                 for="checkbox-open-tabs-in-foreground"
                 data-string="settingsOpenTabsInForegroundToggle"
@@ -240,7 +243,7 @@ export default defineComponent({
             </div>
 
             <div class="setting-section" id="section-user-agent">
-              <input type="checkbox" id="checkbox-user-agent" />
+              <input type="checkbox" id="checkbox-user-agent"/>
               <label
                 for="checkbox-user-agent"
                 data-string="settingsUserAgentToggle"
@@ -271,7 +274,7 @@ export default defineComponent({
             <!--        ></label>-->
             <!--      </div>-->
             <div class="setting-section">
-              <input type="checkbox" id="checkbox-usage-statistics" />
+              <input type="checkbox" id="checkbox-usage-statistics"/>
               <label
                 for="checkbox-usage-statistics"
                 data-string="settingsUsageStatisticsToggle"
@@ -330,6 +333,33 @@ export default defineComponent({
               <div class="settings-info-subheading">当双击标签栏的标签时，直接将其关闭（非锁定标签）</div>
             </div>
           </div>
+          <div class="settings-container" id="browser-gesture">
+            <h3>触摸板手势</h3>
+            <div class="setting-section">
+              <label><input id="gestureBack" type="checkbox"> 双指向右滑返回</label>
+              <p>
+                <svg class="gesture-icon" aria-hidden="true">
+                  <use xlink:href="#icon-swipe-right"></use>
+                </svg>
+                <span class="gesture-tip">捏合双指，自左向右滑动</span>
+              </p>
+            </div>
+            <div class="setting-section">
+              <label><input id="gestureZoom" type="checkbox"> 双指缩放</label>
+              <div class="settings-info-subheading">取消勾选后，按住Ctrl（Command）+鼠标滚轮也将同时失效。</div>
+              <p>
+                <a-button size="small">ctrl</a-button> +
+                <svg class="gesture-icon" aria-hidden="true">
+                <use xlink:href="#icon-pinch"></use>
+              </svg>
+              <svg class="gesture-icon" aria-hidden="true">
+                <use xlink:href="#icon-stretch"></use>
+              </svg>
+                <span class="gesture-tip">按住Ctrl（Mac是Command），同时双指捏合或者双指拉大，可调节网页缩放比例</span>
+              </p>
+
+            </div>
+          </div>
         </a-tab-pane>
         <a-tab-pane :forceRender="true" key="Default">
           <template #tab>
@@ -342,8 +372,9 @@ export default defineComponent({
             <h3 data-string="settingsBrowserHeading"></h3>
             <p>当前：<span id="os_name"></span> <span id="os_type"></span></p>
             <div class="setting-section">
-              <input id="custom-browser" style="margin-left: 0.5em; min-width: 325px" hidden />
-              <button style="border-radius: 4px;border: solid 1px #ccc;padding: 5px " id="button-default-browser" @click="setDefault"></button>
+              <input id="custom-browser" style="margin-left: 0.5em; min-width: 325px" hidden/>
+              <button style="border-radius: 4px;border: solid 1px #ccc;padding: 5px " id="button-default-browser"
+                      @click="setDefault"></button>
             </div>
           </div>
         </a-tab-pane>
@@ -359,31 +390,31 @@ export default defineComponent({
             <h3>起始页</h3>
             <div class="setting-section" id="tab-choose">
               <div class="setting-option">
-                <input type="radio" name="tabChoosed" id="tstab-input" />
+                <input type="radio" name="tabChoosed" id="tstab-input"/>
                 <label
                   for="tstab-input"
                 >想天桌面（官方尝鲜版）</label>
               </div>
               <div class="setting-option">
-                <input type="radio" name="tabChoosed" id="qingning-input" />
+                <input type="radio" name="tabChoosed" id="qingning-input"/>
                 <label
                   for="qingning-input"
                 >青柠起始页（极致简约）</label>
               </div>
               <div class="setting-option">
-                <input type="radio" name="tabChoosed" id="infinity-input" />
+                <input type="radio" name="tabChoosed" id="infinity-input"/>
                 <label
                   for="infinity-input"
                 >infinity（功能强大）</label>
               </div>
               <div class="setting-option">
-                <input type="radio" name="tabChoosed" id="itab-input" />
+                <input type="radio" name="tabChoosed" id="itab-input"/>
                 <label
                   for="itab-input"
                 >iTab（热门新秀）</label>
               </div>
               <div class="setting-option">
-                <input type="radio" name="tabChoosed" id="tab-custom-input" />
+                <input type="radio" name="tabChoosed" id="tab-custom-input"/>
                 <label
                   for="ab-custom-input"
                 >自定义</label>
@@ -530,9 +561,11 @@ export default defineComponent({
   </div>
 
 </template>
-currentTab
 <style>
 body {
   background: #f1f1f1
+}
+.gesture-tip{
+  margin-left: 10px;
 }
 </style>
