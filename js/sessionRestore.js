@@ -93,7 +93,6 @@ const sessionRestore = {
     }
     sessionRestore.currentSpace=await spaceModel.getCurrent()
     let currentState=tasks.getStringifyableState()
-    console.log('当前状态为 currentStat=',currentState)
     var stateString = JSON.stringify(currentState)
     // save all tabs that aren't private
     var data = {
@@ -149,12 +148,13 @@ const sessionRestore = {
               console.warn('保存至云端失败，但无需紧张')
               disconnect(cloudResult.data.option)
             } else {
-              console.warn('保存至云端失败，但是无需做任何反馈')
+              console.error('2382.保存至云端失败,接口返回错误cloudResult=',cloudResult)
             }
           }
 
         }
       } catch (e) {
+        throw('云端保存失败，接口访问不到')
         //todo 走备份空间流程
       }
       sessionRestore.previousState = stateString //存储上一次的样本
@@ -596,17 +596,24 @@ async function safeCloseSave() {
   }
   safeClose=true
 }
+var errorClose=false
 ipc.on('safeClose', async () => {
+  if(errorClose){
+    //错误强制关闭
+    ipc.send('closeMainWindow')
+    return
+  }
   //安全关闭，先完成保存后再关闭
   try{
     await safeCloseSave()
     //关闭前上报数据
     await statistics.upload()
   }catch (e) {
+    errorClose=true
+    ipc.send('errorClose',{error:e})
     console.warn('存储失败')
-  }finally {
-    ipc.send('closeMainWindow')
   }
+  ipc.send('closeMainWindow')
 })
 
 ipc.on('safeQuitApp',async ()=>{
