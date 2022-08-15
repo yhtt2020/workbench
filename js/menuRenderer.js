@@ -99,8 +99,10 @@ module.exports = {
         window.waitOpenTabs.push(data.url)
         //如果还没有初始化好tabs，则将此tab放置到要初始化的tabs队列
       }else{
+        let currentTab=tabs.get(tabs.getSelected())
         var newTab = tabs.add({
-          url: data.url || ''
+          url: data.url || '',
+          partition:currentTab.partition
         })
 
         browserUI.addTab(newTab, {

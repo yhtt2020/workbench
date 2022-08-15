@@ -93,6 +93,28 @@ function duplicateTab(sourceTab){
   addTab(newTab, { enterEditMode: false })
 }
 
+/**
+ * 复制小号标签
+ * @param sourceTab
+ */
+function duplicateCopyTab(sourceTab){
+
+  if (modalMode.enabled()) {
+    return
+  }
+
+  if (focusMode.enabled()) {
+    focusMode.warn()
+    return
+  }
+
+  // strip tab id so that a new one is generated
+  const newTab = tabs.add({ ...sourceTab, id: undefined ,partition:'persist:webcontent_'+Date.now() })
+
+  addTab(newTab, { enterEditMode: false })
+}
+
+
 
 function moveTabLeft (tabId = tabs.getSelected()) {
   tabs.moveBy(tabId, -1)
@@ -554,5 +576,6 @@ module.exports = {
   switchToTab,
   moveTabLeft,
   moveTabRight,
-  duplicateTab
+  duplicateTab,
+  duplicateCopyTab
 }

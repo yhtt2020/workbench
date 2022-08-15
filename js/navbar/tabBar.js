@@ -477,6 +477,13 @@ const tabBar = {
             }
           },
           {
+          id: 'duplicateCopyTab',
+          label: '复制小号标签',
+          click: function () {
+            require('browserUI.js').duplicateCopyTab(tabs.get(data.id))
+          }
+        },
+          {
             id: 'lockTab',
             label: tabs.get(data.id).lock === true ? '解锁标签' : '锁定标签',
             click: function () {
@@ -566,11 +573,21 @@ const tabBar = {
     //titleEl.textContent = tabTitle  原先的方法只是添加了文字
     titleEl.innerHTML = ''
     titleEl.appendChild(iconEl)
+
+    function isCopy(tabData){
+      return tabData.partition&&tabData.partition.startsWith('persist:webcontent_')
+    }
+    if(isCopy(tabData)){
+      tabTitle='小号|'+tabTitle
+    }
     titleEl.append(tabTitle)
 
     tabEl.title = tabTitle
     if (tabData.private) {
       tabEl.title += ' (' + l('privateTab') + ')'
+    }
+    if(isCopy(tabData)){
+      tabEl.title = '小号|'+tabEl.title
     }
 
     // update tab audio icon

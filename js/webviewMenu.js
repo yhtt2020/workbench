@@ -108,7 +108,7 @@ const webviewMenu = {
         linkActions.push({
           label: l('openInNewTab'),
           click: function () {
-            browserUI.addTab(tabs.add({ url: link }), { enterEditMode: false, openInBackground: openInBackground })
+            browserUI.addTab(tabs.add({ url: link ,partition:currentTab.partition }), { enterEditMode: false, openInBackground: openInBackground })
           }
         })
       }

@@ -879,7 +879,7 @@ ipc.on('openSidebarMenu', (e, args) => {
       }
     },
     {
-      label: '新建独立标签组',
+      label: '新建小号标签组',
       click () {
         sendIPCToWindow(mainWindow, 'addSingleTask')
       }
