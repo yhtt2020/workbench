@@ -494,25 +494,27 @@ app.on('ready', function() {
 
 
 })
-
-app.on('open-url', function(e, url) {
-	if (appIsReady) {
-		sendIPCToWindow(mainWindow, 'addTab', {
-			url: url
-		})
+function handleUrlOpen(url){
+  if (appIsReady) {
+    sendIPCToWindow(mainWindow, 'addTab', {
+      url: url
+    })
     if(mainWindow){
       if(mainWindow.isMinimized()){
         mainWindow.restore()
       }
       mainWindow.focus()
     }
-
-
-	} else {
-		global.URLToOpen = url // this will be handled later in the createWindow callback
-	}
+  } else {
+    global.URLToOpen = url // this will be handled later in the createWindow callback
+  }
+}
+app.on('open-url', function(e, url) {
+  handleUrlOpen(url)
 })
-
+app.on('open-file', function(e, url) {
+  handleUrlOpen('file://'+url)
+})
 app.on('second-instance', function(e, argv, workingDir) {
 	if (mainWindow) {
 		if (mainWindow.isMinimized()) {
