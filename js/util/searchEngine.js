@@ -11,17 +11,38 @@ var currentSearchEngine = {
 var defaultSearchEngine = 'Baidu'
 
 var searchEngines = {
+  Baidu: {
+    name: 'Baidu',
+    searchURL: 'https://www.baidu.com/s?wd=%s',
+    suggestionsURL: 'https://www.baidu.com/su?wd=%s&action=opensearch',
+    queryParam: 'wd'
+  }, yuan: {
+    name: 'yuan',
+    alias: '元社区',
+    searchURL: 'https://s.apps.vip/search-result?keyword=%s',
+    //suggestionsURL: 'https://www.baidu.com/su?wd=%s&action=opensearch',
+    queryParam: 'keyword'
+  },
+  bilibili: {
+    name: 'bilibili',
+    alias: '哔哩哔哩',
+    searchURL: 'https://search.bilibili.com/all?keyword=%s',
+    //suggestionsURL:'https://s.search.bilibili.com/main/suggest?term=%s',
+    queryParam: 'keyword'
+  },
+  zhihu: {
+    name: 'zhihu',
+    alias: '知乎',
+    searchURL: 'https://www.zhihu.com/search?type=content&q=%s',
+    //suggestionsURL:'https://s.search.bilibili.com/main/suggest?term=%s',
+    queryParam: 'q'
+  },
   Bing: {
     name: 'Bing',
     searchURL: 'https://www.bing.com/search?q=%s',
     suggestionsURL: 'https://www.bing.com/osjson.aspx?query=%s',
     queryParam: 'q'
-  },Baidu: {
-    name: 'Baidu',
-    searchURL: 'https://www.baidu.com/s?wd=%s',
-    suggestionsURL: 'https://www.baidu.com/su?wd=%s&action=opensearch',
-    queryParam: 'wd'
-  },DuckDuckGo: {
+  }, DuckDuckGo: {
     name: 'DuckDuckGo',
     searchURL: 'https://duckduckgo.com/?q=%s&t=min',
     suggestionsURL: 'https://ac.duckduckgo.com/ac/?q=%s&type=list&t=min',
@@ -70,6 +91,7 @@ var searchEngines = {
     suggestionsURL: 'https://suggest.yandex.com/suggest-ff.cgi?part=%s',
     queryParam: 'text'
   },
+
   none: {
     name: 'none',
     searchURL: 'http://%s'
