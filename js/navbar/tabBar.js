@@ -30,7 +30,7 @@ const { ipcRenderer } = require('electron')
  * @returns {*}
  */
 function isCopy(tabData){
-  return tabData.partition&&tabData.partition.startsWith('persist:webcontent_')
+  return tabData.partition && tabData.partition.startsWith('persist:webcontent_')
 }
 var lastTabDeletion = 0 // TODO get rid of this
 

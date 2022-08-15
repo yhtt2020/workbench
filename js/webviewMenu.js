@@ -107,7 +107,7 @@ const webviewMenu = {
 
 
 
-      if(currentTab.partition.startsWith('persist:webcontent_')){
+      if(currentTab.partition && currentTab.partition.startsWith('persist:webcontent_')){
         linkActions.push({
           label: '当前小号内打开新标签(默认)',
           click: function () {
