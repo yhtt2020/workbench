@@ -38,7 +38,7 @@ var statsh = {
     if (
       buryObj.hasOwnProperty("action") &&
       buryObj.action === "increase" &&
-      (!statsh.get(buryObj.key) || typeof buryObj.value !== number)
+      (!statsh.get(buryObj.key) || typeof buryObj.value !== 'number')
     )
       return;
     if (buryObj.hasOwnProperty("action") && buryObj.action === "increase") {
