@@ -1,6 +1,7 @@
 const { config } = require(path.join(__dirname, '//server-config.js'))
 const remote = require('@electron/remote/main')
 const _ = require('lodash')
+const SaApp = require(__dirname+'/src/main/saAppClass')
 /**
  * 运行中的应用窗体，结构{window:窗体对象,saApp:独立窗体app对象}
  * @type {*[]}
@@ -19,6 +20,7 @@ const appManager = {
   dockBadge: 0,
   settingWindow: null,
   protocolManager: require('./js/main/protocolManager'),
+  saApps:[],
   /**
    * 朝运行中的应用发送IPC
    * @param pkg
@@ -544,6 +546,10 @@ const appManager = {
       window.view.webContents.destroy()
       window.destroy()
       appManager.removeAppWindow(saApp.windowId)
+      let found=appManager.saApps.find((app)=>{
+        return app.instance.info.id===appId
+      })
+      appManager.saApps.splice(found,1)
       SidePanel.send('closeApp', { id: appId })
     }
   },
@@ -998,6 +1004,14 @@ const appManager = {
         window: appWindow,//在本地的对象中插入window对象，方便后续操作
         saApp: saApp
       })
+
+
+      let saAppInstance=new SaApp({
+        info:saApp,
+        window:appWindow,
+        view:appView
+      })
+      this.saApps.push(saAppInstance)
     } else {
       //todo intab模式，在主窗体某个标签内
     }
