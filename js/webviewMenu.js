@@ -104,15 +104,25 @@ const webviewMenu = {
         }
       ]
 
+
+
+
+      if(currentTab.partition.startsWith('persist:webcontent_')){
+        linkActions.push({
+          label: '当前小号内打开新标签(默认)',
+          click: function () {
+            browserUI.addTab(tabs.add({ url: link ,partition:currentTab.partition ,newName:currentTab.newName}), { enterEditMode: false, openInBackground: openInBackground })
+          }
+        })
+      }
       if (!currentTab.private) {
         linkActions.push({
           label: l('openInNewTab'),
           click: function () {
-            browserUI.addTab(tabs.add({ url: link ,partition:currentTab.partition }), { enterEditMode: false, openInBackground: openInBackground })
+            browserUI.addTab(tabs.add({ url: link }), { enterEditMode: false, openInBackground: openInBackground })
           }
         })
       }
-
       linkActions.push({
         label: l('openInNewPrivateTab'),
         click: function () {
@@ -235,7 +245,7 @@ const webviewMenu = {
     if (selection) {
       var textActions = [
         {
-          label: l('searchWith').replace('%s', searchEngine.getCurrent().name),
+          label: l('searchWith').replace('%s', searchEngine.getCurrent().alias),
           click: function () {
             var newTab = tabs.add({
               url: searchEngine.getCurrent().searchURL.replace('%s', encodeURIComponent(selection)),

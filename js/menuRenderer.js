@@ -102,7 +102,8 @@ module.exports = {
         let currentTab=tabs.get(tabs.getSelected())
         var newTab = tabs.add({
           url: data.url || '',
-          partition:currentTab.partition
+          partition:currentTab.partition,
+          newName:currentTab.newName,
         })
 
         browserUI.addTab(newTab, {

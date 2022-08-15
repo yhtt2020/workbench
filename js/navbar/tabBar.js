@@ -22,7 +22,16 @@ const ipc = electron.ipcRenderer
 const navbarApi = require('../request/api/navbarApi.js')
 const baseApi = require('../request/api/baseApi')
 const deskModel = require('../../pages/util/model/deskModel.js')
+const { ipcRenderer } = require('electron')
 
+/**
+ * 判断是不是小号标签
+ * @param tabData
+ * @returns {*}
+ */
+function isCopy(tabData){
+  return tabData.partition&&tabData.partition.startsWith('persist:webcontent_')
+}
 var lastTabDeletion = 0 // TODO get rid of this
 
 const tabBar = {
@@ -281,6 +290,41 @@ const tabBar = {
       ipc.send('message', { type: 'success', config: { content: '添加成功，可在云端团队导航中查看。' } })
     }
   },
+  /**
+   * 重命名
+   * @param tabId
+   */
+  rename(tabId){
+
+
+    const { newName } = ipc.sendSync('prompt', {
+      text: '输入标签名称',
+      values: [
+        { placeholder: tabs.get(tabId).newName?tabs.get(tabId).newName:tabs.get(tabId).title, id: 'newName', type: 'text' }
+        ],
+      ok: '修改',
+      cancel: '取消',
+      width: 500,
+      height: 240
+    })
+    if(newName!=='' && newName){
+      let tabData=tabs.get(tabId)
+      if(isCopy(tabData)){
+        tabs.tabs.forEach(tab=>{
+          //遍历全部的标签，并修改同分区的标签为同一个名称
+          if(tab.partition===tabData.partition){
+            tabs.update(tab.id,{newName})
+            console.log(tab.id)
+          }
+        })
+        tabBar.updateAll()
+      }else{
+        //不是小号标签，只需要改自己就行了
+        tabs.update(tabId,{newName})
+      }
+      //console.log('设置了名称',newName)
+    }
+  },
 
   //复制tab链接
   shareTab: function (tabId) {
@@ -490,6 +534,13 @@ const tabBar = {
               tabBar.lockTab(data.id)
             },
           },
+          {
+          id: 'renameTab',
+          label: isCopy(tab)?'重命名小号':'重命名标签',
+          click: function () {
+            tabBar.rename(data.id)
+          },
+        },
 
           {
             label: '移动到最左边',
@@ -574,20 +625,23 @@ const tabBar = {
     titleEl.innerHTML = ''
     titleEl.appendChild(iconEl)
 
-    function isCopy(tabData){
-      return tabData.partition&&tabData.partition.startsWith('persist:webcontent_')
-    }
+
     if(isCopy(tabData)){
-      tabTitle='小号|'+tabTitle
+      if(tabData.newName){
+        tabTitle=tabData.newName+'|'+tabTitle
+      }else{
+        tabTitle='小号|'+tabTitle
+      }
+    }else{
+      if(tabData.newName) {
+        tabTitle = tabData.newName + '|' + tabTitle
+      }
     }
     titleEl.append(tabTitle)
 
     tabEl.title = tabTitle
     if (tabData.private) {
       tabEl.title += ' (' + l('privateTab') + ')'
-    }
-    if(isCopy(tabData)){
-      tabEl.title = '小号|'+tabEl.title
     }
 
     // update tab audio icon

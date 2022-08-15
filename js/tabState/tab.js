@@ -31,6 +31,7 @@ class TabList {
       muted: tab.muted || false,
       loaded: tab.loaded || false,
       partition:tab.partition,
+      newName:tab.newName,
       hasAudio: false,
       previewImage: '',
       isFileView: false,
