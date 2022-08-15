@@ -118,7 +118,8 @@ const appManager = {
     } else {
       //否则则推送消息并设置badge
       let noti = new electron.Notification(option)
-      noti.on('click', () => {
+
+      noti.on('click', (e) => {
         let saApp = appManager.getSaAppByAppId(appId)
         appManager.openApp(appId, false, saApp)
       })
