@@ -194,11 +194,11 @@
           <div>
             <wallpaper-selector :value="defaultDeskWallPaper" :default-wall-paper="defaultDeskWallPaper" ></wallpaper-selector>
           </div>
-          <div>
-            <h1 style="font-size: 14px;margin-top: 20px">快捷坞图标大小：</h1>
-            <a-slider id="dockSize" v-model="dockAppSize" @change="saveDockSize" :step="1" :min="30" :max="60"
-                      v-model="cardOpacity" :default-value="50"></a-slider>
-          </div>
+<!--          <div>-->
+<!--            <h1 style="font-size: 14px;margin-top: 20px">快捷坞图标大小：</h1>-->
+<!--            <a-slider id="dockSize" v-model="dockAppSize" @change="saveDockSize" :step="1" :min="30" :max="60"-->
+<!--                      v-model="cardOpacity" :default-value="50"></a-slider>-->
+<!--          </div>-->
         </template>
       </div>
 
@@ -823,31 +823,31 @@
       </a-modal>
     </div>
   </template>
-  <div @drop="addDragItem" @dragover.prevent class="dock">
-    <template>
-      <a-dropdown :trigger="['contextmenu']" v-for="item in dock">
-        <a-tooltip class="dock-item" @click="openUrl(item.url,item)">
-          <template slot="title">
-            {{item.name}}
-          </template>
-          <div>
-            <a-avatar shape="square" :size="dockAppSize" :src="item.icon"></a-avatar>
-            <!--              <div style="overflow: hidden;text-align: center;max-width: 100%;overflow: hidden;padding-top: 5px;text-shadow:0 0 1px rgba(255,255,255,0.1);-->
-            <!--            text-overflow:ellipsis;-->
-            <!--            white-space: nowrap; ">-->
-            <!--                {{item.name}}-->
-            <!--              </div>-->
-          </div>
-        </a-tooltip>
-        <a-menu slot="overlay">
-          <a-menu-item @click="removeDockApp(item)" key="1">
-            从dock栏移除
-          </a-menu-item>
-        </a-menu>
-      </a-dropdown>
-    </template>
-    </template>
-  </div>
+<!--  <div @drop="addDragItem" @dragover.prevent class="dock">-->
+<!--    <template>-->
+<!--      <a-dropdown :trigger="['contextmenu']" v-for="item in dock">-->
+<!--        <a-tooltip class="dock-item" @click="openUrl(item.url,item)">-->
+<!--          <template slot="title">-->
+<!--            {{item.name}}-->
+<!--          </template>-->
+<!--          <div>-->
+<!--            <a-avatar shape="square" :size="dockAppSize" :src="item.icon"></a-avatar>-->
+<!--            &lt;!&ndash;              <div style="overflow: hidden;text-align: center;max-width: 100%;overflow: hidden;padding-top: 5px;text-shadow:0 0 1px rgba(255,255,255,0.1);&ndash;&gt;-->
+<!--            &lt;!&ndash;            text-overflow:ellipsis;&ndash;&gt;-->
+<!--            &lt;!&ndash;            white-space: nowrap; ">&ndash;&gt;-->
+<!--            &lt;!&ndash;                {{item.name}}&ndash;&gt;-->
+<!--            &lt;!&ndash;              </div>&ndash;&gt;-->
+<!--          </div>-->
+<!--        </a-tooltip>-->
+<!--        <a-menu slot="overlay">-->
+<!--          <a-menu-item @click="removeDockApp(item)" key="1">-->
+<!--            从dock栏移除-->
+<!--          </a-menu-item>-->
+<!--        </a-menu>-->
+<!--      </a-dropdown>-->
+<!--    </template>-->
+<!--    </template>-->
+<!--  </div>-->
 </div>
 
 <script src="./components/appStore/index.js"></script>

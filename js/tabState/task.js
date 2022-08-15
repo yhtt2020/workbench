@@ -68,6 +68,12 @@ class TaskList {
     return this.find(task => task.id === id) || null
   }
 
+  getStringify(id){
+    const task= tasks.get(id)
+    return Object.assign({}, task, { tabs: task.tabs.getStringifyableState() })
+  }
+
+
   getAll(){
 	  return this.tasks
   }

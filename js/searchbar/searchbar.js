@@ -39,7 +39,7 @@ var searchbar = {
     // delete key doesn't behave like the others, String.fromCharCode returns an unprintable character (which has a length of one)
 
     var realText
-    if (event && event.keyCode !== 8) {
+    if ((event && event.keyCode !== 8) && event.keyCode) {
       realText = text.substring(0, searchbar.associatedInput.selectionStart) + event.key + text.substring(searchbar.associatedInput.selectionEnd, text.length)
     } else {
       realText = text

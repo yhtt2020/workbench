@@ -1,4 +1,5 @@
 const { exists, mkdirSync, readFile, unlink, writeFile } = require("fs");
+const fs = require('fs')
 const ipc = require('electron').ipcRenderer
 let baseStorePath = ''
 let favStorePath = ''
@@ -101,17 +102,27 @@ const fileHelpers = {
     favStorePath = baseStorePath
   },
 
-  //递归处理原始书签(edge、chrome)
+  //递归处理书签(edge、chrome)
   recurBookmark(bookmarkObj, prevFolderName = null) {
     let currentFloderName
     if(bookmarkObj.type === 'url') {
       currentFloderName = prevFolderName ?? '/'
-      fileHelpers.addUrlFile(fileHelpers.filterName(bookmarkObj.name), bookmarkObj.url, currentFloderName)
+      fileHelpers.addUrlFile(bookmarkObj.name, bookmarkObj.url, currentFloderName)
     } else {
       currentFloderName = prevFolderName ? `${prevFolderName}/${bookmarkObj.name}` : `/${bookmarkObj.name}`
       fileHelpers.addBookmarkFolder(currentFloderName)
       bookmarkObj.children.forEach(v => {
         fileHelpers.recurBookmark(v, currentFloderName)
+      })
+    }
+  },
+
+  //递归处理书签前，对整个书签对象的非法违规字符进行处理
+  recurBookmarkNameObj(bookmarkObject) {
+    bookmarkObject.name = fileHelpers.filterName(bookmarkObject.name)
+    if(bookmarkObject.type === 'folder') {
+      bookmarkObject.children.forEach(v => {
+        fileHelpers.recurBookmarkNameObj(v)
       })
     }
   },
@@ -127,6 +138,21 @@ const fileHelpers = {
       }
     })
     return name
+  },
+
+  //手动处理html文件的导入拿到data
+  manualOperateHtml: async function () {
+    let filePath = await ipc.invoke('showOpenDialog', {
+      filters: [
+        { name: 'HTML files', extensions: ['htm', 'html'] }
+      ]
+    })
+
+    if (!filePath) {
+      return
+    }
+
+    return fileHelpers.asyncReadFile(filePath[0])
   }
 
 };

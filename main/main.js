@@ -73,7 +73,6 @@ electronLog.transports.file.level = "debug"
 electronLog.transports.console.level='debug'
 // workaround for flicker when focusing app (https://github.com/electron/electron/issues/17942)
 app.commandLine.appendSwitch('disable-backgrounding-occluded-windows', 'true')
-
 var userDataPath = app.getPath('userData')
 
 const browserPage = 'file://' + __dirname + '/index.html'
@@ -230,6 +229,7 @@ function createWindowWithBounds(bounds) {
 		alwaysOnTop: settings.get('windowAlwaysOnTop'),
 		backgroundColor: '#fff',//backgroundColor: '#fff', // the value of this is ignored, but setting it seems to work around https://github.com/electron/electron/issues/10559
 		webPreferences: {
+      preload: __dirname + '/js/defaultPreload.js',
 			nodeIntegration: true,
 			contextIsolation: false,
 			nodeIntegrationInWorker: true, // used by ProcessSpawner
@@ -248,9 +248,23 @@ function createWindowWithBounds(bounds) {
 	if (process.platform !== 'darwin') {
 		mainWindow.setMenuBarVisibility(false)
 	}
+  if(require('electron').session.defaultSession.protocol.isProtocolRegistered('crx')===false){
+    browser = new Browser(electron.session.fromPartition('persist:webcontent'))
+    let timer=setInterval(()=>{
+      // console.log('检查会话是否注册了协议',require('electron').session.defaultSession.protocol.isProtocolRegistered('crx'))
+      if(require('electron').session.defaultSession.protocol.isProtocolRegistered('crx'))
+      {
+        mainWindow.loadURL(browserPage)
+        clearInterval(timer)
+      }
+    },100)
+  }else{
+    browser = new Browser(electron.session.fromPartition('persist:webcontent'))
+    mainWindow.loadURL(browserPage)
+  }
 
 	// and load the index.html of the app.
-	mainWindow.loadURL(browserPage)
+
 
 	if (bounds.maximized) {
 		mainWindow.maximize()
@@ -260,7 +274,13 @@ function createWindowWithBounds(bounds) {
 		})
 	}
 
-	mainWindow.on('close', function() {
+	mainWindow.on('close', function(e) {
+    if(!canCloseMainWindow){
+      safeCloseMainWindow()//发送给主窗体，告知其需要安全关闭，其准备好关闭后会重新触发
+      mainWindow.hide()
+      e.preventDefault()
+      return
+    }
 		destroyAllViews()
 		// save the window size for the next launch of the app
 		saveWindowBounds()
@@ -271,22 +291,25 @@ function createWindowWithBounds(bounds) {
     getAllAppsWindow()
     changingSpace=false
   })
-
-  mainWindow.on('focus',()=>{
+  function checkClipboard(){
     let latestClipboardContent=clipboard.readText()
     if(latestClipboardContent!==clipboardContent && (latestClipboardContent.startsWith('http://') || latestClipboardContent.startsWith('https://')))
     {
       clipboardContent=latestClipboardContent
       sendIPCToWindow(mainWindow,'showClipboard',{url:latestClipboardContent})
-      // dialog.showMessageBox(undefined,{
-      //   message:'检测到剪贴板存在网址，是否使用新标签打开？',
-      //   buttons:['是','否']
-      // }).then((userSelect)=>{
-      //   if(userSelect.response===0){
-      //     sendIPCToWindow(mainWindow,'addTab',{url:latestClipboardContent})
-      //   }
-      // })
     }
+  }
+  let ClipTimer=setInterval(()=>{
+    if(mainWindow){
+      if(!mainWindow.isDestroyed()){
+        if(mainWindow.isFocused() && mainWindow.isVisible()){
+          checkClipboard()
+        }
+      }
+    }
+  },1000)
+  mainWindow.on('focus',()=>{
+    checkClipboard()
   })
 
 
@@ -546,8 +569,15 @@ app.on('ready', function() {
     settings.set('systemShouldUseDarkColors', electron.nativeTheme.shouldUseDarkColors)
   }
 
-app.on('session-created',(session)=>{
-  sessions.push(session)
+app.on('session-created',async (ses)=>{
+  sessions.push(ses)
+  ses.protocol.registerBufferProtocol('tsbapp', (request, response) => {
+    render.regDefaultProtocol(request, response)
+  })
+  if(ses!==session.defaultSession && session!==session.fromPartition('persist:webcontent')){
+    if(typeof browser!=='undefined')
+      await browser.ensureExtension(ses) //如果不是默认会话和网页会话，就载入插件
+  }
 })
 })
 
@@ -562,9 +592,9 @@ app.on('session-created',(session)=>{
 function safeCloseMainWindow(){
   sendIPCToWindow(mainWindow,'safeClose')
 }
-
+let canCloseMainWindow=false
 ipc.on('closeMainWindow',()=>{
-  mainWindow.setClosable(true)
+  canCloseMainWindow=true
   mainWindow.close()
 })
 
@@ -572,4 +602,12 @@ let canQuit=false
 ipc.on('quitApp',()=>{
   canQuit=true
   app.quit()
+})
+ipc.on('errorClose',(e,args)=>{
+  //此处为遇到意外的情况下，重新显示mainWindow，并提示用户保存失败。可再次点击关闭。
+  electronLog.error('意外关闭',args.error)
+  if(!mainWindow.isDestroyed()){
+    mainWindow.show()
+    sendMessage({type:'error',config:{content:'关闭保存意外失败，您可以再次点击关闭，在不保存的情况下继续使用，此消息将在10秒后自动消失。',duration:'10'}})
+  }
 })

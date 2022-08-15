@@ -2,6 +2,7 @@ const { db } = require('../../js/util/database')
 const { api } = require('../../server-config')
 const standAloneAppModel = require('../util/model/standAloneAppModel.js')
 
+
 const sidebarTpl = /*html*/`
   <div id="sidebar" class="side-container" @contextmenu.stop="openSidebarMenu">
     <div id="itemsEl" class="side-items">
@@ -58,7 +59,7 @@ const sidebarTpl = /*html*/`
                                   </div>
                                 </div>
                               </template>
-                              <a-button size="small">
+                              <a-button class="nickname" size="small">
                                 {{user.nickname}}<a-icon type="swap" /></a-icon>
                               </a-button>
                             </a-popover>
@@ -67,9 +68,13 @@ const sidebarTpl = /*html*/`
                             <a-popover placement="bottomLeft">
                               <template slot="content">
                                 <div class="flex flex-direction justify-around align-start" style="width: 100%; height: 185px">
-                                  <div class="text-black">等级: {{this.$store.getters.getTsGrade.lv}}级</div>
-                                  <div class="text-black">距离下一级还需要: {{remainTime}} 小时</div>
-                                  <div class="text-black">累计在线时长{{this.$store.getters.getTsGrade.cumulativeHours}}小时</div>
+                                  <div class="text-black">在线等级: {{this.$store.getters.getTsGrade.lv}}级</div>
+                                  <div class="text-black">距离下一级还需要: {{remainHour}}小时{{remainMinute}}分钟</div>
+                                  <div class="text-black">累计在线时长: {{this.$store.getters.getTsGrade.cumulativeHours}}小时</div>
+                                  <div class="text-black" v-if="this.$store.getters.getTsGrade.rank < 300">全网排名: {{this.$store.getters.getTsGrade.rank}}</div>
+                                  <div class="text-black" v-else>全网排名: 超过{{this.$store.getters.getTsGrade.percentage}}%的用户</div>
+                                  <div class="text-grey-sm" v-if="this.$store.getters.getTsGrade.rank < 300">恭喜，您排名在300名以内，已展示实际名次</div>
+                                  <div class="text-grey-sm" v-else>300名以外，仅显示百分比</div>
                                   <div class="text-grey">
                                     <img src="./assets/sun.svg" alt="" style="width: 20px; height: 20px"> = 16级
                                   </div>
@@ -85,7 +90,7 @@ const sidebarTpl = /*html*/`
 </div>
                                 </div>
                               </template>
-                              <div class="ts-grade flex justify-start align-center" style="margin-top: 4px">
+                              <div class="ts-grade flex justify-start align-center" style="margin-top: 4px" v-if="this.$store.getters.getTsGrade.lv > 0">
                                 <div class="ts-grade-crown" v-for="item in this.$store.getters.getTsGrade.crown">
                                   <img :src="item.icon" alt="" style="width: 20px; height: 20px">
                                 </div>
@@ -98,6 +103,9 @@ const sidebarTpl = /*html*/`
                                 <div class="ts-grade-star" v-for="item in this.$store.getters.getTsGrade.star">
                                   <img :src="item.icon" alt="" style="width: 20px; height: 20px">
                                 </div>
+                              </div>
+                              <div v-else class="ts-grade flex justify-start align-center" style="margin-top: 4px; color: #B6B6B6">
+                                剩余{{remainHour}}小时{{remainMinute}}分达到1级
                               </div>
                             </a-popover>
                           </template>
@@ -116,22 +124,22 @@ const sidebarTpl = /*html*/`
                         </a-popover>
                        </div>
                     </div>
-                    <div style="margin-bottom: 10px" @click="myCommunity" class="actions flex flex-direction justify-between align-center">
+                    <div style="margin-bottom: 10px" @click="myCommunity" class="my-info-panel actions flex flex-direction justify-between align-center">
                       <div class="actions-top flex justify-start  align-center">
                         <img src="./assets/tizi.svg" alt="" style="width: 16px; height: 16px">
                         <div class="text-grey" style="margin-left: 6px">我的元社区</div>
                       </div>
                       <div class="actions-bottom flex justify-around align-center">
                         <div class="action-bottom-action flex flex-direction justify-around align-center">
-                          <div style="font-weight: 700;">{{user.postCount}}</div>
+                          <div class="info-num" style="font-weight: 700;">{{user.postCount}}</div>
                           <div class="text-grey">内容</div>
                         </div>
                         <div class="action-bottom-action flex flex-direction justify-around align-center">
-                          <div style="font-weight: 700;">{{user.fans}}</div>
+                          <div class="info-num"  style="font-weight: 700;">{{user.fans}}</div>
                           <div class="text-grey">粉丝</div>
                         </div>
                         <div class="action-bottom-action flex flex-direction justify-around align-center">
-                          <div style="font-weight: 700;">{{user.follow}}</div>
+                          <div class="info-num"  style="font-weight: 700;">{{user.follow}}</div>
                           <div class="text-grey">关注</div>
                         </div>
                       </div>
@@ -139,7 +147,7 @@ const sidebarTpl = /*html*/`
                     <div class="my-group" style="margin-top: 20px;">
                       <template>
                         <div class="mg-top flex justify-between align-center">
-                          <div class="mg-top-lf text-black" style="font-weight: 400;">我加入的团队({{this.$store.getters.getAllCircle.length}})</div>
+                          <div class="mg-top-lf text-black title-my-group" style="font-weight: 400;">我加入的团队({{this.$store.getters.getAllCircle.length}})</div>
                           <a-button id="guideTeam" class="mg-top-right" style="border-radius: 50%;" type="primary" icon="plus" size="small" @click="createGroup" />
                         </div>
 
@@ -190,7 +198,7 @@ const sidebarTpl = /*html*/`
                               <div class="cb-top-word">{{item.name}}</div>
                               <a-icon class="cb-top-tag" type="share-alt" @click="inviteLink(item.id)"></a-icon>
                             </div>
-                            <div class="cb-bottom flex align-center justify-around">
+                            <div v-show="item.status!==2" class="cb-bottom flex align-center justify-around">
                               <a-button class="cb-bottom-zone" type="link" icon="team" @click="openCircle(item.id)">
                                 圈子
                               </a-button>
@@ -594,7 +602,10 @@ const sidebarTpl = /*html*/`
                   </div>
 
 </template>
- <div>
+<div style="padding: 10px">
+
+
+ <div >
                     <span @click.stop="editTaskName(item)" class="task-title">      <a-icon :id="'editTip'+item.id" class="edit-tip" type="edit"></a-icon> <span class="text"
                         :id="'taskTitle'+item.id">{{ item.count > 5 ? item.title + ' -- 高负载（5+）' : item.title }}
                       </span>
@@ -635,6 +646,7 @@ const sidebarTpl = /*html*/`
                         </span>
                       </li>
                     </ul>
+                    </div>
 </tippy>
 <!--                <a-popover placement="right" :mouse-enter-delay="0.1" :mouse-leave-delay="0.2"-->
 <!--                  :overlay-style="{'width':'305px','height':item.tabs.length*30+50+'px'}" overlay-class-name="tips">-->
@@ -695,18 +707,15 @@ const sidebarTpl = /*html*/`
     </div>
 
     <div id="bottomsEl" class="bottom-container">
-<!--     <div id="appGroupBottom" style="position: relative;bottom:">-->
-<!--    <div id="appGroupInner"></div>-->
-<!--</div>-->
       <ul class="bottomBar">
-        <template>
+<!--         <template>
           <div>
             <a-collapse default-active-key="0" :active-key="sidebarBottom" :bordered="false" @change="changeBottomSize">
               <a-collapse-panel key="1">
               </a-collapse-panel>
             </a-collapse>
           </div>
-        </template>
+        </template> -->
         <li id="guideSearch" @click="visibleGlobalSearch">
           <a-button  type="default" shape="circle" icon="search" tabindex=-1></a-button>
           <div class="item-title">全局搜索</div>
@@ -718,7 +727,7 @@ const sidebarTpl = /*html*/`
           <div class="item-title">消息中心</div >
         </li>
         <li class="helpCenter" @click="openHelpCenter" style="position: relative">
-          <a-progress :width="32" type="circle" :percent="this.$store.getters.getGuideScedule" :showInfo="false" :strokeWidth="11"></a-progress>
+          <a-progress v-show="this.$store.getters.getGuideScedule < 100" :width="32" type="circle" :percent="this.$store.getters.getGuideScedule" :showInfo="false" :strokeWidth="11"></a-progress>
           <a-icon type="question-circle" style="position: absolute; top: 14.5px; right: 14.5px; font-size: 16px;"></a-icon>
           <div class="item-title">帮助中心</div>
         </li>
@@ -726,16 +735,21 @@ const sidebarTpl = /*html*/`
     </div>
     <message-center ref="messageRef" :visible="messageShow" :mod="mod" @closeMessage="() => this.messageShow = !this.messageShow" @updateVisible="(val) => this.messageShow = val">
     </message-center>
+    <level-upgrade ref="levelUpgradeRef" :visible="levelUpgradeShow" @closeLevelUpgrade="() => this.levelUpgradeShow = !this.levelUpgradeShow"></level-upgrade>
   </div>
 `
 
 const backupSpaceModel=require('../../src/model/backupSpaceModel')
 const _=require('lodash')
+const storage = require('electron-localstorage')
+const {ipcRenderer: ipc} = require("electron");
+const saAppModel = require("../util/model/standAloneAppModel");
 window.selectedTask=null
 
 Vue.component('sidebar', {
   data: function () {
     return {
+      levelUpgradeShow: false,
       isMedals:false,
       lastSync:Date.now(),//最后一次同步时间
       spaceStatus:'local',
@@ -760,7 +774,8 @@ Vue.component('sidebar', {
       userPanelVisible: false,
       teamLock:false,//防止团队引导多次触发
       teamList:[],
-      remainTime:'',
+      remainHour:'',
+      remainMinute: '',
       tags: [
         {
           label: '公开',
@@ -838,6 +853,10 @@ Vue.component('sidebar', {
   },
 
   async mounted () {
+    window.computeBottomSize=this.fixElementPosition
+    if(process.platform==='darwin'){
+      document.getElementById('appVue').style.borderRadius='0 0 0 10px'
+    }
     ipc.on('callBackMedal',(event,args)=>{
       this.$nextTick(()=>{
         appVue.$refs.sidePanel.isMedals = args
@@ -1243,6 +1262,81 @@ Vue.component('sidebar', {
       });
       guideAddTasks.start();
     },
+    //应用市场项目所需要的函数
+    addApp (app) {
+      let option = {
+        name: app.name,
+        logo: !!!app.icon ? '../../icons/default.svg' :app.icon,
+        summary: app.summary,
+        type: app.type,
+        attribute: app.attribute,
+        themeColor: !!!app.themeColor ? '#000' :app.themeColor,
+        settings: {
+          bounds: {
+            width: 1000,
+            height: 800
+          }
+        },
+        circle:app.circle,
+        auth:app.auth,
+        site:app.site,
+        author:app.author,
+        showInSideBar: false
+      }
+      standAloneAppModel.install(app.url, option).then(success => {
+        ipc.send('message', { type: 'success', config: { content: `添加应用：${app.name} 成功` } })
+        ipc.send('installApp', { id: success })
+        ipc.send('installSuccess',{id:success,tips:true})
+      }, err => {
+        ipc.send('message', { type: 'error', config: { content: '添加应用失败' } })
+        ipc.send('installErr',{id:'',tips:false})
+      })
+    },
+    openSystemApp(args){
+      window.location.href=`tsb://app/redirect/?package=${args.package}&url=${args.url}`
+    },
+
+    async contrast(args) {
+      const installList = args
+      for (const e of args) {
+        if(await standAloneAppModel.isInstalledByUrl(e.url)===true){
+          installList[installList.indexOf(e)].isInstalled = true
+          //  console.log(installList.indexOf(e))
+        }
+      }
+      ipc.send('result', await installList)
+    },
+
+    async openApp() {
+      let allApplist = await standAloneAppModel.getAllApps()
+      ipc.send('allAppList', allApplist)
+    },
+    async openSet(args) {
+      let app = await standAloneAppModel.get({url: args})
+      setTimeout(() => {
+        ipc.send('saAppOpenSetting', {id: app.id})
+      }, 200)
+    },
+    async uninstallApp(args) {
+      let app = await standAloneAppModel.get({url: args})
+      setTimeout(()=>{
+        saAppModel.uninstall(app.id).then(success=>{
+          ipc.send('message',{type:"success",config:{content:'卸载应用成功。'}})
+          ipc.send('deleteApp',{id:app.id})
+          window.location.href=`tsb://app/redirect/?package=com.thisky.appStore`
+        },err=>{
+          ipc.send('message',{type:"success",config:{content:'卸载失败。'}})
+        })
+      },200)
+    },
+    openAppCircle(args){
+      window.location.href=`tsb://app/redirect/?package=com.thisky.com&url=${api.getUrl(api.API_URL.user.CIRCLE)}?id=${args}`
+    },
+    myApps(){
+      standAloneAppModel.getAllApps({order:'createTime'}).then((data) => {
+        ipc.send('allMyApps',data)
+      })
+    },
     sortApps(){
       let sorted=_.orderBy(this.apps,(app)=>{
         return [app.processing?1:0,app.lastExecuteTime]
@@ -1269,7 +1363,9 @@ Vue.component('sidebar', {
         }
     },
     openSidebarMenu(){
-      ipc.send('openSidebarMenu')
+      ipc.send('openSidebarMenu',{
+        mod:appVue.mod
+      })
     },
     openTaskMenu(task){
       window.selectedTask=task
@@ -1415,6 +1511,7 @@ Vue.component('sidebar', {
     openCircle (args) {
       this.userPanelVisible = false
       this.addTab(`${api.getUrl(api.API_URL.user.CIRCLE)}?id=${args}`)
+      // window.location.href=`tsb://app/redirect/?package=com.thisky.com&url=${api.getUrl(api.API_URL.user.CIRCLE)}?id=${args}`
     },
     openHelp (apps) {
       function checkAdult (apps) {
@@ -1469,7 +1566,9 @@ Vue.component('sidebar', {
     toggleUserPanel () {
       let lv = this.$store.getters.getTsGrade.lv
       let section = this.gradeTableGenerate(64)[lv+1]
-       this.remainTime = section[0] - this.$store.getters.getTsGrade.cumulativeHours
+      let remain = section[0]*60 - this.$store.getters.getTsGrade.cumulativeMinute
+      this.remainHour = Math.floor(remain/60)
+      this.remainMinute = remain - (Math.floor(remain/60) * 60)
       ipc.send('isMedal')
       this.passList = this.$store.getters.getAllCircle.filter(v => v.status !==3 && v.status !==2 )
       this.teamList = this.passList.filter(v => v.property === 0 ||  v.property===1)
@@ -1482,6 +1581,7 @@ Vue.component('sidebar', {
         this.userPanelVisible = !this.userPanelVisible
         this.$store.dispatch('getJoinedCircle', { page: 1, row: 500 })
         this.$store.dispatch('getMyCircle', { page: 1, row: 500 })
+        this.$store.dispatch('getUserInfo')
       }
     },
     closeUserPanel(){
@@ -1541,7 +1641,9 @@ Vue.component('sidebar', {
       }
     },
     openHelpCenter() {
-      this.addTab('ts://guide')
+      ipc.send('openNewGuide')
+
+      // this.addTab('ts://guide')
     },
     openGroup () {
       ipc.send('openGroup')
@@ -1706,6 +1808,21 @@ Vue.component('sidebar', {
     addNewTask (e) {
       ipc.send('addNewTask')
       this.$message.success({ content: '成功添加一个新标签组到左侧栏。' })
+      setTimeout(()=>{
+      this.scrollToBottom()
+      },500)
+    },
+    scrollToBottom() {
+      const domWrapper = document.querySelector('#appGroup'); // 外层容器 出现滚动条的dom
+      (function smoothscroll() {
+        const currentScroll = domWrapper.scrollTop;   // 已经被卷掉的高度
+        const clientHeight = domWrapper.offsetHeight; // 容器高度
+        const scrollHeight = domWrapper.scrollHeight; // 内容总高度
+        if (scrollHeight - 10 > currentScroll + clientHeight) {
+          window.requestAnimationFrame(smoothscroll);
+          domWrapper.scrollTo(0, currentScroll + (scrollHeight - currentScroll - clientHeight) / 2);
+        }
+      })();
     },
     closeItem (item) {
       if (item.type === 'task') {
@@ -1888,6 +2005,39 @@ ipc.on('message', function (event, args) {
     args.type = 'open'
   }
   appVue.$message[args.type](args.config)
+})
+
+//应用市场项目ipc转发
+ipc.on('addApp',(event,args)=>{
+  appVue.$refs.sidePanel.addApp(args)
+})
+ipc.on('openSystemApp',async (event, args) => {
+  appVue.$refs.sidePanel.openSystemApp(args)
+})
+
+ipc.on('contrast',function(event,args){
+  appVue.$refs.sidePanel.contrast(args)
+})
+
+ipc.on('openApp',()=>{
+  appVue.$refs.sidePanel.openApp()
+})
+
+ipc.on('openSet',(event,args)=>{
+  appVue.$refs.sidePanel.openSet(args)
+})
+
+ipc.on('uninstallApp',(event,args)=>{
+  appVue.$refs.sidePanel.uninstallApp(args)
+})
+ipc.on('myApps',()=>{
+  appVue.$refs.sidePanel.myApps()
+})
+ipc.on('openAppCircle',(event,args)=>{
+  appVue.$refs.sidePanel.openAppCircle(args)
+})
+ipc.on('openAppGroupChat',(event,args)=>{
+  appVue.$refs.sidePanel.openGroupChat(args)
 })
 
 ipc.on('executedAppSuccess', async function (event, args) {
@@ -2214,5 +2364,18 @@ ipc.on('getUserInfo',async (event,args)=>{
 
 
 ipc.on('selectedIcon',(event,args)=>{
-  ipc.sendTo(mainWindowId, 'changeTaskIcon', { id: window.selectedTask.id, icon:args.icon })
+  if(args.text){
+    ipc.sendTo(mainWindowId, 'renameTask', { id: window.selectedTask.id, newName: args.text })
+  }
+  if(args.icon.type==='fontIcon')
+    ipc.sendTo(mainWindowId, 'changeTaskIcon', { id: window.selectedTask.id, icon:args.icon })
+  else{
+    ipc.sendTo(mainWindowId, 'changeTaskIcon', { id: window.selectedTask.id, icon:args.icon })
+  }
+
+})
+
+ipc.on('getStashTasks',async (event, args) => {
+  let tasks=await db.taskStash.toArray()
+  ipc.sendTo(event.senderId,'gotStashTasks', { tasks })
 })

@@ -11,7 +11,14 @@ files:
     - pages/**/*
     - icons/**/*
     - icons/*.svg
-    - js/**/*
+    #- js/**/*
+    - js/places/*
+    - js/defaultPreload.js
+    - js/main/**/*
+    - js/request/**/*
+    - js/util/**/*
+    - js/extras/**/*
+    - js/passwordManager/**/*
     - ./main.build.js
     - ext/**/*
     - index.html

@@ -46,7 +46,7 @@ ipc.on('enterPictureInPicture', function (event, data) {
 })
 
 window.addEventListener('message', function (e) {
-  if(e.data && e.data.eventName && e.data.eventName === 'webNotice') {
+  if (e.data && e.data.eventName && e.data.eventName === 'webNotice') {
     ipc.send('webOsNotice', e.data)
   }
 
@@ -58,7 +58,6 @@ window.addEventListener('message', function (e) {
     ipc.send('showCredentialList')
   }
 })
-
 
 electron.webFrame.executeJavaScript(`
   function copyData(obj, cache = []) {
@@ -123,32 +122,32 @@ electron.webFrame.executeJavaScript(`
   Notification.permission = 'granted'
 `)
 
-
-
-ipc.on('get-content-size', function() {
-  var height = Math.max( document.body.scrollHeight, document.body.offsetHeight,
-    document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight );
+ipc.on('get-content-size', function () {
+  var height = Math.max(document.body.scrollHeight, document.body.offsetHeight,
+    document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight)
   ipc.send('return-content-size', {
     width: window.innerWidth,
     height: height,
     windowHeight: window.innerHeight,
     windowWidth: window.innerWidth,
     scrollBarWidth: window.innerWidth - document.body.clientWidth
-  });
-});
-let fixedElements=[]
-let needShow=[]
-function getFixed(){
-  fixedElements=[]
-  needShow=[]
-  var elems = document.body.getElementsByTagName("*");
+  })
+})
+let fixedElements = []
+let needShow = []
+
+function getFixed () {
+  fixedElements = []
+  needShow = []
+  var elems = document.body.getElementsByTagName('*')
   var len = elems.length
-  for (var i=0;i<len;i++) {
-    if (window.getComputedStyle(elems[i],null).getPropertyValue('position') == 'fixed') {
+  for (var i = 0; i < len; i++) {
+    if (window.getComputedStyle(elems[i], null).getPropertyValue('position') == 'fixed') {
       fixedElements.push(elems[i])
     }
   }
 }
+
 // /**
 //  * 判断元素是否可见
 //  * @param el{dom}: dom元素
@@ -170,25 +169,137 @@ function getFixed(){
 //
 //   return visible;
 // }
-ipc.on('move-page-to', function(events, page) {
-  var height = Math.max( document.body.scrollHeight, document.body.offsetHeight,
-    document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight );
-  if(page===1){
+ipc.on('move-page-to', function (events, page) {
+  var height = Math.max(document.body.scrollHeight, document.body.offsetHeight,
+    document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight)
+  if (page === 1) {
     getFixed()
-  }else if(page>1 && window.innerHeight * page <=height){
+  } else if (page > 1 && window.innerHeight * page <= height) {
     //隐藏页面元素
-    fixedElements.forEach(ele=>{
-        ele.hidden=true
-        needShow.push(ele)
+    fixedElements.forEach(ele => {
+      ele.hidden = true
+      needShow.push(ele)
     })
-  }else{
-    needShow.forEach(ele=>{
-      ele.hidden=false
+  } else {
+    needShow.forEach(ele => {
+      ele.hidden = false
     })
   }
 
-  window.scrollTo(0, window.innerHeight * (page - 1) )
-  setTimeout(function() {
-    ipc.send('return-move-page', page);
+  window.scrollTo(0, window.innerHeight * (page - 1))
+  setTimeout(function () {
+    ipc.send('return-move-page', page)
   }, 100)
-});
+})
+
+if (location.href.startsWith('https://chrome.google.com/webstore')) {
+  injectChromeWebstoreInstallButton = () => {
+    const baseUrl =
+      'https://clients2.google.com/service/update2/crx?response=redirect&acceptformat=crx2,crx3&prodversion=%VERSION&x=id%3D%ID%26installsource%3Dondemand%26uc'
+    const ibText = '安装到想天浏览器'
+    const ibTemplate =
+      '<div role="button" class="dd-Va g-c-wb g-eg-ua-Uc-c-za g-c-Oc-td-jb-oa g-c" aria-label="' +
+      ibText +
+      '" tabindex="0" style="user-select: none;"><div class="g-c-Hf"><div class="g-c-x"><div class="g-c-R  webstore-test-button-label">' +
+      ibText +
+      '</div></div></div></div>'
+
+    console.log('导入谷歌商店proload')
+
+    function waitForCreation (selector, callback) {
+      const element = document.querySelector(selector)
+      if (element != null) {
+        callback(element)
+      } else {
+        setTimeout(() => {
+          waitForCreation(selector, callback)
+        }, 50)
+      }
+    }
+
+    waitForCreation('.h-F-f-k.F-f-k', (element) => {
+      element.addEventListener('DOMNodeInserted', (event) => {
+        if (event.relatedNode != element) return
+
+        setTimeout(() => {
+          console.log('before enter function ')
+          // eslint-disable-next-line @typescript-eslint/no-use-before-define
+          InstallButton(event.target.querySelector('.h-e-f-Ra-c.e-f-oh-Md-zb-k'),)
+
+          // new (InstallButton as any)(
+          //  ,
+          // );
+        }, 10)
+      })
+    })
+
+    document.addEventListener('DOMNodeInserted', (event) => {
+      setTimeout(() => {
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+        Array.from(document.getElementsByClassName('a-na-d-K-ea')).forEach(
+          (el) => {
+            el.parentNode.removeChild(el)
+          },
+        )
+      }, 10)
+    })
+
+    function installPlugin (
+      id,
+      version = navigator.userAgent.match(/(?<=Chrom(e|ium)\/)\d+\.\d+/)[0],
+    ) {
+      window.location.href = baseUrl
+        .replace('%VERSION', version)
+        .replace('%ID', id)
+    }
+
+    function InstallButton (
+      wrapper,
+      id = document.URL.match(/(?<=\/)(\w+)(\?|$)/)[1],
+    ) {
+      if (wrapper == null) return
+      wrapper.innerHTML += ibTemplate
+      this.DOM = wrapper.children[0]
+
+      console.log('run this.dom')
+      /* Styling */
+      this.DOM.addEventListener('mouseover', () => {
+        this.DOM.className =
+          'dd-Va g-c-wb g-eg-ua-Uc-c-za g-c-0c-td-jb-oa g-c g-c-l'
+      })
+      this.DOM.addEventListener('mouseout', () => {
+        this.DOM.className = 'dd-Va g-c-wb g-eg-ua-Uc-c-za g-c-Oc-td-jb-oa g-c'
+      })
+      this.DOM.addEventListener('mousedown', () => {
+        this.DOM.className =
+          'dd-Va g-c-wb g-eg-ua-Uc-c-za g-c-Oc-td-jb-oa g-c g-c-Xc g-c-Sc-ci g-c-l g-c-Bd'
+      })
+      this.DOM.addEventListener('mouseup', () => {
+        this.DOM.className =
+          'dd-Va g-c-wb g-eg-ua-Uc-c-za g-c-0c-td-jb-oa g-c g-c-l'
+      })
+      this.DOM.addEventListener('click', () => {
+        installPlugin(id)
+      })
+    }
+  }
+  injectChromeWebstoreInstallButton()
+}
+document.ondrop = function (e) {
+  console.log(e.dataTransfer.getData('url'))
+  ipc.send('onDropUrl', { url: e.dataTransfer.getData('url') })
+}
+
+document.ondragover = function (e) {
+  e.preventDefault()
+}
+
+window.addEventListener('load', function (e) {
+    //修正css中包含drag的，自动移除这个属性。
+    document.querySelectorAll('div').forEach(dom => {
+      if (getComputedStyle(dom)['-webkit-app-region'] === 'drag') {
+        dom.style['-webkit-app-region'] = 'no-drag'
+      }
+    })
+  }
+)

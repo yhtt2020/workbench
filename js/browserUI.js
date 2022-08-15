@@ -12,6 +12,9 @@ var tabEditor = require('navbar/tabEditor.js')
 var searchbar = require('searchbar/searchbar.js')
 
 const userStatsModel = require('../pages/util/model/userStatsModel')
+const modalMode = require("./modalMode");
+
+const oneTab = require('./extras/newTabs/oneTab.js')
 
 /* creates a new task */
 
@@ -62,7 +65,7 @@ function addTab (tabId = tabs.add(), options = {},last=false) {
       focusWebview: options.enterEditMode === false
     })
     if (options.enterEditMode !== false) {
-      if(tabs.get(tabId).url!=="ts://newtab"){
+      if(tabs.get(tabId).url !== oneTab.selectOnetab()){
         //添加新tab不弹窗
         //todo 后续增加配置项，可以选择新标签的功能
         tabEditor.show(tabId)
@@ -72,6 +75,24 @@ function addTab (tabId = tabs.add(), options = {},last=false) {
     tabBar.getTab(tabId).scrollIntoView()
   }
 }
+
+function duplicateTab(sourceTab){
+
+  if (modalMode.enabled()) {
+    return
+  }
+
+  if (focusMode.enabled()) {
+    focusMode.warn()
+    return
+  }
+
+  // strip tab id so that a new one is generated
+  const newTab = tabs.add({ ...sourceTab, id: undefined })
+
+  addTab(newTab, { enterEditMode: false })
+}
+
 
 function moveTabLeft (tabId = tabs.getSelected()) {
   tabs.moveBy(tabId, -1)
@@ -313,7 +334,11 @@ ipc.on('changeTaskIcon',(event,args)=>{
   const icon=args.icon
   const id=args.id
   let task=tasks.get(id)
-  task.userIcon=`icon.${icon.list}.${icon.name}`
+  if(icon.type==='img'){
+    delete task.userIcon
+  }else{
+    task.userIcon=`icon.${icon.list}.${icon.name}`
+  }
 })
 
 //定位到task组的某tabid，往后插入创建tab
@@ -321,6 +346,29 @@ ipc.on('changeTaskIcon',(event,args)=>{
 // ipc.on('toTask-addTab', (event, arg) => {
 //   console.log(arg, '---------------@@@@@')
 // })
+
+ipc.on('openNewGuide',()=>{
+  var res = tabs.tabs.findIndex((v) => {
+    return  urlParser.getSourceURL(v.url) === 'ts://guide'
+  })
+  let guideTab;
+  tabs.tabs.forEach((v) => {
+    if (urlParser.getSourceURL(v.url) === 'ts://guide') {
+      guideTab = v
+    }
+  })
+  if(res ===-1){
+    ipc.send('addTab',{url:'ts://guide'})
+  }
+  if(res !== -1){
+    tabs.tabs.forEach(v =>{
+      if(v.id === guideTab.id){
+        switchToTab(v.id)//如果新手引导已经存在就直接跳转到该页面
+      }
+    })
+  }
+})
+
 
 ipc.on('closeGuide',()=>{
   let closeGuideTab;
@@ -505,5 +553,6 @@ module.exports = {
   switchToTask,
   switchToTab,
   moveTabLeft,
-  moveTabRight
+  moveTabRight,
+  duplicateTab
 }

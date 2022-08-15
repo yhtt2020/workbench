@@ -1,4 +1,4 @@
-
+@import "darkMod";
 #navbar {
   display: flex;
   height: calc(36px + var(--control-space-top));
@@ -278,21 +278,6 @@ body.linux #menu-button {
     }
   }
 }
-.dark-theme {
-  .tab-item.active:not(:only-child) {
-    border: none;
-    background: rgba(255, 255, 255, 1);
-
-    .title {
-      color: #333;
-    }
-
-    &.theme-background-low-contrast .tab-item.active:not(:only-child) {
-      background: rgba(255, 255, 255, 0.1);
-
-    }
-  }
-}
 
 
 .tab-item.fade {
@@ -334,7 +319,7 @@ body.linux #menu-button {
     height: 18px;
     margin-right: 5px;
     margin-left: 5px;
-    background: #ffffffbb;
+    background: #ffffff;
     border-radius: 6px;
     margin-top: -3px;
     vertical-align: middle;

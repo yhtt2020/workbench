@@ -37,6 +37,23 @@ ipc.handle('showFocusModeDialog2', function () {
   })
 })
 
+
+
+ipc.handle('openBlockTips', function () {
+  dialog.showMessageBox({
+    // type: 'info',
+    buttons: ['忽略','查看引导'],
+    noLink:true,
+    defaultId:1,
+    detail: '检测到当前网站有多个广告或行为被拦截器拦截，如果影响正常浏览体验，请将该网站加入白名单'
+  }).then((index) => {
+    if (index.response === 1) {
+      mainWindow.webContents.send('blockGuide')
+    }
+  });
+})
+
+
 ipc.handle('showGuideDialog', function () {
   dialog.showMessageBox({
     type: 'info',
@@ -45,7 +62,6 @@ ipc.handle('showGuideDialog', function () {
     detail: '请先完成或退出引导'
   })
 })
-
 ipc.handle('showToolbarDialog', function () {
   dialog.showMessageBox({
     type: 'info',
@@ -54,7 +70,6 @@ ipc.handle('showToolbarDialog', function () {
     detail: '如要显示工具栏，请到【菜单】-【查看】-【显示/隐藏工具栏】中勾选显示。'
   })
 })
-
 
 ipc.handle('showOpenDialog', async function (e, options) {
   const result = await dialog.showOpenDialog(mainWindow, options)
@@ -134,3 +149,46 @@ ipc.handle('close', function (e) {
 ipc.handle('setFullScreen', function (e, fullScreen) {
   mainWindow.setFullScreen(e, fullScreen)
 })
+
+
+ipc.on('openThirdToolbarMenu', () => {
+  let templ = [
+    {
+      label: '关闭',
+      click: () => {
+        dialog.showMessageBox({
+          buttons: ['取消', '确定'],
+          message: '确定要关闭引导栏吗？',
+          detail: '完成全部新用户引导即可获得限时纪念勋章'
+        }).then(index => {
+          if(index.response === 1) {
+            mainWindow.webContents.send('hideThirdToolbar')
+            if(!settings.get('hasShowDirection') || settings.get('hasShowDirection') === undefined) {
+              SidePanel.send('guide',7)
+            }
+          }
+        })
+      }
+    }
+  ]
+
+  let menu = require('electron').Menu.buildFromTemplate(templ)
+
+  menu.popup()
+})
+
+ipc.on('finishedGuideHiddenThirdToolbar', () => {
+  mainWindow.webContents.send('hideThirdToolbar')
+})
+
+ipc.on('unfinishedGuideShowThirdToolbar', () => {
+  if(settings.get('thirdToolbar') === undefined) {
+    mainWindow.webContents.send('showThirdToolbar')
+  }
+})
+
+// ipc.handle('toolbarStatus',()=>{
+//   if(settings.get('toolbarStatus') === undefined) {
+//     mainWindow.webContents.send('hideToolbar')
+//   }
+// })

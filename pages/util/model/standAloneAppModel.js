@@ -10,7 +10,8 @@ const systemAppPackage=[
   'com.thisky.imageEditor',
   'com.thisky.nav',
   'com.thisky.appStore',
-  'com.thisky.com'
+  'com.thisky.com',
+  'com.thisky.desk'
 ]  //包名为上述包名的判定为系统应用
 const standAloneAppModel = {
   async initialize() {
@@ -53,12 +54,75 @@ const standAloneAppModel = {
         logo:'../../pages/group/group.svg'
       })
     }
+    let appStore = await  db.standAloneApps.get({package:'com.thisky.appStore'})
+    db.standAloneApps.put({
+      id:appStore.id,
+      name: '应用市场',
+      logo: 'https://up.apps.vip/logo/favicon.svg',
+      summary: '应用市场，助您发现更大的世界。',
+      preload: '/pages/guide/preload.js',
+      type: 'web',
+      package: 'com.thisky.appStore',
+      url: "https://a.apps.vip/appStore/index.html",
+      themeColor: "#3c78d8",
+      userThemeColor: '',
+      createTime: Date.now(),
+      updateTime: Date.now(),
+      accountAvatar: '',
+      order: 0,
+      useCount: 0,
+      attribute: {
+        isOffical: 1,
+        integration: 2
+      },
+      lastExecuteTime: Date.now(),
+      settings: JSON.stringify({
+        bounds: {
+          width: 1180,
+          height: 864
+        },
+        showInSideBar: true
+      }),
+      unreadCount: 0,
+    })
+
+    let importHel = await db.standAloneApps.get({name:'导入助手'})
+    db.standAloneApps.put({
+      id:importHel?importHel.id:4,
+      name: '导入助手',
+      logo: '../../pages/import/img/logo.svg',
+      summary: '快速导入其他浏览器的书签、密码，设置为您的默认浏览器。',
+      type: 'local',
+      url: '/pages/import/index.html',
+      preload: '/pages/group/imPreload.js',
+      package:'com.thisky.import',
+      themeColor: '#689aff',
+      userThemeColor: '',
+      createTime: Date.now(),
+      updateTime: Date.now(),
+      accountAvatar: '',
+      order: 0,
+      useCount: 0,
+      attribute: {
+        isOffical: 1,
+        integration: 2
+      },
+      lastExecuteTime: Date.now(),
+      settings: JSON.stringify({
+        bounds: {
+          width: 610,
+          height: 500
+        }
+      }),
+      unreadCount: 0,
+    })
+
 
     let fav = await  db.standAloneApps.get({name:'超级收藏夹'})
     db.standAloneApps.put({
       id:fav?fav.id:8,
       name: '超级收藏夹',
-      logo: '../../pages/fav/fav.svg',
+      logo: 'https://up.apps.vip/logo/fav.svg',
       summary: '整理你的超级资料库',
       preload: '/pages/fav/preload.js',
       type: 'local',
@@ -71,6 +135,10 @@ const standAloneAppModel = {
       accountAvatar: '',
       order: 0,
       useCount: 0,
+      attribute: {
+        isOffical: 1,
+        integration: 2
+      },
       lastExecuteTime: Date.now(),
       settings: JSON.stringify({
         bounds: {
@@ -84,12 +152,12 @@ const standAloneAppModel = {
     //   await db.standAloneApps.update(1,{url:serverConfig.IM.FRONT_URL + serverConfig.IM.AUTO_LOGIN})
     //
     // }
-    db.standAloneApps.update(2,{package:'com.thisky.com','name':'元社区','url':'https://s.apps.vip','logo':'../../icons/apps/yuan.png'})
+    db.standAloneApps.update(2,{package:'com.thisky.com','name':'元社区','url':'https://s.apps.vip','logo':'https://up.apps.vip/logo/yuan.png'})
     await db.standAloneApps.update(2,{themeColor:'#4188ff'})
     let importHelper=await  db.standAloneApps.get({package:'com.thisky.import'})
     let importHelperApp=  {
       name: '导入助手',
-      logo: '../../pages/import/img/logo.svg',
+      logo: 'https://up.apps.vip/logo/logo.svg',
       summary: '快速导入其他浏览器的书签、密码，设置为您的默认浏览器。',
       type: 'local',
       url: '/pages/import/index.html',
@@ -106,8 +174,8 @@ const standAloneAppModel = {
       lastExecuteTime: Date.now(),
       settings: JSON.stringify({
         bounds: {
-          width: 650,
-          height: 700
+          width: 610,
+          height: 500
         },
         showInSideBar:true
       }),
@@ -277,7 +345,8 @@ const standAloneAppModel = {
         }
       }
     })
-    return searchResult
+
+    return result.filter(v => v.name.includes(word) === true) || searchResult
   },
   async put(id,data){
     data.settings=JSON.stringify(data.settings)
@@ -300,8 +369,8 @@ const standAloneAppModel = {
   async installFromJson(json){
     return await standAloneAppModel.install(json.url,json)
   },
-  async isInstalled (package) {
-    let app = await standAloneAppModel.getFromPackage(package)
+  async isInstalled (packageName) {
+    let app = await standAloneAppModel.getFromPackage(packageName)
     return !!app
   },
   async isInstalledByUrl(url){
@@ -324,10 +393,12 @@ const standAloneAppModel = {
       author:app.author?app.author:'',
       site:app.site?app.site:'',
       url: url,
-      preload: '',
+      circle:app.circle?app.circle:'',
+      preload: app.preload||'',
       package:app.package || '',
       themeColor: app.themeColor || '#ccc',
       userThemeColor: '',
+      attribute: app.attribute,
       createTime: Date.now(),
       updateTime: Date.now(),
       accountAvatar: '',
@@ -383,6 +454,7 @@ const standAloneAppModel = {
     })
     return data
   },
+
   async getFromPackage(packageName){
     let app= await db.standAloneApps.where({package:packageName}).first()
     if(!!!app){
@@ -428,7 +500,7 @@ const standAloneAppModel = {
       {
         id:1,
         name: '团队沟通',
-        logo: '../../pages/group/group.svg',
+        logo: 'https://up.apps.vip/logo/group.svg',
         summary: '团队沟通，随时与团队成员实时沟通',
         type: 'web',
         //url: serverConfig.IM.FRONT_URL+ serverConfig.IM.AUTO_LOGIN,
@@ -442,6 +514,10 @@ const standAloneAppModel = {
         accountAvatar: '',
         order: 0,
         useCount: 3,
+        attribute: {
+          isOffical: 1,
+          integration: 2
+        },
         lastExecuteTime: Date.now(),
         settings: JSON.stringify({
           bounds: {
@@ -457,7 +533,7 @@ const standAloneAppModel = {
       {
         id:2,
         name: '元社区',
-        logo: '../../icons/apps/yuan.png',
+        logo: 'https://up.apps.vip/logo/yuan.png',
         package:'com.thisky.com',
         summary: '用心经营您的元社区',
         type: 'web',
@@ -470,6 +546,10 @@ const standAloneAppModel = {
         accountAvatar: '',
         order: 0,
         useCount: 0,
+        attribute: {
+          isOffical: 1,
+          integration: 2
+        },
         lastExecuteTime: Date.now(),
         settings: JSON.stringify({
           bounds: {
@@ -484,7 +564,7 @@ const standAloneAppModel = {
       {
         id:8,
         name: '超级收藏夹',
-        logo: '../../pages/fav/fav.svg',
+        logo: 'https://up.apps.vip/logo/fav.svg',
         summary: '整理你的超级资料库',
         preload: '/pages/fav/preload.js',
         type: 'web',
@@ -497,6 +577,10 @@ const standAloneAppModel = {
         accountAvatar: '',
         order: 0,
         useCount: 0,
+        attribute: {
+          isOffical: 1,
+          integration: 2
+        },
         lastExecuteTime: Date.now(),
         settings: JSON.stringify({
           bounds: {
@@ -511,7 +595,7 @@ const standAloneAppModel = {
       {
         id:4,
         name: '导入助手',
-        logo: '../../pages/import/img/logo.svg',
+        logo: 'https://up.apps.vip/logo/logo.svg',
         summary: '快速导入其他浏览器的书签、密码，设置为您的默认浏览器。',
         type: 'local',
         //url: serverConfig.IM.FRONT_URL+ serverConfig.IM.AUTO_LOGIN,
@@ -525,11 +609,15 @@ const standAloneAppModel = {
         accountAvatar: '',
         order: 0,
         useCount: 0,
+        attribute: {
+          isOffical: 1,
+          integration: 2
+        },
         lastExecuteTime: Date.now(),
         settings: JSON.stringify({
           bounds: {
-            width: 645,
-            height: 415
+            width: 610,
+            height: 500
           },
           showInSideBar:false
         }),
@@ -544,6 +632,10 @@ const standAloneAppModel = {
         logo: 'https://a.apps.vip/imageEditor/icon.svg',
         url: 'https://a.apps.vip/imageEditor/',
         package: 'com.thisky.imageEditor',
+        attribute: {
+          isOffical: 1,
+          integration: 2
+        },
         createTime: Date.now(),
         updateTime: Date.now(),
         summary: '可以为您的图片增加相框、贴纸、文字、进行简单裁减、旋转，还可以添加滤镜。',
@@ -554,10 +646,14 @@ const standAloneAppModel = {
       {
         id:7,
         name: '帮助教程',
-        logo: '../../icons/apps/help.png',
+        logo: 'https://up.apps.vip/logo/help.png',
         url: 'https://www.yuque.com/tswork/ngd5zk/iuguin',
         package:'com.thisky.helper',
         themeColor: '#ff7b42',
+        attribute: {
+          isOffical: 1,
+          integration: 2
+        },
         createTime: Date.now(),
         updateTime: Date.now(),
         author: '想天软件',

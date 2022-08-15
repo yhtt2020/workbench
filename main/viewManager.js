@@ -18,7 +18,7 @@ const defaultViewWebPreferences = {
   nodeIntegrationInSubFrames: true,
   scrollBounce: true,
   safeDialogs: true,
-  safeDialogsMessage: 'Prevent this page from creating additional dialogs',
+  safeDialogsMessage: '阻止此页面弹窗',
   preload: __dirname + '/dist/preload.js',
   contextIsolation: true,
   sandbox: true,
@@ -31,10 +31,13 @@ const defaultViewWebPreferences = {
   minimumFontSize: 6
 }
 
-function createView(existingViewId, id, webPreferencesString, boundsString, events) {
+
+async function createView(existingViewId, id, webPreferencesString, boundsString, events) {
   viewStateMap[id] = {loadedInitialURL: false}
 
   let view
+  let webPreferences=JSON.parse(webPreferencesString)
+
   if (existingViewId) {
     view = temporaryPopupViews[existingViewId]
     delete temporaryPopupViews[existingViewId]
@@ -43,9 +46,12 @@ function createView(existingViewId, id, webPreferencesString, boundsString, even
     view.setBackgroundColor(defaultBrowserViewBg)
     viewStateMap[id].loadedInitialURL = true
   } else {
-    view = new BrowserView({webPreferences: Object.assign({}, defaultViewWebPreferences, JSON.parse(webPreferencesString))})
+    view = new BrowserView({webPreferences: Object.assign({}, defaultViewWebPreferences, webPreferences)})
     view.setBackgroundColor(defaultBrowserViewBg)
-
+    // if(webPreferences.partition!=='persist:webcontent'){
+    //   console.log('webPreferences',webPreferences)
+    //   await browser.ensureExtension(webPreferences.partition)
+    // }
 
     //mark插入对webviewInk的数据统计 但在主进程中，需要发送一个ipc到sidebar常驻子进程中去db操作
     SidePanel.send('countWebviewInk')
@@ -73,6 +79,20 @@ function createView(existingViewId, id, webPreferencesString, boundsString, even
     callback('')
   })
 
+  view.webContents.on('certificate-error', (event, url, error, certificate, callback, isMainFrame) => {
+    const reg = /^http(s)?:\/\/(.*)\.(\w*)/
+    const regedUrl = reg.exec(url)[0]
+    //在这里触发了证书错误引起的回调，把当前url放入白名单，然后放行
+    let whiteCertInvalid = settings.get('whiteCertInvalid')
+    if(whiteCertInvalid.find(v => v === regedUrl)) {
+      //如果白名单中存在，放行
+      event.preventDefault()
+      callback(true)
+    } else {
+      callback(false)
+    }
+  })
+
   view.webContents.setWindowOpenHandler(function (details) {
     /*
       Opening a popup with window.open() generally requires features to be set
@@ -82,13 +102,14 @@ function createView(existingViewId, id, webPreferencesString, boundsString, even
       (https://github.com/minbrowser/min/issues/1835)
     */
     if (!details.features) {
-      mainWindow.webContents.send('view-event', {
-        viewId: id,
-        event: 'new-tab',
-        args: [details.url, !(details.disposition === 'background-tab')]
-      })
+      // mainWindow.webContents.send('view-event', {
+      //   viewId: id,
+      //   event: 'new-tab',
+      //   args: [details.url, !(details.disposition === 'background-tab')]
+      // })
       return {
-        action: 'deny'
+        //如果这里return  deny，则禁止任何形式的弹窗
+        action: 'allow'
       }
     }
 
@@ -215,6 +236,13 @@ function createView(existingViewId, id, webPreferencesString, boundsString, even
   // })
   //end
 
+  //同步extension的tab
+  browser.extensions.addTab(view.webContents, mainWindow)
+
+  if(waitingSyncId!==0){
+    tabs[waitingSyncId]=view.webContents
+    waitingSyncId=0
+  }
   return view
 }
 
@@ -254,14 +282,18 @@ function destroyAllViews() {
 //处理设置当前BrowserView事件，以将sidebarView拿出来
 
 function setView(id) {
-  if (viewStateMap[id].loadedInitialURL) {
-    setCurrentBrowserView(viewMap[id])
+  if(viewStateMap[id]){
+    if (viewStateMap[id].loadedInitialURL) {
+      setCurrentBrowserView(viewMap[id])
 
-    //mainWindow.removeBrowserView(needRemove)
-  } else {
-    mainWindow.setBrowserView(null)
+      //mainWindow.removeBrowserView(needRemove)
+    } else {
+      mainWindow.setBrowserView(null)
+    }
+    browser.extensions.selectTab(viewMap[id].webContents)
+    sendIPCToWindow(mainWindow,'setActionListTab',{id:viewMap[id].webContents.id})
+    selectedView = id
   }
-  selectedView = id
 }
 
 function setBounds(id, bounds) {

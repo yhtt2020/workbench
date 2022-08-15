@@ -145,7 +145,27 @@ const webviews = {
       fn: fn
     })
   },
-  viewMargins: [document.getElementById('toolbar').hidden?0:40, 0, 0, 45], // top, right, bottom, left
+  viewMargins: [document.getElementById('toolbar').hidden?0:document.getElementById('third-toolbar').hidden?40:80, 0, 0, 45], // top, right, bottom, left
+  autoAdjustMargin: function() {
+    const currentMargins = [
+      document.getElementById("toolbar").hidden
+        ? 0
+        : document.getElementById("third-toolbar").hidden
+        ? 40
+        : 80,
+      0,
+      0,
+      window.sideBar.mod === "close"
+        ? 45
+        : window.sideBar.mod === "open"
+        ? 145
+        : 45,
+    ];
+    for (var i = 0; i < currentMargins.length; i++) {
+      webviews.viewMargins[i] = currentMargins[i];
+    }
+    webviews.resize();
+  },
   adjustMargin: function (margins) {
     for (var i = 0; i < margins.length; i++) {
       webviews.viewMargins[i] += margins[i]
@@ -191,7 +211,6 @@ const webviews = {
     // if the tab is private, we want to partition it. See http://electron.atom.io/docs/v0.34.0/api/web-view-tag/#partition
     // since tab IDs are unique, we can use them as partition names
     var partition=tasks.getSelected().partition
-    console.log(partition)
     if (tabData.private === true) {
       partition= tabId.toString() // options.tabId is a number, which remote.session.fromPartition won't accept. It must be converted to a string first
     }
@@ -220,7 +239,7 @@ const webviews = {
 			],
 			allowPopups:true
 		}
-  }else if(sourceUrl=='ts://newtab'){
+  }else if(sourceUrl=='ts://newtab'  ){
     //仅仅对apps页面单独开启权限
     webPreferences={
       preload: __dirname + '/pages/newtab/preload.js',
@@ -257,7 +276,7 @@ const webviews = {
       ],
       allowPopups:true
     }
-  } else if(sourceUrl.startsWith('http://localhost:5008/')) {
+  } else if(sourceUrl.startsWith('http://localhost:5008/' )) {
     webPreferences={
       preload: __dirname + '/pages/guide/preload.js',
       nodeIntegration: true, //node集成开高了
@@ -275,7 +294,7 @@ const webviews = {
       ],
       allowPopups:true
     }
-  } else if(sourceUrl.startsWith('http://localhost:8080')) {
+  } else if(sourceUrl.startsWith('http://localhost:8080') ) {
     webPreferences={
       preload: __dirname + '/pages/guide/preload.js',
       nodeIntegration: true, //node集成开高了
@@ -292,6 +311,14 @@ const webviews = {
         //'--is-Dev='+window.globalArgs['development--mode']
       ],
       allowPopups:true
+    }
+  }else if(urlParser.isInternalURL(sourceUrl)){
+    webPreferences= {
+      nodeIntegration: true, //node集成开高了
+      contextIsolation:false,
+      enableRemoteModule: true,
+      scrollBounce: false,
+      sandbox: false,
     }
   }
 
@@ -628,7 +655,7 @@ webviews.bindEvent('crashed', function (tabId, isKilled) {
 })
 
 webviews.bindIPC('getSettingsData', function (tabId, args) {
-  if (!urlParser.isInternalURL(tabs.get(tabId).url)) {
+  if (!urlParser.isInternalURL(tabs.get(tabId).url) ) {
     throw new Error()
   }
   const systemType=require('./util/systemType.js')
@@ -676,48 +703,65 @@ webviews.bindIPC('scroll-position-change', function (tabId, args) {
   })
 })
 
+let isDownload = false
+let download = false
+ipc.on('isDownload',()=>{
+  isDownload=true
+  download=true
+})
+
 let originalUrl;
 let originalId;
+let emptyUrl
+let closeGuideTab=''
 ipc.on('view-event', function (e, args) {
   webviews.emitEvent(args.event, args.viewId, args.args)
-  // console.log(args)
 
-  if (args.event === 'new-tab') {
-    originalId = args.viewId
-  }
-  if (args.event === 'dom-ready') {
-    for(let i =0;i<tabs.tabs.length;i++){
-      if(tabs.tabs[i].id===args.viewId){
-        tabs.tabs[i].domRead=true
+  setTimeout(()=>{
+    if (args.event === 'new-tab' && download === true) {
+      originalId = args.viewId
+      emptyUrl = args.args[0]
+      tabs.tabs.filter((e)=>{
+        if (e.url === emptyUrl) {
+          closeGuideTab = e.id
+        }
+      })
+    }
+  },30)
 
+  setTimeout(()=>{
+    for (let i = 0; i < tabs.tabs.length; i++) {
+      if (tabs.tabs[i].id === originalId && isDownload ===true) {
+        originalUrl = tabs.tabs[i].url
+        ipc.send('originalPage',originalUrl)
+        isDownload=false
       }
     }
-  }
-  for (let i = 0; i < tabs.tabs.length; i++) {
-    originalId = args.viewId
-    if (tabs.tabs[i].id === originalId) {
-      originalUrl = tabs.tabs[i].url
-      ipc.send('originalPage',originalUrl)
-    }
-  }
+  },50)
 })
 
 ipc.on('closeEmptyPage',(event,args)=>{
-  // require('browserUI.js').closeTab(args)
-  for(let i=0;i<tabs.tabs.length;i++){
-    for(let j=0;j<args.length;j++){
-      if(tabs.tabs[i].url===args[j]){
-        if(args.length!==1 &&  tabs.tabs[i].domRead!==true){
-          require('browserUI.js').closeTab(tabs.tabs[i].id)
-          ipc.send('willDownload')
-        }
-        // if(args.length===1){
-        //   ipc.send('willDownload')
-        // }
-      }
-    }
-  }
+  require('browserUI.js').closeTab(closeGuideTab)
+  closeGuideTab=''
 })
+
+
+// ipc.on('closeEmptyPage',(event,args)=>{
+//   // require('browserUI.js').closeTab(args)
+//   for(let i=0;i<tabs.tabs.length;i++){
+//     for(let j=0;j<args.length;j++){
+//       if(tabs.tabs[i].url===args[j]){
+//         if(args.length!==1){
+//           require('browserUI.js').closeTab(tabs.tabs[i].id)
+//           ipc.send('willDownload')
+//         }
+//         // if(args.length===1){
+//         //   ipc.send('willDownload')
+//         // }
+//       }
+//     }
+//   }
+// })
 
 
 ipc.on('closeTab',(event,args)=>{

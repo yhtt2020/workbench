@@ -81,6 +81,7 @@ var searchOpenTabs = function (text, input, event) {
 function initialize () {
   searchbarPlugins.register('openTabs', {
     index: 3,
+    alias:'打开标签',
     trigger: function (text) {
       return text.length > 2
     },

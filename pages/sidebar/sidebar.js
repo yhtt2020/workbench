@@ -89,6 +89,13 @@ window.onload = function() {
 
   window.ldb=require('../../src/util/ldb')
   ldb.load(window.globalArgs['user-data-path']+'/ldb.json')
+
+  let showUpdateLog= localStorage.getItem('3.2')
+  if(showUpdateLog!=='true'){
+    ipc.send('addTab',{url:"https://www.yuque.com/tswork/browser/ci5kwg"})
+    localStorage.setItem('3.2','true')
+  }
+
 	const store = new Vuex.Store({
 		state: {
       cloudSpaces:[],
@@ -117,7 +124,10 @@ window.onload = function() {
         moon: [],
         star: [],
         lv: 0,
-        cumulativeHours: 0
+        cumulativeHours: 0,
+        cumulativeMinute: 0,
+        rank: 0,
+        percentage: 0,
       },
       guideScedule: 0
 		},
@@ -297,6 +307,11 @@ window.onload = function() {
       SET_TSGRADE: (state, data) => {
         let userInfo=data.data
         //还需要特殊处理一下浏览器等级
+        //处理前无论如何重置一下防止等级标识被累加
+        state.onlineGrade.crown = []
+        state.onlineGrade.sun = []
+        state.onlineGrade.moon = []
+        state.onlineGrade.star = []
         function handleGrade(name) {
           for(let i = 0; i < userInfo.onlineGrade[name]; i++) {
             state.onlineGrade[name].push({
@@ -308,6 +323,10 @@ window.onload = function() {
         Object.keys(userInfo.onlineGrade).forEach(v => handleGrade(v))
         state.onlineGrade.lv = userInfo.onlineGradeExtra.lv
         state.onlineGrade.cumulativeHours = userInfo.onlineGradeExtra.cumulativeHours
+        state.onlineGrade.cumulativeMinute = userInfo.onlineGradeExtra.minutes
+        state.onlineGrade.rank = userInfo.onlineGradeExtra.rank
+        state.onlineGrade.percentage = String(userInfo.onlineGradeExtra.percentage).slice(0, 6) * 100
+        window.appVue.lastOpenedLv = userInfo.onlineGradeExtra.lv
       },
       //清空浏览器等级相关
       SET_RESET_TSGRADE: (state) => {
@@ -434,7 +453,7 @@ window.onload = function() {
           tabsNum += v.tabs.length
         });
         await userStatsModel.setValue('tabs', tabsNum)
-
+        window.computeBottomSize()
         //statsh
         statsh.do({
           action: 'set',
@@ -458,7 +477,7 @@ window.onload = function() {
         }
       },
       async getUserInfo({commit}){
-        const result=await userApi.getUserInfo()
+        const result = await userApi.getUserInfo()
         if(result.code===1000){
           commit('set_user_info',result.data)
           commit('SET_TSGRADE', result.data)
@@ -475,6 +494,12 @@ window.onload = function() {
         const result = await groupApi.getMyCircle(options)
         if(result.code === 1000) {
           commit('SET_MANAGER_CIRCLE', result.data)
+        }
+      },
+      async getCircleInfoById({commit}, options) {
+        const result = await groupApi.getCircleInfoById(options)
+        if(result.code === 1000) {
+          return result.data
         }
       },
       async getAllMessage({commit}) {
@@ -539,15 +564,27 @@ window.onload = function() {
 		},
 		data: {
       mod:'auto',
-			window: window
+			window: window,
+      lastOpenedLv: -1
 		},
+    watch: {
+      'lastOpenedLv'(newValue, oldValue) {
+        //满足以下表示升级成功了
+        if(oldValue !== -1 && newValue !== oldValue) {
+          window.appVue.$refs.sidePanel.levelUpgradeShow = true
+          setTimeout(() => {
+            window.appVue.$refs.sidePanel.levelUpgradeShow = false
+          }, 5000)
+        }
+      }
+    },
 		mounted: function() {
       tsbk.default.config({
         signature: "ts"
       })
 			window.$store = store
       let sideMode = localStorage.getItem('sideMode')
-      sideMode = sideMode || 'auto'
+      sideMode = sideMode || 'close'
       if (sideMode === 'close' || sideMode === 'auto') {
         document.getElementById('clickThroughElement').style.left = '55px'
       } else if (sideMode === 'open') {
