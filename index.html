@@ -280,8 +280,9 @@
             el: '#third-toolbar',
             data() {
               return {
-                isDefaultBrowser: false,
+                isDefaultBrowser: null,
                 finishedNoobguideNum: 0,
+                migrationed: null
               }
             },
             watch: {
@@ -295,7 +296,30 @@
                     })
                   }
                 }
-              }
+              },
+              isDefaultBrowser: {
+                handler: function(newValue, oldValue) {
+                  if(toString.call(oldValue) !== '[object Null]' && newValue) {
+                    ipc.invoke('getInfoBookmarkMigrationed').then(res => {
+                      if(res && this.finishedNoobguideNum === 5) {
+                        ipc.send('finishedGuideHiddenThirdToolbar')
+                      }
+                    })
+                  }
+                }
+              },
+              migrationed: {
+                handler: function(newValue, oldValue) {
+                  if(toString.call(oldValue) !== '[object Null]' && newValue) {
+                    ipc.send('getIsDefaulBrowser')
+                    setTimeout(() => {
+                      if(this.isDefaultBrowser && this.finishedNoobguideNum === 5) {
+                        ipc.send('finishedGuideHiddenThirdToolbar')
+                      }
+                    }, 2000)
+                  }
+                }
+              },
             },
             methods: {
               openImport() {
@@ -543,17 +567,20 @@
         thirdToolbarVue.$data.isDefaultBrowser = args
       })
 
-      ipc.invoke('toolbarGetNoobGuideSchedule').then(res => {
+      setTimeout(() => {
+        ipc.invoke('toolbarGetNoobGuideSchedule').then(res => {
         const num = Object.entries(res.modules.noobGuide).filter(v => v[1] === true).length
         thirdToolbarVue.$data.finishedNoobguideNum = num
 
-        ipc.invoke('getInfoBookmarkMigrationed').then(migrationedRes => {
-          if(num !== Object.entries(res.modules.noobGuide).length || !migrationedRes || !thirdToolbarVue.$data.isDefaultBrowser) {
-            document.querySelector('#toolbar').style['border-bottom'] = '0px'
-            ipc.send('unfinishedGuideShowThirdToolbar')
-          }
+          ipc.invoke('getInfoBookmarkMigrationed').then(migrationedRes => {
+            thirdToolbarVue.$data.migrationed = migrationedRes
+            if(num !== Object.entries(res.modules.noobGuide).length || !migrationedRes || !thirdToolbarVue.$data.isDefaultBrowser) {
+              document.querySelector('#toolbar').style['border-bottom'] = '0px'
+              ipc.send('unfinishedGuideShowThirdToolbar')
+            }
+          })
         })
-      })
+      }, 2000)
 
       ipc.on('scheduleRefresh', (event, args) => {
         const num = Object.entries(args.modules.noobGuide).filter(v => v[1] === true).length
