@@ -120,6 +120,7 @@ const appManager = {
       let noti = new electron.Notification(option)
 
       noti.on('click', (e) => {
+        console.log('触发click')
         let saApp = appManager.getSaAppByAppId(appId)
         appManager.openApp(appId, false, saApp)
       })

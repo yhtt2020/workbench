@@ -18,7 +18,10 @@ class SaApp {
   logo
   constructor (saApp) {
     this.instance=saApp
-    this.logo=this.getLogoUri()
+    this.getLogoUri().then((icon)=>{
+      this.logo=icon
+      this.instance.window.setIcon(icon)
+    })
   }
 
   /**
