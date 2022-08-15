@@ -56,6 +56,13 @@ async function createView(existingViewId, id, webPreferencesString, boundsString
     //mark插入对webviewInk的数据统计 但在主进程中，需要发送一个ipc到sidebar常驻子进程中去db操作
     SidePanel.send('countWebviewInk')
 
+    //statsh
+    statsh.do({
+      action: 'increase',
+      key: 'webviewsInk',
+      value: 1
+    })
+
     //mark插入对scripts的数据统计
     SidePanel.send('countScript')
 
