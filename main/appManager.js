@@ -95,20 +95,23 @@ const appManager = {
     }
     return false
   },
+  getSaApp(id){
+    return this.saApps.find(app=>{
+      return app.instance.info.id===id
+    })
+  },
   /**
    * 发送应用消息，进行提示，并给应用加上图标
    * @param appId
    * @param option  option.body为消息体  可参考此处参数说明 https://www.electronjs.org/zh/docs/latest/api/notification
    * @param ignoreWhenFocus 是否在窗体可见的时候直接跳过消息提示和badge设置，仅添加到消息记录，默认为false
    */
-  notification (appId = 0, option = {
+  async notification (appId = 0, option = {
     title: '应用消息', body: '消息内容'
   }, ignoreWhenFocus = false) {
-    let defaultNotificationIcon = path.join(__dirname, '/icons/logo1024.png')
-    if (process.platform === 'win32') {
-      defaultNotificationIcon = path.join(__dirname, '/icons/logo128.png')
-    }
-    option.icon = option.icon ? option.icon : nativeImage.createFromPath(defaultNotificationIcon)
+    let saAppInstance=this.getSaApp(appId)
+    let logoUri=await saAppInstance.getLogoUri()
+    option.icon = option.icon ? option.icon : nativeImage.createFromPath(logoUri)
     let saAppWindow = appManager.getWindowByAppId(appId)
     if (ignoreWhenFocus && saAppWindow.isFocused()) {
       //不提示，不加badage，仅添加到消息记录
