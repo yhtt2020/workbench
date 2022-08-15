@@ -63,6 +63,13 @@ function updateBrowserTabUI(tabIdx) {
 }
 
 settings.get("browserTab", (value) => {
+  if(!value) {
+    settings.set('browserTab', {
+      tabIdx: 0
+    })
+    updateBrowserTabUI(0);
+  }
+
   if (value && value.tabIdx !== undefined) {
     updateBrowserTabUI(value.tabIdx);
   }

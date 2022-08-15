@@ -28,6 +28,7 @@ function showPlaceSuggestions (text, input, event) {
 
     results.slice(0, 4).forEach(function (result) {
       searchbarPlugins.addResult('placeSuggestions', {
+        favicon:result.favicon,
         title: urlParser.prettyURL(result.url),
         secondaryText: searchbarUtils.getRealTitle(result.title),
         url: result.url,
@@ -42,6 +43,7 @@ function showPlaceSuggestions (text, input, event) {
 function initialize () {
   searchbarPlugins.register('placeSuggestions', {
     index: 1,
+    alias:'输入建议',
     trigger: function (text) {
       return !text
     },

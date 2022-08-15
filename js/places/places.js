@@ -15,7 +15,8 @@ const places = {
           url: urlParser.getSourceURL(tab.url), // for PDF viewer and reader mode, save the original page URL and not the viewer URL
           title: tab.title,
           color: tab.backgroundColor,
-          extractedText: extractedText
+          extractedText: extractedText,
+          favicon:tab.favicon //补充图标
         }
 
         places.worker.postMessage({

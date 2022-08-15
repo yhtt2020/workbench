@@ -137,6 +137,7 @@ onmessage = function (e) {
             visitCount: 0,
             lastVisit: Date.now(),
             pageHTML: '',
+            favicon:pageData.favicon,
             extractedText: pageData.extractedText,
             searchIndex: [],
             isBookmarked: false,

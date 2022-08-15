@@ -1,5 +1,7 @@
 const webviews = require('webviews.js')
 const urlParser = require('util/urlParser.js')
+const settings = require('../util/settings/settings.js')
+
 const sideBar = {
   minSizeCss: '45px',
   maxSizeCss: '145px',
@@ -121,7 +123,6 @@ const sideBar = {
 window.sideBar=sideBar
 
 ipc.on('openToolbar',()=>{
-
   document.getElementById('password-capture-bar').style.top = -36+'px'
   if (sideBar.mod==='close' || sideBar.mod==='auto'){
     toolbar.expanded = true
@@ -144,6 +145,11 @@ ipc.on('openToolbar',()=>{
     webviews.adjustMargin([0, 0, 0,100])
     document.getElementById('address-bar').appendChild(document.getElementById('tab-editor'))
     document.getElementById('toolbar-navigation-buttons').hidden = true
+  }
+
+  if(settings.get('thirdToolbar') == 'show') {
+    document.querySelector('#third-toolbar').hidden = false
+    webviews.autoAdjustMargin()
   }
 
 })
@@ -180,6 +186,7 @@ const toolbar = {
   expanded: true,
   sideModeButton: document.getElementById('side-mod-button-toolbar'),
   toolbarEl: document.getElementById('toolbar'),
+  thirdToolbarEl: document.querySelector('#third-toolbar'),
   homeButton: document.getElementById('home-button-toolbar'),
   refreshButton: document.getElementById('refresh-button-toolbar'),
   forwardButton: document.getElementById('forward-button-toolbar'),
@@ -397,5 +404,23 @@ ipc.on('temporaryAdjust', (event, args) => {
     }
   }
 })
+
+ipc.on('hideThirdToolbar', () => {
+  document.querySelector('#third-toolbar').hidden = true
+  document.querySelector('#toolbar').style['border-bottom'] = '1px solid #e3e3e3'
+  settings.set('thirdToolbar', 'hidden')
+  webviews.autoAdjustMargin()
+})
+
+ipc.on('showThirdToolbar', () => {
+  document.querySelector('#third-toolbar').hidden = false
+  settings.set('thirdToolbar', 'show')
+  webviews.autoAdjustMargin()
+})
+
+if(settings.get('thirdToolbar') === 'show') {
+  document.querySelector('#third-toolbar').hidden = false
+  webviews.autoAdjustMargin()
+}
 
 module.exports = toolbar

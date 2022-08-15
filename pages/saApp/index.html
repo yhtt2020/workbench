@@ -121,7 +121,7 @@
           fill="#666666" p-id="10759"></path>
       </svg>
     </div>
-    <div onclick="refresh()" title="刷新" class="action">
+    <div id="refresh" onclick="refresh()" title="刷新" class="action">
       <svg t="1643038547858" class="icon action-icon" viewBox="0 0 1024 1024" version="1.1"
            xmlns="http://www.w3.org/2000/svg" p-id="10893" width="200" height="200">
         <path
@@ -129,7 +129,7 @@
           fill="#666666" p-id="10894"></path>
       </svg>
     </div>
-    <div onclick="home()" title="首页" class="action">
+    <div id="goHome" onclick="home()" title="首页" class="action">
       <svg t="1643092919061" class="icon action-icon" viewBox="0 0 1024 1024" version="1.1"
            xmlns="http://www.w3.org/2000/svg" p-id="10638" width="32" height="32">
         <path
@@ -221,6 +221,15 @@
       nameEl.innerText = args.app.name
       nameEl.title = '网址：' + encodeURI(args.url) + '（双击复制）'
       currentUrl = args.url
+
+      //暂时取消应用市场的窗体返回图标
+      if(args.app.package === 'com.thisky.appStore'){
+        document.getElementById('goBack').hidden = true
+        document.getElementById('goForward').hidden = true
+        document.getElementById('goHome').hidden = true
+        document.getElementById('refresh').style.marginLeft = '30px'
+      }
+
     })
 
     function goBack () {

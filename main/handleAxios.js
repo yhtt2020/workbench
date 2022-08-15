@@ -180,6 +180,11 @@ app.whenReady().then(()=>{
     return markDb.db.get('guideSchedule').value()
   })
 
+  //第三栏来获取当前设备的新手引导进度
+  ipc.handle('toolbarGetNoobGuideSchedule', (event, args) => {
+    return markDb.db.get('guideSchedule').value()
+  })
+
   ipc.handle('getOtherStatus', () => {
     let browserTabData = settings.get('browserTab') || null
     if(browserTabData && browserTabData.tabIdx === 0) {
@@ -202,10 +207,15 @@ app.whenReady().then(()=>{
     return data
   })
 
+  ipc.handle('getInfoBookmarkMigrationed', () => {
+    return settings.get('bookmarkMigrationed')
+  })
+
 
   ipc.on('guideMigration', (event, args) => {
     mainWindow.webContents.send('bookmarkMigration', args)
     ipc.on('afterMigration', (event, args) => {
+      settings.set('bookmarkMigrationed', true)
       afterGuide('guideSchedule.modules.noobGuide.migration')
       if(global.fromRender && !global.fromRender.guide.isDestroyed()) {
         markDb.db.set(`guideSchedule.migration.${args}`, true).write()
@@ -249,9 +259,9 @@ app.whenReady().then(()=>{
   ipc.on('activeComplete', (event, args) => {
     afterGuide(`guideSchedule.modules.${args.moduleName}.${args.childName}`)
   })
-  ipc.on('enterFirstGuide',(item,window)=>{
-    sendIPCToWindow(window, 'enterFirstGuide')
-  })
+  // ipc.on('enterFirstGuide',(item,window)=>{
+  //   sendIPCToWindow(window, 'enterFirstGuide')
+  // })
 
   let firstGuideVideo
   ipc.on('firstGuideVideo', () => {
@@ -315,6 +325,7 @@ app.whenReady().then(()=>{
    */
   function afterGuide(guideName) {
     markDb.db.set(guideName, true).write()
+    mainWindow.webContents.send('scheduleRefresh', markDb.db.get('guideSchedule').value())
     if(global.fromRender && !global.fromRender.guide.isDestroyed()) {
       global.fromRender.guide.send('scheduleRefresh', markDb.db.get('guideSchedule').value())
       SidePanel.send('updateSidebarGuideScedule', calcGuideScedule())
@@ -340,7 +351,7 @@ app.whenReady().then(()=>{
   })
   ipc.on('guideDesktopFirst',()=>{
     if(markDb.db.get('guideSchedule.modules.feature.desktop').value()===false){
-      mainWindow.webContents.send('addTab','ts://newtab')
+      mainWindow.send('addTab',{url:'ts://newtab'})
       setTimeout(()=>{
         SidePanel.send('guideDesktop')
       },1000)
@@ -371,7 +382,7 @@ app.whenReady().then(()=>{
     SidePanel.send('guide',1)
   })
   ipc.on('guideDesktop', () => {
-    mainWindow.webContents.send('addTab','ts://newtab')
+    mainWindow.webContents.send('addTab',{url:'ts://newtab'})
     setTimeout(()=>{
       SidePanel.send('guideDesktop')
     },1000)
@@ -395,9 +406,15 @@ app.whenReady().then(()=>{
 
   ipc.on('helpGuide',()=>{
     SidePanel.send('guide',7)
+    settings.set('hasShowDirection', true)
+  })
+
+  ipc.on('recordCareer', (event, args) => {
+    settings.set('career', args.title)
   })
 
   ipc.on('addTaskCareer',(event,args)=>{
+    settings.set('career', args.title)
     sendIPCToMainWindow('addTaskCareer',args)
   })
   ipc.on('openNewBackTab',()=>{
@@ -432,9 +449,9 @@ app.whenReady().then(()=>{
   ipc.on('exitGuide',(item,window)=>{
     sendIPCToWindow(window, 'exitGuide')
   })
-  ipc.on('exitFirstGuide',()=>{
-    mainWindow.webContents.send('exitFirstGuide')
-  })
+  // ipc.on('exitFirstGuide',()=>{
+  //   mainWindow.webContents.send('exitFirstGuide')
+  // })
 
   ipc.on('closeGuide',()=>{
     mainWindow.webContents.send('closeGuide')
@@ -449,6 +466,10 @@ app.whenReady().then(()=>{
 
   ipc.on('valueCount',(event,args)=>{
     mainWindow.webContents.send('valueCount',args)
+  })
+
+  ipc.on('openNewGuide',()=>{
+    mainWindow.webContents.send('openNewGuide')
   })
 
 //--------------------------------------------------------->myf状态管理部分

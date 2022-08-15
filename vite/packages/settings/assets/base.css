@@ -1,0 +1,111 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Helvetica Neue,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
+}
+/* TODO figure out why the default focus color in Electron is orange */
+*:focus {
+  outline-color: rgb(0, 117, 255);
+}
+.dark-mode *:focus {
+  outline-color: transparent;
+}
+body.mac * {
+  letter-spacing: 0.4px;
+}
+[hidden] {
+  display: none !important;
+}
+
+/* buttons are styled like normal text by default */
+button {
+  -webkit-appearance: none;
+  background: none;
+  border: none;
+  color: inherit;
+  outline: none;
+}
+body,
+html {
+  background-color: #fff;
+  color: #000;
+  height: 100%;
+  overflow: hidden;
+  -webkit-user-select: none;
+}
+
+body.dark-mode {
+  background-color: rgb(33, 37, 43);
+  color: lightgrey;
+}
+
+h1,
+h2,
+h3 {
+  font-size: 5em;
+  font-weight: 300;
+  opacity: 0.8;
+  margin: 0.5em 0;
+  color: inherit;
+  text-align: center;
+}
+h2 {
+  text-align: left;
+  font-size: 2.75em;
+}
+h3 {
+  text-align: left;
+  font-size: 2em;
+}
+h1 + h2 {
+  margin-top: -1em;
+}
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}
+.spacer {
+  height: 1em;
+}
+
+.light-fade {
+  opacity: 0.666;
+}
+
+a {
+  color: royalblue;
+  text-decoration: none;
+}
+
+.dark-mode a {
+  color: dodgerblue;
+}
+
+.dark-mode input,
+.dark-mode textarea {
+  background-color: rgb(52, 58, 68);
+  color: white;
+  border-color: transparent;
+}
+
+/* styled scrollbars */
+
+.has-thin-scrollbar::-webkit-scrollbar {
+  height: 0.25em;
+}
+.has-thin-scrollbar::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.has-thin-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.175);
+  border-radius: 0.25em;
+}
+.dark-theme .has-thin-scrollbar::-webkit-scrollbar-track {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+.dark-theme .has-thin-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.6);
+}

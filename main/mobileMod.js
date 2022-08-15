@@ -5,6 +5,28 @@ const initSize = {
   width: 480,
   height: 800
 }
+
+/**
+ * 计算窗口尺寸，主要用于修复部分平台的尺寸偏差
+ * @param width
+ * @param height
+ * @returns {{width: number, height: number}}
+ */
+function computeSize(width=initSize.width,height=initSize.height){
+  if(process.platform==='darwin'){
+   //mac不做处理
+  }else if(process.platform==='win32'){
+    //todo 不知道为什么windows上获取到的尺寸有16，10个像素的差距
+    width-=16
+    height-=10
+  }else{
+  }
+  return {
+    width:width,
+    height:height
+  }
+}
+
 const mobileMod = {
 
   getPos () {
@@ -40,7 +62,7 @@ const mobileMod = {
       height: initSize.height,
       resizable: true,
       acceptFirstMouse: true,
-      maximizable: false,
+      maximizable: true,
       visualEffectState: 'active',
       alwaysOnTop: true,
       webPreferences: {
@@ -55,8 +77,8 @@ const mobileMod = {
       }
     })
     let view = new BrowserView({
-      width: initSize.width,
-      height: initSize.height - 70,
+      width: computeSize().width,
+      height: computeSize().height - 70,
       webPreferences:{
         nodeIntegration: false,
         nodeIntegrationInSubFrames: true,
@@ -82,11 +104,12 @@ const mobileMod = {
       }
     })
     mobileWindow.setBrowserView(view)
+    let size=computeSize(mobileWindow.getBounds().width,mobileWindow.getBounds().height - 70)
     view.setBounds({
       x: 0,
       y: 40,
-      width: mobileWindow.getBounds().width,
-      height: mobileWindow.getBounds().height - 70
+      width:size.width,
+      height: size.height
     })
     mobileWindow.webContents.send('init', {
       windowId: mobileWindow.id,
@@ -118,17 +141,34 @@ const mobileMod = {
         canGoForward: view.webContents.canGoForward()
       })
     })
-
+    function loadDevtool(input){
+      if (input.key.toLowerCase() === 'f12') {
+        view.webContents.openDevTools({
+          mode: "detach"
+        })
+      }
+    }
+    view.webContents.on('before-input-event', (event, input) => {
+        loadDevtool(input)
+      }
+    )
     mobileWindow.webContents.setUserAgent(oldAgent)
     mobileWindow.loadURL('file://' + __dirname + '/pages/mobile/index.html')
     mobileWindow.on('resize', () => {
+      let size=computeSize(mobileWindow.getBounds().width, mobileWindow.getBounds().height)
       view.setBounds({
         x: 0,
         y: 40,
-        width: mobileWindow.getBounds().width,
-        height: mobileWindow.getBounds().height - 70
+        width:size.width,
+        height: size.height - 70
       })
     })
+
+
+    mobileWindow.webContents.on('before-input-event', (event, input) => {
+        loadDevtool(input)
+      }
+    )
 
     mobileWindow.on('closed', () => {
       mobileViews[id] = undefined
