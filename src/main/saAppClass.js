@@ -43,7 +43,15 @@ class SaApp {
         }
         if(ext==='svg'){
           fs.copyFileSync(logoLocal+'.tmp',logoLocal+'.svg')
-          await svg2img(logoLocal+'.svg', (err,buffer)=>{
+          await svg2img(logoLocal+'.svg',{
+            format:"png",
+            resvg:{
+              fitTo:{
+                mode:'width',
+                value:256
+              }
+            }
+          }, (err,buffer)=>{
             fs.writeFileSync(logoLocal, buffer);
             fs.unlinkSync(logoLocal+'.tmp')
           })
