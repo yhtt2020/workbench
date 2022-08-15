@@ -136,6 +136,9 @@ const fileHelpers = {
       if(name.indexOf(v) > -1) {
         name = name.replaceAll(v, ' ')
       }
+      if(name.length > 80) {
+        name = name.slice(0, 80)
+      }
     })
     return name
   },

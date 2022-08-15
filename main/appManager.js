@@ -1,6 +1,7 @@
 const { config } = require(path.join(__dirname, '//server-config.js'))
 const remote = require('@electron/remote/main')
 const _ = require('lodash')
+const SaApp = require(__dirname+'/src/main/saAppClass')
 /**
  * 运行中的应用窗体，结构{window:窗体对象,saApp:独立窗体app对象}
  * @type {*[]}
@@ -19,6 +20,7 @@ const appManager = {
   dockBadge: 0,
   settingWindow: null,
   protocolManager: require('./js/main/protocolManager'),
+  saApps:[],
   /**
    * 朝运行中的应用发送IPC
    * @param pkg
@@ -93,27 +95,32 @@ const appManager = {
     }
     return false
   },
+  getSaApp(id){
+    return this.saApps.find(app=>{
+      return app.instance.info.id===id
+    })
+  },
   /**
    * 发送应用消息，进行提示，并给应用加上图标
    * @param appId
    * @param option  option.body为消息体  可参考此处参数说明 https://www.electronjs.org/zh/docs/latest/api/notification
    * @param ignoreWhenFocus 是否在窗体可见的时候直接跳过消息提示和badge设置，仅添加到消息记录，默认为false
    */
-  notification (appId = 0, option = {
+  async notification (appId = 0, option = {
     title: '应用消息', body: '消息内容'
   }, ignoreWhenFocus = false) {
-    let defaultNotificationIcon = path.join(__dirname, '/icons/logo1024.png')
-    if (process.platform === 'win32') {
-      defaultNotificationIcon = path.join(__dirname, '/icons/logo128.png')
-    }
-    option.icon = option.icon ? option.icon : nativeImage.createFromPath(defaultNotificationIcon)
+    let saAppInstance=this.getSaApp(appId)
+    let logoUri=await saAppInstance.getLogoUri()
+    option.icon = option.icon ? option.icon : nativeImage.createFromPath(logoUri)
     let saAppWindow = appManager.getWindowByAppId(appId)
     if (ignoreWhenFocus && saAppWindow.isFocused()) {
       //不提示，不加badage，仅添加到消息记录
     } else {
       //否则则推送消息并设置badge
       let noti = new electron.Notification(option)
-      noti.on('click', () => {
+
+      noti.on('click', (e) => {
+        console.log('触发click')
         let saApp = appManager.getSaAppByAppId(appId)
         appManager.openApp(appId, false, saApp)
       })
@@ -544,6 +551,10 @@ const appManager = {
       window.view.webContents.destroy()
       window.destroy()
       appManager.removeAppWindow(saApp.windowId)
+      let found=appManager.saApps.find((app)=>{
+        return app.instance.info.id===appId
+      })
+      appManager.saApps.splice(found,1)
       SidePanel.send('closeApp', { id: appId })
     }
   },
@@ -998,6 +1009,14 @@ const appManager = {
         window: appWindow,//在本地的对象中插入window对象，方便后续操作
         saApp: saApp
       })
+
+
+      let saAppInstance=new SaApp({
+        info:saApp,
+        window:appWindow,
+        view:appView
+      })
+      this.saApps.push(saAppInstance)
     } else {
       //todo intab模式，在主窗体某个标签内
     }
