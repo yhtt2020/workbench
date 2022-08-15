@@ -27,6 +27,10 @@ function fatalStop (options) {
   sessionRestore.stopAutoSave()//如果是致命问题，则不再自动保存了，否则还是容易出错。
 }
 
+function setLoadedSuccess(info='200.载入成功，默认信息'){
+  console.info(info)
+  isLoadedSpaceSuccess=true
+}
 /**
  * 设为离线
  * @param options
@@ -89,7 +93,6 @@ const sessionRestore = {
     }
     sessionRestore.currentSpace=await spaceModel.getCurrent()
     let currentState=tasks.getStringifyableState()
-    console.log('当前状态为 currentStat=',currentState)
     var stateString = JSON.stringify(currentState)
     // save all tabs that aren't private
     var data = {
@@ -145,12 +148,13 @@ const sessionRestore = {
               console.warn('保存至云端失败，但无需紧张')
               disconnect(cloudResult.data.option)
             } else {
-              console.warn('保存至云端失败，但是无需做任何反馈')
+              console.error('2382.保存至云端失败,接口返回错误cloudResult=',cloudResult)
             }
           }
 
         }
       } catch (e) {
+        throw('云端保存失败，接口访问不到')
         //todo 走备份空间流程
       }
       sessionRestore.previousState = stateString //存储上一次的样本
@@ -185,7 +189,7 @@ const sessionRestore = {
       console.warn('获取存储的空间信息失败')
     }
 
-    console.log('获取到存储的数据',savedStringData)
+    console.info('777.获取到存储的数据')
     try {
       // first run, show the tour
       //首次运行，显示官方网站
@@ -207,7 +211,7 @@ const sessionRestore = {
       if ((data.version && data.version !== 2) || (data.state && data.state.tasks && data.state.tasks.length === 0)) {
         tasks.setSelected(tasks.add())
         browserUI.addTab(tasks.getSelected().tabs.add())
-        isLoadedSpaceSuccess=true //认为成功载入
+        setLoadedSuccess('1.空间无法恢复，但是仍然认为是载入成功。') //认为成功载入
         return
       }
 
@@ -283,7 +287,7 @@ const sessionRestore = {
         })
       }
       */
-      isLoadedSpaceSuccess=true //认为成功载入
+      setLoadedSuccess('2.空间正常恢复载入。')
     } catch (e) {
       //基本上走不到这里。
 
@@ -306,7 +310,7 @@ const sessionRestore = {
 
       browserUI.switchToTask(newTask)
       browserUI.switchToTab(newSessionErrorTab)
-      isLoadedSpaceSuccess=true //认为成功载入
+      setLoadedSuccess('3.空间还原失败，但仍然认为成功。')//认为成功载入
     }
   },
   init () {
@@ -561,7 +565,7 @@ const sessionRestore = {
     nickname: "立即登录"
     uid: 0
      */
-
+    setLoadedSuccess('5.本地空间还原成功。')
     sessionRestore.startAutoSave()
     window.onbeforeunload = function (e) {
       //这里只是用于意外关闭的情况，由于unload事件无法保证全部执行完毕，所以这个方法不被依赖，仅用于意外情况下的补救。正常的关闭走ipc的safeClose消息或者主进程对应的safeCloseMainWindow()
@@ -592,17 +596,24 @@ async function safeCloseSave() {
   }
   safeClose=true
 }
+var errorClose=false
 ipc.on('safeClose', async () => {
+  if(errorClose){
+    //错误强制关闭
+    ipc.send('closeMainWindow')
+    return
+  }
   //安全关闭，先完成保存后再关闭
   try{
     await safeCloseSave()
     //关闭前上报数据
     await statistics.upload()
   }catch (e) {
+    errorClose=true
+    ipc.send('errorClose',{error:e})
     console.warn('存储失败')
-  }finally {
-    ipc.send('closeMainWindow')
   }
+  ipc.send('closeMainWindow')
 })
 
 ipc.on('safeQuitApp',async ()=>{

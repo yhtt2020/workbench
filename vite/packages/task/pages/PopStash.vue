@@ -57,7 +57,8 @@ export default {
 <template>
   <div style="display: flex;flex-direction: column;height: 100vh">
     <div style="flex-grow:1;overflow-y: auto;background: #ececec">
-      <TaskList :config="{canRemove:true}" :list="stTasks"  v-model:selectedKeys="selectedKeys"  @remove="removeStash"/>
+      <a-empty style="margin-top: 200px" v-if="stTasks.length===0" description="目前没有暂存标签组。请在左侧栏-标签组上右键选择【暂存标签组…】将标签组暂存后再导入。"></a-empty>
+      <TaskList v-else :config="{canRemove:true}" :list="stTasks"  v-model:selectedKeys="selectedKeys"  @remove="removeStash"/>
     </div>
 
     <div @click.stop="()=>{}" class="bottom-bar" >
