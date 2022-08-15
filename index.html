@@ -560,6 +560,20 @@
         thirdToolbarVue.$data.finishedNoobguideNum = num
       })
 
+      let firstGuideVideo = localStorage.getItem('guideVideo')
+      console.log(firstGuideVideo)
+      if(!firstGuideVideo) {
+        console.log('123456')
+        localStorage.setItem('guideVideo', '1')
+      }
+        console.log(localStorage.getItem('guideVideo'))
+
+      ipc.on('firstLoad',()=>{
+        if(localStorage.getItem('guideVideo') === '1') {
+          ipc.send('firstGuideVideo')
+          localStorage.setItem('guideVideo', '2')
+        }
+      })
 
     </script>
 
