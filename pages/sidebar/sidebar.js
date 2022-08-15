@@ -452,7 +452,7 @@ window.onload = function() {
           tabsNum += v.tabs.length
         });
         await userStatsModel.setValue('tabs', tabsNum)
-
+        window.computeBottomSize()
 			}
 
 		},

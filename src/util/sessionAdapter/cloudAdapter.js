@@ -72,7 +72,7 @@ const cloudAdapter={
           backupSpaceModel.cancelOfflineUse(spaceId)
         }else{
           //保存失败，冲突
-          noAction(result.data)
+         return noAction(result.data)
         }
       }catch (e) {
         console.warn('存储到云端失败，接口请求失败。')

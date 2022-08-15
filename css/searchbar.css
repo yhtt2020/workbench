@@ -33,6 +33,14 @@
   border-radius: 20px;
   margin-right: 5px;
 }
+#searchbar .searchbar-item {
+  margin-right: 20px;
+}
+#searchbar .searchbar-item:focus {
+  background-color: rgba(0, 0, 0, 0.08);
+  border-top: none;
+  border-radius: 8px;
+}
 
 body:not(.is-ntp) #searchbar,
 body.ntp-has-background #searchbar {
@@ -48,6 +56,7 @@ body.linux #searchbar {
 .searchbar-plugin-container {
   position: relative;
   margin-left: 40px;
+  margin-right: 40px;
 }
 
 .searchbar-heading {

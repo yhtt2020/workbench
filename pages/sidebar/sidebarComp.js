@@ -853,6 +853,7 @@ Vue.component('sidebar', {
   },
 
   async mounted () {
+    window.computeBottomSize=this.fixElementPosition
     if(process.platform==='darwin'){
       document.getElementById('appVue').style.borderRadius='0 0 0 10px'
     }
@@ -1807,6 +1808,21 @@ Vue.component('sidebar', {
     addNewTask (e) {
       ipc.send('addNewTask')
       this.$message.success({ content: '成功添加一个新标签组到左侧栏。' })
+      setTimeout(()=>{
+      this.scrollToBottom()
+      },500)
+    },
+    scrollToBottom() {
+      const domWrapper = document.querySelector('#appGroup'); // 外层容器 出现滚动条的dom
+      (function smoothscroll() {
+        const currentScroll = domWrapper.scrollTop;   // 已经被卷掉的高度
+        const clientHeight = domWrapper.offsetHeight; // 容器高度
+        const scrollHeight = domWrapper.scrollHeight; // 内容总高度
+        if (scrollHeight - 10 > currentScroll + clientHeight) {
+          window.requestAnimationFrame(smoothscroll);
+          domWrapper.scrollTo(0, currentScroll + (scrollHeight - currentScroll - clientHeight) / 2);
+        }
+      })();
     },
     closeItem (item) {
       if (item.type === 'task') {
