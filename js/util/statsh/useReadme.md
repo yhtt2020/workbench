@@ -19,3 +19,6 @@
     value: 12
   })
 ```
+
+### 三、注意事项
+- 通过`statsh.do`添加了了一个新的key，必须在`statistics`上报接口中添加对应的key

@@ -10,6 +10,7 @@ const urlParser = require('../js/util/urlParser')
 const configModel = require('../src/model/configModel')
 const ipc = require('electron').ipcRenderer
 const statistics = require('./statistics')
+const statsh = require('util/statsh/statsh.js')
 let isLoadedSpaceSuccess=false//是否成功读入空间，如果读入失败，则不做自动保存和关闭前保存，防止丢失空间
 
 let SYNC_INTERVAL = 30 //普通模式下，同步间隔为30秒
@@ -605,6 +606,13 @@ ipc.on('safeClose', async () => {
   }
   //安全关闭，先完成保存后再关闭
   try{
+    //statsh 插入关闭浏览器统计
+    statsh.do({
+      action: 'set',
+      key: 'browserBaseClose',
+      value: 1
+    })
+
     await safeCloseSave()
     //关闭前上报数据
     await statistics.upload()

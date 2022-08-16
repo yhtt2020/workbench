@@ -38,11 +38,11 @@ var statsh = {
     if (
       buryObj.hasOwnProperty("action") &&
       buryObj.action === "increase" &&
-      (!statsh.get(buryObj.key) || typeof buryObj.value !== 'number')
+      typeof buryObj.value !== 'number'
     )
       return;
     if (buryObj.hasOwnProperty("action") && buryObj.action === "increase") {
-      statsh.list[buryObj.key] = statsh.get(buryObj.key) + buryObj.value;
+      statsh.list[buryObj.key] = statsh.get(buryObj.key) ? statsh.get(buryObj.key) + buryObj.value : 0 + buryObj.value;
     }
     if (buryObj.hasOwnProperty("action") && buryObj.action === "set") {
       statsh.list[buryObj.key] = buryObj.value;
@@ -94,5 +94,4 @@ var statsh = {
   },
 };
 
-statsh.initialize();
-module.exports = statsh;
+statsh.initialize()

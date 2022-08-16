@@ -1,5 +1,6 @@
 const store = require('./store.js')
 const placesModel = require('../util/model/placesModel')
+const statsh = require('../../js/util/statsh/statsh.js')
 
 const globalSearch = new Vue({
   el: "#globalSearch",
@@ -155,6 +156,13 @@ const globalSearch = new Vue({
     },
     executeApp(app){
       ipc.send('executeApp',{app:app})
+
+      //statsh 全局搜索打开的应用数量
+      statsh.do({
+        action: 'increase',
+        key: 'globalSearchBaseOpenApp',
+        value: 1
+      })
       ipc.send('closeGlobalSearch')
     },
     clikRecentHistory(item) {
@@ -167,10 +175,24 @@ const globalSearch = new Vue({
           taskId: item.taskId,
           tabId: item.tabId
         })
+
+        //statsh 全局搜索打开的网页数量
+        statsh.do({
+          action: 'increase',
+          key: 'globalSearchBaseOpenWeb',
+          value: 1
+        })
         ipc.send('closeGlobalSearch')
       } else if(item.tag === 'task') {
         ipc.send('switchToTask', {
           id: item.taskId,
+        })
+
+        //statsh 全局搜索打开的标签组数量
+        statsh.do({
+          action: 'increase',
+          key: 'globalSearchBaseOpenTask',
+          value: 1
         })
         ipc.send('closeGlobalSearch')
       } else if(item.tag === 'app') {

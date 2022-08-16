@@ -133,6 +133,13 @@ const statistics = {
       })
     }
 
+    //statsh 插入打开浏览器统计
+    statsh.do({
+      action: 'set',
+      key: 'browserBaseOpen',
+      value: 1
+    })
+
     setTimeout(statistics.upload, 10 * 1000) //启动10秒后上报
     setInterval(statistics.upload, 3 * 60 * 1000) //每隔3分钟上报一次
     setInterval(statistics.uploadCumulativeTime, 1000 * 60) //每分钟上报在线时间

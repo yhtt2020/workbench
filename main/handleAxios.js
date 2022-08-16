@@ -120,9 +120,15 @@ app.whenReady().then(()=>{
       if(createRes.code === 1000) {
         clipboard.writeText(createRes.data.shareTask_link)
         sidePanel.get().webContents.send('message',{type:'success',config:{content:'复制成功，已为您自动排除系统页面。',key:"shareTask"}})
+
+        //statsh 分享标签组统计
+        statsh.do({
+          action: 'increase',
+          key: 'taskBaseShare',
+          value: 1
+        })
       }else{
         sidePanel.get().webContents.send('message',{type:"error",config:{content:'分享失败，服务器繁忙。',key:"shareTask"}})
-
       }
     }
     catch(err){
