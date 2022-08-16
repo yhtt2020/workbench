@@ -278,9 +278,19 @@ const toolbar = {
     toolbar.homeButton.addEventListener('click', () => {
       require('browserUI.js').addTab(tabs.add({}))
     })
-    toolbar.refreshButton.addEventListener('click', () => [
-      webviews.update(tabs.getSelected(), urlParser.parse(tabs.get(tabs.getSelected()).url))
-    ])
+    toolbar.refreshButton.addEventListener('click', () =>{
+      if(urlParser.isInternalURL(tabs.get(tabs.getSelected()).url)){
+        //如果是内部网页，则获取源网址（会自动取得url参数)之后，让窗体的url改为源网址，实现刷新
+        let sourceUrl=urlParser.getSourceURL(tabs.get(tabs.getSelected()).url)
+          webviews.callAsync(tabs.getSelected(),'executeJavaScript',`
+          window.location='${sourceUrl}'
+         `)
+      }else{
+        webviews.callAsync(tabs.getSelected(), 'reload')
+      }
+    }
+
+    )
 
     toolbar.forwardButton.addEventListener('click', function () {
       webviews.callAsync(tabs.getSelected(), 'goForward')

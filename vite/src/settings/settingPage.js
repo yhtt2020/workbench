@@ -437,9 +437,11 @@ const settingPage = {
 
       for (var searchEngine in searchEngines) {
         var item = document.createElement('option')
-        item.textContent = searchEngines[searchEngine].name
+        item.value=searchEngines[searchEngine].name
+        let displayName= searchEngines[searchEngine].alias!==searchEngines[searchEngine].name?"（"+searchEngines[searchEngine].name+"）":''
+        item.textContent = searchEngines[searchEngine].alias +displayName
 
-        if (searchEngines[searchEngine].name == currentSearchEngine.name) {
+        if (searchEngines[searchEngine].name === currentSearchEngine.name) {
           item.setAttribute('selected', 'true')
         }
 
@@ -448,7 +450,8 @@ const settingPage = {
 
       // add custom option
       item = document.createElement('option')
-      item.textContent = 'custom'
+      item.textContent = '自定义'
+      item.value='custom'
       if (currentSearchEngine.custom) {
         item.setAttribute('selected', 'true')
       }
