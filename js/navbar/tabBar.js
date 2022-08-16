@@ -522,7 +522,7 @@ const tabBar = {
           },
           {
           id: 'duplicateCopyTab',
-          label: '复制小号标签',
+          label: '使用此网址创建小号标签',
           click: function () {
             require('browserUI.js').duplicateCopyTab(tabs.get(data.id))
           }

@@ -109,7 +109,7 @@ function duplicateCopyTab(sourceTab){
   }
 
   // strip tab id so that a new one is generated
-  const newTab = tabs.add({ ...sourceTab, id: undefined ,partition:'persist:webcontent_'+Date.now() })
+  const newTab = tabs.add({ ...sourceTab, id: undefined ,partition:'persist:webcontent_'+Date.now() ,newName:'' })
 
   addTab(newTab, { enterEditMode: false })
 }
