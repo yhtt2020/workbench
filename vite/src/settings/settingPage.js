@@ -434,8 +434,6 @@ const settingPage = {
         searchEngineInput.hidden = false
         searchEngineInput.value = currentSearchEngine.searchURL
       }
-      console.log('currentSearchEngine',currentSearchEngine)
-      console.log('searchEngines',searchEngines)
       for (var searchEngine in searchEngines) {
         var item = document.createElement('option')
         item.value=searchEngines[searchEngine].name

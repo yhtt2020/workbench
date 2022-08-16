@@ -153,8 +153,6 @@ let searchEnginePage = {
     }
     for (var searchEngine in searchEngines) {
       var item = document.getElementById('searchEngine_'+searchEngines[searchEngine].name)
-
-      console.log('searchEngine_'+searchEngines[searchEngine].name)
       if (searchEngines[searchEngine].name === currentSearchEngine.name && item) {
         item.setAttribute('selected', 'true')
       }
