@@ -514,7 +514,7 @@
             return '9+'
           }
           if(a<0){
-            document.getElementById('downloadCount').innerText = '0'
+            return 0
           } else{
             return a
           }
@@ -530,10 +530,12 @@
       ipc.on('downloadCountCut',()=>{
         count--
         // console.log(downloadCount)
-        if(count === 0){
+        if(count <= 0){
+          count=0
           downloadCountEl.hidden=true
+        }else {
+          downloadCountEl.innerText=calculate(count)
         }
-        downloadCountEl.innerText=calculate(count)
       })
 
       ipc.on('remakeCurrentUser', async (event, args) => {
