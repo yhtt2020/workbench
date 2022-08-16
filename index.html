@@ -514,7 +514,7 @@
             return '9+'
           }
           if(a<0){
-            return 0
+            document.getElementById('downloadCount').innerText = '0'
           } else{
             return a
           }
@@ -587,6 +587,18 @@
         thirdToolbarVue.$data.finishedNoobguideNum = num
       })
 
+      //新手引导首次视频弹出出的标记
+      let firstGuideVideo = localStorage.getItem('guideVideo')
+      if(!firstGuideVideo) {
+        localStorage.setItem('guideVideo', '1')
+      }
+
+      ipc.on('firstLoad',()=>{
+        if(localStorage.getItem('guideVideo') === '1') {
+          ipc.send('firstGuideVideo')
+          localStorage.setItem('guideVideo', '2')
+        }
+      })
 
     </script>
 
