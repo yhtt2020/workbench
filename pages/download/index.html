@@ -244,7 +244,6 @@
       appVue.list.forEach(item => {
         if (item.startTime === args.startTime) {
           appVue.lists.splice(appVue.lists.indexOf(args.startTime), 1)
-          appVue.count--
         }
       })
       appVue.list.unshift({
@@ -308,12 +307,14 @@
       ipcRenderer.send('inform')
       ipcRenderer.send('emptyPageUrl', args.chainUrl)
       const myDate = new Date()
-      // appVue.doneList.forEach(item => {
-      //   if (item.startTime === args.startTime) {
-      //     appVue.doneList.splice(appVue.doneList.indexOf(args.startTime), 1)
-      //     appVue.count++
-      //   }
-      // })
+      appVue.doneList.forEach(item => {
+        if (item.startTime === args.startTime) {
+          appVue.doneList.splice(appVue.doneList.indexOf(args.startTime), 1)
+          appVue.count++
+          appVue.listCount++
+          appVue.listDoneCount--
+        }
+      })
       appVue.doneList.unshift({
         name: args.name,
         id: appVue.doneId++,
