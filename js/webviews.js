@@ -604,6 +604,7 @@ function willNavigate(tabId, url, isInPlace, isMainFrame, frameProcessId, frameR
       url: url,
       private: currentTab.private,
       partition:currentTab.partition,
+      newName:currentTab.newName,
       backgroundColor:currentTab.backgroundColor||'#fff'
     })
     require('./browserUI.js').addTab(newTab, {
@@ -792,7 +793,8 @@ ipc.on('view-ipc', function (e, args) {
 
 //在当前页面打开emulation
 ipc.on('openMobile',function(e,args){
-	ipc.send('enableEmulation',{id:webviews.selectedId})
+  let tabData=tabs.get(webviews.selectedId)
+	ipc.send('enableEmulation',{id:webviews.selectedId,partition:tabData.partition,newName:tabData.newName})
 })
 
 
