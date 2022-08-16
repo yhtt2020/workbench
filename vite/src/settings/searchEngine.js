@@ -126,14 +126,37 @@ let searchEnginePage = {
           searchDomain = new URL(value.url).hostname.replace('www.', '')
         } catch (e) {}
         currentSearchEngine = {
-          name: searchDomain || '自定义',
+          name: searchDomain || 'custom',
+          alias:'自定义',
           searchURL: value.url,
           custom: true
         }
       } else {
         currentSearchEngine = searchEngines[defaultSearchEngine]
       }
+      window.currentSearchEngine=currentSearchEngine
+      console.log(searchEngines,currentSearchEngine)
+      searchEnginePage.updateSelect(searchEngines,currentSearchEngine)
     })
+
+  },
+  updateSelect(searchEngines,currentSearchEngine){
+    if(currentSearchEngine.name==='custom'){
+      let item=document.getElementById('searchEngine_custom')
+      if (item) {
+        item.setAttribute('selected', 'true')
+        var searchEngineInput = document.getElementById('custom-search-engine')
+        searchEngineInput.hidden = false
+        searchEngineInput.value = currentSearchEngine.searchURL
+      }
+      return
+    }
+    for (var searchEngine in searchEngines) {
+      var item = document.getElementById('searchEngine_'+searchEngines[searchEngine].name)
+      if (searchEngines[searchEngine].name === currentSearchEngine.name && item) {
+        item.setAttribute('selected', 'true')
+      }
+    }
 
   }
 }
