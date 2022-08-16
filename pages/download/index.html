@@ -255,7 +255,7 @@
         total: '',
         progressnuw: 0,
         startTime: args.startTime,
-        path: '',
+        path: args.path,
         loadState: false,
         url: args.url,
         href: args.href,
@@ -265,6 +265,7 @@
       appVue.count++
       ipcRenderer.send('willDownload')
       ipcRenderer.send('downloading')
+
     }
 
     if (args.status === 'cancelled') {
@@ -281,6 +282,9 @@
         appVue.count = 0
       }
       appVue.listCount--
+      if (appVue.listCount < 0) {
+        appVue.listCount = 0
+      }
       ipcRenderer.send('closeEmpty')
     }
 
@@ -347,6 +351,9 @@
       ipcRenderer.send('closeEmpty', args.chainUrl)
       ipcRenderer.send('downloadEnd')
       appVue.classify()
+    }
+    if (appVue.count < 0) {
+      appVue.count = 0
     }
   })
 
@@ -510,7 +517,6 @@
         ipcRenderer.send('showMenuTrash')
         this.selectDelList = item
         this.active = id
-
       },
       mouseOver (id) {
         this.clickActive = id
