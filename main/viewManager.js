@@ -577,6 +577,10 @@ var oldAgent = ''
 ipc.on('enableEmulation', function (e, data) {
   if (viewMap[data.id].webContents.getURL().startsWith("file://") || viewMap[data.id].webContents.getURL().startsWith("ts://"))
     return
-  mobileMod.add(viewMap[data.id].webContents.getURL())
+  mobileMod.add({
+    url:viewMap[data.id].webContents.getURL(),
+    partition:data.partition,
+    newName:data.newName
+  })
 
 })

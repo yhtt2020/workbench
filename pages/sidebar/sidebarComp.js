@@ -196,7 +196,7 @@ const sidebarTpl = /*html*/`
                             <div class="cb-top flex align-center justify-start">
                               <img :src="item.logo" alt="">
                               <div class="cb-top-word">{{item.name}}</div>
-                              <a-icon class="cb-top-tag" type="share-alt" @click="inviteLink(item.id)"></a-icon>
+                              <a-icon v-show="item.status!==2"  class="cb-top-tag" type="share-alt" @click="inviteLink(item.id)"></a-icon>
                             </div>
                             <div v-show="item.status!==2" class="cb-bottom flex align-center justify-around">
                               <a-button class="cb-bottom-zone" type="link" icon="team" @click="openCircle(item.id)">

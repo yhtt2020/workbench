@@ -313,6 +313,12 @@ app.whenReady().then(()=>{
     })
   })
 
+
+  ipc.on('firstLoad',()=>{
+    mainWindow.webContents.send('firstLoad')
+  })
+
+
   ipc.on('closeMvideo', () => {
     firstGuideVideo.close()
   })
