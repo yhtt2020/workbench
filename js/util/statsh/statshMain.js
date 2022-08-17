@@ -23,6 +23,9 @@ var statsh = {
   get: function (key) {
     return statsh.list[key];
   },
+  getAll: function() {
+    return statsh.list
+  },
   /**
    * 埋点函数
    * @param {Object} buryObj action行为属性、key键名、value键值。当action为increase时，vaule必须为number类型
@@ -56,7 +59,6 @@ var statsh = {
     }
   },
   initialize: function () {
-    console.log('执行了！！！！！！！！', statsh.filePath)
     var fileData;
     try {
       fileData = fs.readFileSync(statsh.filePath, "utf-8");
@@ -88,6 +90,7 @@ var statsh = {
     ipc.on('statshReset', () => {
       statsh.lock = true
       statsh.fileWritePromise = null
+      statsh.list = {}
       fs.writeFileSync(statsh.filePath, JSON.stringify({}))
       statsh.lock = false
     })

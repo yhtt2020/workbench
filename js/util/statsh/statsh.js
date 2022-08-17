@@ -10,6 +10,9 @@ var statsh = {
   get: function (key) {
     return statsh.list[key];
   },
+  getAll: function() {
+    return statsh.list
+  },
   /**
    * 埋点函数
    * @param {Object} buryObj action行为属性、key键名、value键值。当action为increase时，vaule必须为number类型
@@ -29,9 +32,6 @@ var statsh = {
     )
       return;
     if (buryObj.hasOwnProperty("action") && buryObj.action === "increase") {
-      console.log(
-        'yeyeyeyeyeye'
-      )
       let prevValue = statsh.get(buryObj.key) ?? 0
       statsh.list[buryObj.key] = prevValue + buryObj.value;
     }

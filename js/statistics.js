@@ -70,26 +70,47 @@ const statistics = {
       value: currentBlockAds
     })
 
-    let osVersion = process.getSystemVersion()
+    const defaultUserStats = {
+      apps: 0,
+      appsExecutedCounts: 0,
+      blockAds: 0,
+      browserBaseClose: 0,
+      browserBaseOpen: 0,
+      defaultBrowser: 0,
+      globalSearchBaseOpenApp: 0,
+      globalSearchBaseOpenTask: 0,
+      globalSearchBaseShortOpen: 0,
+      guideFeatureComplete: 0,
+      guideNewComplete: 0,
+      password: 0,
+      scripts: 0,
+      searchCounts: 0,
+      tabs: 0,
+      tasks: 0,
+      userInfoMedal: 0,
+      webviewsInk: 0,
+    }
+
     const options = {
       uid: result.value.uid != 0 ? result.value.uid : 0,   //用户uid
       client_id: settings.get('clientID'),     //设备号
       install_time: String(settings.get('installTime')),  //初次安装的时间
       submit_time: String(Date.now()),     //最新提交数据时间
-      os: `${process.platform}/${osVersion}`,    //操作系统版本
+      os: `${process.platform}/${process.getSystemVersion()}`,    //操作系统版本
       lang: navigator.language,  //本地语言
       app_version: window.globalArgs['app-version'],   //浏览器版本号
       app_name: window.globalArgs['app-name'],   //浏览器名称
       is_dev: 'development-mode' in window.globalArgs,    //是否是开发化境
       user_info: result.value.uid != 0 ? result.value : {},  //登录账户数据
       usage_data: usageData, //用户部分数据统计，min自带，后续看是否去掉... //todo
-      user_stats: await userStatsModel.get(1)
+      user_stats: Object.assign(defaultUserStats, statsh.getAll())
     }
     axios.post('/app/open/usageStats/addStats', options).then(async res => {
       statistics.usageDataCache = {
         created: Date.now()
       }
       settings.set('usageData', null)
+      statsh.reset()
       await userStatsModel.reset()
     }).catch(e => {
       console.warn('failed to send usage statistics', e)
@@ -133,7 +154,7 @@ const statistics = {
       })
     }
 
-    //statsh 插入打开浏览器统计
+    //statsh 插入打开浏览器那一次统计
     statsh.do({
       action: 'set',
       key: 'browserBaseOpen',
@@ -160,6 +181,31 @@ const statistics = {
     if(settings.get('whiteCertInvalid') == undefined) {
       settings.set('whiteCertInvalid', [])
     }
+
+    setInterval(() => {
+      ipc.invoke('statshNoobGuide').then((res) => {
+        //statsh 完成新用户引导统计
+        statsh.do({
+          action: 'set',
+          key: 'guideNewComplete',
+          value: Object.values(res.modules.noobGuide).findIndex(v => v === false) < 0 ? 1 : 0
+        })
+
+        //statsh 完成功能使用引导统计
+        statsh.do({
+          action: 'set',
+          key: 'guideFeatureComplete',
+          value: Object.values(res.modules.feature).findIndex(v => v === false) < 0 ? 1 : 0
+        })
+
+        //statsh 获取勋章统计
+        statsh.do({
+          action: 'set',
+          key: 'userInfoMedal',
+          value: res.medal ? 1 : 0
+        })
+      })
+    }, 2 * 60 * 1000)
 
     /* 注释掉此段关于用户关闭信息收集按钮后的重制设备ID的问题 */
     settings.listen('collectUsageStats', function (value) {

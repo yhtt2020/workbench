@@ -250,6 +250,10 @@ app.whenReady().then(()=>{
     return calcGuideScedule()
   })
 
+  ipc.handle('statshNoobGuide', () => {
+    return markDb.db.get('guideSchedule').value()
+  })
+
   ipc.on('openRedirectApps', (event, args) => {
     SidePanel.send('handleProtocol', args)
   })
