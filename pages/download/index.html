@@ -246,6 +246,7 @@
           appVue.lists.splice(appVue.lists.indexOf(args.startTime), 1)
         }
       })
+
       appVue.list.unshift({
         name: args.name,
         id: appVue.id++,
@@ -290,6 +291,7 @@
 
     if (args.status === 'progressing' && args.path !== '') {
       // ipcRenderer.send('willDownload')
+
       ipcRenderer.send('closeEmpty')
       appVue.list.forEach(function (item, index, arr) {
         if (item.startTime === args.startTime) {
