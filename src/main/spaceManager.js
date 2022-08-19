@@ -1,18 +1,26 @@
 const fs=require('fs-extra')
 const path=require('path')
-const app=require('electron').app
+const {app ,Notification}=require('electron')
 
 
 
 const knex=require('knex')
 const localSpaceModel=require('../model/localSpaceModel.js')
 const spaceModel=require('../model/spaceModel.js')
+
+const ldb=require('../util/ldb')
+
 class SpaceManager {
   db
   DB_ROOT=path.join(app.getPath('userData'),'db')
   DB_PATH=path.join(this.DB_ROOT,'db.sqlite')
   TPL_PATH=path.join(__dirname,'/../../db/tpl.sqlite')
+
+  LDB_PATH=path.join(app.getPath('userData','ldb.json'))
   constructor () {
+  }
+  showNotification(body,silent=true){
+    new Notification({ title: '数据库转移', body: body }).show()
   }
 
   /**
@@ -57,6 +65,8 @@ class SpaceManager {
     })
     console.warn('插入了一个初始空间')
     await spaceModel.setCurrentSpace(spaceRs.data)
+    await this.migrateOldLocalSpace()
+
     return this.db
   }
 
@@ -65,7 +75,56 @@ class SpaceManager {
    * @returns {Promise<void>}
    */
   async migrateOldLocalSpace(){
+      if(fs.existsSync(this.LDB_PATH)){
+        ldb.initDb()
+        console.log('检测到老的ldb，证明是老版本升级上来，需要迁移数据')
+        this.showNotification('系统检测到您是升级用户，正在为您升级数据库。请稍候。',false)
+        let localSpaces=ldb.db.get('spaces').filter({type:'local'}).value()
+        let spaceAddList=[]
+        localSpaces.forEach((sp)=>{
+          let spAdd={
+            nanoid:sp.id,
+            name:sp.name,
+            data:JSON.stringify(sp.data),
+            count_task:sp.count_task,
+            count_tab:sp.count_tab,
+            create_time:sp.create_time,
+            update_time:sp.update_time,
+            sync_time:sp.sync_time
+          }
 
+          spaceAddList.push(spAdd)
+        })
+
+        await this.db('local_space').insert(spaceAddList)
+        console.log('转移了本地空间过去')
+        this.showNotification('转移'+spaceAddList.length+'个本地空间完成。')
+        let backupSpaces=ldb.db.get('spaces').filter({type:'cloud'}).value()
+        let backupSpaceAddList=[]
+        backupSpaces.forEach((sp)=>{
+          let spAdd={
+            nanoid:sp.id,
+            name:sp.name,
+            data:JSON.stringify(sp.data),
+            count_task:sp.count_task,
+            count_tab:sp.count_tab,
+            create_time:sp.create_time,
+            update_time:sp.update_time,
+            sync_time:sp.sync_time,
+            uid:sp.uid
+          }
+
+          backupSpaceAddList.push(spAdd)
+        })
+        await this.db('backup_space').insert(backupSpaceAddList)
+        console.log('转移了云端空间',localSpaces)
+        this.showNotification('转移'+spaceAddList.length+'个备份空间完成。')
+        let currentSpace= ldb.db.get('currentSpace').value()
+        await spaceModel.setCurrentSpace(currentSpace.space)
+        this.showNotification('重置数据库完成。')
+        console.log('设置了当前空间',localSpaces)
+        console.log('本地space.length=',localSpaces.length)
+      }
   }
 }
 
