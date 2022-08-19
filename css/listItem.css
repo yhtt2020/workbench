@@ -19,7 +19,6 @@
 }
 .searchbar-item:focus,
 .searchbar-item.fakefocus {
-  background-color: rgba(0, 0, 0, 0.08);
   outline: none;
 }
 .dark-theme .theme-background-color .searchbar-item:hover,

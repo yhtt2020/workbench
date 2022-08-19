@@ -1,10 +1,35 @@
 let mobileViews = {}
 let mobileWindows = {}
+let mobiles=[   //{view,window,newName}
+]
+
 let mobileCount = 0
 const initSize = {
   width: 480,
   height: 800
 }
+
+/**
+ * 计算窗口尺寸，主要用于修复部分平台的尺寸偏差
+ * @param width
+ * @param height
+ * @returns {{width: number, height: number}}
+ */
+function computeSize(width=initSize.width,height=initSize.height){
+  if(process.platform==='darwin'){
+   //mac不做处理
+  }else if(process.platform==='win32'){
+    //todo 不知道为什么windows上获取到的尺寸有16，10个像素的差距
+    width-=16
+    height-=10
+  }else{
+  }
+  return {
+    width:width,
+    height:height
+  }
+}
+
 const mobileMod = {
 
   getPos () {
@@ -22,7 +47,7 @@ const mobileMod = {
     }
 
   },
-  add (mobileUrl) {
+  add (option) {
     let id = ''
     do {
       id = String(Math.floor((Math.random() * 10000) + 1))
@@ -40,7 +65,7 @@ const mobileMod = {
       height: initSize.height,
       resizable: true,
       acceptFirstMouse: true,
-      maximizable: false,
+      maximizable: true,
       visualEffectState: 'active',
       alwaysOnTop: true,
       webPreferences: {
@@ -55,8 +80,8 @@ const mobileMod = {
       }
     })
     let view = new BrowserView({
-      width: initSize.width,
-      height: initSize.height - 70,
+      width: computeSize().width,
+      height: computeSize().height - 70,
       webPreferences:{
         nodeIntegration: false,
         nodeIntegrationInSubFrames: true,
@@ -68,7 +93,7 @@ const mobileMod = {
         sandbox: true,
         enableRemoteModule: false,
         allowPopups: false,
-        partition: 'persist:webcontent',
+        partition: option.partition,
         enableWebSQL: false,
         autoplayPolicy: (settings.get('enableAutoplay') ? 'no-user-gesture-required' : 'user-gesture-required'),
         // partition:'persist:webcontent',
@@ -82,19 +107,22 @@ const mobileMod = {
       }
     })
     mobileWindow.setBrowserView(view)
+    let size=computeSize(mobileWindow.getBounds().width,mobileWindow.getBounds().height - 70)
     view.setBounds({
       x: 0,
       y: 40,
-      width: mobileWindow.getBounds().width,
-      height: mobileWindow.getBounds().height - 70
+      width:size.width,
+      height: size.height
     })
     mobileWindow.webContents.send('init', {
       windowId: mobileWindow.id,
-      url: mobileUrl,
-      id: id
+      url: option.url,
+      id: id,
+      partition:option.partition,
+      newName:option.newName
     })
     view.webContents.setUserAgent('Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1')
-    view.webContents.loadURL(mobileUrl)
+    view.webContents.loadURL(option.url)
     view.webContents.on('did-navigate-in-page', (event, url) => {
       mobileWindow.webContents.send('updateView', {
         url: url,
@@ -118,27 +146,55 @@ const mobileMod = {
         canGoForward: view.webContents.canGoForward()
       })
     })
-
+    function loadDevtool(input){
+      if (input.key.toLowerCase() === 'f12') {
+        view.webContents.openDevTools({
+          mode: "detach"
+        })
+      }
+    }
+    view.webContents.on('before-input-event', (event, input) => {
+        loadDevtool(input)
+      }
+    )
     mobileWindow.webContents.setUserAgent(oldAgent)
     mobileWindow.loadURL('file://' + __dirname + '/pages/mobile/index.html')
     mobileWindow.on('resize', () => {
+      let size=computeSize(mobileWindow.getBounds().width, mobileWindow.getBounds().height)
       view.setBounds({
         x: 0,
         y: 40,
-        width: mobileWindow.getBounds().width,
-        height: mobileWindow.getBounds().height - 70
+        width:size.width,
+        height: size.height - 70
       })
     })
+
+
+    mobileWindow.webContents.on('before-input-event', (event, input) => {
+        loadDevtool(input)
+      }
+    )
 
     mobileWindow.on('closed', () => {
       mobileViews[id] = undefined
       mobileWindows[id] = undefined
+      let found=  mobiles.findIndex(mob=>{
+        return mob.id===id
+      })
       delete mobileViews[id]
+      mobiles.splice(found,1)
       mobileCount--
     })
 
     mobileViews[id] = view
     mobileWindows[id] = mobileWindow
+    mobiles.push({
+      id,
+      window:mobileWindow,
+      view:view,
+      partition:option.partition,
+      newName:option.newName
+    })
     mobileCount++
 // var view=viewMap[data.id]
 // var index=emulationViews.indexOf(data.id)

@@ -93,6 +93,28 @@ function duplicateTab(sourceTab){
   addTab(newTab, { enterEditMode: false })
 }
 
+/**
+ * 复制小号标签
+ * @param sourceTab
+ */
+function duplicateCopyTab(sourceTab){
+
+  if (modalMode.enabled()) {
+    return
+  }
+
+  if (focusMode.enabled()) {
+    focusMode.warn()
+    return
+  }
+
+  // strip tab id so that a new one is generated
+  const newTab = tabs.add({ ...sourceTab, id: undefined ,partition:'persist:webcontent_'+Date.now() ,newName:'' })
+
+  addTab(newTab, { enterEditMode: false })
+}
+
+
 
 function moveTabLeft (tabId = tabs.getSelected()) {
   tabs.moveBy(tabId, -1)
@@ -347,6 +369,29 @@ ipc.on('changeTaskIcon',(event,args)=>{
 //   console.log(arg, '---------------@@@@@')
 // })
 
+ipc.on('openNewGuide',()=>{
+  var res = tabs.tabs.findIndex((v) => {
+    return  urlParser.getSourceURL(v.url) === 'ts://guide'
+  })
+  let guideTab;
+  tabs.tabs.forEach((v) => {
+    if (urlParser.getSourceURL(v.url) === 'ts://guide') {
+      guideTab = v
+    }
+  })
+  if(res ===-1){
+    ipc.send('addTab',{url:'ts://guide'})
+  }
+  if(res !== -1){
+    tabs.tabs.forEach(v =>{
+      if(v.id === guideTab.id){
+        switchToTab(v.id)//如果新手引导已经存在就直接跳转到该页面
+      }
+    })
+  }
+})
+
+
 ipc.on('closeGuide',()=>{
   let closeGuideTab;
   tabs.tabs.filter((e)=>{
@@ -531,5 +576,6 @@ module.exports = {
   switchToTab,
   moveTabLeft,
   moveTabRight,
-  duplicateTab
+  duplicateTab,
+  duplicateCopyTab
 }

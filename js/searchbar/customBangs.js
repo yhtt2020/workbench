@@ -255,6 +255,7 @@ function initialize () {
 
   bangsPlugin.registerCustomBang({
     phrase: '!addbookmark',
+    alias:'快捷指令',
     snippet: l('addBookmark'),
     fn: function (text) {
       var url = tabs.get(tabs.getSelected()).url

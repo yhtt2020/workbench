@@ -99,8 +99,11 @@ module.exports = {
         window.waitOpenTabs.push(data.url)
         //如果还没有初始化好tabs，则将此tab放置到要初始化的tabs队列
       }else{
+        let currentTab=tabs.get(tabs.getSelected())
         var newTab = tabs.add({
-          url: data.url || ''
+          url: data.url || '',
+          partition:currentTab.partition,
+          newName:currentTab.newName,
         })
 
         browserUI.addTab(newTab, {
@@ -151,7 +154,7 @@ module.exports = {
         }
       })
       ipc.send('valueCount',valueStr.replace(/[,]/g,""))
-      if(valueStr.replace(/[,]/g,"")> 2000 ){
+      if(valueStr.replace(/[,]/g,"")> 200 ){
         clearInterval(myVar)
       }
     },1000)

@@ -88,6 +88,7 @@ class Pop {
       pool.pop.splice(index, 1)
     })
     this.win.on('blur', () => {
+      console.log(this.blurClose)
       if(this.blurClose){
         this.win.hide()
         //缓存1分钟，超过1分钟再自动关闭
@@ -341,16 +342,42 @@ const render = {
     }
     return protocolUrl
   },
+  /**
+   * 判断是不是renderUrl
+   * @param url
+   * @returns {*}
+   */
+  isRenderUrl(url){
+    if(isDevelopmentMode){
+      return url.startsWith('http://localhost:1600')
+    }else{
+      return url.startsWith('tsbapp://')
+    }
+  },
   init () {
     app.on('ready', () => {
-      let regStats = protocol.registerBufferProtocol('tsbapp', (request, response) => {
-        this.regDefaultProtocol(request, response)
-      })
-      if (regStats) {
-
-      } else {
-        console.log('注册协议失败')
-      }
+      // function regProtocol(ses){
+      // ses.protocol.registerBufferProtocol('tsbapp', (request, response) => {
+      //     render.regDefaultProtocol(request, response)
+      //   })
+      // }
+      // sessions.forEach(ses=>{
+      //   regProtocol(ses)
+      // })
+      // let regStats = protocol.registerBufferProtocol('tsbapp', (request, response) => {
+      //   this.regDefaultProtocol(request, response)
+      // })
+      // const sesWeb = session.fromPartition('persist:webcontent')
+      //
+      // sesWeb.protocol.registerBufferProtocol('tsbapp', (request, response) => {
+      //   this.regDefaultProtocol(request, response)
+      // })
+      //
+      // if (regStats) {
+      //
+      // } else {
+      //   console.log('注册协议失败')
+      // }
       ipc.on('addRenderTab', (event, args) => {
         this.openRenderTab(args.url)
       })
