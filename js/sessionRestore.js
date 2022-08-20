@@ -182,15 +182,15 @@ const sessionRestore = {
       let currentSpace=sessionRestore.currentSpace
 
       if(currentSpace.spaceType==='cloud'){
-        savedStringData = await cloudAdapter.restore(sessionRestore.currentSpace.spaceId,currentSpace.uid)
+        savedStringData = await cloudAdapter.restore(currentSpace.spaceId,currentSpace.uid)
       }else{
-        savedStringData = await sessionRestore.adapter.restore(sessionRestore.currentSpace.spaceId)
+        savedStringData = await localAdapter.restore(currentSpace.spaceId)
       }
 
-      if (!savedStringData && sessionRestore.currentSpace.spaceType === 'cloud') {
+      if (!savedStringData && currentSpace.spaceType === 'cloud') {
         //当云端空间无法正常读入的时候，尝试从备份空间获取
         try {
-          let backupSpace = await backupSpaceModel.getSpace(sessionRestore.currentSpace.spaceId)
+          let backupSpace = await backupSpaceModel.getSpace(currentSpace.spaceId)
           if (backupSpace) {
             savedStringData = JSON.stringify(backupSpace.data)
             // setTimeout(() => {

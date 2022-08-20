@@ -11,7 +11,6 @@ const logger = {
    * @param data 附带的数据
    */
   print(type,message,data){
-    console[type](message,data)
     var cache = [];
     let dataStr=JSON.stringify(data,(name,value)=>{
       if(['string','number','boolean','object'].indexOf(typeof value)>-1){
@@ -27,7 +26,7 @@ const logger = {
       }
     })
     cache = null;
-    console.log(dataStr)
+    //console.log(dataStr)
     data=JSON.parse(dataStr)
     logger.insertDb(type,message,data)
   },

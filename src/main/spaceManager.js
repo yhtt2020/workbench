@@ -9,6 +9,7 @@ const localSpaceModel=require('../model/localSpaceModel.js')
 const spaceModel=require('../model/spaceModel.js')
 
 const ldb=require('../util/ldb')
+const backupSpaceModel = require('../model/backupSpaceModel')
 
 class SpaceManager {
   db
@@ -28,7 +29,6 @@ class SpaceManager {
    * @returns {Promise<*>}
    */
   async ensureDb(){
-    console.log(this.DB_PATH)
     if(!fs.existsSync(this.DB_PATH)){
         return await this.initDb()
     }else{
@@ -77,7 +77,6 @@ class SpaceManager {
   async migrateOldLocalSpace(){
       if(fs.existsSync(this.LDB_PATH)){
         ldb.initDb()
-        console.log('检测到老的ldb，证明是老版本升级上来，需要迁移数据')
         this.showNotification('系统检测到您是升级用户，正在为您升级数据库。请稍候。',false)
         let localSpaces=ldb.db.get('spaces').filter({type:'local'}).value()
         let spaceAddList=[]
@@ -97,7 +96,6 @@ class SpaceManager {
         })
 
         await this.db('local_space').insert(spaceAddList)
-        console.log('转移了本地空间过去')
         this.showNotification('转移'+spaceAddList.length+'个本地空间完成。')
         let backupSpaces=ldb.db.get('spaces').filter({type:'cloud'}).value()
         let backupSpaceAddList=[]
@@ -117,13 +115,11 @@ class SpaceManager {
           backupSpaceAddList.push(spAdd)
         })
         await this.db('backup_space').insert(backupSpaceAddList)
-        console.log('转移了云端空间',localSpaces)
-        this.showNotification('转移'+spaceAddList.length+'个备份空间完成。')
+        this.showNotification('转移'+backupSpaceAddList.length+'个备份空间完成。')
         let currentSpace= ldb.db.get('currentSpace').value()
-        await spaceModel.setCurrentSpace(currentSpace.space)
+        let space=currentSpace.space
+        await spaceModel.setCurrentSpace(space)
         this.showNotification('重置数据库完成。')
-        console.log('设置了当前空间',localSpaces)
-        console.log('本地space.length=',localSpaces.length)
       }
   }
 }

@@ -255,14 +255,20 @@ const spaceModel = {
   async setCurrentSpace (space) {
     if(space.uid){
       space.type='cloud'
+    }else{
+      space.type='local'
     }
-    await sqlDb.setConfig(CURRENT_SPACE_KEY,{
-      space:space,
-      name:space.name,
-      spaceId:space.nanoid,
-      spaceType:space.type,
-      uid:space.type==="local"?0:space.uid
-    })
+    try{
+      await sqlDb.setConfig(CURRENT_SPACE_KEY,{
+        space:space,
+        name:space.name,
+        spaceId:space.nanoid,
+        spaceType:space.type,
+        uid:space.type==="local"?0:space.uid
+      },'当前空间')
+    }catch(e){
+      console.error(e)
+    }
   }
 
 }

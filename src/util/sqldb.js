@@ -6,7 +6,12 @@ if (typeof window !=='undefined') {
 } else {
   const path=require('path')
   const app=require('electron').app
-  filename = path.join(app.getPath('userData'), 'db/db.sqlite')
+  const isDevelopmentMode = process.argv.some(arg => arg === '--development-mode')
+  if (isDevelopmentMode) {
+    filename = path.join(app.getPath('userData') + '-development', 'db/db.sqlite')
+  }else{
+    filename = path.join(app.getPath('userData'), 'db/db.sqlite')
+  }
 }
 
 class SqlDb {
@@ -28,9 +33,13 @@ class SqlDb {
    * @param defaultValue
    */
   async getConfig (key, defaultValue) {
-    let configData = await this.knex('config').where({
-      key
-    }).first()
+    try {
+      var configData = await this.knex('config').where({
+        key
+      }).first()
+    } catch (e) {
+      console.error(e)
+    }
     if (!!configData) {
       return JSON.parse(configData.value)
     } else {
@@ -45,24 +54,34 @@ class SqlDb {
    * @param remark
    * @returns {Promise<void>}
    */
-  async setConfig (key, value, remark) {
+  async setConfig (key, value, remark = '') {
     let find = await this.knex('config').where({
       key
     }).first()
+    console.log(find)
+    console.log(value)
     if (!!!find) {
-      await this.knex('config').insert({
-        nanoid: nanoid(),
-        key,
-        value:JSON.stringify(value),
-        remark
-      })
+      try {
+        await this.knex('config').insert({
+          nanoid: nanoid(),
+          key,
+          value: JSON.stringify(value),
+          remark
+        })
+      } catch (e) {
+        console.error('设置configerror=', e)
+      }
     } else {
-      await this.knex('config').where({
-        key
-      }).update({
-        key,
-        value:JSON.stringify(value)
-      })
+      try {
+        await this.knex('config').where({
+          key
+        }).update({
+          key,
+          value: JSON.stringify(value)
+        })
+      } catch (e) {
+        console.error('更新configerror=', e)
+      }
 
     }
   }
