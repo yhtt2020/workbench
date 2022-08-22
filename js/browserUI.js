@@ -15,6 +15,7 @@ const userStatsModel = require('../pages/util/model/userStatsModel')
 const modalMode = require("./modalMode");
 
 const oneTab = require('./extras/newTabs/oneTab.js')
+const statsh = require('./util/statsh/statsh.js')
 
 /* creates a new task */
 
@@ -539,6 +540,13 @@ searchbar.events.on('url-selected', async function (data) {
   if (searchbarQuery) {
     statistics.incrementValue('searchCounts.' + searchbarQuery.engine)
     await userStatsModel.incrementValue('searchCounts')  //mark插入对searchCounts的数据统计
+
+    //statsh
+    statsh.do({
+      action: 'increase',
+      key: 'searchCounts',
+      value: 1
+    })
   }
 
   if (data.background) {
