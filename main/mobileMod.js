@@ -1,5 +1,8 @@
 let mobileViews = {}
 let mobileWindows = {}
+let mobiles=[   //{view,window,newName}
+]
+
 let mobileCount = 0
 const initSize = {
   width: 480,
@@ -44,7 +47,7 @@ const mobileMod = {
     }
 
   },
-  add (mobileUrl) {
+  add (option) {
     let id = ''
     do {
       id = String(Math.floor((Math.random() * 10000) + 1))
@@ -90,7 +93,7 @@ const mobileMod = {
         sandbox: true,
         enableRemoteModule: false,
         allowPopups: false,
-        partition: 'persist:webcontent',
+        partition: option.partition,
         enableWebSQL: false,
         autoplayPolicy: (settings.get('enableAutoplay') ? 'no-user-gesture-required' : 'user-gesture-required'),
         // partition:'persist:webcontent',
@@ -113,11 +116,13 @@ const mobileMod = {
     })
     mobileWindow.webContents.send('init', {
       windowId: mobileWindow.id,
-      url: mobileUrl,
-      id: id
+      url: option.url,
+      id: id,
+      partition:option.partition,
+      newName:option.newName
     })
     view.webContents.setUserAgent('Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1')
-    view.webContents.loadURL(mobileUrl)
+    view.webContents.loadURL(option.url)
     view.webContents.on('did-navigate-in-page', (event, url) => {
       mobileWindow.webContents.send('updateView', {
         url: url,
@@ -173,12 +178,23 @@ const mobileMod = {
     mobileWindow.on('closed', () => {
       mobileViews[id] = undefined
       mobileWindows[id] = undefined
+      let found=  mobiles.findIndex(mob=>{
+        return mob.id===id
+      })
       delete mobileViews[id]
+      mobiles.splice(found,1)
       mobileCount--
     })
 
     mobileViews[id] = view
     mobileWindows[id] = mobileWindow
+    mobiles.push({
+      id,
+      window:mobileWindow,
+      view:view,
+      partition:option.partition,
+      newName:option.newName
+    })
     mobileCount++
 // var view=viewMap[data.id]
 // var index=emulationViews.indexOf(data.id)

@@ -2,7 +2,8 @@ const fs = require('fs-extra')
 const path = require('path')
 const app = require('electron').app
 const nativeImage = require('electron').nativeImage
-const { Resvg } = require('@resvg/resvg-js')
+// const { Resvg } = require('@resvg/resvg-js')
+// const sharp = require('sharp')
 
 const localCacheManager = require('../../js/main/localCacheManager')
 const { promises } = require('fs-extra')
@@ -28,17 +29,19 @@ class SaApp {
   }
 
   async convertSvgToPng (from, to) {
-    const svg = await promises.readFile(from)
-    const resvg = new Resvg(svg, {
-        fitTo: {
-          mode:'width',
-          value:256
-        }
-      }
-    )
-    const pngData = resvg.render()
-    const pngBuffer = pngData.asPng()
-    await promises.writeFile(to, pngBuffer)
+    // const svg = await promises.readFile(from)
+    // const resvg = new Resvg(svg, {
+    //     fitTo: {
+    //       mode:'width',
+    //       value:256
+    //     }
+    //   }
+    // )
+    // const pngData = resvg.render()
+    // const pngBuffer = pngData.asPng()
+    // await promises.writeFile(to, pngBuffer)
+    //await sharp(from).resize(256,256).png().toFile(to)
+    await fs.copyFile(from,to)
   }
 
   /**
@@ -65,7 +68,7 @@ class SaApp {
         if (ext === 'svg') {
           console.log('要转化svg')
           fs.copyFileSync(logoLocal + '.tmp', logoLocal + '.svg')
-          await this.convertSvgToPng(logoLocal + '.svg', logoLocal)
+          await this.convertSvgToPng(logoLocal + '.svg', logoLocal) //将svg转为Png
           fs.unlinkSync(logoLocal + '.svg')
         } else {
           let image = nativeImage.createFromPath(logoLocal + '.tmp')

@@ -339,11 +339,11 @@ if (errDesc && errDesc.secondaryAction) {
 
 // if an ssl error occured, "try again" should go to the http:// version, which might work
 
-if (erorDescriptions[ec] === sslError && ec != -201) {
+if (erorDescriptions[ec] === sslError && ec != -201 && ec != -200) {
   url = url.replace('https://', 'http://')
 }
 
-if (ec == -201) {
+if (ec == -201 || ec == -200) {
   continueButton.hidden = false
 }
 
@@ -352,7 +352,7 @@ if (url) {
     retry()
   })
   continueButton.addEventListener('click', () => {
-    if(ec == -201) {
+    if(ec == -201 || ec == -200) {
       settings.get('whiteCertInvalid', (whiteCertInvalid) => {
         const reg = /^http(s)?:\/\/(.*)\.(\w*)/
         const regedUrl = reg.exec(url)[0]

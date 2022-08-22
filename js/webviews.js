@@ -211,6 +211,9 @@ const webviews = {
     // if the tab is private, we want to partition it. See http://electron.atom.io/docs/v0.34.0/api/web-view-tag/#partition
     // since tab IDs are unique, we can use them as partition names
     var partition=tasks.getSelected().partition
+    if(tabData.partition){
+      partition=tabData.partition
+    }
     if (tabData.private === true) {
       partition= tabId.toString() // options.tabId is a number, which remote.session.fromPartition won't accept. It must be converted to a string first
     }
@@ -600,6 +603,8 @@ function willNavigate(tabId, url, isInPlace, isMainFrame, frameProcessId, frameR
     var newTab = tabs.add({
       url: url,
       private: currentTab.private,
+      partition:currentTab.partition,
+      newName:currentTab.newName,
       backgroundColor:currentTab.backgroundColor||'#fff'
     })
     require('./browserUI.js').addTab(newTab, {
@@ -788,7 +793,8 @@ ipc.on('view-ipc', function (e, args) {
 
 //在当前页面打开emulation
 ipc.on('openMobile',function(e,args){
-	ipc.send('enableEmulation',{id:webviews.selectedId})
+  let tabData=tabs.get(webviews.selectedId)
+	ipc.send('enableEmulation',{id:webviews.selectedId,partition:tabData.partition,newName:tabData.newName})
 })
 
 

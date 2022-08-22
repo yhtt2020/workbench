@@ -23,7 +23,7 @@ const settingPage = {
     var autoPlayCheckbox = document.getElementById('checkbox-enable-autoplay')
     var userAgentCheckbox = document.getElementById('checkbox-user-agent')
     var userAgentInput = document.getElementById('input-user-agent')
-    searchEnginePage.init()
+
 
     function showRestartRequiredBanner () {
       banner.hidden = false
@@ -426,7 +426,7 @@ const settingPage = {
 
     var searchEngineDropdown = document.getElementById('default-search-engine')
     var searchEngineInput = document.getElementById('custom-search-engine')
-
+    searchEnginePage.init()
     searchEngineInput.setAttribute('placeholder', l('customSearchEngineDescription'))
     let currentSearchEngine = window.currentSearchEngine
     settings.onLoad(function () {
@@ -434,14 +434,15 @@ const settingPage = {
         searchEngineInput.hidden = false
         searchEngineInput.value = currentSearchEngine.searchURL
       }
-
       for (var searchEngine in searchEngines) {
         var item = document.createElement('option')
         item.value=searchEngines[searchEngine].name
+        item.setAttribute('id','searchEngine_'+searchEngines[searchEngine].name)
         let displayName= searchEngines[searchEngine].alias!==searchEngines[searchEngine].name?"（"+searchEngines[searchEngine].name+"）":''
         item.textContent = searchEngines[searchEngine].alias +displayName
 
         if (searchEngines[searchEngine].name === currentSearchEngine.name) {
+
           item.setAttribute('selected', 'true')
         }
 
@@ -451,6 +452,7 @@ const settingPage = {
       // add custom option
       item = document.createElement('option')
       item.textContent = '自定义'
+      item.setAttribute('id','searchEngine_custom')
       item.value='custom'
       if (currentSearchEngine.custom) {
         item.setAttribute('selected', 'true')
