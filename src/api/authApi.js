@@ -10,6 +10,7 @@ const url = {
 }
 const authApi = {
   async loginBrowser(info) {
+    console.log('进入authapi')
     return baseApi.axios(url.loginBrowser, info, 'post', true)
   },
   async logoutBrowser () {
@@ -35,15 +36,15 @@ const authApi = {
   async autoLogin() {
     await baseApi.init()
     const data = {
-      client_id: require('../../../server-config').appConfig.client_id
+      client_id: require('../../server-config').appConfig.client_id
     }
     return baseApi.axios(url.autoLogin, data)
   },
   async imAutoLogin() {
     await baseApi.init()
     const data = {
-      client_id: require('../../../server-config').appConfig.client_id,
-      bind_id: require('../../../server-config').appConfig.bind_im_id
+      client_id: require('../../server-config').appConfig.client_id,
+      bind_id: require('../../server-config').appConfig.bind_im_id
     }
     return baseApi.axios(url.imAutoLogin, data)
   }

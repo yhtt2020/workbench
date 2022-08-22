@@ -1,10 +1,11 @@
 const dlog = require('electron-log');
 const { clipboard } = require('electron');
-const authApi = require(path.join(__dirname, './js/request/api/authApi.js'))
+const authApi = require(path.join(__dirname, './src/api/authApi.js'))
 const storage = require('electron-localstorage');
 const _path= path.join(app.getPath("userData"), app.getName()+"/", 'userConfig.json');
 const _path_dir = path.dirname(_path);
 const { nanoid } = require('nanoid');
+const userModel =  require(path.join(__dirname,'./src/model/userModel.js'))
 
 
 if(!fs.existsSync(_path_dir)){
@@ -61,17 +62,32 @@ app.whenReady().then(()=>{
         code: arg
       }
       result = await authApi.loginBrowser(data)
+      let responseData=result.data
       if(result.code === 1000) {
-        storage.setItem(`userToken`, result.data.token)
-        storage.setItem(`refreshToken`, result.data.refreshToken)
-        storage.setItem(`expire_deadtime`, new Date().getTime() + result.data.expire * 1000)
-        storage.setItem(`refreshExpire_deadtime`, new Date().getTime() + result.data.refreshExpire * 1000)
-        storage.setItem(`userInfo`, result.data.userInfo)
+        let user={
+          uid:responseData.userInfo.uid,
+          code:responseData.code,
+          token:responseData.token,
+          refresh_token:responseData.refreshToken,
+          user_info:responseData.userInfo,
+          expire_time:new Date().getTime() + responseData.expire * 1000,
+          refresh_expire_time: new Date().getTime() + responseData.refreshExpire * 1000,
+          last_login_time:Date.now(),
+          is_current:true
+        }
+          await userModel.setCurrent(user)
+
+        // storage.setItem(`userToken`, result.data.token)
+        // storage.setItem(`refreshToken`, result.data.refreshToken)
+        // storage.setItem(`expire_deadtime`, new Date().getTime() + result.data.expire * 1000)
+        // storage.setItem(`refreshExpire_deadtime`, new Date().getTime() + result.data.refreshExpire * 1000)
+        // storage.setItem(`userInfo`, result.data.userInfo)
       }
       event.reply('callback-loginBrowser', result)
       afterGuide('guideSchedule.modules.noobGuide.accountLogin')
 
     } catch (err) {
+      console.error('登录报错',err)
       dlog.error(err)
     }
 

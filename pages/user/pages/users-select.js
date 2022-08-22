@@ -22,10 +22,10 @@ const tpl = `
            <a-dropdown :trigger="['contextmenu']">
             <a-row class="user-card">
               <a-col class="avatar-wrapper" :span="8" style="text-align: right">
-                <a-avatar :size="60" :src="user.avatar"></a-avatar>
+                <a-avatar :size="60" :src="user.user_info.avatar"></a-avatar>
               </a-col>
               <a-col class="user-info" :span="16">
-                <div>{{user.nickname}}</div>
+                <div>{{user.user_info.nickname}}</div>
                 <p class="info-p" style="color: #1E90FF">云端空间</p>
               </a-col>
             </a-row>

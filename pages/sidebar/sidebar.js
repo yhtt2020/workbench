@@ -338,6 +338,9 @@ window.onload = function() {
           cumulativeHours: 0
         }
       },
+      set_user:(state,user)=>{
+        state.user=user
+      },
       set_user_info:(state,data)=>{
         let userInfo=data.data
         if(!!!userInfo || !!!userInfo.grade){

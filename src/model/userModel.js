@@ -3,30 +3,92 @@ const db = require('../../js/util/database.js').db
 if (typeof window !=='undefined') {
   ldb = window.ldb
 }
+const { SqlDb }=require('../util/sqldb')
+const standReturn = require('../util/standReturn')
+let sqlDb=new SqlDb()
 const userModel={
 
+  /**
+   * 获取全部账号，已sqldb
+   * @returns {Promise<*>}
+   */
   async getAll(){
-    ldb.reload()
-    let users=await db.accounts.toArray()
-    users.forEach(item=>{
-      let userLdb=ldb.db.get('users').find({uid:item.uid}).value()
-      Object.assign(item,userLdb)
+    let accounts=await sqlDb.knex('account').select()
+    accounts.forEach(user=>{
+      user['user_info']=JSON.parse(user.user_info)
     })
-
-    return users
+    return accounts
   },
-  async get(map){
-    if(map.id){
-      map.id=Number(map.id)
+
+  /**
+   * 设置当前用户，sqldb
+   * @param user
+   * @returns {Promise<{data: {}, status: number}|{data: *, status: number, info: *}>}
+   */
+  async setCurrent(user){
+    /** uid:responseData.uid,
+     code:responseData.code,
+     token:responseData.token,
+     refresh_token:responseData.refreshToken,
+     user_info:responseData.userInfo,
+     expire_time:new Date().getTime() + responseData.expire * 1000,
+     refresh_expire_time: new Date().getTime() + responseData.refreshExpire * 1000,
+     last_login_time:Date.now(),
+     is_current:true*/
+    try{
+
+
+    let found=await sqlDb.knex('account').where({uid:user.uid}).first()
+    await sqlDb.knex('account').where({is_current: true}).update({is_current: false}) //重置所有的当前用户
+    let res
+    if(!found){
+     res=await sqlDb.knex('account').insert(user)
+    }else{
+      if(typeof user.user_info ==='object'){
+        user.user_info=JSON.stringify(user.user_info)
+      }
+     res= await sqlDb.knex('account').where({uid:user.uid}).update(user)
     }
+    if(res){
+      return standReturn.success(user,'更新成功')
+    }
+    }catch (e) {
+      return standReturn.failure(e,'更新失败')
+    }
+  },
+  /**
+   * 获取当前用户 sqldb
+   * @returns {Promise<void>}
+   */
+  async getCurrent(){
+    let found
+      try{
+      found=await sqlDb.knex('account').where({is_current: true}).first()
+      }catch (e) {
+        return standReturn.failure({},'数据库错误')
+      }
+    if(found){
+      found.user_info=JSON.parse(found.user_info)
+      return standReturn.success(found,'')
+    }else{
+      return standReturn.failure({},'不存在当前的登录用户')
+    }
+
+
+  },
+
+  /**
+   * 获取用户，sqldb
+   * @param map
+   * @returns {Promise<*|boolean>}
+   */
+  async get(map){
     if(map.uid){
       map.uid=Number(map.uid)
     }
-    let user=await db.accounts.where(map).first()
+    let user=await sqlDb.knex('account').where(map).first()
+    user.user_info=JSON.parse(user.user_info)
     if(user){
-     ldb.reload()
-      let userLdb=ldb.db.get('users').find({uid:map.id}).value()
-      user=Object.assign(user,userLdb)
       return user
     }else{
       return false

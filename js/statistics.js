@@ -1,5 +1,5 @@
 const settings = require('util/settings/settings.js')
-const axios = require('./util/axios')
+const axios = require('../src/util/axios')
 const { db } = require('./util/database');
 
 const userStatsModel = require('../pages/util/model/userStatsModel')

@@ -99,7 +99,7 @@
   ipc.on('loginCallback',(e,args)=>{
     window.antd.message.success('成功添加帐号。')
     setTimeout(async ()=>{
-      await spaceModel.updateSpaceInfo()
+      //await spaceModel.updateSpaceInfo() 新方案不需要手动更新空间那边的账号
       router.replace({ name: 'space', params: { uid: args.data.userInfo.uid } })
     },500)
 

@@ -1,7 +1,7 @@
 const webviews = require('webviews.js')
 const statistics = require('js/statistics.js')
 const settings = require('util/settings/settings.js')
-const axios = require('./util/axios')
+const axios = require('../src/util/axios')
 const userStatsModel = require('../pages/util/model/userStatsModel')
 
 //处理nodeList至URL

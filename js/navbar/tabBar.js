@@ -19,8 +19,8 @@ const remoteMenu = require('remoteMenuRenderer.js')
 
 const ipc = electron.ipcRenderer
 
-const navbarApi = require('../request/api/navbarApi.js')
-const baseApi = require('../request/api/baseApi')
+const navbarApi = require('../../src/api/navbarApi.js')
+const baseApi = require('../../src/api/baseApi')
 const deskModel = require('../../pages/util/model/deskModel.js')
 const { ipcRenderer } = require('electron')
 

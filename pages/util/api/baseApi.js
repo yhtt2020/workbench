@@ -1,28 +1,26 @@
-const axios = require("../../../js/util/axios.js");
-const { db } = require("../../../js/util/database");
+const axios = require("../../../src/util/axios.js");
+const userModel = require('../../../src/model/userModel')
 const baseApi = {
   token: "",
   currentUser: {},
   uid: 0,
   refreshToken: '',
-  expire_deadtime: 0,
-  refreshExpire_deadtime: 0,
-  getCurrentUser: () => {
-    return db.system.where("name").equals("currentUser").first();
-  },
+  expireTime: 0,
+  refreshExpireTime: 0,
   init: async (user=false) => {
     if(user===false){
-      userData=await baseApi.getCurrentUser()
-      if(userData){
-        user=userData.value
+      let userResponse=await userModel.getCurrent()
+      console.log('userResponse=',userResponse)
+      if(userResponse.status===1){
+        user=userResponse.data
       }
     }
-      baseApi.currentUser = {value:user};
+      baseApi.currentUser = user;
       baseApi.token = user.token;
       baseApi.uid = user.uid;
-      baseApi.refreshToken = user.refreshToken
-      baseApi.expire_deadtime = user.expire_deadtime
-      baseApi.refreshExpire_deadtime = user.refreshExpire_deadtime
+      baseApi.refreshToken = user.refresh_token
+      baseApi.expireTime = user.expire_time
+      baseApi.refreshExpireTime = user.refresh_expire_time
   },
 
   /**
@@ -47,8 +45,8 @@ const baseApi = {
       expireInfo: {
         token: baseApi.token,
         refreshToken: baseApi.refreshToken,
-        expire_deadtime: baseApi.expire_deadtime,
-        refreshExpire_deadtime: baseApi.refreshExpire_deadtime,
+        expire_deadtime: baseApi.expireTime,
+        refreshExpire_deadtime: baseApi.refreshExpireTime,
         inMain: false
       }
     });

@@ -57,3 +57,18 @@ create table log
   message     string
 );
 
+
+
+
+create table accounts
+(
+  uid int,
+  code string,
+  token string,
+  refresh_token string,
+  refresh_expire_time int,
+  expire_time int,
+  nickname string,
+  avatar string,
+  last_login_time int
+);

@@ -6,11 +6,11 @@ const tpl = `
   <div style="text-align: center" >
     <a-row style="margin-top: 20px">
       <a-col :span="12" style="text-align: right">
-        <a-avatar :size="60" :src="user.avatar">
+        <a-avatar :size="60" :src="user.user_info.avatar">
         </a-avatar>
       </a-col>
       <a-col :span="12" style="text-align: left;padding-left: 10px">
-        <div style="margin-top: 10px">{{user.nickname}}</div>
+        <div style="margin-top: 10px">{{user.user_info.nickname}}</div>
         <p style="font-size: 16px">{{ spaces.length }} <span style="color: #999;font-size: 12px">空间</span></p>
       </a-col>
     </a-row>
@@ -205,7 +205,6 @@ const tpl = `
   </a-modal>
 </div>
 `
-// const userModel = require('../../util/model/userModel')
 const ipc = require('electron').ipcRenderer
 const SpaceSelect = {
   template: tpl,
@@ -214,7 +213,9 @@ const SpaceSelect = {
       user: {
         uid: 0,
         spaces: [],
-        clientId: ''
+        clientId: '',
+        user_info:{
+        }
       },
       spaces: [],
       currentSpace: {},
@@ -252,8 +253,10 @@ const SpaceSelect = {
     let uid = Number(this.$route.params.uid)
     if (!uid) {
       user = {
-        nickname: '本机空间',
-        avatar: '../../icons/logo128.png',
+        user_info:{
+          nickname: '本机空间',
+          avatar: '../../icons/logo128.png',
+        },
         spaces: [],
         uid: 0
       }

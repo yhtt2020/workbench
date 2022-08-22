@@ -1,6 +1,6 @@
-const axios = require("../../util/axios.js");
+const axios = require("../util/axios.js");
 const storage = require('electron-localstorage');
-const { db } = require("../../util/database.js");
+const { db } = require("../../js/util/database.js");
 
 
 const baseApi = {
