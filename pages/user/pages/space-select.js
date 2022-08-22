@@ -15,6 +15,7 @@ const tpl = `
       </a-col>
     </a-row>
 
+
   </div>
   <div v-if="user.uid" style="float: right;position: absolute;right: 20px;top: 20px;" ><a-button @click="importFromLocal" size="small">导入</a-button></div>
   <div v-else style="float: right;position: absolute;right: 20px;top: 20px;" ><a-checkbox @change="loadSpaces" v-model:checked="showBackup">显示离线空间</a-checkbox></div>
@@ -23,6 +24,7 @@ const tpl = `
   <div v-else style="text-align: center">
     <!--      <a-empty text="无空间" v-if="spaces.length===0"></a-empty>-->
     <div style="text-align: left;overflow-y: auto;max-height: 310px;margin-right: 20px;padding-top: 10px;padding-left: 40px;padding-bottom: 10px" class="scroller">
+     <a-alert v-if="!this.tipCopyRead=='1'" @close="setTipCopyRead" style="margin-right: 44px;margin-left: 20px;margin-bottom: 10px" message="强烈建议复制一个空间做备份：【右键】，选择【复制】空间。" type="info" close-text="知道了" />
     <a-card @click="showCreateSpace" hoverable style="width: 250px;display: inline-block;margin-left:20px;">
         <a-card-meta title="创建新空间" description="创建一个全新的空间">
           <template #avatar>
@@ -245,10 +247,14 @@ const SpaceSelect = {
 
 
       showBackup:false,//默认不显示备份空间
-      loading:true
+      loading:true,
+
+      tipCopyRead:'0',
     }
   },
   async mounted () {
+    this.tipCopyRead=localStorage.getItem('tipCopyRead')
+
     let user = {}
     let uid = Number(this.$route.params.uid)
     if (!uid) {
@@ -284,6 +290,9 @@ const SpaceSelect = {
     this.loading=false
   },
   methods: {
+    setTipCopyRead(){
+      localStorage.setItem('tipCopyRead','1')
+    },
      setEnterPwd(){
       this.visibleSetEnterPwd=true
     },

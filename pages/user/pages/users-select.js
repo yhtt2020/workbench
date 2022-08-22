@@ -25,13 +25,13 @@ const tpl = `
                 <a-avatar :size="60" :src="user.user_info.avatar"></a-avatar>
               </a-col>
               <a-col class="user-info" :span="16">
-                <div>{{user.user_info.nickname}}</div>
+                <div>{{user.user_info.nickname}} <a-tag color="success" v-if="user.is_current">当前</a-tag></div>
                 <p class="info-p" style="color: #1E90FF">云端空间</p>
               </a-col>
             </a-row>
             <template #overlay>
       <a-menu>
-        <a-menu-item @click="deleteAccount(user.uid)" key="deleteAccount">解绑帐号</a-menu-item>
+        <a-menu-item :disabled="user.is_current" @click="deleteAccount(user.uid)" key="deleteAccount">解绑帐号</a-menu-item>
       </a-menu>
     </template>
   </a-dropdown>
