@@ -129,36 +129,33 @@ ipc.on('refreshMyGroups', async () => {
 
 //读入当前登录的帐号
 window.getCurrentUser= async function  getCurrentUser () {
-   let user = {}
-   let item =await db.system.get({ 'name': 'currentUser' }).catch((err) => {
-    console.log('获取当前用户失败')
-    console.log(err)
-  })
-  if (typeof (item) == 'undefined') {
-    //如果还没有当前用户，则插入一个默认用户
-    user = insertDefaultUser()
-  } else {
-    user = item.value
+   let userRs =await userModel.getCurrent()
+  let user={}
+  if (userRs.status) {
+    user=userRs.data
     //兼容老版本优化
-    user.fans=user.fans || 0
-    user.postCount=user.postCount || 0
-    user.follow=user.follow || 0
-    user.grade= user.grade || {
+    user.fans=user.user_info.fans || 0
+    user.postCount=user.user_info.postCount || 0
+    user.follow=user.user_info.follow || 0
+    user.grade= user.user_info.grade || {
       grade: 1
     }
     window.$store.state.user = user
-  }
-  if(user.token){
-    //存在用户则进行用户数据的查询
-    try{
-      await window.$store.dispatch('getUserInfo', {
-        token: user.token
-      })
+    if(user.token){
+      //存在用户则进行用户数据的查询
+      try{
+        await window.$store.dispatch('getUserInfo', {
+          token: user.token
+        })
+      }
+      catch (e){
+        console.log(e)
+      }
     }
-    catch (e){
-      console.log(e)
-    }
+  } else {
+
   }
+
 
 }
 

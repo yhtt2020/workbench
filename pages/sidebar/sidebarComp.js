@@ -744,6 +744,7 @@ const _=require('lodash')
 const storage = require('electron-localstorage')
 const {ipcRenderer: ipc} = require("electron");
 const saAppModel = require("../util/model/standAloneAppModel");
+const userModel = require('../../src/model/userModel')
 window.selectedTask=null
 
 Vue.component('sidebar', {
@@ -829,18 +830,7 @@ Vue.component('sidebar', {
         },
 
       ],
-      accounts: [
-        {
-          'uid': 1,
-          'nickname': '张三',
-          'avatar': '../../icons/apps.svg'
-        },
-        {
-          'uid': 2,
-          'nickname': '李四',
-          'avatar': '../../icons/browser.ico'
-        }
-      ],
+      accounts: [],
       sidebarBottom: 0,
       cloudSpaces: []
     }
@@ -919,17 +909,13 @@ Vue.component('sidebar', {
       that.sidebarBottom = data.value
       setTimeout(that.fixElementPosition, 250)
     })
-    const currentUser = await db.system.where('name').equals('currentUser').first()
-    if (currentUser.value.uid !== 0) {
+    const currentUser =await userModel.getCurrent()
+    if (currentUser.uid !== 0) {
       try {
-        //侧边栏重载的时候也同步一下本地文件的用户标识
-        ipc.send('syncCurrentUser', currentUser.value)
-
         this.$store.dispatch('getJoinedCircle', { page: 1, row: 500 })
         this.$store.dispatch('getMyCircle', { page: 1, row: 500 })
       } catch (err) {
-        console.log(err)
-        console.log('短说圈子接口获取失败')
+        console.error('短说圈子接口获取失败',err)
       }
     }
 
@@ -943,9 +929,9 @@ Vue.component('sidebar', {
     }, 60 * 1000)
 
     try {
-      if (currentUser.value.uid) {
+      if (currentUser.uid) {
         //如果用户已登录，则获取云端的空间
-        this.$store.dispatch('getCloudSpaces', currentUser.value).then(()=>{
+        this.$store.dispatch('getCloudSpaces', currentUser).then(()=>{
           this.cloudSpaces = this.$store.state.cloudSpaces
         })
       }
@@ -1772,10 +1758,8 @@ Vue.component('sidebar', {
       })
     },
     async logout () {
-      const result = await db.system.where('name').equals('currentUser').first()
-      await db.accounts.where({ id: this.user.uid }).delete()
+      await userModel.delete({uid:this.user.uid})
       ipc.send('logoutBrowser')
-      await window.insertDefaultUser(result.value.code)
       //下面这步在insertDefaultUser方法中有
       //db.system.where({name:'currentUser'}).delete()
       this.closeUserPanel()

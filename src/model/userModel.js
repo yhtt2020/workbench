@@ -108,11 +108,23 @@ const userModel={
     return settings.get('clientID')
   },
 
+  /**
+   *删除某个用户
+   * @param map
+   * @returns {Promise<*>}
+   */
   async delete(map){
-    ldb.reload()
-    ldb.db.get('users').remove({uid:map.uid}).write()
-    return await db.accounts.where(map).delete(map)
+    return await sqlDb.knex('account').where(map).delete()
   },
+
+  /**
+   * 是否已登录，>=1为已登录
+   * @returns {Promise<*>}
+   */
+  async isLogged(){
+    return (await sqlDb.knex('account').where({'is_current':true}).select()).length>=1
+  },
+
   sha(text){
     const crypto = require('crypto')
     const sha = crypto.createHash('sha1')

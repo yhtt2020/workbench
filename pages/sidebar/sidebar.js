@@ -1,7 +1,7 @@
 //定义一个TaskList来接收tasks类型的数据
-const groupApi = require('../util/api/groupApi')
+const groupApi = require('../../src/api/groupApi')
 const userStatsModel = require('../util/model/userStatsModel')
-const userApi = require('../util/api/userApi')
+const userApi = require('../../src/api/userApi')
 const messageModel = require('../util/model/messageModel')
 const {tools} = require('../util/util')
 const spaceModel = require('../../src/model/spaceModel')

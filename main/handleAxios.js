@@ -94,39 +94,11 @@ app.whenReady().then(()=>{
   })
   //游览器登出
   ipc.on('logoutBrowser', async() => {
-    storage.removeItem(`userToken`);
-    storage.removeItem(`userInfo`)
-    storage.removeItem(`refreshToken`)
-    storage.removeItem(`expire_deadtime`)
-    storage.removeItem(`refreshExpire_deadtime`)
-
-    const ldb=require(__dirname+'/src/util/ldb.js')
-    ldb.load(app.getPath('userData')+'/ldb.json')
-    let firstSpace=ldb.db.get('spaces')[0].value()
-    let oldUser=ldb.db.get('currentSpace.userInfo').value()
-    console.log(oldUser)
-    ldb.db.set('currentSpace.spaceId',firstSpace['id']).write()
-    ldb.db.set('currentSpace.spaceType','local').write()
-    ldb.db.set('currentSpace.userInfo', {}).write()
-    ldb.db.get('users').remove({uid:oldUser.uid}).write()
     //1是往lumen发消息，让lumen退出
     appManager.getWindowByAppId(1).view.webContents.send('imLogout')
-
     await authApi.logoutBrowser()
   })
 
-  //同步主进程本地文件的用户标识
-  ipc.on('syncCurrentUser', (event, args) => {
-    storage.setItem(`userToken`, args.token)
-    storage.setItem(`refreshToken`, args.refreshToken)
-    storage.setItem(`expire_deadtime`, args.expire_deadtime)
-    storage.setItem(`refreshExpire_deadtime`, args.refreshExpire_deadtime)
-    storage.setItem(`userInfo`, {
-      avatar: args.avatar,
-      id: args.id,
-      uid: args.uid
-    })
-  })
 
   //分享组
   ipc.on('shareTask', async (event, arg) => {
@@ -149,7 +121,8 @@ app.whenReady().then(()=>{
 
   //检测node是否登录
   ipc.on('checkLogin', async(event, args) => {
-    storage.getItem(`userToken`) ? event.reply('callback-checkLogin', true) : event.reply('callback-checkLogin', false)
+    console.log('登录',await userModel.isLogged())
+    event.reply('callback-checkLogin', await userModel.isLogged())
   })
 
   //Osx免登录
