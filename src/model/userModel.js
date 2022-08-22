@@ -94,13 +94,14 @@ const userModel={
       return false
     }
   },
+  /**
+   * 修改当前用户
+   * @param user
+   * @returns {Promise<void>}
+   */
   async change(user){
-    await db.system.where({ name: 'currentUser' }).delete()
-    user=JSON.parse(JSON.stringify(user))
-    await db.system.put({
-      name: 'currentUser',
-      value: user
-    })
+    await sqlDb.knex('account').where({is_current:true}).update({is_current:false})
+    await sqlDb.knex('account').where({uid:user.uid}).update({is_current:true})
   },
 
   getClientId(){
