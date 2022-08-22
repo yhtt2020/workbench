@@ -465,7 +465,6 @@
 
 		<script src="dist/bundle.js"></script>
     <script>
-
       ipc.on('clearCurrentUser', async (event, args) => {
         const {db} = require('./js/util/database.js')
         await db.system.where('name').equals('currentUser').modify({value: {
@@ -514,7 +513,7 @@
             return '9+'
           }
           if(a<0){
-            document.getElementById('downloadCount').innerText = '0'
+            return 0
           } else{
             return a
           }
@@ -530,10 +529,12 @@
       ipc.on('downloadCountCut',()=>{
         count--
         // console.log(downloadCount)
-        if(count === 0){
+        if(count <= 0){
+          count=0
           downloadCountEl.hidden=true
+        }else {
+          downloadCountEl.innerText=calculate(count)
         }
-        downloadCountEl.innerText=calculate(count)
       })
 
       ipc.on('remakeCurrentUser', async (event, args) => {
@@ -587,18 +588,6 @@
         thirdToolbarVue.$data.finishedNoobguideNum = num
       })
 
-      //新手引导首次视频弹出出的标记
-      let firstGuideVideo = localStorage.getItem('guideVideo')
-      if(!firstGuideVideo) {
-        localStorage.setItem('guideVideo', '1')
-      }
-
-      ipc.on('firstLoad',()=>{
-        if(localStorage.getItem('guideVideo') === '1') {
-          ipc.send('firstGuideVideo')
-          localStorage.setItem('guideVideo', '2')
-        }
-      })
 
     </script>
 
