@@ -465,7 +465,6 @@
 
 		<script src="dist/bundle.js"></script>
     <script>
-
       ipc.on('clearCurrentUser', async (event, args) => {
         const {db} = require('./js/util/database.js')
         await db.system.where('name').equals('currentUser').modify({value: {
@@ -589,18 +588,6 @@
         thirdToolbarVue.$data.finishedNoobguideNum = num
       })
 
-      //新手引导首次视频弹出出的标记
-      let firstGuideVideo = localStorage.getItem('guideVideo')
-      if(!firstGuideVideo) {
-        localStorage.setItem('guideVideo', '1')
-      }
-
-      ipc.on('firstLoad',()=>{
-        if(localStorage.getItem('guideVideo') === '1') {
-          ipc.send('firstGuideVideo')
-          localStorage.setItem('guideVideo', '2')
-        }
-      })
 
     </script>
 
