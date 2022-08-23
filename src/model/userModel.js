@@ -1,8 +1,3 @@
-const crypto = require('crypto')
-const db = require('../../js/util/database.js').db
-if (typeof window !=='undefined') {
-  ldb = window.ldb
-}
 const { SqlDb }=require('../util/sqldb')
 const standReturn = require('../util/standReturn')
 let sqlDb=new SqlDb()
@@ -95,7 +90,7 @@ const userModel={
     }
   },
   /**
-   * 修改当前用户
+   * 修改当前用户 sqldb
    * @param user
    * @returns {Promise<void>}
    */
@@ -110,7 +105,7 @@ const userModel={
   },
 
   /**
-   *删除某个用户
+   *删除某个用户 sqldb
    * @param map
    * @returns {Promise<*>}
    */
@@ -133,28 +128,38 @@ const userModel={
     return sha.digest('hex')
   },
 
-  setEnterPwd(enterPwd,uid){
-    ldb.reload()
-    let user=ldb.db.get('users').find({uid:uid}).value()
+  /**
+   * 设置密码 sqldb
+   * @param enterPwd
+   * @param uid
+   * @returns {Promise<boolean>}
+   */
+  async setEnterPwd (enterPwd, uid) {
+    let user = await sqlDb.knex('account').where({ uid: uid }).first()
+    let pwd=null
     if(enterPwd!==''){
-      enterPwd=userModel.sha(enterPwd)
+      pwd=userModel.sha(enterPwd)
     }
     if(!!!user){
-      ldb.db.get('users').push({
-        id:uid,
-        uid:uid,
-        enterPwd:enterPwd
-      }).write()
+      return false
     }else{
-      ldb.db.get('users').find({uid:uid}).assign({'enterPwd':enterPwd}).write()
+      await sqlDb.knex('account').where({uid:uid}).update({password:pwd})
     }
   },
 
-  compareEnterPwd(pwd,uid){
-    ldb.reload()
-    let pwdSha= userModel.sha(pwd)
-    let user =ldb.db.get('users').find({uid:uid}).value()
-    return user.enterPwd === pwdSha
+  /**
+   * 比对密码 sqldb
+   * @param pwd
+   * @param uid
+   * @returns {boolean}
+   */ async compareEnterPwd (pwd, uid) {
+    let pwdSha = userModel.sha(pwd)
+    let user = await sqlDb.knex('account').where({ uid: uid, password: pwdSha }).first()
+    if (!!!user) {
+      return false
+    } else {
+      return true
+    }
   }
 }
 
