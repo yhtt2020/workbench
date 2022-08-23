@@ -82,6 +82,10 @@
   }
 
   .app {
+    filter:grayscale(1);
+    &:hover{
+      filter:none
+    }
     padding: 2px;
     width: 32px;
     height: 32px;

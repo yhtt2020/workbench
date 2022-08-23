@@ -617,7 +617,18 @@ ipc.on('errorClose',(e,args)=>{
 app.whenReady().then(()=>{
   const { BarrageManager }=require(path.join(__dirname,'/src/main/barrageManager.js'))
   console.log('载入BarrageManager',BarrageManager)
-  const barrageManager=new BarrageManager({
+  let barrageManager=new BarrageManager({
     parent:mainWindow
+  })
+
+  ipc.on('toggleBarrage',()=>{
+    if(BarrageManager.isAlive()){
+      barrageManager.destroy()
+      barrageManager=null
+    }else{
+      barrageManager=new BarrageManager({
+        parent:mainWindow
+      })
+    }
   })
 })

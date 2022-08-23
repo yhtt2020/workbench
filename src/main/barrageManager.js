@@ -8,10 +8,10 @@ app.whenReady().then(()=>{
       win.close()
     }
   })
-})
 
+})
 class BarrageManager{
-  container //容器，可以是view也可以是window
+  container
   constructor (optionArgs) {
     console.log('开始初始化')
     const DEFAULT_OPTION={
@@ -26,15 +26,15 @@ class BarrageManager{
       y:undefined
     }
     if(option.parent){
-      if(option.parent.isDestoryed()){
+      if(option.parent.isDestroyed()){
         option.parent=undefined
       }
       bounds =this.getInitBounds(option.parent)
     }
 
-    let container
+    let window
     if(option.type==='window'){
-      container = new BrowserWindow({
+      window = new BrowserWindow({
         width:bounds.width,
         height:bounds.height,
         transparent:true,
@@ -50,19 +50,25 @@ class BarrageManager{
         }
       })
     }
-   container.loadURL(this.getUrl('barrage.html#/pop'))
+    window.loadURL(this.getUrl('barrage.html#/pop'))
     console.log('加载的url',this.getUrl('barrage.html#/pop'))
-    container.on('ready-to-show',()=>{
-      container.show()
+    window.on('ready-to-show',()=>{
+      window.show()
     })
-    this.container=container
+    this.container=window
     win=this.container
   }
+
+  static isAlive(){
+    return win && !win.isDestroyed()
+  }
   getInitBounds(parent){
+    const width=800
+    const height=600
     let parentBounds=parent.getBounds()
-    let x = parseInt(parentBounds.x + (parentBounds.width - width) / 2)
-    let y = parseInt(parentBounds.y + (parentBounds.height - height) / 2)
-    return { x, y, width:width*0.8, height:height*0.8 }
+    let x = parseInt(parentBounds.x + (parentBounds.width- width) / 2)
+    let y = parseInt(parentBounds.y +200)
+    return { x, y, width:width, height:height }
 
   }
   getUrl (url) {
@@ -72,6 +78,10 @@ class BarrageManager{
       protocolUrl = `http://localhost:1600/${url}`
     }
     return protocolUrl
+  }
+
+  destroy(){
+    this.container.close()
   }
 }
 

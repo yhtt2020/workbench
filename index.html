@@ -225,6 +225,11 @@
                 id="nav-toolbar"><img class="action app" src="./icons/toolbar/apps/fav.svg"></span>
             </div>
             <div class="action-wrapper app-tool">
+              <span title="弹幕" onclick="ipc.send('toggleBarrage')" id="danmu-toolbar"><img class="action app" src="./icons/toolbar/hot.svg">
+                <span hidden class="bandage" id="danmu">0</span>
+              </span>
+            </div>
+            <div class="action-wrapper app-tool">
               <span title="阅读模式" id="read-toolbar"><img class="action app" src="./icons/toolbar/apps/read.svg">
                 <span hidden class="bandage" id="canRead">0</span>
               </span>
