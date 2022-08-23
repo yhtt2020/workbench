@@ -1,6 +1,11 @@
 <script lang="ts">
 import { createVNode } from 'vue';
 import {
+  CloseCircleOutlined,
+  RedoOutlined,
+  SettingOutlined,
+  LockOutlined,
+
   PlusOutlined,
   AppstoreAddOutlined,
   FolderOpenOutlined,
@@ -16,6 +21,12 @@ import { Modal } from 'ant-design-vue';
 
 export default {
   components: {
+    CloseCircleOutlined,
+    RedoOutlined,
+    SettingOutlined,
+    LockOutlined,
+
+
     PlusOutlined,
     AppstoreAddOutlined,
     FolderOpenOutlined,
@@ -44,6 +55,8 @@ export default {
     // 这将创建一个弹幕 manager，用于管理弹幕
     const manager = Danmuku.create({
       container:document.getElementById('danmuWrapper'),
+      interval:1,
+      times:[20,25],
       hooks: {
         send (manager, data) {
           console.log(data)
@@ -185,28 +198,32 @@ export default {
   <div id="danmuWrapper" class="barrage-container" style="border-radius: 8px;height: calc(100vh - 30px)">
 
   </div>
-  <div id="controller" class="operation" style="text-align: center">
-    <a class="shadow-button" @click="reload">重载</a>
-    <a class="shadow-button" type="ghost" @click="pause">暂停</a>
-    <a class="shadow-button" type="ghost" @click="close">关闭</a>
+  <div id="controller" class="operation" style="text-align: center;margin-top: 6px">
+    <a class="shadow-button"><lock-outlined /> 锁定</a>
+    <a class="shadow-button"><setting-outlined /> 设置</a>
+<!--    <a class="shadow-button" type="ghost" @click="pause">暂停</a>-->
+    <a class="shadow-button" type="ghost" @click="close"><CloseCircleOutlined/> 关闭</a>
+    <a class="shadow-button" @click="reload"><redo-outlined /> 重置</a>
   </div>
 </template>
 <style>
 .barrage-style{
+  user-select: none;
   border-radius: 100px;
   background: rgba(0,0,0,0.5);
   color: white;
-  padding: 5px 15px;
+  padding: 3px 15px;
+  padding-right: 15px;
   vertical-align: middle;
   line-height: 28px;
 }
 .barrage-avatar{
   border-radius: 100%;
-  width: 26px;
-  height: 26px;
+  width: 30px;
+  height: 30px;
   float: left;
-  margin-left: -5px;
-  margin-right:8px;
+  margin-left: -10px;
+  margin-right:6px;
   vertical-align: middle;
 }
 html, body {
@@ -221,7 +238,6 @@ html, body {
   border-radius: 6px;
   margin-left: 5px;
   margin-right: 5px;
-  margin-top: 10px;
   padding: 5px 10px;
   cursor: pointer;
   &:hover{
