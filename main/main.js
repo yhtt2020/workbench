@@ -612,3 +612,12 @@ ipc.on('errorClose',(e,args)=>{
     sendMessage({type:'error',config:{content:'关闭保存意外失败，您可以再次点击关闭，在不保存的情况下继续使用，此消息将在10秒后自动消失。',duration:'10'}})
   }
 })
+
+
+app.whenReady().then(()=>{
+  const { BarrageManager }=require(path.join(__dirname,'/src/main/barrageManager.js'))
+  console.log('载入BarrageManager',BarrageManager)
+  const barrageManager=new BarrageManager({
+    parent:mainWindow
+  })
+})
