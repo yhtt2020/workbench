@@ -465,7 +465,6 @@
 
 		<script src="dist/bundle.js"></script>
     <script>
-
       ipc.on('clearCurrentUser', async (event, args) => {
         const {db} = require('./js/util/database.js')
         await db.system.where('name').equals('currentUser').modify({value: {
@@ -530,10 +529,12 @@
       ipc.on('downloadCountCut',()=>{
         count--
         // console.log(downloadCount)
-        if(count === 0){
+        if(count <= 0){
+          count=0
           downloadCountEl.hidden=true
+        }else {
+          downloadCountEl.innerText=calculate(count)
         }
-        downloadCountEl.innerText=calculate(count)
       })
 
       ipc.on('remakeCurrentUser', async (event, args) => {

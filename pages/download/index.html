@@ -244,9 +244,9 @@
       appVue.list.forEach(item => {
         if (item.startTime === args.startTime) {
           appVue.lists.splice(appVue.lists.indexOf(args.startTime), 1)
-          appVue.count--
         }
       })
+
       appVue.list.unshift({
         name: args.name,
         id: appVue.id++,
@@ -256,7 +256,7 @@
         total: '',
         progressnuw: 0,
         startTime: args.startTime,
-        path: '',
+        path: args.path,
         loadState: false,
         url: args.url,
         href: args.href,
@@ -266,6 +266,7 @@
       appVue.count++
       ipcRenderer.send('willDownload')
       ipcRenderer.send('downloading')
+
     }
 
     if (args.status === 'cancelled') {
@@ -282,11 +283,15 @@
         appVue.count = 0
       }
       appVue.listCount--
+      if (appVue.listCount < 0) {
+        appVue.listCount = 0
+      }
       ipcRenderer.send('closeEmpty')
     }
 
     if (args.status === 'progressing' && args.path !== '') {
       // ipcRenderer.send('willDownload')
+
       ipcRenderer.send('closeEmpty')
       appVue.list.forEach(function (item, index, arr) {
         if (item.startTime === args.startTime) {
@@ -308,12 +313,14 @@
       ipcRenderer.send('inform')
       ipcRenderer.send('emptyPageUrl', args.chainUrl)
       const myDate = new Date()
-      // appVue.doneList.forEach(item => {
-      //   if (item.startTime === args.startTime) {
-      //     appVue.doneList.splice(appVue.doneList.indexOf(args.startTime), 1)
-      //     appVue.count++
-      //   }
-      // })
+      appVue.doneList.forEach(item => {
+        if (item.startTime === args.startTime) {
+          appVue.doneList.splice(appVue.doneList.indexOf(args.startTime), 1)
+          appVue.count++
+          appVue.listCount++
+          appVue.listDoneCount--
+        }
+      })
       appVue.doneList.unshift({
         name: args.name,
         id: appVue.doneId++,
@@ -346,6 +353,9 @@
       ipcRenderer.send('closeEmpty', args.chainUrl)
       ipcRenderer.send('downloadEnd')
       appVue.classify()
+    }
+    if (appVue.count < 0) {
+      appVue.count = 0
     }
   })
 
@@ -509,7 +519,6 @@
         ipcRenderer.send('showMenuTrash')
         this.selectDelList = item
         this.active = id
-
       },
       mouseOver (id) {
         this.clickActive = id

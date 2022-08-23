@@ -26,6 +26,7 @@ const globalSearchMod = {
         backgroundColor: '#fff',
         webPreferences: {
           devTools: true,
+          preload: path.join(__dirname, '/pages/globalSearch/preload.js'),
           nodeIntegration: true,
           contextIsolation: false,
           additionalArguments: [
@@ -86,11 +87,29 @@ app.whenReady().then(() => {
   // Register a 'CommandOrControl+X' shortcut listener.
   globalShortcut.register('Alt+F', () => {
     globalSearchMod.init()
+
+    //statsh 快捷键打开全局搜索
+    if(globalSearch && globalSearch.isFocused()) {
+      statsh.do({
+        action: 'increase',
+        key: 'globalSearchBaseShortOpen',
+        value: 1
+      })
+    }
   })
 
 
   ipc.on(ipcMessageMain.sidePanel.openGlobalSearch, () => {
     globalSearchMod.init()
+
+    //statsh 点击打开全局搜索
+    if(globalSearch && globalSearch.isFocused()) {
+      statsh.do({
+        action: 'increase',
+        key: 'globalSearchBaseClickOpen',
+        value: 1
+      })
+    }
   })
 
 
