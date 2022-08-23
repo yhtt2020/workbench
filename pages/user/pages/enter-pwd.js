@@ -5,10 +5,10 @@ const tpl = `
 
       </h1>
       <div style="text-align: center">
-      <a-avatar :size="60" :src="user.avatar">
+      <a-avatar :size="60" :src="user.user_info.avatar">
 
 </a-avatar>
-<div>{{user.nickname}}</div>
+<div>{{user.user_info.nickname}}</div>
 </div>
       <p style="text-align: center;color: #999;margin-top: 20px;">
         <a-input-password :style="{'margin-left': shake+'px'}" placeholder="输入访问密码" @keyup.enter="doEnter" id="pwdInput" v-model:value="pwd" style="width: 200px">
@@ -19,18 +19,21 @@ const tpl = `
       </div>
 </div>
 `
-// const userModel = require('../../util/model/userModel')
 const EnterPwd = {
   template: tpl,
     data () {
       return {
-        user:{},
+        user:{
+          user_info:{
+
+          }
+        },
         pwd:'',
         shake:0
       }
     },
     async mounted () {
-      let user=await userModel.get({id:this.$route.params.uid})
+      let user=await userModel.get({uid:this.$route.params.uid})
       if(user){
         this.user=user
       }else{
@@ -41,20 +44,20 @@ const EnterPwd = {
       },200)
     },
     methods: {
-      doEnter(){
-        let right=userModel.compareEnterPwd(this.pwd,this.user.uid)
-        if(right){
+      async doEnter () {
+        let right = await userModel.compareEnterPwd(this.pwd, this.user.uid)
+        if (right) {
           this.$router.replace({ name: 'space', params: { uid: this.user.uid } })
-        }else{
+        } else {
           let timer
-          let i=0
-          timer = setInterval(()=>{
-            this.shake = (( i % 3 ) - 1) * 60;
+          let i = 0
+          timer = setInterval(() => {
+            this.shake = ((i % 3) - 1) * 60;
             i++
-            if(i===5){
+            if (i === 5) {
               clearInterval(timer);
             }
-          },50);
+          }, 50);
 
         }
       },

@@ -166,7 +166,7 @@ const UsersSelect = {
           return
         }
       }
-      if (!!!user.enterPwd) {
+      if (!!!user.password) {
         this.$router.push({ name: 'space', params: { uid: user.uid } })
       } else
         this.$router.push({ name: 'enterPwd', params: { uid: user.uid } })
