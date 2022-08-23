@@ -10,8 +10,6 @@ import IconList from "./components/IconList.vue";
 <!--    <IconList />-->
 <!--  </div>-->
 <router-view></router-view>
-  弹幕插件弹幕插件
-
 </template>
 
 <style>
