@@ -82,9 +82,9 @@ export default {
       manager.send(this.makeBarrage())
     },500)
 
-    setTimeout(()=>{
+    setInterval(()=>{
       manager.sendSpecial({
-        content:this.makeBarrage()['content'],
+        data:this.makeBarrage(),
         duration: 5,
         direction: 'right',
         position (barrage) {
@@ -186,9 +186,9 @@ export default {
 
   </div>
   <div id="controller" class="operation" style="text-align: center">
-    <a-button type="ghost" @click="reload">重载</a-button>
-    <a-button type="ghost" @click="pause">暂停</a-button>
-    <a-button type="ghost" @click="close">关闭</a-button>
+    <a class="shadow-button" @click="reload">重载</a>
+    <a class="shadow-button" type="ghost" @click="pause">暂停</a>
+    <a class="shadow-button" type="ghost" @click="close">关闭</a>
   </div>
 </template>
 <style>
@@ -215,6 +215,19 @@ html, body {
 }
 </style>
 <style scoped lang="scss">
+.shadow-button{
+  background: rgba(0,0,0,0.5);
+  color: white;
+  border-radius: 6px;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 10px;
+  padding: 5px 10px;
+  cursor: pointer;
+  &:hover{
+    color: rgba(255,255,255,.7);
+  }
+}
 .barrage-container{
   &:hover{
     background: rgba(0,0,0,0.3);
