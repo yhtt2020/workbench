@@ -13,7 +13,7 @@ files:
     - icons/**/*
     - icons/*.svg
     #- js/**/*
-    - db/*/**
+    - db/**/*
     - js/places/*
     - js/defaultPreload.js
     - js/main/**/*
