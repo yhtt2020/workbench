@@ -886,8 +886,22 @@ Vue.component('sidebar', {
     try {
       let passwordList = await ipc.invoke('credentialStoreGetCredentials')
       await userStatsModel.setValue('password', passwordList.length)
+
+      //statsh
+      statsh.do({
+        action: 'set',
+        key: 'password',
+        value: passwordList.length
+      })
     } catch (err) {
       await userStatsModel.setValue('password', 0)
+
+      //statsh
+      statsh.do({
+        action: 'set',
+        key: 'password',
+        value: 0
+      })
     }
     // let item = {
     // 	title: '打开标签', //名称，用于显示提示
@@ -2045,6 +2059,15 @@ ipc.on('executedAppSuccess', async function (event, args) {
   setTimeout(async () => {
     await userStatsModel.incrementValue('appsExecutedCounts')
   }, 2000)
+
+  //statsh
+  setTimeout(() => {
+    statsh.do({
+      action: 'increase',
+      key: 'appsExecutedCounts',
+      value: 1
+    })
+  }, 2000)
 })
 ipc.on('closeApp', function (event, args) {
   appVue.$refs.sidePanel.apps.forEach(app => {
@@ -2154,7 +2177,7 @@ ipc.on('appBadge', function (event, args) {
   })
 })
 
-ipc.on('countWebviewInk', async () => {
+ipc.on('countWebviewInk', () => {
   setTimeout(async () => {
     await userStatsModel.incrementValue('webviewsInk')
   }, 2000)
@@ -2165,9 +2188,25 @@ ipc.on('countScript', async () => {
     let num = require('../util/model/userScriptModel').countScript(window.globalArgs['user-data-path'])
     setTimeout(async () => {
       await userStatsModel.setValue('scripts', num)
-    }, 10000)
+    }, 5000)
+
+    //statsh
+    setTimeout(() => {
+      statsh.do({
+        action: 'set',
+        key: 'scripts',
+        value: num
+      })
+    }, 5000)
   } catch (err) {
     await userStatsModel.setValue('scripts', 0)
+
+    //statsh
+    statsh.do({
+      action: 'set',
+      key: 'scripts',
+      value: 0
+    })
   }
 })
 
@@ -2175,6 +2214,23 @@ ipc.on('defaultBrowser', (event, args) => {
   setTimeout(async () => {
     args ? await userStatsModel.setValue('defaultBrowser', 1) : await userStatsModel.setValue('defaultBrowser', 0)
   }, 2000)
+
+  setTimeout(() => {
+    //statsh
+    if(args) {
+      statsh.do({
+        action: 'set',
+        key: 'defaultBrowser',
+        value: 1
+      })
+    } else {
+      statsh.do({
+        action: 'set',
+        key: 'defaultBrowser',
+        value: 0
+      })
+    }
+  })
 })
 
 ipc.on('addToDesk', (event, args) => {

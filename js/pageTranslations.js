@@ -119,6 +119,13 @@ const pageTranslations = {
     //mark插入对translateCounts翻译接口调用次数的数据统计
     await userStatsModel.incrementValue('translateCounts')
 
+    //statsh
+    statsh.do({
+      action: 'increase',
+      key: 'translateCounts',
+      value: 1
+    })
+
     //1000毫秒发起一次请求
     setTimeout(()=> {
       axios.post('/app/translate', requestOptions).then(res => {

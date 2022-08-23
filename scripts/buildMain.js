@@ -40,7 +40,7 @@ const modules = [
   'main/messageCenter.js',
   'main/fav.js',
   'main/globalSearch.js',
-
+  'js/util/statsh/statshMain.js'
 ]
 
 function buildMain () {
