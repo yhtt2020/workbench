@@ -1,4 +1,5 @@
 const BarrageApi = require('../api/barrageApi')
+const standReturn = require('../util/standReturn')
 
 class BarrageModel{
   api
@@ -11,8 +12,11 @@ class BarrageModel{
   }
   async add(barrage){
       let rs=await this.api.add(barrage)
-    console.log('apirs',rs)
-
+    if(rs.code===1000){
+     return standReturn.success(barrage)
+    }else{
+      return standReturn.failure()
+    }
   }
 }
 

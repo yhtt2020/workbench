@@ -3,6 +3,7 @@ const { config, api } = require('../../server-config')
 const storage = require('electron-localstorage');
 const { ipcRenderer: ipc } = require('electron')
 
+
 //本地下面代码强制清除storage
 //console.log(storage.getAll())
 //storage.clear();
@@ -36,6 +37,7 @@ let isRefreshing = false   //是否正在刷新的标记
 
 axios.interceptors.request.use(
   async config => {
+    console.log('config=',config)
     require('../../src/util/logger').log('axiosRequest:'+config.url,config)
     // Do something before request is sent
     // console.log(config, '拦截的config')

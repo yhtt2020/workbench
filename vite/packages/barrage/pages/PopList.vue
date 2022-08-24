@@ -49,7 +49,7 @@ export default {
       user:{},
 
       channelType:false,
-      pageUrl:'',
+      pageUrl:'ts://guide',
       content:'',
       inputPopVisible:false,
     }
@@ -180,6 +180,7 @@ export default {
           })
           this.content = ''
           this.inputPopVisible = false
+          message.success('弹幕装填成功。')
         }else{
           message.error({content:'弹幕发布失败，服务器返回错误。'})
         }

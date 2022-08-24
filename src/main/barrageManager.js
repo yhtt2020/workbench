@@ -1,6 +1,7 @@
 const { BrowserWindow ,app,ipcMain} = require('electron')
 let win=null
 const ipc=ipcMain
+const isDevelopmentMode = process.argv.some(arg => arg === '--development-mode')
 app.whenReady().then(()=>{
   ipc.on('closeBarrageWindow',()=>{
     console.log('收到消息closeBarrageWindow')
@@ -50,7 +51,8 @@ class BarrageManager{
           additionalArguments: [
             '--user-data-path=' + app.getPath('userData'),
             '--app-version=' + app.getVersion(),
-            '--app-name=' + app.getName()
+            '--app-name=' + app.getName(),
+            ...((isDevelopmentMode ? ['--development-mode'] : [])),
           ]
         }
       })

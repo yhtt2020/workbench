@@ -6,6 +6,7 @@ const {
 const ipc = ipcRenderer
 require('../util/util').tools.getWindowArgs(window)
 const BarrageModel=require('../model/barrageModel')
+console.log(window.globalArgs)
 const barrageModel=new BarrageModel()
  barrageModel.init()
 

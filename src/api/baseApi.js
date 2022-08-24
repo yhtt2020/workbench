@@ -42,6 +42,8 @@ const baseApi = {
     if (method === 'post' || method === 'put' || method === 'delete')
       data = { data: params }
     //todo cache请求缓存后期做一下，防止在1000毫秒内重复请求设置
+    console.log(url)
+    console.log(data)
     if (!min) {
       return axios({
         timeout: 5000,//设置默认3秒钟超时
@@ -58,6 +60,8 @@ const baseApi = {
         }
       })
     } else {
+      console.log(url)
+      console.log(data)
       return axios({
         method: method,
         url: url,

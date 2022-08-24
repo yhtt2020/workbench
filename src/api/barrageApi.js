@@ -2,7 +2,7 @@ const baseApi = require('../api/baseApi.js')
 const userModel = require('../model/userModel')
 
 const url = {
-  add: '/barrage/add',
+  add: '/app/addBarrage',
 }
 
 class BarrageApi {
@@ -15,7 +15,7 @@ class BarrageApi {
     await baseApi.init()
   }
   async add(data){
-    return await baseApi.axios(url.add, { data}, 'post')
+    return await baseApi.axios(url.add, data, 'post')
   }
 
 }
