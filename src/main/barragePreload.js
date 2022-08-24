@@ -19,8 +19,12 @@ const windowApi = {
 }
 
 const barrage={
+  CONST:barrageModel.BARRAGE_CONST,
   async add (data) {
     return await barrageModel.add(data)
+  },
+  async getList(channel,pageUrl){
+    return await barrageModel.getList(channel,pageUrl)
   }
 
 }

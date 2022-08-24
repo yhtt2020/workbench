@@ -48,12 +48,16 @@ export default {
       ipc: null,
       user:{},
 
+      CONST:null,
+      barrages:[],
+
       channelType:false,
       pageUrl:'ts://guide',
       content:'',
       inputPopVisible:false,
     }
   },
+
   async mounted() {
     let userResult=await tsbApi.user.get()
     if(userResult.status===0){
@@ -61,6 +65,8 @@ export default {
     }else{
       this.user=userResult.data
     }
+
+
     // this.ipc = tsbApi.ipc
     // this.ipc.on('show', () => {
     //   this.getList()
@@ -108,28 +114,26 @@ export default {
     //   container:document.getElementById('danmuWrapper'),
     //   limit:50
     // })
-    setInterval(()=>{
-      manager.send(this.makeBarrage())
-    },500)
+   this.getList()
 
-    setInterval(()=>{
-      manager.sendSpecial({
-        data:this.makeBarrage(),
-        duration: 5,
-        direction: 'right',
-        position (barrage) {
-          return {
-            x: (manager.containerWidth - barrage.getWidth()) / 2,
-            y: (manager.containerHeight- barrage.getHeight()) / 2
-          }
-        },
-        hooks: {
-          create (barrage) {
-            barrage.node.style.background = 'red'
-          }
-        }
-      })
-    },3000)
+    // setInterval(()=>{
+    //   manager.sendSpecial({
+    //     data:this.makeBarrage(),
+    //     duration: 5,
+    //     direction: 'right',
+    //     position (barrage) {
+    //       return {
+    //         x: (manager.containerWidth - barrage.getWidth()) / 2,
+    //         y: (manager.containerHeight- barrage.getHeight()) / 2
+    //       }
+    //     },
+    //     hooks: {
+    //       create (barrage) {
+    //         barrage.node.style.background = 'red'
+    //       }
+    //     }
+    //   })
+    // },3000)
 
     window.$manager=manager
 
@@ -137,9 +141,22 @@ export default {
     manager.show()
   },
   methods: {
+    async getList(){
+      this.CONST=tsbApi.barrage.CONST
+      try{
+        let rs=await tsbApi.barrage.getList(this.CONST.CHANNEL.PUBLIC,this.pageUrl)
+        this.barrages=rs.data
+        if(rs.status){
+          console.log(this.barrages)
+          $manager.send(this.barrages)
+        }
+      }catch (e) {
+        message.error('获取弹幕接口访问失败，请检查网络。')
+      }
+
+    },
     login(){
       tsbApi.user.login((userInfo)=>{
-        console.log(userInfo)
         this.user={
           user_info:userInfo
         }
@@ -153,25 +170,14 @@ export default {
       if (this.content === '') {
         return
       }
-      //todo 发送到接口提交弹幕
-      const BARRAGE_CONST={
-        CHANNEL:{
-          PUBLIC:10001,
-          GROUP:10002
-        }
-      }
-
-
       let data = {
-        channel_type: this.channelType?BARRAGE_CONST.CHANNEL.GROUP:BARRAGE_CONST.CHANNEL.PUBLIC,
+        channel_type: this.channelType?this.CONST.CHANNEL.GROUP:this.CONST.CHANNEL.PUBLIC,
         content: this.content,
         page_url: this.pageUrl,
 
       }
       try{
         let rs = await tsbApi.barrage.add(data)
-        console.log(rs)
-        console.log(data)
         if(rs.status===1){
           $manager.send({
             avatar: this.user.user_info.avatar,
@@ -188,8 +194,6 @@ export default {
         console.warn(e)
         message.error({content:'弹幕发布失败，请检查网络情况。'})
       }
-
-
     },
     makeBarrage(){
       const barrageContents=[
@@ -240,9 +244,6 @@ export default {
     },
     close(){
       tsbApi.window.close()
-    },
-    async getList() {
-
     },
     getId() {
 
@@ -317,7 +318,7 @@ export default {
     <a class="shadow-button"><setting-outlined /> 设置</a>
 <!--    <a class="shadow-button" type="ghost" @click="pause">暂停</a>-->
     <a class="shadow-button" type="ghost" @click="close"><CloseCircleOutlined/> 关闭</a>
-    <a class="shadow-button" @click="reload"><redo-outlined /> 重置</a>
+    <a class="shadow-button" @click="reload"><redo-outlined /> 刷新</a>
   </div>
 </template>
 <style>
