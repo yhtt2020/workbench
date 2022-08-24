@@ -46,7 +46,7 @@ export default {
     return {
       userDataPath: '',
       ipc: null,
-
+      user:{},
 
       channel:false,
       content:'',
@@ -54,6 +54,12 @@ export default {
     }
   },
   async mounted() {
+    let userResult=await tsbApi.user.get()
+    if(userResult.status===0){
+      this.user=null
+    }else{
+      this.user=userResult.data
+    }
     // this.ipc = tsbApi.ipc
     // this.ipc.on('show', () => {
     //   this.getList()
@@ -130,6 +136,14 @@ export default {
     manager.show()
   },
   methods: {
+    login(){
+      tsbApi.user.login((userInfo)=>{
+        console.log(userInfo)
+        this.user={
+          user_info:userInfo
+        }
+      })
+    },
     /**
      * 发射弹幕
      */
@@ -244,9 +258,20 @@ export default {
         <div><img style="width: 22px;vertical-align: top" src="../assets/hot.svg"> 发弹幕
           &nbsp;
           <a-switch v-model:checked="channel" size="small" checked-children="团队频道" un-checked-children="公共频道"></a-switch>
+          <div style="float: right"><a-avatar v-if="this.user" :src="user.user_info.avatar"></a-avatar></div>
         </div>
         <div style="margin-top: 10px;margin-bottom: 15px">
-          <a-textarea v-model:value="content" spellcheck="false" @visibleChange="toggleInput" id="inputArea" class="scroller-wrapper" :autoSize="{minRows:2,maxRows:2}" style="resize: none;overflow: hidden !important;" :allowClear="true" :maxlength="30"  :bordered="false" placeholder="发一条弹幕吧~"/>
+
+          <a-textarea v-if="this.user"
+                      v-model:value="content" spellcheck="false" @visibleChange="toggleInput" id="inputArea"
+                      class="scroller-wrapper" :autoSize="{minRows:2,maxRows:2}" style="resize: none;overflow: hidden !important;"
+                      :allowClear="true" :maxlength="30"  :bordered="false"
+                      placeholder="发一条弹幕吧~"
+
+          />
+          <div v-else style="width: 100%;height: 60px;font-size: 13px;color: #999;text-align: center;background: rgba(128,128,128,0.15);border-radius:4px;line-height: 24px;padding-top: 5px">
+            <strong>未登录</strong>用户无法发布弹幕<p>请 <a-button type="primary" size="small" @click="login">登录</a-button> 后重试</p>
+          </div>
         </div>
         <div style="clear: both;position: absolute;bottom: 25px;width: 92%">
 
