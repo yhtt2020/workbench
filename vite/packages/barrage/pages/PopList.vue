@@ -52,7 +52,7 @@ export default {
       barrages:[],
 
       channelType:false,
-      pageUrl:'ts://guide',
+      pageUrl:'',
       content:'',
       inputPopVisible:false,
     }
@@ -114,7 +114,10 @@ export default {
     //   container:document.getElementById('danmuWrapper'),
     //   limit:50
     // })
-   this.getList()
+    tsbApi.barrage.onUrlChanged(this.changeUrl) //挂载url变化事件
+    this.pageUrl=(await tsbApi.tabs.current()).sourceUrl
+    this.getList()
+
 
     // setInterval(()=>{
     //   manager.sendSpecial({
@@ -141,19 +144,23 @@ export default {
     manager.show()
   },
   methods: {
+    async changeUrl(url) {
+      this.pageUrl = url
+      await this.getList()
+    },
     async getList(){
       this.CONST=tsbApi.barrage.CONST
       try{
         let rs=await tsbApi.barrage.getList(this.CONST.CHANNEL.PUBLIC,this.pageUrl)
         this.barrages=rs.data
         if(rs.status){
-          console.log(this.barrages)
+          $manager.clear()
           $manager.send(this.barrages)
+          $manager.start()
         }
       }catch (e) {
         message.error('获取弹幕接口访问失败，请检查网络。')
       }
-
     },
     login(){
       tsbApi.user.login((userInfo)=>{
@@ -166,7 +173,13 @@ export default {
      * 发射弹幕
      */
     async send() {
-      console.log(this.content)
+      let allowProtocol=['ts','http','https']
+      if(!allowProtocol.some(protocol=>{
+        return this.pageUrl.startsWith(protocol+'://')
+      })){
+        message.error('当前页面不允许发送弹幕')
+        return
+      }
       if (this.content === '') {
         return
       }

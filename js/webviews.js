@@ -30,6 +30,7 @@ function captureCurrentTab (options) {
 
 // called whenever a new page starts loading, or an in-page navigation occurs
 function onPageURLChange (tab, url) {
+  ipc.send('barrage.changeUrl',{url:urlParser.getSourceURL(url)})
     //增加了ts开头的页面的安全提示，避免提示不安全
     webviews.updateToolBarStatus(tabs.get(tab))
     if (url.indexOf('https://') === 0 || url.indexOf('about:') === 0 || url.indexOf('chrome:') === 0 || url.indexOf('file://') === 0 || url.indexOf('ts://') === 0) {
@@ -45,7 +46,6 @@ function onPageURLChange (tab, url) {
       })
       webviews.updateToolbarSecure(false)
     }
-
 }
 
 // called whenever a navigation finishes
@@ -375,6 +375,7 @@ const webviews = {
       focus: !options || options.focus !== false
     })
     //当切换选中的view的时候要同步一下信息
+    ipc.send('barrage.changeUrl',{url:urlParser.getSourceURL(tabs.get(id).url)})
     webviews.updateToolBarStatus(tabs.get(id))
     webviews.emitEvent('view-shown', id)
   },
@@ -383,6 +384,7 @@ const webviews = {
    * @param tabData tab的信息
    */
   updateToolBarStatus(tabData){
+
     if(tabData.id===tabs.getSelected()){
       require('js/navbar/tabEditor').updateUrl(urlParser.getSourceURL(tabData.url))
       webviews.updateToolbarSecure(tabData.secure)

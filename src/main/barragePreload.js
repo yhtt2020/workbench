@@ -6,7 +6,6 @@ const {
 const ipc = ipcRenderer
 require('../util/util').tools.getWindowArgs(window)
 const BarrageModel=require('../model/barrageModel')
-console.log(window.globalArgs)
 const barrageModel=new BarrageModel()
  barrageModel.init()
 
@@ -20,13 +19,16 @@ const windowApi = {
 
 const barrage={
   CONST:barrageModel.BARRAGE_CONST,
+  urlChangedCallback:null,
   async add (data) {
     return await barrageModel.add(data)
   },
   async getList(channel,pageUrl){
     return await barrageModel.getList(channel,pageUrl)
+  },
+  onUrlChanged(callback){
+    barrage.urlChangedCallback=callback
   }
-
 }
 
 const user={
@@ -40,7 +42,8 @@ const user={
       callback(args.data.userInfo)
     })
     ipc.send('login')
-  }
+  },
+
 }
 contextBridge.exposeInMainWorld('tsbApi', {
   path,
@@ -48,5 +51,15 @@ contextBridge.exposeInMainWorld('tsbApi', {
   ipc: ipcRenderer,
   window:windowApi,
   user,
-  barrage
+  barrage,
+  tabs:{
+    async current(){
+      return await ipc.sendSync('tabs.current')
+    }
+  }
+})
+
+ipc.on('changeUrl',(e,a)=>{
+  if(barrage.urlChangedCallback)
+    barrage.urlChangedCallback(a.url)
 })

@@ -292,7 +292,6 @@ function setView(id) {
   if(viewStateMap[id]){
     if (viewStateMap[id].loadedInitialURL) {
       setCurrentBrowserView(viewMap[id])
-
       //mainWindow.removeBrowserView(needRemove)
     } else {
       mainWindow.setBrowserView(null)
@@ -584,3 +583,4 @@ ipc.on('enableEmulation', function (e, data) {
   })
 
 })
+

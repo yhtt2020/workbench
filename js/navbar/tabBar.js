@@ -1009,4 +1009,13 @@ ipc.on('getAddPageInfo', (event, args) => {
   tabInfo.url = urlParser.getSourceURL(tabInfo.url)
   ipc.sendTo(args.favWindowId, 'gotAddPageInfo', tabInfo) //直接回传消息给收藏夹的渲染进程
 })
+
+ipc.on('getCurrentTab',(e,a)=>{
+
+  let data=tabs.get(tabs.getSelected())
+  data.sourceUrl=urlParser.getSourceURL(data.url)
+  console.log('getCurrentTabdddddddddddddd',data)
+  ipc.send('gotCurrentTab',{data})
+})
+
 module.exports = tabBar

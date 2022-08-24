@@ -10,11 +10,15 @@ app.whenReady().then(()=>{
     }
   })
 
+
+
 })
 class BarrageManager{
   container
-  constructor (optionArgs) {
-    console.log('开始初始化')
+  constructor () {
+
+  }
+  init(optionArgs){
     const DEFAULT_OPTION={
       type:'window', //window,或者view，只有window有窗体交互逻辑，view的话，就不存在这些逻辑了
       parent:undefined  //默认没有父窗体
@@ -58,12 +62,24 @@ class BarrageManager{
       })
     }
     window.loadURL(this.getUrl('barrage.html#/pop'))
-    console.log('加载的url',this.getUrl('barrage.html#/pop'))
     window.on('ready-to-show',()=>{
       window.show()
     })
     this.container=window
     win=this.container
+  }
+  send(channel,args){
+    if(BarrageManager.isAlive()){
+      this.container.webContents.send(channel,args)
+    }
+  }
+
+  /**
+   *
+   * @param url
+   */
+  changeUrl(url){
+    this.send('changeUrl',{url:url})
   }
 
   static isAlive(){

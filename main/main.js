@@ -3,6 +3,7 @@ const fs = require('fs')
 const path = require('path')
 const electronLog=require('electron-log')
 const SpaceManager=require(__dirname+'/src/main/spaceManager.js')
+
 let forceClose = false //是否强制退出应用
 var clipboardContent=''
 var spaceManager
@@ -624,11 +625,24 @@ app.whenReady().then(()=>{
   ipc.on('toggleBarrage',()=>{
     if(BarrageManager.isAlive()){
       barrageManager.destroy()
-      barrageManager=null
     }else{
-      barrageManager=new BarrageManager({
-        parent:mainWindow
-      })
+      barrageManager.init()
     }
+  })
+  ipc.on('barrage.changeUrl',(e,a)=>{
+    barrageManager.changeUrl(a.url)
+  })
+
+  ipc.on('tabs.current',(e,a)=>{
+    //这是一个非常经典的ipc.sendSync的回调实现。
+    function getCurrentTab(callBack){
+      ipc.once('gotCurrentTab',(e,args)=>{
+        callBack(args.data)
+      })
+      sendIPCToWindow(mainWindow,'getCurrentTab')
+    }
+    getCurrentTab((data)=>{
+      e.returnValue=data
+    })
   })
 })
