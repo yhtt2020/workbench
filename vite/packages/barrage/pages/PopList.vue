@@ -161,6 +161,7 @@ export default {
 
       console.log(data)
       $manager.send({
+        avatar:this.user.user_info.avatar,
         content:this.content,
         self:true,
       })
@@ -238,10 +239,12 @@ export default {
       })
     },
     toggleInput(){
-      setTimeout(()=>{
-        document.getElementById('inputArea').focus()
-        document.getElementById('inputArea').select()
-      },500)
+      if(this.user){
+        setTimeout(()=>{
+          document.getElementById('inputArea').focus()
+          document.getElementById('inputArea').select()
+        },500)
+      }
     }
   }
 }
@@ -254,17 +257,17 @@ export default {
   <div id="controller" class="operation" style="text-align: center;margin-top: 6px">
     <a-popover v-model:visible="inputPopVisible"  trigger="click">
     <template #content>
-      <div style="width: 350px;height: 130px;-webkit-app-region:no-drag">
+      <div style="width: 350px;-webkit-app-region:no-drag" :style="{height:this.user?'100px':'130px'}">
         <div><img style="width: 22px;vertical-align: top" src="../assets/hot.svg"> 发弹幕
           &nbsp;
-          <a-switch v-model:checked="channel" size="small" checked-children="团队频道" un-checked-children="公共频道"></a-switch>
+          <a-switch v-if="this.user" v-model:checked="channel" size="small" checked-children="团队频道" un-checked-children="公共频道"></a-switch>
           <div style="float: right"><a-avatar v-if="this.user" :src="user.user_info.avatar"></a-avatar></div>
         </div>
         <div style="margin-top: 10px;margin-bottom: 15px">
 
-          <a-textarea v-if="this.user"
+          <a-input @keypress.enter="send" v-if="this.user"
                       v-model:value="content" spellcheck="false" @visibleChange="toggleInput" id="inputArea"
-                      class="scroller-wrapper" :autoSize="{minRows:2,maxRows:2}" style="resize: none;overflow: hidden !important;"
+                      class="scroller-wrapper" style="resize: none;overflow: hidden !important;"
                       :allowClear="true" :maxlength="30"  :bordered="false"
                       placeholder="发一条弹幕吧~"
 
@@ -276,11 +279,11 @@ export default {
         <div style="clear: both;position: absolute;bottom: 25px;width: 92%">
 
           <div style="float: left">
-            <a-button size="small"><smile-outlined /></a-button>
+            <a-button size="small"  :disabled="!this.user"><smile-outlined /></a-button>
           </div>
           <div style="float: right">
             <a-select v-if="false" size="small">选择团队</a-select> &nbsp;
-            <a-button @click="send" size="small">发送</a-button>
+            <a-button @click="send" size="small" :disabled="!this.user">发送</a-button>
           </div>
         </div>
       </div>
@@ -312,7 +315,7 @@ export default {
   float: left;
   margin-left: -10px;
   margin-right:6px;
-  vertical-align: middle;
+  vertical-align: text-top;
 }
 html, body {
   overflow: hidden !important;
