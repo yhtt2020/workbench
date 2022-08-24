@@ -5,6 +5,8 @@ import {
   RedoOutlined,
   SettingOutlined,
   LockOutlined,
+  SendOutlined,
+  SmileOutlined,
 
   PlusOutlined,
   AppstoreAddOutlined,
@@ -25,6 +27,8 @@ export default {
     RedoOutlined,
     SettingOutlined,
     LockOutlined,
+    SendOutlined,
+    SmileOutlined,
 
 
     PlusOutlined,
@@ -42,6 +46,11 @@ export default {
     return {
       userDataPath: '',
       ipc: null,
+
+
+      channel:false,
+      content:'',
+      inputPopVisible:false,
     }
   },
   async mounted() {
@@ -59,19 +68,21 @@ export default {
       times:[20,25],
       hooks: {
         send (manager, data) {
-          console.log(data)
         },
 
         barrageCreate (barrage, node) {
           if (!barrage.isSpecial) {
-            console.log(barrage.data) // -> { content: 'one' }
             // 设置弹幕内容和样式
-            node.textContent = barrage.data.content
             node.classList.add('barrage-style')
+            if(barrage.data.self){
+              node.style.background='black'
+              node.style.fontWeight='bold'
+            }
           }
         },
         barrageAppend (barrage, node) {
-          node.textContent = barrage.data.content
+          //node.textContent = barrage.data.content
+          node.textContent =barrage.data.self?'我：' +barrage.data.content:barrage.data.content
           let data=barrage.data
           if(barrage.data.avatar){
             let avatarEl=document.createElement('img')
@@ -86,7 +97,6 @@ export default {
         }
       }
     })
-    console.log(manager)
     // manager.setOptions({
     //   container:document.getElementById('danmuWrapper'),
     //   limit:50
@@ -120,6 +130,29 @@ export default {
     manager.show()
   },
   methods: {
+    /**
+     * 发射弹幕
+     */
+    send(){
+      console.log(this.content)
+      if(this.content===''){
+        return
+      }
+
+      let data={
+        channel:this.channel,
+        content:this.content
+      }
+      //todo 发送到接口提交弹幕
+
+      console.log(data)
+      $manager.send({
+        content:this.content,
+        self:true,
+      })
+      this.content=''
+      this.inputPopVisible=false
+    },
     makeBarrage(){
       const barrageContents=[
         '我哭了','好氪','肝疼',
@@ -189,6 +222,12 @@ export default {
       ipc.send('openExtShop', {
         name
       })
+    },
+    toggleInput(){
+      setTimeout(()=>{
+        document.getElementById('inputArea').focus()
+        document.getElementById('inputArea').select()
+      },500)
     }
   }
 }
@@ -199,6 +238,30 @@ export default {
 
   </div>
   <div id="controller" class="operation" style="text-align: center;margin-top: 6px">
+    <a-popover v-model:visible="inputPopVisible"  trigger="click">
+    <template #content>
+      <div style="width: 350px;height: 130px;-webkit-app-region:no-drag">
+        <div><img style="width: 22px;vertical-align: top" src="../assets/hot.svg"> 发弹幕
+          &nbsp;
+          <a-switch v-model:checked="channel" size="small" checked-children="团队频道" un-checked-children="公共频道"></a-switch>
+        </div>
+        <div style="margin-top: 10px;margin-bottom: 15px">
+          <a-textarea v-model:value="content" spellcheck="false" @visibleChange="toggleInput" id="inputArea" class="scroller-wrapper" :autoSize="{minRows:2,maxRows:2}" style="resize: none;overflow: hidden !important;" :allowClear="true" :maxlength="30"  :bordered="false" placeholder="发一条弹幕吧~"/>
+        </div>
+        <div style="clear: both;position: absolute;bottom: 25px;width: 92%">
+
+          <div style="float: left">
+            <a-button size="small"><smile-outlined /></a-button>
+          </div>
+          <div style="float: right">
+            <a-select v-if="false" size="small">选择团队</a-select> &nbsp;
+            <a-button @click="send" size="small">发送</a-button>
+          </div>
+        </div>
+      </div>
+    </template>
+    <a @click="toggleInput" class="shadow-button"><send-outlined /> 发射</a>
+    </a-popover>
     <a class="shadow-button"><lock-outlined /> 锁定</a>
     <a class="shadow-button"><setting-outlined /> 设置</a>
 <!--    <a class="shadow-button" type="ghost" @click="pause">暂停</a>-->
