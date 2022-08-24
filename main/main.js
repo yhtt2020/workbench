@@ -622,6 +622,8 @@ app.whenReady().then(()=>{
     parent:mainWindow
   })
 
+  barrageManager.init()
+
   ipc.on('toggleBarrage',()=>{
     if(BarrageManager.isAlive()){
       if(barrageManager.isLocked){
