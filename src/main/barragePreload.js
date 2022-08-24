@@ -4,13 +4,26 @@ const {
   contextBridge, ipcRenderer
 } = require('electron')
 const ipc = ipcRenderer
+require('../util/util').tools.getWindowArgs(window)
+const BarrageModel=require('../model/barrageModel')
+const barrageModel=new BarrageModel()
+ barrageModel.init()
+
 let apiUserInfo={}
-const window = {
+
+const windowApi = {
   close: () => {
     ipc.send('closeBarrageWindow')
-    console.log('发送closeBarrageWindow')
   }
 }
+
+const barrage={
+  async add (data) {
+    return await barrageModel.add(data)
+  }
+
+}
+
 const user={
   get:async () => {
     let userInfo = await ipc.invoke('user.get')
@@ -18,7 +31,6 @@ const user={
   },
   login:(callback)=>{
     ipc.once('loginCallback',(event,args)=>{
-      console.log(args)
       apiUserInfo=args.data
       callback(args.data.userInfo)
     })
@@ -29,6 +41,7 @@ contextBridge.exposeInMainWorld('tsbApi', {
   path,
   fs,
   ipc: ipcRenderer,
-  window,
-  user
+  window:windowApi,
+  user,
+  barrage
 })

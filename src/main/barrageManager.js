@@ -46,7 +46,12 @@ class BarrageManager{
         frame:false,
         webPreferences:{
           show:false,
-          preload:(__dirname+'/barragePreload.js')
+          preload:(__dirname+'/barragePreload.js'),
+          additionalArguments: [
+            '--user-data-path=' + app.getPath('userData'),
+            '--app-version=' + app.getVersion(),
+            '--app-name=' + app.getName()
+          ]
         }
       })
     }

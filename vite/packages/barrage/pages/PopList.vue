@@ -19,7 +19,7 @@ import {
   DeleteOutlined,
   ExclamationCircleOutlined
 } from '@ant-design/icons-vue '
-import { Modal } from 'ant-design-vue';
+import { message } from 'ant-design-vue';
 
 export default {
   components: {
@@ -48,7 +48,8 @@ export default {
       ipc: null,
       user:{},
 
-      channel:false,
+      channelType:false,
+      pageUrl:'',
       content:'',
       inputPopVisible:false,
     }
@@ -147,26 +148,47 @@ export default {
     /**
      * 发射弹幕
      */
-    send(){
+    async send() {
       console.log(this.content)
-      if(this.content===''){
+      if (this.content === '') {
         return
       }
-
-      let data={
-        channel:this.channel,
-        content:this.content
-      }
       //todo 发送到接口提交弹幕
+      const BARRAGE_CONST={
+        CHANNEL:{
+          PUBLIC:10001,
+          GROUP:10002
+        }
+      }
 
-      console.log(data)
-      $manager.send({
-        avatar:this.user.user_info.avatar,
-        content:this.content,
-        self:true,
-      })
-      this.content=''
-      this.inputPopVisible=false
+
+      let data = {
+        channel_type: this.channelType?BARRAGE_CONST.CHANNEL.GROUP:BARRAGE_CONST.CHANNEL.PUBLIC,
+        content: this.content,
+        page_url: this.pageUrl,
+
+      }
+      try{
+        let rs = await tsbApi.barrage.add(data)
+        console.log(rs)
+        console.log(data)
+        if(rs.status===1){
+          $manager.send({
+            avatar: this.user.user_info.avatar,
+            content: this.content,
+            self: true,
+          })
+          this.content = ''
+          this.inputPopVisible = false
+        }else{
+          message.error({content:'弹幕发布失败，服务器返回错误。'})
+        }
+      }catch (e) {
+        console.warn(e)
+        message.error({content:'弹幕发布失败，请检查网络情况。'})
+      }
+
+
     },
     makeBarrage(){
       const barrageContents=[
@@ -260,7 +282,7 @@ export default {
       <div style="width: 350px;-webkit-app-region:no-drag" :style="{height:this.user?'100px':'130px'}">
         <div><img style="width: 22px;vertical-align: top" src="../assets/hot.svg"> 发弹幕
           &nbsp;
-          <a-switch v-if="this.user" v-model:checked="channel" size="small" checked-children="团队频道" un-checked-children="公共频道"></a-switch>
+          <a-switch v-if="this.user" v-model:checked="channelType" size="small" checked-children="团队频道" un-checked-children="公共频道"></a-switch>
           <div style="float: right"><a-avatar v-if="this.user" :src="user.user_info.avatar"></a-avatar></div>
         </div>
         <div style="margin-top: 10px;margin-bottom: 15px">
