@@ -624,6 +624,10 @@ app.whenReady().then(()=>{
 
   ipc.on('toggleBarrage',()=>{
     if(BarrageManager.isAlive()){
+      if(barrageManager.isLocked){
+        barrageManager.unlock()
+        return
+      }
       barrageManager.destroy()
     }else{
       barrageManager.init()
@@ -644,5 +648,9 @@ app.whenReady().then(()=>{
     getCurrentTab((data)=>{
       e.returnValue=data
     })
+  })
+
+  ipc.on('barrage.lock',(e,a)=>{
+    barrageManager.lock()
   })
 })

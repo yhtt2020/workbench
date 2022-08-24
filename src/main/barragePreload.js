@@ -28,6 +28,9 @@ const barrage={
   },
   onUrlChanged(callback){
     barrage.urlChangedCallback=callback
+  },
+  lock(){
+    ipc.send('barrage.lock')
   }
 }
 

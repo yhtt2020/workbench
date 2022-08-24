@@ -15,6 +15,7 @@ app.whenReady().then(()=>{
 })
 class BarrageManager{
   container
+  isLocked=false
   constructor () {
 
   }
@@ -49,6 +50,7 @@ class BarrageManager{
         alwaysOnTop:true,
         hasShadow:false,
         frame:false,
+        acceptFirstMouse:false,
         webPreferences:{
           show:false,
           preload:(__dirname+'/barragePreload.js'),
@@ -104,6 +106,21 @@ class BarrageManager{
     return protocolUrl
   }
 
+  lock(){
+    if(BarrageManager.isAlive()){
+      this.container.setIgnoreMouseEvents(true,{forward:false})
+      this.container.blur()
+      this.isLocked=true
+    }
+  }
+
+  unlock(){
+    if(BarrageManager.isAlive()){
+      this.container.setIgnoreMouseEvents(false)
+      this.isLocked=false
+      this.container.webContents.executeJavaScript(`document.body.classList.add('active');window.$message.success('已为您解锁弹幕窗口')`)
+    }
+  }
   destroy(){
     this.container.close()
   }

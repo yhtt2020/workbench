@@ -66,6 +66,8 @@ export default {
       this.user=userResult.data
     }
 
+    window.$message=message
+
 
     // this.ipc = tsbApi.ipc
     // this.ipc.on('show', () => {
@@ -258,6 +260,11 @@ export default {
     close(){
       tsbApi.window.close()
     },
+    lock(){
+      message.success('锁定弹幕窗口成功。再次点击工具栏弹幕按钮可解锁。')
+      document.body.classList.remove('active')
+      tsbApi.barrage.lock()
+    },
     getId() {
 
     },
@@ -314,7 +321,6 @@ export default {
           </div>
         </div>
         <div style="clear: both;position: absolute;bottom: 25px;width: 92%">
-
           <div style="float: left">
             <a-button size="small"  :disabled="!this.user"><smile-outlined /></a-button>
           </div>
@@ -327,7 +333,7 @@ export default {
     </template>
     <a @click="toggleInput" class="shadow-button"><send-outlined /> 发射</a>
     </a-popover>
-    <a class="shadow-button"><lock-outlined /> 锁定</a>
+    <a class="shadow-button" @click="lock"><lock-outlined /> 锁定</a>
     <a class="shadow-button"><setting-outlined /> 设置</a>
 <!--    <a class="shadow-button" type="ghost" @click="pause">暂停</a>-->
     <a class="shadow-button" type="ghost" @click="close"><CloseCircleOutlined/> 关闭</a>
@@ -372,13 +378,16 @@ html, body {
     color: rgba(255,255,255,.7);
   }
 }
+.operation{
+  display: none;
+}
+.active{
 .barrage-container{
   &:hover{
     background: rgba(0,0,0,0.3);
   }
   background: rgba(0,0,0,0);
 }
-body{
   &:hover{
     .barrage-container{
       -webkit-app-region: drag;
@@ -387,9 +396,7 @@ body{
       display: block;
     }
   }
-  .operation{
-    display: none;
-  }
+
 }
 .scroller-wrapper {
   &::-webkit-scrollbar {
