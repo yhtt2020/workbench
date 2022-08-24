@@ -73,8 +73,9 @@ class BarrageManager{
   }
   getUrl (url) {
     let protocolUrl
+    let dev=false  //调试开关
     protocolUrl = `tsbapp://./${url}` //todo 需要验证正式环境的协议情况
-    if (true) {
+    if (dev) {
       protocolUrl = `http://localhost:1600/${url}`
     }
     return protocolUrl
