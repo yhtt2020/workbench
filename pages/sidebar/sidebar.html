@@ -66,7 +66,7 @@
     setMainWindow()
   }
 </script>
-<div id="appVue" style="z-index: 2" :class="{'sidebar':true,'expanded':this.mod==='open'}" onmouseenter="mousenter(this)"
+<div id="appVue" hidden style="z-index: 2" :class="{'sidebar':true,'expanded':this.mod==='open'}" onmouseenter="mousenter(this)"
      onmouseleave="mouseleave(this)">
   <sidebar ref="sidePanel"/>
 </div>

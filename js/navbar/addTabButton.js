@@ -7,10 +7,10 @@ function initialize () {
     let tabId=tabs.add(undefined,{atEnd:true})
     browserUI.addTab(tabId,undefined,true)
   })
-
-  shareButton.addEventListener('click',function (){
-    require('./tabBar.js').shareTask()
-  })
+  //
+  // shareButton.addEventListener('click',function (){
+  //   require('./tabBar.js').shareTask()
+  // })
 }
 
 module.exports = { initialize }

@@ -69,6 +69,12 @@ const sideBar = {
 
     }
   },
+  open(){
+    ipc.send('openSidebar')
+  },
+  close(){
+    ipc.send('closeSidebar')
+  },
   /**
    * 将侧边栏模式更改为展开
    */
@@ -121,8 +127,7 @@ const sideBar = {
   }
 }
 window.sideBar=sideBar
-
-ipc.on('openToolbar',()=>{
+function showToolbar(){
   document.getElementById('password-capture-bar').style.top = -36+'px'
   if (sideBar.mod==='close' || sideBar.mod==='auto'){
     toolbar.expanded = true
@@ -152,13 +157,11 @@ ipc.on('openToolbar',()=>{
     webviews.autoAdjustMargin()
   }
 
+}
+ipc.on('openToolbar',()=>{
+showToolbar()
 })
-
-ipc.on('hideToolbar',()=>{
-
-  setTimeout(function () {
-    ipc.invoke('showToolbarDialog')
-  }, 16)
+function hideToolbar(){
   if(sideBar.mod==='close' || sideBar.mod==='auto'){
     toolbar.expanded = false
     toolbar.toolbarEl.hidden = true
@@ -179,6 +182,9 @@ ipc.on('hideToolbar',()=>{
     webviews.adjustMargin([0, 0, 0, 100])
     document.getElementById('toolbar-navigation-buttons').hidden = false
   }
+}
+ipc.on('hideToolbar',()=>{
+  hideToolbar()
 })
 
 
@@ -194,6 +200,7 @@ const toolbar = {
   collapseButton: document.getElementById('collapse-button-toolbar'),
   startPageButton:document.getElementById('start-button-toolbar'),
   readEl : document.getElementById('read-toolbar'),
+  layoutButton:document.getElementById('layout-button'),
   //地址输入框焦点
   focusInput () {
     if ($toolbar.expanded && document.getElementById('searchbar').hidden) {
@@ -271,10 +278,28 @@ const toolbar = {
       toolbar.readEl.title = '阅读模式'
     }
   },
-
+  adjustLayout(){
+    if(this.layoutMod==='max'){
+      sideBar.open()
+      showToolbar()
+      webviews.autoAdjustMargin()
+    }else{
+      sideBar.close()
+      hideToolbar()
+      webviews.autoAdjustMargin()
+    }
+  },
 
   initialize: function () {
     window.$toolbar = toolbar
+
+    toolbar.layoutButton.addEventListener('click',()=>{
+      this.layoutMod=this.layoutMod==='min'?'max':'min'
+      settings.set('layout',this.layoutMod)
+      this.adjustLayout()
+    })
+
+
     toolbar.homeButton.addEventListener('click', () => {
       require('browserUI.js').addTab(tabs.add({}))
     })
@@ -301,33 +326,33 @@ const toolbar = {
 
     toolbar.sideModeButton.addEventListener('click', sideBar.switchSideMod)
 
-    toolbar.collapseButton.addEventListener('click', () => {
-      ipc.send('changeToolbar')
-      setTimeout(function () {
-        ipc.invoke('showToolbarDialog')
-      }, 16)
-      document.getElementById('password-capture-bar').style.top = 36+'px'
-      if(sideBar.mod==='close' || sideBar.mod==='auto'){
-        toolbar.expanded = false
-        toolbar.toolbarEl.hidden = true
-        document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px )`
-        document.getElementById('tab-editor').hidden = true
-        document.getElementById('tabs').insertBefore(document.getElementById('tab-editor'), document.getElementById('tabs').children[0])
-        webviews.viewMargins = [document.getElementById('toolbar').hidden ? 0 : 40, 0, 0, 45]
-        webviews.adjustMargin([0, 0, 0, 0])
-        document.getElementById('toolbar-navigation-buttons').hidden = false
-      }
-      if(sideBar.mod==='open' ){
-        toolbar.expanded = false
-        toolbar.toolbarEl.hidden = true
-        document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px )`
-        document.getElementById('tab-editor').hidden = true
-        document.getElementById('tabs').insertBefore(document.getElementById('tab-editor'), document.getElementById('tabs').children[0])
-        webviews.viewMargins = [document.getElementById('toolbar').hidden ? 0 : 40, 0,0,45]
-        webviews.adjustMargin([0, 0, 0, 100])
-        document.getElementById('toolbar-navigation-buttons').hidden = false
-      }
-    })
+    // toolbar.collapseButton.addEventListener('click', () => {
+    //   ipc.send('changeToolbar')
+    //   setTimeout(function () {
+    //     ipc.invoke('showToolbarDialog')
+    //   }, 16)
+    //   document.getElementById('password-capture-bar').style.top = 36+'px'
+    //   if(sideBar.mod==='close' || sideBar.mod==='auto'){
+    //     toolbar.expanded = false
+    //     toolbar.toolbarEl.hidden = true
+    //     document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px )`
+    //     document.getElementById('tab-editor').hidden = true
+    //     document.getElementById('tabs').insertBefore(document.getElementById('tab-editor'), document.getElementById('tabs').children[0])
+    //     webviews.viewMargins = [document.getElementById('toolbar').hidden ? 0 : 40, 0, 0, 45]
+    //     webviews.adjustMargin([0, 0, 0, 0])
+    //     document.getElementById('toolbar-navigation-buttons').hidden = false
+    //   }
+    //   if(sideBar.mod==='open' ){
+    //     toolbar.expanded = false
+    //     toolbar.toolbarEl.hidden = true
+    //     document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px )`
+    //     document.getElementById('tab-editor').hidden = true
+    //     document.getElementById('tabs').insertBefore(document.getElementById('tab-editor'), document.getElementById('tabs').children[0])
+    //     webviews.viewMargins = [document.getElementById('toolbar').hidden ? 0 : 40, 0,0,45]
+    //     webviews.adjustMargin([0, 0, 0, 100])
+    //     document.getElementById('toolbar-navigation-buttons').hidden = false
+    //   }
+    // })
     if (toolbar.expanded) {
       document.getElementById('address-bar').appendChild(document.getElementById('tab-editor'))
       document.getElementById('searchbar').style.top = ` calc(var(--control-space-top) + 36px + 40px )`
@@ -335,7 +360,8 @@ const toolbar = {
       document.getElementById('toolbar-navigation-buttons').hidden = true
     }
     toolbar.adjustSideBar()
-
+    this.layoutMod=settings.get('layout')|| 'min'
+    this.adjustLayout()
     toolbar.startPageButton.addEventListener('click',()=>{
       if(toolbar.startPageButton.classList.contains('disable')){
         return

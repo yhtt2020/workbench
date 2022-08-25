@@ -117,6 +117,8 @@ class SidePanel {
     this.syncTitleBar()
     this._sidePanel.on('ready-to-show', () => {
       checkUpdate()
+      let layout= settings.get('layout') || 'min'
+      SidePanel.send('adjustSidePanel',layout)
     })
 
     this._sidePanel.on('close', function () {
@@ -448,7 +450,6 @@ function addMainWindowEventListener () {
 }
 
 function loadSidePanel () {
-  log('执行loadSidePanel()')
   if (!SidePanel.alive()) {
     sidePanel = new SidePanel()
     sidePanel.init()
@@ -610,7 +611,15 @@ var count = 0
 ipc.on('showSidePanel', function () {
   loadSidePanel()
 })
-
+let sidePanelState='min'
+ipc.on('openSidebar',()=>{
+  sidePanelState='max'
+  SidePanel.send('adjustSidePanel',sidePanelState)
+})
+ipc.on('closeSidebar',()=>{
+  sidePanelState='min'
+  SidePanel.send('adjustSidePanel',sidePanelState)
+})
 var selectTaskWindow = null
 ipc.on('selectTask', function (event, arg) {
   //console.log(arg, '__apppp__')

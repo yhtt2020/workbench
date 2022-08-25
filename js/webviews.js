@@ -147,19 +147,30 @@ const webviews = {
   },
   viewMargins: [document.getElementById('toolbar').hidden?0:document.getElementById('third-toolbar').hidden?40:80, 0, 0, 45], // top, right, bottom, left
   autoAdjustMargin: function() {
-    const currentMargins = [
-      document.getElementById("toolbar").hidden
+    let top=0
+    let left=0
+    if(window.$toolbar.layoutMod==='min'){
+      top=0
+      left=0
+    }else{
+     top= document.getElementById("toolbar").hidden
         ? 0
         : document.getElementById("third-toolbar").hidden
-        ? 40
-        : 80,
-      0,
-      0,
-      window.sideBar.mod === "close"
+          ? 40
+          : 80
+      left=  window.sideBar.mod === "close"
         ? 45
         : window.sideBar.mod === "open"
-        ? 145
-        : 45,
+          ? 145
+          : 45
+    }
+
+
+    const currentMargins = [
+      top,
+      0,
+      0,
+      left,
     ];
     for (var i = 0; i < currentMargins.length; i++) {
       webviews.viewMargins[i] = currentMargins[i];

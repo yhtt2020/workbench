@@ -703,3 +703,12 @@ ipc.invoke('getSidebarGuideScedule').then(res => {
 ipc.on('updateSidebarGuideScedule', (event, args) => {
   window.$store.commit('UPDATE_GUIDE_SCEDULE', args)
 })
+
+ipc.on('adjustSidePanel',(e,a)=>{
+  console.log(a)
+  if(a==='min'){
+    document.getElementById('appVue').hidden=true
+  }else{
+    document.getElementById('appVue').hidden=false
+  }
+})
