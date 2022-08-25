@@ -1,5 +1,5 @@
 <script lang="ts">
-import { createVNode } from 'vue';
+import {createVNode} from 'vue';
 import {
   CloseCircleOutlined,
   RedoOutlined,
@@ -7,6 +7,7 @@ import {
   LockOutlined,
   SendOutlined,
   SmileOutlined,
+  DragOutlined,
 
   PlusOutlined,
   AppstoreAddOutlined,
@@ -19,7 +20,7 @@ import {
   DeleteOutlined,
   ExclamationCircleOutlined
 } from '@ant-design/icons-vue '
-import { message } from 'ant-design-vue';
+import {message} from 'ant-design-vue';
 
 export default {
   components: {
@@ -29,6 +30,7 @@ export default {
     LockOutlined,
     SendOutlined,
     SmileOutlined,
+    DragOutlined,
 
 
     PlusOutlined,
@@ -46,27 +48,27 @@ export default {
     return {
       userDataPath: '',
       ipc: null,
-      user:{},
+      user: {},
 
-      CONST:null,
-      barrages:[],
+      CONST: null,
+      barrages: [],
 
-      channelType:false,
-      pageUrl:'',
-      content:'',
-      inputPopVisible:false,
+      channelType: false,
+      pageUrl: '',
+      content: '',
+      inputPopVisible: false,
     }
   },
 
   async mounted() {
-    let userResult=await tsbApi.user.get()
-    if(userResult.status===0){
-      this.user=null
-    }else{
-      this.user=userResult.data
+    let userResult = await tsbApi.user.get()
+    if (userResult.status === 0) {
+      this.user = null
+    } else {
+      this.user = userResult.data
     }
 
-    window.$message=message
+    window.$message = message
 
 
     // this.ipc = tsbApi.ipc
@@ -78,31 +80,31 @@ export default {
     // })
     // 这将创建一个弹幕 manager，用于管理弹幕
     const manager = Danmuku.create({
-      container:document.getElementById('danmuWrapper'),
-      interval:1,
-      times:[20,25],
+      container: document.getElementById('danmuWrapper'),
+      interval: 1,
+      times: [20, 25],
       hooks: {
-        send (manager, data) {
+        send(manager, data) {
         },
 
-        barrageCreate (barrage, node) {
+        barrageCreate(barrage, node) {
           if (!barrage.isSpecial) {
             // 设置弹幕内容和样式
             node.classList.add('barrage-style')
-            if(barrage.data.self){
-              node.style.background='black'
-              node.style.fontWeight='bold'
+            if (barrage.data.self) {
+              node.style.background = 'black'
+              node.style.fontWeight = 'bold'
             }
           }
         },
-        barrageAppend (barrage, node) {
+        barrageAppend(barrage, node) {
           //node.textContent = barrage.data.content
-          node.textContent =barrage.data.self?'我：' +barrage.data.content:barrage.data.content
-          let data=barrage.data
-          if(barrage.data.avatar){
-            let avatarEl=document.createElement('img')
+          node.textContent = barrage.data.self ? '我：' + barrage.data.content : barrage.data.content
+          let data = barrage.data
+          if (barrage.data.avatar) {
+            let avatarEl = document.createElement('img')
             avatarEl.classList.add('barrage-avatar')
-            avatarEl.src=data.avatar
+            avatarEl.src = data.avatar
             node.appendChild(avatarEl)
           }
           node.classList.add('barrage-style')
@@ -117,7 +119,7 @@ export default {
     //   limit:50
     // })
     tsbApi.barrage.onUrlChanged(this.changeUrl) //挂载url变化事件
-    this.pageUrl=(await tsbApi.tabs.current()).sourceUrl
+    this.pageUrl = (await tsbApi.tabs.current()).sourceUrl
     this.getList()
 
 
@@ -140,7 +142,7 @@ export default {
     //   })
     // },3000)
 
-    window.$manager=manager
+    window.$manager = manager
 
     manager.start()
     manager.show()
@@ -150,27 +152,27 @@ export default {
       this.pageUrl = url
       await this.getList()
     },
-    async getList(){
-      this.CONST=tsbApi.barrage.CONST
-      try{
-        let rs=await tsbApi.barrage.getList(this.CONST.CHANNEL.PUBLIC,this.pageUrl)
-        this.barrages=rs.data
-        if(rs.status){
+    async getList() {
+      this.CONST = tsbApi.barrage.CONST
+      try {
+        let rs = await tsbApi.barrage.getList(this.CONST.CHANNEL.PUBLIC, this.pageUrl)
+        this.barrages = rs.data
+        if (rs.status) {
           $manager.clear()
           $manager.send(this.barrages)
           $manager.start()
-        }else{
+        } else {
           message.error('获取弹幕接口返回错误，可能是服务器正在维护，请稍后再试。')
         }
-      }catch (e) {
+      } catch (e) {
         console.error(e)
         message.error('获取弹幕意外错误。')
       }
     },
-    login(){
-      tsbApi.user.login((userInfo)=>{
-        this.user={
-          user_info:userInfo
+    login() {
+      tsbApi.user.login((userInfo) => {
+        this.user = {
+          user_info: userInfo
         }
       })
     },
@@ -178,10 +180,10 @@ export default {
      * 发射弹幕
      */
     async send() {
-      let allowProtocol=['ts','http','https']
-      if(!allowProtocol.some(protocol=>{
-        return this.pageUrl.startsWith(protocol+'://')
-      })){
+      let allowProtocol = ['ts', 'http', 'https']
+      if (!allowProtocol.some(protocol => {
+        return this.pageUrl.startsWith(protocol + '://')
+      })) {
         message.error('当前页面不允许发送弹幕')
         return
       }
@@ -189,14 +191,14 @@ export default {
         return
       }
       let data = {
-        channel_type: this.channelType?this.CONST.CHANNEL.GROUP:this.CONST.CHANNEL.PUBLIC,
+        channel_type: this.channelType ? this.CONST.CHANNEL.GROUP : this.CONST.CHANNEL.PUBLIC,
         content: this.content,
         page_url: this.pageUrl,
 
       }
-      try{
+      try {
         let rs = await tsbApi.barrage.add(data)
-        if(rs.status===1){
+        if (rs.status === 1) {
           $manager.send({
             avatar: this.user.user_info.avatar,
             content: this.content,
@@ -205,32 +207,32 @@ export default {
           this.content = ''
           this.inputPopVisible = false
           message.success('弹幕装填成功。')
-        }else{
-          message.error({content:'弹幕发布失败，服务器返回错误。'})
+        } else {
+          message.error({content: '弹幕发布失败，服务器返回错误。'})
         }
-      }catch (e) {
+      } catch (e) {
         console.warn(e)
-        message.error({content:'弹幕发布失败，请检查网络情况。'})
+        message.error({content: '弹幕发布失败，请检查网络情况。'})
       }
     },
-    makeBarrage(){
-      const barrageContents=[
-        '我哭了','好氪','肝疼',
-        '全场最佳','太优雅了，太优雅了','没关系，我也不直','我也不懂',
-        '火钳刘明','姐姐，他不直啊','BGM：独到','看看我姐姐',
-        '火火火火火！！！！太棒了！！','我是我自己','33333','播放量起来了','发量惊人',
-        '恭喜你发现啦宝藏','别刀了，我呜呜呜呜','泪点','这是一部很差的电影',
-        '墨菲定律','好可爱！！！！！','一起上岸','冲鸭','加油！上岸！','上岸，就是现在','吾辈何以为战',
-        '这我熟','这背景音乐，挺应景','这个配音，太棒了','道法自然','成龙','栓Q','宿命不知','翻译过来：人类是有极限的',
-        '我醒了','我悟了','是偶然，是必然','老爹：密集不重要','人人都是食神','相信','币有了','备战高考',
-        '你必须忘掉过去的一切','音响来了','这顿心灵鸡汤，有被喂到','前程似锦','存在主义'
+    makeBarrage() {
+      const barrageContents = [
+        '我哭了', '好氪', '肝疼',
+        '全场最佳', '太优雅了，太优雅了', '没关系，我也不直', '我也不懂',
+        '火钳刘明', '姐姐，他不直啊', 'BGM：独到', '看看我姐姐',
+        '火火火火火！！！！太棒了！！', '我是我自己', '33333', '播放量起来了', '发量惊人',
+        '恭喜你发现啦宝藏', '别刀了，我呜呜呜呜', '泪点', '这是一部很差的电影',
+        '墨菲定律', '好可爱！！！！！', '一起上岸', '冲鸭', '加油！上岸！', '上岸，就是现在', '吾辈何以为战',
+        '这我熟', '这背景音乐，挺应景', '这个配音，太棒了', '道法自然', '成龙', '栓Q', '宿命不知', '翻译过来：人类是有极限的',
+        '我醒了', '我悟了', '是偶然，是必然', '老爹：密集不重要', '人人都是食神', '相信', '币有了', '备战高考',
+        '你必须忘掉过去的一切', '音响来了', '这顿心灵鸡汤，有被喂到', '前程似锦', '存在主义'
       ]
-      const barrageAvatars=[
+      const barrageAvatars = [
         'https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/base64_upload_662801660894026?imageMogr2/crop/216x216/gravity/center',
         'https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/base64_upload_911801656927249?imageMogr2/crop/216x216/gravity/center',
         'https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/base64_upload_258651660897206?imageMogr2/crop/216x216/gravity/center',
         'https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/base64_upload_783781661154005?imageMogr2/crop/216x216/gravity/center',
-'https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/base64_upload_113871639461704?imageMogr2/crop/216x216/gravity/center',
+        'https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/base64_upload_113871639461704?imageMogr2/crop/216x216/gravity/center',
         'https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/base64_upload_430961657529896?imageMogr2/crop/216x216/gravity/center',
         'https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/base64_upload_996711657355741?imageMogr2/crop/216x216/gravity/center',
         'https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/base64_upload_864541660749680?imageMogr2/crop/216x216/gravity/center',
@@ -251,19 +253,19 @@ export default {
         'https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/628665b9c5a46b02c7cf62d2e3198f74.png?imageMogr2/crop/216x216/gravity/center',
         'https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/base64_upload_329221660786827?imageMogr2/crop/216x216/gravity/center'
       ]
-      let content=Math.floor(Math.random() * barrageContents.length )
-      let hasAvatar=Math.floor(Math.random() * 10 + 1)>3
-      let avatar=Math.floor(Math.random() * barrageAvatars.length )
-     let barrage=  {
-        content:barrageContents[content],
+      let content = Math.floor(Math.random() * barrageContents.length)
+      let hasAvatar = Math.floor(Math.random() * 10 + 1) > 3
+      let avatar = Math.floor(Math.random() * barrageAvatars.length)
+      let barrage = {
+        content: barrageContents[content],
       }
-      if(hasAvatar) barrage['avatar']=barrageAvatars[avatar]
-      return  barrage
+      if (hasAvatar) barrage['avatar'] = barrageAvatars[avatar]
+      return barrage
     },
-    close(){
+    close() {
       tsbApi.window.close()
     },
-    lock(){
+    lock() {
       message.success('锁定弹幕窗口成功。再次点击工具栏弹幕按钮可解锁。')
       document.body.classList.remove('active')
       tsbApi.barrage.lock()
@@ -271,13 +273,13 @@ export default {
     getId() {
 
     },
-    reload(){
+    reload() {
       window.location.reload()
     },
-    pause(){
-      $manager.running?$manager.stop():$manager.start()
-      $manager.each((ba)=>{
-        ba.paused?ba.resume():ba.pause()
+    pause() {
+      $manager.running ? $manager.stop() : $manager.start()
+      $manager.each((ba) => {
+        ba.paused ? ba.resume() : ba.pause()
       })
     },
     openShop(name = 'chrome') {
@@ -285,12 +287,12 @@ export default {
         name
       })
     },
-    toggleInput(){
-      if(this.user){
-        setTimeout(()=>{
+    toggleInput() {
+      if (this.user) {
+        setTimeout(() => {
           document.getElementById('inputArea').focus()
           document.getElementById('inputArea').select()
-        },500)
+        }, 500)
       }
     }
   }
@@ -299,103 +301,166 @@ export default {
 
 <template>
   <div id="danmuWrapper" class="barrage-container" style="border-radius: 8px;height: calc(100vh - 30px)">
+    <div style="position: absolute;right: 0;z-index: 9999">
+      <div class="control-action">
+        <CloseCircleOutlined @click="close" class="control-icon"/>
+      </div>
+      <div class="control-action move">
+        <drag-outlined class=" move-icon control-icon"/>
+      </div>
+    </div>
+
 
   </div>
   <div id="controller" class="operation" style="text-align: center;margin-top: 6px">
-    <a-popover v-model:visible="inputPopVisible"  trigger="click">
-    <template #content>
-      <div style="width: 350px;-webkit-app-region:no-drag" :style="{height:this.user?'100px':'130px'}">
-        <div><img style="width: 22px;vertical-align: top" src="../assets/hot.svg"> 发弹幕
-          &nbsp;
-          <a-switch v-if="this.user" v-model:checked="channelType" size="small" checked-children="团队频道" un-checked-children="公共频道"></a-switch>
-          <div style="float: right"><a-avatar v-if="this.user" :src="user.user_info.avatar"></a-avatar></div>
-        </div>
-        <div style="margin-top: 10px;margin-bottom: 15px">
+    <a-popover v-model:visible="inputPopVisible" trigger="click">
+      <template #content>
+        <div style="width: 350px;-webkit-app-region:no-drag" :style="{height:this.user?'100px':'130px'}">
+          <div><img style="width: 22px;vertical-align: top" src="../assets/hot.svg"> 发弹幕
+            &nbsp;
+            <a-switch v-if="this.user" v-model:checked="channelType" size="small" checked-children="团队频道"
+                      un-checked-children="公共频道"></a-switch>
+            <div style="float: right">
+              <a-avatar v-if="this.user" :src="user.user_info.avatar"></a-avatar>
+            </div>
+          </div>
+          <div style="margin-top: 10px;margin-bottom: 15px">
 
-          <a-input @keypress.enter="send" v-if="this.user"
-                      v-model:value="content" spellcheck="false" @visibleChange="toggleInput" id="inputArea"
-                      class="scroller-wrapper" style="resize: none;overflow: hidden !important;"
-                      :allowClear="true" :maxlength="30"  :bordered="false"
-                      placeholder="发一条弹幕吧~"
+            <a-input @keypress.enter="send" v-if="this.user"
+                     v-model:value="content" spellcheck="false" @visibleChange="toggleInput" id="inputArea"
+                     class="scroller-wrapper" style="resize: none;overflow: hidden !important;"
+                     :allowClear="true" :maxlength="30" :bordered="false"
+                     placeholder="发一条弹幕吧~"
 
-          />
-          <div v-else style="width: 100%;height: 60px;font-size: 13px;color: #999;text-align: center;background: rgba(128,128,128,0.15);border-radius:4px;line-height: 24px;padding-top: 5px">
-            <strong>未登录</strong>用户无法发布弹幕<p>请 <a-button type="primary" size="small" @click="login">登录</a-button> 后重试</p>
+            />
+            <div v-else
+                 style="width: 100%;height: 60px;font-size: 13px;color: #999;text-align: center;background: rgba(128,128,128,0.15);border-radius:4px;line-height: 24px;padding-top: 5px">
+              <strong>未登录</strong>用户无法发布弹幕
+              <p>请
+                <a-button type="primary" size="small" @click="login">登录</a-button>
+                后重试
+              </p>
+            </div>
+          </div>
+          <div style="clear: both;position: absolute;bottom: 25px;width: 92%">
+            <div style="float: left">
+              <a-button size="small" :disabled="!this.user">
+                <smile-outlined/>
+              </a-button>
+            </div>
+            <div style="float: right">
+              <a-select v-if="false" size="small">选择团队</a-select> &nbsp;
+              <a-button @click="send" size="small" :disabled="!this.user">发送</a-button>
+            </div>
           </div>
         </div>
-        <div style="clear: both;position: absolute;bottom: 25px;width: 92%">
-          <div style="float: left">
-            <a-button size="small"  :disabled="!this.user"><smile-outlined /></a-button>
-          </div>
-          <div style="float: right">
-            <a-select v-if="false" size="small">选择团队</a-select> &nbsp;
-            <a-button @click="send" size="small" :disabled="!this.user">发送</a-button>
-          </div>
-        </div>
-      </div>
-    </template>
-    <a @click="toggleInput" class="shadow-button"><send-outlined /> 发射</a>
+      </template>
+      <a @click="toggleInput" class="shadow-button">
+        <send-outlined/>
+        发射</a>
     </a-popover>
-    <a class="shadow-button" @click="lock"><lock-outlined /> 锁定</a>
-    <a class="shadow-button"><setting-outlined /> 设置</a>
-<!--    <a class="shadow-button" type="ghost" @click="pause">暂停</a>-->
-    <a class="shadow-button" type="ghost" @click="close"><CloseCircleOutlined/> 关闭</a>
-    <a class="shadow-button" @click="reload"><redo-outlined /> 刷新</a>
+    <a class="shadow-button" @click="lock">
+      <lock-outlined/>
+      锁定</a>
+    <a class="shadow-button">
+      <setting-outlined/>
+      设置</a>
+    <!--    <a class="shadow-button" type="ghost" @click="pause">暂停</a>-->
+    <a class="shadow-button" @click="reload">
+      <redo-outlined/>
+      刷新</a>
   </div>
 </template>
 <style>
-.barrage-style{
+.barrage-style {
   user-select: none;
   border-radius: 100px;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   color: white;
   padding: 3px 15px;
   padding-right: 15px;
   vertical-align: middle;
   line-height: 28px;
 }
-.barrage-avatar{
+
+.barrage-avatar {
   border-radius: 100%;
   width: 30px;
   height: 30px;
   float: left;
   margin-left: -10px;
-  margin-right:6px;
+  margin-right: 6px;
   vertical-align: text-top;
 }
+
 html, body {
   overflow: hidden !important;
   background-color: #00000000 !important;
 }
 </style>
 <style scoped lang="scss">
-.shadow-button{
-  background: rgba(0,0,0,0.5);
+.shadow-button {
+  background: rgba(0, 0, 0, 0.5);
   color: white;
   border-radius: 6px;
   margin-left: 5px;
   margin-right: 5px;
   padding: 5px 10px;
   cursor: pointer;
-  &:hover{
-    color: rgba(255,255,255,.7);
+  opacity: 0.7;
+  &:hover {
+    opacity: 1;
   }
 }
-.operation{
+
+.operation {
   display: none;
 }
-.active{
-.barrage-container{
-  background: rgba(0,0,0,0.3);
-  -webkit-app-region: drag;
+
+.active {
+  .barrage-container {
+    background: rgba(0, 0, 0, 0.3);
+
+  }
+
+
 }
-  &:hover{
-    .operation{
-      display: block;
+
+.control-action {
+  display: none;
+}
+
+.active {
+  .control-action {
+    opacity: 0.7;
+    &:hover{
+      opacity: 1;
+    }
+    background: #8080803d;
+    border-radius: 7px;
+    display: inline-block;
+    margin: 5px;
+    float: right;
+    cursor: move;
+    .control-icon {
+      color: #e5e5e5;
+      padding: 4px;
+      font-size: 20px;
+      z-index: 9999;
     }
   }
 
+  .move {
+    -webkit-app-region: drag;
+  }
+
+  &:hover {
+    .operation {
+      display: block;
+    }
+  }
 }
+
 .scroller-wrapper {
   &::-webkit-scrollbar {
     width: 6px;
