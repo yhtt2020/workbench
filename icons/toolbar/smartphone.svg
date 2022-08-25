@@ -1,1 +1,10 @@
-<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg t="1639547280091" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="47818" xmlns:xlink="http://www.w3.org/1999/xlink" width="32" height="32"><defs><style type="text/css"></style></defs><path d="M725.333333 42.666667a128 128 0 0 1 128 128v682.666666a128 128 0 0 1-128 128H298.666667a128 128 0 0 1-128-128V170.666667a128 128 0 0 1 128-128h426.666666z m0 85.333333H298.666667l-5.802667 0.426667a42.538667 42.538667 0 0 0-36.48 36.437333L256 170.666667v682.666666l0.426667 5.802667a42.538667 42.538667 0 0 0 36.437333 36.48L298.666667 896h426.666666l5.802667-0.426667a42.538667 42.538667 0 0 0 36.48-36.437333L768 853.333333V170.666667l-0.426667-5.802667A42.538667 42.538667 0 0 0 725.333333 128z m-213.333333 597.333333a42.666667 42.666667 0 1 1 0 85.333334 42.666667 42.666667 0 0 1 0-85.333334z" fill="#666666" p-id="47819"></path></svg>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="96px" height="117px" viewBox="0 0 96 117" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>路径</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="编组">
+            <path d="M58,89.125 L38,89.125 C35.2385,89.125 33,91.3635 33,94.125 C33,96.8865 35.2385,99.125 38,99.125 L58,99.125 C60.7615,99.125 63,96.8865 63,94.125 C63,91.3635 60.7615,89.125 58,89.125 Z" id="路径" fill="#333333"></path>
+            <rect id="矩形" stroke="#333333" stroke-width="10" x="5" y="5" width="86" height="107" rx="22"></rect>
+        </g>
+    </g>
+</svg>
