@@ -77,6 +77,10 @@ class SpaceManager {
   async migrateOldLocalSpace(){
       if(fs.existsSync(this.LDB_PATH)){
         ldb.initDb()
+        let current=ldb.db.get('currentSpace').value()
+        if(!Object.keys(current).length>0){
+          return
+        }
         this.showNotification('系统检测到您是升级用户，正在为您升级数据库。请稍候。',false)
         let localSpaces=ldb.db.get('spaces').filter({type:'local'}).value()
         let spaceAddList=[]

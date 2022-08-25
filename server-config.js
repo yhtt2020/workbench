@@ -5,7 +5,7 @@ if(typeof window!=='undefined'){
   window=require('./src/util/util').tools.getWindowArgs(window)
   isDevelopmentMode='development-mode' in window.globalArgs
 }
-const localNode = true  //设置为true， cyx则使用本地的node配置
+const localNode = false  //设置为true， cyx则使用本地的node配置
 const localServer = false  //设置为true， cgz则使用本地的node配置 //两者不能同时为true
 
 const config = {

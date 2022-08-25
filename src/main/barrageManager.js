@@ -4,7 +4,6 @@ const ipc=ipcMain
 const isDevelopmentMode = process.argv.some(arg => arg === '--development-mode')
 app.whenReady().then(()=>{
   ipc.on('closeBarrageWindow',()=>{
-    console.log('收到消息closeBarrageWindow')
     if(win && !win.isDestroyed()){
       win.close()
     }
