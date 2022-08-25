@@ -81,9 +81,9 @@
 #toolbar .app {
   filter: grayscale(1);
   padding: 2px;
-  width: 32px;
-  height: 32px;
-  margin-top: 4px;
+  width: 26px;
+  height: 26px;
+  margin-top: 7px;
 }
 #toolbar .app:hover {
   filter: none;
