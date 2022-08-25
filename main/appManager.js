@@ -60,6 +60,7 @@ const appManager = {
           item.window.show()
         }
         item.window.focus()
+        barrageManager.changeUrl(item.saApp.url)
       }
     })
   },
@@ -649,25 +650,29 @@ const appManager = {
     if (saApp.package === 'com.thisky.fav' && isDevelopmentMode) {
       appView.webContents.openDevTools()
     }
+    function updateView(url){
+      if(appWindow.isFocused()){
+        barrageManager.changeUrl(url)
+      }
+      appWindow.webContents.send('updateView', {
+        url: url,
+        canGoBack: appView.webContents.canGoBack(),
+        canGoForward: appView.webContents.canGoForward()
+      })
+    }
+
     appView.webContents.on('did-navigate-in-page', (event, url) => {
-      if (!appWindow.webContents.isDestroyed())
-        appWindow.webContents.send('updateView', {
-          url: url,
-          canGoBack: appView.webContents.canGoBack(),
-          canGoForward: appView.webContents.canGoForward()
-        })
-    })
+        if (!appWindow.webContents.isDestroyed())
+          updateView(url)
+      }
+    )
 
     appView.webContents.on('new-window', (event, url, frameName, disposition, options, additionalFeatures, referrer, postBody) => {
       if (!!!saApp.openNewWindow || saApp.openNewWindow === 'redirect') {
         //默认为重定向
         event.preventDefault()
         appView.webContents.loadURL(url)
-        appWindow.webContents.send('updateView', {
-          url: url,
-          canGoBack: appView.webContents.canGoBack(),
-          canGoForward: appView.webContents.canGoForward()
-        })
+        updateView(url)
       } else if (saApp.openNewWindow === 'allow') {
         event.preventDefault()
         //允许，则不修改默认事件

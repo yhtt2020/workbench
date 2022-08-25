@@ -614,11 +614,10 @@ ipc.on('errorClose',(e,args)=>{
   }
 })
 
-
+var barrageManager=null //全局可用
+const { BarrageManager }=require(path.join(__dirname,'/src/main/barrageManager.js'))
 app.whenReady().then(()=>{
-  const { BarrageManager }=require(path.join(__dirname,'/src/main/barrageManager.js'))
-  console.log('载入BarrageManager',BarrageManager)
-  let barrageManager=new BarrageManager({
+  barrageManager=new BarrageManager({
     parent:mainWindow
   })
 

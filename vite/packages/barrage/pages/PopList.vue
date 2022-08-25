@@ -159,9 +159,12 @@ export default {
           $manager.clear()
           $manager.send(this.barrages)
           $manager.start()
+        }else{
+          message.error('获取弹幕接口返回错误，可能是服务器正在维护，请稍后再试。')
         }
       }catch (e) {
-        message.error('获取弹幕接口访问失败，请检查网络。')
+        console.error(e)
+        message.error('获取弹幕意外错误。')
       }
     },
     login(){
