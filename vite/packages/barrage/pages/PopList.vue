@@ -143,7 +143,10 @@ export default {
     // },3000)
 
     window.$manager = manager
-
+    window.addEventListener('resize',()=>{
+      console.log('rezied')
+      manager.resize()
+    })
     manager.start()
     manager.show()
   },
@@ -300,20 +303,12 @@ export default {
 </script>
 
 <template>
-  <div id="danmuWrapper" class="barrage-container" style="border-radius: 8px;height: calc(100vh - 30px)">
-    <div style="position: absolute;right: 0;z-index: 9999">
-      <div class="control-action">
-        <CloseCircleOutlined @click="close" class="control-icon"/>
-      </div>
-      <div class="control-action move">
-        <drag-outlined class=" move-icon control-icon"/>
-      </div>
-    </div>
-
+  <div class="window-frame">
+  <div id="danmuWrapper" class="barrage-container" style="height: calc(100vh - 40px);margin-top: 40px">
 
   </div>
-  <div id="controller" class="operation" style="text-align: center;margin-top: 6px">
-    <a-popover v-model:visible="inputPopVisible" trigger="click">
+  <div id="controller" class="operation" style="text-align: center;position: absolute;top: 10px;width:300px;left: 50%;margin-left: -150px">
+    <a-popover v-model:visible="inputPopVisible" placement="bottom" trigger="click">
       <template #content>
         <div style="width: 350px;-webkit-app-region:no-drag" :style="{height:this.user?'100px':'130px'}">
           <div><img style="width: 22px;vertical-align: top" src="../assets/hot.svg"> 发弹幕
@@ -358,21 +353,28 @@ export default {
       <a @click="toggleInput" class="shadow-button">
         <send-outlined/>
         发射</a>
+
     </a-popover>
     <a class="shadow-button" @click="lock">
       <lock-outlined/>
-      锁定</a>
+      </a>
+
     <a class="shadow-button">
       <setting-outlined/>
-      设置</a>
+      </a>
     <!--    <a class="shadow-button" type="ghost" @click="pause">暂停</a>-->
     <a class="shadow-button" @click="reload">
       <redo-outlined/>
-      刷新</a>
+      </a>
+    <a class="shadow-button" @click="close">
+      <CloseCircleOutlined  class="control-icon"/>
+    </a>
+  </div>
   </div>
 </template>
 <style>
 .barrage-style {
+  -webkit-app-region: no-drag;
   user-select: none;
   border-radius: 100px;
   background: rgba(0, 0, 0, 0.5);
@@ -384,6 +386,7 @@ export default {
 }
 
 .barrage-avatar {
+  -webkit-app-region: no-drag;
   border-radius: 100%;
   width: 30px;
   height: 30px;
@@ -393,9 +396,15 @@ export default {
   vertical-align: text-top;
 }
 
-html, body {
+html,body {
   overflow: hidden !important;
   background-color: #00000000 !important;
+}
+.window-frame {
+  height: 100vh;
+}
+.operation{
+  display: none;
 }
 </style>
 <style scoped lang="scss">
@@ -407,6 +416,7 @@ html, body {
   margin-right: 5px;
   padding: 5px 10px;
   cursor: pointer;
+  user-select: none;
   opacity: 0.7;
   &:hover {
     opacity: 1;
@@ -414,16 +424,7 @@ html, body {
 }
 
 .operation {
-  display: none;
-}
-
-.active {
-  .barrage-container {
-    background: rgba(0, 0, 0, 0.3);
-
-  }
-
-
+  -webkit-app-region:no-drag;
 }
 
 .control-action {
@@ -431,6 +432,17 @@ html, body {
 }
 
 .active {
+  .operation{
+   display: block;
+  }
+  .window-frame{
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    -webkit-app-region:drag;
+  }
   .control-action {
     opacity: 0.7;
     &:hover{
