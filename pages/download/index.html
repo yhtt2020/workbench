@@ -243,10 +243,11 @@
     if (args.status === 'start') {
       appVue.list.forEach(item => {
         if (item.startTime === args.startTime) {
-          appVue.lists.splice(appVue.lists.indexOf(args.startTime), 1)
+          appVue.list.splice(appVue.list.indexOf(args.startTime), 1)
+          appVue.listCount--
+          appVue.count--
         }
       })
-
       appVue.list.unshift({
         name: args.name,
         id: appVue.id++,
@@ -262,11 +263,16 @@
         href: args.href,
         suffixal: path.extname(args.name)
       })
+      // function unique(arr) {
+      //   const res = new Map()
+      //   return arr.filter((item) => !res.has(item.startTime) && res.set(item.startTime, 1))
+      // }
+      // appVue.list =unique(appVue.list)
+      //
       appVue.listCount++
       appVue.count++
       ipcRenderer.send('willDownload')
       ipcRenderer.send('downloading')
-
     }
 
     if (args.status === 'cancelled') {
@@ -313,14 +319,16 @@
       ipcRenderer.send('inform')
       ipcRenderer.send('emptyPageUrl', args.chainUrl)
       const myDate = new Date()
-      appVue.doneList.forEach(item => {
-        if (item.startTime === args.startTime) {
-          appVue.doneList.splice(appVue.doneList.indexOf(args.startTime), 1)
-          appVue.count++
-          appVue.listCount++
-          appVue.listDoneCount--
-        }
-      })
+      // appVue.doneList.forEach(item => {
+      //   if (item.startTime === args.startTime) {
+      //     console.log('123')
+      //     appVue.doneList.splice(appVue.doneList.indexOf(args.startTime), 1)
+      //     appVue.count++
+      //     appVue.listCount++
+      //     appVue.listDoneCount--
+      //   }
+      // })
+
       appVue.doneList.unshift({
         name: args.name,
         id: appVue.doneId++,
@@ -336,8 +344,16 @@
       })
 
       appVue.listCount--
+      if( appVue.listCount <0){
+        appVue.listCount =0
+      }
       appVue.count--
       appVue.listDoneCount++
+      function unique(arr) {
+        const res = new Map()
+        return arr.filter((item) => !res.has(item.startTime) && res.set(item.startTime, 1))
+      }
+      appVue.doneList =unique(appVue.doneList)
       db.download.add({
         name: args.name,
         title: args.name,
@@ -555,6 +571,9 @@
         })
         ipcRenderer.send('deleteDownload', this.selectingList.path)
         this.visibleIng = false
+        if(appVue.doneList.length === 0 ){
+          appVue.listDoneCount =0
+        }
       },
 
       doneChange (e) {
@@ -634,6 +653,9 @@
         }
         appVue.listDoneCount--
         appVue.listTrashCount++
+        if(appVue.doneList.length === 0 ){
+          appVue.listDoneCount =0
+        }
       },
       resume (item) {
         ipcRenderer.send('resumeDownload', item.path)
