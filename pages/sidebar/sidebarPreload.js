@@ -179,10 +179,7 @@ window.insertDefaultUser = insertDefaultUser
 ipc.on('userLogin', async function (e, data) {
   //此处是用户触发自动登录后的回调地址
   let userResponse =await userMode.getCurrent()
-  console.log(userResponse)
-  if(userResponse.status===0){
-    return
-  }
+  console.log('userResponse=',userResponse)
   if(userResponse.status===1){
     let data=userResponse.data
     let user={
@@ -207,50 +204,5 @@ ipc.on('userLogin', async function (e, data) {
     window.$store.dispatch('getJoinedCircle', {page: 1, row: 500})
     window.$store.dispatch('getMyCircle', {page: 1, row: 500})
   }
-
-
-
-  // let user = {
-  //   uid: data.userInfo.uid,
-  //   nickname: data.userInfo.nickname,
-  //   avatar: data.userInfo.avatar,
-  //   token: data.token,
-  //   fans: data.userInfo.fans || 0,
-  //   postCount: data.userInfo.post_count || 0,
-  //   follow: data.userInfo.follow || 0,
-  //   grade: data.userInfo.grade || {
-  //     grade: 0
-  //   },
-  //   refreshToken: data.refreshToken,
-  //   expire_deadtime: new Date().getTime() + data.expire * 1000,
-  //   refreshExpire_deadtime: new Date().getTime() + data.refreshExpire * 1000,
-  //   code: data.code
-  // }
-
-  // 设置当前登录帐号为此帐号
-  //db.system.where({ name: 'currentUser' }).delete()
-  // db.system.put({
-  //   name: 'currentUser',
-  //   value: user
-  // }).then(async (msg) => {
-  //   db.accounts.put({
-  //     id:user.uid,
-  //     uid: user.uid,
-  //     nickname: user.nickname,
-  //     avatar: user.avatar,
-  //     lastLoginTime: new Date().getTime(),
-  //     token: user.token,
-  //     refreshToken: user.refreshToken,
-  //     expire_deadtime: user.expire_deadtime,
-  //     refreshExpire_deadtime: user.refreshExpire_deadtime,
-  //     code: user.code
-  //   })
-
-  // }).catch((err) => {
-  //   console.log('登录后设置当前用户失败')
-  //   console.log(err)
-  // })
-  // ++id,uid,nickname,avatar,lastLoginTime,token,isCurrent,lastUseSpace
-  //插入一个用户帐号到帐号表
 
 })

@@ -10,7 +10,6 @@ const tpl = `
 </span>
       <span v-else>
        <span style="text-align: center;color: #333">
-        不同空间的标签组相互隔离<br>
       </span>
         适合不同家庭成员、公共电脑快速切换帐号。<br>也可用于工作、娱乐等不同场景。
 </span>

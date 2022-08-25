@@ -128,7 +128,6 @@ app.whenReady().then(()=>{
 
   //检测node是否登录
   ipc.on('checkLogin', async(event, args) => {
-    console.log('登录',await userModel.isLogged())
     event.reply('callback-checkLogin', await userModel.isLogged())
   })
 

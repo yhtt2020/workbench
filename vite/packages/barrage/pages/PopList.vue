@@ -313,7 +313,7 @@ export default {
         <div style="width: 350px;-webkit-app-region:no-drag" :style="{height:this.user?'100px':'130px'}">
           <div><img style="width: 22px;vertical-align: top" src="../assets/hot.svg"> 发弹幕
             &nbsp;
-            <a-switch v-if="this.user" v-model:checked="channelType" size="small" checked-children="团队频道"
+            <a-switch v-if="false" v-model:checked="channelType" size="small" checked-children="团队频道"
                       un-checked-children="公共频道"></a-switch>
             <div style="float: right">
               <a-avatar v-if="this.user" :src="user.user_info.avatar"></a-avatar>
@@ -339,7 +339,7 @@ export default {
           </div>
           <div style="clear: both;position: absolute;bottom: 25px;width: 92%">
             <div style="float: left">
-              <a-button size="small" :disabled="!this.user">
+              <a-button v-if="false" size="small" :disabled="!this.user">
                 <smile-outlined/>
               </a-button>
             </div>
@@ -417,9 +417,9 @@ html,body {
   padding: 5px 10px;
   cursor: pointer;
   user-select: none;
-  opacity: 0.7;
+  opacity: 1;
   &:hover {
-    opacity: 1;
+    opacity: .81;
   }
 }
 

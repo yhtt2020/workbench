@@ -621,7 +621,7 @@ app.whenReady().then(()=>{
     barrageManager=new BarrageManager({
       parent:mainWindow
     })
-    barrageManager.init()
+    //barrageManager.init()
   },3000)
 
 

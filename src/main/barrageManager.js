@@ -25,8 +25,8 @@ class BarrageManager{
     }
     let option=Object.assign(DEFAULT_OPTION,optionArgs)
     let bounds={
-      width:800,
-      height:600,
+      width:950,
+      height:300,
       x:undefined,
       y:undefined
     }
@@ -90,11 +90,11 @@ class BarrageManager{
     return win && !win.isDestroyed()
   }
   getInitBounds(parent){
-    const width=800
-    const height=600
+    const width=950
+    const height=300
     let parentBounds=parent.getBounds()
     let x = parseInt(parentBounds.x + (parentBounds.width- width) / 2)
-    let y = parseInt(parentBounds.y +200)
+    let y = parseInt(parentBounds.y +500)
     return { x, y, width:width, height:height }
 
   }
