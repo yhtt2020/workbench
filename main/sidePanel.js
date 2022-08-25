@@ -1275,17 +1275,21 @@ app.whenReady().then(() => {
   })
 
   ipc.on('changeSpace',  (event, args) => {
+    async function  reloadMainWindow(){
+      await require('./src/model/spaceModel').setCurrentSpace(args)
+      createWindow()
+    }
     changingSpace = true
     if (mainWindow && !mainWindow.isDestroyed()) {
       mainWindow.setClosable(true)
       mainWindow.once('closed', async () => {
-        await require('./src/model/spaceModel').setCurrentSpace(args)
-        createWindow()
+        reloadMainWindow()
       })
       safeCloseMainWindow()
       // mainWindow.close()
+    }else{
+      reloadMainWindow()
     }
-
   })
 
   ipc.on('disconnect', () => {

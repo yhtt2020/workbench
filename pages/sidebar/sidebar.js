@@ -95,7 +95,16 @@ window.onload = function() {
     ipc.send('addTab',{url:"https://www.yuque.com/tswork/browser/ci5kwg"})
     localStorage.setItem('3.2','true')
   }
-
+  const DEFAULT_GUEST={//当前用户
+    uid:0,
+      nickname:"立即登录",
+      avatar:"../../icons/browser.ico",
+      fans:0,
+      follow:0,
+      grade:{
+      grade:0
+    }
+  }
 	const store = new Vuex.Store({
 		state: {
       cloudSpaces:[],
@@ -104,16 +113,7 @@ window.onload = function() {
 			items: null, //普通区域的items
 			selected: '', //当前选中的
 			tasks: new TasksList(),
-			user:{//当前用户
-				uid:0,
-				nickname:"立即登录",
-				avatar:"../../icons/browser.ico",
-        fans:0,
-        follow:0,
-        grade:{
-          grade:0
-        }
-			},
+			user:DEFAULT_GUEST,
       myGroups: [],
       joinedGroups: [],
       managerGroups: [],
@@ -341,6 +341,9 @@ window.onload = function() {
       },
       set_user:(state,user)=>{
         state.user=user
+      },
+      logout:(state)=>{
+        state.user=	DEFAULT_GUEST
       },
       set_user_info:(state,data)=>{
         let userInfo=data.data

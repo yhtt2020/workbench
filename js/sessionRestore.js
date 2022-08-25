@@ -661,3 +661,9 @@ ipc.on('safeQuitApp',async ()=>{
   ipc.send('quitApp')
 })
 module.exports = sessionRestore
+
+ipc.on('lougout',async ()=>{
+  await safeCloseSave()
+  await userModel.changeToLocal() //更改到本地
+  ipc.send('closeMainWindow')
+})

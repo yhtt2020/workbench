@@ -1772,13 +1772,19 @@ Vue.component('sidebar', {
       })
     },
     async logout () {
-      await userModel.delete({uid:this.user.uid})
-      ipc.send('logoutBrowser')
-      //下面这步在insertDefaultUser方法中有
-      //db.system.where({name:'currentUser'}).delete()
-      this.closeUserPanel()
-      this.$store.commit('SET_RESET_TSGRADE')
-      this.$message.info('注销成功！')
+      if(this.currentSpace.spaceType==='cloud'){
+        this.$confirm({
+          title: '退出账号确认',
+          content: '您当前正在使用云空间，一旦注销，将会退出当前空间，请确认是否要退出当前空间？注意：退出账号不会删除登录凭证，如需删除账号信息，请在切换用户面板删除账号。',
+          centered: true,
+          okText: '我已保存，退出账号同时退出空间',
+          cancelText: '取消',
+          onOk: async () => {
+            ipc.send('showUserWindow')
+            ipc.send('logoutBrowser')
+          }
+        })
+      }
     },
     switchAccount () {
       this.userPanelVisible = false

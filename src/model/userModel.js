@@ -82,8 +82,9 @@ const userModel={
       map.uid=Number(map.uid)
     }
     let user=await sqlDb.knex('account').where(map).first()
-    user.user_info=JSON.parse(user.user_info)
     if(user){
+      if(user.user_info)
+       user.user_info=JSON.parse(user.user_info)
       return user
     }else{
       return false
@@ -97,6 +98,13 @@ const userModel={
   async change(user){
     await sqlDb.knex('account').where({is_current:true}).update({is_current:false})
     await sqlDb.knex('account').where({uid:user.uid}).update({is_current:true})
+  },
+  /**
+   * 切换到本地空间
+   * @returns {Promise<void>}
+   */
+  async changeToLocal(){
+    await sqlDb.knex('account').where({is_current:true}).update({is_current:false})
   },
 
   getClientId(){

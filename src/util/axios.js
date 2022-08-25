@@ -37,7 +37,6 @@ let isRefreshing = false   //是否正在刷新的标记
 
 axios.interceptors.request.use(
   async config => {
-    console.log('config=',config)
     require('../../src/util/logger').log('axiosRequest:'+config.url,config)
     // Do something before request is sent
     // console.log(config, '拦截的config')
@@ -102,8 +101,6 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   response => {
     require('../../src/util/logger').log('axiosResponse',response)
-    console.log('获得axios接口返回，res=',response)
-    console.log('response.status',response.status)
     if (response.status >= 200 && response.status < 300) {
       if(response.data.code === 1000) {
         return response.data;
