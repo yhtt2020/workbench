@@ -617,11 +617,13 @@ ipc.on('errorClose',(e,args)=>{
 var barrageManager=null //全局可用
 const { BarrageManager }=require(path.join(__dirname,'/src/main/barrageManager.js'))
 app.whenReady().then(()=>{
-  barrageManager=new BarrageManager({
-    parent:mainWindow
-  })
+  setTimeout(()=>{
+    barrageManager=new BarrageManager({
+      parent:mainWindow
+    })
+    barrageManager.init()
+  },3000)
 
-  barrageManager.init()
 
   ipc.on('toggleBarrage',()=>{
     if(BarrageManager.isAlive()){
@@ -635,7 +637,8 @@ app.whenReady().then(()=>{
     }
   })
   ipc.on('barrage.changeUrl',(e,a)=>{
-    barrageManager.changeUrl(a.url)
+    if(barrageManager)
+     barrageManager.changeUrl(a.url)
   })
 
   ipc.on('tabs.current',(e,a)=>{

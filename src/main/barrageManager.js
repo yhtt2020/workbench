@@ -75,12 +75,15 @@ class BarrageManager{
     }
   }
 
+
   /**
    *
    * @param url
    */
   changeUrl(url){
-    this.send('changeUrl',{url:url})
+    if(BarrageManager.isAlive()) {
+      this.send('changeUrl', { url: url })
+    }
   }
 
   static isAlive(){

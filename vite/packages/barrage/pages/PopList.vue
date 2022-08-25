@@ -386,15 +386,10 @@ html, body {
 }
 .active{
 .barrage-container{
-  &:hover{
-    background: rgba(0,0,0,0.3);
-  }
-  background: rgba(0,0,0,0);
+  background: rgba(0,0,0,0.3);
+  -webkit-app-region: drag;
 }
   &:hover{
-    .barrage-container{
-      -webkit-app-region: drag;
-    }
     .operation{
       display: block;
     }

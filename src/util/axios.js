@@ -145,7 +145,7 @@ axios.interceptors.response.use(
     } else {
       if(error.message.endsWith('401')){
         //此处是登录报401场景
-        if(!!!window){
+        if(typeof window ==='undefined'){
           console.log('主进程察觉到掉登录')
         }else if(!isRefreshing){
           //且不在刷新令牌，证明已经无法刷新令牌了

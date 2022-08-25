@@ -60,7 +60,8 @@ const appManager = {
           item.window.show()
         }
         item.window.focus()
-        barrageManager.changeUrl(item.saApp.url)
+        if(barrageManager)
+           barrageManager.changeUrl(item.saApp.url)
       }
     })
   },
@@ -652,7 +653,8 @@ const appManager = {
     }
     function updateView(url){
       if(appWindow.isFocused()){
-        barrageManager.changeUrl(url)
+        if(barrageManager)
+            barrageManager.changeUrl(url)
       }
       appWindow.webContents.send('updateView', {
         url: url,
