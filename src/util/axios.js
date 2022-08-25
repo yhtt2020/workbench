@@ -36,6 +36,7 @@ let refreshFuncList = []    //刷新令牌时需要操作的函数队列
 let isRefreshing = false   //是否正在刷新的标记
 
 axios.interceptors.request.use(
+
   async config => {
     require('../../src/util/logger').log('axiosRequest:'+config.url,config)
     // Do something before request is sent
@@ -88,7 +89,6 @@ axios.interceptors.request.use(
 
       }
     }
-
     return config;
   },
   error => {

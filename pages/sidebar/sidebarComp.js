@@ -1784,6 +1784,9 @@ Vue.component('sidebar', {
             ipc.send('logoutBrowser')
           }
         })
+      }else{
+        ipc.send('logoutBrowser')
+        this.$store.commit('logout')
       }
     },
     switchAccount () {

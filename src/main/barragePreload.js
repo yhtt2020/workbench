@@ -43,6 +43,7 @@ const user={
     ipc.once('loginCallback',(event,args)=>{
       apiUserInfo=args.data
       callback(args.data.userInfo)
+      barrageModel.init()
     })
     ipc.send('login')
   },

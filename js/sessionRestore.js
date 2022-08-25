@@ -662,8 +662,14 @@ ipc.on('safeQuitApp',async ()=>{
 })
 module.exports = sessionRestore
 
-ipc.on('lougout',async ()=>{
-  await safeCloseSave()
-  await userModel.changeToLocal() //更改到本地
-  ipc.send('closeMainWindow')
+ipc.on('logout',async ()=>{
+  await userModel.logout() //更改到本地
+  if((await spaceModel.getCurrent()).spaceType==='cloud'){
+    //当前为云空间，则需要关闭主界面，并切换掉空间
+    await safeCloseSave()
+    ipc.send('closeMainWindow')
+  }else{
+    //当前为本地空间，则只需要保存一下就可以了。
+    await sessionRestore.save(true, true)
+  }
 })

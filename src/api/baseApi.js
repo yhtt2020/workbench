@@ -18,6 +18,8 @@ const baseApi = {
       let userResponse = await userModel.getCurrent()
       if (userResponse.status === 1) {
         user = userResponse.data
+      }else{
+        return
       }
     }
     baseApi.currentUser = user
@@ -58,8 +60,6 @@ const baseApi = {
         }
       })
     } else {
-      console.log(url)
-      console.log(data)
       return axios({
         method: method,
         url: url,

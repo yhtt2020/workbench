@@ -95,7 +95,7 @@ app.whenReady().then(()=>{
   //游览器登出
   ipc.on('logoutBrowser', async() => {
     //1是往lumen发消息，让lumen退出
-    sendIPCToMainWindow('lougout')
+    sendIPCToMainWindow('logout')
     appManager.sendIPCToApp('com.thisky.group','imLogout') //通知
     //await authApi.logoutBrowser()
   })

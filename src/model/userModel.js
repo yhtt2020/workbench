@@ -103,7 +103,7 @@ const userModel={
    * 切换到本地空间
    * @returns {Promise<void>}
    */
-  async changeToLocal(){
+  async logout(){
     await sqlDb.knex('account').where({is_current:true}).update({is_current:false})
   },
 
