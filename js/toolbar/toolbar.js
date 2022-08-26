@@ -367,7 +367,7 @@ const toolbar = {
       document.getElementById('toolbar-navigation-buttons').hidden = true
     }
     toolbar.adjustSideBar()
-    this.layoutMod=settings.get('layout')|| 'min'
+    this.layoutMod=settings.get('layout')|| 'max'
     this.adjustLayout()
     toolbar.startPageButton.addEventListener('click',()=>{
       if(toolbar.startPageButton.classList.contains('disable')){

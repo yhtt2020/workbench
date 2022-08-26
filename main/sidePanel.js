@@ -117,7 +117,7 @@ class SidePanel {
     this.syncTitleBar()
     this._sidePanel.on('ready-to-show', () => {
       checkUpdate()
-      let layout= settings.get('layout') || 'min'
+      let layout= settings.get('layout') || 'max'
       SidePanel.send('adjustSidePanel',layout)
     })
 
@@ -615,10 +615,12 @@ let sidePanelState='min'
 ipc.on('openSidebar',()=>{
   sidePanelState='max'
   SidePanel.send('adjustSidePanel',sidePanelState)
+  syncSidebarTitle()
 })
 ipc.on('closeSidebar',()=>{
   sidePanelState='min'
   SidePanel.send('adjustSidePanel',sidePanelState)
+  syncSidebarTitle()
 })
 var selectTaskWindow = null
 ipc.on('selectTask', function (event, arg) {
