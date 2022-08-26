@@ -309,7 +309,7 @@ export default {
 
   </div>
   <div id="controller" class="operation" style="text-align: center;position: absolute;bottom: 10px;width:300px;left: 50%;margin-left: -150px">
-    <a-popover v-model:visible="inputPopVisible" placement="bottom" trigger="click">
+    <a-popover v-model:visible="inputPopVisible"  trigger="click">
       <template #content>
         <div style="width: 350px;-webkit-app-region:no-drag" :style="{height:this.user?'100px':'130px'}">
           <div><img style="width: 22px;vertical-align: top" src="../assets/hot.svg"> 发弹幕
