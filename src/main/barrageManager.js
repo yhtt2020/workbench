@@ -41,7 +41,10 @@ class BarrageManager{
     if(option.type==='window'){
       window = new BrowserWindow({
         width:bounds.width,
+        minHeight:200,
+        minWidth:600,
         height:bounds.height,
+        fullscreenable:false,
         transparent:true,
         backgroundColor:'#00000000',
         x:bounds.x,
@@ -113,6 +116,7 @@ class BarrageManager{
       this.container.setIgnoreMouseEvents(true,{forward:false})
       this.container.blur()
       this.isLocked=true
+      this.container.setSkipTaskbar(true)
     }
   }
 
@@ -120,6 +124,7 @@ class BarrageManager{
     if(BarrageManager.isAlive()){
       this.container.setIgnoreMouseEvents(false)
       this.isLocked=false
+      this.container.setSkipTaskbar(false)
       this.container.webContents.executeJavaScript(`document.body.classList.add('active');window.$message.success('已为您解锁弹幕窗口')`)
     }
   }

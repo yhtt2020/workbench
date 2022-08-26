@@ -118,6 +118,7 @@ export default {
     //   container:document.getElementById('danmuWrapper'),
     //   limit:50
     // })
+    tsbApi.barrage.init()
     tsbApi.barrage.onUrlChanged(this.changeUrl) //挂载url变化事件
     this.pageUrl = (await tsbApi.tabs.current()).sourceUrl
     this.getList()
@@ -324,7 +325,7 @@ export default {
             <a-input @keypress.enter="send" v-if="this.user"
                      v-model:value="content" spellcheck="false" @visibleChange="toggleInput" id="inputArea"
                      class="scroller-wrapper" style="resize: none;overflow: hidden !important;"
-                     :allowClear="true" :maxlength="30" :bordered="false"
+                     :allowClear="true" :maxlength="100" :bordered="false"
                      placeholder="发一条弹幕吧~"
 
             />
