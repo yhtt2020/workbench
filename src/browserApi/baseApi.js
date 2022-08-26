@@ -4,6 +4,7 @@ const baseApi={
   window:require('./window.js'),
   user:require('./user.js'),
   barrage:require('./barrage.js'),
-  tabs:require('./tabs.js')
+  tabs:require('./tabs.js'),
+  runtime:require('./runtime.js')
 }
 module.exports=baseApi
