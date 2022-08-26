@@ -305,10 +305,10 @@ export default {
 
 <template>
   <div class="window-frame">
-  <div id="danmuWrapper" class="barrage-container" style="height: calc(100vh - 40px);margin-top: 40px">
+  <div id="danmuWrapper" class="barrage-container" style="height: calc(100vh - 30px);margin-top: 10px">
 
   </div>
-  <div id="controller" class="operation" style="text-align: center;position: absolute;top: 10px;width:300px;left: 50%;margin-left: -150px">
+  <div id="controller" class="operation" style="text-align: center;position: absolute;bottom: 10px;width:300px;left: 50%;margin-left: -150px">
     <a-popover v-model:visible="inputPopVisible" placement="bottom" trigger="click">
       <template #content>
         <div style="width: 350px;-webkit-app-region:no-drag" :style="{height:this.user?'100px':'130px'}">
