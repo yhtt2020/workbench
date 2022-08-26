@@ -62,9 +62,18 @@
   top: var(--control-space-top);
   right: var(--control-space-right);
   z-index: 4;
-  padding: 0.5em;
+  padding: 0.6em;
+&.switch-task-button svg{
+
+  margin-top: -9px;
+  margin-left: -12px;
 }
 
+}
+#layout-button svg{
+  margin-top: -10px;
+  margin-left: -12px;
+}
 .right-button.active {
   color: royalblue !important;
 }

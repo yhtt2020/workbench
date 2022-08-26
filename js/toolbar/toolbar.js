@@ -279,11 +279,18 @@ const toolbar = {
     }
   },
   adjustLayout(){
+    let container=document.body
     if(this.layoutMod==='max'){
+      document.getElementById('switch-task-button').style.display='none'
+      if(container.classList.contains('min')) container.classList.remove('min')
       sideBar.open()
+      container.classList.add('max')
       showToolbar()
       webviews.autoAdjustMargin()
     }else{
+      document.getElementById('switch-task-button').style.display='inline-block'
+      if(container.classList.contains('max')) container.classList.remove('max')
+      container.classList.add('min')
       sideBar.close()
       hideToolbar()
       webviews.autoAdjustMargin()

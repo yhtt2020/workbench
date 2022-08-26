@@ -43,7 +43,6 @@
     padding-left: 1em;
     padding-right: 1em;
   }
-
   .task-search-input-container i {
     left: 1.33em;
   }
@@ -62,7 +61,16 @@
   top: var(--control-space-top);
   right: var(--control-space-right);
   z-index: 4;
-  padding: 0.5em;
+  padding: 0.6em;
+}
+.right-button.switch-task-button svg {
+  margin-top: -9px;
+  margin-left: -12px;
+}
+
+#layout-button svg {
+  margin-top: -10px;
+  margin-left: -12px;
 }
 
 .right-button.active {
@@ -269,7 +277,7 @@ body:not(.touch) .task-container:not(.collapsed):not(:hover) .task-collapse-butt
   padding: 1.25em;
   text-align: center;
   color: inherit;
-  background-color: whitesmoke;
+  background-color: rgb(245, 245, 245);
   cursor: pointer;
 }
 
@@ -292,7 +300,7 @@ body:not(.touch) .task-container:not(.collapsed):not(:hover) .task-collapse-butt
 }
 
 .dark-mode #add-task {
-  background-color: #21252b;
+  background-color: rgb(33, 37, 43);
   color: lightgrey;
 }
 
@@ -306,11 +314,11 @@ body:not(.touch) .task-container:not(.collapsed):not(:hover) .task-collapse-butt
 }
 
 #add-task:hover {
-  background-color: #ebebeb;
+  background-color: rgb(235, 235, 235);
 }
 
 .dark-mode #add-task:hover {
-  background-color: #2c3138;
+  background-color: rgb(44, 49, 56);
 }
 
 #add-task .i {
@@ -367,7 +375,7 @@ body:not(.touch) .task-container:not(.collapsed):not(:hover) .task-collapse-butt
 }
 
 body.dark-mode #task-overlay {
-  background-color: #282c34 !important;
+  background-color: rgb(40, 44, 52) !important;
   color: lightgrey;
 }
 
@@ -382,12 +390,12 @@ body.dark-mode #task-overlay {
 
 /*夜间模式下*/
 .dark-mode .task-container {
-  background-color: #ffffff0f;
-  border-color: #f9f9f926;
+  background-color: rgba(255, 255, 255, 0.0588235294);
+  border-color: rgba(249, 249, 249, 0.1490196078);
 }
 
 .dark-mode #add-task {
-  box-shadow: 0 0 15px #5252523b;
+  box-shadow: 0 0 15px rgba(82, 82, 82, 0.231372549);
 }
 
 .dark-mode .task-name {
