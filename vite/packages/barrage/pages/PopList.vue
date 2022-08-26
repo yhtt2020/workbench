@@ -360,9 +360,9 @@ export default {
       <lock-outlined/>
       </a>
 
-    <a class="shadow-button">
-      <setting-outlined/>
-      </a>
+<!--    <a class="shadow-button">-->
+<!--      <setting-outlined/>-->
+<!--      </a>-->
     <!--    <a class="shadow-button" type="ghost" @click="pause">暂停</a>-->
     <a class="shadow-button" @click="reload">
       <redo-outlined/>
@@ -387,6 +387,7 @@ export default {
 }
 
 .barrage-avatar {
+  object-fit: cover;
   -webkit-app-region: no-drag;
   border-radius: 100%;
   width: 30px;
