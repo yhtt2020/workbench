@@ -1,5 +1,5 @@
 var webviews = require('webviews.js')
-
+const settings=require('./util/settings/settings')
 var webviewGestures = {
   showBackArrow: function () {
     // this is temporarily disabled until we find a way to make it work with BrowserViews
@@ -29,7 +29,9 @@ var webviewGestures = {
   },
   zoomWebviewBy: function (tabId, amt) {
     webviews.callAsync(tabId, 'zoomFactor', function (err, oldFactor) {
-      webviews.callAsync(tabId, 'zoomFactor', Math.min(webviewMaxZoom, Math.max(webviewMinZoom, oldFactor + amt)))
+      let zoomLevel=Math.min(webviewMaxZoom, Math.max(webviewMinZoom, oldFactor + amt))
+      ipc.send('message',{type:'success',config:{content:'当前页面缩放比例调整为'+parseInt(zoomLevel*100)+'%',key:'zoomFactor'}})
+      webviews.callAsync(tabId, 'zoomFactor',zoomLevel)
     })
   },
   zoomWebviewIn: function (tabId) {
@@ -88,6 +90,10 @@ function onSwipeGestureLowVelocity () {
   // swipe to the right to go backwards
   if (horizontalMouseMove + beginningScrollLeft < -150 && Math.abs(horizontalMouseMove / verticalMouseMove) > 3) {
     if (beginningScrollLeft < 5) {
+      if(settings.get('gestureBack')==='false'){
+        //如果禁用手势，则不做任何操作
+        return
+      }
       resetCounters()
       webviews.goBackIgnoringRedirects(tabs.getSelected())
     }
@@ -116,7 +122,7 @@ webviews.bindIPC('wheel-event', function (tabId, e) {
     (function () {
       var left = 0
       var right = 0
-      
+
       var n = document.elementFromPoint(${e.clientX}, ${e.clientY})
       while (n) {
         if (n.scrollLeft !== undefined) {
@@ -124,7 +130,7 @@ webviews.bindIPC('wheel-event', function (tabId, e) {
             right = Math.max(right, n.scrollWidth - n.clientWidth - n.scrollLeft)
         }
         n = n.parentElement
-      }  
+      }
       return {left, right}
     })()
     `, function (err, result) {
@@ -168,11 +174,19 @@ webviews.bindIPC('wheel-event', function (tabId, e) {
   if (platformZoomKey && initialZoomKeyState) {
     if (verticalMouseMove > 50) {
       verticalMouseMove = -10
+      if(settings.get('gestureZoom')==='false'){
+        //如果禁用手势，则不做任何操作
+        return
+      }
       webviewGestures.zoomWebviewOut(tabs.getSelected())
     }
 
     if (verticalMouseMove < -50) {
       verticalMouseMove = -10
+      if(settings.get('gestureZoom')==='false'){
+        //如果禁用手势，则不做任何操作
+        return
+      }
       webviewGestures.zoomWebviewIn(tabs.getSelected())
     }
   }

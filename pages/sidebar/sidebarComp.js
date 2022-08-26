@@ -2,6 +2,7 @@ const { db } = require('../../js/util/database')
 const { api } = require('../../server-config')
 const standAloneAppModel = require('../util/model/standAloneAppModel.js')
 
+
 const sidebarTpl = /*html*/`
   <div id="sidebar" class="side-container" @contextmenu.stop="openSidebarMenu">
     <div id="itemsEl" class="side-items">
@@ -72,6 +73,8 @@ const sidebarTpl = /*html*/`
                                   <div class="text-black">累计在线时长: {{this.$store.getters.getTsGrade.cumulativeHours}}小时</div>
                                   <div class="text-black" v-if="this.$store.getters.getTsGrade.rank < 300">全网排名: {{this.$store.getters.getTsGrade.rank}}</div>
                                   <div class="text-black" v-else>全网排名: 超过{{this.$store.getters.getTsGrade.percentage}}%的用户</div>
+                                  <div class="text-grey-sm" v-if="this.$store.getters.getTsGrade.rank < 300">恭喜，您排名在300名以内，已展示实际名次</div>
+                                  <div class="text-grey-sm" v-else>300名以外，仅显示百分比</div>
                                   <div class="text-grey">
                                     <img src="./assets/sun.svg" alt="" style="width: 20px; height: 20px"> = 16级
                                   </div>
@@ -193,9 +196,9 @@ const sidebarTpl = /*html*/`
                             <div class="cb-top flex align-center justify-start">
                               <img :src="item.logo" alt="">
                               <div class="cb-top-word">{{item.name}}</div>
-                              <a-icon class="cb-top-tag" type="share-alt" @click="inviteLink(item.id)"></a-icon>
+                              <a-icon v-show="item.status!==2"  class="cb-top-tag" type="share-alt" @click="inviteLink(item.id)"></a-icon>
                             </div>
-                            <div class="cb-bottom flex align-center justify-around">
+                            <div v-show="item.status!==2" class="cb-bottom flex align-center justify-around">
                               <a-button class="cb-bottom-zone" type="link" icon="team" @click="openCircle(item.id)">
                                 圈子
                               </a-button>
@@ -850,6 +853,7 @@ Vue.component('sidebar', {
   },
 
   async mounted () {
+    window.computeBottomSize=this.fixElementPosition
     if(process.platform==='darwin'){
       document.getElementById('appVue').style.borderRadius='0 0 0 10px'
     }
@@ -892,8 +896,22 @@ Vue.component('sidebar', {
     try {
       let passwordList = await ipc.invoke('credentialStoreGetCredentials')
       await userStatsModel.setValue('password', passwordList.length)
+
+      //statsh
+      statsh.do({
+        action: 'set',
+        key: 'password',
+        value: passwordList.length
+      })
     } catch (err) {
       await userStatsModel.setValue('password', 0)
+
+      //statsh
+      statsh.do({
+        action: 'set',
+        key: 'password',
+        value: 0
+      })
     }
     // let item = {
     // 	title: '打开标签', //名称，用于显示提示
@@ -1084,17 +1102,6 @@ Vue.component('sidebar', {
               }, text: '好的'}],
           id: 'teamGudie'    // 用于Shepherd step的唯一标识符
         },
-        {
-          text: `<div>您可以在这里打开帮助中心，查看更多引导帮助</div>`, attachTo: {element: '.helpCenter', on: 'right'},
-          buttons: [
-            {action: function () {
-                this.cancel()
-                ipc.send('exitGuide')
-                ipc.send('closeGuide')
-                // ipc.send('addTab',{url:'ts://newtab'})
-              }, text: '好的'}],
-          id: 'teamGudie'    // 用于Shepherd step的唯一标识符
-        },
       ]
         const shepherd = new Shepherd.Tour({
           // 设置默认引导配置
@@ -1275,7 +1282,7 @@ Vue.component('sidebar', {
         name: app.name,
         logo: !!!app.icon ? '../../icons/default.svg' :app.icon,
         summary: app.summary,
-        type: 'web',
+        type: app.type,
         attribute: app.attribute,
         themeColor: !!!app.themeColor ? '#000' :app.themeColor,
         settings: {
@@ -1284,6 +1291,10 @@ Vue.component('sidebar', {
             height: 800
           }
         },
+        circle:app.circle,
+        auth:app.auth,
+        site:app.site,
+        author:app.author,
         showInSideBar: false
       }
       standAloneAppModel.install(app.url, option).then(success => {
@@ -1644,7 +1655,9 @@ Vue.component('sidebar', {
       }
     },
     openHelpCenter() {
-      this.addTab('ts://guide')
+      ipc.send('openNewGuide')
+
+      // this.addTab('ts://guide')
     },
     openGroup () {
       ipc.send('openGroup')
@@ -1809,6 +1822,21 @@ Vue.component('sidebar', {
     addNewTask (e) {
       ipc.send('addNewTask')
       this.$message.success({ content: '成功添加一个新标签组到左侧栏。' })
+      setTimeout(()=>{
+      this.scrollToBottom()
+      },500)
+    },
+    scrollToBottom() {
+      const domWrapper = document.querySelector('#appGroup'); // 外层容器 出现滚动条的dom
+      (function smoothscroll() {
+        const currentScroll = domWrapper.scrollTop;   // 已经被卷掉的高度
+        const clientHeight = domWrapper.offsetHeight; // 容器高度
+        const scrollHeight = domWrapper.scrollHeight; // 内容总高度
+        if (scrollHeight - 10 > currentScroll + clientHeight) {
+          window.requestAnimationFrame(smoothscroll);
+          domWrapper.scrollTo(0, currentScroll + (scrollHeight - currentScroll - clientHeight) / 2);
+        }
+      })();
     },
     closeItem (item) {
       if (item.type === 'task') {
@@ -2047,6 +2075,15 @@ ipc.on('executedAppSuccess', async function (event, args) {
   setTimeout(async () => {
     await userStatsModel.incrementValue('appsExecutedCounts')
   }, 2000)
+
+  //statsh
+  setTimeout(() => {
+    statsh.do({
+      action: 'increase',
+      key: 'appsExecutedCounts',
+      value: 1
+    })
+  }, 2000)
 })
 ipc.on('closeApp', function (event, args) {
   appVue.$refs.sidePanel.apps.forEach(app => {
@@ -2156,7 +2193,7 @@ ipc.on('appBadge', function (event, args) {
   })
 })
 
-ipc.on('countWebviewInk', async () => {
+ipc.on('countWebviewInk', () => {
   setTimeout(async () => {
     await userStatsModel.incrementValue('webviewsInk')
   }, 2000)
@@ -2167,9 +2204,25 @@ ipc.on('countScript', async () => {
     let num = require('../util/model/userScriptModel').countScript(window.globalArgs['user-data-path'])
     setTimeout(async () => {
       await userStatsModel.setValue('scripts', num)
-    }, 10000)
+    }, 5000)
+
+    //statsh
+    setTimeout(() => {
+      statsh.do({
+        action: 'set',
+        key: 'scripts',
+        value: num
+      })
+    }, 5000)
   } catch (err) {
     await userStatsModel.setValue('scripts', 0)
+
+    //statsh
+    statsh.do({
+      action: 'set',
+      key: 'scripts',
+      value: 0
+    })
   }
 })
 
@@ -2177,6 +2230,23 @@ ipc.on('defaultBrowser', (event, args) => {
   setTimeout(async () => {
     args ? await userStatsModel.setValue('defaultBrowser', 1) : await userStatsModel.setValue('defaultBrowser', 0)
   }, 2000)
+
+  setTimeout(() => {
+    //statsh
+    if(args) {
+      statsh.do({
+        action: 'set',
+        key: 'defaultBrowser',
+        value: 1
+      })
+    } else {
+      statsh.do({
+        action: 'set',
+        key: 'defaultBrowser',
+        value: 0
+      })
+    }
+  })
 })
 
 ipc.on('addToDesk', (event, args) => {

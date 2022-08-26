@@ -345,7 +345,8 @@ const standAloneAppModel = {
         }
       }
     })
-    return searchResult
+
+    return result.filter(v => v.name.includes(word) === true) || searchResult
   },
   async put(id,data){
     data.settings=JSON.stringify(data.settings)
@@ -392,6 +393,7 @@ const standAloneAppModel = {
       author:app.author?app.author:'',
       site:app.site?app.site:'',
       url: url,
+      circle:app.circle?app.circle:'',
       preload: app.preload||'',
       package:app.package || '',
       themeColor: app.themeColor || '#ccc',

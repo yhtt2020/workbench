@@ -52,9 +52,11 @@ const systemType = {
         return 'win7'
       else return '早于win7'
     } else if (systemType.platform() === 'darwin') {
-      if (sysVersion.startsWith('12.1')) {
+      if (sysVersion.startsWith('13.')) {
+        return 'Ventura'
+      }if (sysVersion.startsWith('12.')) {
         return 'Monterey'
-      } else if (sysVersion.startsWith('11.6.2')) {
+      }  else if (sysVersion.startsWith('11.6.2')) {
         return 'Big Sur'
       } else if (sysVersion.startsWith('10.15.7')) {
         return 'Catalina'

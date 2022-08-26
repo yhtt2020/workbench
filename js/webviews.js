@@ -211,6 +211,9 @@ const webviews = {
     // if the tab is private, we want to partition it. See http://electron.atom.io/docs/v0.34.0/api/web-view-tag/#partition
     // since tab IDs are unique, we can use them as partition names
     var partition=tasks.getSelected().partition
+    if(tabData.partition){
+      partition=tabData.partition
+    }
     if (tabData.private === true) {
       partition= tabId.toString() // options.tabId is a number, which remote.session.fromPartition won't accept. It must be converted to a string first
     }
@@ -239,7 +242,7 @@ const webviews = {
 			],
 			allowPopups:true
 		}
-  }else if(sourceUrl=='ts://newtab'){
+  }else if(sourceUrl=='ts://newtab'  ){
     //仅仅对apps页面单独开启权限
     webPreferences={
       preload: __dirname + '/pages/newtab/preload.js',
@@ -276,7 +279,7 @@ const webviews = {
       ],
       allowPopups:true
     }
-  } else if(sourceUrl.startsWith('http://localhost:5008/')) {
+  } else if(sourceUrl.startsWith('http://localhost:5008/' )) {
     webPreferences={
       preload: __dirname + '/pages/guide/preload.js',
       nodeIntegration: true, //node集成开高了
@@ -294,7 +297,7 @@ const webviews = {
       ],
       allowPopups:true
     }
-  } else if(sourceUrl.startsWith('http://localhost:8080')) {
+  } else if(sourceUrl.startsWith('http://localhost:8080') ) {
     webPreferences={
       preload: __dirname + '/pages/guide/preload.js',
       nodeIntegration: true, //node集成开高了
@@ -311,6 +314,14 @@ const webviews = {
         //'--is-Dev='+window.globalArgs['development--mode']
       ],
       allowPopups:true
+    }
+  }else if(urlParser.isInternalURL(sourceUrl)){
+    webPreferences= {
+      nodeIntegration: true, //node集成开高了
+      contextIsolation:false,
+      enableRemoteModule: true,
+      scrollBounce: false,
+      sandbox: false,
     }
   }
 
@@ -592,6 +603,8 @@ function willNavigate(tabId, url, isInPlace, isMainFrame, frameProcessId, frameR
     var newTab = tabs.add({
       url: url,
       private: currentTab.private,
+      partition:currentTab.partition,
+      newName:currentTab.newName,
       backgroundColor:currentTab.backgroundColor||'#fff'
     })
     require('./browserUI.js').addTab(newTab, {
@@ -647,7 +660,7 @@ webviews.bindEvent('crashed', function (tabId, isKilled) {
 })
 
 webviews.bindIPC('getSettingsData', function (tabId, args) {
-  if (!urlParser.isInternalURL(tabs.get(tabId).url)) {
+  if (!urlParser.isInternalURL(tabs.get(tabId).url) ) {
     throw new Error()
   }
   const systemType=require('./util/systemType.js')
@@ -780,7 +793,8 @@ ipc.on('view-ipc', function (e, args) {
 
 //在当前页面打开emulation
 ipc.on('openMobile',function(e,args){
-	ipc.send('enableEmulation',{id:webviews.selectedId})
+  let tabData=tabs.get(webviews.selectedId)
+	ipc.send('enableEmulation',{id:webviews.selectedId,partition:tabData.partition,newName:tabData.newName})
 })
 
 

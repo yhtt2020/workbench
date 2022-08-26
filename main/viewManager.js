@@ -32,10 +32,12 @@ const defaultViewWebPreferences = {
 }
 
 
-function createView(existingViewId, id, webPreferencesString, boundsString, events) {
+async function createView(existingViewId, id, webPreferencesString, boundsString, events) {
   viewStateMap[id] = {loadedInitialURL: false}
 
   let view
+  let webPreferences=JSON.parse(webPreferencesString)
+
   if (existingViewId) {
     view = temporaryPopupViews[existingViewId]
     delete temporaryPopupViews[existingViewId]
@@ -44,12 +46,22 @@ function createView(existingViewId, id, webPreferencesString, boundsString, even
     view.setBackgroundColor(defaultBrowserViewBg)
     viewStateMap[id].loadedInitialURL = true
   } else {
-    view = new BrowserView({webPreferences: Object.assign({}, defaultViewWebPreferences, JSON.parse(webPreferencesString))})
+    view = new BrowserView({webPreferences: Object.assign({}, defaultViewWebPreferences, webPreferences)})
     view.setBackgroundColor(defaultBrowserViewBg)
-
+    // if(webPreferences.partition!=='persist:webcontent'){
+    //   console.log('webPreferences',webPreferences)
+    //   await browser.ensureExtension(webPreferences.partition)
+    // }
 
     //mark插入对webviewInk的数据统计 但在主进程中，需要发送一个ipc到sidebar常驻子进程中去db操作
     SidePanel.send('countWebviewInk')
+
+    //statsh
+    statsh.do({
+      action: 'increase',
+      key: 'webviewsInk',
+      value: 1
+    })
 
     //mark插入对scripts的数据统计
     SidePanel.send('countScript')
@@ -565,6 +577,10 @@ var oldAgent = ''
 ipc.on('enableEmulation', function (e, data) {
   if (viewMap[data.id].webContents.getURL().startsWith("file://") || viewMap[data.id].webContents.getURL().startsWith("ts://"))
     return
-  mobileMod.add(viewMap[data.id].webContents.getURL())
+  mobileMod.add({
+    url:viewMap[data.id].webContents.getURL(),
+    partition:data.partition,
+    newName:data.newName
+  })
 
 })

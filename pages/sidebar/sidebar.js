@@ -5,6 +5,7 @@ const userApi = require('../util/api/userApi')
 const messageModel = require('../util/model/messageModel')
 const {tools} = require('../util/util')
 const spaceModel = require('../../src/model/spaceModel')
+const statsh = require('../../js/util/statsh/statsh')
 
 class TasksList {
 	constructor() {
@@ -324,7 +325,7 @@ window.onload = function() {
         state.onlineGrade.cumulativeHours = userInfo.onlineGradeExtra.cumulativeHours
         state.onlineGrade.cumulativeMinute = userInfo.onlineGradeExtra.minutes
         state.onlineGrade.rank = userInfo.onlineGradeExtra.rank
-        state.onlineGrade.percentage = userInfo.onlineGradeExtra.percentage
+        state.onlineGrade.percentage = String(userInfo.onlineGradeExtra.percentage).slice(0, 6) * 100
         window.appVue.lastOpenedLv = userInfo.onlineGradeExtra.lv
       },
       //清空浏览器等级相关
@@ -452,6 +453,18 @@ window.onload = function() {
           tabsNum += v.tabs.length
         });
         await userStatsModel.setValue('tabs', tabsNum)
+        window.computeBottomSize()
+        //statsh
+        statsh.do({
+          action: 'set',
+          key: 'tabs',
+          value: tabsNum
+        })
+        statsh.do({
+          action: 'set',
+          key: 'tasks',
+          value: state.tasks.tasks.length
+        })
 
 			}
 
@@ -481,6 +494,12 @@ window.onload = function() {
         const result = await groupApi.getMyCircle(options)
         if(result.code === 1000) {
           commit('SET_MANAGER_CIRCLE', result.data)
+        }
+      },
+      async getCircleInfoById({commit}, options) {
+        const result = await groupApi.getCircleInfoById(options)
+        if(result.code === 1000) {
+          return result.data
         }
       },
       async getAllMessage({commit}) {

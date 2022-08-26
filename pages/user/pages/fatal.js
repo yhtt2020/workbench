@@ -206,6 +206,20 @@ const fatal = {
         if(await this.doSave()){ //处理保存的事件
           this.changeToSpace(latestSpace)
         }
+      }else{
+        antd.message.error('未获取到最新的空间，无法切换。')
+      }
+    },
+    /**
+     * 不保存切换空间
+     * @returns {Promise<void>}
+     */
+    async changeWithoutSave(){
+      let latestSpace=await this.getLatestSpace() //先获取最新的空间，如果获取失败，则不进行任何的操作了
+      if(latestSpace){
+        this.changeToSpace(latestSpace)
+      }else{
+        antd.message.error('未获取到最新的空间，无法切换。')
       }
     },
     async doSave(){
