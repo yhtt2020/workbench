@@ -60,8 +60,8 @@ axios.interceptors.request.use(
         if(config.expireInfo.refreshExpire_deadtime - new Date().getTime() <= 8000) {
           if(config.expireInfo.inMain) {
             //在主进程请求时发现refreshToken过期，清空storage用户标识，也要转发到渲染进程清空dexie中的用户标识
-            storage.setStoragePath(global.sharedPath.extra)
-            storage.clear()
+            // storage.setStoragePath(global.sharedPath.extra)
+            // storage.clear()
             global.utilWindow.webContents.send('clearCurrentUser')
           } else {
             //在渲染进程请求时发现refreshToken过期

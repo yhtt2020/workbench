@@ -1304,26 +1304,31 @@ app.whenReady().then(() => {
 
   })
 
-  ipc.handle('saAppGetUserProfile', () => {
+  ipc.handle('saAppGetUserProfile', async () => {
     try {
+      let currentRs=await userModel.getCurrent()
+      if(currentRs.status===1)
       return {
         code: 200,
         msg: '成功',
-        data: Object.assign(storage.getItem('userInfo'), { accessToken: storage.getItem('userToken') })
+        data: Object.assign(currentRs.data.user_info, { accessToken: currentRs.data.token })
       }
     } catch (err) {
+      console.error(err)
       return { code: 500, msg: '失败' }
     }
   })
 
-  ipc.handle('saAppCheckBrowserLogin', () => {
+  ipc.handle('saAppCheckBrowserLogin', async () => {
     try {
-      if (Object.keys(storage.getItem('userInfo')).length === 0) {
+      let isLogged=await userModel.isLogged()
+      if (!isLogged) {
         return { code: 500, msg: '浏览器未登录' }
       } else {
         return { code: 200, msg: '浏览器已登录' }
       }
     } catch (err) {
+      console.error(err)
       return { code: 500, msg: '浏览器未登录' }
     }
   })
@@ -1490,14 +1495,16 @@ app.whenReady().then(() => {
     }
   })
 
-  ipc.on('entityLogin', (event, args) => {
+  ipc.on('entityLogin', async (event, args) => {
     let premissionedData = {}
+    let user= await userModel.getCurrent()
+    if(user.status!==1) return
     if (args.includes('publicUserInfo')) {
-      premissionedData.userInfo = storage.getItem('userInfo')
+      premissionedData.userInfo =user.data.user_info
     }
     //if todo //args之所以一定要把permission传过来 为未来具体授权内容进行不同的返回
     appManager.getWindowByWindowId(ApplyPermissionOptions.windowId).view.webContents.send('replyEntityLogin', {
-      userToken: storage.getItem('userToken'),
+      userToken: user.data.token,
       clientId: ApplyPermissionOptions.clientId,
       bindId: ApplyPermissionOptions.bindId,
       premissionedData

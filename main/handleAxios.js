@@ -1,7 +1,6 @@
 const dlog = require('electron-log');
 const { clipboard } = require('electron');
 const authApi = require(path.join(__dirname, './src/api/authApi.js'))
-const storage = require('electron-localstorage');
 const _path= path.join(app.getPath("userData"), app.getName()+"/", 'userConfig.json');
 const _path_dir = path.dirname(_path);
 const { nanoid } = require('nanoid');
@@ -14,8 +13,7 @@ if(!fs.existsSync(_path_dir)){
   }
   catch(e){ dlog.error(err) }
 }
-storage.setStoragePath(_path);
-global.sharedPath = {extra:storage.getStoragePath()}   //remote官方建议弃用，全局变量在渲染进程中暂时没找到可以替换获取的方法，但是在主进程中全局electronGlobal对象能获取到
+//global.sharedPath = {extra:storage.getStoragePath()}   //remote官方建议弃用，全局变量在渲染进程中暂时没找到可以替换获取的方法，但是在主进程中全局electronGlobal对象能获取到
 function sendIPCToMainWindow(action, data) {
   mainWindow.webContents.send(action, data || {})
 }
@@ -53,7 +51,7 @@ app.whenReady().then(()=>{
     }).write()
   }
 
-  if(storage.getItem(`userToken`)) {
+  if(userModel.isLogged()) {
     markDb.db.set('guideSchedule.modules.noobGuide.accountLogin', true).write()
   }
 
@@ -79,12 +77,6 @@ app.whenReady().then(()=>{
           is_current:true
         }
           await userModel.setCurrent(user)
-
-        // storage.setItem(`userToken`, result.data.token)
-        // storage.setItem(`refreshToken`, result.data.refreshToken)
-        // storage.setItem(`expire_deadtime`, new Date().getTime() + result.data.expire * 1000)
-        // storage.setItem(`refreshExpire_deadtime`, new Date().getTime() + result.data.refreshExpire * 1000)
-        // storage.setItem(`userInfo`, result.data.userInfo)
       }
       event.reply('callback-loginBrowser', result)
       afterGuide('guideSchedule.modules.noobGuide.accountLogin')
@@ -147,13 +139,14 @@ app.whenReady().then(()=>{
   })
 
   function updateStorageInfo(user){
-    storage.setStoragePath(global.sharedPath.extra)
-    storage.setItem(`userToken`, user.token)
-    storage.setItem(`refreshToken`, user.refreshToken)
-    storage.setItem(`expire_deadtime`, new Date().getTime() + user.expire * 1000)
-    storage.setItem(`refreshExpire_deadtime`, new Date().getTime() + user.refreshExpire * 1000)
-    storage.setItem(`userInfo`, user.userInfo)
-    global.utilWindow.webContents.send('remakeCurrentUser', user)
+    userModel.setCurrent(user)
+    // storage.setStoragePath(global.sharedPath.extra)
+    // storage.setItem(`userToken`, user.token)
+    // storage.setItem(`refreshToken`, user.refreshToken)
+    // storage.setItem(`expire_deadtime`, new Date().getTime() + user.expire * 1000)
+    // storage.setItem(`refreshExpire_deadtime`, new Date().getTime() + user.refreshExpire * 1000)
+    // storage.setItem(`userInfo`, user.userInfo)
+    // global.utilWindow.webContents.send('remakeCurrentUser', user)
     //发送过去更新用户的信息
   }
   //主进程的refreshToken成功后   主进程更新storage中的信息，并传到子进程中修改用户标识信息
@@ -163,8 +156,7 @@ app.whenReady().then(()=>{
 
   //主进程的refreshToken也过期的时候 清空主进程中storage的信息，并传到子进程中修改用户标识信息
   ipc.on('clearStorageInfo', () => {
-    storage.setStoragePath(global.sharedPath.extra)
-    storage.clear()
+    userModel.logout()
     global.utilWindow.webContents.send('clearCurrentUser')
   })
 
