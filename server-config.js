@@ -2,7 +2,29 @@
 //也可以直接require进去(在非preload当中）
 let isDevelopmentMode = process.argv.some(arg=>arg==='--development-mode')
 if(typeof window!=='undefined'){
-  window=require('./src/util/util').tools.getWindowArgs(window)
+  function getWindowArgs (window) {
+    window.globalArgs = {};
+    process.argv.forEach(function (arg) {
+      if (arg.startsWith("--")) {
+        var key = arg.split("=")[0].replace("--", "");
+        var value = arg.split("=")[1];
+        // if(key==='saApp'){
+        //   console.log(decodeURI(value))
+        //   value=JSON.parse(decodeURI(value))
+        // }
+        globalArgs[key] = value;
+      }
+    });
+    if (navigator.platform === "MacIntel") {
+      window.platformType = "mac";
+    } else if (navigator.platform === "Win32") {
+      window.platformType = "windows";
+    } else {
+      window.platformType = "linux";
+    }
+    return window;
+  }
+  window=getWindowArgs(window)
   isDevelopmentMode='development-mode' in window.globalArgs
 }
 const localNode = false  //设置为true， cyx则使用本地的node配置

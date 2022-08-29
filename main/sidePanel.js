@@ -1112,8 +1112,7 @@ ipc.on('showAllSaApps', (event, args) => {
 })
 
 const configModel = require(__dirname + '/src/model/configModel')
-const free = require('free-memory')
-const osu = require('node-os-utils')
+
 let userWindow = null
 let lastWindowArgs = {}
 let changingSpace = false
