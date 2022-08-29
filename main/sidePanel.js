@@ -1112,6 +1112,8 @@ ipc.on('showAllSaApps', (event, args) => {
 })
 
 const configModel = require(__dirname + '/src/model/configModel')
+const free = require('free-memory')
+const osu = require('node-os-utils')
 let userWindow = null
 let lastWindowArgs = {}
 let changingSpace = false
@@ -1407,3 +1409,40 @@ ipc.on('dbClickClose', (e, args) => {
 })
 
 /*user面板代码end*/
+
+
+app.whenReady().then(()=>{
+  ipc.on('toolbar.speedup',()=>{
+     let ask= require('electron').dialog.showMessageBoxSync({
+        message:'在加速之前，请务必确认网页表单均已保存。\n此操作将放弃全部网页内容！！！\n注意：任何加速都不会关闭当前标签。',
+        buttons:['杀死所有标签(同时关闭全部应用）','杀死非锁定标签（不关闭应用）','取消'],
+        title:'一键加速',
+       textWidth:300,
+       cancelId:2
+      })
+    switch (ask) {
+      case 0:
+        sendIPCToMainWindow('speedup',{type:'all'})
+        let closedApp=appManager.closeAll()
+        if(closedApp>0)
+          sendMessage({type:'success',config:{content:'已为您关闭'+closedApp+'个应用。'}})
+        break
+      case 1:
+        sendIPCToMainWindow('speedup',{type:'unlock'})
+    }
+  })
+  var osu=require('node-os-utils')
+  setInterval(async ()=>{
+    if(mainWindow && !mainWindow.isDestroyed()){
+      try{
+        let mem=await osu.mem.info()
+        let info={
+          mem: mem,
+        }
+        sendIPCToWindow(mainWindow,'doRefreshLoad',info)
+      }catch (e) {
+       console.error(e)
+      }
+    }
+  },3000)
+})

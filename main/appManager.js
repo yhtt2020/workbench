@@ -122,7 +122,6 @@ const appManager = {
       let noti = new electron.Notification(option)
 
       noti.on('click', (e) => {
-        console.log('触发click')
         let saApp = appManager.getSaAppByAppId(appId)
         appManager.openApp(appId, false, saApp)
       })
@@ -559,6 +558,16 @@ const appManager = {
       appManager.saApps.splice(found,1)
       SidePanel.send('closeApp', { id: appId })
     }
+  },
+  closeAll(){
+    let closed=0
+    processingAppWindows.forEach((item) => {
+      if (!item.window.isDestroyed()) {
+        appManager.closeApp(item.saApp.id)
+        closed++
+      }
+    })
+    return closed
   },
   loadView (saApp, appWindow, option) {
     let preload = ''
@@ -1273,7 +1282,7 @@ app.whenReady().then(() => {
     forceClose = true
     processingAppWindows.forEach((item) => {
       if (!item.window.isDestroyed()) {
-        appManager.closeApp(item.id)
+        appManager.closeApp(item.saApp.id)
       }
     })
   })

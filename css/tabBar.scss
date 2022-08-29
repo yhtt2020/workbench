@@ -126,11 +126,13 @@ body.linux #menu-button {
   display: flex;
   position: relative;
   overflow: hidden;
+  line-height: 1;
   &.fixWidth{
     width: 100%;
   }
 }
 #tabs #tabs-inner {
+  margin-top: 5px;
   display: inline-flex;
   width: calc(100% - 30px);
   overflow-x: visible;
@@ -168,6 +170,7 @@ body.linux #menu-button {
     margin-right: 5px;
   }
   .tab-icon {
+    line-height: 1;
     position: relative;
     font-size: 0.7em;
     padding: 0 0;
