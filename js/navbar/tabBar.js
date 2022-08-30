@@ -1017,5 +1017,35 @@ ipc.on('getCurrentTab',(e,a)=>{
   console.log('getCurrentTabdddddddddddddd',data)
   ipc.send('gotCurrentTab',{data})
 })
+ipc.on('speedup',(e,a)=>{
+  let closed=0
+  if(a.type==='all'){
+    //关闭全部，包含锁定
 
+    tasks.forEach(task=>{
+      task.tabs.forEach(tab=>{
+          if (webviews.viewList.includes(tab.id) && tab.id!==tabs.getSelected()) {
+            webviews.destroy(tab.id)
+            closed++
+          }
+          tab.loaded=false
+      })
+    })
+  }else{
+    //仅关闭锁定
+    tasks.forEach(task=>{
+      task.tabs.forEach(tab=>{
+        if(!tab.lock){
+          if (webviews.viewList.includes(tab.id) && tab.id!==tabs.getSelected()) {
+            webviews.destroy(tab.id)
+            closed++
+          }
+          tab.loaded=false
+        }
+      })
+    })
+  }
+
+  ipc.send('message',{type:'success',config:{content:'已为您杀死'+closed+'个标签'}})
+})
 module.exports = tabBar

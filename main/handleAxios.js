@@ -1,7 +1,6 @@
 const dlog = require('electron-log');
 const { clipboard } = require('electron');
 const authApi = require(path.join(__dirname, './src/api/authApi.js'))
-const storage = require('electron-localstorage');
 const _path= path.join(app.getPath("userData"), app.getName()+"/", 'userConfig.json');
 const _path_dir = path.dirname(_path);
 const { nanoid } = require('nanoid');
@@ -14,8 +13,10 @@ if(!fs.existsSync(_path_dir)){
   }
   catch(e){ dlog.error(err) }
 }
-storage.setStoragePath(_path);
-global.sharedPath = {extra:storage.getStoragePath()}   //remote官方建议弃用，全局变量在渲染进程中暂时没找到可以替换获取的方法，但是在主进程中全局electronGlobal对象能获取到
+//global.sharedPath = {extra:storage.getStoragePath()}   //remote官方建议弃用，全局变量在渲染进程中暂时没找到可以替换获取的方法，但是在主进程中全局electronGlobal对象能获取到
+function sendIPCToMainWindow(action, data) {
+  mainWindow.webContents.send(action, data || {})
+}
 
 app.whenReady().then(()=>{
   //初始化一下此设备浏览器的新手引导进度信息
@@ -50,7 +51,7 @@ app.whenReady().then(()=>{
     }).write()
   }
 
-  if(storage.getItem(`userToken`)) {
+  if(userModel.isLogged()) {
     markDb.db.set('guideSchedule.modules.noobGuide.accountLogin', true).write()
   }
 
@@ -76,12 +77,6 @@ app.whenReady().then(()=>{
           is_current:true
         }
           await userModel.setCurrent(user)
-
-        // storage.setItem(`userToken`, result.data.token)
-        // storage.setItem(`refreshToken`, result.data.refreshToken)
-        // storage.setItem(`expire_deadtime`, new Date().getTime() + result.data.expire * 1000)
-        // storage.setItem(`refreshExpire_deadtime`, new Date().getTime() + result.data.refreshExpire * 1000)
-        // storage.setItem(`userInfo`, result.data.userInfo)
       }
       event.reply('callback-loginBrowser', result)
       afterGuide('guideSchedule.modules.noobGuide.accountLogin')
@@ -144,13 +139,14 @@ app.whenReady().then(()=>{
   })
 
   function updateStorageInfo(user){
-    storage.setStoragePath(global.sharedPath.extra)
-    storage.setItem(`userToken`, user.token)
-    storage.setItem(`refreshToken`, user.refreshToken)
-    storage.setItem(`expire_deadtime`, new Date().getTime() + user.expire * 1000)
-    storage.setItem(`refreshExpire_deadtime`, new Date().getTime() + user.refreshExpire * 1000)
-    storage.setItem(`userInfo`, user.userInfo)
-    global.utilWindow.webContents.send('remakeCurrentUser', user)
+    userModel.setCurrent(user)
+    // storage.setStoragePath(global.sharedPath.extra)
+    // storage.setItem(`userToken`, user.token)
+    // storage.setItem(`refreshToken`, user.refreshToken)
+    // storage.setItem(`expire_deadtime`, new Date().getTime() + user.expire * 1000)
+    // storage.setItem(`refreshExpire_deadtime`, new Date().getTime() + user.refreshExpire * 1000)
+    // storage.setItem(`userInfo`, user.userInfo)
+    // global.utilWindow.webContents.send('remakeCurrentUser', user)
     //发送过去更新用户的信息
   }
   //主进程的refreshToken成功后   主进程更新storage中的信息，并传到子进程中修改用户标识信息
@@ -160,8 +156,7 @@ app.whenReady().then(()=>{
 
   //主进程的refreshToken也过期的时候 清空主进程中storage的信息，并传到子进程中修改用户标识信息
   ipc.on('clearStorageInfo', () => {
-    storage.setStoragePath(global.sharedPath.extra)
-    storage.clear()
+    userModel.logout()
     global.utilWindow.webContents.send('clearCurrentUser')
   })
 
@@ -261,46 +256,94 @@ app.whenReady().then(()=>{
   // ipc.on('enterFirstGuide',(item,window)=>{
   //   sendIPCToWindow(window, 'enterFirstGuide')
   // })
-
   let firstGuideVideo
-  ipc.on('firstGuideVideo', () => {
-    firstGuideVideo = new BrowserWindow({
-      show:false,
-      backgroundColor:'#00000000',
-      transparent: true,
-      resizable:false,
-      parent: mainWindow,
-      frame: false,
-      titleBarStyle: 'hidden',
-      width: 800,
-      height: 490,
-      webPreferences: {
-        nodeIntegration: true,
-        contextIsolation: false,
-      }
-    })
-
-    function computeBounds(parentBounds,selfBounds){
-      let bounds={}
-      bounds.x=parseInt((parentBounds.x+parentBounds.x+parentBounds.width)/2-selfBounds.width/2,0)
-      bounds.y=parseInt((parentBounds.y+parentBounds.y+parentBounds.height)/2-selfBounds.height/2)
-      bounds.width=parseInt(selfBounds.width)
-      bounds.height=parseInt(selfBounds.height)
-      return bounds
+  ipc.on('firstLoad',()=>{
+    let isOpenGuideVideo = settings.get('guideVideo')
+    if(!isOpenGuideVideo) {
+      settings.set('guideVideo', false)
     }
-    if(process.platform==='darwin')
-      firstGuideVideo.setWindowButtonVisibility(false)
-    firstGuideVideo.loadURL('file://'+path.join(__dirname,'/pages/mvideo/index.html'))
-    firstGuideVideo.on('ready-to-show',()=>{
-      firstGuideVideo.show()
-      firstGuideVideo.setBounds(computeBounds(mainWindow.getBounds(),firstGuideVideo.getBounds()))
-      callModal(firstGuideVideo)
-    })
-    firstGuideVideo.on('close', () => {
-      callUnModal(firstGuideVideo)
-      firstGuideVideo = null
-    })
+
+    if(settings.get('guideVideo') === false) {
+      firstGuideVideo = new BrowserWindow({
+        show:false,
+        backgroundColor:'#00000000',
+        transparent: true,
+        resizable:false,
+        parent: mainWindow,
+        frame: false,
+        titleBarStyle: 'hidden',
+        width: 800,
+        height: 490,
+        webPreferences: {
+          nodeIntegration: true,
+          contextIsolation: false,
+        }
+      })
+
+      function computeBounds(parentBounds,selfBounds){
+        let bounds={}
+        bounds.x=parseInt((parentBounds.x+parentBounds.x+parentBounds.width)/2-selfBounds.width/2,0)
+        bounds.y=parseInt((parentBounds.y+parentBounds.y+parentBounds.height)/2-selfBounds.height/2)
+        bounds.width=parseInt(selfBounds.width)
+        bounds.height=parseInt(selfBounds.height)
+        return bounds
+      }
+      if(process.platform==='darwin')
+        firstGuideVideo.setWindowButtonVisibility(false)
+      firstGuideVideo.loadURL('file://'+path.join(__dirname,'/pages/mvideo/index.html'))
+      firstGuideVideo.on('ready-to-show',()=>{
+        firstGuideVideo.show()
+        firstGuideVideo.setBounds(computeBounds(mainWindow.getBounds(),firstGuideVideo.getBounds()))
+        callModal(firstGuideVideo)
+      })
+      firstGuideVideo.on('close', () => {
+        callUnModal(firstGuideVideo)
+        firstGuideVideo = null
+      })
+      settings.set('guideVideo', true)
+    }
   })
+
+
+  // let firstGuideVideo
+  // ipc.on('firstGuideVideo', () => {
+  //   firstGuideVideo = new BrowserWindow({
+  //     show:false,
+  //     backgroundColor:'#00000000',
+  //     transparent: true,
+  //     resizable:false,
+  //     parent: mainWindow,
+  //     frame: false,
+  //     titleBarStyle: 'hidden',
+  //     width: 800,
+  //     height: 490,
+  //     webPreferences: {
+  //       nodeIntegration: true,
+  //       contextIsolation: false,
+  //     }
+  //   })
+  //
+  //   function computeBounds(parentBounds,selfBounds){
+  //     let bounds={}
+  //     bounds.x=parseInt((parentBounds.x+parentBounds.x+parentBounds.width)/2-selfBounds.width/2,0)
+  //     bounds.y=parseInt((parentBounds.y+parentBounds.y+parentBounds.height)/2-selfBounds.height/2)
+  //     bounds.width=parseInt(selfBounds.width)
+  //     bounds.height=parseInt(selfBounds.height)
+  //     return bounds
+  //   }
+  //   if(process.platform==='darwin')
+  //     firstGuideVideo.setWindowButtonVisibility(false)
+  //   firstGuideVideo.loadURL('file://'+path.join(__dirname,'/pages/mvideo/index.html'))
+  //   firstGuideVideo.on('ready-to-show',()=>{
+  //     firstGuideVideo.show()
+  //     firstGuideVideo.setBounds(computeBounds(mainWindow.getBounds(),firstGuideVideo.getBounds()))
+  //     callModal(firstGuideVideo)
+  //   })
+  //   firstGuideVideo.on('close', () => {
+  //     callUnModal(firstGuideVideo)
+  //     firstGuideVideo = null
+  //   })
+  // })
 
 
   ipc.on('firstLoad',()=>{
@@ -339,9 +382,6 @@ app.whenReady().then(()=>{
 
   //--------------------------------------------------------------------->以下myf
 
-  function sendIPCToMainWindow(action, data) {
-    mainWindow.webContents.send(action, data || {})
-  }
 
 
   ipc.on('guideTasksFirst',()=>{
