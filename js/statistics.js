@@ -5,6 +5,7 @@ const { db } = require('./util/database');
 
 const userStatsModel = require('../pages/util/model/userStatsModel')
 const standAloneAppModel = require('../pages/util/model/standAloneAppModel')
+const userModel = require("../src/model/userModel");
 
 const statistics = {
   envGetters: [],
@@ -129,11 +130,12 @@ const statistics = {
   },
 
   async uploadCumulativeTime() {
-    const result = await db.system.where('name').equals('currentUser').first()
+    const userInfo = await userModel.getCurrent()
     const options = {
-      uid: result.value.uid != 0 ? result.value.uid : 0,   //用户uid
+      uid:  userInfo && userInfo.data.uid != 0 ? userInfo.data.uid : 0,  //用户uid
       client_id: settings.get('clientID'),     //设备号
     }
+
     axios.post('/app/open/usageStats/cumulativeTime', options).catch(e => {
       console.warn('failed to send cumulative', e)
     })
