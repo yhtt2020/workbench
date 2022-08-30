@@ -34,52 +34,50 @@
            </a-badge>
         下载中
       </span>
+          <div class="beautiful-sm-scroll" style="height: 390px; width: 100%; overflow: auto;">
           <div v-show="listCount===0" style="margin-top: 50px">
             <a-empty description="暂无下载任务" style="user-select:none"></a-empty>
           </div>
-          <div class="downloadIng" v-for="(item,index) in list" v-bind:key="index" style="margin-top: 10px"
+          <div class="downloadIng" v-for="(item,index) in list" v-bind:key="index" style="margin-top: 10px;height: 55px;display: flex;flex-direction: column"
                @contextmenu="menuIng(item)" @click="change(index)"
                :class="{active : active === index,
          clickActive:clickActive===index}"
                @mouseover="mouseOver(item)"
                @mouseleave="mouseLeave">
-            <div style="margin-top: 0;width: 100%;height: 55px;">
-              <div
-                style="width: 34px;height: 40px;position: absolute;margin-top: 8px;margin-left: 5px; user-select:none">
+            <div style="display: flex">
+              <div style="width: 34px;height: 40px;margin-left: 10px; user-select:none">
                 <img :src="url=(`./icon/${matchFileSuffixType(item.name)}.svg`)" style="height: 100%;width: 100%"/>
               </div>
+              <div style="display: flex;flex-direction: column;margin-left: 10px">
+                <div style="font-size: 13px;font-weight: bold ;">{{ item.title }}</div>
+                <div v-if="item.received" style="font-size: 12px;width: 150px;color:#999">
+                  {{ item.received }} / {{ item.total }}
+                </div>
+                <div v-else style="font-size: 12px;width: 150px;color:#999">{{ item.received }}
+                  预载中...
+                </div>
+              </div>
+                <div v-if="item.realData" style="width: 50px;line-height: 55px">
+                  {{ item.realData }}/s
+                </div>
+                <div v-else></div>
+
               <div v-if="item.status === 'progressing'">
                 <div v-if="item.loadState">
-                  <a-button style="position: absolute;margin-left: 300px;margin-top: 10px" type="link"
-                            @click="resume(item)">
+                  <a-button style="margin-top: 5px;margin-left: 30px" type="link" @click="resume(item)">
                     开始
                   </a-button>
                 </div>
                 <div v-else>
-                  <a-button style="position: absolute;margin-left: 300px;margin-top: 10px" type="link"
-                            @click="stop(item)">
+                  <a-button style="margin-top: 5px;margin-left: 30px" type="link" @click="stop(item)">
                     暂停
                   </a-button>
                 </div>
               </div>
-              <div>
-                <div style="margin-left: 50px;font-size: 13px;font-weight: bold ;">{{ item.title }}</div>
-                <div v-if="item.received" style="margin-left: 50px;font-size: 12px;width: 150px;color:#999">
-                  {{ item.received }} / {{ item.total }}
-                </div>
-                <div v-else style="margin-left: 50px;font-size: 12px;width: 150px;color:#999">{{ item.received }}
-                  预载中...
-                </div>
-                <div v-if="item.realData" style="position: absolute;margin-left: 210px;width: 50px;margin-top: -20px">
-                  {{ item.realData }}/s
-                </div>
-                <div v-else></div>
-              </div>
-              <a-progress style="position: absolute;width: 95%;padding-left: 50px;margin-top: -6px;color:#999"
-                          :percent="item.progressnuw"></a-progress>
             </div>
+            <a-progress v-show="item.received"  style="width: 85%;color:#999;margin-left: 55px;margin-top: -23px" :percent="item.progressnuw"></a-progress>
           </div>
-
+    </div>
         </a-tab-pane>
 
         <a-tab-pane key="2" force-render>
@@ -89,32 +87,30 @@
           <div v-show="listDoneCount===0" style="margin-top: 50px">
             <a-empty description="暂无完成任务" style="user-select:none"></a-empty>
           </div>
-
-          <div v-for="timeGroup in showList">
-            <div class="time" style="margin-top: 5px;font-size: 15px;font-weight: 500">
-              <span style="margin-left: 30px;color: #000000;">{{ timeGroup.addTime }}</span>
-            </div>
-            <div class="downloadDone" v-for="(item,index) in timeGroup.subList" style="margin-top: 5px"
-                 v-bind:key="item.id" @click.stop="change(item.id)" @dblclick="openFileHandler(item)"
-                 @contextmenu="menuDone(item,item.id,timeGroup)" :class="{active : active === item.id,
+          <div class="beautiful-sm-scroll" style="height: 390px; width: 100%; overflow: auto;">
+            <div v-for="timeGroup in showList">
+              <div class="time" style="margin-top: 8px;font-size: 15px;font-weight: 500">
+                <span style="margin-left: 30px;color: #000000;">{{ timeGroup.addTime }}</span>
+              </div>
+              <div class="downloadDone" v-for="(item,index) in timeGroup.subList" style="margin-top: 5px;width: 100%;height: 45px;user-select:none;"
+                   v-bind:key="item.id" @click.stop="change(item.id)" @dblclick="openFileHandler(item)"
+                   @contextmenu="menuDone(item,item.id,timeGroup)" :class="{active : active === item.id,
          clickActive:clickActive===item.id}"
-                 @mouseover="mouseOver(item.id)"
-                 @mouseleave="mouseLeave">
-              <div style="width: 100%;height: 45px;">
-                <div
-                  style="width: 34px;height: 40px;position: absolute;margin-top: 4px;margin-left: 10px; user-select:none">
-                  <img :src="url=(`./icon/${matchFileSuffixType(item.name)}.svg`)" style="height: 100%;width: 100%"/>
+                   @mouseover="mouseOver(item.id)"
+                   @mouseleave="mouseLeave">
+                <div style="display: flex">
+                  <div style="width: 34px;height: 40px;margin-left: 10px; user-select:none">
+                    <img :src="url=(`./icon/${matchFileSuffixType(item.name)}.svg`)" style="height: 100%;width: 100%"/>
+                  </div>
+                  <div style="display: flex;flex-direction: column;margin-left: 10px;width: 115px">
+                    <div style="font-weight: bold">{{ item.title }}</div>
+                    <div style="color:#999">{{ item.total }}</div>
+                  </div>
+                  <div style="margin-top: 20px">{{ item.doneDate }}</div>
+                  <a-button style="line-height: 40px;margin-left: 12px" type="link" @click="openFileHandler(item)">
+                    打开
+                  </a-button>
                 </div>
-
-                <a-button style="position: absolute;margin-left: 300px;margin-top: 5px;cursor:pointer;" type="link"
-                          @click="openFileHandler(item)">
-                  打开
-                </a-button>
-                <div style="position: absolute;font-size: 13px;margin-left: 145px;margin-top: 19px; user-select:none">
-                  {{ item.doneDate }}
-                </div>
-                <div style="margin-left: 50px;font-size: 13px;font-weight: bold ;">{{ item.title }}</div>
-                <div style="margin-left: 50px;font-size: 12px;width: 65px;color:#999">{{ item.total }}</div>
               </div>
             </div>
           </div>
@@ -127,21 +123,24 @@
           <div v-show="listTrashCount===0" style="margin-top: 50px">
             <a-empty description="暂无记录" style="user-select:none"></a-empty>
           </div>
-          <div v-for="(item,index) in deleteList" v-bind:key="index" @click="change(index)" style="margin-top: 10px"
-               @contextmenu="menuDel(item,index)" :class="{active : active === index,
+          <div class="beautiful-sm-scroll" style="height: 390px; width: 100%; overflow: auto;">
+            <div v-for="(item,index) in deleteList" v-bind:key="index" @click="change(index)" style="margin-top: 10px;height: 45px;user-select:none;"
+                 @contextmenu="menuDel(item,index)" :class="{active : active === index,
          clickActive:clickActive===index}"
-               @mouseover="mouseOver(index)"
-               @mouseleave="mouseLeave">
-            <div style="width: 100%;height: 45px;">
-              <div
-                style="width: 34px;height: 40px;position: absolute;margin-top: 4px;margin-left: 10px;user-select:none">
-                <img :src="url=(`./icon/${matchFileSuffixType(item.name)}.svg`)" style="height: 100%;width: 100%"/>
+                 @mouseover="mouseOver(index)"
+                 @mouseleave="mouseLeave">
+              <div style="display: flex;">
+                <div style="width: 34px;height: 40px;margin-left: 10px;">
+                  <img :src="url=(`./icon/${matchFileSuffixType(item.name)}.svg`)" style="height: 100%;width: 100%;line-height: 40px"/>
+                </div>
+                <div style="display:flex; flex-direction: column;margin-left: 10px;width: 190px">
+                  <div style="font-size: 13px;font-weight: bold;text-decoration:line-through">
+                    {{ item.title }}
+                  </div>
+                  <div>{{ item.total }}</div>
+                </div>
+                <div style="line-height: 45px;">{{ item.statusText }}</div>
               </div>
-              <div style="position: absolute;margin-left: 270px;margin-top: 14px">{{ item.statusText }}</div>
-              <div style="margin-left: 50px;font-size: 13px;font-weight: bold;text-decoration:line-through">
-                {{ item.title }}
-              </div>
-              <div style="margin-left: 50px;font-size: 12px;width: 65px;">{{ item.total }}</div>
             </div>
           </div>
         </a-tab-pane>
@@ -243,10 +242,11 @@
     if (args.status === 'start') {
       appVue.list.forEach(item => {
         if (item.startTime === args.startTime) {
-          appVue.lists.splice(appVue.lists.indexOf(args.startTime), 1)
+          appVue.list.splice(appVue.list.indexOf(args.startTime), 1)
+          appVue.listCount--
+          appVue.count--
         }
       })
-
       appVue.list.unshift({
         name: args.name,
         id: appVue.id++,
@@ -262,11 +262,16 @@
         href: args.href,
         suffixal: path.extname(args.name)
       })
+      // function unique(arr) {
+      //   const res = new Map()
+      //   return arr.filter((item) => !res.has(item.startTime) && res.set(item.startTime, 1))
+      // }
+      // appVue.list =unique(appVue.list)
+      //
       appVue.listCount++
       appVue.count++
       ipcRenderer.send('willDownload')
       ipcRenderer.send('downloading')
-
     }
 
     if (args.status === 'cancelled') {
@@ -313,14 +318,16 @@
       ipcRenderer.send('inform')
       ipcRenderer.send('emptyPageUrl', args.chainUrl)
       const myDate = new Date()
-      appVue.doneList.forEach(item => {
-        if (item.startTime === args.startTime) {
-          appVue.doneList.splice(appVue.doneList.indexOf(args.startTime), 1)
-          appVue.count++
-          appVue.listCount++
-          appVue.listDoneCount--
-        }
-      })
+      // appVue.doneList.forEach(item => {
+      //   if (item.startTime === args.startTime) {
+      //     console.log('123')
+      //     appVue.doneList.splice(appVue.doneList.indexOf(args.startTime), 1)
+      //     appVue.count++
+      //     appVue.listCount++
+      //     appVue.listDoneCount--
+      //   }
+      // })
+
       appVue.doneList.unshift({
         name: args.name,
         id: appVue.doneId++,
@@ -336,8 +343,16 @@
       })
 
       appVue.listCount--
+      if( appVue.listCount <0){
+        appVue.listCount =0
+      }
       appVue.count--
       appVue.listDoneCount++
+      function unique(arr) {
+        const res = new Map()
+        return arr.filter((item) => !res.has(item.startTime) && res.set(item.startTime, 1))
+      }
+      appVue.doneList =unique(appVue.doneList)
       db.download.add({
         name: args.name,
         title: args.name,
@@ -555,6 +570,9 @@
         })
         ipcRenderer.send('deleteDownload', this.selectingList.path)
         this.visibleIng = false
+        if(appVue.doneList.length === 0 ){
+          appVue.listDoneCount =0
+        }
       },
 
       doneChange (e) {
@@ -634,6 +652,9 @@
         }
         appVue.listDoneCount--
         appVue.listTrashCount++
+        if(appVue.doneList.length === 0 ){
+          appVue.listDoneCount =0
+        }
       },
       resume (item) {
         ipcRenderer.send('resumeDownload', item.path)
@@ -673,7 +694,9 @@
   .ant-tabs-top-bar {
     margin: 0 0 0;
   }
-
+.ant-tabs-nav.ant-tabs-nav-animated{
+  margin-left: 37px;
+}
   #tag {
     position: absolute;
     margin-left: 60px;
@@ -693,6 +716,19 @@
     height: 100%;
   }
 
+  .beautiful-sm-scroll::-webkit-scrollbar {
+    width: 5px;
+  }
+  .beautiful-sm-scroll::-webkit-scrollbar-thumb {
+    background: rgb(233, 232, 232);
+    border-radius: 20px;
+  }
+  .beautiful-sm-scroll::-webkit-scrollbar-thumb:hover {
+    background: #747474;
+  }
+  .beautiful-sm-scroll::-webkit-scrollbar-corner {
+    background: #f6f6f6;
+  }
 </style>
 
 </html>
