@@ -47,7 +47,7 @@ win:
           to: res
           filter:
             - "**/*"
-    icon: ./icons/logowin.ico
+    icon: ./new_logos/brave/win/brave.ico
     target:
         - target: nsis
         - target: zip
