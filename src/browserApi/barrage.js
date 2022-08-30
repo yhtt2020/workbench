@@ -38,6 +38,9 @@ const barrage={
   async getList(channel,pageUrl){
     return await barrageModel.getList(channel,pageUrl)
   },
+  async delete(id){
+    return await barrageModel.delete(id)
+  },
   /**
    * url改变回调
    * @param callback
