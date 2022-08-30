@@ -31,7 +31,7 @@ function buildBrowser () {
     ignoreMissing: false,
     node: true,
     detectGlobals: false
-  })
+  }).external(['knex'])
 
   instance.transform(renderify)
   const stream = fs.createWriteStream(outFile, { encoding: 'utf-8' })

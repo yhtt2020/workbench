@@ -2,8 +2,11 @@ const electron = require('electron')
 const fs = require('fs')
 const path = require('path')
 const electronLog=require('electron-log')
+const SpaceManager=require(__dirname+'/src/main/spaceManager.js')
+
 let forceClose = false //是否强制退出应用
 var clipboardContent=''
+var spaceManager
 const {
   app, // Module to control application life.
   protocol, // Module to control protocol handling
@@ -424,74 +427,71 @@ app.on('window-all-closed', function() {
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
-app.on('ready', function() {
-	settings.set('restartNow', false)
-	appIsReady = true
+app.on('ready', async function () {
+  settings.set('restartNow', false)
+  appIsReady = true
 
-	/* the installer launches the app to install registry items and shortcuts,
-	but if that's happening, we shouldn't display anything */
-	if (isInstallerRunning) {
-		return
-	}
+  /* the installer launches the app to install registry items and shortcuts,
+  but if that's happening, we shouldn't display anything */
+  if (isInstallerRunning) {
+    return
+  }
 
-
-	//预先创建好快速启动窗口
-	//createLanuchBar()
+  //预先创建好快速启动窗口
+  //createLanuchBar()
 //app.lanuchBar.show()
 
-	// if (isDevelopmentMode) {
-	// 	session.defaultSession.loadExtension(
-	// 		path.join(__dirname, 'devtools-5.3.4/packages/shell-chrome'),
-	// 		// allowFileAccess is required to load the devtools extension on file:// URLs.
-	// 		{
-	// 			allowFileAccess: true
-	// 		}
-	// 	)
-	// }
-	//注册快捷键，用于展示启动界面
-	// globalShortcut.register('alt+space', () => {
-	// 	//注册全局快捷键
-	// 	//todo 判断一下注册失败
-	// 	console.log('Electron loves global shortcuts!')
+  // if (isDevelopmentMode) {
+  // 	session.defaultSession.loadExtension(
+  // 		path.join(__dirname, 'devtools-5.3.4/packages/shell-chrome'),
+  // 		// allowFileAccess is required to load the devtools extension on file:// URLs.
+  // 		{
+  // 			allowFileAccess: true
+  // 		}
+  // 	)
+  // }
+  //注册快捷键，用于展示启动界面
+  // globalShortcut.register('alt+space', () => {
+  // 	//注册全局快捷键
+  // 	//todo 判断一下注册失败
+  // 	console.log('Electron loves global shortcuts!')
 
-	// 	if (app.lanuchBar) {
-	// 		if(app.lanuchBar.isVisible()){
-	// 			app.lanuchBar.hide()  //如果已经存在，则隐藏
-	// 		}else{
-	// 			app.lanuchBar.show()
-	// 		}
+  // 	if (app.lanuchBar) {
+  // 		if(app.lanuchBar.isVisible()){
+  // 			app.lanuchBar.hide()  //如果已经存在，则隐藏
+  // 		}else{
+  // 			app.lanuchBar.show()
+  // 		}
 
-	// 	} else {
-	// 		createLanuchBar()
-	// 	}
+  // 	} else {
+  // 		createLanuchBar()
+  // 	}
 
-	// })
+  // })
 
+  //todo before create
+  spaceManager = new SpaceManager()
+  await spaceManager.ensureDb()
 
-
-	createWindow(function() {
-		mainWindow.webContents.on('did-finish-load', function() {
-			// if a URL was passed as a command line argument (probably because Min is set as the default browser on Linux), open it.
-			handleCommandLineArguments(process.argv)
-			// there is a URL from an "open-url" event (on Mac)
-			if (global.URLToOpen) {
-				// if there is a previously set URL to open (probably from opening a link on macOS), open it
-				sendIPCToWindow(mainWindow, 'addTab', {
-					url: global.URLToOpen
-				})
-				global.URLToOpen = null
-			}
-		})
+  createWindow(function () {
+    mainWindow.webContents.on('did-finish-load', function () {
+      // if a URL was passed as a command line argument (probably because Min is set as the default browser on Linux), open it.
+      handleCommandLineArguments(process.argv)
+      // there is a URL from an "open-url" event (on Mac)
+      if (global.URLToOpen) {
+        // if there is a previously set URL to open (probably from opening a link on macOS), open it
+        sendIPCToWindow(mainWindow, 'addTab', {
+          url: global.URLToOpen
+        })
+        global.URLToOpen = null
+      }
+    })
     callWetherShowUserWindow()
-	})
+  })
 
-
-
-	mainMenu = buildAppMenu()
-	Menu.setApplicationMenu(mainMenu)
-	createDockMenu()
-
-
+  mainMenu = buildAppMenu()
+  Menu.setApplicationMenu(mainMenu)
+  createDockMenu()
 
 })
 function handleUrlOpen(url){
@@ -612,4 +612,49 @@ ipc.on('errorClose',(e,args)=>{
     mainWindow.show()
     sendMessage({type:'error',config:{content:'关闭保存意外失败，您可以再次点击关闭，在不保存的情况下继续使用，此消息将在10秒后自动消失。',duration:'10'}})
   }
+})
+
+var barrageManager=null //全局可用
+const { BarrageManager }=require(path.join(__dirname,'/src/main/barrageManager.js'))
+app.whenReady().then(()=>{
+  setTimeout(()=>{
+    barrageManager=new BarrageManager({
+      parent:mainWindow
+    })
+    //barrageManager.init()
+  },3000)
+
+
+  ipc.on('toggleBarrage',()=>{
+    if(BarrageManager.isAlive()){
+      if(barrageManager.isLocked){
+        barrageManager.unlock()
+        return
+      }
+      barrageManager.destroy()
+    }else{
+      barrageManager.init()
+    }
+  })
+  ipc.on('barrage.changeUrl',(e,a)=>{
+    if(barrageManager)
+     barrageManager.changeUrl(a.url)
+  })
+
+  ipc.on('tabs.current',(e,a)=>{
+    //这是一个非常经典的ipc.sendSync的回调实现。
+    function getCurrentTab(callBack){
+      ipc.once('gotCurrentTab',(e,args)=>{
+        callBack(args.data)
+      })
+      sendIPCToWindow(mainWindow,'getCurrentTab')
+    }
+    getCurrentTab((data)=>{
+      e.returnValue=data
+    })
+  })
+
+  ipc.on('barrage.lock',(e,a)=>{
+    barrageManager.lock()
+  })
 })

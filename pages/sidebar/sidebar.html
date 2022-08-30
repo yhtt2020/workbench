@@ -26,7 +26,7 @@
 <body>
 <script>
   const fs=require('fs')
-  require('../util/util.js').tools.getWindowArgs(window)
+
   let settings=require('../../js/util/settings/settings')
   function mousenter (target) {
     if (appVue.mod==='auto') {
@@ -66,7 +66,7 @@
     setMainWindow()
   }
 </script>
-<div id="appVue" style="z-index: 2" :class="{'sidebar':true,'expanded':this.mod==='open'}" onmouseenter="mousenter(this)"
+<div id="appVue" hidden style="z-index: 2" :class="{'sidebar':true,'expanded':this.mod==='open'}" onmouseenter="mousenter(this)"
      onmouseleave="mouseleave(this)">
   <sidebar ref="sidePanel"/>
 </div>

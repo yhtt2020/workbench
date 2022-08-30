@@ -60,10 +60,10 @@ function checkUpdate(){
       errInfo="软件包名无法验证"
     }
     if(SidePanel.alive() && showedError === false){
-      sidePanel.get().webContents.send('message',{type:'error',config:{content:"自动更新程序意外终止,错误原因： "+errInfo+" ，将为您打开产品官网apps.vip，请至官网手动下载最新版本更新。",key:tag,duration:6}})
+      sidePanel.get().webContents.send('message',{type:'error',config:{content:"自动更新程序意外终止,错误原因： "+errInfo+" ，将为您打开产品官网www.apps.vip，请至官网手动下载最新版本更新。",key:tag,duration:6}})
       showedError=true
       sendIPCToWindow(mainWindow, 'addTab', {
-        url: 'https://apps.vip/#download'
+        url: 'https://www.apps.vip/#download'
       })
     }
   }

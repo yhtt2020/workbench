@@ -285,6 +285,7 @@ function switchToTab (id, options) {
   } else {
     document.body.classList.remove('is-ntp')
   }
+
 }
 
 tasks.on('tab-updated', function (id, key) {

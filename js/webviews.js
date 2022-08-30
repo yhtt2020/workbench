@@ -30,6 +30,7 @@ function captureCurrentTab (options) {
 
 // called whenever a new page starts loading, or an in-page navigation occurs
 function onPageURLChange (tab, url) {
+  ipc.send('barrage.changeUrl',{url:urlParser.getSourceURL(url)})
     //增加了ts开头的页面的安全提示，避免提示不安全
     webviews.updateToolBarStatus(tabs.get(tab))
     if (url.indexOf('https://') === 0 || url.indexOf('about:') === 0 || url.indexOf('chrome:') === 0 || url.indexOf('file://') === 0 || url.indexOf('ts://') === 0) {
@@ -45,7 +46,6 @@ function onPageURLChange (tab, url) {
       })
       webviews.updateToolbarSecure(false)
     }
-
 }
 
 // called whenever a navigation finishes
@@ -147,19 +147,30 @@ const webviews = {
   },
   viewMargins: [document.getElementById('toolbar').hidden?0:document.getElementById('third-toolbar').hidden?40:80, 0, 0, 45], // top, right, bottom, left
   autoAdjustMargin: function() {
-    const currentMargins = [
-      document.getElementById("toolbar").hidden
+    let top=0
+    let left=0
+    if(window.$toolbar.layoutMod==='min'){
+      top=0
+      left=0
+    }else{
+     top= document.getElementById("toolbar").hidden
         ? 0
         : document.getElementById("third-toolbar").hidden
-        ? 40
-        : 80,
-      0,
-      0,
-      window.sideBar.mod === "close"
+          ? 40
+          : 80
+      left=  window.sideBar.mod === "close"
         ? 45
         : window.sideBar.mod === "open"
-        ? 145
-        : 45,
+          ? 145
+          : 45
+    }
+
+
+    const currentMargins = [
+      top,
+      0,
+      0,
+      left,
     ];
     for (var i = 0; i < currentMargins.length; i++) {
       webviews.viewMargins[i] = currentMargins[i];
@@ -375,6 +386,7 @@ const webviews = {
       focus: !options || options.focus !== false
     })
     //当切换选中的view的时候要同步一下信息
+    ipc.send('barrage.changeUrl',{url:urlParser.getSourceURL(tabs.get(id).url)})
     webviews.updateToolBarStatus(tabs.get(id))
     webviews.emitEvent('view-shown', id)
   },
@@ -383,6 +395,7 @@ const webviews = {
    * @param tabData tab的信息
    */
   updateToolBarStatus(tabData){
+
     if(tabData.id===tabs.getSelected()){
       require('js/navbar/tabEditor').updateUrl(urlParser.getSourceURL(tabData.url))
       webviews.updateToolbarSecure(tabData.secure)

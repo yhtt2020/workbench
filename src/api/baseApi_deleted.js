@@ -1,6 +1,6 @@
-const axios = require("../../util/axios.js");
+const axios = require("../util/axios.js");
 const storage = require('electron-localstorage');
-const { db } = require("../../util/database.js");
+const { db } = require("../../js/util/database.js");
 
 
 const baseApi = {
@@ -36,7 +36,7 @@ const baseApi = {
       }
     } else {
       const user = await baseApi.getCurrentUser()
-      if(user.value.uid === 0) {
+      if(user.uid === 0) {
         return Promise.reject('请先登入再操作')
       } else {
         baseApi.currentUser = user;

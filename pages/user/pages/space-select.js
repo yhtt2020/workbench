@@ -6,38 +6,56 @@ const tpl = `
   <div style="text-align: center" >
     <a-row style="margin-top: 20px">
       <a-col :span="12" style="text-align: right">
-        <a-avatar :size="60" :src="user.avatar">
+        <a-avatar :size="60" :src="user.user_info.avatar">
         </a-avatar>
       </a-col>
       <a-col :span="12" style="text-align: left;padding-left: 10px">
-        <div style="margin-top: 10px">{{user.nickname}}</div>
+        <div style="margin-top: 10px">{{user.user_info.nickname}}</div>
         <p style="font-size: 16px">{{ spaces.length }} <span style="color: #999;font-size: 12px">空间</span></p>
       </a-col>
     </a-row>
 
+
   </div>
   <div v-if="user.uid" style="float: right;position: absolute;right: 20px;top: 20px;" ><a-button @click="importFromLocal" size="small">导入</a-button></div>
-  <div v-else style="float: right;position: absolute;right: 20px;top: 20px;" ><a-checkbox @change="loadSpaces" v-model:checked="showBackup">显示备份空间</a-checkbox></div>
+  <div v-else style="float: right;position: absolute;right: 20px;top: 20px;" ><a-checkbox @change="loadSpaces" v-model:checked="showBackup">显示离线空间</a-checkbox></div>
   <div v-if="loading">
   </div>
   <div v-else style="text-align: center">
     <!--      <a-empty text="无空间" v-if="spaces.length===0"></a-empty>-->
     <div style="text-align: left;overflow-y: auto;max-height: 310px;margin-right: 20px;padding-top: 10px;padding-left: 40px;padding-bottom: 10px" class="scroller">
+     <a-alert v-if="!this.tipCopyRead=='1'" @close="setTipCopyRead" style="margin-right: 44px;margin-left: 20px;margin-bottom: 10px" message="强烈建议复制一个空间做备份：【右键】，选择【复制】空间。" type="info" close-text="知道了" />
+    <a-card @click="showCreateSpace" hoverable style="width: 250px;display: inline-block;margin-left:20px;">
+        <a-card-meta title="创建新空间" description="创建一个全新的空间">
+          <template #avatar>
+            <a-avatar :size="40" style="background-color: #eeeeee">
+              <template #icon>
+                <svg style="margin-top: 3px;width: 30px" t="1648099588078" class="icon" viewBox="0 0 1024 1024"
+                     version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="21372" width="36" height="36">
+                  <path
+                    d="M512 42.666667c259.2 0 469.333333 210.133333 469.333333 469.333333s-210.133333 469.333333-469.333333 469.333333S42.666667 771.2 42.666667 512 252.8 42.666667 512 42.666667z m0 85.333333a384 384 0 1 0 0 768 384 384 0 0 0 0-768z m0 170.666667a42.666667 42.666667 0 0 1 42.666667 42.666666v128h128a42.666667 42.666667 0 0 1 0 85.333334h-128v128a42.666667 42.666667 0 0 1-85.333334 0v-128H341.333333a42.666667 42.666667 0 0 1 0-85.333334h128V341.333333a42.666667 42.666667 0 0 1 42.666667-42.666666z"
+                    fill="#666666" p-id="21373"></path>
+                </svg>
+              </template>
+            </a-avatar>
+          </template>
+        </a-card-meta>
+      </a-card>
     <a-tooltip v-for="space,index in spaces" placement="bottom">
     <template #title>
     名称：{{space.name}}<br>
-    空间ID：{{space.id}}<br>
+    空间ID：{{space.nanoid}}<br>
     保存时间：{{dateTime(space.sync_time)}}<br>
     修改时间：{{dateTime(space.update_time)}}<br>
     创建时间：{{dateTime(space.create_time)}}<br>
-     <span v-if="space.client_id !==''">设备ID：{{space.client_id}}</span>
+     <span v-if="space.client_id!='' && typeof space.client_id !=='undefined'">设备ID：{{space.client_id}}</span>
      </template>
         <a-card  v-if="space.type==='cloud'"
          :class="{'other-using':space.isOtherUsing,'self-using':space.isSelfUsing}"
           style="margin-left:20px;width: 250px;display: inline-block;margin-bottom: 10px;background-color: rgba(241,241,241,0.29)">
           <a-card-meta  >
           <template #title>
-          <span v-if="space.type==='cloud'">【备份】</span> {{space.name}}
+          <span v-if="space.type==='cloud'">【离线】</span> {{space.name}}
 
 </template>
             <template #description>
@@ -72,9 +90,9 @@ const tpl = `
          <a-tooltip placement="bottom" :mouseLeave-delay="0">
     <template #title>
     名称：{{space.name}}<br>
-    空间ID：{{space.id}}<br>
+    空间ID：{{space.nanoid}}<br>
     保存时间：{{dateTime(space.sync_time)}}<br>修改时间：{{dateTime(space.update_time)}}<br>创建时间：{{dateTime(space.create_time)}}<br>
-     <span v-if="space.client_id !==''">设备ID：{{space.client_id}}</span>
+     <span v-if="space.client_id!='' && typeof space.client_id !=='undefined' ">设备ID：{{space.client_id}}</span>
      </template>
         <a-card  v-if="space.type!=='cloud'" @click="switchSpace(space)"
          :class="{'other-using':space.isOtherUsing,'self-using':space.isSelfUsing}"
@@ -117,22 +135,7 @@ const tpl = `
         </template>
       </a-dropdown>
 
-      <a-card @click="showCreateSpace" hoverable style="width: 250px;display: inline-block;margin-left:20px;">
-        <a-card-meta title="创建新空间" description="创建一个全新的空间">
-          <template #avatar>
-            <a-avatar :size="40" style="background-color: #eeeeee">
-              <template #icon>
-                <svg style="margin-top: 3px;width: 30px" t="1648099588078" class="icon" viewBox="0 0 1024 1024"
-                     version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="21372" width="36" height="36">
-                  <path
-                    d="M512 42.666667c259.2 0 469.333333 210.133333 469.333333 469.333333s-210.133333 469.333333-469.333333 469.333333S42.666667 771.2 42.666667 512 252.8 42.666667 512 42.666667z m0 85.333333a384 384 0 1 0 0 768 384 384 0 0 0 0-768z m0 170.666667a42.666667 42.666667 0 0 1 42.666667 42.666666v128h128a42.666667 42.666667 0 0 1 0 85.333334h-128v128a42.666667 42.666667 0 0 1-85.333334 0v-128H341.333333a42.666667 42.666667 0 0 1 0-85.333334h128V341.333333a42.666667 42.666667 0 0 1 42.666667-42.666666z"
-                    fill="#666666" p-id="21373"></path>
-                </svg>
-              </template>
-            </a-avatar>
-          </template>
-        </a-card-meta>
-      </a-card>
+
       <div>
       </div>
     </div>
@@ -204,7 +207,6 @@ const tpl = `
   </a-modal>
 </div>
 `
-// const userModel = require('../../util/model/userModel')
 const ipc = require('electron').ipcRenderer
 const SpaceSelect = {
   template: tpl,
@@ -213,7 +215,9 @@ const SpaceSelect = {
       user: {
         uid: 0,
         spaces: [],
-        clientId: ''
+        clientId: '',
+        user_info:{
+        }
       },
       spaces: [],
       currentSpace: {},
@@ -243,16 +247,22 @@ const SpaceSelect = {
 
 
       showBackup:false,//默认不显示备份空间
-      loading:true
+      loading:true,
+
+      tipCopyRead:'0',
     }
   },
   async mounted () {
+    this.tipCopyRead=localStorage.getItem('tipCopyRead')
+
     let user = {}
     let uid = Number(this.$route.params.uid)
     if (!uid) {
       user = {
-        nickname: '本机空间',
-        avatar: '../../icons/logo128.png',
+        user_info:{
+          nickname: '本机空间',
+          avatar: '../../icons/logo128.png',
+        },
         spaces: [],
         uid: 0
       }
@@ -280,6 +290,9 @@ const SpaceSelect = {
     this.loading=false
   },
   methods: {
+    setTipCopyRead(){
+      localStorage.setItem('tipCopyRead','1')
+    },
      setEnterPwd(){
       this.visibleSetEnterPwd=true
     },
@@ -335,11 +348,12 @@ const SpaceSelect = {
       let spaces= await spaceModel.getLocalSpaces()
       this.localOptions=[]
       spaces.forEach((space) => {
-        if(space.data && space.type!=='cloud'){
-          if(space.id===this.currentSpace.spaceId){
-            this.localOptions.push({ label: space.name +'（ '+ space.data.state.tasks.length+' 标签组）← 当前', value: space.id })
+        space.data=JSON.parse(space.data)
+        if(space.data){
+          if(space.nanoid===this.currentSpace.spaceId){
+            this.localOptions.push({ label: space.name +'（ '+ space.data.state.tasks.length+' 标签组）← 当前', value: space.nanoid })
           }else
-          this.localOptions.push({ label: space.name +'（ '+ space.data.state.tasks.length+' 标签组）', value: space.id })
+          this.localOptions.push({ label: space.name +'（ '+ space.data.state.tasks.length+' 标签组）', value: space.nanoid })
           this.localSpaces.push(space)
         }
       })
@@ -355,7 +369,7 @@ const SpaceSelect = {
       try {
         let selectedSpaces=this.selectedImportSpaces.map(space=>{
           let item=this.localSpaces.find((item)=>{
-            return item.id===space
+            return item.nanoid===space
           })
           return {
             data:item.data,
@@ -399,6 +413,7 @@ const SpaceSelect = {
       //下面开始获取用户空间
       try {
         let result = await spaceModel.setUser(this.user).getUserSpaces({showBackup:this.showBackup})
+
         if (result.status === 1) {
           spaces = result.data
           if(this.user.uid){

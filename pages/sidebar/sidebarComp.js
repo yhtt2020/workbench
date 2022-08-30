@@ -744,6 +744,7 @@ const _=require('lodash')
 const storage = require('electron-localstorage')
 const {ipcRenderer: ipc} = require("electron");
 const saAppModel = require("../util/model/standAloneAppModel");
+const userModel = require('../../src/model/userModel')
 window.selectedTask=null
 
 Vue.component('sidebar', {
@@ -829,18 +830,7 @@ Vue.component('sidebar', {
         },
 
       ],
-      accounts: [
-        {
-          'uid': 1,
-          'nickname': '张三',
-          'avatar': '../../icons/apps.svg'
-        },
-        {
-          'uid': 2,
-          'nickname': '李四',
-          'avatar': '../../icons/browser.ico'
-        }
-      ],
+      accounts: [],
       sidebarBottom: 0,
       cloudSpaces: []
     }
@@ -864,14 +854,14 @@ Vue.component('sidebar', {
     })
     this.watchAllHasMore()
     //获取当前左侧栏的状态，并设置
-   spaceModel.getCurrent().then((space)=>{
+   spaceModel.getCurrent().then(async (space)=>{
         this.currentSpace =space
      if(space.spaceType==='local')
      {
        this.spaceStatus='local'
      }else{
        this.spaceStatus='online'
-       let backupSpace= backupSpaceModel.getSpace(space.spaceId)
+       let backupSpace= await backupSpaceModel.getSpace(space.spaceId)
        this.lastSync=backupSpace.sync_time
      }
    })
@@ -933,17 +923,13 @@ Vue.component('sidebar', {
       that.sidebarBottom = data.value
       setTimeout(that.fixElementPosition, 250)
     })
-    const currentUser = await db.system.where('name').equals('currentUser').first()
-    if (currentUser.value.uid !== 0) {
+    const currentUser =await userModel.getCurrent()
+    if (currentUser.uid !== 0) {
       try {
-        //侧边栏重载的时候也同步一下本地文件的用户标识
-        ipc.send('syncCurrentUser', currentUser.value)
-
         this.$store.dispatch('getJoinedCircle', { page: 1, row: 500 })
         this.$store.dispatch('getMyCircle', { page: 1, row: 500 })
       } catch (err) {
-        console.log(err)
-        console.log('短说圈子接口获取失败')
+        console.error('短说圈子接口获取失败',err)
       }
     }
 
@@ -957,9 +943,9 @@ Vue.component('sidebar', {
     }, 60 * 1000)
 
     try {
-      if (currentUser.value.uid) {
+      if (currentUser.uid) {
         //如果用户已登录，则获取云端的空间
-        this.$store.dispatch('getCloudSpaces', currentUser.value).then(()=>{
+        this.$store.dispatch('getCloudSpaces', currentUser).then(()=>{
           this.cloudSpaces = this.$store.state.cloudSpaces
         })
       }
@@ -1786,15 +1772,22 @@ Vue.component('sidebar', {
       })
     },
     async logout () {
-      const result = await db.system.where('name').equals('currentUser').first()
-      await db.accounts.where({ id: this.user.uid }).delete()
-      ipc.send('logoutBrowser')
-      await window.insertDefaultUser(result.value.code)
-      //下面这步在insertDefaultUser方法中有
-      //db.system.where({name:'currentUser'}).delete()
-      this.closeUserPanel()
-      this.$store.commit('SET_RESET_TSGRADE')
-      this.$message.info('注销成功！')
+      if(this.currentSpace.spaceType==='cloud'){
+        this.$confirm({
+          title: '退出账号确认',
+          content: '您当前正在使用云空间，一旦注销，将会退出当前空间，请确认是否要退出当前空间？注意：退出账号不会删除登录凭证，如需删除账号信息，请在切换用户面板删除账号。',
+          centered: true,
+          okText: '我已保存，退出账号同时退出空间',
+          cancelText: '取消',
+          onOk: async () => {
+            ipc.send('showUserWindow')
+            ipc.send('logoutBrowser')
+          }
+        })
+      }else{
+        ipc.send('logoutBrowser')
+        this.$store.commit('logout')
+      }
     },
     switchAccount () {
       this.userPanelVisible = false

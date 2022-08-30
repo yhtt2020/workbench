@@ -10,7 +10,6 @@ const tpl = `
 </span>
       <span v-else>
        <span style="text-align: center;color: #333">
-        不同空间的标签组相互隔离<br>
       </span>
         适合不同家庭成员、公共电脑快速切换帐号。<br>也可用于工作、娱乐等不同场景。
 </span>
@@ -22,16 +21,16 @@ const tpl = `
            <a-dropdown :trigger="['contextmenu']">
             <a-row class="user-card">
               <a-col class="avatar-wrapper" :span="8" style="text-align: right">
-                <a-avatar :size="60" :src="user.avatar"></a-avatar>
+                <a-avatar :size="60" :src="user.user_info.avatar"></a-avatar>
               </a-col>
               <a-col class="user-info" :span="16">
-                <div>{{user.nickname}}</div>
+                <div>{{user.user_info.nickname}} <a-tag color="success" v-if="user.is_current">当前</a-tag></div>
                 <p class="info-p" style="color: #1E90FF">云端空间</p>
               </a-col>
             </a-row>
             <template #overlay>
       <a-menu>
-        <a-menu-item @click="deleteAccount(user.uid)" key="deleteAccount">解绑帐号</a-menu-item>
+        <a-menu-item :disabled="user.is_current" @click="deleteAccount(user.uid)" key="deleteAccount">解绑帐号</a-menu-item>
       </a-menu>
     </template>
   </a-dropdown>
@@ -166,7 +165,7 @@ const UsersSelect = {
           return
         }
       }
-      if (!!!user.enterPwd) {
+      if (!!!user.password) {
         this.$router.push({ name: 'space', params: { uid: user.uid } })
       } else
         this.$router.push({ name: 'enterPwd', params: { uid: user.uid } })

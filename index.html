@@ -1,456 +1,560 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8" />
-		<meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline'" />
+<head>
+  <meta charset="UTF-8"/>
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-eval' 'unsafe-inline'"/>
 
-		<title>想天浏览器</title>
-    <script src="ext/vue/vue.js"></script>
-		<link rel="stylesheet" href="dist/bundle.css" />
-		<link rel="stylesheet" href="ext/icons/iconfont.css" />
-    <link rel="stylesheet" href="ext/flex-class.css">
-    <script src="ext/shepherdjs10/dist/js/shepherd.min.js"></script>
-    <link rel="stylesheet" href="ext/shepherdjs10/dist/css/shepherd.css"/>
-  </head>
+  <title>想天浏览器</title>
+  <script src="ext/vue/vue.js"></script>
+  <link rel="stylesheet" href="dist/bundle.css"/>
+  <link rel="stylesheet" href="ext/icons/iconfont.css"/>
+  <link rel="stylesheet" href="ext/flex-class.css">
+  <script src="ext/shepherdjs10/dist/js/shepherd.min.js"></script>
+  <script src="ext/vue/antd.min.js"></script>
+  <link rel="stylesheet" href="ext/shepherdjs10/dist/css/shepherd.css"/>
+  <link rel="stylesheet" href="ext/vue/antd.min.css"/>
+</head>
 
-	<body>
-		<div class="windows-caption-buttons">
-			<div class="element caption-minimise">
-				<svg>
-					<line x1="1" y1="5.5" x2="11" y2="5.5" />
-				</svg>
-			</div>
-			<div class="element caption-maximize">
-				<svg>
-					<rect x="1.5" y="1.5" width="9" height="9" />
-				</svg>
-			</div>
-			<div class="element caption-restore">
-				<svg>
-					<rect x="1.5" y="3.5" width="7" height="7" />
-					<polyline points="3.5,3.5 3.5,1.5 10.5,1.5 10.5,8.5 8.5,8.5" />
-				</svg>
-			</div>
-			<div class="element caption-close">
-				<svg>
-					<path d="M1,1 l 10,10 M1,11 l 10,-10" />
-				</svg>
-			</div>
-		</div>
+<body>
+<div class="windows-caption-buttons">
+  <div class="element caption-minimise">
+    <svg>
+      <line x1="1" y1="5.5" x2="11" y2="5.5"/>
+    </svg>
+  </div>
+  <div class="element caption-maximize">
+    <svg>
+      <rect x="1.5" y="1.5" width="9" height="9"/>
+    </svg>
+  </div>
+  <div class="element caption-restore">
+    <svg>
+      <rect x="1.5" y="3.5" width="7" height="7"/>
+      <polyline points="3.5,3.5 3.5,1.5 10.5,1.5 10.5,8.5 8.5,8.5"/>
+    </svg>
+  </div>
+  <div class="element caption-close">
+    <svg>
+      <path d="M1,1 l 10,10 M1,11 l 10,-10"/>
+    </svg>
+  </div>
+</div>
 
-		<button id="linux-control-buttons" class="theme-text-color">
-			<svg width="74" height="24" version="1.1" fill="none" stroke="none" stroke-linecap="square"
-				stroke-miterlimit="10" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
-				<g id="minimize-button">
-					<rect width="24" height="24" fill="transparent"></rect>
-					<path class="button-background"
-						d="m0.5826226 9.868774l0 0c0 -5.24453 4.251532 -9.496062 9.496063 -9.496062l0 0c2.5185127 0 4.933873 1.0004752 6.714731 2.7813323c1.7808571 1.7808576 2.781332 4.196218 2.781332 6.7147303l0 0c0 5.2445316 -4.2515326 9.496063 -9.496063 9.496063l0 0c-5.244531 0 -9.496063 -4.2515316 -9.496063 -9.496063z"
-						fill-rule="evenodd" />
-					<path stroke="currentColor" stroke-width="2.0" stroke-linejoin="round" stroke-linecap="butt"
-						d="m6.7086616 12.519685l6.7401576 -0.031496048" fill-rule="evenodd" />
-				</g>
-				<g id="maximize-button">
-					<rect width="24" height="24" x="24" fill="transparent"></rect>
-					<path class="button-background"
-						d="m27.85034 9.868774l0 0c0 -5.24453 4.2515316 -9.496062 9.496061 -9.496062l0 0c2.5185127 0 4.933876 1.0004752 6.714733 2.7813323c1.7808571 1.7808576 2.78133 4.196218 2.78133 6.7147303l0 0c0 5.2445316 -4.2515297 9.496063 -9.496063 9.496063l0 0c-5.2445297 0 -9.496061 -4.2515316 -9.496061 -9.496063z"
-						fill-rule="evenodd" />
-					<path stroke="currentColor" stroke-width="2.0" stroke-linejoin="round" stroke-linecap="butt"
-						d="m34.16273 6.717848l6.3622017 0l0 6.2992125l-6.3622017 0z" fill-rule="evenodd" />
-				</g>
-				<g id="close-button">
-					<rect width="24" height="24" x="48" fill="transparent"></rect>
-					<path class="button-background"
-						d="m55.118057 9.496072l0 0c0 -5.244531 4.2515297 -9.496063 9.496063 -9.496063l0 0c2.518509 0 4.9338684 1.0004753 6.7147293 2.7813325c1.7808533 1.7808573 2.781334 4.1962185 2.781334 6.714731l0 0c0 5.2445307 -4.2515335 9.496062 -9.496063 9.496062l0 0c-5.2445335 0 -9.496063 -4.2515316 -9.496063 -9.496062z"
-						fill-rule="evenodd" />
-					<path stroke="currentColor" stroke-width="2.0" stroke-linejoin="round" stroke-linecap="butt"
-						d="m61.26077 6.1103663l6.740162 6.7716537" fill-rule="evenodd" />
-					<path stroke="currentColor" stroke-width="2.0" stroke-linejoin="round" stroke-linecap="butt"
-						d="m68.01668 6.1261144l-6.771656 6.7401576" fill-rule="evenodd" />
-				</g>
-			</svg>
-		</button>
-    <div id="dragContainer" class="drag-container" ></div>
-		<div id="navbar" class="theme-background-color theme-text-color windowDragHandle" tabindex="-1">
-			<button id="menu-button" class="navbar-action-button i carbon:overflow-menu-vertical" data-label="openMenu"
-				tabindex="-1"></button>
-			<div id="toolbar-navigation-buttons" hidden>
-				<button id="back-button" class="navbar-action-button i carbon:chevron-left" data-label="goBack"
-					tabindex="-1"></button>
-				<button id="forward-button" class="navbar-action-button i carbon:chevron-right" data-label="goForward"
-					tabindex="-1"></button>
-			</div>
-			<div id="tabs">
-				<div id="tab-editor" hidden>
-					<input id="tab-editor-input" class="mousetrap" spellcheck="false" />
-          <div id="clipboardTip" hidden class="clip-tip"><div class="sweep-light"></div>访问剪切板网址</div>
-				</div>
-        <!--<div style="flex-grow:1;-webkit-app-region:drag ;"></div> 暂时先注释掉这个空白可拖拽填充区域，这个场景目前似乎不存在-->
-				<div id="tabs-inner" role="tablist" class="has-thin-scrollbar"><div id="add-btn-wrapper" style="margin-left: 4px;margin-right: 4px" class="navbar-right-actions">
-            <button id="add-tab-button" class="navbar-action-button i carbon:add" data-label="newTabAction"
-                    tabindex="-1"></button>
-          </div></div>
-
-			</div>
-      <button title="分享全部的标签" id="share-button" class="right-button navbar-action-button theme-text-color windowDragHandle i"
-              tabindex="-1">
-        <svg t="1651036076897" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="40845" width="22" height="22"><path d="M292 392.8c32.1 0 62.2 12.5 84.9 35.1 22.7 22.7 35.1 52.8 35.1 84.9s-12.5 62.2-35.1 84.9c-22.7 22.7-52.8 35.1-84.9 35.1s-62.2-12.5-84.9-35.1C184.4 575 172 544.9 172 512.8s12.5-62.2 35.1-84.9c22.7-22.7 52.8-35.1 84.9-35.1m0-60c-99.4 0-180 80.6-180 180s80.6 180 180 180 180-80.6 180-180-80.6-180-180-180zM732 172c32.1 0 62.2 12.5 84.9 35.1 22.7 22.7 35.1 52.8 35.1 84.9s-12.5 62.2-35.1 84.9C794.2 399.5 764.1 412 732 412s-62.2-12.5-84.9-35.1C624.5 354.2 612 324.1 612 292s12.5-62.2 35.1-84.9c22.7-22.6 52.8-35.1 84.9-35.1m0-60c-99.4 0-180 80.6-180 180s80.6 180 180 180 180-80.6 180-180-80.6-180-180-180zM732 612c32.1 0 62.2 12.5 84.9 35.1 22.7 22.7 35.1 52.8 35.1 84.9s-12.5 62.2-35.1 84.9C794.2 839.5 764.1 852 732 852s-62.2-12.5-84.9-35.1C624.5 794.2 612 764.1 612 732s12.5-62.2 35.1-84.9c22.7-22.6 52.8-35.1 84.9-35.1m0-60c-99.4 0-180 80.6-180 180s80.6 180 180 180 180-80.6 180-180-80.6-180-180-180z" fill="#ffffff" p-id="40846"></path><path d="M417.993 401.245l164.367-94.9 30 51.96-164.367 94.9zM599.01 718.246l-180.994-104.5 30-51.96 180.994 104.5z" fill="#ffffff" p-id="40847"></path></svg>
-      </button>
-      <div class="no-drag"></div>
-		</div>
-    <style>
-    #tabs-inner {
-          -webkit-app-region: drag;
-    }
-    .tab-item,#tab-editor,#tab-editor button {
-      -webkit-app-region: no-drag;
-    }
-    .shepherd-element{
-      max-width: 191px;
-      max-height: 72px;
-      margin-left: -38px!important;
-      margin-top: -17px!important;
-    }
-    .shepherd-text{
-      font-size: 15px;
-    }
-    .shepherd-button{
-      padding: 0.5px 4.5px;
-      margin-top: -19px;
-      margin-right: 3px;
-    }
-    .shepherd-arrow{
-      transform:translate(0px,40px)!important;
-    }
-    .shepherd-modal-is-visible.shepherd-modal-overlay-container{
-      opacity: 0.15;
-    }
-    </style>
-
-
-		<button id="switch-task-button" hidden class=" right-button navbar-action-button theme-text-color windowDragHandle i"
-			data-label="viewTasks" tabindex="-1">
-      <svg t="1651031163391" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2209" width="30" height="30"><path d="M864 128H160c-17.6 0-32 14.4-32 32v704c0 17.6 14.4 32 32 32h704c17.6 0 32-14.4 32-32V160c0-17.6-14.4-32-32-32zM750.4 705.6l-45.6 45.6L512 557.6 318.4 750.4l-45.6-45.6L467.2 512 273.6 318.4l45.6-45.6L512 467.2l193.6-193.6 45.6 45.6L557.6 512l192.8 193.6z" p-id="2210" fill="#d81e06"></path></svg>
-		</button>
-		<script>
-			//移动到左侧空白区域的时候，让左侧栏重获鼠标，防止无法移动上去
-			function setNoIgnore() {
-				window.postMessage({
-					message:'set-ignore-mouse-events'
-					})
-				ipc.send('setMouseEnable')
-				//console.log('设置左侧栏鼠标有效')
-
-			}
-      function openSiteCard(e,tabData){
-        ipc.send('createSiteCard',{url:tabData.url,x:e.clientX,y:e.clientY,title:tabData.title,tabData:tabData})
-        e.preventDefault()
-        e.stopPropagation()
-      }
-		</script>
-		<div id="searchbar" class="" hidden>
-			<div class="top-answer-area"></div>
-		</div>
-
-    <!--toolbar区域-->
-    <div id="appVue">
-      <div id="toolbar">
-        <div style="display: flex;justify-content: flex-start;flex-direction:row" type="flex">
-          <div style="width:auto">
-            <div class="page-operation" style="display: flex;justify-content: flex-start;flex-direction:row" type="flex">
-              <div class="action-wrapper" hidden>
-                <img title="当前模式：自动展开收起；点击切换收起左侧栏，不再自动展开" id="side-mod-button-toolbar" class="action "
-                  src="./icons/toolbar/sideauto.svg">
-              </div>
-              <div class="action-wrapper">
-                <img title="返回起始页：锁定标签时的网页地址" id="start-button-toolbar" class="action start-page"
-                  src="./icons/toolbar/startpage.svg">
-              </div>
-              <div class="action-wrapper">
-                <img title="后退（⌘←）" id="back-button-toolbar" class="action" src="./icons/toolbar/arrowleft.svg">
-              </div>
-              <div class="action-wrapper">
-                <img title="前进（⌘→）" id="forward-button-toolbar" class="action" src="./icons/toolbar/arrowright.svg">
-              </div>
-              <div class="action-wrapper">
-                <img title="刷新（⌘R）" id="refresh-button-toolbar" class="action" src="./icons/toolbar/rotate.svg">
-              </div>
-              <div class="action-wrapper">
-                <img title="首页" id="home-button-toolbar" class="action" src="./icons/toolbar/home.svg">
-              </div>
-            </div>
-          </div>
-          <div style="flex-grow:1 ;position:relative;overflow:hidden">
-            <div id="address-bar" style="overflow: hidden">
-              <img id="site-card" onclick="openSiteCard(this,tabs.get(tabs.getSelected()))" title="网站信息" class="site-card"
-                src="icons/svg/safe.svg">
-            </div>
-
-            <!--            <a-input style="width: 100%"></a-input>-->
-
-            <!--            <div id="tab-editor-toolbar">-->
-            <!--              <input id="tab-editor-input-toolbar" class="mousetrap" spellcheck="false" />-->
-            <!--            </div>-->
-
-          </div>
-          <div style="display: flex;">
-            <div id="closeBlockGuide" class="action-wrapper">
-              <span onclick="ipc.send('openSwitch')" title="快速切换（Ctrl+Tab）" id="switch-toolbar"><img class="action"
-                  src="./icons/toolbar/switch.svg">
-              </span>
-            </div>
-            <div class="action-wrapper">
-              <span onclick="ipc.send('openMobile')" title="手机浏览工具" id="mobile-toolbar"><img class="action"
-                  src="./icons/toolbar/smartphone.svg">
-              </span>
-            </div>
-            <browser-action-list hidden partition="persist:webcontent" id="actions"></browser-action-list>
-            <div class="action-wrapper app-tool">
-              <span onclick="ipc.send('openScriptManager')" title="管理脚本插件" id="userscript-toolbar"><img class="action app"
-                  src="./icons/toolbar/apps/code.svg">
-                <span hidden title="当前页面有3个脚本正在启用" class="bandage" id="scriptCount">3</span>
-              </span>
-            </div>
-            <div class="action-wrapper">
-              <span onclick="ipc.send('showPopList')" title="管理插件" id="plugin-toolbar"><img class="action"
-                  src="./icons/toolbar/list.svg">
-              </span>
-            </div>
-
-            <div class="action-wrapper" style="text-align: center;width: 18px;margin-left: 5px">
-              <div class="split"></div>
-            </div>
-            <div class="action-wrapper app-tool">
-              <span oncontextmenu="ipc.send('favContextMenu')"
-                onclick="ipc.send('handleTsbProtocol',{url:'tsb://app/redirect/?package=com.thisky.fav&url=/'})" title="收藏夹"
-                id="nav-toolbar"><img class="action app" src="./icons/toolbar/apps/fav.svg"></span>
-            </div>
-            <div class="action-wrapper app-tool">
-              <span title="阅读模式" id="read-toolbar"><img class="action app" src="./icons/toolbar/apps/read.svg">
-                <span hidden class="bandage" id="canRead">0</span>
-              </span>
-            </div>
-            <div class="action-wrapper app-tool">
-              <span onclick="ipc.send('openDownload')" title="下载助手" id="download-toolbar"><img class="action app"
-                  src="./icons/toolbar/apps/download.svg">
-                <span class="bandage" style="background-color: red" id="downloadCount">0</span>
-              </span>
-            </div>
-            <div class="action-wrapper app-tool">
-              <span onclick="ipc.send('openPwdManager',{tabData:tabs.get(tabs.getSelected())})" title="密码管理"
-                id="pwd-toolbar"><img class="action app" src="./icons/toolbar/apps/pwd.svg">
-                <span hidden class="bandage" id="pwdCount">0</span>
-              </span>
-            </div>
-
-
-            <div class="action-wrapper">
-              <img title="收起地址栏，使用精简模式" id="collapse-button-toolbar" class="action " src="./icons/toolbar/chevronsup.svg">
-            </div>
-          </div>
-        </div>
-        <!-- 第三栏toolbar区域 -->
-        <div id="third-toolbar" class="flex align-center justify-between" @contextmenu.stop="openThirdToolbarMenu" hidden>
-          <div class="third-bar-lf flex align-center justify-start">
-            <div class="feature-btn flex justify-center align-center" v-show="!this.isDefaultBrowser" @click="setDefaultBrowser">
-              <img src="./icons/carry-out.svg" style="width: 18px; height: 18px; margin-right: 4px">
-              <span class="sg-omit-sm">设置为默认浏览器</span>
-            </div>
-            <div class="feature-btn flex justify-center align-center" @click="openImport">
-              <img src="./icons/folder-add.svg" style="width: 18px; height: 18px; margin-right: 4px">
-              <span class="sg-omit-sm">导入其他浏览器数据</span>
-            </div>
-          </div>
-          <div class="third-bar-rg flex justify-around align-center">
-            <div class="flex justify-center align-center">
-              <span class="sg-omit-sm">完成全部新用户引导即可获得限时纪念勋章：</span>
-              <img src="./img/silver-b.png" alt="" style="width: 20px; height: 20px; margin-right: 5px">
-              <span class="sg-omit-sm">创始用户</span>
-            </div>
-            <div class="noob-guide-btn flex justify-around align-center" @click.stop="openNoobGuide">
-              <img src="./icons/svg/wenhao.svg" alt="" style="width: 18px; height: 18px;">
-              <span class="sg-omit-sm">新手引导</span>
-              <span>({{finishedNoobguideNum}}/5)</span>
-            </div>
-          </div>
-        </div>
-        <script>
-          const settings = require('./js/util/settings/settingsContent.js')
-
-          const thirdToolbarVue = new Vue({
-            el: '#third-toolbar',
-            data() {
-              return {
-                isDefaultBrowser: null,
-                finishedNoobguideNum: 0,
-                migrationed: null
-              }
-            },
-            watch: {
-              finishedNoobguideNum: {
-                handler: function(newValue, oldValue) {
-                  if(newValue === 5 && newValue !== oldValue) {
-                    ipc.invoke('getInfoBookmarkMigrationed').then(res => {
-                      if(res && this.isDefaultBrowser) {
-                        ipc.send('finishedGuideHiddenThirdToolbar')
-                      }
-                    })
-                  }
-                }
-              },
-              isDefaultBrowser: {
-                handler: function(newValue, oldValue) {
-                  if(toString.call(oldValue) !== '[object Null]' && newValue) {
-                    ipc.invoke('getInfoBookmarkMigrationed').then(res => {
-                      if(res && this.finishedNoobguideNum === 5) {
-                        ipc.send('finishedGuideHiddenThirdToolbar')
-                      }
-                    })
-                  }
-                }
-              },
-              migrationed: {
-                handler: function(newValue, oldValue) {
-                  if(toString.call(oldValue) !== '[object Null]' && newValue) {
-                    ipc.send('getIsDefaulBrowser')
-                    setTimeout(() => {
-                      if(this.isDefaultBrowser && this.finishedNoobguideNum === 5) {
-                        ipc.send('finishedGuideHiddenThirdToolbar')
-                      }
-                    }, 2000)
-                  }
-                }
-              },
-            },
-            methods: {
-              openImport() {
-                ipc.send('openRedirectApps', 'tsb://app/redirect/?package=com.thisky.import&url=/')
-              },
-              setDefaultBrowser() {
-                ipc.send('callSetOrRemoveDefaultBrowser')
-                setTimeout(() => {
-                  ipc.send('getIsDefaulBrowser')
-                  ipc.on('returnIsDefaultBrowser', (event, args) => {
-                    this.isDefaultBrowser = args
-                  })
-                }, 5000)
-              },
-              openNoobGuide() {
-                ipc.send('openNewGuide')
-              },
-              openThirdToolbarMenu() {
-                ipc.send('openThirdToolbarMenu')
-              }
-            }
-          })
-        </script>
+<button id="linux-control-buttons" class="theme-text-color">
+  <svg width="74" height="24" version="1.1" fill="none" stroke="none" stroke-linecap="square"
+       stroke-miterlimit="10" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+    <g id="minimize-button">
+      <rect width="24" height="24" fill="transparent"></rect>
+      <path class="button-background"
+            d="m0.5826226 9.868774l0 0c0 -5.24453 4.251532 -9.496062 9.496063 -9.496062l0 0c2.5185127 0 4.933873 1.0004752 6.714731 2.7813323c1.7808571 1.7808576 2.781332 4.196218 2.781332 6.7147303l0 0c0 5.2445316 -4.2515326 9.496063 -9.496063 9.496063l0 0c-5.244531 0 -9.496063 -4.2515316 -9.496063 -9.496063z"
+            fill-rule="evenodd"/>
+      <path stroke="currentColor" stroke-width="2.0" stroke-linejoin="round" stroke-linecap="butt"
+            d="m6.7086616 12.519685l6.7401576 -0.031496048" fill-rule="evenodd"/>
+    </g>
+    <g id="maximize-button">
+      <rect width="24" height="24" x="24" fill="transparent"></rect>
+      <path class="button-background"
+            d="m27.85034 9.868774l0 0c0 -5.24453 4.2515316 -9.496062 9.496061 -9.496062l0 0c2.5185127 0 4.933876 1.0004752 6.714733 2.7813323c1.7808571 1.7808576 2.78133 4.196218 2.78133 6.7147303l0 0c0 5.2445316 -4.2515297 9.496063 -9.496063 9.496063l0 0c-5.2445297 0 -9.496061 -4.2515316 -9.496061 -9.496063z"
+            fill-rule="evenodd"/>
+      <path stroke="currentColor" stroke-width="2.0" stroke-linejoin="round" stroke-linecap="butt"
+            d="m34.16273 6.717848l6.3622017 0l0 6.2992125l-6.3622017 0z" fill-rule="evenodd"/>
+    </g>
+    <g id="close-button">
+      <rect width="24" height="24" x="48" fill="transparent"></rect>
+      <path class="button-background"
+            d="m55.118057 9.496072l0 0c0 -5.244531 4.2515297 -9.496063 9.496063 -9.496063l0 0c2.518509 0 4.9338684 1.0004753 6.7147293 2.7813325c1.7808533 1.7808573 2.781334 4.1962185 2.781334 6.714731l0 0c0 5.2445307 -4.2515335 9.496062 -9.496063 9.496062l0 0c-5.2445335 0 -9.496063 -4.2515316 -9.496063 -9.496062z"
+            fill-rule="evenodd"/>
+      <path stroke="currentColor" stroke-width="2.0" stroke-linejoin="round" stroke-linecap="butt"
+            d="m61.26077 6.1103663l6.740162 6.7716537" fill-rule="evenodd"/>
+      <path stroke="currentColor" stroke-width="2.0" stroke-linejoin="round" stroke-linecap="butt"
+            d="m68.01668 6.1261144l-6.771656 6.7401576" fill-rule="evenodd"/>
+    </g>
+  </svg>
+</button>
+<div id="dragContainer" class="drag-container"></div>
+<div id="navbar" class="theme-background-color theme-text-color windowDragHandle" tabindex="-1">
+  <button id="menu-button" class="navbar-action-button i carbon:overflow-menu-vertical" data-label="openMenu"
+          tabindex="-1"></button>
+  <div id="toolbar-navigation-buttons" hidden>
+    <button id="back-button" class="navbar-action-button i carbon:chevron-left" data-label="goBack"
+            tabindex="-1"></button>
+    <button id="forward-button" class="navbar-action-button i carbon:chevron-right" data-label="goForward"
+            tabindex="-1"></button>
+  </div>
+  <div id="tabs">
+    <div id="tab-editor" hidden>
+      <input id="tab-editor-input" class="mousetrap" spellcheck="false"/>
+      <div id="clipboardTip" hidden class="clip-tip">
+        <div class="sweep-light"></div>
+        访问剪切板网址
+      </div>
+    </div>
+    <!--<div style="flex-grow:1;-webkit-app-region:drag ;"></div> 暂时先注释掉这个空白可拖拽填充区域，这个场景目前似乎不存在-->
+    <div id="tabs-inner" role="tablist" class="has-thin-scrollbar">
+      <div id="add-btn-wrapper" style="margin-left: 4px;margin-right: 4px" class="navbar-right-actions">
+        <button id="add-tab-button" class="navbar-action-button i carbon:add" data-label="newTabAction"
+                tabindex="-1"></button>
       </div>
     </div>
 
-		<div id="webviews">
-			<div id="leftArrowContainer" class="arrow-indicator">
-				<i id="leftArrow" class="i carbon:chevron-left"></i>
-			</div>
-			<div id="rightArrowContainer" class="arrow-indicator">
-				<i id="rightArrow" class="i carbon:chevron-right"></i>
-			</div>
-			<img id="webview-placeholder" hidden aria-hidden="true" />
-      <div id="ntp-content">
-        <img id="ntp-background" hidden>
-        <div id="ntp-background-controls">
-          <button id="ntp-image-remove"><i class="i carbon:delete"></i></button>
-          <button id="ntp-image-picker"><i class="i carbon:camera"></i></button>
+  </div>
+  <!--      <button title="分享全部的标签" id="share-button" class="right-button navbar-action-button theme-text-color windowDragHandle i"-->
+  <!--              tabindex="-1">-->
+  <!--        <svg t="1651036076897" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="40845" width="22" height="22"><path d="M292 392.8c32.1 0 62.2 12.5 84.9 35.1 22.7 22.7 35.1 52.8 35.1 84.9s-12.5 62.2-35.1 84.9c-22.7 22.7-52.8 35.1-84.9 35.1s-62.2-12.5-84.9-35.1C184.4 575 172 544.9 172 512.8s12.5-62.2 35.1-84.9c22.7-22.7 52.8-35.1 84.9-35.1m0-60c-99.4 0-180 80.6-180 180s80.6 180 180 180 180-80.6 180-180-80.6-180-180-180zM732 172c32.1 0 62.2 12.5 84.9 35.1 22.7 22.7 35.1 52.8 35.1 84.9s-12.5 62.2-35.1 84.9C794.2 399.5 764.1 412 732 412s-62.2-12.5-84.9-35.1C624.5 354.2 612 324.1 612 292s12.5-62.2 35.1-84.9c22.7-22.6 52.8-35.1 84.9-35.1m0-60c-99.4 0-180 80.6-180 180s80.6 180 180 180 180-80.6 180-180-80.6-180-180-180zM732 612c32.1 0 62.2 12.5 84.9 35.1 22.7 22.7 35.1 52.8 35.1 84.9s-12.5 62.2-35.1 84.9C794.2 839.5 764.1 852 732 852s-62.2-12.5-84.9-35.1C624.5 794.2 612 764.1 612 732s12.5-62.2 35.1-84.9c22.7-22.6 52.8-35.1 84.9-35.1m0-60c-99.4 0-180 80.6-180 180s80.6 180 180 180 180-80.6 180-180-80.6-180-180-180z" fill="#ffffff" p-id="40846"></path><path d="M417.993 401.245l164.367-94.9 30 51.96-164.367 94.9zM599.01 718.246l-180.994-104.5 30-51.96 180.994 104.5z" fill="#ffffff" p-id="40847"></path></svg>-->
+  <!--      </button>-->
+
+  <button title="切换模式极简、完整模式" id="layout-button"
+          class="right-button navbar-action-button theme-text-color windowDragHandle i"
+          tabindex="-1">
+    <svg t="1661436355908" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
+         p-id="11417" width="20" height="20">
+      <path
+        d="M943.254 375.558l-0.12-0.1c-17.357-14.294-42.775-11.232-56.859 6.295C798.229 491.322 663.174 561.584 512 561.584s-286.229-70.262-374.274-179.831c-14.084-17.527-39.502-20.589-56.859-6.295l-0.12 0.1c-16.76 13.801-19.687 38.642-6.122 55.594 43.269 54.077 96.432 99.831 156.62 134.821L170.943 689.61c-9.685 19.855-1.439 43.803 18.416 53.486h0.001c19.855 9.685 43.802 1.439 53.486-18.416l60.279-123.591c52.793 21.266 109.532 34.73 168.875 38.927v137.568c0 22.091 17.908 40 40 40s40-17.909 40-40V640.016c59.343-4.196 116.082-17.661 168.875-38.927l60.279 123.591c9.685 19.855 33.631 28.101 53.486 18.417 19.856-9.685 28.102-33.632 18.417-53.487l-60.302-123.637c60.188-34.99 113.352-80.744 156.62-134.821 13.565-16.953 10.639-41.794-6.121-55.594z"
+        fill="#2c2c2c" p-id="11418"></path>
+    </svg>
+  </button>
+  <div class="no-drag"></div>
+</div>
+<button id="switch-task-button" style="right: calc(var(--control-space-right) + 38px)"
+        class=" right-button navbar-action-button theme-text-color windowDragHandle i  switch-task-button"
+        data-label="viewTasks" tabindex="-1">
+  <svg width="18px" height="18px" viewBox="0 0 104 104" version="1.1" xmlns="http://www.w3.org/2000/svg"
+       xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="控件" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+      <g id="切换任务">
+        <g id="编组" fill="$color" fill-rule="nonzero">
+          <path
+            d="M4.64285714,39 C7.20710714,39 9.28571429,36.9212768 9.28571429,34.3571429 L9.28571429,22.2857143 C9.28571429,15.106 15.1061161,9.28571429 22.2857143,9.28571429 L34.3571429,9.28571429 C36.9213929,9.28571429 39,7.20699107 39,4.64285714 C39,2.07860714 36.9213929,0 34.3571429,0 L22.2857143,0 C9.97761607,0 0,9.97761607 0,22.2857143 L0,34.3571429 C0,36.9212768 2.07860714,39 4.64285714,39 Z M81.7142857,0 L69.6428571,0 C67.0786071,0 65,2.07860714 65,4.64285714 C65,7.20699107 67.0786071,9.28571429 69.6428571,9.28571429 L81.7142857,9.28571429 C88.8938839,9.28571429 94.7142857,15.106 94.7142857,22.2857143 L94.7142857,34.3571429 C94.7142857,36.9212768 96.7928929,39 99.3571429,39 C101.921393,39 104,36.9212768 104,34.3571429 L104,22.2857143 C104,9.97761607 94.0223839,0 81.7142857,0 Z M34.3571429,94.7142857 L22.2857143,94.7142857 C15.1061161,94.7142857 9.28571429,88.8938839 9.28571429,81.7142857 L9.28571429,69.6428571 C9.28571429,67.0786071 7.20710714,65 4.64285714,65 C2.07860714,65 0,67.0786071 0,69.6428571 L0,81.7142857 C0,94.0222679 9.97761607,104 22.2857143,104 L34.3571429,104 C36.9213929,104 39,101.921277 39,99.3571429 C39,96.7928929 36.9213929,94.7142857 34.3571429,94.7142857 Z M99.3571429,65 C96.7928929,65 94.7142857,67.0786071 94.7142857,69.6428571 L94.7142857,81.7142857 C94.7142857,88.8938839 88.8938839,94.7142857 81.7142857,94.7142857 L69.6428571,94.7142857 C67.0786071,94.7142857 65,96.7928929 65,99.3571429 C65,101.921277 67.0786071,104 69.6428571,104 L81.7142857,104 C94.0223839,104 104,94.0222679 104,81.7142857 L104,69.6428571 C104,67.0786071 101.921393,65 99.3571429,65 Z"
+            id="形状"></path>
+        </g>
+        <line x1="36.8333333" y1="51.8333333" x2="67.1666667" y2="51.8333333" id="直线" stroke="$color" stroke-width="10"
+              stroke-linecap="round"></line>
+        <line x1="36.8333333" y1="51.8333333" x2="67.1666667" y2="51.8333333" id="直线" stroke="$color" stroke-width="10"
+              stroke-linecap="round"
+              transform="translate(52.000000, 51.833333) rotate(90.000000) translate(-52.000000, -51.833333) "></line>
+      </g>
+    </g>
+  </svg>
+</button>
+<style>
+
+  #tabs-inner {
+    -webkit-app-region: drag;
+  }
+
+  .tab-item, #tab-editor, #tab-editor button {
+    -webkit-app-region: no-drag;
+  }
+
+  .shepherd-element {
+    max-width: 191px;
+    max-height: 72px;
+    margin-left: -38px !important;
+    margin-top: -17px !important;
+  }
+
+  .shepherd-text {
+    font-size: 15px;
+  }
+
+  .shepherd-button {
+    padding: 0.5px 4.5px;
+    margin-top: -19px;
+    margin-right: 3px;
+  }
+
+  .shepherd-arrow {
+    transform: translate(0px, 40px) !important;
+  }
+
+  .shepherd-modal-is-visible.shepherd-modal-overlay-container {
+    opacity: 0.15;
+  }
+</style>
+
+
+<script>
+  //移动到左侧空白区域的时候，让左侧栏重获鼠标，防止无法移动上去
+  function setNoIgnore () {
+    window.postMessage({
+      message: 'set-ignore-mouse-events'
+    })
+    ipc.send('setMouseEnable')
+    //console.log('设置左侧栏鼠标有效')
+
+  }
+
+  function openSiteCard (e, tabData) {
+    ipc.send('createSiteCard', { url: tabData.url, x: e.clientX, y: e.clientY, title: tabData.title, tabData: tabData })
+    e.preventDefault()
+    e.stopPropagation()
+  }
+</script>
+<div id="searchbar" class="" hidden>
+  <div class="top-answer-area"></div>
+</div>
+
+<!--toolbar区域-->
+<div id="appVue">
+  <div id="toolbar" hidden>
+    <div style="display: flex;justify-content: flex-start;flex-direction:row" type="flex">
+      <div style="width:auto">
+        <div class="page-operation" style="display: flex;justify-content: flex-start;flex-direction:row" type="flex">
+          <div class="action-wrapper" hidden>
+            <img title="当前模式：自动展开收起；点击切换收起左侧栏，不再自动展开" id="side-mod-button-toolbar" class="action "
+                 src="./icons/toolbar/sideauto.svg">
+          </div>
+          <div class="action-wrapper">
+            <img title="返回起始页：锁定标签时的网页地址" id="start-button-toolbar" class="action start-page"
+                 src="./icons/toolbar/startpage.svg">
+          </div>
+          <div class="action-wrapper">
+            <img title="后退（⌘←）" id="back-button-toolbar" class="action" src="./icons/toolbar/arrowleft.svg">
+          </div>
+          <div class="action-wrapper">
+            <img title="前进（⌘→）" id="forward-button-toolbar" class="action" src="./icons/toolbar/arrowright.svg">
+          </div>
+          <div class="action-wrapper">
+            <img title="刷新（⌘R）" id="refresh-button-toolbar" class="action" src="./icons/toolbar/rotate.svg">
+          </div>
+          <div class="action-wrapper">
+            <img title="首页" id="home-button-toolbar" class="action" src="./icons/toolbar/home.svg">
+          </div>
         </div>
       </div>
-		</div>
+      <div style="flex-grow:1 ;position:relative;overflow:hidden">
+        <div id="address-bar" style="overflow: hidden">
+          <img id="site-card" @click="openSiteCard(this,tabs.get(tabs.getSelected()))" title="网站信息" class="site-card"
+               src="icons/svg/safe.svg">
+        </div>
 
-		<div id="overlay"></div>
+        <!--            <a-input style="width: 100%"></a-input>-->
 
-		<!-- findinpage ui -->
+        <!--            <div id="tab-editor-toolbar">-->
+        <!--              <input id="tab-editor-input-toolbar" class="mousetrap" spellcheck="false" />-->
+        <!--            </div>-->
 
-		<div id="findinpage-bar" hidden class="theme-background-color theme-text-color">
-			<input id="findinpage-input" class="mousetrap" />
-			<span id="findinpage-count" class="inline-text"></span>
-			<div class="divider"></div>
-			<button id="findinpage-previous-match">
-				<i class="i carbon:chevron-up navbar-action-button"></i>
-			</button>
-			<button id="findinpage-next-match">
-				<i class="i carbon:chevron-down navbar-action-button"></i>
-			</button>
-			<div class="divider"></div>
-			<button id="findinpage-end">
-				<i class="i carbon:close navbar-action-button"></i>
-			</button>
-		</div>
+      </div>
+      <div style="display: flex;">
+        <div id="closeBlockGuide" class="action-wrapper">
+              <span @click="ipc.send('openSwitch')" title="快速切换（Ctrl+Tab）" id="switch-toolbar"><img class="action"
+                                                                                                    src="./icons/toolbar/switch.svg">
+              </span>
+        </div>
+        <div class="action-wrapper">
+              <span @click="ipc.send('openMobile')" title="手机浏览工具" id="mobile-toolbar"><img class="action"
+                                                                                            src="./icons/toolbar/smartphone.svg">
+              </span>
+        </div>
+        <browser-action-list hidden partition="persist:webcontent" id="actions"></browser-action-list>
+        <div class="action-wrapper app-tool">
+              <span @click="ipc.send('openScriptManager')" title="管理脚本插件" id="userscript-toolbar"><img
+                style="padding:3px;margin-top: 6px" class="action app"
+                src="./icons/toolbar/apps/code.svg">
+                <span hidden title="当前页面有3个脚本正在启用" class="bandage" id="scriptCount">3</span>
+              </span>
+        </div>
+        <div class="action-wrapper">
+              <span @click="ipc.send('showPopList')" title="管理插件" id="plugin-toolbar"><img class="action"
+                                                                                           src="./icons/toolbar/list.svg">
+              </span>
+        </div>
 
-		 <div id="task-overlay" class="" hidden tabindex="-1">
-			<div class="simulated-navbar windowDragHandle" id="task-overlay-navbar">
-				<div class="task-search-input-container">
-				  <i class="i carbon:search"></i>
-				  <input type="search" id="task-search-input" class="mousetrap"/>
-				</div>
-			</div>
+        <div class="action-wrapper" style="text-align: center;width: 18px;margin-left: 5px">
+          <div class="split"></div>
+        </div>
+        <div class="action-wrapper app-tool">
+              <span oncontextmenu="ipc.send('favContextMenu')"
+                    @click="ipc.send('handleTsbProtocol',{url:'tsb://app/redirect/?package=com.thisky.fav&url=/'})"
+                    title="收藏夹"
+                    id="nav-toolbar"><img class="action app" src="./icons/toolbar/apps/fav.svg"></span>
+        </div>
+        <div class="action-wrapper app-tool">
+              <span title="弹幕" @click="ipc.send('toggleBarrage')" id="danmu-toolbar"><img class="action app"
+                                                                                          src="./icons/toolbar/hot.svg">
+                <span hidden class="bandage" id="danmu">0</span>
+              </span>
+        </div>
+        <div class="action-wrapper app-tool">
+              <span title="阅读模式" id="read-toolbar"><img class="action app" src="./icons/toolbar/apps/read.svg">
+                <span hidden class="bandage" id="canRead">0</span>
+              </span>
+        </div>
+        <div class="action-wrapper app-tool">
+              <span @click="ipc.send('openDownload')" title="下载助手" id="download-toolbar"><img class="action app"
+                                                                                              src="./icons/toolbar/apps/download.svg">
+                <span class="bandage" style="background-color: red" id="downloadCount">0</span>
+              </span>
+        </div>
+        <div class="action-wrapper app-tool">
+              <span @click="openPwd" title="密码管理"
+                    id="pwd-toolbar"><img class="action app" src="./icons/toolbar/apps/pwd.svg">
+                <span hidden class="bandage" id="pwdCount">0</span>
+              </span>
+        </div>
+        <div @click="speedup" @mouseleave="leave" @mouseenter="hover" class="action-wrapper app-tool">
+          <a-progress style="margin-top: -3px;vertical-align: middle" title="一键清理内存" :width="24"
+                      :stroke-width="12"
+                      type="circle"
+                      stroke-color="lightgreen"
+                      :percent="memPercent"
 
-			<div id="task-area"></div>
-			<button id="add-task">
-				<i class="i carbon:new-tab"></i>
-				<span></span>
-			</button>
-		</div>
+          >
+            <template #format="percent">
+                  <span v-if="!displayText" style="font-size: 10px;line-height: 20px">
+                    {{ memPercent }}
+                  </span>
+              <span  v-else style="font-size: 10px;line-height: 20px">
+                    加速
+                  </span>
+            </template>
+          </a-progress>
+        </div>
 
-		<div id="download-bar" hidden>
-			<div id="download-container" role="list" class="has-thin-scrollbar"></div>
-			<button id="download-close-button" class="i carbon:close"></button>
-		</div>
-    <div class="modal" id="manager-setup-dialog" hidden>
-        <h3 class="modal-title" id="manager-setup-heading"></h3>
-        <button
-          id="manager-setup-close"
-          class="modal-close-button i carbon:close"
-        ></button>
+        <!--            <div class="action-wrapper">-->
+        <!--              <img title="收起地址栏，使用精简模式" id="collapse-button-toolbar" class="action " src="./icons/toolbar/chevronsup.svg">-->
+        <!--            </div>-->
+      </div>
+    </div>
+    <!-- 第三栏toolbar区域 -->
+    <div id="third-toolbar" class="flex align-center justify-between" @contextmenu.stop="openThirdToolbarMenu" hidden>
+      <div class="third-bar-lf flex align-center justify-start">
+        <div class="feature-btn flex justify-center align-center" v-show="!this.isDefaultBrowser"
+             @click="setDefaultBrowser">
+          <img src="./icons/carry-out.svg" style="width: 18px; height: 18px; margin-right: 4px">
+          <span class="sg-omit-sm">设置为默认浏览器</span>
+        </div>
+        <div class="feature-btn flex justify-center align-center" @click="openImport">
+          <img src="./icons/folder-add.svg" style="width: 18px; height: 18px; margin-right: 4px">
+          <span class="sg-omit-sm">导入其他浏览器数据</span>
+        </div>
+      </div>
+      <div class="third-bar-rg flex justify-around align-center">
+        <div class="flex justify-center align-center">
+          <span class="sg-omit-sm">完成全部新用户引导即可获得限时纪念勋章：</span>
+          <img src="./img/silver-b.png" alt="" style="width: 20px; height: 20px; margin-right: 5px">
+          <span class="sg-omit-sm">创始用户</span>
+        </div>
+        <div class="noob-guide-btn flex justify-around align-center" @click.stop="openNoobGuide">
+          <img src="./icons/svg/wenhao.svg" alt="" style="width: 18px; height: 18px;">
+          <span class="sg-omit-sm">新手引导</span>
+          <span>({{ finishedNoobguideNum }}/5)</span>
+        </div>
+      </div>
+    </div>
 
-			<div id="manager-setup-instructions-primary">
-				<div class="light-fade" data-string="passwordManagerSetupStep1" data-allowHTML></div>
-				<div class="spacer"></div>
-				<div class="light-fade" data-string="passwordManagerSetupStep2" data-allowHTML></div>
-			</div>
+  </div>
+</div>
+<script>
+  const settings = require('./js/util/settings/settingsContent.js')
+  const ipc = require('electron').ipcRenderer
+  const toolbar = new Vue({
+    el: '#appVue',
+    data () {
+      return {
+        displayText: false,
+        memPercent: 0,
+        lastMem:0,
 
-			<div id="manager-setup-instructions-secondary">
-				<div class="light-fade" data-string="passwordManagerInstallerSetup" data-allowHTML></div>
-			</div>
+        isDefaultBrowser: null,
+        finishedNoobguideNum: 0,
+        migrationed: null
+      }
+    },
+    computed: {},
+    watch: {
+      finishedNoobguideNum: {
+        handler: function (newValue, oldValue) {
+          if (newValue === 5 && newValue !== oldValue) {
+            ipc.invoke('getInfoBookmarkMigrationed').then(res => {
+              if (res && this.isDefaultBrowser) {
+                ipc.send('finishedGuideHiddenThirdToolbar')
+              }
+            })
+          }
+        }
+      },
+      isDefaultBrowser: {
+        handler: function (newValue, oldValue) {
+          if (toString.call(oldValue) !== '[object Null]' && newValue) {
+            ipc.invoke('getInfoBookmarkMigrationed').then(res => {
+              if (res && this.finishedNoobguideNum === 5) {
+                ipc.send('finishedGuideHiddenThirdToolbar')
+              }
+            })
+          }
+        }
+      },
+      migrationed: {
+        handler: function (newValue, oldValue) {
+          if (toString.call(oldValue) !== '[object Null]' && newValue) {
+            ipc.send('getIsDefaulBrowser')
+            setTimeout(() => {
+              if (this.isDefaultBrowser && this.finishedNoobguideNum === 5) {
+                ipc.send('finishedGuideHiddenThirdToolbar')
+              }
+            }, 2000)
+          }
+        }
+      },
+    },
+    mounted () {
 
-			<div class="spacer"></div>
+      this.ipc = ipc
+      ipc.on('doRefreshLoad', (e, a) => {
+        /**
+         * totalMemMb: 32768,
+         [1]   usedMemMb: 23942.69,
+         [1]   freeMemMb: 8825.31,
+         [1]   usedMemPercentage: 73.07,
+         [1]   freeMemPercentage: 26.93
+         */
+        this.memPercent = Number(a.mem.usedMemPercentage.toFixed(0))
+      })
+    },
+    methods: {
+      speedup(){
+        ipc.send('toolbar.speedup')
+      },
+      hover () {
+        this.displayText = true
+      },
+      leave () {
+        this.displayText = false
+      },
+      openPwd () {
+        ipc.send('openPwdManager', { tabData: tabs.get(tabs.getSelected()) })
+      },
+      openImport () {
+        ipc.send('openRedirectApps', 'tsb://app/redirect/?package=com.thisky.import&url=/')
+      },
+      setDefaultBrowser () {
+        ipc.send('callSetOrRemoveDefaultBrowser')
+        setTimeout(() => {
+          ipc.send('getIsDefaulBrowser')
+          ipc.on('returnIsDefaultBrowser', (event, args) => {
+            this.isDefaultBrowser = args
+          })
+        }, 5000)
+      },
+      openNoobGuide () {
+        ipc.send('openNewGuide')
+      },
+      openThirdToolbarMenu () {
+        ipc.send('openThirdToolbarMenu')
+      }
+    }
+  })
+</script>
+<script>
 
-			<div id="manager-setup-drop-box" class="drag-and-drop-box" data-string="passwordManagerSetupDragBox"></div>
 
-			<div class="spacer"></div>
-			<div class="spacer"></div>
+</script>
+<div id="webviews">
+  <div id="leftArrowContainer" class="arrow-indicator">
+    <i id="leftArrow" class="i carbon:chevron-left"></i>
+  </div>
+  <div id="rightArrowContainer" class="arrow-indicator">
+    <i id="rightArrow" class="i carbon:chevron-right"></i>
+  </div>
+  <img id="webview-placeholder" hidden aria-hidden="true"/>
+  <div id="ntp-content">
+    <img id="ntp-background" hidden>
+    <div id="ntp-background-controls">
+      <button id="ntp-image-remove"><i class="i carbon:delete"></i></button>
+      <button id="ntp-image-picker"><i class="i carbon:camera"></i></button>
+    </div>
+  </div>
+</div>
 
-			<div class="buttons">
-				<input type="button" id="manager-setup-disable" data-value="disableAutofill" />
-			</div>
-		</div>
+<div id="overlay"></div>
 
-		<div id="password-capture-bar" hidden>
-			<span id="password-capture-description"></span>
-			<input id="password-capture-username" type="text" required />
-			<span class="password-capture-section">
-				<input id="password-capture-password" type="password" required />
+<!-- findinpage ui -->
+
+<div id="findinpage-bar" hidden class="theme-background-color theme-text-color">
+  <input id="findinpage-input" class="mousetrap"/>
+  <span id="findinpage-count" class="inline-text"></span>
+  <div class="divider"></div>
+  <button id="findinpage-previous-match">
+    <i class="i carbon:chevron-up navbar-action-button"></i>
+  </button>
+  <button id="findinpage-next-match">
+    <i class="i carbon:chevron-down navbar-action-button"></i>
+  </button>
+  <div class="divider"></div>
+  <button id="findinpage-end">
+    <i class="i carbon:close navbar-action-button"></i>
+  </button>
+</div>
+
+<div id="task-overlay" class="" hidden tabindex="-1">
+  <div class="simulated-navbar windowDragHandle" id="task-overlay-navbar">
+    <div class="task-search-input-container">
+      <i class="i carbon:search"></i>
+      <input type="search" id="task-search-input" class="mousetrap"/>
+    </div>
+  </div>
+
+  <div id="task-area"></div>
+  <button id="add-task">
+    <i class="i carbon:new-tab"></i>
+    <span></span>
+  </button>
+</div>
+
+<div id="download-bar" hidden>
+  <div id="download-container" role="list" class="has-thin-scrollbar"></div>
+  <button id="download-close-button" class="i carbon:close"></button>
+</div>
+<div class="modal" id="manager-setup-dialog" hidden>
+  <h3 class="modal-title" id="manager-setup-heading"></h3>
+  <button
+    id="manager-setup-close"
+    class="modal-close-button i carbon:close"
+  ></button>
+
+  <div id="manager-setup-instructions-primary">
+    <div class="light-fade" data-string="passwordManagerSetupStep1" data-allowHTML></div>
+    <div class="spacer"></div>
+    <div class="light-fade" data-string="passwordManagerSetupStep2" data-allowHTML></div>
+  </div>
+
+  <div id="manager-setup-instructions-secondary">
+    <div class="light-fade" data-string="passwordManagerInstallerSetup" data-allowHTML></div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div id="manager-setup-drop-box" class="drag-and-drop-box" data-string="passwordManagerSetupDragBox"></div>
+
+  <div class="spacer"></div>
+  <div class="spacer"></div>
+
+  <div class="buttons">
+    <input type="button" id="manager-setup-disable" data-value="disableAutofill"/>
+  </div>
+</div>
+
+<div id="password-capture-bar" hidden>
+  <span id="password-capture-description"></span>
+  <input id="password-capture-username" type="text" required/>
+  <span class="password-capture-section">
+				<input id="password-capture-password" type="password" required/>
 				<button id="password-capture-reveal-password" class="i carbon:view"></button>
 			</span>
-			<span class="password-capture-section">
+  <span class="password-capture-section">
 				<button id="password-capture-save" data-string="passwordCaptureSave"></button>
 				<button id="password-capture-ignore" data-string="passwordCaptureDontSave"></button>
 			</span>
-			<button id="password-capture-never-save" data-string="passwordCaptureNeverSave"></button>
-		</div>
+  <button id="password-capture-never-save" data-string="passwordCaptureNeverSave"></button>
+</div>
 
-		<div id="password-viewer" class="modal" hidden>
-			<h2 class="modal-title" data-string="savedPasswordsHeading"></h2>
-			<button class="modal-close-button i carbon:close"></button>
-			<div id="password-viewer-empty" data-string="savedPasswordsEmpty" hidden></div>
-			<div id="password-viewer-list"></div>
-		</div>
+<div id="password-viewer" class="modal" hidden>
+  <h2 class="modal-title" data-string="savedPasswordsHeading"></h2>
+  <button class="modal-close-button i carbon:close"></button>
+  <div id="password-viewer-empty" data-string="savedPasswordsEmpty" hidden></div>
+  <div id="password-viewer-list"></div>
+</div>
 <div id="mouseRcoverArea" style="width: 45px;
     position: fixed;
     height: 100vh;
@@ -461,51 +565,54 @@
 
 " onmousemove="setNoIgnore()"></div>
 
-		<!-- add scripts in Gruntfile.js -->
+<!-- add scripts in Gruntfile.js -->
 
-		<script src="dist/bundle.js"></script>
-    <script>
-      ipc.on('clearCurrentUser', async (event, args) => {
-        const {db} = require('./js/util/database.js')
-        await db.system.where('name').equals('currentUser').modify({value: {
-          uid: 0,
-          nickname: '立即登录',
-          avatar: './icons/browser.ico'
-        }})
-      })
+<script src="dist/bundle.js"></script>
+<script>
 
-      let isBlockTips = localStorage.getItem('isBlockTips')
-      if(!isBlockTips) {
-        localStorage.setItem('isBlockTips', '1')
+  ipc.on('clearCurrentUser', async (event, args) => {
+    const { db } = require('./js/util/database.js')
+    await db.system.where('name').equals('currentUser').modify({
+      value: {
+        uid: 0,
+        nickname: '立即登录',
+        avatar: './icons/browser.ico'
       }
-      ipc.on('valueCount',(event,args)=>{
-        if(args>200 && isBlockTips === '1') {
-          ipc.invoke('openBlockTips')
-          localStorage.setItem('isBlockTips', '2')
-        }
-      })
+    })
+  })
 
-      ipc.on('blockGuide',()=>{
-        const closeBlockGuide = new Shepherd.Tour({
-          useModalOverlay: true,
-          defaultStepOptions: {
-            cancelIcon: {
-              enabled: false,
-            },
-            classes:'taskAdd',//添加标签组完成后的引导
-            scrollTo: {
-              behavior: 'smooth',
-              block: 'center'
-            }
-          },
-          steps: [{
-            text: '您可以点击该图标取消当前网站的广告拦截', attachTo: {element: '#closeBlockGuide', on:'right'},
-            buttons: [
-              {action: function () {return  this.cancel();}, text: '好 的',classes:'button'}],
-            id: 'blockGuide'    // 用于Shepherd step的唯一标识符
-          }]
-        });
-        closeBlockGuide.start();
+  let isBlockTips = localStorage.getItem('isBlockTips')
+  if (!isBlockTips) {
+    localStorage.setItem('isBlockTips', '1')
+  }
+  ipc.on('valueCount', (event, args) => {
+    if (args > 200 && isBlockTips === '1') {
+      ipc.invoke('openBlockTips')
+      localStorage.setItem('isBlockTips', '2')
+    }
+  })
+
+  ipc.on('blockGuide', () => {
+    const closeBlockGuide = new Shepherd.Tour({
+      useModalOverlay: true,
+      defaultStepOptions: {
+        cancelIcon: {
+          enabled: false,
+        },
+        classes: 'taskAdd',//添加标签组完成后的引导
+        scrollTo: {
+          behavior: 'smooth',
+          block: 'center'
+        }
+      },
+      steps: [{
+        text: '您可以点击该图标取消当前网站的广告拦截', attachTo: { element: '#closeBlockGuide', on: 'right' },
+        buttons: [
+          { action: function () {return this.cancel()}, text: '好 的', classes: 'button' }],
+        id: 'blockGuide'    // 用于Shepherd step的唯一标识符
+      }]
+    })
+    closeBlockGuide.start()
 
       })
       function calculate(a){
@@ -537,66 +644,67 @@
         }
       })
 
-      ipc.on('remakeCurrentUser', async (event, args) => {
-        const {db} = require('./js/util/database.js')
-        await db.system.where('name').equals('currentUser').modify({value: {
-          uid: args.userInfo.uid,
-          nickname: args.userInfo.nickname,
-          avatar: args.userInfo.avatar,
-          token: args.token,
-          refreshToken: args.refreshToken,
-          expire_deadtime: new Date().getTime() + args.expire * 1000,
-          refreshExpire_deadtime: new Date().getTime() + args.refreshExpire * 1000,
-          code: args.code
-        }})
+  ipc.on('remakeCurrentUser', async (event, args) => {
+    const { db } = require('./js/util/database.js')
+    await db.system.where('name').equals('currentUser').modify({
+      value: {
+        uid: args.userInfo.uid,
+        nickname: args.userInfo.nickname,
+        avatar: args.userInfo.avatar,
+        token: args.token,
+        refreshToken: args.refreshToken,
+        expire_deadtime: new Date().getTime() + args.expire * 1000,
+        refreshExpire_deadtime: new Date().getTime() + args.refreshExpire * 1000,
+        code: args.code
+      }
+    })
 
-
-        let updateData={
-          code:args.code,
-          expire_deadtime:new Date().getTime() + args.expire * 1000,
-          refreshExpire_deadtime:new Date().getTime() + args.refreshExpire * 1000,
-          refreshToken:args.refreshToken,
-          token:args.token
-        }
-        db.accounts.update(args.userInfo.uid,updateData) //更新accounts数据
-        const spaceModel=require('./src/model/spaceModel')
-        await spaceModel.updateSpaceInfo()
-      })
-
-      ipc.send('getIsDefaulBrowser')
-      ipc.on('returnIsDefaultBrowser', (event, args) => {
-        thirdToolbarVue.$data.isDefaultBrowser = args
-      })
-
-      setTimeout(() => {
-        ipc.invoke('toolbarGetNoobGuideSchedule').then(res => {
-        const num = Object.entries(res.modules.noobGuide).filter(v => v[1] === true).length
-        thirdToolbarVue.$data.finishedNoobguideNum = num
-
-          ipc.invoke('getInfoBookmarkMigrationed').then(migrationedRes => {
-            thirdToolbarVue.$data.migrationed = migrationedRes
-            if(num !== Object.entries(res.modules.noobGuide).length || !migrationedRes || !thirdToolbarVue.$data.isDefaultBrowser) {
-              document.querySelector('#toolbar').style['border-bottom'] = '0px'
-              ipc.send('unfinishedGuideShowThirdToolbar')
-            }
-          })
-        })
-      }, 2000)
-
-      ipc.on('scheduleRefresh', (event, args) => {
-        const num = Object.entries(args.modules.noobGuide).filter(v => v[1] === true).length
-        thirdToolbarVue.$data.finishedNoobguideNum = num
-      })
-
-
-    </script>
-
-  <style>
-    browser-action-list::part(action) {
-      width: 32px !important;
-      height:32px !important;
-      margin:3px !important;
+    let updateData = {
+      code: args.code,
+      expire_deadtime: new Date().getTime() + args.expire * 1000,
+      refreshExpire_deadtime: new Date().getTime() + args.refreshExpire * 1000,
+      refreshToken: args.refreshToken,
+      token: args.token
     }
-  </style>
-	</body>
+    db.accounts.update(args.userInfo.uid, updateData) //更新accounts数据
+    const spaceModel = require('./src/model/spaceModel')
+    await spaceModel.updateSpaceInfo()
+  })
+
+  ipc.send('getIsDefaulBrowser')
+  ipc.on('returnIsDefaultBrowser', (event, args) => {
+    toolbar.$data.isDefaultBrowser = args
+  })
+
+  setTimeout(() => {
+    ipc.invoke('toolbarGetNoobGuideSchedule').then(res => {
+      const num = Object.entries(res.modules.noobGuide).filter(v => v[1] === true).length
+      toolbar.$data.finishedNoobguideNum = num
+
+      ipc.invoke('getInfoBookmarkMigrationed').then(migrationedRes => {
+        toolbar.$data.migrationed = migrationedRes
+        if (num !== Object.entries(res.modules.noobGuide).length || !migrationedRes || !toolbar.$data.isDefaultBrowser) {
+          document.querySelector('#toolbar').style['border-bottom'] = '0px'
+          ipc.send('unfinishedGuideShowThirdToolbar')
+        }
+      })
+    })
+  }, 2000)
+
+  ipc.on('scheduleRefresh', (event, args) => {
+    const num = Object.entries(args.modules.noobGuide).filter(v => v[1] === true).length
+    toolbar.$data.finishedNoobguideNum = num
+  })
+
+
+</script>
+
+<style>
+  browser-action-list::part(action) {
+    width: 32px !important;
+    height: 32px !important;
+    margin: 3px !important;
+  }
+</style>
+</body>
 </html>

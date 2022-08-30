@@ -1,6 +1,32 @@
 //本代码会同时被preoload.js合并进去
 //也可以直接require进去(在非preload当中）
 let isDevelopmentMode = process.argv.some(arg=>arg==='--development-mode')
+if(typeof window!=='undefined'){
+  function getWindowArgs (window) {
+    window.globalArgs = {};
+    process.argv.forEach(function (arg) {
+      if (arg.startsWith("--")) {
+        var key = arg.split("=")[0].replace("--", "");
+        var value = arg.split("=")[1];
+        // if(key==='saApp'){
+        //   console.log(decodeURI(value))
+        //   value=JSON.parse(decodeURI(value))
+        // }
+        globalArgs[key] = value;
+      }
+    });
+    if (navigator.platform === "MacIntel") {
+      window.platformType = "mac";
+    } else if (navigator.platform === "Win32") {
+      window.platformType = "windows";
+    } else {
+      window.platformType = "linux";
+    }
+    return window;
+  }
+  window=getWindowArgs(window)
+  isDevelopmentMode='development-mode' in window.globalArgs
+}
 const localNode = false  //设置为true， cyx则使用本地的node配置
 const localServer = false  //设置为true， cgz则使用本地的node配置 //两者不能同时为true
 
@@ -31,6 +57,7 @@ const appConfig = {
 }
 
 //cyx本地开发,则修改相应的配置项
+console.log('isDevelopmentMode',isDevelopmentMode)
 if(localNode && isDevelopmentMode){
   //本地环境下的配置项重置
   config.NODE_SERVER_BASE_URL = 'http://test.com:8001'

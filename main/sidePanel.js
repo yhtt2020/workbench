@@ -117,6 +117,8 @@ class SidePanel {
     this.syncTitleBar()
     this._sidePanel.on('ready-to-show', () => {
       checkUpdate()
+      let layout= settings.get('layout') || 'max'
+      SidePanel.send('adjustSidePanel',layout)
     })
 
     this._sidePanel.on('close', function () {
@@ -448,7 +450,6 @@ function addMainWindowEventListener () {
 }
 
 function loadSidePanel () {
-  log('执行loadSidePanel()')
   if (!SidePanel.alive()) {
     sidePanel = new SidePanel()
     sidePanel.init()
@@ -610,7 +611,17 @@ var count = 0
 ipc.on('showSidePanel', function () {
   loadSidePanel()
 })
-
+let sidePanelState='min'
+ipc.on('openSidebar',()=>{
+  sidePanelState='max'
+  SidePanel.send('adjustSidePanel',sidePanelState)
+  syncSidebarTitle()
+})
+ipc.on('closeSidebar',()=>{
+  sidePanelState='min'
+  SidePanel.send('adjustSidePanel',sidePanelState)
+  syncSidebarTitle()
+})
 var selectTaskWindow = null
 ipc.on('selectTask', function (event, arg) {
   //console.log(arg, '__apppp__')
@@ -1101,6 +1112,7 @@ ipc.on('showAllSaApps', (event, args) => {
 })
 
 const configModel = require(__dirname + '/src/model/configModel')
+
 let userWindow = null
 let lastWindowArgs = {}
 let changingSpace = false
@@ -1274,23 +1286,22 @@ app.whenReady().then(() => {
     }
   })
 
-  ipc.on('changeSpace', (event, args) => {
+  ipc.on('changeSpace',  (event, args) => {
+    async function  reloadMainWindow(){
+      await require('./src/model/spaceModel').setCurrentSpace(args)
+      createWindow()
+    }
     changingSpace = true
     if (mainWindow && !mainWindow.isDestroyed()) {
       mainWindow.setClosable(true)
-      mainWindow.once('closed', () => {
-        const ldb = require(__dirname + '/src/util/ldb.js')
-        ldb.load(app.getPath('userData') + '/ldb.json')
-        ldb.db.set('currentSpace.spaceId', args.spaceId).write()
-        ldb.db.set('currentSpace.name', args.name).write()
-        ldb.db.set('currentSpace.spaceType', args.spaceType).write()
-        ldb.db.set('currentSpace.userInfo', args.userInfo).write()
-        createWindow()
+      mainWindow.once('closed', async () => {
+        reloadMainWindow()
       })
       safeCloseMainWindow()
       // mainWindow.close()
+    }else{
+      reloadMainWindow()
     }
-
   })
 
   ipc.on('disconnect', () => {
@@ -1397,3 +1408,40 @@ ipc.on('dbClickClose', (e, args) => {
 })
 
 /*user面板代码end*/
+
+
+app.whenReady().then(()=>{
+  ipc.on('toolbar.speedup',()=>{
+     let ask= require('electron').dialog.showMessageBoxSync({
+        message:'在加速之前，请务必确认网页表单均已保存。\n此操作将放弃全部网页内容！！！\n注意：任何加速都不会关闭当前标签。',
+        buttons:['杀死所有标签(同时关闭全部应用）','杀死非锁定标签（不关闭应用）','取消'],
+        title:'一键加速',
+       textWidth:300,
+       cancelId:2
+      })
+    switch (ask) {
+      case 0:
+        sendIPCToMainWindow('speedup',{type:'all'})
+        let closedApp=appManager.closeAll()
+        if(closedApp>0)
+          sendMessage({type:'success',config:{content:'已为您关闭'+closedApp+'个应用。'}})
+        break
+      case 1:
+        sendIPCToMainWindow('speedup',{type:'unlock'})
+    }
+  })
+  var osu=require('node-os-utils')
+  setInterval(async ()=>{
+    if(mainWindow && !mainWindow.isDestroyed()){
+      try{
+        let mem=await osu.mem.info()
+        let info={
+          mem: mem,
+        }
+        sendIPCToWindow(mainWindow,'doRefreshLoad',info)
+      }catch (e) {
+       console.error(e)
+      }
+    }
+  },3000)
+})
