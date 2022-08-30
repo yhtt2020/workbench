@@ -256,46 +256,94 @@ app.whenReady().then(()=>{
   // ipc.on('enterFirstGuide',(item,window)=>{
   //   sendIPCToWindow(window, 'enterFirstGuide')
   // })
-
   let firstGuideVideo
-  ipc.on('firstGuideVideo', () => {
-    firstGuideVideo = new BrowserWindow({
-      show:false,
-      backgroundColor:'#00000000',
-      transparent: true,
-      resizable:false,
-      parent: mainWindow,
-      frame: false,
-      titleBarStyle: 'hidden',
-      width: 800,
-      height: 490,
-      webPreferences: {
-        nodeIntegration: true,
-        contextIsolation: false,
-      }
-    })
-
-    function computeBounds(parentBounds,selfBounds){
-      let bounds={}
-      bounds.x=parseInt((parentBounds.x+parentBounds.x+parentBounds.width)/2-selfBounds.width/2,0)
-      bounds.y=parseInt((parentBounds.y+parentBounds.y+parentBounds.height)/2-selfBounds.height/2)
-      bounds.width=parseInt(selfBounds.width)
-      bounds.height=parseInt(selfBounds.height)
-      return bounds
+  ipc.on('firstLoad',()=>{
+    let isOpenGuideVideo = settings.get('guideVideo')
+    if(!isOpenGuideVideo) {
+      settings.set('guideVideo', false)
     }
-    if(process.platform==='darwin')
-      firstGuideVideo.setWindowButtonVisibility(false)
-    firstGuideVideo.loadURL('file://'+path.join(__dirname,'/pages/mvideo/index.html'))
-    firstGuideVideo.on('ready-to-show',()=>{
-      firstGuideVideo.show()
-      firstGuideVideo.setBounds(computeBounds(mainWindow.getBounds(),firstGuideVideo.getBounds()))
-      callModal(firstGuideVideo)
-    })
-    firstGuideVideo.on('close', () => {
-      callUnModal(firstGuideVideo)
-      firstGuideVideo = null
-    })
+
+    if(settings.get('guideVideo') === false) {
+      firstGuideVideo = new BrowserWindow({
+        show:false,
+        backgroundColor:'#00000000',
+        transparent: true,
+        resizable:false,
+        parent: mainWindow,
+        frame: false,
+        titleBarStyle: 'hidden',
+        width: 800,
+        height: 490,
+        webPreferences: {
+          nodeIntegration: true,
+          contextIsolation: false,
+        }
+      })
+
+      function computeBounds(parentBounds,selfBounds){
+        let bounds={}
+        bounds.x=parseInt((parentBounds.x+parentBounds.x+parentBounds.width)/2-selfBounds.width/2,0)
+        bounds.y=parseInt((parentBounds.y+parentBounds.y+parentBounds.height)/2-selfBounds.height/2)
+        bounds.width=parseInt(selfBounds.width)
+        bounds.height=parseInt(selfBounds.height)
+        return bounds
+      }
+      if(process.platform==='darwin')
+        firstGuideVideo.setWindowButtonVisibility(false)
+      firstGuideVideo.loadURL('file://'+path.join(__dirname,'/pages/mvideo/index.html'))
+      firstGuideVideo.on('ready-to-show',()=>{
+        firstGuideVideo.show()
+        firstGuideVideo.setBounds(computeBounds(mainWindow.getBounds(),firstGuideVideo.getBounds()))
+        callModal(firstGuideVideo)
+      })
+      firstGuideVideo.on('close', () => {
+        callUnModal(firstGuideVideo)
+        firstGuideVideo = null
+      })
+      settings.set('guideVideo', true)
+    }
   })
+
+
+  // let firstGuideVideo
+  // ipc.on('firstGuideVideo', () => {
+  //   firstGuideVideo = new BrowserWindow({
+  //     show:false,
+  //     backgroundColor:'#00000000',
+  //     transparent: true,
+  //     resizable:false,
+  //     parent: mainWindow,
+  //     frame: false,
+  //     titleBarStyle: 'hidden',
+  //     width: 800,
+  //     height: 490,
+  //     webPreferences: {
+  //       nodeIntegration: true,
+  //       contextIsolation: false,
+  //     }
+  //   })
+  //
+  //   function computeBounds(parentBounds,selfBounds){
+  //     let bounds={}
+  //     bounds.x=parseInt((parentBounds.x+parentBounds.x+parentBounds.width)/2-selfBounds.width/2,0)
+  //     bounds.y=parseInt((parentBounds.y+parentBounds.y+parentBounds.height)/2-selfBounds.height/2)
+  //     bounds.width=parseInt(selfBounds.width)
+  //     bounds.height=parseInt(selfBounds.height)
+  //     return bounds
+  //   }
+  //   if(process.platform==='darwin')
+  //     firstGuideVideo.setWindowButtonVisibility(false)
+  //   firstGuideVideo.loadURL('file://'+path.join(__dirname,'/pages/mvideo/index.html'))
+  //   firstGuideVideo.on('ready-to-show',()=>{
+  //     firstGuideVideo.show()
+  //     firstGuideVideo.setBounds(computeBounds(mainWindow.getBounds(),firstGuideVideo.getBounds()))
+  //     callModal(firstGuideVideo)
+  //   })
+  //   firstGuideVideo.on('close', () => {
+  //     callUnModal(firstGuideVideo)
+  //     firstGuideVideo = null
+  //   })
+  // })
 
 
   ipc.on('firstLoad',()=>{

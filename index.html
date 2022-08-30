@@ -614,35 +614,35 @@
     })
     closeBlockGuide.start()
 
-  })
-
-  function calculate (a) {
-    if (a >= 10) {
-      return '9+'
-    }
-    if (a < 0) {
-      document.getElementById('downloadCount').innerText = '0'
-    } else {
-      return a
-    }
-  }
-
-  let count = 0
-  downloadCountEl = document.getElementById('downloadCount')
-  downloadCountEl.hidden = true
-  ipc.on('downloadCountAdd', () => {
-    downloadCountEl.hidden = false
-    count++
-    downloadCountEl.innerText = calculate(count)
-  })
-  ipc.on('downloadCountCut', () => {
-    count--
-    // console.log(downloadCount)
-    if (count === 0) {
-      downloadCountEl.hidden = true
-    }
-    downloadCountEl.innerText = calculate(count)
-  })
+      })
+      function calculate(a){
+          if(a>=10){
+            return '9+'
+          }
+          if(a<0){
+            return 0
+          } else{
+            return a
+          }
+      }
+      let count = 0;
+      downloadCountEl = document.getElementById('downloadCount')
+      downloadCountEl.hidden=true
+      ipc.on('downloadCountAdd',()=>{
+        downloadCountEl.hidden=false
+        count++
+        downloadCountEl.innerText=calculate(count)
+      })
+      ipc.on('downloadCountCut',()=>{
+        count--
+        // console.log(downloadCount)
+        if(count <= 0){
+          count=0
+          downloadCountEl.hidden=true
+        }else {
+          downloadCountEl.innerText=calculate(count)
+        }
+      })
 
   ipc.on('remakeCurrentUser', async (event, args) => {
     const { db } = require('./js/util/database.js')
@@ -696,18 +696,6 @@
     toolbar.$data.finishedNoobguideNum = num
   })
 
-  //新手引导首次视频弹出出的标记
-  let firstGuideVideo = localStorage.getItem('guideVideo')
-  if (!firstGuideVideo) {
-    localStorage.setItem('guideVideo', '1')
-  }
-
-  ipc.on('firstLoad', () => {
-    if (localStorage.getItem('guideVideo') === '1') {
-      ipc.send('firstGuideVideo')
-      localStorage.setItem('guideVideo', '2')
-    }
-  })
 
 </script>
 

@@ -246,6 +246,7 @@
           appVue.lists.splice(appVue.lists.indexOf(args.startTime), 1)
         }
       })
+
       appVue.list.unshift({
         name: args.name,
         id: appVue.id++,
@@ -255,7 +256,7 @@
         total: '',
         progressnuw: 0,
         startTime: args.startTime,
-        path: '',
+        path: args.path,
         loadState: false,
         url: args.url,
         href: args.href,
@@ -265,6 +266,7 @@
       appVue.count++
       ipcRenderer.send('willDownload')
       ipcRenderer.send('downloading')
+
     }
 
     if (args.status === 'cancelled') {
@@ -281,11 +283,15 @@
         appVue.count = 0
       }
       appVue.listCount--
+      if (appVue.listCount < 0) {
+        appVue.listCount = 0
+      }
       ipcRenderer.send('closeEmpty')
     }
 
     if (args.status === 'progressing' && args.path !== '') {
       // ipcRenderer.send('willDownload')
+
       ipcRenderer.send('closeEmpty')
       appVue.list.forEach(function (item, index, arr) {
         if (item.startTime === args.startTime) {
@@ -347,6 +353,9 @@
       ipcRenderer.send('closeEmpty', args.chainUrl)
       ipcRenderer.send('downloadEnd')
       appVue.classify()
+    }
+    if (appVue.count < 0) {
+      appVue.count = 0
     }
   })
 
@@ -510,7 +519,6 @@
         ipcRenderer.send('showMenuTrash')
         this.selectDelList = item
         this.active = id
-
       },
       mouseOver (id) {
         this.clickActive = id
