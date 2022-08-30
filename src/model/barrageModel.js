@@ -31,7 +31,14 @@ class BarrageModel {
       return standReturn.failure()
     }
   }
-
+  async delete(id){
+    let rs = await this.api.delete(id)
+    if (rs.code === 1000) {
+      return standReturn.success(id)
+    } else {
+      return standReturn.failure()
+    }
+  }
   /**
    * 获取页面上的全部弹幕
    * @param channel

@@ -3,7 +3,8 @@ const userModel = require('../model/userModel')
 
 const url = {
   add: '/app/addBarrage',
-  list:'/app/getBarrageList'
+  list:'/app/getBarrageList',
+  delete:'/app/deleteBarrage'
 }
 
 class BarrageApi {
@@ -17,6 +18,9 @@ class BarrageApi {
   }
   async add(data){
     return await baseApi.axios(url.add, data, 'post')
+  }
+  async delete(id){
+      return await baseApi.axios(url.delete,{nanoid:id},'post')
   }
 
   /**

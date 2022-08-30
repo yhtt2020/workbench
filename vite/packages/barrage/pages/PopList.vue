@@ -69,7 +69,7 @@ export default {
     }
 
     window.$message = message
-
+    let that=this
 
     // this.ipc = tsbApi.ipc
     // this.ipc.on('show', () => {
@@ -107,10 +107,44 @@ export default {
             avatarEl.src = data.avatar
             node.appendChild(avatarEl)
           }
+          let wrapper=document.createElement('div')
+          wrapper.classList.add('barrage-btn-wrapper')
+          if(barrage.data.uid===that.user.user_info.uid || [4].indexOf(that.user.user_info.uid)>-1 )//todo 补充管理员逻辑
+          {
+            let delBtnEl=document.createElement('div')
+            if(barrage.data.uid===that.user.user_info.uid){
+              delBtnEl.innerHTML='撤回'
+            }else{
+              delBtnEl.innerHTML='删除'
+            }
+
+            delBtnEl.classList.add('barrage-opt-button')
+            delBtnEl.onclick=async (e) => {
+              console.log(barrage.data)
+              try{
+                let rs = await tsbApi.barrage.delete(barrage.data.nanoid)
+                if (rs.status === 1) {
+                  node.remove()
+                  message.success('操作成功')
+                } else {
+                  message.error('操作失败，请检查权限')
+                }
+              }catch (e) {
+                message.error('操作失败，请检查权限')
+              }
+
+            }
+            wrapper.appendChild(delBtnEl)
+          }
+
+          node.appendChild(wrapper)
+
           node.classList.add('barrage-style')
           node.onmouseenter = e => barrage.pause()
           node.onmouseleave = e => barrage.resume()
-          node.onclick = e => barrage.destroy()
+          node.onclick = e => {
+
+          }
         }
       }
     })
@@ -374,6 +408,36 @@ export default {
   </div>
 </template>
 <style>
+.barrage-btn-wrapper{
+  position: absolute;
+  bottom: -30px;
+  text-align: center;
+  width: 100%;
+  display: none;
+  z-index: 999999;
+}
+.barrage-style:hover{
+  z-index:9999;
+  border:2px solid rgba(255, 255, 255, 0.47);
+  background: #000;
+}
+.barrage-style:hover .barrage-btn-wrapper{
+  display: block;
+}
+.barrage-opt-button{
+  border-radius: 6px;
+  background:rgba(0, 0, 0, 0.5) ;
+  color: white;
+  padding: 5px 8px;
+  line-height: 18px;
+  font-size: 12px;
+  width: 50px;
+  display: inline-block;
+  cursor: pointer;
+}
+.barrage-opt-button:hover{
+  opacity: 0.8;
+}
 .barrage-style {
   -webkit-app-region: no-drag;
   user-select: none;
