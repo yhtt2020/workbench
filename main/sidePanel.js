@@ -159,13 +159,12 @@ class SidePanel {
       return
     }
     this.bounds = mainWindow.getBounds()
-
     //windows全屏模式单独处理
     if (mainWindow.isMaximized() && isWin()) {
       //win上x和y在全屏下不为0，甚至为-8，目前未考虑win7
-      if (this.bounds.x < 0) this.bounds.x = 0
+      if (this.bounds.x < 0) this.bounds.x = this.bounds.x+8
       if (this.bounds.y < 0) {
-        this.bounds.y = 0
+        this.bounds.y = this.bounds.y+8
       }
       if (settings.get('useSeparateTitlebar')) {
         this.bounds.y += 23
@@ -204,7 +203,6 @@ class SidePanel {
       setHeight -= 2
       setX += 1
     }
-
     this._sidePanel.setBounds({
       x: setX,
       y: setY,

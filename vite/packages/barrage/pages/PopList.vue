@@ -8,6 +8,10 @@ import {
   SendOutlined,
   SmileOutlined,
   DragOutlined,
+  LikeOutlined,
+  LikeFilled,
+  PauseCircleOutlined,
+  PlayCircleOutlined,
 
   PlusOutlined,
   AppstoreAddOutlined,
@@ -20,7 +24,7 @@ import {
   DeleteOutlined,
   ExclamationCircleOutlined
 } from '@ant-design/icons-vue '
-import {message} from 'ant-design-vue';
+import {message,Modal} from 'ant-design-vue';
 
 export default {
   components: {
@@ -31,7 +35,10 @@ export default {
     SendOutlined,
     SmileOutlined,
     DragOutlined,
-
+    LikeOutlined,
+    LikeFilled,
+    PauseCircleOutlined,
+    PlayCircleOutlined,
 
     PlusOutlined,
     AppstoreAddOutlined,
@@ -57,6 +64,13 @@ export default {
       pageUrl: '',
       content: '',
       inputPopVisible: false,
+
+
+      visibleBarrageOperation:false,
+      currentBarrageData:{},
+      manager:{},
+      runing:true,
+      supporting:false
     }
   },
 
@@ -107,42 +121,15 @@ export default {
             avatarEl.src = data.avatar
             node.appendChild(avatarEl)
           }
-          let wrapper=document.createElement('div')
-          wrapper.classList.add('barrage-btn-wrapper')
-          if(barrage.data.uid===that.user.user_info.uid || [4].indexOf(that.user.user_info.uid)>-1 )//todo 补充管理员逻辑
-          {
-            let delBtnEl=document.createElement('div')
-            if(barrage.data.uid===that.user.user_info.uid){
-              delBtnEl.innerHTML='撤回'
-            }else{
-              delBtnEl.innerHTML='删除'
-            }
-
-            delBtnEl.classList.add('barrage-opt-button')
-            delBtnEl.onclick=async (e) => {
-              console.log(barrage.data)
-              try{
-                let rs = await tsbApi.barrage.delete(barrage.data.nanoid)
-                if (rs.status === 1) {
-                  node.remove()
-                  message.success('操作成功')
-                } else {
-                  message.error('操作失败，请检查权限')
-                }
-              }catch (e) {
-                message.error('操作失败，请检查权限')
-              }
-
-            }
-            wrapper.appendChild(delBtnEl)
-          }
-
-          node.appendChild(wrapper)
-
           node.classList.add('barrage-style')
           node.onmouseenter = e => barrage.pause()
-          node.onmouseleave = e => barrage.resume()
+          node.onmouseleave = e => {if($manager.runing)barrage.resume()}
           node.onclick = e => {
+            that.visibleBarrageOperation=true
+            that.currentBarrageData=barrage.data
+            that.currentNode=node
+            that.currentBarrageData.support_count=123
+            that.currentBarrageData.is_like=false
 
           }
         }
@@ -178,6 +165,7 @@ export default {
     // },3000)
 
     window.$manager = manager
+    this.manager=manager
     window.addEventListener('resize',()=>{
       console.log('rezied')
       manager.resize()
@@ -189,6 +177,32 @@ export default {
     async changeUrl(url) {
       this.pageUrl = url
       await this.getList()
+    },
+    doDelete(nanoid){
+      Modal.confirm({
+        title: '删除确认',
+        icon: createVNode(ExclamationCircleOutlined),
+        content: '确认删除此弹幕？此操作不可撤销，请谨慎操作。',
+         onOk:async()=> {
+          try {
+            let rs = await tsbApi.barrage.delete(nanoid)
+            if (rs.status === 1) {
+              this.currentNode.remove()
+              this.visibleBarrageOperation = false
+              message.success('操作成功')
+            } else {
+              message.error('操作失败，请检查权限')
+            }
+          } catch (e) {
+            console.error(e)
+            message.error('操作失败，请检查权限')
+          }
+        },
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        onCancel() {},
+      });
+
+
     },
     async getList() {
       this.CONST = tsbApi.barrage.CONST
@@ -232,7 +246,6 @@ export default {
         channel_type: this.channelType ? this.CONST.CHANNEL.GROUP : this.CONST.CHANNEL.PUBLIC,
         content: this.content,
         page_url: this.pageUrl,
-
       }
       try {
         let rs = await tsbApi.barrage.add(data)
@@ -314,6 +327,9 @@ export default {
     reload() {
       window.location.reload()
     },
+    openSpace(uid){
+      tsbApi.user.openSpace(uid)
+    },
     pause() {
       $manager.running ? $manager.stop() : $manager.start()
       $manager.each((ba) => {
@@ -332,12 +348,118 @@ export default {
           document.getElementById('inputArea').select()
         }, 500)
       }
+    },
+    toggleRuning(){
+      if($manager.runing){
+        $manager.each(barrage=>{
+          barrage.pause()
+        })
+        this.runing=false
+        $manager.stop()
+      }else{
+        $manager.start()
+        this.runing=true
+        $manager.each(barrage=>{
+          barrage.resume()
+        })
+      }
+    },
+    /**
+     * 点赞
+     * @param nanoid
+     */
+    async doSupport(nanoid) {
+      this.supporting = true
+      if (this.currentBarrageData.is_like) {
+        //取消点赞
+        try{
+          let rs = await tsbApi.barrage.unlike(nanoid)
+          if (rs.status) {
+            this.currentBarrageData.is_like = true
+            this.currentBarrageData.support_count += 1
+          } else {
+            message.error('网络错误，取消赞失败。')
+          }
+        }catch (e) {
+          console.error(e)
+          message.error('网络错误，取消赞失败。')
+        }
+      } else {
+        //点赞
+        try{
+          let rs = await tsbApi.barrage.like(nanoid)
+          if (rs.status) {
+            this.currentBarrageData.is_like = true
+            this.currentBarrageData.support_count += 1
+          } else {
+            message.error('网络错误，点赞失败。')
+          }
+        }catch (e) {
+          console.error(e)
+          message.error('网络错误，点赞失败。')
+        }
+      }
+      this.supporting = false
     }
   }
 }
 </script>
 
 <template>
+  <template>
+    <div style="-webkit-app-region:no-drag">
+      <a-modal :centered="true"
+               :maskClosable="true"
+        ref="modalRef"
+               :title="undefined"
+        v-model:visible="visibleBarrageOperation"
+        :wrap-style="{ overflow: 'hidden' }"
+      >
+        <a-row>
+          <a-col flex="60px"><a-avatar class="link" @click="openSpace(currentBarrageData.uid)" size="large" :src="currentBarrageData.avatar"></a-avatar>
+        </a-col>
+          <a-col flex="1">
+            <p style="font-weight: bold"><a class="link"  @click="openSpace(currentBarrageData.uid)">{{ currentBarrageData.nickname }}</a>
+            </p>
+            <p>{{ currentBarrageData.content }}</p>
+            <p style="color: #999;font-size: 12px">{{new Date(currentBarrageData.create_time).toLocaleString()}}</p>
+        </a-col></a-row>
+        <template #footer="">
+             <div  style="text-align: center">
+               <a-button :loading="supporting"   :danger="currentBarrageData.is_like"  @click="doSupport(this.currentBarrageData.nanoid)" class="btn-margin">
+                 <span  class="link"  style="">
+<transition :name="currentBarrageData.is_like ?'zoom': '' " mode="out-in">
+                <!-- 爱心图标 -->
+                <like-filled style="color:red" id="surrpotIco" v-if="currentBarrageData.is_like" key="like"></like-filled>
+                <like-outlined  id="surrpotedIco" v-else key="unlike"></like-outlined>
+                </transition>
+            <div class="like-num-wrapper" style="margin-left: 5px">
+              <transition :name="currentBarrageData.is_like?'plus':'minus'">
+              <div
+                class="like-num"
+                :style="{color:currentBarrageData['is_like'] ? 'red':'#333'}"
+                :key="currentBarrageData['support_count']">
+              {{currentBarrageData["support_count"]}}
+            </div>
+            </transition>
+    </div>
+            </span> </a-button>
+               <span class="btn-margin" v-if="this.currentBarrageData.uid===this.user.user_info.uid || [4].indexOf(this.user.user_info.uid)>-1 ">
+                 <a-button type="danger" @click="doDelete(this.currentBarrageData.nanoid)">
+                 <span v-if="this.currentBarrageData.uid===this.user.user_info.uid">
+                   <delete-outlined /> 撤回
+                 </span>
+                 <span v-else>
+                  <delete-outlined /> 删除
+                 </span>
+                 </a-button>
+               </span>
+
+             </div>
+        </template>
+      </a-modal>
+    </div>
+  </template>
   <div class="window-frame">
   <div id="danmuWrapper" class="barrage-container" style="height: calc(100vh - 30px);margin-top: 10px">
 
@@ -390,6 +512,14 @@ export default {
         发射</a>
 
     </a-popover>
+    <a class="shadow-button" @click="toggleRuning">
+      <span v-if="this.runing">
+        <pause-circle-outlined />
+      </span>
+      <span v-else>
+        <play-circle-outlined />
+      </span>
+    </a>
     <a class="shadow-button" @click="lock">
       <lock-outlined/>
       </a>
@@ -408,16 +538,15 @@ export default {
   </div>
 </template>
 <style>
-.barrage-btn-wrapper{
-  position: absolute;
-  bottom: -30px;
-  text-align: center;
-  width: 100%;
-  display: none;
-  z-index: 999999;
+.btn-margin{
+  margin-left: 10px;
+  margin-right: 10px;
 }
+.ant-modal-mask{
+  -webkit-app-region:no-drag
+}
+
 .barrage-style:hover{
-  z-index:9999;
   border:2px solid rgba(255, 255, 255, 0.47);
   background: #000;
 }
@@ -474,6 +603,9 @@ html,body {
 }
 </style>
 <style scoped lang="scss">
+.link{
+  cursor:pointer;
+}
 .shadow-button {
   background: rgba(0, 0, 0, 0.5);
   color: white;
@@ -563,6 +695,71 @@ html,body {
     background: #f6f6f6;
   }
 }
+/** 动画进行时的class **/
+.zoom-enter-active, .zoom-leave-active {
+  transition: all .15s cubic-bezier(0.42, 0, 0.34, 1.55);
+}
 
+/** 设置进场开始的状态和离场结束的状态，都是缩放到0 **/
+.zoom-enter, .zoom-leave-to {
+  transform: scale(0);
+}
 
+/** 设置进场结束的状态和离场开始的状态, 都是缩放到1 **/
+.zoom-enter-to, .zoom-leave {
+  transform: scale(1);
+}
+.like-num-wrapper {
+  position: relative;
+  /* margin-left: 16px; */
+  text-align: end;
+  font-size: 13px;
+  height: 17px;
+  overflow-y: hidden;
+  display: inline-block;
+  vertical-align: text-bottom;
+  user-select: none;
+  .like-num {
+    top: 0;
+    left: 0;
+    position: relative;
+    line-height: 17px;
+  }
+}
+// 点赞数字+1动画
+.plus-enter-active, .plus-leave-active {
+  transition: all .3s ease-in;
+}
+
+.plus-enter, .plus-leave {
+  transform: translateY(0);
+}
+
+.plus-enter-to, .plus-leave-to {
+  transform: translateY(-17px);
+}
+
+// 点赞数字-1动画
+.minus-enter-active, .minus-leave-active {
+  transition: all .3s ease-in;
+}
+
+.minus-enter {
+  transform: translateY(-34px);
+}
+
+.minus-enter-to {
+  transform: translateY(-17px);
+}
+
+.minus-leave {
+  transform: translateY(0);
+}
+
+.minus-leave-to {
+  transform: translateY(17px);
+}
+.minus-enter {
+  transform: translateY(-34px);
+}
 </style>
