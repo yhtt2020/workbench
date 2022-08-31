@@ -28,14 +28,29 @@
   const fs=require('fs')
 
   let settings=require('../../js/util/settings/settings')
+  let collTimer=null
   function mousenter (target) {
     if (appVue.mod==='auto') {
-      target.setAttribute('class', 'sidebar expanded')
-      document.getElementById('clickThroughElement').style.left = '155px'
+      if(collTimer) return
+      collTimer=setInterval(()=>{
+        target.setAttribute('class', 'sidebar expanded')
+        document.getElementById('clickThroughElement').style.left = '155px'
+        clearInterval(collTimer)
+        collTimer=null
+      },200)
     }
   }
 
   function mouseleave (target) {
+    if (appVue.mod==='auto') {
+      console.log('判断到鼠标移除，并去除')
+      clickThroughMove()
+    }
+    if(collTimer)
+    {
+      clearInterval(collTimer)
+      collTimer=null
+    }
     //
     // if(appVue.$refs.sidePanel.isPopoverShowing===false){
     //   target.setAttribute('class', 'sidebar')
@@ -52,12 +67,15 @@
   }
 
   function clickThroughMove () {
-    setMainWindow()
-    if (appVue.$refs.sidePanel.isPopoverShowing === false && document.getElementById('clickThroughElement').offsetLeft === 155 && appVue.mod==='auto') {
-      setTimeout(function () {
-        document.getElementById('clickThroughElement').style.left = '55px'
-        document.getElementById('appVue').setAttribute('class', 'sidebar')
-      }, 200)
+    if(appVue.$refs.sidePanel.isPopoverShowing === false){ //当悬浮框出现的时候，不进行离开逻辑
+      setMainWindow()
+      if ( document.getElementById('clickThroughElement').offsetLeft === 155 && appVue.mod==='auto') {
+        console.log('可以隐藏')
+        setTimeout(function () {
+          document.getElementById('clickThroughElement').style.left = '55px'
+          document.getElementById('appVue').setAttribute('class', 'sidebar')
+        }, 200)
+      }
     }
   }
 
