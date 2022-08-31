@@ -175,13 +175,25 @@
 
 <script>
   //移动到左侧空白区域的时候，让左侧栏重获鼠标，防止无法移动上去
+  var focusTimer =null
   function setNoIgnore () {
-    window.postMessage({
-      message: 'set-ignore-mouse-events'
-    })
-    ipc.send('setMouseEnable')
-    //console.log('设置左侧栏鼠标有效')
-
+    if(focusTimer) return
+    focusTimer =setInterval(function () { //开启定时器，下面就是执行的方法，在窗体加载1S后执行下面的方法。
+      window.postMessage({
+        message: 'set-ignore-mouse-events'
+      })
+      ipc.send('setMouseEnable')
+      //console.log('设置左侧栏鼠标有效')
+      clearTimeout(focusTimer); //关闭定时器。
+      focusTimer=null
+      console.log('触发左侧栏')
+    }, 200);
+  }
+  function stopSetIgnore(){
+    if(focusTimer){
+      clearTimeout(focusTimer); //关闭定时器。
+      focusTimer=null
+    }
   }
 
   function openSiteCard (e, tabData) {
@@ -563,7 +575,7 @@
     bottom: 0;
     top:calc(var(--control-space-top) + 36px);
 
-" onmousemove="setNoIgnore()"></div>
+" onmousemove="setNoIgnore()" onmouseleave="stopSetIgnore()"></div>
 
 <!-- add scripts in Gruntfile.js -->
 

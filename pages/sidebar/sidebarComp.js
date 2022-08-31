@@ -572,6 +572,9 @@ const sidebarTpl = /*html*/`
                 style="position: relative">
                 <tippy :ref="'task_'+item.id"
     boundary="window"
+
+    @shown="tippyShown"
+    @hidden="tippyHidden"
     interactive
     :animate-fill="false"
     placement="right"
@@ -991,6 +994,14 @@ Vue.component('sidebar', {
   },
   template: sidebarTpl,
   methods: {
+    tippyShown(){
+      this.isPopoverShowing=true
+      console.log('显示了')
+    },
+    tippyHidden(){
+      this.isPopoverShowing=false
+      console.log('隐藏了')
+    },
     getUserIconName(userIcon){
       let iconPath=userIcon.split('.')
       return iconPath[2]
