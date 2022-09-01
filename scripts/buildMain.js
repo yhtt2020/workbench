@@ -24,6 +24,7 @@ const modules = [
   'main/group.js',
   'main/update.js',
   'js/util/settings/settingsMain.js',
+
   'main/filtering.js',
   'main/viewManager.js',
   'main/download.js',
@@ -41,7 +42,9 @@ const modules = [
   'main/messageCenter.js',
   'main/fav.js',
   'main/globalSearch.js',
-  'js/util/statsh/statshMain.js'
+  'js/util/statsh/statshMain.js',
+  'src/main/windowManager.js',//加入浏览器api处理者
+  'main/handleApi.js',//加入浏览器api处理者
 ]
 
 function buildMain () {
