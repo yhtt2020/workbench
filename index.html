@@ -288,6 +288,13 @@
               </span>
         </div>
         <div class="action-wrapper app-tool">
+              <span title="互动面板" @click="ipc.send('toggleChat')" id="chat-toolbar">
+                <img style="width: 24px" class="action app"
+                                                                                          src="./icons/toolbar/apps/chat.svg">
+                <span hidden class="bandage" id="chat">0</span>
+              </span>
+        </div>
+        <div class="action-wrapper app-tool">
               <span title="阅读模式" id="read-toolbar"><img class="action app" src="./icons/toolbar/apps/read.svg">
                 <span hidden class="bandage" id="canRead">0</span>
               </span>
