@@ -30,15 +30,14 @@ const localAdapter={
     }
   },
   async restore(spaceId){
-    ldb.reload()
     var savedStringData
     try {
-      let space=ldb.db.get('spaces').find({id:spaceId}).value()
+      let space= await localSpaceModel.getSpace(spaceId)
       if(!!!space){
         //一般这条路径也走不到的，会被前面的初始化查询处理掉。
         savedStringData=localAdapter.loadOldRestore()
       }else{
-        savedStringData=JSON.stringify(space.data)
+        savedStringData=space.data
       }
       //savedStringData = fs.readFileSync(sessionRestore.savePath, 'utf-8')
     } catch (e) {

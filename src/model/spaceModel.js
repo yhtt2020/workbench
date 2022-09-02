@@ -5,6 +5,9 @@ const localSpaceModel = require('./localSpaceModel')
 const backupSpaceModel = require('./backupSpaceModel')
 const userModel = require('./userModel')
 const { nanoid } = require('nanoid')
+const { SqlDb }=require('../util/sqldb')
+const sqlDb=new SqlDb()
+const CURRENT_SPACE_KEY='system.space.currentSpace'
 const spaceModel = {
   type: 'local',
   user: {
@@ -48,6 +51,7 @@ const spaceModel = {
       spaceModel.setAdapter('local')
     } else {
       spaceModel.setAdapter('cloud')
+      spaceModel.adapterModel.user=user
     }
     return spaceModel
   },
@@ -64,13 +68,14 @@ const spaceModel = {
 
   async getUserSpaces (option) {
     let result = await spaceModel.adapterModel.getUserSpaces(spaceModel.user, option)
-
+    let currentSpace=await spaceModel.getCurrent()
+    let clientId=userModel.getClientId()
     async function getSpaceState (space) {
-      if (spaceModel.user.uid) { //云端判断逻辑
-        if (space.client_id && space.client_id !== spaceModel.user.clientId) {
+      if (spaceModel.type==='cloud') { //云端判断逻辑
+        if (space.client_id && space.client_id !== clientId) {
           space.isOtherUsing = true
           space.isUsing = true
-        } else if ((space.client_id === spaceModel.user.clientId)) {
+        } else if ((space.client_id === clientId)) {
           space.isSelfUsing = true
           space.isUsing = true
         } else {
@@ -82,8 +87,9 @@ const spaceModel = {
           space.disconnect = false
         }
       } else {
+
         await spaceModel.setAdapter('local').getCurrent().then(sp => {
-          if (space.id === sp.spaceId) {
+          if (space.nanoid === currentSpace.spaceId) {
             space.isSelfUsing = true
             space.isUsing = true
           }
@@ -136,11 +142,16 @@ const spaceModel = {
     return currentSpace
   },
   /**
-   * 获取当前空间
+   * 获取当前空间，
    */
   async getCurrent (needDetail = false) {
-    ldb.reload()
-    let currentSpace = ldb.db.get('currentSpace').value()
+
+    let currentSpace = await sqlDb.getConfig(CURRENT_SPACE_KEY,undefined)
+    if(currentSpace===undefined){
+      //初始化
+      console.warn('需要初始化')
+      await sqlDb.setConfig(CURRENT_SPACE_KEY,null,'当前空间，默认为null')
+    }
     if (!!!currentSpace) { //如果是首次读入，不存在currentSpace就插入一个默认的值
       console.warn('空间损坏，基本不会走这条路线')
       return false
@@ -177,23 +188,23 @@ const spaceModel = {
           throw '本地备份空间丢失或不存在'
         }
       }
+      space.type='cloud'
+      currentSpace.userInfo=await userModel.get({uid:currentSpace.uid})
+      currentSpace.userInfo.clientId=userModel.getClientId()
+
     } else {
-      space = await spaceModel.setAdapter('local').getSpace(currentSpace.spaceId)
+      space = await require('./localSpaceModel').getSpace(currentSpace.spaceId)
       if (!!!space) {
         space = {
           name: '本机空间',
-          id: nanoid()
+          nanoid: nanoid()
         }
         console.error('意外未能获得当前空间')
       }
       currentSpace.space = space
-      currentSpace.spaceId = space.id
+      currentSpace.spaceId = space.nanoid
       currentSpace.name = space.name
-      ldb.db.set('currentSpace.space', space).write()
-      ldb.db.set('currentSpace.name', space.name).write()
-      ldb.db.set('currentSpace.spaceId', space.id).write()
     }
-    console.log('currentSpace=',currentSpace)
     return currentSpace
   },
   async getSpace (id) {
@@ -241,11 +252,23 @@ const spaceModel = {
     return await spaceModel.adapterModel.clientOnline(nanoid, force, spaceModel.user)
   },
 
-  setCurrentSpace (space) {
-    ldb.reload()
-    ldb.db.set('currentSpace.space', space).write()
-    ldb.db.set('currentSpace.name', space.name).write()
-    ldb.db.set('currentSpace.spaceId', space.id).write()
+  async setCurrentSpace (space) {
+    if(space.uid){
+      space.type='cloud'
+    }else{
+      space.type='local'
+    }
+    try{
+      await sqlDb.setConfig(CURRENT_SPACE_KEY,{
+        space:space,
+        name:space.name,
+        spaceId:space.nanoid,
+        spaceType:space.type,
+        uid:space.type==="local"?0:space.uid
+      },'当前空间')
+    }catch(e){
+      console.error(e)
+    }
   }
 
 }

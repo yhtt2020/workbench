@@ -126,12 +126,13 @@ body.linux #menu-button {
   display: flex;
   position: relative;
   overflow: hidden;
-  margin-right: 35px;
+  line-height: 1;
   &.fixWidth{
     width: 100%;
   }
 }
 #tabs #tabs-inner {
+  margin-top: 5px;
   display: inline-flex;
   width: calc(100% - 30px);
   overflow-x: visible;
@@ -169,6 +170,7 @@ body.linux #menu-button {
     margin-right: 5px;
   }
   .tab-icon {
+    line-height: 1;
     position: relative;
     font-size: 0.7em;
     padding: 0 0;
@@ -367,6 +369,52 @@ body.windows.dark-theme .navbar-action-button:not(:disabled):hover {
 }
 .navbar-right-actions {
   margin-right: 2.3em;
+}
+.min{
+  #mouseRcoverArea{
+    display: none !important;;
+  }
+  #webview-placeholder{
+    width: 100% !important;;
+    margin-left: 0 !important;;
+  }
+  #searchbar{
+    left: calc((100% ) * 0.02 ) !important;
+    width: calc((100% ) * 0.96) !important;;
+  }
+}
+.max {
+
+  #tabs {
+    margin-right: 55px;
+  }
+  .switch-task-button{
+    display: none;
+  }
+
+}
+
+.switch-task-button{
+  &.active{
+    background: red;
+    path{
+      fill: white;
+    }
+    line{
+      stroke: white;
+    }
+  }
+  display: none;
+  position: absolute;
+  z-index: 4;
+}
+.min {
+  #tabs{
+  margin-right: 85px;
+  }
+  .switch-task-button{
+    display: inline-block;
+  }
 }
 
 .navbar-right-actions #add-tab-button {

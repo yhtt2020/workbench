@@ -22,7 +22,7 @@ const standAloneAppModel = {
     })
 
 
-    let group =await db.standAloneApps.get({name:'团队协作'})
+
     // if(!!!group || !!!group.package){
     //   await standAloneAppModel.setAppSetting(group.id, { autoRun: true ,showInSideBar:true})
     //   db.standAloneApps.update(group.id,{id:1,package:'com.thisky.group'})
@@ -47,11 +47,11 @@ const standAloneAppModel = {
       })
     }
 
-
+    let group =await db.standAloneApps.get({package:'com.thisky.group'})
     if(group){
       db.standAloneApps.update(group.id,{
-        name:'团队沟通',
-        logo:'../../pages/group/group.svg'
+        name:'轻聊',
+        logo:'https://up.apps.vip/logo/group.png?t=2'
       })
     }
     let appStore = await  db.standAloneApps.get({package:'com.thisky.appStore'})
@@ -499,8 +499,8 @@ const standAloneAppModel = {
     const defaultApps = [
       {
         id:1,
-        name: '团队沟通',
-        logo: 'https://up.apps.vip/logo/group.svg',
+        name: '轻聊',
+        logo: 'https://up.apps.vip/logo/group.png?t=2',
         summary: '团队沟通，随时与团队成员实时沟通',
         type: 'web',
         //url: serverConfig.IM.FRONT_URL+ serverConfig.IM.AUTO_LOGIN,

@@ -34,6 +34,7 @@ const modules = [
   'main/remoteActions.js',
   'main/keychainService.js',
   'main/handleAxios.js',
+  'main/api.js',
   'js/util/proxy.js',
   'main/mobileMod.js',
   'main/wizard.js',

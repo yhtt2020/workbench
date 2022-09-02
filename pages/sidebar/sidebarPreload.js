@@ -1,5 +1,6 @@
 require('../../dist/localization.build.js')
-
+require('../util/util.js').tools.getWindowArgs(window)
+let userMode=require('../../src/model/userModel')
 const electron = require('electron')
 const ipc = electron.ipcRenderer
 
@@ -12,9 +13,6 @@ const { db } = require('../../js/util/database.js')
 window.mainWindowId = 0 //主窗体id
 window.l = l
 window.db = db
-const {
-  contextBridge
-} = require('electron')
 const { themeSetting } = require('../util/theme')
 const theme=require('./theme.js')
 //将语言包的接口暴露给里面的页面
@@ -131,36 +129,33 @@ ipc.on('refreshMyGroups', async () => {
 
 //读入当前登录的帐号
 window.getCurrentUser= async function  getCurrentUser () {
-   let user = {}
-   let item =await db.system.get({ 'name': 'currentUser' }).catch((err) => {
-    console.log('获取当前用户失败')
-    console.log(err)
-  })
-  if (typeof (item) == 'undefined') {
-    //如果还没有当前用户，则插入一个默认用户
-    user = insertDefaultUser()
-  } else {
-    user = item.value
+   let userRs =await userModel.getCurrent()
+  let user={}
+  if (userRs.status) {
+    user=userRs.data
     //兼容老版本优化
-    user.fans=user.fans || 0
-    user.postCount=user.postCount || 0
-    user.follow=user.follow || 0
-    user.grade= user.grade || {
+    user.fans=user.user_info.fans || 0
+    user.postCount=user.user_info.postCount || 0
+    user.follow=user.user_info.follow || 0
+    user.grade= user.user_info.grade || {
       grade: 1
     }
     window.$store.state.user = user
-  }
-  if(user.token){
-    //存在用户则进行用户数据的查询
-    try{
-      await window.$store.dispatch('getUserInfo', {
-        token: user.token
-      })
+    if(user.token){
+      //存在用户则进行用户数据的查询
+      try{
+        await window.$store.dispatch('getUserInfo', {
+          token: user.token
+        })
+      }
+      catch (e){
+        console.log(e)
+      }
     }
-    catch (e){
-      console.log(e)
-    }
+  } else {
+
   }
+
 
 }
 
@@ -181,53 +176,33 @@ async function insertDefaultUser (code) {
 
 window.insertDefaultUser = insertDefaultUser
 
-ipc.on('userLogin', function (e, data) {
+ipc.on('userLogin', async function (e, data) {
   //此处是用户触发自动登录后的回调地址
-  let user = {
-    uid: data.userInfo.uid,
-    nickname: data.userInfo.nickname,
-    avatar: data.userInfo.avatar,
-    token: data.token,
-    fans: data.userInfo.fans || 0,
-    postCount: data.userInfo.post_count || 0,
-    follow: data.userInfo.follow || 0,
-    grade: data.userInfo.grade || {
-      grade: 0
-    },
-    refreshToken: data.refreshToken,
-    expire_deadtime: new Date().getTime() + data.expire * 1000,
-    refreshExpire_deadtime: new Date().getTime() + data.refreshExpire * 1000,
-    code: data.code
-  }
-  window.$store.state.user = user
-  // 设置当前登录帐号为此帐号
-  db.system.where({ name: 'currentUser' }).delete()
-  db.system.put({
-    name: 'currentUser',
-    value: user
-  }).then(async (msg) => {
-    db.accounts.put({
-      id:user.uid,
-      uid: user.uid,
-      nickname: user.nickname,
-      avatar: user.avatar,
-      lastLoginTime: new Date().getTime(),
-      token: user.token,
-      refreshToken: user.refreshToken,
-      expire_deadtime: user.expire_deadtime,
-      refreshExpire_deadtime: user.refreshExpire_deadtime,
-      code: user.code
-    })
-    await window.$store.dispatch('getUserInfo')
+  let userResponse =await userMode.getCurrent()
+  console.log('userResponse=',userResponse)
+  if(userResponse.status===1){
+    let data=userResponse.data
+    let user={
+      uid:data.uid,
+      nickname:data.user_info.nickname,
+      avatar:data.user_info.avatar,
+      token:data.token,
+      fans:data.user_info.fans||0,
+      postCount:data.user_info.postCount || 0,
+      follow:data.user_info.follow||0,
+      grade:data.user_info.grade || {
+        grade:0
+      },
+      refreshToken:data.refresh_token,
+      expireTime:data.expire_time,
+      refreshExpireTime: data.refresh_expire_time,
+      code:data.code
+    }
+    window.$store.commit('set_user',user)
+    window.$store.dispatch('getUserInfo')
     //await window.$store.dispatch('getGroups')  //老的团队获取接口
-
-    await window.$store.dispatch('getJoinedCircle', {page: 1, row: 500})
-    await window.$store.dispatch('getMyCircle', {page: 1, row: 500})
-  }).catch((err) => {
-    console.log('登录后设置当前用户失败')
-    console.log(err)
-  })
-  // ++id,uid,nickname,avatar,lastLoginTime,token,isCurrent,lastUseSpace
-  //插入一个用户帐号到帐号表
+    window.$store.dispatch('getJoinedCircle', {page: 1, row: 500})
+    window.$store.dispatch('getMyCircle', {page: 1, row: 500})
+  }
 
 })

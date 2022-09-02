@@ -129,7 +129,7 @@ var taskOverlay = {
     webviews.requestPlaceholder('taskOverlay')
 
     document.body.classList.add('task-overlay-is-shown')
-    document.getElementById('switch-task-button').hidden=false
+    if($toolbar.layoutMod==='max') taskSwitcherButton.style.display='inline-block'
     tabEditor.hide()
     document.getElementById('task-search-input').value = ''
 
@@ -188,7 +188,7 @@ var taskOverlay = {
 
   hide: function () {
     if (this.isShown) {
-      document.getElementById('switch-task-button').hidden=true
+      if($toolbar.layoutMod==='max') taskSwitcherButton.style.display='none'
       this.isShown = false
       this.overlayElement.hidden = true
 

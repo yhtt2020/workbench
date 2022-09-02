@@ -1,6 +1,7 @@
 const cloudSpaceModel = require('../../../src/model/cloudSpaceModel')
 const backupSpaceModel = require('../../../src/model/backupSpaceModel')
 const standReturn = require('../../../src/util/standReturn')
+const userModel = require('../../model/userModel')
 const ipc = require('electron').ipcRenderer
 if(window){
   ldb=window.ldb
@@ -27,13 +28,16 @@ const cloudAdapter={
   adapter:null,
   async save(spaceId,saveData){
     ldb.reload()
+    var userInfo=null //用户信息，用于发起api请求
     try{
-      let userInfo=null //用户信息，用于发起api请求
       try{
-        var backupSpace=ldb.db.get('spaces').find({id:spaceId}).value()
-        if(backupSpace.userInfo){
+        var backupSpace=await backupSpaceModel.getSpace(spaceId)
+        if(backupSpace.uid){
+          let user=await userModel.get({uid:backupSpace.uid})
+          user.clientId=userModel.getClientId()
+          console.log('user',user)
           //如果空间当时存了用户信息，则赋值过去
-          userInfo=backupSpace.userInfo
+          userInfo=user
         }
       }catch (e) {
         console.warn('无法从space中获取到用户信息')
@@ -67,7 +71,8 @@ const cloudAdapter={
           if(result.data==='-2'){
             //todo 保存失败，冲突
             console.warn('fail','设备冲突导致云端存储失败')
-            return fatal({spaceId:spaceId,modal:true,title:'无法成功保存空间',description:'云端空间已被其他设备抢占，当前空间已无法存入。',fatal:true})
+            return
+            //return fatal({spaceId:spaceId,modal:true,title:'无法成功保存空间',description:'云端空间已被其他设备抢占，当前空间已无法存入。',fatal:true})
           }
           backupSpaceModel.cancelOfflineUse(spaceId)
         }else{
@@ -92,12 +97,11 @@ const cloudAdapter={
     }
     return standReturn.success('成功保存至云端，保存时间：'+new Date(Date.now()).toLocaleString())
   },
-  async restore(spaceId){
-    ldb.reload()
+  async restore(spaceId,uid){
     var savedStringData
     try {
-      let userInfo=ldb.db.get('currentSpace.userInfo').value()
-      let result =await cloudSpaceModel.restore(spaceId,userInfo)
+      await cloudSpaceModel.getUserInfo(uid)
+      let result =await cloudSpaceModel.restore(spaceId)
       if(result.status===1){
         console.log('获得云端数据',result.data.data)
         savedStringData=JSON.stringify(result.data.data)

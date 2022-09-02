@@ -19,8 +19,8 @@ const remoteMenu = require('remoteMenuRenderer.js')
 
 const ipc = electron.ipcRenderer
 
-const navbarApi = require('../request/api/navbarApi.js')
-const baseApi = require('../request/api/baseApi')
+const navbarApi = require('../../src/api/navbarApi.js')
+const baseApi = require('../../src/api/baseApi')
 const deskModel = require('../../pages/util/model/deskModel.js')
 const { ipcRenderer } = require('electron')
 
@@ -1008,5 +1008,44 @@ ipc.on('getAddPageInfo', (event, args) => {
   let tabInfo = tabs.get(tabs.getSelected())
   tabInfo.url = urlParser.getSourceURL(tabInfo.url)
   ipc.sendTo(args.favWindowId, 'gotAddPageInfo', tabInfo) //直接回传消息给收藏夹的渲染进程
+})
+
+ipc.on('getCurrentTab',(e,a)=>{
+
+  let data=tabs.get(tabs.getSelected())
+  data.sourceUrl=urlParser.getSourceURL(data.url)
+  console.log('getCurrentTabdddddddddddddd',data)
+  ipc.send('gotCurrentTab',{data})
+})
+ipc.on('speedup',(e,a)=>{
+  let closed=0
+  if(a.type==='all'){
+    //关闭全部，包含锁定
+
+    tasks.forEach(task=>{
+      task.tabs.forEach(tab=>{
+          if (webviews.viewList.includes(tab.id) && tab.id!==tabs.getSelected()) {
+            webviews.destroy(tab.id)
+            closed++
+          }
+          tab.loaded=false
+      })
+    })
+  }else{
+    //仅关闭锁定
+    tasks.forEach(task=>{
+      task.tabs.forEach(tab=>{
+        if(!tab.lock){
+          if (webviews.viewList.includes(tab.id) && tab.id!==tabs.getSelected()) {
+            webviews.destroy(tab.id)
+            closed++
+          }
+          tab.loaded=false
+        }
+      })
+    })
+  }
+
+  ipc.send('message',{type:'success',config:{content:'已为您杀死'+closed+'个标签'}})
 })
 module.exports = tabBar
