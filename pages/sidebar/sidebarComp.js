@@ -2270,8 +2270,9 @@ ipc.on('closeUserSidePanel',(event,args)=>{
 ipc.on('guide',async (event, args) => {
   let current;
   if (args === 5) {
-    current = await db.system.where('name').equals('currentUser').first()
-    if(current.value.uid !== 0 ){
+    // current = await db.system.where('name').equals('currentUser').first()
+      current = appVue.$refs.sidePanel.user.uid
+    if(current !== 0 ){
       if(appVue.$refs.sidePanel.teamLock===false){
         appVue.$refs.sidePanel.toggleUserPanel()
         appVue.$refs.sidePanel.teamLock=true
@@ -2283,7 +2284,7 @@ ipc.on('guide',async (event, args) => {
       }
 
     }
-    if(current.value.uid === 0){
+    if(current === 0){
       appVue.$message.error('登录后才能使用团队功能');
     }
     // appVue.$refs.sidePanel.userPanelVisible=true
