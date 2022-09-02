@@ -1282,12 +1282,7 @@ Vue.component('sidebar', {
         type: app.type,
         attribute: app.attribute,
         themeColor: !!!app.themeColor ? '#000' :app.themeColor,
-        settings: {
-          bounds: {
-            width: 1000,
-            height: 800
-          }
-        },
+        settings:app.settings,
         circle:app.circle,
         auth:app.auth,
         site:app.site,
