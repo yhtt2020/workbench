@@ -1,8 +1,8 @@
 <template>
   <div style="text-align: center;padding-top: 70px">
     <a-avatar :size="80" src="/icons/logo128.png"></a-avatar>
-    <h3 style="margin-top: 15px">欢迎使用想天浏览器</h3>
-    <p>版本：3.2.3</p>
+    <h3 style="margin-top: 15px">欢迎使用 {{appName}}</h3>
+    <p>版本：{{appVersion}}</p>
     <p>
       <a-button type="primary">打开上次空间</a-button>
     </p>
@@ -32,6 +32,8 @@
 <script>
 import { CloseOutlined } from '@ant-design/icons-vue'
 const {configModel} = window.$models
+const appName= window.globalArgs['app-name']
+const appVersion=window.globalArgs['app-version']
 export default {
   name: 'Welcome',
   components: { CloseOutlined },
@@ -40,6 +42,8 @@ export default {
   },
   data(){
     return {
+      appName,
+      appVersion,
       showOnStart:false
     }
   },

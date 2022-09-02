@@ -144,7 +144,7 @@ export default {
 .left-bar {
   width: 140px;
   height: 100vh;
-  background: black;
+  background: rgba(0, 0, 0, 0.83);
   color: white
 }
 
