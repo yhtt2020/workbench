@@ -704,9 +704,9 @@ const tabBar = {
     var index = tabs.getIndex(tabId)
     var tabEl = tabBar.createTab(tab)
     if (last) {
-      tabBar.containerInner.insertBefore(tabEl, tabBar.containerInner.childNodes[tabBar.containerInner.childNodes.length - 1])
+      tabBar.containerInner.insertBefore(tabEl, tabBar.containerInner.childNodes[tabBar.containerInner.childNodes.length-1 ])
     } else
-      tabBar.containerInner.insertBefore(tabEl, tabBar.containerInner.childNodes[index])
+    tabBar.containerInner.insertBefore(tabEl, tabBar.containerInner.childNodes[index+2])
     tabBar.tabElementMap[tabId] = tabEl
   },
 
