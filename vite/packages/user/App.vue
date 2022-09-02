@@ -41,6 +41,7 @@ export default {
       configModel.setShowOnStart(this.showOnStart)
     },
     goAddAccount () {
+      this.activeUser={}
       this.$router.push('/add')
     },
     deleteAccount (uid) {
@@ -117,7 +118,7 @@ export default {
       <h3 style="color: white;font-size: 12px;padding-left: 20px">账号</h3>
       <ul class="left-menu">
         <li :class="{'active':this.activeUser===user.uid}" @click="enterAccount(user)" v-for="user in users">
-          <a-avatar class="side-icon" style="" :src="user.user_info.avatar"/>{{ user.user_info.nickname }}
+          <a-avatar class="side-icon" :src="user.user_info.avatar"/>{{ user.user_info.nickname }}
         </li>
         <li @click="goAddAccount">
           <img class="side-icon" src="./assets/icon/adduser.svg"/>添加账号
@@ -147,6 +148,7 @@ export default {
 .left-menu {
   padding-left: 0 ;
   li {
+    font-size: 14px;
     user-select: none;
     list-style: none;
     padding: 5px 10px;
