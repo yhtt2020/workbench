@@ -10,7 +10,7 @@
   </div>
   <div style="position: absolute;bottom: 20px;text-align: center;width: calc( 100% - 200px) ">
     <div>
-      <a-checkbox>每次启动的时候选择</a-checkbox>
+      <a-checkbox @change="switchShowOnStart" v-model:checked="showOnStart">每次启动的时候选择</a-checkbox>
     </div>
     <div class="tip" style="">
       <a-row type="flex">
@@ -31,10 +31,23 @@
 
 <script>
 import { CloseOutlined } from '@ant-design/icons-vue'
-
+const {configModel} = window.$models
 export default {
   name: 'Welcome',
-  components: { CloseOutlined }
+  components: { CloseOutlined },
+  async mounted () {
+    this.showOnStart = await configModel.getShowOnStart()
+  },
+  data(){
+    return {
+      showOnStart:false
+    }
+  },
+  methods:{
+    switchShowOnStart () {
+      configModel.setShowOnStart(this.showOnStart)
+    },
+  }
 }
 </script>
 

@@ -11,7 +11,7 @@ import {createRouter,createWebHashHistory} from 'vue-router'
 
 const routes=[
   {
-    path:'/',component:Welcome,
+    path:'/',name:'home',component:Welcome,
 
   },
   {

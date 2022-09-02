@@ -1,13 +1,13 @@
 <script>
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-const {userModel,configModel,spaceModel}=window.$models
+const {userModel,spaceModel}=window.$models
 
 export default {
   components: {  },
   data () {
     return {
-      activeUser:{},
+      currentTab:{name:'home'},
       tip: '',
       loaded: false,
       users: [
@@ -33,15 +33,11 @@ export default {
     if (window.globalArgs['tip']) {
       this.tip = window.globalArgs['tip']
     }
-
-    this.showOnStart = configModel.getShowOnStart()
   },
   methods:{
-    switchShowOnStart () {
-      configModel.setShowOnStart(this.showOnStart)
-    },
+
     goAddAccount () {
-      this.activeUser={}
+      this.currentTab={name:'add'}
       this.$router.push('/add')
     },
     deleteAccount (uid) {
@@ -99,10 +95,14 @@ export default {
         }
       }
       if (!!!user.password) {
-        this.activeUser=user.uid
+        this.currentTab={name:'user_'+user.uid}
         this.$router.push({ name: 'space', params: { uid: user.uid } })
       } else
         this.$router.push({ name: 'pwd', params: { uid: user.uid } })
+    },
+    goHome(){
+      this.currentTab={name:'home'}
+      this.$router.push({ name: 'home' })
     }
   }
 }
@@ -111,16 +111,19 @@ export default {
 <template>
   <a-layout style="height: 100vh">
     <a-layout-sider :width="150" class="left-bar"> <ul class="left-menu" style="">
-      <li :class="{'active':this.activeUser=='0'}" @click="enterAccount({uid:0})" style="">
+      <li :class="{'active':this.currentTab.name==='home'}"  @click="goHome()" style="">
+        <img class="side-icon" src="./assets/icon/home.svg"/> 欢迎
+      </li>
+      <li :class="{'active':this.currentTab.name=='user_0'}" @click="enterAccount({uid:0})" style="">
         <img class="side-icon" src="./assets/icon/local.svg"/> 本地空间
       </li>
     </ul>
       <h3 style="color: white;font-size: 12px;padding-left: 20px">账号</h3>
       <ul class="left-menu">
-        <li :class="{'active':this.activeUser===user.uid}" @click="enterAccount(user)" v-for="user in users">
+        <li :class="{'active':this.currentTab.name==='user_'+user.uid}" @click="enterAccount(user)" v-for="user in users">
           <a-avatar class="side-icon" :src="user.user_info.avatar"/>{{ user.user_info.nickname }}
         </li>
-        <li @click="goAddAccount">
+        <li :class="{'active':this.currentTab.name==='add'}" @click="goAddAccount">
           <img class="side-icon" src="./assets/icon/adduser.svg"/>添加账号
         </li>
       </ul></a-layout-sider>

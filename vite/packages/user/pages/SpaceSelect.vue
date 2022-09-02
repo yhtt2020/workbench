@@ -9,8 +9,10 @@
           <a-button @click="showCreateSpace" type="primary" size="small">创建</a-button>
         </a-col>
       </a-row>
+
       <div v-if="loading">
       </div>
+
       <ul style=" overflow-y: auto;overflow-x:hidden;height: calc(100vh - 30px)" v-else class="space-list custom-scroller">
         <a-dropdown v-for="space,index in spaces" :trigger="['contextmenu']">
           <li @dblclick="switchSpace(space)" :class="{'active':this.activeSpace.nanoid===space.nanoid}" @click="setActive(space)">
@@ -46,7 +48,21 @@
 
     </a-layout-sider>
     <a-layout>
-      <a-layout-content>
+      <a-layout-content style="overflow: hidden">
+        <div v-if="!this.activeSpace.nanoid" style="padding: 40px">
+          <a-result >
+            <template #title>
+              <h3 style="font-size: 18px">请选择空间</h3>
+              <p style="font-size: 14px;margin-bottom: 10px"><zoom-in-outlined /> 单击：预览空间</p>
+              <p style="font-size: 14px"><swap-outlined /> 双击：切换空间</p>
+            </template>
+            <template #extra>
+              <a-button key="console" type="primary" @click="showCreateSpace">创建空间</a-button>
+            </template>
+          </a-result>
+
+
+        </div>
         <div style="padding: 10px">
           {{ activeSpace.name }}
         </div>
@@ -155,11 +171,12 @@ const { userModel, spaceModel } = window.$models
 import { message ,Modal} from 'ant-design-vue'
 import TaskList from '../components/TaskList.vue'
 import { createVNode } from 'vue'
+import {ZoomInOutlined,SwapOutlined} from '@ant-design/icons-vue'
 
 export default {
   name: 'SpaceSelect',
   components:{
-    TaskList
+    TaskList,ZoomInOutlined,SwapOutlined
   },
   data () {
     return {
@@ -427,9 +444,10 @@ export default {
         return
       }
       this.spaces = spaces
-      if(spaces.length>0){
-        this.setActive(spaces[0])
-      }
+      this.setActive({})
+      // if(spaces.length>0){
+      //   this.setActive(spaces[0])
+      // }
     }
     ,
     goLogin () {
