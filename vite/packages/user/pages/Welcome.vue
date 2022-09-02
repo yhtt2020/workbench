@@ -4,7 +4,7 @@
     <h3 style="margin-top: 15px">欢迎使用想天浏览器</h3>
     <p>版本：3.2.3</p>
     <p>
-      <a-button type="primary" size="large">打开上次空间</a-button>
+      <a-button type="primary">打开上次空间</a-button>
     </p>
 
   </div>

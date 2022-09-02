@@ -1,5 +1,5 @@
 <template>
-  <a-layout>
+  <a-layout style="overflow: hidden">
     <a-layout-sider  :width="230" style="background: #f1f1f1;height: 100vh;border-right: 1px solid #dadada;">
       <a-row style="padding: 10px">
         <a-col :span="12">
@@ -18,11 +18,11 @@
           <li @dblclick="switchSpace(space)" :class="{'active':this.activeSpace.nanoid===space.nanoid}" @click="setActive(space)">
           <div class="card">
             <a-row>
-              <a-col :span="5">
-                <a-avatar :size="24" shape="square">
+              <a-col :span="4">
+                <a-avatar :size="24" shape="square" :src="getSpaceIcon(space)">
                 </a-avatar>
               </a-col>
-              <a-col :span="19">
+              <a-col :span="20">
                 <div class="text-more" :title="space.name">{{ space.name }}</div>
               </a-col>
             </a-row>
@@ -30,10 +30,10 @@
               <span class="info">{{ space.count_task }} 标签组 {{ space.count_tab }}标签</span>
             </a-row>
             <a-row>
-              <span class="time">{{ dateTime(space.sync_time) }}</span>
+              <span class="time" v-html="dateTime(space.sync_time)"></span>
 
             </a-row>
-            <div v-if="space.client_id"><a-tag >PC-{{space.client_id}}</a-tag></div>
+            <div v-if="space.client_id"><a-tag ><desktop-outlined /> {{space.client_id}}</a-tag></div>
           </div>
         </li>
         <template #overlay>
@@ -171,12 +171,12 @@ const { userModel, spaceModel } = window.$models
 import { message ,Modal} from 'ant-design-vue'
 import TaskList from '../components/TaskList.vue'
 import { createVNode } from 'vue'
-import {ZoomInOutlined,SwapOutlined} from '@ant-design/icons-vue'
+import {ZoomInOutlined,SwapOutlined,DesktopOutlined} from '@ant-design/icons-vue'
 
 export default {
   name: 'SpaceSelect',
   components:{
-    TaskList,ZoomInOutlined,SwapOutlined
+    TaskList,ZoomInOutlined,SwapOutlined,DesktopOutlined
   },
   data () {
     return {
@@ -229,7 +229,15 @@ export default {
     let uid = Number(this.$route.params.uid)
     this.init(uid)
   },
+  computed:{
+
+  },
   methods: {
+    getSpaceIcon(space){
+      let icon='/icons/box.svg'
+      //todo 支持自定义图标
+      return icon
+    },
     async init (uid) {
       this.tipCopyRead = localStorage.getItem('tipCopyRead')
 
@@ -396,7 +404,7 @@ export default {
       let time = time1 - time2
       let result = null
       if (time < 0) {
-        result = '刚刚'
+        result = `<span style="color: black;font-weight: bold">刚刚</span>`
       } else if (time / day >= 3) {
         result = date.getMonth() + '月' + date.getDate() + '日 ' + date.getHours() + ':' + date.getMinutes()
       } else if (time / day >= 2) {
@@ -408,7 +416,7 @@ export default {
       } else if (time / minute >= 1) {
         result = parseInt(time / minute) + '分钟前'
       } else {
-        result = '刚刚'
+        result = `<span style="color: black;font-weight: bold">刚刚</span>`
       }
       return result
     }
