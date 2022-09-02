@@ -1,29 +1,14 @@
+const SqlDb=require('../util/sqldb').SqlDb
+const sqlDb=new SqlDb()
 
-if (typeof window !=='undefined') {
-  ldb = window.ldb
-}else{
-  const app=require('electron').app
-  var  ldb=require('../util/ldb')
-  ldb.load(app.getPath('userData')+'/ldb.json')
-}
 const configModel = {
 
-  setShowOnStart (value) {
-    ldb.reload()
-    return ldb.db.set('config.showOnstart', value).write()
+  async setShowOnStart (value) {
+    return await sqlDb.setConfig('system.user.showOnStart',value)
   },
-  getShowOnStart () {
-    ldb.reload()
-    return ldb.db.get('config.showOnstart').value()
+  async getShowOnStart () {
+    return await sqlDb.getConfig('system.user.showOnStart')
   },
-  set(key,value){
-    ldb.reload()
-    return ldb.db.set(`config.${key}`,value).write()
-  },
-  get(key){
-    ldb.reload()
-    return ldb.db.get(`config.${key}`).value()
-  }
 }
 
 module.exports = configModel

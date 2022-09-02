@@ -13,7 +13,8 @@ export default defineConfig({
         'extension':path.resolve(pkg,'extension.html'),
         'task':path.resolve(pkg,'task.html'),
         'settings':path.resolve(pkg,'settings.html'),
-        'barrage':path.resolve(pkg,'barrage.html')
+        'barrage':path.resolve(pkg,'barrage.html'),
+        'user':path.resolve(pkg,'user.html')
       }
     }
   }

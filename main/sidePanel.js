@@ -1142,16 +1142,17 @@ function showUserWindow (args) {
     userWindow = new BrowserWindow({
       backgroundColor: '#00000000',
       show: false,
-      transparent: true,
-      frame: false,
-      resizable: false,
-      shadow: false,
-      alwaysOnTop: true,
-      width: 700,
-      height: 530,
+      minWidth:900,
+      minHeight:550,
+      width: 900,
+      height: 550,
+      title:'选择空间',
+      maximizable:false,
       webPreferences: {
+        preload:path.join(__dirname,'src/preload/user.js'),
         nodeIntegration: true,
         contextIsolation: false,
+        sandbox:false,
         additionalArguments: [
           '--user-data-path=' + userDataPath,
           '--app-version=' + app.getVersion(),
@@ -1171,7 +1172,7 @@ function showUserWindow (args) {
       return bounds
     }
 
-    userWindow.loadURL('file://' + path.join(__dirname, '/pages/user/index.html'))
+    userWindow.loadURL(render.getUrl('user.html'))
     userWindow.on('ready-to-show', () => {
       userWindow.show()
       if (mainWindow && !mainWindow.isDestroyed())
