@@ -38,7 +38,7 @@
           <div v-show="listCount===0" style="margin-top: 50px">
             <a-empty description="暂无下载任务" style="user-select:none"></a-empty>
           </div>
-          <div class="downloadIng" v-for="(item,index) in list" v-bind:key="index" style="margin-top: 10px;height: 55px;display: flex;flex-direction: column"
+          <div class="downloadIng" v-for="(item,index) in list" v-bind:key="index" style="margin-top: 10px;height: 55px;display: flex;flex-direction: column;user-select:none;"
                @contextmenu="menuIng(item)" @click="change(index)"
                :class="{active : active === index,
          clickActive:clickActive===index}"
@@ -50,10 +50,13 @@
               </div>
               <div style="display: flex;flex-direction: column;margin-left: 10px">
                 <div style="font-size: 13px;font-weight: bold ;">{{ item.title }}</div>
-                <div v-if="item.received" style="font-size: 12px;width: 150px;color:#999">
+                <div v-show="item.path !=='' && item.status==='progressing' && item.total !== '0KB'" style="font-size: 12px;width: 150px;color:#999">
                   {{ item.received }} / {{ item.total }}
                 </div>
-                <div v-else style="font-size: 12px;width: 150px;color:#999">{{ item.received }}
+                <div v-show="item.path !=='' && item.status==='progressing' && item.total === '0KB'" style="font-size: 12px;width: 150px;color:#999">
+                  {{ item.received }} / 未知
+                </div>
+                <div v-show="item.path ===''" style="font-size: 12px;width: 150px;color:#999">{{ item.received }}
                   预载中...
                 </div>
               </div>
@@ -75,7 +78,7 @@
                 </div>
               </div>
             </div>
-            <a-progress v-show="item.received"  style="width: 85%;color:#999;margin-left: 55px;margin-top: -23px" :percent="item.progressnuw"></a-progress>
+            <a-progress v-show="item.received && item.total !=='0KB'"  style="width: 85%;color:#999;margin-left: 55px;margin-top: -23px" :percent="item.progressnuw"></a-progress>
           </div>
     </div>
         </a-tab-pane>
@@ -84,10 +87,10 @@
            <span slot="tab" style="user-select:none">
             已完成
            </span>
-          <div v-show="listDoneCount===0" style="margin-top: 50px">
-            <a-empty description="暂无完成任务" style="user-select:none"></a-empty>
-          </div>
           <div class="beautiful-sm-scroll" style="height: 390px; width: 100%; overflow: auto;">
+            <div v-show="listDoneCount===0" style="margin-top: 50px">
+              <a-empty description="暂无完成任务" style="user-select:none"></a-empty>
+            </div>
             <div v-for="timeGroup in showList">
               <div class="time" style="margin-top: 8px;font-size: 15px;font-weight: 500">
                 <span style="margin-left: 30px;color: #000000;">{{ timeGroup.addTime }}</span>
@@ -103,7 +106,7 @@
                     <img :src="url=(`./icon/${matchFileSuffixType(item.name)}.svg`)" style="height: 100%;width: 100%"/>
                   </div>
                   <div style="display: flex;flex-direction: column;margin-left: 10px;width: 115px">
-                    <div style="font-weight: bold">{{ item.title }}</div>
+                    <div style="font-weight: bold;width: 200px">{{ item.title }}</div>
                     <div style="color:#999">{{ item.total }}</div>
                   </div>
                   <div style="margin-top: 20px">{{ item.doneDate }}</div>
@@ -120,28 +123,45 @@
            <span slot="tab" style="user-select:none">
             回收站
            </span>
-          <div v-show="listTrashCount===0" style="margin-top: 50px">
-            <a-empty description="暂无记录" style="user-select:none"></a-empty>
-          </div>
-          <div class="beautiful-sm-scroll" style="height: 390px; width: 100%; overflow: auto;">
-            <div v-for="(item,index) in deleteList" v-bind:key="index" @click="change(index)" style="margin-top: 10px;height: 45px;user-select:none;"
-                 @contextmenu="menuDel(item,index)" :class="{active : active === index,
-         clickActive:clickActive===index}"
-                 @mouseover="mouseOver(index)"
-                 @mouseleave="mouseLeave">
-              <div style="display: flex;">
-                <div style="width: 34px;height: 40px;margin-left: 10px;">
-                  <img :src="url=(`./icon/${matchFileSuffixType(item.name)}.svg`)" style="height: 100%;width: 100%;line-height: 40px"/>
-                </div>
-                <div style="display:flex; flex-direction: column;margin-left: 10px;width: 190px">
-                  <div style="font-size: 13px;font-weight: bold;text-decoration:line-through">
-                    {{ item.title }}
+          <div class="beautiful-sm-scroll" style="height: 375px; width: 100%; overflow: auto;">
+            <div v-show="listTrashCount===0" style="margin-top: 50px">
+              <a-empty description="暂无记录" style="user-select:none"></a-empty>
+            </div>
+            <div v-for="timeDelGroup in showDelList">
+              <div class="time" style="margin-top: 8px;font-size: 15px;font-weight: 500">
+                <span style="margin-left: 30px;color: #000000;">{{ timeDelGroup.addDelTime }}</span>
+              </div>
+              <div v-for="(item,index) in timeDelGroup.subDelList" v-bind:key="item.id" @click.stop="change(item.id)" style="margin-top: 10px;height: 45px;user-select:none;"
+                   @contextmenu="menuDel(item,item.id,timeDelGroup)" :class="{active : active === item.id,
+         clickActive:clickActive===item.id}"
+                   @mouseover="mouseOver(item.id)"
+                   @mouseleave="mouseLeave">
+                <div style="display: flex;">
+                  <div style="width: 34px;height: 40px;margin-left: 10px;">
+                    <img :src="url=(`./icon/${matchFileSuffixType(item.name)}.svg`)" style="height: 100%;width: 100%;line-height: 40px"/>
                   </div>
-                  <div>{{ item.total }}</div>
+                  <div style="display:flex; flex-direction: column;margin-left: 10px;width: 200px">
+                    <div style="font-size: 13px;font-weight: bold;text-decoration:line-through">
+                      {{ item.title }}
+                    </div>
+                    <div style="display: flex">
+                      <div style="width: 55px">{{ item.total }}</div>
+                      <div style="font-size: 13px;line-height: 23px;margin-left: 25px;width: 120px">{{ item.delTime}}</div>
+                    </div>
+                  </div>
+                  <div v-show="item.status === '-2'" style="line-height: 45px;margin-left: 15px">文件已被删除</div>
                 </div>
-                <div style="line-height: 45px;">{{ item.statusText }}</div>
               </div>
             </div>
+          </div>
+          <div>
+            <a-tooltip>
+              <template slot="title">
+                清空回收站记录
+              </template>
+              <a-icon  style="font-size: 23px;float: right;margin-right: 23px"  @click="delAll()" type="delete" />
+            </a-tooltip>
+
           </div>
         </a-tab-pane>
 
@@ -227,8 +247,14 @@
   })
 
   ipcRenderer.on('menuTrashDelete', (e) => {
-    appVue.deleteList.splice(appVue.deleteList.indexOf(appVue.selectDelList), 1)
+    // appVue.deleteList.splice(appVue.deleteList.indexOf(appVue.selectDelList), 1)
     db.download.delete(appVue.selectDelList.startTime)
+    // appVue.listTrashCount--
+    appVue.selectTimeDelGroup.subDelList.splice(appVue.selectTimeDelGroup.subDelList.indexOf(appVue.selectDelList), 1)
+    appVue.deleteList.splice(appVue.doneList.indexOf(appVue.selectDelList),1)
+    if (appVue.selectTimeDelGroup.subDelList.length === 0) {
+      appVue.showDelList.splice(appVue.showDelList.indexOf(appVue.selectTimeDelGroup), 1)
+    }
     appVue.listTrashCount--
   })
 
@@ -284,14 +310,32 @@
       ipcRenderer.send('downloadEnd')
       appVue.list.splice(appVue.deleteId, 1)
       appVue.count--
-      if (appVue.count < 0) {
-        appVue.count = 0
-      }
+      // if (appVue.count < 0) {
+      //   appVue.count = 0
+      // }
       appVue.listCount--
-      if (appVue.listCount < 0) {
-        appVue.listCount = 0
-      }
+      // if (appVue.listCount < 0) {
+      //   appVue.listCount = 0
+      // }
       ipcRenderer.send('closeEmpty')
+    }
+    if(args.status === 'interrupted'){
+      for (i = 0; i < appVue.list.length; i++) {
+        if (appVue.list[i].startTime === args.startTime) {
+          appVue.deleteId = i
+        }
+      }
+      ipcRenderer.send('downloadEnd')
+      appVue.list.splice(appVue.deleteId, 1)
+      appVue.$message.info('文件下载失败', 0.5)
+      appVue.count--
+      appVue.listCount--
+    }
+    if (appVue.listCount < 0) {
+      appVue.listCount = 0
+    }
+    if (appVue.count < 0) {
+      appVue.count = 0
     }
 
     if (args.status === 'progressing' && args.path !== '') {
@@ -364,6 +408,7 @@
         status: '1',
         href: args.href,
         addTime: myDate.toLocaleDateString(),
+        delTime:'',
       })
       ipcRenderer.send('closeEmpty', args.chainUrl)
       ipcRenderer.send('downloadEnd')
@@ -403,6 +448,7 @@
       delId: '0',
       iconMatch: '',
       showList: [],
+      showDelList:[],
       selectTimeGroup: ''
     },
     created () {
@@ -418,7 +464,7 @@
             if (typeof dblist[i].addTime === 'undefined') {
               dblist[i].addTime = '2022/7/01'
               db.download.put({
-                name: '',
+                name: dblist[i].name,
                 startTime: dblist[i].startTime,
                 title: dblist[i].title,
                 total: dblist[i].total,
@@ -446,6 +492,23 @@
             appVue.classify()
           }
           if (dblist[i].status < 0) {
+            if (typeof dblist[i].addDelTime === 'undefined') {
+              dblist[i].addDelTime = '2022/7/01'
+              db.download.put({
+                name:dblist[i].name,
+                startTime: dblist[i].startTime,
+                title: dblist[i].title,
+                total: dblist[i].total,
+                path: dblist[i].path,
+                url: dblist[i].url,
+                status: dblist[i].status,
+                doneDate: dblist[i].doneDate,
+                href: dblist[i].href,
+                addTime: dblist[i].addTime,
+                // addDelTime:dblist[i].addDelTime,
+                delTime:dblist[i].delTime,
+              })
+            }
             appVue.deleteList.unshift({
               name: dblist[i].name,
               id: appVue.doneId++,
@@ -454,10 +517,13 @@
               path: dblist[i].path,
               url: dblist[i].url,
               startTime: dblist[i].startTime,
-              statusText: dblist[i].statusText,
-              href: dblist[i].href
+              href: dblist[i].href,
+              status: dblist[i].status,
+              delTime:dblist[i].delTime,
+              addDelTime:appVue.transDate(dblist[i].addDelTime),
             })
             appVue.listTrashCount++
+            appVue.classifyDel()
           }
         }
       })
@@ -480,7 +546,7 @@
           // var time = tt.getHours() < 10 ? "0" + tt.getHours() : tt.getHours();
           // var min = tt.getMinutes() < 10 ? "0" + tt.getMinutes() : tt.getMinutes();
           offset = Math.abs(today - day)
-          if (days < 4 && offset < 4) {
+          if (days < 3 && offset < 3) {
             if (offset === 0) {
               result = '今天'
             } else if (offset === 1) {
@@ -516,6 +582,27 @@
           appVue.showList = newArr
         })
       },
+      classifyDel(){
+        let newArr = []
+        appVue.deleteList.forEach((item, i) => {
+          let index = -1
+          let isExists = newArr.some((newItem, j) => {
+            if (item.addDelTime == newItem.addDelTime) {
+              index = j
+              return true
+            }
+          })
+          if (!isExists) {
+            newArr.push({
+              addDelTime: item.addDelTime,
+              subDelList: [item]
+            })
+          } else {
+            newArr[index].subDelList.push(item)
+          }
+          appVue.showDelList = newArr
+        })
+      },
       matchFileSuffixType,
       menuIng (item) {
         this.selectingList = item
@@ -530,9 +617,11 @@
         this.selectList = item
         this.selectTimeGroup = timeGroup
       },
-      menuDel (item, id) {
-        ipcRenderer.send('showMenuTrash')
+      menuDel (item, id,timeDelGroup) {
+
+        ipcRenderer.send('showMenuTrash',item)
         this.selectDelList = item
+        this.selectTimeDelGroup = timeDelGroup
         this.active = id
       },
       mouseOver (id) {
@@ -545,17 +634,20 @@
         this.active = id
       },
       hideModal () {
+        const myDate = new Date()
         appVue.listTrashCount++
         db.download.put({
+          name: appVue.selectingList.name,
           startTime: appVue.selectingList.startTime,
           title: appVue.selectingList.title,
           total: appVue.selectingList.total,
           path: appVue.selectingList.path,
           url: appVue.selectingList.url,
-          status: '-2',//删除包括文件
-          statusText: '文件已被删除',
+          status: '-2',
           doneDate: appVue.selectingList.doneDate,
-          href: appVue.selectingList.href
+          href: appVue.selectingList.href,
+          delTime:myDate.toLocaleString('chinese', { hour12: false }),
+          addDelTime:myDate.toLocaleDateString(),
         })
         appVue.deleteList.unshift({
           name: appVue.selectingList.name,
@@ -565,8 +657,10 @@
           path: appVue.selectingList.path,
           url: appVue.selectingList.url,
           startTime: appVue.selectingList.startTime,
-          statusText: '文件已被删除',
-          href: appVue.selectingList.href
+          status: '-2',
+          href: appVue.selectingList.href,
+          delTime:myDate.toLocaleString('chinese', { hour12: false }),
+          addDelTime:appVue.transDate(myDate.toLocaleDateString()),
         })
         ipcRenderer.send('deleteDownload', this.selectingList.path)
         this.visibleIng = false
@@ -587,6 +681,7 @@
       },
 
       hideModalDone () {
+        const myDate = new Date()
         if (this.deleconfirm === true) {
           db.download.put({
             name: appVue.selectList.name,
@@ -596,9 +691,10 @@
             path: appVue.selectList.path,
             url: appVue.selectList.url,
             status: '-2',//删除包括文件
-            statusText: '文件已被删除',
             doneDate: appVue.selectList.doneDate,
-            href: appVue.selectList.href
+            href: appVue.selectList.href,
+            delTime:myDate.toLocaleString('chinese', { hour12: false }),
+            addDelTime:myDate.toLocaleDateString(),
           })
           appVue.deleteList.unshift({
             name: appVue.selectList.name,
@@ -608,9 +704,12 @@
             path: appVue.selectList.path,
             url: appVue.selectList.url,
             startTime: appVue.selectList.startTime,
-            statusText: '文件已被删除',
-            href: appVue.selectList.href
+            status: '-2',//删除包括文件
+            href: appVue.selectList.href,
+            delTime:myDate.toLocaleString('chinese', { hour12: false }),
+            addDelTime:appVue.transDate(myDate.toLocaleDateString()),
           })
+          appVue.classifyDel()
           ipcRenderer.send('deleteFile', appVue.selectList.path)
           appVue.$message.info('文件已删除', 0.5)
           appVue.selectTimeGroup.subList.splice(appVue.selectTimeGroup.subList.indexOf(appVue.selectList), 1)
@@ -629,9 +728,10 @@
             path: appVue.selectList.path,
             url: appVue.selectList.url,
             status: '-1',//删除不包括文件
-            statusText: '',
             doneDate: appVue.selectList.doneDate,
-            href: appVue.selectList.href
+            href: appVue.selectList.href,
+            delTime:myDate.toLocaleString('chinese', { hour12: false }),
+            addDelTime:myDate.toLocaleDateString(),
           })
           appVue.deleteList.unshift({
             name: appVue.selectList.name,
@@ -641,8 +741,9 @@
             path: appVue.selectList.path,
             url: appVue.selectList.url,
             startTime: appVue.selectList.startTime,
-            statusText: '',
-            href: appVue.selectList.href
+            href: appVue.selectList.href,
+            delTime:myDate.toLocaleString('chinese', { hour12: false }),
+            addDelTime:myDate.toLocaleDateString(),
           })
           appVue.selectTimeGroup.subList.splice(appVue.selectTimeGroup.subList.indexOf(appVue.selectList), 1)
           if (appVue.selectTimeGroup.subList.length === 0) {
@@ -655,6 +756,23 @@
         if(appVue.doneList.length === 0 ){
           appVue.listDoneCount =0
         }
+      },
+      delAll(){
+        this.$confirm({
+          title: '记录清除不可恢复，你确定要清除所有回收站记录吗？',
+          okText:'确定',
+          cancelText:'取消',
+          onOk() {
+            appVue.showDelList.splice(0,appVue.showDelList.length)
+            appVue.listTrashCount = 0
+            for(let i=0;i<appVue.deleteList.length;i++){
+              db.download.delete(appVue.deleteList[i].startTime)
+            }
+          },
+          onCancel() {
+          },
+          class: 'test',
+        });
       },
       resume (item) {
         ipcRenderer.send('resumeDownload', item.path)
