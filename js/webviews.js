@@ -734,10 +734,10 @@ let emptyUrl
 let closeGuideTab=''
 ipc.on('view-event', function (e, args) {
   webviews.emitEvent(args.event, args.viewId, args.args)
+  originalId = args.viewId
 
   setTimeout(()=>{
     if (args.event === 'new-tab' && download === true) {
-      originalId = args.viewId
       emptyUrl = args.args[0]
       tabs.tabs.filter((e)=>{
         if (e.url === emptyUrl) {
