@@ -75,7 +75,6 @@ class SpaceManager {
    */
   async migrateOldLocalSpace(){
       if(fs.existsSync(this.LDB_PATH)){
-
         ldb.initDb()
         let current=ldb.db.get('currentSpace').value()
         if(!Object.keys(current).length>0){
