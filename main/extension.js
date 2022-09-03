@@ -518,8 +518,8 @@ const extensionManager = {
       this.unloadAllSessionExtension(baseName, (ext) => {
         sendIPCToWindow(mainWindow, 'removeExtension', { id: ext.id })
         this.config.setDisable(baseName)
-        messager.success({ content: '禁用插件成功，插件将不再生效。' })
       })
+      messager.success({ content: '禁用插件成功，插件将不再生效。' })
     } else {
       this.loadAllSessionExtension(baseName)
       this.config.setEnable(baseName)
