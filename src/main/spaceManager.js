@@ -17,7 +17,7 @@ class SpaceManager {
   DB_PATH=path.join(this.DB_ROOT,'db.sqlite')
   TPL_PATH=path.join(__dirname,'/../../db/tpl.sqlite')
 
-  LDB_PATH=path.join(app.getPath('userData','ldb.json'))
+  LDB_PATH=path.join(app.getPath('userData'),'ldb.json')
   constructor () {
   }
   showNotification(body,silent=true){
@@ -63,7 +63,6 @@ class SpaceManager {
     let spaceRs=await localSpaceModel.addSpace({
       name:'本机空间'
     })
-    console.warn('插入了一个初始空间')
     await spaceModel.setCurrentSpace(spaceRs.data)
     await this.migrateOldLocalSpace()
 
@@ -76,6 +75,7 @@ class SpaceManager {
    */
   async migrateOldLocalSpace(){
       if(fs.existsSync(this.LDB_PATH)){
+
         ldb.initDb()
         let current=ldb.db.get('currentSpace').value()
         if(!Object.keys(current).length>0){
