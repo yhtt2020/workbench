@@ -152,6 +152,7 @@ app.on('ready', () => {
       }
     })
     const { api } = require(path.join(__dirname, '//server-config.js'))
+    osxInviteMember.setMenu(null)
     osxInviteMember.webContents.loadURL(`${api.getUrl(api.API_URL.user.CIRCLE_INVITELINK)}?id=${args}`)
     osxInviteMember.on('close', () => osxInviteMember = null)
     return {code: 200, msg: '成功'}
@@ -247,10 +248,8 @@ app.on('ready', () => {
   ipc.on('refreshCircle', (event, args) => {
     SidePanel.send('refreshCircleList')
   })
-  var chatWindow=null
   ipc.on('toggleChat',()=>{
-    const chatWindowBoundsKey='chatWindowBounds'
-    if(chatWindow===null) {
+    if(!windowManager.isAlive('chat')){
       //如果还未载入，则需要载入
       let parentBounds=mainWindow.getBounds()
       const defaultSize={
@@ -258,39 +257,31 @@ app.on('ready', () => {
         height:640,
         space:24
       }
-      let value= settings.get(chatWindowBoundsKey)
-      let bounds
-      if (!value) {
-        bounds = {
+      windowManager.create({
+        name:'chat',
+        mod:windowManager.MOD.NO_CONTROLLER,
+        windowOption:{
+          frame:false,
+          resizable:true,
+          minimizable:false,
+          parent:mainWindow,
+          show: false,
+          title:'轻聊',
+          icon:path.join(__dirname,'pages/group/group.png')
+        },
+        webPreferences:{
+            preload:path.join(__dirname,'src/browserApi/apiPreload.js'),
+            sandbox:false,
+        },
+        url:config.IM.FRONT_URL,
+        rememberBounds:true,
+        defaultBounds:{
           width: defaultSize.width,
           height: defaultSize.height,
           x: parentBounds.x + parentBounds.width - defaultSize.width - defaultSize.space,
           y: parentBounds.y + parentBounds.height - defaultSize.height - defaultSize.space
         }
-      } else {
-        bounds = value
-      }
-      chatWindow = new BrowserWindow({
-        frame:false,
-        resizable:true,
-        minimizable:false,
-        parent:mainWindow,
-        x:bounds.x,
-        y:bounds.y,
-        height:bounds.height,
-        width:bounds.width,
-        show: false,
-        webPreferences:{
-          preload:path.join(__dirname,'src/browserApi/apiPreload.js')
-        }
       })
-      chatWindow.on('resized',()=>{
-        settings.set(chatWindowBoundsKey,chatWindow.getBounds())
-      })
-      chatWindow.on('ready-to-show',()=>{
-        chatWindow.show()
-      })
-      chatWindow.loadURL(config.IM.FRONT_URL)
     }
   })
 })

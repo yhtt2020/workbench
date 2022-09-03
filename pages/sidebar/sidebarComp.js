@@ -330,7 +330,7 @@ const sidebarTpl = /*html*/`
                   <template slot="content">
                     <ul class="tabs">
                       <li class="tab-title" :class="{'active':tab.selected}" v-for="(tab,j) in item.tabs" :key="tab.id">
-                        <img class="tab-icon" :src="tab.icon" /> {{ tab.title }}
+                        <img class="tab-icon" :src="tab.icon" /> <span v-html="getTitle(tab)"></span>
                       </li>
                     </ul>
                   </template>
@@ -641,7 +641,7 @@ const sidebarTpl = /*html*/`
                            <img src="assets/close-box.svg"  style="margin-left: 5px;width: 25px;height: 20px;margin-right: 3px">
                         </span>
                           <img class="tab-icon" :id="'tabIcon'+tab.id"  :src="tab.icon" style="margin-left: 8px;"
-                            onerror="this.src='../../icons/default.svg'" />&nbsp;{{ tab.title }}
+                            onerror="this.src='../../icons/default.svg'" />&nbsp;<span v-html="getTitle(tab)"></span>
                         </div>
                         <span @click="toggleLockTab(tab.id,item.id)" :id="'hoverLock'+tab.id" :hidden="tab.lock!==true"
                           title="锁定当前标签；锁定后，标签将无法随意关闭" class="unlock-tab">
@@ -1282,12 +1282,6 @@ Vue.component('sidebar', {
         type: app.type,
         attribute: app.attribute,
         themeColor: !!!app.themeColor ? '#000' :app.themeColor,
-        // settings: {
-        //   bounds: {
-        //     width: 1000,
-        //     height: 800
-        //   }
-        // },
         settings:app.settings,
         circle:app.circle,
         auth:app.auth,
@@ -2015,6 +2009,15 @@ Vue.component('sidebar', {
       this.watchAllHasMore()
       appVue.$message.info({ content: '应用栏的高度模式更改为自动模式。拖动分隔条可更改为手动模式。', key: 'dividerMod' })
 
+    },
+    getTitle(tab){
+      let title= tab.title == '' ? '新标签' : tab.title
+      if(tab.newName){
+        title=`<span style="color:#2181ff;font-weight: bold">${tab.newName}</span>`+"|"+`<span style="color: grey">${title}</span>`
+      }else{
+        title=`<span style="">${title}</span>`
+      }
+      return title
     }
   }
 

@@ -1142,16 +1142,18 @@ function showUserWindow (args) {
     userWindow = new BrowserWindow({
       backgroundColor: '#00000000',
       show: false,
-      transparent: true,
-      frame: false,
-      resizable: false,
-      shadow: false,
-      alwaysOnTop: true,
-      width: 700,
-      height: 530,
+      minWidth:900,
+      minHeight:550,
+      width: 900,
+      height: 550,
+      title:'选择空间',
+      maximizable:false,
       webPreferences: {
+        preload:path.join(__dirname,'src/preload/user.js'),
         nodeIntegration: true,
         contextIsolation: false,
+        sandbox:false,
+        webSecurity:false,
         additionalArguments: [
           '--user-data-path=' + userDataPath,
           '--app-version=' + app.getVersion(),
@@ -1171,7 +1173,7 @@ function showUserWindow (args) {
       return bounds
     }
 
-    userWindow.loadURL('file://' + path.join(__dirname, '/pages/user/index.html'))
+    userWindow.loadURL(render.getUrl('user.html'))
     userWindow.on('ready-to-show', () => {
       userWindow.show()
       if (mainWindow && !mainWindow.isDestroyed())
@@ -1189,11 +1191,7 @@ function showUserWindow (args) {
   }
 }
 
-function callWetherShowUserWindow () {
-  if (configModel.getShowOnStart()) {
-    showUserWindow()
-  }
-}
+
 
 let masked = false
 let inseartedCSS = []
@@ -1270,6 +1268,16 @@ function callUnModal (win) {
 
 /*user面板代码*/
 app.whenReady().then(() => {
+  ipc.on('startApp',()=>{
+    if(!mainWindow){
+      createWindow()
+    }
+
+    if (userWindow) {
+      if (userWindow.isDestroyed() === false)
+        userWindow.close()
+    }
+  })
 
   ipc.on('showUserWindow', (event, args) => {
     showUserWindow(args)
@@ -1319,14 +1327,12 @@ app.whenReady().then(() => {
       loginWindow.show()
       loginWindow.focus()
     } else {
-      let bounds = mainWindow.getBounds()
       loginWindow = new BrowserWindow({
         backgroundColor: '#00000000',
         show: false,
         alwaysOnTop: true,
         width: 550,
         height: 730,
-        parent: mainWindow,
         webPreferences: {
           preload: path.join(__dirname, 'pages/user/loginPreload.js'),
           nodeIntegration: true,

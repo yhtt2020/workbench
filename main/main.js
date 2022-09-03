@@ -3,7 +3,9 @@ const fs = require('fs')
 const path = require('path')
 const electronLog=require('electron-log')
 const SpaceManager=require(__dirname+'/src/main/spaceManager.js')
-
+electron.protocol.registerSchemesAsPrivileged([
+  { scheme: 'tsbapp', privileges: { bypassCSP: true ,standard:true} } //将tsbapp注册为标准协议，以支持localStorage
+])
 let forceClose = false //是否强制退出应用
 var clipboardContent=''
 var spaceManager
@@ -472,26 +474,10 @@ app.on('ready', async function () {
   //todo before create
   spaceManager = new SpaceManager()
   await spaceManager.ensureDb()
-
-  createWindow(function () {
-    mainWindow.webContents.on('did-finish-load', function () {
-      // if a URL was passed as a command line argument (probably because Min is set as the default browser on Linux), open it.
-      handleCommandLineArguments(process.argv)
-      // there is a URL from an "open-url" event (on Mac)
-      if (global.URLToOpen) {
-        // if there is a previously set URL to open (probably from opening a link on macOS), open it
-        sendIPCToWindow(mainWindow, 'addTab', {
-          url: global.URLToOpen
-        })
-        global.URLToOpen = null
-      }
-    })
-    callWetherShowUserWindow()
-  })
-
   mainMenu = buildAppMenu()
   Menu.setApplicationMenu(mainMenu)
   createDockMenu()
+  appStart()
 
 })
 function handleUrlOpen(url){
@@ -536,9 +522,39 @@ app.on('activate', function( /* e, hasVisibleWindows */ ) {
 	if (!mainWindow &&
 		appIsReady
 		) { // sometimes, the event will be triggered before the app is ready, and creating new windows will fail
-		createWindow()
+		//createWindow()
+    appStart()
 	}
 })
+
+/**
+ * 启动应用，此方法会自动判断是否启动的时候显示选择空间的面板
+ * @returns {Promise<void>}
+ */
+async function appStart () {
+  const { SqlDb } = require('./src/util/sqldb.js')
+  let sqlDb = new SqlDb()
+  let showOnStart = await sqlDb.getConfig('system.user.showOnStart')
+  if (!showOnStart) {
+    createWindow(function () {
+      mainWindow.webContents.on('did-finish-load', function () {
+        // if a URL was passed as a command line argument (probably because Min is set as the default browser on Linux), open it.
+        handleCommandLineArguments(process.argv)
+        // there is a URL from an "open-url" event (on Mac)
+        if (global.URLToOpen) {
+          // if there is a previously set URL to open (probably from opening a link on macOS), open it
+          sendIPCToWindow(mainWindow, 'addTab', {
+            url: global.URLToOpen
+          })
+          global.URLToOpen = null
+        }
+      })
+    })
+  } else {
+    showUserWindow()
+  }
+}
+
 
 ipc.on('focusMainWebContents', function() {
 	mainWindow.webContents.focus()

@@ -1,7 +1,32 @@
+.custom-scroller{
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #ffffff;
+    border-radius: 2px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgb(176, 176, 176);
+    border-radius: 20px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #747474;
+  }
+
+  &::-webkit-scrollbar-corner {
+    background: #f6f6f6;
+  }
+}
+
 .tabs,
 .sidebar ul {
   list-style: none;
-  padding: 0;
+  padding: 0
 }
 
 .ant-collapse-content > .ant-collapse-content-box {
@@ -17,43 +42,35 @@
   margin-bottom: 0;
 }
 
-.task-title {
-  font-size: 12px !important;
-}
-
 .task {
-  height: 320px;
+  height: 300px;
   margin-bottom: 10px;
   border-radius: 4px;
-}
-.task .icon {
-  vertical-align: middle;
-  width: 24px;
-  height: 24px;
-}
-.task .time {
-  font-size: 13px;
-  color: grey;
-  padding-left: 35px;
-}
-.task .single-avatar {
-  margin-left: 6px;
-  width: 18px;
-}
-.task .operation {
-  visibility: hidden;
-  cursor: pointer;
+  .icon{
+    vertical-align: middle;
+    width: 24px;
+    height: 24px;
+  }
+  .single-avatar{
+    margin-left: 6px;
+    width: 18px;
+  }
+  .operation{
+    visibility: hidden;
+    cursor: pointer;
+  }
 }
 
 .task:hover {
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1882352941);
+  box-shadow: 0 0 15px #00000030;
+  .operation{
+    visibility: visible;
+    &:hover{
+      color: red;
+    }
+  }
 }
-.task:hover .operation {
-  visibility: visible;
-}
-.task:hover .operation:hover {
-  color: red;
-}
+
 
 .tab-icon {
   width: 20px;
@@ -62,7 +79,8 @@
 }
 
 .tab-title {
-  width: 250px;
+  width: calc(100% - 10px);
+  font-size: 12px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -73,6 +91,10 @@
 
 .tab-title:hover {
   background-color: #efefef;
+}
+
+.ant-card-body {
+  padding: 20px;
 }
 
 .selected-span {
@@ -88,6 +110,7 @@
   max-width: 100px;
 }
 
+
 .ant-card.selected {
   border: 3px solid rgba(0, 0, 0, 0.62);
 }
@@ -96,9 +119,7 @@
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.34);
   width: 100vw;
   background: white;
-  text-align: right;
+  text-align: right;;
   padding: 10px;
-  z-index: 9;
+  z-index: 9
 }
-
-/*# sourceMappingURL=task-list.css.map */

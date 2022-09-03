@@ -376,8 +376,7 @@ function buildAppMenu (options = {}) {
           accelerator: undefined,
           click: function (item, focusedWindow) {
             if (focusedWindow) {
-              destroyAllViews()
-              focusedWindow.reload()
+              reloadBrowser(focusedWindow)
             }
           }
         },
@@ -602,3 +601,15 @@ function installDevPlugin (plugin) {
       })
   })
 }
+function reloadBrowser(focusedWindow){
+  destroyAllViews()
+  focusedWindow.reload()
+}
+require('electron').app.whenReady().then(()=>{
+
+  ipc.handle('reloadBrowser',(event,args)=>{
+    let focusedWindow=BrowserWindow.getFocusedWindow()
+    if(focusedWindow)
+      reloadBrowser(focusedWindow)
+  })
+})
