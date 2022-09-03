@@ -393,7 +393,7 @@ export default {
           this.selectedImportSpaces = []
           await this.loadSpaces()
           if (currentIndex) {
-            window.Modal.info({ title: '空间导入成功', content: '导入空间成功。导入的空间中包括当前使用中的空间，后续对当前空间的改动不会再影响到到导入后的云端空间。' })
+            Modal.info({ title: '空间导入成功', content: '导入空间成功。导入的空间中包括当前使用中的空间，后续对当前空间的改动不会再影响到到导入后的云端空间。' })
           } else {
             message.success('导入空间成功。')
           }
@@ -480,7 +480,7 @@ export default {
         if (result.status === 1) {
           this.newSpaceName = ''
           message.success('创建空间成功。')
-          this.spaces.push(result.data)
+          this.loadSpaces()
           this.visibleCreate = false
         } else {
           message.error('空间名称长度在1-10个汉字，请重新输入。')//获取真实的错误信息
