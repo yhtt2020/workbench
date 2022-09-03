@@ -172,7 +172,7 @@ import { message ,Modal} from 'ant-design-vue'
 import TaskList from '../components/TaskList.vue'
 import { createVNode } from 'vue'
 import {ZoomInOutlined,SwapOutlined,DesktopOutlined} from '@ant-design/icons-vue'
-import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue'
+import vueCustomScrollbar from '../../../src/components/vue-scrollbar.vue'
 export default {
   name: 'SpaceSelect',
   components:{

@@ -1,7 +1,7 @@
 <script lang="ts">
 import {CloseOutlined, CheckOutlined, DeleteOutlined} from '@ant-design/icons-vue'
 import '../assets/task-list.css';
-import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue'
+import vueCustomScrollbar from '../../../src/components/vue-scrollbar.vue'
 const ipc = eval('require')('electron').ipcRenderer
 
 export default {
