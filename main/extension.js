@@ -102,7 +102,6 @@ class Browser {
       },
 
       createWindow: (details) => {
-        conosle.log('触发createWindow')
         // const win = this.createWindow({
         //   initialUrl: details.url || newTabUrl,
         // })

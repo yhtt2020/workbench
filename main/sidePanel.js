@@ -1268,7 +1268,10 @@ function callUnModal (win) {
 /*user面板代码*/
 app.whenReady().then(() => {
   ipc.on('startApp',()=>{
-    createWindow()
+    if(!mainWindow){
+      createWindow()
+    }
+
     if (userWindow) {
       if (userWindow.isDestroyed() === false)
         userWindow.close()

@@ -62,7 +62,7 @@ export default {
   <div >
     <div >
       <a-row :gutter="16">
-        <a-col  :sm="12" :lg="8" v-for="(task,index) in dataList" :key="index">
+        <a-col  :sm="12" :lg="8"  :xl="6" :xxl="4" v-for="(task,index) in dataList" :key="index">
           <a-card
                   :bordered="false" class="task">
             <div  slot="title" slot-scope="title">
