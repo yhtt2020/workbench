@@ -307,7 +307,6 @@ const tabBar = {
       width: 500,
       height: 240
     })
-    if(newName!=='' && newName){
       let tabData=tabs.get(tabId)
       if(isCopy(tabData)){
         tabs.tabs.forEach(tab=>{
@@ -321,9 +320,9 @@ const tabBar = {
       }else{
         //不是小号标签，只需要改自己就行了
         tabs.update(tabId,{newName})
+        tabBar.updateAll()
       }
-      //console.log('设置了名称',newName)
-    }
+
   },
 
   //复制tab链接
