@@ -1190,11 +1190,7 @@ function showUserWindow (args) {
   }
 }
 
-function callWetherShowUserWindow () {
-  if (configModel.getShowOnStart()) {
-    showUserWindow()
-  }
-}
+
 
 let masked = false
 let inseartedCSS = []
@@ -1271,6 +1267,13 @@ function callUnModal (win) {
 
 /*user面板代码*/
 app.whenReady().then(() => {
+  ipc.on('startApp',()=>{
+    createWindow()
+    if (userWindow) {
+      if (userWindow.isDestroyed() === false)
+        userWindow.close()
+    }
+  })
 
   ipc.on('showUserWindow', (event, args) => {
     showUserWindow(args)
@@ -1320,14 +1323,12 @@ app.whenReady().then(() => {
       loginWindow.show()
       loginWindow.focus()
     } else {
-      let bounds = mainWindow.getBounds()
       loginWindow = new BrowserWindow({
         backgroundColor: '#00000000',
         show: false,
         alwaysOnTop: true,
         width: 550,
         height: 730,
-        parent: mainWindow,
         webPreferences: {
           preload: path.join(__dirname, 'pages/user/loginPreload.js'),
           nodeIntegration: true,

@@ -68,7 +68,7 @@
         </div>
         <div class="custom-scroller" style="height: calc(100vh - 50px);overflow-y: auto;padding: 10px;">
 
-          <TaskList v-if="activeSpace.nanoid" :list="this.spaceData.state.tasks"  v-model:selectedKeys="selectedKeys"  ></TaskList>
+          <TaskList v-if="activeSpace.nanoid" :list="spaceData.state.tasks"  v-model:selectedKeys="selectedKeys"  ></TaskList>
         </div>
 
         <div>
@@ -167,6 +167,8 @@
 </template>
 
 <script>
+import cA from '../../../../../vue-color-avatar/dist/assets/html2canvas.esm.0488f9f9'
+
 const { userModel, spaceModel } = window.$models
 import { message ,Modal} from 'ant-design-vue'
 import TaskList from '../components/TaskList.vue'
@@ -187,8 +189,12 @@ export default {
         user_info: {}
       },
       spaces: [],
-      activeSpace: {},
-      spaceData:{},
+      activeSpace: {nanoid:''},
+      spaceData:{
+        state:{
+          tasks:[]
+        }
+      },
       selectedKeys:[],
 
       currentSpace: {},
@@ -452,7 +458,6 @@ export default {
         return
       }
       this.spaces = spaces
-      this.setActive({})
       // if(spaces.length>0){
       //   this.setActive(spaces[0])
       // }
@@ -692,10 +697,18 @@ export default {
     async setActive (space) {
       this.activeSpace = space
       if(this.user.uid!==0){
-        let spaceRs = await spaceModel.setUser(this.user).getSpace(space.nanoid)
-        if(spaceRs.status===1){
-          this.spaceData=spaceRs.data.data
+        try{
+          let spaceRs = await spaceModel.setUser(this.user).getSpace(space.nanoid)
+          if(spaceRs.status===1){
+            console.log('读入数据',spaceRs)
+            this.spaceData=spaceRs.data.data
+          }else{
+            this.spaceData={}
+          }
+        }catch (e) {
+          console.warn('载入失败')
         }
+
       }else{
         let spaceRs = await spaceModel.setUser(this.user).getSpace(space.nanoid)
         this.spaceData=JSON.parse(spaceRs.data)
@@ -740,15 +753,14 @@ export default {
   li {
     user-select: none;
     &:hover, &.active {
-
       .card {
         background: white;
         border-radius: 4px;
-
+        border: 1px solid #c1c1c1;
       }
     }
-
     .card {
+      border: 1px solid #f1f1f1;
       padding: 10px;
     }
 

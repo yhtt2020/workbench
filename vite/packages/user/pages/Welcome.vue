@@ -4,7 +4,7 @@
     <h3 style="margin-top: 15px">欢迎使用 {{appName}}</h3>
     <p>版本：{{appVersion}}</p>
     <p>
-      <a-button type="primary">打开上次空间</a-button>
+      <a-button @click="startApp()" type="primary">打开上次空间</a-button>
     </p>
 
   </div>
@@ -13,7 +13,7 @@
       <a-checkbox @change="switchShowOnStart" v-model:checked="showOnStart">每次启动的时候选择</a-checkbox>
     </div>
     <div class="tip" style="">
-      <a-row type="flex">
+      <a-row @click="showTrial" type="flex">
         <a-col flex="60px">
           <a-avatar shape="square" src="/icons/bilibili.svg" :size="50"/>
         </a-col>
@@ -34,6 +34,7 @@ import { CloseOutlined } from '@ant-design/icons-vue'
 const {configModel} = window.$models
 const appName= window.globalArgs['app-name']
 const appVersion=window.globalArgs['app-version']
+import {Modal} from "ant-design-vue"
 export default {
   name: 'Welcome',
   components: { CloseOutlined },
@@ -48,9 +49,18 @@ export default {
     }
   },
   methods:{
+    showTrial(){
+      Modal.info({
+        content:'视频教程正在准备中……',
+        okText:"知道了"
+      })
+    },
     switchShowOnStart () {
       configModel.setShowOnStart(this.showOnStart)
     },
+    startApp(){
+      window.ipc.send('startApp')
+    }
   }
 }
 </script>

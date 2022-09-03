@@ -2,7 +2,7 @@
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 const {userModel,spaceModel}=window.$models
-
+import {Modal,message} from "ant-design-vue"
 export default {
   components: {  },
   data () {
@@ -33,15 +33,19 @@ export default {
     if (window.globalArgs['tip']) {
       this.tip = window.globalArgs['tip']
     }
+    window.ipc.on('loginCallback',async (e, args) => {
+      message.success('成功添加帐号。')
+      this.users = await userModel.getAll()
+      this.enterAccount({ uid: args.data.userInfo.uid })
+    })
   },
   methods:{
-
     goAddAccount () {
       this.currentTab={name:'add'}
       this.$router.push('/add')
     },
     deleteAccount (uid) {
-      antd.Modal.confirm({
+      Modal.confirm({
         title: '解绑此帐号',
         content: '解绑帐号并不会影响帐号数据，仅仅是将本地帐号退出。但是退出后无法再使用此帐号下的所有空间。',
         centered: true,
@@ -49,7 +53,7 @@ export default {
         cancelText: '取消',
         onOk: () => {
           userModel.delete({ uid: uid }).then(() => {
-            window.antd.message.success('解绑帐号成功。')
+            message.success('解绑帐号成功。')
             this.users.forEach((user, index) => {
               if (user.uid === uid) {
                 this.users.splice(index, 1)
@@ -57,7 +61,7 @@ export default {
               }
             })
           }).catch(() => {
-            window.antd.message.error('解绑帐号失败。')
+            message.error('解绑帐号失败。')
           })
         }
       })
@@ -71,13 +75,13 @@ export default {
           if (userInfo) {
             let spacesResult = await spaceModel.setUser(userInfo).getUserSpaces()
             if (spacesResult.status !== 1) {
-              window.antd.message.error('服务器繁忙，获取用户空间失败，请10分钟后后再试。')
+              message.error('服务器繁忙，获取用户空间失败，请10分钟后后再试。')
               return
             }
             //走到此处是没有异常了，可以正常执行下去
           } else {
             console.warn(user)
-            window.antd.message.error('获取用户信息失败，登录信息过期或用户帐号异常。请尝试解绑用户后重新登陆帐号。')
+            message.error('获取用户信息失败，登录信息过期或用户帐号异常。请尝试解绑用户后重新登陆帐号。')
             return //如果异常，退回上一页，防止后续出错
           }
         } catch (e) {
@@ -87,10 +91,10 @@ export default {
             return
           }
           if (e.response && e.response.data.code === 1001) {
-            window.antd.message.error('用户登录信息过期，请点击【添加账号】重新登录。')
+            message.error('用户登录信息过期，请点击【添加账号】重新登录。')
             return
           }
-          window.antd.message.error('意外错误。')
+          message.error('意外错误。')
           return
         }
       }
@@ -120,9 +124,26 @@ export default {
     </ul>
       <h3 style="color: white;font-size: 12px;padding-left: 20px">账号</h3>
       <ul class="left-menu">
-        <li :class="{'active':this.currentTab.name==='user_'+user.uid}" @click="enterAccount(user)" v-for="user in users">
-          <a-avatar class="side-icon" :src="user.user_info.avatar"/>{{ user.user_info.nickname }}
+        <a-dropdown :trigger="['contextmenu']"  v-for="user in users">
+          <li :class="{'active':this.currentTab.name==='user_'+user.uid}" @click="enterAccount(user)">
+          <a-row type="flex">
+            <a-col flex="40px">
+              <a-avatar class="side-icon" :src="user.user_info.avatar"/>
+            </a-col>
+            <a-col flex="auto">
+              <div class="text-more" style="width: 70px">{{ user.user_info.nickname }}</div>
+              <div class="current-tag" v-if="user.is_current">
+               使用中
+              </div>
+            </a-col>
+          </a-row>
         </li>
+          <template #overlay>
+            <a-menu>
+              <a-menu-item :disabled="user.is_current" @click="deleteAccount(user.uid)" key="deleteAccount">解绑帐号</a-menu-item>
+            </a-menu>
+          </template>
+        </a-dropdown>
         <li :class="{'active':this.currentTab.name==='add'}" @click="goAddAccount">
           <img class="side-icon" src="./assets/icon/adduser.svg"/>添加账号
         </li>
@@ -163,6 +184,17 @@ export default {
     }
   }
 }
-
-
+.current-tag{
+  font-size: 12px;
+  background: white;
+  border-radius: 3px;
+  color: black;
+  padding: 0 4px;
+  display: inline-block;
+}
+.text-more {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 </style>

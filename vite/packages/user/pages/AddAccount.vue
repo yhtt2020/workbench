@@ -25,6 +25,8 @@
 <script>
 export default {
   name: 'AddAccount',
+  mounted () {
+  },
   methods: {
     goLogin(){
       ipc.send('login')
@@ -32,6 +34,7 @@ export default {
     }
   }
 }
+
 </script>
 
 <style scoped>

@@ -12,7 +12,6 @@ export default {
   emits: ['update:selectedKeys','remove'],
   data() {
     return {
-      dataList: [],
       selectedKeysData: []
     }
   },

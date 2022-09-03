@@ -373,7 +373,11 @@ app.whenReady().then(()=>{
    */
   function afterGuide(guideName) {
     markDb.db.set(guideName, true).write()
-    mainWindow.webContents.send('scheduleRefresh', markDb.db.get('guideSchedule').value())
+    if(mainWindow && !mainWindow.isDestroyed()){
+      mainWindow.webContents.send('scheduleRefresh', markDb.db.get('guideSchedule').value())
+      //todo 确认关闭主窗体的情况下能否完成引导
+    }
+
     if(global.fromRender && !global.fromRender.guide.isDestroyed()) {
       global.fromRender.guide.send('scheduleRefresh', markDb.db.get('guideSchedule').value())
       SidePanel.send('updateSidebarGuideScedule', calcGuideScedule())
