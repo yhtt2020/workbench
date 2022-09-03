@@ -1282,17 +1282,19 @@ Vue.component('sidebar', {
         type: app.type,
         attribute: app.attribute,
         themeColor: !!!app.themeColor ? '#000' :app.themeColor,
-        settings: {
-          bounds: {
-            width: 1000,
-            height: 800
-          }
-        },
+        // settings: {
+        //   bounds: {
+        //     width: 1000,
+        //     height: 800
+        //   }
+        // },
+        settings:app.settings,
         circle:app.circle,
         auth:app.auth,
         site:app.site,
         author:app.author,
-        showInSideBar: false
+        showInSideBar: false,
+        circleMessage:!!!app.circleMessage ? '' :app.circleMessage,
       }
       standAloneAppModel.install(app.url, option).then(success => {
         ipc.send('message', { type: 'success', config: { content: `添加应用：${app.name} 成功` } })
