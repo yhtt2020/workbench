@@ -101,8 +101,10 @@ export default {
       if (!!!user.password) {
         this.currentTab={name:'user_'+user.uid}
         this.$router.push({ name: 'space', params: { uid: user.uid } })
-      } else
+      } else{
+        this.currentTab={name:'user_'+user.uid}
         this.$router.push({ name: 'pwd', params: { uid: user.uid } })
+      }
     },
     goHome(){
       this.currentTab={name:'home'}

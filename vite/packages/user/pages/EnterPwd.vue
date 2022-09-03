@@ -16,10 +16,12 @@
     <div style="text-align: center">
       <a-button @click="doEnter" :disabled="this.pwd===''" :type="this.pwd!==''?'primary':'default'">确定</a-button>
     </div>
+    <p style="text-align: center;color: #999;margin-top: 10px;position: absolute;bottom: 10px;left: 50%;margin-left: -20px">忘记密码？重新登录账号即可解锁。</p>
   </div>
 </template>
 
 <script>
+const {userModel}=window.$models
 export default {
   name: 'EnterPwd',
   data () {

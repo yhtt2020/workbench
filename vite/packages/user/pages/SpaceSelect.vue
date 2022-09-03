@@ -6,7 +6,31 @@
           <span style="font-size: 12px;color: grey">{{ spaces.length }} 个空间</span>
         </a-col>
         <a-col :span="12" style="text-align: right">
-          <a-button @click="showCreateSpace" type="primary" size="small">创建</a-button>
+          <a-dropdown>
+            <template #overlay>
+              <a-menu >
+                <a-menu-item @click.stop="()=>{}" v-if="this.user.uid===0" >
+                  <a-checkbox @change="loadSpaces" @click.stop="()=>{}" v-model:checked="showBackup">显示离线空间</a-checkbox>
+                </a-menu-item>
+                <a-menu-item @click="importFromLocal" v-if="user.uid" key="1">
+                  <import-outlined />
+                  导入
+                </a-menu-item>
+                <a-menu-item v-if="user.uid!==0"  @click="setEnterPwd()" key="2">
+                  <LockOutlined/>
+                  设置密码
+                </a-menu-item>
+                <a-menu-item v-if="user.uid!==0 && !user.is_current" @click="deleteAccount(user.uid)" key="3">
+                  <logout-outlined />
+                  解绑帐号
+                </a-menu-item>
+              </a-menu>
+            </template>
+            <a-button size="small" @click="showCreateSpace" type="primary">
+              创建
+              <DownOutlined />
+            </a-button>
+          </a-dropdown>
         </a-col>
       </a-row>
 
@@ -71,22 +95,9 @@
           </vue-custom-scrollbar>
 
         <div>
-          <div style="text-align: center">
-          </div>
-          <div v-if="user.uid" style="float: right;position: absolute;right: 10px;top: 10px;">
-            <a-button @click="importFromLocal" size="small">导入</a-button>
-          </div>
-          <div v-else style="float: right;position: absolute;right: 20px;top: 20px;">
-            <a-checkbox @change="loadSpaces" v-model:checked="showBackup">显示离线空间</a-checkbox>
-          </div>
 
-          <div style="position: absolute;bottom: 10px;width: 100%;padding: 30px;padding-bottom: 15px">
-            <!--    <div style="float: left;"><a-button size="small" shape="round">隐私空间</a-button></div>-->
-            <div style="float:right;width: 200px;text-align: right">
-              <a-button v-if="user.uid!==0" @click="setEnterPwd()" style="margin-right: 10px">设置密码</a-button>
-              <a-button v-if="user.uid!==0" @click="deleteAccount(user.uid)">解绑帐号</a-button>
-            </div>
-          </div>
+
+
           <a-modal
             centered
             v-model:visible="visibleRename"
@@ -171,13 +182,14 @@ const { userModel, spaceModel } = window.$models
 import { message ,Modal} from 'ant-design-vue'
 import TaskList from '../components/TaskList.vue'
 import { createVNode } from 'vue'
-import {ZoomInOutlined,SwapOutlined,DesktopOutlined} from '@ant-design/icons-vue'
+import {ZoomInOutlined,SwapOutlined,DesktopOutlined,DownOutlined,ImportOutlined,LockOutlined,LogoutOutlined} from '@ant-design/icons-vue'
 import vueCustomScrollbar from '../../../src/components/vue-scrollbar.vue'
 export default {
   name: 'SpaceSelect',
   components:{
     vueCustomScrollbar,
-    TaskList,ZoomInOutlined,SwapOutlined,DesktopOutlined
+    TaskList,
+    ZoomInOutlined,SwapOutlined,DesktopOutlined,DownOutlined,ImportOutlined,LockOutlined,LogoutOutlined
   },
   data () {
     return {
