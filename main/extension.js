@@ -151,9 +151,7 @@ class Browser {
       return
     }
     this.standAloneSessions.push(ses)
-    console.log('载入一个独立会话的插件',ses)
     await this.initSessionExtensions(ses)
-    console.log(this.standAloneSessions)
   }
   // setupProtocol () {
   //   let mainSession = require('electron').session.defaultSession
