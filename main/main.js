@@ -3,7 +3,9 @@ const fs = require('fs')
 const path = require('path')
 const electronLog=require('electron-log')
 const SpaceManager=require(__dirname+'/src/main/spaceManager.js')
-
+electron.protocol.registerSchemesAsPrivileged([
+  { scheme: 'tsbapp', privileges: { bypassCSP: true ,standard:true} } //将tsbapp注册为标准协议，以支持localStorage
+])
 let forceClose = false //是否强制退出应用
 var clipboardContent=''
 var spaceManager
