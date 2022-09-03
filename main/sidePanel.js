@@ -1153,6 +1153,7 @@ function showUserWindow (args) {
         nodeIntegration: true,
         contextIsolation: false,
         sandbox:false,
+        webSecurity:false,
         additionalArguments: [
           '--user-data-path=' + userDataPath,
           '--app-version=' + app.getVersion(),
