@@ -131,7 +131,7 @@ export default {
               <a-avatar class="side-icon" :src="user.user_info.avatar"/>
             </a-col>
             <a-col flex="auto">
-              <div class="text-more" style="width: 70px">{{ user.user_info.nickname }}</div>
+              <div class="text-more" :style="{'padding-top':!user.is_current?'4px':''}" style="width: 70px">{{ user.user_info.nickname }}</div>
               <div class="current-tag" v-if="user.is_current">
                使用中
               </div>

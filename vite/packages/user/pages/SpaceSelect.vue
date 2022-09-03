@@ -49,7 +49,7 @@
     </a-layout-sider>
     <a-layout>
       <a-layout-content style="overflow: hidden">
-        <div v-if="!this.activeSpace.nanoid" style="padding: 40px">
+        <div v-if="this.activeSpace.nanoid===''" style="padding: 40px">
           <a-result >
             <template #title>
               <h3 style="font-size: 18px">请选择空间</h3>
@@ -67,7 +67,7 @@
           {{ activeSpace.name }}
         </div>
           <vue-custom-scrollbar :settings="settings" style="position:relative;height:calc(100vh - 50px);padding:10px" >
-          <TaskList v-if="activeSpace.nanoid" :list="spaceData.state.tasks"  v-model:selectedKeys="selectedKeys"  ></TaskList>
+          <TaskList v-if="activeSpace.nanoid!==''" :list="spaceData.state.tasks"  v-model:selectedKeys="selectedKeys"  ></TaskList>
           </vue-custom-scrollbar>
 
         <div>
@@ -283,6 +283,7 @@ export default {
 
       }
       await this.loadSpaces()
+      this.resetActive()
       this.loading = false
     },
     setTipCopyRead () {
@@ -699,6 +700,9 @@ export default {
       }
     }
     ,
+    resetActive(){
+      this.activeSpace ={nanoid:''}
+    },
     async setActive (space) {
       this.activeSpace = space
       if(this.user.uid!==0){
