@@ -730,22 +730,22 @@ ipc.on('isDownload',()=>{
 
 let originalUrl;
 let originalId;
-let emptyUrl
-let closeGuideTab=''
+// let emptyUrl
+// let closeGuideTab=''
 ipc.on('view-event', function (e, args) {
   webviews.emitEvent(args.event, args.viewId, args.args)
   originalId = args.viewId
 
-  setTimeout(()=>{
-    if (args.event === 'new-tab' && download === true) {
-      emptyUrl = args.args[0]
-      tabs.tabs.filter((e)=>{
-        if (e.url === emptyUrl) {
-          closeGuideTab = e.id
-        }
-      })
-    }
-  },30)
+  // setTimeout(()=>{
+  //   if (args.event === 'new-tab' && download === true) {
+  //     emptyUrl = args.args[0]
+  //     tabs.tabs.filter((e)=>{
+  //       if (e.url === emptyUrl) {
+  //         closeGuideTab = e.id
+  //       }
+  //     })
+  //   }
+  // },30)
 
   setTimeout(()=>{
     for (let i = 0; i < tabs.tabs.length; i++) {
@@ -759,8 +759,16 @@ ipc.on('view-event', function (e, args) {
 })
 
 ipc.on('closeEmptyPage',(event,args)=>{
+
+  let closeGuideTab
+  tabs.tabs.forEach((e)=>{
+      for(let i=0;i<args.length;i++){
+        if(args[i]===e.url && e.selected ==='false'){
+          closeGuideTab = e.id
+        }
+      }
+  })
   require('browserUI.js').closeTab(closeGuideTab)
-  closeGuideTab=''
 })
 
 
