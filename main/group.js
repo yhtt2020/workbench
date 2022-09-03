@@ -152,6 +152,7 @@ app.on('ready', () => {
       }
     })
     const { api } = require(path.join(__dirname, '//server-config.js'))
+    osxInviteMember.setMenu(null)
     osxInviteMember.webContents.loadURL(`${api.getUrl(api.API_URL.user.CIRCLE_INVITELINK)}?id=${args}`)
     osxInviteMember.on('close', () => osxInviteMember = null)
     return {code: 200, msg: '成功'}
