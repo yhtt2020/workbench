@@ -35,6 +35,15 @@ export default {
     this.ipc = eval('require')('electron').ipcRenderer
   },
   methods: {
+    getTabName(tab){
+     let title= tab.title == '' ? '新标签' : tab.title
+      if(tab.newName){
+        title=`<span style="color:#2181ff;font-weight: bold">${tab.newName}</span>`+"|"+`<span style="color: grey">${title}</span>`
+      }else{
+        title=`<span style="">${title}</span>`
+      }
+      return title
+    },
     remove(id){
       this.$emit('remove',id)
     },
@@ -94,9 +103,7 @@ export default {
                 @click="selectTab(task, tab, task.id, Dindex)"
               >
                 <a-avatar shape="square" size="small" class="tab-icon" :src="getIcon(tab.favicon)"></a-avatar>
-                {{
-                  tab.title == '' ? '新标签' : tab.title
-                }}
+               <span v-html="getTabName(tab)"></span>
               </li>
             </ul>
             </vue-custom-scrollbar>
