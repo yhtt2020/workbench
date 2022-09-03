@@ -12,8 +12,8 @@
 
       <div v-if="loading">
       </div>
-
-      <ul style=" overflow-y: auto;overflow-x:hidden;height: calc(100vh - 30px)" v-else class="space-list custom-scroller">
+      <vue-custom-scrollbar :settings="settings" style="position:relative;height: calc(100vh - 45px)" >
+      <ul class="space-list">
         <a-dropdown v-for="space,index in spaces" :trigger="['contextmenu']">
           <li @dblclick="switchSpace(space)" :class="{'active':this.activeSpace.nanoid===space.nanoid}" @click="setActive(space)">
           <div class="card">
@@ -45,7 +45,7 @@
         </template>
         </a-dropdown>
       </ul>
-
+      </vue-custom-scrollbar>
     </a-layout-sider>
     <a-layout>
       <a-layout-content style="overflow: hidden">
@@ -66,10 +66,9 @@
         <div style="padding: 10px">
           {{ activeSpace.name }}
         </div>
-        <div class="custom-scroller" style="height: calc(100vh - 50px);overflow-y: auto;padding: 10px;">
-
+          <vue-custom-scrollbar :settings="settings" style="position:relative;height:calc(100vh - 50px);padding:10px" >
           <TaskList v-if="activeSpace.nanoid" :list="spaceData.state.tasks"  v-model:selectedKeys="selectedKeys"  ></TaskList>
-        </div>
+          </vue-custom-scrollbar>
 
         <div>
           <div style="text-align: center">
@@ -167,21 +166,27 @@
 </template>
 
 <script>
-import cA from '../../../../../vue-color-avatar/dist/assets/html2canvas.esm.0488f9f9'
 
 const { userModel, spaceModel } = window.$models
 import { message ,Modal} from 'ant-design-vue'
 import TaskList from '../components/TaskList.vue'
 import { createVNode } from 'vue'
 import {ZoomInOutlined,SwapOutlined,DesktopOutlined} from '@ant-design/icons-vue'
-
+import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue'
 export default {
   name: 'SpaceSelect',
   components:{
+    vueCustomScrollbar,
     TaskList,ZoomInOutlined,SwapOutlined,DesktopOutlined
   },
   data () {
     return {
+      settings: {
+        swipeEasing:true,
+        suppressScrollY: false,
+        suppressScrollX: true,
+        wheelPropagation: false
+      },
       user: {
         uid: 0,
         spaces: [],

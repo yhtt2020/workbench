@@ -1,9 +1,11 @@
 <script lang="ts">
 import {CloseOutlined, CheckOutlined, DeleteOutlined} from '@ant-design/icons-vue'
 import '../assets/task-list.css';
+import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue'
 const ipc = eval('require')('electron').ipcRenderer
+
 export default {
-  components: {CloseOutlined, CheckOutlined, DeleteOutlined},
+  components: {vueCustomScrollbar,CloseOutlined, CheckOutlined, DeleteOutlined},
   props: {
     list: Array,
     selectedKeys: Array,
@@ -12,7 +14,13 @@ export default {
   emits: ['update:selectedKeys','remove'],
   data() {
     return {
-      selectedKeysData: []
+      selectedKeysData: [],
+      settings: {
+        swipeEasing:true,
+        suppressScrollY: false,
+        suppressScrollX: true,
+        wheelPropagation: true
+      },
     }
   },
   computed: {
@@ -77,7 +85,8 @@ export default {
                      src="/public/icons/randomuser.svg">
               </div>
             </div>
-            <ul class="tabs custom-scroller" style="height: 250px; overflow-y: auto; margin-right: -10px">
+            <vue-custom-scrollbar :settings="settings" style="position:relative;height: 250px ;margin-right: -10px" >
+            <ul class="tabs">
               <li
                 class="tab-title"
                 v-for="(tab, Dindex) in task.tabs"
@@ -90,6 +99,7 @@ export default {
                 }}
               </li>
             </ul>
+            </vue-custom-scrollbar>
           </a-card>
         </a-col>
       </a-row>
