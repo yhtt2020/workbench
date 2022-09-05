@@ -44,6 +44,10 @@ export default {
       this.currentTab={name:'add'}
       this.$router.push('/add')
     },
+    goTemplate(){
+      this.currentTab={name:'template'}
+      this.$router.push({name:'template'})
+    },
     deleteAccount (uid) {
       Modal.confirm({
         title: '解绑此帐号',
@@ -120,12 +124,15 @@ export default {
       <li :class="{'active':this.currentTab.name==='home'}"  @click="goHome()" style="">
         <img class="side-icon" src="./assets/icon/home.svg"/> 欢迎
       </li>
-      <li :class="{'active':this.currentTab.name=='user_0'}" @click="enterAccount({uid:0})" style="">
-        <img class="side-icon" src="./assets/icon/local.svg"/> 本地空间
+      <li @click="goTemplate" :class="{'active':this.currentTab.name==='template'}">
+        <img class="side-icon" src="./assets/icon/copy.svg"/> 空间模板
       </li>
     </ul>
       <h3 style="color: white;font-size: 12px;padding-left: 20px">账号</h3>
       <ul class="left-menu">
+        <li :class="{'active':this.currentTab.name=='user_0'}" @click="enterAccount({uid:0})" style="">
+          <img class="side-icon" src="./assets/icon/local.svg"/> 本机空间
+        </li>
         <a-dropdown :trigger="['contextmenu']"  v-for="user in users">
           <li :class="{'active':this.currentTab.name==='user_'+user.uid}" @click="enterAccount(user)">
           <a-row type="flex">
