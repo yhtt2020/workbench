@@ -3,6 +3,10 @@
     <a-avatar :size="80" src="/icons/logo128.png"></a-avatar>
     <h3 style="margin-top: 15px">欢迎使用 {{appName}}</h3>
     <p>版本：{{appVersion}}</p>
+    <div style="position: absolute;right: 10px;top: 10px">
+      <a-tag @click="reName" title="当前设备ID"> <desktop-outlined/> {{this.getClientName()}}</a-tag>
+
+    </div>
     <p>
       <a-button @click="startApp()" type="primary">打开上次空间</a-button>
     </p>
@@ -10,6 +14,7 @@
   </div>
   <div style="position: absolute;bottom: 20px;text-align: center;width: calc( 100% - 200px) ">
     <div>
+
       <a-checkbox @change="switchShowOnStart" v-model:checked="showOnStart">每次启动的时候选择</a-checkbox>
     </div>
     <div class="tip" style="">
@@ -30,25 +35,39 @@
 </template>
 
 <script>
-import { CloseOutlined } from '@ant-design/icons-vue'
+import { CloseOutlined,DesktopOutlined } from '@ant-design/icons-vue'
 const {configModel} = window.$models
 const appName= window.globalArgs['app-name']
 const appVersion=window.globalArgs['app-version']
 import {Modal} from "ant-design-vue"
 export default {
   name: 'Welcome',
-  components: { CloseOutlined },
+  components: { CloseOutlined ,DesktopOutlined},
   async mounted () {
     this.showOnStart = await configModel.getShowOnStart()
+    this.clientId=tsbApi.runtime.clientId
+    this.clientName=tsbApi.runtime.clientName
   },
   data(){
     return {
       appName,
       appVersion,
-      showOnStart:false
+      showOnStart:false,
+
+      clientId:'',
+      clientName:'',
     }
   },
   methods:{
+    reName(){
+    },
+    getClientName(){
+      if(this.clientName){
+        return this.clientName
+      }else{
+        return this.clientId
+      }
+    },
     showTrial(){
       Modal.info({
         content:'视频教程正在准备中……',
