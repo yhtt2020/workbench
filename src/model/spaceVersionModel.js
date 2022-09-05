@@ -7,6 +7,24 @@ const spaceModel = require('./spaceModel')
 const userModel=require('./userModel')
 const cloudSpaceModel = require('./cloudSpaceModel')
 const backupSpaceModel = require('./backupSpaceModel')
+
+sqlDb.knex.schema.hasTable('space_version').then(function(exists) {
+  if (!exists) {
+    return sqlDb.knex.schema.createTable('space_version', function(t) {
+      t.string('nanoid').primary().unique();
+      t.string('name');
+      t.integer('save_time');
+      t.text('data')
+      t.tinyint('is_conflict').defaultTo(false)
+      t.string('space_id')
+      t.integer('count_task')
+      t.integer('count_tab')
+      t.boolean('uploaded').defaultTo(false)
+    });
+  }
+});
+
+
 const spaceVersionModel = {
   /**
    *
