@@ -16,7 +16,7 @@ const statsh = require('util/statsh/statsh.js')
 const spaceVersionModel = require('../src/model/spaceVersionModel')
 let isLoadedSpaceSuccess=false//是否成功读入空间，如果读入失败，则不做自动保存和关闭前保存，防止丢失空间
 
-let SYNC_INTERVAL = 10 //普通模式下，同步间隔为30秒
+let SYNC_INTERVAL = 30 //普通模式下，同步间隔为30秒
 let safeClose=false
 if ('development-mode' in window.globalArgs) {
   SYNC_INTERVAL = 10 //开发模式下，间隔改为5，方便调试和暴露问题

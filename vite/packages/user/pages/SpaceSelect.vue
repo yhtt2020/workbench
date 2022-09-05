@@ -297,8 +297,12 @@ export default {
           this.loadSpaces()
           message.success('成功还原版本。')
         }
-        console.log('是本机空间', this.activeSpace)
       } else {
+        let rs = await spaceVersionModel.restore(this.activeSpace.nanoid, version.nanoid, 'cloud')
+        if(rs.status===1){
+          this.loadSpaces()
+          message.success('成功还原版本。')
+        }
         console.log('是云空间', this.activeSpace, 'cloud')
       }
     },
