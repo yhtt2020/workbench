@@ -13,9 +13,10 @@ const userModel = require('../src/model/userModel')
 const ipc = require('electron').ipcRenderer
 const statistics = require('./statistics')
 const statsh = require('util/statsh/statsh.js')
+const spaceVersionModel = require('../src/model/spaceVersionModel')
 let isLoadedSpaceSuccess=false//是否成功读入空间，如果读入失败，则不做自动保存和关闭前保存，防止丢失空间
 
-let SYNC_INTERVAL = 30 //普通模式下，同步间隔为30秒
+let SYNC_INTERVAL = 10 //普通模式下，同步间隔为30秒
 let safeClose=false
 if ('development-mode' in window.globalArgs) {
   SYNC_INTERVAL = 10 //开发模式下，间隔改为5，方便调试和暴露问题
@@ -103,7 +104,7 @@ function filterPrivateTabs(data){
 const sessionRestore = {
   adapter: {},
   currentSpace: {},
-  save: async function (forceSave = true, sync = true) {
+  save: async function (forceSave = false, sync = true) { //默认关闭强制保存
     if(!isLoadedSpaceSuccess){
       console.warn('不保存空间，因为当前读入空间失败')
       return
@@ -144,6 +145,10 @@ const sessionRestore = {
           //如果是本地，则存入本地空间
           await localSpaceModel.save(space, saveData)
         }
+      }
+      if(stateString !== sessionRestore.previousState){
+        let rsVersion=await spaceVersionModel.save(space.nanoid,saveData) //存储一个版本
+        console.log('存储版本成功',rsVersion)
       }
       //如果是云端，还需去云端同步
       try {
