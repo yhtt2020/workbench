@@ -612,8 +612,10 @@ function safeCloseMainWindow(){
 }
 let canCloseMainWindow=false
 ipc.on('closeMainWindow',()=>{
-  canCloseMainWindow=true
-  mainWindow.close()
+  if(mainWindow && !mainWindow.isDestroyed()){
+    canCloseMainWindow=true
+    mainWindow.close()
+  }
 })
 
 let canQuit=false

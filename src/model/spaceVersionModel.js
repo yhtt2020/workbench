@@ -3,6 +3,7 @@ const sqlDb = new SqlDb()
 const nanoid = require('nanoid')
 const standReturn = require('../util/standReturn')
 const DEFAULT_LIMIT=100 //默认保存数量
+const spaceModel=require('./spaceModel')
 const spaceVersionModel = {
   /**
    *
@@ -53,6 +54,63 @@ const spaceVersionModel = {
       return standReturn.failure('数据库错误',e)
     }
     return standReturn.success(rs)
+  },
+  /**
+   * 还原空间到某个版本
+   * @param spaceId 空间id
+   * @param versionId 版本id
+   */
+  async restore(spaceId,versionId,spaceType='local'){
+    if(spaceType==='local'){
+      return await this.restoreLocal(spaceId,versionId)
+    }else{
+      this.restoreCloud(spaceId,versionId)
+      console.log('是云空间',this.activeSpace)
+    }
+  },
+  async restoreLocal(spaceId,versionId){
+    try{
+      let version=await sqlDb.knex('space_version').where({nanoid:versionId}).first()
+      if(!version){
+        console.warn('还原本机空间失败，版本不存在',e)
+        return standReturn.failure('版本不存在')
+      }
+      let space =await sqlDb.knex('local_space').where({nanoid:spaceId}).first()
+      let currentSpace=await spaceModel.getCurrent()
+      if(!space){
+        console.warn('还原本机空间失败，本机空间不存在',e)
+        return standReturn.failure('本机空间不存在')
+      }
+      if(currentSpace.spaceId===space.nanoid){
+        await require('electron').ipcRenderer.sendSync('closeSync')
+        let rs=await sqlDb.knex('local_space').where({nanoid:spaceId}).update({
+          count_task:version.count_task,
+          count_tab:version.count_tab,
+          sync_time:Date.now(),
+          data:version.data
+        })
+        space.count_task=version.count_task
+        space.count_tab=version.count_tab
+        space.data=version.data
+        await spaceModel.setCurrentSpace(space)
+        await require('electron').ipcRenderer.invoke('createWindow') //切换一下空间
+      }else{
+        await sqlDb.knex('local_space').where({nanoid:spaceId}).update({
+          count_task:version.count_task,
+          count_tab:version.count_tab,
+          sync_time:Date.now(),
+          data:version.data
+        })
+      }
+      return standReturn.success('还原成功。')
+    }catch (e) {
+      console.error(e)
+      return standReturn.failure('还原意外失败')
+    }
+
+  },
+  restoreCloud(spaceId,versionId){
+
   }
 }
 

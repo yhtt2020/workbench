@@ -3,7 +3,7 @@
     <a-empty style="margin-top: 30px" v-if="versions.length===0" description="">
     </a-empty>
     <a-timeline>
-      <a-timeline-item @click="setActive(version)" v-for="version in versions" color="green">
+      <a-timeline-item @dblclick="restoreVersion(version)" @click="setActive(version)" v-for="version in versions" color="green">
         <div :class="{active:this.activeVersion===version}" class="version-item">
           <div class="name">{{ version.name }}</div>
           <div class="info">
@@ -38,6 +38,9 @@ export default {
     setActive (version) {
       this.activeVersion=version
       this.$emit('setActive', version)
+    },
+    restoreVersion(version){
+      this.$emit('restoreVersion',version)
     }
   }
 }

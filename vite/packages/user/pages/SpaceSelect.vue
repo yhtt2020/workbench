@@ -149,7 +149,7 @@
           <close-outlined class="close-btn" @click="this.showHistory=false"/>
         </h3>
         <vue-custom-scrollbar :settings="settings" style="position:relative;height: calc(100vh - 50px)">
-          <VersionList @setActive="setTaskList" :versions="versions"></VersionList>
+          <VersionList @restoreVersion="restoreVersion" @setActive="setTaskList" :versions="versions"></VersionList>
         </vue-custom-scrollbar>
       </a-layout-sider>
     </a-layout>
@@ -261,6 +261,46 @@ export default {
       console.log('选中', version)
       this.activeVersion = version
       this.spaceData = JSON.parse(version.data)
+    },
+    restoreVersion(version){
+      if(this.currentSpace.spaceId===this.activeSpace.nanoid){
+        Modal.confirm({
+          content:'当前空间正在使用中，此操作将自动重启浏览器，请确认当前所有的网页内容均已保存。',
+          okText:'已保存，重启还原',
+          cancelText:'取消',
+          okType: 'danger',
+          type:'danger',
+          onOk:()=>{
+            this.doRestoreVersion(version)
+          }
+        })
+      }else if(this.activeSpace.isUsing){
+          Modal.error('不可还原其他设备使用中的空间。请在其他设备上退出空间后，再尝试还原操作。')
+        }else {
+          Modal.confirm({
+            content:'确定还原此版本？',
+            okText:'还原版本',
+            cancelText:'取消',
+            okType: 'danger',
+            type:'danger',
+            onOk:()=>{
+              this.doRestoreVersion(version)
+            }
+          })
+        }
+
+    },
+    async doRestoreVersion (version) {
+      if (this.activeSpace.type === 'local') {
+        let rs = await spaceVersionModel.restore(this.activeSpace.nanoid, version.nanoid, 'local')
+        if(rs.status===1){
+          this.loadSpaces()
+          message.success('成功还原版本。')
+        }
+        console.log('是本机空间', this.activeSpace)
+      } else {
+        console.log('是云空间', this.activeSpace, 'cloud')
+      }
     },
     async toggleHistory () {
       this.showHistory = !this.showHistory

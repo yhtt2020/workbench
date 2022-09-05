@@ -1294,6 +1294,23 @@ app.whenReady().then(() => {
         userWindow.close()
     }
   })
+  ipc.handle('createWindow',()=>{
+    createWindow()
+  })
+
+  ipc.on('closeSync',(e)=>{
+    function callback(){
+      e.returnValue='done'
+    }
+    if (!mainWindow) {
+      e.returnValue='not_alive'
+      return
+    }
+    mainWindow.once('closed',()=>{
+      callback()
+    })
+    safeCloseMainWindow()
+  })
 
   ipc.on('changeSpace',  (event, args) => {
     async function  reloadMainWindow(){
