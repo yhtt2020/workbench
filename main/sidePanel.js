@@ -1315,8 +1315,10 @@ app.whenReady().then(() => {
   ipc.on('changeSpace',  (event, args) => {
     async function  reloadMainWindow(){
       await require('./src/model/spaceModel').setCurrentSpace(args)
-      createWindow()
-      event.returnValue='done'
+      createWindow(()=>{
+        event.returnValue='done'
+      })
+
     }
     changingSpace = true
     if (mainWindow && !mainWindow.isDestroyed()) {
