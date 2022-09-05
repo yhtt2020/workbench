@@ -1,6 +1,6 @@
 <template>
   <a-layout style="overflow: hidden">
-    <a-layout-sider  :width="230" style="background: #f1f1f1;height: 100vh;border-right: 1px solid #dadada;">
+    <a-layout-sider :width="230" style="background: #f1f1f1;height: 100vh;border-right: 1px solid #dadada;">
       <a-row style="padding: 10px">
         <a-col :span="12">
           <span style="font-size: 12px;color: grey">{{ spaces.length }} 个空间</span>
@@ -8,27 +8,27 @@
         <a-col :span="12" style="text-align: right">
           <a-dropdown>
             <template #overlay>
-              <a-menu >
-                <a-menu-item @click.stop="()=>{}" v-if="this.user.uid===0" >
+              <a-menu>
+                <a-menu-item @click.stop="()=>{}" v-if="this.user.uid===0">
                   <a-checkbox @change="loadSpaces" @click.stop="()=>{}" v-model:checked="showBackup">显示离线空间</a-checkbox>
                 </a-menu-item>
                 <a-menu-item @click="importFromLocal" v-if="user.uid" key="1">
-                  <import-outlined />
+                  <import-outlined/>
                   导入
                 </a-menu-item>
-                <a-menu-item v-if="user.uid!==0"  @click="setEnterPwd()" key="2">
+                <a-menu-item v-if="user.uid!==0" @click="setEnterPwd()" key="2">
                   <LockOutlined/>
                   设置密码
                 </a-menu-item>
                 <a-menu-item v-if="user.uid!==0 && !user.is_current" @click="deleteAccount(user.uid)" key="3">
-                  <logout-outlined />
+                  <logout-outlined/>
                   解绑帐号
                 </a-menu-item>
               </a-menu>
             </template>
             <a-button size="small" @click="showCreateSpace" type="primary">
               创建
-              <DownOutlined />
+              <DownOutlined/>
             </a-button>
           </a-dropdown>
         </a-col>
@@ -36,18 +36,25 @@
 
       <div v-if="loading">
       </div>
-      <vue-custom-scrollbar :settings="settings" style="position:relative;height: calc(100vh - 45px)" >
-        <SpaceList :currentSpace="currentSpace" @reloadSpaces="loadSpaces" v-model:activeSpace="activeSpace" :spaces="spaces" :user="user" @setActive="setActive"></SpaceList>
+      <vue-custom-scrollbar :settings="settings" style="position:relative;height: calc(100vh - 45px)">
+        <SpaceList :currentSpace="currentSpace" @reloadSpaces="loadSpaces" v-model:activeSpace="activeSpace"
+                   :spaces="spaces" :user="user" @setActive="setActive"></SpaceList>
       </vue-custom-scrollbar>
     </a-layout-sider>
     <a-layout>
       <a-layout-content style="overflow: hidden">
         <div v-if="this.activeSpace.nanoid===''" style="padding: 40px">
-          <a-result >
+          <a-result>
             <template #title>
               <h3 style="font-size: 18px">请选择空间</h3>
-              <p style="font-size: 14px;margin-bottom: 10px"><zoom-in-outlined /> 单击：预览空间</p>
-              <p style="font-size: 14px"><swap-outlined /> 双击：切换空间</p>
+              <p style="font-size: 14px;margin-bottom: 10px">
+                <zoom-in-outlined/>
+                单击：预览空间
+              </p>
+              <p style="font-size: 14px">
+                <swap-outlined/>
+                双击：切换空间
+              </p>
             </template>
             <template #extra>
               <a-button key="console" type="primary" @click="showCreateSpace">创建空间</a-button>
@@ -56,12 +63,29 @@
 
 
         </div>
-        <div style="padding: 10px">
-          {{ activeSpace.name }}
+        <div style="padding: 10px;position: relative">
+          {{ activeSpace.name }} <span v-if="this.activeVersion.nanoid"
+                                       style="color: red"> — {{ activeVersion.name }}</span>
+          <div v-if="activeSpace.nanoid" style="position: absolute;right: 10px;top: 10px">
+            <a-dropdown>
+              <template #overlay>
+                <a-menu>
+                  <a-menu-item @click="toggleHistory" key="history">
+                    <history-outlined/>
+                    历史版本
+                  </a-menu-item>
+                </a-menu>
+              </template>
+              <a-button type="text">
+                <more-outlined/>
+              </a-button>
+            </a-dropdown>
+          </div>
         </div>
-          <vue-custom-scrollbar :settings="settings" style="position:relative;height:calc(100vh - 50px);padding:10px" >
-          <TaskList v-if="activeSpace.nanoid!==''" :list="spaceData.state.tasks"  v-model:selectedKeys="selectedKeys"  ></TaskList>
-          </vue-custom-scrollbar>
+        <vue-custom-scrollbar :settings="settings" style="position:relative;height:calc(100vh - 50px);padding:10px">
+          <TaskList v-if="activeSpace.nanoid!==''" :list="spaceData.state.tasks"
+                    v-model:selectedKeys="selectedKeys"></TaskList>
+        </vue-custom-scrollbar>
 
         <div>
           <a-modal
@@ -118,6 +142,16 @@
           </a-modal>
         </div>
       </a-layout-content>
+      <a-layout-sider style="background: white;padding: 10px;box-shadow: 0 0 8px rgba(0,0,0,0.38)" v-if="showHistory">
+        <h3>
+          <history-outlined/>
+          历史版本 <span v-if="versions.length" style="font-size: 12px;color: grey">（{{ versions.length }}）</span>
+          <close-outlined class="close-btn" @click="this.showHistory=false"/>
+        </h3>
+        <vue-custom-scrollbar :settings="settings" style="position:relative;height: calc(100vh - 50px)">
+          <VersionList @setActive="setTaskList" :versions="versions"></VersionList>
+        </vue-custom-scrollbar>
+      </a-layout-sider>
     </a-layout>
   </a-layout>
 
@@ -126,25 +160,50 @@
 
 <script>
 
-const { userModel, spaceModel } = window.$models
-import { message ,Modal} from 'ant-design-vue'
+import VersionList from '../components/VersionList.vue'
+
+const { userModel, spaceModel, spaceVersionModel } = window.$models
+import { message, Modal } from 'ant-design-vue'
 import SpaceList from '../components/SpaceList.vue'
 import TaskList from '../components/TaskList.vue'
 
-import {ZoomInOutlined,SwapOutlined,DownOutlined,ImportOutlined,LockOutlined,LogoutOutlined} from '@ant-design/icons-vue'
+import {
+  ZoomInOutlined,
+  SwapOutlined,
+  DownOutlined,
+  ImportOutlined,
+  LockOutlined,
+  LogoutOutlined,
+  MoreOutlined,
+  HistoryOutlined,
+  CloseOutlined
+} from '@ant-design/icons-vue'
 import vueCustomScrollbar from '../../../src/components/vue-scrollbar.vue'
+
 export default {
   name: 'SpaceSelect',
-  components:{
+  components: {
+    VersionList,
     vueCustomScrollbar,
     SpaceList,
     TaskList,
-    ZoomInOutlined,SwapOutlined,DownOutlined,ImportOutlined,LockOutlined,LogoutOutlined
+    ZoomInOutlined,
+    SwapOutlined,
+    DownOutlined,
+    ImportOutlined,
+    LockOutlined,
+    LogoutOutlined,
+    MoreOutlined,
+    HistoryOutlined,
+    CloseOutlined
   },
   data () {
     return {
+      versions: [],
+      activeVersion: {},//当前版本
+      showHistory: false,//显示右侧历史版本
       settings: {
-        swipeEasing:true,
+        swipeEasing: true,
         suppressScrollY: false,
         suppressScrollX: true,
         wheelPropagation: false
@@ -156,13 +215,13 @@ export default {
         user_info: {}
       },
       spaces: [],
-      activeSpace: {nanoid:''},
-      spaceData:{
-        state:{
-          tasks:[]
+      activeSpace: { nanoid: '' },
+      spaceData: {
+        state: {
+          tasks: []
         }
       },
-      selectedKeys:[],
+      selectedKeys: [],
 
       currentSpace: {},
       pwd: '',
@@ -175,8 +234,6 @@ export default {
       //创建
       visibleCreate: false,
       newSpaceName: '',
-
-
 
       //设置空间密码
       visibleSetEnterPwd: false,
@@ -198,10 +255,22 @@ export default {
     let uid = Number(this.$route.params.uid)
     this.init(uid)
   },
-  computed:{
-
-  },
+  computed: {},
   methods: {
+    setTaskList (version) {
+      console.log('选中', version)
+      this.activeVersion = version
+      this.spaceData = JSON.parse(version.data)
+    },
+    async toggleHistory () {
+      this.showHistory = !this.showHistory
+      if (this.showHistory) {
+        let rs = await spaceVersionModel.list(this.activeSpace.nanoid)
+        if (rs.status) {
+          this.versions = rs.data
+        }
+      }
+    },
     async init (uid) {
       this.tipCopyRead = localStorage.getItem('tipCopyRead')
       let user = {}
@@ -434,27 +503,31 @@ export default {
         this.$refs.spaceNameInput.input.focus()
       }, 200)
     },
-    resetActive(){
-      this.activeSpace ={nanoid:''}
+    resetActive () {
+      this.showHistory = false
+      this.activeVersion = {}
+      this.activeSpace = { nanoid: '' }
     },
     async setActive (space) {
+      this.showHistory = false
       this.activeSpace = space
-      if(this.user.uid!==0){
-        try{
+      this.activeVersion = {}
+      if (this.user.uid !== 0) {
+        try {
           let spaceRs = await spaceModel.setUser(this.user).getSpace(space.nanoid)
-          if(spaceRs.status===1){
-            console.log('读入数据',spaceRs)
-            this.spaceData=spaceRs.data.data
-          }else{
-            this.spaceData={}
+          if (spaceRs.status === 1) {
+            console.log('读入数据', spaceRs)
+            this.spaceData = spaceRs.data.data
+          } else {
+            this.spaceData = {}
           }
-        }catch (e) {
+        } catch (e) {
           console.warn('载入失败')
         }
 
-      }else{
+      } else {
         let spaceRs = await spaceModel.setUser(this.user).getSpace(space.nanoid)
-        this.spaceData=JSON.parse(spaceRs.data)
+        this.spaceData = JSON.parse(spaceRs.data)
       }
 
     },
@@ -480,5 +553,13 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
+.close-btn {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  color: #ccc;
+  &:hover{
+    color:#999
+  }
+}
 </style>

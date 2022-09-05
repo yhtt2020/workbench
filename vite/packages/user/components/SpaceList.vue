@@ -17,7 +17,7 @@
             <span class="info">{{ space.count_task }} 标签组 {{ space.count_tab }}标签</span>
           </a-row>
           <a-row>
-            <span class="time" v-html="dateTime(space.sync_time)"></span>
+            <span class="time" v-html="friendlyDate(space.sync_time)"></span>
           </a-row>
           <div>
             <a-tag v-if="this.currentSpace.spaceId===space.nanoid" color="green">
@@ -97,6 +97,9 @@ export default {
   },
   emits: ['setActive','reloadSpaces'],
   methods: {
+    friendlyDate(date){
+      return tsbApi.util.friendlyDate(date)
+    },
     offLine(time){
       return this.lastReloadTime-time>30*1000
     },
@@ -111,33 +114,6 @@ export default {
       let icon = '/icons/box.svg'
       //todo 支持自定义图标
       return icon
-    },
-    dateTime (stringTime) {
-      let date = new Date(stringTime)
-      //return date.getFullYear()+'年'+date.getMonth()+'月'+date.getDate()+'日 '+date.getHours()+':'+date.getMinutes()
-      let minute = 1000 * 60
-      let hour = minute * 60
-      let day = hour * 24
-      let time1 = new Date().getTime() //当前的时间戳
-      let time2 = Date.parse(new Date(stringTime)) //指定时间的时间戳
-      let time = time1 - time2
-      let result = null
-      if (time < 0) {
-        result = `<span style="color: black;font-weight: bold">刚刚</span>`
-      } else if (time / day >= 3) {
-        result = date.getMonth() + '月' + date.getDate() + '日 ' + date.getHours() + ':' + date.getMinutes()
-      } else if (time / day >= 2) {
-        result = '前天' + date.getHours() + ':' + date.getMinutes()
-      } else if (time / day >= 1) {
-        result = '昨天' + date.getHours() + ':' + date.getMinutes()
-      } else if (time / hour >= 1) {
-        result = parseInt(time / hour) + '小时前'
-      } else if (time / minute >= 1) {
-        result = parseInt(time / minute) + '分钟前'
-      } else {
-        result = `<span style="color: black;font-weight: bold">刚刚</span>`
-      }
-      return result
     },
 
     showRenameSpace (space) {
