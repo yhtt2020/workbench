@@ -216,7 +216,7 @@ const statistics = {
         // settings.set('clientID', undefined)
         return
       } else if (!settings.get('clientID')) {
-        settings.set('clientID', Math.random().toString().slice(2))
+        settings.set('clientID', require('nanoid').nanoid(8))
       }
     })
 
