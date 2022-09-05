@@ -19,29 +19,26 @@
           <a-row>
             <span class="time" v-html="dateTime(space.sync_time)"></span>
           </a-row>
+          <div>
+            <a-tag v-if="this.currentSpace.spaceId===space.nanoid" color="green">
+              当前设备使用中
+            </a-tag>
+          </div>
           <div v-if="space.client_id">
-            <div  v-if="space.client_id===this.user.clientId">
-              <a-tag color="green">
-                当前设备使用中
-              </a-tag>
-              <a-tag title="设备ID">
-                <desktop-outlined/>
-                {{ space.client_id }}
-              </a-tag>
-            </div>
-            <div v-else>
+            <div v-if="space.client_id !==this.user.clientId">
               <a-tag color="red" v-if="!this.offLine(space.sync_time)">
                 其他设备使用中
               </a-tag>
               <a-tag v-else>
                 其他设备离线使用中
               </a-tag>
+            </div>
+            <div>
               <a-tag title="设备ID">
                 <desktop-outlined/>
                 {{ space.client_id }}
               </a-tag>
             </div>
-
           </div>
         </div>
       </li>
@@ -82,6 +79,7 @@ export default {
   props: {
     spaces: Array,
     user: Object,
+    currentSpace:Object,
     activeSpace: {nanoid:''},
   },
   components:{
@@ -94,14 +92,16 @@ export default {
       visibleRename: false,
       renamingSpace: null,
       spaceRename: '',
+      lastReloadTime:Date.now(),
     }
   },
   emits: ['setActive','reloadSpaces'],
   methods: {
     offLine(time){
-      return Date.now()-time>30*1000
+      return this.lastReloadTime-time>30*1000
     },
     reloadSpaces(){
+      this.lastReloadTime=Date.now()
       this.$emit('reloadSpaces')
     },
     setActive(space){
