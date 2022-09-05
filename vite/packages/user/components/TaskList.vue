@@ -76,9 +76,13 @@ export default {
 </script>
 
 <template>
-  <div >
+  <div>
     <div >
       <a-row :gutter="16">
+       <a-col :span="24" style="text-align: center;padding-top: 20vh" v-if="dataList.length===0">
+         <a-empty description="全新空间，进入后自动初始化" >
+         </a-empty>
+       </a-col>
         <a-col  :sm="12" :lg="8"  :xl="6" :xxl="4" v-for="(task,index) in dataList" :key="index">
           <a-card
                   :bordered="false" class="task">
