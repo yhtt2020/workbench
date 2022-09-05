@@ -8,8 +8,11 @@ const runtime={
     'window':'1.0.0'
   },
   clientId:'',
-  clientName:''
+  clientName:'',
 }
 runtime.clientId= settings.get('clientID')
 runtime.clientName=settings.get('clientName')
+if(!runtime.clientName){
+  runtime.clientName=require('os').hostname()
+}
 module.exports=runtime
