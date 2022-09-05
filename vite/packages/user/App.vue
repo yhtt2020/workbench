@@ -135,7 +135,7 @@ export default {
             <a-col flex="auto">
               <div class="text-more" :style="{'padding-top':!user.is_current?'4px':''}" style="width: 70px">{{ user.user_info.nickname }}</div>
               <div class="current-tag" v-if="user.is_current">
-               使用中
+               登录中
               </div>
             </a-col>
           </a-row>

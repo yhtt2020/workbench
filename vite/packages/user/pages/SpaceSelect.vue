@@ -37,7 +37,7 @@
       <div v-if="loading">
       </div>
       <vue-custom-scrollbar :settings="settings" style="position:relative;height: calc(100vh - 45px)" >
-        <SpaceList @reloadSpaces="loadSpaces" v-model:activeSpace="activeSpace" :spaces="spaces" :user="user" @setActive="setActive"></SpaceList>
+        <SpaceList :currentSpace="currentSpace" @reloadSpaces="loadSpaces" v-model:activeSpace="activeSpace" :spaces="spaces" :user="user" @setActive="setActive"></SpaceList>
       </vue-custom-scrollbar>
     </a-layout-sider>
     <a-layout>
