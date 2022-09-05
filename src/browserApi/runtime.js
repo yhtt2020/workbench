@@ -1,3 +1,4 @@
+const settings = require('../../js/util/settings/settings.js')
 const runtime={
   version:{
     'api':'1.0.0',
@@ -6,6 +7,9 @@ const runtime={
     'user':'1.0.0',
     'window':'1.0.0'
   },
+  clientId:'',
+  clientName:''
 }
-
+runtime.clientId= settings.get('clientID')
+runtime.clientName=settings.get('clientName')
 module.exports=runtime
