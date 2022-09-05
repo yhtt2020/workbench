@@ -131,7 +131,7 @@ import { message ,Modal} from 'ant-design-vue'
 import SpaceList from '../components/SpaceList.vue'
 import TaskList from '../components/TaskList.vue'
 
-import {ZoomInOutlined,SwapOutlined,DesktopOutlined,DownOutlined,ImportOutlined,LockOutlined,LogoutOutlined} from '@ant-design/icons-vue'
+import {ZoomInOutlined,SwapOutlined,DownOutlined,ImportOutlined,LockOutlined,LogoutOutlined} from '@ant-design/icons-vue'
 import vueCustomScrollbar from '../../../src/components/vue-scrollbar.vue'
 export default {
   name: 'SpaceSelect',

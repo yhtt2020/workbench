@@ -18,13 +18,30 @@
           </a-row>
           <a-row>
             <span class="time" v-html="dateTime(space.sync_time)"></span>
-
           </a-row>
           <div v-if="space.client_id">
-            <a-tag>
-              <desktop-outlined/>
-              {{ space.client_id }}
-            </a-tag>
+            <div  v-if="space.client_id===this.user.clientId">
+              <a-tag color="green">
+                当前设备使用中
+              </a-tag>
+              <a-tag title="设备ID">
+                <desktop-outlined/>
+                {{ space.client_id }}
+              </a-tag>
+            </div>
+            <div v-else>
+              <a-tag color="red" v-if="!this.offLine(space.sync_time)">
+                其他设备使用中
+              </a-tag>
+              <a-tag v-else>
+                其他设备离线使用中
+              </a-tag>
+              <a-tag title="设备ID">
+                <desktop-outlined/>
+                {{ space.client_id }}
+              </a-tag>
+            </div>
+
           </div>
         </div>
       </li>
@@ -68,7 +85,7 @@ export default {
     activeSpace: {nanoid:''},
   },
   components:{
-    ZoomInOutlined,SwapOutlined,DesktopOutlined,DownOutlined,ImportOutlined,LockOutlined,LogoutOutlined
+    DesktopOutlined
   },
   data(){
     return {
@@ -81,6 +98,9 @@ export default {
   },
   emits: ['setActive','reloadSpaces'],
   methods: {
+    offLine(time){
+      return Date.now()-time>30*1000
+    },
     reloadSpaces(){
       this.$emit('reloadSpaces')
     },
