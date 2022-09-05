@@ -1172,7 +1172,7 @@ function showUserWindow (args) {
       bounds.height = parseInt(selfBounds.height)
       return bounds
     }
-
+    userWindow.setMenu(null)
     userWindow.loadURL(render.getUrl('user.html'))
     userWindow.on('ready-to-show', () => {
       userWindow.show()
@@ -1186,6 +1186,9 @@ function showUserWindow (args) {
 
     })
     userWindow.on('close', () => {
+      if(!mainWindow){
+        app.exit()
+      }
       userWindow = null
     })
   }
