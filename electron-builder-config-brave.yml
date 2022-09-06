@@ -53,7 +53,7 @@ win:
         - target: zip
     publish:
         - provider : generic
-          url: http://d.xiangtian.ren/update/browser/win/
+          url: http://d.xiangtian.ren/update/browser/win_brave/
           channel: latest
 
 mac:
