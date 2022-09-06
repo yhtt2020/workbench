@@ -34,7 +34,7 @@ const cloudSpaceModel={
         await backupSpaceModel.save(cloudSpace,{name:cloudSpace.name,data:cloudSpace.data,count_task: cloudSpace.count_task,count_tab: cloudSpace.count_tab})
         cloudSpace.type='cloud'
         cloudSpace.uid=cloudSpaceModel.user.uid
-        ipc.send('changeSpace',JSON.parse(JSON.stringify(cloudSpace)))
+        await ipc.sendSync('changeSpace',JSON.parse(JSON.stringify(cloudSpace)))
       }else{
         return standReturn.failure('空间异常')
       }
@@ -53,7 +53,7 @@ const cloudSpaceModel={
    return standReturn.autoReturn(result)
   },
   async save (spaceId, saveData, userInfo,force=false) {
-    console.log('测试用户数据',userInfo.clientId)
+    console.log('saveData',saveData)
     let result = await spaceApi.save(spaceId,userInfo.clientId, saveData,userInfo,force)
     return standReturn.autoReturn(result)
   },

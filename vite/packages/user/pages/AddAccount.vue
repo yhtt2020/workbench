@@ -14,8 +14,9 @@
       强烈建议绑定帐号以提升使用体验。
     </p>
     <p style="text-align: center;color: #333">
-      同一帐号共享收藏夹、密码、应用。
+      目前暂不支持云收藏夹、云密码。
     </p>
+    <p style="text-align: center">本机全部账号在此计算机上均可浏览和使用收藏夹、密码。</p>
     <div style="text-align: center">
       <a-button @click="goLogin" type="primary">去登录</a-button>
     </div>

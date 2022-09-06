@@ -7,6 +7,7 @@ import Welcome from './pages/Welcome.vue'
 import EnterPwd from './pages/EnterPwd.vue'
 import AddAccount from './pages/AddAccount.vue'
 import SpaceSelect from './pages/SpaceSelect.vue'
+import Template from './pages/Template.vue'
 import {createRouter,createWebHashHistory} from 'vue-router'
 
 const routes=[
@@ -22,6 +23,9 @@ const routes=[
   },
   {
     path:'/space',name:'space',component: SpaceSelect
+  },
+  {
+    path:'/template',name:'template',component: Template
   }
 
 ]

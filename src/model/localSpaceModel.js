@@ -148,9 +148,9 @@ const localSpaceModel={
    * @param space
    * @returns {Promise<{data: {}, status: number}>}
    */
-   changeCurrent(space){
+   async changeCurrent(space){
      space.type='local'
-    ipc.send('changeSpace',JSON.parse(JSON.stringify(space)))
+     await  ipc.sendSync('changeSpace',JSON.parse(JSON.stringify(space)))
     return standReturn.success(space)
   },
 

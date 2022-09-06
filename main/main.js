@@ -326,6 +326,10 @@ function createWindowWithBounds(bounds) {
 		mainWindow = null
 		mainWindowIsMinimized = false
     if(process.platform==='win32' && !changingSpace){
+      if(userWindow){
+        console.log('userWindow存在，直接取消关闭')
+        return
+      }
      //windows上，且不是在切换空间，则关闭整个应用
       // todo 如果做了托盘菜单，这里不需要直接退出app
      app.quit()
@@ -612,8 +616,10 @@ function safeCloseMainWindow(){
 }
 let canCloseMainWindow=false
 ipc.on('closeMainWindow',()=>{
-  canCloseMainWindow=true
-  mainWindow.close()
+  if(mainWindow && !mainWindow.isDestroyed()){
+    canCloseMainWindow=true
+    mainWindow.close()
+  }
 })
 
 let canQuit=false

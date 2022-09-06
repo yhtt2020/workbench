@@ -45,6 +45,7 @@ const spaceModel = {
       console.error(e)
     }
   },
+
   setUser (user) {
     spaceModel.user = user
     if (user.uid === 0) {
