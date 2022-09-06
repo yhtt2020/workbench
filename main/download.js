@@ -47,8 +47,8 @@ ipc.on('originalPage', (event, args) => {
   originalPageUrl = args
 })
 
-ipc.on('closeEmpty',() => {
-  mainWindow.webContents.send('closeEmptyPage')
+ipc.on('closeEmpty',(event,args) => {
+  mainWindow.webContents.send('closeEmptyPage',args)
 })
 
 ipc.on('downloading', (event, args) => {

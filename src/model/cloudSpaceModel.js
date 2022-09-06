@@ -34,7 +34,7 @@ const cloudSpaceModel={
         await backupSpaceModel.save(cloudSpace,{name:cloudSpace.name,data:cloudSpace.data,count_task: cloudSpace.count_task,count_tab: cloudSpace.count_tab})
         cloudSpace.type='cloud'
         cloudSpace.uid=cloudSpaceModel.user.uid
-        ipc.send('changeSpace',JSON.parse(JSON.stringify(cloudSpace)))
+        await ipc.sendSync('changeSpace',JSON.parse(JSON.stringify(cloudSpace)))
       }else{
         return standReturn.failure('空间异常')
       }

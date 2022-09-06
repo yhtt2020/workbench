@@ -92,6 +92,20 @@ ipc.on('willDownload',()=>{
 })
 
 
+ipc.on('showBreakMenu', (event,args) => {
+  const template = [
+    { label: '重新下载' ,
+      click: () => { event.sender.send('breakMenuAgain') }
+    },
+
+    { label: '删除任务',
+      click: () => { event.sender.send('breakMenuDel') }
+    }
+  ]
+  const menu = Menu.buildFromTemplate(template)
+  menu.popup(BrowserWindow.fromWebContents(event.sender))
+})
+
 
 ipc.on('showMenuIng', (event,args) => {
   const template = [

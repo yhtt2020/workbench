@@ -1273,12 +1273,12 @@ function callUnModal (win) {
 app.whenReady().then(() => {
   ipc.on('startApp',()=>{
     if(!mainWindow){
-      createWindow()
-    }
-
-    if (userWindow) {
-      if (userWindow.isDestroyed() === false)
-        userWindow.close()
+      createWindow(()=>{
+        if (userWindow) {
+          if (userWindow.isDestroyed() === false)
+            userWindow.close()
+        }
+      })
     }
   })
 
@@ -1315,7 +1315,10 @@ app.whenReady().then(() => {
   ipc.on('changeSpace',  (event, args) => {
     async function  reloadMainWindow(){
       await require('./src/model/spaceModel').setCurrentSpace(args)
-      createWindow()
+      createWindow(()=>{
+        event.returnValue='done'
+      })
+
     }
     changingSpace = true
     if (mainWindow && !mainWindow.isDestroyed()) {
