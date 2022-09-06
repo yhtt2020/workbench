@@ -1287,7 +1287,8 @@ Vue.component('sidebar', {
         auth:app.auth,
         site:app.site,
         author:app.author,
-        showInSideBar: false
+        showInSideBar: false,
+        circleMessage:!!!app.circleMessage ? '' :app.circleMessage,
       }
       standAloneAppModel.install(app.url, option).then(success => {
         ipc.send('message', { type: 'success', config: { content: `添加应用：${app.name} 成功` } })

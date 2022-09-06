@@ -394,6 +394,7 @@ const standAloneAppModel = {
       site:app.site?app.site:'',
       url: url,
       circle:app.circle?app.circle:'',
+      circleMessage:app.circleMessage?app.circleMessage:'',
       preload: app.preload||'',
       package:app.package || '',
       themeColor: app.themeColor || '#ccc',
