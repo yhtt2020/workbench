@@ -324,7 +324,9 @@ window.onload = function() {
         state.onlineGrade.lv = userInfo.onlineGradeExtra.lv
         state.onlineGrade.cumulativeHours = userInfo.onlineGradeExtra.cumulativeHours
         state.onlineGrade.cumulativeMinute = userInfo.onlineGradeExtra.minutes
+        state.onlineGrade.cumulativeMinutes=userInfo.onlineGradeExtra.cumulativeHours % 60
         state.onlineGrade.rank = userInfo.onlineGradeExtra.rank
+        state.onlineGrade.distance= userInfo.onlineGradeExtra.distance
         state.onlineGrade.percentage = String(userInfo.onlineGradeExtra.percentage).slice(0, 6) * 100
         window.appVue.lastOpenedLv = userInfo.onlineGradeExtra.lv
       },
@@ -484,6 +486,7 @@ window.onload = function() {
       },
       async getUserInfo({commit}){
         const result = await userApi.getUserInfo()
+        console.log('等级相关;',result.data)
         if(result.code===1000){
           commit('set_user_info',result.data)
           commit('SET_TSGRADE', result.data)
