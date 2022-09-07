@@ -249,7 +249,9 @@ app.on('ready', () => {
     SidePanel.send('refreshCircleList')
   })
   ipc.on('toggleChat',()=>{
-    if(!windowManager.isAlive('chat')){
+    let CHAT_NAME='chat'
+    if(!windowManager.isAlive(CHAT_NAME)){
+      console.log('未找到',windowManager.isAlive(CHAT_NAME))
       //如果还未载入，则需要载入
       let parentBounds=mainWindow.getBounds()
       const defaultSize={
@@ -257,8 +259,8 @@ app.on('ready', () => {
         height:640,
         space:24
       }
-      windowManager.create({
-        name:'chat',
+       windowManager.create({
+        name:CHAT_NAME,
         mod:windowManager.MOD.NO_CONTROLLER,
         windowOption:{
           frame:false,
@@ -273,7 +275,8 @@ app.on('ready', () => {
             preload:path.join(__dirname,'src/browserApi/apiPreload.js'),
             sandbox:false,
         },
-        url:config.IM.FRONT_URL,
+        //url:config.IM.FRONT_URL,
+        url:'http://localhost:8000',
         rememberBounds:true,
         defaultBounds:{
           width: defaultSize.width,
@@ -282,6 +285,9 @@ app.on('ready', () => {
           y: parentBounds.y + parentBounds.height - defaultSize.height - defaultSize.space
         }
       })
+    }
+    else{
+      windowManager.close(CHAT_NAME)
     }
   })
 })

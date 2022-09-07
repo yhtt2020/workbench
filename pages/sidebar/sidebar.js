@@ -90,10 +90,10 @@ window.onload = function() {
   window.ldb=require('../../src/util/ldb')
   ldb.load(window.globalArgs['user-data-path']+'/ldb.json')
 
-  let showUpdateLog= localStorage.getItem('3.2')
+  let showUpdateLog= localStorage.getItem('3.3')
   if(showUpdateLog!=='true'){
-    ipc.send('addTab',{url:"https://www.yuque.com/tswork/browser/ci5kwg"})
-    localStorage.setItem('3.2','true')
+    ipc.send('addTab',{url:"https://www.yuque.com/tswork/browser/xazqoe"})
+    localStorage.setItem('3.3','true')
   }
   const DEFAULT_GUEST={//当前用户
     uid:0,
@@ -324,7 +324,9 @@ window.onload = function() {
         state.onlineGrade.lv = userInfo.onlineGradeExtra.lv
         state.onlineGrade.cumulativeHours = userInfo.onlineGradeExtra.cumulativeHours
         state.onlineGrade.cumulativeMinute = userInfo.onlineGradeExtra.minutes
+        state.onlineGrade.cumulativeMinutes=userInfo.onlineGradeExtra.cumulativeHours % 60
         state.onlineGrade.rank = userInfo.onlineGradeExtra.rank
+        state.onlineGrade.distance= userInfo.onlineGradeExtra.distance
         state.onlineGrade.percentage = String(userInfo.onlineGradeExtra.percentage).slice(0, 6) * 100
         window.appVue.lastOpenedLv = userInfo.onlineGradeExtra.lv
       },
@@ -484,6 +486,7 @@ window.onload = function() {
       },
       async getUserInfo({commit}){
         const result = await userApi.getUserInfo()
+        console.log('等级相关;',result.data)
         if(result.code===1000){
           commit('set_user_info',result.data)
           commit('SET_TSGRADE', result.data)

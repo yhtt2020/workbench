@@ -175,32 +175,30 @@
 
 <script>
   //移动到左侧空白区域的时候，让左侧栏重获鼠标，防止无法移动上去
-  var focusTimer =null
+  var focusTimer = null
+
   function setNoIgnore () {
-    if(focusTimer) return
-    focusTimer =setInterval(function () { //开启定时器，下面就是执行的方法，在窗体加载1S后执行下面的方法。
+    if (focusTimer) return
+    focusTimer = setInterval(function () { //开启定时器，下面就是执行的方法，在窗体加载1S后执行下面的方法。
       window.postMessage({
         message: 'set-ignore-mouse-events'
       })
       ipc.send('setMouseEnable')
       //console.log('设置左侧栏鼠标有效')
-      clearTimeout(focusTimer); //关闭定时器。
-      focusTimer=null
+      clearTimeout(focusTimer) //关闭定时器。
+      focusTimer = null
       console.log('触发左侧栏')
-    }, 200);
+    }, 200)
   }
-  function stopSetIgnore(){
-    if(focusTimer){
-      clearTimeout(focusTimer); //关闭定时器。
-      focusTimer=null
+
+  function stopSetIgnore () {
+    if (focusTimer) {
+      clearTimeout(focusTimer) //关闭定时器。
+      focusTimer = null
     }
   }
 
-  function openSiteCard (e, tabData) {
-    ipc.send('createSiteCard', { url: tabData.url, x: e.clientX, y: e.clientY, title: tabData.title, tabData: tabData })
-    e.preventDefault()
-    e.stopPropagation()
-  }
+
 </script>
 <div id="searchbar" class="" hidden>
   <div class="top-answer-area"></div>
@@ -236,7 +234,7 @@
       </div>
       <div style="flex-grow:1 ;position:relative;overflow:hidden">
         <div id="address-bar" style="overflow: hidden">
-          <img id="site-card" @click="openSiteCard(this,tabs.get(tabs.getSelected()))" title="网站信息" class="site-card"
+          <img id="site-card" @click="openSiteCard($event)" title="网站信息" class="site-card"
                src="icons/svg/safe.svg">
         </div>
 
@@ -290,7 +288,7 @@
         <div class="action-wrapper app-tool">
               <span title="互动面板" @click="ipc.send('toggleChat')" id="chat-toolbar">
                 <img style="width: 24px" class="action app"
-                                                                                          src="./icons/toolbar/apps/chat.svg">
+                     src="./icons/toolbar/apps/chat.svg">
                 <span hidden class="bandage" id="chat">0</span>
               </span>
         </div>
@@ -323,7 +321,7 @@
                   <span v-if="!displayText" style="font-size: 10px;line-height: 20px">
                     {{ memPercent }}
                   </span>
-              <span  v-else style="font-size: 10px;line-height: 20px">
+              <span v-else style="font-size: 10px;line-height: 20px">
                     加速
                   </span>
             </template>
@@ -373,7 +371,7 @@
       return {
         displayText: false,
         memPercent: 0,
-        lastMem:0,
+        lastMem: 0,
 
         isDefaultBrowser: null,
         finishedNoobguideNum: 0,
@@ -432,7 +430,19 @@
       })
     },
     methods: {
-      speedup(){
+      openSiteCard (e) {
+        let tabData=tabs.get(tabs.getSelected())
+        ipc.send('createSiteCard', {
+          url: tabData.url,
+          x: e.clientX,
+          y: e.clientY,
+          title: tabData.title,
+          tabData: tabData
+        })
+        e.preventDefault()
+        e.stopPropagation()
+      },
+      speedup () {
         ipc.send('toolbar.speedup')
       },
       hover () {
@@ -633,35 +643,37 @@
     })
     closeBlockGuide.start()
 
-      })
-      function calculate(a){
-          if(a>=10){
-            return '9+'
-          }
-          if(a<0){
-            return 0
-          } else{
-            return a
-          }
-      }
-      let count = 0;
-      downloadCountEl = document.getElementById('downloadCount')
-      downloadCountEl.hidden=true
-      ipc.on('downloadCountAdd',()=>{
-        downloadCountEl.hidden=false
-        count++
-        downloadCountEl.innerText=calculate(count)
-      })
-      ipc.on('downloadCountCut',()=>{
-        count--
-        // console.log(downloadCount)
-        if(count <= 0){
-          count=0
-          downloadCountEl.hidden=true
-        }else {
-          downloadCountEl.innerText=calculate(count)
-        }
-      })
+  })
+
+  function calculate (a) {
+    if (a >= 10) {
+      return '9+'
+    }
+    if (a < 0) {
+      return 0
+    } else {
+      return a
+    }
+  }
+
+  let count = 0
+  downloadCountEl = document.getElementById('downloadCount')
+  downloadCountEl.hidden = true
+  ipc.on('downloadCountAdd', () => {
+    downloadCountEl.hidden = false
+    count++
+    downloadCountEl.innerText = calculate(count)
+  })
+  ipc.on('downloadCountCut', () => {
+    count--
+    // console.log(downloadCount)
+    if (count <= 0) {
+      count = 0
+      downloadCountEl.hidden = true
+    } else {
+      downloadCountEl.innerText = calculate(count)
+    }
+  })
 
   ipc.on('remakeCurrentUser', async (event, args) => {
     const { db } = require('./js/util/database.js')
