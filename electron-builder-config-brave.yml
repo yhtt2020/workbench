@@ -55,7 +55,7 @@ win:
               - ia32
     publish:
         - provider : generic
-          url: http://d.xiangtian.ren/update/browser/win_brave/
+          url: http://d.xiangtian.ren/update/browser_brave/win/
           channel: latest
 
 mac:
