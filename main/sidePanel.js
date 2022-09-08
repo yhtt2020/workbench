@@ -1291,6 +1291,8 @@ app.whenReady().then(() => {
    */
   ipc.on('justCloseMainWindow',()=>{
     if (mainWindow && !mainWindow.isDestroyed()) {
+      destroyAllViews()
+      saveWindowBounds()
       mainWindow.close()
       mainWindow=null
     }
