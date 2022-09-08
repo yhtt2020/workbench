@@ -1,5 +1,5 @@
-window.ipc=require('electron').ipcRenderer
-const settings = require('../../js/util/settings/settings.js')
+
+const clientModel = require('../model/clientModel')
 
 const runtime={
   version:{
@@ -9,12 +9,16 @@ const runtime={
     'user':'1.0.0',
     'window':'1.0.0'
   },
-  clientId:'',
-  clientName:'',
+  client:{
+    id:'',
+    name:''
+  },
+  initialize(){
+    runtime.client=clientModel.get()
+    runtime.clientId=runtime.client.id  //兼容老版本，仍然提供这个变量
+    runtime.clientName=runtime.client.name //兼容老版本，仍然提供这个变量
+  }
 }
-runtime.clientId= settings.get('clientID')
-runtime.clientName=settings.get('clientName')
-if(!runtime.clientName){
-  runtime.clientName=require('os').hostname()
-}
+
+runtime.initialize()
 module.exports=runtime

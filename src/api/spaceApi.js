@@ -29,9 +29,9 @@ const spaceApi = {
     await baseApi.init(user)
     return baseApi.axios(url.spaceListMy,{},'get')
   },
-  async change(nanoid,clientId,user){
+  async change(nanoid,clientId,clientName,user){
     await baseApi.init(user)
-    return baseApi.axios(url.change,{nanoid:nanoid,clientId:clientId,force:true},'post')
+    return baseApi.axios(url.change,{nanoid:nanoid,clientId:clientId,clientName:clientName,force:true},'post')
   },
   async save(nanoid,clientId, saveData,user,force=false){
     await baseApi.init(user)
@@ -61,9 +61,9 @@ const spaceApi = {
     await baseApi.init(user)
     return baseApi.axios(url.clientOffline,{clientId:clientId},'post')
   },
-  async clientOnline(nanoid,force=false,clientId,user){
+  async clientOnline(nanoid,force=false,clientId,clientName,user){
     await baseApi.init(user)
-    return baseApi.axios(url.clientOnline,{nanoid,force:force,clientId:clientId},'post')
+    return baseApi.axios(url.clientOnline,{nanoid,force:force,clientId:clientId,clientName:clientName},'post')
   }
 }
 

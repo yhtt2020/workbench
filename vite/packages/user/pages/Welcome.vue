@@ -4,7 +4,7 @@
     <h3 style="margin-top: 15px">欢迎使用 {{appName}}</h3>
     <p>版本：{{appVersion}}</p>
     <div style="position: absolute;right: 10px;top: 10px">
-      <a-tag @click="reName" title="当前设备ID"> <desktop-outlined/> {{this.getClientName()}}</a-tag>
+      <a-tag @click="reName" title="当前设备ID" style="max-width: 150px" class="text-more"> <desktop-outlined/> {{this.getClientName()}}</a-tag>
 
     </div>
     <p>
@@ -85,6 +85,11 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.text-more {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .tip {
   &:hover{
       box-shadow: 0 0 8px rgba(101, 96, 96, 0.3);
