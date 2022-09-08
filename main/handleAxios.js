@@ -509,13 +509,11 @@ app.whenReady().then(()=>{
   ipc.on('guideLogin',()=>{
     SidePanel.send('guideLogin')
   })
+
   ipc.on('guideClose',()=>{
     mainWindow.webContents.send('closeGuide')
   })
 
-  ipc.on('valueCount',(event,args)=>{
-    mainWindow.webContents.send('valueCount',args)
-  })
 
   ipc.on('openNewGuide',()=>{
     mainWindow.webContents.send('openNewGuide')

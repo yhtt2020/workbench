@@ -56,7 +56,7 @@
                 <div v-show="item.path !=='' && item.status==='progressing' && item.total === '0KB'" style="font-size: 12px;width: 150px;color:#999">
                   {{ item.received }} / 未知
                 </div>
-                <div v-show="item.path ==='' " style="font-size: 12px;width: 150px;color:#999">
+                <div v-show="item.path ==='' && item.state !== 0 " style="font-size: 12px;width: 150px;color:#999">
                   预载中...
                 </div>
                 <div v-show="item.state === 0" style="font-size: 12px;width: 150px;color:#999">
@@ -274,6 +274,7 @@
   })
 
   ipcRenderer.on('download-info', async (event, args) => {
+    console.log(args)
     let i
     let simpleName
     if (args.name.length >= 20) {

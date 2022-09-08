@@ -598,7 +598,7 @@
 
 <script src="dist/bundle.js"></script>
 <script>
-
+  const setting=require('./js/util/settings/settings')
   ipc.on('clearCurrentUser', async (event, args) => {
     const { db } = require('./js/util/database.js')
     await db.system.where('name').equals('currentUser').modify({
@@ -610,16 +610,35 @@
     })
   })
 
-  let isBlockTips = localStorage.getItem('isBlockTips')
+
+  
+  let isBlockTips = setting.get('isBlockTips')
   if (!isBlockTips) {
-    localStorage.setItem('isBlockTips', '1')
+    setting.set('isBlockTips', '1')
   }
-  ipc.on('valueCount', (event, args) => {
-    if (args > 200 && isBlockTips === '1') {
-      ipc.invoke('openBlockTips')
-      localStorage.setItem('isBlockTips', '2')
-    }
-  })
+
+  if(setting.get('filtering').blockingLevel !== 0 && isBlockTips === '1'){
+    const myVar = setInterval(function () {
+      if(setting.get('filteringBlockedCount')>200){
+        ipc.invoke('openBlockTips')
+        setting.set('isBlockTips', '2')
+        clearInterval(myVar)
+      }
+    }, 10000);
+  }
+  // clearInterval(myVar)
+
+  // let isBlockTips = localStorage.getItem('isBlockTips')
+  // if (!isBlockTips) {
+  //   localStorage.setItem('isBlockTips', '1')
+  // }
+  // ipc.on('valueCount', (event, args) => {
+  //   console.log(args)
+  //   if (args > 200 && isBlockTips === '1') {
+  //     ipc.invoke('openBlockTips')
+  //     localStorage.setItem('isBlockTips', '2')
+  //   }
+  // })
 
   ipc.on('blockGuide', () => {
     const closeBlockGuide = new Shepherd.Tour({
@@ -642,8 +661,9 @@
       }]
     })
     closeBlockGuide.start()
-
   })
+
+
 
   function calculate (a) {
     if (a >= 10) {
