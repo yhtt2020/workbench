@@ -59,28 +59,10 @@ app.whenReady().then(()=>{
   ipc.on('loginBrowser', async (event, arg) => {
     let result={}
     try {
-      const data = {
-        code: arg
-      }
-      result = await authApi.loginBrowser(data)
-      let responseData=result.data
-      if(result.code === 1000) {
-        let user={
-          uid:responseData.userInfo.uid,
-          code:responseData.code,
-          token:responseData.token,
-          refresh_token:responseData.refreshToken,
-          user_info:responseData.userInfo,
-          expire_time:new Date().getTime() + responseData.expire * 1000,
-          refresh_expire_time: new Date().getTime() + responseData.refreshExpire * 1000,
-          last_login_time:Date.now(),
-          is_current:true
-        }
-          await userModel.setCurrent(user)
-      }
+      let code=arg
+      result=await userModel.loginWithCode(code)
       event.reply('callback-loginBrowser', result)
       afterGuide('guideSchedule.modules.noobGuide.accountLogin')
-
     } catch (err) {
       console.error('登录报错',err)
       dlog.error(err)
