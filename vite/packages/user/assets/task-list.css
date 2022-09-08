@@ -1,33 +1,26 @@
-.custom-scroller{
-  &::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-
-
-  &::-webkit-scrollbar-track {
-    background: #ffffff;
-    border-radius: 2px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: rgb(176, 176, 176);
-    border-radius: 20px;
-  }
-
-  &::-webkit-scrollbar-thumb:hover {
-    background: #747474;
-  }
-
-  &::-webkit-scrollbar-corner {
-    background: #f6f6f6;
-  }
+.custom-scroller::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scroller::-webkit-scrollbar-track {
+  background: #ffffff;
+  border-radius: 2px;
+}
+.custom-scroller::-webkit-scrollbar-thumb {
+  background: rgb(176, 176, 176);
+  border-radius: 20px;
+}
+.custom-scroller::-webkit-scrollbar-thumb:hover {
+  background: #747474;
+}
+.custom-scroller::-webkit-scrollbar-corner {
+  background: #f6f6f6;
 }
 
 .tabs,
 .sidebar ul {
   list-style: none;
-  padding: 0
+  padding: 0;
 }
 
 .ant-collapse-content > .ant-collapse-content-box {
@@ -47,31 +40,30 @@
   height: 300px;
   margin-bottom: 10px;
   border-radius: 4px;
-  .icon{
-    vertical-align: middle;
-    width: 24px;
-    height: 24px;
-  }
-  .single-avatar{
-    margin-left: 6px;
-    width: 18px;
-  }
-  .operation{
-    visibility: hidden;
-    cursor: pointer;
-  }
+}
+.task .icon {
+  vertical-align: middle;
+  width: 24px;
+  height: 24px;
+}
+.task .single-avatar {
+  margin-left: 6px;
+  width: 18px;
+}
+.task .operation {
+  visibility: hidden;
+  cursor: pointer;
 }
 
 .task:hover {
-  box-shadow: 0 0 15px #00000030;
-  .operation{
-    visibility: visible;
-    &:hover{
-      color: red;
-    }
-  }
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1882352941);
 }
-
+.task:hover .operation {
+  visibility: visible;
+}
+.task:hover .operation:hover {
+  color: red;
+}
 
 .tab-icon {
   width: 20px;
@@ -111,7 +103,6 @@
   max-width: 100px;
 }
 
-
 .ant-card.selected {
   border: 3px solid rgba(0, 0, 0, 0.62);
 }
@@ -120,7 +111,9 @@
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.34);
   width: 100vw;
   background: white;
-  text-align: right;;
+  text-align: right;
   padding: 10px;
-  z-index: 9
+  z-index: 9;
 }
+
+/*# sourceMappingURL=task-list.css.map */
