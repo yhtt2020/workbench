@@ -17,11 +17,17 @@ class Instance {
  * 窗体类
  */
 class WindowInstance extends Instance{
+  window
   constructor (initOption) {
     super(initOption)
+    this.window=initOption.window
   }
   create(){
     //todo 将窗体实例创建的方法搬过来
+  }
+  close(){
+    this.window.close()
+    this.destroy()
   }
 }
 
@@ -65,13 +71,27 @@ class WindowManager {
   }
 
   /**
-   * 是否存在窗体，存在则返回窗体，不存在则返回undefined
+   * 是否存在窗体，存在则返回Instance，不存在则返回undefined
    * @param name
    * @returns {*}
    */
   isAlive(name){
-    console.log('找到窗体',this.windowMap[name])
-    return this.windowMap[name]
+    console.log('找到instance',this.instanceMap[name])
+    return this.instanceMap[name]!==undefined
+  }
+
+  get(name){
+    return this.instanceMap[name]
+  }
+
+  close(name){
+    let instance=this.instanceMap[name]
+    if(instance){
+     instance.close()
+      delete this.instanceMap[name]
+    }else{
+      throw 'instance不存在'
+    }
   }
 
 
@@ -96,38 +116,40 @@ class WindowManager {
     let webContents
     if (webPreferences)
       webPreferences = Object.assign(this.defaultWebPreferences, webPreferences)
-
-    console.log(webPreferences)
     this.optionMap[name] = name
     let wenContents
     let instance
     if (mod === this.MOD.NO_CONTROLLER) {
       windowOption.webPreferences = webPreferences
       windowOption = Object.assign(this.defaultWindowPreferences, windowOption)
-      instance = new BrowserWindow(windowOption)
+      let window = new BrowserWindow(windowOption)
       if (rememberBounds) {
         let boundsSetting = WindowManager.getBoundsSetting(name)
         if (boundsSetting) {
-          instance.setBounds(boundsSetting)
+          window.setBounds(boundsSetting)
         }else if(defaultBounds){
-          instance.setBounds(defaultBounds)
+          window.setBounds(defaultBounds)
         }
       }
-      instance.on('ready-to-show', () => {
-        instance.show()
+      window.on('ready-to-show', () => {
+        window.show()
       })
-      webContents = instance.webContents
+      webContents = window.webContents
       if (rememberBounds) {
-        instance.on('resized', () => {
-          WindowManager.setBoundsSetting(name,instance.getBounds())
+        window.on('resized', () => {
+          WindowManager.setBoundsSetting(name,window.getBounds())
         })
       }
       if (url) {
-        instance.loadURL(url)
+        window.loadURL(url)
       }
-      this.windowMap[name]=instance
+      this.windowMap[name]=window
+       let windowInstance=new WindowInstance({
+         window:window
+       })
+      instance=windowInstance
     }
-
+    this.instanceMap[name]=instance
     this.webContentsMap[name] = webContents
     return instance
   }

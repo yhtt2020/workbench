@@ -1,4 +1,6 @@
+window.ipc=require('electron').ipcRenderer
 const settings = require('../../js/util/settings/settings.js')
+
 const runtime={
   version:{
     'api':'1.0.0',
