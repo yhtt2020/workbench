@@ -49,11 +49,13 @@ win:
             - "**/*"
     icon: ./new_logos/brave/win/brave.ico
     target:
-        - target: nsis
-        - target: zip
+          - target: nsis
+            arch:
+              - x64
+              - ia32
     publish:
         - provider : generic
-          url: http://d.xiangtian.ren/update/browser/win_brave/
+          url: http://d.xiangtian.ren/update/browser_brave/win/
           channel: latest
 
 mac:
