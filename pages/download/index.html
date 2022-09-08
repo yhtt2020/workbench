@@ -56,10 +56,10 @@
                 <div v-show="item.path !=='' && item.status==='progressing' && item.total === '0KB'" style="font-size: 12px;width: 150px;color:#999">
                   {{ item.received }} / 未知
                 </div>
-                <div v-show="item.path ==='' && item.state !== '0'" style="font-size: 12px;width: 150px;color:#999">
+                <div v-show="item.path ==='' " style="font-size: 12px;width: 150px;color:#999">
                   预载中...
                 </div>
-                <div v-show="item.state === '0'" style="font-size: 12px;width: 150px;color:#999">
+                <div v-show="item.state === 0" style="font-size: 12px;width: 150px;color:#999">
                   下载中断
                 </div>
               </div>
@@ -268,7 +268,7 @@
   })
 
   ipcRenderer.on('breakMenuDel', (e) => {
-    appVue.list.splice(appVue.list.indexOf(appVue.selectingList))
+    appVue.list.splice(appVue.list.indexOf(appVue.selectingList),1)
     appVue.listCount--
     db.download.delete(appVue.selectingList.startTime)
   })
@@ -354,6 +354,7 @@
       ipcRenderer.send('downloadEnd')
       appVue.list.splice(appVue.deleteId, 1)
       appVue.$message.info('文件下载失败', 0.5)
+      db.download.delete(args.startTime)
       appVue.count--
       appVue.listCount--
     }
