@@ -611,17 +611,13 @@
   })
 
 
-  
-  let isBlockTips = setting.get('isBlockTips')
-  if (!isBlockTips) {
-    setting.set('isBlockTips', '1')
-  }
 
-  if(setting.get('filtering').blockingLevel !== 0 && isBlockTips === '1'){
+  let isBlockTips = setting.get('isBlockTips')
+  if(setting.get('filtering').blockingLevel !== 0 && isBlockTips === false){
     const myVar = setInterval(function () {
       if(setting.get('filteringBlockedCount')>200){
         ipc.invoke('openBlockTips')
-        setting.set('isBlockTips', '2')
+        setting.set('isBlockTips', true)
         clearInterval(myVar)
       }
     }, 10000);
