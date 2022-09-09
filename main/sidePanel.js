@@ -1295,6 +1295,7 @@ app.whenReady().then(() => {
       saveWindowBounds()
       mainWindow.close()
       mainWindow=null
+      showUserWindow()
     }
   })
 
