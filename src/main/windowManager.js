@@ -76,7 +76,6 @@ class WindowManager {
    * @returns {*}
    */
   isAlive(name){
-    console.log('找到instance',this.instanceMap[name])
     return this.instanceMap[name]!==undefined
   }
 
@@ -122,9 +121,20 @@ class WindowManager {
     if (mod === this.MOD.NO_CONTROLLER) {
       windowOption.webPreferences = webPreferences
       windowOption = Object.assign(this.defaultWindowPreferences, windowOption)
+      windowOption.webPreferences.additionalArguments=[
+        '--user-data-path=' + userDataPath,
+        '--app-version=' + app.getVersion(),
+        '--app-name=' + app.getName(),
+        ...((isDevelopmentMode ? ['--development-mode'] : [])),
+        '--name='+name
+      ]
       let window = new BrowserWindow(windowOption)
       if (rememberBounds) {
-        let boundsSetting = WindowManager.getBoundsSetting(name)
+        let boundsSetting =WindowManager.getSettings(name,'bounds')
+        let alwaysOnTop=WindowManager.getSettings(name,'alwaysOnTop')
+        if(alwaysOnTop){
+          window.setAlwaysOnTop(alwaysOnTop)
+        }
         if (boundsSetting) {
           window.setBounds(boundsSetting)
         }else if(defaultBounds){
@@ -137,7 +147,13 @@ class WindowManager {
       webContents = window.webContents
       if (rememberBounds) {
         window.on('resized', () => {
-          WindowManager.setBoundsSetting(name,window.getBounds())
+          WindowManager.setSettings(name,'bounds',window.getBounds())
+        })
+        window.on('moved',()=>{
+          WindowManager.setSettings(name,'bounds',window.getBounds())
+        })
+        window.on('always-on-top-changed',(e,isAlwaysOnTop)=>{
+          WindowManager.setSettings(name,'alwaysOnTop',isAlwaysOnTop)
         })
       }
       if (url) {
@@ -158,6 +174,12 @@ class WindowManager {
   }
   static setBoundsSetting(name,bounds){
     settings.set('windowManager.bounds.' + name, bounds)
+  }
+  static setSettings(name,key,value){
+    settings.set('windowManager.settings.' + name+'.'+key, value)
+  }
+  static getSettings(name,key){
+    return settings.get('windowManager.settings.' + name+'.'+key)
   }
   getWindowFromWebContentsId(id){
     return BrowserWindow.fromWebContents(webContents.fromId(id))
@@ -187,25 +209,32 @@ class WindowManager {
 
       })
 
-      function on (channel, cb) {
-        console.log('api on ' + channel)
+      function _on (channel, cb) {
         ipc.on(channel, cb)
       }
 
       function onWindow (channel, cb) {
-        on('api.window.' + channel, cb)
+        _on('api.window.' + channel, cb)
       }
 
       function getWindow (event) {
 
       }
 
-
       onWindow('close', (event, args) => {
         //todo 修改为实例操作，而非直接关闭窗体，因为不同的模式下，其操作模式也不一致
-        this.getWindowFromWebContentsId(event.sender.id).close()
+        this.close(args['_name'])
       })
 
+      onWindow('setAlwaysOnTop',(event,args)=>{
+        let instance=this.get(args['_name'])
+        instance.window.setAlwaysOnTop(args.flag)
+      })
+
+      onWindow('isAlwaysOnTop',(event,args)=>{
+        let instance=this.get(args['_name'])
+        event.returnValue=instance.window.isAlwaysOnTop()
+      })
     })
   }
 }

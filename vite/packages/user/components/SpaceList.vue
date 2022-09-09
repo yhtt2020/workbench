@@ -19,8 +19,8 @@
           <a-row>
             <span class="time" v-html="friendlyDate(space.sync_time)"></span>
           </a-row>
-          <div>
-            <a-tag v-if="this.currentSpace.spaceId===space.nanoid" color="green">
+          <div style="margin-bottom: 5px" v-if="this.currentSpace.spaceId===space.nanoid">
+            <a-tag  color="green">
               当前设备使用中
             </a-tag>
           </div>
@@ -34,9 +34,9 @@
               </a-tag>
             </div>
             <div>
-              <a-tag title="设备ID">
+              <a-tag title="设备名称" class="text-more" style="max-width: 100%">
                 <desktop-outlined/>
-                {{ space.client_id }}
+                {{ space.client_name }}
               </a-tag>
             </div>
           </div>

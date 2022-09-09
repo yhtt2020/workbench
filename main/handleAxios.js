@@ -15,7 +15,8 @@ if(!fs.existsSync(_path_dir)){
 }
 //global.sharedPath = {extra:storage.getStoragePath()}   //remote官方建议弃用，全局变量在渲染进程中暂时没找到可以替换获取的方法，但是在主进程中全局electronGlobal对象能获取到
 function sendIPCToMainWindow(action, data) {
-  mainWindow.webContents.send(action, data || {})
+  if(mainWindow && !mainWindow.isDestroyed())
+  {mainWindow.webContents.send(action, data || {})}
 }
 
 app.whenReady().then(()=>{
@@ -59,28 +60,10 @@ app.whenReady().then(()=>{
   ipc.on('loginBrowser', async (event, arg) => {
     let result={}
     try {
-      const data = {
-        code: arg
-      }
-      result = await authApi.loginBrowser(data)
-      let responseData=result.data
-      if(result.code === 1000) {
-        let user={
-          uid:responseData.userInfo.uid,
-          code:responseData.code,
-          token:responseData.token,
-          refresh_token:responseData.refreshToken,
-          user_info:responseData.userInfo,
-          expire_time:new Date().getTime() + responseData.expire * 1000,
-          refresh_expire_time: new Date().getTime() + responseData.refreshExpire * 1000,
-          last_login_time:Date.now(),
-          is_current:true
-        }
-          await userModel.setCurrent(user)
-      }
+      let code=arg
+      result=await userModel.loginWithCode(code)
       event.reply('callback-loginBrowser', result)
       afterGuide('guideSchedule.modules.noobGuide.accountLogin')
-
     } catch (err) {
       console.error('登录报错',err)
       dlog.error(err)

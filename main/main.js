@@ -629,11 +629,11 @@ ipc.on('quitApp',()=>{
 })
 ipc.on('errorClose',(e,args)=>{
   //此处为遇到意外的情况下，重新显示mainWindow，并提示用户保存失败。可再次点击关闭。
-  electronLog.error('意外关闭',args.error)
-  if(!mainWindow.isDestroyed()){
-    mainWindow.show()
-    sendMessage({type:'error',config:{content:'关闭保存意外失败，您可以再次点击关闭，在不保存的情况下继续使用，此消息将在10秒后自动消失。',duration:'10'}})
-  }
+  // electronLog.error('意外关闭',args.error)
+  // if(mainWindow && !mainWindow.isDestroyed()){
+  //   mainWindow.show()
+  //   sendMessage({type:'error',config:{content:'关闭保存意外失败，您可以再次点击关闭，在不保存的情况下继续使用，此消息将在10秒后自动消失。',duration:'10'}})
+  // }
 })
 
 var barrageManager=null //全局可用

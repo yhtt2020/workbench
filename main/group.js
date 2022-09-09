@@ -259,6 +259,10 @@ app.on('ready', () => {
         height:640,
         space:24
       }
+      let url=config.IM.FRONT_URL
+       if(isDevelopmentMode) {
+        url='http://localhost:8000'
+      }
        windowManager.create({
         name:CHAT_NAME,
         mod:windowManager.MOD.NO_CONTROLLER,
@@ -275,8 +279,7 @@ app.on('ready', () => {
             preload:path.join(__dirname,'src/browserApi/apiPreload.js'),
             sandbox:false,
         },
-        //url:config.IM.FRONT_URL,
-        url:'http://localhost:8000',
+        url,
         rememberBounds:true,
         defaultBounds:{
           width: defaultSize.width,
