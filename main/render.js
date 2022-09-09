@@ -484,6 +484,7 @@ const renderPage = {
     )
   },
 
+
   /**
    * 启动图片选择器
    * @param pos 位置

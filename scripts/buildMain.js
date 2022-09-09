@@ -20,6 +20,7 @@ const modules = [
   'main/popManager.js',
   'main/siteCard.js',
   'main/downloadCard.js',
+  'main/tray.js',
   'main/userScript.js',
   'main/group.js',
   'main/update.js',

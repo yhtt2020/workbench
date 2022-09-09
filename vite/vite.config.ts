@@ -14,7 +14,8 @@ export default defineConfig({
         'task':path.resolve(pkg,'task.html'),
         'settings':path.resolve(pkg,'settings.html'),
         'barrage':path.resolve(pkg,'barrage.html'),
-        'user':path.resolve(pkg,'user.html')
+        'user':path.resolve(pkg,'user.html'),
+        'tray':path.resolve(pkg,'tray.html')
       }
     }
   }
