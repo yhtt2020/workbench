@@ -1286,6 +1286,19 @@ app.whenReady().then(() => {
     showUserWindow(args)
   })
 
+  /**
+   * 只关闭主窗体，不做任何其他的操作
+   */
+  ipc.on('justCloseMainWindow',()=>{
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      destroyAllViews()
+      saveWindowBounds()
+      mainWindow.close()
+      mainWindow=null
+      showUserWindow()
+    }
+  })
+
   let loginWindow = null
   ipc.on('closeUserWindow', () => {
     callUnModal(userWindow)

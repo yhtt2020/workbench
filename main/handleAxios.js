@@ -15,7 +15,8 @@ if(!fs.existsSync(_path_dir)){
 }
 //global.sharedPath = {extra:storage.getStoragePath()}   //remote官方建议弃用，全局变量在渲染进程中暂时没找到可以替换获取的方法，但是在主进程中全局electronGlobal对象能获取到
 function sendIPCToMainWindow(action, data) {
-  mainWindow.webContents.send(action, data || {})
+  if(mainWindow && !mainWindow.isDestroyed())
+  {mainWindow.webContents.send(action, data || {})}
 }
 
 app.whenReady().then(()=>{
@@ -496,7 +497,8 @@ app.whenReady().then(()=>{
   })
 
   ipc.on('valueCount',(event,args)=>{
-    mainWindow.webContents.send('valueCount',args)
+    sendIPCToMainWindow('valueCount',args)
+    //mainWindow.webContents.send()
   })
 
   ipc.on('openNewGuide',()=>{

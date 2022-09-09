@@ -2,6 +2,7 @@
 const clientModel = require('../model/clientModel')
 
 const runtime={
+  name:window.globalArgs['name'],
   version:{
     'api':'1.0.0',
     'barrage':'1.0.0',
