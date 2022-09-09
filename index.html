@@ -613,7 +613,7 @@
 
 
   let isBlockTips = setting.get('isBlockTips')
-  if(setting.get('filtering').blockingLevel !== 0 && isBlockTips === false){
+  if(setting.get('filtering').blockingLevel !== 0 && !isBlockTips){
     const myVar = setInterval(function () {
       if(setting.get('filteringBlockedCount')>200){
         ipc.invoke('openBlockTips')
