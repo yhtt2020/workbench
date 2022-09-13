@@ -627,18 +627,18 @@ const tabBar = {
 
     if(isCopy(tabData)){
       if(tabData.newName){
-        tabTitle=tabData.newName+'|'+tabTitle
+        tabTitle=`<span style="font-weight: bold;font-size:14px">`+tabData.newName+`</span>`+'|'+tabTitle
       }else{
-        tabTitle='小号|'+tabTitle
+        tabTitle=`<span style="font-weight: bold;font-size:14px">`+'小号|'+`</span>`+tabTitle
       }
     }else{
       if(tabData.newName) {
-        tabTitle = tabData.newName + '|' + tabTitle
+        tabTitle = `<span style="font-weight: bold;font-size:14px">`+tabData.newName+`</span>` + '|' + tabTitle
       }
     }
-    titleEl.append(tabTitle)
+    titleEl.innerHTML=titleEl.innerHTML+tabTitle
 
-    tabEl.title = tabTitle
+    tabEl.title = tabTitle.replace(/<span.*?>|<\/span>/ig, "")
     if (tabData.private) {
       tabEl.title += ' (' + l('privateTab') + ')'
     }
