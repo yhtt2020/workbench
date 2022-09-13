@@ -537,7 +537,8 @@ let sqlDb
  */
 async function appStart () {
   const { SqlDb } = require('./src/util/sqldb.js')
-   sqlDb = new SqlDb()
+  sqlDb = new SqlDb()
+  initFav()
   let showOnStart = await sqlDb.getConfig('system.user.showOnStart')
   if (!showOnStart) {
     createWindow(function () {
