@@ -530,14 +530,14 @@ app.on('activate', function( /* e, hasVisibleWindows */ ) {
     appStart()
 	}
 })
-
+let sqlDb
 /**
  * 启动应用，此方法会自动判断是否启动的时候显示选择空间的面板
  * @returns {Promise<void>}
  */
 async function appStart () {
   const { SqlDb } = require('./src/util/sqldb.js')
-  let sqlDb = new SqlDb()
+   sqlDb = new SqlDb()
   let showOnStart = await sqlDb.getConfig('system.user.showOnStart')
   if (!showOnStart) {
     createWindow(function () {
