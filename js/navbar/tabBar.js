@@ -627,13 +627,13 @@ const tabBar = {
 
     if(isCopy(tabData)){
       if(tabData.newName){
-        tabTitle=`<span style="font-weight: bold;font-size:14px">`+tabData.newName+`</span>`+'|'+tabTitle
+        tabTitle=`<span style="font-weight: bold;">`+tabData.newName+`</span>`+'|'+tabTitle
       }else{
-        tabTitle=`<span style="font-weight: bold;font-size:14px">`+'小号|'+`</span>`+tabTitle
+        tabTitle=`<span style="font-weight: bold;">`+'小号|'+`</span>`+tabTitle
       }
     }else{
       if(tabData.newName) {
-        tabTitle = `<span style="font-weight: bold;font-size:14px">`+tabData.newName+`</span>` + '|' + tabTitle
+        tabTitle = `<span style="font-weight: bold;">`+tabData.newName+`</span>` + '|' + tabTitle
       }
     }
     titleEl.innerHTML=titleEl.innerHTML+tabTitle
