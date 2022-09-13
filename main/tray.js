@@ -8,7 +8,7 @@ app.whenReady().then(() => {
   tray.on('click', function(event,position) {
     pool.usePop({
       url: render.getUrl('tray.html'),
-      width: 350,
+      width: 400,
       height: 600,
       x: position.x - 350,
       y: position.y - 600,
@@ -19,8 +19,8 @@ app.whenReady().then(() => {
 
   tray.on('right-click', function(event,position) {
     const contextMenu = Menu.buildFromTemplate([
-      { label: 'Item1', type: 'radio' },
-      { label: 'Item2', type: 'radio' },
+      { label: '设置'},
+      { label: '退出'},
     ])
     tray.setContextMenu(contextMenu)
   })
