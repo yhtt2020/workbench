@@ -641,11 +641,9 @@ var barrageManager=null //全局可用
 const { BarrageManager }=require(path.join(__dirname,'/src/main/barrageManager.js'))
 app.whenReady().then(()=>{
   setTimeout(()=>{
-    barrageManager=new BarrageManager({
-      parent:mainWindow
-    })
+    barrageManager=new BarrageManager(windowManager)
     //barrageManager.init()
-  },3000)
+  },1000)
 
 
   ipc.on('toggleBarrage',()=>{
