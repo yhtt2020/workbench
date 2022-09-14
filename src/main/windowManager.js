@@ -208,39 +208,36 @@ class WindowManager {
       }
     }
   }
+  onWindow (channel, cb) {
+    this._on('api.window.' + channel, (event,args)=>{
+      let instance=this.get(args['_name'])
 
+      cb(event,args,instance)
+    })
+  }
+  _on (channel, cb) {
+    ipc.on(channel, cb)
+  }
   init () {
     app.whenReady().then(() => {
       ipc.on('api.runtime.init', (event, args) => {
 
       })
 
-      function _on (channel, cb) {
-        ipc.on(channel, cb)
-      }
-
-      function onWindow (channel, cb) {
-        _on('api.window.' + channel, cb)
-      }
-
-      function getWindow (event) {
-
-      }
-
-      onWindow('close', (event, args) => {
+      this.onWindow('close', (event, args) => {
         //todo 修改为实例操作，而非直接关闭窗体，因为不同的模式下，其操作模式也不一致
         this.close(args['_name'])
       })
 
-      onWindow('setAlwaysOnTop',(event,args)=>{
-        let instance=this.get(args['_name'])
+      this.onWindow('setAlwaysOnTop',(event,args,instance)=>{
         instance.window.setAlwaysOnTop(args.flag)
       })
 
-      onWindow('isAlwaysOnTop',(event,args)=>{
-        let instance=this.get(args['_name'])
+      this.onWindow('isAlwaysOnTop',(event,args,instance)=>{
         event.returnValue=instance.window.isAlwaysOnTop()
       })
+
+
     })
   }
 }
