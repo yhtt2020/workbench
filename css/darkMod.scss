@@ -4,6 +4,35 @@ $dark-primary-color: rgb(210, 210, 210);
 $dark-second-color: rgb(189, 189, 189);
 .dark-mode {
   #toolbar{
+    .mem-clean{
+      .ant-progress-text{
+        color: $dark-primary-color;
+      }
+
+    }
+    .action-wrapper{
+      display: inline-block;
+      overflow: hidden;
+      &:hover::after{
+        content: "";
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        position: absolute;
+        left: 4px;
+        top: 4px;
+        background: #7575758a;
+        z-index: -1;
+        border-radius: 6px;
+      }
+      .action{
+        filter: drop-shadow($dark-primary-color 80px 0);
+        position: relative;
+        overflow: hidden;
+        left: -80px;
+      }
+    }
+
     background: $dark-bg;
     border-color: $dark-bg;
      .action:hover{
@@ -18,6 +47,7 @@ $dark-second-color: rgb(189, 189, 189);
     svg path {
       fill: $dark-primary-color !important;
       color: $dark-primary-color;
+      stroke: $dark-primary-color;
     }
     .split{
       border-color: $dark-second-bg;

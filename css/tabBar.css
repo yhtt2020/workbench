@@ -3,6 +3,31 @@
   background: rgb(32, 32, 32);
   border-color: rgb(32, 32, 32);
 }
+.dark-mode #toolbar .mem-clean .ant-progress-text {
+  color: rgb(210, 210, 210);
+}
+.dark-mode #toolbar .action-wrapper {
+  display: inline-block;
+  overflow: hidden;
+}
+.dark-mode #toolbar .action-wrapper:hover::after {
+  content: "";
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  background: rgba(117, 117, 117, 0.5411764706);
+  z-index: -1;
+  border-radius: 6px;
+}
+.dark-mode #toolbar .action-wrapper .action {
+  filter: drop-shadow(rgb(210, 210, 210) 80px 0);
+  position: relative;
+  overflow: hidden;
+  left: -80px;
+}
 .dark-mode #toolbar .action:hover {
   background: rgb(63, 63, 63);
 }
@@ -12,6 +37,7 @@
 .dark-mode #toolbar svg path {
   fill: rgb(210, 210, 210) !important;
   color: rgb(210, 210, 210);
+  stroke: rgb(210, 210, 210);
 }
 .dark-mode #toolbar .split {
   border-color: rgb(63, 63, 63);
