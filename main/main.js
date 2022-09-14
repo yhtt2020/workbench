@@ -293,7 +293,6 @@ function createWindowWithBounds(bounds) {
   mainWindow.on('ready-to-show',()=>{
     mainWindow.show()
     loadSidePanel()
-    getAllAppsWindow()
     changingSpace=false
   })
   function checkClipboard(){
