@@ -2,8 +2,9 @@ let localCacheManager = require(path.join(__dirname, '/js/main/localCacheManager
 const { shell } = require('electron')
 const fsExtra=require('fs-extra')
 const ElectronLog = require('electron-log')
+const wallpaper = require('wallpaper')
 const STORE_PATH_KEY='app.fav.storePath'
-app.whenReady().then(async () => {
+async function initFav(){
   const FAV_PACKAGE = 'com.thisky.fav'
   //设置默认的本地收藏夹位置
   const defaultStorePath = await sqlDb.getConfig(STORE_PATH_KEY, path.join(app.getPath('userData'), '收藏夹.lab'))
@@ -318,5 +319,4 @@ app.whenReady().then(async () => {
       }
     }
   })
-
-})
+}
