@@ -2,7 +2,12 @@ const { Tray } = require('electron')
 
 let tray = null
 app.whenReady().then(() => {
-  tray = new Tray(path.join(__dirname,'/img/touxiang.png'))
+  if(process.platform==='darwin'){
+    tray = new Tray(path.join(__dirname,'/icons/tray/mac/tray.png'))
+  }else{
+    tray = new Tray(path.join(__dirname,'/img/touxiang.png'))
+  }
+
 
   tray.setToolTip("我是托盘菜单")
   tray.on('click', function(event,position) {
@@ -13,7 +18,6 @@ app.whenReady().then(() => {
       x: position.x - 350,
       y: position.y - 600,
     }).then( r =>{
-
     })
   })
 
