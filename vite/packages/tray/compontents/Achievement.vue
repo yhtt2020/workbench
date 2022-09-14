@@ -1,9 +1,9 @@
 <template>
   <div class="main" >
-    <div class="title">
-
+    <div class="title flex justify-start align-center">
+      <span class="text-title" style="margin-left: 10px">我的成就</span>
     </div>
-    <div class="content">
+    <div class="content-small">
 
     </div>
   </div>
@@ -13,23 +13,6 @@
 
 </script>
 
-<style scoped lang="scss">
-.main{
-  width: 100%;
-  height: 100%;
-  .title{
-    width: 100%;
-    height: 30px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    background-color: #171717
-  }
-  .content{
-    width: 100%;
-    height: 90px;
-    background-color: #252525;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-  }
-}
+<style >
+
 </style>

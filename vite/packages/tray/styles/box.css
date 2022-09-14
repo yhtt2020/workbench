@@ -1,0 +1,19 @@
+.title{
+  height: 30px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  background-color: #171717
+}
+
+.content-big{
+  height: 120px;
+  background-color: #252525;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.content-small{
+  height: 90px;
+  background-color: #252525;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}

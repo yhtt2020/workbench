@@ -14,9 +14,9 @@
 </div>
 </template>
 
-<script  lang="ts">
-import Home from './page/Home.vue';
+<script lang="ts">
 
+import Home from './page/Home.vue';
 import { defineComponent } from 'vue'
 import {
   LeftOutlined,
@@ -28,6 +28,8 @@ export default defineComponent({
     Home,
     LeftOutlined,
     RightOutlined
+  },
+  mounted() {
   }
 })
 </script>

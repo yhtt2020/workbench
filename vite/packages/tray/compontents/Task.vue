@@ -1,34 +1,33 @@
 <template>
   <div class="main" >
-    <div class="title">
-
+    <div class="title flex justify-start align-center">
+      <comment-outlined  style="color: #F5F5F5;fontSize:22px;margin-left: 10px"/>
+      <span class="text-title" style="margin-left: 10px">标签空间状态： xx</span>
     </div>
-    <div class="content">
+    <div class="content-small">
 
     </div>
   </div>
 </template>
 
-<script>
+
+<script lang="ts">
+import {
+  CommentOutlined
+} from '@ant-design/icons-vue'
+
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  components: {
+    CommentOutlined
+  }
+})
+
 
 </script>
 
-<style scoped lang="scss">
-.main{
 
-  .title{
-    width: 100%;
-    height: 30px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    background-color: #171717
-  }
-  .content{
-    width: 100%;
-    height: 90px;
-    background-color: #252525;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-  }
-}
+<style>
+
 </style>

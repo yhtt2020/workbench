@@ -16,16 +16,19 @@
         <Cache></Cache>
       </a-col>
       <a-col class="rank flex flex-direction" :span="23">
-        <div class="flex">
+        <div class="flex" style="margin-top: 10px">
           <div class="head"></div>
-          <div class="content" style="margin-left: 15px;width: 190px;height: 70px;">
-            <span style="color: #f3f3f3;font-size: 15px;">在线等级：xx级</span>
-            <div style="margin-top: 10px">
+          <div class="content" style="margin-left: 15px;width: 190px;height: 60px;margin-top: 5px">
+            <span style="color: #f3f3f3;font-size: 14px;">在线等级：xx级</span>
+            <div style="margin-top: 5px">
               <a-progress strokeColor="#ffffff" trailColor="#4d4d4d" :percent="30" :showInfo="false" />
             </div>
           </div>
-          <div class="upgrade flex flex-direction" style="width: 130px;height: 70px;margin-left: 20px">
-            <div style="color: #afaf61;margin-bottom: 10px">正在加速成长</div>
+          <div class="upgrade flex flex-direction" style="width: 130px;height: 60px;margin-left: 20px;margin-top: 5px">
+            <div style="color: #afaf61;margin-bottom: 5px;margin-left: 15px">
+              <thunderbolt-outlined />
+              <span style="margin-left: 5px;font-size: 12px">正在加速成长</span>
+            </div>
             <span style="color: #f3f3f3">xx小时xx分后升级</span>
           </div>
         </div>
@@ -39,12 +42,24 @@
 </template>
 
 <script>
+let { ipcMain } = require('electron')
+let { ipcRenderer } = require('electron')
 import Team from '../compontents/Team.vue'
 import Task from '../compontents/Task.vue'
 import Achievement from '../compontents/Achievement.vue'
 import Cache from '../compontents/Cache.vue'
 import InternalStorage from '../compontents/InternalStorage.vue'
 import {defineComponent} from 'vue'
+import {
+   ThunderboltOutlined
+} from '@ant-design/icons-vue'
+
+ipcRenderer.on('userInfo',(event,args)=>{
+
+})
+
+
+
 
 export default defineComponent({
   components: {
@@ -52,7 +67,8 @@ export default defineComponent({
     InternalStorage,
     Achievement,
     Task,
-    Team
+    Team,
+    ThunderboltOutlined
   }
 })
 </script>
@@ -65,7 +81,7 @@ export default defineComponent({
   margin-left: 10px;
   .head{
     width: 60px;
-    height: 60px;
+    height: 55px;
     margin-left: 10px;
     border-radius: 50%;
     background-color: #5586F8;
@@ -73,21 +89,21 @@ export default defineComponent({
   .button{
     .work{
       width: 75px;
-      height: 30px;
+      height: 25px;
       background-color: #F5F5F5;
       border-radius: 6px;
       margin-left: 75px;
       text-align: center;
-      line-height: 30px;
+      line-height: 25px;
     }
     .play{
       margin-left: 10px;
       width: 75px;
-      height: 30px;
+      height: 25px;
       border: 1px solid #F5F5F5;
       border-radius: 6px;
       text-align: center;
-      line-height: 30px;
+      line-height: 25px;
       color: #F5F5F5;
     }
   }
