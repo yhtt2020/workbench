@@ -2,55 +2,121 @@
  * 实例类，主要是将窗体之类的对象进行再一次封装，方便对其进行二次操作
  */
 class Instance {
-  type='window'
+  type = 'window'
   name
-  object=null
+  object = null
   initOption
+
   constructor (initOption) {
-    this.initOption=initOption
-    this.name=initOption.name
+    this.initOption = initOption
+    this.name = initOption.name
   }
-  destroy(){
+
+  destroy () {
 
   }
-  close(){
+
+  close () {
     windowManager.close(this.name)
+  }
+}
+
+/**
+ * 代理view管理
+ */
+class ViewManager {
+  autoAdjustPosition (pos, width) {
+    let parentBounds = mainWindow.getBounds()
+    let y=0
+    Object.keys(viewMap).forEach(key => {
+      let view=viewMap[key]
+      let viewBounds = view.getBounds()
+      let bounds={
+        x: viewBounds.x,
+        y: viewBounds.y,
+        width: parentBounds.width - width-viewBounds.x,
+        height: viewBounds.height
+      }
+      y=viewBounds.y
+      console.log(bounds)
+      view.setBounds(bounds)
+    })
+    console.log('windowManager',windowManager)
+    let viewBounds=windowManager.attachedView.getBounds()
+    viewBounds.y=y
+    windowManager.attachedView.setBounds(viewBounds)
   }
 }
 
 /**
  * 窗体类
  */
-class WindowInstance extends Instance{
+class WindowInstance extends Instance {
   window
+
   constructor (initOption) {
     super(initOption)
-    this.window=initOption.window
+    this.window = initOption.window
   }
-  create(){
+
+  create () {
     //todo 将窗体实例创建的方法搬过来
   }
-  close(){
+
+  close () {
     this.window.close()
     this.destroy()
   }
 }
 
+/**
+ * view类
+ */
+class ViewInstance extends Instance {
+  type = 'view'
+  view
+
+  constructor (initOption) {
+    super(initOption)
+    this.view = initOption.view
+  }
+
+  create () {
+    //todo 将窗体实例创建的方法搬过来
+  }
+
+  close () {
+    this.view.close()
+    this.destroy()
+  }
+}
 
 /**
  * 窗口管理类，主要用于控制一些窗体，可以实现独立小窗体、吸附窗体。
  * 实现了事件绑定，可以在渲染进程自由绑定。
  */
 class WindowManager {
-  instanceMap={} //name:instance
+  instanceMap = {} //name:instance
 
   windowMap = {} //name:window
   viewMap = {} //name:view
   webContentsMap = {} //name:webcontents
   windowStateMap = {} //name:{attach:false , }
   optionMap = {} //id: windowConfig:{} 如果为view,则为null ，当window转为attach的时候，为设置为null,webPreferences:{}
-  constructor () {}
 
+  attachedInstance = {} //已经吸附的窗体的实例
+  attachedView = {}//已经吸附的窗体
+
+  viewManager = null
+
+  constructor () {
+
+    this.viewManager = new ViewManager()
+  }
+
+  defaultViewPreferences = { //根据其定义的位置取用这里的width和height，在左右侧的话，只取用width，在上下，则只取height，目前仅支持width
+    width: 480,
+  }
   defaultWindowPreferences = {}
   defaultWebPreferences = {
     nodeIntegration: false,
@@ -58,7 +124,7 @@ class WindowManager {
     scrollBounce: true,
     safeDialogs: true,
     safeDialogsMessage: '阻止此页面弹窗',
-    preload:  path.join(__dirname, 'src/browserApi/apiPreload.js'),
+    preload: path.join(__dirname, 'src/browserApi/apiPreload.js'),
     contextIsolation: true,
     sandbox: true,
     enableRemoteModule: false,
@@ -74,31 +140,32 @@ class WindowManager {
     NO_CONTROLLER: 2,
     ATTACH: 3,
   }
+  POS = {
+    RIGHT: 'right'
+  }
 
   /**
    * 是否存在窗体，存在则返回Instance，不存在则返回undefined
    * @param name
    * @returns {*}
    */
-  isAlive(name){
-    return this.instanceMap[name]!==undefined
+  isAlive (name) {
+    return this.instanceMap[name] !== undefined
   }
 
-  get(name){
+  get (name) {
     return this.instanceMap[name]
   }
 
-  close(name){
-    let instance=this.instanceMap[name]
-    if(instance){
-     instance.close()
+  close (name) {
+    let instance = this.instanceMap[name]
+    if (instance) {
+      instance.close()
       delete this.instanceMap[name]
-    }else{
+    } else {
       throw 'instance不存在'
     }
   }
-
-
 
   /**
    * name可以是字符串，也可以是时间戳，字符串一般用于经常用到的窗体，而时间戳则是临时窗体
@@ -126,23 +193,23 @@ class WindowManager {
     if (mod === this.MOD.NO_CONTROLLER) {
       windowOption.webPreferences = webPreferences
       windowOption = Object.assign(this.defaultWindowPreferences, windowOption)
-      windowOption.webPreferences.additionalArguments=[
+      windowOption.webPreferences.additionalArguments = [
         '--user-data-path=' + userDataPath,
         '--app-version=' + app.getVersion(),
         '--app-name=' + app.getName(),
         ...((isDevelopmentMode ? ['--development-mode'] : [])),
-        '--name='+name
+        '--name=' + name
       ]
       let window = new BrowserWindow(windowOption)
       if (rememberBounds) {
-        let boundsSetting =WindowManager.getSettings(name,'bounds')
-        let alwaysOnTop=WindowManager.getSettings(name,'alwaysOnTop')
-        if(alwaysOnTop){
+        let boundsSetting = WindowManager.getSettings(name, 'bounds')
+        let alwaysOnTop = WindowManager.getSettings(name, 'alwaysOnTop')
+        if (alwaysOnTop) {
           window.setAlwaysOnTop(alwaysOnTop)
         }
         if (boundsSetting) {
           window.setBounds(boundsSetting)
-        }else if(defaultBounds){
+        } else if (defaultBounds) {
           window.setBounds(defaultBounds)
         }
       }
@@ -152,42 +219,144 @@ class WindowManager {
       webContents = window.webContents
       if (rememberBounds) {
         window.on('resized', () => {
-          WindowManager.setSettings(name,'bounds',window.getBounds())
+          WindowManager.setSettings(name, 'bounds', window.getBounds())
         })
-        window.on('moved',()=>{
-          WindowManager.setSettings(name,'bounds',window.getBounds())
+        window.on('moved', () => {
+          WindowManager.setSettings(name, 'bounds', window.getBounds())
         })
-        window.on('always-on-top-changed',(e,isAlwaysOnTop)=>{
-          WindowManager.setSettings(name,'alwaysOnTop',isAlwaysOnTop)
+        window.on('always-on-top-changed', (e, isAlwaysOnTop) => {
+          WindowManager.setSettings(name, 'alwaysOnTop', isAlwaysOnTop)
         })
       }
       if (url) {
         window.loadURL(url)
       }
-      this.windowMap[name]=window
-       let windowInstance=new WindowInstance({
-         window:window,
-         name:name
-       })
-      instance=windowInstance
+      this.windowMap[name] = window
+      let windowInstance = new WindowInstance({
+        window: window,
+        name: name
+      })
+      instance = windowInstance
     }
-    this.instanceMap[name]=instance
+    this.instanceMap[name] = instance
     this.webContentsMap[name] = webContents
     return instance
   }
-  static getBoundsSetting(name){
-    return  settings.get('windowManager.bounds.' + name)
+
+  createView (options) {
+    let {
+      name,
+      viewOption,
+      webPreferences,
+      rememberBounds,
+      defaultBounds,
+      url
+    } = options
+    let webContents
+    if (!webPreferences) {
+      webPreferences = {}
+    }
+    webPreferences = Object.assign(this.defaultWebPreferences, webPreferences)
+    this.optionMap[name] = name
+    let wenContents
+    let instance
+    if (!viewOption) {
+      viewOption = {}
+    }
+    viewOption.windowOption = Object.assign(this.defaultViewPreferences, viewOption)
+    webPreferences.additionalArguments = [
+      '--user-data-path=' + userDataPath,
+      '--app-version=' + app.getVersion(),
+      '--app-name=' + app.getName(),
+      ...((isDevelopmentMode ? ['--development-mode'] : [])),
+      '--name=' + name
+    ]
+    let view = new BrowserView(webPreferences)
+    // if (rememberBounds) {
+    //   let boundsSetting =WindowManager.getSettings(name,'bounds')
+    //   if(alwaysOnTop){
+    //     window.setAlwaysOnTop(alwaysOnTop)
+    //   }
+    //   if (boundsSetting) {
+    //     window.setBounds(boundsSetting)
+    //   }else if(defaultBounds){
+    //     window.setBounds(defaultBounds)
+    //   }
+    // }
+    // if (rememberBounds) {
+    //   window.on('resized', () => {
+    //     WindowManager.setSettings(name,'bounds',window.getBounds())
+    //   })
+    //   window.on('moved',()=>{
+    //     WindowManager.setSettings(name,'bounds',window.getBounds())
+    //   })
+    //   window.on('always-on-top-changed',(e,isAlwaysOnTop)=>{
+    //     WindowManager.setSettings(name,'alwaysOnTop',isAlwaysOnTop)
+    //   })
+    // }
+    if (url) {
+      view.webContents.loadURL(url)
+    }
+    this.viewMap[name] = view
+    let viewInstance = new ViewInstance({
+      view: view,
+      name: name
+    })
+    this.instanceMap[name] = viewInstance
+    this.webContentsMap[name] = view.webContents
+    return viewInstance
   }
-  static setBoundsSetting(name,bounds){
+
+  /**
+   * 将一个实例附加到主浏览器中
+   * @param instance
+   * @param pos 'right'
+   */
+  attachInstance (instance, pos, width = 480) {
+    switch (pos) {
+      case this.POS.RIGHT:
+        this.attachedInstance = instance
+        let url ='http://www.apps.vip'//仅做测试 instance.window.getURL()
+        let options=instance.initOption
+        options.url=url
+        let viewInstance = this.createView(options)
+        mainWindow.addBrowserView(viewInstance.view)
+        let parentBounds = mainWindow.getBounds()
+        let viewBounds = {
+          x: parentBounds.width - width,
+          y: 0,
+          height: parentBounds.height,
+          width
+        }
+        console.log('viewBounds', viewBounds)
+        viewInstance.view.setBounds(viewBounds)
+
+        this.attachedInstance = viewInstance
+        this.attachedView = viewInstance.view
+        this.viewManager.autoAdjustPosition('right',viewBounds.width)
+        instance.close()
+      //todo viewManager重新调整位置
+      //todo 根据options重新创建view到主浏览器中
+    }
+  }
+
+  static getBoundsSetting (name) {
+    return settings.get('windowManager.bounds.' + name)
+  }
+
+  static setBoundsSetting (name, bounds) {
     settings.set('windowManager.bounds.' + name, bounds)
   }
-  static setSettings(name,key,value){
-    settings.set('windowManager.settings.' + name+'.'+key, value)
+
+  static setSettings (name, key, value) {
+    settings.set('windowManager.settings.' + name + '.' + key, value)
   }
-  static getSettings(name,key){
-    return settings.get('windowManager.settings.' + name+'.'+key)
+
+  static getSettings (name, key) {
+    return settings.get('windowManager.settings.' + name + '.' + key)
   }
-  getWindowFromWebContentsId(id){
+
+  getWindowFromWebContentsId (id) {
     return BrowserWindow.fromWebContents(webContents.fromId(id))
   }
 
@@ -196,28 +365,31 @@ class WindowManager {
    * @param id
    * @returns {{instance, name, type: string}}
    */
-  getInstanceFromWebContentsId(id){
-   let findInWind= Object.keys(this.windowMap).find(win=>{
-      return this.windowMap[win].webContents.id===id
+  getInstanceFromWebContentsId (id) {
+    let findInWind = Object.keys(this.windowMap).find(win => {
+      return this.windowMap[win].webContents.id === id
     })
-    if(findInWind){
+    if (findInWind) {
       return {
-        type:'window',
-        name:findInWind,
-        instance:this.windowMap[findInWind]
+        type: 'window',
+        name: findInWind,
+        instance: this.windowMap[findInWind]
       }
     }
   }
-  onWindow (channel, cb) {
-    this._on('api.window.' + channel, (event,args)=>{
-      let instance=this.get(args['_name'])
 
-      cb(event,args,instance)
+  onWindow (channel, cb) {
+    this._on('api.window.' + channel, (event, args) => {
+      let instance = this.get(args['_name'])
+
+      cb(event, args, instance)
     })
   }
+
   _on (channel, cb) {
     ipc.on(channel, cb)
   }
+
   init () {
     app.whenReady().then(() => {
       ipc.on('api.runtime.init', (event, args) => {
@@ -229,15 +401,17 @@ class WindowManager {
         this.close(args['_name'])
       })
 
-      this.onWindow('setAlwaysOnTop',(event,args,instance)=>{
+      this.onWindow('setAlwaysOnTop', (event, args, instance) => {
         instance.window.setAlwaysOnTop(args.flag)
       })
 
-      this.onWindow('isAlwaysOnTop',(event,args,instance)=>{
-        event.returnValue=instance.window.isAlwaysOnTop()
+      this.onWindow('isAlwaysOnTop', (event, args, instance) => {
+        event.returnValue = instance.window.isAlwaysOnTop()
       })
 
-
+      this.onWindow('attach', (event, args, instance) => {
+        this.attachInstance(instance, args.pos, args.width)
+      })
     })
   }
 }

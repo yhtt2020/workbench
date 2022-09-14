@@ -50,6 +50,13 @@ const windowApi = {
   },
   async isAlwaysOnTop(){
    return await sendSync('isAlwaysOnTop')
+  },
+  /**
+   * 附加到主窗体的某个位置，默认为右侧，暂时仅支持右侧
+   * @param pos 'right'
+   */
+  attach(pos){
+    send('attach',{pos:pos})
   }
 }
 
