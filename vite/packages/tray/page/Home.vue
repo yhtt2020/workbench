@@ -17,20 +17,25 @@
       </a-col>
       <a-col class="rank flex flex-direction" :span="23">
         <div class="flex" style="margin-top: 10px">
-          <div class="head"></div>
-          <div class="content" style="margin-left: 15px;width: 190px;height: 60px;margin-top: 5px">
-            <span style="color: #f3f3f3;font-size: 14px;">在线等级：xx级</span>
-            <div style="margin-top: 5px">
-              <a-progress strokeColor="#ffffff" trailColor="#4d4d4d" :percent="30" :showInfo="false" />
+          <div class="head">
+            <a-avatar style="position: relative;cursor: pointer" :size="60"
+                      :src="avatar">
+            </a-avatar>
+          </div>
+          <div class="content" style="margin-left: 15px;width: 100%;height: 60px;margin-top: 5px">
+            <span style="color: #f3f3f3;font-size: 14px;">在线等级：{{lv}}级</span>
+            <div class="flex" style="margin-top: 5px" >
+              <a-progress strokeColor="#ffffff" trailColor="#4d4d4d" :percent="30" :showInfo="false" style="width: 180px" />
+              <span style="color: #f3f3f3;font-size: 14px">{{remainHour}}小时{{remainMinute}}分后升级</span>
             </div>
           </div>
-          <div class="upgrade flex flex-direction" style="width: 130px;height: 60px;margin-left: 20px;margin-top: 5px">
-            <div style="color: #afaf61;margin-bottom: 5px;margin-left: 15px">
-              <thunderbolt-outlined />
-              <span style="margin-left: 5px;font-size: 12px">正在加速成长</span>
-            </div>
-            <span style="color: #f3f3f3">xx小时xx分后升级</span>
-          </div>
+<!--          <div class="upgrade flex flex-direction" style="width: 130px;height: 60px;margin-left: 15px;margin-top: 5px">-->
+<!--            <div  style="color: #afaf61;margin-bottom: 5px;margin-left: 15px">-->
+<!--              <thunderbolt-outlined />-->
+<!--              <span style="margin-left: 5px;font-size: 12px">正在加速成长</span>-->
+<!--            </div>-->
+<!--            <span style="color: #f3f3f3;font-size: 14px">{{remainHour}}小时{{remainMinute}}分后升级</span>-->
+<!--          </div>-->
         </div>
         <div class="button flex">
           <div class="work">工作模式</div>
@@ -54,9 +59,11 @@ import {
    ThunderboltOutlined
 } from '@ant-design/icons-vue'
 
-ipcRenderer.on('userInfo',(event,args)=>{
-
-})
+// let grade
+// ipcRenderer.once('userInfo',(event,args)=>{
+//   grade = args
+//   console.log(grade)
+// })
 
 
 
@@ -69,7 +76,56 @@ export default defineComponent({
     Task,
     Team,
     ThunderboltOutlined
-  }
+  },
+  data(){
+    return{
+      lv:'',
+      avatar:'',
+      remainHour:'',
+      remainMinute:'',
+    }
+  },
+  methods:{
+    gradeTableGenerate(num){
+      let lvSys = {}
+      for (let i = 0; i < num + 1; i++) {
+        let arrLef = 0
+        let arrRg = 0
+        for (let j = 0; j < i; j++) {
+          arrLef += 10 * (j + 2)
+        }
+        for (let k = 0; k < i + 1; k++) {
+          arrRg += 10 * (k + 2)
+        }
+        arrRg -= 1
+        lvSys[`${i}`] = [arrLef, arrRg]
+      }
+      delete lvSys['lv0']
+      return lvSys
+    }
+  },
+  mounted() {
+
+    ipcRenderer.once('userInfo',(event,args)=>{
+      console.log(args)
+      this.lv=args.data.onlineGradeExtra.lv
+      this.avatar=args.data.avatar
+
+
+      let section = this.gradeTableGenerate(64)[this.lv + 1]
+      let remain = section[0] * 60 - (args.data.onlineGradeExtra.minutes)
+      this.remainHour = Math.floor(remain / 60)
+      this.remainMinute = remain - (Math.floor(remain / 60) * 60)
+
+
+    })
+    // const myVar = setInterval(() => {
+    //   this.lv= grade.data.onlineGradeExtra.lv
+    //   if ( this.lv !== undefined) {
+    //     clearInterval(myVar)
+    //   }
+    // }, 500);
+  },
 })
 </script>
 
@@ -80,11 +136,11 @@ export default defineComponent({
   height: 75px;
   margin-left: 10px;
   .head{
-    width: 60px;
-    height: 55px;
+    //width: 60px;
+    //height: 55px;
     margin-left: 10px;
     border-radius: 50%;
-    background-color: #5586F8;
+    //background-color: #5586F8;
   }
   .button{
     .work{

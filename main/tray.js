@@ -62,7 +62,7 @@ app.whenReady().then(() => {
   tray.setToolTip("我是托盘菜单")
   tray.on('click', function(event,position) {
     getUserInfo().then(r => {
-      sendIPCToTrayWindow('userInfo',r)
+      sendIPCToTrayWindow('userInfo',r.data)
     })
     getTrayWindow()
     if(mainWindow!=null && !mainWindow.isDestroyed()){
