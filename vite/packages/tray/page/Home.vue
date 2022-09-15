@@ -47,8 +47,6 @@
 </template>
 
 <script>
-let { ipcMain } = require('electron')
-let { ipcRenderer } = require('electron')
 import Team from '../compontents/Team.vue'
 import Task from '../compontents/Task.vue'
 import Achievement from '../compontents/Achievement.vue'
@@ -59,13 +57,16 @@ import {
    ThunderboltOutlined
 } from '@ant-design/icons-vue'
 
+let { ipcMain } = require('electron')
+let { ipcRenderer } = require('electron')
+
+const osu=require('node-os-utils')
+
 // let grade
 // ipcRenderer.once('userInfo',(event,args)=>{
 //   grade = args
 //   console.log(grade)
 // })
-
-
 
 
 export default defineComponent({
@@ -104,28 +105,18 @@ export default defineComponent({
       return lvSys
     }
   },
-  mounted() {
-
-    ipcRenderer.once('userInfo',(event,args)=>{
-      console.log(args)
-      this.lv=args.data.onlineGradeExtra.lv
-      this.avatar=args.data.avatar
-
-
-      let section = this.gradeTableGenerate(64)[this.lv + 1]
-      let remain = section[0] * 60 - (args.data.onlineGradeExtra.minutes)
-      this.remainHour = Math.floor(remain / 60)
-      this.remainMinute = remain - (Math.floor(remain / 60) * 60)
-
-
-    })
-    // const myVar = setInterval(() => {
-    //   this.lv= grade.data.onlineGradeExtra.lv
-    //   if ( this.lv !== undefined) {
-    //     clearInterval(myVar)
-    //   }
-    // }, 500);
-  },
+ mounted() {
+   ipcRenderer.once('userInfo', (event, args) => {
+     console.log(args)
+     this.lv = args.data.onlineGradeExtra.lv
+     this.avatar = args.data.avatar
+     let section = this.gradeTableGenerate(64)[this.lv + 1]
+     let remain = section[0] * 60 - (args.data.onlineGradeExtra.minutes)
+     this.remainHour = Math.floor(remain / 60)
+     this.remainMinute = remain - (Math.floor(remain / 60) * 60)
+   })
+ }
+    // this.memoryUsage = await osu.mem.info()
 })
 </script>
 

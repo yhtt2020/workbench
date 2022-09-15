@@ -1,5 +1,7 @@
 const { Tray } = require('electron')
 const baseApi = require('./src/api/baseApi.js')
+const {require} = require("@electron/remote");
+// var viewMap = require('viewManager.js')
 
 function sendIPCToTrayWindow (action, data) {
   // if there are no windows, create a new one
@@ -89,4 +91,13 @@ app.whenReady().then(() => {
     ])
     tray.setContextMenu(contextMenu)
   })
+})
+
+
+ipc.on('release',()=>{
+  var obj = Object.keys(viewMap);
+  var pageCount = obj.map(key => viewMap[key]);
+  console.log(pageCount.length)
+
+  console.log()
 })
