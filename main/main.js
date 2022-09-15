@@ -293,7 +293,6 @@ function createWindowWithBounds(bounds) {
   mainWindow.on('ready-to-show',()=>{
     mainWindow.show()
     loadSidePanel()
-    getAllAppsWindow()
     changingSpace=false
   })
   function checkClipboard(){
@@ -530,14 +529,15 @@ app.on('activate', function( /* e, hasVisibleWindows */ ) {
     appStart()
 	}
 })
-
+let sqlDb
 /**
  * 启动应用，此方法会自动判断是否启动的时候显示选择空间的面板
  * @returns {Promise<void>}
  */
 async function appStart () {
   const { SqlDb } = require('./src/util/sqldb.js')
-  let sqlDb = new SqlDb()
+  sqlDb = new SqlDb()
+  initFav()
   let showOnStart = await sqlDb.getConfig('system.user.showOnStart')
   if (!showOnStart) {
     createWindow(function () {
@@ -640,11 +640,9 @@ var barrageManager=null //全局可用
 const { BarrageManager }=require(path.join(__dirname,'/src/main/barrageManager.js'))
 app.whenReady().then(()=>{
   setTimeout(()=>{
-    barrageManager=new BarrageManager({
-      parent:mainWindow
-    })
+    barrageManager=new BarrageManager(windowManager)
     //barrageManager.init()
-  },3000)
+  },1000)
 
 
   ipc.on('toggleBarrage',()=>{

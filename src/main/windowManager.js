@@ -3,13 +3,18 @@
  */
 class Instance {
   type='window'
+  name
   object=null
   initOption
   constructor (initOption) {
     this.initOption=initOption
+    this.name=initOption.name
   }
   destroy(){
 
+  }
+  close(){
+    windowManager.close(this.name)
   }
 }
 
@@ -53,7 +58,7 @@ class WindowManager {
     scrollBounce: true,
     safeDialogs: true,
     safeDialogsMessage: '阻止此页面弹窗',
-    preload: path.join(__dirname, 'src/browserApi/apiPreload.js'),
+    preload:  path.join(__dirname, 'src/browserApi/apiPreload.js'),
     contextIsolation: true,
     sandbox: true,
     enableRemoteModule: false,
@@ -161,7 +166,8 @@ class WindowManager {
       }
       this.windowMap[name]=window
        let windowInstance=new WindowInstance({
-         window:window
+         window:window,
+         name:name
        })
       instance=windowInstance
     }

@@ -3,7 +3,7 @@ const {
 } = require('electron')
 const ipc = ipcRenderer
 const {contextBridge} =require('electron')
-const api=require('../browserApi/baseApi')
+const api=require('../browserApi/baseApi.js')
 //载入api
 contextBridge.exposeInMainWorld('tsbApi', api)
 //载入api

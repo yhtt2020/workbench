@@ -659,7 +659,7 @@ const appManager = {
       appView.webContents.loadURL(saApp.url)
     }
     if (saApp.package === 'com.thisky.fav' && isDevelopmentMode) {
-      appView.webContents.openDevTools()
+     // appView.webContents.openDevTools()
     }
     function updateView(url){
       if(appWindow.isFocused()){

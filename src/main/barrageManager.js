@@ -14,62 +14,54 @@ app.whenReady().then(()=>{
 })
 class BarrageManager{
   container
+  instance
   isLocked=false
-  constructor () {
-
+  windowManager
+  constructor (windowManager) {
+      this.windowManager=windowManager
   }
-  init(optionArgs){
-    const DEFAULT_OPTION={
-      type:'window', //window,或者view，只有window有窗体交互逻辑，view的话，就不存在这些逻辑了
-      parent:undefined  //默认没有父窗体
-    }
-    let option=Object.assign(DEFAULT_OPTION,optionArgs)
-    let bounds={
-      width:950,
-      height:300,
-      x:undefined,
-      y:undefined
-    }
-    if(option.parent){
-      if(option.parent.isDestroyed()){
-        option.parent=undefined
-      }
-      bounds =this.getInitBounds(option.parent)
-    }
-
+  init(){
+    let windowInstance
     let window
-    if(option.type==='window'){
-      window = new BrowserWindow({
-        width:bounds.width,
-        minHeight:200,
-        minWidth:600,
-        height:bounds.height,
-        fullscreenable:false,
-        transparent:true,
-        backgroundColor:'#00000000',
-        x:bounds.x,
-        y:bounds.y,
-        alwaysOnTop:true,
-        hasShadow:false,
-        frame:false,
-        acceptFirstMouse:false,
+     windowInstance =  this.windowManager.create({
+        name:'barrage',
+        mod:this.windowManager.MOD.NO_CONTROLLER,
+        defaultBounds:{
+          width:950,
+          height:300
+        },
         webPreferences:{
           show:false,
-          preload:(__dirname+'/barragePreload.js'),
+          preload:(__dirname+'/../preload/barragePreload.js'),
           additionalArguments: [
             '--user-data-path=' + app.getPath('userData'),
             '--app-version=' + app.getVersion(),
             '--app-name=' + app.getName(),
             ...((isDevelopmentMode ? ['--development-mode'] : [])),
-          ]
+          ],
+          sandbox:false
+        },
+        rememberBounds: true,
+        windowOption: {
+          minHeight:200,
+          minWidth:600,
+          fullscreenable:false,
+          transparent:true,
+          backgroundColor:'#00000000',
+          alwaysOnTop:true,
+          hasShadow:false,
+          frame:false,
+          acceptFirstMouse:false
         }
-      })
-    }
+    })
+
+    window=windowInstance.window
     window.loadURL(this.getUrl('barrage.html#/pop'))
     window.on('ready-to-show',()=>{
       window.show()
     })
     this.container=window
+    this.instance=windowInstance
     win=this.container
   }
   send(channel,args){
@@ -129,7 +121,7 @@ class BarrageManager{
     }
   }
   destroy(){
-    this.container.close()
+    this.instance.close()
   }
 }
 
