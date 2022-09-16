@@ -1,6 +1,7 @@
 /**
  * 实例类，主要是将窗体之类的对象进行再一次封装，方便对其进行二次操作
  */
+
 class Instance {
   type = 'window'
   name
@@ -85,6 +86,7 @@ class ViewManager {
 
     viewBounds.height = parentBounds.height
     windowManager.attachedView.setBounds(viewBounds)
+    windowManager.attachStatus.bounds=viewBounds
   }
 
   restore () {
@@ -192,6 +194,7 @@ class WindowManager {
 
   attachedInstance = {} //已经吸附的窗体的实例
   attachedView = null//已经吸附的窗体
+  attachStatus=null //{ name ,bounds, pos} //吸附窗体的状态
 
   viewManager = null
 
@@ -408,6 +411,11 @@ class WindowManager {
     switch (pos) {
       case this.POS.RIGHT:
         this.attachedInstance = instance
+        this.attachStatus={
+          pos:pos,
+          name:instance.name,
+          bounds:{}
+        }
         let url =instance.window.getURL()
         let options=instance.initOption
         options.url=url
@@ -435,6 +443,10 @@ class WindowManager {
       //todo viewManager重新调整位置
       //todo 根据options重新创建view到主浏览器中
     }
+  }
+
+  detachInstance(){
+
   }
 
   restoreAttachMod(){
@@ -525,7 +537,25 @@ class WindowManager {
       })
 
       this.onWindow('attach', (event, args, instance) => {
+        if(this.attachedInstance===instance){
+          return
+        }
         this.attachInstance(instance, args.pos, args.width)
+      })
+
+      this.onWindow('detach',(event,args,instance)=>{
+        if(this.attachedInstance!==instance){
+          return
+        }
+        this.detachInstance()
+      })
+
+      this.onWindow('getAttachStatus',(event,args,instance)=>{
+        if(this.attachedInstance!==instance){
+          event.returnValue=false
+        }else{
+          event.returnValue=this.attachStatus
+        }
       })
     })
   }

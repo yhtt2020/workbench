@@ -378,9 +378,7 @@ ipc.on('setView', function (e, args) {
 })
 
 ipc.on('setBounds', function (e, args) {
-  console.log('未修正过的尺寸',args.bounds)
   let bounds=windowManager.onSetBounds(args.bounds)
-  console.log('修正后',bounds)
   setBounds(args.id, bounds)
   if(windowManager) {windowManager.syncAttachedBounds()}
 })

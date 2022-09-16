@@ -51,12 +51,27 @@ const windowApi = {
   async isAlwaysOnTop(){
    return await sendSync('isAlwaysOnTop')
   },
+
+  /**
+   * 获取当前窗体的附加信息
+   * @returns {Promise<*>}
+   */
+  async getAttachStatus(){
+    return await sendSync('getAttachStatus')
+  },
+
   /**
    * 附加到主窗体的某个位置，默认为右侧，暂时仅支持右侧
    * @param pos 'right'
    */
   attach(pos){
     send('attach',{pos:pos})
+  },
+  /**
+   * 分离
+   */
+  detach(){
+    send('detach')
   }
 }
 
