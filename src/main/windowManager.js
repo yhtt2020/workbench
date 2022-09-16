@@ -393,7 +393,6 @@ class WindowManager {
     // }
     if (url) {
       view.webContents.loadURL(url)
-      view.webContents.openDevTools()
     }
     this.viewMap[name] = view
     let viewInstance = new ViewInstance({
