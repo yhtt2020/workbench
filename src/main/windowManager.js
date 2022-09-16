@@ -360,7 +360,9 @@ class WindowManager {
       ...((isDevelopmentMode ? ['--development-mode'] : [])),
       '--name=' + name
     ]
-    let view = new BrowserView(webPreferences)
+    let view = new BrowserView({
+      webPreferences
+    })
     // if (rememberBounds) {
     //   let boundsSetting =WindowManager.getSettings(name,'bounds')
     //   if(alwaysOnTop){
@@ -385,6 +387,7 @@ class WindowManager {
     // }
     if (url) {
       view.webContents.loadURL(url)
+      view.webContents.openDevTools()
     }
     this.viewMap[name] = view
     let viewInstance = new ViewInstance({
@@ -514,6 +517,10 @@ class WindowManager {
       })
 
       this.onWindow('isAlwaysOnTop', (event, args, instance) => {
+        if(instance.type==='view'){
+          event.returnValue=false //view的话，统一返回false
+          return
+        }
         event.returnValue = instance.window.isAlwaysOnTop()
       })
 
