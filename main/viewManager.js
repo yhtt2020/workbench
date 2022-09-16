@@ -306,7 +306,9 @@ function setBounds(id, bounds) {
   if (viewMap[id]) {
     let bvs=mainWindow.getBrowserViews()
     bvs.forEach(bv=>{
-      bv.setBounds(bounds)
+      if(bv.getBounds().x===bounds.x) {
+        bv.setBounds(bounds)
+      }
     })
   }
   viewBounds = bounds
@@ -358,7 +360,9 @@ ipc.on('destroyAllViews', function () {
 
 ipc.on('setView', function (e, args) {
   setView(args.id)
-  setBounds(args.id, args.bounds)
+  let bounds=windowManager.onSetBounds(args.bounds)
+  setBounds(args.id, bounds)
+  if(windowManager) {windowManager.syncAttachedBounds()}
   if (args.focus) {
     if (SidePanel.alive() && sidePanel.get().isFocused()) {
       //如果侧边栏是焦点状态，则不去聚焦
@@ -372,7 +376,11 @@ ipc.on('setView', function (e, args) {
 })
 
 ipc.on('setBounds', function (e, args) {
-  setBounds(args.id, args.bounds)
+  console.log('未修正过的尺寸',args.bounds)
+  let bounds=windowManager.onSetBounds(args.bounds)
+  console.log('修正后',bounds)
+  setBounds(args.id, bounds)
+  if(windowManager) {windowManager.syncAttachedBounds()}
 })
 
 ipc.on('focusView', function (e, id) {

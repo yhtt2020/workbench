@@ -24,6 +24,7 @@ class SpiltBar {
   show(bounds){
     if(document.querySelectorAll('.split-bar').length>0){
       this.bar.style.left=bounds.x+bounds.width +'px'
+      this.bar.style.height=bounds.height+'px'
       return
     }
     let bar=document.createElement('div')

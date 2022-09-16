@@ -26,6 +26,9 @@ class Instance {
  */
 class ViewManager {
    SPLIT_WIDTH=10
+  bindedMainWindowEvent=false //是否已经绑定了主窗体事件
+  lastWidth=0 //最后一次调整的分体窗体的宽度
+
   autoAdjustPosition (pos, width) {
 
     let parentBounds = mainWindow.getBounds()
@@ -36,6 +39,7 @@ class ViewManager {
     Object.keys(viewMap).forEach(key => {
       let view=viewMap[key]
       let viewBounds = view.getBounds()
+      y=viewBounds.y
       let mainViewPreWidth=parentBounds.width - width-viewBounds.x-this.SPLIT_WIDTH
       let maxViewWidth=parentBounds.width-viewBounds.x-this.SPLIT_WIDTH
 
@@ -65,19 +69,20 @@ class ViewManager {
             width: mainViewPreWidth,
             height: viewBounds.height
           }
-          y=viewBounds.y
+
           sendIPCToMainWindow('showSplitBar',{bounds})
           view.setBounds(bounds)
     })
+    let viewBounds = windowManager.attachedView.getBounds()
         if(!noChange) {
-          let viewBounds = windowManager.attachedView.getBounds()
           viewBounds.y = y
           viewBounds.width = width
           viewBounds.x = parentBounds.width - width
-          windowManager.attachedView.setBounds(viewBounds)
+          this.lastWidth=width
         }
 
-
+    viewBounds.height=parentBounds.height
+    windowManager.attachedView.setBounds(viewBounds)
   }
   restore(){
     let parentBounds = mainWindow.getBounds()
@@ -93,13 +98,22 @@ class ViewManager {
       view.setBounds(bounds)
     })
   }
+
+  /**
+   * 鼠标拖动
+   */
   resetAttachPosition(){
     let cursorPosition=require('electron').screen.getCursorScreenPoint()
     let parentBounds=mainWindow.getBounds()
     this.autoAdjustPosition('right',parentBounds.width+parentBounds.x-cursorPosition.x)
-    //如果鼠标x>  mainwindow.width+mainwindow.x- 右侧栏最小宽度
-
-    //如果鼠标x<左侧栏最大宽度
+  }
+  syncSize(){
+     if(windowManager.attachedView) {
+       this.autoAdjustPosition('right', this.lastWidth)}
+  }
+  onSetBounds(bounds){
+    bounds.width=bounds.width-this.lastWidth-this.SPLIT_WIDTH
+    return bounds
   }
 }
 
@@ -145,6 +159,8 @@ class ViewInstance extends Instance {
   close () {
     this.view.webContents.destroy()
     this.parent.restoreAttachMod()
+    windowManager.attachedView=null
+    windowManager.attachedInstance=null
   }
 }
 
@@ -162,7 +178,7 @@ class WindowManager {
   optionMap = {} //id: windowConfig:{} 如果为view,则为null ，当window转为attach的时候，为设置为null,webPreferences:{}
 
   attachedInstance = {} //已经吸附的窗体的实例
-  attachedView = {}//已经吸附的窗体
+  attachedView = null//已经吸附的窗体
 
   viewManager = null
 
@@ -385,9 +401,13 @@ class WindowManager {
           height: parentBounds.height,
           width
         }
-        console.log('viewBounds', viewBounds)
         viewInstance.view.setBounds(viewBounds)
-
+        viewInstance.view.setAutoResize({
+          width:false,
+          height:false,
+          horizontal:false,
+          vertical:false
+        })
         this.attachedInstance = viewInstance
         this.attachedView = viewInstance.view
         this.viewManager.autoAdjustPosition('right',viewBounds.width)
@@ -399,6 +419,13 @@ class WindowManager {
 
   restoreAttachMod(){
     this.viewManager.restore()
+  }
+  onSetBounds(bounds){
+    return this.viewManager.onSetBounds(bounds)
+  }
+  syncAttachedBounds(){
+    if(this.viewManager)
+      this.viewManager.syncSize()
   }
 
   resetAttachPosition(){
