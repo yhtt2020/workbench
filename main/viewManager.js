@@ -306,9 +306,11 @@ function setBounds(id, bounds) {
   if (viewMap[id]) {
     let bvs=mainWindow.getBrowserViews()
     bvs.forEach(bv=>{
-      if(bv.getBounds().x===bounds.x) {
-        bv.setBounds(bounds)
+      let bvBounds=bv.getBounds()
+      if(bvBounds.x!==bounds.x ) {
+        return
       }
+      bv.setBounds(bounds)
     })
   }
   viewBounds = bounds

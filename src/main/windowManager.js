@@ -25,71 +25,75 @@ class Instance {
  * 代理view管理
  */
 class ViewManager {
-   SPLIT_WIDTH=10
-  bindedMainWindowEvent=false //是否已经绑定了主窗体事件
-  lastWidth=0 //最后一次调整的分体窗体的宽度
+  SPLIT_WIDTH = 10
+  bindedMainWindowEvent = false //是否已经绑定了主窗体事件
+  lastWidth = 0 //最后一次调整的分体窗体的宽度
 
   autoAdjustPosition (pos, width) {
-
+    if(!windowManager.attachedView){
+      return
+    }
     let parentBounds = mainWindow.getBounds()
-    let y=0
-    let out=false
-    let outType='min' //max
-    let noChange=false
+    let y = 0
+    let out = false
+    let outType = 'min' //max
+    let noChange = false
     Object.keys(viewMap).forEach(key => {
-      let view=viewMap[key]
+      let view = viewMap[key]
       let viewBounds = view.getBounds()
-      y=viewBounds.y
-      let mainViewPreWidth=parentBounds.width - width-viewBounds.x-this.SPLIT_WIDTH
-      let maxViewWidth=parentBounds.width-viewBounds.x-this.SPLIT_WIDTH
+      y = viewBounds.y
+      let mainViewPreWidth = parentBounds.width - width - viewBounds.x - this.SPLIT_WIDTH
+      let maxViewWidth = parentBounds.width - viewBounds.x - this.SPLIT_WIDTH
 
-      if( mainViewPreWidth<=0 ){
+      if (mainViewPreWidth <= 0) {
         //当发现预估宽度过小，则直接结束此次调整
-        out=true
-        outType='min'
-      }else if( mainViewPreWidth>maxViewWidth){
-        out=true
-        outType='max'
+        out = true
+        outType = 'min'
+      } else if (mainViewPreWidth > maxViewWidth) {
+        out = true
+        outType = 'max'
       }
 
-      if(out){
-        if(outType==='min' && viewBounds.width>0){
-          mainViewPreWidth=0
-          width=parentBounds.width -viewBounds.x-this.SPLIT_WIDTH
-        }else if(outType==='max' && viewBounds.width<maxViewWidth){
-          mainViewPreWidth=maxViewWidth
-        }else{
-          noChange=true
+      if (out) {
+        if (outType === 'min' && viewBounds.width > 0) {
+          mainViewPreWidth = 0
+          width = parentBounds.width - viewBounds.x - this.SPLIT_WIDTH
+        } else if (outType === 'max' && viewBounds.width < maxViewWidth) {
+          mainViewPreWidth = maxViewWidth
+        } else {
+          noChange = true
           return false
         }
       }
-          let bounds={
-            x: viewBounds.x,
-            y: viewBounds.y,
-            width: mainViewPreWidth,
-            height: viewBounds.height
-          }
+      let bounds = {
+        x: viewBounds.x,
+        y: viewBounds.y,
+        width: mainViewPreWidth,
+        height: viewBounds.height
+      }
 
-          sendIPCToMainWindow('showSplitBar',{bounds})
-          view.setBounds(bounds)
+      sendIPCToMainWindow('showSplitBar', { bounds })
+      view.setBounds(bounds)
     })
     let viewBounds = windowManager.attachedView.getBounds()
-        if(!noChange) {
-          viewBounds.y = y
-          viewBounds.width = width
-          viewBounds.x = parentBounds.width - width
-          this.lastWidth=width
-        }
+    if (!noChange) {
+      viewBounds.y = y
+      viewBounds.width = width
+      viewBounds.x = parentBounds.width - width
+      this.lastWidth = width
+    }
 
-    viewBounds.height=parentBounds.height
+    viewBounds.height = parentBounds.height
     windowManager.attachedView.setBounds(viewBounds)
   }
-  restore(){
+
+  restore () {
+    this.lastWidth = 0
     let parentBounds = mainWindow.getBounds()
     Object.keys(viewMap).forEach(key => {
-      let view=viewMap[key]
+      let view = viewMap[key]
       let viewBounds = view.getBounds()
-      let bounds={
+      let bounds = {
         x: viewBounds.x,
         y: viewBounds.y,
         width: parentBounds.width,
@@ -102,17 +106,22 @@ class ViewManager {
   /**
    * 鼠标拖动
    */
-  resetAttachPosition(){
-    let cursorPosition=require('electron').screen.getCursorScreenPoint()
-    let parentBounds=mainWindow.getBounds()
-    this.autoAdjustPosition('right',parentBounds.width+parentBounds.x-cursorPosition.x)
+  resetAttachPosition () {
+    let cursorPosition = require('electron').screen.getCursorScreenPoint()
+    let parentBounds = mainWindow.getBounds()
+    this.autoAdjustPosition('right', parentBounds.width + parentBounds.x - cursorPosition.x)
   }
-  syncSize(){
-     if(windowManager.attachedView) {
-       this.autoAdjustPosition('right', this.lastWidth)}
+
+  syncSize () {
+    if (windowManager.attachedView) {
+      this.autoAdjustPosition('right', this.lastWidth)
+    }
   }
-  onSetBounds(bounds){
-    bounds.width=bounds.width-this.lastWidth-this.SPLIT_WIDTH
+
+  onSetBounds (bounds) {
+    if (windowManager.attachedView) {
+      bounds.width = bounds.width - this.lastWidth - this.SPLIT_WIDTH
+    }
     return bounds
   }
 }
@@ -157,10 +166,14 @@ class ViewInstance extends Instance {
   }
 
   close () {
+    if(mainWindow){
+      mainWindow.removeBrowserView(this.view)
+    }
     this.view.webContents.destroy()
     this.parent.restoreAttachMod()
     windowManager.attachedView=null
     windowManager.attachedInstance=null
+    this.destroy()
   }
 }
 
@@ -234,7 +247,10 @@ class WindowManager {
     let instance = this.instanceMap[name]
     if (instance) {
       instance.close()
+      delete this[instance.type+'Map'][name]
       delete this.instanceMap[name]
+      delete this.webContentsMap[name]
+      console.log(this)
     } else {
       throw 'instance不存在'
     }
@@ -392,6 +408,7 @@ class WindowManager {
         let url =instance.window.getURL()
         let options=instance.initOption
         options.url=url
+        this.close(instance.name)
         let viewInstance = this.createView(options)
         mainWindow.addBrowserView(viewInstance.view)
         let parentBounds = mainWindow.getBounds()
@@ -411,7 +428,7 @@ class WindowManager {
         this.attachedInstance = viewInstance
         this.attachedView = viewInstance.view
         this.viewManager.autoAdjustPosition('right',viewBounds.width)
-        instance.close()
+
       //todo viewManager重新调整位置
       //todo 根据options重新创建view到主浏览器中
     }
