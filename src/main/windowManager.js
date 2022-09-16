@@ -7,9 +7,11 @@ class Instance {
   name
   object = null
   initOption
+  createOptions //首次初始化时的options
 
   constructor (initOption) {
     this.initOption = initOption
+    this.createOptions=initOption.createOptions
     this.name = initOption.name
   }
 
@@ -195,6 +197,7 @@ class WindowManager {
   attachedInstance = {} //已经吸附的窗体的实例
   attachedView = null//已经吸附的窗体
   attachStatus=null //{ name ,bounds, pos} //吸附窗体的状态
+  stashCreateOptions=null//暂存的window的初始化设置
 
   viewManager = null
 
@@ -253,7 +256,6 @@ class WindowManager {
       delete this[instance.type+'Map'][name]
       delete this.instanceMap[name]
       delete this.webContentsMap[name]
-      console.log(this)
     } else {
       throw 'instance不存在'
     }
@@ -326,6 +328,7 @@ class WindowManager {
       this.windowMap[name] = window
       let windowInstance = new WindowInstance({
         window: window,
+        createOptions:options,
         name: name
       })
       instance = windowInstance
@@ -416,6 +419,7 @@ class WindowManager {
           name:instance.name,
           bounds:{}
         }
+        this.stashCreateOptions=instance.createOptions
         let url =instance.window.getURL()
         let options=instance.initOption
         options.url=url
@@ -446,7 +450,13 @@ class WindowManager {
   }
 
   detachInstance(){
-
+    let instance = this.attachedInstance
+    this.attachStatus=null
+    let url =instance.view.webContents.getURL()
+    this.close(instance.name)
+    let options= this.stashCreateOptions
+    options.url=url
+    this.create(Object.assign(options, { url }))
   }
 
   restoreAttachMod(){
