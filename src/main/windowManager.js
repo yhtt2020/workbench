@@ -408,6 +408,7 @@ class WindowManager {
    * 将一个实例附加到主浏览器中
    * @param instance
    * @param pos 'right'
+   * @param width
    */
   attachInstance (instance, pos, width = 480) {
     switch (pos) {
