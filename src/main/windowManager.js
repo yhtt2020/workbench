@@ -34,7 +34,7 @@ class ViewManager {
       let bounds={
         x: viewBounds.x,
         y: viewBounds.y,
-        width: parentBounds.width - width-viewBounds.x,
+        width: parentBounds.width - width-viewBounds.x-5,
         height: viewBounds.height
       }
       y=viewBounds.y
@@ -45,6 +45,20 @@ class ViewManager {
     let viewBounds=windowManager.attachedView.getBounds()
     viewBounds.y=y
     windowManager.attachedView.setBounds(viewBounds)
+  }
+  restore(){
+    let parentBounds = mainWindow.getBounds()
+    Object.keys(viewMap).forEach(key => {
+      let view=viewMap[key]
+      let viewBounds = view.getBounds()
+      let bounds={
+        x: viewBounds.x,
+        y: viewBounds.y,
+        width: parentBounds.width,
+        height: viewBounds.height
+      }
+      view.setBounds(bounds)
+    })
   }
 }
 
@@ -75,10 +89,12 @@ class WindowInstance extends Instance {
 class ViewInstance extends Instance {
   type = 'view'
   view
+  parent
 
-  constructor (initOption) {
+  constructor (initOption,parent) {
     super(initOption)
     this.view = initOption.view
+    this.parent=parent
   }
 
   create () {
@@ -86,8 +102,8 @@ class ViewInstance extends Instance {
   }
 
   close () {
-    this.view.close()
-    this.destroy()
+    this.view.webContents.destroy()
+    this.parent.restoreAttachMod()
   }
 }
 
@@ -301,7 +317,7 @@ class WindowManager {
     let viewInstance = new ViewInstance({
       view: view,
       name: name
-    })
+    },this)
     this.instanceMap[name] = viewInstance
     this.webContentsMap[name] = view.webContents
     return viewInstance
@@ -338,6 +354,10 @@ class WindowManager {
       //todo viewManager重新调整位置
       //todo 根据options重新创建view到主浏览器中
     }
+  }
+
+  restoreAttachMod(){
+    this.viewManager.restore()
   }
 
   static getBoundsSetting (name) {
