@@ -25,26 +25,59 @@ class Instance {
  * 代理view管理
  */
 class ViewManager {
+   SPLIT_WIDTH=10
   autoAdjustPosition (pos, width) {
+
     let parentBounds = mainWindow.getBounds()
     let y=0
+    let out=false
+    let outType='min' //max
+    let noChange=false
     Object.keys(viewMap).forEach(key => {
       let view=viewMap[key]
       let viewBounds = view.getBounds()
-      let bounds={
-        x: viewBounds.x,
-        y: viewBounds.y,
-        width: parentBounds.width - width-viewBounds.x-5,
-        height: viewBounds.height
+      let mainViewPreWidth=parentBounds.width - width-viewBounds.x-this.SPLIT_WIDTH
+      let maxViewWidth=parentBounds.width-viewBounds.x-this.SPLIT_WIDTH
+
+      if( mainViewPreWidth<=0 ){
+        //当发现预估宽度过小，则直接结束此次调整
+        out=true
+        outType='min'
+      }else if( mainViewPreWidth>maxViewWidth){
+        out=true
+        outType='max'
       }
-      y=viewBounds.y
-      console.log(bounds)
-      view.setBounds(bounds)
+
+      if(out){
+        if(outType==='min' && viewBounds.width>0){
+          mainViewPreWidth=0
+          width=parentBounds.width -viewBounds.x-this.SPLIT_WIDTH
+        }else if(outType==='max' && viewBounds.width<maxViewWidth){
+          mainViewPreWidth=maxViewWidth
+        }else{
+          noChange=true
+          return false
+        }
+      }
+          let bounds={
+            x: viewBounds.x,
+            y: viewBounds.y,
+            width: mainViewPreWidth,
+            height: viewBounds.height
+          }
+          y=viewBounds.y
+          sendIPCToMainWindow('showSplitBar',{bounds})
+          view.setBounds(bounds)
     })
-    console.log('windowManager',windowManager)
-    let viewBounds=windowManager.attachedView.getBounds()
-    viewBounds.y=y
-    windowManager.attachedView.setBounds(viewBounds)
+        if(!noChange) {
+          let viewBounds = windowManager.attachedView.getBounds()
+          viewBounds.y = y
+          viewBounds.width = width
+          viewBounds.x = parentBounds.width - width
+          windowManager.attachedView.setBounds(viewBounds)
+        }
+
+
   }
   restore(){
     let parentBounds = mainWindow.getBounds()
@@ -59,6 +92,14 @@ class ViewManager {
       }
       view.setBounds(bounds)
     })
+  }
+  resetAttachPosition(){
+    let cursorPosition=require('electron').screen.getCursorScreenPoint()
+    let parentBounds=mainWindow.getBounds()
+    this.autoAdjustPosition('right',parentBounds.width+parentBounds.x-cursorPosition.x)
+    //如果鼠标x>  mainwindow.width+mainwindow.x- 右侧栏最小宽度
+
+    //如果鼠标x<左侧栏最大宽度
   }
 }
 
@@ -332,7 +373,7 @@ class WindowManager {
     switch (pos) {
       case this.POS.RIGHT:
         this.attachedInstance = instance
-        let url ='http://www.apps.vip'//仅做测试 instance.window.getURL()
+        let url =instance.window.getURL()
         let options=instance.initOption
         options.url=url
         let viewInstance = this.createView(options)
@@ -360,6 +401,9 @@ class WindowManager {
     this.viewManager.restore()
   }
 
+  resetAttachPosition(){
+    this.viewManager.resetAttachPosition()
+  }
   static getBoundsSetting (name) {
     return settings.get('windowManager.bounds.' + name)
   }

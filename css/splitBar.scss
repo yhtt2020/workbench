@@ -1,0 +1,17 @@
+.split-bar{
+  width: 10px;
+  display: inline-block;
+  position: fixed;
+  background: #e6e6e6;
+  .inner-bar{
+    display: inline-block;
+    border-radius:100px;
+    background: darkgrey;
+    height: 40px;
+    width: 6px;
+    position: absolute;
+    top: calc( 50% - 20px);
+    left: 2px;
+    cursor: col-resize;
+  }
+}
