@@ -11,7 +11,7 @@
       <div style="width: 80%;margin-left: 15px">
         <a-progress strokeColor="#f59923" trailColor="#4d4d4d" :percent="percentage" :showInfo="false" />
       </div>
-      <span class="text-content-b" style="margin-left: 15px">共打开：xx 网页 xx 应用</span>
+      <span class="text-content-b" style="margin-left: 15px">共打开：{{pageCount}} 个网页 {{appCount}} 个应用</span>
       <span @click="release()" style="font-size: 14px;margin-left: 140px;color: #d9d9d9;cursor:pointer;">释放</span>
     </div>
   </div>
@@ -21,31 +21,41 @@
 let { ipcMain } = require('electron')
 let { ipcRenderer } = require('electron')
 import {defineComponent} from "vue";
-var osu=require('node-os-utils')
+// var osu=require('node-os-utils')
 export default defineComponent({
   data(){
     return{
       usage:'',
       free:'',
       total:'',
-      percentage:''
+      percentage:'',
+      pageCount:'',
+      appCount:''
     }
   },
   methods:{
     release(){
-      ipcRenderer.send('release')
+      ipcRenderer.send('toolbar.speedup')
     }
   },
-  async mounted() {
-    let mem = await osu.mem.info()
-    let info = {
-      mem: mem,
-    }
-    this.usage = (mem.usedMemMb / 1024).toFixed(1)
-    this.total = (mem.totalMemMb / 1024).toFixed(1)
-    this.free = (mem.freeMemMb / 1024).toFixed(1)
-    this.percentage = mem.usedMemPercentage
-    console.log(info)
+mounted() {
+  ipcRenderer.on('getMemory', (event, args) => {
+    console.log(args)
+      this.usage = (args.mem.mem.usedMemMb / 1024).toFixed(1)
+      this.total = (args.mem.mem.totalMemMb / 1024).toFixed(1)
+      this.free = (args.mem.mem.freeMemMb / 1024).toFixed(1)
+      this.percentage = args.mem.mem.usedMemPercentage
+      this.pageCount = args.pageCount
+      this.appCount = args.appCount
+  })
+  //   let mem = await osu.mem.info()
+  //   let info = {
+  //     mem: mem,
+  //   }
+  //   this.usage = (mem.usedMemMb / 1024).toFixed(1)
+  //   this.total = (mem.totalMemMb / 1024).toFixed(1)
+  //   this.free = (mem.freeMemMb / 1024).toFixed(1)
+  //   this.percentage = mem.usedMemPercentage
   },
 })
 

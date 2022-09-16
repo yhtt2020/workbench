@@ -106,8 +106,8 @@ export default defineComponent({
     }
   },
  mounted() {
-   ipcRenderer.once('userInfo', (event, args) => {
-     console.log(args)
+   ipcRenderer.on('userInfo', (event, args) => {
+
      this.lv = args.data.onlineGradeExtra.lv
      this.avatar = args.data.avatar
      let section = this.gradeTableGenerate(64)[this.lv + 1]

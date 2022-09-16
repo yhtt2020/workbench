@@ -15,7 +15,8 @@
 </template>
 
 <script lang="ts">
-
+let { ipcMain } = require('electron')
+let { ipcRenderer } = require('electron')
 import Home from './page/Home.vue';
 import { defineComponent } from 'vue'
 import {
@@ -30,6 +31,7 @@ export default defineComponent({
     RightOutlined
   },
   mounted() {
+
   }
 })
 </script>
