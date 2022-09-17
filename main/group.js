@@ -270,6 +270,8 @@ app.on('ready', () => {
           resizable:true,
           minimizable:false,
           parent:mainWindow,
+          minWidth:400,
+          minHeight:500,
           show: false,
           shadow:true,
           title:'轻聊',
