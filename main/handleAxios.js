@@ -485,14 +485,11 @@ app.whenReady().then(async () => {
   ipc.on('guideLogin', () => {
     SidePanel.send('guideLogin')
   })
+
   ipc.on('guideClose', () => {
     mainWindow.webContents.send('closeGuide')
   })
 
-  ipc.on('valueCount', (event, args) => {
-    sendIPCToMainWindow('valueCount', args)
-    //mainWindow.webContents.send()
-  })
 
   ipc.on('openNewGuide', () => {
     mainWindow.webContents.send('openNewGuide')
