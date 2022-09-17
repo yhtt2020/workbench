@@ -340,11 +340,11 @@ app.whenReady().then(async () => {
    * @param key 子类
    */
   async function afterGuide (module,key) {
-    let data = await guideModel.getSchedule()
+
     await guideModel.setModuleKey(module,key,true)
 
+    let data = await guideModel.getSchedule()
     if (mainWindow && !mainWindow.isDestroyed()) {
-
       mainWindow.webContents.send('scheduleRefresh', data)
       //todo 确认关闭主窗体的情况下能否完成引导
     }
@@ -499,7 +499,9 @@ app.whenReady().then(async () => {
 
   ipc.on('careerState', () => {
     //afterGuide('guideSchedule.modules.noobGuide.career')
+    console.log('123465')
     afterGuide('noobGuide','career')
+    // afterGuide('noobGuide','career')
   })
   ipc.on('migrationState', () => {
     afterGuide('noobGuide','migration')
