@@ -306,8 +306,8 @@ function setBounds(id, bounds) {
   if (viewMap[id]) {
     let bvs=mainWindow.getBrowserViews()
     bvs.forEach(bv=>{
-      let bvBounds=bv.getBounds()
-      if(bvBounds.x!==bounds.x ) {
+      if(windowManager.attachedView && bv === windowManager.attachedView ) {
+        //排除右侧分屏的bv
         return
       }
       bv.setBounds(bounds)
