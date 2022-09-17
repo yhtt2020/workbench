@@ -191,7 +191,7 @@ Vue.component('gradePanel', {
     },
     getDateStr(){
       let date=new Date(Date.now())
-      let str=date.getFullYear()+'_'+date.getMonth()+"_"+date.getDay()+'_'+this.user.uid
+      let str=date.getFullYear()+'_'+(date.getMonth()+1)+"_"+date.getDate()+'_'+this.user.uid
       return str
     },
     setTimes(times){
