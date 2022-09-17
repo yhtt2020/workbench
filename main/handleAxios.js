@@ -499,7 +499,7 @@ app.whenReady().then(async () => {
 
   ipc.on('careerState', () => {
     //afterGuide('guideSchedule.modules.noobGuide.career')
-    console.log('123465')
+
     afterGuide('noobGuide','career')
     // afterGuide('noobGuide','career')
   })
