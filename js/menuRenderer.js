@@ -143,21 +143,21 @@ module.exports = {
     })
 
 
-    var myVar = setInterval(function(){
-      var valueStr
-      settings.listen('filteringBlockedCount', function (value) {
-        var count = value || 0
-        if (count > 50000) {
-          valueStr = new Intl.NumberFormat(navigator.locale, { notation: 'compact', maximumSignificantDigits: 4 }).format(count)
-        } else {
-          valueStr = new Intl.NumberFormat().format(count)
-        }
-      })
-      ipc.send('valueCount',valueStr.replace(/[,]/g,""))
-      if(valueStr.replace(/[,]/g,"")> 200 ){
-        clearInterval(myVar)
-      }
-    },1000)
+    // var myVar = setInterval(function(){
+    //   var valueStr
+    //   settings.listen('filteringBlockedCount', function (value) {
+    //     var count = value || 0
+    //     if (count > 50000) {
+    //       valueStr = new Intl.NumberFormat(navigator.locale, { notation: 'compact', maximumSignificantDigits: 4 }).format(count)
+    //     } else {
+    //       valueStr = new Intl.NumberFormat().format(count)
+    //     }
+    //   })
+    //   ipc.send('valueCount',valueStr.replace(/[,]/g,""))
+    //   if(valueStr.replace(/[,]/g,"")> 200 ){
+    //     clearInterval(myVar)
+    //   }
+    // },1000)
 
 
 

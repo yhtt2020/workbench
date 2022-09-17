@@ -38,10 +38,6 @@ window.addEventListener('message', function (e) {
 		ipc.send('getIsDefaultBrowser')
 	}
 
-  if(e.data.message==='valueCount'){
-    ipc.send('valueCount',e.data.count)
-  }
-
   if(e.data.message==='themeChange'){
     ipc.send('themeChange',{status:e.data.status})
   }
