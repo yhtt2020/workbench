@@ -42,10 +42,15 @@ class ViewManager {
     let outType = 'min' //max
     let noChange = false
     Object.keys(viewMap).forEach(key => {
+
       let view = viewMap[key]
       let viewBounds = view.getBounds()
-      y = viewBounds.y
-      let mainViewPreWidth = parentBounds.width - width - viewBounds.x - this.SPLIT_WIDTH
+      if(viewMap[key]===windowManager.attachedView && Object.keys(viewMap).length>1)
+      {
+        //如果是吸附到右侧的tab，且不是唯一的tab，则不需要实际去移动这个view
+        return
+      }
+      let mainViewPreWidth = parentBounds.width - width - viewBounds.x - this.SPLIT_WIDTH //计算将要调整的宽度。用于限宽
       let maxViewWidth = parentBounds.width - viewBounds.x - this.SPLIT_WIDTH
 
       if (mainViewPreWidth <= 0) {
@@ -68,26 +73,31 @@ class ViewManager {
           return false
         }
       }
+
+
+      y = viewBounds.y
       let bounds = {
         x: viewBounds.x,
         y: viewBounds.y,
         width: mainViewPreWidth,
         height: viewBounds.height
       }
-
+      console.log(`循环bounds`,bounds)
       sendIPCToMainWindow('showSplitBar', { bounds })
       view.setBounds(bounds)
     })
     let viewBounds = windowManager.attachedView.getBounds()
+    console.log(`原始Bounds`,viewBounds)
     if (!noChange) {
       viewBounds.y = y
       viewBounds.width = width
       viewBounds.x = parentBounds.width - width
       this.lastWidth = width
     }
-
+    console.log(`设置bounds`,viewBounds)
     viewBounds.height = parentBounds.height
     windowManager.attachedView.setBounds(viewBounds)
+
     windowManager.attachStatus.bounds=viewBounds
   }
 
@@ -271,6 +281,7 @@ class WindowManager {
       existingWindowId,
       name,
       windowOption,
+      viewOption,
       webPreferences,
       boundsString,
       events,
@@ -446,6 +457,42 @@ class WindowManager {
 
       //todo viewManager重新调整位置
       //todo 根据options重新创建view到主浏览器中
+    }
+  }
+  setTabAttach(option,width=480){
+    let {tab,pos}=option
+    pos= pos || 'right'
+    let name='tab_'+tab.id
+    let viewInstance= new ViewInstance({
+      view:viewMap[tab.id],
+      name:tab.id
+    },mainWindow)
+    switch (pos) {
+      case this.POS.RIGHT:
+        this.attachedInstance =viewInstance
+        this.attachStatus={
+          pos:pos,
+          name:name,
+          bounds:{}
+        }
+        //this.stashCreateOptions=instance.createOptions
+        let parentBounds = mainWindow.getBounds()
+        let viewBounds = {
+          x: parentBounds.width - width,
+          y: 0,
+          height: parentBounds.height,
+          width
+        }
+        viewInstance.view.setBounds(viewBounds)
+        viewInstance.view.setAutoResize({
+          width:false,
+          height:false,
+          horizontal:false,
+          vertical:false
+        })
+        this.attachedInstance = viewInstance
+        this.attachedView = viewInstance.view
+        this.viewManager.autoAdjustPosition('right',viewBounds.width)
     }
   }
 

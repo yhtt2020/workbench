@@ -505,6 +505,12 @@ const tabBar = {
             click: function () {
               tabBar.addToApps(data.id)
             },
+          },{
+          id:'setAttach',
+            label:'使用分屏打开',
+            click: function () {
+              tabBar.setAttach(data.id)
+            }
           }
         ]
         ]
@@ -792,6 +798,10 @@ const tabBar = {
     }, err => {
       ipc.send('message', { type: 'error', config: { content: '添加应用失败' } })
     })
+  },
+  setAttach(id){
+    let tab = tabs.get(id)
+    ipc.send('setTabAttach',{tab})
   },
   //扩充一个获取icon的方法
   createIconEl: function (tabData, loaded) {

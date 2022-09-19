@@ -151,6 +151,7 @@ const webviews = {
   autoAdjustMargin: function() {
     let top=0
     let left=0
+
     if(window.$toolbar.layoutMod==='min'){
       top=0
       left=0
