@@ -44,7 +44,8 @@ class ViewManager {
     Object.keys(viewMap).forEach(key => {
 
       let view = viewMap[key]
-      let viewBounds = view.getBounds()
+        //let viewBounds = view.getBounds()
+        //viewBounds是从viewManager主进程中直接获取
       if(viewMap[key]===windowManager.attachedView && Object.keys(viewMap).length>1)
       {
         //如果是吸附到右侧的tab，且不是唯一的tab，则不需要实际去移动这个view
@@ -82,23 +83,21 @@ class ViewManager {
         width: mainViewPreWidth,
         height: viewBounds.height
       }
-      console.log(`循环bounds`,bounds)
       sendIPCToMainWindow('showSplitBar', { bounds })
       view.setBounds(bounds)
     })
-    let viewBounds = windowManager.attachedView.getBounds()
-    console.log(`原始Bounds`,viewBounds)
+    let attachedViewBounds = windowManager.attachedView.getBounds()
     if (!noChange) {
-      viewBounds.y = y
-      viewBounds.width = width
-      viewBounds.x = parentBounds.width - width
+      attachedViewBounds.y = viewBounds.y
+      attachedViewBounds.width = width
+      attachedViewBounds.x = parentBounds.width - width
+      attachedViewBounds.height=viewBounds.height //修复attach的高度
       this.lastWidth = width
     }
-    console.log(`设置bounds`,viewBounds)
-    viewBounds.height = parentBounds.height
-    windowManager.attachedView.setBounds(viewBounds)
+    attachedViewBounds.height = parentBounds.height
+    windowManager.attachedView.setBounds(attachedViewBounds)
 
-    windowManager.attachStatus.bounds=viewBounds
+    windowManager.attachStatus.bounds=attachedViewBounds
   }
 
   restore () {
@@ -133,6 +132,11 @@ class ViewManager {
   }
 
   onSetBounds (bounds) {
+    if(mainWindow.getBrowserViews().indexOf(windowManager.attachedView)===-1){
+      //如果发现侧边吸附的view被移除了
+      mainWindow.addBrowserView(windowManager.attachedView)
+      this.syncSize()
+    }
     if (windowManager.attachedView) {
       bounds.width = bounds.width - this.lastWidth - this.SPLIT_WIDTH
     }

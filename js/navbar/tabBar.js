@@ -507,7 +507,7 @@ const tabBar = {
             },
           },{
           id:'setAttach',
-            label:'使用分屏打开',
+            label:'在右侧分屏打开…',
             click: function () {
               tabBar.setAttach(data.id)
             }
@@ -677,6 +677,9 @@ const tabBar = {
 
     tabs.get().forEach(function (tab) {
       var el = tabBar.createTab(tab)
+      // if(tab.attached){
+      //   el.hidden=true
+      // }
       tabBar.containerInner.appendChild(el)
       tabBar.tabElementMap[tab.id] = el
     })
@@ -801,6 +804,7 @@ const tabBar = {
   },
   setAttach(id){
     let tab = tabs.get(id)
+    window.mainTab=tabs.get(tabs.getSelected())
     ipc.send('setTabAttach',{tab})
   },
   //扩充一个获取icon的方法
@@ -1026,6 +1030,23 @@ ipc.on('getCurrentTab',(e,a)=>{
   console.log('getCurrentTabdddddddddddddd',data)
   ipc.send('gotCurrentTab',{data})
 })
+
+ipc.on('changeTabAttach',(e,args)=>{
+  let tab =tabs.get(args.tab.id)
+  window.attachedTab=tab //记录下吸附的tab
+  tasks.forEach(task=>{
+    task.tabs.forEach(item=>{
+      if (item.id!==args.tab.id) {
+        item.attached=false
+      }else{
+        item.attached=true
+      }
+    })
+  })
+  tabBar.updateAll()
+  require('../browserUI.js').focusTab(args.tab.id)
+})
+
 ipc.on('speedup',(e,a)=>{
   let closed=0
   if(a.type==='all'){

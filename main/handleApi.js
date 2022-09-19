@@ -29,6 +29,7 @@ app.whenReady().then(()=>{
       sendMessage({type:'error',config:{content:'至少激活2个标签才可使用侧边分屏功能。'}})
       return
     }
+    sendIPCToMainWindow('changeTabAttach',{tab:args.tab})
     windowManager.setTabAttach({tab:args.tab})
   })
 })
