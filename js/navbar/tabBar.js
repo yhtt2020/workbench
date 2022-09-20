@@ -23,6 +23,7 @@ const navbarApi = require('../../src/api/navbarApi.js')
 const baseApi = require('../../src/api/baseApi')
 const deskModel = require('../../pages/util/model/deskModel.js')
 const { ipcRenderer } = require('electron')
+const browserUI = require('browserUI.js')
 
 /**
  * 判断是不是小号标签
@@ -493,6 +494,27 @@ const tabBar = {
       const tab = tabs.get(data.id)
       let templateAdd = []
       if (!tab.url.startsWith('file://')) {
+        let item
+        if(tab.attached){
+          item={
+            label:'还原到主屏…',
+            click: function () {
+              try {
+                require('../browserUI.js').detachTab(data.id)
+              } catch (e) {
+                console.warn(e)
+              }
+            }
+          }
+        }else{
+          item= {
+            id:'setAttach',
+            label:'在右侧分屏打开…',
+            click: function () {
+              tabBar.setAttach(data.id)
+            }
+          }
+        }
         templateAdd = [[
           {
             id: 'addToDesk',
@@ -505,16 +527,12 @@ const tabBar = {
             click: function () {
               tabBar.addToApps(data.id)
             },
-          },{
-          id:'setAttach',
-            label:'在右侧分屏打开…',
-            click: function () {
-              tabBar.setAttach(data.id)
-            }
-          }
+          },
+          item
         ]
         ]
       }
+
       let template = templateAdd.concat([
 
         [
