@@ -1032,72 +1032,11 @@ ipc.on('captureDeskScreen', (event, args) => {
     })
   })
 })
-let allAppsWindow = null
 
-function getAllAppsWindow () {
-  if (allAppsWindow === null) {
-    createAllAppsWindow()
-  }
-  return allAppsWindow
-}
 
-function createAllAppsWindow () {
-  allAppsWindow = new BrowserWindow({
-    width: 600,
-    height: 600,
-    acceptFirstMouse: true,
-    alwaysOnTop: true,
-    show: false,
-    // resizable:false,
-    frame: false,
-    webPreferences: {
-      //preload: __dirname+'/pages/saApp/settingPreload.js',
-      nodeIntegration: true,
-      contextIsolation: false,
-      enableRemoteModule: true,
-      sandbox: false,
-      safeDialogs: false,
-      safeDialogsMessage: false,
-      partition: null,
-      additionalArguments: [
-        '--user-data-path=' + userDataPath,
-        '--app-version=' + app.getVersion(),
-        '--app-name=' + app.getName()
-      ]
-    }
-  })
-  allAppsWindow.on('will-resize', (event) => {
-    event.preventDefault()
-  })
-  allAppsWindow.loadURL('file://' + path.join(__dirname, '/pages/saApp/list.html'))
-  allAppsWindow.on('close', (event) => {
-    if (forceClose) {
-      allAppsWindow = null
-    } else {
-      allAppsWindow.hide()
-      event.preventDefault()
-    }
-
-  })
-  allAppsWindow.on('blur', () => {
-    allAppsWindow.hide()
-  })
-  setTimeout(() => {
-    if (mainWindow) {
-      mainWindow.on('close', () => {
-        forceClose = true
-        if (allAppsWindow && !allAppsWindow.isDestroyed())
-          allAppsWindow.close()
-        allAppsWindow = null
-      })
-    }
-
-  }, 2000)
-
-}
-
-ipc.on('showAllSaApps', (event, args) => {
-  getAllAppsWindow()
+ipc.on('showAllSaApps', async (event, args) => {
+  let allApps =await renderPage.openAllApps()
+  let allAppsWindow=allApps.win
   allAppsWindow.webContents.send('refresh')
 
   let mainBounds = mainWindow.getBounds()
@@ -1284,6 +1223,19 @@ app.whenReady().then(() => {
 
   ipc.on('showUserWindow', (event, args) => {
     showUserWindow(args)
+  })
+
+  /**
+   * 只关闭主窗体，不做任何其他的操作
+   */
+  ipc.on('justCloseMainWindow',()=>{
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      destroyAllViews()
+      saveWindowBounds()
+      mainWindow.close()
+      mainWindow=null
+      showUserWindow()
+    }
   })
 
   let loginWindow = null

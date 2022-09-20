@@ -49,7 +49,7 @@ class Win {
   }
 }
 
-const PopCacheTime = 300000 //弹窗缓存时长，默认为30秒，期间只会隐藏，而不会直接关闭
+const PopCacheTime = 10000 //弹窗缓存时长，默认为10秒，期间只会隐藏，而不会直接关闭
 class Pop {
   id
   win
@@ -88,10 +88,9 @@ class Pop {
       pool.pop.splice(index, 1)
     })
     this.win.on('blur', () => {
-      console.log(this.blurClose)
       if(this.blurClose){
         this.win.hide()
-        //缓存1分钟，超过1分钟再自动关闭
+        //缓存10秒再自动关闭
         setTimeout(() => {
           if (!this.win.isDestroyed()) {
             if (!this.win.isVisible()) {
@@ -129,6 +128,7 @@ class Pop {
     this.win.loadURL(this.url)
     this.win.setResizable(param.resizable)
     this.win.setSize(this.width, this.height)
+    if(this.x || this.y)
     this.win.setPosition(this.x, this.y)
     this.win.setAlwaysOnTop(!!this.alwaysTop)
     this.win.show()
@@ -563,6 +563,14 @@ const renderPage = {
     this.extensionList = await pool.usePop({
       url: render.getUrl('extension.html#/pop'),
       bounds
+    })
+  },
+
+  async openAllApps () {
+    return await pool.usePop({
+      url: 'file://' + path.join(__dirname, '/pages/saApp/list.html'),
+      width: 600,
+      height: 600,
     })
   }
 }

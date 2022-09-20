@@ -128,9 +128,6 @@ export default {
             that.visibleBarrageOperation=true
             that.currentBarrageData=barrage.data
             that.currentNode=node
-            that.currentBarrageData.support_count=123
-            that.currentBarrageData.is_like=false
-
           }
         }
       }
@@ -182,6 +179,8 @@ export default {
       Modal.confirm({
         title: '删除确认',
         icon: createVNode(ExclamationCircleOutlined),
+        okText:'删除',
+        cancelText:'取消',
         content: '确认删除此弹幕？此操作不可撤销，请谨慎操作。',
          onOk:async()=> {
           try {
@@ -376,7 +375,7 @@ export default {
           let rs = await tsbApi.barrage.unlike(nanoid)
           if (rs.status) {
             this.currentBarrageData.is_like = true
-            this.currentBarrageData.support_count += 1
+            this.currentBarrageData.like_count += 1
           } else {
             message.error('网络错误，取消赞失败。')
           }
@@ -390,7 +389,7 @@ export default {
           let rs = await tsbApi.barrage.like(nanoid)
           if (rs.status) {
             this.currentBarrageData.is_like = true
-            this.currentBarrageData.support_count += 1
+            this.currentBarrageData.like_count += 1
           } else {
             message.error('网络错误，点赞失败。')
           }
@@ -438,8 +437,8 @@ export default {
               <div
                 class="like-num"
                 :style="{color:currentBarrageData['is_like'] ? 'red':'#333'}"
-                :key="currentBarrageData['support_count']">
-              {{currentBarrageData["support_count"]}}
+                :key="currentBarrageData['like_count']">
+              {{currentBarrageData["like_count"]}}
             </div>
             </transition>
     </div>

@@ -3,10 +3,12 @@ const {
 } = require('electron')
 const ipc = ipcRenderer
 function send(channel,args={}){
+  args['_name']=window.baseApi.runtime.name
   ipc.send('api.window.'+channel,args)
 }
-async function sendSync(channel){
-  ipc.sendSync(channel)
+async function sendSync(channel,args={}){
+  args['_name']=window.baseApi.runtime.name
+  return await ipc.sendSync('api.window.'+channel,args)
 }
 
 const windowApi = {
@@ -42,6 +44,12 @@ const windowApi = {
   },
   setSize(){
     send('setSize',size)
+  },
+  setAlwaysOnTop(flag){
+    send('setAlwaysOnTop',{flag})
+  },
+  async isAlwaysOnTop(){
+   return await sendSync('isAlwaysOnTop')
   }
 }
 

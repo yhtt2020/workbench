@@ -293,7 +293,6 @@ function createWindowWithBounds(bounds) {
   mainWindow.on('ready-to-show',()=>{
     mainWindow.show()
     loadSidePanel()
-    getAllAppsWindow()
     changingSpace=false
   })
   function checkClipboard(){
@@ -530,14 +529,15 @@ app.on('activate', function( /* e, hasVisibleWindows */ ) {
     appStart()
 	}
 })
-
+let sqlDb
 /**
  * 启动应用，此方法会自动判断是否启动的时候显示选择空间的面板
  * @returns {Promise<void>}
  */
 async function appStart () {
   const { SqlDb } = require('./src/util/sqldb.js')
-  let sqlDb = new SqlDb()
+  sqlDb = new SqlDb()
+  initFav()
   let showOnStart = await sqlDb.getConfig('system.user.showOnStart')
   if (!showOnStart) {
     createWindow(function () {
@@ -629,22 +629,20 @@ ipc.on('quitApp',()=>{
 })
 ipc.on('errorClose',(e,args)=>{
   //此处为遇到意外的情况下，重新显示mainWindow，并提示用户保存失败。可再次点击关闭。
-  electronLog.error('意外关闭',args.error)
-  if(!mainWindow.isDestroyed()){
-    mainWindow.show()
-    sendMessage({type:'error',config:{content:'关闭保存意外失败，您可以再次点击关闭，在不保存的情况下继续使用，此消息将在10秒后自动消失。',duration:'10'}})
-  }
+  // electronLog.error('意外关闭',args.error)
+  // if(mainWindow && !mainWindow.isDestroyed()){
+  //   mainWindow.show()
+  //   sendMessage({type:'error',config:{content:'关闭保存意外失败，您可以再次点击关闭，在不保存的情况下继续使用，此消息将在10秒后自动消失。',duration:'10'}})
+  // }
 })
 
 var barrageManager=null //全局可用
 const { BarrageManager }=require(path.join(__dirname,'/src/main/barrageManager.js'))
 app.whenReady().then(()=>{
   setTimeout(()=>{
-    barrageManager=new BarrageManager({
-      parent:mainWindow
-    })
+    barrageManager=new BarrageManager(windowManager)
     //barrageManager.init()
-  },3000)
+  },1000)
 
 
   ipc.on('toggleBarrage',()=>{

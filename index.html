@@ -280,7 +280,7 @@
                     id="nav-toolbar"><img class="action app" src="./icons/toolbar/apps/fav.svg"></span>
         </div>
         <div class="action-wrapper app-tool">
-              <span title="弹幕" @click="ipc.send('toggleBarrage')" id="danmu-toolbar"><img class="action app"
+              <span title="弹幕" @click="ipc.send('toggleBarrage')" id="danmu-toolbar"><img style="width: 21px;padding-top: 4px" class="action app"
                                                                                           src="./icons/toolbar/hot.svg">
                 <span hidden class="bandage" id="danmu">0</span>
               </span>
@@ -598,7 +598,7 @@
 
 <script src="dist/bundle.js"></script>
 <script>
-
+  const setting=require('./js/util/settings/settings')
   ipc.on('clearCurrentUser', async (event, args) => {
     const { db } = require('./js/util/database.js')
     await db.system.where('name').equals('currentUser').modify({
@@ -610,16 +610,34 @@
     })
   })
 
-  let isBlockTips = localStorage.getItem('isBlockTips')
-  if (!isBlockTips) {
-    localStorage.setItem('isBlockTips', '1')
+
+  let isBlockTips = setting.get('isBlockTips')
+  if(setting.get('filtering') === undefined){
+    setting.set('filtering',{"blockingLevel":0,"contentTypes":[],"exceptionDomains":[]})
   }
-  ipc.on('valueCount', (event, args) => {
-    if (args > 200 && isBlockTips === '1') {
-      ipc.invoke('openBlockTips')
-      localStorage.setItem('isBlockTips', '2')
-    }
-  })
+
+  if(setting.get('filtering').blockingLevel !== 0 && !isBlockTips){
+    const myVar = setInterval(function () {
+      if(setting.get('filteringBlockedCount')>200){
+        ipc.invoke('openBlockTips')
+        setting.set('isBlockTips', true)
+        clearInterval(myVar)
+      }
+    }, 10000);
+  }
+  // clearInterval(myVar)
+
+  // let isBlockTips = localStorage.getItem('isBlockTips')
+  // if (!isBlockTips) {
+  //   localStorage.setItem('isBlockTips', '1')
+  // }
+  // ipc.on('valueCount', (event, args) => {
+  //   console.log(args)
+  //   if (args > 200 && isBlockTips === '1') {
+  //     ipc.invoke('openBlockTips')
+  //     localStorage.setItem('isBlockTips', '2')
+  //   }
+  // })
 
   ipc.on('blockGuide', () => {
     const closeBlockGuide = new Shepherd.Tour({
@@ -642,8 +660,9 @@
       }]
     })
     closeBlockGuide.start()
-
   })
+
+
 
   function calculate (a) {
     if (a >= 10) {

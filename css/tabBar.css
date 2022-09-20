@@ -77,6 +77,11 @@
   box-shadow: 0 0 5px rgba(80, 80, 80, 0.42);
 }
 
+.tab-name {
+  font-weight: bold;
+  font-size: 13px;
+}
+
 .gu-transit {
   opacity: 0 !important;
 }
