@@ -69,7 +69,12 @@ function getUrl (url) {
 
 let tray=null
 app.whenReady().then(() => {
-  tray = new Tray(path.join(__dirname,'/img/touxiang.png'))
+  if(process.platform==='darwin'){
+    tray = new Tray(path.join(__dirname,'/icons/tray/mac/tray.png'))
+  }else{
+    tray = new Tray(path.join(__dirname,'/img/touxiang.png'))
+  }
+
 
   tray.setToolTip("我是托盘菜单")
   tray.on('click', function(event,position) {
