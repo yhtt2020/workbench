@@ -47,6 +47,19 @@ const mobileMod = {
     }
 
   },
+  getBounds(mobileWindow){
+    let size=computeSize(mobileWindow.getBounds().width,mobileWindow.getBounds().height - 70)
+    let bounds={
+      x: 0,
+        y: 40,
+      width:size.width,
+      height: size.height
+    }
+    if(process.platform==='darwin'){
+      bounds.y=70 //修正mac上的y位置
+    }
+    return bounds
+  },
   add (option) {
     let id = ''
     do {
@@ -107,13 +120,8 @@ const mobileMod = {
       }
     })
     mobileWindow.setBrowserView(view)
-    let size=computeSize(mobileWindow.getBounds().width,mobileWindow.getBounds().height - 70)
-    view.setBounds({
-      x: 0,
-      y: 40,
-      width:size.width,
-      height: size.height
-    })
+
+    view.setBounds(mobileMod.getBounds(mobileWindow))
     mobileWindow.webContents.send('init', {
       windowId: mobileWindow.id,
       url: option.url,
@@ -160,13 +168,7 @@ const mobileMod = {
     mobileWindow.webContents.setUserAgent(oldAgent)
     mobileWindow.loadURL('file://' + __dirname + '/pages/mobile/index.html')
     mobileWindow.on('resize', () => {
-      let size=computeSize(mobileWindow.getBounds().width, mobileWindow.getBounds().height)
-      view.setBounds({
-        x: 0,
-        y: 40,
-        width:size.width,
-        height: size.height - 70
-      })
+      view.setBounds(mobileMod.getBounds(mobileWindow))
     })
 
 
