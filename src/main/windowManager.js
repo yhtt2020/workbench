@@ -91,10 +91,9 @@ class ViewManager {
       attachedViewBounds.y = viewBounds.y
       attachedViewBounds.width = width
       attachedViewBounds.x = parentBounds.width - width
-      attachedViewBounds.height=viewBounds.height //修复attach的高度
       this.lastWidth = width
     }
-    attachedViewBounds.height = parentBounds.height
+    attachedViewBounds.height = viewBounds.height//修复attach的高度
     windowManager.attachedView.setBounds(attachedViewBounds)
 
     windowManager.attachStatus.bounds=attachedViewBounds
