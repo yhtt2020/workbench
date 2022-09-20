@@ -265,13 +265,27 @@ function destroyView(id) {
   if (!viewMap[id]) {
     return
   }
+  let removed=false
+  if(windowManager.attachedView && windowManager.attachedView === viewMap[id]){
+    console.log('移除附着窗口')
+    //如果是关闭当前吸附的窗体
+    windowManager.detachTab()
+    removed=true
+  }
   let bvs=mainWindow.getBrowserViews()
+  if(removed) {
+    //通过上方移除了，不需要再做移除操作
+    console.log('上面直接移除了')
+  }
   bvs.forEach(bv=>{
-    if(bv.webContents.id===viewMap[id].webContents.id){
+    if(bv.webContents.id===viewMap[id].webContents.id ){
       mainWindow.removeBrowserView(bv)
-      selectedView = null
     }
   })
+  viewMap[id].webContents.destroy()
+  delete viewMap[id]
+  delete viewStateMap[id]
+  selectedView = null
   // if (viewMap[id] === mainWindow.getBrowserView()) {
   //   mainWindow.setBrowserView(null)
   //   selectedView = null
@@ -282,10 +296,10 @@ function destroyView(id) {
   //  mainWindow.setTopBrowserView(sidebarView)
   //  return
   // }
-  viewMap[id].webContents.destroy()
 
-  delete viewMap[id]
-  delete viewStateMap[id]
+  console.log('移除的id',id)
+  console.log(viewMap)
+  console.log(viewStateMap)
 }
 
 function destroyAllViews() {

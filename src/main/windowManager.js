@@ -131,13 +131,18 @@ class ViewManager {
     }
   }
 
+  /**
+   * 当主进程中webviews被设置bounds的时候回调，如果存在attchedView则修正尺寸
+   * @param bounds
+   * @returns {*}
+   */
   onSetBounds (bounds) {
-    if(mainWindow.getBrowserViews().indexOf(windowManager.attachedView)===-1){
-      //如果发现侧边吸附的view被移除了
-      mainWindow.addBrowserView(windowManager.attachedView)
-      this.syncSize()
-    }
     if (windowManager.attachedView) {
+      if(mainWindow.getBrowserViews().indexOf(windowManager.attachedView)===-1){
+        //如果发现侧边吸附的view被移除了
+        mainWindow.addBrowserView(windowManager.attachedView)
+        this.syncSize()
+      }
       bounds.width = bounds.width - this.lastWidth - this.SPLIT_WIDTH
     }
     return bounds
@@ -187,10 +192,14 @@ class ViewInstance extends Instance {
     if(mainWindow){
       mainWindow.removeBrowserView(this.view)
     }
-    this.view.webContents.destroy()
+    if(this.view.webContents && !this.view.webContents.isDestroyed())
+    {
+      this.view.webContents.destroy()
+    }
     this.parent.restoreAttachMod()
     windowManager.attachedView=null
     windowManager.attachedInstance=null
+    windowManager.attachStatus=null
     this.destroy()
   }
 }
@@ -263,10 +272,12 @@ class WindowManager {
     return this.instanceMap[name]
   }
 
-  close (name) {
+  close (name,destroy=true) {
     let instance = this.instanceMap[name]
     if (instance) {
-      instance.close()
+      if(destroy) {
+        instance.close()
+      }
       delete this[instance.type+'Map'][name]
       delete this.instanceMap[name]
       delete this.webContentsMap[name]
@@ -509,7 +520,12 @@ class WindowManager {
     options.url=url
     this.create(Object.assign(options, { url }))
   }
-
+  detachTab(){
+    this.attachStatus=null
+    this.attachedInstance=null
+    this.attachedView=null
+    this.restoreAttachMod()
+  }
   restoreAttachMod(){
     this.viewManager.restore()
   }
