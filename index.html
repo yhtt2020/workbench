@@ -175,32 +175,29 @@
 
 <script>
   //移动到左侧空白区域的时候，让左侧栏重获鼠标，防止无法移动上去
-  var focusTimer =null
+  var focusTimer = null
+
   function setNoIgnore () {
-    if(focusTimer) return
-    focusTimer =setInterval(function () { //开启定时器，下面就是执行的方法，在窗体加载1S后执行下面的方法。
+    if (focusTimer) return
+    focusTimer = setInterval(function () { //开启定时器，下面就是执行的方法，在窗体加载1S后执行下面的方法。
       window.postMessage({
         message: 'set-ignore-mouse-events'
       })
       ipc.send('setMouseEnable')
       //console.log('设置左侧栏鼠标有效')
-      clearTimeout(focusTimer); //关闭定时器。
-      focusTimer=null
-      console.log('触发左侧栏')
-    }, 200);
+      clearTimeout(focusTimer) //关闭定时器。
+      focusTimer = null
+    }, 200)
   }
-  function stopSetIgnore(){
-    if(focusTimer){
-      clearTimeout(focusTimer); //关闭定时器。
-      focusTimer=null
+
+  function stopSetIgnore () {
+    if (focusTimer) {
+      clearTimeout(focusTimer) //关闭定时器。
+      focusTimer = null
     }
   }
 
-  function openSiteCard (e, tabData) {
-    ipc.send('createSiteCard', { url: tabData.url, x: e.clientX, y: e.clientY, title: tabData.title, tabData: tabData })
-    e.preventDefault()
-    e.stopPropagation()
-  }
+
 </script>
 <div id="searchbar" class="" hidden>
   <div class="top-answer-area"></div>
@@ -216,27 +213,27 @@
             <img title="当前模式：自动展开收起；点击切换收起左侧栏，不再自动展开" id="side-mod-button-toolbar" class="action "
                  src="./icons/toolbar/sideauto.svg">
           </div>
-          <div class="action-wrapper">
-            <img title="返回起始页：锁定标签时的网页地址" id="start-button-toolbar" class="action start-page"
+          <div class="action-wrapper" id="start-button-toolbar">
+            <img title="返回起始页：锁定标签时的网页地址"  class="action start-page"
                  src="./icons/toolbar/startpage.svg">
           </div>
-          <div class="action-wrapper">
-            <img title="后退（⌘←）" id="back-button-toolbar" class="action" src="./icons/toolbar/arrowleft.svg">
+          <div class="action-wrapper" id="back-button-toolbar">
+            <img title="后退（⌘←）"  class="action" src="./icons/toolbar/arrowleft.svg">
           </div>
-          <div class="action-wrapper">
-            <img title="前进（⌘→）" id="forward-button-toolbar" class="action" src="./icons/toolbar/arrowright.svg">
+          <div class="action-wrapper" id="forward-button-toolbar">
+            <img title="前进（⌘→）"  class="action" src="./icons/toolbar/arrowright.svg">
           </div>
-          <div class="action-wrapper">
-            <img title="刷新（⌘R）" id="refresh-button-toolbar" class="action" src="./icons/toolbar/rotate.svg">
+          <div class="action-wrapper" id="refresh-button-toolbar">
+            <img title="刷新（⌘R）"  class="action" src="./icons/toolbar/rotate.svg">
           </div>
-          <div class="action-wrapper">
-            <img title="首页" id="home-button-toolbar" class="action" src="./icons/toolbar/home.svg">
+          <div class="action-wrapper"  id="home-button-toolbar">
+            <img title="首页" class="action" src="./icons/toolbar/home.svg">
           </div>
         </div>
       </div>
       <div style="flex-grow:1 ;position:relative;overflow:hidden">
         <div id="address-bar" style="overflow: hidden">
-          <img id="site-card" @click="openSiteCard(this,tabs.get(tabs.getSelected()))" title="网站信息" class="site-card"
+          <img id="site-card" @click="openSiteCard($event)" title="网站信息" class="site-card"
                src="icons/svg/safe.svg">
         </div>
 
@@ -261,7 +258,7 @@
         <browser-action-list hidden partition="persist:webcontent" id="actions"></browser-action-list>
         <div class="action-wrapper app-tool">
               <span @click="ipc.send('openScriptManager')" title="管理脚本插件" id="userscript-toolbar"><img
-                style="padding:3px;margin-top: 6px" class="action app"
+                style="padding:3px;margin-top: 6px;margin-left: 6px" class="action app"
                 src="./icons/toolbar/apps/code.svg">
                 <span hidden title="当前页面有3个脚本正在启用" class="bandage" id="scriptCount">3</span>
               </span>
@@ -272,47 +269,48 @@
               </span>
         </div>
 
-        <div class="action-wrapper" style="text-align: center;width: 18px;margin-left: 5px">
+        <div class="" style="text-align: center;width: 18px;margin-left: 5px">
           <div class="split"></div>
         </div>
         <div class="action-wrapper app-tool">
               <span oncontextmenu="ipc.send('favContextMenu')"
                     @click="ipc.send('handleTsbProtocol',{url:'tsb://app/redirect/?package=com.thisky.fav&url=/'})"
                     title="收藏夹"
-                    id="nav-toolbar"><img class="action app" src="./icons/toolbar/apps/fav.svg"></span>
+                    id="nav-toolbar"><img style="margin-left: 6px;
+    margin-top: 6px;" class="action app" src="./icons/toolbar/apps/fav.svg"></span>
         </div>
         <div class="action-wrapper app-tool">
-              <span title="弹幕" @click="ipc.send('toggleBarrage')" id="danmu-toolbar"><img class="action app"
+              <span title="弹幕" @click="ipc.send('toggleBarrage')" id="danmu-toolbar"><img style="margin-left: 8px;width: 21px;padding-top: 4px" class="action app"
                                                                                           src="./icons/toolbar/hot.svg">
                 <span hidden class="bandage" id="danmu">0</span>
               </span>
         </div>
         <div class="action-wrapper app-tool">
               <span title="互动面板" @click="ipc.send('toggleChat')" id="chat-toolbar">
-                <img style="width: 24px" class="action app"
-                                                                                          src="./icons/toolbar/apps/chat.svg">
+                <img style="width: 24px;margin-left: 7px;" class="action app"
+                     src="./icons/toolbar/apps/chat.svg">
                 <span hidden class="bandage" id="chat">0</span>
               </span>
         </div>
         <div class="action-wrapper app-tool">
-              <span title="阅读模式" id="read-toolbar"><img class="action app" src="./icons/toolbar/apps/read.svg">
+              <span title="阅读模式" id="read-toolbar"><img style="margin-left: 6px" class="action app" src="./icons/toolbar/apps/read.svg">
                 <span hidden class="bandage" id="canRead">0</span>
               </span>
         </div>
         <div class="action-wrapper app-tool">
-              <span @click="ipc.send('openDownload')" title="下载助手" id="download-toolbar"><img class="action app"
+              <span @click="ipc.send('openDownload')" title="下载助手" id="download-toolbar"><img style="margin-left: 6px" class="action app"
                                                                                               src="./icons/toolbar/apps/download.svg">
                 <span class="bandage" style="background-color: red" id="downloadCount">0</span>
               </span>
         </div>
         <div class="action-wrapper app-tool">
               <span @click="openPwd" title="密码管理"
-                    id="pwd-toolbar"><img class="action app" src="./icons/toolbar/apps/pwd.svg">
+                    id="pwd-toolbar"><img style="margin-left: 6px" class="action app" src="./icons/toolbar/apps/pwd.svg">
                 <span hidden class="bandage" id="pwdCount">0</span>
               </span>
         </div>
-        <div @click="speedup" @mouseleave="leave" @mouseenter="hover" class="action-wrapper app-tool">
-          <a-progress style="margin-top: -3px;vertical-align: middle" title="一键清理内存" :width="24"
+        <div @click="speedup" @mouseleave="leave" @mouseenter="hover" class="action-wrapper app-tool mem-clean">
+          <a-progress  style="margin-top: -3px;vertical-align: middle;margin-left: 6px;" title="一键清理内存" :width="24"
                       :stroke-width="12"
                       type="circle"
                       stroke-color="lightgreen"
@@ -323,7 +321,7 @@
                   <span v-if="!displayText" style="font-size: 10px;line-height: 20px">
                     {{ memPercent }}
                   </span>
-              <span  v-else style="font-size: 10px;line-height: 20px">
+              <span v-else style="font-size: 10px;line-height: 20px">
                     加速
                   </span>
             </template>
@@ -373,7 +371,7 @@
       return {
         displayText: false,
         memPercent: 0,
-        lastMem:0,
+        lastMem: 0,
 
         isDefaultBrowser: null,
         finishedNoobguideNum: 0,
@@ -432,7 +430,19 @@
       })
     },
     methods: {
-      speedup(){
+      openSiteCard (e) {
+        let tabData=tabs.get(tabs.getSelected())
+        ipc.send('createSiteCard', {
+          url: tabData.url,
+          x: e.clientX,
+          y: e.clientY,
+          title: tabData.title,
+          tabData: tabData
+        })
+        e.preventDefault()
+        e.stopPropagation()
+      },
+      speedup () {
         ipc.send('toolbar.speedup')
       },
       hover () {
@@ -588,7 +598,7 @@
 
 <script src="dist/bundle.js"></script>
 <script>
-
+  const setting=require('./js/util/settings/settings')
   ipc.on('clearCurrentUser', async (event, args) => {
     const { db } = require('./js/util/database.js')
     await db.system.where('name').equals('currentUser').modify({
@@ -600,16 +610,31 @@
     })
   })
 
-  let isBlockTips = localStorage.getItem('isBlockTips')
-  if (!isBlockTips) {
-    localStorage.setItem('isBlockTips', '1')
+
+
+  let isBlockTips = setting.get('isBlockTips')
+  if(setting.get('filtering').blockingLevel !== 0 && !isBlockTips){
+    const myVar = setInterval(function () {
+      if(setting.get('filteringBlockedCount')>200){
+        ipc.invoke('openBlockTips')
+        setting.set('isBlockTips', true)
+        clearInterval(myVar)
+      }
+    }, 10000);
   }
-  ipc.on('valueCount', (event, args) => {
-    if (args > 200 && isBlockTips === '1') {
-      ipc.invoke('openBlockTips')
-      localStorage.setItem('isBlockTips', '2')
-    }
-  })
+  // clearInterval(myVar)
+
+  // let isBlockTips = localStorage.getItem('isBlockTips')
+  // if (!isBlockTips) {
+  //   localStorage.setItem('isBlockTips', '1')
+  // }
+  // ipc.on('valueCount', (event, args) => {
+  //   console.log(args)
+  //   if (args > 200 && isBlockTips === '1') {
+  //     ipc.invoke('openBlockTips')
+  //     localStorage.setItem('isBlockTips', '2')
+  //   }
+  // })
 
   ipc.on('blockGuide', () => {
     const closeBlockGuide = new Shepherd.Tour({
@@ -632,36 +657,39 @@
       }]
     })
     closeBlockGuide.start()
+  })
 
-      })
-      function calculate(a){
-          if(a>=10){
-            return '9+'
-          }
-          if(a<0){
-            return 0
-          } else{
-            return a
-          }
-      }
-      let count = 0;
-      downloadCountEl = document.getElementById('downloadCount')
-      downloadCountEl.hidden=true
-      ipc.on('downloadCountAdd',()=>{
-        downloadCountEl.hidden=false
-        count++
-        downloadCountEl.innerText=calculate(count)
-      })
-      ipc.on('downloadCountCut',()=>{
-        count--
-        // console.log(downloadCount)
-        if(count <= 0){
-          count=0
-          downloadCountEl.hidden=true
-        }else {
-          downloadCountEl.innerText=calculate(count)
-        }
-      })
+
+
+  function calculate (a) {
+    if (a >= 10) {
+      return '9+'
+    }
+    if (a < 0) {
+      return 0
+    } else {
+      return a
+    }
+  }
+
+  let count = 0
+  downloadCountEl = document.getElementById('downloadCount')
+  downloadCountEl.hidden = true
+  ipc.on('downloadCountAdd', () => {
+    downloadCountEl.hidden = false
+    count++
+    downloadCountEl.innerText = calculate(count)
+  })
+  ipc.on('downloadCountCut', () => {
+    count--
+    // console.log(downloadCount)
+    if (count <= 0) {
+      count = 0
+      downloadCountEl.hidden = true
+    } else {
+      downloadCountEl.innerText = calculate(count)
+    }
+  })
 
   ipc.on('remakeCurrentUser', async (event, args) => {
     const { db } = require('./js/util/database.js')

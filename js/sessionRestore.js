@@ -13,6 +13,7 @@ const userModel = require('../src/model/userModel')
 const ipc = require('electron').ipcRenderer
 const statistics = require('./statistics')
 const statsh = require('util/statsh/statsh.js')
+const spaceVersionModel = require('../src/model/spaceVersionModel')
 let isLoadedSpaceSuccess=false//是否成功读入空间，如果读入失败，则不做自动保存和关闭前保存，防止丢失空间
 
 let SYNC_INTERVAL = 30 //普通模式下，同步间隔为30秒
@@ -103,7 +104,7 @@ function filterPrivateTabs(data){
 const sessionRestore = {
   adapter: {},
   currentSpace: {},
-  save: async function (forceSave = true, sync = true) {
+  save: async function (forceSave = false, sync = true) { //默认关闭强制保存
     if(!isLoadedSpaceSuccess){
       console.warn('不保存空间，因为当前读入空间失败')
       return
@@ -144,6 +145,9 @@ const sessionRestore = {
           //如果是本地，则存入本地空间
           await localSpaceModel.save(space, saveData)
         }
+      }
+      if(stateString !== sessionRestore.previousState){
+        let rsVersion=await spaceVersionModel.save(space.nanoid,saveData) //存储一个版本
       }
       //如果是云端，还需去云端同步
       try {
@@ -313,27 +317,28 @@ const sessionRestore = {
       setLoadedSuccess('2.空间正常恢复载入。')
     } catch (e) {
       //基本上走不到这里。
-
       // an error occured while restoring the session data
       console.error('还原空间数据失败: ', e)
+      ipc.send('justCloseMainWindow')
+      //todo 考虑是否要做其他提示
       //console.error('restoring session failed: ', e)
 
-      var backupSavePath = require('path').join(window.globalArgs['user-data-path'], 'sessionRestoreBackup-' + Date.now() + '.json')
-
-      fs.writeFileSync(backupSavePath, savedStringData)
-
-      // destroy any tabs that were created during the restore attempt
-      tabState.initialize()
-
-      // create a new tab with an explanation of what happened
-      var newTask = tasks.add()
-      var newSessionErrorTab = tasks.get(newTask).tabs.add({
-        url: 'file://' + __dirname + '/pages/sessionRestoreError/index.html?backupLoc=' + encodeURIComponent(backupSavePath)
-      })
-
-      browserUI.switchToTask(newTask)
-      browserUI.switchToTab(newSessionErrorTab)
-      setLoadedSuccess('3.空间还原失败，但仍然认为成功。')//认为成功载入
+      // var backupSavePath = require('path').join(window.globalArgs['user-data-path'], 'sessionRestoreBackup-' + Date.now() + '.json')
+      //
+      // fs.writeFileSync(backupSavePath, savedStringData)
+      //
+      // // destroy any tabs that were created during the restore attempt
+      // tabState.initialize()
+      //
+      // // create a new tab with an explanation of what happened
+      // var newTask = tasks.add()
+      // var newSessionErrorTab = tasks.get(newTask).tabs.add({
+      //   url: 'file://' + __dirname + '/pages/sessionRestoreError/index.html?backupLoc=' + encodeURIComponent(backupSavePath)
+      // })
+      //
+      // browserUI.switchToTask(newTask)
+      // browserUI.switchToTab(newSessionErrorTab)
+      // setLoadedSuccess('3.空间还原失败，但仍然认为成功。')//认为成功载入
     }
   },
   async init () {

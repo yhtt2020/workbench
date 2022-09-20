@@ -3,7 +3,9 @@ const fs = require('fs')
 const path = require('path')
 const electronLog=require('electron-log')
 const SpaceManager=require(__dirname+'/src/main/spaceManager.js')
-
+electron.protocol.registerSchemesAsPrivileged([
+  { scheme: 'tsbapp', privileges: { bypassCSP: true ,standard:true} } //将tsbapp注册为标准协议，以支持localStorage
+])
 let forceClose = false //是否强制退出应用
 var clipboardContent=''
 var spaceManager
@@ -28,7 +30,7 @@ crashReporter.start({
 })
 
 if (process.argv.some(arg => arg === '-v' || arg === '--version')) {
-	console.log('Min: ' + app.getVersion())
+	console.log('TSBrowser: ' + app.getVersion())
 	console.log('Chromium: ' + process.versions.chrome)
 	process.exit()
 }
@@ -291,7 +293,6 @@ function createWindowWithBounds(bounds) {
   mainWindow.on('ready-to-show',()=>{
     mainWindow.show()
     loadSidePanel()
-    getAllAppsWindow()
     changingSpace=false
   })
   function checkClipboard(){
@@ -324,6 +325,9 @@ function createWindowWithBounds(bounds) {
 		mainWindow = null
 		mainWindowIsMinimized = false
     if(process.platform==='win32' && !changingSpace){
+      if(userWindow){
+        return
+      }
      //windows上，且不是在切换空间，则关闭整个应用
       // todo 如果做了托盘菜单，这里不需要直接退出app
      app.quit()
@@ -472,26 +476,10 @@ app.on('ready', async function () {
   //todo before create
   spaceManager = new SpaceManager()
   await spaceManager.ensureDb()
-
-  createWindow(function () {
-    mainWindow.webContents.on('did-finish-load', function () {
-      // if a URL was passed as a command line argument (probably because Min is set as the default browser on Linux), open it.
-      handleCommandLineArguments(process.argv)
-      // there is a URL from an "open-url" event (on Mac)
-      if (global.URLToOpen) {
-        // if there is a previously set URL to open (probably from opening a link on macOS), open it
-        sendIPCToWindow(mainWindow, 'addTab', {
-          url: global.URLToOpen
-        })
-        global.URLToOpen = null
-      }
-    })
-    callWetherShowUserWindow()
-  })
-
   mainMenu = buildAppMenu()
   Menu.setApplicationMenu(mainMenu)
   createDockMenu()
+  appStart()
 
 })
 function handleUrlOpen(url){
@@ -536,9 +524,40 @@ app.on('activate', function( /* e, hasVisibleWindows */ ) {
 	if (!mainWindow &&
 		appIsReady
 		) { // sometimes, the event will be triggered before the app is ready, and creating new windows will fail
-		createWindow()
+		//createWindow()
+    appStart()
 	}
 })
+let sqlDb
+/**
+ * 启动应用，此方法会自动判断是否启动的时候显示选择空间的面板
+ * @returns {Promise<void>}
+ */
+async function appStart () {
+  const { SqlDb } = require('./src/util/sqldb.js')
+  sqlDb = new SqlDb()
+  initFav()
+  let showOnStart = await sqlDb.getConfig('system.user.showOnStart')
+  if (!showOnStart) {
+    createWindow(function () {
+      mainWindow.webContents.on('did-finish-load', function () {
+        // if a URL was passed as a command line argument (probably because Min is set as the default browser on Linux), open it.
+        handleCommandLineArguments(process.argv)
+        // there is a URL from an "open-url" event (on Mac)
+        if (global.URLToOpen) {
+          // if there is a previously set URL to open (probably from opening a link on macOS), open it
+          sendIPCToWindow(mainWindow, 'addTab', {
+            url: global.URLToOpen
+          })
+          global.URLToOpen = null
+        }
+      })
+    })
+  } else {
+    showUserWindow()
+  }
+}
+
 
 ipc.on('focusMainWebContents', function() {
 	mainWindow.webContents.focus()
@@ -596,8 +615,10 @@ function safeCloseMainWindow(){
 }
 let canCloseMainWindow=false
 ipc.on('closeMainWindow',()=>{
-  canCloseMainWindow=true
-  mainWindow.close()
+  if(mainWindow && !mainWindow.isDestroyed()){
+    canCloseMainWindow=true
+    mainWindow.close()
+  }
 })
 
 let canQuit=false
@@ -607,22 +628,20 @@ ipc.on('quitApp',()=>{
 })
 ipc.on('errorClose',(e,args)=>{
   //此处为遇到意外的情况下，重新显示mainWindow，并提示用户保存失败。可再次点击关闭。
-  electronLog.error('意外关闭',args.error)
-  if(!mainWindow.isDestroyed()){
-    mainWindow.show()
-    sendMessage({type:'error',config:{content:'关闭保存意外失败，您可以再次点击关闭，在不保存的情况下继续使用，此消息将在10秒后自动消失。',duration:'10'}})
-  }
+  // electronLog.error('意外关闭',args.error)
+  // if(mainWindow && !mainWindow.isDestroyed()){
+  //   mainWindow.show()
+  //   sendMessage({type:'error',config:{content:'关闭保存意外失败，您可以再次点击关闭，在不保存的情况下继续使用，此消息将在10秒后自动消失。',duration:'10'}})
+  // }
 })
 
 var barrageManager=null //全局可用
 const { BarrageManager }=require(path.join(__dirname,'/src/main/barrageManager.js'))
 app.whenReady().then(()=>{
   setTimeout(()=>{
-    barrageManager=new BarrageManager({
-      parent:mainWindow
-    })
+    barrageManager=new BarrageManager(windowManager)
     //barrageManager.init()
-  },3000)
+  },1000)
 
 
   ipc.on('toggleBarrage',()=>{

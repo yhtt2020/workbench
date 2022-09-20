@@ -6,7 +6,7 @@ let allowUrls=[
 function allow() {
   let url=window.location.href
   return allowUrls.some(allowUrl => {
-    console.log(url,allowUrl,url.startsWith(allowUrl))
+    //console.log(url,allowUrl,url.startsWith(allowUrl))
     return url.startsWith(allowUrl)
   })
 }
@@ -38,10 +38,6 @@ window.addEventListener('message', function (e) {
 		ipc.send('getIsDefaultBrowser')
 	}
 
-  if(e.data.message==='valueCount'){
-    ipc.send('valueCount',e.data.count)
-  }
-
   if(e.data.message==='themeChange'){
     ipc.send('themeChange',{status:e.data.status})
   }
@@ -59,5 +55,5 @@ ipc.on('receiveSettingsData', function (e, data) {
   }
 })
 ipc.on('setBrowserReturn',(e,args)=>{
-  console.log(args)
+  //console.log(args)
 })

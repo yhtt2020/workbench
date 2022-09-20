@@ -14,7 +14,7 @@ function setWallPaper(mediaURL,tip=true){
     if(tip)
       ipc.send('message',{type:'success',config:{content:'设置新标签页默认壁纸成功，可在新建标签中查看效果。（如果当前桌面有壁纸，则仍然显示原壁纸）'}})
   }).catch(err=>{
-    console.log(err)
+    console.warn(err)
   })
 }
 ipc.on('setNewTabWallPaper',(event,args)=>{
@@ -354,7 +354,17 @@ const webviewMenu = {
         }
       }
     ]
-
+    if(currentTab.attached){
+      let item={
+        label:'还原到主屏…',
+        click: function () {
+          try {
+            browserUI.detachTab(currentTab.id)
+          } catch (e) { }
+        }
+      }
+      navigationActions.push(item)
+    }
     menuSections.push(navigationActions)
 
     /* inspect element */

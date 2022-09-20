@@ -17,6 +17,10 @@
   margin-bottom: 0;
 }
 
+.task-title {
+  font-size: 12px !important;
+}
+
 .task {
   height: 320px;
   margin-bottom: 10px;
@@ -69,10 +73,6 @@
 
 .tab-title:hover {
   background-color: #efefef;
-}
-
-.ant-card-body {
-  padding: 20px;
 }
 
 .selected-span {

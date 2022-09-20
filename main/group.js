@@ -152,6 +152,7 @@ app.on('ready', () => {
       }
     })
     const { api } = require(path.join(__dirname, '//server-config.js'))
+    osxInviteMember.setMenu(null)
     osxInviteMember.webContents.loadURL(`${api.getUrl(api.API_URL.user.CIRCLE_INVITELINK)}?id=${args}`)
     osxInviteMember.on('close', () => osxInviteMember = null)
     return {code: 200, msg: '成功'}
@@ -248,7 +249,8 @@ app.on('ready', () => {
     SidePanel.send('refreshCircleList')
   })
   ipc.on('toggleChat',()=>{
-    if(!windowManager.isAlive('chat')){
+    let CHAT_NAME='chat'
+    if(!windowManager.isAlive(CHAT_NAME)){
       //如果还未载入，则需要载入
       let parentBounds=mainWindow.getBounds()
       const defaultSize={
@@ -256,23 +258,33 @@ app.on('ready', () => {
         height:640,
         space:24
       }
-      windowManager.create({
-        name:'chat',
+      let url=config.IM.FRONT_URL
+       if(isDevelopmentMode) {
+        url='http://localhost:8000'
+      }
+       windowManager.create({
+        name:CHAT_NAME,
         mod:windowManager.MOD.NO_CONTROLLER,
         windowOption:{
           frame:false,
           resizable:true,
           minimizable:false,
           parent:mainWindow,
+          minWidth:400,
+          minHeight:500,
           show: false,
+          shadow:true,
           title:'轻聊',
           icon:path.join(__dirname,'pages/group/group.png')
         },
+        viewOption:{
+          minWidth:400
+        } ,
         webPreferences:{
             preload:path.join(__dirname,'src/browserApi/apiPreload.js'),
             sandbox:false,
         },
-        url:config.IM.FRONT_URL,
+        url,
         rememberBounds:true,
         defaultBounds:{
           width: defaultSize.width,
@@ -281,6 +293,9 @@ app.on('ready', () => {
           y: parentBounds.y + parentBounds.height - defaultSize.height - defaultSize.space
         }
       })
+    }
+    else{
+      windowManager.close(CHAT_NAME)
     }
   })
 })

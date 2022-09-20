@@ -3,6 +3,31 @@
   background: rgb(32, 32, 32);
   border-color: rgb(32, 32, 32);
 }
+.dark-mode #toolbar .mem-clean .ant-progress-text {
+  color: rgb(210, 210, 210);
+}
+.dark-mode #toolbar .action-wrapper {
+  display: inline-block;
+  overflow: hidden;
+}
+.dark-mode #toolbar .action-wrapper:hover::after {
+  content: "";
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  background: rgba(117, 117, 117, 0.5411764706);
+  z-index: -1;
+  border-radius: 6px;
+}
+.dark-mode #toolbar .action-wrapper .action {
+  filter: drop-shadow(rgb(210, 210, 210) 80px 0);
+  position: relative;
+  overflow: hidden;
+  left: -80px;
+}
 .dark-mode #toolbar .action:hover {
   background: rgb(63, 63, 63);
 }
@@ -12,6 +37,7 @@
 .dark-mode #toolbar svg path {
   fill: rgb(210, 210, 210) !important;
   color: rgb(210, 210, 210);
+  stroke: rgb(210, 210, 210);
 }
 .dark-mode #toolbar .split {
   border-color: rgb(63, 63, 63);
@@ -49,6 +75,36 @@
 .dark-mode .tab-item.active:not(:only-child).theme-background-low-contrast .tab-item.active:not(:only-child) {
   background: rgba(255, 255, 255, 0.1);
 }
+.dark-mode .split-bar {
+  background: #202020;
+}
+.dark-mode .split-bar .inner-bar {
+  background: rgb(118, 118, 118);
+}
+.dark-mode .split-bar .inner-bar:hover {
+  background: rgba(34, 189, 255, 0.6);
+}
+
+.split-bar {
+  width: 10px;
+  display: inline-block;
+  position: fixed;
+  background: linear-gradient(to right, #ececec, #ffffff, #ececec);
+}
+.split-bar .inner-bar {
+  display: inline-block;
+  border-radius: 100px;
+  background: rgba(169, 169, 169, 0.24);
+  height: 40px;
+  width: 4px;
+  position: absolute;
+  top: calc(50% - 20px);
+  left: 3px;
+  cursor: col-resize;
+}
+.split-bar .inner-bar:hover {
+  background: rgba(66, 212, 255, 0.6);
+}
 
 #navbar {
   display: flex;
@@ -75,6 +131,11 @@
   background: rgb(255, 255, 255) !important;
   color: #333 !important;
   box-shadow: 0 0 5px rgba(80, 80, 80, 0.42);
+}
+
+.tab-name {
+  font-weight: bold;
+  font-size: 13px;
 }
 
 .gu-transit {

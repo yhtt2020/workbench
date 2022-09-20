@@ -45,6 +45,7 @@ const spaceModel = {
       console.error(e)
     }
   },
+
   setUser (user) {
     spaceModel.user = user
     if (user.uid === 0) {
@@ -190,7 +191,9 @@ const spaceModel = {
       }
       space.type='cloud'
       currentSpace.userInfo=await userModel.get({uid:currentSpace.uid})
-      currentSpace.userInfo.clientId=userModel.getClientId()
+      let client=require('./clientModel').get()
+      currentSpace.userInfo.clientId=client.id
+      currentSpace.userInfo.clientName=client.name
 
     } else {
       space = await require('./localSpaceModel').getSpace(currentSpace.spaceId)

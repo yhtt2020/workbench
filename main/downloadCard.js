@@ -11,14 +11,11 @@ function getDownloadWindow(){
 function createDownloadWin () {
     downloadWindow = new BrowserWindow({
       frame: true,
-      width: 390,
-      height: 465,
+      width: 385,
+      height:475,
       sandbox:false,
-      maxWidth:390,
-      maxHeight:465,
-      minWidth:390,
       // disableDialogs:true,
-      // resizable: false,
+      resizable: false,
       autoHideMenuBar: true,
       show: false,
       focusable:true,
@@ -94,6 +91,20 @@ ipc.on('willDownload',()=>{
 
 })
 
+
+ipc.on('showBreakMenu', (event,args) => {
+  const template = [
+    { label: '重新下载' ,
+      click: () => { event.sender.send('breakMenuAgain') }
+    },
+
+    { label: '删除任务',
+      click: () => { event.sender.send('breakMenuDel') }
+    }
+  ]
+  const menu = Menu.buildFromTemplate(template)
+  menu.popup(BrowserWindow.fromWebContents(event.sender))
+})
 
 
 ipc.on('showMenuIng', (event,args) => {

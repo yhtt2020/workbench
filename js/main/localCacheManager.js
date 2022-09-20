@@ -9,7 +9,7 @@ const config = {
 }
 let el={
    error(error){
-    console.log(error)
+    console.warn(error)
 }
 }
 if(typeof electronLog!=='undefined'){
@@ -46,7 +46,6 @@ let localCacheManager = {
    */
   getUrlExt(url) {
     let urlSpliced = url.split('.')
-    console.log(urlSpliced,url)
     return urlSpliced[urlSpliced.length-1]
   },
   /**
@@ -55,7 +54,6 @@ let localCacheManager = {
   async getWithoutCache(url){
     try{
       let ext = localCacheManager.getUrlExt(url)
-      console.log(ext)
       if (config.cacheExts.indexOf(ext) === -1)
         return
       let downloadDir = localCacheManager.cachePath + '/' + ext
@@ -143,11 +141,10 @@ let localCacheManager = {
       method:'get',
       responseType: 'arraybuffer',
     })
-    console.log(data)
     try {
       await fs.promises.writeFile(path, data, 'binary')
     }catch (e) {
-      console.log(e)
+      console.warn(e)
     }
   },
 
@@ -167,7 +164,7 @@ let localCacheManager = {
       await fs.promises.writeFile(path, data, 'binary')
       return headers['content-type']
     }catch (e) {
-      console.log(e)
+      console.warn(e)
     }
   },
 

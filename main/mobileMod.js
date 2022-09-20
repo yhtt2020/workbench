@@ -93,7 +93,7 @@ const mobileMod = {
         sandbox: true,
         enableRemoteModule: false,
         allowPopups: false,
-        partition: option.partition,
+        partition: option.partition?option.partition:"persist:webcontent",
         enableWebSQL: false,
         autoplayPolicy: (settings.get('enableAutoplay') ? 'no-user-gesture-required' : 'user-gesture-required'),
         // partition:'persist:webcontent',
@@ -243,7 +243,6 @@ app.whenReady().then(() => {
   })
 
   ipc.on('mobileResetSize', (event, args) => {
-    console.log(mobileWindows[args.id])
     mobileWindows[args.id].setSize(initSize.width, initSize.height)
   })
 })

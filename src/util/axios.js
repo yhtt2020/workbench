@@ -152,7 +152,6 @@ axios.interceptors.response.use(
           //且不在刷新令牌，证明已经无法刷新令牌了
           let userRs=await userModel.getCurrent()
           if (userRs.status===1) {
-            console.log('判定丁扥=',user)
             ipc.send('showUserWindow', {tip: '您的登录信息已过期，请重新登录。'})
 
             ipc.send('message', {type: 'warn', config: {content: '您的登录信息已过期，请重新登录。', key: "401"}})

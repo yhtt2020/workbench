@@ -20,7 +20,7 @@ const cloudSpaceModel={
    * @returns {Promise<{data: *, status: number}|{data: *, status: number, info: *}>}
    */
   async changeCurrent (space) {
-    let result = await spaceApi.change(space.nanoid,cloudSpaceModel.user.clientId, cloudSpaceModel.user)
+    let result = await spaceApi.change(space.nanoid,cloudSpaceModel.user.clientId,cloudSpaceModel.user.clientName, cloudSpaceModel.user)
     if(result.code===1000){
       //切换当前用户到对应空间的所属用户
       await userModel.change(cloudSpaceModel.user)
@@ -34,7 +34,7 @@ const cloudSpaceModel={
         await backupSpaceModel.save(cloudSpace,{name:cloudSpace.name,data:cloudSpace.data,count_task: cloudSpace.count_task,count_tab: cloudSpace.count_tab})
         cloudSpace.type='cloud'
         cloudSpace.uid=cloudSpaceModel.user.uid
-        ipc.send('changeSpace',JSON.parse(JSON.stringify(cloudSpace)))
+        await ipc.sendSync('changeSpace',JSON.parse(JSON.stringify(cloudSpace)))
       }else{
         return standReturn.failure('空间异常')
       }
@@ -53,7 +53,6 @@ const cloudSpaceModel={
    return standReturn.autoReturn(result)
   },
   async save (spaceId, saveData, userInfo,force=false) {
-    console.log('测试用户数据',userInfo.clientId)
     let result = await spaceApi.save(spaceId,userInfo.clientId, saveData,userInfo,force)
     return standReturn.autoReturn(result)
   },
@@ -88,7 +87,7 @@ const cloudSpaceModel={
     return standReturn.autoReturn(result)
   },
   async clientOnline(nanoid,force=false,userInfo){
-    let result =await spaceApi.clientOnline(nanoid,force,cloudSpaceModel.user.clientId,cloudSpaceModel.user)
+    let result =await spaceApi.clientOnline(nanoid,force,cloudSpaceModel.user.clientId,cloudSpaceModel.user.clientName,cloudSpaceModel.user)
     return standReturn.autoReturn(result)
   },
   /**
@@ -98,7 +97,9 @@ const cloudSpaceModel={
    */
   async getUserInfo(uid){
     let userInfo=await userModel.get({uid})
-    userInfo.clientId=userModel.getClientId()
+    let client=require('./clientModel').get()
+    userInfo.clientId=client.id
+    userInfo.clientName=client.name
     cloudSpaceModel.user=userInfo
     return userInfo
   }

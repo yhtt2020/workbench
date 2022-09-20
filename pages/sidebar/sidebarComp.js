@@ -65,31 +65,12 @@ const sidebarTpl = /*html*/`
                             </a-popover>
                           </template>
                           <template>
+
                             <a-popover placement="bottomLeft">
                               <template slot="content">
-                                <div class="flex flex-direction justify-around align-start" style="width: 100%; height: 185px">
-                                  <div class="text-black">在线等级: {{this.$store.getters.getTsGrade.lv}}级</div>
-                                  <div class="text-black">距离下一级还需要: {{remainHour}}小时{{remainMinute}}分钟</div>
-                                  <div class="text-black">累计在线时长: {{this.$store.getters.getTsGrade.cumulativeHours}}小时</div>
-                                  <div class="text-black" v-if="this.$store.getters.getTsGrade.rank < 300">全网排名: {{this.$store.getters.getTsGrade.rank}}</div>
-                                  <div class="text-black" v-else>全网排名: 超过{{this.$store.getters.getTsGrade.percentage}}%的用户</div>
-                                  <div class="text-grey-sm" v-if="this.$store.getters.getTsGrade.rank < 300">恭喜，您排名在300名以内，已展示实际名次</div>
-                                  <div class="text-grey-sm" v-else>300名以外，仅显示百分比</div>
-                                  <div class="text-grey">
-                                    <img src="./assets/sun.svg" alt="" style="width: 20px; height: 20px"> = 16级
-                                  </div>
-                                  <div class="text-grey">
-                                    <img src="./assets/moon.svg" alt="" style="width: 20px; height: 20px"> = 4级
-                                  </div>
-                                  <div class="text-grey">
-                                    <img src="./assets/star.svg" alt="" style="width: 20px; height: 20px"> = 1级
-                                  </div>
-                                  <div class="text-help"  @click="gradeHelp()" style="display: flex;flex-direction: row;color: rgba(0, 0, 0, 0.25);margin-left: 2px;cursor:pointer;">
- <a-icon type="question-circle" style="margin-top: 3px"></a-icon>
- <span style="margin-left: 6px;font-size: 12px;margin-bottom: -8px">关于等级</span>
-</div>
-                                </div>
+                              点击查看详情
                               </template>
+                              <div class="live-grade"  @click="() => (modalLiveGradeVisible = true)" style="cursor:pointer;">
                               <div class="ts-grade flex justify-start align-center" style="margin-top: 4px" v-if="this.$store.getters.getTsGrade.lv > 0">
                                 <div class="ts-grade-crown" v-for="item in this.$store.getters.getTsGrade.crown">
                                   <img :src="item.icon" alt="" style="width: 20px; height: 20px">
@@ -106,9 +87,23 @@ const sidebarTpl = /*html*/`
                               </div>
                               <div v-else class="ts-grade flex justify-start align-center" style="margin-top: 4px; color: #B6B6B6">
                                 剩余{{remainHour}}小时{{remainMinute}}分达到1级
-                              </div>
+                              </div></div>
                             </a-popover>
                           </template>
+
+
+    <a-modal :destroy-on-close="true" width="750px"
+      v-model="modalLiveGradeVisible"
+      title="在线等级"
+      :footer="null"
+       :title="null"
+      centered
+    >
+<grade-panel :user="user" :grade="this.$store.getters.getTsGrade" >
+
+</grade-panel>
+
+    </a-modal>
                         </a-col>
                       </a-row>
                     </div>
@@ -330,7 +325,7 @@ const sidebarTpl = /*html*/`
                   <template slot="content">
                     <ul class="tabs">
                       <li class="tab-title" :class="{'active':tab.selected}" v-for="(tab,j) in item.tabs" :key="tab.id">
-                        <img class="tab-icon" :src="tab.icon" /> {{ tab.title }}
+                        <img class="tab-icon" :src="tab.icon" /> <span v-html="getTitle(tab)"></span>
                       </li>
                     </ul>
                   </template>
@@ -641,7 +636,7 @@ const sidebarTpl = /*html*/`
                            <img src="assets/close-box.svg"  style="margin-left: 5px;width: 25px;height: 20px;margin-right: 3px">
                         </span>
                           <img class="tab-icon" :id="'tabIcon'+tab.id"  :src="tab.icon" style="margin-left: 8px;"
-                            onerror="this.src='../../icons/default.svg'" />&nbsp;{{ tab.title }}
+                            onerror="this.src='../../icons/default.svg'" />&nbsp;<span v-html="getTitle(tab)"></span>
                         </div>
                         <span @click="toggleLockTab(tab.id,item.id)" :id="'hoverLock'+tab.id" :hidden="tab.lock!==true"
                           title="锁定当前标签；锁定后，标签将无法随意关闭" class="unlock-tab">
@@ -748,6 +743,7 @@ const storage = require('electron-localstorage')
 const {ipcRenderer: ipc} = require("electron");
 const saAppModel = require("../util/model/standAloneAppModel");
 const userModel = require('../../src/model/userModel')
+
 window.selectedTask=null
 
 Vue.component('sidebar', {
@@ -835,7 +831,9 @@ Vue.component('sidebar', {
       ],
       accounts: [],
       sidebarBottom: 0,
-      cloudSpaces: []
+      cloudSpaces: [],
+
+      modalLiveGradeVisible:false
     }
 
   },
@@ -1282,17 +1280,13 @@ Vue.component('sidebar', {
         type: app.type,
         attribute: app.attribute,
         themeColor: !!!app.themeColor ? '#000' :app.themeColor,
-        settings: {
-          bounds: {
-            width: 1000,
-            height: 800
-          }
-        },
+        settings:app.settings,
         circle:app.circle,
         auth:app.auth,
         site:app.site,
         author:app.author,
-        showInSideBar: false
+        showInSideBar: false,
+        circleMessage:!!!app.circleMessage ? '' :app.circleMessage,
       }
       standAloneAppModel.install(app.url, option).then(success => {
         ipc.send('message', { type: 'success', config: { content: `添加应用：${app.name} 成功` } })
@@ -2013,6 +2007,15 @@ Vue.component('sidebar', {
       this.watchAllHasMore()
       appVue.$message.info({ content: '应用栏的高度模式更改为自动模式。拖动分隔条可更改为手动模式。', key: 'dividerMod' })
 
+    },
+    getTitle(tab){
+      let title= tab.title == '' ? '新标签' : tab.title
+      if(tab.newName){
+        title=`<span style="color:#2181ff;font-weight: bold">${tab.newName}</span>`+"|"+`<span style="color: grey">${title}</span>`
+      }else{
+        title=`<span style="">${title}</span>`
+      }
+      return title
     }
   }
 
@@ -2274,8 +2277,9 @@ ipc.on('closeUserSidePanel',(event,args)=>{
 ipc.on('guide',async (event, args) => {
   let current;
   if (args === 5) {
-    current = await db.system.where('name').equals('currentUser').first()
-    if(current.value.uid !== 0 ){
+    // current = await db.system.where('name').equals('currentUser').first()
+      current = appVue.$refs.sidePanel.user.uid
+    if(current !== 0 ){
       if(appVue.$refs.sidePanel.teamLock===false){
         appVue.$refs.sidePanel.toggleUserPanel()
         appVue.$refs.sidePanel.teamLock=true
@@ -2287,7 +2291,7 @@ ipc.on('guide',async (event, args) => {
       }
 
     }
-    if(current.value.uid === 0){
+    if(current === 0){
       appVue.$message.error('登录后才能使用团队功能');
     }
     // appVue.$refs.sidePanel.userPanelVisible=true

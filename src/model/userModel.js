@@ -1,16 +1,16 @@
-const { SqlDb }=require('../util/sqldb')
+const { SqlDb } = require('../util/sqldb')
 const standReturn = require('../util/standReturn')
-let sqlDb=new SqlDb()
-const userModel={
+let sqlDb = new SqlDb()
+const userModel = {
 
   /**
    * 获取全部账号，已sqldb
    * @returns {Promise<*>}
    */
-  async getAll(){
-    let accounts=await sqlDb.knex('account').select()
-    accounts.forEach(user=>{
-      user['user_info']=JSON.parse(user.user_info)
+  async getAll () {
+    let accounts = await sqlDb.knex('account').select()
+    accounts.forEach(user => {
+      user['user_info'] = JSON.parse(user.user_info)
     })
     return accounts
   },
@@ -20,7 +20,7 @@ const userModel={
    * @param user
    * @returns {Promise<{data: {}, status: number}|{data: *, status: number, info: *}>}
    */
-  async setCurrent(user){
+  async setCurrent (user) {
     /** uid:responseData.uid,
      code:responseData.code,
      token:responseData.token,
@@ -30,46 +30,42 @@ const userModel={
      refresh_expire_time: new Date().getTime() + responseData.refreshExpire * 1000,
      last_login_time:Date.now(),
      is_current:true*/
-    try{
-
-
-    let found=await sqlDb.knex('account').where({uid:user.uid}).first()
-    await sqlDb.knex('account').where({is_current: true}).update({is_current: false}) //重置所有的当前用户
-    let res
-    if(!found){
-     res=await sqlDb.knex('account').insert(user)
-    }else{
-      if(typeof user.user_info ==='object'){
-        user.user_info=JSON.stringify(user.user_info)
+    try {
+      let found = await sqlDb.knex('account').where({ uid: user.uid }).first()
+      await sqlDb.knex('account').where({ is_current: true }).update({ is_current: false }) //重置所有的当前用户
+      let res
+      if (!found) {
+        res = await sqlDb.knex('account').insert(user)
+      } else {
+        if (typeof user.user_info === 'object') {
+          user.user_info = JSON.stringify(user.user_info)
+        }
+        res = await sqlDb.knex('account').where({ uid: user.uid }).update(user)
       }
-     res= await sqlDb.knex('account').where({uid:user.uid}).update(user)
-    }
-    if(res){
-      return standReturn.success(user,'更新成功')
-    }
-    }catch (e) {
-      return standReturn.failure(e,'更新失败')
+      if (res) {
+        return standReturn.success(user, '更新成功')
+      }
+    } catch (e) {
+      return standReturn.failure(e, '更新失败')
     }
   },
   /**
    * 获取当前用户 sqldb
    * @returns {Promise<void>}
    */
-  async getCurrent(){
+  async getCurrent () {
     let found
-      try{
-      found=await sqlDb.knex('account').where({is_current: true}).first()
-      }catch (e) {
-        return standReturn.failure({},'数据库错误')
-      }
-    if(found){
-      found.user_info=JSON.parse(found.user_info)
-      return standReturn.success(found,'')
-    }else{
-      return standReturn.failure({},'不存在当前的登录用户')
+    try {
+      found = await sqlDb.knex('account').where({ is_current: true }).first()
+    } catch (e) {
+      return standReturn.failure({}, '数据库错误')
     }
-
-
+    if (found) {
+      found.user_info = JSON.parse(found.user_info)
+      return standReturn.success(found, '')
+    } else {
+      return standReturn.failure({}, '不存在当前的登录用户')
+    }
   },
 
   /**
@@ -77,16 +73,16 @@ const userModel={
    * @param map
    * @returns {Promise<*|boolean>}
    */
-  async get(map){
-    if(map.uid){
-      map.uid=Number(map.uid)
+  async get (map) {
+    if (map.uid) {
+      map.uid = Number(map.uid)
     }
-    let user=await sqlDb.knex('account').where(map).first()
-    if(user){
-      if(user.user_info)
-       user.user_info=JSON.parse(user.user_info)
+    let user = await sqlDb.knex('account').where(map).first()
+    if (user) {
+      if (user.user_info)
+        user.user_info = JSON.parse(user.user_info)
       return user
-    }else{
+    } else {
       return false
     }
   },
@@ -95,20 +91,20 @@ const userModel={
    * @param user
    * @returns {Promise<void>}
    */
-  async change(user){
-    await sqlDb.knex('account').where({is_current:true}).update({is_current:false})
-    await sqlDb.knex('account').where({uid:user.uid}).update({is_current:true})
+  async change (user) {
+    await sqlDb.knex('account').where({ is_current: true }).update({ is_current: false })
+    await sqlDb.knex('account').where({ uid: user.uid }).update({ is_current: true })
   },
   /**
    * 切换到本地空间
    * @returns {Promise<void>}
    */
-  async logout(){
-    await sqlDb.knex('account').where({is_current:true}).update({is_current:false})
+  async logout () {
+    await sqlDb.knex('account').where({ is_current: true }).update({ is_current: false })
   },
 
-  getClientId(){
-    const settings=require('../../js/util/settings/settings.js')
+  getClientId () {
+    const settings = require('../../js/util/settings/settings.js')
     return settings.get('clientID')
   },
 
@@ -117,7 +113,7 @@ const userModel={
    * @param map
    * @returns {Promise<*>}
    */
-  async delete(map){
+  async delete (map) {
     return await sqlDb.knex('account').where(map).delete()
   },
 
@@ -125,14 +121,14 @@ const userModel={
    * 是否已登录，>=1为已登录
    * @returns {Promise<*>}
    */
-  async isLogged(){
-    return (await sqlDb.knex('account').where({'is_current':true}).select()).length>=1
+  async isLogged () {
+    return (await sqlDb.knex('account').where({ 'is_current': true }).select()).length >= 1
   },
 
-  sha(text){
+  sha (text) {
     const crypto = require('crypto')
     const sha = crypto.createHash('sha1')
-    sha.update(text);
+    sha.update(text)
     return sha.digest('hex')
   },
 
@@ -144,14 +140,14 @@ const userModel={
    */
   async setEnterPwd (enterPwd, uid) {
     let user = await sqlDb.knex('account').where({ uid: uid }).first()
-    let pwd=null
-    if(enterPwd!==''){
-      pwd=userModel.sha(enterPwd)
+    let pwd = null
+    if (enterPwd !== '') {
+      pwd = userModel.sha(enterPwd)
     }
-    if(!!!user){
+    if (!!!user) {
       return false
-    }else{
-      await sqlDb.knex('account').where({uid:uid}).update({password:pwd})
+    } else {
+      await sqlDb.knex('account').where({ uid: uid }).update({ password: pwd })
     }
   },
 
@@ -168,7 +164,64 @@ const userModel={
     } else {
       return true
     }
+  },
+
+  /**
+   * 主动刷新token，成功则自动更新当前用户，失败则返回标准失败
+   */
+  async refreshToken (uid) {
+    try{
+      let user = await userModel.get({ uid: uid })
+      let res= await require('../api/userApi').refreshToken(user)
+      if(res){
+        let userData=userModel.convertUserData(res)
+        let setResult=await userModel.setCurrent(userData)
+        if(setResult.status===1){
+          return standReturn.success()
+        }else{
+          return standReturn.failure('续期失败，设置当前用户失败')
+        }
+      }else{
+        return standReturn.failure('续期失败')
+      }
+    }catch (e) {
+      return standReturn.failure('意外失败')
+    }
+  },
+
+  /**
+   * 将登录接口返回的数据转换为可以存入到数据库的用户数据
+   * @param data
+   * @returns {{uid, refresh_token, code, last_login_time: number, user_info, refresh_expire_time: number, expire_time: number, is_current: boolean, token}}
+   */
+  convertUserData (data) {
+    return {
+      uid: data.userInfo.uid,
+      code: data.code,
+      token: data.token,
+      refresh_token: data.refreshToken,
+      user_info: data.userInfo,
+      expire_time: new Date().getTime() + data.expire * 1000,
+      refresh_expire_time: new Date().getTime() + data.refreshExpire * 1000,
+      last_login_time: Date.now(),
+      is_current: true
+    }
+  },
+
+  /**
+   * 使用code登录
+   * @param code
+   * @returns {Promise<*>}
+   */
+  async loginWithCode (code) {
+    let result = await require('../api/authApi').loginBrowser({ code })
+    let responseData = result.data
+    if (result.code === 1000) {
+      let user = userModel.convertUserData(responseData)
+      await userModel.setCurrent(user)
+    }
+    return result
   }
 }
 
-module.exports=userModel
+module.exports = userModel

@@ -305,7 +305,6 @@ function addFocusListener (element, credentials) {
     removeAutocompleteList()
     const container = buildContainer()
     const inputWidth=e.target.offsetWidth
-    console.log()
     container.innerHTML=`<div style="padding: 5px;border-bottom: 1px solid #c1c1c1;color: grey;width:${inputWidth}px"> ${lockIcon} 个人帐号</div>`
     for (const cred of credentials) {
       addOption(container, cred.username)

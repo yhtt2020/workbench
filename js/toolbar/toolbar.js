@@ -225,14 +225,14 @@ const toolbar = {
   updateStartPage(){
     let tabData=tabs.get(tabs.getSelected())
     if(tabData.lock){
-      toolbar.startPageButton.parentElement.hidden=false
+      toolbar.startPageButton.hidden=false
       if(tabData.startPage===tabData.url){
         toolbar.startPageButton.classList.add('disable')
       }else{
         toolbar.startPageButton.classList.remove('disable')
       }
     }else{
-      toolbar.startPageButton.parentElement.hidden=true
+      toolbar.startPageButton.hidden=true
     }
   },
   updateScriptsCountTip (tabId = tabs.getSelected().id) {

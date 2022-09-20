@@ -37,6 +37,10 @@ export function matchFileSuffixType(fileName) {
       exts:['gif']
     },
     {
+      name:'ppt',
+      exts:['ppt','pptx']
+    },
+    {
       name:'jpg',
       exts:['webp', 'jpg', 'jpeg', 'svg']
     },

@@ -58,8 +58,6 @@ class SqlDb {
     let find = await this.knex('config').where({
       key
     }).first()
-    console.log(find)
-    console.log(value)
     if (!!!find) {
       try {
         await this.knex('config').insert({

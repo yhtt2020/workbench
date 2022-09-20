@@ -76,11 +76,15 @@
       windowId=args.windowId
       id=args.id
       document.getElementById('address').value = args.url
-      if(args.newName){
-        document.title='小号手机模式 #'+args.newName
-      }else{
-        document.title='手机模式 #'+id
+      let mod='手机模式'
+      if(args.partition){
+        mod='小号手机模式'
       }
+      let name=id
+      if(args.newName){
+        name=args.newName
+      }
+      document.title=mod + ' # '+name
     })
     function goBack(){
       ipc.send("mobileGoBack",{

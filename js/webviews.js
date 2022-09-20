@@ -30,6 +30,7 @@ function captureCurrentTab (options) {
 
 // called whenever a new page starts loading, or an in-page navigation occurs
 function onPageURLChange (tab, url) {
+
   ipc.send('barrage.changeUrl',{url:urlParser.getSourceURL(url)})
     //增加了ts开头的页面的安全提示，避免提示不安全
     webviews.updateToolBarStatus(tabs.get(tab))
@@ -52,6 +53,7 @@ function onPageURLChange (tab, url) {
 function onNavigate (tabId, url, isInPlace, isMainFrame, frameProcessId, frameRoutingId) {
   if (isMainFrame) {
     onPageURLChange(tabId, url)
+
   }
 }
 
@@ -149,6 +151,7 @@ const webviews = {
   autoAdjustMargin: function() {
     let top=0
     let left=0
+
     if(window.$toolbar.layoutMod==='min'){
       top=0
       left=0
@@ -412,7 +415,7 @@ const webviews = {
         $toolbar.setCanRead(true)
       }
     }else{
-      console.log('update了一个非选中的tab信息')
+      //console.log('update了一个非选中的tab信息')
     }
   },
   updateAppStatus(tabData){
@@ -488,6 +491,14 @@ const webviews = {
     if (webviews.placeholderRequests.length === 0) {
       // multiple things can request a placeholder at the same time, but we should only show the view again if nothing requires a placeholder anymore
       if (webviews.viewList.includes(webviews.selectedId)) {
+        //如果是吸附模式，还需要还原主tab
+        if( typeof window.attachedTab !=='undefined'){
+          ipc.send('addView', {
+            id: window.mainTab.id,
+            bounds: webviews.getViewBounds(),
+            focus:false
+          })
+        }
         ipc.send('setView', {
           id: webviews.selectedId,
           bounds: webviews.getViewBounds(),
@@ -608,9 +619,25 @@ ipc.on('leave-full-screen', function () {
   webviews.resize()
 })
 
+//触发下载后地址会被重新定向，判断为下载网页，将地址改回原地址，可能会有bug。
+let reUrl
+let reId
+ipc.on('isDownload',()=>{
+  tabs.update(reId, {
+    url: reUrl
+  })
+})
+
 webviews.bindEvent('did-start-navigation', willNavigate)
 webviews.bindEvent('will-redirect', onNavigate)
 function willNavigate(tabId, url, isInPlace, isMainFrame, frameProcessId, frameRoutingId){
+tabs.tabs.forEach((e)=>{
+  if(e.selected === true){
+    reUrl = e.url
+    reId = e.id
+  }
+})
+
   const currentTab=tabs.get(tabId)
   if(currentTab.url===urlParser.parse('ts://newtab') && url!==urlParser.parse('ts://newtab')){
     var newTab = tabs.add({
@@ -628,7 +655,7 @@ function willNavigate(tabId, url, isInPlace, isMainFrame, frameProcessId, frameR
     require('./browserUI.js').closeTab(tabId)
     //todo 过早关闭tab导致后面有报错，但是不影响使用，后面再修正
   }else{
-    onNavigate(tabId, url, isInPlace, isMainFrame, frameProcessId, frameRoutingId)
+      onNavigate(tabId, url, isInPlace, isMainFrame, frameProcessId, frameRoutingId)
   }
 }
 
@@ -721,65 +748,31 @@ webviews.bindIPC('scroll-position-change', function (tabId, args) {
   })
 })
 
-let isDownload = false
-let download = false
-ipc.on('isDownload',()=>{
-  isDownload=true
-  download=true
-})
-
-let originalUrl;
-let originalId;
-let emptyUrl
-let closeGuideTab=''
 ipc.on('view-event', function (e, args) {
+  let originalId;
   webviews.emitEvent(args.event, args.viewId, args.args)
+  originalId = args.viewId
 
   setTimeout(()=>{
-    if (args.event === 'new-tab' && download === true) {
-      originalId = args.viewId
-      emptyUrl = args.args[0]
-      tabs.tabs.filter((e)=>{
-        if (e.url === emptyUrl) {
-          closeGuideTab = e.id
-        }
-      })
-    }
-  },30)
-
-  setTimeout(()=>{
-    for (let i = 0; i < tabs.tabs.length; i++) {
-      if (tabs.tabs[i].id === originalId && isDownload ===true) {
-        originalUrl = tabs.tabs[i].url
-        ipc.send('originalPage',originalUrl)
-        isDownload=false
+    tabs.tabs.forEach((e)=>{
+      if(e.id === originalId){
+        ipc.send('originalPage',e.url)
       }
-    }
+    })
   },50)
 })
 
 ipc.on('closeEmptyPage',(event,args)=>{
+  let closeGuideTab
+  tabs.tabs.forEach((e)=>{
+      for(let i=0;i<args.length;i++){
+        if(args[i]===e.url){
+          closeGuideTab = e.id
+        }
+      }
+  })
   require('browserUI.js').closeTab(closeGuideTab)
-  closeGuideTab=''
 })
-
-
-// ipc.on('closeEmptyPage',(event,args)=>{
-//   // require('browserUI.js').closeTab(args)
-//   for(let i=0;i<tabs.tabs.length;i++){
-//     for(let j=0;j<args.length;j++){
-//       if(tabs.tabs[i].url===args[j]){
-//         if(args.length!==1){
-//           require('browserUI.js').closeTab(tabs.tabs[i].id)
-//           ipc.send('willDownload')
-//         }
-//         // if(args.length===1){
-//         //   ipc.send('willDownload')
-//         // }
-//       }
-//     }
-//   }
-// })
 
 
 ipc.on('closeTab',(event,args)=>{

@@ -16,8 +16,11 @@
 .sidebar ul {
   margin-bottom: 0;
 }
-
+.task-title{
+  font-size: 12px !important;
+}
 .task {
+
   height: 320px;
   margin-bottom: 10px;
   border-radius: 4px;
@@ -70,9 +73,7 @@
   background-color: #efefef;
 }
 
-.ant-card-body {
-  padding: 20px;
-}
+
 
 .selected-span {
   display: inline-block;

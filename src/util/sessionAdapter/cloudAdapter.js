@@ -35,7 +35,6 @@ const cloudAdapter={
         if(backupSpace.uid){
           let user=await userModel.get({uid:backupSpace.uid})
           user.clientId=userModel.getClientId()
-          console.log('user',user)
           //如果空间当时存了用户信息，则赋值过去
           userInfo=user
         }

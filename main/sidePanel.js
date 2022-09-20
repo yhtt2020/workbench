@@ -1032,72 +1032,11 @@ ipc.on('captureDeskScreen', (event, args) => {
     })
   })
 })
-let allAppsWindow = null
 
-function getAllAppsWindow () {
-  if (allAppsWindow === null) {
-    createAllAppsWindow()
-  }
-  return allAppsWindow
-}
 
-function createAllAppsWindow () {
-  allAppsWindow = new BrowserWindow({
-    width: 600,
-    height: 600,
-    acceptFirstMouse: true,
-    alwaysOnTop: true,
-    show: false,
-    // resizable:false,
-    frame: false,
-    webPreferences: {
-      //preload: __dirname+'/pages/saApp/settingPreload.js',
-      nodeIntegration: true,
-      contextIsolation: false,
-      enableRemoteModule: true,
-      sandbox: false,
-      safeDialogs: false,
-      safeDialogsMessage: false,
-      partition: null,
-      additionalArguments: [
-        '--user-data-path=' + userDataPath,
-        '--app-version=' + app.getVersion(),
-        '--app-name=' + app.getName()
-      ]
-    }
-  })
-  allAppsWindow.on('will-resize', (event) => {
-    event.preventDefault()
-  })
-  allAppsWindow.loadURL('file://' + path.join(__dirname, '/pages/saApp/list.html'))
-  allAppsWindow.on('close', (event) => {
-    if (forceClose) {
-      allAppsWindow = null
-    } else {
-      allAppsWindow.hide()
-      event.preventDefault()
-    }
-
-  })
-  allAppsWindow.on('blur', () => {
-    allAppsWindow.hide()
-  })
-  setTimeout(() => {
-    if (mainWindow) {
-      mainWindow.on('close', () => {
-        forceClose = true
-        if (allAppsWindow && !allAppsWindow.isDestroyed())
-          allAppsWindow.close()
-        allAppsWindow = null
-      })
-    }
-
-  }, 2000)
-
-}
-
-ipc.on('showAllSaApps', (event, args) => {
-  getAllAppsWindow()
+ipc.on('showAllSaApps', async (event, args) => {
+  let allApps =await renderPage.openAllApps()
+  let allAppsWindow=allApps.win
   allAppsWindow.webContents.send('refresh')
 
   let mainBounds = mainWindow.getBounds()
@@ -1142,16 +1081,18 @@ function showUserWindow (args) {
     userWindow = new BrowserWindow({
       backgroundColor: '#00000000',
       show: false,
-      transparent: true,
-      frame: false,
-      resizable: false,
-      shadow: false,
-      alwaysOnTop: true,
-      width: 700,
-      height: 530,
+      minWidth:900,
+      minHeight:550,
+      width: 900,
+      height: 550,
+      title:'选择空间',
+      maximizable:false,
       webPreferences: {
+        preload:path.join(__dirname,'src/preload/user.js'),
         nodeIntegration: true,
         contextIsolation: false,
+        sandbox:false,
+        webSecurity:false,
         additionalArguments: [
           '--user-data-path=' + userDataPath,
           '--app-version=' + app.getVersion(),
@@ -1170,8 +1111,8 @@ function showUserWindow (args) {
       bounds.height = parseInt(selfBounds.height)
       return bounds
     }
-
-    userWindow.loadURL('file://' + path.join(__dirname, '/pages/user/index.html'))
+    userWindow.setMenu(null)
+    userWindow.loadURL(render.getUrl('user.html'))
     userWindow.on('ready-to-show', () => {
       userWindow.show()
       if (mainWindow && !mainWindow.isDestroyed())
@@ -1184,16 +1125,15 @@ function showUserWindow (args) {
 
     })
     userWindow.on('close', () => {
+      if(!mainWindow){
+        app.exit()
+      }
       userWindow = null
     })
   }
 }
 
-function callWetherShowUserWindow () {
-  if (configModel.getShowOnStart()) {
-    showUserWindow()
-  }
-}
+
 
 let masked = false
 let inseartedCSS = []
@@ -1270,9 +1210,32 @@ function callUnModal (win) {
 
 /*user面板代码*/
 app.whenReady().then(() => {
+  ipc.on('startApp',()=>{
+    if(!mainWindow){
+      createWindow(()=>{
+        if (userWindow) {
+          if (userWindow.isDestroyed() === false)
+            userWindow.close()
+        }
+      })
+    }
+  })
 
   ipc.on('showUserWindow', (event, args) => {
     showUserWindow(args)
+  })
+
+  /**
+   * 只关闭主窗体，不做任何其他的操作
+   */
+  ipc.on('justCloseMainWindow',()=>{
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      destroyAllViews()
+      saveWindowBounds()
+      mainWindow.close()
+      mainWindow=null
+      showUserWindow()
+    }
   })
 
   let loginWindow = null
@@ -1283,11 +1246,31 @@ app.whenReady().then(() => {
         userWindow.close()
     }
   })
+  ipc.handle('createWindow',()=>{
+    createWindow()
+  })
+
+  ipc.on('closeSync',(e)=>{
+    function callback(){
+      e.returnValue='done'
+    }
+    if (!mainWindow) {
+      e.returnValue='not_alive'
+      return
+    }
+    mainWindow.once('closed',()=>{
+      callback()
+    })
+    safeCloseMainWindow()
+  })
 
   ipc.on('changeSpace',  (event, args) => {
     async function  reloadMainWindow(){
       await require('./src/model/spaceModel').setCurrentSpace(args)
-      createWindow()
+      createWindow(()=>{
+        event.returnValue='done'
+      })
+
     }
     changingSpace = true
     if (mainWindow && !mainWindow.isDestroyed()) {
@@ -1319,14 +1302,12 @@ app.whenReady().then(() => {
       loginWindow.show()
       loginWindow.focus()
     } else {
-      let bounds = mainWindow.getBounds()
       loginWindow = new BrowserWindow({
         backgroundColor: '#00000000',
         show: false,
         alwaysOnTop: true,
         width: 550,
         height: 730,
-        parent: mainWindow,
         webPreferences: {
           preload: path.join(__dirname, 'pages/user/loginPreload.js'),
           nodeIntegration: true,
@@ -1409,7 +1390,10 @@ ipc.on('dbClickClose', (e, args) => {
 
 
 app.whenReady().then(()=>{
+  let askingSpeedup=false
   ipc.on('toolbar.speedup',()=>{
+    if(askingSpeedup) return
+    askingSpeedup=true
      let ask= require('electron').dialog.showMessageBoxSync({
         message:'在加速之前，请务必确认网页表单均已保存。\n此操作将放弃全部网页内容！！！\n注意：任何加速都不会关闭当前标签。',
         buttons:['杀死所有标签(同时关闭全部应用）','杀死非锁定标签（不关闭应用）','取消'],
@@ -1427,6 +1411,7 @@ app.whenReady().then(()=>{
       case 1:
         sendIPCToMainWindow('speedup',{type:'unlock'})
     }
+    askingSpeedup=false
   })
   var osu=require('node-os-utils')
   setInterval(async ()=>{

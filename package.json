@@ -2,9 +2,9 @@
   "name": "tsbrowser_brave",
   "productName": "想天浏览器3.3勇士版",
   "author": "Thisky",
-  "version": "3.3.36",
+  "version": "3.3.90",
   "description": "一款针对工作场景的极简浏览器，帮助你提升效率，保持专注",
-  "electronVersion": "19.0.0",
+  "electronVersion": "19.0.10",
   "main": "main.build.js",
   "standard": {
     "globals": [
@@ -78,7 +78,7 @@
     "chokidar": "^3.4.0",
     "concurrently": "^5.2.0",
     "decomment": "^0.9.0",
-    "electron": "^19.0.0",
+    "electron": "^19.0.10",
     "electron-builder": "23.2.0",
     "electron-devtools-installer": "^3.2.0",
     "electron-installer-windows": "^3.0.0",

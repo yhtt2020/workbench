@@ -102,7 +102,6 @@ class Browser {
       },
 
       createWindow: (details) => {
-        conosle.log('触发createWindow')
         // const win = this.createWindow({
         //   initialUrl: details.url || newTabUrl,
         // })
@@ -135,7 +134,6 @@ class Browser {
    * @returns {Promise<void>}
    */
   async initSessionExtensions (session) {
-    console.log('初始化一个会话的插件')
     extensions = this.extensions
     const extensionPath = path.join(userDataPath, 'extensions')
     if (!fs.existsSync(extensionPath)) {
@@ -152,9 +150,7 @@ class Browser {
       return
     }
     this.standAloneSessions.push(ses)
-    console.log('载入一个独立会话的插件',ses)
     await this.initSessionExtensions(ses)
-    console.log(this.standAloneSessions)
   }
   // setupProtocol () {
   //   let mainSession = require('electron').session.defaultSession
@@ -491,7 +487,7 @@ async function askInstall (manifestPath, crxInfo) {
     )
     renderPage.openInstallExtension({ manifest, crxInfo, manifestPath })
   } catch (e) {
-    console.log(e)
+    console.warn(e)
     messager.error({ content: '插件信息读取失败，安装终止。' })
   }
 }
@@ -521,8 +517,8 @@ const extensionManager = {
       this.unloadAllSessionExtension(baseName, (ext) => {
         sendIPCToWindow(mainWindow, 'removeExtension', { id: ext.id })
         this.config.setDisable(baseName)
-        messager.success({ content: '禁用插件成功，插件将不再生效。' })
       })
+      messager.success({ content: '禁用插件成功，插件将不再生效。' })
     } else {
       this.loadAllSessionExtension(baseName)
       this.config.setEnable(baseName)

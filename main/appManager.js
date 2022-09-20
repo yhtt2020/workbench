@@ -641,10 +641,11 @@ const appManager = {
     } else if (saApp.package === 'com.thisky.fav') {
       saApp.url = '/pages/fav/index.html'
       saApp.type = 'local'
-    }else if(saApp.package === 'com.thisky.appStore' && isDevelopmentMode){
-      // saApp.url = 'http://localhost:5008/'
-      // saApp.type = 'local'
     }
+    // else if(saApp.package === 'com.thisky.appStore' && isDevelopmentMode){
+    //   saApp.url = 'http://localhost:5008/'
+    //   saApp.type = 'local'
+    // }
 
     remote.enable(appView.webContents)
 
@@ -658,7 +659,7 @@ const appManager = {
       appView.webContents.loadURL(saApp.url)
     }
     if (saApp.package === 'com.thisky.fav' && isDevelopmentMode) {
-      appView.webContents.openDevTools()
+     // appView.webContents.openDevTools()
     }
     function updateView(url){
       if(appWindow.isFocused()){
