@@ -88,11 +88,11 @@ class ViewManager {
     })
     let attachedViewBounds = windowManager.attachedView.getBounds()
     if (!noChange) {
-      attachedViewBounds.y = viewBounds.y
       attachedViewBounds.width = width
       attachedViewBounds.x = parentBounds.width - width
       this.lastWidth = width
     }
+    attachedViewBounds.y = viewBounds.y
     attachedViewBounds.height = viewBounds.height//修复attach的高度
     windowManager.attachedView.setBounds(attachedViewBounds)
 
