@@ -478,7 +478,7 @@ const renderPage = {
         resizable:true,
         x:pos.x,
         y:pos.y,
-        blurClose:false
+        blurClose:true
       },
       sidePanel.get().webContents.id
     )

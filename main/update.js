@@ -103,7 +103,9 @@ function checkUpdate(){
     //console.log('update下载完成')
     loadUpdate(updateInfo)
   })
+}
 
+app.whenReady().then(()=>{
   ipc.on('startInstall',()=>{
     destroyAllViews()
     // save the window size for the next launch of the app
@@ -116,8 +118,11 @@ function checkUpdate(){
   //   autoUpdater.quitAndInstall()
   // })
   ipc.on('closeUpdate',()=>{
-    updaterWindow.close()
+    if(updaterWindow)
+    {
+      updaterWindow.close()
+    }
   })
-}
+})
 
 

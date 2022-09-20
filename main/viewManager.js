@@ -12,6 +12,9 @@ var viewBounds = {}
 var sidebarBounds = {}
 
 var defaultBrowserViewBg='#ffffff'
+var mainTabView
+
+var viewStash=[] //暂存，用于隐藏views时暂存下来，下次setview的时候自动读入并清空，防止因为开关而导致view被销毁的问题。
 
 const defaultViewWebPreferences = {
   nodeIntegration: false,
@@ -169,6 +172,10 @@ async function createView(existingViewId, id, webPreferencesString, boundsString
     })
   })
 
+  view.webContents.on('focus',()=>{
+    sendIPCToMainWindow('focusTab',{tabId:id})
+  })
+
   // Open a login prompt when site asks for http authentication
   view.webContents.on('login', (event, authenticationResponseDetails, authInfo, callback) => {
     if (authInfo.scheme !== 'basic') { // Only for basic auth
@@ -233,6 +240,7 @@ async function createView(existingViewId, id, webPreferencesString, boundsString
 
   view.setBounds(JSON.parse(boundsString))
   viewBounds = JSON.parse(boundsString)
+  view.id=id //增加一个id属性，方便后续区分
   viewMap[id] = view
 
   //增加对证书的验证事件处理
@@ -257,13 +265,27 @@ function destroyView(id) {
   if (!viewMap[id]) {
     return
   }
+  let removed=false
+  if(windowManager.attachedView && windowManager.attachedView === viewMap[id]){
+    console.log('移除附着窗口')
+    //如果是关闭当前吸附的窗体
+    windowManager.detachTab()
+    removed=true
+  }
   let bvs=mainWindow.getBrowserViews()
+  if(removed) {
+    //通过上方移除了，不需要再做移除操作
+    console.log('上面直接移除了')
+  }
   bvs.forEach(bv=>{
-    if(bv.webContents.id===viewMap[id].webContents.id){
+    if(bv.webContents.id===viewMap[id].webContents.id ){
       mainWindow.removeBrowserView(bv)
-      selectedView = null
     }
   })
+  viewMap[id].webContents.destroy()
+  delete viewMap[id]
+  delete viewStateMap[id]
+  selectedView = null
   // if (viewMap[id] === mainWindow.getBrowserView()) {
   //   mainWindow.setBrowserView(null)
   //   selectedView = null
@@ -274,10 +296,10 @@ function destroyView(id) {
   //  mainWindow.setTopBrowserView(sidebarView)
   //  return
   // }
-  viewMap[id].webContents.destroy()
 
-  delete viewMap[id]
-  delete viewStateMap[id]
+  console.log('移除的id',id)
+  console.log(viewMap)
+  console.log(viewStateMap)
 }
 
 function destroyAllViews() {
@@ -306,6 +328,10 @@ function setBounds(id, bounds) {
   if (viewMap[id]) {
     let bvs=mainWindow.getBrowserViews()
     bvs.forEach(bv=>{
+      if(windowManager.attachedView && bv === windowManager.attachedView ) {
+        //排除右侧分屏的bv
+        return
+      }
       bv.setBounds(bounds)
     })
   }
@@ -355,10 +381,41 @@ ipc.on('destroyView', function (e, id) {
 ipc.on('destroyAllViews', function () {
   destroyAllViews()
 })
-
+ipc.on('addView',(e, args)=>{
+  // console.log('添加view',args.id,viewMap[args.id])
+  // mainWindow.addBrowserView(viewMap[args.id])
+  // console.log('添加时设置的bounds',args.bounds)
+  // let bounds=windowManager.onSetBounds(args.bounds)
+  // console.log('修复了attach之后的bounds',args.bounds)
+  // viewMap[args.id].setBounds(bounds)
+  // //setBounds(args.id,bounds)
+  // if(windowManager) {windowManager.syncAttachedBounds()}
+  // console.log(mainWindow.getBrowserViews())
+  //let bounds=windowManager.onSetBounds(args.bounds)
+})
 ipc.on('setView', function (e, args) {
+  if(viewStash){
+    console.log('存在暂存的view')
+    viewStash.forEach((bv)=>{
+      mainWindow.addBrowserView(bv)
+    })
+    viewStash=[]
+  }
   setView(args.id)
-  setBounds(args.id, args.bounds)
+  // let bvs=mainWindow.getBrowserViews()
+  // console.log('setvbiew',bvs)
+  // if( typeof mainTabView !=='undefined' && bvs.indexOf(mainTabView)===-1){
+  //   console.log('自动补充主view')
+  //   mainWindow.addBrowserView(mainTabView)
+  //   mainTabView.setBounds(viewBounds)
+  // }
+  // let bvs2=mainWindow.getBrowserViews()
+  // console.log('setvbiew2',bvs2)
+  let bounds=windowManager.onSetBounds(args.bounds)
+  setBounds(args.id, bounds)
+  // let bvs3=mainWindow.getBrowserViews()
+  // console.log('setvbiew3',bvs3)
+  if(windowManager) {windowManager.syncAttachedBounds()}
   if (args.focus) {
     if (SidePanel.alive() && sidePanel.get().isFocused()) {
       //如果侧边栏是焦点状态，则不去聚焦
@@ -372,7 +429,9 @@ ipc.on('setView', function (e, args) {
 })
 
 ipc.on('setBounds', function (e, args) {
-  setBounds(args.id, args.bounds)
+  let bounds=windowManager.onSetBounds(args.bounds)
+  setBounds(args.id, bounds)
+  if(windowManager) {windowManager.syncAttachedBounds()}
 })
 
 ipc.on('focusView', function (e, id) {
@@ -393,11 +452,18 @@ ipc.on('printToPDF',(e,args)=>{
 })
 
 ipc.on('hideCurrentView', function (e) {
+  viewStash=mainWindow.getBrowserViews()// 暂存一下，用于后续恢复
   hideCurrentView()
   //调用隐藏当前视图的回调到sidebar
   //onHideCurrentView()
 })
 function setCurrentBrowserView(needSetBrowserView){
+  if(windowManager){
+    if(windowManager.attachedView!==needSetBrowserView){
+      console.log('设置了主maintabview',mainTabView)
+      mainTabView=needSetBrowserView
+    }
+  }
   if(process.platform==='win32'){
     //windows上存在背景色bug，只能牺牲体验追求正确性
     mainWindow.setBrowserView(needSetBrowserView)

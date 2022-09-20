@@ -251,7 +251,6 @@ app.on('ready', () => {
   ipc.on('toggleChat',()=>{
     let CHAT_NAME='chat'
     if(!windowManager.isAlive(CHAT_NAME)){
-      console.log('未找到',windowManager.isAlive(CHAT_NAME))
       //如果还未载入，则需要载入
       let parentBounds=mainWindow.getBounds()
       const defaultSize={
@@ -271,10 +270,16 @@ app.on('ready', () => {
           resizable:true,
           minimizable:false,
           parent:mainWindow,
+          minWidth:400,
+          minHeight:500,
           show: false,
+          shadow:true,
           title:'轻聊',
           icon:path.join(__dirname,'pages/group/group.png')
         },
+        viewOption:{
+          minWidth:400
+        } ,
         webPreferences:{
             preload:path.join(__dirname,'src/browserApi/apiPreload.js'),
             sandbox:false,

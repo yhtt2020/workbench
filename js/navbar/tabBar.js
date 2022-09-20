@@ -23,6 +23,7 @@ const navbarApi = require('../../src/api/navbarApi.js')
 const baseApi = require('../../src/api/baseApi')
 const deskModel = require('../../pages/util/model/deskModel.js')
 const { ipcRenderer } = require('electron')
+const browserUI = require('browserUI.js')
 
 /**
  * 判断是不是小号标签
@@ -493,6 +494,27 @@ const tabBar = {
       const tab = tabs.get(data.id)
       let templateAdd = []
       if (!tab.url.startsWith('file://')) {
+        let item
+        if(tab.attached){
+          item={
+            label:'还原到主屏…',
+            click: function () {
+              try {
+                require('../browserUI.js').detachTab(data.id)
+              } catch (e) {
+                console.warn(e)
+              }
+            }
+          }
+        }else{
+          item= {
+            id:'setAttach',
+            label:'在右侧分屏打开…',
+            click: function () {
+              tabBar.setAttach(data.id)
+            }
+          }
+        }
         templateAdd = [[
           {
             id: 'addToDesk',
@@ -505,10 +527,12 @@ const tabBar = {
             click: function () {
               tabBar.addToApps(data.id)
             },
-          }
+          },
+          item
         ]
         ]
       }
+
       let template = templateAdd.concat([
 
         [
@@ -671,6 +695,9 @@ const tabBar = {
 
     tabs.get().forEach(function (tab) {
       var el = tabBar.createTab(tab)
+      // if(tab.attached){
+      //   el.hidden=true
+      // }
       tabBar.containerInner.appendChild(el)
       tabBar.tabElementMap[tab.id] = el
     })
@@ -792,6 +819,11 @@ const tabBar = {
     }, err => {
       ipc.send('message', { type: 'error', config: { content: '添加应用失败' } })
     })
+  },
+  setAttach(id){
+    let tab = tabs.get(id)
+    window.mainTab=tabs.get(tabs.getSelected())
+    ipc.send('setTabAttach',{tab})
   },
   //扩充一个获取icon的方法
   createIconEl: function (tabData, loaded) {
@@ -1016,6 +1048,23 @@ ipc.on('getCurrentTab',(e,a)=>{
   console.log('getCurrentTabdddddddddddddd',data)
   ipc.send('gotCurrentTab',{data})
 })
+
+ipc.on('changeTabAttach',(e,args)=>{
+  let tab =tabs.get(args.tab.id)
+  window.attachedTab=tab //记录下吸附的tab
+  tasks.forEach(task=>{
+    task.tabs.forEach(item=>{
+      if (item.id!==args.tab.id) {
+        item.attached=false
+      }else{
+        item.attached=true
+      }
+    })
+  })
+  tabBar.updateAll()
+  require('../browserUI.js').focusTab(args.tab.id)
+})
+
 ipc.on('speedup',(e,a)=>{
   let closed=0
   if(a.type==='all'){

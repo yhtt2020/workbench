@@ -151,6 +151,7 @@ const webviews = {
   autoAdjustMargin: function() {
     let top=0
     let left=0
+
     if(window.$toolbar.layoutMod==='min'){
       top=0
       left=0
@@ -490,6 +491,14 @@ const webviews = {
     if (webviews.placeholderRequests.length === 0) {
       // multiple things can request a placeholder at the same time, but we should only show the view again if nothing requires a placeholder anymore
       if (webviews.viewList.includes(webviews.selectedId)) {
+        //如果是吸附模式，还需要还原主tab
+        if( typeof window.attachedTab !=='undefined'){
+          ipc.send('addView', {
+            id: window.mainTab.id,
+            bounds: webviews.getViewBounds(),
+            focus:false
+          })
+        }
         ipc.send('setView', {
           id: webviews.selectedId,
           bounds: webviews.getViewBounds(),

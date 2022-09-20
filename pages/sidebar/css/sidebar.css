@@ -253,6 +253,16 @@
   background-color: #fff;
 }
 
+.dark-mode .bottomBar .ant-btn {
+  background: none !important;
+  border: none !important;
+}
+.dark-mode .bottomBar .ant-btn svg path {
+  fill: rgb(210, 210, 210);
+}
+.dark-mode .bottomBar .anticon svg path {
+  fill: rgb(210, 210, 210);
+}
 .dark-mode .ant-btn:hover {
   color: #9f9f9f;
   background-color: rgb(63, 63, 63) !important;
@@ -368,9 +378,6 @@ body {
 .sidebar .side-container .side-items .app-task .task-icon {
   margin-top: 10px;
 }
-
-.sidebar .side-container .side-items .app-task .task-icon {
-  margin-top: 10px; }
 
 .item-icon {
   width: 45px;
