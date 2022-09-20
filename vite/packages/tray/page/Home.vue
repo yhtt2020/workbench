@@ -25,8 +25,8 @@
           <div class="content" style="margin-left: 15px;width: 100%;height: 60px;margin-top: 5px">
             <span style="color: #f3f3f3;font-size: 14px;">在线等级：{{lv}}级</span>
             <div class="flex" style="margin-top: 5px" >
-              <a-progress strokeColor="#ffffff" trailColor="#4d4d4d" :percent="30" :showInfo="false" style="width: 180px" />
-              <span style="color: #f3f3f3;font-size: 14px">{{remainHour}}小时{{remainMinute}}分后升级</span>
+              <a-progress strokeColor="#ffffff" trailColor="#4d4d4d" :percent="percentage" :showInfo="false" style="width: 165px" />
+              <span style="color: #f3f3f3;font-size: 14px;margin-left: 5px">{{remainHour}}小时{{remainMinute}}分后升级</span>
             </div>
           </div>
 <!--          <div class="upgrade flex flex-direction" style="width: 130px;height: 60px;margin-left: 15px;margin-top: 5px">-->
@@ -37,7 +37,7 @@
 <!--            <span style="color: #f3f3f3;font-size: 14px">{{remainHour}}小时{{remainMinute}}分后升级</span>-->
 <!--          </div>-->
         </div>
-        <div class="button flex">
+        <div hidden class="button flex">
           <div class="work">工作模式</div>
           <div class="play">娱乐模式</div>
         </div>
@@ -84,6 +84,8 @@ export default defineComponent({
       avatar:'',
       remainHour:'',
       remainMinute:'',
+      minute:'',
+      percentage:''
     }
   },
   methods:{
@@ -114,6 +116,8 @@ export default defineComponent({
      let remain = section[0] * 60 - (args.data.onlineGradeExtra.minutes)
      this.remainHour = Math.floor(remain / 60)
      this.remainMinute = remain - (Math.floor(remain / 60) * 60)
+      this.minute = args.data.onlineGradeExtra.minutes
+     this.percentage = (this.minute / (section[0] * 60))*100
    })
  }
     // this.memoryUsage = await osu.mem.info()
