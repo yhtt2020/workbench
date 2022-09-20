@@ -86,4 +86,15 @@ $dark-second-color: rgb(189, 189, 189);
       background: rgba(255, 255, 255, 0.1);
     }
   }
+
+
+  .split-bar{
+    background: #202020;
+    .inner-bar{
+      background: rgb(118 118 118);
+      &:hover{
+        background: rgba(34, 189, 255, 0.6);
+      }
+    }
+  }
 }

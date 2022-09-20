@@ -75,6 +75,15 @@
 .dark-mode .tab-item.active:not(:only-child).theme-background-low-contrast .tab-item.active:not(:only-child) {
   background: rgba(255, 255, 255, 0.1);
 }
+.dark-mode .split-bar {
+  background: #202020;
+}
+.dark-mode .split-bar .inner-bar {
+  background: rgb(118, 118, 118);
+}
+.dark-mode .split-bar .inner-bar:hover {
+  background: rgba(34, 189, 255, 0.6);
+}
 
 .split-bar {
   width: 10px;
