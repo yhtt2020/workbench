@@ -306,7 +306,23 @@ function activeTab(id){
   }
 }
 
+/**
+ * 关闭分屏
+ * @param id
+ */
+function detachTab(id){
+    switchToTab(id)
+    ipc.send('detachTab')
+    let tab=tabs.tabs.find((t)=>{
+      return t.id===id
+    })
+    tab.attached=false
+}
 
+/**
+ * 聚焦到某个tab，仅用于分屏的时候操作，此操作并不会切换tab，只是聚焦tabbar而已，一般请使用switchToTab
+ * @param id
+ */
 function focusTab(id){
   if(typeof attachedTab ==='undefined'){
     //未设置attach，无需操作
@@ -671,5 +687,6 @@ module.exports = {
   moveTabRight,
   duplicateTab,
   duplicateCopyTab,
-  focusTab
+  focusTab,
+  detachTab
 }
