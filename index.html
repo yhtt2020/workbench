@@ -611,8 +611,11 @@
   })
 
 
-
   let isBlockTips = setting.get('isBlockTips')
+  if(setting.get('filtering') === undefined){
+    setting.set('filtering',{"blockingLevel":0,"contentTypes":[],"exceptionDomains":[]})
+  }
+
   if(setting.get('filtering').blockingLevel !== 0 && !isBlockTips){
     const myVar = setInterval(function () {
       if(setting.get('filteringBlockedCount')>200){
