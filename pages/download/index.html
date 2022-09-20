@@ -109,7 +109,11 @@
                     <img :src="url=(`./icon/${matchFileSuffixType(item.name)}.svg`)" style="height: 100%;width: 100%"/>
                   </div>
                   <div style="display: flex;flex-direction: column;margin-left: 10px;width: 115px">
-                    <div style="font-weight: bold;width: 200px">{{ item.title }}</div>
+                    <div style="display: flex">
+                      <div class="title">{{ item.title }}</div>
+<!--                      <div>{{item}}</div>-->
+                    </div>
+
                     <div style="color:#999">{{ item.total }}</div>
                   </div>
                   <div style="margin-top: 20px">{{ item.doneDate }}</div>
@@ -275,11 +279,8 @@
 
   ipcRenderer.on('download-info', async (event, args) => {
     let i
-    let simpleName
-    if (args.name.length >= 20) {
-      simpleName = args.name.substring(0, 7) + '...' + args.name.substring(args.name.length - 6, args.name.length)
-    } else (simpleName = args.name)
-
+    let fileName = args.name.substring(0, args.name.lastIndexOf("."))
+    let suffixName = args.name.substring(args.name.lastIndexOf("."))
     if (args.status === 'start') {
       appVue.list.forEach(item => {
         if (item.startTime === args.startTime) {
@@ -291,7 +292,7 @@
       appVue.list.unshift({
         name: args.name,
         id: appVue.id++,
-        title: simpleName,
+        title: fileName,
         received: '',
         realData: '',
         total: '',
@@ -303,6 +304,7 @@
         href: args.href,
         suffixal: path.extname(args.name)
       })
+      console.log(appVue.list)
 
       db.download.add({
         name: args.name,
@@ -371,7 +373,7 @@
       // ipcRenderer.send('closeEmpty')
       appVue.list.forEach(function (item, index, arr) {
         if (item.startTime === args.startTime) {
-          item.title = simpleName
+          item.title = fileName
           item.received = args.size.received
           item.realData = args.realData
           item.total = args.size.total
@@ -394,7 +396,7 @@
       appVue.doneList.unshift({
         name: args.name,
         id: appVue.doneId++,
-        title: simpleName,
+        title: fileName,
         total: args.size.total,
         path: args.path,
         url: args.url,
@@ -474,12 +476,8 @@
     created () {
       db.download.toArray().then(dblist => {
         for (let i = 0; i <= dblist.length; i++) {
-          let simpleName
-          if (dblist[i].title.length >= 20) {
-            simpleName = dblist[i].title.substring(0, 7) + '...' + dblist[i].title.substring(dblist[i].title.length - 6, dblist[i].title.length)
-          } else {
-            simpleName = dblist[i].title
-          }
+          let fileName = dblist[i].name.substring(0,dblist[i].name.lastIndexOf("."))
+
           if(dblist[i].state === DOWNLOAD_STATUS.LOADING || dblist[i].state === DOWNLOAD_STATUS.BREAK){
             db.download.put({
               name: dblist[i].name,
@@ -496,7 +494,7 @@
             appVue.list.unshift({
               name: dblist[i].name,
               id: appVue.id++,
-              title: simpleName,
+              title: fileName,
               path: '',
               url: dblist[i].url,
               startTime: dblist[i].startTime,
@@ -531,7 +529,7 @@
             appVue.doneList.unshift({
               name: dblist[i].name,
               id: appVue.doneId++,
-              title: simpleName,
+              title: fileName,
               total: dblist[i].total,
               path: dblist[i].path,
               url: dblist[i].url,
@@ -564,7 +562,7 @@
             appVue.deleteList.unshift({
               name: dblist[i].name,
               id: appVue.doneId++,
-              title: simpleName,
+              title: fileName,
               total: dblist[i].total,
               path: dblist[i].path,
               url: dblist[i].url,
@@ -911,6 +909,16 @@
   }
   .beautiful-sm-scroll::-webkit-scrollbar-corner {
     background: #f6f6f6;
+  }
+  .title{
+    font-weight: bold;
+    width: 200px;
+    word-break: break-all;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1; /* 这里是超出几行省略 */
+    overflow: hidden;
   }
 </style>
 
