@@ -277,6 +277,9 @@ app.on('ready', () => {
           title:'轻聊',
           icon:path.join(__dirname,'pages/group/group.png')
         },
+        viewOption:{
+          minWidth:400
+        } ,
         webPreferences:{
             preload:path.join(__dirname,'src/browserApi/apiPreload.js'),
             sandbox:false,
