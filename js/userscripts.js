@@ -323,7 +323,6 @@ return ele
     webviews.bindEvent('dom-ready', (tabId)=>{
       userscripts.systemScripts.forEach((script)=>{
         userscripts.runScript(tabId, script)
-        console.log('运行了系统脚本',script)
       })
     })
 

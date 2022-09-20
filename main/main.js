@@ -30,7 +30,7 @@ crashReporter.start({
 })
 
 if (process.argv.some(arg => arg === '-v' || arg === '--version')) {
-	console.log('Min: ' + app.getVersion())
+	console.log('TSBrowser: ' + app.getVersion())
 	console.log('Chromium: ' + process.versions.chrome)
 	process.exit()
 }
@@ -326,7 +326,6 @@ function createWindowWithBounds(bounds) {
 		mainWindowIsMinimized = false
     if(process.platform==='win32' && !changingSpace){
       if(userWindow){
-        console.log('userWindow存在，直接取消关闭')
         return
       }
      //windows上，且不是在切换空间，则关闭整个应用

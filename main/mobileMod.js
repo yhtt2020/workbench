@@ -243,7 +243,6 @@ app.whenReady().then(() => {
   })
 
   ipc.on('mobileResetSize', (event, args) => {
-    console.log(mobileWindows[args.id])
     mobileWindows[args.id].setSize(initSize.width, initSize.height)
   })
 })

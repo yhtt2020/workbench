@@ -415,7 +415,7 @@ const webviews = {
         $toolbar.setCanRead(true)
       }
     }else{
-      console.log('update了一个非选中的tab信息')
+      //console.log('update了一个非选中的tab信息')
     }
   },
   updateAppStatus(tabData){

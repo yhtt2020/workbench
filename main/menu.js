@@ -582,9 +582,8 @@ function installDevPlugin (plugin) {
     sessions.forEach(ses=>{
       if(!ses.getExtension(extension.id)){
         ses.loadExtension(extension.path).catch(e=>{
-          console.log(e)
+          console.warn(e)
         })
-        console.log('added ',extension.path)
       }
     })
   })

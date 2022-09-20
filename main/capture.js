@@ -18,7 +18,6 @@ ipc.on('start-capture', function(events){
 ipc.on('return-content-size', function (events, size) {
   contentSize = size
   captureTimes = Math.ceil(contentSize.height/contentSize.windowHeight)
-  console.log(captureTimes)
   targetWindow.webContents.send('move-page-to', 1)
 })
 ipc.on('return-move-page', function (events, page) {
@@ -37,7 +36,6 @@ ipc.on('return-move-page', function (events, page) {
       if (!fsExistsSync(tempDir)) {
         fs.mkdirSync(tempDir)
       }
-      console.log('create ',tempDir)
       fs.writeFile(tempDir + '/' + page + '.png', image.toPNG(), function(err){
         if (page !== captureTimes) {
           targetWindow.webContents.send('move-page-to', page + 1)

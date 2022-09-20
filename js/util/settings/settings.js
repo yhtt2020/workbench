@@ -54,7 +54,7 @@ var settings = {
     })
 
 	ipc.on('returnIsDefaultBrowser',function(e,value){
-		console.log(value)
+		//console.log(value)
 	})
   }
 }
