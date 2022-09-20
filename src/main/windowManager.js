@@ -105,7 +105,6 @@ class ViewManager {
     let parentBounds = mainWindow.getBounds()
     Object.keys(viewMap).forEach(key => {
       let view = viewMap[key]
-      let viewBounds = view.getBounds()
       let bounds = {
         x: viewBounds.x,
         y: viewBounds.y,

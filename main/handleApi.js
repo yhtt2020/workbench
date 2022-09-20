@@ -32,5 +32,9 @@ app.whenReady().then(()=>{
     sendIPCToMainWindow('changeTabAttach',{tab:args.tab})
     windowManager.setTabAttach({tab:args.tab})
   })
+
+  ipc.on('detachTab',(event,args)=>{
+    windowManager.detachTab()
+  })
 })
 
