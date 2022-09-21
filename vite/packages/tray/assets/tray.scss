@@ -2,11 +2,12 @@
   height: 100px;
 }
 .box-title{
+  background-color: #252525;
   padding-left: 10px;
-  height: 30px;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  background-color: #171717
+  line-height: 35px;
+  //background-color: #171717
 }
 
 .box-icon {
@@ -26,4 +27,16 @@
   background-color: #252525;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
+}
+.text-more {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.text-button{
+&:hover{
+  opacity: 0.8;
+}
+  color:white !important;
 }

@@ -44,6 +44,7 @@ const messageModel = {
     return await sqlDb.knex('message').orderBy('create_time', 'desc').select()
   },
 
+
   /**
    * sqldb 根据消息类型查询此类型的所有消息
    * @param {String} type 查询的消息类型

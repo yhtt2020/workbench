@@ -55,6 +55,14 @@ function createTrayWin () {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
+      sandbox:false,
+      preload:(__dirname+'/src/preload/trayPreload.js'),
+      additionalArguments: [
+        '--user-data-path=' + app.getPath('userData'),
+        '--app-version=' + app.getVersion(),
+        '--app-name=' + app.getName(),
+        ...((isDevelopmentMode ? ['--development-mode'] : [])),
+      ],
     }
   })
   trayWindow.webContents.loadURL(getUrl('tray.html'))

@@ -12,11 +12,11 @@
         <a-progress strokeColor="#f59923" trailColor="#4d4d4d" :percent="percentage" :showInfo="false" />
       </div>
       <div class="flex">
-        <span class="text-content-b">共打开: {{pageCount}}个网页</span>
+        <span class="text-content-b">共打开: {{pageCount}}个网页</span> &nbsp;
         <span class="text-content-b">{{appCount}}个应用</span>
       </div>
       <div style="text-align: right">
-        <a-button type="text" size="small" @click="release()" style="font-size: 12px;color: #d9d9d9;"><rocket-outlined /> 释放</a-button>
+        <span class="text-button" size="small" @click="release()" style="font-size: 12px;"><rocket-outlined /> 释放</span>
       </div>
     </div>
   </div>
