@@ -8,9 +8,7 @@ var osu=require('node-os-utils')
 function sendIPCToTrayWindow (action, data) {
   // if there are no windows, create a new one
   if (trayWindow === null) {
-    getTrayWindow(function () {
-      trayWindow.webContents.send(action, data || {})
-    })
+   return
   } else {
     trayWindow.webContents.send(action, data || {})
   }
@@ -41,7 +39,7 @@ function createTrayWin () {
   trayWindow = new BrowserWindow({
     frame: false,
     width: 400,
-    height: 580,
+    height: 430,
     sandbox: false,
     // disableDialogs:true,
     resizable: false,
@@ -60,6 +58,13 @@ function createTrayWin () {
     }
   })
   trayWindow.webContents.loadURL(getUrl('tray.html'))
+  trayWindow.on('ready-to-show',()=>{
+    trayWindow.show()
+  })
+  trayWindow.on('blur',()=>{
+    trayWindow.close()
+    trayWindow=null
+  })
 }
 function getUrl (url) {
   let protocolUrl
@@ -72,42 +77,35 @@ function getUrl (url) {
 
 let tray=null
 app.whenReady().then(() => {
+  ipc.on('getMemory',(event,args)=> {
+    var obj = Object.keys(viewMap);
+    var pageCount = obj.map(key => viewMap[key]).length
+    var appCount = appManager.saApps.length
+    getMemory().then(info => {
+      let data = {
+        mem: info,
+        pageCount: pageCount,
+        appCount: appCount
+      }
+      event.reply('getMemory', data)
+    })
+  })
+  ipc.on('getUserInfo',(event,args)=>{
+    getUserInfo().then(r => {
+      sendIPCToTrayWindow('userInfo',r.data)
+    })
+  })
+
   if(process.platform==='darwin'){
     tray = new Tray(path.join(__dirname,'/icons/tray/mac/tray.png'))
   }else{
     tray = new Tray(path.join(__dirname,'/icons/tray/win/tray.png'))
   }
-
-  getTrayWindow()
-
-  setInterval(function () {
-    var obj = Object.keys(viewMap);
-    var pageCount = obj.map(key => viewMap[key]).length
-    var appCount = appManager.saApps.length
-    getMemory().then(r =>{
-      sendIPCToTrayWindow('getMemory', {
-        mem:r,
-        pageCount:pageCount,
-        appCount:appCount
-      })
-    })
-  }, 2000)
-
-  trayWindow.on('blur',()=>{
-    trayWindow.hide()
-  })
-
-
-  tray.setToolTip("我是托盘菜单")
+  tray.setToolTip("想天浏览器")
   tray.on('click', function(event,position) {
-    getUserInfo().then(r => {
-      sendIPCToTrayWindow('userInfo',r.data)
-    })
-
-    if(mainWindow!=null && !mainWindow.isDestroyed()){
-      trayWindow.setPosition(position.x - 350,position.y - 580)
-    }
-    trayWindow.show()
+    getTrayWindow()
+    trayWindow.setPosition(position.x - 350,position.y - 580)
+    return false
     // pool.usePop({
     //   url: render.getUrl('tray.html'),
     //   width: 400,
@@ -118,39 +116,42 @@ app.whenReady().then(() => {
     //
     // })
   })
-
-  tray.on('right-click', function(event,position) {
-    const contextMenu = Menu.buildFromTemplate([
-      {
-        label: '打开主界面',
-        click: () => {
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: '打开主界面',
+      click: () => {
+        if(!mainWindow){
+          createWindow()
+        }else{
           mainWindow.show()
         }
-      },
-      {
-        label: '切换账号空间',
-        click: () => {
-          showUserWindow()
+      }
+    },
+    {
+      label: '切换账号空间',
+      click: () => {
+        showUserWindow()
+      }
+    },
+    {
+      label: '全局搜索',
+      click: () => {
+        globalSearchMod.init()
+        //statsh 点击打开全局搜索
+        if(globalSearch && globalSearch.isFocused()) {
+          statsh.do({
+            action: 'increase',
+            key: 'globalSearchBaseClickOpen',
+            value: 1
+          })
         }
-      },
-      {
-        label: '全局搜索',
-        click: () => {
-          globalSearchMod.init()
-          //statsh 点击打开全局搜索
-          if(globalSearch && globalSearch.isFocused()) {
-            statsh.do({
-              action: 'increase',
-              key: 'globalSearchBaseClickOpen',
-              value: 1
-            })
-          }
-        }
-      },
-      {
-        label: '退出',
-      },
-    ])
-    tray.setContextMenu(contextMenu)
+      }
+    },
+    {
+      label: '关闭浏览器',
+    },
+  ])
+  tray.on('right-click',()=>{
+    tray.popUpContextMenu(contextMenu)
   })
 })
