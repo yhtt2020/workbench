@@ -2,7 +2,7 @@
 const groupApi = require('../../src/api/groupApi')
 const userStatsModel = require('../util/model/userStatsModel')
 const userApi = require('../../src/api/userApi')
-const messageModel = require('../util/model/messageModel')
+const messageModel = require('../../src/model/messageModel')
 const {tools} = require('../util/util')
 const spaceModel = require('../../src/model/spaceModel')
 const statsh = require('../../js/util/statsh/statsh')
@@ -268,23 +268,23 @@ window.onload = function() {
       //设置全部的消息列表
       SET_ALLMESSAGES: (state, messages) => {
         messages.forEach(v => {
-          v.time = tools.formatTime(v.timestamp)
+          v.time = tools.formatTime(v.create_time)
         });
         state.allMessages = messages
       },
       //添加消息
       ADD_MESSAGE: (state, messages) => {
-        messages.time = tools.formatTime(messages.timestamp)
+        messages.time = tools.formatTime(messages.create_time)
         state.allMessages.unshift(messages)
       },
       //根据id删除单个消息
       DEL_MESSAGE_BYID: (state, id) => {
-        const index = state.allMessages.findIndex(v => v.id === id)
+        const index = state.allMessages.findIndex(v => v.nanoid === id)
         state.allMessages.splice(index, 1)
       },
       //根据type删除消息
       DEL_MESSAGES_BYTYPE: (state, type) => {
-        const result = state.allMessages.filter(v => v.messageType !== type)
+        const result = state.allMessages.filter(v => v.type !== type)
         state.allMessages = result
       },
       //删除所有消息
@@ -513,6 +513,7 @@ window.onload = function() {
       },
       async getAllMessage({commit}) {
         const result = await messageModel.allList()
+        console.log(result)
         commit('SET_ALLMESSAGES', result)
       },
       async deleteMessageById({commit}, options) {
@@ -632,11 +633,11 @@ ipc.on('sideSetAuto',(event,args)=>{
 
 ipc.on('storeMessage', async (event, args) => {
   let message = {}
-  message.messageType = args.type
-  message.timestamp = Date.now()
+  message.type = args.type
+  message.create_time = Date.now()
   message.title = args.title
   message.body = args.body
-  message.indexName = args.indexName ?? null
+  message.index_name = args.indexName ?? null
   message.avatar = args.avatar
   await messageModel.add(message)
 
@@ -650,11 +651,11 @@ ipc.on('webOsNotice', async(event, args) => {
   if(settingStatus[index].notice && settingStatus[index].childs[childIndex].notice) {
     //如果允许通知，存入dexie和vuex
     let message = {}
-    message.messageType = 'webOs'
-    message.timestamp = Date.now()
+    message.type = 'webOs'
+    message.create_time = Date.now()
     message.title = args.url
     message.body = `${args.title}【${args.body}】`
-    message.indexName = null,
+    message.index_name = null,
     message.avatar = args.icon ? args.icon : args.favicon
     await messageModel.add(message)
 

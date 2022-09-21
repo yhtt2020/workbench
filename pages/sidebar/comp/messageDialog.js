@@ -36,25 +36,25 @@ const messageTempl = /* html */`
           <div class="lumen-content flex flex-direction justify-center align-center" v-show="!messageListStatus.groupChat.fold">
             <ul>
               <template>
-                <a-dropdown :trigger="['contextmenu']" class="flex justify-between align-center" v-for="(item, index) in groupMessage" :key="item.id">
+                <a-dropdown :trigger="['contextmenu']" class="flex justify-between align-center" v-for="(item, index) in groupMessage" :key="item.nanoid">
                   <transition name="slide-fade">
                     <li @click="openMenuClick(item)">
                       <div class="flex flex-direction justify-around align-start">
                         <div class="flex justify-start align-center">
-                          <img @error="errorPic($event, item)" :src="item.avatar.length > 0 ? item.avatar : item.indexName.startsWith('1_') ? 'https://apps.vip/img/anonymity.png' : '../../icons/svg/chat.svg'" alt="" style="width: 20px; height: 20px; margin-right: 8px; border-radius: 5px; object-fit: cover;">
+                          <img @error="errorPic($event, item)" :src="item.avatar.length > 0 ? item.avatar : item.index_name.startsWith('1_') ? 'https://apps.vip/img/anonymity.png' : '../../icons/svg/chat.svg'" alt="" style="width: 20px; height: 20px; margin-right: 8px; border-radius: 5px; object-fit: cover;">
                           <span class="text-black" style="font-weight: 500;">{{item.title}}</span>
                         </div>
                         <span class="text-grey-sm sg-omit2-sm" style="width: 94%">{{item.body}}</span>
                         <span class="text-grey-sm">{{item.time}}</span>
                       </div>
-                      <a-icon class="closex" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click.stop="removeMessage(item.id)"></a-icon>
+                      <a-icon class="closex" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click.stop="removeMessage(item.nanoid)"></a-icon>
                     </li>
                   </transition>
                   <a-menu slot="overlay">
                     <a-menu-item key="1"  @click="openMenuClick(item)">
                       打开
                     </a-menu-item>
-                    <a-menu-item key="2" @click="delMenuClick(item.id)">
+                    <a-menu-item key="2" @click="delMenuClick(item.nanoid)">
                       删除
                     </a-menu-item>
                     <a-menu-item key="3" @click="noReceived(item)">
@@ -77,7 +77,7 @@ const messageTempl = /* html */`
           <div class="osx-content flex flex-direction justify-center align-center" v-show="!messageListStatus.community.fold">
             <ul>
               <template>
-                <a-dropdown :trigger="['contextmenu']" class="flex justify-between align-center" v-for="(item, index) in communityMessage" :key="item.id">
+                <a-dropdown :trigger="['contextmenu']" class="flex justify-between align-center" v-for="(item, index) in communityMessage" :key="item.nanoid">
                   <transition name="slide-fade">
                     <li>
                       <div class="flex flex-direction justify-around align-start">
@@ -88,14 +88,14 @@ const messageTempl = /* html */`
                         <span class="text-grey-sm sg-omit2-sm" style="width: 94%">{{item.body}}</span>
                         <span class="text-grey-sm">{{item.time}}</span>
                       </div>
-                      <a-icon class="closex" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click.stop="removeMessage(item.id)"></a-icon>
+                      <a-icon class="closex" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click.stop="removeMessage(item.nanoid)"></a-icon>
                     </li>
                   </transition>
                   <a-menu slot="overlay">
-                    <a-menu-item key="1" @click="openMenuClick(item.id)">
+                    <a-menu-item key="1" @click="openMenuClick(item.nanoid)">
                       打开
                     </a-menu-item>
-                    <a-menu-item key="2" @click="delMenuClick(item.id)">
+                    <a-menu-item key="2" @click="delMenuClick(item.nanoid)">
                       删除
                     </a-menu-item>
                     <a-menu-item key="3" @click="noReceived(item)">
@@ -118,7 +118,7 @@ const messageTempl = /* html */`
           <div class="webos-content flex flex-direction justify-center align-center" v-show="!messageListStatus.webOs.fold">
             <ul>
               <template>
-                <a-dropdown :trigger="['contextmenu']" class="flex justify-between align-center" v-for="(item, index) in webOsMessage" :key="item.id">
+                <a-dropdown :trigger="['contextmenu']" class="flex justify-between align-center" v-for="(item, index) in webOsMessage" :key="item.nanoid">
                   <transition name="slide-fade">
                     <li @click="openMenuClick(item)">
                       <div class="flex flex-direction justify-around align-start">
@@ -129,14 +129,14 @@ const messageTempl = /* html */`
                         <span class="text-grey-sm sg-omit-sm" style="width: 94%">{{item.body}}</span>
                         <span class="text-grey-sm">{{item.time}}</span>
                       </div>
-                      <a-icon class="closex" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click.stop="removeMessage(item.id)"></a-icon>
+                      <a-icon class="closex" type="close-circle" theme="filled" :style="{ fontSize: '16px' }" @click.stop="removeMessage(item.nanoid)"></a-icon>
                     </li>
                   </transition>
                   <a-menu slot="overlay">
                     <a-menu-item key="1" @click="openMenuClick(item)">
                       打开
                     </a-menu-item>
-                    <a-menu-item key="2" @click="delMenuClick(item.id)">
+                    <a-menu-item key="2" @click="delMenuClick(item.nanoid)">
                       删除
                     </a-menu-item>
                     <a-menu-item key="3" @click="noReceived(item)">
@@ -190,17 +190,17 @@ Vue.component("message-center", {
   computed: {
     groupMessage() {
       return this.$store.getters.getAllMessages.filter(
-        (v) => v.messageType === "groupChat"
+        (v) => v.type === "groupChat"
       );
     },
     communityMessage() {
       return this.$store.getters.getAllMessages.filter(
-        (v) => v.messageType === "community"
+        (v) => v.type === "community"
       );
     },
     webOsMessage() {
       return this.$store.getters.getAllMessages.filter(
-        (v) => v.messageType === "webOs"
+        (v) => v.type === "webOs"
       );
     },
     isSilent: {
@@ -224,7 +224,7 @@ Vue.component("message-center", {
     },
     errorPic(event, item) {
       let img = event.srcElement;   //当前元素
-      img.src = item.indexName.startsWith('1_') ? 'https://apps.vip/img/anonymity.png' : '../../icons/svg/chat.svg';
+      img.src = item.index_name.startsWith('1_') ? 'https://apps.vip/img/anonymity.png' : '../../icons/svg/chat.svg';
       img.onerror = null; //防止闪图
     },
     showGroup() {
@@ -247,20 +247,20 @@ Vue.component("message-center", {
       this.$store.dispatch("deleteMessageById", id);
     },
     openMenuClick(item) {
-      if(item.messageType === 'groupChat') {
+      if(item.type === 'groupChat') {
         ipc.send('mesageOpenOperate', {
           saAppId: 1,
           type: 'groupChat',
-          indexName: item.indexName
+          indexName: item.index_name
         })
-      } else if(item.messageType === 'webOs') {
+      } else if(item.type === 'webOs') {
         ipc.send('addTab',{url: item.title});
-      } else if(item.messageType === 'community') {
+      } else if(item.type === 'community') {
         //todo
       }
     },
     noReceived(item) {
-      if(item.messageType === 'groupChat') {
+      if(item.type === 'groupChat') {
         let messageSetting = JSON.parse(localStorage.getItem('messageSetting'))
         let index = messageSetting.findIndex(v => v.appId === 1)
         messageSetting[index].notice = false
@@ -270,9 +270,9 @@ Vue.component("message-center", {
         ipc.send("notificationSettingStatus", messageSetting)
         localStorage.setItem("messageSetting", JSON.stringify(messageSetting))
         this.silent = true
-      } else if(item.messageType === 'groupChat') {
+      } else if(item.type === 'groupChat') {
         //todo
-      } else if(item.messageType === 'webOs') {
+      } else if(item.type === 'webOs') {
         //console.log(settings, ' label！！！')
         let webMessage = settings.get('noticeWebOrigin')
         //console.log(webMessage, ' label！！！')
