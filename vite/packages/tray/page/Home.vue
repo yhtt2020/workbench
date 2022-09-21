@@ -1,6 +1,6 @@
 <template>
-  <div class="header flex justify-between align-center" style="width: 100%;height: 45px">
-    <span style="color:#f3f3f3;font-size: 16px;margin-left: 10px">快捷面板</span>
+  <div class="header flex justify-between align-center" style="width: 100%;height: 32px">
+    <span style="color:#f3f3f3;font-size: 14px;margin-left: 10px">快捷面板</span>
     <div hidden class="flex justify-between align-center" style="margin-right: 10px">
       <div
         style="width: 90px;height: 22px;border-radius: 6px;background-color: #4f4f4f;line-height: 22px;text-align: center;color: #f3f3f3">
@@ -28,7 +28,7 @@
         <Cache></Cache>
       </a-col>
       <a-col class="rank flex flex-direction" :span="23">
-        <div class="flex" style="margin-top: 10px">
+        <div class="flex">
           <div class="head">
             <a-avatar style="position: relative;cursor: pointer" :size="55"
                       :src="avatar">

@@ -26,7 +26,6 @@ body{
 }
 .box{
   width: 400px;
-  height: 100vh;
   background-color: #323232;
   border-radius: 10px;
 }

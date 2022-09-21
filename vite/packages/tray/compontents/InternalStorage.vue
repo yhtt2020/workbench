@@ -1,11 +1,11 @@
 <template>
   <div class="main" >
     <div class="title flex justify-start align-center">
-      <span class="text-title" style="margin-left: 10px">内存 {{total}} GB</span>
+      <dashboard-outlined  style="color: #F5F5F5;fontSize:22px;margin-left: 10px" /> <span class="text-title" style="margin-left: 10px">内存 {{total}} GB</span>
     </div>
     <div class="content-small flex flex-direction">
       <div class="flex justify-between" style="width: 90%;margin-left: 10px;margin-top: 5px">
-        <span class="text-content-w">占用: {{usage}} GB</span>
+        <span class="text-content-w">已用: {{usage}} GB</span>
         <span class="text-content-w">剩余: {{free}} GB</span>
       </div>
       <div style="width: 90%;margin-left: 10px">
@@ -15,7 +15,9 @@
         <span class="text-content-b" style="margin-left: 15px">共打开: {{pageCount}}个网页</span>
         <span class="text-content-b" style="margin-left: 15px">{{appCount}}个应用</span>
       </div>
-      <span @click="release()" style="font-size: 14px;margin-left: 138px;color: #d9d9d9;cursor:pointer;">释放</span>
+      <div style="text-align: right">
+        <a-button type="text" size="small" @click="release()" style="font-size: 12px;margin-left: 120px;color: #d9d9d9;"><rocket-outlined /> 释放</a-button>
+      </div>
     </div>
   </div>
 </template>
@@ -23,9 +25,14 @@
 <script>
 let { ipcMain } = require('electron')
 let { ipcRenderer } = require('electron')
+import {DashboardOutlined,RocketOutlined} from '@ant-design/icons-vue'
 import {defineComponent} from "vue";
 // var osu=require('node-os-utils')
 export default defineComponent({
+  components:{
+    DashboardOutlined,
+    RocketOutlined
+  },
   data(){
     return{
       usage:'',

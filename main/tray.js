@@ -39,7 +39,7 @@ function createTrayWin () {
   trayWindow = new BrowserWindow({
     frame: false,
     width: 400,
-    height: 430,
+    height: 410,
     sandbox: false,
     // disableDialogs:true,
     resizable: false,
@@ -62,8 +62,8 @@ function createTrayWin () {
     trayWindow.show()
   })
   trayWindow.on('blur',()=>{
-    trayWindow.close()
-    trayWindow=null
+    // trayWindow.close()
+    // trayWindow=null
   })
 }
 function getUrl (url) {
