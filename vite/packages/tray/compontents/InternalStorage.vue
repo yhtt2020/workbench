@@ -1,22 +1,22 @@
 <template>
   <div class="main" >
-    <div class="title flex justify-start align-center">
-      <dashboard-outlined  style="color: #F5F5F5;fontSize:22px;margin-left: 10px" /> <span class="text-title" style="margin-left: 10px">内存 {{total}} GB</span>
+    <div class="box-title flex justify-start align-center">
+      <dashboard-outlined  class="box-icon" /> <span class="text-title" style="margin-left: 10px">内存 {{total}} GB</span>
     </div>
-    <div class="content-small flex flex-direction">
-      <div class="flex justify-between" style="width: 90%;margin-left: 10px;margin-top: 5px">
+    <div class="box-content content-small flex flex-direction">
+      <div class="flex justify-between" >
         <span class="text-content-w">已用: {{usage}} GB</span>
         <span class="text-content-w">剩余: {{free}} GB</span>
       </div>
-      <div style="width: 90%;margin-left: 10px">
+      <div>
         <a-progress strokeColor="#f59923" trailColor="#4d4d4d" :percent="percentage" :showInfo="false" />
       </div>
       <div class="flex">
-        <span class="text-content-b" style="margin-left: 15px">共打开: {{pageCount}}个网页</span>
-        <span class="text-content-b" style="margin-left: 15px">{{appCount}}个应用</span>
+        <span class="text-content-b">共打开: {{pageCount}}个网页</span>
+        <span class="text-content-b">{{appCount}}个应用</span>
       </div>
       <div style="text-align: right">
-        <a-button type="text" size="small" @click="release()" style="font-size: 12px;margin-left: 120px;color: #d9d9d9;"><rocket-outlined /> 释放</a-button>
+        <a-button type="text" size="small" @click="release()" style="font-size: 12px;color: #d9d9d9;"><rocket-outlined /> 释放</a-button>
       </div>
     </div>
   </div>

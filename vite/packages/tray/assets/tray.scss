@@ -1,0 +1,29 @@
+.content-small {
+  height: 100px;
+}
+.box-title{
+  padding-left: 10px;
+  height: 30px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  background-color: #171717
+}
+
+.box-icon {
+  svg{
+    path{
+      fill: #F5F5F5;
+    }
+  }
+  color: #F5F5F5;
+  font-size: 22px;
+}
+.box-content{
+  color: white;
+  padding: 10px;
+  font-size: 12px;
+  height: 100px;
+  background-color: #252525;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}

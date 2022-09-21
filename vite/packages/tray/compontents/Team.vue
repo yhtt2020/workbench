@@ -1,10 +1,10 @@
 <template>
 <div class="main" >
-  <div class="title flex justify-start align-center">
-      <comment-outlined  style="color: #F5F5F5;fontSize:22px;margin-left: 10px"/>
+  <div class="box-title flex justify-start align-center">
+      <comment-outlined class="box-icon" />
       <span class="text-title" style="margin-left: 10px">轻聊</span>
   </div>
-  <div class="content-big flex flex-direction">
+  <div class="box-content content-big flex flex-direction">
     <div style="width: 100%;height: 90px">
 
     </div>
