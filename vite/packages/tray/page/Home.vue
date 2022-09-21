@@ -18,7 +18,7 @@
       <a-col class="rank flex flex-direction" :span="23">
         <div class="flex" style="margin-top: 10px">
           <div class="head">
-            <a-avatar style="position: relative;cursor: pointer" :size="60"
+            <a-avatar style="position: relative;cursor: pointer" :size="55"
                       :src="avatar">
             </a-avatar>
           </div>

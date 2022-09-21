@@ -7,12 +7,12 @@ var osu=require('node-os-utils')
 
 function sendIPCToTrayWindow (action, data) {
   // if there are no windows, create a new one
-  if (TrayWindow === null) {
+  if (trayWindow === null) {
     getTrayWindow(function () {
-      TrayWindow.webContents.send(action, data || {})
+      trayWindow.webContents.send(action, data || {})
     })
   } else {
-    TrayWindow.webContents.send(action, data || {})
+    trayWindow.webContents.send(action, data || {})
   }
 }
 
@@ -21,12 +21,12 @@ async function getUserInfo() {
   return  baseApi.axios('/app/getUserInfo', {fields: 'fans,follow,grade,post_count,signature,nickname,avatar'}, 'get')
 }
 
-let TrayWindow=null
+let trayWindow=null
 function getTrayWindow(){
-  if(TrayWindow===null){
+  if(trayWindow===null){
     createTrayWin()
   }
-  return TrayWindow
+  return trayWindow
 }
 
 async function getMemory() {
@@ -38,10 +38,10 @@ async function getMemory() {
 }
 
 function createTrayWin () {
-  TrayWindow = new BrowserWindow({
+  trayWindow = new BrowserWindow({
     frame: false,
     width: 400,
-    height: 600,
+    height: 580,
     sandbox: false,
     // disableDialogs:true,
     resizable: false,
@@ -49,14 +49,17 @@ function createTrayWin () {
     show: false,
     focusable: true,
     acceptFirstMouse: true,
+    transparent:true,
+    backgroundColor: '#00000000',
     maximizable: false,
+    skipTaskbar:true,
     alwaysOnTop: false,//调整窗口层级
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
     }
   })
-  TrayWindow.webContents.loadURL(getUrl('tray.html'))
+  trayWindow.webContents.loadURL(getUrl('tray.html'))
 }
 function getUrl (url) {
   let protocolUrl
@@ -72,19 +75,15 @@ app.whenReady().then(() => {
   if(process.platform==='darwin'){
     tray = new Tray(path.join(__dirname,'/icons/tray/mac/tray.png'))
   }else{
-    tray = new Tray(path.join(__dirname,'/img/touxiang.png'))
+    tray = new Tray(path.join(__dirname,'/icons/tray/win/tray.png'))
   }
 
+  getTrayWindow()
 
-  tray.setToolTip("我是托盘菜单")
-  tray.on('click', function(event,position) {
+  setInterval(function () {
     var obj = Object.keys(viewMap);
     var pageCount = obj.map(key => viewMap[key]).length
     var appCount = appManager.saApps.length
-    getUserInfo().then(r => {
-      sendIPCToTrayWindow('userInfo',r.data)
-    })
-
     getMemory().then(r =>{
       sendIPCToTrayWindow('getMemory', {
         mem:r,
@@ -92,12 +91,23 @@ app.whenReady().then(() => {
         appCount:appCount
       })
     })
+  }, 2000)
 
-    getTrayWindow()
+  trayWindow.on('blur',()=>{
+    trayWindow.hide()
+  })
+
+
+  tray.setToolTip("我是托盘菜单")
+  tray.on('click', function(event,position) {
+    getUserInfo().then(r => {
+      sendIPCToTrayWindow('userInfo',r.data)
+    })
+
     if(mainWindow!=null && !mainWindow.isDestroyed()){
-      TrayWindow.setPosition(position.x - 350,position.y - 600)
+      trayWindow.setPosition(position.x - 350,position.y - 580)
     }
-    TrayWindow.show()
+    trayWindow.show()
     // pool.usePop({
     //   url: render.getUrl('tray.html'),
     //   width: 400,
@@ -144,4 +154,3 @@ app.whenReady().then(() => {
     tray.setContextMenu(contextMenu)
   })
 })
-

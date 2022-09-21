@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="box">
   <div class="header flex justify-between align-center" style="width: 100%;height: 45px">
     <span style="color:#f3f3f3;font-size: 16px;margin-left: 10px">快捷面板</span>
     <div hidden class="flex justify-between align-center" style="margin-right: 10px">
@@ -38,6 +38,14 @@ export default defineComponent({
 
 <style>
 body{
-  background-color: #323232;
+  background-color: rgba(0,0,0,0);
+  user-select:none;
+}
+.box{
+    width: 400px;
+    height: 580px;
+    background-color: #323232;
+    border-radius: 10px;
+
 }
 </style>
