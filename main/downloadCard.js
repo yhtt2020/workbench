@@ -1,4 +1,4 @@
-
+const { Notification } = require('electron')
 let downloadWindow=null
 function getDownloadWindow(){
   if(downloadWindow===null){
@@ -63,6 +63,22 @@ app.whenReady().then(() => {
     }
     downloadWindow.show()
   })
+
+  const content = {
+    title:"完成提示",
+    body:"您有一项下载任务已经完成",
+  }
+  const notification = new Notification(content);
+
+  notification.on('click',()=>{
+    getDownloadWindow()
+    downloadWindow.show()
+  })
+  ipc.on('inform',()=>{
+    notification.show()
+  })
+
+
 })
 
 ipc.on('deleteFile',function (e,deletepath){
@@ -88,8 +104,8 @@ ipc.on('willDownload',()=>{
   }
   downloadWindow.focus()
   downloadWindow.show()
-
 })
+
 
 
 ipc.on('showBreakMenu', (event,args) => {

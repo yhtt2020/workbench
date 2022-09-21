@@ -49,8 +49,11 @@
                 <img :src="url=(`./icon/${matchFileSuffixType(item.name)}.svg`)" style="height: 100%;width: 100%"/>
               </div>
               <div style="display: flex;flex-direction: column;margin-left: 10px">
-                <div style="display: flex;width: 150px">
-                  <div class="title">{{ item.title }}</div>
+                <div style="display: flex;width: 230px">
+                  <a-tooltip>
+                    <template #title>{{item.name}}</template>
+                    <div class="title">{{ item.title }}</div>
+                  </a-tooltip>
                   <div style="width: 30px;font-weight: bold;">{{item.suffixal}}</div>
                 </div>
                 <div v-show="item.path !=='' && item.status==='progressing' && item.total !== '0KB'" style="font-size: 12px;width: 150px;color:#999">
@@ -113,7 +116,10 @@
                   </div>
                   <div style="display: flex;flex-direction: column;margin-left: 10px;width: 115px">
                     <div style="display: flex;width: 231px">
-                      <div class="title">{{ item.title }}</div>
+                      <a-tooltip>
+                        <template #title>{{item.name}}</template>
+                        <div class="title">{{ item.title }}</div>
+                      </a-tooltip>
                       <div style="width: 30px;font-weight: bold;">{{item.suffixal}}</div>
                     </div>
                     <div style="color:#999">{{ item.total }}</div>
@@ -151,7 +157,10 @@
                   </div>
                   <div style="display:flex; flex-direction: column;margin-left: 10px;width: 200px">
                     <div style="display: flex;width: 231px">
-                      <div class="title">{{ item.title }}</div>
+                      <a-tooltip>
+                        <template #title>{{item.name}}</template>
+                        <div class="title">{{ item.title }}</div>
+                      </a-tooltip>
                       <div style="width: 30px;font-weight: bold;">{{item.suffixal}}</div>
                     </div>
                     <div style="display: flex">
