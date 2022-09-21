@@ -21,8 +21,9 @@
 .box-content {
   color: white;
   padding: 10px;
+  padding-top: 0;
   font-size: 12px;
-  height: 100px;
+  height: 90px;
   background-color: #252525;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
@@ -39,6 +40,14 @@
 }
 .text-button:hover {
   opacity: 0.8;
+}
+
+.box-extra {
+  position: absolute;
+  right: 10px;
+}
+.box-extra svg path {
+  fill: white;
 }
 
 /*# sourceMappingURL=tray.css.map */

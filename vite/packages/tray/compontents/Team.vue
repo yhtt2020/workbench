@@ -5,7 +5,7 @@
       <span class="text-title" style="margin-left: 10px">轻聊</span>
   </div>
   <div class="box-content  flex flex-direction" style="height: auto">
-    <div style="width: 100%;margin-bottom: 5px">
+    <div style="width: 100%;margin-bottom: 5px;margin-top: 10px">
       <a-row :gutter="10">
         <a-col @click="openItem(message)" class="text-button text-more" :span="12" v-for="message in messages" style="margin-bottom: 5px">
           <span style="cursor: pointer" type="text">
