@@ -34,8 +34,22 @@
                       :src="avatar">
             </a-avatar>
           </div>
-          <div class="content" style="margin-left: 15px;width: 100%;height: 60px;margin-top: 5px">
-            <span style="color: #f3f3f3;font-size: 14px;">在线等级：{{ lv }}级</span>
+          <div class="content" @click="goDetail('grade')" style="margin-left: 15px;width: 100%;height: 60px;margin-top: 5px">
+            <span style="color: #f3f3f3;font-size: 14px;">在线等级：{{ lv }}级 &nbsp;&nbsp;
+              <span  v-if="this.lv > 0">
+                <span class="ts-grade-crown" v-for="item in onlineGrade.crown">
+                  <img :src="item.icon" alt="" style="width: 20px; height: 20px">
+                </span>
+                <span class="ts-grade-sun" v-for="item in onlineGrade.sun">
+                  <img :src="item.icon" alt="" style="width: 20px; height: 20px">
+                </span>
+                <span class="ts-grade-moon" v-for="item in onlineGrade.moon">
+                  <img :src="item.icon" alt="" style="width: 20px; height: 20px">
+                </span>
+                <span class="ts-grade-star" v-for="item in onlineGrade.star">
+                  <img :src="item.icon" alt="" style="width: 20px; height: 20px">
+                </span>
+              </span></span>
             <div class="flex" style="margin-top: 5px">
               <a-progress strokeColor="#ffffff" trailColor="#4d4d4d" :percent="percentage" :showInfo="false"
                           style="width: 165px"/>
@@ -66,6 +80,8 @@ import Task from '../compontents/Task.vue'
 import Achievement from '../compontents/Achievement.vue'
 import Cache from '../compontents/Cache.vue'
 import InternalStorage from '../compontents/InternalStorage.vue'
+
+import {mapState} from 'vuex'
 import { defineComponent } from 'vue'
 
 import {
@@ -106,6 +122,9 @@ export default defineComponent({
       percentage: ''
     }
   },
+  computed:{
+    ...mapState(['onlineGrade'])
+  },
   methods: {
     gradeTableGenerate (num) {
       let lvSys = {}
@@ -123,10 +142,14 @@ export default defineComponent({
       }
       delete lvSys['lv0']
       return lvSys
+    },
+    goDetail(path){
+      this.$router.push({name:'detail',params: { path:path}})
     }
   },
   mounted () {
     ipcRenderer.on('userInfo', (event, args) => {
+      this.$store.commit('setUser',args.data)
       this.lv = args.data.onlineGradeExtra.lv
       this.avatar = args.data.avatar
       let section = this.gradeTableGenerate(64)[this.lv + 1]
@@ -150,7 +173,10 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+.ts-grade-crown{
+  display: inline-block;
 
+}
 .rank {
   width: 380px;
   height: 75px;

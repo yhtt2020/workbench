@@ -50,7 +50,7 @@ const tpl = `
                                  <div class="badge-box" :style="{'border-color':this.getBadge().color}" >
 <a-row>
 <a-col :span="10">
-<img style="width: 75px;margin-top: 10px" :src="'./assets/badge/'+getBadge().badge+'.png'">
+<img style="width: 75px;margin-top: 10px" :src="'../../icons/badge/'+getBadge().badge+'.png'">
 <div v-if="badge.rank<100" class="badge-num" :style="{'background-color':this.getBadge().color}">{{badge.rank}}</div>
 </a-col>
 <a-col  :span="14">

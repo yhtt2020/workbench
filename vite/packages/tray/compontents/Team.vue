@@ -11,8 +11,11 @@
           <span style="cursor: pointer" type="text">
             <a-avatar v-if="message.avatar" size="small" :src="message.avatar"></a-avatar>
             <a-avatar v-else size="small" src="https://up.apps.vip/logo/group.png?t=2"></a-avatar>
-
-            &nbsp;&nbsp;{{message.body}}</span>
+            &nbsp;
+            <span v-if="message.body">
+              {{message.body}}
+            </span><span v-else>{{message.title}}</span>
+            &nbsp;&nbsp;</span>
         </a-col>
       </a-row>
     </div>

@@ -56,6 +56,7 @@ function createTrayWin () {
       nodeIntegration: true,
       contextIsolation: false,
       sandbox:false,
+      webSecurity:false,
       preload:(__dirname+'/src/preload/trayPreload.js'),
       additionalArguments: [
         '--user-data-path=' + app.getPath('userData'),
@@ -70,8 +71,8 @@ function createTrayWin () {
     trayWindow.show()
   })
   trayWindow.on('blur',()=>{
-    // trayWindow.close()
-    // trayWindow=null
+    trayWindow.close()
+    trayWindow=null
   })
 }
 function getUrl (url) {

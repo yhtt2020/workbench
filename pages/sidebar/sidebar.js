@@ -315,7 +315,7 @@ window.onload = function() {
         function handleGrade(name) {
           for(let i = 0; i < userInfo.onlineGrade[name]; i++) {
             state.onlineGrade[name].push({
-              icon: `./assets/${name}.svg`
+              icon: `../../icons/grade/${name}.svg`
             })
           }
         }

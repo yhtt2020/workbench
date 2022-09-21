@@ -64,7 +64,7 @@ export default defineComponent({
     },30000)
   },
   methods:{
-    friendlyDate:window.api.util.friendlyDate,
+    friendlyDate:window.tsbApi.util.friendlyDate,
     switchSpace(){
       ipc.send('showUserWindow')
     }
