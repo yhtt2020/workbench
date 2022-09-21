@@ -18,8 +18,8 @@
           <div style="font-size: 12px;color: grey">
             {{currentSpace.space.count_task}} 标签组 {{currentSpace.space.count_tab}}标签
           </div>
-          <div style="">
-            最后同步： {{friendlyDate(currentSpace.space.sync_time)}}
+          <div >
+            最后同步：<span class="time" v-html="friendlyDate(currentSpace.space.sync_time)"></span>
           </div>
         </div>
 
@@ -59,6 +59,9 @@ export default defineComponent({
   },
   async mounted() {
     this.currentSpace = await spaceModel.getCurrent()
+    setInterval(async ()=>{
+      this.currentSpace = await spaceModel.getCurrent()
+    },30000)
   },
   methods:{
     friendlyDate:window.api.util.friendlyDate,
@@ -73,5 +76,7 @@ export default defineComponent({
 
 
 <style>
-
+.time span{
+  color: grey;
+}
 </style>
