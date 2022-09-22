@@ -1125,9 +1125,6 @@ function showUserWindow (args) {
 
     })
     userWindow.on('close', () => {
-      if(!mainWindow){
-        app.exit()
-      }
       userWindow = null
     })
   }
