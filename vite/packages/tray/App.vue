@@ -24,6 +24,7 @@ export default defineComponent({
 body{
   background-color: rgba(0,0,0,0);
   user-select:none;
+  overflow: hidden;
 }
 .box{
   width: 400px;

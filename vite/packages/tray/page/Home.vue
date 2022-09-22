@@ -53,11 +53,23 @@
                   <img :src="item.icon" alt="" style="width: 20px; height: 20px">
                 </span>
               </span></span>
+
+
+
+
+
             <div class="flex" style="margin-top: 5px">
               <a-progress strokeColor="#ffffff" trailColor="#4d4d4d" :percent="percentage" :showInfo="false"
                           style="width: 165px"/>
-              <span
-                style="color: #f3f3f3;font-size: 14px;margin-left: 5px">{{ remainHour }}小时{{ remainMinute }}分后升级</span>
+              &nbsp; &nbsp;
+              <a-tooltip >
+                <template #title>正在累计在线时长。<br>无需启动浏览器即可累计时长。</template>
+                <thunderbolt-filled class="thunder" style="color: rgba(255,140,44,0.98);vertical-align: middle"/>
+                <span
+                  style="color: #f3f3f3;font-size: 12px;vertical-align: middle">{{ remainHour }}小时{{ remainMinute }}分后升级</span>
+              </a-tooltip>
+
+
             </div>
           </div>
           <!--          <div class="upgrade flex flex-direction" style="width: 130px;height: 60px;margin-left: 15px;margin-top: 5px">-->
@@ -105,8 +117,8 @@ import {mapState} from 'vuex'
 import { defineComponent } from 'vue'
 
 import {
-  ThunderboltOutlined, LeftOutlined,
-  RightOutlined,LoadingOutlined
+  ThunderboltFilled, LeftOutlined,
+  RightOutlined,LoadingOutlined,
 } from '@ant-design/icons-vue'
 
 
@@ -125,7 +137,7 @@ export default defineComponent({
     Task,
     Team,
     App,
-    ThunderboltOutlined,
+    ThunderboltFilled,
     LeftOutlined,
     RightOutlined,
     LoadingOutlined
@@ -207,6 +219,25 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+@keyframes twinkling {
+  0% {
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+  }
+
+  50% {
+    opacity: 1;
+    filter: alpha(opacity=100);
+  }
+
+  100% {
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+  }
+}
+.thunder{
+  animation: twinkling 1.2s ease-in-out infinite;
+}
 .ts-grade-crown{
   display: inline-block;
 
