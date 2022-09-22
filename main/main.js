@@ -511,7 +511,9 @@ app.on('second-instance', function(e, argv, workingDir) {
 		mainWindow.focus()
 		// add a tab with the new URL
 		handleCommandLineArguments(argv)
-	}
+	}else{
+    createWindow()
+  }
 })
 
 /**
