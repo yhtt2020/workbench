@@ -12,6 +12,9 @@
   </div>
   <div>
     <a-row type="flex" justify="space-around" align="top" :gutter="[0,16]">
+      <a-col hidden="" class="app" :span="23">
+        <App></App>
+      </a-col>
       <a-col class="team" :span="23">
         <Team></Team>
       </a-col>
@@ -93,6 +96,7 @@
 <script>
 import Team from '../compontents/Team.vue'
 import Task from '../compontents/Task.vue'
+import App from '../compontents/App.vue'
 import Achievement from '../compontents/Achievement.vue'
 import Cache from '../compontents/Cache.vue'
 import InternalStorage from '../compontents/InternalStorage.vue'
@@ -120,6 +124,7 @@ export default defineComponent({
     Achievement,
     Task,
     Team,
+    App,
     ThunderboltOutlined,
     LeftOutlined,
     RightOutlined,
