@@ -109,9 +109,8 @@ class Browser {
         return mainWindow
       },
       removeWindow: (browserWindow) => {
-        conosle.log('触发removeWindow')
         const win = this.getWindowFromBrowserWindow(browserWindow)
-        win?.destroy()
+        win.destroy()
       },
     })
 
