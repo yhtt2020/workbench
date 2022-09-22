@@ -37,7 +37,7 @@
                       :src="avatar">
             </a-avatar>
           </div>
-          <div class="content" @click="goDetail('grade')" style="margin-left: 15px;width: 100%;height: 60px;margin-top: 5px">
+          <div class="content" @click="goDetail('grade')" style="cursor:pointer;margin-left: 15px;width: 100%;height: 60px;margin-top: 5px">
             <span style="color: #f3f3f3;font-size: 14px;">在线等级：{{ lv }}级 &nbsp;&nbsp;
               <span  v-if="this.lv > 0">
                 <span class="ts-grade-crown" v-for="item in onlineGrade.crown">
