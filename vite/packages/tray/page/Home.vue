@@ -27,10 +27,10 @@
       <a-col hidden class="cache" :span="11">
         <Cache></Cache>
       </a-col>
-      <a-col class="rank flex flex-direction" :span="23">
+      <a-col v-if="avatar" class="rank flex flex-direction" :span="23">
         <div class="flex">
           <div class="head">
-            <a-avatar style="position: relative;cursor: pointer" :size="55"
+            <a-avatar @click="openUserSpace" style="position: relative;cursor: pointer" :size="55"
                       :src="avatar">
             </a-avatar>
           </div>
@@ -70,6 +70,22 @@
           <div class="play">娱乐模式</div>
         </div>
       </a-col>
+      <a-col v-else :span="23">
+        <div style="height: 75px;color: white;text-align: center">
+          <div v-if="loading===false">
+            <p>
+              请登录后查看用户等级信息
+            </p>
+            <p>
+              <a-button type="primary" @click="goLogin" size="small">前往登录</a-button>
+            </p>
+          </div>
+          <div v-else>
+            <loading-outlined style="font-size: 32px;padding-top: 10px" />
+          </div>
+
+          </div>
+      </a-col>
     </a-row>
   </div>
 </template>
@@ -86,7 +102,7 @@ import { defineComponent } from 'vue'
 
 import {
   ThunderboltOutlined, LeftOutlined,
-  RightOutlined
+  RightOutlined,LoadingOutlined
 } from '@ant-design/icons-vue'
 
 let { ipcMain } = require('electron')
@@ -110,10 +126,12 @@ export default defineComponent({
     Team,
     ThunderboltOutlined,
     LeftOutlined,
-    RightOutlined
+    RightOutlined,
+    LoadingOutlined
   },
   data () {
     return {
+      loading:false,
       lv: '',
       avatar: '',
       remainHour: '',
@@ -123,9 +141,18 @@ export default defineComponent({
     }
   },
   computed:{
-    ...mapState(['onlineGrade'])
+    ...mapState(['onlineGrade','user'])
   },
   methods: {
+    openUserSpace(){
+      tsbApi.user.openSpace(this.user.uid)
+    },
+    goLogin(){
+      ipc.send('login')
+      window.loginCallback=()=>{
+        ipcRenderer.send('getTrayUserInfo')
+      }
+    },
     gradeTableGenerate (num) {
       let lvSys = {}
       for (let i = 0; i < num + 1; i++) {
@@ -145,10 +172,16 @@ export default defineComponent({
     },
     goDetail(path){
       this.$router.push({name:'detail',params: { path:path}})
+    },
+    loadUserInfo(){
+      this.loading=true
+      ipcRenderer.send('getTrayUserInfo')
     }
   },
   mounted () {
+    ipc.send('resizeTray',{width:400,height:401})
     ipcRenderer.on('userInfo', (event, args) => {
+      this.loading=false
       this.$store.commit('setUser',args.data)
       this.lv = args.data.onlineGradeExtra.lv
       this.avatar = args.data.avatar
@@ -160,12 +193,12 @@ export default defineComponent({
       this.percentage = (this.minute / (section[0] * 60)) * 100
     })
     ipcRenderer.send('getMemory')
-    ipcRenderer.send('getUserInfo')
+    this.loadUserInfo()
     setInterval(()=>{
       ipcRenderer.send('getMemory')
     },2000)
     setInterval(()=>{
-      ipcRenderer.send('getUserInfo')
+      this.loadUserInfo()
     },60000)
   }
   // this.memoryUsage = await osu.mem.info()

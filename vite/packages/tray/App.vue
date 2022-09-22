@@ -1,18 +1,21 @@
 <template>
 <div class="box">
-    <router-view></router-view>
+    <router-view>
+
+    </router-view>
 </div>
 </template>
 
 <script lang="ts">
 
 import { defineComponent } from 'vue'
-
 export default defineComponent({
   components: {
   },
   mounted() {
-
+    require('electron').ipcRenderer.on('loginCallback',async (e, args) => {
+      window.loginCallback()
+    })
   }
 })
 </script>

@@ -82,7 +82,7 @@ export default defineComponent( {
   computed:{
       ...mapState(['user','onlineGrade']),
     getPath(){
-        return 'file://' +process.cwd()+'/icons/badge/'
+        return 'file://' +window.globalArgs['app-path']+'/icons/badge/'
     }
   },
   data () {

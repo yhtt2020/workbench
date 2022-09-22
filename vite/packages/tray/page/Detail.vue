@@ -41,6 +41,7 @@ export default {
   },
   mounted () {
     this.detail = detailMap[this.$route.params.path]
+    ipc.send('resizeTray',{width:400,height:430})
     console.log(this.detail)
   },
   methods:{

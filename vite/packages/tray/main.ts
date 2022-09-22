@@ -33,7 +33,7 @@ const store = createStore({
       function handleGrade(name){
         for(let i = 0; i < user.onlineGrade[name]; i++) {
           state.onlineGrade[name].push({
-            icon: 'file://' +process.cwd()+`/icons/grade/${name}.svg`
+            icon: 'file://' +window.globalArgs['app-path']+`/icons/grade/${name}.svg`
           })
         }
       }
@@ -48,13 +48,14 @@ const routes=[
     path:'/',component: Home,
   },
   {
-    path:'/detail',component: Detail,name:'detail'
+    path:'/detail',component: Detail,name:'detail',
   }
 ]
 const router=createRouter({
   history:createWebHashHistory(),
   routes
 })
+
 
 createApp(App).use(Antd).use(store).use(router).mount('#app')
 

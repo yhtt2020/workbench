@@ -16,7 +16,7 @@ function sendIPCToTrayWindow (action, data) {
 
 async function getUserInfo() {
   await baseApi.init()
-  return  baseApi.axios('/app/getUserInfo', {fields: 'fans,follow,grade,post_count,signature,nickname,avatar'}, 'get')
+  return  baseApi.axios('/app/getUserInfo', {fields: 'uid,fans,follow,grade,post_count,signature,nickname,avatar'}, 'get')
 }
 
 let trayWindow=null
@@ -99,10 +99,15 @@ app.whenReady().then(() => {
       event.reply('getMemory', data)
     })
   })
-  ipc.on('getUserInfo',(event,args)=>{
-    getUserInfo().then(r => {
-      sendIPCToTrayWindow('userInfo',r.data)
+  ipc.on('getTrayUserInfo',(event,args)=>{
+    getUserInfo().then(result => {
+      sendIPCToTrayWindow('userInfo',result.data)
     })
+  })
+  ipc.on('resizeTray',(event,args)=>{
+    if(trayWindow){
+      trayWindow.setSize(args.width,args.height)
+    }
   })
 
   if(process.platform==='darwin'){
