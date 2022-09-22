@@ -685,7 +685,7 @@
           ipcRenderer.send('showMenuIng', item.loadState)
         }
         if(item.state === DOWNLOAD_STATUS.BREAK){
-          console.log(item)
+
           ipcRenderer.send('showBreakMenu', item)
         }
       },
