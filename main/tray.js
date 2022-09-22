@@ -123,6 +123,8 @@ app.whenReady().then(() => {
   ipc.on('getTrayUserInfo',(event,args)=>{
     getUserInfo().then(result => {
       sendIPCToTrayWindow('userInfo',result.data)
+    }).catch(()=>{
+      sendIPCToTrayWindow('userInfo',{})
     })
   })
   ipc.on('resizeTray',(event,args)=>{
@@ -134,12 +136,13 @@ app.whenReady().then(() => {
   if(process.platform==='darwin'){
     tray = new Tray(path.join(__dirname,'/icons/tray/mac/tray.png'))
   }else{
-    tray = new Tray(path.join(__dirname,'/icons/tray/win/tray.png'))
+    tray = new Tray(path.join(__dirname,'/icons/logowin.ico'))
   }
   tray.setToolTip("想天浏览器")
   tray.on('click', function(event,position) {
     getTrayWindow()
-    trayWindow.setPosition(position.x - 350,position.y - 580)
+    let bounds=trayWindow.getBounds()
+    trayWindow.setPosition(position.x - bounds.width,position.y - bounds.height)
     return false
     // pool.usePop({
     //   url: render.getUrl('tray.html'),

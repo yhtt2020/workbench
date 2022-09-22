@@ -330,7 +330,7 @@ function createWindowWithBounds(bounds) {
       }
      //windows上，且不是在切换空间，则关闭整个应用
       // todo 如果做了托盘菜单，这里不需要直接退出app
-     app.quit()
+     //app.quit()
 
     }
 	})
@@ -425,7 +425,7 @@ app.on('window-all-closed', function() {
 	// On OS X it is common for applications and their menu bar
 	// to stay active until the user quits explicitly with Cmd + Q
 	if (process.platform !== 'darwin' && !changingSpace) {
-		app.quit()
+		//app.quit()
 	}
 })
 
