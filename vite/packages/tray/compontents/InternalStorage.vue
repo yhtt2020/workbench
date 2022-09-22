@@ -23,11 +23,8 @@
 </template>
 
 <script>
-let { ipcMain } = require('electron')
-let { ipcRenderer } = require('electron')
 import {DashboardOutlined,RocketOutlined} from '@ant-design/icons-vue'
 import {defineComponent} from "vue";
-// var osu=require('node-os-utils')
 export default defineComponent({
   components:{
     DashboardOutlined,
@@ -45,11 +42,11 @@ export default defineComponent({
   },
   methods:{
     release(){
-      ipcRenderer.send('toolbar.speedup')
+      ipc.send('toolbar.speedup')
     }
   },
 mounted() {
-  ipcRenderer.on('getMemory', (event, args) => {
+  ipc.on('getMemory', (event, args) => {
       this.usage = (args.mem.mem.usedMemMb / 1024).toFixed(1)
       this.total = (args.mem.mem.totalMemMb / 1024).toFixed(1)
       this.free = (args.mem.mem.freeMemMb / 1024).toFixed(1)

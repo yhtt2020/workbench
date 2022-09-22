@@ -2,7 +2,6 @@ import { createApp } from 'vue'
 import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
 import App from './App.vue'
-import tools from '../../src/util/tools.js'
 import Welcome from './pages/Welcome.vue'
 import EnterPwd from './pages/EnterPwd.vue'
 import AddAccount from './pages/AddAccount.vue'
@@ -33,6 +32,7 @@ const router=createRouter({
   history:createWebHashHistory(),
   routes
 })
+
 tools.getWindowArgs(window).globalArgs
 createApp(App).use(Antd).use(router).mount('#app')
 tools.getWindowArgs(window)

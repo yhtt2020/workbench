@@ -33,7 +33,6 @@ import {
 
 import { defineComponent } from 'vue'
 const {messageModel}=window.$models
-const ipc=require('electron').ipcRenderer
 
 export default defineComponent({
   components: {

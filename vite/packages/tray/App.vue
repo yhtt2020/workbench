@@ -13,7 +13,7 @@ export default defineComponent({
   components: {
   },
   mounted() {
-    require('electron').ipcRenderer.on('loginCallback',async (e, args) => {
+    ipc.on('loginCallback',async (e, args) => {
       window.loginCallback()
     })
   }

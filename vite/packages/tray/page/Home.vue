@@ -105,10 +105,6 @@ import {
   RightOutlined,LoadingOutlined
 } from '@ant-design/icons-vue'
 
-let { ipcMain } = require('electron')
-let { ipcRenderer } = require('electron')
-
-const osu = require('node-os-utils')
 
 // let grade
 // ipcRenderer.once('userInfo',(event,args)=>{
@@ -150,7 +146,7 @@ export default defineComponent({
     goLogin(){
       ipc.send('login')
       window.loginCallback=()=>{
-        ipcRenderer.send('getTrayUserInfo')
+        ipc.send('getTrayUserInfo')
       }
     },
     gradeTableGenerate (num) {
@@ -175,12 +171,12 @@ export default defineComponent({
     },
     loadUserInfo(){
       this.loading=true
-      ipcRenderer.send('getTrayUserInfo')
+      ipc.send('getTrayUserInfo')
     }
   },
   mounted () {
     ipc.send('resizeTray',{width:400,height:401})
-    ipcRenderer.on('userInfo', (event, args) => {
+    ipc.on('userInfo', (event, args) => {
       this.loading=false
       this.$store.commit('setUser',args.data)
       this.lv = args.data.onlineGradeExtra.lv
@@ -192,10 +188,10 @@ export default defineComponent({
       this.minute = args.data.onlineGradeExtra.minutes
       this.percentage = (this.minute / (section[0] * 60)) * 100
     })
-    ipcRenderer.send('getMemory')
+    ipc.send('getMemory')
     this.loadUserInfo()
     setInterval(()=>{
-      ipcRenderer.send('getMemory')
+      ipc.send('getMemory')
     },2000)
     setInterval(()=>{
       this.loadUserInfo()

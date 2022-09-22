@@ -43,7 +43,6 @@ import {
 } from '@ant-design/icons-vue'
 import { Empty } from 'ant-design-vue';
 import { defineComponent } from 'vue'
-const ipc=require('electron').ipcRenderer
 const {spaceModel}=window.$models
 export default defineComponent({
   components: {
