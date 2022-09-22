@@ -57,7 +57,6 @@ const appConfig = {
 }
 
 //cyx本地开发,则修改相应的配置项
-console.log('isDevelopmentMode',isDevelopmentMode)
 if(localNode && isDevelopmentMode){
   //本地环境下的配置项重置
   config.NODE_SERVER_BASE_URL = 'http://test.com:8001'
