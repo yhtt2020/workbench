@@ -129,17 +129,7 @@ const statistics = {
     }
   },
 
-  async uploadCumulativeTime() {
-    const userInfo = await userModel.getCurrent()
-    const options = {
-      uid:  userInfo && userInfo.data.uid != 0 ? userInfo.data.uid : 0,  //用户uid
-      client_id: settings.get('clientID'),     //设备号
-    }
 
-    axios.post('/app/open/usageStats/cumulativeTime', options).catch(e => {
-      console.warn('failed to send cumulative', e)
-    })
-  },
 
   initialize: async function () {
     await userStatsModel.initialize()
@@ -165,7 +155,7 @@ const statistics = {
 
     setTimeout(statistics.upload, 10 * 1000) //启动10秒后上报
     setInterval(statistics.upload, 3 * 60 * 1000) //每隔3分钟上报一次
-    setInterval(statistics.uploadCumulativeTime, 1000 * 60) //每分钟上报在线时间
+
 
     statistics.usageDataCache = settings.get('usageData') || ({
       created: Date.now()

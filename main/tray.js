@@ -86,6 +86,27 @@ function getUrl (url) {
 
 let tray=null
 app.whenReady().then(() => {
+  async function uploadCumulativeTime() {
+    try{
+      const userInfo = await userModel.getCurrent()
+      const options = {
+        uid:  userInfo && userInfo.data.uid != 0 ? userInfo.data.uid : 0,  //用户uid
+        client_id: settings.get('clientID'),     //设备号
+      }
+
+      await baseApi.init()
+      baseApi.axios('/app/open/usageStats/cumulativeTime', options,'post').catch(e => {
+        console.warn('上传在线时长失败', e)
+      })
+    }catch (e) {
+      console.warn('上传在线时间意外错误', e)
+    }
+
+  }
+  setInterval(uploadCumulativeTime, 1000 * 60) //每分钟上报在线时间
+
+
+
   ipc.on('getMemory',(event,args)=> {
     var obj = Object.keys(viewMap);
     var pageCount = obj.map(key => viewMap[key]).length
