@@ -53,7 +53,6 @@ const cloudSpaceModel={
    return standReturn.autoReturn(result)
   },
   async save (spaceId, saveData, userInfo,force=false) {
-    console.log('saveData',saveData)
     let result = await spaceApi.save(spaceId,userInfo.clientId, saveData,userInfo,force)
     return standReturn.autoReturn(result)
   },

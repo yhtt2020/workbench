@@ -99,7 +99,6 @@ const tabBar = {
   },
   //关闭左侧标签
   closeLeftTabs: function (tabId) {
-    console.log('close left')
     let tabs = tasks.getSelected().tabs
     if (tabId !== tabs.getSelected())
       require('browserUI.js').switchToTab(tabId)
@@ -314,7 +313,6 @@ const tabBar = {
           //遍历全部的标签，并修改同分区的标签为同一个名称
           if(tab.partition===tabData.partition){
             tabs.update(tab.id,{newName})
-            console.log(tab.id)
           }
         })
         tabBar.updateAll()
@@ -613,7 +611,6 @@ const tabBar = {
           }
         ],
       ])
-      console.log(template)
       remoteMenu.open(template)
       //绑定代码结束
     })
@@ -813,7 +810,6 @@ const tabBar = {
       showInSideBar: false
     }
     standAloneAppModel.install(tab.url, option).then(success => {
-      console.log(success)
       ipc.send('message', { type: 'success', config: { content: `添加应用：${tab.title} 成功` } })
       ipc.send('installApp', { id: success })
     }, err => {
@@ -892,7 +888,6 @@ if (0) {//window.platformType === 'mac'
   tabBar.dragulaInstance.containers = []
   keybindings.defineShortcut({ keys: 'mod' }, function () {
     tabBar.enableTabDragging()
-    console.log('mod')
     document.body.classList.add('disable-window-drag')
   })
 
@@ -1003,7 +998,6 @@ ipc.on('clearTaskUnlock', (event, args) => {
   let task = tasks.get(args.id)
   let deleteIds = []
   task.tabs.forEach((tab, index) => {
-    console.log(tab.lock)
     if (!!!tab.lock) {
       deleteIds.push(tab.id)
     }
@@ -1045,7 +1039,6 @@ ipc.on('getCurrentTab',(e,a)=>{
 
   let data=tabs.get(tabs.getSelected())
   data.sourceUrl=urlParser.getSourceURL(data.url)
-  console.log('getCurrentTabdddddddddddddd',data)
   ipc.send('gotCurrentTab',{data})
 })
 

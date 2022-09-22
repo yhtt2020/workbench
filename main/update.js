@@ -73,7 +73,6 @@ function checkUpdate(){
       version:checkResult.updateInfo.version,
       releaseDate:checkResult.updateInfo.releaseDate
     }
-    console.log(updateData)
 
   }).catch((error)=> {
     showError(error,'checkError')

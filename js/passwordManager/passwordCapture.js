@@ -120,7 +120,6 @@ const passwordCapture = {
         webviews.adjustMargin([passwordCapture.barHeight - oldHeight, 0, 0, 0])
       }
     })
-    console.log($toolbar.expanded)
 
   }
 }

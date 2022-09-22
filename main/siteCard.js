@@ -8,7 +8,6 @@ function createSiteCardWin (args) {
   // tabData：当前的tab对象
   if (siteCardWindow === null) {
     url=!!!url?tabData.url:url
-    console.log(tabData)
     title=!!!title?tabData.title:title
     activeTab=!!!activeTab?'base':activeTab
     const siteUrl=parseInnerURL(url)

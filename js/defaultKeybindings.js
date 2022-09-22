@@ -252,7 +252,6 @@ const defaultKeybindings = {
 
     keybindings.defineShortcut('reload', function () {
       var time = Date.now()
-      console.log(window.globalArgs)
       // pressing mod+r twice in a row reloads the whole browser
       if (time - lastReload < 500 && 'development-mode' in window.globalArgs) {
         ipc.send('message',{type:'success',config:{content:'在开发环境下，连续刷新2次，自动重载浏览器'}})

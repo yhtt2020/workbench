@@ -267,7 +267,6 @@ function destroyView(id) {
   }
   let removed=false
   if(windowManager.attachedView && windowManager.attachedView === viewMap[id]){
-    console.log('移除附着窗口')
     //如果是关闭当前吸附的窗体
     windowManager.detachTab()
     removed=true
@@ -275,7 +274,6 @@ function destroyView(id) {
   let bvs=mainWindow.getBrowserViews()
   if(removed) {
     //通过上方移除了，不需要再做移除操作
-    console.log('上面直接移除了')
   }
   bvs.forEach(bv=>{
     if(bv.webContents.id===viewMap[id].webContents.id ){
@@ -296,10 +294,6 @@ function destroyView(id) {
   //  mainWindow.setTopBrowserView(sidebarView)
   //  return
   // }
-
-  console.log('移除的id',id)
-  console.log(viewMap)
-  console.log(viewStateMap)
 }
 
 function destroyAllViews() {
@@ -382,7 +376,7 @@ ipc.on('destroyAllViews', function () {
   destroyAllViews()
 })
 ipc.on('addView',(e, args)=>{
-  // console.log('添加view',args.id,viewMap[args.id])
+  // console.log('saveData',saveData)g('添加view',args.id,viewMap[args.id])
   // mainWindow.addBrowserView(viewMap[args.id])
   // console.log('添加时设置的bounds',args.bounds)
   // let bounds=windowManager.onSetBounds(args.bounds)
@@ -395,7 +389,6 @@ ipc.on('addView',(e, args)=>{
 })
 ipc.on('setView', function (e, args) {
   if(viewStash){
-    console.log('存在暂存的view')
     viewStash.forEach((bv)=>{
       mainWindow.addBrowserView(bv)
     })
@@ -446,7 +439,7 @@ ipc.on('printToPDF',(e,args)=>{
       require('electron').shell.showItemInFolder(args.savePath)
     })
   }).catch(error => {
-    console.log(`Failed to write PDF to ${pdfPath}: `, error)
+    //console.log(`Failed to write PDF to ${pdfPath}: `, error)
     sendMessage({type:'error',config:{content:'保存为PDF失败。'}})
   })
 })
@@ -460,7 +453,6 @@ ipc.on('hideCurrentView', function (e) {
 function setCurrentBrowserView(needSetBrowserView){
   if(windowManager){
     if(windowManager.attachedView!==needSetBrowserView){
-      console.log('设置了主maintabview',mainTabView)
       mainTabView=needSetBrowserView
     }
   }

@@ -342,7 +342,7 @@ db.version(166).stores({
 })
 
 db.open().then(function () {
-  console.log('database opened ', performance.now())
+  console.info('database opened ', performance.now())
 }).catch(function (error) {
   if (error.message.indexOf(dbErrorMessage) !== -1 && !dbErrorAlertShown) {
     window && window.alert && window.alert(l('multipleInstancesErrorMessage'))

@@ -14,15 +14,12 @@ const server = {
     ipc.send('checkLogin')
     ipc.on('callback-checkLogin', (event, args) => {
       if(args) {
-        console.log(args)
         if(window.localStorage.getItem('token')) {
           return
         } else {
-          console.log(api.getUrl(api.API_URL.user.loginOrigin))
           if(href===api.getUrl(api.API_URL.user.loginOrigin)){
             let timer=setInterval(()=>{
               let els=document.getElementsByClassName('form')
-              console.log(els)
               if(els.length>0){
                 clearInterval(timer)
                 ipc.on('callback-autoLogin', (event, args) => {
@@ -55,7 +52,7 @@ const server = {
         this.login()
         break
       default:
-        console.log('在server网站下，但未命中任何预加载处理路径:'+path)
+        //console.log('在server网站下，但未命中任何预加载处理路径:'+path)
 		}
 	},
 	login() {
@@ -69,7 +66,6 @@ const server = {
             window.location.href = api.getUrl(api.API_URL.group.index)
           }, 500)
         } else {
-          console.log(arg.message)
           window.location.href = api.getUrl(api.API_URL.user.login)
         }
       })

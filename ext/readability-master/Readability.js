@@ -85,7 +85,7 @@ function Readability(doc, options) {
         dump("Reader: (Readability) " + msg + "\n");
       } else if (typeof console !== "undefined") {
         var args = ["Reader: (Readability) "].concat(arguments);
-        console.log.apply(console, args);
+        //console.log.apply(console, args);
       }
     };
   } else {

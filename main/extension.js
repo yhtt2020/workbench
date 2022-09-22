@@ -134,7 +134,6 @@ class Browser {
    * @returns {Promise<void>}
    */
   async initSessionExtensions (session) {
-    console.log('初始化一个会话的插件')
     extensions = this.extensions
     const extensionPath = path.join(userDataPath, 'extensions')
     if (!fs.existsSync(extensionPath)) {
@@ -488,7 +487,7 @@ async function askInstall (manifestPath, crxInfo) {
     )
     renderPage.openInstallExtension({ manifest, crxInfo, manifestPath })
   } catch (e) {
-    console.log(e)
+    console.warn(e)
     messager.error({ content: '插件信息读取失败，安装终止。' })
   }
 }

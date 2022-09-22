@@ -43,7 +43,7 @@ class SafariBookmarkRepository {
     const safariBookmark = new SafariBookmarkRepository(safariBookmarksFilePath)
 
     const bookmark = await safariBookmark.getBrowserBookmarks()
-    console.log(bookmark, '!!!!!!!!!')
+    //console.log(bookmark, '!!!!!!!!!')
   }
 
 }

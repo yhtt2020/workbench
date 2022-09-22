@@ -11,12 +11,10 @@ class SpiltBar {
 
   bindInnerBarEvent(innerBar){
     innerBar.addEventListener('mousedown',(e)=>{
-      console.log('发送指令开始调节')
       innerBar.setPointerCapture(1)
       ipc.send('startResizeSplitBar')
     })
     innerBar.addEventListener('mouseup',(e)=>{
-      console.log('发送指令停止调节')
       innerBar.releasePointerCapture(1)
       ipc.send('stopResizeSplitBar')
     })

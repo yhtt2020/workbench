@@ -102,7 +102,7 @@ const tsbSdk = {
       }
     });
 
-    console.log(tsbSdk.tsbSaApp, tsbSdk, "挂载了SDK");
+    //console.log(tsbSdk.tsbSaApp, tsbSdk, "挂载了SDK");
   },
 
   handleCheckAuth: function (id) {

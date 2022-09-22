@@ -73,7 +73,6 @@ protocolManager={
           break
         case 'fileAssign':
           window.view.webContents.send('fileAssign',{filePath:option.filePath})
-          console.log(option)
       }
   }
 }

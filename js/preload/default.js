@@ -204,7 +204,6 @@ if (location.href.startsWith('https://chrome.google.com/webstore')) {
       ibText +
       '</div></div></div></div>'
 
-    console.log('导入谷歌商店proload')
 
     function waitForCreation (selector, callback) {
       const element = document.querySelector(selector)
@@ -222,7 +221,6 @@ if (location.href.startsWith('https://chrome.google.com/webstore')) {
         if (event.relatedNode != element) return
 
         setTimeout(() => {
-          console.log('before enter function ')
           // eslint-disable-next-line @typescript-eslint/no-use-before-define
           InstallButton(event.target.querySelector('.h-e-f-Ra-c.e-f-oh-Md-zb-k'),)
 
@@ -261,7 +259,6 @@ if (location.href.startsWith('https://chrome.google.com/webstore')) {
       wrapper.innerHTML += ibTemplate
       this.DOM = wrapper.children[0]
 
-      console.log('run this.dom')
       /* Styling */
       this.DOM.addEventListener('mouseover', () => {
         this.DOM.className =
@@ -286,7 +283,6 @@ if (location.href.startsWith('https://chrome.google.com/webstore')) {
   injectChromeWebstoreInstallButton()
 }
 document.ondrop = function (e) {
-  console.log(e.dataTransfer.getData('url'))
   ipc.send('onDropUrl', { url: e.dataTransfer.getData('url') })
 }
 
