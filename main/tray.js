@@ -162,9 +162,22 @@ app.whenReady().then(() => {
       }
     },
     {
+      type:'separator'
+    },
+    {
       label: '关闭浏览器',
+      click(){
+        app.exit()
+      }
     },
   ])
+  tray.on('double-click',()=>{
+    if(!mainWindow){
+      createWindow()
+    }else{
+      mainWindow.show()
+    }
+  })
   tray.on('right-click',()=>{
     tray.popUpContextMenu(contextMenu)
   })
