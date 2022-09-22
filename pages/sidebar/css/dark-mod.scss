@@ -3,7 +3,24 @@ $dark-second-bg: rgb(63, 63, 63);
 $dark-primary-color: rgb(210, 210, 210);
 
 .dark-mode {
-
+  .bottomBar{
+    .ant-btn{
+      background: none !important;
+      border: none !important;
+      svg{
+        path{
+          fill: $dark-primary-color;
+        }
+      }
+    }
+    .anticon{
+      svg{
+        path{
+          fill: $dark-primary-color;
+        }
+      }
+    }
+  }
   .ant-btn:hover {
     color: #9f9f9f;
     background-color: $dark-second-bg !important;
@@ -94,5 +111,6 @@ $dark-primary-color: rgb(210, 210, 210);
     background: $dark-second-bg;
     border:none;
   }
+
 
 }

@@ -1,0 +1,20 @@
+.split-bar{
+  width: 10px;
+  display: inline-block;
+  position: fixed;
+  background: linear-gradient(to right,#ececec, #ffffff,#ececec);
+  .inner-bar{
+    display: inline-block;
+    border-radius: 100px;
+    background: rgba(169, 169, 169, 0.24);
+    &:hover{
+      background: rgba(66, 212, 255, 0.6);
+    }
+    height: 40px;
+    width: 4px;
+    position: absolute;
+    top: calc(50% - 20px);
+    left: 3px;
+    cursor: col-resize;
+  }
+}

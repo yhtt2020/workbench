@@ -1390,7 +1390,10 @@ ipc.on('dbClickClose', (e, args) => {
 
 
 app.whenReady().then(()=>{
+  let askingSpeedup=false
   ipc.on('toolbar.speedup',()=>{
+    if(askingSpeedup) return
+    askingSpeedup=true
      let ask= require('electron').dialog.showMessageBoxSync({
         message:'在加速之前，请务必确认网页表单均已保存。\n此操作将放弃全部网页内容！！！\n注意：任何加速都不会关闭当前标签。',
         buttons:['杀死所有标签(同时关闭全部应用）','杀死非锁定标签（不关闭应用）','取消'],
@@ -1408,6 +1411,7 @@ app.whenReady().then(()=>{
       case 1:
         sendIPCToMainWindow('speedup',{type:'unlock'})
     }
+    askingSpeedup=false
   })
   var osu=require('node-os-utils')
   setInterval(async ()=>{

@@ -23,6 +23,7 @@ const navbarApi = require('../../src/api/navbarApi.js')
 const baseApi = require('../../src/api/baseApi')
 const deskModel = require('../../pages/util/model/deskModel.js')
 const { ipcRenderer } = require('electron')
+const browserUI = require('browserUI.js')
 
 /**
  * 判断是不是小号标签
@@ -98,7 +99,6 @@ const tabBar = {
   },
   //关闭左侧标签
   closeLeftTabs: function (tabId) {
-    console.log('close left')
     let tabs = tasks.getSelected().tabs
     if (tabId !== tabs.getSelected())
       require('browserUI.js').switchToTab(tabId)
@@ -313,7 +313,6 @@ const tabBar = {
           //遍历全部的标签，并修改同分区的标签为同一个名称
           if(tab.partition===tabData.partition){
             tabs.update(tab.id,{newName})
-            console.log(tab.id)
           }
         })
         tabBar.updateAll()
@@ -493,6 +492,27 @@ const tabBar = {
       const tab = tabs.get(data.id)
       let templateAdd = []
       if (!tab.url.startsWith('file://')) {
+        let item
+        if(tab.attached){
+          item={
+            label:'还原到主屏…',
+            click: function () {
+              try {
+                require('../browserUI.js').detachTab(data.id)
+              } catch (e) {
+                console.warn(e)
+              }
+            }
+          }
+        }else{
+          item= {
+            id:'setAttach',
+            label:'在右侧分屏打开…',
+            click: function () {
+              tabBar.setAttach(data.id)
+            }
+          }
+        }
         templateAdd = [[
           {
             id: 'addToDesk',
@@ -505,10 +525,12 @@ const tabBar = {
             click: function () {
               tabBar.addToApps(data.id)
             },
-          }
+          },
+          item
         ]
         ]
       }
+
       let template = templateAdd.concat([
 
         [
@@ -589,7 +611,6 @@ const tabBar = {
           }
         ],
       ])
-      console.log(template)
       remoteMenu.open(template)
       //绑定代码结束
     })
@@ -671,6 +692,9 @@ const tabBar = {
 
     tabs.get().forEach(function (tab) {
       var el = tabBar.createTab(tab)
+      // if(tab.attached){
+      //   el.hidden=true
+      // }
       tabBar.containerInner.appendChild(el)
       tabBar.tabElementMap[tab.id] = el
     })
@@ -786,12 +810,16 @@ const tabBar = {
       showInSideBar: false
     }
     standAloneAppModel.install(tab.url, option).then(success => {
-      console.log(success)
       ipc.send('message', { type: 'success', config: { content: `添加应用：${tab.title} 成功` } })
       ipc.send('installApp', { id: success })
     }, err => {
       ipc.send('message', { type: 'error', config: { content: '添加应用失败' } })
     })
+  },
+  setAttach(id){
+    let tab = tabs.get(id)
+    window.mainTab=tabs.get(tabs.getSelected())
+    ipc.send('setTabAttach',{tab})
   },
   //扩充一个获取icon的方法
   createIconEl: function (tabData, loaded) {
@@ -860,7 +888,6 @@ if (0) {//window.platformType === 'mac'
   tabBar.dragulaInstance.containers = []
   keybindings.defineShortcut({ keys: 'mod' }, function () {
     tabBar.enableTabDragging()
-    console.log('mod')
     document.body.classList.add('disable-window-drag')
   })
 
@@ -971,7 +998,6 @@ ipc.on('clearTaskUnlock', (event, args) => {
   let task = tasks.get(args.id)
   let deleteIds = []
   task.tabs.forEach((tab, index) => {
-    console.log(tab.lock)
     if (!!!tab.lock) {
       deleteIds.push(tab.id)
     }
@@ -1013,9 +1039,25 @@ ipc.on('getCurrentTab',(e,a)=>{
 
   let data=tabs.get(tabs.getSelected())
   data.sourceUrl=urlParser.getSourceURL(data.url)
-  console.log('getCurrentTabdddddddddddddd',data)
   ipc.send('gotCurrentTab',{data})
 })
+
+ipc.on('changeTabAttach',(e,args)=>{
+  let tab =tabs.get(args.tab.id)
+  window.attachedTab=tab //记录下吸附的tab
+  tasks.forEach(task=>{
+    task.tabs.forEach(item=>{
+      if (item.id!==args.tab.id) {
+        item.attached=false
+      }else{
+        item.attached=true
+      }
+    })
+  })
+  tabBar.updateAll()
+  require('../browserUI.js').focusTab(args.tab.id)
+})
+
 ipc.on('speedup',(e,a)=>{
   let closed=0
   if(a.type==='all'){

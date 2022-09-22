@@ -59,7 +59,6 @@ app.whenReady().then(() => {
   ipc.on('exportScript',(event,args)=>{
     const filename=args.filename
     const path=dialog.showSaveDialogSync(userScriptWindow,{title:'导出脚本',defaultPath:args.filename})
-    console.log(path)
     if(!!!path){
       return
     }else{

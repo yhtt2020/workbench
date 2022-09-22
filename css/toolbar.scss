@@ -108,7 +108,18 @@
   .action-wrapper {
     width: 40px;
     position: relative;
-
+    &:hover::after{
+      content: "";
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      position: absolute;
+      left: 4px;
+      top: 4px;
+      background: rgba(222, 222, 222, 0.54);
+      z-index: -1;
+      border-radius: 6px;
+    }
     .bandage {
       position: absolute;
       display: inline-block;

@@ -214,7 +214,9 @@ require('sessionRestore.js').initialize().then(()=>{
   require('util/theme.js').initialize()
 //通用工具类(copy实现、深拷贝命中)
   require('util/tools.js').initialize()
-
+  const SpiltBar=require('toolbar/splitbar.js')
+  let splitBar=new SpiltBar()
+  splitBar.watch()
   const searchbar = require('searchbar/searchbar.js')
   ipc.on('importBookMarks',function(){
     searchbar.openURL('!importbookmarks', null)

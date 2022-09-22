@@ -1,5 +1,6 @@
 const oneTab = require('../extras/newTabs/oneTab.js')
 class TabList {
+
   constructor (tabs, parentTaskList) {
     this.tabs = tabs || []
     this.parentTaskList = parentTaskList
@@ -138,7 +139,7 @@ class TabList {
     return this.tabs[index] || undefined
   }
 
-  setSelected (id) {
+  setSelected (id,emitEvent=true) {
     if (!this.has(id)) {
       throw new ReferenceError('Attempted to select a tab that does not exist.')
     }
@@ -151,7 +152,11 @@ class TabList {
         this.tabs[i].lastActivity = Date.now()
       }
     }
-    this.parentTaskList.emit('tab-selected', id)
+    if(emitEvent){
+      //同时触发tab选中事件
+      this.parentTaskList.emit('tab-selected', id)
+    }
+
   }
 
   moveBy (id, offset) {

@@ -42,7 +42,6 @@ class Keychain {
   }
 
   saveCredential (domain, username, password) {
-    console.log('保存密码')
     ipcRenderer.invoke('credentialStoreSetPassword', { domain, username, password })
   }
 

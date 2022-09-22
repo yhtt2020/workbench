@@ -81,5 +81,8 @@ ipc.on('open-context-menu', function (e, data) {
   menu.on('menu-will-close', function () {
     e.sender.send('context-menu-will-close', { menuId: data.id })
   })
-  menu.popup({ x: data.x, y: data.y })
+  let cursorPosition = require('electron').screen.getCursorScreenPoint()
+  let windowBounds=mainWindow.getBounds()
+  //menu.popup({ x: data.x, y: data.y })
+  menu.popup({ x: cursorPosition.x-windowBounds.x , y: cursorPosition.y -windowBounds.y}) //修复popup弹出位置，以屏幕鼠标位置为准
 })

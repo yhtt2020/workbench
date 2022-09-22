@@ -148,7 +148,6 @@ const sessionRestore = {
       }
       if(stateString !== sessionRestore.previousState){
         let rsVersion=await spaceVersionModel.save(space.nanoid,saveData) //存储一个版本
-        console.log('存储版本成功',rsVersion)
       }
       //如果是云端，还需去云端同步
       try {

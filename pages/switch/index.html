@@ -36,7 +36,7 @@
         <ul class="item-list" style="max-width:319px">
           <li @click="openTab(item.id,item.task.id)" v-for="(item,index) in currentTabs" :class="{'active':selectedIndex===index}">
             <a-avatar :size="20" :src="item.icon" shape="square"></a-avatar>
-            {{item.title}}
+            <span v-html="item.title"></span>
           </li>
         </ul>
         <div class="title">↑最近打开标签，   <span  class="key">tab</span> 切换，<span class="key">space</span> 确认</div>
@@ -217,12 +217,10 @@
         appVue.openTab(appVue.currentTabs[appVue.selectedIndex].id, appVue.currentTabs[appVue.selectedIndex].task.id)
       },
       openTask(taskId){
-        console.log(taskId)
         ipc.send('switchToTask',{id:taskId})
         this.closeWindow()
       },
       openTab (tabId,taskId) {
-        console.log(tabId)
         ipc.send('switchToTab', { taskId: taskId, tabId: tabId })
         this.closeWindow()
       },
@@ -242,6 +240,9 @@
             tab.task.id = task.id
             tab.icon = !!!tab.favicon ? '../../icons/default.svg' : tab.favicon.url
             tab.name = !!!tab.name ? '新标签' : tab.name
+            if(tab.newName){
+              tab.title='<span style="color:#2181ff;font-weight:bold">'+tab.newName+'</span>|' +tab.name
+            }
             allTabs.push(tab)
           })
         })
