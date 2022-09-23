@@ -49,7 +49,7 @@
                 <img :src="url=(`./icon/${matchFileSuffixType(item.name)}.svg`)" style="height: 100%;width: 100%"/>
               </div>
               <div style="display: flex;flex-direction: column;margin-left: 10px">
-                <div style="display: flex;width: 230px">
+                <div style="display: flex">
                   <a-tooltip>
                     <template #title>{{item.name}}</template>
                     <div class="title">{{ item.title }}</div>
@@ -65,7 +65,7 @@
                 <div v-show="item.path ==='' && item.state !== 0 " style="font-size: 12px;width: 150px;color:#999">
                   预载中...
                 </div>
-                <div v-show="item.state === 0" style="font-size: 12px;width: 150px;color:#999">
+                <div v-show="item.state === 0 && item.status !== 'progressing'" style="font-size: 12px;width: 150px;color:#999">
                   下载中断
                 </div>
               </div>
@@ -530,6 +530,22 @@
 
           }
           if (dblist[i].state === DOWNLOAD_STATUS.DONE) {
+            if(typeof dblist[i].suffixal === 'undefined'){
+              dblist[i].suffixal = path.extname(dblist[i].name)
+              db.download.put({
+                name: dblist[i].name,
+                startTime: dblist[i].startTime,
+                title: dblist[i].title,
+                total: dblist[i].total,
+                path: dblist[i].path,
+                url: dblist[i].url,
+                state:DOWNLOAD_STATUS.DONE,
+                doneDate: dblist[i].doneDate,
+                href: dblist[i].href,
+                addTime: dblist[i].addTime,
+                suffixal: dblist[i].suffixal,
+              })
+            }
             if (typeof dblist[i].addTime === 'undefined') {
               dblist[i].addTime = '2022/7/01'
               db.download.put({
@@ -563,6 +579,22 @@
             appVue.classify()
           }
           if (dblist[i].state ===DOWNLOAD_STATUS.CANCEL || dblist[i].state ===DOWNLOAD_STATUS.DELETED) {
+            if(typeof dblist[i].suffixal === 'undefined'){
+              dblist[i].suffixal = path.extname(dblist[i].name)
+              db.download.put({
+                name: dblist[i].name,
+                startTime: dblist[i].startTime,
+                title: dblist[i].title,
+                total: dblist[i].total,
+                path: dblist[i].path,
+                url: dblist[i].url,
+                state:DOWNLOAD_STATUS.DONE,
+                doneDate: dblist[i].doneDate,
+                href: dblist[i].href,
+                addTime: dblist[i].addTime,
+                suffixal: dblist[i].suffixal,
+              })
+            }
             if (typeof dblist[i].addDelTime === 'undefined') {
               dblist[i].addDelTime = '2022/7/01'
               db.download.put({
