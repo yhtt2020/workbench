@@ -1,51 +1,44 @@
 <template>
-  <div id="titleBar" oncontextmenu="ipc.send('createAppMenu',{id:window.id,app:window.app})" class="windows"
+  <div id="titleBar" @contextmenu="showMenu"   class="windows"
        style="display: flex;justify-content: flex-start;flex-direction: row;">
-    <div class="control-actions" style="width: 120px;display: flex;justify-content: flex-start;flex-direction: row;">
+    <div class="control-actions" style="width: 120px;display: flex;justify-content: flex-start;flex-direction: row;margin-left: 10px">
+      <div id="goHome" @click="home" title="首页" class="action">
+        <span class="action-icon-wrapper"><home-outlined class="action-icon-ant" /></span>
+      </div>
       <div id="goBack" @click="goBack" title="返回" class="action" style="opacity: 0.5">
-        <svg t="1643038310188" class="icon action-icon" viewBox="0 0 1024 1024" version="1.1"
-             xmlns="http://www.w3.org/2000/svg" p-id="10623" width="200" height="200">
-          <path
-            d="M877.397333 533.632a42.666667 42.666667 0 0 1-42.666666 42.666667H316.672l228.224 228.266666a42.666667 42.666667 0 0 1-60.330667 60.330667L182.869333 563.2a42.666667 42.666667 0 0 1 0-60.330667l301.653334-301.738666a42.666667 42.666667 0 0 1 60.373333 60.373333l-229.546667 229.461333h519.381334a42.666667 42.666667 0 0 1 42.666666 42.666667z"
-            fill="#666666" p-id="10624"></path>
-        </svg>
-        <!--      <img class="action-icon" src="../../icons/toolbar/arrowleft.svg">-->
+        <span class="action-icon-wrapper">
+           <left-outlined class="action-icon-ant"/>
+        </span>
       </div>
       <div id="goForward" @click="goForward" title="前进" class="action" style="display: none">
-        <svg t="1643038483998" class="icon action-icon" viewBox="0 0 1024 1024" version="1.1"
-             xmlns="http://www.w3.org/2000/svg" p-id="10758" width="200" height="200">
-          <path
-            d="M161.536 523.52a42.666667 42.666667 0 0 1 42.666667-42.666667l518.058666 0.085334-228.266666-228.266667a42.666667 42.666667 0 0 1 60.373333-60.373333l301.653333 301.696a42.666667 42.666667 0 0 1 0 60.373333l-301.653333 301.653333a42.666667 42.666667 0 0 1-60.373333-60.330666l229.546666-229.418667-519.338666-0.042667a42.666667 42.666667 0 0 1-42.666667-42.666666z"
-            fill="#666666" p-id="10759"></path>
-        </svg>
+        <span class="action-icon-wrapper"><right-outlined  class="action-icon-ant"/></span>
       </div>
       <div id="refresh" @click="refresh" title="刷新" class="action">
-        <svg t="1643038547858" class="icon action-icon" viewBox="0 0 1024 1024" version="1.1"
-             xmlns="http://www.w3.org/2000/svg" p-id="10893" width="200" height="200">
-          <path
-            d="M477.44 85.333333c-235.648 0-426.666667 191.018667-426.666667 426.666667s191.018667 426.666667 426.666667 426.666667c184.32 0 341.418667-116.906667 401.066667-280.661334l-0.128-0.085333a42.666667 42.666667 0 1 0-80.213334-29.184l-1.92 5.418667-2.133333 5.461333A341.461333 341.461333 0 0 1 136.106667 512a341.333333 341.333333 0 0 1 582.698666-241.365333l108.202667 108.16h-153.002667a42.666667 42.666667 0 1 0 0 85.333333h257.408l2.432-0.128 1.109334-0.128 1.066666-0.128 1.493334-0.256 1.109333-0.213333a42.368 42.368 0 0 0 3.84-0.981334l0.469333-0.128a42.325333 42.325333 0 0 0 1.450667-0.512l2.090667-0.810666a42.368 42.368 0 0 0 17.109333-13.056l-3.413333 3.84a42.965333 42.965333 0 0 0 12.501333-30.122667v-256a42.666667 42.666667 0 1 0-85.333333 0v152.917333L779.093333 210.304A425.344 425.344 0 0 0 477.44 85.333333z"
-            fill="#666666" p-id="10894"></path>
-        </svg>
+        <span class="action-icon-wrapper"><redo-outlined  class="action-icon-ant"/></span>
       </div>
-      <div id="goHome" @click="home" title="首页" class="action">
-        <svg t="1643092919061" class="icon action-icon" viewBox="0 0 1024 1024" version="1.1"
-             xmlns="http://www.w3.org/2000/svg" p-id="10638" width="32" height="32">
-          <path
-            d="M929.28 358.656l0.341333 0.426667a42.368 42.368 0 0 1 9.045334 26.282666V853.333333a128 128 0 0 1-128 128H213.333333a128 128 0 0 1-128-128V384.512c0-1.024 0.085333-2.090667 0.170667-3.114667L85.333333 385.365333a43.008 43.008 0 0 1 9.045334-26.325333c2.048-2.56 4.394667-4.906667 6.954666-6.954667l0.426667-0.341333 384-300.032a42.666667 42.666667 0 0 1 52.48 0l384 300.032 0.426667 0.341333c2.474667 1.92 4.693333 4.138667 6.613333 6.570667zM512 139.434667l-341.333333 266.666666V853.333333a42.538667 42.538667 0 0 0 36.864 42.24L213.333333 896l128-0.042667v-382.592a42.666667 42.666667 0 0 1 42.666667-42.666666h256a42.666667 42.666667 0 0 1 42.666667 42.666666v382.592L810.666667 896a42.538667 42.538667 0 0 0 42.24-36.864L853.333333 853.333333V406.144l-341.333333-266.709333z m85.333333 416.597333h-170.666666v339.925333h170.666666v-339.925333z"
-            fill="#666666" p-id="10639"></path>
-        </svg>
-      </div>
+
     </div>
     <div id="addressWrapper" style="flex: auto;      line-height: 40px;">
       <input id="address" readonly
              style=" width: calc(100% - 20px);border:1px solid #cacaca;border-radius: 4px;padding: 5px;margin:5px">
     </div>
+
     <div id="title" style="flex: auto; line-height: 30px;text-align: center">
       <img onerror="this.src='../../icons/default.svg'"
            :src="app.logo"
            style="margin-top:-3px;border-radius: 100px ;background-color: white;width: 20px;height: 20px;vertical-align: middle;border:2px solid white"
            id="appLogo"><span :title="'网址：' + encodeURI(this.app.url) + '（双击复制）'" style="color: white;margin-left: 10px;font-size: 14px" id="appName" @dblclick="copyAddress">{{ app.name }}</span>
+
+
     </div>
+    <div style="display: flex;width: auto;padding-right: 10px">
+      <div class="action">
+        <span @click="showMenu" class="action-icon-wrapper">
+         <ellipsis-outlined class="action-icon-ant"/>
+        </span>
+      </div>
+      </div>
+
     <div id="windows-control"  v-if="platform==='win32'" style="width: 140px;display: flex">
       <div class="windows-caption-buttons">
         <div class="element caption-minimise"  @click="minimize" v-show="!windowIsMaximized">
@@ -86,8 +79,16 @@
 </template>
 
 <script>
+import { LeftOutlined,RightOutlined,RedoOutlined,HomeOutlined,EllipsisOutlined } from '@ant-design/icons-vue'
 export default {
   name: 'TitleBar',
+  components:{
+    LeftOutlined,
+    RightOutlined,
+    RedoOutlined,
+    HomeOutlined,
+    EllipsisOutlined
+  },
   data(){
     return {
       platform:'darwin',
@@ -159,6 +160,9 @@ export default {
 
   },
   methods: {
+    showMenu(){
+      ipc.send('createAppMenu',{id:window.id,app:window.app})
+    },
     goBack () {
       ipc.send('saAppGoBack', {
         id: window.id

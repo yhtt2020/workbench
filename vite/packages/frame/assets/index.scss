@@ -1,6 +1,6 @@
 @import "findinpage";
 
-button{
+button {
   -webkit-appearance: none;
   background: none;
   border: none;
@@ -8,22 +8,26 @@ button{
   outline: none;
 }
 
-body.mac #titleBar{
+body.mac #titleBar {
   width: calc(100vw - 65px);
   margin-left: 65px;
 }
-body.mac #title{
+
+body.mac #title {
   margin-left: -120px;
 }
-#titleBar{
+
+#titleBar {
   -webkit-app-region: drag;
 }
+
 /* Windows caption buttions */
 body {
   --control-space-top: 0px;
   --control-space-left: 0.3em;
   --control-space-right: 0.3em;
 }
+
 body.windows:not(.separate-titlebar) {
   --control-space-right: 138px;
 }
@@ -40,9 +44,10 @@ body.windows:not(.separate-titlebar) .windows-caption-buttons {
   z-index: 10;
 }
 
-.control-actions{
+.control-actions {
   -webkit-app-region: none;
 }
+
 .windows-caption-buttons .element {
   -webkit-app-region: none;
   line-height: 30px;
@@ -57,7 +62,8 @@ body.windows:not(.separate-titlebar) .windows-caption-buttons {
 body:not(.task-overlay-is-shown).dark-theme .windows-caption-buttons .element {
   stroke: #fff;
 }
-body:not(.task-overlay-is-shown).dark-theme .action-icon path{
+
+body:not(.task-overlay-is-shown).dark-theme .action-icon path {
   fill: #fff;
 }
 
@@ -69,25 +75,29 @@ body:not(.task-overlay-is-shown).dark-theme .action-icon path{
 .windows-caption-buttons .element {
   transition: background-color 0.1s linear, color 0.1s linear;
 }
+
 .windows-caption-buttons .element:hover {
   background-color: rgba(196, 196, 196, 0.4);
   transition: none;
 }
+
 .windows-caption-buttons .element:active {
   background-color: rgba(168, 168, 168, 0.5);
 }
+
 .windows-caption-buttons .element.caption-close:hover {
   background-color: #e81123;
 }
+
 .windows-caption-buttons .element.caption-close:hover > svg,
 .windows-caption-buttons .element.caption-close:active > svg {
   stroke: #fff;
   stroke-width: 1.1px;
 }
+
 .windows-caption-buttons .element.caption-close:active {
   background-color: rgba(232, 17, 35, 0.6);
 }
-
 
 
 .action {
@@ -96,17 +106,17 @@ body:not(.task-overlay-is-shown).dark-theme .action-icon path{
   text-align: center;
   line-height: 30px;
 }
-
-.action-icon {
-  padding: 3px;
-  width: 23px;
-  height: 23px;
-  vertical-align: middle;
-  border-radius: 3px;
-  margin-top: -3px;
-}
-
-.action-icon:hover {
-
-  background-color: rgba(227, 227, 227, 0.41);
+.action-icon-wrapper{
+  padding:3px;
+  line-height: 16px;
+  margin-top: 2px;
+  border-radius: 4px;
+  display: inline-block;
+  &:hover {
+    background-color: rgba(227, 227, 227, 0.41);
+  }
+  .action-icon-ant {
+    color: white;
+    font-size:19px;
+  }
 }
