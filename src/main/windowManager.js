@@ -240,6 +240,8 @@ class WindowManager {
     preload: path.join(__dirname, 'src/browserApi/apiPreload.js'),
     contextIsolation: true,
     sandbox: true,
+    shadow:true,
+    acceptFirstMouse:true,
     enableRemoteModule: false,
     allowPopups: false,
     // partition: partition || 'persist:webcontent',
