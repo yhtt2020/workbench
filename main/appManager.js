@@ -851,6 +851,7 @@ const appManager = {
           nodeIntegration: true,
           contextIsolation: false,
           sandbox: false,
+          preload:path.join(__dirname, 'src/preload/windowFramePreload.js'),
           partition: null,
           additionalArguments: [
             '--user-data-path=' + userDataPath,
@@ -865,7 +866,7 @@ const appManager = {
 
       appWindow.setMenu(null)
 
-      appWindow.webContents.loadURL('file://' + path.join(__dirname + '/pages/saApp/index.html'))
+      appWindow.webContents.loadURL(render.getUrl('frame.html'))
       appWindow.on('ready-to-show', () => {
         appWindow.webContents.send('init', {
           url: saApp.url,

@@ -25,6 +25,11 @@ export default defineComponent({
     EyeOutlined, LayoutOutlined, SearchOutlined, AimOutlined, ControlOutlined, CheckSquareOutlined, HomeOutlined,
     LockOutlined, NodeIndexOutlined, GoldOutlined, InsuranceOutlined, ExpandAltOutlined, ArrowRightOutlined
   },
+  data(){
+    return {
+      autoStart:false,
+    }
+  },
   mounted() {
     window.settings = settings
     // settings.load()
@@ -214,6 +219,11 @@ export default defineComponent({
             <h3 data-string="settingsAdditionalFeaturesHeading"></h3>
 
             <div class="setting-section">
+              <a-checkbox v-model="autoStart" >开机自启动（浏览器启动加速）</a-checkbox>
+              <p style="color: grey;">
+                开机后，自动后台启动到托盘菜单，并开始累计在线时长。此功能同时可加快浏览器的启动速度。
+              </p>
+              <br>
               <input type="checkbox" id="checkbox-userscripts"/>
               <label
                 for="checkbox-userscripts"
