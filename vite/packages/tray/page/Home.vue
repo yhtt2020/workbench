@@ -87,19 +87,28 @@
       </a-col>
       <a-col v-else :span="23">
         <div style="height: 75px;color: white;text-align: center">
-          <div v-if="loading===false">
-            <p>
-              请登录后查看用户等级信息
-            </p>
-            <p>
-              <a-button type="primary" @click="goLogin" size="small">前往登录</a-button>
-            </p>
+          <div v-if="this.loading===false">
+            <div v-if="this.user.uid===-1">
+              <p>
+                请登录后查看用户等级信息
+              </p>
+              <p>
+                <a-button type="primary" @click="goLogin" size="small">前往登录</a-button>
+              </p>
+            </div>
+            <div v-else-if="this.user.uid===-2">
+              <p style="padding-top: 15px">
+                网络异常，无法获取到用户信息
+              </p>
+            </div>
+            <div v-else>
+
+            </div>
           </div>
           <div v-else>
             <loading-outlined style="font-size: 32px;padding-top: 10px" />
           </div>
-
-          </div>
+       </div>
       </a-col>
     </a-row>
   </div>
@@ -194,6 +203,7 @@ export default defineComponent({
   mounted () {
     ipc.send('resizeTray',{width:400,height:401})
     ipc.on('userInfo', (event, args) => {
+      console.log(args)
       this.loading=false
       this.$store.commit('setUser',args.data)
       this.lv = args.data.onlineGradeExtra.lv

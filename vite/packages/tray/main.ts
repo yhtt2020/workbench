@@ -24,6 +24,12 @@ const store = createStore({
   },
   mutations: {
     setUser (state,user) {
+      if(user.uid===-1 || user.uid===-2){
+        state.user={
+          uid:user.uid
+        }
+        return
+      }
       user.onlineGradeExtra.cumulativeMinutes= user.onlineGradeExtra.cumulativeHours % 60
       user.onlineGradeExtra.cumulativeMinute = user.onlineGradeExtra.minutes
       state.onlineGrade.crown = []
