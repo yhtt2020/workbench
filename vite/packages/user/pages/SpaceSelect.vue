@@ -76,10 +76,11 @@
                   </a-menu-item>
                 </a-menu>
               </template>
-              <a-button type="text">
-                <more-outlined/>
-              </a-button>
+
             </a-dropdown>
+            <a-button @click="toggleHistory" type="text">
+              <history-outlined/> 版本历史
+            </a-button>
           </div>
         </div>
         <vue-custom-scrollbar :settings="settings" style="position:relative;height:calc(100vh - 50px);padding:10px">
@@ -145,9 +146,14 @@
       <a-layout-sider style="background: white;padding: 10px;box-shadow: 0 0 8px rgba(0,0,0,0.38)" v-if="showHistory">
         <h3>
           <history-outlined/>
-          历史版本 <span v-if="versions.length" style="font-size: 12px;color: grey">（{{ versions.length }}）</span>
+          备份版本 <span v-if="versions.length" style="font-size: 12px;color: grey">（{{ versions.length }}）</span>
           <close-outlined class="close-btn" @click="this.showHistory=false"/>
         </h3>
+        <p style="font-size: 13px">
+          单击预览；<br/>
+          双击重置空间到此版本；
+          <br>系统仅备份不同的版本。
+        </p>
         <vue-custom-scrollbar :settings="settings" style="position:relative;height: calc(100vh - 50px)">
           <VersionList @restoreVersion="restoreVersion" @setActive="setTaskList" :versions="versions"></VersionList>
         </vue-custom-scrollbar>
