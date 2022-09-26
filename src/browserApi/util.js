@@ -12,7 +12,7 @@ const util={
       if (time < 0) {
         result = `<span style="color: black;font-weight: bold">刚刚</span>`
       } else if (time / day >= 3) {
-        result = date.getMonth() + '月' + date.getDate() + '日 ' + date.getHours() + ':' + date.getMinutes()
+        result = (date.getMonth()+1) + '月' + date.getDate() + '日 ' + date.getHours() + ':' + date.getMinutes()
       } else if (time / day >= 2) {
         result = '前天' + date.getHours() + ':' + date.getMinutes()
       } else if (time / day >= 1) {

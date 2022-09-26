@@ -45,7 +45,7 @@ const spaceVersionModel = {
     let nowDate = new Date(now)
     let data = {
       nanoid: nanoid.nanoid(),
-      name: '备份_' + nowDate.getMonth() + '月' + nowDate.getDate() + '日 ' + nowDate.getHours() + ':' + nowDate.getMinutes(),
+      name: '备份_' + (nowDate.getMonth()+1) + '月' + nowDate.getDate() + '日 ' + nowDate.getHours() + ':' + nowDate.getMinutes(),
       save_time: now,
       is_conflict,
       data: saveData.data,
