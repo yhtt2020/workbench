@@ -259,9 +259,10 @@ app.on('ready', () => {
         space:24
       }
       let url=config.IM.FRONT_URL
-       if(isDevelopmentMode) {
+      if(isDevelopmentMode) {
         url='http://localhost:8000'
       }
+       url=url + config.IM.AUTO_LOGIN
        windowManager.create({
         name:CHAT_NAME,
         mod:windowManager.MOD.NO_CONTROLLER,
@@ -281,7 +282,7 @@ app.on('ready', () => {
           minWidth:400
         } ,
         webPreferences:{
-            preload:path.join(__dirname,'src/browserApi/apiPreload.js'),
+            preload:path.join(__dirname,'src/preload/chatPreload.js'),
             sandbox:false,
         },
         url,
