@@ -23,7 +23,7 @@
              style=" width: calc(100% - 20px);border:1px solid #cacaca;border-radius: 4px;padding: 5px;margin:5px">
     </div>
 
-    <div id="title" style="flex: auto; line-height: 30px;text-align: center">
+    <div id="title" style="flex: auto; line-height: 30px;text-align: center;">
       <img onerror="this.src='../../icons/default.svg'"
            :src="app.logo"
            style="margin-top:-3px;border-radius: 100px ;background-color: white;width: 20px;height: 20px;vertical-align: middle;border:2px solid white"
@@ -31,7 +31,7 @@
 
 
     </div>
-    <div style="display: flex;width: auto;padding-right: 10px">
+    <div class="extra-actions" style="display: flex;width: auto;padding-right: 10px">
       <div class="action">
         <span @click="showMenu" class="action-icon-wrapper">
          <ellipsis-outlined class="action-icon-ant"/>

@@ -8,6 +8,8 @@ button {
   outline: none;
 }
 
+
+
 body.mac #titleBar {
   width: calc(100vw - 65px);
   margin-left: 65px;
@@ -99,12 +101,17 @@ body:not(.task-overlay-is-shown).dark-theme .action-icon path {
   background-color: rgba(232, 17, 35, 0.6);
 }
 
-
+.windows {
+  .extra-actions {
+      margin-right: -20px;
+  }
+}
 .action {
   position: relative;
   width: 30px;
   text-align: center;
   line-height: 30px;
+  -webkit-app-region: none;
 }
 .action-icon-wrapper{
   padding:3px;
