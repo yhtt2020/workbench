@@ -45,15 +45,15 @@
 <!--                <a-icon type="user"></a-icon>-->
 <!--                应用分身-->
 <!--              </a-menu-item>-->
-<!--              <a-sub-menu key="dev">-->
-<!--                <span slot="title"><a-icon type="laptop"></a-icon>深度集成</span>-->
+              <a-sub-menu key="dev">
+                <span slot="title"><a-icon type="laptop"></a-icon>深度集成</span>
 <!--                <a-menu-item key="5">-->
 <!--                  菜单管理-->
 <!--                </a-menu-item>-->
-<!--                <a-menu-item key="6">-->
-<!--                  接口对接-->
-<!--                </a-menu-item>-->
-<!--              </a-sub-menu>-->
+                <a-menu-item key="6">
+                  开发者模式
+                </a-menu-item>
+              </a-sub-menu>
 
             </a-menu>
           </a-layout-sider>
@@ -122,12 +122,12 @@
                   >
 <!--                    -->
                     <div >
-                      <span class="theme-color" :style="{'background-color':this.saApp.themeColor} "></span>
+                      <span class="theme-color" :style="{'background-color':this.saApp.theme_color} "></span>
                       <div style="margin-left: 50px;margin-top: -35px">图标背景色</div>
                     </div>
-                    <div style="margin-top: 18px"><v-swatches class="color-select" @input="userThemeColorChanged" shapes="circles" v-model="saApp.userThemeColor" popover-x="left" popover-y="bottom" show-fallback swatches="text-advanced" fallback-input-type="color"></v-swatches>
+                    <div style="margin-top: 18px"><v-swatches class="color-select" @input="userThemeColorChanged" shapes="circles" v-model="saApp.user_theme_color" popover-x="left" popover-y="bottom" show-fallback swatches="text-advanced" fallback-input-type="color"></v-swatches>
                       <div style="margin-left: 50px;margin-top: -33px">自定义背景色</div>
-                    <a-button style="position: absolute;margin-left: 140px;margin-top: -21px" type="default" size="small" @click="saApp.userThemeColor='';userThemeColorChanged('')">重置</a-button>
+                    <a-button style="position: absolute;margin-left: 140px;margin-top: -21px" type="default" size="small" @click="saApp.user_theme_color='';userThemeColorChanged('')">重置</a-button>
                     </div>
                   </a-form-item>
 
@@ -270,8 +270,8 @@
     labelCol: {span: 4},
     wrapperCol: {span: 8, offset: 4},
   };
-  let standAloneModel=require('../util/model/standAloneAppModel')
-  let appId=Number(window.globalArgs['app-id'])
+  let standAloneModel=require('../../src/model/appModel.js')
+  let appId=window.globalArgs['app-id']
   var appVue = new Vue({
     el: '#appVue',
     components: {
@@ -294,16 +294,16 @@
               optimizeValue.forEach(item=>{
                 settings[item] = optimize.indexOf(item) > -1;
                })
-              standAloneModel.setAppSetting(Number(window.globalArgs['app-id']),settings)
+              standAloneModel.setAppSetting(window.globalArgs['app-id'],settings)
               this.tipSave()
               //todo 主动更新应用信息，即时更新
             }else if(values.name){
               this.saApp.name=values.name
-              standAloneModel.update(Number(window.globalArgs['app-id']), { name: tools.htmlEncode(values.name) })
+              standAloneModel.update(window.globalArgs['app-id'], { name: tools.htmlEncode(values.name) })
               this.tipSave()
               //todo 主动更新应用信息，即时更新
             }else if(values.summary){
-              standAloneModel.update(Number(window.globalArgs['app-id']), { summary: tools.htmlEncode(values.summary) })
+              standAloneModel.update(window.globalArgs['app-id'], { summary: tools.htmlEncode(values.summary) })
               this.tipSave()
               //todo 主动更新应用信息，即时更新
             }
@@ -327,7 +327,7 @@
         this.form.setFieldsValue({
           name: data.name,
           summary: data.summary,
-          themeColor: data.themeColor,
+          theme_color: data.theme_color,
           optimize:optimize
         })
         console.log(that.saApp)
@@ -338,7 +338,7 @@
     },
     methods: {
       userThemeColorChanged(input){
-        standAloneModel.update(this.appId,{userThemeColor:input})
+        standAloneModel.update(this.appId,{user_theme_color:input})
         this.tipSave()
         console.log(input)
       },
@@ -355,7 +355,7 @@
           onOk() {
             standAloneModel.uninstall(appId).then(success=>{
               ipc.send('message',{type:"success",config:{content:'卸载应用成功。'}})
-              ipc.send('deleteApp',{id:appId})
+              ipc.send('deleteApp',{nanoid:appId})
             },err=>{
               ipc.send('message',{type:"success",config:{content:'卸载失败。'}})
             })

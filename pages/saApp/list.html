@@ -46,9 +46,9 @@
             <a-dropdown :trigger="['contextmenu']">
             <div style="margin-bottom: 15px;text-align: center;">
               <div style="margin-bottom: 10px">
-                <a-badge  :dot="app.isNew">
+                <a-badge  :dot="app.is_new">
                 <img @click="executeApp(app)" onerror="this.src='../../icons/default.svg'" shape="circle" class="logo clickable" :src="app.logo"
-                     :style="{'border-color':app.userThemeColor?app.userThemeColor:app.themeColor}">
+                     :style="{'border-color':app.user_theme_color?app.user_theme_color:app.theme_color}">
                 </a-badge>
               </div>
               <div class="clickable"  @click="executeApp(app)" style="white-space:nowrap;
@@ -58,8 +58,8 @@ text-overflow:ellipsis; ">
               </div>
             </div>
             <a-menu slot="overlay" >
-              <a-menu-item @click="openSetting(app.id)" key="setting"> <a-icon type="setting"></a-icon>设置</a-menu-item>
-              <a-menu-item @click="uninstall(app.id)" v-if="!app.isSystemApp" key="uninstall"> <a-icon type="delete"></a-icon>卸载 </a-menu-item>
+              <a-menu-item @click="openSetting(app.nanoid)" key="setting"> <a-icon type="setting"></a-icon>设置</a-menu-item>
+              <a-menu-item @click="uninstall(app.nanoid)" v-if="!app.isSystemApp" key="uninstall"> <a-icon type="delete"></a-icon>卸载 </a-menu-item>
             </a-menu>
             </a-dropdown>
           </a-col>
@@ -76,9 +76,9 @@ text-overflow:ellipsis; ">
                   <div>
 
                     <div style="margin-bottom: 10px">
-                      <a-badge  :dot="app.isNew">
+                      <a-badge  :dot="app.is_new">
                     <img onerror="this.src='../../icons/default.svg'" @click="executeApp(app)" shape="circle" class="logo clickable" :src="app.logo"
-                          :style="{'border-color':app.userThemeColor?app.userThemeColor:app.themeColor}">
+                          :style="{'border-color':app.user_theme_color?app.user_theme_color:app.theme_color}">
 
 
                       </a-badge>
@@ -92,8 +92,8 @@ text-overflow:ellipsis; ">
 
 
                 <a-menu slot="overlay" >
-                  <a-menu-item @click="openSetting(app.id)" key="setting"> <a-icon type="setting"></a-icon>设置</a-menu-item>
-                  <a-menu-item @click="uninstall(app.id)" v-if="!app.isSystemApp" key="uninstall"> <a-icon type="delete"></a-icon>卸载 </a-menu-item>
+                  <a-menu-item @click="openSetting(app.nanoid)" key="setting"> <a-icon type="setting"></a-icon>设置</a-menu-item>
+                  <a-menu-item @click="uninstall(app.nanoid)" v-if="!app.isSystemApp" key="uninstall"> <a-icon type="delete"></a-icon>卸载 </a-menu-item>
                 </a-menu>
             </a-dropdown>
               </div>
@@ -109,9 +109,9 @@ text-overflow:ellipsis; ">
             <a-dropdown :trigger="['contextmenu']">
               <div style="margin-bottom: 15px;text-align: center">
                 <div style="margin-bottom: 10px">
-                  <a-badge  :dot="app.isNew">
+                  <a-badge  :dot="app.is_new">
                   <img onerror="this.src='../../icons/default.svg'"  @click="executeApp(app)" shape="circle" class="logo clickable"  :src="app.logo"
-                        :style="{'border-color':app.userThemeColor?app.userThemeColor:app.themeColor}">
+                        :style="{'border-color':app.user_theme_color?app.user_theme_color:app.theme_color}">
                   </a-badge>
                 </div>
                 <div class="clickable"  @click="executeApp(app)" style="white-space:nowrap;
@@ -121,8 +121,8 @@ text-overflow:ellipsis; ">
                 </div>
               </div>
             <a-menu slot="overlay" >
-              <a-menu-item @click="openSetting(app.id)" key="setting"> <a-icon type="setting"></a-icon>设置</a-menu-item>
-              <a-menu-item @click="uninstall(app.id)" v-if="!app.isSystemApp" key="uninstall"> <a-icon type="delete"></a-icon>卸载 </a-menu-item>
+              <a-menu-item @click="openSetting(app.nanoid)" key="setting"> <a-icon type="setting"></a-icon>设置</a-menu-item>
+              <a-menu-item @click="uninstall(app.nanoid)" v-if="!app.isSystemApp" key="uninstall"> <a-icon type="delete"></a-icon>卸载 </a-menu-item>
             </a-menu>
             </a-dropdown>
 
@@ -162,7 +162,7 @@ text-overflow:ellipsis; ">
 <script>
   const tools = require('../util/util.js').tools
   const ipc = require('electron').ipcRenderer
-  const saAppModel = require('../util/model/standAloneAppModel')
+  const saAppModel = require('../../src/model/appModel.js')
   tools.getWindowArgs(window)
   var appVue = new Vue({
       el: '#appVue',
@@ -178,7 +178,7 @@ text-overflow:ellipsis; ">
     watch:{
      async searchWords(){
        if(this.searchWords!=='')
-        this.searchResult= await  saAppModel.find(this.searchWords,{order:'lastExecuteTime'})
+        this.searchResult= await  saAppModel.find(this.searchWords,{order:'last_execute_time'})
       }
     },
       mounted() {
@@ -194,10 +194,10 @@ text-overflow:ellipsis; ">
           //
         },
         refresh(){
-          saAppModel.getAllApps({order:'createTime'}).then((data) => {
+          saAppModel.getAllApps({order:'create_time'}).then((data) => {
             appVue.apps = data
           })
-          saAppModel.getAllApps({order:'lastExecuteTime',limit:6}).then((data) => {
+          saAppModel.getAllApps({order:'last_execute_time',limit:6}).then((data) => {
             appVue.appsRecently = data
           })
 
@@ -208,7 +208,7 @@ text-overflow:ellipsis; ">
           appVue.searchWords=''
         },
         openSetting(appId){
-          ipc.send('saAppOpenSetting',{id:appId})
+          ipc.send('saAppOpenSetting',{nanoid:appId})
         },
         uninstall(appId){
           let that=this
@@ -221,12 +221,12 @@ text-overflow:ellipsis; ">
             onOk() {
               saAppModel.uninstall(appId).then(success=>{
                 for(let i=0;i<that.apps.length;i++){
-                  if(that.apps[i].id===appId){
+                  if(that.apps[i].nanoid===appId){
                     that.apps.splice(i,1)
                   }
                 }
                 ipc.send('message',{type:"success",config:{content:'卸载应用成功。'}})
-                ipc.send('deleteApp',{id:appId})
+                ipc.send('deleteApp',{nanoid:appId})
               },err=>{
                 ipc.send('message',{type:"success",config:{content:'卸载失败。'}})
               })

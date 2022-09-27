@@ -42,7 +42,7 @@ const appManager = {
    */
   updateSaApp (id, saApp) {
     for (let i = 0; i < processingAppWindows.length; i++) {
-      if (processingAppWindows[i].saApp.id === id) {
+      if (processingAppWindows[i].saApp.nanoid === id) {
         processingAppWindows[i].saApp = saApp
         return true
       }
@@ -97,9 +97,9 @@ const appManager = {
     }
     return false
   },
-  getSaApp(id){
+  getSaApp(nanoid){
     return this.saApps.find(app=>{
-      return app.instance.info.id===id
+      return app.instance.info.nanoid===nanoid
     })
   },
   /**
@@ -138,11 +138,11 @@ const appManager = {
    */
   incAppBadge (appId = 0, add = 1) {
     processingAppWindows.forEach(processApp => {
-      if (processApp.saApp.id === appId) {
+      if (processApp.saApp.nanoid === appId) {
         processApp.saApp.badge = processApp.saApp.badge ? processApp.saApp.badge + add : add
       }
     })
-    SidePanel.send('appBadge', { id: appId, add: add })
+    SidePanel.send('appBadge', { nanoid: appId, add: add })
     appManager.updateDockBadge()
   },
   /**
@@ -152,11 +152,11 @@ const appManager = {
    */
   clearAppBadge (appId = 0, add = 1) {
     processingAppWindows.forEach(processApp => {
-      if (processApp.saApp.id === appId) {
+      if (processApp.saApp.nanoid === appId) {
         processApp.saApp.badge = 0
       }
     })
-    SidePanel.send('appBadge', { id: appId, badge: 0 })
+    SidePanel.send('appBadge', { nanoid: appId, badge: 0 })
     appManager.updateDockBadge()
   },
   /**
@@ -254,7 +254,7 @@ const appManager = {
   isAppProcessing (saAppId) {
     let processing = false
     processingAppWindows.forEach((item) => {
-      if (item.saApp.id === saAppId) {
+      if (item.saApp.nanoid === saAppId) {
         processing = !item.window.isDestroyed()
       }
     })
@@ -278,7 +278,7 @@ const appManager = {
    * @param settings
    */
   setOriginAppSettings (saAppId, settings) {
-    SidePanel.send('updateSetting', { id: saAppId, settings: settings })
+    SidePanel.send('updateSetting', { nanoid: saAppId, settings: settings })
   },
   /**
    * 设置应用的设置，如果应用已存在，则会自动更新main中存储的设置，如果不存在，则直接调取originAppSetting，仅发送ipc去更新设置
@@ -303,7 +303,7 @@ const appManager = {
    */
   getAppSettings (saAppId, settingName) {
     for (let i = 0; i < processingAppWindows.length; i++) {
-      if (processingAppWindows[i].saApp.id === saAppId) {
+      if (processingAppWindows[i].saApp.nanoid === saAppId) {
         return processingAppWindows[i].saApp.settings[settingName]
       }
 
@@ -333,12 +333,12 @@ const appManager = {
   },
   /**
    * 获取saApp信息，通过appid
-   * @param appId
    * @returns {*}
+   * @param nanoid
    */
-  getSaAppByAppId (appId) {
+  getSaAppByAppId (nanoid) {
     for (let i = 0; i < processingAppWindows.length; i++) {
-      if (processingAppWindows[i].saApp.id === appId) {
+      if (processingAppWindows[i].saApp.nanoid === nanoid) {
         return processingAppWindows[i].saApp
       }
     }
@@ -371,9 +371,9 @@ const appManager = {
    * @param appId
    * @returns {null|*}
    */
-  getWindowByAppId (appId) {
+  getWindowByAppId (nanoid) {
     for (let i = 0; i < processingAppWindows.length; i++) {
-      if (processingAppWindows[i].saApp.id === appId) {
+      if (processingAppWindows[i].saApp.nanoid === nanoid) {
         return processingAppWindows[i].window
       }
     }
@@ -445,7 +445,7 @@ const appManager = {
    */
   async capture (saAppWindowId) {
     let saApp = appManager.getSaAppByWindowId(saAppWindowId)
-    let imagePath = path.resolve(userDataPath + '/app/screen' + saApp.saApp.id + '.jpg')
+    let imagePath = path.resolve(userDataPath + '/app/screen' + saApp.saApp.nanoid + '.jpg')
     if (saApp.window.isDestroyed()) {
       return
     }
@@ -541,29 +541,29 @@ const appManager = {
   deleteApp (appId) {
     appManager.closeApp(appId)
     setTimeout(() => {
-      SidePanel.send('deleteApp', { id: appId })
+      SidePanel.send('deleteApp', { nanoid: appId })
     }, 1000)
   },
-  closeApp (appId) {
-    let window = appManager.getWindowByAppId(appId)
-    let saApp = appManager.getSaAppByAppId(appId)
+  closeApp (nanoid) {
+    let window = appManager.getWindowByAppId(nanoid)
+    let saApp = appManager.getSaAppByAppId(nanoid)
     if (window && !window.isDestroyed()) {
       saApp.canClose = true
       window.view.webContents.destroy()
       window.destroy()
       appManager.removeAppWindow(saApp.windowId)
       let found=appManager.saApps.find((app)=>{
-        return app.instance.info.id===appId
+        return app.instance.info.nanoid===nanoid
       })
       appManager.saApps.splice(found,1)
-      SidePanel.send('closeApp', { id: appId })
+      SidePanel.send('closeApp', { nanoid: nanoid })
     }
   },
   closeAll(){
     let closed=0
     processingAppWindows.forEach((item) => {
       if (!item.window.isDestroyed()) {
-        appManager.closeApp(item.saApp.id)
+        appManager.closeApp(item.saApp.nanoid)
         closed++
       }
     })
@@ -814,7 +814,7 @@ const appManager = {
       //   appManager.executeApp(saApp, background)
       // }
     } else {
-      let window = appManager.getWindowByAppId(saApp.id)
+      let window = appManager.getWindowByAppId(saApp.nanoid)
       appManager.focusWindow(saApp.windowId)
 
       if (option) {
@@ -822,7 +822,7 @@ const appManager = {
           appManager.protocolManager.handleAction(window, option.action, option)
         }
       }
-      appManager.clearAppBadge(saApp.id)
+      appManager.clearAppBadge(saApp.nanoid)
     }
   },
   /**
@@ -870,7 +870,7 @@ const appManager = {
       appWindow.on('ready-to-show', () => {
         appWindow.webContents.send('init', {
           url: saApp.url,
-          id: saApp.id,
+          nanoid: saApp.nanoid,
           title: saApp.name,
           windowId: saApp.windowId,
           app: saApp
@@ -905,10 +905,10 @@ const appManager = {
       // })
       SidePanel.send('executedAppSuccess', { app: saApp })
       appWindow.on('moved', (event, args) => {
-        appManager.setAppSettings(saApp.id, { bounds: appWindow.getBounds() })
+        appManager.setAppSettings(saApp.nanoid, { bounds: appWindow.getBounds() })
       })
       appWindow.on('resize', (event, args) => {
-        appManager.setAppSettings(saApp.id, { bounds: appWindow.getBounds() })
+        appManager.setAppSettings(saApp.nanoid, { bounds: appWindow.getBounds() })
         appView.setBounds({
           x: 0,
           y: titleBarHeight,
@@ -955,7 +955,7 @@ const appManager = {
         }, 4000)
       })
       appWindow.on('blur', async (event) => {
-        SidePanel.send('updateRunningInfo', { id: saApp.id, 'info': await appManager.getAppRunningInfo(saApp.id) })
+        SidePanel.send('updateRunningInfo', { nanoid: saApp.nanoid, 'info': await appManager.getAppRunningInfo(saApp.nanoid) })
       })
       /**
        * 只允许通过关闭按钮隐藏，而不是彻底关闭
@@ -993,7 +993,7 @@ const appManager = {
           appManager.hideWindow(saApp.windowId)
           event.preventDefault()
         } else {
-          appManager.closeApp(saApp.id)
+          appManager.closeApp(saApp.nanoid)
         }
 
         // const result = dialog.showMessageBoxSync({
@@ -1056,14 +1056,17 @@ app.whenReady().then(() => {
   ipc.on('executeApp', (event, args) => {
     //这里传app，代表app未运行则直接执行起来
     try {
-      appManager.openApp(args.app.id, args.background, args.app, args.option)
+      if(args.app  && args.app.id){
+        args.app.nanoid=args.app.id
+      }
+      appManager.openApp(args.app.nanoid, args.background, args.app, args.option)
     } catch (e) {
       electronLog.error(e)
     }
 
   })
   ipc.on(ipcMessageMain.saApps.createAppMenu, (event, args) => {
-    let appId = args.id
+    let appId = args.nanoid
     let saApp = appManager.getSaAppByAppId(appId)
     let appWindow = appManager.getWindowByAppId(appId)
     let template = [
@@ -1153,7 +1156,7 @@ app.whenReady().then(() => {
               type: 'app',
               data: {
                 type: 'saApp',
-                appId: args.app.id,
+                appId: args.app.nanoid,
                 name: args.app.name,
                 icon: args.app.logo,
                 summary: args.app.summary
@@ -1232,25 +1235,25 @@ app.whenReady().then(() => {
     menu.popup()
   })
   ipc.on(ipcMessageMain.saApps.openSetting, (event, args) => {
-    appManager.openSetting(args.id)
+    appManager.openSetting(args.nanoid)
   })
   ipc.on('closeApp', (event, args) => {
-    appManager.closeApp(args.id)
+    appManager.closeApp(args.nanoid)
   })
   ipc.on('getAppRunningInfo', async (event, args) => {
-    SidePanel.send('updateRunningInfo', { id: args.id, 'info': await appManager.getAppRunningInfo(args.id) })
+    SidePanel.send('updateRunningInfo', { nanoid: args.nanoid, 'info': await appManager.getAppRunningInfo(args.nanoid) })
   })
   /**
    * 获取并更新一个app的截图
    */
   ipc.on('getAppCapture', (event, args) => {
-    let saApp = appManager.getSaAppByAppId(args.id)
+    let saApp = appManager.getSaAppByAppId(args.nanoid)
     if (!!!saApp) {
       return //如果不存在这个saApp
     }
     let image = appManager.capture(saApp.windowId)
     if (!!image)
-      SidePanel.send('updateAppCapture', { id: saApp.saApp.id, captureSrc: image })
+      SidePanel.send('updateAppCapture', { nanoid: saApp.saApp.nanoid, captureSrc: image })
   })
   /**
    * 获取到全部正在运行的app清单
@@ -1259,13 +1262,13 @@ app.whenReady().then(() => {
     let runningApps = []
     let windows = []
     processingAppWindows.forEach(window => {
-      runningApps.push(window.saApp.id)
+      runningApps.push(window.saApp.nanoid)
       windows.push(window.saApp.windowId)
     })
     SidePanel.send('updateRunningApps', { runningApps: runningApps, windows: windows })
   })
   ipc.on(ipcMessageMain.saApps.deleteApp, (event, args) => {
-    let appId = args.id
+    let appId = args.nanoid
     if (appManager.settingWindow) {
       appManager.settingWindow.close()
       appManager.settingWindow = null
@@ -1275,7 +1278,7 @@ app.whenReady().then(() => {
   })
 
   ipc.on(ipcMessageMain.saApps.installApp, (event, args) => {
-    SidePanel.send('installApp', { id: args.id, background: args.background })
+    SidePanel.send('installApp', { nanoid: args.nanoid, background: args.background })
   })
   /**
    * 应用关闭前，将所有开启的窗体销毁掉
@@ -1284,25 +1287,25 @@ app.whenReady().then(() => {
     forceClose = true
     processingAppWindows.forEach((item) => {
       if (!item.window.isDestroyed()) {
-        appManager.closeApp(item.saApp.id)
+        appManager.closeApp(item.saApp.nanoid)
       }
     })
   })
 
   ipc.handle('minimizeAppWindow', (event, args) => {
-    appManager.getWindowByAppId(args.id).minimize()
+    appManager.getWindowByAppId(args.nanoid).minimize()
   })
   ipc.handle('closeAppWindow', (event, args) => {
-    appManager.getWindowByAppId(args.id).close()
+    appManager.getWindowByAppId(args.nanoid).close()
   })
   ipc.handle('unmaximizeAppWindow', (event, args) => {
-    appManager.getWindowByAppId(args.id).unmaximize()
+    appManager.getWindowByAppId(args.nanoid).unmaximize()
   })
   ipc.handle('maximizeAppWindow', (event, args) => {
-    appManager.getWindowByAppId(args.id).maximize()
+    appManager.getWindowByAppId(args.nanoid).maximize()
   })
   ipc.handle('setFullScreenAppWindow', (event, args) => {
-    appManager.getWindowByAppId(args.id).setFullScreen(args.flag)
+    appManager.getWindowByAppId(args.nanoid).setFullScreen(args.flag)
 
   })
 
@@ -1336,35 +1339,35 @@ app.whenReady().then(() => {
   })
 
   ipc.on('saAppGoBack', (event, args) => {
-    appManager.getWindowByAppId(args.id).view.webContents.goBack()
+    appManager.getWindowByAppId(args.nanoid).view.webContents.goBack()
   })
 
   ipc.on('saAppGoForward', (event, args) => {
-    appManager.getWindowByAppId(args.id).view.webContents.goForward()
+    appManager.getWindowByAppId(args.nanoid).view.webContents.goForward()
   })
 
   ipc.on('saAppRefresh', (event, args) => {
-    appManager.getWindowByAppId(args.id).view.webContents.reload()
+    appManager.getWindowByAppId(args.nanoid).view.webContents.reload()
   })
 
   ipc.on('saAppHome', (event, args) => {
-    let saApp = appManager.getSaAppByAppId(args.id)
-    appManager.getWindowByAppId(args.id).view.webContents.loadURL(saApp.url)
+    let saApp = appManager.getSaAppByAppId(args.nanoid)
+    appManager.getWindowByAppId(args.nanoid).view.webContents.loadURL(saApp.url)
   })
   // ipc.on('saAppFindInPage',(event,args)=>{
-  //   appManager.findInPage(args.id,args)
+  //   appManager.findInPage(args.nanoid,args)
   // })
   //
   //  ipc.on('saAppStopFindInPage',(event,args)=>{
-  //    appManager.stopFindInPage(args.id,args.action)
+  //    appManager.stopFindInPage(args.nanoid,args.action)
   //  })
 
   ipc.on('saAppFocusView', (event, args) => {
-    appManager.appFocusView(args.id)
+    appManager.appFocusView(args.nanoid)
   })
 
   ipc.on('releaseFocus', (event, args) => {
-    appManager.releaseFocus(args.id)
+    appManager.releaseFocus(args.nanoid)
   })
 
   ipc.handle('imPreloadReady', () => {

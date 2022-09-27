@@ -1,7 +1,7 @@
 const { db } = require('../../js/util/database')
 const { api } = require('../../server-config')
-const standAloneAppModel = require('../util/model/standAloneAppModel.js')
-
+const standAloneAppModel =require('../../src/model/appModel.js')//require('../util/model/standAloneAppModel.js')
+console.log('导入appModel')
 
 const sidebarTpl = /*html*/`
   <div id="sidebar" class="side-container" @contextmenu.stop="openSidebarMenu">
@@ -257,7 +257,7 @@ const sidebarTpl = /*html*/`
         <ul id="pinGroup" @scroll="onScroll($event,'divider-inner')" class="app-task app-items" style="margin-bottom: 0; ">
 
           <li v-for="app in apps" @click="executeApp(app)" @mouseenter="hoverApp($event,app)"
-            @contextmenu.stop="createMenu(app.id,app)" v-if="app.processing || app.settings.showInSideBar">
+            @contextmenu.stop="createMenu(app.nanoid,app)" v-if="app.processing || app.settings.showInSideBar">
             <a-popover placement="right"  :mouse-enter-delay="0.3" overlay-class-name="tips" @visible-change="">
               <template  slot="title">
                 <span class="app-name-popover"> {{app.name}} </span>
@@ -273,11 +273,11 @@ const sidebarTpl = /*html*/`
               <div class="wrapper sa-app-wrapper">
                 <div v-if="app.processing" class="processing"></div>
                 <div class="item-icon">
-                  <a-badge :count="app.badge" :dot="app.isNew">
+                  <a-badge :count="app.badge" :dot="app.is_new===1">
                     <!--                :style="{position: 'absolute',right:  '-2px',visibility:'visible'}"-->
 
                     <img onerror="this.src='../../icons/default.svg'" class="icon sa-app"
-                      :style="app.processing? {'border-color':app.userThemeColor!==''?app.userThemeColor:app.themeColor}:{}"
+                      :style="app.processing? {'border-color':app.user_theme_color!==''?app.user_theme_color:app.theme_color}:{}"
                       :src="app.logo" :class="{running:app.processing?true:false}" />
 
                   </a-badge>
@@ -741,7 +741,6 @@ const backupSpaceModel=require('../../src/model/backupSpaceModel')
 const _=require('lodash')
 const storage = require('electron-localstorage')
 const {ipcRenderer: ipc} = require("electron");
-const saAppModel = require("../util/model/standAloneAppModel");
 const userModel = require('../../src/model/userModel')
 
 window.selectedTask=null
@@ -1273,26 +1272,29 @@ Vue.component('sidebar', {
     },
     //应用市场项目所需要的函数
     addApp (app) {
+      console.log(app)
       let option = {
         name: app.name,
         logo: !!!app.icon ? '../../icons/default.svg' :app.icon,
         summary: app.summary,
         type: app.type,
         attribute: app.attribute,
-        themeColor: !!!app.themeColor ? '#000' :app.themeColor,
+        theme_color: !!!app.themeColor ? '#000' :app.themeColor,
         settings:app.settings,
         circle:app.circle,
         auth:app.auth,
         site:app.site,
         author:app.author,
         showInSideBar: false,
-        circleMessage:!!!app.circleMessage ? '' :app.circleMessage,
+        //circleMessage:!!!app.circleMessage ? '' :app.circleMessage,
       }
-      standAloneAppModel.install(app.url, option).then(success => {
+
+      standAloneAppModel.install(app.url, option).then(nanoid => {
         ipc.send('message', { type: 'success', config: { content: `添加应用：${app.name} 成功` } })
-        ipc.send('installApp', { id: success })
-        ipc.send('installSuccess',{id:success,tips:true})
+        ipc.send('installApp', { nanoid: nanoid })
+        ipc.send('installSuccess',{nanoid:nanoid,tips:true})
       }, err => {
+        console.log(err)
         ipc.send('message', { type: 'error', config: { content: '添加应用失败' } })
         ipc.send('installErr',{id:'',tips:false})
       })
@@ -1314,37 +1316,40 @@ Vue.component('sidebar', {
 
     async openApp() {
       let allApplist = await standAloneAppModel.getAllApps()
+      allApplist.forEach(app=>{
+        app.id=app.nanoid
+      })
       ipc.send('allAppList', allApplist)
     },
     async openSet(args) {
       let app = await standAloneAppModel.get({url: args})
-      setTimeout(() => {
-        ipc.send('saAppOpenSetting', {id: app.id})
-      }, 200)
+      ipc.send('saAppOpenSetting', {nanoid: app.nanoid})
     },
     async uninstallApp(args) {
       let app = await standAloneAppModel.get({url: args})
-      setTimeout(()=>{
-        saAppModel.uninstall(app.id).then(success=>{
-          ipc.send('message',{type:"success",config:{content:'卸载应用成功。'}})
-          ipc.send('deleteApp',{id:app.id})
-          window.location.href=`tsb://app/redirect/?package=com.thisky.appStore`
-        },err=>{
-          ipc.send('message',{type:"success",config:{content:'卸载失败。'}})
-        })
-      },200)
+      console.log(app)
+      standAloneAppModel.uninstall(app.nanoid).then(success=>{
+        ipc.send('message',{type:"success",config:{content:'卸载应用成功。'}})
+        ipc.send('deleteApp',{nanoid:app.nanoid})
+        window.location.href=`tsb://app/redirect/?package=com.thisky.appStore`
+      },err=>{
+        ipc.send('message',{type:"success",config:{content:'卸载失败。'}})
+      })
     },
     openAppCircle(args){
       window.location.href=`tsb://app/redirect/?package=com.thisky.com&url=${api.getUrl(api.API_URL.user.CIRCLE)}?id=${args}`
     },
     myApps(){
-      standAloneAppModel.getAllApps({order:'createTime'}).then((data) => {
+      standAloneAppModel.getAllApps({order:'create_time'}).then((data) => {
+        data.forEach(app=>{
+          app.id=app.nanoid
+        })
         ipc.send('allMyApps',data)
       })
     },
     sortApps(){
       let sorted=_.orderBy(this.apps,(app)=>{
-        return [app.processing?1:0,app.lastExecuteTime]
+        return [app.processing?1:0,app.last_execute_time]
       },['desc','desc'])
       this.apps=sorted
     },
@@ -1554,7 +1559,7 @@ Vue.component('sidebar', {
      */
     hoverApp (e, app) {
       // if(app.processing){
-      //   ipc.send('getAppCapture',{id:app.id})
+      //   ipc.send('getAppCapture',{id:app.nanoid})
       // }
     },
     executeApp (app) {
@@ -1912,19 +1917,19 @@ Vue.component('sidebar', {
     clearTaskUnlock (task) {
       ipc.sendTo(mainWindowId, 'clearTaskUnlock', { id: task.id })
     },
-    createMenu (appId, app) {
+    createMenu (nanoid, app) {
       let desks = []
       try {
         desks = JSON.parse(localStorage.getItem('desks'))
       } catch (e) {
         console.log('解析桌面失败')
       }
-      ipc.send('createAppMenu', { id: appId, app: app, desks: desks })
+      ipc.send('createAppMenu', { nanoid: nanoid, app: app, desks: desks })
       // let remote=require('electron').remote
       // let {Menu,MenuItem}=remote
       // let menu=Menu.buildFromTemplate([
       //   {
-      //     label:"设置",
+      //     label:"设置",executedAppSuccess
       //     click(){
       //       alert('a')
       //     }
@@ -2064,16 +2069,16 @@ ipc.on('openAppGroupChat',(event,args)=>{
 ipc.on('executedAppSuccess', async function (event, args) {
   let now=Date.now()
   appVue.$refs.sidePanel.apps.forEach(app => {
-    if (app.id === args.app.id) {
+    if (app.nanoid === args.app.nanoid) {
       app.processing = true
       app.windowId = args.app.windowId
-      app.lastExecuteTime=now
-      app.isNew=false
+      app.last_execute_time=now
+      app.is_new=false
     }
   })
-  appVue.$refs.sidePanel.runningApps.push(args.app.id)
+  appVue.$refs.sidePanel.runningApps.push(args.app.nanoid)
   appVue.$refs.sidePanel.sortApps()
-  standAloneAppModel.update(args.app.id, { lastExecuteTime: now ,isNew:false}).then((res) => {
+  standAloneAppModel.update(args.app.nanoid, { last_execute_time: now ,is_new:false}).then((res) => {
   })
   setTimeout(()=>{
     appVue.$refs.sidePanel.watchAllHasMore()
@@ -2094,10 +2099,10 @@ ipc.on('executedAppSuccess', async function (event, args) {
 })
 ipc.on('closeApp', function (event, args) {
   appVue.$refs.sidePanel.apps.forEach(app => {
-    if (app.id === args.id) {
+    if (app.nanoid === args.nanoid) {
       app.processing = false
       //从正在运行的app里移除掉该id
-      let appIndex = appVue.$refs.sidePanel.runningApps.indexOf(args.id)
+      let appIndex = appVue.$refs.sidePanel.runningApps.indexOf(args.nanoid)
       if (appIndex > -1)
         appVue.$refs.sidePanel.runningApps.splice(appIndex, 1)
       appVue.$refs.sidePanel.sortApps()
@@ -2107,7 +2112,7 @@ ipc.on('closeApp', function (event, args) {
 
 ipc.on('updateAppCapture', function (event, args) {
   appVue.$refs.sidePanel.apps.forEach(app => {
-    if (app.id === args.id) {
+    if (app.nanoid === args.nanoid) {
       app.capture = args.captureSrc + '?t=' + Date.now()
     }
   })
@@ -2115,10 +2120,10 @@ ipc.on('updateAppCapture', function (event, args) {
 ipc.on('updateRunningApps', function (event, args) {
   appVue.$refs.sidePanel.runningApps = args.runningApps
   appVue.$refs.sidePanel.apps.forEach((app, index) => {
-    if (args.runningApps.indexOf(app.id) > -1) {
+    if (args.runningApps.indexOf(app.nanoid) > -1) {
       app.processing = true
-      app.windowId = args.windows[args.runningApps.indexOf(app.id)]
-      ipc.send('getAppRunningInfo', { id: app.id })
+      app.windowId = args.windows[args.runningApps.indexOf(app.nanoid)]
+      ipc.send('getAppRunningInfo', { nanoid: app.nanoid })
     }
   })
   appVue.$refs.sidePanel.sortApps()
@@ -2129,8 +2134,8 @@ ipc.on('updateRunningApps', function (event, args) {
 
 ipc.on('updateSetting', function (event, args) {
   appVue.$refs.sidePanel.apps.forEach((app, index) => {
-    if (app.id === args.id) {
-      standAloneAppModel.setAppSetting(args.id, args.settings)
+    if (app.nanoid === args.nanoid) {
+      standAloneAppModel.setAppSetting(args.nanoid, args.settings)
       app.settings = Object.assign(app.settings, args.settings)
     }
   })
@@ -2140,7 +2145,7 @@ ipc.on('updateAppMemoryUsage', function (event, args) {
 
 ipc.on('updateRunningInfo', function (event, args) {
   appVue.$refs.sidePanel.apps.forEach(app => {
-    if (app.id === args.id) {
+    if (app.nanoid === args.nanoid) {
       app.capture = args.info.capture + '?t=' + Date.now()
       app.memoryUsage = args.info.memoryUsage
     }
@@ -2150,7 +2155,7 @@ ipc.on('updateRunningInfo', function (event, args) {
 ipc.on('deleteApp', function (event, args) {
   let index = 0
   for (let i = 0; i < appVue.$refs.sidePanel.apps.length; i++) {
-    if (appVue.$refs.sidePanel.apps[i].id === args.id) {
+    if (appVue.$refs.sidePanel.apps[i].nanoid === args.nanoid) {
       index = i
     }
   }
@@ -2160,8 +2165,8 @@ ipc.on('deleteApp', function (event, args) {
 })
 
 ipc.on('installApp', function (event, args) {
-  let id = args.id
-  standAloneAppModel.get(id).then(async app => {
+  let nanoid = args.nanoid
+  standAloneAppModel.get(nanoid).then(async app => {
     if (!args.background) {ipc.send('executeApp', { app: app })}
     appVue.$refs.sidePanel.apps = await standAloneAppModel.getAllApps()
     ipc.send('getRunningApps')
@@ -2188,7 +2193,7 @@ ipc.on('executeAppByPackage',async (event,args)=>{
 
 ipc.on('appBadge', function (event, args) {
   appVue.$refs.sidePanel.apps.forEach(app => {
-    if (app.id === args.id) {
+    if (app.nanoid === args.nanoid) {
       if (args.add) {
         if (!!!app.badge) app.badge = 0
         app.badge += args.add //默认是使用add来增加，否则直接使用badge

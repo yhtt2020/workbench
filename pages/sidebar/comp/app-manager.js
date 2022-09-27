@@ -138,8 +138,7 @@ Vue.component('app-manager', {
       if(!this.setted){
         window.tickId=id
        this.timer= setInterval(()=>{
-         ipc.send('getAppRunningInfo',{id:window.tickId})
-         console.log(window.tickId)
+         ipc.send('getAppRunningInfo',{nanoid:window.tickId})
        },1000)
         this.setted=true
       }
@@ -160,7 +159,7 @@ Vue.component('app-manager', {
       // 判断单例的问题留给主进程处理
       ipc.send('executeApp',{app:app})
     },
-    getApp(id){
+    getApp(nanoid){
       let defaultMemoryUsage={
         cpu:{
           percentCPUUsage:0
@@ -171,13 +170,13 @@ Vue.component('app-manager', {
       }
       let currentApp={
         name:'',
-        id:'',
+        nanoid:'',
         logo:'',
         capture:'',
         memoryUsage:defaultMemoryUsage
       }
       appVue.$refs.sidePanel.apps.forEach((app)=>{
-        if(app.id===id)
+        if(app.nanoid===nanoid)
         {
           if(!!!app.memoryUsage){
             app.memoryUsage=defaultMemoryUsage
@@ -192,10 +191,10 @@ Vue.component('app-manager', {
       return currentApp
     },
     closeApp(appId){
-        ipc.send('closeApp',{id:appId})
+        ipc.send('closeApp',{nanoid:appId})
     },
     openSetting(appId){
-      ipc.send('saAppOpenSetting',{id:appId})
+      ipc.send('saAppOpenSetting',{nanoid:appId})
     },
     showAllSaApps(){
       ipc.send('showAllSaApps')

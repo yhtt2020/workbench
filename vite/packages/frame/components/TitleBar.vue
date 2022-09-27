@@ -130,11 +130,11 @@ export default {
       windowId = args.windowId
       window.app=args.app
       this.app=args.app
-      window.id = args.app.id
+      window.nanoid = args.app.nanoid
       document.getElementById('address').value = args.url
       document.getElementById('addressWrapper').style.display = 'none'
       document.title = args.title
-      document.body.style.backgroundColor = args.app.userThemeColor ? args.app.userThemeColor : args.app.themeColor
+      document.body.style.backgroundColor = args.app.user_theme_color ? args.app.user_theme_color : args.app.theme_color
 
       //暂时取消应用市场的窗体返回图标
       if(args.app.package === 'com.thisky.appStore'){
@@ -161,52 +161,53 @@ export default {
   },
   methods: {
     showMenu(){
-      ipc.send('createAppMenu',{id:window.id,app:window.app})
+      console.log(window.nanoid)
+      ipc.send('createAppMenu',{nanoid:window.nanoid,app:window.app})
     },
     goBack () {
       ipc.send('saAppGoBack', {
-        id: window.id
+        nanoid: window.nanoid
       })
     },
 
     goForward () {
       ipc.send('saAppGoForward', {
-        id: window.id
+        nanoid: window.nanoid
       })
     },
 
     refresh () {
       ipc.send('saAppRefresh', {
-        id: window.id
+        nanoid: window.nanoid
       })
     },
 
     home () {
       ipc.send('saAppHome', {
-        id: window.id
+        nanoid: window.nanoid
       })
     },
 
     resetSize () {
       ipc.send('saAppResetSize', {
-        id: window.id
+        nanoid: window.nanoid
       })
     },
     minimize(){
-      ipc.invoke('minimizeAppWindow', { id: window.id })
+      ipc.invoke('minimizeAppWindow', { nanoid: window.nanoid })
     },
     maximize(){
-      ipc.invoke('maximizeAppWindow', { id: window.id })
+      ipc.invoke('maximizeAppWindow', { nanoid: window.nanoid })
     },
     restore(){
       if (this.windowIsFullscreen) {
-        ipc.invoke('setFullScreenAppWindow', { flag: false, id: window.id })
+        ipc.invoke('setFullScreenAppWindow', { flag: false, nanoid: window.nanoid })
       } else {
-        ipc.invoke('unmaximizeAppWindow', { id: window.id })
+        ipc.invoke('unmaximizeAppWindow', { nanoid: window.nanoid })
       }
     },
     close(){
-      ipc.invoke('closeAppWindow', { id: window.id })
+      ipc.invoke('closeAppWindow', { nanoid: window.nanoid })
     },
     copyAddress(){
       clipboard.writeText(this.currentUrl)
