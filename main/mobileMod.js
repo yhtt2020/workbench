@@ -92,6 +92,7 @@ const mobileMod = {
         ]
       }
     })
+    mobileWindow.setAlwaysOnTop(true,'screen-saver')
     let view = new BrowserView({
       width: computeSize().width,
       height: computeSize().height - 70,

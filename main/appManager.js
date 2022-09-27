@@ -861,6 +861,9 @@ const appManager = {
           ]
         }
       })
+      if(saApp.settings.alwaysTop){
+        appWindow.setAlwaysOnTop(true,'screen-saver')
+      }
 
       saApp.windowId = appWindow.webContents.id
 
@@ -1089,7 +1092,7 @@ app.whenReady().then(() => {
                 'alwaysTop': true
               })
               if (appWindow && !appWindow.isDestroyed()) {
-                appWindow.setAlwaysOnTop(true)
+                appWindow.setAlwaysOnTop(true,'screen-saver')
               }
             }
           }
