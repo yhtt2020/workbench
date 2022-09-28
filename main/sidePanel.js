@@ -848,7 +848,7 @@ ipc.on('openTaskMenu', (event, args) => {
       }
     },
     {
-      label: '关闭标签组',
+      label: '删除标签组',
       click () {
         sendIPCToWindow(mainWindow, 'closeTask', { tabId: task.id })
       }
