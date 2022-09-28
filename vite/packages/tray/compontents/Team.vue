@@ -14,7 +14,7 @@
             &nbsp;
             <span v-if="message.body">
               {{message.body}}
-            </span><span v-else>{{message.title}}</span>
+            </span><span v-else>{{message.title}}</span><br><span style="font-size: 12px;color:grey;margin-left: 34px"> {{this.friendlyDate(message.create_time)}}</span>
             &nbsp;&nbsp;</span>
         </a-col>
       </a-row>
@@ -50,6 +50,7 @@ export default defineComponent({
     },2000)
   },
   methods:{
+    friendlyDate:window.tsbApi.util.friendlyDate,
     async loadMessages(){
       this.messages=await messageModel.allList()
       if(this.messages.length>4){

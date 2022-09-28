@@ -201,7 +201,7 @@ export default defineComponent({
     }
   },
   mounted () {
-    ipc.send('resizeTray',{width:400,height:401})
+    ipc.send('resizeTray',{width:400,height:435})
     ipc.on('userInfo', (event, args) => {
       console.log(args)
       this.loading=false
