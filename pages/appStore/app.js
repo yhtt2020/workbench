@@ -1,7 +1,7 @@
 let app={
   "name": "应用市场",
   "version": "1.0.0",
-  "themeColor": "#3c78d8",
+  "theme_color": "#3c78d8",
   "author": "想天软件",
   "site": "https://apps.vip",
   "logo": "https://up.apps.vip/logo/favicon.svg",

@@ -6,14 +6,28 @@ const { SqlDb } = require('../util/sqldb')
 const { nanoid } = require('nanoid')
 const sqlDb = new SqlDb()
 
-async function initDb () {
-  /**
-   *  standAloneApps:'++id,name,package,logo,summary,type,url,theme_color,user_theme_color,create_time,updateTime,accountAvatar
-   *  ,order,useCount,lastExecuteTime,settings,unreadCount,*fileAssign,auth,isNew,attribute',//新增两个字段方便应用市场查找筛选
-   */
-  sqlDb.knex.schema.hasTable('app').then(async function (exists) {
+
+
+const systemAppPackage = [
+  'com.thisky.group',
+  'com.thisky.fav',
+  'com.thisky.import',
+  'com.thisky.helper',
+  'com.thisky.imageEditor',
+  'com.thisky.nav',
+  'com.thisky.appStore',
+  'com.thisky.com',
+  'com.thisky.desk'
+]  //包名为上述包名的判定为系统应用
+const appModel = {
+  async initDb () {
+    /**
+     *  standAloneApps:'++id,name,package,logo,summary,type,url,theme_color,user_theme_color,create_time,updateTime,accountAvatar
+     *  ,order,useCount,lastExecuteTime,settings,unreadCount,*fileAssign,auth,isNew,attribute',//新增两个字段方便应用市场查找筛选
+     */
+    let exists = await sqlDb.knex.schema.hasTable('app')
     if (!exists) {
-      console.log('创建app表')
+      console.log('检测到app表不存在，自动创建')
       await sqlDb.knex.schema.createTable('app', function (t) {
         t.string('nanoid').primary().unique() //本地id
         t.string('appid')//appstore的应用id
@@ -74,24 +88,15 @@ async function initDb () {
         }
         await sqlDb.knex('app').insert(data)
       }
+      let count = await sqlDb.knex('app').count({count: '*'})
+      console.log('count=',count)
+      if (!count[0].count) {
+        console.log('准备插入默认应用')
+        await appModel.insertDefaultApps()
+      }
     }
-  })
 
-}
-
-const systemAppPackage = [
-  'com.thisky.group',
-  'com.thisky.fav',
-  'com.thisky.import',
-  'com.thisky.helper',
-  'com.thisky.imageEditor',
-  'com.thisky.nav',
-  'com.thisky.appStore',
-  'com.thisky.com',
-  'com.thisky.desk'
-]  //包名为上述包名的判定为系统应用
-const appModel = {
-
+  },
   async updateAppData (condition, newData) {
     let data = await sqlDb.knex('app').where(condition).first()//get({ name: '收藏夹' })
     if (data) {
@@ -158,11 +163,8 @@ const appModel = {
    * @returns {Promise<void>}
    */
   async initialize () {
-    await initDb()
-    let count = await sqlDb.knex('app').count()
-    if (!count) {
-      await appModel.insertDefaultApps()
-    }
+    await appModel.initDb()
+
     await appModel.ensureAppsData()
 
   },
@@ -339,6 +341,12 @@ const appModel = {
    */
   async install (url = '', app = {}) {
     if (!!!url) return false
+
+    if(app.themeColor){
+      app.theme_color=app.themeColor
+    }
+
+
     let appInstall = {
       nanoid: app.nanoid ? app.nanoid : nanoid(8),
       name: app.name,
@@ -373,9 +381,9 @@ const appModel = {
         return false
       }
     }
-    let insertResult=await sqlDb.knex('app').insert(appInstall)
-    if(insertResult.length>0)
-    return appInstall.nanoid
+    let insertResult = await sqlDb.knex('app').insert(appInstall)
+    if (insertResult.length > 0)
+      return appInstall.nanoid
   },
   /**
    *sqldb
@@ -396,10 +404,10 @@ const appModel = {
     result.forEach((app) => {
       app.capture = ''
       app.isSystemApp = appModel.isSystemApp(app)
-      try{
-        app.attribute=app.attribute?JSON.parse(app.attribute):{}
-      }catch (e) {
-        app.attribute={}
+      try {
+        app.attribute = app.attribute ? JSON.parse(app.attribute) : {}
+      } catch (e) {
+        app.attribute = {}
       }
 
       app.settings = app.settings ? JSON.parse(app.settings) : {}
@@ -413,10 +421,10 @@ const appModel = {
    */
   async get (map) {
     let data = false
-    if(typeof map=='object'){
+    if (typeof map == 'object') {
       data = await sqlDb.knex('app').where(map).first()
-    }else{
-      let nanoid=map
+    } else {
+      let nanoid = map
       data = await sqlDb.knex('app').where({ nanoid: nanoid }).first()
     }
     if (data) {
@@ -497,10 +505,10 @@ const appModel = {
         account_avatar: '',
         order: 0,
         use_count: 3,
-        attribute: {
+        attribute: JSON.stringify({
           isOffical: 1,
           integration: 2
-        },
+        }),
         last_execute_time: Date.now(),
         settings: JSON.stringify({
           bounds: {
@@ -529,10 +537,10 @@ const appModel = {
         account_avatar: '',
         order: 0,
         use_count: 0,
-        attribute: {
+        attribute:JSON.stringify( {
           isOffical: 1,
           integration: 2
-        },
+        }),
         last_execute_time: Date.now(),
         settings: JSON.stringify({
           bounds: {
@@ -552,7 +560,7 @@ const appModel = {
         preload: '/pages/fav/preload.js',
         type: 'web',
         package: 'com.thisky.fav',
-        url: 'http://a.apps.vip/fav/',
+        url: '/pages/fav/index.html',
         theme_color: '#3c78d8',
         user_theme_color: '',
         create_time: Date.now(),
@@ -560,10 +568,10 @@ const appModel = {
         account_avatar: '',
         order: 0,
         use_count: 0,
-        attribute: {
+        attribute: JSON.stringify({
           isOffical: 1,
           integration: 2
-        },
+        }),
         last_execute_time: Date.now(),
         settings: JSON.stringify({
           bounds: {
@@ -592,10 +600,10 @@ const appModel = {
         account_avatar: '',
         order: 0,
         use_count: 0,
-        attribute: {
+        attribute: JSON.stringify({
           isOffical: 1,
           integration: 2
-        },
+        }),
         last_execute_time: Date.now(),
         settings: JSON.stringify({
           bounds: {
@@ -615,10 +623,10 @@ const appModel = {
         logo: 'https://a.apps.vip/imageEditor/icon.svg',
         url: 'https://a.apps.vip/imageEditor/',
         package: 'com.thisky.imageEditor',
-        attribute: {
+        attribute: JSON.stringify({
           isOffical: 1,
           integration: 2
-        },
+        }),
         create_time: Date.now(),
         update_time: Date.now(),
         summary: '可以为您的图片增加相框、贴纸、文字、进行简单裁减、旋转，还可以添加滤镜。',
@@ -633,15 +641,14 @@ const appModel = {
         url: 'https://www.yuque.com/tswork/ngd5zk/iuguin',
         package: 'com.thisky.helper',
         theme_color: '#ff7b42',
-        attribute: {
+        attribute: JSON.stringify({
           isOffical: 1,
           integration: 2
-        },
+        }),
         create_time: Date.now(),
         update_time: Date.now(),
         author: '想天软件',
         site: 'https://apps.vip/',
-        checked: true,
         summary: '帮助手册，让你从零开始学会掌握想天浏览器。',
         is_new: true,
         settings: JSON.stringify({
@@ -652,11 +659,39 @@ const appModel = {
           alwaysTop: false,
           showInSideBar: false,
         }),
+      },
+      {
+        nanoid:nanoid(8),
+        name: '应用市场',
+        logo: 'https://up.apps.vip/logo/favicon.svg',
+        summary: '应用市场，助您发现更大的世界。',
+        preload: '/pages/guide/preload.js',
+        type: 'web',
+        package: 'com.thisky.appStore',
+        url: 'https://a.apps.vip/appStore/index.html',
+        theme_color: '#3c78d8',
+        user_theme_color: '',
+        create_time: Date.now(),
+        update_time: Date.now(),
+        account_avatar: '',
+        order: 0,
+        use_count: 0,
+        attribute: JSON.stringify({
+          isOffical: 1,
+          integration: 2
+        }),
+        last_execute_time: Date.now(),
+        settings: JSON.stringify({
+          bounds: {
+            width: 1180,
+            height: 864
+          },
+          showInSideBar: true
+        }),
+        unread_count: 0,
       }
     ]
     await sqlDb.knex('app').insert(defaultApps)
-    let appStoreData = require('../../pages/appStore/app.js')
-    await appModel.installFromJson(appStoreData)
   },
   /**
    * 设置转中文表达
