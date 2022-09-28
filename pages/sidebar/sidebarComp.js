@@ -2173,16 +2173,6 @@ ipc.on('installApp', function (event, args) {
   })
 })
 
-ipc.on('runAutoRunApps', function (event, args) {
-  appVue.$refs.sidePanel.apps.forEach(app => {
-    if (app.settings.autoRun) {
-      ipc.send('executeApp', { app: app, background: true })
-    }
-  })
-  // if (!localStorage.getItem('suggest')) {
-  //   ipc.send('wizard', { page: 'apps' })
-  // }
-})
 
 ipc.on('executeAppByPackage',async (event,args)=>{
    let app=await standAloneAppModel.getFromPackage(args.package)
