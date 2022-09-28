@@ -1,5 +1,5 @@
 <template>
-  <div id="titleBar" @contextmenu="showMenu"   class="windows"
+  <div id="titleBar" @contextmenu="showMenu"
        style="display: flex;justify-content: flex-start;flex-direction: row;">
     <div class="control-actions" style="width: 120px;display: flex;justify-content: flex-start;flex-direction: row;margin-left: 10px">
       <div id="goHome" @click="home" title="首页" class="action">
