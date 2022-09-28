@@ -240,12 +240,21 @@ const appManager = {
     appManager.getWindowByAppId(appId).hide()
   },
   /**
-   * 隐藏窗体
+   * 显示窗体
    * @param appId
    */
   showAppWindow (appId) {
     appManager.getWindowByAppId(appId).show()
     appManager.getWindowByAppId(appId).focus()
+  },
+  /**
+   * 显示窗体
+   * @param package
+   */
+  showAppWindowByPackage (package) {
+    let window=appManager.getWindowByPackage(package)
+    window.show()
+    window.focus()
   },
   /**
    * 获得app运行状态
@@ -256,6 +265,20 @@ const appManager = {
     let processing = false
     processingAppWindows.forEach((item) => {
       if (item.saApp.nanoid === saAppId) {
+        processing = !item.window.isDestroyed()
+      }
+    })
+    return processing
+  },
+  /**
+   * 获得app运行状态使用package判断
+   * @param saAppId appId
+   * @returns {boolean}
+   */
+  isAppProcessingByPackage (package) {
+    let processing = false
+    processingAppWindows.forEach((item) => {
+      if (item.saApp.package === package) {
         processing = !item.window.isDestroyed()
       }
     })
@@ -363,9 +386,10 @@ const appManager = {
    * @param pkg
    */
   getWindowByPackage (pkg) {
-    return _.find(processingAppWindows, (win) => {
+    let find= _.find(processingAppWindows, (win) => {
       return win.saApp.package === pkg
     })
+    return find.window
   },
   /**
    * 通过appid获取到对应的运行的window对象
@@ -1414,14 +1438,14 @@ app.whenReady().then(() => {
   })
 
   ipc.handle('saAppOpenSysApp', (event, args) => {
-    if (appManager.isAppProcessing(args.saAppId)) {
-      appManager.showAppWindow(args.saAppId)
-
+    const GROUP_PKG='com.thisky.group'
+    if (appManager.isAppProcessingByPackage(GROUP_PKG)) {
+      appManager.showAppWindowByPackage(GROUP_PKG)
       //通过url跳转的方式
-      const appInfo = appManager.getSaAppByAppId(args.saAppId)
+      const appInfo = appModel.get({package:GROUP_PKG})
       const reg = /^http(s)?:\/\/(.*?)\//
       const host = reg.exec(appInfo.url)[0]
-      appManager.getWindowByAppId(args.saAppId).view.webContents.loadURL(`${host}?fid=${args.circleId}`)
+      appManager.getWindowByPackage(GROUP_PKG).view.webContents.loadURL(`${host}?fid=${args.circleId}`)
       return { code: 200, msg: '成功' }
     } else {
       sidePanel.get().webContents.send('message', { type: 'error', config: { content: '团队沟通未运行', key: Date.now() } })
