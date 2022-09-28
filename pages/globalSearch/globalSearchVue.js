@@ -318,15 +318,14 @@ const globalSearch = new Vue({
       return await placesModel.getHistoryCount()
     },
     async getAllApps() {
-      this.apps = await saAppModel.getAllApps({order:'lastExecuteTime',limit:6})
+      this.apps = await saAppModel.getAllApps({order:'last_execute_time',limit:6})
     },
     async searchApp(word) {
-      let apps = await saAppModel.find(word,{order:'lastExecuteTime'})
+      let apps = await saAppModel.find(word,{order:'last_execute_time'})
       return apps.map(v => {
         return {
           title: v.name,
           icon: v.logo,
-          tabId: null,
           tabId: null,
           url: null,
           tag: 'app',

@@ -168,6 +168,7 @@ const appModel = {
     await appModel.ensureAppsData()
 
   },
+
   /**
    *sqldb
    * @param word
@@ -191,7 +192,12 @@ const appModel = {
     }
 
     function matchChinese (str) {
-      return str.match(/[\u4e00-\u9fa5]/g)
+      let match=str.match(/[\u4e00-\u9fa5]/g)
+      if(match)
+        return match
+      else{
+        return []
+      }
     }
 
     function intelligentMatch (arr, word) {
@@ -234,63 +240,130 @@ const appModel = {
       return result
     }
 
-    result.forEach(item => {
-      if (matchChinese(item.name) && matchChinese(item.summary)) {
-        let quanPinName = pinyin(matchChinese(item.name).join(''), { toneType: 'none', type: 'array' })   // 获取数组形式不带声调的拼音
-        let firstPinName = pinyin(matchChinese(item.name).join(''), {
-          pattern: 'first',
-          toneType: 'none',
-          type: 'array'
-        })   // 获取数组形式不带音调拼音首字母
-        let quanPinSummary = pinyin(matchChinese(item.summary).join(''), { toneType: 'none', type: 'array' })   // 获取数组形式不带声调的拼音
-        let firstPinSummary = pinyin(matchChinese(item.summary).join(''), {
-          pattern: 'first',
-          toneType: 'none',
-          type: 'array'
-        })
-
-        if ((item.name.toLowerCase().includes(word) || item.summary.includes(word) || tools.execDomain(item.url).toLowerCase().includes(word)) && !checkMatched(item)) {
-          dealItem(item)
-          searchResult.push(item)
+    function testPin(target,find){
+      function split(str){
+        let arr=[]
+        for (let i=0;i<str.length;i++){
+          arr.push(str.charAt(i))
         }
+        return arr
+      }
 
-        quanPinName.forEach((v, index) => {
-          if (v === word && !checkMatched(item)) {
-            dealItem(item)
-            searchResult.push(item)
-          } else if (quanPinName.join('') === word && !checkMatched(item)) {
-            dealItem(item)
-            searchResult.push(item)
-          } else if (index <= quanPinName.length - 2 && word.includes(v.concat(quanPinName[index + 1])) && !checkMatched(item)) {
-            dealItem(item)
-            searchResult.push(item)
+      function isOrderMatch(target,find){
+        for (let i=0;i<find.length;i++){
+          //挨个字符去匹配，一旦找到，就从这个字符开始的位置继续匹配，如果全部匹配到，则认为成功
+          let currentChart=find.charAt(i)
+          let charIndex=target.indexOf(currentChart)
+          if(charIndex===-1){
+            //没找到这个字符
+            return false
           }
-        })
-        if (intelligentMatch(firstPinName, word) && !checkMatched(item)) {
-          dealItem(item)
-          searchResult.push(item)
+          //如果找到位置，则截断当前的字符后，继续往后面找
+          target=target.substring(charIndex)
         }
+        //找了一遍都找到了，则返回true
+        return true
+      }
 
-        quanPinSummary.forEach((v, index) => {
-          if (v === word && !checkMatched(item)) {
-            dealItem(item)
-            searchResult.push(item)
-          } else if (quanPinSummary.join('') === word && !checkMatched(item)) {
-            dealItem(item)
-            searchResult.push(item)
-          } else if (index <= quanPinSummary.length - 2 && word.includes(v.concat(quanPinSummary[index + 1])) && !checkMatched(item)) {
-            dealItem(item)
-            searchResult.push(item)
-          }
-        })
-        if (intelligentMatch(firstPinSummary, word) && !checkMatched(item)) {
-          dealItem(item)
-          searchResult.push(item)
-        }
+      find=find.toLowerCase()
+      console.log('需要找的目标',find)
+      let full=pinyin(target.toLowerCase(), { toneType: 'none', type: 'array' })
+      let first=pinyin(target.toLowerCase(), {
+        pattern: 'first',
+        toneType: 'none',
+        type: 'array'
+      })
+      let fullStr=full.join('')
+      let firstStr=first.join('')
+      if(isOrderMatch(fullStr,find)|| isOrderMatch(firstStr,find))
+      {
+        return true
+      }
+    }
+
+    let matchedApps= result.filter(app=>{
+      if(testPin(app.name,word) || testPin(app.summary,word) || testPin(app.url,word)){
+        return true
       }
     })
+    return matchedApps
 
-    return result.filter(v => v.name.includes(word) === true) || searchResult
+    //
+    // result.forEach(item => {
+    //   try{
+    //     let haveChinese=matchChinese(item.name) || matchChinese(item.summary)
+    //     if (haveChinese) {
+    //       let quanPinName = pinyin(matchChinese(item.name).join(''), { toneType: 'none', type: 'array' })   // 获取数组形式不带声调的拼音
+    //       let firstPinName = pinyin(matchChinese(item.name).join(''), {
+    //         pattern: 'first',
+    //         toneType: 'none',
+    //         type: 'array'
+    //       })   // 获取数组形式不带音调拼音首字母
+    //
+    //
+    //       console.log('quanPinName',quanPinName)
+    //       console.log('firstPinName',firstPinName)
+    //       let quanPinSummary = pinyin(matchChinese(item.summary).join(''), { toneType: 'none', type: 'array' })   // 获取数组形式不带声调的拼音
+    //       let firstPinSummary = pinyin(matchChinese(item.summary).join(''), {
+    //         pattern: 'first',
+    //         toneType: 'none',
+    //         type: 'array'
+    //       })
+    //       console.log('quanPinSummary',quanPinSummary)
+    //       console.log('firstPinSummary',firstPinSummary)
+    //       if ((item.name.toLowerCase().includes(word) || item.summary.includes(word) || tools.execDomain(item.url).toLowerCase().includes(word)) && !checkMatched(item)) {
+    //         dealItem(item)
+    //         console.log('匹配1')
+    //         searchResult.push(item)
+    //       }
+    //
+    //       quanPinName.forEach((v, index) => {
+    //         if (v === word && !checkMatched(item)) {
+    //           console.log('匹配2')
+    //           dealItem(item)
+    //           searchResult.push(item)
+    //         } else if (quanPinName.join('') === word && !checkMatched(item)) {
+    //           console.log('匹配3')
+    //           dealItem(item)
+    //           searchResult.push(item)
+    //         } else if (index <= quanPinName.length - 2 && word.includes(v.concat(quanPinName[index + 1])) && !checkMatched(item)) {
+    //           console.log('匹配4')
+    //           dealItem(item)
+    //           searchResult.push(item)
+    //         }
+    //       })
+    //       if (intelligentMatch(firstPinName, word) && !checkMatched(item)) {
+    //         console.log('匹配5')
+    //         dealItem(item)
+    //         searchResult.push(item)
+    //       }
+    //
+    //       quanPinSummary.forEach((v, index) => {
+    //         if (v === word && !checkMatched(item)) {
+    //           dealItem(item)
+    //           searchResult.push(item)
+    //         } else if (quanPinSummary.join('') === word && !checkMatched(item)) {
+    //           dealItem(item)
+    //           searchResult.push(item)
+    //         } else if (index <= quanPinSummary.length - 2 && word.includes(v.concat(quanPinSummary[index + 1])) && !checkMatched(item)) {
+    //           dealItem(item)
+    //           searchResult.push(item)
+    //         }
+    //       })
+    //       if (intelligentMatch(firstPinSummary, word) && !checkMatched(item)) {
+    //         dealItem(item)
+    //         searchResult.push(item)
+    //       }
+    //     }
+    //   }catch (e) {
+    //     console.warn(e)
+    //     console.warn(item)
+    //   }
+    //
+    //
+    // })
+    //
+    // return result.filter(v => v.name.includes(word) === true) || searchResult
   },
   /**
    * sqldb
