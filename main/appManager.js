@@ -23,6 +23,17 @@ const appManager = {
   protocolManager: require('./js/main/protocolManager'),
   saApps:[],
   /**
+   * 启动自启动的应用
+   * @returns {Promise<void>}
+   */
+  async executeAutoRunApps () {
+    let apps = await appModel.getAutoRunApps()
+    console.log(apps)
+    apps.forEach(app=>{
+      appManager.openApp(app.nanoid, true, app)
+    })
+  },
+  /**
    * 朝运行中的应用发送IPC
    * @param pkg
    * @param event
@@ -1074,12 +1085,10 @@ const appManager = {
  */
 app.whenReady().then(() => {
   let saAppApplyPermission = null
-
   remote.initialize()
-
-  setTimeout(() => {
-    SidePanel.send('runAutoRunApps')
-  }, 2000)
+  setTimeout(()=> {
+    appManager.executeAutoRunApps() //启动启动运行的应用们
+  },3000)
 
   ipc.on('executeApp', (event, args) => {
     //这里传app，代表app未运行则直接执行起来

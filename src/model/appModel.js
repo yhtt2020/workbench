@@ -79,7 +79,7 @@ const appModel = {
           order: item.order || 0,
           use_count: item.useCount || 0,
           last_execute_time: item.lastExecuteTime,
-          settings: item.settings,
+          settings: item.settings||{},
           unread_count: item.unreadCount || 0,
           file_assign: item.fileAssign || [],
           auth: item.auth || [],
@@ -385,6 +385,18 @@ const appModel = {
     if (insertResult.length > 0)
       return appInstall.nanoid
   },
+  /**
+   * 获得全部自启动的应用
+   * @returns {Promise<*[]>}
+   */
+  async getAutoRunApps(){
+   let allApps=await  appModel.getAllApps()
+    return allApps.filter((app)=>{
+      return !!app.settings.autoRun;
+    })
+  },
+
+
   /**
    *sqldb
    * @param option  order,limit
