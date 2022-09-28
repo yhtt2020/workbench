@@ -61,7 +61,7 @@ Vue.component('group', {
     }
   },
   mounted () {
-    const saAppModel=require('../util/model/standAloneAppModel.js')
+    const saAppModel=require('../../src/model/appModel.js')
     this.item.element.data.forEach(async(icon,index)=>{
       if(icon.element.data.type==='saApp'){
         icon.element.data.saApp= await saAppModel.get(icon.element.data.appId)
@@ -98,7 +98,7 @@ Vue.component('group', {
               style['border-radius']='50%'
               style['background-color']='white'
               style['padding']='1px'
-              let bg= saApp.userThemeColor?saApp.userThemeColor:saApp.themeColor
+              let bg= saApp.user_theme_color?saApp.user_theme_color:saApp.theme_color
               style['border']='2px solid '+bg.toString()
             }
 
@@ -122,7 +122,7 @@ Vue.component('group', {
       this.mouseFlag = 1
     },
    async appMouseUp (e, url,iconEl) {
-      const saAppModel=require('../util/model/standAloneAppModel.js')
+      const saAppModel=require('../../src/model/appModel.js')
       if (this.mouseFlag === 0 && e.button === 0) {
         if(iconEl.element.data.type==='saApp'){
           let saApp=await saAppModel.get(iconEl.element.data.appId)

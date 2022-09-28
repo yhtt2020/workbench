@@ -1,6 +1,6 @@
 const { db } = require('../../js/util/database')
 const { api } = require('../../server-config')
-const standAloneAppModel =require('../../src/model/appModel.js')//require('../util/model/standAloneAppModel.js')
+const standAloneAppModel =require('../../src/model/appModel.js')
 console.log('导入appModel')
 
 const sidebarTpl = /*html*/`

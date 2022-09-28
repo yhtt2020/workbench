@@ -8,7 +8,7 @@ const appTpl = `
                     <!-- draggable="true"  @dragstart="setDrag($event,item.element.data)"-->
                       <div   class="icon-wrapper allow-drag" @mousedown.stop="appMouseDown" @mousemove.stop="appMouseMove" @mouseup.stop="appMouseUp($event,item.element.data.url)"
                            :style="iconStyle(item.element.data)">
-                        <img :style="{'border-color':saApp.userThemeColor?saApp.userThemeColor:saApp.themeColor}"
+                        <img :style="{'border-color':saApp.user_theme_color?saApp.user_theme_color:saApp.theme_color}"
                              :src="item.element.data.icon" onerror="this.src='../../icons/default.svg'">
                       </div>
                       <div class="name allow-drag" :style="'background-color:'+item.element.data.textColor"
@@ -115,7 +115,7 @@ const appTpl = `
       </a-modal>
 </div>
   `
-const saAppModel=require('../util/model/standAloneAppModel.js')
+const saAppModel=require('../../src/model/appModel.js')
 const swatches = window['vue-swatches']
 Vue.component('app', {
   template: appTpl,
@@ -280,7 +280,7 @@ Vue.component('app', {
     },
     async openUrl () {
       if(this.item.element.data.type==='saApp'){
-        let saApp=await saAppModel.get(this.saApp.id)
+        let saApp=await saAppModel.get(this.saApp.nanoid)
         if(saApp){
           ipc.send('executeApp',{app:saApp})
         }else{

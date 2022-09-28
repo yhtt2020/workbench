@@ -6,6 +6,8 @@ const messageModel = require('../../src/model/messageModel')
 const {tools} = require('../util/util')
 const spaceModel = require('../../src/model/spaceModel')
 const statsh = require('../../js/util/statsh/statsh')
+const appModel=require('../../src/model/appModel.js')
+
 
 class TasksList {
 	constructor() {
@@ -680,7 +682,7 @@ ipc.on('handleProtocol', (event, args) => {
 })
 
 ipc.on('execImportHelper', async () => {
-  let saApp=await require('../util/model/standAloneAppModel.js').getFromPackage('com.thisky.import')
+  let saApp=await appModel.getFromPackage('com.thisky.import')
   if(saApp){
     ipc.send('executeApp',{app:saApp})
   }else{
@@ -689,7 +691,7 @@ ipc.on('execImportHelper', async () => {
 })
 
 ipc.on('execFav', async () => {
-  let saApp=await require('../util/model/standAloneAppModel.js').getFromPackage('com.thisky.fav')
+  let saApp=await appModel.getFromPackage('com.thisky.fav')
   if(saApp){
     ipc.send('executeApp',{app:saApp})
   }else{

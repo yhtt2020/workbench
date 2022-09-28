@@ -4,7 +4,7 @@ const axios = require('../src/util/axios')
 const { db } = require('./util/database');
 
 const userStatsModel = require('../pages/util/model/userStatsModel')
-const standAloneAppModel = require('../pages/util/model/standAloneAppModel')
+const standAloneAppModel = require('../src/model/appModel.js')
 const userModel = require("../src/model/userModel");
 
 const statistics = {

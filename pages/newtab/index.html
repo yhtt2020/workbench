@@ -1178,7 +1178,7 @@
         if(!!!this.selectGroup.element.listType)
         {
           this.selectGroup.element['listType']='icon'
-          const saAppModel=require('../util/model/standAloneAppModel.js')
+          const saAppModel=require('../../src/model/appModel.js')
           this.selectGroup.element.data.forEach(async(icon)=>{
             if(icon.element.data.type==='saApp'){
               icon.element.data.saApp= await saAppModel.get(icon.element.data.appId)
@@ -1522,7 +1522,7 @@
       },
       async openUrl (url,data) {
         if(data.type==='saApp'){
-          let saApp=await require('../util/model/standAloneAppModel.js').get(data.appId)
+          let saApp=await require('../../src/model/appModel.js').get(data.appId)
           if(saApp){
             ipc.send('executeApp',{app:saApp})
           }else{
