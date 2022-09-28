@@ -794,13 +794,13 @@ const tabBar = {
    */
   addToApps (id) {
     let tab = tabs.get(id)
-    let standAloneAppModel = require('../../pages/util/model/standAloneAppModel.js')
+    let appModel = require('../../src/model/appModel.js')
     let option = {
       name: tab.title,
       logo: !!!tab.favicon ? '../../icons/default.svg' : tab.favicon.url,
       summary: '自定义应用',
       type: 'web',
-      themeColor: !!!tab.backgroundColor ? '#ccc' : tab.backgroundColor.color,
+      theme_color: !!!tab.backgroundColor ? '#ccc' : tab.backgroundColor.color,
       settings: {
         bounds: {
           width: 1000,
@@ -809,9 +809,9 @@ const tabBar = {
       },
       showInSideBar: false
     }
-    standAloneAppModel.install(tab.url, option).then(success => {
+    appModel.install(tab.url, option).then(nanoid => {
       ipc.send('message', { type: 'success', config: { content: `添加应用：${tab.title} 成功` } })
-      ipc.send('installApp', { id: success })
+      ipc.send('installApp', { nanoid: nanoid })
     }, err => {
       ipc.send('message', { type: 'error', config: { content: '添加应用失败' } })
     })
