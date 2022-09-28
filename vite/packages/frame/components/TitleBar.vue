@@ -162,7 +162,7 @@ export default {
   methods: {
     showMenu(){
       console.log(window.nanoid)
-      ipc.send('createAppMenu',{nanoid:window.nanoid,app:window.app})
+      ipc.send('createAppMenu',{nanoid:window.nanoid})
     },
     goBack () {
       ipc.send('saAppGoBack', {

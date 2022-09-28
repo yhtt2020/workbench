@@ -2,6 +2,7 @@ const { config } = require(path.join(__dirname, '//server-config.js'))
 const remote = require('@electron/remote/main')
 const _ = require('lodash')
 const SaApp = require(__dirname+'/src/main/saAppClass')
+const appModel = require(__dirname+'/src/model/appModel')
 /**
  * 运行中的应用窗体，结构{window:窗体对象,saApp:独立窗体app对象}
  * @type {*[]}
@@ -1068,19 +1069,20 @@ app.whenReady().then(() => {
     }
 
   })
-  ipc.on(ipcMessageMain.saApps.createAppMenu, (event, args) => {
+  ipc.on(ipcMessageMain.saApps.createAppMenu, async (event, args) => {
     let appId = args.nanoid
     let saApp = appManager.getSaAppByAppId(appId)
     let appWindow = appManager.getWindowByAppId(appId)
+    let app = await appModel.get(appId)
     let template = [
       {
         label: '选项',
         submenu: [{
           type: 'checkbox',
-          checked: args.app.settings['alwaysTop'],
+          checked: app.settings['alwaysTop'],
           label: '窗口置顶',
           click () {
-            if (args.app.settings['alwaysTop']) {
+            if (app.settings['alwaysTop']) {
               appManager.setAppSettings(appId, {
                 'alwaysTop': false
               })
@@ -1092,17 +1094,17 @@ app.whenReady().then(() => {
                 'alwaysTop': true
               })
               if (appWindow && !appWindow.isDestroyed()) {
-                appWindow.setAlwaysOnTop(true,'screen-saver')
+                appWindow.setAlwaysOnTop(true, 'screen-saver')
               }
             }
           }
         },
           {
             type: 'checkbox',
-            checked: args.app.settings['showInSideBar'],
+            checked: app.settings['showInSideBar'],
             label: '在左侧栏保留',
             click () {
-              if (args.app.settings['showInSideBar']) {
+              if (app.settings['showInSideBar']) {
                 appManager.setAppSettings(appId, {
                   'showInSideBar': false
                 })
@@ -1116,11 +1118,11 @@ app.whenReady().then(() => {
             }
           },
           {
-            checked: args.app.settings['autoRun'],
+            checked: app.settings['autoRun'],
             type: 'checkbox',
             label: '打开浏览器时运行',
             click () {
-              if (args.app.settings['autoRun']) {
+              if (app.settings['autoRun']) {
                 appManager.setAppSettings(appId, {
                   'autoRun': false
                 })
@@ -1159,10 +1161,10 @@ app.whenReady().then(() => {
               type: 'app',
               data: {
                 type: 'saApp',
-                appId: args.app.nanoid,
-                name: args.app.name,
-                icon: args.app.logo,
-                summary: args.app.summary
+                appId: app.nanoid,
+                name: app.name,
+                icon: app.logo,
+                summary: app.summary
               }
             }
             SidePanel.send('addToDesk', { app: appIcon, deskId: desk.id })
@@ -1207,16 +1209,16 @@ app.whenReady().then(() => {
           })
         }
         template.push({
-          label:'重置窗口',
-          click(){
-            let bounds=renderPage.getMainWindowCenterBounds(appWindow.view.getBounds().width,appWindow.view.getBounds().height)
-            appWindow.setPosition(bounds.x,bounds.y)
+          label: '重置窗口',
+          click () {
+            let bounds = renderPage.getMainWindowCenterBounds(appWindow.view.getBounds().width, appWindow.view.getBounds().height)
+            appWindow.setPosition(bounds.x, bounds.y)
             appWindow.moveTop()
             appWindow.focus()
           }
         })
         template.push({
-          type:'separator'
+          type: 'separator'
         })
         template.push({
           label: '退出',
@@ -1229,7 +1231,7 @@ app.whenReady().then(() => {
       template.push({
         label: '打开',
         click () {
-          appManager.executeApp(args.app)
+          appManager.executeApp(app)
         }
       })
     }
