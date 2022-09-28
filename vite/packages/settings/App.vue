@@ -34,6 +34,9 @@ export default defineComponent({
     window.settings = settings
     // settings.load()
     settingPage.init()
+    settings.get('autoRun',(value)=>{
+      this.autoStart=value
+    })
   },
   setup() {
 
@@ -44,6 +47,10 @@ export default defineComponent({
     }
   },
   methods: {
+    changeAutoStart(value){
+      let isAutoRun=value.target.checked
+      ipc.send('setAutoRun', {value:isAutoRun})
+    },
     setDefault() {
       settingPage.callSetDefaultBrowser()
     }
@@ -219,7 +226,7 @@ export default defineComponent({
             <h3 data-string="settingsAdditionalFeaturesHeading"></h3>
 
             <div class="setting-section">
-              <a-checkbox v-model="autoStart" >开机自启动（浏览器启动加速）</a-checkbox>
+              <a-checkbox @change="changeAutoStart" v-model:checked="autoStart" >开机自启动（浏览器启动加速）</a-checkbox>
               <p style="color: grey;">
                 开机后，自动后台启动到托盘菜单，并开始累计在线时长。此功能同时可加快浏览器的启动速度。
               </p>
