@@ -240,6 +240,21 @@ const appModel = {
       return result
     }
 
+    function isOrderMatch(target,find){
+      for (let i=0;i<find.length;i++){
+        //挨个字符去匹配，一旦找到，就从这个字符开始的位置继续匹配，如果全部匹配到，则认为成功
+        let currentChart=find.charAt(i)
+        let charIndex=target.indexOf(currentChart)
+        if(charIndex===-1){
+          //没找到这个字符
+          return false
+        }
+        //如果找到位置，则截断当前的字符后，继续往后面找
+        target=target.substring(charIndex)
+      }
+      //找了一遍都找到了，则返回true
+      return true
+    }
     function testPin(target,find){
       function split(str){
         let arr=[]
@@ -249,24 +264,8 @@ const appModel = {
         return arr
       }
 
-      function isOrderMatch(target,find){
-        for (let i=0;i<find.length;i++){
-          //挨个字符去匹配，一旦找到，就从这个字符开始的位置继续匹配，如果全部匹配到，则认为成功
-          let currentChart=find.charAt(i)
-          let charIndex=target.indexOf(currentChart)
-          if(charIndex===-1){
-            //没找到这个字符
-            return false
-          }
-          //如果找到位置，则截断当前的字符后，继续往后面找
-          target=target.substring(charIndex)
-        }
-        //找了一遍都找到了，则返回true
-        return true
-      }
 
       find=find.toLowerCase()
-      console.log('需要找的目标',find)
       let full=pinyin(target.toLowerCase(), { toneType: 'none', type: 'array' })
       let first=pinyin(target.toLowerCase(), {
         pattern: 'first',
@@ -282,7 +281,7 @@ const appModel = {
     }
 
     let matchedApps= result.filter(app=>{
-      if(testPin(app.name,word) || testPin(app.summary,word) || testPin(app.url,word)){
+      if(testPin(app.name,word) || testPin(app.summary,word) || testPin(app.url,word) || isOrderMatch(app.name,word) || isOrderMatch(app.summary,word)){
         return true
       }
     })
