@@ -65,7 +65,7 @@
       </div>
     </div>
   </div>
-  <div style="background-color: white;position: fixed;top: 41px;left: 0;right: 0;bottom: 0">
+  <div style="background-color: white;position: fixed;top: 30px;left: 0;right: 0;bottom: 0; -webkit-app-region: none;">
     <div hidden
          style="margin: auto;width: 200px;height: 200px;margin-top: calc( (100vh - 41px) / 2 - 100px);text-align: center">
       <div id="loadingEl" class="lds-ellipsis">
