@@ -678,4 +678,23 @@ app.whenReady().then(()=>{
   ipc.on('barrage.lock',(e,a)=>{
     barrageManager.lock()
   })
+
+
+  ipc.on('setAutoRun',(event,args)=>{
+    let autoRun=args.value
+    if(autoRun){
+      app.setLoginItemSettings({
+        openAtLogin:true,
+        path:process.execPath,
+        args:[]
+      })
+    }else{
+      app.setLoginItemSettings({
+        openAtLogin:false,
+        path:process.execPath,
+        args:[]
+      })
+    }
+    settings.set('autoRun',autoRun)
+  })
 })

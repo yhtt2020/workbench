@@ -1,7 +1,8 @@
 import tools from '../../src/util/tools.js'
-window.globalArgs=tools.getWindowArgs(window).globalArgs
-if(typeof fs ==='undefined'){
-  var fs=require('fs')
+
+window.globalArgs = tools.getWindowArgs(window).globalArgs
+if (typeof fs === 'undefined') {
+  var fs = require('fs')
 }
 var settings = {
   filePath: window.globalArgs['user-data-path'] + (process.platform === 'win32' ? '\\' : '/') + 'settings.json',
@@ -55,9 +56,9 @@ var settings = {
       settings.runChangeCallbacks(key)
     })
 
-	ipc.on('returnIsDefaultBrowser',function(e,value){
-		console.log(value)
-	})
+    ipc.on('returnIsDefaultBrowser', function (e, value) {
+      console.log(value)
+    })
   }
 }
 

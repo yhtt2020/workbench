@@ -57,3 +57,5 @@ ipc.on('receiveSettingsData', function (e, data) {
 ipc.on('setBrowserReturn',(e,args)=>{
   //console.log(args)
 })
+
+window.ipc=ipc
