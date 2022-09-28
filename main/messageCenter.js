@@ -36,12 +36,13 @@ app.whenReady().then(() => {
 
   ipc.on('mesageOpenOperate', (event, args) => {
     if(args.type === 'groupChat') {
-      if(appManager.isAppProcessing(args.saAppId)) {
+      const GROUP_PKG='com.thisky.group'
+      if(appManager.isAppProcessingByPackage(GROUP_PKG)) {
         //通过借助preload对vue直接clicktab操作
-        appManager.showAppWindow(args.saAppId)
-        appManager.getWindowByAppId(args.saAppId).view.webContents.send('switchChat', args.indexName)
+        appManager.showAppWindowByPackage(GROUP_PKG)
+        appManager.getWindowByPackage(GROUP_PKG).view.webContents.send('switchChat', args.indexName)
       } else {
-        sidePanel.get().webContents.send('message',{type:"error",config:{content:'团队沟通未运行',key: Date.now()}})
+        sendMessage({type:"error",config:{content:'团队沟通未运行',key: Date.now()}})
       }
     } else if(args.type === 'community') {
       //todo

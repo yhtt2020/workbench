@@ -57,12 +57,11 @@ export default defineComponent({
       }
     },
     openChat(){
-      ipc.invoke('saAppOpenSysApp', {saAppId: 1})
+      ipc.invoke('saAppOpenSysApp')
     },
     openItem(item){
       if(item.type === 'groupChat') {
         ipc.send('mesageOpenOperate', {
-          saAppId: 1,
           type: 'groupChat',
           indexName: item.index_name
         })
