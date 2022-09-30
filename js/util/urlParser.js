@@ -187,6 +187,10 @@ var urlParser = {
       var representedURL
       try {
         representedURL = new URLSearchParams(new URL(url).search).get('url')
+        let file=new URLSearchParams(new URL(url).search).get('file')
+        if(file){
+          representedURL=file
+        }
       } catch (e) {}
       if (representedURL) {
         return decodeURI(representedURL) //调整，去除对url的转码，重新转出来以提升其可读性
