@@ -15,7 +15,8 @@ import {
   GoldOutlined,
   InsuranceOutlined,
   ExpandAltOutlined,
-  ArrowRightOutlined
+  ArrowRightOutlined,
+  LinkOutlined
 } from '@ant-design/icons-vue'
 import settings from '../../src/settings/settingsContent'
 import settingPage from '../../src/settings/settingPage.js'
@@ -23,7 +24,7 @@ import settingPage from '../../src/settings/settingPage.js'
 export default defineComponent({
   components: {
     EyeOutlined, LayoutOutlined, SearchOutlined, AimOutlined, ControlOutlined, CheckSquareOutlined, HomeOutlined,
-    LockOutlined, NodeIndexOutlined, GoldOutlined, InsuranceOutlined, ExpandAltOutlined, ArrowRightOutlined
+    LockOutlined, NodeIndexOutlined, GoldOutlined, InsuranceOutlined, ExpandAltOutlined, ArrowRightOutlined,LinkOutlined
   },
   mounted() {
     window.settings = settings
@@ -41,6 +42,9 @@ export default defineComponent({
   methods: {
     setDefault() {
       settingPage.callSetDefaultBrowser()
+    },
+    openUrl(url){
+      window.ipc.send('addTab',{url:url})
     }
   }
 })
@@ -389,34 +393,39 @@ export default defineComponent({
           <div class="settings-container" id="browser-tab-container">
             <h3>起始页</h3>
             <div class="setting-section" id="tab-choose">
-              <div class="setting-option">
-                <input type="radio" name="tabChoosed" id="tstab-input"/>
-                <label
-                  for="tstab-input"
-                >想天桌面（官方尝鲜版）</label>
+              <div class="setting-option" style="display: flex;align-items: center">
+                  <input type="radio" name="tabChoosed" id="tstab-input"/>
+                  <label
+                    for="tstab-input"
+                  >想天桌面（官方尝鲜版）</label>
+                <div class="url-icon" @click="openUrl('ts://newtab')"> <link-outlined /></div>
+
               </div>
-              <div class="setting-option">
+              <div class="setting-option" style="display:flex;align-items: center">
                 <input type="radio" name="tabChoosed" id="qingning-input"/>
                 <label
                   for="qingning-input"
                 >青柠起始页（极致简约）</label>
+                <div class="url-icon" @click="openUrl('https://limestart.cn/')"> <link-outlined /></div>
               </div>
-              <div class="setting-option">
+              <div class="setting-option" style="display: flex;align-items: center">
                 <input type="radio" name="tabChoosed" id="infinity-input"/>
                 <label
                   for="infinity-input"
                 >infinity（功能强大）</label>
+                <div class="url-icon" @click="openUrl('https://inftab.com/')"> <link-outlined /></div>
               </div>
-              <div class="setting-option">
+              <div class="setting-option" style="display: flex;align-items: center">
                 <input type="radio" name="tabChoosed" id="itab-input"/>
                 <label
                   for="itab-input"
                 >iTab（热门新秀）</label>
+                <div class="url-icon" @click="openUrl('https://go.itab.link/')"> <link-outlined /></div>
               </div>
               <div class="setting-option">
                 <input type="radio" name="tabChoosed" id="tab-custom-input"/>
                 <label
-                  for="ab-custom-input"
+                  for="tab-custom-input"
                 >自定义</label>
                 <input
                   id="tab-text-input"
@@ -567,5 +576,8 @@ body {
 }
 .gesture-tip{
   margin-left: 10px;
+}
+.url-icon{
+  cursor: pointer;
 }
 </style>
