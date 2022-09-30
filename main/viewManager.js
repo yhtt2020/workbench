@@ -404,7 +404,12 @@ ipc.on('setView', function (e, args) {
   // }
   // let bvs2=mainWindow.getBrowserViews()
   // console.log('setvbiew2',bvs2)
-  let bounds=windowManager.onSetBounds(args.bounds)
+  let bounds=args.bounds
+  try{
+    bounds=windowManager.onSetBounds(args.bounds)
+  }catch (e) {
+    console.warn(e)
+  }
   setBounds(args.id, bounds)
   // let bvs3=mainWindow.getBrowserViews()
   // console.log('setvbiew3',bvs3)
