@@ -56,46 +56,58 @@ const appModel = {
         t.boolean('is_new')
         t.string('attribute')
       })
+      await this.migrateDB()
       //todo 迁移
-      let saApps = await db.standAloneApps.orderBy('id').desc().toArray()
-      //迁移数据库
-      for (let i = 0; i < saApps.length; i++) {
-        let item = saApps[i]
-        let data = {
-          nanoid: nanoid(8),
-          appid: '',
-          name: item.name,
-          package: item.package,
-          preload: item.preload,
-          logo: item.logo,
-          summary: item.summary,
-          type: item.type || 'web',
-          url: item.url,
-          theme_color: item.themeColor,
-          user_theme_color: item.userThemeColor || '',
-          create_time: item.createTime,
-          update_time: item.updateTime,
-          account_avatar: item.accountAvatar,
-          order: item.order || 0,
-          use_count: item.useCount || 0,
-          last_execute_time: item.lastExecuteTime,
-          settings: item.settings||{},
-          unread_count: item.unreadCount || 0,
-          file_assign: item.fileAssign || [],
-          auth: item.auth || [],
-          is_new: item.isNew || 0,
-          attribute: item.attribute || {}
-        }
-        await sqlDb.knex('app').insert(data)
+    }else{
+      //防止迁移失败导致未成功转入应用
+      await this.migrateDB()
+    }
+  },
+  async migrateDB(){
+    const DONE='app.migrate.done'
+    if(await sqlDb.getConfig(DONE)){
+      return
+    }
+    let saApps = await db.standAloneApps.orderBy('id').desc().toArray()
+    //迁移数据库
+    for (let i = 0; i < saApps.length; i++) {
+      let item = saApps[i]
+      let data = {
+        nanoid: nanoid(8),
+        appid: '',
+        name: item.name,
+        package: item.package,
+        preload: item.preload,
+        logo: item.logo,
+        summary: item.summary,
+        type: item.type || 'web',
+        url: item.url,
+        theme_color: item.themeColor,
+        user_theme_color: item.userThemeColor || '',
+        create_time: item.createTime,
+        update_time: item.updateTime,
+        account_avatar: item.accountAvatar,
+        order: item.order || 0,
+        use_count: item.useCount || 0,
+        last_execute_time: item.lastExecuteTime,
+        settings: item.settings||{},
+        unread_count: item.unreadCount || 0,
+        file_assign: item.fileAssign || [],
+        auth: item.auth || [],
+        is_new: item.isNew || 0,
+        attribute: item.attribute || {}
       }
-      let count = await sqlDb.knex('app').count({count: '*'})
-      console.log('count=',count)
-      if (!count[0].count) {
-        console.log('准备插入默认应用')
-        await appModel.insertDefaultApps()
-      }
+      await sqlDb.knex('app').insert(data)
+      console.log('迁移应用',data)
     }
 
+    let count = await sqlDb.knex('app').count({count: '*'})
+    console.log('count=',count)
+    if (!count[0].count) {
+      console.log('准备插入默认应用')
+      await appModel.insertDefaultApps()
+    }
+    await sqlDb.setConfig(DONE,true)
   },
   async updateAppData (condition, newData) {
     let data = await sqlDb.knex('app').where(condition).first()//get({ name: '收藏夹' })
