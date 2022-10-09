@@ -212,6 +212,7 @@ require('sessionRestore.js').initialize().then(()=>{
   require('searchbar/calculatorPlugin.js').initialize()
   require('sessionRestore.js').restore()
   require('util/theme.js').initialize()
+  require('desk.js').initialize()
 //通用工具类(copy实现、深拷贝命中)
   require('util/tools.js').initialize()
   const SpiltBar=require('toolbar/splitbar.js')

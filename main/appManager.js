@@ -1102,175 +1102,180 @@ app.whenReady().then(() => {
     }
 
   })
+
   ipc.on(ipcMessageMain.saApps.createAppMenu, async (event, args) => {
     let appId = args.nanoid
     let saApp = appManager.getSaAppByAppId(appId)
     let appWindow = appManager.getWindowByAppId(appId)
     let app = await appModel.get(appId)
-    let template = [
-      {
-        label: '选项',
-        submenu: [{
-          type: 'checkbox',
-          checked: app.settings['alwaysTop'],
-          label: '窗口置顶',
-          click () {
-            if (app.settings['alwaysTop']) {
-              appManager.setAppSettings(appId, {
-                'alwaysTop': false
-              })
-              if (appWindow && !appWindow.isDestroyed()) {
-                appWindow.setAlwaysOnTop(false)
-              }
-            } else {
-              appManager.setAppSettings(appId, {
-                'alwaysTop': true
-              })
-              if (appWindow && !appWindow.isDestroyed()) {
-                appWindow.setAlwaysOnTop(true, 'screen-saver')
+    ipc.once('gotDesks',(e,a)=>{
+      let template = [
+        {
+          label: '选项',
+          submenu: [{
+            type: 'checkbox',
+            checked: app.settings['alwaysTop'],
+            label: '窗口置顶',
+            click () {
+              if (app.settings['alwaysTop']) {
+                appManager.setAppSettings(appId, {
+                  'alwaysTop': false
+                })
+                if (appWindow && !appWindow.isDestroyed()) {
+                  appWindow.setAlwaysOnTop(false)
+                }
+              } else {
+                appManager.setAppSettings(appId, {
+                  'alwaysTop': true
+                })
+                if (appWindow && !appWindow.isDestroyed()) {
+                  appWindow.setAlwaysOnTop(true, 'screen-saver')
+                }
               }
             }
-          }
+          },
+            {
+              type: 'checkbox',
+              checked: app.settings['showInSideBar'],
+              label: '在左侧栏保留',
+              click () {
+                if (app.settings['showInSideBar']) {
+                  appManager.setAppSettings(appId, {
+                    'showInSideBar': false
+                  })
+                  //todo 更新左侧栏
+                } else {
+                  appManager.setAppSettings(appId, {
+                    'showInSideBar': true
+                  })
+                  //todo 在左侧栏显示
+                }
+              }
+            },
+            {
+              checked: app.settings['autoRun'],
+              type: 'checkbox',
+              label: '打开浏览器时运行',
+              click () {
+                if (app.settings['autoRun']) {
+                  appManager.setAppSettings(appId, {
+                    'autoRun': false
+                  })
+                } else {
+                  appManager.setAppSettings(appId, {
+                    'autoRun': true
+                  })
+                }
+              }
+            },
+            // {
+            //   type: 'separator'
+            // },
+            // {
+            //   label:'发送到当前桌面'
+            // }
+          ]
+
         },
-          {
-            type: 'checkbox',
-            checked: app.settings['showInSideBar'],
-            label: '在左侧栏保留',
-            click () {
-              if (app.settings['showInSideBar']) {
-                appManager.setAppSettings(appId, {
-                  'showInSideBar': false
-                })
-                //todo 更新左侧栏
-              } else {
-                appManager.setAppSettings(appId, {
-                  'showInSideBar': true
-                })
-                //todo 在左侧栏显示
-              }
-            }
-          },
-          {
-            checked: app.settings['autoRun'],
-            type: 'checkbox',
-            label: '打开浏览器时运行',
-            click () {
-              if (app.settings['autoRun']) {
-                appManager.setAppSettings(appId, {
-                  'autoRun': false
-                })
-              } else {
-                appManager.setAppSettings(appId, {
-                  'autoRun': true
-                })
-              }
-            }
-          },
-          // {
-          //   type: 'separator'
-          // },
-          // {
-          //   label:'发送到当前桌面'
-          // }
-        ]
-
-      },
-      {
-        label: '设置',
-        click () {
-          appManager.openSetting(appId)
+        {
+          label: '设置',
+          click () {
+            appManager.openSetting(appId)
+          }
         }
-      }
-    ]
-    let addToDeskMenus = []
-    let desks = args.desks
-    if (!!desks) {
-      desks.forEach((desk) => {
-        addToDeskMenus.push({
-          id: desk.id,
-          label: desk.name,
-          click: () => {
-            const appIcon = {
-              type: 'app',
-              data: {
-                type: 'saApp',
-                appId: app.nanoid,
-                name: app.name,
-                icon: app.logo,
-                summary: app.summary
+      ]
+      let addToDeskMenus = []
+      let desks = a.desks
+      if (!!desks) {
+        desks.forEach((desk) => {
+          addToDeskMenus.push({
+            id: desk.id,
+            label: desk.name,
+            click: () => {
+              const appIcon = {
+                type: 'app',
+                data: {
+                  type: 'saApp',
+                  appId: app.nanoid,
+                  name: app.name,
+                  icon: app.logo,
+                  summary: app.summary
+                }
               }
-            }
-            SidePanel.send('addToDesk', { app: appIcon, deskId: desk.id })
+              SidePanel.send('addToDesk', { app: appIcon, deskId: desk.id })
 
-          }
-        })
-      })
-    }
-    template.push({
-      id: 'addToDesk',
-      label: '添加到桌面',
-      submenu: addToDeskMenus
-    })
-    if (appWindow) {
-      if (!appWindow.isDestroyed()) {
-        template.unshift(
-          {
-            type: 'checkbox',
-            checked: appWindow.isVisible(),
-            label: (saApp.name.length > 18) ? saApp.name.substring(0, 15) + '...' : saApp.name,
-            click () {
-              appManager.toggleAppWindowVisible(appId)
-            }
-          }, {
-            type: 'separator'
-          }
-        )
-
-        if (appWindow.isVisible()) {
-          template.push({
-            label: '隐藏',
-            click () {
-              appManager.hideAppWindow(appId)
             }
           })
-        } else {
-          template.push({
-            label: '显示',
-            click () {
-              appManager.showAppWindow(appId)
-            }
-          })
-        }
-        template.push({
-          label: '重置窗口',
-          click () {
-            let bounds = renderPage.getMainWindowCenterBounds(appWindow.view.getBounds().width, appWindow.view.getBounds().height)
-            appWindow.setPosition(bounds.x, bounds.y)
-            appWindow.moveTop()
-            appWindow.focus()
-          }
-        })
-        template.push({
-          type: 'separator'
-        })
-        template.push({
-          label: '退出',
-          click () {
-            appManager.closeApp(appId)
-          }
         })
       }
-    } else {
       template.push({
-        label: '打开',
-        click () {
-          appManager.executeApp(app)
-        }
+        id: 'addToDesk',
+        label: '添加到桌面',
+        submenu: addToDeskMenus
       })
-    }
-    let menu = require('electron').Menu.buildFromTemplate(template)
+      if (appWindow) {
+        if (!appWindow.isDestroyed()) {
+          template.unshift(
+            {
+              type: 'checkbox',
+              checked: appWindow.isVisible(),
+              label: (saApp.name.length > 18) ? saApp.name.substring(0, 15) + '...' : saApp.name,
+              click () {
+                appManager.toggleAppWindowVisible(appId)
+              }
+            }, {
+              type: 'separator'
+            }
+          )
 
-    menu.popup()
+          if (appWindow.isVisible()) {
+            template.push({
+              label: '隐藏',
+              click () {
+                appManager.hideAppWindow(appId)
+              }
+            })
+          } else {
+            template.push({
+              label: '显示',
+              click () {
+                appManager.showAppWindow(appId)
+              }
+            })
+          }
+          template.push({
+            label: '重置窗口',
+            click () {
+              let bounds = renderPage.getMainWindowCenterBounds(appWindow.view.getBounds().width, appWindow.view.getBounds().height)
+              appWindow.setPosition(bounds.x, bounds.y)
+              appWindow.moveTop()
+              appWindow.focus()
+            }
+          })
+          template.push({
+            type: 'separator'
+          })
+          template.push({
+            label: '退出',
+            click () {
+              appManager.closeApp(appId)
+            }
+          })
+        }
+      } else {
+        template.push({
+          label: '打开',
+          click () {
+            appManager.executeApp(app)
+          }
+        })
+      }
+      let menu = require('electron').Menu.buildFromTemplate(template)
+
+      menu.popup()
+    })
+    sendIPCToMainWindow('getDesks')
+
   })
   ipc.on(ipcMessageMain.saApps.openSetting, (event, args) => {
     appManager.openSetting(args.nanoid)
