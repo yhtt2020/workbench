@@ -17,8 +17,8 @@
 
       <a-checkbox @change="switchShowOnStart" v-model:checked="showOnStart">每次启动的时候选择</a-checkbox>
     </div>
-    <div class="tip" style="">
-      <a-row @click="showTrial" type="flex">
+    <div v-if="hideTrialTip==='false'" class="tip" style="">
+      <a-row @click="showTrial" type="flex" style="cursor: pointer">
         <a-col flex="60px">
           <a-avatar shape="square" src="/icons/bilibili.svg" :size="50"/>
         </a-col>
@@ -26,7 +26,8 @@
           <h3>快速学习空间功能</h3>
           <div>
             通过视频教程，系统学习掌握空间的使用技巧。强烈推荐。
-            <close-outlined style="position: absolute;right: 5px;top: 5px;cursor: pointer"/>
+            <span class="clickable"> <close-outlined @click.stop="hideTrial()" style="position: absolute;right: 5px;top: 5px;cursor: pointer"/></span>
+
           </div>
         </a-col>
       </a-row>
@@ -47,18 +48,25 @@ export default {
     this.showOnStart = await configModel.getShowOnStart()
     this.clientId=tsbApi.runtime.clientId
     this.clientName=tsbApi.runtime.clientName
+    this.hideTrialTip=localStorage.getItem('hideTrialTip')||'false'
+
   },
   data(){
     return {
       appName,
       appVersion,
       showOnStart:false,
+      hideTrialTip:'true',
 
       clientId:'',
       clientName:'',
     }
   },
   methods:{
+    hideTrial(){
+      localStorage.setItem('hideTrialTip','true')
+      this.hideTrialTip='true'
+    },
     reName(){
     },
     getClientName(){
@@ -69,10 +77,7 @@ export default {
       }
     },
     showTrial(){
-      Modal.info({
-        content:'视频教程正在准备中……',
-        okText:"知道了"
-      })
+      this.$router.push({name:'trial'})
     },
     switchShowOnStart () {
       configModel.setShowOnStart(this.showOnStart)
@@ -102,5 +107,10 @@ export default {
   margin-top: 10px;
   text-align: left;
   padding: 10px
+}
+.clickable{
+  &:hover{
+    opacity: 0.6;
+  }
 }
 </style>
