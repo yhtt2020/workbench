@@ -276,8 +276,10 @@ function destroyView(id) {
     //通过上方移除了，不需要再做移除操作
   }
   bvs.forEach(bv=>{
-    if(bv.webContents.id===viewMap[id].webContents.id ){
-      mainWindow.removeBrowserView(bv)
+    if(bv.webContents&&viewMap[id].webContents) {
+      if (bv.webContents.id === viewMap[id].webContents.id) {
+        mainWindow.removeBrowserView(bv)
+      }
     }
   })
   viewMap[id].webContents.destroy()
@@ -470,10 +472,12 @@ function setCurrentBrowserView(needSetBrowserView){
   let hasFinded=false
   let findedView=null
   bvs.forEach(bv=>{
-    if(bv.webContents.id===needSetBrowserView.webContents.id){
-      //如果是要设置的view则跳过
-      findedView=bv
-      hasFinded=true
+    if(needSetBrowserView.webContents && bv.webContents){
+      if(bv.webContents.id===needSetBrowserView.webContents.id){
+        //如果是要设置的view则跳过
+        findedView=bv
+        hasFinded=true
+      }
     }
   })
   if (!hasFinded) {
