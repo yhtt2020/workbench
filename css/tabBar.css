@@ -193,10 +193,6 @@
   min-width: 60px;
 }
 
-#toolbar-navigation-buttons.can-go-forward:hover {
-  width: 4.25rem;
-}
-
 body.is-edit-mode #toolbar-navigation-buttons {
   display: none;
 }
@@ -491,6 +487,9 @@ body.windows.dark-theme .navbar-action-button:not(:disabled):hover {
   margin-right: 2.3em;
 }
 
+.min #toolbar-navigation-buttons #back-button, .min #toolbar-navigation-buttons #forward-button {
+  line-height: 26px;
+}
 .min #mouseRcoverArea {
   display: none !important;
 }
