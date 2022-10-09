@@ -343,6 +343,15 @@ body {
   overflow: hidden;
 }
 
+.bottomBar .ant-badge-dot {
+  right: 5px;
+  top: 5px;
+}
+.bottomBar .ant-btn {
+  background: none !important;
+  border: none !important;
+}
+
 .sidebar {
   position: fixed;
   bottom: 0;
