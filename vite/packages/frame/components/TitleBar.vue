@@ -3,18 +3,27 @@
        style="display: flex;justify-content: flex-start;flex-direction: row;">
     <div class="control-actions" style="width: 120px;display: flex;justify-content: flex-start;flex-direction: row;margin-left: 10px">
       <div id="goHome" @click="home" title="首页" class="action">
-        <span class="action-icon-wrapper"><home-outlined class="action-icon-ant" /></span>
+        <span class="action-icon-wrapper">
+          <span class="bicon action-icon-ant" >&#xe648;</span>
+        </span>
       </div>
       <div id="goBack" @click="goBack" title="返回" class="action" style="opacity: 0.5">
         <span class="action-icon-wrapper">
-           <left-outlined class="action-icon-ant"/>
+          <span class="bicon action-icon-ant" >&#xe650;</span>
         </span>
       </div>
       <div id="goForward" @click="goForward" title="前进" class="action" style="display: none">
-        <span class="action-icon-wrapper"><right-outlined  class="action-icon-ant"/></span>
+        <span class="action-icon-wrapper">
+
+            <span class="bicon action-icon-ant" >&#xe64f;</span>
+        </span>
       </div>
       <div id="refresh" @click="refresh" title="刷新" class="action">
-        <span class="action-icon-wrapper"><redo-outlined  class="action-icon-ant"/></span>
+        <span class="action-icon-wrapper" style="transform: rotateY(180deg)">
+
+            <span class="bicon action-icon-ant" >&#xe661;</span>
+
+        </span>
       </div>
 
     </div>
@@ -34,7 +43,9 @@
     <div class="extra-actions" style="display: flex;width: auto;padding-right: 10px">
       <div class="action">
         <span @click="showMenu" class="action-icon-wrapper">
-         <ellipsis-outlined class="action-icon-ant"/>
+           <span class="bicon action-icon-ant" >&#xe63d;</span>
+
+
         </span>
       </div>
       </div>
