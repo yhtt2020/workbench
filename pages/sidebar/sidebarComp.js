@@ -714,10 +714,6 @@ const sidebarTpl = /*html*/`
             </a-collapse>
           </div>
         </template> -->
-        <li id="guideSearch" @click="visibleGlobalSearch">
-          <a-button  type="default" shape="circle" icon="search" tabindex=-1></a-button>
-          <div class="item-title">全局搜索</div>
-        </li>
         <li @click="visibleMessageCenter">
           <a-badge :dot="this.$store.getters.getAllMessages.length > 0 ? true : false">
             <a-button type="default" shape="circle" icon="bell" tabindex=-1></a-button>
@@ -1514,9 +1510,6 @@ Vue.component('sidebar', {
           freeFixed: true
         })
       }
-    },
-    visibleGlobalSearch () {
-      ipc.send('openGlobalSearch')
     },
     openCircle (args) {
       this.userPanelVisible = false
