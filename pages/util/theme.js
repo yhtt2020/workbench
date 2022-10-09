@@ -3,15 +3,15 @@ db = require('../../js/util/database').db
  * 壁纸的原始地址
  * @type {string}
  */
-const wallUrl='http://d.xiangtian.ren/api/wall/' //壁纸存储的cdn地址
+const wallUrl = 'http://d.xiangtian.ren/api/wall/' //壁纸存储的cdn地址
 
 const wallPaper = {
   get: async () => {
     return db.system.get({ name: 'newtabBg' })
   },
-  async setUrlWallPaper(url){
+  async setUrlWallPaper (url) {
     let newtabBg = await db.system.get({ name: 'newtabBg' })
-    const imageUrl=url
+    const imageUrl = url
     wallPaper.pushHistory(imageUrl)//设置自定义壁纸历史
     if (!!!newtabBg) {
       db.system.put({ name: 'newtabBg', value: imageUrl })
@@ -20,40 +20,39 @@ const wallPaper = {
     }
   },
   set: async (image) => {
-      let newtabBg = await db.system.get({ name: 'newtabBg' })
-      const imageUrl=wallUrl+image
-      wallPaper.pushHistory(imageUrl)//设置自定义壁纸历史
-      if (!!!newtabBg) {
-        db.system.put({ name: 'newtabBg', value: imageUrl })
-      } else {
-        return db.system.update(newtabBg.id, { name: 'newtabBg', value: imageUrl })
-      }
+    let newtabBg = await db.system.get({ name: 'newtabBg' })
+    const imageUrl = wallUrl + image
+    wallPaper.pushHistory(imageUrl)//设置自定义壁纸历史
+    if (!!!newtabBg) {
+      db.system.put({ name: 'newtabBg', value: imageUrl })
+    } else {
+      return db.system.update(newtabBg.id, { name: 'newtabBg', value: imageUrl })
+    }
   },
 
-  getHistory(){
-    let history=[]
-    try{
-      history=JSON.parse(localStorage.getItem('wallPaperHistory'))
-    }catch (e) {
+  getHistory () {
+    let history = []
+    try {
+      history = JSON.parse(localStorage.getItem('wallPaperHistory'))
+    } catch (e) {
 
     }
-    if(!!!history)
-    {
-      localStorage.setItem('wallPaperHistory',JSON.stringify(['../../img/wallpaper.jpeg']))
+    if (!!!history) {
+      localStorage.setItem('wallPaperHistory', JSON.stringify(['../../img/wallpaper.jpeg']))
       return ['../../img/wallpaper.jpeg']
     }
     return history
   },
-  pushHistory(imageUrl){
-    let history=wallPaper.getHistory()
-    for(let i=0;i<history.length;i++){
-      if(history[i]===imageUrl){
-        history.splice(i,1)
+  pushHistory (imageUrl) {
+    let history = wallPaper.getHistory()
+    for (let i = 0; i < history.length; i++) {
+      if (history[i] === imageUrl) {
+        history.splice(i, 1)
       }
     }
     history.unshift(imageUrl)
     console.log(history)
-    localStorage.setItem('wallPaperHistory',JSON.stringify(history))
+    localStorage.setItem('wallPaperHistory', JSON.stringify(history))
   },
   /**
    * 设置某个元素的背景
@@ -62,23 +61,37 @@ const wallPaper = {
    * @returns {boolean}
    */
   setElementBg: (element, bg) => {
+    if (document.getElementById('bgFigure')) {
+      document.getElementById('bgFigure').remove()
+    }
+    let figure = document.createElement('figure')
+    figure.setAttribute('id', 'bgFigure')
+    figure.classList.add('progressive')
+    let img = document.createElement('img')
+    img.setAttribute('id', 'wallpeperWrapper')
+    img.classList.add('progressive__img')
+    img.classList.add('progressive--not-loaded')
+    img.classList.add('wallpaper-wrapper')
+    img.setAttribute('data-progressive', bg)
+    figure.appendChild(img)
+    document.body.appendChild(figure)
+    progressively.init({
+      delay:0,
+      throttle:500
+    })
     if (!!!bg) {
       //背景不存在
       return false
     }
-    element.style = `
-                background: url("${bg}") no-repeat;
-                background-size:cover;
-                background-attachment:fixed;
-                `
+
   },
   /**
    * 获取壁纸的url，自动拼装进起始地址
    * @param name
    * @returns {string}
    */
-  getWallPaperUrl:(name)=>{
-    return wallUrl+name
+  getWallPaperUrl: (name) => {
+    return wallUrl + name
   }
 }
 
@@ -97,15 +110,15 @@ const themeSetting = {
    * 设置新标签页dock的尺寸
    * @returns {*}
    */
-  getNewtabDockSize:()=>{
-    return db.system.get({name:'newtabDockSize'})
+  getNewtabDockSize: () => {
+    return db.system.get({ name: 'newtabDockSize' })
   },
   /**
    * 设置新标签页的dock尺寸，自动存入数据库
    * @param size
    * @returns {Promise<*>}
    */
-  setNewtabDockSize:async (size)=>{
+  setNewtabDockSize: async (size) => {
     let data = await db.system.get({ name: 'newtabDockSize' })
     if (!!!data) {
       db.system.put({ name: 'newtabDockSize', value: size })
@@ -116,4 +129,4 @@ const themeSetting = {
 
 }
 
-module.exports = { wallPaper, themeSetting , wallUrl}
+module.exports = { wallPaper, themeSetting, wallUrl }

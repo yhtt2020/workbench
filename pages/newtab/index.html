@@ -12,19 +12,22 @@
   <link rel="stylesheet" href="./assets/index.css"/>
   <link rel="stylesheet" href="./assets/desktop.css"/>
   <link rel="stylesheet" href="../../ext/vue/vue-swatches.css"/>
+  <link rel="stylesheet" href="./assets/progressively/progressively.min.css"/>
   <script src="../../ext/vue/vue-grid-layout.umd.min.js"></script>
   <script src="../../ext/vue/vue-swatches.umd.min.js"></script>
+  <script src="./assets/progressively/progressively.min.js"></script>
   <link rel="icon" type="image/svg+xml" href="../../icons/svg/hi.svg"/>
   <title>新标签页</title>
 </head>
 
 <body>
+
 <script>
   Vue.use(antd)
   var electron = require('electron')
   var ipc = electron.ipcRenderer
 </script>
-<div id="app">
+<div id="app" style="z-index: 1;position: relative">
 
   <template>
     <vue-selecto
@@ -219,6 +222,7 @@
           <div id="desktop-content" class="desktop-content">
             <div>
               <grid-layout
+                v-show="loaded"
                 :layout.sync="layout"
                 :cols="{ lg: 20, md: 15, sm: 12, xs: 10, xxs: 0 }"
                 :row-height="100"
@@ -877,6 +881,7 @@
     },
     data () {
       return {
+        loaded:false,
         USER_PATH:'',
 
         defaultDeskWallPaper:'../../img/wallpaper.jpeg',
@@ -1389,6 +1394,9 @@
       layoutUpdatedEvent () {
         this.saveDesk()
         this.removeResizeHandleEvent()
+        setTimeout(()=>{
+          this.loaded=true
+        },500)
       },
       handleOk (e) {
         this.visibleAdd = false
@@ -1544,7 +1552,7 @@
         })
       },
       setBg (tabBg) {
-        wallPaper.setElementBg(document.body, tabBg)
+        wallPaper.setElementBg(document.getElementById('wallpeperWrapper'), tabBg)
       },
       //开始拖拽事件
       onStart () {
@@ -1584,7 +1592,22 @@
       }
 
     },
+    beforeCreate(){
+      wallPaper.get().then(data => {
+        if (!!data) {
+          this.defaultDeskWallPaper=data.value
+        }
+        if(!!!this.currentDeskInfo.wallPaper){
+          this.setBg(data.value)
+        }else{
+          this.setBg(this.currentDeskInfo.wallPaper)
+        }
+      }).catch(err => console.log(err))
+    },
     mounted () {
+
+
+
       function aLive(){
         let latestCurrentDeskInfo=deskModel.getCurrentDeskInfo()//当前最新的桌面信息
         if(Number(appVue.currentDeskInfo.updateTime)===Number(latestCurrentDeskInfo.updateTime))
@@ -1620,16 +1643,6 @@
 
       }, 200)
       //获取壁纸
-      wallPaper.get().then(data => {
-        if (!!data) {
-          this.defaultDeskWallPaper=data.value
-        }
-        if(!!!this.currentDeskInfo.wallPaper){
-          this.setBg(data.value)
-        }else{
-          this.setBg(this.currentDeskInfo.wallPaper)
-        }
-      }).catch(err => console.log(err))
 
 
       //获取主题的卡片透明度

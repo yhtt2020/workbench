@@ -1,0 +1,29 @@
+.progressive {
+  overflow: hidden;
+  position: relative;
+  background: #efefef
+}
+
+.progressive__img {
+  width: 100%;
+  height: 100%;
+  transform: translateZ(0)
+}
+
+.progressive--not-loaded {
+  opacity: 0;
+}
+
+.progressive--is-loaded {
+  opacity: 1;
+  animation: a .5s both
+}
+
+@keyframes a {
+  0% {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
