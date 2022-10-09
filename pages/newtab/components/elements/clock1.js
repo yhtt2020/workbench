@@ -1,95 +1,107 @@
 const clock1Tpl=
   `
-   <div class="clock">
-     <link rel="stylesheet" href="./assets/elements/clocks/clock1.css"/>
-        <div class="flip">
-            <div class="digital front" :data-number="nextTimes[0]"></div>
-            <div class="digital back" :data-number="nowTimes[0]"></div>
-        </div>
-        <div class="flip">
-            <div class="digital front" :data-number="nextTimes[1]"></div>
-            <div class="digital back" :data-number="nowTimes[1]"></div>
-        </div>
-        <em class="divider">:</em>
-        <div class="flip">
-            <div class="digital front" :data-number="nextTimes[2]"></div>
-            <div class="digital back" :data-number="nowTimes[2]"></div>
-        </div>
-        <div class="flip">
-            <div class="digital front" :data-number="nextTimes[3]"></div>
-            <div class="digital back" :data-number="nowTimes[3]"></div>
-        </div>
-        <em class="divider">:</em>
-        <div class="flip">
-            <div class="digital front" :data-number="nextTimes[4]"></div>
-            <div class="digital back" :data-number="nowTimes[4]"></div>
-        </div>
-        <div class="flip">
-            <div class="digital front" :data-number="nextTimes[5]"></div>
-            <div class="digital back" :data-number="nowTimes[5]"></div>
-        </div>
-    </div>
 
-
+  <div class="FlipClock">
+  <link rel="stylesheet" href="./assets/elements/clocks/clock1.css"/>
+    <Flipper ref="flipperHour1" />
+    <Flipper ref="flipperHour2" />
+    <em>:</em>
+    <Flipper ref="flipperMinute1" />
+    <Flipper ref="flipperMinute2" />
+    <em>:</em>
+    <Flipper ref="flipperSecond1" />
+    <Flipper ref="flipperSecond2" />
+  </div>
   `
 Vue.component('clock1', {
   template:clock1Tpl,
-  name: "ClockData",
-  data () {
+  name:'clock1',
+  data() {
     return {
-      duration: 650,
-      nowTimes: [],
-      nextTimes: [],
-      timer: {},
+      timer: null,
+      flipObjs: []
+    }
+  },
+  methods: {
+    // 初始化数字
+    init() {
+      let now = new Date()
+      let nowTimeStr = this.formatDate(new Date(now.getTime()), 'hhiiss')
+      for (let i = 0; i < this.flipObjs.length; i++) {
+        this.flipObjs[i].setFront(nowTimeStr[i])
+      }
+    },
+    // 开始计时
+    run() {
+      this.timer = setInterval(() => {
+        // 获取当前时间
+        let now = new Date()
+        let nowTimeStr = this.formatDate(new Date(now.getTime() - 1000), 'hhiiss')
+        let nextTimeStr = this.formatDate(now, 'hhiiss')
+        for (let i = 0; i < this.flipObjs.length; i++) {
+          if (nowTimeStr[i] === nextTimeStr[i]) {
+            continue
+          }
+          this.flipObjs[i].flipDown(
+            nowTimeStr[i],
+            nextTimeStr[i]
+          )
+        }
+      }, 1000)
+    },
+    // 正则格式化日期
+    formatDate(date, dateFormat) {
+      /* 单独格式化年份，根据y的字符数量输出年份
+     * 例如：yyyy => 2019
+            yy => 19
+            y => 9
+     */
+      if (/(y+)/.test(dateFormat)) {
+        dateFormat = dateFormat.replace(
+          RegExp.$1,
+          (date.getFullYear() + '').substr(4 - RegExp.$1.length)
+        )
+      }
+      // 格式化月、日、时、分、秒
+      let o = {
+        'm+': date.getMonth() + 1,
+        'd+': date.getDate(),
+        'h+': date.getHours(),
+        'i+': date.getMinutes(),
+        's+': date.getSeconds()
+      }
+      for (let k in o) {
+        if (new RegExp(`(${k})`).test(dateFormat)) {
+          // 取出对应的值
+          let str = o[k] + ''
+          /* 根据设置的格式，输出对应的字符
+           * 例如: 早上8时，hh => 08，h => 8
+           * 但是，当数字>=10时，无论格式为一位还是多位，不做截取，这是与年份格式化不一致的地方
+           * 例如: 下午15时，hh => 15, h => 15
+           */
+          dateFormat = dateFormat.replace(
+            RegExp.$1,
+            RegExp.$1.length === 1 ? str : this.padLeftZero(str)
+          )
+        }
+      }
+      return dateFormat
+    },
+    // 日期时间补零
+    padLeftZero(str) {
+      return ('00' + str).substr(str.length)
     }
   },
   mounted() {
-    this.initDate();
-    this.timer = setInterval(() => {
-      this.updateTime();
-    }, 1000)
-  },
-  methods: {
-    initDate() {
-      let now = new Date();
-      this.nowTimes = this.getTimeFromDate(new Date(now.getTime() - 1000));
-      this.nextTimes = this.getTimeFromDate(now);
-    },
-    updateTime() {
-      let now = new Date();
-      let nowTimes = this.getTimeFromDate(new Date(now.getTime() - 1000));
-      let nextTimes = this.getTimeFromDate(now);;
-      for (let i = 0; i < 6; i++) {
-        if (nowTimes[i] !== nextTimes[i]) {
-          this.setSpin(i, nowTimes[i], nextTimes[i]);
-        }
-      }
-    },
-    setSpin(index, nowTime, nextTime) {
-      let nodes = document.querySelectorAll(".flip");
-      nodes[index].classList.add('running');
-      this.nowTimes.splice(index, 1, nowTime);
-      this.nextTimes.splice(index, 1, nextTime);
-      setTimeout(() => {
-        nodes[index].classList.remove('running');
-        this.nowTimes.splice(index, 1, nextTime);
-      }, this.duration)
-    },
-    getTimeFromDate(date) {
-      let numTime = [];
-      let timeStr = date
-        .toTimeString()
-        .slice(0, 8)
-        .split(":")
-        .join("");
-      for (let i = 0; i < timeStr.length; i++) {
-        numTime.push(parseInt(timeStr[i]));
-      }
-      return numTime;
-    }
-  },
-  destroyed() {
-    // 销毁定时器
-    clearInterval(this.timer);
+    this.flipObjs = [
+      this.$refs.flipperHour1,
+      this.$refs.flipperHour2,
+      this.$refs.flipperMinute1,
+      this.$refs.flipperMinute2,
+      this.$refs.flipperSecond1,
+      this.$refs.flipperSecond2
+    ]
+    this.init()
+    this.run()
   }
 })
