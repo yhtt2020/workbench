@@ -97,4 +97,8 @@ $dark-second-color: rgb(189, 189, 189);
       }
     }
   }
+  #task-area .task-container{
+      background: $dark-second-bg;
+    border: none;
+  }
 }
