@@ -1,4 +1,24 @@
 @charset "UTF-8";
+.dark-mode #tab-editor-input {
+  color: rgb(210, 210, 210);
+}
+.dark-mode #searchbar {
+  background: rgb(63, 63, 63);
+  border: none;
+  color: rgb(210, 210, 210);
+}
+.dark-mode .searchbar-item {
+  border-bottom: 1px dashed rgba(230, 230, 230, 0.2901960784) !important;
+}
+.dark-mode #searchbar .plugin-alias {
+  border: 1px solid rgba(204, 204, 204, 0.2);
+  background: rgba(221, 221, 221, 0.2392156863);
+  font-size: 12px;
+  padding: 2px 5px;
+  border-radius: 20px;
+  margin-right: 5px;
+  color: #fff;
+}
 .dark-mode #toolbar {
   background: rgb(32, 32, 32);
   border-color: rgb(32, 32, 32);
@@ -491,6 +511,9 @@ body.windows.dark-theme .navbar-action-button:not(:disabled):hover {
   margin-right: 2.3em;
 }
 
+.min #tab-editor {
+  margin-top: 5px;
+}
 .min #toolbar-navigation-buttons #back-button, .min #toolbar-navigation-buttons #forward-button {
   line-height: 26px;
 }

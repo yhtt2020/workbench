@@ -1,19 +1,45 @@
 $dark-bg: rgb(32, 32, 32);
-$dark-second-bg:rgb(63,63,63);
+$dark-second-bg: rgb(63, 63, 63);
 $dark-primary-color: rgb(210, 210, 210);
 $dark-second-color: rgb(189, 189, 189);
 .dark-mode {
-  #toolbar{
-    .mem-clean{
-      .ant-progress-text{
+  #tab-editor-input {
+    color: $dark-primary-color;
+  }
+
+  #searchbar {
+    background: $dark-second-bg;
+    border: none;
+    color: $dark-primary-color
+  }
+
+  .searchbar-item {
+    border-bottom: 1px dashed #e6e6e64a !important;
+  }
+
+  #searchbar .plugin-alias {
+    border: 1px solid #ccc3;
+    background: #dddddd3d;
+    font-size: 12px;
+    padding: 2px 5px;
+    border-radius: 20px;
+    margin-right: 5px;
+    color: #fff;
+  }
+
+  #toolbar {
+    .mem-clean {
+      .ant-progress-text {
         color: $dark-primary-color;
       }
 
     }
-    .action-wrapper{
+
+    .action-wrapper {
       display: inline-block;
       overflow: hidden;
-      &:hover::after{
+
+      &:hover::after {
         content: "";
         display: inline-block;
         width: 30px;
@@ -25,7 +51,8 @@ $dark-second-color: rgb(189, 189, 189);
         z-index: -1;
         border-radius: 6px;
       }
-      .action{
+
+      .action {
         filter: drop-shadow($dark-primary-color 80px 0);
         position: relative;
         overflow: hidden;
@@ -35,70 +62,87 @@ $dark-second-color: rgb(189, 189, 189);
 
     background: $dark-bg;
     border-color: $dark-bg;
-     .action:hover{
+
+    .action:hover {
       background: $dark-second-bg;
     }
-    #tab-editor-input{
+
+    #tab-editor-input {
       color: $dark-primary-color;
     }
-    svg{
+
+    svg {
 
     }
+
     svg path {
       fill: $dark-primary-color !important;
       color: $dark-primary-color;
       stroke: $dark-primary-color;
     }
-    .split{
+
+    .split {
       border-color: $dark-second-bg;
     }
   }
-  #toolbar #address-bar{
+
+  #toolbar #address-bar {
     background: $dark-second-bg;
   }
+
   #third-toolbar {
     background: $dark-bg;
     border-color: $dark-bg;
     color: $dark-primary-color;
   }
+
   #third-toolbar .third-bar-lf .feature-btn {
     background: $dark-second-bg;
     border-color: $dark-second-bg;
     color: $dark-second-color;
   }
+
   #third-toolbar .third-bar-rg .noob-guide-btn {
     background: $dark-second-bg;
     border-color: $dark-second-bg;
   }
+
   #third-toolbar .third-bar-rg span {
     color: $dark-second-color;
   }
-  .tab-item .title{
+
+  .tab-item .title {
     color: $dark-second-color;
   }
+
   .tab-item.active:not(:only-child) {
     border: none;
-    background: rgb(63,63,63);
+    background: rgb(63, 63, 63);
+
     .title {
       color: #cecece;
     }
+
     &.theme-background-low-contrast .tab-item.active:not(:only-child) {
       background: rgba(255, 255, 255, 0.1);
     }
   }
 
 
-  .split-bar{
+  .split-bar {
     background: #202020;
-    .inner-bar{
-      background: rgb(118,118,118);
-      &:hover{
+
+    .inner-bar {
+      background: rgb(118, 118, 118);
+
+      &:hover {
         background: rgba(34, 189, 255, 0.6);
       }
     }
   }
-  #task-area .task-container{
-      background: $dark-second-bg;
+
+  #task-area .task-container {
+    background: $dark-second-bg;
     border: none;
   }
 }
