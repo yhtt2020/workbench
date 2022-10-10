@@ -197,6 +197,10 @@ class SidePanel {
       if (process.getSystemVersion().startsWith('6.1')) {//win7少也要少一个像素
         setHeight -= 1
       }
+      if(process.getSystemVersion().startsWith('10.')){
+        setHeight+=1
+        setX-=1
+      }
     }
     if (isWin11()) {
       //win11要少一个像素
