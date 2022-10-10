@@ -1127,8 +1127,6 @@ function showUserWindow (args) {
     userWindow.on('close', () => {
       userWindow = null
     })
-
-    userWindow.webContents.openDevTools()
   }
 }
 
