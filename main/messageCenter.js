@@ -42,7 +42,9 @@ app.whenReady().then(() => {
         appManager.showAppWindowByPackage(GROUP_PKG)
         appManager.getWindowByPackage(GROUP_PKG).view.webContents.send('switchChat', args.indexName)
       } else {
-        sendMessage({type:"error",config:{content:'团队沟通未运行',key: Date.now()}})
+        appManager.executeAppByPackage(GROUP_PKG,()=>{
+          appManager.getWindowByPackage(GROUP_PKG).view.webContents.send('switchChat', args.indexName)
+        })
       }
     } else if(args.type === 'community') {
       //todo

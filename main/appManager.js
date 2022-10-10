@@ -1,8 +1,8 @@
 const { config } = require(path.join(__dirname, '//server-config.js'))
 const remote = require('@electron/remote/main')
 const _ = require('lodash')
-const SaApp = require(__dirname+'/src/main/saAppClass')
-const appModel = require(__dirname+'/src/model/appModel')
+const SaApp = require(__dirname + '/src/main/saAppClass')
+const appModel = require(__dirname + '/src/model/appModel')
 /**
  * 运行中的应用窗体，结构{window:窗体对象,saApp:独立窗体app对象}
  * @type {*[]}
@@ -21,7 +21,7 @@ const appManager = {
   dockBadge: 0,
   settingWindow: null,
   protocolManager: require('./js/main/protocolManager'),
-  saApps:[],
+  saApps: [],
   /**
    * 启动自启动的应用
    * @returns {Promise<void>}
@@ -29,10 +29,17 @@ const appManager = {
   async executeAutoRunApps () {
     let apps = await appModel.getAutoRunApps()
     console.log(apps)
-    apps.forEach(app=>{
+    apps.forEach(app => {
       appManager.openApp(app.nanoid, true, app)
     })
   },
+  async executeAppByPackage (pkg, cb) {
+    let app = await appModel.get({ package: pkg })
+    if (app) {
+      appManager.openApp(app.nanoid, false, app, undefined, cb)
+    }
+  }
+  ,
   /**
    * 朝运行中的应用发送IPC
    * @param pkg
@@ -72,8 +79,8 @@ const appManager = {
           item.window.show()
         }
         item.window.focus()
-        if(barrageManager)
-           barrageManager.changeUrl(item.saApp.url)
+        if (barrageManager)
+          barrageManager.changeUrl(item.saApp.url)
       }
     })
   },
@@ -109,9 +116,9 @@ const appManager = {
     }
     return false
   },
-  getSaApp(nanoid){
-    return this.saApps.find(app=>{
-      return app.instance.info.nanoid===nanoid
+  getSaApp (nanoid) {
+    return this.saApps.find(app => {
+      return app.instance.info.nanoid === nanoid
     })
   },
   /**
@@ -123,8 +130,8 @@ const appManager = {
   async notification (appId = 0, option = {
     title: '应用消息', body: '消息内容'
   }, ignoreWhenFocus = false) {
-    let saAppInstance=this.getSaApp(appId)
-    let logoUri=await saAppInstance.getLogoUri()
+    let saAppInstance = this.getSaApp(appId)
+    let logoUri = await saAppInstance.getLogoUri()
     option.icon = option.icon ? option.icon : nativeImage.createFromPath(logoUri)
     let saAppWindow = appManager.getWindowByAppId(appId)
     if (ignoreWhenFocus && saAppWindow.isFocused()) {
@@ -263,7 +270,7 @@ const appManager = {
    * @param package
    */
   showAppWindowByPackage (package) {
-    let window=appManager.getWindowByPackage(package)
+    let window = appManager.getWindowByPackage(package)
     window.show()
     window.focus()
   },
@@ -397,7 +404,7 @@ const appManager = {
    * @param pkg
    */
   getWindowByPackage (pkg) {
-    let find= _.find(processingAppWindows, (win) => {
+    let find = _.find(processingAppWindows, (win) => {
       return win.saApp.package === pkg
     })
     return find.window
@@ -588,15 +595,15 @@ const appManager = {
       window.view.webContents.destroy()
       window.destroy()
       appManager.removeAppWindow(saApp.windowId)
-      let found=appManager.saApps.find((app)=>{
-        return app.instance.info.nanoid===nanoid
+      let found = appManager.saApps.find((app) => {
+        return app.instance.info.nanoid === nanoid
       })
-      appManager.saApps.splice(found,1)
+      appManager.saApps.splice(found, 1)
       SidePanel.send('closeApp', { nanoid: nanoid })
     }
   },
-  closeAll(){
-    let closed=0
+  closeAll () {
+    let closed = 0
     processingAppWindows.forEach((item) => {
       if (!item.window.isDestroyed()) {
         appManager.closeApp(item.saApp.nanoid)
@@ -670,8 +677,8 @@ const appManager = {
     if (saApp.package === 'com.thisky.fav' && isDevelopmentMode) {
       // 当为开发环境下的时候，将团队强行更改为本地开发
       //todo 根据实际需求更改
-      saApp.url ='/pages/fav/index.html'
-      saApp.type='local'
+      saApp.url = '/pages/fav/index.html'
+      saApp.type = 'local'
 
       //saApp.url = 'http://localhost:8080/'
     } else if (saApp.package === 'com.thisky.fav') {
@@ -688,19 +695,19 @@ const appManager = {
     if (saApp.type === 'local' && saApp.package) {
       appView.webContents.loadURL('file://' + path.join(__dirname, saApp.url))
     }
-    if(saApp.package === 'com.thisky.appStore') {
+    if (saApp.package === 'com.thisky.appStore') {
       appView.webContents.loadURL(saApp.url)
-    }
-    else {
+    } else {
       appView.webContents.loadURL(saApp.url)
     }
     if (saApp.package === 'com.thisky.fav' && isDevelopmentMode) {
-     // appView.webContents.openDevTools()
+      // appView.webContents.openDevTools()
     }
-    function updateView(url){
-      if(appWindow.isFocused()){
-        if(barrageManager)
-            barrageManager.changeUrl(url)
+
+    function updateView (url) {
+      if (appWindow.isFocused()) {
+        if (barrageManager)
+          barrageManager.changeUrl(url)
       }
       appWindow.webContents.send('updateView', {
         url: url,
@@ -808,24 +815,24 @@ const appManager = {
     // })
     appView.webContents.on('before-input-event', (event, input) => {
       let keyCtrlOrMeta
-        if (process.platform === 'darwin') {
-          keyCtrlOrMeta=input.meta
-        }else{
-          keyCtrlOrMeta=input.control
-        }
-        if (keyCtrlOrMeta && input.key.toLowerCase() === 'w') {
-          appWindow.close()
-          event.preventDefault()
-        } else if (keyCtrlOrMeta && input.key.toLowerCase() === 'f') {
-          appView.webContents.send('findInPage')
-          event.preventDefault()
-        } else if (input.key.toLowerCase() === 'f12') {
-          appView.webContents.openDevTools({
-            mode:"detach"
-          })
-          //todo 想办法增加devtool的新菜单打开的事件，目前没有好办法
-          event.preventDefault()
-        }
+      if (process.platform === 'darwin') {
+        keyCtrlOrMeta = input.meta
+      } else {
+        keyCtrlOrMeta = input.control
+      }
+      if (keyCtrlOrMeta && input.key.toLowerCase() === 'w') {
+        appWindow.close()
+        event.preventDefault()
+      } else if (keyCtrlOrMeta && input.key.toLowerCase() === 'f') {
+        appView.webContents.send('findInPage')
+        event.preventDefault()
+      } else if (input.key.toLowerCase() === 'f12') {
+        appView.webContents.openDevTools({
+          mode: 'detach'
+        })
+        //todo 想办法增加devtool的新菜单打开的事件，目前没有好办法
+        event.preventDefault()
+      }
       // console.log('press'+input)
       //todo 判断linux
     })
@@ -836,12 +843,12 @@ const appManager = {
 
   },
 
-  openApp (appId, background = false, app, option = {}) {
+  openApp (appId, background = false, app, option = {}, cb) {
     let saApp = appManager.getSaAppByAppId(appId)
     if (!!!saApp) {
       //首先必须是没运行的
       saApp = app
-      appManager.executeApp(saApp, background, option)
+      appManager.executeApp(saApp, background, option, cb)
       // if (!saApp) {
       //   //如果不存在，直接运行
       //   appManager.executeApp(saApp, background)
@@ -865,8 +872,10 @@ const appManager = {
    * 执行应用
    * @param saApp 一个应用实体
    * @param background 是否后台运行，是则运行后不显示
+   * @param option
+   * @param cb 启动后的回调
    */
-  executeApp (saApp, background = false, option) {
+  executeApp (saApp, background = false, option, cb) {
     saApp.settings = saApp.settings ? saApp.settings : {}
     if (1) {
       //todo 判断一下是不是独立窗体模式
@@ -880,14 +889,14 @@ const appManager = {
         show: !background,
         frame: false,
         acceptFirstMouse: true,
-        resizable:saApp.package === 'com.thisky.import' || saApp.package === 'com.thisky.appStore' ? false : true,
+        resizable: saApp.package === 'com.thisky.import' || saApp.package === 'com.thisky.appStore' ? false : true,
         titleBarStyle: 'hidden',
         alwaysOnTop: saApp.settings.alwaysTop ? saApp.settings.alwaysTop : false,
         webPreferences: {
           nodeIntegration: true,
           contextIsolation: false,
           sandbox: false,
-          preload:path.join(__dirname, 'src/preload/windowFramePreload.js'),
+          preload: path.join(__dirname, 'src/preload/windowFramePreload.js'),
           partition: null,
           additionalArguments: [
             '--user-data-path=' + userDataPath,
@@ -897,8 +906,8 @@ const appManager = {
           ]
         }
       })
-      if(saApp.settings.alwaysTop){
-        appWindow.setAlwaysOnTop(true,'screen-saver')
+      if (saApp.settings.alwaysTop) {
+        appWindow.setAlwaysOnTop(true, 'screen-saver')
       }
 
       saApp.windowId = appWindow.webContents.id
@@ -917,6 +926,11 @@ const appManager = {
         if (isDevelopmentMode) {
           //appWindow.webContents.openDevTools()
         }
+        if (cb){
+          cb()//执行启动后的回调
+          cb=undefined
+        }
+
       })
       if (saApp.settings.bounds) {
         appWindow.setBounds(saApp.settings.bounds)
@@ -994,7 +1008,10 @@ const appManager = {
         }, 4000)
       })
       appWindow.on('blur', async (event) => {
-        SidePanel.send('updateRunningInfo', { nanoid: saApp.nanoid, 'info': await appManager.getAppRunningInfo(saApp.nanoid) })
+        SidePanel.send('updateRunningInfo', {
+          nanoid: saApp.nanoid,
+          'info': await appManager.getAppRunningInfo(saApp.nanoid)
+        })
       })
       /**
        * 只允许通过关闭按钮隐藏，而不是彻底关闭
@@ -1067,15 +1084,44 @@ const appManager = {
         saApp: saApp
       })
 
-
-      let saAppInstance=new SaApp({
-        info:saApp,
-        window:appWindow,
-        view:appView
+      let saAppInstance = new SaApp({
+        info: saApp,
+        window: appWindow,
+        view: appView
       })
       this.saApps.push(saAppInstance)
     } else {
       //todo intab模式，在主窗体某个标签内
+    }
+  },
+  goChat (args) {
+    let circleId=''
+    if(args && args.circleId){
+      circleId=args.circleId
+    }
+
+    const GROUP_PKG = 'com.thisky.group'
+    async function loadChatUrl () {
+      appManager.showAppWindowByPackage(GROUP_PKG)
+      const appInfo = await appModel.get({ package: GROUP_PKG })
+      console.log(appInfo)
+      let url = appInfo.url
+      if (circleId) {
+        const reg = /^http(s)?:\/\/(.*?)\//
+        const host = reg.exec(appInfo.url)[0]
+        url = `${host}?fid=${circleId}`
+      }
+      appManager.getWindowByPackage(GROUP_PKG).view.webContents.loadURL(url)
+    }
+
+    if (appManager.isAppProcessingByPackage(GROUP_PKG)) {
+      appManager.showAppWindowByPackage(GROUP_PKG)
+      //通过url跳转的方式
+      loadChatUrl()
+    } else {
+      appManager.executeAppByPackage(GROUP_PKG, () => {
+        loadChatUrl()
+      })
     }
   }
 }
@@ -1086,15 +1132,15 @@ const appManager = {
 app.whenReady().then(() => {
   let saAppApplyPermission = null
   remote.initialize()
-  setTimeout(()=> {
+  setTimeout(() => {
     appManager.executeAutoRunApps() //启动启动运行的应用们
-  },3000)
+  }, 3000)
 
   ipc.on('executeApp', (event, args) => {
     //这里传app，代表app未运行则直接执行起来
     try {
-      if(args.app  && args.app.id){
-        args.app.nanoid=args.app.id
+      if (args.app && args.app.id) {
+        args.app.nanoid = args.app.id
       }
       appManager.openApp(args.app.nanoid, args.background, args.app, args.option)
     } catch (e) {
@@ -1108,7 +1154,7 @@ app.whenReady().then(() => {
     let saApp = appManager.getSaAppByAppId(appId)
     let appWindow = appManager.getWindowByAppId(appId)
     let app = await appModel.get(appId)
-    ipc.once('gotDesks',(e,a)=>{
+    ipc.once('gotDesks', (e, a) => {
       let template = [
         {
           label: '选项',
@@ -1284,7 +1330,10 @@ app.whenReady().then(() => {
     appManager.closeApp(args.nanoid)
   })
   ipc.on('getAppRunningInfo', async (event, args) => {
-    SidePanel.send('updateRunningInfo', { nanoid: args.nanoid, 'info': await appManager.getAppRunningInfo(args.nanoid) })
+    SidePanel.send('updateRunningInfo', {
+      nanoid: args.nanoid,
+      'info': await appManager.getAppRunningInfo(args.nanoid)
+    })
   })
   /**
    * 获取并更新一个app的截图
@@ -1354,13 +1403,13 @@ app.whenReady().then(() => {
 
   ipc.handle('saAppGetUserProfile', async () => {
     try {
-      let currentRs=await userModel.getCurrent()
-      if(currentRs.status===1)
-      return {
-        code: 200,
-        msg: '成功',
-        data: Object.assign(currentRs.data.user_info, { accessToken: currentRs.data.token })
-      }
+      let currentRs = await userModel.getCurrent()
+      if (currentRs.status === 1)
+        return {
+          code: 200,
+          msg: '成功',
+          data: Object.assign(currentRs.data.user_info, { accessToken: currentRs.data.token })
+        }
     } catch (err) {
       console.error(err)
       return { code: 500, msg: '失败' }
@@ -1369,7 +1418,7 @@ app.whenReady().then(() => {
 
   ipc.handle('saAppCheckBrowserLogin', async () => {
     try {
-      let isLogged=await userModel.isLogged()
+      let isLogged = await userModel.isLogged()
       if (!isLogged) {
         return { code: 500, msg: '浏览器未登录' }
       } else {
@@ -1452,19 +1501,7 @@ app.whenReady().then(() => {
   })
 
   ipc.handle('saAppOpenSysApp', (event, args) => {
-    const GROUP_PKG='com.thisky.group'
-    if (appManager.isAppProcessingByPackage(GROUP_PKG)) {
-      appManager.showAppWindowByPackage(GROUP_PKG)
-      //通过url跳转的方式
-      const appInfo = appModel.get({package:GROUP_PKG})
-      const reg = /^http(s)?:\/\/(.*?)\//
-      const host = reg.exec(appInfo.url)[0]
-      appManager.getWindowByPackage(GROUP_PKG).view.webContents.loadURL(`${host}?fid=${args.circleId}`)
-      return { code: 200, msg: '成功' }
-    } else {
-      sidePanel.get().webContents.send('message', { type: 'error', config: { content: '团队沟通未运行', key: Date.now() } })
-      return { code: 500, msg: '失败' }
-    }
+    appManager.goChat(args)
   })
 
   ipc.on('channelReloadGroup', () => {
@@ -1545,10 +1582,10 @@ app.whenReady().then(() => {
 
   ipc.on('entityLogin', async (event, args) => {
     let premissionedData = {}
-    let user= await userModel.getCurrent()
-    if(user.status!==1) return
+    let user = await userModel.getCurrent()
+    if (user.status !== 1) return
     if (args.includes('publicUserInfo')) {
-      premissionedData.userInfo =user.data.user_info
+      premissionedData.userInfo = user.data.user_info
     }
     //if todo //args之所以一定要把permission传过来 为未来具体授权内容进行不同的返回
     appManager.getWindowByWindowId(ApplyPermissionOptions.windowId).view.webContents.send('replyEntityLogin', {
