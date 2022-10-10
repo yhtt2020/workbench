@@ -68,6 +68,13 @@ const appModel = {
     if(await sqlDb.getConfig(DONE)){
       return
     }
+    let count = await sqlDb.knex('app').count({count: '*'})
+    let appsCount=count[0].count
+    if(appsCount){
+      await sqlDb.setConfig(DONE,true)
+      //已经迁移过了，直接跳过，防止重复迁移
+      return
+    }
     let saApps = await db.standAloneApps.orderBy('id').desc().toArray()
     //迁移数据库
     for (let i = 0; i < saApps.length; i++) {
@@ -100,10 +107,7 @@ const appModel = {
       await sqlDb.knex('app').insert(data)
       console.log('迁移应用',data)
     }
-
-    let count = await sqlDb.knex('app').count({count: '*'})
-    console.log('count=',count)
-    if (!count[0].count) {
+    if(saApps.length===0){
       console.log('准备插入默认应用')
       await appModel.insertDefaultApps()
     }
