@@ -1127,6 +1127,8 @@ function showUserWindow (args) {
     userWindow.on('close', () => {
       userWindow = null
     })
+
+    userWindow.webContents.openDevTools()
   }
 }
 
@@ -1230,6 +1232,9 @@ app.whenReady().then(() => {
       destroyAllViews()
       saveWindowBounds()
       mainWindow.close()
+      if(SidePanel.alive()){
+        sidePanel.close()
+      }
       mainWindow=null
       showUserWindow()
     }
