@@ -324,7 +324,7 @@ export default {
     async init (uid) {
       this.tipCopyRead = localStorage.getItem('tipCopyRead')
       let user = {}
-      if (uid == 0) {
+      if (!Number(uid)) {
         user = {
           user_info: {
             nickname: '本机空间',

@@ -22,7 +22,7 @@ const routes=[
     path:'/pwd',name:'pwd',component: EnterPwd
   },
   {
-    path:'/space',name:'space',component: SpaceSelect
+    path:'/space/:uid',name:'space',component: SpaceSelect
   },
   {
     path:'/template',name:'template',component: Template
