@@ -110,7 +110,7 @@ app.on('ready', () => {
       resizable: false,
       webPreferences: {
         devTools: true,
-        partition: 'persist:webcontent',
+        partition: null,
         nodeIntegration: true,
         contextIsolation: false,
         additionalArguments: [
@@ -140,7 +140,7 @@ app.on('ready', () => {
       resizable: false,
       webPreferences: {
         devTools: true,
-        partition: 'persist:webcontent',
+        partition: null,
         nodeIntegration: true,
         contextIsolation: false,
         additionalArguments: [
@@ -171,7 +171,7 @@ app.on('ready', () => {
       maximizable:false,
       resizable: false,
       webPreferences: {
-        partition: 'persist:webcontent',
+        partition: null,
         devTools: true,
         nodeIntegration: true,
         contextIsolation: false,
@@ -204,7 +204,7 @@ app.on('ready', () => {
       resizable: false,
       webPreferences: {
         preload: __dirname + '/pages/circle/createPreload.js',
-        partition: 'persist:webcontent',
+        partition: null,
         devTools: true,
         nodeIntegration: true,
         contextIsolation: false,
@@ -262,7 +262,7 @@ app.on('ready', () => {
       if(isDevelopmentMode) {
         url='http://localhost:8000'
       }
-       url=url + config.IM.AUTO_LOGIN
+       //url=url + config.IM.AUTO_LOGIN
        windowManager.create({
         name:CHAT_NAME,
         mod:windowManager.MOD.NO_CONTROLLER,
@@ -274,7 +274,7 @@ app.on('ready', () => {
           minWidth:400,
           minHeight:500,
           show: false,
-          shadow:true,
+          hasShadow:true,
           title:'轻聊',
           icon:path.join(__dirname,'pages/group/group.png')
         },
