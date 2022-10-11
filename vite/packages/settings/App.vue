@@ -55,6 +55,15 @@ export default defineComponent({
                     unit:'百毫秒',
                     type:'number',
                     tip:'设置延迟后，可减少误触概率，但是也将同时降低左侧栏的响应速度，建议设置为300毫秒左右。如频繁使用左侧栏，可调整为0。'
+                  },
+                  {
+                    callback:['sidebar'],//改变的时候，通知侧边栏
+                    value:false,
+                    defaultValue:false,
+                    name:'sideBarDbClickCloseTask',
+                    title:'双击删除标签组',
+                    type:'switch',
+                    tip:'在左侧栏标签组上双击，自动关闭标签组。'
                   }
                 ]
               },

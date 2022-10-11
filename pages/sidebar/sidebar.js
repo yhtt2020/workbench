@@ -488,7 +488,6 @@ window.onload = function() {
       },
       async getUserInfo({commit}){
         const result = await userApi.getUserInfo()
-        console.log('等级相关;',result.data)
         if(result.code===1000){
           commit('set_user_info',result.data)
           commit('SET_TSGRADE', result.data)
@@ -515,7 +514,6 @@ window.onload = function() {
       },
       async getAllMessage({commit}) {
         const result = await messageModel.allList()
-        console.log(result)
         commit('SET_ALLMESSAGES', result)
       },
       async deleteMessageById({commit}, options) {
@@ -711,7 +709,6 @@ ipc.on('updateSidebarGuideScedule', (event, args) => {
 })
 
 ipc.on('adjustSidePanel',(e,a)=>{
-  console.log(a)
   if(a==='min'){
     document.getElementById('appVue').hidden=true
   }else{

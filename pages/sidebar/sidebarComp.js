@@ -1,7 +1,6 @@
 const { db } = require('../../js/util/database')
 const { api } = require('../../server-config')
 const standAloneAppModel =require('../../src/model/appModel.js')
-console.log('导入appModel')
 
 const sidebarTpl = /*html*/`
   <div id="sidebar" class="side-container" @contextmenu.stop="openSidebarMenu">
@@ -562,7 +561,7 @@ const sidebarTpl = /*html*/`
           <draggable id="addTaskCareer" v-model="getItems" group="sideBtn" animation="300" dragClass="dragClass" ghostClass="ghostClass"
             chosenClass="chosenClass" @start="onStart" @end="onEnd">
             <transition-group>
-              <li id="guideAddTasks"  @click="openItem(item.id,i)" @dblclick.stop="" v-for="(item,i) in this.$store.getters.getItems"
+              <li id="guideAddTasks"  @click="openItem(item.id,i)" @dblclick.stop="dbClickTask(item)" v-for="(item,i) in this.$store.getters.getItems"
                 :key="item.id" :visible="item.count>1" data-role="task" :class="isActive(item.id)" :item-id="item.id"
                 style="position: relative">
                 <tippy :ref="'task_'+item.id"
@@ -744,8 +743,8 @@ window.selectedTask=null
 Vue.component('sidebar', {
   data: function () {
     return {
-      showSideBarPopover:true,
-
+      showSideBarPopover:true,//显示悬浮面板
+      sideBarDbClickCloseTask:false,//双击关闭标签组
 
       levelUpgradeShow: false,
       isMedals:false,
@@ -999,21 +998,24 @@ Vue.component('sidebar', {
   },
   template: sidebarTpl,
   methods: {
+    dbClickTask(item){
+      if(this.sideBarDbClickCloseTask) {
+        this.closeItem(item)
+      }
+    },
     getSettings(){
-      console.log('收到设置改变')
       this.showSideBarPopover=this.getSetting('showSideBarPopover',true)
+      this.sideBarDbClickCloseTask=this.getSetting('sideBarDbClickCloseTask',false)
     },
     getSetting(key,defaultValue){
-      let value=settings.get('showSideBarPopover')
+      let value=settings.get(key)
       return (value===undefined?defaultValue:value)
     },
     tippyShown(){
       this.isPopoverShowing=true
-      console.log('显示了')
     },
     tippyHidden(){
       this.isPopoverShowing=false
-      console.log('隐藏了')
     },
     getUserIconName(userIcon){
       let iconPath=userIcon.split('.')
