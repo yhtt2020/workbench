@@ -28,6 +28,7 @@ export default defineComponent({
   },
   data(){
     return {
+      platform:'',//平台
       autoStart:false,//自动启动
       closeExit:1,//关闭时的默认操作
       askCloseExit:true,//关闭的时候询问
@@ -100,6 +101,7 @@ export default defineComponent({
     }
   },
   mounted() {
+    this.platform=process.platform
     window.settings = settings
     // settings.load()
     settingPage.init()
@@ -390,12 +392,15 @@ export default defineComponent({
                 开机后，自动后台启动到托盘菜单，并开始累计在线时长。此功能同时可加快浏览器的启动速度。
               </p>
               <br>
-              <h3>关闭主浏览器后操作</h3>
+
+
+              <!--  仅window上显示此配置项 -->
+              <h3>关闭主界面后操作（仅限Windows操作系统）</h3>
 
               <div style="margin-top: 5px">
-                <a-checkbox @change="changeAskCloseExit" v-model:checked="askCloseExit">每次关闭主窗体的时候都询问</a-checkbox>
+                <a-checkbox :disabled="this.platform!=='win32'" @change="changeAskCloseExit" v-model:checked="askCloseExit">每次关闭主窗体的时候都询问</a-checkbox>
               </div>
-              <a-radio-group style="margin-top: 10px;margin-bottom: 10px;background: #f1f1f1;padding: 10px;border-radius: 3px" v-if="askCloseExit===false" @change="changeCloseExit" v-model:value="closeExit">
+              <a-radio-group style="margin-top: 10px;margin-bottom: 10px;background: #f1f1f1;padding: 10px;border-radius: 3px" v-if="askCloseExit===false && this.platform==='win32'" @change="changeCloseExit" v-model:value="closeExit">
                 <a-radio  :value="0"  >完全退出</a-radio>
                 <a-radio  :value="1" >节能后台运行（推荐）</a-radio>
               </a-radio-group>
@@ -415,7 +420,6 @@ export default defineComponent({
               </li>
               </ol>
               </div>
-
 
               <h3>其他</h3>
               <input type="checkbox" id="checkbox-userscripts"/>
