@@ -36,6 +36,20 @@ var settings = {
     ipc.send('settingChanged', key, value)
     settings.runChangeCallbacks(key)
   },
+  reload(){
+    var fileData
+    try {
+      fileData = fs.readFileSync(settings.filePath, 'utf-8')
+    } catch (e) {
+      if (e.code !== 'ENOENT') {
+        console.warn(e)
+      }
+    }
+    if (fileData) {
+      settings.list = JSON.parse(fileData)
+    }
+    settings.runChangeCallbacks()
+  },
   initialize: function () {
     var fileData
     try {

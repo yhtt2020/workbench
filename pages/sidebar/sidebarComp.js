@@ -576,7 +576,7 @@ const sidebarTpl = /*html*/`
     theme="light"
     :sticky="true"
     animation="fade"
-    trigger="click mouseenter"
+    :trigger="showPopover"
     :delay="[200,200]"
     :lazy="false"
     :hideOnClick="false"
@@ -744,6 +744,9 @@ window.selectedTask=null
 Vue.component('sidebar', {
   data: function () {
     return {
+      showSideBarPopover:true,
+
+
       levelUpgradeShow: false,
       isMedals:false,
       lastSync:Date.now(),//最后一次同步时间
@@ -839,6 +842,12 @@ Vue.component('sidebar', {
   },
 
   async mounted () {
+    ipc.on('settingChanged',(event,args)=>{
+      settings.reload()
+      this.getSettings()
+    })
+    this.getSettings()
+
     window.computeBottomSize=this.fixElementPosition
     if(process.platform==='darwin'){
       document.getElementById('appVue').style.borderRadius='0 0 0 10px'
@@ -953,6 +962,9 @@ Vue.component('sidebar', {
     }
   },
   computed: {
+    showPopover(){
+      return this.showSideBarPopover?'click mouseenter':''
+    },
     user () {
       return this.$store.state.user
     },
@@ -987,6 +999,14 @@ Vue.component('sidebar', {
   },
   template: sidebarTpl,
   methods: {
+    getSettings(){
+      console.log('收到设置改变')
+      this.showSideBarPopover=this.getSetting('showSideBarPopover',true)
+    },
+    getSetting(key,defaultValue){
+      let value=settings.get('showSideBarPopover')
+      return (value===undefined?defaultValue:value)
+    },
     tippyShown(){
       this.isPopoverShowing=true
       console.log('显示了')

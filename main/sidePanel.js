@@ -1390,6 +1390,12 @@ ipc.on('dbClickClose', (e, args) => {
   }
 })
 
+ipc.on('settingChangedCallback',(event,args)=>{
+  if(args.callback.indexOf('sidebar')>=0){
+    SidePanel.send('settingChanged',args)
+  }
+})
+
 /*user面板代码end*/
 
 

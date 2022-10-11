@@ -44,8 +44,10 @@ export default defineComponent({
               {
                 name:'base',
                 title:'基础设置',
+
                 items:[
                   {
+                    callback:['sidebar'],//改变的时候，通知侧边栏
                     value:0,
                     defaultValue:0,
                     name:'sideBarFocusDelay',
@@ -57,12 +59,14 @@ export default defineComponent({
                 ]
               },
               {
+
                 name: 'popover',
                 img:'/img/tip-sidebar-popover.png',
                 title: '悬浮面板',
                 tip:'当鼠标移到左侧栏标签组上的时候，会自动出现悬浮面板。',
                 items: [
                   {
+                    callback: ['sidebar'],//改变的时候通知侧边栏
                     value:true,//此值用于绑定
                     defaultValue:true,//默认值
                     name: 'showSideBarPopover',
@@ -94,10 +98,6 @@ export default defineComponent({
         this.askCloseExit=value
     })
 
-    settings.get('showSideBarPopover',(value)=>{
-      if(value!==undefined)
-        this.showSideBarPopover=value
-    })
     this.initCustomSettings()
   },
   setup() {
@@ -129,14 +129,26 @@ export default defineComponent({
             //绑定配置项的自动存储事件
             item.onChange=(event)=>{
               console.log(event)
+              let value
               switch (item.type) {
                 case 'switch':
-                  settings.set(item.name, event)
-                  break;
                 case 'number':
-                  settings.set(item.name, event)
+                  value=event
                   break
               }
+              settings.set(item.name,value)
+              if(item.callback){
+                let args={
+                  callback:JSON.parse(JSON.stringify(item.callback)),
+                  name:item.name,
+                  value:value
+                }
+                setTimeout(()=>{
+                  ipc.send('settingChangedCallback',args)
+                },500)
+
+              }
+
             }
           })
         })
