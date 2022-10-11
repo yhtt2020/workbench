@@ -15,23 +15,66 @@ import {
   GoldOutlined,
   InsuranceOutlined,
   ExpandAltOutlined,
-  ArrowRightOutlined,ExclamationCircleOutlined
+  ArrowRightOutlined,ExclamationCircleOutlined,SkinOutlined
 } from '@ant-design/icons-vue'
 import settings from '../../src/settings/settingsContent'
 import settingPage from '../../src/settings/settingPage.js'
-
 export default defineComponent({
   components: {
     EyeOutlined, LayoutOutlined, SearchOutlined, AimOutlined, ControlOutlined, CheckSquareOutlined, HomeOutlined,
     LockOutlined, NodeIndexOutlined, GoldOutlined, InsuranceOutlined, ExpandAltOutlined, ArrowRightOutlined,
-    ExclamationCircleOutlined
+    ExclamationCircleOutlined,
+    SkinOutlined
   },
   data(){
     return {
-      autoStart:false,
-      closeExit:1,
-      askCloseExit:true,
-      showCloseExit:false,
+      autoStart:false,//自动启动
+      closeExit:1,//关闭时的默认操作
+      askCloseExit:true,//关闭的时候询问
+      showCloseExit:false,//
+
+      sideBarPopoverDelay:0,//侧边栏感知延迟
+      showSideBarPopover:true,//显示侧边栏悬浮面板
+
+      settings: {
+        sidePanel:
+          {
+            title:'左侧栏',
+            itemGroups:[
+              {
+                name:'base',
+                title:'基础设置',
+                items:[
+                  {
+                    value:0,
+                    defaultValue:0,
+                    name:'sideBarFocusDelay',
+                    title:'左侧栏聚焦延迟',
+                    unit:'百毫秒',
+                    type:'number',
+                    tip:'设置延迟后，可减少误触概率，但是也将同时降低左侧栏的响应速度，建议设置为300毫秒左右。如频繁使用左侧栏，可调整为0。'
+                  }
+                ]
+              },
+              {
+                name: 'popover',
+                img:'/img/tip-sidebar-popover.png',
+                title: '悬浮面板',
+                tip:'当鼠标移到左侧栏标签组上的时候，会自动出现悬浮面板。',
+                items: [
+                  {
+                    value:true,//此值用于绑定
+                    defaultValue:true,//默认值
+                    name: 'showSideBarPopover',
+                    title: '启用悬浮面板',
+                    type: 'switch',
+                    tip: '鼠标移动到标签组上的时候显示悬浮面板。关闭后则不显示。'
+                  }
+                ]
+              },
+            ]
+          }
+      }
     }
   },
   mounted() {
@@ -39,14 +82,23 @@ export default defineComponent({
     // settings.load()
     settingPage.init()
     settings.get('autoRun',(value)=>{
-      this.autoStart=value
+      if(value!==undefined)
+        this.autoStart=value
     })
     settings.get('closeExit',(value)=>{
-      this.closeExit=value
+      if(value!==undefined)
+        this.closeExit=value
     })
     settings.get('askCloseExit',(value)=>{
-      this.askCloseExit=value
+      if(value!==undefined)
+        this.askCloseExit=value
     })
+
+    settings.get('showSideBarPopover',(value)=>{
+      if(value!==undefined)
+        this.showSideBarPopover=value
+    })
+    this.initCustomSettings()
   },
   setup() {
 
@@ -57,6 +109,41 @@ export default defineComponent({
     }
   },
   methods: {
+    /**
+     * 读入自定义配置
+     */
+    initCustomSettings(){
+     let keys= Object.keys(this.settings)
+      keys.forEach((setGroup,key)=>{
+        this.settings[setGroup].itemGroups.forEach((itemGroup)=>{
+          itemGroup.items.forEach((item)=>{
+            //读取配置项
+            settings.get(item.name,(value)=>{
+              if(value===undefined){
+                item.value=item.defaultValue
+              }else{
+                item.value=value
+              }
+            })
+
+            //绑定配置项的自动存储事件
+            item.onChange=(event)=>{
+              console.log(event)
+              switch (item.type) {
+                case 'switch':
+                  settings.set(item.name, event)
+                  break;
+                case 'number':
+                  settings.set(item.name, event)
+                  break
+              }
+            }
+          })
+        })
+      })
+    },
+
+
     changeAutoStart(value){
       let isAutoRun=value.target.checked
       ipc.send('setAutoRun', {value:isAutoRun})
@@ -110,7 +197,7 @@ export default defineComponent({
         </span>
           </template>
           <div class="settings-container" id="privacy-settings-container">
-            <h3 data-string="settingsPrivacyHeading"></h3>
+            <h3 class="set-item" data-string="settingsPrivacyHeading"></h3>
 
             <div class="settings-info-subheading" id="content-blocking-statistics">
               <insurance-outlined style="font-size: 24px;vertical-align: middle"/>
@@ -172,7 +259,7 @@ export default defineComponent({
         <a-tab-pane :forceRender="true" key="Appearance">
           <template #tab>
         <span>
-          <layout-outlined/>
+          <skin-outlined />
           外观
         </span>
 
@@ -233,6 +320,30 @@ export default defineComponent({
           </div>
 
         </a-tab-pane>
+        <a-tab-pane :forceRender="true" key="SidePanel">
+          <template #tab>
+        <span>
+          <layout-outlined/>
+          左侧栏
+        </span>
+          </template>
+          <div class="settings-container" v-for="itemGroup in settings.sidePanel.itemGroups">
+            <h3>{{itemGroup.title}}</h3>
+            <div v-if="itemGroup.tip" class="item-group-tip">{{itemGroup.tip}}</div>
+            <img v-if="itemGroup.img" style="width: 220px;margin-bottom: 10px" :src="itemGroup.img"/>
+            <div v-for="item in itemGroup.items">
+              <span class="item-title">- {{item.title}}：</span> &nbsp;&nbsp;
+              <span v-if="item.type==='switch'">
+                <a-switch @change="item.onChange($event)" size="small" v-model:checked="item.value" />
+              </span>
+              <span v-if="item.type==='number'">
+                <a-input-number @change="item.onChange" style="width: 50px;text-align: center" size="small" id="inputNumber" v-model:value="item.value" :min="0" :max="10" /> {{item.unit}}
+              </span>
+              <p class="tip"><exclamation-circle-outlined /> {{item.tip}}</p>
+            </div>
+          </div>
+
+        </a-tab-pane>
         <a-tab-pane :forceRender="true" key="Feature">
           <template #tab>
         <span>
@@ -245,7 +356,7 @@ export default defineComponent({
 
             <div class="setting-section">
               <a-checkbox @change="changeAutoStart" v-model:checked="autoStart" >开机自启动（浏览器启动加速）</a-checkbox>
-              <p style="color: grey;">
+              <p class="tip">
                 开机后，自动后台启动到托盘菜单，并开始累计在线时长。此功能同时可加快浏览器的启动速度。
               </p>
               <br>
@@ -258,7 +369,7 @@ export default defineComponent({
                 <a-radio  :value="0"  >完全退出</a-radio>
                 <a-radio  :value="1" >节能后台运行（推荐）</a-radio>
               </a-radio-group>
-              <div style="margin-top: 5px">
+              <div  class="tip" style="margin-top: 5px">
                 <exclamation-circle-outlined /> 节能后台运行将<strong>大幅度降低</strong>软件内存消耗。
                 <br>
                 选择完全退出则不能：
@@ -630,5 +741,48 @@ body {
 }
 .gesture-tip{
   margin-left: 10px;
+}
+
+.set-title{
+  margin-bottom: 5px;
+}
+h3{
+  font-size: 14px;
+  padding-bottom: 5px;
+  margin-left: -20px;
+  padding-left: 5px;
+  position: relative;
+  margin-top: 10px;
+}
+</style>
+<style lang="scss">
+h3{
+  &:before{
+    content:"";
+    display: inline-block;
+    background: #0051ff;
+    width:5px;
+    border-radius: 3px;
+    height: 16px;
+    position: absolute;
+    bottom: 8px;
+    left: -8px;
+
+  }
+}
+.item-group-tip{
+  font-size: 13px;
+  margin-left: -15px;
+  color: #999;
+  margin-bottom: 10px;
+}
+.item-title{
+
+}
+
+.tip{
+  color: grey;
+  font-size: 12px;
+  margin-top: 5px;
 }
 </style>
