@@ -26,9 +26,15 @@
 <body>
 <script>
   const fs=require('fs')
-
   let settings=require('../../js/util/settings/settings')
   let collTimer=null
+  let value=settings.get('sideBarFocusDelay')
+  let sideBarFocusDelay=value===undefined?0:value
+  ipc.on('settingChanged',(event,args)=>{
+    if(args.name==='sideBarFocusDelay'){
+      sideBarFocusDelay=args.value
+    }
+  })
   function mousenter (target) {
     if (appVue.mod==='auto') {
       if(collTimer) return
@@ -37,7 +43,7 @@
         document.getElementById('clickThroughElement').style.left = '155px'
         clearInterval(collTimer)
         collTimer=null
-      },200)
+      },sideBarFocusDelay*100)
     }
   }
 

@@ -173,32 +173,7 @@
 </style>
 
 
-<script>
-  //移动到左侧空白区域的时候，让左侧栏重获鼠标，防止无法移动上去
-  var focusTimer = null
 
-  function setNoIgnore () {
-    if (focusTimer) return
-    focusTimer = setInterval(function () { //开启定时器，下面就是执行的方法，在窗体加载1S后执行下面的方法。
-      window.postMessage({
-        message: 'set-ignore-mouse-events'
-      })
-      ipc.send('setMouseEnable')
-      //console.log('设置左侧栏鼠标有效')
-      clearTimeout(focusTimer) //关闭定时器。
-      focusTimer = null
-    }, 200)
-  }
-
-  function stopSetIgnore () {
-    if (focusTimer) {
-      clearTimeout(focusTimer) //关闭定时器。
-      focusTimer = null
-    }
-  }
-
-
-</script>
 <div id="searchbar" class="" hidden>
   <div class="top-answer-area"></div>
 </div>
@@ -369,7 +344,8 @@
   </div>
 </div>
 <script>
-  const settings = require('./js/util/settings/settingsContent.js')
+  //const settings = require('./js/util/settings/settingsContent.js')
+
   const ipc = require('electron').ipcRenderer
   const toolbar = new Vue({
     el: '#appVue',
@@ -604,7 +580,9 @@
 
 <script src="dist/bundle.js"></script>
 <script>
-  const setting=require('./js/util/settings/settings')
+  window.setting=require('./js/util/settings/settings')
+  console.log('初始化配置')
+
   ipc.on('clearCurrentUser', async (event, args) => {
     const { db } = require('./js/util/database.js')
     await db.system.where('name').equals('currentUser').modify({
@@ -754,7 +732,41 @@
 
 
 </script>
+<script>
+  window.sideBarFocusDelay=0
+  let value=setting.get('sideBarFocusDelay')
+  window.sideBarFocusDelay=value===undefined?0:value
+  ipc.on('settingChanged',(event,args)=>{
+    //当用户修改设置的时候，自动生效
+    if(args.name==='sideBarFocusDelay'){
+      window.sideBarFocusDelay=args.value
+    }
+  })
+  //移动到左侧空白区域的时候，让左侧栏重获鼠标，防止无法移动上去
+  var focusTimer = null
 
+  function setNoIgnore () {
+    if (focusTimer) return
+    focusTimer = setInterval(function () { //开启定时器，下面就是执行的方法，在窗体加载1S后执行下面的方法。
+      window.postMessage({
+        message: 'set-ignore-mouse-events'
+      })
+      ipc.send('setMouseEnable')
+      //console.log('设置左侧栏鼠标有效')
+      clearTimeout(focusTimer) //关闭定时器。
+      focusTimer = null
+    }, window.sideBarFocusDelay*100)
+  }
+
+  function stopSetIgnore () {
+    if (focusTimer) {
+      clearTimeout(focusTimer) //关闭定时器。
+      focusTimer = null
+    }
+  }
+
+
+</script>
 <style>
   browser-action-list::part(action) {
     width: 32px !important;

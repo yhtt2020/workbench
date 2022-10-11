@@ -47,7 +47,7 @@ export default defineComponent({
 
                 items:[
                   {
-                    callback:['sidebar'],//改变的时候，通知侧边栏
+                    callback:['sidebar','main'],//改变的时候，通知侧边栏
                     value:0,
                     defaultValue:0,
                     name:'sideBarFocusDelay',
@@ -346,7 +346,7 @@ export default defineComponent({
             <div v-for="item in itemGroup.items">
               <span class="item-title">- {{item.title}}：</span> &nbsp;&nbsp;
               <span v-if="item.type==='switch'">
-                <a-switch @change="item.onChange($event)" size="small" v-model:checked="item.value" />
+                <a-switch style="margin-bottom: 4px" @change="item.onChange($event)" size="small" v-model:checked="item.value" />
               </span>
               <span v-if="item.type==='number'">
                 <a-input-number @change="item.onChange" style="width: 50px;text-align: center" size="small" id="inputNumber" v-model:value="item.value" :min="0" :max="10" /> {{item.unit}}
