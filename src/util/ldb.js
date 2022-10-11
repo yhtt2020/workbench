@@ -48,9 +48,9 @@ let ldb = {
     }
   },
   initDb(){
-    ldb.db.defaults(tables).write()
+    //ldb.db.defaults(tables).write()
     //修正错误数据
-    ldb.repaireDb()
+    //ldb.repaireDb()
   },
   /**
    * 修复数据库的数据

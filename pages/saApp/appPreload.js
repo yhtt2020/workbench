@@ -9,6 +9,8 @@ const { nanoid } = require('nanoid')
 const axios = require('axios')
 const { config, api } = require('../../server-config')
 
+const tsbApi=require('../../src/browserApi/baseApi.js')
+contextBridge.exposeInMainWorld('tsbApi',tsbApi)
 axios.defaults.baseURL = config.NODE_SERVER_BASE_URL;
 axios.defaults.adapter = require('axios/lib/adapters/http');
 

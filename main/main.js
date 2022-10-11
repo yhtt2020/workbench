@@ -278,18 +278,54 @@ function createWindowWithBounds(bounds) {
 			sendIPCToWindow(mainWindow, 'maximize')
 		})
 	}
+    async function askCloseExit() {
+      let askCloseExit = settings.get('askCloseExit')
+      if(askCloseExit===undefined){
+        askCloseExit=true
+      }
+      let closeExit
+      if (askCloseExit === true) {
+        let choose = await dialog.showMessageBox(mainWindow, {
+          message: '是否完全退出浏览器？',
+          type: 'info',
+          defaultId: 1,
+          title: '退出选择',
+          detail: '完全退出之后，将无法累计在线时长、无法接收消息，还将增加打开浏览器的耗时。选『节能后台运行』，则保留到托盘菜单，且以最低内存运行。建议后台运行。',
+          checkboxLabel: '不再询问',
+          buttons: [
+            '完全退出',
+            '节能后台运行（推荐）'
+          ]
+        })
+        console.log(choose)
+        if (choose.checkboxChecked) {
+          settings.set('askCloseExit', false)
+          settings.set('closeExit', choose.response)
+        }
+        closeExit = choose.response
+      }else{
+        closeExit=settings.get('closeExit')
+        if(closeExit===undefined){
+          closeExit=1
+        }
+      }
+      if (closeExit === 0) {
+        app.exit()
+      }
+    }
+	mainWindow.on('close', async function (e) {
 
-	mainWindow.on('close', function(e) {
-    if(!canCloseMainWindow){
+    if (!canCloseMainWindow) {
       safeCloseMainWindow()//发送给主窗体，告知其需要安全关闭，其准备好关闭后会重新触发
       mainWindow.hide()
       e.preventDefault()
       return
     }
-		destroyAllViews()
-		// save the window size for the next launch of the app
-		saveWindowBounds()
-	})
+    destroyAllViews()
+    // save the window size for the next launch of the app
+    saveWindowBounds()
+
+  })
   mainWindow.on('ready-to-show',()=>{
     mainWindow.show()
     loadSidePanel()
@@ -328,10 +364,10 @@ function createWindowWithBounds(bounds) {
       if(userWindow){
         return
       }
+      askCloseExit()
      //windows上，且不是在切换空间，则关闭整个应用
       // todo 如果做了托盘菜单，这里不需要直接退出app
      //app.quit()
-
     }
 	})
 

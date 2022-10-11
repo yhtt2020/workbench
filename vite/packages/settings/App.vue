@@ -15,7 +15,7 @@ import {
   GoldOutlined,
   InsuranceOutlined,
   ExpandAltOutlined,
-  ArrowRightOutlined
+  ArrowRightOutlined,ExclamationCircleOutlined
 } from '@ant-design/icons-vue'
 import settings from '../../src/settings/settingsContent'
 import settingPage from '../../src/settings/settingPage.js'
@@ -23,11 +23,15 @@ import settingPage from '../../src/settings/settingPage.js'
 export default defineComponent({
   components: {
     EyeOutlined, LayoutOutlined, SearchOutlined, AimOutlined, ControlOutlined, CheckSquareOutlined, HomeOutlined,
-    LockOutlined, NodeIndexOutlined, GoldOutlined, InsuranceOutlined, ExpandAltOutlined, ArrowRightOutlined
+    LockOutlined, NodeIndexOutlined, GoldOutlined, InsuranceOutlined, ExpandAltOutlined, ArrowRightOutlined,
+    ExclamationCircleOutlined
   },
   data(){
     return {
       autoStart:false,
+      closeExit:1,
+      askCloseExit:true,
+      showCloseExit:false,
     }
   },
   mounted() {
@@ -36,6 +40,12 @@ export default defineComponent({
     settingPage.init()
     settings.get('autoRun',(value)=>{
       this.autoStart=value
+    })
+    settings.get('closeExit',(value)=>{
+      this.closeExit=value
+    })
+    settings.get('askCloseExit',(value)=>{
+      this.askCloseExit=value
     })
   },
   setup() {
@@ -50,6 +60,14 @@ export default defineComponent({
     changeAutoStart(value){
       let isAutoRun=value.target.checked
       ipc.send('setAutoRun', {value:isAutoRun})
+    },
+    changeCloseExit(value){
+      let closeExit=Number(value.target.value)
+      settings.set('closeExit',closeExit)
+    },
+    changeAskCloseExit(value){
+      let checked=value.target.checked
+      settings.set('askCloseExit',checked)
     },
     setDefault() {
       settingPage.callSetDefaultBrowser()
@@ -223,7 +241,7 @@ export default defineComponent({
         </span>
           </template>
           <div class="settings-container" id="additional-settings-container">
-            <h3 data-string="settingsAdditionalFeaturesHeading"></h3>
+            <h3>开机自启动</h3>
 
             <div class="setting-section">
               <a-checkbox @change="changeAutoStart" v-model:checked="autoStart" >开机自启动（浏览器启动加速）</a-checkbox>
@@ -231,6 +249,34 @@ export default defineComponent({
                 开机后，自动后台启动到托盘菜单，并开始累计在线时长。此功能同时可加快浏览器的启动速度。
               </p>
               <br>
+              <h3>关闭主浏览器后操作</h3>
+
+              <div style="margin-top: 5px">
+                <a-checkbox @change="changeAskCloseExit" v-model:checked="askCloseExit">每次关闭主窗体的时候都询问</a-checkbox>
+              </div>
+              <a-radio-group style="margin-top: 10px;margin-bottom: 10px;background: #f1f1f1;padding: 10px;border-radius: 3px" v-if="askCloseExit===false" @change="changeCloseExit" v-model:value="closeExit">
+                <a-radio  :value="0"  >完全退出</a-radio>
+                <a-radio  :value="1" >节能后台运行（推荐）</a-radio>
+              </a-radio-group>
+              <div style="margin-top: 5px">
+                <exclamation-circle-outlined /> 节能后台运行将<strong>大幅度降低</strong>软件内存消耗。
+                <br>
+                选择完全退出则不能：
+                <ol style="padding-left: 20px">
+              <li>
+                累计在线使用时长，提升在线等级。
+              </li>
+              <li>
+                接收轻聊、应用消息。
+              </li>
+              <li>
+                快速打开浏览器。
+              </li>
+              </ol>
+              </div>
+
+
+              <h3>其他</h3>
               <input type="checkbox" id="checkbox-userscripts"/>
               <label
                 for="checkbox-userscripts"
