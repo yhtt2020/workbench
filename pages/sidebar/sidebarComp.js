@@ -1873,7 +1873,7 @@ Vue.component('sidebar', {
           if(this.sideBarCloseAutoClean){
             //清理标签组
             this.clearTaskUnlock(item)
-            this.$message.success({ content: '以内组内存在锁定标签，已为您自动清理标签组。' })
+            this.$message.success({ content: '因为组内存在锁定标签，根据您的设置，已为您自动清理标签组。' })
           }else{
             this.$message.error({ content: '删除标签失败，组内存在锁定标签，请解锁后重新删除。' })
           }
