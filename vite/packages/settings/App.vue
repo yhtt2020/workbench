@@ -64,6 +64,15 @@ export default defineComponent({
                     title:'双击删除标签组',
                     type:'switch',
                     tip:'在左侧栏标签组上双击，自动关闭标签组。'
+                  },
+                  {
+                    callback:['sidebar'],//改变的时候，通知侧边栏
+                    value:false,
+                    defaultValue:false,
+                    name:'sideBarCloseAutoClean',
+                    title:'组内存在锁定标签时删除标签组改为清理标签组',
+                    type:'switch',
+                    tip:'当标签组内存在锁定标签时，自动改为清理标签组内非锁定标签。对双击删除、点关闭均生效。不勾选则仅提示。建议勾选。'
                   }
                 ]
               },

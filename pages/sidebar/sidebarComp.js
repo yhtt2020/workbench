@@ -745,6 +745,7 @@ Vue.component('sidebar', {
     return {
       showSideBarPopover:true,//显示悬浮面板
       sideBarDbClickCloseTask:false,//双击关闭标签组
+      sideBarCloseAutoClean:false,//当组内存在锁定标签时，更改为清理标签组
 
       levelUpgradeShow: false,
       isMedals:false,
@@ -1006,6 +1007,7 @@ Vue.component('sidebar', {
     getSettings(){
       this.showSideBarPopover=this.getSetting('showSideBarPopover',true)
       this.sideBarDbClickCloseTask=this.getSetting('sideBarDbClickCloseTask',false)
+      this.sideBarCloseAutoClean=this.getSetting('sideBarCloseAutoClean',false)
     },
     getSetting(key,defaultValue){
       let value=settings.get(key)
@@ -1868,7 +1870,13 @@ Vue.component('sidebar', {
           ipc.send('closeTask', { tabId: item.id })
           this.$message.success({ content: '删除标签组成功。' })
         } else {
-          this.$message.error({ content: '删除标签失败，组内存在锁定标签，请解锁后重新删除。' })
+          if(this.sideBarCloseAutoClean){
+            //清理标签组
+            this.clearTaskUnlock(item)
+            this.$message.success({ content: '以内组内存在锁定标签，已为您自动清理标签组。' })
+          }else{
+            this.$message.error({ content: '删除标签失败，组内存在锁定标签，请解锁后重新删除。' })
+          }
         }
 
       }
