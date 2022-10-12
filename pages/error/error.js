@@ -277,10 +277,7 @@ const erorDescriptions = {
   '-116': sslError,
   '-117': sslError,
   '-200': sslError,
-  '-201': {
-    name: l('sslErrorTitle'),
-    message: l('sslTimeErrorMessage')
-  },
+  '-201': sslError,
   '-202': sslError,
   '-203': sslError,
   '-204': sslError,
@@ -339,11 +336,14 @@ if (errDesc && errDesc.secondaryAction) {
 
 // if an ssl error occured, "try again" should go to the http:// version, which might work
 
-if (erorDescriptions[ec] === sslError && ec != -201 && ec != -200) {
-  url = url.replace('https://', 'http://')
-}
+// if (erorDescriptions[ec] === sslError && ec != -201 && ec != -200) {
+//   url = url.replace('https://', 'http://')
+// }
+//证书类的都允许用户强制跳过，如果用户强制跳过，则无需进行协议转换，故不需要此代码了
+console.log(erorDescriptions[ec],sslError)
 
-if (ec == -201 || ec == -200) {
+if (erorDescriptions[ec]===sslError) {
+  //证书类的都允许
   continueButton.hidden = false
 }
 
@@ -352,7 +352,7 @@ if (url) {
     retry()
   })
   continueButton.addEventListener('click', () => {
-    if(ec == -201 || ec == -200) {
+    if(erorDescriptions[ec]===sslError) {
       settings.get('whiteCertInvalid', (whiteCertInvalid) => {
         const reg = /^http(s)?:\/\/(.*)\.(\w*)/
         const regedUrl = reg.exec(url)[0]
