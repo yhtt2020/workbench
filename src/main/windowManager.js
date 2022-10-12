@@ -278,12 +278,30 @@ class WindowManager {
       if(destroy) {
         instance.close()
       }
-      delete this[instance.type+'Map'][name]
-      delete this.instanceMap[name]
-      delete this.webContentsMap[name]
+      //因为存在可能由于parent窗体被关闭导致被关闭的情况，实例的移除已经全部放到window或者webcontents移除的时候自动处理了。
+      //this.ensureInstanceRemoved(instance.type,name)
     } else {
       throw 'instance不存在'
     }
+  }
+
+  /**
+   * 确认并删除实例
+   * @param type
+   * @param name
+   */
+  ensureInstanceRemoved(type,name){
+    if(this[type+'Map'][name]){
+      delete this[type+'Map'][name]
+    }
+    if(this.instanceMap[name] && this.instanceMap[name].type===type){
+      //判断一下类型是否匹配，如果不匹配，可能是切换，而不是关闭，此时可能之后，则不需要移除
+      delete this.instanceMap[name]
+      if(this.webContentsMap[name]){
+        delete this.webContentsMap[name]
+      }
+    }
+
   }
 
   /**
@@ -335,6 +353,10 @@ class WindowManager {
       }
       window.on('ready-to-show', () => {
         window.show()
+      })
+
+      window.on('closed',()=>{
+        this.ensureInstanceRemoved('window',name)
       })
       webContents = window.webContents
       if (rememberBounds) {
@@ -421,6 +443,9 @@ class WindowManager {
       view.webContents.loadURL(url)
     }
     this.viewMap[name] = view
+    view.webContents.on('destroyed',()=>{
+      this.ensureInstanceRemoved('view',name)
+    })
     let viewInstance = new ViewInstance({
       view: view,
       name: name
@@ -578,6 +603,11 @@ class WindowManager {
     }
   }
 
+  /**
+   * 通用绑定事件方法，额外增加了一个instance参数以便于api区分当前的instance
+   * @param channel
+   * @param cb
+   */
   onWindow (channel, cb) {
     this._on('api.window.' + channel, (event, args) => {
       let instance = this.get(args['_name'])
