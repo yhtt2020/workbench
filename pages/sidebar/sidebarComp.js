@@ -774,6 +774,7 @@ Vue.component('sidebar', {
       teamList:[],
       remainHour:'',
       remainMinute: '',
+      minimal:false,
       tags: [
         {
           label: '公开',
@@ -1057,7 +1058,8 @@ Vue.component('sidebar', {
         {
         },
         {
-          text: `<div>点击这里，或着按下<b>Alt + F</b>键打开全局搜索</div>`, attachTo: {element: '#guideSearch', on: 'right'},
+          text: `<div>点击这里，或着按下<b>Alt + F</b>键打开全局搜索</div>`, attachTo: {element: '#guideApplySecond', on: 'bottom'},
+          classes: 'guideSearch',
           buttons: [
             {action: function () {
                 window.location.href='tsb://app/redirect/?package=com.thisky.helper&url=https://www.yuque.com/tswork/browser/zp48yn'
@@ -2293,60 +2295,81 @@ ipc.on('closeUserSidePanel',(event,args)=>{
 })
 
 ipc.on('guide',async (event, args) => {
-  let current;
-  if (args === 5) {
-    // current = await db.system.where('name').equals('currentUser').first()
+  if(appVue.$refs.sidePanel.minimal===true){
+    appVue.$message.error('请取消极简模式后再使用新手引导');
+  } else{
+    let current;
+    if (args === 5) {
+      // current = await db.system.where('name').equals('currentUser').first()
       current = appVue.$refs.sidePanel.user.uid
-    if(current !== 0 ){
-      if(appVue.$refs.sidePanel.teamLock===false){
-        appVue.$refs.sidePanel.toggleUserPanel()
-        appVue.$refs.sidePanel.teamLock=true
-        setTimeout(() => {
-          appVue.$refs.sidePanel.focus()
-          appVue.$refs.sidePanel.guide(args)
-          ipc.send('enterGuide')
-        }, 800)
-      }
+      if(current !== 0 ){
+        if(appVue.$refs.sidePanel.teamLock===false){
+          appVue.$refs.sidePanel.toggleUserPanel()
+          appVue.$refs.sidePanel.teamLock=true
+          setTimeout(() => {
+            appVue.$refs.sidePanel.focus()
+            appVue.$refs.sidePanel.guide(args)
+            ipc.send('enterGuide')
+          }, 800)
+        }
 
+      }
+      if(current === 0){
+        appVue.$message.error('登录后才能使用团队功能');
+      }
+      // appVue.$refs.sidePanel.userPanelVisible=true
+    }else if(args===6){
+      appVue.$refs.sidePanel.focus()
+      appVue.$refs.sidePanel.guideAddTasks()
     }
-    if(current === 0){
-      appVue.$message.error('登录后才能使用团队功能');
+    else {
+      ipc.send('enterGuide')
+      appVue.$refs.sidePanel.focus()
+      appVue.$refs.sidePanel.guide(args)
     }
-    // appVue.$refs.sidePanel.userPanelVisible=true
-  }else if(args===6){
-    appVue.$refs.sidePanel.focus()
-    appVue.$refs.sidePanel.guideAddTasks()
   }
-  else {
-    ipc.send('enterGuide')
-    appVue.$refs.sidePanel.focus()
-    appVue.$refs.sidePanel.guide(args)
-  }
+
 })
 
 ipc.on('guideTasks',()=>{
-  ipc.send('enterGuide')
-  appVue.$refs.sidePanel.focus()
-  appVue.$refs.sidePanel.guideTasks()
+  if(appVue.$refs.sidePanel.minimal===true){
+    appVue.$message.error('请取消极简模式后再使用新手引导');
+  } else {
+    ipc.send('enterGuide')
+    appVue.$refs.sidePanel.focus()
+    appVue.$refs.sidePanel.guideTasks()
+  }
 })
 
 ipc.on('guideApplyFirst',()=>{
-  ipc.send('enterGuide')
-  appVue.$refs.sidePanel.focus()
-  appVue.$refs.sidePanel.guideApplyFirst()
+  if(appVue.$refs.sidePanel.minimal===true){
+    appVue.$message.error('请取消极简模式后再使用新手引导');
+  } else {
+    ipc.send('enterGuide')
+    appVue.$refs.sidePanel.focus()
+    appVue.$refs.sidePanel.guideApplyFirst()
+  }
 })
 
 ipc.on('guideDesktop',()=>{
-  setTimeout(() => {
-    ipc.send('enterGuide')
-  }, 300)
-  appVue.$refs.sidePanel.focus()
-  appVue.$refs.sidePanel.guideDesktop()
+  if(appVue.$refs.sidePanel.minimal===true){
+    appVue.$message.error('请取消极简模式后再使用新手引导');
+  } else {
+    setTimeout(() => {
+      ipc.send('enterGuide')
+    }, 300)
+    appVue.$refs.sidePanel.focus()
+    appVue.$refs.sidePanel.guideDesktop()
+  }
 })
 
 ipc.on('guideLogin',()=>{
-  appVue.$refs.sidePanel.focus()
-  appVue.$refs.sidePanel.toggleUserPanel()
+  if(appVue.$refs.sidePanel.minimal===true){
+    appVue.$message.error('请取消极简模式后再使用新手引导');
+  } else {
+    appVue.$refs.sidePanel.focus()
+    appVue.$refs.sidePanel.toggleUserPanel()
+  }
 })
 
 
