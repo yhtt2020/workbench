@@ -673,11 +673,10 @@ ipc.on('errorClose',(e,args)=>{
   // }
 })
 
-var barrageManager=null //全局可用
 const { BarrageManager }=require(path.join(__dirname,'/src/main/barrageManager.js'))
 app.whenReady().then(()=>{
   setTimeout(()=>{
-    barrageManager=new BarrageManager(windowManager)
+    global.barrageManager=new BarrageManager(windowManager)
     //barrageManager.init()
   },1000)
 
@@ -694,7 +693,7 @@ app.whenReady().then(()=>{
     }
   })
   ipc.on('barrage.changeUrl',(e,a)=>{
-    if(barrageManager)
+    if(typeof barrageManager !=='undefined')
      barrageManager.changeUrl(a.url)
   })
 

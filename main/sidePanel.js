@@ -25,7 +25,7 @@ function isWin () {
   return process.platform === 'win32'
 }
 
-class SidePanel {
+global.SidePanel=class SidePanel {
   _sidePanel = null //sidePanelWindow的实例
   titlebarHeight = 20
   panelWidth = 800

@@ -326,7 +326,7 @@ app.whenReady().then(() => {
 //   }
 // }
 
-const render = {
+global.render = {
   renderWindows: [],//渲染窗体
   renderPopups: [],//渲染弹窗
   /**

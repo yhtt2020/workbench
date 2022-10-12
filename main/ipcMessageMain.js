@@ -55,4 +55,4 @@ const ipcMessageMain={
   }
 }
 
-
+module.exports=ipcMessageMain
