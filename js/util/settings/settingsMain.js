@@ -76,6 +76,6 @@ var settings = {
     })
   }
 }
-
+global.settings=settings
 settings.initialize()
 module.exports = settings
