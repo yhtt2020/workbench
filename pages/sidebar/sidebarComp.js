@@ -996,7 +996,7 @@ Vue.component('sidebar', {
           'app-task': true
         }
       }
-    }
+    },
   },
   template: sidebarTpl,
   methods: {
@@ -1052,6 +1052,12 @@ Vue.component('sidebar', {
       }
       delete lvSys['lv0']
       return lvSys
+    },
+    isminimal(){
+      if(appVue.$refs.sidePanel.minimal === true){
+        appVue.$message.error('请取消极简模式后再使用新手引导');
+        return false
+      }else return true
     },
     guide(a){
       const stepsList=[
@@ -2295,9 +2301,8 @@ ipc.on('closeUserSidePanel',(event,args)=>{
 })
 
 ipc.on('guide',async (event, args) => {
-  if(appVue.$refs.sidePanel.minimal===true){
-    appVue.$message.error('请取消极简模式后再使用新手引导');
-  } else{
+
+  if(appVue.$refs.sidePanel.isminimal()===true){
     let current;
     if (args === 5) {
       // current = await db.system.where('name').equals('currentUser').first()
@@ -2327,14 +2332,13 @@ ipc.on('guide',async (event, args) => {
       appVue.$refs.sidePanel.focus()
       appVue.$refs.sidePanel.guide(args)
     }
+
   }
 
 })
 
 ipc.on('guideTasks',()=>{
-  if(appVue.$refs.sidePanel.minimal===true){
-    appVue.$message.error('请取消极简模式后再使用新手引导');
-  } else {
+  if(appVue.$refs.sidePanel.isminimal()===true){
     ipc.send('enterGuide')
     appVue.$refs.sidePanel.focus()
     appVue.$refs.sidePanel.guideTasks()
@@ -2342,9 +2346,7 @@ ipc.on('guideTasks',()=>{
 })
 
 ipc.on('guideApplyFirst',()=>{
-  if(appVue.$refs.sidePanel.minimal===true){
-    appVue.$message.error('请取消极简模式后再使用新手引导');
-  } else {
+  if(appVue.$refs.sidePanel.isminimal()===true){
     ipc.send('enterGuide')
     appVue.$refs.sidePanel.focus()
     appVue.$refs.sidePanel.guideApplyFirst()
@@ -2352,9 +2354,7 @@ ipc.on('guideApplyFirst',()=>{
 })
 
 ipc.on('guideDesktop',()=>{
-  if(appVue.$refs.sidePanel.minimal===true){
-    appVue.$message.error('请取消极简模式后再使用新手引导');
-  } else {
+  if(appVue.$refs.sidePanel.isminimal()===true){
     setTimeout(() => {
       ipc.send('enterGuide')
     }, 300)
@@ -2364,9 +2364,7 @@ ipc.on('guideDesktop',()=>{
 })
 
 ipc.on('guideLogin',()=>{
-  if(appVue.$refs.sidePanel.minimal===true){
-    appVue.$message.error('请取消极简模式后再使用新手引导');
-  } else {
+  if(appVue.$refs.sidePanel.isminimal()===true){
     appVue.$refs.sidePanel.focus()
     appVue.$refs.sidePanel.toggleUserPanel()
   }
