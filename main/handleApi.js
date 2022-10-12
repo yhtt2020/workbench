@@ -1,6 +1,7 @@
-var windowManager
+const {WindowManager}= require(__dirname+'/src/main/windowManager.js')
+
 app.whenReady().then(()=>{
-  windowManager=new WindowManager({
+  global.windowManager=new WindowManager({
   })
   windowManager.init()
   let resizingSplitBar=false

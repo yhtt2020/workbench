@@ -1,29 +1,6 @@
-/**
- * 实例类，主要是将窗体之类的对象进行再一次封装，方便对其进行二次操作
- */
-
-class Instance {
-  type = 'window'
-  name
-  object = null
-  initOption
-  createOptions //首次初始化时的options
-
-  constructor (initOption) {
-    this.initOption = initOption
-    this.createOptions=initOption.createOptions
-    this.name = initOption.name
-  }
-
-  destroy () {
-
-  }
-
-  close () {
-    windowManager.close(this.name)
-  }
-}
-
+const path=require('path')
+const {WindowInstance,ViewInstance} =require('./instanceClass.js')
+const {app,ipcMain:ipc,BrowserWindow,BrowserView }=require('electron')
 /**
  * 代理view管理
  */
@@ -147,60 +124,7 @@ class ViewManager {
   }
 }
 
-/**
- * 窗体类
- */
-class WindowInstance extends Instance {
-  window
 
-  constructor (initOption) {
-    super(initOption)
-    this.window = initOption.window
-  }
-
-  create () {
-    //todo 将窗体实例创建的方法搬过来
-  }
-
-  close () {
-    this.window.close()
-    this.destroy()
-  }
-}
-
-/**
- * view类
- */
-class ViewInstance extends Instance {
-  type = 'view'
-  view
-  parent
-
-  constructor (initOption,parent) {
-    super(initOption)
-    this.view = initOption.view
-    this.parent=parent
-  }
-
-  create () {
-    //todo 将窗体实例创建的方法搬过来
-  }
-
-  close () {
-    if(mainWindow){
-      mainWindow.removeBrowserView(this.view)
-    }
-    if(this.view.webContents && !this.view.webContents.isDestroyed())
-    {
-      this.view.webContents.destroy()
-    }
-    this.parent.restoreAttachMod()
-    windowManager.attachedView=null
-    windowManager.attachedInstance=null
-    windowManager.attachStatus=null
-    this.destroy()
-  }
-}
 
 /**
  * 窗口管理类，主要用于控制一些窗体，可以实现独立小窗体、吸附窗体。
@@ -671,3 +595,6 @@ class WindowManager {
 
 
 
+module.exports={
+  WindowManager
+}

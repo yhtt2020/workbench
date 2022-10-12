@@ -2,13 +2,13 @@
 
 const BrowserView = electron.BrowserView
 
-var viewMap = {} // id: view
+global.viewMap = {} // id: view
 var viewStateMap = {} // id: view state
 var selectedView = null
 
 var temporaryPopupViews = {} // id: view
 
-var viewBounds = {}
+global.viewBounds = {}
 var sidebarBounds = {}
 
 var defaultBrowserViewBg='#ffffff'
