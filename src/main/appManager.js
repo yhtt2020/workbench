@@ -620,116 +620,50 @@ class AppManager {
     })
     return closed
   }
-  loadView (saApp, appWindow, option) {
+  getViewWebPreferences (saApp) {
     let preload = ''
     if (saApp.isSystemApp) {
       if (!!!saApp.preload || saApp.preload === '') {
-        preload = path.join(__dirname + '/pages/saApp/appPreload.js')
+        preload = path.join(__dirname + '../../../pages/saApp/appPreload.js')
       } else {
-        preload = path.join(__dirname + saApp.preload)
+        preload = path.join(__dirname +'../../../'+ saApp.preload)
       }
     } else {
-      preload = path.join(__dirname + '/pages/saApp/appPreload.js')
-    }
-
-    let auth = []
-    if (saApp.auth) {
-      saApp.auth = JSON.parse(saApp.auth)
-      if (saApp.auth.base) {
-        auth = auth.concat(...saApp.auth.base)
-      }
-      if (saApp.auth.app) {
-        auth = auth.concat(...saApp.auth.app)
-      }
+      preload = path.join(__dirname + '../../../pages/saApp/appPreload.js')
     }
     let partition = 'persist:webcontent'
     if (saApp.isSystemApp) {
       partition = null
-    } else if (auth.indexOf('node') > -1) {
+    } else if (saApp.authAll.indexOf('node') > -1) {
       partition = 'persist:' + saApp.package
     }
-
-    let webPreferences = {
-      preload: preload,//后者是所有web应用公用的preload
-      nodeIntegration: saApp.isSystemApp || auth.indexOf('node') > -1,
-      contextIsolation: !saApp.isSystemApp && auth.indexOf('webSecure') === -1,
-      enableRemoteModule: true,
-      sandbox: false,
-      safeDialogs: false,
-      backgroundColor: 'white',
-      safeDialogsMessage: false,
-      webSecurity: !saApp.isSystemApp && auth.indexOf('webSecure') === -1, //系统应用关闭同源策略，不开启会报cros
-      partition: partition,
-      additionalArguments: [
-        '--user-data-path=' + userDataPath,
-        '--app-version=' + app.getVersion(),
-        '--app-name=' + app.getName(),
-        //'--saApp='+encodeURI(JSON.stringify(saApp)),
-        ...((isDevelopmentMode ? ['--development-mode'] : [])),
-      ]
-    }
-    let appView = new BrowserView({
-      width: appWindow.getBounds().width,
-      height: appWindow.getBounds().height - 70,
-      webPreferences: webPreferences
-    })
-    appView.setBackgroundColor('#ffffff')
-    /**
-     * 在dev模式下，group引用开发环境
-     */
-    if (saApp.package === 'com.thisky.group' && isDevelopmentMode) {
-      // 当为开发环境下的时候，将团队强行更改为本地开发
-      //todo 根据实际需求更改
-      saApp.url = config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN
-    }
-    if (saApp.package === 'com.thisky.fav' && isDevelopmentMode) {
-      // 当为开发环境下的时候，将团队强行更改为本地开发
-      //todo 根据实际需求更改
-      saApp.url = '/pages/fav/index.html'
-      saApp.type = 'local'
-
-      //saApp.url = 'http://localhost:8080/'
-    } else if (saApp.package === 'com.thisky.fav') {
-      saApp.url = '/pages/fav/index.html'
-      saApp.type = 'local'
-    }
-    // else if(saApp.package === 'com.thisky.appStore' && isDevelopmentMode){
-    //   saApp.url = 'http://localhost:5008/'
-    //   saApp.type = 'local'
-    // }
-
-    remote.enable(appView.webContents)
-
-    if (saApp.type === 'local' && saApp.package) {
-      appView.webContents.loadURL('file://' + path.join(__dirname, saApp.url))
-    }
-    if (saApp.package === 'com.thisky.appStore') {
-      appView.webContents.loadURL(saApp.url)
-    } else {
-      appView.webContents.loadURL(saApp.url)
-    }
-    if (saApp.package === 'com.thisky.fav' && isDevelopmentMode) {
-      // appView.webContents.openDevTools()
+    let webPreferences={
+      preload,
+       nodeIntegration: saApp.isSystemApp || saApp.authAll.indexOf('node') > -1,
+       contextIsolation: !saApp.isSystemApp && saApp.authAll.indexOf('webSecure') === -1,
+       enableRemoteModule: true,
+       sandbox: false,
+       safeDialogs: false,
+       backgroundColor: 'white',
+       safeDialogsMessage: false,
+       webSecurity: !saApp.isSystemApp && saApp.authAll.indexOf('webSecure') === -1, //系统应用关闭同源策略，不开启会报cros
+       partition: partition,
+       additionalArguments: [
+         '--user-data-path=' + userDataPath,
+         '--app-version=' + app.getVersion(),
+         '--app-name=' + app.getName(),
+         //'--saApp='+encodeURI(JSON.stringify(saApp)),
+         ...((isDevelopmentMode ? ['--development-mode'] : [])),
+       ]
     }
 
-    function updateView (url) {
-      if (appWindow.isFocused()) {
-        if (barrageManager)
-          barrageManager.changeUrl(url)
-      }
-      appWindow.webContents.send('updateView', {
-        url: url,
-        canGoBack: appView.webContents.canGoBack(),
-        canGoForward: appView.webContents.canGoForward()
-      })
-    }
+    return webPreferences
 
-    appView.webContents.on('did-navigate-in-page', (event, url) => {
-        if (!appWindow.webContents.isDestroyed())
-          updateView(url)
-      }
-    )
 
+
+
+
+    //todo 兼容在应用内打开新窗体的操作
     appView.webContents.on('new-window', (event, url, frameName, disposition, options, additionalFeatures, referrer, postBody) => {
       if (!!!saApp.openNewWindow || saApp.openNewWindow === 'redirect') {
         //默认为重定向
@@ -810,44 +744,10 @@ class AppManager {
     // */
     // appView.webContents.on('will-redirect', _handleExternalProtocol)
 
-    appView.webContents.once('dom-ready', () => {
-      if (option) {
-        if (option.action) {
-          appManager.protocolManager.handleAction(appWindow, option.action, option)
-        }
-      }
-    })
 
     // appView.webContents.on('found-in-page',(event,result)=>{
     //   appWindow.webContents.send('found-in-page',{data:result})
     // })
-    appView.webContents.on('before-input-event', (event, input) => {
-      let keyCtrlOrMeta
-      if (process.platform === 'darwin') {
-        keyCtrlOrMeta = input.meta
-      } else {
-        keyCtrlOrMeta = input.control
-      }
-      if (keyCtrlOrMeta && input.key.toLowerCase() === 'w') {
-        appWindow.close()
-        event.preventDefault()
-      } else if (keyCtrlOrMeta && input.key.toLowerCase() === 'f') {
-        appView.webContents.send('findInPage')
-        event.preventDefault()
-      } else if (input.key.toLowerCase() === 'f12') {
-        appView.webContents.openDevTools({
-          mode: 'detach'
-        })
-        //todo 想办法增加devtool的新菜单打开的事件，目前没有好办法
-        event.preventDefault()
-      }
-      // console.log('press'+input)
-      //todo 判断linux
-    })
-    if (isDevelopmentMode) {
-      //appView.webContents.openDevTools()
-    }
-    return appView
 
   }
 
@@ -876,6 +776,44 @@ class AppManager {
       appManager.clearAppBadge(saApp.nanoid)
     }
   }
+
+  getUrl(saApp){
+    //todo 真实实现debug_url功能
+    if(saApp.debug_url){
+
+      //debug_url优先级最高
+      return saApp.debug_url
+    }
+    let url=''
+    if (saApp.type === 'local' && saApp.package) {
+      url='file://' + path.join(__dirname, saApp.url)
+    }else{
+      url=saApp.url
+    }
+    /**
+     * 在dev模式下，group引用开发环境
+     */
+    if (saApp.package === 'com.thisky.group' && isDevelopmentMode) {
+      // 当为开发环境下的时候，将团队强行更改为本地开发
+      //todo 根据实际需求更改
+      url = config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN
+    }
+    if (saApp.package === 'com.thisky.fav' && isDevelopmentMode) {
+      // 当为开发环境下的时候，将团队强行更改为本地开发
+      //todo 根据实际需求更改
+      url = 'file://' + path.join(__dirname, '/pages/fav/index.html')
+      //saApp.url = 'http://localhost:8080/'
+    } else if (saApp.package === 'com.thisky.fav') {
+      url='file://'+path.join(__dirname,'/pages/fav/index.html')
+    }
+    if (saApp.package === 'com.thisky.appStore') {
+      url=saApp.url
+    }
+    if (saApp.package === 'com.thisky.fav' && isDevelopmentMode) {
+      // appView.webContents.openDevTools()
+    }
+    return url
+  }
   /**
    * 执行应用
    * @param saApp 一个应用实体
@@ -885,171 +823,81 @@ class AppManager {
    */
   executeApp (saApp, background = false, option, cb) {
     saApp.settings = saApp.settings ? saApp.settings : {}
+    let auth = []
+    if (saApp.auth) {
+      saApp.auth = JSON.parse(saApp.auth)
+      if (saApp.auth.base) {
+        auth = auth.concat(...saApp.auth.base)
+      }
+      if (saApp.auth.app) {
+        auth = auth.concat(...saApp.auth.app)
+      }
+      saApp.authAll=auth
+    }
     if (1) {
+      let url=this.getUrl(saApp)
       //todo 判断一下是不是独立窗体模式
-      let appWindow = new BrowserWindow({
-        width: 1200,
-        height: 800,
-        minWidth: 380,
-        trafficLightPosition: {
-          x: 10, y: 7
+      let appWindow = windowManager.createFrameWindow({
+        name:saApp.package?saApp.package:saApp.url,//如果有包名，优先用包名，没有包名用url(网络应用）
+        rememberBounds:true,
+        url:url,
+        viewOptions:{
+
         },
-        show: !background,
-        frame: false,
-        acceptFirstMouse: true,
-        resizable: saApp.package === 'com.thisky.import' || saApp.package === 'com.thisky.appStore' ? false : true,
-        titleBarStyle: 'hidden',
-        alwaysOnTop: saApp.settings.alwaysTop ? saApp.settings.alwaysTop : false,
-        webPreferences: {
-          nodeIntegration: true,
+        viewWebPreferences:appManager.getViewWebPreferences(saApp),
+        windowOption:{
+          width: 1200,
+          height: 800,
+          minWidth: 380,
+          trafficLightPosition: {
+            x: 10, y: 7
+          },
+          show: !background,
+          frame: false,
+          titleBarStyle: 'hidden',
+          acceptFirstMouse: true,
+          resizable: saApp.package === 'com.thisky.import' || saApp.package === 'com.thisky.appStore' ? false : true,
+          alwaysOnTop:saApp.settings.alwaysTop ? saApp.settings.alwaysTop : false,
+        },onReadyToShow:(frame)=>{
+          frame.webContents.send('init', {
+            url: saApp.url,
+            nanoid: saApp.nanoid,
+            title: saApp.name,
+            windowId: saApp.windowId,
+            app: saApp
+          })
+          if (cb){
+            cb()//执行启动后的回调
+            cb=undefined
+          }
+        },
+        onDomReady:()=>{
+          if (option) {
+            if (option.action) {
+              appManager.protocolManager.handleAction(appWindow, option.action, option)
+            }
+          }
+        },
+        frameWebPreferences:{
+        nodeIntegration: true,
           contextIsolation: false,
           sandbox: false,
           preload: path.join(__dirname,'../preload/windowFramePreload.js'),
           partition: null,
           additionalArguments: [
-            '--user-data-path=' + userDataPath,
-            '--app-version=' + app.getVersion(),
-            '--app-name=' + app.getName(),
-            ...((isDevelopmentMode ? ['--development-mode'] : [])),
-          ]
+          '--user-data-path=' + userDataPath,
+          '--app-version=' + app.getVersion(),
+          '--app-name=' + app.getName(),
+          ...((isDevelopmentMode ? ['--development-mode'] : [])),
+        ]
         }
       })
-      if (saApp.settings.alwaysTop) {
-        appWindow.setAlwaysOnTop(true, 'screen-saver')
-      }
+      let frame=appWindow.frame
 
-      saApp.windowId = appWindow.webContents.id
-
-      appWindow.setMenu(null)
-
-      appWindow.webContents.loadURL(render.getUrl('frame.html'))
-      appWindow.on('ready-to-show', () => {
-        appWindow.webContents.send('init', {
-          url: saApp.url,
-          nanoid: saApp.nanoid,
-          title: saApp.name,
-          windowId: saApp.windowId,
-          app: saApp
-        })
-        if (isDevelopmentMode) {
-          //appWindow.webContents.openDevTools()
-        }
-        if (cb){
-          cb()//执行启动后的回调
-          cb=undefined
-        }
-
-      })
       if (saApp.settings.bounds) {
-        appWindow.setBounds(saApp.settings.bounds)
+        frame.setBounds(saApp.settings.bounds)
       }
-      // if (process.platform !== 'darwin') {
-      //   appWindow.setMenuBarVisibility(false)
-      // }
-      let appView = appManager.loadView(saApp, appWindow, option)
-      appWindow.setBrowserView(appView)
-
-      const titleBarHeight = 30
-
-      appView.setBounds({
-        x: 0,
-        y: titleBarHeight,
-        width: appWindow.getBounds().width,
-        height: appWindow.getBounds().height - titleBarHeight
-      })
-      // appWindow.webContents.on('ipc-message', function (e, channel, data) {
-      //   mainWindow.webContents.send('view-ipc', {
-      //     name: channel,
-      //     data: data,
-      //     frameId: e.frameId
-      //   })
-      // })
-      SidePanel.send('executedAppSuccess', { app: saApp })
-      appWindow.on('moved', (event, args) => {
-        appManager.setAppSettings(saApp.nanoid, { bounds: appWindow.getBounds() })
-      })
-      appWindow.on('resize', (event, args) => {
-        appManager.setAppSettings(saApp.nanoid, { bounds: appWindow.getBounds() })
-        appView.setBounds({
-          x: 0,
-          y: titleBarHeight,
-          width: appWindow.getBounds().width,
-          height: appWindow.getBounds().height - titleBarHeight
-        })
-      })
-      appWindow.webContents.on('before-input-event', (event, input) => {
-        if (process.platform === 'darwin') {
-          if (input.meta && input.key.toLowerCase() === 'w') {
-            appWindow.close()
-            event.preventDefault()
-          }
-          if (input.meta && input.key.toLowerCase() === 'f') {
-            appView.webContents.send('findInPage')
-            event.preventDefault()
-          }
-        } else if (process.platform === 'win32') {
-          if (input.control && input.key.toLowerCase() === 'w') {
-            appWindow.close()
-            event.preventDefault()
-          }
-          if (input.control && input.key.toLowerCase() === 'f') {
-            appView.webContents.send('findInPage')
-            event.preventDefault()
-          }
-        }
-        //todo 判断linux
-      })
-      appWindow.on('ready-to-show', (event) => {
-        //连续4秒都获取一次截图，保障能够截取到最新的图
-        appManager.capture(saApp.windowId)
-        setTimeout(() => {
-          if (!appWindow.isDestroyed())
-            appManager.capture(saApp.windowId)
-        }, 2000)
-        setTimeout(() => {
-          if (!appWindow.isDestroyed())
-            appManager.capture(saApp.windowId)
-        }, 3000)
-        setTimeout(() => {
-          if (!appWindow.isDestroyed())
-            appManager.capture(saApp.windowId)
-        }, 4000)
-      })
-      appWindow.on('blur', async (event) => {
-        SidePanel.send('updateRunningInfo', {
-          nanoid: saApp.nanoid,
-          'info': await appManager.getAppRunningInfo(saApp.nanoid)
-        })
-      })
-      /**
-       * 只允许通过关闭按钮隐藏，而不是彻底关闭
-       */
-      appWindow.on('enter-full-screen', () => {
-        appView.setBounds({
-          x: 0,
-          y: 0,
-          width: appWindow.getBounds().width,
-          height: appWindow.getBounds().height
-        })
-        appWindow.webContents.send('enter-full-screen')
-      })
-      appWindow.on('leave-full-screen', () => {
-        appView.setBounds({
-          x: 0,
-          y: titleBarHeight,
-          width: appWindow.getBounds().width,
-          height: appWindow.getBounds().height - titleBarHeight
-        })
-        appWindow.webContents.send('leave-full-screen')
-      })
-
-      appWindow.on('maximize', () => {
-        appWindow.webContents.send('maximize')
-      })
-      appWindow.on('unmaximize', () => {
-        appWindow.webContents.send('unmaximize')
-      })
-      appWindow.on('close', (event, args) => {
+      frame.on('close', (event, args) => {
         if (saApp.canClose) {
           return
         }
@@ -1087,21 +935,49 @@ class AppManager {
         // }
 
       })
-      appWindow.view = appView
-      processingAppWindows.push({
-        window: appWindow,//在本地的对象中插入window对象，方便后续操作
-        saApp: saApp
+      frame.on('ready-to-show', (event) => {
+        //连续4秒都获取一次截图，保障能够截取到最新的图
+        appManager.capture(saApp.windowId)
+        setTimeout(() => {
+          if (!frame.isDestroyed())
+            appManager.capture(saApp.windowId)
+        }, 2000)
+        setTimeout(() => {
+          if (!frame.isDestroyed())
+            appManager.capture(saApp.windowId)
+        }, 3000)
+        setTimeout(() => {
+          if (!frame.isDestroyed())
+            appManager.capture(saApp.windowId)
+        }, 4000)
+      })
+      frame.on('blur', async (event) => {
+        SidePanel.send('updateRunningInfo', {
+          nanoid: saApp.nanoid,
+          'info': await appManager.getAppRunningInfo(saApp.nanoid)
+        })
       })
 
+
+      SidePanel.send('executedAppSuccess', { app: saApp })
+      saApp.windowId=appWindow.windowId
+
+      processingAppWindows.push({
+        window: frame,//在本地的对象中插入window对象，方便后续操作
+        saApp: saApp,
+        windowId:appWindow.windowId
+      })
       let saAppInstance = new SaApp({
         info: saApp,
-        window: appWindow,
-        view: appView
+        window:frame,
+        view: appWindow.view
       })
       this.saApps.push(saAppInstance)
     } else {
       //todo intab模式，在主窗体某个标签内
     }
+
+
   }
 
   goChat (args) {

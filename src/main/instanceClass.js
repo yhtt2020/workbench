@@ -46,6 +46,24 @@ class WindowInstance extends Instance {
 }
 
 
+class FrameWindowInstance extends Instance{
+  type='frameWindow'
+  frame
+  window
+  constructor (iniOption) {
+    super(iniOption)
+    this.frame=iniOption.frame
+    this.window=this.frame
+    this.view=iniOption.view
+  }
+
+  close () {
+    this.frame.removeBrowserView(this.view)
+    this.view.webContents.destroy()
+    this.frame.close()
+  }
+
+}
 
 
 /**
@@ -83,5 +101,5 @@ class ViewInstance extends Instance {
 }
 
 module.exports={
-  WindowInstance,ViewInstance
+  WindowInstance,ViewInstance,FrameWindowInstance
 }

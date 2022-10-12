@@ -44,7 +44,7 @@ const modules = [
   'main/fav.js',
   'main/globalSearch.js',
   'js/util/statsh/statshMain.js',
-  'src/main/windowManager.js',//加入浏览器api处理者
+  // 'src/main/windowManager.js',//加入浏览器api处理者
   'main/handleApi.js',//加入浏览器api处理者
 ]
 

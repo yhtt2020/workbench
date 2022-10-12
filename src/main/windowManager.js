@@ -1,6 +1,8 @@
 const path=require('path')
-const {WindowInstance,ViewInstance} =require('./instanceClass.js')
+const {WindowInstance,ViewInstance,FrameWindowInstance} =require('./instanceClass.js')
 const {app,ipcMain:ipc,BrowserWindow,BrowserView }=require('electron')
+const SaApp = require('./saAppClass')
+const remote = require('@electron/remote/main')
 /**
  * 代理view管理
  */
@@ -284,15 +286,7 @@ class WindowManager {
       })
       webContents = window.webContents
       if (rememberBounds) {
-        window.on('resized', () => {
-          WindowManager.setSettings(name, 'bounds', window.getBounds())
-        })
-        window.on('moved', () => {
-          WindowManager.setSettings(name, 'bounds', window.getBounds())
-        })
-        window.on('always-on-top-changed', (e, isAlwaysOnTop) => {
-          WindowManager.setSettings(name, 'alwaysOnTop', isAlwaysOnTop)
-        })
+       this.bindRememberBoundsEvents(name,window)
       }
       if (url) {
         window.loadURL(url)
@@ -309,6 +303,286 @@ class WindowManager {
     this.webContentsMap[name] = webContents
     return instance
   }
+
+  /**绑定记忆外框事件
+   *
+   * @param window
+   */
+  bindRememberBoundsEvents(name,window){
+    window.on('resized', () => {
+      WindowManager.setSettings(name, 'bounds', window.getBounds())
+    })
+    window.on('moved', () => {
+      WindowManager.setSettings(name, 'bounds', window.getBounds())
+    })
+    window.on('always-on-top-changed', (e, isAlwaysOnTop) => {
+      WindowManager.setSettings(name, 'alwaysOnTop', isAlwaysOnTop)
+    })
+  }
+
+  /**创建带外框的窗体
+   *
+   * @param options
+   */
+  createFrameWindow(options){
+    let {
+      name,
+      url,
+      windowOption,
+      frameWebPreferences,
+      viewWebPreferences,
+      rememberBounds,
+      onReadyToShow,//读入事件
+      onDomReady
+    }=options
+    frameWebPreferences = Object.assign(this.defaultWebPreferences, frameWebPreferences)
+    if (frameWebPreferences) {
+      windowOption.webPreferences = frameWebPreferences
+    }
+
+    windowOption = Object.assign(this.defaultWindowPreferences, windowOption)
+    let appWindow=new BrowserWindow(windowOption)
+    appWindow.on('ready-to-show', () => {
+      if(onReadyToShow){
+        onReadyToShow(appWindow)
+      }
+    })
+    if (windowOption.alwaysOnTop) {
+      appWindow.setAlwaysOnTop(true, 'screen-saver')
+    }
+
+    let windowId = appWindow.webContents.id
+
+    appWindow.setMenu(null)
+
+    appWindow.webContents.loadURL(render.getUrl('frame.html'))
+
+    // if (process.platform !== 'darwin') {
+    //   appWindow.setMenuBarVisibility(false)
+    // }
+    viewWebPreferences.additionalArguments.push('--name=' + name)
+    let appView = windowManager.createFrameView({
+      width: appWindow.getBounds().width,
+      height: appWindow.getBounds().height - 70,
+      url,
+      webPreferences:viewWebPreferences,
+      onDomReady
+    })
+
+    appWindow.setBrowserView(appView)
+
+    const titleBarHeight = 30
+
+    appView.setBounds({
+      x: 0,
+      y: titleBarHeight,
+      width: appWindow.getBounds().width,
+      height: appWindow.getBounds().height - titleBarHeight
+    })
+    // appWindow.webContents.on('ipc-message', function (e, channel, data) {
+    //   mainWindow.webContents.send('view-ipc', {
+    //     name: channel,
+    //     data: data,
+    //     frameId: e.frameId
+    //   })
+    // })
+    if (rememberBounds) {
+     this.bindRememberBoundsEvents(name,appWindow)
+    }
+
+    appWindow.on('resize', (event, args) => {
+      appView.setBounds({
+        x: 0,
+        y: titleBarHeight,
+        width: appWindow.getBounds().width,
+        height: appWindow.getBounds().height - titleBarHeight
+      })
+    })
+    appWindow.webContents.on('before-input-event', (event, input) => {
+      if (process.platform === 'darwin') {
+        if (input.meta && input.key.toLowerCase() === 'w') {
+          appWindow.close()
+          event.preventDefault()
+        }
+        if (input.meta && input.key.toLowerCase() === 'f') {
+          appView.webContents.send('findInPage')
+          event.preventDefault()
+        }
+      } else if (process.platform === 'win32') {
+        if (input.control && input.key.toLowerCase() === 'w') {
+          appWindow.close()
+          event.preventDefault()
+        }
+        if (input.control && input.key.toLowerCase() === 'f') {
+          appView.webContents.send('findInPage')
+          event.preventDefault()
+        }
+      }
+      //todo 判断linux
+    })
+
+    /**
+     * 只允许通过关闭按钮隐藏，而不是彻底关闭
+     */
+    appWindow.on('enter-full-screen', () => {
+      appView.setBounds({
+        x: 0,
+        y: 0,
+        width: appWindow.getBounds().width,
+        height: appWindow.getBounds().height
+      })
+      appWindow.webContents.send('enter-full-screen')
+    })
+    appWindow.on('leave-full-screen', () => {
+      appView.setBounds({
+        x: 0,
+        y: titleBarHeight,
+        width: appWindow.getBounds().width,
+        height: appWindow.getBounds().height - titleBarHeight
+      })
+      appWindow.webContents.send('leave-full-screen')
+    })
+
+    appWindow.on('maximize', () => {
+      appWindow.webContents.send('maximize')
+    })
+    appWindow.on('unmaximize', () => {
+      appWindow.webContents.send('unmaximize')
+    })
+
+
+
+    appWindow.view = appView
+
+    this.windowMap[name] = appWindow
+    this.instanceMap[name] = new FrameWindowInstance({
+      frame: appWindow,
+      view: appWindow.view,
+      createOptions: options,
+      name: name
+    })
+    this.webContentsMap[name] = appView.webContents
+
+    console.log(this.instanceMap)
+    return {
+      frame:appWindow ,
+      view:appWindow.view,
+      windowId
+    }
+  }
+
+  createFrameView(options,frameWindow){
+    let {
+      webPreferences,
+      width,
+      height,
+      url,
+      onDomReady
+    } = options
+
+    let appView = new BrowserView({
+      width,
+      height,
+      webPreferences: webPreferences
+    })
+    appView.setBackgroundColor('#ffffff')
+
+    remote.enable(appView.webContents)
+    function updateView (url) {
+      if (frameWindow.isFocused()) {
+        if (barrageManager)
+          barrageManager.changeUrl(url)
+      }
+      frameWindow.webContents.send('updateView', {
+        url: url,
+        canGoBack: appView.webContents.canGoBack(),
+        canGoForward: appView.webContents.canGoForward()
+      })
+    }
+
+    appView.webContents.on('did-navigate-in-page', (event, url) => {
+      if(frameWindow){
+        if (!frameWindow.webContents.isDestroyed())
+          updateView(url)
+      }
+      }
+
+    )
+
+
+    appView.webContents.on('new-window', (event, url, frameName, disposition, options, additionalFeatures, referrer, postBody) => {
+      if (!!!saApp.openNewWindow || saApp.openNewWindow === 'redirect') {
+        //默认为重定向
+        event.preventDefault()
+        appView.webContents.loadURL(url)
+        updateView(url)
+      } else if (saApp.openNewWindow === 'allow') {
+        event.preventDefault()
+        //允许，则不修改默认事件
+        const win = new BrowserWindow({
+          webContents: options.webContents, // use existing webContents if provided
+          show: false
+        })
+        win.webContents.on('new-window', (event, url) => {
+          event.preventDefault()
+          win.webContents.loadURL(url)
+        })
+        win.once('ready-to-show', () => win.show())
+        win.setMenu(null)
+        if (!options.webContents) {
+          const loadOptions = {
+            httpReferrer: referrer
+          }
+          if (postBody != null) {
+            const { data, contentType, boundary } = postBody
+            loadOptions.postData = postBody.data
+            loadOptions.extraHeaders = `content-type: ${contentType}; boundary=${boundary}`
+          }
+          win.loadURL(url, loadOptions)
+        }
+        event.newGuest = win
+      } else if (saApp.openNewWindow === 'deny') {
+        //禁止打开
+        event.preventDefault()
+      }
+    })
+
+    appView.webContents.once('dom-ready', () => {
+      if(onDomReady){
+        onDomReady()
+      }
+    })
+
+    appView.webContents.on('before-input-event', (event, input) => {
+      let keyCtrlOrMeta
+      if (process.platform === 'darwin') {
+        keyCtrlOrMeta = input.meta
+      } else {
+        keyCtrlOrMeta = input.control
+      }
+      if (keyCtrlOrMeta && input.key.toLowerCase() === 'w') {
+        frameWindow.close()
+        event.preventDefault()
+      } else if (keyCtrlOrMeta && input.key.toLowerCase() === 'f') {
+        appView.webContents.send('findInPage')
+        event.preventDefault()
+      } else if (input.key.toLowerCase() === 'f12') {
+        appView.webContents.openDevTools({
+          mode: 'detach'
+        })
+        //todo 想办法增加devtool的新菜单打开的事件，目前没有好办法
+        event.preventDefault()
+      }
+      // console.log('press'+input)
+      //todo 判断linux
+    })
+    appView.webContents.loadURL(url)
+
+
+
+    return appView
+  }
+
 
   createView (options) {
     let {
@@ -560,11 +834,15 @@ class WindowManager {
       })
 
       this.onWindow('isAlwaysOnTop', (event, args, instance) => {
+        console.log('isaw',instance)
         if(instance.type==='view'){
           event.returnValue=false //view的话，统一返回false
-          return
+        }else if(instance.type==='frameWindow'){
+          event.returnValue= instance.frame.isAlwaysOnTop()
+        }else if(instance.type==='window'){
+          event.returnValue = instance.window.isAlwaysOnTop()
         }
-        event.returnValue = instance.window.isAlwaysOnTop()
+
       })
 
       this.onWindow('attach', (event, args, instance) => {
@@ -591,9 +869,6 @@ class WindowManager {
     })
   }
 }
-
-
-
 
 module.exports={
   WindowManager
