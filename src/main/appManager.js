@@ -1,13 +1,13 @@
 const path=require('path')
 const fs=require('fs')
-const { config } = require( '../../server-config.js')
 const {app,BrowserWindow,BrowserView} =require('electron')
+const { config } = require(___dirname+'/server-config.js')
 const remote = require('@electron/remote/main')
 const _ = require('lodash')
 const SaApp = require( './saAppClass')
 const appModel = require('../model/appModel')
 const ipc=require('electron').ipcMain
-const ipcMessageMain=require('../../main/ipcMessageMain.js')
+const ipcMessageMain=require('./ipcMessageMain.js')
 
 /**
  * 运行中的应用窗体，结构{window:窗体对象,saApp:独立窗体app对象}
@@ -545,7 +545,7 @@ class AppManager {
         }
       })
       appManager.settingWindow.setMenu(null)
-      appManager.settingWindow.webContents.loadURL('file://' + __dirname + '/pages/saApp/setting.html')
+      appManager.settingWindow.webContents.loadURL('file://' + ___dirname + '/pages/saApp/setting.html')
       if (isDevelopmentMode) {
         //appManager.settingWindow.webContents.openDevTools()
       }
@@ -624,12 +624,12 @@ class AppManager {
     let preload = ''
     if (saApp.isSystemApp) {
       if (!!!saApp.preload || saApp.preload === '') {
-        preload = path.join(__dirname + '../../../pages/saApp/appPreload.js')
+        preload = path.join(___dirname + '/pages/saApp/appPreload.js')
       } else {
-        preload = path.join(__dirname +'../../../'+ saApp.preload)
+        preload = path.join(___dirname +'/'+ saApp.preload)
       }
     } else {
-      preload = path.join(__dirname + '../../../pages/saApp/appPreload.js')
+      preload = path.join(___dirname + '/pages/saApp/appPreload.js')
     }
     let partition = 'persist:webcontent'
     if (saApp.isSystemApp) {
@@ -786,7 +786,7 @@ class AppManager {
     }
     let url=''
     if (saApp.type === 'local' && saApp.package) {
-      url='file://' + path.join(__dirname, saApp.url)
+      url='file://' + path.join(___dirname, saApp.url)
     }else{
       url=saApp.url
     }
@@ -801,10 +801,10 @@ class AppManager {
     if (saApp.package === 'com.thisky.fav' && isDevelopmentMode) {
       // 当为开发环境下的时候，将团队强行更改为本地开发
       //todo 根据实际需求更改
-      url = 'file://' + path.join(__dirname, '/pages/fav/index.html')
+      url = 'file://' + path.join(___dirname, '/pages/fav/index.html')
       //saApp.url = 'http://localhost:8080/'
     } else if (saApp.package === 'com.thisky.fav') {
-      url='file://'+path.join(__dirname,'/pages/fav/index.html')
+      url='file://'+path.join(___dirname,'/pages/fav/index.html')
     }
     if (saApp.package === 'com.thisky.appStore') {
       url=saApp.url
@@ -1438,7 +1438,7 @@ app.whenReady().then(() => {
         height: 250,
         maximizable: false,
         resizable: false,
-        preload: __dirname + '/pages/saApp/applyPermission/preload.js',
+        preload: ___dirname + '/pages/saApp/applyPermission/preload.js',
         webPreferences: {
           devTools: true,
           partition: 'persist:webcontent',
@@ -1455,7 +1455,7 @@ app.whenReady().then(() => {
         }
       })
       saAppApplyPermission.setMenu(null)
-      saAppApplyPermission.webContents.loadURL('file://' + __dirname + '/pages/saApp/applyPermission/index.html')
+      saAppApplyPermission.webContents.loadURL('file://' + ___dirname + '/pages/saApp/applyPermission/index.html')
       saAppApplyPermission.on('close', () => {
         saAppApplyPermission = null
       })

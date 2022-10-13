@@ -22,7 +22,8 @@ const {
   nativeTheme,
   globalShortcut
 } = electron
-
+global.___dirname=__dirname
+global.ipcMessageMain=require('./src/main/ipcMessageMain.js')
 crashReporter.start({
 	submitURL: 'https://minbrowser.org/',
 	uploadToServer: false,
