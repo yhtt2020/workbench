@@ -1053,7 +1053,8 @@ Vue.component('sidebar', {
       delete lvSys['lv0']
       return lvSys
     },
-    isminimal(){
+    //侧边栏判断是否进入极简模式
+    isMinimal(){
       if(appVue.$refs.sidePanel.minimal === true){
         appVue.$message.error('请取消极简模式后再使用新手引导');
         return false
@@ -2302,7 +2303,7 @@ ipc.on('closeUserSidePanel',(event,args)=>{
 
 ipc.on('guide',async (event, args) => {
 
-  if(appVue.$refs.sidePanel.isminimal()===true){
+  if(appVue.$refs.sidePanel.isMinimal()===true){
     let current;
     if (args === 5) {
       // current = await db.system.where('name').equals('currentUser').first()
@@ -2338,7 +2339,7 @@ ipc.on('guide',async (event, args) => {
 })
 
 ipc.on('guideTasks',()=>{
-  if(appVue.$refs.sidePanel.isminimal()===true){
+  if(appVue.$refs.sidePanel.isMinimal()===true){
     ipc.send('enterGuide')
     appVue.$refs.sidePanel.focus()
     appVue.$refs.sidePanel.guideTasks()
@@ -2346,7 +2347,7 @@ ipc.on('guideTasks',()=>{
 })
 
 ipc.on('guideApplyFirst',()=>{
-  if(appVue.$refs.sidePanel.isminimal()===true){
+  if(appVue.$refs.sidePanel.isMinimal()===true){
     ipc.send('enterGuide')
     appVue.$refs.sidePanel.focus()
     appVue.$refs.sidePanel.guideApplyFirst()
@@ -2354,7 +2355,7 @@ ipc.on('guideApplyFirst',()=>{
 })
 
 ipc.on('guideDesktop',()=>{
-  if(appVue.$refs.sidePanel.isminimal()===true){
+  if(appVue.$refs.sidePanel.isMinimal()===true){
     setTimeout(() => {
       ipc.send('enterGuide')
     }, 300)
@@ -2364,7 +2365,7 @@ ipc.on('guideDesktop',()=>{
 })
 
 ipc.on('guideLogin',()=>{
-  if(appVue.$refs.sidePanel.isminimal()===true){
+  if(appVue.$refs.sidePanel.isMinimal()===true){
     appVue.$refs.sidePanel.focus()
     appVue.$refs.sidePanel.toggleUserPanel()
   }
