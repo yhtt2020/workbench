@@ -156,7 +156,9 @@ class WindowManager {
   defaultViewPreferences = { //根据其定义的位置取用这里的width和height，在左右侧的话，只取用width，在上下，则只取height，目前仅支持width
     width: 480,
   }
-  defaultWindowPreferences = {}
+  defaultWindowPreferences = {
+
+  }
   defaultWebPreferences = {
     nodeIntegration: false,
     nodeIntegrationInSubFrames: true,

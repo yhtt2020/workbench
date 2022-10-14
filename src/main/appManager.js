@@ -1,7 +1,7 @@
 const path=require('path')
 const fs=require('fs')
 const {app,BrowserWindow,BrowserView} =require('electron')
-const { config } = require(___dirname+'/server-config.js')
+
 const remote = require('@electron/remote/main')
 const _ = require('lodash')
 const SaApp = require( './saAppClass')
@@ -1029,7 +1029,7 @@ app.whenReady().then(() => {
       }
       appManager.openApp(args.app.nanoid, args.background, args.app, args.option)
     } catch (e) {
-      electronLog.error(e)
+      console.warn(e)
     }
 
   })
