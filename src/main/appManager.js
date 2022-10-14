@@ -796,7 +796,7 @@ class AppManager {
     if (saApp.package === 'com.thisky.group' && isDevelopmentMode) {
       // 当为开发环境下的时候，将团队强行更改为本地开发
       //todo 根据实际需求更改
-      url = config.IM.FRONT_URL_DEV + config.IM.AUTO_LOGIN
+      url = serverConfig.IM.FRONT_URL_DEV + serverConfig.IM.AUTO_LOGIN
     }
     if (saApp.package === 'com.thisky.fav' && isDevelopmentMode) {
       // 当为开发环境下的时候，将团队强行更改为本地开发
@@ -833,6 +833,8 @@ class AppManager {
         auth = auth.concat(...saApp.auth.app)
       }
       saApp.authAll=auth
+    }else{
+      saApp.authAll=[] //修复后面的判断报错的问题
     }
     if (1) {
       let url=this.getUrl(saApp)

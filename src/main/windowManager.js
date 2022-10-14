@@ -157,6 +157,7 @@ class WindowManager {
     width: 480,
   }
   defaultWindowPreferences = {
+      frame:false,
 
   }
   defaultWebPreferences = {
@@ -267,6 +268,7 @@ class WindowManager {
         '--name=' + name
       ]
       let window = new BrowserWindow(windowOption)
+      window.setWindowButtonVisibility(false)
       if (rememberBounds) {
         let boundsSetting = WindowManager.getSettings(name, 'bounds')
         let alwaysOnTop = WindowManager.getSettings(name, 'alwaysOnTop')

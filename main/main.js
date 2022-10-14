@@ -4,7 +4,7 @@ const path = require('path')
 const electronLog=require('electron-log')
 const SpaceManager=require(__dirname+'/src/main/spaceManager.js')
 const { config } = require(__dirname+'/server-config.js')
-global.config=config
+global.serverConfig=config
 electron.protocol.registerSchemesAsPrivileged([
   { scheme: 'tsbapp', privileges: { bypassCSP: true ,standard:true} } //将tsbapp注册为标准协议，以支持localStorage
 ])

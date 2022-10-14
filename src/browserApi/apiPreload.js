@@ -4,18 +4,18 @@ const {
 const ipc = ipcRenderer
 const {contextBridge} =require('electron')
 const api=require('./baseApi.js')
+window.tsbApi=api
 //载入api
 try{
-  window.tsbApi=api
   contextBridge.exposeInMainWorld('tsbApi', api)
 }catch (e) {
-  console.warn('content isolate')
+  console.warn(e)
 }
 
 //载入api
 ipc.on('changeUrl',(e,a)=>{
-  if(api.barrage.urlChangedCallback){
-    api.barrage.urlChangedCallback(a.url)
-    api.barrage.reload()
+  if(tsbApi.barrage.urlChangedCallback){
+    tsbApi.barrage.urlChangedCallback(a.url)
+    tsbApi.barrage.reload()
   }
 })
