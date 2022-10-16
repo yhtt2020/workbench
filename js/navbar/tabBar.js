@@ -825,8 +825,9 @@ const tabBar = {
   createIconEl: function (tabData, loaded) {
     var iconEl = document.createElement('img')
     iconEl.className = 'icon'
+    iconEl.id='icon'+tabData.id
     iconEl.addEventListener('error', (e) => {
-      e.target.src = __dirname + '/icons/default.svg'
+      document.getElementById('icon'+tabData.id).src=__dirname + '/icons/default.svg'
     })
     var src = ''
     if (loaded == false) {
