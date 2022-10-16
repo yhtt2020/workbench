@@ -457,7 +457,7 @@ const appModel = {
       order: 0,
       use_count: 0,
       last_execute_time: Date.now(),
-      settings: app.settings ? JSON.stringify(app.settings) : '[]',
+      settings: app.settings ? JSON.stringify(app.settings) : JSON.stringify({}),
       auth: app.auth ? JSON.stringify(app.auth) : '[]',
       unread_count: 0,
       is_new: true
@@ -573,11 +573,14 @@ const appModel = {
       return false
     } else {
       let DBSavedSettings = app.settings
+      if(Array.isArray(DBSavedSettings)){
+        DBSavedSettings={} //默认值有误
+      }
       let newSettings = Object.assign(DBSavedSettings, settings)
       await appModel.updateAppData({ nanoid: id }, { 'settings': JSON.stringify(newSettings) }).then((result) => {
         return true
       }).catch((err) => {
-        console.warn('存储app的setting失败')
+        console.warn('存储app的setting失败',err)
       })
     }
   },
@@ -818,6 +821,9 @@ const appModel = {
         break
       case 'disableWebSecurity':
         words = '本地权限'
+        break
+      case 'noFrame':
+        words='无边框窗体'
         break
     }
     return words

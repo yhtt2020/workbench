@@ -167,6 +167,11 @@
                             保持在最顶层
                           </a-checkbox>
                         </a-col>
+                        <a-col :span="8">
+                          <a-checkbox value="noFrame">
+                            无边框窗体
+                          </a-checkbox>
+                        </a-col>
                       </a-row>
                     </a-checkbox-group>
                   </a-form-item>
@@ -288,7 +293,7 @@
             console.log(values)
             if(values.optimize){
               //['keepRunning', 'theme', 'desktop', 'showInSideBar', 'alwaysTop', 'autoRun']
-              let optimizeValue=['keepRunning', 'theme', 'desktop', 'showInSideBar', 'alwaysTop', 'autoRun']
+              let optimizeValue=['keepRunning', 'theme', 'desktop', 'showInSideBar', 'alwaysTop', 'autoRun','noFrame']
               let optimize=values['optimize']
               let settings={}
               optimizeValue.forEach(item=>{
@@ -316,7 +321,7 @@
       standAloneModel.get(appId).then(data => {
         that.saApp = data
         that.form.name = data.name
-        let optimizeValues=['keepRunning', 'theme', 'desktop', 'showInSideBar', 'alwaysTop', 'autoRun']
+        let optimizeValues=['keepRunning', 'theme', 'desktop', 'showInSideBar', 'alwaysTop', 'autoRun','noFrame']
         let optimize=[]
           optimizeValues.forEach(item=>{
           if(data.settings[item]){
