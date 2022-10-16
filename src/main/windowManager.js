@@ -332,6 +332,7 @@ class WindowManager {
     let {
       name,
       url,
+      app,
       windowOption,
       frameWebPreferences,
       viewWebPreferences,
@@ -463,15 +464,15 @@ class WindowManager {
       frame: appWindow,
       view: appWindow.view,
       createOptions: options,
-      name: name
+      name: name,
+      app
     })
     this.webContentsMap[name] = appView.webContents
-
-    console.log(this.instanceMap)
     return {
       frame:appWindow ,
       view:appWindow.view,
-      windowId
+      windowId,
+      app
     }
   }
 
@@ -823,6 +824,13 @@ class WindowManager {
     })
   }
 
+  on(module,channel,cb){
+    this._on('api.'+module+'.'+channel,(event,args)=>{
+      let instance=this.get(args['_name'])
+      cb(event,args,instance)
+    })
+  }
+
   _on (channel, cb) {
     ipc.on(channel, cb)
   }
@@ -843,7 +851,6 @@ class WindowManager {
       })
 
       this.onWindow('isAlwaysOnTop', (event, args, instance) => {
-        console.log('isaw',instance)
         if(instance.type==='view'){
           event.returnValue=false //view的话，统一返回false
         }else if(instance.type==='frameWindow'){
@@ -874,6 +881,23 @@ class WindowManager {
         }else{
           event.returnValue=this.attachStatus
         }
+      })
+
+      this.on('notification','send',(event,args,instance)=>{
+          //需要前置处理消息设置的状态决定到底发不发消息
+          if(instance.app){
+            appManager.onNotice(instance.app,args)
+          }
+          // const result = appManager.beforeEachNotification(notificationSettingStatus, args)
+          // if (result) {
+          //   appManager.notification(args.saAppId, {
+          //     title: args.title,
+          //     body: args.body,
+          //   }, typeof args.ignoreWhenFocus == 'undefined' ? false : args.ignoreWhenFocus)
+          //   return { code: 200, msg: '成功' }
+          // } else {
+          //   return { code: 500, msg: '失败' }
+          // }
       })
     })
   }

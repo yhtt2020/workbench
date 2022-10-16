@@ -8,11 +8,13 @@ class Instance {
   object = null
   initOption
   createOptions //首次初始化时的options
+  app //如果是app的话，记录好app信息
 
   constructor (initOption) {
     this.initOption = initOption
     this.createOptions=initOption.createOptions
     this.name = initOption.name
+    this.app=initOption.app
   }
 
   destroy () {

@@ -1,14 +1,10 @@
-const {
-  ipcRenderer
-} = require('electron')
-const ipc = ipcRenderer
+
+const ipcHelper=require('./ipcHelper')
 function send(channel,args={}){
-  args['_name']=window.baseApi.runtime.name
-  ipc.send('api.window.'+channel,args)
+  ipcHelper.send('window',channel,args)
 }
 async function sendSync(channel,args={}){
-  args['_name']=window.baseApi.runtime.name
-  return await ipc.sendSync('api.window.'+channel,args)
+  return await ipcHelper.sendSync('window',channel,args)
 }
 
 const windowApi = {

@@ -169,21 +169,36 @@ const tsbSdk = {
     }
   },
 
-  notice: function (eventName, id, options) {
+  /**
+   * 发消息到消息中心，更改为api实现
+   * @param eventName
+   * @param id
+   * @param options
+   * @returns {Promise<void>}
+   */
+  notice: async function (eventName, id, options) {
     try {
       options.saAppId = tsbSdk.tsbSaApp.nanoid
 
       if (!tsbSdk.isThirdApp) {
-        ipc.invoke('saAppNotice', options).then(res => {
-          tsbSdk.bridgeToWeb({eventName, resInfo: res, id})
-        }).catch(err => {
-          tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: err, id})
-        })
+        console.log('options=', options)
+        try {
+          let res = await tsbApi.notification.send({
+            title: options.title,
+            icon: options.avatar,
+            body: options.body,
+            indexName: options.indexName,
+            category: options.category
+          })
+          tsbSdk.bridgeToWeb({ eventName, resInfo: res, id })
+        } catch (e) {
+          tsbSdk.bridgeToWeb({ eventName: 'errorSys', errorInfo: err, id })
+        }
       } else {
-        tsbSdk.bridgeToPreload({eventName, options, id})
+        tsbSdk.bridgeToPreload({ eventName, options, id })
       }
     } catch (error) {
-      tsbSdk.bridgeToWeb({eventName: 'errorSys', errorInfo: error, id})
+      tsbSdk.bridgeToWeb({ eventName: 'errorSys', errorInfo: error, id })
     }
   },
 

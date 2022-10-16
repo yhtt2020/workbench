@@ -1,6 +1,6 @@
 const path=require('path')
 const fs=require('fs')
-const {app,BrowserWindow,BrowserView} =require('electron')
+const {app,BrowserWindow,BrowserView,nativeImage,Notification} =require('electron')
 
 const remote = require('@electron/remote/main')
 const _ = require('lodash')
@@ -93,26 +93,32 @@ class AppManager {
   /**
    * 消息提示的前置处理，决定是否弹窗提示
    * @param {array} settingStatus 消息设置状态 (notificationSettingStatus对象)
+   * @param app
    * @param {object} message 消息体
    */
-  beforeEachNotification (settingStatus, message) {
+  beforeEachNotification (settingStatus,app, args) {
     //前置判断
-    let index = settingStatus.findIndex(v => v.appId === message.saAppId)
-    console.log(settingStatus,'beforeEachNotification','index=',index)
-    let childIndex = settingStatus[index].childs.findIndex(v => v.title === message.category)
+    let packageMap={
+      'com.thisky.group':1,
+      'com.thisky.com':2
+    } //增加一个id和packageMap来兼容新的api的定位方式
+    let message=args.options
+    let index = settingStatus.findIndex(v => v.appId === packageMap[app.package])
+    let childIndex = settingStatus[index].childs.findIndex(v => {
+     return v.title === message.category
+    })
 
     if (settingStatus[index].notice && settingStatus[index].childs[childIndex].notice) {
       //消息中心的收录做在这里
-      console.log(message)
-      if (message.saAppId == 1) {
+      if (app.package ==='com.thisky.group') {
         SidePanel.send('storeMessage', {
           title: message.title,
           body: message.body,
           indexName: message.indexName ?? null,
-          avatar: message.avatar ? message.avatar.length > 0 ? message.avatar : '' : '',
+          avatar: message.icon ? message.icon.length > 0 ? message.icon : '' : '',
           type: 'groupChat'
         })
-      } else if (message.saAppId == 2) {
+      } else if (app.package === 'com.thisky.com') {
         SidePanel.send('storeMessage', {
           title: message.title,
           body: message.body,
@@ -147,7 +153,7 @@ class AppManager {
       //不提示，不加badage，仅添加到消息记录
     } else {
       //否则则推送消息并设置badge
-      let noti = new electron.Notification(option)
+      let noti = Notification(option)
 
       noti.on('click', (e) => {
         let saApp = appManager.getSaAppByAppId(appId)
@@ -815,6 +821,28 @@ class AppManager {
     }
     return url
   }
+
+  /**
+   * 应用收到消息的回调
+   * @param app
+   * @param args
+   * @returns {{msg: string, code: number}}
+   */
+  onNotice(app,args){
+      //需要前置处理消息设置的状态决定到底发不发消息
+      const result = appManager.beforeEachNotification(notificationSettingStatus,app, args)
+      if (result) {
+        appManager.notification(app.nanoid, {
+          title: args.options.title,
+          body: args.options.body,
+        }, typeof args.ignoreWhenFocus == 'undefined' ? false : args.ignoreWhenFocus)
+        return { code: 200, msg: '成功' }
+      } else {
+        return { code: 500, msg: '失败' }
+      }
+  }
+
+
   /**
    * 执行应用
    * @param saApp 一个应用实体
@@ -842,6 +870,7 @@ class AppManager {
       //todo 判断一下是不是独立窗体模式
       let appWindow = windowManager.createFrameWindow({
         name:saApp.package?saApp.package:saApp.url,//如果有包名，优先用包名，没有包名用url(网络应用）
+        app:saApp,
         rememberBounds:true,
         url:url,
         viewOptions:{
@@ -1366,20 +1395,7 @@ app.whenReady().then(() => {
     }
   })
 
-  ipc.handle('saAppNotice', (event, args) => {
-    //需要前置处理消息设置的状态决定到底发不发消息
-    console.log('saAppNotice args',args)
-    const result = appManager.beforeEachNotification(notificationSettingStatus, args)
-    if (result) {
-      appManager.notification(args.saAppId, {
-        title: args.title,
-        body: args.body,
-      }, typeof args.ignoreWhenFocus == 'undefined' ? false : args.ignoreWhenFocus)
-      return { code: 200, msg: '成功' }
-    } else {
-      return { code: 500, msg: '失败' }
-    }
-  })
+
 
   ipc.on('webOsNotice', (event, args) => {
     //只有存在且notice为true，才允许转发webOsNotice到vuex处理

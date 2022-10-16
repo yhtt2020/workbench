@@ -7,7 +7,8 @@ const baseApi={
   barrage:require('./barrage.js'),
   tabs:require('./tabs.js'),
   runtime:require('./runtime.js'),
-  util:require('./util.js')
+  util:require('./util.js'),
+  notification:require('./notification.js')
 }
 window.baseApi=baseApi
 module.exports=baseApi
