@@ -6,6 +6,7 @@ const remote = require('@electron/remote/main')
 const _ = require('lodash')
 const SaApp = require( './saAppClass')
 const appModel = require('../model/appModel')
+const userModel=require('../model/userModel')
 const ipc=require('electron').ipcMain
 const ipcMessageMain=require('./ipcMessageMain.js')
 
@@ -903,7 +904,6 @@ class AppManager {
         if (saApp.canClose) {
           return
         }
-        console.log(saApp.settings)
         if(saApp.settings.keepRunning){
           appManager.hideWindow(saApp.windowId)
           event.preventDefault()
@@ -1475,19 +1475,20 @@ app.whenReady().then(() => {
   })
 
   ipc.on('entityLogin', async (event, args) => {
-    let premissionedData = {}
+    let returnData = {}
     let user = await userModel.getCurrent()
     if (user.status !== 1) return
     if (args.includes('publicUserInfo')) {
-      premissionedData.userInfo = user.data.user_info
+      returnData.userInfo = user.data.user_info
     }
-    //if todo //args之所以一定要把permission传过来 为未来具体授权内容进行不同的返回
-    appManager.getWindowByWindowId(ApplyPermissionOptions.windowId).view.webContents.send('replyEntityLogin', {
+    let data={
       userToken: user.data.token,
       clientId: ApplyPermissionOptions.clientId,
       bindId: ApplyPermissionOptions.bindId,
-      premissionedData
-    })
+      returnData
+    }
+    //if todo //args之所以一定要把permission传过来 为未来具体授权内容进行不同的返回
+    appManager.getWindowByWindowId(ApplyPermissionOptions.windowId).view.webContents.send('replyEntityLogin', data)
   })
 
   ipc.on('closePermissionWin', () => {

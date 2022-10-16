@@ -1,7 +1,7 @@
 const xss = require("xss");
 const axios = require('axios')
 const { config, api } = require('../../server-config')
-
+require('../../src/browserApi/apiPreload.js')
 axios.defaults.baseURL = config.NODE_SERVER_BASE_URL;
 axios.defaults.adapter = require('axios/lib/adapters/http');
 
@@ -171,7 +171,7 @@ const tsbSdk = {
 
   notice: function (eventName, id, options) {
     try {
-      options.saAppId = tsbSdk.tsbSaApp.id
+      options.saAppId = tsbSdk.tsbSaApp.nanoid
 
       if (!tsbSdk.isThirdApp) {
         ipc.invoke('saAppNotice', options).then(res => {
@@ -263,13 +263,14 @@ const tsbSdk = {
             bind_id: args.bindId
           }
         })
-        if(result.status === 200 && result.data.code === 1000) {
-          tsbSdk.bridgeToWeb({eventName: 'receivePermission', resInfo: {code: 200, msg: '成功', data: Object.assign(result.data.data, args.premissionedData.userInfo) }})
+        if(result.code === 1000) {
+          tsbSdk.bridgeToWeb({eventName: 'receivePermission', resInfo: {code: 200, msg: '成功', data: Object.assign(result.data, args.returnData.userInfo) }})
           ipc.send('closePermissionWin')
         } else {
           tsbSdk.bridgeToWeb({eventName: 'receivePermission', resInfo: {code: 500, msg: '授权登录失败'}})
         }
       } catch (err) {
+        console.warn(err)
         tsbSdk.bridgeToWeb({eventName: 'receivePermission', resInfo: {code: 500, msg: '授权登录失败'}})
       }
     }
