@@ -903,7 +903,13 @@ class AppManager {
         if (saApp.canClose) {
           return
         }
-        appManager.closeApp(saApp.nanoid)//暂时改为直接关闭 //todo 后面要给应用权限，是否询问后台运行
+        console.log(saApp.settings)
+        if(saApp.settings.keepRunning){
+          appManager.hideWindow(saApp.windowId)
+          event.preventDefault()
+        }else{
+          appManager.closeApp(saApp.nanoid)//暂时改为直接关闭
+        }
         // if (!forceClose) {
         //   appManager.hideWindow(saApp.windowId)
         //   event.preventDefault()
