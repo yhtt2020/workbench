@@ -480,7 +480,7 @@ class WindowManager {
       webPreferences,
       width,
       height,
-      url,
+      url:loadUrl,
       onDomReady
     } = options
 
@@ -515,40 +515,45 @@ class WindowManager {
 
 
     appView.webContents.on('new-window', (event, url, frameName, disposition, options, additionalFeatures, referrer, postBody) => {
-      if (!!!saApp.openNewWindow || saApp.openNewWindow === 'redirect') {
-        //默认为重定向
-        event.preventDefault()
-        appView.webContents.loadURL(url)
-        updateView(url)
-      } else if (saApp.openNewWindow === 'allow') {
-        event.preventDefault()
-        //允许，则不修改默认事件
-        const win = new BrowserWindow({
-          webContents: options.webContents, // use existing webContents if provided
-          show: false
-        })
-        win.webContents.on('new-window', (event, url) => {
-          event.preventDefault()
-          win.webContents.loadURL(url)
-        })
-        win.once('ready-to-show', () => win.show())
-        win.setMenu(null)
-        if (!options.webContents) {
-          const loadOptions = {
-            httpReferrer: referrer
-          }
-          if (postBody != null) {
-            const { data, contentType, boundary } = postBody
-            loadOptions.postData = postBody.data
-            loadOptions.extraHeaders = `content-type: ${contentType}; boundary=${boundary}`
-          }
-          win.loadURL(url, loadOptions)
-        }
-        event.newGuest = win
-      } else if (saApp.openNewWindow === 'deny') {
-        //禁止打开
-        event.preventDefault()
-      }
+
+      sendIPCToMainWindow('addTab',{url:url})
+      event.preventDefault()
+      //todo 考虑如何处理应用内的网页打开
+
+      // if (!!!saApp.openNewWindow || saApp.openNewWindow === 'redirect') {
+      //   //默认为重定向
+      //   event.preventDefault()
+      //   appView.webContents.loadURL(url)
+      //   updateView(url)
+      // } else if (saApp.openNewWindow === 'allow') {
+      //   event.preventDefault()
+      //   //允许，则不修改默认事件
+      //   const win = new BrowserWindow({
+      //     webContents: options.webContents, // use existing webContents if provided
+      //     show: false
+      //   })
+      //   win.webContents.on('new-window', (event, url) => {
+      //     event.preventDefault()
+      //     win.webContents.loadURL(url)
+      //   })
+      //   win.once('ready-to-show', () => win.show())
+      //   win.setMenu(null)
+      //   if (!options.webContents) {
+      //     const loadOptions = {
+      //       httpReferrer: referrer
+      //     }
+      //     if (postBody != null) {
+      //       const { data, contentType, boundary } = postBody
+      //       loadOptions.postData = postBody.data
+      //       loadOptions.extraHeaders = `content-type: ${contentType}; boundary=${boundary}`
+      //     }
+      //     win.loadURL(url, loadOptions)
+      //   }
+      //   event.newGuest = win
+      // } else if (saApp.openNewWindow === 'deny') {
+      //   //禁止打开
+      //   event.preventDefault()
+      // }
     })
 
     appView.webContents.once('dom-ready', () => {
@@ -580,7 +585,7 @@ class WindowManager {
       // console.log('press'+input)
       //todo 判断linux
     })
-    appView.webContents.loadURL(url)
+    appView.webContents.loadURL(loadUrl)
 
 
 
