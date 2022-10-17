@@ -231,7 +231,7 @@ function createWindowWithBounds(bounds) {
 			x: 12,
 			y: 10
 		},
-    show:false,
+    show:true,
 		icon: icon,
 		frame: false,//不再从配置中取是否带边框参数
 		alwaysOnTop: settings.get('windowAlwaysOnTop'),
