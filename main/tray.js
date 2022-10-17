@@ -203,6 +203,7 @@ app.whenReady().then(() => {
     {
       label: '关闭浏览器',
       click () {
+        global.trayExit=true
         app.exit()
       }
     },

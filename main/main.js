@@ -300,7 +300,6 @@ function createWindowWithBounds(bounds) {
             '节能后台运行（推荐）'
           ]
         })
-        console.log(choose)
         if (choose.checkboxChecked) {
           settings.set('askCloseExit', false)
           settings.set('closeExit', choose.response)
@@ -367,7 +366,12 @@ function createWindowWithBounds(bounds) {
       if(userWindow){
         return
       }
-      askCloseExit()
+      if(typeof trayExit === 'undefined' || !trayExit){
+        askCloseExit()
+      }else{
+        app.exit()
+      }
+
      //windows上，且不是在切换空间，则关闭整个应用
       // todo 如果做了托盘菜单，这里不需要直接退出app
      //app.quit()
