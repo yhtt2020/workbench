@@ -1083,7 +1083,7 @@ function showUserWindow (args) {
     })
 
     userWindow = new BrowserWindow({
-      backgroundColor: '#00000000',
+      //backgroundColor: '#00000000',
       show: false,
       minWidth:900,
       minHeight:550,
@@ -1116,6 +1116,7 @@ function showUserWindow (args) {
       return bounds
     }
     userWindow.setMenu(null)
+    //userWindow.webContents.openDevTools()
     userWindow.loadURL(render.getUrl('user.html'))
     userWindow.on('ready-to-show', () => {
       userWindow.show()

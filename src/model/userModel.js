@@ -1,8 +1,16 @@
 const { SqlDb } = require('../util/sqldb')
 const standReturn = require('../util/standReturn')
 let sqlDb = new SqlDb()
+
 const userModel = {
 
+  async initialize(){
+    if(!await sqlDb.knex.schema.hasColumn('account','expired')){
+      await sqlDb.knex.schema.alterTable('account',(table)=>{
+        table.boolean('expired').defaultTo('false').comment('是否已经过期')
+      })
+    }
+  },
   /**
    * 获取全部账号，已sqldb
    * @returns {Promise<*>}
@@ -102,7 +110,9 @@ const userModel = {
   async logout () {
     await sqlDb.knex('account').where({ is_current: true }).update({ is_current: false })
   },
-
+  async setExpired(uid){
+    await sqlDb.knex('account').where({uid}).update({expired:true})
+  },
   getClientId () {
     const settings = require('../../js/util/settings/settings.js')
     return settings.get('clientID')
@@ -218,10 +228,11 @@ const userModel = {
     let responseData = result.data
     if (result.code === 1000) {
       let user = userModel.convertUserData(responseData)
+      user.expired=false
       await userModel.setCurrent(user)
     }
     return result
   }
 }
-
+userModel.initialize()
 module.exports = userModel

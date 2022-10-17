@@ -74,7 +74,6 @@ axios.interceptors.request.use(
           refreshFuncList.push(async user => {
             if(config.expireInfo.inMain) {
               //根据进程类型执行不同的重制用户标识 //情况一主进程中触发的，修改主进程中storage中的用户标识，并通过ipc传到渲染进程
-              updateStorageInfo(user)
               //todo 发送Ipc去更新空间里的信息
             } else {
               //根据进程类型执行不同的重制用户标识 //情况二渲染进程中触发的，通过ipc通知主进程去修改，并还会再发到渲染进程
@@ -152,6 +151,7 @@ axios.interceptors.response.use(
           //且不在刷新令牌，证明已经无法刷新令牌了
           let userRs=await userModel.getCurrent()
           if (userRs.status===1) {
+            await userModel.setExpired(userRs.data.uid)
             ipc.send('showUserWindow', {tip: '您的登录信息已过期，请重新登录。'})
 
             ipc.send('message', {type: 'warn', config: {content: '您的登录信息已过期，请重新登录。', key: "401"}})
