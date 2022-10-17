@@ -24,14 +24,13 @@ class BarrageManager{
     let windowInstance
     let window
      windowInstance =  this.windowManager.create({
+        url:this.getUrl('barrage.html#/pop'),
         name:'barrage',
-        mod:this.windowManager.MOD.NO_CONTROLLER,
         defaultBounds:{
           width:950,
           height:300
         },
         webPreferences:{
-          show:false,
           preload:(__dirname+'/../preload/barragePreload.js'),
           additionalArguments: [
             '--user-data-path=' + app.getPath('userData'),
@@ -54,12 +53,7 @@ class BarrageManager{
           acceptFirstMouse:false
         }
     })
-
     window=windowInstance.window
-    window.loadURL(this.getUrl('barrage.html#/pop'))
-    window.on('ready-to-show',()=>{
-      window.show()
-    })
     this.container=window
     this.instance=windowInstance
     win=this.container

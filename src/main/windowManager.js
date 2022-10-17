@@ -1,8 +1,9 @@
-const path=require('path')
-const {WindowInstance,ViewInstance,FrameWindowInstance} =require('./instanceClass.js')
-const {app,ipcMain:ipc,BrowserWindow,BrowserView }=require('electron')
+const path = require('path')
+const {WindowInstance, ViewInstance, FrameWindowInstance} = require('./instanceClass.js')
+const {app, ipcMain: ipc, BrowserWindow, BrowserView} = require('electron')
 const SaApp = require('./saAppClass')
 const remote = require('@electron/remote/main')
+
 /**
  * 代理view管理
  */
@@ -11,8 +12,8 @@ class ViewManager {
   bindedMainWindowEvent = false //是否已经绑定了主窗体事件
   lastWidth = 0 //最后一次调整的分体窗体的宽度
 
-  autoAdjustPosition (pos, width) {
-    if(!windowManager.attachedView){
+  autoAdjustPosition(pos, width) {
+    if (!windowManager.attachedView) {
       return
     }
     let parentBounds = mainWindow.getBounds()
@@ -23,10 +24,9 @@ class ViewManager {
     Object.keys(viewMap).forEach(key => {
 
       let view = viewMap[key]
-        //let viewBounds = view.getBounds()
-        //viewBounds是从viewManager主进程中直接获取
-      if(viewMap[key]===windowManager.attachedView && Object.keys(viewMap).length>1)
-      {
+      //let viewBounds = view.getBounds()
+      //viewBounds是从viewManager主进程中直接获取
+      if (viewMap[key] === windowManager.attachedView && Object.keys(viewMap).length > 1) {
         //如果是吸附到右侧的tab，且不是唯一的tab，则不需要实际去移动这个view
         return
       }
@@ -62,7 +62,7 @@ class ViewManager {
         width: mainViewPreWidth,
         height: viewBounds.height
       }
-      sendIPCToMainWindow('showSplitBar', { bounds })
+      sendIPCToMainWindow('showSplitBar', {bounds})
       view.setBounds(bounds)
     })
     let attachedViewBounds = windowManager.attachedView.getBounds()
@@ -75,10 +75,10 @@ class ViewManager {
     attachedViewBounds.height = viewBounds.height//修复attach的高度
     windowManager.attachedView.setBounds(attachedViewBounds)
 
-    windowManager.attachStatus.bounds=attachedViewBounds
+    windowManager.attachStatus.bounds = attachedViewBounds
   }
 
-  restore () {
+  restore() {
     this.lastWidth = 0
     let parentBounds = mainWindow.getBounds()
     Object.keys(viewMap).forEach(key => {
@@ -96,13 +96,13 @@ class ViewManager {
   /**
    * 鼠标拖动
    */
-  resetAttachPosition () {
+  resetAttachPosition() {
     let cursorPosition = require('electron').screen.getCursorScreenPoint()
     let parentBounds = mainWindow.getBounds()
     this.autoAdjustPosition('right', parentBounds.width + parentBounds.x - cursorPosition.x)
   }
 
-  syncSize () {
+  syncSize() {
     if (windowManager.attachedView) {
       this.autoAdjustPosition('right', this.lastWidth)
     }
@@ -113,9 +113,9 @@ class ViewManager {
    * @param bounds
    * @returns {*}
    */
-  onSetBounds (bounds) {
+  onSetBounds(bounds) {
     if (windowManager.attachedView) {
-      if(mainWindow.getBrowserViews().indexOf(windowManager.attachedView)===-1){
+      if (mainWindow.getBrowserViews().indexOf(windowManager.attachedView) === -1) {
         //如果发现侧边吸附的view被移除了
         mainWindow.addBrowserView(windowManager.attachedView)
         this.syncSize()
@@ -125,7 +125,6 @@ class ViewManager {
     return bounds
   }
 }
-
 
 
 /**
@@ -143,12 +142,12 @@ class WindowManager {
 
   attachedInstance = {} //已经吸附的窗体的实例
   attachedView = null//已经吸附的窗体
-  attachStatus=null //{ name ,bounds, pos} //吸附窗体的状态
-  stashCreateOptions=null//暂存的window的初始化设置
+  attachStatus = null //{ name ,bounds, pos} //吸附窗体的状态
+  stashCreateOptions = null//暂存的window的初始化设置
 
   viewManager = null
 
-  constructor () {
+  constructor() {
 
     this.viewManager = new ViewManager()
   }
@@ -157,8 +156,8 @@ class WindowManager {
     width: 480,
   }
   defaultWindowPreferences = {
-      frame:false,
-
+    frame: false,
+    hasShadow:true
   }
   defaultWebPreferences = {
     nodeIntegration: false,
@@ -169,8 +168,8 @@ class WindowManager {
     preload: path.join(__dirname, 'src/browserApi/apiPreload.js'),
     contextIsolation: true,
     sandbox: true,
-    shadow:true,
-    acceptFirstMouse:true,
+    backgroundColor: '#2e2c29',
+    acceptFirstMouse: true,
     enableRemoteModule: false,
     allowPopups: false,
     // partition: partition || 'persist:webcontent',
@@ -193,18 +192,18 @@ class WindowManager {
    * @param name
    * @returns {*}
    */
-  isAlive (name) {
+  isAlive(name) {
     return this.instanceMap[name] !== undefined
   }
 
-  get (name) {
+  get(name) {
     return this.instanceMap[name]
   }
 
-  close (name,destroy=true) {
+  close(name, destroy = true) {
     let instance = this.instanceMap[name]
     if (instance) {
-      if(destroy) {
+      if (destroy) {
         instance.close()
       }
       //因为存在可能由于parent窗体被关闭导致被关闭的情况，实例的移除已经全部放到window或者webcontents移除的时候自动处理了。
@@ -219,14 +218,14 @@ class WindowManager {
    * @param type
    * @param name
    */
-  ensureInstanceRemoved(type,name){
-    if(this[type+'Map'][name]){
-      delete this[type+'Map'][name]
+  ensureInstanceRemoved(type, name) {
+    if (this[type + 'Map'][name]) {
+      delete this[type + 'Map'][name]
     }
-    if(this.instanceMap[name] && this.instanceMap[name].type===type){
+    if (this.instanceMap[name] && this.instanceMap[name].type === type) {
       //判断一下类型是否匹配，如果不匹配，可能是切换，而不是关闭，此时可能之后，则不需要移除
       delete this.instanceMap[name]
-      if(this.webContentsMap[name]){
+      if (this.webContentsMap[name]) {
         delete this.webContentsMap[name]
       }
     }
@@ -237,7 +236,7 @@ class WindowManager {
    * name可以是字符串，也可以是时间戳，字符串一般用于经常用到的窗体，而时间戳则是临时窗体
    * @param options {mod,existingWindowId, name, webPreferences, boundsString, events,rememberBounds,url,defaultBounds}
    */
-  create (options) {
+  create(options) {
     let {
       mod,
       existingWindowId,
@@ -255,54 +254,58 @@ class WindowManager {
     if (webPreferences)
       webPreferences = Object.assign(this.defaultWebPreferences, webPreferences)
     this.optionMap[name] = name
-    let wenContents
     let instance
-    if (mod === this.MOD.NO_CONTROLLER) {
-      windowOption.webPreferences = webPreferences
-      windowOption = Object.assign(this.defaultWindowPreferences, windowOption)
-      windowOption.webPreferences.additionalArguments = [
-        '--user-data-path=' + userDataPath,
-        '--app-version=' + app.getVersion(),
-        '--app-name=' + app.getName(),
-        ...((isDevelopmentMode ? ['--development-mode'] : [])),
-        '--name=' + name
-      ]
-      let window = new BrowserWindow(windowOption)
-      window.setWindowButtonVisibility(false)
-      if (rememberBounds) {
-        let boundsSetting = WindowManager.getSettings(name, 'bounds')
-        let alwaysOnTop = WindowManager.getSettings(name, 'alwaysOnTop')
-        if (alwaysOnTop) {
-          window.setAlwaysOnTop(alwaysOnTop)
-        }
-        if (boundsSetting) {
-          window.setBounds(boundsSetting)
-        } else if (defaultBounds) {
-          window.setBounds(defaultBounds)
-        }
-      }
-      window.on('ready-to-show', () => {
-        window.show()
-      })
 
-      window.on('closed',()=>{
-        this.ensureInstanceRemoved('window',name)
-      })
-      webContents = window.webContents
-      if (rememberBounds) {
-       this.bindRememberBoundsEvents(name,window)
-      }
-      if (url) {
-        window.loadURL(url)
-      }
-      this.windowMap[name] = window
-      let windowInstance = new WindowInstance({
-        window: window,
-        createOptions:options,
-        name: name
-      })
-      instance = windowInstance
+    windowOption.webPreferences = webPreferences
+    windowOption = Object.assign(this.defaultWindowPreferences, windowOption)
+    windowOption.webPreferences.additionalArguments = [
+      '--user-data-path=' + userDataPath,
+      '--app-version=' + app.getVersion(),
+      '--app-name=' + app.getName(),
+      ...((isDevelopmentMode ? ['--development-mode'] : [])),
+      '--name=' + name
+    ]
+    let window = new BrowserWindow(windowOption)
+    window.once('ready-to-show', () => {
+      window.show()
+    })
+    if (process.platform === 'darwin') {
+      //mac上设置隐藏交通灯按钮
+      window.setWindowButtonVisibility(false)
     }
+
+    if (rememberBounds) {
+      let boundsSetting = WindowManager.getSettings(name, 'bounds')
+      let alwaysOnTop = WindowManager.getSettings(name, 'alwaysOnTop')
+      if (alwaysOnTop) {
+        window.setAlwaysOnTop(alwaysOnTop)
+      }
+      if (boundsSetting) {
+        window.setBounds(boundsSetting)
+      } else if (defaultBounds) {
+        //window.setBounds(defaultBounds)
+      }
+    }
+
+
+    window.on('closed', () => {
+      this.ensureInstanceRemoved('window', name)
+    })
+    webContents = window.webContents
+    if (rememberBounds) {
+      this.bindRememberBoundsEvents(name, window)
+    }
+    if (url) {
+      window.loadURL(url)
+    }
+    //window.webContents.openDevTools()
+    this.windowMap[name] = window
+    instance = new WindowInstance({
+      window: window,
+      createOptions: options,
+      name: name
+    })
+
     this.instanceMap[name] = instance
     this.webContentsMap[name] = webContents
     return instance
@@ -310,16 +313,17 @@ class WindowManager {
 
   /**绑定记忆外框事件
    *
+   * @param name
    * @param window
    */
-  bindRememberBoundsEvents(name,window){
+  bindRememberBoundsEvents(name, window) {
     window.on('resized', () => {
       WindowManager.setSettings(name, 'bounds', window.getBounds())
     })
     window.on('moved', () => {
       WindowManager.setSettings(name, 'bounds', window.getBounds())
     })
-    window.on('always-on-top-changed', (e, isAlwaysOnTop) => {
+    window.on('always-on-top-cha1nged', (e, isAlwaysOnTop) => {
       WindowManager.setSettings(name, 'alwaysOnTop', isAlwaysOnTop)
     })
   }
@@ -328,7 +332,7 @@ class WindowManager {
    *
    * @param options
    */
-  createFrameWindow(options){
+  createFrameWindow(options) {
     let {
       name,
       url,
@@ -339,16 +343,16 @@ class WindowManager {
       rememberBounds,
       onReadyToShow,//读入事件
       onDomReady
-    }=options
+    } = options
     frameWebPreferences = Object.assign(this.defaultWebPreferences, frameWebPreferences)
     if (frameWebPreferences) {
       windowOption.webPreferences = frameWebPreferences
     }
 
     windowOption = Object.assign(this.defaultWindowPreferences, windowOption)
-    let appWindow=new BrowserWindow(windowOption)
+    let appWindow = new BrowserWindow(windowOption)
     appWindow.on('ready-to-show', () => {
-      if(onReadyToShow){
+      if (onReadyToShow) {
         onReadyToShow(appWindow)
       }
     })
@@ -370,7 +374,7 @@ class WindowManager {
       width: appWindow.getBounds().width,
       height: appWindow.getBounds().height - 70,
       url,
-      webPreferences:viewWebPreferences,
+      webPreferences: viewWebPreferences,
       onDomReady
     })
 
@@ -392,7 +396,7 @@ class WindowManager {
     //   })
     // })
     if (rememberBounds) {
-     this.bindRememberBoundsEvents(name,appWindow)
+      this.bindRememberBoundsEvents(name, appWindow)
     }
 
     appWindow.on('resize', (event, args) => {
@@ -456,7 +460,6 @@ class WindowManager {
     })
 
 
-
     appWindow.view = appView
 
     this.windowMap[name] = appWindow
@@ -469,19 +472,19 @@ class WindowManager {
     })
     this.webContentsMap[name] = appView.webContents
     return {
-      frame:appWindow ,
-      view:appWindow.view,
+      frame: appWindow,
+      view: appWindow.view,
       windowId,
       app
     }
   }
 
-  createFrameView(options,frameWindow){
+  createFrameView(options, frameWindow) {
     let {
       webPreferences,
       width,
       height,
-      url:loadUrl,
+      url: loadUrl,
       onDomReady
     } = options
 
@@ -493,7 +496,8 @@ class WindowManager {
     appView.setBackgroundColor('#ffffff')
 
     remote.enable(appView.webContents)
-    function updateView (url) {
+
+    function updateView(url) {
       if (frameWindow.isFocused()) {
         if (barrageManager)
           barrageManager.changeUrl(url)
@@ -506,18 +510,17 @@ class WindowManager {
     }
 
     appView.webContents.on('did-navigate-in-page', (event, url) => {
-      if(frameWindow){
-        if (!frameWindow.webContents.isDestroyed())
-          updateView(url)
+        if (frameWindow) {
+          if (!frameWindow.webContents.isDestroyed())
+            updateView(url)
+        }
       }
-      }
-
     )
 
 
     appView.webContents.on('new-window', (event, url, frameName, disposition, options, additionalFeatures, referrer, postBody) => {
 
-      sendIPCToMainWindow('addTab',{url:url})
+      sendIPCToMainWindow('addTab', {url: url})
       event.preventDefault()
       //todo 考虑如何处理应用内的网页打开
 
@@ -558,7 +561,7 @@ class WindowManager {
     })
 
     appView.webContents.once('dom-ready', () => {
-      if(onDomReady){
+      if (onDomReady) {
         onDomReady()
       }
     })
@@ -594,7 +597,7 @@ class WindowManager {
   }
 
 
-  createView (options) {
+  createView(options) {
     let {
       name,
       viewOption,
@@ -651,13 +654,13 @@ class WindowManager {
       view.webContents.loadURL(url)
     }
     this.viewMap[name] = view
-    view.webContents.on('destroyed',()=>{
-      this.ensureInstanceRemoved('view',name)
+    view.webContents.on('destroyed', () => {
+      this.ensureInstanceRemoved('view', name)
     })
     let viewInstance = new ViewInstance({
       view: view,
       name: name
-    },this)
+    }, this)
     this.instanceMap[name] = viewInstance
     this.webContentsMap[name] = view.webContents
     return viewInstance
@@ -669,19 +672,19 @@ class WindowManager {
    * @param pos 'right'
    * @param width
    */
-  attachInstance (instance, pos, width = 480) {
+  attachInstance(instance, pos, width = 480) {
     switch (pos) {
       case this.POS.RIGHT:
         this.attachedInstance = instance
-        this.attachStatus={
-          pos:pos,
-          name:instance.name,
-          bounds:{}
+        this.attachStatus = {
+          pos: pos,
+          name: instance.name,
+          bounds: {}
         }
-        this.stashCreateOptions=instance.createOptions
-        let url =instance.window.getURL()
-        let options=instance.initOption
-        options.url=url
+        this.stashCreateOptions = instance.createOptions
+        let url = instance.window.getURL()
+        let options = instance.initOption
+        options.url = url
         this.close(instance.name)
         let viewInstance = this.createView(options)
         mainWindow.addBrowserView(viewInstance.view)
@@ -694,34 +697,35 @@ class WindowManager {
         }
         viewInstance.view.setBounds(viewBounds)
         viewInstance.view.setAutoResize({
-          width:false,
-          height:false,
-          horizontal:false,
-          vertical:false
+          width: false,
+          height: false,
+          horizontal: false,
+          vertical: false
         })
         this.attachedInstance = viewInstance
         this.attachedView = viewInstance.view
-        this.viewManager.autoAdjustPosition('right',viewBounds.width)
+        this.viewManager.autoAdjustPosition('right', viewBounds.width)
 
       //todo viewManager重新调整位置
       //todo 根据options重新创建view到主浏览器中
     }
   }
-  setTabAttach(option,width=480){
-    let {tab,pos}=option
-    pos= pos || 'right'
-    let name='tab_'+tab.id
-    let viewInstance= new ViewInstance({
-      view:viewMap[tab.id],
-      name:tab.id
-    },mainWindow)
+
+  setTabAttach(option, width = 480) {
+    let {tab, pos} = option
+    pos = pos || 'right'
+    let name = 'tab_' + tab.id
+    let viewInstance = new ViewInstance({
+      view: viewMap[tab.id],
+      name: tab.id
+    }, mainWindow)
     switch (pos) {
       case this.POS.RIGHT:
-        this.attachedInstance =viewInstance
-        this.attachStatus={
-          pos:pos,
-          name:name,
-          bounds:{}
+        this.attachedInstance = viewInstance
+        this.attachStatus = {
+          pos: pos,
+          name: name,
+          bounds: {}
         }
         //this.stashCreateOptions=instance.createOptions
         let parentBounds = mainWindow.getBounds()
@@ -733,63 +737,68 @@ class WindowManager {
         }
         viewInstance.view.setBounds(viewBounds)
         viewInstance.view.setAutoResize({
-          width:false,
-          height:false,
-          horizontal:false,
-          vertical:false
+          width: false,
+          height: false,
+          horizontal: false,
+          vertical: false
         })
         this.attachedInstance = viewInstance
         this.attachedView = viewInstance.view
-        this.viewManager.autoAdjustPosition('right',viewBounds.width)
+        this.viewManager.autoAdjustPosition('right', viewBounds.width)
     }
   }
 
-  detachInstance(){
+  detachInstance() {
     let instance = this.attachedInstance
-    this.attachStatus=null
-    let url =instance.view.webContents.getURL()
+    this.attachStatus = null
+    let url = instance.view.webContents.getURL()
     this.close(instance.name)
-    let options= this.stashCreateOptions
-    options.url=url
-    this.create(Object.assign(options, { url }))
+    let options = this.stashCreateOptions
+    options.url = url
+    this.create(Object.assign(options, {url}))
   }
-  detachTab(){
-    this.attachStatus=null
-    this.attachedInstance=null
-    this.attachedView=null
+
+  detachTab() {
+    this.attachStatus = null
+    this.attachedInstance = null
+    this.attachedView = null
     this.restoreAttachMod()
   }
-  restoreAttachMod(){
+
+  restoreAttachMod() {
     this.viewManager.restore()
   }
-  onSetBounds(bounds){
+
+  onSetBounds(bounds) {
     return this.viewManager.onSetBounds(bounds)
   }
-  syncAttachedBounds(){
-    if(this.viewManager)
+
+  syncAttachedBounds() {
+    if (this.viewManager)
       this.viewManager.syncSize()
   }
 
-  resetAttachPosition(){
+  resetAttachPosition() {
     this.viewManager.resetAttachPosition()
   }
-  static getBoundsSetting (name) {
+
+  static getBoundsSetting(name) {
     return settings.get('windowManager.bounds.' + name)
   }
 
-  static setBoundsSetting (name, bounds) {
+  static setBoundsSetting(name, bounds) {
     settings.set('windowManager.bounds.' + name, bounds)
   }
 
-  static setSettings (name, key, value) {
+  static setSettings(name, key, value) {
     settings.set('windowManager.settings.' + name + '.' + key, value)
   }
 
-  static getSettings (name, key) {
+  static getSettings(name, key) {
     return settings.get('windowManager.settings.' + name + '.' + key)
   }
 
-  getWindowFromWebContentsId (id) {
+  getWindowFromWebContentsId(id) {
     return BrowserWindow.fromWebContents(webContents.fromId(id))
   }
 
@@ -798,7 +807,7 @@ class WindowManager {
    * @param id
    * @returns {{instance, name, type: string}}
    */
-  getInstanceFromWebContentsId (id) {
+  getInstanceFromWebContentsId(id) {
     let findInWind = Object.keys(this.windowMap).find(win => {
       return this.windowMap[win].webContents.id === id
     })
@@ -816,7 +825,7 @@ class WindowManager {
    * @param channel
    * @param cb
    */
-  onWindow (channel, cb) {
+  onWindow(channel, cb) {
     this._on('api.window.' + channel, (event, args) => {
       let instance = this.get(args['_name'])
 
@@ -824,18 +833,18 @@ class WindowManager {
     })
   }
 
-  on(module,channel,cb){
-    this._on('api.'+module+'.'+channel,(event,args)=>{
-      let instance=this.get(args['_name'])
-      cb(event,args,instance)
+  on(module, channel, cb) {
+    this._on('api.' + module + '.' + channel, (event, args) => {
+      let instance = this.get(args['_name'])
+      cb(event, args, instance)
     })
   }
 
-  _on (channel, cb) {
+  _on(channel, cb) {
     ipc.on(channel, cb)
   }
 
-  init () {
+  init() {
     app.whenReady().then(() => {
       ipc.on('api.runtime.init', (event, args) => {
 
@@ -851,58 +860,58 @@ class WindowManager {
       })
 
       this.onWindow('isAlwaysOnTop', (event, args, instance) => {
-        if(instance.type==='view'){
-          event.returnValue=false //view的话，统一返回false
-        }else if(instance.type==='frameWindow'){
-          event.returnValue= instance.frame.isAlwaysOnTop()
-        }else if(instance.type==='window'){
+        if (instance.type === 'view') {
+          event.returnValue = false //view的话，统一返回false
+        } else if (instance.type === 'frameWindow') {
+          event.returnValue = instance.frame.isAlwaysOnTop()
+        } else if (instance.type === 'window') {
           event.returnValue = instance.window.isAlwaysOnTop()
         }
 
       })
 
       this.onWindow('attach', (event, args, instance) => {
-        if(this.attachedInstance===instance){
+        if (this.attachedInstance === instance) {
           return
         }
         this.attachInstance(instance, args.pos, args.width)
       })
 
-      this.onWindow('detach',(event,args,instance)=>{
-        if(this.attachedInstance!==instance){
+      this.onWindow('detach', (event, args, instance) => {
+        if (this.attachedInstance !== instance) {
           return
         }
         this.detachInstance()
       })
 
-      this.onWindow('getAttachStatus',(event,args,instance)=>{
-        if(this.attachedInstance!==instance){
-          event.returnValue=false
-        }else{
-          event.returnValue=this.attachStatus
+      this.onWindow('getAttachStatus', (event, args, instance) => {
+        if (this.attachedInstance !== instance) {
+          event.returnValue = false
+        } else {
+          event.returnValue = this.attachStatus
         }
       })
 
-      this.on('notification','send',(event,args,instance)=>{
-          //需要前置处理消息设置的状态决定到底发不发消息
-          if(instance.app){
-            appManager.onNotice(instance.app,args)
-          }
-          // const result = appManager.beforeEachNotification(notificationSettingStatus, args)
-          // if (result) {
-          //   appManager.notification(args.saAppId, {
-          //     title: args.title,
-          //     body: args.body,
-          //   }, typeof args.ignoreWhenFocus == 'undefined' ? false : args.ignoreWhenFocus)
-          //   return { code: 200, msg: '成功' }
-          // } else {
-          //   return { code: 500, msg: '失败' }
-          // }
+      this.on('notification', 'send', (event, args, instance) => {
+        //需要前置处理消息设置的状态决定到底发不发消息
+        if (instance.app) {
+          appManager.onNotice(instance.app, args)
+        }
+        // const result = appManager.beforeEachNotification(notificationSettingStatus, args)
+        // if (result) {
+        //   appManager.notification(args.saAppId, {
+        //     title: args.title,
+        //     body: args.body,
+        //   }, typeof args.ignoreWhenFocus == 'undefined' ? false : args.ignoreWhenFocus)
+        //   return { code: 200, msg: '成功' }
+        // } else {
+        //   return { code: 500, msg: '失败' }
+        // }
       })
     })
   }
 }
 
-module.exports={
+module.exports = {
   WindowManager
 }

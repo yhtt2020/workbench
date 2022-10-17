@@ -273,7 +273,7 @@ app.on('ready', () => {
           parent:mainWindow,
           minWidth:400,
           minHeight:500,
-          show: false,
+          show: true,
           hasShadow:true,
           title:'轻聊',
           icon:path.join(__dirname,'pages/group/group.png')

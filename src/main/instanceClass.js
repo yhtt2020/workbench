@@ -63,6 +63,7 @@ class FrameWindowInstance extends Instance{
     this.frame.removeBrowserView(this.view)
     this.view.webContents.destroy()
     this.frame.close()
+    this.destroy()
   }
 
 }
