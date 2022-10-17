@@ -1,6 +1,6 @@
 import { passwordManager, passwordManagers } from './passwordManager'
 import { searchEnginePage, searchEngine } from './searchEngine.js'
-import locale from './localization.build'
+
 import theme from './theme.js'
 import { defaultKeyMap, userKeyMap } from './keyMap'
 
@@ -9,7 +9,7 @@ const settingPage = {
     postMessage({ message: 'callSetOrRemoveDefaultBrowser' })
   },
   init () {
-    locale.init()
+    window.localeInit()
     document.title = l('settingsPreferencesHeading')
     let settings = window.settings
     settings.load()

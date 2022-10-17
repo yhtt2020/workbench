@@ -3,6 +3,11 @@ let notInner=null
 let allowUrls=[
   'http://localhost:1600','tsbapp://'
 ]
+const  {  l,userLanguage,getCurrentLanguage,init} =require('./localization.build')
+window.l=l
+window.userLanguage=userLanguage
+window.getCurrentLanguage=getCurrentLanguage
+window.localeInit=init
 function allow() {
   let url=window.location.href
   return allowUrls.some(allowUrl => {

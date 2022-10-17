@@ -53,40 +53,47 @@ insert a localized string into all elements with a [data-string] attribute
 set the correct attributes for all elements with a [data-label] attribute
 set the value attribute for all elements with a [data-value] attribute
  */
+function init(){
+  if (typeof document !== 'undefined') {
+    if (languages[getCurrentLanguage()] && languages[getCurrentLanguage()].rtl) {
+      document.body.classList.add('rtl')
+    }
 
-if (typeof document !== 'undefined') {
-  if (languages[getCurrentLanguage()] && languages[getCurrentLanguage()].rtl) {
-    document.body.classList.add('rtl')
+    document.querySelectorAll('[data-string]').forEach(function (el) {
+      var str = l(el.getAttribute('data-string'))
+      if (typeof str === 'string') {
+        el.textContent = str
+      } else if (str && str.unsafeHTML && el.hasAttribute('data-allowHTML')) {
+        el.innerHTML = str.unsafeHTML
+      }
+    })
+    document.querySelectorAll('[data-label]').forEach(function (el) {
+      var str = l(el.getAttribute('data-label'))
+      if (typeof str === 'string') {
+        el.setAttribute('title', str)
+        el.setAttribute('aria-label', str)
+      } else {
+        throw new Error('invalid data-label value: ' + str)
+      }
+    })
+    document.querySelectorAll('[data-value]').forEach(function (el) {
+      var str = l(el.getAttribute('data-value'))
+      if (typeof str === 'string') {
+        el.setAttribute('value', str)
+      } else {
+        throw new Error('invalid data-value value: ' + str)
+      }
+    })
   }
-
-  document.querySelectorAll('[data-string]').forEach(function (el) {
-    var str = l(el.getAttribute('data-string'))
-    if (typeof str === 'string') {
-      el.textContent = str
-    } else if (str && str.unsafeHTML && el.hasAttribute('data-allowHTML')) {
-      el.innerHTML = str.unsafeHTML
-    }
-  })
-  document.querySelectorAll('[data-label]').forEach(function (el) {
-    var str = l(el.getAttribute('data-label'))
-    if (typeof str === 'string') {
-      el.setAttribute('title', str)
-      el.setAttribute('aria-label', str)
-    } else {
-      throw new Error('invalid data-label value: ' + str)
-    }
-  })
-  document.querySelectorAll('[data-value]').forEach(function (el) {
-    var str = l(el.getAttribute('data-value'))
-    if (typeof str === 'string') {
-      el.setAttribute('value', str)
-    } else {
-      throw new Error('invalid data-value value: ' + str)
-    }
-  })
 }
+init()
 if (typeof window !== 'undefined') {
   window.l = l
   window.userLanguage = userLanguage
   window.getCurrentLanguage = getCurrentLanguage
+}
+if(typeof module.exports){
+  module.exports={
+    l,userLanguage,getCurrentLanguage,init
+  }
 }

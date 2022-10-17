@@ -263,7 +263,7 @@
     "passwordManagerSetupStep2": "然后把工具拖动到下面的框中：",
     "passwordManagerSetupDragBox": "把工具拖动到这里",
     "passwordManagerSetupInstalling": "安装中...",
-    "passwordManagerBitwardenSignIn": null, //missing translation
+    "passwordManagerBitwardenSignIn": "为了连接您的Bitwarden帐户，请转到vault.bitwarden.com/#/settings/account，滚动到底部，然后选择“查看API密钥”。然后将值粘贴到下面的字段中。", //missing translation
     "passwordManagerSetupSignIn": "登录密码管理器以使用自动填充。你的凭证不会在浏览器内存储。",
     "disableAutofill": "关闭自动填充",
     "passwordManagerSetupUnlockError": "解锁密码存储区失败：",
