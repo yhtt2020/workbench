@@ -33,6 +33,10 @@ export default {
     if (window.globalArgs['tip']) {
       this.tip = window.globalArgs['tip']
     }
+    if(this.tip.indexOf('重新登录')>-1){
+      //掉登录
+      this.tipExpired()
+    }
     window.ipc.on('loginCallback',async (e, args) => {
       message.success('成功添加帐号。')
       this.users = await userModel.getAll()
@@ -40,6 +44,16 @@ export default {
     })
   },
   methods:{
+    tipExpired(){
+      Modal.confirm({
+        content:'账号登录信息已过期，请重新登录。',
+        okText:'重新登录',
+        onOk(){
+          ipc.send('login')
+        },
+        cancelText:'取消'
+      })
+    },
     goAddAccount () {
       this.currentTab={name:'add'}
       this.$router.push('/add')
@@ -95,7 +109,7 @@ export default {
             return
           }
           if (e.response && e.response.data.code === 1001) {
-            message.error('用户登录信息过期，请点击【添加账号】重新登录。')
+            this.tipExpired()
             return
           }
           message.error('意外错误。')
@@ -142,7 +156,12 @@ export default {
             <a-col flex="auto">
               <div class="text-more" :style="{'padding-top':!user.is_current?'4px':''}" style="width: 70px">{{ user.user_info.nickname }}</div>
               <div class="current-tag" v-if="user.is_current">
-               登录中
+               <span style="color: orangered" v-if="user.expired">
+                 已过期
+               </span>
+                <span v-else>
+                  登录中
+                </span>
               </div>
             </a-col>
           </a-row>
