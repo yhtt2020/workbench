@@ -841,7 +841,6 @@ ipc.on('openTaskMenu', (event, args) => {
         }, event.sender.id)
       }
     },
-    ,
     {
       type: 'separator'
     },

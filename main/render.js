@@ -87,20 +87,7 @@ class Pop {
       let index = pool.pop.findIndex(v => v.url === this.url)
       pool.pop.splice(index, 1)
     })
-    this.win.on('blur', () => {
-      if(this.blurClose){
-        this.win.hide()
-        //缓存10秒再自动关闭
-        setTimeout(() => {
-          if (!this.win.isDestroyed()) {
-            if (!this.win.isVisible()) {
-              this.win.close()
-              return
-            }
-          }
-        }, PopCacheTime)
-      }
-    })
+
     this.win.on('maximize', () => {
       this.win.webContents.send('windowMaximized')
     })
@@ -132,6 +119,23 @@ class Pop {
     this.win.setPosition(this.x, this.y)
     this.win.setAlwaysOnTop(!!this.alwaysTop)
     this.win.show()
+    this.win.once('focus',()=>{
+      //首次显示后再挂在失焦事件，防止首次无法打开
+      this.win.on('blur', () => {
+        if(this.blurClose){
+          this.win.hide()
+          //缓存10秒再自动关闭
+          setTimeout(() => {
+            if (!this.win.isDestroyed()) {
+              if (!this.win.isVisible()) {
+                this.win.close()
+                return
+              }
+            }
+          }, PopCacheTime)
+        }
+      })
+    })
   }
 }
 
@@ -200,6 +204,7 @@ class Pool {
     }
     let blankObj = this.pop.find(v => v.url === '/blank')
     await blankObj.use(param, callerId)
+
     this.pop.push(new Pop())
     return blankObj
   }
@@ -436,11 +441,12 @@ global.render = {
       height: 800,
       backgroundColor: '#fff',//backgroundColor: '#fff', // the value of this is ignored, but setting it seems to work around https://github.com/electron/electron/issues/10559
       webPreferences: webP,
-      show: false
+      show: true,
     }
     let windowA = Object.assign(defaultWindowArgs, windowArgs)
     let win = new BrowserWindow(windowA)
     win.on('ready-to-show', () => {
+      console.log('弹窗show')
       win.show()
     })
     win.loadURL(this.getUrl(url))
@@ -516,6 +522,11 @@ const renderPage = {
       args:args,
     }, windowId).then((pop)=>{
       pop.win.setParentWindow(mainWindow)
+      //父窗体改变会导致失焦隐藏
+      setTimeout(()=>{
+        pop.win.show()
+      },500)
+
     })
   },
   openInstallExtension (args) {
