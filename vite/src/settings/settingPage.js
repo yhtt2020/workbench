@@ -596,13 +596,6 @@ const settingPage = {
         settings.set('passwordManager', { name: this.value })
       }
     })
-
-    var keychainViewLink = document.getElementById('keychain-view-link')
-
-    keychainViewLink.addEventListener('click', function () {
-      postMessage({ message: 'showCredentialList' })
-    })
-
     settings.listen('passwordManager', function (value) {
       keychainViewLink.hidden = !(currentPasswordManager.name === 'Built-in password manager')
     })

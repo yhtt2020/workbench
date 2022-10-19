@@ -50,12 +50,11 @@ window.addEventListener('message', function (e) {
     ipc.send('webOsNotice', e.data)
   }
 
-  if (!e.origin.startsWith('file://') && !e.origin.startsWith('http://localhost:1600')) {
+  if (!e.origin.startsWith('file://') && !e.origin.startsWith('http://localhost:1600') && !e.origin.startsWith('ts://')) {
     return
   }
 
   if (e.data && e.data.message && e.data.message === 'showCredentialList') {
-    console.log('需要查看密码')
     ipc.send('showCredentialList')
   }
 })

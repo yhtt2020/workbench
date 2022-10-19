@@ -19,8 +19,10 @@ import {
 } from '@ant-design/icons-vue'
 import settings from '../../src/settings/settingsContent'
 import settingPage from '../../src/settings/settingPage.js'
+import Passwords from "./components/Passwords.vue";
 export default defineComponent({
   components: {
+    Passwords,
     EyeOutlined, LayoutOutlined, SearchOutlined, AimOutlined, ControlOutlined, CheckSquareOutlined, HomeOutlined,
     LockOutlined, NodeIndexOutlined, GoldOutlined, InsuranceOutlined, ExpandAltOutlined, ArrowRightOutlined,
     ExclamationCircleOutlined,
@@ -659,9 +661,8 @@ export default defineComponent({
               ></select>
             </div>
 
-            <div class="setting-section" id="keychain-view-link" hidden>
-              <a data-string="keychainViewPasswords"></a>
-            </div>
+            <h3>已保存的密码</h3>
+            <Passwords/>
           </div>
 
         </a-tab-pane>
