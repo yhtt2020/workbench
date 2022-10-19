@@ -10,7 +10,8 @@ import {
   DeleteOutlined,
   EditOutlined,
   CheckOutlined,
-  CloseCircleOutlined
+  CloseCircleOutlined,
+  ExportOutlined
 } from '@ant-design/icons-vue'
 
   ;
@@ -20,7 +21,7 @@ const editableData = {}
 export default {
   name: 'Passwords',
   components: {
-    FilterOutlined,
+    FilterOutlined,ExportOutlined,
     SearchOutlined, EyeOutlined, EyeInvisibleOutlined, EllipsisOutlined,
     DeleteOutlined, EditOutlined, CheckOutlined, CloseCircleOutlined
   },
@@ -32,8 +33,7 @@ export default {
           dataIndex: 'domain',
           key: 'domain',
           resizable: true,
-          width: 150,
-          sorter: true,
+          width: 250,
           ellipsis: true,
           customFilterDropdown: true,
           onFilter: (value, record) =>
@@ -183,12 +183,29 @@ export default {
     handleReset() {
       this.searchText = ''
       this.searchColumn=''
+    },
+    filterDomain(domain){
+      this.searchText=domain
+      this.searchColumn='domain'
     }
   }
 }
 </script>
 
 <template>
+  <div>
+    <div>
+      <a-tag  v-if="this.searchColumn && this.searchText" :closable='true' @close='()=>{this.searchText="";this.searchColumn=""}'
+             color="#108ee9">网站：{{this.searchText}}</a-tag>
+      <span v-if="this.filters['name']">
+      <a-tag v-for="name in this.filters['name']"  @close="()=>{
+        this.filters['name'].splice(this.filters['name'].indexOf(name),1)
+      }"
+             color="#108ee9">{{name==='named'?'已命名':'未命名'}}</a-tag>
+      </span>
+    </div>
+
+  </div>
   <a-table @change="handleTableChange" :columns="columns" :data-source="displayData()">
     <template #headerCell="{ column }">
       <template v-if="column.key === 'name'">
@@ -231,9 +248,22 @@ export default {
     </template>
     <template #bodyCell="{ column, record }">
       <template v-if="column.key === 'domain'">
-        <a :href="'http://'+record.domain" target="_blank">
-          {{ record.domain }}
-        </a>
+        <a-dropdown>
+          <a class="ant-dropdown-link" @click.prevent>
+            {{ record.domain }}
+          </a>
+          <template #overlay>
+            <a-menu>
+              <a-menu-item>
+                <a @click="filterDomain(record.domain)" href="javascript:;"><search-outlined></search-outlined> 只看此网站的账号</a>
+              </a-menu-item>
+              <a-menu-item>
+                <a :href="'http://'+record.domain" target="_blank" href="javascript:;"><export-outlined /> 打开此网站</a>
+              </a-menu-item>
+            </a-menu>
+          </template>
+        </a-dropdown>
+
       </template>
       <template v-else-if="column.key === 'name'">
         <div v-if="editableData[record.domain+'_'+record.username]" class="editable-cell-input-wrapper">
