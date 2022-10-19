@@ -1,13 +1,16 @@
 let systemInfo={}
 let notInner=null
 let allowUrls=[
-  'http://localhost:1600','tsbapp://'
+  'http://localhost:1600','tsbapp://','ts://'
 ]
-const  {  l,userLanguage,getCurrentLanguage,init} =require('./localization.build')
-window.l=l
-window.userLanguage=userLanguage
-window.getCurrentLanguage=getCurrentLanguage
-window.localeInit=init
+if(allow()){
+  //载入本地化的语言包方法
+  const  {  l,userLanguage,getCurrentLanguage,init} =require('./localization.build.js')
+  window.l=l
+  window.userLanguage=userLanguage
+  window.getCurrentLanguage=getCurrentLanguage
+  window.localeInit=init
+}
 function allow() {
   let url=window.location.href
   return allowUrls.some(allowUrl => {
@@ -20,10 +23,12 @@ function notInnerPage(e){
     notInner=!(e.origin.startsWith('file://') || allow())
   return notInner
 }
+
 window.addEventListener('message', function (e) {
   if (notInnerPage(e)) {
     return
   }
+
   if (e.data && e.data.message && e.data.message === 'getSettingsData') {
     ipc.send('getSettingsData')
   }
