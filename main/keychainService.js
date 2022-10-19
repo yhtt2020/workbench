@@ -52,6 +52,11 @@ function credentialStoreSetPassword (account) {
       i--
     }
   }
+  if(account.newUsername){
+    //如果存在新账号名，因为是以账号名和域名双条件判断的，所以这里必须用一个新字段去替换，否则会无法查到
+    account.username=account.newUsername
+    delete account.newUsername
+  }
 
   fileContent.credentials.push(account)
   writeSavedPasswordFile(fileContent)

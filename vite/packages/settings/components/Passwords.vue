@@ -1,11 +1,15 @@
 <script  lang="ts">
-
-import {EyeOutlined,EyeInvisibleOutlined,EllipsisOutlined,DeleteOutlined} from '@ant-design/icons-vue'
+import { cloneDeep } from 'lodash-es';
+import {message} from 'ant-design-vue'
+import {EyeOutlined,EyeInvisibleOutlined,EllipsisOutlined,DeleteOutlined,EditOutlined,CheckOutlined,CloseCircleOutlined} from '@ant-design/icons-vue'
 const columns = [
   {
     title: '网站',
     dataIndex: 'domain',
     key: 'domain',
+    resizable:true,
+    width:150,
+    ellipsis:true,
   },
   {
     title: '名称',
@@ -32,17 +36,19 @@ const columns = [
     key:'action'
   }
 ];
-
+const editableData={}
 
 export default {
   name: 'Passwords',
   components:{
-    EyeOutlined,EyeInvisibleOutlined,EllipsisOutlined,DeleteOutlined
+    EyeOutlined,EyeInvisibleOutlined,EllipsisOutlined,
+    DeleteOutlined,EditOutlined,CheckOutlined,CloseCircleOutlined
   },
   data() {
     return {
       columns,
-      passwords:[]
+      passwords:[],
+      editableData
     };
   },
   async mounted() {
@@ -59,6 +65,36 @@ export default {
         username: account.username
       })
       this.passwords.splice(this.passwords.indexOf(account), 1)
+    },
+    edit(domain: string,username:string){
+      this.editableData[domain+'_'+username] = cloneDeep(this.passwords.filter(item => (domain===item.domain && username===item.username))[0]);
+    },
+    save (domain: string,username:string){
+      let oldData=this.passwords.filter(item => (domain===item.domain && username===item.username))[0]
+      let saveData=this.editableData[domain+'_'+username]
+      if(saveData.username!==oldData.username){
+        //编辑了账号的情况下，要排重
+        let test=this.passwords.filter(item => (domain===item.domain && item.username===saveData.username)).length>=1
+        console.log(saveData,'savedata')
+        console.log(test)
+        if(test){
+          message.error('不可设置为已经存在的账号名称。')
+          return
+        }
+      }
+      //Object.assign(oldData, this.editableData[domain+'_'+username]);
+      ipc.invoke('credentialStoreSetPassword',{
+        newUsername:saveData.username,
+        username:oldData.username,
+        name:saveData.name,
+        domain:oldData.domain,
+        password:saveData.password
+      })
+      Object.assign(oldData, this.editableData[domain+'_'+username]);
+      delete editableData[domain+'_'+username];
+    },
+    cancelSave(domain: string,username:string){
+      delete editableData[domain+'_'+username];
     }
   }
 }
@@ -82,18 +118,33 @@ export default {
         </a>
       </template>
       <template v-else-if="column.key === 'name'">
-        <a>
+        <div v-if="editableData[record.domain+'_'+record.username]" class="editable-cell-input-wrapper">
+          <a-input v-model:value="editableData[record.domain+'_'+record.username].name" @pressEnter="save(record.domain,record.username)" />
+        </div>
+        <div v-else class="editable-cell-text-wrapper">
           {{ record.name }}
-        </a>
+        </div>
+      </template>
+      <template v-else-if="column.key === 'username'">
+        <div v-if="editableData[record.domain+'_'+record.username]" class="editable-cell-input-wrapper">
+          <a-input v-model:value="editableData[record.domain+'_'+record.username].username" @pressEnter="save(record.domain,record.username)" />
+        </div>
+        <div v-else class="editable-cell-text-wrapper">
+          {{ record.username }}
+        </div>
       </template>
       <template v-if="column.key === 'password'">
-        <span v-if="record.show">
+        <div v-if="editableData[record.domain+'_'+record.username]" class="editable-cell-input-wrapper">
+          <a-input v-model:value="editableData[record.domain+'_'+record.username].password" @pressEnter="save(record.domain,record.username)" />
+        </div>
+        <div v-else class="editable-cell-text-wrapper">
+          <span v-if="record.show">
            {{ record.password }}
         </span>
-        <span v-else>
+          <span v-else>
            {{ '•••••••••' }}
         </span>
-         &nbsp;&nbsp;
+        </div>
 
       </template>
       <template v-else-if="column.key==='show'">
@@ -104,7 +155,6 @@ export default {
           <span v-else>
             <eye-invisible-outlined />
           </span>
-
         </a-button>
       </template>
       <template v-else-if="column.key === 'tags'">
@@ -119,7 +169,7 @@ export default {
         </span>
       </template>
       <template v-else-if="column.key === 'action'">
-        <a-dropdown>
+        <a-dropdown v-if="!editableData[record.domain+'_'+record.username]">
           <span class="ant-dropdown-link" @click.prevent>
             <ellipsis-outlined style="font-size: 22px" />
           </span>
@@ -127,6 +177,10 @@ export default {
             <a-menu>
               <a-menu-item>
                 <a @click="delAccount(record)" href="javascript:;"><delete-outlined /> 删除</a>
+              </a-menu-item>
+
+              <a-menu-item>
+                <a @click="edit(record.domain,record.username)"><edit-outlined/> 编辑</a>
               </a-menu-item>
 <!--              <a-menu-item>-->
 <!--                <a href="javascript:;">2nd menu item</a>-->
@@ -137,6 +191,12 @@ export default {
             </a-menu>
           </template>
         </a-dropdown>
+        <div style="font-size: 20px" v-else>
+          <check-outlined class="editable-cell-icon-check" @click="save(record.domain,record.username)" />
+          &nbsp;
+          <close-circle-outlined @click="cancelSave(record.domain,record.username)"/>
+
+        </div>
       </template>
     </template>
   </a-table>

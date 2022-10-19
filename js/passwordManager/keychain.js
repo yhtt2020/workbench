@@ -41,8 +41,8 @@ class Keychain {
     })
   }
 
-  saveCredential (domain, username, password) {
-    ipcRenderer.invoke('credentialStoreSetPassword', { domain, username, password })
+  saveCredential (domain, username, password ,name='') {
+    ipcRenderer.invoke('credentialStoreSetPassword', { domain, username, password ,name })
   }
 
   deleteCredential (domain, username) {

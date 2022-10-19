@@ -5,6 +5,7 @@ const PasswordManagers = require('passwordManager/passwordManager.js')
 const passwordCapture = {
   bar: document.getElementById('password-capture-bar'),
   description: document.getElementById('password-capture-description'),
+  nameInput: document.getElementById('password-capture-name'),
   usernameInput: document.getElementById('password-capture-username'),
   passwordInput: document.getElementById('password-capture-password'),
   revealButton: document.getElementById('password-capture-reveal-password'),
@@ -21,6 +22,7 @@ const passwordCapture = {
     passwordCapture.revealButton.classList.add('carbon:view')
     passwordCapture.revealButton.classList.remove('carbon:view-off')
 
+    passwordCapture.nameInput.value =  ''
     passwordCapture.usernameInput.value = username || ''
     passwordCapture.passwordInput.value = password || ''
 
@@ -40,6 +42,7 @@ const passwordCapture = {
     webviews.adjustMargin([passwordCapture.barHeight * -1, 0, 0, 0])
 
     passwordCapture.bar.hidden = true
+    passwordCapture.nameInput.value = ''
     passwordCapture.usernameInput.value = ''
     passwordCapture.passwordInput.value = ''
     passwordCapture.currentDomain = null
@@ -89,6 +92,7 @@ const passwordCapture = {
     })
   },
   initialize: function () {
+    passwordCapture.nameInput.placeholder = '名称'
     passwordCapture.usernameInput.placeholder = l('username')
     passwordCapture.passwordInput.placeholder = l('password')
 
@@ -97,7 +101,7 @@ const passwordCapture = {
     passwordCapture.saveButton.addEventListener('click', function () {
       if (passwordCapture.usernameInput.checkValidity() && passwordCapture.passwordInput.checkValidity()) {
         PasswordManagers.getConfiguredPasswordManager().then(function (manager) {
-          manager.saveCredential(passwordCapture.currentDomain, passwordCapture.usernameInput.value, passwordCapture.passwordInput.value)
+          manager.saveCredential(passwordCapture.currentDomain, passwordCapture.usernameInput.value, passwordCapture.passwordInput.value,passwordCapture.nameInput.value)
 
           passwordCapture.hideCaptureBar()
         })
