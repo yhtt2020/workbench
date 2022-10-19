@@ -9,12 +9,17 @@ const columns = [
     key: 'domain',
     resizable:true,
     width:150,
+    sorter: true,
     ellipsis:true,
   },
   {
     title: '名称',
     dataIndex: 'name',
     key: 'name',
+    filters: [
+      { text: '未命名', value: 'noname' },
+      { text: '已命名', value: 'named' },
+    ],
   },
   {
     title: '账号',
@@ -48,8 +53,34 @@ export default {
     return {
       columns,
       passwords:[],
-      editableData
+      editableData,
+      filters:[],
     };
+  },
+  computed:{
+    displayData:{
+     get(){
+       console.log(this)
+       return this.passwords.filter((item)=>{
+         if(this.filters['name']){
+           let name=item.name||''
+           console.log(name)
+           if(this.filters['name'].indexOf('noname')>-1){
+             if(name==''){
+               return true
+             }
+           }
+           if(this.filters['name'].indexOf('named')>-1){
+             if(name!=''){
+               return true
+             }
+           }
+           return false
+         }
+         return true
+       })
+     }
+    }
   },
   async mounted() {
     this.passwords = await ipc.invoke('credentialStoreGetCredentials')
@@ -95,13 +126,20 @@ export default {
     },
     cancelSave(domain: string,username:string){
       delete editableData[domain+'_'+username];
+    },
+    handleTableChange(
+      pag: { pageSize: number; current: number },
+      filters: any,
+      sorter: any,
+    ){
+        this.filters=filters
     }
   }
 }
 </script>
 
 <template>
-  <a-table :columns="columns" :data-source="passwords">
+  <a-table @change="handleTableChange" :columns="columns" :data-source="displayData">
     <template #headerCell="{ column }">
       <template v-if="column.key === 'name'">
         <span>
