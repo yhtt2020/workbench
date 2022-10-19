@@ -2,10 +2,11 @@
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import {defineComponent, ref} from "vue";
+import {Modal} from 'ant-design-vue'
 import {
   EyeOutlined,
   LayoutOutlined,
-  SearchOutlined,
+  SearchOutlined,ImportOutlined,
   AimOutlined,
   ControlOutlined,
   CheckSquareOutlined,
@@ -22,7 +23,7 @@ import settingPage from '../../src/settings/settingPage.js'
 import Passwords from "./components/Passwords.vue";
 export default defineComponent({
   components: {
-    Passwords,
+    Passwords,ImportOutlined,
     EyeOutlined, LayoutOutlined, SearchOutlined, AimOutlined, ControlOutlined, CheckSquareOutlined, HomeOutlined,
     LockOutlined, NodeIndexOutlined, GoldOutlined, InsuranceOutlined, ExpandAltOutlined, ArrowRightOutlined,
     ExclamationCircleOutlined,
@@ -131,6 +132,18 @@ export default defineComponent({
     }
   },
   methods: {
+    importPwd(){
+      Modal.confirm({
+        title:'选择csv文件导入',
+        content:'csv可从其他浏览器的密码导出功能导出获得。导入后请手动刷新设置页面。',
+        centered:true,
+        onOk:()=>{
+          ipc.send('importPwd')
+        },
+        okText:'导入',
+        cancelText:'取消'
+      })
+    },
     /**
      * 读入自定义配置
      */
@@ -661,7 +674,7 @@ export default defineComponent({
               ></select>
             </div>
 
-            <h3>已保存的密码</h3>
+            <h3>已保存的密码  <a-button @click="importPwd" style="float: right" size="small" type="primary"><import-outlined/> 导入密码</a-button> </h3>
             <Passwords/>
           </div>
 
