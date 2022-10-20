@@ -171,7 +171,6 @@ Vue.component('app', {
       }
     },
     moveAppsTo(group){
-      console.log(appVue.selectedElements)
       for(let selectedI=0;selectedI<appVue.selectedElements.length;selectedI++){
         let item=appVue.selectedElements[selectedI]
         for(let i=0;i<appVue.layout.length;i++){
