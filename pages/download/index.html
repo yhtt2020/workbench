@@ -122,10 +122,13 @@
                       </a-tooltip>
                       <div style="width: 30px;font-weight: bold;">{{item.suffixal}}</div>
                     </div>
-                    <div style="color:#999">{{ item.total }}</div>
+                    <div style="display:flex;width: 215px;justify-content: space-between">
+                      <div style="color:#999">{{ item.total }}</div>
+                      <div>{{ item.doneDate }}</div>
+                    </div>
                   </div>
-                  <div style="margin-top: 20px">{{ item.doneDate }}</div>
-                  <a-button style="line-height: 40px;margin-left: 12px" type="link" @click="openFileHandler(item)">
+
+                  <a-button style="line-height: 40px;margin-left: 135px" type="link" @click="openFileHandler(item)">
                     打开
                   </a-button>
                 </div>
@@ -493,142 +496,162 @@
     created () {
       db.download.toArray().then(dblist => {
         for (let i = 0; i <= dblist.length; i++) {
-          let fileName = dblist[i].name.substring(0,dblist[i].name.lastIndexOf("."))
+          if(typeof dblist[i].state === 'undefined'){
+         let fileName = dblist[i].title.substring(0,dblist[i].title.lastIndexOf("."))
+         dblist[i].state = 2
+         db.download.put({
+           name: dblist[i].title,
+           startTime: dblist[i].startTime,
+           title:fileName,
+           total: dblist[i].total,
+           path: dblist[i].path,
+           url: dblist[i].url,
+           state: dblist[i].state,
+           doneDate: '2022/7/01',
+           href: '',
+           addTime: '2022/7/01',
+           suffixal:dblist[i].title.substring(dblist[i].title.lastIndexOf(".")),
+         })
+       }
+          else{
+            if(dblist[i].state === DOWNLOAD_STATUS.LOADING || dblist[i].state === DOWNLOAD_STATUS.BREAK){
+              let fileName = dblist[i].name.substring(0,dblist[i].name.lastIndexOf("."))
+              db.download.put({
+                name: dblist[i].name,
+                startTime: dblist[i].startTime,
+                title: dblist[i].title,
+                total: dblist[i].total,
+                path: dblist[i].path,
+                url: dblist[i].url,
+                state: DOWNLOAD_STATUS.BREAK,
+                doneDate: dblist[i].doneDate,
+                href: dblist[i].href,
+                addTime: dblist[i].addTime,
+                suffixal: dblist[i].suffixal,
+              })
+              appVue.list.unshift({
+                name: dblist[i].name,
+                id: appVue.id++,
+                title: fileName,
+                path: '',
+                url: dblist[i].url,
+                startTime: dblist[i].startTime,
+                doneDate: dblist[i].doneDate,
+                href: dblist[i].href,
+                state: DOWNLOAD_STATUS.BREAK,
+                addTime: '',
+                received: '',
+                realData: '',
+                total: '',
+                progressnuw: 0,
+                suffixal: dblist[i].suffixal,
+              })
+              appVue.listCount++
 
-          if(dblist[i].state === DOWNLOAD_STATUS.LOADING || dblist[i].state === DOWNLOAD_STATUS.BREAK){
-            db.download.put({
-              name: dblist[i].name,
-              startTime: dblist[i].startTime,
-              title: dblist[i].title,
-              total: dblist[i].total,
-              path: dblist[i].path,
-              url: dblist[i].url,
-              state: DOWNLOAD_STATUS.BREAK,
-              doneDate: dblist[i].doneDate,
-              href: dblist[i].href,
-              addTime: dblist[i].addTime,
-              suffixal: dblist[i].suffixal,
-            })
-            appVue.list.unshift({
-              name: dblist[i].name,
-              id: appVue.id++,
-              title: fileName,
-              path: '',
-              url: dblist[i].url,
-              startTime: dblist[i].startTime,
-              doneDate: dblist[i].doneDate,
-              href: dblist[i].href,
-              state: DOWNLOAD_STATUS.BREAK,
-              addTime: '',
-              received: '',
-              realData: '',
-              total: '',
-              progressnuw: 0,
-              suffixal: dblist[i].suffixal,
-            })
-            appVue.listCount++
-
-          }
-          if (dblist[i].state === DOWNLOAD_STATUS.DONE) {
-            if(typeof dblist[i].suffixal === 'undefined'){
-              dblist[i].suffixal = path.extname(dblist[i].name)
-              db.download.put({
+            }
+            if (dblist[i].state === DOWNLOAD_STATUS.DONE) {
+              let fileName = dblist[i].name.substring(0,dblist[i].name.lastIndexOf("."))
+              if(typeof dblist[i].suffixal === 'undefined'){
+                dblist[i].suffixal = path.extname(dblist[i].name)
+                db.download.put({
+                  name: dblist[i].name,
+                  startTime: dblist[i].startTime,
+                  title: dblist[i].title,
+                  total: dblist[i].total,
+                  path: dblist[i].path,
+                  url: dblist[i].url,
+                  state:DOWNLOAD_STATUS.DONE,
+                  doneDate: dblist[i].doneDate,
+                  href: dblist[i].href,
+                  addTime: dblist[i].addTime,
+                  suffixal: dblist[i].suffixal,
+                })
+              }
+              if (typeof dblist[i].addTime === 'undefined') {
+                dblist[i].addTime = '2022/7/01'
+                db.download.put({
+                  name: dblist[i].name,
+                  startTime: dblist[i].startTime,
+                  title: dblist[i].title,
+                  total: dblist[i].total,
+                  path: dblist[i].path,
+                  url: dblist[i].url,
+                  state:DOWNLOAD_STATUS.DONE,
+                  doneDate: dblist[i].doneDate,
+                  href: dblist[i].href,
+                  addTime: dblist[i].addTime,
+                  suffixal: dblist[i].suffixal,
+                })
+              }
+              appVue.doneList.unshift({
                 name: dblist[i].name,
-                startTime: dblist[i].startTime,
-                title: dblist[i].title,
+                id: appVue.doneId++,
+                title: fileName,
                 total: dblist[i].total,
                 path: dblist[i].path,
                 url: dblist[i].url,
-                state:DOWNLOAD_STATUS.DONE,
+                startTime: dblist[i].startTime,
                 doneDate: dblist[i].doneDate,
                 href: dblist[i].href,
-                addTime: dblist[i].addTime,
+                addTime: appVue.transDate(dblist[i].addTime),
                 suffixal: dblist[i].suffixal,
               })
+              appVue.listDoneCount++
+              appVue.classify()
             }
-            if (typeof dblist[i].addTime === 'undefined') {
-              dblist[i].addTime = '2022/7/01'
-              db.download.put({
+            if (dblist[i].state ===DOWNLOAD_STATUS.CANCEL || dblist[i].state ===DOWNLOAD_STATUS.DELETED) {
+              let fileName = dblist[i].name.substring(0,dblist[i].name.lastIndexOf("."))
+              if(typeof dblist[i].suffixal === 'undefined'){
+                dblist[i].suffixal = path.extname(dblist[i].name)
+                db.download.put({
+                  name: dblist[i].name,
+                  startTime: dblist[i].startTime,
+                  title: dblist[i].title,
+                  total: dblist[i].total,
+                  path: dblist[i].path,
+                  url: dblist[i].url,
+                  state:DOWNLOAD_STATUS.DONE,
+                  doneDate: dblist[i].doneDate,
+                  href: dblist[i].href,
+                  addTime: dblist[i].addTime,
+                  suffixal: dblist[i].suffixal,
+                })
+              }
+              if (typeof dblist[i].addDelTime === 'undefined') {
+                dblist[i].addDelTime = '2022/7/01'
+                db.download.put({
+                  name:dblist[i].name,
+                  startTime: dblist[i].startTime,
+                  title: dblist[i].title,
+                  total: dblist[i].total,
+                  path: dblist[i].path,
+                  url: dblist[i].url,
+                  state: dblist[i].state,
+                  doneDate: dblist[i].doneDate,
+                  href: dblist[i].href,
+                  addTime: dblist[i].addTime,
+                  // addDelTime:dblist[i].addDelTime,
+                  delTime:dblist[i].delTime,
+                  suffixal: dblist[i].suffixal,
+                })
+              }
+              appVue.deleteList.unshift({
                 name: dblist[i].name,
-                startTime: dblist[i].startTime,
-                title: dblist[i].title,
+                id: appVue.doneId++,
+                title: fileName,
                 total: dblist[i].total,
                 path: dblist[i].path,
                 url: dblist[i].url,
-                state:DOWNLOAD_STATUS.DONE,
-                doneDate: dblist[i].doneDate,
+                startTime: dblist[i].startTime,
                 href: dblist[i].href,
-                addTime: dblist[i].addTime,
-                suffixal: dblist[i].suffixal,
-              })
-            }
-            appVue.doneList.unshift({
-              name: dblist[i].name,
-              id: appVue.doneId++,
-              title: fileName,
-              total: dblist[i].total,
-              path: dblist[i].path,
-              url: dblist[i].url,
-              startTime: dblist[i].startTime,
-              doneDate: dblist[i].doneDate,
-              href: dblist[i].href,
-              addTime: appVue.transDate(dblist[i].addTime),
-              suffixal: dblist[i].suffixal,
-            })
-            appVue.listDoneCount++
-            appVue.classify()
-          }
-          if (dblist[i].state ===DOWNLOAD_STATUS.CANCEL || dblist[i].state ===DOWNLOAD_STATUS.DELETED) {
-            if(typeof dblist[i].suffixal === 'undefined'){
-              dblist[i].suffixal = path.extname(dblist[i].name)
-              db.download.put({
-                name: dblist[i].name,
-                startTime: dblist[i].startTime,
-                title: dblist[i].title,
-                total: dblist[i].total,
-                path: dblist[i].path,
-                url: dblist[i].url,
-                state:DOWNLOAD_STATUS.DONE,
-                doneDate: dblist[i].doneDate,
-                href: dblist[i].href,
-                addTime: dblist[i].addTime,
-                suffixal: dblist[i].suffixal,
-              })
-            }
-            if (typeof dblist[i].addDelTime === 'undefined') {
-              dblist[i].addDelTime = '2022/7/01'
-              db.download.put({
-                name:dblist[i].name,
-                startTime: dblist[i].startTime,
-                title: dblist[i].title,
-                total: dblist[i].total,
-                path: dblist[i].path,
-                url: dblist[i].url,
                 state: dblist[i].state,
-                doneDate: dblist[i].doneDate,
-                href: dblist[i].href,
-                addTime: dblist[i].addTime,
-                // addDelTime:dblist[i].addDelTime,
                 delTime:dblist[i].delTime,
+                addDelTime:appVue.transDate(dblist[i].addDelTime),
                 suffixal: dblist[i].suffixal,
               })
+              appVue.listTrashCount++
+              appVue.classifyDel()
             }
-            appVue.deleteList.unshift({
-              name: dblist[i].name,
-              id: appVue.doneId++,
-              title: fileName,
-              total: dblist[i].total,
-              path: dblist[i].path,
-              url: dblist[i].url,
-              startTime: dblist[i].startTime,
-              href: dblist[i].href,
-              state: dblist[i].state,
-              delTime:dblist[i].delTime,
-              addDelTime:appVue.transDate(dblist[i].addDelTime),
-              suffixal: dblist[i].suffixal,
-            })
-            appVue.listTrashCount++
-            appVue.classifyDel()
           }
         }
       })
