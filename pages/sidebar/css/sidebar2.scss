@@ -154,6 +154,25 @@
   }
 }
 
+.shepherd-element.guideSearch.shepherd-enabled{
+  max-width: 250px!important;
+  //margin-right: 78px !important;
+  .shepherd-text{
+    font-size: 14px;
+  }
+  transform: translate(-11px, 42px)!important;
+  .shepherd-button{
+    padding: 3px 6px;
+    transition: 0s !important;
+  }
+  .shepherd-arrow{
+    transform:translate(215px,0px) !important;
+  }
+  .shepherd-footer .shepherd-button:last-child {
+    margin-right: 1px;
+  }
+}
+
 .shepherd-element.appSecond.shepherd-enabled{
   max-width: 230px;
   .shepherd-text{
