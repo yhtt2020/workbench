@@ -455,7 +455,7 @@ global.render = {
   }
 }
 
-const renderPage = {
+global.renderPage = {
   iconSelector: null, //图标选择器
   installExtension: null, //安装插件
   extensionList:null,//扩展列表

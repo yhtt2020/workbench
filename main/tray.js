@@ -74,6 +74,9 @@ function createTrayWin () {
     trayWindow.close()
     trayWindow=null
   })
+  trayWindow.on('closed',()=>{
+    trayWindow=null
+  })
 }
 
 function getUrl (url) {
