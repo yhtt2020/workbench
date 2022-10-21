@@ -55,7 +55,7 @@ class AppManager {
   sendIPCToApp (pkg, event, args) {
     let win = this.getWindowByPackage(pkg)
     if (win) {
-      win.window.view.webContents.send(event, args)
+      win.view.webContents.send(event, args)
     } else {
       return false
     }
