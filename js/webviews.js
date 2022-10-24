@@ -336,6 +336,7 @@ const webviews = {
       enableRemoteModule: true,
       scrollBounce: false,
       sandbox: false,
+      webSecurity:false,
     }
   }
 
