@@ -103,28 +103,30 @@ class AppManager {
       'com.thisky.com':2
     } //增加一个id和packageMap来兼容新的api的定位方式
     let message=args.options
-    let index = settingStatus.findIndex(v => v.appId === packageMap[app.package])
-    let childIndex = settingStatus[index].childs.findIndex(v => {
-     return v.title === message.category
-    })
+    if(settingStatus){
+      let index = settingStatus.findIndex(v => v.appId === packageMap[app.package])
+      let childIndex = settingStatus[index].childs.findIndex(v => {
+        return v.title === message.category
+      })
 
-    if (settingStatus[index].notice && settingStatus[index].childs[childIndex].notice) {
-      //消息中心的收录做在这里
-      if (app.package ==='com.thisky.group') {
-        SidePanel.send('storeMessage', {
-          title: message.title,
-          body: message.body,
-          indexName: message.indexName ?? null,
-          avatar: message.icon ? message.icon.length > 0 ? message.icon : '' : '',
-          type: 'groupChat'
-        })
-      } else if (app.package === 'com.thisky.com') {
-        SidePanel.send('storeMessage', {
-          title: message.title,
-          body: message.body,
-          avatar: message.avatar ? message.avatar.length > 0 ? message.avatar : '' : '',
-          type: 'community'
-        })
+      if (settingStatus[index].notice && settingStatus[index].childs[childIndex].notice) {
+        //消息中心的收录做在这里
+        if (app.package ==='com.thisky.group') {
+          SidePanel.send('storeMessage', {
+            title: message.title,
+            body: message.body,
+            indexName: message.indexName ?? null,
+            avatar: message.icon ? message.icon.length > 0 ? message.icon : '' : '',
+            type: 'groupChat'
+          })
+        } else if (app.package === 'com.thisky.com') {
+          SidePanel.send('storeMessage', {
+            title: message.title,
+            body: message.body,
+            avatar: message.avatar ? message.avatar.length > 0 ? message.avatar : '' : '',
+            type: 'community'
+          })
+        }
       }
 
       return true
