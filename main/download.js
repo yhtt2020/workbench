@@ -1,4 +1,6 @@
 
+
+
 const currrentDownloadItems = {}
 
 // ipc.on('cancelDownload', function (e, path) {
@@ -60,13 +62,55 @@ ipc.on('downloadEnd', (event, args) => {
   mainWindow.send('downloadCountCut')
 })
 
-function downloadHandler (event, item, webContents) {
+ipc.on('setSavePath',(event,args)=>{
+  let savePath = dialog.showOpenDialogSync({
+    properties: ['openFile', 'openDirectory']
+  })
+  let downloadSavePath = savePath.toString().replace(/\[|]/g, '')
+  settings.set('downloadSavePath',downloadSavePath)
+
+  event.reply('getSavePath',downloadSavePath)
+})
+
+// let fileNew;
+// function changeFileName(savePath,simpleName,suffixName,num){
+//   if (num != 0) {
+//     fileNew = savePath + simpleName + '(' + num + ')' + suffixName
+//   } else {
+//     fileNew = savePath + simpleName + suffixName
+//   }
+//   return fileNew
+// }
+// let num
+// let fileNew
+// let m
+// function changeFileName(savePath,simpleName,suffixName,num){
+//
+//   // console.log('55555555555',num)
+//     fileNew = savePath + simpleName + '(' + num + ')' + suffixName
+//     // console.log('111111111111',fileNew)
+//      num++
+//   fs.exists(fileNew, function (flag) {
+//     if(flag){
+//       changeFileName(savePath,simpleName,suffixName,num)
+//     }
+//   })
+//    return  num
+// }
+
+async function downloadHandler (event, item, webContents) {
   var itemURL = item.getURL()
   var attachment = isAttachment(item.getContentDisposition())
-  let suffixName = item.getFilename().substring(item.getFilename().lastIndexOf('.') + 1, item.getFilename().length)
+  let suffixName = item.getFilename().substring(item.getFilename().lastIndexOf('.'), item.getFilename().length)
   savePathFilename = path.basename(item.getSavePath())
-
+  let simpleName = item.getFilename().substring(0, item.getFilename().lastIndexOf("."))
   mainWindow.webContents.send('isDownload')
+  const savePathPrefix = settings.get('downloadSavePath') + '\\'
+  var fs = require("fs");
+  const fsExists = (fileNewPath) => {
+    return fs.existsSync(fileNewPath)
+  }
+  let num = 1
   if (item.getMimeType() === 'application/pdf' && itemURL.indexOf('blob:') !== 0 && itemURL.indexOf('#pdfjs.action=download') === -1 && !attachment) { // clicking the download button in the viewer opens a blob url, so we don't want to open those in the viewer (since that would make it impossible to download a PDF)
     event.preventDefault()
     sendIPCToWindow(mainWindow, 'openPDF', {
@@ -74,15 +118,46 @@ function downloadHandler (event, item, webContents) {
       tabId: getViewIDFromWebContents(webContents)
     })
   } else {
+    console.log(savePathPrefix)
+    const filePath = savePathPrefix + item.getFilename()
+    let res =  fsExists(filePath) // 找是否存在
+    while(res) { // 存在循环查找
+      const newFilePath = savePathPrefix + simpleName + '(' + num + ')' + suffixName
+      res =  fsExists(newFilePath)
+      num++
+    }
+    // 退出的num不存在
+    if (num === 1) {
+      item.setSavePath(filePath)
+    } else {
+      const newFilePath = savePathPrefix + simpleName + '(' + (num-1) + ')' + suffixName
+      item.setSavePath(newFilePath)
+    }
 
-    item.setSaveDialogOptions({
-      title: '选择保存地址',
-      filters: [
-        { name: suffixName, extensions: [suffixName] },
-        { name: '自定义', extensions: ['*'] }
-      ]
-    })
-    // event.preventDefault()
+    // // item.setSavePath(savePath + simpleName + '(' + i + ')' + suffixName)
+    // var savePath = 'D:\\迅雷下载\\'
+    // let file = savePath + item.getFilename()
+    // fs.exists(file, function (flag) {
+    //   if (flag) {
+    //     changeFileName(savePath, simpleName, suffixName, num = 1)
+    //     item.setSavePath(savePath + simpleName + '(' + m + ')' + suffixName)
+    //
+    //     // item.setSavePath(changeFileName(savePath,simpleName,suffixName,num=1))
+    //   } else {
+    //     item.setSavePath(file)
+    //   }
+    // })
+
+
+    // item.setSaveDialogOptions({
+    //   title: '选择保存地址',
+    //   filters: [
+    //     { name: suffixName, extensions: [suffixName] },
+    //     { name: '自定义', extensions: ['*'] }
+    //   ],
+    // })
+
+
 
     var savePathFilename
 
@@ -175,7 +250,6 @@ function downloadHandler (event, item, webContents) {
       }
 
     })
-
     return true
   }
 }
