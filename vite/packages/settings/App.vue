@@ -2,10 +2,11 @@
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import {defineComponent, ref} from "vue";
+import {Modal} from 'ant-design-vue'
 import {
   EyeOutlined,
   LayoutOutlined,
-  SearchOutlined,
+  SearchOutlined,ImportOutlined,
   AimOutlined,
   ControlOutlined,
   CheckSquareOutlined,
@@ -16,7 +17,8 @@ import {
   InsuranceOutlined,
   ExpandAltOutlined,
   DownloadOutlined,
-  ArrowRightOutlined,ExclamationCircleOutlined,SkinOutlined
+  ArrowRightOutlined,ExclamationCircleOutlined,SkinOutlined,
+  LinkOutlined
 } from '@ant-design/icons-vue'
 import settings from '../../src/settings/settingsContent'
 import settingPage from '../../src/settings/settingPage.js'
@@ -26,11 +28,11 @@ import Passwords from "./components/Passwords.vue";
 
 export default defineComponent({
   components: {
-    Passwords,
+    Passwords,ImportOutlined,
     EyeOutlined, LayoutOutlined, SearchOutlined, AimOutlined, ControlOutlined, CheckSquareOutlined, HomeOutlined,
     LockOutlined, NodeIndexOutlined, GoldOutlined, InsuranceOutlined, ExpandAltOutlined, ArrowRightOutlined,DownloadOutlined,
     ExclamationCircleOutlined,
-    SkinOutlined
+    SkinOutlined,LinkOutlined
   },
   data(){
     return {
@@ -141,6 +143,18 @@ export default defineComponent({
     }
   },
   methods: {
+    importPwd(){
+      Modal.confirm({
+        title:'选择csv文件导入',
+        content:'csv可从其他浏览器的密码导出功能导出获得。导入后请手动刷新设置页面。',
+        centered:true,
+        onOk:()=>{
+          ipc.send('importPwd')
+        },
+        okText:'导入',
+        cancelText:'取消'
+      })
+    },
     /**
      * 读入自定义配置
      */
@@ -206,6 +220,9 @@ export default defineComponent({
     },
     setDefault() {
       settingPage.callSetDefaultBrowser()
+    },
+    openUrl(url){
+      window.ipc.send('addTab',{url:url})
     }
   }
 })
@@ -630,34 +647,39 @@ export default defineComponent({
           <div class="settings-container" id="browser-tab-container">
             <h3>起始页</h3>
             <div class="setting-section" id="tab-choose">
-              <div class="setting-option">
-                <input type="radio" name="tabChoosed" id="tstab-input"/>
-                <label
-                  for="tstab-input"
-                >想天桌面（官方尝鲜版）</label>
+              <div class="setting-option" style="display: flex;align-items: center">
+                  <input type="radio" name="tabChoosed" id="tstab-input"/>
+                  <label
+                    for="tstab-input"
+                  >想天桌面（官方尝鲜版）</label>
+                <div class="url-icon" @click="openUrl('ts://newtab')"> <link-outlined /></div>
+
               </div>
-              <div class="setting-option">
+              <div class="setting-option" style="display:flex;align-items: center">
                 <input type="radio" name="tabChoosed" id="qingning-input"/>
                 <label
                   for="qingning-input"
                 >青柠起始页（极致简约）</label>
+                <div class="url-icon" @click="openUrl('https://limestart.cn/')"> <link-outlined /></div>
               </div>
-              <div class="setting-option">
+              <div class="setting-option" style="display: flex;align-items: center">
                 <input type="radio" name="tabChoosed" id="infinity-input"/>
                 <label
                   for="infinity-input"
                 >infinity（功能强大）</label>
+                <div class="url-icon" @click="openUrl('https://inftab.com/')"> <link-outlined /></div>
               </div>
-              <div class="setting-option">
+              <div class="setting-option" style="display: flex;align-items: center">
                 <input type="radio" name="tabChoosed" id="itab-input"/>
                 <label
                   for="itab-input"
                 >iTab（热门新秀）</label>
+                <div class="url-icon" @click="openUrl('https://go.itab.link/')"> <link-outlined /></div>
               </div>
               <div class="setting-option">
                 <input type="radio" name="tabChoosed" id="tab-custom-input"/>
                 <label
-                  for="ab-custom-input"
+                  for="tab-custom-input"
                 >自定义</label>
                 <input
                   id="tab-text-input"
@@ -692,7 +714,7 @@ export default defineComponent({
               ></select>
             </div>
 
-            <h3>已保存的密码</h3>
+            <h3>已保存的密码  <a-button @click="importPwd" style="float: right" size="small" type="primary"><import-outlined/> 导入密码</a-button> </h3>
             <Passwords/>
           </div>
 
@@ -850,5 +872,8 @@ h3{
   color: grey;
   font-size: 12px;
   margin-top: 5px;
+}
+.url-icon{
+  cursor: pointer;
 }
 </style>

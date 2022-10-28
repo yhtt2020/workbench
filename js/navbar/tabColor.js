@@ -9,7 +9,7 @@ const textColorNN = require('ext/textColor/textColor.js')
 
 const defaultColors = {
   private: ['rgb(58, 44, 99)', 'white'],
-  lightMode: ['rgb(255, 255, 255)', 'black'],
+  lightMode: ['#d3d3d3', 'black'],
   darkMode: ['rgb(32, 32, 32)', 'white']
 }
 

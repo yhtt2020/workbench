@@ -275,9 +275,14 @@ function addFocusListener (element, credentials) {
 
   // Adds an option row to the list container.
   // 添加一个选择行到列表容器
-  function addOption (parent, username) {
+  function addOption (parent, cred) {
     const suggestionItem = document.createElement('div')
-    suggestionItem.innerHTML = username
+    if(cred.name){
+      suggestionItem.innerHTML =`<strong>`+cred.name+` | </strong>  ` + cred.username
+    }else{
+      suggestionItem.innerHTML =cred.username
+    }
+
     suggestionItem.style = 'padding: 10px; cursor: pointer; background-color: #fff; width:100%;'
 
     // Hover.
@@ -290,7 +295,7 @@ function addFocusListener (element, credentials) {
 
     // When user clicks on the suggestion, we populate the form inputs with selected credentials.
     suggestionItem.addEventListener('click', function (e) {
-      const selectedCredentials = credentials.filter(el => { return el.username === username })[0]
+      const selectedCredentials = credentials.filter(el => { return el.username === cred.username })[0]
       fillCredentials(selectedCredentials)
       removeAutocompleteList()
       element.focus()
@@ -307,7 +312,7 @@ function addFocusListener (element, credentials) {
     const inputWidth=e.target.offsetWidth
     container.innerHTML=`<div style="padding: 5px;border-bottom: 1px solid #c1c1c1;color: grey;width:${inputWidth}px"> ${lockIcon} 个人帐号</div>`
     for (const cred of credentials) {
-      addOption(container, cred.username)
+      addOption(container, cred)
     }
     document.body.appendChild(container)
     currentAutocompleteList = container

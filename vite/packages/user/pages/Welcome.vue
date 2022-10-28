@@ -10,6 +10,9 @@
     <p>
       <a-button @click="startApp()" type="primary">打开上次空间</a-button>
     </p>
+<!--    <p>-->
+<!--      <a-button @click="migrate()" >迁移老空间</a-button>-->
+<!--    </p>-->
 
   </div>
   <div style="position: absolute;bottom: 20px;text-align: center;width: calc( 100% - 200px) ">
@@ -37,7 +40,7 @@
 
 <script>
 import { CloseOutlined,DesktopOutlined } from '@ant-design/icons-vue'
-const {configModel} = window.$models
+const {configModel,spaceModel} = window.$models
 const appName= window.globalArgs['app-name']
 const appVersion=window.globalArgs['app-version']
 import {Modal} from "ant-design-vue"

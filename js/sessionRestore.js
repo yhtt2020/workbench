@@ -632,10 +632,10 @@ async function safeCloseSave() {
   safeClose=true
 }
 var errorClose=false
-ipc.on('safeClose', async () => {
+ipc.on('safeClose', async (event,args) => {
   if(errorClose){
     //错误强制关闭
-    ipc.send('closeMainWindow')
+    ipc.send('closeMainWindow',{isExit:args.isExit})
     return
   }
   //安全关闭，先完成保存后再关闭
@@ -655,7 +655,7 @@ ipc.on('safeClose', async () => {
     ipc.send('errorClose',{error:e})
     console.warn('存储失败')
   }
-  ipc.send('closeMainWindow')
+  ipc.send('closeMainWindow',{isExit:args.isExit})
 })
 
 ipc.on('safeQuitApp',async ()=>{

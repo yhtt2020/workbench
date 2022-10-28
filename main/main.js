@@ -2,9 +2,10 @@ const electron = require('electron')
 const fs = require('fs')
 const path = require('path')
 const electronLog=require('electron-log')
-const SpaceManager=require(__dirname+'/src/main/spaceManager.js')
+global.SpaceManager=require(__dirname+'/src/main/spaceManager.js')
 const { config } = require(__dirname+'/server-config.js')
 global.serverConfig=config
+global.isExit=false
 electron.protocol.registerSchemesAsPrivileged([
   { scheme: 'tsbapp', privileges: { bypassCSP: true ,standard:true} } //将tsbapp注册为标准协议，以支持localStorage
 ])
@@ -326,7 +327,9 @@ function createWindowWithBounds(bounds) {
     destroyAllViews()
     // save the window size for the next launch of the app
     saveWindowBounds()
-
+    if(isExit){
+      app.exit()
+    }
   })
   mainWindow.on('ready-to-show',()=>{
     mainWindow.show()
@@ -634,7 +637,12 @@ app.on('ready', function() {
   if (electron.nativeTheme.shouldUseDarkColors !== settings.get('systemShouldUseDarkColors')) {
     settings.set('systemShouldUseDarkColors', electron.nativeTheme.shouldUseDarkColors)
   }
-
+app.on('before-quit',()=>{
+  if(isExit){
+    app.exit()
+  }
+  global.isExit=true
+})
 app.on('session-created',async (ses)=>{
   sessions.push(ses)
   ses.protocol.registerBufferProtocol('tsbapp', (request, response) => {
@@ -659,7 +667,11 @@ function safeCloseMainWindow(){
   sendIPCToWindow(mainWindow,'safeClose')
 }
 let canCloseMainWindow=false
-ipc.on('closeMainWindow',()=>{
+ipc.on('closeMainWindow',(event,args)=>{
+  if(isExit){
+    canCloseMainWindow=true
+    app.exit()
+  }
   if(mainWindow && !mainWindow.isDestroyed()){
     canCloseMainWindow=true
     mainWindow.close()

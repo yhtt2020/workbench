@@ -711,7 +711,9 @@ ipc.on('updateSidebarGuideScedule', (event, args) => {
 ipc.on('adjustSidePanel',(e,a)=>{
   if(a==='min'){
     document.getElementById('appVue').hidden=true
+    appVue.$refs.sidePanel.minimal=true
   }else{
     document.getElementById('appVue').hidden=false
+    appVue.$refs.sidePanel.minimal=false
   }
 })

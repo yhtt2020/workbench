@@ -4,6 +4,13 @@ var statsh = {
     userDataPath + (process.platform === "win32" ? "\\" : "/") + "statsh.json",
   fileWritePromise: null,
   list: {},
+  reset(){
+    statsh.lock = true
+    statsh.fileWritePromise = null
+    statsh.list = {}
+    fs.writeFileSync(statsh.filePath, JSON.stringify({}))
+    statsh.lock = false
+  },
   writeFile: function () {
     function newFileWrite() {
       return fs.promises.writeFile(
@@ -67,9 +74,17 @@ var statsh = {
         console.warn(e);
       }
     }
-    if (fileData) {
-      statsh.list = JSON.parse(fileData);
+    try{
+      if (fileData) {
+        statsh.list = JSON.parse(fileData);
+      }
     }
+    catch (e) {
+      console.error('损坏，重建')
+      statsh.reset()
+      //statsh.list=[]
+    }
+
 
     //这里是在主进程中接收来自子进程的同步
     ipc.on("statshChanged", function (e, buryObj) {
@@ -88,11 +103,7 @@ var statsh = {
 
     //重置的监听
     ipc.on('statshReset', () => {
-      statsh.lock = true
-      statsh.fileWritePromise = null
-      statsh.list = {}
-      fs.writeFileSync(statsh.filePath, JSON.stringify({}))
-      statsh.lock = false
+     statsh.reset()
     })
   },
 };
