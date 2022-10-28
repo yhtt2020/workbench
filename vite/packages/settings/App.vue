@@ -132,6 +132,11 @@ export default defineComponent({
       this.savePath = args
     })
 
+    settings.get('downloadSavePath',(value)=>{
+     if(value!==undefined){
+       this.savePath = value
+     }
+    })
   },
 
   setup() {
@@ -420,9 +425,8 @@ export default defineComponent({
             <h3>下载设置</h3>
             <div class="setting-section" style="display: flex;align-items: center">
                 <span>设置默认下载保存路径:</span>
-<!--              <input  type="file"  @change="choseSavePath()" />-->
-                <a-input v-model:value="savePath" style="width: 40%;margin-left: 15px" placeholder="请选择文件保存路径" />
-                <span  style="margin-left: 15px" @click="choseSavePath()">浏览</span>
+                <a-input :disabled="true" v-model:value="savePath" style="width: 40%;margin-left: 15px" placeholder="请选择文件保存路径" />
+                <span  style="margin-left: 15px;cursor: pointer" @click="choseSavePath()">更改</span>
             </div>
           </div>
         </a-tab-pane>

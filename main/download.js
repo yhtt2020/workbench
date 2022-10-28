@@ -66,10 +66,12 @@ ipc.on('setSavePath',(event,args)=>{
   let savePath = dialog.showOpenDialogSync({
     properties: ['openFile', 'openDirectory']
   })
-  let downloadSavePath = savePath.toString().replace(/\[|]/g, '')
-  settings.set('downloadSavePath',downloadSavePath)
+  if (savePath!==undefined){
+    let downloadSavePath = savePath.toString().replace(/\[|]/g, '')
+    settings.set('downloadSavePath',downloadSavePath)
 
-  event.reply('getSavePath',downloadSavePath)
+    event.reply('getSavePath',downloadSavePath)
+  }
 })
 
 // let fileNew;
@@ -118,50 +120,42 @@ async function downloadHandler (event, item, webContents) {
       tabId: getViewIDFromWebContents(webContents)
     })
   } else {
-    console.log(savePathPrefix)
-    const filePath = savePathPrefix + item.getFilename()
-    let res =  fsExists(filePath) // 找是否存在
-    while(res) { // 存在循环查找
-      const newFilePath = savePathPrefix + simpleName + '(' + num + ')' + suffixName
-      res =  fsExists(newFilePath)
-      num++
-    }
-    // 退出的num不存在
-    if (num === 1) {
-      item.setSavePath(filePath)
+
+    if (settings.get('downloadSavePath') === undefined) {
+      let downloadSavePath;
+      let savePath = dialog.showOpenDialogSync({
+        properties: ['openFile', 'openDirectory']
+        // title: '选择保存地址',
+        // filters: [
+        //   { name: suffixName, extensions: [suffixName] },
+        //   { name: '自定义', extensions: ['*'] }
+        // ],
+      })
+      downloadSavePath = savePath.toString().replace(/\[|]/g, '')
+      item.setSavePath(downloadSavePath +'\\' + item.getFilename())
+      settings.set('downloadSavePath', downloadSavePath)
     } else {
-      const newFilePath = savePathPrefix + simpleName + '(' + (num-1) + ')' + suffixName
-      item.setSavePath(newFilePath)
+      const filePath = savePathPrefix + item.getFilename()
+      let res = fsExists(filePath) // 找是否存在
+      while (res) { // 存在循环查找
+        const newFilePath = savePathPrefix + simpleName + '(' + num + ')' + suffixName
+        res = fsExists(newFilePath)
+        num++
+      }
+      // 退出的num不存在
+      if (num === 1) {
+        item.setSavePath(filePath)
+      } else {
+        const newFilePath = savePathPrefix + simpleName + '(' + (num - 1) + ')' + suffixName
+        item.setSavePath(newFilePath)
+      }
     }
-
-    // // item.setSavePath(savePath + simpleName + '(' + i + ')' + suffixName)
-    // var savePath = 'D:\\迅雷下载\\'
-    // let file = savePath + item.getFilename()
-    // fs.exists(file, function (flag) {
-    //   if (flag) {
-    //     changeFileName(savePath, simpleName, suffixName, num = 1)
-    //     item.setSavePath(savePath + simpleName + '(' + m + ')' + suffixName)
-    //
-    //     // item.setSavePath(changeFileName(savePath,simpleName,suffixName,num=1))
-    //   } else {
-    //     item.setSavePath(file)
-    //   }
-    // })
-
-
-    // item.setSaveDialogOptions({
-    //   title: '选择保存地址',
-    //   filters: [
-    //     { name: suffixName, extensions: [suffixName] },
-    //     { name: '自定义', extensions: ['*'] }
-    //   ],
-    // })
 
 
 
     var savePathFilename
 
-    function conver (limit) {
+    function conver(limit) {
       var size
       if (limit < 1024 * 1024) {
         size = (limit / 1024).toFixed(2) + 'KB'
@@ -183,7 +177,7 @@ async function downloadHandler (event, item, webContents) {
       path: item.getSavePath(),
       name: item.getFilename(),
       status: 'start',
-      size: { received: 0, total: conver(item.getTotalBytes()) },
+      size: {received: 0, total: conver(item.getTotalBytes())},
       paused: item.isPaused(),
       startTime: item.getStartTime(),
       url: item.getURL(),
@@ -217,7 +211,7 @@ async function downloadHandler (event, item, webContents) {
         path: item.getSavePath(),
         name: savePathFilename,
         status: state,
-        size: { received: conver(item.getReceivedBytes()), total: conver(item.getTotalBytes()) },
+        size: {received: conver(item.getReceivedBytes()), total: conver(item.getTotalBytes())},
         // realdata1:item.speed,
         realData: conver(item.speed),
         progressnuw: ((prevReceivedBytes / item.getTotalBytes()).toFixed(2)) * 100,
@@ -240,7 +234,7 @@ async function downloadHandler (event, item, webContents) {
         name: savePathFilename,
         status: state,
         url: item.getURL(),
-        size: { received: conver(item.getTotalBytes()), total: conver(item.getTotalBytes()) },
+        size: {received: conver(item.getTotalBytes()), total: conver(item.getTotalBytes())},
         href: originalPageUrl,
         chainUrl: item.getURLChain()
       })
