@@ -1,0 +1,214 @@
+<template>
+  <a-page-header
+    style="box-shadow: 0 2px 8px #f0f1f2;z-index: 1; padding:6px 10px;"
+    :title="this.app.name"
+
+    :avatar="{src:app.logo}"
+    sub-title="应用设置"
+  >
+    <template #extra>
+      <a-button size="small" key="1" type="danger" @click="uninstall(appId)" v-if="!app.isSystemApp">
+        卸载应用
+      </a-button>
+    </template>
+  </a-page-header>
+  <a-layout id="components-layout-demo-top-side-2" style="height: 100vh">
+    <a-layout>
+      <a-layout-sider width="200" theme="light">
+        <a-menu
+          theme="light"
+          mode="inline"
+          :default-selected-keys="['basic']"
+          open-keys="['basic','dev']"
+          :style="{ height: '100%', borderRight: 0 }"
+        >
+          <a-sub-menu key="basic">
+            <template #icon>
+              <SettingOutlined></SettingOutlined>
+            </template>
+            <template #title>基础设置</template>
+            <a-menu-item key="1">
+              <router-link :to="{path:'/setting/'}">应用信息</router-link>
+            </a-menu-item>
+            <a-menu-item key="2">
+              <router-link :to="{path:'/setting/optimize'}">体验优化</router-link>
+            </a-menu-item>
+            <a-menu-item v-if="debugMod" key="auth">
+              <router-link :to="{path:'/setting/window'}">权限设置</router-link>
+            </a-menu-item>
+            <a-menu-item v-if="debugMod" key="window">
+              <router-link :to="{path:'/setting/window'}"><strong>窗体设置</strong> <CodeTwoTone/></router-link>
+            </a-menu-item>
+
+            <!--                <a-menu-item key="3">-->
+            <!--                  <a href="#permission">权限管理</a>-->
+            <!--                </a-menu-item>-->
+          </a-sub-menu>
+          <!--              <a-menu-item key="fenshen">-->
+          <!--                <a-icon type="user"></a-icon>-->
+          <!--                应用分身-->
+          <!--              </a-menu-item>-->
+          <a-sub-menu key="dev">
+            <template #icon>
+              <LaptopOutlined></LaptopOutlined>
+            </template>
+            <template #title>深度集成</template>
+            <!--                <a-menu-item key="5">-->
+            <!--                  菜单管理-->
+            <!--                </a-menu-item>-->
+            <a-menu-item  key="6">
+              <router-link :to="{path:'/setting/develop'}">开发者模式</router-link>
+            </a-menu-item>
+            <a-menu-item v-if="debugMod"  key="7">
+              <router-link :to="{path:'/setting/tool'}"><strong>开发者工具</strong> <CodeTwoTone/></router-link>
+            </a-menu-item>
+            <a-menu-item v-if="debugMod"  key="8">
+              <router-link :to="{path:'/setting/wizard'}"><strong>开发向导</strong> <CodeTwoTone/></router-link>
+            </a-menu-item>
+          </a-sub-menu>
+
+        </a-menu>
+      </a-layout-sider>
+      <a-layout-content >
+        <vue-custom-scrollbar :settings="settings" style="position:relative;height: calc(100vh - 55px)">
+        <div style="padding: 20px">
+          <router-view/>
+        </div>
+        </vue-custom-scrollbar>
+      </a-layout-content>
+    </a-layout>
+  </a-layout>
+</template>
+
+<script>
+import vueCustomScrollbar from '../../../src/components/vue-scrollbar.vue'
+import VSwatches from 'vue-swatches'
+import 'vue-swatches/dist/vue-swatches.css'
+import { SettingOutlined, LaptopOutlined } from '@ant-design/icons-vue'
+import { appStore } from '../store'
+import { mapState} from 'pinia'
+import {CodeTwoTone} from '@ant-design/icons-vue'
+let { appModel } = window.$models
+let appId =
+  window.globalArgs['app-id']
+
+export default {
+  name: 'Setting',
+  components: {
+    VSwatches, SettingOutlined, LaptopOutlined,CodeTwoTone,vueCustomScrollbar
+  },
+  computed:{
+    ...mapState(appStore,['app','debugMod'])
+  },
+  data () {
+    return {
+      settings: {
+        swipeEasing: true,
+        suppressScrollY: false,
+        suppressScrollX: true,
+        wheelPropagation: false
+      },
+      checkNick: false,
+
+      // form: this.$form.createForm(this, {
+      //   name: 'appSetting', onValuesChange: (props, values) => {
+      //     if(values.optimize){
+      //       //['keepRunning', 'theme', 'desktop', 'showInSideBar', 'alwaysTop', 'autoRun']
+      //       let optimizeValue=['keepRunning', 'theme', 'desktop', 'showInSideBar', 'alwaysTop', 'autoRun','noFrame']
+      //       let optimize=values['optimize']
+      //       let settings={}
+      //       optimizeValue.forEach(item=>{
+      //         settings[item] = optimize.indexOf(item) > -1;
+      //       })
+      //       appModel.setAppSetting(window.globalArgs['app-id'],settings)
+      //       this.tipSave()
+      //       //todo 主动更新应用信息，即时更新
+      //     }else if(values.name){
+      //       this.saApp.name=values.name
+      //       appModel.update(window.globalArgs['app-id'], { name: tools.htmlEncode(values.name) })
+      //       this.tipSave()
+      //       //todo 主动更新应用信息，即时更新
+      //     }else if(values.summary){
+      //       appModel.update(window.globalArgs['app-id'], { summary: tools.htmlEncode(values.summary) })
+      //       this.tipSave()
+      //       //todo 主动更新应用信息，即时更新
+      //     }
+      //   }
+      // }),
+    }
+  },
+
+  async mounted () {
+    this.appId = appId
+    await appStore().getApp(appId)
+
+  },
+  methods: {
+    goDevelop(){
+      this.$router.push({path:'develop'})
+    },
+    userThemeColorChanged (input) {
+      appModel.update(this.appId, { user_theme_color: input })
+      this.tipSave()
+    },
+    tipSave () {
+      appVue.$message.info({ content: '保存成功，此处设置修改需浏览器重启后生效。', key: 'save' })
+    },
+    uninstall (appId) {
+      this.$confirm({
+        title: '确定卸载此应用？',
+        content: '此操作将卸载应用并清空所有应用数据，且无法还原。请谨慎操作。',
+        okText: '确认',
+        okType: 'danger',
+        cancelText: '取消',
+        onOk () {
+          appModel.uninstall(appId).then(success => {
+            ipc.send('message', { type: 'success', config: { content: '卸载应用成功。' } })
+            ipc.send('deleteApp', { nanoid: appId })
+          }, err => {
+            ipc.send('message', { type: 'success', config: { content: '卸载失败。' } })
+          })
+        },
+        onCancel () {
+          console.log('Cancel')
+        },
+      })
+
+    },
+    check () {
+      this.form.validateFields(err => {
+        if (!err) {
+          console.info('success')
+        }
+      })
+    },
+    handleChange (e) {
+      this.checkNick = e.target.checked
+      this.$nextTick(() => {
+        this.form.validateFields(['nickname'], { force: true })
+      })
+    },
+  }
+}
+</script>
+<style>
+body{
+  overflow: hidden;
+}
+</style>
+<style lang="scss">
+h3 {
+  &:before {
+    content: "";
+    display: inline-block;
+    background: #0051ff;
+    width: 5px;
+    border-radius: 3px;
+    height: 16px;
+    position: absolute;
+    bottom: 8px;
+    left: -8px;
+
+  }
+}
+</style>

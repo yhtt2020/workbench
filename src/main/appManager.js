@@ -538,9 +538,8 @@ class AppManager {
         width: 800,
         height: 800,
         acceptFirstMouse: true,
-        alwaysOnTop: true,
         webPreferences: {
-          //preload: __dirname+'/pages/saApp/settingPreload.js',
+          preload: ___dirname+'/src/preload/appSettingPreload.js',
           nodeIntegration: true,
           contextIsolation: false,
           enableRemoteModule: true,
@@ -557,7 +556,7 @@ class AppManager {
         }
       })
       appManager.settingWindow.setMenu(null)
-      appManager.settingWindow.webContents.loadURL('file://' + ___dirname + '/pages/saApp/setting.html')
+      appManager.settingWindow.webContents.loadURL(render.getUrl('app.html#/setting'))
       if (isDevelopmentMode) {
         //appManager.settingWindow.webContents.openDevTools()
       }

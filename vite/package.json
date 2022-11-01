@@ -15,10 +15,12 @@
     "ant-design-vue": "^3.2.9",
     "lodash-es": "^4.17.21",
     "perfect-scrollbar": "^1.5.5",
+    "pinia": "^2.0.23",
     "sass": "^1.53.0",
     "unplugin-vue-components": "^0.20.1",
     "vue": "^3.2.25",
     "vue-router": "4",
+    "vue-swatches": "^2.1.1",
     "vuex": "^4.0.2"
   },
   "devDependencies": {

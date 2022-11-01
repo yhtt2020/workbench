@@ -16,7 +16,8 @@ export default defineConfig({
         'barrage':path.resolve(pkg,'barrage.html'),
         'user':path.resolve(pkg,'user.html'),
         'tray':path.resolve(pkg,'tray.html'),
-        'frame':path.resolve(pkg,'frame.html')
+        'frame':path.resolve(pkg,'frame.html'),
+        'app':path.resolve(pkg,'app.html')
       },output:{
         manualChunks: {
           vandor: ['vue', 'ant-design-vue', 'perfect-scrollbar','@ant-design/icons-vue','vue-router','vuex'],//提取公共部分的插件，防止部分插件无法加载
