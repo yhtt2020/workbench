@@ -1,4 +1,5 @@
 <template>
+
   <a-page-header
     style="box-shadow: 0 2px 8px #f0f1f2;z-index: 1; padding:6px 10px;"
     :title="this.app.name"
@@ -10,6 +11,13 @@
       <a-button size="small" key="1" type="danger" @click="uninstall(appId)" v-if="!app.isSystemApp">
         卸载应用
       </a-button>
+      <span v-else>
+        <a-tooltip title="系统应用，不可卸载">
+          <a-button disabled size="small" key="1" @click="uninstall(appId)">
+        卸载应用
+      </a-button>
+        </a-tooltip>
+      </span>
     </template>
   </a-page-header>
   <a-layout id="components-layout-demo-top-side-2" style="height: 100vh">
@@ -34,10 +42,12 @@
               <router-link :to="{path:'/setting/optimize'}">体验优化</router-link>
             </a-menu-item>
             <a-menu-item v-if="debugMod" key="auth">
-              <router-link :to="{path:'/setting/window'}">权限设置</router-link>
+              <router-link :to="{path:'/setting/auth'}">权限设置</router-link>
             </a-menu-item>
             <a-menu-item v-if="debugMod" key="window">
-              <router-link :to="{path:'/setting/window'}"><strong>窗体设置</strong> <CodeTwoTone/></router-link>
+              <router-link :to="{path:'/setting/window'}"><strong>窗体设置</strong>
+                <CodeTwoTone/>
+              </router-link>
             </a-menu-item>
 
             <!--                <a-menu-item key="3">-->
@@ -56,24 +66,28 @@
             <!--                <a-menu-item key="5">-->
             <!--                  菜单管理-->
             <!--                </a-menu-item>-->
-            <a-menu-item  key="6">
+            <a-menu-item key="6">
               <router-link :to="{path:'/setting/develop'}">开发者模式</router-link>
             </a-menu-item>
-            <a-menu-item v-if="debugMod"  key="7">
-              <router-link :to="{path:'/setting/tool'}"><strong>开发者工具</strong> <CodeTwoTone/></router-link>
+            <a-menu-item v-if="debugMod" key="7">
+              <router-link :to="{path:'/setting/tool'}"><strong>开发者工具</strong>
+                <CodeTwoTone/>
+              </router-link>
             </a-menu-item>
-            <a-menu-item v-if="debugMod"  key="8">
-              <router-link :to="{path:'/setting/wizard'}"><strong>开发向导</strong> <CodeTwoTone/></router-link>
+            <a-menu-item v-if="debugMod" key="8">
+              <router-link :to="{path:'/setting/wizard'}"><strong>开发向导</strong>
+                <CodeTwoTone/>
+              </router-link>
             </a-menu-item>
           </a-sub-menu>
 
         </a-menu>
       </a-layout-sider>
-      <a-layout-content >
+      <a-layout-content>
         <vue-custom-scrollbar :settings="settings" style="position:relative;height: calc(100vh - 55px)">
-        <div style="padding: 20px">
-          <router-view/>
-        </div>
+          <div style="padding: 20px">
+            <router-view/>
+          </div>
         </vue-custom-scrollbar>
       </a-layout-content>
     </a-layout>
@@ -86,8 +100,9 @@ import VSwatches from 'vue-swatches'
 import 'vue-swatches/dist/vue-swatches.css'
 import { SettingOutlined, LaptopOutlined } from '@ant-design/icons-vue'
 import { appStore } from '../store'
-import { mapState} from 'pinia'
-import {CodeTwoTone} from '@ant-design/icons-vue'
+import { mapState } from 'pinia'
+import { CodeTwoTone } from '@ant-design/icons-vue'
+
 let { appModel } = window.$models
 let appId =
   window.globalArgs['app-id']
@@ -95,10 +110,10 @@ let appId =
 export default {
   name: 'Setting',
   components: {
-    VSwatches, SettingOutlined, LaptopOutlined,CodeTwoTone,vueCustomScrollbar
+    VSwatches, SettingOutlined, LaptopOutlined, CodeTwoTone, vueCustomScrollbar
   },
-  computed:{
-    ...mapState(appStore,['app','debugMod'])
+  computed: {
+    ...mapState(appStore, ['app', 'debugMod'])
   },
   data () {
     return {
@@ -144,8 +159,8 @@ export default {
 
   },
   methods: {
-    goDevelop(){
-      this.$router.push({path:'develop'})
+    goDevelop () {
+      this.$router.push({ path: 'develop' })
     },
     userThemeColorChanged (input) {
       appModel.update(this.appId, { user_theme_color: input })
@@ -192,7 +207,7 @@ export default {
 }
 </script>
 <style>
-body{
+body {
   overflow: hidden;
 }
 </style>

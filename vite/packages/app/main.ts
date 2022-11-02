@@ -9,11 +9,13 @@ import Tool from './page/settingChildren/Tool.vue'
 import Wizard from './page/settingChildren/Wizard.vue'
 import Base from './page/settingChildren/Base.vue'
 import Window from './page/settingChildren/Window.vue'
+import Auth from './page/settingChildren/Auth.vue'
+import Export from './page/settingChildren/Export.vue'
 import {createRouter, createWebHashHistory} from 'vue-router'
 import Optimize from './page/settingChildren/Optimize.vue'
 import {createPinia} from 'pinia'
 
-const pinia=createPinia()
+const pinia = createPinia()
 const routes = [
   {
     path: '/setting', name: 'setting', component: Setting,
@@ -22,18 +24,23 @@ const routes = [
         path: '', component: Base
       },
       {
-        path:'optimize',component: Optimize
+        path: 'optimize', component: Optimize
       },
       {
         path: 'develop', component: Develop
+      }, {
+        path: 'auth', component: Auth
       },
       {
         path: 'window', component: Window
       },
       {
         path: 'tool', component: Tool
-      },{
-        path:'wizard',component:Wizard
+      }, {
+        path: 'wizard', component: Wizard
+      },
+      {
+        path: 'export', component: Export
       }
     ]
   }

@@ -4,7 +4,7 @@
   </h3>
   <div style="border: solid #c1c1c1 1px;padding: 10px ;border-radius: 4px;background: white;margin-bottom: 10px">注意：开启调试模式后，将允许进行高级设置，凡是调试模式下特有的设置，都将被标记上调试模式图标 <CodeTwoTone/>。</div>
 
-  开关 <a-switch v-model:checked="debugMod"/>
+  开关 <a-tooltip title="仅非系统应用可开启调试模式"><a-switch :disabled="app.isSystemApp" v-model:checked="debugMod"/></a-tooltip>
 
   <div style="padding: 10px;box-shadow: 0 0 3px #a4a4a4;border-radius: 4px;margin-top: 20px;background: white">
 
