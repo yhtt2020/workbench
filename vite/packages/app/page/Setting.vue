@@ -42,13 +42,9 @@
               <router-link :to="{path:'/setting/optimize'}">体验优化</router-link>
             </a-menu-item>
             <a-menu-item v-if="debugMod" key="auth">
-              <router-link :to="{path:'/setting/auth'}">权限设置</router-link>
+              <router-link :to="{path:'/setting/auth'}">应用授权</router-link>
             </a-menu-item>
-            <a-menu-item v-if="debugMod" key="window">
-              <router-link :to="{path:'/setting/window'}"><strong>窗体设置</strong>
-                <CodeTwoTone/>
-              </router-link>
-            </a-menu-item>
+
 
             <!--                <a-menu-item key="3">-->
             <!--                  <a href="#permission">权限管理</a>-->
@@ -58,6 +54,26 @@
           <!--                <a-icon type="user"></a-icon>-->
           <!--                应用分身-->
           <!--              </a-menu-item>-->
+          <a-sub-menu  v-if="debugMod" key="dev">
+            <template #icon>
+              <code-two-tone/>
+            </template>
+            <template #title>应用开发设置</template>
+            <a-menu-item key="baseDev">
+              <router-link :to="{path:'/setting/baseDev'}">基础信息</router-link>
+            </a-menu-item>
+            <a-menu-item  key="authDev">
+              <router-link :to="{path:'/setting/authDev'}">权限设置</router-link>
+            </a-menu-item>
+            <a-menu-item key="optimizeDev">
+            <router-link :to="{path:'/setting/optimizeDev'}">体验优化</router-link>
+          </a-menu-item>
+
+            <a-menu-item v-if="debugMod" key="window">
+              <router-link :to="{path:'/setting/window'}"><strong>窗体设置</strong>
+              </router-link>
+            </a-menu-item>
+          </a-sub-menu>
           <a-sub-menu key="dev">
             <template #icon>
               <LaptopOutlined></LaptopOutlined>
@@ -96,8 +112,6 @@
 
 <script>
 import vueCustomScrollbar from '../../../src/components/vue-scrollbar.vue'
-import VSwatches from 'vue-swatches'
-import 'vue-swatches/dist/vue-swatches.css'
 import { SettingOutlined, LaptopOutlined } from '@ant-design/icons-vue'
 import { appStore } from '../store'
 import { mapState } from 'pinia'
@@ -110,7 +124,7 @@ let appId =
 export default {
   name: 'Setting',
   components: {
-    VSwatches, SettingOutlined, LaptopOutlined, CodeTwoTone, vueCustomScrollbar
+     SettingOutlined, LaptopOutlined, CodeTwoTone, vueCustomScrollbar
   },
   computed: {
     ...mapState(appStore, ['app', 'debugMod'])

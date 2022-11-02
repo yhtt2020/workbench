@@ -1,5 +1,6 @@
 <template>
 <h3>应用信息</h3>
+  <p>此处的所有设置均不会影响到当前已经安装的应用，如需设置生效，可点击安装测试应用以此配置安装一个新的本地测试应用。所有模板设置均需点击保存方可生效，否则均会丢失。</p>
   <a-form :model="formState" style="padding: 20px" :label-col="{span:5}" :wrapper-col="{span:19}">
     <a-form-item
       label="应用名"
@@ -9,6 +10,18 @@
                placeholder="输入应用名称"
       />
     </a-form-item>
+    <a-form-item v-if="debugMod"
+      label="包名"
+      :rules="{ required: true, message: '唯一的应用名，用于开发的时候应用身份确认，唯一' ,min:1,max:16 }"
+    >
+      <a-input-group compact>
+        <a-input style="width: 200px" v-model:value="app.package"
+                 placeholder="请点击注册包名"
+        >
+        </a-input><a-button type="primary">注册包名</a-button>
+      </a-input-group>
+<DebugTip tip="package"></DebugTip>
+    </a-form-item>
     <a-form-item
       label="应用起始地址：" >
                     <span v-if="!debugMod" class="ant-form-text" style="text-overflow: ellipsis;
@@ -16,6 +29,20 @@
         {{ this.app.url }}
       </span>
       <a-input v-else v-model:value="app.url"/>
+    </a-form-item>
+    <a-form-item  v-if="debugMod"
+                  label="启用调试入口：">
+      <template #extra>
+        <DebugTip tip="use_debug_url" />
+      </template>
+      <a-switch  v-model:checked="app.use_debug_url"/>
+    </a-form-item>
+    <a-form-item  v-if="debugMod && app.use_debug_url"
+      label="应用调试地址：">
+      <template #extra>
+      <DebugTip tip="debug_url" />
+      </template>
+        <a-input  v-model:value="app.debug_url"/>
     </a-form-item>
     <a-form-item
       label="应用说明"
@@ -25,24 +52,14 @@
         placeholder="输入应用说明" maxlength="50"
       />
     </a-form-item>
-    <a-form-item
-      label="主题色">
-      <div>
-        <span class="theme-color" :style="{'background-color':this.app.theme_color} "></span>
-      </div>
-    </a-form-item>
-    <a-form-item label="自定义背景色">
-      <!--                  <v-swatches class="color-select" @input="userThemeColorChanged" shapes="circles" v-model="formState.user_theme_color" popover-x="left" popover-y="bottom" show-fallback swatches="text-advanced" fallback-input-type="color"></v-swatches>-->
-
-
+    <a-form-item label="主题色">
       <div>
         <a-popover style="background: transparent;border: none" title="选择颜色">
           <template #content>
-            <SketchPicker v-model="this.formState.user_theme_colors"></SketchPicker>
+            <SketchPicker v-model="this.devApp.theme_colors"></SketchPicker>
           </template>
-          <span class="theme-color" :style="{'background-color':this.formState.user_theme_colors.hex} "></span>
+          <span class="theme-color" :style="{'background-color':this.devApp.theme_colors.hex} "></span>
         </a-popover>
-        {{this.formState.user_theme_color}}
       </div>
       <a-button style="position: absolute;margin-left: 140px;margin-top: -21px" type="default" size="small"
                 @click="this.formState.user_theme_colors.hex='#ffffff';">重置
@@ -119,7 +136,7 @@ import DebugTip from '../../components/DebugTip.vue'
 export default {
   name: 'base',
   computed: {
-    ...mapWritableState(appStore, ['app','debugMod'])
+    ...mapWritableState(appStore, ['app','debugMod','devApp'])
   },
   components:{
     DebugTip,'SketchPicker':Sketch
@@ -155,7 +172,6 @@ export default {
   },
   data () {
     return {
-
       formItemLayout,
       formTailLayout,
       formState: {

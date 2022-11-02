@@ -13,6 +13,7 @@
     "@ant-design/icons-vue": "^6.1.0",
     "@codemirror/lang-javascript": "^6.1.1",
     "@codemirror/lang-json": "^6.0.1",
+    "@lk77/vue3-color": "^3.0.6",
     "@types/node": "^18.0.0",
     "ant-design-vue": "^3.2.9",
     "codemirror": "^6.0.1",
@@ -23,7 +24,6 @@
     "unplugin-vue-components": "^0.20.1",
     "vue": "^3.2.25",
     "vue-router": "4",
-    "vue-swatches": "^2.1.1",
     "vuex": "^4.0.2"
   },
   "devDependencies": {

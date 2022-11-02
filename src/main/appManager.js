@@ -535,7 +535,7 @@ class AppManager {
   openSetting (appId) {
     function loadSettingWindow (appId) {
       appManager.settingWindow = new BrowserWindow({
-        width: 800,
+        width: 920,
         height: 800,
         acceptFirstMouse: true,
         webPreferences: {

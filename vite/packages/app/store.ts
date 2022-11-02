@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
 
-const {appModel}=window.$models
+const {appModel,devAppModel}=window.$models
 export const appStore = defineStore('app', {
   state: () => ({
     app:{
@@ -15,6 +15,11 @@ export const appStore = defineStore('app', {
     config:{ //配置，开发人员设置的
 
     },
+    devApp:{
+        package:'',
+      theme_color:'',
+      theme_colors:{}
+    },
     debugMod:false
   }),
   actions:{
@@ -24,6 +29,20 @@ export const appStore = defineStore('app', {
     },
     async toggleDebug(){
       this.debugMod=!this.debugMod
+    },
+    async setDevApp(devApp){
+      this.devApp=devApp
+      this.devApp.theme_colors={
+        hex:this.devApp.theme_color || '#000000'
+      }
+      this.debugMod=true
+    },
+    async reloadDevApp(){
+      let devApp=await devAppModel.get(this.devApp.nanoid)
+      await this.setDevApp(devApp)
+    },
+    async saveDevApp(){
+
     }
   }
 
