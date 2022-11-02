@@ -29,6 +29,7 @@ const devAppModel = {
         t.string('nanoid').primary().unique().comment('本地id和应用id无关') //本地id
         t.string('app_nanoid').comment('appstore的应用nanoid，需要从远端获取，和package差不多')//
         t.string('assign_apps').comment('关联的系统内已安装的app') //关联的系统内已安装的app
+        t.string('local_dir').comment('项目目录')
         t.string('name').comment('英文名称，这个不要求唯一')
         t.string('options').comment('基本设置')
         t.string('author').comment('开发者名称')

@@ -8,7 +8,7 @@
     sub-title="应用设置"
   >
     <template #extra>
-      <a-button size="small" key="1" type="danger" @click="uninstall(appId)" v-if="!app.isSystemApp">
+      <a-button  key="1" type="danger" @click="uninstall(appId)" v-if="!app.isSystemApp">
         卸载应用
       </a-button>
       <span v-else>

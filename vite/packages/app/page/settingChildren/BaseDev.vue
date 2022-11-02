@@ -12,7 +12,7 @@
     </a-form-item>
     <a-form-item v-if="debugMod"
       label="包名"
-      :rules="{ required: true, message: '唯一的应用名，用于开发的时候应用身份确认，唯一' ,min:1,max:16 }"
+      :rules="{ message: '唯一的应用名，用于开发的时候应用身份确认，唯一' ,min:1,max:16 }"
     >
       <a-input-group compact>
         <a-input style="width: 200px" v-model:value="devApp.package"
@@ -21,6 +21,20 @@
         </a-input><a-button type="primary">注册包名</a-button>
       </a-input-group>
 <DebugTip tip="package"></DebugTip>
+    </a-form-item>
+    <a-form-item label="本地项目目录"
+                 :rules="{ message: '选择一个本地项目目录，用于输出manifest.json' ,min:1,max:16 }"
+    >
+      <a-input-group compact>
+        <a-input style="width: 200px" v-model:value="devApp.local_dir"
+                 placeholder="选择本地项目目录"
+        >
+        </a-input>
+          <a-button @click="selectDir">
+            选择目录
+          </a-button>
+      </a-input-group>
+      <DebugTip tip="local_dir"></DebugTip>
     </a-form-item>
     <a-form-item
       label="应用起始地址：" >
@@ -46,7 +60,7 @@
     </a-form-item>
     <a-form-item
       label="应用说明"
-      :rules="{ required: true, message: '请输入应用说明' }"
+      :rules="{  message: '请输入应用说明' }"
     >
       <a-textarea v-model:value="devApp.summary"
         placeholder="输入应用说明" maxlength="50"
@@ -121,6 +135,7 @@
 </template>
 
 <script>
+import { message, Upload } from 'ant-design-vue';
 const formItemLayout = {
   labelCol: { span: 6 },
   wrdevApperCol: { span: 16 },
@@ -133,6 +148,7 @@ import { appStore } from '../../store'
 import { mapWritableState } from 'pinia'
 import {Sketch} from '@lk77/vue3-color'
 import DebugTip from '../../components/DebugTip.vue'
+const path=require('path')
 export default {
   name: 'base',
   computed: {
@@ -147,6 +163,12 @@ export default {
       switch (type){
         case 'debug_url':
           return tip+`调试入口，仅调试模式下生效，可根据开关启用调试入口`
+      }
+    },
+    async selectDir(){
+      let  dir=ipc.sendSync('selectDir')
+      if(dir){
+        this.devApp.local_dir=dir
       }
     }
   },

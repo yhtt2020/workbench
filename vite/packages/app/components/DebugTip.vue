@@ -27,7 +27,11 @@ const tipMap = {
   'package':{
     title:'包名',
     message:'包名是应用唯一可读身份，一般由三段组成。 【前缀】.【公司名】.【应用名】，只有注册了包名的应用，才能够上架市场。'
-  }
+  },
+  'local_dir':{
+    title:'本地目录',
+    message:'本地目录，用于生成minifest.json文件，不选择则无法生成路径和打包项目。'
+}
 }
 export default {
   name: 'DebugTip',
