@@ -1,6 +1,6 @@
 <template>
 
-  <a-page-header
+  <a-page-header v-if="!debugMod"
     style="box-shadow: 0 2px 8px #f0f1f2;z-index: 1; padding:6px 10px;"
     :title="this.app.name"
 
@@ -20,6 +20,19 @@
       </span>
     </template>
   </a-page-header>
+  <a-page-header v-else
+                 style="box-shadow: 0 2px 8px #f0f1f2;z-index: 1; padding:6px 10px;"
+                 :title="this.devApp.name"
+
+                 :avatar="{src:devApp.logo}"
+                 sub-title="开发中的应用"
+  >
+    <template #extra>
+      <a-button @click="()=>{this.$router.push({path:'/allDevApps'})}"  key="go" >
+        查看其他开发中应用
+      </a-button>
+    </template>
+  </a-page-header>
   <a-layout id="components-layout-demo-top-side-2" style="height: 100vh">
     <a-layout>
       <a-layout-sider width="200" theme="light">
@@ -30,7 +43,7 @@
           open-keys="['basic','dev']"
           :style="{ height: '100%', borderRight: 0 }"
         >
-          <a-sub-menu key="basic">
+          <a-sub-menu v-if="!debugMod" key="basic">
             <template #icon>
               <SettingOutlined></SettingOutlined>
             </template>
@@ -96,7 +109,6 @@
               </router-link>
             </a-menu-item>
           </a-sub-menu>
-
         </a-menu>
       </a-layout-sider>
       <a-layout-content>
@@ -127,7 +139,7 @@ export default {
      SettingOutlined, LaptopOutlined, CodeTwoTone, vueCustomScrollbar
   },
   computed: {
-    ...mapState(appStore, ['app', 'debugMod'])
+    ...mapState(appStore, ['app', 'debugMod','devApp'])
   },
   data () {
     return {

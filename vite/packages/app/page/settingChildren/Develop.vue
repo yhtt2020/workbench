@@ -1,21 +1,23 @@
 <template>
-  <h3>调试模式
+  <h3>开发者模式
   <span style="float:right;font-size: 14px">当前状态 <span :style="{background:this.debugMod?'green':'red'}" style="display: inline-block;border-radius: 100%;width: 10px;height: 10px;" />&nbsp; </span>
   </h3>
-  <div style="border: solid #c1c1c1 1px;padding: 10px ;border-radius: 4px;background: white;margin-bottom: 10px">注意：开启调试模式后，将允许进行高级设置，凡是调试模式下特有的设置，都将被标记上调试模式图标 <CodeTwoTone/>。</div>
 
-  开关 <a-tooltip title="仅非系统应用可开启调试模式"><a-switch @change="switchToDevMod" :checked="debugMod" :disabled="app.isSystemApp"  /></a-tooltip>
+  进入开发者模式 <a-tooltip title="仅非系统应用可开启调试模式"><a-switch @change="switchToDevMod" :checked="debugMod" :disabled="app.isSystemApp"  /></a-tooltip>
 
+  <div style="margin-top: 10px">
+    <router-link :to="{path:'/allDevApps'}"><a-button>查看其他开发中的应用</a-button></router-link>
+  </div>
   <a-alert style="margin-top: 10px" v-if="existsDevApp">
     <template #description>
-      存在开发中的应用 「<strong>{{existsDevApp.name}}（ID：{{existsDevApp.nanoid}}）</strong>」，可开启调试模式。
+      当前应用存在开发中的应用 「<strong>{{existsDevApp.name}}（ID：{{existsDevApp.nanoid}}）</strong>」，可开启调试模式。
     </template>
   </a-alert>
   <div style="padding: 10px;box-shadow: 0 0 3px #a4a4a4;border-radius: 4px;margin-top: 20px;background: white">
 
       <h4>什么是开发者模式？</h4>
 
-      <p>如果此应用是您自己开发的应用，可以勾选此选项，勾选后，此应用将运行在开发者模式中，同时将为您解锁更多开发者工具，方便您开发和调试应用。</p>
+      <p>如果此应用是您自己开发的应用，可以勾选此选项，启用后设置页面将切换到开发者模式，并载入此应用关联的开发中的应用，同时将为您解锁更多开发者工具，方便您开发和调试应用。</p>
 
       <h4>开发者模式有哪些额外的功能？</h4>
 

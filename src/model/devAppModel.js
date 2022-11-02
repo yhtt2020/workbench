@@ -108,6 +108,9 @@ const devAppModel = {
   },
   async get(nanoid){
     return await sqlDb.knex('dev_app').select({nanoid}).first()
+  },
+  async getAll(){
+    return await sqlDb.knex('dev_app').select()
   }
 }
 module.exports = devAppModel

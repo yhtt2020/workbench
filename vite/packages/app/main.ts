@@ -12,6 +12,7 @@ import BaseDev from './page/settingChildren/BaseDev.vue'
 import Window from './page/settingChildren/Window.vue'
 import Auth from './page/settingChildren/Auth.vue'
 import AuthDev from './page/settingChildren/AuthDev.vue'
+import AllDevApps from './page/AllDevApps.vue'
 import Export from './page/settingChildren/Export.vue'
 import {createRouter, createWebHashHistory} from 'vue-router'
 import Optimize from './page/settingChildren/Optimize.vue'
@@ -20,6 +21,9 @@ import {createPinia} from 'pinia'
 
 const pinia = createPinia()
 const routes = [
+  {
+    path:"/allDevApps",component: AllDevApps
+  },
   {
     path: '/setting', name: 'setting', component: Setting,
     children: [
