@@ -56,11 +56,6 @@
       </div>
     </a-tab-pane>
   </a-tabs>
-
-  <div style="text-align:right;margin-right: 10px;">
-    <a-button style="margin-right: 20px" type="primary" @click="save">保存</a-button>
-    <a-button>重置</a-button>
-  </div>
 </template>
 
 <script>
@@ -208,17 +203,6 @@ export default {
     }
   },
   methods: {
-    save () {
-      let windowConfig = {}
-
-      if (!(this.windowConfigs.frameWindow.enable || this.windowConfigs.window.enable || this.windowConfigs.attach.enable)) {
-        message.error({
-          content: '必须至少启用一种窗体'
-        })
-
-      }
-
-    },
     getExtra (type) {
       let tip = `&nbsp;调试&nbsp;`
       switch (type) {

@@ -21,12 +21,13 @@ import {createPinia} from 'pinia'
 
 const pinia = createPinia()
 const routes = [
-  {
-    path:"/allDevApps",component: AllDevApps
-  },
+
   {
     path: '/setting', name: 'setting', component: Setting,
     children: [
+      {
+        path:"allDevApps",component: AllDevApps
+      },
       {
         path: '', component: Base
       },

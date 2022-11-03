@@ -35,6 +35,8 @@ const devAppModel = {
         t.string('author').comment('开发者名称')
         t.string('package').comment('包名，需要从云端申请后填入，是应用的唯一可读身份标识')
         t.string('preload').comment('预载文件')
+        t.boolean('use_debug_url').comment('使用调试入口')
+        t.string('debug_url').comment('调试入口')
         t.string('url').comment('最低优先级url')
         t.string('logo').comment('应用的logo，需要自动将本地文件导入到开发文件下面')
         t.string('summary').comment('应用的简介')
@@ -108,10 +110,14 @@ const devAppModel = {
     }
   },
   async get(nanoid){
-    return await sqlDb.knex('dev_app').select({nanoid}).first()
+    return await sqlDb.knex('dev_app').where({nanoid:nanoid}).first()
   },
   async getAll(){
     return await sqlDb.knex('dev_app').select()
+  },
+  async save(nanoid,data){
+    return await sqlDb.knex('dev_app').where({nanoid}).update(data)
   }
+
 }
 module.exports = devAppModel

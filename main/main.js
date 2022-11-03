@@ -751,4 +751,12 @@ app.whenReady().then(()=>{
     }
     settings.set('autoRun',autoRun)
   })
+
+  ipc.on('selectDir',(event)=>{
+    event.returnValue=dialog.showOpenDialogSync(undefined,{
+      properties:['openDirectory']
+    }
+    )
+
+  })
 })

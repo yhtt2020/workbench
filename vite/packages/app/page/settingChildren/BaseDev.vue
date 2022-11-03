@@ -23,7 +23,7 @@
 <DebugTip tip="package"></DebugTip>
     </a-form-item>
     <a-form-item label="本地项目目录"
-                 :rules="{ message: '选择一个本地项目目录，用于输出manifest.json' ,min:1,max:16 }"
+                 :rules="{ message: '选择一个本地项目目录，用于输出manifest.json'  }"
     >
       <a-input-group compact>
         <a-input style="width: 200px" v-model:value="devApp.local_dir"
@@ -44,14 +44,14 @@
       </span>
       <a-input v-else v-model:value="devApp.url"/>
     </a-form-item>
-    <a-form-item  v-if="debugMod"
+    <a-form-item
                   label="启用调试入口：">
       <template #extra>
         <DebugTip tip="use_debug_url" />
       </template>
       <a-switch  v-model:checked="devApp.use_debug_url"/>
     </a-form-item>
-    <a-form-item  v-if="debugMod && devApp.use_debug_url"
+    <a-form-item  v-if="devApp.use_debug_url"
       label="应用调试地址：">
       <template #extra>
       <DebugTip tip="debug_url" />
@@ -63,7 +63,7 @@
       :rules="{  message: '请输入应用说明' }"
     >
       <a-textarea v-model:value="devApp.summary"
-        placeholder="输入应用说明" maxlength="50"
+        placeholder="输入应用说明"
       />
     </a-form-item>
     <a-form-item label="主题色">
@@ -75,9 +75,6 @@
           <span class="theme-color" :style="{'background-color':this.devApp.theme_colors.hex} "></span>
         </a-popover>
       </div>
-      <a-button style="position: absolute;margin-left: 140px;margin-top: -21px" type="default" size="small"
-                @click="this.formState.user_theme_colors.hex='#ffffff';">重置
-      </a-button>
     </a-form-item>
 
     <!--                  <a-form-item id="permission" label="权限管理">-->
@@ -168,7 +165,7 @@ export default {
     async selectDir(){
       let  dir=ipc.sendSync('selectDir')
       if(dir){
-        this.devApp.local_dir=dir
+        this.devApp.local_dir=dir[0]
       }
     }
   },

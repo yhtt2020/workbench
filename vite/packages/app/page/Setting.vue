@@ -28,19 +28,22 @@
                  sub-title="开发中的应用"
   >
     <template #extra>
+      <a-button @click=""  type="primary">
+        运行测试应用
+      </a-button>
       <a-button @click="()=>{this.$router.push({path:'/allDevApps'})}"  key="go" >
         查看其他开发中应用
       </a-button>
     </template>
   </a-page-header>
-  <a-layout id="components-layout-demo-top-side-2" style="height: 100vh">
+  <a-layout id="components-layout-demo-top-side-2" style="height:calc(100vh - 50px)">
     <a-layout>
-      <a-layout-sider width="200" theme="light">
+      <a-layout-sider width="200" theme="light" style="position: relative">
         <a-menu
           theme="light"
           mode="inline"
           :default-selected-keys="['basic']"
-          open-keys="['basic','dev']"
+          :open-keys="['basic','dev']"
           :style="{ height: '100%', borderRight: 0 }"
         >
           <a-sub-menu v-if="!debugMod" key="basic">
@@ -67,6 +70,7 @@
           <!--                <a-icon type="user"></a-icon>-->
           <!--                应用分身-->
           <!--              </a-menu-item>-->
+
           <a-sub-menu  v-if="debugMod" key="dev">
             <template #icon>
               <code-two-tone/>
@@ -87,6 +91,7 @@
               </router-link>
             </a-menu-item>
           </a-sub-menu>
+
           <a-sub-menu key="dev">
             <template #icon>
               <LaptopOutlined></LaptopOutlined>
@@ -98,18 +103,34 @@
             <a-menu-item key="6">
               <router-link :to="{path:'/setting/develop'}">开发者模式</router-link>
             </a-menu-item>
-            <a-menu-item v-if="debugMod" key="7">
-              <router-link :to="{path:'/setting/tool'}"><strong>开发者工具</strong>
+            <router-link :to="{path:'/setting/tool'}">
+            <a-sub-menu v-if="debugMod" key="devtool">
+              <template #icon>
+                <CodeTwoTone/>
+              </template>
+
+              <template #title>开发者工具</template>
+              <a-menu-item key="export">
+                <router-link :to="{path:'/setting/export'}">导出工具</router-link>
+              </a-menu-item>
+            </a-sub-menu>
+            </router-link>
+            <a-menu-item v-if="debugMod"  key="8">
+              <router-link :to="{path:'/setting/wizard'}"><strong>开发向导</strong>
                 <CodeTwoTone/>
               </router-link>
-            </a-menu-item>
-            <a-menu-item v-if="debugMod" key="8">
-              <router-link :to="{path:'/setting/wizard'}"><strong>开发向导</strong>
+            </a-menu-item >
+            <a-menu-item v-if="debugMod" key="all">
+              <router-link :to="{path:'/setting/allDevapps'}"><strong>开发中的应用</strong>
                 <CodeTwoTone/>
               </router-link>
             </a-menu-item>
           </a-sub-menu>
         </a-menu>
+        <div  v-if="debugMod"  style="position:absolute;bottom: 10px;left: 10px;text-align: center;width: 100%">
+          <a-button type="primary" style="margin-right: 20px" @click="save">保存</a-button>
+          <a-button @click="reset">重置</a-button>
+        </div>
       </a-layout-sider>
       <a-layout-content>
         <vue-custom-scrollbar :settings="settings" style="position:relative;height: calc(100vh - 55px)">
@@ -126,9 +147,9 @@
 import vueCustomScrollbar from '../../../src/components/vue-scrollbar.vue'
 import { SettingOutlined, LaptopOutlined } from '@ant-design/icons-vue'
 import { appStore } from '../store'
-import { mapState } from 'pinia'
+import { mapState,mapActions } from 'pinia'
 import { CodeTwoTone } from '@ant-design/icons-vue'
-
+import {message,Modal} from 'ant-design-vue'
 let { appModel } = window.$models
 let appId =
   window.globalArgs['app-id']
@@ -185,6 +206,7 @@ export default {
 
   },
   methods: {
+    ...mapActions(appStore,['reloadDevApp','saveDevApp']),
     goDevelop () {
       this.$router.push({ path: 'develop' })
     },
@@ -229,6 +251,24 @@ export default {
         this.form.validateFields(['nickname'], { force: true })
       })
     },
+    reset(){
+      Modal.confirm({
+        content:'是否放弃当前所有改动重载之前的配置？',
+        onOk:()=>{
+          this.reloadDevApp()
+          message.success('已为您重置当前开发应用的信息。')
+        }
+      })
+    },
+    async save () {
+      try{
+        await this.saveDevApp()
+        message.success('保存成功。')
+      }catch (e) {
+        message.error('保存失败。'+e)
+      }
+
+    }
   }
 }
 </script>

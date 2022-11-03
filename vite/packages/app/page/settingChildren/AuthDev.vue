@@ -56,11 +56,6 @@
       </div>
     </a-tab-pane>
   </a-tabs>
-
-  <div style="text-align:right;margin-right: 10px;">
-    <a-button style="margin-right: 20px" type="primary" @click="save">保存</a-button>
-    <a-button>重置</a-button>
-  </div>
 </template>
 
 <script>
@@ -175,7 +170,7 @@ export default {
   name: 'base',
 
   computed: {
-    ...mapWritableState(appStore, ['app', 'debugMod'])
+    ...mapWritableState(appStore, ['app', 'debugMod','devApp'])
   },
   components: {
     DebugTip
@@ -185,40 +180,32 @@ export default {
       activeKey: 'base',
       formItemLayout,
       formTailLayout,
-
-      auth:{
+      authDefaultConfigs:{
         base:{
           webSecure:false,
           node:false
         },
         api:{
-            runtime:true,
-            util:true,
-            window:true,
-            barrage:false,
-            user:false,
-            tabs:false,
+          runtime:true,
+          util:true,
+          window:true,
+          barrage:false,
+          user:false,
+          tabs:false,
         },
         ability:{
-
         }
+      },
+      auth:{
+        base:{},
+        api:{},
+        ability:{}
       },
       apiList,
       abilityList
     }
   },
   methods: {
-    save () {
-      let windowConfig = {}
-
-      if (!(this.windowConfigs.frameWindow.enable || this.windowConfigs.window.enable || this.windowConfigs.attach.enable)) {
-        message.error({
-          content: '必须至少启用一种窗体'
-        })
-
-      }
-
-    },
     getExtra (type) {
       let tip = `&nbsp;调试&nbsp;`
       switch (type) {
@@ -228,6 +215,11 @@ export default {
     }
   },
   mounted () {
+    if(!this.devApp.auth){
+      this.devApp.auth={}
+    }
+    this.devApp.auth=Object.assign(this.authDefaultConfigs,this.devApp.auth)
+    this.auth=this.devApp.auth
     let optimizeValues = ['keepRunning', 'theme', 'desktop', 'showInSideBar', 'alwaysTop', 'autoRun', 'noFrame']
     let optimize = []
     if (this.app.settings) {

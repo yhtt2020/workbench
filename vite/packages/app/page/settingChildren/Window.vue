@@ -275,8 +275,6 @@
       </div>
     </a-tab-pane>
   </a-tabs>
-
-<div style="text-align:right;margin-right: 10px;"><a-button style="margin-right: 20px" type="primary" @click="save">保存</a-button> <a-button>重置</a-button></div>
 </template>
 
 <script>
@@ -296,7 +294,7 @@ export default {
   name: 'base',
 
   computed: {
-    ...mapWritableState(appStore, ['app', 'debugMod'])
+    ...mapWritableState(appStore, ['app', 'debugMod','devApp'])
   },
   components: {
     DebugTip
@@ -307,7 +305,7 @@ export default {
       formItemLayout,
       formTailLayout,
 
-      windowConfigs:{
+      windowDefaultConfigs:{
         defaultType:'frame_window',
         frameWindow:{
           enable:true,
@@ -346,22 +344,16 @@ export default {
           canResize:false,
         }
 
+      },
+      windowConfigs:{
+        frameWindow:{},
+        window:{},
+        attach:{}
       }
 
     }
   },
   methods: {
-    save(){
-      let windowConfig={}
-
-      if(!(this.windowConfigs.frameWindow.enable || this.windowConfigs.window.enable || this.windowConfigs.attach.enable)){
-        message.error({
-         content: '必须至少启用一种窗体'
-        })
-
-      }
-
-    },
     getExtra (type) {
       let tip = `&nbsp;调试&nbsp;`
       switch (type) {
@@ -371,6 +363,8 @@ export default {
     }
   },
   mounted () {
+    this.devApp.window=Object.assign(this.windowDefaultConfigs,this.devApp.window)
+    this.windowConfigs=this.devApp.window
     let optimizeValues = ['keepRunning', 'theme', 'desktop', 'showInSideBar', 'alwaysTop', 'autoRun', 'noFrame']
     let optimize = []
     if (this.app.settings) {

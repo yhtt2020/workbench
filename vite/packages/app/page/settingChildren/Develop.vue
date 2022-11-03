@@ -6,7 +6,7 @@
   进入开发者模式 <a-tooltip title="仅非系统应用可开启调试模式"><a-switch @change="switchToDevMod" :checked="debugMod" :disabled="app.isSystemApp"  /></a-tooltip>
 
   <div style="margin-top: 10px">
-    <router-link :to="{path:'/allDevApps'}"><a-button>查看其他开发中的应用</a-button></router-link>
+    <router-link :to="{path:'/setting/allDevApps'}"><a-button>查看其他开发中的应用</a-button></router-link>
   </div>
   <a-alert style="margin-top: 10px" v-if="existsDevApp">
     <template #description>
