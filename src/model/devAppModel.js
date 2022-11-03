@@ -99,8 +99,16 @@ const devAppModel = {
       preload: app.preload,
       logo: app.logo,
       theme_color: app.theme_color,
-      window: {},
-      auth: {},
+      window: JSON.stringify({
+        frameWindow:{},
+        window:{},
+        attach:{}
+      }),
+      auth: JSON.stringify({
+        base:{},
+        api:{},
+        ability:{}
+      }),
       create_time: Date.now(),
       update_time: Date.now(),
     }

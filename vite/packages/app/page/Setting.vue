@@ -46,6 +46,13 @@
           :open-keys="['basic','dev']"
           :style="{ height: '100%', borderRight: 0 }"
         >
+          <a-menu-item v-if="debugMod"  key="8">
+            <template #icon>
+              <smile-outlined />
+            </template>
+            <router-link :to="{path:'/setting/wizard'}"><strong>开发向导</strong>
+            </router-link>
+          </a-menu-item >
           <a-sub-menu v-if="!debugMod" key="basic">
             <template #icon>
               <SettingOutlined></SettingOutlined>
@@ -71,7 +78,7 @@
           <!--                应用分身-->
           <!--              </a-menu-item>-->
 
-          <a-sub-menu  v-if="debugMod" key="dev">
+          <a-sub-menu  v-if="debugMod" key="basicDev">
             <template #icon>
               <code-two-tone/>
             </template>
@@ -105,24 +112,15 @@
             </a-menu-item>
             <router-link :to="{path:'/setting/tool'}">
             <a-sub-menu v-if="debugMod" key="devtool">
-              <template #icon>
-                <CodeTwoTone/>
-              </template>
-
               <template #title>开发者工具</template>
               <a-menu-item key="export">
                 <router-link :to="{path:'/setting/export'}">导出工具</router-link>
               </a-menu-item>
             </a-sub-menu>
             </router-link>
-            <a-menu-item v-if="debugMod"  key="8">
-              <router-link :to="{path:'/setting/wizard'}"><strong>开发向导</strong>
-                <CodeTwoTone/>
-              </router-link>
-            </a-menu-item >
+
             <a-menu-item v-if="debugMod" key="all">
               <router-link :to="{path:'/setting/allDevapps'}"><strong>开发中的应用</strong>
-                <CodeTwoTone/>
               </router-link>
             </a-menu-item>
           </a-sub-menu>
@@ -145,7 +143,7 @@
 
 <script>
 import vueCustomScrollbar from '../../../src/components/vue-scrollbar.vue'
-import { SettingOutlined, LaptopOutlined } from '@ant-design/icons-vue'
+import { SettingOutlined, LaptopOutlined,SmileOutlined,} from '@ant-design/icons-vue'
 import { appStore } from '../store'
 import { mapState,mapActions } from 'pinia'
 import { CodeTwoTone } from '@ant-design/icons-vue'
@@ -157,7 +155,7 @@ let appId =
 export default {
   name: 'Setting',
   components: {
-     SettingOutlined, LaptopOutlined, CodeTwoTone, vueCustomScrollbar
+     SettingOutlined, LaptopOutlined, CodeTwoTone, vueCustomScrollbar,SmileOutlined
   },
   computed: {
     ...mapState(appStore, ['app', 'debugMod','devApp'])
@@ -273,8 +271,9 @@ export default {
 }
 </script>
 <style>
-body {
+body,html {
   overflow: hidden;
+  width:100% !important
 }
 </style>
 <style lang="scss">

@@ -26,7 +26,7 @@
                  :rules="{ message: '选择一个本地项目目录，用于输出manifest.json'  }"
     >
       <a-input-group compact>
-        <a-input style="width: 200px" v-model:value="devApp.local_dir"
+        <a-input style="width:calc( 100% - 87px)" v-model:value="devApp.local_dir"
                  placeholder="选择本地项目目录"
         >
         </a-input>
