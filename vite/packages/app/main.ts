@@ -5,18 +5,19 @@ import App from './App.vue'
 import tools from '../../src/util/tools.js'
 import Setting from './page/Setting.vue'
 import Develop from './page/settingChildren/Develop.vue'
-import Tool from './page/settingChildren/Tool.vue'
-import Wizard from './page/settingChildren/Wizard.vue'
+import Tool from './page/devMod/Tool.vue'
+import Wizard from './page/devMod/Wizard.vue'
 import Base from './page/settingChildren/Base.vue'
-import BaseDev from './page/settingChildren/BaseDev.vue'
-import Window from './page/settingChildren/Window.vue'
+import BaseDev from './page/devMod/Base.vue'
+import Window from './page/devMod/Window.vue'
 import Auth from './page/settingChildren/Auth.vue'
-import AuthDev from './page/settingChildren/AuthDev.vue'
+import AuthDev from './page/devMod/Auth.vue'
 import AllDevApps from './page/AllDevApps.vue'
-import Export from './page/settingChildren/Export.vue'
+import Export from './page/devMod/Export.vue'
 import {createRouter, createWebHashHistory} from 'vue-router'
 import Optimize from './page/settingChildren/Optimize.vue'
-import OptimizeDev from './page/settingChildren/OptimizeDev.vue'
+import OptimizeDev from './page/devMod/Optimize.vue'
+import DevMod from './page/DevMod.vue'
 import {createPinia} from 'pinia'
 
 const pinia = createPinia()
@@ -26,23 +27,31 @@ const routes = [
     path: '/setting', name: 'setting', component: Setting,
     children: [
       {
-        path:"allDevApps",component: AllDevApps
-      },
-      {
-        path: '', component: Base
-      },
-      {
-        path: 'optimize', component: Optimize
+        path: 'auth', component: Auth
       },{
-        path: 'optimizeDev', component: OptimizeDev
+        path: '', component: Base
+      },{
+        path: 'optimize', component: Optimize
       },
       {
         path: 'develop', component: Develop
-      }, {
-        path: 'auth', component: Auth
       },
+    ]
+  },
+  {
+    path: "/allDevApps", component: AllDevApps
+  },
+  {
+    path: '/dev', name: 'dev', component: DevMod,
+    children: [
+
+
+       {
+        path: 'optimize', component: OptimizeDev
+      },
+
       {
-        path:'authDev',component: AuthDev
+        path: 'auth', component: AuthDev
       },
       {
         path: 'window', component: Window
@@ -53,7 +62,7 @@ const routes = [
         path: 'wizard', component: Wizard
       },
       {
-        path:'baseDev',component: BaseDev
+        path: '', component: BaseDev
       },
       {
         path: 'export', component: Export

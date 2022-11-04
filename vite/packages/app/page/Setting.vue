@@ -1,7 +1,7 @@
 <template>
 
 
-  <a-layout id="components-layout-demo-top-side-2" style="height:calc(100vh)">
+  <a-layout style="height:calc(100vh)">
     <a-layout-header v-if="debugMod" style="background: rgb(255,255,255);box-shadow: 0 0 8px rgba(63,63,63,0.2);z-index: 1;padding-left: 20px;padding-right: 20px;" class="header" theme="light">
       <div style="display: flex">
         <div>
@@ -25,12 +25,12 @@
                 {{ app.name }}
               </a-menu-item>
               <a-menu-item key="all">
-                <router-link :to="{path:'/setting/allDevapps'}"><strong>其他应用</strong>
+                <router-link :to="{path:'/dev/allDevapps'}"><strong>其他应用</strong>
                 </router-link>
               </a-menu-item>
             </a-sub-menu>
             <a-menu-item key="tool">
-              <router-link :to="{path:'/setting/tool'}">开发者工具</router-link>
+              <router-link :to="{path:'/dev/tool'}">开发者工具</router-link>
             </a-menu-item>
 
           </a-menu>
@@ -72,7 +72,7 @@
                 <template #icon>
                   <smile-outlined/>
                 </template>
-                <router-link :to="{path:'/setting/wizard'}"><strong>开发向导</strong>
+                <router-link :to="{path:'/dev/wizard'}"><strong>开发向导</strong>
                 </router-link>
               </a-menu-item>
               <a-sub-menu v-if="!debugMod" key="basic">
@@ -89,65 +89,24 @@
                 <a-menu-item v-if="debugMod" key="auth">
                   <router-link :to="{path:'/setting/auth'}">应用授权</router-link>
                 </a-menu-item>
+                <a-menu-item key="6">
+                  <router-link :to="{path:'/setting/develop'}">进入开发者模式</router-link>
+                </a-menu-item>
 
 
                 <!--                <a-menu-item key="3">-->
                 <!--                  <a href="#permission">权限管理</a>-->
                 <!--                </a-menu-item>-->
               </a-sub-menu>
+
               <!--              <a-menu-item key="fenshen">-->
               <!--                <a-icon type="user"></a-icon>-->
               <!--                应用分身-->
               <!--              </a-menu-item>-->
 
-              <a-sub-menu v-if="debugMod" key="basicDev">
-                <template #icon>
-                  <code-two-tone/>
-                </template>
-                <template #title>应用开发设置</template>
-                <a-menu-item key="baseDev">
-                  <router-link :to="{path:'/setting/baseDev'}">基础信息</router-link>
-                </a-menu-item>
-                <a-menu-item key="authDev">
-                  <router-link :to="{path:'/setting/authDev'}">权限设置</router-link>
-                </a-menu-item>
-                <a-menu-item key="optimizeDev">
-                  <router-link :to="{path:'/setting/optimizeDev'}">体验优化</router-link>
-                </a-menu-item>
-
-                <a-menu-item v-if="debugMod" key="window">
-                  <router-link :to="{path:'/setting/window'}"><strong>窗体设置</strong>
-                  </router-link>
-                </a-menu-item>
-              </a-sub-menu>
-
-              <a-sub-menu key="dev">
-                <template #icon>
-                  <LaptopOutlined></LaptopOutlined>
-                </template>
-                <template #title>深度集成</template>
-                <!--                <a-menu-item key="5">-->
-                <!--                  菜单管理-->
-                <!--                </a-menu-item>-->
-                <a-menu-item key="6">
-                  <router-link :to="{path:'/setting/develop'}">开发者模式</router-link>
-                </a-menu-item>
-                <router-link :to="{path:'/setting/tool'}">
-
-                  <a-menu-item key="export">
-                    <router-link :to="{path:'/setting/export'}">导出工具</router-link>
-                  </a-menu-item>
-                </router-link>
 
 
-              </a-sub-menu>
             </a-menu>
-          </div>
-          <div v-if="debugMod">
-            <div style="position:absolute;bottom: 10px;left: 10px;text-align: center;width: 100%">
-              <a-button type="primary" style="margin-right: 20px" @click="save">保存</a-button>
-              <a-button @click="reset">重置</a-button>
-            </div>
           </div>
         </div>
 
@@ -174,19 +133,6 @@
       </a-button>
         </a-tooltip>
       </span>
-          </template>
-        </a-page-header>
-        <a-page-header  @back="goALl" v-else
-                       style="box-shadow: 0 2px 8px #f0f1f2;z-index: 1; padding:6px 10px;"
-                       :title="this.devApp.name"
-
-                       :avatar="{src:devApp.logo}"
-                       sub-title="开发中的应用"
-        >
-          <template #extra>
-            <a-button @click="" type="primary">
-              运行测试应用
-            </a-button>
           </template>
         </a-page-header>
         <vue-custom-scrollbar :settings="settings" style="position:relative;height: calc(100vh - 55px)">
@@ -273,20 +219,31 @@ export default {
     console.log(this.user)
   },
   methods: {
+    run(){
+      if(!this.devApp.debug_app){
+        Modal.confirm({
+          centered:true,
+          content:'首次运行测试应用需要安装此应用，是否以当前配置安装并运行测试应用？',
+          onOk:()=>{
+
+          }
+        })
+      }
+    },
     login(){
       tsbApi.user.login()
     },
     goALl(){
       this.devMod=false
-      this.$router.push('/setting/allDevApps')
+      this.$router.push('/dev/allDevApps')
     },
     ...mapActions(appStore, ['reloadDevApp', 'saveDevApp', 'setDevApp']),
     async loadDevApp (devApp) {
       await this.setDevApp(devApp)
-      this.$router.push('/setting/baseDev')
+      this.$router.push('/dev/baseDev')
     },
     goDevelop () {
-      this.$router.push({ path: 'develop' })
+      this.$router.push({ path: '/dev/' })
     },
     userThemeColorChanged (input) {
       appModel.update(this.appId, { user_theme_color: input })

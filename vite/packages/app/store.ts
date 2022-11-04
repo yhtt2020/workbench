@@ -53,6 +53,7 @@ export const appStore = defineStore('app', {
       }
       devApp.window=JSON.stringify(this.devApp.window)
       delete devApp.theme_colors
+      delete devApp.assignAppsInfo
       await devAppModel.save(devApp.nanoid,devApp)
       console.log('要保存的应用', devApp)
     }

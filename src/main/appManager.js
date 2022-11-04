@@ -528,12 +528,8 @@ class AppManager {
     }
     return imagePath
   }
-  /**
-   * 打开应用的设置窗口
-   * @param appId
-   */
-  openSetting (appId) {
-    function loadSettingWindow (appId) {
+  openAppVite(path,additionalArguments=[]){
+    function loadSettingWindow () {
       appManager.settingWindow = new BrowserWindow({
         width: 920,
         height: 800,
@@ -549,14 +545,12 @@ class AppManager {
           partition: null,
           additionalArguments: [
             '--user-data-path=' + userDataPath,
-            '--app-version=' + app.getVersion(),
-            '--app-name=' + app.getName(),
-            '--app-id=' + appId
+            ...additionalArguments
           ]
         }
       })
       appManager.settingWindow.setMenu(null)
-      appManager.settingWindow.webContents.loadURL(render.getUrl('app.html#/setting'))
+      appManager.settingWindow.webContents.loadURL(render.getUrl('app.html#'+path))
       if (isDevelopmentMode) {
         //appManager.settingWindow.webContents.openDevTools()
       }
@@ -566,14 +560,24 @@ class AppManager {
     }
 
     if (appManager.settingWindow === null) {
-      loadSettingWindow(appId)
+      loadSettingWindow()
     } else {
       if (!appManager.settingWindow.isDestroyed()) {
         appManager.settingWindow.close()
-        loadSettingWindow(appId)
+        loadSettingWindow()
       }
     }
-
+  }
+  /**
+   * 打开应用的设置窗口
+   * @param appId
+   */
+  openSetting (appId) {
+    this.openAppVite('/setting',[
+      '--app-version=' + app.getVersion(),
+      '--app-name=' + app.getName(),
+      '--app-id=' + appId
+    ])
   }
   // findInPage(appId,args){
   //   let window=appManager.getWindowByAppId(appId)

@@ -4,6 +4,8 @@ window.$models={
   appModel:require('../model/appModel'),
   devAppModel:devAppModel
 }
+window.tsbApi=require('../browserApi/baseApi')
+
 
 window.ipc=require('electron').ipcRenderer
 

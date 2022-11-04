@@ -29,6 +29,7 @@ const devAppModel = {
         t.string('nanoid').primary().unique().comment('本地id和应用id无关') //本地id
         t.string('app_nanoid').comment('appstore的应用nanoid，需要从远端获取，和package差不多')//
         t.string('assign_apps').comment('关联的系统内已安装的app') //关联的系统内已安装的app
+        t.string('debug_app_nanoid').comment('对应的调试应用nanoid')
         t.string('local_dir').comment('项目目录')
         t.string('name').comment('英文名称，这个不要求唯一')
         t.string('options').comment('基本设置')
@@ -83,6 +84,50 @@ const devAppModel = {
     })
     return found
   },
+  async create(){
+    let generate_nanoid = nanoid(4)
+    let devApp = {
+      nanoid:generate_nanoid,
+      assign_apps: JSON.stringify([]),
+      name: '新项目',
+      package: '',
+      author: '',
+      site: '',
+      summary: '用几句话介绍一下您的应用',
+      type: 'web',
+      file_assign: [],
+      url: '',
+      preload: '',
+      logo: '',
+      theme_color: '#f1f1f1',
+      window: JSON.stringify({
+        defaultType:'frame_window',
+        frameWindow: {
+          enable:true,
+          width:800,
+          height:800,
+          controllers: {
+
+            goBack: true,
+            goForward: true,
+            refresh: true,
+            home: true
+          }
+        }
+      }),
+      auth: JSON.stringify({
+        base:{},
+        api:{},
+        ability:{}
+      }),
+      create_time: Date.now(),
+      update_time: Date.now(),
+    }
+    let res = await sqlDb.knex('dev_app').insert(devApp)
+    if (res) {return devApp} else {
+      return false
+    }
+  },
   async createFromApp (app) {
     let generate_nanoid = nanoid(4)
     let devApp = {
@@ -100,7 +145,18 @@ const devAppModel = {
       logo: app.logo,
       theme_color: app.theme_color,
       window: JSON.stringify({
-        frameWindow:{},
+        defaultType:'frame_window',
+        frameWindow: {
+          enable:true,
+          width:800,
+          height:800,
+          controllers: {
+            goBack: true,
+            goForward: true,
+            refresh: true,
+            home: true
+          }
+        },
         window:{},
         attach:{}
       }),
@@ -125,6 +181,9 @@ const devAppModel = {
   },
   async save(nanoid,data){
     return await sqlDb.knex('dev_app').where({nanoid}).update(data)
+  },
+  async delete(nanoid){
+    return await sqlDb.knex('dev_app').where({nanoid}).delete()
   }
 
 }

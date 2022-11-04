@@ -425,6 +425,16 @@ function buildAppMenu (options = {}) {
                 installDevPlugin(REACT_DEVELOPER_TOOLS)
               }
             }]
+        },
+        {
+          type: 'separator'
+        },
+        {
+          label:'管理开发中的项目',
+          icon:___dirname+'/vite/public/icons/dev.png',
+          click:()=>{
+            appManager.openAppVite('/allDevApps')
+          }
         }
       ]
     },

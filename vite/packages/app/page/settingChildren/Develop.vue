@@ -4,7 +4,7 @@
   </h3>
   <div style="padding-bottom:  10px">
     进入开发者模式 <a-tooltip title="仅非系统应用可开启调试模式"><a-switch @change="switchToDevMod" :checked="debugMod" :disabled="app.isSystemApp"  /></a-tooltip>
-    <router-link :to="{path:'/setting/allDevApps'}"><a-button style="float: right">查看其他开发中的应用</a-button></router-link>
+    <router-link :to="{path:'/allDevapps'}"><a-button style="float: right">查看其他开发中的应用</a-button></router-link>
   </div>
    <a-alert style="margin-top: 10px" v-if="existsDevApp">
     <template #description>
@@ -63,12 +63,14 @@ export default {
               devApp=await devAppModel.createFromApp(this.app)
               if(devApp){
                this.setDevApp(devApp)
+                this.$router.push({path:'/dev/'})
               }else{
                 return message.error('创建应用失败。')
               }
             }
           })
         }else{
+          this.$router.push({path:'/dev/'})
           this.setDevApp(devApp)//devApp是不和任何对象挂钩的，只有在保存的时候才会把对应的设置覆盖进去
         }
       }else{
