@@ -1308,7 +1308,9 @@ Vue.component('sidebar', {
         summary: app.summary,
         type: app.type,
         version:app.version,
-        // attribute: app.attribute,
+
+        isOfficial:app.isOfficial,
+        integrationLevel:app.integrationLevel,
         theme_color: !!!app.themeColor ? '#000' :app.themeColor,
         settings:app.settings,
         circle:app.circle,

@@ -450,7 +450,7 @@ const appModel = {
       package: app.package || '',
       theme_color: app.theme_color || '#ccc',
       user_theme_color: '',
-      attribute: app.attribute,
+      // attribute: app.attribute,
       create_time: Date.now(),
       update_time: Date.now(),
       account_avatar: '',
