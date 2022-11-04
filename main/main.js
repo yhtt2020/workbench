@@ -759,4 +759,13 @@ app.whenReady().then(()=>{
     )
 
   })
+  ipc.on('selectFile',(event)=>{
+    event.returnValue=dialog.showOpenDialogSync(undefined,{
+      filters: [
+        { name: '图片', extensions: [ 'png'] }
+      ],
+        properties:['openFile']
+      }
+    )
+  })
 })

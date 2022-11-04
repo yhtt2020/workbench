@@ -10,6 +10,30 @@
                placeholder="输入应用名称"
       />
     </a-form-item>
+    <a-form-item label="本地项目目录"
+                 :rules="{ message: '选择一个本地项目目录，用于输出manifest.json'  }"
+    >
+      <a-input-group compact>
+        <a-input style="width:calc( 100% - 87px)" v-model:value="devApp.local_dir"
+                 placeholder="选择本地项目目录"
+        >
+        </a-input>
+        <a-button @click="selectDir">
+          选择目录
+        </a-button>
+      </a-input-group>
+      <DebugTip tip="local_dir"></DebugTip>
+    </a-form-item>
+    <a-form-item label="应用图标"
+                 :rules="{ message: '选择一个本地项目目录，用于输出manifest.json'  }"
+    >
+
+        <a-avatar style="margin-right: 10px" shape="circle" :src="getLogo(this.devApp.logo,this.devApp.local_dir)"></a-avatar>
+        <a-button size="small" @click="selectLogo">
+          选择图片
+        </a-button>
+      <DebugTip tip="logo"></DebugTip>
+    </a-form-item>
     <a-form-item v-if="debugMod"
       label="包名"
       :rules="{ message: '唯一的应用名，用于开发的时候应用身份确认，唯一' ,min:1,max:16 }"
@@ -22,20 +46,7 @@
       </a-input-group>
 <DebugTip tip="package"></DebugTip>
     </a-form-item>
-    <a-form-item label="本地项目目录"
-                 :rules="{ message: '选择一个本地项目目录，用于输出manifest.json'  }"
-    >
-      <a-input-group compact>
-        <a-input style="width:calc( 100% - 87px)" v-model:value="devApp.local_dir"
-                 placeholder="选择本地项目目录"
-        >
-        </a-input>
-          <a-button @click="selectDir">
-            选择目录
-          </a-button>
-      </a-input-group>
-      <DebugTip tip="local_dir"></DebugTip>
-    </a-form-item>
+
     <a-form-item
       label="应用起始地址：" >
                     <span v-if="!debugMod" class="ant-form-text" style="text-overflow: ellipsis;
@@ -145,7 +156,9 @@ import { appStore } from '../../store'
 import { mapWritableState } from 'pinia'
 import {Sketch} from '@lk77/vue3-color'
 import DebugTip from '../../components/DebugTip.vue'
+import {getLogo} from '../../util'
 const path=require('path')
+const fs=require('fs')
 export default {
   name: 'base',
   computed: {
@@ -155,11 +168,24 @@ export default {
     DebugTip,'SketchPicker':Sketch
   },
   methods:{
+    getLogo,
     getExtra(type){
       let tip=`&nbsp;调试&nbsp;`
       switch (type){
         case 'debug_url':
           return tip+`调试入口，仅调试模式下生效，可根据开关启用调试入口`
+      }
+    },
+    async selectLogo(){
+      if(!this.devApp.local_dir){
+        message.error('请先选择项目目录，方可选择应用图标')
+        return
+      }
+      let file=ipc.sendSync('selectFile')
+      if(file){
+        let dest=path.join(this.devApp.local_dir,'logo.png')
+        fs.copyFileSync(file[0],dest)
+        this.devApp.logo='local'
       }
     },
     async selectDir(){

@@ -28,6 +28,10 @@ const tipMap = {
     title:'包名',
     message:'包名是应用唯一可读身份，一般由三段组成。 【前缀】.【公司名】.【应用名】，只有注册了包名的应用，才能够上架市场。'
   },
+  'logo':{
+    title:'logo',
+    message:'应用图标必须为png，建议尺寸256*256，将被自动复制到项目目录下logo.png'
+  },
   'local_dir':{
     title:'本地目录',
     message:'本地目录，用于生成minifest.json文件，不选择则无法生成路径和打包项目。'

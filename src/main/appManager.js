@@ -539,6 +539,7 @@ class AppManager {
           nodeIntegration: true,
           contextIsolation: false,
           enableRemoteModule: true,
+          webSecurity:false,
           sandbox: false,
           safeDialogs: false,
           safeDialogsMessage: false,
