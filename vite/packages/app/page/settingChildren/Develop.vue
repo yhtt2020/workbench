@@ -2,15 +2,13 @@
   <h3>开发者模式
   <span style="float:right;font-size: 14px">当前状态 <span :style="{background:this.debugMod?'green':'red'}" style="display: inline-block;border-radius: 100%;width: 10px;height: 10px;" />&nbsp; </span>
   </h3>
-
-  进入开发者模式 <a-tooltip title="仅非系统应用可开启调试模式"><a-switch @change="switchToDevMod" :checked="debugMod" :disabled="app.isSystemApp"  /></a-tooltip>
-
-  <div style="margin-top: 10px">
-    <router-link :to="{path:'/setting/allDevApps'}"><a-button>查看其他开发中的应用</a-button></router-link>
+  <div style="padding-bottom:  10px">
+    进入开发者模式 <a-tooltip title="仅非系统应用可开启调试模式"><a-switch @change="switchToDevMod" :checked="debugMod" :disabled="app.isSystemApp"  /></a-tooltip>
+    <router-link :to="{path:'/setting/allDevApps'}"><a-button style="float: right">查看其他开发中的应用</a-button></router-link>
   </div>
-  <a-alert style="margin-top: 10px" v-if="existsDevApp">
+   <a-alert style="margin-top: 10px" v-if="existsDevApp">
     <template #description>
-      当前应用存在开发中的应用 「<strong>{{existsDevApp.name}}（ID：{{existsDevApp.nanoid}}）</strong>」，可开启调试模式。
+      当前应用已绑定开发中的应用 「<strong>{{existsDevApp.name}}（ID：{{existsDevApp.nanoid}}）</strong>」，可开启进入对应开发应用。
     </template>
   </a-alert>
   <div style="padding: 10px;box-shadow: 0 0 3px #a4a4a4;border-radius: 4px;margin-top: 20px;background: white">

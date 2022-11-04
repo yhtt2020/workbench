@@ -1,10 +1,5 @@
 <template>
   <h3>开发者工具
-    <span style="font-size: 13px;float:right;font-weight: normal">
-      当前开发者：<a-avatar >
-      <template #icon><UserOutlined /></template>
-    </a-avatar> 未登录
-    </span>
   </h3>
 
   <div>

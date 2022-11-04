@@ -1,38 +1,45 @@
 <template>
   <div class="container">
-    <a-page-header
-      style="box-shadow: 0 2px 8px #f0f1f2;z-index: 1; padding:6px 10px;background: white"
-      title="全部开发中的应用"
-      sub-title="应用设置"
-    >
-      <template #extra>
-      </template>
-    </a-page-header>
+
+    <h3>全部开发中的应用
+      <a-button type="primary" style="float: right">创建新应用</a-button>
+    </h3>
     <div style="padding: 20px">
-      <a-row :gutter="16">
-        <a-col v-for="devApp in devApps" :span="8">
-          <a-card @click="loadDevApp(devApp)"  hoverable style="width: 100%">
-            <template #cover>
-              <div style="text-align: center;padding: 20px">
-                <img style="width: 80px"
-                     :alt="devApp.name"
-                     :src="devApp.logo"
-                />
-              </div>
-            </template>
+      <a-list
+        class="demo-loadmore-list"
+        item-layout="horizontal"
+        :data-source="devApps"
+      >
+        <template #renderItem="{ item }">
+          <a-list-item >
             <template #actions>
-              <setting-outlined key="setting" />
-              <edit-outlined key="edit" />
-              <ellipsis-outlined key="ellipsis" />
+              <a @click="loadDevApp(item)" key="list-loadmore-edit">
+                <edit-outlined key="edit"/>
+              </a>
+              <a key="list-loadmore-more">删除</a>
             </template>
-            <a-card-meta :title="devApp.name" :description="devApp.summary">
-              <template #avatar>
-                <a-avatar src="https://joeschmoe.io/api/v1/random" />
-              </template>
-            </a-card-meta>
-          </a-card>
-        </a-col>
-      </a-row>
+            <a-skeleton avatar :title="false" :loading="!!item.loading" active>
+              <a-list-item-meta>
+                <template #description>
+                  <p>
+                    {{ item.summary }}
+                  </p>
+                  <p>
+                    关联的应用：
+                    <a-tag v-for="app in item.assignAppsInfo">{{ app.name }} <span style="color:grey">{{app.nanoid}}</span></a-tag>
+                  </p>
+                </template>
+                <template #title>
+                  <a @click="loadDevApp(item)" >{{ item.name }}</a>
+                </template>
+                <template #avatar>
+                  <a-avatar :src="item.logo"/>
+                </template>
+              </a-list-item-meta>
+            </a-skeleton>
+          </a-list-item>
+        </template>
+      </a-list>
 
     </div>
 
@@ -41,11 +48,11 @@
 </template>
 
 <script>
-import { SettingOutlined, EditOutlined, EllipsisOutlined } from '@ant-design/icons-vue';
-import {mapActions} from 'pinia'
-import {appStore} from '../store'
+import { SettingOutlined, EditOutlined, EllipsisOutlined } from '@ant-design/icons-vue'
+import { mapActions } from 'pinia'
+import { appStore } from '../store'
 
-const {devAppModel} = window.$models
+const { devAppModel,appModel } = window.$models
 export default {
   name: 'AllDevApps',
   components: {
@@ -53,21 +60,32 @@ export default {
     EditOutlined,
     EllipsisOutlined,
   },
-  data(){
-    return{
-      devApps:[]
+  data () {
+    return {
+      devApps: []
     }
   },
   async mounted () {
     this.devApps = await devAppModel.getAll()
 
+    this.devApps.forEach(devApp => {
+
+      let assignApps=JSON.parse(devApp.assign_apps)
+
+      devApp.assignAppsInfo=[]
+      assignApps.forEach(async appId => {
+        devApp.assignAppsInfo.push(await appModel.get({ nanoid: appId }))
+      })
+      console.log( devApp.assignAppsInfo)
+    })
+
   },
-  methods:{
+  methods: {
     async loadDevApp (devApp) {
       await this.setDevApp(devApp)
       this.$router.push('/setting/baseDev')
     },
-    ...mapActions(appStore,['setDevApp'])
+    ...mapActions(appStore, ['setDevApp'])
   }
 }
 </script>
@@ -75,8 +93,7 @@ export default {
 
 </style>
 <style scoped>
-.container{
+.container {
   height: 100vh;
-  background-color: #ececec;
 }
 </style>
