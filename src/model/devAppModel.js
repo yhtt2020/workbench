@@ -33,7 +33,14 @@ const devAppModel = {
         t.string('local_dir').comment('项目目录')
         t.string('name').comment('英文名称，这个不要求唯一')
         t.string('options').comment('基本设置')
+
         t.string('author').comment('开发者名称')
+        t.boolean('open_source').comment('是否开源')
+        t.string('csv_url').comment('开源代码地址')
+        t.string('os_summary').comment('开源说明')
+        t.string('site').comment('应用的官网')
+
+
         t.string('package').comment('包名，需要从云端申请后填入，是应用的唯一可读身份标识')
         t.string('preload').comment('预载文件')
         t.boolean('use_debug_url').comment('使用调试入口')
@@ -41,7 +48,7 @@ const devAppModel = {
         t.string('url').comment('最低优先级url')
         t.string('logo').comment('应用的logo，需要自动将本地文件导入到开发文件下面')
         t.string('summary').comment('应用的简介')
-        t.string('site').comment('应用的官网')
+
         t.string('type').comment('可以是web应用或者本地应用，web应用不允许使用preload和api')
         t.string('auth').comment('权限，为json序列化')
         t.string('window').comment('窗体设置')
@@ -101,7 +108,7 @@ const devAppModel = {
       logo: '',
       theme_color: '#f1f1f1',
       window: JSON.stringify({
-        defaultType:'frame_window',
+        defaultType:'frameWindow',
         frameWindow: {
           enable:true,
           width:800,
@@ -145,7 +152,7 @@ const devAppModel = {
       logo: app.logo,
       theme_color: app.theme_color,
       window: JSON.stringify({
-        defaultType:'frame_window',
+        defaultType:'frameWindow',
         frameWindow: {
           enable:true,
           width:800,
