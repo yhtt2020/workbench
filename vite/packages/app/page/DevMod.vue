@@ -146,8 +146,8 @@
           <a-dropdown-button type="primary" @click="run">
             运行测试应用
             <template #overlay>
-              <a-menu @click="handleMenuClick">
-                <a-menu-item key="1">
+              <a-menu>
+                <a-menu-item  @click="reInstallAndRun" key="1">
                   重新安装并运行
                 </a-menu-item>
               </a-menu>
@@ -234,15 +234,67 @@ export default {
     }
   },
   methods: {
-    run(){
-      if(!this.devApp.debug_app_nanoid){
-        Modal.confirm({
-          centered:true,
-          content:'首次运行测试应用需要安装此应用，是否以当前配置安装并运行测试应用？',
-          onOk:()=>{
-
+    installAndRun(){
+      Modal.confirm({
+        centered: true,
+        content: '首次运行测试应用需要安装此应用，是否以当前配置安装并运行测试应用？此操作将保存全部的配置。',
+        onOk: async () => {
+          try {
+            let app=await this.saveAndInstall()
+            ipc.send('executeApp', {
+              app: app
+            })
+          } catch (e) {
+            message.error('运行测试应用失败，失败原因：' + e)
           }
-        })
+        }
+      })
+    },
+    /**
+     * 重装兵运行
+     */
+    reInstallAndRun(){
+      Modal.confirm({
+        centered: true,
+        content: '是否以当前配置重新安装并运行测试应用？此操作将保存全部的配置。',
+        onOk: async () => {
+          try {
+            let app=await this.saveAndInstall()
+            ipc.send('executeApp', {
+              app: app
+            })
+          } catch (e) {
+            message.error('运行测试应用失败，失败原因：' + e)
+          }
+        }
+      })
+    },
+    /**
+     * 保存当前设置并安装
+     * @returns {Promise<*>}
+     */
+    async saveAndInstall () {
+      await this.saveDevApp()
+      let appJson = await devAppModel.get(this.devApp.nanoid)
+      let appNanoid = await appModel.installDebugAppFromJson(appJson)
+      let app = await appModel.get({ nanoid: appNanoid })
+      this.devApp.debug_app_nanoid = app.nanoid
+      await this.saveDevApp()
+      return app
+    },
+    async run () {
+
+      if (!this.devApp.debug_app_nanoid) {
+        this.installAndRun()
+      } else {
+        let app = await appModel.get({ nanoid: this.devApp.debug_app_nanoid })
+        if (!app) {
+          this.installAndRun()
+        }else{
+          ipc.send('executeApp', {
+            app: app
+          })
+        }
       }
     },
     goDoc(){

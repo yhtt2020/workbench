@@ -12,6 +12,15 @@
 </head>
 <body class="wrapper-scroller" style=" -webkit-app-region: drag;">
 <style>
+  .debug-tag{
+    padding:0 2px;
+    background: #0bb20c;
+    border-radius: 2px;
+    line-height: 12px;
+    height: 12px;
+    color: white;
+    font-size: 12px;
+  }
   .wrapper-scroller::-webkit-scrollbar-track
    {
      border-radius: 10px;
@@ -54,7 +63,7 @@
               <div class="clickable"  @click="executeApp(app)" style="white-space:nowrap;
 overflow:hidden;
 text-overflow:ellipsis; ">
-                {{app.name}}
+               <span class="debug-tag" v-if="app.is_debug">调试</span> {{app.name}}
               </div>
             </div>
             <a-menu slot="overlay" >
@@ -86,7 +95,7 @@ text-overflow:ellipsis; ">
                     <div class="clickable"  @click="executeApp(app)" style="white-space:nowrap;
 overflow:hidden;
 text-overflow:ellipsis; ">
-                      {{app.name}}
+                      <span class="debug-tag" v-if="app.is_debug">调试</span>  {{app.name}}
                     </div>
                   </div>
 
@@ -117,7 +126,7 @@ text-overflow:ellipsis; ">
                 <div class="clickable"  @click="executeApp(app)" style="white-space:nowrap;
 overflow:hidden;
 text-overflow:ellipsis; ">
-                  {{app.name}}
+                  <span class="debug-tag" v-if="app.is_debug">调试</span> {{app.name}}
                 </div>
               </div>
             <a-menu slot="overlay" >

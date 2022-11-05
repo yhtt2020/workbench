@@ -4,6 +4,7 @@ window.$models={
   appModel:require('../model/appModel'),
   devAppModel:devAppModel
 }
+window.$models.appModel.initDb()
 window.tsbApi=require('../browserApi/baseApi')
 
 

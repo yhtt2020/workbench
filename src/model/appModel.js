@@ -55,6 +55,15 @@ const appModel = {
         t.string('auth')
         t.boolean('is_new')
         t.string('attribute')
+
+
+        //新补充的字段
+        t.string('window').comment('窗体设置')
+        t.boolean('open_source').comment('是否开源')
+        t.string('csv_url').comment('开源代码地址')
+        t.string('os_summary').comment('开源说明')
+
+        t.boolean('is_debug').comment('是否是调试应用')
       })
       await this.migrateDB()
       //todo 迁移
@@ -63,9 +72,29 @@ const appModel = {
       await this.migrateDB()
     }
   },
+async ensureColumns(){
+  console.log('检测数据库版本')
+  // await sqlDb.knex.schema.table('app', function (t) {
+  //   t.boolean('is_debug').comment('是否是调试应用')
+  // })
+  if(!await sqlDb.knex.schema.hasColumn('app','window')){
+    //确认版本
+    console.log('升级数据库')
+    await sqlDb.knex.schema.table('app', function (t) {
+      console.log('开始添加字段')
+      t.string('window').comment('窗体设置')
+      t.boolean('open_source').comment('是否开源')
+      t.string('csv_url').comment('开源代码地址')
+      t.string('os_summary').comment('开源说明')
+      t.boolean('is_debug').comment('是否是调试应用')
+    })
+  }
+},
   async migrateDB(){
+    console.log('迁移数据库')
     const DONE='app.migrate.done'
     if(await sqlDb.getConfig(DONE)){
+      await this.ensureColumns()
       return
     }
     let count = await sqlDb.knex('app').count({count: '*'})
@@ -407,6 +436,26 @@ const appModel = {
     return await appModel.install(json.url, json)
   },
 
+  /**
+   * 从json安装应用
+   * @param json
+   * @returns {Promise<void>}
+   */
+  async installDebugAppFromJson (json) {
+    delete json.nanoid
+    if(json.use_debug_url){
+      if(json.debug_url.startsWith('http'))
+      {
+        json.type='local'
+      }
+      json.url=json.debug_url
+    }
+    json.is_debug=true
+
+    console.log(json)
+    return await appModel.install(json.url, json)
+  },
+
   async isInstalled (packageName) {
     let app = await appModel.getFromPackage(packageName)
     return !!app
@@ -453,6 +502,14 @@ const appModel = {
       attribute: app.attribute,
       create_time: Date.now(),
       update_time: Date.now(),
+
+      window:JSON.stringify(app.window || {}),
+      open_source:app.open_source,
+      csv_url:app.csv_url,
+      os_summary:app.os_summary,
+      is_debug:app.is_debug,
+
+
       account_avatar: '',
       order: 0,
       use_count: 0,
