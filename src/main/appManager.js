@@ -1,14 +1,14 @@
-const path=require('path')
-const fs=require('fs')
-const {app,BrowserWindow,BrowserView,nativeImage,Notification} =require('electron')
+const path = require('path')
+const fs = require('fs')
+const { app, BrowserWindow, BrowserView, nativeImage, Notification } = require('electron')
 
 const remote = require('@electron/remote/main')
 const _ = require('lodash')
-const SaApp = require( './saAppClass')
+const SaApp = require('./saAppClass')
 const appModel = require('../model/appModel')
-const userModel=require('../model/userModel')
-const ipc=require('electron').ipcMain
-const ipcMessageMain=require('./ipcMessageMain.js')
+const userModel = require('../model/userModel')
+const ipc = require('electron').ipcMain
+const ipcMessageMain = require('./ipcMessageMain.js')
 
 /**
  * 运行中的应用窗体，结构{window:窗体对象,saApp:独立窗体app对象}
@@ -23,12 +23,14 @@ function apLog (e) {
 }
 
 let notificationSettingStatus = null
-let protocolManager=require('./protocolManager.js')
+let protocolManager = require('./protocolManager.js')
+
 class AppManager {
-  dockBadge= 0
-  settingWindow=null
-  protocolManager=protocolManager
-  saApps= []
+  dockBadge = 0
+  settingWindow = null
+  protocolManager = protocolManager
+  saApps = []
+
   /**
    * 启动自启动的应用
    * @returns {Promise<void>}
@@ -39,6 +41,7 @@ class AppManager {
       appManager.openApp(app.nanoid, true, app)
     })
   }
+
   async executeAppByPackage (pkg, cb) {
     let app = await appModel.get({ package: pkg })
     if (app) {
@@ -60,6 +63,7 @@ class AppManager {
       return false
     }
   }
+
   /**
    * 单个更新app信息
    * @param id
@@ -74,6 +78,7 @@ class AppManager {
     }
     return false
   }
+
   /**
    * 聚焦窗体
    * @param windowId
@@ -90,20 +95,21 @@ class AppManager {
       }
     })
   }
+
   /**
    * 消息提示的前置处理，决定是否弹窗提示
    * @param {array} settingStatus 消息设置状态 (notificationSettingStatus对象)
    * @param app
    * @param {object} message 消息体
    */
-  beforeEachNotification (settingStatus,app, args) {
+  beforeEachNotification (settingStatus, app, args) {
     //前置判断
-    let packageMap={
-      'com.thisky.group':1,
-      'com.thisky.com':2
+    let packageMap = {
+      'com.thisky.group': 1,
+      'com.thisky.com': 2
     } //增加一个id和packageMap来兼容新的api的定位方式
-    let message=args.options
-    if(settingStatus){
+    let message = args.options
+    if (settingStatus) {
       let index = settingStatus.findIndex(v => v.appId === packageMap[app.package])
       let childIndex = settingStatus[index].childs.findIndex(v => {
         return v.title === message.category
@@ -111,7 +117,7 @@ class AppManager {
 
       if (settingStatus[index].notice && settingStatus[index].childs[childIndex].notice) {
         //消息中心的收录做在这里
-        if (app.package ==='com.thisky.group') {
+        if (app.package === 'com.thisky.group') {
           SidePanel.send('storeMessage', {
             title: message.title,
             body: message.body,
@@ -133,11 +139,13 @@ class AppManager {
     }
     return false
   }
+
   getSaApp (nanoid) {
     return this.saApps.find(app => {
       return app.instance.info.nanoid === nanoid
     })
   }
+
   /**
    * 发送应用消息，进行提示，并给应用加上图标
    * @param appId
@@ -167,6 +175,7 @@ class AppManager {
     }
 
   }
+
   /**
    * 将app的badge+1，并更新dock中的badge
    * @param appId
@@ -181,6 +190,7 @@ class AppManager {
     SidePanel.send('appBadge', { nanoid: appId, add: add })
     appManager.updateDockBadge()
   }
+
   /**
    * 清理app的Bandage
    * @param appId
@@ -195,6 +205,7 @@ class AppManager {
     SidePanel.send('appBadge', { nanoid: appId, badge: 0 })
     appManager.updateDockBadge()
   }
+
   /**
    * 自动统计全部的app的badge，进行汇总
    */
@@ -208,6 +219,7 @@ class AppManager {
       appManager.dockBadge = count
     }
   }
+
   /**
    * 给当前dockBage+1，此操作可能导致不同步
    * @param add
@@ -218,6 +230,7 @@ class AppManager {
       app.dock.setBadge(appManager.dockBadge.toString())
     }
   }
+
   /**
    * 设置dock栏的badge，不建议直接使用，请使用updateDockBadge（更新统计）或者incDockBadge（单独增加值）
    * @param count
@@ -228,6 +241,7 @@ class AppManager {
       app.dock.setBadge(appManager.dockBadge.toString())
     }
   }
+
   /**
    * 清理dock栏的badge，置零，不建议直接使用，这是临时性的，建议先调整每个应用的badge，然后使用updateDockBadge进行dock栏汇总更新
    */
@@ -236,6 +250,7 @@ class AppManager {
       app.dock.setBadge('0')
     }
   }
+
   /**
    * 隐藏窗体
    * @param windowId
@@ -254,6 +269,7 @@ class AppManager {
       }
     })
   }
+
   /**
    * 切换窗体的可见度，适用于不需要确认窗体是否可见的场景
    * @param appId
@@ -267,6 +283,7 @@ class AppManager {
       appWindow.focus()
     }
   }
+
   /**
    * 隐藏窗体
    * @param appId
@@ -274,6 +291,7 @@ class AppManager {
   hideAppWindow (appId) {
     appManager.getWindowByAppId(appId).hide()
   }
+
   /**
    * 显示窗体
    * @param appId
@@ -282,6 +300,7 @@ class AppManager {
     appManager.getWindowByAppId(appId).show()
     appManager.getWindowByAppId(appId).focus()
   }
+
   /**
    * 显示窗体
    * @param package
@@ -291,6 +310,7 @@ class AppManager {
     window.show()
     window.focus()
   }
+
   /**
    * 获得app运行状态
    * @param saAppId appId
@@ -305,6 +325,7 @@ class AppManager {
     })
     return processing
   }
+
   /**
    * 获得app运行状态使用package判断
    * @param saAppId appId
@@ -319,6 +340,7 @@ class AppManager {
     })
     return processing
   }
+
   /**
    * 移除appWindow
    * @param saAppWindowId 窗体id,这里不适用appid，因为未来可能是多开窗体的
@@ -331,6 +353,7 @@ class AppManager {
 
     }
   }
+
   /**
    * 设置原始app的设置，这里不考虑main中应用状态，还需要自行更新main的设置
    * @param saAppId
@@ -339,6 +362,7 @@ class AppManager {
   setOriginAppSettings (saAppId, settings) {
     SidePanel.send('updateSetting', { nanoid: saAppId, settings: settings })
   }
+
   /**
    * 设置应用的设置，如果应用已存在，则会自动更新main中存储的设置，如果不存在，则直接调取originAppSetting，仅发送ipc去更新设置
    * @param saAppId 应用id
@@ -354,6 +378,7 @@ class AppManager {
       appManager.setOriginAppSettings(saAppId, settings)
     }
   }
+
   /**
    * 获取应用设置
    * @param saAppId 应用id
@@ -368,6 +393,7 @@ class AppManager {
 
     }
   }
+
   /**
    * 通过窗体获得saApp实体
    * @returns {*}
@@ -379,6 +405,7 @@ class AppManager {
       }
     }
   }
+
   /**
    * 通过WindowId获得对应索引
    * @returns {number}
@@ -390,6 +417,7 @@ class AppManager {
       }
     }
   }
+
   /**
    * 获取saApp信息，通过appid
    * @returns {*}
@@ -403,6 +431,7 @@ class AppManager {
     }
     return null
   }
+
   /**
    * 获取saApp信息，通过domain
    * @param {string} domian 主域名
@@ -416,6 +445,7 @@ class AppManager {
     }
     return null
   }
+
   /**
    * 根据包名获得运行中的窗体
    * @param pkg
@@ -424,11 +454,12 @@ class AppManager {
     let find = _.find(processingAppWindows, (win) => {
       return win.saApp.package === pkg
     })
-    if(!find){
+    if (!find) {
       return false
     }
     return find.window
   }
+
   /**
    * 通过appid获取到对应的运行的window对象
    * @param appId
@@ -442,6 +473,7 @@ class AppManager {
     }
     return null
   }
+
   /**
    * 通过windowId获取到对应的运行的window对象
    * @param windowId
@@ -455,6 +487,7 @@ class AppManager {
     }
     return null
   }
+
   /**
    *
    * @param id 应用id
@@ -473,6 +506,7 @@ class AppManager {
     }
     return info
   }
+
   /**
    * 获取应用内存信息
    * @param saAppWindowId
@@ -502,6 +536,7 @@ class AppManager {
     })
     return memoryInfo
   }
+
   /**
    * 通过windowId给APP截图
    * @param saAppWindowId
@@ -528,18 +563,19 @@ class AppManager {
     }
     return imagePath
   }
-  openAppVite(path,additionalArguments=[]){
+
+  openAppVite (path, additionalArguments = []) {
     function loadSettingWindow () {
       appManager.settingWindow = new BrowserWindow({
         width: 920,
         height: 800,
         acceptFirstMouse: true,
         webPreferences: {
-          preload: ___dirname+'/src/preload/appSettingPreload.js',
+          preload: ___dirname + '/src/preload/appSettingPreload.js',
           nodeIntegration: true,
           contextIsolation: false,
           enableRemoteModule: true,
-          webSecurity:false,
+          webSecurity: false,
           sandbox: false,
           safeDialogs: false,
           safeDialogsMessage: false,
@@ -551,7 +587,7 @@ class AppManager {
         }
       })
       appManager.settingWindow.setMenu(null)
-      appManager.settingWindow.webContents.loadURL(render.getUrl('app.html#'+path))
+      appManager.settingWindow.webContents.loadURL(render.getUrl('app.html#' + path))
       if (isDevelopmentMode) {
         //appManager.settingWindow.webContents.openDevTools()
       }
@@ -569,17 +605,19 @@ class AppManager {
       }
     }
   }
+
   /**
    * 打开应用的设置窗口
    * @param appId
    */
   openSetting (appId) {
-    this.openAppVite('/setting',[
+    this.openAppVite('/setting', [
       '--app-version=' + app.getVersion(),
       '--app-name=' + app.getName(),
       '--app-id=' + appId
     ])
   }
+
   // findInPage(appId,args){
   //   let window=appManager.getWindowByAppId(appId)
   //   let view=window.view
@@ -597,10 +635,12 @@ class AppManager {
     let window = appManager.getWindowByAppId(appId)
     window.webContents.focus()
   }
+
   appFocusView (appId) {
     let view = appManager.getWindowByAppId(appId).view
     view.webContents.focus()
   }
+
   /**
    * 关闭并删除应用
    * @param appId
@@ -611,6 +651,7 @@ class AppManager {
       SidePanel.send('deleteApp', { nanoid: appId })
     }, 1000)
   }
+
   closeApp (nanoid) {
     let window = appManager.getWindowByAppId(nanoid)
     let saApp = appManager.getSaAppByAppId(nanoid)
@@ -626,6 +667,7 @@ class AppManager {
       SidePanel.send('closeApp', { nanoid: nanoid })
     }
   }
+
   closeAll () {
     let closed = 0
     processingAppWindows.forEach((item) => {
@@ -636,13 +678,14 @@ class AppManager {
     })
     return closed
   }
+
   getViewWebPreferences (saApp) {
     let preload = ''
     if (saApp.isSystemApp) {
       if (!!!saApp.preload || saApp.preload === '') {
         preload = path.join(___dirname + '/pages/saApp/appPreload.js')
       } else {
-        preload = path.join(___dirname +'/'+ saApp.preload)
+        preload = path.join(___dirname + '/' + saApp.preload)
       }
     } else {
       preload = path.join(___dirname + '/pages/saApp/appPreload.js')
@@ -653,31 +696,27 @@ class AppManager {
     } else if (saApp.authAll.indexOf('node') > -1) {
       partition = 'persist:' + saApp.package
     }
-    let webPreferences={
+    let webPreferences = {
       preload,
-       nodeIntegration: saApp.isSystemApp || saApp.authAll.indexOf('node') > -1,
-       contextIsolation: !saApp.isSystemApp && saApp.authAll.indexOf('webSecure') === -1,
-       enableRemoteModule: true,
-       sandbox: false,
-       safeDialogs: false,
-       backgroundColor: 'white',
-       safeDialogsMessage: false,
-       webSecurity: !saApp.isSystemApp && saApp.authAll.indexOf('webSecure') === -1, //系统应用关闭同源策略，不开启会报cros
-       partition: partition,
-       additionalArguments: [
-         '--user-data-path=' + userDataPath,
-         '--app-version=' + app.getVersion(),
-         '--app-name=' + app.getName(),
-         //'--saApp='+encodeURI(JSON.stringify(saApp)),
-         ...((isDevelopmentMode ? ['--development-mode'] : [])),
-       ]
+      nodeIntegration: saApp.isSystemApp || saApp.authAll.indexOf('node') > -1,
+      contextIsolation: !saApp.isSystemApp && saApp.authAll.indexOf('webSecure') === -1,
+      enableRemoteModule: true,
+      sandbox: false,
+      safeDialogs: false,
+      backgroundColor: 'white',
+      safeDialogsMessage: false,
+      webSecurity: !saApp.isSystemApp && saApp.authAll.indexOf('webSecure') === -1, //系统应用关闭同源策略，不开启会报cros
+      partition: partition,
+      additionalArguments: [
+        '--user-data-path=' + userDataPath,
+        '--app-version=' + app.getVersion(),
+        '--app-name=' + app.getName(),
+        //'--saApp='+encodeURI(JSON.stringify(saApp)),
+        ...((isDevelopmentMode ? ['--development-mode'] : [])),
+      ]
     }
 
     return webPreferences
-
-
-
-
 
     //todo 兼容在应用内打开新窗体的操作
     appView.webContents.on('new-window', (event, url, frameName, disposition, options, additionalFeatures, referrer, postBody) => {
@@ -760,7 +799,6 @@ class AppManager {
     // */
     // appView.webContents.on('will-redirect', _handleExternalProtocol)
 
-
     // appView.webContents.on('found-in-page',(event,result)=>{
     //   appWindow.webContents.send('found-in-page',{data:result})
     // })
@@ -793,18 +831,18 @@ class AppManager {
     }
   }
 
-  getUrl(saApp){
+  getUrl (saApp) {
     //todo 真实实现debug_url功能
-    if(saApp.debug_url){
+    if (saApp.debug_url) {
 
       //debug_url优先级最高
       return saApp.debug_url
     }
-    let url=''
+    let url = ''
     if (saApp.type === 'local' && saApp.package) {
-      url='file://' + path.join(___dirname, saApp.url)
-    }else{
-      url=saApp.url
+      url = 'file://' + path.join(___dirname, saApp.url)
+    } else {
+      url = saApp.url
     }
     /**
      * 在dev模式下，group引用开发环境
@@ -820,10 +858,10 @@ class AppManager {
       url = 'file://' + path.join(___dirname, '/pages/fav/index.html')
       //saApp.url = 'http://localhost:8080/'
     } else if (saApp.package === 'com.thisky.fav') {
-      url='file://'+path.join(___dirname,'/pages/fav/index.html')
+      url = 'file://' + path.join(___dirname, '/pages/fav/index.html')
     }
     if (saApp.package === 'com.thisky.appStore') {
-      url=saApp.url
+      url = saApp.url
     }
     if (saApp.package === 'com.thisky.fav' && isDevelopmentMode) {
       // appView.webContents.openDevTools()
@@ -837,20 +875,36 @@ class AppManager {
    * @param args
    * @returns {{msg: string, code: number}}
    */
-  onNotice(app,args){
-      //需要前置处理消息设置的状态决定到底发不发消息
-      const result = appManager.beforeEachNotification(notificationSettingStatus,app, args)
-      if (result) {
-        appManager.notification(app.nanoid, {
-          title: args.options.title,
-          body: args.options.body,
-        }, typeof args.ignoreWhenFocus == 'undefined' ? false : args.ignoreWhenFocus)
-        return { code: 200, msg: '成功' }
-      } else {
-        return { code: 500, msg: '失败' }
-      }
+  onNotice (app, args) {
+    //需要前置处理消息设置的状态决定到底发不发消息
+    const result = appManager.beforeEachNotification(notificationSettingStatus, app, args)
+    if (result) {
+      appManager.notification(app.nanoid, {
+        title: args.options.title,
+        body: args.options.body,
+      }, typeof args.ignoreWhenFocus == 'undefined' ? false : args.ignoreWhenFocus)
+      return { code: 200, msg: '成功' }
+    } else {
+      return { code: 500, msg: '失败' }
+    }
   }
 
+  /**
+   * 将配置转为窗体参数
+   * @param source
+   * @returns {{}}
+   */
+  convertToWindowParams(source){
+    let target={}
+    target.maxWidth=source.maxWidth||undefined
+    target.minWidth=source.minWidth|| undefined
+    target.maxHeight=source.maxHeight||undefined
+    target.minHeight=source.minHeight || undefined
+    target.alwaysOnTop=source.top//将参数转换为可识别参数
+    target.resizable=source.canResize
+    return target
+
+  }
 
   /**
    * 执行应用
@@ -870,26 +924,35 @@ class AppManager {
       if (saApp.auth.app) {
         auth = auth.concat(...saApp.auth.app)
       }
-      saApp.authAll=auth
-    }else{
-      saApp.authAll=[] //修复后面的判断报错的问题
+      saApp.authAll = auth
+    } else {
+      saApp.authAll = [] //修复后面的判断报错的问题
     }
-    if (1) {
-      let url=this.getUrl(saApp)
-      //todo 判断一下是不是独立窗体模式
-      let appWindow = windowManager.createFrameWindow({
-        name:saApp.package?saApp.package:saApp.url,//如果有包名，优先用包名，没有包名用url(网络应用）
-        app:saApp,
-        rememberBounds:true,
-        url:url,
-        viewOptions:{
-
-        },
-        viewWebPreferences:appManager.getViewWebPreferences(saApp),
-        windowOption:{
-          width: 1200,
+    let url = this.getUrl(saApp)
+    let name=(saApp.is_debug?'debug_':'') +saApp.package ? saApp.package : saApp.url//如果有包名，优先用包名，没有包名用url(网络应用）
+    if (saApp.window.defaultType === 'frameWindow') {
+      //带边框窗体
+      let windowParams=this.convertToWindowParams(saApp.window.frameWindow)
+      let frameWindowConfig =Object.assign({
+          //默认参数
+          minWidth:800,
+          minHeight:800,
+          maxWidth:800,
+          maxHeight:800,
+          width: 800,
           height: 800,
-          minWidth: 380,
+          resizable:true,
+          alwaysOnTop:false,
+        },windowParams)
+
+      let appWindow = windowManager.createFrameWindow({
+        name:name,
+        app: saApp,
+        rememberBounds: true,
+        url: url,
+        viewOptions: {},
+        viewWebPreferences: appManager.getViewWebPreferences(saApp),
+        windowOption: Object.assign({
           trafficLightPosition: {
             x: 10, y: 7
           },
@@ -897,9 +960,8 @@ class AppManager {
           frame: false,
           titleBarStyle: 'hidden',
           acceptFirstMouse: true,
-          resizable: saApp.package === 'com.thisky.import' || saApp.package === 'com.thisky.appStore' ? false : true,
-          alwaysOnTop:saApp.settings.alwaysTop ? saApp.settings.alwaysTop : false,
-        },onReadyToShow:(frame)=>{
+          alwaysOnTop: saApp.settings.alwaysTop ? saApp.settings.alwaysTop : frameWindowConfig.alwaysOnTop,//
+        },frameWindowConfig), onReadyToShow: (frame) => {
           frame.webContents.send('init', {
             url: saApp.url,
             nanoid: saApp.nanoid,
@@ -907,33 +969,33 @@ class AppManager {
             windowId: saApp.windowId,
             app: saApp
           })
-          if (cb){
+          if (cb) {
             cb()//执行启动后的回调
-            cb=undefined
+            cb = undefined
           }
         },
-        onDomReady:()=>{
+        onDomReady: () => {
           if (option) {
             if (option.action) {
               appManager.protocolManager.handleAction(appWindow, option.action, option)
             }
           }
         },
-        frameWebPreferences:{
-        nodeIntegration: true,
+        frameWebPreferences: {
+          nodeIntegration: true,
           contextIsolation: false,
           sandbox: false,
-          preload: path.join(__dirname,'../preload/windowFramePreload.js'),
+          preload: path.join(__dirname, '../preload/windowFramePreload.js'),
           partition: null,
           additionalArguments: [
-          '--user-data-path=' + userDataPath,
-          '--app-version=' + app.getVersion(),
-          '--app-name=' + app.getName(),
-          ...((isDevelopmentMode ? ['--development-mode'] : [])),
-        ]
+            '--user-data-path=' + userDataPath,
+            '--app-version=' + app.getVersion(),
+            '--app-name=' + app.getName(),
+            ...((isDevelopmentMode ? ['--development-mode'] : [])),
+          ]
         }
       })
-      let frame=appWindow.frame
+      let frame = appWindow.frame
 
       if (saApp.settings.bounds) {
         frame.setBounds(saApp.settings.bounds)
@@ -942,10 +1004,10 @@ class AppManager {
         if (saApp.canClose) {
           return
         }
-        if(saApp.settings.keepRunning){
+        if (saApp.settings.keepRunning) {
           appManager.hideWindow(saApp.windowId)
           event.preventDefault()
-        }else{
+        } else {
           appManager.closeApp(saApp.nanoid)//暂时改为直接关闭
         }
         // if (!forceClose) {
@@ -1004,35 +1066,53 @@ class AppManager {
         })
       })
 
-
       SidePanel.send('executedAppSuccess', { app: saApp })
-      saApp.windowId=appWindow.windowId
+      saApp.windowId = appWindow.windowId
 
       processingAppWindows.push({
         window: frame,//在本地的对象中插入window对象，方便后续操作
         saApp: saApp,
-        windowId:appWindow.windowId
+        windowId: appWindow.windowId
       })
       let saAppInstance = new SaApp({
         info: saApp,
-        window:frame,
+        window: frame,
         view: appWindow.view
       })
       this.saApps.push(saAppInstance)
-    } else {
-      //todo intab模式，在主窗体某个标签内
-    }
+    } else if(saApp.window.defaultType==='window'){
+      let appWindow=windowManager.create({
+        name,
+        app:saApp,
+        rememberBounds: true,
+        url: url,
+        windowOption: {
+          ...windowConfig,
+          trafficLightPosition: {
+            x: 10, y: 7
+          },
+          show: !background,
+          frame: false,
+          titleBarStyle: 'hidden',
+          acceptFirstMouse: true,
+          resizable: saApp.package === 'com.thisky.import' || saApp.package === 'com.thisky.appStore' ? false : frameWindowConfig.resizable,
+          alwaysOnTop: saApp.settings.alwaysTop ? saApp.settings.alwaysTop : frameWindowConfig.alwaysOnTop,
+        }
+      })
 
+      //todo 继续开发window模式
+    }
 
   }
 
   goChat (args) {
-    let circleId=''
-    if(args && args.circleId){
-      circleId=args.circleId
+    let circleId = ''
+    if (args && args.circleId) {
+      circleId = args.circleId
     }
 
     const GROUP_PKG = 'com.thisky.group'
+
     async function loadChatUrl () {
       appManager.showAppWindowByPackage(GROUP_PKG)
       const appInfo = await appModel.get({ package: GROUP_PKG })
@@ -1404,8 +1484,6 @@ app.whenReady().then(() => {
     }
   })
 
-
-
   ipc.on('webOsNotice', (event, args) => {
     //只有存在且notice为true，才允许转发webOsNotice到vuex处理
     let noticeWebOrigin = settings.get('noticeWebOrigin')
@@ -1506,7 +1584,7 @@ app.whenReady().then(() => {
     if (args.includes('publicUserInfo')) {
       returnData.userInfo = user.data.user_info
     }
-    let data={
+    let data = {
       userToken: user.data.token,
       clientId: ApplyPermissionOptions.clientId,
       bindId: ApplyPermissionOptions.bindId,
@@ -1522,5 +1600,4 @@ app.whenReady().then(() => {
 
 })
 
-
-module.exports={AppManager}
+module.exports = { AppManager }

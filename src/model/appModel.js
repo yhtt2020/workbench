@@ -470,6 +470,39 @@ async ensureColumns(){
     return !!await sqlDb.knex('app').where({ 'url': url }).first()
   },
   /**
+   * 将老的应用的设置转为新的应用设置
+   * @returns {Promise<void>}
+   */
+  async migrateOldApp(data){
+    if(!data.window || data.window.startsWith('[')){
+      let bounds=null
+      if(data.settings && data.settings.bounds){
+        bounds=data.settings.bounds
+      }
+      data.window={
+        defaultType:'frameWindow',
+        frameWindow: {
+          enable:true,
+          width:bounds?bounds.width : 800,
+          height:bounds?bounds.height : 800,
+          controllers: {
+            goBack: true,
+            goForward: true,
+            refresh: true,
+            home: true
+          },
+          top:false,
+          canResize:true,
+        }
+      }
+      if(data.package === 'com.thisky.import' || data.package === 'com.thisky.appStore' ){
+        data.window.frameWindow.canResize=false //此两应用禁止重新调整尺寸
+      }
+      await appModel.update(data.nanoid,{window:JSON.stringify(data.window)})
+    }
+
+  },
+  /**
    * sqldb
    * 安装应用
    * @param url 安装的web应用地址
@@ -503,7 +536,7 @@ async ensureColumns(){
       create_time: Date.now(),
       update_time: Date.now(),
 
-      window:JSON.stringify(app.window || {}),
+      window:app.window || {},
       open_source:app.open_source,
       csv_url:app.csv_url,
       os_summary:app.os_summary,
@@ -541,6 +574,27 @@ async ensureColumns(){
     })
   },
 
+  /**
+   * 预处理数据对象
+   * @param app
+   * @returns {Promise<*>}
+   */
+  async preHandleApp (app) {
+    app.capture = ''
+    app.isSystemApp = appModel.isSystemApp(app)
+    await appModel.migrateOldApp(app)
+    try {
+      app.attribute = app.attribute ? JSON.parse(app.attribute) : {}
+    } catch (e) {
+      app.attribute = {}
+    }
+    app.is_new = app.is_new === 1
+    app.settings = app.settings ? JSON.parse(app.settings) : {}
+    if(typeof app.window==='string'){
+      app.window=JSON.parse(app.window)
+    }
+    return app
+  },
 
   /**
    *sqldb
@@ -558,17 +612,9 @@ async ensureColumns(){
     }
     result = await query.select()
 
-    result.forEach((app) => {
-      app.capture = ''
-      app.isSystemApp = appModel.isSystemApp(app)
-      try {
-        app.attribute = app.attribute ? JSON.parse(app.attribute) : {}
-      } catch (e) {
-        app.attribute = {}
-      }
-
-      app.settings = app.settings ? JSON.parse(app.settings) : {}
-    })
+    for(let i = 0;i<result.length;i++){
+      result[i]=await appModel.preHandleApp(result[i])
+    }
     return result
   },
   /**
@@ -585,8 +631,7 @@ async ensureColumns(){
       data = await sqlDb.knex('app').where({ nanoid: nanoid }).first()
     }
     if (data) {
-      data.settings = JSON.parse(data.settings)
-      data.isSystemApp = appModel.isSystemApp(data)
+      data=await appModel.preHandleApp(data)
     }
     return data
   },
