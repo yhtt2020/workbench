@@ -450,7 +450,10 @@ const appModel = {
       package: app.package || '',
       theme_color: app.theme_color || '#ccc',
       user_theme_color: '',
-      // attribute: app.attribute,
+      attribute: JSON.stringify({
+        isOffical: app.isOfficial,
+        integration: app.integrationLevel
+      }),
       create_time: Date.now(),
       update_time: Date.now(),
       account_avatar: '',
