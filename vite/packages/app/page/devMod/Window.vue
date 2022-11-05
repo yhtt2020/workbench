@@ -4,7 +4,7 @@
   <div class="mod-line">
     默认窗体类型：
     <a-radio-group v-model:value="this.windowConfigs.defaultType">
-      <a-radio v-if="windowConfigs.frameWindow.enable" value="frame_window">边框窗体</a-radio>
+      <a-radio v-if="windowConfigs.frameWindow.enable" value="frameWindow">边框窗体</a-radio>
       <a-radio v-if="windowConfigs.window.enable" value="window">无边框窗体</a-radio>
       <a-radio v-if="windowConfigs.attach.enable" value="attach">分屏窗体</a-radio>
     </a-radio-group>
@@ -306,7 +306,7 @@ export default {
       formTailLayout,
 
       windowDefaultConfigs:{
-        defaultType:'frame_window',
+        defaultType:'frameWindow',
         frameWindow:{
           enable:true,
           width:800,

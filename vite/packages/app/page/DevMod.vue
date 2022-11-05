@@ -91,6 +91,9 @@
               <a-menu-item key="baseDev">
                 <router-link :to="{path:'/dev/'}">基础信息</router-link>
               </a-menu-item>
+              <a-menu-item key="author">
+                <router-link :to="{path:'/dev/author'}">作者信息</router-link>
+              </a-menu-item>
               <a-menu-item key="authDev">
                 <router-link :to="{path:'/dev/auth'}">权限设置</router-link>
               </a-menu-item>

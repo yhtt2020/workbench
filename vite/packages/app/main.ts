@@ -11,6 +11,7 @@ import Base from './page/settingChildren/Base.vue'
 import BaseDev from './page/devMod/Base.vue'
 import Window from './page/devMod/Window.vue'
 import Auth from './page/settingChildren/Auth.vue'
+import Author from './page/devMod/Author.vue'
 import AuthDev from './page/devMod/Auth.vue'
 import AllDevApps from './page/AllDevApps.vue'
 import Export from './page/devMod/Export.vue'
@@ -28,9 +29,9 @@ const routes = [
     children: [
       {
         path: 'auth', component: Auth
-      },{
+      }, {
         path: '', component: Base
-      },{
+      }, {
         path: 'optimize', component: Optimize
       },
       {
@@ -46,13 +47,16 @@ const routes = [
     children: [
 
 
-       {
+      {
         path: 'optimize', component: OptimizeDev
       },
-
+      {
+        path: 'Author', component: Author
+      },
       {
         path: 'auth', component: AuthDev
       },
+
       {
         path: 'window', component: Window
       },

@@ -34,8 +34,17 @@ const tipMap = {
   },
   'local_dir':{
     title:'本地目录',
-    message:'本地目录，用于生成minifest.json文件，不选择则无法生成路径和打包项目。'
-}
+    message:'本地目录，用于生成minifest.json文件，不选择则无法生成路径和打包项目。',
+
+},
+  'open_source':{
+    title:'是否开源',
+    message:'此项不是必须的，如果您的应用同时开源，可以勾选后填写开源地址，将被展现在应用设置和应用市场页面上。'
+  },
+  'os_summary':{
+    title:'开源说明',
+    message:'请写清楚开源协议，以及附加条款，方便其他用户全面了解应用的情况。'
+  }
 }
 export default {
   name: 'DebugTip',
