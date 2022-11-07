@@ -168,7 +168,7 @@ async ensureColumns(){
       name: '应用市场',
       logo: 'https://up.apps.vip/logo/favicon.svg',
       summary: '应用市场，助您发现更大的世界。',
-      preload: '/pages/guide/preload.js',
+      preload: '/pages/appStore/preload.js',
       type: 'web',
       package: 'com.thisky.appStore',
       url: 'https://a.apps.vip/appStore/index.html',
@@ -532,7 +532,10 @@ async ensureColumns(){
       package: app.package || '',
       theme_color: app.theme_color || '#ccc',
       user_theme_color: '',
-      attribute: app.attribute,
+      attribute: JSON.stringify({
+        isOffical: app.isOfficial,
+        integration: app.integrationLevel
+      }),
       create_time: Date.now(),
       update_time: Date.now(),
 
@@ -870,7 +873,7 @@ async ensureColumns(){
         name: '应用市场',
         logo: 'https://up.apps.vip/logo/favicon.svg',
         summary: '应用市场，助您发现更大的世界。',
-        preload: '/pages/guide/preload.js',
+        preload: '/pages/appStore/preload.js',
         type: 'web',
         package: 'com.thisky.appStore',
         url: 'https://a.apps.vip/appStore/index.html',

@@ -1304,21 +1304,26 @@ Vue.component('sidebar', {
       console.log(app)
       let option = {
         name: app.name,
-        logo: !!!app.icon ? '../../icons/default.svg' :app.icon,
+        logo: !!!app.logo256 ? '../../icons/default.svg' :app.logo256,
         summary: app.summary,
         type: app.type,
-        attribute: app.attribute,
+        version:app.version,
+
+        isOfficial:app.isOfficial,
+        integrationLevel:app.integrationLevel,
         theme_color: !!!app.themeColor ? '#000' :app.themeColor,
         settings:app.settings,
         circle:app.circle,
         auth:app.auth,
+        url:app.site,
         site:app.site,
         author:app.author,
         showInSideBar: false,
         //circleMessage:!!!app.circleMessage ? '' :app.circleMessage,
+        nanoid:app.appNanoid
       }
 
-      standAloneAppModel.install(app.url, option).then(nanoid => {
+      standAloneAppModel.install(app.site, option).then(nanoid => {
         ipc.send('message', { type: 'success', config: { content: `添加应用：${app.name} 成功` } })
         ipc.send('installApp', { nanoid: nanoid })
         ipc.send('installSuccess',{nanoid:nanoid,tips:true})
@@ -1329,7 +1334,8 @@ Vue.component('sidebar', {
       })
     },
     openSystemApp(args){
-      window.location.href=`tsb://app/redirect/?package=${args.package}&url=${args.url}`
+      console.log(args)
+      window.location.href=`tsb://app/redirect/?package=${args.packageName}&url=${args.site}`
     },
 
     async contrast(args) {
@@ -1351,11 +1357,11 @@ Vue.component('sidebar', {
       ipc.send('allAppList', allApplist)
     },
     async openSet(args) {
-      let app = await standAloneAppModel.get({url: args})
+      let app = await standAloneAppModel.get({nanoid: args})
       ipc.send('saAppOpenSetting', {nanoid: app.nanoid})
     },
     async uninstallApp(args) {
-      let app = await standAloneAppModel.get({url: args})
+      let app = await standAloneAppModel.get({nanoid: args})
       console.log(app)
       standAloneAppModel.uninstall(app.nanoid).then(success=>{
         ipc.send('message',{type:"success",config:{content:'卸载应用成功。'}})
@@ -1373,6 +1379,7 @@ Vue.component('sidebar', {
         data.forEach(app=>{
           app.id=app.nanoid
         })
+        console.log('-----',data)
         ipc.send('allMyApps',data)
       })
     },

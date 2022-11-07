@@ -16,22 +16,27 @@ import {
   GoldOutlined,
   InsuranceOutlined,
   ExpandAltOutlined,
+  DownloadOutlined,
   ArrowRightOutlined,ExclamationCircleOutlined,SkinOutlined,
   LinkOutlined
 } from '@ant-design/icons-vue'
 import settings from '../../src/settings/settingsContent'
 import settingPage from '../../src/settings/settingPage.js'
 import Passwords from "./components/Passwords.vue";
+
+
+
 export default defineComponent({
   components: {
     Passwords,ImportOutlined,
     EyeOutlined, LayoutOutlined, SearchOutlined, AimOutlined, ControlOutlined, CheckSquareOutlined, HomeOutlined,
-    LockOutlined, NodeIndexOutlined, GoldOutlined, InsuranceOutlined, ExpandAltOutlined, ArrowRightOutlined,
+    LockOutlined, NodeIndexOutlined, GoldOutlined, InsuranceOutlined, ExpandAltOutlined, ArrowRightOutlined,DownloadOutlined,
     ExclamationCircleOutlined,
     SkinOutlined,LinkOutlined
   },
   data(){
     return {
+      savePath:'',
       platform:'',//平台
       autoStart:false,//自动启动
       closeExit:1,//关闭时的默认操作
@@ -121,9 +126,19 @@ export default defineComponent({
       if(value!==undefined)
         this.askCloseExit=value
     })
-
     this.initCustomSettings()
+
+    ipc.on('getSavePath',(event,args)=>{
+      this.savePath = args
+    })
+
+    settings.get('downloadSavePath',(value)=>{
+     if(value!==undefined){
+       this.savePath = value
+     }
+    })
   },
+
   setup() {
 
     const activeKey = ref('Privacy')
@@ -148,6 +163,10 @@ export default defineComponent({
     /**
      * 读入自定义配置
      */
+    choseSavePath(e){
+      ipc.send('setSavePath')
+
+    },
     initCustomSettings(){
      let keys= Object.keys(this.settings)
       keys.forEach((setGroup,key)=>{
@@ -394,6 +413,22 @@ export default defineComponent({
             </div>
           </div>
 
+        </a-tab-pane>
+        <a-tab-pane :forceRender="true" key="DownloadSetting">
+          <template #tab>
+        <span>
+         <download-outlined />
+          下载设置
+        </span>
+          </template>
+          <div class="settings-container">
+            <h3>下载设置</h3>
+            <div class="setting-section" style="display: flex;align-items: center">
+                <span>设置默认下载保存路径:</span>
+                <a-input :disabled="true" v-model:value="savePath" style="width: 40%;margin-left: 15px" placeholder="请选择文件保存路径" />
+                <span  style="margin-left: 15px;cursor: pointer" @click="choseSavePath()">更改</span>
+            </div>
+          </div>
         </a-tab-pane>
         <a-tab-pane :forceRender="true" key="Feature">
           <template #tab>

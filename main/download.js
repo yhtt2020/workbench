@@ -1,4 +1,6 @@
 
+
+
 const currrentDownloadItems = {}
 
 // ipc.on('cancelDownload', function (e, path) {
@@ -60,13 +62,57 @@ ipc.on('downloadEnd', (event, args) => {
   mainWindow.send('downloadCountCut')
 })
 
-function downloadHandler (event, item, webContents) {
+ipc.on('setSavePath',(event,args)=>{
+  let savePath = dialog.showOpenDialogSync({
+    properties: ['openFile', 'openDirectory']
+  })
+  if (savePath!==undefined){
+    let downloadSavePath = savePath.toString().replace(/\[|]/g, '')
+    settings.set('downloadSavePath',downloadSavePath)
+
+    event.reply('getSavePath',downloadSavePath)
+  }
+})
+
+// let fileNew;
+// function changeFileName(savePath,simpleName,suffixName,num){
+//   if (num != 0) {
+//     fileNew = savePath + simpleName + '(' + num + ')' + suffixName
+//   } else {
+//     fileNew = savePath + simpleName + suffixName
+//   }
+//   return fileNew
+// }
+// let num
+// let fileNew
+// let m
+// function changeFileName(savePath,simpleName,suffixName,num){
+//
+//   // console.log('55555555555',num)
+//     fileNew = savePath + simpleName + '(' + num + ')' + suffixName
+//     // console.log('111111111111',fileNew)
+//      num++
+//   fs.exists(fileNew, function (flag) {
+//     if(flag){
+//       changeFileName(savePath,simpleName,suffixName,num)
+//     }
+//   })
+//    return  num
+// }
+
+async function downloadHandler (event, item, webContents) {
   var itemURL = item.getURL()
   var attachment = isAttachment(item.getContentDisposition())
-  let suffixName = item.getFilename().substring(item.getFilename().lastIndexOf('.') + 1, item.getFilename().length)
+  let suffixName = item.getFilename().substring(item.getFilename().lastIndexOf('.'), item.getFilename().length)
   savePathFilename = path.basename(item.getSavePath())
-
+  let simpleName = item.getFilename().substring(0, item.getFilename().lastIndexOf("."))
   mainWindow.webContents.send('isDownload')
+  const savePathPrefix = settings.get('downloadSavePath') + '\\'
+  var fs = require("fs");
+  const fsExists = (fileNewPath) => {
+    return fs.existsSync(fileNewPath)
+  }
+  let num = 1
   if (item.getMimeType() === 'application/pdf' && itemURL.indexOf('blob:') !== 0 && itemURL.indexOf('#pdfjs.action=download') === -1 && !attachment) { // clicking the download button in the viewer opens a blob url, so we don't want to open those in the viewer (since that would make it impossible to download a PDF)
     event.preventDefault()
     sendIPCToWindow(mainWindow, 'openPDF', {
@@ -75,18 +121,41 @@ function downloadHandler (event, item, webContents) {
     })
   } else {
 
-    item.setSaveDialogOptions({
-      title: '选择保存地址',
-      filters: [
-        { name: suffixName, extensions: [suffixName] },
-        { name: '自定义', extensions: ['*'] }
-      ]
-    })
-    // event.preventDefault()
+    if (settings.get('downloadSavePath') === undefined) {
+      let downloadSavePath;
+      let savePath = dialog.showOpenDialogSync({
+        properties: ['openFile', 'openDirectory']
+        // title: '选择保存地址',
+        // filters: [
+        //   { name: suffixName, extensions: [suffixName] },
+        //   { name: '自定义', extensions: ['*'] }
+        // ],
+      })
+      downloadSavePath = savePath.toString().replace(/\[|]/g, '')
+      item.setSavePath(downloadSavePath +'\\' + item.getFilename())
+      settings.set('downloadSavePath', downloadSavePath)
+    } else {
+      const filePath = savePathPrefix + item.getFilename()
+      let res = fsExists(filePath) // 找是否存在
+      while (res) { // 存在循环查找
+        const newFilePath = savePathPrefix + simpleName + '(' + num + ')' + suffixName
+        res = fsExists(newFilePath)
+        num++
+      }
+      // 退出的num不存在
+      if (num === 1) {
+        item.setSavePath(filePath)
+      } else {
+        const newFilePath = savePathPrefix + simpleName + '(' + (num - 1) + ')' + suffixName
+        item.setSavePath(newFilePath)
+      }
+    }
+
+
 
     var savePathFilename
 
-    function conver (limit) {
+    function conver(limit) {
       var size
       if (limit < 1024 * 1024) {
         size = (limit / 1024).toFixed(2) + 'KB'
@@ -108,7 +177,7 @@ function downloadHandler (event, item, webContents) {
       path: item.getSavePath(),
       name: item.getFilename(),
       status: 'start',
-      size: { received: 0, total: conver(item.getTotalBytes()) },
+      size: {received: 0, total: conver(item.getTotalBytes())},
       paused: item.isPaused(),
       startTime: item.getStartTime(),
       url: item.getURL(),
@@ -142,7 +211,7 @@ function downloadHandler (event, item, webContents) {
         path: item.getSavePath(),
         name: savePathFilename,
         status: state,
-        size: { received: conver(item.getReceivedBytes()), total: conver(item.getTotalBytes()) },
+        size: {received: conver(item.getReceivedBytes()), total: conver(item.getTotalBytes())},
         // realdata1:item.speed,
         realData: conver(item.speed),
         progressnuw: ((prevReceivedBytes / item.getTotalBytes()).toFixed(2)) * 100,
@@ -165,7 +234,7 @@ function downloadHandler (event, item, webContents) {
         name: savePathFilename,
         status: state,
         url: item.getURL(),
-        size: { received: conver(item.getTotalBytes()), total: conver(item.getTotalBytes()) },
+        size: {received: conver(item.getTotalBytes()), total: conver(item.getTotalBytes())},
         href: originalPageUrl,
         chainUrl: item.getURLChain()
       })
@@ -175,7 +244,6 @@ function downloadHandler (event, item, webContents) {
       }
 
     })
-
     return true
   }
 }

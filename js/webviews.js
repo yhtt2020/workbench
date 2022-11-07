@@ -295,7 +295,7 @@ const webviews = {
     }
   } else if(sourceUrl.startsWith('http://localhost:5008/' )) {
     webPreferences={
-      preload: __dirname + '/pages/guide/preload.js',
+      preload: __dirname + '/pages/appStore/preload.js',
       nodeIntegration: true, //node集成开高了
       contextIsolation:false,
       enableRemoteModule: true,
