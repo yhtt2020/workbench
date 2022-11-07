@@ -3,7 +3,7 @@
   <span style="float:right;font-size: 14px">当前状态 <span :style="{background:this.debugMod?'green':'red'}" style="display: inline-block;border-radius: 100%;width: 10px;height: 10px;" />&nbsp; </span>
   </h3>
   <div style="padding-bottom:  10px">
-    进入开发者模式 <a-tooltip title="仅非系统应用可开启调试模式"><a-switch @change="switchToDevMod" :checked="debugMod" :disabled="app.isSystemApp"  /></a-tooltip>
+    进入开发者模式 <a-tooltip title="仅非系统应用可开启调试模式"><a-switch @change="switchToDevMod" :checked="debugMod" :disabled="app.isSystemApp && !allowSystemDebug"  /></a-tooltip>
     <router-link :to="{path:'/allDevapps'}"><a-button style="float: right">查看其他开发中的应用</a-button></router-link>
   </div>
    <a-alert style="margin-top: 10px" v-if="existsDevApp">
@@ -20,7 +20,7 @@
       <h4>开发者模式有哪些额外的功能？</h4>
 
       <p>允许您为应用添加更多的设置，包括修改默认主题色、应用包名、应用标题、应用起始url
-      允许您使用开发者工具，包括导出应用配置文件，上架应用。</p>
+      允许您使用<span @dblclick="enableAllowSystemDebug">开发者工具</span>，包括导出应用配置文件，上架应用。</p>
 
   </div>
 </template>
@@ -35,7 +35,8 @@ export default {
   name: 'develop',
   data(){
     return {
-      existsDevApp:false
+      existsDevApp:false,
+      allowSystemDebug:false,
     }
   },
   components: {
@@ -51,6 +52,10 @@ export default {
     ...mapWritableState(appStore, ['app', 'debugMod','devApp'])
   },
   methods: {
+    enableAllowSystemDebug(){
+      console.log('allowSystemDebug')
+      this.allowSystemDebug=true
+    },
     ...mapActions(appStore, ['toggleDebug','setDevApp']),
     async switchToDevMod () {
       if(!this.debugMod){
