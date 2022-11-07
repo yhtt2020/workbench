@@ -1334,7 +1334,8 @@ Vue.component('sidebar', {
       })
     },
     openSystemApp(args){
-      window.location.href=`tsb://app/redirect/?package=${args.package}&url=${args.url}`
+      console.log(args)
+      window.location.href=`tsb://app/redirect/?package=${args.packageName}&url=${args.site}`
     },
 
     async contrast(args) {
