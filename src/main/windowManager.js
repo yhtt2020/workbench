@@ -267,6 +267,9 @@ class WindowManager {
     ]
     let window = new BrowserWindow(windowOption)
     window.once('ready-to-show', () => {
+      if(options.onReadyToShow){
+        options.onReadyToShow(window)
+      }
       window.show()
     })
     if (process.platform === 'darwin') {

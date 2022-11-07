@@ -657,15 +657,17 @@ class AppManager {
     let saApp = appManager.getSaAppByAppId(nanoid)
     if (window && !window.isDestroyed()) {
       saApp.canClose = true
-      window.view.webContents.destroy()
-      window.destroy()
       appManager.removeAppWindow(saApp.windowId)
       let found = appManager.saApps.find((app) => {
         return app.instance.info.nanoid === nanoid
       })
+      windowManager.close(found.windowName)//通过windowManager关闭实例
       appManager.saApps.splice(found, 1)
       SidePanel.send('closeApp', { nanoid: nanoid })
     }
+
+
+
   }
 
   closeAll () {
@@ -930,10 +932,12 @@ class AppManager {
       saApp.authAll = [] //修复后面的判断报错的问题
     }
     let url = this.getUrl(saApp)
-    let name=(saApp.is_debug?'debug_':'') +saApp.package ? saApp.package : saApp.url//如果有包名，优先用包名，没有包名用url(网络应用）
+    let name=(saApp.is_debug?'debug_':'') +(saApp.package ? saApp.package : url)//如果有包名，优先用包名，没有包名用url(网络应用）
+    let windowParams=this.convertToWindowParams(saApp.window[saApp.window.defaultType])
+
     if (saApp.window.defaultType === 'frameWindow') {
       //带边框窗体
-      let windowParams=this.convertToWindowParams(saApp.window.frameWindow)
+
       let frameWindowConfig =Object.assign({
           //默认参数
           minWidth:800,
@@ -1011,37 +1015,6 @@ class AppManager {
         } else {
           appManager.closeApp(saApp.nanoid)//暂时改为直接关闭
         }
-        // if (!forceClose) {
-        //   appManager.hideWindow(saApp.windowId)
-        //   event.preventDefault()
-        // } else {
-
-        // }
-
-        // const result = dialog.showMessageBoxSync({
-        //   type: 'none',
-        //   buttons: ['取消','退出', '隐藏[不再询问]'],
-        //   message: '退出后无法接受消息提醒,请注意!',
-        //   cancelId: 0,
-        //   defaultId: 2,
-        //   noLink: true
-        // })
-        // if(result === 0 ) {
-        //   apLog('阻止隐藏')
-        //   event.preventDefault()
-        //   return
-        // } else if(result === 2) {
-        //   event.preventDefault()
-        //   apLog('设置设置,true')
-        //   appManager.setAppSettings(saApp.id,{'alwaysHide':true})//alwaysHide = true
-        //
-        //   //groupIMWindow.hide()
-        // } else {
-        //   appManager.closeApp(saApp.id)
-        //   //alwaysHide = false
-        //   apLog('设置设置false')
-        //   appManager.setAppSettings(saApp.id,{'alwaysHide':false})
-        // }
 
       })
       frame.on('ready-to-show', (event) => {
@@ -1077,12 +1050,25 @@ class AppManager {
       })
       let saAppInstance = new SaApp({
         info: saApp,
+        type:'frameWindow',
+        windowName:name,
         window: frame,
         view: appWindow.view
       })
       this.saApps.push(saAppInstance)
     } else if(saApp.window.defaultType==='window'){
-      let appWindow=windowManager.create({
+      let windowConfig =Object.assign({
+        //默认参数
+        minWidth:800,
+        minHeight:800,
+        maxWidth:800,
+        maxHeight:800,
+        width: 800,
+        height: 800,
+        resizable:true,
+        alwaysOnTop:false,
+      },windowParams)
+      let appWindowInstance=windowManager.create({
         name,
         app:saApp,
         rememberBounds: true,
@@ -1096,11 +1082,40 @@ class AppManager {
           frame: false,
           titleBarStyle: 'hidden',
           acceptFirstMouse: true,
-          resizable: saApp.package === 'com.thisky.import' || saApp.package === 'com.thisky.appStore' ? false : frameWindowConfig.resizable,
-          alwaysOnTop: saApp.settings.alwaysTop ? saApp.settings.alwaysTop : frameWindowConfig.alwaysOnTop,
+          resizable:  windowConfig.resizable,
+          alwaysOnTop: saApp.settings.alwaysTop ? saApp.settings.alwaysTop : windowConfig.alwaysOnTop,
+        },
+        webPreferences:appManager.getViewWebPreferences(saApp),
+        onReadyToShow: (window) => {
+          window.webContents.send('init', {
+            url: saApp.url,
+            nanoid: saApp.nanoid,
+            title: saApp.name,
+            windowId: saApp.windowId,
+            app: saApp
+          })
+          if (cb) {
+            cb()//执行启动后的回调
+            cb = undefined
+          }
         }
       })
+      SidePanel.send('executedAppSuccess', { app: saApp })
+      saApp.windowId = appWindowInstance.window.windowId
 
+      processingAppWindows.push({
+        window: appWindowInstance.window,//在本地的对象中插入window对象，方便后续操作
+        saApp: saApp,
+        windowId: appWindowInstance.window.windowId
+      })
+      let saAppInstance = new SaApp({
+        info: saApp,
+        windowName:name,
+        type:'window',
+        window: appWindowInstance.window,
+        view: appWindowInstance.window
+      })
+      this.saApps.push(saAppInstance)
       //todo 继续开发window模式
     }
 

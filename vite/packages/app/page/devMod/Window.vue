@@ -209,6 +209,10 @@
           </a-row>
           <a-divider orientation="left">其他</a-divider>
           <div>
+            <span class="sub-label">窗口置顶</span>
+            <a-switch v-model:checked="windowConfigs.window.top"></a-switch>
+          </div>
+          <div>
             <span class="sub-label" style="width: 150px">允许用户改变窗口尺寸</span>
             <a-switch v-model:checked="windowConfigs.window.canResize"></a-switch>
           </div>
@@ -267,6 +271,7 @@
             </a-col>
           </a-row>
           <a-divider orientation="left">其他</a-divider>
+
           <div>
             <span class="sub-label" style="width: 150px">允许用户改变分屏尺寸</span>
             <a-switch v-model:checked="windowConfigs.attach.canResize"></a-switch>

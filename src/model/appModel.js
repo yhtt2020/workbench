@@ -6,7 +6,22 @@ const { SqlDb } = require('../util/sqldb')
 const { nanoid } = require('nanoid')
 const sqlDb = new SqlDb()
 
-
+const defaultWindow={
+  defaultType:'frameWindow',
+  frameWindow: {
+    enable:true,
+    width:800,
+    height: 800,
+    controllers: {
+      goBack: true,
+      goForward: true,
+      refresh: true,
+      home: true
+    },
+    top:false,
+    canResize:true,
+  }
+}
 
 const systemAppPackage = [
   'com.thisky.group',
@@ -479,22 +494,8 @@ async ensureColumns(){
       if(data.settings && data.settings.bounds){
         bounds=data.settings.bounds
       }
-      data.window={
-        defaultType:'frameWindow',
-        frameWindow: {
-          enable:true,
-          width:bounds?bounds.width : 800,
-          height:bounds?bounds.height : 800,
-          controllers: {
-            goBack: true,
-            goForward: true,
-            refresh: true,
-            home: true
-          },
-          top:false,
-          canResize:true,
-        }
-      }
+      data.window=Object.assign(defaultWindow,bounds)
+
       if(data.package === 'com.thisky.import' || data.package === 'com.thisky.appStore' ){
         data.window.frameWindow.canResize=false //此两应用禁止重新调整尺寸
       }
@@ -539,7 +540,7 @@ async ensureColumns(){
       create_time: Date.now(),
       update_time: Date.now(),
 
-      window:app.window || {},
+      window:app.window || defaultWindow,
       open_source:app.open_source,
       csv_url:app.csv_url,
       os_summary:app.os_summary,
