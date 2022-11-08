@@ -1308,7 +1308,6 @@ Vue.component('sidebar', {
         summary: app.summary,
         type: app.type,
         version:app.version,
-
         isOfficial:app.isOfficial,
         integrationLevel:app.integrationLevel,
         theme_color: !!!app.themeColor ? '#000' :app.themeColor,
@@ -1316,7 +1315,7 @@ Vue.component('sidebar', {
         circle:app.circle,
         auth:app.auth,
         url:app.site,
-        site:app.site,
+        site:app.url,
         author:app.author,
         showInSideBar: false,
         //circleMessage:!!!app.circleMessage ? '' :app.circleMessage,
