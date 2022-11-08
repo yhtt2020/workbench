@@ -5,7 +5,8 @@ const tools = require('../util/util.js').tools
 const { SqlDb } = require('../util/sqldb')
 const { nanoid } = require('nanoid')
 const sqlDb = new SqlDb()
-
+const SettingModel=require('./settingModel.js')
+let settingModel
 const defaultWindow={
   defaultType:'frameWindow',
   frameWindow: {
@@ -36,6 +37,8 @@ const systemAppPackage = [
 ]  //包名为上述包名的判定为系统应用
 const appModel = {
   async initDb () {
+    settingModel=new SettingModel()
+    await settingModel.initDb()
     /**
      *  standAloneApps:'++id,name,package,logo,summary,type,url,theme_color,user_theme_color,create_time,updateTime,accountAvatar
      *  ,order,useCount,lastExecuteTime,settings,unreadCount,*fileAssign,auth,isNew,attribute',//新增两个字段方便应用市场查找筛选
@@ -435,11 +438,27 @@ async ensureColumns(){
     return await sqlDb.knex('app').where({ nanoid: id }).update(data)
   },
   /**
+   * 获得应用的名称，用于定义窗体
+   * @param app
+   * @returns {*}
+   */
+  getName(app){
+   return (app.is_debug ? 'debug_' : '') + (app.package ? app.package : app.url)//如果有包名，优先用包名，没有包名用url(网络应用）
+  },
+
+  /**
    * sqldb 删除对象
    * @param appId
    * @returns {Promise<*|boolean>}
    */
   async uninstall (appId) {
+    //await appModel.clearSettings(appid)
+    let app =await sqlDb.knex('app').where({nanoid:appId}).first()
+      console.log(app)
+    let name= appModel.getName(app)
+    console.log(name)
+    await settingModel.clear('appSetting',name) //移除相关设置
+
     return await sqlDb.knex('app').where({ nanoid: appId }).delete()
   },
   /**

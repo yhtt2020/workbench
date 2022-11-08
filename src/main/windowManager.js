@@ -3,7 +3,8 @@ const {WindowInstance, ViewInstance, FrameWindowInstance} = require('./instanceC
 const {app, ipcMain: ipc, BrowserWindow, BrowserView} = require('electron')
 const SaApp = require('./saAppClass')
 const remote = require('@electron/remote/main')
-
+const SettingModel=require('../model/settingModel.js')
+let settingModel
 /**
  * 代理view管理
  */
@@ -150,6 +151,8 @@ class WindowManager {
   constructor() {
 
     this.viewManager = new ViewManager()
+    settingModel=new SettingModel()
+    settingModel.initDb()
   }
 
   defaultViewPreferences = { //根据其定义的位置取用这里的width和height，在左右侧的话，只取用width，在上下，则只取height，目前仅支持width
@@ -236,7 +239,7 @@ class WindowManager {
    * name可以是字符串，也可以是时间戳，字符串一般用于经常用到的窗体，而时间戳则是临时窗体
    * @param options {mod,existingWindowId, name, webPreferences, boundsString, events,rememberBounds,url,defaultBounds}
    */
-  create(options) {
+  async create (options) {
     let {
       mod,
       existingWindowId,
@@ -267,7 +270,7 @@ class WindowManager {
     ]
     let window = new BrowserWindow(windowOption)
     window.once('ready-to-show', () => {
-      if(options.onReadyToShow){
+      if (options.onReadyToShow) {
         options.onReadyToShow(window)
       }
       window.show()
@@ -276,18 +279,8 @@ class WindowManager {
       //mac上设置隐藏交通灯按钮
       window.setWindowButtonVisibility(false)
     }
-
     if (rememberBounds) {
-      let boundsSetting = WindowManager.getSettings(name, 'bounds')
-      let alwaysOnTop = WindowManager.getSettings(name, 'alwaysOnTop')
-      if (alwaysOnTop) {
-        window.setAlwaysOnTop(alwaysOnTop)
-      }
-      if (boundsSetting) {
-        window.setBounds(boundsSetting)
-      } else if (defaultBounds) {
-        //window.setBounds(defaultBounds)
-      }
+      await this.bindRememberBoundsEvents(name,window,defaultBounds)
     }
 
 
@@ -295,9 +288,7 @@ class WindowManager {
       this.ensureInstanceRemoved('window', name)
     })
     webContents = window.webContents
-    if (rememberBounds) {
-      this.bindRememberBoundsEvents(name, window)
-    }
+
     if (url) {
       window.loadURL(url)
     }
@@ -319,23 +310,37 @@ class WindowManager {
    * @param name
    * @param window
    */
-  bindRememberBoundsEvents(name, window) {
-    window.on('resized', () => {
-      WindowManager.setSettings(name, 'bounds', window.getBounds())
+  async bindRememberBoundsEvents (name, window,defaultBounds) {
+    window.on('resized', async () => {
+      await WindowManager.setBoundsSetting(name, window.getBounds())
     })
-    window.on('moved', () => {
-      WindowManager.setSettings(name, 'bounds', window.getBounds())
+    window.on('moved', async () => {
+      await WindowManager.setBoundsSetting(name, window.getBounds())
     })
-    window.on('always-on-top-cha1nged', (e, isAlwaysOnTop) => {
-      WindowManager.setSettings(name, 'alwaysOnTop', isAlwaysOnTop)
+    window.on('always-on-top-changed', async (e, isAlwaysOnTop) => {
+      await WindowManager.setSettings(name, 'alwaysOnTop', isAlwaysOnTop)
     })
+
+      let boundsSetting = await WindowManager.getBoundsSetting(name)
+      let alwaysOnTop = await WindowManager.getSettings(name, 'alwaysOnTop')
+      if (alwaysOnTop) {
+        window.setAlwaysOnTop(alwaysOnTop)
+      }
+    defaultBounds.width=Number(defaultBounds.width)
+    defaultBounds.height=Number(defaultBounds.height)
+      if (boundsSetting) {
+        window.setBounds(boundsSetting)
+      }else{
+        window.setBounds(defaultBounds)
+      }
+
   }
 
   /**创建带外框的窗体
    *
    * @param options
    */
-  createFrameWindow(options) {
+  async createFrameWindow(options) {
     let {
       name,
       url,
@@ -345,6 +350,7 @@ class WindowManager {
       viewWebPreferences,
       rememberBounds,
       onReadyToShow,//读入事件
+      defaultBounds,
       onDomReady
     } = options
     frameWebPreferences = Object.assign(this.defaultWebPreferences, frameWebPreferences)
@@ -384,7 +390,9 @@ class WindowManager {
     appWindow.setBrowserView(appView)
 
     const titleBarHeight = 30
-
+    if (rememberBounds) {
+      await this.bindRememberBoundsEvents(name, appWindow,defaultBounds)
+    }
     appView.setBounds({
       x: 0,
       y: titleBarHeight,
@@ -398,9 +406,7 @@ class WindowManager {
     //     frameId: e.frameId
     //   })
     // })
-    if (rememberBounds) {
-      this.bindRememberBoundsEvents(name, appWindow)
-    }
+
 
     appWindow.on('resize', (event, args) => {
       appView.setBounds({
@@ -785,20 +791,26 @@ class WindowManager {
     this.viewManager.resetAttachPosition()
   }
 
-  static getBoundsSetting(name) {
-    return settings.get('windowManager.bounds.' + name)
+  static async getBoundsSetting (name) {
+    return await this.getSettings(name, 'bounds')
   }
 
-  static setBoundsSetting(name, bounds) {
-    settings.set('windowManager.bounds.' + name, bounds)
+  static async setBoundsSetting (name, bounds) {
+    await this.setSettings(name,'bounds', bounds)
   }
 
-  static setSettings(name, key, value) {
-    settings.set('windowManager.settings.' + name + '.' + key, value)
+  static async setSettings (name, key, value) {
+    await settingModel.set('appSetting',name , key, value)
+
+    //settings.set('windowManager.settings.' + name + '.' + key, value)
   }
 
-  static getSettings(name, key) {
-    return settings.get('windowManager.settings.' + name + '.' + key)
+  static async getSettings (name, key) {
+    return await settingModel.get('appSetting',name, key )
+  }
+
+  static async clearSettings (name, key) {
+    await settingModel.clear('appSetting', name, key)
   }
 
   getWindowFromWebContentsId(id) {

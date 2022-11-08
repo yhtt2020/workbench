@@ -256,13 +256,13 @@ export default {
     reInstallAndRun(){
       Modal.confirm({
         centered: true,
-        content: '是否以当前配置重新安装并运行测试应用？此操作将保存全部的配置。',
+        content: '是否以当前配置重新安装并运行测试应用？此操作将保存全部的配置并删除之前的测试应用。',
         onOk: async () => {
           try {
+            await appModel.uninstall(this.devApp.debug_app_nanoid)
+            ipc.sendSync('deleteApp',{nanoid:this.devApp.debug_app_nanoid})
+            this.devApp.debug_app_nanoid=''
             let app=await this.saveAndInstall()
-            ipc.send('executeApp', {
-              app: app
-            })
           } catch (e) {
             message.error('运行测试应用失败，失败原因：' + e)
           }
@@ -277,6 +277,7 @@ export default {
       await this.saveDevApp()
       let appJson = await devAppModel.get(this.devApp.nanoid)
       let appNanoid = await appModel.installDebugAppFromJson(appJson)
+      ipc.send('installApp',{nanoid:appNanoid,background:false})
       let app = await appModel.get({ nanoid: appNanoid })
       this.devApp.debug_app_nanoid = app.nanoid
       await this.saveDevApp()

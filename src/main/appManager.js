@@ -15,12 +15,6 @@ const ipcMessageMain = require('./ipcMessageMain.js')
  * @type {*[]}
  */
 let processingAppWindows = []//运行中的应用
-function apLog (e) {
-  if (0) {
-    //electronLog.info(e)
-    console.log(e)
-  }
-}
 
 let notificationSettingStatus = null
 let protocolManager = require('./protocolManager.js')
@@ -903,10 +897,25 @@ class AppManager {
     target.minWidth=source.minWidth|| undefined
     target.maxHeight=source.maxHeight||undefined
     target.minHeight=source.minHeight || undefined
+    target.width=source.width || undefined
+    target.height=source.height || undefined
     target.alwaysOnTop=source.top//将参数转换为可识别参数
     target.resizable=source.canResize
     return target
 
+  }
+
+  /**
+   * 参考source的字段，移除target上面source不存在的字段
+   * @param target
+   * @param source
+   */
+  removeUndefinedKey(target,source){
+    Object.keys(target).forEach((key)=>{
+      if(typeof source[key] ==='undefined'){
+        delete target[key]
+      }
+    })
   }
 
   /**
@@ -916,7 +925,7 @@ class AppManager {
    * @param option
    * @param cb 启动后的回调
    */
-  executeApp (saApp, background = false, option, cb) {
+  async executeApp (saApp, background = false, option, cb) {
     saApp.settings = saApp.settings ? saApp.settings : {}
     let auth = []
     if (saApp.auth) {
@@ -932,27 +941,30 @@ class AppManager {
       saApp.authAll = [] //修复后面的判断报错的问题
     }
     let url = this.getUrl(saApp)
-    let name=(saApp.is_debug?'debug_':'') +(saApp.package ? saApp.package : url)//如果有包名，优先用包名，没有包名用url(网络应用）
-    let windowParams=this.convertToWindowParams(saApp.window[saApp.window.defaultType])
+    let name = appModel.getName(saApp)
+    let config = saApp.window[saApp.window.defaultType]
+    let windowParams = this.convertToWindowParams(config)
 
     if (saApp.window.defaultType === 'frameWindow') {
       //带边框窗体
+      const defaultFrameWindowConfig = {
+        //默认参数
+        minWidth: 800,
+        minHeight: 800,
+        maxWidth: 800,
+        maxHeight: 800,
+        width: 800,
+        height: 800,
+        resizable: true,
+        alwaysOnTop: false,
+      }
+      this.removeUndefinedKey(defaultFrameWindowConfig, windowParams)
+      let frameWindowConfig = Object.assign(defaultFrameWindowConfig, windowParams)
 
-      let frameWindowConfig =Object.assign({
-          //默认参数
-          minWidth:800,
-          minHeight:800,
-          maxWidth:800,
-          maxHeight:800,
-          width: 800,
-          height: 800,
-          resizable:true,
-          alwaysOnTop:false,
-        },windowParams)
-
-      let appWindow = windowManager.createFrameWindow({
-        name:name,
+      let appWindow = await windowManager.createFrameWindow({
+        name: name,
         app: saApp,
+        defaultBounds:{width:frameWindowConfig.width,height:frameWindowConfig.height},
         rememberBounds: true,
         url: url,
         viewOptions: {},
@@ -966,7 +978,7 @@ class AppManager {
           titleBarStyle: 'hidden',
           acceptFirstMouse: true,
           alwaysOnTop: saApp.settings.alwaysTop ? saApp.settings.alwaysTop : frameWindowConfig.alwaysOnTop,//
-        },frameWindowConfig), onReadyToShow: (frame) => {
+        }, frameWindowConfig), onReadyToShow: (frame) => {
           frame.webContents.send('init', {
             url: saApp.url,
             nanoid: saApp.nanoid,
@@ -1002,9 +1014,6 @@ class AppManager {
       })
       let frame = appWindow.frame
 
-      if (saApp.settings.bounds) {
-        frame.setBounds(saApp.settings.bounds)
-      }
       frame.on('close', (event, args) => {
         if (saApp.canClose) {
           return
@@ -1050,29 +1059,32 @@ class AppManager {
       })
       let saAppInstance = new SaApp({
         info: saApp,
-        type:'frameWindow',
-        windowName:name,
+        type: 'frameWindow',
+        windowName: name,
         window: frame,
         view: appWindow.view
       })
       this.saApps.push(saAppInstance)
-    } else if(saApp.window.defaultType==='window'){
-      let windowConfig =Object.assign({
+    } else if (saApp.window.defaultType === 'window') {
+      let defaultWindowConfig = {
         //默认参数
-        minWidth:800,
-        minHeight:800,
-        maxWidth:800,
-        maxHeight:800,
-        width: 800,
-        height: 800,
-        resizable:true,
-        alwaysOnTop:false,
-      },windowParams)
-      let appWindowInstance=windowManager.create({
+        minWidth: 400,
+        minHeight: 400,
+        maxWidth: 400,
+        maxHeight: 400,
+        width: 400,
+        height: 400,
+        resizable: true,
+        alwaysOnTop: false,
+      }
+      this.removeUndefinedKey(defaultWindowConfig, windowParams)
+      let windowConfig = Object.assign(defaultWindowConfig, windowParams)
+      let appWindowInstance = await windowManager.create({
         name,
-        app:saApp,
+        app: saApp,
         rememberBounds: true,
         url: url,
+        defaultBounds:{width:windowConfig.width,height:windowConfig.height},
         windowOption: {
           ...windowConfig,
           trafficLightPosition: {
@@ -1082,10 +1094,10 @@ class AppManager {
           frame: false,
           titleBarStyle: 'hidden',
           acceptFirstMouse: true,
-          resizable:  windowConfig.resizable,
+          resizable: windowConfig.resizable,
           alwaysOnTop: saApp.settings.alwaysTop ? saApp.settings.alwaysTop : windowConfig.alwaysOnTop,
         },
-        webPreferences:appManager.getViewWebPreferences(saApp),
+        webPreferences: appManager.getViewWebPreferences(saApp),
         onReadyToShow: (window) => {
           window.webContents.send('init', {
             url: saApp.url,
@@ -1100,6 +1112,7 @@ class AppManager {
           }
         }
       })
+      console.log(`executedAppSuccess`,saApp)
       SidePanel.send('executedAppSuccess', { app: saApp })
       saApp.windowId = appWindowInstance.window.windowId
 
@@ -1110,8 +1123,8 @@ class AppManager {
       })
       let saAppInstance = new SaApp({
         info: saApp,
-        windowName:name,
-        type:'window',
+        windowName: name,
+        type: 'window',
         window: appWindowInstance.window,
         view: appWindowInstance.window
       })
@@ -1388,12 +1401,13 @@ app.whenReady().then(() => {
   })
   ipc.on(ipcMessageMain.saApps.deleteApp, (event, args) => {
     let appId = args.nanoid
-    if (appManager.settingWindow) {
-      appManager.settingWindow.close()
-      appManager.settingWindow = null
-    }
+    // if (appManager.settingWindow) {
+    //   appManager.settingWindow.close()
+    //   appManager.settingWindow = null
+    // }
     mainWindow.focus()
     appManager.deleteApp(appId)
+    event.returnValue=true
   })
 
   ipc.on(ipcMessageMain.saApps.installApp, (event, args) => {
@@ -1613,6 +1627,7 @@ app.whenReady().then(() => {
   ipc.on('closePermissionWin', () => {
     saAppApplyPermission.close()
   })
+
 
 })
 
