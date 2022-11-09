@@ -1116,6 +1116,17 @@ class AppManager {
       SidePanel.send('executedAppSuccess', { app: saApp })
       saApp.windowId = appWindowInstance.window.windowId
 
+      if(saApp.window.window.blurAction==='close'){
+        appWindowInstance.window.on('blur',()=>{
+          appManager.closeApp(saApp.nanoid)
+        })
+      }else if(saApp.window.window.blurAction==='hide'){
+        appWindowInstance.window.on('blur',()=>{
+          appWindowInstance.window.hide()
+        })
+      }
+
+
       processingAppWindows.push({
         window: appWindowInstance.window,//在本地的对象中插入window对象，方便后续操作
         saApp: saApp,

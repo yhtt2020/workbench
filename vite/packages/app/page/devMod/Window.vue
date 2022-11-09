@@ -213,6 +213,15 @@
             <a-switch v-model:checked="windowConfigs.window.top"></a-switch>
           </div>
           <div>
+            <span class="sub-label">失焦操作</span>
+            <a-radio-group button-style="solid" v-model:value="windowConfigs.window.blurAction">
+              <a-radio-button value="none">无操作</a-radio-button>
+              <a-radio-button value="hide">隐藏</a-radio-button>
+              <a-radio-button value="close">关闭</a-radio-button>
+
+            </a-radio-group>
+          </div>
+          <div>
             <span class="sub-label" style="width: 150px">允许用户改变窗口尺寸</span>
             <a-switch v-model:checked="windowConfigs.window.canResize"></a-switch>
           </div>
@@ -340,6 +349,7 @@ export default {
           minHeight:300,
           maxHeight:600,
           top:false,
+          blurAction:'none',
         },
         attach:{
           enable:false,
@@ -352,7 +362,9 @@ export default {
       },
       windowConfigs:{
         frameWindow:{},
-        window:{},
+        window:{
+          blurAction:'none'
+        },
         attach:{}
       }
 
