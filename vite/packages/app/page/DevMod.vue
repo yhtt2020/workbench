@@ -241,9 +241,6 @@ export default {
         onOk: async () => {
           try {
             let app=await this.saveAndInstall()
-            ipc.send('executeApp', {
-              app: app
-            })
           } catch (e) {
             message.error('运行测试应用失败，失败原因：' + e)
           }
@@ -284,7 +281,6 @@ export default {
       return app
     },
     async run () {
-
       if (!this.devApp.debug_app_nanoid) {
         this.installAndRun()
       } else {

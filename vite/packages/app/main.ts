@@ -14,6 +14,7 @@ import Auth from './page/settingChildren/Auth.vue'
 import Author from './page/devMod/Author.vue'
 import AuthDev from './page/devMod/Auth.vue'
 import AllDevApps from './page/AllDevApps.vue'
+import AllApps from './page/AllApps.vue'
 import Export from './page/devMod/Export.vue'
 import {createRouter, createWebHashHistory} from 'vue-router'
 import Optimize from './page/settingChildren/Optimize.vue'
@@ -25,12 +26,12 @@ const pinia = createPinia()
 const routes = [
 
   {
-    path: '/setting', name: 'setting', component: Setting,
+    path: '/setting', component: Setting,
     children: [
       {
         path: 'auth', component: Auth
       }, {
-        path: '', component: Base
+        path: ':appId', component: Base, name: 'settingBase'
       }, {
         path: 'optimize', component: Optimize
       },
@@ -41,6 +42,9 @@ const routes = [
   },
   {
     path: "/allDevApps", component: AllDevApps
+  },
+  {
+    path: "/allApps", component: AllApps
   },
   {
     path: '/dev', name: 'dev', component: DevMod,

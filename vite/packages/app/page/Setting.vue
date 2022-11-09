@@ -2,61 +2,6 @@
 
 
   <a-layout style="height:calc(100vh)">
-    <a-layout-header v-if="debugMod" style="background: rgb(255,255,255);box-shadow: 0 0 8px rgba(63,63,63,0.2);z-index: 1;padding-left: 20px;padding-right: 20px;" class="header" theme="light">
-      <div style="display: flex">
-        <div>
-          <div class="logo" style="font-size: 16px;margin-right: 20px;font-weight: 700"><a-avatar style="margin-right: 10px" src="/icons/dev.svg"></a-avatar> 开发模式</div>
-        </div>
-        <div style="flex: auto">
-          <a-menu
-            v-model:selectedKeys="currentDevApp"
-            theme="light"
-            mode="horizontal"
-            :style="{ lineHeight: '64px' ,borderBottom:'none'}"
-          >
-            <a-sub-menu>
-              <template #title>
-                开发中的项目
-              </template>
-              <a-menu-item v-for="app in devApps" @click="loadDevApp(app)" :key="app.nanoid">
-                <template #icon>
-                  <a-avatar :src="app.logo"></a-avatar>
-                </template>
-                {{ app.name }}
-              </a-menu-item>
-              <a-menu-item key="all">
-                <router-link :to="{path:'/dev/allDevapps'}"><strong>其他应用</strong>
-                </router-link>
-              </a-menu-item>
-            </a-sub-menu>
-            <a-menu-item key="tool">
-              <router-link :to="{path:'/dev/tool'}">开发者工具</router-link>
-            </a-menu-item>
-
-          </a-menu>
-        </div>
-        <div>
-<span @click="login" v-if="!user" style="cursor: pointer">  <a-avatar>
-              开
-            </a-avatar> 登录</span>
-          <a-dropdown v-else>
-            <a-avatar :src="user.user_info.avatar">
-              开
-            </a-avatar>
-            {{ user.user_info.nickname }}
-            <template #overlay>
-              <a-menu>
-                <a-menu-item>
-                  <a href="javascript:;">打开应用市场</a>
-                </a-menu-item>
-              </a-menu>
-            </template>
-          </a-dropdown>
-        </div>
-      </div>
-
-
-    </a-layout-header>
     <a-layout>
       <a-layout-sider width="200" theme="light" style="position: relative">
         <div  style="display:flex;flex-direction:column;width: 200px;height: 100vh">
@@ -68,44 +13,24 @@
               :open-keys="['basic','dev','basicDev']"
               :style="{ height: '100%', borderRight: 0 }"
             >
-              <a-menu-item v-if="debugMod" key="8">
-                <template #icon>
-                  <smile-outlined/>
-                </template>
-                <router-link :to="{path:'/dev/wizard'}"><strong>开发向导</strong>
-                </router-link>
-              </a-menu-item>
-              <a-sub-menu v-if="!debugMod" key="basic">
+              <a-sub-menu   key="basic">
                 <template #icon>
                   <SettingOutlined></SettingOutlined>
                 </template>
                 <template #title>基础设置</template>
                 <a-menu-item key="1">
-                  <router-link :to="{path:'/setting/'}">应用信息</router-link>
+                  <router-link :to="{path:'/setting/'+appId}">应用信息</router-link>
                 </a-menu-item>
                 <a-menu-item key="2">
                   <router-link :to="{path:'/setting/optimize'}">体验优化</router-link>
                 </a-menu-item>
-                <a-menu-item v-if="debugMod" key="auth">
-                  <router-link :to="{path:'/setting/auth'}">应用授权</router-link>
+                <a-menu-item key="auth">
+                  <router-link :to="{path:'/setting/auth'}">权限管理</router-link>
                 </a-menu-item>
                 <a-menu-item key="6">
                   <router-link :to="{path:'/setting/develop'}">进入开发者模式</router-link>
                 </a-menu-item>
-
-
-                <!--                <a-menu-item key="3">-->
-                <!--                  <a href="#permission">权限管理</a>-->
-                <!--                </a-menu-item>-->
               </a-sub-menu>
-
-              <!--              <a-menu-item key="fenshen">-->
-              <!--                <a-icon type="user"></a-icon>-->
-              <!--                应用分身-->
-              <!--              </a-menu-item>-->
-
-
-
             </a-menu>
           </div>
         </div>
@@ -115,7 +40,6 @@
       <a-layout-content>
         <a-page-header
           @back="goALl"
-          v-if="!debugMod"
                        style="box-shadow: 0 2px 8px #f0f1f2;z-index: 1; padding:6px 10px;"
                        :title="this.app.name"
 
@@ -209,14 +133,15 @@ export default {
 
   async mounted () {
     this.appId = appId
-    await appStore().getApp(appId)
-    this.devApps = await devAppModel.getAll()
-    console.log(this.devApps)
+    console.log(this.$route.params)
+    if(this.$route.params.appId){
+      this.appId=this.$route.params.appId
+    }
+    await appStore().getApp(this.appId)
     let userRs =  await tsbApi.user.get()
     if(userRs.status){
       this.user=userRs.data
     }
-    console.log(this.user)
   },
   methods: {
     run(){
@@ -235,7 +160,7 @@ export default {
     },
     goALl(){
       this.devMod=false
-      this.$router.push('/dev/allDevApps')
+      this.$router.push('/allApps')
     },
     ...mapActions(appStore, ['reloadDevApp', 'saveDevApp', 'setDevApp']),
     async loadDevApp (devApp) {

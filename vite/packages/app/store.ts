@@ -34,8 +34,7 @@ export const appStore = defineStore('app', {
       this.devApp.theme_colors = {
         hex: this.devApp.theme_color || '#000000'
       }
-      this.devApp.auth=JSON.parse(this.devApp.auth)
-      this.devApp.window=JSON.parse(this.devApp.window)
+
       this.devApp.use_debug_url=!!this.devApp.use_debug_url
       this.debugMod = true
       return true
@@ -55,7 +54,6 @@ export const appStore = defineStore('app', {
       delete devApp.theme_colors
       delete devApp.assignAppsInfo
       await devAppModel.save(devApp.nanoid,devApp)
-      console.log('要保存的应用', devApp)
     }
   }
 

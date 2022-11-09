@@ -454,9 +454,7 @@ async ensureColumns(){
   async uninstall (appId) {
     //await appModel.clearSettings(appid)
     let app =await sqlDb.knex('app').where({nanoid:appId}).first()
-      console.log(app)
     let name= appModel.getName(app)
-    console.log(name)
     await settingModel.clear('appSetting',name) //移除相关设置
 
     return await sqlDb.knex('app').where({ nanoid: appId }).delete()
@@ -616,6 +614,19 @@ async ensureColumns(){
     if(typeof app.window==='string'){
       app.window=JSON.parse(app.window)
     }
+    if(typeof app.auth==='string'){
+      app.auth=JSON.parse(app.auth)
+    }
+    let userSettings=await settingModel.get('appSetting',appModel.getName(app),'common')
+    if(!userSettings){
+      app.userSettings={
+        auth:app.auth
+      }
+      await settingModel.set('appSetting',appModel.getName(app),'common',app.userSettings)
+    }
+    else{
+      app.userSettings=userSettings
+    }
     return app
   },
 
@@ -639,6 +650,9 @@ async ensureColumns(){
       result[i]=await appModel.preHandleApp(result[i])
     }
     return result
+  },
+  async getAll(option){
+    return await appModel.getAllApps(option)
   },
   /**
    * sqldb
@@ -991,7 +1005,9 @@ async ensureColumns(){
     }
 
     return assigned
-  }
+  },
+
+
 
 }
 module.exports = appModel

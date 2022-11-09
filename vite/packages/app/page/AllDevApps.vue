@@ -74,9 +74,9 @@ export default {
 
       devApp.assignAppsInfo=[]
       assignApps.forEach(async appId => {
-        devApp.assignAppsInfo.push(await appModel.get({ nanoid: appId }))
+        let assignApp=await appModel.get({ nanoid: appId })
+        if(assignApp) {devApp.assignAppsInfo.push(assignApp)}
       })
-      console.log( devApp.assignAppsInfo)
     })
 
   },

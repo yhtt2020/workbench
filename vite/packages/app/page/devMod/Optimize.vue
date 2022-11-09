@@ -32,16 +32,6 @@
               保持在左侧栏
             </a-checkbox>
           </a-col>
-          <a-col :span="8">
-            <a-checkbox value="alwaysTop">
-              保持在最顶层
-            </a-checkbox>
-          </a-col>
-          <a-col :span="8">
-            <a-checkbox value="noFrame">
-              无边框窗体
-            </a-checkbox>
-          </a-col>
         </a-row>
       </a-checkbox-group>
       <template #extra>

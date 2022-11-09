@@ -6,6 +6,7 @@ const remote = require('@electron/remote/main')
 const _ = require('lodash')
 const SaApp = require('./saAppClass')
 const appModel = require('../model/appModel')
+appModel.initDb()
 const userModel = require('../model/userModel')
 const ipc = require('electron').ipcMain
 const ipcMessageMain = require('./ipcMessageMain.js')
@@ -605,13 +606,19 @@ class AppManager {
    * @param appId
    */
   openSetting (appId) {
-    this.openAppVite('/setting', [
+    this.openAppVite('/setting/'+appId, [
       '--app-version=' + app.getVersion(),
       '--app-name=' + app.getName(),
       '--app-id=' + appId
     ])
   }
 
+  openAppManage(){
+    this.openAppVite('/allApps', [
+      '--app-version=' + app.getVersion(),
+      '--app-name=' + app.getName(),
+    ])
+  }
   // findInPage(appId,args){
   //   let window=appManager.getWindowByAppId(appId)
   //   let view=window.view
@@ -856,10 +863,6 @@ class AppManager {
     } else if (saApp.package === 'com.thisky.fav') {
       url = 'file://' + path.join(___dirname, '/pages/fav/index.html')
     }
-    if (saApp.package === 'com.thisky.appStore' ) {
-      url = 'http://localhost:5008/'
-      // url = saApp.url
-    }
     if (saApp.package === 'com.thisky.fav' && isDevelopmentMode) {
       // appView.webContents.openDevTools()
     }
@@ -893,14 +896,15 @@ class AppManager {
    */
   convertToWindowParams(source){
     let target={}
-    target.maxWidth=source.maxWidth||undefined
-    target.minWidth=source.minWidth|| undefined
-    target.maxHeight=source.maxHeight||undefined
-    target.minHeight=source.minHeight || undefined
-    target.width=source.width || undefined
-    target.height=source.height || undefined
+    target.maxWidth=Number(source.maxWidth)||undefined
+    target.minWidth=Number(source.minWidth)|| undefined
+    target.maxHeight=Number(source.maxHeight)||undefined
+    target.minHeight=Number(source.minHeight) || undefined
+    target.width=Number(source.width) || undefined
+    target.height=Number(source.height) || undefined
     target.alwaysOnTop=source.top//将参数转换为可识别参数
     target.resizable=source.canResize
+    console.log('target',target)
     return target
 
   }
@@ -916,6 +920,7 @@ class AppManager {
         delete target[key]
       }
     })
+    console.log('target fix',target)
   }
 
   /**
@@ -929,12 +934,22 @@ class AppManager {
     saApp.settings = saApp.settings ? saApp.settings : {}
     let auth = []
     if (saApp.auth) {
-      saApp.auth = JSON.parse(saApp.auth)
-      if (saApp.auth.base) {
-        auth = auth.concat(...saApp.auth.base)
+      if(typeof saApp.auth ==='string'){
+        saApp.auth=JSON.parse(saApp.auth)//防止老的string格式错误
       }
-      if (saApp.auth.app) {
-        auth = auth.concat(...saApp.auth.app)
+      if (saApp.auth.base) {
+        auth = auth.concat(Object.keys(saApp.auth.base).map(key=>{
+          if(saApp.auth.base[key]){
+            return key
+          }
+        }))
+      }
+      if (saApp.auth.api) {
+        auth = auth.concat(Object.keys(saApp.auth.api).map(key=>{
+          if(saApp.auth.api[key]){
+            return key
+          }
+        }))
       }
       saApp.authAll = auth
     } else {
@@ -960,7 +975,7 @@ class AppManager {
       }
       this.removeUndefinedKey(defaultFrameWindowConfig, windowParams)
       let frameWindowConfig = Object.assign(defaultFrameWindowConfig, windowParams)
-
+      console.log(`frameWindowConfig`,frameWindowConfig)
       let appWindow = await windowManager.createFrameWindow({
         name: name,
         app: saApp,
@@ -1639,6 +1654,9 @@ app.whenReady().then(() => {
     saAppApplyPermission.close()
   })
 
+  ipc.on('openAppManage',()=>{
+    appManager.openAppManage()
+  })
 
 })
 

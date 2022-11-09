@@ -1,6 +1,5 @@
 <template>
   <h3>权限设置</h3>
-  <h4>应用默认所需权限</h4>
   <a-tabs v-model:activeKey="activeKey">
     <a-tab-pane key="base" tab="基础权限">
       <div class="mod-line detail-setting">
@@ -9,11 +8,11 @@
         <div class="items-container">
           <a-row>
             <a-col :span="8"> <a-checkbox v-model:checked="auth.base.webSecure"><strong>base.webSecure</strong> <br>跨域</a-checkbox></a-col>
-            <a-col :span="16"> 支持跨域发起请求，在服务器端未做任何设置的情况下都可发起api请求。</a-col>
+            <a-col :span="16"> 支持跨域发起请求，应用可以向任何网站发起请求。</a-col>
           </a-row>
           <a-row>
             <a-col :span="8"> <a-checkbox v-model:checked="auth.base.node"><strong>base.node</strong> <br/>Node集成</a-checkbox></a-col>
-            <a-col :span="16"> 支持跨域发起请求，在服务器端未做任何设置的情况下都可发起api请求。</a-col>
+            <a-col :span="16"> <a-tag color="red">高危权限</a-tag>开启Node集成后，应用几乎无所不能，如果非绝对信任的应用，请勿授予此项权限。</a-col>
           </a-row>
         </div>
       </div>
@@ -212,16 +211,11 @@ export default {
     }
   },
   mounted () {
-    let optimizeValues = ['keepRunning', 'theme', 'desktop', 'showInSideBar', 'alwaysTop', 'autoRun', 'noFrame']
-    let optimize = []
-    if (this.app.settings) {
-      optimizeValues.forEach(item => {
-        if (this.app.settings[item]) {
-          optimize.push(item)
-        }
-      })
-    }
+    if(this.app.auth)
+      this.auth=this.app.userSettings.auth
+    else{
 
+    }
   }
 }
 </script>

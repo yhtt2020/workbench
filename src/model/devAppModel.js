@@ -181,10 +181,21 @@ const devAppModel = {
     }
   },
   async get(nanoid){
-    return await sqlDb.knex('dev_app').where({nanoid:nanoid}).first()
+     let devApp=await sqlDb.knex('dev_app').where({nanoid:nanoid}).first()
+
+    return devAppModel.preHandle(devApp)
+  },
+  async preHandle(devApp){
+    devApp.auth=JSON.parse(devApp.auth)
+    devApp.window=JSON.parse(devApp.window)
+    return devApp
   },
   async getAll(){
-    return await sqlDb.knex('dev_app').select()
+    let all= await sqlDb.knex('dev_app').select()
+    all.forEach(devApp=>{
+      devAppModel.preHandle(devApp)
+    })
+    return all
   },
   async save(nanoid,data){
     return await sqlDb.knex('dev_app').where({nanoid}).update(data)
