@@ -256,8 +256,13 @@ export default {
         content: '是否以当前配置重新安装并运行测试应用？此操作将保存全部的配置并删除之前的测试应用。',
         onOk: async () => {
           try {
-            await appModel.uninstall(this.devApp.debug_app_nanoid)
-            ipc.sendSync('deleteApp',{nanoid:this.devApp.debug_app_nanoid})
+            let debugApp=await appModel.get({nanoid:this.devApp.debug_app_nanoid})
+            if(!!!debugApp){
+              console.warn('调试应用不存在，忽略')
+            }else{
+              await appModel.uninstall(this.devApp.debug_app_nanoid)
+              ipc.sendSync('deleteApp',{nanoid:this.devApp.debug_app_nanoid})
+            }
             this.devApp.debug_app_nanoid=''
             let app=await this.saveAndInstall()
           } catch (e) {
@@ -273,12 +278,18 @@ export default {
     async saveAndInstall () {
       await this.saveDevApp()
       let appJson = await devAppModel.get(this.devApp.nanoid)
-      let appNanoid = await appModel.installDebugAppFromJson(appJson)
-      ipc.send('installApp',{nanoid:appNanoid,background:false})
-      let app = await appModel.get({ nanoid: appNanoid })
-      this.devApp.debug_app_nanoid = app.nanoid
-      await this.saveDevApp()
-      return app
+      appJson.is_debug=true
+     // let appNanoid = await appModel.installDebugAppFromJson(appJson)
+      let installResult=ipc.sendSync('installAppConfirm',{background:false,appJson:appJson})
+      if(installResult.result){
+        let app = await appModel.get({ nanoid: installResult.nanoid })
+        this.devApp.debug_app_nanoid = app.nanoid
+        await this.saveDevApp()
+        return app
+      }else{
+        message.error('安装取消')
+      }
+
     },
     async run () {
       if (!this.devApp.debug_app_nanoid) {

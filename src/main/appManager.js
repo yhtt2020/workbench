@@ -613,6 +613,47 @@ class AppManager {
     ])
   }
 
+  installInfo={}
+
+  /**
+   * 询问安装应用，在此阶段用户可以手动取消授权
+   * @param appJson
+   * @param from
+   * @param callback
+   * @param parent
+   */
+  installAppConfirm(appJson,from,callback,parent){
+    let installWindow=new BrowserWindow({
+      width: 350,
+      height: 500,
+      acceptFirstMouse: true,
+      frame:false,
+      parent:parent,
+      webPreferences: {
+        preload: ___dirname + '/src/preload/appSettingPreload.js',
+        nodeIntegration: true,
+        contextIsolation: false,
+        enableRemoteModule: true,
+        webSecurity: false,
+        sandbox: false,
+        safeDialogs: false,
+        safeDialogsMessage: false,
+        partition: null,
+        additionalArguments: [
+          '--user-data-path=' + userDataPath,
+        ]
+      }
+    })
+    installWindow.setMenu(null)
+    appManager.installInfo.appJson=appJson
+    appManager.installInfo.from=from
+
+    installWindow.webContents.loadURL(render.getUrl('app.html#/installApp'))
+    ipc.once('installAppReturn',(event,args)=>{
+      callback(args)
+    })
+  }
+
   openAppManage(){
     this.openAppVite('/allApps', [
       '--app-version=' + app.getVersion(),
@@ -1436,6 +1477,21 @@ app.whenReady().then(() => {
     event.returnValue=true
   })
 
+  /**
+   * ipc触发安装应用询问
+   */
+  ipc.on('installAppConfirm',(event,args)=>{
+    appManager.installAppConfirm(args.appJson,'开发项目管理',(data)=>{
+      if(data.result){
+        SidePanel.send('installApp', { nanoid: data.nanoid, background: args.background })
+        event.returnValue= { result:true,nanoid:data.nanoid }
+      }else{
+        event.returnValue= { result:false }
+      }
+    },BrowserWindow.fromWebContents(event.sender))
+  })
+
+
   ipc.on(ipcMessageMain.saApps.installApp, (event, args) => {
     SidePanel.send('installApp', { nanoid: args.nanoid, background: args.background })
   })
@@ -1657,6 +1713,13 @@ app.whenReady().then(() => {
   ipc.on('openAppManage',()=>{
     appManager.openAppManage()
   })
+  /**
+   * 获取到当前正在安装中的应用信息
+   */
+  ipc.on('getInstallAppJson',(event,args)=>{
+    event.sender.send('returnInstallAppJson',{appJson:appManager.installInfo.appJson,from:appManager.installInfo.from})
+  })
+
 
 })
 

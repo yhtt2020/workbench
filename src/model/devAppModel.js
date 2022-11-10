@@ -151,7 +151,7 @@ const devAppModel = {
       preload: app.preload,
       logo: app.logo,
       theme_color: app.theme_color,
-      window: JSON.stringify({
+      window:{
         defaultType:'frameWindow',
         frameWindow: {
           enable:true,
@@ -166,12 +166,12 @@ const devAppModel = {
         },
         window:{},
         attach:{}
-      }),
-      auth: JSON.stringify({
+      },
+      auth: {
         base:{},
         api:{},
         ability:{}
-      }),
+      },
       create_time: Date.now(),
       update_time: Date.now(),
     }

@@ -15,6 +15,7 @@ import Author from './page/devMod/Author.vue'
 import AuthDev from './page/devMod/Auth.vue'
 import AllDevApps from './page/AllDevApps.vue'
 import AllApps from './page/AllApps.vue'
+import InstallApp from './page/installApp.vue'
 import Export from './page/devMod/Export.vue'
 import {createRouter, createWebHashHistory} from 'vue-router'
 import Optimize from './page/settingChildren/Optimize.vue'
@@ -45,6 +46,9 @@ const routes = [
   },
   {
     path: "/allApps", component: AllApps
+  },
+  {
+    path: "/installApp", component: InstallApp
   },
   {
     path: '/dev', name: 'dev', component: DevMod,
