@@ -6,6 +6,7 @@ const { SqlDb } = require('../util/sqldb')
 const { nanoid } = require('nanoid')
 const sqlDb = new SqlDb()
 const SettingModel=require('./settingModel.js')
+const _ =require('lodash')
 const authBaseList=[
   {
     key:'webSecure',
@@ -748,6 +749,11 @@ async ensureColumns(){
     else{
       app.userSettings=userSettings
     }
+
+    app.origin=_.cloneDeep(app)
+    app=Object.assign(app,userSettings)
+
+
     return app
   },
   async setUserSetting(app,userSetting){

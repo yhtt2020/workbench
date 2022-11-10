@@ -76,7 +76,7 @@ export default {
   name: 'base',
 
   computed: {
-    ...mapWritableState(appStore, ['app', 'debugMod'])
+    ...mapWritableState(appStore, ['app', 'debugMod','userSetting'])
   },
   components: {
     DebugTip
@@ -119,8 +119,8 @@ export default {
     }
   },
   mounted () {
-    if(this.app.auth)
-      this.auth=this.app.userSettings.auth
+    if(this.userSetting.auth)
+      this.auth=this.userSetting.auth
     else{
 
     }

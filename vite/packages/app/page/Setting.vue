@@ -9,8 +9,9 @@
             <a-menu
               theme="light"
               mode="inline"
-              :default-selected-keys="['basic']"
-              :open-keys="['basic','dev','basicDev']"
+              v-model:selectedKeys="activeNav"
+              :default-selected-keys="['base']"
+              :open-keys="['basic' ]"
               :style="{ height: '100%', borderRight: 0 }"
             >
               <a-sub-menu   key="basic">
@@ -18,7 +19,7 @@
                   <SettingOutlined></SettingOutlined>
                 </template>
                 <template #title>基础设置</template>
-                <a-menu-item key="1">
+                <a-menu-item key="base">
                   <router-link :to="{path:'/setting/'+appId}">应用信息</router-link>
                 </a-menu-item>
                 <a-menu-item key="2">
@@ -32,6 +33,21 @@
                 </a-menu-item>
               </a-sub-menu>
             </a-menu>
+          </div>
+          <div style="height: 50px" >
+            <div style=" text-align: center;width: 100%">
+              <a-button type="primary" style="margin-right: 20px" @click="save">保存</a-button>
+              <a-dropdown>
+                <template #overlay>
+                  <a-menu>
+                    <a-menu-item @click="restore" key="restoreAppSetting">还原到初始设置</a-menu-item>
+                  </a-menu>
+                </template>
+                <a-button @click="reset">
+                  重置 <DownOutlined />
+                </a-button>
+              </a-dropdown>
+            </div>
           </div>
         </div>
 
@@ -71,7 +87,7 @@
 
 <script>
 import vueCustomScrollbar from '../../../src/components/vue-scrollbar.vue'
-import { SettingOutlined, LaptopOutlined, SmileOutlined, } from '@ant-design/icons-vue'
+import { SettingOutlined, LaptopOutlined, SmileOutlined,DownOutlined } from '@ant-design/icons-vue'
 import { appStore } from '../store'
 import { mapState, mapActions } from 'pinia'
 import { CodeTwoTone } from '@ant-design/icons-vue'
@@ -84,13 +100,14 @@ let appId =
 export default {
   name: 'Setting',
   components: {
-    SettingOutlined, LaptopOutlined, CodeTwoTone, vueCustomScrollbar, SmileOutlined
+    SettingOutlined, LaptopOutlined, CodeTwoTone, vueCustomScrollbar, SmileOutlined,DownOutlined
   },
   computed: {
     ...mapState(appStore, ['app', 'debugMod', 'devApp'])
   },
   data () {
     return {
+      activeNav:['base'],
       user:{
         user_info:{}
       },
@@ -102,32 +119,6 @@ export default {
         wheelPropagation: false
       },
       checkNick: false,
-
-      // form: this.$form.createForm(this, {
-      //   name: 'appSetting', onValuesChange: (props, values) => {
-      //     if(values.optimize){
-      //       //['keepRunning', 'theme', 'desktop', 'showInSideBar', 'alwaysTop', 'autoRun']
-      //       let optimizeValue=['keepRunning', 'theme', 'desktop', 'showInSideBar', 'alwaysTop', 'autoRun','noFrame']
-      //       let optimize=values['optimize']
-      //       let settings={}
-      //       optimizeValue.forEach(item=>{
-      //         settings[item] = optimize.indexOf(item) > -1;
-      //       })
-      //       appModel.setAppSetting(window.globalArgs['app-id'],settings)
-      //       this.tipSave()
-      //       //todo 主动更新应用信息，即时更新
-      //     }else if(values.name){
-      //       this.saApp.name=values.name
-      //       appModel.update(window.globalArgs['app-id'], { name: tools.htmlEncode(values.name) })
-      //       this.tipSave()
-      //       //todo 主动更新应用信息，即时更新
-      //     }else if(values.summary){
-      //       appModel.update(window.globalArgs['app-id'], { summary: tools.htmlEncode(values.summary) })
-      //       this.tipSave()
-      //       //todo 主动更新应用信息，即时更新
-      //     }
-      //   }
-      // }),
     }
   },
 
@@ -144,17 +135,6 @@ export default {
     }
   },
   methods: {
-    run(){
-      if(!this.devApp.debug_app){
-        Modal.confirm({
-          centered:true,
-          content:'首次运行测试应用需要安装此应用，是否以当前配置安装并运行测试应用？',
-          onOk:()=>{
-
-          }
-        })
-      }
-    },
     login(){
       tsbApi.user.login()
     },
@@ -162,20 +142,20 @@ export default {
       this.devMod=false
       this.$router.push('/allApps')
     },
-    ...mapActions(appStore, ['reloadDevApp', 'saveDevApp', 'setDevApp']),
-    async loadDevApp (devApp) {
-      await this.setDevApp(devApp)
-      this.$router.push('/dev/baseDev')
-    },
+    ...mapActions(appStore, ['reloadAppSetting', 'saveAppSetting', 'setApp','restoreAppSetting']),
     goDevelop () {
       this.$router.push({ path: '/dev/' })
     },
-    userThemeColorChanged (input) {
-      appModel.update(this.appId, { user_theme_color: input })
-      this.tipSave()
-    },
-    tipSave () {
-      appVue.$message.info({ content: '保存成功，此处设置修改需浏览器重启后生效。', key: 'save' })
+    restore(){
+      Modal.confirm({
+        content:'是否还原应用的全部设置？这将丢失所有的设置内容，还原到首次安装时的设置状态。',
+        onOk:()=>{
+          this.restoreAppSetting()
+          this.$router.replace({path:'/setting/'+this.app.nanoid})
+          this.activeNav=['base']
+          message.success('还原设置成功。')
+        }
+      })
     },
     uninstall (appId) {
       this.$confirm({
@@ -215,14 +195,17 @@ export default {
       Modal.confirm({
         content: '是否放弃当前所有改动重载之前的配置？',
         onOk: () => {
-          this.reloadDevApp()
-          message.success('已为您重置当前开发应用的信息。')
+          this.reloadAppSetting()
+          this.$router.replace({path:'/setting/'+this.app.nanoid})
+          this.activeNav=['base']
+          message.success('已为您重置当前应用的信息。')
+
         }
       })
     },
     async save () {
       try {
-        await this.saveDevApp()
+        await this.saveAppSetting()
         message.success('保存成功。')
       } catch (e) {
         message.error('保存失败。' + e)
