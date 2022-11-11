@@ -39,7 +39,9 @@ function sendIPCToDownloadWindow (action, data) {
       downloadWindow.webContents.send(action, data || {})
     })
   } else {
-    downloadWindow.webContents.send(action, data || {})
+    if(!downloadWindow.isDestroyed()) {
+      downloadWindow.webContents.send(action, data || {})
+    }
   }
 
 }

@@ -431,7 +431,7 @@ function buildAppMenu (options = {}) {
         },
         {
           label:'管理开发中的项目',
-          icon:___dirname+'/vite/public/icons/dev.png',
+          icon:___dirname+'/vite/dist/icons/dev.png',
           click:()=>{
             appManager.openAppVite('/allDevApps')
           }
