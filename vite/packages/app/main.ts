@@ -59,7 +59,7 @@ const routes = [
         path: 'optimize', component: OptimizeDev
       },
       {
-        path: 'Author', component: Author
+        path: 'author', component: Author
       },
       {
         path: 'auth', component: AuthDev

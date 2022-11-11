@@ -861,8 +861,17 @@ class WindowManager {
 
   init() {
     app.whenReady().then(() => {
-      ipc.on('api.runtime.init', (event, args) => {
+      this.on('runtime','init', (event, args,instance) => {
+         let modMap={
+           'frameWindow':'frameWindow',
+           'window':'window',
+           'view':'attach'
+         }
+         let runtime={
+           mod:modMap[instance.type]
+         }
 
+         event.sender.send('api.runtime.initResponse',{runtime}) //回传当前模式信息
       })
 
       this.onWindow('close', (event, args) => {

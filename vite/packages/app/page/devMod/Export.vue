@@ -6,7 +6,7 @@
     <a-tab-pane key="appjson" tab="导出app.json">
       <p>以下为自动根据设置导出的app.json文件，您可以直接复制，或者保存为文件。此文件可用于应用市场上架。为了方便起见，您甚至可以直接一键上架到应用市场。</p>
       <p v-if="!this.devApp.local_dir">
-        注意： 请设置开发应用的项目路径后使用保存和导出功能。<router-link :to="{path:'/setting/baseDev'}">前往设置</router-link>
+        注意： 请设置开发应用的项目路径后使用保存和导出功能。<router-link :to="{path:'/dev/'}">前往设置</router-link>
       </p>
       <p>
         <a-button style="margin-right: 30px" type="primary" @click="copyJson">复制</a-button>

@@ -326,7 +326,7 @@ export default {
           width:800,
           minWidth:800,
           maxWidth:800,
-          canResize:false,
+          canResize:true,
           height:800,
           minHeight:800,
           maxHeight:800,
@@ -344,7 +344,7 @@ export default {
           width:400,
           minWidth:300,
           maxWidth:600,
-          canResize:false,
+          canResize:true,
           height:400,
           minHeight:300,
           maxHeight:600,
@@ -356,7 +356,7 @@ export default {
           width:320,
           minWidth:320,
           maxWidth:320,
-          canResize:false,
+          canResize:true,
         }
 
       },

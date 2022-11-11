@@ -214,6 +214,8 @@ async ensureColumns(){
   // await sqlDb.knex.schema.table('app', function (t) {
   //   t.boolean('is_debug').comment('是否是调试应用')
   // })
+
+
   if(!await sqlDb.knex.schema.hasColumn('app','window')){
     //确认版本
     console.log('升级数据库')
@@ -736,8 +738,59 @@ async ensureColumns(){
     if(typeof app.window==='string'){
       app.window=JSON.parse(app.window)
     }
+    if(app.window.defaultType==='frameWindow' && app.window.frameWindow['canResize']===false && ['com.thisky.appStore'].indexOf(app.package)===-1){
+      app.window.frameWindow.canResize=true
+      await appModel.update(app.nanoid,{window:JSON.stringify(app.window)}) //修复一下默认数据
+    }
     if(typeof app.auth==='string'){
-      app.auth=JSON.parse(app.auth)
+      try{
+        app.auth=JSON.parse(app.auth)
+        if(Array.isArray(app.auth)){
+          if(app.auth.length===0){
+            app.auth={
+              base:{},
+              api:{},
+              ability:{}
+            }
+          }else{
+            //修复一下数据格式
+            let newAuth={
+              base:{
+                "webSecure":app.auth.base.indexOf('webSecure')>-1,
+                "node":app.auth.base.indexOf('node')>-1
+              },
+              api:{
+
+              },
+              ability:{}
+            }
+            app.auth=newAuth
+          }
+          if(Array.isArray(app.auth.base)){
+            let newAuth={
+              base:{
+                "webSecure":app.auth.base.indexOf('webSecure')>-1,
+                "node":app.auth.base.indexOf('node')>-1
+              },
+              api:{
+
+              },
+              ability:{}
+            }
+            app.auth=newAuth
+          }
+
+          await appModel.update(app.nanoid,{auth:JSON.stringify(app.auth)}) //修复一下默认数据
+        }
+      }catch (e) {
+        console.warn(e,app) //强制转换掉异常数据
+        app.auth={
+          base:{},
+          api:{},
+          ability:{}
+        }
+        await appModel.update(app.nanoid,{auth:JSON.stringify(app.auth)}) //修复一下默认数据
+      }
     }
     let userSettings=await settingModel.get('appSetting',appModel.getName(app),'common')
     if(!userSettings){
