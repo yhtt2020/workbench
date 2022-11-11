@@ -10,18 +10,18 @@
       </p>
       <p>
         <a-button style="margin-right: 30px" type="primary" @click="copyJson">复制</a-button>
-        <a-tooltip :overlayStyle="{'max-width':'500px'}" :title="'保存到：\n'+this.devApp.local_dir">
+        <a-tooltip :overlayStyle="{'max-width':'500px'}" :title="this.devApp.local_dir?'保存到 \n'+this.devApp.local_dir:''">
           <a-button @click="overwrite" :disabled="!this.devApp.local_dir" style="margin-right: 30px">保存到…</a-button>
         </a-tooltip>
-        <a-button style="margin-right: 30px">一键上架到应用市场</a-button>
+        <a-button disabled style="margin-right: 30px">一键上架到应用市场</a-button>
       </p>
       <div id="code" style="background: white;border-radius: 4px"></div>
     </a-tab-pane>
     <a-tab-pane key="offline" tab="导出离线应用包">
       <p>离线应用包一般用于离线安装应用，或者将应用上传到线上。</p>
       <p>
-        <a-button style="margin-right: 30px">导出</a-button>
-        <a-button style="margin-right: 30px">一键上架到应用市场</a-button>
+        <a-button  disabled style="margin-right: 30px">导出</a-button>
+        <a-button disabled style="margin-right: 30px">一键上架到应用市场</a-button>
       </p>
     </a-tab-pane>
   </a-tabs>

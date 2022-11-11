@@ -559,12 +559,18 @@ class AppManager {
     return imagePath
   }
 
-  openAppVite (path, additionalArguments = []) {
-    function loadSettingWindow () {
-      appManager.settingWindow = new BrowserWindow({
-        width: 920,
-        height: 800,
-        acceptFirstMouse: true,
+  async openAppVite (path, additionalArguments = []) {
+    async function loadSettingWindow () {
+      appManager.settingWindow = await windowManager.create({
+        name: 'appManager',
+        windowOption: {
+          frame:true,
+          width: 920,
+          height: 800,
+          closable:true,
+          minimizable:false,
+          acceptFirstMouse: true,
+        },
         webPreferences: {
           preload: ___dirname + '/src/preload/appSettingPreload.js',
           nodeIntegration: true,
@@ -577,27 +583,25 @@ class AppManager {
           partition: null,
           additionalArguments: [
             '--user-data-path=' + userDataPath,
-            ...additionalArguments
+            ...additionalArguments,
           ]
-        }
+        },
+        url: render.getUrl('app.html#' + path)
       })
-      appManager.settingWindow.setMenu(null)
-      appManager.settingWindow.webContents.loadURL(render.getUrl('app.html#' + path))
+      appManager.settingWindow.window.setMenu(null)
       if (isDevelopmentMode) {
         //appManager.settingWindow.webContents.openDevTools()
       }
-      appManager.settingWindow.on('close', () => {
+      appManager.settingWindow.window.on('close', () => {
         appManager.settingWindow = null
       })
     }
 
     if (appManager.settingWindow === null) {
-      loadSettingWindow()
+      await loadSettingWindow()
     } else {
-      if (!appManager.settingWindow.isDestroyed()) {
-        appManager.settingWindow.close()
-        loadSettingWindow()
-      }
+      appManager.settingWindow.close()
+      await loadSettingWindow()
     }
   }
 
@@ -641,6 +645,7 @@ class AppManager {
         partition: null,
         additionalArguments: [
           '--user-data-path=' + userDataPath,
+
         ]
       }
     })
@@ -658,6 +663,7 @@ class AppManager {
     this.openAppVite('/allApps', [
       '--app-version=' + app.getVersion(),
       '--app-name=' + app.getName(),
+
     ])
   }
   // findInPage(appId,args){
@@ -1016,7 +1022,6 @@ class AppManager {
       }
       this.removeUndefinedKey(defaultFrameWindowConfig, windowParams)
       let frameWindowConfig = Object.assign(defaultFrameWindowConfig, windowParams)
-      console.log(`frameWindowConfig`,frameWindowConfig)
       let appWindow = await windowManager.createFrameWindow({
         name: name,
         app: saApp,
@@ -1025,7 +1030,7 @@ class AppManager {
         url: url,
         viewOptions: {},
         viewWebPreferences: appManager.getViewWebPreferences(saApp),
-        windowOption: Object.assign({
+        windowOption: _.cloneDeep(Object.assign({
           trafficLightPosition: {
             x: 10, y: 7
           },
@@ -1034,7 +1039,7 @@ class AppManager {
           titleBarStyle: 'hidden',
           acceptFirstMouse: true,
           alwaysOnTop: saApp.settings.alwaysTop ? saApp.settings.alwaysTop : frameWindowConfig.alwaysOnTop,//
-        }, frameWindowConfig), onReadyToShow: (frame) => {
+        }, frameWindowConfig)), onReadyToShow: (frame) => {
           frame.webContents.send('init', {
             url: saApp.url,
             nanoid: saApp.nanoid,
@@ -1168,7 +1173,6 @@ class AppManager {
           }
         }
       })
-      console.log(`executedAppSuccess`,saApp)
       SidePanel.send('executedAppSuccess', { app: saApp })
       saApp.windowId = appWindowInstance.window.windowId
 

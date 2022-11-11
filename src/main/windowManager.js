@@ -4,6 +4,7 @@ const {app, ipcMain: ipc, BrowserWindow, BrowserView} = require('electron')
 const SaApp = require('./saAppClass')
 const remote = require('@electron/remote/main')
 const SettingModel=require('../model/settingModel.js')
+const _ = require('lodash')
 let settingModel
 /**
  * 代理view管理
@@ -255,12 +256,12 @@ class WindowManager {
     } = options
     let webContents
     if (webPreferences)
-      webPreferences = Object.assign(this.defaultWebPreferences, webPreferences)
+      webPreferences =Object.assign( _.cloneDeep(this.defaultWebPreferences), webPreferences)
     this.optionMap[name] = name
     let instance
 
     windowOption.webPreferences = webPreferences
-    windowOption = Object.assign(this.defaultWindowPreferences, windowOption)
+    windowOption = Object.assign(_.cloneDeep(this.defaultWindowPreferences), windowOption)
     windowOption.webPreferences.additionalArguments = [
       '--user-data-path=' + userDataPath,
       '--app-version=' + app.getVersion(),
@@ -275,7 +276,8 @@ class WindowManager {
       }
       window.show()
     })
-    if (process.platform === 'darwin') {
+
+    if (process.platform === 'darwin' && windowOption.frame===false) {
       //mac上设置隐藏交通灯按钮
       window.setWindowButtonVisibility(false)
     }
@@ -353,12 +355,12 @@ class WindowManager {
       defaultBounds,
       onDomReady
     } = options
-    frameWebPreferences = Object.assign(this.defaultWebPreferences, frameWebPreferences)
+    frameWebPreferences =Object.assign( _.cloneDeep(this.defaultWebPreferences), frameWebPreferences)
     if (frameWebPreferences) {
       windowOption.webPreferences = frameWebPreferences
     }
 
-    windowOption = Object.assign(this.defaultWindowPreferences, windowOption)
+    windowOption =  Object.assign(_.cloneDeep(this.defaultWindowPreferences), windowOption)
     let appWindow = new BrowserWindow(windowOption)
     appWindow.on('ready-to-show', () => {
       if (onReadyToShow) {
@@ -862,16 +864,21 @@ class WindowManager {
   init() {
     app.whenReady().then(() => {
       this.on('runtime','init', (event, args,instance) => {
-         let modMap={
-           'frameWindow':'frameWindow',
-           'window':'window',
-           'view':'attach'
-         }
-         let runtime={
-           mod:modMap[instance.type]
-         }
+        try{
+          let modMap={
+            'frameWindow':'frameWindow',
+            'window':'window',
+            'view':'attach'
+          }
+          let runtime={
+            mod:modMap[instance.type]
+          }
 
-         event.sender.send('api.runtime.initResponse',{runtime}) //回传当前模式信息
+          event.sender.send('api.runtime.initResponse',{runtime}) //回传当前模式信息
+        }catch (e) {
+          console.warn('回传失败',e)
+        }
+
       })
 
       this.onWindow('close', (event, args) => {

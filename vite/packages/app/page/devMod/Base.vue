@@ -39,10 +39,11 @@
       :rules="{ message: '唯一的应用名，用于开发的时候应用身份确认，唯一' ,min:1,max:16 }"
     >
       <a-input-group compact>
-        <a-input style="width: 200px" v-model:value="devApp.package"
-                 placeholder="请点击注册包名"
+        <a-input style="width: 300px" v-model:value="devApp.package"
+                 placeholder="全网唯一包名，形如com.thisky.todo"
         >
-        </a-input><a-button type="primary">注册包名</a-button>
+        </a-input>
+<!--        <a-button type="primary">注册包名</a-button>-->
       </a-input-group>
 <DebugTip tip="package"></DebugTip>
     </a-form-item>

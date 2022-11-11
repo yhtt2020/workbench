@@ -43,7 +43,6 @@
             </a-avatar> 登录</span>
         <a-dropdown v-else>
           <a-avatar :src="user.user_info.avatar">
-            开
           </a-avatar>
           {{ user.user_info.nickname }}
           <template #overlay>
@@ -70,13 +69,6 @@
             :open-keys="['basic','dev','basicDev']"
             :style="{ height: '100%', borderRight: 0 }"
           >
-            <a-menu-item   key="8">
-              <template #icon>
-                <smile-outlined/>
-              </template>
-              <router-link :to="{path:'/dev/wizard'}"><strong>开发向导</strong>
-              </router-link>
-            </a-menu-item>
 
             <!--              <a-menu-item key="fenshen">-->
             <!--                <a-icon type="user"></a-icon>-->
@@ -126,7 +118,12 @@
             </a-sub-menu>
           </a-menu>
         </div>
-        <div style="height: 110px" >
+        <div style="height: 160px;padding: 10px" >
+          <div style="width: 82%;margin: auto;margin-bottom: 10px;">
+
+            <router-link :to="{path:'/dev/wizard'}"><a-button block type="danger" >    <smile-outlined/><strong>&nbsp; 开发向导</strong></a-button>
+            </router-link>
+          </div>
           <div style=" text-align: center;width: 100%">
             <a-button type="primary" style="margin-right: 20px" @click="save">保存</a-button>
             <a-button @click="reset">重置</a-button>
@@ -168,7 +165,7 @@
 import vueCustomScrollbar from '../../../src/components/vue-scrollbar.vue'
 import { SettingOutlined, LaptopOutlined, SmileOutlined,BookOutlined,SelectOutlined } from '@ant-design/icons-vue'
 import { appStore } from '../store'
-import { mapState, mapActions } from 'pinia'
+import { mapState, mapActions,mapWritableState } from 'pinia'
 import { CodeTwoTone } from '@ant-design/icons-vue'
 import { message, Modal } from 'ant-design-vue'
 
@@ -182,13 +179,12 @@ export default {
     SettingOutlined, LaptopOutlined, CodeTwoTone, vueCustomScrollbar, SmileOutlined,BookOutlined,SelectOutlined
   },
   computed: {
-    ...mapState(appStore, ['app', 'debugMod', 'devApp'])
+    ...mapState(appStore, ['app', 'debugMod', 'devApp']),
+    ...mapWritableState(appStore,['user']),
   },
   data () {
     return {
-      user:{
-        user_info:{}
-      },
+
       currentDevApp: [],
       settings: {
         swipeEasing: true,
@@ -232,6 +228,20 @@ export default {
     if(userRs.status){
       this.user=userRs.data
     }
+
+    let hasTipAppManagerWizard=localStorage.getItem('hasTipAppManagerWizard')
+    if(!hasTipAppManagerWizard){
+      Modal.info({
+        centered:true,
+        content:'首次使用开发者工具，建议点击左下角红色开发向导按钮，详细了解一个应用从创建项目到上线需要做的事情。',
+        okText:'我知道了，不再提示',
+        onOk:()=>{
+          localStorage.setItem('hasTipAppManagerWizard',true)
+      }
+      })
+    }
+
+
   },
   methods: {
     installAndRun(){
@@ -241,6 +251,11 @@ export default {
         onOk: async () => {
           try {
             let app=await this.saveAndInstall()
+            Modal.info({
+              centered:true,
+              content:'成功安装运行，如若需要设置生效，则需要重新安装并运行应用',
+              okText:'我知道了'
+            })
           } catch (e) {
             message.error('运行测试应用失败，失败原因：' + e)
           }

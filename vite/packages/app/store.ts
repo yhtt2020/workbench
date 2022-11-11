@@ -22,6 +22,9 @@ export const appStore = defineStore('app', {
       theme_color: '',
       user_theme_color: ''
     },
+    user:{
+      user_info:{}
+    },
     userSetting:initSetting,
     setting: {  //设置，用户设置的
 

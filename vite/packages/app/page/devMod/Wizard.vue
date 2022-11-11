@@ -22,6 +22,9 @@
                   <div v-else-if="item.target==='_tab'">
                     <a @click="addTab(item.href)">{{ item.hrefText || '打开' }}</a>
                   </div>
+                  <div v-else-if="item.target==='button'">
+                    <a @click="item.onClick()">{{ item.hrefText || '打开' }}</a>
+                  </div>
                 </template>
                 <a-list-item-meta :description="item.description">
                   <template #title>
@@ -82,16 +85,14 @@ export default {
                   done++
                 }
               })
-              console.log(done)
-              console.log(Object.keys(this.devApp))
               return ((done / count) * 100).toFixed(0)
             },
-            href: '/setting/baseDev'
+            href: '/dev/'
           }, {
             title: '设置权限',
             progress: null,
             description: '根据实际需求选择权限，不需要的不要勾选，以免造成用户流失',
-            href: '/setting/authDev'
+            href: '/dev/auth'
           },
         ]
       },
@@ -103,17 +104,17 @@ export default {
             type: 'checkbox',
             title: '设置项目目录',
             description: '设置了目录才可以导出minifest和打包',
-            href: '/setting/baseDev',
+            href: '/dev/',
             hrefText: '去设置',
             checked: () => {
               return !!this.devApp.local_dir
             }
           }, {
             type: 'checkbox',
-            title: '申请唯一包名',
+            title: '填写唯一包名',
             description: '只有注册了唯一包名的应用才可以使用api',
-            href: '/setting/baseDev',
-            hrefText: '去申请',
+            href: '/dev/',
+            hrefText: '去填写',
             checked: () => {
               return !!this.devApp.package
             }
@@ -121,7 +122,7 @@ export default {
           {
             title: '加入开发者学院',
             description: '在元社区假如开发者学院，学习开发知识',
-            href: '',
+            href: 'https://s.apps.vip/forum?id=123',
             target: '_tab'
           },
           {
@@ -135,7 +136,10 @@ export default {
         subTitle: '大功告成',
         nodes: [
           {
-            title: '导出离线安装包'
+            title: '导出离线安装包',
+            description: '导出离线安装包，用于上架',
+            hrefText: '去导出',
+            href: '/dev/export',
           }
         ]
       }, {
@@ -143,7 +147,18 @@ export default {
         subTitle: '',
         nodes: [
           {
-            title: '开发者入驻'
+            title: '登录浏览器账号',
+            type: 'checkbox',
+            description: '登录浏览器账号后才可上架应用到市场',
+            href: 'com.thisky.appStore',
+            hrefText: '去登录',
+            onClick:()=>{
+              tsbApi.user.login()
+            },
+            target:'button',
+            checked: () => {
+              return this.user.uid
+            }
           },
           {
             title: '申请上架'
@@ -168,7 +183,7 @@ export default {
     this.steps = steps
   },
   computed: {
-    ...mapWritableState(appStore, ['app', 'debugMod', 'devApp'])
+    ...mapWritableState(appStore, ['app', 'debugMod', 'devApp','user'])
   },
   methods: {
     ...mapActions(appStore, ['toggleDebug']),
