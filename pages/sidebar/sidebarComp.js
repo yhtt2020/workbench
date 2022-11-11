@@ -1302,6 +1302,7 @@ Vue.component('sidebar', {
     //应用市场项目所需要的函数
     addApp (app) {
       console.log(app)
+
       let option = {
         name: app.name,
         logo: !!!app.logo256 ? '../../icons/default.svg' :app.logo256,
@@ -1316,7 +1317,9 @@ Vue.component('sidebar', {
         auth:app.auth,
         url:app.site,
         site:app.url,
-        author:app.author,
+        avatar:app.author.avatar,
+        nickname:app.author.nickname,
+        // author:app.author,
         showInSideBar: false,
         //circleMessage:!!!app.circleMessage ? '' :app.circleMessage,
         nanoid:app.appNanoid
@@ -1360,8 +1363,9 @@ Vue.component('sidebar', {
       ipc.send('saAppOpenSetting', {nanoid: app.nanoid})
     },
     async uninstallApp(args) {
+      console.log('卸载',args)
       let app = await standAloneAppModel.get({nanoid: args})
-      console.log(app)
+
       standAloneAppModel.uninstall(app.nanoid).then(success=>{
         ipc.send('message',{type:"success",config:{content:'卸载应用成功。'}})
         ipc.send('deleteApp',{nanoid:app.nanoid})
@@ -1624,6 +1628,7 @@ Vue.component('sidebar', {
         this.$store.dispatch('getJoinedCircle', { page: 1, row: 500 })
         this.$store.dispatch('getMyCircle', { page: 1, row: 500 })
         this.$store.dispatch('getUserInfo')
+        this.$store.dispatch('getCircleInfoById')
       }
     },
     closeUserPanel(){

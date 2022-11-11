@@ -445,6 +445,7 @@ const appModel = {
       site: app.site ? app.site : '',
       url: url,
       circle: app.circle ? app.circle : '',
+
       // circleMessage: app.circleMessage ? app.circleMessage : '',
       preload: app.preload || '',
       package: app.package || '',
@@ -456,7 +457,10 @@ const appModel = {
       }),
       create_time: Date.now(),
       update_time: Date.now(),
-      account_avatar: '',
+      account_avatar: JSON.stringify({
+        avatar:app.avatar,
+        nickname:app.nickname,
+      }),
       order: 0,
       use_count: 0,
       last_execute_time: Date.now(),
