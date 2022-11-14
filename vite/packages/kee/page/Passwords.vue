@@ -1,9 +1,49 @@
 <template>
-  <a-layout style="height:calc(100vh)">
-    <a-layout-sider theme="light">
-      左侧栏
+  <div style="height: 45px;padding: 10px">
+    <a-row gutter="20">
+      <a-col>
+        <a-select placeholder="当前站点">
+
+        </a-select>
+      </a-col>
+      <a-col>
+        <a-input-search
+          v-model:value="value"
+          placeholder="搜索"
+          style="width: 200px"
+          @search="onSearch"
+        />
+      </a-col>
+      <a-col>
+        <a-button type="primary">
+          新建密码
+        </a-button>
+      </a-col>
+    </a-row>
+
+
+
+  </div>
+  <a-layout style="height:calc(100vh - 45px)">
+    <a-layout-sider theme="light" style="padding: 20px">
+      <a-list item-layout="horizontal" :data-source="passwords">
+        <template #renderItem="{ item }">
+          <a-list-item>
+            <a-list-item-meta
+              :description="item.description"
+            >
+              <template #title>
+                <a href="https://www.antdv.com/">{{ item.title }}</a>
+              </template>
+              <template #avatar>
+                <a-avatar src="https://joeschmoe.io/api/v1/random" />
+              </template>
+            </a-list-item-meta>
+          </a-list-item>
+        </template>
+      </a-list>
     </a-layout-sider>
-    <a-layout-body>
+    <a-layout-body style="padding: 10px">
       <router-view></router-view>
     </a-layout-body>
   </a-layout>
@@ -43,6 +83,28 @@ export default {
         wheelPropagation: false
       },
       checkNick: false,
+      passwords:[
+        {
+          title:'禅道账号',
+          description:'Francisio_Phillps'
+        },
+        {
+          title:'禅道账号',
+          description:'Francisio_Phillps'
+        },
+        {
+          title:'禅道账号',
+          description:'Francisio_Phillps'
+        },
+        {
+          title:'禅道账号',
+          description:'Francisio_Phillps'
+        },
+        {
+          title:'禅道账号',
+          description:'Francisio_Phillps'
+        }
+      ]
     }
   },
 
