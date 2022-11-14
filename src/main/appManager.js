@@ -943,17 +943,19 @@ class AppManager {
    */
   convertToWindowParams(source){
     let target={}
-    target.maxWidth=Number(source.maxWidth)||undefined
-    target.minWidth=Number(source.minWidth)|| undefined
-    target.maxHeight=Number(source.maxHeight)||undefined
-    target.minHeight=Number(source.minHeight) || undefined
-    target.width=Number(source.width) || undefined
-    target.height=Number(source.height) || undefined
-    target.alwaysOnTop=source.top//将参数转换为可识别参数
-    target.resizable=source.canResize
-    console.log('target',target)
-    return target
+    if(typeof source ==='undefined'){
+      target=source
+    }else{target.maxWidth=Number(source.maxWidth)||undefined
+      target.minWidth=Number(source.minWidth)|| undefined
+      target.maxHeight=Number(source.maxHeight)||undefined
+      target.minHeight=Number(source.minHeight) || undefined
+      target.width=Number(source.width) || undefined
+      target.height=Number(source.height) || undefined
+      target.alwaysOnTop=source.top//将参数转换为可识别参数
+      target.resizable=source.canResize
 
+    }
+    return _.cloneDeep(target)//复制出去，防止引用错误
   }
 
   /**
