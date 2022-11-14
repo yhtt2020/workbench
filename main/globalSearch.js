@@ -85,7 +85,14 @@ const globalSearchMod = {
 
 app.whenReady().then(() => {
   // Register a 'CommandOrControl+X' shortcut listener.
-  globalShortcut.register('Alt+F', () => {
+  let keyMap=settings.get('keyMap')
+  let quick='Alt+F'
+  if(keyMap){
+    if(keyMap.globalSearch){
+      quick=keyMap.globalSearch
+    }
+  }
+  globalShortcut.register(quick, () => {
     globalSearchMod.init()
 
     //statsh 快捷键打开全局搜索
