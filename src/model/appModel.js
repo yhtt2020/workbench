@@ -469,6 +469,10 @@ async ensureColumns(){
         return true
       }
     })
+    for(let i=0;i<matchedApps.length;i++){
+      matchedApps[i]=await appModel.preHandleApp(matchedApps[i])
+    }
+
     return matchedApps
 
     //
