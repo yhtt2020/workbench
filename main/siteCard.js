@@ -78,8 +78,50 @@ app.whenReady().then(() => {
   //createSiteCardWin() 启动的时候不自动创建sitecard
 })
 
-ipc.on('openPwdManager', (event, args) => {
-  createSiteCardWin({ tabData: args.tabData ,activeTab:'pwd'})
+ipc.on('openPwdManager', async (event, args) => {
+  let url = args.tabData.url
+  let title = args.tabData.title
+  const siteUrl = parseInnerURL(url)
+  if (!global.passwordWin) {
+    global.passwordWin = await windowManager.create({
+      url: render.getUrl('kee.html'),
+      name: 'kee',
+      windowOption: {
+        backgroundColor: 'white',
+        parent: mainWindow,
+        center: true,
+        hasShadow: true,
+        minWidth: 600,
+        width: 600,
+        autoHideMenuBar: true,
+        minHeight: 600,
+        height: 600,
+        acceptFirstMouse: true,
+        maximizable: false,
+        visualEffectState: 'active',
+        alwaysOnTop: true,
+      },
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false,
+        sandbox: false,
+        preload: ___dirname + '/src/preload/keePreload.js',
+        additionalArguments: [
+          '--user-data-path=' + userDataPath,
+          '--app-version=' + app.getVersion(),
+          '--app-name=' + app.getName(),
+          '--site-url=' + siteUrl,
+          '--site-title=' + title,
+          '--tab-data=' + encodeURIComponent(JSON.stringify(args.tabData)),
+          ...((isDevelopmentMode ? ['--development-mode'] : []))
+        ]
+      }
+    })
+  } else {
+    global.passwordWin.close()
+    global.passwordWin=null
+  }
+
 })
 
 function parseInnerURL(url){
