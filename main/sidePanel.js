@@ -1057,7 +1057,7 @@ let userWindow = null
 let lastWindowArgs = {}
 let changingSpace = false
 
-function showUserWindow (args) {
+async function showUserWindow (args) {
   const _ = require('lodash')
   if (userWindow) {
     if (masked) {
@@ -1080,22 +1080,26 @@ function showUserWindow (args) {
     _.mapKeys(additionalArgs, (value, key) => {
       formatArgs.push('--' + key + '=' + value)
     })
-
-    userWindow = new BrowserWindow({
-      //backgroundColor: '#00000000',
-      show: false,
-      minWidth:900,
-      minHeight:550,
-      width: 900,
-      height: 550,
-      title:'选择空间',
-      maximizable:false,
+    let userWindowInstance = await windowManager.create({
+      name: 'user',
+      windowOption: {
+        //backgroundColor: '#00000000',
+        frame: true,
+        show: false,
+        minWidth: 900,
+        minHeight: 550,
+        width: 900,
+        height: 550,
+        title: '选择空间',
+        maximizable: false,
+        alwaysOnTop: true,//一直保持最高，防止被遮挡
+      },
       webPreferences: {
-        preload:path.join(__dirname,'src/preload/user.js'),
+        preload: path.join(__dirname, 'src/preload/user.js'),
         nodeIntegration: true,
         contextIsolation: false,
-        sandbox:false,
-        webSecurity:false,
+        sandbox: false,
+        webSecurity: false,
         additionalArguments: [
           '--user-data-path=' + userDataPath,
           '--app-version=' + app.getVersion(),
@@ -1103,8 +1107,11 @@ function showUserWindow (args) {
           ...((isDevelopmentMode ? ['--development-mode'] : [])),
           ...formatArgs
         ]
-      }
+      },
+      url: render.getUrl('user.html')
     })
+    console.log(userWindowInstance, '222')
+    userWindow = userWindowInstance.window
 
     function computeBounds (parentBounds, selfBounds) {
       let bounds = {}
@@ -1114,9 +1121,9 @@ function showUserWindow (args) {
       bounds.height = parseInt(selfBounds.height)
       return bounds
     }
+
     userWindow.setMenu(null)
     //userWindow.webContents.openDevTools()
-    userWindow.loadURL(render.getUrl('user.html'))
     userWindow.on('ready-to-show', () => {
       userWindow.show()
       if (mainWindow && !mainWindow.isDestroyed())
