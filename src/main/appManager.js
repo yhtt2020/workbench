@@ -986,19 +986,27 @@ class AppManager {
       if(typeof saApp.auth ==='string'){
         saApp.auth=JSON.parse(saApp.auth)//防止老的string格式错误
       }
-      if (saApp.auth.base) {
-        auth = auth.concat(Object.keys(saApp.auth.base).map(key=>{
+      if( typeof saApp.auth.base ==='object'){
+        //兼容最新的auth格式，因为最新的auth变成了对象
+        Object.keys(saApp.auth.base).forEach(key=>{
+          if(saApp.auth.base[key]) auth.push(key)
+        })
+      }else{
+        if (saApp.auth.base) {
+
+          auth = auth.concat(Object.keys(saApp.auth.base).map(key=>{
           if(saApp.auth.base[key]){
             return key
           }
         }))
-      }
-      if (saApp.auth.api) {
-        auth = auth.concat(Object.keys(saApp.auth.api).map(key=>{
+        }
+        if (saApp.auth.api) {
+          auth = auth.concat(Object.keys(saApp.auth.api).map(key=>{
           if(saApp.auth.api[key]){
             return key
           }
         }))
+        }
       }
       saApp.authAll = auth
     } else {

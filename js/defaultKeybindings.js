@@ -101,8 +101,9 @@ const defaultKeybindings = {
     })
 
     keybindings.defineShortcut('addToFavorites', function (e) {
-      tabEditor.show(tabs.getSelected(), null, false) // we need to show the bookmarks button, which is only visible in edit mode
-      tabEditor.container.querySelector('.bookmarks-button').click()
+      // tabEditor.show(tabs.getSelected(), null, false) // we need to show the bookmarks button, which is only visible in edit mode
+      // tabEditor.container.querySelector('.bookmarks-button').click()
+      ipc.send('openPopSaveToFolder')
     })
 
     keybindings.defineShortcut('showBookmarks', function () {

@@ -12,7 +12,7 @@ const popManager = {
   /**
    * 准备窗体
    */
-  preparePop (name = Date.now().toString(), url, options = {}, webPreferences = {},fileOption) {
+  async preparePop (name = Date.now().toString(), url, options = {}, webPreferences = {}, fileOption) {
     if (popRegistered.indexOf(name) === -1) {
       return false //如果不在注册的弹窗清单中，则直接返回假
     }
@@ -39,24 +39,30 @@ const popManager = {
       safeDialogs: false,
       safeDialogsMessage: false,
       partition: null,
-      webSecurity:false,
+      webSecurity: false,
       additionalArguments: [
         '--user-data-path=' + userDataPath,
         '--app-version=' + app.getVersion(),
         '--app-name=' + app.getName()
       ]
     }, webPreferences)
-    options.webPreferences = webPreferences
-    let pop = new BrowserWindow(options)
-    if(url.startsWith('http') || url.startsWith('https')){
+    let popInstance = await windowManager.create({
+      name: name,
+      windowOption: options,
+      webPreferences,
+    })
+
+    console.log(popInstance)
+    let pop = popInstance.window
+    if (url.startsWith('http') || url.startsWith('https')) {
       pop.loadURL(url)
-    }else{
-      pop.loadFile(url,fileOption)
+    } else {
+      pop.loadFile(url, fileOption)
     }
     pop.on('blur', () => {
       pop.hide()
     })
-    pop.on('will-resize',(event)=>{
+    pop.on('will-resize', (event) => {
       event.preventDefault()
     })
     popWindow = {
@@ -113,8 +119,8 @@ const popManager = {
    * @param webPreferences
    * @returns {BrowserWindow}
    */
-  openPop (name = Date.now().toString(), url, options = {}, webPreferences = {},fileOptions) {
-    let popWindow = popManager.preparePop(name, url, options, webPreferences,fileOptions)
+  async openPop (name = Date.now().toString(), url, options = {}, webPreferences = {}, fileOptions) {
+    let popWindow = await popManager.preparePop(name, url, options, webPreferences, fileOptions)
     if (popWindow) {
       popWindow.window.show()
       return popWindow
