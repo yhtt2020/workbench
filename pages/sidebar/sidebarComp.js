@@ -1301,8 +1301,6 @@ Vue.component('sidebar', {
     },
     //应用市场项目所需要的函数
     addApp (app) {
-      console.log(app)
-
       let option = {
         name: app.name,
         logo: !!!app.logo256 ? '../../icons/default.svg' :app.logo256,
@@ -1314,14 +1312,14 @@ Vue.component('sidebar', {
         theme_color: !!!app.themeColor ? '#000' :app.themeColor,
         settings:app.settings,
         circle:app.circle,
-        auth:app.auth,
+        auth:JSON.parse(app.auth),
         url:app.site,
         site:app.url,
         avatar:app.author.avatar,
         nickname:app.author.nickname,
         // author:app.author,
         showInSideBar: false,
-        //circleMessage:!!!app.circleMessage ? '' :app.circleMessage,
+
         nanoid:app.appNanoid
       }
 
