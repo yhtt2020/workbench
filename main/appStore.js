@@ -28,7 +28,7 @@ app.whenReady().then(()=> {
         }
         clearInterval(myVar)
       }
-    }, 20);
+    }, 20)
   })
 
   ipc.on('openSystemApp',(event,args)=>{
