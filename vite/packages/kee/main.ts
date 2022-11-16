@@ -12,13 +12,13 @@ const pinia = createPinia()
 const routes = [
   {
     path: '/', component: Passwords,
+    redirect:'/zenmaster',
     children:[
       {
         path:'/zenmaster',component:PasswordDetail
       },
       {
-        path:'/languagefinches',
-        components:PasswordLanguage,
+        path:'/languagefinches',components:PasswordLanguage,
       }
     ]
   }

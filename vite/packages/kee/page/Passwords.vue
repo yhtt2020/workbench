@@ -1,13 +1,13 @@
 <template>
    <div class="password-header">
-    <div class="password-select">
+    <div class="password-select" @click="selectOptions">
       <a-row class="password-select-container">
         <a-col :span="12" class="col-left">
             <AppstoreFilled class="col-left-icon"/>
             <span class="password-all">所有密码</span>
         </a-col>
         <a-col  :span="12" class="col-right">
-          <SwapOutlined  style="font-size:16px;cursor: pointer;" @click="selectOptions"/>
+          <SwapOutlined  style="font-size:16px;cursor: pointer;"/>
         </a-col>
       </a-row>
     </div>
@@ -26,30 +26,36 @@
     </a-button>
    </div>
    <a-layout style="height:calc(100vh - 45px)">
-    <a-layout-sider theme="light" style="padding: 9px 8px 9px 8px;">
+    <a-layout-sider theme="light" style="padding: 20px">
       <a-list item-layout="horizontal" :data-source="passwords">
         <template #renderItem="{ item }">
-          <a-list-item  @click="passwordListClick(item.path)">
-            <a-list-item-meta :description="item.description">
-               <router-link to="">
-                <template #title>
-                  <a href="https://www.antdv.com/">{{ item.title }}</a>
-                </template>
-                <template #avatar>
-                   <a-avatar src="https://joeschmoe.io/api/v1/random" />
-                </template>
-               </router-link>
+          <a-list-item>
+            <a-list-item-meta  :description="item.description" > 
+
+
+
+              <template #title>
+                <a href="https://www.antdv.com/">{{ item.title }}</a>
+              </template>
             </a-list-item-meta>
           </a-list-item>
         </template>
       </a-list>
     </a-layout-sider>
-    <a-layout-body style="padding: 10px; width:100%;background: rgba(255, 255, 255, 1);">
+    <a-layout-body class="password-right-main">
       <router-view></router-view>
     </a-layout-body>
-   </a-layout>
+  </a-layout>
    <a-drawer :width="216" placement="left" :visible="visible" @close="onClose">
-      
+      <div class="filter-list-container">
+          
+      </div>
+      <a-tree>
+       <template #title="{ title, key }">
+        <span v-if="key === '0-0-1-0'" style="color: #1890ff">{{ title }}</span>
+        <template v-else>{{ title }}</template>
+        </template>
+      </a-tree>
    </a-drawer> 
 </template>
 
@@ -63,6 +69,7 @@ import {
 import { appStore } from '../store'
 import { mapState, mapActions } from 'pinia'
 import { CodeTwoTone } from '@ant-design/icons-vue'
+import '../assets/font/iconfont.css'
 import { message, Modal } from 'ant-design-vue'
 let { appModel, devAppModel } = window.$models
 let appId = window.globalArgs['app-id']
@@ -97,32 +104,31 @@ export default {
           id:0,
           title:'禅道账号',
           description:'Francisio_Phillps',
-          path:'/zenmaster',
-          passwrodUrl:'/password-detail'
+          // iconURL:require('../assets/image/key_one.svg')
         },
         {
           id:1,
           title:'语雀帐号',
-          path:'/languagefinches',
-          description:'Isabelle_Fisher'
+          description:'Isabelle_Fisher',
+          // iconURL:require('@/assets/image/key_two.svg')
         },
         {
           id:2,
           title:'即时设计帐号',
-          path:'',
-          description:'Francisio_Phillps'
+          description:'Benjamin_Gonzalez',
+          // iconURL:require('../assets/image/key_three.svg')
         },
         {
           id:3,
           title:'轻流帐号',
-          path:'',
-          description:'Francisio_Phillps'
+          description:'Maurice_Alvarado',
+          // iconURL:require('../assets/image/key_one.svg')
         },
         {
           id:4,
           title:'元社区帐号',
-          path:'',
-          description:'Francisio_Phillps'
+          description:'Derek_Edwards',
+          // iconURL:require('../assets/image/key_four.svg')
         }
       ],
       search:'',
@@ -149,7 +155,7 @@ export default {
     },
     // 列表点击
     passwordListClick(v){
-      console.log(v);
+    
     }
   }
 }
@@ -172,6 +178,9 @@ body, html {
 }
 .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected{
   background: rgba(80, 139, 254, 0.1);
+}
+.ant-list-split .ant-list-item{
+   border:none;
 }
 /*其他样式结束*/
 </style>
@@ -255,7 +264,7 @@ h3 {
 
 /*清除边框开始*/
 .ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover {
-  border-color: rgba(0, 0, 0, 0.25);
+  border-color: rgba(230, 230, 230, 1);
   border-right-width: 1px !important;
   z-index: 1;
 }
@@ -280,9 +289,27 @@ h3 {
 }
 /*清除边框结束*/
 
+/*左侧边栏滚动开始*/
+.ant-layout-sider{
+     overflow: scroll;
+     &::-webkit-scrollbar{
+       width: 0 !important;
+     }
+}
+/*左侧边栏滚动结束*/
+
+/*右侧盒子样式开始*/
+.password-right-main{
+   padding: 12px 16px 12px 17px;
+   background: rgba(255, 255, 255, 1);
+   width: 100%;
+}
+/*右侧盒子样式结束*/
 
 /*筛选列表开始*/
-
+.filter-list-container{
+   
+}
 /*筛选列表结束*/
 
 </style>
