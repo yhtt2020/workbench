@@ -11,11 +11,14 @@ export default {
 
 <template>
   <a-config-provider :locale="locale">
-  <div >
+  <div class="a-container">
     <router-view></router-view>
   </div>
   </a-config-provider>
 </template>
 
 <style>
+.a-container{
+   width: 100%;
+}
 </style>

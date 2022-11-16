@@ -7,13 +7,18 @@ import {createRouter, createWebHashHistory} from 'vue-router'
 import {createPinia} from 'pinia'
 import Passwords from './page/Passwords.vue'
 import PasswordDetail from './page/PasswordDetail.vue'
+import PasswordLanguage from './page/PasswordLanguage.vue'
 const pinia = createPinia()
 const routes = [
   {
     path: '/', component: Passwords,
     children:[
       {
-        path:'',component:PasswordDetail
+        path:'/zenmaster',component:PasswordDetail
+      },
+      {
+        path:'/languagefinches',
+        components:PasswordLanguage,
       }
     ]
   }
