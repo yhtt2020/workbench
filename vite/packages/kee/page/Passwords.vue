@@ -51,7 +51,7 @@
       <div style="height:50px;border-bottom: 1px solid rgba(230, 230, 230, 1);margin-bottom: 8px;">
         <a-menu-item key="1" class="menu-password">
           <template #icon>
-           <UnlockFilled />
+           <UnlockFilled  style="font-size:16px;"/>
           </template>
           <span>我的密码</span>
         </a-menu-item>
@@ -59,13 +59,13 @@
       <div  style="height:100px; border-bottom: 1px solid rgba(230, 230, 230, 1);margin-bottom: 8px;">
         <a-menu-item key="2">
           <template #icon>
-           <AppstoreFilled />
+           <AppstoreFilled style="font-size:16px;"/>
           </template>
           <span>所有密码</span>
          </a-menu-item>
          <a-menu-item key="3">
           <template #icon>
-           <InboxOutlined />
+           <LinkOutlined style="font-size:16px;"/>
           </template>
           <span>当前网站</span>
          </a-menu-item>
@@ -73,7 +73,7 @@
       <div style="height:50px;border-bottom: 1px solid rgba(230, 230, 230, 1);margin-bottom: 8px;">
         <a-menu-item key="4">
           <template #icon>
-           <StarFilled />
+           <StarFilled  style="font-size:16px;"/>
           </template>
           <span>颜色</span>
         </a-menu-item>
@@ -81,31 +81,31 @@
       <div style="height:100px;border-bottom: 1px solid rgba(230, 230, 230, 1);">
         <a-menu-item key="5">
           <template #icon>
-           <TagFilled />
+           <TagFilled style="font-size:16px;"/>
           </template>
           <span>Computer</span>
         </a-menu-item>
         <a-menu-item key="6">
           <template #icon>
-           <TagFilled />
+           <TagFilled style="font-size:16px;"/>
           </template>
           <span>Email</span>
         </a-menu-item>
       </div>
       <a-sub-menu key="sub1" style="margin-bottom: 8px;">
        <template #icon>
-        <FolderOpenFilled />
+        <FolderOpenFilled style="font-size:16px;"/>
        </template>
        <template #title>Demo</template>
        <a-menu-item key="7" class="password-computer">
         <template #icon>
-          <FolderOpenFilled />
+          <FolderOpenFilled style="font-size:16px;"/>
         </template>
         <span>Computer</span>
        </a-menu-item>
        <a-menu-item key="8" class="password-computer">
         <template #icon>
-          <FolderOpenFilled />
+          <FolderOpenFilled style="font-size:16px;"/>
         </template>
         <span>Internet</span>
        </a-menu-item>
@@ -126,7 +126,7 @@ import {
   SmileOutlined,DownOutlined,SearchOutlined,
   PlusOutlined,SwapOutlined,AppstoreFilled,
   UnlockFilled,StarFilled,TagFilled,
-  FolderOpenFilled
+  FolderOpenFilled,LinkOutlined
 } from '@ant-design/icons-vue'
 import '../assets/icon-font/iconfont.css'
 import { appStore } from '../store'
@@ -145,7 +145,7 @@ export default {
     SearchOutlined, PlusOutlined,
     SwapOutlined,AppstoreFilled,
     UnlockFilled,StarFilled,TagFilled,
-    FolderOpenFilled
+    FolderOpenFilled,LinkOutlined
   },
   computed: {
     ...mapState(appStore, [])

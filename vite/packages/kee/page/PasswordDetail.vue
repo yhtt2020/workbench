@@ -17,13 +17,22 @@
         <template #overlay>
           <a-menu>
             <a-menu-item key="0">
-              编辑
+              <template #icon>
+                <FormOutlined style="font-size:16px;"/>
+              </template>
+               <span>编辑</span>
             </a-menu-item>
             <a-menu-item key="1">
-              分享
+              <template #icon>
+                <ShareAltOutlined style="font-size:16px;"/>
+              </template>
+              <span>分享</span>
             </a-menu-item>
             <a-menu-item key="3">
-               删除
+               <template #icon>
+                  <MinusCircleOutlined style="color:rgba(255, 77, 79, 1);font-size:16px;"/>
+               </template>
+               <span style="color:rgba(255, 77, 79, 1);">删除</span>
             </a-menu-item>
           </a-menu>
         </template>
@@ -66,16 +75,26 @@
 <script>
 import {
   EllipsisOutlined,UnlockFilled,
+  FormOutlined,MinusCircleOutlined,
+  ShareAltOutlined
 } from '@ant-design/icons-vue'
 export default {
   name: 'PasswordDetail',
   components:{
     EllipsisOutlined,UnlockFilled,
+    FormOutlined,MinusCircleOutlined,
+    ShareAltOutlined
   }
 }
 </script>
 <style>
-
+.ant-dropdown-menu-item:hover, .ant-dropdown-menu-submenu-title:hover{
+   background: rgba(80, 139, 254, 0.1) !important;
+}
+.ant-dropdown-menu{
+    padding: 4px !important;
+    border-radius: 4px !important;
+}
 </style>
 <style lang="scss">
 .breadcrumb-container{
