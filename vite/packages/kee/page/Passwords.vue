@@ -30,10 +30,10 @@
       <a-list item-layout="horizontal" :data-source="passwords">
         <template #renderItem="{ item }">
           <a-list-item>
-            <a-list-item-meta  :description="item.description" > 
-
-
-
+            <a-list-item-meta class="password-meta"
+              :description="item.description" 
+              @click="passwordListClick(item)"
+            >
               <template #title>
                 <a href="https://www.antdv.com/">{{ item.title }}</a>
               </template>
@@ -46,16 +46,76 @@
       <router-view></router-view>
     </a-layout-body>
   </a-layout>
-   <a-drawer :width="216" placement="left" :visible="visible" @close="onClose">
-      <div class="filter-list-container">
-          
+   <a-drawer class="filter-list-container" :width="216" placement="left" :visible="visible" @close="onClose">
+    <a-menu mode="inline" :inline-collapsed="collapsed" >
+      <div style="height:50px;border-bottom: 1px solid rgba(230, 230, 230, 1);margin-bottom: 8px;">
+        <a-menu-item key="1" class="menu-password">
+          <template #icon>
+           <UnlockFilled />
+          </template>
+          <span>我的密码</span>
+        </a-menu-item>
       </div>
-      <a-tree>
-       <template #title="{ title, key }">
-        <span v-if="key === '0-0-1-0'" style="color: #1890ff">{{ title }}</span>
-        <template v-else>{{ title }}</template>
+      <div  style="height:100px; border-bottom: 1px solid rgba(230, 230, 230, 1);margin-bottom: 8px;">
+        <a-menu-item key="2">
+          <template #icon>
+           <AppstoreFilled />
+          </template>
+          <span>所有密码</span>
+         </a-menu-item>
+         <a-menu-item key="3">
+          <template #icon>
+           <InboxOutlined />
+          </template>
+          <span>当前网站</span>
+         </a-menu-item>
+      </div>
+      <div style="height:50px;border-bottom: 1px solid rgba(230, 230, 230, 1);margin-bottom: 8px;">
+        <a-menu-item key="4">
+          <template #icon>
+           <StarFilled />
+          </template>
+          <span>颜色</span>
+        </a-menu-item>
+      </div>
+      <div style="height:100px;border-bottom: 1px solid rgba(230, 230, 230, 1);">
+        <a-menu-item key="5">
+          <template #icon>
+           <TagFilled />
+          </template>
+          <span>Computer</span>
+        </a-menu-item>
+        <a-menu-item key="6">
+          <template #icon>
+           <TagFilled />
+          </template>
+          <span>Email</span>
+        </a-menu-item>
+      </div>
+      <a-sub-menu key="sub1" style="margin-bottom: 8px;">
+       <template #icon>
+        <FolderOpenFilled />
+       </template>
+       <template #title>Demo</template>
+       <a-menu-item key="7" class="password-computer">
+        <template #icon>
+          <FolderOpenFilled />
         </template>
-      </a-tree>
+        <span>Computer</span>
+       </a-menu-item>
+       <a-menu-item key="8" class="password-computer">
+        <template #icon>
+          <FolderOpenFilled />
+        </template>
+        <span>Internet</span>
+       </a-menu-item>
+      </a-sub-menu>
+      <div style="hieght:50px;border-top:1px solid rgba(230, 230, 230, 1);padding-top: 8px;">
+        <a-menu-item key="9">
+          <span>主应用中打开</span>
+        </a-menu-item>
+      </div>
+  </a-menu>
    </a-drawer> 
 </template>
 
@@ -64,15 +124,18 @@ import vueCustomScrollbar from '../../../src/components/vue-scrollbar.vue'
 import { 
   SettingOutlined, LaptopOutlined, 
   SmileOutlined,DownOutlined,SearchOutlined,
-  PlusOutlined,SwapOutlined,AppstoreFilled 
+  PlusOutlined,SwapOutlined,AppstoreFilled,
+  UnlockFilled,StarFilled,TagFilled,
+  FolderOpenFilled
 } from '@ant-design/icons-vue'
+import '../assets/icon-font/iconfont.css'
 import { appStore } from '../store'
 import { mapState, mapActions } from 'pinia'
 import { CodeTwoTone } from '@ant-design/icons-vue'
-import '../assets/font/iconfont.css'
 import { message, Modal } from 'ant-design-vue'
 let { appModel, devAppModel } = window.$models
 let appId = window.globalArgs['app-id']
+ 
 export default {
   name: 'Passwords',
   components: {
@@ -80,7 +143,9 @@ export default {
     CodeTwoTone, vueCustomScrollbar, 
     SmileOutlined,DownOutlined,
     SearchOutlined, PlusOutlined,
-    SwapOutlined,AppstoreFilled
+    SwapOutlined,AppstoreFilled,
+    UnlockFilled,StarFilled,TagFilled,
+    FolderOpenFilled
   },
   computed: {
     ...mapState(appStore, [])
@@ -104,31 +169,27 @@ export default {
           id:0,
           title:'禅道账号',
           description:'Francisio_Phillps',
-          // iconURL:require('../assets/image/key_one.svg')
         },
         {
           id:1,
           title:'语雀帐号',
           description:'Isabelle_Fisher',
-          // iconURL:require('@/assets/image/key_two.svg')
         },
         {
           id:2,
           title:'即时设计帐号',
           description:'Benjamin_Gonzalez',
-          // iconURL:require('../assets/image/key_three.svg')
         },
         {
           id:3,
           title:'轻流帐号',
           description:'Maurice_Alvarado',
-          // iconURL:require('../assets/image/key_one.svg')
+         
         },
         {
           id:4,
           title:'元社区帐号',
           description:'Derek_Edwards',
-          // iconURL:require('../assets/image/key_four.svg')
         }
       ],
       search:'',
@@ -155,7 +216,7 @@ export default {
     },
     // 列表点击
     passwordListClick(v){
-    
+         console.log(v);
     }
   }
 }
@@ -176,11 +237,43 @@ body, html {
 .ant-menu-inline, .ant-menu-vertical, .ant-menu-vertical-left{
   border: none;
 }
-.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected{
-  background: rgba(80, 139, 254, 0.1);
-}
 .ant-list-split .ant-list-item{
    border:none;
+}
+.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected{
+   background: rgba(80, 139, 254, 0.2) !important;
+   background-color:rgba(80, 139, 254, 0.2) !important;
+   color: rgba(0, 0, 0, 0.65) !important;
+   border-radius: 6px;
+}
+.ant-menu-light .ant-menu-item:hover, .ant-menu-light .ant-menu-item-active, .ant-menu-light .ant-menu:not(.ant-menu-inline) .ant-menu-submenu-open, .ant-menu-light .ant-menu-submenu-active, .ant-menu-light .ant-menu-submenu-title:hover{
+  color: rgba(0, 0, 0, 0.65) !important;
+}
+.ant-menu-item:active, .ant-menu-submenu-title:active{
+  background: rgba(80, 139, 254, 0.2) !important;
+  background-color:rgba(80, 139, 254, 0.2) !important;
+  color: rgba(0, 0, 0, 0.65)  !important;
+  border-radius: 6px;
+}
+.ant-menu-item::after{
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  border-right: none !important;
+  transform: scaleY(0.0001);
+  opacity: 0;
+  transition: transform 0.15s cubic-bezier(0.215, 0.61, 0.355, 1), opacity 0.15s cubic-bezier(0.215, 0.61, 0.355, 1);
+  content: '';
+}
+.password-computer{
+   padding-left: 30px !important;
+}
+.ant-drawer-body{
+  overflow:scroll !important; 
+}
+.ant-drawer-body::-webkit-scrollbar{
+   width: 0 !important;
 }
 /*其他样式结束*/
 </style>
@@ -215,6 +308,7 @@ h3 {
    padding: 6px 8px 5px 8px;
    line-height: 19px;
    user-select: none;
+   cursor: pointer;
    .password-select-container{
      display: flex;
      align-items: center;
@@ -305,10 +399,9 @@ h3 {
    width: 100%;
 }
 /*右侧盒子样式结束*/
-
 /*筛选列表开始*/
-.filter-list-container{
-   
+.ant-menu-submenu-arrow{
+   display: none;
 }
 /*筛选列表结束*/
 

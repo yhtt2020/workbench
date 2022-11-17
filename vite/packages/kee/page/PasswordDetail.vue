@@ -32,9 +32,9 @@
   </div>
   <div class="breadcrumb-bottom-container">
       <div class="breadcrumb-bottom-name">
-          <span>
-               <i class="iconfont icon-yuechi1"></i>
-          </span>
+          <!-- <span>
+             <i class="iconfont iconyuechi1"></i>
+          </span> -->
           <span class="name">禅道账号</span>
       </div>
       <div class="breadcrumb-bottom-card">
@@ -65,13 +65,12 @@
 
 <script>
 import {
-  EllipsisOutlined,UnlockFilled
+  EllipsisOutlined,UnlockFilled,
 } from '@ant-design/icons-vue'
-import '../assets/font/iconfont.css'
 export default {
   name: 'PasswordDetail',
   components:{
-    EllipsisOutlined,UnlockFilled
+    EllipsisOutlined,UnlockFilled,
   }
 }
 </script>

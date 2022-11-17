@@ -5,6 +5,7 @@ import App from './App.vue'
 import tools from '../../src/util/tools.js'
 import {createRouter, createWebHashHistory} from 'vue-router'
 import {createPinia} from 'pinia'
+import './assets/icon-font/iconfont.css'
 import Passwords from './page/Passwords.vue'
 import PasswordDetail from './page/PasswordDetail.vue'
 import PasswordLanguage from './page/PasswordLanguage.vue'
@@ -15,10 +16,14 @@ const routes = [
     redirect:'/zenmaster',
     children:[
       {
-        path:'/zenmaster',component:PasswordDetail
+        path:'/zenmaster',
+        name:'zenmaster',
+        component:PasswordDetail
       },
       {
-        path:'/languagefinches',components:PasswordLanguage,
+        path:'/languagefinches',
+        name:'languagefinches',
+        components:PasswordLanguage,
       }
     ]
   }
@@ -27,6 +32,8 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes
 })
+
+
 createApp(App).use(pinia).use(Antd).use(router).mount('#app')
 
 tools.getWindowArgs(window)

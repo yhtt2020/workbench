@@ -1,8 +1,8 @@
 {
   "id": "3773993",
   "name": "password_mannager",
-  "font_family": "iconfont",
-  "css_prefix_text": "icon-",
+  "font_family": "icon-",
+  "css_prefix_text": "icon",
   "description": "",
   "glyphs": [
     {
