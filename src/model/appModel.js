@@ -869,8 +869,7 @@ async ensureColumns(){
     if (!!!app) {
       return false
     }
-    app.settings = JSON.parse(app.settings)
-    app.isSystemApp = appModel.isSystemApp(app)
+    app=await appModel.preHandleApp(app)
     return app
   },
   isSystemApp (app) {
