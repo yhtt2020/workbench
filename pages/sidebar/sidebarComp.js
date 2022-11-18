@@ -1418,6 +1418,7 @@ Vue.component('sidebar', {
       window.selectedTask=task
       ipc.send('openTaskMenu',{task:task})
     },
+
     inviteLink(id) {
       tsbk.default.ready(() => {
         tsbk.default.openOsxInviteMember({
@@ -2105,6 +2106,10 @@ ipc.on('openAppCircle',(event,args)=>{
 })
 ipc.on('openAppGroupChat',(event,args)=>{
   appVue.$refs.sidePanel.openGroupChat(args)
+})
+ipc.on('openInvite',(event,args)=>{
+  console.log(args)
+  appVue.$refs.sidePanel.inviteLink(args)
 })
 
 ipc.on('executedAppSuccess', async function (event, args) {

@@ -100,6 +100,10 @@ app.whenReady().then(()=> {
     SidePanel.send('openAppGroupChat',args)
   })
 
+  ipc.on('openInvite',(event,args)=>{
+
+    SidePanel.send('openInvite',args)
+  })
 
 })
 
