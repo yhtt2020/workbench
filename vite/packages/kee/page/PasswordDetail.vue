@@ -12,38 +12,37 @@
        <a-dropdown :trigger="['click']" width="180">
         <a class="ant-dropdown-link" @click.prevent>
           <EllipsisOutlined class="breadcrumb-icon"/>
-          <DownOutlined />
         </a>
         <template #overlay>
           <a-menu>
             <a-menu-item key="0">
               <template #icon>
-                <FormOutlined style="font-size:16px;"/>
+                <FormOutlined style="font-size:16px;color: rgba(0, 0, 0, 0.65);"/>
               </template>
-               <span>编辑</span>
+               <span class="medit">编辑</span>
             </a-menu-item>
-            <a-menu-item key="1">
+            <a-menu-item key="1" @click="openShare">
               <template #icon>
-                <ShareAltOutlined style="font-size:16px;"/>
+                <ShareAltOutlined style="font-size:16px;color: rgba(0, 0, 0, 0.65);"/>
               </template>
-              <span>分享</span>
+              <span class="share">分享</span>
             </a-menu-item>
             <a-menu-item key="3">
                <template #icon>
                   <MinusCircleOutlined style="color:rgba(255, 77, 79, 1);font-size:16px;"/>
                </template>
-               <span style="color:rgba(255, 77, 79, 1);">删除</span>
+               <span class="delete">删除</span>
             </a-menu-item>
           </a-menu>
         </template>
-      </a-dropdown>
+       </a-dropdown>
     </div> 
   </div>
   <div class="breadcrumb-bottom-container">
       <div class="breadcrumb-bottom-name">
-          <!-- <span>
-             <i class="iconfont iconyuechi1"></i>
-          </span> -->
+          <span>
+            <i class="iconfont icon-yuechi1"></i>
+          </span>
           <span class="name">禅道账号</span>
       </div>
       <div class="breadcrumb-bottom-card">
@@ -69,7 +68,25 @@
            <span class="ana">团队语雀公用帐号，注意不要对外分享该密码</span>
       </div>
   </div>
-
+  <a-modal width="408px" v-model:visible="sharVisible" title="分享">
+    <div class="share-contaniner">
+        <div class="share-header">
+           <span>
+            <svg t="1668734179161" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="978" xmlns:xlink="http://www.w3.org/1999/xlink" width="128" height="128">
+              <path d="M639.9 351.9C639.9 192.9 511.1 64 352 64S64.2 192.8 64.2 351.9c0 158.9 128.8 287.9 287.9 287.9 158.9-0.1 287.8-128.9 287.8-287.9z m-367.4 16.4c-50.4 0-91.3-40.9-91.3-91.3s40.9-91.3 91.3-91.3 91.3 40.9 91.3 91.3-40.9 91.3-91.3 91.3z" p-id="979" fill="#FFFFFF"></path><path d="M930 732.3L663.8 455l-43 71.6h0.7l253.4 266.3-1.8 27.6-45.9 1.8-237.7-250.4c-39.1 46-85.6 70.5-85.6 70.5l5.5 112 53.3 58.8H706L704.2 949l126.7 11s12.9-12.9 91.9-90c78.9-77.1 7.2-137.7 7.2-137.7z" p-id="980" fill="#FFFFFF"></path>
+            </svg>
+           </span>
+           <div class="share-passeword-right">
+                <p>伏娜枝的语雀帐号</p>
+                <p>Isabelle_Fisher</p>
+           </div>
+        </div>
+    </div>
+    <template #footer>
+      <a-button @click="sharVisible = false">取消</a-button>
+      <a-button type="primary" @click="handleOk">获取分享链接</a-button>
+    </template>
+  </a-modal>
 </template>
 
 <script>
@@ -84,7 +101,19 @@ export default {
     EllipsisOutlined,UnlockFilled,
     FormOutlined,MinusCircleOutlined,
     ShareAltOutlined
+  },
+  data(){
+    return{
+      sharVisible:false
+    }
+  },
+  methods:{
+    openShare(){
+       // 使用一个值控制弹窗
+       this.sharVisible = true
+    },
   }
+
 }
 </script>
 <style>
@@ -235,4 +264,78 @@ export default {
 }
 /*底部内容结束*/
 
+/*编辑分享删除样式开始*/
+.medit{
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 21px;
+}
+.share{
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 21px;
+}
+.delete{
+   color: rgba(255, 77, 79, 1);
+   font-weight: 400;
+   font-size: 14px;
+   line-height: 21px;
+}
+/*编辑分享删除样式结束*/
+
+/*分享密码样式开始*/
+.ant-modal-header{
+   text-align: center;
+   color: rgba(0, 0, 0, 0.85);
+   font-size: 16px;
+   font-weight: 600;
+   border: none;
+}
+.ant-modal-body{
+   padding: 0 32px;
+}
+.ant-modal-footer{
+   border: none;
+}
+/*分享密码样式结束*/
+
+/*分享密码内容开始*/
+.share-contaniner{
+   display: flex;
+   flex-direction: column;
+   .share-header{
+      display: flex;
+      align-items: center;
+      span{
+         width: 48px;
+         height: 48px;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         border-radius: 6px;
+         background: linear-gradient(41deg, rgba(45, 74, 253, 0.59) 0%, rgba(20, 99, 250, 1) 100%), rgba(216, 216, 216, 1);
+         svg{
+           width: 16px;
+           height: 16px;
+         }
+      }
+      .share-passeword-right{
+         padding-left: 12px;
+         p{
+           margin: 0;
+           line-height: 17px;
+           font-size: 14px;
+           font-weight: 400;
+           &:nth-of-type(1){
+             color: rgba(0, 0, 0, 0.85);
+             margin-bottom: 3px;
+           }
+           &:nth-of-type(2){
+              color: rgba(0, 0, 0, 0.45);
+           }
+         }
+      }
+   }
+}
+/*分享密码内容结束*/
 </style>

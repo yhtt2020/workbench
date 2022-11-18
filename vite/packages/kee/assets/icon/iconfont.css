@@ -1,0 +1,21 @@
+@font-face {
+  font-family: "iconfont"; /* Project id 3773993 */
+  /* Color fonts */
+  src: 
+       url('iconfont.woff2?t=1668673893128') format('woff2'),
+       url('iconfont.woff?t=1668673893128') format('woff'),
+       url('iconfont.ttf?t=1668673893128') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-yuechi1:before {
+  content: "\e602";
+}
+

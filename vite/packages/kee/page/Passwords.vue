@@ -25,35 +25,37 @@
       新建密码
     </a-button>
    </div>
-   <a-layout style="height:calc(100vh - 45px)">
+  <a-layout style="height:calc(100vh - 45px)">
     <a-layout-sider theme="light" style="padding: 20px">
       <a-list item-layout="horizontal" :data-source="passwords">
         <template #renderItem="{ item }">
-          <a-list-item>
-            <a-list-item-meta class="password-meta"
-              :description="item.description" 
-              @click="passwordListClick(item)"
-            >
+          <a-list-item class="left-item-list" :class="currentIndex==item.id ? 'active-list':''" @click="leftDescription(item)">
+            <a-list-item-meta :description="item.description">
+              <template #avatar>
+                 <img :src="item.url" alt="">
+              </template>
               <template #title>
-                <a href="https://www.antdv.com/">{{ item.title }}</a>
+               {{ item.title }}
+               <a href="https://www.antdv.com/"></a>
               </template>
             </a-list-item-meta>
           </a-list-item>
         </template>
       </a-list>
     </a-layout-sider>
-    <a-layout-body class="password-right-main">
+    <a-layout-content class="password-right-main">
       <router-view></router-view>
-    </a-layout-body>
+    </a-layout-content>
   </a-layout>
-   <a-drawer class="filter-list-container" :width="216" placement="left" :visible="visible" @close="onClose">
+  <a-drawer class="filter-list-container" :width="216" placement="left" :visible="visible" @close="visible = false">
     <a-menu mode="inline" :inline-collapsed="collapsed" >
       <div style="height:50px;border-bottom: 1px solid rgba(230, 230, 230, 1);margin-bottom: 8px;">
         <a-menu-item key="1" class="menu-password">
           <template #icon>
-           <UnlockFilled  style="font-size:16px;"/>
+           <UnlockFilled style="font-size:16px;"/>
           </template>
-          <span>我的密码</span>
+          <div>我的密码</div>
+          <SwapOutlined  style="font-size:16px;cursor: pointer;"  @click="openPasswordSelect($event)"/>
         </a-menu-item>
       </div>
       <div  style="height:100px; border-bottom: 1px solid rgba(230, 230, 230, 1);margin-bottom: 8px;">
@@ -111,41 +113,44 @@
        </a-menu-item>
       </a-sub-menu>
       <div style="hieght:50px;border-top:1px solid rgba(230, 230, 230, 1);padding-top: 8px;">
-        <a-menu-item key="9">
+        <a-menu-item key="9" class="main-open-item">
+          <span class="main-open">
+            <LockFilled style="font-size:16px;"/>
+          </span>
           <span>主应用中打开</span>
         </a-menu-item>
       </div>
-  </a-menu>
-   </a-drawer> 
+    </a-menu>
+  </a-drawer> 
 </template>
 
 <script>
-import vueCustomScrollbar from '../../../src/components/vue-scrollbar.vue'
+// import vueCustomScrollbar from '../../../src/components/vue-scrollbar.vue'
+// vueCustomScrollbar,
 import { 
   SettingOutlined, LaptopOutlined, 
-  SmileOutlined,DownOutlined,SearchOutlined,
+  SmileOutlined,SearchOutlined,
   PlusOutlined,SwapOutlined,AppstoreFilled,
   UnlockFilled,StarFilled,TagFilled,
-  FolderOpenFilled,LinkOutlined
+  FolderOpenFilled,LinkOutlined,
+  LockFilled,CodeTwoTone
 } from '@ant-design/icons-vue'
-import '../assets/icon-font/iconfont.css'
 import { appStore } from '../store'
-import { mapState, mapActions } from 'pinia'
-import { CodeTwoTone } from '@ant-design/icons-vue'
-import { message, Modal } from 'ant-design-vue'
-let { appModel, devAppModel } = window.$models
-let appId = window.globalArgs['app-id']
+import { mapState } from 'pinia'
+// import { message, Modal } from 'ant-design-vue', mapActions
+// let { appModel, devAppModel } = window.$models
+// let appId = window.globalArgs['app-id']
  
 export default {
   name: 'Passwords',
   components: {
     SettingOutlined, LaptopOutlined, 
-    CodeTwoTone, vueCustomScrollbar, 
-    SmileOutlined,DownOutlined,
-    SearchOutlined, PlusOutlined,
-    SwapOutlined,AppstoreFilled,
-    UnlockFilled,StarFilled,TagFilled,
-    FolderOpenFilled,LinkOutlined
+    CodeTwoTone,SearchOutlined, 
+    SmileOutlined,SwapOutlined,
+    PlusOutlined,AppstoreFilled,
+    UnlockFilled,StarFilled,
+    TagFilled,FolderOpenFilled,
+    LinkOutlined,LockFilled
   },
   computed: {
     ...mapState(appStore, [])
@@ -163,33 +168,43 @@ export default {
         suppressScrollX: true,
         wheelPropagation: false
       },
+      currentIndex:0,
       checkNick: false,
       passwords:[
         {
           id:0,
           title:'禅道账号',
           description:'Francisio_Phillps',
+          path:'zenmaster',
+          url:'http://localhost:1600/packages/kee/assets/image/key_one.svg'
         },
         {
           id:1,
           title:'语雀帐号',
           description:'Isabelle_Fisher',
+          path:'languagefinches',
+          url:'http://localhost:1600/packages/kee/assets/image/key_two.svg'
         },
         {
           id:2,
           title:'即时设计帐号',
           description:'Benjamin_Gonzalez',
+          path:'instant',
+          url:'http://localhost:1600/packages/kee/assets/image/key_three.svg'
         },
         {
           id:3,
           title:'轻流帐号',
           description:'Maurice_Alvarado',
-         
+          path:'light',
+          url:'http://localhost:1600/packages/kee/assets/image/key_one.svg'
         },
         {
           id:4,
           title:'元社区帐号',
           description:'Derek_Edwards',
+          path:'yuan',
+          url:'http://localhost:1600/packages/kee/assets/image/key_four.svg'
         }
       ],
       search:'',
@@ -204,19 +219,21 @@ export default {
   methods: {
     // 搜索触发做的事情
     serachClikc(){
-      //  console.log(this.search);
+     
     },
     // 开启抽屉式的选项
     selectOptions(){
-         this.visible = true
-    },
-    // 关闭抽屉式的选项
-    onClose(){
-       this.visible = false
+      this.visible = true
     },
     // 列表点击
-    passwordListClick(v){
-         console.log(v);
+    leftDescription(v){
+      this.currentIndex = v.id
+      this.$router.push('/'+v.path)
+      console.log(v);
+    },
+    // 筛选下拉菜单
+    openPasswordSelect(e){
+      
     }
   }
 }
@@ -229,7 +246,7 @@ body, html {
 /*其他样式开始*/
 .ant-layout-sider{
   max-width: 240px !important;
-  padding: 20px;
+  padding: 0 8px !important;
   flex: 0 0 240px !important;
   min-width: 240px !important;
   width: 240px !important;
@@ -274,6 +291,15 @@ body, html {
 }
 .ant-drawer-body::-webkit-scrollbar{
    width: 0 !important;
+}
+.main-open-item{
+  padding-left: 20px !important;
+}
+.ant-empty-description{
+   display: none !important;
+}
+.ant-list-item-meta-avatar{ 
+  margin-right: 8px;
 }
 /*其他样式结束*/
 </style>
@@ -390,6 +416,17 @@ h3 {
        width: 0 !important;
      }
 }
+.active-list{
+  background: rgba(80, 139, 254, 0.1);
+  border-radius: 6px;
+}
+.left-item-list{
+    padding: 8px 12px;
+    img{
+       width: 16px;
+       height: 16px;
+    }
+}
 /*左侧边栏滚动结束*/
 
 /*右侧盒子样式开始*/
@@ -402,6 +439,25 @@ h3 {
 /*筛选列表开始*/
 .ant-menu-submenu-arrow{
    display: none;
+}
+.menu-password{
+   line-height: 32px;
+   display: flex;
+}
+.menu-password .ant-menu-title-content{
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   line-height: 32px;
+   height: 32px;
+   user-select: none;
+}
+.main-open{
+   background-color: rgba(80, 139, 254, 1);
+   color:rgba(255, 255, 255, 1);
+   border-radius: 50%;
+   padding: 4px;
+   margin-right: 12px;
 }
 /*筛选列表结束*/
 
