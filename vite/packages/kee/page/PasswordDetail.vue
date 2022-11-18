@@ -81,10 +81,54 @@
                 <p>Isabelle_Fisher</p>
            </div>
         </div>
+        <div class="share-content">
+            <div class="share-content-item">
+              <span class="share-content-title">链接有效期</span>
+              <a-select v-model:value="validity" style="width: 160px">
+                <!--  @focus="focus"  @change="handleChange" -->
+                <a-select-option value="0">7天</a-select-option>
+                <a-select-option value="1">1天</a-select-option>
+                <a-select-option value="2">1小时</a-select-option>
+                <a-select-option value="3">14天</a-select-option>
+                <a-select-option value="4">30天</a-select-option>
+              </a-select>
+            </div>
+            <div class="share-content-item">
+              <span class="share-content-title">分享给</span>
+              <a-select v-model:value="value" style="width: 160px" @change="shareSelectChange">
+                <!--  @focus="focus"  @change="handleChange" -->
+                <a-select-option value="0">任何有此链接的人</a-select-option>
+                <a-select-option value="1">仅指定团队</a-select-option>
+                <a-select-option value="2">仅指定人员</a-select-option>
+              </a-select>
+            </div>
+        </div>
+        <a-checkbox v-model:checked="checked" class="share-checkbox">
+          <span>仅允许查看 1 次</span>
+        </a-checkbox>
+        <template v-if="value==1">
+            <span style="margin-bottom:7px;">选择团队</span>
+            <a-select v-model:value="TeamValue"  mode="tags" style="width: 100%" placeholder="请选择团队">
+              <a-select-option value="0">A团队</a-select-option>
+              <a-select-option value="1">B团队</a-select-option>
+              <a-select-option value="2">C团队</a-select-option>
+              <a-select-option value="3">D团队</a-select-option>
+            </a-select>
+            <span style="margin-top:4px;">仅团队内成员可以查看密码</span>
+        </template>
+        <template v-if="value==2">
+            <span style="margin-bottom:7px;">手机号</span>
+            <a-input class="share-mobile">
+              <template #prefix>
+                <plus-outlined />
+              </template>
+            </a-input>
+            <span style="margin-top:4px;">对方需要验证手机号后才能查看密码</span>
+        </template>
     </div>
     <template #footer>
       <a-button @click="sharVisible = false">取消</a-button>
-      <a-button type="primary" @click="handleOk">获取分享链接</a-button>
+      <a-button type="primary">获取分享链接</a-button>
     </template>
   </a-modal>
 </template>
@@ -93,19 +137,29 @@
 import {
   EllipsisOutlined,UnlockFilled,
   FormOutlined,MinusCircleOutlined,
-  ShareAltOutlined
+  ShareAltOutlined,PlusOutlined
 } from '@ant-design/icons-vue'
 export default {
   name: 'PasswordDetail',
   components:{
     EllipsisOutlined,UnlockFilled,
     FormOutlined,MinusCircleOutlined,
-    ShareAltOutlined
+    ShareAltOutlined,PlusOutlined
   },
   data(){
     return{
-      sharVisible:false
+      sharVisible:false,
+      // 链接有效期值
+      validity:'0',
+      // 任何有此链接的人
+      value:'0',
+      checked:false,
+      TeamValue:['0'],
     }
+  },
+  mounted(){
+    this.$route.params.userId;
+    console.log(this.$route.params.userId);
   },
   methods:{
     openShare(){
@@ -306,6 +360,7 @@ export default {
    .share-header{
       display: flex;
       align-items: center;
+      margin-bottom: 24px;
       span{
          width: 48px;
          height: 48px;
@@ -335,6 +390,26 @@ export default {
            }
          }
       }
+   }
+   .share-content{
+        display: flex;
+        justify-content: space-between;
+        .share-content-item{
+           width: 160px;
+           display: flex;
+           flex-direction: column;
+           margin-bottom: 24px;
+           .share-content-title{
+             margin-bottom: 7px;
+             font-weight: 400;
+             font-size: 14px;
+             line-height: 21px;
+             color: rgba(0, 0, 0, 0.65);
+           }
+        }
+   }
+   .share-checkbox{
+    margin-bottom: 24px;
    }
 }
 /*分享密码内容结束*/

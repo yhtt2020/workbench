@@ -175,14 +175,14 @@ export default {
           id:0,
           title:'禅道账号',
           description:'Francisio_Phillps',
-          path:'zenmaster',
+          path:'detail',
           url:'http://localhost:1600/packages/kee/assets/image/key_one.svg'
         },
         {
           id:1,
           title:'语雀帐号',
           description:'Isabelle_Fisher',
-          path:'languagefinches',
+          path:'language',
           url:'http://localhost:1600/packages/kee/assets/image/key_two.svg'
         },
         {
@@ -203,7 +203,7 @@ export default {
           id:4,
           title:'元社区帐号',
           description:'Derek_Edwards',
-          path:'yuan',
+          path:'commun',
           url:'http://localhost:1600/packages/kee/assets/image/key_four.svg'
         }
       ],
@@ -228,8 +228,7 @@ export default {
     // 列表点击
     leftDescription(v){
       this.currentIndex = v.id
-      this.$router.push('/'+v.path)
-      console.log(v);
+      this.$router.push('/'+v.path+'/:'+v.id,{params:{ userId: v.id }})
     },
     // 筛选下拉菜单
     openPasswordSelect(e){

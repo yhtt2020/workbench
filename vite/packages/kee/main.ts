@@ -8,30 +8,26 @@ import {createRouter, createWebHashHistory} from 'vue-router'
 import {createPinia} from 'pinia'
 import Passwords from './page/Passwords.vue'
 import PasswordDetail from './page/PasswordDetail.vue'
-import PasswordLanguage from './page/PasswordLanguage.vue'
-import PasswordInstant from './page/PasswordInstant.vue'
-import LightFlow from './page/LightFlow.vue'
-import Community from './page/Community.vue'
 const pinia = createPinia()
 const routes = [
   {
     path: '/', component: Passwords,
-    redirect:'/zenmaster',
+    redirect:'detail/:id',
     children:[
       {
-        path:'zenmaster',component:PasswordDetail
+        path:'detail/:id',component:PasswordDetail
       },
       {
-        path:'languagefinches',component:PasswordLanguage,
+        path:'language/:id',component:PasswordDetail,
       },
       {
-        path:'instant',component:PasswordInstant
+        path:'instant/:id',component:PasswordDetail
       },
       {
-        path:'light',component:LightFlow
+        path:'light/:id',component:PasswordDetail
       },
       {
-        path:'yuan',component:Community
+        path:'commun/:id',component:PasswordDetail
       }
     ]
   }
