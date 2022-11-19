@@ -116,6 +116,7 @@ const appTpl = `
 </div>
   `
 const saAppModel=require('../../src/model/appModel.js')
+saAppModel.initDb()
 const swatches = window['vue-swatches']
 Vue.component('app', {
   template: appTpl,
