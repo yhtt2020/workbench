@@ -30,6 +30,7 @@ class BarrageManager {
     this.instance = null
     this.container = null
     windowManager.close(name)
+    sendIPCToMainWindow('setBarrageOpen',{open:false})
     settings.set(settingName, false)
   }
 
@@ -75,6 +76,7 @@ class BarrageManager {
       this.container = window
       this.instance = windowInstance
       settings.set(settingName, true)
+      sendIPCToMainWindow('setBarrageOpen',{open:true})
       if (settings.get('barrageLock')) {
         this.lock()
       } else {
