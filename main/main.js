@@ -730,6 +730,9 @@ app.whenReady().then(()=>{
     barrageManager.lock()
   })
 
+  ipc.on('barrage.unlock',()=>{
+    barrageManager.unlock()
+  })
 
   ipc.on('setAutoRun',(event,args)=>{
     let autoRun=args.value

@@ -70,7 +70,8 @@ export default {
       currentBarrageData:{},
       manager:{},
       runing:true,
-      supporting:false
+      supporting:false,
+      quickSend:false//是否是快速发布，快速发布后，自动恢复状态
     }
   },
 
@@ -81,6 +82,16 @@ export default {
     } else {
       this.user = userResult.data
     }
+
+    tsbApi.barrage.onPostBarrage((e,a)=>{
+      if(!document.body.classList.contains('active')){
+        this.quickSend=true
+        tsbApi.barrage.unlock()//解锁
+        //如果是锁定的
+      }
+      this.inputPopVisible=true
+      this.toggleInput()
+    })
 
     window.$message = message
     let that=this
@@ -256,6 +267,10 @@ export default {
           })
           this.content = ''
           this.inputPopVisible = false
+          if(this.quickSend){
+            this.quickSend=false
+            this.lock()
+          }
           message.success('弹幕装填成功。')
         } else {
           message.error({content: '弹幕发布失败，服务器返回错误。'})
@@ -316,7 +331,9 @@ export default {
       tsbApi.window.close()
     },
     lock() {
+
       message.success('锁定弹幕窗口成功。再次点击工具栏弹幕按钮可解锁。')
+
       tsbApi.barrage.lock()
     },
     getId() {
