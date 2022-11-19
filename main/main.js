@@ -701,12 +701,7 @@ app.whenReady().then(()=>{
 
 
   ipc.on('toggleBarrage',()=>{
-    if(!BarrageManager.isAlive()){
-      barrageManager.get()
-    }else{
-      barrageManager.close()
-    }
-
+   barrageManager.toggle()
   })
 
    ipc.on('closeBarrageWindow', () => {

@@ -1,11 +1,33 @@
-const { BrowserWindow, app, ipcMain } = require('electron')
+const { BrowserWindow, app, ipcMain,Menu } = require('electron')
 let win = null
 const ipc = ipcMain
 const isDevelopmentMode = process.argv.some(arg => arg === '--development-mode')
 
 const name = 'barrage'
 const settingName = 'barrageOpen'
-
+app.whenReady().then(()=>{
+  ipc.on('showBarrageMenu',(event)=>{
+    let open=BarrageManager.isAlive()
+    let lock=settings.get('barrageLock')
+    const template = [
+      {
+        label: open?'关闭弹幕':'打开弹幕' ,
+        click: () => { barrageManager.toggle()}
+      }
+    ]
+    if(open){
+      template.push(
+        { label: lock?'解锁':'锁定',
+          click: () => {
+            barrageManager.toggleLock()
+          }
+        }
+      )
+    }
+    const menu = Menu.buildFromTemplate(template)
+    menu.popup(BrowserWindow.fromWebContents(event.sender))
+  })
+})
 class BarrageManager {
   container
   instance
@@ -23,6 +45,20 @@ class BarrageManager {
     }
   }
 
+  toggle(){
+    if(!BarrageManager.isAlive()){
+      barrageManager.get()
+    }else{
+      barrageManager.close()
+    }
+  }
+  toggleLock(){
+    if(settings.get('barrageLock')){
+      this.unlock()
+    }else{
+      this.lock()
+    }
+  }
   /**
    * 关闭并移除设置，不影响锁定设置
    */
