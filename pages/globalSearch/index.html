@@ -19,6 +19,7 @@
     const ipc = require("electron").ipcRenderer;
     const tools = require('../util/util.js').tools;
     const saAppModel = require('../../src/model/appModel.js')
+    saAppModel.initDb()
   </script>
   <div id="globalSearch" class="gs-wrap">
     <div class="gs-dialog" :class="{'first-gs-dialog': openFirst}">

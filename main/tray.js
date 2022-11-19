@@ -20,9 +20,9 @@ async function getUserInfo () {
 
 let trayWindow = null
 
-function getTrayWindow () {
+async function getTrayWindow () {
   if (trayWindow === null) {
-    createTrayWin()
+    await createTrayWin()
   }
   return trayWindow
 }
@@ -35,47 +35,55 @@ async function getMemory () {
   return info
 }
 
-function createTrayWin () {
-  trayWindow = new BrowserWindow({
-    frame: false,
-    width: 400,
-    height: 430,
-    sandbox: false,
-    // disableDialogs:true,
-    resizable: false,
-    autoHideMenuBar: true,
-    show: false,
-    focusable: true,
-    acceptFirstMouse: true,
-    transparent: true,
-    backgroundColor: '#00000000',
-    maximizable: false,
-    skipTaskbar: true,
-    alwaysOnTop: false,//调整窗口层级
-    webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
-      sandbox: false,
-      webSecurity: false,
-      preload: (__dirname + '/src/preload/trayPreload.js'),
-      additionalArguments: [
-        '--user-data-path=' + app.getPath('userData'),
-        '--app-version=' + app.getVersion(),
-        '--app-name=' + app.getName(),
-        ...((isDevelopmentMode ? ['--development-mode'] : [])),
-      ],
+async function createTrayWin () {
+  let windowInstance = await windowManager.create({
+      name: 'tray',
+      windowOption:
+        {
+          frame: false,
+          width: 400,
+          height: 430,
+          sandbox: false,
+          // disableDialogs:true,
+          resizable: false,
+          autoHideMenuBar: true,
+          show: false,
+          focusable: true,
+          acceptFirstMouse: true,
+          transparent: true,
+          backgroundColor: '#00000000',
+          maximizable: false,
+          skipTaskbar: true,
+          alwaysOnTop: false,//调整窗口层级
+
+        },
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false,
+        sandbox: false,
+        webSecurity: false,
+        preload: (__dirname + '/src/preload/trayPreload.js'),
+        additionalArguments: [
+          '--user-data-path=' + app.getPath('userData'),
+          '--app-version=' + app.getVersion(),
+          '--app-name=' + app.getName(),
+          ...((isDevelopmentMode ? ['--development-mode'] : [])),
+        ],
+      }
+
     }
-  })
+  )
+  trayWindow = windowInstance.window
   trayWindow.webContents.loadURL(getUrl('tray.html'))
   trayWindow.on('ready-to-show', () => {
     trayWindow.show()
   })
   trayWindow.on('blur', () => {
     trayWindow.close()
-    trayWindow=null
+    trayWindow = null
   })
-  trayWindow.on('closed',()=>{
-    trayWindow=null
+  trayWindow.on('closed', () => {
+    trayWindow = null
   })
 }
 
@@ -101,6 +109,8 @@ app.whenReady().then(() => {
       await baseApi.init()
       baseApi.axios('/app/open/usageStats/cumulativeTime', options, 'post').catch(e => {
         console.warn('上传在线时长失败', e)
+      }).then((rs)=>{
+        console.log(rs)
       })
     } catch (e) {
       console.warn('上传在线时间意外错误', e)
@@ -154,20 +164,11 @@ app.whenReady().then(() => {
     tray = new Tray(path.join(__dirname, '/icons/logowin.ico'))
   }
   tray.setToolTip('想天浏览器')
-  tray.on('click', function (event, position) {
-    getTrayWindow()
+  tray.on('click', async function (event, position) {
+    await getTrayWindow()
     let bounds = trayWindow.getBounds()
     trayWindow.setPosition(position.x - bounds.width, position.y - bounds.height)
     return false
-    // pool.usePop({
-    //   url: render.getUrl('tray.html'),
-    //   width: 400,
-    //   height: 600,
-    //   x: position.x - 350,
-    //   y: position.y - 600,
-    // }).then( r =>{
-    //
-    // })
   })
   const contextMenu = Menu.buildFromTemplate([
     {
