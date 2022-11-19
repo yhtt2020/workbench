@@ -696,21 +696,23 @@ const { BarrageManager }=require(path.join(__dirname,'/src/main/barrageManager.j
 app.whenReady().then(()=>{
   setTimeout(()=>{
     global.barrageManager=new BarrageManager(windowManager)
-    //barrageManager.init()
+    barrageManager.init()
   },1000)
 
 
   ipc.on('toggleBarrage',()=>{
-    if(BarrageManager.isAlive()){
-      if(barrageManager.isLocked){
-        barrageManager.unlock()
-        return
-      }
-      barrageManager.destroy()
+    if(!BarrageManager.isAlive()){
+      barrageManager.get()
     }else{
-      barrageManager.init()
+      barrageManager.close()
     }
+
   })
+
+   ipc.on('closeBarrageWindow', () => {
+      barrageManager.close()
+    })
+
   ipc.on('barrage.changeUrl',(e,a)=>{
     if(typeof barrageManager !=='undefined')
      barrageManager.changeUrl(a.url)
