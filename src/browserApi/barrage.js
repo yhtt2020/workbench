@@ -7,6 +7,7 @@ const barrageModel=new BarrageModel()
 const barrage={
   CONST:barrageModel.BARRAGE_CONST,
   urlChangedCallback:null,
+  sendBarrageCallback:null,
   /**
    * init方法主要用于刷新api的信息，如果不init是不会重载里面的信息的
    * @returns {Promise<void>}
@@ -53,6 +54,17 @@ const barrage={
    */
   lock(){
     ipc.send('barrage.lock')
-  }
+  },
+  unlock(){
+    ipc.send('barrage.unlock')
+  },
+  onPostBarrage:(cb)=>{
+    barrage.sendBarrageCallback=cb
+  }//回调
 }
+ipc.on('postBarrage',(e,a)=>{
+  if(barrage.sendBarrageCallback){
+    barrage.sendBarrageCallback(e,a)
+  }
+})
 module.exports=barrage

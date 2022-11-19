@@ -23,6 +23,12 @@ app.whenReady().then(()=>{
           }
         }
       )
+      template.push({
+        label:'发送弹幕',
+        click:()=>{
+          barrageManager.send('postBarrage')//发送弹幕
+        }
+      })
     }
     const menu = Menu.buildFromTemplate(template)
     menu.popup(BrowserWindow.fromWebContents(event.sender))
