@@ -969,7 +969,6 @@ class AppManager {
         delete target[key]
       }
     })
-    console.log('target fix',target)
   }
 
   /**
