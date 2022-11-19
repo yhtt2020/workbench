@@ -540,19 +540,20 @@ ipc.on(ipcMessageMain.sidePanel.getGlobal, (event, args) => {
 
 //ipc从mainWindow得到全局变量后，返回给sidebar
 ipc.on(ipcMessageMain.sidePanel.receiveGlobal, function (event, args) {
-  args.mainWindowId = mainWindow.webContents.id
-  if (!!!args.callbackWin) {
-    if (sidePanel != null && mainWindow != null) {
-      SidePanel.send('receiveGlobal', args)
-    }
-  } else {
-    if (args.callbackWin === 'switchWin')
-      //如果是明确了要返回给switchWin的，则发送到switchWindow
-      if (switchWindow != null && mainWindow != null) {
-        switchWindow.webContents.send('receiveGlobal', args)
+  if(mainWindow && mainWindow.webContents){
+    args.mainWindowId = mainWindow.webContents.id
+    if (!!!args.callbackWin) {
+      if (sidePanel != null && mainWindow != null) {
+        SidePanel.send('receiveGlobal', args)
       }
+    } else {
+      if (args.callbackWin === 'switchWin')
+        //如果是明确了要返回给switchWin的，则发送到switchWindow
+        if (switchWindow != null && mainWindow != null) {
+          switchWindow.webContents.send('receiveGlobal', args)
+        }
+    }
   }
-
 })
 function openSetting(){
   let url= render.getUrl('settings.html')
