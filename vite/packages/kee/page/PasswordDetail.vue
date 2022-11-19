@@ -213,9 +213,8 @@ export default {
     },
     // 添加创建tag
     addTag(){
-      // if(this.mobileValue == ''){
-      //   this.$refs.addBtnRef.preventDefault()
-      // }
+      if(this.mobileValue == ''){
+      }
       this.mobileTag.push(this.mobileValue)
       this.mobileValue = ''
     },
