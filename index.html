@@ -260,7 +260,7 @@
                     id="nav-toolbar"><img style="margin-left: 6px;
     margin-top: 6px;" class="action app" src="./icons/toolbar/apps/fav.svg"></span>
         </div>
-        <div class="action-wrapper app-tool">
+        <div class="action-wrapper app-tool" :class="{'open':barrageOpen}" @contextmenu="showBarrageMenu">
               <span title="弹幕" @click="ipc.send('toggleBarrage')" id="danmu-toolbar"><img style="margin-left: 8px;width: 21px;padding-top: 4px" class="action app"
                                                                                           src="./icons/toolbar/hot.svg">
                 <span hidden class="bandage" id="danmu">0</span>
@@ -351,6 +351,7 @@
     el: '#appVue',
     data () {
       return {
+        barrageOpen:false,
         displayText: false,
         memPercent: 0,
         lastMem: 0,
@@ -399,6 +400,9 @@
     },
     mounted () {
 
+      ipc.on('setBarrageOpen',(e,a)=>{
+        this.barrageOpen=a.open
+      })
       this.ipc = ipc
       ipc.on('doRefreshLoad', (e, a) => {
         /**
@@ -412,6 +416,9 @@
       })
     },
     methods: {
+      showBarrageMenu(){
+        ipc.send('showBarrageMenu')
+      },
       openSiteCard (e) {
         let tabData=tabs.get(tabs.getSelected())
         ipc.send('createSiteCard', {
