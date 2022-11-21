@@ -27,6 +27,7 @@
               </template>
               <span class="share">分享</span>
             </a-menu-item>
+            <!--主应用中打开下拉菜单打开-->
             <a-menu-item key="2">
               <template #icon>
                 <ExportOutlined style="font-size:16px;color: rgba(0, 0, 0, 0.65);"/>
@@ -118,10 +119,10 @@
         <template v-if="value==1">
             <span style="margin-bottom:7px;">选择团队</span>
             <a-select v-model:value="teamValue"  mode="tags" style="width: 100%" placeholder="请选择团队">
-              <a-select-option value="0">A团队</a-select-option>
-              <a-select-option value="1">B团队</a-select-option>
-              <a-select-option value="2">C团队</a-select-option>
-              <a-select-option value="3">D团队</a-select-option>
+              <a-select-option value="Ateam">A团队</a-select-option>
+              <a-select-option value="Bteam">B团队</a-select-option>
+              <a-select-option value="Cteam">C团队</a-select-option>
+              <a-select-option value="Dteam">D团队</a-select-option>
             </a-select>
             <span style="margin-top:4px;">仅团队内成员可以查看密码</span>
         </template>
@@ -182,7 +183,7 @@ export default {
       // 任何有此链接的人
       value:'0',
       checked:false,
-      teamValue:['0'],
+      teamValue:['Ateam'],
       // 是否删除
       deletVisible:false,
       formState:{
