@@ -75,6 +75,7 @@
      </div>
    </a-layout-sider>
    <a-layout-content class="password-right-main">
+    <!-- 当数据为加载完成时,初始化默认没有搭建时展示页面空状态 -->
     <a-empty :image="simpleImage" style="display:none"/>
     <router-view></router-view>
    </a-layout-content>
