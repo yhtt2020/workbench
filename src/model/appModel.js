@@ -443,7 +443,7 @@ const appModel = {
       type: app.type || 'web',
       author: app.author ? app.author : '',
       site: app.site ? app.site : '',
-      url: url,
+      url: app.url,
       circle: app.circle ? app.circle : '',
 
       // circleMessage: app.circleMessage ? app.circleMessage : '',

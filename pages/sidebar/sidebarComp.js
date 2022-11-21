@@ -1301,6 +1301,7 @@ Vue.component('sidebar', {
     },
     //应用市场项目所需要的函数
     addApp (app) {
+      console.log(app)
       let option = {
         name: app.name,
         logo: !!!app.logo256 ? '../../icons/default.svg' :app.logo256,
@@ -1312,9 +1313,9 @@ Vue.component('sidebar', {
         theme_color: !!!app.themeColor ? '#000' :app.themeColor,
         settings:app.settings,
         circle:app.circle,
-        auth:JSON.parse(app.auth),
-        url:app.site,
-        site:app.url,
+        auth:!!!app.auth ? '' : JSON.parse(app.auth),
+        url:app.url,
+        site:app.site,
         avatar:app.author.avatar,
         nickname:app.author.nickname,
         // author:app.author,
@@ -1323,7 +1324,7 @@ Vue.component('sidebar', {
         nanoid:app.appNanoid
       }
 
-      standAloneAppModel.install(app.site, option).then(nanoid => {
+      standAloneAppModel.install(app.url, option).then(nanoid => {
         ipc.send('message', { type: 'success', config: { content: `添加应用：${app.name} 成功` } })
         ipc.send('installApp', { nanoid: nanoid })
         ipc.send('installSuccess',{nanoid:nanoid,tips:true})
