@@ -27,6 +27,12 @@
               </template>
               <span class="share">分享</span>
             </a-menu-item>
+            <a-menu-item key="2">
+              <template #icon>
+                <ExportOutlined style="font-size:16px;color: rgba(0, 0, 0, 0.65);"/>
+              </template>
+              <span class="share">主应用中打开</span>
+            </a-menu-item>
             <a-menu-item key="3" @click="shareDelete">
                <template #icon>
                   <MinusCircleOutlined style="color:rgba(255, 77, 79, 1);font-size:16px;"/>
@@ -111,7 +117,7 @@
         </a-checkbox>
         <template v-if="value==1">
             <span style="margin-bottom:7px;">选择团队</span>
-            <a-select v-model:value="TeamValue"  mode="tags" style="width: 100%" placeholder="请选择团队">
+            <a-select v-model:value="teamValue"  mode="tags" style="width: 100%" placeholder="请选择团队">
               <a-select-option value="0">A团队</a-select-option>
               <a-select-option value="1">B团队</a-select-option>
               <a-select-option value="2">C团队</a-select-option>
@@ -155,7 +161,7 @@ import {
   EllipsisOutlined,UnlockFilled,
   FormOutlined,MinusCircleOutlined,
   ShareAltOutlined,PlusOutlined,
-  ExclamationCircleOutlined
+  ExclamationCircleOutlined,ExportOutlined
 } from '@ant-design/icons-vue'
 import { Modal } from 'ant-design-vue';
 import { createVNode } from 'vue'
@@ -166,7 +172,7 @@ export default {
     FormOutlined,MinusCircleOutlined,
     ShareAltOutlined,PlusOutlined,
     ExclamationCircleOutlined,
-    PlusOutlined
+    PlusOutlined,ExportOutlined
   },
   data(){
     return{
@@ -176,7 +182,7 @@ export default {
       // 任何有此链接的人
       value:'0',
       checked:false,
-      TeamValue:['0'],
+      teamValue:['0'],
       // 是否删除
       deletVisible:false,
       formState:{

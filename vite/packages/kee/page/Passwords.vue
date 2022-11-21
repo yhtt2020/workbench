@@ -4,7 +4,7 @@
      <a-row class="password-select-container">
        <a-col :span="12" class="col-left">
            <AppstoreFilled class="col-left-icon"/>
-           <span class="password-all">所有密码</span>
+           <span class="password-all">{{filterText}}</span>
        </a-col>
        <a-col  :span="12" class="col-right">
          <SwapOutlined  style="font-size:16px;cursor: pointer;"/>
@@ -27,7 +27,7 @@
   </div>
  <a-layout style="height:calc(100vh - 45px)">
    <a-layout-sider theme="light" style="padding: 20px">
-     <a-list item-layout="horizontal" :data-source="passwords">
+     <a-list item-layout="horizontal" :data-source="passwords" >
        <template #renderItem="{ item }">
          <a-list-item class="left-item-list" :class="currentIndex==item.id ? 'active-list':''" @click="leftDescription(item)">
            <a-list-item-meta :description="item.description">
@@ -42,91 +42,91 @@
          </a-list-item>
        </template>
      </a-list>
+     <!-- <div class="current-container">
+      <div></div>
+      <a-list>
+       
+      </a-list>
+     </div> -->
    </a-layout-sider>
    <a-layout-content class="password-right-main">
      <router-view></router-view>
    </a-layout-content>
  </a-layout>
  <a-drawer class="filter-list-container" :width="216" placement="left" :visible="visible" @close="visible = false">
-   <a-menu mode="inline" :inline-collapsed="collapsed" >
-     <div style="height:50px;border-bottom: 1px solid rgba(230, 230, 230, 1);margin-bottom: 8px;">
-       <a-menu-item key="1" class="menu-password">
+  <a-menu mode="inline" :data-source="filterPassword">
+      <a-menu-item key="my-password" class="menu-password" @click="getDrawerItem($event)">
+        <template #icon>
+         <UnlockFilled style="font-size:16px;"/>
+        </template>
+        <span>我的密码</span>
+        <SwapOutlined  style="font-size:16px;cursor: pointer;"  @click="openPasswordSelect($event)"/>
+      </a-menu-item>
+      <a-divider style="height: 1px; background-color:rgba(230, 230, 230, 1)" />
+      <a-menu-item key="all-password" @click="getDrawerItem($event)">
+        <template #icon>
+         <AppstoreFilled style="font-size:16px;"/>
+        </template>
+        <span>所有密码</span>
+      </a-menu-item>
+      <a-menu-item key="current-website" >
+        <template #icon>
+         <LinkOutlined style="font-size:16px;"/>
+        </template>
+        <span>当前网站</span>
+      </a-menu-item>
+      <a-divider style="height: 1px; background-color: rgba(230, 230, 230, 1)" />
+      <a-menu-item key="password-color">
+        <template #icon>
+         <StarFilled  style="font-size:16px;"/>
+        </template>
+        <span>颜色</span>
+      </a-menu-item>
+      <a-menu-item key="computer">
+        <template #icon>
+         <TagFilled style="font-size:16px;"/>
+        </template>
+        <span>Computer</span>
+      </a-menu-item>
+      <a-divider style="height: 1px; background-color:rgba(230, 230, 230, 1)" />
+      <a-menu-item key="email">
+        <template #icon>
+         <TagFilled style="font-size:16px;"/>
+        </template>
+        <span>Email</span>
+      </a-menu-item>
+      <a-divider style="height: 1px; background-color: rgba(230, 230, 230, 1)" />
+      <a-sub-menu key="password-demo" style="margin-bottom: 8px;">
+        <template #icon>
+         <FolderOpenFilled style="font-size:16px;"/>
+        </template>
+        <template #title>Demo</template>
+        <a-menu-item key="password-computer" class="password-computer">
          <template #icon>
-          <UnlockFilled style="font-size:16px;"/>
-         </template>
-         <div>我的密码</div>
-         <SwapOutlined  style="font-size:16px;cursor: pointer;"  @click="openPasswordSelect($event)"/>
-       </a-menu-item>
-     </div>
-     <div  style="height:100px; border-bottom: 1px solid rgba(230, 230, 230, 1);margin-bottom: 8px;">
-       <a-menu-item key="2">
-         <template #icon>
-          <AppstoreFilled style="font-size:16px;"/>
-         </template>
-         <span>所有密码</span>
-        </a-menu-item>
-        <a-menu-item key="3">
-         <template #icon>
-          <LinkOutlined style="font-size:16px;"/>
-         </template>
-         <span>当前网站</span>
-        </a-menu-item>
-     </div>
-     <div style="height:50px;border-bottom: 1px solid rgba(230, 230, 230, 1);margin-bottom: 8px;">
-       <a-menu-item key="4">
-         <template #icon>
-          <StarFilled  style="font-size:16px;"/>
-         </template>
-         <span>颜色</span>
-       </a-menu-item>
-     </div>
-     <div style="height:100px;border-bottom: 1px solid rgba(230, 230, 230, 1);">
-       <a-menu-item key="5">
-         <template #icon>
-          <TagFilled style="font-size:16px;"/>
+           <FolderOpenFilled style="font-size:16px;"/>
          </template>
          <span>Computer</span>
-       </a-menu-item>
-       <a-menu-item key="6">
+        </a-menu-item>
+        <a-menu-item key="password-internet" class="password-computer">
          <template #icon>
-          <TagFilled style="font-size:16px;"/>
+           <FolderOpenFilled style="font-size:16px;"/>
          </template>
-         <span>Email</span>
-       </a-menu-item>
-     </div>
-     <a-sub-menu key="sub1" style="margin-bottom: 8px;">
-      <template #icon>
-       <FolderOpenFilled style="font-size:16px;"/>
-      </template>
-      <template #title>Demo</template>
-      <a-menu-item key="7" class="password-computer">
-       <template #icon>
-         <FolderOpenFilled style="font-size:16px;"/>
-       </template>
-       <span>Computer</span>
+         <span>Internet</span>
+        </a-menu-item>
+      </a-sub-menu>
+      <a-divider style="height: 1px; background-color: rgba(230, 230, 230, 1)" />
+      <a-menu-item key="mian-apply" class="main-open-item">
+        <span class="main-open">
+          <LockFilled style="font-size:16px;"/>
+        </span>
+        <span>主应用中打开</span>
       </a-menu-item>
-      <a-menu-item key="8" class="password-computer">
-       <template #icon>
-         <FolderOpenFilled style="font-size:16px;"/>
-       </template>
-       <span>Internet</span>
-      </a-menu-item>
-     </a-sub-menu>
-     <div style="hieght:50px;border-top:1px solid rgba(230, 230, 230, 1);padding-top: 8px;">
-       <a-menu-item key="9" class="main-open-item">
-         <span class="main-open">
-           <LockFilled style="font-size:16px;"/>
-         </span>
-         <span>主应用中打开</span>
-       </a-menu-item>
-     </div>
-   </a-menu>
- </a-drawer> 
+  </a-menu>
+</a-drawer>  
 </template>
 
 <script>
-// import vueCustomScrollbar from '../../../src/components/vue-scrollbar.vue'
-// vueCustomScrollbar,
+
 import { 
  SettingOutlined, LaptopOutlined, 
  SmileOutlined,SearchOutlined,
@@ -137,10 +137,11 @@ import {
 } from '@ant-design/icons-vue'
 import { appStore } from '../store'
 import { mapState } from 'pinia'
+// import vueCustomScrollbar from '../../../src/components/vue-scrollbar.vue'
+// vueCustomScrollbar,
 // import { message, Modal } from 'ant-design-vue', mapActions
 // let { appModel, devAppModel } = window.$models
 // let appId = window.globalArgs['app-id']
-
 export default {
  name: 'Passwords',
  components: {
@@ -150,7 +151,7 @@ export default {
    PlusOutlined,AppstoreFilled,
    UnlockFilled,StarFilled,
    TagFilled,FolderOpenFilled,
-   LinkOutlined,LockFilled
+   LinkOutlined,LockFilled,
  },
  computed: {
    ...mapState(appStore, [])
@@ -176,41 +177,99 @@ export default {
          title:'禅道账号',
          description:'Francisio_Phillps',
          path:'detail',
-         url:'http://localhost:1600/packages/kee/assets/image/key_one.svg'
+         url:'http://localhost:1600/packages/kee/assets/image/key_black.svg'
        },
        {
          id:1,
          title:'语雀帐号',
          description:'Isabelle_Fisher',
          path:'detail',
-         url:'http://localhost:1600/packages/kee/assets/image/key_two.svg'
+         url:'http://localhost:1600/packages/kee/assets/image/key_crimson.svg'
        },
        {
          id:2,
          title:'即时设计帐号',
          description:'Benjamin_Gonzalez',
          path:'detail',
-         url:'http://localhost:1600/packages/kee/assets/image/key_three.svg'
+         url:'http://localhost:1600/packages/kee/assets/image/key_blue.svg'
+         
        },
        {
          id:3,
          title:'轻流帐号',
          description:'Maurice_Alvarado',
          path:'detail',
-         url:'http://localhost:1600/packages/kee/assets/image/key_one.svg'
+         url:'http://localhost:1600/packages/kee/assets/image/key_black.svg'
        },
        {
          id:4,
          title:'元社区帐号',
          description:'Derek_Edwards',
          path:'detail',
-         url:'http://localhost:1600/packages/kee/assets/image/key_four.svg'
+         url:'http://localhost:1600/packages/kee/assets/image/key_orange.svg'
        }
+     ],
+     filterPassword:[
+         {
+          id:0,
+          title: '我的密码',
+          icon:'UnlockFilled',
+          swipeIcon:'SwapOutlined',
+          divider:2
+         },
+         {
+          id:1,
+          title: '所有密码',
+          icon:'AppstoreFilled',
+         },
+         {
+          id:2,
+          title: '当前网站',
+          divider:2,
+          icon:'LinkOutlined'
+         },
+         {
+          id:3,
+          title:'颜色',
+          icon:'StarFilled'
+         },
+         {
+          id:4,
+          title:'Computer',
+          icon:'TagFilled'
+         },
+         {
+          id:5,
+          title:'Email',
+          icon:'TagFilled',
+          divider:2
+         },
+         {
+          id:6,
+          title:'Demo',
+          divider:2,
+          icon:'FolderOpenFilled',
+          children:[
+             {
+              id:6_1,
+              title:'Computer'
+             },
+             {
+              id:6_2,
+              title:'Internet'
+             }
+          ]
+         },
+         {
+          id:7,
+          title:'主应用中打开',
+         }
      ],
      search:'',
      size:'large',
      visible:false,
-    
+     filterText:'所有密码',
+    //  filterIndex:0
    }
  },
 
@@ -234,6 +293,9 @@ export default {
    // 筛选下拉菜单
    openPasswordSelect(e){
      
+   },
+   getDrawerItem(v){
+      console.log(v);
    }
  }
 }
@@ -440,27 +502,22 @@ h3 {
 }
 /*右侧盒子样式结束*/
 /*筛选列表开始*/
+.filter-list-item{
+   padding: 0 8px 0 8px !important;
+}
+.ant-list-item-meta-title{
+   margin: 0 !important;
+   line-height: 32px !important;
+}
+.ant-divider-horizontal{
+   margin: 8px 0 !important;
+}
+.filter-active{
+  background: rgba(80, 139, 254, 0.2);
+  border-radius: 6px;
+}
 .ant-menu-submenu-arrow{
   display: none;
-}
-.menu-password{
-  line-height: 32px;
-  display: flex;
-}
-.menu-password .ant-menu-title-content{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  line-height: 32px;
-  height: 32px;
-  user-select: none;
-}
-.main-open{
-  background-color: rgba(80, 139, 254, 1);
-  color:rgba(255, 255, 255, 1);
-  border-radius: 50%;
-  padding: 4px;
-  margin-right: 12px;
 }
 /*筛选列表结束*/
 
