@@ -27,7 +27,7 @@
   </div>
  <a-layout style="height:calc(100vh - 45px)">
    <a-layout-sider theme="light" style="padding: 20px">
-     <a-list item-layout="horizontal" :data-source="passwords" >
+     <a-list item-layout="horizontal" :data-source="passwords" style="display:none;">
        <template #renderItem="{ item }">
          <a-list-item class="left-item-list" :class="currentIndex==item.id ? 'active-list':''" @click="leftDescription(item)">
            <a-list-item-meta :description="item.description">
@@ -42,15 +42,41 @@
          </a-list-item>
        </template>
      </a-list>
-     <!-- <div class="current-container">
-      <div></div>
-      <a-list>
-       
+     <div class="current-container" >
+      <div class="current-header">
+          <span class="current-avatar">
+             <img src="https://img.js.design/assets/img/62592c9e1be7d2a75a32e89b.png" alt="">
+          </span>
+          <div class="current-switch">
+            <a-switch v-model:checked="totalOpen" checked-children="全站" un-checked-children="关" />
+            <UpOutlined v-if="totalOpen==true" style="color:rgba(0, 0, 0, 0.45);padding-left:4px;"/>
+            <DownOutlined v-if="totalOpen==false" style="color:rgba(0, 0, 0, 0.45);padding-left:4px;"/>
+          </div>
+      </div>
+      <div class="current-content" v-if="totalOpen==true">
+         <span>语雀——想天浏览器官方文档</span>
+          <span class="current-website">https://www.yuque.com/thisky/ylbh5g</span>
+      </div>
+      <a-list :data-source="currentList">
+        <template #renderItem="{ item }">
+          <a-list-item class="left-item-list" :class="currentIndex==item.id ? 'active-list':''" @click="currentDescription(item)">
+            <a-list-item-meta :description="item.description">
+              <template #avatar>
+                 <img :src="item.url" alt="">
+              </template>
+              <template #title>
+               {{ item.title }}
+               <a href="https://www.antdv.com/"></a>
+              </template>
+            </a-list-item-meta>
+          </a-list-item>
+        </template>
       </a-list>
-     </div> -->
+     </div>
    </a-layout-sider>
    <a-layout-content class="password-right-main">
-     <router-view></router-view>
+    <a-empty :image="simpleImage" style="display:none"/>
+    <router-view></router-view>
    </a-layout-content>
  </a-layout>
  <a-drawer class="filter-list-container" :width="216" placement="left" :visible="visible" @close="visible = false">
@@ -133,10 +159,12 @@ import {
  PlusOutlined,SwapOutlined,AppstoreFilled,
  UnlockFilled,StarFilled,TagFilled,
  FolderOpenFilled,LinkOutlined,
- LockFilled,CodeTwoTone
+ LockFilled,CodeTwoTone,
+ UpOutlined,DownOutlined
 } from '@ant-design/icons-vue'
 import { appStore } from '../store'
 import { mapState } from 'pinia'
+import { Empty } from 'ant-design-vue';
 // import vueCustomScrollbar from '../../../src/components/vue-scrollbar.vue'
 // vueCustomScrollbar,
 // import { message, Modal } from 'ant-design-vue', mapActions
@@ -152,6 +180,7 @@ export default {
    UnlockFilled,StarFilled,
    TagFilled,FolderOpenFilled,
    LinkOutlined,LockFilled,
+   Empty,UpOutlined,DownOutlined
  },
  computed: {
    ...mapState(appStore, [])
@@ -169,6 +198,7 @@ export default {
        suppressScrollX: true,
        wheelPropagation: false
      },
+     simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
      currentIndex:0,
      checkNick: false,
      passwords:[
@@ -192,7 +222,6 @@ export default {
          description:'Benjamin_Gonzalez',
          path:'detail',
          url:'http://localhost:1600/packages/kee/assets/image/key_blue.svg'
-         
        },
        {
          id:3,
@@ -268,7 +297,29 @@ export default {
      search:'',
      size:'large',
      visible:false,
-     filterText:'所有密码',
+     filterText:'当前网站',
+     totalOpen:true,
+     // 当前网站
+     currentList:[
+        {
+           id:1,
+           title:'拉娅枫的语雀帐号',
+           description:'Francisio_Phillps',
+           url:'http://localhost:1600/packages/kee/assets/image/key_black.svg',
+        },
+        {
+           id:2,
+           title:'过英的语雀帐号',
+           description:'Isabelle_Fisher',
+           url:'http://localhost:1600/packages/kee/assets/image/key_crimson.svg'
+        },
+        {
+           id:3,
+           title:'汝贵的语雀帐号',
+           description:'Benjamin_Gonzalez',
+           url:'http://localhost:1600/packages/kee/assets/image/key_blue.svg'
+        }
+     ]
     //  filterIndex:0
    }
  },
@@ -296,6 +347,10 @@ export default {
    },
    getDrawerItem(v){
       console.log(v);
+   },
+   // 当前网站点击
+   currentDescription(v){
+    this.currentIndex = v.id
    }
  }
 }
@@ -520,5 +575,42 @@ h3 {
   display: none;
 }
 /*筛选列表结束*/
+
+/*当前网站密码开始*/
+.current-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  .current-avatar{
+    padding-left:12px;
+    img{
+      width: 16px;
+      height: 16px;
+    }
+  }
+  .current-switch{
+    display: flex;
+    align-items: center; 
+  }
+}
+.current-content{
+   max-width:100%;
+   padding: 0 12px 0 12px;
+   margin: 0 auto;
+   span{
+     font-size: 14px;
+     font-weight: 400;
+   }
+   .current-website{
+    word-break:normal; 
+    width:auto; 
+    display:block; 
+    white-space:pre-wrap;
+    word-wrap : break-word ;
+    overflow: hidden ;
+   }
+}
+/*当前网站密码结束*/
 
 </style>
