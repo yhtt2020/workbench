@@ -148,12 +148,14 @@ export default {
       document.body.style.backgroundColor = args.app.user_theme_color ? args.app.user_theme_color : args.app.theme_color
 
       //暂时取消应用市场的窗体返回图标
-      if(args.app.package === 'com.thisky.appStore'){
-        document.getElementById('goBack').hidden = true
-        document.getElementById('goForward').hidden = true
-        document.getElementById('goHome').hidden = true
-        document.getElementById('refresh').style.marginLeft = '30px'
-      }
+      if(!args.app.window.frameWindow.controllers.goBack)  document.getElementById('goBack').hidden = true
+      if(!args.app.window.frameWindow.controllers.goForward)  document.getElementById('goForward').hidden = true
+      if(!args.app.window.frameWindow.controllers.refresh)  document.getElementById('refresh').hidden = true
+      if(!args.app.window.frameWindow.controllers.home)  document.getElementById('goHome').hidden = true
+      // document.getElementById('goForward').hidden = true
+      //   document.getElementById('goHome').hidden = true
+      //   document.getElementById('refresh').style.marginLeft = '30px'
+
 
     })
     ipc.on('maximize',  (e) =>{
