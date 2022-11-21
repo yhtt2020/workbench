@@ -348,7 +348,7 @@ export default {
      
    },
    getDrawerItem(v){
-      console.log(v);
+     
    },
    // 当前网站点击
    currentDescription(v){
