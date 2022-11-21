@@ -27,7 +27,7 @@
   </div>
  <a-layout style="height:calc(100vh - 45px)">
    <a-layout-sider theme="light" style="padding: 20px">
-     <a-list item-layout="horizontal" :data-source="passwords" style="display:none;">
+     <a-list item-layout="horizontal" :data-source="passwords" >
        <template #renderItem="{ item }">
          <a-list-item class="left-item-list" :class="currentIndex==item.id ? 'active-list':''" @click="leftDescription(item)">
            <a-list-item-meta :description="item.description">
@@ -42,7 +42,8 @@
          </a-list-item>
        </template>
      </a-list>
-     <div class="current-container" >
+     <!-- 暂时没有数据先隐藏掉 -->
+     <div class="current-container" style="display:none;">
       <div class="current-header">
           <span class="current-avatar">
              <img src="https://img.js.design/assets/img/62592c9e1be7d2a75a32e89b.png" alt="">
@@ -75,7 +76,7 @@
      </div>
    </a-layout-sider>
    <a-layout-content class="password-right-main">
-    <!-- 当数据为加载完成时,初始化默认没有搭建时展示页面空状态 -->
+    <!-- 当数据为加载完成时,初始化默认没有搭建时展示页面空状态，暂时先隐藏掉 -->
     <a-empty :image="simpleImage" style="display:none"/>
     <router-view></router-view>
    </a-layout-content>
@@ -543,6 +544,7 @@ h3 {
 }
 .left-item-list{
    padding: 8px 12px;
+   cursor: pointer;
    img{
       width: 16px;
       height: 16px;
@@ -563,7 +565,7 @@ h3 {
 }
 .ant-list-item-meta-title{
    margin: 0 !important;
-   line-height: 32px !important;
+   line-height: 16px !important;
 }
 .ant-divider-horizontal{
    margin: 8px 0 !important;
