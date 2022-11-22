@@ -6,8 +6,11 @@
       <a-breadcrumb-item class="password-group"><a href="">分组A</a></a-breadcrumb-item>
     </a-breadcrumb-separator>   
     <div class="breadcrumb-right">
-       <div class="auto-full">
+       <div class="auto-full" v-if="editShow == false">
         <span>自动填充</span>
+       </div>
+       <div class="auto-full" v-else>
+        <span @click="saveChange">保存修改</span>
        </div>
        <a-dropdown :trigger="['click']" width="180">
         <a class="ant-dropdown-link" @click.prevent>
@@ -15,7 +18,7 @@
         </a>
         <template #overlay>
           <a-menu>
-            <a-menu-item key="0">
+            <a-menu-item key="0" @click="openEdit">
               <template #icon>
                 <FormOutlined style="font-size:16px;color: rgba(0, 0, 0, 0.65);"/>
               </template>
@@ -47,10 +50,11 @@
   </div>
   <div class="breadcrumb-bottom-container">
       <div class="breadcrumb-bottom-name">
-          <span>
+          <span style="padding-right:12px;">
             <i class="iconfont icon-yuechi1"></i>
           </span>
-          <span class="name">禅道账号</span>
+          <span class="name" v-if="editShow == false">禅道账号</span>
+          <a-input style="width:80%;" v-else v-model:value="passwordAccount"/>
       </div>
       <a-form :model="formState" class="form-layout">
         <a-form-item name="username" style="border:1px solid rgba(00,00,00,0.15); border-radius: 6px 6px 0 0 ;padding: 2px 12px;">
@@ -66,14 +70,23 @@
       </a-form>
       <div class="breadcrumb-bottom-sites">
           <a href="" class="sites-name">网站</a>
-          <a href="http://zt.xiangtian.ren/" class="sites">zt.xaingtian.ren</a>
+          <a href="http://zt.xiangtian.ren/" v-if="editShow == false" class="sites">zt.xaingtian.ren</a>
+          <a-input v-else v-model:value="websiteValue"/>
       </div>
       <div class="breadcrumb-bottom-sites">
         <a href="" class="sites-name">网站</a>
         <a href="https://www.yuque.com/" class="sites">www.yuque.com</a>
       </div>
       <div class="breadcrumb-bottom-remark">
-           <a href="#" class="remark">备注</a>
+           <div class="breadcrumb-bottom-remark-top">
+            <span class="remark">
+              备注
+             </span>
+             <a href="#" v-if="editShow  == true">
+              <ExportOutlined style="font-size:14px;color:rgba(80, 139, 254, 1);"/>
+              <span style="font-size:14px;padding-left: 4px;">在主应用中编辑</span>
+             </a>
+           </div>
            <span class="ana">团队语雀公用帐号，注意不要对外分享该密码</span>
       </div>
   </div>
@@ -193,7 +206,11 @@ export default {
       mobileValue:'',
       // 手机号标记
       mobileTag:['13675425868','13645221134'],
-      addDisabled:false
+      addDisabled:false,
+      editShow:false,
+      // 密码账号
+      passwordAccount:'禅道账号',
+      websiteValue:'zt.xaingtian.ren'
     }
   },
   mounted(){
@@ -232,6 +249,15 @@ export default {
             arr.splice(i, 1);
           }
        })
+    },
+    // 打开编辑模式
+    openEdit(){
+       this.editShow = true
+    },
+    // 保存修改
+    saveChange(){
+      this.editShow = false
+      console.log();
     }
   }
 
@@ -282,6 +308,7 @@ export default {
      border: 1px solid rgba(80, 139, 254, 1);
      border-radius: 4px;
      user-select: none;
+     cursor: pointer;
      span{
       color: rgba(80, 139, 254, 1);
       font-size: 14px;
@@ -315,7 +342,6 @@ export default {
 .breadcrumb-bottom-name {
    margin-bottom: 24px;
    .name{
-     padding-left: 13px;
      font-size: 16px;
      font-weight: 500;
      color: rgba(0, 0, 0, 0.85);
@@ -386,6 +412,7 @@ export default {
      font-size: 12px;
      font-weight: 400;
      line-height: 17px;
+     padding-right: 8px;
   }
   .ana{
      color: rgba(0, 0, 0, 0.65);
@@ -393,6 +420,10 @@ export default {
      font-weight: 400;
      line-height: 20px;
   }
+}
+.breadcrumb-bottom-remark-top{
+   display: flex;
+   align-items: center;
 }
 /*底部内容结束*/
 

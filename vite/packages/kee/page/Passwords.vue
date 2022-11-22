@@ -81,76 +81,9 @@
     <router-view></router-view>
    </a-layout-content>
  </a-layout>
- <a-drawer class="filter-list-container" :width="216" placement="left" :visible="visible" @close="visible = false">
-  <a-menu mode="inline" :data-source="filterPassword">
-      <a-menu-item key="my-password" class="menu-password" @click="getDrawerItem($event)">
-        <template #icon>
-         <UnlockFilled style="font-size:16px;"/>
-        </template>
-        <span>我的密码</span>
-        <SwapOutlined  style="font-size:16px;cursor: pointer;"  @click="openPasswordSelect($event)"/>
-      </a-menu-item>
-      <a-divider style="height: 1px; background-color:rgba(230, 230, 230, 1)" />
-      <a-menu-item key="all-password" @click="getDrawerItem($event)">
-        <template #icon>
-         <AppstoreFilled style="font-size:16px;"/>
-        </template>
-        <span>所有密码</span>
-      </a-menu-item>
-      <a-menu-item key="current-website" >
-        <template #icon>
-         <LinkOutlined style="font-size:16px;"/>
-        </template>
-        <span>当前网站</span>
-      </a-menu-item>
-      <a-divider style="height: 1px; background-color: rgba(230, 230, 230, 1)" />
-      <a-menu-item key="password-color">
-        <template #icon>
-         <StarFilled  style="font-size:16px;"/>
-        </template>
-        <span>颜色</span>
-      </a-menu-item>
-      <a-menu-item key="computer">
-        <template #icon>
-         <TagFilled style="font-size:16px;"/>
-        </template>
-        <span>Computer</span>
-      </a-menu-item>
-      <a-divider style="height: 1px; background-color:rgba(230, 230, 230, 1)" />
-      <a-menu-item key="email">
-        <template #icon>
-         <TagFilled style="font-size:16px;"/>
-        </template>
-        <span>Email</span>
-      </a-menu-item>
-      <a-divider style="height: 1px; background-color: rgba(230, 230, 230, 1)" />
-      <a-sub-menu key="password-demo" style="margin-bottom: 8px;">
-        <template #icon>
-         <FolderOpenFilled style="font-size:16px;"/>
-        </template>
-        <template #title>Demo</template>
-        <a-menu-item key="password-computer" class="password-computer">
-         <template #icon>
-           <FolderOpenFilled style="font-size:16px;"/>
-         </template>
-         <span>Computer</span>
-        </a-menu-item>
-        <a-menu-item key="password-internet" class="password-computer">
-         <template #icon>
-           <FolderOpenFilled style="font-size:16px;"/>
-         </template>
-         <span>Internet</span>
-        </a-menu-item>
-      </a-sub-menu>
-      <a-divider style="height: 1px; background-color: rgba(230, 230, 230, 1)" />
-      <a-menu-item key="mian-apply" class="main-open-item">
-        <span class="main-open">
-          <LockFilled style="font-size:16px;"/>
-        </span>
-        <span>主应用中打开</span>
-      </a-menu-item>
-  </a-menu>
-</a-drawer>  
+ <a-drawer class="filter-list-container" :width="216" placement="left" :visible="sideDrawerVisible">
+     
+ </a-drawer>  
 </template>
 
 <script>
@@ -165,7 +98,7 @@ import {
  UpOutlined,DownOutlined
 } from '@ant-design/icons-vue'
 import { appStore } from '../store'
-import { mapState } from 'pinia'
+import { mapState } from 'pinia' 
 import { Empty } from 'ant-design-vue';
 // import vueCustomScrollbar from '../../../src/components/vue-scrollbar.vue'
 // vueCustomScrollbar,
@@ -182,7 +115,7 @@ export default {
    UnlockFilled,StarFilled,
    TagFilled,FolderOpenFilled,
    LinkOutlined,LockFilled,
-   Empty,UpOutlined,DownOutlined
+   Empty,UpOutlined,DownOutlined,
  },
  computed: {
    ...mapState(appStore, [])
@@ -244,42 +177,43 @@ export default {
          {
           id:0,
           title: '我的密码',
-          icon:'UnlockFilled',
-          swipeIcon:'SwapOutlined',
-          divider:2
+          // icon:'UnlockFilled',
+          // swipeIcon:'SwapOutlined',
+          divider:2,
+          isLeaf: true
          },
          {
           id:1,
           title: '所有密码',
-          icon:'AppstoreFilled',
+          // icon:'AppstoreFilled',
          },
          {
           id:2,
           title: '当前网站',
           divider:2,
-          icon:'LinkOutlined'
+          // icon:'LinkOutlined'
          },
          {
           id:3,
           title:'颜色',
-          icon:'StarFilled'
+          // icon:'StarFilled'
          },
          {
           id:4,
           title:'Computer',
-          icon:'TagFilled'
+          // icon:'TagFilled'
          },
          {
           id:5,
           title:'Email',
-          icon:'TagFilled',
+          // icon:'TagFilled',
           divider:2
          },
          {
           id:6,
           title:'Demo',
           divider:2,
-          icon:'FolderOpenFilled',
+          // icon:'FolderOpenFilled',
           children:[
              {
               id:6_1,
@@ -298,7 +232,7 @@ export default {
      ],
      search:'',
      size:'large',
-     visible:false,
+     sideDrawerVisible:false,
      filterText:'当前网站',
      totalOpen:true,
      // 当前网站
@@ -336,7 +270,7 @@ export default {
    },
    // 开启抽屉式的选项
    selectOptions(){
-     this.visible = true
+     this.sideDrawerVisible = true
    },
    // 列表点击
    leftDescription(v){
@@ -347,8 +281,9 @@ export default {
    openPasswordSelect(e){
      
    },
-   getDrawerItem(v){
-     
+   // 筛选列表点击
+   getDrawerItem(e){
+      // this.sideDrawerVisible = false
    },
    // 当前网站点击
    currentDescription(v){
@@ -446,7 +381,6 @@ h3 {
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
 }
 /*下拉选择开始*/
 .password-select{
@@ -456,6 +390,7 @@ h3 {
   padding: 6px 8px 5px 8px;
   line-height: 19px;
   user-select: none;
+  margin-right: 16px;
   cursor: pointer;
   .password-select-container{
     display: flex;
@@ -489,6 +424,7 @@ h3 {
 /*搜索开始*/
 .password-search{
   width: 35%;
+  margin-right: 16px; 
 }
 /*搜索结束*/
 
@@ -560,25 +496,10 @@ h3 {
 }
 /*右侧盒子样式结束*/
 /*筛选列表开始*/
-.filter-list-item{
-   padding: 0 8px 0 8px !important;
-}
-.ant-list-item-meta-title{
-   margin: 0 !important;
-   line-height: 16px !important;
-}
-.ant-divider-horizontal{
-   margin: 8px 0 !important;
-}
-.filter-active{
-  background: rgba(80, 139, 254, 0.2);
-  border-radius: 6px;
-}
-.ant-menu-submenu-arrow{
-  display: none;
-}
 /*筛选列表结束*/
-
+.ant-tree-switcher{
+   display: none;
+}
 /*当前网站密码开始*/
 .current-header{
   display: flex;
