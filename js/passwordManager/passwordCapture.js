@@ -12,10 +12,21 @@ const passwordCapture = {
   saveButton: document.getElementById('password-capture-save'),
   neverSaveButton: document.getElementById('password-capture-never-save'),
   closeButton: document.getElementById('password-capture-ignore'),
+  favicon:'',
   currentDomain: null,
   barHeight: 0,
   showCaptureBar: function (username, password) {
-    passwordCapture.description.textContent = l('passwordCaptureSavePassword').replace('%s', passwordCapture.currentDomain)
+    let tabData=tabs.get(tabs.getSelected())
+    let tabIcon=''
+    console.log(tabData)
+    if(tabData.favicon && tabData.favicon.url){
+      tabIcon=`<img style="width: 22px;height: 22px;margin-left: 10px;margin-right: 5px;vertical-align: middle;object-fit: cover" src="${tabData.favicon.url}"/>`
+      passwordCapture.favicon=tabData.favicon.url
+    }else{
+      tabIcon=''
+      passwordCapture.favicon=''
+    }
+    passwordCapture.description.innerHTML = l('passwordCaptureSavePassword').replace('%s', tabIcon +  `${passwordCapture.currentDomain}`)
     passwordCapture.bar.hidden = false
 
     passwordCapture.passwordInput.type = 'password'

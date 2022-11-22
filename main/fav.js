@@ -212,7 +212,7 @@ async function initFav(){
   })
   let popWindow = null
 
-  function showAddPage () {
+  async function showAddPage () {
     let url = 'pages/fav/index.html'//decodeURI('file://'+path.join(__dirname,'/pages/fav/index.html?=#/popSaveToFolder'))//开发环境测试环境，提交到版本库前注释掉
     let options = {
       hash: 'popSaveToFolder',
@@ -227,7 +227,7 @@ async function initFav(){
     if (!popManager.get('favSaveToFolder')) {
       ipc.on('addPageReady', () => popWindow.window.webContents.send('addPage'))//首次准备好之后再发消息获取图片，防止过早获取，应用未准备好接收
     }
-    popWindow = popManager.openPop('favSaveToFolder', url, {}, { preload: __dirname + '/pages/fav/preload.js' }, options)
+    popWindow = await popManager.openPop('favSaveToFolder', url, {}, { preload: __dirname + '/pages/fav/preload.js' }, options)
     popWindow.setBounds(currentBounds)  //重新调整位置，不然会保持在首次创建的位置不再变化
 
     require("@electron/remote/main").enable(popWindow.window.webContents)

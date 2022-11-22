@@ -861,11 +861,19 @@ class AppManager {
     let auth = []
     if (saApp.auth) {
       saApp.auth = JSON.parse(saApp.auth)
-      if (saApp.auth.base) {
-        auth = auth.concat(...saApp.auth.base)
-      }
-      if (saApp.auth.app) {
-        auth = auth.concat(...saApp.auth.app)
+      if( typeof saApp.auth.base ==='object'){
+        //兼容最新的auth格式，因为最新的auth变成了对象
+        Object.keys(saApp.auth.base).forEach(key=>{
+          if(saApp.auth.base[key]) auth.push(key)
+        })
+      }else{
+        if (saApp.auth.base) {
+
+          auth = auth.concat(...saApp.auth.base)
+        }
+        if (saApp.auth.app) {
+          auth = auth.concat(...saApp.auth.app)
+        }
       }
       saApp.authAll=auth
     }else{
