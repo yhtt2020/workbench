@@ -19,9 +19,12 @@ if (process.platform === 'win32') {
 class SaApp {
   instance //saApp  { info:saApp,window:window,view:view}
   logo
-
+  type //'frameWindow' 'window'  'attach'
+  windowName //windowManager那边的名称
   constructor (saApp) {
     this.instance = saApp
+    this.type=saApp.type
+    this.windowName=saApp.windowName
     this.getLogoUri().then((icon) => {
       this.logo = icon
       this.instance.window.setIcon(icon)

@@ -1,6 +1,6 @@
 const fs=require('fs-extra')
 const path=require('path')
-const {app ,Notification}=require('electron')
+const {app ,Notification,ipcMain:ipc}=require('electron')
 
 
 

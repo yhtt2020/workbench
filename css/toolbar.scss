@@ -108,7 +108,7 @@
   .action-wrapper {
     width: 40px;
     position: relative;
-    &:hover::after{
+    &.open::after, &:hover::after{
       content: "";
       display: inline-block;
       width: 30px;

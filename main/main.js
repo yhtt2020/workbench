@@ -696,21 +696,18 @@ const { BarrageManager }=require(path.join(__dirname,'/src/main/barrageManager.j
 app.whenReady().then(()=>{
   setTimeout(()=>{
     global.barrageManager=new BarrageManager(windowManager)
-    //barrageManager.init()
+    barrageManager.init()
   },1000)
 
 
   ipc.on('toggleBarrage',()=>{
-    if(BarrageManager.isAlive()){
-      if(barrageManager.isLocked){
-        barrageManager.unlock()
-        return
-      }
-      barrageManager.destroy()
-    }else{
-      barrageManager.init()
-    }
+   barrageManager.toggle()
   })
+
+   ipc.on('closeBarrageWindow', () => {
+      barrageManager.close()
+    })
+
   ipc.on('barrage.changeUrl',(e,a)=>{
     if(typeof barrageManager !=='undefined')
      barrageManager.changeUrl(a.url)
@@ -733,6 +730,9 @@ app.whenReady().then(()=>{
     barrageManager.lock()
   })
 
+  ipc.on('barrage.unlock',()=>{
+    barrageManager.unlock()
+  })
 
   ipc.on('setAutoRun',(event,args)=>{
     let autoRun=args.value
@@ -750,5 +750,22 @@ app.whenReady().then(()=>{
       })
     }
     settings.set('autoRun',autoRun)
+  })
+
+  ipc.on('selectDir',(event)=>{
+    event.returnValue=dialog.showOpenDialogSync(undefined,{
+      properties:['openDirectory']
+    }
+    )
+
+  })
+  ipc.on('selectFile',(event)=>{
+    event.returnValue=dialog.showOpenDialogSync(undefined,{
+      filters: [
+        { name: '图片', extensions: [ 'png'] }
+      ],
+        properties:['openFile']
+      }
+    )
   })
 })

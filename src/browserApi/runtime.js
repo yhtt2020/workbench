@@ -1,7 +1,10 @@
 
 const clientModel = require('../model/clientModel')
-
-const runtime={
+const ipcHelper=require('./ipcHelper')
+function send(channel,args={}){
+  ipcHelper.send('runtime',channel,args,runtime.name)
+}
+let runtime={
   name:window.globalArgs['name'],
   version:{
     'api':'1.0.0',
@@ -18,7 +21,13 @@ const runtime={
     runtime.client=clientModel.get()
     runtime.clientId=runtime.client.id  //兼容老版本，仍然提供这个变量
     runtime.clientName=runtime.client.name //兼容老版本，仍然提供这个变量
-  }
+
+
+    ipc.on('api.runtime.initResponse',(event,args)=>{
+      tsbApi.runtime.info=args.runtime//获取到当前窗口的状态存储下来
+    })
+    send('init')
+  },
 }
 
 runtime.initialize()

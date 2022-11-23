@@ -4,9 +4,9 @@ let userMode=require('../../src/model/userModel')
 const electron = require('electron')
 const ipc = electron.ipcRenderer
 
-const tsbSdk = require('../../js/util/tsbSdk.js')
+// const tsbSdk = require('../../js/util/tsbSdk.js')
 
-tsbSdk.listener({isSystemApp: true})
+// tsbSdk.listener({isSystemApp: true})
 
 
 const { db } = require('../../js/util/database.js')

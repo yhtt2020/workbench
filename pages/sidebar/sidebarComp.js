@@ -2115,6 +2115,7 @@ ipc.on('openInvite',(event,args)=>{
 
 ipc.on('executedAppSuccess', async function (event, args) {
   let now=Date.now()
+  console.log(args.app)
   appVue.$refs.sidePanel.apps.forEach(app => {
     if (app.nanoid === args.app.nanoid) {
       app.processing = true
