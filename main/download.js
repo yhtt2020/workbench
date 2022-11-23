@@ -107,12 +107,23 @@ async function downloadHandler (event, item, webContents) {
   savePathFilename = path.basename(item.getSavePath())
   let simpleName = item.getFilename().substring(0, item.getFilename().lastIndexOf("."))
   mainWindow.webContents.send('isDownload')
-  const savePathPrefix = settings.get('downloadSavePath') + '\\'
+  // const savePathPrefix = settings.get('downloadSavePath') + '\\'
+  const savePathPrefix = settings.get('downloadSavePath')
   var fs = require("fs");
   const fsExists = (fileNewPath) => {
     return fs.existsSync(fileNewPath)
   }
   let num = 1
+  let setPath;
+  let downloadSavePath;
+  let savePath = dialog.showOpenDialogSync({
+    properties: ['openFile', 'openDirectory']
+    // title: '选择保存地址',
+    // filters: [
+    //   { name: suffixName, extensions: [suffixName] },
+    //   { name: '自定义', extensions: ['*'] }
+    // ],
+  })
   if (item.getMimeType() === 'application/pdf' && itemURL.indexOf('blob:') !== 0 && itemURL.indexOf('#pdfjs.action=download') === -1 && !attachment) { // clicking the download button in the viewer opens a blob url, so we don't want to open those in the viewer (since that would make it impossible to download a PDF)
     event.preventDefault()
     sendIPCToWindow(mainWindow, 'openPDF', {
@@ -120,34 +131,31 @@ async function downloadHandler (event, item, webContents) {
       tabId: getViewIDFromWebContents(webContents)
     })
   } else {
-
-    if (settings.get('downloadSavePath') === undefined) {
-      let downloadSavePath;
-      let savePath = dialog.showOpenDialogSync({
-        properties: ['openFile', 'openDirectory']
-        // title: '选择保存地址',
-        // filters: [
-        //   { name: suffixName, extensions: [suffixName] },
-        //   { name: '自定义', extensions: ['*'] }
-        // ],
-      })
+    if(settings.get('downloadAutoSave') === true){
       downloadSavePath = savePath.toString().replace(/\[|]/g, '')
-      item.setSavePath(downloadSavePath +'\\' + item.getFilename())
-      settings.set('downloadSavePath', downloadSavePath)
-    } else {
-      const filePath = savePathPrefix + item.getFilename()
-      let res = fsExists(filePath) // 找是否存在
-      while (res) { // 存在循环查找
-        const newFilePath = savePathPrefix + simpleName + '(' + num + ')' + suffixName
-        res = fsExists(newFilePath)
-        num++
-      }
-      // 退出的num不存在
-      if (num === 1) {
-        item.setSavePath(filePath)
+      setPath = path.join(downloadSavePath, item.getFilename())
+      item.setSavePath(setPath)
+    }else {
+      if (settings.get('downloadSavePath') === undefined) {
+        downloadSavePath = savePath.toString().replace(/\[|]/g, '')
+        setPath = path.join(downloadSavePath, item.getFilename())
+        item.setSavePath(setPath)
+        settings.set('downloadSavePath', downloadSavePath)
       } else {
-        const newFilePath = savePathPrefix + simpleName + '(' + (num - 1) + ')' + suffixName
-        item.setSavePath(newFilePath)
+        const filePath = path.join(savePathPrefix,item.getFilename())
+        let res = fsExists(filePath) // 找是否存在
+        while (res) { // 存在循环查找
+          const newFilePath = savePathPrefix + simpleName + '(' + num + ')' + suffixName
+          res = fsExists(newFilePath)
+          num++
+        }
+        // 退出的num不存在
+        if (num === 1) {
+          item.setSavePath(filePath)
+        } else {
+          const newFilePath = savePathPrefix + simpleName + '(' + (num - 1) + ')' + suffixName
+          item.setSavePath(newFilePath)
+        }
       }
     }
 
