@@ -81,13 +81,12 @@
     <router-view></router-view>
    </a-layout-content>
  </a-layout>
- <a-drawer class="filter-list-container" :width="216" placement="left" :visible="sideDrawerVisible">
-     
- </a-drawer>  
+ <a-drawer class="filter-list-container" :width="216" placement="left" :visible="sideDrawerVisible" @close="sideDrawerVisible=false">
+
+</a-drawer>  
 </template>
 
 <script>
-
 import { 
  SettingOutlined, LaptopOutlined, 
  SmileOutlined,SearchOutlined,
@@ -99,12 +98,7 @@ import {
 } from '@ant-design/icons-vue'
 import { appStore } from '../store'
 import { mapState } from 'pinia' 
-import { Empty } from 'ant-design-vue';
-// import vueCustomScrollbar from '../../../src/components/vue-scrollbar.vue'
-// vueCustomScrollbar,
-// import { message, Modal } from 'ant-design-vue', mapActions
-// let { appModel, devAppModel } = window.$models
-// let appId = window.globalArgs['app-id']
+import { Empty } from 'ant-design-vue'
 export default {
  name: 'Passwords',
  components: {
@@ -173,68 +167,12 @@ export default {
          url:'http://localhost:1600/packages/kee/assets/image/key_orange.svg'
        }
      ],
-     filterPassword:[
-         {
-          id:0,
-          title: '我的密码',
-          // icon:'UnlockFilled',
-          // swipeIcon:'SwapOutlined',
-          divider:2,
-          isLeaf: true
-         },
-         {
-          id:1,
-          title: '所有密码',
-          // icon:'AppstoreFilled',
-         },
-         {
-          id:2,
-          title: '当前网站',
-          divider:2,
-          // icon:'LinkOutlined'
-         },
-         {
-          id:3,
-          title:'颜色',
-          // icon:'StarFilled'
-         },
-         {
-          id:4,
-          title:'Computer',
-          // icon:'TagFilled'
-         },
-         {
-          id:5,
-          title:'Email',
-          // icon:'TagFilled',
-          divider:2
-         },
-         {
-          id:6,
-          title:'Demo',
-          divider:2,
-          // icon:'FolderOpenFilled',
-          children:[
-             {
-              id:6_1,
-              title:'Computer'
-             },
-             {
-              id:6_2,
-              title:'Internet'
-             }
-          ]
-         },
-         {
-          id:7,
-          title:'主应用中打开',
-         }
-     ],
      search:'',
      size:'large',
      sideDrawerVisible:false,
      filterText:'当前网站',
      totalOpen:true,
+     contextItems:'',
      // 当前网站
      currentList:[
         {
@@ -255,8 +193,7 @@ export default {
            description:'Benjamin_Gonzalez',
            url:'http://localhost:1600/packages/kee/assets/image/key_blue.svg'
         }
-     ]
-    //  filterIndex:0
+     ],
    }
  },
 
@@ -282,13 +219,13 @@ export default {
      
    },
    // 筛选列表点击
-   getDrawerItem(e){
-      // this.sideDrawerVisible = false
+   getDrawerItem(){
+      console.log(11);
    },
    // 当前网站点击
    currentDescription(v){
     this.currentIndex = v.id
-   }
+   },
  }
 }
 </script>
@@ -495,11 +432,7 @@ h3 {
   width: 100%;
 }
 /*右侧盒子样式结束*/
-/*筛选列表开始*/
-/*筛选列表结束*/
-.ant-tree-switcher{
-   display: none;
-}
+
 /*当前网站密码开始*/
 .current-header{
   display: flex;
@@ -537,4 +470,12 @@ h3 {
 }
 /*当前网站密码结束*/
 
+/*筛选列表开始*/
+.tree-row-item-icon-wrapper{
+   display: none;
+}
+.tree-row-item:hover .delete-icon{
+  display: none;
+}
+/*筛选列表结束*/
 </style>
