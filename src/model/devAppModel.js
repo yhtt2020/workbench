@@ -107,26 +107,25 @@ const devAppModel = {
       preload: '',
       logo: '',
       theme_color: '#f1f1f1',
-      window: JSON.stringify({
+      window: {
         defaultType:'frameWindow',
         frameWindow: {
           enable:true,
-          width:800,
+          width:1000,
           height:800,
           controllers: {
-
             goBack: true,
             goForward: true,
             refresh: true,
             home: true
           }
         }
-      }),
-      auth: JSON.stringify({
+      },
+      auth: {
         base:{},
         api:{},
         ability:{}
-      }),
+      },
       create_time: Date.now(),
       update_time: Date.now(),
     }
