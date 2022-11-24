@@ -4,7 +4,7 @@
       <UnlockFilled style="color: #ffffff; font-size: 32px" />
     </span>
     <div class="password-bank-input">
-      <a-input class="bank-input" v-model:value="bankValue" />
+      <a-input class="bank-input" v-model:value="bankValue" placeholder="请输入「密码库A」的密码"/>
       <span class="password-bank-button" @click="enterSubmit">
         <img src="../assets/image/enter_submit.svg" alt="" />
       </span>
@@ -27,7 +27,7 @@ export default {
   },
   data() {
     return {
-      bankValue: "请输入「密码库A」的密码",
+      bankValue: "密码库A",
       bankIndex:0,
       bankList:[
           {
