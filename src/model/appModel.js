@@ -310,7 +310,7 @@ async ensureColumns(){
       preload: '/pages/appStore/preload.js',
       type: 'web',
       package: 'com.thisky.appStore',
-      url: 'https://a.apps.vip/appStore/index.html',
+      url: 'https://a.apps.vip/d.appStore/index.html', //更改为测试版的地址
       theme_color: '#3c78d8',
       user_theme_color: '',
       create_time: Date.now(),
@@ -318,6 +318,22 @@ async ensureColumns(){
       account_avatar: '',
       order: 0,
       use_count: 0,
+      window:JSON.stringify({
+        "defaultType": "frameWindow",
+        "frameWindow": {
+          "enable": true,
+          "width": 1180,
+          "height": 864,
+          "controllers": {
+            "goBack": false,
+            "goForward": false,
+            "refresh": true,
+            "home": false
+          }
+        },
+        "window": {},
+        "attach": {}
+      }),
       attribute: JSON.stringify({
         isOffical: 1,
         integration: 2
