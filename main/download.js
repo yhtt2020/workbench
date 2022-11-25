@@ -116,14 +116,6 @@ async function downloadHandler (event, item, webContents) {
   let num = 1
   let setPath;
   let downloadSavePath;
-  let savePath = dialog.showOpenDialogSync({
-    properties: ['openFile', 'openDirectory']
-    // title: '选择保存地址',
-    // filters: [
-    //   { name: suffixName, extensions: [suffixName] },
-    //   { name: '自定义', extensions: ['*'] }
-    // ],
-  })
   if (item.getMimeType() === 'application/pdf' && itemURL.indexOf('blob:') !== 0 && itemURL.indexOf('#pdfjs.action=download') === -1 && !attachment) { // clicking the download button in the viewer opens a blob url, so we don't want to open those in the viewer (since that would make it impossible to download a PDF)
     event.preventDefault()
     sendIPCToWindow(mainWindow, 'openPDF', {
@@ -136,7 +128,15 @@ async function downloadHandler (event, item, webContents) {
       setPath = path.join(downloadSavePath, item.getFilename())
       item.setSavePath(setPath)
     }else {
-      if (settings.get('downloadSavePath') === undefined) {
+      if (settings.get('downloadSavePath') === undefined || settings.get('downloadSavePath') == '') {
+        let savePath = dialog.showOpenDialogSync({
+          properties: ['openFile', 'openDirectory']
+          // title: '选择保存地址',
+          // filters: [
+          //   { name: suffixName, extensions: [suffixName] },
+          //   { name: '自定义', extensions: ['*'] }
+          // ],
+        })
         downloadSavePath = savePath.toString().replace(/\[|]/g, '')
         setPath = path.join(downloadSavePath, item.getFilename())
         item.setSavePath(setPath)

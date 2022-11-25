@@ -42,7 +42,7 @@ export default defineComponent({
       closeExit:1,//关闭时的默认操作
       askCloseExit:true,//关闭的时候询问
       showCloseExit:false,//
-
+      downloadAuto:false,
       sideBarPopoverDelay:0,//侧边栏感知延迟
       showSideBarPopover:true,//显示侧边栏悬浮面板
 
@@ -120,6 +120,11 @@ export default defineComponent({
     }
   },
   mounted() {
+    settings.get('downloadAutoSave',(value)=>{
+      if(value!==undefined){
+        this.downloadAuto = value
+      }
+    })
     this.platform=process.platform
     window.settings = settings
     // settings.load()
@@ -144,7 +149,6 @@ export default defineComponent({
 
     settings.get('downloadSavePath',(value)=>{
      if(value!==undefined){
-       console.log('888')
        this.savePath = value
      }
     })
@@ -159,6 +163,14 @@ export default defineComponent({
     }
   },
   methods: {
+    onChange(e){
+      if(e == true){
+        settings.set('downloadAutoSave',true)
+      }
+      if(e == false){
+        settings.set('downloadAutoSave',false)
+      }
+    },
     importPwd(){
       Modal.confirm({
         title:'选择csv文件导入',
@@ -475,7 +487,7 @@ export default defineComponent({
               <div v-for="item in itemGroup.download">
                 <span class="item-title">- {{item.title}}：</span> &nbsp;&nbsp;
               <span v-if="item.type==='switch'">
-                <a-switch style="margin-bottom: 4px" @change="item.onChange($event)" size="small" v-model:checked="item.value" />
+                <a-switch style="margin-bottom: 4px" @change="onChange($event)" size="small" v-model:checked="downloadAuto" />
               </span>
                 <p class="tip"><exclamation-circle-outlined /> {{item.tip}}</p>
               </div>
