@@ -508,7 +508,6 @@ window.onload = function() {
       },
       async getCircleInfoById({commit} ) {
         const result = await groupApi.getCircleInfoById({id:95})
-        console.log(result)
         if(result.code === 1000) {
           return result.data
         }
