@@ -113,7 +113,9 @@ async function downloadHandler (event, item, webContents) {
   const savePathPrefix = settings.get('downloadSavePath')
   var fs = require("fs");
   const fsExists = (fileNewPath) => {
+    console.log(fs.existsSync(fileNewPath))
     return fs.existsSync(fileNewPath)
+
   }
   let num = 1
   let setPath;
@@ -126,6 +128,9 @@ async function downloadHandler (event, item, webContents) {
     })
   } else {
     if(settings.get('downloadAutoSave') === true){
+      let savePath = dialog.showOpenDialogSync({
+        properties: ['openFile', 'openDirectory']
+      })
       downloadSavePath = savePath.toString().replace(/\[|]/g, '')
       setPath = path.join(downloadSavePath, item.getFilename())
       item.setSavePath(setPath)
@@ -133,11 +138,6 @@ async function downloadHandler (event, item, webContents) {
       if (settings.get('downloadSavePath') === undefined || settings.get('downloadSavePath') == '') {
         let savePath = dialog.showOpenDialogSync({
           properties: ['openFile', 'openDirectory']
-          // title: '选择保存地址',
-          // filters: [
-          //   { name: suffixName, extensions: [suffixName] },
-          //   { name: '自定义', extensions: ['*'] }
-          // ],
         })
         downloadSavePath = savePath.toString().replace(/\[|]/g, '')
         setPath = path.join(downloadSavePath, item.getFilename())
@@ -147,7 +147,7 @@ async function downloadHandler (event, item, webContents) {
         const filePath = path.join(savePathPrefix,item.getFilename())
         let res = fsExists(filePath) // 找是否存在
         while (res) { // 存在循环查找
-          const newFilePath = savePathPrefix + simpleName + '(' + num + ')' + suffixName
+          const newFilePath = path.join(savePathPrefix,(simpleName + '(' + num + ')' + suffixName))
           res = fsExists(newFilePath)
           num++
         }
@@ -155,7 +155,8 @@ async function downloadHandler (event, item, webContents) {
         if (num === 1) {
           item.setSavePath(filePath)
         } else {
-          const newFilePath = savePathPrefix + simpleName + '(' + (num - 1) + ')' + suffixName
+          const newFilePath = path.join(savePathPrefix,(simpleName + '(' + (num - 1) + ')' + suffixName))
+          console.log('22',newFilePath)
           item.setSavePath(newFilePath)
         }
       }
