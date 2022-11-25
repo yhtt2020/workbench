@@ -50,24 +50,39 @@ ipc.on('unmaximize', function() {
 })
 let mouseRcoverAreaElement = document.getElementById('mouseRcoverArea')
 
-ipc.on('getTitlebarHeight',function(){
-	ipc.send('returnTitlebarHeight',{
-			titlebarHeight:mouseRcoverAreaElement.offsetTop,
-	})
+/**
+ * 取到左侧栏应该所在的位置并返回
+ */
+function getSidebarBounds(){
+  let top=document.getElementById('navbar').getBoundingClientRect().height
+  let height=document.body.getBoundingClientRect().height-top
+  let pos={
+    clientY:top,height,width:document.getElementById('toolbar').getBoundingClientRect().left
+  }
+  ipc.send('returnSidePanelPos',{pos})
+}
+ipc.on('getSidePanelPos',function(){
+	// ipc.send('returnTitlebarHeight',{
+	// 		titlebarHeight:mouseRcoverAreaElement.offsetTop,
+	// })
+  getSidebarBounds()
 })
 ipc.on('getTasks',(event,args)=>{
   if(window.tasks){
    ipc.sendTo(args.id,'gotTasks',{tasksState:window.tasks.getStringifyableState()})
   }
 })
-ipc.send('returnTitlebarHeight',{
-	 	titlebarHeight:mouseRcoverAreaElement.offsetTop,
-})
-setTimeout(()=>{
-	ipc.send('returnTitlebarHeight',{
-		 		titlebarHeight:mouseRcoverAreaElement.offsetTop,
-	})
-},500)
+// ipc.send('returnTitlebarHeight',{
+// 	 	titlebarHeight:mouseRcoverAreaElement.offsetTop,
+// })
+// setTimeout(()=>{
+// 	ipc.send('returnTitlebarHeight',{
+// 		 		titlebarHeight:mouseRcoverAreaElement.offsetTop,
+// 	})
+// },500)
+
+
+
 // https://remysharp.com/2010/07/21/throttling-function-calls
 
 window.throttle = function(fn, threshhold, scope) {

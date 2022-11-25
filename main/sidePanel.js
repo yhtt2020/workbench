@@ -113,8 +113,7 @@ global.SidePanel=class SidePanel {
     // }
     this._sidePanel.webContents.loadURL('file://' + __dirname + '/pages/sidebar/sidebar.html')
 
-    this.syncSize()
-    this.syncTitleBar()
+    this.syncBounds()
     this._sidePanel.on('ready-to-show', () => {
       checkUpdate()
       let layout= settings.get('layout') || 'max'
@@ -145,74 +144,72 @@ global.SidePanel=class SidePanel {
     return this._sidePanel
   }
 
+  syncBounds(){
+    sendIPCToMainWindow('getSidePanelPos')
+  }
   /**
    * 获取一下mainWindow的位置信息并同步一下sidePanel，不包含焦点处理
    */
   syncSize (resetY = 0) {
-
-    if (!SidePanel.alive()) return
-    if (mainWindow == null || sidePanel == null) {
-      return
-    }
-    if (!mainWindow.isVisible()) {
-      //如果mainWindow本身不可见，则不做吸附操作
-      return
-    }
-    this.bounds = mainWindow.getBounds()
-    //windows全屏模式单独处理
-    if (mainWindow.isMaximized() && isWin()) {
-      //win上x和y在全屏下不为0，甚至为-8，目前未考虑win7
-      if (this.bounds.x < 0) this.bounds.x = this.bounds.x+8
-      if (this.bounds.y < 0) {
-        this.bounds.y = this.bounds.y+8
-      }
-      if (settings.get('useSeparateTitlebar')) {
-        this.bounds.y += 23
-        this.bounds.height -= 40
-      } else {
-        if (isWin11()) {
-          this.bounds.height -= 15 //单独对win11的标题栏高度进行兼容
-        } else {
-          this.bounds.height -= 20
-        }
-      }
-    } else if (settings.get('useSeparateTitlebar') && isWin()) {
-      //win上带标题栏的单独处理
-      this.bounds.x += 8
-      this.bounds.y += 31
-      this.bounds.height -= 40
-    }
-
-    let setX = this.bounds.x
-    let setY = !resetY ? this.bounds.y + this.titlebarHeight : this.bounds.y + resetY
-    let setHeight = this.bounds.height - this.titlebarHeight
-    if (isWin11()) {
-      //win11的高度不一致
-      setX += 1
-      setHeight -= 1
-    }
-    if (isWin()) {
-      setHeight += 2
-      setX -= 1
-      if (process.getSystemVersion().startsWith('6.1')) {//win7少也要少一个像素
-        setHeight -= 1
-      }
-      if(process.getSystemVersion().startsWith('10.')){
-        setHeight+=1
-        setX-=1
-      }
-    }
-    if (isWin11()) {
-      //win11要少一个像素
-      setHeight -= 2
-      setX += 1
-    }
-    this._sidePanel.setBounds({
-      x: setX,
-      y: setY,
-      width: this.bounds.width,
-      height: setHeight
-    }, false)
+    this.syncBounds()
+    // if (!SidePanel.alive()) return
+    // if (mainWindow == null || sidePanel == null) {
+    //   return
+    // }
+    // if (!mainWindow.isVisible()) {
+    //   //如果mainWindow本身不可见，则不做吸附操作
+    //   return
+    // }
+    // this.bounds = mainWindow.getBounds()
+    // //windows全屏模式单独处理
+    // if (mainWindow.isMaximized() && isWin()) {
+    //   //win上x和y在全屏下不为0，甚至为-8，目前未考虑win7
+    //   if (this.bounds.x < 0) this.bounds.x = this.bounds.x+8
+    //   if (this.bounds.y < 0) {
+    //     this.bounds.y = this.bounds.y+8
+    //   }
+    //   if (settings.get('useSeparateTitlebar')) {
+    //     this.bounds.y += 23
+    //     this.bounds.height -= 40
+    //   } else {
+    //     if (isWin11()) {
+    //       this.bounds.height -= 15 //单独对win11的标题栏高度进行兼容
+    //     } else {
+    //       this.bounds.height -= 20
+    //     }
+    //   }
+    // }
+    //
+    // let setX = this.bounds.x
+    // let setY = !resetY ? this.bounds.y + this.titlebarHeight : this.bounds.y + resetY
+    // let setHeight = this.bounds.height - this.titlebarHeight
+    // if (isWin11()) {
+    //   //win11的高度不一致
+    //   setX += 1
+    //   setHeight -= 1
+    // }
+    // if (isWin()) {
+    //   setHeight += 2
+    //   setX -= 1
+    //   if (process.getSystemVersion().startsWith('6.1')) {//win7少也要少一个像素
+    //     setHeight -= 1
+    //   }
+    //   if(process.getSystemVersion().startsWith('10.')){
+    //     setHeight+=1
+    //     setX-=1
+    //   }
+    // }
+    // if (isWin11()) {
+    //   //win11要少一个像素
+    //   setHeight -= 2
+    //   setX += 1
+    // }
+    // this._sidePanel.setBounds({
+    //   x: setX,
+    //   y: setY,
+    //   width: this.bounds.width,
+    //   height: setHeight
+    // }, false)
   }
 
   setTop () {
@@ -298,6 +295,34 @@ global.SidePanel=class SidePanel {
     sendIPCToWindow(mainWindow, 'getTitlebarHeight')
   }
 
+  /**
+   * 设置左侧栏位置
+   * @param pos
+   */
+  setPos(pos){
+    if(mainWindow){
+      let parentBounds=mainWindow.getBounds()
+      if(mainWindow.isMaximized() && isWin()){
+        let fixBounds=require('electron').screen.getDisplayMatching(parentBounds).bounds //取出主屏幕所在屏幕的坐标
+        //重新设置为主窗口所在屏幕的起始点
+        parentBounds.x=fixBounds.x
+        parentBounds.y=fixBounds.y
+      }
+      let bounds={
+        x:0,
+        y:0,
+        height:0,
+        width:0
+      }
+      bounds.x=parentBounds.x
+      bounds.y=pos.clientY+parentBounds.y
+      bounds.width=pos.width
+      bounds.height=pos.height
+      sidePanel._sidePanel.setBounds(bounds)
+    }else{
+      console.log('因为mainwindow未载入而放弃一次设置位置')
+    }
+  }
   //设置在侧边栏鼠标无效
   setMouseIgnore () {
     this._sidePanel.setIgnoreMouseEvents(true, {
@@ -591,11 +616,16 @@ ipc.on('hideSidePanel', function () {
   closeSidePanel()
 })
 
-ipc.on('returnTitlebarHeight', function (event, data) {
-  if (data.titlebarHeight && sidePanel != null) {
-    sidePanel.titlebarHeight = data.titlebarHeight
-    sidePanel.syncSize()
-  }
+// ipc.on('returnTitlebarHeight', function (event, data) {
+//   if (data.titlebarHeight && sidePanel != null) {
+//     sidePanel.titlebarHeight = data.titlebarHeight
+//     sidePanel.syncSize()
+//   }
+// })
+
+ipc.on('returnSidePanelPos', (event,data)=>{
+  let pos=data.pos
+  sidePanel.setPos(pos)
 })
 
 ipc.on('channelFixed', () => {
