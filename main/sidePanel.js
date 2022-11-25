@@ -316,7 +316,7 @@ global.SidePanel=class SidePanel {
       }
       bounds.x=parentBounds.x
       bounds.y=pos.clientY+parentBounds.y
-      bounds.width=parentBounds.width
+      bounds.width=pos.width===0?0:parentBounds.width
       bounds.height=pos.height
       sidePanel._sidePanel.setBounds(bounds)
     }else{
@@ -432,13 +432,11 @@ function addMainWindowEventListener () {
     log('mainwindow-maximize:')
     loadSidePanel()
     syncSize()
-    syncSidebarTitle()
     //sidePanel.show() //最大化情况下，最小化，再恢复窗体，必须要重新show一下，不然无法点击左侧栏
   })
   mainWindow.on('unmaximize', () => {
     log('mainwindow-unmaximize:')
     syncSize()
-    syncSidebarTitle()
     //sendIPCToWindow(mainWindow, 'getTitlebarHeight')
   })
 
@@ -452,8 +450,7 @@ function addMainWindowEventListener () {
   })
   mainWindow.on('leave-full-screen', () => {
     log('mainwindow-leave-full-screen:进入全屏')
-    syncSize()
-    syncSidebarTitle() //sendIPCToWindow(mainWindow, 'getTitlebarHeight')
+    syncSize() //sendIPCToWindow(mainWindow, 'getTitlebarHeight')
   })
 
   //进入退出html全屏，一般用于视频播放的时候
@@ -501,11 +498,6 @@ function closeSidePanel () {
   }
 }
 
-function syncSidebarTitle () {
-  if (sidePanel != null) {
-    sidePanel.syncTitleBar()
-  }
-}
 
 function syncSize () {
   if (sidePanel != null) {
@@ -648,12 +640,12 @@ let sidePanelState='min'
 ipc.on('openSidebar',()=>{
   sidePanelState='max'
   SidePanel.send('adjustSidePanel',sidePanelState)
-  syncSidebarTitle()
+  syncSize()
 })
 ipc.on('closeSidebar',()=>{
   sidePanelState='min'
   SidePanel.send('adjustSidePanel',sidePanelState)
-  syncSidebarTitle()
+  syncSize()
 })
 var selectTaskWindow = null
 ipc.on('selectTask', function (event, arg) {
