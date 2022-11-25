@@ -2142,13 +2142,13 @@ ipc.on('openAppGroupChat',(event,args)=>{
   appVue.$refs.sidePanel.openGroupChat(args)
 })
 ipc.on('openInvite',(event,args)=>{
-  console.log(args)
+
   appVue.$refs.sidePanel.inviteLink(args)
 })
 
 ipc.on('executedAppSuccess', async function (event, args) {
   let now=Date.now()
-  console.log(args.app)
+
   appVue.$refs.sidePanel.apps.forEach(app => {
     if (app.nanoid === args.app.nanoid) {
       app.processing = true
@@ -2246,7 +2246,7 @@ ipc.on('deleteApp', function (event, args) {
 })
 
 ipc.on('installApp', function (event, args) {
-  console.log('101',args)
+
   let nanoid = args.nanoid
   standAloneAppModel.get(nanoid).then(async app => {
     if (!args.background) {ipc.send('executeApp', { app: app })}
