@@ -77,9 +77,5 @@ app.whenReady().then(()=> {
     SidePanel.send('openInvite',args)
   })
 
-
-  ipc.on('ceshi',(event,agrs)=>{
-    console.log('111111111')
-  })
 })
 
