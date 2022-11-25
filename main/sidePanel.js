@@ -316,7 +316,7 @@ global.SidePanel=class SidePanel {
       }
       bounds.x=parentBounds.x
       bounds.y=pos.clientY+parentBounds.y
-      bounds.width=pos.width
+      bounds.width=parentBounds.width
       bounds.height=pos.height
       sidePanel._sidePanel.setBounds(bounds)
     }else{
