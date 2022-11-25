@@ -1300,40 +1300,75 @@ Vue.component('sidebar', {
       guideAddTasks.start();
     },
     //应用市场项目所需要的函数
-    addApp (app) {
-      console.log(app)
-      let option = {
-        name: app.name,
-        logo: !!!app.logo256 ? '../../icons/default.svg' :app.logo256,
-        summary: app.summary,
-        type: app.type,
-        version:app.version,
-        isOfficial:app.isOfficial,
-        integrationLevel:app.integrationLevel,
-        theme_color: !!!app.themeColor ? '#000' :app.themeColor,
-        settings:app.settings,
-        circle:app.circle,
-        auth:!!!app.auth ? '' : JSON.parse(app.auth),
-        url:app.url,
-        site:app.site,
-        avatar:app.author.avatar,
-        nickname:app.author.nickname,
-        // author:app.author,
-        showInSideBar: false,
-
-        nanoid:app.appNanoid
-      }
-
-      standAloneAppModel.install(app.url, option).then(nanoid => {
-        ipc.send('message', { type: 'success', config: { content: `添加应用：${app.name} 成功` } })
-        ipc.send('installApp', { nanoid: nanoid })
-        ipc.send('installSuccess',{nanoid:nanoid,tips:true})
-      }, err => {
-        console.log(err)
-        ipc.send('message', { type: 'error', config: { content: '添加应用失败' } })
-        ipc.send('installErr',{id:'',tips:false})
-      })
-    },
+    // addApp (app) {
+//      let option={
+//         appJson:{
+//           app_nanoid:app.appNanoid,
+//           name: app.name,
+//           author: {
+//             nickname: app.author.nickname,
+//             avatar: app.author.avatar
+//           },
+//           auth:{
+//             base: {
+//               webSecure: true,
+//               node: true
+//             },
+//             api: {
+//               runtime: true,
+//               util: true,
+//               window: true,
+//               barrage: false,
+//               user: true,
+//               tabs: false,
+//               enable: true
+//             },
+//           },
+//           ability: {},
+//           site: app.site,
+//           package: app.packageName,
+//           version:app.version,
+//           url: app.url,
+//           logo: app.logo256,
+//           summary: app.summary,
+//           type: app.type,
+//           themeColor:app.themeColor
+//         },
+//         backgroud: '',
+//       }
+//
+// ipc.send('installAppConfirm',option)
+    // let option = {
+      //   name: app.name,
+      //   logo: !!!app.logo256 ? '../../icons/default.svg' :app.logo256,
+      //   summary: app.summary,
+      //   type: app.type,
+      //   version:app.version,
+      //   isOfficial:app.isOfficial,
+      //   integrationLevel:app.integrationLevel,
+      //   theme_color: !!!app.themeColor ? '#000' :app.themeColor,
+      //   settings:app.settings,
+      //   circle:app.circle,
+      //   auth:!!!app.auth ? '' : JSON.parse(app.auth),
+      //   url:app.url,
+      //   site:app.site,
+      //   avatar:app.author.avatar,
+      //   nickname:app.author.nickname,
+      //   // author:app.author,
+      //   showInSideBar: false,
+      //   nanoid:app.appNanoid
+      // }
+      //
+      // standAloneAppModel.install(app.url, option).then(nanoid => {
+      //   ipc.send('message', { type: 'success', config: { content: `添加应用：${app.name} 成功` } })
+      //   ipc.send('installApp', { nanoid: nanoid })
+      //   ipc.send('installSuccess',{nanoid:nanoid,tips:true})
+      // }, err => {
+      //   console.log(err)
+      //   ipc.send('message', { type: 'error', config: { content: '添加应用失败' } })
+      //   ipc.send('installErr',{id:'',tips:false})
+      // })
+    // },
     openSystemApp(args){
       console.log(args)
       window.location.href=`tsb://app/redirect/?package=${args.packageName}&url=${args.site}`
@@ -2077,9 +2112,9 @@ ipc.on('message', function (event, args) {
 })
 
 //应用市场项目ipc转发
-ipc.on('addApp',(event,args)=>{
-  appVue.$refs.sidePanel.addApp(args)
-})
+// ipc.on('addApp',(event,args)=>{
+//   appVue.$refs.sidePanel.addApp(args)
+// })
 ipc.on('openSystemApp',async (event, args) => {
   appVue.$refs.sidePanel.openSystemApp(args)
 })
@@ -2213,6 +2248,7 @@ ipc.on('deleteApp', function (event, args) {
 })
 
 ipc.on('installApp', function (event, args) {
+  console.log('101',args)
   let nanoid = args.nanoid
   standAloneAppModel.get(nanoid).then(async app => {
     if (!args.background) {ipc.send('executeApp', { app: app })}
