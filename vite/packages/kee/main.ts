@@ -15,23 +15,11 @@ const pinia = createPinia()
 const routes = [
   {
     path: '/', component: Passwords,
-    redirect:'detail',
+    redirect:'/detail',
     children:[
       {
         path:'detail',component:PasswordDetail
       },
-      // {
-      //   path:'language/:id',component:PasswordDetail,
-      // },
-      // {
-      //   path:'instant/:id',component:PasswordDetail
-      // },
-      // {
-      //   path:'light/:id',component:PasswordDetail
-      // },
-      // {
-      //   path:'commun/:id',component:PasswordDetail
-      // }
     ]
   }
 ]

@@ -1,6 +1,23 @@
+<template>
+  <a-config-provider :locale="locale">
+  <div class="a-container" >
+    <router-view></router-view>
+  </div>
+  <!-- 
+     密码库解锁组件 
+     这里由于是静态页面先暂时隐藏掉
+  -->
+  <PasswordBank style="display:none !important;"/>
+  </a-config-provider>
+</template>
+
 <script lang="ts">
 import zhCN from 'ant-design-vue/es/locale/zh_CN';
+import PasswordBank from './page/PasswordBank.vue';
 export default {
+  components:{
+    PasswordBank
+  },
   data(){
     return {
       locale:zhCN
@@ -8,14 +25,6 @@ export default {
   }
 }
 </script>
-
-<template>
-  <a-config-provider :locale="locale">
-  <div class="a-container">
-    <router-view></router-view>
-  </div>
-  </a-config-provider>
-</template>
 
 <style>
 .a-container{

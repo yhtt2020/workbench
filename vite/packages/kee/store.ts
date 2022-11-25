@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
 import _ from 'lodash-es';
-const {appModel, devAppModel} = window.$models
+// const {appModel, devAppModel} = window.$models
 const initSetting={ //存储用户的设置
   name:'',
   theme_color:'',
@@ -12,7 +12,7 @@ const initSetting={ //存储用户的设置
     base:{},
     api:{},
     ability:{}
-  }
+  },
 }
 export const appStore = defineStore('kee', {
   state: () => ({
@@ -24,11 +24,14 @@ export const appStore = defineStore('kee', {
     },
     user:{
       user_info:{}
-    }
+    },
+    // 用于鼠标移入展示复制按钮
+    showCopy:false
   }),
   actions: {
-
-  }
+    
+  },
+  getters:{}
 
 })
 
