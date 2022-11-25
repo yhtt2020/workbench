@@ -76,32 +76,6 @@ ipc.on('setSavePath',(event,args)=>{
   }
 })
 
-// let fileNew;
-// function changeFileName(savePath,simpleName,suffixName,num){
-//   if (num != 0) {
-//     fileNew = savePath + simpleName + '(' + num + ')' + suffixName
-//   } else {
-//     fileNew = savePath + simpleName + suffixName
-//   }
-//   return fileNew
-// }
-// let num
-// let fileNew
-// let m
-// function changeFileName(savePath,simpleName,suffixName,num){
-//
-//   // console.log('55555555555',num)
-//     fileNew = savePath + simpleName + '(' + num + ')' + suffixName
-//     // console.log('111111111111',fileNew)
-//      num++
-//   fs.exists(fileNew, function (flag) {
-//     if(flag){
-//       changeFileName(savePath,simpleName,suffixName,num)
-//     }
-//   })
-//    return  num
-// }
-
 async function downloadHandler (event, item, webContents) {
   var itemURL = item.getURL()
   var attachment = isAttachment(item.getContentDisposition())
@@ -113,7 +87,6 @@ async function downloadHandler (event, item, webContents) {
   const savePathPrefix = settings.get('downloadSavePath')
   var fs = require("fs");
   const fsExists = (fileNewPath) => {
-    console.log(fs.existsSync(fileNewPath))
     return fs.existsSync(fileNewPath)
 
   }
@@ -156,7 +129,6 @@ async function downloadHandler (event, item, webContents) {
           item.setSavePath(filePath)
         } else {
           const newFilePath = path.join(savePathPrefix,(simpleName + '(' + (num - 1) + ')' + suffixName))
-          console.log('22',newFilePath)
           item.setSavePath(newFilePath)
         }
       }

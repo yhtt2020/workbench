@@ -1370,7 +1370,6 @@ Vue.component('sidebar', {
       // })
     // },
     openSystemApp(args){
-      console.log(args)
       window.location.href=`tsb://app/redirect/?package=${args.packageName}&url=${args.site}`
     },
 
@@ -1414,7 +1413,6 @@ Vue.component('sidebar', {
         data.forEach(app=>{
           app.id=app.nanoid
         })
-        console.log('-----',data)
         ipc.send('allMyApps',data)
       })
     },
