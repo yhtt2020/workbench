@@ -193,7 +193,7 @@ export default defineComponent({
      let keys= Object.keys(this.settings)
       keys.forEach((setGroup,key)=>{
         this.settings[setGroup].itemGroups.forEach((itemGroup)=>{
-          console.log('===',itemGroup)
+
           itemGroup.items.forEach((item)=>{
             //读取配置项
             settings.get(item.name,(value)=>{
@@ -227,40 +227,6 @@ export default defineComponent({
               }
             }
           })
-
-          // itemGroup.download.forEach((item)=>{
-          //   //读取配置项
-          //   settings.get(item.name,(value)=>{
-          //     if(value===undefined){
-          //       item.value=item.defaultValue
-          //     }else{
-          //       item.value=value
-          //     }
-          //   })
-          //
-          //   //绑定配置项的自动存储事件
-          //   item.onChange=(event)=>{
-          //     console.log(event)
-          //     let value
-          //     switch (item.type) {
-          //       case 'switch':
-          //         value=event
-          //         break
-          //     }
-          //     settings.set(item.name,value)
-          //     if(item.callback){
-          //       let args={
-          //         callback:JSON.parse(JSON.stringify(item.callback)),
-          //         name:item.name,
-          //         value:value
-          //       }
-          //       setTimeout(()=>{
-          //         ipc.send('settingChangedCallback',args)
-          //       },500)
-          //     }
-          //   }
-          // })
-
         })
       })
     },
