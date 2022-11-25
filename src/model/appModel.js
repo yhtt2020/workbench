@@ -665,14 +665,16 @@ async ensureColumns(){
 
     let appInstall = {
       nanoid: app.nanoid ? app.nanoid : nanoid(8),
+      appid:app.app_nanoid,
       name: app.name,
       logo: app.logo,
       summary: app.summary || '',
       type: app.type || 'web',
       author: app.author ? app.author : '',
       site: app.site ? app.site : '',
-      url: url,
+      url: app.url,
       circle: app.circle ? app.circle : '',
+
       // circleMessage: app.circleMessage ? app.circleMessage : '',
       preload: app.preload || '',
       package: app.package || '',
@@ -692,7 +694,10 @@ async ensureColumns(){
       is_debug:app.is_debug,
 
 
-      account_avatar: '',
+      account_avatar: JSON.stringify({
+        avatar:app.avatar,
+        nickname:app.nickname,
+      }),
       order: 0,
       use_count: 0,
       last_execute_time: Date.now(),

@@ -42,7 +42,7 @@ export default defineComponent({
       closeExit:1,//关闭时的默认操作
       askCloseExit:true,//关闭的时候询问
       showCloseExit:false,//
-
+      downloadAuto:false,
       sideBarPopoverDelay:0,//侧边栏感知延迟
       showSideBarPopover:true,//显示侧边栏悬浮面板
 
@@ -54,7 +54,17 @@ export default defineComponent({
               {
                 name:'base',
                 title:'基础设置',
-
+                download:[
+                  {
+                    // callback:['sidebar'],
+                    value:false,
+                    defaultValue:false,
+                    name:'downloadAutoSave',
+                    title:'每次下载前询问文件保存位置',
+                    type:'switch',
+                    tip:'每次下载之前都会弹出保存位置选择框，手动选择下载文件保存的位置'
+                  }
+                  ],
                 items:[
                   {
                     callback:['sidebar','main'],//改变的时候，通知侧边栏
@@ -83,7 +93,7 @@ export default defineComponent({
                     title:'组内存在锁定标签时删除标签组改为清理标签组',
                     type:'switch',
                     tip:'当标签组内存在锁定标签时，自动改为清理标签组内非锁定标签。对双击删除、点关闭均生效。不勾选则仅提示。建议勾选。'
-                  }
+                  },
                 ]
               },
               {
@@ -110,6 +120,11 @@ export default defineComponent({
     }
   },
   mounted() {
+    settings.get('downloadAutoSave',(value)=>{
+      if(value!==undefined){
+        this.downloadAuto = value
+      }
+    })
     this.platform=process.platform
     window.settings = settings
     // settings.load()
@@ -148,6 +163,14 @@ export default defineComponent({
     }
   },
   methods: {
+    onChange(e){
+      if(e == true){
+        settings.set('downloadAutoSave',true)
+      }
+      if(e == false){
+        settings.set('downloadAutoSave',false)
+      }
+    },
     importPwd(){
       Modal.confirm({
         title:'选择csv文件导入',
@@ -165,12 +188,12 @@ export default defineComponent({
      */
     choseSavePath(e){
       ipc.send('setSavePath')
-
     },
     initCustomSettings(){
      let keys= Object.keys(this.settings)
       keys.forEach((setGroup,key)=>{
         this.settings[setGroup].itemGroups.forEach((itemGroup)=>{
+
           itemGroup.items.forEach((item)=>{
             //读取配置项
             settings.get(item.name,(value)=>{
@@ -201,9 +224,7 @@ export default defineComponent({
                 setTimeout(()=>{
                   ipc.send('settingChangedCallback',args)
                 },500)
-
               }
-
             }
           })
         })
@@ -428,6 +449,16 @@ export default defineComponent({
                 <a-input :disabled="true" v-model:value="savePath" style="width: 40%;margin-left: 15px" placeholder="请选择文件保存路径" />
                 <span  style="margin-left: 15px;cursor: pointer" @click="choseSavePath()">更改</span>
             </div>
+            <div class="settings-container" v-for="itemGroup in settings.sidePanel.itemGroups">
+              <div v-for="item in itemGroup.download">
+                <span class="item-title">- {{item.title}}：</span> &nbsp;&nbsp;
+              <span v-if="item.type==='switch'">
+                <a-switch style="margin-bottom: 4px" @change="onChange($event)" size="small" v-model:checked="downloadAuto" />
+              </span>
+                <p class="tip"><exclamation-circle-outlined /> {{item.tip}}</p>
+              </div>
+            </div>
+
           </div>
         </a-tab-pane>
         <a-tab-pane :forceRender="true" key="Feature">

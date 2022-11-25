@@ -1300,41 +1300,76 @@ Vue.component('sidebar', {
       guideAddTasks.start();
     },
     //应用市场项目所需要的函数
-    addApp (app) {
-      console.log(app)
-      let option = {
-        name: app.name,
-        logo: !!!app.logo256 ? '../../icons/default.svg' :app.logo256,
-        summary: app.summary,
-        type: app.type,
-        version:app.version,
-
-        isOfficial:app.isOfficial,
-        integrationLevel:app.integrationLevel,
-        theme_color: !!!app.themeColor ? '#000' :app.themeColor,
-        settings:app.settings,
-        circle:app.circle,
-        auth:app.auth,
-        url:app.site,
-        site:app.site,
-        author:app.author,
-        showInSideBar: false,
-        //circleMessage:!!!app.circleMessage ? '' :app.circleMessage,
-        nanoid:app.appNanoid
-      }
-
-      standAloneAppModel.install(app.site, option).then(nanoid => {
-        ipc.send('message', { type: 'success', config: { content: `添加应用：${app.name} 成功` } })
-        ipc.send('installApp', { nanoid: nanoid })
-        ipc.send('installSuccess',{nanoid:nanoid,tips:true})
-      }, err => {
-        console.log(err)
-        ipc.send('message', { type: 'error', config: { content: '添加应用失败' } })
-        ipc.send('installErr',{id:'',tips:false})
-      })
-    },
+    // addApp (app) {
+//      let option={
+//         appJson:{
+//           app_nanoid:app.appNanoid,
+//           name: app.name,
+//           author: {
+//             nickname: app.author.nickname,
+//             avatar: app.author.avatar
+//           },
+//           auth:{
+//             base: {
+//               webSecure: true,
+//               node: true
+//             },
+//             api: {
+//               runtime: true,
+//               util: true,
+//               window: true,
+//               barrage: false,
+//               user: true,
+//               tabs: false,
+//               enable: true
+//             },
+//           },
+//           ability: {},
+//           site: app.site,
+//           package: app.packageName,
+//           version:app.version,
+//           url: app.url,
+//           logo: app.logo256,
+//           summary: app.summary,
+//           type: app.type,
+//           themeColor:app.themeColor
+//         },
+//         backgroud: '',
+//       }
+//
+// ipc.send('installAppConfirm',option)
+    // let option = {
+      //   name: app.name,
+      //   logo: !!!app.logo256 ? '../../icons/default.svg' :app.logo256,
+      //   summary: app.summary,
+      //   type: app.type,
+      //   version:app.version,
+      //   isOfficial:app.isOfficial,
+      //   integrationLevel:app.integrationLevel,
+      //   theme_color: !!!app.themeColor ? '#000' :app.themeColor,
+      //   settings:app.settings,
+      //   circle:app.circle,
+      //   auth:!!!app.auth ? '' : JSON.parse(app.auth),
+      //   url:app.url,
+      //   site:app.site,
+      //   avatar:app.author.avatar,
+      //   nickname:app.author.nickname,
+      //   // author:app.author,
+      //   showInSideBar: false,
+      //   nanoid:app.appNanoid
+      // }
+      //
+      // standAloneAppModel.install(app.url, option).then(nanoid => {
+      //   ipc.send('message', { type: 'success', config: { content: `添加应用：${app.name} 成功` } })
+      //   ipc.send('installApp', { nanoid: nanoid })
+      //   ipc.send('installSuccess',{nanoid:nanoid,tips:true})
+      // }, err => {
+      //   console.log(err)
+      //   ipc.send('message', { type: 'error', config: { content: '添加应用失败' } })
+      //   ipc.send('installErr',{id:'',tips:false})
+      // })
+    // },
     openSystemApp(args){
-      console.log(args)
       window.location.href=`tsb://app/redirect/?package=${args.packageName}&url=${args.site}`
     },
 
@@ -1357,12 +1392,11 @@ Vue.component('sidebar', {
       ipc.send('allAppList', allApplist)
     },
     async openSet(args) {
-      let app = await standAloneAppModel.get({nanoid: args})
+      let app = await standAloneAppModel.get({appid: args})
       ipc.send('saAppOpenSetting', {nanoid: app.nanoid})
     },
     async uninstallApp(args) {
-      let app = await standAloneAppModel.get({nanoid: args})
-      console.log(app)
+      let app = await standAloneAppModel.get({appid: args})
       standAloneAppModel.uninstall(app.nanoid).then(success=>{
         ipc.send('message',{type:"success",config:{content:'卸载应用成功。'}})
         ipc.send('deleteApp',{nanoid:app.nanoid})
@@ -1379,7 +1413,6 @@ Vue.component('sidebar', {
         data.forEach(app=>{
           app.id=app.nanoid
         })
-        console.log('-----',data)
         ipc.send('allMyApps',data)
       })
     },
@@ -1417,6 +1450,7 @@ Vue.component('sidebar', {
       window.selectedTask=task
       ipc.send('openTaskMenu',{task:task})
     },
+
     inviteLink(id) {
       tsbk.default.ready(() => {
         tsbk.default.openOsxInviteMember({
@@ -1625,6 +1659,7 @@ Vue.component('sidebar', {
         this.$store.dispatch('getJoinedCircle', { page: 1, row: 500 })
         this.$store.dispatch('getMyCircle', { page: 1, row: 500 })
         this.$store.dispatch('getUserInfo')
+        this.$store.dispatch('getCircleInfoById')
       }
     },
     closeUserPanel(){
@@ -2073,9 +2108,9 @@ ipc.on('message', function (event, args) {
 })
 
 //应用市场项目ipc转发
-ipc.on('addApp',(event,args)=>{
-  appVue.$refs.sidePanel.addApp(args)
-})
+// ipc.on('addApp',(event,args)=>{
+//   appVue.$refs.sidePanel.addApp(args)
+// })
 ipc.on('openSystemApp',async (event, args) => {
   appVue.$refs.sidePanel.openSystemApp(args)
 })
@@ -2104,10 +2139,14 @@ ipc.on('openAppCircle',(event,args)=>{
 ipc.on('openAppGroupChat',(event,args)=>{
   appVue.$refs.sidePanel.openGroupChat(args)
 })
+ipc.on('openInvite',(event,args)=>{
+
+  appVue.$refs.sidePanel.inviteLink(args)
+})
 
 ipc.on('executedAppSuccess', async function (event, args) {
   let now=Date.now()
-  console.log(args.app)
+
   appVue.$refs.sidePanel.apps.forEach(app => {
     if (app.nanoid === args.app.nanoid) {
       app.processing = true
@@ -2205,6 +2244,7 @@ ipc.on('deleteApp', function (event, args) {
 })
 
 ipc.on('installApp', function (event, args) {
+
   let nanoid = args.nanoid
   standAloneAppModel.get(nanoid).then(async app => {
     if (!args.background) {ipc.send('executeApp', { app: app })}

@@ -506,8 +506,8 @@ window.onload = function() {
           commit('SET_MANAGER_CIRCLE', result.data)
         }
       },
-      async getCircleInfoById({commit}, options) {
-        const result = await groupApi.getCircleInfoById(options)
+      async getCircleInfoById({commit} ) {
+        const result = await groupApi.getCircleInfoById({id:95})
         if(result.code === 1000) {
           return result.data
         }

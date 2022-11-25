@@ -3,34 +3,6 @@
 
 app.whenReady().then(()=> {
 
-  let appId
-  let tips
-  ipc.on('installSuccess',(event,args)=>{
-    appId = args.id
-    tips = args.tips
-  })
-  ipc.on('installErr',(event,args)=>{
-    appId = args.id
-    tips = args.tips
-  })
-
-  ipc.on('addNewApp',function (event, args){
-    SidePanel.send('addApp',args)
-
-    const myVar = setInterval(function () {
-      if (tips !== '') {
-
-        if(tips === true){
-          event.reply('installResult',true)
-        }
-        if(tips === false){
-          event.reply('installResult',false)
-        }
-        clearInterval(myVar)
-      }
-    }, 20);
-  })
-
   ipc.on('openSystemApp',(event,args)=>{
     SidePanel.send('openSystemApp',args)
   })
@@ -100,6 +72,10 @@ app.whenReady().then(()=> {
     SidePanel.send('openAppGroupChat',args)
   })
 
+  ipc.on('openInvite',(event,args)=>{
+
+    SidePanel.send('openInvite',args)
+  })
 
 })
 

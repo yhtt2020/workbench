@@ -908,13 +908,16 @@ class AppManager {
       url = 'file://' + path.join(___dirname, '/pages/fav/index.html')
       //saApp.url = 'http://localhost:8080/'
     } else if (saApp.package === 'com.thisky.fav') {
-      url = 'file://' + path.join(___dirname, '/pages/fav/index.html')
+      url='file://'+path.join(___dirname,'/pages/fav/index.html')
     }
+
     if (saApp.package === 'com.thisky.fav' && isDevelopmentMode) {
       // appView.webContents.openDevTools()
     }
     return url
   }
+
+
 
   /**
    * 应用收到消息的回调
@@ -1494,11 +1497,15 @@ app.whenReady().then(() => {
    * ipc触发安装应用询问
    */
   ipc.on('installAppConfirm',(event,args)=>{
+
     appManager.installAppConfirm(args.appJson,'开发项目管理',(data)=>{
       if(data.result){
+
+        event.reply('installResult',{result:true,index:args.index})
         SidePanel.send('installApp', { nanoid: data.nanoid, background: args.background })
         event.returnValue= { result:true,nanoid:data.nanoid }
       }else{
+        event.reply('installResult',{result:false,index:args.index})
         event.returnValue= { result:false }
       }
     },BrowserWindow.fromWebContents(event.sender))
