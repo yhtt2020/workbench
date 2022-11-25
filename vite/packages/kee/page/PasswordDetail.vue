@@ -48,62 +48,17 @@
        </a-dropdown>
     </div> 
   </div>
-  <div class="breadcrumb-bottom-container">
-     <a-form :model="formState" :rules="eidtRules">
-      <a-form-item name="passwordAccount">
-        <div class="breadcrumb-bottom-name">
-          <span style="padding-right:12px;">
-            <i class="iconfont icon-yuechi1"></i>
+  <div class="breadcrumb-from">
+      <div class="breadcrumb-from-header">
+          <span class="left-breadcrumb-key">
+            <img :src="state.passworItem.url" alt="">
           </span>
-          <span class="name" v-if="editShow == false">禅道账号</span>
-          <a-input style="width:80%;" v-else v-model:value="formState.passwordAccount"/>
-        </div>
-      </a-form-item>
-      <a-form-item name="username" style="border:1px solid rgba(00,00,00,0.15); border-radius: 6px 6px 0 0 ;padding: 2px 12px;">
-        <div>
-         <span class="form-item-text">用户名</span>
-         <a-input v-model:value="formState.username" style="border:none;padding:0 !important;"></a-input>
-        </div>
-      </a-form-item>
-      <a-form-item  style="border:1px solid rgba(00,00,00,0.15); border-top: none; border-radius: 0 0 6px 6px  ;padding: 2.5px 12px;">
-        <span class="form-item-text">密码</span>
-        <a-input type="password" v-model:value="formState.password" style="border:none;padding:0 !important;"></a-input>
-      </a-form-item>
-      <a-form-item name="websiteValue" >
-        <div class="breadcrumb-bottom-website" style="margin-top:24px;">
-           <div class="breadcrumb-bottom-link">
-            <a href="javascript:viod(0)" class="sites-name">网站</a>
-            <a href="http://zt.xiangtian.ren/" v-if="editShow == false" class="sites">zt.xaingtian.ren</a>
-            <a-input v-else v-model:value="formState.websiteValue"/>
-           </div>
-           <div class="copy-container">
-            <span>
-              打开并填写
-            </span>
-            <a-divider type="vertical" style="height: 21px; background-color: rgba(80, 139, 254, 1)" />
-            <span class="breadcrumb-bottom-copy">
-               复制
-            </span>
-           </div>
-        </div>
-      </a-form-item>
-     </a-form>
-     <div class="breadcrumb-bottom-sites">
-      <a href="" class="sites-name">网站</a>
-      <a href="https://www.yuque.com/" class="sites">www.yuque.com</a>
-     </div>
-     <div class="breadcrumb-bottom-remark">
-      <div class="breadcrumb-bottom-remark-top">
-       <span class="remark">
-         备注
-        </span>
-        <a href="#" v-if="editShow  == true">
-         <ExportOutlined style="font-size:16px;color:rgba(80, 139, 254, 1);"/>
-         <span style="font-size:12px; font-width:400;padding-left: 4px;">在主应用中编辑</span>
-        </a>
+          <span class="left-breadcrumb-username" v-if="editShow == false">{{state.passworItem.title}}</span>
+          <a-input style="width:80%;" v-else v-model:value="state.passworItem.title"/>
       </div>
-      <span class="ana">团队语雀公用帐号，注意不要对外分享该密码</span>
-     </div>
+      <div class="breadcrumb-from-bottom">
+
+      </div>
   </div>
   <a-modal width="408px"  :centered="true" v-model:visible="sharVisible" title="分享">
     <div class="share-contaniner">
@@ -206,11 +161,12 @@ export default {
     PlusOutlined,ExportOutlined
   },
   computed: {
-   ...mapState(appStore, [])
+   ...mapState(appStore, ['passworItem'])
   },
   data(){
     return{
-      show:'',
+      // 控制是否鼠标悬浮
+      webisteVisble:false,
       sharVisible:false,
       // 链接有效期值
       validity:'0',
@@ -256,6 +212,7 @@ export default {
       addDisabled:false,
       editShow:false,
       // 密码账号
+      state:appStore()
     }
   },
   async mounted(){
@@ -304,7 +261,15 @@ export default {
     saveChange(){
       this.editShow = false
       console.log();
+    },
+    // 鼠标悬浮
+    inputHover(){
+       this.webisteVisble = true
+    },
+    inputLeave(){
+      this.webisteVisble = false
     }
+
   }
 
 }
@@ -384,121 +349,6 @@ export default {
   background-color: rgba(216, 216, 216, 1);
 }
 /*添加按钮样式结束*/
-/*底部内容开始*/
-.breadcrumb-bottom-name {
-   margin-bottom: 24px;
-   .name{
-     font-size: 16px;
-     font-weight: 500;
-     color: rgba(0, 0, 0, 0.85);
-   }
-}
-.breadcrumb-bottom-card{
-   border: 1px solid rgba(230, 230, 230, 1);
-   border-radius: 6px;
-   margin-bottom: 24px;
-   .breadcrumb-bottom-user{
-     padding: 7px 12px 6px 12px;
-     border-bottom: 1px solid rgba(230, 230, 230, 1);
-     display: flex;
-     flex-direction: column;
-     .user{
-       color: rgba(104, 81, 214, 1);
-       font-size: 12px;
-       font-weight: 400;
-       line-height: 17px;
-     }
-     span{
-      font-size: 14px;
-      line-height: 20px;
-      color: rgba(0, 0, 0, 0.85);
-      font-weight: 400;
-     }
-   }
-   .breadcrumb-bottom-password{
-    padding: 7px 12px 6px 12px;
-    display: flex;
-    flex-direction: column;
-    .cryptogram{
-      color: rgba(104, 81, 214, 1);
-      font-size: 12px;
-      font-weight: 400;
-      line-height: 17px;
-    }
-    span{
-       font-size: 22px;
-       color: rgba(0, 0, 0, 0.85);
-       font-weight: 400;
-       line-height: 22px;
-    }
-   }
-}
-
-.breadcrumb-bottom-website{
-   display: flex;
-   align-items: center;
-   justify-content: space-between;
-   padding: 0 12px;
-   margin-bottom: 24px;
-   .breadcrumb-bottom-link{
-     display: flex;
-     flex-direction: column;
-     .sites-name{
-      color: rgba(104, 81, 214, 1);
-      font-size: 12px;
-      font-weight: 400;
-      line-height: 17px;
-     }
-     .sites{
-      line-height: 20px;
-     }
-   }
-   .breadcrumb-bottom-copy{
-      
-   }
-}
-
-.breadcrumb-bottom-sites{
-    display: flex;
-    flex-direction: column;
-    padding: 0 12px;
-    margin-bottom: 24px;
-
-    .sites-name{
-       color: rgba(104, 81, 214, 1);
-       font-size: 12px;
-       font-weight: 400;
-       line-height: 17px;
-    }
-    .sites{
-       line-height: 20px;
-    }
-}
-.breadcrumb-bottom-remark{
-  display: flex;
-  flex-direction: column;
-  padding: 0 12px;
-  margin-bottom: 24px;
-  .remark{
-     color: rgba(104, 81, 214, 1);
-     font-size: 12px;
-     font-weight: 400;
-     line-height: 17px;
-     padding-right: 8px;
-  }
-  .ana{
-     color: rgba(0, 0, 0, 0.65);
-     font-size: 14px;
-     font-weight: 400;
-     line-height: 20px;
-  }
-}
-.breadcrumb-bottom-remark-top{
-   display: flex;
-   align-items: center;
-}
-/*底部内容结束*/
-
 /*编辑分享删除样式开始*/
 .medit{
   font-weight: 400;
@@ -592,14 +442,22 @@ export default {
    }
 }
 /*分享密码内容结束*/
-/*表单开始*/
-.form-layout{
-   margin-bottom: 24px;
-   .form-item-text{
-     color: rgba(104, 81, 214, 1);
-     font-size: 12px;
-     font-weight: 400;
-   }
+/*账号内容开始*/
+.breadcrumb-from{}
+.breadcrumb-from-header{
+   display: flex;
+   align-items: center;
+   padding-bottom: 24px;
+   .left-breadcrumb-key{
+    display: flex;
+    align-items: center;
+    padding-right: 8px;
+    img{
+      width: 16px;
+      height: 16px;
+    }
+   } 
 }
-/*表单结束*/
+/*账号内容结束*/
+
 </style>

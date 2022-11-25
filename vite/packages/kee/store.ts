@@ -25,8 +25,17 @@ export const appStore = defineStore('kee', {
     user:{
       user_info:{}
     },
-    // 用于鼠标移入展示复制按钮
-    showCopy:false
+    //将点击之后的值进行缓存
+    passworItem:[
+      {
+        id:0,
+        index: 0,
+        title: "禅道账号",
+        description: "Francisio_Phillps",
+        path: "detail",
+        url: "http://localhost:1600/packages/kee/assets/image/key_black.svg",
+      }
+    ]
   }),
   actions: {
     
