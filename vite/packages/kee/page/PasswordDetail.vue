@@ -70,11 +70,22 @@
         <a-input type="password" v-model:value="formState.password" style="border:none;padding:0 !important;"></a-input>
       </a-form-item>
       <a-form-item name="websiteValue" >
-        <div class="breadcrumb-bottom-sites" style="margin-top:24px;">
-          <a href="javascript:viod(0)" class="sites-name">网站</a>
-          <a href="http://zt.xiangtian.ren/" v-if="editShow == false" class="sites">zt.xaingtian.ren</a>
-          <a-input v-else v-model:value="formState.websiteValue"/>
-      </div>
+        <div class="breadcrumb-bottom-website" style="margin-top:24px;">
+           <div class="breadcrumb-bottom-link">
+            <a href="javascript:viod(0)" class="sites-name">网站</a>
+            <a href="http://zt.xiangtian.ren/" v-if="editShow == false" class="sites">zt.xaingtian.ren</a>
+            <a-input v-else v-model:value="formState.websiteValue"/>
+           </div>
+           <div class="copy-container">
+            <span>
+              打开并填写
+            </span>
+            <a-divider type="vertical" style="height: 21px; background-color: rgba(80, 139, 254, 1)" />
+            <span class="breadcrumb-bottom-copy">
+               复制
+            </span>
+           </div>
+        </div>
       </a-form-item>
      </a-form>
      <div class="breadcrumb-bottom-sites">
@@ -183,6 +194,8 @@ import {
 } from '@ant-design/icons-vue'
 import { Modal } from 'ant-design-vue';
 import { createVNode } from 'vue'
+import { appStore } from '../store'
+import { mapState } from 'pinia' 
 export default {
   name: 'PasswordDetail',
   components:{
@@ -192,8 +205,12 @@ export default {
     ExclamationCircleOutlined,
     PlusOutlined,ExportOutlined
   },
+  computed: {
+   ...mapState(appStore, [])
+  },
   data(){
     return{
+      show:'',
       sharVisible:false,
       // 链接有效期值
       validity:'0',
@@ -241,7 +258,8 @@ export default {
       // 密码账号
     }
   },
-  mounted(){
+  async mounted(){
+    
   },
   methods:{
     openShare(){
@@ -415,11 +433,37 @@ export default {
     }
    }
 }
+
+.breadcrumb-bottom-website{
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   padding: 0 12px;
+   margin-bottom: 24px;
+   .breadcrumb-bottom-link{
+     display: flex;
+     flex-direction: column;
+     .sites-name{
+      color: rgba(104, 81, 214, 1);
+      font-size: 12px;
+      font-weight: 400;
+      line-height: 17px;
+     }
+     .sites{
+      line-height: 20px;
+     }
+   }
+   .breadcrumb-bottom-copy{
+      
+   }
+}
+
 .breadcrumb-bottom-sites{
     display: flex;
     flex-direction: column;
     padding: 0 12px;
     margin-bottom: 24px;
+
     .sites-name{
        color: rgba(104, 81, 214, 1);
        font-size: 12px;

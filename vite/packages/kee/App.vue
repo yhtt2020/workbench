@@ -1,10 +1,13 @@
 <template>
   <a-config-provider :locale="locale">
-  <div class="a-container" style="display:none !important;">
+  <div class="a-container" >
     <router-view></router-view>
   </div>
-  <!-- 密码库解锁组件 -->
-  <PasswordBank />
+  <!-- 
+     密码库解锁组件 
+     这里由于是静态页面先暂时隐藏掉
+  -->
+  <PasswordBank style="display:none !important;"/>
   </a-config-provider>
 </template>
 
