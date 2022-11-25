@@ -665,6 +665,7 @@ async ensureColumns(){
 
     let appInstall = {
       nanoid: app.nanoid ? app.nanoid : nanoid(8),
+      appid:app.app_nanoid,
       name: app.name,
       logo: app.logo,
       summary: app.summary || '',

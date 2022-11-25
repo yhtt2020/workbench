@@ -1393,13 +1393,11 @@ Vue.component('sidebar', {
       ipc.send('allAppList', allApplist)
     },
     async openSet(args) {
-      let app = await standAloneAppModel.get({nanoid: args})
+      let app = await standAloneAppModel.get({appid: args})
       ipc.send('saAppOpenSetting', {nanoid: app.nanoid})
     },
     async uninstallApp(args) {
-      console.log('卸载',args)
-      let app = await standAloneAppModel.get({nanoid: args})
-
+      let app = await standAloneAppModel.get({appid: args})
       standAloneAppModel.uninstall(app.nanoid).then(success=>{
         ipc.send('message',{type:"success",config:{content:'卸载应用成功。'}})
         ipc.send('deleteApp',{nanoid:app.nanoid})
