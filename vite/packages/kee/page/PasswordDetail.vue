@@ -104,7 +104,11 @@
               <a href="#" style="color:rgba(104, 81, 214, 1);">网站</a>
               <a href="#">{{store.passworItem.site}}</a>
              </div>
-             <span v-if="websiteShow==true" style="color:rgba(80, 139, 254, 1);cursor: pointer;">复制</span>
+             <div>
+              <span v-if="websiteShow==true" style="color:rgba(80, 139, 254, 1);cursor: pointer;">打开并填写</span>
+              <a-divider v-if="websiteShow==true"  type="vertical" style="height: 20px; background-color:rgba(80, 139, 254, 1)" />
+              <span v-if="websiteShow==true" style="color:rgba(80, 139, 254, 1);cursor: pointer;">复制</span>
+             </div>
           </div>
           <div class="breadcrumb-bottom-website" style="padding-top:0;">
               <div class="website-top">
