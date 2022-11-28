@@ -58,9 +58,7 @@ const formTailLayout = {
 }
 import { appStore } from '../../store'
 import { mapWritableState } from 'pinia'
-import {Sketch} from '@lk77/vue3-color'
 import DebugTip from '../../components/DebugTip.vue'
-import {getLogo} from '../../util'
 const path=require('path')
 const fs=require('fs')
 export default {
@@ -69,55 +67,12 @@ export default {
     ...mapWritableState(appStore, ['devApp','debugMod'])
   },
   components:{
-    DebugTip,'SketchPicker':Sketch
+    DebugTip
   },
   methods:{
-    getLogo,
-    getExtra(type){
-      let tip=`&nbsp;调试&nbsp;`
-      switch (type){
-        case 'debug_url':
-          return tip+`调试入口，仅调试模式下生效，可根据开关启用调试入口`
-      }
-    },
-    async selectLogo(){
-      if(!this.devApp.local_dir){
-        message.error('请先选择项目目录，方可选择应用图标')
-        return
-      }
-      let file=ipc.sendSync('selectFile')
-      if(file){
-        let dest=path.join(this.devApp.local_dir,'logo.png')
-        fs.copyFileSync(file[0],dest)
-        this.devApp.logo='local'
-      }
-    },
-    async selectDir(){
-      let  dir=ipc.sendSync('selectDir')
-      if(dir){
-        this.devApp.local_dir=dir[0]
-      }
-    }
   },
   mounted () {
     this.formState.name = this.devApp
-    let optimizeValues = ['keepRunning', 'theme', 'desktop', 'showInSideBar', 'alwaysTop', 'autoRun', 'noFrame']
-    let optimize = []
-    if(this.devApp.settings){
-      optimizeValues.forEach(item => {
-        if (this.devApp.settings[item]) {
-          optimize.push(item)
-        }
-      })
-    }
-
-    // this.form.setFieldsValue({
-    //   name: data.name,
-    //   summary: data.summary,
-    //   theme_color: data.theme_color,
-    //   optimize:optimize
-    // })
-
   },
   data () {
     return {

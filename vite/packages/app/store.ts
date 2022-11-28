@@ -103,6 +103,11 @@ export const appStore = defineStore('app', {
       if((!this.devApp.window.frameWindow.enable && !this.devApp.window.window.enable && !this.devApp.window.attach.enable ) || !this.devApp.window[this.devApp.window.defaultType].enable ){
         throw '至少设置一种窗体，且正确设置默认窗体类型。'
       }
+      if(devApp.open_source){
+        if(!devApp.os_summary){
+          throw '开源软件必须填写「开源说明」，避免其他用户在不知情的情况下触犯开源协议。'
+        }
+      }
       devApp.window=JSON.stringify(this.devApp.window)
       delete devApp.theme_colors
       delete devApp.assignAppsInfo
