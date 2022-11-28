@@ -4,7 +4,7 @@
   <a-form :model="formState" style="padding: 20px" :label-col="{span:5}" :wrdevApper-col="{span:19}">
     <a-form-item
       label="作者名称"
-      :rules="{ required: true, message: '应用名称，长度大于1，小于16' ,min:1,max:16 }"
+      :rules="{ message: '应用名称，长度大于1，小于16' ,min:1,max:16 }"
     >
       <a-input v-model:value="devApp.author"
                placeholder="输入作者名称"
@@ -12,7 +12,7 @@
     </a-form-item>
     <a-form-item
       label="作者官网"
-      :rules="{ required: true, message: '应用名称，长度大于1，小于16' ,min:1,max:16 }"
+      :rules="{  message: '应用名称，长度大于1，小于16' ,min:1,max:16 }"
     >
       <a-input v-model:value="devApp.site"
                placeholder="输入官网地址"
