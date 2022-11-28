@@ -1,6 +1,6 @@
 <script lang="ts">
 import {cloneDeep} from 'lodash-es';
-import {message} from 'ant-design-vue'
+import {message,Modal} from 'ant-design-vue'
 import {
   FilterOutlined,
   SearchOutlined,
@@ -133,11 +133,17 @@ export default {
       return result
     },
     async delAccount(account) {
-      await ipc.invoke('credentialStoreDeletePassword', {
-        domain: account.domain,
-        username: account.username
+      Modal.confirm({
+        content:'确认删除密码？此操作不可还原。',
+        centered:true,
+        onOk:async () => {
+          await ipc.invoke('credentialStoreDeletePassword', {
+            domain: account.domain,
+            username: account.username
+          })
+          this.passwords.splice(this.passwords.indexOf(account), 1)
+        }
       })
-      this.passwords.splice(this.passwords.indexOf(account), 1)
     },
     edit(domain: string, username: string) {
       this.editableData[domain + '_' + username] = cloneDeep(this.passwords.filter(item => (domain === item.domain && username === item.username))[0]);
