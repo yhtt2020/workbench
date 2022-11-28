@@ -152,7 +152,7 @@
           </a-dropdown-button>
         </template>
       </a-page-header>
-      <vue-custom-scrollbar :settings="settings" style="position:relative;height: calc(100vh - 105px)">
+      <vue-custom-scrollbar :key="routeUpdateTime" :settings="settings" style="position:relative;height: calc(100vh - 105px)">
         <div style="padding: 20px">
           <router-view/>
         </div>
@@ -182,10 +182,13 @@ export default {
     ...mapState(appStore, ['app', 'debugMod', 'devApp']),
     ...mapWritableState(appStore,['user']),
   },
+  beforeRouteUpdate(){
+    this.routeUpdateTime=Date.now()
+  },
   data () {
     return {
-
       currentDevApp: [],
+      routeUpdateTime:0,
       settings: {
         swipeEasing: true,
         suppressScrollY: false,
