@@ -25,12 +25,10 @@
         </template>
       </a-input>
     </div>
-    <a-button type="primary" class="password-button">
-      <template #icon>
-        <PlusOutlined style="font-size: 16px" />
-      </template>
-      新建密码
-    </a-button>
+    <div class="passsword-button">
+      <PlusOutlined style="font-size: 16px; color:rgba(255, 255, 255, 1) !important;" />
+      <span style=" color: rgba(255, 255, 255, 1); padding-left:8px;">新建密码</span>
+    </div>
   </div>
   <a-layout style="height: calc(100vh - 45px)">
     <a-layout-sider theme="light" style="padding: 20px">
@@ -118,8 +116,9 @@
     </a-layout-content>
   </a-layout>
   <a-drawer class="filter-list-container" :width="216" placement="left"
-    :visible="sideDrawerVisible" @close="sideDrawerVisible = false"
+    :visible="sideDrawerVisible" 
   >
+     
   </a-drawer>
 </template>
 
@@ -198,6 +197,7 @@ export default {
           password:'123456',
           url: "http://localhost:1600/packages/kee/assets/image/key_black.svg",
           showCopy: false,
+          site:'zt.xaingtian.ren'
         },
         {
           id: 1,
@@ -208,6 +208,7 @@ export default {
           password:'123456',
           url: "http://localhost:1600/packages/kee/assets/image/key_crimson.svg",
           showCopy: false,
+          site:'zt.xaingtian.ren'
         },
         {
           id: 2,
@@ -218,6 +219,7 @@ export default {
           password:'123456',
           url: "http://localhost:1600/packages/kee/assets/image/key_blue.svg",
           showCopy: false,
+          site:'zt.xaingtian.ren'
         },
         {
           id: 3,
@@ -228,6 +230,7 @@ export default {
           password:'123456',
           url: "http://localhost:1600/packages/kee/assets/image/key_black.svg",
           showCopy: false,
+          site:'zt.xaingtian.ren'
         },
         {
           id: 4,
@@ -238,6 +241,7 @@ export default {
           password:'123456',
           url: "http://localhost:1600/packages/kee/assets/image/key_orange.svg",
           showCopy: false,
+          site:'zt.xaingtian.ren'
         },
       ],
       search: "",
@@ -286,7 +290,7 @@ export default {
       this.currentIndex = v.id;
       this.$router.push("/" + v.path);
       this.state.$patch({
-         passworItem:v
+         passwordItem:v
       })
     },
     // 筛选下拉菜单
@@ -416,14 +420,14 @@ h3 {
 /*密码分享头部*/
 .password-header {
   height: 54px;
-  padding: 11px 8px;
+  padding: 11px 16px 11px 8px;
   width: 100%;
   display: flex;
   align-items: center;
 }
 /*下拉选择开始*/
 .password-select {
-  width: 35%;
+  width: 40.7%;
   border: 1px solid rgba(230, 230, 230, 1);
   border-radius: 4px;
   padding: 6px 8px 5px 8px;
@@ -462,20 +466,22 @@ h3 {
 /*下拉选择结束*/
 /*搜索开始*/
 .password-search {
-  width: 35%;
+  width: 44.37%;
   margin-right: 16px;
 }
 /*搜索结束*/
 
 /*新建密码开始*/
-.password-button {
-  width: 98px;
-  line-height: 21px;
-  background: rgba(80, 139, 254, 1);
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  padding: 6px 10px 5px 10px;
+.passsword-button{
+   width:18.765%;
+   line-height: 32px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   background: rgba(80, 139, 254, 1);
+   border-radius: 4px;
+   user-select: none;
+   cursor: pointer;
 }
 /*新建密码结束*/
 
