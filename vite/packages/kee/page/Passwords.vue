@@ -30,8 +30,9 @@
       <span style=" color: rgba(255, 255, 255, 1); padding-left:8px;">新建密码</span>
     </div>
   </div>
-  <a-layout style="height: calc(100vh - 45px)">
-    <a-layout-sider theme="light" style="padding: 20px">
+  <a-divider style="height: 1px; background-color: rgba(230, 230, 230, 0.1);margin: 0  !important;" />
+  <a-layout style="height: calc(100vh - 45px);">
+    <a-layout-sider theme="light" style="padding: 20px;border-right: 1px solid rgba(230, 230, 230, 1);">
       <a-list item-layout="horizontal" :data-source="passwords">
         <template #renderItem="{ item }">
           <a-list-item :class="currentIndex==item.id ? 'active-list':''"
@@ -335,7 +336,7 @@ html {
 /*其他样式开始*/
 .ant-layout-sider {
   max-width: 240px !important;
-  padding: 0 8px !important;
+  padding: 9px 8px !important;
   flex: 0 0 240px !important;
   min-width: 240px !important;
   width: 240px !important;
