@@ -206,7 +206,7 @@ export default {
     </div>
 
   </div>
-  <a-table @change="handleTableChange" :columns="columns" :data-source="displayData()">
+  <a-table style="user-select: text" @change="handleTableChange" :columns="columns" :data-source="displayData()">
     <template #headerCell="{ column }">
       <template v-if="column.key === 'name'">
         <span>
