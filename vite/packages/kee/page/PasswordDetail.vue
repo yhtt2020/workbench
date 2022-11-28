@@ -48,62 +48,88 @@
        </a-dropdown>
     </div> 
   </div>
-  <div class="breadcrumb-bottom-container">
-     <a-form :model="formState" :rules="eidtRules">
-      <a-form-item name="passwordAccount">
-        <div class="breadcrumb-bottom-name">
-          <span style="padding-right:12px;">
-            <i class="iconfont icon-yuechi1"></i>
-          </span>
-          <span class="name" v-if="editShow == false">禅道账号</span>
-          <a-input style="width:80%;" v-else v-model:value="formState.passwordAccount"/>
-        </div>
-      </a-form-item>
-      <a-form-item name="username" style="border:1px solid rgba(00,00,00,0.15); border-radius: 6px 6px 0 0 ;padding: 2px 12px;">
-        <div>
-         <span class="form-item-text">用户名</span>
-         <a-input v-model:value="formState.username" style="border:none;padding:0 !important;"></a-input>
-        </div>
-      </a-form-item>
-      <a-form-item  style="border:1px solid rgba(00,00,00,0.15); border-top: none; border-radius: 0 0 6px 6px  ;padding: 2.5px 12px;">
-        <span class="form-item-text">密码</span>
-        <a-input type="password" v-model:value="formState.password" style="border:none;padding:0 !important;"></a-input>
-      </a-form-item>
-      <a-form-item name="websiteValue" >
-        <div class="breadcrumb-bottom-website" style="margin-top:24px;">
-           <div class="breadcrumb-bottom-link">
-            <a href="javascript:viod(0)" class="sites-name">网站</a>
-            <a href="http://zt.xiangtian.ren/" v-if="editShow == false" class="sites">zt.xaingtian.ren</a>
-            <a-input v-else v-model:value="formState.websiteValue"/>
-           </div>
-           <div class="copy-container">
-            <span>
-              打开并填写
-            </span>
-            <a-divider type="vertical" style="height: 21px; background-color: rgba(80, 139, 254, 1)" />
-            <span class="breadcrumb-bottom-copy">
-               复制
-            </span>
-           </div>
-        </div>
-      </a-form-item>
-     </a-form>
-     <div class="breadcrumb-bottom-sites">
-      <a href="" class="sites-name">网站</a>
-      <a href="https://www.yuque.com/" class="sites">www.yuque.com</a>
-     </div>
-     <div class="breadcrumb-bottom-remark">
-      <div class="breadcrumb-bottom-remark-top">
-       <span class="remark">
-         备注
+  <div class="breadcrumb-form">
+    <div class="breadcrumb-form-header">
+      <div class="breadcrumb-bottom-name">
+        <span class="avatar">
+           <img :src="store.passworItem.url" alt="">
         </span>
-        <a href="#" v-if="editShow  == true">
-         <ExportOutlined style="font-size:16px;color:rgba(80, 139, 254, 1);"/>
-         <span style="font-size:12px; font-width:400;padding-left: 4px;">在主应用中编辑</span>
-        </a>
+        <span class="name" v-if="editShow == false">
+          {{store.passworItem.title}}
+        </span>
+        <a-form :model="formState" :rules="formRules" v-if="editShow==true">
+          <a-form-item name="passwordAccount" required>
+            <a-input v-model:value="formState.passwordAccount" />
+          </a-form-item>
+        </a-form>
       </div>
-      <span class="ana">团队语雀公用帐号，注意不要对外分享该密码</span>
-     </div>
+    </div>
+    <div class="breadcrumb-form-footer">
+          <div ref="usernameRef" class="breadcrumb-form-username" @mouseover="isMouse==true&&openUsernameHover()" @mouseleave="isMouse==true&&closeUsernameHover()">
+             <div class="left-content">
+              <span style="padding-bottom:5px;color:rgba(104, 81, 214, 1);">用户名</span> 
+              <span v-if="editShow==false">{{store.passworItem.description}}</span>
+              <a-form :model="formState" :rules="formRules" v-if="editShow==true">
+               <a-form-item name="username" required>
+                 <a-input style="padding:0  !important;border: none;" v-model:value="formState.username" />
+               </a-form-item>
+              </a-form>
+             </div>
+            <div class="right-content"  v-if="usernamVisble == true">
+              <span class="usernane-copy">复制</span>
+            </div>
+          </div>
+          <div ref="passwordRef" class="breadcrumb-form-password" @mouseover="isMouse==true&&opPasswordHover()" @mouseleave="isMouse==true&&closePasswordHover()">
+              <div class="password-inoput">
+                <span style="color:rgba(104, 81, 214, 1);">密码</span>
+                <div class="password-show" v-if="editShow==false">
+                  <a-input  :type="passwordType" style="border:none;padding:0;width: 65%;background: rgba(80, 139, 254, 0);" v-model:value="store.passworItem.password"></a-input>
+                  <div style="cursor: pointer;" v-if="passwordVisible==true" @click="passwordShowClick">
+                    <EyeFilled v-if="passwordShow == true" style="color:rgba(80, 139, 254, 1); padding-right:11px; cursor: pointer;"/>
+                    <EyeInvisibleFilled v-if="passwordShow==false"  style="color:rgba(80, 139, 254, 1); padding-right:11px; cursor: pointer;"/>
+                    <span style="color:rgba(80, 139, 254, 1);">{{ passwordShow==true ? '显示':'隐藏'}}</span>
+                  </div>
+                  <a-divider v-if="passwordVisible==true" type="vertical" style="height: 20px; background-color:rgba(80, 139, 254, 1)" />
+                  <span v-if="passwordVisible==true" style="color:rgba(80, 139, 254, 1); cursor: pointer;">复制</span>
+                </div>
+                <a-form :model="formState" :rules="formRules" v-if="editShow==true">
+                  <a-form-item name="password" required>
+                    <a-input type="password" style="padding:0  !important;border: none;" v-model:value="formState.password" />
+                  </a-form-item>
+                </a-form>
+              </div>
+          </div>
+          <div ref="webSiteRef" class="breadcrumb-bottom-website" @mouseover="isMouse==true&&openWebsiteHover()" @mouseleave="isMouse==true&&closeWebsiteHover()">
+             <div class="website-top">
+              <a href="#" style="color:rgba(104, 81, 214, 1);">网站</a>
+              <a href="#">{{store.passworItem.site}}</a>
+             </div>
+             <div>
+              <span v-if="websiteShow==true" style="color:rgba(80, 139, 254, 1);cursor: pointer;">打开并填写</span>
+              <a-divider v-if="websiteShow==true"  type="vertical" style="height: 20px; background-color:rgba(80, 139, 254, 1)" />
+              <span v-if="websiteShow==true" style="color:rgba(80, 139, 254, 1);cursor: pointer;">复制</span>
+             </div>
+          </div>
+          <div class="breadcrumb-bottom-website" style="padding-top:0;">
+              <div class="website-top">
+                <a href="#" style="color:rgba(104, 81, 214, 1);">网站</a>
+                <a href="#">{{store.passworItem.site}}</a>
+              </div>
+          </div>
+          <div class="breadcrumb-bottom-remark">
+            <div class="breadcrumb-bottom-remark-top">
+             <span style="color:rgba(104, 81, 214, 1);font-width:400;font-size:12px;">
+               备注
+              </span>
+              <a href="#" v-if="editShow  == true">
+               <ExportOutlined style="font-size:16px;color:rgba(80, 139, 254, 1);"/>
+               <span style="font-size:12px; font-width:400;padding-left: 4px;">在主应用中编辑</span>
+              </a>
+            </div>
+            <span style="font-size:14px;font-width:400;color:rgba(0, 0, 0, 0.65);">团队语雀公用帐号，注意不要对外分享该密码</span>
+          </div>
+    </div>
+    
   </div>
   <a-modal width="408px"  :centered="true" v-model:visible="sharVisible" title="分享">
     <div class="share-contaniner">
@@ -190,7 +216,8 @@ import {
   EllipsisOutlined,UnlockFilled,
   FormOutlined,MinusCircleOutlined,
   ShareAltOutlined,PlusOutlined,
-  ExclamationCircleOutlined,ExportOutlined
+  ExclamationCircleOutlined,ExportOutlined,
+  EyeFilled,EyeInvisibleFilled
 } from '@ant-design/icons-vue'
 import { Modal } from 'ant-design-vue';
 import { createVNode } from 'vue'
@@ -203,32 +230,43 @@ export default {
     FormOutlined,MinusCircleOutlined,
     ShareAltOutlined,PlusOutlined,
     ExclamationCircleOutlined,
-    PlusOutlined,ExportOutlined
+    PlusOutlined,ExportOutlined,
+    EyeFilled,EyeInvisibleFilled
   },
   computed: {
    ...mapState(appStore, [])
   },
   data(){
     return{
-      show:'',
+      // 控制网站是否鼠标悬浮
+      webisteVisble:false,
+      // 控制用户是否鼠标悬浮
+      usernamVisble:false,
+      // 控制密码是否鼠标悬浮
+      passwordVisible:false,
+      // 控制网站是否鼠标悬浮
+      websiteShow:false,
+      // 分享开关
       sharVisible:false,
       // 链接有效期值
       validity:'0',
       // 任何有此链接的人
       value:'0',
+      // 默认勾选
       checked:false,
       teamValue:['Ateam'],
+      store:appStore(),
       // 是否删除
       deletVisible:false,
       // 密码编辑内容
       formState:{
-         username:'Francisco_Phillips',
-         password:'123456',
-         passwordAccount:'禅道账号',
-         websiteValue:'zt.xaingtian.ren'
+         username:'',
+         password:'',
+         passwordAccount:'',
+         websiteValue:''
       },
       // 密码编辑内容验证
-      eidtRules:{
+      formRules:{
         username:[
             {
               required: true,message: '请输入账号名称',
@@ -255,13 +293,23 @@ export default {
       mobileTag:['13675425868','13645221134'],
       addDisabled:false,
       editShow:false,
-      // 密码账号
+      // 取消鼠标事件
+      isMouse:true,
+      // 密码是否显示和隐藏
+      passwordShow:false,
+      // 改变密码类型
+      passwordType:'password'
     }
   },
-  async mounted(){
-    
+  mounted(){},
+  updated(){
+    this.formState.passwordAccount = this.store.passworItem.title
+    this.formState.username = this.store.passworItem.description
+    this.formState.websiteValue = this.store.passworItem.site
+    this.formState.password = this.store.passworItem.password
   },
   methods:{
+    // 打开分享
     openShare(){
        // 使用一个值控制弹窗
        this.sharVisible = true
@@ -299,14 +347,58 @@ export default {
     // 打开编辑模式
     openEdit(){
        this.editShow = true
+       this.isMouse = false
     },
     // 保存修改
     saveChange(){
       this.editShow = false
-      console.log();
+      this.isMouse = true
+    },
+    /*鼠标悬浮事件开始*/ 
+    // 用户名称
+    openUsernameHover(){
+        this.usernamVisble = true
+        this.$refs.usernameRef.style = "background:rgba(80, 139, 254, 0.25);"
+    },
+    // 密码
+    opPasswordHover(){
+      this.passwordVisible = true
+      this.$refs.passwordRef.style = "background:rgba(80, 139, 254, 0.25);"
+    },
+    // 网站
+    openWebsiteHover(){
+      this.websiteShow = true
+      this.$refs.webSiteRef.style = "background:rgba(80, 139, 254, 0.25);border-radius:6px;"
+    },
+    /*鼠标悬浮事件结束*/
+    /** 鼠标移出事件开始**/
+    // 用户名称
+    closeUsernameHover(){
+       this.usernamVisble = false
+       this.$refs.usernameRef.style = "background:rgba(255, 255, 255, 1);"
+    },
+    // 密码
+    closePasswordHover(){
+      this.passwordVisible = false
+      this.$refs.passwordRef.style = "background:rgba(255, 255, 255, 1);"
+    },
+    // 网站
+    closeWebsiteHover(){
+      this.websiteShow = false
+      this.$refs.webSiteRef.style = "background:rgba(255, 255, 255, 1);"
+    },
+    /** 鼠标移出事件结束**/
+    // 密码显示和隐藏事件
+    passwordShowClick(){
+       if(this.passwordShow == false){
+         this.passwordShow = true
+         this.passwordType = "text"
+       }else{
+         this.passwordShow = false
+         this.passwordType = "password"
+       } 
     }
   }
-
 }
 </script>
 <style>
@@ -379,126 +471,10 @@ export default {
 .add-btn{
    padding: 0 ;
 }
-
 .ant-btn:active{
   background-color: rgba(216, 216, 216, 1);
 }
 /*添加按钮样式结束*/
-/*底部内容开始*/
-.breadcrumb-bottom-name {
-   margin-bottom: 24px;
-   .name{
-     font-size: 16px;
-     font-weight: 500;
-     color: rgba(0, 0, 0, 0.85);
-   }
-}
-.breadcrumb-bottom-card{
-   border: 1px solid rgba(230, 230, 230, 1);
-   border-radius: 6px;
-   margin-bottom: 24px;
-   .breadcrumb-bottom-user{
-     padding: 7px 12px 6px 12px;
-     border-bottom: 1px solid rgba(230, 230, 230, 1);
-     display: flex;
-     flex-direction: column;
-     .user{
-       color: rgba(104, 81, 214, 1);
-       font-size: 12px;
-       font-weight: 400;
-       line-height: 17px;
-     }
-     span{
-      font-size: 14px;
-      line-height: 20px;
-      color: rgba(0, 0, 0, 0.85);
-      font-weight: 400;
-     }
-   }
-   .breadcrumb-bottom-password{
-    padding: 7px 12px 6px 12px;
-    display: flex;
-    flex-direction: column;
-    .cryptogram{
-      color: rgba(104, 81, 214, 1);
-      font-size: 12px;
-      font-weight: 400;
-      line-height: 17px;
-    }
-    span{
-       font-size: 22px;
-       color: rgba(0, 0, 0, 0.85);
-       font-weight: 400;
-       line-height: 22px;
-    }
-   }
-}
-
-.breadcrumb-bottom-website{
-   display: flex;
-   align-items: center;
-   justify-content: space-between;
-   padding: 0 12px;
-   margin-bottom: 24px;
-   .breadcrumb-bottom-link{
-     display: flex;
-     flex-direction: column;
-     .sites-name{
-      color: rgba(104, 81, 214, 1);
-      font-size: 12px;
-      font-weight: 400;
-      line-height: 17px;
-     }
-     .sites{
-      line-height: 20px;
-     }
-   }
-   .breadcrumb-bottom-copy{
-      
-   }
-}
-
-.breadcrumb-bottom-sites{
-    display: flex;
-    flex-direction: column;
-    padding: 0 12px;
-    margin-bottom: 24px;
-
-    .sites-name{
-       color: rgba(104, 81, 214, 1);
-       font-size: 12px;
-       font-weight: 400;
-       line-height: 17px;
-    }
-    .sites{
-       line-height: 20px;
-    }
-}
-.breadcrumb-bottom-remark{
-  display: flex;
-  flex-direction: column;
-  padding: 0 12px;
-  margin-bottom: 24px;
-  .remark{
-     color: rgba(104, 81, 214, 1);
-     font-size: 12px;
-     font-weight: 400;
-     line-height: 17px;
-     padding-right: 8px;
-  }
-  .ana{
-     color: rgba(0, 0, 0, 0.65);
-     font-size: 14px;
-     font-weight: 400;
-     line-height: 20px;
-  }
-}
-.breadcrumb-bottom-remark-top{
-   display: flex;
-   align-items: center;
-}
-/*底部内容结束*/
-
 /*编辑分享删除样式开始*/
 .medit{
   font-weight: 400;
@@ -592,14 +568,85 @@ export default {
    }
 }
 /*分享密码内容结束*/
-/*表单开始*/
-.form-layout{
-   margin-bottom: 24px;
-   .form-item-text{
-     color: rgba(104, 81, 214, 1);
-     font-size: 12px;
-     font-weight: 400;
+/*账号内容开始*/
+.breadcrumb-form-header{
+   padding-bottom: 22px;
+}
+.breadcrumb-bottom-name{
+   display: flex;
+   align-items: center;
+  .avatar {
+    padding-right: 8px;
+    padding-bottom: 8px;
+    img{
+      width: 16px;
+      height: 16px;
+    }
+  }
+  .name{
+  }
+}
+.ant-form{
+   width: 100%;
+}
+
+.breadcrumb-form-username{
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid rgba(230, 230, 230, 1);
+  line-height: 16px;
+  padding: 7px 16px 9px 12px;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  .left-content{
+     display: flex;
+     flex-direction: column;
+     justify-content: space-between;
+  }
+  .right-content{
+     display: flex;
+     align-items: center;
+     justify-content: center;
+    .usernane-copy{
+      color: rgba(80, 139, 254, 1);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 32px;
+      cursor: pointer;
+      user-select: none;
+   }
+  }
+}
+.breadcrumb-form-password{
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid rgba(230, 230, 230, 1);
+  border-top: none; 
+  line-height: 16px;
+  padding: 7px 16px 9px 12px;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  margin-bottom: 16px;
+  .password-inoput{
+    width: 100%;
+    .password-show{
+      display: flex;
+    } 
+  }
+}
+.breadcrumb-bottom-website{
+   padding: 8px 16px 8px 12px;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   .website-top{
+     display: flex;
+     flex-direction: column;
    }
 }
-/*表单结束*/
+.breadcrumb-bottom-remark{
+  padding: 0 12px;
+}
+/*账号内容结束*/
+
 </style>

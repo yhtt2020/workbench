@@ -38,6 +38,7 @@
         <template #renderItem="{ item }">
           <a-list-item :class="currentIndex==item.id ? 'active-list':''"
           @click="leftDescription(item)" @mouseover="passwordItemsHover(item)" @mouseleave="passwordItemRemove(item)">
+          <!-- 判断鼠标悬浮时打开并填充按钮显示 -->
           <a-list-item-meta class="is-open-fill" v-if="item.showCopy == true" :description="item.description">
             <template #title>
               <a>{{ item.title }}</a>
@@ -46,6 +47,7 @@
               <a-avatar :src="item.url" />
             </template>
           </a-list-item-meta>
+          <!-- 判断鼠标离开时打开并填充按钮隐藏 -->
           <a-list-item-meta class="no-open-fill" :description="item.description" v-else>
             <template #title>
               <a>{{ item.title }}</a>
@@ -185,7 +187,6 @@ export default {
       },
       simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
       currentIndex: 0,
-      listItemIndex: 0,
       checkNick: false,
       passwords: [
         {
@@ -194,6 +195,7 @@ export default {
           title: "禅道账号",
           description: "Francisio_Phillps",
           path: "detail",
+          password:'123456',
           url: "http://localhost:1600/packages/kee/assets/image/key_black.svg",
           showCopy: false,
         },
@@ -203,6 +205,7 @@ export default {
           title: "语雀帐号",
           description: "Isabelle_Fisher",
           path: "detail",
+          password:'123456',
           url: "http://localhost:1600/packages/kee/assets/image/key_crimson.svg",
           showCopy: false,
         },
@@ -212,6 +215,7 @@ export default {
           title: "即时设计帐号",
           description: "Benjamin_Gonzalez",
           path: "detail",
+          password:'123456',
           url: "http://localhost:1600/packages/kee/assets/image/key_blue.svg",
           showCopy: false,
         },
@@ -221,6 +225,7 @@ export default {
           title: "轻流帐号",
           description: "Maurice_Alvarado",
           path: "detail",
+          password:'123456',
           url: "http://localhost:1600/packages/kee/assets/image/key_black.svg",
           showCopy: false,
         },
@@ -230,6 +235,7 @@ export default {
           title: "元社区帐号",
           description: "Derek_Edwards",
           path: "detail",
+          password:'123456',
           url: "http://localhost:1600/packages/kee/assets/image/key_orange.svg",
           showCopy: false,
         },
@@ -261,12 +267,14 @@ export default {
           url: "http://localhost:1600/packages/kee/assets/image/key_blue.svg",
         },
       ],
+      state:appStore()
     };
   },
 
-  async mounted() {},
+  async mounted() {
+
+  },
   methods: {
-    ...mapActions(appStore, ["showCopyChange"]),
     // 搜索触发做的事情
     serachClikc() {},
     // 开启抽屉式的选项
@@ -277,6 +285,9 @@ export default {
     leftDescription(v) {
       this.currentIndex = v.id;
       this.$router.push("/" + v.path);
+      this.state.$patch({
+         passworItem:v
+      })
     },
     // 筛选下拉菜单
     openPasswordSelect(e) {},
