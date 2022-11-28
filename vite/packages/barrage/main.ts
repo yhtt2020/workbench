@@ -11,6 +11,7 @@ const routes=[
 ]
 const router=createRouter({
   history:createWebHashHistory(),
+  base:'/html/',
   routes
 })
 let app=createApp(App).use(Antd).use(router).mount('#app')
