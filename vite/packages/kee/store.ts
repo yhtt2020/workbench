@@ -27,7 +27,7 @@ export const appStore = defineStore('kee',{
         user_info:{}
       },
        //将点击之后的值进行缓存
-      passworItem: {
+      passwordItem: {
         id:0,
         index: 0,
         title: "禅道账号",
