@@ -231,6 +231,9 @@ async ensureColumns(){
 },
   async migrateDB(){
     console.log('迁移数据库')
+
+    //todo 判断某个应用的appid，如果不存在，则批量处理，处理完之后，写一个config，调用sqldb.setconfig，参考下方写法
+
     const DONE='app.migrate.done'
     if(await sqlDb.getConfig(DONE)){
       await this.ensureColumns()
@@ -293,10 +296,59 @@ async ensureColumns(){
    * @returns {Promise<void>}
    */
   async ensureAppsData () {
-    await appModel.updateAppData({ name: '收藏夹' }, {
-      package: 'com.thisky.nav',
-      url: '/pages/apps/index.html',
+    let todo=await appModel.get({
+      package:'com.thisky.todo'
     })
+    if(!todo){
+      await sqlDb.knex('app').insert({
+        nanoid: nanoid(8),
+        name: '轻待办',
+        logo: 'http://a.apps.vip/com.thisky.todo/logo.png?t=2',
+        summary: '代办事项。',
+        type: 'web',
+        //url: serverConfig.IM.FRONT_URL+ serverConfig.IM.AUTO_LOGIN,
+        url: 'http://a.apps.vip/com.thisky.todo/',
+        package: 'com.thisky.todo',
+        theme_color: '#6fafff',
+        create_time: Date.now(),
+        update_time: Date.now(),
+        order: 0,
+        use_count: 0,
+        last_execute_time: Date.now(),
+        "window": JSON.stringify({
+          "defaultType": "window",
+          "frameWindow": {
+            "enable": true,
+            "width": 800,
+            "height": 800,
+            "controllers": {
+              "goBack": true,
+              "goForward": true,
+              "refresh": true,
+              "home": true
+            }
+          },
+          "window": {
+            "enable": true,
+            "width": "600",
+            "height": "320",
+            "canResize": true,
+            "blurAction": "hide"
+          },
+          "attach": {}
+        }),
+        "auth": JSON.stringify({
+          "base": {
+            "webSecure": true,
+            "node": false
+          },
+          "api": {},
+          "ability": {}
+        }),
+        is_new: true,
+        unread_count: 0,
+      })
+    }
 
     await appModel.updateAppData({ package: 'com.thisky.group' }, {
       name: '轻聊',
@@ -627,8 +679,6 @@ async ensureColumns(){
       json.url=json.debug_url
     }
     json.is_debug=true
-
-    console.log(json)
     return await appModel.install(json.url, json)
   },
 
@@ -830,7 +880,9 @@ async ensureColumns(){
 
     app.origin=_.cloneDeep(app)
     app=Object.assign(app,userSettings)
-
+    if(!app.user_theme_color){
+      app.user_theme_color=app.theme_color //将主题色复制到用户设置
+    }
 
     return app
   },
