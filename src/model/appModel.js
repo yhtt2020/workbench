@@ -231,6 +231,8 @@ async ensureColumns(){
 },
   async migrateDB(){
     console.log('迁移数据库')
+
+
     const DONE='app.migrate.done'
     if(await sqlDb.getConfig(DONE)){
       await this.ensureColumns()
@@ -249,7 +251,7 @@ async ensureColumns(){
       let item = saApps[i]
       let data = {
         nanoid: nanoid(8),
-        appid: '',
+        appid: item.appid,
         name: item.name,
         package: item.package,
         preload: item.preload,
@@ -297,10 +299,27 @@ async ensureColumns(){
       package: 'com.thisky.nav',
       url: '/pages/apps/index.html',
     })
-
+    await appModel.updateAppData({ name: '超级收藏夹' }, {
+      appid:'GYfdW8',
+    })
     await appModel.updateAppData({ package: 'com.thisky.group' }, {
       name: '轻聊',
-      logo: 'https://up.apps.vip/logo/group.png?t=2'
+      logo: 'https://up.apps.vip/logo/group.png?t=2',
+      appid:'qQ79Dw',
+    })
+
+    await appModel.updateAppData({ name: '帮助教程' }, {
+      appid:'t3VLx3',
+    })
+    await appModel.updateAppData({ name: '轻聊' }, {
+      appid:'qQ79Dw',
+    })
+
+    await appModel.updateAppData({ name: '导入助手' }, {
+      appid:'N1OPW6',
+    })
+    await appModel.updateAppData({ name: '图片编辑器' }, {
+      appid:'6g6SdP',
     })
 
     await appModel.updateAppData({ package: 'com.thisky.appStore' }, {
@@ -309,6 +328,7 @@ async ensureColumns(){
       summary: '应用市场，助您发现更大的世界。',
       preload: '/pages/appStore/preload.js',
       type: 'web',
+      appid:'MiXNpK',
       package: 'com.thisky.appStore',
       url: 'https://a.apps.vip/d.appStore/index.html', //更改为测试版的地址
       theme_color: '#3c78d8',
@@ -354,6 +374,7 @@ async ensureColumns(){
       'name': '元社区',
       'url': 'https://s.apps.vip',
       'logo': 'https://up.apps.vip/logo/yuan.png',
+      appid:'A0Iap3',
       theme_color: '#4188ff'
     })
   },
@@ -943,6 +964,7 @@ async ensureColumns(){
         logo: 'https://up.apps.vip/logo/group.png?t=2',
         summary: '团队沟通，随时与团队成员实时沟通',
         type: 'web',
+        appid:'qQ79Dw',
         //url: serverConfig.IM.FRONT_URL+ serverConfig.IM.AUTO_LOGIN,
         url: serverConfig.IM.FRONT_URL + serverConfig.IM.AUTO_LOGIN,
         preload: '/pages/group/imPreload.js',
@@ -977,6 +999,7 @@ async ensureColumns(){
         package: 'com.thisky.com',
         summary: '用心经营您的元社区',
         type: 'web',
+        appid:'A0Iap3',
         url: serverConfig.SERVER_BASE_URL,
         preload: '/pages/com/preload.js',
         theme_color: '#85ff85',
@@ -1008,6 +1031,7 @@ async ensureColumns(){
         summary: '整理你的超级资料库',
         preload: '/pages/fav/preload.js',
         type: 'web',
+        appid:'GYfdW8',
         package: 'com.thisky.fav',
         url: '/pages/fav/index.html',
         theme_color: '#3c78d8',
@@ -1038,6 +1062,7 @@ async ensureColumns(){
         logo: 'https://up.apps.vip/logo/logo.svg',
         summary: '快速导入其他浏览器的书签、密码，设置为您的默认浏览器。',
         type: 'local',
+        appid:'N1OPW6',
         //url: serverConfig.IM.FRONT_URL+ serverConfig.IM.AUTO_LOGIN,
         url: '/pages/import/index.html',
         preload: '/pages/group/imPreload.js',
@@ -1068,6 +1093,7 @@ async ensureColumns(){
         name: '图片编辑器',
         theme_color: 'rgb(90,170,60)',
         author: '想天软件',
+        appid:'6g6SdP',
         site: 'http://apps.vip',
         logo: 'https://a.apps.vip/imageEditor/icon.svg',
         url: 'https://a.apps.vip/imageEditor/',
@@ -1090,6 +1116,7 @@ async ensureColumns(){
         url: 'https://www.yuque.com/tswork/ngd5zk/iuguin',
         package: 'com.thisky.helper',
         theme_color: '#ff7b42',
+        appid:'t3VLx3',
         attribute: JSON.stringify({
           isOffical: 1,
           integration: 2
@@ -1116,6 +1143,7 @@ async ensureColumns(){
         summary: '应用市场，助您发现更大的世界。',
         preload: '/pages/appStore/preload.js',
         type: 'web',
+        appid:'MiXNpK',
         package: 'com.thisky.appStore',
         url: 'https://a.apps.vip/appStore/index.html',
         theme_color: '#3c78d8',
