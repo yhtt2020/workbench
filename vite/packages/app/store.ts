@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
 import _ from 'lodash-es';
 const {appModel, devAppModel} = window.$models
+const path=require('path')
 const initSetting={ //存储用户的设置
   name:'',
   theme_color:'',
@@ -110,6 +111,10 @@ export const appStore = defineStore('app', {
         if(!devApp.os_summary){
           throw '开源软件必须填写「开源说明」，避免其他用户在不知情的情况下触犯开源协议。'
         }
+      }
+
+      if(devApp.startsWith==='local|'){
+        devApp.logo=path.join(devApp.local_dir,'logo.png')
       }
       devApp.window=JSON.stringify(this.devApp.window)
       delete devApp.theme_colors

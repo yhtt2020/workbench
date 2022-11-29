@@ -186,7 +186,7 @@ export default {
       if(file){
         let dest=path.join(this.devApp.local_dir,'logo.png')
         fs.copyFileSync(file[0],dest)
-        this.devApp.logo='local'
+        this.devApp.logo='local|'+dest
       }
     },
     async selectDir(){

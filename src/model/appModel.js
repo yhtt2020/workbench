@@ -875,13 +875,15 @@ async ensureColumns(){
     else{
       app.userSettings=userSettings
     }
-
+    if(app.logo.startsWith('local|')){
+      //预处理本地图片（临时）
+      app.logo= 'file://'+ app.logo.replace('local|','')
+    }
     app.origin=_.cloneDeep(app)
     app=Object.assign(app,userSettings)
     if(!app.user_theme_color){
       app.user_theme_color=app.theme_color //将主题色复制到用户设置
     }
-
     return app
   },
   async setUserSetting(app,userSetting){
