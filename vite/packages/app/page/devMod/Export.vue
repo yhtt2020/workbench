@@ -1,10 +1,10 @@
 <template>
 
 
-  <h3>导出工具</h3>
+  <h3>导出工具 <a-button size="small" @click="openDir" style="float: right" v-if="this.devApp.local_dir">打开项目目录</a-button></h3>
   <a-tabs>
-    <a-tab-pane key="appjson" tab="导出app.json">
-      <p>以下为自动根据设置导出的app.json文件，您可以直接复制，或者保存为文件。此文件可用于应用市场上架。为了方便起见，您甚至可以直接一键上架到应用市场。</p>
+    <a-tab-pane key="appjson" tab="导出manifest.json">
+      <p>以下为自动根据设置导出的manifest.json文件，您可以直接复制，或者保存为文件。此文件可用于应用市场上架。为了方便起见，您甚至可以直接一键上架到应用市场。</p>
       <p v-if="!this.devApp.local_dir">
         注意： 请设置开发应用的项目路径后使用保存和导出功能。<router-link :to="{path:'/dev/'}">前往设置</router-link>
       </p>
@@ -68,7 +68,16 @@ export default {
       Modal.confirm({
         content: '是否覆盖到' + path.join(this.devApp.local_dir, 'manifest.json') + '？',
         onOk: () => {
-
+          const fs=require('fs')
+          fs.writeFile(path.join(this.devApp.local_dir, 'manifest.json'),this.json,'utf8',(err)=>{
+            if(err)
+            {
+              console.warn(err)
+              message.error('导出manifest.json失败，请检查读写权限。')
+            }else{
+              message.success('已成功导出manifest.json')
+            }
+          })
         }
       })
     },
@@ -92,6 +101,10 @@ export default {
     },
     refresh () {
       this.json = this.getJson()
+    },
+    openDir(){
+      const {shell} =require('electron')
+      shell.openPath(this.devApp.local_dir)
     },
     ...mapActions(appStore, ['toggleDebug'])
   }

@@ -103,7 +103,7 @@
               <template #icon>
                 <LaptopOutlined></LaptopOutlined>
               </template>
-              <template #title>深度集成</template>
+              <template #title>开发工具</template>
               <!--                <a-menu-item key="5">-->
               <!--                  菜单管理-->
               <!--                </a-menu-item>-->
