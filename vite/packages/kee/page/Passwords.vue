@@ -7,7 +7,7 @@
     >
       <a-row class="password-select-container">
         <a-col :span="12" class="col-left">
-          <AppstoreFilled class="col-left-icon" />
+          <component :is="filterIcon"/>
           <span class="password-all">{{ filterText }}</span>
         </a-col>
         <a-col :span="12" class="col-right">
@@ -35,28 +35,29 @@
     <a-layout-sider theme="light" style="padding: 20px;border-right: 1px solid rgba(230, 230, 230, 1);">
       <a-list item-layout="horizontal" :data-source="passwords">
         <template #renderItem="{ item }">
-          <a-list-item :class="currentIndex==item.id ? 'active-list':''"
-          @click="leftDescription(item)" @mouseover="passwordItemsHover(item)" @mouseleave="passwordItemRemove(item)">
-          <!-- 判断鼠标悬浮时打开并填充按钮显示 -->
-          <a-list-item-meta class="is-open-fill" v-if="item.showCopy == true" :description="item.description">
-            <template #title>
-              <a>{{ item.title }}</a>
-            </template>
-            <template #avatar>
-              <a-avatar :src="item.url" />
-            </template>
-          </a-list-item-meta>
-          <!-- 判断鼠标离开时打开并填充按钮隐藏 -->
-          <a-list-item-meta class="no-open-fill" :description="item.description" v-else>
-            <template #title>
-              <a>{{ item.title }}</a>
-            </template>
-            <template #avatar>
-              <a-avatar :src="item.url" />
-            </template>
-          </a-list-item-meta>
-          <div class="open-fill" v-if="item.showCopy == true" @click="openFillClick">打开并填充</div>
-         </a-list-item>
+          <div  @mouseover="passwordItemsHover(item)" @mouseleave="passwordItemRemove(item)">
+            <a-list-item :class="currentIndex==item.id ? 'active-list':''" @click="leftDescription(item)">
+            <!-- 判断鼠标悬浮时打开并填充按钮显示 -->
+            <a-list-item-meta class="is-open-fill" v-if="item.showCopy == true" :description="item.description">
+              <template #title>
+                <a>{{ item.title }}</a>
+              </template>
+              <template #avatar>
+                <a-avatar :src="item.url" />
+              </template>
+            </a-list-item-meta>
+            <!-- 判断鼠标离开时打开并填充按钮隐藏 -->
+            <a-list-item-meta class="no-open-fill" :description="item.description" v-else>
+              <template #title>
+                <a>{{ item.title }}</a>
+              </template>
+              <template #avatar>
+                <a-avatar :src="item.url" />
+              </template>
+            </a-list-item-meta>
+            <div class="open-fill" v-if="item.showCopy == true" @click="openFillClick">打开并填充</div>
+            </a-list-item>
+          </div>
         </template>
       </a-list>
       <!-- 暂时没有数据先隐藏掉 -->
@@ -116,13 +117,28 @@
       <router-view></router-view>
     </a-layout-content>
   </a-layout>
-  <a-drawer class="filter-list-container" :width="216" placement="left" :visible="sideDrawerVisible" @close="sideDrawerVisible=false">
-     
+  <a-drawer class="filter-list-container" :width="216" placement="left" :visible="sideDrawerVisible">
+    <a-menu style="width: 200px">
+      <a-menu-item class="drawer-list-item" v-for="item in selectMenuList" :key="item.index">
+          <component :is="item.icon" />
+          <span @click="selectListItem(item)">{{item.text}}</span>
+          <component :is="item.iconSwap" class="right-icon"/>
+      </a-menu-item>
+      <a-divider style="height: 1px; background-color: rgba(230, 230, 230, 1);margin: 8px 0 !important;" />
+      <a-menu-item class="drawer-list-item">
+         <span class="drawer-app-icon">
+           <UnlockFilled />
+         </span>
+         <span>主应用中打开</span>
+      </a-menu-item>
+    </a-menu>
   </a-drawer>
+  <!-- 我的密码下拉菜单 -->
+
 </template>
 
 <script>
-import Icon, {
+import {
   SettingOutlined,
   LaptopOutlined,
   SmileOutlined,
@@ -166,7 +182,6 @@ export default {
     Empty,
     UpOutlined,
     DownOutlined,
-    Icon
   },
   computed: {
     ...mapState(appStore, []),
@@ -248,7 +263,8 @@ export default {
       search: "",
       size: "large",
       sideDrawerVisible: false,
-      filterText: "当前网站",
+      filterText: "所有密码",
+      filterIcon:'AppstoreFilled',
       totalOpen: true,
       contextItems: "",
       // 当前网站
@@ -280,7 +296,8 @@ export default {
              icon:'UnlockFilled',
              index:1,
              text:'我的密码',
-             iconSwap:'SwapOutlined'
+             iconSwap:'SwapOutlined',
+             divider:1,
            },
            {
              id:1,
@@ -292,13 +309,15 @@ export default {
              id:2,
              index:3,
              text:'当前网站',
-             icon:'LinkOutlined'
+             icon:'LinkOutlined',
+             divider:1,
            },
            {
              id:3,
              index:4,
              text:'颜色',
-             icon:'StarFilled'
+             icon:'StarFilled',
+             divider:1,
            },
            {
              id:4,
@@ -310,22 +329,14 @@ export default {
              id:5,
              index:6,
              text:'Email',
-             icon:'TagFilled'
+             icon:'TagFilled',
+             divider:1,
            },
-           {
-            id:6,
-            index:7,
-            text:'主应用打开',
-            icon:'UnlockFilled'
-           }
       ]
       
     }
   },
-
-  async mounted() {
-
-  },
+  async mounted() {},
   methods: {
     // 搜索触发做的事情
     serachClikc() {},
@@ -333,7 +344,7 @@ export default {
     selectOptions() {
       this.sideDrawerVisible = true;
     },
-    // 列表点击
+    // 左侧列表点击
     leftDescription(v) {
       this.currentIndex = v.id;
       this.$router.push("/" + v.path);
@@ -373,9 +384,9 @@ export default {
     },
     // 筛选菜单中子项选中
     selectListItem(v){
-      // this.sideDrawerVisible = false
-      this.drawerIndex = v.id
-      // console.log(v);
+      this.filterText = v.text
+      this.filterIcon = v.icon
+      this.sideDrawerVisible = false
     }
   },
 };
@@ -677,34 +688,14 @@ h3 {
 /*当前网站密码结束*/
 
 /*筛选列表开始*/
-.drawer-list-container{
-   
-  .drawer-list-item{
-     padding: 0 !important;
-     margin: 0 !important;
-     cursor: pointer;
-     &:hover{
-       background: none !important;
-     }
-     .drawer-list-meta{
-       padding:6px 8px 5px 8px;
-       width: 100%;
-       line-height: 21px;
-       display: flex;
-       align-items: center;
-       justify-content: space-between;
-       .title{
-         padding-left: 16px;
-         color: rgba(0, 0, 0, 0.65);
-         font-size: 14px;
-         font-weight: 400;
-       }
-     }
-  }
+.drawer-list-item{
+   padding: 6px 8px 5px 8px !important;
+   margin: 0 !important;
+   line-height: 19px !important;
+   height: 32px !important;
 }
-.active-drawer{
-  background: rgba(80, 139, 254, 0.25);
-  border-radius: 4px;
+.right-icon{
+   padding-left: 84px;
 }
 /*筛选列表结束*/
 </style>
