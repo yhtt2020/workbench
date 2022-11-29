@@ -343,7 +343,7 @@ global.render = {
     let protocolUrl
     protocolUrl = `tsbapp://./${url}` //todo 需要验证正式环境的协议情况
     if (isDevelopmentMode) {
-      protocolUrl = `http://localhost:1600/${url}`
+      protocolUrl = `http://localhost:1600/html/${url}`
     }
     return protocolUrl
   },
@@ -397,7 +397,7 @@ global.render = {
     let extension = path.extname(pathName).toLowerCase()
     if (!extension) return
     pathName = decodeURI(pathName)
-    let filePath = path.join(__dirname, 'vite', 'dist', pathName)
+    let filePath = path.join(__dirname, 'vite', 'dist','html', pathName)
     fs.readFile(filePath, (error, data) => {
       if (error) return
       let mimeType = ''
