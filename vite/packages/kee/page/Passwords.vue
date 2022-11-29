@@ -119,22 +119,37 @@
   </a-layout>
   <a-drawer class="filter-list-container" :width="216" placement="left" :visible="sideDrawerVisible">
     <a-menu style="width: 200px">
-      <a-menu-item class="drawer-list-item" v-for="item in selectMenuList" :key="item.index">
-          <component :is="item.icon" />
+      <div class="drawer-list-container"  v-for="item in selectMenuList" :key="item.id">
+        <a-menu-item class="drawer-list-item" :key="item.index">
+          <component :is="item.icon" style="font-size:16px;"/>
           <span @click="selectListItem(item)">{{item.text}}</span>
-          <component :is="item.iconSwap" class="right-icon"/>
-      </a-menu-item>
+          <component :is="item.iconSwap" class="right-icon" @click="openMyPassword"/>
+        </a-menu-item>
+        <a-divider v-if="item.divider==1" style="height: 1px; background-color: rgba(230, 230, 230, 1);margin: 8px 0 !important;" />
+      </div>
       <a-divider style="height: 1px; background-color: rgba(230, 230, 230, 1);margin: 8px 0 !important;" />
       <a-menu-item class="drawer-list-item">
          <span class="drawer-app-icon">
-           <UnlockFilled />
+           <UnlockFilled style="font-size:16px;color:#FFFFFF;"/>
          </span>
-         <span>主应用中打开</span>
+         <span style="padding-left:12px;color:rgba(0, 0, 0, 0.65);font-size:14px;font-width:400;">主应用中打开</span>
       </a-menu-item>
     </a-menu>
+    <a-dropdown placement="bottom"  v-model="dropdownVisible">
+            <template #overlay>
+              <a-menu>
+                <a-menu-item key="0">
+                  <a href="http://www.alipay.com/">1st menu item</a>
+                </a-menu-item>
+                <a-menu-item key="1">
+                  <a href="http://www.taobao.com/">2nd menu item</a>
+                </a-menu-item>
+                <a-menu-divider />
+                <a-menu-item key="3">3rd menu item</a-menu-item>
+              </a-menu>
+            </template>
+    </a-dropdown>
   </a-drawer>
-  <!-- 我的密码下拉菜单 -->
-
 </template>
 
 <script>
@@ -200,8 +215,8 @@ export default {
         wheelPropagation: false,
       },
       simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
+      // 列表默认下标
       currentIndex: 0,
-      drawerIndex:1,
       checkNick: false,
       passwords: [
         {
@@ -265,6 +280,8 @@ export default {
       sideDrawerVisible: false,
       filterText: "所有密码",
       filterIcon:'AppstoreFilled',
+      // 筛选菜单列表下标
+      selectDrawerIndex:1,
       totalOpen: true,
       contextItems: "",
       // 当前网站
@@ -330,9 +347,10 @@ export default {
              index:6,
              text:'Email',
              icon:'TagFilled',
-             divider:1,
            },
-      ]
+      ],
+      // 筛选菜单下拉框
+      dropdownVisible:false
       
     }
   },
@@ -387,6 +405,10 @@ export default {
       this.filterText = v.text
       this.filterIcon = v.icon
       this.sideDrawerVisible = false
+    },
+    // 我的密码下拉
+    openMyPassword(){
+       this.dropdownVisible = true
     }
   },
 };
@@ -688,14 +710,31 @@ h3 {
 /*当前网站密码结束*/
 
 /*筛选列表开始*/
+.drawer-list-container{
+   .drawer-list-item{
+     margin: 0 !important;
+     padding: 8px !important;
+     height: 32px !important;
+     line-height: 16px !important;
+   }
+}
 .drawer-list-item{
-   padding: 6px 8px 5px 8px !important;
-   margin: 0 !important;
-   line-height: 19px !important;
-   height: 32px !important;
+  margin: 0 !important;
+  padding: 8px !important;
+  height: 32px !important;
+  line-height: 16px !important;
+  .drawer-app-icon{
+     width: 16px;
+     height: 16px;
+     padding: 2px 3px;
+     background: rgba(80, 139, 254, 1);
+     border-radius: 50%;
+  }
+  .right-icon{
+    font-size: 16px;
+    padding-left: 84px;
+  }
 }
-.right-icon{
-   padding-left: 84px;
-}
+
 /*筛选列表结束*/
 </style>
