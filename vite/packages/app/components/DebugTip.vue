@@ -34,7 +34,7 @@ const tipMap = {
   },
   'local_dir':{
     title:'本地目录',
-    message:'本地目录，用于生成minifest.json文件，不选择则无法生成路径和打包项目。',
+    message:'本地目录，用于生成manifest.json文件，不选择则无法生成路径和打包项目。',
 
 },
   'open_source':{
