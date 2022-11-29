@@ -1,6 +1,5 @@
 const path=require('path')
-export function getLogo(logo,local_dir,fileProtocol=true){
-  console.log(logo,local_dir)
+export function getLogo(logo,fileProtocol=true){
   if(logo.startsWith('local|')){
     return  (fileProtocol?'file://':'')+ logo.replace('local|','')
   }else{

@@ -28,7 +28,7 @@
                  :rules="{ message: '选择一个本地项目目录，用于输出manifest.json'  }"
     >
 
-        <a-avatar style="margin-right: 10px" shape="circle" :src="getLogo(this.devApp.logo,this.devApp.local_dir)"></a-avatar>
+        <a-avatar style="margin-right: 10px" shape="circle" :src="getLogo(this.devApp.logo)"></a-avatar>
         <a-button size="small" @click="selectLogo">
           选择图片
         </a-button>
@@ -144,7 +144,7 @@
 </template>
 
 <script>
-import { message, Upload } from 'ant-design-vue';
+import { message, Upload,Modal } from 'ant-design-vue';
 const formItemLayout = {
   labelCol: { span: 6 },
   wrdevApperCol: { span: 16 },
@@ -184,9 +184,19 @@ export default {
       }
       let file=ipc.sendSync('selectFile')
       if(file){
-        let dest=path.join(this.devApp.local_dir,'logo.png')
-        fs.copyFileSync(file[0],dest)
-        this.devApp.logo='local|'+dest
+        if(fs.existsSync(path.join(this.devApp.local_dir,'logo.png'))){
+        Modal.confirm({
+          content:'是否确认覆盖应用图标？',
+          centered:true,
+          onOk:()=>{
+
+              let dest=path.join(this.devApp.local_dir,'logo.png')
+              fs.copyFileSync(file[0],dest)
+              this.devApp.logo='local|'+dest+'?t='+Date.now()
+
+          }
+        })
+        }
       }
     },
     async selectDir(){

@@ -136,7 +136,7 @@
                       style="box-shadow: 0 2px 8px #f0f1f2;z-index: 1; padding:6px 10px;"
                       :title="this.devApp.name"
 
-                      :avatar="{src:devApp.logo}"
+                      :avatar="{src:this.getLogo(this.devApp.logo)}"
                       sub-title="开发中的项目"
       >
         <template #extra>
@@ -168,7 +168,7 @@ import { appStore } from '../store'
 import { mapState, mapActions,mapWritableState } from 'pinia'
 import { CodeTwoTone } from '@ant-design/icons-vue'
 import { message, Modal } from 'ant-design-vue'
-
+import {getLogo} from '../util'
 let { appModel, devAppModel } = window.$models
 let appId =
   window.globalArgs['app-id']
@@ -247,6 +247,7 @@ export default {
 
   },
   methods: {
+    getLogo,
     installAndRun(){
       Modal.confirm({
         centered: true,
