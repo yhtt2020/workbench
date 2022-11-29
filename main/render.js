@@ -397,7 +397,13 @@ global.render = {
     let extension = path.extname(pathName).toLowerCase()
     if (!extension) return
     pathName = decodeURI(pathName)
-    let filePath = path.join(__dirname, 'vite', 'dist','html', pathName)
+    let filePath
+    if(extension==='.html'){
+      filePath=path.join(__dirname, 'vite', 'dist','html', pathName)
+    }else{
+      filePath=path.join(__dirname, 'vite', 'dist', pathName)
+    }
+
     fs.readFile(filePath, (error, data) => {
       if (error) return
       let mimeType = ''

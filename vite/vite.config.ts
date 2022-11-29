@@ -15,7 +15,7 @@ htmls.forEach(html=>{
 })
 export default defineConfig({
   plugins: [vue()],
-  base:'/html/',
+  base:'./',
   build:{
     rollupOptions:{
       input :inputs,
