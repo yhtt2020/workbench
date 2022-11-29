@@ -254,11 +254,14 @@ export default {
         onOk: async () => {
           try {
             let app=await this.saveAndInstall()
-            Modal.info({
-              centered:true,
-              content:'成功安装运行，如若需要设置生效，则需要重新安装并运行应用',
-              okText:'我知道了'
-            })
+            if(app)
+            {
+              Modal.info({
+                centered:true,
+                content:'成功安装运行，如若需要设置生效，则需要重新安装并运行应用',
+                okText:'我知道了'
+              })
+            }
           } catch (e) {
             message.error('运行测试应用失败，失败原因：' + e)
           }
@@ -305,7 +308,7 @@ export default {
         await this.saveDevApp()
         return app
       }else{
-        message.error('安装取消')
+        message.error('安装意外终止')
       }
 
     },

@@ -86,6 +86,8 @@ export default {
       delete devApp.theme_colors
       delete devApp.local_dir
       delete devApp.assignAppsInfo
+      delete devApp.debug_app_nanoid
+      delete devApp.app_nanoid
       return JSON.stringify(devApp, null, '\t')
     },
     refresh () {

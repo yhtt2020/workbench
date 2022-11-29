@@ -16,7 +16,7 @@
         <span class="sub-label" style="margin-left: 10px;font-weight: bold">启用</span>
         <a-switch v-model:checked="windowConfigs.frameWindow.enable">边框窗体</a-switch>
         <a-row>
-          <a-col :span="9" ><div style="float:left;transform:scale(0.6); display: block;width:410px;height: 320px;background:url('./img/window.png');margin: -69px;
+          <a-col :span="9" ><div style="float:left;transform:scale(0.6); display: block;width:410px;height: 320px;background:url('../img/window.png');margin: -69px;
     margin-left: -86px;"></div></a-col>
           <a-col :span="15" >
             <p class="introduce">此模式会自动提供『后退』、『前进』、『刷新』、『设置』等窗体控制按钮，且支持『主题色』的设置。
@@ -127,7 +127,7 @@
           <a-switch v-model:checked="windowConfigs.window.enable">无边框窗体</a-switch>
 <a-row>
           <a-col :span="9">
-  <div style="transform:scale(0.6); display: block;width:410px;height: 320px;background:url('./img/window.png');background-position:-410px 0;margin: -69px;
+  <div style="transform:scale(0.6); display: block;width:410px;height: 320px;background:url('../img/window.png');background-position:-410px 0;margin: -69px;
     margin-left: -86px;"></div>
 </a-col>
 
@@ -235,7 +235,7 @@
           <a-switch v-model:checked="windowConfigs.attach.enable"></a-switch>
 
           <a-row>
-            <a-col :span="9" > <div style="transform:scale(0.6); display: block;width:410px;height: 320px;background:url('./img/window.png');background-position:-810px 0;margin: -69px;
+            <a-col :span="9" > <div style="transform:scale(0.6); display: block;width:410px;height: 320px;background:url('../img/window.png');background-position:-810px 0;margin: -69px;
     margin-left: -86px;"></div></a-col>
             <a-col :span="15" >
               <p class="introduce">此模式将吸附到浏览器主窗体右侧，此模式需要应用支持响应式，为了提供优秀体验，建议额外增加接收拖拽事件。
@@ -382,16 +382,6 @@ export default {
   mounted () {
     this.devApp.window=Object.assign(this.windowDefaultConfigs,this.devApp.window)
     this.windowConfigs=this.devApp.window
-    let optimizeValues = ['keepRunning', 'theme', 'desktop', 'showInSideBar', 'alwaysTop', 'autoRun', 'noFrame']
-    let optimize = []
-    if (this.app.settings) {
-      optimizeValues.forEach(item => {
-        if (this.app.settings[item]) {
-          optimize.push(item)
-        }
-      })
-    }
-
   }
 }
 </script>

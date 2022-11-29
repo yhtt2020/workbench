@@ -111,13 +111,22 @@ export default {
     async install () {
       let installedAppId=''
       delete this.app.nanoid
-      if(this.app.is_debug){
-        installedAppId=await appModel.installDebugAppFromJson(this.app)
-      }else{
-        installedAppId=await appModel.installFromJson(this.app)
+      try{
+        if(this.app.is_debug){
+          installedAppId=await appModel.installDebugAppFromJson(this.app)
+        }else{
+          installedAppId=await appModel.installFromJson(this.app)
+        }
+        if(installedAppId){
+          await appModel.setUserSetting(this.app,this.userSetting)
+          ipc.send('installAppReturn', { result: true, nanoid:installedAppId})
+        }else{
+          ipc.send('installAppReturn', { result: false})
+        }
+      }catch (e) {
+        console.warn(e)
+        ipc.send('installAppReturn', { result: false})
       }
-      await appModel.setUserSetting(this.app,this.userSetting)
-      ipc.send('installAppReturn', { result: true, nanoid:installedAppId})
       ipc.send('closeSelf')
     },
     close () {

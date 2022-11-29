@@ -100,6 +100,9 @@ export const appStore = defineStore('app', {
       let devApp =_.cloneDeep(this.devApp)
       devApp.theme_color = devApp.theme_colors.hex
       devApp.auth=JSON.stringify(this.devApp.auth)
+      if(!devApp.url){
+        throw '必须设置应用起始地址。'
+      }
       if((!this.devApp.window.frameWindow.enable && !this.devApp.window.window.enable && !this.devApp.window.attach.enable ) || !this.devApp.window[this.devApp.window.defaultType].enable ){
         throw '至少设置一种窗体，且正确设置默认窗体类型。'
       }
