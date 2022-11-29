@@ -1500,7 +1500,6 @@ app.whenReady().then(() => {
 
     appManager.installAppConfirm(args.appJson,'开发项目管理',(data)=>{
       if(data.result){
-
         event.reply('installResult',{result:true,index:args.index})
         SidePanel.send('installApp', { nanoid: data.nanoid, background: args.background })
         event.returnValue= { result:true,nanoid:data.nanoid }

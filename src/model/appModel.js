@@ -758,8 +758,6 @@ async ensureColumns(){
       csv_url:app.csv_url,
       os_summary:app.os_summary,
       is_debug:app.is_debug,
-
-
       account_avatar: JSON.stringify({
         avatar:app.avatar,
         nickname:app.nickname,
@@ -775,7 +773,7 @@ async ensureColumns(){
     let hasInstalled = false
     if (app.package) {
       hasInstalled = await appModel.isInstalled(app.package)
-      if (!hasInstalled) {
+      if (hasInstalled) {
         return false
       }
     }
