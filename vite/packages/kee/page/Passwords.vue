@@ -34,9 +34,9 @@
   <a-layout style="height: calc(100vh - 45px);">
     <a-layout-sider theme="light" style="padding: 20px;border-right: 1px solid rgba(230, 230, 230, 1);">
       <a-list item-layout="horizontal" :data-source="passwords">
-        <template #renderItem="{ item }">
-          <div  @mouseover="passwordItemsHover(item)" @mouseleave="passwordItemRemove(item)">
-            <a-list-item :class="currentIndex==item.id ? 'active-list':''" @click="leftDescription(item)">
+        <template #renderItem="{ item,index }">
+          <div @mouseover="passwordItemsHover(item)" @mouseleave="passwordItemRemove(item)">
+            <a-list-item :class="currentIndex==index ? 'active-list':''" @click="leftDescription(item)">
             <!-- 判断鼠标悬浮时打开并填充按钮显示 -->
             <a-list-item-meta class="is-open-fill" v-if="item.showCopy == true" :description="item.description">
               <template #title>
@@ -118,37 +118,40 @@
     </a-layout-content>
   </a-layout>
   <a-drawer class="filter-list-container" :width="216" placement="left" :visible="sideDrawerVisible">
-    <a-menu style="width: 200px">
-      <div class="drawer-list-container"  v-for="item in selectMenuList" :key="item.id">
-        <a-menu-item class="drawer-list-item" :key="item.index">
-          <component :is="item.icon" style="font-size:16px;"/>
-          <span @click="selectListItem(item)">{{item.text}}</span>
-          <component :is="item.iconSwap" class="right-icon" @click="openMyPassword"/>
-        </a-menu-item>
-        <a-divider v-if="item.divider==1" style="height: 1px; background-color: rgba(230, 230, 230, 1);margin: 8px 0 !important;" />
-      </div>
-      <a-divider style="height: 1px; background-color: rgba(230, 230, 230, 1);margin: 8px 0 !important;" />
-      <a-menu-item class="drawer-list-item">
-         <span class="drawer-app-icon">
-           <UnlockFilled style="font-size:16px;color:#FFFFFF;"/>
-         </span>
-         <span style="padding-left:12px;color:rgba(0, 0, 0, 0.65);font-size:14px;font-width:400;">主应用中打开</span>
-      </a-menu-item>
-    </a-menu>
-    <a-dropdown placement="bottom"  v-model="dropdownVisible">
+    <a-list item-layout="horizontal" :data-source="selectMenuList">
+      <template #renderItem="{ item }">
+        <a-list-item class="drawer-item-list" :class="selectDrawerIndex == item.id ? 'active-drawer':''">
+          <component :is="item.icon" style="font-size:16px;padding-right: 12px;color: rgba(0, 0, 0, 0.5) !important;"/>
+          <a-list-item-meta @click="selectListItem(item)">
+            <template #title>
+             <span>{{ item.text }}</span>
+            </template>
+          </a-list-item-meta>
+          <!-- 下拉菜单列表 -->
+          <a-dropdown  :trigger="['click']">
+            <component :is="item.iconSwap" @click="openMyPassword"/>
             <template #overlay>
               <a-menu>
                 <a-menu-item key="0">
-                  <a href="http://www.alipay.com/">1st menu item</a>
+                  <a>1st menu item</a>
                 </a-menu-item>
                 <a-menu-item key="1">
-                  <a href="http://www.taobao.com/">2nd menu item</a>
+                  <a >2nd menu item</a>
                 </a-menu-item>
-                <a-menu-divider />
                 <a-menu-item key="3">3rd menu item</a-menu-item>
               </a-menu>
             </template>
-    </a-dropdown>
+          </a-dropdown>
+        </a-list-item>
+        <a-divider v-if="item.divider==1" style="height: 1px; background-color: rgba(230, 230, 230, 1);margin: 8px 0 !important;" />
+      </template>
+      <a-list-item class="drawer-main-application-open" @click="openMainApplication">
+        <span class="drawer-main-app-icon">
+          <UnlockFilled style="color:#FFFFFF;"/>
+        </span>
+        <span>主应用中打开</span>
+      </a-list-item>
+    </a-list>
   </a-drawer>
 </template>
 
@@ -309,44 +312,39 @@ export default {
       // 定义筛选菜单列表数据
       selectMenuList:[
            {
-             id:0,
+             id:1001,
              icon:'UnlockFilled',
-             index:1,
              text:'我的密码',
              iconSwap:'SwapOutlined',
              divider:1,
            },
            {
-             id:1,
-             index:2,
+             id:1002,
              icon:'AppstoreFilled',
              text:'所有密码'
            },
            {
-             id:2,
-             index:3,
+             id:1003,
              text:'当前网站',
              icon:'LinkOutlined',
              divider:1,
            },
            {
-             id:3,
-             index:4,
+             id:1004,
              text:'颜色',
              icon:'StarFilled',
              divider:1,
            },
            {
-             id:4,
-             index:5,
+             id:1005,
              text:'Computer',
              icon:'TagFilled'
            },
            {
-             id:5,
-             index:6,
+             id:1006,
              text:'Email',
              icon:'TagFilled',
+             divider:1,
            },
       ],
       // 筛选菜单下拉框
@@ -403,12 +401,17 @@ export default {
     // 筛选菜单中子项选中
     selectListItem(v){
       this.filterText = v.text
+      this.selectDrawerIndex = v.id
       this.filterIcon = v.icon
       this.sideDrawerVisible = false
     },
     // 我的密码下拉
     openMyPassword(){
        this.dropdownVisible = true
+    },
+    // 主应用打开
+    openMainApplication(){
+        document.querySelector('.drawer-main-application-open').classList.add('active-drawer')
     }
   },
 };
@@ -710,29 +713,44 @@ h3 {
 /*当前网站密码结束*/
 
 /*筛选列表开始*/
-.drawer-list-container{
-   .drawer-list-item{
-     margin: 0 !important;
-     padding: 8px !important;
-     height: 32px !important;
-     line-height: 16px !important;
+.drawer-item-list{
+   line-height: 32px !important;
+   padding: 5px  8px !important;
+   cursor: pointer;
+   .ant-list-item-meta-title{
+      margin: 0 !important;
+   }
+   &:hover{
+     background: none ;
    }
 }
-.drawer-list-item{
-  margin: 0 !important;
-  padding: 8px !important;
-  height: 32px !important;
-  line-height: 16px !important;
-  .drawer-app-icon{
-     width: 16px;
-     height: 16px;
-     padding: 2px 3px;
-     background: rgba(80, 139, 254, 1);
-     border-radius: 50%;
+.active-drawer{
+  background: rgba(80, 139, 254, 0.25) !important;
+  border-radius: 6px;
+}
+.ant-dropdown-menu-item{
+   width: 192px !important;
+}
+.ant-dropdown{
+    min-width: 14px !important;
+    left: 9px !important;
+    top: 40px !important;
+}
+.drawer-main-application-open{
+  padding: 5px 8px !important;
+  line-height: 22px !important;
+  display: flex !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  &:hover{
+     background: none;
   }
-  .right-icon{
-    font-size: 16px;
-    padding-left: 84px;
+  .drawer-main-app-icon{
+     display: flex;
+     align-items: center;
+     padding: 6.18px 4.16px 4.15px 4.14px;
+     background: rgba(158, 191, 255, 1);
+     border-radius: 50%;
   }
 }
 
