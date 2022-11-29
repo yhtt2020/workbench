@@ -188,25 +188,17 @@
         <template v-if="value==2">
             <span>手机号</span>
             <span style="margin-bottom:4px;color:rgba(00,00,00,0.45);">对方需要验证手机号后才能查看密码</span>
-            <a-input-search
-            v-model:value="mobileValue"
-            placeholder="请输入手机号"
-            @search="addTag($event)"
-          >
-            <template #enterButton >
-               <a-button class="add-btn" ref="addBtnRef">
-                <PlusOutlined style="padding-left:4px;"/>
-                <span>添加手机号</span>
-               </a-button>
-            </template>
-          </a-input-search>
-           <a-tag closable 
-           style="width:29%;margin: 0;padding: 0px 7px; margin-top:4px;" 
-           v-for="item in  mobileTag" :key="item"
-           @close="romoveTag(item)"
-          >
+            <a-input-group compact>
+              <a-input class="mobile-input" v-model:value="mobileValue" placeholder="请输入手机号" style="width: calc(100% - 120px);" />
+              <a-button class="moblie-button" style="width: 29.07%;padding:0 !important;" @click="addTag($event)">
+                <PlusOutlined />
+                <span style="padding-left:4px;  margin-left: 0 !important;">添加手机号</span>
+              </a-button>
+            </a-input-group>
+           <a-tag closable style="width:29%;margin: 0;padding: 0px 7px; margin-top:4px;" 
+            v-for="item in  mobileTag" :key="item" @close="romoveTag(item)" >
            {{item}}
-          </a-tag>
+           </a-tag>
         </template>
     </div>
     <template #footer>
@@ -222,9 +214,9 @@ import {
   FormOutlined,MinusCircleOutlined,
   ShareAltOutlined,PlusOutlined,
   ExclamationCircleOutlined,ExportOutlined,
-  EyeFilled,EyeInvisibleFilled
+  EyeFilled,EyeInvisibleFilled, LoginOutlined
 } from '@ant-design/icons-vue'
-import { Modal } from 'ant-design-vue';
+import { Modal , message } from 'ant-design-vue';
 import { createVNode } from 'vue'
 import { appStore } from '../store'
 import { mapState } from 'pinia' 
@@ -296,7 +288,7 @@ export default {
       },
       mobileValue:'',
       // 手机号标记
-      mobileTag:['13675425868','13645221134'],
+      mobileTag:['15072058436'],
       addDisabled:false,
       editShow:false,
       // 取消鼠标事件
@@ -338,11 +330,18 @@ export default {
     },
     // 添加创建tag
     addTag(e){
-      if(this.mobileValue == ''){
-      
+      // 校验手机号
+      const reg = /^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-79])|(?:5[0-35-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[1589]))\d{8}$/
+      if(this.mobileValue != '' && reg.test(this.mobileValue)){
+        this.mobileTag.push(this.mobileValue)
+        this.mobileValue = ''
+      }else{
+        e.preventDefault()
+        message.error({
+           duration:2,
+           content:'手机号不能为空,请输入正确的手机号'
+        })
       }
-      this.mobileTag.push(this.mobileValue)
-      this.mobileValue = ''
     },
     // 移除手机号
     romoveTag(e){
@@ -574,6 +573,16 @@ export default {
    .share-checkbox{
     margin-bottom: 24px;
    }
+}
+.ant-tag-close-icon{
+   margin-left: 7px !important;
+}
+.mobile-input:hover{
+  border-color: none !important;
+}
+.moblie-button:hover, .moblie-button:focus{
+  border-color: rgba(217, 217, 217, 1) !important;
+  color: rgba(0, 0, 0, 0.65) !important;
 }
 /*分享密码内容结束*/
 /*账号内容开始*/

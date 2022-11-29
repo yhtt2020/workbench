@@ -116,15 +116,13 @@
       <router-view></router-view>
     </a-layout-content>
   </a-layout>
-  <a-drawer class="filter-list-container" :width="216" placement="left"
-    :visible="sideDrawerVisible" 
-  >
+  <a-drawer class="filter-list-container" :width="216" placement="left" :visible="sideDrawerVisible" @close="sideDrawerVisible=false">
      
   </a-drawer>
 </template>
 
 <script>
-import {
+import Icon, {
   SettingOutlined,
   LaptopOutlined,
   SmileOutlined,
@@ -168,6 +166,7 @@ export default {
     Empty,
     UpOutlined,
     DownOutlined,
+    Icon
   },
   computed: {
     ...mapState(appStore, []),
@@ -187,6 +186,7 @@ export default {
       },
       simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
       currentIndex: 0,
+      drawerIndex:1,
       checkNick: false,
       passwords: [
         {
@@ -272,8 +272,55 @@ export default {
           url: "http://localhost:1600/packages/kee/assets/image/key_blue.svg",
         },
       ],
-      state:appStore()
-    };
+      state:appStore(),
+      // 定义筛选菜单列表数据
+      selectMenuList:[
+           {
+             id:0,
+             icon:'UnlockFilled',
+             index:1,
+             text:'我的密码',
+             iconSwap:'SwapOutlined'
+           },
+           {
+             id:1,
+             index:2,
+             icon:'AppstoreFilled',
+             text:'所有密码'
+           },
+           {
+             id:2,
+             index:3,
+             text:'当前网站',
+             icon:'LinkOutlined'
+           },
+           {
+             id:3,
+             index:4,
+             text:'颜色',
+             icon:'StarFilled'
+           },
+           {
+             id:4,
+             index:5,
+             text:'Computer',
+             icon:'TagFilled'
+           },
+           {
+             id:5,
+             index:6,
+             text:'Email',
+             icon:'TagFilled'
+           },
+           {
+            id:6,
+            index:7,
+            text:'主应用打开',
+            icon:'UnlockFilled'
+           }
+      ]
+      
+    }
   },
 
   async mounted() {
@@ -324,6 +371,12 @@ export default {
     openFillClick() {
       console.log("打开填充");
     },
+    // 筛选菜单中子项选中
+    selectListItem(v){
+      // this.sideDrawerVisible = false
+      this.drawerIndex = v.id
+      // console.log(v);
+    }
   },
 };
 </script>
@@ -624,6 +677,34 @@ h3 {
 /*当前网站密码结束*/
 
 /*筛选列表开始*/
-
+.drawer-list-container{
+   
+  .drawer-list-item{
+     padding: 0 !important;
+     margin: 0 !important;
+     cursor: pointer;
+     &:hover{
+       background: none !important;
+     }
+     .drawer-list-meta{
+       padding:6px 8px 5px 8px;
+       width: 100%;
+       line-height: 21px;
+       display: flex;
+       align-items: center;
+       justify-content: space-between;
+       .title{
+         padding-left: 16px;
+         color: rgba(0, 0, 0, 0.65);
+         font-size: 14px;
+         font-weight: 400;
+       }
+     }
+  }
+}
+.active-drawer{
+  background: rgba(80, 139, 254, 0.25);
+  border-radius: 4px;
+}
 /*筛选列表结束*/
 </style>

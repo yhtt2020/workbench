@@ -26,7 +26,7 @@ export const appStore = defineStore('kee',{
       user:{
         user_info:{}
       },
-       //将点击之后的值进行缓存
+      //将点击之后的值进行缓存
       passwordItem: {
         id:0,
         index: 0,
@@ -35,7 +35,7 @@ export const appStore = defineStore('kee',{
         password:'123456',
         url: "http://localhost:1600/packages/kee/assets/image/key_black.svg",
         site:'zt.xaingtian.ren'
-      }
+      },
     }),
     actions:{},
     getters:{}
