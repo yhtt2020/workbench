@@ -119,6 +119,13 @@
                   <a>{{items.title}}</a>
                   <CheckOutlined v-if="checkPasswordIndex==items.id" style="padding-left:70px;color: rgba(80, 139, 254, 1);"/>
                 </a-menu-item>
+                <a-menu-divider/>
+                <a-menu-item>
+                  <router-link :to="{name:'bank'}">
+                    <lock-outlined style="font-size:16px;padding-right:12px;"/>
+                    <span class="drawer-open-main-text">锁定密码库</span>
+                  </router-link>
+                </a-menu-item>
               </a-menu>
             </template>
           </a-dropdown>
@@ -131,6 +138,7 @@
         </span>
         <span class="drawer-open-main-text">主应用中打开</span>
       </a-list-item>
+
     </a-list>
   </a-drawer>
 </template>
@@ -139,7 +147,7 @@
 import {
   SettingOutlined, LaptopOutlined,
   SmileOutlined,SearchOutlined,
-  PlusOutlined,SwapOutlined,
+  PlusOutlined,SwapOutlined,LockOutlined,
   AppstoreFilled, UnlockFilled,
   StarFilled, TagFilled,
   FolderOpenFilled, LinkOutlined,
@@ -160,7 +168,7 @@ export default {
   components: {
     SettingOutlined, LaptopOutlined,
     CodeTwoTone, SearchOutlined,
-    SmileOutlined,SwapOutlined,
+    SmileOutlined,SwapOutlined,LockOutlined,
     PlusOutlined,AppstoreFilled,
     UnlockFilled,StarFilled,
     TagFilled,FolderOpenFilled,

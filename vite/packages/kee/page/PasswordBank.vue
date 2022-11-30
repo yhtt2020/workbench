@@ -1,16 +1,30 @@
 <template>
   <div class="password-bank-container">
-    <span class="password-bank-unlock">
+    <div style="height: 180px;padding-top:84px;width: 100%;text-align: center" v-if="!showAction" @mouseenter="showAction=true">
+      <span class="password-bank-unlock">
       <UnlockFilled style="color: #ffffff; font-size: 32px" />
     </span>
+    </div>
+    <div style="height: 180px;padding-top:84px;;width: 100%;text-align: center" v-else  @mouseleave="showAction=false">
+      <a-row style="margin: auto;width: 220px;text-align: center" :gutter="20">
+        <a-col class="action"  :span="12">
+          <folder-open-outlined  class="icon"/>
+          <div>打开</div>
+        </a-col>
+        <a-col class="action"   :span="12">
+          <folder-open-outlined class="icon"/>
+          <div>新建</div>
+        </a-col>
+      </a-row>
+    </div>
     <div class="password-bank-input">
-      <a-input class="bank-input" v-model:value="bankValue" placeholder="请输入「密码库A」的密码"/>
+      <a-input-password class="bank-input" v-model:value="password" :placeholder="'请输入「'+this.bankValue+'」的密码'"/>
       <span class="password-bank-button" @click="enterSubmit">
         <img src="../assets/image/enter_submit.svg" alt="" />
       </span>
     </div>
     <div class="password-bank-list-container">
-        <div class="password-bank-list-item" :class="bankIndex == item.id ? 'bank_active':''" v-for="item in bankList" 
+        <div class="password-bank-list-item" :class="bankIndex == item.id ? 'bank_active':''" v-for="item in bankList"
         :key="item.id" @click="selectBankItem(item)">
            <img :src="item.url" alt="">
            <span>{{item.text}}</span>
@@ -20,15 +34,17 @@
 </template>
 
 <script>
-import { UnlockFilled } from "@ant-design/icons-vue";
+import { UnlockFilled,FolderOpenOutlined } from "@ant-design/icons-vue";
 export default {
   components: {
-    UnlockFilled,
+    UnlockFilled,FolderOpenOutlined
   },
   data() {
     return {
+      showAction:false,
       bankValue: "密码库A",
       bankIndex:0,
+      password:'',
       bankList:[
           {
              id:0,
@@ -63,20 +79,27 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+.action{
+  .icon{
+    font-size: 44px;
+  }
+
+}
 .password-bank-container {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  margin: 84px 0 0 0;
+  padding: 0 0 0 0;
   .password-bank-unlock {
-    display: flex;
+    display: inline-block;
     align-items: center;
     justify-content: center;
-    margin-bottom: 24px;
     width: 64px;
+    padding-top: 6px;
     height: 64px;
+    line-height: 64px;
     background: linear-gradient(
       60deg,
       rgba(45, 74, 253, 0.59) 0%,
