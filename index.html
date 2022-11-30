@@ -285,7 +285,7 @@
               </span>
         </div>
         <div class="action-wrapper app-tool">
-              <span @click="openPwd" title="密码管理"
+              <span @click="openPwd($event)" title="密码管理"
                     id="pwd-toolbar"><img style="margin-left: 6px" class="action app" src="./icons/toolbar/apps/pwd.svg">
                 <span hidden class="bandage" id="pwdCount">0</span>
               </span>
@@ -440,8 +440,12 @@
       leave () {
         this.displayText = false
       },
-      openPwd () {
-        ipc.send('openPwdManager', { tabData: tabs.get(tabs.getSelected()) })
+      openPwd (e) {
+        console.log(e)
+        console.log(e.target.x)
+        ipc.send('openPwdManager', { tabData: tabs.get(tabs.getSelected()) ,pos:{
+          x:e.target.x,y:e.target.y+e.target.offsetHeight
+          }})
       },
       openImport () {
         ipc.send('openRedirectApps', 'tsb://app/redirect/?package=com.thisky.import&url=/')
