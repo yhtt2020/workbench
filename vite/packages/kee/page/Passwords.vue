@@ -33,6 +33,38 @@
   <a-divider style="height: 1px; background-color: rgba(230, 230, 230, 0.1);margin: 0  !important;" />
   <a-layout style="height: calc(100vh - 45px);">
     <a-layout-sider theme="light" style="padding: 20px;border-right: 1px solid rgba(230, 230, 230, 1);">
+      <!-- 暂时没有数据先隐藏掉 -->
+      <div class="current-container"  >
+        <div class="current-header">
+          <span class="current-avatar">
+            <img
+              src="https://img.js.design/assets/img/62592c9e1be7d2a75a32e89b.png"
+              alt=""
+            />
+          </span>
+          <div class="current-switch">
+            <a-switch
+              v-model:checked="totalOpen"
+              checked-children="全站"
+              un-checked-children="关"
+            />
+            <UpOutlined
+              v-if="totalOpen === true"
+              style="color: rgba(0, 0, 0, 0.45); padding-left: 4px"
+            />
+            <DownOutlined
+              v-if="totalOpen === false"
+              style="color: rgba(0, 0, 0, 0.45); padding-left: 4px"
+            />
+          </div>
+        </div>
+        <div class="current-content" v-if="totalOpen === true">
+          <span>语雀——想天浏览器官方文档</span>
+          <span class="current-website"
+          >https://www.yuque.com/thisky/ylbh5g</span
+          >
+        </div>
+      </div>
       <a-list item-layout="horizontal" :data-source="passwords">
         <template #renderItem="{ item,index }">
           <div @mouseover="passwordItemsHover(item)" @mouseleave="passwordItemRemove(item)">
@@ -60,56 +92,6 @@
           </div>
         </template>
       </a-list>
-      <!-- 暂时没有数据先隐藏掉 -->
-      <div class="current-container" style="display: none">
-        <div class="current-header">
-          <span class="current-avatar">
-            <img
-              src="https://img.js.design/assets/img/62592c9e1be7d2a75a32e89b.png"
-              alt=""
-            />
-          </span>
-          <div class="current-switch">
-            <a-switch
-              v-model:checked="totalOpen"
-              checked-children="全站"
-              un-checked-children="关"
-            />
-            <UpOutlined
-              v-if="totalOpen == true"
-              style="color: rgba(0, 0, 0, 0.45); padding-left: 4px"
-            />
-            <DownOutlined
-              v-if="totalOpen == false"
-              style="color: rgba(0, 0, 0, 0.45); padding-left: 4px"
-            />
-          </div>
-        </div>
-        <div class="current-content" v-if="totalOpen == true">
-          <span>语雀——想天浏览器官方文档</span>
-          <span class="current-website"
-            >https://www.yuque.com/thisky/ylbh5g</span
-          >
-        </div>
-        <a-list :data-source="currentList">
-          <template #renderItem="{ item }">
-            <a-list-item
-              class="left-item-list"
-              :class="currentIndex == item.id ? 'active-list' : ''"
-              @click="currentDescription(item)"
-            >
-              <a-list-item-meta :description="item.description">
-                <template #avatar>
-                  <img :src="item.url" alt="" />
-                </template>
-                <template #title>
-                  <a href="https://www.antdv.com/">{{ item.title }}</a>
-                </template>
-              </a-list-item-meta>
-            </a-list-item>
-          </template>
-        </a-list>
-      </div>
     </a-layout-sider>
     <a-layout-content class="password-right-main">
       <!-- 当数据为加载完成时,初始化默认没有搭建时展示页面空状态，暂时先隐藏掉 -->
@@ -169,6 +151,7 @@ import { appStore } from "../store";
 import { mapActions,mapWritableState, mapState } from "pinia";
 import vueCustomScrollbar from "../../../src/components/vue-scrollbar.vue";
 import { message, Modal, Empty } from "ant-design-vue";
+
 let { appModel, devAppModel } = window.$models;
 let appId = window.globalArgs["app-id"];
 const { passwordModel }=window.$models
@@ -308,7 +291,6 @@ export default {
     let params=this.$route.params
     if(params.type==='url'){
       //todo是路径方式
-
       passwordModel.getSiteCredit(params.value, true).then((result) => {
         let isFirst=true
         result.item.forEach((item) => {
@@ -331,7 +313,7 @@ export default {
             showCopy:false,
             id:item.domain+'_'+item.username,
             site: item.domain,
-            icon:'http://localhost:1600/packages/kee/assets/image/key_black.svg'
+            icon:'/kee/key_black.svg'
           }
           if(isFirst){
             this.passwordItem=pwd
