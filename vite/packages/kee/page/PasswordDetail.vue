@@ -170,7 +170,7 @@
             </a-select>
           </div>
         </div>
-        <a-checkbox v-model:checked="checked" class="share-checkbox">
+        <a-checkbox v-model:checked="isAllowed" class="share-checkbox">
           <span>仅允许查看 1 次</span>
         </a-checkbox>
         <template v-if="anyLinkValue == 1">
@@ -283,8 +283,8 @@ export default {
           text:'仅指定人员'
         }
       ],
-      // 默认勾选
-      checked:false,
+      // 默认不勾选
+      isAllowed:false,
       teamValue:['Ateam'],
       store:appStore(),
       // 是否删除
