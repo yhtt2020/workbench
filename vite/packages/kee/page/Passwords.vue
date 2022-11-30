@@ -38,21 +38,21 @@
           <div @mouseover="passwordItemsHover(item)" @mouseleave="passwordItemRemove(item)">
             <a-list-item :class="currentIndex==index ? 'active-list':''" @click="leftDescription(item)">
             <!-- 判断鼠标悬浮时打开并填充按钮显示 -->
-            <a-list-item-meta class="is-open-fill" v-if="item.showCopy == true" :description="item.description">
+            <a-list-item-meta class="is-open-fill" v-if="item.showCopy == true" :description="item.username">
               <template #title>
                 <a>{{ item.title }}</a>
               </template>
               <template #avatar>
-                <a-avatar :src="item.url" />
+                <a-avatar :src="item.icon" />
               </template>
             </a-list-item-meta>
             <!-- 判断鼠标离开时打开并填充按钮隐藏 -->
-            <a-list-item-meta class="no-open-fill" :description="item.description" v-else>
+            <a-list-item-meta class="no-open-fill" :description="item.username" v-else>
               <template #title>
                 <a>{{ item.title }}</a>
               </template>
               <template #avatar>
-                <a-avatar :src="item.url" />
+                <a-avatar :src="item.icon" />
               </template>
             </a-list-item-meta>
             <div class="open-fill" v-if="item.showCopy == true" @click="openFillClick">打开并填充</div>
@@ -117,7 +117,7 @@
       <router-view></router-view>
     </a-layout-content>
   </a-layout>
-  <a-drawer class="filter-list-container" :width="216" placement="left" :visible="sideDrawerVisible">
+  <a-drawer :closable="true" class="filter-list-container" :width="216" placement="left" v-model:visible="sideDrawerVisible">
     <a-list item-layout="horizontal" :data-source="selectMenuList">
       <template #renderItem="{ item }">
         <a-list-item class="drawer-item-list" :class="selectDrawerIndex == item.id ? 'active-drawer':''">
@@ -166,11 +166,12 @@ import {
   CheckOutlined
 } from "@ant-design/icons-vue";
 import { appStore } from "../store";
-import { mapActions, mapState } from "pinia";
+import { mapActions,mapWritableState, mapState } from "pinia";
 import vueCustomScrollbar from "../../../src/components/vue-scrollbar.vue";
 import { message, Modal, Empty } from "ant-design-vue";
 let { appModel, devAppModel } = window.$models;
 let appId = window.globalArgs["app-id"];
+const { passwordModel }=window.$models
 export default {
   name: "Passwords",
   components: {
@@ -186,9 +187,11 @@ export default {
   },
   computed: {
     ...mapState(appStore, []),
+    ...mapWritableState(appStore,['passwordItem']),
   },
   data() {
     return {
+
       activeNav: ["base"],
       user: {
         user_info: {},
@@ -204,63 +207,7 @@ export default {
       // 列表默认下标
       currentIndex: 0,
       checkNick: false,
-      passwords: [
-        {
-          id: 0,
-          index: 0,
-          title: "禅道账号",
-          description: "Francisio_Phillps",
-          path: "detail",
-          password:'123456',
-          url: "http://localhost:1600/packages/kee/assets/image/key_black.svg",
-          showCopy: false,
-          site:'zt.xaingtian.ren'
-        },
-        {
-          id: 1,
-          index: 1,
-          title: "语雀帐号",
-          description: "Isabelle_Fisher",
-          path: "detail",
-          password:'123456',
-          url: "http://localhost:1600/packages/kee/assets/image/key_crimson.svg",
-          showCopy: false,
-          site:'zt.xaingtian.ren'
-        },
-        {
-          id: 2,
-          index: 2,
-          title: "即时设计帐号",
-          description: "Benjamin_Gonzalez",
-          path: "detail",
-          password:'123456',
-          url: "http://localhost:1600/packages/kee/assets/image/key_blue.svg",
-          showCopy: false,
-          site:'zt.xaingtian.ren'
-        },
-        {
-          id: 3,
-          index: 3,
-          title: "轻流帐号",
-          description: "Maurice_Alvarado",
-          path: "detail",
-          password:'123456',
-          url: "http://localhost:1600/packages/kee/assets/image/key_black.svg",
-          showCopy: false,
-          site:'zt.xaingtian.ren'
-        },
-        {
-          id: 4,
-          index: 4,
-          title: "元社区帐号",
-          description: "Derek_Edwards",
-          path: "detail",
-          password:'123456',
-          url: "http://localhost:1600/packages/kee/assets/image/key_orange.svg",
-          showCopy: false,
-          site:'zt.xaingtian.ren'
-        },
-      ],
+      passwords: [],
       search: "",
       size: "large",
       sideDrawerVisible: false,
@@ -357,7 +304,60 @@ export default {
       checkPasswordIndex:0
     }
   },
-  async mounted() {},
+  async mounted() {
+    let params=this.$route.params
+    if(params.type==='url'){
+      //todo是路径方式
+
+      passwordModel.getSiteCredit(params.value, true).then((result) => {
+        let isFirst=true
+        result.item.forEach((item) => {
+          let pwd
+          // {
+          //   id: 3,
+          //     index: 3,
+          //   title: "轻流帐号",
+          //   description: "Maurice_Alvarado",
+          //   path: "detail",
+          //   password:'123456',
+          //   url: "http://localhost:1600/packages/kee/assets/image/key_black.svg",
+          //   showCopy: false,
+          //   site:'zt.xaingtian.ren'
+          // },
+          pwd={
+            title: item.name || item.username,
+            password: item.password,
+            username:item.username,
+            showCopy:false,
+            id:item.domain+'_'+item.username,
+            site: item.domain,
+            icon:'http://localhost:1600/packages/kee/assets/image/key_black.svg'
+          }
+          if(isFirst){
+            this.passwordItem=pwd
+            this.$router.push({
+              name:'detail',
+              params:{
+                t:Date.now()
+              }
+            })
+            isFirst=false
+          }
+          this.passwords.push(pwd)
+        })
+
+        // result.rootItem.forEach((item) => {
+        //   let pwd = item
+        //   pwd.passwordSwitch = {
+        //     hide: true,
+        //     pwd: item.password
+        //   }
+        //   appVue.rootPwds.push(pwd)
+        // })
+
+      })
+    }
+  },
   methods: {
     // 搜索触发做的事情
     serachClikc() {},
@@ -366,11 +366,14 @@ export default {
       this.sideDrawerVisible = true;
     },
     // 左侧列表点击
-    leftDescription(v) {
-      this.currentIndex = v.id;
-      this.$router.push("/" + v.path);
-      this.state.$patch({
-         passwordItem:v
+    leftDescription(item) {
+      this.currentIndex = item.id;
+      this.passwordItem=item
+      this.$router.push({
+        name:'detail',
+        params:{
+          t:Date.now()
+        }
       })
     },
     // 筛选下拉菜单
@@ -380,8 +383,12 @@ export default {
       console.log(11);
     },
     // 当前网站点击
-    currentDescription(v) {
+    currentDescription(item) {
       this.currentIndex = v.id;
+      this.passwordItem=item
+      this.$router.push({
+        name:'detail'
+      })
     },
     // 鼠标移入
     passwordHover() {

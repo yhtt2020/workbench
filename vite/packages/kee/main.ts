@@ -14,12 +14,15 @@ app.config.globalProperties.$antIcons = antIcons
 const pinia = createPinia()
 const routes = [
   {
-    path: '/', component: Passwords,
-    redirect:'/detail',
-    children:[
+    path:'/passwords/value/:value/type/:type',
+    name:'passwords',
+    component: Passwords,
+    children: [
       {
-        path:'detail',component:PasswordDetail
-      },
+        name:'detail',
+        path:'',
+        component:PasswordDetail
+      }
     ]
   }
 ]

@@ -4,7 +4,7 @@
       <UnlockFilled class="breadcrumb-lock"/>
       <a-breadcrumb-item class="my-password">我的密码</a-breadcrumb-item>
       <a-breadcrumb-item class="password-group"><a href="">分组A</a></a-breadcrumb-item>
-    </a-breadcrumb-separator>   
+    </a-breadcrumb-separator>
     <div class="breadcrumb-right">
        <div class="auto-full" v-if="editShow == false">
         <span>自动填充</span>
@@ -46,16 +46,16 @@
           </a-menu>
         </template>
        </a-dropdown>
-    </div> 
+    </div>
   </div>
   <div class="breadcrumb-form">
     <div class="breadcrumb-form-header">
       <div class="breadcrumb-bottom-name">
         <span class="avatar">
-           <img :src="store.passwordItem.url" alt="">
+           <img :src="passwordItem.icon" alt="">
         </span>
         <span class="name" v-if="editShow == false">
-          {{store.passwordItem.title}}
+          {{passwordItem.title}}
         </span>
         <a-form :model="formState" :rules="formRules" v-if="editShow==true">
           <a-form-item name="passwordAccount" required>
@@ -67,8 +67,8 @@
     <div class="breadcrumb-form-footer">
           <div ref="usernameRef" class="breadcrumb-form-username" @mouseover="isMouse==true&&openUsernameHover()" @mouseleave="isMouse==true&&closeUsernameHover()">
              <div class="left-content">
-              <span style="padding-bottom:5px;color:rgba(104, 81, 214, 1);">用户名</span> 
-              <span v-if="editShow==false">{{store.passwordItem.description}}</span>
+              <span style="padding-bottom:5px;color:rgba(104, 81, 214, 1);">用户名</span>
+              <span v-if="editShow==false">{{passwordItem.username}}</span>
               <a-form :model="formState" :rules="formRules" v-if="editShow==true">
                <a-form-item name="username" required>
                  <a-input style="padding:0  !important;border: none;" v-model:value="formState.username" />
@@ -83,7 +83,7 @@
               <div class="password-inoput">
                 <span style="color:rgba(104, 81, 214, 1);">密码</span>
                 <div class="password-show" v-if="editShow==false">
-                  <a-input  :type="passwordType" style="border:none;padding:0;width: 65%;background: rgba(80, 139, 254, 0);" v-model:value="store.passwordItem.password"></a-input>
+                  <a-input  :type="passwordType" style="border:none;padding:0;width: 65%;background: rgba(80, 139, 254, 0);" v-model:value="passwordItem.password"></a-input>
                   <div style="cursor: pointer;" v-if="passwordVisible==true" @click="passwordShowClick">
                     <EyeFilled v-if="passwordShow == true" style="color:rgba(80, 139, 254, 1); padding-right:11px; cursor: pointer;"/>
                     <EyeInvisibleFilled v-if="passwordShow==false"  style="color:rgba(80, 139, 254, 1); padding-right:11px; cursor: pointer;"/>
@@ -102,7 +102,7 @@
           <div ref="webSiteRef" class="breadcrumb-bottom-website" @mouseover="isMouse==true&&openWebsiteHover()" @mouseleave="isMouse==true&&closeWebsiteHover()">
              <div class="website-top">
               <a href="#" style="color:rgba(104, 81, 214, 1);">网站</a>
-              <a href="#" v-if="editShow==false">{{store.passwordItem.site}}</a>
+              <a href="#" v-if="editShow==false">{{passwordItem.site}}</a>
               <a-form :model="formState" :rules="formRules" v-if="editShow==true">
                 <a-form-item name="siteValue" required>
                   <a-input  style="padding:0 10px !important;" v-model:value="formState.siteValue" />
@@ -118,7 +118,7 @@
           <div class="breadcrumb-bottom-website" style="padding-top:0;">
               <div class="website-top">
                 <a href="#" style="color:rgba(104, 81, 214, 1);">网站</a>
-                <a href="#">{{store.passwordItem.site}}</a>
+                <a href="#">{{passwordItem.site}}</a>
               </div>
           </div>
           <div class="breadcrumb-bottom-remark">
@@ -131,10 +131,10 @@
                <span style="font-size:12px; font-width:400;padding-left: 4px;">在主应用中编辑</span>
               </a>
             </div>
-            <span style="font-size:14px;font-width:400;color:rgba(0, 0, 0, 0.65);">团队语雀公用帐号，注意不要对外分享该密码</span>
+            <span style="font-size:14px;font-width:400;color:rgba(0, 0, 0, 0.65);">{{passwordItem.remark || '无'}}</span>
           </div>
     </div>
-    
+
   </div>
   <a-modal width="408px"  :centered="true" v-model:visible="sharVisible" title="分享">
     <div class="share-contaniner">
@@ -193,7 +193,7 @@
               <span style="padding-left:4px;  margin-left: 0 !important;">添加手机号</span>
             </a-button>
           </a-input-group>
-          <a-tag closable style="width:29%;margin: 0;padding: 0px 7px; margin-top:4px;" 
+          <a-tag closable style="width:29%;margin: 0;padding: 0px 7px; margin-top:4px;"
           v-for="item in  mobileTag" :key="item" @close="romoveTag(item)" >
            {{item}}
           </a-tag>
@@ -217,7 +217,7 @@ import {
 import { Modal , message } from 'ant-design-vue';
 import { createVNode } from 'vue'
 import { appStore } from '../store'
-import { mapState } from 'pinia' 
+import { mapState,mapWritableState } from 'pinia'
 export default {
   name: 'PasswordDetail',
   components:{
@@ -229,7 +229,7 @@ export default {
     EyeFilled,EyeInvisibleFilled
   },
   computed: {
-   ...mapState(appStore, [])
+   ...mapWritableState(appStore, ['passwordItem'])
   },
   data(){
     return{
@@ -333,13 +333,14 @@ export default {
       passwordType:'password'
     }
   },
-  mounted(){},
+  mounted(){
+  },
   updated(){
-    this.formState.passwordAccount = this.store.passwordItem.title
-    this.formState.username = this.store.passwordItem.description
-    this.formState.websiteValue = this.store.passwordItem.site
-    this.formState.password = this.store.passwordItem.password
-    this.formState.siteValue = this.store.passwordItem.site
+    this.formState.passwordAccount = this.passwordItem.title
+    this.formState.username = this.passwordItem.username
+    this.formState.websiteValue = this.passwordItem.site
+    this.formState.password = this.passwordItem.password
+    this.formState.siteValue = this.passwordItem.site
   },
   methods:{
     // 打开分享
@@ -355,10 +356,10 @@ export default {
         okText:"确定",
         cancelText:"取消",
         onOk(){
-          
+
         },
         onCancel(){
-          
+
         }
       });
     },
@@ -395,7 +396,7 @@ export default {
       this.editShow = false
       this.isMouse = true
     },
-    /*鼠标悬浮事件开始*/ 
+    /*鼠标悬浮事件开始*/
     // 用户名称
     openUsernameHover(){
         this.usernamVisble = true
@@ -437,7 +438,7 @@ export default {
        }else{
          this.passwordShow = false
          this.passwordType = "password"
-       } 
+       }
     }
   }
 }
@@ -466,7 +467,7 @@ export default {
   .password-group .ant-breadcrumb-separator{
     display: none ;
   }
-}  
+}
 .ant-breadcrumb-separator{
    margin: 0;
 }
@@ -672,7 +673,7 @@ export default {
   display: flex;
   justify-content: space-between;
   border: 1px solid rgba(230, 230, 230, 1);
-  border-top: none; 
+  border-top: none;
   line-height: 16px;
   padding: 7px 16px 9px 12px;
   border-bottom-left-radius: 6px;
@@ -682,7 +683,7 @@ export default {
     width: 100%;
     .password-show{
       display: flex;
-    } 
+    }
   }
 }
 .breadcrumb-bottom-website{
