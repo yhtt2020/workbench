@@ -150,55 +150,53 @@
            </div>
         </div>
         <div class="share-content">
-            <div class="share-content-item">
-              <span class="share-content-title">链接有效期</span>
-              <a-select v-model:value="validity" style="width: 160px">
-                <!--  @focus="focus"  @change="handleChange" -->
-                <a-select-option value="0">7天</a-select-option>
-                <a-select-option value="1">1天</a-select-option>
-                <a-select-option value="2">1小时</a-select-option>
-                <a-select-option value="3">14天</a-select-option>
-                <a-select-option value="4">30天</a-select-option>
-              </a-select>
-            </div>
-            <div class="share-content-item">
-              <span class="share-content-title">分享给</span>
-              <a-select v-model:value="value" style="width: 160px" >
-                <!-- @change="shareSelectChange" -->
-                <!--  @focus="focus"  @change="handleChange" -->
-                <a-select-option value="0">任何有此链接的人</a-select-option>
-                <a-select-option value="1">仅指定团队</a-select-option>
-                <a-select-option value="2">仅指定人员</a-select-option>
-              </a-select>
-            </div>
+          <div class="share-content-item">
+            <span class="share-content-title">链接有效期</span>
+            <a-select v-model:value="linkValidity" style="width: 160px">
+              <a-select-option v-for="item in linkValidityList" :value="item.id" :key="item.id">
+                {{item.text}}
+              </a-select-option>
+              <!--  @focus="focus"  @change="handleChange" -->
+            </a-select>
+          </div>
+          <div class="share-content-item">
+            <span class="share-content-title">分享给</span>
+            <a-select v-model:value="anyLinkValue" style="width: 160px" >
+              <!-- @change="shareSelectChange"
+               @focus="focus"  @change="handleChange" -->
+              <a-select-option v-for="item in  anyLinkValueList" :value="item.id" :key="item.id">
+                {{item.text}}
+              </a-select-option>
+            </a-select>
+          </div>
         </div>
         <a-checkbox v-model:checked="checked" class="share-checkbox">
           <span>仅允许查看 1 次</span>
         </a-checkbox>
-        <template v-if="value==1">
-            <span style="margin-bottom:7px;">选择团队</span>
-            <a-select v-model:value="teamValue"  mode="tags" style="width: 100%" placeholder="请选择团队">
-              <a-select-option value="Ateam">A团队</a-select-option>
-              <a-select-option value="Bteam">B团队</a-select-option>
-              <a-select-option value="Cteam">C团队</a-select-option>
-              <a-select-option value="Dteam">D团队</a-select-option>
-            </a-select>
-            <span style="margin-top:4px;">仅团队内成员可以查看密码</span>
+        <template v-if="anyLinkValue == 1">
+          <span style="margin-bottom:7px;">选择团队</span>
+          <a-select v-model:value="teamValue"  mode="tags" style="width: 100%" placeholder="请选择团队">
+            <a-select-option value="Ateam">A团队</a-select-option>
+            <a-select-option value="Bteam">B团队</a-select-option>
+            <a-select-option value="Cteam">C团队</a-select-option>
+            <a-select-option value="Dteam">D团队</a-select-option>
+          </a-select>
+          <span style="margin-top:4px;">仅团队内成员可以查看密码</span>
         </template>
-        <template v-if="value==2">
-            <span>手机号</span>
-            <span style="margin-bottom:4px;color:rgba(00,00,00,0.45);">对方需要验证手机号后才能查看密码</span>
-            <a-input-group compact>
-              <a-input class="mobile-input" v-model:value="mobileValue" placeholder="请输入手机号" style="width: calc(100% - 120px);" />
-              <a-button class="moblie-button" style="width: 29.07%;padding:0 !important;" @click="addTag($event)">
-                <PlusOutlined />
-                <span style="padding-left:4px;  margin-left: 0 !important;">添加手机号</span>
-              </a-button>
-            </a-input-group>
-           <a-tag closable style="width:29%;margin: 0;padding: 0px 7px; margin-top:4px;" 
-            v-for="item in  mobileTag" :key="item" @close="romoveTag(item)" >
+        <template v-if="anyLinkValue == 2">
+          <span>手机号</span>
+          <span style="margin-bottom:4px;color:rgba(00,00,00,0.45);">对方需要验证手机号后才能查看密码</span>
+          <a-input-group compact>
+            <a-input class="mobile-input" v-model:value="mobileValue" placeholder="请输入手机号" style="width: calc(100% - 120px);" />
+            <a-button class="moblie-button" style="width: 29.07%;padding:0 !important;" @click="addTag($event)">
+              <PlusOutlined />
+              <span style="padding-left:4px;  margin-left: 0 !important;">添加手机号</span>
+            </a-button>
+          </a-input-group>
+          <a-tag closable style="width:29%;margin: 0;padding: 0px 7px; margin-top:4px;" 
+          v-for="item in  mobileTag" :key="item" @close="romoveTag(item)" >
            {{item}}
-           </a-tag>
+          </a-tag>
         </template>
     </div>
     <template #footer>
@@ -246,9 +244,45 @@ export default {
       // 分享开关
       sharVisible:false,
       // 链接有效期值
-      validity:'0',
-      // 任何有此链接的人
-      value:'0',
+      linkValidity:0,
+      linkValidityList:[
+        {
+          id:0,
+          text:'7天'
+        },
+        {
+          id:1,
+          text:'1天'
+        },
+        {
+          id:2,
+          text:'1小时'
+        },
+        {
+          id:3,
+          text:'14天'
+        },
+        {
+          id:5,
+          text:'30天'
+        }
+      ],
+      // 分享链接
+      anyLinkValue:0,
+      anyLinkValueList:[
+        {
+          id:0,
+          text:'任何有此链接的人'
+        },
+        {
+          id:1,
+          text:'仅指定团队'
+        },
+        {
+          id:2,
+          text:'仅指定人员'
+        }
+      ],
       // 默认勾选
       checked:false,
       teamValue:['Ateam'],
