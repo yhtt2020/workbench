@@ -28,9 +28,16 @@ function captureCurrentTab (options) {
   })
 }
 
+
+
+
+
 // called whenever a new page starts loading, or an in-page navigation occurs
 function onPageURLChange (tab, url) {
 
+  if(url.indexOf('https://a.apps.vip/') !== -1){
+
+  }
   ipc.send('barrage.changeUrl',{url:urlParser.getSourceURL(url)})
     //增加了ts开头的页面的安全提示，避免提示不安全
     webviews.updateToolBarStatus(tabs.get(tab))
@@ -53,7 +60,6 @@ function onPageURLChange (tab, url) {
 function onNavigate (tabId, url, isInPlace, isMainFrame, frameProcessId, frameRoutingId) {
   if (isMainFrame) {
     onPageURLChange(tabId, url)
-
   }
 }
 
@@ -293,25 +299,27 @@ const webviews = {
       ],
       allowPopups:true
     }
-  } else if(sourceUrl.startsWith('http://localhost:5008/' )) {
-    webPreferences={
-      preload: __dirname + '/pages/appStore/preload.js',
-      nodeIntegration: true, //node集成开高了
-      contextIsolation:false,
-      enableRemoteModule: true,
-      scrollBounce: false,
-      sandbox: false,
-      safeDialogs:false,
-      safeDialogsMessage:false,
-      additionalArguments: [
-        '--user-data-path=' + window.globalArgs['user-data-path'],
-        '--app-version=' + window.globalArgs['app-version'],
-        '--app-name=' +  window.globalArgs['app-name'],
-        //'--is-Dev='+window.globalArgs['development--mode']
-      ],
-      allowPopups:true
-    }
-  } else if(sourceUrl.startsWith('http://localhost:8080') ) {
+  }
+  //   else if(sourceUrl.startsWith('http://localhost:5008/' )) {
+  //   webPreferences={
+  //     preload: __dirname + '/pages/appStore/preload.js',
+  //     nodeIntegration: true, //node集成开高了
+  //     contextIsolation:false,
+  //     enableRemoteModule: true,
+  //     scrollBounce: false,
+  //     sandbox: false,
+  //     safeDialogs:false,
+  //     safeDialogsMessage:false,
+  //     additionalArguments: [
+  //       '--user-data-path=' + window.globalArgs['user-data-path'],
+  //       '--app-version=' + window.globalArgs['app-version'],
+  //       '--app-name=' +  window.globalArgs['app-name'],
+  //       //'--is-Dev='+window.globalArgs['development--mode']
+  //     ],
+  //     allowPopups:true
+  //   }
+  // }
+    else if(sourceUrl.startsWith('http://localhost:8080') ) {
     webPreferences={
       preload: __dirname + '/pages/guide/preload.js',
       nodeIntegration: true, //node集成开高了

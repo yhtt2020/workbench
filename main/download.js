@@ -254,7 +254,7 @@ function listenForDownloadHeaders (ses) {
       // It doesn't make much sense to have this here, but only one onHeadersReceived instance can be created per session
       const isFileView = typeHeader instanceof Array && !typeHeader.some(t => t.includes('text/html'))
 
-      sendIPCToDownloadWindow('set-file-view', {
+      sendIPCToWindow(mainWindow,'set-file-view', {
         url: details.url,
         isFileView
       })

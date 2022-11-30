@@ -2143,6 +2143,9 @@ ipc.on('openInvite',(event,args)=>{
 
   appVue.$refs.sidePanel.inviteLink(args)
 })
+ipc.on('openAppStore',(event,args)=>{
+  // window.location.href=`tsb://app/redirect/?package=com.thisky.appStore&url=https://a.apps.vip/d.appStore/index.html`
+})
 
 ipc.on('executedAppSuccess', async function (event, args) {
   let now=Date.now()
