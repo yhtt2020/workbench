@@ -85,7 +85,7 @@ ipc.on('openPwdManager', async (event, args) => {
   if (!global.passwordWin) {
     let parentBounds=mainWindow.getBounds()
     global.passwordWin = await windowManager.create({
-      url: render.getUrl('kee.html'),
+      url: render.getUrl('kee.html#/passwords/value/'+ encodeURIComponent(siteUrl)+'/type/url'),
       name: 'kee',
       windowOption: {
         backgroundColor: 'white',
@@ -119,10 +119,10 @@ ipc.on('openPwdManager', async (event, args) => {
         ]
       }
     })
-    passwordWin.window.on('blur',()=>{
-      passwordWin.close()
-      passwordWin=null
-    })
+    // passwordWin.window.on('blur',()=>{
+    //   passwordWin.close()
+    //   passwordWin=null
+    // })
   } else {
     global.passwordWin.close()
     global.passwordWin=null
