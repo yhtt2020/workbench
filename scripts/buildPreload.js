@@ -14,7 +14,8 @@ const modules = [
   'js/preload/translate.js',
   'server-config.js',
   'js/preload/server.js',
-  'js/preload/fav.js'
+  'js/preload/fav.js',
+  'js/preload/webApi.js'
 ]
 
 function buildPreload() {

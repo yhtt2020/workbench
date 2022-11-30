@@ -204,7 +204,6 @@ if (location.href.startsWith('https://chrome.google.com/webstore')) {
       ibText +
       '</div></div></div></div>'
 
-
     function waitForCreation (selector, callback) {
       const element = document.querySelector(selector)
       if (element != null) {
