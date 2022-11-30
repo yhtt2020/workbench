@@ -19,7 +19,7 @@
       <a-input v-model:value="search" placeholder="搜索">
         <template #prefix>
           <search-outlined
-            @click="serachClikc"
+            @click="searchClick"
             style="color: rgba(0, 0, 0, 0.45); font-size: 20px; cursor: pointer"
           />
         </template>
@@ -33,7 +33,60 @@
   <a-divider style="height: 1px; background-color: rgba(230, 230, 230, 0.1);margin: 0  !important;" />
   <a-layout style="height: calc(100vh - 45px);">
     <a-layout-sider theme="light" style="padding: 20px;border-right: 1px solid rgba(230, 230, 230, 1);">
-      <a-list item-layout="horizontal" :data-source="passwords">
+      <!-- 暂时没有数据先隐藏掉 -->
+      <div class="current-container" v-if="filterId==1003">
+        <div class="header-container">
+          <div class="current-header">
+            <span class="current-avatar">
+              <img
+                src="https://img.js.design/assets/img/62592c9e1be7d2a75a32e89b.png"
+                alt=""
+              />
+            </span>
+            <div class="header-content" v-if="totalOpen == false">
+              <span>语雀——想天浏览器官方文档</span>
+              <span class="current-website">https://www.yuque.com/thisky/ylbh5g</span>
+            </div>
+            <div class="current-switch">
+              <a-switch
+                v-model:checked="totalOpen"
+                checked-children="全站"
+                un-checked-children="关"
+              />
+              <UpOutlined
+                v-if="totalOpen == true"
+                style="color: rgba(0, 0, 0, 0.45); padding-left: 4px"
+              />
+              <DownOutlined
+                v-if="totalOpen == false"
+                style="color: rgba(0, 0, 0, 0.45); padding-left: 4px"
+              />
+            </div>
+          </div>
+          <div class="current-content" v-if="totalOpen == true">
+            <span>语雀——想天浏览器官方文档</span>
+            <span class="current-website">https://www.yuque.com/thisky/ylbh5g</span>
+          </div>
+        </div>
+        <a-list :data-source="currentList">
+          <template #renderItem="{ item }">
+            <a-list-item
+              class="left-item-list"
+              :class="noWebIndex == item.id ? 'noweb-background' : ''"
+            >
+              <a-list-item-meta :description="item.description"  @click="currentDescription(item)">
+                <template #avatar>
+                  <img class="now-website-img" :src="item.url" alt="" />
+                </template>
+                <template #title>
+                  <span>{{ item.title }}</span>
+                </template>
+              </a-list-item-meta>
+            </a-list-item>
+          </template>
+        </a-list>
+      </div>
+      <a-list item-layout="horizontal" :data-source="passwords" v-else>
         <template #renderItem="{ item,index }">
           <div @mouseover="passwordItemsHover(item)" @mouseleave="passwordItemRemove(item)">
             <a-list-item :class="currentIndex==index ? 'active-list':''" @click="leftDescription(item)">
@@ -60,56 +113,6 @@
           </div>
         </template>
       </a-list>
-      <!-- 暂时没有数据先隐藏掉 -->
-      <div class="current-container" style="display: none">
-        <div class="current-header">
-          <span class="current-avatar">
-            <img
-              src="https://img.js.design/assets/img/62592c9e1be7d2a75a32e89b.png"
-              alt=""
-            />
-          </span>
-          <div class="current-switch">
-            <a-switch
-              v-model:checked="totalOpen"
-              checked-children="全站"
-              un-checked-children="关"
-            />
-            <UpOutlined
-              v-if="totalOpen == true"
-              style="color: rgba(0, 0, 0, 0.45); padding-left: 4px"
-            />
-            <DownOutlined
-              v-if="totalOpen == false"
-              style="color: rgba(0, 0, 0, 0.45); padding-left: 4px"
-            />
-          </div>
-        </div>
-        <div class="current-content" v-if="totalOpen == true">
-          <span>语雀——想天浏览器官方文档</span>
-          <span class="current-website"
-            >https://www.yuque.com/thisky/ylbh5g</span
-          >
-        </div>
-        <a-list :data-source="currentList">
-          <template #renderItem="{ item }">
-            <a-list-item
-              class="left-item-list"
-              :class="currentIndex == item.id ? 'active-list' : ''"
-              @click="currentDescription(item)"
-            >
-              <a-list-item-meta :description="item.description">
-                <template #avatar>
-                  <img :src="item.url" alt="" />
-                </template>
-                <template #title>
-                  <a href="https://www.antdv.com/">{{ item.title }}</a>
-                </template>
-              </a-list-item-meta>
-            </a-list-item>
-          </template>
-        </a-list>
-      </div>
     </a-layout-sider>
     <a-layout-content class="password-right-main">
       <!-- 当数据为加载完成时,初始化默认没有搭建时展示页面空状态，暂时先隐藏掉 -->
@@ -145,7 +148,7 @@
       </template>
       <a-list-item class="drawer-main-application-open" @click="openMainApplication">
         <span class="drawer-main-app-icon">
-          <img src="../assets/image/lock-app.svg" alt="">
+          <img src="../../../public/img/lock-app.svg" alt="">
         </span>
         <span class="drawer-open-main-text">主应用中打开</span>
       </a-list-item>
@@ -212,7 +215,7 @@ export default {
           description: "Francisio_Phillps",
           path: "detail",
           password:'123456',
-          url: "http://localhost:1600/packages/kee/assets/image/key_black.svg",
+          url: "../../../public/img/key_black.svg",
           showCopy: false,
           site:'zt.xaingtian.ren'
         },
@@ -223,7 +226,7 @@ export default {
           description: "Isabelle_Fisher",
           path: "detail",
           password:'123456',
-          url: "http://localhost:1600/packages/kee/assets/image/key_crimson.svg",
+          url: "../../../public/img/key_crimson.svg",
           showCopy: false,
           site:'zt.xaingtian.ren'
         },
@@ -234,7 +237,7 @@ export default {
           description: "Benjamin_Gonzalez",
           path: "detail",
           password:'123456',
-          url: "http://localhost:1600/packages/kee/assets/image/key_blue.svg",
+          url: "../../../public/img/key_blue.svg",
           showCopy: false,
           site:'zt.xaingtian.ren'
         },
@@ -245,7 +248,7 @@ export default {
           description: "Maurice_Alvarado",
           path: "detail",
           password:'123456',
-          url: "http://localhost:1600/packages/kee/assets/image/key_black.svg",
+          url: "../../../public/img/key_black.svg",
           showCopy: false,
           site:'zt.xaingtian.ren'
         },
@@ -256,7 +259,7 @@ export default {
           description: "Derek_Edwards",
           path: "detail",
           password:'123456',
-          url: "http://localhost:1600/packages/kee/assets/image/key_orange.svg",
+          url: "../../../public/img/key_orange.svg",
           showCopy: false,
           site:'zt.xaingtian.ren'
         },
@@ -266,29 +269,31 @@ export default {
       sideDrawerVisible: false,
       filterText: "所有密码",
       filterIcon:'AppstoreFilled',
+      filterId:0,
       // 筛选菜单列表下标
       selectDrawerIndex:1,
       totalOpen: true,
       contextItems: "",
       // 当前网站
+      noWebIndex:0,
       currentList: [
         {
-          id: 1,
+          id:1,
           title: "拉娅枫的语雀帐号",
           description: "Francisio_Phillps",
-          url: "http://localhost:1600/packages/kee/assets/image/key_black.svg",
+          url: "../../../public/img/key_black.svg",
         },
         {
-          id: 2,
+          id:2,
           title: "过英的语雀帐号",
           description: "Isabelle_Fisher",
-          url: "http://localhost:1600/packages/kee/assets/image/key_crimson.svg",
+          url: "../../../public/img/key_crimson.svg",
         },
         {
-          id: 3,
+          id:3,
           title: "汝贵的语雀帐号",
           description: "Benjamin_Gonzalez",
-          url: "http://localhost:1600/packages/kee/assets/image/key_blue.svg",
+          url: "../../../public/img/key_blue.svg",
         },
       ],
       state:appStore(),
@@ -360,7 +365,7 @@ export default {
   async mounted() {},
   methods: {
     // 搜索触发做的事情
-    serachClikc() {},
+    searchClick() {},
     // 开启抽屉式的选项
     selectOptions() {
       this.sideDrawerVisible = true;
@@ -381,7 +386,7 @@ export default {
     },
     // 当前网站点击
     currentDescription(v) {
-      this.currentIndex = v.id;
+      this.noWebIndex = v.id
     },
     // 鼠标移入
     passwordHover() {
@@ -408,6 +413,7 @@ export default {
       this.filterText = v.text
       this.selectDrawerIndex = v.id
       this.filterIcon = v.icon
+      this.filterId = v.id
       this.sideDrawerVisible = false
       document.querySelector('.drawer-main-application-open').classList.remove('active-drawer')
     },
@@ -421,7 +427,7 @@ export default {
       this.selectDrawerIndex = ''
       this.sideDrawerVisible = false
     },
-    myPassswordBankClick(v){
+    myPasswordBankClick(v){
       this.selectMenuList[0].text = v.title
       this.myPasswordIndex = v.id
       this.checkPasswordIndex = v.id
@@ -624,7 +630,7 @@ h3 {
     width: 0 !important;
   }
 }
-.active-list {
+.noweb-background {
   background: rgba(80, 139, 254, 0.1);
   border-radius: 6px;
 }
@@ -689,40 +695,47 @@ h3 {
 /*右侧盒子样式结束*/
 
 /*当前网站密码开始*/
-.current-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 8px;
-  .current-avatar {
-    padding-left: 12px;
-    img {
-      width: 16px;
-      height: 16px;
+.current-container{
+  padding: 9px 8px;
+  .header-container{
+     background: rgba(0, 0, 0, 0.04);
+    .current-header{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+     .current-avatar img{
+       width: 16px;
+       height: 16px;
+      }
+      .header-content{
+       max-width: 102px;
+       overflow: hidden;
+       white-space: nowrap;
+       text-overflow: ellipsis;
+      }
+    }
+    .current-content{
+      max-width: 194px;
+      padding-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+       .current-website{
+        word-break: break-all;
+       }
     }
   }
-  .current-switch {
-    display: flex;
-    align-items: center;
+}
+.left-item-list{
+   cursor: pointer;
+  .now-website-img{
+    width: 16px;
+    height: 16px;
+  }
+  &:hover{
+    background: none;
   }
 }
-.current-content {
-  max-width: 100%;
-  padding: 0 12px 0 12px;
-  margin: 0 auto;
-  span {
-    font-size: 14px;
-    font-weight: 400;
-  }
-  .current-website {
-    word-break: normal;
-    width: auto;
-    display: block;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    overflow: hidden;
-  }
-}
+
 /*当前网站密码结束*/
 
 /*筛选列表开始*/

@@ -33,7 +33,7 @@ export const appStore = defineStore('kee',{
         title: "禅道账号",
         description: "Francisio_Phillps",
         password:'123456',
-        url: "http://localhost:1600/packages/kee/assets/image/key_black.svg",
+        url: "../../../public/img/key_black.svg",
         site:'zt.xaingtian.ren'
       },
     }),
