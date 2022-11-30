@@ -7,7 +7,7 @@
     >
       <a-row class="password-select-container">
         <a-col :span="12" class="col-left">
-          <AppstoreFilled class="col-left-icon" />
+          <component :is="filterIcon"/>
           <span class="password-all">{{ filterText }}</span>
         </a-col>
         <a-col :span="12" class="col-right">
@@ -25,39 +25,39 @@
         </template>
       </a-input>
     </div>
-    <a-button type="primary" class="password-button">
-      <template #icon>
-        <PlusOutlined style="font-size: 16px" />
-      </template>
-      新建密码
-    </a-button>
+    <div class="passsword-button">
+      <PlusOutlined style="font-size: 16px; color:rgba(255, 255, 255, 1) !important;" />
+      <span style=" color: rgba(255, 255, 255, 1); padding-left:8px;">新建密码</span>
+    </div>
   </div>
-  <a-layout style="height: calc(100vh - 45px)">
-    <a-layout-sider theme="light" style="padding: 20px">
+  <a-divider style="height: 1px; background-color: rgba(230, 230, 230, 0.1);margin: 0  !important;" />
+  <a-layout style="height: calc(100vh - 45px);">
+    <a-layout-sider theme="light" style="padding: 20px;border-right: 1px solid rgba(230, 230, 230, 1);">
       <a-list item-layout="horizontal" :data-source="passwords">
-        <template #renderItem="{ item }">
-          <a-list-item :class="currentIndex==item.id ? 'active-list':''"
-          @click="leftDescription(item)" @mouseover="passwordItemsHover(item)" @mouseleave="passwordItemRemove(item)">
-          <!-- 判断鼠标悬浮时打开并填充按钮显示 -->
-          <a-list-item-meta class="is-open-fill" v-if="item.showCopy == true" :description="item.description">
-            <template #title>
-              <a>{{ item.title }}</a>
-            </template>
-            <template #avatar>
-              <a-avatar :src="item.url" />
-            </template>
-          </a-list-item-meta>
-          <!-- 判断鼠标离开时打开并填充按钮隐藏 -->
-          <a-list-item-meta class="no-open-fill" :description="item.description" v-else>
-            <template #title>
-              <a>{{ item.title }}</a>
-            </template>
-            <template #avatar>
-              <a-avatar :src="item.url" />
-            </template>
-          </a-list-item-meta>
-          <div class="open-fill" v-if="item.showCopy == true" @click="openFillClick">打开并填充</div>
-         </a-list-item>
+        <template #renderItem="{ item,index }">
+          <div @mouseover="passwordItemsHover(item)" @mouseleave="passwordItemRemove(item)">
+            <a-list-item :class="currentIndex==index ? 'active-list':''" @click="leftDescription(item)">
+            <!-- 判断鼠标悬浮时打开并填充按钮显示 -->
+            <a-list-item-meta class="is-open-fill" v-if="item.showCopy == true" :description="item.description">
+              <template #title>
+                <a>{{ item.title }}</a>
+              </template>
+              <template #avatar>
+                <a-avatar :src="item.url" />
+              </template>
+            </a-list-item-meta>
+            <!-- 判断鼠标离开时打开并填充按钮隐藏 -->
+            <a-list-item-meta class="no-open-fill" :description="item.description" v-else>
+              <template #title>
+                <a>{{ item.title }}</a>
+              </template>
+              <template #avatar>
+                <a-avatar :src="item.url" />
+              </template>
+            </a-list-item-meta>
+            <div class="open-fill" v-if="item.showCopy == true" @click="openFillClick">打开并填充</div>
+            </a-list-item>
+          </div>
         </template>
       </a-list>
       <!-- 暂时没有数据先隐藏掉 -->
@@ -117,30 +117,53 @@
       <router-view></router-view>
     </a-layout-content>
   </a-layout>
-  <a-drawer class="filter-list-container" :width="216" placement="left"
-    :visible="sideDrawerVisible" @close="sideDrawerVisible = false"
-  >
+  <a-drawer class="filter-list-container" :width="216" placement="left" :visible="sideDrawerVisible">
+    <a-list item-layout="horizontal" :data-source="selectMenuList">
+      <template #renderItem="{ item }">
+        <a-list-item class="drawer-item-list" :class="selectDrawerIndex == item.id ? 'active-drawer':''">
+          <component :is="item.icon" style="font-size:16px;padding-right: 12px;color: rgba(0, 0, 0, 0.5) !important;"/>
+          <a-list-item-meta @click="selectListItem(item)">
+            <template #title>
+             <span style=" color: rgba(0, 0, 0, 0.65);">{{ item.text }}</span>
+            </template>
+          </a-list-item-meta>
+          <!-- 下拉菜单列表 -->
+          <a-dropdown :trigger="['click']">
+            <component :is="item.iconSwap" @click="openMyPassword"/>
+            <template #overlay>
+              <a-menu class="my-password">
+                <a-menu-item  class="my-password-dropdown" :class="myPasswordIndex == items.id ? 'active-drawer':''" v-for="items in item.children" :key="items.id" @click="myPassswordBankClick(items)">
+                  <UnlockFilled style="font-size:16px;padding-right:12px;"/>
+                  <a>{{items.title}}</a>
+                  <CheckOutlined v-if="checkPasswordIndex==items.id" style="padding-left:70px;color: rgba(80, 139, 254, 1);"/>
+                </a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
+        </a-list-item>
+        <a-divider v-if="item.divider==1" style="height: 1px; background-color: rgba(230, 230, 230, 1);margin: 8px 0 !important;" />
+      </template>
+      <a-list-item class="drawer-main-application-open" @click="openMainApplication">
+        <span class="drawer-main-app-icon">
+          <img src="../assets/image/lock-app.svg" alt="">
+        </span>
+        <span class="drawer-open-main-text">主应用中打开</span>
+      </a-list-item>
+    </a-list>
   </a-drawer>
 </template>
 
 <script>
 import {
-  SettingOutlined,
-  LaptopOutlined,
-  SmileOutlined,
-  SearchOutlined,
-  PlusOutlined,
-  SwapOutlined,
-  AppstoreFilled,
-  UnlockFilled,
-  StarFilled,
-  TagFilled,
-  FolderOpenFilled,
-  LinkOutlined,
-  LockFilled,
-  CodeTwoTone,
-  UpOutlined,
-  DownOutlined,
+  SettingOutlined, LaptopOutlined,
+  SmileOutlined,SearchOutlined,
+  PlusOutlined,SwapOutlined,
+  AppstoreFilled, UnlockFilled,
+  StarFilled, TagFilled,
+  FolderOpenFilled, LinkOutlined,
+  LockFilled,CodeTwoTone,
+  UpOutlined,DownOutlined,
+  CheckOutlined
 } from "@ant-design/icons-vue";
 import { appStore } from "../store";
 import { mapActions, mapState } from "pinia";
@@ -151,23 +174,15 @@ let appId = window.globalArgs["app-id"];
 export default {
   name: "Passwords",
   components: {
-    SettingOutlined,
-    LaptopOutlined,
-    CodeTwoTone,
-    SearchOutlined,
-    SmileOutlined,
-    SwapOutlined,
-    PlusOutlined,
-    AppstoreFilled,
-    UnlockFilled,
-    StarFilled,
-    TagFilled,
-    FolderOpenFilled,
-    LinkOutlined,
-    LockFilled,
-    Empty,
-    UpOutlined,
-    DownOutlined,
+    SettingOutlined, LaptopOutlined,
+    CodeTwoTone, SearchOutlined,
+    SmileOutlined,SwapOutlined,
+    PlusOutlined,AppstoreFilled,
+    UnlockFilled,StarFilled,
+    TagFilled,FolderOpenFilled,
+    LinkOutlined,LockFilled,
+    Empty,UpOutlined,
+    DownOutlined,CheckOutlined
   },
   computed: {
     ...mapState(appStore, []),
@@ -186,6 +201,7 @@ export default {
         wheelPropagation: false,
       },
       simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
+      // 列表默认下标
       currentIndex: 0,
       checkNick: false,
       passwords: [
@@ -198,6 +214,7 @@ export default {
           password:'123456',
           url: "http://localhost:1600/packages/kee/assets/image/key_black.svg",
           showCopy: false,
+          site:'zt.xaingtian.ren'
         },
         {
           id: 1,
@@ -208,6 +225,7 @@ export default {
           password:'123456',
           url: "http://localhost:1600/packages/kee/assets/image/key_crimson.svg",
           showCopy: false,
+          site:'zt.xaingtian.ren'
         },
         {
           id: 2,
@@ -218,6 +236,7 @@ export default {
           password:'123456',
           url: "http://localhost:1600/packages/kee/assets/image/key_blue.svg",
           showCopy: false,
+          site:'zt.xaingtian.ren'
         },
         {
           id: 3,
@@ -228,6 +247,7 @@ export default {
           password:'123456',
           url: "http://localhost:1600/packages/kee/assets/image/key_black.svg",
           showCopy: false,
+          site:'zt.xaingtian.ren'
         },
         {
           id: 4,
@@ -238,12 +258,16 @@ export default {
           password:'123456',
           url: "http://localhost:1600/packages/kee/assets/image/key_orange.svg",
           showCopy: false,
+          site:'zt.xaingtian.ren'
         },
       ],
       search: "",
       size: "large",
       sideDrawerVisible: false,
-      filterText: "当前网站",
+      filterText: "所有密码",
+      filterIcon:'AppstoreFilled',
+      // 筛选菜单列表下标
+      selectDrawerIndex:1,
       totalOpen: true,
       contextItems: "",
       // 当前网站
@@ -267,13 +291,73 @@ export default {
           url: "http://localhost:1600/packages/kee/assets/image/key_blue.svg",
         },
       ],
-      state:appStore()
-    };
+      state:appStore(),
+      // 定义筛选菜单列表数据
+      selectMenuList:[
+           {
+             id:1001,
+             icon:'UnlockFilled',
+             text:'我的密码',
+             iconSwap:'SwapOutlined',
+             divider:1,
+             children:[
+              {
+                id:1001_1,
+                title:'我的密码',
+              },
+              {
+                id:1001_2,
+                title:'A密码库',
+              },
+              {
+                id:1001_3,
+                title:'B密码库',
+              },
+              {
+                id:1001_4,
+                title:'C密码库',
+              }
+             ]
+           },
+           {
+             id:1002,
+             icon:'AppstoreFilled',
+             text:'所有密码'
+           },
+           {
+             id:1003,
+             text:'当前网站',
+             icon:'LinkOutlined',
+             divider:1,
+           },
+           {
+             id:1004,
+             text:'颜色',
+             icon:'StarFilled',
+             divider:1,
+           },
+           {
+             id:1005,
+             text:'Computer',
+             icon:'TagFilled'
+           },
+           {
+             id:1006,
+             text:'Email',
+             icon:'TagFilled',
+             divider:1,
+           },
+      ],
+      // 筛选菜单下拉框
+      dropdownVisible:false,
+      // 判断主应用打开入口
+      openMainEnter:true,
+      // 我的密码库筛选下标
+      myPasswordIndex:0,
+      checkPasswordIndex:0
+    }
   },
-
-  async mounted() {
-
-  },
+  async mounted() {},
   methods: {
     // 搜索触发做的事情
     serachClikc() {},
@@ -281,12 +365,12 @@ export default {
     selectOptions() {
       this.sideDrawerVisible = true;
     },
-    // 列表点击
+    // 左侧列表点击
     leftDescription(v) {
       this.currentIndex = v.id;
       this.$router.push("/" + v.path);
       this.state.$patch({
-         passworItem:v
+         passwordItem:v
       })
     },
     // 筛选下拉菜单
@@ -319,6 +403,29 @@ export default {
     openFillClick() {
       console.log("打开填充");
     },
+    // 筛选菜单中子项选中
+    selectListItem(v){
+      this.filterText = v.text
+      this.selectDrawerIndex = v.id
+      this.filterIcon = v.icon
+      this.sideDrawerVisible = false
+      document.querySelector('.drawer-main-application-open').classList.remove('active-drawer')
+    },
+    // 我的密码下拉
+    openMyPassword(){
+       this.dropdownVisible = true
+    },
+    // 主应用打开跳转到对应的路由地址
+    openMainApplication(){
+      document.querySelector('.drawer-main-application-open').classList.add('active-drawer')
+      this.selectDrawerIndex = ''
+      this.sideDrawerVisible = false
+    },
+    myPassswordBankClick(v){
+      this.selectMenuList[0].text = v.title
+      this.myPasswordIndex = v.id
+      this.checkPasswordIndex = v.id
+    }
   },
 };
 </script>
@@ -331,7 +438,7 @@ html {
 /*其他样式开始*/
 .ant-layout-sider {
   max-width: 240px !important;
-  padding: 0 8px !important;
+  padding: 9px 8px !important;
   flex: 0 0 240px !important;
   min-width: 240px !important;
   width: 240px !important;
@@ -416,14 +523,14 @@ h3 {
 /*密码分享头部*/
 .password-header {
   height: 54px;
-  padding: 11px 8px;
+  padding: 11px 16px 11px 8px;
   width: 100%;
   display: flex;
   align-items: center;
 }
 /*下拉选择开始*/
 .password-select {
-  width: 35%;
+  width: 40.7%;
   border: 1px solid rgba(230, 230, 230, 1);
   border-radius: 4px;
   padding: 6px 8px 5px 8px;
@@ -462,20 +569,22 @@ h3 {
 /*下拉选择结束*/
 /*搜索开始*/
 .password-search {
-  width: 35%;
+  width: 44.37%;
   margin-right: 16px;
 }
 /*搜索结束*/
 
 /*新建密码开始*/
-.password-button {
-  width: 98px;
-  line-height: 21px;
-  background: rgba(80, 139, 254, 1);
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  padding: 6px 10px 5px 10px;
+.passsword-button{
+   width:18.765%;
+   line-height: 32px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   background: rgba(80, 139, 254, 1);
+   border-radius: 4px;
+   user-select: none;
+   cursor: pointer;
 }
 /*新建密码结束*/
 
@@ -617,6 +726,57 @@ h3 {
 /*当前网站密码结束*/
 
 /*筛选列表开始*/
-
+.drawer-item-list{
+   line-height: 32px !important;
+   padding: 5px  8px !important;
+   cursor: pointer;
+   .ant-list-item-meta-title{
+      margin: 0 !important;
+   }
+   &:hover{
+     background: none ;
+   }
+}
+.active-drawer{
+  background: rgba(80, 139, 254, 0.25) !important;
+  border-radius: 6px;
+}
+.ant-dropdown-menu-item{
+   width: 192px !important;
+}
+.my-password{
+  min-width: 14px !important;
+  left: -178px !important;
+  top: 1px !important;
+}
+.drawer-main-application-open{
+  padding: 5px 8px !important;
+  line-height: 22px !important;
+  display: flex !important;
+  cursor: pointer;
+  user-select: none;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  &:hover{
+     background: none;
+  }
+  .drawer-main-app-icon{
+     display: flex;
+     align-items: center;
+     img{
+       width: 16px;
+       height: 16px;
+     }
+  }
+  .drawer-open-main-text{
+     padding-left: 12px;
+     font-size: 14px;
+     color: rgba(0, 0, 0, 0.65);
+     font-weight: 400;
+  }
+}
+.my-password-dropdown:hover{
+   background: none;
+}
 /*筛选列表结束*/
 </style>

@@ -52,10 +52,10 @@
     <div class="breadcrumb-form-header">
       <div class="breadcrumb-bottom-name">
         <span class="avatar">
-           <img :src="store.passworItem.url" alt="">
+           <img :src="store.passwordItem.url" alt="">
         </span>
         <span class="name" v-if="editShow == false">
-          {{store.passworItem.title}}
+          {{store.passwordItem.title}}
         </span>
         <a-form :model="formState" :rules="formRules" v-if="editShow==true">
           <a-form-item name="passwordAccount" required>
@@ -68,7 +68,7 @@
           <div ref="usernameRef" class="breadcrumb-form-username" @mouseover="isMouse==true&&openUsernameHover()" @mouseleave="isMouse==true&&closeUsernameHover()">
              <div class="left-content">
               <span style="padding-bottom:5px;color:rgba(104, 81, 214, 1);">用户名</span> 
-              <span v-if="editShow==false">{{store.passworItem.description}}</span>
+              <span v-if="editShow==false">{{store.passwordItem.description}}</span>
               <a-form :model="formState" :rules="formRules" v-if="editShow==true">
                <a-form-item name="username" required>
                  <a-input style="padding:0  !important;border: none;" v-model:value="formState.username" />
@@ -83,7 +83,7 @@
               <div class="password-inoput">
                 <span style="color:rgba(104, 81, 214, 1);">密码</span>
                 <div class="password-show" v-if="editShow==false">
-                  <a-input  :type="passwordType" style="border:none;padding:0;width: 65%;background: rgba(80, 139, 254, 0);" v-model:value="store.passworItem.password"></a-input>
+                  <a-input  :type="passwordType" style="border:none;padding:0;width: 65%;background: rgba(80, 139, 254, 0);" v-model:value="store.passwordItem.password"></a-input>
                   <div style="cursor: pointer;" v-if="passwordVisible==true" @click="passwordShowClick">
                     <EyeFilled v-if="passwordShow == true" style="color:rgba(80, 139, 254, 1); padding-right:11px; cursor: pointer;"/>
                     <EyeInvisibleFilled v-if="passwordShow==false"  style="color:rgba(80, 139, 254, 1); padding-right:11px; cursor: pointer;"/>
@@ -102,7 +102,12 @@
           <div ref="webSiteRef" class="breadcrumb-bottom-website" @mouseover="isMouse==true&&openWebsiteHover()" @mouseleave="isMouse==true&&closeWebsiteHover()">
              <div class="website-top">
               <a href="#" style="color:rgba(104, 81, 214, 1);">网站</a>
-              <a href="#">{{store.passworItem.site}}</a>
+              <a href="#" v-if="editShow==false">{{store.passwordItem.site}}</a>
+              <a-form :model="formState" :rules="formRules" v-if="editShow==true">
+                <a-form-item name="siteValue" required>
+                  <a-input  style="padding:0 10px !important;" v-model:value="formState.siteValue" />
+                </a-form-item>
+              </a-form>
              </div>
              <div>
               <span v-if="websiteShow==true" style="color:rgba(80, 139, 254, 1);cursor: pointer;">打开并填写</span>
@@ -113,7 +118,7 @@
           <div class="breadcrumb-bottom-website" style="padding-top:0;">
               <div class="website-top">
                 <a href="#" style="color:rgba(104, 81, 214, 1);">网站</a>
-                <a href="#">{{store.passworItem.site}}</a>
+                <a href="#">{{store.passwordItem.site}}</a>
               </div>
           </div>
           <div class="breadcrumb-bottom-remark">
@@ -145,61 +150,51 @@
            </div>
         </div>
         <div class="share-content">
-            <div class="share-content-item">
-              <span class="share-content-title">链接有效期</span>
-              <a-select v-model:value="validity" style="width: 160px">
-                <!--  @focus="focus"  @change="handleChange" -->
-                <a-select-option value="0">7天</a-select-option>
-                <a-select-option value="1">1天</a-select-option>
-                <a-select-option value="2">1小时</a-select-option>
-                <a-select-option value="3">14天</a-select-option>
-                <a-select-option value="4">30天</a-select-option>
-              </a-select>
-            </div>
-            <div class="share-content-item">
-              <span class="share-content-title">分享给</span>
-              <a-select v-model:value="value" style="width: 160px" >
-                <!-- @change="shareSelectChange" -->
-                <!--  @focus="focus"  @change="handleChange" -->
-                <a-select-option value="0">任何有此链接的人</a-select-option>
-                <a-select-option value="1">仅指定团队</a-select-option>
-                <a-select-option value="2">仅指定人员</a-select-option>
-              </a-select>
-            </div>
+          <div class="share-content-item">
+            <span class="share-content-title">链接有效期</span>
+            <a-select v-model:value="linkValidity" style="width: 160px">
+              <a-select-option v-for="item in linkValidityList" :value="item.id" :key="item.id">
+                {{item.text}}
+              </a-select-option>
+              <!--  @focus="focus"  @change="handleChange" -->
+            </a-select>
+          </div>
+          <div class="share-content-item">
+            <span class="share-content-title">分享给</span>
+            <a-select v-model:value="anyLinkValue" style="width: 160px" >
+              <!-- @change="shareSelectChange"
+               @focus="focus"  @change="handleChange" -->
+              <a-select-option v-for="item in  anyLinkValueList" :value="item.id" :key="item.id">
+                {{item.text}}
+              </a-select-option>
+            </a-select>
+          </div>
         </div>
-        <a-checkbox v-model:checked="checked" class="share-checkbox">
+        <a-checkbox v-model:checked="isAllowed" class="share-checkbox">
           <span>仅允许查看 1 次</span>
         </a-checkbox>
-        <template v-if="value==1">
-            <span style="margin-bottom:7px;">选择团队</span>
-            <a-select v-model:value="teamValue"  mode="tags" style="width: 100%" placeholder="请选择团队">
-              <a-select-option value="Ateam">A团队</a-select-option>
-              <a-select-option value="Bteam">B团队</a-select-option>
-              <a-select-option value="Cteam">C团队</a-select-option>
-              <a-select-option value="Dteam">D团队</a-select-option>
-            </a-select>
-            <span style="margin-top:4px;">仅团队内成员可以查看密码</span>
+        <template v-if="anyLinkValue == 1">
+          <span style="margin-bottom:7px;">选择团队</span>
+          <a-select v-model:value="teamValue"  mode="tags" style="width: 100%" placeholder="请选择团队">
+            <a-select-option value="Ateam">A团队</a-select-option>
+            <a-select-option value="Bteam">B团队</a-select-option>
+            <a-select-option value="Cteam">C团队</a-select-option>
+            <a-select-option value="Dteam">D团队</a-select-option>
+          </a-select>
+          <span style="margin-top:4px;">仅团队内成员可以查看密码</span>
         </template>
-        <template v-if="value==2">
-            <span>手机号</span>
-            <span style="margin-bottom:4px;color:rgba(00,00,00,0.45);">对方需要验证手机号后才能查看密码</span>
-            <a-input-search
-            v-model:value="mobileValue"
-            placeholder="请输入手机号"
-            @search="addTag($event)"
-          >
-            <template #enterButton >
-               <a-button class="add-btn" ref="addBtnRef">
-                <PlusOutlined style="padding-left:4px;"/>
-                <span>添加手机号</span>
-               </a-button>
-            </template>
-          </a-input-search>
-           <a-tag closable 
-           style="width:29%;margin: 0;padding: 0px 7px; margin-top:4px;" 
-           v-for="item in  mobileTag" :key="item"
-           @close="romoveTag(item)"
-          >
+        <template v-if="anyLinkValue == 2">
+          <span>手机号</span>
+          <span style="margin-bottom:4px;color:rgba(00,00,00,0.45);">对方需要验证手机号后才能查看密码</span>
+          <a-input-group compact>
+            <a-input class="mobile-input" v-model:value="mobileValue" placeholder="请输入手机号" style="width: calc(100% - 120px);" />
+            <a-button class="moblie-button" style="width: 29.07%;padding:0 !important;" @click="addTag($event)">
+              <PlusOutlined />
+              <span style="padding-left:4px;  margin-left: 0 !important;">添加手机号</span>
+            </a-button>
+          </a-input-group>
+          <a-tag closable style="width:29%;margin: 0;padding: 0px 7px; margin-top:4px;" 
+          v-for="item in  mobileTag" :key="item" @close="romoveTag(item)" >
            {{item}}
           </a-tag>
         </template>
@@ -217,9 +212,9 @@ import {
   FormOutlined,MinusCircleOutlined,
   ShareAltOutlined,PlusOutlined,
   ExclamationCircleOutlined,ExportOutlined,
-  EyeFilled,EyeInvisibleFilled
+  EyeFilled,EyeInvisibleFilled, LoginOutlined
 } from '@ant-design/icons-vue'
-import { Modal } from 'ant-design-vue';
+import { Modal , message } from 'ant-design-vue';
 import { createVNode } from 'vue'
 import { appStore } from '../store'
 import { mapState } from 'pinia' 
@@ -249,11 +244,47 @@ export default {
       // 分享开关
       sharVisible:false,
       // 链接有效期值
-      validity:'0',
-      // 任何有此链接的人
-      value:'0',
-      // 默认勾选
-      checked:false,
+      linkValidity:0,
+      linkValidityList:[
+        {
+          id:0,
+          text:'7天'
+        },
+        {
+          id:1,
+          text:'1天'
+        },
+        {
+          id:2,
+          text:'1小时'
+        },
+        {
+          id:3,
+          text:'14天'
+        },
+        {
+          id:5,
+          text:'30天'
+        }
+      ],
+      // 分享链接
+      anyLinkValue:0,
+      anyLinkValueList:[
+        {
+          id:0,
+          text:'任何有此链接的人'
+        },
+        {
+          id:1,
+          text:'仅指定团队'
+        },
+        {
+          id:2,
+          text:'仅指定人员'
+        }
+      ],
+      // 默认不勾选
+      isAllowed:false,
       teamValue:['Ateam'],
       store:appStore(),
       // 是否删除
@@ -263,7 +294,8 @@ export default {
          username:'',
          password:'',
          passwordAccount:'',
-         websiteValue:''
+         websiteValue:'',
+         siteValue:''
       },
       // 密码编辑内容验证
       formRules:{
@@ -290,7 +322,7 @@ export default {
       },
       mobileValue:'',
       // 手机号标记
-      mobileTag:['13675425868','13645221134'],
+      mobileTag:['15072058436'],
       addDisabled:false,
       editShow:false,
       // 取消鼠标事件
@@ -303,10 +335,11 @@ export default {
   },
   mounted(){},
   updated(){
-    this.formState.passwordAccount = this.store.passworItem.title
-    this.formState.username = this.store.passworItem.description
-    this.formState.websiteValue = this.store.passworItem.site
-    this.formState.password = this.store.passworItem.password
+    this.formState.passwordAccount = this.store.passwordItem.title
+    this.formState.username = this.store.passwordItem.description
+    this.formState.websiteValue = this.store.passwordItem.site
+    this.formState.password = this.store.passwordItem.password
+    this.formState.siteValue = this.store.passwordItem.site
   },
   methods:{
     // 打开分享
@@ -330,11 +363,19 @@ export default {
       });
     },
     // 添加创建tag
-    addTag(){
-      if(this.mobileValue == ''){
+    addTag(e){
+      // 校验手机号
+      const reg = /^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-79])|(?:5[0-35-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[1589]))\d{8}$/
+      if(this.mobileValue != '' && reg.test(this.mobileValue)){
+        this.mobileTag.push(this.mobileValue)
+        this.mobileValue = ''
+      }else{
+        e.preventDefault()
+        message.error({
+           duration:2,
+           content:'手机号不能为空,请输入正确的手机号'
+        })
       }
-      this.mobileTag.push(this.mobileValue)
-      this.mobileValue = ''
     },
     // 移除手机号
     romoveTag(e){
@@ -566,6 +607,16 @@ export default {
    .share-checkbox{
     margin-bottom: 24px;
    }
+}
+.ant-tag-close-icon{
+   margin-left: 7px !important;
+}
+.mobile-input:hover{
+  border-color: none !important;
+}
+.moblie-button:hover, .moblie-button:focus{
+  border-color: rgba(217, 217, 217, 1) !important;
+  color: rgba(0, 0, 0, 0.65) !important;
 }
 /*分享密码内容结束*/
 /*账号内容开始*/
