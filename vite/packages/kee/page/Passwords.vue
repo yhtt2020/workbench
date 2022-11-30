@@ -124,7 +124,7 @@
           <component :is="item.icon" style="font-size:16px;padding-right: 12px;color: rgba(0, 0, 0, 0.5) !important;"/>
           <a-list-item-meta @click="selectListItem(item)">
             <template #title>
-             <span>{{ item.text }}</span>
+             <span style=" color: rgba(0, 0, 0, 0.65);">{{ item.text }}</span>
             </template>
           </a-list-item-meta>
           <!-- 下拉菜单列表 -->
@@ -132,13 +132,11 @@
             <component :is="item.iconSwap" @click="openMyPassword"/>
             <template #overlay>
               <a-menu>
-                <a-menu-item key="0">
-                  <a>1st menu item</a>
+                <a-menu-item  class="my-password-dropdown" :class="myPasswordIndex == items.id ? 'active-drawer':''" v-for="items in item.children" :key="items.id" @click="myPassswordBankClick(items)">
+                  <UnlockFilled style="font-size:16px;padding-right:12px;"/>
+                  <a>{{items.title}}</a>
+                  <CheckOutlined v-if="checkPasswordIndex==items.id" style="padding-left:70px;color: rgba(80, 139, 254, 1);"/>
                 </a-menu-item>
-                <a-menu-item key="1">
-                  <a >2nd menu item</a>
-                </a-menu-item>
-                <a-menu-item key="3">3rd menu item</a-menu-item>
               </a-menu>
             </template>
           </a-dropdown>
@@ -147,9 +145,9 @@
       </template>
       <a-list-item class="drawer-main-application-open" @click="openMainApplication">
         <span class="drawer-main-app-icon">
-          <UnlockFilled style="color:#FFFFFF;"/>
+          <img src="../assets/image/lock-app.svg" alt="">
         </span>
-        <span>主应用中打开</span>
+        <span class="drawer-open-main-text">主应用中打开</span>
       </a-list-item>
     </a-list>
   </a-drawer>
@@ -157,22 +155,15 @@
 
 <script>
 import {
-  SettingOutlined,
-  LaptopOutlined,
-  SmileOutlined,
-  SearchOutlined,
-  PlusOutlined,
-  SwapOutlined,
-  AppstoreFilled,
-  UnlockFilled,
-  StarFilled,
-  TagFilled,
-  FolderOpenFilled,
-  LinkOutlined,
-  LockFilled,
-  CodeTwoTone,
-  UpOutlined,
-  DownOutlined,
+  SettingOutlined, LaptopOutlined,
+  SmileOutlined,SearchOutlined,
+  PlusOutlined,SwapOutlined,
+  AppstoreFilled, UnlockFilled,
+  StarFilled, TagFilled,
+  FolderOpenFilled, LinkOutlined,
+  LockFilled,CodeTwoTone,
+  UpOutlined,DownOutlined,
+  CheckOutlined
 } from "@ant-design/icons-vue";
 import { appStore } from "../store";
 import { mapActions, mapState } from "pinia";
@@ -183,23 +174,15 @@ let appId = window.globalArgs["app-id"];
 export default {
   name: "Passwords",
   components: {
-    SettingOutlined,
-    LaptopOutlined,
-    CodeTwoTone,
-    SearchOutlined,
-    SmileOutlined,
-    SwapOutlined,
-    PlusOutlined,
-    AppstoreFilled,
-    UnlockFilled,
-    StarFilled,
-    TagFilled,
-    FolderOpenFilled,
-    LinkOutlined,
-    LockFilled,
-    Empty,
-    UpOutlined,
-    DownOutlined,
+    SettingOutlined, LaptopOutlined,
+    CodeTwoTone, SearchOutlined,
+    SmileOutlined,SwapOutlined,
+    PlusOutlined,AppstoreFilled,
+    UnlockFilled,StarFilled,
+    TagFilled,FolderOpenFilled,
+    LinkOutlined,LockFilled,
+    Empty,UpOutlined,
+    DownOutlined,CheckOutlined
   },
   computed: {
     ...mapState(appStore, []),
@@ -317,6 +300,24 @@ export default {
              text:'我的密码',
              iconSwap:'SwapOutlined',
              divider:1,
+             children:[
+              {
+                id:1001_1,
+                title:'我的密码',
+              },
+              {
+                id:1001_2,
+                title:'A密码库',
+              },
+              {
+                id:1001_3,
+                title:'B密码库',
+              },
+              {
+                id:1001_4,
+                title:'C密码库',
+              }
+             ]
            },
            {
              id:1002,
@@ -348,8 +349,12 @@ export default {
            },
       ],
       // 筛选菜单下拉框
-      dropdownVisible:false
-      
+      dropdownVisible:false,
+      // 判断主应用打开入口
+      openMainEnter:true,
+      // 我的密码库筛选下标
+      myPasswordIndex:0,
+      checkPasswordIndex:0
     }
   },
   async mounted() {},
@@ -404,14 +409,22 @@ export default {
       this.selectDrawerIndex = v.id
       this.filterIcon = v.icon
       this.sideDrawerVisible = false
+      document.querySelector('.drawer-main-application-open').classList.remove('active-drawer')
     },
     // 我的密码下拉
     openMyPassword(){
        this.dropdownVisible = true
     },
-    // 主应用打开
+    // 主应用打开跳转到对应的路由地址
     openMainApplication(){
-        document.querySelector('.drawer-main-application-open').classList.add('active-drawer')
+      document.querySelector('.drawer-main-application-open').classList.add('active-drawer')
+      this.selectDrawerIndex = ''
+      this.sideDrawerVisible = false
+    },
+    myPassswordBankClick(v){
+      this.selectMenuList[0].text = v.title
+      this.myPasswordIndex = v.id
+      this.checkPasswordIndex = v.id
     }
   },
 };
@@ -740,6 +753,8 @@ h3 {
   padding: 5px 8px !important;
   line-height: 22px !important;
   display: flex !important;
+  cursor: pointer;
+  user-select: none;
   justify-content: flex-start !important;
   align-items: center !important;
   &:hover{
@@ -748,11 +763,20 @@ h3 {
   .drawer-main-app-icon{
      display: flex;
      align-items: center;
-     padding: 6.18px 4.16px 4.15px 4.14px;
-     background: rgba(158, 191, 255, 1);
-     border-radius: 50%;
+     img{
+       width: 16px;
+       height: 16px;
+     }
+  }
+  .drawer-open-main-text{
+     padding-left: 12px;
+     font-size: 14px;
+     color: rgba(0, 0, 0, 0.65);
+     font-weight: 400;
   }
 }
-
+.my-password-dropdown:hover{
+   background: none;
+}
 /*筛选列表结束*/
 </style>
