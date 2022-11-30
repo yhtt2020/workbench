@@ -128,10 +128,10 @@
             </template>
           </a-list-item-meta>
           <!-- 下拉菜单列表 -->
-          <a-dropdown  :trigger="['click']">
+          <a-dropdown :trigger="['click']">
             <component :is="item.iconSwap" @click="openMyPassword"/>
             <template #overlay>
-              <a-menu>
+              <a-menu class="my-password">
                 <a-menu-item  class="my-password-dropdown" :class="myPasswordIndex == items.id ? 'active-drawer':''" v-for="items in item.children" :key="items.id" @click="myPassswordBankClick(items)">
                   <UnlockFilled style="font-size:16px;padding-right:12px;"/>
                   <a>{{items.title}}</a>
@@ -744,10 +744,10 @@ h3 {
 .ant-dropdown-menu-item{
    width: 192px !important;
 }
-.ant-dropdown{
-    min-width: 14px !important;
-    left: 9px !important;
-    top: 40px !important;
+.my-password{
+  min-width: 14px !important;
+  left: -178px !important;
+  top: 1px !important;
 }
 .drawer-main-application-open{
   padding: 5px 8px !important;
