@@ -356,6 +356,7 @@ class WindowManager {
       onDomReady
     } = options
     frameWebPreferences =Object.assign( _.cloneDeep(this.defaultWebPreferences), frameWebPreferences)
+    frameWebPreferences.webSecurity=false
     if (frameWebPreferences) {
       windowOption.webPreferences = frameWebPreferences
     }

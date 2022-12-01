@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
 import _ from 'lodash-es';
 const {appModel, devAppModel} = window.$models
+const path=require('path')
 const initSetting={ //存储用户的设置
   name:'',
   theme_color:'',
@@ -100,8 +101,20 @@ export const appStore = defineStore('app', {
       let devApp =_.cloneDeep(this.devApp)
       devApp.theme_color = devApp.theme_colors.hex
       devApp.auth=JSON.stringify(this.devApp.auth)
+      if(!devApp.url){
+        throw '必须设置应用起始地址。'
+      }
       if((!this.devApp.window.frameWindow.enable && !this.devApp.window.window.enable && !this.devApp.window.attach.enable ) || !this.devApp.window[this.devApp.window.defaultType].enable ){
         throw '至少设置一种窗体，且正确设置默认窗体类型。'
+      }
+      if(devApp.open_source){
+        if(!devApp.os_summary){
+          throw '开源软件必须填写「开源说明」，避免其他用户在不知情的情况下触犯开源协议。'
+        }
+      }
+
+      if(devApp.startsWith==='local|'){
+        devApp.logo=path.join(devApp.local_dir,'logo.png')
       }
       devApp.window=JSON.stringify(this.devApp.window)
       delete devApp.theme_colors

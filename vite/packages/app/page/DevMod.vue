@@ -103,7 +103,7 @@
               <template #icon>
                 <LaptopOutlined></LaptopOutlined>
               </template>
-              <template #title>深度集成</template>
+              <template #title>开发工具</template>
               <!--                <a-menu-item key="5">-->
               <!--                  菜单管理-->
               <!--                </a-menu-item>-->
@@ -136,7 +136,7 @@
                       style="box-shadow: 0 2px 8px #f0f1f2;z-index: 1; padding:6px 10px;"
                       :title="this.devApp.name"
 
-                      :avatar="{src:devApp.logo}"
+                      :avatar="{src:this.getLogo(this.devApp.logo)}"
                       sub-title="开发中的项目"
       >
         <template #extra>
@@ -152,7 +152,7 @@
           </a-dropdown-button>
         </template>
       </a-page-header>
-      <vue-custom-scrollbar :settings="settings" style="position:relative;height: calc(100vh - 105px)">
+      <vue-custom-scrollbar :key="routeUpdateTime" :settings="settings" style="position:relative;height: calc(100vh - 105px)">
         <div style="padding: 20px">
           <router-view/>
         </div>
@@ -168,7 +168,7 @@ import { appStore } from '../store'
 import { mapState, mapActions,mapWritableState } from 'pinia'
 import { CodeTwoTone } from '@ant-design/icons-vue'
 import { message, Modal } from 'ant-design-vue'
-
+import {getLogo} from '../util'
 let { appModel, devAppModel } = window.$models
 let appId =
   window.globalArgs['app-id']
@@ -182,10 +182,13 @@ export default {
     ...mapState(appStore, ['app', 'debugMod', 'devApp']),
     ...mapWritableState(appStore,['user']),
   },
+  beforeRouteUpdate(){
+    this.routeUpdateTime=Date.now()
+  },
   data () {
     return {
-
       currentDevApp: [],
+      routeUpdateTime:0,
       settings: {
         swipeEasing: true,
         suppressScrollY: false,
@@ -244,6 +247,7 @@ export default {
 
   },
   methods: {
+    getLogo,
     installAndRun(){
       Modal.confirm({
         centered: true,
@@ -251,11 +255,14 @@ export default {
         onOk: async () => {
           try {
             let app=await this.saveAndInstall()
-            Modal.info({
-              centered:true,
-              content:'成功安装运行，如若需要设置生效，则需要重新安装并运行应用',
-              okText:'我知道了'
-            })
+            if(app)
+            {
+              Modal.info({
+                centered:true,
+                content:'成功安装运行，如若需要设置生效，则需要重新安装并运行应用',
+                okText:'我知道了'
+              })
+            }
           } catch (e) {
             message.error('运行测试应用失败，失败原因：' + e)
           }
@@ -302,7 +309,7 @@ export default {
         await this.saveDevApp()
         return app
       }else{
-        message.error('安装取消')
+        message.error('安装意外终止')
       }
 
     },

@@ -9,17 +9,26 @@ import {createRouter, createWebHashHistory} from 'vue-router'
 import {createPinia} from 'pinia'
 import Passwords from './page/Passwords.vue'
 import PasswordDetail from './page/PasswordDetail.vue'
+import PasswordBank from './page/PasswordBank.vue'
 const app = createApp(App)
 app.config.globalProperties.$antIcons = antIcons
 const pinia = createPinia()
 const routes = [
   {
-    path: '/', component: Passwords,
-    redirect:'/detail',
-    children:[
+    path:'/passwordBank',
+    name:'bank',
+    component: PasswordBank
+  },
+  {
+    path:'/passwords/value/:value/type/:type',
+    name:'passwords',
+    component: Passwords,
+    children: [
       {
-        path:'detail',component:PasswordDetail
-      },
+        name:'detail',
+        path:'',
+        component:PasswordDetail
+      }
     ]
   }
 ]

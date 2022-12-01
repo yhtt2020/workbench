@@ -1272,9 +1272,19 @@ app.whenReady().then(() => {
     } catch (e) {
       console.warn(e)
     }
-
   })
-
+  ipc.on('executeAppByPackage', async (event, args) => {
+    //这里传app，代表app未运行则直接执行起来
+    try {
+      args.package
+      let app = await appModel.get({ package: args.package })
+      if (app) {
+        appManager.openApp(app.nanoid, false, app)
+      }
+    } catch (e) {
+      console.warn(e)
+    }
+  })
   ipc.on(ipcMessageMain.saApps.createAppMenu, async (event, args) => {
     let appId = args.nanoid
     let saApp = appManager.getSaAppByAppId(appId)
@@ -1503,7 +1513,6 @@ app.whenReady().then(() => {
 
     appManager.installAppConfirm(args.appJson,'开发项目管理',(data)=>{
       if(data.result){
-
         event.reply('installResult',{result:true,index:args.index})
         SidePanel.send('installApp', { nanoid: data.nanoid, background: args.background })
         event.returnValue= { result:true,nanoid:data.nanoid }

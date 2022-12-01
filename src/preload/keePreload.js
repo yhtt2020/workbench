@@ -1,7 +1,8 @@
 window.$models={
   appModel:require('../model/appModel'),
   settingModel:require('../model/settingModel.js'),
-  util:require('../util/util.js')
+  util:require('../util/util.js'),
+  passwordModel:require('../model/passwordModel')
 }
 window.$models.appModel.initDb()
 window.tsbApi=require('../browserApi/baseApi')

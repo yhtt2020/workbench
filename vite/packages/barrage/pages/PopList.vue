@@ -331,7 +331,9 @@ export default {
       tsbApi.window.close()
     },
     lock() {
+
       message.success('锁定弹幕窗口成功。再次点击工具栏弹幕按钮可解锁。')
+      document.body.classList.remove('active')
       tsbApi.barrage.lock()
     },
     getId() {

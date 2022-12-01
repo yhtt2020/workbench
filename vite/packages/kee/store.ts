@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import _ from 'lodash-es';
+// import _ from 'lodash-es';
 // const {appModel, devAppModel} = window.$models
 const initSetting={ //存储用户的设置
   name:'',
@@ -14,24 +14,29 @@ const initSetting={ //存储用户的设置
     ability:{}
   },
 }
-export const appStore = defineStore('kee', {
-  state: () => ({
-    app: {
-      name: '',
-      url: '',
-      theme_color: '',
-      user_theme_color: ''
-    },
-    user:{
-      user_info:{}
-    },
-    // 用于鼠标移入展示复制按钮
-    showCopy:false
-  }),
-  actions: {
-    
-  },
-  getters:{}
 
+export const appStore = defineStore('kee',{
+    state:()=>({
+      app: {
+        name: '',
+        url: '',
+        theme_color: '',
+        user_theme_color: ''
+      },
+      user:{
+        user_info:{}
+      },
+      //将点击之后的值进行缓存
+      passwordItem: {
+        id:0,
+        index: 0,
+        title: "禅道账号",
+        description: "Francisio_Phillps",
+        password:'123456',
+        url: "http://localhost:1600/packages/kee/assets/image/key_black.svg",
+        site:'zt.xaingtian.ren'
+      },
+    }),
+    actions:{},
+    getters:{}
 })
-

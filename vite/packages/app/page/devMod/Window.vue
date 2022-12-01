@@ -6,7 +6,7 @@
     <a-radio-group v-model:value="this.windowConfigs.defaultType">
       <a-radio v-if="windowConfigs.frameWindow.enable" value="frameWindow">边框窗体</a-radio>
       <a-radio v-if="windowConfigs.window.enable" value="window">无边框窗体</a-radio>
-      <a-radio v-if="windowConfigs.attach.enable" value="attach">分屏窗体</a-radio>
+<!--      <a-radio v-if="windowConfigs.attach.enable" value="attach">分屏窗体</a-radio>-->
     </a-radio-group>
   </div>
   <a-tabs v-model:activeKey="activeKey">
@@ -16,7 +16,7 @@
         <span class="sub-label" style="margin-left: 10px;font-weight: bold">启用</span>
         <a-switch v-model:checked="windowConfigs.frameWindow.enable">边框窗体</a-switch>
         <a-row>
-          <a-col :span="9" ><div style="float:left;transform:scale(0.6); display: block;width:410px;height: 320px;background:url('./img/window.png');margin: -69px;
+          <a-col :span="9" ><div style="float:left;transform:scale(0.6); display: block;width:410px;height: 320px;background:url('../img/window.png');margin: -69px;
     margin-left: -86px;"></div></a-col>
           <a-col :span="15" >
             <p class="introduce">此模式会自动提供『后退』、『前进』、『刷新』、『设置』等窗体控制按钮，且支持『主题色』的设置。
@@ -127,7 +127,7 @@
           <a-switch v-model:checked="windowConfigs.window.enable">无边框窗体</a-switch>
 <a-row>
           <a-col :span="9">
-  <div style="transform:scale(0.6); display: block;width:410px;height: 320px;background:url('./img/window.png');background-position:-410px 0;margin: -69px;
+  <div style="transform:scale(0.6); display: block;width:410px;height: 320px;background:url('../img/window.png');background-position:-410px 0;margin: -69px;
     margin-left: -86px;"></div>
 </a-col>
 
@@ -228,66 +228,66 @@
         </div>
       </div>
     </a-tab-pane>
-    <a-tab-pane key="attach" tab="分屏">
-      <div class="mod-line detail-setting">
-        <div>
-          <span class="sub-label" style="margin-left: 10px;font-weight: bold">启用</span>
-          <a-switch v-model:checked="windowConfigs.attach.enable"></a-switch>
+<!--    <a-tab-pane key="attach" tab="分屏">-->
+<!--      <div class="mod-line detail-setting">-->
+<!--        <div>-->
+<!--          <span class="sub-label" style="margin-left: 10px;font-weight: bold">启用</span>-->
+<!--          <a-switch v-model:checked="windowConfigs.attach.enable"></a-switch>-->
 
-          <a-row>
-            <a-col :span="9" > <div style="transform:scale(0.6); display: block;width:410px;height: 320px;background:url('./img/window.png');background-position:-810px 0;margin: -69px;
-    margin-left: -86px;"></div></a-col>
-            <a-col :span="15" >
-              <p class="introduce">此模式将吸附到浏览器主窗体右侧，此模式需要应用支持响应式，为了提供优秀体验，建议额外增加接收拖拽事件。
-                <br>一般用于一些需要和网页频繁交互的应用，例如收藏夹、网盘、笔记等应用。
-                <br>也非常适合手机应用直接兼容此浏览方式。
-              </p>
-            </a-col>
-          </a-row>
+<!--          <a-row>-->
+<!--            <a-col :span="9" > <div style="transform:scale(0.6); display: block;width:410px;height: 320px;background:url('../img/window.png');background-position:-810px 0;margin: -69px;-->
+<!--    margin-left: -86px;"></div></a-col>-->
+<!--            <a-col :span="15" >-->
+<!--              <p class="introduce">此模式将吸附到浏览器主窗体右侧，此模式需要应用支持响应式，为了提供优秀体验，建议额外增加接收拖拽事件。-->
+<!--                <br>一般用于一些需要和网页频繁交互的应用，例如收藏夹、网盘、笔记等应用。-->
+<!--                <br>也非常适合手机应用直接兼容此浏览方式。-->
+<!--              </p>-->
+<!--            </a-col>-->
+<!--          </a-row>-->
 
-        </div>
+<!--        </div>-->
 
 
-        <div class="inner-box" v-if="windowConfigs.attach.enable">
-          <a-row>
-            <a-col :span="8">
-              <span class="sub-label">默认宽度</span>
-              <a-input v-model:value="windowConfigs.attach.width" style="width: 60px"></a-input>
-            </a-col>
-            <a-col :span="16">
-              <template v-if="windowConfigs.attach.canResize">
-                <span class="sub-label">宽度限制</span>
-                <span style="display: inline-block">
-                  <a-input-group compact>
-                    <a-input
-                      v-model:value="windowConfigs.attach.minWidth"
-                      style="width: 100px; text-align: center"
-                      placeholder="最小"
-                    />
-                    <a-input
-                      style="width: 30px; border-left: 0; pointer-events: none; background-color: #fff"
-                      placeholder="~"
-                      disabled
-                    />
-                    <a-input
-                      v-model:value="windowConfigs.attach.maxWidth"
-                      style="width: 100px; text-align: center; border-left: 0"
-                      placeholder="最大"
-                    />
-                  </a-input-group>
-                </span>
-              </template>
-            </a-col>
-          </a-row>
-          <a-divider orientation="left">其他</a-divider>
+<!--        <div class="inner-box" v-if="windowConfigs.attach.enable">-->
+<!--          <a-row>-->
+<!--            <a-col :span="8">-->
+<!--              <span class="sub-label">默认宽度</span>-->
+<!--              <a-input v-model:value="windowConfigs.attach.width" style="width: 60px"></a-input>-->
+<!--            </a-col>-->
+<!--            <a-col :span="16">-->
+<!--              <template v-if="windowConfigs.attach.canResize">-->
+<!--                <span class="sub-label">宽度限制</span>-->
+<!--                <span style="display: inline-block">-->
+<!--                  <a-input-group compact>-->
+<!--                    <a-input-->
+<!--                      v-model:value="windowConfigs.attach.minWidth"-->
+<!--                      style="width: 100px; text-align: center"-->
+<!--                      placeholder="最小"-->
+<!--                    />-->
+<!--                    <a-input-->
+<!--                      style="width: 30px; border-left: 0; pointer-events: none; background-color: #fff"-->
+<!--                      placeholder="~"-->
+<!--                      disabled-->
+<!--                    />-->
+<!--                    <a-input-->
+<!--                      v-model:value="windowConfigs.attach.maxWidth"-->
+<!--                      style="width: 100px; text-align: center; border-left: 0"-->
+<!--                      placeholder="最大"-->
+<!--                    />-->
+<!--                  </a-input-group>-->
+<!--                </span>-->
+<!--              </template>-->
+<!--            </a-col>-->
+<!--          </a-row>-->
+<!--          <a-divider orientation="left">其他</a-divider>-->
 
-          <div>
-            <span class="sub-label" style="width: 150px">允许用户改变分屏尺寸</span>
-            <a-switch v-model:checked="windowConfigs.attach.canResize"></a-switch>
-          </div>
-        </div>
-      </div>
-    </a-tab-pane>
+<!--          <div>-->
+<!--            <span class="sub-label" style="width: 150px">允许用户改变分屏尺寸</span>-->
+<!--            <a-switch v-model:checked="windowConfigs.attach.canResize"></a-switch>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </a-tab-pane>-->
   </a-tabs>
 </template>
 
@@ -382,16 +382,6 @@ export default {
   mounted () {
     this.devApp.window=Object.assign(this.windowDefaultConfigs,this.devApp.window)
     this.windowConfigs=this.devApp.window
-    let optimizeValues = ['keepRunning', 'theme', 'desktop', 'showInSideBar', 'alwaysTop', 'autoRun', 'noFrame']
-    let optimize = []
-    if (this.app.settings) {
-      optimizeValues.forEach(item => {
-        if (this.app.settings[item]) {
-          optimize.push(item)
-        }
-      })
-    }
-
   }
 }
 </script>

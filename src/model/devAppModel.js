@@ -187,6 +187,10 @@ const devAppModel = {
   async preHandle(devApp){
     devApp.auth=JSON.parse(devApp.auth)
     devApp.window=JSON.parse(devApp.window)
+    if(devApp.logo.startsWith('local|')){
+      //预处理本地图片（临时）
+      devApp.logo= 'file://'+ devApp.logo .replace('local|','')
+    }
     return devApp
   },
   async getAll(){

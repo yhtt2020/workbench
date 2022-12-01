@@ -23,7 +23,8 @@ import {
 import settings from '../../src/settings/settingsContent'
 import settingPage from '../../src/settings/settingPage.js'
 import Passwords from "./components/Passwords.vue";
-
+import zhCN from "ant-design-vue/es/locale/zh_CN";
+import zhCN from 'ant-design-vue/es/locale/zh_CN';
 
 
 export default defineComponent({
@@ -36,6 +37,7 @@ export default defineComponent({
   },
   data(){
     return {
+      locale:zhCN,
       savePath:'',
       platform:'',//平台
       autoStart:false,//自动启动
@@ -255,6 +257,7 @@ export default defineComponent({
 </script>
 
 <template>
+  <a-config-provider :locale="locale">
   <div
     class="banner yellow-background"
     id="restart-required-banner"
@@ -856,7 +859,7 @@ export default defineComponent({
     </div>
 
   </div>
-
+  </a-config-provider>
 </template>
 <style>
 body {

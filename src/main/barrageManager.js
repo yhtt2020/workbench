@@ -165,7 +165,7 @@ class BarrageManager {
     let dev = isDevelopmentMode  //调试开关
     protocolUrl = `tsbapp://./${url}` //todo 需要验证正式环境的协议情况
     if (dev) {
-      protocolUrl = `http://localhost:1600/${url}`
+      protocolUrl = `http://localhost:1600/html/${url}`
     }
     return protocolUrl
   }

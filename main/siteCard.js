@@ -83,13 +83,15 @@ ipc.on('openPwdManager', async (event, args) => {
   let title = args.tabData.title
   const siteUrl = parseInnerURL(url)
   if (!global.passwordWin) {
+    let parentBounds=mainWindow.getBounds()
     global.passwordWin = await windowManager.create({
-      url: render.getUrl('kee.html'),
+      url: render.getUrl('kee.html#/passwords/value/'+ encodeURIComponent(siteUrl)+'/type/url'),
       name: 'kee',
       windowOption: {
         backgroundColor: 'white',
         parent: mainWindow,
-        center: true,
+        x:parentBounds.x+parentBounds.width-610,//todo 后面要做个工具方法，统一实现计算弹窗位置
+        y:args.pos.y+parentBounds.y+10,
         hasShadow: true,
         minWidth: 600,
         width: 600,
@@ -117,6 +119,10 @@ ipc.on('openPwdManager', async (event, args) => {
         ]
       }
     })
+    // passwordWin.window.on('blur',()=>{
+    //   passwordWin.close()
+    //   passwordWin=null
+    // })
   } else {
     global.passwordWin.close()
     global.passwordWin=null
