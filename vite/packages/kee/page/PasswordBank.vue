@@ -38,12 +38,19 @@
       </a-tooltip>
     </div>
   </div>
-  <a-modal v-model:visible="visibleInputPwd" centered :width="300" title="主密码" @ok="doCreate" >
+  <a-modal v-model:visible="visibleInputPwd" centered :width="380" title="主密码" @ok="doCreate" >
     <div style="padding:20px">
       <a-input default-value="新密码库" style="margin-bottom: 10px" v-model:value="newName" placeholder="密码库名称">
+        <template #addonBefore>
+          库名称
+        </template>
       </a-input>
       <div class="password-bank-input">
-        <a-input-password class="bank-input" v-model:value="newPassword" placeholder="主密码"/>
+        <a-input-password class="bank-input" v-model:value="newPassword" placeholder="主密码">
+          <template #addonBefore>
+            主密码
+          </template>
+        </a-input-password>
       </div>
     </div>
   </a-modal>
