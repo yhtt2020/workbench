@@ -105,10 +105,12 @@ export default {
       // kdbxModel.create('kdb',filePath)
     },
     openDb(){
-      console.log('use pwd',this.password)
+      if(!this.selectedItem.path){
+        message.error('请先选择密码库')
+      }
       kdbxModel.openFile(this.password,this.selectedItem.path,null,(err)=>{
         if(err){
-          message.error('打开密码库失败，请确认主密码是否正确，错误信息：',err)
+          message.error('打开密码库失败，请确认主密码正确且选择了正确的秘钥文件（如果有。点击更多选项进行选择）。')
         }else{
           console.log()
         }
