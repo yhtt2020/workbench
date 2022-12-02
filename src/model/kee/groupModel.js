@@ -1,10 +1,10 @@
-import * as kdbxweb from 'kdbxweb';
-import { IconMap } from 'const/icon-map';
-import { EntryModel } from 'models/entry-model';
-import { MenuItemModel } from 'models/menu/menu-item-model';
-import { IconUrlFormat } from 'util/formatting/icon-url-format';
-const GroupCollection =require('collections/groupCollection');
-import { EntryCollection } from 'collections/entry-collection';
+const kdbxweb =require('kdbxweb');
+//import { IconMap } from 'const/icon-map';
+const EntryModel=require('./entryModel');
+//import { MenuItemModel } from 'models/menu/menu-item-model';
+//import { IconUrlFormat } from 'util/formatting/icon-url-format';
+const GroupCollection =require('./collections/groupCollection');
+const EntryCollection =require('./collections/entryCollection');
 
 const KdbxIcons = kdbxweb.Consts.Icons;
 

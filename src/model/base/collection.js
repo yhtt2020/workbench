@@ -248,4 +248,4 @@ for (const method of ProxiedArrayMethods) {
     });
 }
 
-modules.exports=Collection
+module.exports=Collection

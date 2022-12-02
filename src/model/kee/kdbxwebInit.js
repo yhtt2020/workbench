@@ -6,6 +6,14 @@ const kdbxwebInit={
   init(){
     kdbxweb.CryptoEngine.setArgon2Impl((...args) => this.argon2(...args));
   },
+  /**
+   * 此处实际实现是keeweb桌面本地部分的argon算法
+   * @param password
+   * @param salt
+   * @param options
+   * @returns {Promise<unknown>}
+   * @private
+   */
   _argon2(password, salt, options) {
     const fileName = `argon2-${process.platform}-${process.arch}.node`;
     const argon2 = require('@keeweb/keeweb-native-modules/'+fileName);
@@ -32,6 +40,7 @@ const kdbxwebInit={
   },
   argon2(password, salt, memory, iterations, length, parallelism, type, version) {
     const args = { password, salt, memory, iterations, length, parallelism, type, version };
+    console.log(args,'args...')
     return this.loadRuntime(memory).then((runtime) => {
       const ts = logger.ts();
       return runtime.hash(args).then((hash) => {
@@ -42,13 +51,15 @@ const kdbxwebInit={
   },
   loadRuntime(requiredMemory){
     let argon2=this._argon2
+    logger.debug('Using native argon2');
     this.runtimeModule = {
       hash(args) {
         const ts = logger.ts();
-        let bin=kdbxweb.ProtectedValue.fromBinary(args.password)
+        //let bin=kdbxweb.ProtectedValue.fromBinary(args.password)
         const password = kdbxweb.ProtectedValue.fromBinary(args.password).dataAndSalt();
         const salt = kdbxweb.ProtectedValue.fromBinary(args.salt).dataAndSalt();
 
+        console.log('进入argon2')
         return argon2(password, salt, {
           type: args.type,
           version: args.version,
@@ -59,10 +70,12 @@ const kdbxwebInit={
           memoryCost: args.memory
         })
           .then((res) => {
+            console.log('argon计算结果=',res)
             password.data.fill(0);
             salt.data.fill(0);
 
             logger.debug('Argon2 hash calculated', logger.ts(ts));
+
             res = new kdbxweb.ProtectedValue(res.data, res.salt);
             return res.getBinary();
           })

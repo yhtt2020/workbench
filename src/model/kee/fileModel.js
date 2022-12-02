@@ -3,6 +3,8 @@ const Model=require('../base/model')
 const { readXoredValue, makeXoredValue } = require('../../util/byte-utils')
 require('../../util/kdbxweb/protected-value-ex')
 const logger = require('../../util/logger')
+// const GroupCollection = require('./collections/groupCollection')
+// const GroupModel = require('./groupModel')
 class FileModel extends Model{
   name
   db
@@ -14,11 +16,7 @@ class FileModel extends Model{
       groupMap: {},
       ...data
     });
-
-
   }
-
-
 
   kdfArgsToString(header) {
     if (header.kdfParameters) {
@@ -39,19 +37,16 @@ class FileModel extends Model{
       return '?';
     }
   }
-  async create (name = 'kdb',path,pwd,callback) {
+  async create (name = 'kdb',path,pwd='',callback) {
     this.path=path
-    console.log('create1 ')
     const password = kdbxweb.ProtectedValue.fromString(pwd);
-    console.log('pwd',pwd)
-
     const credentials = new kdbxweb.Credentials(password);
     //kdbxweb.CryptoEngine.setArgon2Impl((...args) => this.argon2(...args));
     this.db = kdbxweb.Kdbx.create(credentials, name);
     let group = this.db.createGroup(this.db.getDefaultGroup(), '密码组');
     let entry = this.db.createEntry(group);
     this.name = name;
-    // this.readModel();
+    this.readModel();
     this.set({ active: true, created: true, name });
     this.db.save().then((data)=>{
       console.log('data=',data)
@@ -67,11 +62,9 @@ class FileModel extends Model{
       //const challengeResponse = ChalRespCalculator.build(this.chalResp);
 
       console.log(keyFileData,'keyfile')
-      credentials = new kdbxweb.Credentials(passwordValue, keyFileData);
-
+      credentials = new kdbxweb.Credentials(passwordValue);
 
       const ts = logger.ts();
-
       kdbxweb.Kdbx.load(fileData, credentials)
         .then((db) => {
           this.db = db;
@@ -128,11 +121,11 @@ class FileModel extends Model{
     this.oldKeyChangeDate = this.db.meta.keyChanged;
   }
   readModel() {
-    const groups = new GroupCollection();
+    //const groups = new GroupCollection();
     this.set(
       {
         uuid: this.db.getDefaultGroup().uuid.toString(),
-        groups,
+        // groups,
         formatVersion: this.db.header.versionMajor,
         defaultUser: this.db.meta.defaultUser,
         recycleBinEnabled: this.db.meta.recycleBinEnabled,
@@ -145,17 +138,17 @@ class FileModel extends Model{
       },
       { silent: true }
     );
-    this.db.groups.forEach(function (group) {
-      let groupModel = this.getGroup(this.subId(group.uuid.id));
-      if (groupModel) {
-        groupModel.setGroup(group, this);
-      } else {
-        groupModel = GroupModel.fromGroup(group, this);
-      }
-      groups.push(groupModel);
-    }, this);
-    this.buildObjectMap();
-    this.resolveFieldReferences();
+    // this.db.groups.forEach(function (group) {
+    //   let groupModel = this.getGroup(this.subId(group.uuid.id));
+    //   if (groupModel) {
+    //     groupModel.setGroup(group, this);
+    //   } else {
+    //     groupModel = GroupModel.fromGroup(group, this);
+    //   }
+    //   groups.push(groupModel);
+    // }, this);
+    // this.buildObjectMap();
+    // this.resolveFieldReferences();
   }
   readKdfName() {
     if (this.db.header.versionMajor === 4 && this.db.header.kdfParameters) {
