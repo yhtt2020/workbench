@@ -48,7 +48,18 @@
        </a-dropdown>
     </div>
   </div>
-  <div class="breadcrumb-form">
+  <div v-if="!passwordItem.icon" style="padding-top: 30%">
+    <a-empty >
+      <template #description>
+      <span>
+        暂无密码
+        <a-button type="primary">新建密码</a-button>
+      </span>
+      </template>
+    </a-empty>
+
+  </div>
+  <div v-else class="breadcrumb-form">
     <div class="breadcrumb-form-header">
       <div class="breadcrumb-bottom-name">
         <span class="avatar">

@@ -14,13 +14,13 @@ class KdbxModel {
   }
   openFile (password, path, keyFileData, callback) {
     storageFile.load(path, undefined, (err, buffer) => {
-      fileModel.open(password, buffer, undefined, callback)
+      fileModel.open(password, buffer, keyFileData, callback)
     })
   }
   create (name = 'kdb', path, pwd, callback) {
-    fileModel.create(name, path, pwd, (err,buffer) => {
+    fileModel.create(name, path, pwd, (buffer) => {
       console.log('chuangjian')
-      storageFile.saveToFile(path,buffer,callback)
+      storageFile.save(path,undefined,buffer,callback)
     })
   }
 }

@@ -18,12 +18,28 @@
       </a-row>
     </div>
     <div @click.stop="()=>{}" class="password-bank-input">
-      <a-input-password  class="bank-input" v-model:value="password" :placeholder="this.bankValue?'请输入「'+this.bankValue+'」的密码':'请先选择一个密码库'"/>
-      <span class="password-bank-button" @click="enterSubmit">
+      <a-input-password @keypress.enter="openDb"  class="bank-input" v-model:value="password" :placeholder="this.bankValue?'请输入「'+this.bankValue+'」的密码':'请先选择一个密码库'">
+
+      </a-input-password>
+      <span @click="openDb" class="password-bank-button"  >
         <img src="../assets/image/enter_submit.svg" alt="" />
       </span>
     </div>
-    <div class="password-bank-list-container">
+
+        <div class="collapse-addon" style="text-align: left;width: 340px;margin-top: -10px">
+          <a-collapse  ghost>
+            <a-collapse-panel class="addon" style="color: #999" key="1" header="更多选项">
+          附加凭证（如果有） <a @click="selectKey" type="primary" size="small"> <key-outlined />选择秘钥文件</a>
+          <div v-if="keyPath" style="position: relative">
+            <a-tag title="{{keyPath[0]}}">
+              <div class="key-file">{{keyPath[0]}}</div><a title="去除秘钥" @click="removeKey" style="color: red;position: absolute;right: 0px;top: 0 " class="remove-icon" size="small"> <close-outlined /></a>
+            </a-tag>
+          </div>
+                          </a-collapse-panel>
+          </a-collapse>
+        </div>
+
+      <div class="password-bank-list-container">
       <a-empty v-if="bankList.length===0"></a-empty>
       <a-tooltip :overlay-style="{'min-width':'500px'}" :mouseEnterDelay="0.5" placement="bottom"  v-for="(item,index) in bankList">
       <template #title>
@@ -57,11 +73,11 @@
 </template>
 
 <script>
-import { UnlockFilled,FolderOpenOutlined,CloseOutlined } from "@ant-design/icons-vue";
+import { UnlockFilled,FolderOpenOutlined,CloseOutlined,KeyOutlined } from "@ant-design/icons-vue";
 import {message,Modal} from 'ant-design-vue'
 export default {
   components: {
-    UnlockFilled,FolderOpenOutlined,CloseOutlined
+    UnlockFilled,FolderOpenOutlined,CloseOutlined,KeyOutlined
   },
   data() {
     return {
@@ -70,10 +86,12 @@ export default {
       bankIndex:0,
       visibleInputPwd:false,
       password:'',
+      selectedItem:{},
       newPassword:'',
       newName:'新密码库',
       bankList:[
-      ]
+      ],
+      keyPath:'',
     };
   },
   mounted () {
@@ -87,13 +105,22 @@ export default {
       // kdbxModel.create('kdb',filePath)
     },
     openDb(){
-      kdbxModel.openFile(this.password,this.bankList[this.bankIndex],undefined,(err)=>{
+      console.log('use pwd',this.password)
+      kdbxModel.openFile(this.password,this.selectedItem.path,null,(err)=>{
         if(err){
-          message.error('打开密码库失败，请确认主密码是否正确')
+          message.error('打开密码库失败，请确认主密码是否正确，错误信息：',err)
         }else{
           console.log()
         }
       })
+    },
+    selectKey(){
+      const keyPath=ipc.sendSync('selectKey')
+      if(keyPath)
+        this.keyPath=keyPath
+    },
+    removeKey(){
+      this.keyPath=''
     },
     doCreate(){
       if(!this.newPassword){
@@ -141,9 +168,6 @@ export default {
       })
 
     },
-    enterSubmit() {
-      // 点击之后做进入该密码库的事情
-    },
     unselectBankItem(){
       // 点击选中的状态
       this.bankIndex = 0
@@ -156,12 +180,21 @@ export default {
        this.bankIndex = v.id
        // 将点击选中的内容放入输入框中
        this.bankValue = v.text
+      this.selectedItem=v
     }
   },
 };
 </script>
-
+<style>
+.collapse-addon  .ant-collapse > .ant-collapse-item > .ant-collapse-header  {
+  padding: 0;
+}
+.collapse-addon .ant-collapse-ghost > .ant-collapse-item > .ant-collapse-content > .ant-collapse-content-box{
+  padding: 0;
+}
+</style>
 <style lang="scss" scoped>
+
 .action{
   .icon{
     font-size: 44px;
@@ -172,6 +205,20 @@ export default {
     background: #f1f1f1 ;
     border-radius: 4px;
   }
+}
+.addon{
+  font-size: 12px;
+  color: #999;
+}
+.key-file{
+  padding-right: 15px;
+  position: relative;
+  color: #333;
+  overflow: hidden;
+  word-break: break-word;
+  text-overflow: ellipsis;
+  width: 300px;
+  white-space: nowrap;
 }
 .password-bank-container {
   display: flex;
@@ -220,11 +267,15 @@ export default {
       }
     }
   }
-  .password-bank-list-container{
 
+  .password-bank-list-container{
+    margin-top:8px;
      width: 328px;
      .password-bank-list-item{
        position: relative;
+       display: flex;
+       align-items: center;
+       padding: 8px 23px;
        &:hover{
          .remove-icon{
            display: inline-block;
@@ -244,9 +295,7 @@ export default {
            opacity: 1;
          }
        }
-       display: flex;
-       align-items: center;
-       padding: 14px 23px;
+
        img{
          width: 16px;
          height: 16px;

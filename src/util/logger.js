@@ -12,22 +12,28 @@ const logger = {
    */
   print(type,message,data){
     var cache = [];
-    let dataStr=JSON.stringify(data,(name,value)=>{
-      if(['string','number','boolean','object'].indexOf(typeof value)>-1){
-        if(typeof value==='object' && value!==null){
-          if (cache.indexOf(value) !== -1) {
-            // Circular reference found, discard key
-            return;
+    if(data){
+      let dataStr=JSON.stringify(data,(name,value)=>{
+        if(['string','number','boolean','object'].indexOf(typeof value)>-1){
+          if(typeof value==='object' && value!==null){
+            if (cache.indexOf(value) !== -1) {
+              // Circular reference found, discard key
+              return;
+            }
+            // Store value in our collection
+            cache.push(value)
           }
-          // Store value in our collection
-          cache.push(value)
+          return value
         }
-        return value
-      }
-    })
-    cache = null;
-    //console.log(dataStr)
-    data=JSON.parse(dataStr)
+      })
+      cache = null;
+      //console.log(dataStr)
+      data=JSON.parse(dataStr)
+    }else{
+      data={}
+    }
+
+    console.log(type,message,data)
     logger.insertDb(type,message,data)
   },
   /**

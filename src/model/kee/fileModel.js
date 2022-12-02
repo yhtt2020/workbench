@@ -43,6 +43,8 @@ class FileModel extends Model{
     this.path=path
     console.log('create1 ')
     const password = kdbxweb.ProtectedValue.fromString(pwd);
+    console.log('pwd',pwd)
+
     const credentials = new kdbxweb.Credentials(password);
     //kdbxweb.CryptoEngine.setArgon2Impl((...args) => this.argon2(...args));
     this.db = kdbxweb.Kdbx.create(credentials, name);
@@ -51,12 +53,23 @@ class FileModel extends Model{
     this.name = name;
     // this.readModel();
     this.set({ active: true, created: true, name });
-    callback(undefined,await this.db.save())
+    this.db.save().then((data)=>{
+      console.log('data=',data)
+      callback(data)
+    })
+
   }
   open(password, fileData, keyFileData, callback) {
+    let passwordValue=kdbxweb.ProtectedValue.fromString(password)
+    console.log('use',passwordValue)
     try {
+      let  credentials
       //const challengeResponse = ChalRespCalculator.build(this.chalResp);
-      const credentials = new kdbxweb.Credentials(password, keyFileData);
+
+      console.log(keyFileData,'keyfile')
+      credentials = new kdbxweb.Credentials(passwordValue, keyFileData);
+
+
       const ts = logger.ts();
 
       kdbxweb.Kdbx.load(fileData, credentials)

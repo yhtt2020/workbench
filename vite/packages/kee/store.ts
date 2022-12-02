@@ -28,13 +28,6 @@ export const appStore = defineStore('kee',{
       },
       //将点击之后的值进行缓存
       passwordItem: {
-        id:0,
-        index: 0,
-        title: "禅道账号",
-        description: "Francisio_Phillps",
-        password:'123456',
-        url: "http://localhost:1600/packages/kee/assets/image/key_black.svg",
-        site:'zt.xaingtian.ren'
       },
     }),
     actions:{},
