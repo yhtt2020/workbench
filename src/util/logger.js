@@ -61,6 +61,13 @@ const logger = {
   },
   error:(message,data)=>{
     logger.print('error',message,data)
+  },
+  ts(ts){
+    if (ts) {
+      return Math.round(performance.now() - ts) + 'ms';
+    } else {
+      return performance.now();
+    }
   }
 }
 

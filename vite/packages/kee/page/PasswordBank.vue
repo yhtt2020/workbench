@@ -79,6 +79,15 @@ export default {
       // const filePath=ipc.sendSync('selectKdbx')
       // kdbxModel.create('kdb',filePath)
     },
+    openDb(){
+      kdbxModel.openFile(this.password,this.bankList[this.bankIndex],undefined,(err)=>{
+        if(err){
+          message.error('打开密码库失败，请确认主密码是否正确')
+        }else{
+          console.log()
+        }
+      })
+    },
     doCreate(){
       if(!this.newPassword){
         message.error('请输入密码库主密码。')
@@ -89,20 +98,21 @@ export default {
       if(!filePath){
         return
       }
-      kdbxModel.create(this.newName,filePath,this.newPassword)
-      let item={
-        id:Date.now(),
-        text:this.newName,
-        path:filePath,
-        lastOpen:Date.now()
-      }
-      this.bankList.push(item)
-      this.newPassword=''
-      this.newName='新密码库'
-      this.visibleInputPwd=false
-      message.success('密码库创建成功。')
-      this.selectBankItem(item)
-      this.saveHistory()
+      kdbxModel.create(this.newName,filePath,this.newPassword,()=>{
+        let item={
+          id:Date.now(),
+          text:this.newName,
+          path:filePath,
+          lastOpen:Date.now()
+        }
+        this.bankList.unshift(item)
+        this.newPassword=''
+        this.newName='新密码库'
+        this.visibleInputPwd=false
+        message.success('密码库创建成功。')
+        this.selectBankItem(item)
+        this.saveHistory()
+      })
     },
     saveHistory(){
       localStorage.setItem('bankList',JSON.stringify(this.bankList))
