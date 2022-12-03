@@ -16,7 +16,7 @@ const places = {
           title: tab.title,
           color: tab.backgroundColor,
           extractedText: extractedText,
-          favicon:tab.favicon //补充图标
+          favicon: tab.favicon // 补充图标
         }
 
         places.worker.postMessage({

@@ -7,7 +7,7 @@ var osu = require('node-os-utils')
 function sendIPCToTrayWindow (action, data) {
   // if there are no windows, create a new one
   if (trayWindow === null) {
-    return
+
   } else {
     trayWindow.webContents.send(action, data || {})
   }
@@ -28,17 +28,17 @@ async function getTrayWindow () {
 }
 
 async function getMemory () {
-  let mem = await osu.mem.info()
-  let info = {
-    mem: mem,
+  const mem = await osu.mem.info()
+  const info = {
+    mem: mem
   }
   return info
 }
 
 async function createTrayWin () {
-  let windowInstance = await windowManager.create({
-      name: 'tray',
-      windowOption:
+  const windowInstance = await windowManager.create({
+    name: 'tray',
+    windowOption:
         {
           frame: false,
           width: 400,
@@ -54,24 +54,24 @@ async function createTrayWin () {
           backgroundColor: '#00000000',
           maximizable: false,
           skipTaskbar: true,
-          alwaysOnTop: false,//调整窗口层级
+          alwaysOnTop: false// 调整窗口层级
 
         },
-      webPreferences: {
-        nodeIntegration: true,
-        contextIsolation: false,
-        sandbox: false,
-        webSecurity: false,
-        preload: (__dirname + '/src/preload/trayPreload.js'),
-        additionalArguments: [
-          '--user-data-path=' + app.getPath('userData'),
-          '--app-version=' + app.getVersion(),
-          '--app-name=' + app.getName(),
-          ...((isDevelopmentMode ? ['--development-mode'] : [])),
-        ],
-      }
-
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+      sandbox: false,
+      webSecurity: false,
+      preload: (__dirname + '/src/preload/trayPreload.js'),
+      additionalArguments: [
+        '--user-data-path=' + app.getPath('userData'),
+        '--app-version=' + app.getVersion(),
+        '--app-name=' + app.getName(),
+        ...((isDevelopmentMode ? ['--development-mode'] : []))
+      ]
     }
+
+  }
   )
   trayWindow = windowInstance.window
   trayWindow.webContents.loadURL(getUrl('tray.html'))
@@ -89,7 +89,7 @@ async function createTrayWin () {
 
 function getUrl (url) {
   let protocolUrl
-  protocolUrl = `tsbapp://./${url}` //todo 需要验证正式环境的协议情况
+  protocolUrl = `tsbapp://./${url}` // todo 需要验证正式环境的协议情况
   if (isDevelopmentMode) {
     protocolUrl = `http://localhost:1600/${url}`
   }
@@ -102,30 +102,29 @@ app.whenReady().then(() => {
     try {
       const userInfo = await userModel.getCurrent()
       const options = {
-        uid: userInfo && userInfo.data.uid != 0 ? userInfo.data.uid : 0,  //用户uid
-        client_id: settings.get('clientID'),     //设备号
+        uid: userInfo && userInfo.data.uid != 0 ? userInfo.data.uid : 0, // 用户uid
+        client_id: settings.get('clientID') // 设备号
       }
 
       await baseApi.init()
       baseApi.axios('/app/open/usageStats/cumulativeTime', options, 'post').catch(e => {
         console.warn('上传在线时长失败', e)
-      }).then((rs)=>{
+      }).then((rs) => {
         console.log(rs)
       })
     } catch (e) {
       console.warn('上传在线时间意外错误', e)
     }
-
   }
 
-  setInterval(uploadCumulativeTime, 1000 * 60) //每分钟上报在线时间
+  setInterval(uploadCumulativeTime, 1000 * 60) // 每分钟上报在线时间
 
   ipc.on('getMemory', (event, args) => {
     var obj = Object.keys(viewMap)
     var pageCount = obj.map(key => viewMap[key]).length
     var appCount = appManager.saApps.length
     getMemory().then(info => {
-      let data = {
+      const data = {
         mem: info,
         pageCount: pageCount,
         appCount: appCount
@@ -137,20 +136,19 @@ app.whenReady().then(() => {
     const isLogged = await userModel.isLogged()
     if (isLogged) {
       getUserInfo().then(result => {
-        if(result.data.data.uid){
+        if (result.data.data.uid) {
           sendIPCToTrayWindow('userInfo', result.data)
-        }else{
-          sendIPCToTrayWindow('userInfo', { data: { uid: -2 } }) //-2代表异常
+        } else {
+          sendIPCToTrayWindow('userInfo', { data: { uid: -2 } }) // -2代表异常
         }
       }).catch(() => {
-        sendIPCToTrayWindow('userInfo', { data: { uid: -2 } }) //-2代表异常
+        sendIPCToTrayWindow('userInfo', { data: { uid: -2 } }) // -2代表异常
       })
     } else {
       sendIPCToTrayWindow('userInfo', {
-        data: { uid: -1 } //-1代表未登录
+        data: { uid: -1 } // -1代表未登录
       })
     }
-
   })
   ipc.on('resizeTray', (event, args) => {
     if (trayWindow) {
@@ -166,7 +164,7 @@ app.whenReady().then(() => {
   tray.setToolTip('想天浏览器')
   tray.on('click', async function (event, position) {
     await getTrayWindow()
-    let bounds = trayWindow.getBounds()
+    const bounds = trayWindow.getBounds()
     trayWindow.setPosition(position.x - bounds.width, position.y - bounds.height)
     return false
   })
@@ -191,7 +189,7 @@ app.whenReady().then(() => {
       label: '全局搜索',
       click: () => {
         globalSearchMod.init()
-        //statsh 点击打开全局搜索
+        // statsh 点击打开全局搜索
         if (globalSearch && globalSearch.isFocused()) {
           statsh.do({
             action: 'increase',
@@ -207,10 +205,10 @@ app.whenReady().then(() => {
     {
       label: '关闭浏览器',
       click () {
-        global.trayExit=true
+        global.trayExit = true
         app.exit()
       }
-    },
+    }
   ])
   tray.on('double-click', () => {
     if (!mainWindow) {

@@ -5,7 +5,7 @@ var searchEngine = require('util/searchEngine.js')
 const axios = require('axios')
 
 function showSearchSuggestions (text, input, event) {
-    const suggestionsURL = searchEngine.getCurrent().suggestionsURL
+  const suggestionsURL = searchEngine.getCurrent().suggestionsURL
 
   if (!suggestionsURL) {
     searchbarPlugins.reset('searchSuggestions')
@@ -17,24 +17,25 @@ function showSearchSuggestions (text, input, event) {
     return
   }
 
-  const axios=require('axios')
-  let iconv = require('iconv-lite')
-  if(searchEngine.getCurrent().name==='Baidu'){
+  const axios = require('axios')
+  const iconv = require('iconv-lite')
+  if (searchEngine.getCurrent().name === 'Baidu') {
     axios({
-      method:'get',
-      url:suggestionsURL.replace('%s', encodeURIComponent(text)),
-      responseType: 'stream'}).then(res=>{
-      //此时的res.data 则为stream
-      let chunks = [];
-      res.data.on('data',chunk=>{
-        chunks.push(chunk);
-      });
-      res.data.on('end',()=>{
-        let buffer = Buffer.concat(chunks);
-        //通过iconv来进行转化。
-        let str = iconv.decode(buffer,'gbk');
-        //https://chrunlee.cn/article/axios-gbk-utf8.html
-        let results=JSON.parse(str)
+      method: 'get',
+      url: suggestionsURL.replace('%s', encodeURIComponent(text)),
+      responseType: 'stream'
+    }).then(res => {
+      // 此时的res.data 则为stream
+      const chunks = []
+      res.data.on('data', chunk => {
+        chunks.push(chunk)
+      })
+      res.data.on('end', () => {
+        const buffer = Buffer.concat(chunks)
+        // 通过iconv来进行转化。
+        const str = iconv.decode(buffer, 'gbk')
+        // https://chrunlee.cn/article/axios-gbk-utf8.html
+        let results = JSON.parse(str)
         searchbarPlugins.reset('searchSuggestions')
         if (searchbarPlugins.getResultCount() > 3) {
           return
@@ -56,10 +57,9 @@ function showSearchSuggestions (text, input, event) {
             searchbarPlugins.addResult('searchSuggestions', data)
           })
         }
-
       })
     })
-  }else if(suggestionsURL){
+  } else if (suggestionsURL) {
     fetch(suggestionsURL.replace('%s', encodeURIComponent(text)), {
       cache: 'force-cache'
     })
@@ -93,15 +93,12 @@ function showSearchSuggestions (text, input, event) {
         }
       })
   }
-
-
-
 }
 
 function initialize () {
   searchbarPlugins.register('searchSuggestions', {
     index: 4,
-    alias:'搜索建议',
+    alias: '搜索建议',
     trigger: function (text) {
       return !!text && text.indexOf('!') !== 0 && !tabs.get(tabs.getSelected()).private
     },

@@ -147,6 +147,7 @@ export default {
         if (err) {
           message.error('打开密码库失败，请确认主密码正确且选择了正确的秘钥文件（如果有。点击更多选项进行选择）。')
         } else {
+          message.success('打开密码库成功。')
           console.log()
         }
       })

@@ -89,10 +89,10 @@ var TaskOverlayBuilder = {
         })
         return input
       },
-      taskIcon(task,taskIndex){
-        var img=document.createElement('img')
-        img.src=task.favicon.icon
-        //todo 正确获取任务图标
+      taskIcon (task, taskIndex) {
+        var img = document.createElement('img')
+        img.src = task.favicon.icon
+        // todo 正确获取任务图标
         return img
       },
       deleteButton: function (container, task) {
@@ -104,7 +104,7 @@ var TaskOverlayBuilder = {
           if (task.tabs.isEmpty()) {
             container.remove()
             browserUI.closeTask(task.id)
-			//$store.getters.fillTasksToItems()
+            // $store.getters.fillTasksToItems()
           } else {
             container.classList.add('deleting')
             setTimeout(function () {
@@ -140,7 +140,7 @@ var TaskOverlayBuilder = {
         var collapseButton = this.collapseButton(taskContainer, task)
         taskActionContainer.appendChild(collapseButton)
 
-        //taskActionContainer.appendChild(this.taskIcon(task,taskIndex))
+        // taskActionContainer.appendChild(this.taskIcon(task,taskIndex))
         // add the input for the task name
         var input = this.nameInputField(task, taskIndex)
         taskActionContainer.appendChild(input)

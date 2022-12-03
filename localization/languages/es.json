@@ -41,7 +41,7 @@
     "clearHistory": "Limpiar todo el historial",
     "enableBlocking": "Activar bloqueo de contenido",
     "disableBlocking": "Desactivar bloqueo de contenido",
-    "clearHistoryConfirmation": "¿Borrar todo el historial y los datos de navegación?", 
+    "clearHistoryConfirmation": "¿Borrar todo el historial y los datos de navegación?",
     "switchToTask": "Cambiar a la tarea",
     "createTask": "Crear una tarea",
     "closeTask": "Cerrar una tarea",
@@ -51,7 +51,7 @@
     "searchBookmarks": "Buscar marcadores",
     "bookmarksAddTag": "Agregar etiqueta...",
     "bookmarksSimilarItems": "Elementos similares",
-    "searchHistory": "Historial de búsqueda",  //noun?
+    "searchHistory": "Historial de búsqueda", //noun?
     "importBookmarks": "Importar marcadores",
     "exportBookmarks": "Exportar marcadores",
     "runUserscript": "Correr userscript", //userscript doesn't have a Spanish translation, afaik maybe "script de usuario"

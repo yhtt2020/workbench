@@ -13,7 +13,7 @@ const bookmarkStar = {
     star.setAttribute('aria-label', l('addBookmark'))
 
     star.addEventListener('click', function (e) {
-      //bookmarkStar.onClick(star)
+      // bookmarkStar.onClick(star)
       ipc.send('openPopSaveToFolder')
     })
 

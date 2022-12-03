@@ -12,8 +12,8 @@ function removeWWW (domain) {
 function removeTrailingSlash (url) {
   return (url.endsWith('/') ? url.slice(0, -1) : url)
 }
-const specialMaps={
-  'ts://settings':'tsbapp://./settings.html'
+const specialMaps = {
+  'ts://settings': 'tsbapp://./settings.html'
 }
 
 /**
@@ -22,21 +22,21 @@ const specialMaps={
  * @param url
  * @returns {{status: boolean}|{url: string, status: boolean}}
  */
-function parseSpecialUrl(url){
-  let source=''
-  Object.keys(specialMaps).forEach(key=>{
-    if(specialMaps[key]===url){
-      source=key
+function parseSpecialUrl (url) {
+  let source = ''
+  Object.keys(specialMaps).forEach(key => {
+    if (specialMaps[key] === url) {
+      source = key
     }
   })
-  if(source!==''){
+  if (source !== '') {
     return {
-      status:true,
-      url:source
+      status: true,
+      url: source
     }
-  }else{
-    return{
-      status:false
+  } else {
+    return {
+      status: false
     }
   }
 }
@@ -47,19 +47,18 @@ function parseSpecialUrl(url){
  * @param url
  * @returns {{status: boolean}|{url, status: boolean}}
  */
-function getSourceUrl(url){
-  if(specialMaps[url]){
+function getSourceUrl (url) {
+  if (specialMaps[url]) {
     return {
-      status:true,
-      url:specialMaps[url]
+      status: true,
+      url: specialMaps[url]
     }
-  }else{
+  } else {
     return {
-      status:false,
+      status: false
     }
   }
 }
-
 
 var urlParser = {
   validIP4Regex: /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/i,
@@ -108,15 +107,15 @@ var urlParser = {
 
       return 'view-source:' + urlParser.parse(realURL)
     }
-    if(url.startsWith('chrome-extension') ){
+    if (url.startsWith('chrome-extension')) {
       return url
     }
 
     // if the URL is an internal URL, convert it to the correct file:// url
     if (url.startsWith('ts:')) {
-      let map=getSourceUrl(url)
-      if(map.status){
-        return map['url']
+      const map = getSourceUrl(url)
+      if (map.status) {
+        return map.url
       }
       try {
         var urlObj = new URL(url)
@@ -151,8 +150,6 @@ var urlParser = {
       return 'http://' + url
     }
 
-
-
     // else, do a search
     return searchEngine.getCurrent().searchURL.replace('%s', encodeURIComponent(url))
   },
@@ -168,11 +165,11 @@ var urlParser = {
     }
   },
   isInternalURL: function (url) {
-    //todo 内部url放行vite
-    function isRenderUrl(url){
+    // todo 内部url放行vite
+    function isRenderUrl (url) {
       return url.startsWith('http://localhost:1600') || url.startsWith('tsbapp://') || parseSpecialUrl(url).status || getSourceUrl(url).status
     }
-    return url.startsWith(urlParser.getFileURL(__dirname)) ||  isRenderUrl(url)
+    return url.startsWith(urlParser.getFileURL(__dirname)) || isRenderUrl(url)
   },
   getSourceURL: function (url) {
     // converts internal URLs (like the PDF viewer or the reader view) to the URL of the page they are displaying
@@ -180,20 +177,20 @@ var urlParser = {
       // if(url.startsWith('tsbapp://./')){
       //   return url.replace('tsbapp://./','ts://').replace('.html','')
       // }
-      let map=parseSpecialUrl(url)
-      if(map.status){
+      const map = parseSpecialUrl(url)
+      if (map.status) {
         return map.url
       }
       var representedURL
       try {
         representedURL = new URLSearchParams(new URL(url).search).get('url')
-        let file=new URLSearchParams(new URL(url).search).get('file')
-        if(file){
-          representedURL=file
+        const file = new URLSearchParams(new URL(url).search).get('file')
+        if (file) {
+          representedURL = file
         }
       } catch (e) {}
       if (representedURL) {
-        return decodeURI(representedURL) //调整，去除对url的转码，重新转出来以提升其可读性
+        return decodeURI(representedURL) // 调整，去除对url的转码，重新转出来以提升其可读性
       } else {
         try {
           var pageName = url.match(/\/pages\/([a-zA-Z]+)\//)

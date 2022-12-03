@@ -13,9 +13,9 @@ const tabEditor = require('navbar/tabEditor.js')
 const progressBar = require('navbar/progressBar.js')
 const permissionRequests = require('navbar/permissionRequests.js')
 
-//添加tab上的右键菜单，支持右键选择关闭行为组
+// 添加tab上的右键菜单，支持右键选择关闭行为组
 const remoteMenu = require('remoteMenuRenderer.js')
-//const path = require('path')
+// const path = require('path')
 
 const ipc = electron.ipcRenderer
 
@@ -30,7 +30,7 @@ const browserUI = require('browserUI.js')
  * @param tabData
  * @returns {*}
  */
-function isCopy(tabData){
+function isCopy (tabData) {
   return tabData.partition && tabData.partition.startsWith('persist:webcontent_')
 }
 var lastTabDeletion = 0 // TODO get rid of this
@@ -65,16 +65,15 @@ const tabBar = {
       el.scrollIntoView()
     })
   },
-  /*标签栏补充的右键菜单触发动作开始*/
-  //关闭其他的标签
+  /* 标签栏补充的右键菜单触发动作开始 */
+  // 关闭其他的标签
   closeOtherTabs: function (tabId) {
-    if (tabId !== tabs.getSelected())
-      require('browserUI.js').switchToTab(tabId)
-    let needDestroy = []
+    if (tabId !== tabs.getSelected()) { require('browserUI.js').switchToTab(tabId) }
+    const needDestroy = []
     let lockCount = 0
     tasks.getSelected().tabs.forEach(function (tab, index) {
       if (tab.id != tabId) {
-        if (!!tabs.get(tab.id).lock) {
+        if (tabs.get(tab.id).lock) {
           lockCount++
         } else {
           needDestroy.push(tab.id)
@@ -82,7 +81,7 @@ const tabBar = {
       }
     })
     tabBar.closeTabsById(needDestroy, lockCount)
-    //$store.getters.fillTasksToItems
+    // $store.getters.fillTasksToItems
   },
   closeTabsById (needDestroyIds, lockCount) {
     needDestroyIds.forEach(function (tid, index) {
@@ -97,17 +96,16 @@ const tabBar = {
       ipc.send('message', { type: 'success', config: { content: '成功关闭' + needDestroyIds.length + '个标签。' } })
     }
   },
-  //关闭左侧标签
+  // 关闭左侧标签
   closeLeftTabs: function (tabId) {
-    let tabs = tasks.getSelected().tabs
-    if (tabId !== tabs.getSelected())
-      require('browserUI.js').switchToTab(tabId)
-    let needDestroy = []
+    const tabs = tasks.getSelected().tabs
+    if (tabId !== tabs.getSelected()) { require('browserUI.js').switchToTab(tabId) }
+    const needDestroy = []
     let lockCount = 0
-    let currentIndex = tabs.getIndex(tabId)
+    const currentIndex = tabs.getIndex(tabId)
     for (let i = 0; i < currentIndex; i++) {
       if (tabs.getAtIndex(i).id != tabId) {
-        if (!!tabs.getAtIndex(i).lock) {
+        if (tabs.getAtIndex(i).lock) {
           lockCount++
         } else {
           needDestroy.push(tabs.getAtIndex(i).id)
@@ -115,20 +113,19 @@ const tabBar = {
       }
     }
     tabBar.closeTabsById(needDestroy, lockCount)
-    //$store.getters.fillTasksToItems
+    // $store.getters.fillTasksToItems
   },
-  //关闭右侧标签
+  // 关闭右侧标签
   closeRightTabs: function (tabId) {
-    let tabs = tasks.getSelected().tabs
-    if (tabId !== tabs.getSelected())
-      require('browserUI.js').switchToTab(tabId)
-    let needDestroy = []
-    let count = tabs.count()
+    const tabs = tasks.getSelected().tabs
+    if (tabId !== tabs.getSelected()) { require('browserUI.js').switchToTab(tabId) }
+    const needDestroy = []
+    const count = tabs.count()
     let lockCount = 0
-    let currentIndex = tabs.getIndex(tabId)
+    const currentIndex = tabs.getIndex(tabId)
     for (let i = count - 1; i >= currentIndex; i--) {
       if (tabs.getAtIndex(i).id != tabId) {
-        if (!!tabs.getAtIndex(i).lock) {
+        if (tabs.getAtIndex(i).lock) {
           lockCount++
         } else {
           needDestroy.push(tabs.getAtIndex(i).id)
@@ -136,11 +133,11 @@ const tabBar = {
       }
     }
     tabBar.closeTabsById(needDestroy, lockCount)
-    //$store.getters.fillTasksToItems
+    // $store.getters.fillTasksToItems
   },
-  //移动到第一个标签
+  // 移动到第一个标签
   moveToFirst: function (tabId) {
-    let tabs = tasks.getSelected().tabs
+    const tabs = tasks.getSelected().tabs
     tab = tabs.get(tabId)
     index = tabs.getIndex(tabId)
     tabs.splice(index, 1)
@@ -148,17 +145,17 @@ const tabBar = {
     tabBar.updateAll()
     require('browserUI.js').switchToTab(tabId)
   },
-  //刷新
+  // 刷新
   refresh: function (id) {
     webviews.update(id, tasks.getSelected().tabs.get(id).url)
   },
-  //移动到其他标签组
+  // 移动到其他标签组
   insertTabToTask (tabId) {
-    let previousTask = tasks.getSelected()
-    let currentTabIndex = previousTask.tabs.getIndex(tabId)
-    //拿到oldTab的信息
-    let oldTab = previousTask.tabs.tabs[currentTabIndex]
-    ipc.send('selectTask', oldTab)   //呼出面板,并把oldtab的应用地址对象传过去
+    const previousTask = tasks.getSelected()
+    const currentTabIndex = previousTask.tabs.getIndex(tabId)
+    // 拿到oldTab的信息
+    const oldTab = previousTask.tabs.tabs[currentTabIndex]
+    ipc.send('selectTask', oldTab) // 呼出面板,并把oldtab的应用地址对象传过去
   },
 
   /**
@@ -169,8 +166,8 @@ const tabBar = {
    */
   addToScopeLocal (tabId, listId, single = true) {
     if (single) {
-      let tabs = tasks.getSelected().tabs
-      let tab = tabs.get(tabId)
+      const tabs = tasks.getSelected().tabs
+      const tab = tabs.get(tabId)
       if (tab.url.startsWith('file:///')) {
         ipc.send('message', { type: 'error', config: { content: '系统页面无法添加!' } })
       } else {
@@ -179,7 +176,7 @@ const tabBar = {
           name: tab.title,
           url: tab.url,
           summary: '',
-          listId: listId ? listId : 0,
+          listId: listId || 0,
           star: '5'
         }
         const appsRestore = require('../../pages/apps/appsRestore.js')
@@ -188,7 +185,7 @@ const tabBar = {
       }
     } else {
       const appsRestore = require('../../pages/apps/appsRestore.js')
-      let tabs = tasks.getSelected().tabs
+      const tabs = tasks.getSelected().tabs
       const filterTabs = tabs.tabs.filter(e => !e.url.startsWith('file:///'))
       filterTabs.forEach(item => {
         const appNow = {
@@ -196,7 +193,7 @@ const tabBar = {
           name: item.title,
           url: item.url,
           summary: '',
-          listId: listId ? listId : 0,
+          listId: listId || 0,
           star: '5'
         }
         appsRestore.addApp(appNow)
@@ -213,8 +210,8 @@ const tabBar = {
    */
   async addToUserNav (tabId, listId, single = true) {
     if (single) {
-      let tabs = tasks.getSelected().tabs
-      let tab = tabs.get(tabId)
+      const tabs = tasks.getSelected().tabs
+      const tab = tabs.get(tabId)
       if (tab.url.startsWith('file:///')) {
         ipc.send('message', { type: 'error', config: { content: '系统页面无法添加!' } })
       } else {
@@ -224,7 +221,7 @@ const tabBar = {
           url: tab.url,
           summary: '',
           list_id: listId,
-          add_time: String(new Date().getTime()),
+          add_time: String(new Date().getTime())
         }
         const result = await navbarApi.addUserNavApp(appNow)
         if (result.code === 1000) {
@@ -232,7 +229,7 @@ const tabBar = {
         }
       }
     } else {
-      let tabs = tasks.getSelected().tabs
+      const tabs = tasks.getSelected().tabs
       const filterTabs = tabs.tabs.filter(e => !e.url.startsWith('file:///'))
       filterTabs.forEach(item => {
         const appNow = {
@@ -241,7 +238,7 @@ const tabBar = {
           url: item.url,
           summary: '',
           list_id: listId,
-          add_time: String(new Date().getTime()),
+          add_time: String(new Date().getTime())
         }
         setTimeout(async () => {
           await navbarApi.addUserNavApp(appNow)
@@ -253,8 +250,8 @@ const tabBar = {
 
   async addToGroupNav (tabId, listId, single = true) {
     if (single) {
-      let tabs = tasks.getSelected().tabs
-      let tab = tabs.get(tabId)
+      const tabs = tasks.getSelected().tabs
+      const tab = tabs.get(tabId)
       if (tab.url.startsWith('file:///')) {
         ipc.send('message', { type: 'error', config: { content: '系统页面无法添加!' } })
       } else {
@@ -264,7 +261,7 @@ const tabBar = {
           url: tab.url,
           summary: '',
           list_id: listId,
-          add_time: String(new Date().getTime()),
+          add_time: String(new Date().getTime())
         }
         const result = await navbarApi.addGroupNavApp(appNow)
         if (result.code === 1000) {
@@ -272,7 +269,7 @@ const tabBar = {
         }
       }
     } else {
-      let tabs = tasks.getSelected().tabs
+      const tabs = tasks.getSelected().tabs
       const filterTabs = tabs.tabs.filter(e => !e.url.startsWith('file:///'))
       filterTabs.forEach(item => {
         const appNow = {
@@ -281,7 +278,7 @@ const tabBar = {
           url: item.url,
           summary: '',
           list_id: listId,
-          add_time: String(new Date().getTime()),
+          add_time: String(new Date().getTime())
         }
         setTimeout(async () => {
           await navbarApi.addGroupNavApp(appNow)
@@ -294,40 +291,37 @@ const tabBar = {
    * 重命名
    * @param tabId
    */
-  rename(tabId){
-
-
+  rename (tabId) {
     const { newName } = ipc.sendSync('prompt', {
       text: '输入标签名称',
       values: [
-        { placeholder: tabs.get(tabId).newName?tabs.get(tabId).newName:tabs.get(tabId).title, id: 'newName', type: 'text' }
-        ],
+        { placeholder: tabs.get(tabId).newName ? tabs.get(tabId).newName : tabs.get(tabId).title, id: 'newName', type: 'text' }
+      ],
       ok: '修改',
       cancel: '取消',
       width: 500,
       height: 240
     })
-      let tabData=tabs.get(tabId)
-      if(isCopy(tabData)){
-        tabs.tabs.forEach(tab=>{
-          //遍历全部的标签，并修改同分区的标签为同一个名称
-          if(tab.partition===tabData.partition){
-            tabs.update(tab.id,{newName})
-          }
-        })
-        tabBar.updateAll()
-      }else{
-        //不是小号标签，只需要改自己就行了
-        tabs.update(tabId,{newName})
-        tabBar.updateAll()
-      }
-
+    const tabData = tabs.get(tabId)
+    if (isCopy(tabData)) {
+      tabs.tabs.forEach(tab => {
+        // 遍历全部的标签，并修改同分区的标签为同一个名称
+        if (tab.partition === tabData.partition) {
+          tabs.update(tab.id, { newName })
+        }
+      })
+      tabBar.updateAll()
+    } else {
+      // 不是小号标签，只需要改自己就行了
+      tabs.update(tabId, { newName })
+      tabBar.updateAll()
+    }
   },
 
-  //复制tab链接
+  // 复制tab链接
   shareTab: function (tabId) {
-    let tabs = tasks.getSelected().tabs
-    let tab = tabs.get(tabId)
+    const tabs = tasks.getSelected().tabs
+    const tab = tabs.get(tabId)
     if (tab.url.startsWith('file:///')) {
       ipc.send('message', { type: 'error', config: { content: '链接复制失败' } })
     } else {
@@ -335,11 +329,11 @@ const tabBar = {
     }
   },
 
-  //复制tasks整组链接生成分享页
+  // 复制tasks整组链接生成分享页
   shareTask: function () {
-    let tabs = tasks.getSelected().tabs
-    let filterList = tabs.tabs.filter(e => !e.url.startsWith('file:///'))    //过滤掉file层面的tab
-    let args = []
+    const tabs = tasks.getSelected().tabs
+    const filterList = tabs.tabs.filter(e => !e.url.startsWith('file:///')) // 过滤掉file层面的tab
+    const args = []
     for (let i = 0; i < filterList.length; i++) {
       const obj = {
         url: filterList[i].url,
@@ -351,7 +345,7 @@ const tabBar = {
     ipc.send('shareTask', args)
   },
 
-  /*标签栏补充的右键菜单触发动作结束*/
+  /* 标签栏补充的右键菜单触发动作结束 */
   createTab: function (data) {
     var tabEl = document.createElement('div')
     tabEl.className = 'tab-item'
@@ -381,7 +375,7 @@ const tabBar = {
     // var secIcon = document.createElement('i')
     // secIcon.className = 'icon-tab-not-secure tab-icon tab-info-icon i carbon:unlocked'
     // secIcon.title = l('connectionNotSecure')
-    //iconArea.appendChild(secIcon)
+    // iconArea.appendChild(secIcon)
 
     var closeTabButton = document.createElement('button')
     closeTabButton.className = 'tab-icon tab-close-button i carbon:close'
@@ -412,7 +406,7 @@ const tabBar = {
       } else {
         // the tab is focused, edit tab instead
         if (!$toolbar.expanded) {
-          //如果非二栏模式才可以触发show
+          // 如果非二栏模式才可以触发show
           tabEditor.show(data.id)
         }
       }
@@ -465,8 +459,8 @@ const tabBar = {
         desks = JSON.parse(localStorage.getItem('desks'))
       } catch (e) {
       }
-      let addToDeskMenus = []
-      if (!!desks) {
+      const addToDeskMenus = []
+      if (desks) {
         desks.forEach((desk) => {
           addToDeskMenus.push({
             id: desk.id,
@@ -484,7 +478,7 @@ const tabBar = {
               const deskModel = require('../../pages/util/model/deskModel.js')
               const element = deskModel.createElementPos(app)
               deskModel.addElementToDesk(element, desk.id)
-              ipc.send('message', { 'type': 'success', config: { 'content': '添加到桌面成功' } })
+              ipc.send('message', { type: 'success', config: { content: '添加到桌面成功' } })
             }
           })
         })
@@ -493,9 +487,9 @@ const tabBar = {
       let templateAdd = []
       if (!tab.url.startsWith('file://')) {
         let item
-        if(tab.attached){
-          item={
-            label:'还原到主屏…',
+        if (tab.attached) {
+          item = {
+            label: '还原到主屏…',
             click: function () {
               try {
                 require('../browserUI.js').detachTab(data.id)
@@ -504,10 +498,10 @@ const tabBar = {
               }
             }
           }
-        }else{
-          item= {
-            id:'setAttach',
-            label:'在右侧分屏打开…',
+        } else {
+          item = {
+            id: 'setAttach',
+            label: '在右侧分屏打开…',
             click: function () {
               tabBar.setAttach(data.id)
             }
@@ -524,14 +518,14 @@ const tabBar = {
             label: '添加到我的应用…',
             click: function () {
               tabBar.addToApps(data.id)
-            },
+            }
           },
           item
         ]
         ]
       }
 
-      let template = templateAdd.concat([
+      const template = templateAdd.concat([
 
         [
           {
@@ -542,33 +536,33 @@ const tabBar = {
             }
           },
           {
-          id: 'duplicateCopyTab',
-          label: '使用此网址创建小号标签',
-          click: function () {
-            require('browserUI.js').duplicateCopyTab(tabs.get(data.id))
-          }
-        },
+            id: 'duplicateCopyTab',
+            label: '使用此网址创建小号标签',
+            click: function () {
+              require('browserUI.js').duplicateCopyTab(tabs.get(data.id))
+            }
+          },
           {
             id: 'lockTab',
             label: tabs.get(data.id).lock === true ? '解锁标签' : '锁定标签',
             click: function () {
               tabBar.lockTab(data.id)
-            },
+            }
           },
           {
-          id: 'renameTab',
-          label: isCopy(tab)?'重命名小号':'重命名标签',
-          click: function () {
-            tabBar.rename(data.id)
+            id: 'renameTab',
+            label: isCopy(tab) ? '重命名小号' : '重命名标签',
+            click: function () {
+              tabBar.rename(data.id)
+            }
           },
-        },
 
           {
             label: '移动到最左边',
             toolTip: '作为组代表,当前任务组会更新为此标签的网站图标',
             click: function () {
               tabBar.moveToFirst(data.id)
-            },
+            }
           },
           {
             label: '移动到其他标签组',
@@ -582,20 +576,20 @@ const tabBar = {
             label: '关闭其他标签',
             click: function () {
               tabBar.closeOtherTabs(data.id)
-            },
+            }
           },
           {
             label: '关闭左侧标签',
             click: function () {
               tabBar.closeLeftTabs(data.id)
-            },
+            }
           },
           {
             label: '关闭右侧标签',
             click: function () {
               tabBar.closeRightTabs(data.id)
-            },
-          },
+            }
+          }
         ],
         [
           {
@@ -605,14 +599,14 @@ const tabBar = {
                 label: '复制链接',
                 click: function () {
                   tabBar.shareTab(data.id)
-                },
-              },
-            ],
+                }
+              }
+            ]
           }
-        ],
+        ]
       ])
       remoteMenu.open(template)
-      //绑定代码结束
+      // 绑定代码结束
     })
 
     tabBar.updateTab(data.id, tabEl)
@@ -639,27 +633,26 @@ const tabBar = {
 
     var titleEl = tabEl.querySelector('.title')
 
-    //给tab加上favicon的显示，以提升每个页面的辨识度
+    // 给tab加上favicon的显示，以提升每个页面的辨识度
     var iconEl = this.createIconEl(tabData, tabData.loaded)
-    //titleEl.textContent = tabTitle  原先的方法只是添加了文字
+    // titleEl.textContent = tabTitle  原先的方法只是添加了文字
     titleEl.innerHTML = ''
     titleEl.appendChild(iconEl)
 
-
-    if(isCopy(tabData)){
-      if(tabData.newName){
-        tabTitle=`<span class="tab-name">`+tabData.newName+`</span>`+'|'+tabTitle
-      }else{
-        tabTitle=`<span class="tab-name">`+'小号|'+`</span>`+tabTitle
+    if (isCopy(tabData)) {
+      if (tabData.newName) {
+        tabTitle = '<span class="tab-name">' + tabData.newName + '</span>' + '|' + tabTitle
+      } else {
+        tabTitle = '<span class="tab-name">' + '小号|' + '</span>' + tabTitle
       }
-    }else{
-      if(tabData.newName) {
-        tabTitle = `<span class="tab-name">`+tabData.newName+`</span>` + '|' + tabTitle
+    } else {
+      if (tabData.newName) {
+        tabTitle = '<span class="tab-name">' + tabData.newName + '</span>' + '|' + tabTitle
       }
     }
-    titleEl.innerHTML=titleEl.innerHTML+tabTitle
+    titleEl.innerHTML = titleEl.innerHTML + tabTitle
 
-    tabEl.title = tabTitle.replace(/<span.*?>|<\/span>/ig, "")
+    tabEl.title = tabTitle.replace(/<span.*?>|<\/span>/ig, '')
     if (tabData.private) {
       tabEl.title += ' (' + l('privateTab') + ')'
     }
@@ -685,7 +678,7 @@ const tabBar = {
     // }
   },
   updateAll: function () {
-    let addBtnWrapper = document.getElementById('add-btn-wrapper')
+    const addBtnWrapper = document.getElementById('add-btn-wrapper')
     empty(tabBar.containerInner)
 
     tabBar.tabElementMap = {}
@@ -706,9 +699,9 @@ const tabBar = {
   },
 
   lockTab: function (id) {
-    let tab = tabs.get(id)
-    let tabEl = tabBar.tabElementMap[id]
-    let closeEl = tabEl.querySelector('.tab-close-button')
+    const tab = tabs.get(id)
+    const tabEl = tabBar.tabElementMap[id]
+    const closeEl = tabEl.querySelector('.tab-close-button')
     if (tab.lock === true) {
       tabs.update(tab.id, { lock: !tab.lock, startPage: null })
       $toolbar.updateStartPage()
@@ -727,9 +720,8 @@ const tabBar = {
     var index = tabs.getIndex(tabId)
     var tabEl = tabBar.createTab(tab)
     if (last) {
-      tabBar.containerInner.insertBefore(tabEl, tabBar.containerInner.childNodes[tabBar.containerInner.childNodes.length-1 ])
-    } else
-    tabBar.containerInner.insertBefore(tabEl, tabBar.containerInner.childNodes[index+2])
+      tabBar.containerInner.insertBefore(tabEl, tabBar.containerInner.childNodes[tabBar.containerInner.childNodes.length - 1])
+    } else { tabBar.containerInner.insertBefore(tabEl, tabBar.containerInner.childNodes[index + 2]) }
     tabBar.tabElementMap[tabId] = tabEl
   },
 
@@ -793,14 +785,14 @@ const tabBar = {
    * @param id
    */
   addToApps (id) {
-    let tab = tabs.get(id)
-    let appModel = require('../../src/model/appModel.js')
-    let option = {
+    const tab = tabs.get(id)
+    const appModel = require('../../src/model/appModel.js')
+    const option = {
       name: tab.title,
-      logo: !!!tab.favicon ? '../../icons/default.svg' : tab.favicon.url,
+      logo: !tab.favicon ? '../../icons/default.svg' : tab.favicon.url,
       summary: '自定义应用',
       type: 'web',
-      theme_color: !!!tab.backgroundColor ? '#ccc' : tab.backgroundColor.color,
+      theme_color: !tab.backgroundColor ? '#ccc' : tab.backgroundColor.color,
       settings: {
         bounds: {
           width: 1000,
@@ -816,18 +808,18 @@ const tabBar = {
       ipc.send('message', { type: 'error', config: { content: '添加应用失败' } })
     })
   },
-  setAttach(id){
-    let tab = tabs.get(id)
-    window.mainTab=tabs.get(tabs.getSelected())
-    ipc.send('setTabAttach',{tab})
+  setAttach (id) {
+    const tab = tabs.get(id)
+    window.mainTab = tabs.get(tabs.getSelected())
+    ipc.send('setTabAttach', { tab })
   },
-  //扩充一个获取icon的方法
+  // 扩充一个获取icon的方法
   createIconEl: function (tabData, loaded) {
     var iconEl = document.createElement('img')
     iconEl.className = 'icon'
-    iconEl.id='icon'+tabData.id
+    iconEl.id = 'icon' + tabData.id
     iconEl.addEventListener('error', (e) => {
-      document.getElementById('icon'+tabData.id).src=__dirname + '/icons/default.svg'
+      document.getElementById('icon' + tabData.id).src = __dirname + '/icons/default.svg'
     })
     var src = ''
     if (loaded == false) {
@@ -849,31 +841,31 @@ const tabBar = {
     //    e.stopPropagation()
     //  })
     return iconEl
-  },
+  }
 }
 
 settings.listen('showDividerBetweenTabs', function (dividerPreference) {
   tabBar.handleDividerPreference(dividerPreference)
 })
 
-/* tab loading and progress bar status*/
+/* tab loading and progress bar status */
 webviews.bindEvent('did-start-loading', function (tabId) {
   progressBar.update(tabBar.getTab(tabId).querySelector('.progress-bar'), 'start')
   tabs.update(tabId, {
-    loaded: false,
+    loaded: false
   })
 })
 
 webviews.bindEvent('did-stop-loading', function (tabId) {
   progressBar.update(tabBar.getTab(tabId).querySelector('.progress-bar'), 'finish')
   tabs.update(tabId, {
-    loaded: true,
+    loaded: true
   })
   tabBar.updateTab(tabId)
 })
 
 tasks.on('tab-updated', function (id, key) {
-  var updateKeys = ['title', 'secure', 'url', 'muted', 'hasAudio', 'favicon'] //增加了一下更新的字段，否则favcion变化是不会生效的
+  var updateKeys = ['title', 'secure', 'url', 'muted', 'hasAudio', 'favicon'] // 增加了一下更新的字段，否则favcion变化是不会生效的
   if (updateKeys.includes(key)) {
     tabBar.updateTab(id)
   }
@@ -885,7 +877,7 @@ permissionRequests.onChange(function (tabId) {
 
 tabBar.initializeTabDragging()
 
-if (0) {//window.platformType === 'mac'
+if (0) { // window.platformType === 'mac'
   tabBar.dragulaInstance.containers = []
   keybindings.defineShortcut({ keys: 'mod' }, function () {
     tabBar.enableTabDragging()
@@ -926,11 +918,11 @@ tabBar.container.addEventListener('drop', (e) => {
   require('browserUI.js').addTab(
     tabs.add({
       url: data.files[0] ? 'file://' + data.files[0].path : data.getData('text'),
-      private: tabs.get(tabs.getSelected()).private,
+      private: tabs.get(tabs.getSelected()).private
     }),
     {
       enterEditMode: false,
-      openInBackground: !settings.get('openTabsInForeground'),
+      openInBackground: !settings.get('openTabsInForeground')
     }
   )
 })
@@ -951,31 +943,31 @@ ipc.on('stashTask', (e, args) => {
   })
 })
 
-ipc.on('importTasks',async (e, args) => {
-  let stashTasks = await db.taskStash.where('id').anyOf(args.ids).toArray()
-  let count=0
-  let remove=args.config.removeAfterImported
-  stashTasks.forEach(st=>{
-    try{
-      let task=JSON.parse(st.taskData)
-      task.id=Date.now()-Math.round(Math.random()*1000000)
+ipc.on('importTasks', async (e, args) => {
+  const stashTasks = await db.taskStash.where('id').anyOf(args.ids).toArray()
+  let count = 0
+  const remove = args.config.removeAfterImported
+  stashTasks.forEach(st => {
+    try {
+      const task = JSON.parse(st.taskData)
+      task.id = Date.now() - Math.round(Math.random() * 1000000)
       tasks.add(task)
       count++
-      if(remove){
+      if (remove) {
         db.taskStash.delete(st.id)
       }
-    }catch (e) {
-      console.warn('导入失败',e)
+    } catch (e) {
+      console.warn('导入失败', e)
     }
   })
-  if(count>0){
-    ipc.send('message',{type:'success',config:{content:'成功导入'+count+'个标签组。'}})
-  }else{
-    ipc.send('message',{type:'error',config:{content:'导入标签组失败。'}})
+  if (count > 0) {
+    ipc.send('message', { type: 'success', config: { content: '成功导入' + count + '个标签组。' } })
+  } else {
+    ipc.send('message', { type: 'error', config: { content: '导入标签组失败。' } })
   }
 })
 
-ipc.on('removeStash',(e,args)=>{
+ipc.on('removeStash', (e, args) => {
   db.taskStash.delete(args.id)
 })
 
@@ -989,34 +981,33 @@ ipc.on('toggleLockTab', (event, args) => {
 })
 
 ipc.on('lockTask', (event, args) => {
-  let tabs = tasks.get(args.id)
+  const tabs = tasks.get(args.id)
   tabs.tabs.forEach((item, index) => {
     tabs.tabs.update(item.id, { lock: true, startPage: item.url })
   })
 })
 
 ipc.on('clearTaskUnlock', (event, args) => {
-  let task = tasks.get(args.id)
-  let deleteIds = []
+  const task = tasks.get(args.id)
+  const deleteIds = []
   task.tabs.forEach((tab, index) => {
-    if (!!!tab.lock) {
+    if (!tab.lock) {
       deleteIds.push(tab.id)
     }
   })
   deleteIds.forEach((id) => {
     if (args.id === tasks.getSelected().id) {
-      //如果是当前的标签组，则通过ui去关闭标签
+      // 如果是当前的标签组，则通过ui去关闭标签
       require('../browserUI.js').closeTab(id)
     } else {
-      //如果不是当前选中的标签组，则直接移除
+      // 如果不是当前选中的标签组，则直接移除
       task.tabs.destroy(id)
     }
   })
   if (task.tabs.count() === 0 && args.id !== tasks.getSelected().id) {
-    //清空了，再加一个新标签进去，防止tabs出问题
+    // 清空了，再加一个新标签进去，防止tabs出问题
     task.tabs.add()
   }
-
 })
 
 ipc.on('tabNavigateTo', function (e, data) {
@@ -1030,28 +1021,27 @@ ipc.on('tabNavigateTo', function (e, data) {
  * 故信息和截图两边是分开发送的
  */
 ipc.on('getAddPageInfo', (event, args) => {
-  ipc.send('getHDCapture', { id: tabs.getSelected(), favWindowId: args.favWindowId }) //发送给主进程，要求捕获一个高清截图
-  let tabInfo = tabs.get(tabs.getSelected())
+  ipc.send('getHDCapture', { id: tabs.getSelected(), favWindowId: args.favWindowId }) // 发送给主进程，要求捕获一个高清截图
+  const tabInfo = tabs.get(tabs.getSelected())
   tabInfo.url = urlParser.getSourceURL(tabInfo.url)
-  ipc.sendTo(args.favWindowId, 'gotAddPageInfo', tabInfo) //直接回传消息给收藏夹的渲染进程
+  ipc.sendTo(args.favWindowId, 'gotAddPageInfo', tabInfo) // 直接回传消息给收藏夹的渲染进程
 })
 
-ipc.on('getCurrentTab',(e,a)=>{
-
-  let data=tabs.get(tabs.getSelected())
-  data.sourceUrl=urlParser.getSourceURL(data.url)
-  ipc.send('gotCurrentTab',{data})
+ipc.on('getCurrentTab', (e, a) => {
+  const data = tabs.get(tabs.getSelected())
+  data.sourceUrl = urlParser.getSourceURL(data.url)
+  ipc.send('gotCurrentTab', { data })
 })
 
-ipc.on('changeTabAttach',(e,args)=>{
-  let tab =tabs.get(args.tab.id)
-  window.attachedTab=tab //记录下吸附的tab
-  tasks.forEach(task=>{
-    task.tabs.forEach(item=>{
-      if (item.id!==args.tab.id) {
-        item.attached=false
-      }else{
-        item.attached=true
+ipc.on('changeTabAttach', (e, args) => {
+  const tab = tabs.get(args.tab.id)
+  window.attachedTab = tab // 记录下吸附的tab
+  tasks.forEach(task => {
+    task.tabs.forEach(item => {
+      if (item.id !== args.tab.id) {
+        item.attached = false
+      } else {
+        item.attached = true
       }
     })
   })
@@ -1059,35 +1049,35 @@ ipc.on('changeTabAttach',(e,args)=>{
   require('../browserUI.js').focusTab(args.tab.id)
 })
 
-ipc.on('speedup',(e,a)=>{
-  let closed=0
-  if(a.type==='all'){
-    //关闭全部，包含锁定
+ipc.on('speedup', (e, a) => {
+  let closed = 0
+  if (a.type === 'all') {
+    // 关闭全部，包含锁定
 
-    tasks.forEach(task=>{
-      task.tabs.forEach(tab=>{
-          if (webviews.viewList.includes(tab.id) && tab.id!==tabs.getSelected()) {
-            webviews.destroy(tab.id)
-            closed++
-          }
-          tab.loaded=false
+    tasks.forEach(task => {
+      task.tabs.forEach(tab => {
+        if (webviews.viewList.includes(tab.id) && tab.id !== tabs.getSelected()) {
+          webviews.destroy(tab.id)
+          closed++
+        }
+        tab.loaded = false
       })
     })
-  }else{
-    //仅关闭锁定
-    tasks.forEach(task=>{
-      task.tabs.forEach(tab=>{
-        if(!tab.lock){
-          if (webviews.viewList.includes(tab.id) && tab.id!==tabs.getSelected()) {
+  } else {
+    // 仅关闭锁定
+    tasks.forEach(task => {
+      task.tabs.forEach(tab => {
+        if (!tab.lock) {
+          if (webviews.viewList.includes(tab.id) && tab.id !== tabs.getSelected()) {
             webviews.destroy(tab.id)
             closed++
           }
-          tab.loaded=false
+          tab.loaded = false
         }
       })
     })
   }
 
-  ipc.send('message',{type:'success',config:{content:'已为您杀死'+closed+'个标签'}})
+  ipc.send('message', { type: 'success', config: { content: '已为您杀死' + closed + '个标签' } })
 })
 module.exports = tabBar

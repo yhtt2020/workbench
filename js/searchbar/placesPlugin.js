@@ -77,7 +77,7 @@ function showSearchbarPlaceResults (text, input, event, pluginName = 'places') {
         delete: function () {
           places.deleteHistory(result.url)
         },
-        favicon:result.favicon,
+        favicon: result.favicon,
         icon: 'carbon:wikis'
       }
 
@@ -113,7 +113,7 @@ function showSearchbarPlaceResults (text, input, event, pluginName = 'places') {
 function initialize () {
   searchbarPlugins.register('places', {
     index: 1,
-    alias:'位置',
+    alias: '位置',
     trigger: function (text) {
       return !!text && text.indexOf('!') !== 0
     },
@@ -122,7 +122,7 @@ function initialize () {
 
   searchbarPlugins.register('fullTextPlaces', {
     index: 2,
-    alias:'全文搜索',
+    alias: '全文搜索',
     trigger: function (text) {
       return !!text && text.indexOf('!') !== 0
     },

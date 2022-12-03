@@ -10,7 +10,6 @@ var dbErrorAlertShown = false
 
 var db = new Dexie('browsingData2')
 
-
 db.version(143).stores({
   /*
   color - the main color of the page, extracted from the page icon
@@ -22,18 +21,18 @@ db.version(143).stores({
   */
   places: '++id, &url, title, color, visitCount, lastVisit, pageHTML, extractedText, *searchIndex, isBookmarked, *tags, metadata',
   readingList: 'url, time, visitCount, pageHTML, article, extraData', // TODO remove this (reading list is no longer used)
-  myApps:'++id,name,summary,url,icon,addTime,sort,listId', // 我的应用表
+  myApps: '++id,name,summary,url,icon,addTime,sort,listId', // 我的应用表
   mySearch: '++id,name,slinkLogo,frontLink,sDefault', // 我的搜索引擎
-  accounts: '++id,&uid,nickname,avatar,lastLoginTime,code,token,isCurrent,lastUseSpace',//本地已经登录过的帐号
+  accounts: '++id,&uid,nickname,avatar,lastLoginTime,code,token,isCurrent,lastUseSpace', // 本地已经登录过的帐号
   localSpaces: '++id,uid,tasks,data,name,lastUseTime,createTime,icon',
   system: '++id,&name,value',
-  dockApps:'++id,name,url,icon,order',
-  appList:'++id,name,createTime,updateTime,order,summary,appsCount,parentId,type,path,sort',//应用列表 type:0.默认，大图标,1.小图标,2.列表  path存储路径树，便于后面查询
-  standAloneApps:'++id,name,package,logo,summary,type,url,themeColor,userThemeColor,createTime,updateTime,accountAvatar,order,useCount,lastExecuteTime,settings,unreadCount,*fileAssign',
-  userStats: '++id,scripts,apps,appsExecutedCounts,blockAds,tasks,tabs,webviewsInk,password,defaultBrowser,searchCounts,translateCounts,startTime,appList,myApps',  //脚本数，应用数，开启应用的次数，广告拦截数，标签组数，标签数，访问网站累计数，密码数，是否是默认浏览器，搜索数（只对用tab栏选中后输入搜索内容用默认搜索引擎进行搜索的统计），翻译次数， 此次开始时间，本地导航列表数，本地导航应用app数
+  dockApps: '++id,name,url,icon,order',
+  appList: '++id,name,createTime,updateTime,order,summary,appsCount,parentId,type,path,sort', // 应用列表 type:0.默认，大图标,1.小图标,2.列表  path存储路径树，便于后面查询
+  standAloneApps: '++id,name,package,logo,summary,type,url,themeColor,userThemeColor,createTime,updateTime,accountAvatar,order,useCount,lastExecuteTime,settings,unreadCount,*fileAssign',
+  userStats: '++id,scripts,apps,appsExecutedCounts,blockAds,tasks,tabs,webviewsInk,password,defaultBrowser,searchCounts,translateCounts,startTime,appList,myApps', // 脚本数，应用数，开启应用的次数，广告拦截数，标签组数，标签数，访问网站累计数，密码数，是否是默认浏览器，搜索数（只对用tab栏选中后输入搜索内容用默认搜索引擎进行搜索的统计），翻译次数， 此次开始时间，本地导航列表数，本地导航应用app数
   messages: '++id,messageType,title,body,indexName,timestamp',
-  download:'startTime,title,total,path,url'
-}).upgrade(trans=> {
+  download: 'startTime,title,total,path,url'
+}).upgrade(trans => {
   // return trans.standAloneApps.modify (item => {
   //   if(!!!item.type){
   //     item.type=0
@@ -51,18 +50,18 @@ db.version(150).stores({
   */
   places: '++id, &url, title, color, visitCount, lastVisit, pageHTML, extractedText, *searchIndex, isBookmarked, *tags, metadata',
   readingList: 'url, time, visitCount, pageHTML, article, extraData', // TODO remove this (reading list is no longer used)
-  myApps:'++id,name,summary,url,icon,addTime,sort,listId', // 我的应用表
+  myApps: '++id,name,summary,url,icon,addTime,sort,listId', // 我的应用表
   mySearch: '++id,name,slinkLogo,frontLink,sDefault', // 我的搜索引擎
-  accounts: '++id,&uid,nickname,avatar,lastLoginTime,code,token,isCurrent,lastUseSpace',//本地已经登录过的帐号
+  accounts: '++id,&uid,nickname,avatar,lastLoginTime,code,token,isCurrent,lastUseSpace', // 本地已经登录过的帐号
   localSpaces: '++id,uid,tasks,name,lastUseTime,createTime,icon',
   system: '++id,&name,value',
-  dockApps:'++id,name,url,icon,order',
-  appList:'++id,name,createTime,updateTime,order,summary,appsCount,parentId,type,path,sort',//应用列表 type:0.默认，大图标,1.小图标,2.列表  path存储路径树，便于后面查询
-  standAloneApps:'++id,name,package,logo,summary,type,url,themeColor,userThemeColor,createTime,updateTime,accountAvatar,order,useCount,lastExecuteTime,settings,unreadCount,*fileAssign',
-  userStats: '++id,scripts,apps,appsExecutedCounts,blockAds,tasks,tabs,webviewsInk,password,defaultBrowser,searchCounts,translateCounts,startTime,appList,myApps',  //脚本数，应用数，开启应用的次数，广告拦截数，标签组数，标签数，访问网站累计数，密码数，是否是默认浏览器，搜索数（只对用tab栏选中后输入搜索内容用默认搜索引擎进行搜索的统计），翻译次数， 此次开始时间，本地导航列表数，本地导航应用app数
+  dockApps: '++id,name,url,icon,order',
+  appList: '++id,name,createTime,updateTime,order,summary,appsCount,parentId,type,path,sort', // 应用列表 type:0.默认，大图标,1.小图标,2.列表  path存储路径树，便于后面查询
+  standAloneApps: '++id,name,package,logo,summary,type,url,themeColor,userThemeColor,createTime,updateTime,accountAvatar,order,useCount,lastExecuteTime,settings,unreadCount,*fileAssign',
+  userStats: '++id,scripts,apps,appsExecutedCounts,blockAds,tasks,tabs,webviewsInk,password,defaultBrowser,searchCounts,translateCounts,startTime,appList,myApps', // 脚本数，应用数，开启应用的次数，广告拦截数，标签组数，标签数，访问网站累计数，密码数，是否是默认浏览器，搜索数（只对用tab栏选中后输入搜索内容用默认搜索引擎进行搜索的统计），翻译次数， 此次开始时间，本地导航列表数，本地导航应用app数
   messages: '++id,messageType,title,body,indexName,timestamp',
-  download:'&startTime,title,total,path,url,doneDate,status'
-}).upgrade(trans=> {
+  download: '&startTime,title,total,path,url,doneDate,status'
+}).upgrade(trans => {
   // return trans.standAloneApps.modify (item => {
   //   if(!!!item.type){
   //     item.type=0
@@ -81,18 +80,18 @@ db.version(151).stores({
   */
   places: '++id, &url, title, color, visitCount, lastVisit, pageHTML, extractedText, *searchIndex, isBookmarked, *tags, metadata',
   readingList: 'url, time, visitCount, pageHTML, article, extraData', // TODO remove this (reading list is no longer used)
-  myApps:'++id,name,summary,url,icon,addTime,sort,listId', // 我的应用表
+  myApps: '++id,name,summary,url,icon,addTime,sort,listId', // 我的应用表
   mySearch: '++id,name,slinkLogo,frontLink,sDefault', // 我的搜索引擎
-  accounts: '++id,&uid,nickname,avatar,lastLoginTime,code,token,isCurrent,lastUseSpace',//本地已经登录过的帐号
+  accounts: '++id,&uid,nickname,avatar,lastLoginTime,code,token,isCurrent,lastUseSpace', // 本地已经登录过的帐号
   localSpaces: '++id,uid,tasks,name,lastUseTime,createTime,icon',
   system: '++id,&name,value',
-  dockApps:'++id,name,url,icon,order',
-  appList:'++id,name,createTime,updateTime,order,summary,appsCount,parentId,type,path,sort',//应用列表 type:0.默认，大图标,1.小图标,2.列表  path存储路径树，便于后面查询
-  standAloneApps:'++id,name,package,logo,summary,type,url,themeColor,userThemeColor,createTime,updateTime,accountAvatar,order,useCount,lastExecuteTime,settings,unreadCount,*fileAssign',
-  userStats: '++id,scripts,apps,appsExecutedCounts,blockAds,tasks,tabs,webviewsInk,password,defaultBrowser,searchCounts,translateCounts,startTime,appList,myApps',  //脚本数，应用数，开启应用的次数，广告拦截数，标签组数，标签数，访问网站累计数，密码数，是否是默认浏览器，搜索数（只对用tab栏选中后输入搜索内容用默认搜索引擎进行搜索的统计），翻译次数， 此次开始时间，本地导航列表数，本地导航应用app数
+  dockApps: '++id,name,url,icon,order',
+  appList: '++id,name,createTime,updateTime,order,summary,appsCount,parentId,type,path,sort', // 应用列表 type:0.默认，大图标,1.小图标,2.列表  path存储路径树，便于后面查询
+  standAloneApps: '++id,name,package,logo,summary,type,url,themeColor,userThemeColor,createTime,updateTime,accountAvatar,order,useCount,lastExecuteTime,settings,unreadCount,*fileAssign',
+  userStats: '++id,scripts,apps,appsExecutedCounts,blockAds,tasks,tabs,webviewsInk,password,defaultBrowser,searchCounts,translateCounts,startTime,appList,myApps', // 脚本数，应用数，开启应用的次数，广告拦截数，标签组数，标签数，访问网站累计数，密码数，是否是默认浏览器，搜索数（只对用tab栏选中后输入搜索内容用默认搜索引擎进行搜索的统计），翻译次数， 此次开始时间，本地导航列表数，本地导航应用app数
   messages: '++id,messageType,title,body,indexName,timestamp',
-  download:'&startTime,title,total,path,url,doneDate,status,href'
-}).upgrade(trans=> {
+  download: '&startTime,title,total,path,url,doneDate,status,href'
+}).upgrade(trans => {
   // return trans.standAloneApps.modify (item => {
   //   if(!!!item.type){
   //     item.type=0
@@ -111,18 +110,18 @@ db.version(152).stores({
   */
   places: '++id, &url, title, color, visitCount, lastVisit, pageHTML, extractedText, *searchIndex, isBookmarked, *tags, metadata',
   readingList: 'url, time, visitCount, pageHTML, article, extraData', // TODO remove this (reading list is no longer used)
-  myApps:'++id,name,summary,url,icon,addTime,sort,listId', // 我的应用表
+  myApps: '++id,name,summary,url,icon,addTime,sort,listId', // 我的应用表
   mySearch: '++id,name,slinkLogo,frontLink,sDefault', // 我的搜索引擎
-  accounts: '++id,&uid,nickname,avatar,lastLoginTime,code,token,isCurrent,lastUseSpace',//本地已经登录过的帐号
+  accounts: '++id,&uid,nickname,avatar,lastLoginTime,code,token,isCurrent,lastUseSpace', // 本地已经登录过的帐号
   localSpaces: '++id,uid,tasks,name,lastUseTime,createTime,icon',
   system: '++id,&name,value',
-  dockApps:'++id,name,url,icon,order',
-  appList:'++id,name,createTime,updateTime,order,summary,appsCount,parentId,type,path,sort',//应用列表 type:0.默认，大图标,1.小图标,2.列表  path存储路径树，便于后面查询
-  standAloneApps:'++id,name,package,logo,summary,type,url,themeColor,userThemeColor,createTime,updateTime,accountAvatar,order,useCount,lastExecuteTime,settings,unreadCount,*fileAssign',
-  userStats: '++id,scripts,apps,appsExecutedCounts,blockAds,tasks,tabs,webviewsInk,password,defaultBrowser,searchCounts,translateCounts,startTime,appList,myApps',  //脚本数，应用数，开启应用的次数，广告拦截数，标签组数，标签数，访问网站累计数，密码数，是否是默认浏览器，搜索数（只对用tab栏选中后输入搜索内容用默认搜索引擎进行搜索的统计），翻译次数， 此次开始时间，本地导航列表数，本地导航应用app数
+  dockApps: '++id,name,url,icon,order',
+  appList: '++id,name,createTime,updateTime,order,summary,appsCount,parentId,type,path,sort', // 应用列表 type:0.默认，大图标,1.小图标,2.列表  path存储路径树，便于后面查询
+  standAloneApps: '++id,name,package,logo,summary,type,url,themeColor,userThemeColor,createTime,updateTime,accountAvatar,order,useCount,lastExecuteTime,settings,unreadCount,*fileAssign',
+  userStats: '++id,scripts,apps,appsExecutedCounts,blockAds,tasks,tabs,webviewsInk,password,defaultBrowser,searchCounts,translateCounts,startTime,appList,myApps', // 脚本数，应用数，开启应用的次数，广告拦截数，标签组数，标签数，访问网站累计数，密码数，是否是默认浏览器，搜索数（只对用tab栏选中后输入搜索内容用默认搜索引擎进行搜索的统计），翻译次数， 此次开始时间，本地导航列表数，本地导航应用app数
   messages: '++id,messageType,avatar,title,body,indexName,timestamp',
-  download:'&startTime,title,total,path,url,doneDate,status,href'
-}).upgrade(trans=> {
+  download: '&startTime,title,total,path,url,doneDate,status,href'
+}).upgrade(trans => {
   // return trans.standAloneApps.modify (item => {
   //   if(!!!item.type){
   //     item.type=0
@@ -141,18 +140,18 @@ db.version(153).stores({
   */
   places: '++id, &url, title, color, visitCount, lastVisit, pageHTML, extractedText, *searchIndex, isBookmarked, *tags, metadata',
   readingList: 'url, time, visitCount, pageHTML, article, extraData', // TODO remove this (reading list is no longer used)
-  myApps:'++id,name,summary,url,icon,addTime,sort,listId', // 我的应用表
+  myApps: '++id,name,summary,url,icon,addTime,sort,listId', // 我的应用表
   mySearch: '++id,name,slinkLogo,frontLink,sDefault', // 我的搜索引擎
-  accounts: '++id,&uid,nickname,avatar,lastLoginTime,code,token,isCurrent,lastUseSpace',//本地已经登录过的帐号
+  accounts: '++id,&uid,nickname,avatar,lastLoginTime,code,token,isCurrent,lastUseSpace', // 本地已经登录过的帐号
   localSpaces: '++id,uid,tasks,name,lastUseTime,createTime,icon',
   system: '++id,&name,value',
-  dockApps:'++id,name,url,icon,order',
-  appList:'++id,name,createTime,updateTime,order,summary,appsCount,parentId,type,path,sort',//应用列表 type:0.默认，大图标,1.小图标,2.列表  path存储路径树，便于后面查询
-  standAloneApps:'++id,name,package,logo,summary,type,url,themeColor,userThemeColor,createTime,updateTime,accountAvatar,order,useCount,lastExecuteTime,settings,unreadCount,*fileAssign,auth',
-  userStats: '++id,scripts,apps,appsExecutedCounts,blockAds,tasks,tabs,webviewsInk,password,defaultBrowser,searchCounts,translateCounts,startTime,appList,myApps',  //脚本数，应用数，开启应用的次数，广告拦截数，标签组数，标签数，访问网站累计数，密码数，是否是默认浏览器，搜索数（只对用tab栏选中后输入搜索内容用默认搜索引擎进行搜索的统计），翻译次数， 此次开始时间，本地导航列表数，本地导航应用app数
+  dockApps: '++id,name,url,icon,order',
+  appList: '++id,name,createTime,updateTime,order,summary,appsCount,parentId,type,path,sort', // 应用列表 type:0.默认，大图标,1.小图标,2.列表  path存储路径树，便于后面查询
+  standAloneApps: '++id,name,package,logo,summary,type,url,themeColor,userThemeColor,createTime,updateTime,accountAvatar,order,useCount,lastExecuteTime,settings,unreadCount,*fileAssign,auth',
+  userStats: '++id,scripts,apps,appsExecutedCounts,blockAds,tasks,tabs,webviewsInk,password,defaultBrowser,searchCounts,translateCounts,startTime,appList,myApps', // 脚本数，应用数，开启应用的次数，广告拦截数，标签组数，标签数，访问网站累计数，密码数，是否是默认浏览器，搜索数（只对用tab栏选中后输入搜索内容用默认搜索引擎进行搜索的统计），翻译次数， 此次开始时间，本地导航列表数，本地导航应用app数
   messages: '++id,messageType,avatar,title,body,indexName,timestamp',
-  download:'&startTime,title,total,path,url,doneDate,status,href'
-}).upgrade(trans=> {
+  download: '&startTime,title,total,path,url,doneDate,status,href'
+}).upgrade(trans => {
   // return trans.standAloneApps.modify (item => {
   //   if(!!!item.type){
   //     item.type=0
@@ -170,18 +169,18 @@ db.version(154).stores({
   */
   places: '++id, &url, title, color, visitCount, lastVisit, pageHTML, extractedText, *searchIndex, isBookmarked, *tags, metadata',
   readingList: 'url, time, visitCount, pageHTML, article, extraData', // TODO remove this (reading list is no longer used)
-  myApps:'++id,name,summary,url,icon,addTime,sort,listId', // 我的应用表
+  myApps: '++id,name,summary,url,icon,addTime,sort,listId', // 我的应用表
   mySearch: '++id,name,slinkLogo,frontLink,sDefault', // 我的搜索引擎
-  accounts: '++id,&uid,nickname,avatar,lastLoginTime,code,token,isCurrent,lastUseSpace',//本地已经登录过的帐号
+  accounts: '++id,&uid,nickname,avatar,lastLoginTime,code,token,isCurrent,lastUseSpace', // 本地已经登录过的帐号
   localSpaces: '++id,uid,tasks,name,lastUseTime,createTime,icon',
   system: '++id,&name,value',
-  dockApps:'++id,name,url,icon,order',
-  appList:'++id,name,createTime,updateTime,order,summary,appsCount,parentId,type,path,sort',//应用列表 type:0.默认，大图标,1.小图标,2.列表  path存储路径树，便于后面查询
-  standAloneApps:'++id,name,package,logo,summary,type,url,themeColor,userThemeColor,createTime,updateTime,accountAvatar,order,useCount,lastExecuteTime,settings,unreadCount,*fileAssign,auth,isNew',
-  userStats: '++id,scripts,apps,appsExecutedCounts,blockAds,tasks,tabs,webviewsInk,password,defaultBrowser,searchCounts,translateCounts,startTime,appList,myApps',  //脚本数，应用数，开启应用的次数，广告拦截数，标签组数，标签数，访问网站累计数，密码数，是否是默认浏览器，搜索数（只对用tab栏选中后输入搜索内容用默认搜索引擎进行搜索的统计），翻译次数， 此次开始时间，本地导航列表数，本地导航应用app数
+  dockApps: '++id,name,url,icon,order',
+  appList: '++id,name,createTime,updateTime,order,summary,appsCount,parentId,type,path,sort', // 应用列表 type:0.默认，大图标,1.小图标,2.列表  path存储路径树，便于后面查询
+  standAloneApps: '++id,name,package,logo,summary,type,url,themeColor,userThemeColor,createTime,updateTime,accountAvatar,order,useCount,lastExecuteTime,settings,unreadCount,*fileAssign,auth,isNew',
+  userStats: '++id,scripts,apps,appsExecutedCounts,blockAds,tasks,tabs,webviewsInk,password,defaultBrowser,searchCounts,translateCounts,startTime,appList,myApps', // 脚本数，应用数，开启应用的次数，广告拦截数，标签组数，标签数，访问网站累计数，密码数，是否是默认浏览器，搜索数（只对用tab栏选中后输入搜索内容用默认搜索引擎进行搜索的统计），翻译次数， 此次开始时间，本地导航列表数，本地导航应用app数
   messages: '++id,messageType,avatar,title,body,indexName,timestamp',
-  download:'&startTime,title,total,path,url,doneDate,status,href'
-}).upgrade(trans=> {
+  download: '&startTime,title,total,path,url,doneDate,status,href'
+}).upgrade(trans => {
   // return trans.standAloneApps.modify (item => {
   //   if(!!!item.type){
   //     item.type=0
@@ -200,18 +199,18 @@ db.version(156).stores({
   */
   places: '++id, &url, title, color, visitCount, lastVisit, pageHTML, extractedText, *searchIndex, isBookmarked, *tags, metadata',
   readingList: 'url, time, visitCount, pageHTML, article, extraData', // TODO remove this (reading list is no longer used)
-  myApps:'++id,name,summary,url,icon,addTime,sort,listId', // 我的应用表
+  myApps: '++id,name,summary,url,icon,addTime,sort,listId', // 我的应用表
   mySearch: '++id,name,slinkLogo,frontLink,sDefault', // 我的搜索引擎
-  accounts: '++id,&uid,nickname,avatar,lastLoginTime,code,token,isCurrent,lastUseSpace',//本地已经登录过的帐号
+  accounts: '++id,&uid,nickname,avatar,lastLoginTime,code,token,isCurrent,lastUseSpace', // 本地已经登录过的帐号
   localSpaces: '++id,uid,tasks,name,lastUseTime,createTime,icon',
   system: '++id,&name,value',
-  dockApps:'++id,name,url,icon,order',
-  appList:'++id,name,createTime,updateTime,order,summary,appsCount,parentId,type,path,sort',//应用列表 type:0.默认，大图标,1.小图标,2.列表  path存储路径树，便于后面查询
-  standAloneApps:'++id,name,package,logo,summary,type,url,themeColor,userThemeColor,createTime,updateTime,accountAvatar,order,useCount,lastExecuteTime,settings,unreadCount,*fileAssign,auth,isNew',
-  userStats: '++id,scripts,apps,appsExecutedCounts,blockAds,tasks,tabs,webviewsInk,password,defaultBrowser,searchCounts,translateCounts,startTime,appList,myApps',  //脚本数，应用数，开启应用的次数，广告拦截数，标签组数，标签数，访问网站累计数，密码数，是否是默认浏览器，搜索数（只对用tab栏选中后输入搜索内容用默认搜索引擎进行搜索的统计），翻译次数， 此次开始时间，本地导航列表数，本地导航应用app数
+  dockApps: '++id,name,url,icon,order',
+  appList: '++id,name,createTime,updateTime,order,summary,appsCount,parentId,type,path,sort', // 应用列表 type:0.默认，大图标,1.小图标,2.列表  path存储路径树，便于后面查询
+  standAloneApps: '++id,name,package,logo,summary,type,url,themeColor,userThemeColor,createTime,updateTime,accountAvatar,order,useCount,lastExecuteTime,settings,unreadCount,*fileAssign,auth,isNew',
+  userStats: '++id,scripts,apps,appsExecutedCounts,blockAds,tasks,tabs,webviewsInk,password,defaultBrowser,searchCounts,translateCounts,startTime,appList,myApps', // 脚本数，应用数，开启应用的次数，广告拦截数，标签组数，标签数，访问网站累计数，密码数，是否是默认浏览器，搜索数（只对用tab栏选中后输入搜索内容用默认搜索引擎进行搜索的统计），翻译次数， 此次开始时间，本地导航列表数，本地导航应用app数
   messages: '++id,messageType,avatar,title,body,indexName,timestamp',
-  download:'&startTime,title,total,path,url,doneDate,status,href,addTime'
-}).upgrade(trans=> {
+  download: '&startTime,title,total,path,url,doneDate,status,href,addTime'
+}).upgrade(trans => {
   // return trans.standAloneApps.modify (item => {
   //   if(!!!item.type){
   //     item.type=0
@@ -229,19 +228,19 @@ db.version(161).stores({
   */
   places: '++id, &url, title, color, visitCount, lastVisit, pageHTML, extractedText, *searchIndex, isBookmarked, *tags, metadata',
   readingList: 'url, time, visitCount, pageHTML, article, extraData', // TODO remove this (reading list is no longer used)
-  myApps:'++id,name,summary,url,icon,addTime,sort,listId', // 我的应用表
+  myApps: '++id,name,summary,url,icon,addTime,sort,listId', // 我的应用表
   mySearch: '++id,name,slinkLogo,frontLink,sDefault', // 我的搜索引擎
-  accounts: '++id,&uid,nickname,avatar,lastLoginTime,code,token,isCurrent,lastUseSpace',//本地已经登录过的帐号
+  accounts: '++id,&uid,nickname,avatar,lastLoginTime,code,token,isCurrent,lastUseSpace', // 本地已经登录过的帐号
   localSpaces: '++id,uid,tasks,name,lastUseTime,createTime,icon',
   system: '++id,&name,value',
-  dockApps:'++id,name,url,icon,order',
-  appList:'++id,name,createTime,updateTime,order,summary,appsCount,parentId,type,path,sort',//应用列表 type:0.默认，大图标,1.小图标,2.列表  path存储路径树，便于后面查询
-  standAloneApps:'++id,name,package,logo,summary,type,url,themeColor,userThemeColor,createTime,updateTime,accountAvatar,order,useCount,lastExecuteTime,settings,unreadCount,*fileAssign,auth,isNew',
-  userStats: '++id,scripts,apps,appsExecutedCounts,blockAds,tasks,tabs,webviewsInk,password,defaultBrowser,searchCounts,translateCounts,startTime,appList,myApps',  //脚本数，应用数，开启应用的次数，广告拦截数，标签组数，标签数，访问网站累计数，密码数，是否是默认浏览器，搜索数（只对用tab栏选中后输入搜索内容用默认搜索引擎进行搜索的统计），翻译次数， 此次开始时间，本地导航列表数，本地导航应用app数
+  dockApps: '++id,name,url,icon,order',
+  appList: '++id,name,createTime,updateTime,order,summary,appsCount,parentId,type,path,sort', // 应用列表 type:0.默认，大图标,1.小图标,2.列表  path存储路径树，便于后面查询
+  standAloneApps: '++id,name,package,logo,summary,type,url,themeColor,userThemeColor,createTime,updateTime,accountAvatar,order,useCount,lastExecuteTime,settings,unreadCount,*fileAssign,auth,isNew',
+  userStats: '++id,scripts,apps,appsExecutedCounts,blockAds,tasks,tabs,webviewsInk,password,defaultBrowser,searchCounts,translateCounts,startTime,appList,myApps', // 脚本数，应用数，开启应用的次数，广告拦截数，标签组数，标签数，访问网站累计数，密码数，是否是默认浏览器，搜索数（只对用tab栏选中后输入搜索内容用默认搜索引擎进行搜索的统计），翻译次数， 此次开始时间，本地导航列表数，本地导航应用app数
   messages: '++id,messageType,avatar,title,body,indexName,timestamp',
-  download:'&startTime,title,total,path,url,doneDate,status,href,addTime',
-  taskStash:'++id,taskData,createTime,remark'
-}).upgrade(trans=> {
+  download: '&startTime,title,total,path,url,doneDate,status,href,addTime',
+  taskStash: '++id,taskData,createTime,remark'
+}).upgrade(trans => {
   // return trans.standAloneApps.modify (item => {
   //   if(!!!item.type){
   //     item.type=0
@@ -260,19 +259,19 @@ db.version(163).stores({
   */
   places: '++id, &url, title, color, visitCount, lastVisit, pageHTML, extractedText, *searchIndex, isBookmarked, *tags, metadata',
   readingList: 'url, time, visitCount, pageHTML, article, extraData', // TODO remove this (reading list is no longer used)
-  myApps:'++id,name,summary,url,icon,addTime,sort,listId', // 我的应用表
+  myApps: '++id,name,summary,url,icon,addTime,sort,listId', // 我的应用表
   mySearch: '++id,name,slinkLogo,frontLink,sDefault', // 我的搜索引擎
-  accounts: '++id,&uid,nickname,avatar,lastLoginTime,code,token,isCurrent,lastUseSpace',//本地已经登录过的帐号
+  accounts: '++id,&uid,nickname,avatar,lastLoginTime,code,token,isCurrent,lastUseSpace', // 本地已经登录过的帐号
   localSpaces: '++id,uid,tasks,name,lastUseTime,createTime,icon',
   system: '++id,&name,value',
-  dockApps:'++id,name,url,icon,order',
-  appList:'++id,name,createTime,updateTime,order,summary,appsCount,parentId,type,path,sort',//应用列表 type:0.默认，大图标,1.小图标,2.列表  path存储路径树，便于后面查询
-  standAloneApps:'++id,name,package,logo,summary,type,url,themeColor,userThemeColor,createTime,updateTime,accountAvatar,order,useCount,lastExecuteTime,settings,unreadCount,*fileAssign,auth,isNew,attribute',//新增两个字段方便应用市场查找筛选
-  userStats: '++id,scripts,apps,appsExecutedCounts,blockAds,tasks,tabs,webviewsInk,password,defaultBrowser,searchCounts,translateCounts,startTime,appList,myApps',  //脚本数，应用数，开启应用的次数，广告拦截数，标签组数，标签数，访问网站累计数，密码数，是否是默认浏览器，搜索数（只对用tab栏选中后输入搜索内容用默认搜索引擎进行搜索的统计），翻译次数， 此次开始时间，本地导航列表数，本地导航应用app数
+  dockApps: '++id,name,url,icon,order',
+  appList: '++id,name,createTime,updateTime,order,summary,appsCount,parentId,type,path,sort', // 应用列表 type:0.默认，大图标,1.小图标,2.列表  path存储路径树，便于后面查询
+  standAloneApps: '++id,name,package,logo,summary,type,url,themeColor,userThemeColor,createTime,updateTime,accountAvatar,order,useCount,lastExecuteTime,settings,unreadCount,*fileAssign,auth,isNew,attribute', // 新增两个字段方便应用市场查找筛选
+  userStats: '++id,scripts,apps,appsExecutedCounts,blockAds,tasks,tabs,webviewsInk,password,defaultBrowser,searchCounts,translateCounts,startTime,appList,myApps', // 脚本数，应用数，开启应用的次数，广告拦截数，标签组数，标签数，访问网站累计数，密码数，是否是默认浏览器，搜索数（只对用tab栏选中后输入搜索内容用默认搜索引擎进行搜索的统计），翻译次数， 此次开始时间，本地导航列表数，本地导航应用app数
   messages: '++id,messageType,avatar,title,body,indexName,timestamp',
-  download:'&startTime,title,total,path,url,doneDate,status,href,addTime',
-  taskStash:'++id,taskData,createTime,remark'
-}).upgrade(trans=> {
+  download: '&startTime,title,total,path,url,doneDate,status,href,addTime',
+  taskStash: '++id,taskData,createTime,remark'
+}).upgrade(trans => {
   // return trans.standAloneApps.modify (item => {
   //   if(!!!item.type){
   //     item.type=0
@@ -290,19 +289,19 @@ db.version(164).stores({
   */
   places: '++id, &url, title, color, visitCount, lastVisit, pageHTML, extractedText, *searchIndex, isBookmarked, *tags, metadata,favicon',
   readingList: 'url, time, visitCount, pageHTML, article, extraData', // TODO remove this (reading list is no longer used)
-  myApps:'++id,name,summary,url,icon,addTime,sort,listId', // 我的应用表
+  myApps: '++id,name,summary,url,icon,addTime,sort,listId', // 我的应用表
   mySearch: '++id,name,slinkLogo,frontLink,sDefault', // 我的搜索引擎
-  accounts: '++id,&uid,nickname,avatar,lastLoginTime,code,token,isCurrent,lastUseSpace',//本地已经登录过的帐号
+  accounts: '++id,&uid,nickname,avatar,lastLoginTime,code,token,isCurrent,lastUseSpace', // 本地已经登录过的帐号
   localSpaces: '++id,uid,tasks,name,lastUseTime,createTime,icon',
   system: '++id,&name,value',
-  dockApps:'++id,name,url,icon,order',
-  appList:'++id,name,createTime,updateTime,order,summary,appsCount,parentId,type,path,sort',//应用列表 type:0.默认，大图标,1.小图标,2.列表  path存储路径树，便于后面查询
-  standAloneApps:'++id,name,package,logo,summary,type,url,themeColor,userThemeColor,createTime,updateTime,accountAvatar,order,useCount,lastExecuteTime,settings,unreadCount,*fileAssign,auth,isNew,attribute',//新增两个字段方便应用市场查找筛选
-  userStats: '++id,scripts,apps,appsExecutedCounts,blockAds,tasks,tabs,webviewsInk,password,defaultBrowser,searchCounts,translateCounts,startTime,appList,myApps',  //脚本数，应用数，开启应用的次数，广告拦截数，标签组数，标签数，访问网站累计数，密码数，是否是默认浏览器，搜索数（只对用tab栏选中后输入搜索内容用默认搜索引擎进行搜索的统计），翻译次数， 此次开始时间，本地导航列表数，本地导航应用app数
+  dockApps: '++id,name,url,icon,order',
+  appList: '++id,name,createTime,updateTime,order,summary,appsCount,parentId,type,path,sort', // 应用列表 type:0.默认，大图标,1.小图标,2.列表  path存储路径树，便于后面查询
+  standAloneApps: '++id,name,package,logo,summary,type,url,themeColor,userThemeColor,createTime,updateTime,accountAvatar,order,useCount,lastExecuteTime,settings,unreadCount,*fileAssign,auth,isNew,attribute', // 新增两个字段方便应用市场查找筛选
+  userStats: '++id,scripts,apps,appsExecutedCounts,blockAds,tasks,tabs,webviewsInk,password,defaultBrowser,searchCounts,translateCounts,startTime,appList,myApps', // 脚本数，应用数，开启应用的次数，广告拦截数，标签组数，标签数，访问网站累计数，密码数，是否是默认浏览器，搜索数（只对用tab栏选中后输入搜索内容用默认搜索引擎进行搜索的统计），翻译次数， 此次开始时间，本地导航列表数，本地导航应用app数
   messages: '++id,messageType,avatar,title,body,indexName,timestamp',
-  download:'&startTime,title,total,path,url,doneDate,status,href,addTime',
-  taskStash:'++id,taskData,createTime,remark'
-}).upgrade(trans=> {
+  download: '&startTime,title,total,path,url,doneDate,status,href,addTime',
+  taskStash: '++id,taskData,createTime,remark'
+}).upgrade(trans => {
   // return trans.standAloneApps.modify (item => {
   //   if(!!!item.type){
   //     item.type=0
@@ -321,19 +320,19 @@ db.version(166).stores({
   */
   places: '++id, &url, title, color, visitCount, lastVisit, pageHTML, extractedText, *searchIndex, isBookmarked, *tags, metadata,favicon',
   readingList: 'url, time, visitCount, pageHTML, article, extraData', // TODO remove this (reading list is no longer used)
-  myApps:'++id,name,summary,url,icon,addTime,sort,listId', // 我的应用表
+  myApps: '++id,name,summary,url,icon,addTime,sort,listId', // 我的应用表
   mySearch: '++id,name,slinkLogo,frontLink,sDefault', // 我的搜索引擎
-  accounts: '++id,&uid,nickname,avatar,lastLoginTime,code,token,isCurrent,lastUseSpace',//本地已经登录过的帐号
+  accounts: '++id,&uid,nickname,avatar,lastLoginTime,code,token,isCurrent,lastUseSpace', // 本地已经登录过的帐号
   localSpaces: '++id,uid,tasks,name,lastUseTime,createTime,icon',
   system: '++id,&name,value',
-  dockApps:'++id,name,url,icon,order',
-  appList:'++id,name,createTime,updateTime,order,summary,appsCount,parentId,type,path,sort',//应用列表 type:0.默认，大图标,1.小图标,2.列表  path存储路径树，便于后面查询
-  standAloneApps:'++id,name,package,logo,summary,type,url,themeColor,userThemeColor,createTime,updateTime,accountAvatar,order,useCount,lastExecuteTime,settings,unreadCount,*fileAssign,auth,isNew,attribute',//新增两个字段方便应用市场查找筛选
-  userStats: '++id,scripts,apps,appsExecutedCounts,blockAds,tasks,tabs,webviewsInk,password,defaultBrowser,searchCounts,translateCounts,startTime,appList,myApps',  //脚本数，应用数，开启应用的次数，广告拦截数，标签组数，标签数，访问网站累计数，密码数，是否是默认浏览器，搜索数（只对用tab栏选中后输入搜索内容用默认搜索引擎进行搜索的统计），翻译次数， 此次开始时间，本地导航列表数，本地导航应用app数
+  dockApps: '++id,name,url,icon,order',
+  appList: '++id,name,createTime,updateTime,order,summary,appsCount,parentId,type,path,sort', // 应用列表 type:0.默认，大图标,1.小图标,2.列表  path存储路径树，便于后面查询
+  standAloneApps: '++id,name,package,logo,summary,type,url,themeColor,userThemeColor,createTime,updateTime,accountAvatar,order,useCount,lastExecuteTime,settings,unreadCount,*fileAssign,auth,isNew,attribute', // 新增两个字段方便应用市场查找筛选
+  userStats: '++id,scripts,apps,appsExecutedCounts,blockAds,tasks,tabs,webviewsInk,password,defaultBrowser,searchCounts,translateCounts,startTime,appList,myApps', // 脚本数，应用数，开启应用的次数，广告拦截数，标签组数，标签数，访问网站累计数，密码数，是否是默认浏览器，搜索数（只对用tab栏选中后输入搜索内容用默认搜索引擎进行搜索的统计），翻译次数， 此次开始时间，本地导航列表数，本地导航应用app数
   messages: '++id,messageType,avatar,title,body,indexName,timestamp',
-  download:'&startTime,title,total,path,url,doneDate,state,href,addTime,addDelTime,delTime,name',
-  taskStash:'++id,taskData,createTime,remark'
-}).upgrade(trans=> {
+  download: '&startTime,title,total,path,url,doneDate,state,href,addTime,addDelTime,delTime,name',
+  taskStash: '++id,taskData,createTime,remark'
+}).upgrade(trans => {
   // return trans.standAloneApps.modify (item => {
   //   if(!!!item.type){
   //     item.type=0
@@ -352,19 +351,19 @@ db.version(167).stores({
   */
   places: '++id, &url, title, color, visitCount, lastVisit, pageHTML, extractedText, *searchIndex, isBookmarked, *tags, metadata,favicon',
   readingList: 'url, time, visitCount, pageHTML, article, extraData', // TODO remove this (reading list is no longer used)
-  myApps:'++id,name,summary,url,icon,addTime,sort,listId', // 我的应用表
+  myApps: '++id,name,summary,url,icon,addTime,sort,listId', // 我的应用表
   mySearch: '++id,name,slinkLogo,frontLink,sDefault', // 我的搜索引擎
-  accounts: '++id,&uid,nickname,avatar,lastLoginTime,code,token,isCurrent,lastUseSpace',//本地已经登录过的帐号
+  accounts: '++id,&uid,nickname,avatar,lastLoginTime,code,token,isCurrent,lastUseSpace', // 本地已经登录过的帐号
   localSpaces: '++id,uid,tasks,name,lastUseTime,createTime,icon',
   system: '++id,&name,value',
-  dockApps:'++id,name,url,icon,order',
-  appList:'++id,name,createTime,updateTime,order,summary,appsCount,parentId,type,path,sort',//应用列表 type:0.默认，大图标,1.小图标,2.列表  path存储路径树，便于后面查询
-  standAloneApps:'++id,name,package,logo,summary,type,url,themeColor,userThemeColor,createTime,updateTime,accountAvatar,order,useCount,lastExecuteTime,settings,unreadCount,*fileAssign,auth,isNew,attribute',//新增两个字段方便应用市场查找筛选
-  userStats: '++id,scripts,apps,appsExecutedCounts,blockAds,tasks,tabs,webviewsInk,password,defaultBrowser,searchCounts,translateCounts,startTime,appList,myApps',  //脚本数，应用数，开启应用的次数，广告拦截数，标签组数，标签数，访问网站累计数，密码数，是否是默认浏览器，搜索数（只对用tab栏选中后输入搜索内容用默认搜索引擎进行搜索的统计），翻译次数， 此次开始时间，本地导航列表数，本地导航应用app数
+  dockApps: '++id,name,url,icon,order',
+  appList: '++id,name,createTime,updateTime,order,summary,appsCount,parentId,type,path,sort', // 应用列表 type:0.默认，大图标,1.小图标,2.列表  path存储路径树，便于后面查询
+  standAloneApps: '++id,name,package,logo,summary,type,url,themeColor,userThemeColor,createTime,updateTime,accountAvatar,order,useCount,lastExecuteTime,settings,unreadCount,*fileAssign,auth,isNew,attribute', // 新增两个字段方便应用市场查找筛选
+  userStats: '++id,scripts,apps,appsExecutedCounts,blockAds,tasks,tabs,webviewsInk,password,defaultBrowser,searchCounts,translateCounts,startTime,appList,myApps', // 脚本数，应用数，开启应用的次数，广告拦截数，标签组数，标签数，访问网站累计数，密码数，是否是默认浏览器，搜索数（只对用tab栏选中后输入搜索内容用默认搜索引擎进行搜索的统计），翻译次数， 此次开始时间，本地导航列表数，本地导航应用app数
   messages: '++id,messageType,avatar,title,body,indexName,timestamp',
-  download:'&startTime,title,total,path,url,doneDate,state,href,addTime,addDelTime,delTime,name,suffixal',
-  taskStash:'++id,taskData,createTime,remark'
-}).upgrade(trans=> {
+  download: '&startTime,title,total,path,url,doneDate,state,href,addTime,addDelTime,delTime,name,suffixal',
+  taskStash: '++id,taskData,createTime,remark'
+}).upgrade(trans => {
   // return trans.standAloneApps.modify (item => {
   //   if(!!!item.type){
   //     item.type=0
@@ -386,4 +385,3 @@ db.open().then(function () {
 if (typeof module !== 'undefined') {
   module.exports = { db }
 }
-

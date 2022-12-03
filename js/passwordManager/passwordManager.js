@@ -90,7 +90,7 @@ const PasswordManagers = {
 
       PasswordManagers.getConfiguredPasswordManager().then(async (manager) => {
         if (!manager) {
-          ipc.send('message',{type:'success',config:{content:"没有可用的密码管理器。",key:"password"}})
+          ipc.send('message', { type: 'success', config: { content: '没有可用的密码管理器。', key: 'password' } })
           return
         }
 
@@ -105,14 +105,14 @@ const PasswordManagers = {
         }
 
         manager.getSuggestions(formattedHostname).then(credentials => {
-          //console.log(credentials)
+          // console.log(credentials)
           // 增加对找回密码数量的提示，减少认知成本
           // if(credentials.length===0){
           //   // ipc.send('message',{type:'error',config:{content:"暂未找到保存密码。",key:"password"}})
           // }else{
           //   ipc.send('message',{type:'success',config:{content:`找到 ${credentials.length} 个密码。`,key:"password"}})
           // }
-          //不再提示找到多少密码，主要观察二级导航栏了
+          // 不再提示找到多少密码，主要观察二级导航栏了
 
           if (credentials != null) {
             webviews.callAsync(tab, 'getURL', function (err, topLevelURL) {
@@ -139,7 +139,7 @@ const PasswordManagers = {
             }])
           }
         }).catch(e => {
-          ipc.send('message',{type:'error',config:{content:"获取自动填充密码失败。"}})
+          ipc.send('message', { type: 'error', config: { content: '获取自动填充密码失败。' } })
           console.error('Failed to get password suggestions: ' + e.message)
         })
       })

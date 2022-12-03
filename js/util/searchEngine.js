@@ -13,29 +13,30 @@ var defaultSearchEngine = 'Baidu'
 var searchEngines = {
   Baidu: {
     name: 'Baidu',
-    alias:'百度',
+    alias: '百度',
     searchURL: 'https://www.baidu.com/s?wd=%s',
     suggestionsURL: 'https://www.baidu.com/su?wd=%s&action=opensearch',
     queryParam: 'wd'
-  }, yuan: {
+  },
+  yuan: {
     name: 'yuan',
     alias: '元社区',
     searchURL: 'https://s.apps.vip/search-result?keyword=%s',
-    //suggestionsURL: 'https://www.baidu.com/su?wd=%s&action=opensearch',
+    // suggestionsURL: 'https://www.baidu.com/su?wd=%s&action=opensearch',
     queryParam: 'keyword'
   },
   bilibili: {
     name: 'bilibili',
     alias: '哔哩哔哩',
     searchURL: 'https://search.bilibili.com/all?keyword=%s',
-    //suggestionsURL:'https://s.search.bilibili.com/main/suggest?term=%s',
+    // suggestionsURL:'https://s.search.bilibili.com/main/suggest?term=%s',
     queryParam: 'keyword'
   },
   zhihu: {
     name: 'zhihu',
     alias: '知乎',
     searchURL: 'https://www.zhihu.com/search?type=content&q=%s',
-    //suggestionsURL:'https://s.search.bilibili.com/main/suggest?term=%s',
+    // suggestionsURL:'https://s.search.bilibili.com/main/suggest?term=%s',
     queryParam: 'q'
   },
   Bing: {
@@ -126,9 +127,9 @@ settings.listen('searchEngine', function (value) {
     } catch (e) {}
     currentSearchEngine = {
       name: searchDomain || 'custom',
-      alias:'自定义',
+      alias: '自定义',
       searchURL: value.url,
-      custom: true,
+      custom: true
     }
   } else {
     currentSearchEngine = searchEngines[defaultSearchEngine]

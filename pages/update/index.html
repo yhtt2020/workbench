@@ -1,145 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>自动升级</title>
-  <script src="../../ext/vue/vue.js"></script>
-  <script src="../../ext/vue/antd.min.js"></script>
-  <link rel="stylesheet" href="../../ext/vue/antd.min.css"/>
-</head>
-<body style="overflow: hidden">
-<script>
-  Vue.use(antd)
-</script>
-<div id="appVue">
-  <template>
-    <a-result>
-<!--      <template #extra>-->
-<!--        <a-button key="console" type="primary">-->
-<!--          下载更新-->
-<!--        </a-button>-->
-<!--      -->
-<!--       -->
-<!--      </template>-->
-      <span slot="title">
-        {{tip}}
-      </span>
-      <div class="desc">
-
-        <p>您当前的版本号：{{currentVersion}}</p>
-        <div v-if="!info.version" style="color: red;margin-bottom: 10px" >
-          暂未检测到新版本，请确认网络或者版本类型。
-        </div>
-        <div v-else>
-          <p>
-            最新发行版本号：<strong>{{ info.version }}</strong>
-            <a @click="send('addTab',{url:'https://www.yuque.com/tswork/ngd5zk/rvo0kt'})" >了解更多 &gt;</a>
-          </p>
-          <p>
-            发布日期： <strong>{{ renderTime(info.releaseDate) }}</strong>
-          </p>
-        </div>
-        <p>如更新后无法打开浏览器，请至官网 <a @click="send('addTab',{url:'https://apps.vip'})">apps.vip</a> 重新下载最新稳定版本。</p>
-      </div>
-      <template #extra>
-        <div v-if="canUpdate">
-          <a-button @click="startInstall" type="primary">
-            重新打开并更新
-          </a-button>
-          <a-button @click="cancel">
-            下次启动更新
-          </a-button>
-        </div>
-        <div v-else>
-          <a-button @click="cancel">
-            关闭
-          </a-button>
-        </div>
+  <head>
+    <meta charset="UTF-8" />
+    <title>自动升级</title>
+    <script src="../../ext/vue/vue.js"></script>
+    <script src="../../ext/vue/antd.min.js"></script>
+    <link rel="stylesheet" href="../../ext/vue/antd.min.css" />
+  </head>
+  <body style="overflow: hidden">
+    <script>
+      Vue.use(antd);
+    </script>
+    <div id="appVue">
+      <template>
+        <a-result>
+          <!--      <template #extra>-->
+          <!--        <a-button key="console" type="primary">-->
+          <!--          下载更新-->
+          <!--        </a-button>-->
+          <!--      -->
+          <!--       -->
+          <!--      </template>-->
+          <span slot="title"> {{tip}} </span>
+          <div class="desc">
+            <p>您当前的版本号：{{currentVersion}}</p>
+            <div v-if="!info.version" style="color: red; margin-bottom: 10px">
+              暂未检测到新版本，请确认网络或者版本类型。
+            </div>
+            <div v-else>
+              <p>
+                最新发行版本号：<strong>{{ info.version }}</strong>
+                <a
+                  @click="send('addTab',{url:'https://www.yuque.com/tswork/ngd5zk/rvo0kt'})"
+                  >了解更多 &gt;</a
+                >
+              </p>
+              <p>
+                发布日期： <strong>{{ renderTime(info.releaseDate) }}</strong>
+              </p>
+            </div>
+            <p>
+              如更新后无法打开浏览器，请至官网
+              <a @click="send('addTab',{url:'https://apps.vip'})">apps.vip</a>
+              重新下载最新稳定版本。
+            </p>
+          </div>
+          <template #extra>
+            <div v-if="canUpdate">
+              <a-button @click="startInstall" type="primary">
+                重新打开并更新
+              </a-button>
+              <a-button @click="cancel"> 下次启动更新 </a-button>
+            </div>
+            <div v-else>
+              <a-button @click="cancel"> 关闭 </a-button>
+            </div>
+          </template>
+        </a-result>
       </template>
-    </a-result>
-
-  </template>
-</div>
-<script>
-  const ipc=require('electron').ipcRenderer
-  window.ipc=ipc
-  function toNum(a){
-    var a=a.toString();
-//也可以这样写 var c=a.split(/\./);
-    var c=a.split('.');
-    var num_place=["","0","00","000","0000"],r=num_place.reverse();
-    for (var i=0;i<c.length;i++){
-      var len=c[i].length;
-      c[i]=r[len]+c[i];
-    }
-    var res= c.join('');
-    return res;
-  }
-  function cpr_version(a,b){
-    var _a=toNum(a),_b=toNum(b);
-    if(_a===_b) return a;
-    if(_a>_b)  return a;
-    if(_a<_b)  return b;
-  }
-  let appVue = new Vue({
-    el: '#appVue',
-    components: {},
-    data () {
-      return {
-          info:{
-            version:'读取数据中',
-            releaseDate:'读取数据中',
+    </div>
+    <script>
+      const ipc = require("electron").ipcRenderer;
+      window.ipc = ipc;
+      function toNum(a) {
+        var a = a.toString();
+        //也可以这样写 var c=a.split(/\./);
+        var c = a.split(".");
+        var num_place = ["", "0", "00", "000", "0000"],
+          r = num_place.reverse();
+        for (var i = 0; i < c.length; i++) {
+          var len = c[i].length;
+          c[i] = r[len] + c[i];
+        }
+        var res = c.join("");
+        return res;
+      }
+      function cpr_version(a, b) {
+        var _a = toNum(a),
+          _b = toNum(b);
+        if (_a === _b) return a;
+        if (_a > _b) return a;
+        if (_a < _b) return b;
+      }
+      let appVue = new Vue({
+        el: "#appVue",
+        components: {},
+        data() {
+          return {
+            info: {
+              version: "读取数据中",
+              releaseDate: "读取数据中",
+            },
+            currentVersion: "",
+            canUpdate: false,
+            tip: "",
+          };
+        },
+        mounted() {},
+        methods: {
+          startInstall() {
+            ipc.send("startInstall");
           },
-        currentVersion:'',
-        canUpdate:false,
-        tip:''
+          cancel() {
+            ipc.send("closeUpdate");
+          },
+          renderTime(date) {
+            var dateee = new Date(date).toJSON();
+            return new Date(+new Date(dateee) + 8 * 3600 * 1000)
+              .toISOString()
+              .replace(/T/g, " ")
+              .replace(/\.[\d]{3}Z/, "");
+          },
+          send(event, args) {
+            ipc.send(event, args);
+          },
+        },
+      });
+      ipc.on("downloadProgress", (args) => {
+        console.log(args);
+      });
+      ipc.on("getInfo", (event, args) => {
+        // files: [{…}]
+        // path: "想天浏览器 Setup 0.8.6.exe"
+        // releaseDate: "2021-11-09T12:54:39.593Z"
+        // sha512: "ercXqvkbZdTDhR4u1YjXsvrqurXIsWuX52iCSToCeT3dDMWOt9mRUc/sCqDh3UoxBXv84Kd+bpZgJs3BG2mEJw=="
+        // version: "0.8.6"
+        appVue.info = args.updateInfo;
+        appVue.currentVersion = args.currentVersion;
+        if (appVue.info.version) {
+          appVue.canUpdate =
+            cpr_version(args.updateInfo.version, args.currentVersion) ===
+              args.updateInfo.version &&
+            args.updateInfo.version !== args.currentVersion;
+        }
+        if (appVue.canUpdate) {
+          appVue.tip = "您有新的升级可用";
+        } else {
+          appVue.tip = "暂无更新可用";
+        }
+      });
+    </script>
+    <style>
+      .desc p {
+        margin-bottom: 1em;
       }
-    },
-    mounted(){
-
-    },
-    methods:{
-      startInstall(){
-        ipc.send('startInstall')
-      },
-      cancel(){
-        ipc.send('closeUpdate')
-      },
-      renderTime(date){
-        var dateee = new Date(date).toJSON();
-        return new Date(+new Date(dateee) + 8 * 3600 * 1000).toISOString().replace(/T/g, ' ').replace(/\.[\d]{3}Z/, '')
-      },
-      send(event,args){
-        ipc.send(event,args)
-      }
-
-    }
-  })
-  ipc.on('downloadProgress',(args)=>{
-    console.log(args)
-  })
-  ipc.on('getInfo',(event,args)=>{
-    // files: [{…}]
-    // path: "想天浏览器 Setup 0.8.6.exe"
-    // releaseDate: "2021-11-09T12:54:39.593Z"
-    // sha512: "ercXqvkbZdTDhR4u1YjXsvrqurXIsWuX52iCSToCeT3dDMWOt9mRUc/sCqDh3UoxBXv84Kd+bpZgJs3BG2mEJw=="
-    // version: "0.8.6"
-    appVue.info=args.updateInfo
-    appVue.currentVersion=args.currentVersion
-    if(appVue.info.version){
-      appVue.canUpdate=(cpr_version(args.updateInfo.version,args.currentVersion)===args.updateInfo.version) && args.updateInfo.version!==args.currentVersion
-    }
-   if(appVue.canUpdate){
-      appVue.tip='您有新的升级可用'
-    }else{
-      appVue.tip='暂无更新可用'
-    }
-  })
-</script>
-<style >
-  .desc p {
-    margin-bottom: 1em;
-  }
-</style>
-</body>
+    </style>
+  </body>
 </html>

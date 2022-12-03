@@ -31,13 +31,13 @@ function addTaskFromMenu () {
 
   browserUI.addTask()
   // 移除两次弹窗事件
-  //taskOverlay.show()
+  // taskOverlay.show()
   // setTimeout(function () {
   //   taskOverlay.hide()
   //   tabEditor.show(tabs.getSelected())
   // }, 600)
 }
-function addSingleTask(){
+function addSingleTask () {
   if (modalMode.enabled()) {
     return
   }
@@ -114,11 +114,10 @@ var taskOverlay = {
     }
   }),
   show: function () {
-
-    if(window.sideBar.mod==='open'){
-      document.getElementById('task-area').style.marginLeft='155px'
-    }else{
-      document.getElementById('task-area').style.marginLeft='55px'
+    if (window.sideBar.mod === 'open') {
+      document.getElementById('task-area').style.marginLeft = '155px'
+    } else {
+      document.getElementById('task-area').style.marginLeft = '55px'
     }
     /* disabled in focus mode */
     if (focusMode.enabled()) {
@@ -129,7 +128,7 @@ var taskOverlay = {
     webviews.requestPlaceholder('taskOverlay')
 
     document.body.classList.add('task-overlay-is-shown')
-    if($toolbar.layoutMod==='max') taskSwitcherButton.style.display='inline-block'
+    if ($toolbar.layoutMod === 'max') taskSwitcherButton.style.display = 'inline-block'
     tabEditor.hide()
     document.getElementById('task-search-input').value = ''
 
@@ -183,12 +182,11 @@ var taskOverlay = {
       taskContainer.appendChild(el)
       taskOverlay.tabDragula.containers.push(el.getElementsByClassName('task-tabs-container')[0])
     })
-
   },
 
   hide: function () {
     if (this.isShown) {
-      if($toolbar.layoutMod==='max') taskSwitcherButton.style.display='none'
+      if ($toolbar.layoutMod === 'max') taskSwitcherButton.style.display = 'none'
       this.isShown = false
       this.overlayElement.hidden = true
 
@@ -349,7 +347,7 @@ var taskOverlay = {
 
     keybindings.defineShortcut('addTask', addTaskFromMenu)
     ipcRenderer.on('addTask', addTaskFromMenu) // for menu item
-    ipcRenderer.on('addSingleTask',addSingleTask)
+    ipcRenderer.on('addSingleTask', addSingleTask)
 
     /* rearrange tabs when they are dropped */
 
@@ -372,7 +370,7 @@ var taskOverlay = {
         addTaskButton.classList.remove('drag-target')
       }
     })
-    //mark 这里是拖动标签到另外的位置
+    // mark 这里是拖动标签到另外的位置
     taskOverlay.tabDragula.on('drop', function (el, target, source, sibling) { // see https://github.com/bevacqua/dragula#drakeon-events
       var tabId = el.getAttribute('data-tab')
 
@@ -454,8 +452,6 @@ var taskOverlay = {
       tasks.splice(newIdx, 0, droppedTask)
     })
 
-
-
     /* auto-scroll the container when the item is dragged to the edge of the screen */
 
     taskOverlay.tabDragula.on('drag', function () {
@@ -491,10 +487,10 @@ var taskOverlay = {
     })
   }
 }
-ipc.on('showTasks',()=>{
+ipc.on('showTasks', () => {
   taskOverlay.show()
 })
-ipc.on('closeTask',(event,args)=>{
+ipc.on('closeTask', (event, args) => {
   browserUI.closeTask(args.tabId)
 })
 

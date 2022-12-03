@@ -1,12 +1,12 @@
-let localCacheManager = require(path.join(__dirname, '/js/main/localCacheManager.js'))
+const localCacheManager = require(path.join(__dirname, '/js/main/localCacheManager.js'))
 const { shell } = require('electron')
-const fsExtra=require('fs-extra')
+const fsExtra = require('fs-extra')
 const ElectronLog = require('electron-log')
 const wallpaper = require('wallpaper')
-const STORE_PATH_KEY='app.fav.storePath'
-async function initFav(){
+const STORE_PATH_KEY = 'app.fav.storePath'
+async function initFav () {
   const FAV_PACKAGE = 'com.thisky.fav'
-  //设置默认的本地收藏夹位置
+  // 设置默认的本地收藏夹位置
   const defaultStorePath = await sqlDb.getConfig(STORE_PATH_KEY, path.join(app.getPath('userData'), '收藏夹.lab'))
 
   ipc.on('downloadAndSetWallpaper', (event, args) => {
@@ -15,7 +15,7 @@ async function initFav(){
       if (!fs.existsSync(savePath)) {
         fs.mkdirSync(savePath)
       }
-      let filename = localCacheManager.getHash(args.url).substr(0, 5)
+      const filename = localCacheManager.getHash(args.url).substr(0, 5)
       const filePath = path.join(savePath, filename)
       localCacheManager.fetchContentWithType(args.url, filePath).then((header) => {
         let ext = header.substr(header.lastIndexOf('/') + 1)
@@ -31,12 +31,12 @@ async function initFav(){
       event.reply('setWallPaper', { status: 0 })
     }
   })
-  //------------------>
+  // ------------------>
   let canCloseInterval = false
   ipc.on('canCloseInterval', (event, args) => {
     canCloseInterval = true
   })
-  let interval = setInterval(() => {
+  const interval = setInterval(() => {
     if (mainWindow && !mainWindow.isDestroyed()) {
       mainWindow.webContents.send('getUserDataPath', defaultStorePath)
       if (canCloseInterval) {
@@ -44,8 +44,8 @@ async function initFav(){
       }
     }
   }, 5000)
-  //以上部分解决子进程中无法获得到当前收藏夹的storePath路径的问题
-  //-----------------
+  // 以上部分解决子进程中无法获得到当前收藏夹的storePath路径的问题
+  // -----------------
 
   if (!fs.existsSync(defaultStorePath)) {
     /**
@@ -63,14 +63,14 @@ async function initFav(){
         }
       }
 
-      let commonFolder = [
+      const commonFolder = [
         '书签', '图片', '视频', '音频', '密码', '笔记'
       ]
-      let jobFolder = {
-        'develop': [],
-        'pm': [],
-        'designer': [],
-        'salse': []
+      const jobFolder = {
+        develop: [],
+        pm: [],
+        designer: [],
+        salse: []
       }
       commonFolder.forEach(folder => {
         createDir(defaultStorePath, folder)
@@ -82,7 +82,7 @@ async function initFav(){
   ipc.on('getUserInfo', (event, args) => {
     SidePanel.send('getUserInfo', { webContentsId: event.sender.id })
   })
-  //采集到的内容本地下载下来保存
+  // 采集到的内容本地下载下来保存
   ipc.on('getFavContent', async (event, args) => {
     SidePanel.send('message', { type: 'info', config: { content: '开始下载图片到收藏夹，请稍候…', key: 'fav' } })
 
@@ -98,7 +98,7 @@ async function initFav(){
 
     SidePanel.send('executeAppByPackage', { package: FAV_PACKAGE, background: true })
     const content = args.content
-    let filename = Date.now().toString()//content.src.substr(content.src.lastIndexOf('/'))
+    let filename = Date.now().toString()// content.src.substr(content.src.lastIndexOf('/'))
     if (content.type === 'img') {
       content.src.substr(content.src.lastIndexOf('/'))
       if (filename.length > 30) {
@@ -108,7 +108,7 @@ async function initFav(){
         filename = filename.substr(0, 30) + filename.substr(filename.indexOf('.'))
       }
 
-      let fullPath = path.join(defaultStorePath, filename)
+      const fullPath = path.join(defaultStorePath, filename)
       localCacheManager.fetchContentWithType(content.src, fullPath).then((header) => {
         let ext = header.substr(header.lastIndexOf('/') + 1)
         if (ext === 'svg+xml') {
@@ -122,7 +122,7 @@ async function initFav(){
         } else {
           newFileName = Date.now() + '.' + ext
         }
-        newFileName = filterFilename(newFileName) //过滤一下文件名
+        newFileName = filterFilename(newFileName) // 过滤一下文件名
         let i = 0
         let testFileName = newFileName
         while (fs.existsSync(path.join(defaultStorePath, testFileName))) {
@@ -131,15 +131,15 @@ async function initFav(){
         }
         let lastPath = testFileName
         lastPath = lastPath
-        let storePath = path.join(defaultStorePath, lastPath)//存储的实际文件名
+        const storePath = path.join(defaultStorePath, lastPath)// 存储的实际文件名
         fs.renameSync(path.join(defaultStorePath, filename), storePath)
         if (fs.existsSync(path.join(defaultStorePath, newFileName))) {
-          //此时已经保存成功，需要发送消息告诉fav，要更新了
-          let timeout = 5000
+          // 此时已经保存成功，需要发送消息告诉fav，要更新了
+          const timeout = 5000
           let timeGone = 0
-          let timer = setInterval(() => {
+          const timer = setInterval(() => {
             if (timeGone >= timeout) {
-              //超时终止
+              // 超时终止
               clearInterval(timer)
             }
             if (appManager.getWindowByPackage(FAV_PACKAGE)) {
@@ -161,7 +161,6 @@ async function initFav(){
         SidePanel.send('message', { type: 'error', config: { content: '收藏失败，意外错误。', key: 'fav' } })
       })
     }
-
   })
 
   ipc.on('openDir', (event, args) => {
@@ -184,7 +183,6 @@ async function initFav(){
     } catch (e) {
       console.warn(e)
     }
-
   })
   ipc.on('setWallPaper', (event, args) => {
     sendIPCToWindow(mainWindow, 'setNewTabWallPaper', { wallPaper: args.wallPaper, tip: false })
@@ -213,8 +211,8 @@ async function initFav(){
   let popWindow = null
 
   async function showAddPage () {
-    let url = 'pages/fav/index.html'//decodeURI('file://'+path.join(__dirname,'/pages/fav/index.html?=#/popSaveToFolder'))//开发环境测试环境，提交到版本库前注释掉
-    let options = {
+    let url = 'pages/fav/index.html'// decodeURI('file://'+path.join(__dirname,'/pages/fav/index.html?=#/popSaveToFolder'))//开发环境测试环境，提交到版本库前注释掉
+    const options = {
       hash: 'popSaveToFolder',
       enableRemoteModule: true
     }
@@ -223,14 +221,14 @@ async function initFav(){
     }
 
     const bounds = mainWindow.getBounds()
-    let currentBounds = { width: 500, height: 500, x: bounds.x + bounds.width - 510, y: bounds.y + 85 }
+    const currentBounds = { width: 500, height: 500, x: bounds.x + bounds.width - 510, y: bounds.y + 85 }
     if (!popManager.get('favSaveToFolder')) {
-      ipc.on('addPageReady', () => popWindow.window.webContents.send('addPage'))//首次准备好之后再发消息获取图片，防止过早获取，应用未准备好接收
+      ipc.on('addPageReady', () => popWindow.window.webContents.send('addPage'))// 首次准备好之后再发消息获取图片，防止过早获取，应用未准备好接收
     }
     popWindow = await popManager.openPop('favSaveToFolder', url, {}, { preload: __dirname + '/pages/fav/preload.js' }, options)
-    popWindow.setBounds(currentBounds)  //重新调整位置，不然会保持在首次创建的位置不再变化
+    popWindow.setBounds(currentBounds) // 重新调整位置，不然会保持在首次创建的位置不再变化
 
-    require("@electron/remote/main").enable(popWindow.window.webContents)
+    require('@electron/remote/main').enable(popWindow.window.webContents)
     popWindow.window.webContents.send('addPage')
   }
 
@@ -238,7 +236,7 @@ async function initFav(){
     showAddPage()
   })
   ipc.on('favContextMenu', (event, args) => {
-    let menuTemplate = [{
+    const menuTemplate = [{
       label: '收藏网页...',
       click: () => {
         showAddPage()
@@ -246,25 +244,25 @@ async function initFav(){
     }, {
       type: 'separator'
     },
-      // {
-      //   label: '整页截图保存'
-      // },
-      // {
-      //   label: '此页面禁用拖拽保存'
-      // },
-      // {
-      //   label: '此域名下禁用拖拽保存'
-      // },
-      // {
-      //   type: 'separator'
-      // },
-      {
-        label: '打开超级收藏夹',
-        click () {
-          protocolManager.handleProtocol('tsb://app/redirect/?package=com.thisky.fav&url=/')
-        }
-      }]
-    let menu = require('electron').Menu.buildFromTemplate(menuTemplate)
+    // {
+    //   label: '整页截图保存'
+    // },
+    // {
+    //   label: '此页面禁用拖拽保存'
+    // },
+    // {
+    //   label: '此域名下禁用拖拽保存'
+    // },
+    // {
+    //   type: 'separator'
+    // },
+    {
+      label: '打开超级收藏夹',
+      click () {
+        protocolManager.handleProtocol('tsb://app/redirect/?package=com.thisky.fav&url=/')
+      }
+    }]
+    const menu = require('electron').Menu.buildFromTemplate(menuTemplate)
     menu.popup()
   })
 
@@ -282,7 +280,7 @@ async function initFav(){
   })
 
   ipc.on('exportFile', async (event, args) => {
-    let defaultPath = args.parentPath || args.path
+    const defaultPath = args.parentPath || args.path
     let filePath
     filePath = dialog.showSaveDialogSync({
       title: '导出内容',
@@ -291,7 +289,7 @@ async function initFav(){
         'openDirectory'
       ]
     })
-    if (!!!filePath) return
+    if (!filePath) return
     // if(args.parentPath){
     //    filePath= dialog.showOpenDialogSync({
     //     title:'导出内容',
@@ -308,7 +306,7 @@ async function initFav(){
       event.reply('error', { message: '导出文件不能导出到收藏夹内。' })
       return
     }
-    if (!!filePath) {
+    if (filePath) {
       try {
         fsExtra.copySync(args.path, filePath)
         shell.showItemInFolder(filePath)

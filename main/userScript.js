@@ -27,7 +27,7 @@ function createUserScriptWin (args) {
           '--user-data-path=' + userDataPath,
           '--app-version=' + app.getVersion(),
           '--app-name=' + app.getName(),
-          ...((isDevelopmentMode ? ['--development-mode'] : [])),
+          ...((isDevelopmentMode ? ['--development-mode'] : []))
         ]
       }
     })
@@ -42,12 +42,11 @@ function createUserScriptWin (args) {
     userScriptWindow.setPosition(parseInt(userScriptWindows_new_x), parseInt(userScriptWindow_new_y), false)
 
     userScriptWindow.webContents.loadURL('file://' + __dirname + '/pages/userScript/index.html')
-    //siteCardWindow.webContents.openDevTools()
+    // siteCardWindow.webContents.openDevTools()
     userScriptWindow.on('close', () => userScriptWindow = null)
     userScriptWindow.on('show', () => {
       userScriptWindow.focus()
     })
-
   } else {
     userScriptWindow.close()
     userScriptWindow = null
@@ -56,39 +55,40 @@ function createUserScriptWin (args) {
 
 app.whenReady().then(() => {
   const userScriptPath = userDataPath + '/userscripts'
-  ipc.on('exportScript',(event,args)=>{
-    const filename=args.filename
-    const path=dialog.showSaveDialogSync(userScriptWindow,{title:'导出脚本',defaultPath:args.filename})
-    if(!!!path){
-      return
-    }else{
-      fs.copyFileSync(userScriptPath+'/'+filename,path)
+  ipc.on('exportScript', (event, args) => {
+    const filename = args.filename
+    const path = dialog.showSaveDialogSync(userScriptWindow, { title: '导出脚本', defaultPath: args.filename })
+    if (!path) {
+
+    } else {
+      fs.copyFileSync(userScriptPath + '/' + filename, path)
     }
   })
 
   ipc.on('importScript', (event, args) => {
     let existsCount = 0
     let imported = 0
-    let existsFilename = []
+    const existsFilename = []
     userScriptWindow.setAlwaysOnTop(false)
     mainWindow.focus()
     const files = dialog.showOpenDialogSync({
       userScriptWindow,
       filters: [
         { name: '脚本文件', extensions: ['js'] }
-      ], properties: ['openFile', 'multiSelections']
+      ],
+      properties: ['openFile', 'multiSelections']
     })
-    if(!!!files){
+    if (!files) {
       return
     }
-     if(!fs.existsSync(userScriptPath)){
+    if (!fs.existsSync(userScriptPath)) {
      	fs.mkdirSync(userScriptPath)
-     }
+    }
     files.forEach((file) => {
-      let  filename=''
-      if(isWin()){
-         filename= file.slice(file.lastIndexOf('\\') + 1, file.length)
-      }else{
+      let filename = ''
+      if (isWin()) {
+        filename = file.slice(file.lastIndexOf('\\') + 1, file.length)
+      } else {
         filename = file.slice(file.lastIndexOf('/') + 1, file.length)
       }
       const target = userScriptPath + '/' + filename
@@ -102,26 +102,24 @@ app.whenReady().then(() => {
           imported++
         }
       }
-
     })
     if (existsCount > 0) {
       sendMessage({
         type: 'info',
-        config: { content: '成功导入' + imported + '个脚本，导入失败' + existsCount + '个脚本。导入失败的脚本名称如下：\n' + existsFilename.join('\n')+' 新导入的脚本需要重启浏览器方可生效。' }
+        config: { content: '成功导入' + imported + '个脚本，导入失败' + existsCount + '个脚本。导入失败的脚本名称如下：\n' + existsFilename.join('\n') + ' 新导入的脚本需要重启浏览器方可生效。' }
       })
     } else {
       sendMessage({ type: 'success', config: { content: '成功导入' + imported + '个脚本。新导入的脚本需要重启浏览器方可生效。' } })
     }
     userScriptWindow.setAlwaysOnTop(true)
     userScriptWindow.webContents.reload()
-
   })
   ipc.on('openScriptManager', (event, args) => {
     createUserScriptWin()
   })
   ipc.on('viewCode', (event, args) => {
     const file = args.file
-    let viewCodeWindow = new BrowserWindow({
+    const viewCodeWindow = new BrowserWindow({
       frame: true,
       backgroundColor: 'white',
       parent: mainWindow,
@@ -144,7 +142,7 @@ app.whenReady().then(() => {
           '--app-version=' + app.getVersion(),
           '--app-name=' + app.getName(),
           '--file=' + file.filename,
-          ...((isDevelopmentMode ? ['--development-mode'] : [])),
+          ...((isDevelopmentMode ? ['--development-mode'] : []))
         ]
       }
     })
@@ -159,81 +157,82 @@ app.whenReady().then(() => {
       userScriptWindow,
       filters: [
         { name: '密码导出文件', extensions: ['csv'] }
-      ], properties: ['openFile']
+      ],
+      properties: ['openFile']
     })
-    if(!!!files){
+    if (!files) {
       return
     }
-    const csv=require('csvtojson')
-    let importedPwds=[]
+    const csv = require('csvtojson')
+    const importedPwds = []
     files.forEach((file) => {
-      csv().fromFile(file).then(json=>{
+      csv().fromFile(file).then(json => {
         // {
         // [1]     name: 'miwifi.com',
         // [1]     url: 'http://miwifi.com/cgi-bin/luci/web',
         // [1]     username: '',
         // [1]     password: 'chenyixiao1'
         // [1]   }  edge导入格式
-        function convertFromChrome(item){
+        function convertFromChrome (item) {
           return {
             domain: item.name,
             username: item.username,
             password: item.password,
             alias: item.url
           }
-          //从chrome、edge导入密码
+          // 从chrome、edge导入密码
         }
-        function convertFromSafari(item){
-          let domain=item.URL.replace('http://','').replace('https://','').replace('/','')//清理掉http和https
+        function convertFromSafari (item) {
+          const domain = item.URL.replace('http://', '').replace('https://', '').replace('/', '')// 清理掉http和https
           return {
-            domain:domain,
-            username:item.Username,
-            password:item.Password,
-            alias:item.Title
+            domain: domain,
+            username: item.Username,
+            password: item.Password,
+            alias: item.Title
           }
         }
-        function convertFromFirefox(item){
-          let domain=item.url.replace('http://','').replace('https://','').replace('/','')//清理掉http和https
+        function convertFromFirefox (item) {
+          const domain = item.url.replace('http://', '').replace('https://', '').replace('/', '')// 清理掉http和https
           return {
-            domain:domain,
-            username:item.username,
-            password:item.password,
-            alias:item.formActionOrigin
+            domain: domain,
+            username: item.username,
+            password: item.password,
+            alias: item.formActionOrigin
           }
         }
-        let from='Chrome或Edge'
-        try{
-          //{"domain":"passport.aliyun.com","username":"thisky","password":"Xiangtian1!"}  文件存储格式
-          json.forEach(item=>{
-            let account={}
-            let isSafari=(typeof item.OTPAuth !=='undefined')
-            let isFirefox=(typeof item.formActionOrigin!=='undefined')
-            if(isSafari){
-              //是safari
-              from='Safari'
-              account=convertFromSafari(item)
-            }else if(isFirefox) {
-              from='Firefox'
-              account=convertFromFirefox(item)
-              //是火狐
-            }else {
+        let from = 'Chrome或Edge'
+        try {
+          // {"domain":"passport.aliyun.com","username":"thisky","password":"Xiangtian1!"}  文件存储格式
+          json.forEach(item => {
+            let account = {}
+            const isSafari = (typeof item.OTPAuth !== 'undefined')
+            const isFirefox = (typeof item.formActionOrigin !== 'undefined')
+            if (isSafari) {
+              // 是safari
+              from = 'Safari'
+              account = convertFromSafari(item)
+            } else if (isFirefox) {
+              from = 'Firefox'
+              account = convertFromFirefox(item)
+              // 是火狐
+            } else {
               account = convertFromChrome(item)
             }
             credentialStoreSetPassword(account)
             importedPwds.push(account)
           })
-        }catch (e){
-          event.reply('importPwdFailed',{message:'解析密码文件失败。'})
+        } catch (e) {
+          event.reply('importPwdFailed', { message: '解析密码文件失败。' })
           return
         }
 
-        if(importedPwds.length===0){
-          event.reply('importPwdFailed',{message:'无任何密码需要导入。'})
-        }else{
-          event.reply('importPwdSuccess',{imported:importedPwds.length,importedPwds:importedPwds,from:from})
+        if (importedPwds.length === 0) {
+          event.reply('importPwdFailed', { message: '无任何密码需要导入。' })
+        } else {
+          event.reply('importPwdSuccess', { imported: importedPwds.length, importedPwds: importedPwds, from: from })
         }
-      }).catch((err)=>{
-        event.reply('importPwdFailed',{message:'解析密码文件失败。'})
+      }).catch((err) => {
+        event.reply('importPwdFailed', { message: '解析密码文件失败。' })
       })
     })
   })

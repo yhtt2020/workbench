@@ -1,5 +1,4 @@
 
-
 const BrowserView = electron.BrowserView
 
 global.viewMap = {} // id: view
@@ -11,10 +10,10 @@ var temporaryPopupViews = {} // id: view
 global.viewBounds = {}
 var sidebarBounds = {}
 
-var defaultBrowserViewBg='#ffffff'
+var defaultBrowserViewBg = '#ffffff'
 var mainTabView
 
-var viewStash=[] //暂存，用于隐藏views时暂存下来，下次setview的时候自动读入并清空，防止因为开关而导致view被销毁的问题。
+var viewStash = [] // 暂存，用于隐藏views时暂存下来，下次setview的时候自动读入并清空，防止因为开关而导致view被销毁的问题。
 
 const defaultViewWebPreferences = {
   nodeIntegration: false,
@@ -34,12 +33,11 @@ const defaultViewWebPreferences = {
   minimumFontSize: 6
 }
 
-
-async function createView(existingViewId, id, webPreferencesString, boundsString, events) {
-  viewStateMap[id] = {loadedInitialURL: false}
+async function createView (existingViewId, id, webPreferencesString, boundsString, events) {
+  viewStateMap[id] = { loadedInitialURL: false }
 
   let view
-  let webPreferences=JSON.parse(webPreferencesString)
+  const webPreferences = JSON.parse(webPreferencesString)
 
   if (existingViewId) {
     view = temporaryPopupViews[existingViewId]
@@ -49,27 +47,27 @@ async function createView(existingViewId, id, webPreferencesString, boundsString
     view.setBackgroundColor(defaultBrowserViewBg)
     viewStateMap[id].loadedInitialURL = true
   } else {
-    view = new BrowserView({webPreferences: Object.assign({}, defaultViewWebPreferences, webPreferences)})
+    view = new BrowserView({ webPreferences: Object.assign({}, defaultViewWebPreferences, webPreferences) })
     view.setBackgroundColor(defaultBrowserViewBg)
     // if(webPreferences.partition!=='persist:webcontent'){
     //   console.log('webPreferences',webPreferences)
     //   await browser.ensureExtension(webPreferences.partition)
     // }
 
-    //mark插入对webviewInk的数据统计 但在主进程中，需要发送一个ipc到sidebar常驻子进程中去db操作
+    // mark插入对webviewInk的数据统计 但在主进程中，需要发送一个ipc到sidebar常驻子进程中去db操作
     SidePanel.send('countWebviewInk')
 
-    //statsh
+    // statsh
     statsh.do({
       action: 'increase',
       key: 'webviewsInk',
       value: 1
     })
 
-    //mark插入对scripts的数据统计
+    // mark插入对scripts的数据统计
     SidePanel.send('countScript')
 
-    //mark插入对defaultBrowser的数据统计
+    // mark插入对defaultBrowser的数据统计
     SidePanel.send('defaultBrowser', app.isDefaultProtocolClient('http'))
   }
   events.forEach(function (event) {
@@ -92,10 +90,10 @@ async function createView(existingViewId, id, webPreferencesString, boundsString
   view.webContents.on('certificate-error', (event, url, error, certificate, callback, isMainFrame) => {
     const reg = /^http(s)?:\/\/(.*)\.(\w*)/
     const regedUrl = reg.exec(url)[0]
-    //在这里触发了证书错误引起的回调，把当前url放入白名单，然后放行
-    let whiteCertInvalid = settings.get('whiteCertInvalid')
-    if(whiteCertInvalid.find(v => v === regedUrl)) {
-      //如果白名单中存在，放行
+    // 在这里触发了证书错误引起的回调，把当前url放入白名单，然后放行
+    const whiteCertInvalid = settings.get('whiteCertInvalid')
+    if (whiteCertInvalid.find(v => v === regedUrl)) {
+      // 如果白名单中存在，放行
       event.preventDefault()
       callback(true)
     } else {
@@ -118,7 +116,7 @@ async function createView(existingViewId, id, webPreferencesString, boundsString
       //   args: [details.url, !(details.disposition === 'background-tab')]
       // })
       return {
-        //如果这里return  deny，则禁止任何形式的弹窗
+        // 如果这里return  deny，则禁止任何形式的弹窗
         action: 'allow'
       }
     }
@@ -149,7 +147,7 @@ async function createView(existingViewId, id, webPreferencesString, boundsString
       return
     }
 
-    var view = new BrowserView({webPreferences: defaultViewWebPreferences, webContents: webContents})
+    var view = new BrowserView({ webPreferences: defaultViewWebPreferences, webContents: webContents })
 
     var popupId = Math.random().toString()
     temporaryPopupViews[popupId] = view
@@ -162,18 +160,19 @@ async function createView(existingViewId, id, webPreferencesString, boundsString
   })
 
   view.webContents.on('ipc-message', function (e, channel, data) {
-    if(mainWindow && !mainWindow.isDestroyed())
-    mainWindow.webContents.send('view-ipc', {
-      id: id,
-      name: channel,
-      data: data,
-      frameId: e.frameId,
-      frameURL: e.senderFrame.url
-    })
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.send('view-ipc', {
+        id: id,
+        name: channel,
+        data: data,
+        frameId: e.frameId,
+        frameURL: e.senderFrame.url
+      })
+    }
   })
 
-  view.webContents.on('focus',()=>{
-    sendIPCToMainWindow('focusTab',{tabId:id})
+  view.webContents.on('focus', () => {
+    sendIPCToMainWindow('focusTab', { tabId: id })
   })
 
   // Open a login prompt when site asks for http authentication
@@ -185,8 +184,8 @@ async function createView(existingViewId, id, webPreferencesString, boundsString
     var title = l('loginPromptTitle').replace('%h', authInfo.host).replace('%r', authInfo.realm)
     createPrompt({
       text: title,
-      values: [{placeholder: l('username'), id: 'username', type: 'text'},
-        {placeholder: l('password'), id: 'password', type: 'password'}],
+      values: [{ placeholder: l('username'), id: 'username', type: 'text' },
+        { placeholder: l('password'), id: 'password', type: 'password' }],
       ok: l('dialogConfirmButton'),
       cancel: l('dialogSkipButton'),
       width: 400,
@@ -199,8 +198,8 @@ async function createView(existingViewId, id, webPreferencesString, boundsString
 
   // show an "open in app" prompt for external protocols
 
-  function handleExternalProtocol(e, url, isInPlace, isMainFrame, frameProcessId, frameRoutingId) {
-    var knownProtocols = ['http', 'https', 'file', 'min', 'about', 'data', 'javascript', 'chrome','tsb'] // TODO anything else? tsb是新增的协议
+  function handleExternalProtocol (e, url, isInPlace, isMainFrame, frameProcessId, frameRoutingId) {
+    var knownProtocols = ['http', 'https', 'file', 'min', 'about', 'data', 'javascript', 'chrome', 'tsb'] // TODO anything else? tsb是新增的协议
     if (!knownProtocols.includes(url.split(':')[0])) {
       var externalApp = app.getApplicationNameForProtocol(url)
       if (externalApp) {
@@ -240,43 +239,43 @@ async function createView(existingViewId, id, webPreferencesString, boundsString
 
   view.setBounds(JSON.parse(boundsString))
   viewBounds = JSON.parse(boundsString)
-  view.id=id //增加一个id属性，方便后续区分
+  view.id = id // 增加一个id属性，方便后续区分
   viewMap[id] = view
 
-  //增加对证书的验证事件处理
+  // 增加对证书的验证事件处理
   // view.webContents.session.setCertificateVerifyProc((request, callback) => {
   //   const { hostname } = request
   //   //沿用默认验证方法
   //   callback(-3)
   // })
-  //end
+  // end
 
-  //同步extension的tab
+  // 同步extension的tab
   browser.extensions.addTab(view.webContents, mainWindow)
 
-  if(waitingSyncId!==0){
-    tabs[waitingSyncId]=view.webContents
-    waitingSyncId=0
+  if (waitingSyncId !== 0) {
+    tabs[waitingSyncId] = view.webContents
+    waitingSyncId = 0
   }
   return view
 }
 
-function destroyView(id) {
+function destroyView (id) {
   if (!viewMap[id]) {
     return
   }
-  let removed=false
-  if(windowManager.attachedView && windowManager.attachedView === viewMap[id]){
-    //如果是关闭当前吸附的窗体
+  let removed = false
+  if (windowManager.attachedView && windowManager.attachedView === viewMap[id]) {
+    // 如果是关闭当前吸附的窗体
     windowManager.detachTab()
-    removed=true
+    removed = true
   }
-  let bvs=mainWindow.getBrowserViews()
-  if(removed) {
-    //通过上方移除了，不需要再做移除操作
+  const bvs = mainWindow.getBrowserViews()
+  if (removed) {
+    // 通过上方移除了，不需要再做移除操作
   }
-  bvs.forEach(bv=>{
-    if(bv.webContents&&viewMap[id].webContents) {
+  bvs.forEach(bv => {
+    if (bv.webContents && viewMap[id].webContents) {
       if (bv.webContents.id === viewMap[id].webContents.id) {
         mainWindow.removeBrowserView(bv)
       }
@@ -298,34 +297,34 @@ function destroyView(id) {
   // }
 }
 
-function destroyAllViews() {
+function destroyAllViews () {
   for (const id in viewMap) {
     destroyView(id)
   }
 }
 
-//处理设置当前BrowserView事件，以将sidebarView拿出来
+// 处理设置当前BrowserView事件，以将sidebarView拿出来
 
-function setView(id) {
-  if(viewStateMap[id]){
+function setView (id) {
+  if (viewStateMap[id]) {
     if (viewStateMap[id].loadedInitialURL) {
       setCurrentBrowserView(viewMap[id])
-      //mainWindow.removeBrowserView(needRemove)
+      // mainWindow.removeBrowserView(needRemove)
     } else {
       mainWindow.setBrowserView(null)
     }
     browser.extensions.selectTab(viewMap[id].webContents)
-    sendIPCToWindow(mainWindow,'setActionListTab',{id:viewMap[id].webContents.id})
+    sendIPCToWindow(mainWindow, 'setActionListTab', { id: viewMap[id].webContents.id })
     selectedView = id
   }
 }
 
-function setBounds(id, bounds) {
+function setBounds (id, bounds) {
   if (viewMap[id]) {
-    let bvs=mainWindow.getBrowserViews()
-    bvs.forEach(bv=>{
-      if(windowManager.attachedView && bv === windowManager.attachedView ) {
-        //排除右侧分屏的bv
+    const bvs = mainWindow.getBrowserViews()
+    bvs.forEach(bv => {
+      if (windowManager.attachedView && bv === windowManager.attachedView) {
+        // 排除右侧分屏的bv
         return
       }
       bv.setBounds(bounds)
@@ -334,10 +333,9 @@ function setBounds(id, bounds) {
   viewBounds = bounds
   // sidebarBounds={x:0,y:bounds.y,width:45,height:bounds.height}
   // sidebarView.setBounds(sidebarBounds)
-
 }
 
-function focusView(id) {
+function focusView (id) {
   // empty views can't be focused because they won't propogate keyboard events correctly, see https://github.com/minbrowser/min/issues/616
   // also, make sure the view exists, since it might not if the app is shutting down
   if (viewMap[id] && (viewMap[id].webContents.getURL() !== '' || viewMap[id].webContents.isLoading())) {
@@ -347,17 +345,17 @@ function focusView(id) {
   }
 }
 
-function hideCurrentView() {
+function hideCurrentView () {
   mainWindow.setBrowserView(null)
   selectedView = null
   mainWindow.webContents.focus()
 }
 
-function getView(id) {
+function getView (id) {
   return viewMap[id]
 }
 
-function getViewIDFromWebContents(contents) {
+function getViewIDFromWebContents (contents) {
   for (var id in viewMap) {
     if (viewMap[id].webContents === contents) {
       return id
@@ -367,7 +365,7 @@ function getViewIDFromWebContents(contents) {
 
 ipc.on('createView', function (e, args) {
   createView(args.existingViewId, args.id, args.webPreferencesString, args.boundsString, args.events)
-  //focusView(args.id)
+  // focusView(args.id)
 })
 
 ipc.on('destroyView', function (e, id) {
@@ -377,7 +375,7 @@ ipc.on('destroyView', function (e, id) {
 ipc.on('destroyAllViews', function () {
   destroyAllViews()
 })
-ipc.on('addView',(e, args)=>{
+ipc.on('addView', (e, args) => {
   // console.log('saveData',saveData)g('添加view',args.id,viewMap[args.id])
   // mainWindow.addBrowserView(viewMap[args.id])
   // console.log('添加时设置的bounds',args.bounds)
@@ -387,14 +385,14 @@ ipc.on('addView',(e, args)=>{
   // //setBounds(args.id,bounds)
   // if(windowManager) {windowManager.syncAttachedBounds()}
   // console.log(mainWindow.getBrowserViews())
-  //let bounds=windowManager.onSetBounds(args.bounds)
+  // let bounds=windowManager.onSetBounds(args.bounds)
 })
 ipc.on('setView', function (e, args) {
-  if(viewStash){
-    viewStash.forEach((bv)=>{
+  if (viewStash) {
+    viewStash.forEach((bv) => {
       mainWindow.addBrowserView(bv)
     })
-    viewStash=[]
+    viewStash = []
   }
   setView(args.id)
   // let bvs=mainWindow.getBrowserViews()
@@ -406,89 +404,87 @@ ipc.on('setView', function (e, args) {
   // }
   // let bvs2=mainWindow.getBrowserViews()
   // console.log('setvbiew2',bvs2)
-  let bounds=args.bounds
-  try{
-    bounds=windowManager.onSetBounds(args.bounds)
-  }catch (e) {
+  let bounds = args.bounds
+  try {
+    bounds = windowManager.onSetBounds(args.bounds)
+  } catch (e) {
     console.warn(e)
   }
   setBounds(args.id, bounds)
   // let bvs3=mainWindow.getBrowserViews()
   // console.log('setvbiew3',bvs3)
-  if(windowManager) {windowManager.syncAttachedBounds()}
+  if (windowManager) { windowManager.syncAttachedBounds() }
   if (args.focus) {
     if (SidePanel.alive() && sidePanel.get().isFocused()) {
-      //如果侧边栏是焦点状态，则不去聚焦
+      // 如果侧边栏是焦点状态，则不去聚焦
     } else {
-      focusView(args.id) //todo观察，注释这行在切换view的时候给他聚焦的代码，用以解决mac平台上切换tab导致侧边栏丢失焦点出错的问题
+      focusView(args.id) // todo观察，注释这行在切换view的时候给他聚焦的代码，用以解决mac平台上切换tab导致侧边栏丢失焦点出错的问题
     }
-
   }
-  //设置当前view
-  //onSetView()
+  // 设置当前view
+  // onSetView()
 })
 
 ipc.on('setBounds', function (e, args) {
-  let bounds=windowManager.onSetBounds(args.bounds)
+  const bounds = windowManager.onSetBounds(args.bounds)
   setBounds(args.id, bounds)
-  if(windowManager) {windowManager.syncAttachedBounds()}
+  if (windowManager) { windowManager.syncAttachedBounds() }
 })
 
 ipc.on('focusView', function (e, id) {
   focusView(id)
 })
 
-ipc.on('printToPDF',(e,args)=>{
+ipc.on('printToPDF', (e, args) => {
   viewMap[args.id].webContents.printToPDF({}).then(data => {
     fs.writeFile(args.savePath, data, (error) => {
       if (error) throw error
-      sendMessage({type:'success',config:{content:'保存为PDF成功。'}})
+      sendMessage({ type: 'success', config: { content: '保存为PDF成功。' } })
       require('electron').shell.showItemInFolder(args.savePath)
     })
   }).catch(error => {
-    //console.log(`Failed to write PDF to ${pdfPath}: `, error)
-    sendMessage({type:'error',config:{content:'保存为PDF失败。'}})
+    // console.log(`Failed to write PDF to ${pdfPath}: `, error)
+    sendMessage({ type: 'error', config: { content: '保存为PDF失败。' } })
   })
 })
 
 ipc.on('hideCurrentView', function (e) {
-  viewStash=mainWindow.getBrowserViews()// 暂存一下，用于后续恢复
+  viewStash = mainWindow.getBrowserViews()// 暂存一下，用于后续恢复
   hideCurrentView()
-  //调用隐藏当前视图的回调到sidebar
-  //onHideCurrentView()
+  // 调用隐藏当前视图的回调到sidebar
+  // onHideCurrentView()
 })
-function setCurrentBrowserView(needSetBrowserView){
-  if(windowManager){
-    if(windowManager.attachedView!==needSetBrowserView){
-      mainTabView=needSetBrowserView
+function setCurrentBrowserView (needSetBrowserView) {
+  if (windowManager) {
+    if (windowManager.attachedView !== needSetBrowserView) {
+      mainTabView = needSetBrowserView
     }
   }
-  if(process.platform==='win32'){
-    //windows上存在背景色bug，只能牺牲体验追求正确性
+  if (process.platform === 'win32') {
+    // windows上存在背景色bug，只能牺牲体验追求正确性
     mainWindow.setBrowserView(needSetBrowserView)
     return
   }
-  let bvs=mainWindow.getBrowserViews()
-  let hasFinded=false
-  let findedView=null
-  bvs.forEach(bv=>{
-    if(needSetBrowserView.webContents && bv.webContents){
-      if(bv.webContents.id===needSetBrowserView.webContents.id){
-        //如果是要设置的view则跳过
-        findedView=bv
-        hasFinded=true
+  const bvs = mainWindow.getBrowserViews()
+  let hasFinded = false
+  let findedView = null
+  bvs.forEach(bv => {
+    if (needSetBrowserView.webContents && bv.webContents) {
+      if (bv.webContents.id === needSetBrowserView.webContents.id) {
+        // 如果是要设置的view则跳过
+        findedView = bv
+        hasFinded = true
       }
     }
   })
   if (!hasFinded) {
-    //如果不存在要寻找的view，则将view添加上去
+    // 如果不存在要寻找的view，则将view添加上去
     mainWindow.addBrowserView(needSetBrowserView)
-  }else{
-    //mainWindow.addBrowserView(viewMap[id])
+  } else {
+    // mainWindow.addBrowserView(viewMap[id])
     mainWindow.setTopBrowserView(findedView)
   }
 }
-
 
 ipc.on('loadURLInView', function (e, args) {
   // wait until the first URL is loaded to set the background color so that new tabs can use a custom background
@@ -502,7 +498,7 @@ ipc.on('loadURLInView', function (e, args) {
   if (SidePanel.alive()) {
     if (sidePanel.get().isFocused()) {
       if (process.platform === 'darwin') {
-        //todo 这行之后就会抢夺焦点到view上 只有mac上有需要这样抢夺焦点
+        // todo 这行之后就会抢夺焦点到view上 只有mac上有需要这样抢夺焦点
         mainWindow.setFocusable(false)
         viewMap[args.id].webContents.loadURL(args.url).then(() => {
           mainWindow.setFocusable(true)
@@ -542,16 +538,16 @@ ipc.on('callViewMethod', function (e, data) {
   if (result instanceof Promise) {
     result.then(function (result) {
       if (data.callId) {
-        mainWindow.webContents.send('async-call-result', {callId: data.callId, error: null, result})
+        mainWindow.webContents.send('async-call-result', { callId: data.callId, error: null, result })
       }
     })
     result.catch(function (error) {
       if (data.callId) {
-        mainWindow.webContents.send('async-call-result', {callId: data.callId, error, result: null})
+        mainWindow.webContents.send('async-call-result', { callId: data.callId, error, result: null })
       }
     })
   } else if (data.callId) {
-    mainWindow.webContents.send('async-call-result', {callId: data.callId, error, result})
+    mainWindow.webContents.send('async-call-result', { callId: data.callId, error, result })
   }
 })
 
@@ -567,15 +563,15 @@ ipc.on('getCapture', function (e, data) {
     if (size.width === 0 && size.height === 0) {
       return
     }
-    img = img.resize({width: data.width, height: data.height})
-    mainWindow.webContents.send('captureData', {id: data.id, url: img.toDataURL()})
+    img = img.resize({ width: data.width, height: data.height })
+    mainWindow.webContents.send('captureData', { id: data.id, url: img.toDataURL() })
   })
 })
 
 /**
  * 获得高清的截图，并回传给收藏夹添加页面的fav让它去挂载截图
  */
-ipc.on('getHDCapture',(event,args)=>{
+ipc.on('getHDCapture', (event, args) => {
   var view = viewMap[args.id]
   if (!view) {
     return
@@ -586,17 +582,17 @@ ipc.on('getHDCapture',(event,args)=>{
     if (size.width === 0 && size.height === 0) {
       return
     }
-    const dir=app.getPath('userData')+'/captureTmp/'
-    const filename=dir+Date.now()+'.jpg'
-    if(!fs.existsSync(dir)){
+    const dir = app.getPath('userData') + '/captureTmp/'
+    const filename = dir + Date.now() + '.jpg'
+    if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir)
     }
-    fs.writeFileSync(filename,img.toJPEG(100))
-    if(args.favWindowId){
-      //如果收藏夹id存在，则直发过去
-      webContents.fromId(args.favWindowId).send('gotHdCaptureData', {id: args.id, url: filename})
+    fs.writeFileSync(filename, img.toJPEG(100))
+    if (args.favWindowId) {
+      // 如果收藏夹id存在，则直发过去
+      webContents.fromId(args.favWindowId).send('gotHdCaptureData', { id: args.id, url: filename })
     }
-    mainWindow.webContents.send('hDCaptureData', {id: args.id, url: filename})
+    mainWindow.webContents.send('hDCaptureData', { id: args.id, url: filename })
   })
 })
 
@@ -611,43 +607,37 @@ ipc.on('saveViewCapture', function (e, data) {
   })
 })
 
-ipc.on('saveViewFullCapture',function (e,data){
+ipc.on('saveViewFullCapture', function (e, data) {
   var view = viewMap[data.id]
   if (!view) {
     // view could have been destroyed
   }
 
-  view.captureFullPage(function(imageStream){
+  view.captureFullPage(function (imageStream) {
     // return an image Stream
-    const dir=app.getPath('userData')+'/pageCapture'
-    if(!fs.existsSync(dir))
-    {
+    const dir = app.getPath('userData') + '/pageCapture'
+    if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir)
     }
-    let time=String(Date.now())
-    let path=dir+'/capture'+time.substr(time.length-4,time.length)+'.png'
-    imageStream.pipe(fs.createWriteStream(path));
-    //let image=require('electron').nativeImage.createFromPath(app.getPath('userData')+'/page.png')
-    imageStream.on('end',()=>{
-      view.webContents.downloadURL('file://'+path)
+    const time = String(Date.now())
+    const path = dir + '/capture' + time.substr(time.length - 4, time.length) + '.png'
+    imageStream.pipe(fs.createWriteStream(path))
+    // let image=require('electron').nativeImage.createFromPath(app.getPath('userData')+'/page.png')
+    imageStream.on('end', () => {
+      view.webContents.downloadURL('file://' + path)
     })
   })
 })
 
-
-
 global.getView = getView
 var emulationViews = []
 var oldAgent = ''
-//当前view打开emulation
+// 当前view打开emulation
 ipc.on('enableEmulation', function (e, data) {
-  if (viewMap[data.id].webContents.getURL().startsWith("file://") || viewMap[data.id].webContents.getURL().startsWith("ts://"))
-    return
+  if (viewMap[data.id].webContents.getURL().startsWith('file://') || viewMap[data.id].webContents.getURL().startsWith('ts://')) { return }
   mobileMod.add({
-    url:viewMap[data.id].webContents.getURL(),
-    partition:data.partition,
-    newName:data.newName
+    url: viewMap[data.id].webContents.getURL(),
+    partition: data.partition,
+    newName: data.newName
   })
-
 })
-
