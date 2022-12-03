@@ -6,15 +6,16 @@ function tipOpenInApp (params) {
   //     title:'安装提醒',
   //   content:'是否安装此应用，并用应用模式打开？'
   // }
-  ipc.send('executeAppByPackage', { package: 'com.thisky.com' })
+  // window.location.href=`tsb://app/redirect/?package=com.thisky.appStore&url=${params}`
+  ipc.send('openAppStore', params)
 }
 
-function installAppConfirm () {
-
+function installAppConfirm (e) {
+  ipc.send('installAppConfirm',e)
 }
 
-function openApp () {
-  ipc.send('executeAppByPackage', { package: 'com.thisky.com' })
+function openGroupChat (e) {
+  ipc.send('openAppGroupChat',e)
 }
 
 let browser = {
@@ -28,5 +29,5 @@ contextBridge.exposeInMainWorld('__TSB_RUNTIME', browser)
 contextBridge.exposeInMainWorld('__TSB_API', {
   tipOpenInApp,
   installAppConfirm,
-  openApp
+  openGroupChat
 })

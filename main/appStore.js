@@ -1,8 +1,6 @@
 
 
-
 app.whenReady().then(()=> {
-
   ipc.on('openSystemApp',(event,args)=>{
     SidePanel.send('openSystemApp',args)
   })
@@ -73,9 +71,11 @@ app.whenReady().then(()=> {
   })
 
   ipc.on('openInvite',(event,args)=>{
-
     SidePanel.send('openInvite',args)
   })
 
+  ipc.on('openAppStore',(event,args)=>{
+    SidePanel.send('openAppStore',args)
+  })
 })
 
