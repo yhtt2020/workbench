@@ -48,6 +48,7 @@
     </div>
 
     <div class="password-bank-list-container">
+      <vue-custom-scrollbar :settings="settings" style="position:relative;height: 185px">
       <a-empty v-if="bankList.length===0"></a-empty>
       <a-tooltip :overlay-style="{'min-width':'500px'}" :mouseEnterDelay="0.5" placement="bottom"
                  v-for="(item,index) in bankList">
@@ -61,8 +62,12 @@
           <span title="删除记录" @click="removeBank(index)" class="remove-icon" size="small"> <close-outlined/></span>
         </div>
       </a-tooltip>
+      </vue-custom-scrollbar>
     </div>
   </div>
+
+
+
   <a-modal v-model:visible="visibleInputPwd" centered :width="380" title="主密码" @ok="doCreate">
     <div style="padding:20px">
       <a-input default-value="新密码库" style="margin-bottom: 10px" v-model:value="newName" placeholder="密码库名称">
@@ -84,13 +89,20 @@
 <script>
 import { UnlockFilled, FolderOpenOutlined, CloseOutlined, KeyOutlined } from '@ant-design/icons-vue'
 import { message, Modal } from 'ant-design-vue'
-
+import vueCustomScrollbar from '../../../src/components/vue-scrollbar.vue'
 export default {
   components: {
+    vueCustomScrollbar,
     UnlockFilled, FolderOpenOutlined, CloseOutlined, KeyOutlined
   },
   data () {
     return {
+      settings: {
+        swipeEasing: true,
+        suppressScrollY: false,
+        suppressScrollX: true,
+        wheelPropagation: false
+      },
       showAction: false,
       bankValue: '',
       bankIndex: 0,
