@@ -71,7 +71,6 @@ ipc.on('setSavePath',(event,args)=>{
   if (savePath!==undefined){
     let downloadSavePath = savePath.toString().replace(/\[|]/g, '')
     settings.set('downloadSavePath',downloadSavePath)
-
     event.reply('getSavePath',downloadSavePath)
   }
 })
@@ -79,6 +78,7 @@ ipc.on('setSavePath',(event,args)=>{
 async function downloadHandler (event, item, webContents) {
   var itemURL = item.getURL()
   var attachment = isAttachment(item.getContentDisposition())
+  let suffix = item.getFilename().substring(item.getFilename().lastIndexOf('.') + 1, item.getFilename().length)
   let suffixName = item.getFilename().substring(item.getFilename().lastIndexOf('.'), item.getFilename().length)
   savePathFilename = path.basename(item.getSavePath())
   let simpleName = item.getFilename().substring(0, item.getFilename().lastIndexOf("."))
@@ -88,11 +88,9 @@ async function downloadHandler (event, item, webContents) {
   var fs = require("fs");
   const fsExists = (fileNewPath) => {
     return fs.existsSync(fileNewPath)
-
   }
   let num = 1
-  let setPath;
-  let downloadSavePath;
+
   if (item.getMimeType() === 'application/pdf' && itemURL.indexOf('blob:') !== 0 && itemURL.indexOf('#pdfjs.action=download') === -1 && !attachment) { // clicking the download button in the viewer opens a blob url, so we don't want to open those in the viewer (since that would make it impossible to download a PDF)
     event.preventDefault()
     sendIPCToWindow(mainWindow, 'openPDF', {
@@ -101,21 +99,23 @@ async function downloadHandler (event, item, webContents) {
     })
   } else {
     if(settings.get('downloadAutoSave') === true){
-      let savePath = dialog.showOpenDialogSync({
-        properties: ['openFile', 'openDirectory']
+      item.setSaveDialogOptions({
+        title: '选择保存地址',
+        filters: [
+          { name: suffix, extensions: [suffix] },
+          { name: '自定义', extensions: ['*'] }
+        ]
       })
-      downloadSavePath = savePath.toString().replace(/\[|]/g, '')
-      setPath = path.join(downloadSavePath, item.getFilename())
-      item.setSavePath(setPath)
     }else {
       if (settings.get('downloadSavePath') === undefined || settings.get('downloadSavePath') == '') {
-        let savePath = dialog.showOpenDialogSync({
-          properties: ['openFile', 'openDirectory']
+        item.setSaveDialogOptions({
+          title: '选择保存地址',
+          filters: [
+            { name: suffix, extensions: [suffix] },
+            { name: '自定义', extensions: ['*'] }
+          ]
         })
-        downloadSavePath = savePath.toString().replace(/\[|]/g, '')
-        setPath = path.join(downloadSavePath, item.getFilename())
-        item.setSavePath(setPath)
-        settings.set('downloadSavePath', downloadSavePath)
+
       } else {
         const filePath = path.join(savePathPrefix,item.getFilename())
         let res = fsExists(filePath) // 找是否存在
