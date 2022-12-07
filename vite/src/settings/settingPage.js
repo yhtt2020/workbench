@@ -576,38 +576,7 @@ const settingPage = {
       })
     }
 
-    /* Password auto-fill settings  */
 
-    var passwordManagersDropdown = document.getElementById('selected-password-manager')
-    for (var manager in passwordManagers) {
-      var item = document.createElement('option')
-      if(passwordManagers[manager].name==='Built-in password manager'){
-        item.textContent = '内置密码管理器'
-      }else{
-        item.textContent = passwordManagers[manager].name
-      }
-      passwordManagersDropdown.appendChild(item)
-    }
-
-    settings.listen('passwordManager', function (value) {
-      if(currentPasswordManager.name==='Built-in password manager'){
-        passwordManagersDropdown.value='内置密码管理器'
-      }else{
-        passwordManagersDropdown.value = currentPasswordManager.name
-      }
-    })
-
-    passwordManagersDropdown.addEventListener('change', function (e) {
-      if (this.value === 'none') {
-        settings.set('passwordManager', { name: 'none' })
-      } else {
-        if(this.value==='内置密码管理器'){
-          settings.set('passwordManager', { name: 'Built-in password manager' })
-        }else{
-          settings.set('passwordManager', { name: this.value })
-        }
-      }
-    })
     // settings.listen('passwordManager', function (value) {
     //   keychainViewLink.hidden = !(currentPasswordManager.name === 'Built-in password manager')
     // })

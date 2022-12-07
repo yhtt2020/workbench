@@ -70,7 +70,7 @@
           <div @mouseover="passwordItemsHover(item)" @mouseleave="passwordItemRemove(item)">
             <a-list-item :class="currentIndex==index ? 'active-list':''" @click="leftDescription(item)">
             <!-- 判断鼠标悬浮时打开并填充按钮显示 -->
-            <a-list-item-meta class="is-open-fill" v-if="item.showCopy == true" :description="item.username">
+            <a-list-item-meta class="is-open-fill" v-if="item.showTip == true" :description="item.username">
               <template #title>
                 <a>{{ item.title }}</a>
               </template>
@@ -87,7 +87,7 @@
                 <a-avatar :src="item.icon" />
               </template>
             </a-list-item-meta>
-            <div class="open-fill" v-if="item.showCopy == true" @click="openFillClick">打开并填充</div>
+            <div class="open-fill" v-if="item.showTip == true" @click="openFillClick">打开并填充</div>
             </a-list-item>
           </div>
         </template>
@@ -319,6 +319,8 @@ export default {
             password: item.password,
             username:item.username,
             showCopy:false,
+
+            passwordType:'passwordType',
             id:item.domain+'_'+item.username,
             site: item.domain,
             icon:'/kee/key_black.svg'
@@ -346,6 +348,18 @@ export default {
         // })
 
       })
+    }
+    else if(params.type==='all'){
+      //是直接查看全部的密码
+      let passwords=passwordModel.getAllPasswords()
+      console.log(passwords,'passwords获取')
+      passwords.forEach((pwd)=>{
+        pwd.showCopy=false
+        pwd.passwordType = "password"
+        pwd.icon='/kee/key_black.svg'
+      })
+      this.passwords=passwords
+      console.log(this.passwords,'获取到的密码')
     }
   },
   methods: {
@@ -386,7 +400,7 @@ export default {
         "background:rgba(80, 139, 254, 0.1);";
     },
     passwordItemsHover(v) {
-      v.showCopy = true;
+      v.showTip = true;
     },
     // 鼠标移出
     passwordRemove() {
@@ -394,7 +408,7 @@ export default {
         "background:rgba(255, 255, 255, 1);";
     },
     passwordItemRemove(v) {
-      v.showCopy = false;
+      v.showTip = false;
     },
     // 打开填充按钮
     openFillClick() {

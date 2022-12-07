@@ -4,6 +4,7 @@
 import {defineComponent, ref} from "vue";
 import {Modal} from 'ant-design-vue'
 import {
+  CheckCircleOutlined,
   EyeOutlined,
   LayoutOutlined,
   SearchOutlined,ImportOutlined,
@@ -24,8 +25,7 @@ import settings from '../../src/settings/settingsContent'
 import settingPage from '../../src/settings/settingPage.js'
 import Passwords from "./components/Passwords.vue";
 import zhCN from "ant-design-vue/es/locale/zh_CN";
-import zhCN from 'ant-design-vue/es/locale/zh_CN';
-
+import {passwordManagers} from '../../src/settings/passwordManager'
 
 export default defineComponent({
   components: {
@@ -33,10 +33,15 @@ export default defineComponent({
     EyeOutlined, LayoutOutlined, SearchOutlined, AimOutlined, ControlOutlined, CheckSquareOutlined, HomeOutlined,
     LockOutlined, NodeIndexOutlined, GoldOutlined, InsuranceOutlined, ExpandAltOutlined, ArrowRightOutlined,DownloadOutlined,
     ExclamationCircleOutlined,
-    SkinOutlined,LinkOutlined
+    SkinOutlined,LinkOutlined,
+    CheckCircleOutlined
   },
   data(){
     return {
+      currentPasswordDb:{},
+      currentPasswordManager:{
+        alias:'无'
+      },
       locale:zhCN,
       savePath:'',
       platform:'',//平台
@@ -154,6 +159,9 @@ export default defineComponent({
        this.savePath = value
      }
     })
+
+
+    this.preparePasswordsSettings()
   },
 
   setup() {
@@ -165,6 +173,60 @@ export default defineComponent({
     }
   },
   methods: {
+    setPasswordManager(pm){
+      if(typeof pm==='string'){
+        pm=this.passwordManagers[1]
+      }
+
+      settings.set('passwordManager', {name:pm.name})
+      settings.get('passwordDb',(value)=>{
+        if(this.currentPasswordManager.name==='file' &&  (!value || !value.filePath)){
+          Modal.confirm({
+            title:'提示',
+            content:'首次使用独立密码管理器需要选择密码库，您可以选择或者创建一个全新的密码库。',
+            okText:'创建新密码库',
+            cancelText:'自行选择密码库'
+          })
+        }
+      })
+      this.currentPasswordManager=pm
+    },
+    preparePasswordsSettings(){
+      /* Password auto-fill settings  */
+      this.passwordManagers=passwordManagers
+      settings.get('passwordManager',(value)=>{
+        this.currentPasswordManager=this.passwordManagers.find(pm=>{
+          return pm.name===value.name
+        })
+      })
+      settings.listen('passwordManager', (value)=>{
+        this.currentPasswordManager=this.passwordManagers.find(pm=>{
+          return pm.name===value.name
+        })
+      })
+
+
+
+      // settings.listen('passwordManager', function (value) {
+      //   if(currentPasswordManager.name==='Built-in password manager'){
+      //     passwordManagersDropdown.value='内置密码管理器'
+      //   }else{
+      //     passwordManagersDropdown.value = currentPasswordManager.name
+      //   }
+      // })
+      //
+      // passwordManagersDropdown.addEventListener('change', function (e) {
+      //   if (this.value === 'none') {
+      //     settings.set('passwordManager', { name: 'none' })
+      //   } else {
+      //     if(this.value==='内置密码管理器'){
+      //       settings.set('passwordManager', { name: 'Built-in password manager' })
+      //     }else{
+      //       settings.set('passwordManager', { name: this.value })
+      //     }
+      //   }
+      // })
+    },
     onChange(e){
       if(e == true){
         settings.set('downloadAutoSave',true)
@@ -742,14 +804,59 @@ export default defineComponent({
             <h3 data-string="settingsPasswordAutoFillHeadline"></h3>
 
             <div class="setting-section">
-              <label
-                for="selectedPasswordManagers"
-                data-string="settingsSelectPasswordManager"
-              ></label>
-              <select
-                id="selected-password-manager"
-                name="selectedPasswordManager"
-              ></select>
+
+              当前密码管理器： <a-avatar v-if="currentPasswordManager.icon" shape="square" :src="currentPasswordManager.icon" />
+              <a-avatar v-else style="background-color: #1890ff">内</a-avatar> {{currentPasswordManager.alias}}
+
+              <div v-if="currentPasswordManager.name!=='file'" style="border: 1px solid rgba(65,105,225,0.64);padding: 10px;width: 600px;border-radius: 4px;;margin-top: 10px;">
+                <div><a-avatar src="/kee/kee.svg" :size="30"></a-avatar> <strong style="font-size: 16px;margin-left: 10px">想天轻密码</strong></div>
+                <div  style="padding-left: 42px;">推荐使用<strong>想天轻密码</strong>管理您的密码，可一键迁移当前浏览器密码至轻应用。
+                  <a-button @click="setPasswordManager('file')" type="primary" size="small" style="margin-top: 10px">点击更改</a-button></div>
+
+              </div>
+
+              <div v-if="currentPasswordManager.name==='file'" style="margin-top: 10px;margin-bottom: 10px;padding-left: 20px">
+                <a-input-group style="float: right" compact>
+
+                  <a-input placeholder="请选择密码库" disabled :value="currentPasswordDb.filePath" style="width:400px" >
+                    <template #addonBefore>
+                      密码库位置
+                    </template>
+                  </a-input>
+                  <a-button type="primary">更改密码库</a-button>
+                </a-input-group>
+              </div>
+
+             <a-collapse ghost size="small"  >
+               <a-collapse-panel header='更换密码管理器'>
+                 <a-list  :grid="{ gutter: 20, column: 2 }" :data-source="passwordManagers">
+                   <template #renderItem="{ item }">
+                     <a-list-item>
+                       <a-card :style="{'border-color': item.name==='file'?'#3a8ee6':'#f1f1f1',background:item.name==='file'?'rgba(58,142,230,0.03)':'white'}" hoverable size="small"  >
+                         <template #actions>
+                           <a v-if="currentPasswordManager.name===item.name"  style="color:#1890ff" @click="setPasswordManager(item)"><check-circle-outlined  /> 当前使用中</a>
+                           <a v-else="currentPasswordManager.name===item.name" @click="setPasswordManager(item)"><check-circle-outlined  /> 设置</a>
+                           <a target="_blank" :href="item.url"> 查看官网</a>
+                         </template>
+                         <a-card-meta :title="item.alias" >
+                           <template #description>
+                             <div v-html="item.summary"></div>
+                           </template>
+                           <template #avatar>
+                             <a-avatar v-if="item.icon" shape="square" :src="item.icon" />
+                             <a-avatar v-else style="background-color: #1890ff">内</a-avatar>
+                           </template>
+                         </a-card-meta>
+                       </a-card>
+                     </a-list-item>
+                   </template>
+                 </a-list>
+               </a-collapse-panel>
+             </a-collapse>
+<!--              <select-->
+<!--                -->
+<!--              ></select>-->
+
             </div>
 
             <h3>已保存的密码  <a-button @click="importPwd" style="float: right" size="small" type="primary"><import-outlined/> 导入密码</a-button> </h3>

@@ -94,11 +94,11 @@
               <div class="password-inoput">
                 <span style="color:rgba(104, 81, 214, 1);">密码</span>
                 <div class="password-show" v-if="editShow==false">
-                  <a-input  :type="passwordType" style="border:none;padding:0;width: 65%;background: rgba(80, 139, 254, 0);" v-model:value="passwordItem.password"></a-input>
-                  <div style="cursor: pointer;" v-if="passwordVisible==true" @click="passwordShowClick">
-                    <EyeFilled v-if="passwordShow == true" style="color:rgba(80, 139, 254, 1); padding-right:11px; cursor: pointer;"/>
-                    <EyeInvisibleFilled v-if="passwordShow==false"  style="color:rgba(80, 139, 254, 1); padding-right:11px; cursor: pointer;"/>
-                    <span style="color:rgba(80, 139, 254, 1);">{{ passwordShow==true ? '显示':'隐藏'}}</span>
+                  <a-input  :type="passwordItem.passwordType" style="border:none;padding:0;width: 65%;background: rgba(80, 139, 254, 0);" v-model:value="passwordItem.password"></a-input>
+                  <div style="cursor: pointer;" v-if="passwordVisible==true" @click="passwordShowClick(passwordItem)">
+                    <EyeFilled v-if="passwordItem.showCopy == true" style="color:rgba(80, 139, 254, 1); padding-right:11px; cursor: pointer;"/>
+                    <EyeInvisibleFilled v-if="passwordItem.showCopy==false"  style="color:rgba(80, 139, 254, 1); padding-right:11px; cursor: pointer;"/>
+                    <span style="color:rgba(80, 139, 254, 1);">{{ passwordItem.showCopy==true ? '显示':'隐藏'}}</span>
                   </div>
                   <a-divider v-if="passwordVisible==true" type="vertical" style="height: 20px; background-color:rgba(80, 139, 254, 1)" />
                   <span v-if="passwordVisible==true" style="color:rgba(80, 139, 254, 1); cursor: pointer;">复制</span>
@@ -442,13 +442,13 @@ export default {
     },
     /** 鼠标移出事件结束**/
     // 密码显示和隐藏事件
-    passwordShowClick(){
-       if(this.passwordShow == false){
-         this.passwordShow = true
-         this.passwordType = "text"
+    passwordShowClick(item){
+       if(item.showCopy == false){
+         item.showCopy = true
+         item.passwordType = "text"
        }else{
-         this.passwordShow = false
-         this.passwordType = "password"
+         item.showCopy = false
+         item.passwordType = "password"
        }
     }
   }

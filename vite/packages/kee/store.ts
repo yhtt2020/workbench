@@ -29,7 +29,22 @@ export const appStore = defineStore('kee',{
       //将点击之后的值进行缓存
       passwordItem: {
       },
+
+      currentDb:{
+        filePath:'',
+        name:'',
+        kdbx:{}
+      }
+
     }),
-    actions:{},
+    actions:{
+      setDb(dbInfo){
+        this.currentDb=dbInfo
+        const manager=kdbxModel.getManager(dbInfo.filePath)
+        passwordModel.setPasswordManager(manager)
+        passwordModel.getAllPasswords()
+        console.log('set dbinfo',dbInfo)
+      }
+    },
     getters:{}
 })

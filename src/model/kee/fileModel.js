@@ -86,7 +86,10 @@ class FileModel extends Model{
             Math.round(fileData.byteLength / 1024) +
             ' kB'
           );
-          callback();
+          callback(undefined,{
+            name:this.db.meta._name,
+            db:this.db,
+          });
         })
         .catch((err) => {
           if (

@@ -90,6 +90,8 @@
 import { UnlockFilled, FolderOpenOutlined, CloseOutlined, KeyOutlined } from '@ant-design/icons-vue'
 import { message, Modal } from 'ant-design-vue'
 import vueCustomScrollbar from '../../../src/components/vue-scrollbar.vue'
+import {mapActions} from 'pinia'
+import  { appStore } from '../store'
 export default {
   components: {
     vueCustomScrollbar,
@@ -119,6 +121,7 @@ export default {
     this.loadHistory()
   },
   methods: {
+    ...mapActions(appStore,['setDb']),
     create () {
       this.visibleInputPwd = true
       // const filePath=ipc.sendSync('selectKdbx')
@@ -155,12 +158,26 @@ export default {
       if (!this.selectedItem.path) {
         message.error('请先选择密码库')
       }
-      kdbxModel.openFile(this.password, this.selectedItem.path, null, (err) => {
+      passwordModel.openFile(this.password, this.selectedItem.path, null, (err,dbInfo) => {
         if (err) {
+          this.password=''
           message.error('打开密码库失败，请确认主密码正确且选择了正确的秘钥文件（如果有。点击更多选项进行选择）。')
         } else {
-          message.success('打开密码库成功。')
-          console.log()
+          //message.success('打开密码库成功。')
+          Modal.confirm({
+            centered:true,
+            title:'切换密码库',
+            content:'是否切换当前的密码库到：「'+dbInfo.name+'」，切换密码库会导致浏览器的填充密码被调整为新的密码库中的密码。',
+            okText:'切换',
+            onOk:()=>{
+              this.setDb({
+                filePath:this.selectedItem.path,
+                kdbx:dbInfo.db,
+                name:dbInfo.name
+              })
+              this.$router.push({name:'passwords',params:{value:'',type:'all'}})
+            }
+          })
         }
       })
     },
@@ -182,7 +199,7 @@ export default {
       if (!filePath) {
         return
       }
-      kdbxModel.create(this.newName, filePath, this.newPassword, () => {
+      passwordModel.create(this.newName, filePath, this.newPassword, () => {
         let item = {
           id: Date.now(),
           text: this.newName,

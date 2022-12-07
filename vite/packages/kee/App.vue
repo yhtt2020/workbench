@@ -20,6 +20,7 @@ export default {
   mounted() {
     window.ipc=window.$models.ipc
     window.kdbxModel=window.$models.kdbxModel
+    window.passwordModel =window.$models.passwordModel
   },
   data(){
     return {
