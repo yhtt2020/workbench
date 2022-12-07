@@ -127,7 +127,7 @@ export default {
         console.warn(e)
         ipc.send('installAppReturn', { result: false})
       }
-      ipc.send('closeSelf')
+      //ipc.send('closeSelf')
     },
     close () {
       ipc.send('installAppReturn', { result: false })
