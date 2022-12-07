@@ -910,10 +910,10 @@ class AppManager {
     } else if (saApp.package === 'com.thisky.fav') {
       url='file://'+path.join(___dirname,'/pages/fav/index.html')
     }
-    if (saApp.package === 'com.thisky.appStore' ) {
-      url = 'http://localhost:5008/'
-      // url=saApp.url
-    }
+    // if (saApp.package === 'com.thisky.appStore' ) {
+    //   url = 'http://localhost:5008/'
+    //   // url=saApp.url
+    // }
     if (saApp.package === 'com.thisky.fav' && isDevelopmentMode) {
       // appView.webContents.openDevTools()
     }
