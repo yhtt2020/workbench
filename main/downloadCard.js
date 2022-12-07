@@ -1,7 +1,8 @@
 const { Notification } = require('electron')
 let downloadWindow=null
 function getDownloadWindow(){
-  if(downloadWindow===null){
+  console.log(downloadWindow)
+  if(downloadWindow===null || downloadWindow.isDestroyed()==true ){
     createDownloadWin()
   }
   return downloadWindow
@@ -35,7 +36,7 @@ function createDownloadWin () {
     if (forceClose) {
       downloadWindow = null
     } else {
-      downloadWindow.hide()
+      downloadWindow.close()
       event.preventDefault()
     }
   })
@@ -46,7 +47,7 @@ function createDownloadWin () {
       mainWindow.on('close',()=>{
         forceClose=true
         if(downloadWindow && !downloadWindow.isDestroyed())
-          downloadWindow.close()
+          downloadWindow.hide()
         downloadWindow=null
       })
     }

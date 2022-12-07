@@ -108,13 +108,48 @@ async function downloadHandler (event, item, webContents) {
       })
     }else {
       if (settings.get('downloadSavePath') === undefined || settings.get('downloadSavePath') == '') {
-        item.setSaveDialogOptions({
-          title: '选择保存地址',
-          filters: [
-            { name: suffix, extensions: [suffix] },
-            { name: '自定义', extensions: ['*'] }
-          ]
+        let selectPath =  dialog.showOpenDialogSync({
+            title: '选择保存地址',
+            properties: ['openDirectory'],
+            filters: [
+              { name: suffix, extensions: [suffix] },
+              { name: '自定义', extensions: ['*'] }
+            ]
         })
+           if(selectPath != undefined){
+             let savePath = selectPath.toString().replace(/\[|]/g, '')
+             let downloadSavePath = path.join(savePath,item.getFilename())
+             item.setSavePath(downloadSavePath)
+             if(settings.get('saveTips') == undefined || settings.get('saveTips') == false ){
+              let result =  dialog.showMessageBoxSync({
+                buttons:['是','取消'],
+                 message:'是否需要开启下载自动保存，并将该地址设为默认保存路径\n（您也可在下载设置页面手动更改）',
+                cancelId:1
+               })
+             switch (result) {
+               case 0:
+                settings.set('downloadSavePath',savePath)
+             }
+               settings.set('saveTips',true)
+             }
+           }
+          if(selectPath == undefined){
+            item.cancel()
+            setTimeout(()=>{
+              sendIPCToDownloadWindow('download-info', {
+                path: item.getSavePath(),
+                name: savePathFilename,
+                status: 'cancelled',
+                size: '',
+                // realdata1:item.speed,
+                realData:'',
+                paused: item.isPaused(),
+                startTime: item.getStartTime(),
+                chainUrl: item.getURLChain()
+              })
+            },300)
+           }
+
 
       } else {
         const filePath = path.join(savePathPrefix,item.getFilename())

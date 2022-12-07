@@ -49,7 +49,7 @@
                 <img :src="url=(`./icon/${matchFileSuffixType(item.name)}.svg`)" style="height: 100%;width: 100%"/>
               </div>
               <div style="display: flex;flex-direction: column;margin-left: 10px">
-                <div style="display: flex">
+                <div style="display: flex;width: 200px">
                   <a-tooltip>
                     <template #title>{{item.name}}</template>
                     <div class="title">{{ item.title }}</div>
@@ -63,7 +63,7 @@
                   {{ item.received }} / 未知
                 </div>
                 <div v-show="item.path ==='' && item.state !== 0 " style="font-size: 12px;width: 150px;color:#999">
-                  预载中...
+                  下载取消
                 </div>
                 <div v-show="item.state === 0 && item.status !== 'progressing'" style="font-size: 12px;width: 150px;color:#999">
                   下载中断
@@ -76,12 +76,12 @@
 
               <div v-if="item.status === 'progressing'">
                 <div v-if="item.loadState">
-                  <a-button style="margin-top: 5px;margin-left: 30px" type="link" @click="resume(item)">
+                  <a-button style="margin-top: 5px;" type="link" @click="resume(item)">
                     开始
                   </a-button>
                 </div>
                 <div v-else>
-                  <a-button style="margin-top: 5px;margin-left: 30px" type="link" @click="stop(item)">
+                  <a-button style="margin-top: 5px;" type="link" @click="stop(item)">
                     暂停
                   </a-button>
                 </div>
@@ -103,7 +103,7 @@
             </div>
             <div v-for="timeGroup in showList">
               <div class="time" style="margin-top: 8px;font-size: 15px;font-weight: 500">
-                <span style="margin-left: 30px;color: #000000;">{{ timeGroup.addTime }}</span>
+                <span style="margin-left: 15px;color: #000000;">{{ timeGroup.addTime }}</span>
               </div>
               <div class="downloadDone" v-for="(item,index) in timeGroup.subList" style="margin-top: 5px;width: 100%;height: 45px;user-select:none;"
                    v-bind:key="item.id" @click.stop="change(item.id)" @dblclick="openFileHandler(item)"
@@ -116,16 +116,16 @@
                     <img :src="url=(`./icon/${matchFileSuffixType(item.name)}.svg`)" style="height: 100%;width: 100%"/>
                   </div>
                   <div style="display: flex;flex-direction: column;margin-left: 10px;width: 115px">
-                    <div style="display: flex;width: 231px">
+                    <div style="display: flex;width: 205px">
                       <a-tooltip>
                         <template #title>{{item.name}}</template>
                         <div class="title">{{ item.title }}</div>
                       </a-tooltip>
-                      <div style="width: 30px;font-weight: bold;">{{item.suffixal}}</div>
+                      <div style="width: 100px;font-weight: bold;overflow: hidden">{{item.suffixal}}</div>
                     </div>
-                    <div style="display:flex;width: 215px;justify-content: space-between">
+                    <div style="display:flex;width: 200px;justify-content: space-between">
                       <div style="color:#999">{{ item.total }}</div>
-                      <div>{{ item.doneDate }}</div>
+                      <div style="font-size: 12px;line-height: 23px">{{ item.doneDate }}</div>
                     </div>
                   </div>
 
@@ -149,7 +149,7 @@
             </div>
             <div v-for="timeDelGroup in showDelList">
               <div class="time" style="margin-top: 8px;font-size: 15px;font-weight: 500">
-                <span style="margin-left: 30px;color: #000000;">{{ timeDelGroup.addDelTime }}</span>
+                <span style="margin-left: 15px;color: #000000;">{{ timeDelGroup.addDelTime }}</span>
               </div>
               <div v-for="(item,index) in timeDelGroup.subDelList" v-bind:key="item.id" @click.stop="change(item.id)" style="margin-top: 10px;height: 45px;user-select:none;"
                    @contextmenu="menuDel(item,item.id,timeDelGroup)" :class="{active : active === item.id,
@@ -161,19 +161,19 @@
                     <img :src="url=(`./icon/${matchFileSuffixType(item.name)}.svg`)" style="height: 100%;width: 100%;line-height: 40px"/>
                   </div>
                   <div style="display:flex; flex-direction: column;margin-left: 10px;width: 200px">
-                    <div style="display: flex;width: 231px">
+                    <div style="display: flex;width: 205px">
                       <a-tooltip>
                         <template #title>{{item.name}}</template>
                         <div class="title">{{ item.title }}</div>
                       </a-tooltip>
-                      <div style="width: 30px;font-weight: bold;">{{item.suffixal}}</div>
+                      <div style="width: 100px;font-weight: bold;overflow: hidden">{{item.suffixal}}</div>
                     </div>
-                    <div style="display: flex">
+                    <div style="display: flex;width: 200px;justify-content: space-between">
                       <div style="width: 55px">{{ item.total }}</div>
-                      <div style="font-size: 13px;line-height: 23px;margin-left: 25px;width: 120px">{{ item.delTime}}</div>
+                      <div style="font-size: 12px;line-height: 23px">{{ item.delTime}}</div>
                     </div>
                   </div>
-                  <div v-show="item.state === '-2'" style="line-height: 45px;margin-left: 15px">文件已被删除</div>
+                  <div v-show="item.state == -2" style="line-height: 45px;margin-left: 15px">文件已被删除</div>
                 </div>
               </div>
             </div>
@@ -299,6 +299,7 @@
   })
 
   ipcRenderer.on('download-info', async (event, args) => {
+    console.log(args)
     let i
     let fileName = args.name.substring(0, args.name.lastIndexOf("."))
     if (args.status === 'start') {
@@ -346,6 +347,7 @@
       appVue.count++
       ipcRenderer.send('willDownload')
       ipcRenderer.send('downloading')
+
     }
 
     if (args.status === 'cancelled') {
@@ -688,7 +690,7 @@
               result = '前天'
             }
           } else {
-            result = year + '-' + month + '-' + day
+            result = year + '年' + month + '月' + day + '日'
           }
         }
         return result
@@ -1004,7 +1006,7 @@
   }
   .title{
     font-weight: bold;
-    /*width: 200px;*/
+    /*width: 99px;*/
     word-break: break-all;
     text-overflow: ellipsis;
     display: -webkit-box;
