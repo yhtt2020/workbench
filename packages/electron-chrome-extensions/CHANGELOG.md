@@ -126,7 +126,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [3.0.0] - 2021-01-15
 
-### Added 
+### Added
 
 - Most of `chrome.cookies`
 - Most of `chrome.windows`
