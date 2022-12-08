@@ -584,8 +584,7 @@ global.renderPage = {
   },
 
   async openAllApps () {
-    return await pool.usePop({
-      url: 'file://' + path.join(__dirname, '/pages/saApp/list.html'),
+    return await appManager.openAppVite('/list',[],{
       width: 600,
       height: 600,
     })

@@ -528,6 +528,9 @@ async ensureColumns(){
       return true
     }
     function testPin(target,find){
+      if(!target){
+        return false
+      }
       function split(str){
         let arr=[]
         for (let i=0;i<str.length;i++){
@@ -552,8 +555,8 @@ async ensureColumns(){
       }
     }
 
-    let matchedApps= result.filter(app=>{
-      if(testPin(app.name,word) || testPin(app.summary,word) || testPin(app.url,word) || isOrderMatch(app.name,word) || isOrderMatch(app.summary,word)){
+    let matchedApps= result.filter(testApp=>{
+      if(testPin(testApp.name,word) || testPin(testApp.summary,word) || testPin(testApp.url,word) || isOrderMatch(testApp.name,word) || isOrderMatch(testApp.summary,word)){
         return true
       }
     })
