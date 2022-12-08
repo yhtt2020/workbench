@@ -135,7 +135,7 @@
             <component :is="item.iconSwap" @click="openMyPassword"/>
             <template #overlay>
               <a-menu class="my-password">
-                <a-menu-item  class="my-password-dropdown" :class="myPasswordIndex == items.id ? 'active-drawer':''" v-for="items in item.children" :key="items.id" @click="myPassswordBankClick(items)">
+                <a-menu-item  class="my-password-dropdown" :class="myPasswordIndex == items.id ? 'active-drawer':''" v-for="items in item.children" :key="items.id" @click="myPasswordBankClick(items)">
                   <UnlockFilled style="font-size:16px;padding-right:12px;"/>
                   <a>{{items.title}}</a>
                   <CheckOutlined v-if="checkPasswordIndex==items.id" style="padding-left:70px;color: rgba(80, 139, 254, 1);"/>
@@ -581,7 +581,7 @@ h3 {
 /*搜索结束*/
 
 /*新建密码开始*/
-.passsword-button{
+.password-button{
    width:18.765%;
    line-height: 32px;
    display: flex;
