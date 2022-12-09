@@ -1,6 +1,6 @@
 <template>
   <a-dropdown :trigger="['contextmenu']">
-    <div style="margin-bottom: 15px;text-align: center;">
+    <div @click="executeApp(app)" class="app-item clickable" style="margin-bottom: 15px;text-align: center;">
       <div style="margin-bottom: 10px">
         <a-badge :dot="app.is_new">
           <img onerror="this.src='../../icons/default.svg'" @click="executeApp(app)" shape="circle"
@@ -8,7 +8,7 @@
                :style="{'border-color':app.user_theme_color?app.user_theme_color:app.theme_color}">
         </a-badge>
       </div>
-      <div class="clickable" @click="executeApp(app)" style="white-space:nowrap;
+      <div   style="white-space:nowrap;
 overflow:hidden;
 text-overflow:ellipsis; ">
         <span class="debug-tag" v-if="app.is_debug">调试</span> {{ app.name }}
@@ -16,6 +16,14 @@ text-overflow:ellipsis; ">
     </div>
     <template #overlay>
       <a-menu>
+        <a-menu-item v-if="app.is_fav" @click="removeFav(app)" key="remove">
+          <a-icon  type="setting"></a-icon>
+          取消收藏
+        </a-menu-item>
+        <a-menu-item v-else  @click="addFav(app)" key="add">
+          <a-icon type="setting"></a-icon>
+          添加收藏
+        </a-menu-item>
         <a-menu-item @click="openSetting(app.nanoid)" key="setting">
           <a-icon type="setting"></a-icon>
           设置
@@ -31,14 +39,15 @@ text-overflow:ellipsis; ">
 </template>
 
 <script>
-import {Modal} from 'ant-design-vue'
+import { Modal,message } from 'ant-design-vue'
+const appModel = window.$models.appModel
 export default {
   name: 'AppItem',
-  props:['app'],
+  props: ['app'],
   data () {
 
   },
-  methods:{
+  methods: {
     executeApp (app) {
       ipc.send('executeApp', { app: JSON.parse(JSON.stringify(app)) })
       //this.searchWords=''
@@ -73,12 +82,33 @@ export default {
     openSetting (appId) {
       ipc.send('saAppOpenSetting', { nanoid: appId })
     },
+    async addFav (app) {
+      await appModel.addFav(app.nanoid)
+      app.is_fav = true
+      this.$emit('favUpdated')
+      message.success('成功添加到收藏列表')
+    },
+    async removeFav (app) {
+      await appModel.removeFav(app.nanoid)
+      this.$emit('favUpdated')
+      app.is_fav = false
+      message.success('成功从收藏列表中移除')
+    }
 
   }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.app-item {
+  padding: 10px;
+  &:hover {
+    box-shadow: 0 0 8px rgba(124, 124, 124, 0.35);
+    background: rgba(128, 128, 128, 0.06);
+    border-radius: 4px;
+  }
+}
+
 .logo {
   border-radius: 50%;
 
@@ -87,9 +117,11 @@ export default {
   padding: 2px;
   object-fit: cover;
 }
+
 .clickable {
   cursor: pointer;
 }
+
 .debug-tag {
   padding: 0 2px;
   background: #0bb20c;
@@ -99,7 +131,8 @@ export default {
   color: white;
   font-size: 12px;
 }
+
 .processing {
-   border: 3px solid blue;
- }
+  border: 3px solid blue;
+}
 </style>
