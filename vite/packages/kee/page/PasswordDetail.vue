@@ -454,7 +454,7 @@ export default {
    border-style: solid !important;
 }
 </style>
-<style lang="scss">
+<style lang="scss" scoped>
 .breadcrumb-container{
   display: flex;
   align-items: center;
@@ -699,5 +699,9 @@ export default {
   padding: 0 12px;
 }
 /*账号内容结束*/
-
+.ant-dropdown .ant-dropdown-placement-bottomLeft{
+  min-width: 183px !important;
+  top: 698px !important;
+  left: 955px !important;
+}
 </style>

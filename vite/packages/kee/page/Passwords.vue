@@ -112,38 +112,51 @@
     </a-layout-content>
   </a-layout>
   <a-drawer class="filter-list-container" :width="216" placement="left" :visible="sideDrawerVisible">
-    <a-list item-layout="horizontal" :data-source="selectMenuList">
-      <template #renderItem="{ item }">
-        <a-list-item class="drawer-item-list" :class="selectDrawerIndex == item.id ? 'active-drawer':''">
-          <component :is="item.icon" style="font-size:16px;padding-right: 12px;color: rgba(0, 0, 0, 0.5) !important;"/>
-          <a-list-item-meta @click="selectListItem(item)">
-            <template #title>
-             <span style=" color: rgba(0, 0, 0, 0.65);">{{ item.text }}</span>
-            </template>
-          </a-list-item-meta>
-          <!-- 下拉菜单列表 -->
-          <a-dropdown :trigger="['click']">
-            <component :is="item.iconSwap" @click="openMyPassword"/>
-            <template #overlay>
-              <a-menu class="my-password">
-                <a-menu-item  class="my-password-dropdown" :class="myPasswordIndex == items.id ? 'active-drawer':''" v-for="items in item.children" :key="items.id" @click="myPasswordBankClick(items)">
-                  <UnlockFilled style="font-size:16px;padding-right:12px;"/>
-                  <a>{{items.title}}</a>
-                  <CheckOutlined v-if="checkPasswordIndex==items.id" style="padding-left:70px;color: rgba(80, 139, 254, 1);"/>
-                </a-menu-item>
-              </a-menu>
-            </template>
-          </a-dropdown>
+    <div class="password-filter-container">
+      <a-list item-layout="horizontal" :data-source="selectMenuList">
+        <template #renderItem="{ item }">
+          <a-list-item class="drawer-item-list" :class="selectDrawerIndex == item.id ? 'active-drawer':''" >
+            <div class="my-password-drawer"  v-if="item.id == 1001">
+              <a-dropdown  :trigger="['click']" >
+                <span class="ant-dropdown-link" @click.prevent>
+                  <component :is="item.icon" style="font-size:16px;padding-right: 12px;color: rgba(0, 0, 0, 0.5) !important;"/>
+                  <a-list-item-meta @click="selectMyPassword(item)">
+                   <template #title>
+                   <span style=" color: rgba(0, 0, 0, 0.65);">{{ item.text }}</span>
+                   </template>
+                  </a-list-item-meta>
+                  <component :is="item.iconSwap"></component>
+                </span>
+                <template #overlay>
+                  <a-menu class="my-password-drawer-dropdown">
+                    <a-menu-item :key="items.id" v-for="items in item.children"  @click="myPasswordBankClick(items)">
+                      <UnlockFilled style="padding-right:12px;"/>
+                      <span class="title">{{items.title}}</span>
+                      <CheckOutlined v-if="checkPasswordIndex==items.id"  class="checkout"/>
+                    </a-menu-item>
+                  </a-menu>
+                </template>
+              </a-dropdown>
+            </div>
+            <div class="other-password-drawer" v-else >
+              <component :is="item.icon" style="font-size:16px;padding-right: 12px;color: rgba(0, 0, 0, 0.5) !important;"/>
+              <a-list-item-meta  @click="selectListItem(item)">
+                <template #title>
+                 <span style=" color: rgba(0, 0, 0, 0.65);">{{ item.text }}</span>
+                </template>
+              </a-list-item-meta>
+            </div>
+          </a-list-item>
+          <a-divider v-if="item.divider==1" style="height: 1px; background-color: rgba(230, 230, 230, 1);margin: 8px 0 !important;" />
+        </template>
+        <a-list-item class="drawer-main-application-open" @click="openMainApplication">
+          <span class="drawer-main-app-icon">
+            <img src="../../../public/img/lock-app.svg" alt="">
+          </span>
+          <span class="drawer-open-main-text">主应用中打开</span>
         </a-list-item>
-        <a-divider v-if="item.divider==1" style="height: 1px; background-color: rgba(230, 230, 230, 1);margin: 8px 0 !important;" />
-      </template>
-      <a-list-item class="drawer-main-application-open" @click="openMainApplication">
-        <span class="drawer-main-app-icon">
-          <img src="../../../public/img/lock-app.svg" alt="">
-        </span>
-        <span class="drawer-open-main-text">主应用中打开</span>
-      </a-list-item>
-    </a-list>
+      </a-list>
+    </div>
   </a-drawer>
 </template>
 
@@ -309,7 +322,7 @@ export default {
       // 定义筛选菜单列表数据
       selectMenuList:[
            {
-             id:1001,
+            id:1001,
              icon:'UnlockFilled',
              text:'我的密码',
              iconSwap:'SwapOutlined',
@@ -336,7 +349,7 @@ export default {
            {
              id:1002,
              icon:'AppstoreFilled',
-             text:'所有密码'
+             text:'所有密码',
            },
            {
              id:1003,
@@ -353,7 +366,7 @@ export default {
            {
              id:1005,
              text:'Computer',
-             icon:'TagFilled'
+             icon:'TagFilled',
            },
            {
              id:1006,
@@ -368,11 +381,12 @@ export default {
       openMainEnter:true,
       // 我的密码库筛选下标
       myPasswordIndex:0,
-      checkPasswordIndex:0
+      checkPasswordIndex:0,
+      myPasswordVisible:false
     }
   },
   async mounted() {},
-  methods: {
+  methods:{
     // 搜索触发做的事情
     searchClick() {},
     // 开启抽屉式的选项
@@ -387,38 +401,12 @@ export default {
          passwordItem:v
       })
     },
-    // 筛选下拉菜单
-    openPasswordSelect(e) {},
-    // 筛选列表点击
-    getDrawerItem() {
-      console.log(11);
-    },
-    // 当前网站点击
-    currentWebSiteClick(v){
-      this.noWebIndex = v.id
-      this.state.$patch({
-         passwordItem:v
-      })
-    },
-    // 鼠标移入
-    passwordHover() {
-      document.querySelector(".password-select").style =
-        "background:rgba(80, 139, 254, 0.1);";
-    },
-    passwordItemsHover(v) {
-      v.showCopy = true;
-    },
-    // 鼠标移出
-    passwordRemove() {
-      document.querySelector(".password-select").style =
-        "background:rgba(255, 255, 255, 1);";
-    },
-    passwordItemRemove(v) {
-      v.showCopy = false;
-    },
-    // 打开填充按钮
-    openFillClick() {
-      console.log("打开填充");
+    // 密码库下拉菜单点击
+    myPasswordBankClick(v){
+      this.checkPasswordIndex = v.id
+      this.selectMenuList[0].text = v.title
+      this.filterText = v.title
+      this.sideDrawerVisible = false
     },
     // 筛选菜单中子项选中
     selectListItem(v){
@@ -429,100 +417,61 @@ export default {
       this.sideDrawerVisible = false
       document.querySelector('.drawer-main-application-open').classList.remove('active-drawer')
     },
-    // 我的密码下拉
-    openMyPassword(){
-       this.dropdownVisible = true
+    selectMyPassword(v){
+      this.filterText = v.text
+      this.selectDrawerIndex = v.id
+      this.filterIcon = v.icon
+      this.filterId = v.id
     },
+    
     // 主应用打开跳转到对应的路由地址
     openMainApplication(){
       document.querySelector('.drawer-main-application-open').classList.add('active-drawer')
       this.selectDrawerIndex = ''
       this.sideDrawerVisible = false
     },
-    myPasswordBankClick(v){
-      this.selectMenuList[0].text = v.title
-      this.myPasswordIndex = v.id
-      this.checkPasswordIndex = v.id
-    }
-  },
+    // 鼠标移入开始
+    passwordHover() {
+      document.querySelector(".password-select").style =
+        "background:rgba(80, 139, 254, 0.1);";
+    },
+    passwordItemsHover(v) {
+      v.showCopy = true;
+    },
+    // 鼠标移入结束
+    // 鼠标移出开始
+    passwordRemove() {
+      document.querySelector(".password-select").style =
+        "background:rgba(255, 255, 255, 1);";
+    },
+    passwordItemRemove(v) {
+      v.showCopy = false;
+    },
+    // 鼠标移出结束
+    // 筛选列表点击
+    getDrawerItem() {
+     
+    },
+    // 当前网站点击
+    currentWebSiteClick(v){
+      this.noWebIndex = v.id
+      this.state.$patch({
+         passwordItem:v
+      })
+    },
+    // 打开填充按钮
+    openFillClick() {
+      
+    },
+  }
 };
 </script>
-<style>
+<style scoped>
 body,
 html {
   overflow: hidden;
   width: 100% !important;
 }
-/*其他样式开始*/
-.ant-layout-sider {
-  max-width: 240px !important;
-  padding: 9px 8px !important;
-  flex: 0 0 240px !important;
-  min-width: 240px !important;
-  width: 240px !important;
-}
-.ant-menu-inline,
-.ant-menu-vertical,
-.ant-menu-vertical-left {
-  border: none;
-}
-.ant-list-split .ant-list-item {
-  border: none;
-}
-.ant-form-item {
-  margin: 0 !important;
-}
-.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
-  background: rgba(80, 139, 254, 0.2) !important;
-  background-color: rgba(80, 139, 254, 0.2) !important;
-  color: rgba(0, 0, 0, 0.65) !important;
-  border-radius: 6px;
-}
-.ant-menu-light .ant-menu-item:hover,
-.ant-menu-light .ant-menu-item-active,
-.ant-menu-light .ant-menu:not(.ant-menu-inline) .ant-menu-submenu-open,
-.ant-menu-light .ant-menu-submenu-active,
-.ant-menu-light .ant-menu-submenu-title:hover {
-  color: rgba(0, 0, 0, 0.65) !important;
-}
-.ant-menu-item:active,
-.ant-menu-submenu-title:active {
-  background: rgba(80, 139, 254, 0.2) !important;
-  background-color: rgba(80, 139, 254, 0.2) !important;
-  color: rgba(0, 0, 0, 0.65) !important;
-  border-radius: 6px;
-}
-.ant-menu-item::after {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  border-right: none !important;
-  transform: scaleY(0.0001);
-  opacity: 0;
-  transition: transform 0.15s cubic-bezier(0.215, 0.61, 0.355, 1),
-    opacity 0.15s cubic-bezier(0.215, 0.61, 0.355, 1);
-  content: "";
-}
-.password-computer {
-  padding-left: 30px !important;
-}
-.ant-drawer-body {
-  overflow: scroll !important;
-}
-.ant-drawer-body::-webkit-scrollbar {
-  width: 0 !important;
-}
-.main-open-item {
-  padding-left: 20px !important;
-}
-.ant-empty-description {
-  display: none !important;
-}
-.ant-list-item-meta-avatar {
-  margin-right: 8px;
-}
-/*其他样式结束*/
 </style>
 <style lang="scss">
 h3 {
@@ -605,35 +554,6 @@ h3 {
    cursor: pointer;
 }
 /*新建密码结束*/
-
-/*清除边框开始*/
-.ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover {
-  border-color: rgba(230, 230, 230, 1);
-  border-right-width: 1px !important;
-  z-index: 1;
-}
-.ant-input-affix-wrapper:focus,
-.ant-input-affix-wrapper-focused {
-  border-color: rgba(230, 230, 230, 1);
-  box-shadow: none !important;
-  border-right-width: 1px !important;
-  outline: 0;
-}
-.ant-input-affix-wrapper:hover {
-  border-color: none;
-  border-right-width: 1px !important;
-}
-.ant-input:focus,
-.ant-input-focused {
-  box-shadow: none !important;
-}
-.ant-drawer-header-close-only {
-  display: none;
-}
-.ant-drawer-body {
-  padding: 8px;
-}
-/*清除边框结束*/
 
 /*左侧边栏滚动开始*/
 .ant-layout-sider {
@@ -787,59 +707,190 @@ h3 {
 }
 
 /*当前网站密码结束*/
-
 /*筛选列表开始*/
-.drawer-item-list{
-   line-height: 32px !important;
-   padding: 5px  8px !important;
-   cursor: pointer;
-   .ant-list-item-meta-title{
-      margin: 0 !important;
-   }
-   &:hover{
-     background: none ;
-   }
-}
-.active-drawer{
-  background: rgba(80, 139, 254, 0.25) !important;
-  border-radius: 6px;
-}
-.ant-dropdown-menu-item{
-   width: 192px !important;
-}
-.my-password{
-  min-width: 14px !important;
-  left: -178px !important;
-  top: 1px !important;
-}
-.drawer-main-application-open{
-  padding: 5px 8px !important;
-  line-height: 22px !important;
-  display: flex !important;
-  cursor: pointer;
-  user-select: none;
-  justify-content: flex-start !important;
-  align-items: center !important;
-  &:hover{
+.password-filter-container{
+  padding: 8px;
+  .drawer-item-list{
+    line-height: 32px !important;
+    padding: 5px  8px !important;
+    cursor: pointer;
+    .ant-list-item-meta-title{
+       margin: 0 !important;
+    }
+    &:hover{
+      background: none ;
+    }
+    .my-password-drawer,.ant-dropdown-link{
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+    .other-password-drawer{
+      display: flex;
+      width: 100%;
+    }
+  }
+  .drawer-main-application-open{
+    padding: 5px 8px !important;
+    line-height: 22px !important;
+    display: flex !important;
+    cursor: pointer;
+    user-select: none;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    &:hover{
+       background: none;
+    }
+    .drawer-main-app-icon{
+       display: flex;
+       align-items: center;
+       img{
+         width: 16px;
+         height: 16px;
+       }
+    }
+    .drawer-open-main-text{
+       padding-left: 12px;
+       font-size: 14px;
+       color: rgba(0, 0, 0, 0.65);
+       font-weight: 400;
+    }
+  }
+  .active-drawer{
+    background: rgba(80, 139, 254, 0.25) !important;
+    border-radius: 6px;
+  }
+  .ant-dropdown-menu-item{
+    width: 192px !important;
+  }
+  .my-password{
+    min-width: 14px !important;
+    left: -178px !important;
+    top: 1px !important;
+  }
+  
+  .my-password-dropdown:hover{
      background: none;
   }
-  .drawer-main-app-icon{
-     display: flex;
-     align-items: center;
-     img{
-       width: 16px;
-       height: 16px;
-     }
-  }
-  .drawer-open-main-text{
-     padding-left: 12px;
-     font-size: 14px;
-     color: rgba(0, 0, 0, 0.65);
-     font-weight: 400;
+  .my-password-list{
+    cursor: pointer;
+    padding: 5px 8px;
+    .title{
+       padding-left: 12px;
+    }
   }
 }
-.my-password-dropdown:hover{
-   background: none;
+.checkout{
+   color: rgba(80, 139, 254, 1);
+   padding-left: 70px;
+}
+.ant-dropdown-menu-item:nth-of-type(1){
+  
+  .checkout{
+    color: rgba(80, 139, 254, 1);
+    padding-left: 66px !important;
+ }
 }
 /*筛选列表结束*/
+/*其他样式开始*/
+.ant-layout-sider {
+  max-width: 240px !important;
+  padding: 9px 8px !important;
+  flex: 0 0 240px !important;
+  min-width: 240px !important;
+  width: 240px !important;
+}
+.ant-menu-inline,
+.ant-menu-vertical,
+.ant-menu-vertical-left {
+  border: none;
+}
+.ant-list-split .ant-list-item {
+  border: none;
+}
+.ant-form-item {
+  margin: 0 !important;
+}
+.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  background: rgba(80, 139, 254, 0.2) !important;
+  background-color: rgba(80, 139, 254, 0.2) !important;
+  color: rgba(0, 0, 0, 0.65) !important;
+  border-radius: 6px;
+}
+.ant-menu-light .ant-menu-item:hover,
+.ant-menu-light .ant-menu-item-active,
+.ant-menu-light .ant-menu:not(.ant-menu-inline) .ant-menu-submenu-open,
+.ant-menu-light .ant-menu-submenu-active,
+.ant-menu-light .ant-menu-submenu-title:hover {
+  color: rgba(0, 0, 0, 0.65) !important;
+}
+.ant-menu-item:active,
+.ant-menu-submenu-title:active {
+  background: rgba(80, 139, 254, 0.2) !important;
+  background-color: rgba(80, 139, 254, 0.2) !important;
+  color: rgba(0, 0, 0, 0.65) !important;
+  border-radius: 6px;
+}
+.ant-menu-item::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  border-right: none !important;
+  transform: scaleY(0.0001);
+  opacity: 0;
+  transition: transform 0.15s cubic-bezier(0.215, 0.61, 0.355, 1),
+    opacity 0.15s cubic-bezier(0.215, 0.61, 0.355, 1);
+  content: "";
+}
+.password-computer {
+  padding-left: 30px !important;
+}
+.ant-drawer-body {
+  overflow: scroll !important;
+}
+.ant-drawer-body::-webkit-scrollbar {
+  width: 0 !important;
+}
+.main-open-item {
+  padding-left: 20px !important;
+}
+.ant-empty-description {
+  display: none !important;
+}
+.ant-list-item-meta-avatar {
+  margin-right: 8px;
+}
+.ant-drawer-header{
+   display: none !important;
+}
+/*其他样式结束*/
+/*清除边框开始*/
+.ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover {
+  border-color: rgba(230, 230, 230, 1);
+  border-right-width: 1px !important;
+  z-index: 1;
+}
+.ant-input-affix-wrapper:focus,
+.ant-input-affix-wrapper-focused {
+  border-color: rgba(230, 230, 230, 1);
+  box-shadow: none !important;
+  border-right-width: 1px !important;
+  outline: 0;
+}
+.ant-input-affix-wrapper:hover {
+  border-color: none;
+  border-right-width: 1px !important;
+}
+.ant-input:focus,
+.ant-input-focused {
+  box-shadow: none !important;
+}
+.ant-drawer-header-close-only {
+  display: none;
+}
+.ant-drawer-body {
+  padding: 8px;
+}
+/*清除边框结束*/
 </style>
