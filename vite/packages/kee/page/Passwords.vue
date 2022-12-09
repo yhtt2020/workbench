@@ -280,7 +280,9 @@ export default {
           url: "../../../public/img/key_black.svg",
           password:'123456',
           site_1:'zt.xaingtian.ren',
+          showCopy: false,
           site_2:'www.yuque.com'
+          
         },
         {
           id:2,
@@ -288,6 +290,7 @@ export default {
           description: "Isabelle_Fisher",
           url: "../../../public/img/key_crimson.svg",
           password:'123456',
+          showCopy: false,
           site_1:'zt.xaingtian.ren',
           site_2:'www.yuque.com'
         },
@@ -297,6 +300,7 @@ export default {
           description: "Benjamin_Gonzalez",
           url: "../../../public/img/key_blue.svg",
           password:'123456',
+          showCopy: false,
           site_1:'zt.xaingtian.ren',
           site_2:'www.yuque.com'
         },

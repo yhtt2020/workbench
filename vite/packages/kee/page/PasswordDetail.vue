@@ -337,9 +337,9 @@ export default {
   updated(){
     this.formState.passwordAccount = this.passwordItem.title
     this.formState.username = this.passwordItem.description
-    this.formState.websiteValue = this.passwordItem.site_1
+    this.formState.websiteValue = this.passwordItem.site_2
     this.formState.password = this.passwordItem.password
-    this.formState.siteValue = this.passwordItem.site_2
+    this.formState.siteValue = this.passwordItem.site_1
   },
   methods:{
     // 打开分享
