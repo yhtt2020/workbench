@@ -34,7 +34,8 @@ export const appStore = defineStore('kee',{
         description: "Francisio_Phillps",
         password:'123456',
         url: "../../../public/img/key_black.svg",
-        site:'zt.xaingtian.ren'
+        site_1:'zt.xaingtian.ren',
+        site_2:'zt.xaingtian.ren'
       },
     }),
     actions:{},

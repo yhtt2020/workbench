@@ -52,10 +52,10 @@
     <div class="breadcrumb-form-header">
       <div class="breadcrumb-bottom-name">
         <span class="avatar">
-           <img :src="store.passwordItem.url" alt="">
+           <img :src="passwordItem.url" alt="">
         </span>
         <span class="name" v-if="editShow == false">
-          {{store.passwordItem.title}}
+          {{passwordItem.title}}
         </span>
         <a-form :model="formState" :rules="formRules" v-if="editShow==true">
           <a-form-item name="passwordAccount" required>
@@ -68,7 +68,7 @@
           <div ref="usernameRef" class="breadcrumb-form-username" @mouseover="isMouse==true&&openUsernameHover()" @mouseleave="isMouse==true&&closeUsernameHover()">
              <div class="left-content">
               <span style="padding-bottom:5px;color:rgba(104, 81, 214, 1);">用户名</span> 
-              <span v-if="editShow==false">{{store.passwordItem.description}}</span>
+              <span v-if="editShow==false">{{passwordItem.description}}</span>
               <a-form :model="formState" :rules="formRules" v-if="editShow==true">
                <a-form-item name="username" required>
                  <a-input style="padding:0  !important;border: none;" v-model:value="formState.username" />
@@ -83,7 +83,7 @@
               <div class="password-input">
                 <span style="color:rgba(104, 81, 214, 1);">密码</span>
                 <div class="password-show" v-if="editShow==false">
-                  <a-input  :type="passwordType" style="border:none;padding:0;width: 65%;background: rgba(80, 139, 254, 0);" v-model:value="store.passwordItem.password"></a-input>
+                  <a-input  :type="passwordType" style="border:none;padding:0;width: 65%;background: rgba(80, 139, 254, 0);" v-model:value="passwordItem.password"></a-input>
                   <div style="cursor: pointer;" v-if="passwordVisible==true" @click="passwordShowClick">
                     <EyeFilled v-if="passwordShow == true" style="color:rgba(80, 139, 254, 1); padding-right:11px; cursor: pointer;"/>
                     <EyeInvisibleFilled v-if="passwordShow==false"  style="color:rgba(80, 139, 254, 1); padding-right:11px; cursor: pointer;"/>
@@ -102,7 +102,7 @@
           <div ref="webSiteRef" class="breadcrumb-bottom-website" @mouseover="isMouse==true&&openWebsiteHover()" @mouseleave="isMouse==true&&closeWebsiteHover()">
              <div class="website-top">
               <a href="#" style="color:rgba(104, 81, 214, 1);">网站</a>
-              <a href="#" v-if="editShow==false">{{store.passwordItem.site}}</a>
+              <a href="#" v-if="editShow==false">{{passwordItem.site_1}}</a>
               <a-form :model="formState" :rules="formRules" v-if="editShow==true">
                 <a-form-item name="siteValue" required>
                   <a-input  style="padding:0 10px !important;" v-model:value="formState.siteValue" />
@@ -118,7 +118,7 @@
           <div class="breadcrumb-bottom-website" style="padding-top:0;">
               <div class="website-top">
                 <a href="#" style="color:rgba(104, 81, 214, 1);">网站</a>
-                <a href="#">{{store.passwordItem.site}}</a>
+                <a href="#">{{passwordItem.site_2}}</a>
               </div>
           </div>
           <div class="breadcrumb-bottom-remark">
@@ -229,7 +229,7 @@ export default {
     EyeFilled,EyeInvisibleFilled
   },
   computed: {
-   ...mapState(appStore, [])
+   ...mapState(appStore, ['passwordItem'])
   },
   data(){
     return{
@@ -286,7 +286,7 @@ export default {
       // 默认不勾选
       isAllowed:false,
       teamValue:['A_team'],
-      store:appStore(),
+      // store:appStore(),
       // 是否删除
       deleteVisible:false,
       // 密码编辑内容
@@ -335,11 +335,11 @@ export default {
   },
   mounted(){},
   updated(){
-    this.formState.passwordAccount = this.store.passwordItem.title
-    this.formState.username = this.store.passwordItem.description
-    this.formState.websiteValue = this.store.passwordItem.site
-    this.formState.password = this.store.passwordItem.password
-    this.formState.siteValue = this.store.passwordItem.site
+    this.formState.passwordAccount = this.passwordItem.title
+    this.formState.username = this.passwordItem.description
+    this.formState.websiteValue = this.passwordItem.site_1
+    this.formState.password = this.passwordItem.password
+    this.formState.siteValue = this.passwordItem.site_2
   },
   methods:{
     // 打开分享

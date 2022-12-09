@@ -25,7 +25,7 @@
         </template>
       </a-input>
     </div>
-    <div class="passsword-button">
+    <div class="password-button">
       <PlusOutlined style="font-size: 16px; color:rgba(255, 255, 255, 1) !important;" />
       <span style=" color: rgba(255, 255, 255, 1); padding-left:8px;">新建密码</span>
     </div>
@@ -38,10 +38,7 @@
         <div class="header-container">
           <div class="current-header">
             <span class="current-avatar">
-              <img
-                src="https://img.js.design/assets/img/62592c9e1be7d2a75a32e89b.png"
-                alt=""
-              />
+              <img src="https://img.js.design/assets/img/62592c9e1be7d2a75a32e89b.png"/>
             </span>
             <div class="header-content" v-if="totalOpen == false">
               <span>语雀——想天浏览器官方文档</span>
@@ -55,7 +52,7 @@
               />
               <UpOutlined
                 v-if="totalOpen == true"
-                style="color: rgba(0, 0, 0, 0.45); padding-left: 4px"
+                style="color: rgba(0, 0, 0, 0.45); padding-left: 4px;"
               />
               <DownOutlined
                 v-if="totalOpen == false"
@@ -68,23 +65,17 @@
             <span class="current-website">https://www.yuque.com/thisky/ylbh5g</span>
           </div>
         </div>
-        <a-list :data-source="currentList">
-          <template #renderItem="{ item }">
-            <a-list-item
-              class="left-item-list"
-              :class="noWebIndex == item.id ? 'noweb-background' : ''"
-            >
-              <a-list-item-meta :description="item.description"  @click="currentDescription(item)">
-                <template #avatar>
-                  <img class="now-website-img" :src="item.url" alt="" />
-                </template>
-                <template #title>
-                  <span>{{ item.title }}</span>
-                </template>
-              </a-list-item-meta>
-            </a-list-item>
-          </template>
-        </a-list>
+        <div class="current-list-container">
+           <div class="current-item" :class="noWebIndex == item.id ? 'active-current-bgcolor':''" v-for="item in currentList" :key="item.id" @click="currentWebSiteClick(item)">
+              <span class="current-item-img">
+                <img :src="item.url" alt=""/>
+              </span>
+              <div class="current-item-right">
+                <span class="title">{{item.title}}</span>
+                <span class="description">{{item.description}}</span>
+              </div>
+           </div>
+        </div>
       </div>
       <a-list item-layout="horizontal" :data-source="passwords" v-else>
         <template #renderItem="{ item,index }">
@@ -188,7 +179,7 @@ export default {
     DownOutlined,CheckOutlined
   },
   computed: {
-    ...mapState(appStore, []),
+    ...mapState(appStore, ['passwordItem']),
   },
   data() {
     return {
@@ -217,7 +208,8 @@ export default {
           password:'123456',
           url: "../../../public/img/key_black.svg",
           showCopy: false,
-          site:'zt.xaingtian.ren'
+          site_1:'zt.xaingtian.ren',
+          site_2:'zt.xaingtian.ren'
         },
         {
           id: 1,
@@ -228,7 +220,8 @@ export default {
           password:'123456',
           url: "../../../public/img/key_crimson.svg",
           showCopy: false,
-          site:'zt.xaingtian.ren'
+          site_1:'zt.xaingtian.ren',
+          site_2:'zt.xaingtian.ren'
         },
         {
           id: 2,
@@ -239,7 +232,8 @@ export default {
           password:'123456',
           url: "../../../public/img/key_blue.svg",
           showCopy: false,
-          site:'zt.xaingtian.ren'
+          site_1:'zt.xaingtian.ren',
+          site_2:'zt.xaingtian.ren'
         },
         {
           id: 3,
@@ -250,7 +244,8 @@ export default {
           password:'123456',
           url: "../../../public/img/key_black.svg",
           showCopy: false,
-          site:'zt.xaingtian.ren'
+          site_1:'zt.xaingtian.ren',
+          site_2:'zt.xaingtian.ren'
         },
         {
           id: 4,
@@ -261,7 +256,8 @@ export default {
           password:'123456',
           url: "../../../public/img/key_orange.svg",
           showCopy: false,
-          site:'zt.xaingtian.ren'
+          site_1:'zt.xaingtian.ren',
+          site_2:'zt.xaingtian.ren'
         },
       ],
       search: "",
@@ -275,25 +271,34 @@ export default {
       totalOpen: true,
       contextItems: "",
       // 当前网站
-      noWebIndex:0,
+      noWebIndex:'',
       currentList: [
         {
           id:1,
           title: "拉娅枫的语雀帐号",
           description: "Francisio_Phillps",
           url: "../../../public/img/key_black.svg",
+          password:'123456',
+          site_1:'zt.xaingtian.ren',
+          site_2:'www.yuque.com'
         },
         {
           id:2,
           title: "过英的语雀帐号",
           description: "Isabelle_Fisher",
           url: "../../../public/img/key_crimson.svg",
+          password:'123456',
+          site_1:'zt.xaingtian.ren',
+          site_2:'www.yuque.com'
         },
         {
           id:3,
           title: "汝贵的语雀帐号",
           description: "Benjamin_Gonzalez",
           url: "../../../public/img/key_blue.svg",
+          password:'123456',
+          site_1:'zt.xaingtian.ren',
+          site_2:'www.yuque.com'
         },
       ],
       state:appStore(),
@@ -385,8 +390,11 @@ export default {
       console.log(11);
     },
     // 当前网站点击
-    currentDescription(v) {
+    currentWebSiteClick(v){
       this.noWebIndex = v.id
+      this.state.$patch({
+         passwordItem:v
+      })
     },
     // 鼠标移入
     passwordHover() {
@@ -696,9 +704,11 @@ h3 {
 
 /*当前网站密码开始*/
 .current-container{
-  padding: 9px 8px;
   .header-container{
      background: rgba(0, 0, 0, 0.04);
+     padding: 7.25px 12px;
+     border-radius: 6px;
+     margin-bottom: 8px;
     .current-header{
       display: flex;
       align-items: center;
@@ -723,6 +733,38 @@ h3 {
         word-break: break-all;
        }
     }
+    .current-switch{
+       display: flex;
+       align-items: center;
+       justify-content: center;
+    }
+  }
+  .current-list-container{
+     .current-item{
+       padding: 8.5px 12px;
+       display: flex;
+       cursor: pointer;
+       .current-item-img{
+        line-height: 21px;
+        padding-right: 12px;
+        img{
+          width: 16px;
+          height: 16px;
+        }
+       }
+       
+       .current-item-right{
+         display: flex;
+         width: 100%;
+         flex-direction: column;
+         .title{
+           line-height: 21px;
+         }
+         .description{
+           line-height: 15px;
+         }
+       }
+     }
   }
 }
 .left-item-list{
@@ -734,6 +776,10 @@ h3 {
   &:hover{
     background: none;
   }
+}
+.active-current-bgcolor{
+   background: rgba(80, 139, 254, 0.2);
+   border-radius: 6px;
 }
 
 /*当前网站密码结束*/
