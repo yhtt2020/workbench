@@ -12,7 +12,7 @@
        <div class="auto-full" v-else>
         <span @click="saveChange">保存修改</span>
        </div>
-       <a-dropdown :trigger="['click']" width="180">
+       <a-dropdown :trigger="['click']" width="180" placement="bottomRight">
         <a class="ant-dropdown-link" @click.prevent>
           <EllipsisOutlined class="breadcrumb-icon"/>
         </a>
@@ -453,6 +453,7 @@ export default {
 .ant-tag{
    border-style: solid !important;
 }
+
 </style>
 <style lang="scss" scoped>
 .breadcrumb-container{
@@ -699,7 +700,7 @@ export default {
   padding: 0 12px;
 }
 /*账号内容结束*/
-.ant-dropdown .ant-dropdown-placement-bottomLeft{
+.ant-dropdown-placement-bottomLeft{
   min-width: 183px !important;
   top: 698px !important;
   left: 955px !important;

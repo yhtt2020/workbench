@@ -117,7 +117,7 @@
         <template #renderItem="{ item }">
           <a-list-item class="drawer-item-list" :class="selectDrawerIndex == item.id ? 'active-drawer':''" >
             <div class="my-password-drawer"  v-if="item.id == 1001">
-              <a-dropdown  :trigger="['click']" >
+              <a-dropdown  :trigger="['click']" width="200" placement="bottomLeft">
                 <span class="ant-dropdown-link" @click.prevent>
                   <component :is="item.icon" style="font-size:16px;padding-right: 12px;color: rgba(0, 0, 0, 0.5) !important;"/>
                   <a-list-item-meta @click="selectMyPassword(item)">
@@ -466,11 +466,16 @@ export default {
   }
 };
 </script>
-<style scoped>
+<style>
 body,
 html {
   overflow: hidden;
   width: 100% !important;
+}
+.ant-dropdown-placement-bottomLeft{
+    top: 44px !important;
+    left: 8px !important;
+    min-width: 200px !important;
 }
 </style>
 <style lang="scss">
@@ -709,7 +714,6 @@ h3 {
 /*当前网站密码结束*/
 /*筛选列表开始*/
 .password-filter-container{
-  padding: 8px;
   .drawer-item-list{
     line-height: 32px !important;
     padding: 5px  8px !important;
