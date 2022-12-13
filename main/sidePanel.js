@@ -2,6 +2,19 @@ let sidePanel = null //SidePanel类的存储变量
 /**
  * 是否是win11
  */
+function debounce(fn, delay) {
+  let time = null;//time用来控制事件的触发
+  return function () {
+    if (time !== null) {
+      clearTimeout(time);
+    }
+    time = setTimeout(() => {
+      fn.call(this);
+      //利用call(),让this的指针从指向window 转成指向input
+    }, delay)
+  }
+}
+
 function isWin11 () {
   const sysVersion = process.getSystemVersion()
   return sysVersion.startsWith('10.') && process.platform === 'win32'
@@ -291,9 +304,9 @@ global.SidePanel=class SidePanel {
 
   }
 
-  syncTitleBar () {
-    sendIPCToWindow(mainWindow, 'getTitlebarHeight')
-  }
+  // syncTitleBar () {
+  //   sendIPCToWindow(mainWindow, 'getTitlebarHeight')
+  // }
 
   /**
    * 设置左侧栏位置
@@ -318,7 +331,13 @@ global.SidePanel=class SidePanel {
       bounds.y=pos.clientY+parentBounds.y
       bounds.width=pos.width===0?0:parentBounds.width
       bounds.height=pos.height
-      sidePanel._sidePanel.setBounds(bounds)
+      if(sidePanelState!=='min'){
+        //如果此处不做判断，则导致极简模式下卡死
+        debounce(()=>{
+          console.log('同步尺寸')
+          sidePanel._sidePanel.setBounds(bounds)
+        },15)() //60帧=1000/60
+      }
     }else{
       console.log('因为mainwindow未载入而放弃一次设置位置')
     }
