@@ -714,6 +714,7 @@ ipc.on('addTab', function (event, data) {
 })
 
 ipc.on('themeChange', (e, a) => {
+  global.darkMode=a.status
   SidePanel.send('themeChange', a)
 })
 

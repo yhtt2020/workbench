@@ -34,23 +34,35 @@ const defaultViewWebPreferences = {
   minimumFontSize: 6
 }
 
-
+function getBackgroundColor(){
+  if(global.darkMode===undefined){
+    global.darkMode=require('./js/util/theme').getShouldDarkMod()?'enable':'disable'
+  }
+  if(global.darkMode==='enable' && settings.get('useTabDarkBackground')){
+    return 'rgb(32,32,32)'
+  }else{
+    return  '#fff'
+  }
+}
 async function createView(existingViewId, id, webPreferencesString, boundsString, events) {
   viewStateMap[id] = {loadedInitialURL: false}
 
   let view
   let webPreferences=JSON.parse(webPreferencesString)
 
+
+
   if (existingViewId) {
     view = temporaryPopupViews[existingViewId]
     delete temporaryPopupViews[existingViewId]
 
     // the initial URL has already been loaded, so set the background color
-    view.setBackgroundColor(defaultBrowserViewBg)
+    view.setBackgroundColor(getBackgroundColor())
     viewStateMap[id].loadedInitialURL = true
   } else {
     view = new BrowserView({webPreferences: Object.assign({}, defaultViewWebPreferences, webPreferences)})
-    view.setBackgroundColor(defaultBrowserViewBg)
+    view.setBackgroundColor(getBackgroundColor())
+
     // if(webPreferences.partition!=='persist:webcontent'){
     //   console.log('webPreferences',webPreferences)
     //   await browser.ensureExtension(webPreferences.partition)
@@ -493,7 +505,7 @@ function setCurrentBrowserView(needSetBrowserView){
 ipc.on('loadURLInView', function (e, args) {
   // wait until the first URL is loaded to set the background color so that new tabs can use a custom background
   if (!viewStateMap[args.id].loadedInitialURL) {
-    viewMap[args.id].setBackgroundColor(defaultBrowserViewBg)
+    viewMap[args.id].setBackgroundColor(getBackgroundColor())
     // If the view has no URL, it won't be attached yet
     if (args.id === selectedView) {
       mainWindow.setBrowserView(viewMap[args.id])
