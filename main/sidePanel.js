@@ -334,7 +334,6 @@ global.SidePanel=class SidePanel {
       if(sidePanelState!=='min'){
         //如果此处不做判断，则导致极简模式下卡死
         debounce(()=>{
-          console.log('同步尺寸')
           sidePanel._sidePanel.setBounds(bounds)
         },15)() //60帧=1000/60
       }
