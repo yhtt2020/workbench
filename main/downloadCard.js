@@ -1,10 +1,15 @@
 const { Notification } = require('electron')
 let downloadWindow=null
+
 function getDownloadWindow(){
-  console.log(downloadWindow)
-  if(downloadWindow===null || downloadWindow.isDestroyed()==true ){
+  if(downloadWindow === null || downloadWindow.isDestroyed() == true ){
     createDownloadWin()
   }
+  if(mainWindow!=null && !mainWindow.isDestroyed()){
+    let x = (mainWindow.getBounds().x + mainWindow.getBounds().width - downloadWindow.getBounds().width - 15)
+    downloadWindow.setPosition(x,mainWindow.getBounds().y+90)
+  }
+  downloadWindow.show()
   return downloadWindow
 }
 
@@ -36,7 +41,8 @@ function createDownloadWin () {
     if (forceClose) {
       downloadWindow = null
     } else {
-      downloadWindow.close()
+      sendIPCToDownloadWindow('isCloseWin')
+      // downloadWindow.close()
       event.preventDefault()
     }
   })
@@ -56,13 +62,10 @@ function createDownloadWin () {
 }
 
 app.whenReady().then(() => {
+
   ipc.on('openDownload', (event,args) => {
     getDownloadWindow()
-    if(mainWindow!=null && !mainWindow.isDestroyed()){
-      let x = (mainWindow.getBounds().x + mainWindow.getBounds().width - downloadWindow.getBounds().width - 15)
-      downloadWindow.setPosition(x,mainWindow.getBounds().y+90)
-    }
-    downloadWindow.show()
+    // downloadWindow.show()
   })
 
   const content = {
@@ -79,8 +82,17 @@ app.whenReady().then(() => {
     notification.show()
   })
 
-
 })
+
+
+ipc.on('closeWin',(event,args)=>{
+  if(args == 0){
+    downloadWindow.destroy()
+  }else {
+    downloadWindow.hide()
+  }
+})
+
 
 ipc.on('deleteFile',function (e,deletepath){
   const { shell } = require('electron')
@@ -99,12 +111,7 @@ ipc.on('deleteFile',function (e,deletepath){
 
 ipc.on('willDownload',()=>{
   getDownloadWindow()
-  if(mainWindow!=null && !mainWindow.isDestroyed()){
-    let x = (mainWindow.getBounds().x + mainWindow.getBounds().width - downloadWindow.getBounds().width - 15)
-    downloadWindow.setPosition(x,mainWindow.getBounds().y+90)
-  }
-  downloadWindow.focus()
-  downloadWindow.show()
+
 })
 
 

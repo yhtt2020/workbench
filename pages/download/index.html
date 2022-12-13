@@ -62,8 +62,8 @@
                 <div v-show="item.path !=='' && item.status==='progressing' && item.total === '0KB'" style="font-size: 12px;width: 150px;color:#999">
                   {{ item.received }} / 未知
                 </div>
-                <div v-show="item.path ==='' && item.state !== 0 " style="font-size: 12px;width: 150px;color:#999">
-                  下载取消
+                <div v-show="item.path === '' && item.state !== 0 " style="font-size: 12px;width: 150px;color:#999">
+                  预载中
                 </div>
                 <div v-show="item.state === 0 && item.status !== 'progressing'" style="font-size: 12px;width: 150px;color:#999">
                   下载中断
@@ -209,6 +209,7 @@
   import { matchFileSuffixType } from './typeHelper.js'
   const { DOWNLOAD_STATUS } =require('./stateHelper')
 
+
   ipcRenderer.on('menuIngStart', (e, args) => {
     if (appVue.selectingList.loadState === true) {
       ipcRenderer.send('resumeDownload', appVue.selectingList.path)
@@ -245,6 +246,10 @@
       }
     })
 
+  })
+  ipcRenderer.on('isCloseWin',(event,args)=>{
+
+    ipcRenderer.send('closeWin',appVue.list.length)
   })
 
   ipcRenderer.on('menuDoneOpenPage', (e) => {
@@ -299,7 +304,7 @@
   })
 
   ipcRenderer.on('download-info', async (event, args) => {
-    console.log(args)
+
     let i
     let fileName = args.name.substring(0, args.name.lastIndexOf("."))
     if (args.status === 'start') {
@@ -411,6 +416,7 @@
     }
 
     if (args.status === 'completed' && args.path !== '') {
+      ipcRenderer.send('downloadCompletes')
       ipcRenderer.send('inform')
       // ipcRenderer.send('emptyPageUrl', args.chainUrl)
       const myDate = new Date()
@@ -457,7 +463,6 @@
         delTime:'',
         addDelTime:'',
         suffixal: path.extname(args.name)
-
       })
       ipcRenderer.send('closeEmpty', args.chainUrl)
       ipcRenderer.send('downloadEnd')

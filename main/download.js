@@ -1,6 +1,4 @@
 
-
-
 const currrentDownloadItems = {}
 
 // ipc.on('cancelDownload', function (e, path) {
@@ -27,22 +25,47 @@ ipc.on('deleteDownload', function (e, path) {
   }
 })
 
+ipc.on('downloadCompletes',(agrs,events)=>{
+if(settings.get('downloadAutoSave') != true){
+  if(settings.get('saveTips') == undefined || settings.get('saveTips') == false ){
+    let result =  dialog.showMessageBoxSync({
+      buttons:['去设置','取消'],
+      message:'是否需要设置默认保存地址并开启下载自动保存\n（您也可在下载设置页面手动更改）',
+      cancelId:1
+    })
+    switch (result) {
+      case 0:
+        openSetting()
+    }
+    settings.set('saveTips',true)
+  }
+}
+})
+
 function isAttachment (header) {
   return /^\s*attache*?ment/i.test(header)
 }
 
 function sendIPCToDownloadWindow (action, data) {
   // if there are no windows, create a new one
+  getDownloadWindow()
+  setTimeout(()=>{
+    downloadWindow.webContents.send(action, data || {})
+  },20)
 
-  if (downloadWindow === null) {
-    getDownloadWindow(function () {
-      downloadWindow.webContents.send(action, data || {})
-    })
-  } else {
-    if(!downloadWindow.isDestroyed()) {
-      downloadWindow.webContents.send(action, data || {})
-    }
-  }
+
+
+  // if (downloadWindow === null || downloadWindow.isDestroyed()) {
+  //   createDownloadWin()
+  //   downloadWindow.webContents.send(action, data || {})
+  //   // getDownloadWindow(function () {
+  //   //   downloadWindow.webContents.send(action, data || {})
+  //   // })
+  // } else {
+  //   if(!downloadWindow.isDestroyed()) {
+  //     downloadWindow.webContents.send(action, data || {})
+  //   }
+  // }
 
 }
 
@@ -56,12 +79,12 @@ ipc.on('closeEmpty',(event,args) => {
 })
 
 ipc.on('downloading', (event, args) => {
-  mainWindow.send('downloadCountAdd')
+  mainWindow.webContents.send('downloadCountAdd')
 })
 
 
 ipc.on('downloadEnd', (event, args) => {
-  mainWindow.send('downloadCountCut')
+  mainWindow.webContents.send('downloadCountCut')
 })
 
 ipc.on('setSavePath',(event,args)=>{
@@ -76,6 +99,7 @@ ipc.on('setSavePath',(event,args)=>{
 })
 
 async function downloadHandler (event, item, webContents) {
+
   var itemURL = item.getURL()
   var attachment = isAttachment(item.getContentDisposition())
   let suffix = item.getFilename().substring(item.getFilename().lastIndexOf('.') + 1, item.getFilename().length)
@@ -108,48 +132,13 @@ async function downloadHandler (event, item, webContents) {
       })
     }else {
       if (settings.get('downloadSavePath') === undefined || settings.get('downloadSavePath') == '') {
-        let selectPath =  dialog.showOpenDialogSync({
-            title: '选择保存地址',
-            properties: ['openDirectory'],
-            filters: [
-              { name: suffix, extensions: [suffix] },
-              { name: '自定义', extensions: ['*'] }
-            ]
+        item.setSaveDialogOptions({
+          title: '选择保存地址',
+          filters: [
+            { name: suffix, extensions: [suffix] },
+            { name: '自定义', extensions: ['*'] }
+          ]
         })
-           if(selectPath != undefined){
-             let savePath = selectPath.toString().replace(/\[|]/g, '')
-             let downloadSavePath = path.join(savePath,item.getFilename())
-             item.setSavePath(downloadSavePath)
-             if(settings.get('saveTips') == undefined || settings.get('saveTips') == false ){
-              let result =  dialog.showMessageBoxSync({
-                buttons:['是','取消'],
-                 message:'是否需要开启下载自动保存，并将该地址设为默认保存路径\n（您也可在下载设置页面手动更改）',
-                cancelId:1
-               })
-             switch (result) {
-               case 0:
-                settings.set('downloadSavePath',savePath)
-             }
-               settings.set('saveTips',true)
-             }
-           }
-          if(selectPath == undefined){
-            item.cancel()
-            setTimeout(()=>{
-              sendIPCToDownloadWindow('download-info', {
-                path: item.getSavePath(),
-                name: savePathFilename,
-                status: 'cancelled',
-                size: '',
-                // realdata1:item.speed,
-                realData:'',
-                paused: item.isPaused(),
-                startTime: item.getStartTime(),
-                chainUrl: item.getURLChain()
-              })
-            },300)
-           }
-
 
       } else {
         const filePath = path.join(savePathPrefix,item.getFilename())
@@ -264,6 +253,7 @@ async function downloadHandler (event, item, webContents) {
     })
     return true
   }
+
 }
 
 function listenForDownloadHeaders (ses) {
