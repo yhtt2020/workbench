@@ -13,7 +13,7 @@
               <a-row  >
                 <div style="width: 20%"  v-for="app in appsRecently">
                   <div style="margin-bottom: 15px;text-align: center">
-                    <AppItem  @favUpdated="refresh" :app="app"></AppItem>
+                    <AppItem @uninstall="()=>{ this.uninstall(app,appsRecently)}" @favUpdated="refresh" :app="app"></AppItem>
                   </div>
                 </div>
               </a-row>
@@ -25,7 +25,7 @@
               <a-row  >
                 <div style="width: 20%"  v-for="app in appsFav">
                   <div style="margin-bottom: 15px;text-align: center">
-                    <AppItem  @favUpdated="refresh" :app="app"></AppItem>
+                    <AppItem @uninstall="()=>{ this.uninstall(app,appsFav)}" @favUpdated="refresh" :app="app"></AppItem>
                   </div>
                 </div>
               </a-row>
@@ -49,7 +49,7 @@
               <a-row  >
                 <div style="width: 20%"  v-for="app in filteredApps">
                   <div style="margin-bottom: 15px;text-align: center">
-                    <AppItem @favUpdated="refresh" :app="app"></AppItem>
+                    <AppItem @uninstall="()=>{ this.uninstall(app,filteredApps)}" @favUpdated="refresh" :app="app"></AppItem>
                   </div>
                 </div>
               </a-row>
@@ -62,7 +62,7 @@
         <a-empty v-if="this.searchResult.length===0" description="暂无相关应用"></a-empty>
         <a-row>
           <a-col :span="4" v-for="app in searchResult">
-            <AppItem :app="app"></AppItem>
+            <AppItem @uninstall="()=>{ this.uninstall(app,searchResult)}" :app="app"></AppItem>
           </a-col>
         </a-row>
       </div>
@@ -150,6 +150,18 @@ export default {
     this.refresh()
   },
   methods: {
+    uninstall(app,list){
+      appModel.uninstall(app.nanoid).then(success => {
+        list.splice(list.findIndex(item=>{
+          return item===app
+        }),1)
+        ipc.send('message', { type: 'success', config: { content: '卸载应用成功。' } })
+        ipc.send('deleteApp', { nanoid: app.nanoid })
+        this.refresh()
+      }, err => {
+        ipc.send('message', { type: 'success', config: { content: '卸载失败。' } })
+      })
+    },
     async addNew () {
       ipc.send('executeApp', { app: await appModel.get({ package: 'com.thisky.appStore' }) })
     },

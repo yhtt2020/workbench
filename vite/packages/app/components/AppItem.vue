@@ -11,7 +11,7 @@
       <div   style="white-space:nowrap;
 overflow:hidden;
 text-overflow:ellipsis; ">
-        <span class="debug-tag" v-if="app.is_debug">调试</span> {{ app.name }}
+        <span class="debug-tag" v-if="app.is_debug">调试</span> <strong v-if="app.is_fav"  style="">{{ app.name }}</strong><span v-else>{{app.name}}</span>
       </div>
     </div>
     <template #overlay>
@@ -28,7 +28,7 @@ text-overflow:ellipsis; ">
           <a-icon type="setting"></a-icon>
           设置
         </a-menu-item>
-        <a-menu-item @click="uninstall(app.nanoid)" v-if="!app.isSystemApp" key="uninstall">
+        <a-menu-item @click="uninstall(app)" v-if="!app.isSystemApp || app.is_debug" key="uninstall">
           <a-icon type="delete"></a-icon>
           卸载
         </a-menu-item>
@@ -53,26 +53,15 @@ export default {
       //this.searchWords=''
       this.searchWords = ''
     },
-    uninstall (appId) {
-      let that = this
+    uninstall (app) {
       Modal.confirm({
         title: '确定卸载此应用？',
         content: '此操作将卸载应用并清空所有应用数据，且无法还原。请谨慎操作。',
         okText: '确认',
         okType: 'danger',
         cancelText: '取消',
-        onOk () {
-          appModel.uninstall(appId).then(success => {
-            for (let i = 0; i < that.apps.length; i++) {
-              if (that.apps[i].nanoid === appId) {
-                that.apps.splice(i, 1)
-              }
-            }
-            ipc.send('message', { type: 'success', config: { content: '卸载应用成功。' } })
-            ipc.send('deleteApp', { nanoid: appId })
-          }, err => {
-            ipc.send('message', { type: 'success', config: { content: '卸载失败。' } })
-          })
+        onOk:()=> {
+          this.$emit('uninstall',app)
         },
         onCancel () {
           console.log('Cancel')
