@@ -559,18 +559,20 @@ class AppManager {
     return imagePath
   }
 
-  async openAppVite (path, additionalArguments = [],options) {
+  async openAppVite (path, additionalArguments = [],options={}) {
     async function loadSettingWindow () {
+      const windowOption={
+        frame:options.frame===undefined?true:options.frame,
+        width: options.width||920,
+        height: options.height||800,
+        closable:true,
+        minimizable:false,
+        maximizable:options.maximizable===undefined?true:options.maximizable,
+        acceptFirstMouse: true,
+      }
       appManager.settingWindow = await windowManager.create({
         name: 'appManager',
-        windowOption: {
-          frame:true,
-          width: options.width||920,
-          height: options.height||800,
-          closable:true,
-          minimizable:false,
-          acceptFirstMouse: true,
-        },
+        windowOption: windowOption,
         webPreferences: {
           preload: ___dirname + '/src/preload/appSettingPreload.js',
           nodeIntegration: true,
@@ -911,7 +913,7 @@ class AppManager {
       url='file://'+path.join(___dirname,'/pages/fav/index.html')
     }
     if (saApp.package === 'com.thisky.appStore' ) {
-      url = 'http://localhost:5008/'
+      //url = 'http://localhost:5008/'
       // url=saApp.url
     }
     if (saApp.package === 'com.thisky.fav' && isDevelopmentMode) {
@@ -1501,7 +1503,6 @@ app.whenReady().then(() => {
     //   appManager.settingWindow.close()
     //   appManager.settingWindow = null
     // }
-    mainWindow.focus()
     appManager.deleteApp(appId)
     event.returnValue=true
   })
