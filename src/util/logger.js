@@ -26,7 +26,7 @@ const logger = {
       }
     })
     cache = null;
-    //console.log(dataStr)
+    //console.log('log+',Date.now())
     data=JSON.parse(dataStr)
     logger.insertDb(type,message,data)
   },

@@ -13,7 +13,7 @@ var settings = {
 
     /* eslint-disable no-inner-declarations */
     function newFileWrite () {
-      return fs.promises.writeFile(settings.filePath, JSON.stringify(settings.list))
+      return require('fs').promises.writeFile(settings.filePath, JSON.stringify(settings.list))
     }
 
     function ongoingFileWrite () {
@@ -59,7 +59,7 @@ var settings = {
   initialize: function () {
     var fileData
     try {
-      fileData = fs.readFileSync(settings.filePath, 'utf-8')
+      fileData = require('fs').readFileSync(settings.filePath, 'utf-8')
     } catch (e) {
       if (e.code !== 'ENOENT') {
         console.warn(e)
@@ -69,7 +69,7 @@ var settings = {
       settings.list = JSON.parse(fileData)
     }
 
-    ipc.on('settingChanged', function (e, key, value) {
+    require('electron').ipcMain.on('settingChanged', function (e, key, value) {
       settings.list[key] = value
       settings.writeFile()
       settings.runChangeCallbacks(key)

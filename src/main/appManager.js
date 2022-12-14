@@ -559,18 +559,20 @@ class AppManager {
     return imagePath
   }
 
-  async openAppVite (path, additionalArguments = []) {
+  async openAppVite (path, additionalArguments = [],options={}) {
     async function loadSettingWindow () {
+      const windowOption={
+        frame:options.frame===undefined?true:options.frame,
+        width: options.width||920,
+        height: options.height||800,
+        closable:true,
+        minimizable:false,
+        maximizable:options.maximizable===undefined?true:options.maximizable,
+        acceptFirstMouse: true,
+      }
       appManager.settingWindow = await windowManager.create({
         name: 'appManager',
-        windowOption: {
-          frame:true,
-          width: 920,
-          height: 800,
-          closable:true,
-          minimizable:false,
-          acceptFirstMouse: true,
-        },
+        windowOption: windowOption,
         webPreferences: {
           preload: ___dirname + '/src/preload/appSettingPreload.js',
           nodeIntegration: true,
@@ -859,7 +861,7 @@ class AppManager {
     let saApp = appManager.getSaAppByAppId(appId)
     if (!!!saApp) {
       //首先必须是没运行的
-      saApp = app
+      saApp = JSON.parse(JSON.stringify(app))
       appManager.executeApp(saApp, background, option, cb)
       // if (!saApp) {
       //   //如果不存在，直接运行
@@ -1501,7 +1503,6 @@ app.whenReady().then(() => {
     //   appManager.settingWindow.close()
     //   appManager.settingWindow = null
     // }
-    mainWindow.focus()
     appManager.deleteApp(appId)
     event.returnValue=true
   })

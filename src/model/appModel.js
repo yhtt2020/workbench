@@ -5,129 +5,127 @@ const tools = require('../util/util.js').tools
 const { SqlDb } = require('../util/sqldb')
 const { nanoid } = require('nanoid')
 const sqlDb = new SqlDb()
-const SettingModel=require('./settingModel.js')
-const _ =require('lodash')
-const authBaseList=[
+const SettingModel = require('./settingModel.js')
+const _ = require('lodash')
+const authBaseList = [
   {
-    key:'webSecure',
-    name:'base.webSecure',
-    alias:'跨域',
-    summary:'支持跨域发起请求，在服务器端未做任何设置的情况下都可发起api请求。',
-    userSummary:'支持跨域发起请求，应用可以向任何网站发起请求。'
+    key: 'webSecure',
+    name: 'base.webSecure',
+    alias: '跨域',
+    summary: '支持跨域发起请求，在服务器端未做任何设置的情况下都可发起api请求。',
+    userSummary: '支持跨域发起请求，应用可以向任何网站发起请求。'
   },
   {
-    key:'node',
-    name:'base.node',
-    alias:'Node集成',
-    summary:'高权限接口，支持启用Node集成，只有本地应用可开启，且此类权限开启后需要接受严格的审核。',
-    userSummary:'高危权限，开启Node集成后，应用几乎无所不能，如果非绝对信任的应用，请勿授予此项权限。'
+    key: 'node',
+    name: 'base.node',
+    alias: 'Node集成',
+    summary: '高权限接口，支持启用Node集成，只有本地应用可开启，且此类权限开启后需要接受严格的审核。',
+    userSummary: '高危权限，开启Node集成后，应用几乎无所不能，如果非绝对信任的应用，请勿授予此项权限。'
   },
-
 
 ]
-const authApiList=[
+const authApiList = [
   {
-    disabled:true,
-    key:'runtime',
-    name:'tsbApi.runtime.*',
-    alias:'运行时',
-    summary:'包括API的运行状态，只要启用了API即可获得，区别是如果部分API未启用，则获取不到对应的信息。'
+    disabled: true,
+    key: 'runtime',
+    name: 'tsbApi.runtime.*',
+    alias: '运行时',
+    summary: '包括API的运行状态，只要启用了API即可获得，区别是如果部分API未启用，则获取不到对应的信息。'
   },
   {
-    disabled:true,
-    key:'util',
-    name:'tsbApi.util.*',
-    alias:'工具类',
-    summary:'包含一些辅助工具类，默认可使用。'
+    disabled: true,
+    key: 'util',
+    name: 'tsbApi.util.*',
+    alias: '工具类',
+    summary: '包含一些辅助工具类，默认可使用。'
   },
   {
-    key:'window',
-    name:'tsbApi.window.*',
-    alias:'窗体操作',
-    summary:'窗体API，包括各种最大化、最小化、显示、隐藏、吸附等操作，用于模拟窗体按钮。'
+    key: 'window',
+    name: 'tsbApi.window.*',
+    alias: '窗体操作',
+    summary: '窗体API，包括各种最大化、最小化、显示、隐藏、吸附等操作，用于模拟窗体按钮。'
   },
   {
-    key:'barrage',
-    name:'tsbApi.barrage.*',
-    alias:'弹幕功能',
-    summary:'支持通过api使用弹幕功能。'
+    key: 'barrage',
+    name: 'tsbApi.barrage.*',
+    alias: '弹幕功能',
+    summary: '支持通过api使用弹幕功能。'
   },
   {
-    key:'tabs',
-    name:'tsbApi.tabs.*',
-    alias:'标签',
-    summary:'可获取到当前的标签信息。'
+    key: 'tabs',
+    name: 'tsbApi.tabs.*',
+    alias: '标签',
+    summary: '可获取到当前的标签信息。'
   },
   {
-    key:'user',
-    name:'tsbApi.user.*',
-    alias:'用户信息',
-    summary:'可获取到当前的登录用户信息、手动触发用户登录。'
+    key: 'user',
+    name: 'tsbApi.user.*',
+    alias: '用户信息',
+    summary: '可获取到当前的登录用户信息、手动触发用户登录。'
   },
   {
-    key:'notification',
-    name:'tsbApi.notification.*',
-    alias:'系统消息提醒',
-    summary:'通过系统的弹窗直接触发消息。'
+    key: 'notification',
+    name: 'tsbApi.notification.*',
+    alias: '系统消息提醒',
+    summary: '通过系统的弹窗直接触发消息。'
   },
   {
-    key:'fs',
-    name:'tsbApi.fs.*',
-    alias:'文件操作',
-    summary:'可通过fs操作文件，此类API用户可能比较敏感，请谨慎开启。'
+    key: 'fs',
+    name: 'tsbApi.fs.*',
+    alias: '文件操作',
+    summary: '可通过fs操作文件，此类API用户可能比较敏感，请谨慎开启。'
   },
   {
-    key:'system',
-    name:'tsbApi.system.*',
-    alias:'系统便捷操作',
-    summary:'包括一些常用的操作，例如设置壁纸。'
+    key: 'system',
+    name: 'tsbApi.system.*',
+    alias: '系统便捷操作',
+    summary: '包括一些常用的操作，例如设置壁纸。'
   }
 ]
-const authAbilityList=[
+const authAbilityList = [
   {
-    key:'offlinePush',
-    name:'offlinePush',
-    alias:'离线消息',
-    summary:'通过服务器向轻聊应用机器人发送消息。',
-    needPackage:true
+    key: 'offlinePush',
+    name: 'offlinePush',
+    alias: '离线消息',
+    summary: '通过服务器向轻聊应用机器人发送消息。',
+    needPackage: true
   },
   {
-    key:'robot',
-    name:'robot',
-    alias:'群机器人',
-    summary:'开通应用的群机器人，可以方便地与轻聊的群进行交互。',
-    needPackage:true
+    key: 'robot',
+    name: 'robot',
+    alias: '群机器人',
+    summary: '开通应用的群机器人，可以方便地与轻聊的群进行交互。',
+    needPackage: true
   },
   {
-    key:'widget',
-    name:'widget',
-    alias:'效率栏组件',
-    summary:'启用效率栏小组件。',
-    needPackage:true
+    key: 'widget',
+    name: 'widget',
+    alias: '效率栏组件',
+    summary: '启用效率栏小组件。',
+    needPackage: true
   },
   {
-    key:'deskWidget',
-    name:'deskWidget',
-    alias:'想天桌面组件',
-    summary:'启用想天桌面小组件小组件。',
-    needPackage:true
+    key: 'deskWidget',
+    name: 'deskWidget',
+    alias: '想天桌面组件',
+    summary: '启用想天桌面小组件小组件。',
+    needPackage: true
   },
   {
-    key:'cloudArchiving',
-    name:'云存档',
-    alias:'云存档',
-    summary:'云存档，允许调用api进行云端数据存储和读取，方便实现云同步。',
-    needPackage:true,
+    key: 'cloudArchiving',
+    name: '云存档',
+    alias: '云存档',
+    summary: '云存档，允许调用api进行云端数据存储和读取，方便实现云同步。',
+    needPackage: true,
   }
 ]
-
 
 let settingModel
-const defaultWindow={
-  defaultType:'frameWindow',
+const defaultWindow = {
+  defaultType: 'frameWindow',
   frameWindow: {
-    enable:true,
-    width:800,
+    enable: true,
+    width: 800,
     height: 800,
     controllers: {
       goBack: true,
@@ -135,8 +133,8 @@ const defaultWindow={
       refresh: true,
       home: true
     },
-    top:false,
-    canResize:true,
+    top: false,
+    canResize: true,
   }
 }
 
@@ -156,7 +154,7 @@ const appModel = {
   authApiList,
   authAbilityList,
   async initDb () {
-    settingModel=new SettingModel()
+    settingModel = new SettingModel()
     await settingModel.initDb()
     /**
      *  standAloneApps:'++id,name,package,logo,summary,type,url,theme_color,user_theme_color,create_time,updateTime,accountAvatar
@@ -193,7 +191,6 @@ const appModel = {
         t.boolean('is_new')
         t.string('attribute')
 
-
         //新补充的字段
         t.string('window').comment('窗体设置')
         t.boolean('open_source').comment('是否开源')
@@ -204,45 +201,48 @@ const appModel = {
       })
       await this.migrateDB()
       //todo 迁移
-    }else{
+    } else {
       //防止迁移失败导致未成功转入应用
       await this.migrateDB()
     }
   },
-async ensureColumns(){
-  console.log('检测数据库版本')
-  // await sqlDb.knex.schema.table('app', function (t) {
-  //   t.boolean('is_debug').comment('是否是调试应用')
-  // })
-
-
-  if(!await sqlDb.knex.schema.hasColumn('app','window')){
-    //确认版本
-    console.log('升级数据库')
-    await sqlDb.knex.schema.table('app', function (t) {
-      console.log('开始添加字段')
-      t.string('window').comment('窗体设置')
-      t.boolean('open_source').comment('是否开源')
-      t.string('csv_url').comment('开源代码地址')
-      t.string('os_summary').comment('开源说明')
-      t.boolean('is_debug').comment('是否是调试应用')
-    })
-  }
-},
-  async migrateDB(){
+  async ensureColumns () {
+    console.log('检测数据库版本')
+    // await sqlDb.knex.schema.table('app', function (t) {
+    //   t.boolean('is_debug').comment('是否是调试应用')
+    // })
+    if (!await sqlDb.knex.schema.hasColumn('app', 'is_fav')) {
+      await sqlDb.knex.schema.table('app', function (t) {
+        t.boolean('is_fav').comment('是否是收藏的应用')
+      })
+    }
+    if (!await sqlDb.knex.schema.hasColumn('app', 'window')) {
+      //确认版本
+      console.log('升级数据库')
+      await sqlDb.knex.schema.table('app', function (t) {
+        console.log('开始添加字段')
+        t.string('window').comment('窗体设置')
+        t.boolean('open_source').comment('是否开源')
+        t.string('csv_url').comment('开源代码地址')
+        t.string('os_summary').comment('开源说明')
+        t.boolean('is_debug').comment('是否是调试应用')
+      })
+    }
+  },
+  async migrateDB () {
     console.log('迁移数据库')
 
     //todo 判断某个应用的appid，如果不存在，则批量处理，处理完之后，写一个config，调用sqldb.setconfig，参考下方写法
 
-    const DONE='app.migrate.done'
-    if(await sqlDb.getConfig(DONE)){
+    const DONE = 'app.migrate.done'
+    if (await sqlDb.getConfig(DONE)) {
       await this.ensureColumns()
       return
     }
-    let count = await sqlDb.knex('app').count({count: '*'})
-    let appsCount=count[0].count
-    if(appsCount){
-      await sqlDb.setConfig(DONE,true)
+    let count = await sqlDb.knex('app').count({ count: '*' })
+    let appsCount = count[0].count
+    if (appsCount) {
+      await sqlDb.setConfig(DONE, true)
       //已经迁移过了，直接跳过，防止重复迁移
       return
     }
@@ -268,7 +268,7 @@ async ensureColumns(){
         order: item.order || 0,
         use_count: item.useCount || 0,
         last_execute_time: item.lastExecuteTime,
-        settings: item.settings||{},
+        settings: item.settings || {},
         unread_count: item.unreadCount || 0,
         file_assign: item.fileAssign || [],
         auth: item.auth || [],
@@ -276,13 +276,13 @@ async ensureColumns(){
         attribute: item.attribute || {}
       }
       await sqlDb.knex('app').insert(data)
-      console.log('迁移应用',data)
+      console.log('迁移应用', data)
     }
-    if(saApps.length===0){
+    if (saApps.length === 0) {
       console.log('准备插入默认应用')
       await appModel.insertDefaultApps()
     }
-    await sqlDb.setConfig(DONE,true)
+    await sqlDb.setConfig(DONE, true)
   },
   async updateAppData (condition, newData) {
     let data = await sqlDb.knex('app').where(condition).first()//get({ name: '收藏夹' })
@@ -296,13 +296,13 @@ async ensureColumns(){
    * @returns {Promise<void>}
    */
   async ensureAppsData () {
-    let todo=await appModel.get({
-      package:'com.thisky.todo'
+    let todo = await appModel.get({
+      package: 'com.thisky.todo'
     })
     await appModel.updateAppData({ name: '超级收藏夹' }, {
-      appid:'GYfdW8',
+      appid: 'GYfdW8',
     })
-    if(!todo){
+    if (!todo) {
       await sqlDb.knex('app').insert({
         nanoid: nanoid(8),
         name: '轻待办',
@@ -318,35 +318,35 @@ async ensureColumns(){
         order: 0,
         use_count: 0,
         last_execute_time: Date.now(),
-        "window": JSON.stringify({
-          "defaultType": "window",
-          "frameWindow": {
-            "enable": true,
-            "width": 800,
-            "height": 800,
-            "controllers": {
-              "goBack": true,
-              "goForward": true,
-              "refresh": true,
-              "home": true
+        'window': JSON.stringify({
+          'defaultType': 'window',
+          'frameWindow': {
+            'enable': true,
+            'width': 800,
+            'height': 800,
+            'controllers': {
+              'goBack': true,
+              'goForward': true,
+              'refresh': true,
+              'home': true
             }
           },
-          "window": {
-            "enable": true,
-            "width": "600",
-            "height": "320",
-            "canResize": true,
-            "blurAction": "hide"
+          'window': {
+            'enable': true,
+            'width': '600',
+            'height': '320',
+            'canResize': true,
+            'blurAction': 'hide'
           },
-          "attach": {}
+          'attach': {}
         }),
-        "auth": JSON.stringify({
-          "base": {
-            "webSecure": true,
-            "node": false
+        'auth': JSON.stringify({
+          'base': {
+            'webSecure': true,
+            'node': false
           },
-          "api": {},
-          "ability": {}
+          'api': {},
+          'ability': {}
         }),
         is_new: true,
         unread_count: 0,
@@ -356,21 +356,21 @@ async ensureColumns(){
     await appModel.updateAppData({ package: 'com.thisky.group' }, {
       name: '轻聊',
       logo: 'https://up.apps.vip/logo/group.png?t=2',
-      appid:'qQ79Dw',
+      appid: 'qQ79Dw',
     })
 
     await appModel.updateAppData({ name: '帮助教程' }, {
-      appid:'t3VLx3',
+      appid: 't3VLx3',
     })
     await appModel.updateAppData({ name: '轻聊' }, {
-      appid:'qQ79Dw',
+      appid: 'qQ79Dw',
     })
 
     await appModel.updateAppData({ name: '导入助手' }, {
-      appid:'N1OPW6',
+      appid: 'N1OPW6',
     })
     await appModel.updateAppData({ name: '图片编辑器' }, {
-      appid:'6g6SdP',
+      appid: '6g6SdP',
     })
 
     await appModel.updateAppData({ package: 'com.thisky.appStore' }, {
@@ -379,7 +379,7 @@ async ensureColumns(){
       summary: '应用市场，助您发现更大的世界。',
       preload: '/pages/appStore/preload.js',
       type: 'web',
-      appid:'MiXNpK',
+      appid: 'MiXNpK',
       package: 'com.thisky.appStore',
       url: 'https://a.apps.vip/d.appStore/index.html', //更改为测试版的地址
       theme_color: '#3c78d8',
@@ -389,21 +389,21 @@ async ensureColumns(){
       account_avatar: '',
       order: 0,
       use_count: 0,
-      window:JSON.stringify({
-        "defaultType": "frameWindow",
-        "frameWindow": {
-          "enable": true,
-          "width": 1180,
-          "height": 864,
-          "controllers": {
-            "goBack": false,
-            "goForward": false,
-            "refresh": true,
-            "home": false
+      window: JSON.stringify({
+        'defaultType': 'frameWindow',
+        'frameWindow': {
+          'enable': true,
+          'width': 1180,
+          'height': 864,
+          'controllers': {
+            'goBack': false,
+            'goForward': false,
+            'refresh': true,
+            'home': false
           }
         },
-        "window": {},
-        "attach": {}
+        'window': {},
+        'attach': {}
       }),
       attribute: JSON.stringify({
         isOffical: 1,
@@ -425,7 +425,7 @@ async ensureColumns(){
       'name': '元社区',
       'url': 'https://s.apps.vip',
       'logo': 'https://up.apps.vip/logo/yuan.png',
-      appid:'A0Iap3',
+      appid: 'A0Iap3',
       theme_color: '#4188ff'
     })
   },
@@ -464,10 +464,10 @@ async ensureColumns(){
     }
 
     function matchChinese (str) {
-      let match=str.match(/[\u4e00-\u9fa5]/g)
-      if(match)
+      let match = str.match(/[\u4e00-\u9fa5]/g)
+      if (match)
         return match
-      else{
+      else {
         return []
       }
     }
@@ -512,53 +512,56 @@ async ensureColumns(){
       return result
     }
 
-    function isOrderMatch(target,find){
-      for (let i=0;i<find.length;i++){
+    function isOrderMatch (target, find) {
+      for (let i = 0; i < find.length; i++) {
         //挨个字符去匹配，一旦找到，就从这个字符开始的位置继续匹配，如果全部匹配到，则认为成功
-        let currentChart=find.charAt(i)
-        let charIndex=target.indexOf(currentChart)
-        if(charIndex===-1){
+        let currentChart = find.charAt(i)
+        let charIndex = target.indexOf(currentChart)
+        if (charIndex === -1) {
           //没找到这个字符
           return false
         }
         //如果找到位置，则截断当前的字符后，继续往后面找
-        target=target.substring(charIndex)
+        target = target.substring(charIndex)
       }
       //找了一遍都找到了，则返回true
       return true
     }
-    function testPin(target,find){
-      function split(str){
-        let arr=[]
-        for (let i=0;i<str.length;i++){
+
+    function testPin (target, find) {
+      if (!target) {
+        return false
+      }
+
+      function split (str) {
+        let arr = []
+        for (let i = 0; i < str.length; i++) {
           arr.push(str.charAt(i))
         }
         return arr
       }
 
-
-      find=find.toLowerCase()
-      let full=pinyin(target.toLowerCase(), { toneType: 'none', type: 'array' })
-      let first=pinyin(target.toLowerCase(), {
+      find = find.toLowerCase()
+      let full = pinyin(target.toLowerCase(), { toneType: 'none', type: 'array' })
+      let first = pinyin(target.toLowerCase(), {
         pattern: 'first',
         toneType: 'none',
         type: 'array'
       })
-      let fullStr=full.join('')
-      let firstStr=first.join('')
-      if(isOrderMatch(fullStr,find)|| isOrderMatch(firstStr,find))
-      {
+      let fullStr = full.join('')
+      let firstStr = first.join('')
+      if (isOrderMatch(fullStr, find) || isOrderMatch(firstStr, find)) {
         return true
       }
     }
 
-    let matchedApps= result.filter(app=>{
-      if(testPin(app.name,word) || testPin(app.summary,word) || testPin(app.url,word) || isOrderMatch(app.name,word) || isOrderMatch(app.summary,word)){
+    let matchedApps = result.filter(testApp => {
+      if (testPin(testApp.name, word) || testPin(testApp.summary, word) || testPin(testApp.url, word) || isOrderMatch(testApp.name, word) || isOrderMatch(testApp.summary, word)) {
         return true
       }
     })
-    for(let i=0;i<matchedApps.length;i++){
-      matchedApps[i]=await appModel.preHandleApp(matchedApps[i])
+    for (let i = 0; i < matchedApps.length; i++) {
+      matchedApps[i] = await appModel.preHandleApp(matchedApps[i])
     }
 
     return matchedApps
@@ -655,8 +658,8 @@ async ensureColumns(){
    * @param app
    * @returns {*}
    */
-  getName(app){
-   return (app.is_debug ? 'debug_' : '') + (app.package ? app.package : app.url)//如果有包名，优先用包名，没有包名用url(网络应用）
+  getName (app) {
+    return (app.is_debug ? 'debug_' : '') + (app.package ? app.package : app.url)//如果有包名，优先用包名，没有包名用url(网络应用）
   },
 
   /**
@@ -666,12 +669,12 @@ async ensureColumns(){
    */
   async uninstall (appId) {
     //await appModel.clearSettings(appid)
-    let app =await sqlDb.knex('app').where({nanoid:appId}).first()
-    if(!!!app){
+    let app = await sqlDb.knex('app').where({ nanoid: appId }).first()
+    if (!!!app) {
       throw '应用不存在'
     }
-    let name= appModel.getName(app)
-    await settingModel.clear('appSetting',name) //移除相关设置
+    let name = appModel.getName(app)
+    await settingModel.clear('appSetting', name) //移除相关设置
 
     return await sqlDb.knex('app').where({ nanoid: appId }).delete()
   },
@@ -691,14 +694,13 @@ async ensureColumns(){
    */
   async installDebugAppFromJson (json) {
     delete json.nanoid
-    if(json.use_debug_url){
-      if(json.debug_url.startsWith('http'))
-      {
-        json.type='local'
+    if (json.use_debug_url) {
+      if (json.debug_url.startsWith('http')) {
+        json.type = 'local'
       }
-      json.url=json.debug_url
+      json.url = json.debug_url
     }
-    json.is_debug=true
+    json.is_debug = true
     return await appModel.install(json.url, json)
   },
 
@@ -719,18 +721,18 @@ async ensureColumns(){
    * 将老的应用的设置转为新的应用设置
    * @returns {Promise<void>}
    */
-  async migrateOldApp(data){
-    if(!data.window || data.window.startsWith('[')){
-      let bounds=null
-      if(data.settings && data.settings.bounds){
-        bounds=data.settings.bounds
+  async migrateOldApp (data) {
+    if (!data.window || data.window.startsWith('[')) {
+      let bounds = null
+      if (data.settings && data.settings.bounds) {
+        bounds = data.settings.bounds
       }
-      data.window=Object.assign(defaultWindow,bounds)
+      data.window = Object.assign(defaultWindow, bounds)
 
-      if(data.package === 'com.thisky.import' || data.package === 'com.thisky.appStore' ){
-        data.window.frameWindow.canResize=false //此两应用禁止重新调整尺寸
+      if (data.package === 'com.thisky.import' || data.package === 'com.thisky.appStore') {
+        data.window.frameWindow.canResize = false //此两应用禁止重新调整尺寸
       }
-      await appModel.update(data.nanoid,{window:JSON.stringify(data.window)})
+      await appModel.update(data.nanoid, { window: JSON.stringify(data.window) })
     }
 
   },
@@ -744,14 +746,13 @@ async ensureColumns(){
   async install (url = '', app = {}) {
     if (!!!url) return false
 
-    if(app.themeColor){
-      app.theme_color=app.themeColor
+    if (app.themeColor) {
+      app.theme_color = app.themeColor
     }
-
 
     let appInstall = {
       nanoid: app.nanoid ? app.nanoid : nanoid(8),
-      appid:app.app_nanoid,
+      appid: app.app_nanoid,
       name: app.name,
       logo: app.logo,
       summary: app.summary || '',
@@ -773,14 +774,14 @@ async ensureColumns(){
       create_time: Date.now(),
       update_time: Date.now(),
 
-      window:app.window || defaultWindow,
-      open_source:app.open_source,
-      csv_url:app.csv_url,
-      os_summary:app.os_summary,
-      is_debug:app.is_debug,
+      window: app.window || defaultWindow,
+      open_source: app.open_source,
+      csv_url: app.csv_url,
+      os_summary: app.os_summary,
+      is_debug: app.is_debug,
       account_avatar: JSON.stringify({
-        avatar:app.avatar,
-        nickname:app.nickname,
+        avatar: app.avatar,
+        nickname: app.nickname,
       }),
       order: 0,
       use_count: 0,
@@ -805,10 +806,10 @@ async ensureColumns(){
    * 获得全部自启动的应用
    * @returns {Promise<*[]>}
    */
-  async getAutoRunApps(){
-   let allApps=await  appModel.getAllApps()
-    return allApps.filter((app)=>{
-      return !!app.settings.autoRun;
+  async getAutoRunApps () {
+    let allApps = await appModel.getAllApps()
+    return allApps.filter((app) => {
+      return !!app.settings.autoRun
     })
   },
 
@@ -828,86 +829,81 @@ async ensureColumns(){
     }
     app.is_new = app.is_new === 1
     app.settings = app.settings ? JSON.parse(app.settings) : {}
-    if(typeof app.window==='string'){
-      app.window=JSON.parse(app.window)
+    if (typeof app.window === 'string') {
+      app.window = JSON.parse(app.window)
     }
-    if(app.window.defaultType==='frameWindow' && app.window.frameWindow['canResize']===false && ['com.thisky.appStore'].indexOf(app.package)===-1){
-      app.window.frameWindow.canResize=true
-      await appModel.update(app.nanoid,{window:JSON.stringify(app.window)}) //修复一下默认数据
+    if (app.window.defaultType === 'frameWindow' && app.window.frameWindow['canResize'] === false && ['com.thisky.appStore'].indexOf(app.package) === -1) {
+      app.window.frameWindow.canResize = true
+      await appModel.update(app.nanoid, { window: JSON.stringify(app.window) }) //修复一下默认数据
     }
-    if(typeof app.auth==='string'){
-      try{
-        app.auth=JSON.parse(app.auth)
-        if(Array.isArray(app.auth)){
-          if(app.auth.length===0){
-            app.auth={
-              base:{},
-              api:{},
-              ability:{}
+    if (typeof app.auth === 'string') {
+      try {
+        app.auth = JSON.parse(app.auth)
+        if (Array.isArray(app.auth)) {
+          if (app.auth.length === 0) {
+            app.auth = {
+              base: {},
+              api: {},
+              ability: {}
             }
-          }else{
+          } else {
             //修复一下数据格式
-            let newAuth={
-              base:{
-                "webSecure":app.auth.base.indexOf('webSecure')>-1,
-                "node":app.auth.base.indexOf('node')>-1
+            let newAuth = {
+              base: {
+                'webSecure': app.auth.base.indexOf('webSecure') > -1,
+                'node': app.auth.base.indexOf('node') > -1
               },
-              api:{
-
-              },
-              ability:{}
+              api: {},
+              ability: {}
             }
-            app.auth=newAuth
+            app.auth = newAuth
           }
-          if(Array.isArray(app.auth.base)){
-            let newAuth={
-              base:{
-                "webSecure":app.auth.base.indexOf('webSecure')>-1,
-                "node":app.auth.base.indexOf('node')>-1
+          if (Array.isArray(app.auth.base)) {
+            let newAuth = {
+              base: {
+                'webSecure': app.auth.base.indexOf('webSecure') > -1,
+                'node': app.auth.base.indexOf('node') > -1
               },
-              api:{
-
-              },
-              ability:{}
+              api: {},
+              ability: {}
             }
-            app.auth=newAuth
+            app.auth = newAuth
           }
 
-          await appModel.update(app.nanoid,{auth:JSON.stringify(app.auth)}) //修复一下默认数据
+          await appModel.update(app.nanoid, { auth: JSON.stringify(app.auth) }) //修复一下默认数据
         }
-      }catch (e) {
-        console.warn(e,app) //强制转换掉异常数据
-        app.auth={
-          base:{},
-          api:{},
-          ability:{}
+      } catch (e) {
+        console.warn(e, app) //强制转换掉异常数据
+        app.auth = {
+          base: {},
+          api: {},
+          ability: {}
         }
-        await appModel.update(app.nanoid,{auth:JSON.stringify(app.auth)}) //修复一下默认数据
+        await appModel.update(app.nanoid, { auth: JSON.stringify(app.auth) }) //修复一下默认数据
       }
     }
-    let userSettings=await settingModel.get('appSetting',appModel.getName(app),'common')
-    if(!userSettings){
-      app.userSettings={
-        auth:app.auth
+    let userSettings = await settingModel.get('appSetting', appModel.getName(app), 'common')
+    if (!userSettings) {
+      app.userSettings = {
+        auth: app.auth
       }
-      await settingModel.set('appSetting',appModel.getName(app),'common',app.userSettings)
+      await settingModel.set('appSetting', appModel.getName(app), 'common', app.userSettings)
+    } else {
+      app.userSettings = userSettings
     }
-    else{
-      app.userSettings=userSettings
-    }
-    if(app.logo.startsWith('local|')){
+    if (app.logo.startsWith('local|')) {
       //预处理本地图片（临时）
-      app.logo= 'file://'+ app.logo.replace('local|','')
+      app.logo = 'file://' + app.logo.replace('local|', '')
     }
-    app.origin=_.cloneDeep(app)
-    app=Object.assign(app,userSettings)
-    if(!app.user_theme_color){
-      app.user_theme_color=app.theme_color //将主题色复制到用户设置
+    app.origin = _.cloneDeep(app)
+    app = Object.assign(app, userSettings)
+    if (!app.user_theme_color) {
+      app.user_theme_color = app.theme_color //将主题色复制到用户设置
     }
     return app
   },
-  async setUserSetting(app,userSetting){
-    await settingModel.set('appSetting',appModel.getName(app),'common',userSetting)
+  async setUserSetting (app, userSetting) {
+    await settingModel.set('appSetting', appModel.getName(app), 'common', userSetting)
   },
 
   /**
@@ -924,14 +920,18 @@ async ensureColumns(){
     if (option.limit) {
       query = query.limit(option.limit)
     }
+    if (option.where) {
+      query = query.where(option.where)
+    }
+
     result = await query.select()
 
-    for(let i = 0;i<result.length;i++){
-      result[i]=await appModel.preHandleApp(result[i])
+    for (let i = 0; i < result.length; i++) {
+      result[i] = await appModel.preHandleApp(result[i])
     }
     return result
   },
-  async getAll(option){
+  async getAll (option) {
     return await appModel.getAllApps(option)
   },
   /**
@@ -948,7 +948,7 @@ async ensureColumns(){
       data = await sqlDb.knex('app').where({ nanoid: nanoid }).first()
     }
     if (data) {
-      data=await appModel.preHandleApp(data)
+      data = await appModel.preHandleApp(data)
     }
     return data
   },
@@ -962,7 +962,7 @@ async ensureColumns(){
     if (!!!app) {
       return false
     }
-    app=await appModel.preHandleApp(app)
+    app = await appModel.preHandleApp(app)
     return app
   },
   isSystemApp (app) {
@@ -991,14 +991,14 @@ async ensureColumns(){
       return false
     } else {
       let DBSavedSettings = app.settings
-      if(Array.isArray(DBSavedSettings)){
-        DBSavedSettings={} //默认值有误
+      if (Array.isArray(DBSavedSettings)) {
+        DBSavedSettings = {} //默认值有误
       }
       let newSettings = Object.assign(DBSavedSettings, settings)
       await appModel.updateAppData({ nanoid: id }, { 'settings': JSON.stringify(newSettings) }).then((result) => {
         return true
       }).catch((err) => {
-        console.warn('存储app的setting失败',err)
+        console.warn('存储app的setting失败', err)
       })
     }
   },
@@ -1015,7 +1015,7 @@ async ensureColumns(){
         logo: 'https://up.apps.vip/logo/group.png?t=2',
         summary: '团队沟通，随时与团队成员实时沟通',
         type: 'web',
-        appid:'qQ79Dw',
+        appid: 'qQ79Dw',
         //url: serverConfig.IM.FRONT_URL+ serverConfig.IM.AUTO_LOGIN,
         url: serverConfig.IM.FRONT_URL + serverConfig.IM.AUTO_LOGIN,
         preload: '/pages/group/imPreload.js',
@@ -1050,7 +1050,7 @@ async ensureColumns(){
         package: 'com.thisky.com',
         summary: '用心经营您的元社区',
         type: 'web',
-        appid:'A0Iap3',
+        appid: 'A0Iap3',
         url: serverConfig.SERVER_BASE_URL,
         preload: '/pages/com/preload.js',
         theme_color: '#85ff85',
@@ -1060,7 +1060,7 @@ async ensureColumns(){
         account_avatar: '',
         order: 0,
         use_count: 0,
-        attribute:JSON.stringify( {
+        attribute: JSON.stringify({
           isOffical: 1,
           integration: 2
         }),
@@ -1082,7 +1082,7 @@ async ensureColumns(){
         summary: '整理你的超级资料库',
         preload: '/pages/fav/preload.js',
         type: 'web',
-        appid:'GYfdW8',
+        appid: 'GYfdW8',
         package: 'com.thisky.fav',
         url: '/pages/fav/index.html',
         theme_color: '#3c78d8',
@@ -1113,7 +1113,7 @@ async ensureColumns(){
         logo: 'https://up.apps.vip/logo/logo.svg',
         summary: '快速导入其他浏览器的书签、密码，设置为您的默认浏览器。',
         type: 'local',
-        appid:'N1OPW6',
+        appid: 'N1OPW6',
         //url: serverConfig.IM.FRONT_URL+ serverConfig.IM.AUTO_LOGIN,
         url: '/pages/import/index.html',
         preload: '/pages/group/imPreload.js',
@@ -1144,7 +1144,7 @@ async ensureColumns(){
         name: '图片编辑器',
         theme_color: 'rgb(90,170,60)',
         author: '想天软件',
-        appid:'6g6SdP',
+        appid: '6g6SdP',
         site: 'http://apps.vip',
         logo: 'https://a.apps.vip/imageEditor/icon.svg',
         url: 'https://a.apps.vip/imageEditor/',
@@ -1167,7 +1167,7 @@ async ensureColumns(){
         url: 'https://www.yuque.com/tswork/ngd5zk/iuguin',
         package: 'com.thisky.helper',
         theme_color: '#ff7b42',
-        appid:'t3VLx3',
+        appid: 't3VLx3',
         attribute: JSON.stringify({
           isOffical: 1,
           integration: 2
@@ -1188,13 +1188,13 @@ async ensureColumns(){
         }),
       },
       {
-        nanoid:nanoid(8),
+        nanoid: nanoid(8),
         name: '应用市场',
         logo: 'https://up.apps.vip/logo/favicon.svg',
         summary: '应用市场，助您发现更大的世界。',
         preload: '/pages/appStore/preload.js',
         type: 'web',
-        appid:'MiXNpK',
+        appid: 'MiXNpK',
         package: 'com.thisky.appStore',
         url: 'https://a.apps.vip/appStore/index.html',
         theme_color: '#3c78d8',
@@ -1248,7 +1248,7 @@ async ensureColumns(){
         words = '本地权限'
         break
       case 'noFrame':
-        words='无边框窗体'
+        words = '无边框窗体'
         break
     }
     return words
@@ -1293,7 +1293,15 @@ async ensureColumns(){
     return assigned
   },
 
-
-
+  async addFav(nanoid){
+    return appModel.update(nanoid,{
+      is_fav:true
+    })
+  },
+  async removeFav(nanoid){
+    return appModel.update(nanoid,{
+      is_fav:false
+    })
+  }
 }
 module.exports = appModel

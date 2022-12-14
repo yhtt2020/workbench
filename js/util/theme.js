@@ -1,5 +1,9 @@
 if (typeof require !== 'undefined') {
-  var settings = require('util/settings/settings.js')
+  if(typeof require('electron').app==='undefined'){
+    var settings = require('util/settings/settings.js')
+  }else{
+    var settings = require('./settings/settingsMain.js')
+  }
 }
 
 function systemShouldEnableDarkMode () {
@@ -33,6 +37,38 @@ function disableDarkMode () {
       message:'themeChange',
       status:'disable'
     })
+
+}
+
+/**
+ * 获取是否应该是夜间模式
+ * @returns {boolean}
+ */
+function getShouldDarkMod(){
+  // 1 or true: dark mode is always enabled
+  const value=settings.get('darkMode')
+  if (value === 1 || value === true) {
+    return true
+  }
+  if (value === 2 ) {
+    if (systemShouldEnableDarkMode()) {
+      return true
+    } else {
+      return false
+    }
+  } else if (value === 0) {
+    // 0: automatic dark mode at night
+    if (isNightTime()) {
+      return true
+    } else {
+      return false
+    }
+    //undefined和false都默认和永久禁用一致
+  } else if (value === undefined || value === -1 || value === false) {
+    // -1: never enable
+    return false
+  }
+
 
 }
 
@@ -110,7 +146,7 @@ function initialize () {
 }
 
 if (typeof module !== 'undefined') {
-  module.exports = { initialize }
+  module.exports = { initialize ,systemShouldEnableDarkMode,getShouldDarkMod}
 } else {
   initialize()
 }

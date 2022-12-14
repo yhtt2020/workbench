@@ -23,12 +23,12 @@ import {
 import settings from '../../src/settings/settingsContent'
 import settingPage from '../../src/settings/settingPage.js'
 import Passwords from "./components/Passwords.vue";
-import zhCN from "ant-design-vue/es/locale/zh_CN";
 import zhCN from 'ant-design-vue/es/locale/zh_CN';
-
+import SettingGroup from "./components/SettingGroup.vue";
 
 export default defineComponent({
   components: {
+    SettingGroup,
     Passwords,ImportOutlined,
     EyeOutlined, LayoutOutlined, SearchOutlined, AimOutlined, ControlOutlined, CheckSquareOutlined, HomeOutlined,
     LockOutlined, NodeIndexOutlined, GoldOutlined, InsuranceOutlined, ExpandAltOutlined, ArrowRightOutlined,DownloadOutlined,
@@ -49,6 +49,23 @@ export default defineComponent({
       showSideBarPopover:true,//显示侧边栏悬浮面板
 
       settings: {
+        appearance:{
+          title:'外观',
+          itemGroups:[
+            {
+              name:'darkMod',
+              title:'深色模式',
+              items:[
+                  {
+                    name:'useTabDarkBackground',
+                    title:'标签页深色背景',
+                    type:'switch',
+                    tip:'深色模式下，新标签页背景色设置为深色（此设置不会影响到网页内容的背景色）'
+                  }
+                ]
+            }
+          ]
+        },
         sidePanel:
           {
             title:'左侧栏',
@@ -411,6 +428,9 @@ export default defineComponent({
                 data-string="settingsShowDividerToggle"
               ></label>
             </div>
+
+            <SettingGroup :item-groups="settings.appearance.itemGroups"></SettingGroup>
+
           </div>
 
         </a-tab-pane>
@@ -421,22 +441,7 @@ export default defineComponent({
           左侧栏
         </span>
           </template>
-          <div class="settings-container" v-for="itemGroup in settings.sidePanel.itemGroups">
-            <h3>{{itemGroup.title}}</h3>
-            <div v-if="itemGroup.tip" class="item-group-tip">{{itemGroup.tip}}</div>
-            <img v-if="itemGroup.img" style="width: 220px;margin-bottom: 10px" :src="itemGroup.img"/>
-            <div v-for="item in itemGroup.items">
-              <span class="item-title">- {{item.title}}：</span> &nbsp;&nbsp;
-              <span v-if="item.type==='switch'">
-                <a-switch style="margin-bottom: 4px" @change="item.onChange($event)" size="small" v-model:checked="item.value" />
-              </span>
-              <span v-if="item.type==='number'">
-                <a-input-number @change="item.onChange" style="width: 50px;text-align: center" size="small" id="inputNumber" v-model:value="item.value" :min="0" :max="10" /> {{item.unit}}
-              </span>
-              <p class="tip"><exclamation-circle-outlined /> {{item.tip}}</p>
-            </div>
-          </div>
-
+          <SettingGroup :item-groups="settings.sidePanel.itemGroups"></SettingGroup>
         </a-tab-pane>
         <a-tab-pane :forceRender="true" key="DownloadSetting">
           <template #tab>

@@ -234,6 +234,7 @@ function createWindowWithBounds(bounds) {
 		},
     show:true,
 		icon: icon,
+    acceptFirstMouse:true,
 		frame: false,//不再从配置中取是否带边框参数
 		alwaysOnTop: settings.get('windowAlwaysOnTop'),
 		backgroundColor: '#fff',//backgroundColor: '#fff', // the value of this is ignored, but setting it seems to work around https://github.com/electron/electron/issues/10559
