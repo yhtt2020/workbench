@@ -209,20 +209,20 @@
   import { matchFileSuffixType } from './typeHelper.js'
   const { DOWNLOAD_STATUS } =require('./stateHelper')
 
-  ipcRenderer.on('menuIngStart', (e, args) => {
-    if (appVue.selectingList.loadState === true) {
-      ipcRenderer.send('resumeDownload', appVue.selectingList.path)
-      appVue.selectingList.loadState = false
-    } else {
-      ipcRenderer.send('stopDownload', appVue.selectingList.path)
-      appVue.selectingList.loadState = true
-    }
-  })
+      ipcRenderer.on("menuIngStart", (e, args) => {
+        if (appVue.selectingList.loadState === true) {
+          ipcRenderer.send("resumeDownload", appVue.selectingList.path);
+          appVue.selectingList.loadState = false;
+        } else {
+          ipcRenderer.send("stopDownload", appVue.selectingList.path);
+          appVue.selectingList.loadState = true;
+        }
+      });
 
-  ipcRenderer.on('menuIngUrl', (e) => {
-    clipboard.writeText(appVue.selectingList.url)
-    appVue.$message.success('已复制到剪切板')
-  })
+      ipcRenderer.on("menuIngUrl", (e) => {
+        clipboard.writeText(appVue.selectingList.url);
+        appVue.$message.success("已复制到剪切板");
+      });
 
   ipcRenderer.on('menuIngDelete', (e) => {
     appVue.visibleIng = true
@@ -247,771 +247,801 @@
 
   })
 
-  ipcRenderer.on('menuDoneOpenPage', (e) => {
-    ipcRenderer.send('addTab', { url: appVue.selectList.href })
-  })
+      ipcRenderer.on("menuDoneUrl", (e) => {
+        clipboard.writeText(appVue.selectList.url);
+        appVue.$message.success("已复制到剪切板");
+      });
 
-  ipcRenderer.on('menuDoneUrl', (e) => {
-    clipboard.writeText(appVue.selectList.url)
-    appVue.$message.success('已复制到剪切板')
-  })
+      ipcRenderer.on("menuDoneDelete", (e) => {
+        appVue.visible = true;
+      });
 
-  ipcRenderer.on('menuDoneDelete', (e) => {
-    appVue.visible = true
-  })
+      ipcRenderer.on("menuTrashAgain", (e) => {
+        ipcRenderer.send("addTab", { url: appVue.selectDelList.url });
+      });
 
-  ipcRenderer.on('menuTrashAgain', (e) => {
-    ipcRenderer.send('addTab', { url: appVue.selectDelList.url })
-  })
+      ipcRenderer.on("menuTrashOpenPage", (e) => {
+        ipcRenderer.send("addTab", { url: appVue.selectDelList.href });
+      });
 
-  ipcRenderer.on('menuTrashOpenPage', (e) => {
-    ipcRenderer.send('addTab', { url: appVue.selectDelList.href })
-  })
+      ipcRenderer.on("menuTrashUrl", (e) => {
+        clipboard.writeText(appVue.selectDelList.url);
+        appVue.$message.success("已复制到剪切板");
+      });
 
-  ipcRenderer.on('menuTrashUrl', (e) => {
-    clipboard.writeText(appVue.selectDelList.url)
-    appVue.$message.success('已复制到剪切板')
-  })
-
-  ipcRenderer.on('menuTrashDelete', (e) => {
-    // appVue.deleteList.splice(appVue.deleteList.indexOf(appVue.selectDelList), 1)
-    db.download.delete(appVue.selectDelList.startTime)
-    // appVue.listTrashCount--
-    appVue.selectTimeDelGroup.subDelList.splice(appVue.selectTimeDelGroup.subDelList.indexOf(appVue.selectDelList), 1)
-    appVue.deleteList.splice(appVue.doneList.indexOf(appVue.selectDelList),1)
-    if (appVue.selectTimeDelGroup.subDelList.length === 0) {
-      appVue.showDelList.splice(appVue.showDelList.indexOf(appVue.selectTimeDelGroup), 1)
-    }
-    appVue.listTrashCount--
-  })
-
-  ipcRenderer.on('breakMenuAgain', (e) => {
-    ipcRenderer.send('addTab', { url: appVue.selectingList.url })
-    appVue.list.splice(appVue.list.indexOf(appVue.selectingList),1)
-    db.download.delete(appVue.selectingList.startTime)
-    appVue.listCount--
-  })
-
-  ipcRenderer.on('breakMenuDel', (e) => {
-    appVue.list.splice(appVue.list.indexOf(appVue.selectingList),1)
-    appVue.listCount--
-    db.download.delete(appVue.selectingList.startTime)
-  })
-
-  ipcRenderer.on('download-info', async (event, args) => {
-    let i
-    let fileName = args.name.substring(0, args.name.lastIndexOf("."))
-    if (args.status === 'start') {
-      appVue.list.forEach(item => {
-        if (item.startTime === args.startTime) {
-          appVue.list.splice(appVue.list.indexOf(args.startTime), 1)
-          appVue.listCount--
-          appVue.count--
+      ipcRenderer.on("menuTrashDelete", (e) => {
+        // appVue.deleteList.splice(appVue.deleteList.indexOf(appVue.selectDelList), 1)
+        db.download.delete(appVue.selectDelList.startTime);
+        // appVue.listTrashCount--
+        appVue.selectTimeDelGroup.subDelList.splice(
+          appVue.selectTimeDelGroup.subDelList.indexOf(appVue.selectDelList),
+          1
+        );
+        appVue.deleteList.splice(
+          appVue.doneList.indexOf(appVue.selectDelList),
+          1
+        );
+        if (appVue.selectTimeDelGroup.subDelList.length === 0) {
+          appVue.showDelList.splice(
+            appVue.showDelList.indexOf(appVue.selectTimeDelGroup),
+            1
+          );
         }
-      })
-      appVue.list.unshift({
-        name: args.name,
-        id: appVue.id++,
-        title: fileName,
-        received: '',
-        realData: '',
-        total: '',
-        progressnuw: 0,
-        startTime: args.startTime,
-        path: args.path,
-        loadState: false,
-        url: args.url,
-        href: args.href,
-        suffixal: path.extname(args.name)
-      })
+        appVue.listTrashCount--;
+      });
 
+      ipcRenderer.on("breakMenuAgain", (e) => {
+        ipcRenderer.send("addTab", { url: appVue.selectingList.url });
+        appVue.list.splice(appVue.list.indexOf(appVue.selectingList), 1);
+        db.download.delete(appVue.selectingList.startTime);
+        appVue.listCount--;
+      });
 
-      db.download.add({
-        name: args.name,
-        title: args.name,
-        total: args.size.total,
-        path: args.path,
-        url: args.url,
-        startTime: args.startTime,
-        doneDate: '',
-        state: DOWNLOAD_STATUS.LOADING,
-        href: args.href,
-        addTime: '',
-        delTime:'',
-        addDelTime:'',
-        suffixal: path.extname(args.name)
-      })
+      ipcRenderer.on("breakMenuDel", (e) => {
+        appVue.list.splice(appVue.list.indexOf(appVue.selectingList), 1);
+        appVue.listCount--;
+        db.download.delete(appVue.selectingList.startTime);
+      });
 
-      appVue.listCount++
-      appVue.count++
-      ipcRenderer.send('willDownload')
-      ipcRenderer.send('downloading')
-    }
+      ipcRenderer.on("download-info", async (event, args) => {
+        let i;
+        let fileName = args.name.substring(0, args.name.lastIndexOf("."));
+        if (args.status === "start") {
+          appVue.list.forEach((item) => {
+            if (item.startTime === args.startTime) {
+              appVue.list.splice(appVue.list.indexOf(args.startTime), 1);
+              appVue.listCount--;
+              appVue.count--;
+            }
+          });
+          appVue.list.unshift({
+            name: args.name,
+            id: appVue.id++,
+            title: fileName,
+            received: "",
+            realData: "",
+            total: "",
+            progressnuw: 0,
+            startTime: args.startTime,
+            path: args.path,
+            loadState: false,
+            url: args.url,
+            href: args.href,
+            suffixal: path.extname(args.name),
+          });
 
-    if (args.status === 'cancelled') {
-      // ipcRenderer.send('emptyPageUrl', args.chainUrl)
-      for (i = 0; i < appVue.list.length; i++) {
-        if (appVue.list[i].startTime === args.startTime) {
-          appVue.deleteId = i
+          db.download.add({
+            name: args.name,
+            title: args.name,
+            total: args.size.total,
+            path: args.path,
+            url: args.url,
+            startTime: args.startTime,
+            doneDate: "",
+            state: DOWNLOAD_STATUS.LOADING,
+            href: args.href,
+            addTime: "",
+            delTime: "",
+            addDelTime: "",
+            suffixal: path.extname(args.name),
+          });
+
+          appVue.listCount++;
+          appVue.count++;
+          ipcRenderer.send("willDownload");
+          ipcRenderer.send("downloading");
         }
-      }
-      ipcRenderer.send('downloadEnd')
-      db.download.delete(args.startTime)
-      appVue.list.splice(appVue.deleteId, 1)
-      appVue.count--
-      // if (appVue.count < 0) {
-      //   appVue.count = 0
-      // }
-      appVue.listCount--
-      // if (appVue.listCount < 0) {
-      //   appVue.listCount = 0
-      // }
-      ipcRenderer.send('closeEmpty', args.chainUrl)
-    }
-    if(args.status === 'interrupted'){
-      for (i = 0; i < appVue.list.length; i++) {
-        if (appVue.list[i].startTime === args.startTime) {
-          appVue.deleteId = i
-        }
-      }
-      ipcRenderer.send('downloadEnd')
-      appVue.list.splice(appVue.deleteId, 1)
-      appVue.$message.info('文件下载失败', 0.5)
-      db.download.delete(args.startTime)
-      appVue.count--
-      appVue.listCount--
-    }
-    if (appVue.listCount < 0) {
-      appVue.listCount = 0
-    }
-    if (appVue.count < 0) {
-      appVue.count = 0
-    }
 
-    if (args.status === 'progressing' && args.path !== '') {
-      // ipcRenderer.send('willDownload')
-
-      // ipcRenderer.send('closeEmpty')
-      appVue.list.forEach(function (item, index, arr) {
-        if (item.startTime === args.startTime) {
-          item.title = fileName
-          item.received = args.size.received
-          item.realData = args.realData
-          item.total = args.size.total
-          item.progressnuw = Math.round(args.progressnuw)
-          item.path = args.path
-          item.status = args.status
-          if (item.progressnuw === 100) {
-            appVue.list.splice(index, 1)
+        if (args.status === "cancelled") {
+          // ipcRenderer.send('emptyPageUrl', args.chainUrl)
+          for (i = 0; i < appVue.list.length; i++) {
+            if (appVue.list[i].startTime === args.startTime) {
+              appVue.deleteId = i;
+            }
           }
+          ipcRenderer.send("downloadEnd");
+          db.download.delete(args.startTime);
+          appVue.list.splice(appVue.deleteId, 1);
+          appVue.count--;
+          // if (appVue.count < 0) {
+          //   appVue.count = 0
+          // }
+          appVue.listCount--;
+          // if (appVue.listCount < 0) {
+          //   appVue.listCount = 0
+          // }
+          ipcRenderer.send("closeEmpty", args.chainUrl);
         }
-      })
-    }
-
-    if (args.status === 'completed' && args.path !== '') {
-      ipcRenderer.send('inform')
-      // ipcRenderer.send('emptyPageUrl', args.chainUrl)
-      const myDate = new Date()
-
-
-      appVue.doneList.unshift({
-        name: args.name,
-        id: appVue.doneId++,
-        title: fileName,
-        total: args.size.total,
-        path: args.path,
-        url: args.url,
-        startTime: args.startTime,
-        doneDate: myDate.toLocaleString('chinese', { hour12: false }),
-        href: args.href,
-        addTime: appVue.transDate(myDate.toLocaleDateString()),
-        suffixal: path.extname(args.name),
-
-        // addTime:myDate.toLocaleDateString(),
-      })
-
-      appVue.listCount--
-      if( appVue.listCount <0){
-        appVue.listCount =0
-      }
-      appVue.count--
-      appVue.listDoneCount++
-      function unique(arr) {
-        const res = new Map()
-        return arr.filter((item) => !res.has(item.startTime) && res.set(item.startTime, 1))
-      }
-      appVue.doneList =unique(appVue.doneList)
-      db.download.put({
-        name: args.name,
-        title: args.name,
-        total: args.size.total,
-        path: args.path,
-        url: args.url,
-        startTime: args.startTime,
-        doneDate: myDate.toLocaleString('chinese', { hour12: false }),
-        state:DOWNLOAD_STATUS.DONE,
-        href: args.href,
-        addTime: myDate.toLocaleDateString(),
-        delTime:'',
-        addDelTime:'',
-        suffixal: path.extname(args.name)
-
-      })
-      ipcRenderer.send('closeEmpty', args.chainUrl)
-      ipcRenderer.send('downloadEnd')
-      appVue.classify()
-    }
-    if (appVue.count < 0) {
-      appVue.count = 0
-    }
-  })
-
-  let appVue = new Vue({
-    el: '#appVue',
-    data: {
-      listCount: 0,
-      listDoneCount: 0,
-      listTrashCount: 0,
-      count: '0',
-      doneDate: '',
-      visibleIng: false,
-      visible: false,
-      list: [],
-      doneList: [],
-      deleteList: [],
-      progressnuw: 0,
-      startTime: '',
-      pathList: [],
-      deleteId: '0',
-      loadState: [],
-      id: '0',
-      active: '',
-      clickActive: '',
-      selectList: [],
-      selectingList: [],
-      url: '',
-      doneId: '0',
-      deleconfirm: '',
-      delId: '0',
-      iconMatch: '',
-      showList: [],
-      showDelList:[],
-      selectTimeGroup: ''
-    },
-    created () {
-      db.download.toArray().then(dblist => {
-        for (let i = 0; i <= dblist.length; i++) {
-          if(typeof dblist[i].state === 'undefined'){
-         let fileName = dblist[i].title.substring(0,dblist[i].title.lastIndexOf("."))
-         dblist[i].state = 2
-         db.download.put({
-           name: dblist[i].title,
-           startTime: dblist[i].startTime,
-           title:fileName,
-           total: dblist[i].total,
-           path: dblist[i].path,
-           url: dblist[i].url,
-           state: dblist[i].state,
-           doneDate: '2022/7/01',
-           href: '',
-           addTime: '2022/7/01',
-           suffixal:dblist[i].title.substring(dblist[i].title.lastIndexOf(".")),
-         })
-       }
-          else{
-            if(dblist[i].state === DOWNLOAD_STATUS.LOADING || dblist[i].state === DOWNLOAD_STATUS.BREAK){
-              let fileName = dblist[i].name.substring(0,dblist[i].name.lastIndexOf("."))
-              db.download.put({
-                name: dblist[i].name,
-                startTime: dblist[i].startTime,
-                title: dblist[i].title,
-                total: dblist[i].total,
-                path: dblist[i].path,
-                url: dblist[i].url,
-                state: DOWNLOAD_STATUS.BREAK,
-                doneDate: dblist[i].doneDate,
-                href: dblist[i].href,
-                addTime: dblist[i].addTime,
-                suffixal: dblist[i].suffixal,
-              })
-              appVue.list.unshift({
-                name: dblist[i].name,
-                id: appVue.id++,
-                title: fileName,
-                path: '',
-                url: dblist[i].url,
-                startTime: dblist[i].startTime,
-                doneDate: dblist[i].doneDate,
-                href: dblist[i].href,
-                state: DOWNLOAD_STATUS.BREAK,
-                addTime: '',
-                received: '',
-                realData: '',
-                total: '',
-                progressnuw: 0,
-                suffixal: dblist[i].suffixal,
-              })
-              appVue.listCount++
-
+        if (args.status === "interrupted") {
+          for (i = 0; i < appVue.list.length; i++) {
+            if (appVue.list[i].startTime === args.startTime) {
+              appVue.deleteId = i;
             }
-            if (dblist[i].state === DOWNLOAD_STATUS.DONE) {
-              let fileName = dblist[i].name.substring(0,dblist[i].name.lastIndexOf("."))
-              if(typeof dblist[i].suffixal === 'undefined'){
-                dblist[i].suffixal = path.extname(dblist[i].name)
-                db.download.put({
-                  name: dblist[i].name,
-                  startTime: dblist[i].startTime,
-                  title: dblist[i].title,
-                  total: dblist[i].total,
-                  path: dblist[i].path,
-                  url: dblist[i].url,
-                  state:DOWNLOAD_STATUS.DONE,
-                  doneDate: dblist[i].doneDate,
-                  href: dblist[i].href,
-                  addTime: dblist[i].addTime,
-                  suffixal: dblist[i].suffixal,
-                })
+          }
+          ipcRenderer.send("downloadEnd");
+          appVue.list.splice(appVue.deleteId, 1);
+          appVue.$message.info("文件下载失败", 0.5);
+          db.download.delete(args.startTime);
+          appVue.count--;
+          appVue.listCount--;
+        }
+        if (appVue.listCount < 0) {
+          appVue.listCount = 0;
+        }
+        if (appVue.count < 0) {
+          appVue.count = 0;
+        }
+
+        if (args.status === "progressing" && args.path !== "") {
+          // ipcRenderer.send('willDownload')
+
+          // ipcRenderer.send('closeEmpty')
+          appVue.list.forEach(function (item, index, arr) {
+            if (item.startTime === args.startTime) {
+              item.title = fileName;
+              item.received = args.size.received;
+              item.realData = args.realData;
+              item.total = args.size.total;
+              item.progressnuw = Math.round(args.progressnuw);
+              item.path = args.path;
+              item.status = args.status;
+              if (item.progressnuw === 100) {
+                appVue.list.splice(index, 1);
               }
-              if (typeof dblist[i].addTime === 'undefined') {
-                dblist[i].addTime = '2022/7/01'
-                db.download.put({
-                  name: dblist[i].name,
-                  startTime: dblist[i].startTime,
-                  title: dblist[i].title,
-                  total: dblist[i].total,
-                  path: dblist[i].path,
-                  url: dblist[i].url,
-                  state:DOWNLOAD_STATUS.DONE,
-                  doneDate: dblist[i].doneDate,
-                  href: dblist[i].href,
-                  addTime: dblist[i].addTime,
-                  suffixal: dblist[i].suffixal,
-                })
-              }
-              appVue.doneList.unshift({
-                name: dblist[i].name,
-                id: appVue.doneId++,
-                title: fileName,
-                total: dblist[i].total,
-                path: dblist[i].path,
-                url: dblist[i].url,
-                startTime: dblist[i].startTime,
-                doneDate: dblist[i].doneDate,
-                href: dblist[i].href,
-                addTime: appVue.transDate(dblist[i].addTime),
-                suffixal: dblist[i].suffixal,
-              })
-              appVue.listDoneCount++
-              appVue.classify()
             }
-            if (dblist[i].state ===DOWNLOAD_STATUS.CANCEL || dblist[i].state ===DOWNLOAD_STATUS.DELETED) {
-              let fileName = dblist[i].name.substring(0,dblist[i].name.lastIndexOf("."))
-              if(typeof dblist[i].suffixal === 'undefined'){
-                dblist[i].suffixal = path.extname(dblist[i].name)
+          });
+        }
+
+        if (args.status === "completed" && args.path !== "") {
+          ipcRenderer.send("inform");
+          // ipcRenderer.send('emptyPageUrl', args.chainUrl)
+          const myDate = new Date();
+
+          appVue.doneList.unshift({
+            name: args.name,
+            id: appVue.doneId++,
+            title: fileName,
+            total: args.size.total,
+            path: args.path,
+            url: args.url,
+            startTime: args.startTime,
+            doneDate: myDate.toLocaleString("chinese", { hour12: false }),
+            href: args.href,
+            addTime: appVue.transDate(myDate.toLocaleDateString()),
+            suffixal: path.extname(args.name),
+
+            // addTime:myDate.toLocaleDateString(),
+          });
+
+          appVue.listCount--;
+          if (appVue.listCount < 0) {
+            appVue.listCount = 0;
+          }
+          appVue.count--;
+          appVue.listDoneCount++;
+          function unique(arr) {
+            const res = new Map();
+            return arr.filter(
+              (item) => !res.has(item.startTime) && res.set(item.startTime, 1)
+            );
+          }
+          appVue.doneList = unique(appVue.doneList);
+          db.download.put({
+            name: args.name,
+            title: args.name,
+            total: args.size.total,
+            path: args.path,
+            url: args.url,
+            startTime: args.startTime,
+            doneDate: myDate.toLocaleString("chinese", { hour12: false }),
+            state: DOWNLOAD_STATUS.DONE,
+            href: args.href,
+            addTime: myDate.toLocaleDateString(),
+            delTime: "",
+            addDelTime: "",
+            suffixal: path.extname(args.name),
+          });
+          ipcRenderer.send("closeEmpty", args.chainUrl);
+          ipcRenderer.send("downloadEnd");
+          appVue.classify();
+        }
+        if (appVue.count < 0) {
+          appVue.count = 0;
+        }
+      });
+
+      let appVue = new Vue({
+        el: "#appVue",
+        data: {
+          listCount: 0,
+          listDoneCount: 0,
+          listTrashCount: 0,
+          count: "0",
+          doneDate: "",
+          visibleIng: false,
+          visible: false,
+          list: [],
+          doneList: [],
+          deleteList: [],
+          progressnuw: 0,
+          startTime: "",
+          pathList: [],
+          deleteId: "0",
+          loadState: [],
+          id: "0",
+          active: "",
+          clickActive: "",
+          selectList: [],
+          selectingList: [],
+          url: "",
+          doneId: "0",
+          deleconfirm: "",
+          delId: "0",
+          iconMatch: "",
+          showList: [],
+          showDelList: [],
+          selectTimeGroup: "",
+        },
+        created() {
+          db.download.toArray().then((dblist) => {
+            for (let i = 0; i <= dblist.length; i++) {
+              if (typeof dblist[i].state === "undefined") {
+                let fileName = dblist[i].title.substring(
+                  0,
+                  dblist[i].title.lastIndexOf(".")
+                );
+                dblist[i].state = 2;
                 db.download.put({
-                  name: dblist[i].name,
+                  name: dblist[i].title,
                   startTime: dblist[i].startTime,
-                  title: dblist[i].title,
-                  total: dblist[i].total,
-                  path: dblist[i].path,
-                  url: dblist[i].url,
-                  state:DOWNLOAD_STATUS.DONE,
-                  doneDate: dblist[i].doneDate,
-                  href: dblist[i].href,
-                  addTime: dblist[i].addTime,
-                  suffixal: dblist[i].suffixal,
-                })
-              }
-              if (typeof dblist[i].addDelTime === 'undefined') {
-                dblist[i].addDelTime = '2022/7/01'
-                db.download.put({
-                  name:dblist[i].name,
-                  startTime: dblist[i].startTime,
-                  title: dblist[i].title,
+                  title: fileName,
                   total: dblist[i].total,
                   path: dblist[i].path,
                   url: dblist[i].url,
                   state: dblist[i].state,
-                  doneDate: dblist[i].doneDate,
-                  href: dblist[i].href,
-                  addTime: dblist[i].addTime,
-                  // addDelTime:dblist[i].addDelTime,
-                  delTime:dblist[i].delTime,
-                  suffixal: dblist[i].suffixal,
-                })
+                  doneDate: "2022/7/01",
+                  href: "",
+                  addTime: "2022/7/01",
+                  suffixal: dblist[i].title.substring(
+                    dblist[i].title.lastIndexOf(".")
+                  ),
+                });
+              } else {
+                if (
+                  dblist[i].state === DOWNLOAD_STATUS.LOADING ||
+                  dblist[i].state === DOWNLOAD_STATUS.BREAK
+                ) {
+                  let fileName = dblist[i].name.substring(
+                    0,
+                    dblist[i].name.lastIndexOf(".")
+                  );
+                  db.download.put({
+                    name: dblist[i].name,
+                    startTime: dblist[i].startTime,
+                    title: dblist[i].title,
+                    total: dblist[i].total,
+                    path: dblist[i].path,
+                    url: dblist[i].url,
+                    state: DOWNLOAD_STATUS.BREAK,
+                    doneDate: dblist[i].doneDate,
+                    href: dblist[i].href,
+                    addTime: dblist[i].addTime,
+                    suffixal: dblist[i].suffixal,
+                  });
+                  appVue.list.unshift({
+                    name: dblist[i].name,
+                    id: appVue.id++,
+                    title: fileName,
+                    path: "",
+                    url: dblist[i].url,
+                    startTime: dblist[i].startTime,
+                    doneDate: dblist[i].doneDate,
+                    href: dblist[i].href,
+                    state: DOWNLOAD_STATUS.BREAK,
+                    addTime: "",
+                    received: "",
+                    realData: "",
+                    total: "",
+                    progressnuw: 0,
+                    suffixal: dblist[i].suffixal,
+                  });
+                  appVue.listCount++;
+                }
+                if (dblist[i].state === DOWNLOAD_STATUS.DONE) {
+                  let fileName = dblist[i].name.substring(
+                    0,
+                    dblist[i].name.lastIndexOf(".")
+                  );
+                  if (typeof dblist[i].suffixal === "undefined") {
+                    dblist[i].suffixal = path.extname(dblist[i].name);
+                    db.download.put({
+                      name: dblist[i].name,
+                      startTime: dblist[i].startTime,
+                      title: dblist[i].title,
+                      total: dblist[i].total,
+                      path: dblist[i].path,
+                      url: dblist[i].url,
+                      state: DOWNLOAD_STATUS.DONE,
+                      doneDate: dblist[i].doneDate,
+                      href: dblist[i].href,
+                      addTime: dblist[i].addTime,
+                      suffixal: dblist[i].suffixal,
+                    });
+                  }
+                  if (typeof dblist[i].addTime === "undefined") {
+                    dblist[i].addTime = "2022/7/01";
+                    db.download.put({
+                      name: dblist[i].name,
+                      startTime: dblist[i].startTime,
+                      title: dblist[i].title,
+                      total: dblist[i].total,
+                      path: dblist[i].path,
+                      url: dblist[i].url,
+                      state: DOWNLOAD_STATUS.DONE,
+                      doneDate: dblist[i].doneDate,
+                      href: dblist[i].href,
+                      addTime: dblist[i].addTime,
+                      suffixal: dblist[i].suffixal,
+                    });
+                  }
+                  appVue.doneList.unshift({
+                    name: dblist[i].name,
+                    id: appVue.doneId++,
+                    title: fileName,
+                    total: dblist[i].total,
+                    path: dblist[i].path,
+                    url: dblist[i].url,
+                    startTime: dblist[i].startTime,
+                    doneDate: dblist[i].doneDate,
+                    href: dblist[i].href,
+                    addTime: appVue.transDate(dblist[i].addTime),
+                    suffixal: dblist[i].suffixal,
+                  });
+                  appVue.listDoneCount++;
+                  appVue.classify();
+                }
+                if (
+                  dblist[i].state === DOWNLOAD_STATUS.CANCEL ||
+                  dblist[i].state === DOWNLOAD_STATUS.DELETED
+                ) {
+                  let fileName = dblist[i].name.substring(
+                    0,
+                    dblist[i].name.lastIndexOf(".")
+                  );
+                  if (typeof dblist[i].suffixal === "undefined") {
+                    dblist[i].suffixal = path.extname(dblist[i].name);
+                    db.download.put({
+                      name: dblist[i].name,
+                      startTime: dblist[i].startTime,
+                      title: dblist[i].title,
+                      total: dblist[i].total,
+                      path: dblist[i].path,
+                      url: dblist[i].url,
+                      state: DOWNLOAD_STATUS.DONE,
+                      doneDate: dblist[i].doneDate,
+                      href: dblist[i].href,
+                      addTime: dblist[i].addTime,
+                      suffixal: dblist[i].suffixal,
+                    });
+                  }
+                  if (typeof dblist[i].addDelTime === "undefined") {
+                    dblist[i].addDelTime = "2022/7/01";
+                    db.download.put({
+                      name: dblist[i].name,
+                      startTime: dblist[i].startTime,
+                      title: dblist[i].title,
+                      total: dblist[i].total,
+                      path: dblist[i].path,
+                      url: dblist[i].url,
+                      state: dblist[i].state,
+                      doneDate: dblist[i].doneDate,
+                      href: dblist[i].href,
+                      addTime: dblist[i].addTime,
+                      // addDelTime:dblist[i].addDelTime,
+                      delTime: dblist[i].delTime,
+                      suffixal: dblist[i].suffixal,
+                    });
+                  }
+                  appVue.deleteList.unshift({
+                    name: dblist[i].name,
+                    id: appVue.doneId++,
+                    title: fileName,
+                    total: dblist[i].total,
+                    path: dblist[i].path,
+                    url: dblist[i].url,
+                    startTime: dblist[i].startTime,
+                    href: dblist[i].href,
+                    state: dblist[i].state,
+                    delTime: dblist[i].delTime,
+                    addDelTime: appVue.transDate(dblist[i].addDelTime),
+                    suffixal: dblist[i].suffixal,
+                  });
+                  appVue.listTrashCount++;
+                  appVue.classifyDel();
+                }
               }
-              appVue.deleteList.unshift({
-                name: dblist[i].name,
-                id: appVue.doneId++,
-                title: fileName,
-                total: dblist[i].total,
-                path: dblist[i].path,
-                url: dblist[i].url,
-                startTime: dblist[i].startTime,
-                href: dblist[i].href,
-                state: dblist[i].state,
-                delTime:dblist[i].delTime,
-                addDelTime:appVue.transDate(dblist[i].addDelTime),
-                suffixal: dblist[i].suffixal,
-              })
-              appVue.listTrashCount++
-              appVue.classifyDel()
             }
-          }
-        }
-      })
-    },
-    methods: {
-      transDate (strtime) {
-        var result, offset
-        if (strtime === '2022/7/01') {
-          result = '以前'
-        }
-        if (strtime !== '2022/7/01') {
-          var date = new Date(strtime.replace(/-/g, '/'))
-          date = Date.parse(date)
-          var tt = new Date(parseInt(date))
-          var days = parseInt((new Date().getTime() - date) / 86400000)
-          var today = new Date().getDate()
-          var year = tt.getFullYear()
-          var month = tt.getMonth() + 1
-          var day = tt.getDate()
-          // var time = tt.getHours() < 10 ? "0" + tt.getHours() : tt.getHours();
-          // var min = tt.getMinutes() < 10 ? "0" + tt.getMinutes() : tt.getMinutes();
-          offset = Math.abs(today - day)
-          if (days < 3 && offset < 3) {
-            if (offset === 0) {
-              result = '今天'
-            } else if (offset === 1) {
-              result = '昨天'
-            } else if (offset === 2) {
-              result = '前天'
+          });
+        },
+        methods: {
+          transDate(strtime) {
+            var result, offset;
+            if (strtime === "2022/7/01") {
+              result = "以前";
             }
-          } else {
-            result = year + '-' + month + '-' + day
-          }
-        }
-        return result
-
-      },
-      classify () {
-        let newArr = []
-        appVue.doneList.forEach((item, i) => {
-          let index = -1
-          let isExists = newArr.some((newItem, j) => {
-            if (item.addTime == newItem.addTime) {
-              index = j
-              return true
+            if (strtime !== "2022/7/01") {
+              var date = new Date(strtime.replace(/-/g, "/"));
+              date = Date.parse(date);
+              var tt = new Date(parseInt(date));
+              var days = parseInt((new Date().getTime() - date) / 86400000);
+              var today = new Date().getDate();
+              var year = tt.getFullYear();
+              var month = tt.getMonth() + 1;
+              var day = tt.getDate();
+              // var time = tt.getHours() < 10 ? "0" + tt.getHours() : tt.getHours();
+              // var min = tt.getMinutes() < 10 ? "0" + tt.getMinutes() : tt.getMinutes();
+              offset = Math.abs(today - day);
+              if (days < 3 && offset < 3) {
+                if (offset === 0) {
+                  result = "今天";
+                } else if (offset === 1) {
+                  result = "昨天";
+                } else if (offset === 2) {
+                  result = "前天";
+                }
+              } else {
+                result = year + "-" + month + "-" + day;
+              }
             }
-          })
-          if (!isExists) {
-            newArr.push({
-              addTime: item.addTime,
-              subList: [item]
-            })
-          } else {
-            newArr[index].subList.push(item)
-          }
-          appVue.showList = newArr
-        })
-      },
-      classifyDel(){
-        let newArr = []
-        appVue.deleteList.forEach((item, i) => {
-          let index = -1
-          let isExists = newArr.some((newItem, j) => {
-            if (item.addDelTime == newItem.addDelTime) {
-              index = j
-              return true
+            return result;
+          },
+          classify() {
+            let newArr = [];
+            appVue.doneList.forEach((item, i) => {
+              let index = -1;
+              let isExists = newArr.some((newItem, j) => {
+                if (item.addTime == newItem.addTime) {
+                  index = j;
+                  return true;
+                }
+              });
+              if (!isExists) {
+                newArr.push({
+                  addTime: item.addTime,
+                  subList: [item],
+                });
+              } else {
+                newArr[index].subList.push(item);
+              }
+              appVue.showList = newArr;
+            });
+          },
+          classifyDel() {
+            let newArr = [];
+            appVue.deleteList.forEach((item, i) => {
+              let index = -1;
+              let isExists = newArr.some((newItem, j) => {
+                if (item.addDelTime == newItem.addDelTime) {
+                  index = j;
+                  return true;
+                }
+              });
+              if (!isExists) {
+                newArr.push({
+                  addDelTime: item.addDelTime,
+                  subDelList: [item],
+                });
+              } else {
+                newArr[index].subDelList.push(item);
+              }
+              appVue.showDelList = newArr;
+            });
+          },
+          matchFileSuffixType,
+          menuIng(item) {
+            this.selectingList = item;
+            // this.active = index;
+            if (this.selectingList.status === "progressing") {
+              ipcRenderer.send("showMenuIng", item.loadState);
             }
-          })
-          if (!isExists) {
-            newArr.push({
-              addDelTime: item.addDelTime,
-              subDelList: [item]
-            })
-          } else {
-            newArr[index].subDelList.push(item)
-          }
-          appVue.showDelList = newArr
-        })
-      },
-      matchFileSuffixType,
-      menuIng (item) {
-
-        this.selectingList = item
-        // this.active = index;
-        if (this.selectingList.status === 'progressing') {
-          ipcRenderer.send('showMenuIng', item.loadState)
-        }
-        if(item.state === DOWNLOAD_STATUS.BREAK){
-
-          ipcRenderer.send('showBreakMenu', item)
-        }
-      },
-      menuDone (item, id, timeGroup) {
-        this.active = id
-        ipcRenderer.send('showMenuDone', item)
-        this.selectList = item
-        this.selectTimeGroup = timeGroup
-      },
-      menuDel (item, id,timeDelGroup) {
-        ipcRenderer.send('showMenuTrash',item)
-        this.selectDelList = item
-        this.selectTimeDelGroup = timeDelGroup
-        this.active = id
-      },
-      mouseOver (id) {
-        this.clickActive = id
-      },
-      mouseLeave () {
-        this.clickActive = ''
-      },
-      change (id) {
-        this.active = id
-      },
-      openSetting(){
+            if (item.state === DOWNLOAD_STATUS.BREAK) {
+              ipcRenderer.send("showBreakMenu", item);
+            }
+          },
+          menuDone(item, id, timeGroup) {
+            this.active = id;
+            ipcRenderer.send("showMenuDone", item);
+            this.selectList = item;
+            this.selectTimeGroup = timeGroup;
+          },
+          menuDel(item, id, timeDelGroup) {
+            ipcRenderer.send("showMenuTrash", item);
+            this.selectDelList = item;
+            this.selectTimeDelGroup = timeDelGroup;
+            this.active = id;
+          },
+          mouseOver(id) {
+            this.clickActive = id;
+          },
+          mouseLeave() {
+            this.clickActive = "";
+          },
+          change(id) {
+            this.active = id;
+          },
+          openSetting(){
         ipcRenderer.send('openSetting')
       },
       hideModal () {
         //下载中的任务删除会走status=cancelled判断，和上面选择保存时产生冲突。
 
-        // const myDate = new Date()
-        // appVue.listTrashCount++
-        // db.download.put({
-        //   name: appVue.selectingList.name,
-        //   startTime: appVue.selectingList.startTime,
-        //   title: appVue.selectingList.title,
-        //   total: appVue.selectingList.total,
-        //   path: appVue.selectingList.path,
-        //   url: appVue.selectingList.url,
-        //   state:DOWNLOAD_STATUS.DELETED,
-        //   doneDate: appVue.selectingList.doneDate,
-        //   href: appVue.selectingList.href,
-        //   delTime:myDate.toLocaleString('chinese', { hour12: false }),
-        //   addDelTime:myDate.toLocaleDateString(),
-        //   addTime:''
-        // })
-        // appVue.deleteList.unshift({
-        //   name: appVue.selectingList.name,
-        //   id: appVue.delId++,
-        //   title: appVue.selectingList.title,
-        //   total: appVue.selectingList.total,
-        //   path: appVue.selectingList.path,
-        //   url: appVue.selectingList.url,
-        //   startTime: appVue.selectingList.startTime,
-        //   state:DOWNLOAD_STATUS.DELETED,
-        //   href: appVue.selectingList.href,
-        //   delTime:myDate.toLocaleString('chinese', { hour12: false }),
-        //   addDelTime:appVue.transDate(myDate.toLocaleDateString()),
-        // })
-        // appVue.classifyDel()
+            // const myDate = new Date()
+            // appVue.listTrashCount++
+            // db.download.put({
+            //   name: appVue.selectingList.name,
+            //   startTime: appVue.selectingList.startTime,
+            //   title: appVue.selectingList.title,
+            //   total: appVue.selectingList.total,
+            //   path: appVue.selectingList.path,
+            //   url: appVue.selectingList.url,
+            //   state:DOWNLOAD_STATUS.DELETED,
+            //   doneDate: appVue.selectingList.doneDate,
+            //   href: appVue.selectingList.href,
+            //   delTime:myDate.toLocaleString('chinese', { hour12: false }),
+            //   addDelTime:myDate.toLocaleDateString(),
+            //   addTime:''
+            // })
+            // appVue.deleteList.unshift({
+            //   name: appVue.selectingList.name,
+            //   id: appVue.delId++,
+            //   title: appVue.selectingList.title,
+            //   total: appVue.selectingList.total,
+            //   path: appVue.selectingList.path,
+            //   url: appVue.selectingList.url,
+            //   startTime: appVue.selectingList.startTime,
+            //   state:DOWNLOAD_STATUS.DELETED,
+            //   href: appVue.selectingList.href,
+            //   delTime:myDate.toLocaleString('chinese', { hour12: false }),
+            //   addDelTime:appVue.transDate(myDate.toLocaleDateString()),
+            // })
+            // appVue.classifyDel()
 
-        ipcRenderer.send('deleteDownload', this.selectingList.path)
-        this.visibleIng = false
-        if(appVue.doneList.length === 0 ){
-          appVue.listDoneCount =0
-        }
-      },
-
-      doneChange (e) {
-        if (e.target.checked === true) {
-          this.deleconfirm = true
-        }
-        if (e.target.checked === false) {
-          this.deleconfirm = false
-        }
-      },
-      callback (key) {
-      },
-
-      hideModalDone () {
-        const myDate = new Date()
-        if (this.deleconfirm === true) {
-          db.download.put({
-            name: appVue.selectList.name,
-            startTime: appVue.selectList.startTime,
-            title: appVue.selectList.title,
-            total: appVue.selectList.total,
-            path: appVue.selectList.path,
-            url: appVue.selectList.url,
-            state:DOWNLOAD_STATUS.DELETED,
-            doneDate: appVue.selectList.doneDate,
-            href: appVue.selectList.href,
-            delTime:myDate.toLocaleString('chinese', { hour12: false }),
-            addDelTime:myDate.toLocaleDateString(),
-            addTime:'',
-            suffixal: path.extname(appVue.selectList.name)
-          })
-          appVue.deleteList.unshift({
-            name: appVue.selectList.name,
-            id: appVue.delId++,
-            title: appVue.selectList.title,
-            total: appVue.selectList.total,
-            path: appVue.selectList.path,
-            url: appVue.selectList.url,
-            startTime: appVue.selectList.startTime,
-            state:DOWNLOAD_STATUS.DELETED,
-            href: appVue.selectList.href,
-            delTime:myDate.toLocaleString('chinese', { hour12: false }),
-            addDelTime:appVue.transDate(myDate.toLocaleDateString()),
-            suffixal: path.extname(appVue.selectList.name)
-          })
-          appVue.classifyDel()
-          ipcRenderer.send('deleteFile', appVue.selectList.path)
-          appVue.$message.info('文件已删除', 0.5)
-          appVue.selectTimeGroup.subList.splice(appVue.selectTimeGroup.subList.indexOf(appVue.selectList), 1)
-          appVue.doneList.splice(appVue.doneList.indexOf(appVue.selectList),1)
-          if (appVue.selectTimeGroup.subList.length === 0) {
-            appVue.showList.splice(appVue.showList.indexOf(appVue.selectTimeGroup), 1)
-          }
-          appVue.visible = false
-        }
-         else {
-          db.download.put({
-            name: appVue.selectList.name,
-            startTime: appVue.selectList.startTime,
-            title: appVue.selectList.title,
-            total: appVue.selectList.total,
-            path: appVue.selectList.path,
-            url: appVue.selectList.url,
-            state:DOWNLOAD_STATUS.CANCEL,
-            doneDate: appVue.selectList.doneDate,
-            href: appVue.selectList.href,
-            delTime:myDate.toLocaleString('chinese', { hour12: false }),
-            addDelTime:myDate.toLocaleDateString(),
-            addTime:'',
-            suffixal: path.extname(appVue.selectList.name)
-          })
-          appVue.deleteList.unshift({
-            name: appVue.selectList.name,
-            id: appVue.delId++,
-            title: appVue.selectList.title,
-            total: appVue.selectList.total,
-            path: appVue.selectList.path,
-            url: appVue.selectList.url,
-            startTime: appVue.selectList.startTime,
-            href: appVue.selectList.href,
-            delTime:myDate.toLocaleString('chinese', { hour12: false }),
-            addDelTime:myDate.toLocaleDateString(),
-            suffixal: path.extname(appVue.selectList.name)
-          })
-          appVue.classifyDel()
-          appVue.selectTimeGroup.subList.splice(appVue.selectTimeGroup.subList.indexOf(appVue.selectList), 1)
-          if (appVue.selectTimeGroup.subList.length === 0) {
-            appVue.showList.splice(appVue.showList.indexOf(appVue.selectTimeGroup), 1)
-          }
-          appVue.visible = false
-        }
-        appVue.listDoneCount--
-        appVue.listTrashCount++
-        if(appVue.doneList.length === 0 ){
-          appVue.listDoneCount =0
-        }
-      },
-      delAll(){
-        // ipcRenderer.send('openSetting')
-        this.$confirm({
-          title: '记录清除不可恢复，你确定要清除所有回收站记录吗？',
-          okText:'确定',
-          cancelText:'取消',
-          onOk() {
-            appVue.showDelList.splice(0,appVue.showDelList.length)
-            // appVue.deleteList.splice(0,appVue.deleteList.length)
-            appVue.listTrashCount = 0
-            for(let i=0;i<appVue.deleteList.length;i++){
-              db.download.delete(appVue.deleteList[i].startTime)
+            ipcRenderer.send("deleteDownload", this.selectingList.path);
+            this.visibleIng = false;
+            if (appVue.doneList.length === 0) {
+              appVue.listDoneCount = 0;
             }
-            appVue.deleteList.splice(0,appVue.deleteList.length)
           },
-          onCancel() {
-          },
-          class: 'test',
-        });
-      },
-      resume (item) {
-        ipcRenderer.send('resumeDownload', item.path)
-        item.loadState = false
-      },
-      stop (item) {
-        ipcRenderer.send('stopDownload', item.path)
-        item.loadState = true
-      },
 
-      openFileHandler (item) {
-        const { shell } = require('electron')
-        fs.exists(item.path, function (flag) {
-          if (flag) {
-            if (require('path').extname(item.path) === '.crx') {
-              ipcRenderer.send('installCrx', { path: item.path })
+          doneChange(e) {
+            if (e.target.checked === true) {
+              this.deleconfirm = true;
+            }
+            if (e.target.checked === false) {
+              this.deleconfirm = false;
+            }
+          },
+          callback(key) {},
+
+          hideModalDone() {
+            const myDate = new Date();
+            if (this.deleconfirm === true) {
+              db.download.put({
+                name: appVue.selectList.name,
+                startTime: appVue.selectList.startTime,
+                title: appVue.selectList.title,
+                total: appVue.selectList.total,
+                path: appVue.selectList.path,
+                url: appVue.selectList.url,
+                state: DOWNLOAD_STATUS.DELETED,
+                doneDate: appVue.selectList.doneDate,
+                href: appVue.selectList.href,
+                delTime: myDate.toLocaleString("chinese", { hour12: false }),
+                addDelTime: myDate.toLocaleDateString(),
+                addTime: "",
+                suffixal: path.extname(appVue.selectList.name),
+              });
+              appVue.deleteList.unshift({
+                name: appVue.selectList.name,
+                id: appVue.delId++,
+                title: appVue.selectList.title,
+                total: appVue.selectList.total,
+                path: appVue.selectList.path,
+                url: appVue.selectList.url,
+                startTime: appVue.selectList.startTime,
+                state: DOWNLOAD_STATUS.DELETED,
+                href: appVue.selectList.href,
+                delTime: myDate.toLocaleString("chinese", { hour12: false }),
+                addDelTime: appVue.transDate(myDate.toLocaleDateString()),
+                suffixal: path.extname(appVue.selectList.name),
+              });
+              appVue.classifyDel();
+              ipcRenderer.send("deleteFile", appVue.selectList.path);
+              appVue.$message.info("文件已删除", 0.5);
+              appVue.selectTimeGroup.subList.splice(
+                appVue.selectTimeGroup.subList.indexOf(appVue.selectList),
+                1
+              );
+              appVue.doneList.splice(
+                appVue.doneList.indexOf(appVue.selectList),
+                1
+              );
+              if (appVue.selectTimeGroup.subList.length === 0) {
+                appVue.showList.splice(
+                  appVue.showList.indexOf(appVue.selectTimeGroup),
+                  1
+                );
+              }
+              appVue.visible = false;
             } else {
-              shell.openPath(item.path)
+              db.download.put({
+                name: appVue.selectList.name,
+                startTime: appVue.selectList.startTime,
+                title: appVue.selectList.title,
+                total: appVue.selectList.total,
+                path: appVue.selectList.path,
+                url: appVue.selectList.url,
+                state: DOWNLOAD_STATUS.CANCEL,
+                doneDate: appVue.selectList.doneDate,
+                href: appVue.selectList.href,
+                delTime: myDate.toLocaleString("chinese", { hour12: false }),
+                addDelTime: myDate.toLocaleDateString(),
+                addTime: "",
+                suffixal: path.extname(appVue.selectList.name),
+              });
+              appVue.deleteList.unshift({
+                name: appVue.selectList.name,
+                id: appVue.delId++,
+                title: appVue.selectList.title,
+                total: appVue.selectList.total,
+                path: appVue.selectList.path,
+                url: appVue.selectList.url,
+                startTime: appVue.selectList.startTime,
+                href: appVue.selectList.href,
+                delTime: myDate.toLocaleString("chinese", { hour12: false }),
+                addDelTime: myDate.toLocaleDateString(),
+                suffixal: path.extname(appVue.selectList.name),
+              });
+              appVue.classifyDel();
+              appVue.selectTimeGroup.subList.splice(
+                appVue.selectTimeGroup.subList.indexOf(appVue.selectList),
+                1
+              );
+              if (appVue.selectTimeGroup.subList.length === 0) {
+                appVue.showList.splice(
+                  appVue.showList.indexOf(appVue.selectTimeGroup),
+                  1
+                );
+              }
+              appVue.visible = false;
             }
-          } else {
-            appVue.$message.info('文件已被删除或位置被移动', 1)
-            db.download.delete(item.startTime)
-            appVue.doneList.splice(appVue.doneList.indexOf(appVue.selectList), 1)
-            appVue.listDoneCount--
-          }
-        })
-      },
+            appVue.listDoneCount--;
+            appVue.listTrashCount++;
+            if (appVue.doneList.length === 0) {
+              appVue.listDoneCount = 0;
+            }
+          },
+          delAll() {
+            // ipcRenderer.send('openSetting')
+        this.$confirm({
+          title: "记录清除不可恢复，你确定要清除所有回收站记录吗？",
+              okText: "确定",
+              cancelText: "取消",
+              onOk() {
+                appVue.showDelList.splice(0, appVue.showDelList.length);
+                // appVue.deleteList.splice(0,appVue.deleteList.length)
+                appVue.listTrashCount = 0;
+                for (let i = 0; i < appVue.deleteList.length; i++) {
+                  db.download.delete(appVue.deleteList[i].startTime);
+                }
+                appVue.deleteList.splice(0, appVue.deleteList.length);
+              },
+              onCancel() {},
+              class: "test",
+            });
+          },
+          resume(item) {
+            ipcRenderer.send("resumeDownload", item.path);
+            item.loadState = false;
+          },
+          stop(item) {
+            ipcRenderer.send("stopDownload", item.path);
+            item.loadState = true;
+          },
+
+          openFileHandler(item) {
+            const { shell } = require("electron");
+            fs.exists(item.path, function (flag) {
+              if (flag) {
+                if (require("path").extname(item.path) === ".crx") {
+                  ipcRenderer.send("installCrx", { path: item.path });
+                } else {
+                  shell.openPath(item.path);
+                }
+              } else {
+                appVue.$message.info("文件已被删除或位置被移动", 1);
+                db.download.delete(item.startTime);
+                appVue.doneList.splice(
+                  appVue.doneList.indexOf(appVue.selectList),
+                  1
+                );
+                appVue.listDoneCount--;
+              }
+            });
+          },
+        },
+      });
+    </script>
+  </body>
+
+  <style>
+    .ant-tabs-top-bar {
+      margin: 0 5px 0;
     }
-  })
+    .ant-tabs-nav.ant-tabs-nav-animated {
+      margin-left: 37px;
+    }
+    #tag {
+      position: absolute;
+      margin-left: 60px;
+      margin-top: 10px;
+    }
 
+    .active {
+      background: #f7f7f7;
+    }
 
-</script>
+    .clickActive {
+      background: #f7f7f7;
+    }
 
-</body>
+    .icon {
+      width: 100%;
+      height: 100%;
+    }
 
-<style>
-  .ant-tabs-top-bar {
-    margin: 0 5px 0;
-  }
-.ant-tabs-nav.ant-tabs-nav-animated{
-  margin-left: 37px;
-}
-  #tag {
-    position: absolute;
-    margin-left: 60px;
-    margin-top: 10px;
-  }
-
-  .active {
-    background: #f7f7f7;
-  }
-
-  .clickActive {
-    background: #f7f7f7;
-  }
-
-  .icon {
-    width: 100%;
-    height: 100%;
-  }
-
-  .beautiful-sm-scroll::-webkit-scrollbar {
-    width: 5px;
-  }
-  .beautiful-sm-scroll::-webkit-scrollbar-thumb {
-    background: rgb(233, 232, 232);
-    border-radius: 20px;
-  }
-  .beautiful-sm-scroll::-webkit-scrollbar-thumb:hover {
-    background: #747474;
-  }
-  .beautiful-sm-scroll::-webkit-scrollbar-corner {
-    background: #f6f6f6;
-  }
-  .title{
-    font-weight: bold;
-    /*width: 200px;*/
-    word-break: break-all;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1; /* 这里是超出几行省略 */
-    overflow: hidden;
-  }
-</style>
-
+    .beautiful-sm-scroll::-webkit-scrollbar {
+      width: 5px;
+    }
+    .beautiful-sm-scroll::-webkit-scrollbar-thumb {
+      background: rgb(233, 232, 232);
+      border-radius: 20px;
+    }
+    .beautiful-sm-scroll::-webkit-scrollbar-thumb:hover {
+      background: #747474;
+    }
+    .beautiful-sm-scroll::-webkit-scrollbar-corner {
+      background: #f6f6f6;
+    }
+    .title {
+      font-weight: bold;
+      /*width: 200px;*/
+      word-break: break-all;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 1; /* 这里是超出几行省略 */
+      overflow: hidden;
+    }
+  </style>
 </html>

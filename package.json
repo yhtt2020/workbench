@@ -30,6 +30,7 @@
     ]
   },
   "dependencies": {
+    "@keeweb/keeweb-native-modules": "https://github.com/keeweb/keeweb-native-modules/releases/download/0.11.6/keeweb-native-modules.tgz",
     "@electron/remote": "^2.0.1",
     "axios": "^0.24.0",
     "csvtojson": "^2.0.10",
@@ -49,6 +50,7 @@
     "image-size": "^1.0.1",
     "javascript-obfuscator": "^4.0.0",
     "jszip": "^3.10.0",
+    "kdbxweb": "^2.1.1",
     "keytar": "7.9",
     "knex": "^2.2.0",
     "lodash": "^4.17.21",

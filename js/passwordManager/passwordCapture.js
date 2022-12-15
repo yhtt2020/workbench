@@ -12,41 +12,41 @@ const passwordCapture = {
   saveButton: document.getElementById('password-capture-save'),
   neverSaveButton: document.getElementById('password-capture-never-save'),
   closeButton: document.getElementById('password-capture-ignore'),
-  favicon:'',
+  favicon: '',
   currentDomain: null,
   barHeight: 0,
   showCaptureBar: function (username, password) {
-    let tabData=tabs.get(tabs.getSelected())
-    let tabIcon=''
+    const tabData = tabs.get(tabs.getSelected())
+    let tabIcon = ''
     console.log(tabData)
-    if(tabData.favicon && tabData.favicon.url){
-      tabIcon=`<img style="width: 22px;height: 22px;margin-left: 10px;margin-right: 5px;vertical-align: middle;object-fit: cover" src="${tabData.favicon.url}"/>`
-      passwordCapture.favicon=tabData.favicon.url
-    }else{
-      tabIcon=''
-      passwordCapture.favicon=''
+    if (tabData.favicon && tabData.favicon.url) {
+      tabIcon = `<img style="width: 22px;height: 22px;margin-left: 10px;margin-right: 5px;vertical-align: middle;object-fit: cover" src="${tabData.favicon.url}"/>`
+      passwordCapture.favicon = tabData.favicon.url
+    } else {
+      tabIcon = ''
+      passwordCapture.favicon = ''
     }
-    passwordCapture.description.innerHTML = l('passwordCaptureSavePassword').replace('%s', tabIcon +  `${passwordCapture.currentDomain}`)
+    passwordCapture.description.innerHTML = l('passwordCaptureSavePassword').replace('%s', tabIcon + `${passwordCapture.currentDomain}`)
     passwordCapture.bar.hidden = false
 
     passwordCapture.passwordInput.type = 'password'
     passwordCapture.revealButton.classList.add('carbon:view')
     passwordCapture.revealButton.classList.remove('carbon:view-off')
 
-    passwordCapture.nameInput.value =  ''
+    passwordCapture.nameInput.value = ''
     passwordCapture.usernameInput.value = username || ''
     passwordCapture.passwordInput.value = password || ''
 
     passwordCapture.barHeight = passwordCapture.bar.getBoundingClientRect().height
     webviews.adjustMargin([passwordCapture.barHeight, 0, 0, 0])
-    if($toolbar.expanded){
-      if(document.querySelector('#third-toolbar').hidden === true) {
-        document.getElementById('password-capture-bar').style.top=document.getElementById('toolbar').offsetTop+ 40 +'px'
+    if ($toolbar.expanded) {
+      if (document.querySelector('#third-toolbar').hidden === true) {
+        document.getElementById('password-capture-bar').style.top = document.getElementById('toolbar').offsetTop + 40 + 'px'
       } else {
-        document.getElementById('password-capture-bar').style.top=document.getElementById('toolbar').offsetTop+ 80 +'px'
+        document.getElementById('password-capture-bar').style.top = document.getElementById('toolbar').offsetTop + 80 + 'px'
       }
-    }else{
-      document.getElementById('password-capture-bar').style.top='calc(36px + var(--control-space-top))'
+    } else {
+      document.getElementById('password-capture-bar').style.top = 'calc(36px + var(--control-space-top))'
     }
   },
   hideCaptureBar: function () {
@@ -112,7 +112,7 @@ const passwordCapture = {
     passwordCapture.saveButton.addEventListener('click', function () {
       if (passwordCapture.usernameInput.checkValidity() && passwordCapture.passwordInput.checkValidity()) {
         PasswordManagers.getConfiguredPasswordManager().then(function (manager) {
-          manager.saveCredential(passwordCapture.currentDomain, passwordCapture.usernameInput.value, passwordCapture.passwordInput.value,passwordCapture.nameInput.value)
+          manager.saveCredential(passwordCapture.currentDomain, passwordCapture.usernameInput.value, passwordCapture.passwordInput.value, passwordCapture.nameInput.value)
 
           passwordCapture.hideCaptureBar()
         })
@@ -135,7 +135,6 @@ const passwordCapture = {
         webviews.adjustMargin([passwordCapture.barHeight - oldHeight, 0, 0, 0])
       }
     })
-
   }
 }
 

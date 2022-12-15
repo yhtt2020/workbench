@@ -5,15 +5,15 @@ var urlParser = require('util/urlParser.js')
 var keyboardNavigationHelper = require('util/keyboardNavigationHelper.js')
 var bookmarkStar = require('navbar/bookmarkStar.js')
 var contentBlockingToggle = require('navbar/contentBlockingToggle.js')
-var toolbar=require('toolbar/toolbar.js')
+var toolbar = require('toolbar/toolbar.js')
 const tabEditor = {
   container: document.getElementById('tab-editor'),
   input: document.getElementById('tab-editor-input'),
-  addButton:document.getElementById('add-btn-wrapper'),
-  tabsEl:document.getElementById('tabs'),
+  addButton: document.getElementById('add-btn-wrapper'),
+  tabsEl: document.getElementById('tabs'),
   star: null,
 
-  updateUrl:function(url){
+  updateUrl: function (url) {
     tabEditor.input.value = url
   },
   show: function (tabId, editingValue, showSearchbar) {
@@ -26,7 +26,7 @@ const tabEditor = {
     if (currentURL === 'ts://newtab') {
       currentURL = ''
     }
-    if(!toolbar.expanded){
+    if (!toolbar.expanded) {
       tabEditor.container.hidden = false
     }
 
@@ -34,19 +34,19 @@ const tabEditor = {
     contentBlockingToggle.update(tabId, tabEditor.contentBlockingToggle)
 
     webviews.requestPlaceholder('editMode')
-    if(!toolbar.expanded) {
+    if (!toolbar.expanded) {
       document.body.classList.add('is-edit-mode')
     }
     tabEditor.updateUrl(editingValue || currentURL)
-    if(!toolbar.expanded){
-      tabEditor.addButton.hidden=true
+    if (!toolbar.expanded) {
+      tabEditor.addButton.hidden = true
       tabEditor.input.focus()
       tabEditor.tabsEl.classList.add('fixWidth')
     }
     if (!editingValue) {
-      setTimeout(()=>{
+      setTimeout(() => {
         tabEditor.input.select()
-      },200)
+      }, 200)
     }
     // https://github.com/minbrowser/min/discussions/1506
     tabEditor.input.scrollLeft = 0
@@ -82,21 +82,21 @@ const tabEditor = {
     }
   },
   hide: function () {
-    if(!toolbar.expanded){
+    if (!toolbar.expanded) {
       tabEditor.container.hidden = true
-      tabEditor.addButton.hidden=false
+      tabEditor.addButton.hidden = false
       tabEditor.tabsEl.classList.remove('fixWidth')
     }
     tabEditor.container.removeAttribute('style')
 
     tabEditor.input.blur()
     searchbar.hide()
-    if(!toolbar.expanded) {
+    if (!toolbar.expanded) {
       document.body.classList.remove('is-edit-mode')
     }
     webviews.hidePlaceholder('editMode')
   },
-  updateTool(tabId){
+  updateTool (tabId) {
     bookmarkStar.update(tabId, tabEditor.star)
     contentBlockingToggle.update(tabId, tabEditor.contentBlockingToggle)
   },
@@ -150,7 +150,7 @@ const tabEditor = {
         e.preventDefault()
       }
     })
-    tabEditor.input.addEventListener('compositionend',function (e){
+    tabEditor.input.addEventListener('compositionend', function (e) {
       searchbar.showResults(this.value, e)
     })
     document.getElementById('webviews').addEventListener('click', function () {
@@ -158,35 +158,34 @@ const tabEditor = {
     })
   }
 }
-let tipEl=document.getElementById('clipboardTip')
-tipEl.addEventListener('click',()=>{
+const tipEl = document.getElementById('clipboardTip')
+tipEl.addEventListener('click', () => {
   var newTab = tabs.add({
     url: tipEl.getAttribute('title')
   })
-  require('../browserUI').addTab(newTab,{
-    enterEditMode:false
+  require('../browserUI').addTab(newTab, {
+    enterEditMode: false
   })
-  tipEl.hidden=true
+  tipEl.hidden = true
 })
-let tick=0
-let timerShowClipTip=null
-ipc.on('showClipboard',(event,args)=>{
-
-  tipEl.setAttribute('title',args.url)
-  tipEl.hidden=false
-  if(tick>0){
-    tick=10
+let tick = 0
+let timerShowClipTip = null
+ipc.on('showClipboard', (event, args) => {
+  tipEl.setAttribute('title', args.url)
+  tipEl.hidden = false
+  if (tick > 0) {
+    tick = 10
     return
   }
-  tick=10
-  timerShowClipTip=setInterval(()=>{
+  tick = 10
+  timerShowClipTip = setInterval(() => {
     tick--
-    if(tick<=0){
-      tipEl.hidden=true
+    if (tick <= 0) {
+      tipEl.hidden = true
       clearInterval(timerShowClipTip)
-      timerShowClipTip=null
+      timerShowClipTip = null
     }
-  },1000)
+  }, 1000)
 })
 tabEditor.initialize()
 

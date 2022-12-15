@@ -37,7 +37,23 @@ export const appStore = defineStore('kee',{
         site_1:'zt.xaingtian.ren',
         site_2:'zt.xaingtian.ren'
       },
+
+      currentDb:{
+        filePath:'',
+        name:'',
+        kdbx:{}
+      }
+
     }),
-    actions:{},
+    actions:{
+      setDb(dbInfo){
+        this.currentDb=dbInfo
+        const manager=kdbxModel.getManager(dbInfo.filePath)
+        passwordModel.setPasswordManager(manager)
+        passwordModel.getAllPasswords()
+        console.log('set dbinfo',dbInfo)
+      }
+    },
     getters:{}
 })
+

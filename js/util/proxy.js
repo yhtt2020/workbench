@@ -13,13 +13,13 @@ settings.listen('proxy', (proxy = {}) => {
       proxyConfig.pacScript = proxy.pacScript
       break
     case 3:
-      proxyConfig={
-        mode:'system'
+      proxyConfig = {
+        mode: 'system'
       }
       break
     default:
       proxyConfig = {
-        mode:'system'
+        mode: 'system'
       }
   }
 

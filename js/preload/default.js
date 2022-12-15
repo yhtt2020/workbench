@@ -175,7 +175,7 @@ ipc.on('move-page-to', function (events, page) {
   if (page === 1) {
     getFixed()
   } else if (page > 1 && window.innerHeight * page <= height) {
-    //隐藏页面元素
+    // 隐藏页面元素
     fixedElements.forEach(ele => {
       ele.hidden = true
       needShow.push(ele)
@@ -221,7 +221,7 @@ if (location.href.startsWith('https://chrome.google.com/webstore')) {
 
         setTimeout(() => {
           // eslint-disable-next-line @typescript-eslint/no-use-before-define
-          InstallButton(event.target.querySelector('.h-e-f-Ra-c.e-f-oh-Md-zb-k'),)
+          InstallButton(event.target.querySelector('.h-e-f-Ra-c.e-f-oh-Md-zb-k'))
 
           // new (InstallButton as any)(
           //  ,
@@ -236,14 +236,14 @@ if (location.href.startsWith('https://chrome.google.com/webstore')) {
         Array.from(document.getElementsByClassName('a-na-d-K-ea')).forEach(
           (el) => {
             el.parentNode.removeChild(el)
-          },
+          }
         )
       }, 10)
     })
 
     function installPlugin (
       id,
-      version = navigator.userAgent.match(/(?<=Chrom(e|ium)\/)\d+\.\d+/)[0],
+      version = navigator.userAgent.match(/(?<=Chrom(e|ium)\/)\d+\.\d+/)[0]
     ) {
       window.location.href = baseUrl
         .replace('%VERSION', version)
@@ -252,7 +252,7 @@ if (location.href.startsWith('https://chrome.google.com/webstore')) {
 
     function InstallButton (
       wrapper,
-      id = document.URL.match(/(?<=\/)(\w+)(\?|$)/)[1],
+      id = document.URL.match(/(?<=\/)(\w+)(\?|$)/)[1]
     ) {
       if (wrapper == null) return
       wrapper.innerHTML += ibTemplate
@@ -290,11 +290,11 @@ document.ondragover = function (e) {
 }
 
 window.addEventListener('load', function (e) {
-    //修正css中包含drag的，自动移除这个属性。
-    document.querySelectorAll('div').forEach(dom => {
-      if (getComputedStyle(dom)['-webkit-app-region'] === 'drag') {
-        dom.style['-webkit-app-region'] = 'no-drag'
-      }
-    })
-  }
+  // 修正css中包含drag的，自动移除这个属性。
+  document.querySelectorAll('div').forEach(dom => {
+    if (getComputedStyle(dom)['-webkit-app-region'] === 'drag') {
+      dom.style['-webkit-app-region'] = 'no-drag'
+    }
+  })
+}
 )

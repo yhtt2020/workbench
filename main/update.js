@@ -1,111 +1,108 @@
 const { autoUpdater } = require('electron-updater')
-let updaterWindow=null
-let  showedError=false
-function loadUpdate(updateInfo){
-  if(!updaterWindow){
-    updaterWindow= new BrowserWindow({
+let updaterWindow = null
+let showedError = false
+function loadUpdate (updateInfo) {
+  if (!updaterWindow) {
+    updaterWindow = new BrowserWindow({
       parent: mainWindow,
       width: 500,
       height: 580,
       resizable: false,
-      visible:false,
+      visible: false,
       acceptFirstMouse: true,
       webPreferences: {
-        //preload: path.join(__dirname, '/pages/update/inde.js'),
+        // preload: path.join(__dirname, '/pages/update/inde.js'),
         nodeIntegration: true,
         contextIsolation: false,
         additionalArguments: [
           '--user-data-path=' + userDataPath,
           '--app-version=' + app.getVersion(),
           '--app-name=' + app.getName(),
-          ...((isDevelopmentMode ? ['--development-mode'] : [])),
+          ...((isDevelopmentMode ? ['--development-mode'] : []))
         ]
       }
     })
-    updaterWindow.on('close',()=>updaterWindow=null)
+    updaterWindow.on('close', () => updaterWindow = null)
     updaterWindow.setMenu(null)
-    updaterWindow.webContents.loadURL('file://' + __dirname + "/pages/update/index.html")
-    updaterWindow.on('ready-to-show',()=>{
+    updaterWindow.webContents.loadURL('file://' + __dirname + '/pages/update/index.html')
+    updaterWindow.on('ready-to-show', () => {
       updaterWindow.show()
-      updaterWindow.webContents.send('getInfo',{updateInfo:updateInfo,currentVersion: app.getVersion()})
-      if(isDevelopmentMode){
-        //updaterWindow.openDevTools()
+      updaterWindow.webContents.send('getInfo', { updateInfo: updateInfo, currentVersion: app.getVersion() })
+      if (isDevelopmentMode) {
+        // updaterWindow.openDevTools()
       }
-
     })
     updaterWindow.focus()
-  }else{
+  } else {
     updaterWindow.focus()
   }
-
 }
-let updateData={}
-//app.whenReady().then(()=>loadUpdate())
+let updateData = {}
+// app.whenReady().then(()=>loadUpdate())
 // 自动检测升级机制
-function checkUpdate(){
-  if(isDevelopmentMode){
-    //如果是开发环境，直接不检测，如需调试升级工具，将此处return注释掉即可
+function checkUpdate () {
+  if (isDevelopmentMode) {
+    // 如果是开发环境，直接不检测，如需调试升级工具，将此处return注释掉即可
     return
   }
-  autoUpdater.logger=electronLog
-  function showError(error,tag='check'){
-    if(!electron.net.online){
-      if(SidePanel.alive()){
-        sidePanel.get().webContents.send('message',{type:'info',config:{content:"当前为离线状态，自动更新程序暂不检测更新，请联网后重启应用检测。",key:"update",duration:6}})
+  autoUpdater.logger = electronLog
+  function showError (error, tag = 'check') {
+    if (!electron.net.online) {
+      if (SidePanel.alive()) {
+        sidePanel.get().webContents.send('message', { type: 'info', config: { content: '当前为离线状态，自动更新程序暂不检测更新，请联网后重启应用检测。', key: 'update', duration: 6 } })
       }
       return
     }
-    let errInfo='未知'
-    if(error.code===2){
-      errInfo="软件包名无法验证"
+    let errInfo = '未知'
+    if (error.code === 2) {
+      errInfo = '软件包名无法验证'
     }
-    if(SidePanel.alive() && showedError === false){
-      sidePanel.get().webContents.send('message',{type:'error',config:{content:"自动更新程序意外终止,错误原因： "+errInfo+" ，将为您打开产品官网www.apps.vip，请至官网手动下载最新版本更新。",key:tag,duration:6}})
-      showedError=true
+    if (SidePanel.alive() && showedError === false) {
+      sidePanel.get().webContents.send('message', { type: 'error', config: { content: '自动更新程序意外终止,错误原因： ' + errInfo + ' ，将为您打开产品官网www.apps.vip，请至官网手动下载最新版本更新。', key: tag, duration: 6 } })
+      showedError = true
       sendIPCToWindow(mainWindow, 'addTab', {
         url: 'https://www.apps.vip/#download'
       })
     }
   }
-  autoUpdater.checkForUpdates().then((checkResult)=>{
-    //检测到可以升级，则发送升级的信息到updateWindow
-    updateData={
-      version:checkResult.updateInfo.version,
-      releaseDate:checkResult.updateInfo.releaseDate
+  autoUpdater.checkForUpdates().then((checkResult) => {
+    // 检测到可以升级，则发送升级的信息到updateWindow
+    updateData = {
+      version: checkResult.updateInfo.version,
+      releaseDate: checkResult.updateInfo.releaseDate
     }
-
-  }).catch((error)=> {
-    showError(error,'checkError')
+  }).catch((error) => {
+    showError(error, 'checkError')
   })
-  autoUpdater.on('error',(error)=>{
-    showError(error,'error')
+  autoUpdater.on('error', (error) => {
+    showError(error, 'error')
   })
 
-  autoUpdater.on('update-available',(data)=>{
-    updateInfo=data
-    //console.log(updateInfo)
-    setTimeout(()=>{
-      if(SidePanel.alive()){
-        sidePanel.get().webContents.send('message',{type:'success',config:{content:"有新版本可用，将为您准备更新。",key:"check"}})
+  autoUpdater.on('update-available', (data) => {
+    updateInfo = data
+    // console.log(updateInfo)
+    setTimeout(() => {
+      if (SidePanel.alive()) {
+        sidePanel.get().webContents.send('message', { type: 'success', config: { content: '有新版本可用，将为您准备更新。', key: 'check' } })
       }
-    },2000)
+    }, 2000)
   })
 
   // autoUpdater.on('download-progress',(progressObj)=>{
   //   updaterWindow.webContents.send('downloadProgress',progressObj)
   // })
 
-  autoUpdater.on('update-downloaded',(event,releaseEvents,releaseName,releaseDate,updateUrl,quitAndUpdate)=>{
+  autoUpdater.on('update-downloaded', (event, releaseEvents, releaseName, releaseDate, updateUrl, quitAndUpdate) => {
     // ipc.on('updateNow',(e,arg)=>{
     //   autoUpdater.quitAndInstall()
     // })
-    //console.log('update下载完成')
+    // console.log('update下载完成')
     loadUpdate(updateInfo)
   })
 }
 
-app.whenReady().then(()=>{
-  ipc.on('startInstall',()=>{
+app.whenReady().then(() => {
+  ipc.on('startInstall', () => {
     destroyAllViews()
     // save the window size for the next launch of the app
     saveWindowBounds()
@@ -116,12 +113,9 @@ app.whenReady().then(()=>{
   //   console.log('退出并执行升级')
   //   autoUpdater.quitAndInstall()
   // })
-  ipc.on('closeUpdate',()=>{
-    if(updaterWindow)
-    {
+  ipc.on('closeUpdate', () => {
+    if (updaterWindow) {
       updaterWindow.close()
     }
   })
 })
-
-

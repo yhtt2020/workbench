@@ -34,15 +34,15 @@ class TaskList {
   add (task = {}, index) {
     const newTask = {
       name: task.name || null,
-      partition: task.partition|| 'persist:webcontent',
-      userIcon:task.userIcon,
+      partition: task.partition || 'persist:webcontent',
+      userIcon: task.userIcon,
       tabs: new TabList(task.tabs, this),
       tabHistory: new TabStack(task.tabHistory),
       collapsed: task.collapsed, // this property must stay undefined if it is already (since there is a difference between "explicitly uncollapsed" and "never collapsed")
       id: task.id || String(TaskList.getRandomId()),
       favicon: {
         url: 'file://' + __dirname + '/js/icons/taskIcon.svg'
-      },
+      }
     }
 
     if (index) {
@@ -52,7 +52,6 @@ class TaskList {
     }
 
     this.emit('task-added', newTask.id)
-
 
     return newTask.id
   }
@@ -68,13 +67,12 @@ class TaskList {
     return this.find(task => task.id === id) || null
   }
 
-  getStringify(id){
-    const task= tasks.get(id)
+  getStringify (id) {
+    const task = tasks.get(id)
     return Object.assign({}, task, { tabs: task.tabs.getStringifyableState() })
   }
 
-
-  getAll(){
+  getAll () {
 	  return this.tasks
   }
 
@@ -170,7 +168,6 @@ class TaskList {
   static getRandomId () {
     return Math.round(Math.random() * 100000000000000000)
   }
-
 }
 
 module.exports = TaskList

@@ -701,6 +701,7 @@ const appModel = {
       json.url = json.debug_url
     }
     json.is_debug = true
+    console.log(json)
     return await appModel.install(json.url, json)
   },
 
@@ -759,7 +760,7 @@ const appModel = {
       type: app.type || 'web',
       author: app.author ? app.author : '',
       site: app.site ? app.site : '',
-      url: app.url,
+      url: app.url || url,
       circle: app.circle ? app.circle : '',
 
       // circleMessage: app.circleMessage ? app.circleMessage : '',
@@ -793,6 +794,9 @@ const appModel = {
     }
     let hasInstalled = false
     if (app.package) {
+      if(app.is_debug){
+        app.package='d.'+app.package //调试应用包名额外加d.
+      }
       hasInstalled = await appModel.isInstalled(app.package)
       if (hasInstalled) {
         return false

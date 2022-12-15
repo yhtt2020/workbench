@@ -94,26 +94,26 @@ const searchbarPlugins = {
         URLOpener(data.url, e)
       })
 
-      item.addEventListener('keyup', function(e) {
+      item.addEventListener('keyup', function (e) {
         /*  right arrow or space should autocomplete with selected item if it's
             a search suggestion */
         if (e.keyCode === 39 || e.keyCode === 32) {
-          let input = document.getElementById('tab-editor-input')
+          const input = document.getElementById('tab-editor-input')
           input.value = data.url
           input.focus()
         }
       })
     }
 
-    let pluginObject= plugins.find((plg)=>{
-      return plg.name===pluginName
+    const pluginObject = plugins.find((plg) => {
+      return plg.name === pluginName
     })
 
-    if(pluginObject.alias){
-      let el=document.createElement('span')
+    if (pluginObject.alias) {
+      const el = document.createElement('span')
       el.classList.add('plugin-alias')
-      el.innerText=pluginObject.alias
-      item.insertBefore(el,item.children[0])
+      el.innerText = pluginObject.alias
+      item.insertBefore(el, item.children[0])
     }
 
     searchbarPlugins.getContainer(pluginName).appendChild(item)
@@ -143,7 +143,7 @@ const searchbarPlugins = {
 
     plugins.push({
       name: name,
-      alias:object.alias, //加入中文名称，提升可读性
+      alias: object.alias, // 加入中文名称，提升可读性
       container: container,
       trigger: object.trigger,
       showResults: object.showResults

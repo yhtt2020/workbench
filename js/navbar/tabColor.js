@@ -125,7 +125,7 @@ function isLowContrast (color) {
 function adjustColorForTheme (color) {
   // dim the colors late at night or early in the morning if automatic dark mode is enabled
   const darkMode = settings.get('darkMode')
-  const isAuto = ( darkMode === true || darkMode >= 0) //去除undefined
+  const isAuto = (darkMode === true || darkMode >= 0) // 去除undefined
 
   let colorChange = 1
   if (isAuto) {
@@ -160,11 +160,11 @@ function setColor (bg, fg, isLowContrast) {
   }
 
   for (let i = 0; i < textElements.length; i++) {
-    if(textElements[i].id==='layout-button' ){
-      textElements[i].children[0].children[0].setAttribute('fill',fg)
+    if (textElements[i].id === 'layout-button') {
+      textElements[i].children[0].children[0].setAttribute('fill', fg)
     }
-    if(textElements[i].id==='switch-task-button'){
-      textElements[i].innerHTML=` <svg width="18px" height="18px" viewBox="0 0 104 104" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    if (textElements[i].id === 'switch-task-button') {
+      textElements[i].innerHTML = ` <svg width="18px" height="18px" viewBox="0 0 104 104" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
           <g id="控件" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
             <g id="切换任务">
               <g id="编组" fill="$color" fill-rule="nonzero">
@@ -174,7 +174,7 @@ function setColor (bg, fg, isLowContrast) {
               <line x1="36.8333333" y1="51.8333333" x2="67.1666667" y2="51.8333333" id="直线" stroke="$color" stroke-width="10" stroke-linecap="round" transform="translate(52.000000, 51.833333) rotate(90.000000) translate(-52.000000, -51.833333) "></line>
             </g>
           </g>
-        </svg>`.replaceAll('$color',fg)
+        </svg>`.replaceAll('$color', fg)
     }
     textElements[i].style.color = fg
   }
@@ -218,9 +218,9 @@ const tabColor = {
       if (isMainFrame) {
         tabs.update(tabId, {
           backgroundColor: {
-            color: "#DFDFE3",
+            color: '#DFDFE3',
             isLowContrast: false,
-            textColor: "black"
+            textColor: 'black'
           },
           favicon: null
         })
@@ -232,7 +232,7 @@ const tabColor = {
     this is needed to go back to default colors in case this page doesn't specify one
      */
     webviews.bindEvent('did-finish-load', function (tabId) {
-      //tabColor.updateColors()
+      // tabColor.updateColors()
     })
 
     // theme changes can affect the tab colors
@@ -244,9 +244,9 @@ const tabColor = {
       if (value !== undefined) {
         tabColor.useSiteTheme = value
       }
-      if(tabColor.useSiteTheme){
+      if (tabColor.useSiteTheme) {
         document.body.classList.add('use-theme')
-      }else{
+      } else {
         document.body.classList.remove('use-theme')
       }
     })

@@ -1,144 +1,164 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8"/>
-  <title>侧边栏</title>
-  <link rel="stylesheet" href="../../ext/flex-class.css"/>
-  <script src="../../ext/vue/vue.js"></script>
-  <script src="../../ext/vue/vuex.js"></script>
-  <script src="../../ext/vue/sortable.min.js"></script>
-  <script src="../../ext/vue/vuedraggable.umd.min.js"></script>
-  <script src="../../ext/vue/antd.min.js"></script>
-  <link rel="stylesheet" href="../../ext/vue/antd.min.css"/>
-  <link rel="stylesheet" href="css/sidebar.css"/>
-  <link rel="stylesheet" href="css/sidebar2.css"/>
-  <link rel="stylesheet" href="css/messageCenter.css"/>
-  <link rel="stylesheet" href="css/levelUpgradeDialog.css"/>
-  <!--tippy鼠标弹窗，解决antdvue popover鼠标移动的时候不精准的问题-->
-  <script src="../../ext/tippy/vue-tippy.min.js"></script>
-  <link rel="stylesheet" href="../../ext/tippy/light.css"/>
-  <script src="../util/tsbSdk.js"></script>
+  <head>
+    <meta charset="utf-8" />
+    <title>侧边栏</title>
+    <link rel="stylesheet" href="../../ext/flex-class.css" />
+    <script src="../../ext/vue/vue.js"></script>
+    <script src="../../ext/vue/vuex.js"></script>
+    <script src="../../ext/vue/sortable.min.js"></script>
+    <script src="../../ext/vue/vuedraggable.umd.min.js"></script>
+    <script src="../../ext/vue/antd.min.js"></script>
+    <link rel="stylesheet" href="../../ext/vue/antd.min.css" />
+    <link rel="stylesheet" href="css/sidebar.css" />
+    <link rel="stylesheet" href="css/sidebar2.css" />
+    <link rel="stylesheet" href="css/messageCenter.css" />
+    <link rel="stylesheet" href="css/levelUpgradeDialog.css" />
+    <!--tippy鼠标弹窗，解决antdvue popover鼠标移动的时候不精准的问题-->
+    <script src="../../ext/tippy/vue-tippy.min.js"></script>
+    <link rel="stylesheet" href="../../ext/tippy/light.css" />
+    <script src="../util/tsbSdk.js"></script>
 
-  <script src="../../ext/shepherdjs10/dist/js/shepherd.min.js"></script>
-  <link rel="stylesheet" href="../../ext/shepherdjs10/dist/css/shepherd.css"/>
-
-</head>
-<body>
-<script>
-  const fs=require('fs')
-  let settings=require('../../js/util/settings/settings')
-  let collTimer=null
-  let value=settings.get('sideBarFocusDelay')
-  let sideBarFocusDelay=value===undefined?0:value
-  ipc.on('settingChanged',(event,args)=>{
-    if(args.name==='sideBarFocusDelay'){
-      sideBarFocusDelay=args.value
-    }
-  })
-  function mousenter (target) {
-    if (appVue.mod==='auto') {
-      if(collTimer) return
-      collTimer=setInterval(()=>{
-        target.setAttribute('class', 'sidebar expanded')
-        document.getElementById('clickThroughElement').style.left = '155px'
-        clearInterval(collTimer)
-        collTimer=null
-      },sideBarFocusDelay*100)
-    }
-  }
-
-  function mouseleave (target) {
-    if (appVue.mod==='auto') {
-      console.log('判断到鼠标移除，并去除')
-      clickThroughMove()
-    }
-    if(collTimer)
-    {
-      clearInterval(collTimer)
-      collTimer=null
-    }
-    //
-    // if(appVue.$refs.sidePanel.isPopoverShowing===false){
-    //   target.setAttribute('class', 'sidebar')
-    //   document.getElementById('clickThroughElement').style.left = '46px'
-    // }
-  }
-
-  //对clickThrough区域进行穿透设置，这样鼠标移动到clickThroug的区域就会自动穿透
-  function setMainWindow (e) {
-    if (appVue.$refs.sidePanel.userPanelVisible === true) {
-    } else {
-      ipc.send('setMouseIgnore')
-    }
-  }
-
-  function clickThroughMove () {
-    if(appVue.$refs.sidePanel.isPopoverShowing === false){ //当悬浮框出现的时候，不进行离开逻辑
-      setMainWindow()
-      if ( document.getElementById('clickThroughElement').offsetLeft === 155 && appVue.mod==='auto') {
-        console.log('可以隐藏')
-        setTimeout(function () {
-          document.getElementById('clickThroughElement').style.left = '55px'
-          document.getElementById('appVue').setAttribute('class', 'sidebar')
-        }, 200)
+    <script src="../../ext/shepherdjs10/dist/js/shepherd.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="../../ext/shepherdjs10/dist/css/shepherd.css"
+    />
+  </head>
+  <body>
+    <script>
+      const fs = require("fs");
+      let settings = require("../../js/util/settings/settings");
+      let collTimer = null;
+      let value = settings.get("sideBarFocusDelay");
+      let sideBarFocusDelay = value === undefined ? 0 : value;
+      ipc.on("settingChanged", (event, args) => {
+        if (args.name === "sideBarFocusDelay") {
+          sideBarFocusDelay = args.value;
+        }
+      });
+      function mousenter(target) {
+        if (appVue.mod === "auto") {
+          if (collTimer) return;
+          collTimer = setInterval(() => {
+            target.setAttribute("class", "sidebar expanded");
+            document.getElementById("clickThroughElement").style.left = "155px";
+            clearInterval(collTimer);
+            collTimer = null;
+          }, sideBarFocusDelay * 100);
+        }
       }
+
+      function mouseleave(target) {
+        if (appVue.mod === "auto") {
+          console.log("判断到鼠标移除，并去除");
+          clickThroughMove();
+        }
+        if (collTimer) {
+          clearInterval(collTimer);
+          collTimer = null;
+        }
+        //
+        // if(appVue.$refs.sidePanel.isPopoverShowing===false){
+        //   target.setAttribute('class', 'sidebar')
+        //   document.getElementById('clickThroughElement').style.left = '46px'
+        // }
+      }
+
+      //对clickThrough区域进行穿透设置，这样鼠标移动到clickThroug的区域就会自动穿透
+      function setMainWindow(e) {
+        if (appVue.$refs.sidePanel.userPanelVisible === true) {
+        } else {
+          ipc.send("setMouseIgnore");
+        }
+      }
+
+      function clickThroughMove() {
+        if (appVue.$refs.sidePanel.isPopoverShowing === false) {
+          //当悬浮框出现的时候，不进行离开逻辑
+          setMainWindow();
+          if (
+            document.getElementById("clickThroughElement").offsetLeft === 155 &&
+            appVue.mod === "auto"
+          ) {
+            console.log("可以隐藏");
+            setTimeout(function () {
+              document.getElementById("clickThroughElement").style.left =
+                "55px";
+              document
+                .getElementById("appVue")
+                .setAttribute("class", "sidebar");
+            }, 200);
+          }
+        }
+      }
+
+      function clickThroughClick() {
+        appVue.$refs.sidePanel.userPanelVisible = false;
+        setMainWindow();
+      }
+    </script>
+    <div
+      id="appVue"
+      hidden
+      style="z-index: 2"
+      :class="{'sidebar':true,'expanded':this.mod==='open'}"
+      onmouseenter="mousenter(this)"
+      onmouseleave="mouseleave(this)"
+    >
+      <sidebar ref="sidePanel" />
+    </div>
+    <div
+      id="clickThroughElement"
+      onclick="clickThroughClick()"
+      onmousemove="clickThroughMove()"
+      style="
+        background-color: #00000000;
+        height: 100vh;
+        position: fixed;
+        left: 46px;
+        width: calc(100% - 46px);
+      "
+    ></div>
+  </body>
+  <script src="./comp/messageDialog.js"></script>
+  <script src="./comp/levelUpgradeDialog.js"></script>
+  <script src="./comp/gradePanel.js"></script>
+  <script src="./sidebarComp.js"></script>
+  <script src="./sidebar.js"></script>
+  <script src="./comp/app-manager.js"></script>
+  <script src="../../vite/dist/iconLists/twoColor.js"></script>
+  <script src="../../vite/dist/iconLists/fruit.js"></script>
+  <script src="../../vite/dist/iconLists/animal.js"></script>
+  <script src="../../vite/dist/iconLists/jingling.js"></script>
+  <style>
+    .tabs,
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
     }
-  }
 
-  function clickThroughClick () {
-    appVue.$refs.sidePanel.userPanelVisible = false
-    setMainWindow()
-  }
-</script>
-<div id="appVue" hidden style="z-index: 2" :class="{'sidebar':true,'expanded':this.mod==='open'}" onmouseenter="mousenter(this)"
-     onmouseleave="mouseleave(this)">
-  <sidebar ref="sidePanel"/>
-</div>
-<div
-  id="clickThroughElement"
-  onclick="clickThroughClick()"
-  onmousemove="clickThroughMove()"
-  style="background-color: #00000000; height: 100vh; position: fixed; left: 46px; width: calc(100% - 46px)"
-></div>
-</body>
-<script src="./comp/messageDialog.js"></script>
-<script src="./comp/levelUpgradeDialog.js"></script>
-<script src="./comp/gradePanel.js"></script>
-<script src="./sidebarComp.js"></script>
-<script src="./sidebar.js"></script>
-<script src="./comp/app-manager.js"></script>
-<script src="../../vite/dist/iconLists/twoColor.js"></script>
-<script src="../../vite/dist/iconLists/fruit.js"></script>
-<script src="../../vite/dist/iconLists/animal.js"></script>
-<script src="../../vite/dist/iconLists/jingling.js"></script>
-<style>
-  .tabs,
-  .sidebar ul {
-    list-style: none;
-    padding: 0;
-  }
+    .ant-collapse-content > .ant-collapse-content-box {
+      padding: 0;
+    }
 
-  .ant-collapse-content > .ant-collapse-content-box {
-    padding: 0;
-  }
+    .ant-collapse-borderless > .ant-collapse-item {
+      border-bottom: none;
+    }
 
-  .ant-collapse-borderless > .ant-collapse-item {
-    border-bottom: none;
-  }
+    .tabs,
+    .sidebar ul {
+      margin-bottom: 0;
+    }
 
-  .tabs,
-  .sidebar ul {
-    margin-bottom: 0;
-  }
-
- .sa-app-wrapper .ant-badge-count{
-   right: 2px;
-   padding:0 !important;
-   font-size: 10px;
-   height: 15px;
-   width: 15px;
-   line-height: 15px;
-   min-width: 15px;
- }
-</style>
+    .sa-app-wrapper .ant-badge-count {
+      right: 2px;
+      padding: 0 !important;
+      font-size: 10px;
+      height: 15px;
+      width: 15px;
+      line-height: 15px;
+      min-width: 15px;
+    }
+  </style>
 </html>

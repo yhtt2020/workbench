@@ -1,7 +1,5 @@
 /* global importScripts db performance searchPlaces postMessage fullTextPlacesSearch */
 
-
-
 importScripts('../../node_modules/dexie/dist/dexie.min.js')
 importScripts('../../node_modules/string_score/string_score.min.js')
 importScripts('../util/database.js')
@@ -137,7 +135,7 @@ onmessage = function (e) {
             visitCount: 0,
             lastVisit: Date.now(),
             pageHTML: '',
-            favicon:pageData.favicon,
+            favicon: pageData.favicon,
             extractedText: pageData.extractedText,
             searchIndex: [],
             isBookmarked: false,

@@ -22,8 +22,8 @@ function enableDarkMode () {
     window.dispatchEvent(new CustomEvent('themechange'))
   })
   window.postMessage({
-    message:'themeChange',
-    status:'enable'
+    message: 'themeChange',
+    status: 'enable'
   })
 }
 
@@ -34,10 +34,9 @@ function disableDarkMode () {
     window.dispatchEvent(new CustomEvent('themechange'))
   })
   window.postMessage({
-      message:'themeChange',
-      status:'disable'
-    })
-
+    message: 'themeChange',
+    status: 'disable'
+  })
 }
 
 /**
@@ -94,8 +93,8 @@ function initialize () {
     }
 
     // 2, undefined, or false: automatic dark mode following system
-    //移除undefined和false
-    if (value === 2 ) {
+    // 移除undefined和false
+    if (value === 2) {
       if (systemShouldEnableDarkMode()) {
         enableDarkMode()
       } else {
@@ -128,7 +127,7 @@ function initialize () {
           disableDarkMode()
         }
       }, 10000)
-      //undefined和false都默认和永久禁用一致
+      // undefined和false都默认和永久禁用一致
     } else if (value === undefined || value === -1 || value === false) {
       // -1: never enable
       disableDarkMode()

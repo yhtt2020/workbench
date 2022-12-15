@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3693838 */
-  src: url('iconfont.woff2?t=1665306618202') format('woff2'),
-       url('iconfont.woff?t=1665306618202') format('woff'),
-       url('iconfont.ttf?t=1665306618202') format('truetype');
+  src: url("iconfont.woff2?t=1665306618202") format("woff2"),
+    url("iconfont.woff?t=1665306618202") format("woff"),
+    url("iconfont.ttf?t=1665306618202") format("truetype");
 }
 
 .iconfont {
@@ -296,4 +296,3 @@
 .icon-rizhi:before {
   content: "\e66a";
 }
-
