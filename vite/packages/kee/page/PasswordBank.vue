@@ -120,6 +120,14 @@ export default {
     ...mapWritableState(appStore,['dbList'])
   },
   mounted () {
+    let bank=this.$route.params
+    if(bank.name){
+      message.info('请输入密码库的登录信息，回车进入。')
+      this.selectBankItem({
+        text:bank.name,
+        path:bank.path
+      })
+    }
 
   },
   methods: {

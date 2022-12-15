@@ -128,10 +128,11 @@
                 </span>
                 <template #overlay>
                   <a-menu class="my-password-drawer-dropdown">
-                    <a-menu-item   :key="item.id" v-for="(item,index) in myDbList"  @click="myPasswordBankClick(item)">
+                    <a-menu-item   :key="item.id" v-for="(item,index) in myDbList" >
+                      <router-link :to="{name:'bank',params:{name:item.text,path:item.path}}">
                       <UnlockFilled style="padding-right:12px;"/>
                       <span class="title">{{item.text}}</span>
-                      <CheckOutlined v-if="checkPasswordIndex==item.id"  class="checkout"/>
+                      </router-link>
                     </a-menu-item>
                     <a-menu-divider/>
                     <a-menu-item>
@@ -204,6 +205,7 @@ export default {
     ...mapWritableState(appStore,['passwordItem','dbList','currentTab']),
     myDbList(){
       let i=0
+
       return this.dbList.filter(item=>{
         if(i<=5 && i>0){
           i++
@@ -327,6 +329,7 @@ export default {
     }
   },
   async mounted() {
+    console.log(this.dbList)
       this.getTabData()
     //获取到前面5个最近的库
     this.selectMenuList.children=this.dbList.map(item=>{
@@ -419,13 +422,6 @@ export default {
           t:Date.now()
         }
       })
-    },
-    // 密码库下拉菜单点击
-    myPasswordBankClick(v){
-      this.checkPasswordIndex = v.id
-      this.selectMenuList[0].text = v.title
-      this.filterText = v.title
-      this.sideDrawerVisible = false
     },
     // 筛选菜单中子项选中
     selectListItem(v){
