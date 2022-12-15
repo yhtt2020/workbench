@@ -33,16 +33,15 @@
   <a-divider style="height: 1px; background-color: rgba(230, 230, 230, 0.1);margin: 0  !important;" />
   <a-layout style="height: calc(100vh - 45px);">
     <a-layout-sider theme="light" style="padding: 20px;border-right: 1px solid rgba(230, 230, 230, 1);">
-      <!-- 暂时没有数据先隐藏掉 -->
       <div class="current-container" v-if="currentTab">
         <div class="header-container">
           <div class="current-header">
             <span class="current-avatar">
               <img :src="currentTab.favicon.url"/>
             </span>
-            <div class="header-content" v-if="totalOpen == false">
-              <span>{{currentTab.title}}</span>
-              <span class="current-website">{{currentTab.url}}</span>
+            <div class="header-content" >
+              <span v-if="totalOpen == false">{{currentTab.title}}</span>
+              <span style="color: grey" v-else>当前页面</span>
             </div>
             <div class="current-switch">
               <a-switch
@@ -65,19 +64,19 @@
             <span class="current-website">{{ currentTab.url }}</span>
           </div>
         </div>
-        <div class="current-list-container">
-           <div class="current-item" :class="noWebIndex == item.id ? 'active-current-bgcolor':''" v-for="item in currentList" :key="item.id" @click="currentWebSiteClick(item)">
-              <span class="current-item-img">
-                <img :src="item.url" alt=""/>
-              </span>
-              <div class="current-item-right">
-                <span class="title">{{item.title}}</span>
-                <span class="description">{{item.description}}</span>
-              </div>
-           </div>
-        </div>
+<!--        <div class="current-list-container">-->
+<!--           <div class="current-item" :class="noWebIndex == item.id ? 'active-current-bgcolor':''" v-for="item in currentList" :key="item.id" @click="currentWebSiteClick(item)">-->
+<!--              <span class="current-item-img">-->
+<!--                <img :src="item.url" alt=""/>-->
+<!--              </span>-->
+<!--              <div class="current-item-right">-->
+<!--                <span class="title">{{item.title}}</span>-->
+<!--                <span class="description">{{item.description}}</span>-->
+<!--              </div>-->
+<!--           </div>-->
+<!--        </div>-->
       </div>
-      <a-list item-layout="horizontal" :data-source="passwords" v-else>
+      <a-list item-layout="horizontal" :data-source="passwords" >
         <template #renderItem="{ item,index }">
           <div @mouseover="passwordItemsHover(item)" @mouseleave="passwordItemRemove(item)">
             <a-list-item :class="currentIndex==index ? 'active-list':''" @click="leftDescription(item)">
@@ -778,14 +777,15 @@ h3 {
      margin-bottom: 8px;
     .current-header{
       display: flex;
-      align-items: center;
+      align-items :flex-start;
       justify-content: space-between;
      .current-avatar img{
        width: 16px;
        height: 16px;
+       vertical-align: text-bottom;
       }
       .header-content{
-       max-width: 102px;
+       width: 102px;
        overflow: hidden;
        white-space: nowrap;
        text-overflow: ellipsis;
@@ -798,6 +798,8 @@ h3 {
       flex-wrap: wrap;
        .current-website{
         word-break: break-all;
+         color: grey;
+         font-size: 12px;
        }
     }
     .current-switch{
