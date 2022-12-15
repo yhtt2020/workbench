@@ -19,7 +19,7 @@
       </a-row>
     </div>
     <div @click.stop="()=>{}" class="password-bank-input">
-      <a-input-password @keypress.enter="openDb" class="bank-input" v-model:value="password"
+      <a-input-password id="pwdInput" @keypress.enter="openDb" class="bank-input" v-model:value="password"
                         :placeholder="this.bankValue?'请输入「'+this.bankValue+'」的密码':'请先选择一个密码库'">
 
       </a-input-password>
@@ -123,6 +123,7 @@ export default {
     let bank=this.$route.params
     if(bank.name){
       message.info('请输入密码库的登录信息，回车进入。')
+      document.getElementById('pwdInput').focus()
       this.selectBankItem({
         text:bank.name,
         path:bank.path
