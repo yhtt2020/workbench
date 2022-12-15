@@ -20,7 +20,7 @@
     <div class="password-bank-input">
       <a-input-password class="bank-input" v-model:value="password" :placeholder="'请输入「'+this.bankValue+'」的密码'"/>
       <span class="password-bank-button" @click="enterSubmit">
-        <img src="../assets/image/enter_submit.svg" alt="" />
+        <img src="../../../public/img/enter_submit.svg" alt="" />
       </span>
     </div>
     <div class="password-bank-list-container">
@@ -49,17 +49,17 @@ export default {
           {
              id:0,
              text:'密码库A',
-             url:'http://localhost:1600/packages/kee/assets/image/lock.svg'
+             url:'../../../public/img/lock.svg'
           },
           {
              id:1,
              text:'密码库B',
-             url:'http://localhost:1600/packages/kee/assets/image/unlock.svg'
+             url:'../../../public/img/unlock.svg'
           },
           {
              id:2,
              text:'密码库C',
-             url:'http://localhost:1600/packages/kee/assets/image/lock.svg'
+             url:'../../../public/img/lock.svg'
           }
       ]
     };
