@@ -82,21 +82,21 @@
           <div @mouseover="passwordItemsHover(item)" @mouseleave="passwordItemRemove(item)">
             <a-list-item :class="currentIndex==index ? 'active-list':''" @click="leftDescription(item)">
             <!-- 判断鼠标悬浮时打开并填充按钮显示 -->
-            <a-list-item-meta class="is-open-fill" v-if="item.showTip == true" :description="item.description">
+            <a-list-item-meta class="is-open-fill" v-if="item.showTip == true" :description="item.username">
               <template #title>
                 <a>{{ item.title }}</a>
               </template>
               <template #avatar>
-                <a-avatar :src="item.url" />
+                <a-avatar :src="item.icon" />
               </template>
             </a-list-item-meta>
             <!-- 判断鼠标离开时打开并填充按钮隐藏 -->
-            <a-list-item-meta class="no-open-fill" :description="item.description" v-else>
+            <a-list-item-meta class="no-open-fill" :description="item.username" v-else>
               <template #title>
                 <a>{{ item.title }}</a>
               </template>
               <template #avatar>
-                <a-avatar :src="item.url" />
+                <a-avatar :src="item.icon" />
               </template>
             </a-list-item-meta>
             <div class="open-fill" v-if="item.showTip == true" @click="openFillClick">打开并填充</div>
@@ -111,7 +111,7 @@
       <router-view></router-view>
     </a-layout-content>
   </a-layout>
-  <a-drawer class="filter-list-container" :width="216" placement="left" :visible="sideDrawerVisible">
+  <a-drawer class="filter-list-container" :width="216" placement="left" v-model:visible="sideDrawerVisible">
     <div class="password-filter-container">
       <a-list item-layout="horizontal" :data-source="selectMenuList">
         <template #renderItem="{ item }">
@@ -129,10 +129,10 @@
                 </span>
                 <template #overlay>
                   <a-menu class="my-password-drawer-dropdown">
-                    <a-menu-item :key="items.id" v-for="items in item.children"  @click="myPasswordBankClick(items)">
+                    <a-menu-item   :key="item.id" v-for="(item,index) in myDbList"  @click="myPasswordBankClick(item)">
                       <UnlockFilled style="padding-right:12px;"/>
-                      <span class="title">{{items.title}}</span>
-                      <CheckOutlined v-if="checkPasswordIndex==items.id"  class="checkout"/>
+                      <span class="title">{{item.text}}</span>
+                      <CheckOutlined v-if="checkPasswordIndex==item.id"  class="checkout"/>
                     </a-menu-item>
                     <a-menu-divider/>
                     <a-menu-item>
@@ -202,7 +202,17 @@ export default {
   },
   computed: {
     ...mapState(appStore, []),
-    ...mapWritableState(appStore,['passwordItem']),
+    ...mapWritableState(appStore,['passwordItem','dbList']),
+    myDbList(){
+      let i=0
+      return this.dbList.filter(item=>{
+        if(i<=5 && i>0){
+          i++
+          return true
+        }
+        i++
+      })
+    }
   },
   data() {
     return {
@@ -276,24 +286,7 @@ export default {
              text:'我的密码',
              iconSwap:'SwapOutlined',
              divider:1,
-             children:[
-              {
-                id:1001_1,
-                title:'我的密码',
-              },
-              {
-                id:1001_2,
-                title:'A密码库',
-              },
-              {
-                id:1001_3,
-                title:'B密码库',
-              },
-              {
-                id:1001_4,
-                title:'C密码库',
-              }
-             ]
+             children:[]
            },
            {
              id:1002,
@@ -335,6 +328,14 @@ export default {
     }
   },
   async mounted() {
+
+    this.selectMenuList.children=this.dbList.map(item=>{
+      return {
+        id:item.id,
+        title:item.text,
+      }
+    })
+    console.log(this.selectMenuList.children,'cc')
     let params=this.$route.params
     if(params.type==='url'){
       //todo是路径方式

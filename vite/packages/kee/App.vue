@@ -13,6 +13,8 @@
 <script lang="ts">
 import zhCN from 'ant-design-vue/es/locale/zh_CN';
 import PasswordBank from './page/PasswordBank.vue';
+import {mapActions,mapWritableState} from 'pinia'
+import  { appStore } from './store'
 export default {
   components:{
     PasswordBank
@@ -21,6 +23,10 @@ export default {
     window.ipc=window.$models.ipc
     window.kdbxModel=window.$models.kdbxModel
     window.passwordModel =window.$models.passwordModel
+    this.loadDbList()
+  },
+  methods:{
+    ...mapActions(appStore,['setDb','loadDbList']),
   },
   data(){
     return {

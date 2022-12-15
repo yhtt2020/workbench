@@ -42,7 +42,9 @@ export const appStore = defineStore('kee',{
         filePath:'',
         name:'',
         kdbx:{}
-      }
+      },
+
+      dbList:[]//打开过的密码库
 
     }),
     actions:{
@@ -52,6 +54,15 @@ export const appStore = defineStore('kee',{
         passwordModel.setPasswordManager(manager)
         passwordModel.getAllPasswords()
         console.log('set dbinfo',dbInfo)
+      },
+      loadDbList(){
+        let history = localStorage.getItem('bankList')
+        if (history) {
+          this.dbList = JSON.parse(history)
+        }
+      },
+      saveDbList(){
+        localStorage.setItem('bankList', JSON.stringify(this.dbList))
       }
     },
     getters:{}

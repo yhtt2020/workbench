@@ -49,15 +49,15 @@
 
     <div class="password-bank-list-container">
       <vue-custom-scrollbar :settings="settings" style="position:relative;height: 185px">
-      <a-empty v-if="bankList.length===0"></a-empty>
+      <a-empty v-if="dbList.length===0"></a-empty>
       <a-tooltip :overlay-style="{'min-width':'500px'}" :mouseEnterDelay="0.5" placement="bottom"
-                 v-for="(item,index) in bankList">
+                 v-for="(item,index) in dbList">
         <template #title>
           保存位置：<br>{{ item.path }}
         </template>
         <div class="password-bank-list-item" :class="bankIndex == item.id ? 'bank_active':''"
              :key="item.id" @click.stop="selectBankItem(item)">
-          <img src="../assets/image/lock.svg" alt="">
+          <img src="/img/lock.svg" alt="">
           <span class="name">{{ item.text }}</span>
           <span title="删除记录" @click="removeBank(index)" class="remove-icon" size="small"> <close-outlined/></span>
         </div>
@@ -90,7 +90,7 @@
 import { UnlockFilled, FolderOpenOutlined, CloseOutlined, KeyOutlined } from '@ant-design/icons-vue'
 import { message, Modal } from 'ant-design-vue'
 import vueCustomScrollbar from '../../../src/components/vue-scrollbar.vue'
-import {mapActions} from 'pinia'
+import {mapActions,mapWritableState} from 'pinia'
 import  { appStore } from '../store'
 export default {
   components: {
@@ -113,15 +113,17 @@ export default {
       selectedItem: {},
       newPassword: '',
       newName: '新密码库',
-      bankList: [],
       keyPath: '',
     }
   },
+  computed:{
+    ...mapWritableState(appStore,['dbList'])
+  },
   mounted () {
-    this.loadHistory()
+
   },
   methods: {
-    ...mapActions(appStore,['setDb']),
+    ...mapActions(appStore,['setDb','loadDbList','saveDbList']),
     create () {
       this.visibleInputPwd = true
       // const filePath=ipc.sendSync('selectKdbx')
@@ -141,13 +143,13 @@ export default {
         path: filePath,
         lastOpen: Date.now()
       }
-      let found = this.bankList.findIndex((testItem) => {
+      let found = this.dbList.findIndex((testItem) => {
         return testItem.path === filePath
       })
       if (found > -1) {
-        this.bankList.splice(found, 1)
+        this.dbList.splice(found, 1)
       }
-      this.bankList.unshift(item)
+      this.dbList.unshift(item)
       setTimeout(()=>{
         this.selectBankItem(item)
         this.saveHistory()
@@ -206,7 +208,7 @@ export default {
           path: filePath,
           lastOpen: Date.now()
         }
-        this.bankList.unshift(item)
+        this.dbList.unshift(item)
         this.newPassword = ''
         this.newName = '新密码库'
         this.visibleInputPwd = false
@@ -216,20 +218,14 @@ export default {
       })
     },
     saveHistory () {
-      localStorage.setItem('bankList', JSON.stringify(this.bankList))
-    },
-    loadHistory () {
-      let history = localStorage.getItem('bankList')
-      if (history) {
-        this.bankList = JSON.parse(history)
-      }
+      this.saveDbList()
     },
     removeBank (index) {
       Modal.confirm({
         centered: true,
         content: '是否移除记录？此行为不会删除密码库。',
         onOk: () => {
-          this.bankList.splice(index, 1)
+          this.dbList.splice(index, 1)
           this.saveHistory()
         }
       })
