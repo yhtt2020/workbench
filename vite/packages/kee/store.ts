@@ -17,6 +17,7 @@ const initSetting={ //存储用户的设置
 
 export const appStore = defineStore('kee',{
     state:()=>({
+      currentTab:null,
       app: {
         name: '',
         url: '',
@@ -44,8 +45,7 @@ export const appStore = defineStore('kee',{
         kdbx:{}
       },
 
-      dbList:[]//打开过的密码库
-
+      dbList:[],//打开过的密码库
     }),
     actions:{
       setDb(dbInfo){
@@ -63,6 +63,15 @@ export const appStore = defineStore('kee',{
       },
       saveDbList(){
         localStorage.setItem('bankList', JSON.stringify(this.dbList))
+      },
+      getTabData(){
+        let timer=setTimeout(()=>{
+          if(window.tabData){
+            this.currentTab=window.tabData
+            console.log('获得到tabdata',this.currentTab)
+            clearInterval(timer)
+          }
+        },500)
       }
     },
     getters:{}

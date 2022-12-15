@@ -76,11 +76,15 @@ ipc.on('createSiteCard', (event, args) => {
 app.whenReady().then(() => {
   // createSiteCardWin() 启动的时候不自动创建sitecard
 })
-
+let currentPwdTab={}
+ipc.handle('getPwdTab',(event,args)=>{
+  return currentPwdTab
+})
 ipc.on('openPwdManager', async (event, args) => {
   const url = args.tabData.url
   const title = args.tabData.title
   const siteUrl = parseInnerURL(url)
+  currentPwdTab=args.tabData
   if (!global.passwordWin) {
     const parentBounds = mainWindow.getBounds()
     global.passwordWin = await windowManager.create({
@@ -113,7 +117,6 @@ ipc.on('openPwdManager', async (event, args) => {
           '--app-name=' + app.getName(),
           '--site-url=' + siteUrl,
           '--site-title=' + title,
-          '--tab-data=' + encodeURIComponent(JSON.stringify(args.tabData)),
           ...((isDevelopmentMode ? ['--development-mode'] : []))
         ]
       }

@@ -34,21 +34,21 @@
   <a-layout style="height: calc(100vh - 45px);">
     <a-layout-sider theme="light" style="padding: 20px;border-right: 1px solid rgba(230, 230, 230, 1);">
       <!-- 暂时没有数据先隐藏掉 -->
-      <div class="current-container" v-if="filterId==1003">
+      <div class="current-container" v-if="currentTab">
         <div class="header-container">
           <div class="current-header">
             <span class="current-avatar">
-              <img src="https://img.js.design/assets/img/62592c9e1be7d2a75a32e89b.png"/>
+              <img :src="currentTab.favicon.url"/>
             </span>
             <div class="header-content" v-if="totalOpen == false">
-              <span>语雀——想天浏览器官方文档</span>
-              <span class="current-website">https://www.yuque.com/thisky/ylbh5g</span>
+              <span>{{currentTab.title}}</span>
+              <span class="current-website">{{currentTab.url}}</span>
             </div>
             <div class="current-switch">
               <a-switch
                 v-model:checked="totalOpen"
                 checked-children="全站"
-                un-checked-children="关"
+                un-checked-children="子站"
               />
               <UpOutlined
                 v-if="totalOpen == true"
@@ -61,8 +61,8 @@
             </div>
           </div>
           <div class="current-content" v-if="totalOpen == true">
-            <span>语雀——想天浏览器官方文档</span>
-            <span class="current-website">https://www.yuque.com/thisky/ylbh5g</span>
+            <span>{{ currentTab.title }}</span>
+            <span class="current-website">{{ currentTab.url }}</span>
           </div>
         </div>
         <div class="current-list-container">
@@ -202,7 +202,7 @@ export default {
   },
   computed: {
     ...mapState(appStore, []),
-    ...mapWritableState(appStore,['passwordItem','dbList']),
+    ...mapWritableState(appStore,['passwordItem','dbList','currentTab']),
     myDbList(){
       let i=0
       return this.dbList.filter(item=>{
@@ -328,16 +328,17 @@ export default {
     }
   },
   async mounted() {
-
+      this.getTabData()
+    //获取到前面5个最近的库
     this.selectMenuList.children=this.dbList.map(item=>{
       return {
         id:item.id,
         title:item.text,
       }
     })
-    console.log(this.selectMenuList.children,'cc')
     let params=this.$route.params
     if(params.type==='url'){
+
       //todo是路径方式
       passwordModel.getSiteCredit(params.value, true).then((result) => {
         let isFirst=true
@@ -399,10 +400,10 @@ export default {
         pwd.icon='/kee/key_black.svg'
       })
       this.passwords=passwords
-      console.log(this.passwords,'获取到的密码')
     }
   },
   methods: {
+    ...mapActions(appStore,['getTabData']),
     // 搜索触发做的事情
     searchClick() {},
     // 开启抽屉式的选项
@@ -490,6 +491,7 @@ export default {
     openFillClick() {
 
     },
+
   }
 };
 </script>

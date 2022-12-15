@@ -33,7 +33,7 @@ const logger = {
       data={}
     }
 
-    console.log(type,message,data)
+    //console.log(type,message,data)
     logger.insertDb(type,message,data)
   },
   /**
