@@ -49,17 +49,20 @@
                 checked-children="全站"
                 un-checked-children="子站"
               />
-              <UpOutlined
-                v-if="totalOpen == true"
+               <UpOutlined
+                v-if="contentControlShow == false"
                 style="color: rgba(0, 0, 0, 0.45); padding-left: 4px;"
+                @click="currentContentControl"
               />
               <DownOutlined
-                v-if="totalOpen == false"
+                v-else
                 style="color: rgba(0, 0, 0, 0.45); padding-left: 4px"
+                @click="currentContentControl"
               />
             </div>
           </div>
-          <div class="current-content" v-if="totalOpen == true">
+          <!-- 通过最右侧图标控制内容显示和隐藏 -->
+          <div class="current-content" v-if="contentControlShow == true">
             <span>{{ currentTab.title }}</span>
             <span class="current-website">{{ currentTab.url }}</span>
           </div>
@@ -110,7 +113,10 @@
       <router-view></router-view>
     </a-layout-content>
   </a-layout>
-  <a-drawer class="filter-list-container" :width="216" placement="left" v-model:visible="sideDrawerVisible">
+  <a-drawer class="filter-list-container" :width="216" 
+     placement="left" v-model:visible="sideDrawerVisible"
+     @close="sideDrawerVisible = false"
+  >
     <div class="password-filter-container">
       <a-list item-layout="horizontal" :data-source="selectMenuList">
         <template #renderItem="{ item }">
@@ -128,7 +134,7 @@
                 </span>
                 <template #overlay>
                   <a-menu class="my-password-drawer-dropdown">
-                    <a-menu-item   :key="item.id" v-for="(item,index) in myDbList" >
+                    <a-menu-item   :key="item.id" v-for="item in myDbList" >
                       <router-link :to="{name:'bank',params:{name:item.text,path:item.path}}">
                       <UnlockFilled style="padding-right:12px;"/>
                       <span class="title">{{item.text}}</span>
@@ -281,7 +287,17 @@ export default {
   },
   computed: {
     ...mapState(appStore, []),
-    ...mapWritableState(appStore,['passwordItem','dbList','currentTab']),
+    ...mapWritableState(appStore,['passwordItem','dbList','currentTab','tags']),
+    displayTags(){
+      return this.tags.map((tag,index)=>{
+        return {
+          id:tag,
+          text:tag,
+          icon:'TagFilled',
+          divider:index===this.tags.length-1
+        }
+      })
+    },
     myDbList(){
       let i=0
 
@@ -292,7 +308,36 @@ export default {
         }
         i++
       })
+    },
+    selectMenuList(){
+      return [{
+        id:1001,
+        icon:'UnlockFilled',
+        text:'我的密码',
+        iconSwap:'SwapOutlined',
+        divider:1,
+        children:[]
+      },
+        {
+          id:1002,
+          icon:'AppstoreFilled',
+          text:'所有密码',
+        },
+        {
+          id:1003,
+          text:'当前网站',
+          icon:'LinkOutlined',
+          divider:1,
+        },
+        {
+          id:1004,
+          text:'颜色',
+          icon:'StarFilled',
+          divider:1,
+        }
+      ].concat(this.displayTags)
     }
+
   },
   data() {
     return {
@@ -350,7 +395,6 @@ export default {
           site_1:'zt.xaingtian.ren',
           showCopy: false,
           site_2:'www.yuque.com'
-
         },
         {
           id:2,
@@ -375,44 +419,7 @@ export default {
       ],
       state:appStore(),
       // 定义筛选菜单列表数据
-      selectMenuList:[
-           {
-            id:1001,
-             icon:'UnlockFilled',
-             text:'我的密码',
-             iconSwap:'SwapOutlined',
-             divider:1,
-             children:[]
-           },
-           {
-             id:1002,
-             icon:'AppstoreFilled',
-             text:'所有密码',
-           },
-           {
-             id:1003,
-             text:'当前网站',
-             icon:'LinkOutlined',
-             divider:1,
-           },
-           {
-             id:1004,
-             text:'颜色',
-             icon:'StarFilled',
-             divider:1,
-           },
-           {
-             id:1005,
-             text:'Computer',
-             icon:'TagFilled',
-           },
-           {
-             id:1006,
-             text:'Email',
-             icon:'TagFilled',
-             divider:1,
-           },
-      ],
+
       // 筛选菜单下拉框
       dropdownVisible:false,
       // 判断主应用打开入口
@@ -420,7 +427,9 @@ export default {
       // 我的密码库筛选下标
       myPasswordIndex:0,
       checkPasswordIndex:0,
-      myPasswordVisible:false
+      myPasswordVisible:false,
+      // 控制内容信息隐藏和显示
+      contentControlShow:false
     }
   },
   async mounted() {
@@ -610,6 +619,10 @@ export default {
       this.state.$patch({
          passwordItem:v
       })
+    },
+    // 控制当前网站内容的形式和隐藏
+    currentContentControl(){
+       this.contentControlShow = !this.contentControlShow
     },
     // 打开填充按钮
     openFillClick() {
@@ -941,9 +954,15 @@ h3 {
       display: flex;
       flex-wrap: wrap;
        .current-website{
-        word-break: break-all;
+         word-break: break-all;
          color: grey;
          font-size: 12px;
+         max-width: 200px;
+         overflow: hidden;
+         display: -webkit-box;
+         -webkit-box-orient: vertical;
+         -webkit-line-clamp: 2;
+         text-overflow: ellipsis;
        }
     }
     .current-switch{
