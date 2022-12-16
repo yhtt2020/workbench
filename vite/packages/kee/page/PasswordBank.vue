@@ -50,11 +50,17 @@
     <div class="password-bank-list-container">
       <vue-custom-scrollbar :settings="settings" style="position:relative;height: 185px">
       <a-empty v-if="dbList.length===0"></a-empty>
+        <div class="password-bank-list-item" :class="bankIndex == 'inner' ? 'bank_active':''"
+             key="inner" @click.stop="selectBankItem({id:'inner',text:'内置密码库'})">
+          <img src="/img/lock-app.svg" alt="">
+          <strong class="name">内置密码库</strong>
+        </div>
       <a-tooltip :overlay-style="{'min-width':'500px'}" :mouseEnterDelay="0.5" placement="bottom"
                  v-for="(item,index) in dbList">
         <template #title>
           保存位置：<br>{{ item.path }}
         </template>
+
         <div class="password-bank-list-item" :class="bankIndex == item.id ? 'bank_active':''"
              :key="item.id" @click.stop="selectBankItem(item)">
           <img src="/img/lock.svg" alt="">
@@ -184,6 +190,7 @@ export default {
               this.setDb({
                 filePath:this.selectedItem.path,
                 kdbx:dbInfo.db,
+                tags:dbInfo.tags,
                 name:dbInfo.name
               })
               this.$router.push({name:'passwords',params:{value:'',type:'all'}})

@@ -45,11 +45,14 @@ export const appStore = defineStore('kee',{
         kdbx:{}
       },
 
+      tags:[],//全部标签
+
       dbList:[],//打开过的密码库
     }),
     actions:{
       setDb(dbInfo){
         this.currentDb=dbInfo
+        this.tags=dbInfo.tags
         const manager=kdbxModel.getManager(dbInfo.filePath)
         passwordModel.setPasswordManager(manager)
         passwordModel.getAllPasswords()

@@ -9,8 +9,10 @@ const  kdbxweb = require('kdbxweb')
 class KdbxModel {
   db//密码库
   path
+  tags
   name //密码库名称
   constructor () {
+    this.tags=[]
     this.logger = logger
     this.storageFile = new StorageFile()
     this.kdbxwebInit=require('./kee/kdbxwebInit')
@@ -27,6 +29,7 @@ class KdbxModel {
         this.db=dbInfo.db
         this.name=dbInfo.name
         this.path=path
+        this.tags=dbInfo.tags
         callback(undefined,dbInfo)
       })
     })
@@ -58,12 +61,10 @@ class KdbxModel {
   }
 
   getAllCredentials () {
-    console.log(this.db)
     let credentials=[]
     for(const entry of this.db.getDefaultGroup().allEntries()){
       let fields=entry.fields
       let pwd=fields.get('Password')
-      console.log(pwd,'pwd')
       credentials.push({
         domain:fields.get('URL'),
         username:fields.get('UserName'),
@@ -72,7 +73,6 @@ class KdbxModel {
         id:entry.uuid
       })
     }
-    console.log(credentials,'creds')
     return credentials
   }
 

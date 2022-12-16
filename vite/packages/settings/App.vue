@@ -217,11 +217,17 @@ export default defineComponent({
         this.currentPasswordManager=this.passwordManagers.find(pm=>{
           return pm.name===value.name
         })
+        if(value.name==='file'){
+          this.currentPasswordDb.filePath=value.filePath
+        }
       })
       settings.listen('passwordManager', (value)=>{
         this.currentPasswordManager=this.passwordManagers.find(pm=>{
           return pm.name===value.name
         })
+        if(value.name==='file'){
+          this.currentPasswordDb.filePath=value.filePath
+        }
       })
 
 

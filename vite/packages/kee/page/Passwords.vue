@@ -281,7 +281,17 @@ export default {
   },
   computed: {
     ...mapState(appStore, []),
-    ...mapWritableState(appStore,['passwordItem','dbList','currentTab']),
+    ...mapWritableState(appStore,['passwordItem','dbList','currentTab','tags']),
+    displayTags(){
+      return this.tags.map((tag,index)=>{
+        return {
+          id:tag,
+          text:tag,
+          icon:'TagFilled',
+          divider:index===this.tags.length-1
+        }
+      })
+    },
     myDbList(){
       let i=0
 
@@ -292,7 +302,36 @@ export default {
         }
         i++
       })
+    },
+    selectMenuList(){
+      return [{
+        id:1001,
+        icon:'UnlockFilled',
+        text:'我的密码',
+        iconSwap:'SwapOutlined',
+        divider:1,
+        children:[]
+      },
+        {
+          id:1002,
+          icon:'AppstoreFilled',
+          text:'所有密码',
+        },
+        {
+          id:1003,
+          text:'当前网站',
+          icon:'LinkOutlined',
+          divider:1,
+        },
+        {
+          id:1004,
+          text:'颜色',
+          icon:'StarFilled',
+          divider:1,
+        }
+      ].concat(this.displayTags)
     }
+
   },
   data() {
     return {
@@ -375,44 +414,7 @@ export default {
       ],
       state:appStore(),
       // 定义筛选菜单列表数据
-      selectMenuList:[
-           {
-            id:1001,
-             icon:'UnlockFilled',
-             text:'我的密码',
-             iconSwap:'SwapOutlined',
-             divider:1,
-             children:[]
-           },
-           {
-             id:1002,
-             icon:'AppstoreFilled',
-             text:'所有密码',
-           },
-           {
-             id:1003,
-             text:'当前网站',
-             icon:'LinkOutlined',
-             divider:1,
-           },
-           {
-             id:1004,
-             text:'颜色',
-             icon:'StarFilled',
-             divider:1,
-           },
-           {
-             id:1005,
-             text:'Computer',
-             icon:'TagFilled',
-           },
-           {
-             id:1006,
-             text:'Email',
-             icon:'TagFilled',
-             divider:1,
-           },
-      ],
+
       // 筛选菜单下拉框
       dropdownVisible:false,
       // 判断主应用打开入口

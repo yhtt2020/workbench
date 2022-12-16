@@ -9,6 +9,7 @@ class FileModel extends Model{
   name
   db
   keyFile
+  tags //全部的标签
 
   constructor (data) {
     super({
@@ -16,6 +17,49 @@ class FileModel extends Model{
       groupMap: {},
       ...data
     });
+    this.tags=[]
+  }
+  forEachEntry(filter, callback) {
+    // let top = this.db.getDefaultGroup();
+    // if (filter.trash) {
+    //   top = this.getGroup(
+    //     this.db.meta.recycleBinUuid ? this.subId(this.db.meta.recycleBinUuid.id) : null
+    //   );
+    // } else if (filter.group) {
+    //   top = this.getGroup(filter.group);
+    // }
+    // if (top) {
+    //   if (top.forEachOwnEntry) {
+    //     top.forEachOwnEntry(filter, callback);
+    //   }
+    //   if (!filter.group || filter.subGroups) {
+    //     top.forEachGroup((group) => {
+    //       group.forEachOwnEntry(filter, callback);
+    //     }, filter);
+    //   }
+    // }
+  }
+  _addTags(){
+    try{
+    const tagsHash = {};
+    this.tags.forEach((tag) => {
+      tagsHash[tag.toLowerCase()] = true;
+    });
+    for(const entry of this.db.getDefaultGroup().allEntries()) {
+      for (const tag of entry.tags) {
+        if (!tagsHash[tag.toLowerCase()]) {
+          tagsHash[tag.toLowerCase()] = true;
+          this.tags.push(tag);
+        }
+      }
+    }
+    this.tags.sort();
+    console.log(this.tags,'tagssss')
+    return this.tags
+    }
+    catch (e) {
+      console.log(e)
+    }
   }
 
   kdfArgsToString(header) {
@@ -46,6 +90,7 @@ class FileModel extends Model{
     let group = this.db.createGroup(this.db.getDefaultGroup(), '密码组');
     let entry = this.db.createEntry(group);
     this.name = name;
+    this.tags=[]
     this.readModel();
     this.set({ active: true, created: true, name });
     this.db.save().then((data)=>{
@@ -56,7 +101,6 @@ class FileModel extends Model{
   }
   open(password, fileData, keyFileData, callback) {
     let passwordValue=kdbxweb.ProtectedValue.fromString(password)
-    console.log('use',passwordValue)
     try {
       let  credentials
       //const challengeResponse = ChalRespCalculator.build(this.chalResp);
@@ -86,9 +130,12 @@ class FileModel extends Model{
             Math.round(fileData.byteLength / 1024) +
             ' kB'
           );
+          console.log('成功打开，接下来载入tag')
+          let tags=this._addTags()
           callback(undefined,{
             name:this.db.meta._name,
             db:this.db,
+            tags
           });
         })
         .catch((err) => {

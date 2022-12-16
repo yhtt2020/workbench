@@ -35,7 +35,10 @@ const PasswordModel = {
    * @param manager
    */
   setPasswordManager(manager){
-    settings.set('passwordManager',manager)
+    settings.set('passwordManager', {
+      name:manager.name,
+      filePath:manager.filePath
+    })
     if(manager.name==='file'){
       PasswordModel.activeManager=PasswordModel.managerMap.kdbxModel
     }
