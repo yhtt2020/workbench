@@ -3,16 +3,18 @@ import vue from '@vitejs/plugin-vue'
 const path=require('path')
 // https://vitejs.dev/config/
 const pkg:string=__dirname
+console.log(pkg)
 function getPath(name){
-  return path.resolve(pkg,'/html/'+name+'.html')
+  return path.resolve(pkg,'html',name+'.html')
 }
 const htmls=[
-  'icon','index','extension','task','settings','barrage','user','tray','frame','app','kee'
+  'index','icon','extension','task','settings','barrage','user','tray','frame','app','kee'
 ]
 let inputs={}
 htmls.forEach(html=>{
   inputs[html]=getPath(html)
 })
+console.log(inputs)
 export default defineConfig({
   plugins: [vue()],
   base:'./',
