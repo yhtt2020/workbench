@@ -590,18 +590,18 @@ ipc.on(ipcMessageMain.sidePanel.receiveGlobal, function (event, args) {
     }
   }
 })
-function openSetting(){
+function openSetting(e){
   let url= render.getUrl('settings.html')
   sendIPCToWindow(mainWindow, 'addTab', {
-    url: url
+    url: url + '?' + e
   })
 }
 //显示书签的时候，将sidepanel隐藏起来
 ipc.on(ipcMessageMain.main.openBookmarks, function () {
   sendIPCToWindow(mainWindow, 'showBookmarks') //直传给mainWindow，让它唤出书签页面
 })
-ipc.on('openSetting', function () {
-  openSetting()
+ipc.on('openSetting', function (event,args) {
+  openSetting(args)
 })
 
 ipc.on('openHome', function () {
