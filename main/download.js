@@ -35,7 +35,7 @@ if(settings.get('downloadAutoSave') != true){
     })
     switch (result) {
       case 0:
-        openSetting()
+        openSetting(DownloadSetting)
     }
     settings.set('saveTips',true)
   }
