@@ -40,7 +40,7 @@
               <img :src="currentTab.favicon.url"/>
             </span>
             <div class="header-content" >
-              <span v-if="totalOpen == false">{{currentTab.title}}</span>
+              <span v-if="contentControlShow == false">{{currentTab.title}}</span>
               <span style="color: grey" v-else>当前页面</span>
             </div>
             <div class="current-switch">
