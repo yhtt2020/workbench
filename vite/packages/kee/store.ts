@@ -71,6 +71,9 @@ export const appStore = defineStore('kee',{
         localStorage.setItem('bankList', JSON.stringify(this.dbList))
       },
       getTabData(){
+        if(window.tabData) {
+          this.currentTab = window.tabData
+        }
         let timer=setTimeout(()=>{
           if(window.tabData){
             this.currentTab=window.tabData

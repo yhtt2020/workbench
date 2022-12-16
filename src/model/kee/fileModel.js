@@ -130,7 +130,7 @@ class FileModel extends Model{
             Math.round(fileData.byteLength / 1024) +
             ' kB'
           );
-          console.log('成功打开，接下来载入tag')
+          this.tags=[]
           let tags=this._addTags()
           callback(undefined,{
             name:this.db.meta._name,

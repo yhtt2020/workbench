@@ -79,7 +79,7 @@
           <div ref="usernameRef" class="breadcrumb-form-username" @mouseover="isMouse==true&&openUsernameHover()" @mouseleave="isMouse==true&&closeUsernameHover()">
              <div class="left-content">
               <span style="padding-bottom:5px;color:rgba(104, 81, 214, 1);">用户名</span>
-              <span v-if="editShow==false">{{passwordItem.username}}</span>
+              <span v-if="editShow==false">{{passwordItem.username || '无用户名'}}</span>
               <a-form :model="formState" :rules="formRules" v-if="editShow==true">
                <a-form-item name="username" required>
                  <a-input style="padding:0  !important;border: none;" v-model:value="formState.username" />

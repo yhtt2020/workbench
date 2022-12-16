@@ -50,11 +50,14 @@
     <div class="password-bank-list-container">
       <vue-custom-scrollbar :settings="settings" style="position:relative;height: 185px">
       <a-empty v-if="dbList.length===0"></a-empty>
+      <a-tooltip :mouseEnterDelay="0.5" placement="top" title="使用内置的密码库，但是无法被外部网盘同步，建议保存到外部密码库。">
         <div class="password-bank-list-item" :class="bankIndex == 'inner' ? 'bank_active':''"
              key="inner" @click.stop="selectBankItem({id:'inner',text:'内置密码库'})">
           <img src="/img/lock-app.svg" alt="">
           <strong class="name">内置密码库</strong>
         </div>
+      </a-tooltip>
+
       <a-tooltip :overlay-style="{'min-width':'500px'}" :mouseEnterDelay="0.5" placement="bottom"
                  v-for="(item,index) in dbList">
         <template #title>

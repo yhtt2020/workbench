@@ -84,18 +84,18 @@
           <div @mouseover="passwordItemsHover(item)" @mouseleave="passwordItemRemove(item)">
             <a-list-item :class="currentIndex==index ? 'active-list':''" @click="leftDescription(item)">
             <!-- 判断鼠标悬浮时打开并填充按钮显示 -->
-            <a-list-item-meta class="is-open-fill" v-if="item.showTip == true" :description="item.username">
+            <a-list-item-meta class="is-open-fill" v-if="item.showTip == true" :description="item.username || '无用户名'">
               <template #title>
-                <a>{{ item.title }}</a>
+                <a>{{ item.title || '未命名'}}</a>
               </template>
               <template #avatar>
                 <a-avatar :src="item.icon" />
               </template>
             </a-list-item-meta>
             <!-- 判断鼠标离开时打开并填充按钮隐藏 -->
-            <a-list-item-meta class="no-open-fill" :description="item.username" v-else>
+            <a-list-item-meta class="no-open-fill" :description="item.username || '无用户名'" v-else>
               <template #title>
-                <a>{{ item.title }}</a>
+                <a>{{ item.title || '未命名' }}</a>
               </template>
               <template #avatar>
                 <a-avatar :src="item.icon" />
@@ -113,7 +113,7 @@
       <router-view></router-view>
     </a-layout-content>
   </a-layout>
-  <a-drawer class="filter-list-container" :width="216" 
+  <a-drawer class="filter-list-container" :width="216"
      placement="left" v-model:visible="sideDrawerVisible"
      @close="sideDrawerVisible = false"
   >
