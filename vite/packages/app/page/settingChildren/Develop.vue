@@ -63,14 +63,14 @@ export default {
         if (!devApp) {
           //todo 查询当前应用关联的开发应用，如果不存在，则询问是否要基于此应用创建一个开发应用
           Modal.confirm({
-            content: '当前应用不存在关联的开发中的应用，是否需要基于此应用创建一个开发中的应用，从而启用开发者模式？',
+            content: '当前应用不存在关联的开发中的项目，是否需要基于此应用创建一个开发中的项目，从而启用开发者模式？',
             onOk: async () => {
               devApp=await devAppModel.createFromApp(this.app)
               if(devApp){
                this.setDevApp(devApp)
                 this.$router.push({path:'/dev/'})
               }else{
-                return message.error('创建应用失败。')
+                return message.error('创建项目失败。')
               }
             }
           })

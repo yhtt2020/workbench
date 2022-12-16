@@ -12,7 +12,7 @@
        <div class="auto-full" v-else>
         <span @click="saveChange">保存修改</span>
        </div>
-       <a-dropdown :trigger="['click']" width="180">
+       <a-dropdown :trigger="['click']" width="180" placement="bottomRight">
         <a class="ant-dropdown-link" @click.prevent>
           <EllipsisOutlined class="breadcrumb-icon"/>
         </a>
@@ -48,7 +48,18 @@
        </a-dropdown>
     </div>
   </div>
-  <div class="breadcrumb-form">
+  <div v-if="!passwordItem.icon" style="padding-top: 30%">
+    <a-empty >
+      <template #description>
+      <span>
+        暂无密码
+        <a-button type="primary">新建密码</a-button>
+      </span>
+      </template>
+    </a-empty>
+
+  </div>
+  <div v-else class="breadcrumb-form">
     <div class="breadcrumb-form-header">
       <div class="breadcrumb-bottom-name">
         <span class="avatar">
@@ -75,19 +86,19 @@
                </a-form-item>
               </a-form>
              </div>
-            <div class="right-content"  v-if="usernamVisble == true">
-              <span class="usernane-copy">复制</span>
+            <div class="right-content"  v-if="usernameVisible == true">
+              <span class="username-copy">复制</span>
             </div>
           </div>
           <div ref="passwordRef" class="breadcrumb-form-password" @mouseover="isMouse==true&&opPasswordHover()" @mouseleave="isMouse==true&&closePasswordHover()">
-              <div class="password-inoput">
+              <div class="password-input">
                 <span style="color:rgba(104, 81, 214, 1);">密码</span>
                 <div class="password-show" v-if="editShow==false">
-                  <a-input  :type="passwordType" style="border:none;padding:0;width: 65%;background: rgba(80, 139, 254, 0);" v-model:value="passwordItem.password"></a-input>
-                  <div style="cursor: pointer;" v-if="passwordVisible==true" @click="passwordShowClick">
-                    <EyeFilled v-if="passwordShow == true" style="color:rgba(80, 139, 254, 1); padding-right:11px; cursor: pointer;"/>
-                    <EyeInvisibleFilled v-if="passwordShow==false"  style="color:rgba(80, 139, 254, 1); padding-right:11px; cursor: pointer;"/>
-                    <span style="color:rgba(80, 139, 254, 1);">{{ passwordShow==true ? '显示':'隐藏'}}</span>
+                  <a-input  :type="passwordItem.passwordType" style="border:none;padding:0;width: 65%;background: rgba(80, 139, 254, 0);" v-model:value="passwordItem.password"></a-input>
+                  <div style="cursor: pointer;" v-if="passwordVisible==true" @click="passwordShowClick(passwordItem)">
+                    <EyeFilled v-if="passwordItem.showCopy == true" style="color:rgba(80, 139, 254, 1); padding-right:11px; cursor: pointer;"/>
+                    <EyeInvisibleFilled v-if="passwordItem.showCopy==false"  style="color:rgba(80, 139, 254, 1); padding-right:11px; cursor: pointer;"/>
+                    <span style="color:rgba(80, 139, 254, 1);">{{ passwordItem.showCopy==true ? '显示':'隐藏'}}</span>
                   </div>
                   <a-divider v-if="passwordVisible==true" type="vertical" style="height: 20px; background-color:rgba(80, 139, 254, 1)" />
                   <span v-if="passwordVisible==true" style="color:rgba(80, 139, 254, 1); cursor: pointer;">复制</span>
@@ -102,7 +113,7 @@
           <div ref="webSiteRef" class="breadcrumb-bottom-website" @mouseover="isMouse==true&&openWebsiteHover()" @mouseleave="isMouse==true&&closeWebsiteHover()">
              <div class="website-top">
               <a href="#" style="color:rgba(104, 81, 214, 1);">网站</a>
-              <a href="#" v-if="editShow==false">{{passwordItem.site}}</a>
+              <a href="#" v-if="editShow==false">{{passwordItem.site_1}}</a>
               <a-form :model="formState" :rules="formRules" v-if="editShow==true">
                 <a-form-item name="siteValue" required>
                   <a-input  style="padding:0 10px !important;" v-model:value="formState.siteValue" />
@@ -118,7 +129,7 @@
           <div class="breadcrumb-bottom-website" style="padding-top:0;">
               <div class="website-top">
                 <a href="#" style="color:rgba(104, 81, 214, 1);">网站</a>
-                <a href="#">{{passwordItem.site}}</a>
+                <a href="#">{{passwordItem.site_2}}</a>
               </div>
           </div>
           <div class="breadcrumb-bottom-remark">
@@ -136,15 +147,15 @@
     </div>
 
   </div>
-  <a-modal width="408px"  :centered="true" v-model:visible="sharVisible" title="分享">
-    <div class="share-contaniner">
+  <a-modal width="408px"  :centered="true" v-model:visible="shareVisible" title="分享">
+    <div class="share-container">
         <div class="share-header">
            <span>
             <svg t="1668734179161" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="978" xmlns:xlink="http://www.w3.org/1999/xlink" width="128" height="128">
               <path d="M639.9 351.9C639.9 192.9 511.1 64 352 64S64.2 192.8 64.2 351.9c0 158.9 128.8 287.9 287.9 287.9 158.9-0.1 287.8-128.9 287.8-287.9z m-367.4 16.4c-50.4 0-91.3-40.9-91.3-91.3s40.9-91.3 91.3-91.3 91.3 40.9 91.3 91.3-40.9 91.3-91.3 91.3z" p-id="979" fill="#FFFFFF"></path><path d="M930 732.3L663.8 455l-43 71.6h0.7l253.4 266.3-1.8 27.6-45.9 1.8-237.7-250.4c-39.1 46-85.6 70.5-85.6 70.5l5.5 112 53.3 58.8H706L704.2 949l126.7 11s12.9-12.9 91.9-90c78.9-77.1 7.2-137.7 7.2-137.7z" p-id="980" fill="#FFFFFF"></path>
             </svg>
            </span>
-           <div class="share-passeword-right">
+           <div class="share-password-right">
                 <p>伏娜枝的语雀帐号</p>
                 <p>Isabelle_Fisher</p>
            </div>
@@ -176,10 +187,10 @@
         <template v-if="anyLinkValue == 1">
           <span style="margin-bottom:7px;">选择团队</span>
           <a-select v-model:value="teamValue"  mode="tags" style="width: 100%" placeholder="请选择团队">
-            <a-select-option value="Ateam">A团队</a-select-option>
-            <a-select-option value="Bteam">B团队</a-select-option>
-            <a-select-option value="Cteam">C团队</a-select-option>
-            <a-select-option value="Dteam">D团队</a-select-option>
+            <a-select-option value="A_team">A团队</a-select-option>
+            <a-select-option value="B_team">B团队</a-select-option>
+            <a-select-option value="C_team">C团队</a-select-option>
+            <a-select-option value="D_team">D团队</a-select-option>
           </a-select>
           <span style="margin-top:4px;">仅团队内成员可以查看密码</span>
         </template>
@@ -188,7 +199,7 @@
           <span style="margin-bottom:4px;color:rgba(00,00,00,0.45);">对方需要验证手机号后才能查看密码</span>
           <a-input-group compact>
             <a-input class="mobile-input" v-model:value="mobileValue" placeholder="请输入手机号" style="width: calc(100% - 120px);" />
-            <a-button class="moblie-button" style="width: 29.07%;padding:0 !important;" @click="addTag($event)">
+            <a-button class="mobile-button" style="width: 29.07%;padding:0 !important;" @click="addTag($event)">
               <PlusOutlined />
               <span style="padding-left:4px;  margin-left: 0 !important;">添加手机号</span>
             </a-button>
@@ -200,7 +211,7 @@
         </template>
     </div>
     <template #footer>
-      <a-button @click="sharVisible = false">取消</a-button>
+      <a-button @click="shareVisible = false">取消</a-button>
       <a-button type="primary">获取分享链接</a-button>
     </template>
   </a-modal>
@@ -234,15 +245,15 @@ export default {
   data(){
     return{
       // 控制网站是否鼠标悬浮
-      webisteVisble:false,
+      websiteVisible:false,
       // 控制用户是否鼠标悬浮
-      usernamVisble:false,
+      usernameVisible:false,
       // 控制密码是否鼠标悬浮
       passwordVisible:false,
       // 控制网站是否鼠标悬浮
       websiteShow:false,
       // 分享开关
-      sharVisible:false,
+      shareVisible:false,
       // 链接有效期值
       linkValidity:0,
       linkValidityList:[
@@ -285,10 +296,10 @@ export default {
       ],
       // 默认不勾选
       isAllowed:false,
-      teamValue:['Ateam'],
-      store:appStore(),
+      teamValue:['A_team'],
+      // store:appStore(),
       // 是否删除
-      deletVisible:false,
+      deleteVisible:false,
       // 密码编辑内容
       formState:{
          username:'',
@@ -338,15 +349,15 @@ export default {
   updated(){
     this.formState.passwordAccount = this.passwordItem.title
     this.formState.username = this.passwordItem.username
-    this.formState.websiteValue = this.passwordItem.site
+    this.formState.websiteValue = this.passwordItem.site_2
     this.formState.password = this.passwordItem.password
-    this.formState.siteValue = this.passwordItem.site
+    this.formState.siteValue = this.passwordItem.site_1
   },
   methods:{
     // 打开分享
     openShare(){
        // 使用一个值控制弹窗
-       this.sharVisible = true
+       this.shareVisible = true
     },
     // 删除事件
     shareDelete(){
@@ -379,7 +390,7 @@ export default {
       }
     },
     // 移除手机号
-    romoveTag(e){
+    removeTag(e){
        this.mobileTag.forEach((item,i,arr)=>{
           if(item == e){
             arr.splice(i, 1);
@@ -399,7 +410,7 @@ export default {
     /*鼠标悬浮事件开始*/
     // 用户名称
     openUsernameHover(){
-        this.usernamVisble = true
+        this.usernameVisible = true
         this.$refs.usernameRef.style = "background:rgba(80, 139, 254, 0.25);"
     },
     // 密码
@@ -416,7 +427,7 @@ export default {
     /** 鼠标移出事件开始**/
     // 用户名称
     closeUsernameHover(){
-       this.usernamVisble = false
+       this.usernameVisible = false
        this.$refs.usernameRef.style = "background:rgba(255, 255, 255, 1);"
     },
     // 密码
@@ -431,13 +442,13 @@ export default {
     },
     /** 鼠标移出事件结束**/
     // 密码显示和隐藏事件
-    passwordShowClick(){
-       if(this.passwordShow == false){
-         this.passwordShow = true
-         this.passwordType = "text"
+    passwordShowClick(item){
+       if(item.showCopy == false){
+         item.showCopy = true
+         item.passwordType = "text"
        }else{
-         this.passwordShow = false
-         this.passwordType = "password"
+         item.showCopy = false
+         item.passwordType = "password"
        }
     }
   }
@@ -454,8 +465,9 @@ export default {
 .ant-tag{
    border-style: solid !important;
 }
+
 </style>
-<style lang="scss">
+<style lang="scss" scoped>
 .breadcrumb-container{
   display: flex;
   align-items: center;
@@ -551,7 +563,7 @@ export default {
 }
 /*分享密码样式结束*/
 /*分享密码内容开始*/
-.share-contaniner{
+.share-container{
    display: flex;
    flex-direction: column;
    .share-header{
@@ -571,7 +583,7 @@ export default {
            height: 16px;
          }
       }
-      .share-passeword-right{
+      .share-password-right{
          padding-left: 12px;
          p{
            margin: 0;
@@ -615,7 +627,7 @@ export default {
 .mobile-input:hover{
   border-color: none !important;
 }
-.moblie-button:hover, .moblie-button:focus{
+.mobile-button:hover, .mobile-button:focus{
   border-color: rgba(217, 217, 217, 1) !important;
   color: rgba(0, 0, 0, 0.65) !important;
 }
@@ -659,7 +671,7 @@ export default {
      display: flex;
      align-items: center;
      justify-content: center;
-    .usernane-copy{
+    .username-copy{
       color: rgba(80, 139, 254, 1);
       font-size: 14px;
       font-weight: 400;
@@ -679,7 +691,7 @@ export default {
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
   margin-bottom: 16px;
-  .password-inoput{
+  .password-input{
     width: 100%;
     .password-show{
       display: flex;
@@ -700,5 +712,9 @@ export default {
   padding: 0 12px;
 }
 /*账号内容结束*/
-
+.ant-dropdown-placement-bottomLeft{
+  min-width: 183px !important;
+  top: 698px !important;
+  left: 955px !important;
+}
 </style>

@@ -11,18 +11,18 @@ function tipOpenInApp (params) {
 }
 
 function installAppConfirm (e) {
-  ipc.send('installAppConfirm',e)
+  ipc.send('installAppConfirm', e)
 }
 
 function openGroupChat (e) {
-  ipc.send('openAppGroupChat',e)
+  ipc.send('openAppGroupChat', e)
 }
 
-let browser = {
+const browser = {
   name: 'ThiskyBrowser',
   alias: '想天浏览器',
   version: '3.4.1',
-  short: 'tsb',
+  short: 'tsb'
 }
 
 contextBridge.exposeInMainWorld('__TSB_RUNTIME', browser)

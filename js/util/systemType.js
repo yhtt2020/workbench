@@ -48,15 +48,13 @@ const systemType = {
         return 'win10'
       } else if (sysVersion.startsWith('10.0.2')) {
         return 'win11'
-      } else if (sysVersion.startsWith('6.1'))
-        return 'win7'
-      else return '早于win7'
+      } else if (sysVersion.startsWith('6.1')) { return 'win7' } else return '早于win7'
     } else if (systemType.platform() === 'darwin') {
       if (sysVersion.startsWith('13.')) {
         return 'Ventura'
-      }if (sysVersion.startsWith('12.')) {
+      } if (sysVersion.startsWith('12.')) {
         return 'Monterey'
-      }  else if (sysVersion.startsWith('11.6.2')) {
+      } else if (sysVersion.startsWith('11.6.2')) {
         return 'Big Sur'
       } else if (sysVersion.startsWith('10.15.7')) {
         return 'Catalina'
@@ -70,7 +68,7 @@ const systemType = {
         return 'El Capitan'
       } else if (sysVersion.startsWith('10.10.5')) {
         return 'Yosemite'
-      }else{
+      } else {
         return '早于Yosemite'
       }
     }

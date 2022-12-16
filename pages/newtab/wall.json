@@ -61,60 +61,61 @@
       {
         "title": "鹰",
         "image": "ying.jpeg"
-      },{
+      },
+      {
         "title": "狗",
         "image": "dog.jpeg"
       }
     ]
   },
   {
-    "title":"天文",
-    "list":[
+    "title": "天文",
+    "list": [
       {
-        "title":"日环食",
-        "image":"rihuanshi.jpg"
+        "title": "日环食",
+        "image": "rihuanshi.jpg"
       },
       {
-        "title":"流星",
-        "image":"liuxing.jpg"
+        "title": "流星",
+        "image": "liuxing.jpg"
       },
       {
-        "title":"星轨",
-        "image":"xinggui.jpg"
+        "title": "星轨",
+        "image": "xinggui.jpg"
       }
     ]
   },
   {
-    "title":"风景",
-    "list":[
+    "title": "风景",
+    "list": [
       {
-        "title":"雪山",
-        "image":"snowmountain.jpg"
+        "title": "雪山",
+        "image": "snowmountain.jpg"
       },
       {
-        "title":"湖泊",
-        "image":"lake.jpg"
+        "title": "湖泊",
+        "image": "lake.jpg"
       },
       {
-        "title":"海岸线",
-        "image":"coastline.jpg"
+        "title": "海岸线",
+        "image": "coastline.jpg"
       }
     ]
   },
   {
-    "title":"植物",
-    "list":[
+    "title": "植物",
+    "list": [
       {
-        "title":"树木",
-        "image":"tree.jpg"
+        "title": "树木",
+        "image": "tree.jpg"
       },
       {
-        "title":"蒲公英",
-        "image":"pugongying.jpg"
+        "title": "蒲公英",
+        "image": "pugongying.jpg"
       },
       {
-        "title":"向日葵",
-        "image":"sunflower.jpg"
+        "title": "向日葵",
+        "image": "sunflower.jpg"
       }
     ]
   },

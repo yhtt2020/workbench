@@ -37,22 +37,19 @@ ipc.handle('showFocusModeDialog2', function () {
   })
 })
 
-
-
 ipc.handle('openBlockTips', function () {
   dialog.showMessageBox({
     // type: 'info',
-    buttons: ['忽略','查看引导'],
-    noLink:true,
-    defaultId:1,
+    buttons: ['忽略', '查看引导'],
+    noLink: true,
+    defaultId: 1,
     detail: '检测到当前网站有多个广告或行为被拦截器拦截，如果影响正常浏览体验，请将该网站加入白名单'
   }).then((index) => {
     if (index.response === 1) {
       mainWindow.webContents.send('blockGuide')
     }
-  });
+  })
 })
-
 
 ipc.handle('showGuideDialog', function () {
   dialog.showMessageBox({
@@ -80,7 +77,6 @@ ipc.handle('showSaveDialog', async function (e, options) {
   const result = await dialog.showSaveDialog(mainWindow, options)
   return result.filePath
 })
-
 
 ipc.handle('addWordToSpellCheckerDictionary', function (e, word) {
   session.fromPartition('persist:webcontent').addWordToSpellCheckerDictionary(word)
@@ -141,8 +137,8 @@ ipc.handle('unmaximize', function (e) {
 })
 
 ipc.handle('close', function (e) {
-  //mainWindow.close()
-  //更改为安全关闭
+  // mainWindow.close()
+  // 更改为安全关闭
   safeCloseMainWindow()
 })
 
@@ -150,9 +146,8 @@ ipc.handle('setFullScreen', function (e, fullScreen) {
   mainWindow.setFullScreen(e, fullScreen)
 })
 
-
 ipc.on('openThirdToolbarMenu', () => {
-  let templ = [
+  const templ = [
     {
       label: '关闭',
       click: () => {
@@ -161,10 +156,10 @@ ipc.on('openThirdToolbarMenu', () => {
           message: '确定要关闭引导栏吗？',
           detail: '完成全部新用户引导即可获得限时纪念勋章'
         }).then(index => {
-          if(index.response === 1) {
+          if (index.response === 1) {
             mainWindow.webContents.send('hideThirdToolbar')
-            if(!settings.get('hasShowDirection') || settings.get('hasShowDirection') === undefined) {
-              SidePanel.send('guide',7)
+            if (!settings.get('hasShowDirection') || settings.get('hasShowDirection') === undefined) {
+              SidePanel.send('guide', 7)
             }
           }
         })
@@ -172,7 +167,7 @@ ipc.on('openThirdToolbarMenu', () => {
     }
   ]
 
-  let menu = require('electron').Menu.buildFromTemplate(templ)
+  const menu = require('electron').Menu.buildFromTemplate(templ)
 
   menu.popup()
 })
@@ -182,7 +177,7 @@ ipc.on('finishedGuideHiddenThirdToolbar', () => {
 })
 
 ipc.on('unfinishedGuideShowThirdToolbar', () => {
-  if(settings.get('thirdToolbar') === undefined) {
+  if (settings.get('thirdToolbar') === undefined) {
     mainWindow.webContents.send('showThirdToolbar')
   }
 })

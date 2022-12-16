@@ -1,37 +1,37 @@
-const  { getPath } =require('./paths');
-const { mkdirSync, existsSync, writeFileSync, stat } =require('fs');
+const { getPath } = require('./paths')
+const { mkdirSync, existsSync, writeFileSync, stat } = require('fs')
 
-const DIRECTORIES = [ 'extensions', 'storage'];
+const DIRECTORIES = ['extensions', 'storage']
 
 const FILES = {
-  'window-data.json': {},
-};
+  'window-data.json': {}
+}
 
 const checkFiles = () => {
   for (const dir of DIRECTORIES) {
-    const path = getPath(dir);
+    const path = getPath(dir)
     if (!existsSync(path)) {
-      mkdirSync(path);
+      mkdirSync(path)
     }
   }
 
   Object.keys(FILES).forEach((key) => {
-    const defaultContent = FILES ;
-    const path = getPath(key);
+    const defaultContent = FILES
+    const path = getPath(key)
 
     if (!existsSync(path)) {
-      writeFileSync(path, JSON.stringify(defaultContent));
+      writeFileSync(path, JSON.stringify(defaultContent))
     }
-  });
-};
+  })
+}
 
 const pathExists = (path) => {
   return new Promise((resolve) => {
     stat(path, (error) => {
-      resolve(!error);
-    });
-  });
-};
-module.exports={
-  checkFiles,pathExists
+      resolve(!error)
+    })
+  })
+}
+module.exports = {
+  checkFiles, pathExists
 }

@@ -1,22 +1,68 @@
 window.ipc=require('electron').ipcRenderer
 const settings = require('../../js/util/settings/settings.js')
-const Bitwarden = require('../../js/passwordManager/bitwarden.js')
-const OnePassword = require('../../js/passwordManager/onePassword.js')
+// const Bitwarden = require('../../js/passwordManager/bitwarden.js')
+// const OnePassword = require('../../js/passwordManager/onePassword.js')
 const Keychain = require('../../js/passwordManager/keychain.js')
 const { ipcRenderer } = require('electron')
 const tools=require('../util/util').tools
+const KdbxModel=require('./kdbxModel.js')
+const bitwarden={}// new Bitwarden()
+const onePassword={}//new OnePassword()
+const keychain=new Keychain()
+const kdbxModel=new KdbxModel()
 const PasswordModel = {
   managers: [
-    new Bitwarden(),
-    new OnePassword(),
-    new Keychain()
+    bitwarden,
+    onePassword,
+    keychain,
+    kdbxModel
   ],
   activeManager: {},
+  managerMap:{
+    bitwarden,onePassword,keychain,kdbxModel
+  },
+  kdbxModel:kdbxModel,
 
-  //获取设置 用于使用不同的密码管理器
-  getSettings: function () {
+  openFile (password, path, keyFileData, callback) {
+    this.kdbxModel.openFile(password, path, keyFileData, callback)
+  },
+  create (name = 'kdb', path, pwd, callback){
+    this.kdbxModel.create(name,path,pwd,callback)
+  },
+
+  /**
+   * 设置密码管理器，{name:''} name值候选 `Built-in password manager` 'file' 'Bitwarden' '1Password'
+   * @param manager
+   */
+  setPasswordManager(manager){
+    settings.set('passwordManager', {
+      name:manager.name,
+      filePath:manager.filePath
+    })
+    if(manager.name==='file'){
+      PasswordModel.activeManager=PasswordModel.managerMap.kdbxModel
+    }
+  },
+
+  /**批量导入密码到密码库内
+   *
+   * @param passwords
+   */
+
+  importPasswords(passwords,groupName,existAction){
+    // if(PasswordModel.activeManager!==PasswordModel.managerMap.kdbxModel)//不支持文件密码库以外的导入，均返回失败
+    //   console.log('当前密码非文件管理器（未打开）',1)
+    //   return false
+
+    //todo jude密码库一打开
+    return  passwordModel.kdbxModel.importPasswords(passwords,groupName,existAction)
 
   },
+
+  getAllPasswords(){
+   return PasswordModel.activeManager.getAllCredentials()
+  },
+
   getActivePasswordManager: function () {
     if (PasswordModel.managers.length === 0) {
       return null

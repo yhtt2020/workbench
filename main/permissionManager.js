@@ -1,8 +1,8 @@
 var pendingPermissions = []
 var grantedPermissions = []
 var nextPermissionId = 1
-//默认放行的权限管理
-let allowPermissions=[
+// 默认放行的权限管理
+const allowPermissions = [
   'notifications',
   'fullscreen',
   'clipboard-sanitized-write',
@@ -10,12 +10,12 @@ let allowPermissions=[
   'media'
 ]
 
-if(!settings.get('allowPermissions')) {
+if (!settings.get('allowPermissions')) {
   settings.set('allowPermissions', allowPermissions)
 }
 
-if(!settings.get('noticeWebOrigin')) {
-  //console.log('被触发了！！！！！')
+if (!settings.get('noticeWebOrigin')) {
+  // console.log('被触发了！！！！！')
   settings.set('noticeWebOrigin', [])
 }
 
@@ -47,23 +47,23 @@ function removePermissionsForContents (contents) {
 Was permission already granted for this tab and URL?
 */
 function isPermissionGrantedForContents (requestContents, requestPermission, requestDetails) {
-  try{
+  try {
     var requestOrigin = new URL(requestDetails.requestingUrl).hostname
-  }catch (e){
+  } catch (e) {
     return false
   }
 
-  //console.log(requestOrigin, settings.get('noticeWebOrigin'), 'laiellaodi************')
+  // console.log(requestOrigin, settings.get('noticeWebOrigin'), 'laiellaodi************')
 
-  if(requestPermission === 'notifications') {
-    let result = settings.get('noticeWebOrigin')
-    let index  = result.findIndex(v => v.link == requestOrigin)
+  if (requestPermission === 'notifications') {
+    const result = settings.get('noticeWebOrigin')
+    const index = result.findIndex(v => v.link == requestOrigin)
 
-    if(index >= 0 && !result[index].notice) {
+    if (index >= 0 && !result[index].notice) {
       return false
     }
 
-    if(index < 0) {
+    if (index < 0) {
       result.push({
         link: requestOrigin,
         notice: true
@@ -72,8 +72,7 @@ function isPermissionGrantedForContents (requestContents, requestPermission, req
     }
   }
 
-  if(settings.get('allowPermissions').indexOf(requestPermission)>-1)
-  {
+  if (settings.get('allowPermissions').indexOf(requestPermission) > -1) {
     return true
   }
   for (var i = 0; i < grantedPermissions.length; i++) {
@@ -129,7 +128,7 @@ function pagePermissionRequestHandler (webContents, permission, callback, detail
     callback(false)
     return
   }
-  //允许的网页权限
+  // 允许的网页权限
   // clipboard-read - Request access to read from the clipboard.
   //   media - Request access to media devices such as camera, microphone and speakers.
   //   display-capture - Request access to capture the screen.
@@ -142,7 +141,7 @@ function pagePermissionRequestHandler (webContents, permission, callback, detail
   //   fullscreen - Request for the app to enter fullscreen mode.
   //   openExternal - Request to open links in external applications.
   //   unknown - An unrecognized permission request
-  const permissions=[
+  const permissions = [
     'notifications',
     'fullscreen',
     'clipboard-sanitized-write',
@@ -150,9 +149,9 @@ function pagePermissionRequestHandler (webContents, permission, callback, detail
     'media'
   ]
 
-  if ( permissions.includes(permission)) {
+  if (permissions.includes(permission)) {
     callback(true)
-    //todo 应当在ui层加入选择
+    // todo 应当在ui层加入选择
     return
   }
 
@@ -212,8 +211,8 @@ function pagePermissionCheckHandler (webContents, permission, requestingOrigin, 
   // }
   // starting in Electron 13, this will sometimes be called with no URL. TODO figure out why
   if (!details.requestingUrl) {
-    //return false
-    details.requestingUrl=requestingOrigin
+    // return false
+    details.requestingUrl = requestingOrigin
   }
 
   if (permission === 'clipboard-sanitized-write') {
@@ -223,7 +222,7 @@ function pagePermissionCheckHandler (webContents, permission, requestingOrigin, 
   return isPermissionGrantedForContents(webContents, permission, details)
 }
 
-function devicePermissionHandler(details){
+function devicePermissionHandler (details) {
   return true
 }
 
@@ -255,19 +254,19 @@ ipc.on('permissionGranted', function (e, permissionId) {
 
 ipc.on('allowPermissionsControl', (event, args) => {
   let result = settings.get('allowPermissions')
-  if(args.status) {
-    if(result.findIndex(v => v === args.permission) >= 0) {
-      return
-    }else {
+  if (args.status) {
+    if (result.findIndex(v => v === args.permission) >= 0) {
+
+    } else {
       result.push(args.permission)
       settings.set('allowPermissions', result)
     }
   } else {
-    if(result.findIndex(v => v === args.permission) >= 0) {
+    if (result.findIndex(v => v === args.permission) >= 0) {
       result = result.filter(v => v !== args.permission)
       settings.set('allowPermissions', result)
     } else {
-      return
+
     }
   }
 })

@@ -1,6 +1,6 @@
-let mobileViews = {}
-let mobileWindows = {}
-let mobiles=[   //{view,window,newName}
+const mobileViews = {}
+const mobileWindows = {}
+const mobiles = [ // {view,window,newName}
 ]
 
 let mobileCount = 0
@@ -15,48 +15,47 @@ const initSize = {
  * @param height
  * @returns {{width: number, height: number}}
  */
-function computeSize(width=initSize.width,height=initSize.height){
-  if(process.platform==='darwin'){
-   //mac不做处理
-  }else if(process.platform==='win32'){
-    //todo 不知道为什么windows上获取到的尺寸有16，10个像素的差距
-    width-=16
-    height-=10
-  }else{
+function computeSize (width = initSize.width, height = initSize.height) {
+  if (process.platform === 'darwin') {
+    // mac不做处理
+  } else if (process.platform === 'win32') {
+    // todo 不知道为什么windows上获取到的尺寸有16，10个像素的差距
+    width -= 16
+    height -= 10
+  } else {
   }
   return {
-    width:width,
-    height:height
+    width: width,
+    height: height
   }
 }
 
 const mobileMod = {
 
   getPos () {
-    const space=10
+    const space = 10
     const { screen } = require('electron')
-    const maxWidth=screen.getPrimaryDisplay().workAreaSize.width
+    const maxWidth = screen.getPrimaryDisplay().workAreaSize.width
     const sourcePoint = {
       x: mainWindow.getBounds().x + 300,
       y: mainWindow.getBounds().y + 300
     }
-    if (sourcePoint.x + (mobileCount+1) * initSize.width < maxWidth) {
-      return {x:sourcePoint.x + mobileCount * (initSize.width+space),y:sourcePoint.y}
-    }else{
-      return {x:sourcePoint.x+ mobileCount * space,y: sourcePoint.y + mobileCount * space }
+    if (sourcePoint.x + (mobileCount + 1) * initSize.width < maxWidth) {
+      return { x: sourcePoint.x + mobileCount * (initSize.width + space), y: sourcePoint.y }
+    } else {
+      return { x: sourcePoint.x + mobileCount * space, y: sourcePoint.y + mobileCount * space }
     }
-
   },
-  getBounds(mobileWindow){
-    let size=computeSize(mobileWindow.getBounds().width,mobileWindow.getBounds().height - 70)
-    let bounds={
+  getBounds (mobileWindow) {
+    const size = computeSize(mobileWindow.getBounds().width, mobileWindow.getBounds().height - 70)
+    const bounds = {
       x: 0,
-        y: 40,
-      width:size.width,
+      y: 40,
+      width: size.width,
       height: size.height
     }
-    if(process.platform==='darwin'){
-      bounds.y=70 //修正mac上的y位置
+    if (process.platform === 'darwin') {
+      bounds.y = 70 // 修正mac上的y位置
     }
     return bounds
   },
@@ -65,8 +64,8 @@ const mobileMod = {
     do {
       id = String(Math.floor((Math.random() * 10000) + 1))
     } while (typeof mobileViews[id] !== 'undefined')
-    const pos= mobileMod.getPos()
-    let mobileWindow = new BrowserWindow({
+    const pos = mobileMod.getPos()
+    const mobileWindow = new BrowserWindow({
       frame: true,
       backgroundColor: 'white',
       modal: false,
@@ -88,15 +87,15 @@ const mobileMod = {
           '--user-data-path=' + userDataPath,
           '--app-version=' + app.getVersion(),
           '--app-name=' + app.getName(),
-          ...((isDevelopmentMode ? ['--development-mode'] : [])),
+          ...((isDevelopmentMode ? ['--development-mode'] : []))
         ]
       }
     })
-    mobileWindow.setAlwaysOnTop(true,'screen-saver')
-    let view = new BrowserView({
+    mobileWindow.setAlwaysOnTop(true, 'screen-saver')
+    const view = new BrowserView({
       width: computeSize().width,
       height: computeSize().height - 70,
-      webPreferences:{
+      webPreferences: {
         nodeIntegration: false,
         nodeIntegrationInSubFrames: true,
         scrollBounce: true,
@@ -107,9 +106,9 @@ const mobileMod = {
         sandbox: true,
         enableRemoteModule: false,
         allowPopups: false,
-        partition: option.partition?option.partition:"persist:webcontent",
+        partition: option.partition ? option.partition : 'persist:webcontent',
         enableWebSQL: false,
-        autoplayPolicy: (settings.get('enableAutoplay') ? 'no-user-gesture-required' : 'user-gesture-required'),
+        autoplayPolicy: (settings.get('enableAutoplay') ? 'no-user-gesture-required' : 'user-gesture-required')
         // partition:'persist:webcontent',
         // preload: path.join(__dirname, '/dist/preload.js'),
         // additionalArguments: [
@@ -127,8 +126,8 @@ const mobileMod = {
       windowId: mobileWindow.id,
       url: option.url,
       id: id,
-      partition:option.partition,
-      newName:option.newName
+      partition: option.partition,
+      newName: option.newName
     })
     view.webContents.setUserAgent('Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1')
     view.webContents.loadURL(option.url)
@@ -155,16 +154,16 @@ const mobileMod = {
         canGoForward: view.webContents.canGoForward()
       })
     })
-    function loadDevtool(input){
+    function loadDevtool (input) {
       if (input.key.toLowerCase() === 'f12') {
         view.webContents.openDevTools({
-          mode: "detach"
+          mode: 'detach'
         })
       }
     }
     view.webContents.on('before-input-event', (event, input) => {
-        loadDevtool(input)
-      }
+      loadDevtool(input)
+    }
     )
     mobileWindow.webContents.setUserAgent(oldAgent)
     mobileWindow.loadURL('file://' + __dirname + '/pages/mobile/index.html')
@@ -172,20 +171,19 @@ const mobileMod = {
       view.setBounds(mobileMod.getBounds(mobileWindow))
     })
 
-
     mobileWindow.webContents.on('before-input-event', (event, input) => {
-        loadDevtool(input)
-      }
+      loadDevtool(input)
+    }
     )
 
     mobileWindow.on('closed', () => {
       mobileViews[id] = undefined
       mobileWindows[id] = undefined
-      let found=  mobiles.findIndex(mob=>{
-        return mob.id===id
+      const found = mobiles.findIndex(mob => {
+        return mob.id === id
       })
       delete mobileViews[id]
-      mobiles.splice(found,1)
+      mobiles.splice(found, 1)
       mobileCount--
     })
 
@@ -193,41 +191,41 @@ const mobileMod = {
     mobileWindows[id] = mobileWindow
     mobiles.push({
       id,
-      window:mobileWindow,
-      view:view,
-      partition:option.partition,
-      newName:option.newName
+      window: mobileWindow,
+      view: view,
+      partition: option.partition,
+      newName: option.newName
     })
     mobileCount++
-// var view=viewMap[data.id]
-// var index=emulationViews.indexOf(data.id)
-// if(index!=-1){
-// 	view.webContents.setUserAgent(oldAgent)
-// 	view.webContents.disableDeviceEmulation()
-// 	view.webContents.reload()
-// 	emulationViews.splice(index,1)
-//
-// }else{
-// 	oldAgent=view.webContents.getUserAgent()
-// 	view.setBackgroundColor("#d1d1d1")
-// 	view.webContents.setUserAgent('Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A403 Safari/8536.25')
-// 	view.webContents.enableDeviceEmulation({
-// 		 screenPosition: 'mobile',
-// 		 screenSize: { width: 480, height: 812 },
-// 		 deviceScaleFactor: 0,
-// 		 viewPosition: { x: 10, y: 0 },
-// 		 viewSize: { width: 600, height: 812 },
-// 		 fitToView: false,
-// 		 offset: { x: 10, y: 0 }
-// 	})
-//
-// 	emulationViews.push(data.id)
-// 	view.webContents.reload()
-// }
+    // var view=viewMap[data.id]
+    // var index=emulationViews.indexOf(data.id)
+    // if(index!=-1){
+    // 	view.webContents.setUserAgent(oldAgent)
+    // 	view.webContents.disableDeviceEmulation()
+    // 	view.webContents.reload()
+    // 	emulationViews.splice(index,1)
+    //
+    // }else{
+    // 	oldAgent=view.webContents.getUserAgent()
+    // 	view.setBackgroundColor("#d1d1d1")
+    // 	view.webContents.setUserAgent('Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A403 Safari/8536.25')
+    // 	view.webContents.enableDeviceEmulation({
+    // 		 screenPosition: 'mobile',
+    // 		 screenSize: { width: 480, height: 812 },
+    // 		 deviceScaleFactor: 0,
+    // 		 viewPosition: { x: 10, y: 0 },
+    // 		 viewSize: { width: 600, height: 812 },
+    // 		 fitToView: false,
+    // 		 offset: { x: 10, y: 0 }
+    // 	})
+    //
+    // 	emulationViews.push(data.id)
+    // 	view.webContents.reload()
+    // }
 
-// view.webContents.openDevTools({
-// 	 mode: 'bottom'
-// })
+    // view.webContents.openDevTools({
+    // 	 mode: 'bottom'
+    // })
   }
 
 }

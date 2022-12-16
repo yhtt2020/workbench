@@ -255,7 +255,7 @@ function initialize () {
 
   bangsPlugin.registerCustomBang({
     phrase: '!addbookmark',
-    alias:'快捷指令',
+    alias: '快捷指令',
     snippet: l('addBookmark'),
     fn: function (text) {
       var url = tabs.get(tabs.getSelected()).url
@@ -263,7 +263,7 @@ function initialize () {
         places.updateItem(url, {
           isBookmarked: true,
           tags: (text ? text.split(/\s/g).map(t => t.replace('#', '').trim()) : [])
-        }, ()=>{})
+        }, () => {})
       }
     }
   })

@@ -20,7 +20,7 @@ const routes = [
     component: PasswordBank
   },
   {
-    path:'/passwords/value/:value/type/:type',
+    path:'/passwords/value/:value?/type/:type?',
     name:'passwords',
     component: Passwords,
     children: [

@@ -2,6 +2,7 @@ const knex = require('knex')
 const { nanoid } = require('nanoid')
 let filename
 if (typeof window !=='undefined') {
+   window=require('./util').tools.getWindowArgs(window)
   filename = window.globalArgs['user-data-path'] + '/db/db.sqlite'
 } else {
   const path=require('path')

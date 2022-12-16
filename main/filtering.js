@@ -158,9 +158,9 @@ function handleRequest (details, callback) {
   // webContentsId may not exist if this request is a mainFrame or subframe
   let domain
   if (details.webContentsId) {
-    //todo 这里可能会导致报错，所以对对象的存在进行了判断
-    let wc=webContents.fromId(details.webContentsId)
-    if(!!!wc){
+    // todo 这里可能会导致报错，所以对对象的存在进行了判断
+    const wc = webContents.fromId(details.webContentsId)
+    if (!wc) {
       return
     }
     domain = parser.getUrlHost(wc.getURL())

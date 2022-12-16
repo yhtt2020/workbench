@@ -3,12 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <title>创建团队</title>
-    <link rel="stylesheet" href="../../ext/reset.css"/>
-    <link rel="stylesheet" href="../../ext/flex-class.css"/>
+    <link rel="stylesheet" href="../../ext/reset.css" />
+    <link rel="stylesheet" href="../../ext/flex-class.css" />
     <script src="../../ext/vue/vue.js"></script>
     <script src="../../ext/vue/antd.min.js"></script>
     <link rel="stylesheet" href="../../ext/vue/antd.min.css" />
-    <link rel="stylesheet" href="./create.css"/>
+    <link rel="stylesheet" href="./create.css" />
   </head>
   <body>
     <script>
@@ -63,9 +63,7 @@
               </a-avatar>
             </a-form-item>
 
-            <a-form-item
-              class="form-item-col4"
-            >
+            <a-form-item class="form-item-col4">
               <a-button @click="close" style="width: 160px"> 取消 </a-button>
               <a-button
                 style="margin-left: 20px; width: 160px"
@@ -77,15 +75,36 @@
             </a-form-item>
           </a-form>
         </template>
-        <p class="flex justify-center align-center" style="color: #999; padding-top: 10px;">创建团队后会生成专属的圈子和群聊</p>
+        <p
+          class="flex justify-center align-center"
+          style="color: #999; padding-top: 10px"
+        >
+          创建团队后会生成专属的圈子和群聊
+        </p>
         <template>
           <div>
-            <div class="flex justify-center align-center" style="padding-left: 25px; margin-top: -10px;">
+            <div
+              class="flex justify-center align-center"
+              style="padding-left: 25px; margin-top: -10px"
+            >
               <a-checkbox @change="() => this.agreeProtoco = true"></a-checkbox>
-              <div style="margin-left: 10px;" >已阅读并同意</div>
-              <a-button style="margin-left: -20px;" type="link" @click="showProtocol"> 《圈子使用协议》 </a-button>
+              <div style="margin-left: 10px">已阅读并同意</div>
+              <a-button
+                style="margin-left: -20px"
+                type="link"
+                @click="showProtocol"
+              >
+                《圈子使用协议》
+              </a-button>
             </div>
-            <a-modal v-model="protocolVisible" title="Basic Modal" @ok="handleOk" :closable="false" cancel-text="不同意" ok-text="同意">
+            <a-modal
+              v-model="protocolVisible"
+              title="Basic Modal"
+              @ok="handleOk"
+              :closable="false"
+              cancel-text="不同意"
+              ok-text="同意"
+            >
               <p>Some contents...</p>
               <p>Some contents...</p>
               <p>Some contents...</p>
@@ -123,7 +142,7 @@
       mounted() {},
       methods: {
         showProtocol() {
-          this.protocolVisible = true
+          this.protocolVisible = true;
         },
         handleSubmit(e) {
           e.preventDefault();
@@ -131,9 +150,9 @@
             if (!err) {
               console.log("Received values of form: ", values);
             }
-            if(!appVue.$data.agreeProtoco) {
-              this.$message.warn('请先同意使用协议!')
-              return
+            if (!appVue.$data.agreeProtoco) {
+              this.$message.warn("请先同意使用协议!");
+              return;
             }
             const currentUser = await db.system
               .where("name")
@@ -158,7 +177,7 @@
               });
               //如果来自group-comp创建成功还需要转发一条消息出去通知group-comp去更新一下group的信息
               ipc.send("refreshGroupComp");
-              ipc.send('teamTip')
+              ipc.send("teamTip");
             }
           });
         },

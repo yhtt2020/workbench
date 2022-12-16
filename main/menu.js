@@ -105,7 +105,6 @@ function buildAppMenu (options = {}) {
     }
   }
 
-
   ipc.on('changeToolbar', () => {
     isToolbar = false
   })
@@ -165,34 +164,34 @@ function buildAppMenu (options = {}) {
         ...(!options.secondary ? tabTaskActions : []),
         ...(!options.secondary ? [{ type: 'separator' }] : []),
         {
-          label:'截图',
-          submenu:[
+          label: '截图',
+          submenu: [
             {
-            label:'可见区域',
-            click:()=>{
-              sendIPCToWindow(mainWindow,'saveViewCapture')
-            }
-          },
-            {
-              label:'整页',
-              click:()=>{
-                sendIPCToWindow(mainWindow,'saveViewFullCapture')
+              label: '可见区域',
+              click: () => {
+                sendIPCToWindow(mainWindow, 'saveViewCapture')
               }
             },
-          ],
+            {
+              label: '整页',
+              click: () => {
+                sendIPCToWindow(mainWindow, 'saveViewFullCapture')
+              }
+            }
+          ]
         },
         {
           label: l('appMenuSavePageAs'),
-          submenu:[
+          submenu: [
             {
-              label:'文件',
+              label: '文件',
               accelerator: 'CmdOrCtrl+s',
               click: function (item, window) {
                 sendIPCToWindow(window, 'saveCurrentPage')
               }
             },
             {
-              label:'PDF',
+              label: 'PDF',
               click: function (item, window) {
                 sendIPCToWindow(window, 'saveCurrentPageToPdf')
               }
@@ -400,18 +399,18 @@ function buildAppMenu (options = {}) {
           label: '一键启用开发扩展',
           submenu: [
             {
-              label: '⭐⭐⭐️安装插件需要挂梯子⭐⭐⭐️',
+              label: '⭐⭐⭐️安装插件需要挂梯子⭐⭐⭐️'
             },
             {
               label: 'Vue2扩展',
-              type:'checkbox',
+              type: 'checkbox',
               checked: devPlugin[VUEJS_DEVTOOLS.id].installed,
               click: function () {
                 installDevPlugin(VUEJS_DEVTOOLS)
               }
             }, {
               label: 'Vue3扩展',
-              type:'checkbox',
+              type: 'checkbox',
               checked: devPlugin[VUEJS3_DEVTOOLS.id].installed,
               click: () => {
                 installDevPlugin(VUEJS3_DEVTOOLS)
@@ -419,7 +418,7 @@ function buildAppMenu (options = {}) {
             },
             {
               label: 'React扩展',
-              type:'checkbox',
+              type: 'checkbox',
               checked: devPlugin[REACT_DEVELOPER_TOOLS.id].installed,
               click: () => {
                 installDevPlugin(REACT_DEVELOPER_TOOLS)
@@ -430,9 +429,9 @@ function buildAppMenu (options = {}) {
           type: 'separator'
         },
         {
-          label:'管理开发中的项目',
-          icon:___dirname+'/vite/dist/icons/dev.png',
-          click:()=>{
+          label: '管理开发中的项目',
+          icon: ___dirname + '/vite/dist/icons/dev.png',
+          click: () => {
             appManager.openAppVite('/allDevApps')
           }
         }
@@ -583,15 +582,15 @@ function installDevPlugin (plugin) {
   installExtension(plugin).then((ext) => {
     sendMessage({
       type: 'success',
-      config: { content: '安装插件成功，插件生效需如此操作：①关闭原调试工具，②按F5刷新调试页面，③按F12再次打开调试工具。', key: 'install', duration: 10  }
+      config: { content: '安装插件成功，插件生效需如此操作：①关闭原调试工具，②按F5刷新调试页面，③按F12再次打开调试工具。', key: 'install', duration: 10 }
     })
     devPlugin[plugin.id].installed = true
     Menu.setApplicationMenu(buildAppMenu())
-    const _=require('lodash')
-    let extension =_.find(session.defaultSession.getAllExtensions(),{name:ext})
-    sessions.forEach(ses=>{
-      if(!ses.getExtension(extension.id)){
-        ses.loadExtension(extension.path).catch(e=>{
+    const _ = require('lodash')
+    const extension = _.find(session.defaultSession.getAllExtensions(), { name: ext })
+    sessions.forEach(ses => {
+      if (!ses.getExtension(extension.id)) {
+        ses.loadExtension(extension.path).catch(e => {
           console.warn(e)
         })
       }
@@ -603,22 +602,21 @@ function installDevPlugin (plugin) {
         config: { content: '安装插件失败，失败原因：' + err + '，请检查网络后再试，必要情况下请挂梯子。', key: 'install' }
       })
     }).finally(() => {
-    if (devPlugin[plugin.id].installed === false)
-      sendMessage({
-        type: 'info',
-        config: { content: '后台安装任务结束。', key: 'install' }
-      })
-  })
+      if (devPlugin[plugin.id].installed === false) {
+        sendMessage({
+          type: 'info',
+          config: { content: '后台安装任务结束。', key: 'install' }
+        })
+      }
+    })
 }
-function reloadBrowser(focusedWindow){
+function reloadBrowser (focusedWindow) {
   destroyAllViews()
   focusedWindow.reload()
 }
-require('electron').app.whenReady().then(()=>{
-
-  ipc.handle('reloadBrowser',(event,args)=>{
-    let focusedWindow=BrowserWindow.getFocusedWindow()
-    if(focusedWindow)
-      reloadBrowser(focusedWindow)
+require('electron').app.whenReady().then(() => {
+  ipc.handle('reloadBrowser', (event, args) => {
+    const focusedWindow = BrowserWindow.getFocusedWindow()
+    if (focusedWindow) { reloadBrowser(focusedWindow) }
   })
 })

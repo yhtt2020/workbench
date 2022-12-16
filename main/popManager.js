@@ -1,12 +1,12 @@
-/*使用方法参考语雀文档：
-* https://duanshuo.yuque.com/hfru7g/gta7yy/pzyk4z*/
-let popList = [] //弹窗池
+/* 使用方法参考语雀文档：
+* https://duanshuo.yuque.com/hfru7g/gta7yy/pzyk4z */
+const popList = [] // 弹窗池
 /**
  * 必须先手动填入这个常量中，才可通过popManager调用，主要是为了防止不受控
  * @type {string[]}
  */
 const popRegistered = [
-  'favSaveToFolder',//收藏夹保存到文件夹窗体
+  'favSaveToFolder'// 收藏夹保存到文件夹窗体
 ]
 const popManager = {
   /**
@@ -14,7 +14,7 @@ const popManager = {
    */
   async preparePop (name = Date.now().toString(), url, options = {}, webPreferences = {}, fileOption) {
     if (popRegistered.indexOf(name) === -1) {
-      return false //如果不在注册的弹窗清单中，则直接返回假
+      return false // 如果不在注册的弹窗清单中，则直接返回假
     }
     let popWindow = popManager.get(name)
     if (popWindow) {
@@ -26,12 +26,12 @@ const popManager = {
       acceptFirstMouse: true,
       alwaysOnTop: true,
       show: false,
-      //resizable: false,  //必须设置为resizeable，无法resize的窗体在window上无边框和阴影
+      // resizable: false,  //必须设置为resizeable，无法resize的窗体在window上无边框和阴影
       frame: false,
       webPreferences: webPreferences
     }, options)
     webPreferences = Object.assign({
-      //preload: __dirname+'/pages/saApp/settingPreload.js',
+      // preload: __dirname+'/pages/saApp/settingPreload.js',
       nodeIntegration: true,
       contextIsolation: false,
       enableRemoteModule: true,
@@ -46,14 +46,14 @@ const popManager = {
         '--app-name=' + app.getName()
       ]
     }, webPreferences)
-    let popInstance = await windowManager.create({
+    const popInstance = await windowManager.create({
       name: name,
       windowOption: options,
-      webPreferences,
+      webPreferences
     })
 
     console.log(popInstance)
-    let pop = popInstance.window
+    const pop = popInstance.window
     if (url.startsWith('http') || url.startsWith('https')) {
       pop.loadURL(url)
     } else {
@@ -86,9 +86,8 @@ const popManager = {
    * @returns {boolean|*}
    */
   get (name) {
-    let find = popList.find(item => {
-      if (item.name === name)
-        return item
+    const find = popList.find(item => {
+      if (item.name === name) { return item }
     })
     if (find) {
       return find
@@ -103,7 +102,7 @@ const popManager = {
    * @returns {boolean}
    */
   setBounds (name, bounds) {
-    let popWindow = popManager.get(name)
+    const popWindow = popManager.get(name)
     if (popWindow) {
       popWindow.setBounds(bounds)
       return popWindow
@@ -120,7 +119,7 @@ const popManager = {
    * @returns {BrowserWindow}
    */
   async openPop (name = Date.now().toString(), url, options = {}, webPreferences = {}, fileOptions) {
-    let popWindow = await popManager.preparePop(name, url, options, webPreferences, fileOptions)
+    const popWindow = await popManager.preparePop(name, url, options, webPreferences, fileOptions)
     if (popWindow) {
       popWindow.window.show()
       return popWindow
@@ -129,5 +128,3 @@ const popManager = {
     }
   }
 }
-
-

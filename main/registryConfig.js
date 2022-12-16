@@ -3,35 +3,32 @@ const regeditTool = {
   /**
    * @file 添加、删除注册列表的key值
    */
-// eslint-disable-next-line camelcase
+  // eslint-disable-next-line camelcase
   child_process: require('child_process'),
-//  注意：`HKEY_CURRENT_USER`可以简写为`HKCU`，在网上看到的`HKCU`也就是`HKEY_CURRENT_USER`的意思
-// 默认的自启动注册列表地址
+  //  注意：`HKEY_CURRENT_USER`可以简写为`HKCU`，在网上看到的`HKCU`也就是`HKEY_CURRENT_USER`的意思
+  // 默认的自启动注册列表地址
   keyPathRun: 'HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\',
-  deleteKey(keyPath, value) {
+  deleteKey (keyPath, value) {
     return new Promise((resolve, reject) => {
       // reg delete HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run /v electron.app.Electron /f
       regeditTool.child_process.exec(`reg delete ${keyPath} /v ${value} /f`, (error, stdout, stderr) => {
         if (error) {
-          console.error(`stderr: ${stderr}`);
-          reject(error);
-          return;
+          console.error(`stderr: ${stderr}`)
+          reject(error)
         } else {
-          console.log(`stdout: ${stdout}`);
-          resolve(stdout);
+          console.log(`stdout: ${stdout}`)
+          resolve(stdout)
         }
-
-
-      });
-    });
+      })
+    })
   },
 
-// deleteKey(keyPath, 'electron.app.DuGuanjiaTray')
-//     .then(() => console.log('deleteKey ok '))
-//     .catch((err) => console.log('deleteKey error', err));
+  // deleteKey(keyPath, 'electron.app.DuGuanjiaTray')
+  //     .then(() => console.log('deleteKey ok '))
+  //     .catch((err) => console.log('deleteKey error', err));
 
-  addKey(keyPath, name, value, type = 'REG_SZ') {
-    if (!!!type) type = 'REG_RZ'
+  addKey (keyPath, name, value, type = 'REG_SZ') {
+    if (!type) type = 'REG_RZ'
     return new Promise((resolve, reject) => {
       // try {
       //   // eslint-disable-next-line max-len
@@ -42,40 +39,38 @@ const regeditTool = {
       // } catch (error) {
       //   reject(error);
       // }
-      let cmd=''
-      if(type!=='REG_DEFAULT'){
-        cmd=`reg add ${keyPath} /v "${name}" /t "${type}" /d "${value}" /f`
-        console.log('即将注册:'+cmd);
+      let cmd = ''
+      if (type !== 'REG_DEFAULT') {
+        cmd = `reg add ${keyPath} /v "${name}" /t "${type}" /d "${value}" /f`
+        console.log('即将注册:' + cmd)
         regeditTool.child_process.exec(cmd, (error, stdout, stderr) => {
           if (error) {
-            console.log('注册失败:'+cmd);
-            console.error(`stderr: ${stderr}`);
-            reject(error);
+            console.log('注册失败:' + cmd)
+            console.error(`stderr: ${stderr}`)
+            reject(error)
           } else {
-            console.log('注册成功:'+cmd);
-            resolve(stdout);
+            console.log('注册成功:' + cmd)
+            resolve(stdout)
           }
         })
-
-      }else{
-        cmd=`reg add ${keyPath} /d "${value}" /f`
-        console.log('即将注册默认数值:'+cmd);
+      } else {
+        cmd = `reg add ${keyPath} /d "${value}" /f`
+        console.log('即将注册默认数值:' + cmd)
         regeditTool.child_process.exec(cmd, (error, stdout, stderr) => {
           if (error) {
-            console.log('注册失败:'+cmd);
-            console.error(`stderr: ${stderr}`);
-            reject(error);
+            console.log('注册失败:' + cmd)
+            console.error(`stderr: ${stderr}`)
+            reject(error)
           } else {
-            console.log(`注册成功:`+cmd);
-            resolve(stdout);
+            console.log('注册成功:' + cmd)
+            resolve(stdout)
           }
         })
       }
-
-    });
+    })
   },
 
-  addKeyList(list) {
+  addKeyList (list) {
     list.forEach(async keyValue => {
       console.log('注册')
       console.log(keyValue)
@@ -89,7 +84,7 @@ const regeditTool = {
       })
     })
   },
-  deleteKeyList(list) {
+  deleteKeyList (list) {
     list.forEach(async keyValue => {
       console.log('注册')
       console.log(keyValue)
@@ -105,25 +100,25 @@ const regeditTool = {
       })
     })
   },
-  setDefaultBrowser(){
-    let exePath=''
-      if(isDevelopmentMode){
-         exePath=path.join(__dirname,'/res/SetDefaultBrowser.exe')
-      }else{
-         exePath=path.join(path.dirname(app.getPath('exe')),'\\resources\\res\\SetDefaultBrowser.exe')
-      }
+  setDefaultBrowser () {
+    let exePath = ''
+    if (isDevelopmentMode) {
+      exePath = path.join(__dirname, '/res/SetDefaultBrowser.exe')
+    } else {
+      exePath = path.join(path.dirname(app.getPath('exe')), '\\resources\\res\\SetDefaultBrowser.exe')
+    }
 
-    console.log('即将启用设置默认浏览器的脚本'+exePath)
+    console.log('即将启用设置默认浏览器的脚本' + exePath)
 
-    const cmd=`"${exePath}"`+' HKCU ThiskyBrowser'
-    const dlog =require('electron-log')
+    const cmd = `"${exePath}"` + ' HKCU ThiskyBrowser'
+    const dlog = require('electron-log')
     dlog.error(cmd)
-    regeditTool.child_process.exec(cmd,(error, stdout, stderr) => {
+    regeditTool.child_process.exec(cmd, (error, stdout, stderr) => {
       if (error) {
-        console.log('最终设置默认浏览器gg:'+cmd);
-        console.error(`stderr: ${stderr}`);
+        console.log('最终设置默认浏览器gg:' + cmd)
+        console.error(`stderr: ${stderr}`)
       } else {
-        console.log(`最终设置默认浏览器成功:`+cmd);
+        console.log('最终设置默认浏览器成功:' + cmd)
       }
     })
   }
@@ -140,7 +135,7 @@ var registryConfig = [
     path: 'HKCU\\Software\\Classes\\ThiskyBrowser',
     name: 'default',
     value: 'ThiskyBrowser Browser Document',
-    type:'REG_DEFAULT'
+    type: 'REG_DEFAULT'
   },
   {
     path: 'HKCU\\Software\\Classes\\ThiskyBrowser\\Application',
@@ -160,12 +155,12 @@ var registryConfig = [
   {
     path: 'HKCU\\Software\\Classes\\ThiskyBrowser\\Application',
     name: 'ApplicationName',
-    value: '想天浏览器',
+    value: '想天浏览器'
   },
   {
     path: 'HKCU\\Software\\Classes\\ThiskyBrowser\\Application',
     name: 'AppUserModelId',
-    value: 'ThiskyBrowser',
+    value: 'ThiskyBrowser'
   },
   {
     path: 'HKCU\\Software\\Classes\\ThiskyBrowser\\DefaultIcon',
@@ -173,11 +168,11 @@ var registryConfig = [
     value: installPath + ',0'
   },
   {
-    //这条是控制默认打开行为的参数的，设置出错则无法使用默认打开
+    // 这条是控制默认打开行为的参数的，设置出错则无法使用默认打开
     path: 'HKCU\\Software\\Classes\\ThiskyBrowser\\shell\\open\\command',
     name: 'default',
     value: installPath + ' %1',
-    type:'REG_DEFAULT'
+    type: 'REG_DEFAULT'
   },
   {
     path: 'HKCU\\Software\\Classes\\.htm\\OpenWithProgIds',
@@ -196,7 +191,7 @@ var registryConfig = [
     path: 'HKCU\\Software\\Clients\\StartMenuInternet\\ThiskyBrowser\\Capabilities',
     name: 'ApplicationIcon',
     value: installPath + ',0',
-    type:'REG_DEFAULT'
+    type: 'REG_DEFAULT'
   },
   {
     path: 'HKCU\\Software\\Clients\\StartMenuInternet\\ThiskyBrowser\\Capabilities',
@@ -243,7 +238,7 @@ var registryConfig = [
     path: 'HKCU\\Software\\Clients\\StartMenuInternet\\ThiskyBrowser\\DefaultIcon',
     name: 'default',
     value: installPath + ',0',
-    type:'REG_DEFAULT'
+    type: 'REG_DEFAULT'
   },
 
   {
@@ -262,9 +257,9 @@ var registryConfig = [
     path: 'HKCU\\Software\\Clients\\StartMenuInternet\\ThiskyBrowser\\shell\\open\\command',
     name: 'default',
     value: installPath,
-    type:'REG_DEFAULT'
+    type: 'REG_DEFAULT'
   },
-  //设置不要出现弹窗提示
+  // 设置不要出现弹窗提示
   {
     path: 'HKCU\\Software\\Policies\\Microsoft\\Windows\\Explorer',
     name: 'NoNewAppAlert',
@@ -274,17 +269,16 @@ var registryConfig = [
   {
     path: 'HKCU\\Software\\Microsoft\\Windows\\Shell\\Associations\\UrlAssociations\\http\\UserChoice',
     name: 'ProgId',
-    value: 'ThiskyBrowser',
+    value: 'ThiskyBrowser'
   },
-    //hkcR
+  // hkcR
   {
     path: 'HKCR\\http\\shell\\open\\ddeexec\\Application',
     value: 'ThiskyBrowser',
-    type:'REG_DEFAULT'
-  },
+    type: 'REG_DEFAULT'
+  }
 
 ]
-
 
 var keysToCreate = [
   'HKCU\\Software\\Classes\\ThiskyBrowser',
@@ -424,15 +418,13 @@ var keysToCreate = [
 //   }
 // }
 
-
 var registryInstaller = {
-  install:async function () {
+  install: async function () {
     // return new Promise(function (resolve, reject) {
     //  await regeditTool.addKeyList(registryConfig)
     // })
     await regeditTool.addKeyList(registryConfig)
     await regeditTool.setDefaultBrowser()
-
   },
   uninstall: function () {
     console.log(installPath)

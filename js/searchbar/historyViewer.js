@@ -56,7 +56,7 @@ module.exports = {
             }
             var data = {
               title: result.title,
-              favicon:result.favicon,
+              favicon: result.favicon,
               secondaryText: urlParser.getSourceURL(result.url),
               fakeFocus: index === 0 && text,
               icon: (result.isBookmarked ? 'carbon:star' : ''),
@@ -73,7 +73,6 @@ module.exports = {
             lazyList.lazyRenderItem(placeholder, data)
           })
         }, { limit: Infinity })
-
       },
       fn: function (text) {
         if (!text) {

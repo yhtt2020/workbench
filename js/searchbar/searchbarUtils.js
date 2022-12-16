@@ -58,13 +58,12 @@ function createItem (data) {
     item.appendChild(el)
   }
 
-  if(data.favicon){
-    var el= document.createElement('img')
+  if (data.favicon) {
+    var el = document.createElement('img')
     el.classList.add('search-favicon')
-    el.src=data.favicon.url
+    el.src = data.favicon.url
     item.appendChild(el)
   }
-
 
   if (data.title) {
     var title = document.createElement('span')

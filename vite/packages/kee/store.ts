@@ -17,6 +17,7 @@ const initSetting={ //存储用户的设置
 
 export const appStore = defineStore('kee',{
     state:()=>({
+      currentTab:null,
       app: {
         name: '',
         url: '',
@@ -33,10 +34,52 @@ export const appStore = defineStore('kee',{
         title: "禅道账号",
         description: "Francisio_Phillps",
         password:'123456',
-        url: "http://localhost:1600/packages/kee/assets/image/key_black.svg",
-        site:'zt.xaingtian.ren'
+        url: "../../../public/img/key_black.svg",
+        site_1:'zt.xaingtian.ren',
+        site_2:'zt.xaingtian.ren'
       },
+
+      currentDb:{
+        filePath:'',
+        name:'',
+        kdbx:{}
+      },
+
+      tags:[],//全部标签
+
+      dbList:[],//打开过的密码库
     }),
-    actions:{},
+    actions:{
+      setDb(dbInfo){
+        this.currentDb=dbInfo
+        this.tags=dbInfo.tags
+        const manager=kdbxModel.getManager(dbInfo.filePath)
+        passwordModel.setPasswordManager(manager)
+        passwordModel.getAllPasswords()
+        console.log('set dbinfo',dbInfo)
+      },
+      importPasswords(passwords,groupName,existAction){
+        return passwordModel.importPasswords(passwords,groupName,existAction)
+      },
+      loadDbList(){
+        let history = localStorage.getItem('bankList')
+        if (history) {
+          this.dbList = JSON.parse(history)
+        }
+      },
+      saveDbList(){
+        localStorage.setItem('bankList', JSON.stringify(this.dbList))
+      },
+      getTabData(){
+        let timer=setTimeout(()=>{
+          if(window.tabData){
+            this.currentTab=window.tabData
+            console.log('获得到tabdata',this.currentTab)
+            clearInterval(timer)
+          }
+        },500)
+      }
+    },
     getters:{}
 })
+

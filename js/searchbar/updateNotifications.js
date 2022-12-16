@@ -110,7 +110,7 @@ function initialize () {
   //   },
   //   showResults: showUpdateNotification
   // })
-  //暂时禁用搜索栏更新提醒
+  // 暂时禁用搜索栏更新提醒
 }
 
 module.exports = { initialize }

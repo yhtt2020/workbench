@@ -1,5 +1,5 @@
 /* detects if a page is readerable, and tells the main process if it is */
-/**判断页面是否可使用阅读模式
+/** 判断页面是否可使用阅读模式
  * @returns {boolean}
  */
 function pageIsReaderable () {
@@ -13,7 +13,7 @@ function pageIsReaderable () {
   }
 
   for (var i = 0; i < paragraphs.length; i++) {
-    var pLength = paragraphs[i].textContent.length//原规则： Math.max(paragraphs[i].textContent.replace(/\s+/g, ' ').length - 100, -30)
+    var pLength = paragraphs[i].textContent.length// 原规则： Math.max(paragraphs[i].textContent.replace(/\s+/g, ' ').length - 100, -30)
     totalLength += pLength
 
     var prev = paragraphMap.get(paragraphs[i].parentNode) || 0
@@ -27,14 +27,13 @@ function pageIsReaderable () {
       largestValue = value
     }
   })
-  //如果最长的行占总行的长度比例为0.1以上，则可认为是可阅读的，放宽了原要求
-  //if ((largestValue > 600 && largestValue / totalLength > 0.33) || (largestValue > 400 && document.querySelector('article, meta[property="og:type"][content="article"]'))) {
+  // 如果最长的行占总行的长度比例为0.1以上，则可认为是可阅读的，放宽了原要求
+  // if ((largestValue > 600 && largestValue / totalLength > 0.33) || (largestValue > 400 && document.querySelector('article, meta[property="og:type"][content="article"]'))) {
   if ((largestValue > 50 && largestValue / totalLength > 0.1) || (largestValue > 200 && document.querySelector('article, meta[property="og:type"][content="article"]'))) {
     return true
   } else {
     return false
   }
-
 }
 
 function checkReaderStatus () {

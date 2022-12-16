@@ -6,8 +6,8 @@
     /* Context menu items
         these are the items displayed in the menu when you right-click on a page
         */
-    "addToDictionary": "أضف إلى القاموس", 
-    "pictureInPicture": "صورة داخل صورة", 
+    "addToDictionary": "أضف إلى القاموس",
+    "pictureInPicture": "صورة داخل صورة",
     "openInNewTab": "فتح الرابط في علامة تبويب جديدة",
     "openInNewPrivateTab": "فتح الرابط في التصفح المتخفي",
     "saveLinkAs": "حفظ الرابط باسم",
@@ -163,7 +163,7 @@
     "settingsUserAgentToggle": "خاص user-agent إستخدم",
     "settingsUpdateNotificationsToggle": "إبحث تلقائيا عن التحديثات",
     "settingsUsageStatisticsToggle": {
-      "unsafeHTML":"إرسال إحصائيات المستخدم - <a href=\"https://github.com/minbrowser/min/blob/master/docs/statistics.md\">معرفة المزيد</a>"
+      "unsafeHTML": "إرسال إحصائيات المستخدم - <a href=\"https://github.com/minbrowser/min/blob/master/docs/statistics.md\">معرفة المزيد</a>"
     },
     "settingsSearchEngineHeading": "محرك بحث",
     "settingsDefaultSearchEngine": "اختر محرك بحث اساسي",
@@ -282,7 +282,7 @@
     "password": "كلمة المرور",
     "secretKey": "المفتاح السري",
     "openExternalApp": " ؟\\\"%s\\\" إفتح في ",
-    "clickToCopy": "إنسخ", 
-    "copied": "تم النسخ" 
+    "clickToCopy": "إنسخ",
+    "copied": "تم النسخ"
   }
 }

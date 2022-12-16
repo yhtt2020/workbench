@@ -1,72 +1,70 @@
-const axios = require("axios");
-const fs=require('fs')
+const axios = require('axios')
+const fs = require('fs')
 const config = {
-  expireTime: 24 * 60 * 60, //默认缓存有效期为24小时
+  expireTime: 24 * 60 * 60, // 默认缓存有效期为24小时
   cacheExts: [
     'js',
     'jpg', 'jpeg', 'svg', 'png'
   ]
 }
-let el={
-   error(error){
+let el = {
+  error (error) {
     console.warn(error)
+  }
 }
+if (typeof electronLog !== 'undefined') {
+  el = electronLog
 }
-if(typeof electronLog!=='undefined'){
-  el=electronLog
+let userDataPath = ''
+if (typeof window !== 'undefined') {
+  // 如果是主进程下，有app对象\
+  userDataPath = window.globalArgs['user-data-path']
+} else {
+  userDataPath = require('electron').app.getPath('userData')
 }
-let userDataPath=''
-if(typeof window !=='undefined'){
-  //如果是主进程下，有app对象\
-  userDataPath=window.globalArgs['user-data-path']
-}else{
-  userDataPath=require('electron').app.getPath('userData')
-}
-const  cachePath=userDataPath + '/localCache'
-let localCacheManager = {
-  cachePath:cachePath,
-  tmpPath: cachePath+'/tmp',
-  urlToFilePath(url) {
+const cachePath = userDataPath + '/localCache'
+const localCacheManager = {
+  cachePath: cachePath,
+  tmpPath: cachePath + '/tmp',
+  urlToFilePath (url) {
     try {
-      let ext = localCacheManager.getUrlExt(url)
-      let downloadDir = localCacheManager.cachePath + '/' + ext
+      const ext = localCacheManager.getUrlExt(url)
+      const downloadDir = localCacheManager.cachePath + '/' + ext
       localCacheManager.prepareDir(downloadDir)
-      let fileName = localCacheManager.getHash(url) + '.' + ext
-      let filePath = downloadDir + '/' + fileName
+      const fileName = localCacheManager.getHash(url) + '.' + ext
+      const filePath = downloadDir + '/' + fileName
       return filePath
     } catch (e) {
       el.error(e)
     }
-
   },
   /**
    * 获取一个url的后缀名
    * @param url
    * @returns {*}
    */
-  getUrlExt(url) {
-    let urlSpliced = url.split('.')
-    return urlSpliced[urlSpliced.length-1]
+  getUrlExt (url) {
+    const urlSpliced = url.split('.')
+    return urlSpliced[urlSpliced.length - 1]
   },
   /**
    * 无缓存下载文件，即时更新文件到本地
    */
-  async getWithoutCache(url){
-    try{
-      let ext = localCacheManager.getUrlExt(url)
-      if (config.cacheExts.indexOf(ext) === -1)
-        return
-      let downloadDir = localCacheManager.cachePath + '/' + ext
+  async getWithoutCache (url) {
+    try {
+      const ext = localCacheManager.getUrlExt(url)
+      if (config.cacheExts.indexOf(ext) === -1) { return }
+      const downloadDir = localCacheManager.cachePath + '/' + ext
       localCacheManager.prepareDir(downloadDir)
-      let fileName = localCacheManager.getHash(url) + '.' + ext
-      let filePath = downloadDir + '/' + fileName
+      const fileName = localCacheManager.getHash(url) + '.' + ext
+      const filePath = downloadDir + '/' + fileName
       await localCacheManager.fetchUrl(url, filePath)
       if (fs.existsSync(filePath)) {
         return filePath
       } else {
         return false
       }
-    }catch (e) {
+    } catch (e) {
       el.error(e)
     }
   },
@@ -76,19 +74,18 @@ let localCacheManager = {
    * @param url 文件的url地址
    * @param expireTime 过期实际，默认为config设置的时间
    */
-  async get(url, expireTime = config.expireTime) {
+  async get (url, expireTime = config.expireTime) {
     try {
-      let ext = localCacheManager.getUrlExt(url)
-      if (config.cacheExts.indexOf(ext) === -1)
-        return
-      let downloadDir = localCacheManager.cachePath + '/' + ext
+      const ext = localCacheManager.getUrlExt(url)
+      if (config.cacheExts.indexOf(ext) === -1) { return }
+      const downloadDir = localCacheManager.cachePath + '/' + ext
       localCacheManager.prepareDir(downloadDir)
-      let fileName = localCacheManager.getHash(url) + '.' + ext
-      let filePath = downloadDir + '/' + fileName
-      let stat = fs.statSync(filePath)
+      const fileName = localCacheManager.getHash(url) + '.' + ext
+      const filePath = downloadDir + '/' + fileName
+      const stat = fs.statSync(filePath)
       const cTime = stat.ctime
       if (new Date().getTime() - cTime.getTime() > expireTime / 1000) {
-        //缓存已失效
+        // 缓存已失效
         await localCacheManager.fetchUrl(url, filePath)
         if (fs.existsSync(filePath)) {
           return filePath
@@ -106,14 +103,14 @@ let localCacheManager = {
    * 如果不存在目录，则自动创建
    * @param dir
    */
-  prepareDir(dir = localCacheManager.tmpPath) {
+  prepareDir (dir = localCacheManager.tmpPath) {
     if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir+'/',{
-        recursive:true
+      fs.mkdirSync(dir + '/', {
+        recursive: true
       })
     }
   },
-  getFileMd5(path) {
+  getFileMd5 (path) {
 
   },
   /**
@@ -121,10 +118,10 @@ let localCacheManager = {
    * @param text
    * @returns {string}
    */
-  getHash(text) {
+  getHash (text) {
     const crypto = require('crypto')
     const shasum = crypto.createHash('sha1')
-    shasum.update(text);
+    shasum.update(text)
     return shasum.digest('hex')
   },
   /**
@@ -133,17 +130,17 @@ let localCacheManager = {
    * @param path
    * @returns {Promise<void>}
    */
-  async fetchUrl(url, path = localCacheManager.tmpPath) {
-    //直接下载到本地，不考虑缓存
+  async fetchUrl (url, path = localCacheManager.tmpPath) {
+    // 直接下载到本地，不考虑缓存
 
-    let {data} = await axios({
+    const { data } = await axios({
       url: url,
-      method:'get',
-      responseType: 'arraybuffer',
+      method: 'get',
+      responseType: 'arraybuffer'
     })
     try {
       await fs.promises.writeFile(path, data, 'binary')
-    }catch (e) {
+    } catch (e) {
       console.warn(e)
     }
   },
@@ -154,21 +151,21 @@ let localCacheManager = {
    * @param path
    * @returns {Promise<string>}
    */
-  async fetchContentWithType(url,path){
-    let {data,headers} = await axios({
+  async fetchContentWithType (url, path) {
+    const { data, headers } = await axios({
       url: url,
-      method:'get',
+      method: 'get',
       responseType: 'arraybuffer'
     })
     try {
       await fs.promises.writeFile(path, data, 'binary')
       return headers['content-type']
-    }catch (e) {
+    } catch (e) {
       console.warn(e)
     }
   },
 
-  async downloadFile(url, path) {
+  async downloadFile (url, path) {
 
   },
   /**
@@ -176,8 +173,8 @@ let localCacheManager = {
    * @param url
    * @returns {boolean}
    */
-  clearCache(url) {
-    let filePath = localCacheManager.urlToFilePath(url)
+  clearCache (url) {
+    const filePath = localCacheManager.urlToFilePath(url)
     if (fs.existsSync(filePath)) {
       fs.rmSync(filePath)
       if (!fs.existsSync(filePath)) {
@@ -187,4 +184,4 @@ let localCacheManager = {
     return false
   }
 }
-  module.exports = localCacheManager
+module.exports = localCacheManager

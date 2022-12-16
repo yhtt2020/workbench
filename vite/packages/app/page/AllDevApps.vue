@@ -1,8 +1,8 @@
 <template>
   <div class="container" style="margin:10vh;background: white;padding: 20px;border-radius: 8px;height: 80vh;overflow-y: auto">
 
-    <h3>全部开发中的应用
-      <a-button @click="createNew" type="primary" style="float: right">创建新应用</a-button>
+    <h3>全部开发中的项目
+      <a-button @click="createNew" type="primary" style="float: right">创建新项目</a-button>
     </h3>
     <div style="padding: 20px">
       <a-list

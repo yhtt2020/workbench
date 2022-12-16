@@ -210,20 +210,20 @@
   const { DOWNLOAD_STATUS } =require('./stateHelper')
 
 
-  ipcRenderer.on('menuIngStart', (e, args) => {
-    if (appVue.selectingList.loadState === true) {
-      ipcRenderer.send('resumeDownload', appVue.selectingList.path)
-      appVue.selectingList.loadState = false
-    } else {
-      ipcRenderer.send('stopDownload', appVue.selectingList.path)
-      appVue.selectingList.loadState = true
-    }
-  })
+  ipcRenderer.on("menuIngStart", (e, args) => {
+        if (appVue.selectingList.loadState === true) {
+          ipcRenderer.send("resumeDownload", appVue.selectingList.path);
+          appVue.selectingList.loadState = false;
+        } else {
+          ipcRenderer.send("stopDownload", appVue.selectingList.path);
+          appVue.selectingList.loadState = true;
+        }
+      });
 
-  ipcRenderer.on('menuIngUrl', (e) => {
-    clipboard.writeText(appVue.selectingList.url)
-    appVue.$message.success('已复制到剪切板')
-  })
+      ipcRenderer.on("menuIngUrl", (e) => {
+        clipboard.writeText(appVue.selectingList.url);
+        appVue.$message.success("已复制到剪切板");
+      });
 
   ipcRenderer.on('menuIngDelete', (e) => {
     appVue.visibleIng = true
@@ -252,191 +252,194 @@
     ipcRenderer.send('closeWin',appVue.list.length)
   })
 
-  ipcRenderer.on('menuDoneOpenPage', (e) => {
-    ipcRenderer.send('addTab', { url: appVue.selectList.href })
-  })
+      ipcRenderer.on("menuDoneUrl", (e) => {
+        clipboard.writeText(appVue.selectList.url);
+        appVue.$message.success("已复制到剪切板");
+      });
 
-  ipcRenderer.on('menuDoneUrl', (e) => {
-    clipboard.writeText(appVue.selectList.url)
-    appVue.$message.success('已复制到剪切板')
-  })
+      ipcRenderer.on("menuDoneDelete", (e) => {
+        appVue.visible = true;
+      });
 
-  ipcRenderer.on('menuDoneDelete', (e) => {
-    appVue.visible = true
-  })
+      ipcRenderer.on("menuTrashAgain", (e) => {
+        ipcRenderer.send("addTab", { url: appVue.selectDelList.url });
+      });
 
-  ipcRenderer.on('menuTrashAgain', (e) => {
-    ipcRenderer.send('addTab', { url: appVue.selectDelList.url })
-  })
+      ipcRenderer.on("menuTrashOpenPage", (e) => {
+        ipcRenderer.send("addTab", { url: appVue.selectDelList.href });
+      });
 
-  ipcRenderer.on('menuTrashOpenPage', (e) => {
-    ipcRenderer.send('addTab', { url: appVue.selectDelList.href })
-  })
+      ipcRenderer.on("menuTrashUrl", (e) => {
+        clipboard.writeText(appVue.selectDelList.url);
+        appVue.$message.success("已复制到剪切板");
+      });
 
-  ipcRenderer.on('menuTrashUrl', (e) => {
-    clipboard.writeText(appVue.selectDelList.url)
-    appVue.$message.success('已复制到剪切板')
-  })
-
-  ipcRenderer.on('menuTrashDelete', (e) => {
-    // appVue.deleteList.splice(appVue.deleteList.indexOf(appVue.selectDelList), 1)
-    db.download.delete(appVue.selectDelList.startTime)
-    // appVue.listTrashCount--
-    appVue.selectTimeDelGroup.subDelList.splice(appVue.selectTimeDelGroup.subDelList.indexOf(appVue.selectDelList), 1)
-    appVue.deleteList.splice(appVue.doneList.indexOf(appVue.selectDelList),1)
-    if (appVue.selectTimeDelGroup.subDelList.length === 0) {
-      appVue.showDelList.splice(appVue.showDelList.indexOf(appVue.selectTimeDelGroup), 1)
-    }
-    appVue.listTrashCount--
-  })
-
-  ipcRenderer.on('breakMenuAgain', (e) => {
-    ipcRenderer.send('addTab', { url: appVue.selectingList.url })
-    appVue.list.splice(appVue.list.indexOf(appVue.selectingList),1)
-    db.download.delete(appVue.selectingList.startTime)
-    appVue.listCount--
-  })
-
-  ipcRenderer.on('breakMenuDel', (e) => {
-    appVue.list.splice(appVue.list.indexOf(appVue.selectingList),1)
-    appVue.listCount--
-    db.download.delete(appVue.selectingList.startTime)
-  })
-
-  ipcRenderer.on('download-info', async (event, args) => {
-
-    let i
-    let fileName = args.name.substring(0, args.name.lastIndexOf("."))
-    if (args.status === 'start') {
-      appVue.list.forEach(item => {
-        if (item.startTime === args.startTime) {
-          appVue.list.splice(appVue.list.indexOf(args.startTime), 1)
-          appVue.listCount--
-          appVue.count--
+      ipcRenderer.on("menuTrashDelete", (e) => {
+        // appVue.deleteList.splice(appVue.deleteList.indexOf(appVue.selectDelList), 1)
+        db.download.delete(appVue.selectDelList.startTime);
+        // appVue.listTrashCount--
+        appVue.selectTimeDelGroup.subDelList.splice(
+          appVue.selectTimeDelGroup.subDelList.indexOf(appVue.selectDelList),
+          1
+        );
+        appVue.deleteList.splice(
+          appVue.doneList.indexOf(appVue.selectDelList),
+          1
+        );
+        if (appVue.selectTimeDelGroup.subDelList.length === 0) {
+          appVue.showDelList.splice(
+            appVue.showDelList.indexOf(appVue.selectTimeDelGroup),
+            1
+          );
         }
-      })
-      appVue.list.unshift({
-        name: args.name,
-        id: appVue.id++,
-        title: fileName,
-        received: '',
-        realData: '',
-        total: '',
-        progressnuw: 0,
-        startTime: args.startTime,
-        path: args.path,
-        loadState: false,
-        url: args.url,
-        href: args.href,
-        suffixal: path.extname(args.name)
-      })
+        appVue.listTrashCount--;
+      });
 
+      ipcRenderer.on("breakMenuAgain", (e) => {
+        ipcRenderer.send("addTab", { url: appVue.selectingList.url });
+        appVue.list.splice(appVue.list.indexOf(appVue.selectingList), 1);
+        db.download.delete(appVue.selectingList.startTime);
+        appVue.listCount--;
+      });
 
-      db.download.add({
-        name: args.name,
-        title: args.name,
-        total: args.size.total,
-        path: args.path,
-        url: args.url,
-        startTime: args.startTime,
-        doneDate: '',
-        state: DOWNLOAD_STATUS.LOADING,
-        href: args.href,
-        addTime: '',
-        delTime:'',
-        addDelTime:'',
-        suffixal: path.extname(args.name)
-      })
+      ipcRenderer.on("breakMenuDel", (e) => {
+        appVue.list.splice(appVue.list.indexOf(appVue.selectingList), 1);
+        appVue.listCount--;
+        db.download.delete(appVue.selectingList.startTime);
+      });
 
-      appVue.listCount++
-      appVue.count++
-      ipcRenderer.send('willDownload')
-      ipcRenderer.send('downloading')
+      ipcRenderer.on("download-info", async (event, args) => {
+
+    let i;
+        let fileName = args.name.substring(0, args.name.lastIndexOf("."));
+        if (args.status === "start") {
+          appVue.list.forEach((item) => {
+            if (item.startTime === args.startTime) {
+              appVue.list.splice(appVue.list.indexOf(args.startTime), 1);
+              appVue.listCount--;
+              appVue.count--;
+            }
+          });
+          appVue.list.unshift({
+            name: args.name,
+            id: appVue.id++,
+            title: fileName,
+            received: "",
+            realData: "",
+            total: "",
+            progressnuw: 0,
+            startTime: args.startTime,
+            path: args.path,
+            loadState: false,
+            url: args.url,
+            href: args.href,
+            suffixal: path.extname(args.name),
+          });
+
+          db.download.add({
+            name: args.name,
+            title: args.name,
+            total: args.size.total,
+            path: args.path,
+            url: args.url,
+            startTime: args.startTime,
+            doneDate: "",
+            state: DOWNLOAD_STATUS.LOADING,
+            href: args.href,
+            addTime: "",
+            delTime: "",
+            addDelTime: "",
+            suffixal: path.extname(args.name),
+          });
+
+          appVue.listCount++;
+          appVue.count++;
+          ipcRenderer.send("willDownload");
+          ipcRenderer.send("downloading");
 
     }
 
-    if (args.status === 'cancelled') {
-      // ipcRenderer.send('emptyPageUrl', args.chainUrl)
-      for (i = 0; i < appVue.list.length; i++) {
-        if (appVue.list[i].startTime === args.startTime) {
-          appVue.deleteId = i
-        }
-      }
-      ipcRenderer.send('downloadEnd')
-      db.download.delete(args.startTime)
-      appVue.list.splice(appVue.deleteId, 1)
-      appVue.count--
-      // if (appVue.count < 0) {
-      //   appVue.count = 0
-      // }
-      appVue.listCount--
-      // if (appVue.listCount < 0) {
-      //   appVue.listCount = 0
-      // }
-      ipcRenderer.send('closeEmpty', args.chainUrl)
-    }
-    if(args.status === 'interrupted'){
-      for (i = 0; i < appVue.list.length; i++) {
-        if (appVue.list[i].startTime === args.startTime) {
-          appVue.deleteId = i
-        }
-      }
-      ipcRenderer.send('downloadEnd')
-      appVue.list.splice(appVue.deleteId, 1)
-      appVue.$message.info('文件下载失败', 0.5)
-      db.download.delete(args.startTime)
-      appVue.count--
-      appVue.listCount--
-    }
-    if (appVue.listCount < 0) {
-      appVue.listCount = 0
-    }
-    if (appVue.count < 0) {
-      appVue.count = 0
-    }
-
-    if (args.status === 'progressing' && args.path !== '') {
-      // ipcRenderer.send('willDownload')
-
-      // ipcRenderer.send('closeEmpty')
-      appVue.list.forEach(function (item, index, arr) {
-        if (item.startTime === args.startTime) {
-          item.title = fileName
-          item.received = args.size.received
-          item.realData = args.realData
-          item.total = args.size.total
-          item.progressnuw = Math.round(args.progressnuw)
-          item.path = args.path
-          item.status = args.status
-          if (item.progressnuw === 100) {
-            appVue.list.splice(index, 1)
+        if (args.status === "cancelled") {
+          // ipcRenderer.send('emptyPageUrl', args.chainUrl)
+          for (i = 0; i < appVue.list.length; i++) {
+            if (appVue.list[i].startTime === args.startTime) {
+              appVue.deleteId = i;
+            }
           }
+          ipcRenderer.send("downloadEnd");
+          db.download.delete(args.startTime);
+          appVue.list.splice(appVue.deleteId, 1);
+          appVue.count--;
+          // if (appVue.count < 0) {
+          //   appVue.count = 0
+          // }
+          appVue.listCount--;
+          // if (appVue.listCount < 0) {
+          //   appVue.listCount = 0
+          // }
+          ipcRenderer.send("closeEmpty", args.chainUrl);
         }
-      })
-    }
+        if (args.status === "interrupted") {
+          for (i = 0; i < appVue.list.length; i++) {
+            if (appVue.list[i].startTime === args.startTime) {
+              appVue.deleteId = i;
+            }
+          }
+          ipcRenderer.send("downloadEnd");
+          appVue.list.splice(appVue.deleteId, 1);
+          appVue.$message.info("文件下载失败", 0.5);
+          db.download.delete(args.startTime);
+          appVue.count--;
+          appVue.listCount--;
+        }
+        if (appVue.listCount < 0) {
+          appVue.listCount = 0;
+        }
+        if (appVue.count < 0) {
+          appVue.count = 0;
+        }
 
-    if (args.status === 'completed' && args.path !== '') {
-      ipcRenderer.send('downloadCompletes')
-      ipcRenderer.send('inform')
-      // ipcRenderer.send('emptyPageUrl', args.chainUrl)
-      const myDate = new Date()
+        if (args.status === "progressing" && args.path !== "") {
+          // ipcRenderer.send('willDownload')
 
+          // ipcRenderer.send('closeEmpty')
+          appVue.list.forEach(function (item, index, arr) {
+            if (item.startTime === args.startTime) {
+              item.title = fileName;
+              item.received = args.size.received;
+              item.realData = args.realData;
+              item.total = args.size.total;
+              item.progressnuw = Math.round(args.progressnuw);
+              item.path = args.path;
+              item.status = args.status;
+              if (item.progressnuw === 100) {
+                appVue.list.splice(index, 1);
+              }
+            }
+          });
+        }
 
-      appVue.doneList.unshift({
-        name: args.name,
-        id: appVue.doneId++,
-        title: fileName,
-        total: args.size.total,
-        path: args.path,
-        url: args.url,
-        startTime: args.startTime,
-        doneDate: myDate.toLocaleString('chinese', { hour12: false }),
-        href: args.href,
-        addTime: appVue.transDate(myDate.toLocaleDateString()),
-        suffixal: path.extname(args.name),
+        if (args.status === "completed" && args.path !== "") {
+          ipcRenderer.send('downloadCompletes')
+      ipcRenderer.send("inform");
+          // ipcRenderer.send('emptyPageUrl', args.chainUrl)
+          const myDate = new Date();
 
-        // addTime:myDate.toLocaleDateString(),
-      })
+          appVue.doneList.unshift({
+            name: args.name,
+            id: appVue.doneId++,
+            title: fileName,
+            total: args.size.total,
+            path: args.path,
+            url: args.url,
+            startTime: args.startTime,
+            doneDate: myDate.toLocaleString("chinese", { hour12: false }),
+            href: args.href,
+            addTime: appVue.transDate(myDate.toLocaleDateString()),
+            suffixal: path.extname(args.name),
+
+            // addTime:myDate.toLocaleDateString(),
+          });
 
       appVue.listCount--
       if( appVue.listCount <0){
@@ -783,242 +786,253 @@
       hideModal () {
         //下载中的任务删除会走status=cancelled判断，和上面选择保存时产生冲突。
 
-        // const myDate = new Date()
-        // appVue.listTrashCount++
-        // db.download.put({
-        //   name: appVue.selectingList.name,
-        //   startTime: appVue.selectingList.startTime,
-        //   title: appVue.selectingList.title,
-        //   total: appVue.selectingList.total,
-        //   path: appVue.selectingList.path,
-        //   url: appVue.selectingList.url,
-        //   state:DOWNLOAD_STATUS.DELETED,
-        //   doneDate: appVue.selectingList.doneDate,
-        //   href: appVue.selectingList.href,
-        //   delTime:myDate.toLocaleString('chinese', { hour12: false }),
-        //   addDelTime:myDate.toLocaleDateString(),
-        //   addTime:''
-        // })
-        // appVue.deleteList.unshift({
-        //   name: appVue.selectingList.name,
-        //   id: appVue.delId++,
-        //   title: appVue.selectingList.title,
-        //   total: appVue.selectingList.total,
-        //   path: appVue.selectingList.path,
-        //   url: appVue.selectingList.url,
-        //   startTime: appVue.selectingList.startTime,
-        //   state:DOWNLOAD_STATUS.DELETED,
-        //   href: appVue.selectingList.href,
-        //   delTime:myDate.toLocaleString('chinese', { hour12: false }),
-        //   addDelTime:appVue.transDate(myDate.toLocaleDateString()),
-        // })
-        // appVue.classifyDel()
+            // const myDate = new Date()
+            // appVue.listTrashCount++
+            // db.download.put({
+            //   name: appVue.selectingList.name,
+            //   startTime: appVue.selectingList.startTime,
+            //   title: appVue.selectingList.title,
+            //   total: appVue.selectingList.total,
+            //   path: appVue.selectingList.path,
+            //   url: appVue.selectingList.url,
+            //   state:DOWNLOAD_STATUS.DELETED,
+            //   doneDate: appVue.selectingList.doneDate,
+            //   href: appVue.selectingList.href,
+            //   delTime:myDate.toLocaleString('chinese', { hour12: false }),
+            //   addDelTime:myDate.toLocaleDateString(),
+            //   addTime:''
+            // })
+            // appVue.deleteList.unshift({
+            //   name: appVue.selectingList.name,
+            //   id: appVue.delId++,
+            //   title: appVue.selectingList.title,
+            //   total: appVue.selectingList.total,
+            //   path: appVue.selectingList.path,
+            //   url: appVue.selectingList.url,
+            //   startTime: appVue.selectingList.startTime,
+            //   state:DOWNLOAD_STATUS.DELETED,
+            //   href: appVue.selectingList.href,
+            //   delTime:myDate.toLocaleString('chinese', { hour12: false }),
+            //   addDelTime:appVue.transDate(myDate.toLocaleDateString()),
+            // })
+            // appVue.classifyDel()
 
-        ipcRenderer.send('deleteDownload', this.selectingList.path)
-        this.visibleIng = false
-        if(appVue.doneList.length === 0 ){
-          appVue.listDoneCount =0
-        }
-      },
-
-      doneChange (e) {
-        if (e.target.checked === true) {
-          this.deleconfirm = true
-        }
-        if (e.target.checked === false) {
-          this.deleconfirm = false
-        }
-      },
-      callback (key) {
-      },
-
-      hideModalDone () {
-        const myDate = new Date()
-        if (this.deleconfirm === true) {
-          db.download.put({
-            name: appVue.selectList.name,
-            startTime: appVue.selectList.startTime,
-            title: appVue.selectList.title,
-            total: appVue.selectList.total,
-            path: appVue.selectList.path,
-            url: appVue.selectList.url,
-            state:DOWNLOAD_STATUS.DELETED,
-            doneDate: appVue.selectList.doneDate,
-            href: appVue.selectList.href,
-            delTime:myDate.toLocaleString('chinese', { hour12: false }),
-            addDelTime:myDate.toLocaleDateString(),
-            addTime:'',
-            suffixal: path.extname(appVue.selectList.name)
-          })
-          appVue.deleteList.unshift({
-            name: appVue.selectList.name,
-            id: appVue.delId++,
-            title: appVue.selectList.title,
-            total: appVue.selectList.total,
-            path: appVue.selectList.path,
-            url: appVue.selectList.url,
-            startTime: appVue.selectList.startTime,
-            state:DOWNLOAD_STATUS.DELETED,
-            href: appVue.selectList.href,
-            delTime:myDate.toLocaleString('chinese', { hour12: false }),
-            addDelTime:appVue.transDate(myDate.toLocaleDateString()),
-            suffixal: path.extname(appVue.selectList.name)
-          })
-          appVue.classifyDel()
-          ipcRenderer.send('deleteFile', appVue.selectList.path)
-          appVue.$message.info('文件已删除', 0.5)
-          appVue.selectTimeGroup.subList.splice(appVue.selectTimeGroup.subList.indexOf(appVue.selectList), 1)
-          appVue.doneList.splice(appVue.doneList.indexOf(appVue.selectList),1)
-          if (appVue.selectTimeGroup.subList.length === 0) {
-            appVue.showList.splice(appVue.showList.indexOf(appVue.selectTimeGroup), 1)
-          }
-          appVue.visible = false
-        }
-         else {
-          db.download.put({
-            name: appVue.selectList.name,
-            startTime: appVue.selectList.startTime,
-            title: appVue.selectList.title,
-            total: appVue.selectList.total,
-            path: appVue.selectList.path,
-            url: appVue.selectList.url,
-            state:DOWNLOAD_STATUS.CANCEL,
-            doneDate: appVue.selectList.doneDate,
-            href: appVue.selectList.href,
-            delTime:myDate.toLocaleString('chinese', { hour12: false }),
-            addDelTime:myDate.toLocaleDateString(),
-            addTime:'',
-            suffixal: path.extname(appVue.selectList.name)
-          })
-          appVue.deleteList.unshift({
-            name: appVue.selectList.name,
-            id: appVue.delId++,
-            title: appVue.selectList.title,
-            total: appVue.selectList.total,
-            path: appVue.selectList.path,
-            url: appVue.selectList.url,
-            startTime: appVue.selectList.startTime,
-            href: appVue.selectList.href,
-            delTime:myDate.toLocaleString('chinese', { hour12: false }),
-            addDelTime:myDate.toLocaleDateString(),
-            suffixal: path.extname(appVue.selectList.name)
-          })
-          appVue.classifyDel()
-          appVue.selectTimeGroup.subList.splice(appVue.selectTimeGroup.subList.indexOf(appVue.selectList), 1)
-          if (appVue.selectTimeGroup.subList.length === 0) {
-            appVue.showList.splice(appVue.showList.indexOf(appVue.selectTimeGroup), 1)
-          }
-          appVue.visible = false
-        }
-        appVue.listDoneCount--
-        appVue.listTrashCount++
-        if(appVue.doneList.length === 0 ){
-          appVue.listDoneCount =0
-        }
-      },
-      delAll(){
-        // ipcRenderer.send('openSetting')
-        this.$confirm({
-          title: '记录清除不可恢复，你确定要清除所有回收站记录吗？',
-          okText:'确定',
-          cancelText:'取消',
-          onOk() {
-            appVue.showDelList.splice(0,appVue.showDelList.length)
-            // appVue.deleteList.splice(0,appVue.deleteList.length)
-            appVue.listTrashCount = 0
-            for(let i=0;i<appVue.deleteList.length;i++){
-              db.download.delete(appVue.deleteList[i].startTime)
+            ipcRenderer.send("deleteDownload", this.selectingList.path);
+            this.visibleIng = false;
+            if (appVue.doneList.length === 0) {
+              appVue.listDoneCount = 0;
             }
-            appVue.deleteList.splice(0,appVue.deleteList.length)
           },
-          onCancel() {
-          },
-          class: 'test',
-        });
-      },
-      resume (item) {
-        ipcRenderer.send('resumeDownload', item.path)
-        item.loadState = false
-      },
-      stop (item) {
-        ipcRenderer.send('stopDownload', item.path)
-        item.loadState = true
-      },
 
-      openFileHandler (item) {
-        const { shell } = require('electron')
-        fs.exists(item.path, function (flag) {
-          if (flag) {
-            if (require('path').extname(item.path) === '.crx') {
-              ipcRenderer.send('installCrx', { path: item.path })
+          doneChange(e) {
+            if (e.target.checked === true) {
+              this.deleconfirm = true;
+            }
+            if (e.target.checked === false) {
+              this.deleconfirm = false;
+            }
+          },
+          callback(key) {},
+
+          hideModalDone() {
+            const myDate = new Date();
+            if (this.deleconfirm === true) {
+              db.download.put({
+                name: appVue.selectList.name,
+                startTime: appVue.selectList.startTime,
+                title: appVue.selectList.title,
+                total: appVue.selectList.total,
+                path: appVue.selectList.path,
+                url: appVue.selectList.url,
+                state: DOWNLOAD_STATUS.DELETED,
+                doneDate: appVue.selectList.doneDate,
+                href: appVue.selectList.href,
+                delTime: myDate.toLocaleString("chinese", { hour12: false }),
+                addDelTime: myDate.toLocaleDateString(),
+                addTime: "",
+                suffixal: path.extname(appVue.selectList.name),
+              });
+              appVue.deleteList.unshift({
+                name: appVue.selectList.name,
+                id: appVue.delId++,
+                title: appVue.selectList.title,
+                total: appVue.selectList.total,
+                path: appVue.selectList.path,
+                url: appVue.selectList.url,
+                startTime: appVue.selectList.startTime,
+                state: DOWNLOAD_STATUS.DELETED,
+                href: appVue.selectList.href,
+                delTime: myDate.toLocaleString("chinese", { hour12: false }),
+                addDelTime: appVue.transDate(myDate.toLocaleDateString()),
+                suffixal: path.extname(appVue.selectList.name),
+              });
+              appVue.classifyDel();
+              ipcRenderer.send("deleteFile", appVue.selectList.path);
+              appVue.$message.info("文件已删除", 0.5);
+              appVue.selectTimeGroup.subList.splice(
+                appVue.selectTimeGroup.subList.indexOf(appVue.selectList),
+                1
+              );
+              appVue.doneList.splice(
+                appVue.doneList.indexOf(appVue.selectList),
+                1
+              );
+              if (appVue.selectTimeGroup.subList.length === 0) {
+                appVue.showList.splice(
+                  appVue.showList.indexOf(appVue.selectTimeGroup),
+                  1
+                );
+              }
+              appVue.visible = false;
             } else {
-              shell.openPath(item.path)
+              db.download.put({
+                name: appVue.selectList.name,
+                startTime: appVue.selectList.startTime,
+                title: appVue.selectList.title,
+                total: appVue.selectList.total,
+                path: appVue.selectList.path,
+                url: appVue.selectList.url,
+                state: DOWNLOAD_STATUS.CANCEL,
+                doneDate: appVue.selectList.doneDate,
+                href: appVue.selectList.href,
+                delTime: myDate.toLocaleString("chinese", { hour12: false }),
+                addDelTime: myDate.toLocaleDateString(),
+                addTime: "",
+                suffixal: path.extname(appVue.selectList.name),
+              });
+              appVue.deleteList.unshift({
+                name: appVue.selectList.name,
+                id: appVue.delId++,
+                title: appVue.selectList.title,
+                total: appVue.selectList.total,
+                path: appVue.selectList.path,
+                url: appVue.selectList.url,
+                startTime: appVue.selectList.startTime,
+                href: appVue.selectList.href,
+                delTime: myDate.toLocaleString("chinese", { hour12: false }),
+                addDelTime: myDate.toLocaleDateString(),
+                suffixal: path.extname(appVue.selectList.name),
+              });
+              appVue.classifyDel();
+              appVue.selectTimeGroup.subList.splice(
+                appVue.selectTimeGroup.subList.indexOf(appVue.selectList),
+                1
+              );
+              if (appVue.selectTimeGroup.subList.length === 0) {
+                appVue.showList.splice(
+                  appVue.showList.indexOf(appVue.selectTimeGroup),
+                  1
+                );
+              }
+              appVue.visible = false;
             }
-          } else {
-            appVue.$message.info('文件已被删除或位置被移动', 1)
-            db.download.delete(item.startTime)
-            appVue.doneList.splice(appVue.doneList.indexOf(appVue.selectList), 1)
-            appVue.listDoneCount--
-          }
-        })
-      },
+            appVue.listDoneCount--;
+            appVue.listTrashCount++;
+            if (appVue.doneList.length === 0) {
+              appVue.listDoneCount = 0;
+            }
+          },
+          delAll() {
+            // ipcRenderer.send('openSetting')
+        this.$confirm({
+          title: "记录清除不可恢复，你确定要清除所有回收站记录吗？",
+              okText: "确定",
+              cancelText: "取消",
+              onOk() {
+                appVue.showDelList.splice(0, appVue.showDelList.length);
+                // appVue.deleteList.splice(0,appVue.deleteList.length)
+                appVue.listTrashCount = 0;
+                for (let i = 0; i < appVue.deleteList.length; i++) {
+                  db.download.delete(appVue.deleteList[i].startTime);
+                }
+                appVue.deleteList.splice(0, appVue.deleteList.length);
+              },
+              onCancel() {},
+              class: "test",
+            });
+          },
+          resume(item) {
+            ipcRenderer.send("resumeDownload", item.path);
+            item.loadState = false;
+          },
+          stop(item) {
+            ipcRenderer.send("stopDownload", item.path);
+            item.loadState = true;
+          },
+
+          openFileHandler(item) {
+            const { shell } = require("electron");
+            fs.exists(item.path, function (flag) {
+              if (flag) {
+                if (require("path").extname(item.path) === ".crx") {
+                  ipcRenderer.send("installCrx", { path: item.path });
+                } else {
+                  shell.openPath(item.path);
+                }
+              } else {
+                appVue.$message.info("文件已被删除或位置被移动", 1);
+                db.download.delete(item.startTime);
+                appVue.doneList.splice(
+                  appVue.doneList.indexOf(appVue.selectList),
+                  1
+                );
+                appVue.listDoneCount--;
+              }
+            });
+          },
+        },
+      });
+    </script>
+  </body>
+
+  <style>
+    .ant-tabs-top-bar {
+      margin: 0 5px 0;
     }
-  })
+    .ant-tabs-nav.ant-tabs-nav-animated {
+      margin-left: 37px;
+    }
+    #tag {
+      position: absolute;
+      margin-left: 60px;
+      margin-top: 10px;
+    }
 
+    .active {
+      background: #f7f7f7;
+    }
 
-</script>
+    .clickActive {
+      background: #f7f7f7;
+    }
 
-</body>
+    .icon {
+      width: 100%;
+      height: 100%;
+    }
 
-<style>
-  .ant-tabs-top-bar {
-    margin: 0 5px 0;
-  }
-.ant-tabs-nav.ant-tabs-nav-animated{
-  margin-left: 37px;
-}
-  #tag {
-    position: absolute;
-    margin-left: 60px;
-    margin-top: 10px;
-  }
-
-  .active {
-    background: #f7f7f7;
-  }
-
-  .clickActive {
-    background: #f7f7f7;
-  }
-
-  .icon {
-    width: 100%;
-    height: 100%;
-  }
-
-  .beautiful-sm-scroll::-webkit-scrollbar {
-    width: 5px;
-  }
-  .beautiful-sm-scroll::-webkit-scrollbar-thumb {
-    background: rgb(233, 232, 232);
-    border-radius: 20px;
-  }
-  .beautiful-sm-scroll::-webkit-scrollbar-thumb:hover {
-    background: #747474;
-  }
-  .beautiful-sm-scroll::-webkit-scrollbar-corner {
-    background: #f6f6f6;
-  }
-  .title{
-    font-weight: bold;
-    /*width: 99px;*/
-    word-break: break-all;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 1; /* 这里是超出几行省略 */
-    overflow: hidden;
-  }
-</style>
-
+    .beautiful-sm-scroll::-webkit-scrollbar {
+      width: 5px;
+    }
+    .beautiful-sm-scroll::-webkit-scrollbar-thumb {
+      background: rgb(233, 232, 232);
+      border-radius: 20px;
+    }
+    .beautiful-sm-scroll::-webkit-scrollbar-thumb:hover {
+      background: #747474;
+    }
+    .beautiful-sm-scroll::-webkit-scrollbar-corner {
+      background: #f6f6f6;
+    }
+    .title {
+      font-weight: bold;
+      /*width: 99px;*/
+      word-break: break-all;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 1; /* 这里是超出几行省略 */
+      overflow: hidden;
+    }
+  </style>
 </html>

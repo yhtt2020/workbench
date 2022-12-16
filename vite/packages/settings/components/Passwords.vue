@@ -83,6 +83,7 @@ export default {
       },
       searchText: '',
       searchColumn: '',
+
     };
   },
   computed: {},
@@ -114,7 +115,6 @@ export default {
         }else{
           pass=true
         }
-        console.log('pass=',pass)
         if (pass) {
           //如果通过了名称筛选，再测试搜索
           console.log('this.searchedColumn=',this.searchedColumn,'this.searchText=',this.searchText)
