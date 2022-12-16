@@ -6,8 +6,10 @@ and then resolves the promise with gathered data.
 
 const { spawn, spawnSync } = require('child_process')
 
-const worker = new Worker(require('path').resolve(__dirname, 'js','util','processWorker.js'))
+const path=__dirname.indexOf('util')>-1?require('path').join(__dirname,'processWorker.js'):require('path').join(__dirname, 'js','util','processWorker.js')
+const worker = new Worker(path)
 
+console.log(path)
 let processPath = process.env.PATH
 
 // we need to locate the op binary in this directory on macOS - see https://github.com/minbrowser/min/issues/1028
