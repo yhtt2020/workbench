@@ -952,9 +952,15 @@ h3 {
       display: flex;
       flex-wrap: wrap;
        .current-website{
-        word-break: break-all;
+         word-break: break-all;
          color: grey;
          font-size: 12px;
+         max-width: 200px;
+         overflow: hidden;
+         display: -webkit-box;
+         -webkit-box-orient: vertical;
+         -webkit-line-clamp: 2;
+         text-overflow: ellipsis;
        }
     }
     .current-switch{

@@ -13,7 +13,6 @@ let inputs={}
 htmls.forEach(html=>{
   inputs[html]=getPath(html)
 })
-console.log(inputs)
 export default defineConfig({
   plugins: [vue()],
   base:'./',
