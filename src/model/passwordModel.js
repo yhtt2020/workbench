@@ -1,13 +1,13 @@
 window.ipc=require('electron').ipcRenderer
 const settings = require('../../js/util/settings/settings.js')
-const Bitwarden = require('../../js/passwordManager/bitwarden.js')
-const OnePassword = require('../../js/passwordManager/onePassword.js')
+// const Bitwarden = require('../../js/passwordManager/bitwarden.js')
+// const OnePassword = require('../../js/passwordManager/onePassword.js')
 const Keychain = require('../../js/passwordManager/keychain.js')
 const { ipcRenderer } = require('electron')
 const tools=require('../util/util').tools
 const KdbxModel=require('./kdbxModel.js')
-const bitwarden= new Bitwarden()
-const onePassword=new OnePassword()
+const bitwarden={}// new Bitwarden()
+const onePassword={}//new OnePassword()
 const keychain=new Keychain()
 const kdbxModel=new KdbxModel()
 const PasswordModel = {
