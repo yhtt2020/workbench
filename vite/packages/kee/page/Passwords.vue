@@ -162,9 +162,87 @@
           </span>
           <span class="drawer-open-main-text">主应用中打开</span>
         </a-list-item>
+        <a-list-item @click="showImport" style="font-size:14px; color:#666 " class="other-password-drawer">
+          <ApiFilled /> 导入内置密码库密码
+        </a-list-item>
       </a-list>
     </div>
   </a-drawer>
+
+  <a-modal
+    v-model:visible="importVisible"
+    title="导入密码"
+    width="80%"
+    centered
+    @ok="doImport"
+  >
+    <a-steps :current="importStep">
+      <a-step>
+        <!-- <span slot="title">Finished</span> -->
+        <template #title>验证密码库</template>
+      </a-step>
+      <a-step title="导入密码"   description="" />
+      <a-step title="导入完成" description="" />
+    </a-steps>
+    <div style="padding: 10px">
+    <template v-if="importStep===0">
+        <p>温馨提示：您可能需要先验证内置密码库的主密码，请点击下一步。</p>
+<!--        <p>-->
+<!--          <a-input-password v-model:value="importPwd" placeholder="请输入主密码"></a-input-password>-->
+<!--        </p>-->
+
+    </template>
+    <template v-else-if="importStep===1">
+      <p>当前有 <strong style="font-size: 24px">{{innerPasswords.length}}</strong> 条密码可供导入。点击下一步导入。</p>
+      <p>
+        <a-checkbox v-model:checked="importGroup">导入到单独的密码组</a-checkbox>
+      </p>
+      <p v-if="importGroup">
+        <a-input  v-model:value="importGroupName"></a-input>
+      </p>
+      <p>
+        对已存在的密码采取的操作
+        <a-radio-group v-model:value="existAction">
+          <a-radio value="jump">跳过</a-radio>
+          <a-radio value="push">更新一个版本</a-radio>
+        </a-radio-group>
+      </p>
+      <p>
+        <a-checkbox v-model:checked="importDelete">导入后删除成功导入的密码</a-checkbox>
+      </p>
+    </template>
+      <template v-else-if="importStep===2">
+        <a-result
+          status="success"
+          title="导入密码成功。"
+          :sub-title="'共为您处理 '+this.importResult.handleCount+' 个密码，其中：'"
+        >
+          <template #extra>
+             新创建：{{importResult.createCount}}<br>
+            <template v-if="existAction==='jump'">
+              跳过：{{importResult.jumpCount}} <br>
+            </template>
+            <template v-else>
+              更新：{{importResult.pushCount}} <br>
+            </template>
+
+          </template>
+        </a-result>
+      </template>
+    </div>
+    <template #footer>
+      <a-button key="back" @click="this.importVisible=false;this.importStep=0">取消</a-button>
+      <a-button key="submit" type="primary" :loading="loading" @click="doImportNext()">
+        <template v-if="importStep!==2">
+          下一步
+        </template>
+        <template v-else>
+          完成
+        </template>
+
+      </a-button>
+    </template>
+  </a-modal>
 </template>
 
 <script>
@@ -177,7 +255,7 @@ import {
   FolderOpenFilled, LinkOutlined,
   LockFilled,CodeTwoTone,
   UpOutlined,DownOutlined,
-  CheckOutlined
+  CheckOutlined,ApiFilled
 } from "@ant-design/icons-vue";
 import { appStore } from "../store";
 import { mapActions,mapWritableState, mapState } from "pinia";
@@ -198,7 +276,8 @@ export default {
     TagFilled,FolderOpenFilled,
     LinkOutlined,LockFilled,
     Empty,UpOutlined,
-    DownOutlined,CheckOutlined
+    DownOutlined,CheckOutlined,
+    ApiFilled
   },
   computed: {
     ...mapState(appStore, []),
@@ -217,6 +296,22 @@ export default {
   },
   data() {
     return {
+      importStep:0,
+      importVisible:false,
+      importPwd:'',
+      innerPasswords:[],
+      importDelete:false,//导入后是否删除成功导入的密码
+      importGroup:true,//导入到一个单独的密码组
+      importGroupName:'',
+      existAction:'jump',//密码已经存在的操作，默认跳过
+      importResult:{
+        handleCount:0,//处理数量
+        jumpCount:0,//跳过数量
+        createCount:0,//创建数量
+        pushCount:0//推版本数量
+      },
+
+
       activeNav: ["base"],
       user: {
         user_info: {},
@@ -405,7 +500,41 @@ export default {
     }
   },
   methods: {
-    ...mapActions(appStore,['getTabData']),
+    ...mapActions(appStore,['getTabData','importPasswords']),
+    showImport(){
+      this.importVisible=true
+    },
+    async doImportNext () {
+      switch (this.importStep) {
+        case 0:
+          //todo验证密码
+          this.innerPasswords = await ipc.invoke('credentialStoreGetCredentials')
+          this.importGroupName= '导入密码_'+ (new Date(Date.now())).toLocaleString()
+          console.log(this.innerPasswords)
+          this.importStep++
+          break;
+        case 1:
+          //todo 导入密码
+          if(this.importGroup){
+            if(this.importGroupName===''){
+              message.error('请输入新的密码组的名称')
+            }
+          }
+          if(this.doImportPasswords()){
+            this.importStep++
+          }else{
+            message.error('导入遇到意外错误。')
+          }
+          break;
+        case 2:
+          this.importVisible = false;
+          this.importStep = 0
+      }
+    },
+    doImportPasswords(){
+      this.importResult= this.importPasswords(this.innerPasswords,this.importGroup?this.importGroupName:undefined,this.existAction)
+      return true
+    },
     // 搜索触发做的事情
     searchClick() {},
     // 开启抽屉式的选项
@@ -490,7 +619,26 @@ export default {
   }
 };
 </script>
+<style lang="scss">
+.full-modal {
+.ant-modal {
+  max-width: 100%;
+  top: 0;
+  padding-bottom: 0;
+  margin: 0;
+}
+.ant-modal-content {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh);
+}
+.ant-modal-body {
+  flex: 1;
+}
+}
+</style>
 <style>
+
 body,
 html {
   overflow: hidden;

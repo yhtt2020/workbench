@@ -41,6 +41,21 @@ const PasswordModel = {
     }
   },
 
+  /**批量导入密码到密码库内
+   *
+   * @param passwords
+   */
+
+  importPasswords(passwords,groupName,existAction){
+    // if(PasswordModel.activeManager!==PasswordModel.managerMap.kdbxModel)//不支持文件密码库以外的导入，均返回失败
+    //   console.log('当前密码非文件管理器（未打开）',1)
+    //   return false
+
+    //todo jude密码库一打开
+    return  passwordModel.kdbxModel.importPasswords(passwords,groupName,existAction)
+
+  },
+
   getAllPasswords(){
    return PasswordModel.activeManager.getAllCredentials()
   },

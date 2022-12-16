@@ -55,6 +55,9 @@ export const appStore = defineStore('kee',{
         passwordModel.getAllPasswords()
         console.log('set dbinfo',dbInfo)
       },
+      importPasswords(passwords,groupName,existAction){
+        return passwordModel.importPasswords(passwords,groupName,existAction)
+      },
       loadDbList(){
         let history = localStorage.getItem('bankList')
         if (history) {
