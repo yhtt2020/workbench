@@ -149,7 +149,7 @@ class KdbxModel {
       importEntry.pushHistory()
       importEntry.fields.set('URL',password.domain)
       importEntry.fields.set('UserName',password.username)
-      importEntry.fields.set('Title',password.title)
+      importEntry.fields.set('Title',password.name)
       importEntry.fields.set('Password',kdbxweb.ProtectedValue.fromString(password.password))
       importEntry.times.update()
       console.log('更新密码版本成功=',importEntry,12)
