@@ -37,7 +37,7 @@
         <div class="header-container">
           <div class="current-header">
             <span class="current-avatar">
-              <img :src="currentTab.favicon.url"/>
+              <img v-if="currentTab.favicon" :src="currentTab.favicon.url"/>
             </span>
             <div class="header-content" >
               <span v-if="contentControlShow == false">{{currentTab.title}}</span>
