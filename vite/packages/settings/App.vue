@@ -54,7 +54,7 @@ export default defineComponent({
       downloadAuto:false,
       sideBarPopoverDelay:0,//侧边栏感知延迟
       showSideBarPopover:true,//显示侧边栏悬浮面板
-
+      activeKey:'Privacy',
       settings: {
         appearance:{
           title:'外观',
@@ -146,11 +146,16 @@ export default defineComponent({
     }
   },
   mounted() {
+    let url = window.location.search
+    var type=url.substring(url.indexOf("?")+1);
+    this.activeKey = type
+    console.log(type)
     settings.get('downloadAutoSave',(value)=>{
       if(value!==undefined){
         this.downloadAuto = value
       }
     })
+
     this.platform=process.platform
     window.settings = settings
     // settings.load()
@@ -183,14 +188,15 @@ export default defineComponent({
     this.preparePasswordsSettings()
   },
 
-  setup() {
+  // setup() {
+  //   const activeKey = ref('Privacy')
+  //
+  //   return {
+  //     activeKey,
+  //   }
+  // },
 
-    const activeKey = ref('Privacy')
-    return {
-      activeKey,
 
-    }
-  },
   methods: {
     setPasswordManager(pm){
       if(typeof pm==='string'){
