@@ -92,11 +92,12 @@ export const appStore = defineStore('kee', {
 
     dbList: [],//打开过的密码库
 
-    passwords: []//全部的密码
+    passwords: [],//全部的密码
+    _passwords:[]
   }),
   getters: {
     displayPasswords() {
-      let passwords = this.passwords.map((pwd) => {
+      this._passwords = this.passwords.map((pwd) => {
         return {
           ...pwd,
           showCopy: false,
@@ -105,11 +106,11 @@ export const appStore = defineStore('kee', {
         }
       })
       if (this.filterInfo.type === 'all') {
-        return passwords
+        return this._passwords
       } else if (this.filterInfo.type === 'tab') {
         let domain = tools.getDomainFromUrl(this.filterInfo.url)
         let rootDomain = tools.getRootDomain(this.filterInfo.url)
-        passwords=passwords.filter(pwd => {
+        this._passwords=this._passwords.filter(pwd => {
           if (!pwd.domain) {
             return false
           }
@@ -122,7 +123,7 @@ export const appStore = defineStore('kee', {
         })
       }
 
-      return passwords
+      return this._passwords
     }
   },
 

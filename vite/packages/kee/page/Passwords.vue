@@ -73,10 +73,10 @@
       >
       <a-list item-layout="horizontal" :data-source="state.displayPasswords" >
         <template #renderItem="{ item,index }">
-          <div @mouseover="passwordItemsHover(item)" @mouseleave="passwordItemRemove(item)">
-            <a-list-item :class="currentIndex==index ? 'active-list':''" @click="leftDescription(item)">
+          <div @mouseenter.stop="passwordItemsHover(item)" @mouseleave.stop="passwordItemRemove(item)">
+            <a-list-item :class="currentIndex===item.id ? 'active-list':''" @click="leftDescription(item)">
             <!-- 判断鼠标悬浮时打开并填充按钮显示 -->
-            <a-list-item-meta class="is-open-fill" v-if="item.showTip == true" :description="item.username || '无用户名'">
+            <a-list-item-meta :class="{'is-open-fill':item.showTip,'no-open-fill':!item.showTip}" :description="item.username || '无用户名'">
               <template #title>
                 <a>{{ item.title || '未命名'}}</a>
               </template>
@@ -84,16 +84,7 @@
                 <a-avatar :src="item.icon" />
               </template>
             </a-list-item-meta>
-            <!-- 判断鼠标离开时打开并填充按钮隐藏 -->
-            <a-list-item-meta class="no-open-fill" :description="item.username || '无用户名'" v-else>
-              <template #title>
-                <a>{{ item.title || '未命名' }}</a>
-              </template>
-              <template #avatar>
-                <a-avatar :src="item.icon" />
-              </template>
-            </a-list-item-meta>
-            <div class="open-fill" v-if="item.showTip == true" @click="openFillClick">打开并填充</div>
+               <div class="open-fill" v-show="item.showTip" @click="openFillClick">打开并填充</div>
             </a-list-item>
           </div>
         </template>
