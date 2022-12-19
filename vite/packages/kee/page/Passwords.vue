@@ -67,18 +67,10 @@
             <span class="current-website">{{ currentTab.url }}</span>
           </div>
         </div>
-<!--        <div class="current-list-container">-->
-<!--           <div class="current-item" :class="noWebIndex == item.id ? 'active-current-bgcolor':''" v-for="item in currentList" :key="item.id" @click="currentWebSiteClick(item)">-->
-<!--              <span class="current-item-img">-->
-<!--                <img :src="item.url" alt=""/>-->
-<!--              </span>-->
-<!--              <div class="current-item-right">-->
-<!--                <span class="title">{{item.title}}</span>-->
-<!--                <span class="description">{{item.description}}</span>-->
-<!--              </div>-->
-<!--           </div>-->
-<!--        </div>-->
       </div>
+      <vue-custom-scrollbar :settings="settings" style="position:relative;"
+      :style="{height:this.listHeight}"
+      >
       <a-list item-layout="horizontal" :data-source="state.displayPasswords" >
         <template #renderItem="{ item,index }">
           <div @mouseover="passwordItemsHover(item)" @mouseleave="passwordItemRemove(item)">
@@ -106,6 +98,7 @@
           </div>
         </template>
       </a-list>
+      </vue-custom-scrollbar>
     </a-layout-sider>
     <a-layout-content class="password-right-main">
       <!-- 当数据为加载完成时,初始化默认没有搭建时展示页面空状态，暂时先隐藏掉 -->
@@ -274,6 +267,7 @@ const { passwordModel }=window.$models
 export default {
   name: "Passwords",
   components: {
+    vueCustomScrollbar,
     SettingOutlined, LaptopOutlined,
     CodeTwoTone, SearchOutlined,
     SmileOutlined,SwapOutlined,LockOutlined,
@@ -285,9 +279,92 @@ export default {
     DownOutlined,CheckOutlined,
     ApiFilled
   },
+  data() {
+    return {
+      settings: {
+        swipeEasing: true,
+        suppressScrollY: false,
+        suppressScrollX: true,
+        wheelPropagation: false
+      },
+
+
+      url:'',//当前标签页的url
+
+
+      importStep:0,
+      importVisible:false,
+      importPwd:'',
+      innerPasswords:[],
+      importDelete:false,//导入后是否删除成功导入的密码
+      importGroup:true,//导入到一个单独的密码组
+      importGroupName:'',
+      existAction:'jump',//密码已经存在的操作，默认跳过
+      importResult:{
+        handleCount:0,//处理数量
+        jumpCount:0,//跳过数量
+        createCount:0,//创建数量
+        pushCount:0//推版本数量
+      },
+
+
+      activeNav: ["base"],
+      user: {
+        user_info: {},
+      },
+      currentDevApp: [],
+      settings: {
+        swipeEasing: true,
+        suppressScrollY: false,
+        suppressScrollX: true,
+        wheelPropagation: false,
+      },
+      simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
+      // 列表默认下标
+      currentIndex: 0,
+      checkNick: false,
+      search: "",
+      size: "large",
+      sideDrawerVisible: false,
+
+      // 筛选菜单列表下标
+      selectDrawerIndex:1,
+      totalOpen: true,
+      contextItems: "",
+      // 当前网站
+      noWebIndex:'',
+      state:appStore(),
+      // 定义筛选菜单列表数据
+
+      // 筛选菜单下拉框
+      dropdownVisible:false,
+      // 判断主应用打开入口
+      openMainEnter:true,
+      // 我的密码库筛选下标
+      myPasswordIndex:0,
+      checkPasswordIndex:0,
+      myPasswordVisible:false,
+      // 控制内容信息隐藏和显示
+      contentControlShow:false,
+    }
+
+  },
   computed: {
     ...mapState(appStore,['displayPasswords']),
     ...mapWritableState(appStore,['passwordItem','dbList','currentTab','tags','filterInfo','siteCard']),
+    listHeight(){
+      let height=''
+      if(this.filterInfo.type==='tab'){
+        if(this.contentControlShow){
+         height=160
+        }else{
+          height=115
+        }
+      }else{
+        height=70
+      }
+      return 'calc( 100vh - '+height+'px)'
+    },
     displayTags(){
       return this.tags.map((tag,index)=>{
         return {
@@ -350,100 +427,7 @@ export default {
     }
 
   },
-  data() {
-    return {
-      url:'',//当前标签页的url
 
-
-      importStep:0,
-      importVisible:false,
-      importPwd:'',
-      innerPasswords:[],
-      importDelete:false,//导入后是否删除成功导入的密码
-      importGroup:true,//导入到一个单独的密码组
-      importGroupName:'',
-      existAction:'jump',//密码已经存在的操作，默认跳过
-      importResult:{
-        handleCount:0,//处理数量
-        jumpCount:0,//跳过数量
-        createCount:0,//创建数量
-        pushCount:0//推版本数量
-      },
-
-
-      activeNav: ["base"],
-      user: {
-        user_info: {},
-      },
-      currentDevApp: [],
-      settings: {
-        swipeEasing: true,
-        suppressScrollY: false,
-        suppressScrollX: true,
-        wheelPropagation: false,
-      },
-      simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
-      // 列表默认下标
-      currentIndex: 0,
-      checkNick: false,
-      search: "",
-      size: "large",
-      sideDrawerVisible: false,
-
-      // 筛选菜单列表下标
-      selectDrawerIndex:1,
-      totalOpen: true,
-      contextItems: "",
-      // 当前网站
-      noWebIndex:'',
-      currentList: [
-        {
-          id:1,
-          title: "拉娅枫的语雀帐号",
-          description: "Francisio_Phillps",
-          url: "../../../public/img/key_black.svg",
-          password:'123456',
-          site_1:'zt.xaingtian.ren',
-          showCopy: false,
-          site_2:'www.yuque.com'
-        },
-        {
-          id:2,
-          title: "过英的语雀帐号",
-          description: "Isabelle_Fisher",
-          url: "../../../public/img/key_crimson.svg",
-          password:'123456',
-          showCopy: false,
-          site_1:'zt.xaingtian.ren',
-          site_2:'www.yuque.com'
-        },
-        {
-          id:3,
-          title: "汝贵的语雀帐号",
-          description: "Benjamin_Gonzalez",
-          url: "../../../public/img/key_blue.svg",
-          password:'123456',
-          showCopy: false,
-          site_1:'zt.xaingtian.ren',
-          site_2:'www.yuque.com'
-        },
-      ],
-      state:appStore(),
-      // 定义筛选菜单列表数据
-
-      // 筛选菜单下拉框
-      dropdownVisible:false,
-      // 判断主应用打开入口
-      openMainEnter:true,
-      // 我的密码库筛选下标
-      myPasswordIndex:0,
-      checkPasswordIndex:0,
-      myPasswordVisible:false,
-      // 控制内容信息隐藏和显示
-      contentControlShow:false,
-    }
-
-  },
   async mounted() {
       this.getTabData()
     //获取到前面5个最近的库
