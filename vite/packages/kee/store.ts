@@ -138,6 +138,9 @@ export const appStore = defineStore('kee', {
      */
     setFilter(filterName, args) {
       let newFilter = FILTERS[filterName]
+      if(newFilter.type==='all'){
+        newFilter.text=this.currentDb.name
+      }
       this.filterInfo = Object.assign(this.filterInfo, newFilter)
       this.filterInfo = Object.assign(this.filterInfo, args)
     },

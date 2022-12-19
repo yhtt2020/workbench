@@ -1,5 +1,5 @@
 <template>
- <span :style="{width:width,height:height}"   class="img" style="overflow: hidden;position:relative;display: inline-block">
+ <span :style="{width:width,height:height}"   class="img" style="overflow: hidden;position:relative;display: inline-block;vertical-align: top">
            <img :style="getStyle"
                 :src="src" alt="">
 </span>

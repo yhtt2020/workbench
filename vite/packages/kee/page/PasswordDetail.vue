@@ -62,9 +62,9 @@
   <div v-else class="breadcrumb-form">
     <div class="breadcrumb-form-header">
       <div class="breadcrumb-bottom-name">
-        <ColorImg :src="passwordItem.icon" :width="18" :height="18" :color="this.getColor"></ColorImg>
+        <ColorImg :src="passwordItem.icon" :width="16" :height="16" :color="this.getColor"></ColorImg>&nbsp;
         <span class="name" v-if="editShow == false">
-          {{passwordItem.title}}
+          {{passwordItem.title || '未命名'}}
         </span>
         <a-form :model="formState" :rules="formRules" v-if="editShow==true">
           <a-form-item name="passwordAccount" required>
