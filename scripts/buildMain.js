@@ -34,6 +34,7 @@ const modules = [
   'main/remoteMenu.js',
   'main/remoteActions.js',
   'main/keychainService.js',
+  'main/kdbxService.js',
   'main/handleAxios.js',
   'main/api.js',
   'js/util/proxy.js',

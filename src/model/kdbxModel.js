@@ -2,7 +2,6 @@ const logger = require('../util/logger')
 const StorageFile = require('./kee/storageFile')
 const storageFile = new StorageFile()
 const FileModel = require('./kee/fileModel')
-const { ipcRenderer } = require('electron')
 const fileModel = new FileModel()
 const  kdbxweb = require('kdbxweb')
 

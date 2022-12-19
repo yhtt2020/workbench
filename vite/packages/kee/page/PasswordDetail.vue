@@ -111,7 +111,7 @@
           <div ref="webSiteRef" class="breadcrumb-bottom-website" @mouseover="isMouse==true&&openWebsiteHover()" @mouseleave="isMouse==true&&closeWebsiteHover()">
              <div class="website-top">
               <a href="#" style="color:rgba(104, 81, 214, 1);">网站</a>
-              <a href="#" v-if="editShow==false">{{passwordItem.site_1}}</a>
+              <a   @click="openUrl(passwordItem.domain)" v-if="editShow==false">{{passwordItem.domain}}</a>
               <a-form :model="formState" :rules="formRules" v-if="editShow==true">
                 <a-form-item name="siteValue" required>
                   <a-input  style="padding:0 10px !important;" v-model:value="formState.siteValue" />
@@ -358,6 +358,9 @@ export default {
     this.formState.siteValue = this.passwordItem.site_1
   },
   methods:{
+    openUrl(url){
+      ipc.send('addTab',{url})
+    },
     // 打开分享
     openShare(){
        // 使用一个值控制弹窗

@@ -8,7 +8,7 @@ const statistics = require('js/statistics.js')
 const Bitwarden = require('js/passwordManager/bitwarden.js')
 const OnePassword = require('js/passwordManager/onePassword.js')
 const Keychain = require('js/passwordManager/keychain.js')
-
+const Kdbx = require('js/passwordManager/kdbx.js')
 const PasswordManagers = {
   // List of supported password managers. Each password manager is expected to
   // have getSuggestions(domain) method that returns a Promise with credentials
@@ -16,7 +16,8 @@ const PasswordManagers = {
   managers: [
     new Bitwarden(),
     new OnePassword(),
-    new Keychain()
+    new Keychain(),
+    new Kdbx()
   ],
   // Returns an active password manager, which is the one that is selected in app's
   // settings.

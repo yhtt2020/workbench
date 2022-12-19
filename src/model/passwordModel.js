@@ -24,7 +24,19 @@ const PasswordModel = {
   kdbxModel:kdbxModel,
 
   openFile (password, path, keyFileData, callback) {
-    PasswordModel.kdbxModel.openFile(password, path, keyFileData, callback)
+    PasswordModel.kdbxModel.openFile(password, path, keyFileData, (err,data)=>{
+      if(err){
+        console.warn('打开失败',err)
+        callback(err,data)
+      }
+      ipc.invoke('setKdbxCredential',{
+        filePath:path,
+        name:data.name,
+        password:password,
+        keyFile:keyFileData
+      })
+      callback(undefined,data)
+    })
   },
   create (name = 'kdb', path, pwd, callback){
     PasswordModel.kdbxModel.create(name,path,pwd,callback)
@@ -86,6 +98,7 @@ const PasswordModel = {
     if (managerSetting == null) {
       return PasswordModel.managers.find(mgr => mgr.name === 'Built-in password manager')
     }
+
 
     return PasswordModel.managers.find(mgr => mgr.name === managerSetting.name)
   },
