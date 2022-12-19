@@ -70,7 +70,8 @@ class KdbxModel {
         username:fields.get('UserName'),
         password:pwd?pwd.getText():{},
         title:fields.get('Title'),
-        id:entry.uuid
+        id:entry.uuid,
+        originData:entry
       })
     }
     return credentials

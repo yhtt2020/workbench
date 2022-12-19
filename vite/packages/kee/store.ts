@@ -72,6 +72,10 @@ export const appStore = defineStore('kee', {
     },
     //将点击之后的值进行缓存
     passwordItem: {
+      originData:{
+        parentGroup:{
+        }
+      },
       id: 0,
       index: 0,
       title: "禅道账号",
@@ -122,7 +126,6 @@ export const appStore = defineStore('kee', {
           }
         })
       }
-
       return this._passwords
     }
   },

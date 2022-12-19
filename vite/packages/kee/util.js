@@ -6,3 +6,11 @@ export function getLogo(logo,local_dir,fileProtocol=true){
     return logo
   }
 }
+
+export function getBgColorFromEntry(entry){
+  let color='black'
+  if(entry){
+    color= entry.bgColor
+  }
+  return color
+}

@@ -81,7 +81,7 @@
                 <a>{{ item.title || '未命名'}}</a>
               </template>
               <template #avatar>
-                <a-avatar :src="item.icon" />
+                <ColorImg :src="item.icon" :width="18" :height="18" :color="this.getColor(item.originData)"></ColorImg>
               </template>
             </a-list-item-meta>
                <div class="open-fill" v-show="item.showTip" @click="openFillClick">打开并填充</div>
@@ -251,6 +251,8 @@ import { appStore } from "../store";
 import { mapActions,mapWritableState, mapState } from "pinia";
 import vueCustomScrollbar from "../../../src/components/vue-scrollbar.vue";
 import { message, Modal, Empty } from "ant-design-vue";
+import ColorImg from '../components/ColorImg.vue'
+import { getBgColorFromEntry } from '../util'
 
 let { appModel, devAppModel } = window.$models;
 let appId = window.globalArgs["app-id"];
@@ -268,7 +270,7 @@ export default {
     LinkOutlined,LockFilled,
     Empty,UpOutlined,
     DownOutlined,CheckOutlined,
-    ApiFilled
+    ApiFilled,ColorImg
   },
   data() {
     return {
@@ -341,6 +343,7 @@ export default {
 
   },
   computed: {
+
     ...mapState(appStore,['displayPasswords']),
     ...mapWritableState(appStore,['passwordItem','dbList','currentTab','tags','filterInfo','siteCard']),
     listHeight(){
@@ -490,6 +493,9 @@ export default {
     }
   },
   methods: {
+    getColor(data){
+      return getBgColorFromEntry(data)
+    },
     ...mapActions(appStore,['getTabData','importPasswords','getAllPasswords','setFilter']),
     showImport(){
       this.importVisible=true
@@ -535,6 +541,7 @@ export default {
     leftDescription(item) {
       this.currentIndex = item.id;
       this.passwordItem=item
+      console.log(this.passwordItem)
       this.$router.push({
         name:'detail',
         params:{

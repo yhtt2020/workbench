@@ -3,7 +3,7 @@
     <a-breadcrumb-separator class="breadcrumb-left">
       <UnlockFilled class="breadcrumb-lock"/>
       <a-breadcrumb-item class="my-password">我的密码</a-breadcrumb-item>
-      <a-breadcrumb-item class="password-group"><a href="">分组A</a></a-breadcrumb-item>
+      <a-breadcrumb-item v-if="passwordItem.originData.parentGroup" class="password-group"><a >{{ passwordItem.originData.parentGroup.name }}</a></a-breadcrumb-item>
     </a-breadcrumb-separator>
     <div class="breadcrumb-right">
        <div class="auto-full" v-if="editShow == false">
@@ -62,9 +62,7 @@
   <div v-else class="breadcrumb-form">
     <div class="breadcrumb-form-header">
       <div class="breadcrumb-bottom-name">
-        <span class="avatar">
-           <img :src="passwordItem.icon" alt="">
-        </span>
+        <ColorImg :src="passwordItem.icon" :width="18" :height="18" :color="this.getColor"></ColorImg>
         <span class="name" v-if="editShow == false">
           {{passwordItem.title}}
         </span>
@@ -229,18 +227,24 @@ import { Modal , message } from 'ant-design-vue';
 import { createVNode } from 'vue'
 import { appStore } from '../store'
 import { mapState,mapWritableState } from 'pinia'
+import ColorImg from '../components/ColorImg.vue'
+import { getBgColorFromEntry } from '../util.js'
 export default {
   name: 'PasswordDetail',
   components:{
     EllipsisOutlined,UnlockFilled,
     FormOutlined,MinusCircleOutlined,
-    ShareAltOutlined,PlusOutlined,
+    ShareAltOutlined,
     ExclamationCircleOutlined,
     PlusOutlined,ExportOutlined,
-    EyeFilled,EyeInvisibleFilled
+    EyeFilled,EyeInvisibleFilled,
+    ColorImg
   },
   computed: {
-   ...mapWritableState(appStore, ['passwordItem'])
+   ...mapWritableState(appStore, ['passwordItem']),
+    getColor(){
+     return getBgColorFromEntry(this.passwordItem.originData)
+    },
   },
   data(){
     return{
@@ -374,6 +378,7 @@ export default {
         }
       });
     },
+
     // 添加创建tag
     addTag(e){
       // 校验手机号
