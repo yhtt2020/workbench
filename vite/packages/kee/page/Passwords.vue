@@ -45,7 +45,7 @@
             </div>
             <div class="current-switch">
               <a-switch
-                v-model:checked="totalOpen"
+                v-model:checked="this.siteCard.isRoot"
                 checked-children="全站"
                 un-checked-children="子站"
               />
@@ -153,7 +153,7 @@
             </div>
             <div class="other-password-drawer" v-else >
               <component :is="item.icon" style="font-size:16px;padding-right: 12px;color: rgba(0, 0, 0, 0.5) !important;"/>
-              <a-list-item-meta  @click="selectListItem(item)">
+              <a-list-item-meta   @click="selectListItem(item);item.onClick()">
                 <template #title>
                  <span style=" color: rgba(0, 0, 0, 0.65);">{{ item.text }}</span>
                 </template>
@@ -287,7 +287,7 @@ export default {
   },
   computed: {
     ...mapState(appStore,['displayPasswords']),
-    ...mapWritableState(appStore,['passwordItem','dbList','currentTab','tags','filterInfo']),
+    ...mapWritableState(appStore,['passwordItem','dbList','currentTab','tags','filterInfo','siteCard']),
     displayTags(){
       return this.tags.map((tag,index)=>{
         return {
@@ -323,18 +323,28 @@ export default {
           id:1002,
           icon:'AppstoreFilled',
           text:'所有密码',
+          onClick:()=>{
+            this.setFilter('ALL')
+          }
         },
         {
           id:1003,
           text:'当前网站',
           icon:'LinkOutlined',
           divider:1,
+          onClick:()=>{
+            this.setFilter('TAB',{url:this.url})
+            console.log('选择当前网站',this.url)
+          }
         },
         {
           id:1004,
           text:'颜色',
           icon:'StarFilled',
           divider:1,
+          onClick:()=>{
+            console.log('选择颜色')
+          }
         }
       ].concat(this.displayTags)
     }
@@ -342,6 +352,9 @@ export default {
   },
   data() {
     return {
+      url:'',//当前标签页的url
+
+
       importStep:0,
       importVisible:false,
       importPwd:'',
@@ -442,11 +455,10 @@ export default {
     })
     let params=this.$route.params
     if(params.type==='url'){
-      this.filterInfo.type='tab'
-      this.filterInfo.text='当前网站'
-      console.log('设置当前为site')
+      this.url=params.value
+      this.setFilter('TAB',{url:this.url})
       //todo是路径方式
-      passwordModel.getSiteCredit(params.value, true).then((result) => {
+      passwordModel.getSiteCredit(this.url, true).then((result) => {
         let isFirst=true
         result.item.forEach((item) => {
           let pwd
@@ -498,11 +510,12 @@ export default {
     }
     else if(params.type==='all'){
       //是直接查看全部的密码
+      this.setFilter('ALL')
       this.getAllPasswords()
     }
   },
   methods: {
-    ...mapActions(appStore,['getTabData','importPasswords','getAllPasswords']),
+    ...mapActions(appStore,['getTabData','importPasswords','getAllPasswords','setFilter']),
     showImport(){
       this.importVisible=true
     },

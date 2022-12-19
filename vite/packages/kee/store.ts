@@ -1,4 +1,7 @@
 import {defineStore} from "pinia";
+import * as util from "util";
+
+const tools = window.$models.util.tools
 // import _ from 'lodash-es';
 // const {appModel, devAppModel} = window.$models
 const initSetting = { //存储用户的设置
@@ -15,6 +18,33 @@ const initSetting = { //存储用户的设置
   },
 }
 
+const FILTERS = {
+  ALL: {
+    id: 'all',
+    type: 'all',
+    text: '所有密码',
+    icon: 'AppstoreFilled'
+  },
+  TAB: {
+    id: 'tab',
+    type: 'tab',
+    text: '当前网站',
+    icon: 'AppstoreFilled'
+  },
+  TAG: {
+    id: 'tag',
+    type: 'tag',
+    text: '标签',
+    icon: 'AppstoreFilled'
+  },
+  COLOR: {
+    id: 'color',
+    type: 'color',
+    text: '颜色',
+    icon: 'AppstoreFilled'
+  }
+}
+
 export const appStore = defineStore('kee', {
   state: () => ({
 
@@ -23,6 +53,10 @@ export const appStore = defineStore('kee', {
       type: 'all',
       text: "所有密码",
       icon: 'AppstoreFilled'
+    },
+
+    siteCard: {
+      isRoot:false,//子站属性
     },
 
 
@@ -61,19 +95,48 @@ export const appStore = defineStore('kee', {
     passwords: []//全部的密码
   }),
   getters: {
-    displayPasswords: (state) => {
-      const passwords =  state.passwords.map((pwd)=> {
+    displayPasswords() {
+      let passwords = this.passwords.map((pwd) => {
         return {
           ...pwd,
-          showCopy : false,
+          showCopy: false,
           passwordType: 'password',
-          icon : '/kee/key_black.svg'
+          icon: '/kee/key_black.svg'
         }
       })
+      if (this.filterInfo.type === 'all') {
+        return passwords
+      } else if (this.filterInfo.type === 'tab') {
+        let domain = tools.getDomainFromUrl(this.filterInfo.url)
+        let rootDomain = tools.getRootDomain(this.filterInfo.url)
+        passwords=passwords.filter(pwd => {
+          if (!pwd.domain) {
+            return false
+          }
+          let url = new URL('http://'+pwd.domain)
+          if(this.siteCard.isRoot){
+            return url.hostname.endsWith('.'+rootDomain) || url.hostname===rootDomain
+          }else{
+            return url.hostname===domain
+          }
+        })
+      }
+
       return passwords
     }
   },
+
   actions: {
+    /**
+     * 设置筛选器
+     * @param filterName 筛选器名称
+     * @param args 额外的参数，例如site，则需要提交当前的domain
+     */
+    setFilter(filterName, args) {
+      let newFilter = FILTERS[filterName]
+      this.filterInfo = Object.assign(this.filterInfo, newFilter)
+      this.filterInfo = Object.assign(this.filterInfo, args)
+    },
     setDb(dbInfo) {
       this.currentDb = dbInfo
       this.tags = dbInfo.tags
