@@ -25,22 +25,47 @@ ipc.on('deleteDownload', function (e, path) {
   }
 })
 
+ipc.on('downloadCompletes',(agrs,events)=>{
+if(settings.get('downloadAutoSave') != true){
+  if(settings.get('saveTips') == undefined || settings.get('saveTips') == false ){
+    let result =  dialog.showMessageBoxSync({
+      buttons:['去设置','取消'],
+      message:'是否需要设置默认保存地址并开启下载自动保存\n（您也可在下载设置页面手动更改）',
+      cancelId:1
+    })
+    switch (result) {
+      case 0:
+        openSetting(DownloadSetting)
+    }
+    settings.set('saveTips',true)
+  }
+}
+})
+
 function isAttachment (header) {
   return /^\s*attache*?ment/i.test(header)
 }
 
 function sendIPCToDownloadWindow (action, data) {
   // if there are no windows, create a new one
+  getDownloadWindow()
+  setTimeout(()=>{
+    downloadWindow.webContents.send(action, data || {})
+  },20)
 
-  if (downloadWindow === null) {
-    getDownloadWindow(function () {
-      downloadWindow.webContents.send(action, data || {})
-    })
-  } else {
-    if (!downloadWindow.isDestroyed()) {
-      downloadWindow.webContents.send(action, data || {})
-    }
-  }
+
+
+  // if (downloadWindow === null || downloadWindow.isDestroyed()) {
+  //   createDownloadWin()
+  //   downloadWindow.webContents.send(action, data || {})
+  //   // getDownloadWindow(function () {
+  //   //   downloadWindow.webContents.send(action, data || {})
+  //   // })
+  // } else {
+  //   if (!downloadWindow.isDestroyed()) {
+  //     downloadWindow.webContents.send(action, data || {})
+  //   }
+  // }
 }
 
 let originalPageUrl
@@ -53,11 +78,11 @@ ipc.on('closeEmpty', (event, args) => {
 })
 
 ipc.on('downloading', (event, args) => {
-  mainWindow.send('downloadCountAdd')
+  mainWindow.webContents.send('downloadCountAdd')
 })
 
 ipc.on('downloadEnd', (event, args) => {
-  mainWindow.send('downloadCountCut')
+  mainWindow.webContents.send('downloadCountCut')
 })
 
 ipc.on('setSavePath', (event, args) => {
@@ -72,6 +97,7 @@ ipc.on('setSavePath', (event, args) => {
 })
 
 async function downloadHandler (event, item, webContents) {
+
   var itemURL = item.getURL()
   var attachment = isAttachment(item.getContentDisposition())
   const suffixName = item.getFilename().substring(item.getFilename().lastIndexOf('.'), item.getFilename().length)
@@ -218,6 +244,7 @@ async function downloadHandler (event, item, webContents) {
     })
     return true
   }
+
 }
 
 function listenForDownloadHeaders (ses) {

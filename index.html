@@ -147,7 +147,7 @@
   }
 
   .shepherd-element {
-    max-width: 191px;
+    max-width: 200px;
     max-height: 72px;
     margin-left: -38px !important;
     margin-top: -17px !important;
@@ -209,7 +209,7 @@
                                                                                                     src="./icons/toolbar/search.svg">
               </span>
           </div>
-          <div id="closeBlockGuide" class="action-wrapper">
+          <div class="action-wrapper">
               <span @click="ipc.send('openSwitch')" title="快速切换（ctrl+tab）" id="switch-toolbar"><img class="action"
                                                                                                     src="./icons/toolbar/switch.svg">
               </span>
@@ -230,8 +230,8 @@
 
       </div>
       <div style="display: flex;">
-
-        <div class="action-wrapper">
+<!--        广告拦截的提示和手机浏览工具按钮有关联-->
+        <div  id="closeBlockGuide" class="action-wrapper">
               <span @click="ipc.send('openMobile')" title="手机浏览工具" id="mobile-toolbar"><img class="action"
                                                                                             src="./icons/toolbar/smartphone.svg">
               </span>
