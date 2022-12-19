@@ -24,10 +24,22 @@ const PasswordModel = {
   kdbxModel:kdbxModel,
 
   openFile (password, path, keyFileData, callback) {
-    this.kdbxModel.openFile(password, path, keyFileData, callback)
+    PasswordModel.kdbxModel.openFile(password, path, keyFileData, callback)
   },
   create (name = 'kdb', path, pwd, callback){
-    this.kdbxModel.create(name,path,pwd,callback)
+    PasswordModel.kdbxModel.create(name,path,pwd,callback)
+  },
+  loadCurrent(callback){
+    const pm=settings.get('passwordManager')
+    if(pm.name==='file')
+    {
+      if(!pm.filePath){
+        return false
+      }
+      //todo 获取安全存储内的主密码
+      const password= '123'
+      passwordModel.openFile(password,pm.filePath,undefined,callback)//todo 加入key
+    }
   },
 
   /**
@@ -60,6 +72,8 @@ const PasswordModel = {
   },
 
   getAllPasswords(){
+    console.log('获取全部密码')
+    console.log(PasswordModel.activeManager,'manag')
    return PasswordModel.activeManager.getAllCredentials()
   },
 

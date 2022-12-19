@@ -40,7 +40,6 @@ const kdbxwebInit={
   },
   argon2(password, salt, memory, iterations, length, parallelism, type, version) {
     const args = { password, salt, memory, iterations, length, parallelism, type, version };
-    console.log(args,'args...')
     return this.loadRuntime(memory).then((runtime) => {
       const ts = logger.ts();
       return runtime.hash(args).then((hash) => {
@@ -58,8 +57,6 @@ const kdbxwebInit={
         //let bin=kdbxweb.ProtectedValue.fromBinary(args.password)
         const password = kdbxweb.ProtectedValue.fromBinary(args.password).dataAndSalt();
         const salt = kdbxweb.ProtectedValue.fromBinary(args.salt).dataAndSalt();
-
-        console.log('进入argon2')
         return argon2(password, salt, {
           type: args.type,
           version: args.version,
@@ -70,7 +67,6 @@ const kdbxwebInit={
           memoryCost: args.memory
         })
           .then((res) => {
-            console.log('argon计算结果=',res)
             password.data.fill(0);
             salt.data.fill(0);
 

@@ -11,7 +11,8 @@ var passwordManagers = [
     name: 'file',
     alias: '想天轻密码',
     icon:'/kee/kee.svg',
-    summary:'独立应用版密码管理器，使用Keepass格式存储密码库，支持密码库切换，可使用网盘进行同步。<br>推荐使用此方式。',
+    disable:true,
+    summary:'独立应用版密码管理器，使用Keepass格式存储密码库，支持密码库切换，可使用网盘进行同步。<br>推荐使用此方式。即将上线，敬请期待。',
     url:'https://www.yuque.com/tswork/browser/cahep9'
   },
   {

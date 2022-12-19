@@ -7,8 +7,8 @@
     >
       <a-row class="password-select-container">
         <a-col :span="12" class="col-left">
-          <component :is="filterIcon"/>
-          <span class="password-all">{{ filterText }}</span>
+          <component :is="filterInfo.icon"/>
+          <span class="password-all">{{ filterInfo.text }}</span>
         </a-col>
         <a-col :span="12" class="col-right">
           <SwapOutlined style="font-size: 16px; cursor: pointer" />
@@ -33,7 +33,7 @@
   <a-divider style="height: 1px; background-color: rgba(230, 230, 230, 0.1);margin: 0  !important;" />
   <a-layout style="height: calc(100vh - 45px);">
     <a-layout-sider theme="light" style="padding: 20px;border-right: 1px solid rgba(230, 230, 230, 1);">
-      <div class="current-container" v-if="currentTab">
+      <div class="current-container" v-if="filterInfo.type==='tab'">
         <div class="header-container">
           <div class="current-header">
             <span class="current-avatar">
@@ -79,7 +79,7 @@
 <!--           </div>-->
 <!--        </div>-->
       </div>
-      <a-list item-layout="horizontal" :data-source="passwords" >
+      <a-list item-layout="horizontal" :data-source="state.displayPasswords" >
         <template #renderItem="{ item,index }">
           <div @mouseover="passwordItemsHover(item)" @mouseleave="passwordItemRemove(item)">
             <a-list-item :class="currentIndex==index ? 'active-list':''" @click="leftDescription(item)">
@@ -286,8 +286,8 @@ export default {
     ApiFilled
   },
   computed: {
-    ...mapState(appStore, []),
-    ...mapWritableState(appStore,['passwordItem','dbList','currentTab','tags']),
+    ...mapState(appStore,['displayPasswords']),
+    ...mapWritableState(appStore,['passwordItem','dbList','currentTab','tags','filterInfo']),
     displayTags(){
       return this.tags.map((tag,index)=>{
         return {
@@ -310,10 +310,11 @@ export default {
       })
     },
     selectMenuList(){
+
       return [{
         id:1001,
         icon:'UnlockFilled',
-        text:'我的密码',
+        text:this.currentDb?this.currentDb.name:'我的密码',
         iconSwap:'SwapOutlined',
         divider:1,
         children:[]
@@ -372,13 +373,10 @@ export default {
       // 列表默认下标
       currentIndex: 0,
       checkNick: false,
-      passwords: [],
       search: "",
       size: "large",
       sideDrawerVisible: false,
-      filterText: "所有密码",
-      filterIcon:'AppstoreFilled',
-      filterId:0,
+
       // 筛选菜单列表下标
       selectDrawerIndex:1,
       totalOpen: true,
@@ -429,11 +427,11 @@ export default {
       checkPasswordIndex:0,
       myPasswordVisible:false,
       // 控制内容信息隐藏和显示
-      contentControlShow:false
+      contentControlShow:false,
     }
+
   },
   async mounted() {
-    console.log(this.dbList)
       this.getTabData()
     //获取到前面5个最近的库
     this.selectMenuList.children=this.dbList.map(item=>{
@@ -444,7 +442,9 @@ export default {
     })
     let params=this.$route.params
     if(params.type==='url'){
-
+      this.filterInfo.type='tab'
+      this.filterInfo.text='当前网站'
+      console.log('设置当前为site')
       //todo是路径方式
       passwordModel.getSiteCredit(params.value, true).then((result) => {
         let isFirst=true
@@ -498,18 +498,11 @@ export default {
     }
     else if(params.type==='all'){
       //是直接查看全部的密码
-      let passwords=passwordModel.getAllPasswords()
-      console.log(passwords,'passwords获取')
-      passwords.forEach((pwd)=>{
-        pwd.showCopy=false
-        pwd.passwordType = "password"
-        pwd.icon='/kee/key_black.svg'
-      })
-      this.passwords=passwords
+      this.getAllPasswords()
     }
   },
   methods: {
-    ...mapActions(appStore,['getTabData','importPasswords']),
+    ...mapActions(appStore,['getTabData','importPasswords','getAllPasswords']),
     showImport(){
       this.importVisible=true
     },

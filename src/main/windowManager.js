@@ -846,7 +846,6 @@ class WindowManager {
   onWindow(channel, cb) {
     this._on('api.window.' + channel, (event, args) => {
       let instance = this.get(args['_name'])
-
       cb(event, args, instance)
     })
   }

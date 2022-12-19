@@ -24,9 +24,10 @@ export default {
     window.kdbxModel=window.$models.kdbxModel
     window.passwordModel =window.$models.passwordModel
     this.loadDbList()
+    this.loadCurrentDb()
   },
   methods:{
-    ...mapActions(appStore,['setDb','loadDbList']),
+    ...mapActions(appStore,['setDb','loadDbList','loadCurrentDb']),
   },
   data(){
     return {

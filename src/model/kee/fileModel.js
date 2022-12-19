@@ -54,11 +54,10 @@ class FileModel extends Model{
       }
     }
     this.tags.sort();
-    console.log(this.tags,'tagssss')
     return this.tags
     }
     catch (e) {
-      console.log(e)
+      console.warn(e)
     }
   }
 
@@ -94,7 +93,6 @@ class FileModel extends Model{
     this.readModel();
     this.set({ active: true, created: true, name });
     this.db.save().then((data)=>{
-      console.log('data=',data)
       callback(data)
     })
 
@@ -105,7 +103,6 @@ class FileModel extends Model{
       let  credentials
       //const challengeResponse = ChalRespCalculator.build(this.chalResp);
 
-      console.log(keyFileData,'keyfile')
       credentials = new kdbxweb.Credentials(passwordValue);
 
       const ts = logger.ts();

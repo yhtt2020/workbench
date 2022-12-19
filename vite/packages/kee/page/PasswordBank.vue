@@ -126,7 +126,7 @@ export default {
     }
   },
   computed:{
-    ...mapWritableState(appStore,['dbList'])
+    ...mapWritableState(appStore,['dbList','filterInfo'])
   },
   mounted () {
     let bank=this.$route.params
@@ -190,6 +190,8 @@ export default {
             content:'是否切换当前的密码库到：「'+dbInfo.name+'」，切换密码库会导致浏览器的填充密码被调整为新的密码库中的密码。',
             okText:'切换',
             onOk:()=>{
+
+              this.filterInfo.type='all'
               this.setDb({
                 filePath:this.selectedItem.path,
                 kdbx:dbInfo.db,

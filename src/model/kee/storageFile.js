@@ -6,6 +6,12 @@ class StorageFile {
     this.logger = require('../../util/logger')
   }
 
+  /**
+   * 从文件中读取密码库
+   * @param path 标准的文件绝对路径
+   * @param opts 读取文件的额外参数
+   * @param callback 回调(err,data)=>{}
+   */
   load (path, opts, callback) {
     this.logger.debug('Load' + path)
     const ts = this.logger.ts()
@@ -21,7 +27,6 @@ class StorageFile {
         return onError(err)
       }
       const data = typeof contents === 'string' ? contents : new Uint8Array(contents)
-      console.log(data, ';111')
       fs.stat(path, (err, stat) => {
         if (err) {
           return onError(err)
@@ -37,7 +42,6 @@ class StorageFile {
   }
 
   async save (path, opts, data, callback) {
-    console.log(data)
     const ts = this.logger.ts()
     const onError = (e) => {
       if (Object.prototype.hasOwnProperty.call(e, 'code') && e.code === 'EISDIR') {

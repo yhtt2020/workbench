@@ -25,11 +25,11 @@ class KdbxModel {
           callback(err)
           return
         }
-        console.log(dbInfo,'dbInfo')
         this.db=dbInfo.db
         this.name=dbInfo.name
         this.path=path
         this.tags=dbInfo.tags
+        dbInfo.filePath=path
         callback(undefined,dbInfo)
       })
     })

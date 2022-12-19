@@ -827,7 +827,7 @@ export default defineComponent({
               当前密码管理器： <a-avatar v-if="currentPasswordManager.icon" shape="square" :src="currentPasswordManager.icon" />
               <a-avatar v-else style="background-color: #1890ff">内</a-avatar> {{currentPasswordManager.alias}}
 
-              <div v-if="currentPasswordManager.name!=='file'" style="border: 1px solid rgba(65,105,225,0.64);padding: 10px;width: 600px;border-radius: 4px;;margin-top: 10px;">
+              <div hidden v-if="currentPasswordManager.name!=='file'" style="border: 1px solid rgba(65,105,225,0.64);padding: 10px;width: 600px;border-radius: 4px;;margin-top: 10px;">
                 <div><a-avatar src="/kee/kee.svg" :size="30"></a-avatar> <strong style="font-size: 16px;margin-left: 10px">想天轻密码</strong></div>
                 <div  style="padding-left: 42px;">推荐使用<strong>想天轻密码</strong>管理您的密码，可一键迁移当前浏览器密码至轻应用。
                   <a-button @click="setPasswordManager('file')" type="primary" size="small" style="margin-top: 10px">点击更改</a-button></div>
@@ -853,7 +853,8 @@ export default defineComponent({
                      <a-list-item>
                        <a-card :style="{'border-color': item.name==='file'?'#3a8ee6':'#f1f1f1',background:item.name==='file'?'rgba(58,142,230,0.03)':'white'}" hoverable size="small"  >
                          <template #actions>
-                           <a v-if="currentPasswordManager.name===item.name"  style="color:#1890ff" @click="setPasswordManager(item)"><check-circle-outlined  /> 当前使用中</a>
+                           <a v-if="item.disable">敬请期待</a>
+                           <a v-else-if="currentPasswordManager.name===item.name"  style="color:#1890ff" @click="setPasswordManager(item)"><check-circle-outlined  /> 当前使用中</a>
                            <a v-else="currentPasswordManager.name===item.name" @click="setPasswordManager(item)"><check-circle-outlined  /> 设置</a>
                            <a target="_blank" :href="item.url"> 查看官网</a>
                          </template>
