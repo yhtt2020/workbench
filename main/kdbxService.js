@@ -2,12 +2,9 @@
  * 此服务是提供给使用了文件形式的密码库的响应，和kechain不同的是，此形式只将凭证存储在加密存储中，而不将密码库整个存储进去。
  * 当用户登录后，保存凭证将使用安全存储进行，而且此凭证与原先的keychain的密码是分离的。
  * 至于有效时间，则由用户应用中来处理，一旦失效，则用户需要再次提供凭证。
+ *
+ *
  * **/
-// const keytar = require('keytar')
-// const safeStorage = require('electron').safeStorage
-const kdbxFilePath = path.join(userDataPath, 'kdbxStore')
-const KdbxModel=require('./src/model/kdbxModel.js')
-const kdbxModel=new KdbxModel()
 /*
 file format:
 {
@@ -22,115 +19,173 @@ file format:
   ]
 }
 */
+const KdbxModel=require('./src/model/kdbxModel.js')
+class KdbxService{
+  kdbxFilePath = path.join(userDataPath, 'kdbxStore')
+  kdbxModel=new KdbxModel()
+  dbFile=''
+  currentCredential={}
 
-function readSavedKdbxPasswordFile () {
-  let file
-  try {
-    file = fs.readFileSync(kdbxFilePath)
-  } catch (e) {
-    if (e.code !== 'ENOENT') {
-      console.warn(e)
-      throw new Error(e)
+  /**
+   * 做好密码库的准备，主要做了以下操作
+   * 1.从先前有效的凭证中取出凭证
+   * 2.准备好凭证
+   * @returns {Promise<*[]>}
+   */
+  async prepareDb(){
+    const pm=settings.get('passwordManager')
+    let filePath=pm.filePath
+    if(!fs.existsSync(filePath)){
+      console.warn('当前密码库不存在')
+      return []
     }
+    this.dbFile=filePath
+    this.currentCredential=this.getCredential(filePath) //获取当前凭证
   }
-  try{
-    if (file) {
-      const creds=JSON.parse(safeStorage.decryptString(file))
-      return creds
-    } else {
+
+  /**
+   * 从配置中重载一下密码管理器
+   * @returns {Promise<[]|undefined>}
+   */
+  async reload(){
+    return await this.prepareDb()
+  }
+
+  /**
+   * 写回凭证
+   * @param content 凭证内容
+   */
+   writeSavedKdbxPasswordFile (content) {
+    fs.writeFileSync(this.kdbxFilePath, safeStorage.encryptString(JSON.stringify(content)))
+  }
+  /**
+   * 获取存储的凭证
+   */
+   readSavedKdbxPasswordFile () {
+    let file
+    try {
+      file = fs.readFileSync(this.kdbxFilePath)
+    } catch (e) {
+      if (e.code !== 'ENOENT') {
+        console.warn(e)
+        throw new Error(e)
+      }
+    }
+    try{
+      if (file) {
+        const creds=JSON.parse(safeStorage.decryptString(file))
+        return creds
+      } else {
+        return {
+          version: 1,
+          credentials: []
+        }
+      }
+    }catch (e) {
+      console.warn(e)
       return {
         version: 1,
         credentials: []
       }
     }
-  }catch (e) {
-    console.warn(e)
-    return {
-      version: 1,
-      credentials: []
-    }
+
   }
 
-}
+  /**
+   * 写回一个凭证
+   * @param crd 将一个标准的凭证写回到文件中，自动去重
+   */
+   kdbxCredentialStoreSetPassword (crd) {
+    const fileContent = this.readSavedKdbxPasswordFile()
 
-
-function writeSavedKdbxPasswordFile (content) {
-  fs.writeFileSync(kdbxFilePath, safeStorage.encryptString(JSON.stringify(content)))
-}
-
-function kdbxCredentialStoreSetPassword (crd) {
-  const fileContent = readSavedKdbxPasswordFile()
-
-  // delete duplicate credentials
-  for (let i = 0; i < fileContent.credentials.length; i++) {
-    if (fileContent.credentials[i].filePath === crd.filePath) {
-      fileContent.credentials.splice(i, 1)
-      i--
+    // delete duplicate credentials
+    for (let i = 0; i < fileContent.credentials.length; i++) {
+      if (fileContent.credentials[i].filePath === crd.filePath) {
+        fileContent.credentials.splice(i, 1)
+        i--
+      }
     }
+
+    fileContent.credentials.push(crd)
+    this.writeSavedKdbxPasswordFile(fileContent)
   }
 
-  fileContent.credentials.push(crd)
-  writeSavedKdbxPasswordFile(fileContent)
+  /**
+   * 获得当前凭证库中的一个凭证（从加密文件中获取）
+   * @returns {boolean|*}
+   */
+  getCredential(filePath){
+    let creds=this.readSavedKdbxPasswordFile()
+    let currentDbCred=creds.credentials.find(cred=>{
+      return cred.filePath===filePath
+    })
+    if(!currentDbCred){
+      console.warn('不存在记录的凭证，打开失败')
+      return false
+    }
+    return currentDbCred
+  }
+
+  /**
+   * 此方法是真正的获取密码方法
+   * @returns {Promise<unknown>}
+   */
+  async getAllPasswords(){
+    let currentCredential=this.currentCredential
+      console.log('当前凭证=',this.currentCredential)
+    const gotCreds=new Promise(resolve => {
+
+      this.kdbxModel.openFile(currentCredential.password,currentCredential.filePath,currentCredential.keyFile, (err,data)=>{
+        if(err){
+          console.warn('打开失败',err)
+          return
+        }
+        let allCredentials=this.kdbxModel.getAllCredentials()
+        allCredentials=allCredentials.map(crd=>{
+          crd.name=crd.title
+          return crd
+        })
+        resolve(allCredentials)
+      })
+    })
+    return await gotCreds
+  }
 }
+const kdbxService=new KdbxService()
+app.whenReady().then(()=>{
+  kdbxService.prepareDb()
+})
+
+
 
 ipc.handle('kdbxCredentialStoreSetPassword', async function (event, account) {
+  //设置一个密码 //todo
   return credentialStoreSetPassword(account)
 })
 
 ipc.handle('kdbxCredentialStoreDeletePassword', async function (event, account) {
+  //删除一个密码 //todo
   const fileContent = readSavedPasswordFile()
-
-  // delete matching credentials
   for (let i = 0; i < fileContent.credentials.length; i++) {
     if (fileContent.credentials[i].domain === account.domain && fileContent.credentials[i].username === account.username) {
       fileContent.credentials.splice(i, 1)
       i--
     }
   }
-
   return writeSavedKdbxPasswordFile(fileContent)
 })
 
 ipc.handle('kdbxCredentialStoreGetCredentials', async function (event) {
-  console.log()
-  const pm=settings.get('passwordManager')
-  console.log('pm=',pm)
-  let filePath=pm.filePath
-  if(!fs.existsSync(filePath)){
-    dialog.showMessageBoxSync({
-      message:'密码库文件不存在，请确认密码库存在。'
-    })
-    return []
-  }
-  let creds=readSavedKdbxPasswordFile()
-  console.log('获取全部密码的范围内取creds',creds)
-  let currentDbCred=creds.credentials.find(cred=>{
-    return cred.filePath===filePath
-  })
-  if(!currentDbCred){
-    console.warn('不存在记录的凭证，打开失败')
-    return
-  }
-  const gotCreds=new Promise(resolve => {
-    kdbxModel.openFile(currentDbCred.password,currentDbCred.filePath,currentDbCred.keyFile, (err,data)=>{
-      if(err){
-        console.warn('打开失败',err)
-        return
-      }
-      let allCredentials=kdbxModel.getAllCredentials()
-      allCredentials=allCredentials.map(crd=>{
-        crd.name=crd.title
-        return crd
-      })
-      resolve(allCredentials)
-    })
-  })
-  return await gotCreds
+  //获取全部密码，已实现
+  return await kdbxService.getAllPasswords()
 })
 
+/**
+ * 存入一下新的凭证
+ */
 ipc.handle('setKdbxCredential',async function(event,args){
-  console.log('存入凭证',args)
-  kdbxCredentialStoreSetPassword({
+  //存入一个认证过的凭证
+  kdbxService.kdbxCredentialStoreSetPassword({
     filePath:args.filePath,
     name:args.name,
     password:args.password,
