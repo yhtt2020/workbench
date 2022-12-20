@@ -781,7 +781,7 @@
         this.active = id
       },
       openSetting(){
-        ipcRenderer.send('openSetting','DownloadSetting')
+        ipcRenderer.send('openSetting', { tab:'DownloadSetting' })
       },
       hideModal () {
         //下载中的任务删除会走status=cancelled判断，和上面选择保存时产生冲突。

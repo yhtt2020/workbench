@@ -337,13 +337,24 @@ global.render = {
   /**
    * 获得一个url，调试环境下，返回vite调试协议路径，正式环境下，返回tsbapp协议地址
    * @param url
+   * @param params 参数表，对象传递
    * @returns {string}
    */
-  getUrl (url) {
+  getUrl (url,params) {
     let protocolUrl
     protocolUrl = `tsbapp://./${url}` //todo 需要验证正式环境的协议情况
     if (isDevelopmentMode) {
       protocolUrl = `http://localhost:1600/html/${url}`
+    }
+    if(params){
+      let url= new URL(protocolUrl)
+      //拼装参数
+      Object.keys(params).forEach(key=>{
+        url.searchParams.set(key,params[key])
+      })
+
+      protocolUrl=url.toString()
+      console.log('拼装了参数=',protocolUrl)
     }
     return protocolUrl
   },
@@ -591,5 +602,7 @@ global.renderPage = {
     })
   }
 }
+
+console.log(render.getUrl('settings.html',{domain:'zt.xiangtian.ren'}),'2222222')
 
 render.init()

@@ -25,14 +25,14 @@ const specialMaps = {
 function parseSpecialUrl (url) {
   let source = ''
   Object.keys(specialMaps).forEach(key => {
-    if (specialMaps[key] === url) {
+    if (url.startsWith(specialMaps[key])) {
       source = key
     }
   })
   if (source !== '') {
     return {
       status: true,
-      url: source
+      url: url.replace(specialMaps[source],source)
     }
   } else {
     return {
@@ -48,10 +48,13 @@ function parseSpecialUrl (url) {
  * @returns {{status: boolean}|{url, status: boolean}}
  */
 function getSourceUrl (url) {
-  if (specialMaps[url]) {
+  let foundKey=Object.keys(specialMaps).find(key=>{
+    return url.startsWith(key)
+  })
+  if (foundKey) {
     return {
       status: true,
-      url: specialMaps[url]
+      url: url.replace(foundKey,specialMaps[foundKey])
     }
   } else {
     return {

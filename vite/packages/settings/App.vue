@@ -146,8 +146,9 @@ export default defineComponent({
     }
   },
   mounted() {
-    let url = window.location.search
-    var type=url.substring(url.indexOf("?")+1);
+    let url = new URL(window.location)
+
+    var type=url.searchParams.get('tab')
     this.activeKey = type || 'Privacy'
     console.log(type)
     settings.get('downloadAutoSave',(value)=>{
