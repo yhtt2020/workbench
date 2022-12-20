@@ -81,10 +81,20 @@ ipc.handle('getPwdTab',(event,args)=>{
   return currentPwdTab
 })
 ipc.on('openPwdManager', async (event, args) => {
+  if(!args.tabData){
+    let promise=new Promise(resolve => {
+      ipc.once('gotCurrentTab',(e,arg)=>{
+        resolve(arg.data)
+      })
+    })
+    sendIPCToWindow(mainWindow,'getCurrentTab')
+    args.tabData=await promise
+  }
   const url = args.tabData.url
   const title = args.tabData.title
   const siteUrl = parseInnerURL(url)
   currentPwdTab=args.tabData
+
   if (!global.passwordWin) {
     const parentBounds = mainWindow.getBounds()
     global.passwordWin = await windowManager.create({

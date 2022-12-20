@@ -2,7 +2,7 @@
   "name": "tsbrowser",
   "productName": "想天浏览器",
   "author": "Thisky",
-  "version": "3.4.13",
+  "version": "3.4.15",
   "description": "一款针对工作场景的极简浏览器，帮助你提升效率，保持专注",
   "electronVersion": "21.3.3",
   "main": "main.build.js",
@@ -127,7 +127,8 @@
     "postinstallArm": "./node_modules/.bin/electron-builder install-app-deps --arch arm64",
     "packagePrdMacAll": "yarn run packagePrd --macos --x64 && yarn run packagePrd --macos --arm64",
     "packageb": "npm run build && ./node_modules/.bin/electron-builder --config electron-builder-config-brave.yml --publish never",
-    "gongzheng": "node ./scripts/justNotarize.js"
+    "gongzheng": "node ./scripts/justNotarize.js",
+    "packageCom": "node ./scripts/packageCom.js"
   },
   "repository": {
     "type": "git",

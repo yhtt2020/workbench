@@ -84,9 +84,12 @@ function getUrl (url,params) {
   return protocolUrl
 }
 
-function openPwdSettings(params){
-  params.tab='Password'
-  ipc.send('openSetting',params)
+function openPwdSettings(e){
+  // params.tab='Password'
+  // ipc.send('openSetting',params)
+  ipc.send('openPwdManager', { pos:{
+      x:e.target.x,y:e.target.y+e.target.offsetHeight
+    }})
 }
 
 // "carbon:password"
@@ -336,14 +339,17 @@ function addFocusListener (element, credentials) {
     removeAutocompleteList()
     const container = buildContainer()
     const inputWidth = e.target.offsetWidth
-    container.innerHTML = `<div style="padding: 5px;color: grey;width:${inputWidth}px"> ${lockIcon} 我的密码<a target="_blank" style="float: right">全部密码</a></div>`
+    container.innerHTML = `<div style="position:relative;padding: 5px;color: grey;width:${inputWidth}px"> ${lockIcon} 我的密码</div>`
+    let all=document.createElement('span')
+    all.innerHTML=`<a target="_blank" style="position: absolute;top: 5px;right: 5px">全部密码</a>`
+    container.appendChild(all)
+    all.addEventListener('click',(e)=>{
+      console.log('触发')
+      openPwdSettings(e)
+    })
     for (const cred of credentials) {
       addOption(container, cred)
     }
-    container.addEventListener('click',()=>{
-      console.log('触发')
-      openPwdSettings({domain: window.location.href })
-    })
     document.body.appendChild(container)
     currentAutocompleteList = container
   }

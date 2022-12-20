@@ -441,8 +441,7 @@
         this.displayText = false
       },
       openPwd (e) {
-        console.log(e)
-        console.log(e.target.x)
+        //ipc.send('addTab',{url:'ts://settings?domain='+encodeURIComponent(tabs.get(tabs.getSelected()).url)})
         ipc.send('openPwdManager', { tabData: tabs.get(tabs.getSelected()) ,pos:{
           x:e.target.x,y:e.target.y+e.target.offsetHeight
           }})
