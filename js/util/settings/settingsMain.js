@@ -69,13 +69,23 @@ var settings = {
       settings.list = JSON.parse(fileData)
     }
 
-    require('electron').ipcMain.on('settingChanged', function (e, key, value) {
-      settings.list[key] = value
-      settings.writeFile()
-      settings.runChangeCallbacks(key)
-    })
+    if(!global.settingsSetted){
+      //只绑定一次，防止多次绑定产生并发
+      require('electron').ipcMain.on('settingChanged', function (e, key, value) {
+        settings.list[key] = value
+        settings.writeFile()
+        console.log('触发了settings.write=' ,Date.now())
+        settings.runChangeCallbacks(key)
+      })
+      console.log('绑定')
+    }
+    global.settingsSetted=true
   }
 }
-global.settings=settings
-settings.initialize()
+if(!global.settings){
+  global.settings=settings
+  settings.initialize()
+}
+
+
 module.exports = settings
