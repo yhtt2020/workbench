@@ -148,7 +148,7 @@ export default defineComponent({
   mounted() {
     let url = window.location.search
     var type=url.substring(url.indexOf("?")+1);
-    this.activeKey = type
+    this.activeKey = type || 'Privacy'
     console.log(type)
     settings.get('downloadAutoSave',(value)=>{
       if(value!==undefined){
@@ -220,6 +220,7 @@ export default defineComponent({
       /* Password auto-fill settings  */
       this.passwordManagers=passwordManagers
       settings.get('passwordManager',(value)=>{
+        console.log('获取到',value)
         this.currentPasswordManager=this.passwordManagers.find(pm=>{
           return pm.name===value.name
         })
