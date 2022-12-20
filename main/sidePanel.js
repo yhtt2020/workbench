@@ -593,7 +593,7 @@ ipc.on(ipcMessageMain.sidePanel.receiveGlobal, function (event, args) {
 function openSetting(e){
   let url= render.getUrl('settings.html')
   sendIPCToWindow(mainWindow, 'addTab', {
-    url: url + '?' + e
+    url: url +(e?'?' + e:'')
   })
 }
 //显示书签的时候，将sidepanel隐藏起来
