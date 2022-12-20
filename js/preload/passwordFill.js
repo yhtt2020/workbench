@@ -383,7 +383,7 @@ ipc.on('password-autofill-match', (event, data) => {
   if (data.hostname !== window.location.hostname) {
     throw new Error('password origin must match current page origin')
   }
-
+  ipc.send('setPwdCount',{count:data.credentials.length,url:window.location.href})
   if (data.credentials.length === 0) {
     if (currentUnlockButton && currentUnlockButton.children.length > 0) {
       currentUnlockButton.children[0].style.color = 'rgb(180, 0, 0)'

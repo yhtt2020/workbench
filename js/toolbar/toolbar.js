@@ -1,7 +1,7 @@
 const webviews = require('webviews.js')
 const urlParser = require('util/urlParser.js')
 const settings = require('../util/settings/settings.js')
-
+window.$pwdCount={}
 const sideBar = {
   minSizeCss: '45px',
   maxSizeCss: '145px',
@@ -255,6 +255,25 @@ const toolbar = {
       pwdEl.style.pointerEvents = 'auto'
     }
   },
+  loadPwdCount(url){
+    console.log('读入pwd')
+    if(url){
+      console.log('获得url',url,window.$pwdCount[url])
+      let count= window.$pwdCount[url]?window.$pwdCount[url]:0
+      toolbar.setPwdCount(count,url)
+    }
+  },
+  setPwdCount(count,url){
+    try{
+      const pwdCountEl=document.getElementById('pwdCount')
+      pwdCountEl.innerText=count>9? 9 : count
+      pwdCountEl.hidden = count === 0;
+      window.$pwdCount[url]=count
+    }catch (e) {
+      console.warn(e)
+    }
+
+  },
   // 设置一个元素的透明度
   setElOpacity (el, opacity = 1) {
     el.style.opacity = opacity
@@ -459,4 +478,7 @@ if (settings.get('thirdToolbar') === 'show') {
   webviews.autoAdjustMargin()
 }
 
+ipc.on('setPwdCount',(e,a)=>{
+  toolbar.setPwdCount(a.count,a.url)
+})
 module.exports = toolbar

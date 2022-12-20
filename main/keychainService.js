@@ -100,3 +100,6 @@ setTimeout(function () {
     })
   }
 }, 5000)
+ipc.on('setPwdCount',(e,a)=>{
+  sendIPCToMainWindow('setPwdCount',{count:a.count,url:a.url})
+})

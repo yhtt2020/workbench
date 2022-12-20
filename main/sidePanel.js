@@ -1152,7 +1152,6 @@ async function showUserWindow (args) {
       },
       url: render.getUrl('user.html')
     })
-    console.log(userWindowInstance, '222')
     userWindow = userWindowInstance.window
 
     function computeBounds (parentBounds, selfBounds) {

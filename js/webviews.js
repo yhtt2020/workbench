@@ -405,7 +405,6 @@ const webviews = {
    * @param tabData tab的信息
    */
   updateToolBarStatus(tabData){
-
     if(tabData.id===tabs.getSelected()){
       require('js/navbar/tabEditor').updateUrl(urlParser.getSourceURL(tabData.url))
       webviews.updateToolbarSecure(tabData.secure)
@@ -427,19 +426,12 @@ const webviews = {
   },
   updateAppStatus(tabData){
     // 添加密码数量显示
-    const passwordModel = require('../pages/util/model/passwordModel')
-    passwordModel.getSiteCredit(tabData.url, true).then((result) => {
-      const pwdCountEl=document.getElementById('pwdCount')
-      pwdCountEl.innerText=result.rootItem.length>9? 9 : result.rootItem.length
-      if(result.rootItem.length===0)
-      {
-        pwdCountEl.hidden=true
-      }else{
-        pwdCountEl.hidden=false
-      }
-    })
+    if($toolbar){
+      console.log('tabData',tabData)
+      $toolbar.loadPwdCount(tabData.url)
+      $toolbar.updateScriptsCountTip(tabData.id)
+    }
 
-    $toolbar.updateScriptsCountTip(tabData.id)
   },
   updateToolbarSecure(secure){
     if(secure){
