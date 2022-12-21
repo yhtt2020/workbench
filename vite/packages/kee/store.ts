@@ -78,12 +78,10 @@ export const appStore = defineStore('kee', {
       },
       id: 0,
       index: 0,
-      title: "禅道账号",
-      description: "Francisio_Phillps",
-      password: '123456',
-      url: "../../../public/img/key_black.svg",
-      site_1: 'zt.xaingtian.ren',
-      site_2: 'zt.xaingtian.ren'
+      title: "",
+      description: "",
+      password: '',
+      url: "../../../public/img/key_black.svg"
     },
 
     currentDb: {

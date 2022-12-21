@@ -95,8 +95,8 @@ function openPwdSettings(e){
 }
 
 // "carbon:password"
-const keyIcon = '<svg t="1638197146961" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="13422" width="28" height="28"><path d="M510.8224 513.1264m-450.816 0a450.816 450.816 0 1 0 901.632 0 450.816 450.816 0 1 0-901.632 0Z" fill="#E9ECFF" p-id="13423"></path><path d="M324.4544 387.9424c-11.6224-128.2048 98.304-206.3872 186.4704-206.3872 87.552 0 197.7856 77.056 186.6752 206.3872 3.072 0.3584 6.144 0.768 9.216 1.0752 46.0288 5.1712 78.1312 38.912 78.5408 85.1968 0.7168 76.2368 0.8192 152.4736-0.0512 228.6592-0.5632 49.92-38.0928 85.8112-88.064 85.8624-124.3136 0.1536-248.6272 0.1536-372.8896 0-50.5856-0.0512-87.6544-35.7376-88.1664-86.4768-0.7168-75.9296-0.6656-151.8592 0-227.7888 0.4096-46.9504 32.256-80.5376 78.8992-85.6064 2.9696-0.2048 5.8368-0.512 9.3696-0.9216z m57.2928-0.0512h257.8944c7.7312-48.7936-14.8992-101.2736-56.2688-127.488-47.2064-30.0032-96.0512-31.0272-143.104-0.8192-45.9776 29.4912-62.6688 74.24-58.5216 128.3072z m26.7776 164.352c-0.2048 20.992 4.7104 43.264 20.3776 60.672 12.9536 14.336 20.5824 28.4672 21.3504 48.64 0.9728 26.8288 22.7328 47.6672 48.896 52.5312 26.7776 4.9664 52.8896-7.6288 65.8944-31.488 7.0144-12.8512 7.424-26.8288 7.8848-40.9088 0.1024-3.84 1.9456-8.2432 4.352-11.3664 6.7072-8.7552 15.4112-16.2304 20.992-25.6512 19.712-33.1776 20.1216-67.6864 1.792-101.2736-19.1488-35.072-50.432-52.992-90.0608-52.8896-56.2176 0.1536-98.6112 42.752-101.4784 101.7344z" fill="#6C6CEA" p-id="13424"></path><path d="M510.8224 500.48c23.1936 0 42.8032 14.592 49.8688 37.0688 6.656 21.248-1.024 46.1312-20.3264 57.856-13.7216 8.3456-18.5856 19.1488-17.664 34.2016 0.4608 7.5776 0.256 15.2064-0.1024 22.8352-0.3584 7.3216-4.1984 12.544-11.9296 12.4928-7.68-0.0512-11.52-5.0176-11.6736-12.5952-0.1536-8.4992-0.3584-16.9984-0.0512-25.4464 0.4096-13.4144-4.352-23.1936-16.3328-30.5152-20.1216-12.3392-28.4672-36.3008-21.8112-58.0096 7.2704-23.5008 26.1632-37.888 50.0224-37.888z" fill="#757BF2" p-id="13425"></path><path d="M785.3568 474.2656c-0.4608-46.2848-32.512-80.0768-78.5408-85.1968-3.072-0.3584-6.1952-0.7168-9.216-1.0752 11.1616-129.3312-99.072-206.3872-186.6752-206.3872-88.1664 0-198.0928 78.1824-186.4704 206.3872-3.5328 0.3584-6.4 0.6656-9.3184 0.9728-46.6944 5.0688-78.4896 38.656-78.8992 85.6064-0.6656 75.9296-0.7168 151.8592 0 227.7888 0.4608 50.7392 37.5808 86.4256 88.1664 86.4768 77.7728 0.0512 155.5968 0.1024 233.3696 0.0512 116.3264-63.1808 201.6768-176.0768 227.6352-310.1696 0-1.4848 0-2.9696-0.0512-4.4544z m-187.0336 130.3552c-5.5808 9.3696-14.2848 16.8448-20.992 25.6512-2.4064 3.1232-4.1984 7.4752-4.352 11.3664-0.4608 14.1312-0.9216 28.0576-7.8848 40.9088-13.0048 23.9104-39.1168 36.4544-65.8944 31.488-26.2144-4.8128-47.9232-25.6512-48.896-52.5312-0.768-20.1728-8.3968-34.304-21.3504-48.64-15.6672-17.3568-20.5824-39.68-20.3776-60.672 2.8672-58.9824 45.2608-101.5808 101.4784-101.7344 39.68-0.1024 70.912 17.8176 90.0608 52.8896 18.3296 33.5872 17.8688 68.1472-1.792 101.2736z m41.3184-216.7296H381.7472c-4.1472-54.0672 12.544-98.816 58.5216-128.3072 47.0528-30.208 95.8976-29.184 143.104 0.768 41.3696 26.2144 64.0512 78.7456 56.2688 127.5392z" fill="#757BF2" p-id="13426"></path><path d="M557.824 530.3296c-8.704-18.3296-26.4192-29.8496-47.0016-29.7984-23.8592 0-42.8032 14.336-50.0224 37.888-6.656 21.6576 1.7408 45.6704 21.8112 58.0096 0.512 0.3072 0.9728 0.6656 1.4848 1.024a454.56896 454.56896 0 0 0 73.728-67.1232z" fill="#8486F8" p-id="13427"></path><path d="M510.9248 181.5552c-88.1664 0-198.0928 78.1824-186.4704 206.3872-3.5328 0.3584-6.4 0.6656-9.3184 0.9728-46.6944 5.0688-78.4896 38.656-78.8992 85.6064-0.6144 69.4272-0.6144 138.9056-0.1024 208.3328a448.34816 448.34816 0 0 0 203.008-56.7296c-2.9184-4.5056-6.2976-8.8576-10.24-13.2608-15.6672-17.3568-20.5824-39.68-20.3776-60.672 2.8672-58.9824 45.2608-101.5808 101.4784-101.7344 33.6384-0.1024 61.184 12.8 80.4864 38.0928a447.77472 447.77472 0 0 0 78.336-219.2384c-36.864-56.32-101.9904-87.7568-157.9008-87.7568z m128.7168 206.336H381.7472c-4.1472-54.0672 12.544-98.816 58.5216-128.3072 47.0528-30.208 95.8976-29.184 143.104 0.768 41.3696 26.2144 64.0512 78.7456 56.2688 127.5392z" fill="#8486F8" p-id="13428"></path><path d="M428.5952 387.8912h-46.7968c-4.1984-54.0672 12.4928-98.816 58.4704-128.3072 28.0064-17.9712 56.6784-24.832 85.2992-21.0944a442.4704 442.4704 0 0 0 17.3568-53.6064c-10.8032-2.1504-21.5552-3.2768-32-3.2768-88.1664 0-198.0928 78.1824-186.4704 206.3872-3.5328 0.3584-6.4 0.6656-9.3184 0.9728-46.6944 5.0688-78.4896 38.656-78.8992 85.6064-0.1024 10.0352-0.0512 20.0704-0.1536 30.1056 73.9328-22.272 139.9296-62.976 192.512-116.7872z" fill="#8D92F8" p-id="13429"></path></svg>'
-const lockIcon = '<svg style="vertical-align: middle"  t="1638195533973" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="21180" width="15" height="15"><path d="M92.16 348.16m81.92 0l686.08 0q81.92 0 81.92 81.92l0 491.52q0 81.92-81.92 81.92l-686.08 0q-81.92 0-81.92-81.92l0-491.52q0-81.92 81.92-81.92Z" fill="#40A9FF" p-id="21181"></path><path d="M92.16 829.44m81.92 0l686.08 0q81.92 0 81.92 81.92l0 10.24q0 81.92-81.92 81.92l-686.08 0q-81.92 0-81.92-81.92l0-10.24q0-81.92 81.92-81.92Z" fill="#40A9FF" p-id="21182"></path><path d="M382.28992 351.08864V204.8c0-43.42784 61.56288-87.76704 145.07008-87.76704 83.5072 0 145.07008 44.3392 145.07008 87.76704v146.28864c0 32.31744 25.97888 58.51136 58.01984 58.51136C762.50112 409.6 788.48 383.40608 788.48 351.08864V204.8C788.48 86.64064 668.19072 0 527.36 0S266.24 86.64064 266.24 204.8v146.28864C266.24 383.40608 292.21888 409.6 324.27008 409.6s58.01984-26.19392 58.01984-58.51136z" fill="#40A9FF" p-id="21183"></path><path d="M517.12 522.24a87.04 87.04 0 0 1 46.09024 160.89088L563.2 783.36a46.08 46.08 0 1 1-92.16 0v-100.22912A87.04 87.04 0 0 1 517.12 522.24z" fill="#91D5FF" p-id="21184"></path></svg>'
+const keyIcon = `<img style="width: 20px;height:20px;margin-top: 3px" src="//a.apps.vip/kee/kee.svg"/>`
+const lockIcon = `<img style="width: 18px;height: 18px;vertical-align: text-top" src="//a.apps.vip/kee/kee.svg"/>`
 // Ref to added unlock button.
 var currentUnlockButton = null
 var currentAutocompleteList = null
@@ -307,7 +307,7 @@ function addFocusListener (element, credentials) {
     const width=18
     const src='http://a.apps.vip/kee/key.svg'
    const style= `filter: drop-shadow(${width}px 0px 0px ${color});left: -${width}px; width:${width}px; position:relative;`
-    const html=`<span class="img" style="overflow: hidden;width:${width};height:${width};position:relative;display: inline-block;vertical-align: top">
+    const html=`<span class="img" style="margin-left:5px;margin-top: 5px;overflow: hidden;width:${width};height:${width};position:relative;display: inline-block;vertical-align: top">
            <img style="${style}"
                 src="${src}" alt="">
             </span>`
@@ -323,13 +323,14 @@ function addFocusListener (element, credentials) {
       cred.title='未命名'
     }
     if(cred.originData.fields.get('Notes')){
-      remark='<img style="width: 18px;height:18px" src="https://a.apps.vip/kee/remark.svg">'
+      remark='<img class="__remark-icon" style="width: 18px;height:18px;margin-top: 5px;margin-right:5px;" src="https://a.apps.vip/kee/remark.svg"><div class="__pwd-tip-remark">查看备注</div>  '
     }
     let  icon= getIcon(cred.originData.bgColor)
 
     const template=  `<div style="display:flex;">
 <div style="width:30px;">${icon}</div>
-<div style="flex:1"><div style="font-size:14px;font-weight:bold">${cred.title}</div><div style="color: grey">${cred.username}</div></div><div>${remark}</div></div>`
+<div style="flex:1"><div style="font-size:14px;font-weight:bold;line-height: 18px;">${cred.title}</div><div style="color: grey;line-height: 18px;">${cred.username}</div></div><div>${remark}</div></div>`
+    suggestionItem.classList='__pwd-item'
     suggestionItem.innerHTML=template
     suggestionItem.style="margin:8px;padding: 5px; cursor: pointer; width: 100%; border-radius: 8px;"
     // Hover.
@@ -357,7 +358,10 @@ function addFocusListener (element, credentials) {
     removeAutocompleteList()
     const container = buildContainer()
     const inputWidth = e.target.offsetWidth
-    container.innerHTML = `<div style="position:relative;padding: 8px;color: grey;width:${inputWidth}px;"> ${lockIcon} <span style="font-size: 13px">我的密码</span></div>`
+    container.id='__pwdContainer'
+    container.style.width=`${inputWidth}px`
+    console.log(inputWidth,'2232312123312')
+    container.innerHTML = `<div style="position:relative;padding: 8px;color: grey;"> ${lockIcon} <span style="font-size: 13px">我的密码</span></div>`
     let all=document.createElement('span')
     all.innerHTML=`<a target="_blank" style="position: absolute;top: 8px;right: 8px;font-size: 13px">全部密码</a>`
     container.appendChild(all)
@@ -366,10 +370,11 @@ function addFocusListener (element, credentials) {
     })
 
     let wrapper=document.createElement('div')
+    wrapper.id='__pwdWrapper'
     wrapper.style.maxHeight='350px'
     wrapper.style.overflowY='auto'
     wrapper.style.overflowX='hidden'
-
+    wrapper.style.paddingRight='15px'
     for (const cred of credentials) {
       addOption(wrapper, cred)
     }
@@ -534,6 +539,39 @@ HTMLFormElement.prototype.submit = function () {
   window.postMessage({message: 'formSubmit'})
   origSubmit.apply(this, arguments)
 }
+`)
+electron.webFrame.insertCSS(`
+#__pwdWrapper::-webkit-scrollbar{
+width:3px;
+}
+#__pwdWrapper::-webkit-scrollbar-thumb{
+  border-radius:10px;
+  -webkit-box-shadow:inset 0 0 5px rgba(0,0,0,0.2);
+  opacity:0.2;
+}
+#__pwdWrapper::-webkit-scrollbar-track{
+  border-radius:0;
+  background:#f1f1f1;
+}
+.__pwd-item .__pwd-tip-remark{
+display:none;
+}
+.__pwd-item:hover .__remark-icon{
+ display:none
+}
+.__pwd-item:hover .__pwd-tip-remark{
+ display:block
+}
+.__pwd-item:hover .__pwd-tip-remark{
+  padding-left: 14px;
+  padding-right:14px;
+  line-height:46px;
+  background: #E0E7F5;
+  border-radius: 0 5px 5px 0;
+  margin:-5px;
+  color:#4881FE
+}
+
 `)
 
 window.addEventListener('message', function (e) {
