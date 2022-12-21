@@ -124,15 +124,15 @@
               <span v-if="websiteShow==true" style="color:rgba(80, 139, 254, 1);cursor: pointer;">复制</span>
              </div>
           </div>
-          <div class="breadcrumb-bottom-website" style="padding-top:0;">
-              <div class="website-top">
-                <a href="#" style="color:rgba(104, 81, 214, 1);">网站</a>
-                <a href="#">{{passwordItem.site_2}}</a>
-              </div>
-          </div>
+<!--          <div class="breadcrumb-bottom-website" style="padding-top:0;">-->
+<!--              <div class="website-top">-->
+<!--                <a href="#" style="color:rgba(104, 81, 214, 1);">网站</a>-->
+<!--                <a href="#">{{passwordItem.site_2}}</a>-->
+<!--              </div>-->
+<!--          </div>-->
           <div class="breadcrumb-bottom-remark">
             <div class="breadcrumb-bottom-remark-top">
-             <span style="color:rgba(104, 81, 214, 1);font-width:400;font-size:12px;">
+             <span style="color:rgba(104, 81, 214, 1);font-width:400;font-size:14px;">
                备注
               </span>
               <a href="#" v-if="editShow  == true">
@@ -140,7 +140,7 @@
                <span style="font-size:12px; font-width:400;padding-left: 4px;">在主应用中编辑</span>
               </a>
             </div>
-            <span style="font-size:14px;font-width:400;color:rgba(0, 0, 0, 0.65);">{{passwordItem.remark || '无'}}</span>
+            <span style="font-size:14px;font-width:400;color:rgba(0, 0, 0, 0.65);">{{ passwordItem.originData.fields.get('Notes') || '无'}}</span>
           </div>
     </div>
 

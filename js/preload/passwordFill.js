@@ -84,6 +84,8 @@ function getUrl (url,params) {
   return protocolUrl
 }
 
+
+
 function openPwdSettings(e){
   // params.tab='Password'
   // ipc.send('openSetting',params)
@@ -287,7 +289,7 @@ function addFocusListener (element, credentials) {
   function buildContainer () {
     const suggestionsDiv = document.createElement('div')
     suggestionsDiv.style = `
-    position: absolute; border: 1px solid #d4d4d4; z-index: 999999; background: #FFFFFF; transform: scale(0); opacity: 0; transform-origin: top left; transition: 0.15s; color: #000000;
+    position: absolute;  z-index: 999999; background: #FFFFFF; transform: scale(0); opacity: 0; transform-origin: top left; transition: 0.15s; color: #000000;
     border-radius:6px;
     box-shadow:rgb(207 207 207 / 85%) 0px 0px 9px;
     overflow:hidden
@@ -301,22 +303,38 @@ function addFocusListener (element, credentials) {
     })
     return suggestionsDiv
   }
-
+  function getIcon(color){
+    const width=18
+    const src='http://a.apps.vip/kee/key.svg'
+   const style= `filter: drop-shadow(${width}px 0px 0px ${color});left: -${width}px; width:${width}px; position:relative;`
+    const html=`<span class="img" style="overflow: hidden;width:${width};height:${width};position:relative;display: inline-block;vertical-align: top">
+           <img style="${style}"
+                src="${src}" alt="">
+            </span>`
+    return html
+  }
   // Adds an option row to the list container.
   // 添加一个选择行到列表容器
   function addOption (parent, cred) {
     const suggestionItem = document.createElement('div')
-    if (cred.name) {
-      suggestionItem.innerHTML = '<strong>' + cred.name + ' | </strong>  ' + cred.username
-    } else {
-      suggestionItem.innerHTML = cred.username
+    console.log('密码'+Date.now(),cred)
+    let remark=''
+    if(!cred.title){
+      cred.title='未命名'
     }
+    if(cred.originData.fields.get('Notes')){
+      remark='<img style="width: 18px;height:18px" src="https://a.apps.vip/kee/remark.svg">'
+    }
+    let  icon= getIcon(cred.originData.bgColor)
 
-    suggestionItem.style = 'padding: 10px; cursor: pointer; background-color: #fff; width:100%;'
-
+    const template=  `<div style="display:flex;">
+<div style="width:30px;">${icon}</div>
+<div style="flex:1"><div style="font-size:14px;font-weight:bold">${cred.title}</div><div style="color: grey">${cred.username}</div></div><div>${remark}</div></div>`
+    suggestionItem.innerHTML=template
+    suggestionItem.style="margin:8px;padding: 5px; cursor: pointer; width: 100%; border-radius: 8px;"
     // Hover.
     suggestionItem.addEventListener('mouseenter', (event) => {
-      suggestionItem.style.backgroundColor = '#e4e4e4'
+      suggestionItem.style.backgroundColor = '#f1f1f1'
     })
     suggestionItem.addEventListener('mouseleave', (event) => {
       suggestionItem.style.backgroundColor = '#fff'
@@ -339,17 +357,23 @@ function addFocusListener (element, credentials) {
     removeAutocompleteList()
     const container = buildContainer()
     const inputWidth = e.target.offsetWidth
-    container.innerHTML = `<div style="position:relative;padding: 5px;color: grey;width:${inputWidth}px"> ${lockIcon} 我的密码</div>`
+    container.innerHTML = `<div style="position:relative;padding: 8px;color: grey;width:${inputWidth}px;"> ${lockIcon} <span style="font-size: 13px">我的密码</span></div>`
     let all=document.createElement('span')
-    all.innerHTML=`<a target="_blank" style="position: absolute;top: 5px;right: 5px">全部密码</a>`
+    all.innerHTML=`<a target="_blank" style="position: absolute;top: 8px;right: 8px;font-size: 13px">全部密码</a>`
     container.appendChild(all)
     all.addEventListener('click',(e)=>{
-      console.log('触发')
       openPwdSettings(e)
     })
+
+    let wrapper=document.createElement('div')
+    wrapper.style.maxHeight='350px'
+    wrapper.style.overflowY='auto'
+    wrapper.style.overflowX='hidden'
+
     for (const cred of credentials) {
-      addOption(container, cred)
+      addOption(wrapper, cred)
     }
+    container.appendChild(wrapper)
     document.body.appendChild(container)
     currentAutocompleteList = container
   }
