@@ -100,7 +100,8 @@ async function downloadHandler (event, item, webContents) {
 
   var itemURL = item.getURL()
   var attachment = isAttachment(item.getContentDisposition())
-  const suffixName = item.getFilename().substring(item.getFilename().lastIndexOf('.'), item.getFilename().length)
+
+  const suffixName = require('path').extname(item.getFilename())
   savePathFilename = path.basename(item.getSavePath())
   const simpleName = item.getFilename().substring(0, item.getFilename().lastIndexOf('.'))
   mainWindow.webContents.send('isDownload')
@@ -122,7 +123,7 @@ async function downloadHandler (event, item, webContents) {
       item.setSaveDialogOptions({
         title: '选择保存地址',
         filters: [
-          { name: suffix, extensions: [suffix] },
+          { name: suffixName, extensions: [suffixName] },
           { name: '自定义', extensions: ['*'] }
         ]
       })
@@ -131,7 +132,7 @@ async function downloadHandler (event, item, webContents) {
         item.setSaveDialogOptions({
           title: '选择保存地址',
           filters: [
-            { name: suffix, extensions: [suffix] },
+            { name: suffixName, extensions: [suffixName] },
             { name: '自定义', extensions: ['*'] }
           ]
         })
