@@ -11,188 +11,193 @@
 <body>
 
 <div id="appVue">
-  <div>
-    <a-modal v-model="visible" title="删除下载任务" ok-text="确认" cancel-text="取消" @ok="hideModalDone()">
-      <p>文件下载已完成，确认删除</p>
-      <a-checkbox :default-checked="false" @change="doneChange">
-        同时删除下载文件
-      </a-checkbox>
-    </a-modal>
-  </div>
-  <div>
-    <a-modal v-model="visibleIng" title="删除下载任务" ok-text="确认" cancel-text="取消" @ok="hideModal()">
-      <p>文件正在下载中，确认删除</p>
-    </a-modal>
-  </div>
   <template>
-    <div class="toggle">
-      <a-tabs default-active-key="1" @change="callback">
-        <a-tab-pane key="1">
+    <div>
+      <a-modal v-model="visible" title="删除下载任务" ok-text="确认" cancel-text="取消" @ok="hideModalDone()">
+        <p>文件下载已完成，确认删除</p>
+        <a-checkbox :default-checked="false" @change="doneChange">
+          同时删除下载文件
+        </a-checkbox>
+      </a-modal>
+    </div>
+    <div>
+      <a-modal v-model="visibleIng" title="删除下载任务" ok-text="确认" cancel-text="取消" @ok="hideModal()">
+        <p>文件正在下载中，确认删除</p>
+      </a-modal>
+    </div>
+    <template>
+      <div class="toggle">
+        <a-tabs default-active-key="1" @change="callback">
+          <a-tab-pane key="1">
         <span slot="tab" style="user-select:none">
            <a-badge :count="count" id="tag">
              <a href="#" class="head-example"></a>
            </a-badge>
         下载中
       </span>
-          <div class="beautiful-sm-scroll" style="height: 365px; width: 100%; overflow: auto;">
-          <div v-show="listCount===0" style="margin-top: 50px">
-            <a-empty description="暂无下载任务" style="user-select:none"></a-empty>
-          </div>
-          <div class="downloadIng" v-for="(item,index) in list" v-bind:key="index" style="margin-top: 10px;height: 55px;display: flex;flex-direction: column;user-select:none;"
-               @contextmenu="menuIng(item)" @click="change(index)"
-               :class="{active : active === index,
+            <div class="beautiful-sm-scroll" style="height: 365px; width: 100%; overflow: auto;">
+              <div v-show="listCount===0" style="margin-top: 50px">
+                <a-empty description="暂无下载任务" style="user-select:none"></a-empty>
+              </div>
+              <div class="downloadIng" v-for="(item,index) in list" v-bind:key="index" style="margin-top: 10px;height: 55px;display: flex;flex-direction: column;user-select:none;"
+                   @contextmenu="menuIng(item)" @click="change(index)"
+                   :class="{active : active === index,
          clickActive:clickActive===index}"
-               @mouseover="mouseOver(item)"
-               @mouseleave="mouseLeave">
-            <div style="display: flex">
-              <div style="width: 34px;height: 40px;margin-left: 10px; user-select:none">
-                <img :src="url=(`./icon/${matchFileSuffixType(item.name)}.svg`)" style="height: 100%;width: 100%"/>
-              </div>
-              <div style="display: flex;flex-direction: column;margin-left: 10px">
-                <div style="display: flex;width: 200px">
-                  <a-tooltip>
-                    <template #title>{{item.name}}</template>
-                    <div class="title">{{ item.title }}</div>
-                  </a-tooltip>
-                  <div style="width: 30px;font-weight: bold;">{{item.suffixal}}</div>
-                </div>
-                <div v-show="item.path !=='' && item.status==='progressing' && item.total !== '0KB'" style="font-size: 12px;width: 150px;color:#999">
-                  {{ item.received }} / {{ item.total }}
-                </div>
-                <div v-show="item.path !=='' && item.status==='progressing' && item.total === '0KB'" style="font-size: 12px;width: 150px;color:#999">
-                  {{ item.received }} / 未知
-                </div>
-                <div v-show="item.path === '' && item.state !== 0 " style="font-size: 12px;width: 150px;color:#999">
-                  预载中
-                </div>
-                <div v-show="item.state === 0 && item.status !== 'progressing'" style="font-size: 12px;width: 150px;color:#999">
-                  下载中断
-                </div>
-              </div>
-                <div v-if="item.realData" style="width: 50px;line-height: 55px">
-                  {{ item.realData }}/s
-                </div>
-                <div v-else></div>
-
-              <div v-if="item.status === 'progressing'">
-                <div v-if="item.loadState">
-                  <a-button style="margin-top: 5px;" type="link" @click="resume(item)">
-                    开始
-                  </a-button>
-                </div>
-                <div v-else>
-                  <a-button style="margin-top: 5px;" type="link" @click="stop(item)">
-                    暂停
-                  </a-button>
-                </div>
-              </div>
-            </div>
-            <a-progress v-show="item.received && item.total !=='0KB'"  style="width: 85%;color:#999;margin-left: 55px;margin-top: -23px" :percent="item.progressnuw"></a-progress>
-          </div>
-    </div>
-          <div style="height: 22px"></div>
-        </a-tab-pane>
-
-        <a-tab-pane key="2" force-render>
-           <span slot="tab" style="user-select:none">
-            已完成
-           </span>
-          <div class="beautiful-sm-scroll" style="height: 365px; width: 100%; overflow: auto;">
-            <div v-show="listDoneCount===0" style="margin-top: 50px">
-              <a-empty description="暂无完成任务" style="user-select:none"></a-empty>
-            </div>
-            <div v-for="timeGroup in showList">
-              <div class="time" style="margin-top: 8px;font-size: 15px;font-weight: 500">
-                <span style="margin-left: 15px;color: #000000;">{{ timeGroup.addTime }}</span>
-              </div>
-              <div class="downloadDone" v-for="(item,index) in timeGroup.subList" style="margin-top: 5px;width: 100%;height: 45px;user-select:none;"
-                   v-bind:key="item.id" @click.stop="change(item.id)" @dblclick="openFileHandler(item)"
-                   @contextmenu="menuDone(item,item.id,timeGroup)" :class="{active : active === item.id,
-         clickActive:clickActive===item.id}"
-                   @mouseover="mouseOver(item.id)"
+                   @mouseover="mouseOver(item)"
                    @mouseleave="mouseLeave">
                 <div style="display: flex">
                   <div style="width: 34px;height: 40px;margin-left: 10px; user-select:none">
                     <img :src="url=(`./icon/${matchFileSuffixType(item.name)}.svg`)" style="height: 100%;width: 100%"/>
                   </div>
-                  <div style="display: flex;flex-direction: column;margin-left: 10px;width: 115px">
-                    <div style="display: flex;width: 205px">
+                  <div style="display: flex;flex-direction: column;margin-left: 10px">
+                    <div style="display: flex;width: 200px">
                       <a-tooltip>
                         <template #title>{{item.name}}</template>
                         <div class="title">{{ item.title }}</div>
                       </a-tooltip>
-                      <div style="width: 100px;font-weight: bold;overflow: hidden">{{item.suffixal}}</div>
+                      <div style="width: 30px;font-weight: bold;">{{item.suffixal}}</div>
                     </div>
-                    <div style="display:flex;width: 200px;justify-content: space-between">
-                      <div style="color:#999">{{ item.total }}</div>
-                      <div style="font-size: 12px;line-height: 23px">{{ item.doneDate }}</div>
+                    <div v-show="item.path !=='' && item.status==='progressing' && item.total !== '0KB'" style="font-size: 12px;width: 150px;color:#999">
+                      {{ item.received }} / {{ item.total }}
+                    </div>
+                    <div v-show="item.path !=='' && item.status==='progressing' && item.total === '0KB'" style="font-size: 12px;width: 150px;color:#999">
+                      {{ item.received }} / 未知
+                    </div>
+                    <div v-show="item.path === '' && item.state !== 0 " style="font-size: 12px;width: 150px;color:#999">
+                      预载中
+                    </div>
+                    <div v-show="item.state === 0 && item.status !== 'progressing'" style="font-size: 12px;width: 150px;color:#999">
+                      下载中断
                     </div>
                   </div>
+                  <div v-if="item.realData" style="width: 50px;line-height: 55px">
+                    {{ item.realData }}/s
+                  </div>
+                  <div v-else></div>
 
-                  <a-button style="line-height: 40px;margin-left: 135px" type="link" @click="openFileHandler(item)">
-                    打开
-                  </a-button>
+                  <div v-if="item.status === 'progressing'">
+                    <div v-if="item.loadState">
+                      <a-button style="margin-top: 5px;" type="link" @click="resume(item)">
+                        开始
+                      </a-button>
+                    </div>
+                    <div v-else>
+                      <a-button style="margin-top: 5px;" type="link" @click="stop(item)">
+                        暂停
+                      </a-button>
+                    </div>
+                  </div>
+                </div>
+                <a-progress v-show="item.received && item.total !=='0KB'"  style="width: 85%;color:#999;margin-left: 55px;margin-top: -23px" :percent="item.progressnuw"></a-progress>
+              </div>
+            </div>
+            <div style="height: 22px"></div>
+          </a-tab-pane>
+
+          <a-tab-pane key="2" force-render>
+           <span slot="tab" style="user-select:none">
+            已完成
+           </span>
+            <div class="beautiful-sm-scroll" style="height: 365px; width: 100%; overflow: auto;">
+              <div v-show="listDoneCount===0" style="margin-top: 50px">
+                <a-empty description="暂无完成任务" style="user-select:none"></a-empty>
+              </div>
+              <div v-for="timeGroup in showList">
+                <div class="time" style="margin-top: 8px;font-size: 15px;font-weight: 500">
+                  <span style="margin-left: 15px;color: #000000;">{{ timeGroup.addTime }}</span>
+                </div>
+                <div class="downloadDone" v-for="(item,index) in timeGroup.subList" style="margin-top: 5px;width: 100%;height: 45px;user-select:none;"
+                     v-bind:key="item.id" @click.stop="change(item.id)" @dblclick="openFileHandler(item)"
+                     @contextmenu="menuDone(item,item.id,timeGroup)" :class="{active : active === item.id,
+         clickActive:clickActive===item.id}"
+                     @mouseover="mouseOver(item.id)"
+                     @mouseleave="mouseLeave">
+                  <div style="display: flex">
+                    <div style="width: 34px;height: 40px;margin-left: 10px; user-select:none">
+                      <img :src="url=(`./icon/${matchFileSuffixType(item.name)}.svg`)" style="height: 100%;width: 100%"/>
+                    </div>
+                    <div style="display: flex;flex-direction: column;margin-left: 10px;width: 115px">
+                      <div style="display: flex;width: 205px">
+                        <a-tooltip>
+                          <template #title>{{item.name}}</template>
+                          <div class="title">{{ item.title }}</div>
+                        </a-tooltip>
+                        <div style="width: 100px;font-weight: bold;overflow: hidden">{{item.suffixal}}</div>
+                      </div>
+                      <div style="display:flex;width: 200px;justify-content: space-between">
+                        <div style="color:#999">{{ item.total }}</div>
+                        <div style="font-size: 12px;line-height: 23px">{{ item.doneDate }}</div>
+                      </div>
+                    </div>
+
+                    <a-button style="line-height: 40px;margin-left: 135px" type="link" @click="openFileHandler(item)">
+                      打开
+                    </a-button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div style="height: 22px"></div>
-        </a-tab-pane>
+            <div style="height: 22px"></div>
+          </a-tab-pane>
 
-        <a-tab-pane key="3">
+          <a-tab-pane key="3">
            <span slot="tab" style="user-select:none">
             回收站
            </span>
-          <div class="beautiful-sm-scroll" style="height: 365px; width: 100%; overflow: auto;">
-            <div v-show="listTrashCount===0" style="margin-top: 50px">
-              <a-empty description="暂无记录" style="user-select:none"></a-empty>
-            </div>
-            <div v-for="timeDelGroup in showDelList">
-              <div class="time" style="margin-top: 8px;font-size: 15px;font-weight: 500">
-                <span style="margin-left: 15px;color: #000000;">{{ timeDelGroup.addDelTime }}</span>
+            <div class="beautiful-sm-scroll" style="height: 365px; width: 100%; overflow: auto;">
+              <div v-show="listTrashCount===0" style="margin-top: 50px">
+                <a-empty description="暂无记录" style="user-select:none"></a-empty>
               </div>
-              <div v-for="(item,index) in timeDelGroup.subDelList" v-bind:key="item.id" @click.stop="change(item.id)" style="margin-top: 10px;height: 45px;user-select:none;"
-                   @contextmenu="menuDel(item,item.id,timeDelGroup)" :class="{active : active === item.id,
+              <div v-for="timeDelGroup in showDelList">
+                <div class="time" style="margin-top: 8px;font-size: 15px;font-weight: 500">
+                  <span style="margin-left: 15px;color: #000000;">{{ timeDelGroup.addDelTime }}</span>
+                </div>
+                <div v-for="(item,index) in timeDelGroup.subDelList" v-bind:key="item.id" @click.stop="change(item.id)" style="margin-top: 10px;height: 45px;user-select:none;"
+                     @contextmenu="menuDel(item,item.id,timeDelGroup)" :class="{active : active === item.id,
          clickActive:clickActive===item.id}"
-                   @mouseover="mouseOver(item.id)"
-                   @mouseleave="mouseLeave">
-                <div style="display: flex;">
-                  <div style="width: 34px;height: 40px;margin-left: 10px;">
-                    <img :src="url=(`./icon/${matchFileSuffixType(item.name)}.svg`)" style="height: 100%;width: 100%;line-height: 40px"/>
-                  </div>
-                  <div style="display:flex; flex-direction: column;margin-left: 10px;width: 200px">
-                    <div style="display: flex;width: 205px">
-                      <a-tooltip>
-                        <template #title>{{item.name}}</template>
-                        <div class="title">{{ item.title }}</div>
-                      </a-tooltip>
-                      <div style="width: 100px;font-weight: bold;overflow: hidden">{{item.suffixal}}</div>
+                     @mouseover="mouseOver(item.id)"
+                     @mouseleave="mouseLeave">
+                  <div style="display: flex;">
+                    <div style="width: 34px;height: 40px;margin-left: 10px;">
+                      <img :src="url=(`./icon/${matchFileSuffixType(item.name)}.svg`)" style="height: 100%;width: 100%;line-height: 40px"/>
                     </div>
-                    <div style="display: flex;width: 200px;justify-content: space-between">
-                      <div style="width: 55px">{{ item.total }}</div>
-                      <div style="font-size: 12px;line-height: 23px">{{ item.delTime}}</div>
+                    <div style="display:flex; flex-direction: column;margin-left: 10px;width: 200px">
+                      <div style="display: flex;width: 205px">
+                        <a-tooltip>
+                          <template #title>{{item.name}}</template>
+                          <div class="title">{{ item.title }}</div>
+                        </a-tooltip>
+                        <div style="width: 100px;font-weight: bold;overflow: hidden">{{item.suffixal}}</div>
+                      </div>
+                      <div style="display: flex;width: 200px;justify-content: space-between">
+                        <div style="width: 55px">{{ item.total }}</div>
+                        <div style="font-size: 12px;line-height: 23px">{{ item.delTime}}</div>
+                      </div>
                     </div>
+                    <div v-show="item.state == -2" style="line-height: 45px;margin-left: 15px">文件已被删除</div>
                   </div>
-                  <div v-show="item.state == -2" style="line-height: 45px;margin-left: 15px">文件已被删除</div>
                 </div>
               </div>
             </div>
-          </div>
-          <div style="cursor: pointer;display: flex;height: 22px;width: 110px;float: right" @click="delAll()">
-            <a-icon  style="font-size: 16px;float: right;line-height: 30px" type="delete"></a-icon>
-            <div style="margin-left: 5px;line-height: 25px">清空回收站</div>
-          </div>
-        </a-tab-pane>
+            <div style="cursor: pointer;display: flex;height: 22px;width: 110px;float: right" @click="delAll()">
+              <a-icon  style="font-size: 16px;float: right;line-height: 30px" type="delete"></a-icon>
+              <div style="margin-left: 5px;line-height: 25px">清空回收站</div>
+            </div>
+          </a-tab-pane>
 
-      </a-tabs>
-    </div>
-  </template>
-  <a-tooltip>
-    <template slot="title">
-      设置
+        </a-tabs>
+      </div>
     </template>
-    <a-icon @click="openSetting()" style="cursor: pointer;font-size: 15px; position: absolute;float: left; margin-top: -13px;margin-left: 15px" type="setting"></a-icon>
-  </a-tooltip>
+    <a-tooltip>
+      <template slot="title">
+        设置
+      </template>
+      <a-icon @click="openSetting()" style="cursor: pointer;font-size: 15px; position: absolute;float: left; margin-top: -13px;margin-left: 15px" type="setting"></a-icon>
+    </a-tooltip>
+
+
+  </template>
+
 
 
 
