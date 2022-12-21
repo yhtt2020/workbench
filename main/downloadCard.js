@@ -1,9 +1,9 @@
 const { Notification } = require('electron')
 let downloadWindow = null
 
-function getDownloadWindow () {
+function getDownloadWindow (cb) {
   if (downloadWindow === null || downloadWindow.isDestroyed() == true ) {
-    createDownloadWin()
+    createDownloadWin(cb)
   }
   if(mainWindow!=null && !mainWindow.isDestroyed()){
     let x = (mainWindow.getBounds().x + mainWindow.getBounds().width - downloadWindow.getBounds().width - 15)
@@ -13,7 +13,7 @@ function getDownloadWindow () {
   return downloadWindow
 }
 
-function createDownloadWin () {
+function createDownloadWin (cb) {
   downloadWindow = new BrowserWindow({
     frame: true,
     width: 385,
@@ -33,6 +33,11 @@ function createDownloadWin () {
     }
   })
 
+  if(cb){
+    downloadWindow.on('ready-to-show',()=>{
+      if(cb) cb(downloadWindow)
+    })
+  }
   downloadWindow.webContents.loadURL('file://' + __dirname + '/pages/download/index.html')
 
   downloadWindow.on('close', (event) => {
