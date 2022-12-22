@@ -106,6 +106,11 @@ ipc.on('openPwdManager', async (event, args) => {
     global.passwordWin = await windowManager.create({
       url: url,
       name: 'kee',
+      rememberBounds: true,
+      defaultBounds:{
+        width: 600,
+        height: 453,
+      },
       windowOption: {
         backgroundColor: 'white',
         parent: mainWindow,
@@ -113,10 +118,8 @@ ipc.on('openPwdManager', async (event, args) => {
         y: args.pos.y + parentBounds.y + 10,
         hasShadow: true,
         minWidth: 600,
-        width: 600,
         autoHideMenuBar: true,
         minHeight: 453,
-        height: 453,
         acceptFirstMouse: true,
         maximizable: false,
         visualEffectState: 'active',
@@ -126,6 +129,7 @@ ipc.on('openPwdManager', async (event, args) => {
         nodeIntegration: true,
         contextIsolation: false,
         sandbox: false,
+        webSecurity:false,
         preload: ___dirname + '/src/preload/keePreload.js',
         additionalArguments: [
           '--user-data-path=' + userDataPath,

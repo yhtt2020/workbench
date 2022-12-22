@@ -15,7 +15,10 @@
     </template>
   </a-page-header>
   <div style="padding: 10px" v-if="!editing">
+    <vue-custom-scrollbar :settings="settings" style="position:relative;height:calc(100vh - 40px)"
+    >
   <div v-html="valueHtml"></div>
+    </vue-custom-scrollbar>
   </div>
   <div  v-else>
     <Toolbar
@@ -40,14 +43,24 @@ import '@wangeditor/editor/dist/css/style.css' // 引入 css
 
 import { onBeforeUnmount, ref, shallowRef, onMounted } from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+import api from '../../../src/model/api.js'
+
+
+import vueCustomScrollbar from "../../../src/components/vue-scrollbar.vue";
 import {mapActions} from "pinia";
 import {appStore} from "../store";
 import {message} from 'ant-design-vue'
 export default {
   name:'RemarkEditor',
-  components: { Editor, Toolbar },
+  components: { Editor, Toolbar ,  vueCustomScrollbar,},
   data(){
     return{
+      settings: {
+        swipeEasing: true,
+        suppressScrollY: false,
+        suppressScrollX: true,
+        wheelPropagation: false,
+      },
       editing:false,
       oldHtml:'',
       password:{
@@ -119,7 +132,7 @@ export default {
     })
 
     const toolbarConfig = {}
-    const editorConfig = { placeholder: '请输入内容...' }
+    const editorConfig = { placeholder: '请输入内容...' ,MENU_CONF:{},}
 
     // 组件销毁时，也及时销毁编辑器
     onBeforeUnmount(() => {
@@ -130,6 +143,84 @@ export default {
 
     const handleCreated = (editor) => {
       editorRef.value = editor // 记录 editor 实例，重要！
+    }
+    editorConfig.MENU_CONF['uploadImage'] = {
+
+      maxFileSize: 10 * 1024 * 1024,
+
+      // 最多可上传几个文件，默认为 10
+      maxNumberOfFiles: 10,
+
+      metaWithUrl: false,
+
+
+      // 跨域是否传递 cookie ，默认为 false
+      withCredentials: true,
+
+      // 超时时间，默认为 10 秒
+      timeout: 5 * 1000, // 5 秒
+
+      async customUpload(file, insertFn) {                   // JS 语法
+        // file 即选中的文件
+        // 自己实现上传，并得到图片 url alt href
+        // 最后插入图片
+        let url
+        var formData = new FormData();
+        formData.append("file",file)
+
+        await api.getCosUpload(formData, (err, data) => {
+          if (!err) {
+            message.error('图片上传失败')
+          } else {
+            url = 'http://' + data.data.data
+            insertFn(url)
+          }
+        })
+        // api.getCosUpload(formData).then((data) => {
+        //   if (data.data.code === 1000) {
+        //     url = 'http://' + data.data.data
+        //     insertFn(url)
+        //   } else {
+        //     message.error('图片上传失败')
+        //   }
+        // })
+
+      },
+    }
+    editorConfig.MENU_CONF['uploadImage'] = {
+
+      maxFileSize: 10 * 1024 * 1024,
+
+      // 最多可上传几个文件，默认为 10
+      maxNumberOfFiles: 10,
+
+      metaWithUrl: false,
+
+
+      // 跨域是否传递 cookie ，默认为 false
+      withCredentials: true,
+
+      // 超时时间，默认为 10 秒
+      timeout: 5 * 1000, // 5 秒
+
+      async customUpload(file, insertFn) {                   // JS 语法
+        // file 即选中的文件
+        // 自己实现上传，并得到图片 url alt href
+        // 最后插入图片
+        let url
+        var formData = new FormData();
+        formData.append("file",file)
+
+        await api.getCosUpload(formData, (err, data) => {
+          if (!err) {
+            message.error('图片上传失败')
+          } else {
+            url = 'http://' + data.data.data
+            insertFn(url)
+          }
+        })
+
+      },
     }
 
     return {

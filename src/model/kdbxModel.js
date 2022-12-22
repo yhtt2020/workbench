@@ -35,8 +35,12 @@ class KdbxModel {
   }
   async save (callback) {
     const data=await this.db.save()
-    storageFile.save(this.path, undefined, data, () => {
-      if(callback) callback()
+    storageFile.save(this.path, undefined, data, (err,data) => {
+      if(err){
+        callback(err,data)
+        return
+      }
+      callback(undefined,data)
     })
   }
   create (name = 'kdb', path, pwd, callback) {

@@ -141,7 +141,14 @@
 
             </div>
             <span style="font-size:14px;font-width:400;color:rgba(0, 0, 0, 0.65);">
-              <div v-html="passwordItem.originData.fields.get('Notes') || '无'">
+              <div style="    max-height: 150px;
+    overflow: hidden;
+    box-shadow: 0 0 8px #aeaeae91;
+    border-radius: 8px;
+    background: #f1f1f1;
+    margin-bottom: 10px;
+    padding:10px;
+    margin-top: 10px;" v-html="passwordItem.originData.fields.get('Notes') || '暂无备注'">
               </div></span>
             <p><router-link :to="{name:'remark',params:{uuid:passwordItem.originData.uuid.id}}">
               <ExportOutlined style="font-size:16px;color:rgba(80, 139, 254, 1);"/>

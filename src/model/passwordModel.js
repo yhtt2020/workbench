@@ -41,6 +41,16 @@ const PasswordModel = {
   create (name = 'kdb', path, pwd, callback){
     PasswordModel.kdbxModel.create(name,path,pwd,callback)
   },
+
+  save(cb){
+    PasswordModel.kdbxModel.save((err,data)=>{
+      if(err){
+        throw err
+      }else{
+        cb(true)
+      }
+    })
+  },
   loadCurrent(callback){
     const pm=settings.get('passwordManager')
     if(pm.name==='file')
