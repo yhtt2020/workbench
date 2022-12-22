@@ -59,7 +59,10 @@
     </a-empty>
 
   </div>
+
   <div v-else class="breadcrumb-form">
+    <vue-custom-scrollbar :settings="settings" style="position:relative;height:calc(100vh - 120px)"
+    >
     <div class="breadcrumb-form-header">
       <div class="breadcrumb-bottom-name">
         <ColorImg :src="passwordItem.icon" :width="16" :height="16" :color="this.getColor"></ColorImg>&nbsp;
@@ -137,15 +140,18 @@
               </span>
 
             </div>
-            <span style="font-size:14px;font-width:400;color:rgba(0, 0, 0, 0.65);">{{ passwordItem.originData.fields.get('Notes') || '无'}}</span>
+            <span style="font-size:14px;font-width:400;color:rgba(0, 0, 0, 0.65);">
+              <div v-html="passwordItem.originData.fields.get('Notes') || '无'">
+              </div></span>
             <p><router-link :to="{name:'remark',params:{uuid:passwordItem.originData.uuid.id}}">
               <ExportOutlined style="font-size:16px;color:rgba(80, 139, 254, 1);"/>
               <span style="font-size:12px; font-width:400;padding-left: 4px;">查看全部</span>
             </router-link></p>
           </div>
     </div>
-
+    </vue-custom-scrollbar>
   </div>
+
   <a-modal width="408px"  :centered="true" v-model:visible="shareVisible" title="分享">
     <div class="share-container">
         <div class="share-header">
@@ -228,6 +234,8 @@ import { Modal , message } from 'ant-design-vue';
 import { createVNode } from 'vue'
 import { appStore } from '../store'
 import { mapState,mapWritableState } from 'pinia'
+
+import vueCustomScrollbar from "../../../src/components/vue-scrollbar.vue";
 import ColorImg from '../components/ColorImg.vue'
 import { getBgColorFromEntry } from '../util.js'
 export default {
@@ -239,7 +247,8 @@ export default {
     ExclamationCircleOutlined,
     PlusOutlined,ExportOutlined,
     EyeFilled,EyeInvisibleFilled,
-    ColorImg
+    ColorImg,
+    vueCustomScrollbar,
   },
   computed: {
    ...mapWritableState(appStore, ['passwordItem']),
@@ -249,6 +258,12 @@ export default {
   },
   data(){
     return{
+      settings: {
+        swipeEasing: true,
+        suppressScrollY: false,
+        suppressScrollX: true,
+        wheelPropagation: false,
+      },
       // 控制网站是否鼠标悬浮
       websiteVisible:false,
       // 控制用户是否鼠标悬浮

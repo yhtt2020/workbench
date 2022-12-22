@@ -9,8 +9,9 @@
       {{password.title}}
     </template>
     <template #extra>
-      <a-button v-if="!editing" @click="editing=true" size="" key="1" type="primary">编辑</a-button>
-      <a-button v-else @click="editing=false" type="primary">保存</a-button>
+      <a-button v-if="!editing" @click="startEdit" size="" key="1" type="primary">编辑</a-button>
+      <a-button v-else-if="editing && oldHtml!==valueHtml" @click="save" type="primary">保存</a-button>
+      <a-button v-if="editing" @click="stopEdit">取消</a-button>
     </template>
   </a-page-header>
   <div style="padding: 10px" v-if="!editing">
@@ -41,12 +42,14 @@ import { onBeforeUnmount, ref, shallowRef, onMounted } from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import {mapActions} from "pinia";
 import {appStore} from "../store";
+import {message} from 'ant-design-vue'
 export default {
   name:'RemarkEditor',
   components: { Editor, Toolbar },
   data(){
     return{
       editing:false,
+      oldHtml:'',
       password:{
         originData:{
           uuid:{}
@@ -68,10 +71,38 @@ export default {
 
   },
   methods:{
+    startEdit(){
+      this.editing=true
+      this.oldHtml=this.valueHtml
+    },
+    save(){
+      try{
+        this.changeEntry(this.password.originData.uuid.id,(entry=>{
+          entry.fields.set('Notes',this.valueHtml)
+          this.editing=false
+          this.password.originData.fields.set('Notes',this.valueHtml)
+          this.saveDb((result)=>{
+            if(result)
+            {
+              message.success('保存成功。')
+              this.editing=false
+            }
+          })
+        }))
+      }catch (e) {
+        message.error('保存失败'+e)
+      }
+
+
+    },
+    stopEdit(){
+      this.valueHtml=this.oldHtml
+      this.editing=false
+    },
     goBack(){
       this.$router.go(-1)
     },
-    ...mapActions(appStore,['getPasswordByUuid'])
+    ...mapActions(appStore,['getPasswordByUuid','changeEntry','saveDb'])
   },
   setup() {
     // 编辑器实例，必须用 shallowRef

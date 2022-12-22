@@ -129,6 +129,14 @@ export const appStore = defineStore('kee', {
   },
 
   actions: {
+    changeEntry(uuid,cb){
+      for (let entry of this.currentDb.kdbx.getDefaultGroup().allEntries()){
+        if(entry.uuid.id===uuid){
+          entry.pushHistory()
+          cb(entry)
+        }
+      }
+    },
     getPasswordByUuid(uuid){
       return this.passwords.find(pwd=>{
         return pwd.originData.uuid.id===uuid
@@ -156,6 +164,9 @@ export const appStore = defineStore('kee', {
       if (this.filterInfo.type === 'all') {
         this.filterInfo.text = dbInfo.name
       }
+    },
+    saveDb(cb){
+      passwordModel.save(cb)
     },
     getAllPasswords() {
       this.passwords = []
