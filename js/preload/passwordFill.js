@@ -84,9 +84,13 @@ function getUrl (url,params) {
   return protocolUrl
 }
 
+function openPwdRemark(e,uuid){
+  ipc.send('openPwdManager', {pos:{
+      x:e.target.x,y:e.target.y+e.target.offsetHeight
+    }, uuid,target:'remark'})
+}
 
-
-function openPwdSettings(e){
+function openPwd(e){
   // params.tab='Password'
   // ipc.send('openSetting',params)
   ipc.send('openPwdManager', { pos:{
@@ -322,8 +326,16 @@ function addFocusListener (element, credentials) {
     if(!cred.title){
       cred.title='未命名'
     }
+    let viewRemark
+    let hasRemark=false
     if(cred.originData.fields.get('Notes')){
-      remark='<img class="__remark-icon" style="width: 18px;height:18px;margin-top: 5px;margin-right:5px;" src="https://a.apps.vip/kee/remark.svg"><div class="__pwd-tip-remark">查看备注</div>  '
+      remark='<img class="__remark-icon" style="width: 18px;height:18px;margin-top: 5px;margin-right:5px;" src="https://a.apps.vip/kee/remark.svg"> '
+      viewRemark = document.createElement('div')
+      viewRemark.classList='__pwd-tip-remark'
+      viewRemark.innerText='查看备注'
+      hasRemark=true
+      //viewRemark=`<div class="__pwd-tip-remark">查看备注</div> `
+
     }
     let  icon= getIcon(cred.originData.bgColor)
 
@@ -340,6 +352,15 @@ function addFocusListener (element, credentials) {
     suggestionItem.addEventListener('mouseleave', (event) => {
       suggestionItem.style.backgroundColor = '#fff'
     })
+
+    if(hasRemark){
+      suggestionItem.children[0].children[2].appendChild(viewRemark)
+      viewRemark.addEventListener('click',(event) =>{
+        console.log(cred.originData.uuid.id)
+        openPwdRemark(event,cred.originData.uuid.id)
+        event.stopPropagation()
+      })
+    }
 
     // When user clicks on the suggestion, we populate the form inputs with selected credentials.
     suggestionItem.addEventListener('click', function (e) {
@@ -366,7 +387,7 @@ function addFocusListener (element, credentials) {
     all.innerHTML=`<a target="_blank" style="position: absolute;top: 8px;right: 8px;font-size: 13px">全部密码</a>`
     container.appendChild(all)
     all.addEventListener('click',(e)=>{
-      openPwdSettings(e)
+      openPwd(e)
     })
 
     let wrapper=document.createElement('div')
@@ -555,14 +576,18 @@ width:3px;
 }
 .__pwd-item .__pwd-tip-remark{
 display:none;
+
 }
 .__pwd-item:hover .__remark-icon{
  display:none
 }
-.__pwd-item:hover .__pwd-tip-remark{
- display:block
+.__pwd-item:hover .__pwd-tip-remark:hover{
+  opacity:1
 }
+
 .__pwd-item:hover .__pwd-tip-remark{
+  display:block;
+  opacity:0.7;
   padding-left: 14px;
   padding-right:14px;
   line-height:46px;

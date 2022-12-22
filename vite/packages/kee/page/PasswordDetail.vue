@@ -135,12 +135,13 @@
              <span style="color:rgba(104, 81, 214, 1);font-width:400;font-size:14px;">
                备注
               </span>
-              <a href="#" v-if="editShow  == true">
-               <ExportOutlined style="font-size:16px;color:rgba(80, 139, 254, 1);"/>
-               <span style="font-size:12px; font-width:400;padding-left: 4px;">在主应用中编辑</span>
-              </a>
+
             </div>
             <span style="font-size:14px;font-width:400;color:rgba(0, 0, 0, 0.65);">{{ passwordItem.originData.fields.get('Notes') || '无'}}</span>
+            <p><router-link :to="{name:'remark',params:{uuid:passwordItem.originData.uuid.id}}">
+              <ExportOutlined style="font-size:16px;color:rgba(80, 139, 254, 1);"/>
+              <span style="font-size:12px; font-width:400;padding-left: 4px;">查看全部</span>
+            </router-link></p>
           </div>
     </div>
 

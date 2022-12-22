@@ -10,17 +10,23 @@ import {createPinia} from 'pinia'
 import Passwords from './page/Passwords.vue'
 import PasswordDetail from './page/PasswordDetail.vue'
 import PasswordBank from './page/PasswordBank.vue'
+import RemarkEditor from './page/RemarkEditor.vue'
 const app = createApp(App)
 app.config.globalProperties.$antIcons = antIcons
 const pinia = createPinia()
 const routes = [
+  {
+    path:'/remarkEditor/:uuid?',
+    name:'remark',
+    component: RemarkEditor
+  },
   {
     path:'/passwordBank',
     name:'bank',
     component: PasswordBank
   },
   {
-    path:'/passwords/value/:value?/type/:type?',
+    path:'/passwords/value/:value?/type/:type?/:uuid?/:target?',
     name:'passwords',
     component: Passwords,
     children: [

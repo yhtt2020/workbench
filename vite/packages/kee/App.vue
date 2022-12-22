@@ -19,12 +19,13 @@ export default {
   components:{
     PasswordBank
   },
-  mounted() {
-    window.ipc=window.$models.ipc
-    window.kdbxModel=window.$models.kdbxModel
-    window.passwordModel =window.$models.passwordModel
+  async mounted() {
+    window.ipc = window.$models.ipc
+    window.kdbxModel = window.$models.kdbxModel
+    window.passwordModel = window.$models.passwordModel
     this.loadDbList()
-    this.loadCurrentDb()
+
+
   },
   methods:{
     ...mapActions(appStore,['setDb','loadDbList','loadCurrentDb']),

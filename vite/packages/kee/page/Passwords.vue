@@ -432,59 +432,78 @@ export default {
       }
     })
     let params=this.$route.params
+    console.log(params)
     if(params.type==='url'){
       this.url=params.value
+      await this.loadCurrentDb()
       this.setFilter('TAB',{url:this.url})
       //todo是路径方式
-      passwordModel.getSiteCredit(this.url, true).then((result) => {
-        let isFirst=true
-        result.item.forEach((item) => {
-          let pwd
-          // {
-          //   id: 3,
-          //     index: 3,
-          //   title: "轻流帐号",
-          //   description: "Maurice_Alvarado",
-          //   path: "detail",
-          //   password:'123456',
-          //   url: "http://localhost:1600/packages/kee/assets/image/key_black.svg",
-          //   showCopy: false,
-          //   site:'zt.xaingtian.ren'
-          // },
-          pwd={
-            title: item.name || item.username,
-            password: item.password,
-            username:item.username,
-            showCopy:false,
+      await this.getAllPasswords()
+      if(this.$route.params.uuid && this.$route.params.target ==='remark' && !window.redirected){
+        window.redirected=true
+        this.leftDescription(this.displayPasswords.find(pwd=>{
+          return pwd.originData.uuid.id===this.$route.params.uuid
+        }))
+        this.goRemark(this.$route.params)
+      }
+      // passwordModel.getSiteCredit(this.url, true).then((result) => {
+      //   let isFirst=true
+      //   result.item.forEach((item) => {
+      //     let pwd
+      //     // {
+      //     //   id: 3,
+      //     //     index: 3,
+      //     //   title: "轻流帐号",
+      //     //   description: "Maurice_Alvarado",
+      //     //   path: "detail",
+      //     //   password:'123456',
+      //     //   url: "http://localhost:1600/packages/kee/assets/image/key_black.svg",
+      //     //   showCopy: false,
+      //     //   site:'zt.xaingtian.ren'
+      //     // },
+      //     pwd={
+      //       title: item.name || item.username,
+      //       password: item.password,
+      //       username:item.username,
+      //       showCopy:false,
+      //
+      //       passwordType:'passwordType',
+      //       id:item.domain+'_'+item.username,
+      //       site: item.domain,
+      //       icon:'/kee/key_black.svg'
+      //     }
+      //     if(isFirst){
+      //       this.passwordItem=pwd
+      //       this.$router.push({
+      //         name:'detail',
+      //         params:{
+      //           t:Date.now()
+      //         }
+      //       })
+      //       isFirst=false
+      //     }
+      //     this.passwords.push(pwd)
+      //   })
+      //
+      //
+      //
+      //   // result.rootItem.forEach((item) => {
+      //   //   let pwd = item
+      //   //   pwd.passwordSwitch = {
+      //   //     hide: true,
+      //   //     pwd: item.password
+      //   //   }
+      //   //   appVue.rootPwds.push(pwd)
+      //   // })
+      //   console.log(this.$route.params,'参数')
+      //   if(this.$route.params.uuid && this.$route.params.target ==='remark'){
+      //     console.log('发现是要定向的',this.$route.params)
+      //     this.goRemark(this.$route.params)
+      //   }
+      //
+      // })
 
-            passwordType:'passwordType',
-            id:item.domain+'_'+item.username,
-            site: item.domain,
-            icon:'/kee/key_black.svg'
-          }
-          if(isFirst){
-            this.passwordItem=pwd
-            this.$router.push({
-              name:'detail',
-              params:{
-                t:Date.now()
-              }
-            })
-            isFirst=false
-          }
-          this.passwords.push(pwd)
-        })
 
-        // result.rootItem.forEach((item) => {
-        //   let pwd = item
-        //   pwd.passwordSwitch = {
-        //     hide: true,
-        //     pwd: item.password
-        //   }
-        //   appVue.rootPwds.push(pwd)
-        // })
-
-      })
     }
     else if(params.type==='all'){
       //是直接查看全部的密码
@@ -493,10 +512,13 @@ export default {
     }
   },
   methods: {
+    goRemark(params){
+      this.$router.push({name:'remark',params:{uuid:params.uuid}})
+    },
     getColor(data){
       return getBgColorFromEntry(data)
     },
-    ...mapActions(appStore,['getTabData','importPasswords','getAllPasswords','setFilter']),
+    ...mapActions(appStore,['getTabData','importPasswords','getAllPasswords','setFilter','loadCurrentDb']),
     showImport(){
       this.importVisible=true
     },
@@ -541,7 +563,6 @@ export default {
     leftDescription(item) {
       this.currentIndex = item.id;
       this.passwordItem=item
-      console.log(this.passwordItem)
       this.$router.push({
         name:'detail',
         params:{

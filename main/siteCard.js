@@ -97,8 +97,14 @@ ipc.on('openPwdManager', async (event, args) => {
 
   if (!global.passwordWin) {
     const parentBounds = mainWindow.getBounds()
+    if(args.uuid && args.target){
+      var p=`/${encodeURIComponent(args.uuid)}/${args.target}`
+    }else{
+      p=''
+    }
+    let url=render.getUrl('kee.html#/passwords/value/' + encodeURIComponent(siteUrl) + '/type/url'+p)
     global.passwordWin = await windowManager.create({
-      url: render.getUrl('kee.html#/passwords/value/' + encodeURIComponent(siteUrl) + '/type/url'),
+      url: url,
       name: 'kee',
       windowOption: {
         backgroundColor: 'white',

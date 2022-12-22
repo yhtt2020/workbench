@@ -129,6 +129,11 @@ export const appStore = defineStore('kee', {
   },
 
   actions: {
+    getPasswordByUuid(uuid){
+      return this.passwords.find(pwd=>{
+        return pwd.originData.uuid.id===uuid
+      })
+    },
     /**
      * 设置筛选器
      * @param filterName 筛选器名称
@@ -160,20 +165,23 @@ export const appStore = defineStore('kee', {
     importPasswords(passwords, groupName, existAction) {
       return passwordModel.importPasswords(passwords, groupName, existAction)
     },
-    loadCurrentDb() {
-      passwordModel.loadCurrent((err, dbInfo) => {
-        if (err) {
-          console.warn('打开密码库失败')
-          return
-        }
-        if (dbInfo) {
-          this.setDb({
-            filePath: dbInfo.filePath,
-            kdbx: dbInfo.db,
-            tags: dbInfo.tags,
-            name: dbInfo.name
-          })
-        }
+    async loadCurrentDb() {
+      return new Promise(resolve => {
+        passwordModel.loadCurrent((err, dbInfo) => {
+          if (err) {
+            console.warn('打开密码库失败')
+            return
+          }
+          if (dbInfo) {
+            this.setDb({
+              filePath: dbInfo.filePath,
+              kdbx: dbInfo.db,
+              tags: dbInfo.tags,
+              name: dbInfo.name
+            })
+          }
+          resolve(dbInfo)
+        })
       })
 
     },
