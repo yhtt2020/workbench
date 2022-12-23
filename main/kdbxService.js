@@ -158,9 +158,10 @@ class KdbxService {
           return
         }
         let allCredentials = this.kdbxModel.getAllCredentials()
-        allCredentials = allCredentials.map(crd => {
+        allCredentials = allCredentials.filter(crd => {
           crd.name = crd.title
-          return crd
+          //排除掉已删除的密码
+          return crd.originData.parentGroup.uuid.id!==this.kdbxModel.db.meta.recycleBinUuid.id
         })
         resolve(allCredentials)
       })

@@ -94,8 +94,6 @@ const PasswordModel = {
   },
 
   getAllPasswords(){
-    console.log('获取全部密码')
-    console.log(PasswordModel.activeManager,'manag')
    return PasswordModel.activeManager.getAllCredentials()
   },
 
