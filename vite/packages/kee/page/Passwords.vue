@@ -27,7 +27,7 @@
     </div>
     <div class="password-button">
       <PlusOutlined style="font-size: 16px; color:rgba(255, 255, 255, 1) !important;" />
-      <span style=" color: rgba(255, 255, 255, 1); padding-left:8px;">新建密码</span>
+      <span @click="createPwd" style=" color: rgba(255, 255, 255, 1); padding-left:8px;">新建密码</span>
     </div>
   </div>
   <a-divider style="height: 1px; background-color: rgba(230, 230, 230, 0.1);margin: 0  !important;" />
@@ -510,13 +510,20 @@ export default {
     }
   },
   methods: {
+    createPwd(){
+      this.createEntry(entry=>{
+        this.saveDb(result=>{
+          message.success('新建密码成功。')
+        })
+      })
+    },
     goRemark(params){
       this.$router.push({name:'remark',params:{uuid:params.uuid}})
     },
     getColor(data){
       return getBgColorFromEntry(data)
     },
-    ...mapActions(appStore,['getTabData','importPasswords','getAllPasswords','setFilter','loadCurrentDb']),
+    ...mapActions(appStore,['getTabData','importPasswords','getAllPasswords','setFilter','loadCurrentDb','createEntry','saveDb']),
     showImport(){
       this.importVisible=true
     },

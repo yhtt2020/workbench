@@ -164,6 +164,19 @@ export const appStore = defineStore('kee', {
           url: "../../../public/img/key_black.svg"
         }
     },
+    createEntry(cb){
+      console.log('111111')
+      let entry = this.currentDb.kdbx.createEntry(this.currentDb.kdbx.getDefaultGroup())
+      console.log(entry,'dawdwawda')
+      if(this.currentTab){
+        entry.fields.set('URL',new URL(this.currentTab.url).hostname)
+      }
+      if(cb) {
+        this.clearPasswordItem()
+        this.getAllPasswords()
+        cb(entry)
+      }
+    },
     removeEntry(uuid,cb){
       for(let entry of this.currentDb.kdbx.getDefaultGroup().allEntries()){
         if(entry.uuid.id===uuid){

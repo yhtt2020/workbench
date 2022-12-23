@@ -57,7 +57,7 @@
       <template #description>
       <span>
         暂无密码
-        <a-button type="primary">新建密码</a-button>
+        <a-button @click="createPwd" type="primary">新建密码</a-button>
       </span>
       </template>
     </a-empty>
@@ -99,7 +99,7 @@
               <div class="password-input">
                 <span style="color:rgba(104, 81, 214, 1);">密码</span>
                 <div class="password-show" v-if="editShow==false">
-                  <a-input  :type="passwordItem.passwordType" style="border:none;padding:0;width: 65%;background: rgba(80, 139, 254, 0);" v-model:value="passwordItem.password"></a-input>
+                  <a-input disabled  :type="passwordItem.passwordType" style="border:none;padding:0;width: 65%;background: rgba(80, 139, 254, 0);" v-model:value="passwordItem.password"></a-input>
                   <div style="cursor: pointer;" v-if="passwordVisible==true" @click="passwordShowClick(passwordItem)">
                     <EyeFilled v-if="passwordItem.showCopy == true" style="color:rgba(80, 139, 254, 1); padding-right:11px; cursor: pointer;"/>
                     <EyeInvisibleFilled v-if="passwordItem.showCopy==false"  style="color:rgba(80, 139, 254, 1); padding-right:11px; cursor: pointer;"/>
@@ -381,6 +381,14 @@ export default {
       this.updateForm()
   },
   methods:{
+    createPwd(){
+      alert('a')
+      this.createEntry(entry=>{
+          this.saveDb(result=>{
+            message.success('新建密码成功。')
+          })
+      })
+    },
     updateForm(){
       this.formState.passwordAccount = this.passwordItem.title
       this.formState.username = this.passwordItem.username
@@ -388,7 +396,7 @@ export default {
       this.formState.password = this.passwordItem.password
       this.formState.siteValue = this.passwordItem.site_1
     },
-    ...mapActions(appStore,['removeEntry','saveDb','clearPasswordItem','changeEntry','getAllPasswords']),
+    ...mapActions(appStore,['removeEntry','saveDb','clearPasswordItem','changeEntry','getAllPasswords','createEntry']),
     openUrl(url){
       ipc.send('addTab',{url})
     },

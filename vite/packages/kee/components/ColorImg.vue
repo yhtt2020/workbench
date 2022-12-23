@@ -12,7 +12,7 @@ export default {
   computed:{
     getStyle(){
       let imgColor='black'
-      if(this.color===''){
+      if(this.color==='' || !this.color){
         imgColor= 'black'
       }else{
         imgColor=this.color
