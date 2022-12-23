@@ -72,6 +72,7 @@ export const appStore = defineStore('kee', {
     user: {
       user_info: {}
     },
+    currentIndex:0,
     //将点击之后的值进行缓存
     passwordItem: {
       originData:{
@@ -114,7 +115,7 @@ export const appStore = defineStore('kee', {
         }
       })
       this._passwords=this._passwords.filter(pwd=>{
-        console.log(pwd)
+        if(pwd.originData.parentGroup.uuid.id===this.currentDb.kdbx.meta.recycleBinUuid.id) return false //排除已被删除的密码
         return testWords(pwd.title,this.searchKey)  || testWords(pwd.originData.fields.get('Notes'),this.searchKey) || testWords(pwd.originData.fields.get('URL'),this.searchKey) ||testWords(pwd.originData.fields.get('UserName'),this.searchKey)
 
       })
@@ -148,6 +149,36 @@ export const appStore = defineStore('kee', {
           cb(entry)
         }
       }
+    },
+    clearPasswordItem(){
+        this.passwordItem={
+          originData:{
+            parentGroup:{
+            }
+          },
+          id: 0,
+          index: 0,
+          title: "",
+          description: "",
+          password: '',
+          url: "../../../public/img/key_black.svg"
+        }
+    },
+    removeEntry(uuid,cb){
+      for(let entry of this.currentDb.kdbx.getDefaultGroup().allEntries()){
+        if(entry.uuid.id===uuid){
+          this.currentDb.kdbx.remove(entry);
+         let found= this.passwords.findIndex((pwd) => {
+            return pwd.originData.uuid.id===uuid})
+          if(found)
+          {
+            this.passwords.splice(found,1)
+          }
+          if(cb) cb(true)
+          return
+        }
+      }
+      if(cb) cb(false)
     },
     getPasswordByUuid(uuid){
       return this.passwords.find(pwd=>{

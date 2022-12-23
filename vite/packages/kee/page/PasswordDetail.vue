@@ -24,12 +24,12 @@
               </template>
                <span class="medit">编辑</span>
             </a-menu-item>
-            <a-menu-item key="1" @click="openShare">
-              <template #icon>
-                <ShareAltOutlined style="font-size:16px;color: rgba(0, 0, 0, 0.65);"/>
-              </template>
-              <span class="share">分享</span>
-            </a-menu-item>
+<!--            <a-menu-item key="1" @click="openShare">-->
+<!--              <template #icon>-->
+<!--                <ShareAltOutlined style="font-size:16px;color: rgba(0, 0, 0, 0.65);"/>-->
+<!--              </template>-->
+<!--              <span class="share">分享</span>-->
+<!--            </a-menu-item>-->
             <!--主应用中打开下拉菜单打开-->
             <a-menu-item key="2">
               <template #icon>
@@ -37,7 +37,7 @@
               </template>
               <span class="share">主应用中打开</span>
             </a-menu-item>
-            <a-menu-item key="3" @click="shareDelete">
+            <a-menu-item key="3" @click="shareDelete(passwordItem.originData.uuid.id)">
                <template #icon>
                   <MinusCircleOutlined style="color:rgba(255, 77, 79, 1);font-size:16px;"/>
                </template>
@@ -240,7 +240,7 @@ import {
 import { Modal , message } from 'ant-design-vue';
 import { createVNode } from 'vue'
 import { appStore } from '../store'
-import { mapState,mapWritableState } from 'pinia'
+import { mapState,mapActions,mapWritableState } from 'pinia'
 
 import vueCustomScrollbar from "../../../src/components/vue-scrollbar.vue";
 import ColorImg from '../components/ColorImg.vue'
@@ -258,7 +258,7 @@ export default {
     vueCustomScrollbar,
   },
   computed: {
-   ...mapWritableState(appStore, ['passwordItem']),
+   ...mapWritableState(appStore, ['passwordItem','currentIndex']),
     getColor(){
      return getBgColorFromEntry(this.passwordItem.originData)
     },
@@ -381,6 +381,7 @@ export default {
     this.formState.siteValue = this.passwordItem.site_1
   },
   methods:{
+    ...mapActions(appStore,['removeEntry','saveDb','clearPasswordItem']),
     openUrl(url){
       ipc.send('addTab',{url})
     },
@@ -390,14 +391,28 @@ export default {
        this.shareVisible = true
     },
     // 删除事件
-    shareDelete(){
+    shareDelete(uuid){
       Modal.confirm({
         title:"确定要删除当前密码吗，后续您可以在回收站中进行恢复和彻底删除操作?",
         icon: createVNode(ExclamationCircleOutlined),
         okText:"确定",
         cancelText:"取消",
-        onOk(){
+        onOk:()=>{
+          this.removeEntry(uuid,(result)=>{
+            if(result) {
+              this.saveDb((result)=>{
+                if(result){
+                  this.clearPasswordItem()
+                  this.currentIndex=0
+                  message.success('删除密码成功。')
+                }else{
+                  message.success('删除密码成功。但是无法保存密码，请检查密码库是否被占用。')
+                }
 
+              })
+
+            }
+          })
         },
         onCancel(){
 

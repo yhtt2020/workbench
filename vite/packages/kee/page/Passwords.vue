@@ -314,7 +314,6 @@ export default {
       },
       simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
       // 列表默认下标
-      currentIndex: 0,
       checkNick: false,
       size: "large",
       sideDrawerVisible: false,
@@ -344,7 +343,7 @@ export default {
   computed: {
 
     ...mapState(appStore,['displayPasswords']),
-    ...mapWritableState(appStore,['passwordItem','dbList','currentTab','tags','filterInfo','siteCard','searchKey']),
+    ...mapWritableState(appStore,['passwordItem','dbList','currentTab','tags','filterInfo','siteCard','searchKey','currentIndex']),
     listHeight(){
       let height=''
       if(this.filterInfo.type==='tab'){
