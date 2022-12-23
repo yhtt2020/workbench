@@ -711,9 +711,12 @@ class AppManager {
       let found = appManager.saApps.find((app) => {
         return app.instance.info.nanoid === nanoid
       })
-      windowManager.close(found.windowName)//通过windowManager关闭实例
-      appManager.saApps.splice(found, 1)
-      SidePanel.send('closeApp', { nanoid: nanoid })
+      if(found){
+        //有时候可能不存在对应的app
+        windowManager.close(found.windowName)//通过windowManager关闭实例
+        appManager.saApps.splice(found, 1)
+        SidePanel.send('closeApp', { nanoid: nanoid })
+      }
     }
 
 
