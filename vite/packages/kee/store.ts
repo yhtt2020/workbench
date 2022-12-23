@@ -55,6 +55,8 @@ export const appStore = defineStore('kee', {
       icon: 'AppstoreFilled'
     },
 
+    searchKey:'',
+
     siteCard: {
       isRoot:false,//子站属性
     },
@@ -99,6 +101,10 @@ export const appStore = defineStore('kee', {
   }),
   getters: {
     displayPasswords() {
+      function testWords(target,pattern){
+        if(!target) return false
+        return target.indexOf(pattern)>-1
+      }
       this._passwords = this.passwords.map((pwd) => {
         return {
           ...pwd,
@@ -107,6 +113,12 @@ export const appStore = defineStore('kee', {
           icon: '/kee/key_black.svg'
         }
       })
+      this._passwords=this._passwords.filter(pwd=>{
+        console.log(pwd)
+        return testWords(pwd.title,this.searchKey)  || testWords(pwd.originData.fields.get('Notes'),this.searchKey) || testWords(pwd.originData.fields.get('URL'),this.searchKey) ||testWords(pwd.originData.fields.get('UserName'),this.searchKey)
+
+      })
+
       if (this.filterInfo.type === 'all') {
         return this._passwords
       } else if (this.filterInfo.type === 'tab') {

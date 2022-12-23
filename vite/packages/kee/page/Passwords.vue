@@ -16,7 +16,7 @@
       </a-row>
     </div>
     <div class="password-search">
-      <a-input v-model:value="search" placeholder="搜索">
+      <a-input v-model:value="searchKey" placeholder="搜索 网址、备注、标题、用户名">
         <template #prefix>
           <search-outlined
             @click="searchClick"
@@ -316,7 +316,6 @@ export default {
       // 列表默认下标
       currentIndex: 0,
       checkNick: false,
-      search: "",
       size: "large",
       sideDrawerVisible: false,
 
@@ -345,7 +344,7 @@ export default {
   computed: {
 
     ...mapState(appStore,['displayPasswords']),
-    ...mapWritableState(appStore,['passwordItem','dbList','currentTab','tags','filterInfo','siteCard']),
+    ...mapWritableState(appStore,['passwordItem','dbList','currentTab','tags','filterInfo','siteCard','searchKey']),
     listHeight(){
       let height=''
       if(this.filterInfo.type==='tab'){
