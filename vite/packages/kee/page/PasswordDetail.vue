@@ -2,7 +2,7 @@
   <div class="breadcrumb-container">
     <a-breadcrumb-separator class="breadcrumb-left">
       <UnlockFilled class="breadcrumb-lock"/>
-      <a-breadcrumb-item class="my-password">我的密码</a-breadcrumb-item>
+      <a-breadcrumb-item class="my-password">全部</a-breadcrumb-item>
       <a-breadcrumb-item v-if="passwordItem.originData.parentGroup" class="password-group"><a >{{ passwordItem.originData.parentGroup.name }}</a></a-breadcrumb-item>
     </a-breadcrumb-separator>
     <div class="breadcrumb-right">
@@ -141,7 +141,7 @@
 
             </div>
             <span style="font-size:14px;font-width:400;color:rgba(0, 0, 0, 0.65);">
-              <div style="    max-height: 150px;
+              <div class="remark-content" style="    max-height: 150px;
     overflow: hidden;
     box-shadow: 0 0 8px #aeaeae91;
     border-radius: 8px;
@@ -485,7 +485,7 @@ export default {
   }
 }
 </script>
-<style>
+<style lang="scss">
 .ant-dropdown-menu-item:hover, .ant-dropdown-menu-submenu-title:hover{
    background: rgba(80, 139, 254, 0.1) !important;
 }
@@ -496,7 +496,13 @@ export default {
 .ant-tag{
    border-style: solid !important;
 }
-
+.remark-content{
+  img{
+    max-width: 90% !important;
+    border-radius: 4px;
+    box-shadow: 0 0 6px rgba(63, 62, 62, 0.56);
+  }
+}
 </style>
 <style lang="scss" scoped>
 .breadcrumb-container{
@@ -504,6 +510,13 @@ export default {
   align-items: center;
   padding-bottom: 12px;
   justify-content: space-between;
+  .password-group{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 60%;
+    overflow: hidden;
+
+  }
   .password-group a{
     color: rgba(0, 0, 0, 0.45) !important;
   }
@@ -516,6 +529,8 @@ export default {
 }
 .breadcrumb-left{
    user-select: none;
+  max-width: 100%;
+  min-width: 65%;
    display: flex;
    align-items: center;
    .my-password .ant-breadcrumb-separator{
@@ -523,6 +538,7 @@ export default {
    }
 }
 .breadcrumb-right{
+  min-width: 108px;
    display: flex;
    align-items: center;
    .auto-full{

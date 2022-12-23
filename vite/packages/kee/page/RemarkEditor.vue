@@ -1,7 +1,6 @@
 <template>
   <a-page-header
     style="border: 1px solid rgb(235, 237, 240);padding:0 10px !important;"
-
     sub-title="密码备注"
     @back="this.goBack"
   >
@@ -9,12 +8,12 @@
       {{password.title}}
     </template>
     <template #extra>
-      <a-button v-if="!editing" @click="startEdit" size="" key="1" type="primary">编辑</a-button>
+      <a-button v-if="!editing" @click="startEdit" key="1" type="primary">编辑</a-button>
       <a-button v-else-if="editing && oldHtml!==valueHtml" @click="save" type="primary">保存</a-button>
       <a-button v-if="editing" @click="stopEdit">取消</a-button>
     </template>
   </a-page-header>
-  <div style="padding: 10px" v-if="!editing">
+  <div class="remark-content" style="padding: 10px" v-if="!editing">
     <vue-custom-scrollbar :settings="settings" style="position:relative;height:calc(100vh - 40px)"
     >
   <div v-html="valueHtml"></div>
@@ -29,7 +28,7 @@
     />
 
     <Editor
-      style="height: 500px; overflow-y: hidden;"
+      style="height: calc(100vh - 40px); overflow-y: hidden;"
       v-model="valueHtml"
       :defaultConfig="editorConfig"
       :mode="mode"
@@ -235,6 +234,12 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss">
+.remark-content{
+  img{
+    max-width: 90% !important;
+    border-radius: 4px;
+    box-shadow: 0 0 6px rgba(63, 62, 62, 0.56);
+  }
+}
 </style>

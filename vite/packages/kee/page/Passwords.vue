@@ -1,5 +1,5 @@
 <template>
-  <div class="password-header">
+  <div class="password-header" style="-webkit-app-region:drag">
     <div class="password-select"
       @click="selectOptions"
       @mouseover="passwordHover"
@@ -797,7 +797,8 @@ h3 {
 }
 /*下拉选择开始*/
 .password-select {
-  width: 40.7%;
+  width: 225px;
+  min-width: 225px;
   border: 1px solid rgba(230, 230, 230, 1);
   border-radius: 4px;
   padding: 6px 8px 5px 8px;
@@ -836,14 +837,14 @@ h3 {
 /*下拉选择结束*/
 /*搜索开始*/
 .password-search {
-  width: 44.37%;
+  flex-grow: 1;
   margin-right: 16px;
 }
 /*搜索结束*/
 
 /*新建密码开始*/
 .password-button{
-   width:18.765%;
+   width:110px;
    line-height: 32px;
    display: flex;
    justify-content: center;
