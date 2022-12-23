@@ -16,6 +16,7 @@ class KdbxModel {
     this.storageFile = new StorageFile()
     this.kdbxwebInit=require('./kee/kdbxwebInit')
     this.kdbxwebInit.init()
+    this.kdbxweb=kdbxweb
   }
   openFile (password, path, keyFileData, callback) {
     storageFile.load(path, undefined, (err, buffer) => {
@@ -28,6 +29,7 @@ class KdbxModel {
         this.name=dbInfo.name
         this.path=path
         this.tags=dbInfo.tags
+
         dbInfo.filePath=path
         callback(undefined,dbInfo)
       })

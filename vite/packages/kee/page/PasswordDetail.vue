@@ -6,12 +6,16 @@
       <a-breadcrumb-item v-if="passwordItem.originData.parentGroup.name" class="password-group"><a >{{ passwordItem.originData.parentGroup.name }}</a></a-breadcrumb-item>
     </a-breadcrumb-separator>
     <div class="breadcrumb-right">
-       <div class="auto-full" v-if="editShow == false">
+       <span class="auto-full" v-if="editShow == false">
         <span>自动填充</span>
-       </div>
-       <div class="auto-full" v-else>
-        <span @click="saveChange">保存修改</span>
-       </div>
+       </span>
+       <span v-else>
+         <a-button-group>
+            <a-button size="small" @click="saveChange" type="primary">保存</a-button>
+         <a-button size="small" @click="editShow =false" >取消</a-button>
+
+         </a-button-group>
+             </span>
        <a-dropdown :trigger="['click']" width="180" placement="bottomRight">
         <a class="ant-dropdown-link" @click.prevent>
           <EllipsisOutlined class="breadcrumb-icon"/>
@@ -117,7 +121,7 @@
               <a   @click="openUrl(passwordItem.domain)" v-if="editShow==false">{{passwordItem.domain}}</a>
               <a-form :model="formState" :rules="formRules" v-if="editShow==true">
                 <a-form-item name="siteValue" required>
-                  <a-input  style="padding:0 10px !important;" v-model:value="formState.siteValue" />
+                  <a-input  style="padding:0 10px !important;" v-model:value="formState.websiteValue" />
                 </a-form-item>
               </a-form>
              </div>
@@ -258,7 +262,7 @@ export default {
     vueCustomScrollbar,
   },
   computed: {
-   ...mapWritableState(appStore, ['passwordItem','currentIndex']),
+   ...mapWritableState(appStore, ['passwordItem','currentIndex','currentDb']),
     getColor(){
      return getBgColorFromEntry(this.passwordItem.originData)
     },
@@ -374,14 +378,17 @@ export default {
   mounted(){
   },
   updated(){
-    this.formState.passwordAccount = this.passwordItem.title
-    this.formState.username = this.passwordItem.username
-    this.formState.websiteValue = this.passwordItem.site_2
-    this.formState.password = this.passwordItem.password
-    this.formState.siteValue = this.passwordItem.site_1
+      this.updateForm()
   },
   methods:{
-    ...mapActions(appStore,['removeEntry','saveDb','clearPasswordItem']),
+    updateForm(){
+      this.formState.passwordAccount = this.passwordItem.title
+      this.formState.username = this.passwordItem.username
+      this.formState.websiteValue = this.passwordItem.domain
+      this.formState.password = this.passwordItem.password
+      this.formState.siteValue = this.passwordItem.site_1
+    },
+    ...mapActions(appStore,['removeEntry','saveDb','clearPasswordItem','changeEntry','getAllPasswords']),
     openUrl(url){
       ipc.send('addTab',{url})
     },
@@ -452,6 +459,29 @@ export default {
     saveChange(){
       this.editShow = false
       this.isMouse = true
+
+      this.changeEntry(this.passwordItem.originData.uuid.id,(entry)=>{
+         this.passwordItem.title=this.formState.passwordAccount
+         this.passwordItem.username=this.formState.username
+         this.passwordItem.domain=this.formState.websiteValue
+         this.passwordItem.password=this.formState.password
+        entry.fields.set('UserName', this.formState.username)
+        entry.fields.set('URL', this.formState.websiteValue)
+        entry.fields.set('Password', passwordModel.kdbxModel.kdbxweb.ProtectedValue.fromString(this.formState.password))
+        entry.fields.set('Title',this.formState.passwordAccount)
+        this.getAllPasswords()
+
+
+        this.updateForm()
+        this.saveDb((rs)=>{
+          if(rs){
+            message.success('保存密码改动成功。')
+          }
+        })
+      })
+
+
+
     },
     /*鼠标悬浮事件开始*/
     // 用户名称
