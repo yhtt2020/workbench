@@ -332,6 +332,7 @@ function addFocusListener (element, credentials) {
       remark='<img class="__remark-icon" style="width: 18px;height:18px;margin-top: 5px;margin-right:5px;" src="https://a.apps.vip/kee/remark.svg"> '
       viewRemark = document.createElement('div')
       viewRemark.classList='__pwd-tip-remark'
+      viewRemark.style.minWidth='80px'
       viewRemark.innerText='查看备注'
       hasRemark=true
       //viewRemark=`<div class="__pwd-tip-remark">查看备注</div> `
@@ -340,8 +341,8 @@ function addFocusListener (element, credentials) {
     let  icon= getIcon(cred.originData.bgColor)
 
     const template=  `<div style="display:flex;">
-<div style="width:30px;">${icon}</div>
-<div style="flex:1"><div style="font-size:14px;font-weight:bold;line-height: 18px;">${cred.title}</div><div style="color: grey;line-height: 18px;">${cred.username}</div></div><div>${remark}</div></div>`
+<div style="width:30px;min-width: 30px;">${icon}</div>
+<div style="flex:1"><div style="font-size:14px;font-weight:bold;line-height: 18px;white-space:nowrap;text-overflow: ellipsis;overflow: hidden;word-break: break-all;max-width:90%">${cred.title}</div><div style="color: grey;line-height: 18px;max-width:90%;white-space:nowrap;text-overflow: ellipsis;overflow: hidden;word-break: break-all">${cred.username}</div></div><div>${remark}</div></div>`
     suggestionItem.classList='__pwd-item'
     suggestionItem.innerHTML=template
     suggestionItem.style="margin:8px;padding: 5px; cursor: pointer; width: 100%; border-radius: 8px;"
