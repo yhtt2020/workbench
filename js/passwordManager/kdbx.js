@@ -1,6 +1,9 @@
 const { ipcRenderer } = require('electron')
 
 class Kdbx {
+  name
+  dbName
+  filePath
   constructor () {
     this.name = 'file'
   }

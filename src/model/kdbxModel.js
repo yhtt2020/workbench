@@ -19,17 +19,17 @@ class KdbxModel {
     this.kdbxweb=kdbxweb
   }
   openFile (password, path, keyFileData, callback) {
+    let that=this
     storageFile.load(path, undefined, (err, buffer) => {
       fileModel.open(password, buffer, keyFileData, (err,dbInfo)=>{
         if(err){
           callback(err)
           return
         }
-        this.db=dbInfo.db
-        this.name=dbInfo.name
-        this.path=path
-        this.tags=dbInfo.tags
-
+        that.db=dbInfo.db
+        that.name=dbInfo.name
+        that.path=path
+        that.tags=dbInfo.tags
         dbInfo.filePath=path
         callback(undefined,dbInfo)
       })
@@ -61,7 +61,8 @@ class KdbxModel {
   getManager(filePath){
     return {
       name:'file',
-      filePath:filePath
+      filePath:filePath,
+      dbName:this.name
     }
   }
 

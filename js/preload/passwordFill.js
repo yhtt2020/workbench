@@ -385,7 +385,11 @@ function addFocusListener (element, credentials) {
     const inputWidth = e.target.offsetWidth
     container.id='__pwdContainer'
     container.style.width=`${inputWidth}px`
-    container.innerHTML = `<div style="position:relative;padding: 8px;color: grey;"> ${lockIcon} <span style="font-size: 13px">我的密码</span></div>`
+    let name='内置密码库'
+    if(currentManager.name==='file'){
+      name=currentManager.dbName
+    }
+    container.innerHTML = `<div style="position:relative;padding: 8px;color: grey;"> ${lockIcon} <span style="font-size: 13px">${name}</span></div>`
     let all=document.createElement('span')
     all.innerHTML=`<a target="_blank" style="position: absolute;top: 8px;right: 8px;font-size: 13px">全部密码</a>`
     container.appendChild(all)
@@ -468,9 +472,11 @@ function handleBlur (event) {
 window.onload = () => {
   setTimeout(requestAutofill, 1000)
 }
+var currentManager={}
 // Handle credentials fetched from the backend. Credentials are expected to be
 // an array of { username, password, manager } objects.
 ipc.on('password-autofill-match', (event, data) => {
+  currentManager=data.manager
   if (data.hostname !== window.location.hostname) {
     throw new Error('password origin must match current page origin')
   }

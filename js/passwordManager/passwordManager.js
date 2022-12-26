@@ -30,8 +30,12 @@ const PasswordManagers = {
     if (managerSetting == null) {
       return PasswordManagers.managers.find(mgr => mgr.name === 'Built-in password manager')
     }
-
-    return PasswordManagers.managers.find(mgr => mgr.name === managerSetting.name)
+    let pm=PasswordManagers.managers.find(mgr => mgr.name === managerSetting.name)
+    if(pm.name==='file'){
+      pm.filePath=managerSetting.filePath
+      pm.dbName=managerSetting.dbName
+    }
+    return pm
   },
   getConfiguredPasswordManager: async function () {
     const manager = PasswordManagers.getActivePasswordManager()
@@ -131,6 +135,7 @@ const PasswordManagers = {
               }
               webviews.callAsync(tab, 'sendToFrame', [frameId, 'password-autofill-match', {
                 credentials,
+                manager:PasswordManagers.getActivePasswordManager(),
                 hostname
               }])
               if(global.passwordToFill){
@@ -141,6 +146,7 @@ const PasswordManagers = {
             })
             webviews.callAsync(tab, 'sendToFrame', [frameId, 'password-autofill-match', {
               credentials,
+              manager:PasswordManagers.getActivePasswordManager(),
               hostname
             }])
             if(global.passwordToFill){
@@ -155,7 +161,6 @@ const PasswordManagers = {
 
           }
         }).catch(e => {
-          console.log(manager)
           if(manager.name==='file' && !manager.filePath){
             ipc.send('message', { type: 'error', config: { content: '使用外部密码库时，必须设置密码库。请到 设置-密码设置 中进行设置。' } })
           }else{

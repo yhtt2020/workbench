@@ -216,8 +216,8 @@ export const appStore = defineStore('kee', {
         passwordModel.setPasswordManager({
           name:'Built-in password manager'
         })
-      }else{
-        const manager = kdbxModel.getManager(dbInfo.filePath)
+      }else {
+        const manager = passwordModel.kdbxModel.getManager(dbInfo.filePath)
         passwordModel.setPasswordManager(manager)
       }
       this.currentDb = dbInfo
