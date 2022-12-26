@@ -256,9 +256,7 @@ const toolbar = {
     }
   },
   loadPwdCount(url){
-    console.log('读入pwd')
     if(url){
-      console.log('获得url',url,window.$pwdCount[url])
       let count= window.$pwdCount[url]?window.$pwdCount[url]:0
       toolbar.setPwdCount(count,url)
     }

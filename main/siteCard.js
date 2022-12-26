@@ -151,6 +151,14 @@ ipc.on('openPwdManager', async (event, args) => {
   }
 })
 
+//打开标签并填充密码
+ipc.on('openTabFill',(event,args)=>{
+  sendIPCToMainWindow('addTab',{
+    url:'http://'+args.password.domain,
+    password:args.password
+  })
+})
+
 function parseInnerURL (url) {
   if (url.startsWith('file://')) {
     try {

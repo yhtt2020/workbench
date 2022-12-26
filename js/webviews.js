@@ -427,7 +427,6 @@ const webviews = {
   updateAppStatus(tabData){
     // 添加密码数量显示
     if($toolbar){
-      console.log('tabData',tabData)
       $toolbar.loadPwdCount(tabData.url)
       $toolbar.updateScriptsCountTip(tabData.id)
     }

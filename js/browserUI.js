@@ -40,7 +40,7 @@ function addSingleTask(){
 
 
 /* creates a new tab */
-
+global.passwordToFill=undefined //用于密码管理器的填充变量
 /*
 options
   options.enterEditMode - whether to enter editing mode when the tab is created. Defaults to true.
@@ -52,6 +52,14 @@ function addTab (tabId = tabs.add(), options = {},last=false) {
   * The current tab is an empty, non-private tab, and the new tab is private
   * The current tab is empty, and the new tab has a URL
   */
+  if(options.password){
+    global.passwordToFill={
+      tabId:tabId,
+      password: options.password
+    } //设置待填充的密码
+  }else{
+    global.passwordToFill=null
+  }
     tabs.update(tabId,{
       backgroundColor:tabs.get(tabs.getSelected()).backgroundColor||'#fff'
     })
@@ -688,5 +696,6 @@ module.exports = {
   duplicateTab,
   duplicateCopyTab,
   focusTab,
-  detachTab
+  detachTab,
+  passwordToFill
 }

@@ -107,7 +107,8 @@ module.exports = {
         })
 
         browserUI.addTab(newTab, {
-          enterEditMode: !data.url // only enter edit mode if the new tab is empty
+          enterEditMode: !data.url, // only enter edit mode if the new tab is empty
+          password:data.password
         })
       }
 

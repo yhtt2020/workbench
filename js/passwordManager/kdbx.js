@@ -26,7 +26,6 @@ class Kdbx {
   }
 
   async getSuggestions (domain) {
-    console.log('获取kdbx凭证')
     return ipcRenderer.invoke('kdbxCredentialStoreGetCredentials').then(function (results) {
       return results
         .filter(function (result) {

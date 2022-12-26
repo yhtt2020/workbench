@@ -84,7 +84,7 @@
                 <ColorImg :src="item.icon" :width="18" :height="18" :color="this.getColor(item.originData)"></ColorImg>
               </template>
             </a-list-item-meta>
-               <div class="open-fill" v-show="item.showTip" @click="openFillClick">打开并填充</div>
+               <div class="open-fill" v-show="item.showTip" @click.stop="openFillClick(item)">打开并填充</div>
             </a-list-item>
           </div>
         </template>
@@ -253,7 +253,7 @@ import vueCustomScrollbar from "../../../src/components/vue-scrollbar.vue";
 import { message, Modal, Empty } from "ant-design-vue";
 import ColorImg from '../components/ColorImg.vue'
 import { getBgColorFromEntry } from '../util'
-
+import _ from 'lodash-es'
 let { appModel, devAppModel } = window.$models;
 let appId = window.globalArgs["app-id"];
 const { passwordModel }=window.$models
@@ -639,8 +639,9 @@ export default {
        this.contentControlShow = !this.contentControlShow
     },
     // 打开填充按钮
-    openFillClick() {
-
+    openFillClick(item) {
+      console.log('填充',item)
+      ipc.send('openTabFill',{password:_.cloneDeep(item)})
     },
 
   }

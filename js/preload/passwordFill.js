@@ -59,6 +59,7 @@ wanted to keep it lightweight and not impact browser performace too much.
 添加一个 MutationObserver 到文档，或者 DOMNodeInserted 监听器，但我
 希望保持轻量级并且不会过多地影响浏览器性能。
 * */
+
 /**
  * 根据环境自动拼装我们render的地址，支持参数
  * @param url
@@ -321,7 +322,6 @@ function addFocusListener (element, credentials) {
   // 添加一个选择行到列表容器
   function addOption (parent, cred) {
     const suggestionItem = document.createElement('div')
-    console.log('密码'+Date.now(),cred)
     let remark=''
     if(!cred.title){
       cred.title='未命名'
@@ -490,6 +490,10 @@ ipc.on('password-autofill-match', (event, data) => {
       firstField.focus()
     }
   }
+})
+
+ipc.on('fill-password',(event,args)=>{
+  fillCredentials(args.passwordToFill.password)
 })
 
 // Trigger autofill check from keyboard shortcut.

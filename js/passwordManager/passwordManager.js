@@ -133,11 +133,26 @@ const PasswordManagers = {
                 credentials,
                 hostname
               }])
+              if(global.passwordToFill){
+                webviews.callAsync(tab,'sendToFrame',[frameId,'fill-password',{
+                  passwordToFill:global.passwordToFill
+                }])
+              }
             })
             webviews.callAsync(tab, 'sendToFrame', [frameId, 'password-autofill-match', {
               credentials,
               hostname
             }])
+            if(global.passwordToFill){
+              webviews.callAsync(tab,'sendToFrame',[frameId,'fill-password',{
+                passwordToFill:global.passwordToFill
+              }])
+            }
+            // webviews.callAsync(tab, 'sendToFrame', [frameId, 'password-autofill-match', {
+            //   credentials,
+            //   hostname
+            // }])
+
           }
         }).catch(e => {
           ipc.send('message', { type: 'error', config: { content: '获取自动填充密码失败。' } })
