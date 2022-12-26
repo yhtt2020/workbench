@@ -721,7 +721,7 @@ webviews.bindIPC('setSetting', function (tabId, args) {
 settings.listen(function () {
   tasks.forEach(function (task) {
     task.tabs.forEach(function (tab) {
-      if (tab.url.startsWith('file://')) {
+      if (urlParser.isInternalURL(tab.url)) {
         try {
           const systemType=require('./util/systemType.js')
           const systemInfo={

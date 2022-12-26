@@ -1,13 +1,14 @@
 if (typeof require !== 'undefined') {
   if(typeof require('electron').app==='undefined'){
-    var settings = require('util/settings/settings.js')
+    var tempSettings = require('util/settings/settings.js')
   }else{
-    var settings = require('./settings/settingsMain.js')
+    var tempSettings=global.settings
+      //var settings=global.settings
   }
 }
 
 function systemShouldEnableDarkMode () {
-  return settings.list.systemShouldUseDarkColors
+  return tempSettings.list.systemShouldUseDarkColors
 }
 
 function isNightTime () {
@@ -45,7 +46,7 @@ function disableDarkMode () {
  */
 function getShouldDarkMod(){
   // 1 or true: dark mode is always enabled
-  const value=settings.get('darkMode')
+  const value=tempSettings.get('darkMode')
   if (value === 1 || value === true) {
     return true
   }
@@ -133,13 +134,13 @@ function initialize () {
       disableDarkMode()
     }
   }
-  settings.listen('darkMode', themeSettingsChanged)
-  settings.listen('systemShouldUseDarkColors', function () {
+  tempSettings.listen('darkMode', themeSettingsChanged)
+  tempSettings.listen('systemShouldUseDarkColors', function () {
     // the settings API differs between the UI process and tabs
     if (typeof process === 'undefined') {
-      settings.get('darkMode', themeSettingsChanged)
+      tempSettings.get('darkMode', themeSettingsChanged)
     } else {
-      themeSettingsChanged(settings.get('darkMode'))
+      themeSettingsChanged(tempSettings.get('darkMode'))
     }
   })
 }

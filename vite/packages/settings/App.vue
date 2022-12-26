@@ -150,7 +150,6 @@ export default defineComponent({
 
     var type=url.searchParams.get('tab')
     this.activeKey = type || 'Privacy'
-    console.log(type)
     settings.get('downloadAutoSave',(value)=>{
       if(value!==undefined){
         this.downloadAuto = value
@@ -221,7 +220,6 @@ export default defineComponent({
       /* Password auto-fill settings  */
       this.passwordManagers=passwordManagers
       settings.get('passwordManager',(value)=>{
-        console.log('获取到',value)
         this.currentPasswordManager=this.passwordManagers.find(pm=>{
           return pm.name===value.name
         })
@@ -881,7 +879,7 @@ export default defineComponent({
 
             </div>
 
-            <h3>已保存的密码  <a-button @click="importPwd" style="float: right" size="small" type="primary"><import-outlined/> 导入密码</a-button> </h3>
+            <h3>内置密码库内的密码（任何使用此浏览器的用户均可切换到内置密码库，重要密码建议使用独立密码库）  <a-button @click="importPwd" style="float: right" size="small" type="primary"><import-outlined/> 导入密码</a-button> </h3>
             <Passwords/>
           </div>
 

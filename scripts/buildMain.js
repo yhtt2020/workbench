@@ -23,8 +23,6 @@ const modules = [
   'main/userScript.js',
   'main/group.js',
   'main/update.js',
-  'js/util/settings/settingsMain.js',
-
   'main/filtering.js',
   'main/viewManager.js',
   'main/download.js',

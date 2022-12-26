@@ -117,7 +117,6 @@ export default {
         }
         if (pass) {
           //如果通过了名称筛选，再测试搜索
-          console.log('this.searchedColumn=',this.searchedColumn,'this.searchText=',this.searchText)
           if (this.searchColumn!=='' && this.searchText !== '') {
             console.log('text=',this.searchText,'column=',this.searchColumn)
             return item[this.searchColumn].indexOf(this.searchText) > -1
@@ -128,8 +127,6 @@ export default {
           return false
         }
       })
-
-      console.log(result)
       return result
     },
     async delAccount(account) {

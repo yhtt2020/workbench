@@ -85,7 +85,8 @@ electronLog.transports.console.level='debug'
 // workaround for flicker when focusing app (https://github.com/electron/electron/issues/17942)
 app.commandLine.appendSwitch('disable-backgrounding-occluded-windows', 'true')
 global.userDataPath = app.getPath('userData')
-
+global.settings=require('./js/util/settings/settingsMain.js')
+global.settings.initialize()
 const browserPage = 'file://' + __dirname + '/index.html'
 
 global.mainWindow = null

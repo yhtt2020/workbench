@@ -135,7 +135,6 @@ let searchEnginePage = {
         currentSearchEngine = searchEngines[defaultSearchEngine]
       }
       window.currentSearchEngine=currentSearchEngine
-      console.log(searchEngines,currentSearchEngine)
       searchEnginePage.updateSelect(searchEngines,currentSearchEngine)
     })
 
