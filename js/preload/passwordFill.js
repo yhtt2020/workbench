@@ -342,7 +342,7 @@ function addFocusListener (element, credentials) {
 
     const template=  `<div style="display:flex;">
 <div style="width:30px;min-width: 30px;">${icon}</div>
-<div style="flex:1"><div style="font-size:14px;font-weight:bold;line-height: 18px;white-space:nowrap;text-overflow: ellipsis;overflow: hidden;word-break: break-all;max-width:90%">${cred.title}</div><div style="color: grey;line-height: 18px;max-width:90%;white-space:nowrap;text-overflow: ellipsis;overflow: hidden;word-break: break-all">${cred.username}</div></div><div>${remark}</div></div>`
+<div style="flex:1"><div style="font-size:14px;font-weight:bold;line-height: 18px;white-space:nowrap;text-overflow: ellipsis;overflow: hidden;word-break: break-all;max-width:90%">${cred.title}</div><div style="color: grey;line-height: 18px;max-width:90%;white-space:nowrap;text-overflow: ellipsis;overflow: hidden;word-break: break-all">${cred.username}&nbsp;</div></div><div>${remark}</div></div>`
     suggestionItem.classList='__pwd-item'
     suggestionItem.innerHTML=template
     suggestionItem.style="margin:8px;padding: 5px; cursor: pointer; width: 100%; border-radius: 8px;"
