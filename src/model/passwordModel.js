@@ -66,7 +66,7 @@ const PasswordModel = {
 
   /**
    * 设置密码管理器，{name:''} name值候选 `Built-in password manager` 'file' 'Bitwarden' '1Password'
-   * @param manager
+   * @param managershi
    */
   setPasswordManager(manager){
     settings.set('passwordManager', {
@@ -75,6 +75,8 @@ const PasswordModel = {
     })
     if(manager.name==='file'){
       PasswordModel.activeManager=PasswordModel.managerMap.kdbxModel
+    }else{
+      PasswordModel.activeManager=PasswordModel.getActivePasswordManager()
     }
   },
 

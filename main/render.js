@@ -354,7 +354,6 @@ global.render = {
       })
 
       protocolUrl=url.toString()
-      console.log('拼装了参数=',protocolUrl)
     }
     return protocolUrl
   },

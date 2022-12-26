@@ -328,17 +328,21 @@ function addFocusListener (element, credentials) {
     }
     let viewRemark
     let hasRemark=false
-    if(cred.originData.fields.get('Notes')){
-      remark='<img class="__remark-icon" style="width: 18px;height:18px;margin-top: 5px;margin-right:5px;" src="https://a.apps.vip/kee/remark.svg"> '
-      viewRemark = document.createElement('div')
-      viewRemark.classList='__pwd-tip-remark'
-      viewRemark.style.minWidth='80px'
-      viewRemark.innerText='查看备注'
-      hasRemark=true
-      //viewRemark=`<div class="__pwd-tip-remark">查看备注</div> `
+    if(cred.originData){
+      //必须是存在原始数据的
+      if(cred.originData.fields.get('Notes')){
+        remark='<img class="__remark-icon" style="width: 18px;height:18px;margin-top: 5px;margin-right:5px;" src="https://a.apps.vip/kee/remark.svg"> '
+        viewRemark = document.createElement('div')
+        viewRemark.classList='__pwd-tip-remark'
+        viewRemark.style.minWidth='80px'
+        viewRemark.innerText='查看备注'
+        hasRemark=true
+        //viewRemark=`<div class="__pwd-tip-remark">查看备注</div> `
 
+      }
     }
-    let  icon= getIcon(cred.originData.bgColor)
+
+    let  icon= getIcon(cred.originData?cred.originData.bgColor:'black')//如果不存在originData则直接黑色
 
     const template=  `<div style="display:flex;">
 <div style="width:30px;min-width: 30px;">${icon}</div>
@@ -357,7 +361,6 @@ function addFocusListener (element, credentials) {
     if(hasRemark){
       suggestionItem.children[0].children[2].appendChild(viewRemark)
       viewRemark.addEventListener('click',(event) =>{
-        console.log(cred.originData.uuid.id)
         openPwdRemark(event,cred.originData.uuid.id)
         event.stopPropagation()
       })
@@ -382,7 +385,6 @@ function addFocusListener (element, credentials) {
     const inputWidth = e.target.offsetWidth
     container.id='__pwdContainer'
     container.style.width=`${inputWidth}px`
-    console.log(inputWidth,'2232312123312')
     container.innerHTML = `<div style="position:relative;padding: 8px;color: grey;"> ${lockIcon} <span style="font-size: 13px">我的密码</span></div>`
     let all=document.createElement('span')
     all.innerHTML=`<a target="_blank" style="position: absolute;top: 8px;right: 8px;font-size: 13px">全部密码</a>`
