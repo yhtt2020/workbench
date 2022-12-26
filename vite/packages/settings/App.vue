@@ -198,6 +198,9 @@ export default defineComponent({
 
 
   methods: {
+    changePwdDb(){
+      ipc.send('changePwdDb')
+    },
     setPasswordManager(pm){
       if(typeof pm==='string'){
         pm=this.passwordManagers[1]
@@ -208,9 +211,12 @@ export default defineComponent({
         if(this.currentPasswordManager.name==='file' &&  (!value || !value.filePath)){
           Modal.confirm({
             title:'提示',
-            content:'首次使用独立密码管理器需要选择密码库，您可以选择或者创建一个全新的密码库。',
-            okText:'创建新密码库',
-            cancelText:'自行选择密码库'
+            content:'您必须手动设置一个密码库之后方可使用密码填充功能，点击去设置进行设置。',
+            okText:'去设置',
+            cancelText:'暂不设置',
+            onOk:()=>{
+              this.changePwdDb()
+            }
           })
         }
       })
@@ -842,7 +848,7 @@ export default defineComponent({
                       密码库位置
                     </template>
                   </a-input>
-                  <a-button type="primary">更改密码库</a-button>
+                  <a-button @click="changePwdDb" type="primary">更改密码库</a-button>
                 </a-input-group>
               </div>
 

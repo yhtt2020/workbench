@@ -80,42 +80,57 @@ let currentPwdTab={}
 ipc.handle('getPwdTab',(event,args)=>{
   return currentPwdTab
 })
-ipc.on('openPwdManager', async (event, args) => {
-  if(!args.tabData){
-    let promise=new Promise(resolve => {
-      ipc.once('gotCurrentTab',(e,arg)=>{
+
+
+async function openPwdManager (args) {
+  if (!args.tabData) {
+    let promise = new Promise(resolve => {
+      ipc.once('gotCurrentTab', (e, arg) => {
         resolve(arg.data)
       })
     })
-    sendIPCToWindow(mainWindow,'getCurrentTab')
-    args.tabData=await promise
+    sendIPCToWindow(mainWindow, 'getCurrentTab')
+    args.tabData = await promise
   }
   const url = args.tabData.url
   const title = args.tabData.title
   const siteUrl = parseInnerURL(url)
-  currentPwdTab=args.tabData
+  currentPwdTab = args.tabData
 
   if (!global.passwordWin) {
     const parentBounds = mainWindow.getBounds()
-    if(args.uuid && args.target){
-      var p=`/${encodeURIComponent(args.uuid)}/${args.target}`
-    }else{
-      p=''
+    if (args.uuid && args.target) {
+      var p = `/${encodeURIComponent(args.uuid)}/${args.target}`
+    } else {
+      p = ''
     }
-    let url=render.getUrl('kee.html#/passwords/value/' + encodeURIComponent(siteUrl) + '/type/url'+p)
+    let url = render.getUrl('kee.html#/passwords/value/' + encodeURIComponent(siteUrl) + '/type/url' + p)
+    if(args.route){
+      url=render.getUrl(args.route)
+    }
+    let pos={}
+  if(args.pos){
+    pos={
+      x: parentBounds.x + parentBounds.width - 610, // todo 后面要做个工具方法，统一实现计算弹窗位置
+      y: args.pos.y + parentBounds.y + 10,
+    }
+  }
+
+
+
+
     global.passwordWin = await windowManager.create({
       url: url,
       name: 'kee',
       rememberBounds: true,
-      defaultBounds:{
+      defaultBounds: {
         width: 600,
         height: 453,
       },
       windowOption: {
         backgroundColor: 'white',
         parent: mainWindow,
-        x: parentBounds.x + parentBounds.width - 610, // todo 后面要做个工具方法，统一实现计算弹窗位置
-        y: args.pos.y + parentBounds.y + 10,
+        ...pos,
         hasShadow: true,
         minWidth: 600,
         autoHideMenuBar: true,
@@ -129,7 +144,7 @@ ipc.on('openPwdManager', async (event, args) => {
         nodeIntegration: true,
         contextIsolation: false,
         sandbox: false,
-        webSecurity:false,
+        webSecurity: false,
         preload: ___dirname + '/src/preload/keePreload.js',
         additionalArguments: [
           '--user-data-path=' + userDataPath,
@@ -149,6 +164,9 @@ ipc.on('openPwdManager', async (event, args) => {
     global.passwordWin.close()
     global.passwordWin = null
   }
+}
+ipc.on('openPwdManager', async (event, args) => {
+  return await openPwdManager(args)
 })
 
 //打开标签并填充密码
@@ -157,6 +175,11 @@ ipc.on('openTabFill',(event,args)=>{
     url:'http://'+args.password.domain,
     password:args.password
   })
+})
+ipc.on('changePwdDb',(event,args)=>{
+   openPwdManager({
+     route:'kee.html#/passwordBank'
+   })
 })
 
 function parseInnerURL (url) {

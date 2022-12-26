@@ -155,7 +155,11 @@ const PasswordManagers = {
 
           }
         }).catch(e => {
-          ipc.send('message', { type: 'error', config: { content: '获取自动填充密码失败。' } })
+          if(manager.name==='file' && !manager.filePath){
+            ipc.send('message', { type: 'error', config: { content: '使用外部密码库时，必须设置密码库。请到 设置-密码设置 中进行设置。' } })
+          }else{
+            ipc.send('message', { type: 'error', config: { content: '获取自动填充密码失败。' } })
+          }
           console.error('Failed to get password suggestions: ' + e.message)
         })
       })
