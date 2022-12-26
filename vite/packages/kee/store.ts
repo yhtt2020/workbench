@@ -212,10 +212,16 @@ export const appStore = defineStore('kee', {
       this.filterInfo = Object.assign(this.filterInfo, args)
     },
     setDb(dbInfo) {
+      if(dbInfo.type==='inner'){
+        passwordModel.setPasswordManager({
+          name:'Built-in password manager'
+        })
+      }else{
+        const manager = kdbxModel.getManager(dbInfo.filePath)
+        passwordModel.setPasswordManager(manager)
+      }
       this.currentDb = dbInfo
       this.tags = dbInfo.tags
-      const manager = kdbxModel.getManager(dbInfo.filePath)
-      passwordModel.setPasswordManager(manager)
       this.getAllPasswords()
       if (this.filterInfo.type === 'all') {
         this.filterInfo.text = dbInfo.name

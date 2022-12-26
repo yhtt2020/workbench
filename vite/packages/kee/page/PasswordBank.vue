@@ -52,7 +52,7 @@
       <a-empty v-if="dbList.length===0"></a-empty>
       <a-tooltip :mouseEnterDelay="0.5" placement="top" title="使用内置的密码库，但是无法被外部网盘同步，建议保存到外部密码库。">
         <div class="password-bank-list-item" :class="bankIndex == 'inner' ? 'bank_active':''"
-             key="inner" @click.stop="selectBankItem({id:'inner',text:'内置密码库'})">
+             key="inner" @click.stop="setInnerDb">
           <img src="/img/lock-app.svg" alt="">
           <strong class="name">内置密码库</strong>
         </div>
@@ -146,6 +146,20 @@ export default {
       this.visibleInputPwd = true
       // const filePath=ipc.sendSync('selectKdbx')
       // kdbxModel.create('kdb',filePath)
+    },
+    setInnerDb(){
+      Modal.confirm({
+        content:'设置为内置密码库时，部分功能将被禁用。',
+        okText:'确定',
+        onOk:()=>{
+          this.setDb({
+            tags: [],
+            name: '内部密码库',
+            type:'inner'
+          })
+          this.$router.push({name:'passwords',params:{value:'',type:'all'}})
+        }
+      })
     },
     selectDb () {
       let filePath = ipc.sendSync('selectKdbx')
