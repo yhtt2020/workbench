@@ -133,6 +133,7 @@ async function openPwdManager (args) {
         ...pos,
         hasShadow: true,
         minWidth: 600,
+        frame:true,
         autoHideMenuBar: true,
         minHeight: 453,
         acceptFirstMouse: true,
@@ -160,6 +161,9 @@ async function openPwdManager (args) {
     //   passwordWin.close()
     //   passwordWin=null
     // })
+    passwordWin.window.on('close',()=>{
+      passwordWin=null
+    })
   } else {
     global.passwordWin.close()
     global.passwordWin = null
