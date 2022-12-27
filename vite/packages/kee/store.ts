@@ -235,8 +235,8 @@ export const appStore = defineStore('kee', {
       this.passwords = passwordModel.getAllPasswords()
       window.pina = this
     },
-    importPasswords(passwords, groupName, existAction) {
-      return passwordModel.importPasswords(passwords, groupName, existAction)
+    importPasswords(passwords, groupName, existAction,successAction) {
+      return passwordModel.importPasswords(passwords, groupName, existAction,successAction)
     },
     async loadCurrentDb() {
       return new Promise(resolve => {

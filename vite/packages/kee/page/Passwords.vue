@@ -301,7 +301,7 @@ export default {
       importDelete:false,//导入后是否删除成功导入的密码
       importGroup:true,//导入到一个单独的密码组
       importGroupName:'',
-      existAction:'jump',//密码已经存在的操作，默认跳过
+      existAction:'jump',//密码已经存在的操作，默认跳过,
       importResult:{
         handleCount:0,//处理数量
         jumpCount:0,//跳过数量
@@ -564,7 +564,7 @@ export default {
       }
     },
     doImportPasswords(){
-      this.importResult= this.importPasswords(this.innerPasswords,this.importGroup?this.importGroupName:undefined,this.existAction)
+      this.importResult= this.importPasswords(this.innerPasswords,this.importGroup?this.importGroupName:undefined,this.existAction,this.importDelete?'delete':'none')
       return true
     },
     // 搜索触发做的事情

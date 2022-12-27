@@ -82,18 +82,23 @@ const PasswordModel = {
     }
   },
 
-  /**批量导入密码到密码库内
-   *
-   * @param passwords
+  /**
+   * 批量导入密码到密码库内
+   * @param passwords 全部密码
+   * @param groupName 导入的小组名称
+   * @param existAction 对于存在的密码的操作
+   * @param successAction 成功导入的密码的操作 none delete
+   * @returns {*}
    */
-
-  importPasswords(passwords,groupName,existAction){
+  importPasswords(passwords,groupName,existAction,successAction='none'){
     // if(PasswordModel.activeManager!==PasswordModel.managerMap.kdbxModel)//不支持文件密码库以外的导入，均返回失败
     //   console.log('当前密码非文件管理器（未打开）',1)
     //   return false
 
     //todo jude密码库一打开
-    return  passwordModel.kdbxModel.importPasswords(passwords,groupName,existAction)
+    return  passwordModel.kdbxModel.importPasswords(passwords,groupName,existAction,successAction==='delete'?(password)=>{
+      PasswordModel.managers[2].deleteCredential(password.domain,password.username)//直接删除密码
+    }:undefined)
 
   },
 

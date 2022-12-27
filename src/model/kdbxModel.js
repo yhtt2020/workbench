@@ -42,7 +42,7 @@ class KdbxModel {
         callback(err,data)
         return
       }
-      callback(undefined,data)
+      if(callback) callback(undefined,data)
     })
   }
   create (name = 'kdb', path, pwd, callback) {
@@ -89,7 +89,7 @@ class KdbxModel {
    * @param groupName
    * @param existAction jump push
    */
-  importPasswords(passwords,groupName,existAction='jump'){
+  importPasswords(passwords,groupName,existAction='jump',successAction){
     const db=this.db
     let result={
       handleCount:0,//处理数量
@@ -161,9 +161,12 @@ class KdbxModel {
       importEntry.times.update()
       console.log('更新密码版本成功=',importEntry,12)
       result.handleCount++
+      if(successAction){
+        successAction(password)
+      }
     })
     console.log('导入完成',13)
-    console.log('改完后的db.en')
+
     for(const ent of db.getDefaultGroup().allEntries()){
       console.log(ent)
     }
