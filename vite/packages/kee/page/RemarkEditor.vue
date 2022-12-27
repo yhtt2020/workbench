@@ -1,6 +1,6 @@
 <template>
   <a-page-header
-    style="border: 1px solid rgb(235, 237, 240);padding:0 10px !important;"
+    style="border: 1px solid rgb(235, 237, 240);padding:0 10px !important;-webkit-app-region:drag"
     sub-title="密码备注"
     @back="this.goBack"
   >
@@ -8,9 +8,12 @@
       {{password.title}}
     </template>
     <template #extra>
-      <a-button v-if="!editing" @click="startEdit" key="1" type="primary">编辑</a-button>
-      <a-button v-else-if="editing && oldHtml!==valueHtml" @click="save" type="primary">保存</a-button>
-      <a-button v-if="editing" @click="stopEdit">取消</a-button>
+      <div style="-webkit-app-region:none">
+        <a-button v-if="!editing" @click="startEdit" key="1" type="primary">编辑</a-button>
+        <a-button v-else-if="editing && oldHtml!==valueHtml" @click="save" type="primary">保存</a-button>
+        <a-button v-if="editing" @click="stopEdit">取消</a-button>
+      </div>
+
     </template>
   </a-page-header>
   <div class="remark-content" style="padding: 10px" v-if="!editing">

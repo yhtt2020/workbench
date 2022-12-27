@@ -1,6 +1,6 @@
 <template>
   <div class="password-header" style="-webkit-app-region:drag">
-    <div class="password-select"
+    <div class="password-select" style="-webkit-app-region:none"
       @click="selectOptions"
       @mouseover="passwordHover"
       @mouseleave="passwordRemove"
@@ -15,7 +15,7 @@
         </a-col>
       </a-row>
     </div>
-    <div class="password-search">
+    <div class="password-search" style="-webkit-app-region:none">
       <a-input v-model:value="searchKey" placeholder="搜索 网址、备注、标题、用户名">
         <template #prefix>
           <search-outlined
@@ -25,7 +25,7 @@
         </template>
       </a-input>
     </div>
-    <div class="password-button">
+    <div class="password-button" style="-webkit-app-region:none">
       <PlusOutlined style="font-size: 16px; color:rgba(255, 255, 255, 1) !important;" />
       <span @click="createPwd" style=" color: rgba(255, 255, 255, 1); padding-left:8px;">新建密码</span>
     </div>
