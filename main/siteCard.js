@@ -184,7 +184,9 @@ ipc.on('openSubTabFillClick',(event,args)=>{
     newName:args.password.title || args.password.username}
   sendIPCToMainWindow('addTab',newTab)
 })
-
+ipc.on('fillPassword',(event,args)=>{
+  sendIPCToMainWindow('fillPassword',{password:args.password})
+})
 ipc.on('changePwdDb',(event,args)=>{
    openPwdManager({
      route:'kee.html#/passwordBank'

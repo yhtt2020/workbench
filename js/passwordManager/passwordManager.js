@@ -184,7 +184,16 @@ const PasswordManagers = {
     statistics.registerGetter('passwordManager', function () {
       return PasswordManagers.getActivePasswordManager().name
     })
+  },
+  fillPassword(data){
+    //处理密码填充，转发到对应的webviews
+    global.passwordToFill=data.password
+    webviews.callAsync(tabs.getSelected(), 'send', ['fill-password',{
+      passwordToFill:{password:data.password}
+    }])
   }
 }
-
+ipc.on('fillPassword',(event,args)=>{
+  PasswordManagers.fillPassword(args)
+})
 module.exports = PasswordManagers

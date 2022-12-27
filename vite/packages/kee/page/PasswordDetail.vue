@@ -6,7 +6,7 @@
       <a-breadcrumb-item v-if="passwordItem.originData.parentGroup.name" class="password-group"><a >{{ passwordItem.originData.parentGroup.name }}</a></a-breadcrumb-item>
     </a-breadcrumb-separator>
     <div class="breadcrumb-right" v-if="passwordItem.icon">
-       <span class="auto-full" v-if="editShow == false">
+       <span @click="fillClick(passwordItem)" class="auto-full" v-if="editShow == false">
         <span>自动填充</span>
        </span>
        <span v-else>
@@ -245,7 +245,7 @@ import { Modal , message } from 'ant-design-vue';
 import { createVNode } from 'vue'
 import { appStore } from '../store'
 import { mapState,mapActions,mapWritableState } from 'pinia'
-
+import _ from 'lodash-es'
 import vueCustomScrollbar from "../../../src/components/vue-scrollbar.vue";
 import ColorImg from '../components/ColorImg.vue'
 import { getBgColorFromEntry } from '../util.js'
@@ -462,6 +462,9 @@ export default {
     openEdit(){
        this.editShow = true
        this.isMouse = false
+    },
+    fillClick(item){
+      ipc.send('fillPassword',{password:_.cloneDeep(item)})
     },
     // 保存修改
     saveChange(){
