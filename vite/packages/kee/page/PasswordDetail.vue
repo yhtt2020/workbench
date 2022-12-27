@@ -5,7 +5,7 @@
       <a-breadcrumb-item class="my-password">全部</a-breadcrumb-item>
       <a-breadcrumb-item v-if="passwordItem.originData.parentGroup.name" class="password-group"><a >{{ passwordItem.originData.parentGroup.name }}</a></a-breadcrumb-item>
     </a-breadcrumb-separator>
-    <div class="breadcrumb-right">
+    <div class="breadcrumb-right" v-if="passwordItem.icon">
        <span class="auto-full" v-if="editShow == false">
         <span>自动填充</span>
        </span>
