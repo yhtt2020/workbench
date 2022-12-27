@@ -1,16 +1,19 @@
 <template>
-  <a-page-header
-    style="border: 1px solid rgb(235, 237, 240);padding:0 10px !important;-webkit-app-region:drag"
+  <a-page-header class="page-header"
+    style="border: 1px solid rgb(235, 237, 240);padding:0 10px !important;"
     sub-title="密码备注"
     @back="this.goBack"
   >
     <template #title>
-      {{password.title}}
+      <div style="-webkit-app-region:drag">
+        <span style="-webkit-app-region:none">{{password.title}}</span>
+      </div>
+
     </template>
     <template #extra>
-      <div style="-webkit-app-region:none">
+      <div>
         <a-button v-if="!editing" @click="startEdit" key="1" type="primary">编辑</a-button>
-        <a-button v-else-if="editing && oldHtml!==valueHtml" @click="save" type="primary">保存</a-button>
+        <a-button v-else-if="editing && oldHtml!==valueHtml" @click="save"  style="margin-right: 10px" type="primary">保存</a-button>
         <a-button v-if="editing" @click="stopEdit">取消</a-button>
       </div>
 
@@ -245,4 +248,19 @@ export default {
     box-shadow: 0 0 6px rgba(63, 62, 62, 0.56);
   }
 }
+
+
+
+</style>
+<style lang="scss">
+.page-header{
+  .ant-page-header-back{
+    -webkit-app-region:none
+  }
+  .ant-page-header-heading-extra{
+    -webkit-app-region:none
+  }
+  -webkit-app-region:drag
+}
+
 </style>
