@@ -92,21 +92,21 @@
               </a-form>
              </div>
             <div class="right-content"  v-if="usernameVisible == true">
-              <span class="username-copy">复制</span>
+              <span @click="copyText(passwordItem.username)" class="username-copy">复制</span>
             </div>
           </div>
           <div ref="passwordRef" class="breadcrumb-form-password" @mouseover="isMouse==true&&opPasswordHover()" @mouseleave="isMouse==true&&closePasswordHover()">
               <div class="password-input">
                 <span style="color:rgba(104, 81, 214, 1);">密码</span>
-                <div class="password-show" v-if="editShow==false">
+                <div class="password-show" style="margin-right: -20px" v-if="editShow==false">
                   <a-input disabled  :type="passwordItem.passwordType" style="border:none;padding:0;width: 65%;background: rgba(80, 139, 254, 0);" v-model:value="passwordItem.password"></a-input>
-                  <div style="cursor: pointer;" v-if="passwordVisible==true" @click="passwordShowClick(passwordItem)">
-                    <EyeFilled v-if="passwordItem.showCopy == true" style="color:rgba(80, 139, 254, 1); padding-right:11px; cursor: pointer;"/>
+                  <div style="cursor: pointer;" v-if="passwordVisible" @click="passwordShowClick(passwordItem)">
+                    <EyeFilled v-if="passwordItem.showCopy" style="color:rgba(80, 139, 254, 1); padding-right:11px; cursor: pointer;"/>
                     <EyeInvisibleFilled v-if="passwordItem.showCopy==false"  style="color:rgba(80, 139, 254, 1); padding-right:11px; cursor: pointer;"/>
-                    <span style="color:rgba(80, 139, 254, 1);">{{ passwordItem.showCopy==true ? '显示':'隐藏'}}</span>
+                    <span style="color:rgba(80, 139, 254, 1);">{{ passwordItem.showCopy ? '显示':'隐藏'}}</span>
                   </div>
-                  <a-divider v-if="passwordVisible==true" type="vertical" style="height: 20px; background-color:rgba(80, 139, 254, 1)" />
-                  <span v-if="passwordVisible==true" style="color:rgba(80, 139, 254, 1); cursor: pointer;">复制</span>
+                  <a-divider v-if="passwordVisible" type="vertical" style="height: 20px; background-color:rgba(80, 139, 254, 1)" />
+                  <span @click="copyText(passwordItem.password)" v-if="passwordVisible" style="color:rgba(80, 139, 254, 1);margin-right:-30px; cursor: pointer;">复制</span>
                 </div>
                 <a-form :model="formState" :rules="formRules" v-if="editShow==true">
                   <a-form-item name="password" required>
@@ -126,9 +126,9 @@
               </a-form>
              </div>
              <div>
-              <span v-if="websiteShow==true" style="color:rgba(80, 139, 254, 1);cursor: pointer;">打开并填写</span>
+              <span @click="openFillClick"  v-if="websiteShow==true" style="color:rgba(80, 139, 254, 1);cursor: pointer;">打开并填写</span>
               <a-divider v-if="websiteShow==true"  type="vertical" style="height: 20px; background-color:rgba(80, 139, 254, 1)" />
-              <span v-if="websiteShow==true" style="color:rgba(80, 139, 254, 1);cursor: pointer;">复制</span>
+              <span @click="copyText(passwordItem.domain)" v-if="websiteShow==true" style="color:rgba(80, 139, 254, 1);cursor: pointer;">复制</span>
              </div>
           </div>
 <!--          <div class="breadcrumb-bottom-website" style="padding-top:0;">-->
@@ -464,6 +464,7 @@ export default {
        this.isMouse = false
     },
     fillClick(item){
+      message.success('已为您填充密码，如遇部分页面无法填充，请手动复制。')
       ipc.send('fillPassword',{password:_.cloneDeep(item)})
     },
     // 保存修改
@@ -528,6 +529,13 @@ export default {
       this.$refs.webSiteRef.style = "background:rgba(255, 255, 255, 1);"
     },
     /** 鼠标移出事件结束**/
+    copyText(text){
+      message.success('复制成功。')
+      require('electron').clipboard.writeText(text)
+    },
+    openFillClick(){
+      ipc.send('openTabFill',{password:_.cloneDeep(this.passwordItem)})
+    },
     // 密码显示和隐藏事件
     passwordShowClick(item){
        if(item.showCopy == false){
