@@ -5,7 +5,7 @@
       @mouseover="passwordHover"
       @mouseleave="passwordRemove"
     >
-      <a-row class="password-select-container">
+      <a-row style="-webkit-app-region:none" class="password-select-container">
         <a-col :span="12" class="col-left">
           <component :is="filterInfo.icon"/>
           <span class="password-all">{{ filterInfo.text }}</span>
