@@ -100,11 +100,20 @@ module.exports = {
         //如果还没有初始化好tabs，则将此tab放置到要初始化的tabs队列
       }else{
         let currentTab=tabs.get(tabs.getSelected())
-        var newTab = tabs.add({
-          url: data.url || '',
-          partition:currentTab.partition,
-          newName:currentTab.newName,
-        })
+        if(data.partition){
+          var newTab = tabs.add({
+            url: data.url || '',
+            partition:data.partition,
+            newName:data.newName,
+          })
+        }else{
+          var newTab = tabs.add({
+            url: data.url || '',
+            partition:currentTab.partition,
+            newName:currentTab.newName,
+          })
+        }
+
 
         browserUI.addTab(newTab, {
           enterEditMode: !data.url, // only enter edit mode if the new tab is empty

@@ -84,7 +84,16 @@
                 <ColorImg :src="item.icon" :width="18" :height="18" :color="this.getColor(item.originData)"></ColorImg>
               </template>
             </a-list-item-meta>
+              <a-dropdown :trigger="['hover']">
                <div class="open-fill" v-show="item.showTip" @click.stop="openFillClick(item)">打开并填充</div>
+                <template #overlay>
+                  <a-menu>
+                    <a-menu-item key="0">
+                      <span @click.stop="openSubTabFillClick(item)">打开小号标签并填充</span>
+                    </a-menu-item>
+                  </a-menu>
+                </template>
+              </a-dropdown>
             </a-list-item>
           </div>
         </template>
@@ -106,7 +115,7 @@
         <template #renderItem="{ item }">
           <a-list-item class="drawer-item-list" :class="selectDrawerIndex == item.id ? 'active-drawer':''" >
             <div class="my-password-drawer"  v-if="item.id == 1001">
-              <a-dropdown  :trigger="['click']" width="200" placement="bottomLeft">
+              <a-dropdown overlayClassName="select-pwd"  :trigger="['click']" width="200" placement="bottomLeft">
                 <span class="ant-dropdown-link" @click.prevent>
                   <component :is="item.icon" style="font-size:16px;padding-right: 12px;color: rgba(0, 0, 0, 0.5) !important;"/>
                   <a-list-item-meta @click="selectMyPassword(item)">
@@ -640,9 +649,11 @@ export default {
     },
     // 打开填充按钮
     openFillClick(item) {
-      console.log('填充',item)
       ipc.send('openTabFill',{password:_.cloneDeep(item)})
     },
+    openSubTabFillClick(item){
+      ipc.send('openSubTabFillClick',{password:_.cloneDeep(item)})
+    }
 
   }
 };
@@ -672,7 +683,7 @@ html {
   overflow: hidden;
   width: 100% !important;
 }
-.ant-dropdown-placement-bottomLeft{
+.select-pwd .ant-dropdown-placement-bottomLeft{
     top: 44px !important;
     left: 8px !important;
     min-width: 200px !important;
