@@ -84,6 +84,48 @@ class KdbxModel {
   }
 
   /**
+   * 创建密码实体
+   * @param account
+   * @returns {*}
+   */
+  createEntry(account){
+    if(!this.db){
+      throw '密码库未打开'
+    }
+   let entry= this.db.createEntry(this.db.getDefaultGroup())
+   this.updateEntry(entry,account)
+   return entry
+  }
+
+  /**
+   * 还原密码到根组下
+   * @param entry
+   */
+  recoveryEntry(entry){
+    entry.pushHistory()
+    this.db.move(entry,this.db.getDefaultGroup())
+  }
+
+  /**
+   * 更新密码实体
+   * @param entry
+   * @param data
+   * @returns {*}
+   */
+  updateEntry(entry,data){
+    entry.pushHistory();
+    entry.fields.set('URL',data.domain)
+    entry.fields.set('Title',data.name)
+    entry.fields.set('UserName',data.username)
+    entry.fields.set('Password',kdbxweb.ProtectedValue.fromString(data.password))
+// change something
+    entry.fgColor = 'black';
+// update entry modification and access time
+    entry.times.update();
+    return entry
+  }
+
+  /**
    *
    * @param passwords
    * @param groupName

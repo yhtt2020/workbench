@@ -145,28 +145,74 @@ class KdbxService {
     return await this.prepareDb()
   }
 
-  /**
-   * 此方法是真正的获取密码方法
-   * @returns {Promise<unknown>}
-   */
-  async getAllPasswords () {
+  async openDb(){
     let currentCredential = this.currentCredential
-    const gotCreds = new Promise(resolve => {
+    let openDb=new Promise(resolve => {
       this.kdbxModel.openFile(currentCredential.password, currentCredential.filePath, currentCredential.keyFile, (err, data) => {
         if (err) {
           console.warn('打开失败', err)
           return
         }
-        let allCredentials = this.kdbxModel.getAllCredentials()
-        allCredentials = allCredentials.filter(crd => {
-          crd.name = crd.title
-          //排除掉已删除的密码
-          return crd.originData.parentGroup.uuid.id!==this.kdbxModel.db.meta.recycleBinUuid.id
-        })
-        resolve(allCredentials)
+        resolve(data)
       })
     })
-    return await gotCreds
+    return await openDb
+  }
+
+  /**
+   * 此方法是真正的获取密码方法
+   * @returns {Promise<unknown>}
+   */
+  async getAllPasswords () {
+    await this.openDb()
+    let allCredentials = this.kdbxModel.getAllCredentials()
+    allCredentials = allCredentials.filter(crd => {
+      crd.name = crd.title
+      //排除掉已删除的密码
+      return crd.originData.parentGroup.uuid.id!==this.kdbxModel.db.meta.recycleBinUuid.id
+    })
+    return allCredentials
+    // const gotCreds = new Promise(resolve => {
+    //   this.kdbxModel.openFile(currentCredential.password, currentCredential.filePath, currentCredential.keyFile, (err, data) => {
+    //     if (err) {
+    //       console.warn('打开失败', err)
+    //       return
+    //     }
+    //     let allCredentials = this.kdbxModel.getAllCredentials()
+    //     allCredentials = allCredentials.filter(crd => {
+    //       crd.name = crd.title
+    //       //排除掉已删除的密码
+    //       return crd.originData.parentGroup.uuid.id!==this.kdbxModel.db.meta.recycleBinUuid.id
+    //     })
+    //     resolve(allCredentials)
+    //   })
+    // })
+    // return await gotCreds
+  }
+
+  /**
+   * 设置密码，如果密码存在或已被删除，则自动更新一个版本，并移动回正式组。
+   * @param account
+   * @returns {Promise<void>}
+   */
+  async setPassword(account){
+    await this.openDb()
+    let allCredentials = this.kdbxModel.getAllCredentials()
+    let found = allCredentials.find(crd => {
+      return (crd.domain = account.domain && crd.username===account.username)
+    })
+    if(found){
+      if(found.originData.parentGroup.uuid.id===this.kdbxModel.db.meta.recycleBinUuid.id)
+      {
+        // 已删除的密码要复原
+        this.kdbxModel.recoveryEntry(found.originData)
+      }
+      this.kdbxModel.updateEntry(found.originData,account)
+    }else{
+      this.kdbxModel.createEntry(account)
+    }
+
+    return await this.kdbxModel.save()
   }
 }
 
@@ -176,8 +222,7 @@ app.whenReady().then(() => {
 })
 
 ipc.handle('kdbxCredentialStoreSetPassword', async function (event, account) {
-  //设置一个密码 //todo
-  return credentialStoreSetPassword(account)
+  return kdbxService.setPassword(account)// credentialStoreSetPassword(account)
 })
 
 ipc.handle('kdbxCredentialStoreDeletePassword', async function (event, account) {
