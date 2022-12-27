@@ -98,6 +98,14 @@ class KdbxModel {
   }
 
   /**
+   * 删除密码
+   * @param entry
+   */
+  trashEntry(entry){
+    entry.pushHistory()
+    this.db.move(entry,this.db.getGroup(db.meta.recycleBinUuid))
+  }
+  /**
    * 还原密码到根组下
    * @param entry
    */

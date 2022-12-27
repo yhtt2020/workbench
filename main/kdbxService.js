@@ -196,11 +196,7 @@ class KdbxService {
    * @returns {Promise<void>}
    */
   async setPassword(account){
-    await this.openDb()
-    let allCredentials = this.kdbxModel.getAllCredentials()
-    let found = allCredentials.find(crd => {
-      return (crd.domain = account.domain && crd.username===account.username)
-    })
+    let found=await this.findEntry(account)
     if(found){
       if(found.originData.parentGroup.uuid.id===this.kdbxModel.db.meta.recycleBinUuid.id)
       {
@@ -212,6 +208,39 @@ class KdbxService {
       this.kdbxModel.createEntry(account)
     }
 
+    return await this.kdbxModel.save()
+  }
+
+  /**
+   * 查找实体
+   * @param account
+   * @returns {Promise<*>}
+   */
+  async findEntry (account) {
+    await this.openDb()
+    let allCredentials = this.kdbxModel.getAllCredentials()
+    let found = allCredentials.find(crd => {
+      return (crd.domain = account.domain && crd.username === account.username)
+    })
+    return found
+  }
+
+  /**
+   * todo 此处未充分测试，因为一下子找不到场景了。
+   * @param account
+   * @returns {Promise<*>}
+   */
+  async deletePassword(account){
+    let found=await this.findEntry(account)
+    if(found){
+      if(found.originData.parentGroup.uuid.id!==this.kdbxModel.db.meta.recycleBinUuid.id)
+      {
+        // 已删除的密码要复原
+        this.kdbxModel.trashEntry(found.originData)
+      }
+    }else{
+      throw '需要删除的密码不存在'
+    }
     return await this.kdbxModel.save()
   }
 }
@@ -227,14 +256,7 @@ ipc.handle('kdbxCredentialStoreSetPassword', async function (event, account) {
 
 ipc.handle('kdbxCredentialStoreDeletePassword', async function (event, account) {
   //删除一个密码 //todo
-  const fileContent = readSavedPasswordFile()
-  for (let i = 0; i < fileContent.credentials.length; i++) {
-    if (fileContent.credentials[i].domain === account.domain && fileContent.credentials[i].username === account.username) {
-      fileContent.credentials.splice(i, 1)
-      i--
-    }
-  }
-  return writeSavedKdbxPasswordFile(fileContent)
+  return await kdbxService.deletePassword(account)
 })
 
 ipc.handle('kdbxCredentialStoreGetCredentials', async function (event) {
