@@ -161,7 +161,8 @@ class WindowManager {
   }
   defaultWindowPreferences = {
     frame: false,
-    hasShadow:true
+    hasShadow:true,
+    show:false
   }
   defaultWebPreferences = {
     nodeIntegration: false,
