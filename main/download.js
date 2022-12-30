@@ -50,6 +50,7 @@ function sendIPCToDownloadWindow (action, data) {
   // if there are no windows, create a new one
   getDownloadWindow()
   setTimeout(()=>{
+    if(downloadWindow && !downloadWindow.isDestroyed())
     downloadWindow.webContents.send(action, data || {})
   },20)
 
@@ -74,15 +75,15 @@ ipc.on('originalPage', (event, args) => {
 })
 
 ipc.on('closeEmpty', (event, args) => {
-  mainWindow.webContents.send('closeEmptyPage', args)
+ sendIPCToMainWindow('closeEmptyPage', args)
 })
 
 ipc.on('downloading', (event, args) => {
-  mainWindow.webContents.send('downloadCountAdd')
+  sendIPCToMainWindow('downloadCountAdd')
 })
 
 ipc.on('downloadEnd', (event, args) => {
-  mainWindow.webContents.send('downloadCountCut')
+  sendIPCToMainWindow('downloadCountCut')
 })
 
 ipc.on('setSavePath', (event, args) => {
@@ -104,7 +105,7 @@ async function downloadHandler (event, item, webContents) {
   const suffixName = require('path').extname(item.getFilename())
   savePathFilename = path.basename(item.getSavePath())
   const simpleName = item.getFilename().substring(0, item.getFilename().lastIndexOf('.'))
-  mainWindow.webContents.send('isDownload')
+  sendIPCToMainWindow('isDownload')
   // const savePathPrefix = settings.get('downloadSavePath') + '\\'
   const savePathPrefix = settings.get('downloadSavePath')
   var fs = require('fs')
