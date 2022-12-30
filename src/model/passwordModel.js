@@ -61,6 +61,16 @@ const PasswordModel = {
       //todo 获取安全存储内的主密码
       const password= '123'
       passwordModel.openFile(password,pm.filePath,undefined,callback)//todo 加入key
+    }else if(pm.name==='Built-in password manager'){
+      callback(undefined,{
+        name:'内置密码库',
+        type:'builtin',
+        db:keychain
+      })
+    }else{
+      callback(undefined,{
+        type:pm.name,
+      })
     }
   },
 

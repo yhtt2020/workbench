@@ -155,7 +155,7 @@ export default {
           this.setDb({
             tags: [],
             name: '内部密码库',
-            type:'inner'
+            type:'builtin'
           })
           this.$router.push({name:'passwords',params:{value:'',type:'all'}})
         }

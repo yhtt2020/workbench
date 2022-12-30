@@ -430,7 +430,7 @@ export default {
   },
 
   async mounted() {
-      this.getTabData()
+    this.getTabData()
     //获取到前面5个最近的库
     this.selectMenuList.children=this.dbList.map(item=>{
       return {
@@ -439,7 +439,6 @@ export default {
       }
     })
     let params=this.$route.params
-    console.log(params)
     if(params.type==='url'){
       this.url=params.value
       await this.loadCurrentDb()

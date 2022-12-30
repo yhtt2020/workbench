@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
 import * as util from "util";
-
+import {nanoid} from 'nanoid'
 const tools = window.$models.util.tools
 // import _ from 'lodash-es';
 // const {appModel, devAppModel} = window.$models
@@ -111,14 +111,17 @@ export const appStore = defineStore('kee', {
           ...pwd,
           showCopy: false,
           passwordType: 'password',
-          icon: '/kee/key_black.svg'
+          icon: '/kee/key_black.svg',
+
         }
       })
-      this._passwords=this._passwords.filter(pwd=>{
-        if(pwd.originData.parentGroup.uuid.id===this.currentDb.kdbx.meta.recycleBinUuid.id) return false //排除已被删除的密码
-        return testWords(pwd.title,this.searchKey)  || testWords(pwd.originData.fields.get('Notes'),this.searchKey) || testWords(pwd.originData.fields.get('URL'),this.searchKey) ||testWords(pwd.originData.fields.get('UserName'),this.searchKey)
+      if(this.currentDb.type!=='builtin') {
+        this._passwords = this._passwords.filter(pwd => {
+          if (pwd.originData.parentGroup.uuid.id === this.currentDb.kdbx.meta.recycleBinUuid.id) return false //排除已被删除的密码
+          return testWords(pwd.title, this.searchKey) || testWords(pwd.originData.fields.get('Notes'), this.searchKey) || testWords(pwd.originData.fields.get('URL'), this.searchKey) || testWords(pwd.originData.fields.get('UserName'), this.searchKey)
 
-      })
+        })
+      }
 
       if (this.filterInfo.type === 'all') {
         return this._passwords
@@ -165,7 +168,6 @@ export const appStore = defineStore('kee', {
         }
     },
     createEntry(cb){
-      console.log('111111')
       let entry = this.currentDb.kdbx.createEntry(this.currentDb.kdbx.getDefaultGroup())
       console.log(entry,'dawdwawda')
       if(this.currentTab){
@@ -212,7 +214,7 @@ export const appStore = defineStore('kee', {
       this.filterInfo = Object.assign(this.filterInfo, args)
     },
     setDb(dbInfo) {
-      if(dbInfo.type==='inner'){
+      if(dbInfo.type==='builtin'){
         passwordModel.setPasswordManager({
           name:'Built-in password manager'
         })
@@ -230,9 +232,14 @@ export const appStore = defineStore('kee', {
     saveDb(cb){
       passwordModel.save(cb)
     },
-    getAllPasswords() {
+    async getAllPasswords() {
       this.passwords = []
-      this.passwords = passwordModel.getAllPasswords()
+      this.passwords = await passwordModel.getAllPasswords()
+      this.passwords.forEach(pwd=>{
+        if(!pwd.id){
+          pwd.id=nanoid(8)
+        }
+      })
       window.pina = this
     },
     importPasswords(passwords, groupName, existAction,successAction) {
@@ -246,12 +253,21 @@ export const appStore = defineStore('kee', {
             return
           }
           if (dbInfo) {
-            this.setDb({
-              filePath: dbInfo.filePath,
-              kdbx: dbInfo.db,
-              tags: dbInfo.tags,
-              name: dbInfo.name
-            })
+            if(dbInfo.type==='builtin'){
+              this.setDb({
+                type:'builtin',
+                name:'内置密码库',
+                tags:[]
+              })
+            }else {
+              this.setDb({
+                filePath: dbInfo.filePath,
+                kdbx: dbInfo.db,
+                tags: dbInfo.tags,
+                name: dbInfo.name
+              })
+            }
+
           }
           resolve(dbInfo)
         })

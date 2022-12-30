@@ -3,7 +3,7 @@
     <a-breadcrumb-separator class="breadcrumb-left">
       <UnlockFilled class="breadcrumb-lock"/>
       <a-breadcrumb-item class="my-password">全部</a-breadcrumb-item>
-      <a-breadcrumb-item v-if="passwordItem.originData.parentGroup.name" class="password-group"><a >{{ passwordItem.originData.parentGroup.name }}</a></a-breadcrumb-item>
+      <a-breadcrumb-item v-if="passwordItem.originData && passwordItem.originData.parentGroup.name" class="password-group"><a >{{ passwordItem.originData.parentGroup.name }}</a></a-breadcrumb-item>
     </a-breadcrumb-separator>
     <div class="breadcrumb-right" v-if="passwordItem.icon">
        <span @click="fillClick(passwordItem)" class="auto-full" v-if="editShow == false">
@@ -145,7 +145,7 @@
 
             </div>
             <span style="font-size:14px;font-width:400;color:rgba(0, 0, 0, 0.65);">
-              <div class="remark-content" style="    max-height: 150px;
+              <div v-if="passwordItem.originData" class="remark-content" style="    max-height: 150px;
     overflow: hidden;
     box-shadow: 0 0 8px #aeaeae91;
     border-radius: 8px;
@@ -154,7 +154,7 @@
     padding:10px;
     margin-top: 10px;" v-html="passwordItem.originData.fields.get('Notes') || '暂无备注'">
               </div></span>
-            <p><router-link :to="{name:'remark',params:{uuid:passwordItem.originData.uuid.id}}">
+            <p><router-link v-if="passwordItem.originData" :to="{name:'remark',params:{uuid:passwordItem.originData.uuid.id}}">
               <ExportOutlined style="font-size:16px;color:rgba(80, 139, 254, 1);"/>
               <span style="font-size:12px; font-width:400;padding-left: 4px;">查看全部</span>
             </router-link></p>

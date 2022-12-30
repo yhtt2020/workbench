@@ -66,7 +66,7 @@ class KdbxModel {
     }
   }
 
-  getAllCredentials () {
+  async getAllCredentials () {
     let credentials=[]
     for(const entry of this.db.getDefaultGroup().allEntries()){
       let fields=entry.fields
