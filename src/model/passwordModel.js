@@ -42,6 +42,10 @@ const PasswordModel = {
     PasswordModel.kdbxModel.create(name,path,pwd,callback)
   },
 
+  saveCredential(cb){
+    PasswordModel.activeManager.saveCredential(cb)
+  },
+
   save(cb){
     PasswordModel.kdbxModel.save((err,data)=>{
       if(err){
@@ -125,8 +129,6 @@ const PasswordModel = {
     if (managerSetting == null) {
       return PasswordModel.managers.find(mgr => mgr.name === 'Built-in password manager')
     }
-
-
     return PasswordModel.managers.find(mgr => mgr.name === managerSetting.name)
   },
   getConfiguredPasswordManager: async function () {

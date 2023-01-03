@@ -90,6 +90,7 @@ export const appStore = defineStore('kee', {
     currentDb: {
       filePath: '',
       name: '',
+      type:'file',
       kdbx: {}
     },
 
@@ -167,31 +168,50 @@ export const appStore = defineStore('kee', {
           url: "../../../public/img/key_black.svg"
         }
     },
+    /**
+     * 创建实体，支持kdbx和keychain
+     * @param cb
+     */
     createEntry(cb){
-      let entry = this.currentDb.kdbx.createEntry(this.currentDb.kdbx.getDefaultGroup())
-      console.log(entry,'dawdwawda')
-      if(this.currentTab){
-        entry.fields.set('URL',new URL(this.currentTab.url).hostname)
+      let password={
+        domain:'',
+        username:'',
+        password:'',
+        name:''
       }
+      if(this.currentTab){
+        password.domain=new URL(this.currentTab.url).hostname
+      }
+      let entry = passwordModel.getActivePasswordManager().saveCredential(password.domain,password.username,password.password,password.name)
+
       if(cb) {
         this.clearPasswordItem()
         this.getAllPasswords()
         cb(entry)
       }
     },
+    /**
+     * 删除密码，支持kdbx和keychain
+     * @param uuid
+     * @param cb
+     */
     removeEntry(uuid,cb){
-      for(let entry of this.currentDb.kdbx.getDefaultGroup().allEntries()){
-        if(entry.uuid.id===uuid){
-          this.currentDb.kdbx.remove(entry);
-         let found= this.passwords.findIndex((pwd) => {
-            return pwd.originData.uuid.id===uuid})
-          if(found)
-          {
-            this.passwords.splice(found,1)
-          }
-          if(cb) cb(true)
-          return
+      let foundIndex=-1
+      let found= this.passwords.find((pwd,index) => {
+        if(pwd.uuid===uuid){
+          foundIndex=index
+          return pwd.uuid === uuid
         }
+
+      })
+      if(!found){
+        console.warn('未找到')
+        cb(false)
+      }
+      passwordModel.getActivePasswordManager().deleteCredential(found.domain,found.username,found.uuid)
+      if(found)
+      {
+        this.passwords.splice(foundIndex,1)
       }
       if(cb) cb(false)
     },
@@ -230,7 +250,10 @@ export const appStore = defineStore('kee', {
       }
     },
     saveDb(cb){
-      passwordModel.save(cb)
+      if(this.currentDb.type==='file'){
+        //只有kdbx的才需要手动保存
+        passwordModel.save(cb)
+      }
     },
     async getAllPasswords() {
       this.passwords = []
@@ -262,12 +285,12 @@ export const appStore = defineStore('kee', {
             }else {
               this.setDb({
                 filePath: dbInfo.filePath,
+                type:'file',
                 kdbx: dbInfo.db,
                 tags: dbInfo.tags,
                 name: dbInfo.name
               })
             }
-
           }
           resolve(dbInfo)
         })

@@ -519,10 +519,9 @@ export default {
   },
   methods: {
     createPwd(){
-      this.createEntry(entry=>{
-        this.saveDb(result=>{
-          message.success('新建密码成功。')
-        })
+      this.createEntry()
+      this.saveDb(result=>{
+        message.success('新建密码成功。')
       })
     },
     goRemark(params){

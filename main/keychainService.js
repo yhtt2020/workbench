@@ -3,7 +3,7 @@
 const keytar = require('keytar')
 const safeStorage = require('electron').safeStorage
 const passwordFilePath = path.join(userDataPath, 'passwordStore')
-
+const { nanoid }=require('nanoid')
 /*
 file format:
 {
@@ -29,7 +29,15 @@ function readSavedPasswordFile () {
     }
   }
   if (file) {
-    return JSON.parse(safeStorage.decryptString(file))
+    let fileDb=JSON.parse(safeStorage.decryptString(file))
+    fileDb.credentials.forEach(pwd=>{
+      if(!pwd.uuid){
+        pwd.uuid=nanoid(8)
+      }
+    })
+    console.log(fileDb)
+    writeSavedPasswordFile(fileDb)
+    return fileDb
   } else {
     return {
       version: 1,
@@ -45,13 +53,20 @@ function writeSavedPasswordFile (content) {
 function credentialStoreSetPassword (account) {
   const fileContent = readSavedPasswordFile()
 
+  let found=false
   // delete duplicate credentials
   for (let i = 0; i < fileContent.credentials.length; i++) {
     if (fileContent.credentials[i].domain === account.domain && fileContent.credentials[i].username === account.username) {
+      found=fileContent.credentials[i]//找到密码
       fileContent.credentials.splice(i, 1)
       i--
     }
   }
+  if(!found){
+    //是创建的场景，则自动附上uuid
+    account.uuid= nanoid(8)
+  }
+
   if (account.newUsername) {
     // 如果存在新账号名，因为是以账号名和域名双条件判断的，所以这里必须用一个新字段去替换，否则会无法查到
     account.username = account.newUsername
@@ -66,12 +81,20 @@ ipc.handle('credentialStoreSetPassword', async function (event, account) {
   return credentialStoreSetPassword(account)
 })
 
-ipc.handle('credentialStoreDeletePassword', async function (event, account) {
+ipc.handle('credentialStoreDeletePassword', async function (event, account,uuid) {
   const fileContent = readSavedPasswordFile()
 
   // delete matching credentials
   for (let i = 0; i < fileContent.credentials.length; i++) {
+    let found=false
+    if(uuid && fileContent.credentials[i].uuid===uuid){
+      //通过uuid匹配
+      found=true
+    }
     if (fileContent.credentials[i].domain === account.domain && fileContent.credentials[i].username === account.username) {
+      found=true
+    }
+    if(found){
       fileContent.credentials.splice(i, 1)
       i--
     }

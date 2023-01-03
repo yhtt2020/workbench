@@ -45,8 +45,8 @@ class Keychain {
     ipcRenderer.invoke('credentialStoreSetPassword', { domain, username, password, name })
   }
 
-  deleteCredential (domain, username) {
-    ipcRenderer.invoke('credentialStoreDeletePassword', { domain, username })
+  deleteCredential (domain, username,uuid) {
+    ipcRenderer.invoke('credentialStoreDeletePassword', { domain, username,uuid })
   }
 
   getAllCredentials () {

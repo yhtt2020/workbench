@@ -41,7 +41,7 @@
               </template>
               <span class="share">主应用中打开</span>
             </a-menu-item>
-            <a-menu-item key="3" @click="shareDelete(passwordItem.originData.uuid.id)">
+            <a-menu-item key="3" @click="shareDelete(passwordItem.uuid)">
                <template #icon>
                   <MinusCircleOutlined style="color:rgba(255, 77, 79, 1);font-size:16px;"/>
                </template>

@@ -4,6 +4,7 @@ const storageFile = new StorageFile()
 const FileModel = require('./kee/fileModel')
 const fileModel = new FileModel()
 const  kdbxweb = require('kdbxweb')
+const { ipcRenderer } = require('electron')
 
 class KdbxModel {
   db//密码库
@@ -77,10 +78,27 @@ class KdbxModel {
         password:pwd?pwd.getText():{},
         title:fields.get('Title'),
         id:entry.uuid,
+        uuid:entry.uuid,
         originData:entry
       })
     }
     return credentials
+  }
+  saveCredential (domain, username, password, name = '') {
+    return this.createEntry({
+      domain, username, password, name
+    })
+  }
+
+  deleteCredential (domain, username,uuid) {
+    if(uuid){
+      for(let entry of this.db.getDefaultGroup().allEntries()){
+        if(entry.uuid.id===uuid){
+          this.db.remove(entry);
+          return
+        }
+      }
+    }
   }
 
   /**
