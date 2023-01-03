@@ -19,5 +19,5 @@ function codeHandle (outFile) {
   fs.writeFileSync(outFile, outputContent)
 }
 
-codeHandle(path.resolve(__dirname, '../main.build.js'))
+//codeHandle(path.resolve(__dirname, '../main.build.js'))
 codeHandle(path.resolve(__dirname, '../dist/bundle.js'))
