@@ -167,7 +167,7 @@ class KdbxService {
    */
   async getAllPasswords () {
     await this.openDb()
-    let allCredentials = this.kdbxModel.getAllCredentials()
+    let allCredentials = await this.kdbxModel.getAllCredentials()
     allCredentials = allCredentials.filter(crd => {
       crd.name = crd.title
       //排除掉已删除的密码
