@@ -156,7 +156,7 @@ export const appStore = defineStore('kee', {
      * @param cb
      */
     changeEntry(uuid,data,cb){
-      passwordModel.getActivePasswordManager().saveCredential(data.domain,data.username,data.password,data.title,uuid)
+      passwordModel.getActivePasswordManager().saveCredential(data.domain,data.username,data.password,data.title,uuid,data.notes)
       if(cb) {
         cb(data)
       }
@@ -189,7 +189,7 @@ export const appStore = defineStore('kee', {
       if(this.currentTab){
         password.domain=new URL(this.currentTab.url).hostname
       }
-      let entry = passwordModel.getActivePasswordManager().saveCredential(password.domain,password.username,password.password,password.name)
+      let entry = passwordModel.getActivePasswordManager().createCredential(password.domain,password.username,password.password,password.name)
       this.clearPasswordItem()
       this.getAllPasswords()
       if(cb) {
@@ -219,7 +219,7 @@ export const appStore = defineStore('kee', {
       {
         this.passwords.splice(foundIndex,1)
       }
-      if(cb) cb(false)
+      if(cb) cb(true)
     },
     getPasswordByUuid(uuid){
       return this.passwords.find(pwd=>{
@@ -248,6 +248,7 @@ export const appStore = defineStore('kee', {
         const manager = passwordModel.kdbxModel.getManager(dbInfo.filePath)
         passwordModel.setPasswordManager(manager)
       }
+
       this.currentDb = dbInfo
       this.tags = dbInfo.tags
       this.getAllPasswords()

@@ -353,7 +353,7 @@ export default {
         ],
         passwordAccount:[
            {
-            required: true,message: '请输入密码昵称',
+            required: true,message: '请输入密码名称',
            }
         ],
         websiteValue:[

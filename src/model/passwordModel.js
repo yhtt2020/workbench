@@ -83,17 +83,13 @@ const PasswordModel = {
    * @param manager
    */
   setPasswordManager(manager){
-    console.log(manager,'manager')
+    console.log(manager,'manager123123')
     settings.set('passwordManager', {
       name:manager.name,
       filePath:manager.filePath,
       dbName:manager.dbName
     })
-    if(manager.name==='file'){
-      PasswordModel.activeManager=PasswordModel.managerMap.kdbxModel
-    }else{
-      PasswordModel.activeManager=PasswordModel.getActivePasswordManager()
-    }
+    PasswordModel.activeManager=PasswordModel.getActivePasswordManager()
   },
 
   /**
@@ -128,6 +124,9 @@ const PasswordModel = {
     const managerSetting = settings.get('passwordManager')
     if (managerSetting == null) {
       return PasswordModel.managers.find(mgr => mgr.name === 'Built-in password manager')
+    }
+    if(managerSetting.name==='file'){
+      return kdbxModel
     }
     return PasswordModel.managers.find(mgr => mgr.name === managerSetting.name)
   },

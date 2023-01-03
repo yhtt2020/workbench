@@ -95,8 +95,9 @@ export default {
     },
     save(){
       try{
-        this.changeEntry(this.password.originData.uuid.id,(entry=>{
-          entry.fields.set('Notes',this.valueHtml)
+        this.changeEntry(this.password.uuid,{
+          notes:this.valueHtml
+        },(entry=>{
           this.editing=false
           this.password.originData.fields.set('Notes',this.valueHtml)
           this.saveDb((result)=>{

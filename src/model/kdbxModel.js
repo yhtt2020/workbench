@@ -74,17 +74,35 @@ class KdbxModel {
    * @param password
    * @param name
    * @param uuid
+   * @param notes
    */
-  saveCredential (domain, username, password, name = '',uuid){
-    for (let entry of this.db.kdbx.getDefaultGroup().allEntries()){
+  saveCredential (domain, username, password, name = '',uuid,notes){
+    for (let entry of this.db.getDefaultGroup().allEntries()){
       if(entry.uuid.id===uuid){
         entry.pushHistory()
-        entry.fields.set('URL',domain)
-        entry.fields.set('Title',name)
-        entry.fields.set('UserName',username)
-        entry.fields.set('password',this.kdbxweb.ProtectedValue.fromString(password))
+        if(domain) entry.fields.set('URL',domain)
+        if(name) entry.fields.set('Title',name)
+        if(username) entry.fields.set('UserName',username)
+        if(notes){
+          entry.fields.set('Notes',notes)
+        }
+        if(password) entry.fields.set('password',this.kdbxweb.ProtectedValue.fromString(password))
       }
     }
+  }
+
+  /**
+   * 创建密码
+   * @param domain
+   * @param username
+   * @param password
+   * @param name
+   * @returns {*}
+   */
+  createCredential(domain, username, password, name = ''){
+    let entry=this.db.createEntry(this.db.getDefaultGroup())
+    this.saveCredential(domain,username,password,name,entry.uuid.id)
+    return entry
   }
 
 
@@ -98,8 +116,8 @@ class KdbxModel {
         username:fields.get('UserName'),
         password:pwd?pwd.getText():{},
         title:fields.get('Title'),
-        id:entry.uuid,
-        uuid:entry.uuid,
+        id:entry.uuid.id,
+        uuid:entry.uuid.id,
         originData:entry
       })
     }

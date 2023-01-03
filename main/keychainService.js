@@ -50,6 +50,18 @@ function writeSavedPasswordFile (content) {
   fs.writeFileSync(passwordFilePath, safeStorage.encryptString(JSON.stringify(content)))
 }
 
+/**
+ * 创建一个新的密码，目前仅用于密码插件
+ * @param account
+ */
+function credentialStoreCreatePassword(account){
+  const fileContent = readSavedPasswordFile()
+  account.uuid=nanoid(8)
+  fileContent.credentials.push(account)
+  writeSavedPasswordFile(fileContent)
+}
+
+
 function credentialStoreSetPassword (account) {
   const fileContent = readSavedPasswordFile()
   let found=false
@@ -84,11 +96,15 @@ function credentialStoreSetPassword (account) {
   fileContent.credentials.push(account)
   writeSavedPasswordFile(fileContent)
 }
-
+//修改密码
 ipc.handle('credentialStoreSetPassword', async function (event, account) {
   return credentialStoreSetPassword(account)
 })
-
+//创建新密码
+ipc.handle('credentialStoreCreatePassword',async function (event,account){
+  return  credentialStoreCreatePassword(account)
+})
+//删除密码
 ipc.handle('credentialStoreDeletePassword', async function (event, account,uuid) {
   const fileContent = readSavedPasswordFile()
 

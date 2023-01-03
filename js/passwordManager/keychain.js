@@ -45,6 +45,11 @@ class Keychain {
     ipcRenderer.invoke('credentialStoreSetPassword', { domain, username, password, name , uuid })
   }
 
+  //创建密码
+  createCredential(domain,username,password,name){
+    ipcRenderer.invoke('credentialStoreCreatePassword', { domain, username, password, name  })
+  }
+
   deleteCredential (domain, username,uuid) {
     ipcRenderer.invoke('credentialStoreDeletePassword', { domain, username,uuid })
   }
