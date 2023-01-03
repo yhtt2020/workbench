@@ -183,10 +183,9 @@ export const appStore = defineStore('kee', {
         password.domain=new URL(this.currentTab.url).hostname
       }
       let entry = passwordModel.getActivePasswordManager().saveCredential(password.domain,password.username,password.password,password.name)
-
+      this.clearPasswordItem()
+      this.getAllPasswords()
       if(cb) {
-        this.clearPasswordItem()
-        this.getAllPasswords()
         cb(entry)
       }
     },
