@@ -52,15 +52,23 @@ function writeSavedPasswordFile (content) {
 
 function credentialStoreSetPassword (account) {
   const fileContent = readSavedPasswordFile()
-
   let found=false
   // delete duplicate credentials
   for (let i = 0; i < fileContent.credentials.length; i++) {
+    found=false
+    if(account.uuid && fileContent.credentials[i].uuid===account.uuid){
+      found=true
+    }
+
     if (fileContent.credentials[i].domain === account.domain && fileContent.credentials[i].username === account.username) {
+     found=true
+    }
+    if(found){
       found=fileContent.credentials[i]//找到密码
       fileContent.credentials.splice(i, 1)
       i--
     }
+
   }
   if(!found){
     //是创建的场景，则自动附上uuid

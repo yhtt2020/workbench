@@ -67,6 +67,27 @@ class KdbxModel {
     }
   }
 
+  /**
+   * 保存凭证
+   * @param domain
+   * @param username
+   * @param password
+   * @param name
+   * @param uuid
+   */
+  saveCredential (domain, username, password, name = '',uuid){
+    for (let entry of this.db.kdbx.getDefaultGroup().allEntries()){
+      if(entry.uuid.id===uuid){
+        entry.pushHistory()
+        entry.fields.set('URL',domain)
+        entry.fields.set('Title',name)
+        entry.fields.set('UserName',username)
+        entry.fields.set('password',this.kdbxweb.ProtectedValue.fromString(password))
+      }
+    }
+  }
+
+
   async getAllCredentials () {
     let credentials=[]
     for(const entry of this.db.getDefaultGroup().allEntries()){
@@ -84,11 +105,11 @@ class KdbxModel {
     }
     return credentials
   }
-  saveCredential (domain, username, password, name = '') {
-    return this.createEntry({
-      domain, username, password, name
-    })
-  }
+  // saveCredential (domain, username, password, name = '') {
+  //   return this.createEntry({
+  //     domain, username, password, name
+  //   })
+  // }
 
   deleteCredential (domain, username,uuid) {
     if(uuid){
