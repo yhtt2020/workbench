@@ -471,19 +471,17 @@ export default {
     saveChange(){
       this.editShow = false
       this.isMouse = true
-
-      this.changeEntry(this.passwordItem.originData.uuid.id,(entry)=>{
-         this.passwordItem.title=this.formState.passwordAccount
-         this.passwordItem.username=this.formState.username
-         this.passwordItem.domain=this.formState.websiteValue
-         this.passwordItem.password=this.formState.password
-        entry.fields.set('UserName', this.formState.username)
-        entry.fields.set('URL', this.formState.websiteValue)
-        entry.fields.set('Password', passwordModel.kdbxModel.kdbxweb.ProtectedValue.fromString(this.formState.password))
-        entry.fields.set('Title',this.formState.passwordAccount)
+      this.changeEntry(this.passwordItem.uuid,{
+        username:this.formState.username,
+        title:this.formState.passwordAccount,
+        domain:this.formState.websiteValue,
+        password:this.formState.password
+      },()=>{
+        this.passwordItem.username=this.formState.username
+        this.passwordItem.title=this.formState.passwordAccount
+        this.passwordItem.domain=this.formState.websiteValue
+        this.passwordItem.password=this.formState.password
         this.getAllPasswords()
-
-
         this.updateForm()
         this.saveDb((rs)=>{
           if(rs){
@@ -491,9 +489,6 @@ export default {
           }
         })
       })
-
-
-
     },
     /*鼠标悬浮事件开始*/
     // 用户名称

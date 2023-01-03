@@ -113,16 +113,19 @@ export const appStore = defineStore('kee', {
           showCopy: false,
           passwordType: 'password',
           icon: '/kee/key_black.svg',
-
         }
       })
-      if(this.currentDb.type!=='builtin') {
         this._passwords = this._passwords.filter(pwd => {
-          if (pwd.originData.parentGroup.uuid.id === this.currentDb.kdbx.meta.recycleBinUuid.id) return false //排除已被删除的密码
-          return testWords(pwd.title, this.searchKey) || testWords(pwd.originData.fields.get('Notes'), this.searchKey) || testWords(pwd.originData.fields.get('URL'), this.searchKey) || testWords(pwd.originData.fields.get('UserName'), this.searchKey)
-
+          if (pwd.originData && pwd.originData.parentGroup.uuid.id === this.currentDb.kdbx.meta.recycleBinUuid.id) return false //排除已被删除的密码
+          let result=testWords(pwd.title, this.searchKey) ||
+            testWords(pwd.domain, this.searchKey) ||
+            testWords(pwd.username, this.searchKey)
+          if(pwd.originData){
+            result=result||testWords(pwd.originData.fields.get('Notes'), this.searchKey)
+          }
+          return result
         })
-      }
+
 
       if (this.filterInfo.type === 'all') {
         return this._passwords
@@ -146,12 +149,16 @@ export const appStore = defineStore('kee', {
   },
 
   actions: {
-    changeEntry(uuid,cb){
-      for (let entry of this.currentDb.kdbx.getDefaultGroup().allEntries()){
-        if(entry.uuid.id===uuid){
-          entry.pushHistory()
-          cb(entry)
-        }
+    /**
+     * 修改密码
+     * @param uuid
+     * @param data
+     * @param cb
+     */
+    changeEntry(uuid,data,cb){
+      passwordModel.getActivePasswordManager().saveCredential(data.domain,data.username,data.password,data.title,uuid)
+      if(cb) {
+        cb(data)
       }
     },
     clearPasswordItem(){
@@ -260,6 +267,7 @@ export const appStore = defineStore('kee', {
       this.passwords.forEach(pwd=>{
         if(!pwd.id){
           pwd.id=nanoid(8)
+          pwd.title=pwd.name
         }
       })
       window.pina = this
