@@ -93,8 +93,8 @@ class SettingModel {
    * @returns {Promise<*>}
    */
   async remove(sign,group,key){
-    if(!!!key || !!!sign || !!!value){
-      throw '必须提供key，sign和值'
+    if(!!!key || !!!sign || !!!group){
+      throw '必须提供key，group，sign和值'
     }
 
     return await sqlDb.knex('setting').where({

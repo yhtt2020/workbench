@@ -406,7 +406,7 @@ const appModel = {
         'attach': {}
       }),
       attribute: JSON.stringify({
-        isOffical: 1,
+        isOfficial: 1,
         integration: 2
       }),
       last_execute_time: Date.now(),
@@ -419,6 +419,7 @@ const appModel = {
       }),
       unread_count: 0,
     })
+    settingModel.remove('appSetting','com.thisky.appStore','bounds')
 
     await appModel.updateAppData({ package: 'com.thisky.com' }, {
       package: 'com.thisky.com',
