@@ -8,7 +8,8 @@ const baseApi={
   tabs:require('./tabs.js'),
   runtime:require('./runtime.js'),
   util:require('./util.js'),
-  notification:require('./notification.js')
+  notification:require('./notification.js'),
+  screen:require('./screen.js')
 }
 window.baseApi=baseApi
 module.exports=baseApi
