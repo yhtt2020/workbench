@@ -86,11 +86,14 @@ async function createView(existingViewId, id, webPreferencesString, boundsString
     view.webContents.on(event, function (e) {
       var args = Array.prototype.slice.call(arguments).slice(1)
 
-      mainWindow.webContents.send('view-event', {
-        viewId: id,
-        event: event,
-        args: args
-      })
+      if(mainWindow && !mainWindow.isDestroyed()) {
+        //防止报错
+        mainWindow.webContents.send('view-event', {
+          viewId: id,
+          event: event,
+          args: args
+        })
+      }
     })
   })
 

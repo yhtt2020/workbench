@@ -183,19 +183,23 @@ export default {
         return
       }
       let file=ipc.sendSync('selectFile')
+      function copyFile(dir){
+        let dest=path.join(dir,'logo.png')
+        fs.copyFileSync(file[0],dest)
+        return 'local|'+dest+'?t='+Date.now()
+      }
+
       if(file){
         if(fs.existsSync(path.join(this.devApp.local_dir,'logo.png'))){
         Modal.confirm({
           content:'是否确认覆盖应用图标？',
           centered:true,
           onOk:()=>{
-
-              let dest=path.join(this.devApp.local_dir,'logo.png')
-              fs.copyFileSync(file[0],dest)
-              this.devApp.logo='local|'+dest+'?t='+Date.now()
-
+            this.devApp.logo=copyFile(this.devApp.local_dir)
           }
         })
+        }else{
+          this.devApp.logo=copyFile(this.devApp.local_dir)
         }
       }
     },

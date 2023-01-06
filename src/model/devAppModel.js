@@ -194,7 +194,7 @@ const devAppModel = {
     return devApp
   },
   async getAll(){
-    let all= await sqlDb.knex('dev_app').select()
+    let all= await sqlDb.knex('dev_app').orderBy('update_time','desc').select()
     all.forEach(devApp=>{
       devAppModel.preHandle(devApp)
     })
