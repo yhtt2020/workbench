@@ -3,7 +3,7 @@
     <div @click="executeApp(app)" class="app-item clickable" style="margin-bottom: 15px;text-align: center;">
       <div style="margin-bottom: 10px">
         <a-badge :dot="app.is_new">
-          <img onerror="this.src='../../icons/default.svg'" @click="executeApp(app)" shape="circle"
+          <img onerror="this.src='../../icons/default.svg'" shape="circle"
                class="logo clickable" :src="app.logo"
                :style="{'border-color':app.user_theme_color?app.user_theme_color:app.theme_color}">
         </a-badge>
@@ -49,6 +49,7 @@ export default {
   },
   methods: {
     executeApp (app) {
+      console.log('启动app',{ app: JSON.parse(JSON.stringify(app)) })
       ipc.send('executeApp', { app: JSON.parse(JSON.stringify(app)) })
       //this.searchWords=''
       this.searchWords = ''
