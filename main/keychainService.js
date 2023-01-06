@@ -35,7 +35,6 @@ function readSavedPasswordFile () {
         pwd.uuid=nanoid(8)
       }
     })
-    console.log(fileDb)
     writeSavedPasswordFile(fileDb)
     return fileDb
   } else {

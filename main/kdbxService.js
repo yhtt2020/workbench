@@ -135,7 +135,6 @@ class KdbxService {
     }
     this.dbFile = filePath
     this.currentCredential = this.credentialService.get(filePath) //获取当前凭证
-    console.log('获得到当前存储的凭证',this.currentCredential)
   }
 
   /**
@@ -148,7 +147,6 @@ class KdbxService {
 
   async openDb(){
     let currentCredential = this.currentCredential
-    console.log('用于打开密码库的凭证',currentCredential)
     let openDb=new Promise(resolve => {
       this.kdbxModel.openFile(currentCredential.password, currentCredential.filePath, currentCredential.keyFile, (err, data) => {
         if (err) {
@@ -277,7 +275,6 @@ ipc.handle('setKdbxCredential', async function (event, args) {
     password: args.password,
     keyFile: args.keyFile
   }
-  console.log('写出凭证',cred)
   credentialService.set(cred)
   setTimeout( () => {
      kdbxService.reload()
