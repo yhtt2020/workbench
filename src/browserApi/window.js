@@ -35,6 +35,9 @@ const windowApi = {
   setBounds(bounds){
     send('setBounds',bounds)
   },
+  setFullScreen(flag){
+    send('setFullScreen',flag)
+  },
   async getSize(){
     return await sendSync('getSize')
   },

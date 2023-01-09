@@ -1,15 +1,173 @@
 const path = require('path')
 const {WindowInstance, ViewInstance, FrameWindowInstance} = require('./instanceClass.js')
 const {app, ipcMain: ipc, BrowserWindow, BrowserView} = require('electron')
+const ApiHandler = require('./apiHandler.js')
 const SaApp = require('./saAppClass')
 const remote = require('@electron/remote/main')
 const SettingModel=require('../model/settingModel.js')
 const _ = require('lodash')
+
 let settingModel
+
+class BrowserViewHandler{
+  asyncCallbacks
+  view
+  static IPCEvents=[]
+  id//id，webcontents的id
+  constructor (props) {
+    this.view=props.view
+    this.id=props.view.webContents.id
+  }
+  callSync(method, argsOrCallback, callback){
+    var args = argsOrCallback
+    var cb = callback
+    if (argsOrCallback instanceof Function && !cb) {
+      args = []
+      cb = argsOrCallback
+    }
+    if (!(args instanceof Array)) {
+      args = [args]
+    }
+    if (cb) {
+      var callId = Math.random()
+      this.asyncCallbacks[callId] = cb
+    }
+    this.send('callViewMethod', { callId: callId, method: method, args: args })
+  }
+  send(event,args){
+    console.log('发送ipc',event,args)
+    this.view.webContents.send(event,args)
+  }
+  //监听app单独的IPC信道
+  static listenIPC(){
+    console.log('监听IPC')
+    ipc.on('app.ipc',(event,args)=>{
+      BrowserViewHandler.IPCEvents.forEach(e=>{
+        if(e.id===event.sender.id && e.event===args.event){//找到发送者的id
+          console.log('找到匹配的event',e,args)
+          e.fn(args.id, [args.data], args.frameId, args.frameURL)
+        }
+      })
+    })
+  }
+  bindIPC(event,id,fn){
+    BrowserViewHandler.IPCEvents.push({
+      event,
+      id:id,
+      fn })
+  }
+
+  /**
+   *
+   */
+  removeIPC(){
+    console.log('清理前',BrowserViewHandler.IPCEvents)
+    BrowserViewHandler.IPCEvents=BrowserViewHandler.IPCEvents.filter(e=>{
+      return e.id!==this.id
+    })
+    console.log('清理后',BrowserViewHandler.IPCEvents)
+  }
+
+  ready(){
+    this.view.webContents.on('destroyed',()=>{
+      this.removeIPC()
+    })
+    console.log('尝试去绑定一个IPC事件')
+    this.bindIPC('password-autofill',this.id,function (tab, args, frameId, frameURL) {
+      console.log('接收到password-autofill ipc')
+      // it's important to use frameURL here and not the tab URL, because the domain of the
+      // requesting iframe may not match the domain of the top-level page
+      const hostname = new URL(frameURL).hostname
+      let passwordModel=require('src/model/passwordModel.js')
+      passwordModel.getConfiguredPasswordManager().then(async (manager) => {
+        if (!manager) {
+          this.send('message', { type: 'success', config: { content: '没有可用的密码管理器。', key: 'password' } })
+          return
+        }
+
+        if (!manager.isUnlocked()) {
+          await passwordModel.unlock(manager)
+        }
+
+        // 去除域名里的www，根域名用同一套帐号
+        var formattedHostname = hostname
+        if (formattedHostname.startsWith('www.')) {
+          formattedHostname = formattedHostname.slice(4)
+        }
+
+        manager.getSuggestions(formattedHostname).then(credentials => {
+          // console.log(credentials)
+          // 增加对找回密码数量的提示，减少认知成本
+          // if(credentials.length===0){
+          //   // ipc.send('message',{type:'error',config:{content:"暂未找到保存密码。",key:"password"}})
+          // }else{
+          //   ipc.send('message',{type:'success',config:{content:`找到 ${credentials.length} 个密码。`,key:"password"}})
+          // }
+          // 不再提示找到多少密码，主要观察二级导航栏了
+
+          if (credentials != null) {
+            this.callAsync( 'getURL', function (err, topLevelURL) {
+              if (err) {
+                console.warn(err)
+                return
+              }
+              var topLevelDomain = new URL(topLevelURL).hostname
+              if (topLevelDomain.startsWith('www.')) {
+                topLevelDomain = topLevelDomain.slice(4)
+              }
+              if (domain !== topLevelDomain) {
+                console.warn("autofill isn't supported for 3rd-party frames")
+                return
+              }
+              this.callAsync('sendToFrame', [frameId, 'password-autofill-match', {
+                credentials,
+                manager:passwordModel.getActivePasswordManager(),
+                hostname
+              }])
+              if(global.passwordToFill){
+                this.callAsync('sendToFrame',[frameId,'fill-password',{
+                  passwordToFill:global.passwordToFill
+                }])
+              }
+            })
+            this.callAsync( 'sendToFrame', [frameId, 'password-autofill-match', {
+              credentials,
+              manager:passwordModel.getActivePasswordManager(),
+              hostname
+            }])
+            if(global.passwordToFill){
+              this.callAsync('sendToFrame',[frameId,'fill-password',{
+                passwordToFill:global.passwordToFill
+              }])
+            }
+            // webviews.callAsync(tab, 'sendToFrame', [frameId, 'password-autofill-match', {
+            //   credentials,
+            //   hostname
+            // }])
+
+          }
+        }).catch(e => {
+          if(manager.name==='file' && !manager.filePath){
+            this.send('message', { type: 'error', config: { content: '使用外部密码库时，必须设置密码库。请到 设置-密码设置 中进行设置。' } })
+          }else{
+            this.send('message', { type: 'error', config: { content: '获取自动填充密码失败。' } })
+          }
+          console.error('Failed to get password suggestions: ' + e.message)
+        })
+      })
+    })
+
+  }
+
+}
+
+
+
 /**
  * 代理view管理
  */
 class ViewManager {
+  asyncCallbacks=[]//事件回调
   SPLIT_WIDTH = 10
   bindedMainWindowEvent = false //是否已经绑定了主窗体事件
   lastWidth = 0 //最后一次调整的分体窗体的宽度
@@ -127,6 +285,8 @@ class ViewManager {
     return bounds
   }
 }
+
+
 
 
 /**
@@ -300,8 +460,13 @@ class WindowManager {
     instance = new WindowInstance({
       window: window,
       createOptions: options,
-      name: name
+      name: name,
+      viewHandler:new BrowserViewHandler({view:window})
     })
+
+    instance.viewHandler.ready()
+
+
 
     this.instanceMap[name] = instance
     this.webContentsMap[name] = webContents
@@ -466,6 +631,7 @@ class WindowManager {
     })
 
     appWindow.on('maximize', () => {
+
       appWindow.webContents.send('maximize')
     })
     appWindow.on('unmaximize', () => {
@@ -481,8 +647,10 @@ class WindowManager {
       view: appWindow.view,
       createOptions: options,
       name: name,
+      viewHandler:new BrowserViewHandler({view:appWindow.view}),
       app
     })
+    this.instanceMap[name].viewHandler.ready()
     this.webContentsMap[name] = appView.webContents
     return {
       frame: appWindow,
@@ -839,107 +1007,12 @@ class WindowManager {
     }
   }
 
-  /**
-   * 通用绑定事件方法，额外增加了一个instance参数以便于api区分当前的instance
-   * @param channel
-   * @param cb
-   */
-  onWindow(channel, cb) {
-    this._on('api.window.' + channel, (event, args) => {
-      let instance = this.get(args['_name'])
-      cb(event, args, instance)
-    })
-  }
 
-  on(module, channel, cb) {
-    this._on('api.' + module + '.' + channel, (event, args) => {
-      let instance = this.get(args['_name'])
-      cb(event, args, instance)
-    })
-  }
-
-  _on(channel, cb) {
-    ipc.on(channel, cb)
-  }
 
   init() {
     app.whenReady().then(() => {
-      this.on('runtime','init', (event, args,instance) => {
-        try{
-          let modMap={
-            'frameWindow':'frameWindow',
-            'window':'window',
-            'view':'attach'
-          }
-          let runtime={
-            mod:modMap[instance.type]
-          }
-
-          event.sender.send('api.runtime.initResponse',{runtime}) //回传当前模式信息
-        }catch (e) {
-          console.warn('回传失败',e)
-        }
-
-      })
-
-      this.onWindow('close', (event, args) => {
-        //todo 修改为实例操作，而非直接关闭窗体，因为不同的模式下，其操作模式也不一致
-        this.close(args['_name'])
-      })
-
-      this.onWindow('setAlwaysOnTop', (event, args, instance) => {
-        instance.window.setAlwaysOnTop(args.flag)
-      })
-
-      this.onWindow('isAlwaysOnTop', (event, args, instance) => {
-        if (instance.type === 'view') {
-          event.returnValue = false //view的话，统一返回false
-        } else if (instance.type === 'frameWindow') {
-          event.returnValue = instance.frame.isAlwaysOnTop()
-        } else if (instance.type === 'window') {
-          event.returnValue = instance.window.isAlwaysOnTop()
-        }
-
-      })
-
-      this.onWindow('attach', (event, args, instance) => {
-        if (this.attachedInstance === instance) {
-          return
-        }
-        this.attachInstance(instance, args.pos, args.width)
-      })
-
-      this.onWindow('detach', (event, args, instance) => {
-        if (this.attachedInstance !== instance) {
-          return
-        }
-        this.detachInstance()
-      })
-
-      this.onWindow('getAttachStatus', (event, args, instance) => {
-        if (this.attachedInstance !== instance) {
-          event.returnValue = false
-        } else {
-          event.returnValue = this.attachStatus
-        }
-      })
-
-      this.on('notification', 'send', (event, args, instance) => {
-        //需要前置处理消息设置的状态决定到底发不发消息
-        if (instance.app) {
-          appManager.onNotice(instance.app, args)
-        }
-        // const result = appManager.beforeEachNotification(notificationSettingStatus, args)
-        // if (result) {
-        //   appManager.notification(args.saAppId, {
-        //     title: args.title,
-        //     body: args.body,
-        //   }, typeof args.ignoreWhenFocus == 'undefined' ? false : args.ignoreWhenFocus)
-        //   return { code: 200, msg: '成功' }
-        // } else {
-        //   return { code: 500, msg: '失败' }
-        // }
-      })
+      BrowserViewHandler.listenIPC()
+      ApiHandler.bindIPC()//绑定APIHandler的公共方法
     })
   }
 }

@@ -31,10 +31,12 @@ class Instance {
  */
 class WindowInstance extends Instance {
   window
+  viewHandler
 
   constructor (initOption) {
     super(initOption)
     this.window = initOption.window
+    this.viewHandler=initOption.viewHandler
   }
 
   create () {
@@ -42,6 +44,7 @@ class WindowInstance extends Instance {
   }
 
   close () {
+    this.window.webContents.destroy()
     this.window.close()
     this.destroy()
   }
@@ -52,11 +55,13 @@ class FrameWindowInstance extends Instance{
   type='frameWindow'
   frame
   window
+  viewHandler
   constructor (iniOption) {
     super(iniOption)
     this.frame=iniOption.frame
     this.window=this.frame
     this.view=iniOption.view
+    this.viewHandler=iniOption.viewHandler
   }
 
   close () {

@@ -738,12 +738,12 @@ class AppManager {
     let preload = ''
     if (saApp.isSystemApp) {
       if (!!!saApp.preload || saApp.preload === '') {
-        preload = path.join(___dirname + '/pages/saApp/appPreload.js')
+        preload = path.join(___dirname + '/src/preload/appPreload.js')
       } else {
         preload = path.join(___dirname + '/' + saApp.preload)
       }
     } else {
-      preload = path.join(___dirname + '/pages/saApp/appPreload.js')
+      preload = path.join(___dirname + '/src/preload/appPreload.js')
     }
     let partition = 'persist:webcontent'
     if (saApp.isSystemApp) {
