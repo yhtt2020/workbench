@@ -542,6 +542,15 @@ function handleFormSubmit () {
 
 
 function initPasswordFill(){
+  function passwordAutofillEnabled() {
+    log('密码自动填充有效')
+    checkInitialFocus()
+
+    // Add default focus event listeners.
+    window.addEventListener('blur', handleBlur, true)
+    window.addEventListener('focus', handleFocus, true)
+  }
+  passwordAutofillEnabled()
   let electron=require('electron')
   window.onload = () => {
     setTimeout(requestAutofill, 1000)
@@ -558,14 +567,8 @@ function initPasswordFill(){
 
 // Autofill enabled event handler. Initializes focus listeners for input fields.
 // 自动填充事件handler，初始化输入框的焦点事件
-  ipc.on('password-autofill-enabled', (event) => {
-    log('密码自动填充有效')
-    checkInitialFocus()
 
-    // Add default focus event listeners.
-    window.addEventListener('blur', handleBlur, true)
-    window.addEventListener('focus', handleFocus, true)
-  })
+
   window.addEventListener('DOMNodeInsertedIntoDocument', (event) => {
     log('页面元素有变')
     checkInitialFocus()

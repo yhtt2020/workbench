@@ -67,6 +67,13 @@ class KdbxModel {
     }
   }
 
+  async checkIfConfigured(){
+    return true
+  }
+
+  isUnlocked () {
+    return true
+  }
   /**
    * 保存凭证
    * @param domain
@@ -138,6 +145,21 @@ class KdbxModel {
         }
       }
     }
+  }
+
+  async getSuggestions (domain) {
+    return ipcRenderer.invoke('kdbxCredentialStoreGetCredentials').then(function (results) {
+      return results
+        .filter(function (result) {
+          return result.domain === domain
+        })
+        .map(function (result) {
+          return {
+            ...result,
+            manager: 'file'
+          }
+        })
+    })
   }
 
   /**
