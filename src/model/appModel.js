@@ -125,7 +125,7 @@ const defaultWindow = {
   defaultType: 'frameWindow',
   frameWindow: {
     enable: true,
-    width: 800,
+    width: 1200,
     height: 800,
     controllers: {
       goBack: true,
@@ -767,7 +767,7 @@ const appModel = {
       // circleMessage: app.circleMessage ? app.circleMessage : '',
       preload: app.preload || '',
       package: app.package || '',
-      theme_color: app.theme_color || '#ccc',
+      theme_color: app.theme_color ||  '#4A90E2',//theme_color不存在的时候默认给一个相对好看的蓝色
       user_theme_color: '',
       attribute: JSON.stringify({
         isOffical: app.isOfficial,
@@ -834,9 +834,22 @@ const appModel = {
     }
     app.is_new = app.is_new === 1
     app.settings = app.settings ? JSON.parse(app.settings) : {}
-    if (typeof app.window === 'string') {
-      app.window = JSON.parse(app.window)
+    try{
+      if (typeof app.window === 'string') {
+        app.window = JSON.parse(app.window)
+      }
+    }catch (e) {
+      console.warn(app.alias+'的window参数损坏')
+      await appModel.update(app.nanoid, { window: defaultWindow })
+      app.window=defaultWindow
     }
+    if(app.theme_color==='#ccc'){
+      app.theme_color=`#4A90E2` //修正一下灰色主题色的颜色
+      await appModel.update(app.nanoid, { theme_color: `#4A90E2` })
+    }
+
+
+
     if (app.window.defaultType === 'frameWindow' && app.window.frameWindow['canResize'] === false && ['com.thisky.appStore'].indexOf(app.package) === -1) {
       app.window.frameWindow.canResize = true
       await appModel.update(app.nanoid, { window: JSON.stringify(app.window) }) //修复一下默认数据
