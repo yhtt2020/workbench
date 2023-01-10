@@ -44,8 +44,7 @@ class BrowserViewHandler{
     ipc.on('app.ipc',(event,args)=>{
       BrowserViewHandler.IPCEvents.forEach(e=>{
         if(e.id===event.sender.id && e.event===args.event){//找到发送者的id
-          console.log('找到匹配的event',e,args)
-          e.fn(args.id, [args.data], args.frameId, args.frameURL)
+          e.fn(args.id, [args.data], event.frameId, event.senderFrame.url)
         }
       })
     })
@@ -73,89 +72,11 @@ class BrowserViewHandler{
       this.removeIPC()
     })
     console.log('尝试去绑定一个IPC事件')
-    this.bindIPC('password-autofill',this.id,function (tab, args, frameId, frameURL) {
-      console.log('接收到password-autofill ipc')
-      // it's important to use frameURL here and not the tab URL, because the domain of the
-      // requesting iframe may not match the domain of the top-level page
-      const hostname = new URL(frameURL).hostname
-      let passwordModel=require('src/model/passwordModel.js')
-      passwordModel.getConfiguredPasswordManager().then(async (manager) => {
-        if (!manager) {
-          this.send('message', { type: 'success', config: { content: '没有可用的密码管理器。', key: 'password' } })
-          return
-        }
-
-        if (!manager.isUnlocked()) {
-          await passwordModel.unlock(manager)
-        }
-
-        // 去除域名里的www，根域名用同一套帐号
-        var formattedHostname = hostname
-        if (formattedHostname.startsWith('www.')) {
-          formattedHostname = formattedHostname.slice(4)
-        }
-
-        manager.getSuggestions(formattedHostname).then(credentials => {
-          // console.log(credentials)
-          // 增加对找回密码数量的提示，减少认知成本
-          // if(credentials.length===0){
-          //   // ipc.send('message',{type:'error',config:{content:"暂未找到保存密码。",key:"password"}})
-          // }else{
-          //   ipc.send('message',{type:'success',config:{content:`找到 ${credentials.length} 个密码。`,key:"password"}})
-          // }
-          // 不再提示找到多少密码，主要观察二级导航栏了
-
-          if (credentials != null) {
-            this.callAsync( 'getURL', function (err, topLevelURL) {
-              if (err) {
-                console.warn(err)
-                return
-              }
-              var topLevelDomain = new URL(topLevelURL).hostname
-              if (topLevelDomain.startsWith('www.')) {
-                topLevelDomain = topLevelDomain.slice(4)
-              }
-              if (domain !== topLevelDomain) {
-                console.warn("autofill isn't supported for 3rd-party frames")
-                return
-              }
-              this.callAsync('sendToFrame', [frameId, 'password-autofill-match', {
-                credentials,
-                manager:passwordModel.getActivePasswordManager(),
-                hostname
-              }])
-              if(global.passwordToFill){
-                this.callAsync('sendToFrame',[frameId,'fill-password',{
-                  passwordToFill:global.passwordToFill
-                }])
-              }
-            })
-            this.callAsync( 'sendToFrame', [frameId, 'password-autofill-match', {
-              credentials,
-              manager:passwordModel.getActivePasswordManager(),
-              hostname
-            }])
-            if(global.passwordToFill){
-              this.callAsync('sendToFrame',[frameId,'fill-password',{
-                passwordToFill:global.passwordToFill
-              }])
-            }
-            // webviews.callAsync(tab, 'sendToFrame', [frameId, 'password-autofill-match', {
-            //   credentials,
-            //   hostname
-            // }])
-
-          }
-        }).catch(e => {
-          if(manager.name==='file' && !manager.filePath){
-            this.send('message', { type: 'error', config: { content: '使用外部密码库时，必须设置密码库。请到 设置-密码设置 中进行设置。' } })
-          }else{
-            this.send('message', { type: 'error', config: { content: '获取自动填充密码失败。' } })
-          }
-          console.error('Failed to get password suggestions: ' + e.message)
-        })
-      })
-    })
+    // this.bindIPC('password-autofill',this.id, (tab, args, frameId, frameURL) =>{
+    //   this.view.webContents.send('password-autofill',{id:this.id,args:{
+    //       tab, args, frameId, frameURL
+    //     }})
+    // })
 
   }
 

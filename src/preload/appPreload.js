@@ -4,6 +4,9 @@ const remote = require('@electron/remote')
 let FindInPage = require('electron-find').FindInPage
 const tsbSdk = require('../../js/util/tsbSdk')
 let tools = require('../util/util').tools
+
+require('./appPreloads/passwordFillForApp.js')
+
 const { nanoid } = require('nanoid')
 
 const axios = require('axios')

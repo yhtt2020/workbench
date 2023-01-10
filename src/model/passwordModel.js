@@ -1,3 +1,4 @@
+//运行在render渲染进程当中
 window.ipc=require('electron').ipcRenderer
 const settings = require('../../js/util/settings/settings.js')
 // const Bitwarden = require('../../js/passwordManager/bitwarden.js')
