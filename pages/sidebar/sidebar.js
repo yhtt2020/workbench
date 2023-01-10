@@ -493,13 +493,29 @@ window.onload = function() {
           commit('SET_TSGRADE', result.data)
         }
       },
+      /**
+       * 获取到我加入的圈子，此接口耗时较长，需要放宽超时时长。
+       * @param commit
+       * @param options
+       * @returns {Promise<void>}
+       */
       async getJoinedCircle({commit}, options) {
-        const result = await groupApi.getJoinedCircle(options)
-        if(result.code === 1000) {
-          const data = toString.call(result.data) === '[object Array]' ? [] : result.data.list
-          commit('SET_JOINED_CIRCLE', data)
+        try{
+          const result = await groupApi.getJoinedCircle(options)
+          if(result.code === 1000) {
+            const data = toString.call(result.data) === '[object Array]' ? [] : result.data.list
+            commit('SET_JOINED_CIRCLE', data)
+          }
+        }catch (e) {
+          console.log(e)
         }
       },
+      /**
+       * 获取我的圈子
+       * @param commit
+       * @param options
+       * @returns {Promise<void>}
+       */
       async getMyCircle({commit}, options) {
         const result = await groupApi.getMyCircle(options)
         if(result.code === 1000) {

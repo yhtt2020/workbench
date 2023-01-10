@@ -46,7 +46,7 @@ const baseApi = {
     //todo cache请求缓存后期做一下，防止在1000毫秒内重复请求设置
     if (!min) {
       return axios({
-        timeout: 5000,//设置默认3秒钟超时
+        timeout: 10000,//设置默认3秒钟超时 因为我加入的圈子的接口耗时过长，所以这边从5秒又放宽到了10秒
         method: method,
         url: url,
         headers: { Authorization: baseApi.token },

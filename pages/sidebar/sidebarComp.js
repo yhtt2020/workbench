@@ -185,6 +185,7 @@ const sidebarTpl = /*html*/`
 <!--                          </div>-->
 
 
+                            <a-empty style="margin-top: 20px" description="" v-if="teamList.length===0 && this.$store.getters.getAllCircle.length!==0"></a-empty>
                             <div class="mg-content-btn flex flex-direction"
                           v-for="(item, index) in teamList" :key="item.id" >
                             <div class="cb-top flex align-center justify-start">
