@@ -332,6 +332,11 @@ global.SidePanel=class SidePanel {
       bounds.width=pos.width===0?0:parentBounds.width
       bounds.height=pos.height
       if(sidePanelState!=='min'){
+        if (isWin11()) {
+          //win11要少一个像素
+          bounds.height -= 1
+          bounds.x+=1
+        }
         //如果此处不做判断，则导致极简模式下卡死
         debounce(()=>{
           sidePanel._sidePanel.setBounds(bounds)
