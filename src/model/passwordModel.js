@@ -56,7 +56,7 @@ const PasswordModel = {
       }
     })
   },
-  loadCurrent(callback){
+  async loadCurrent(callback){
     const pm=settings.get('passwordManager')
     if(pm.name==='file')
     {
@@ -64,8 +64,8 @@ const PasswordModel = {
         return false
       }
       //todo 获取安全存储内的主密码
-      const password= '123'
-      passwordModel.openFile(password,pm.filePath,undefined,callback)//todo 加入key
+      let credit=await ipc.invoke('getKdbxCredential',{filePath:pm.filePath})
+      passwordModel.openFile(credit.password,pm.filePath,undefined,callback)//todo 加入key
     }else if(pm.name==='Built-in password manager'){
       callback(undefined,{
         name:'内置密码库',

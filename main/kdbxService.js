@@ -281,3 +281,8 @@ ipc.handle('setKdbxCredential', async function (event, args) {
   },1000)
 
 })
+
+ipc.handle('getKdbxCredential',async (event,args)=>{
+  let cred= credentialService.get(args.filePath)
+  return cred
+})
