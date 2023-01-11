@@ -4,12 +4,12 @@ let downloadWindow = null
 function getDownloadWindow (cb) {
   if (downloadWindow === null || downloadWindow.isDestroyed() == true ) {
     createDownloadWin(cb)
+    //修正下载窗口位置
+    if(mainWindow!=null && !mainWindow.isDestroyed()){
+      let x = (mainWindow.getBounds().x + mainWindow.getBounds().width - downloadWindow.getBounds().width - 15)
+      downloadWindow.setPosition(x,mainWindow.getBounds().y+90)
+    }
   }
-  if(mainWindow!=null && !mainWindow.isDestroyed()){
-    let x = (mainWindow.getBounds().x + mainWindow.getBounds().width - downloadWindow.getBounds().width - 15)
-    downloadWindow.setPosition(x,mainWindow.getBounds().y+90)
-  }
-  downloadWindow.show()
   return downloadWindow
 }
 
@@ -64,7 +64,7 @@ function createDownloadWin (cb) {
 app.whenReady().then(() => {
 
   ipc.on('openDownload', (event, args) => {
-    getDownloadWindow()
+    getDownloadWindow().show()
     // downloadWindow.show()
   })
 
