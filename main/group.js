@@ -259,9 +259,9 @@ app.on('ready', () => {
         space: 24
       }
       let url = config.IM.FRONT_URL
-      if (isDevelopmentMode) {
-        url = 'http://localhost:8000'
-      }
+      // if (isDevelopmentMode) {
+      //   url = 'http://localhost:8000'
+      // }
       // url=url + config.IM.AUTO_LOGIN
       windowManager.create({
         name: CHAT_NAME,
