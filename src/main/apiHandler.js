@@ -36,9 +36,8 @@ class ApiHandler {
       event.returnValue= require('electron').screen.getAllDisplays()
     })
 
-    ApiHandler.onWindow('close', (event, args) => {
-      //todo 修改为实例操作，而非直接关闭窗体，因为不同的模式下，其操作模式也不一致
-      windowManager.close(args['_name'])
+    ApiHandler.onWindow('close', (event, args,instance) => {
+      windowManager.close(instance.name)
     })
 
     ApiHandler.onWindow('setAlwaysOnTop', (event, args, instance) => {
