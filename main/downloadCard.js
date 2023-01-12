@@ -2,7 +2,7 @@ const { Notification } = require('electron')
 let downloadWindow = null
 
 function getDownloadWindow (cb) {
-  if (downloadWindow === null || downloadWindow.isDestroyed() == true ) {
+  if (downloadWindow === null || downloadWindow.isDestroyed() === true ) {
     createDownloadWin(cb)
     //修正下载窗口位置
     if(mainWindow!=null && !mainWindow.isDestroyed()){

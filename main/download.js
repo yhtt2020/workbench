@@ -114,17 +114,20 @@ async function downloadHandler (event, item, webContents) {
   }
   let num = 1
   if (item.getMimeType() === 'application/pdf' && itemURL.indexOf('blob:') !== 0 && itemURL.indexOf('#pdfjs.action=download') === -1 && !attachment) { // clicking the download button in the viewer opens a blob url, so we don't want to open those in the viewer (since that would make it impossible to download a PDF)
+    //此处是pdf阅读逻辑
     event.preventDefault()
     sendIPCToWindow(mainWindow, 'openPDF', {
       url: itemURL,
       tabId: getViewIDFromWebContents(webContents)
     })
   } else {
+    //此处是下载文件逻辑
+    getDownloadWindow()//尝试启动下载助手
     if(settings.get('downloadAutoSave') === true){
       item.setSaveDialogOptions({
         title: '选择保存地址',
         filters: [
-          { name: suffixName, extensions: [suffixName] },
+          { name: suffixName, extensions: [suffixName.replace('.','')] },
           { name: '自定义', extensions: ['*'] }
         ]
       })
@@ -133,7 +136,7 @@ async function downloadHandler (event, item, webContents) {
         item.setSaveDialogOptions({
           title: '选择保存地址',
           filters: [
-            { name: suffixName, extensions: [suffixName] },
+            { name: suffixName, extensions: [suffixName.replace('.','')] },
             { name: '自定义', extensions: ['*'] }
           ]
         })
@@ -158,7 +161,7 @@ async function downloadHandler (event, item, webContents) {
 
     var savePathFilename
 
-    function conver (limit) {
+    function convert (limit) {
       var size
       if (limit < 1024 * 1024) {
         size = (limit / 1024).toFixed(2) + 'KB'
@@ -180,7 +183,7 @@ async function downloadHandler (event, item, webContents) {
       path: item.getSavePath(),
       name: item.getFilename(),
       status: 'start',
-      size: { received: 0, total: conver(item.getTotalBytes()) },
+      size: { received: 0, total: convert(item.getTotalBytes()) },
       paused: item.isPaused(),
       startTime: item.getStartTime(),
       url: item.getURL(),
@@ -213,9 +216,9 @@ async function downloadHandler (event, item, webContents) {
         path: item.getSavePath(),
         name: savePathFilename,
         status: state,
-        size: { received: conver(item.getReceivedBytes()), total: conver(item.getTotalBytes()) },
+        size: { received: convert(item.getReceivedBytes()), total: convert(item.getTotalBytes()) },
         // realdata1:item.speed,
-        realData: conver(item.speed),
+        realData: convert(item.speed),
         progressnuw: ((prevReceivedBytes / item.getTotalBytes()).toFixed(2)) * 100,
         paused: item.isPaused(),
         startTime: item.getStartTime(),
@@ -225,7 +228,7 @@ async function downloadHandler (event, item, webContents) {
 
     item.once('done', async function (e, state) {
       delete currrentDownloadItems[item.getSavePath()]
-      if (!downloadWindow.isDestroyed()) {
+      if (downloadWindow && !downloadWindow.isDestroyed()) {
         downloadWindow.setProgressBar(-1)
       }
 
@@ -235,7 +238,7 @@ async function downloadHandler (event, item, webContents) {
         name: savePathFilename,
         status: state,
         url: item.getURL(),
-        size: { received: conver(item.getTotalBytes()), total: conver(item.getTotalBytes()) },
+        size: { received: convert(item.getTotalBytes()), total: convert(item.getTotalBytes()) },
         href: originalPageUrl,
         chainUrl: item.getURLChain()
       })

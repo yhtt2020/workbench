@@ -597,13 +597,14 @@ class AppManager {
       appManager.settingWindow.window.on('close', () => {
         appManager.settingWindow = null
       })
+      return appManager.settingWindow
     }
 
     if (appManager.settingWindow === null) {
-      await loadSettingWindow()
+     return await loadSettingWindow()
     } else {
       appManager.settingWindow.close()
-      await loadSettingWindow()
+      return await loadSettingWindow()
     }
   }
 

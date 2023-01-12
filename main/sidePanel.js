@@ -1088,7 +1088,7 @@ ipc.on('captureDeskScreen', (event, args) => {
 
 ipc.on('showAllSaApps', async (event, args) => {
   let allApps =await renderPage.openAllApps()
-  let allAppsWindow=allApps.win
+  let allAppsWindow=allApps.window
   allAppsWindow.webContents.send('refresh')
 
   let mainBounds = mainWindow.getBounds()
