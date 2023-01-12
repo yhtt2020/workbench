@@ -339,7 +339,9 @@ global.SidePanel=class SidePanel {
         }
         //如果此处不做判断，则导致极简模式下卡死
         debounce(()=>{
-          sidePanel._sidePanel.setBounds(bounds)
+          if(SidePanel.alive()){
+            sidePanel._sidePanel.setBounds(bounds)
+          }
         },15)() //60帧=1000/60
       }
     }else{
