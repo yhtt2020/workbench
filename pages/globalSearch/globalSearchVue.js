@@ -169,6 +169,9 @@ const globalSearch = new Vue({
       ipc.send('addTab',{url: item.url});
       ipc.send('closeGlobalSearch')
     },
+    openAppstore(){
+      ipc.send('executeAppByPackage',{package:'com.thisky.appStore'})
+    },
     clkli(item) {
       if(item.tag === 'tab') {
         ipc.send('switchToTab', {

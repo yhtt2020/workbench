@@ -12,6 +12,14 @@
     <script src="../../ext/vue/vuex.js"></script>
     <link rel="stylesheet" href="../../ext/vue/antd.min.css" />
     <link rel="stylesheet" href="./style.css" />
+    <style>
+      .app-hover :hover{
+        cursor: pointer;
+        border:2px solid #0C0C0C;
+        box-shadow: 0 0 5px #0C0C0C;
+        border-radius: 100%;
+      }
+    </style>
   </head>
   <body>
     <script>
@@ -41,6 +49,13 @@
             @input="handleInput($event)"
             style="font-size: 20px"
           />
+          <div>
+            <a-avatar @click="openAppstore" class="app-hover"
+              src="../appStore/favicon.svg"
+              alt=""
+              shape="circle"
+            ></a-avatar>
+          </div>
         </div>
         <div
           class="apps flex flex-direction justify-between align-start"
