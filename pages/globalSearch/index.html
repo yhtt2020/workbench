@@ -50,7 +50,7 @@
             style="font-size: 20px"
           />
           <div>
-            <a-avatar @click="openAppstore" class="app-hover"
+            <a-avatar :size="35" @click="openAppstore" class="app-hover"
               src="../appStore/favicon.svg"
               alt=""
               shape="circle"
@@ -122,7 +122,7 @@
                   :key="index"
                   class="flex justify-start align-center"
                   :class="{'li-ready': recentReadyedIndex === index}"
-                  @click="clikRecentHistory(item)"
+                  @click="clickRecentHistory(item)"
                 >
                   <img
                     src="../../icons/default.svg"
@@ -159,7 +159,7 @@
                 class="flex justify-start align-center"
                 :class="{'li-ready': itemReadyedIndex === index}"
                 :key="index"
-                @click="clkli(item)"
+                @click="click(item)"
               >
                 <img
                   onerror="this.src='../../icons/default.svg'"
@@ -170,8 +170,8 @@
                   class="flex flex-direction justify-around align-start"
                   style="padding-left: 20px; height: 100%"
                 >
-                  <div class="text-black-lg sg-omit-sm">{{item.title}}</div>
-                  <div class="text-grey-sm sg-omit-sm">{{item.attached}}</div>
+                  <div class="text-black-lg sg-omit-sm" v-html="item.title.replaceAll(searchWord,`<strong style='color:orangered'>${searchWord}</strong>`)"></div>
+                  <div class="text-grey-sm sg-omit-sm" v-html="item.attached.replaceAll(searchWord,`<strong style='color:orangered'>${searchWord}</strong>`)"></div>
                 </div>
               </li>
             </template>

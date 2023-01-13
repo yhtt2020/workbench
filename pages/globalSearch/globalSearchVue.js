@@ -11,8 +11,8 @@ const globalSearch = new Vue({
         this.searchResult = []
         if(newValue.length > 0) {
           this.openFirst = false
-          let appresult = await this.searchApp(newValue)
-          this.searchResult = this.searchResult.concat(appresult, this.searchTab(newValue), this.searchTask(newValue))
+          let appResult = await this.searchApp(newValue)
+          this.searchResult = this.searchResult.concat(appResult, this.searchTab(newValue), this.searchTask(newValue))
           this.itemReadyedIndex = 0
           this.itemReadyedItem = this.searchResult[0]
         } else if (newValue.length === 0) {
@@ -52,6 +52,10 @@ const globalSearch = new Vue({
           label: '应用',
           checked: false
         },
+        // {
+        //   label: '应用市场',
+        //   checked: false
+        // },
         {
           label: '网页',
           checked: false
@@ -94,6 +98,12 @@ const globalSearch = new Vue({
         return filterRes
       } else if (findResult.label === '应用') {
         let filterRes = this.searchResult.filter(v => v.tag === 'app')
+        this.itemReadyedIndex = 0
+        this.itemReadyedItem = filterRes[0]
+        this.calculateAreaHeight(filterRes)
+        return filterRes
+      } else if (findResult.label === '应用市场') {
+        let filterRes = this.searchResult.filter(v => v.tag === 'appstore')
         this.itemReadyedIndex = 0
         this.itemReadyedItem = filterRes[0]
         this.calculateAreaHeight(filterRes)
@@ -165,14 +175,14 @@ const globalSearch = new Vue({
       })
       ipc.send('closeGlobalSearch')
     },
-    clikRecentHistory(item) {
+    clickRecentHistory(item) {
       ipc.send('addTab',{url: item.url});
       ipc.send('closeGlobalSearch')
     },
     openAppstore(){
       ipc.send('executeAppByPackage',{package:'com.thisky.appStore'})
     },
-    clkli(item) {
+    click(item) {
       if(item.tag === 'tab') {
         ipc.send('switchToTab', {
           taskId: item.taskId,
@@ -374,8 +384,6 @@ const globalSearch = new Vue({
   async mounted () {
     await this.getAllApps()
     this.bindKeys()
-
-    // console.log(await this.getHistoryCount(), '%%%%%%%%%%%')
 
     this.calculateAreaHeight(await this.getHistoryCount())
     this.recentOpenedHistory = await this.handleRecentOpenedHistory()
