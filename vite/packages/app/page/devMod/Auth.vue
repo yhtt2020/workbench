@@ -70,7 +70,7 @@ import { Modal, message } from 'ant-design-vue'
 const  {appModel} = window.$models
 
 export default {
-  name: 'base',
+  name: 'auth',
 
   computed: {
     ...mapWritableState(appStore, ['app', 'debugMod','devApp'])

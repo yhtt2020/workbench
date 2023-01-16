@@ -305,7 +305,7 @@ import { mapWritableState } from 'pinia'
 import DebugTip from '../../components/DebugTip.vue'
 import {Modal,message} from 'ant-design-vue'
 export default {
-  name: 'base',
+  name: 'window',
 
   computed: {
     ...mapWritableState(appStore, ['app', 'debugMod','devApp'])

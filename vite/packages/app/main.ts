@@ -7,8 +7,8 @@ import Setting from './page/Setting.vue'
 import Develop from './page/settingChildren/Develop.vue'
 import Tool from './page/devMod/Tool.vue'
 import Wizard from './page/devMod/Wizard.vue'
-import Base from './page/settingChildren/Base.vue'
-import BaseDev from './page/devMod/Base.vue'
+import BaseInfo from './page/settingChildren/BaseInfo.vue'
+import BaseDev from './page/devMod/BaseDev.vue'
 import Window from './page/devMod/Window.vue'
 import Auth from './page/settingChildren/Auth.vue'
 import Author from './page/devMod/Author.vue'
@@ -35,7 +35,7 @@ const routes = [
       {
         path: 'auth', component: Auth
       }, {
-        path: ':appId', component: Base, name: 'settingBase'
+        path: ':appId', component: BaseInfo, name: 'settingBase'
       }, {
         path: 'optimize', component: Optimize
       },

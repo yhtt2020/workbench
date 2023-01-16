@@ -22,7 +22,7 @@
       :rules="{ required: true, message: '请输入应用说明' }"
     >
       <a-textarea v-model:value="userSetting.summary"
-        placeholder="输入应用说明" maxlength="50"
+        placeholder="输入应用说明" :maxlength="50"
       />
     </a-form-item>
     <a-form-item label="自定义主题色">
@@ -52,7 +52,7 @@ import { mapWritableState } from 'pinia'
 import {Sketch} from '@lk77/vue3-color'
 import DebugTip from '../../components/DebugTip.vue'
 export default {
-  name: 'base',
+  name: 'BaseInfo',
   computed: {
     ...mapWritableState(appStore, ['app','debugMod','userSetting'])
   },
@@ -66,31 +66,8 @@ export default {
     DebugTip,'SketchPicker':Sketch
   },
   methods:{
-    getExtra(type){
-      let tip=`&nbsp;调试&nbsp;`
-      switch (type){
-        case 'debug_url':
-          return tip+`调试入口，仅调试模式下生效，可根据开关启用调试入口`
-      }
-    }
   },
   mounted () {
-    let optimizeValues = ['keepRunning', 'theme', 'desktop', 'showInSideBar', 'alwaysTop', 'autoRun', 'noFrame']
-    let optimize = []
-    if(this.app.settings){
-      optimizeValues.forEach(item => {
-        if (this.app.settings[item]) {
-          optimize.push(item)
-        }
-      })
-    }
-
-    // this.form.setFieldsValue({
-    //   name: data.name,
-    //   summary: data.summary,
-    //   theme_color: data.theme_color,
-    //   optimize:optimize
-    // })
 
   },
 

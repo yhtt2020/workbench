@@ -1,8 +1,8 @@
 <template>
   <h3>体验优化</h3>
 
-  <a-form :model="formState" style="padding: 20px" :label-col="{span:5}" :wrapper-col="{span:19}">
-    <a-form-item v-if="debugMod"  :rules="{ initialValue: ['A', 'B'] }" id="optimize" label="初始体验优化" style="margin-bottom: 0">
+  <a-form  style="padding: 20px" :label-col="{span:5}" :wrapper-col="{span:19}">
+    <a-form-item  :rules="{ initialValue: ['A', 'B'] }" id="optimize" label="初始体验优化" style="margin-bottom: 0">
       <a-checkbox-group
         style="width: 100%;"
       >

@@ -149,10 +149,28 @@ const systemAppPackage = [
   'com.thisky.com',
   'com.thisky.desk'
 ]  //包名为上述包名的判定为系统应用
+
+const defaultAuth= {
+  'base': {
+    'webSecure': false,
+    'node': false
+  },
+  'api': {},
+  'ability': {}
+}
+
+const defaultOptimize={
+  autoRun:false,
+  keepRunning:false,
+  showInSideBar:false
+}
 const appModel = {
   authBaseList,
   authApiList,
   authAbilityList,
+
+  defaultOptimize:defaultOptimize,
+
   async initDb () {
     settingModel = new SettingModel()
     await settingModel.initDb()
@@ -900,28 +918,65 @@ const appModel = {
         await appModel.update(app.nanoid, { auth: JSON.stringify(app.auth) }) //修复一下默认数据
       }
     }
-    let userSettings = await settingModel.get('appSetting', appModel.getName(app), 'common')
-    if (!userSettings) {
-      app.userSettings = {
-        auth: app.auth
-      }
-      await settingModel.set('appSetting', appModel.getName(app), 'common', app.userSettings)
-    } else {
-      app.userSettings = userSettings
-    }
+    app.userSettings = await appModel.getUserSetting(app)
     if (app.logo.startsWith('local|')) {
       //预处理本地图片（临时）
       app.logo = 'file://' + app.logo.replace('local|', '')
     }
     app.origin = _.cloneDeep(app)
-    app = Object.assign(app, userSettings)
+    //app = Object.assign(app, userSettings)
     if (!app.user_theme_color) {
       app.user_theme_color = app.theme_color //将主题色复制到用户设置
     }
     return app
   },
+  /**
+   * 设置用户的设置
+   * @param app
+   * @param userSetting
+   * @returns {Promise<*>}
+   */
   async setUserSetting (app, userSetting) {
     await settingModel.set('appSetting', appModel.getName(app), 'common', userSetting)
+    return userSetting
+  },
+  /*
+  获取到默认的用户配置，可作为充值方法，如果取不到默认的值，则返回一个默认值
+   */
+  async getDefaultUserSetting(id){
+    let app=await this.get({nanoid:id})
+    console.log(app,'appinfo')
+    console.log('app.optimize',app.optimize,'default=',{
+      autoRun:false,
+      keepRunning:false,
+      showInSideBar:false
+    })
+    let defaultSetting={
+      auth: app.auth || defaultAuth,
+      window:app.window || defaultWindow,
+      optimize:app.optimize || {
+        autoRun:false,
+        keepRunning:false,
+        showInSideBar:false
+      }
+    }
+    console.log('创作的=',defaultSetting)
+   return  defaultSetting
+  },
+  /**
+   * 读取用户设置，如果用户未进行设置，则初始化
+   * @param app
+   * @returns {Promise<*>}
+   */
+  async getUserSetting(app){
+    let userSetting= await settingModel.get('appSetting', appModel.getName(app),'common')
+    if (!userSetting || userSetting.auth===null) {
+      //初始化用户设置的值
+      userSetting=await appModel.getDefaultUserSetting(app.nanoid)
+      app.userSettings =userSetting
+      await settingModel.set('appSetting', appModel.getName(app), 'common', app.userSettings)
+    }
+    return userSetting
   },
 
   /**

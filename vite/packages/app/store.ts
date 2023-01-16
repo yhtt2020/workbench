@@ -3,12 +3,15 @@ import _ from 'lodash-es';
 const {appModel, devAppModel} = window.$models
 const path=require('path')
 const initSetting={ //存储用户的设置
-  name:'',
   theme_color:'',
   theme_colors:{},
   url:'',
   summary:'',
-  optimize:{},
+  optimize:{
+    autoRun:false,
+    keepRunning:false,
+    showInSideBar:false
+  },
   auth:{
     base:{},
     api:{},
@@ -46,7 +49,6 @@ export const appStore = defineStore('app', {
     async getApp(id) {
       this.app = await appModel.get({nanoid: id})
       this.loadDefaultValues() //先读入默认值
-
       this.userSetting=_.cloneDeep(Object.assign(this.userSetting,this.app.userSettings)) //再将已经有的值设置进去
       this.userSetting['theme_colors']={hex:this.userSetting['theme_color']}
     },
@@ -61,12 +63,13 @@ export const appStore = defineStore('app', {
       await this.getApp(this.app.nanoid)
 
     },
+    /*保存全部的设置
+     */
     async saveAppSetting(){
       let userSetting =_.cloneDeep(this.userSetting)
       userSetting.theme_color = userSetting.theme_colors.hex
-      //userSetting.window=JSON.stringify(userSetting)
       delete userSetting.theme_colors
-      //delete userSetting.assignAppsInfo
+      console.log(userSetting,'需要保存的设置')
       await appModel.setUserSetting(this.app,userSetting)
     },
     /**
@@ -78,7 +81,9 @@ export const appStore = defineStore('app', {
           this.userSetting[key]=this.app.origin[key]
         }
       })
-
+      if(!this.userSetting.name){
+         this.userSetting.name=this.app.name
+      }
     },
     async toggleDebug() {
       this.debugMod = !this.debugMod
@@ -124,4 +129,3 @@ export const appStore = defineStore('app', {
   }
 
 })
-

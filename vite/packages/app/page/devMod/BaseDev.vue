@@ -161,7 +161,7 @@ import {getLogo} from '../../util'
 const path=require('path')
 const fs=require('fs')
 export default {
-  name: 'base',
+  name: 'BaseInfo',
   computed: {
     ...mapWritableState(appStore, ['devApp','debugMod'])
   },
