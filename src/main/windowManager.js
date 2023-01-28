@@ -473,6 +473,7 @@ class WindowManager {
       width: appWindow.getBounds().width,
       height: appWindow.getBounds().height - 70,
       url,
+      name,
       webPreferences: viewWebPreferences,
       onDomReady
     })
@@ -586,6 +587,7 @@ class WindowManager {
       webPreferences,
       width,
       height,
+      name,
       url: loadUrl,
       onDomReady
     } = options
@@ -676,7 +678,8 @@ class WindowManager {
         keyCtrlOrMeta = input.control
       }
       if (keyCtrlOrMeta && input.key.toLowerCase() === 'w') {
-        frameWindow.close()
+        windowManager.close(name)
+        //frameWindow.close()
         event.preventDefault()
       } else if (keyCtrlOrMeta && input.key.toLowerCase() === 'f') {
         appView.webContents.send('findInPage')
