@@ -197,12 +197,15 @@ if (location.href.startsWith('https://chrome.google.com/webstore')) {
     const baseUrl =
       'https://clients2.google.com/service/update2/crx?response=redirect&acceptformat=crx2,crx3&prodversion=%VERSION&x=id%3D%ID%26installsource%3Dondemand%26uc'
     const ibText = '安装到想天浏览器'
+    escapeHTMLPolicy = trustedTypes.createPolicy("forceInner", {
+      createHTML: (to_escape) => to_escape
+    })
     const ibTemplate =
-      '<div role="button" class="dd-Va g-c-wb g-eg-ua-Uc-c-za g-c-Oc-td-jb-oa g-c" aria-label="' +
+      escapeHTMLPolicy.createHTML('<div role="button" class="dd-Va g-c-wb g-eg-ua-Uc-c-za g-c-Oc-td-jb-oa g-c" aria-label="' +
       ibText +
       '" tabindex="0" style="user-select: none;"><div class="g-c-Hf"><div class="g-c-x"><div class="g-c-R  webstore-test-button-label">' +
       ibText +
-      '</div></div></div></div>'
+      '</div></div></div></div>')
 
     function waitForCreation (selector, callback) {
       const element = document.querySelector(selector)
@@ -255,7 +258,7 @@ if (location.href.startsWith('https://chrome.google.com/webstore')) {
       id = document.URL.match(/(?<=\/)(\w+)(\?|$)/)[1]
     ) {
       if (wrapper == null) return
-      wrapper.innerHTML += ibTemplate
+      wrapper.innerHTML = ibTemplate
       this.DOM = wrapper.children[0]
 
       /* Styling */
