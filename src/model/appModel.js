@@ -944,7 +944,9 @@ const appModel = {
   获取到默认的用户配置，可作为充值方法，如果取不到默认的值，则返回一个默认值
    */
   async getDefaultUserSetting(id){
-    let app=await this.get({nanoid:id})
+    console.log('执行到了')
+    //let app=await this.get({nanoid:id})此方法会导致循环嵌套，内存泄漏
+    let app=await sqlDb.knex('app').where({nanoid:id}).first()
     console.log(app,'appinfo')
     console.log('app.optimize',app.optimize,'default=',{
       autoRun:false,
