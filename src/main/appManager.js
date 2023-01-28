@@ -191,7 +191,7 @@ class AppManager {
    * @param appId
    * @param add
    */
-  clearAppBadge (appId = 0, add = 1) {
+  clearAppBadge (appId = '', add = 1) {
     processingAppWindows.forEach(processApp => {
       if (processApp.saApp.nanoid === appId) {
         processApp.saApp.badge = 0
@@ -706,6 +706,7 @@ class AppManager {
   closeApp (nanoid) {
     let window = appManager.getWindowByAppId(nanoid)
     let saApp = appManager.getSaAppByAppId(nanoid)
+    appManager.clearAppBadge(nanoid)
     if (window && !window.isDestroyed()) {
       saApp.canClose = true
       appManager.removeAppWindow(saApp.windowId)
