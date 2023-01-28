@@ -180,7 +180,7 @@ const appModel = {
      */
     let exists = await sqlDb.knex.schema.hasTable('app')
     if (!exists) {
-      console.log('检测到app表不存在，自动创建')
+      console.info('检测到app表不存在，自动创建')
       await sqlDb.knex.schema.createTable('app', function (t) {
         t.string('nanoid').primary().unique() //本地id
         t.string('appid')//appstore的应用id
@@ -225,7 +225,7 @@ const appModel = {
     }
   },
   async ensureColumns () {
-    console.log('检测数据库版本')
+    //检测数据库版本
     // await sqlDb.knex.schema.table('app', function (t) {
     //   t.boolean('is_debug').comment('是否是调试应用')
     // })
@@ -236,7 +236,7 @@ const appModel = {
     }
     if (!await sqlDb.knex.schema.hasColumn('app', 'window')) {
       //确认版本
-      console.log('升级数据库')
+      console.info('升级数据库')
       await sqlDb.knex.schema.table('app', function (t) {
         console.log('开始添加字段')
         t.string('window').comment('窗体设置')
@@ -248,7 +248,7 @@ const appModel = {
     }
   },
   async migrateDB () {
-    console.log('迁移数据库')
+    //console.log('迁移数据库')
 
     //todo 判断某个应用的appid，如果不存在，则批量处理，处理完之后，写一个config，调用sqldb.setconfig，参考下方写法
 
@@ -866,7 +866,20 @@ const appModel = {
       await appModel.update(app.nanoid, { theme_color: `#4A90E2` })
     }
 
-
+    if(app.logo.startsWith('../../')){
+      //证明还存在脏数据，进行修正替换
+      const replaceMap={
+        '../../pages/import/img/logo.svg':'https://up.apps.vip/logo/logo.svg',//导入助手
+        '../../icons/apps/help.png':'https://up.apps.vip/logo/help.png',//帮助
+        '../../icons/apps/wechatfile.png':'https://up.apps.vip/yyscIcon/wechatfile.png',//文件小助手
+        '../../icons/svg/apps.svg':'https://a.apps.vip/icons/default.png'
+      }
+      for (const key of Object.keys(replaceMap)) {
+        if(app.logo===key){
+          await appModel.update(app.nanoid,{logo:replaceMap[key]})
+        }
+      }
+    }
 
     if (app.window.defaultType === 'frameWindow' && app.window.frameWindow['canResize'] === false && ['com.thisky.appStore'].indexOf(app.package) === -1) {
       app.window.frameWindow.canResize = true
@@ -944,10 +957,8 @@ const appModel = {
   获取到默认的用户配置，可作为充值方法，如果取不到默认的值，则返回一个默认值
    */
   async getDefaultUserSetting(id){
-    console.log('执行到了')
     //let app=await this.get({nanoid:id})此方法会导致循环嵌套，内存泄漏
     let app=await sqlDb.knex('app').where({nanoid:id}).first()
-    console.log(app,'appinfo')
     console.log('app.optimize',app.optimize,'default=',{
       autoRun:false,
       keepRunning:false,
@@ -962,7 +973,6 @@ const appModel = {
         showInSideBar:false
       }
     }
-    console.log('创作的=',defaultSetting)
    return  defaultSetting
   },
   /**
