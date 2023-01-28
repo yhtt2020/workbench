@@ -161,8 +161,8 @@
           </span>
           <span class="drawer-open-main-text">主应用中打开</span>
         </a-list-item>
-        <a-list-item @click="showImport" style="font-size:14px; color:#666 " class="other-password-drawer">
-          <ApiFilled /> 导入内置密码库密码
+        <a-list-item @click="showImport" style="font-size:14px; color:royalblue;cursor:pointer;" class="other-password-drawer">
+          <ApiFilled style="margin-right: 10px;margin-left: -4px" /> 导入内置密码库密码
         </a-list-item>
       </a-list>
     </div>
