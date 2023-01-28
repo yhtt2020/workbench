@@ -857,7 +857,7 @@ export default defineComponent({
                  <a-list  :grid="{ gutter: 20, column: 2 }" :data-source="passwordManagers">
                    <template #renderItem="{ item }">
                      <a-list-item>
-                       <a-card :style="{'border-color': item.name==='file'?'#3a8ee6':'#f1f1f1',background:item.name==='file'?'rgba(58,142,230,0.03)':'white'}" hoverable size="small"  >
+                       <a-card :style="{'border-color': currentPasswordManager.name===item.name?'#3a8ee6':'#f1f1f1',background:currentPasswordManager.name===item.name?'rgba(58,142,230,0.03)':'white'}" hoverable size="small"  >
                          <template #actions>
                            <a v-if="item.disable">敬请期待</a>
                            <a v-else-if="currentPasswordManager.name===item.name"  style="color:#1890ff" @click="setPasswordManager(item)"><check-circle-outlined  /> 当前使用中</a>
