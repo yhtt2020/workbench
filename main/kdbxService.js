@@ -218,7 +218,7 @@ class KdbxService {
    */
   async findEntry (account) {
     await this.openDb()
-    let allCredentials = this.kdbxModel.getAllCredentials()
+    let allCredentials =await this.kdbxModel.getAllCredentials()
     let found = allCredentials.find(crd => {
       return (crd.domain = account.domain && crd.username === account.username)
     })
