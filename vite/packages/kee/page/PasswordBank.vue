@@ -1,19 +1,19 @@
 <template>
   <div @click="unselectBankItem" class="password-bank-container">
-    <div style="height: 180px;padding-top:84px;width: 100%;text-align: center" v-if="!showAction"
+    <!-- <div style="height: 180px;padding-top:84px;width: 100%;text-align: center" v-if="!showAction"
          @mouseenter="showAction=true">
       <span class="password-bank-unlock">
       <UnlockFilled style="color: #ffffff; font-size: 32px"/>
     </span>
-    </div>
-    <div style="height: 180px;padding-top:44px;;width: 100%;text-align: center" v-else @mouseleave="showAction=false">
+    </div> -->
+    <div style="height: 180px;padding-top:44px;;width: 100%;text-align: center"  @mouseleave="showAction=false">
       <a-row style="margin: auto;width: 220px;text-align: center" :gutter="20">
         <a-col @click="selectDb" class="action" :span="12">
           <folder-open-outlined class="icon"/>
           <div>打开</div>
         </a-col>
         <a-col @click="create" class="action" :span="12">
-          <folder-open-outlined class="icon"/>
+          <folder-add-outlined class="icon"/>
           <div>新建</div>
         </a-col>
       </a-row>
@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import { UnlockFilled, FolderOpenOutlined, CloseOutlined, KeyOutlined } from '@ant-design/icons-vue'
+import { UnlockFilled, FolderOpenOutlined, CloseOutlined, KeyOutlined, FolderAddOutlined} from '@ant-design/icons-vue'
 import { message, Modal } from 'ant-design-vue'
 import vueCustomScrollbar from '../../../src/components/vue-scrollbar.vue'
 import {mapActions,mapWritableState} from 'pinia'
@@ -104,7 +104,7 @@ import  { appStore } from '../store'
 export default {
   components: {
     vueCustomScrollbar,
-    UnlockFilled, FolderOpenOutlined, CloseOutlined, KeyOutlined
+    UnlockFilled, FolderOpenOutlined, CloseOutlined, KeyOutlined,FolderAddOutlined
   },
   data () {
     return {
