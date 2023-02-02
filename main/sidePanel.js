@@ -340,7 +340,11 @@ global.SidePanel=class SidePanel {
         //如果此处不做判断，则导致极简模式下卡死
         debounce(()=>{
           if(SidePanel.alive()){
-            sidePanel._sidePanel.setBounds(bounds)
+            try{
+              sidePanel._sidePanel.setBounds(bounds)
+            }catch (e) {
+              console.warn('侧边栏未载入，导致无法设置边框报错')
+            }
           }
         },15)() //60帧=1000/60
       }

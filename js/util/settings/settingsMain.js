@@ -74,14 +74,17 @@ var settings = {
       require('electron').ipcMain.on('settingChanged', function (e, key, value) {
         settings.list[key] = value
         settings.writeFile()
-        if(e.sender.id !== mainWindow.webContents.id){
-          //此处必须对非主界面发来的消息做变更提醒，不然浏览器主界面不会感知到，也就不会同步更新其他页面了。
-          if (mainWindow && !mainWindow.isDestroyed()) { mainWindow.webContents.send('settingChanged',key,value) }
-        }else{
-          //console.log('主进程自己修改，不需要通知')
-        }
+        if(mainWindow && !mainWindow.isDestroyed())
+        {
+          if(e.sender.id !== mainWindow.webContents.id){
+            //此处必须对非主界面发来的消息做变更提醒，不然浏览器主界面不会感知到，也就不会同步更新其他页面了。
+            if (mainWindow && !mainWindow.isDestroyed()) { mainWindow.webContents.send('settingChanged',key,value) }
+          }else{
+            //console.log('主进程自己修改，不需要通知')
+          }
 
-        settings.runChangeCallbacks(key)
+          settings.runChangeCallbacks(key)
+        }
       })
     }
     global.settingsSetted=true
