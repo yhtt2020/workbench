@@ -18,6 +18,7 @@ const htmls=[
   'frame',//应用外框
   'app',//应用管理
   'kee',//密码弹窗
+  'search'//全局搜索
 ]
 let inputs={}
 htmls.forEach(html=>{

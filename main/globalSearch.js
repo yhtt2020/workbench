@@ -26,7 +26,7 @@ const globalSearchMod = {
         backgroundColor: '#fff',
         webPreferences: {
           devTools: true,
-          preload: path.join(__dirname, '/pages/globalSearch/preload.js'),
+          preload: path.join(__dirname, '/src/preload/searchPreload.js'),
           nodeIntegration: true,
           contextIsolation: false,
           additionalArguments: [
@@ -65,7 +65,7 @@ const globalSearchMod = {
       })
     }
 
-    globalSearch.webContents.loadURL('file://' + __dirname + '/pages/globalSearch/index.html')
+    globalSearch.webContents.loadURL(render.getUrl('search.html'))
 
     globalSearch.on('close', () => globalSearch = null)
 
