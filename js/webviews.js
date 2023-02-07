@@ -697,26 +697,6 @@ webviews.bindEvent('crashed', function (tabId, isKilled) {
   }
 })
 
-webviews.bindIPC('getSettingsData', function (tabId, args) {
-  if (!urlParser.isInternalURL(tabs.get(tabId).url) ) {
-    throw new Error()
-  }
-  const systemType=require('./util/systemType.js')
-  const systemInfo={
-    platformAlias:systemType.platformAlias(),
-    versionAlias:systemType.versionAlias(),
-    platform:systemType.platform(),
-    systemVersion:systemType.systemVersion()
-  }
-  settings.list.systemInfo=systemInfo
-  webviews.callAsync(tabId, 'send', ['receiveSettingsData', settings.list])
-})
-webviews.bindIPC('setSetting', function (tabId, args) {
-  if (!urlParser.isInternalURL(tabs.get(tabId).url)) {
-    throw new Error()
-  }
-  settings.set(args[0].key, args[0].value)
-})
 
 settings.listen(function () {
   tasks.forEach(function (task) {

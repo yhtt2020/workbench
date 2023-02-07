@@ -7,7 +7,17 @@ function getPath(name){
   return path.resolve(pkg,'html',name+'.html')
 }
 const htmls=[
-  'index','icon','extension','task','settings','barrage','user','tray','frame','app','kee'
+  'index',//无任何作用
+  'icon',//图标选择器
+  'extension',//扩展插件
+  'task',//选择任务，暂存任务
+  'settings',//设置页面
+  'barrage',//弹幕插件
+  'user',//用户空间选择
+  'tray',//托盘
+  'frame',//应用外框
+  'app',//应用管理
+  'kee',//密码弹窗
 ]
 let inputs={}
 htmls.forEach(html=>{

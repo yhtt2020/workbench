@@ -601,12 +601,67 @@ ipc.on(ipcMessageMain.sidePanel.receiveGlobal, function (event, args) {
     }
   }
 })
-function openSetting(params){
-  let url= render.getUrl('settings.html',params)
-  sendIPCToWindow(mainWindow, 'addTab', {
-    url: url
-  })
+let settingsWindow=null
+async function openSetting(params){
+  if(settingsWindow && !settingsWindow.window.isDestroyed()){
+    settingsWindow.window.show()
+    settingsWindow.window.focus()
+  }else{
+    let url= render.getUrl('settings.html',params)
+    // sendIPCToWindow(mainWindow, 'addTab', {
+    //   url: url
+    // })
+    const windowOption={
+      frame:true,
+      width: 1188,
+      height: 800,
+      closable:true,
+      minimizable:false,
+      maximizable:false,
+      resizable:false,
+      acceptFirstMouse: true,
+    }
+    settingsWindow=await windowManager.create({
+      name: 'appManager',
+      windowOption: windowOption,
+      webPreferences: {
+        preload: ___dirname + '/src/preload/settingsPreload.js',
+        nodeIntegration: true,
+        contextIsolation: false,
+        enableRemoteModule: true,
+        webSecurity: false,
+        sandbox: false,
+        safeDialogs: false,
+        safeDialogsMessage: false,
+        partition: null,
+        additionalArguments: [
+          '--user-data-path=' + userDataPath,
+        ]
+      },
+      url: url
+    })
+    settingsWindow.window.on('close',()=>{
+      settingsWindow=null
+    })
+
+  }
+
 }
+
+ipc.on('getSettingsData', (event, args)=> {
+  const systemType=require(__dirname+'/js/util/systemType.js')
+  const systemInfo={
+    platformAlias:systemType.platformAlias(),
+    versionAlias:systemType.versionAlias(),
+    platform:systemType.platform(),
+    systemVersion:systemType.systemVersion()
+  }
+  settings.list.systemInfo=systemInfo
+  event.reply('receiveSettingsData', settings.list)
+})
+ipc.on('setSetting',  (event, args) =>{
+  settings.set(args.key, args.value)
+})
 //显示书签的时候，将sidepanel隐藏起来
 ipc.on(ipcMessageMain.main.openBookmarks, function () {
   sendIPCToWindow(mainWindow, 'showBookmarks') //直传给mainWindow，让它唤出书签页面

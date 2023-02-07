@@ -2,7 +2,7 @@
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import {defineComponent, ref} from "vue";
-import {Modal} from 'ant-design-vue'
+import {Modal,message} from 'ant-design-vue'
 import {
   CheckCircleOutlined,
   EyeOutlined,
@@ -27,6 +27,7 @@ import Passwords from "./components/Passwords.vue";
 import zhCN from 'ant-design-vue/es/locale/zh_CN';
 import {passwordManagers} from '../../src/settings/passwordManager'
 import SettingGroup from "./components/SettingGroup.vue";
+let {logger}=window.$models
 
 export default defineComponent({
   components: {
@@ -44,6 +45,7 @@ export default defineComponent({
       currentPasswordManager:{
         alias:'无'
       },
+      logCount:0,//'日志记录数'
       locale:zhCN,
       savePath:'',
       platform:'',//平台
@@ -71,6 +73,55 @@ export default defineComponent({
                   }
                 ]
             }
+          ]
+        },
+        debug:{
+          title:'调试',
+          itemGroups:[
+            {
+              name:'log',
+              title:'日志',
+              items:[
+                {
+                  name:'clearLog',
+                  title:'清理日志',
+                  type:'button',
+                  buttonType:'primary',
+                  buttonSize:'small',
+                  click:()=>{
+                    logger.getCount((data)=>{
+                      this.logCount=data[0].count
+                      Modal.confirm({
+                        content:'当前存在的日志数：'+this.logCount+'，确认清理？此操作不可恢复。',
+                        centered:true,
+                        onOk:()=>{
+                          logger.clear((cb)=>{
+                            message.success('清理成功。')
+                          })
+                        }
+                      })
+                    })
+                  },
+                  tip:'清理全部的日志，点击可查看前日志总数',
+                },
+                {
+                  name:'requestLog',
+                  title:'请求日志',
+                  type:'switch',
+                  tip:'开启请求日志，将记录下发送至服务器的请求（仅包含浏览器系统请求，不包含网页请求）。可能导致数据库性能下降。默认不开启。'
+                },
+                {
+                  name:'logLimit',
+                  title:'最多记录请求数',
+                  type:'number',
+                  value:1000,
+                  defaultValue:1000,
+                  max:1000000,
+                  tip:'数据库允许记录的最多请求数，超过则会自动被清理。最多记录100万条。'
+                }
+              ]
+            },
+
           ]
         },
         sidePanel:
@@ -183,6 +234,8 @@ export default defineComponent({
        this.savePath = value
      }
     })
+
+
 
 
     this.preparePasswordsSettings()
@@ -307,7 +360,6 @@ export default defineComponent({
 
             //绑定配置项的自动存储事件
             item.onChange=(event)=>{
-              console.log(event)
               let value
               switch (item.type) {
                 case 'switch':
@@ -987,6 +1039,15 @@ export default defineComponent({
               ></button>
             </div>
           </div>
+        </a-tab-pane>
+        <a-tab-pane :forceRender="true" key="Debug">
+          <template #tab>
+        <span>
+          <layout-outlined/>
+          调试模式
+        </span>
+          </template>
+          <SettingGroup :item-groups="settings.debug.itemGroups"></SettingGroup>
         </a-tab-pane>
       </a-tabs>
     </div>

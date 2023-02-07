@@ -9,7 +9,6 @@ const modules = [
   'js/preload/textExtractor.js',
   'js/preload/readerDetector.js',
   'js/preload/siteUnbreak.js',
-  'js/util/settings/settingsPreload.js',
   'js/preload/passwordFill.js',
   'js/preload/translate.js',
   'server-config.js',
