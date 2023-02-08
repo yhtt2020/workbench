@@ -15,3 +15,7 @@ yarn.lock
 /vite/.vscode/
 /pages/guide/static
 /css/.sass-cache/
+/setup-arm64/
+/tsbSdk/node_modules/
+/补丁/
+**/node_modules/**

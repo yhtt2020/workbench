@@ -82,7 +82,6 @@ li{
             width: 44px;
             height: 44px;
             padding: 2px;
-            border: 2px solid;
             border-radius: 50%;
           }
         }
@@ -163,4 +162,28 @@ li{
 
 ul {
   margin: 0px;
+}
+.gpt-tip-wrapper{
+  margin: 10px;
+  padding: 10px;
+  border-radius: 4px;
+  background: rgba(241, 241, 241, 0.58);
+  border: 1px solid #e7e7e7;
+  .gpt-icon{
+    background:forestgreen ;
+    padding: 5px;
+    border-radius: 4px;
+    display: inline-block;
+    img{
+      width: 24px;
+      height: 24px;
+    }
+  }
+}
+.close-btn{
+  padding: 5px;
+  &:hover{
+    opacity: .5;
+  }
+  cursor: pointer;
 }
