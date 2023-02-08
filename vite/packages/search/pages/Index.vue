@@ -1,22 +1,23 @@
 <script lang="ts">
 import tools from '../../../src/util/tools.js'
-
+import {Modal} from 'ant-design-vue'
 let {appModel, placesModel,statsh} = window.$models
-let ipc = require('electron').ipcRenderer
+window.ipc = require('electron').ipcRenderer
 import {mapActions, mapWritableState, mapState, mapGetters} from "pinia";
-import {SearchOutlined, SmileOutlined,CloseOutlined} from '@ant-design/icons-vue'
+import {SearchOutlined, SmileOutlined,CloseOutlined,BulbOutlined} from '@ant-design/icons-vue'
 import {appStore} from "../store";
-import gpt from '../assets/img/gpt.svg'
+
+import SearchInput from "../components/SearchInput.vue";
 export default {
   components: {
-    SearchOutlined, SmileOutlined,CloseOutlined
+    SearchInput,
+    SearchOutlined, SmileOutlined,CloseOutlined,BulbOutlined
   },
   watch: {
     searchWord: {
       handler: tools.debounce(async function (newValue, oldValue) {
         this.searchResult = []
         if (newValue.length > 0) {
-          console.log('设置为false')
           this.openFirst = false
           let appResult = await this.searchApp(newValue)
           this.searchResult = this.searchResult.concat(appResult, this.searchTab(newValue), this.searchTask(newValue))
@@ -47,38 +48,11 @@ export default {
   },
   data() {
     return {
-      gpt,
-      tip:'',
+
       indicator: '<a-icon type="loading" style="font-size: 24px" spin />',
-      contentLoading: false,
-      searchWord: '',
-      tags: [
-        {
-          label: '全部',
-          checked: true
-        },
-        {
-          label: '应用',
-          checked: false
-        },
-        // {
-        //   label: '应用市场',
-        //   checked: false
-        // },
-        {
-          label: '网页',
-          checked: false
-        },
-        {
-          label: '标签组',
-          checked: false
-        }
-      ],
-      searchResult: [],
-      itemReadyedIndex: 0,
-      itemReadyedItem: {},
+
       openFirst: true,
-      apps: [],
+
       visible: false,
       recentOpenedHistory: [],
       recentReadyedItem: {},
@@ -86,58 +60,33 @@ export default {
     }
   },
   computed: {
-    ...mapState(appStore, ['getAllTasks']),
-    compSearchResult() {
-      let findResult = this.tags.find(v => v.checked === true)
-      if (findResult.label === '全部') {
-        this.itemReadyedIndex = 0
-        this.itemReadyedItem = this.searchResult[0]
-        this.calculateAreaHeight(this.searchResult)
-        return this.searchResult
-      } else if (findResult.label === '网页') {
-        let filterRes = this.searchResult.filter(v => v.tag === 'tab')
-        this.itemReadyedIndex = 0
-        this.itemReadyedItem = filterRes[0]
-        this.calculateAreaHeight(filterRes)
-        return filterRes
-      } else if (findResult.label === '标签组') {
-        let filterRes = this.searchResult.filter(v => v.tag === 'task')
-        this.itemReadyedIndex = 0
-        this.itemReadyedItem = filterRes[0]
-        this.calculateAreaHeight(filterRes)
-        return filterRes
-      } else if (findResult.label === '应用') {
-        let filterRes = this.searchResult.filter(v => v.tag === 'app')
-        this.itemReadyedIndex = 0
-        this.itemReadyedItem = filterRes[0]
-        this.calculateAreaHeight(filterRes)
-        return filterRes
-      } else if (findResult.label === '应用市场') {
-        let filterRes = this.searchResult.filter(v => v.tag === 'appstore')
-        this.itemReadyedIndex = 0
-        this.itemReadyedItem = filterRes[0]
-        this.calculateAreaHeight(filterRes)
-        return filterRes
-      }
-    }
+    ...mapState(appStore, ['getAllTasks','searchWord']),
+    ...mapWritableState(appStore,['contentLoading','searchResult','apps']),
+
   },
   async mounted() {
     await this.getAllApps()
     this.bindKeys()
 
+    window.changeHeight=this.changeHeight
     this.calculateAreaHeight(await this.getHistoryCount())
     this.recentOpenedHistory = await this.handleRecentOpenedHistory()
     this.recentReadyedItem = this.recentOpenedHistory[0]
-    this.tip=localStorage.getItem('closeTip')
+
   },
   methods: {
-    closeTip(){
-      localStorage.setItem('closeTip','1')
-      this.tip='1'
-    },
+
+
+    /**
+     * 修改窗体自身高度
+     * @param height
+     */
     changeHeight(height: number) {
       ipc.send('changeBrowserWindowHeight', height)
     },
+    /**
+     * 关闭全局搜索窗
+     */
     close() {
       ipc.send('closeGlobalSearch')
     },
@@ -194,55 +143,12 @@ export default {
       })
       return mapHistory
     },
-    executeApp(app) {
-      ipc.send('executeApp', {app: JSON.parse(JSON.stringify(app))})
 
-      //statsh 全局搜索打开的应用数量
-      statsh.do({
-        action: 'increase',
-        key: 'globalSearchBaseOpenApp',
-        value: 1
-      })
-      this.close()
-    },
     clickRecentHistory(item) {
       ipc.send('addTab', {url: item.url});
       this.close()
     },
-    openAppstore() {
-      ipc.send('executeAppByPackage', {package: 'com.thisky.appStore'})
-    },
-    click(item) {
-      if (item.tag === 'tab') {
-        ipc.send('switchToTab', {
-          taskId: item.taskId,
-          tabId: item.tabId
-        })
 
-        //statsh 全局搜索打开的网页数量
-        statsh.do({
-          action: 'increase',
-          key: 'globalSearchBaseOpenWeb',
-          value: 1
-        })
-        this.close()
-      } else if (item.tag === 'task') {
-        ipc.send('switchToTask', {
-          id: item.taskId,
-        })
-
-        //statsh 全局搜索打开的标签组数量
-        statsh.do({
-          action: 'increase',
-          key: 'globalSearchBaseOpenTask',
-          value: 1
-        })
-        this.close()
-      } else if (item.tag === 'app') {
-        this.executeApp(item.app)
-        this.close()
-      }
-    },
     calculateHeight() {
       let currentHeight = 0
       if (this.openFirst) {
@@ -347,10 +253,6 @@ export default {
         }
       }
     },
-    handleInput(e) {
-      this.searchWord = e.target.value
-      this.contentLoading = true
-    },
     handleChange(tag, index) {
       this.tags.forEach(e => {
         e.checked = false
@@ -417,136 +319,12 @@ export default {
 <template>
   <div id="globalSearch" class="gs-wrap">
     <div :class="{'first-gs-dialog': openFirst}" class="gs-dialog">
-      <div class="search flex justify-start align-center">
-        <search-outlined :style="{ fontSize: '26px' }"></search-outlined>
-        <input
-          id="myTextField"
-          :value="searchWord"
-          class="search-rg"
-          onfocus="this.select()"
-          placeholder="搜索应用、网页、标签组"
-          spellcheck="false"
-          style="font-size: 20px"
-          tabindex="-1"
-          type="text"
-          @input="handleInput($event)"
-        />
-        <div>
-          <a-avatar :size="35" alt="" class="app-hover" shape="circle"
-                    src="https://up.apps.vip/logo/favicon.svg"
-                    style="-webkit-app-region:no-drag"
-                    @click="openAppstore"
-          ></a-avatar>
-        </div>
-      </div>
-      <div
-        v-if="openFirst"
-        class="apps flex flex-direction justify-between align-start"
-      >
-        <span class="text-grey">推荐</span>
-        <div class="apps-content flex">
-          <ul class="flex">
-            <li v-for="(app, index) in apps"
-                :key="index"
-                class="flex flex-direction justify-around align-center"
-                @click="executeApp(app)"
-            >
-              <img
-                :src="app.logo"
-                alt=""
-                onerror="this.src='../../icons/default.svg'"
-                shape="circle"
-              />
-              <span
-                class="text-black sg-omit-sm flex justify-center align-center"
-              >{{ app.name }}</span
-              >
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div v-else class="category flex justify-between align-center">
-        <div class="category-lf">
+      <SearchInput></SearchInput>
 
-          <a-tag v-for="(tag, index) in tags"
-                 :key="index"
-                 :color="tag.checked ? 'blue' : ''"
-                 style="font-size: 15px; border-radius: 10px"
-                 @click="handleChange(tag, index)"
-          >
-            {{ tag.label }}
-          </a-tag>
-        </div>
-        <div class="category-rg flex justify-around align-center">
-          <smile-outlined/>
-          <div
-            class="flex align-center justify-center"
-            style="padding-left: 5px"
-          >
-            按下Tab键切换类型
-          </div>
-        </div>
-      </div>
+      <router-view>
 
-            <div
-              class="recent-open flex flex-direction justify-between"
-              v-if="openFirst"
-            >
-             <div v-if="tip!=='1'" class="gpt-tip-wrapper">
-               <div class="gpt-icon">
-                 <img  :src="gpt">
-               </div>
-               按下ctrl+回车，或者无搜索结果将会询问ChatGPT
-                <span  @click="closeTip" style="float: right" class="close-btn">
-                  <close-outlined />
-                </span>
+      </router-view>
 
-             </div>
-
-            </div>
-      <div v-else class="content flex justify-center list-hook">
-        <div v-if="contentLoading" key="loading">
-          <a-spin>
-            <a-icon
-              slot="indicator"
-              spin
-              style="font-size: 40px"
-              type="loading"
-            ></a-icon>
-          </a-spin>
-        </div>
-        <ul v-else>
-
-          <li v-for="(item, index) in compSearchResult"
-              :key="index"
-              :class="{'li-ready': itemReadyedIndex === index}"
-              class="flex justify-start align-center"
-              @click="click(item)"
-          >
-            <img
-              :src="item.icon"
-              onerror="this.src='../../icons/default.svg'"
-              style="width: 30px; height: 30px"
-            />
-            <div
-              class="flex flex-direction justify-around align-start"
-              style="padding-left: 20px; height: 100%"
-            >
-              <div class="text-black-lg sg-omit-sm"
-                   v-html="item.title.replaceAll(searchWord,`<strong style='color:orangered'>${searchWord}</strong>`)"></div>
-              <div class="text-grey-sm sg-omit-sm"
-                   v-html="item.attached.replaceAll(searchWord,`<strong style='color:orangered'>${searchWord}</strong>`)"></div>
-            </div>
-          </li>
-          <div
-            v-show="compSearchResult.length === 0 && !openFirst"
-            class="text-grey flex justify-center align-center"
-            style="width: 100%; height: 50px"
-          >
-            未找到任何结果
-          </div>
-        </ul>
-      </div>
     </div>
   </div>
 </template>
