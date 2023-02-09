@@ -12,7 +12,6 @@ window.$models = {
 }
 
 window.addEventListener('message', function (e) {
-  console.log(e,'收到消息')
   if (e.data && e.data.message && e.data.message === 'getSettingsData') {
     ipc.send('getSettingsData')
   }

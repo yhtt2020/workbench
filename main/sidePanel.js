@@ -640,10 +640,11 @@ async function openSetting(params){
       },
       url: url
     })
+    settingsWindow.window.setMenu(null)
     settingsWindow.window.on('close',()=>{
       settingsWindow=null
     })
-
+//settingsWindow.window.webContents.openDevTools()
   }
 
 }

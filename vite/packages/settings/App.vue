@@ -57,6 +57,7 @@ export default defineComponent({
       sideBarPopoverDelay:0,//侧边栏感知延迟
       showSideBarPopover:true,//显示侧边栏悬浮面板
       activeKey:'Privacy',
+      db:{},
       settings: {
         appearance:{
           title:'外观',
@@ -97,6 +98,7 @@ export default defineComponent({
                         onOk:()=>{
                           logger.clear((cb)=>{
                             message.success('清理成功。')
+                            this.getDbSize()
                           })
                         }
                       })
@@ -207,6 +209,7 @@ export default defineComponent({
       }
     })
 
+
     this.platform=process.platform
     window.settings = settings
     // settings.load()
@@ -236,7 +239,7 @@ export default defineComponent({
     })
 
 
-
+    this.getDbSize()
 
     this.preparePasswordsSettings()
   },
@@ -251,6 +254,12 @@ export default defineComponent({
 
 
   methods: {
+    getDbSize(){
+      let fileStat=require('fs').statSync(window.globalArgs['user-data-dir']+'/db/db.sqlite')
+      this.db={
+        size:(fileStat.size/1024/1024 ).toFixed(2)
+      }
+    },
     changePwdDb(){
       ipc.send('changePwdDb')
     },
@@ -1048,6 +1057,7 @@ export default defineComponent({
         </span>
           </template>
           <SettingGroup :item-groups="settings.debug.itemGroups"></SettingGroup>
+          <p>当前数据库大小：{{db.size}} MB <a-button @click="getDbSize" size="small">刷新</a-button></p>
         </a-tab-pane>
       </a-tabs>
     </div>

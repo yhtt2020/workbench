@@ -121,9 +121,13 @@ const logger = {
     })
   },
   clear (cb) {
-    sqlDb.knex('log').where('create_time', '>', 0).delete().then(data => {
-      cb(data)
+    sqlDb.knex('log').truncate().then(data => {
+      sqlDb.knex.raw('vacuum').then(()=>{
+         cb(data)
+      })
+     
     })
+
   }
 }
 
