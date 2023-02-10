@@ -1,3 +1,7 @@
+if(typeof ipc ==='undefined'){
+  window.ipc=require('electron').ipcRenderer
+}
+
 if (typeof fs === "undefined") {
   var fs = require("fs");
 }

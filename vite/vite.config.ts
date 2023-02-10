@@ -19,6 +19,7 @@ const htmls=[
   'app',//应用管理
   'kee',//密码弹窗
   'table',//工作台
+  'search'//全局搜索
 ]
 let inputs={}
 htmls.forEach(html=>{
