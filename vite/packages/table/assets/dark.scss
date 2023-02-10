@@ -1,0 +1,24 @@
+.dark{
+  .common-panel{
+    background: #282828;
+    .icon{
+      fill: #797979;
+    }
+    .item{
+      &:hover{
+        background: #888888;
+        .icon{
+          fill: #333;
+        }
+      }
+      &.active{
+        .icon{
+          fill: #333;
+        }
+        background: #888888;
+      }
+      background: #000c17;
+    }
+  }
+  color: #b7b7b7;
+}

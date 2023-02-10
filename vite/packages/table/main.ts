@@ -1,20 +1,29 @@
 import {createApp} from 'vue'
 import Antd from 'ant-design-vue';
+import 'ant-design-vue/dist/antd.css';
 import App from './App.vue'
-import tools from '../../src/util/tools.js'
-import * as antIcons from '@ant-design/icons-vue'
 import {createRouter, createWebHashHistory} from 'vue-router'
 import {createPinia} from 'pinia'
 import Index from './page/Index.vue'
 const app = createApp(App)
-app.config.globalProperties.$antIcons = antIcons
 const pinia = createPinia()
+import Icon from './components/Icon.vue'
+import PanelButton from './components/PanelButton.vue'
+import Home from './page/Home.vue'
+
+
 const routes = [
   {
-    path:'/',
+    path:'',
     name:'index',
-    component: Index
+    component: Index,
+    children:[
+      {
+        path:'',name:'home',component:Home,
+      }
+    ]
   },
+
 
 ]
 const router = createRouter({
@@ -22,7 +31,7 @@ const router = createRouter({
   routes
 })
 app.use(pinia).use(Antd).use(router).mount('#app')
-tools.getWindowArgs(window)
-
+app.component('Icon',Icon)
+app.component('PanelButton',PanelButton)
 export default router;
 

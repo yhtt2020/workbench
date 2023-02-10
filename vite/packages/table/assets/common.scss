@@ -1,0 +1,71 @@
+@import "card";
+@import 'dark';
+body{
+  overflow: hidden;
+}
+.bottom-panel{
+  .item{
+    background: transparent !important;
+  }
+}
+.common-panel {
+  list-style: none;
+  border-radius: 8px;
+  margin: 10px;
+  padding-left: 0;
+  padding-bottom: 5px;
+  padding-top: 5px;
+  background: rgba(190, 190, 190, 0.38);
+
+  .icon {
+    display: inline-block;
+    width: 2em;
+    height: 2em;
+  }
+
+  .item {
+    width: 4em;
+    cursor: pointer;
+    padding: 10px;
+    height: 4em;
+
+    text-align: center;
+    background: rgba(201, 201, 201, 0.5);
+    border-radius: 6px;
+    font-size: 1.2em;
+    &:hover {
+      background: #bebebe;
+    }
+
+    &.active {
+      background: #b9b9b9;
+    }
+  }
+
+  .title {
+    font-size: 0.6em;
+  }
+}
+
+.drag{
+  -webkit-app-region:drag
+}
+.no-drag{
+  -webkit-app-region:no-drag
+}
+
+
+.key-button{
+  border: 1px solid #c1c1c1;
+  border-radius: 4px;
+  display: inline-block;
+  height: 1.8em;
+  line-height: 1.8em;
+  font-size: .8em;
+  width: 1.8em;
+  background: linear-gradient(to right, #ececec,white, #e5e5e5);
+}
+
+body{
+  user-select: none;
+}

@@ -1,6 +1,6 @@
 <template>
   <a-config-provider :locale="locale">
-  <div class="a-container" >
+  <div class="a-container " :class="{dark:settings.darkMod}" >
     <router-view></router-view>
   </div>
   </a-config-provider>
@@ -9,15 +9,19 @@
 <script lang="ts">
 import zhCN from 'ant-design-vue/es/locale/zh_CN';
 import {mapActions,mapWritableState} from 'pinia'
+
 import  { appStore } from './store'
+
 export default {
   components:{
   },
   async mounted() {
-    window.ipc = window.$models.ipc
-    window.kdbxModel = window.$models.kdbxModel
-    window.passwordModel = window.$models.passwordModel
-    this.loadDbList()
+    if(this.settings.darkMod){
+      document.body.style.background='black'
+    }
+  },
+  computed:{
+    ...mapWritableState(appStore,['settings'])
   },
   methods:{
     ...mapActions(appStore,[]),
@@ -31,6 +35,7 @@ export default {
 </script>
 
 <style>
+@import './assets/common.css';
 .a-container{
    width: 100%;
 }

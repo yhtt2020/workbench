@@ -84,6 +84,16 @@ const globalSearchMod = {
 }
 
 app.whenReady().then(() => {
+  const TableManager=require('./src/main/tableManager.js')
+  console.log('before初始化table')
+  global.tableManager= new TableManager()
+  console.log('初始化table')
+  globalShortcut.register('alt+space',()=>{
+    console.log('触发快捷键')
+    tableManager.init()
+  })
+
+
   // Register a 'CommandOrControl+X' shortcut listener.
   const keyMap = settings.get('keyMap')
   let quick = 'Alt+F'

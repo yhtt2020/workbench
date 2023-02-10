@@ -1,7 +1,6 @@
 import {defineStore} from "pinia";
 import * as util from "util";
 import {nanoid} from 'nanoid'
-const tools = window.$models.util.tools
 // import _ from 'lodash-es';
 // const {appModel, devAppModel} = window.$models
 const initSetting = { //存储用户的设置
@@ -18,9 +17,13 @@ const initSetting = { //存储用户的设置
   },
 }
 
-export const appStore = defineStore('app', {
+export const appStore = defineStore('appStore', {
   state: () => ({
 
+    settings:{
+      showButtonTitle:false,
+      darkMod:true
+    }
 
   }),
   getters: {
