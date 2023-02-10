@@ -1,7 +1,9 @@
 <template>
   <a-config-provider :locale="locale">
-  <div class="a-container " :class="{dark:settings.darkMod}" >
-    <router-view></router-view>
+  <div class="a-container " :class="{dark:settings.darkMod}"  >
+     <router-view></router-view>
+
+
   </div>
   </a-config-provider>
 </template>
@@ -17,7 +19,7 @@ export default {
   },
   async mounted() {
     if(this.settings.darkMod){
-      document.body.style.background='black'
+      document.body.style.background='rgb(50,50,50)'
     }
   },
   computed:{

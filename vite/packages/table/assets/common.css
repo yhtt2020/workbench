@@ -1,6 +1,15 @@
 .card {
   border-radius: 8px;
-  background: rgba(183, 183, 183, 0.63); }
+  background: rgba(183, 183, 183, 0.63);
+  vertical-align: text-top; }
+  .card .title {
+    font-size: 2em; }
+  .card .sub-card {
+    text-align: center;
+    background: #3b3b3b;
+    padding: 1em;
+    border-radius: .3em;
+    font-size: 1.2em; }
 
 .dark {
   color: #b7b7b7; }
@@ -9,15 +18,21 @@
     .dark .common-panel .icon {
       fill: #797979; }
     .dark .common-panel .item {
-      background: #000c17; }
+      background: #1f1f1f; }
       .dark .common-panel .item:hover {
-        background: #888888; }
+        background: #a6a6a6; }
         .dark .common-panel .item:hover .icon {
           fill: #333; }
       .dark .common-panel .item.active {
         background: #888888; }
         .dark .common-panel .item.active .icon {
           fill: #333; }
+  .dark .card {
+    background: #363738; }
+  .dark .input-box {
+    border-color: #3a3a39 !important;
+    border-width: 0.15em !important;
+    color: #7a7a7a; }
 
 body {
   overflow: hidden; }

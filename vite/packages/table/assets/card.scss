@@ -1,6 +1,16 @@
 .card{
   border-radius: 8px;
   background: rgba(183, 183, 183, 0.63);
-
+  vertical-align: text-top;
+  .title{
+    font-size: 2em;
+  }
+  .sub-card{
+    text-align: center;
+    background: #3b3b3b;
+    padding: 1em;
+    border-radius: .3em;
+    font-size:1.2em;
+  }
 }
 

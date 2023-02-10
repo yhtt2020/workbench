@@ -5,7 +5,9 @@
       <SidePanel></SidePanel>
     </a-col>
     <a-col style="margin-left: 8em">
+      <vue-custom-scrollbar :settings="settings" style="position:relative;height: 30em;width:calc(100vw - 9em);  border-radius: 8px;">
       <router-view></router-view>
+      </vue-custom-scrollbar>
     </a-col>
   </a-row>
   <BottomPanel></BottomPanel>
@@ -15,10 +17,21 @@
 import SidePanel from '../components/SidePanel.vue'
 import TopPanel from '../components/TopPanel.vue'
 import BottomPanel from '../components/BottomPanel.vue'
-
+import vueCustomScrollbar from "../../../src/components/vue-scrollbar.vue";
 export default {
   name: 'Index',
-  components: { BottomPanel, TopPanel, SidePanel }
+  components: { BottomPanel, TopPanel, SidePanel,vueCustomScrollbar },
+  data(){
+    return {
+      settings: {
+        useBothWheelAxes:true,
+        swipeEasing: true,
+        suppressScrollY: true,
+        suppressScrollX: false,
+        wheelPropagation: true
+      },
+    }
+  }
 }
 </script>
 

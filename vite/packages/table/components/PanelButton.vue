@@ -1,6 +1,6 @@
 <template>
 
-  <div class="item" :class="{'active':active}">
+  <div @click="onClick" class="item" :class="{'active':active}">
     <template v-if="settings.showButtonTitle">
       <div style="height: 3em;vertical-align: baseline">
         <Icon :icon="icon"></Icon>
@@ -22,7 +22,7 @@ import {mapWritableState} from 'pinia'
 import {appStore} from '../store.ts'
 export default {
   name: 'PanelButton',
-  props: ['title', 'icon','active','iconStyle'],
+  props: ['title', 'icon','active','iconStyle','onClick'],
   computed:{
     ...mapWritableState(appStore,['settings'])
   }

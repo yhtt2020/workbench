@@ -6,7 +6,7 @@
     }
     .item{
       &:hover{
-        background: #888888;
+        background: #a6a6a6;
         .icon{
           fill: #333;
         }
@@ -17,8 +17,21 @@
         }
         background: #888888;
       }
-      background: #000c17;
+      background: #1f1f1f;
     }
   }
   color: #b7b7b7;
+  .card{
+    background:   rgb(54,55,56);
+  }
+
+
+  .input-box{
+    border-color: rgb(58,58,57) !important;
+    border-width: 0.15em!important;
+    color: #7a7a7a;
+  }
 }
+
+
+
