@@ -1,6 +1,6 @@
 <template>
   <ul class="side-panel common-panel" style="
-  width: 6em;position: fixed;top: 4em">
+  width: 6em;position: fixed;top: calc((100vh - 32em)/2)">
     <li class="active">
       <PanelButton icon="#icon-shouye1" :active="true" title="主页"></PanelButton>
     </li>

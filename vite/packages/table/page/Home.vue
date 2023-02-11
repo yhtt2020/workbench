@@ -3,6 +3,7 @@
     <div>
       <div style="overflow-x: visible">
         <div class="card-wrapper">
+          <Dou></Dou>
           <Music></Music>
           <div style="display: inline-block;width: 21em;white-space: pre-wrap;vertical-align: text-top;">
             <Timer></Timer>
@@ -12,8 +13,6 @@
           <Calendar></Calendar>
           <Stock></Stock>
          <AddMore></AddMore>
-
-
         </div>
       </div>
     </div>
@@ -27,10 +26,11 @@ import Timer from '../components/homeWidgets/Timer.vue'
 import Music from '../components/homeWidgets/Music.vue'
 import Stock from '../components/homeWidgets/Stock.vue'
 import AddMore from '../components/homeWidgets/AddMore.vue'
+import Dou from '../components/homeWidgets/Dou.vue'
 
 export default {
   name: 'Home',
-  components: { AddMore, Stock, Music, Calendar, Weather, Timer }
+  components: { Dou, AddMore, Stock, Music, Calendar, Weather, Timer }
 }
 </script>
 
@@ -40,7 +40,6 @@ export default {
   width: auto;
   flex-wrap: nowrap;
   white-space: nowrap;
-  height: calc(100vh - 12em)
 }
 
 .card {

@@ -1,61 +1,70 @@
 <template>
-  <div class="bottom-panel" style="position: fixed;width: 100vw;padding:10px">
-    <a-row :gutter="10">
-      <a-col :span="2">
-        <a-row class="common-panel" style="width:5em" >
-          <PanelButton icon="#icon-shezhi" title="我的"></PanelButton>
-        </a-row>
-      </a-col>
-      <a-col :span="2">
-        <a-row class="common-panel" style="width:5em">
-          <PanelButton icon="#icon-shezhi" title="设置"></PanelButton>
-        </a-row>
-      </a-col>
-      <a-col  :span="4" class="common-panel">
-        <a-row>
-          <a-col :span="12">
-            <PanelButton icon="#icon-suoding" title="锁屏"></PanelButton>
-          </a-col>
-          <a-col  :span="12">
-            <PanelButton icon="#icon-yidongwenjianjia" :onClick="transFile" title="传文件"></PanelButton>
-          </a-col>
-        </a-row>
-      </a-col>
-      <a-col  :span="4" class="common-panel">
-        <a-row >
-          <a-col  :span="12">
-            <PanelButton icon="#icon-suoding" title="动态"></PanelButton>
-          </a-col>
-          <a-col  :span="12">
-            <PanelButton icon="#icon-yidongwenjianjia" title="邮件"></PanelButton>
-          </a-col>
-        </a-row>
-      </a-col>
-      <a-col  :span="3">
-        <a-row class="common-panel">
-<!--          <span class="status-text">专注中</span>-->
-          <PanelButton icon="#icon-tiaoduguanli" title="调整"></PanelButton>
-        </a-row>
-      </a-col>
+  <div class="bottom-panel" style="position: fixed;padding:10px;bottom:0;width: 100vw;text-align: center">
+    <div class="common-panel" style="display: inline-block">
+      <PanelButton icon="#icon-shezhi" title="设置"></PanelButton>
+
+      <PanelButton icon="#icon-yidongwenjianjia" :onClick="transFile" title="传文件"></PanelButton>
+    </div>
+    <div class="common-panel" style="display: inline-block">
+      <PanelButton icon="#icon-tiaoduguanli" title="调整"></PanelButton>
+      <PanelButton :onClick="setFullScreen" icon="#icon-daochu" title="全屏"></PanelButton>
+      <PanelButton icon="#icon-suoding" title="锁屏" :onClick="lock"></PanelButton>
+      <PanelButton icon="#icon-tuichu" title="电源"></PanelButton>
+    </div>
+<!--    <div style="display: inline-block">-->
+<!--      <a-row :gutter="10">-->
+<!--        <a-col :span="2">-->
+<!--          <a-row class="common-panel" style="width:5em">-->
+<!--            <PanelButton icon="#icon-shezhi" title="设置"></PanelButton>-->
+<!--          </a-row>-->
+<!--        </a-col>-->
+<!--        <a-col  :span="4" class="common-panel">-->
+<!--          <a-row>-->
+<!--            <a-col :span="12">-->
+<!--              <PanelButton icon="#icon-suoding" title="锁屏"></PanelButton>-->
+<!--            </a-col>-->
+<!--            <a-col  :span="12">-->
+<!--              <PanelButton icon="#icon-yidongwenjianjia" :onClick="transFile" title="传文件"></PanelButton>-->
+<!--            </a-col>-->
+<!--          </a-row>-->
+<!--        </a-col>-->
+<!--        <a-col  :span="4" class="common-panel">-->
+<!--          <a-row >-->
+<!--            <a-col  :span="12">-->
+<!--              <PanelButton icon="#icon-suoding" title="动态"></PanelButton>-->
+<!--            </a-col>-->
+<!--            <a-col  :span="12">-->
+<!--              <PanelButton icon="#icon-yidongwenjianjia" title="邮件"></PanelButton>-->
+<!--            </a-col>-->
+<!--          </a-row>-->
+<!--        </a-col>-->
+<!--        <a-col  :span="3">-->
+<!--          <a-row class="common-panel">-->
+<!--            &lt;!&ndash;          <span class="status-text">专注中</span>&ndash;&gt;-->
+<!--            <PanelButton icon="#icon-tiaoduguanli" title="调整"></PanelButton>-->
+<!--          </a-row>-->
+<!--        </a-col>-->
 
 
-<!--      <a-col  :span="2">-->
-<!--        <a-row class="common-panel" style="width:4em" >-->
-<!--          <a-col><PanelButton icon="#icon-xiaoxi" title="消息"></PanelButton></a-col>-->
-<!--&lt;!&ndash;          <a-col> <PanelButton icon="#icon-tishi-xianxing" title="通知"></PanelButton></a-col>&ndash;&gt;-->
-<!--        </a-row>-->
-<!--      </a-col>-->
-      <a-col  :span="4">
-        <a-row class="common-panel" style="width:10em" >
-          <a-col>
-            <PanelButton :onClick="setFullScreen" icon="#icon-daochu" title="全屏"></PanelButton>
-          </a-col>
-          <a-col>
-            <PanelButton icon="#icon-tuichu" title="电源"></PanelButton>
-          </a-col>
-        </a-row>
-      </a-col>
-    </a-row>
+<!--        &lt;!&ndash;      <a-col  :span="2">&ndash;&gt;-->
+<!--        &lt;!&ndash;        <a-row class="common-panel" style="width:4em" >&ndash;&gt;-->
+<!--        &lt;!&ndash;          <a-col><PanelButton icon="#icon-xiaoxi" title="消息"></PanelButton></a-col>&ndash;&gt;-->
+<!--        &lt;!&ndash;&lt;!&ndash;          <a-col> <PanelButton icon="#icon-tishi-xianxing" title="通知"></PanelButton></a-col>&ndash;&gt;&ndash;&gt;-->
+<!--        &lt;!&ndash;        </a-row>&ndash;&gt;-->
+<!--        &lt;!&ndash;      </a-col>&ndash;&gt;-->
+<!--        <a-col  :span="4">-->
+<!--          <a-row class="common-panel" style="width:10em" >-->
+<!--            <a-col>-->
+<!--              <PanelButton :onClick="setFullScreen" icon="#icon-daochu" title="全屏"></PanelButton>-->
+<!--            </a-col>-->
+<!--            <a-col>-->
+<!--              <PanelButton icon="#icon-tuichu" title="电源"></PanelButton>-->
+<!--            </a-col>-->
+<!--          </a-row>-->
+<!--        </a-col>-->
+<!--      </a-row>-->
+<!--    </div>-->
+
   </div>
   <div id="trans" v-show="visibleTrans" style="position:fixed;left: 0;top: 0;width: 100vw;height: 100vh;background: #2c2c2c">
     <a-button @click="visibleTrans=false" style="position:fixed;left: 10px;top: 10px">取消</a-button>
@@ -79,6 +88,9 @@ export default {
     }
   },
   methods:{
+    lock(){
+      this.$router.push({path:'/lock'})
+    },
     transFile(){
       //this.visibleTrans=true
       //document.getElementById('transFrame').src='https://szfilehelper.weixin.qq.com/'
@@ -110,4 +122,6 @@ export default {
   width: 6em;
   text-align: center;
 }
+
+
 </style>

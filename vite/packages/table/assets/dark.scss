@@ -1,9 +1,20 @@
 .dark{
-  .common-panel{
-    background: #282828;
+  .bottom-panel{
     .icon{
       fill: #797979;
     }
+    .item:hover .icon{
+      fill: #bbbbbb !important;
+    }
+  }
+  .side-panel{
+    .icon{
+      fill: #6e6e6e;
+    }
+  }
+  .common-panel{
+    background: #282828;
+
     .item{
       &:hover{
         background: #a6a6a6;
@@ -12,9 +23,7 @@
         }
       }
       &.active{
-        .icon{
-          fill: #333;
-        }
+
         background: #888888;
       }
       background: #1f1f1f;

@@ -5,7 +5,7 @@
       <SidePanel></SidePanel>
     </a-col>
     <a-col style="margin-left: 8em">
-      <vue-custom-scrollbar :settings="settings" style="position:relative;height: 30em;width:calc(100vw - 9em);  border-radius: 8px;">
+      <vue-custom-scrollbar :settings="settings" style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em)">
       <router-view></router-view>
       </vue-custom-scrollbar>
     </a-col>

@@ -28,7 +28,7 @@ body{
     cursor: pointer;
     padding: 10px;
     height: 4em;
-
+    display: inline-block;
     text-align: center;
     background: rgba(201, 201, 201, 0.5);
     border-radius: 6px;
@@ -53,7 +53,9 @@ body{
 .no-drag{
   -webkit-app-region:no-drag
 }
-
+.bottom-panel{
+  .item{}
+}
 
 .key-button{
   border: 1px solid #c1c1c1;

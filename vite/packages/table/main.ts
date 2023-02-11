@@ -10,7 +10,7 @@ const pinia = createPinia()
 import Icon from './components/Icon.vue'
 import PanelButton from './components/PanelButton.vue'
 import Home from './page/Home.vue'
-
+import Lock from './page/Lock.vue'
 
 const routes = [
   {
@@ -23,6 +23,12 @@ const routes = [
       }
     ]
   },
+  {
+    path:'/lock',
+    name:'lock',
+    component: Lock
+
+  }
 
 
 ]

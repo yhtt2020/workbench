@@ -10,9 +10,10 @@ class TableManager {
           alwaysOnTop: true,
           width: 960,
           height: 540,
+          minWidth:960,
+          minHeight:540,
           frame: false,
           backgroundColor: '#fff',
-
         },
         webPreferences: {
           webSecurity :false,
