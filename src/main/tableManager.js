@@ -126,11 +126,12 @@ app.whenReady().then(()=>{
         let _p = _dir + '/' + _file;
         //changes slashing for file paths
         let _path = _p.replace(/\\\\/g, "/");
+        let name=path.parse(_path).name
         if(_path.endsWith('.lnk')){
           _path=require('electron').shell.readShortcutLink(_path).target
         }
         filepaths.push({
-          name:path.parse(_path).name,
+          name:name,
           path:_path,
           ext:path.parse(_path).ext
         });

@@ -7,7 +7,7 @@
       <div @click="loadDeskIconApps" class="btn" style="font-size: 1.5em">导入桌面应用</div>
     </div>
     <div style="padding: 1em">
-      <div class="app" v-for="app in apps">
+      <div @click="open(app)" class="app" v-for="app in apps">
         <a-avatar :size="32" shape="square" :src="app.icon"></a-avatar><br>
         <div class="name">
           {{app.name}}
@@ -36,6 +36,9 @@ export default {
     }
   },
   methods:{
+    open(app){
+     require('electron').shell.openPath(app.path)
+   },
     ...mapActions(appStore,['addApps']),
     async loadDeskIconApps () {
       const desktopApps = await ipc.sendSync('getDeskApps')
@@ -68,7 +71,14 @@ export default {
   width: 5em;
   text-align: center;
   vertical-align: text-top;
-  margin-bottom: 1em;
+  padding: 0.5em;
+  margin: 0.5em;
+  cursor: pointer;
+  &:hover{
+    background: #969696;
+    border-radius: 4px;
+
+  }
   .name{
     font-size: 0.8em;
     word-break: break-all;
