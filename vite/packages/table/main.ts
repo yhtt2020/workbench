@@ -11,7 +11,8 @@ import Icon from './components/Icon.vue'
 import PanelButton from './components/PanelButton.vue'
 import Home from './page/Home.vue'
 import Lock from './page/Lock.vue'
-
+import Power from './page/Power.vue'
+import Apps from './page/Apps.vue'
 const routes = [
   {
     path:'',
@@ -20,6 +21,12 @@ const routes = [
     children:[
       {
         path:'',name:'home',component:Home,
+      },
+      {
+        path:'/apps',
+        name:'apps',
+        component: Apps
+
       }
     ]
   },
@@ -28,7 +35,14 @@ const routes = [
     name:'lock',
     component: Lock
 
-  }
+  },
+  {
+    path:'/power',
+    name:'power',
+    component: Power
+
+  },
+
 
 
 ]

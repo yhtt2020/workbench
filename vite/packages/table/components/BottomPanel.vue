@@ -8,8 +8,14 @@
     <div class="common-panel" style="display: inline-block">
       <PanelButton icon="#icon-tiaoduguanli" title="调整"></PanelButton>
       <PanelButton :onClick="setFullScreen" icon="#icon-daochu" title="全屏"></PanelButton>
+
+
+    </div>
+    <div class="common-panel" style="display: inline-block">
       <PanelButton icon="#icon-suoding" title="锁屏" :onClick="lock"></PanelButton>
-      <PanelButton icon="#icon-tuichu" title="电源"></PanelButton>
+    </div>
+    <div class="common-panel" style="display: inline-block">
+      <PanelButton :onClick="power" icon="#icon-tuichu" title="电源"></PanelButton>
     </div>
 <!--    <div style="display: inline-block">-->
 <!--      <a-row :gutter="10">-->
@@ -88,6 +94,9 @@ export default {
     }
   },
   methods:{
+    power(){
+      this.$router.push({path:'/power'})
+    },
     lock(){
       this.$router.push({path:'/lock'})
     },

@@ -19,6 +19,8 @@ const initSetting = { //存储用户的设置
 
 export const appStore = defineStore('appStore', {
   state: () => ({
+    apps:[],
+
 
     settings:{
       showButtonTitle:false,
@@ -31,7 +33,11 @@ export const appStore = defineStore('appStore', {
   },
 
   actions: {
-
+    addApps(apps){
+      console.log(apps)
+      this.apps=this.apps.concat(apps)
+      console.log(this.apps)
+    }
   }
 })
 

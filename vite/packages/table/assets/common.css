@@ -13,6 +13,10 @@
 
 .dark {
   color: #b7b7b7; }
+  .dark .key-button {
+    border: 1px solid #3a3a3a;
+    color: #8d8d8d;
+    background: linear-gradient(to right, #494949, #444444, #444444); }
   .dark .bottom-panel .icon {
     fill: #797979; }
   .dark .bottom-panel .item:hover .icon {
@@ -29,6 +33,8 @@
           fill: #333; }
       .dark .common-panel .item.active {
         background: #888888; }
+        .dark .common-panel .item.active .icon {
+          fill: #333; }
   .dark .card {
     background: #363738; }
   .dark .input-box {
@@ -89,5 +95,22 @@ body {
 
 body {
   user-select: none; }
+
+.main {
+  position: fixed;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0; }
+
+.btn {
+  cursor: pointer;
+  padding: 0.8em;
+  background: rgba(0, 0, 0, 0.3);
+  display: inline-block;
+  border-radius: 0.5em; }
+  .btn:hover {
+    background: rgba(0, 0, 0, 0.2);
+    color: white; }
 
 /*# sourceMappingURL=common.css.map */

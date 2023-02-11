@@ -1,4 +1,11 @@
 .dark{
+  .key-button{
+    border: 1px solid #3a3a3a;
+    color: #8d8d8d;
+    background: linear-gradient(to right, #494949, #444444, #444444);
+  }
+
+
   .bottom-panel{
     .icon{
       fill: #797979;
@@ -23,7 +30,9 @@
         }
       }
       &.active{
-
+        .icon{
+          fill: #333;
+        }
         background: #888888;
       }
       background: #1f1f1f;
