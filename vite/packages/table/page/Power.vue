@@ -1,11 +1,11 @@
 <template>
   <div class="main" style="text-align: center;padding-top: 3em">
     <BackBtn></BackBtn>
-    <div class="btn">关机</div>
-    <div class="btn">注销</div>
+    <div class="power-btn">关机</div>
+    <div class="power-btn">注销</div>
     <br/>
-    <div class="btn">重启</div>
-    <div class="btn">休眠</div>
+    <div class="power-btn">重启</div>
+    <div class="power-btn">休眠</div>
   </div>
 
 </template>
@@ -20,7 +20,7 @@ export default {
 </script>
 
 <style scoped>
-.btn{
+.power-btn{
   display: inline-block;
   border-radius: 100%;
   color: white;
