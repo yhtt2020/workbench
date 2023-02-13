@@ -10,7 +10,7 @@
       </a-col>
     </a-row>
     <a-row style="margin-top: 0.5em;text-align: center">
-      <div class="btn" @click="start"><Icon style="width:2em;height:2em;margin-right:10px;vertical-align: middle" icon="#icon-fanqie"></Icon>开始一个番茄</div>
+      <div class="btn" @click="start" style="font-size: 1.3em;font-weight: bold;margin-top: .4em;width: 12em"> 开始一个番茄</div>
     </a-row>
   </div>
 </template>

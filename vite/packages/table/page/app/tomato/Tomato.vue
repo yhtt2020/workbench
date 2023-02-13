@@ -2,22 +2,22 @@
   <BackBtn :onClick="this.goBack"></BackBtn>
   <a-row style="margin-left:5em ">
     <a-col :span="8">
-      <a-progress style="margin-top: 10em;" type="circle" :percent="rate" strokeColor="#666" strokeWidth="15"
-                  width="18em">
+      <a-progress style="margin-top: 8em;" type="circle" :percent="rate" strokeColor="#666" :strokeWidth="15"
+                  :width="250">
         <template #format="percent">
-          <span style="font-size: 3em">{{ status }}</span>
+          <span style="font-size: 1em">{{ status }}</span>
         </template>
       </a-progress>
     </a-col>
-    <a-col style="font-size: 3em;text-align: center;padding-top: 1.2em" :soan="16">
+    <a-col style="font-size: 3em;text-align: center;padding-top: 1em" :soan="16">
       <div>番茄钟</div>
-      <div style="font-size: 3em;font-weight: bold">
+      <div style="font-size: 2.8em;font-weight: bold">
         {{ displayNum(hours) }}:{{ displayNum(minutes) }}:{{ displayNum(seconds) }}
       </div>
-      <div style="font-size: 1.5em">
+      <div style="">
 
-        <Icon v-for="i in tomato" style="margin-right:10px;vertical-align: middle" icon="#icon-fanqie"></Icon>
-        <Icon v-for="i in target-tomato" style="margin-right:10px;vertical-align: middle;opacity: 0.3"
+        <Icon v-for="i in tomato" style="margin-right:10px;vertical-align: middle;font-size: 1.5em" icon="#icon-fanqie"></Icon>
+        <Icon v-for="i in target-tomato" style="margin-right:10px;vertical-align: middle;opacity: 0.3;font-size: 1em"
               icon="#icon-fanqie"></Icon>
       </div>
       <div style="margin-top: 1em">
@@ -111,7 +111,6 @@ export default {
   },
   methods: {
     goBack(){
-      console.log('go')
       let isPaused=false
       if(this.running){
         if(!this.timer){
@@ -170,7 +169,7 @@ export default {
       this.timer = null
     },
     getRate () {
-      return ((1 - (this.seconds + this.minutes * 60 + this.hours * 60 * 60) / (this.totalTime.seconds + this.totalTime.minutes * 60 + this.totalTime.hours * 60 * 60)) * 100).toFixed()
+      return Number(((1 - (this.seconds + this.minutes * 60 + this.hours * 60 * 60) / (this.totalTime.seconds + this.totalTime.minutes * 60 + this.totalTime.hours * 60 * 60)) * 100).toFixed())
     },
     pause () {
       if (this.timer === null) {

@@ -1,6 +1,6 @@
 <template>
-  <div class="back-btn">
-    <Icon icon="#icon-xiangzuo" @click="click" style="font-size: 4em"></Icon>
+  <div class="back-btn" @click="click">
+    <Icon icon="#icon-xiangzuo"  style="font-size: 4em"></Icon>
   </div>
 </template>
 
@@ -31,8 +31,8 @@ export default {
   position: fixed;
   left: 2em;
   top: 2em;
-
-
+  z-index: 999;
+  cursor: pointer;
   &:hover {
     background: rgba(0, 0, 0, 0.2);
     color: white;

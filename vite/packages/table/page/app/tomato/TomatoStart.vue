@@ -21,7 +21,7 @@ export default {
   },
   methods:{
     start(){
-      this.$router.push('/tomato')
+      this.$router.replace('/tomato')
     }
   }
 }
