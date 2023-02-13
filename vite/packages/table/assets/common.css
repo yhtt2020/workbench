@@ -1,3 +1,4 @@
+@import url(../../../node_modules/ant-design-vue/dist/antd.dark.css);
 .card {
   border-radius: 8px;
   background: rgba(183, 183, 183, 0.63);
@@ -10,6 +11,20 @@
     padding: 1em;
     border-radius: .3em;
     font-size: 1.2em; }
+
+.ant-modal-body {
+  font-size: 3em; }
+  .ant-modal-body svg {
+    font-size: 2em; }
+  .ant-modal-body .ant-modal-confirm-content {
+    font-size: 0.5em; }
+  .ant-modal-body .ant-btn {
+    font-size: 32px;
+    height: auto;
+    line-height: 1.5;
+    margin-right: 20px;
+    border-width: 3px;
+    border-radius: 4px; }
 
 .dark {
   color: #b7b7b7; }
@@ -103,6 +118,9 @@ body {
   left: 0;
   right: 0; }
 
+.btn.sm {
+  padding: 0.4em 0.8em; }
+
 .btn {
   cursor: pointer;
   padding: 0.8em;
@@ -110,6 +128,16 @@ body {
   display: inline-block;
   border-radius: 0.5em; }
   .btn:hover {
+    background: rgba(0, 0, 0, 0.2);
+    color: white; }
+
+.text-btn {
+  cursor: pointer;
+  padding: 0.8em;
+  background: rgba(0, 0, 0, 0.3);
+  display: inline-block;
+  border-radius: 0.5em; }
+  .text-btn:hover {
     background: rgba(0, 0, 0, 0.2);
     color: white; }
 

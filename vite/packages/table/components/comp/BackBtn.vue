@@ -14,6 +14,8 @@ export default {
     click(){
       if(!this.onClick){
         this.$router.go(-1)
+      }else{
+        this.onClick()
       }
     }
   }

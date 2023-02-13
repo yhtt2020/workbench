@@ -9,10 +9,16 @@ const app = createApp(App)
 const pinia = createPinia()
 import Icon from './components/Icon.vue'
 import PanelButton from './components/PanelButton.vue'
+import BackBtn from './components/comp/BackBtn.vue'
 import Home from './page/Home.vue'
 import Lock from './page/Lock.vue'
 import Power from './page/Power.vue'
 import Apps from './page/Apps.vue'
+
+
+//应用
+import TomatoStart from './page/app/tomato/TomatoStart.vue'
+import Tomato from './page/app/tomato/Tomato.vue'
 const routes = [
   {
     path:'',
@@ -42,7 +48,16 @@ const routes = [
     component: Power
 
   },
-
+  {
+    path:'/TomatoStart',
+    name:'tomatoStart',
+    component: TomatoStart
+  },
+  {
+    path:'/Tomato',
+    name:'tomato',
+    component: Tomato
+  }
 
 
 ]
@@ -53,5 +68,6 @@ const router = createRouter({
 app.use(pinia).use(Antd).use(router).mount('#app')
 app.component('Icon',Icon)
 app.component('PanelButton',PanelButton)
+app.component('BackBtn',BackBtn)
 export default router;
 

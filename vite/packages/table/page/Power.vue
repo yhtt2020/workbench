@@ -14,7 +14,7 @@
 import BackBtn from '../components/comp/BackBtn.vue'
 
 export default {
-  name: 'Poweroff',
+  name: 'Power',
   components: { BackBtn }
 }
 </script>

@@ -1,4 +1,5 @@
 @import "card";
+@import "reset";
 @import 'dark';
 body{
   overflow: hidden;
@@ -78,9 +79,22 @@ body{
   left: 0;
   right:0
 }
-
+.btn.sm{
+  padding: 0.4em 0.8em;
+}
 
 .btn{
+  cursor: pointer;
+  padding: 0.8em;
+  background: rgba(0, 0, 0, 0.3);
+  display: inline-block;
+  border-radius: 0.5em;
+  &:hover {
+    background: rgba(0, 0, 0, 0.2);
+    color: white;
+  }
+}
+.text-btn{
   cursor: pointer;
   padding: 0.8em;
   background: rgba(0, 0, 0, 0.3);
