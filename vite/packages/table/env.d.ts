@@ -5,4 +5,16 @@ declare module '*.vue' {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
   const component: DefineComponent<{}, {}, any>
   export default component
+
+
+
+}
+declare interface IDateTime{
+  year:number,
+  month:number,
+  day:number,
+  hours:number,
+  minutes:string
+  seconds:string,
+  week:string
 }

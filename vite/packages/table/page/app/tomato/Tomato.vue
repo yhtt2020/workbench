@@ -85,7 +85,7 @@ export default {
         minutes: 0,
         seconds: 0
       },
-      tick: 1000,
+      tick: 2,
       running: false,
     }
   },
