@@ -8,7 +8,7 @@
       <PanelButton :active="tab==='apps'" @click="goTab('apps')" icon="#icon-yingyongzhongxin" title="应用"></PanelButton>
     </li>
     <li>
-      <PanelButton :active="tab==='music'" iconStyle="width:2.5em;height:2.5em;margin-top:-0.4em;" icon="#icon-yinle1" title="音乐"></PanelButton>
+      <PanelButton :active="tab==='music'"  @click="goTab('music')" iconStyle="width:2.5em;height:2.5em;margin-top:-0.4em;" icon="#icon-yinle1" title="音乐"></PanelButton>
     </li>
     <li>
       <PanelButton :active="tab==='todo'" icon="#icon-daibanshixiang" title="待办"></PanelButton>

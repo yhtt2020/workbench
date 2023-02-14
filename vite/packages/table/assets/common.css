@@ -141,4 +141,7 @@ body {
     background: rgba(0, 0, 0, 0.2);
     color: white; }
 
+.pointer {
+  cursor: pointer; }
+
 /*# sourceMappingURL=common.css.map */

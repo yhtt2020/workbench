@@ -16,7 +16,7 @@ import Lock from './page/Lock.vue'
 import Power from './page/Power.vue'
 import Apps from './page/Apps.vue'
 import AppFrame from './page/AppFrame.vue'
-
+import Music from './page/Music.vue'
 //应用
 import TomatoStart from './page/app/tomato/TomatoStart.vue'
 import Tomato from './page/app/tomato/Tomato.vue'
@@ -35,7 +35,13 @@ const routes = [
         name: 'apps',
         component: Apps
 
-      }
+      },
+      {
+        path: '/music',
+        name: 'music',
+        component: Music
+
+      },
     ]
   },
   {
@@ -44,6 +50,7 @@ const routes = [
     component: Lock
 
   },
+
   {
     path: '/power',
     name: 'power',

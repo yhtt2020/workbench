@@ -1,7 +1,7 @@
 <template>
   <div class="card" >
     <div class="title"><Icon icon="#icon-yinle1" style="height: 1.3em;width: 1.3em;margin-right: 0.1em"></Icon> 个性电台</div>
-    <div style="text-align: center;padding:3em">
+    <div @click="enterMusic" class="pointer" style="text-align: center;padding:3em">
       <a-avatar :size="100" src="http://p2.music.126.net/34jpb4Gan4mBzF6h9gWdUQ==/109951167921090656.jpg?param=140y140"></a-avatar>
     </div>
     <a-row :gutter="10">
@@ -23,7 +23,21 @@
 
 <script>
 export default {
-  name: 'Music'
+  name: 'Music',
+  methods:{
+    enterMusic(){
+      this.$router.push({
+        name:'app',
+        params:{
+          theme:'#242424',
+          name:'wyyMusic',
+          url:'https://music.163.com',
+          preload:'wyyMusic',
+          background:true,
+        }
+      })
+    }
+  }
 }
 </script>
 

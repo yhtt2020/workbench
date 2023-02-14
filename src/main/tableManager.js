@@ -3,7 +3,7 @@ let { app ,ipcMain:ipc} = require('electron')
 const path = require('path')
 
 class TableManager {
-
+  window
   async init () {
     if (global.tableWin === null) {
       tableWin = await windowManager.create({
@@ -39,6 +39,8 @@ class TableManager {
         }
         c({cancel:false,responseHeaders:d.responseHeaders})
       })
+      this.window=tableWin.window
+      console.log(this.window)
       tableWin.window.webContents.loadURL(render.getUrl('table.html'))
       tableWin.window.on('close', () => globalSearch = null)
 
@@ -50,11 +52,13 @@ class TableManager {
         tableWin.window.focus()
       }
     }
+
   }
 }
 
 app.whenReady().then(()=>{
   let transWin=null
+
   ipc.on('transFile',async () => {
     if (transWin === null) {
       tansWin = await windowManager.create({
@@ -153,6 +157,10 @@ app.whenReady().then(()=>{
       })
     }
     e.returnValue=apps
+  })
+
+  ipc.on('updateMusicStatus',(event,args)=>{
+    tableManager.window.webContents.send('updateMusicStatus',args)
   })
 })
 

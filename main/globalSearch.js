@@ -82,17 +82,21 @@ const globalSearchMod = {
     })
   }
 }
-
+const TableManager = require('./src/main/tableManager.js')
+const TableAppManager = require('./src/main/tableAppManager.js')
+global.tableManager = new TableManager()
 app.whenReady().then(() => {
-  const TableManager=require('./src/main/tableManager.js')
-  console.log('before初始化table')
-  global.tableManager= new TableManager()
-  console.log('初始化table')
-  globalShortcut.register('alt+space',()=>{
-    console.log('触发快捷键')
-    tableManager.init()
-  })
 
+  console.log('before初始化table')
+
+  console.log('初始化table')
+  globalShortcut.register('alt+space', async () => {
+    console.log('触发快捷键')
+    await tableManager.init()
+    global.tableAppManager =new TableAppManager()
+    console.log(tableManager,'tablemanager')
+    global.tableAppManager.setTableWin(tableManager.window)
+  })
 
   // Register a 'CommandOrControl+X' shortcut listener.
   const keyMap = settings.get('keyMap')
@@ -140,5 +144,19 @@ app.whenReady().then(() => {
 
   ipc.on('closeGlobalSearch', () => {
     globalSearch.hide()
+  })
+
+
+
+  ipc.on('executeTableApp', async (event, args) => {
+    console.log('接收到启动应用的请求')
+    let appInstance = await tableAppManager.executeApp({ app: args.app, position: args.position })
+  })
+
+  ipc.on('closeTableApp',(event,args)=>{
+    tableAppManager.closeApp(tableAppManager.getName(args.app.name))
+  })
+  ipc.on('hideTableApp',(event,args)=>{
+    tableAppManager.hideApp(tableAppManager.getName(args.app.name))
   })
 })
