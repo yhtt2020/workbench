@@ -95,7 +95,7 @@ export default {
           summary: '开源壁纸轻应用，可以将wallheaven上的壁纸设置为桌面壁纸或者工作台壁纸。',
           needInstall: false,
           data: {
-            theme: '#242424',
+            theme: '#030c13',
             name: 'wallpapaer',
             url: 'https://a.apps.vip/wallpaper',
             preload: 'wallpaper',
