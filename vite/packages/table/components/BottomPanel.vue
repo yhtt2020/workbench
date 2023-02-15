@@ -6,7 +6,7 @@
       <PanelButton icon="#icon-yidongwenjianjia" :onClick="transFile" title="传文件"></PanelButton>
     </div>
     <div class="common-panel" style="display: inline-block">
-      <PanelButton icon="#icon-tiaoduguanli" title="调整"></PanelButton>
+      <PanelButton :onClick="openStatus" icon="#icon-tiaoduguanli" title="调整"></PanelButton>
       <PanelButton :onClick="setFullScreen" icon="#icon-daochu" title="全屏"></PanelButton>
 
 
@@ -94,6 +94,13 @@ export default {
     }
   },
   methods:{
+    openStatus(){
+      if(this.$route.path==='/status'){
+        this.$router.go(-1)
+      }else{
+        this.$router.push({path:'/status'})
+      }
+    },
     power(){
       this.$router.push({path:'/power'})
     },

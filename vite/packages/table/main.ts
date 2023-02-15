@@ -17,6 +17,7 @@ import Power from './page/Power.vue'
 import Apps from './page/Apps.vue'
 import AppFrame from './page/AppFrame.vue'
 import Music from './page/Music.vue'
+import Status from './page/Status.vue'
 //应用
 import TomatoStart from './page/app/tomato/TomatoStart.vue'
 import Tomato from './page/app/tomato/Tomato.vue'
@@ -41,7 +42,11 @@ const routes = [
         name: 'music',
         component: Music
 
-      },
+      },{
+        path:'/status',
+        name:'status',
+        component: Status
+      }
     ]
   },
   {
