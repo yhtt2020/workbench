@@ -95,6 +95,12 @@ class TableAppManager {
       return instance.name===name
     })
   }
+  send(name,channel,args){
+    let appInstance=this.get(this.getName(name))
+    if(appInstance){
+      appInstance.view.webContents.send(channel,args)
+    }
+  }
 }
 
 module.exports = TableAppManager

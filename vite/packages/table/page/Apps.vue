@@ -81,7 +81,7 @@ export default {
       dropFiles: [],
       storeApps: [
         {
-          icon: '',
+          icon: 'https://a.apps.vip/icons/ppet.png',
           name: 'PPet桌面宠物',
           summary: '一款开源桌面看板娘，让你不再孤单。',
           needInstall: true,
@@ -91,7 +91,7 @@ export default {
         },
         {
           icon: 'https://a.apps.vip/wallpaper/favicon.png',
-          name: '壁纸',
+          name: 'OneWallheaven壁纸',
           summary: '开源壁纸轻应用，可以将wallheaven上的壁纸设置为桌面壁纸或者工作台壁纸。',
           needInstall: false,
           data: {

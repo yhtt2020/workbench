@@ -144,4 +144,31 @@ body {
 .pointer {
   cursor: pointer; }
 
+.playing {
+  animation: rotate 30s linear infinite;
+  -webkit-animation: rotate 30s linear infinite; }
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0); }
+  25% {
+    transform: rotate(90deg); }
+  50% {
+    transform: rotate(180deg); }
+  75% {
+    transform: rotate(270deg); }
+  100% {
+    transform: rotate(360deg); } }
+@-webkit-keyframes rotate {
+  0% {
+    transform: rotate(0); }
+  25% {
+    transform: rotate(90deg); }
+  50% {
+    transform: rotate(180deg); }
+  75% {
+    transform: rotate(270deg); }
+  100% {
+    transform: rotate(360deg); } }
+
 /*# sourceMappingURL=common.css.map */

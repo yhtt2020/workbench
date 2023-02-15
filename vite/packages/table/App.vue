@@ -21,9 +21,10 @@ export default {
     if(this.settings.darkMod){
       document.body.style.background='rgb(50,50,50)'
     }
+
   },
   computed:{
-    ...mapWritableState(appStore,['settings'])
+    ...mapWritableState(appStore,['settings','routeUpdateTime'])
   },
   methods:{
     ...mapActions(appStore,[]),

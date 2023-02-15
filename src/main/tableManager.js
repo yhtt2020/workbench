@@ -162,6 +162,10 @@ app.whenReady().then(()=>{
   ipc.on('updateMusicStatus',(event,args)=>{
     tableManager.window.webContents.send('updateMusicStatus',args)
   })
+
+  ipc.on('wyyAction',(event,args)=>{
+    global.tableAppManager.send('wyyMusic','wyyAction',args)
+  })
 })
 
 module.exports = TableManager

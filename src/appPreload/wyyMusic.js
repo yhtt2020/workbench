@@ -1,17 +1,39 @@
 let $ = require('cash-dom')
 let fs = require('fs')
-
 function frame () {
   insertCss(fs.readFileSync(__dirname + '/css/wyyFrame.css'))
+  $('.m-nav li ').eq(3).remove()
+  $('.icn.icn-share').remove()
+
+  require('electron').ipcRenderer.on('wyyAction',(event,args)=>{
+    switch (args.action){
+      case 'play':
+        //播放
+        $('.g-btmbar .btns .ply')[0].click()
+        break
+      case 'next':
+        $('.g-btmbar .btns .nxt')[0].click()
+        break
+      case 'prev':
+        $('.g-btmbar .btns .prv')[0].click()
+        break
+      case 'pause':
+        $('.g-btmbar .btns .ply')[0].click()
+        break
+    }
+  })
   setInterval(() => {
     //console.log('回报数据')
     let cover = $('.head.j-flag img').eq(0).attr('src')
     let title = $('.m-playbar .words .name').eq(0).text()
     let singer = $('.m-playbar .words .by a').eq(0).text()
     let progress = $('.m-pbar .time em').eq(0).text()
+
     let total = $('.m-pbar .time').eq(0).text().split('/')[1]
     let word = $('.m-playbar .listlyric p.z-sel').eq(0).text()
+    let playing=$('[data-action=pause]').length>0
     require('electron').ipcRenderer.send('updateMusicStatus', {
+      playing,
       cover,
       title,
       singer,
@@ -19,7 +41,6 @@ function frame () {
       total,
       word
     })
-
   }, 1000)
 
 }

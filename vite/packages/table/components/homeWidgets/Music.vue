@@ -1,8 +1,8 @@
 <template>
   <div class="card" >
-    <div class="title"><Icon icon="#icon-yinle1" style="height: 1.3em;width: 1.3em;margin-right: 0.1em"></Icon> 个性电台</div>
+    <div class="title"><Icon icon="#icon-yinle1" style="height: 1.3em;width: 1.3em;margin-right: 0.1em"></Icon> 网易云音乐</div>
     <div @click="enterMusic" class="pointer" style="text-align: center;padding:3em">
-      <a-avatar :size="100" src="http://p2.music.126.net/34jpb4Gan4mBzF6h9gWdUQ==/109951167921090656.jpg?param=140y140"></a-avatar>
+      <a-avatar :size="100" :class="{'playing':status.music.playing}" style="border:3px solid #999"  :src="status.music.cover || 'https://a.apps.vip/icons/wyy.png'"></a-avatar>
     </div>
     <a-row :gutter="10">
       <a-col :span="12">
@@ -22,8 +22,14 @@
 </template>
 
 <script>
+import { appStore } from '../../store'
+import {mapWritableState} from 'pinia'
+
 export default {
   name: 'Music',
+  computed:{
+    ...mapWritableState(appStore,['status'])
+  },
   methods:{
     enterMusic(){
       this.$router.push({
