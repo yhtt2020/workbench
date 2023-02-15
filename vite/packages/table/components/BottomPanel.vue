@@ -108,7 +108,7 @@ export default {
       this.$router.push({
         name:'app',
         params:{
-          theme:'#242424',
+          theme:'#2c2c2c',
           name:'fileHelper',
           url:'https://szfilehelper.weixin.qq.com/',
           preload:'fileHelper',
