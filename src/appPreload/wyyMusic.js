@@ -20,6 +20,10 @@ function frame () {
       case 'pause':
         $('.g-btmbar .btns .ply')[0].click()
         break
+      case 'prompt':
+        if(!$('.listlyric')[0]){
+          $('[data-action=panel]')[0].click()
+        }
     }
   })
   setInterval(() => {
@@ -32,6 +36,12 @@ function frame () {
     let total = $('.m-pbar .time').eq(0).text().split('/')[1]
     let word = $('.m-playbar .listlyric p.z-sel').eq(0).text()
     let playing=$('[data-action=pause]').length>0
+    let prompt=$('.listlyric').html()
+    let scrollTop=0
+    if($('.listlyric')[0]){
+      scrollTop=$('.listlyric')[0].scrollTop
+    }
+
     require('electron').ipcRenderer.send('updateMusicStatus', {
       playing,
       cover,
@@ -39,7 +49,9 @@ function frame () {
       singer,
       progress,
       total,
-      word
+      word,
+      prompt,
+      scrollTop
     })
   }, 1000)
 
