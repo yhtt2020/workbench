@@ -29,6 +29,9 @@ export const appStore = defineStore('appStore', {
   },
 
   actions: {
+    save(){
+
+    },
     addApps(apps){
       console.log(apps)
       this.apps=this.apps.concat(apps)

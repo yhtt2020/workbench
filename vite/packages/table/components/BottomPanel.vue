@@ -131,7 +131,9 @@ export default {
   }
 }
 </script>
+<style>
 
+</style>
 <style scoped>
 
 .status-text {
@@ -141,6 +143,8 @@ export default {
   width: 6em;
   text-align: center;
 }
-
+.bottom-panel .common-panel{
+  padding: 0.2em 1em 0.2em 1em !important;
+}
 
 </style>

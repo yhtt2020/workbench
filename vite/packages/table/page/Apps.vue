@@ -19,11 +19,11 @@
     </div>
   </div>
   <div class="app-content" v-if="currentIndex==='qing'">
-    轻应用
+
   </div>
   <div class="app-content" v-if="currentIndex==='store'" style="padding:2em">
     <div v-for="app in storeApps"
-         style="display: inline-block;width:560px;height: 130px;padding: 20px;margin-right:10px;margin-bottom:10px;background: #262626;border-radius: 10px">
+         style="display: inline-block;width:560px;height: 130px;padding: 20px;margin-right:10px;margin-bottom:10px;background: #313131;border-radius: 10px">
       <a-row :gutter="20">
         <a-col :span="4">
           <a-avatar shape="square" :src="app.icon" style="margin-top: 10px" :size="80">
