@@ -1,17 +1,19 @@
 <template>
-  <div >
+  <div>
     <div style="text-align: center;margin-left: -7em">
 
-    <div v-if="tab==='player'">
-      <a-avatar :class="{'playing':status.music.playing}" :size="120" :src="status.music.cover"
-                style="margin: 20px;border: 3px solid #6b6b6b"></a-avatar>
-      <div style="font-size: 2.2em">{{ status.music.title }}</div>
-      <div style="font-size: 1.1em;color: #7c7c7c" class="singer">
-        {{ status.music.singer }}
+      <div v-if="tab==='player'">
+        <a-avatar :class="{'playing':status.music.playing}" :size="120" :src="status.music.cover"
+                  style="margin: 20px;border: 3px solid #6b6b6b"></a-avatar>
+        <div style="font-size: 2.2em">{{ status.music.title }}</div>
+        <div style="font-size: 1.1em;color: #7c7c7c" class="singer">
+          {{ status.music.singer }}
+        </div>
       </div>
-    </div>
-      <div  v-show="tab==='prompt'">
-        <div >  <div v-html="prompt"   id="prompt" class="listlyric j-flag"></div></div>
+      <div v-show="tab==='prompt'">
+        <div>
+          <div v-html="prompt" id="prompt" class="listlyric j-flag"></div>
+        </div>
 
       </div>
       <div v-show="tab==='player'" style="width: 400px;margin: auto" class="player">
@@ -20,7 +22,7 @@
       <div style="font-size: 2em">
         {{ status.music.progress }} / {{ status.music.total }}
       </div>
-      <div  :style="{zoom:tab==='player'?1:0.5}" style="text-align: center;margin-top: 2em">
+      <div :style="{zoom:tab==='player'?1:0.5}" style="text-align: center;margin-top: 2em">
         <div style="width: 250px;margin: auto">
           <a-row>
             <a-col @click="doAction('prev')" :span="8" style="padding-top: 1em">
@@ -66,16 +68,16 @@ export default {
     ...mapWritableState(appStore, ['apps', 'status'])
   },
   mounted () {
-    if(this.status.music.notInit){
+    if (this.status.music.notInit) {
 
     }
     window.updateMusicStatusHandler = this.updateStatus
   },
   data () {
     return {
-      scrollTop:0,
-      prompt:'',
-      tab:'player',
+      scrollTop: 0,
+      prompt: '',
+      tab: 'player',
       currentIndex: 'my',
       menus: [{
         title: '我的应用',
@@ -94,11 +96,11 @@ export default {
     }
   },
   methods: {
-    showPrompt(){
-      if(this.tab==='prompt'){
-        this.tab='player'
-      }else{
-        this.tab='prompt'
+    showPrompt () {
+      if (this.tab === 'prompt') {
+        this.tab = 'player'
+      } else {
+        this.tab = 'prompt'
         this.doAction('prompt')
       }
 
@@ -110,10 +112,12 @@ export default {
     updateStatus (status) {
       this.status.music = status
       this.status.music.cover = status.cover.replace('34y34', '120y120')//修正封面
-      this.prompt=status.prompt
-      this.scrollTop=status.scrollTop
+      this.prompt = status.prompt
+      this.scrollTop = status.scrollTop
       //document.getElementById('prompt').scrollTop=this.scrollTop
-      console.log(document.getElementById('prompt').scrollTop=this.scrollTop)
+      if (document.getElementById('prompt')) {
+        document.getElementById('prompt').scrollTop = this.scrollTop
+      }
       this.getPercent()
     },
     getPercent () {
@@ -175,6 +179,7 @@ export default {
   width: 20px;
   height: 20px;
 }
+
 .z-sel {
   color: #fff !important;
   font-size: 14px !important;
@@ -183,6 +188,7 @@ export default {
   -o-transition: color 0.7s linear;
   transition: color 0.7s linear;
 }
+
 .listlyric p {
   color: #989898;
   word-wrap: break-word;
@@ -238,7 +244,7 @@ export default {
   }
 }
 
-.listlyric{
+.listlyric {
   text-align: center;
   zoom: 1.4;
   top: 0;

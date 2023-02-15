@@ -1,10 +1,10 @@
 <template>
   <div class="main" style="text-align: center;padding-top: 3em">
     <BackBtn></BackBtn>
-    <div class="power-btn">关机</div>
+    <div @click="shutdown" class="power-btn">关机</div>
     <div class="power-btn">注销</div>
     <br/>
-    <div class="power-btn">重启</div>
+    <div @click="reboot" class="power-btn">重启</div>
     <div class="power-btn">休眠</div>
   </div>
 
@@ -12,10 +12,45 @@
 
 <script>
 import BackBtn from '../components/comp/BackBtn.vue'
-
+import {Modal,message} from 'ant-design-vue'
+const execShell=require('child_process').exec
 export default {
   name: 'Power',
-  components: { BackBtn }
+  components: { BackBtn },
+  methods:{
+    shutdown(){
+      Modal.confirm({
+        content:'关闭系统？请保存文件后确认。',
+        onOk(){
+          let shell='shutdown -s -t 00'
+          if(require('os').platform()!='win32'){
+            shell='shutdown now'
+          }
+          let command=execShell(shell, (err,stdout,stderr)=>{
+            if(err||stderr){
+              message.error('关机失败，请确认软件权限。')
+            }
+          })
+        }
+      })
+    },
+    reboot(){
+      Modal.confirm({
+        content:'重启系统？请保存文件后确认。',
+        onOk(){
+          let shell='shutdown -r -t 0'
+          if(require('os').platform()!='win32'){
+            shell='shutdown -r now'
+          }
+          let command=execShell(shell, (err,stdout,stderr)=>{
+            if(err||stderr){
+              message.error('重启失败，请确认软件权限。')
+            }
+          })
+        }
+      })
+    }
+  }
 }
 </script>
 
