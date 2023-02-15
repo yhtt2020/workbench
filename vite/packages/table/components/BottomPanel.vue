@@ -105,6 +105,16 @@ export default {
       //document.getElementById('transFrame').src='https://szfilehelper.weixin.qq.com/'
       // console.log('发送消息')
      ipc.send('executeAppByPackage',{package:'com.thisky.fileHelper'})
+      this.$router.push({
+        name:'app',
+        params:{
+          theme:'#242424',
+          name:'fileHelper',
+          url:'https://szfilehelper.weixin.qq.com/',
+          preload:'fileHelper',
+          background:false,
+        }
+      })
 
     },
     async setFullScreen () {
