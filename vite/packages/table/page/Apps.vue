@@ -6,7 +6,7 @@
       将应用拖放到此处，即可用于快捷启动
     </div>
     <div v-if="apps.length===0" style="text-align: center">
-      <div @click="loadDeskIconApps" class="btn" style="font-size: 1.5em">导入桌面应用</div>
+      <div @click="loadDeskIconApps" class="btn" style="font-size: 1.5em;width: 8em">导入桌面应用</div>
     </div>
     <div style="padding: 1em">
       <div @click="open(app)" class="app" v-for="app in apps">
@@ -20,6 +20,31 @@
   </div>
   <div class="app-content" v-if="currentIndex==='qing'">
     轻应用
+  </div>
+  <div class="app-content" v-if="currentIndex==='store'" style="padding:2em">
+    <div v-for="app in storeApps"
+         style="display: inline-block;width:560px;height: 130px;padding: 20px;margin-right:10px;margin-bottom:10px;background: #262626;border-radius: 10px">
+      <a-row :gutter="20">
+        <a-col :span="4">
+          <a-avatar shape="square" :src="app.icon" style="margin-top: 10px" :size="80">
+          </a-avatar>
+        </a-col>
+        <a-col :span="14">
+          <div class="app-name">{{ app.name }}</div>
+          <div class="app-summary">
+            {{ app.summary }}
+          </div>
+        </a-col>
+        <a-col :span="6">
+          <div v-if="app.needInstall" class="btn">
+            安装
+          </div>
+          <div @click="executeApp(app.data)" v-else class="btn">
+            打开
+          </div>
+        </a-col>
+      </a-row>
+    </div>
   </div>
 </template>
 
@@ -53,10 +78,42 @@ export default {
         }
       ],
       desktopApps: [],
-      dropFiles: []
+      dropFiles: [],
+      storeApps: [
+        {
+          icon: '',
+          name: 'PPet桌面宠物',
+          summary: '一款开源桌面看板娘，让你不再孤单。',
+          needInstall: true,
+          data: {
+            security: true
+          }
+        },
+        {
+          icon: 'https://a.apps.vip/wallpaper/favicon.png',
+          name: '壁纸',
+          summary: '开源壁纸轻应用，可以将wallheaven上的壁纸设置为桌面壁纸或者工作台壁纸。',
+          needInstall: false,
+          data: {
+            theme: '#242424',
+            name: 'wallpapaer',
+            url: 'https://a.apps.vip/wallpaper',
+            preload: 'wallpaper',
+            background: true,
+            node: true,
+            security: false
+          }
+        }
+      ]
     }
   },
   methods: {
+    executeApp (appData) {
+      this.$router.push({
+        name: 'app',
+        params: appData
+      })
+    },
     open (app) {
       require('electron').shell.openPath(app.path)
     },
@@ -70,7 +127,7 @@ export default {
 
     },
     changeTab (data) {
-      console.log(data,'data')
+      console.log(data, 'data')
       this.currentIndex = data.index
     },
     async drop (e) {
@@ -117,5 +174,24 @@ export default {
     font-size: 0.8em;
     word-break: break-all;
   }
+}
+
+.app-name {
+  font-size: 1.3em;
+  font-weight: bold;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+
+}
+
+.btn {
+  width: 6em;
+  text-align: center;
+  background: #575757;
+  font-size: 1.2em;
+}
+
+.app-summary {
+  font-size: 1.1em;
 }
 </style>

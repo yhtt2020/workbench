@@ -44,13 +44,7 @@ export default {
     }
     let args = {
       position,
-      app:
-        {
-          theme: app.theme,
-          name: app.name,
-          url: app.url,
-          preload: app.preload,
-        }
+      app
     }
     this.app = app
     ipc.send('executeTableApp', args)

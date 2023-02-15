@@ -21,12 +21,16 @@ class TableAppManager {
     if(appInstance){
       //已经运行了
     }else{
+      console.log(app)
       appInstance = await global.windowManager.createView({
         name: this.getName(app.name),
         webPreferences: {
           preload:___dirname + '/src/appPreload/' + app.preload + '.js',
           sandbox: false,
-          partition:'persist:webcontent'
+          partition:'persist:webcontent',
+          nodeIntegration:app.node==='true',
+          webSecurity:app.webSecurity==='true',
+          contextIsolation:app.node!=='true',
         },
         url:app.url
       })
