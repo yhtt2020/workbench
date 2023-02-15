@@ -10,6 +10,7 @@ class TableManager {
         windowOption: {
           alwaysOnTop: true,
           width: 960,
+          minimizable: false,
           height: 540,
           minWidth:960,
           minHeight:540,
