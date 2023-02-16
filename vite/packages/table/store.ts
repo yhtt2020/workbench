@@ -9,6 +9,7 @@ export const appStore = defineStore('appStore', {
   state: () => ({
     apps:[],
 
+    fullScreen:false,//是否是全屏模式
 
     settings:{
       showButtonTitle:false,

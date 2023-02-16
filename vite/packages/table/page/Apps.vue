@@ -155,6 +155,7 @@ export default {
           summary: '快速创建和管理你的待办。',
           needInstall: false,
           data: {
+            fullScreen:false,
             theme: '#2e3238',
             name: 'todo',
             url: 'https://a.apps.vip/todo',

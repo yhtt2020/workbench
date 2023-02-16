@@ -10,7 +10,7 @@
         </div>
       </a-col>
       <a-col :span="12" style="text-align: center;line-height: 3">
-<!--        <span style="font-size: 1.2em">您可以通过按下esc键隐藏/显示外框。</span>-->
+        <!--        <span style="font-size: 1.2em">您可以通过按下esc键隐藏/显示外框。</span>-->
       </a-col>
       <a-col :span="6" style="text-align: right">
         <div class="app-btn no-drag">
@@ -22,39 +22,70 @@
       </a-col>
     </a-row>
   </div>
-  <div id="frame" :style="{background:app.theme||'#424242'}" style="height: calc(100vh - 4em)">
+  <div v-if="fullScreen" id="frame" :style="{background:app.theme||'#424242'}" style="height: calc(100vh - 4em)">
+
+  </div>
+  <div v-else id="frame" :style="{background:app.theme||'#424242'}" style="height: calc(100vh - 15em)">
 
   </div>
 </template>
 
 <script>
+import { appStore } from '../store'
+import {mapWritableState} from 'pinia'
+
 export default {
   name: 'AppFrame',
   data () {
     return { app: {} }
   },
+  computed:{
+    ...mapWritableState(appStore,['fullScreen'])
+  },
   mounted () {
     let app = this.$route.params
-    let frame = document.getElementById('frame')
-    let position = {
-      x: frame.offsetLeft,
-      y: frame.offsetTop,
-      width: frame.offsetWidth,
-      height: frame.offsetHeight
+
+    if (typeof app.fullScreen === 'undefined') {
+      app.fullScreen = true //默认全屏
+    } else {
+      app.fullScreen = !(app.fullScreen === 'false')
     }
-    let args = {
-      position,
-      app
+    if(app.fullScreen){
+      this.fullScreen=app.fullScreen
     }
-    this.app = app
-    ipc.send('executeTableApp', args)
-  }, methods: {
-    goBack () {
+    this.$nextTick(()=>{
+      let frame = document.getElementById('frame')
+      let position = {
+        x: Number(frame.getBoundingClientRect().x.toFixed(0)),
+        y: Number(frame.getBoundingClientRect().y.toFixed(0)),
+        width: frame.offsetWidth,
+        height: frame.offsetHeight
+      }
+      let args = {
+        position,
+        app
+      }
+      this.app = app
+      ipc.send('executeTableApp', args)
+    })
+    setTimeout(() => {
+
+    }, 500)
+  },
+  beforeUnmount () {
+    this.handleLeave()
+  },
+  methods: {
+    handleLeave () {
       if (this.app.background) {
         ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.app)) })
       } else {
         ipc.send('closeTableApp', { app: JSON.parse(JSON.stringify(this.app)) })
       }
+     this.fullScreen=false
+    },
+    goBack () {
+
       this.$router.go(-1)
     }
   }

@@ -32,6 +32,11 @@ const routes = [
         path: '', name: 'home', component: Home,
       },
       {
+        path: '/app',
+        name: 'app',
+        component: AppFrame
+      },
+      {
         path: '/apps',
         name: 'apps',
         component: Apps
@@ -71,11 +76,7 @@ const routes = [
     path: '/Tomato',
     name: 'tomato',
     component: Tomato
-  }, {
-    path: '/app',
-    name: 'app',
-    component: AppFrame
-  }
+  },
 
 
 ]

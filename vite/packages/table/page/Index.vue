@@ -1,16 +1,22 @@
 <template>
-  <TopPanel></TopPanel>
-  <a-row>
-    <a-col>
-      <SidePanel></SidePanel>
-    </a-col>
-    <a-col style="padding-left: 8em">
-      <vue-custom-scrollbar :settings="settings" :key="routeUpdateTime" style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em)">
-      <router-view></router-view>
-      </vue-custom-scrollbar>
-    </a-col>
-  </a-row>
-  <BottomPanel></BottomPanel>
+  <template v-if="!fullScreen">
+    <TopPanel></TopPanel>
+    <a-row>
+      <a-col>
+        <SidePanel></SidePanel>
+      </a-col>
+      <a-col style="padding-left: 8em">
+        <vue-custom-scrollbar :settings="settings" :key="routeUpdateTime" style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em)">
+          <router-view></router-view>
+        </vue-custom-scrollbar>
+      </a-col>
+    </a-row>
+    <BottomPanel></BottomPanel>
+  </template>
+  <template v-else>
+    <router-view></router-view>
+  </template>
+
 </template>
 
 <script>
@@ -30,7 +36,7 @@ export default {
     })
   },
   computed:{
-    ...mapWritableState(appStore,['routeUpdateTime'])
+    ...mapWritableState(appStore,['routeUpdateTime','fullScreen'])
   },
   data(){
     return {
