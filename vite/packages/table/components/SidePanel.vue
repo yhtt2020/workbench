@@ -5,13 +5,16 @@
       <PanelButton :active="tab==='home'" @click="goTab('','home')" icon="#icon-shouye1" title="主页"></PanelButton>
     </li>
     <li>
-      <PanelButton :active="tab==='apps'" @click="goTab('apps')" icon="#icon-yingyongzhongxin" title="应用"></PanelButton>
+      <PanelButton :active="tab==='apps'" @click="goTab('apps')" icon="#icon-yingyongzhongxin"
+                   title="应用"></PanelButton>
     </li>
     <li>
-      <PanelButton :active="tab==='music'"  @click="goTab('music')" iconStyle="width:2.5em;height:2.5em;margin-top:-0.4em;" icon="#icon-yinle1" title="音乐"></PanelButton>
+      <PanelButton :active="tab==='music'" @click="goTab('music')"
+                   iconStyle="width:2.5em;height:2.5em;margin-top:-0.4em;" icon="#icon-yinle1"
+                   title="音乐"></PanelButton>
     </li>
     <li>
-      <PanelButton :active="tab==='todo'" icon="#icon-daibanshixiang" title="待办"></PanelButton>
+      <PanelButton :active="tab==='todo'" @click="goApp" icon="#icon-daibanshixiang" title="待办"></PanelButton>
     </li>
     <li>
       <PanelButton :active="tab==='data'" icon="#icon-iconfontpaixingbang" title="数据"></PanelButton>
@@ -22,27 +25,45 @@
 <script>
 export default {
   name: 'SidePanel',
-  data(){
+  data () {
     return {
-      tab:'home'
+      tab: 'home'
     }
   },
-  methods:{
-    goTab(tab,name){
-      if(!name){
-        name=tab
+  methods: {
+    goTab (tab, name) {
+      if (!name) {
+        name = tab
       }
-      this.tab=name
+      this.tab = name
       this.$router.push({
-        path:'/'+tab
+        path: '/' + tab
       })
+    },
+    goApp () {
+      this.goTab('todo')
+      this.$router.push({
+        name: 'app',
+        params:
+          {
+            fullScreen: false,
+            theme: 'transparent',
+            name: 'todo',
+            url: 'https://a.apps.vip/todo',
+            preload: 'app',
+            background: true,
+            node: true,
+            security: true
+          }
+      }
+      )
     }
   }
 }
 </script>
 
 <style scoped lang="scss">
-.item{
+.item {
   margin: 8px;
 }
 </style>

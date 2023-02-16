@@ -140,7 +140,7 @@ export default {
           summary: '在副屏上使用飞书办公。（可用）',
           needInstall: false,
           data: {
-            theme: '#2e3238',
+            theme: '#465069',
             name: 'feishu',
             url: ' https://feishu.cn/messenger/',
             preload: 'app',
@@ -156,7 +156,7 @@ export default {
           needInstall: false,
           data: {
             fullScreen:false,
-            theme: '#2e3238',
+            theme: 'transparent',
             name: 'todo',
             url: 'https://a.apps.vip/todo',
             preload: 'app',
