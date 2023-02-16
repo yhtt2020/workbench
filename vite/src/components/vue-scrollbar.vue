@@ -1,5 +1,8 @@
 <template>
-  <section class="ps-container" :is="$props.tagname" @ps-scroll-y="scrollHandle" @ps-scroll-x="scrollHandle" @ps-scroll-up="scrollHandle" @ps-scroll-down="scrollHandle" @ps-scroll-left="scrollHandle" @ps-scroll-right="scrollHandle" @ps-y-reach-start="scrollHandle" @ps-y-reach-end="scrollHandle" @ps-x-reach-start="scrollHandle" @ps-x-reach-end="scrollHandle">
+  <section class="ps-container" :is="$props.tagname" @ps-scroll-y="scrollHandle" @ps-scroll-x="scrollHandle"
+           @ps-scroll-up="scrollHandle" @ps-scroll-down="scrollHandle" @ps-scroll-left="scrollHandle"
+           @ps-scroll-right="scrollHandle" @ps-y-reach-start="scrollHandle" @ps-y-reach-end="scrollHandle"
+           @ps-x-reach-start="scrollHandle" @ps-x-reach-end="scrollHandle">
     <slot></slot>
   </section>
 </template>
@@ -17,7 +20,13 @@ export default {
   name: 'vue-custom-scrollbar',
   props: {
     settings: {
-      default: null
+      default: {
+        useBothWheelAxes: true,
+        swipeEasing: true,
+        suppressScrollY: true,
+        suppressScrollX: false,
+        wheelPropagation: true
+      }
     },
     swicher: {
       type: Boolean,

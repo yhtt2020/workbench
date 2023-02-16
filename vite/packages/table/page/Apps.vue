@@ -21,30 +21,38 @@
   <div class="app-content" v-if="currentIndex==='qing'">
 
   </div>
-  <div class="app-content" v-if="currentIndex==='store'" style="padding:2em">
-    <div v-for="app in storeApps"
-         style="display: inline-block;width:560px;height: 130px;padding: 20px;margin-right:10px;margin-bottom:10px;background: #313131;border-radius: 10px">
-      <a-row :gutter="20">
-        <a-col :span="4">
-          <a-avatar shape="square" :src="app.icon" style="margin-top: 10px" :size="80">
-          </a-avatar>
-        </a-col>
-        <a-col :span="14">
-          <div class="app-name">{{ app.name }}</div>
-          <div class="app-summary">
-            {{ app.summary }}
-          </div>
-        </a-col>
-        <a-col :span="6">
-          <div v-if="app.needInstall" class="btn">
-            安装
-          </div>
-          <div @click="executeApp(app.data)" v-else class="btn">
-            打开
-          </div>
-        </a-col>
-      </a-row>
+  <div class="app-content" v-if="currentIndex==='store'" style="padding:2em;">
+
+    <vue-custom-scrollbar  :settings="settings"  style="position:relative;height:calc(100vh - 14em);  border-radius: 8px;">
+    <div style="margin: auto;width: 95%;height: auto;text-align: center">
+      <div style="margin-bottom: 1em;font-size: 1.5em">
+        共 {{storeApps.length}} 应用
+      </div>
+      <div v-for="app in storeApps"
+           style="display: inline-block;width:660px;height: 130px;padding: 20px;margin-right:10px;margin-bottom:10px;background: #313131;border-radius: 10px;">
+        <a-row :gutter="20">
+          <a-col :span="5">
+            <a-avatar shape="square" :src="app.icon" style="margin-top: 10px" :size="80">
+            </a-avatar>
+          </a-col>
+          <a-col :span="13">
+            <div class="app-name"  style="text-align: left">{{ app.name }}</div>
+            <div class="app-summary"  style="text-align: left">
+              {{ app.summary }}
+            </div>
+          </a-col>
+          <a-col :span="6">
+            <div v-if="app.needInstall" class="btn">
+              安装
+            </div>
+            <div @click="executeApp(app.data)" v-else class="btn">
+              打开
+            </div>
+          </a-col>
+        </a-row>
+      </div>
     </div>
+    </vue-custom-scrollbar>
   </div>
 </template>
 
@@ -62,6 +70,13 @@ export default {
   },
   data () {
     return {
+      settings:{
+        useBothWheelAxes: true,
+        swipeEasing: true,
+        suppressScrollY: false,
+        suppressScrollX: true,
+        wheelPropagation: true
+      },
       currentIndex: 'my',
       menus: [{
         title: '我的应用',
@@ -102,6 +117,51 @@ export default {
             background: true,
             node: true,
             security: false
+          }
+        },
+        {
+          icon: 'https://res.wx.qq.com/a/wx_fed/assets/res/OTE0YTAw.png',
+          name: '微信',
+          summary: '在副屏上使用网页版微信聊天。（已适配小屏）',
+          needInstall: false,
+          data: {
+            theme: '#2e3238',
+            name: 'weixin',
+            url: 'https://wx.qq.com',
+            preload: 'weixin',
+            background: true,
+            node: false,
+            security: true
+          }
+        },
+        {
+          icon: 'https://p1-hera.byteimg.com/tos-cn-i-jbbdkfciu3/22718e94fbd9483ea54301cf431ce2ee~tplv-jbbdkfciu3-image:0:0.image',
+          name: '飞书',
+          summary: '在副屏上使用飞书办公。（可用）',
+          needInstall: false,
+          data: {
+            theme: '#2e3238',
+            name: 'feishu',
+            url: ' https://feishu.cn/messenger/',
+            preload: 'app',
+            background: true,
+            node: false,
+            security: true
+          }
+        },
+        {
+          icon: 'https://a.apps.vip/todo/logo.png',
+          name: '轻待办',
+          summary: '快速创建和管理你的待办。',
+          needInstall: false,
+          data: {
+            theme: '#2e3238',
+            name: 'todo',
+            url: 'https://a.apps.vip/todo',
+            preload: 'app',
+            background: true,
+            node: true,
+            security: true
           }
         }
       ]

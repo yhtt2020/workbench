@@ -5,7 +5,7 @@ import App from './App.vue'
 import {createRouter, createWebHashHistory} from 'vue-router'
 import {createPinia} from 'pinia'
 import Index from './page/Index.vue'
-
+import vueCustomScrollbar from "../../src/components/vue-scrollbar.vue";
 const app = createApp(App)
 const pinia = createPinia()
 import Icon from './components/Icon.vue'
@@ -87,5 +87,6 @@ app.use(pinia).use(Antd).use(router).mount('#app')
 app.component('Icon', Icon)
 app.component('PanelButton', PanelButton)
 app.component('BackBtn', BackBtn)
+app.component('vueCustomScrollbar',vueCustomScrollbar)
 export default router;
 
