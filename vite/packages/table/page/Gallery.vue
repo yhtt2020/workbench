@@ -94,7 +94,7 @@ export default {
 
     this.getBingWallPaper((images) => {
       //let animations = ['a-fadeout','a-fadeoutT', 'a-fadeoutR', 'a-fadeoutB', 'a-fadeoutL','a-rotateoutLT', 'a-rotateoutLB', 'a-rotateoutRT', 'a-rotateoutRB', 'a-flipout', 'a-flipoutX', 'a-flipoutY']
-      let animations = ['ani-gray','bowen']
+      let animations = ['ani-gray','bowen','ani-rotate']
       if (images) {
         this.bingImages = images.map(img => {
           let random = Math.random()
@@ -161,16 +161,17 @@ export default {
 </style>
 <style>
 .spl-pane > *{
-  filter: grayscale(0);
+  filter: grayscale(0) blur(0);
   transform: rotate(0deg);
   transition: all 4s ease-out,transform 3s linear;
 }
 .spl-pane .ani-gray{
-  filter: grayscale(1);
+  filter: grayscale(1) blur(5px);
   opacity: 0;
 }
 
 .spl-pane .ani-rotate{
+  display: inline-block;
   transform:rotate(360deg);
 }
 
@@ -183,7 +184,7 @@ export default {
   clip-path: circle(100% at center);
   transition: transform 0.35s ease,
   opacity 0.65s ease,
-  clip-path 0.8s ease;
+  clip-path 0.8s ease,filter 3s ease-out;
 }
 /* custom animation "hidden state" ("custom" is the name of the animation you pass as gallery option) */
 /* 波纹动画*/

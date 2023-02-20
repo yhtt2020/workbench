@@ -19,7 +19,7 @@ import AppFrame from './page/AppFrame.vue'
 import Music from './page/Music.vue'
 import Status from './page/Status.vue'
 import Gallery from './page/Gallery.vue'
-
+import Wizard from './page/Wizard.vue'
 
 import $ from 'jquery'
 
@@ -91,6 +91,10 @@ const routes = [
     name: 'tomato',
     component: Tomato
   },
+  {
+    path:'/wizard',
+    component: Wizard
+  }
 
 
 ]

@@ -30,6 +30,10 @@ export default {
   name: 'Index',
   components: { BottomPanel, TopPanel, SidePanel,vueCustomScrollbar },
   mounted () {
+    if(!this.init){
+      this.$router.push('/wizard')
+      return
+    }
     this.$router.afterEach((to, from)=>{
       this.routeUpdateTime=Date.now()
       console.log(this.routeUpdateTime,'更新路由事件')
