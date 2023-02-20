@@ -2,8 +2,6 @@
   <a-config-provider :locale="locale">
   <div class="a-container " :class="{dark:settings.darkMod}"  >
      <router-view></router-view>
-
-
   </div>
   </a-config-provider>
 </template>

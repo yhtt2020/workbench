@@ -18,10 +18,17 @@ import Apps from './page/Apps.vue'
 import AppFrame from './page/AppFrame.vue'
 import Music from './page/Music.vue'
 import Status from './page/Status.vue'
+import Gallery from './page/Gallery.vue'
+
+
+import $ from 'jquery'
+
 //应用
 import TomatoStart from './page/app/tomato/TomatoStart.vue'
 import Tomato from './page/app/tomato/Tomato.vue'
 
+// @ts-ignore
+window.$=$
 const routes = [
   {
     path: '',
@@ -42,6 +49,7 @@ const routes = [
         component: Apps
 
       },
+
       {
         path: '/music',
         name: 'music',
@@ -57,10 +65,16 @@ const routes = [
   {
     path: '/lock',
     name: 'lock',
-    component: Lock
+    component: Lock,
+    children: [
 
+    ]
   },
-
+  {
+    path: '/gallery',
+    name: 'gallery',
+    component: Gallery
+  },
   {
     path: '/power',
     name: 'power',

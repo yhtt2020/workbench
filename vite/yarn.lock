@@ -966,17 +966,34 @@ is-url@^1.2.4:
   resolved "https://registry.npmmirror.com/is-url/-/is-url-1.2.4.tgz#04a4df46d28c4cff3d73d01ff06abeb318a1aa52"
   integrity sha512-ITvGim8FhRiYe4IQ5uHSkj7pVaPDrCTkNd3yq3cV7iZAcJdHTUMPMEHcqSOy9xZ9qFenQCvi+2wjH9a1nXqHww==
 
+jquery@^3.5.1, jquery@^3.6.3:
+  version "3.6.3"
+  resolved "https://registry.npmmirror.com/jquery/-/jquery-3.6.3.tgz#23ed2ffed8a19e048814f13391a19afcdba160e6"
+  integrity sha512-bZ5Sy3YzKo9Fyc8wH2iIQK4JImJ6R0GWI9kL1/k7Z91ZBNgkRXE6U0JfHIizZbort8ZunhSI3jw9I6253ahKfg==
+
 "js-tokens@^3.0.0 || ^4.0.0":
   version "4.0.0"
   resolved "https://registry.npmmirror.com/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
   integrity sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==
 
-kim-vue-touch@^1.1.5:
-  version "1.1.5"
-  resolved "https://registry.npmmirror.com/kim-vue-touch/-/kim-vue-touch-1.1.5.tgz#ba4b8f6c2ab13ce7aa2799d04d10709ed0b05ebc"
-  integrity sha512-29Y7rgHSh3R4Lqb+ImLZwk5CSB2w8SQGhIwC0Kk5arGH6oRAkmLILLCochPYfsTaFCB4V7/o+AneZ2BUmVMKNA==
+justified-layout@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npmmirror.com/justified-layout/-/justified-layout-3.0.0.tgz#f8643ac51d97cf43dd40ddf38601161968ff8165"
+  integrity sha512-xki5bVJ84HokIV47mfHdmWB56zFrQKbtrU5KHA5GoatOnRwQWGOvNtBlbW8dU0yIa3pNmCPuacuuMRPvM9p5mg==
   dependencies:
-    vue "^2.5.17"
+    merge "1.2.1"
+
+justifiedGallery@^3.8.1:
+  version "3.8.1"
+  resolved "https://registry.npmmirror.com/justifiedGallery/-/justifiedGallery-3.8.1.tgz#0b0c117aa03ce3130a9c90516ae93bd2f2a72948"
+  integrity sha512-qHvW4bGD9RkYYR2WfuXQK8/OdHRMTm09RJUmjWYDjAM5BS3yUpoHqXHgLjolE6m9QDReT9E6bME5YBP3VxRYtw==
+  dependencies:
+    jquery "^3.5.1"
+
+lightgallery@^2.7.1:
+  version "2.7.1"
+  resolved "https://registry.npmmirror.com/lightgallery/-/lightgallery-2.7.1.tgz#6f15bfb72d51ed9499aa6b6363181083fd048ef9"
+  integrity sha512-NbXOzD2APY1OhOOn464jDsBZBaCRahUoLvBxhDFxvwJeC8hCkCIPYSjGgGTYINxVK09DKMsNDJzRr1ngH5nDdg==
 
 local-pkg@^0.4.1:
   version "0.4.1"
@@ -1053,6 +1070,11 @@ merge2@^1.3.0:
   version "1.4.1"
   resolved "https://registry.npmmirror.com/merge2/-/merge2-1.4.1.tgz#4368892f885e907455a6fd7dc55c0c9d404990ae"
   integrity sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==
+
+merge@1.2.1:
+  version "1.2.1"
+  resolved "https://registry.npmmirror.com/merge/-/merge-1.2.1.tgz#38bebf80c3220a8a487b6fcfb3941bb11720c145"
+  integrity sha512-VjFo4P5Whtj4vsLzsYBu5ayHhoHJ0UqNm7ibvShmbmoz7tGi0vXaoJbGdB+GmDMLUdg8DpQXEIeVDAe8MaABvQ==
 
 micromatch@^4.0.4:
   version "4.0.5"
@@ -1286,6 +1308,11 @@ sourcemap-codec@^1.4.8:
   resolved "https://registry.npmmirror.com/sourcemap-codec/-/sourcemap-codec-1.4.8.tgz#ea804bd94857402e6992d05a38ef1ae35a9ab4c4"
   integrity sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==
 
+spotlight.js@^0.7.8:
+  version "0.7.8"
+  resolved "https://registry.npmmirror.com/spotlight.js/-/spotlight.js-0.7.8.tgz#0620371701508222d736e0658e8db3fbe9ddc53b"
+  integrity sha512-zq822gqhjaMHt31oZi4do211NwqBcxZ4u7Xtb+OEsbLrz37dcELhBCoQXFu/0sTiomqD6tm5g6tmqvE7S6h4ng==
+
 ssr-window@^3.0.0-alpha.1:
   version "3.0.0"
   resolved "https://registry.npmmirror.com/ssr-window/-/ssr-window-3.0.0.tgz#fd5b82801638943e0cc704c4691801435af7ac37"
@@ -1371,6 +1398,14 @@ vue-demi@*:
   resolved "https://registry.npmmirror.com/vue-demi/-/vue-demi-0.13.11.tgz#7d90369bdae8974d87b1973564ad390182410d99"
   integrity sha512-IR8HoEEGM65YY3ZJYAjMlKygDQn25D5ajNFNoKh9RSDMQtlzCxtfQjdQgv9jjK+m3377SsJXY8ysq8kLCZL25A==
 
+vue-justified-layout@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.npmmirror.com/vue-justified-layout/-/vue-justified-layout-0.2.0.tgz#d669f10c5f70695fd1d79174b60da6fbddbf285e"
+  integrity sha512-yxwu4AaOqtZU6KnXy1jcVDv+1aX+bRod3XFWpxedjepPCD8wydssbamMwIbwQV3TZVr9e48U4iGcLRWXnO82vQ==
+  dependencies:
+    justified-layout "^3.0.0"
+    vue "^2.2"
+
 vue-router@4:
   version "4.0.16"
   resolved "https://registry.npmmirror.com/vue-router/-/vue-router-4.0.16.tgz#9477beeeef36e80e04d041a1738801a55e6e862e"
@@ -1392,7 +1427,7 @@ vue-types@^3.0.0:
   dependencies:
     is-plain-object "3.0.1"
 
-vue@^2.5.17:
+vue@^2.2:
   version "2.7.14"
   resolved "https://registry.npmmirror.com/vue/-/vue-2.7.14.tgz#3743dcd248fd3a34d421ae456b864a0246bafb17"
   integrity sha512-b2qkFyOM0kwqWFuQmgd4o+uHGU7T+2z3T+WQp8UBjADfEv2n4FEMffzBmCKNP0IGzOEEfYjvtcC62xaSKeQDrQ==
