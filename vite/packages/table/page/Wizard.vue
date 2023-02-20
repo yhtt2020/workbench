@@ -135,6 +135,29 @@ export default {
         {
           title: '完成'
         }
+      ],stepsBoot: [
+        {
+          title: '设置模式'
+
+        }, {
+          title: '模式配置'
+        },
+        {
+          title: '完成'
+        }
+      ],
+      stepsSecond: [
+        {
+          title: '设置模式'
+
+        }, {
+          title: '屏幕设置'
+        }, {
+          title: '模式配置'
+        },
+        {
+          title: '完成'
+        }
       ]
     }
   },
@@ -201,9 +224,19 @@ export default {
       })
     },
     prevStep () {
+      if(this.mod==='second-screen'){
+        this.steps=this.stepsSecond
+      }else{
+        this.steps=this.stepsBoot
+      }
       this.step--
     },
     nextStep () {
+      if(this.mod==='second-screen'){
+        this.steps=this.stepsSecond
+      }else{
+        this.steps=this.stepsBoot
+      }
       this.step++
     },
     pressTable (e) {
