@@ -15,7 +15,8 @@ export const appStore = defineStore('appStore', {
 
     settings:{
       showButtonTitle:false,
-      darkMod:true
+      darkMod:true,
+      attachScreen:null//id,bounds
     },
 
     routeUpdateTime:Date.now(),//用于更新滚动条

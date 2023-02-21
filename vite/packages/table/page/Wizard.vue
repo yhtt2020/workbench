@@ -49,9 +49,10 @@
         <a-switch v-model:checked="canTouch" checked-children="可正确触摸"
                   un-checked-children="不可正常触摸"></a-switch>
       </div>
-      <div v-if="false">请使用手指触摸下一步。</div>
-      <div v-else>选择显示的屏幕</div>
-      <div class="panel" style="line-height: 1" v-if="!canTouch">
+      <div v-if="canTouch">选择显示的屏幕
+      <ChooseScreen></ChooseScreen>
+      </div>
+      <div class="panel" style="line-height: 1;margin-top: 0.5em" v-if="!canTouch">
         <p>如果无法触摸，进行可进行屏幕触摸矫正。</p>
         <p>矫正方法：</p>
         <p>在非触摸屏上按下Enter键，在触摸屏上进行触摸。</p>
@@ -96,7 +97,6 @@
     <div style="position: absolute;bottom: 1em;left: calc(50% - 8em)">
 
       <a-button v-if="step!==0" @click="prevStep" style="" :disabled="!canTouch" size="large">上一步</a-button>
-
       <a-button v-if="step!==2" @click="nextStep" style="margin-left: 6em" :disabled="!canTouch" size="large" type="primary">下一步
       </a-button>
       <a-button v-else @click="finish" style="margin-left: 6em"   size="large" type="primary">完成
@@ -111,8 +111,18 @@
 </template>
 
 <script>
+import ChooseScreen from './ChooseScreen.vue'
+import { appStore } from '../store'
+import {mapWritableState} from 'pinia'
+
 export default {
   name: 'Wizard',
+  components:{
+    ChooseScreen
+  },
+  computed:{
+    ...mapWritableState(appStore,['settings'])
+  },
   data () {
     return {
       ctrl: false,
