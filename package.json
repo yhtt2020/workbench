@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@electron/remote": "^2.0.1",
+    "@josephuspaye/win-audio-outputs": "^0.1.0",
     "@keeweb/keeweb-native-modules": "./packages/keeweb-native-modules.tgz",
     "axios": "^0.24.0",
     "brightness": "^3.0.0",

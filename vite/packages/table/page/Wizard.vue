@@ -255,6 +255,7 @@ export default {
       return false
     },
     finish(){
+      this.settings.init=true
       this.$router.replace({path:'/'})
     },
     getKeys (e) {
