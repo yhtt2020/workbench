@@ -850,7 +850,7 @@ const tabBar = {
         name: tab.title,
         type: 'web',
         theme_color: !!!tab.backgroundColor ? '#ccc' : tab.backgroundColor.color,
-        auth: '来自网页',
+        author: '来自网页',
         url: tab.url,
         logo: !!!tab.favicon ? '../../icons/default.svg' : tab.favicon.url,
         summary: '自定义应用',

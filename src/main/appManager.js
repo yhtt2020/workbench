@@ -996,7 +996,16 @@ class AppManager {
     let auth = []
     if (saApp.auth) {
       if(typeof saApp.auth ==='string'){
-        saApp.auth=JSON.parse(saApp.auth)//防止老的string格式错误
+        try{
+          saApp.auth=JSON.parse(saApp.auth)//防止老的string格式错误
+        }catch (e) {
+          saApp.auth={
+            base: {},
+            api: {},
+            ability: {}
+          }
+        }
+
       }
       if( typeof saApp.auth.base ==='object'){
         //兼容最新的auth格式，因为最新的auth变成了对象
