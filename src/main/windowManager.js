@@ -71,7 +71,6 @@ class BrowserViewHandler{
     this.view.webContents.on('destroyed',()=>{
       this.removeIPC()
     })
-    console.log('尝试去绑定一个IPC事件')
     // this.bindIPC('password-autofill',this.id, (tab, args, frameId, frameURL) =>{
     //   this.view.webContents.send('password-autofill',{id:this.id,args:{
     //       tab, args, frameId, frameURL

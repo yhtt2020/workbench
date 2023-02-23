@@ -86,14 +86,22 @@ class TableAppManager {
       this.tableWin.removeBrowserView(instance.view)
     }
   }
+  closeAllApp(){
+    this.runningApps.forEach(app=>{
+      console.log(app,'待关闭')
+      this.closeApp(this.getName(app.name))
+    })
+  }
   closeApp(name){
     let instance=this.get(name)
     if(instance){
-      this.tableWin.removeBrowserView(instance.view)
+      if(this.tableWin && !this.tableWin.isDestroyed()) {
+        this.tableWin.removeBrowserView(instance.view)
+      }
       instance.close()
+      this.runningAppsInstance.splice(this.getIndex(name),1)
+      this.runningApps.splice(this.getIndex(name),1)
     }
-    this.runningAppsInstance.splice(this.getIndex(name),1)
-    this.runningApps.splice(this.getIndex(name),1)
   }
   showApp(name,position){
     //实现还存在问题，需要去获取到最新的位置再重置

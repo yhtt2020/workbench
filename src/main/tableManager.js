@@ -41,9 +41,8 @@ class TableManager {
         c({cancel:false,responseHeaders:d.responseHeaders})
       })
       this.window=tableWin.window
-      console.log(this.window)
       tableWin.window.webContents.loadURL(render.getUrl('table.html'))
-      tableWin.window.on('close', () => globalSearch = null)
+      tableWin.window.on('close', () => global.tableWin=null)
 
     } else {
       if (tableWin.window.isFocused()) {
@@ -53,7 +52,16 @@ class TableManager {
         tableWin.window.focus()
       }
     }
+  }
+  close(){
+    global.tableAppManager.closeAllApp()
+    global.tableWin.window.close()
 
+  }
+  send(channel,args){
+    if(global.tableWin && !global.tableWin.window.isDestroyed()){
+      tableManager.window.webContents.send(channel,args)
+    }
   }
 }
 
@@ -161,11 +169,15 @@ app.whenReady().then(()=>{
   })
 
   ipc.on('updateMusicStatus',(event,args)=>{
-    tableManager.window.webContents.send('updateMusicStatus',args)
+    global.tableManager.send('updateMusicStatus',args)
   })
 
   ipc.on('wyyAction',(event,args)=>{
     global.tableAppManager.send('wyyMusic','wyyAction',args)
+  })
+
+  ipc.on('exitTable',()=>{
+    global.tableManager.close()
   })
 })
 

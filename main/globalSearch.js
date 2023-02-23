@@ -86,15 +86,9 @@ const TableManager = require('./src/main/tableManager.js')
 const TableAppManager = require('./src/main/tableAppManager.js')
 global.tableManager = new TableManager()
 app.whenReady().then(() => {
-
-  console.log('before初始化table')
-
-  console.log('初始化table')
+  global.tableAppManager =new TableAppManager()
   globalShortcut.register('alt+space', async () => {
-    console.log('触发快捷键')
     await tableManager.init()
-    global.tableAppManager =new TableAppManager()
-    console.log(tableManager,'tablemanager')
     global.tableAppManager.setTableWin(tableManager.window)
   })
 
