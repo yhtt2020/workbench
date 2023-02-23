@@ -56,7 +56,8 @@
         <p>矫正方法：</p>
         <p>在非触摸屏上按下Enter键，在触摸屏上进行触摸。</p>
         <p style="text-align: center">
-          <a-button type="primary" size="large" @click="startAdjust">触摸矫正</a-button>
+          <a-button type="primary" size="large" @click="startAdjust">触摸矫正</a-button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <a-button type="primary" size="large" @click="adjustPen">笔矫正</a-button>
         </p>
       </div>
     </div>
@@ -112,6 +113,7 @@
 import ChooseScreen from './ChooseScreen.vue'
 import { appStore } from '../store'
 import {mapWritableState,mapActions} from 'pinia'
+import cp from 'child_process'
 
 export default {
   name: 'Wizard',
@@ -228,6 +230,14 @@ export default {
       await tsbApi.window.setAlwaysOnTop(false)
       let cp = require('child_process')
       cp.exec('MultiDigiMon.exe -touch', async (err) => {
+        await tsbApi.window.setAlwaysOnTop(true)
+        this.canTouch = true
+      })
+    },
+    async adjustPen () {
+      await tsbApi.window.setAlwaysOnTop(false)
+      let cp = require('child_process')
+      cp.exec('MultiDigiMon.exe -pen', async (err) => {
         await tsbApi.window.setAlwaysOnTop(true)
         this.canTouch = true
       })
