@@ -21,13 +21,11 @@ class TableAppManager {
     let appInstance=this.get(this.getName(app.name))
     if(appInstance){
       //已经运行了
-      console.log(app.name,appInstance.name,'两个name')
       this.showApp(appInstance.name,position)
       // this.tableWin.setBrowserView(view)//置入app
       // this.setViewPos(appInstance.view, position)
     }else{
       //初始化一下
-      console.log(app)
       appInstance = await global.windowManager.createView({
         name: this.getName(app.name),
         webPreferences: {
@@ -70,7 +68,6 @@ class TableAppManager {
       this.runningApps.push(app)
       this.runningAppsInstance.push(appInstance)
     }
-    console.log(position)
     return appInstance
   }
 
@@ -101,7 +98,6 @@ class TableAppManager {
   showApp(name,position){
     //实现还存在问题，需要去获取到最新的位置再重置
     let instance=this.get(name)
-    console.log(instance,'找到的instance')
     if(instance){
       this.tableWin.setBrowserView(instance.view)
       this.setViewPos(instance.view,position)
