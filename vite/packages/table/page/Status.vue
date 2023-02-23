@@ -8,10 +8,10 @@
           <a-row>
             <a-col :span="3">
               <div style="cursor: pointer" v-if="!muted" @click="setMuted">
-                <Icon icon="#icon-yinliang" style="font-size: 3em"></Icon>
+                <Icon icon="yinliang" style="font-size: 3em"></Icon>
               </div>
               <div style="cursor: pointer" v-else @click="cancelMuted">
-                <Icon icon="#icon-jingyin" style="font-size: 3em"></Icon>
+                <Icon icon="jingyin" style="font-size: 3em"></Icon>
               </div>
             </a-col>
             <a-col :span="21">
@@ -26,7 +26,7 @@
           <a-row>
             <a-col :span="3">
               <div>
-                <Icon icon="#icon-icon_qingtian" style="font-size: 3em;filter: grayscale(100%)"></Icon>
+                <Icon icon="icon_qingtian" style="font-size: 3em;filter: grayscale(100%)"></Icon>
               </div>
             </a-col>
             <a-col :span="21">
@@ -48,13 +48,13 @@
         <h3>音频输出设备</h3>
             <div v-for="audio in audioList" >
               <div @click="setAudio(audio)" class="audio" :class="{'active':audio.isDefaultForMultimedia}">
-                <Icon icon="#icon-yinlianglabashengyin" style="font-size: 1.2em"></Icon> {{audio.name}} <span v-if="audio.deviceId==='default'">当前</span>
+                <Icon icon="yinlianglabashengyin" style="font-size: 1.2em"></Icon> {{audio.name}} <span v-if="audio.deviceId==='default'">当前</span>
               </div>
             </div>
         <div>
         </div>
       </div>
-      <audio id="speakerAudio" src='/sound/gua.mp3' autoPlay="autoplay"      >
+      <audio id="speakerAudio" src='/sound/gua.mp3'     >
         您的浏览器暂不支持音频播放
       </audio>
     </div>
@@ -63,7 +63,7 @@
         <h3>音频输入设备</h3>
             <div v-for="audio in micList" >
               <div @click="setAudio(audio)" class="audio" :class="{'active':audio.deviceId==='default'}">
-                <Icon icon="#icon-maikefeng" style="font-size: 1.2em"></Icon> {{audio.label}} <span v-if="audio.deviceId==='default'">当前</span>
+                <Icon icon="maikefeng" style="font-size: 1.2em"></Icon> {{audio.label}} <span v-if="audio.deviceId==='default'">当前</span>
               </div>
             </div>
 
@@ -162,7 +162,6 @@ export default {
     async getSpeakerList () {
       listOutputs().then( (devices) =>{
         let list = [];
-        console.log(devices)
         devices.forEach((device)=> {
           device.value=device.id
           list.push(device);
@@ -181,6 +180,7 @@ export default {
     },
     async setVol () {
       await loudness.setVolume(Number(this.vol))
+      this.gua()
     },
     async setBright () {
       console.log(this.bright)
@@ -190,6 +190,10 @@ export default {
     async setAudio(audio){
       await setAsDefault(audio)
       audio.isDefaultForMultimedia=true
+      this.gua()
+     // navigator.mediaDevices.selectAudioOutput()
+    },
+    async gua(){
       let audioSpeaker=document.getElementById('speakerAudio')
       await this.getSpeakerList()
       // console.log(audioSpeaker)
@@ -201,7 +205,6 @@ export default {
       // console.log(audio)
       //  this.shell('setdefaultsounddevice "'+audio.label+'"')
       audioSpeaker.play()
-     // navigator.mediaDevices.selectAudioOutput()
     },
     async setMuted () {
       await loudness.setMuted(true)
@@ -210,6 +213,7 @@ export default {
     async cancelMuted () {
       await loudness.setMuted(false)
       this.muted = false
+      this.gua()
     },
     async shell(cmd,cb){
       let rs=await ipc.invoke('shell', { cmd })
