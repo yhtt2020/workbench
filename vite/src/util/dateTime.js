@@ -10,7 +10,7 @@ function getDateTime(){
 
   let minutes=date.getMinutes()
   if(minutes<10){
-    dateTime.minutes='0'+String(dateTime.minutes)
+    dateTime.minutes='0'+String(minutes)
   }else{
     dateTime.minutes=minutes
   }
