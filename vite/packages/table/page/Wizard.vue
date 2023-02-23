@@ -1,5 +1,5 @@
 <template>
-  <h2  style="text-align: center;padding: 1em;-webkit-app-region:drag">工作台使用向导</h2>
+  <h2  style="text-align: center;padding: 1em;-webkit-app-region:drag"><Icon icon="jurassic_nav" style="font-size: 1.2em"></Icon> 工作台使用向导</h2>
   <div
     style="text-align: left;font-size: 1.2em;line-height: 2;width: 500px;margin: auto;position: relative;height: 80vh">
     <div style="padding: 0.5em">
@@ -19,7 +19,7 @@
         <a-col :span="12">
           <div v :class="{'active':mod==='second-screen'}" @click="this.mod='second-screen'" class="panel pointer">
             <div class="title">
-              <icon icon="#icon-touping" style="font-size: 1.2em"></icon>
+              <icon icon="touping" style="font-size: 1.2em"></icon>
               副屏模式
             </div>
             <p>
@@ -30,13 +30,12 @@
         <a-col :span="12">
           <div :class="{'active':mod==='bootstrap'}" @click="this.mod='bootstrap'" class="panel pointer">
             <div class="title">
-              <icon icon="#icon-kuaijie" style="font-size: 1.2em"></icon>
+              <icon icon="kuaijie" style="font-size: 1.2em"></icon>
               启动器模式
             </div>
             <p>
               通过默认快捷键<br>Alt+空格<br>呼出界面。
             </p></div>
-
         </a-col>
       </a-row>
 
@@ -95,7 +94,6 @@
     </div>
 
     <div style="position: absolute;bottom: 1em;left: calc(50% - 8em)">
-
       <a-button v-if="step!==0" @click="prevStep" style="" :disabled="!canTouch" size="large">上一步</a-button>
       <a-button v-if="step!==2" @click="nextStep" style="margin-left: 6em" :disabled="!canTouch" size="large" type="primary">下一步
       </a-button>
@@ -113,7 +111,7 @@
 <script>
 import ChooseScreen from './ChooseScreen.vue'
 import { appStore } from '../store'
-import {mapWritableState} from 'pinia'
+import {mapWritableState,mapActions} from 'pinia'
 
 export default {
   name: 'Wizard',
@@ -121,7 +119,7 @@ export default {
     ChooseScreen
   },
   computed:{
-    ...mapWritableState(appStore,['settings'])
+    ...mapWritableState(appStore,['settings','init'])
   },
   data () {
     return {
@@ -208,6 +206,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(appStore,['finishWizard']),
     toggleListenKey(short){
       this.listening=true
       this.currentListen=short
@@ -255,7 +254,7 @@ export default {
       return false
     },
     finish(){
-      this.settings.init=true
+      this.finishWizard()
       this.$router.replace({path:'/'})
     },
     getKeys (e) {
