@@ -183,5 +183,17 @@ app.whenReady().then(() => {
   const out=myUser32.GetSystemMetrics(94)
   console.log(out);
 
+  ipc.handle('shell',(event,args)=>{
+    if(args.cmd){
+      require('child_process').exec(__dirname+'/ext/cmd/x64/nircmdc.exe '+args.cmd,(err,stdout,stderr)=>{
+        console.log( {
+          err,stdout,stderr
+        })
+        event.returnValue= {
+          err,stdout,stderr
+        }
+      })
+    }
+  })
 
 })

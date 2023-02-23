@@ -17,10 +17,16 @@ class TableAppManager {
 
     //app args
     let { app, position } = args
+    let view
     let appInstance=this.get(this.getName(app.name))
     if(appInstance){
       //已经运行了
+      console.log(app.name,appInstance.name,'两个name')
+      this.showApp(appInstance.name,position)
+      // this.tableWin.setBrowserView(view)//置入app
+      // this.setViewPos(appInstance.view, position)
     }else{
+      //初始化一下
       console.log(app)
       appInstance = await global.windowManager.createView({
         name: this.getName(app.name),
@@ -34,22 +40,37 @@ class TableAppManager {
         },
         url:app.url
       })
+      view = appInstance.view
+      view.webContents.on('before-input-event', (event, input) => {
+        if (input.key.toLowerCase() === 'f12') {
+          view.webContents.openDevTools({
+            mode: 'detach'
+          })
+          event.preventDefault()
+        }else if(input.key.toLowerCase() === 'f11'){
+          view.webContents.executeJavaScript(`
+        function toggleFullScreen() {
+  if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
     }
-    let view = appInstance.view
-    view.webContents.on('before-input-event', (event, input) => {
-      if (input.key.toLowerCase() === 'f12') {
-        view.webContents.openDevTools({
-          mode: 'detach'
-        })
-        event.preventDefault()
-      }
-    })
-    this.runningApps.push(app)
-    this.runningAppsInstance.push(appInstance)
-    this.tableWin.setBrowserView(view)//置入app
-    view.webContents.on('dom-ready',()=>{
-      this.setViewPos(appInstance.view, position)
-    })
+  }
+}
+    toggleFullScreen()
+        `)
+          event.preventDefault()
+        }
+      })
+      this.tableWin.setBrowserView(view)//置入app
+      view.webContents.on('dom-ready',()=>{
+        this.setViewPos(appInstance.view, position)
+      })
+      this.runningApps.push(app)
+      this.runningAppsInstance.push(appInstance)
+    }
+    console.log(position)
     return appInstance
   }
 
@@ -77,12 +98,13 @@ class TableAppManager {
     this.runningAppsInstance.splice(this.getIndex(name),1)
     this.runningApps.splice(this.getIndex(name),1)
   }
-  showApp(name){
+  showApp(name,position){
     //实现还存在问题，需要去获取到最新的位置再重置
     let instance=this.get(name)
+    console.log(instance,'找到的instance')
     if(instance){
       this.tableWin.setBrowserView(instance.view)
-      this.setViewPos(instance.view,instance.position)
+      this.setViewPos(instance.view,position)
     }
   }
   get(name){
