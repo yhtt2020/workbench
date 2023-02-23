@@ -1,13 +1,14 @@
 <template>
   <a-row   class="top-panel drag" type="flex" :gutter="10">
     <a-col :span="8"  >
-<!--      <Icon icon="#icon-xiaoxi"></Icon>-->
-<!--      李想：来一下我办公室。 6分钟前-->
-      &nbsp;
+      <div  class="pointer no-drag" @click="enterMusic" v-if="status.music.title">
+         <a-avatar :size="24" :src="status.music.cover"></a-avatar>
+         {{ status.music.title }} {{ status.music.singer }}
+      </div>
     </a-col>
     <a-col  :span="8" style="text-align: center">
-      <div class="input-box no-drag">
-        <Icon icon="#icon-sousuo"></Icon> 搜索 网页内容、标签
+      <div @click="openGlobalSearch" class="input-box no-drag">
+        <Icon icon="sousuo"></Icon> 搜索 网页内容、标签（下滑)
         <span style="float:right;padding-right: 10px">
           <span style="margin-right: 3px" class="key-button">Alt</span><span  class="key-button">F</span>
         </span>
@@ -21,6 +22,9 @@
 
 <script >
 import { getDateTime } from '../../../src/util/dateTime'
+import { appStore } from '../store'
+import {mapWritableState} from 'pinia'
+
 export default {
   name: 'TopPanel',
   data(){
@@ -31,6 +35,9 @@ export default {
       timer:null,
     }
   },
+  computed:{
+    ...mapWritableState(appStore,['status'])
+  },
   mounted () {
     this.getTime()
     this.loading=false
@@ -39,8 +46,16 @@ export default {
     }
   },
   methods:{
+    openGlobalSearch(){
+      ipc.send('openGlobalSearch')
+    },
     getTime(){
       this.dateTime=getDateTime()
+    },
+    enterMusic(){
+      this.$router.push({
+        name:'music'
+      })
     }
   }
 }
