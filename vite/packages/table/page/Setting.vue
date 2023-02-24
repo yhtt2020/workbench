@@ -66,8 +66,8 @@
     wrap-class-name="full-modal"
     @ok="()=>{this.visibleChooseScreen=false}"
   >
-    <div style="zoom: 1.5;">
-      <ChooseScreen></ChooseScreen>
+    <div style="zoom: 1.5;font-size: 16px;padding-top: 5em;text-align: center">
+      <div style="width: 500px;overflow: visible;display: inline-block"><ChooseScreen></ChooseScreen></div>
     </div>
 
   </a-modal>
@@ -110,6 +110,6 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 
 </style>
