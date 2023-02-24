@@ -4,9 +4,7 @@
     <div class="rotate-center" style="font-size: 2em;margin-bottom: 1em">
       必应壁纸
     </div>
-    <div style="position: fixed;right: 2em;top: 2em"><span style="font-size: 3em" @click="play"><Icon
-      icon="#icon-bofang"></Icon></span></div>
-
+    <div style="position: fixed;right: 2em;top: 2em"><span style="font-size: 3em" @click="play"><Icon icon="bofang"></Icon></span></div>
     <vue-custom-scrollbar id="containerWrapper" :settings="settingsScroller" style="height: 80vh">
       <!--            <lightgallery id="container"-->
       <!--                          :settings="settings"-->

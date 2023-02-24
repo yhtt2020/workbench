@@ -26,6 +26,9 @@ import $ from 'jquery'
 //应用
 import TomatoStart from './page/app/tomato/TomatoStart.vue'
 import Tomato from './page/app/tomato/Tomato.vue'
+import Deck from './page/Deck.vue'
+import Setting from './page/Setting.vue'
+import Weather from './page/app/Weather.vue'
 
 // @ts-ignore
 window.$=$
@@ -49,16 +52,28 @@ const routes = [
         component: Apps
 
       },
-
       {
         path: '/music',
         name: 'music',
         component: Music
-
+      },
+      {
+        path:'/weather',
+        name:'weather',
+        component: Weather
+      },
+      {
+        path:'/deck',
+        component: Deck
       },{
         path:'/status',
         name:'status',
         component: Status
+      },
+      {
+        path:'/setting',
+        name:'setting',
+        component: Setting
       }
     ]
   },

@@ -1,14 +1,18 @@
 <template>
 
-  <div class="second-panel" id="secondPanel" style="">
-    <div style="padding-left: 1em">
+  <div class="second-panel"  :class="{'large':this.size==='large','small':this.size==='small'}" id="secondPanel" style="">
+    <div v-if="close" style="margin-bottom: 1em">
+      <div class="btn"><Icon icon="close"></Icon></div>
+    </div>
+    <div v-if="logo" style="padding-left: 1em">
       <a-avatar shape="square" :size="50" :src="logo">
       </a-avatar>
     </div>
-    <div style="margin-top: 2.5em;margin-bottom:2em">
+    <div v-if="search" style="margin-top: 2.5em;margin-bottom:2em">
       <a-input-search style="width: 8em;margin-left: 1em" placeholder="搜索"></a-input-search>
     </div>
-    <div @click="change($event,menu)" class="menu" :class="{'active':activeIndex===menu.index}" v-for="(menu,index) in menus">
+    <div @click="change($event,menu)" class="menu" :class="{'active':activeIndex===menu.index}"
+         v-for="(menu,index) in menus">
       {{ menu.title }}
     </div>
   </div>
@@ -19,9 +23,13 @@ export default {
   name: 'SecondPanel',
   props: [
     'menus',
-    'logo'
+    'logo',
+    'size',
+    'search',
+    'close',
+    'back'
   ],
-  emits:[
+  emits: [
     'changeTab'
   ],
   data () {
@@ -32,16 +40,16 @@ export default {
   },
   mounted () {
     this.panel = document.getElementById('secondPanel')
-    this.activeIndex=this.menus[0].index
+    this.activeIndex = this.menus[0].index
     //this.panel.style.marginTop = -this.panel.offsetHeight / 2-20 + 'px'
   },
-  methods:{
-    change(e,menu){
-      this.activeIndex=menu.index
-      this.$emit('changeTab',{
-        index:menu.index,
-        menu:menu,
-        event:e
+  methods: {
+    change (e, menu) {
+      this.activeIndex = menu.index
+      this.$emit('changeTab', {
+        index: menu.index,
+        menu: menu,
+        event: e
       })
     }
   }
@@ -50,6 +58,9 @@ export default {
 
 <style scoped lang="scss">
 .second-panel {
+  &.small{
+
+  }
   height: auto;
   border-radius: 6px;
   position: fixed;

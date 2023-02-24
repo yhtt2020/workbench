@@ -1,9 +1,9 @@
 <template>
   <div class="card" >
-    <div class="title"><Icon icon="#icon-douban" style="height: 1.3em;width: 1.3em;margin-right: 0.1em"></Icon> 豆瓣FM</div>
+    <div class="title"><Icon icon="douban" style="height: 1.3em;width: 1.3em;margin-right: 0.1em"></Icon> 豆瓣FM</div>
     <div style="text-align: center;padding:3em;position:relative;">
       <div class="play-wrapper">
-        <Icon icon="#icon-bofang" class="play-btn"></Icon>
+        <Icon icon="bofang" class="play-btn"></Icon>
       </div>
       <a-avatar :size="100" src=""></a-avatar>
     </div>
@@ -11,13 +11,13 @@
       <a-col :span="12">
         <div class="sub-card">
           我喜欢<br>
-          <Icon icon="#icon-xin" style="width: 3em;height:3em;margin-top: 1em"></Icon>
+          <Icon icon="xin" style="width: 3em;height:3em;margin-top: 1em"></Icon>
         </div>
       </a-col>
       <a-col :span="12">
         <div class="sub-card">
           歌单<br>
-          <Icon icon="#icon-zicaidan" style="width: 3em;height:3em;margin-top: 1em"></Icon>
+          <Icon icon="zicaidan" style="width: 3em;height:3em;margin-top: 1em"></Icon>
         </div>
       </a-col>
     </a-row>

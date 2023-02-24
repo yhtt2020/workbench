@@ -1,6 +1,6 @@
 <template>
   <div class="back-btn" @click="click">
-    <Icon icon="#icon-xiangzuo"  style="font-size: 4em"></Icon>
+    <Icon icon="xiangzuo"  style="font-size: 4em"></Icon>
   </div>
 </template>
 

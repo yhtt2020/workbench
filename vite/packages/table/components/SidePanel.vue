@@ -2,22 +2,22 @@
   <ul class="side-panel common-panel" style=" z-index: 999;
   width: 6em;position: fixed;top: calc((100vh - 32em)/2)">
     <li class="active">
-      <PanelButton :active="tab==='home'" @click="goTab('','home')" icon="#icon-shouye1" title="主页"></PanelButton>
+      <PanelButton :active="tab==='home'" @click="goTab('','home')" icon="shouye1" title="主页"></PanelButton>
     </li>
     <li>
-      <PanelButton :active="tab==='apps'" @click="goTab('apps')" icon="#icon-yingyongzhongxin"
+      <PanelButton :active="tab==='apps'" @click="goTab('apps')" icon="yingyongzhongxin"
                    title="应用"></PanelButton>
     </li>
     <li>
       <PanelButton :active="tab==='music'" @click="goTab('music')"
-                   iconStyle="width:2.5em;height:2.5em;margin-top:-0.4em;" icon="#icon-yinle1"
+                   iconStyle="width:2.5em;height:2.5em;margin-top:-0.4em;" icon="yinle1"
                    title="音乐"></PanelButton>
     </li>
     <li>
-      <PanelButton :active="tab==='todo'" @click="goApp" icon="#icon-daibanshixiang" title="待办"></PanelButton>
+      <PanelButton :active="tab==='todo'" @click="goApp" icon="daibanshixiang" title="待办"></PanelButton>
     </li>
     <li>
-      <PanelButton :active="tab==='data'" icon="#icon-iconfontpaixingbang" title="数据"></PanelButton>
+      <PanelButton :active="tab==='deck'" @click="goTab('deck')" icon="kuaijie" title="Deck"></PanelButton>
     </li>
   </ul>
 </template>

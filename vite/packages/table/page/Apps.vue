@@ -1,8 +1,8 @@
 <template>
-  <SecondPanel :menus="menus" logo="https://up.apps.vip/logo/favicon.svg" @change-tab="changeTab"></SecondPanel>
+  <SecondPanel :search="true" :menus="menus" logo="https://up.apps.vip/logo/favicon.svg" @change-tab="changeTab"></SecondPanel>
   <div v-show="currentIndex==='my'" @dragover.prevent="dragOver" @drop.prevent="drop" class="app-content">
     <div v-if="apps.length===0" style="font-size: 2em;padding-top: 6em;text-align: center;">
-      <Icon style="color: #ccc;font-size: 2em;vertical-align: middle" icon="#icon-line-dragdroptuofang"></Icon>
+      <Icon style="color: #ccc;font-size: 2em;vertical-align: middle" icon="line-dragdroptuofang"></Icon>
       将应用拖放到此处，即可用于快捷启动
     </div>
     <div v-if="apps.length===0" style="text-align: center">

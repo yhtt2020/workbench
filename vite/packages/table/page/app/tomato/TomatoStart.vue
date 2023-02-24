@@ -3,7 +3,7 @@
     <BackBtn></BackBtn>
 
     <div>
-      <Icon style="width:8em;height:8em;margin-right:10px;vertical-align: middle" icon="#icon-fanqie"></Icon>
+      <Icon style="width:8em;height:8em;margin-right:10px;vertical-align: middle" icon="fanqie"></Icon>
     <p style="font-size: 2.5em;padding-top: 1em">每天获得番茄，保持专注</p>
       <div style="margin-top: 8em">
         <div class="btn" @click="start" style="font-size: 3em;padding: 0.4em 1.5em">开始新番茄</div>

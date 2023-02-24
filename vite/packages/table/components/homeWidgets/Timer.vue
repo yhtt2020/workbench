@@ -2,7 +2,7 @@
   <div class="card" style="height: 14em;margin-bottom: 1em" >
     <a-row>
       <a-col>
-        <Icon style="width:5em;height:5em;margin-right:10px;vertical-align: middle" icon="#icon-fanqie"></Icon>
+        <Icon style="width:5em;height:5em;margin-right:10px;vertical-align: middle" icon="fanqie"></Icon>
       </a-col>
       <a-col style="text-align: center">
         <div style="font-size: 1.5em;font-weight: bold">番茄钟</div>

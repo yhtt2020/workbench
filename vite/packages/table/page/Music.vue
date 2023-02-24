@@ -26,21 +26,21 @@
         <div style="width: 250px;margin: auto">
           <a-row>
             <a-col @click="doAction('prev')" :span="8" style="padding-top: 1em">
-              <Icon class="player-icon" icon="#icon-shangyishou"></Icon>
+              <Icon class="player-icon" icon="shangyishou"></Icon>
 
             </a-col>
             <a-col @click="doAction('pause')" v-if="status.music.playing" :span="8">
 
-              <Icon class="player-icon" style="font-size: 6em" icon="#icon-zanting"></Icon>
+              <Icon class="player-icon" style="font-size: 6em" icon="zanting"></Icon>
 
             </a-col>
             <a-col @click="doAction('play')" v-else :span="8">
 
-              <Icon class="player-icon" style="font-size: 6em" icon="#icon-bofang"></Icon>
+              <Icon class="player-icon" style="font-size: 6em" icon="bofang"></Icon>
 
             </a-col>
             <a-col @click="doAction('next')" :span="8" style="padding-top: 1em">
-              <Icon class="player-icon" icon="#icon-xiayishou"></Icon>
+              <Icon class="player-icon" icon="xiayishou"></Icon>
             </a-col>
           </a-row>
         </div>
@@ -50,7 +50,7 @@
     </div>
   </div>
   <div @click="showPrompt" style="position:fixed;right: 3em;top: 43vh">
-    <Icon icon="#icon-zimu" style="font-size: 4em"></Icon>
+    <Icon icon="zimu" style="font-size: 4em"></Icon>
   </div>
 
 </template>
@@ -71,7 +71,7 @@ export default {
     if (this.status.music.notInit) {
 
     }
-    window.updateMusicStatusHandler = this.updateStatus
+    //window.updateMusicStatusHandler = this.updateStatus
   },
   data () {
     return {
@@ -95,6 +95,21 @@ export default {
       ],
     }
   },
+  watch:{
+    'status.music':function (newValue,oldValue){
+      console.log(newValue)
+      let status=newValue
+      if(status.prompt){
+        this.prompt = status.prompt
+        this.scrollTop = status.scrollTop
+        if (document.getElementById('prompt')) {
+          document.getElementById('prompt').scrollTop = this.scrollTop
+        }
+      }
+      //document.getElementById('prompt').scrollTop=this.scrollTop
+      this.getPercent()
+    }
+  },
   methods: {
     showPrompt () {
       if (this.tab === 'prompt') {
@@ -106,20 +121,9 @@ export default {
 
     },
     doAction (action) {
-      console.log('发送消息')
       require('electron').ipcRenderer.send('wyyAction', { action })
     },
-    updateStatus (status) {
-      this.status.music = status
-      this.status.music.cover = status.cover.replace('34y34', '120y120')//修正封面
-      this.prompt = status.prompt
-      this.scrollTop = status.scrollTop
-      //document.getElementById('prompt').scrollTop=this.scrollTop
-      if (document.getElementById('prompt')) {
-        document.getElementById('prompt').scrollTop = this.scrollTop
-      }
-      this.getPercent()
-    },
+
     getPercent () {
       let currentText = this.status.music.progress.split(':')
       let current
@@ -140,22 +144,9 @@ export default {
     ...mapActions(appStore, ['addApps']),
 
     changeTab (data) {
-      console.log(data, 'data')
       this.currentIndex = data.index
     },
-    async drop (e) {
-      let files = e.dataTransfer.files
 
-      let filesArr = []
-      if (files && files.length > 0) {
-        for (let i = 0; i < files.length; i++) {
-          filesArr.push(files[i].path)
-          console.log('path:', files[i])
-        }
-      }
-      this.dropFiles = await ipc.sendSync('getFilesIcon', { files: JSON.parse(JSON.stringify(filesArr)) })
-      this.addApps(this.dropFiles)
-    }
   }
 }
 </script>

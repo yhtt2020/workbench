@@ -16,21 +16,21 @@
       </div>
       <div style="">
 
-        <Icon v-for="i in tomato" style="margin-right:10px;vertical-align: middle;font-size: 1.5em" icon="#icon-fanqie"></Icon>
+        <Icon v-for="i in tomato" style="margin-right:10px;vertical-align: middle;font-size: 1.5em" icon="fanqie"></Icon>
         <Icon v-for="i in target-tomato" style="margin-right:10px;vertical-align: middle;opacity: 0.3;font-size: 1em"
-              icon="#icon-fanqie"></Icon>
+              icon="fanqie"></Icon>
       </div>
       <div style="margin-top: 1em">
         <a-row :gutter="30" v-if="running" >
           <a-col  @click="pause" :span="12">
             <div class="btn sm" v-if="timer">
-              <Icon style="font-size: 2em;vertical-align: middle" icon="#icon-zanting"></Icon>
+              <Icon style="font-size: 2em;vertical-align: middle" icon="zanting"></Icon>
               <span style="font-size: 0.7em">
                 暂停
               </span>
             </div>
             <div class="btn sm" v-else>
-              <Icon style="font-size: 2em;vertical-align: middle" icon="#icon-bofang"></Icon>
+              <Icon style="font-size: 2em;vertical-align: middle" icon="bofang"></Icon>
               <span style="font-size: 0.7em">
                 <span>
                   继续
@@ -40,7 +40,7 @@
           </a-col>
           <a-col  @click="stop" :span="12"  >
             <div class="btn sm">
-              <Icon style="font-size: 2em;vertical-align: middle" icon="#icon-tingzhi"></Icon>
+              <Icon style="font-size: 2em;vertical-align: middle" icon="tingzhi"></Icon>
               <span style="font-size: 0.7em">放弃
               </span>
             </div>
@@ -50,7 +50,7 @@
         <a-row @click="start" v-else>
           <a-col  :span="24">
             <div class="btn sm">
-              <Icon style="font-size: 2em;vertical-align: middle" icon="#icon-bofang"></Icon>
+              <Icon style="font-size: 2em;vertical-align: middle" icon="bofang"></Icon>
               <span style="font-size: 0.7em">
               <span>
                   开始

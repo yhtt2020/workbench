@@ -117,6 +117,7 @@ class BarrageManager {
       window = windowInstance.window
       this.container = window
       this.instance = windowInstance
+      this.container.setAlwaysOnTop('screen-saver')
       settings.set(settingName, true)
       sendIPCToMainWindow('setBarrageOpen',{open:true})
       if (settings.get('barrageLock')) {

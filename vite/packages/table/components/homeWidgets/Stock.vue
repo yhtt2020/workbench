@@ -2,7 +2,7 @@
   <div class="card" style="margin-bottom: 1em" >
     <a-row>
       <a-col>
-        <Icon style="width:3em;height:3em;margin-right:10px;vertical-align: middle" icon="#icon-gupiao"></Icon>
+        <Icon style="width:3em;height:3em;margin-right:10px;vertical-align: middle" icon="gupiao"></Icon>
       </a-col>
       <a-col style="text-align: center">
         <div style="font-size: 1.5em;font-weight: bold">自选股</div>

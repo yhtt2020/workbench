@@ -172,6 +172,7 @@ export default {
     }
   },
   mounted () {
+    console.log('进入wizard')
     document.onkeydown = (e) => {
 
       // this.setKeyStatus(e.keyCode, true)

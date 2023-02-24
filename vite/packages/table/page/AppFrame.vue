@@ -4,7 +4,7 @@
       <a-col :span="6">
         <div @click="goBack" class="app-btn no-drag">
           <div class="btn-wrapper">
-            <Icon icon="#icon-xiangzuo" style="font-size: 1.5em;vertical-align: middle"></Icon>
+            <Icon icon="xiangzuo" style="font-size: 1.5em;vertical-align: middle"></Icon>
             返回
           </div>
         </div>
@@ -15,7 +15,7 @@
       <a-col :span="6" style="text-align: right">
         <div class="app-btn no-drag">
           <div class="btn-wrapper">
-            <Icon icon="#icon-touping" style="font-size: 1.5em;vertical-align: middle"></Icon>
+            <Icon icon="touping" style="font-size: 1.5em;vertical-align: middle"></Icon>
             投屏
           </div>
         </div>
@@ -32,27 +32,27 @@
 
 <script>
 import { appStore } from '../store'
-import {mapWritableState} from 'pinia'
+import { mapWritableState } from 'pinia'
 
 export default {
   name: 'AppFrame',
   data () {
     return { app: {} }
   },
-  computed:{
-    ...mapWritableState(appStore,['fullScreen'])
+  computed: {
+    ...mapWritableState(appStore, ['fullScreen'])
   },
   mounted () {
     let app = this.$route.params
-
     if (typeof app.fullScreen === 'undefined') {
       app.fullScreen = true //默认全屏
     } else {
       app.fullScreen = !(app.fullScreen === 'false')
     }
-    if(app.fullScreen){
-      this.fullScreen=app.fullScreen
+    if (app.fullScreen) {
+      this.fullScreen = app.fullScreen
     }
+    console.log(this.fullScreen,'full')
     this.$nextTick(()=>{
       let frame = document.getElementById('frame')
       let position = {
@@ -66,11 +66,12 @@ export default {
         app
       }
       this.app = app
+      console.log('触发执行')
+      console.log(args)
       ipc.send('executeTableApp', args)
     })
-    setTimeout(() => {
 
-    }, 500)
+
   },
   beforeUnmount () {
     this.handleLeave()
@@ -82,10 +83,9 @@ export default {
       } else {
         ipc.send('closeTableApp', { app: JSON.parse(JSON.stringify(this.app)) })
       }
-     this.fullScreen=false
+      this.fullScreen = false
     },
     goBack () {
-
       this.$router.go(-1)
     }
   }

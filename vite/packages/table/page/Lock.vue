@@ -1,7 +1,7 @@
 <template>
   <div @click="enter" style="position:relative;">
     <div @click.stop="enterGallery" class="gallery" style="">
-      <Icon icon="#icon-banner"></Icon>
+      <Icon icon="banner"></Icon>
     </div>
     <div class="time" v-if="loaded" style="">
       <span style="font-size: 3.5em">{{ hours }}:{{ minutes }}</span><br>

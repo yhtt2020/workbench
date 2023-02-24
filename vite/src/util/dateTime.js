@@ -1,8 +1,7 @@
 
-function getDateTime(){
+function getDateTime(date=new Date()){
   let dateTime={}
   let  weeks=['星期一','星期二','星期三','星期四','星期五','星期六','星期日']
-  var date=new Date()
   dateTime.year=date.getFullYear()
   dateTime.month=date.getMonth()+1
   dateTime.day=date.getDate()
