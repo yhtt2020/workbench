@@ -1,7 +1,7 @@
 <template>
   <a-row   class="top-panel drag" type="flex" :gutter="10">
     <a-col :span="8"  >
-      <div  class="pointer no-drag" @click="enterMusic" v-if="status.music.title">
+      <div  class="pointer no-drag" @click="enterMusic" v-if="  status.music && status.music.title">
          <a-avatar style="margin-right: 0.5em" :size="24" :src="status.music.cover"></a-avatar> {{ status.music.title }} {{ status.music.singer }}
       </div>
     </a-col>
@@ -14,7 +14,11 @@
       </div>
     </a-col>
     <a-col  :span="8" style="text-align: right">
-     <span class="no-drag" v-if="!loading">{{ dateTime.year }}/{{ dateTime.month }}/{{ dateTime.day }} {{ dateTime.hours }}:{{ dateTime.minutes }} {{ dateTime.week }} 晴 9℃</span>
+     <span class="no-drag" v-if="!loading">{{ dateTime.month }}/{{ dateTime.day }} {{ dateTime.hours }}:{{ dateTime.minutes }} {{ dateTime.week }}
+
+        <i style="" :class="'qi-'+city.weather.now.icon+'-fill'"></i> {{ city.weather.now.temp }}℃
+
+     </span>
     </a-col>
   </a-row>
 </template>
@@ -22,7 +26,7 @@
 <script >
 import { getDateTime } from '../../../src/util/dateTime'
 import { appStore } from '../store'
-import {mapWritableState} from 'pinia'
+import {mapWritableState,mapState} from 'pinia'
 
 export default {
   name: 'TopPanel',
@@ -30,12 +34,15 @@ export default {
     return {
       loading:true,
       dateTime:{},
-      weather:'晴 9℃',
       timer:null,
     }
   },
   computed:{
-    ...mapWritableState(appStore,['status'])
+    ...mapWritableState(appStore,['status']),
+    ...mapState(appStore,['appData']),
+    city () {
+      return this.appData.weather.cities[0]
+    }
   },
   mounted () {
     this.getTime()
