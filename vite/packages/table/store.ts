@@ -7,98 +7,127 @@ import {nanoid} from 'nanoid'
 
 export const appStore = defineStore('appStore', {
   state: () => ({
-    apps:[],
+    apps: [],
 
-    init:false,//todo 增加初始化设置的保存 是否初始设置过了
-
-    fullScreen:false,//是否是全屏模式
-
-    settings:{
-      showButtonTitle:false,
-      darkMod:true,
-      attachScreen:null//id,bounds
-    },
-
-    routeUpdateTime:Date.now(),//用于更新滚动条
-    status:{
-      music:{//存当前播放的音乐
-        notInit:true,
-        cover:''
+    appData: {//应用数据
+      weather: {
+        cities: []
       }
     },
-    decks:[
+
+    init: false,//todo 增加初始化设置的保存 是否初始设置过了
+
+    fullScreen: false,//是否是全屏模式
+
+    settings: {
+      showButtonTitle: false,
+      darkMod: true,
+      attachScreen: null//id,bounds
+    },
+
+    routeUpdateTime: Date.now(),//用于更新滚动条
+    status: {
+      music: {//存当前播放的音乐
+        notInit: true,
+        cover: '',
+        title:''
+      }
+    },
+    decks: [
       {
-        id:1,
-        title:'板子1',
-        children:[
+        id: 1,
+        title: '板子1',
+        children: [
           {
-            icon:'',
-            cover:'',
-            title:'微信'
+            icon: '',
+            cover: '',
+            title: '微信'
           },
           {
-            icon:'',
-            cover:'',
-            title:'微信'
+            icon: '',
+            cover: '',
+            title: '微信'
           }
         ]
       },
       {
-        id:2,
-        title:'板子1',
-        children:[
+        id: 2,
+        title: '板子1',
+        children: [
           {
-            icon:'',
-            cover:'',
-            title:'微信'
+            icon: '',
+            cover: '',
+            title: '微信'
           },
           {
-            icon:'',
-            cover:'',
-            title:'微信'
+            icon: '',
+            cover: '',
+            title: '微信'
           },
           {
-            icon:'',
-            cover:'',
-            title:'微信'
+            icon: '',
+            cover: '',
+            title: '微信'
           }
         ]
       },
     ]
 
   }),
-  getters: {
-
-  },
+  getters: {},
 
   actions: {
-    save(key,value){
-      localStorage.setItem(key,JSON.stringify(value))
+    save(key, value) {
+      localStorage.setItem(key, JSON.stringify(value))
     },
 
-    loadAll(){
-      this.loadMusic()
-      this.init=!!localStorage.getItem('init')
+    loadAll() {
+      this.loadAppData()
+      this.init = !!localStorage.getItem('init')
     },
 
-    finishWizard(){
-      this.init=true
-      localStorage.setItem('init','true')
+    finishWizard() {
+      this.init = true
+      localStorage.setItem('init', 'true')
     },
 
-    setMusic(status){
+    setMusic(status) {
       this.status.music = status
       this.status.music.cover = status.cover.replace('34y34', '120y120')//修正封面
-      this.save('status.music',status)
+      this.save('status.music', status)
     },
 
-    loadMusic(){
-      this.status.music=JSON.parse(localStorage.getItem('status.music'))
+    loadMusic() {
+      let music=JSON.parse(localStorage.getItem('status.music'))
+      if(music){
+        this.status.music =music
+      }
     },
-    addApps(apps){
-      console.log(apps)
-      this.apps=this.apps.concat(apps)
-      console.log(this.apps)
+    loadAppData() {
+      let saved=localStorage.getItem('appData.weather')
+      if(saved) {
+        let weather= JSON.parse(saved)
+        console.log(weather)
+        this.appData.weather = weather
+      }
+      this.loadMusic()
+    },
+    addApps(apps) {
+      this.apps = this.apps.concat(apps)
+    },
+
+    addCity(city) {
+      this.appData.weather.cities.push(city)
+      this.saveWeather()
+    },
+    saveWeather() {
+      this.save('appData.weather', this.appData.weather)
+    },
+    removeCity(cityId) {
+      this.appData.weather.cities = this.appData.weather.cities.filter(city => {
+        return city.id !== cityId
+      })
+      this.saveWeather()
     }
   }
 })
