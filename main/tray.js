@@ -132,20 +132,20 @@ app.whenReady().then(() => {
       event.reply('getMemory', data)
     })
   })
-  ipc.on('getTrayUserInfo', async (event, args) => {
+  ipc.on('getDetailUserInfo', async (event, args) => {
     const isLogged = await userModel.isLogged()
     if (isLogged) {
       getUserInfo().then(result => {
         if (result.data.data.uid) {
-          sendIPCToTrayWindow('userInfo', result.data)
+          event.reply('userInfo', result.data)
         } else {
-          sendIPCToTrayWindow('userInfo', { data: { uid: -2 } }) // -2代表异常
+          event.reply('userInfo', { data: { uid: -2 } }) // -2代表异常
         }
       }).catch(() => {
-        sendIPCToTrayWindow('userInfo', { data: { uid: -2 } }) // -2代表异常
+        event.reply('userInfo', { data: { uid: -2 } }) // -2代表异常
       })
     } else {
-      sendIPCToTrayWindow('userInfo', {
+      event.reply('userInfo', {
         data: { uid: -1 } // -1代表未登录
       })
     }
@@ -176,6 +176,16 @@ app.whenReady().then(() => {
           createWindow()
         } else {
           mainWindow.show()
+        }
+      }
+    },
+    {
+      label: '还原工作台位置',
+      click: () => {
+        if (global.tableWin && !global.tableWin.window.isDestroyed()) {
+          global.tableWin.window.center()
+        } else {
+          settings.set('tableWinSetting',undefined)
         }
       }
     },
