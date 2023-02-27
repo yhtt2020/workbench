@@ -31,6 +31,7 @@ class TableManager {
             '--user-data-path=' + userDataPath,
             '--app-version=' + app.getVersion(),
             '--app-name=' + app.getName(),
+            '--app-path='+app.getPath('exe'),
             ...((isDevelopmentMode ? ['--development-mode'] : []))
           ]
         }

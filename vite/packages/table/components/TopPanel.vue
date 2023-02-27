@@ -16,7 +16,10 @@
     <a-col  :span="8" style="text-align: right">
      <span class="no-drag" v-if="!loading">{{ dateTime.month }}/{{ dateTime.day }} {{ dateTime.hours }}:{{ dateTime.minutes }} {{ dateTime.week }}
 
-        <i style="" :class="'qi-'+city.weather.now.icon+'-fill'"></i> {{ city.weather.now.temp }}℃
+       <span v-if="hasWeather">
+          <i style="" :class="'qi-'+city.weather.now.icon+'-fill'"></i> {{ city.weather.now.temp }}℃
+       </span>
+
 
      </span>
     </a-col>
@@ -42,6 +45,9 @@ export default {
     ...mapState(appStore,['appData']),
     city () {
       return this.appData.weather.cities[0]
+    },
+    hasWeather(){
+      return this.appData.weather.cities.length>0
     }
   },
   mounted () {

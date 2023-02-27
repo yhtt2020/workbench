@@ -29,6 +29,8 @@ import Tomato from './page/app/tomato/Tomato.vue'
 import Deck from './page/Deck.vue'
 import Setting from './page/Setting.vue'
 import Weather from './page/app/Weather.vue'
+import BiliIndex from './page/app/bili/Index.vue'
+import LevelDetail from './page/LevelDetail.vue'
 
 // @ts-ignore
 window.$=$
@@ -44,7 +46,20 @@ const routes = [
       {
         path: '/app',
         name: 'app',
-        component: AppFrame
+        component: AppFrame,
+        children:[
+
+        ]
+      },
+      {
+        path:'/bili',
+        name:'bili',
+        component: BiliIndex
+      },
+      {
+        path:'/levelDetail',
+        name:'levelDetail',
+        component: LevelDetail
       },
       {
         path: '/apps',

@@ -41,7 +41,9 @@ class ApiHandler {
     })
 
     ApiHandler.onWindow('setAlwaysOnTop', (event, args, instance) => {
-      instance.window.setAlwaysOnTop(args.flag)
+      if(instance.window) {
+        instance.window.setAlwaysOnTop(args.flag)
+      }
     })
 
     ApiHandler.onWindow('isAlwaysOnTop', (event, args, instance) => {

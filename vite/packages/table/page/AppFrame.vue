@@ -23,10 +23,10 @@
     </a-row>
   </div>
   <div v-if="fullScreen" id="frame" :style="{background:app.theme||'#424242'}" style="height: calc(100vh - 4em)">
-
+      <router-view></router-view>
   </div>
   <div v-else id="frame" :style="{background:app.theme||'#424242'}" style="height: calc(100vh - 15em)">
-
+      <router-view></router-view>
   </div>
 </template>
 
@@ -52,38 +52,45 @@ export default {
     if (app.fullScreen) {
       this.fullScreen = app.fullScreen
     }
-    console.log(this.fullScreen,'full')
-    this.$nextTick(()=>{
-      let frame = document.getElementById('frame')
-      let position = {
-        x: Number(frame.getBoundingClientRect().x.toFixed(0)),
-        y: Number(frame.getBoundingClientRect().y.toFixed(0)),
-        width: frame.offsetWidth,
-        height: frame.offsetHeight
-      }
-      let args = {
-        position,
-        app
-      }
-      this.app = app
-      console.log('触发执行')
-      console.log(args)
-      ipc.send('executeTableApp', args)
-    })
-
-
+    console.log(this.fullScreen)
+    if(app.type==='system'){
+      //系统应用则跳转
+      this.$router.replace({
+        ...JSON.parse(app.route)
+      })
+    }else{
+      //非系统应用，则打开内嵌网页
+      this.$nextTick(()=>{
+        let frame = document.getElementById('frame')
+        let position = {
+          x: Number(frame.getBoundingClientRect().x.toFixed(0)),
+          y: Number(frame.getBoundingClientRect().y.toFixed(0)),
+          width: frame.offsetWidth,
+          height: frame.offsetHeight
+        }
+        let args = {
+          position,
+          app
+        }
+        this.app = app
+        ipc.send('executeTableApp', args)
+      })
+    }
   },
   beforeUnmount () {
     this.handleLeave()
   },
   methods: {
     handleLeave () {
-      if (this.app.background) {
-        ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.app)) })
-      } else {
-        ipc.send('closeTableApp', { app: JSON.parse(JSON.stringify(this.app)) })
+      if(this.app.type!=='system'){
+        //非系统应用，隐藏应用
+        if (this.app.background) {
+          ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.app)) })
+        } else {
+          ipc.send('closeTableApp', { app: JSON.parse(JSON.stringify(this.app)) })
+        }
+        this.fullScreen = false
       }
-      this.fullScreen = false
     },
     goBack () {
       this.$router.go(-1)

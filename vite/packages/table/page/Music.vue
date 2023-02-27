@@ -97,7 +97,6 @@ export default {
   },
   watch:{
     'status.music':function (newValue,oldValue){
-      console.log(newValue)
       let status=newValue
       if(status.prompt){
         this.prompt = status.prompt

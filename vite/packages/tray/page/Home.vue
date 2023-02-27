@@ -175,6 +175,7 @@ export default defineComponent({
         ipc.send('getTrayUserInfo')
       }
     },
+
     gradeTableGenerate (num) {
       let lvSys = {}
       for (let i = 0; i < num + 1; i++) {
@@ -197,7 +198,7 @@ export default defineComponent({
     },
     loadUserInfo(){
       this.loading=true
-      ipc.send('getTrayUserInfo')
+      ipc.send('getDetailUserInfo')
     }
   },
   mounted () {

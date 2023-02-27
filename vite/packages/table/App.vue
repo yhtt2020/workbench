@@ -16,7 +16,9 @@ let startX, startY, moveEndX, moveEndY, X, Y = 0
 export default {
   components: {},
   async mounted() {
-    window.updateMusicStatusHandler=this.updateMusic
+
+    // this.getUserInfo()
+    window.updateMusicStatusHandler = this.updateMusic
     this.loadAll()
 
     if (this.settings.darkMod) {
@@ -54,14 +56,22 @@ export default {
   },
 
   computed: {
-    ...mapWritableState(appStore, ['settings', 'routeUpdateTime'])
+    ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo'])
   },
   methods: {
-    ...mapActions(appStore,['setMusic','loadAll']),
-    updateMusic(music){
+    ...mapActions(appStore, ['setMusic', 'loadAll']),
+    updateMusic(music) {
       this.setMusic(music)
     },
     ...mapActions(appStore, []),
+    // async getUserInfo() {
+    //   let rs = await tsbApi.user.get()
+    //   if (rs.status === 1) {
+    //     console.log(rs.data.user_info)
+    //     this.userInfo=rs.data.user_info
+    //   }
+    // }
+
   },
   data() {
     return {

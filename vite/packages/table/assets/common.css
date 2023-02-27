@@ -170,5 +170,10 @@ body {
     transform: rotate(270deg); }
   100% {
     transform: rotate(360deg); } }
+.text-more {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-break: break-all;
+  overflow: hidden; }
 
 /*# sourceMappingURL=common.css.map */

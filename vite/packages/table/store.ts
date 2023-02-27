@@ -7,6 +7,9 @@ import {nanoid} from 'nanoid'
 
 export const appStore = defineStore('appStore', {
   state: () => ({
+    userInfo:false,
+
+
     apps: [],
 
     appData: {//应用数据
@@ -128,6 +131,26 @@ export const appStore = defineStore('appStore', {
         return city.id !== cityId
       })
       this.saveWeather()
+    },
+    setUser(userInfo){
+      userInfo.onlineGradeExtra.cumulativeMinutes= userInfo.onlineGradeExtra.cumulativeHours % 60
+      userInfo.onlineGradeExtra.cumulativeMinute = userInfo.onlineGradeExtra.minutes
+      userInfo.onlineGradeIcons={}
+      userInfo.onlineGradeIcons.crown = []
+      userInfo.onlineGradeIcons.sun = []
+      userInfo.onlineGradeIcons.moon = []
+      userInfo.onlineGradeIcons.star = []
+      function handleGrade(name){
+        for(let i = 0; i < userInfo.onlineGrade[name]; i++) {
+          userInfo.onlineGradeIcons[name].push({
+            icon: 'file://' +window.globalArgs['app-path']+`/icons/grade/${name}.svg`
+          })
+        }
+      }
+      console.log(userInfo)
+
+      Object.keys( userInfo.onlineGrade).forEach(v => handleGrade(v))
+      this.userInfo=userInfo
     }
   }
 })

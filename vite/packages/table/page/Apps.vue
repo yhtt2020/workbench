@@ -96,6 +96,21 @@ export default {
       dropFiles: [],
       storeApps: [
         {
+          icon: 'https://s1.hdslb.com/bfs/static/jinkela/popular/assets/icon_popular.png',
+          name: 'B站数据小助手',
+          summary: '一个B站数据监控的小插件，可以实时监测一个视频的热度走势，显示在副屏上。',
+          needInstall: false,
+          data: {
+            fullScreen:false,
+            theme: '#030c13',
+            name: 'wallpapaer',
+            type:'system',//网页助手
+            route:JSON.stringify({
+              name:'bili',
+            })
+          }
+        },
+        {
           icon: 'https://a.apps.vip/icons/ppet.png',
           name: 'PPet桌面宠物',
           summary: '一款开源桌面看板娘，让你不再孤单。',

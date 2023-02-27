@@ -159,5 +159,13 @@ body{
 
 
 body.full-screen{
-  
+
+}
+
+
+.text-more{
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-break: break-all;
+  overflow: hidden;
 }
