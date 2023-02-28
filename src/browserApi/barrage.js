@@ -4,6 +4,7 @@ const {
 const ipc = ipcRenderer
 const BarrageModel = require('../model/barrageModel')
 const barrageModel=new BarrageModel()
+const tabs=require('./tabs.js')
 const barrage={
   CONST:barrageModel.BARRAGE_CONST,
   urlChangedCallback:null,
@@ -48,6 +49,14 @@ const barrage={
    */
   onUrlChanged(callback){
     barrage.urlChangedCallback=callback
+  },
+  setOnUrlChanged (callback) {
+    barrage.urlChangedCallback=callback
+    tabs.setOnUrlChanged((a)=>{
+      if(barrage.urlChangedCallback){
+        barrage.urlChangedCallback(a.url)
+      }
+    })
   },
   /**
    * 锁定窗体

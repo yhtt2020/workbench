@@ -1,6 +1,7 @@
 /**
  * 专用于拆分出api的处理方法，主要是绑定各种方法并进行处理
  */
+const { ipcMain: ipc } = require('electron')
 
 const apiList={
 
@@ -11,10 +12,27 @@ const apiList={
 
 
 class ApiHandler {
+  apiInstance=[]
+  static onUrlChanged=[]
   constructor () {
 
   }
   static bindIPC(){
+    ipc.on('changeUrl',(e,a)=>{
+      ApiHandler.onUrlChanged.forEach(instance=>{
+        console.log(instance,'每一个监听的实例')
+        instance.webContents.send('tabs.onUrlChanged',a)
+      })
+    })
+    ApiHandler.on('tabs','setOnUrlChanged',(event,args,instance)=>{
+      //添加一个弹幕观测
+      console.log('添加监听',instance)
+      if(instance.type==='view')
+        ApiHandler.onUrlChanged.push(instance.view)
+      else{
+        ApiHandler.onUrlChanged.push(instance.window)
+      }
+    })
     ApiHandler.on('runtime','init', (event, args,instance) => {
       try{
         let modMap={

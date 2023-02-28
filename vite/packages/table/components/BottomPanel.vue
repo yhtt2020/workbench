@@ -10,9 +10,9 @@
           </div>
         </div>
       </div>
-      <div v-else style="width: 23em">
+      <div v-else :style="{width:settings.enableChat?'23em':'11em'}">
         <a-row class="pointer" @click="levelDetail">
-          <a-col  :span="10" style="padding: 0.6em;position:relative;">
+          <a-col  :span="settings.enableChat?10:24" style="padding: 0.6em;position:relative;">
             <a-row  style="text-align: left" :gutter="10">
               <a-col>
                 <a-avatar :src="userInfo.avatar" :size="50">{{ userInfo.nickname }}</a-avatar>
@@ -53,14 +53,12 @@
 
 
           </a-col>
-          <a-col :span="14" style="text-align: left;padding-top: 0.5em;line-height: 1.75">
+          <a-col v-if="settings.enableChat" :span="14" style="text-align: left;padding-top: 0.5em;line-height: 1.75">
             <div class="pointer" @click.stop="enterIM">
               <div v-for="message in messages" class="text-more">{{message.title}}：{{message.body}}</div>
             </div>
           </a-col>
         </a-row>
-
-
       </div>
     </div>
     <div class="common-panel" style="display: inline-block">
@@ -175,21 +173,18 @@ export default {
       lvInfo.lv = args.data.onlineGradeExtra.lv
       let current = this.gradeTableGenerate(64)[lvInfo.lv]
       let section = this.gradeTableGenerate(64)[lvInfo.lv + 1]
-      console.log(section, 'section')
       let remain = section[0] * 60 - (args.data.onlineGradeExtra.minutes)
       lvInfo.remainHour = Math.floor(remain / 60)
       lvInfo.remainMinute = remain - (Math.floor(remain / 60) * 60)
       lvInfo.minute = args.data.onlineGradeExtra.minutes
       lvInfo.percentage = ((lvInfo.minute - current[0] * 60) / ((current[1] - current[0]) * 60)) * 100
-      console.log(lvInfo)
       this.lvInfo = lvInfo
       this.setUser(args.data)
-      console.log(lvInfo)
     })
     ipc.send('getDetailUserInfo')
   },
   computed: {
-    ...mapWritableState(appStore, ['userInfo'])
+    ...mapWritableState(appStore, ['userInfo','settings'])
   },
   methods: {
     ...mapActions(appStore, ['setUser']),

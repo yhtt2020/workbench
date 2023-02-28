@@ -3,6 +3,7 @@
     <div class="a-container " :class="{dark:settings.darkMod}">
       <router-view></router-view>
     </div>
+    <Barrage></Barrage>
   </a-config-provider>
 </template>
 
@@ -11,10 +12,11 @@ import zhCN from 'ant-design-vue/es/locale/zh_CN';
 import {mapActions, mapWritableState} from 'pinia'
 
 import {appStore} from './store'
+import Barrage from "./components/comp/Barrage.vue";
 
 let startX, startY, moveEndX, moveEndY, X, Y = 0
 export default {
-  components: {},
+  components: {Barrage},
   async mounted() {
 
     // this.getUserInfo()

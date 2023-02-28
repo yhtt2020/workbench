@@ -602,6 +602,7 @@ class WindowManager {
 
     function updateView(url) {
       if (frameWindow.isFocused()) {
+        //发送弹幕更新ipc
         if (barrageManager)
           barrageManager.changeUrl(url)
       }

@@ -23,6 +23,18 @@ export const appStore = defineStore('appStore', {
     fullScreen: false,//是否是全屏模式
 
     settings: {
+      enableChat:true,//主界面显示聊天
+
+
+      enableBarrage:true,//启用弹幕
+      barrage:{
+        height:100,//单个轨道的高度
+        limit:10,//单个屏幕允许的数量
+        repeat:3,//重复次数
+        direction:'left',
+        browserLink:true,//和浏览器联动
+      },//弹幕设置
+      ui:{},//ui设置
       showButtonTitle: false,
       darkMod: true,
       attachScreen: null//id,bounds

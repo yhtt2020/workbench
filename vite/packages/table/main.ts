@@ -32,6 +32,9 @@ import Weather from './page/app/Weather.vue'
 import BiliIndex from './page/app/bili/Index.vue'
 import LevelDetail from './page/LevelDetail.vue'
 
+//设置
+import BarrageSetting from './page/settings/BarrageSetting.vue'
+
 // @ts-ignore
 window.$=$
 const routes = [
@@ -68,6 +71,11 @@ const routes = [
 
       },
       {
+        path:'/barrage',
+        name:'barrageSetting',
+        component: BarrageSetting
+      },
+      {
         path: '/music',
         name: 'music',
         component: Music
@@ -88,7 +96,10 @@ const routes = [
       {
         path:'/setting',
         name:'setting',
-        component: Setting
+        component: Setting,
+        children: [
+
+        ]
       }
     ]
   },

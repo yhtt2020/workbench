@@ -117,8 +117,9 @@ class BarrageManager {
       window = windowInstance.window
       this.container = window
       this.instance = windowInstance
-      this.container.setAlwaysOnTop('screen-saver')
+      this.container.setAlwaysOnTop(true,'screen-saver')
       settings.set(settingName, true)
+
       sendIPCToMainWindow('setBarrageOpen',{open:true})
       if (settings.get('barrageLock')) {
         this.lock()
@@ -179,6 +180,7 @@ class BarrageManager {
       settings.set('barrageLock', true)
       this.container.webContents.executeJavaScript(`document.body.classList.remove('active')`)
       this.container.setSkipTaskbar(true)
+      this.container.setAlwaysOnTop(true,'screen-saver')
     }
   }
 

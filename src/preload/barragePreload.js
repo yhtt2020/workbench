@@ -12,9 +12,9 @@ try{
   console.warn(e)
 }
 //载入api
-ipc.on('changeUrl',(e,a)=>{
+tsbApi.tabs.setOnUrlChanged=(e,a)=>{
   if(api.barrage.urlChangedCallback){
     api.barrage.urlChangedCallback(a.url)
     api.barrage.reload()
   }
-})
+}

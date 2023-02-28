@@ -13,9 +13,9 @@ try{
 }
 
 //载入api
-ipc.on('changeUrl',(e,a)=>{
-  if(tsbApi.barrage.urlChangedCallback){
-    tsbApi.barrage.urlChangedCallback(a.url)
-    tsbApi.barrage.reload()
-  }
-})
+// ipc.on('changeUrl',(e,a)=>{
+//   if(tsbApi.barrage.urlChangedCallback){
+//     tsbApi.barrage.urlChangedCallback(a.url)
+//     tsbApi.barrage.reload()
+//   }
+// })
