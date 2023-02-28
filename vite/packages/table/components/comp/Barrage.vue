@@ -9,10 +9,19 @@ import {mapState} from 'pinia'
 
 export default {
   name: 'Barrage',
+  data(){
+    return{
+      sendBarragesCount:{},//用于屏蔽弹幕的数组，最终会存入localStorage ,nanoid:times
+      filteredBarrages:[]//已经被屏蔽的
+    }
+
+  },
   computed:{
     ...mapState(appStore,['settings'])
   },
   async mounted () {
+    this.filteredBarrages =JSON.parse(localStorage.getItem('filteredBarrages')) || []
+    this.sendBarragesCount =JSON.parse(localStorage.getItem('sendBarragesCount')) || {}
     let that = this
     const settings=this.settings
     const manager = Danmuku.create({
@@ -72,6 +81,7 @@ export default {
     this.getList()
     window.$manager = manager
     window.$manager.reload=this.getList
+    window.$manager.sendChat=this.sendChat
     this.manager=manager
     window.addEventListener('resize',()=>{
       console.log('rezied')
@@ -85,6 +95,53 @@ export default {
       this.pageUrl = url
       await this.getList()
     },
+    /**
+     * 通过计数的方式进行弹幕的屏蔽
+     */
+    filterBarrages(list){
+      let sendList= list.filter(barrage=>{
+        if(this.filteredBarrages.indexOf(barrage.nanoid)>-1)//已经被屏蔽了
+        {
+          return false
+        }
+        if(!this.sendBarragesCount[barrage.nanoid]){
+          this.sendBarragesCount[barrage.nanoid]=1
+        }else{
+          this.sendBarragesCount[barrage.nanoid]++
+        }
+        if(this.sendBarragesCount[barrage.nanoid]>this.settings.barrage.repeat){
+          this.filteredBarrages.push(barrage.nanoid)//加入屏蔽列表
+          delete this.sendBarragesCount[barrage.nanoid] //移除屏蔽记录
+          return false
+        }
+        return true//幸存下来的予以推送
+      })
+      localStorage.setItem('filteredBarrages',JSON.stringify(this.filteredBarrages))
+      localStorage.setItem('sendBarragesCount',JSON.stringify(this.sendBarragesCount))
+      //存入两个值
+      return sendList
+
+    },
+    async sendChat(messages){
+
+      let barrages=[]
+      messages.forEach(mes=>{
+         if(mes.body===''){
+           return
+         }else{
+           if(!mes.avatar){
+             mes.avatar='https://up.apps.vip/logo/group.png?t=2'
+           }
+           barrages.push({
+             avatar:mes.avatar,
+             channel_type:-1,
+             content:'【消息】'+mes.title+'：'+mes.body,
+             nickname:mes.title,
+           })
+         }
+      })
+      $manager.send(barrages)
+    },
     async getList() {
       this.CONST = tsbApi.barrage.CONST
       try {
@@ -92,7 +149,7 @@ export default {
         this.barrages = rs.data
         if (rs.status) {
           $manager.clear()
-          $manager.send(this.barrages)
+          $manager.send(this.filterBarrages(this.barrages))//进行前置过滤
           $manager.start()
         } else {
           message.error('获取弹幕接口返回错误，可能是服务器正在维护，请稍后再试。')

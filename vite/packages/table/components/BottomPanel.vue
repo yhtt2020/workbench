@@ -155,6 +155,7 @@ export default {
   components: { Template, PanelButton, ThunderboltFilled },
   data () {
     return {
+      lastTime:0,
       visibleTrans: false,
       full: false,
       lvInfo: {},
@@ -165,7 +166,7 @@ export default {
     this.loadMessages()
     setInterval( ()=>{
       this.loadMessages()
-    },2000)
+    },10000)
     ipc.on('userInfo', (event, args) => {
       this.loading = false
 
@@ -190,6 +191,21 @@ export default {
     ...mapActions(appStore, ['setUser']),
     async loadMessages(){
       this.messages=await messageModel.allList()
+      if(this.lastTime===0){
+        let barrages=this.messages.slice(0,10)
+        window.$manager.sendChat(barrages)
+        this.lastTime=barrages[0].create_time
+      }else{
+        let readyToSend=this.messages.filter(mes=>{
+          return mes.create_time>this.lastTime
+        })
+         //readyToSend.splice(0,10)
+        if(readyToSend.length>0){
+          window.$manager.sendChat(readyToSend)
+        }
+        this.lastTime=this.messages[0].create_time//重新设置指标
+        console.log(readyToSend)
+      }
       if(this.messages.length>2){
         this.messages.splice(2)
       }
