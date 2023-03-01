@@ -163,6 +163,7 @@ export default {
     }
   },
   mounted () {
+    this.lastTime=Number(localStorage.getItem('lastBarrageMessageTime'))
     this.loadMessages()
     setInterval( ()=>{
       this.loadMessages()
@@ -204,7 +205,7 @@ export default {
           window.$manager.sendChat(readyToSend)
         }
         this.lastTime=this.messages[0].create_time//重新设置指标
-        console.log(readyToSend)
+        localStorage.setItem('lastBarrageMessageTime',this.lastTime)
       }
       if(this.messages.length>2){
         this.messages.splice(2)
