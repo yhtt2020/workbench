@@ -1,5 +1,5 @@
 <template>
-  <div @click="enterWeather" class="card" style="height: 14.7em;margin-bottom: 1em;padding:1em">
+  <div @click="enterWeather" class="card pointer" style="height: 14.7em;margin-bottom: 1em;padding:1em">
     <!--    <iframe scrolling="no"  style="border: none;height: 196px;width: 100%" :src="src"></iframe>-->
     <div v-if="!appData.weather.cities.length">
       <div>
@@ -8,15 +8,12 @@
         </a-col>
       </div>
       <div style="text-align: center">
-
         <div class="btn" @click.stop="add"
              style="font-size: 1.3em;font-weight: bold;margin-top: 1em;width: 12em;display:inline-block">
           <Icon icon="tianjia1"></Icon>
           添加城市
         </div>
-
       </div>
-
     </div>
     <div @click="enterWeather" v-else>
       <Icon icon="position"></Icon>
