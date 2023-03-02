@@ -40,10 +40,11 @@ const modules = [
   'main/wizard.js',
   'main/messageCenter.js',
   'main/fav.js',
-  'main/globalSearch.js',
+
   'js/util/statsh/statshMain.js',
   // 'src/main/windowManager.js',//加入浏览器api处理者
   'main/handleApi.js',//加入浏览器api处理者
+  'main/globalSearch.js',
 ]
 
 function buildMain () {
