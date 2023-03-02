@@ -192,6 +192,12 @@ export default {
     ...mapActions(appStore, ['setUser']),
     async loadMessages(){
       this.messages=await messageModel.allList()
+      this.messages.forEach(mes=>{
+        //修正一下登录小助手的
+        if(mes.title==='登录小助手'){
+          mes.body='[提醒]'
+        }
+      })
       if(this.lastTime===0){
         let barrages=this.messages.slice(0,10)
         window.$manager.sendChat(barrages)

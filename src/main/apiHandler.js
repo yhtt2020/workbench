@@ -15,6 +15,7 @@ class ApiHandler {
   static onUrlChanged = []
   static downloadingItems=[]
   static downloadWebContents=[]
+  static downloadSession=[]
 
   constructor () {
 
@@ -86,16 +87,27 @@ class ApiHandler {
         })
       }
       let originEvent=event
+      function send(webContents,channel,args){
+        if(webContents && !webContents.isDestroyed()){
+          webContents.send(channel,args)
+        }
+      }
       function bindDownloadListener(webContents){
-        let found= ApiHandler.downloadWebContents.find(wc=>{
-          return wc===webContents
+        let found= ApiHandler.downloadSession.find(ds=>{
+          return ds===webContents.session
         })
         if(found){
           //已经绑定了直接return
           return
         }else{
           let session=webContents.session
-          session.on('will-download', (event, item) => {
+          webContents.on('closed',()=>{
+            //当webcontent被关闭的时候，自动清理掉downloadWebcontents
+            ApiHandler.downloadWebContents.splice(ApiHandler.downloadWebContents.findIndex(wc=>{
+              return wc===webContents
+            }),)
+          })
+          session.on('will-download', (event, item,webContents) => {
             let myItem= getDownloadingItem(item.getURL())
             let saveDir= require('path').dirname(myItem.savePath)
             let fs=require('fs-extra')
@@ -105,12 +117,12 @@ class ApiHandler {
               fs.rmSync(myItem.savePath)//自动删除已经存在的文件，放置文件不存在无法下载
             }
             item.setSavePath(savePath)
-            webContents.send('download.onWillDownload',{item:myItem})
+            send(webContents,'download.onWillDownload',{item:myItem})
 
             //绑定更新
             item.on('updated',(event,state)=>{
               let myItem= getDownloadingItem(item.getURL())
-              webContents.send('download.onUpdated',{item:myItem,state:state,downloadInfo:{
+              send(webContents,'download.onUpdated',{item:myItem,state:state,downloadInfo:{
                  totalBytes:item.getTotalBytes(),
                   receivedBytes:item.getReceivedBytes(),
                 }})
@@ -127,7 +139,7 @@ class ApiHandler {
                 }
 
               }
-              webContents.send('download.onDone',{item:myItem,state:state,downloadInfo:{
+              send(webContents,'download.onDone',{item:myItem,state:state,downloadInfo:{
                 totalBytes:item.getTotalBytes(),
                   receivedBytes:item.getReceivedBytes()
               }})

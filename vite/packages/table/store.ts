@@ -3,28 +3,53 @@ import * as util from "util";
 import {nanoid} from 'nanoid'
 // import _ from 'lodash-es';
 // const {appModel, devAppModel} = window.$models
-
+const DEFAULT_PAPERS_SETTINGS={
+  enable:true,
+  playType:'my',
+  showTime:true,
+  showWeather:true,
+  showProgress:true,
+  usePassword:false,
+  password:'',
+  showUnreadMessage:true,
+  lockTimeout:300,
+  interval:3,
+  savePath:''
+}
 
 export const appStore = defineStore('appStore', {
   state: () => ({
     userInfo:false,
+    myData:{
+      myCircle:[],
+      joinedCircle:[]
+    },
 
 
     apps: [],
 
     appData: {//应用数据
-      weather: {
-        cities: []
+      weather: {//天气
+        cities: [],//当前城市
+        lastUpdateTime:0,//最后一次更新时间
+      },
+      papers:{
+        myPapers:[],//我的壁纸收藏
+        activePapers:[],//当前激活的壁纸
+        playingPaper:null,//播放中的壁纸
+        settings:undefined
       }
     },
 
-    init: false,//todo 增加初始化设置的保存 是否初始设置过了
+    init: false,//是否已经初始化
 
     fullScreen: false,//是否是全屏模式
 
     settings: {
       enableChat:true,//主界面显示聊天
 
+      autoLockTimeout:60,//自动锁屏时长
+      preventLock:false,//阻止锁屏
 
       enableBarrage:true,//启用弹幕
       barrage:{
@@ -36,7 +61,7 @@ export const appStore = defineStore('appStore', {
       },//弹幕设置
       ui:{},//ui设置
       showButtonTitle: false,
-      darkMod: true,
+      darkMod: true,//深色模式
       attachScreen: null//id,bounds
     },
 
@@ -96,11 +121,64 @@ export const appStore = defineStore('appStore', {
       localStorage.setItem(key, JSON.stringify(value))
     },
 
+    /**
+     * 读入全部的数据，包括应用的数据
+     */
     loadAll() {
-      this.loadAppData()
+      this.loadAppsData()
+      this.loadSettings()
       this.init = !!localStorage.getItem('init')
     },
 
+    /**
+     * 读入全部的设置
+     */
+    loadSettings(){
+      let saved=localStorage.getItem('settings')
+      if(saved) {
+        let data= JSON.parse(saved)
+        this.settings = data
+      }
+    },
+    addToActive(image){
+      let found=this.appData.papers.activePapers.findIndex(img=>{
+        if(img.src===image.src)
+          return true
+      })
+      if(found===-1){
+        this.appData.papers.activePapers.push(image)
+      }else{
+        this.appData.papers.activePapers.splice(found,1)
+      }
+      console.log(this.appData.papers)
+      this.saveAppData('papers')
+    },
+    /**
+     * 添加到我的壁纸
+     * @param image
+     */
+    addToMyPaper(image){
+      let found=this.appData.papers.myPapers.findIndex(img=>{
+        if(img.src===image.src)
+          return true
+      })
+      if(found===-1){
+        this.appData.papers.myPapers.push(image)
+      }else{
+        this.appData.papers.myPapers.splice(found,1)
+      }
+      this.saveAppData('papers')
+    },
+    /**
+     * 重置全部壁纸设置
+     */
+    resetPapersSettings(){
+      this.appData.papers.settings=DEFAULT_PAPERS_SETTINGS
+    },
+
+    /**
+     * 结束新手引导
+     */
     finishWizard() {
       this.init = true
       localStorage.setItem('init', 'true')
@@ -118,32 +196,73 @@ export const appStore = defineStore('appStore', {
         this.status.music =music
       }
     },
-    loadAppData() {
-      let saved=localStorage.getItem('appData.weather')
-      if(saved) {
-        let weather= JSON.parse(saved)
-        console.log(weather)
-        this.appData.weather = weather
+
+    /**
+     * 读入某个应用的相关数据
+     */
+    loadAppsData() {
+      this.loadAppData('weather')
+      this.loadAppData('papers')
+      if(typeof this.appData.papers.settings==='undefined'){
+        this.resetPapersSettings()
       }
       this.loadMusic()
     },
+    /**
+     * 读入一个app的数据
+     * @param $app
+     */
+    loadAppData($app){
+      let saved=localStorage.getItem('appData.'+$app)
+      if(saved) {
+        let data= JSON.parse(saved)
+        this.appData[$app] = data
+      }
+    },
+
+    /**
+     * 添加应用
+     * @param apps
+     */
     addApps(apps) {
       this.apps = this.apps.concat(apps)
     },
 
+    /**
+     * 添加城市
+     * @param city
+     */
     addCity(city) {
       this.appData.weather.cities.push(city)
       this.saveWeather()
     },
+    /**
+     * 保存单个应用的数据
+     * @param app
+     */
+    saveAppData(app){
+      this.save('appData.'+app,this.appData[app])
+    },
+    /**
+     * 保存天气
+     */
     saveWeather() {
       this.save('appData.weather', this.appData.weather)
     },
+    /**
+     * 移除城市
+     * @param cityId
+     */
     removeCity(cityId) {
       this.appData.weather.cities = this.appData.weather.cities.filter(city => {
         return city.id !== cityId
       })
       this.saveWeather()
     },
+    /**
+     * 设置当前用户
+     * @param userInfo
+     */
     setUser(userInfo){
       userInfo.onlineGradeExtra.cumulativeMinutes= userInfo.onlineGradeExtra.cumulativeHours % 60
       userInfo.onlineGradeExtra.cumulativeMinute = userInfo.onlineGradeExtra.minutes
@@ -159,8 +278,6 @@ export const appStore = defineStore('appStore', {
           })
         }
       }
-      console.log(userInfo)
-
       Object.keys( userInfo.onlineGrade).forEach(v => handleGrade(v))
       this.userInfo=userInfo
     }

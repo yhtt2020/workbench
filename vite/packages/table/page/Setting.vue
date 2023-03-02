@@ -83,6 +83,14 @@
                 <Icon icon="danmushezhi" style="font-size: 2em"></Icon>
                 <div> 弹幕设置</div>
               </div>
+
+
+            </a-col>
+            <a-col :span="6">
+              <div @click="papersSettings" class="btn">
+                <Icon icon="banner" style="font-size: 2em"></Icon>
+                <div> 锁屏壁纸</div>
+              </div>
             </a-col>
           </a-row>
           <div>
@@ -150,6 +158,11 @@ export default {
     barrage(){
       this.$router.push({
         path:'/barrage'
+      })
+    },
+    papersSettings(){
+      this.$router.push({
+        name:'papersSetting'
       })
     },
     switchBarrage(value){

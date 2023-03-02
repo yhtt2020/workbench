@@ -21,6 +21,10 @@ import Status from './page/Status.vue'
 import Gallery from './page/Gallery.vue'
 import Wizard from './page/Wizard.vue'
 
+
+import 'viewerjs/dist/viewer.css'
+import VueViewer from 'v-viewer'
+
 import $ from 'jquery'
 
 //应用
@@ -31,9 +35,14 @@ import Setting from './page/Setting.vue'
 import Weather from './page/app/Weather.vue'
 import BiliIndex from './page/app/bili/Index.vue'
 import LevelDetail from './page/LevelDetail.vue'
+import My from './page/gallery/My.vue'
 
 //设置
 import BarrageSetting from './page/settings/BarrageSetting.vue'
+import Bing from './page/gallery/Bing.vue'
+import Lively from './page/gallery/Lively.vue'
+import Wallheaven from './page/gallery/Wallheaven.vue'
+import PapersSetting from './page/gallery/Setting.vue'
 
 // @ts-ignore
 window.$=$
@@ -114,7 +123,34 @@ const routes = [
   {
     path: '/gallery',
     name: 'gallery',
-    component: Gallery
+    component: Gallery,
+    children: [
+      {
+        path:'/bing',
+        name:'bing',
+        component:Bing
+      },
+      {
+        path:'/lively',
+        name:'lively',
+        component: Lively
+      },
+      {
+        path:'/wallheaven',
+        name:'wallheaven',
+        component: Wallheaven
+      },
+      {
+        path:'/my',
+        name:'my',
+        component: My
+      },
+      {
+        path:'/setting',
+        name:'papersSetting',
+        component: PapersSetting
+      }
+    ]
   },
   {
     path: '/power',
@@ -143,7 +179,7 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes
 })
-app.use(pinia).use(Antd).use(router).mount('#app')
+app.use(pinia).use(Antd).use(router).use(VueViewer).mount('#app')
 app.component('Icon', Icon)
 app.component('PanelButton', PanelButton)
 app.component('BackBtn', BackBtn)

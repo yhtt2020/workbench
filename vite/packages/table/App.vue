@@ -45,7 +45,7 @@ export default {
       } else if (X < -distX) {
         console.log("向左滑", distX);
         //e.preventDefault();
-      } else if (Y > distY) {
+      } else if (Y > distY && startY<=50) {
         ipc.send('openGlobalSearch')
         e.preventDefault();
       } else if (Y < -distY) {

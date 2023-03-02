@@ -48,7 +48,5 @@ export default {
 </script>
 
 <style scoped>
-.line{
-    margin-bottom: 1em;
-}
+
 </style>

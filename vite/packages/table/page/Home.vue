@@ -3,7 +3,7 @@
     <div>
       <div style="overflow-x: visible">
         <div class="card-wrapper">
-          <Dou></Dou>
+<!--          <Dou></Dou>-->
           <Music></Music>
           <div style="display: inline-block;width: 21em;white-space: pre-wrap;vertical-align: text-top;">
             <Timer></Timer>
@@ -11,8 +11,8 @@
           </div>
 
           <Calendar></Calendar>
-          <Stock></Stock>
-         <AddMore></AddMore>
+<!--          <Stock></Stock>-->
+<!--         <AddMore></AddMore>-->
         </div>
       </div>
     </div>

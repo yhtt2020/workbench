@@ -13,7 +13,7 @@
     </div>
     <div @click="change($event,menu)" class="menu" :class="{'active':activeIndex===menu.index}"
          v-for="(menu,index) in menus">
-      {{ menu.title }}
+     <Icon v-if="menu.icon" :icon="menu.icon"></Icon>  {{ menu.title }}
     </div>
   </div>
 </template>
@@ -45,6 +45,7 @@ export default {
   },
   methods: {
     change (e, menu) {
+      console.log(e,menu)
       this.activeIndex = menu.index
       this.$emit('changeTab', {
         index: menu.index,
