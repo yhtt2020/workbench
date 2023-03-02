@@ -261,10 +261,18 @@ export default {
         window.$xgplayer.destroy()
       }
       this.currentItem=item
-
+      let url=this.getVideo(item)
+      let local=''
+      if(item.done){
+        //如果是已经触发过下载的，则判断一下本地是否存在，存在则替换成本地播放链接
+        local = require('path').join(this.appData.papers.settings.savePath,'lively',item.name)
+      }
+      if(fs.existsSync(local)){
+        url='file://'+local
+      }
       window.$xgplayer = new Player({
         id: 'mse',
-        url: this.getVideo(item),
+        url: url,
         // fitVideoSize: 'fixWidth',
         fitVideoSize: 'fixWidth',
         // width:300,
