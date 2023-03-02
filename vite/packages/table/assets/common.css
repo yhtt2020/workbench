@@ -176,4 +176,13 @@ body {
   word-break: break-all;
   overflow: hidden; }
 
+.line, .line-title {
+  margin-bottom: 1em;
+  padding-left: 1em; }
+
+.line-title {
+  padding-left: 0em;
+  font-size: 1.2em;
+  font-weight: bold; }
+
 /*# sourceMappingURL=common.css.map */
