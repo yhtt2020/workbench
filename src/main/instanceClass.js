@@ -100,7 +100,11 @@ class ViewInstance extends Instance {
     {
       this.view.webContents.destroy()
     }
-    this.parent.restoreAttachMod()
+    if(mainWindow && !mainWindow.isDestroyed())
+    {
+      //防止报错
+      this.parent.restoreAttachMod()
+    }
     windowManager.attachedView=null
     windowManager.attachedInstance=null
     windowManager.attachStatus=null
