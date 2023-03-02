@@ -18,7 +18,7 @@
     <vue-custom-scrollbar  id="containerWrapper" :settings="settingsScroller" style="height: 80vh">
     <viewer :images="appData.papers.myPapers">
       <a-row :gutter="[20,20]" id="bingImages" style="margin-right: 1em">
-        <a-col class="image-wrapper " :span="6" style="">
+        <a-col @click="this.visibleImport=true" class="image-wrapper " :span="6" style="">
           <a-avatar    class="image-item pointer"   style="font-size:2em;position: relative;line-height:118px;height: 118px;background: rgba(10,10,10,0.31)">
             <Icon  style="font-size: 1.3em;vertical-align: text-bottom" icon="tianjiawenjianjia"></Icon> 导入
           </a-avatar>
@@ -52,11 +52,15 @@
       </a-col>
     </a-row>
   </a-drawer>
+  <a-drawer v-model:visible="visibleImport" placement="right">
+     <Import ></Import>
+  </a-drawer>
 </template>
 
 <script>
 import {mapWritableState,mapActions} from 'pinia'
 import { appStore } from '../../store'
+import Import from './Import.vue'
 import Spotlight from 'spotlight.js'
 import path from 'path'
 export default {
@@ -64,6 +68,7 @@ export default {
   data(){
     return{
       visibleMenu:false,
+      visibleImport:false,
       settingsScroller: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -74,11 +79,14 @@ export default {
       livelyPapers:[]
     }
   },
+  components:{Import},
   computed:{
     ...mapWritableState(appStore,['appData'])
   },mounted () {
     console.log(this.appData.papers.myPapers,'我的壁纸')
-    this.loadLivelyPapers()
+    if(this.appData.papers.settings.savePath){
+      this.loadLivelyPapers()
+    }
   },
   methods:{
     ...mapActions(appStore,['addToActive']),

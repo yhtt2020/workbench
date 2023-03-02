@@ -1,7 +1,7 @@
 <template>
   <div id="galleryContainer" class="main" style="text-align: center;padding-top: 2em">
     <BackBtn :onClick="goHome"></BackBtn>
-      <SecondPanel :search="true" :menus="menus" style="margin-top: 3em;margin-left: 3em;text-align: left" logo="https://up.apps.vip/logo/favicon.svg"
+      <SecondPanel :search="true" :menus="menus" style="margin-top: 3em;margin-left: 3em;text-align: left" logo="https://a.apps.vip/wallpaper/favicon.png"
                    @changeTab="changeTab"></SecondPanel>
     <div id="parentScroller" style="margin-left: 15em">
       <router-view></router-view>
