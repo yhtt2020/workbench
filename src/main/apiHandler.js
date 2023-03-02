@@ -3,63 +3,179 @@
  */
 const { ipcMain: ipc } = require('electron')
 
-const apiList={
+const apiList = {
 
-  window:[
+  window: [
     'close',
   ]
 }
 
-
 class ApiHandler {
-  apiInstance=[]
-  static onUrlChanged=[]
+  apiInstance = []
+  static onUrlChanged = []
+  static downloadingItems=[]
+  static downloadWebContents=[]
+
   constructor () {
 
   }
-  static bindIPC(){
-    ipc.on('changeUrl',(e,a)=>{
-      ApiHandler.onUrlChanged.forEach(instance=>{
-        console.log(instance,'每一个监听的实例')
-        instance.webContents.send('tabs.onUrlChanged',a)
+
+  static bindIPC () {
+    ipc.on('changeUrl', (e, a) => {
+      ApiHandler.onUrlChanged.forEach(instance => {
+        try {
+          instance.webContents.send('tabs.onUrlChanged', a)
+        } catch (e) {
+          //发现已经挂了，就直接delete掉
+          ApiHandler.onUrlChanged.splice(ApiHandler.onUrlChanged.findIndex(ins => {
+            return ins === instance
+          }), 1)
+        }
       })
     })
-    ApiHandler.on('tabs','setOnUrlChanged',(event,args,instance)=>{
+    ApiHandler.on('tabs', 'setOnUrlChanged', (event, args, instance) => {
       //添加一个弹幕观测
-      console.log('添加监听',instance)
-      if(instance.type==='view')
+      if (instance.type === 'view')
         ApiHandler.onUrlChanged.push(instance.view)
-      else{
+      else {
         ApiHandler.onUrlChanged.push(instance.window)
       }
     })
-    ApiHandler.on('runtime','init', (event, args,instance) => {
-      try{
-        let modMap={
-          'frameWindow':'frameWindow',
-          'window':'window',
-          'view':'attach'
+
+
+    ApiHandler.on('dialog','showOpenDialog',(event,args,instance)=>{
+      console.log(args)
+      event.returnValue =  require('electron').dialog.showOpenDialogSync(instance.window||instance.view,args)
+    })
+    ApiHandler.on('dialog','showSaveDialog',(event,args,instance)=>{
+      event.returnValue =  require('electron').dialog.showSaveDialogSync(instance.window||instance.view,args)
+    })
+    ApiHandler.on('dialog','showMessageBox',(event,args,instance)=>{
+      event.returnValue =  require('electron').dialog.showMessageBoxSync(instance.window||instance.view,args)
+    })
+    ApiHandler.on('dialog','showErrorBox',(event,args,instance)=>{
+      require('electron').dialog.showErrorBox(instance.window||instance.view,args)
+      event.returnValue =true
+    })
+
+    ApiHandler.on('download','start',(event,args,instance)=>{
+      //启动一个下载
+      let ins=instance.window||instance.view
+      let webContents=ins.webContents
+        args.webContentsId=webContents.id
+
+        ApiHandler.downloadingItems.push(args)
+      console.log('开始下载事件',args)
+      /*
+      * url:this.getVideo(item),
+        savePath: this.appData.papers.settings.savePath+'/lively/'+item.name,
+        updated:(item,event,state)=>{
+          //https://www.electronjs.org/zh/docs/latest/api/download-item#%E4%BA%8B%E4%BB%B6%E5%90%8D-updated
+        },
+        done:(item,event,state)=>{
+
+        }*/
+      /**
+       * 获取到下载中的item，这个item是触发的时候给的item，不是下载的时候生成的那个
+       * @param url
+       * @returns {*}
+       */
+      function getDownloadingItem(url){
+        return   ApiHandler.downloadingItems.find(di=>{
+          return di.url===url
+        })
+      }
+      let originEvent=event
+      function bindDownloadListener(webContents){
+        let found= ApiHandler.downloadWebContents.find(wc=>{
+          return wc===webContents
+        })
+        if(found){
+          //已经绑定了直接return
+          return
+        }else{
+          let session=webContents.session
+          session.on('will-download', (event, item) => {
+            let myItem= getDownloadingItem(item.getURL())
+            let saveDir= require('path').dirname(myItem.savePath)
+            let fs=require('fs-extra')
+            fs.ensureDirSync(saveDir)
+            let savePath=require('path').normalize(myItem.savePath)
+            if(fs.existsSync(myItem.savePath)){
+              fs.rmSync(myItem.savePath)//自动删除已经存在的文件，放置文件不存在无法下载
+            }
+            item.setSavePath(savePath)
+            webContents.send('download.onWillDownload',{item:myItem})
+
+            //绑定更新
+            item.on('updated',(event,state)=>{
+              let myItem= getDownloadingItem(item.getURL())
+              webContents.send('download.onUpdated',{item:myItem,state:state,downloadInfo:{
+                 totalBytes:item.getTotalBytes(),
+                  receivedBytes:item.getReceivedBytes(),
+                }})
+            })
+            //绑定下载完成
+            item.on('done',(event,state)=>{
+              let myItem= getDownloadingItem(item.getURL())
+              if(myItem){
+                let foundIndex= ApiHandler.downloadingItems.findIndex(di=>{
+                  return di.url===item.getURL()
+                })
+                if(foundIndex>-1){
+                  ApiHandler.downloadingItems.splice(foundIndex,1)
+                }
+
+              }
+              webContents.send('download.onDone',{item:myItem,state:state,downloadInfo:{
+                totalBytes:item.getTotalBytes(),
+                  receivedBytes:item.getReceivedBytes()
+              }})
+            })
+          })
+
+          ApiHandler.downloadWebContents.push(webContents)
+          console.log('成功绑定'+webContents.id+'的下载事件')
         }
-        let runtime={
-          mod:modMap[instance.type]
+      }
+      try{
+        bindDownloadListener(webContents)
+        webContents.downloadURL(args.url)
+      }catch (e) {
+        console.warn('下载失败，原因',e)
+      }
+
+    })
+
+
+
+    ApiHandler.on('runtime', 'init', (event, args, instance) => {
+      try {
+        let modMap = {
+          'frameWindow': 'frameWindow',
+          'window': 'window',
+          'view': 'attach'
+        }
+        let runtime = {
+          mod: modMap[instance.type]
         }
 
-        event.sender.send('api.runtime.initResponse',{runtime}) //回传当前模式信息
-      }catch (e) {
-        console.warn('回传失败',e)
+        event.sender.send('api.runtime.initResponse', { runtime }) //回传当前模式信息
+      } catch (e) {
+        console.warn('回传失败', e)
       }
     })
 
-    ApiHandler.on('screen','getAllDisplays',(event,args,instance)=>{
-      event.returnValue= require('electron').screen.getAllDisplays()
+    ApiHandler.on('screen', 'getAllDisplays', (event, args, instance) => {
+      event.returnValue = require('electron').screen.getAllDisplays()
     })
 
-    ApiHandler.onWindow('close', (event, args,instance) => {
+    ApiHandler.onWindow('close', (event, args, instance) => {
       windowManager.close(instance.name)
     })
 
     ApiHandler.onWindow('setAlwaysOnTop', (event, args, instance) => {
-      if(instance.window) {
+      if (instance.window) {
         instance.window.setAlwaysOnTop(args.flag)
       }
     })
@@ -74,47 +190,47 @@ class ApiHandler {
       }
     })
 
-    ApiHandler.onWindow('maximize',(event,args,instance)=>{
-      if(instance.type==='frameWindow'){
+    ApiHandler.onWindow('maximize', (event, args, instance) => {
+      if (instance.type === 'frameWindow') {
         instance.frame.maximize()
-      }else if (instance.type === 'window') {
+      } else if (instance.type === 'window') {
         instance.window.maximize()
       }
     })
-    ApiHandler.onWindow('minimize',(event,args,instance)=>{
-      if(instance.type==='frameWindow'){
+    ApiHandler.onWindow('minimize', (event, args, instance) => {
+      if (instance.type === 'frameWindow') {
         instance.frame.minimize()
-      }else if (instance.type === 'window') {
+      } else if (instance.type === 'window') {
         instance.window.minimize()
       }
     })
-    ApiHandler.onWindow('restore',(event,args,instance)=>{
-      if(instance.type==='frameWindow'){
+    ApiHandler.onWindow('restore', (event, args, instance) => {
+      if (instance.type === 'frameWindow') {
         instance.frame.restore()
-      }else if (instance.type === 'window') {
+      } else if (instance.type === 'window') {
         instance.window.restore()
       }
     })
-    ApiHandler.onWindow('getBounds',(event,args,instance)=>{
-      if(instance.type==='frameWindow'){
-        event.returnValue= instance.frame.getBounds()
-      }else if (instance.type === 'window') {
-        event.returnValue= instance.window.getBounds()
+    ApiHandler.onWindow('getBounds', (event, args, instance) => {
+      if (instance.type === 'frameWindow') {
+        event.returnValue = instance.frame.getBounds()
+      } else if (instance.type === 'window') {
+        event.returnValue = instance.window.getBounds()
       }
 
     })
 
-    ApiHandler.onWindow('setBounds',(event,args,instance)=>{
-      if(instance.type==='frameWindow'){
+    ApiHandler.onWindow('setBounds', (event, args, instance) => {
+      if (instance.type === 'frameWindow') {
         instance.frame.setBounds(args)
-      }else if (instance.type === 'window') {
+      } else if (instance.type === 'window') {
         instance.window.setBounds(args)
       }
     })
-    ApiHandler.onWindow('setFullScreen',(event,args,instance)=>{
-      if(instance.type==='frameWindow'){
+    ApiHandler.onWindow('setFullScreen', (event, args, instance) => {
+      if (instance.type === 'frameWindow') {
         instance.frame.setFullScreen(args)
-      }else if (instance.type === 'window') {
+      } else if (instance.type === 'window') {
         instance.window.setFullScreen(args)
       }
     })
@@ -157,28 +273,29 @@ class ApiHandler {
       // }
     })
   }
+
   /**
    * 通用绑定事件方法，额外增加了一个instance参数以便于api区分当前的instance
    * @param channel
    * @param cb
    */
-  static onWindow(channel, cb) {
+  static onWindow (channel, cb) {
     ApiHandler._on('api.window.' + channel, (event, args) => {
       let instance = windowManager.get(args['_name'])
       cb(event, args['args'], instance)
     })
   }
 
-  static on(module, channel, cb) {
+  static on (module, channel, cb) {
     ApiHandler._on('api.' + module + '.' + channel, (event, args) => {
       let instance = windowManager.get(args['_name'])
       cb(event, args['args'], instance)
     })
   }
 
-  static _on(channel, cb) {
+  static _on (channel, cb) {
     require('electron').ipcMain.on(channel, cb)
   }
 }
 
-module.exports=ApiHandler
+module.exports = ApiHandler

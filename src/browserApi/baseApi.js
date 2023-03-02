@@ -9,7 +9,9 @@ const baseApi={
   runtime:require('./runtime.js'),
   util:require('./util.js'),
   notification:require('./notification.js'),
-  screen:require('./screen.js')
+  screen:require('./screen.js'),
+  dialog:require('./dialog.js'),
+  download:require('./download.js')
 }
 window.baseApi=baseApi
 module.exports=baseApi

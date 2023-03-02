@@ -9,9 +9,10 @@ class TableManager {
     if (global.tableWin === null) {
       let tableWinSetting = settings.get('tableWinSetting')
 
-      tableWin = await windowManager.create({
+      global.tableWin = await windowManager.create({
+        name:'table',
         windowOption: {
-          alwaysOnTop: true,
+          alwaysOnTop: false,
           width: 960,
           minimizable: false,
           height: 540,

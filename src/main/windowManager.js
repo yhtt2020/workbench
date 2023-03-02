@@ -1,7 +1,7 @@
 const path = require('path')
 const {WindowInstance, ViewInstance, FrameWindowInstance} = require('./instanceClass.js')
 const {app, ipcMain: ipc, BrowserWindow, BrowserView} = require('electron')
-const ApiHandler = require('./apiHandler.js')
+global.ApiHandler = require('./apiHandler.js')
 const SaApp = require('./saAppClass')
 const remote = require('@electron/remote/main')
 const SettingModel=require('../model/settingModel.js')
