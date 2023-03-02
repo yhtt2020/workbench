@@ -161,16 +161,24 @@ app.whenReady().then(() => {
   } else {
     tray = new Tray(path.join(__dirname, '/icons/logowin.ico'))
   }
-  tray.setToolTip('想天浏览器')
+  tray.setToolTip('想天工作台')
+  // 任务栏点击事件
+  let timeCount = 0
   tray.on('click', async function (event, position) {
-    await getTrayWindow()
-    const bounds = trayWindow.getBounds()
-    trayWindow.setPosition(position.x - bounds.width, position.y - bounds.height)
-    return false
+    setTimeout(async () => {
+      if (timeCount === 0) {
+        await getTrayWindow()
+        const bounds = trayWindow.getBounds()
+        trayWindow.setPosition(position.x - bounds.width, position.y - bounds.height)
+        timeCount = 0
+      }
+    }, 300)
+
+
   })
   const contextMenu = Menu.buildFromTemplate([
     {
-      label: '打开主界面',
+      label: '打开浏览器',
       click: () => {
         if (!mainWindow) {
           createWindow()
@@ -213,14 +221,15 @@ app.whenReady().then(() => {
       type: 'separator'
     },
     {
-      label: '关闭浏览器',
+      label: '完全退出',
       click () {
         global.trayExit = true
         app.exit()
       }
     }
   ])
-  tray.on('double-click', () => {
+  tray.on('double-click', (event) => {
+    timeCount = 1
     if (!mainWindow) {
       createWindow()
     } else {
