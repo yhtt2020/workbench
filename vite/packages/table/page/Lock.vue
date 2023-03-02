@@ -1,18 +1,23 @@
 <template>
-  <div @click="enter" style="position:relative;">
-    <div @click.stop="enterGallery" class="gallery" style="">
-      <Icon icon="banner"></Icon>
+  <div id="displayMiddle" @click.prevent="enter" class="pointer"  style="margin-top: -6em;min-height: 15em">
+    <div v-if="appData.papers.settings.showTime && loaded" class="time" style="" >
+      <span style="font-size: 3.5em">{{ hours }}:{{ minutes }}</span>
+     <div style="margin-top: -0.5em"> {{ year }}年{{ month }}月{{ day }}日 {{ week }}</div>
     </div>
-    <div class="time" v-if="loaded" style="">
-      <span style="font-size: 3.5em">{{ hours }}:{{ minutes }}</span><br>
-      {{ year }}年{{ month }}月{{ day }}日 {{ week }}
+    <div id="tip" style="color: white;font-size: 20px;margin-top: 2em" >
+      <Icon  icon="jiesuo" style="font-size: 30px;vertical-align: text-top"></Icon>点击屏幕中间解锁
     </div>
-    <img :src="wallPaper" style="width: 100vw;height: 100vh;object-fit: cover">
 
   </div>
+
 </template>
 
 <script>
+import Spotlight from 'spotlight.js'
+import { appStore } from '../store'
+import {mapState} from 'pinia'
+import { message } from 'ant-design-vue'
+
 export default {
   name: 'Lock',
   data () {
@@ -32,6 +37,18 @@ export default {
     }
   },
   mounted () {
+    this.$nextTick(()=>{
+      $('#displayMiddle').css('top','calc(50vh - '+$('#displayMiddle').height()/2+'px)')
+    })
+    $('#displayMiddle').fadeIn(1000)
+    setTimeout(()=>{
+      $('#tip').fadeOut(1000)
+    },3000)
+    if(this.appData.papers.settings.playType==='my'){
+      this.playAll()
+    }else{
+      this.playActive()
+    }
     this.tick()
     if (!this.timer) {
       this.timer = setInterval(() => {
@@ -42,9 +59,13 @@ export default {
   beforeUnmount () {
     clearInterval(this.timer)
   },
+  computed:{
+    ...mapState(appStore,['appData'])
+  },
   methods: {
     enterGallery(){
-      this.$router.push({
+      window.Spotlight.close()
+      this.$router.replace({
          path:'/gallery'
       })
     },
@@ -64,34 +85,66 @@ export default {
       this.week = weeks[date.getDay() - 1]
       this.loaded = true
     },
-    enter () {
-      this.$router.push('/')
+    enter (closeSpot=true) {
+      if(closeSpot)
+        window.Spotlight.close()
+      console.log('解锁')
+      this.$router.go(-1)
+    },
+    playAll(){
+      if(this.appData.papers.myPapers.length===0){
+        this.$router.replace({
+          name:'my'
+        })
+        message.error('请添加我的壁纸后重新锁屏。')
+        return
+      }
+      window.Spotlight.show(this.appData.papers.myPapers, {
+        control: 'autofit,fullscreen,close,zoom,prev,next',
+        play: true,
+        autoslide: true,
+        infinite: true,
+        progress: this.appData.papers.settings.showProgress,
+        title: false,
+        onclose:()=>{this.enter(false)}
+      })
+    },
+    playActive(){
+      if(this.appData.papers.activePapers.length===0){
+        this.$router.replace({
+          name:'my'
+        })
+        message.error('请激活壁纸后重新使用激活壁纸模式。')
+        return
+      }
+      window.Spotlight.show(this.appData.papers.activePapers, {
+        control: 'autofit,fullscreen,close,zoom,prev,next',
+        play: true,
+        autoslide: true,
+        infinite: true,
+        progress: this.appData.papers.settings.showProgress,
+        title: false,
+        onclose:()=>{this.enter(false)}
+      })
     }
   }
 }
 </script>
 
 <style scoped>
-.gallery {
-  position: fixed;
-  right: 1em;
-  top: 1em;
-  font-size: 3em;
-  color: rgba(255, 255, 255, 0.67);
-  background: rgba(0, 0, 0, 0.4);
-  padding: 0 0.3em;
-  border-radius: 0.2em
-}
-
 .time {
-  margin-top: 15%;
-  z-index: 9;
-  position: absolute;
-  font-size: 2em;
+  font-size: 1.5em;
   color: white;
   text-shadow: 0 0 2em #000;
-  left: 50%;
-  margin-left: -4em;
   text-align: center
+}
+#displayMiddle{
+  display:none;position: fixed;left: calc(25%);
+  width: 50%;
+  text-align: center;
+  z-index: 9999999;
+  /*background: rgba(0, 0, 0, 0.3);*/
+  padding: 1em;
+  border-radius: 2em;
 }
 </style>
