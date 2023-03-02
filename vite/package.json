@@ -19,6 +19,7 @@
     "@wangeditor/editor-for-vue": "^5.1.12",
     "ant-design-vue": "^3.2.9",
     "codemirror": "^6.0.1",
+    "echarts": "^5.4.1",
     "jquery": "^3.6.3",
     "justifiedGallery": "^3.8.1",
     "lightgallery": "^2.7.1",
