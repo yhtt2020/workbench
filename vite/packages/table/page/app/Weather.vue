@@ -3,7 +3,7 @@
 
     <a-tabs v-model:activeKey="currentCity" type="editable-card" @edit="onEdit">
       <a-tab-pane  v-for="city in appData.weather.cities" :key="city.id" :tab="city.name">
-        <div></div>
+
         <vue-custom-scrollbar :settings="outerSettings" style="position:relative;height:calc(100vh - 14em);  ">
         <div class="section" style="text-align: center">
           <div style="width: 40em;display: inline-block">
@@ -56,6 +56,9 @@
               {{w.windScaleDay}}级
             </a-col>
           </a-row>
+
+          <Son :daily="city.d7.daily"></Son>
+
         </div>
         </vue-custom-scrollbar>
       </a-tab-pane>
@@ -82,8 +85,10 @@ import { message } from 'ant-design-vue'
 import { appStore } from '../../store'
 import {mapWritableState,mapActions} from 'pinia'
 import { getDateTime } from  '../../../../src/util/dateTime.js'
+import Son from './Son.vue'
 export default {
   name: 'Weather',
+  components:{Son},
   data () {
     return {
       outerSettings:{
@@ -104,7 +109,8 @@ export default {
       searchList: [],
       currentCity:'',
       visibleAdd:false,
-      weather:{}
+      weather:{},
+
     }
   },
   mounted () {
@@ -118,6 +124,8 @@ export default {
     if(this.appData.weather.cities.length){
       this.currentCity=this.appData.weather.cities[0].id
     }
+
+
   },
   computed:{
     ...mapWritableState(appStore, ['appData']),
@@ -205,7 +213,8 @@ export default {
       this.addCity(city)
       this.currentCity=city.id
       this.visibleAdd=false
-    }
+    },
+
   }
 }
 </script>
