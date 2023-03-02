@@ -1,6 +1,6 @@
 <template>
   <div class="rotate-center" style="font-size: 2em;margin-bottom: 1em">
-    我的收藏
+    我的收藏 {{appData.papers.myPapers.length}}
   </div>
   <div>
   </div>
@@ -86,6 +86,7 @@ export default {
       let fs=require('fs-extra')
       let path=require('path')
       let videos=fs.readdirSync(require('path').join(this.appData.papers.settings.savePath,'lively'))
+      console.log(JSON.stringify(videos))
       this.livelyPapers= videos.map(v=>{
         return {
           src:path.join(this.appData.papers.settings.savePath,'lively',v),

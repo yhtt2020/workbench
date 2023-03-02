@@ -1,11 +1,11 @@
 <template>
   <div class="rotate-center" style="font-size: 2em;margin-bottom: 1em">
-    动态壁纸
+    动态壁纸 {{ list.length}}
   </div>
   <vue-custom-scrollbar id="containerWrapper" :settings="settingsScroller" style="height: 80vh;">
     <a-row :gutter="[20,20]" id="bingImages" style="margin-right: 1em">
 
-      <a-col class="image-wrapper " v-for="item in list" :span="6" style="position: relative">
+      <a-col class="image-wrapper " v-for="item in displayList" :span="6" style="position: relative">
 <!--        <div style="position: absolute;left: 20px;top: 10px;display: inline-block;z-index: 999">-->
 <!--          <a-progress type="circle" :width="30" :percent="100" :strokeWidth="12"  >-->
 <!--            <template #format>-->
@@ -28,7 +28,7 @@
         </div>
 
         <div style="position: absolute;right: 0;top: -10px ;padding: 10px;z-index: 999">
-              <div  v-if="getWidth(item)===100 && item.percent===undefined " style="" @click.stop="clickDownload(item)" class="bottom-actions pointer"
+              <div  v-if="getWidth(item)===100 && item.percent===undefined " style=""  class="bottom-actions "
                     >
                 <Icon icon="xiazai"></Icon>
               </div>
@@ -40,8 +40,8 @@
     </a-row>
   </vue-custom-scrollbar>
 
-  <div v-show="previewVideoVisible" style="position: fixed;left: 0;right: 0;top: 0;bottom: 0;z-index:9999999">
-    <div style="position: fixed;right: 2em;top: 2em;z-index: 9999999999;">
+  <div v-show="previewVideoVisible" style="position: fixed;left: 0;right: 0;top: 0;bottom: 0;z-index:9999999" id="previwer">
+    <div id="actions" style="position: fixed;right: 2em;top: 2em;z-index: 9999999999;">
       <div @click="startDownload()" class="btn pointer" style="background: rgba(0,0,0,0.76);min-width: 4em;margin-right: 1em;">
         <Icon icon="xiazai" style="font-size: 2em"></Icon>
       </div>
@@ -108,7 +108,8 @@ const lively = [
     name: 'trees-98970.mp4'
   }
 ]
-
+const lively2=["mylivewallpapers-com-Arcanine-and-Oddish-Pokemon.mp4","MyLiveWallpapers-com-Conch-Street-4K.mp4","mylivewallpapers-com-Cult-of-the-Lamb-4K.mp4","mylivewallpapers-com-Fenrir-Ragnorak-4K.mp4","mylivewallpapers-com-Firecracker-Diana-LoL.mp4","mylivewallpapers-com-Geralt-Wild-Hunt.mp4","mylivewallpapers-com-Ghost-Screen-4K.mp4","mylivewallpapers-com-Resident-Evil-Pixels.mp4","mylivewallpapers-com-Shiba-Inu.mp4","mylivewallpapers-com-Tree-Houses-4K.mp4","mylivewallpapers-com-V-Rising.mp4","mylivewallpapers-com-White-Wolf.mp4","mylivewallpapers-com-Wolf.mp4","mylivewallpapers.com-16bit-Japanese-Beach.mp4","mylivewallpapers.com-3D-Skull.mp4","mylivewallpapers.com-Aquarium.mp4","mylivewallpapers.com-Avengers-EndGame.mp4","mylivewallpapers.com-Blue-Butterflies.mp4","mylivewallpapers.com-Captain-America-VS-Iron-Man.mp4","mylivewallpapers.com-Cartoon-Baby-Yoda-Mandalorian.mp4","mylivewallpapers.com-Cerberus-Pixel-Art-Helltaker.mp4","mylivewallpapers.com-Crocodile-Swamp.mp4","mylivewallpapers.com-Dolphin-Island.mp4","mylivewallpapers.com-Forest-Deer.mp4","mylivewallpapers.com-Geralt-of-Rivia.mp4","mylivewallpapers.com-Geralt.mp4","mylivewallpapers.com-Glow-Sunset-Mountain.mp4","mylivewallpapers.com-Glowing-Deer.mp4","mylivewallpapers.com-Hearth-Groves.mp4","mylivewallpapers.com-Heimerstinger-LoL.mp4","mylivewallpapers.com-Henry-Cavill-The-Witcher.mp4","mylivewallpapers.com-Jupiter.mp4","mylivewallpapers.com-Lil-SpongeThug-KillaPants.mp4","mylivewallpapers.com-Magical-Hummingbird.mp4","mylivewallpapers.com-Magical-Underwater.mp4","mylivewallpapers.com-Mountain-Lake-Sunset.mp4","mylivewallpapers.com-Neutron-Star.mp4","mylivewallpapers.com-Nuclear-Blast.mp4","mylivewallpapers.com-Ocean-Waves.mp4","mylivewallpapers.com-Pickle-Rick.mp4","mylivewallpapers.com-Pixel-Flower-Shop.mp4","mylivewallpapers.com-Pixel-Pleiades-Overlord.mp4","mylivewallpapers.com-Pixel-Waterfall.mp4","mylivewallpapers.com-Polar-Bubbles.mp4","mylivewallpapers.com-Rick-and-Morty-Escape.mp4","mylivewallpapers.com-Rick-N-Morty-Adventures.mp4","mylivewallpapers.com-Rise-of-Skywalker.mp4","mylivewallpapers.com-Shiba-Inu-Hot-Dog.mp4","mylivewallpapers.com-Shiba-Inu-Snow.mp4","mylivewallpapers.com-Snow-Deer.mp4","mylivewallpapers.com-Sponge-Bob-Coffee.mp4","mylivewallpapers.com-Sunset-River-FIX.mp4","mylivewallpapers.com-The-Long-Dark.mp4","mylivewallpapers.com-Tropical-Waterfall.mp4","mylivewallpapers.com-Undead-Pirate.mp4","mylivewallpapers.com-Waterfall-Birds-1.mp4","mylivewallpapers.com-Waterfall-Fox.mp4"]
+let fs=require('fs-extra')
 export default {
   name: 'Lively',
   components: { Template },
@@ -123,15 +124,46 @@ export default {
         wheelPropagation: true
       },
       currentItem:{},//当前项目
-      list: lively,
-      previewVideoVisible: false
+      list: [],
+      previewVideoVisible: false,
+      timer:null
     }
   },
   mounted () {
-
+    this.list=[...lively]
+    console.log(this.list)
+    lively2.forEach((w)=>{
+      console.log('添加')
+      this.list.push({
+        name:w
+      })
+    })
+    if(this.appData.papers.settings.savePath){
+    this.list.forEach(li=>{
+        if(fs.existsSync(require('path').join(this.appData.papers.settings.savePath,'lively',li.name))){
+          li.done=1
+      }else{
+          li.done=0
+        }
+    })
+    }
+    $('#previwer').mousemove(()=>{
+      $('#actions').show()
+      if(this.timer){
+        clearTimeout(this.timer)
+      }
+      this.timer=setTimeout(()=>{
+        $('#actions').fadeOut()
+      },5000)
+    })
   },
   computed:{
-    ...mapWritableState(appStore,['appData'])
+    ...mapWritableState(appStore,['appData']),
+    displayList(){
+      return this.list.sort((a,b)=>{
+        return b.done-a.done
+      })
+    }
   },
   methods: {
     ...mapActions(appStore, ['addToMyPaper','saveAppData']),
@@ -146,11 +178,12 @@ export default {
       return filename
     },
     getWidth(item){
-      let fs=require('fs-extra')
+
       if(this.appData.papers.settings.savePath===''){
         return 100
       }else{
         if(item.percent===undefined && fs.existsSync(require('path').join(this.appData.papers.settings.savePath,'lively',item.name))){
+          item.done=1
           return 0
         }
         if(item.percent){
@@ -202,6 +235,7 @@ export default {
         url:this.getVideo(item),
         savePath: this.appData.papers.settings.savePath+'/lively/'+item.name,
         updated:(args)=>{
+          item.done=1
           console.log(args)
           item.percent=(args.downloadInfo.receivedBytes/args.downloadInfo.totalBytes*100).toFixed(0)
           console.log(item.percent,'下载进度')
@@ -209,6 +243,7 @@ export default {
         },
         done:(args)=>{
           item.percent=100
+          item.done=1
           message.success('动态壁纸下载完成')
         },
         willDownload:(args)=>{
@@ -217,6 +252,10 @@ export default {
       this.previewVideoVisible=false
     },
     previewVideo (item) {
+      $('#actions').show()
+      this.timer=setTimeout(()=>{
+        $('#actions').fadeOut()
+      },5000)
       this.previewVideoVisible = true
       if (window.$xgplayer) {
         window.$xgplayer.destroy()
@@ -230,6 +269,7 @@ export default {
         fitVideoSize: 'fixWidth',
         // width:300,
         // height:300,
+        loop:true,
         fluid: true,
         videoInit: true,
         autoplay: true
