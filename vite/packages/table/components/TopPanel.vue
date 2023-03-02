@@ -1,7 +1,7 @@
 <template>
   <a-row   class="top-panel drag" type="flex" :gutter="10">
     <a-col :span="8"  >
-      <div  class="pointer no-drag" @click="enterMusic" v-if="  status.music && status.music.title">
+      <div   class="pointer no-drag text-more" @click="enterMusic" v-if="  status.music && status.music.title">
          <a-avatar style="margin-right: 0.5em" :size="24" :src="status.music.cover"></a-avatar> {{ status.music.title }} {{ status.music.singer }}
       </div>
     </a-col>
