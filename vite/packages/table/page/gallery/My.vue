@@ -24,7 +24,7 @@
           </a-avatar>
         </a-col>
         <a-col class="image-wrapper " v-for="img in appData.papers.myPapers" :span="6" style="">
-          <img @contextmenu.stop="visibleMenu=true"  class="image-item pointer" :src="img.src" style="position: relative">
+          <img @contextmenu.stop="showMenu(img)"  class="image-item pointer" :src="img.src" style="position: relative">
           <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
             <div @click.stop="addToActive(img)" class="bottom-actions pointer" :style="{background:isInActive(img)?'rgba(255,0,0,0.66)':''}">
             <Icon v-if="!isInActive(img)" icon="tianjia1"></Icon>
@@ -38,7 +38,7 @@
   <a-drawer v-model:visible="visibleMenu" placement="bottom">
     <a-row :gutter="20" style="text-align: center">
       <a-col :span="4">
-        <div @click="add()" class="btn">
+        <div @click="setDesktopPaper" class="btn">
           <Icon style="font-size: 3em" icon="tianjia1"></Icon>
           <div>设置为桌面壁纸</div>
         </div>
@@ -61,6 +61,7 @@
 import {mapWritableState,mapActions} from 'pinia'
 import { appStore } from '../../store'
 import Import from './Import.vue'
+import {message,Modal} from 'ant-design-vue'
 import Spotlight from 'spotlight.js'
 import path from 'path'
 export default {
@@ -76,25 +77,39 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
-      livelyPapers:[]
+      livelyPapers:[],
+      currentPaper:null//当前壁纸，显示菜单用
     }
   },
   components:{Import},
   computed:{
     ...mapWritableState(appStore,['appData'])
   },mounted () {
-    console.log(this.appData.papers.myPapers,'我的壁纸')
     if(this.appData.papers.settings.savePath){
       this.loadLivelyPapers()
     }
   },
   methods:{
     ...mapActions(appStore,['addToActive']),
+    showMenu(item){
+      this.currentPaper=item
+      this.visibleMenu=true
+
+    },
+    setDesktopPaper(){
+      Modal.confirm({
+        content:'确定将此壁纸设置为系统桌面壁纸？注意，此处设置不是工作台的壁纸。',
+        okText:'设置桌面壁纸',
+        onOk:()=>{
+          message.info('正在为您下载并设桌面壁纸')
+          tsbApi.system.setPaper(this.currentPaper.src)
+        }
+      })
+    },
     loadLivelyPapers(){
       let fs=require('fs-extra')
       let path=require('path')
       let videos=fs.readdirSync(require('path').join(this.appData.papers.settings.savePath,'lively'))
-      console.log(JSON.stringify(videos))
       this.livelyPapers= videos.map(v=>{
         return {
           src:path.join(this.appData.papers.settings.savePath,'lively',v),
