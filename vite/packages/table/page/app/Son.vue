@@ -3,6 +3,7 @@
 </template>
 <script>
 import * as echarts from "echarts";
+import { getDateTime } from "../../../../src/util/dateTime.js";
 export default {
   name: "Son",
   props: {
@@ -15,15 +16,21 @@ export default {
     return {
       tempMin: [],
       tempMax: [],
+      fxDate: [],
     };
   },
   mounted() {
+    this.fxDate = this.daily.map((item) => this.getMonthAndDay(item.fxDate));
     this.tempMin = this.daily.map((item) => item.tempMin);
     this.tempMax = this.daily.map((item) => item.tempMax);
     this.wertherEcharts();
   },
 
   methods: {
+    getMonthAndDay(time) {
+      let format = getDateTime(new Date(time));
+      return format.month + "月" + format.day + "日";
+    },
     wertherEcharts() {
       var myChart = echarts.init(document.getElementById("ec"));
       myChart.setOption({
@@ -34,7 +41,8 @@ export default {
         xAxis: {
           type: "category",
           boundaryGap: false,
-          data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+          // data: [],
+          data: this.fxDate,
           show: false,
         },
         yAxis: {
@@ -52,7 +60,7 @@ export default {
 
         series: [
           {
-            name: "Highest",
+            name: "最高温",
             type: "line",
             data: this.tempMax,
             label: { show: true, fontSize: 15, color: "#FFFFFF" },
@@ -62,7 +70,7 @@ export default {
             // },
           },
           {
-            name: "Lowest",
+            name: "最低温",
             type: "line",
             data: this.tempMin,
             label: {
