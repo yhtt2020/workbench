@@ -30,7 +30,6 @@ export default {
 
     // this.getUserInfo()
     window.updateMusicStatusHandler = this.updateMusic
-    this.loadAll()
 
     if (this.settings.darkMod) {
       document.body.style.background = 'rgb(50,50,50)'
@@ -42,7 +41,7 @@ export default {
     ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo'])
   },
   methods: {
-    ...mapActions(appStore, ['setMusic', 'loadAll']),
+    ...mapActions(appStore, ['setMusic']),
     bindTouchEvents(){
       $(".a-container").on("touchstart",  (e) =>{
         startX = e.originalEvent.changedTouches[0].pageX,

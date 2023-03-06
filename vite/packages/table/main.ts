@@ -3,11 +3,16 @@ import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
 import App from './App.vue'
 import {createRouter, createWebHashHistory} from 'vue-router'
+
+
 import {createPinia} from 'pinia'
+import piniaPersist from 'pinia-plugin-persist'
+
+
 import Index from './page/Index.vue'
 import vueCustomScrollbar from "../../src/components/vue-scrollbar.vue";
-const app = createApp(App)
-const pinia = createPinia()
+
+
 import Icon from './components/Icon.vue'
 import PanelButton from './components/PanelButton.vue'
 import BackBtn from './components/comp/BackBtn.vue'
@@ -43,6 +48,10 @@ import Bing from './page/gallery/Bing.vue'
 import Lively from './page/gallery/Lively.vue'
 import Wallheaven from './page/gallery/Wallheaven.vue'
 import PapersSetting from './page/gallery/Setting.vue'
+
+const app = createApp(App)
+const pinia = createPinia()
+pinia.use(piniaPersist)
 
 // @ts-ignore
 window.$=$

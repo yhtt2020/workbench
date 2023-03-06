@@ -18,8 +18,9 @@ export const appsStore = defineStore('apps', {
      * @param apps
      */
     addApps(apps) {
-      this.appData.apps.myApps = this.appData.apps.myApps.concat(apps)
-      this.saveAppData('apps')
+      this.myApps = this.myApps.concat(apps)
+      //console.log(appsStore())
+      //myStore.saveAppData('apps')
     },
 
     /**
@@ -28,13 +29,23 @@ export const appsStore = defineStore('apps', {
      */
     deleteApp(findApp){
       try{
-        this.appData.apps.myApps.splice(this.appData.apps.myApps.findIndex(app=>{
+        this.myApps.splice( this.myApps.findIndex(app=>{
           return app===findApp
         }),1)
-        this.saveAppData('apps')
+        console.log(appsStore())
+       // this.saveAppData('apps')
       }catch (e) {
 
       }
     }
+  },
+  persist: {
+    enabled: true,
+    strategies: [{
+      // 自定义存储的 key，默认是 store.$id
+      // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
+      storage: localStorage,
+      // state 中的字段名，按组打包储存
+    }]
   }
 })

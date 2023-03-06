@@ -180,6 +180,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(appsStore, ['addApps']),
     executeApp (appData) {
       this.$router.push({
         name: 'app',
@@ -189,7 +190,7 @@ export default {
     open (app) {
       require('electron').shell.openPath(app.path)
     },
-    ...mapActions(appStore, ['addApps']),
+
     async loadDeskIconApps () {
       const desktopApps = await ipc.sendSync('getDeskApps')
       this.desktopApps = desktopApps
