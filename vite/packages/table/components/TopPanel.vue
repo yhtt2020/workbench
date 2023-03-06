@@ -33,6 +33,7 @@
 import { getDateTime } from '../../../src/util/dateTime'
 import { appStore } from '../store'
 import {mapWritableState,mapState} from 'pinia'
+import { paperStore } from '../store/paper'
 
 export default {
   name: 'TopPanel',
@@ -48,6 +49,7 @@ export default {
   computed:{
     ...mapWritableState(appStore,['status','lockTimeout']),
     ...mapState(appStore,['appData']),
+    ...mapWritableState(paperStore,['settings']),
     lockTimeoutDisplay(){
       if(this.lockTimeout>=60){
         return (this.lockTimeout/60).toFixed(0)+'分'+this.lockTimeout % 60+'秒'
@@ -79,15 +81,14 @@ export default {
     clearLockTimer(){
       clearInterval(this.lockTimer)
       this.lockTimer=null
-      this.lockTimeout=this.appData.papers.settings.lockTimeout
+      this.lockTimeout=this.settings.lockTimeout
       this.showLockTip=false
     },
     setLockTimer(){
       if(this.lockTimer){
-        this.lockTimeout=this.appData.papers.settings.lockTimeout || 300
+        this.lockTimeout=this.settings.lockTimeout || 300
       }else{
-        console.log(this.appData.papers)
-        this.lockTimeout=this.appData.papers.settings.lockTimeout
+        this.lockTimeout=this.settings.lockTimeout
         this.showLockTip=true
         this.lockTimer=setInterval(()=>{
           if(this.lockTimeout===0){

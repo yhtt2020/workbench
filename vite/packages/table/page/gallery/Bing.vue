@@ -33,6 +33,7 @@ import justifiedGallery from 'justifiedGallery'
 import { appStore } from '../../store'
 import {mapActions} from 'pinia'
 import PaperList from '../../components/comp/PaperList.vue'
+import { paperStore } from '../../store/paper'
 
 export default {
   name: 'Bing',
@@ -79,7 +80,7 @@ export default {
 
   },
   methods: {
-    ...mapActions(appStore,['addToMyPaper']),
+    ...mapActions(paperStore,['addToMyPaper']),
 
     getBingWallPaper (page) {
       this.isLoading=true
