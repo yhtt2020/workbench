@@ -188,6 +188,23 @@ app.whenReady().then(() => {
       }
     },
     {
+      label: '打开工作台',
+      click: () => {
+        if (global.tableWin && !global.tableWin.window.isDestroyed()) {
+          global.tableWin.window.show()
+          global.tableWin.window.focus()
+        } else {
+          settings.set('tableWinSetting',undefined)
+          global.tableManager.init().then(()=>{
+            global.tableWin.window.show()
+          })
+        }
+      }
+    },
+    {
+      type: 'separator'
+    },
+    {
       label: '还原工作台位置',
       click: () => {
         if (global.tableWin && !global.tableWin.window.isDestroyed()) {
@@ -196,7 +213,8 @@ app.whenReady().then(() => {
           global.tableWin.window.focus()
         } else {
           settings.set('tableWinSetting',undefined)
-          global.tableManager.init().then()
+          global.tableManager.init().then(()=>{})
+          global.tableWin.window.show()
         }
       }
     },
