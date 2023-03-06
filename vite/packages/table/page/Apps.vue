@@ -1,11 +1,11 @@
 <template>
   <SecondPanel :search="true" :menus="menus" logo="https://up.apps.vip/logo/favicon.svg" @change-tab="changeTab"></SecondPanel>
   <div v-show="currentIndex==='my'" @dragover.prevent="dragOver" @drop.prevent="drop" class="app-content">
-    <div v-if="appData.apps.myApps.length===0" style="font-size: 2em;padding-top: 6em;text-align: center;">
+    <div v-if="myApps.length===0" style="font-size: 2em;padding-top: 6em;text-align: center;">
       <Icon style="color: #ccc;font-size: 2em;vertical-align: middle" icon="line-dragdroptuofang"></Icon>
       将应用拖放到此处，即可用于快捷启动
     </div>
-    <div v-if="appData.apps.myApps.length===0" style="text-align: center">
+    <div v-if="myApps.length===0" style="text-align: center">
       <div @click="loadDeskIconApps" class="btn" style="font-size: 1.5em;width: 8em">导入桌面应用</div>
     </div>
     <div style="padding: 1em">
@@ -55,13 +55,14 @@ import { appStore } from '../store'
 import SecondPanel from '../components/SecondPanel.vue'
 import QingApps from '../components/QingApps.vue'
 import MyApps from '../components/MyApps.vue'
-
+import { appsStore } from '../store/apps'
 let fs = require('fs')
 export default {
   name: 'Apps',
   components: { MyApps, QingApps, SecondPanel },
   computed: {
-    ...mapWritableState(appStore, ['appData'])
+    ...mapWritableState(appStore, ['appData']),
+    ...mapWritableState(appsStore,['myApps'])
   },
   data () {
     return {

@@ -13,13 +13,13 @@
 
 <script>
 import { mapWritableState } from 'pinia'
-import { appStore } from '../store'
+// import { apps } from '../store/apps'
 
 const {appModel}=window.$models
 export default {
   name: 'QingApps',
   computed:{
-    ...mapWritableState(appStore, ['appData'])
+    // ...mapWritableState(apps,['myApps','qingApps'])
   },
   data(){
     return {

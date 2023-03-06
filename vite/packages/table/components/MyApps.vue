@@ -1,6 +1,6 @@
 <template>
   <vue-custom-scrollbar :settings="outerSettings" style="position:relative;height:calc(100vh - 14em);  ">
-    <a-dropdown v-for="app in appData.apps.myApps" :trigger="['contextmenu']">
+    <a-dropdown v-for="app in myApps" :trigger="['contextmenu']">
 
       <div @click="open(app)" class="app" >
         <a-avatar :size="50" shape="square" :src="app.icon"></a-avatar>
@@ -26,9 +26,10 @@
 </template>
 
 <script>
-import { mapWritableState,mapActions } from 'pinia'
+import { mapWritableState,mapActions ,mapState} from 'pinia'
 import { appStore } from '../store'
 import { Modal } from 'ant-design-vue'
+import { appsStore } from '../store/apps'
 
 export default {
   name: 'MyApps',
@@ -44,10 +45,11 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(appStore, ['appData'])
+    ...mapWritableState(appsStore,['qingApps']),
+      ...mapState(appsStore,['myApps'])
   },
   methods:{
-    ...mapActions(appStore,['deleteApp']),
+    ...mapActions(appsStore,['deleteApp']),
     open (app) {
       require('electron').shell.openPath(app.path)
     },

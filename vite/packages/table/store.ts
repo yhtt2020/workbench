@@ -1,8 +1,11 @@
 import {defineStore} from "pinia";
 import * as util from "util";
 import {nanoid} from 'nanoid'
+import {myStore} from './util.js'
 // import _ from 'lodash-es';
 // const {appModel, devAppModel} = window.$models
+import {appsStore} from './store/apps'
+let apps
 const DEFAULT_PAPERS_SETTINGS={
   enable:true,
   playType:'my',
@@ -32,12 +35,6 @@ export const appStore = defineStore('appStore', {
     lockTimeout:300,//锁屏延迟
 
     appData: {//应用数据
-      apps:{
-        myApps:[],
-        qingApps:[]
-      },
-
-
       weather: {//天气
         cities: [],//当前城市
         lastUpdateTime:0,//最后一次更新时间
@@ -58,8 +55,6 @@ export const appStore = defineStore('appStore', {
 
     settings: {
       enableChat:true,//主界面显示聊天
-
-      autoLockTimeout:60,//自动锁屏时长
       preventLock:false,//阻止锁屏
 
       enableBarrage:true,//启用弹幕
@@ -128,29 +123,20 @@ export const appStore = defineStore('appStore', {
   getters: {},
 
   actions: {
-    save(key, value) {
-      localStorage.setItem(key, JSON.stringify(value))
-    },
-
     /**
      * 读入全部的数据，包括应用的数据
      */
     loadAll() {
-      this.loadAppsData()
+      apps=appsStore()
       this.loadSettings()
+      this.loadAppsData()
       this.init = !!localStorage.getItem('init')
     },
 
-    /**
-     * 读入全部的设置
-     */
     loadSettings(){
-      let saved=localStorage.getItem('settings')
-      if(saved) {
-        let data= JSON.parse(saved)
-        this.settings = data
-      }
+      this.settings=myStore.loadSettings(this.settings)
     },
+
     addToActive(image){
       let found=this.appData.papers.activePapers.findIndex(img=>{
         if(img.src===image.src)
@@ -212,34 +198,17 @@ export const appStore = defineStore('appStore', {
      * 读入某个应用的相关数据
      */
     loadAppsData() {
-      this.loadAppData('weather')
-      this.loadAppData('papers')
-      this.loadAppData('apps')
+      this.appData.weather= myStore.loadAppData('weather')
+      this.appData.papers= myStore.loadAppData('papers')
+      //this.appData.apps= myStore.loadAppData('apps')
+      apps.loadData()
       if(typeof this.appData.papers.settings==='undefined'){
         this.resetPapersSettings()
       }
       this.loadMusic()
     },
-    /**
-     * 读入一个app的数据
-     * @param $app
-     */
-    loadAppData($app){
-      let saved=localStorage.getItem('appData.'+$app)
-      if(saved) {
-        let data= JSON.parse(saved)
-        this.appData[$app] = data
-      }
-    },
 
-    /**
-     * 添加应用
-     * @param apps
-     */
-    addApps(apps) {
-      this.appData.apps.myApps = this.appData.apps.myApps.concat(apps)
-      this.saveAppData('apps')
-    },
+
 
     /**
      * 添加城市
@@ -293,21 +262,6 @@ export const appStore = defineStore('appStore', {
       }
       Object.keys( userInfo.onlineGrade).forEach(v => handleGrade(v))
       this.userInfo=userInfo
-    },
-
-    /**
-     * 删除应用
-     * @param findApp
-     */
-    deleteApp(findApp){
-      try{
-        this.appData.apps.myApps.splice(this.appData.apps.myApps.findIndex(app=>{
-          return app===findApp
-        }),1)
-        this.saveAppData('apps')
-      }catch (e) {
-
-      }
     }
   }
 })
