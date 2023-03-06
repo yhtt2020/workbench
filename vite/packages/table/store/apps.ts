@@ -1,5 +1,6 @@
 import {defineStore} from "pinia";
 import {myStore} from '../util.js'
+// @ts-ignore
 export const appsStore = defineStore('apps', {
   state: () => ({
     myApps:[],

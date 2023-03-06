@@ -1,5 +1,5 @@
 <template>
-  <div @click="enterWeather" class="card pointer" style="height: 14.7em;margin-bottom: 1em;padding:1em">
+  <div @click="enterWeather" class="card pointer half" style="padding:1em;margin-bottom: 0">
     <!--    <iframe scrolling="no"  style="border: none;height: 196px;width: 100%" :src="src"></iframe>-->
     <div v-if="!appData.weather.cities.length">
       <div>

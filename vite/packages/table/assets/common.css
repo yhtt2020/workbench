@@ -2,7 +2,15 @@
 .card {
   border-radius: 8px;
   background: rgba(183, 183, 183, 0.63);
-  vertical-align: text-top; }
+  vertical-align: text-top;
+  width: 20em;
+  display: inline-block;
+  height: calc(100vh - 14em);
+  padding: 1em;
+  margin-right: 1em; }
+  .card.half {
+    height: calc((100vh - 14em - 1em) /2 );
+    margin-bottom: 1em; }
   .card .title {
     font-size: 2em; }
   .card .sub-card {
@@ -11,6 +19,15 @@
     padding: 1em;
     border-radius: .3em;
     font-size: 1.2em; }
+
+.card-wrapper {
+  width: auto;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  vertical-align: middle;
+  height: calc(100vh - 11em);
+  display: flex;
+  align-items: center; }
 
 .ant-modal-body {
   font-size: 3em; }
