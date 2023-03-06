@@ -14,7 +14,8 @@ const DEFAULT_PAPERS_SETTINGS={
   showUnreadMessage:true,
   lockTimeout:300,
   interval:3,
-  savePath:''
+  savePath:'',
+  tipLock:true//在状态栏提示多久锁屏
 }
 
 export const appStore = defineStore('appStore', {
@@ -27,6 +28,8 @@ export const appStore = defineStore('appStore', {
 
 
     apps: [],
+
+    lockTimeout:300,//锁屏延迟
 
     appData: {//应用数据
       apps:{
@@ -43,7 +46,9 @@ export const appStore = defineStore('appStore', {
         myPapers:[],//我的壁纸收藏
         activePapers:[],//当前激活的壁纸
         playingPaper:null,//播放中的壁纸
-        settings:undefined
+        settings:undefined,
+        tipLock:true,//在状态栏提示还有多久进入锁屏
+        lockTimeout:300,
       }
     },
 

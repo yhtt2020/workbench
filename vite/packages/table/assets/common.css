@@ -127,7 +127,7 @@ body {
   background: rgba(0, 0, 0, 0.3);
   display: inline-block;
   border-radius: 0.5em; }
-  .btn:hover {
+  .btn:hover, .btn:active {
     background: rgba(0, 0, 0, 0.2);
     color: white; }
 

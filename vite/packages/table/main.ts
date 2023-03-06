@@ -53,7 +53,9 @@ const routes = [
     component: Index,
     children: [
       {
-        path: '', name: 'home', component: Home,
+        path: '',
+        name: 'home',
+        component: Home,
       },
       {
         path: '/app',

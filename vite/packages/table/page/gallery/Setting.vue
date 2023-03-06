@@ -23,6 +23,9 @@
             进入锁屏时间：   <a-input-number default-value="300" v-model:value="appData.papers.settings.lockTimeout"></a-input-number> 秒
           </div>
           <div class="line">
+            在状态栏提示还有多久自动锁屏：<a-switch v-model:checked="appData.papers.settings.tipLock"></a-switch>
+          </div>
+          <div class="line">
             壁纸保存位置：<a-input placeholder="请选择壁纸保存地址" @click="showSaveDialog" style="width: 15em" v-model:value="appData.papers.settings.savePath"></a-input>
           </div>
           <div class="line">
