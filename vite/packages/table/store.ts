@@ -102,7 +102,8 @@ export const appStore = defineStore('appStore', {
   getters: {},
 
   actions: {
-    initAll(){
+    reset(){
+      this.fullScreen=false
     },
 
     /**

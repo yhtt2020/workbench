@@ -27,7 +27,7 @@ export default {
     }
   },
   async mounted() {
-
+    this.reset()//重置部分状态
     // this.getUserInfo()
     window.updateMusicStatusHandler = this.updateMusic
 
@@ -41,7 +41,7 @@ export default {
     ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo'])
   },
   methods: {
-    ...mapActions(appStore, ['setMusic']),
+    ...mapActions(appStore, ['setMusic','reset']),
     bindTouchEvents(){
       $(".a-container").on("touchstart",  (e) =>{
         startX = e.originalEvent.changedTouches[0].pageX,

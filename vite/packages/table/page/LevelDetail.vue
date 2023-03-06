@@ -4,10 +4,10 @@
       <GradePanel></GradePanel>
     </div>
     <div style="width: 400px;display: inline-block;vertical-align: top;margin-right: 1em;white-space: pre-wrap">
-      <div class="card" style="width: 400px;padding: 1em;display: inline-block;margin-bottom: 1em">
+      <div class="card half" style="width: 400px;padding: 1em;display: inline-block;margin-bottom: 1em">
         <ComPanel></ComPanel>
       </div>
-      <div class="card" style="width: 400px;padding: 1em;display: inline-block">
+      <div class="card half" style="width: 400px;padding: 1em;display: inline-block">
         <ComActionPanel></ComActionPanel>
       </div>
     </div>

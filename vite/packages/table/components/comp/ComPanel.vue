@@ -28,9 +28,9 @@
         </a-col>
       </a-row>
     </a-col>
-    <a-col :span="24">
-      <edit-outlined style="margin-right: 0.5em" /> {{userInfo.signature}}
-    </a-col>
+<!--    <a-col :span="24">-->
+<!--      <edit-outlined style="margin-right: 0.5em" /> {{userInfo.signature}}-->
+<!--    </a-col>-->
   </a-row>
   </div>
 </template>
