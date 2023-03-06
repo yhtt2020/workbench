@@ -30,7 +30,6 @@
 import axios from 'axios'
 import Spotlight from 'spotlight.js'
 import justifiedGallery from 'justifiedGallery'
-import { appStore } from '../../store'
 import {mapActions} from 'pinia'
 import PaperList from '../../components/comp/PaperList.vue'
 import { paperStore } from '../../store/paper'

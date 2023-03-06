@@ -29,14 +29,14 @@ export const paperStore = defineStore('paper', {
      * @param image
      */
     addToMyPaper(image) {
-      let found = this.appData.papers.myPapers.findIndex(img => {
+      let found = this.myPapers.findIndex(img => {
         if (img.src === image.src)
           return true
       })
       if (found === -1) {
-        this.appData.papers.myPapers.push(image)
+        this.myPapers.push(image)
       } else {
-        this.appData.papers.myPapers.splice(found, 1)
+        this.myPapers.splice(found, 1)
       }
       // this.saveAppData('papers')
     },
@@ -45,14 +45,14 @@ export const paperStore = defineStore('paper', {
      * @param image
      */
     addToActive(image) {
-      let found = this.appData.papers.activePapers.findIndex(img => {
+      let found = this.activePapers.findIndex(img => {
         if (img.src === image.src)
           return true
       })
       if (found === -1) {
-        this.appData.papers.activePapers.push(image)
+        this.activePapers.push(image)
       } else {
-        this.appData.papers.activePapers.splice(found, 1)
+        this.activePapers.splice(found, 1)
       }
     },
   },

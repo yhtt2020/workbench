@@ -70,6 +70,7 @@ import Player from 'xgplayer/dist/simple_player'
 import { Modal } from 'ant-design-vue'
 import Template from '../../../user/pages/Template.vue'
 import { message } from 'ant-design-vue'
+import { paperStore } from '../../store/paper'
 
 const lively = [
   {
@@ -136,7 +137,7 @@ export default {
   },
   mounted () {
     this.list = [...lively]
-    this.savePath = this.appData.papers.settings.savePath
+    this.savePath = this.settings.savePath
 
     lively2.forEach((w) => {
       this.list.push({
@@ -164,22 +165,22 @@ export default {
     })
   },
   computed: {
-    ...mapWritableState(appStore, ['appData']),
+    ...mapWritableState(appStore, ['settings']),
     displayList () {
       return this.list.sort((a, b) => {
         return b.done - a.done
       })
     },
     savePath(){
-      if(!this.appData.papers.settings.savePath){
+      if(!this.settings.savePath){
         return ''
       }
-      return this.appData.papers.settings.savePath
+      return this.settings.savePath
     }
 
   },
   methods: {
-    ...mapActions(appStore, ['addToMyPaper', 'saveAppData']),
+    ...mapActions(paperStore, ['addToMyPaper']),
     getCover (item) {
       let filename = item.name.substring(0, item.name.lastIndexOf('.'))
       filename = `https://up.apps.vip/lively/${filename}.jpg`
@@ -191,7 +192,7 @@ export default {
       return filename
     },
     getWidth (item) {
-      if (this.appData.papers.settings.savePath === '') {
+      if (this.settings.savePath === '') {
         return 100
       } else {
         if (item.percent === undefined && fs.existsSync(require('path').join(this.savePath, 'lively', item.name))) {
@@ -222,8 +223,7 @@ export default {
         ]
       })
       if (savePath) {
-        this.appData.papers.settings.savePath = savePath[0]
-        this.saveAppData('papers')
+        this.settings.savePath = savePath[0]
         this.doStartDownload(this.currentItem)
       } else {
       }
@@ -248,9 +248,7 @@ export default {
         savePath: this.savePath + '/lively/' + item.name,
         updated: (args) => {
           item.done = 1
-          console.log(args)
           item.percent = (args.downloadInfo.receivedBytes / args.downloadInfo.totalBytes * 100).toFixed(0)
-          console.log(item.percent, '下载进度')
           //https://www.electronjs.org/zh/docs/latest/api/download-item#%E4%BA%8B%E4%BB%B6%E5%90%8D-updated
         },
         done: (args) => {

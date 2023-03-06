@@ -17,28 +17,27 @@
 <script>
 import { mapActions,mapState  } from 'pinia'
 import { appStore} from '../../store'
+import { paperStore } from '../../store/paper'
 
 export default {
   name: 'PaperList',
   props:['list'],
 
   mounted () {
-    console.log(this.list,'inner')
-    console.log(this.papers,'papers')
   },
   methods:{
-    ...mapActions(appStore,['addToMyPaper']),
+    ...mapActions(paperStore,['addToMyPaper']),
     addToMy(img){
       this.addToMyPaper(img)
     },
     isInMyPapers(image){
-      return this.appData.papers.myPapers.findIndex(img=>{
+      return this.myPapers.findIndex(img=>{
         return image.src===img.src
       })>-1
     }
   },
   computed:{
-    ...mapState(appStore,['appData']),
+    ...mapState(paperStore,['myPapers']),
 
     // ...mapState(appStore,[
     //   {
