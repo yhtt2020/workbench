@@ -14,7 +14,7 @@
       </div>
     </a-col>
     <a-col  :span="8" style="text-align: right">
-      <span style="color: grey;font-size: 0.8em;margin-right: 1em" v-if="appData.papers.settings.tipLock && this.showLockTip">
+      <span style="color: grey;font-size: 0.8em;margin-right: 1em" v-if="settings.tipLock && this.showLockTip">
         {{lockTimeoutDisplay}}后锁屏
       </span>
      <span class="no-drag" v-if="!loading">{{ dateTime.month }}/{{ dateTime.day }} {{ dateTime.hours }}:{{ dateTime.minutes }} {{ dateTime.week }}
@@ -51,11 +51,37 @@ export default {
     ...mapState(appStore,['appData']),
     ...mapWritableState(paperStore,['settings']),
     lockTimeoutDisplay(){
-      if(this.lockTimeout>=60){
-        return (this.lockTimeout/60).toFixed(0)+'分'+this.lockTimeout % 60+'秒'
-      }else{
-        return this.lockTimeout+'秒'
+      // if(this.lockTimeout>=60){
+      //   return ((this.lockTimeout/60).toFixed(0)-1)+'分'+this.lockTimeout % 60+'秒'
+      // }else{
+      //   return this.lockTimeout+'秒'
+      // }
+      function secTotime(s) {
+        var t = '';
+        if(s > -1){
+          var hour = Math.floor(s/3600)
+          var min = Math.floor(s/60) % 60
+          var sec = s % 60
+          if(hour===0)
+            t=''
+            else
+          if(hour < 10) {
+            t = '0'+ hour + "小时"
+          } else {
+            t = hour + "小时"
+          }
+          if(min < 10){
+            t += "0"
+          }
+          t += min + "分"
+          if(sec < 10){
+            t += "0"
+          }
+          t += sec.toFixed(0)+'秒'
+        }
+        return t
       }
+      return secTotime(this.lockTimeout)
     },
     city () {
       return this.appData.weather.cities[0]
@@ -86,16 +112,15 @@ export default {
     },
     setLockTimer(){
       if(this.lockTimer){
-        this.lockTimeout=this.settings.lockTimeout || 300
+        this.lockTimeout=(this.settings.lockTimeout || 300)-1
       }else{
-        this.lockTimeout=this.settings.lockTimeout
+        this.lockTimeout=(this.settings.lockTimeout || 300)-1
         this.showLockTip=true
         this.lockTimer=setInterval(()=>{
+          this.lockTimeout--
           if(this.lockTimeout===0){
             this.clearLockTimer()
             this.$router.push('/lock')
-          }else{
-            this.lockTimeout--
           }
         },1000)
       }

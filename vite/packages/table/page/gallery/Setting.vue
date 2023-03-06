@@ -9,7 +9,8 @@
                   icon="shuaxin"></Icon></span><span  style="font-size:1.2em"> 重置全部设置</span>
     </div>
   </div>
-      <div class="card" style="display: inline-block;width: 25em;padding: 1em;text-align: left;margin-right: 2em;margin-bottom: 2em">
+  <vue-custom-scrollbar id="containerWrapper" :settings="settingsScroller" style="height: 80vh;">
+      <div class="card auto-height" style="display: inline-block;width: 25em;padding: 1em;text-align: left;margin-right: 2em;margin-bottom: 2em">
 
         <div class="line-title">基础设置</div>
         <div class="line" v-if="!settings.enable">
@@ -37,7 +38,7 @@
 
         </div>
         </div>
-  <div class="card" v-if="settings.enable"  style="display: inline-block;width: 25em;padding: 1em;text-align: left;margin-bottom: 2em">
+  <div class="card auto-height" v-if="settings.enable"  style="display: inline-block;width: 25em;padding: 1em;text-align: left;margin-bottom: 2em">
     <div class="line-title">
       锁屏显示设置
     </div>
@@ -54,7 +55,7 @@
       显示播放进度：<a-switch v-model:checked="settings.showProgress"></a-switch>
     </div>
   </div>
-  <div class="card" v-if="settings.enable"  style="display: inline-block;width: 30em;padding: 1em;text-align: left">
+  <div class="card auto-height" v-if="settings.enable"  style="display: inline-block;width: 30em;padding: 1em;text-align: left">
     <div class="line-title">
       轮播设置
     </div>
@@ -67,6 +68,7 @@
 
   </div>
 
+  </vue-custom-scrollbar>
 </template>
 
 <script>
@@ -78,6 +80,17 @@ export default {
   name: 'Setting',
   computed:{
     ...mapWritableState(paperStore,['settings'])
+  },
+  data(){
+    return {
+      settingsScroller: {
+        useBothWheelAxes: true,
+        swipeEasing: true,
+        suppressScrollY: false,
+        suppressScrollX: true,
+        wheelPropagation: true
+      },
+    }
   },
   mounted () {
     if(!this.settings){

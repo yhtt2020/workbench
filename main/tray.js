@@ -176,79 +176,9 @@ app.whenReady().then(() => {
 
 
   })
-  const contextMenu = Menu.buildFromTemplate([
-    {
-      label: '打开浏览器',
-      click: () => {
-        if (!mainWindow) {
-          createWindow()
-        } else {
-          mainWindow.show()
-        }
-      }
-    },
-    {
-      label: '打开工作台',
-      click: () => {
-        if (global.tableWin && !global.tableWin.window.isDestroyed()) {
-          global.tableWin.window.show()
-          global.tableWin.window.focus()
-        } else {
-          settings.set('tableWinSetting',undefined)
-          global.tableManager.init().then(()=>{
-            global.tableWin.window.show()
-          })
-        }
-      }
-    },
-    {
-      type: 'separator'
-    },
-    {
-      label: '还原工作台位置',
-      click: () => {
-        if (global.tableWin && !global.tableWin.window.isDestroyed()) {
-          global.tableWin.window.center()
-          global.tableWin.window.show()
-          global.tableWin.window.focus()
-        } else {
-          settings.set('tableWinSetting',undefined)
-          global.tableManager.init().then(()=>{})
-          global.tableWin.window.show()
-        }
-      }
-    },
-    {
-      label: '切换账号空间',
-      click: () => {
-        showUserWindow()
-      }
-    },
-    {
-      label: '全局搜索',
-      click: () => {
-        globalSearchMod.init()
-        // statsh 点击打开全局搜索
-        if (globalSearch && globalSearch.isFocused()) {
-          statsh.do({
-            action: 'increase',
-            key: 'globalSearchBaseClickOpen',
-            value: 1
-          })
-        }
-      }
-    },
-    {
-      type: 'separator'
-    },
-    {
-      label: '完全退出',
-      click () {
-        global.trayExit = true
-        app.exit()
-      }
-    }
-  ])
+
+
+
   tray.on('double-click', (event) => {
     timeCount = 1
     if (!mainWindow) {
@@ -258,6 +188,91 @@ app.whenReady().then(() => {
     }
   })
   tray.on('right-click', () => {
+    let tableRunning=global.tableWin && !global.tableWin.window.isDestroyed()
+    let tpl=[
+      {
+        label: '打开浏览器',
+        click: () => {
+          if (!mainWindow) {
+            createWindow()
+          } else {
+            mainWindow.show()
+          }
+        }
+      },
+      {
+        label: '打开工作台',
+        click: () => {
+          if (global.tableWin && !global.tableWin.window.isDestroyed()) {
+            global.tableWin.window.show()
+            global.tableWin.window.focus()
+          } else {
+            settings.set('tableWinSetting',undefined)
+            global.tableManager.init().then(()=>{
+              global.tableWin.window.show()
+            })
+          }
+        }
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: '还原工作台位置',
+        click: () => {
+          if (global.tableWin && !global.tableWin.window.isDestroyed()) {
+            global.tableWin.window.center()
+            global.tableWin.window.show()
+            global.tableWin.window.focus()
+          } else {
+            settings.set('tableWinSetting',undefined)
+            global.tableManager.init().then(()=>{})
+            global.tableWin.window.show()
+          }
+        }
+      },
+      {
+        label: '切换账号空间',
+        click: () => {
+          showUserWindow()
+        }
+      },
+      {
+        label: '全局搜索',
+        click: () => {
+          globalSearchMod.init()
+          // statsh 点击打开全局搜索
+          if (globalSearch && globalSearch.isFocused()) {
+            statsh.do({
+              action: 'increase',
+              key: 'globalSearchBaseClickOpen',
+              value: 1
+            })
+          }
+        }
+      },
+      {
+        type: 'separator'
+      },
+
+    ]
+    if(tableRunning){
+      tpl.push({
+        label:'退出工作台',
+        click(){
+          global.tableManager.close()
+        }
+      })
+    }
+
+    tpl.push({
+      label: '全部退出',
+      click () {
+        global.trayExit = true
+        app.exit()
+      }
+    })
+    const contextMenu = Menu.buildFromTemplate(tpl)
     tray.popUpContextMenu(contextMenu)
   })
 })

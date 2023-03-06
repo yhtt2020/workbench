@@ -1,6 +1,6 @@
 <template>
   <div id="displayMiddle" @click.prevent="enter" class="pointer"  style="margin-top: -6em;min-height: 15em">
-    <div v-if="appData.papers.settings.showTime && loaded" class="time" style="" >
+    <div v-if="settings.showTime && loaded" class="time" style="" >
       <span style="font-size: 3.5em">{{ hours }}:{{ minutes }}</span>
      <div style="margin-top: -0.5em"> {{ year }}年{{ month }}月{{ day }}日 {{ week }}</div>
     </div>
@@ -17,6 +17,7 @@ import Spotlight from 'spotlight.js'
 import { appStore } from '../store'
 import {mapState} from 'pinia'
 import { message } from 'ant-design-vue'
+import { paperStore } from '../store/paper'
 
 export default {
   name: 'Lock',
@@ -44,7 +45,7 @@ export default {
     setTimeout(()=>{
       $('#tip').fadeOut(1000)
     },3000)
-    if(this.appData.papers.settings.playType==='my'){
+    if(this.settings.playType==='my'){
       this.playAll()
     }else{
       this.playActive()
@@ -60,7 +61,7 @@ export default {
     clearInterval(this.timer)
   },
   computed:{
-    ...mapState(appStore,['appData'])
+    ...mapState(paperStore,['myPapers','settings','activePapers'])
   },
   methods: {
     enterGallery(){
@@ -92,37 +93,37 @@ export default {
       this.$router.go(-1)
     },
     playAll(){
-      if(this.appData.papers.myPapers.length===0){
+      if(this.myPapers.length===0){
         this.$router.replace({
           name:'my'
         })
         message.error('请添加我的壁纸后重新锁屏。')
         return
       }
-      window.Spotlight.show(this.appData.papers.myPapers, {
+      window.Spotlight.show(this.myPapers, {
         control: 'autofit,fullscreen,close,zoom,prev,next',
         play: true,
         autoslide: true,
         infinite: true,
-        progress: this.appData.papers.settings.showProgress,
+        progress: this.settings.showProgress,
         title: false,
         onclose:()=>{this.enter(false)}
       })
     },
     playActive(){
-      if(this.appData.papers.activePapers.length===0){
+      if(this.activePapers.length===0){
         this.$router.replace({
           name:'my'
         })
         message.error('请激活壁纸后重新使用激活壁纸模式。')
         return
       }
-      window.Spotlight.show(this.appData.papers.activePapers, {
+      window.Spotlight.show(this.activePapers, {
         control: 'autofit,fullscreen,close,zoom,prev,next',
         play: true,
         autoslide: true,
         infinite: true,
-        progress: this.appData.papers.settings.showProgress,
+        progress: this.settings.showProgress,
         title: false,
         onclose:()=>{this.enter(false)}
       })

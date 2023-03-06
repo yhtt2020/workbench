@@ -1,4 +1,7 @@
 .card{
+  &.auto-height{
+    height: auto;
+  }
   &.half{
     height:calc((100vh - 14em - 1em) /2 );
     margin-bottom: 1em;

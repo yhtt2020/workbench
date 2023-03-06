@@ -8,6 +8,8 @@
   height: calc(100vh - 14em);
   padding: 1em;
   margin-right: 1em; }
+  .card.auto-height {
+    height: auto; }
   .card.half {
     height: calc((100vh - 14em - 1em) /2 );
     margin-bottom: 1em; }
