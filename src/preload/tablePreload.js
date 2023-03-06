@@ -8,9 +8,12 @@ ipc.on('updateMusicStatus',(e,a)=>{
     window.updateMusicStatusHandler(a)
   }
 })
+
 window.$models = {
+  appModel:require('../model/appModel'),
   messageModel
 }
+window.$models.appModel.initDb()
 window.$apis={
   groupApi
 }

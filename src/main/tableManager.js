@@ -55,12 +55,22 @@ class TableManager {
       tableWin.window.webContents.loadURL(render.getUrl('table.html'))
 
       tableWin.window.on('close', () => {
-        let tableWinSetting = {
-          bounds: this.window.getBounds(),
-          isMaximized: this.window.isMaximized()
-        }
-        settings.set('tableWinSetting', tableWinSetting)
+        this.saveBounds()
         global.tableWin = null
+      })
+
+      tableWin.window.on('resized',()=>{
+        this.saveBounds()
+      })
+
+      tableWin.window.on('moved',()=>{
+        this.saveBounds()
+      })
+      tableWin.window.on('leave-full-screen',()=>{
+        this.saveBounds()
+      })
+      tableWin.window.on('enter-full-screen',()=>{
+        this.saveBounds()
       })
 
     } else {
@@ -71,6 +81,14 @@ class TableManager {
         tableWin.window.focus()
       }
     }
+  }
+
+  saveBounds(){
+    let tableWinSetting = {
+      bounds: this.window.getBounds(),
+      isMaximized: this.window.isMaximized()
+    }
+    settings.set('tableWinSetting', tableWinSetting)
   }
 
   close () {

@@ -1,28 +1,21 @@
 <template>
   <SecondPanel :search="true" :menus="menus" logo="https://up.apps.vip/logo/favicon.svg" @change-tab="changeTab"></SecondPanel>
   <div v-show="currentIndex==='my'" @dragover.prevent="dragOver" @drop.prevent="drop" class="app-content">
-    <div v-if="apps.length===0" style="font-size: 2em;padding-top: 6em;text-align: center;">
+    <div v-if="appData.apps.myApps.length===0" style="font-size: 2em;padding-top: 6em;text-align: center;">
       <Icon style="color: #ccc;font-size: 2em;vertical-align: middle" icon="line-dragdroptuofang"></Icon>
       将应用拖放到此处，即可用于快捷启动
     </div>
-    <div v-if="apps.length===0" style="text-align: center">
+    <div v-if="appData.apps.myApps.length===0" style="text-align: center">
       <div @click="loadDeskIconApps" class="btn" style="font-size: 1.5em;width: 8em">导入桌面应用</div>
     </div>
     <div style="padding: 1em">
-      <div @click="open(app)" class="app" v-for="app in apps">
-        <a-avatar :size="50" shape="square" :src="app.icon"></a-avatar>
-        <br>
-        <div class="name">
-          {{ app.name }}
-        </div>
-      </div>
+     <MyApps></MyApps>
     </div>
   </div>
   <div class="app-content" v-if="currentIndex==='qing'">
-
+    <QingApps></QingApps>
   </div>
   <div class="app-content" v-if="currentIndex==='store'" style="padding:2em;">
-
     <vue-custom-scrollbar  :settings="settings"  style="position:relative;height:calc(100vh - 14em);  border-radius: 8px;">
     <div style="margin: auto;width: 95%;height: auto;text-align: center">
       <div style="margin-bottom: 1em;font-size: 1.5em">
@@ -60,13 +53,15 @@
 import { mapWritableState, mapActions } from 'pinia'
 import { appStore } from '../store'
 import SecondPanel from '../components/SecondPanel.vue'
+import QingApps from '../components/QingApps.vue'
+import MyApps from '../components/MyApps.vue'
 
 let fs = require('fs')
 export default {
   name: 'Apps',
-  components: { SecondPanel },
+  components: { MyApps, QingApps, SecondPanel },
   computed: {
-    ...mapWritableState(appStore, ['apps'])
+    ...mapWritableState(appStore, ['appData'])
   },
   data () {
     return {
@@ -203,7 +198,6 @@ export default {
 
     },
     changeTab (data) {
-      console.log(data, 'data')
       this.currentIndex = data.index
     },
     async drop (e) {
@@ -231,43 +225,4 @@ export default {
   border-radius: 8px;
 }
 
-.app {
-  display: inline-block;
-  width: 5em;
-  text-align: center;
-  vertical-align: text-top;
-  padding: 0.5em;
-  margin: 0.5em;
-  cursor: pointer;
-
-  &:hover {
-    background: #969696;
-    border-radius: 4px;
-
-  }
-
-  .name {
-    font-size: 0.8em;
-    word-break: break-all;
-  }
-}
-
-.app-name {
-  font-size: 1.3em;
-  font-weight: bold;
-  padding-top: 0.2em;
-  padding-bottom: 0.2em;
-
-}
-
-.btn {
-  width: 6em;
-  text-align: center;
-  background: #575757;
-  font-size: 1.2em;
-}
-
-.app-summary {
-  font-size: 1.1em;
-}
 </style>

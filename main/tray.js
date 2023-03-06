@@ -192,8 +192,11 @@ app.whenReady().then(() => {
       click: () => {
         if (global.tableWin && !global.tableWin.window.isDestroyed()) {
           global.tableWin.window.center()
+          global.tableWin.window.show()
+          global.tableWin.window.focus()
         } else {
           settings.set('tableWinSetting',undefined)
+          global.tableManager.init().then()
         }
       }
     },

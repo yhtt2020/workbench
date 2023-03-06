@@ -29,6 +29,12 @@ export const appStore = defineStore('appStore', {
     apps: [],
 
     appData: {//应用数据
+      apps:{
+        myApps:[],
+        qingApps:[]
+      },
+
+
       weather: {//天气
         cities: [],//当前城市
         lastUpdateTime:0,//最后一次更新时间
@@ -203,6 +209,7 @@ export const appStore = defineStore('appStore', {
     loadAppsData() {
       this.loadAppData('weather')
       this.loadAppData('papers')
+      this.loadAppData('apps')
       if(typeof this.appData.papers.settings==='undefined'){
         this.resetPapersSettings()
       }
@@ -225,7 +232,8 @@ export const appStore = defineStore('appStore', {
      * @param apps
      */
     addApps(apps) {
-      this.apps = this.apps.concat(apps)
+      this.appData.apps.myApps = this.appData.apps.myApps.concat(apps)
+      this.saveAppData('apps')
     },
 
     /**
@@ -280,6 +288,21 @@ export const appStore = defineStore('appStore', {
       }
       Object.keys( userInfo.onlineGrade).forEach(v => handleGrade(v))
       this.userInfo=userInfo
+    },
+
+    /**
+     * 删除应用
+     * @param findApp
+     */
+    deleteApp(findApp){
+      try{
+        this.appData.apps.myApps.splice(this.appData.apps.myApps.findIndex(app=>{
+          return app===findApp
+        }),1)
+        this.saveAppData('apps')
+      }catch (e) {
+
+      }
     }
   }
 })
