@@ -67,7 +67,7 @@
   </div>
   <a-drawer v-model:visible="visibleAdd">
     <h3>添加城市</h3>
-    <a-input-search id="searchInput" ref="searchInput" v-model:value="words" @search="search" placeholder="输入城市搜索">
+    <a-input-search id="searchInput" ref="searchInput" v-model:value="words" @search="onSearch" placeholder="输入城市搜索">
 
     </a-input-search>
 
@@ -132,6 +132,7 @@ export default {
     ...mapWritableState(weatherStore,['cities','lastUpdateTime']),
   },
   methods: {
+    ...mapActions(weatherStore,['getNow','get24h','get7d','search','addCity','removeCity','reloadCityWeatherAll','get']),
     getMonthAndDay(time){
       let format=this.getDateTime(new Date(time))
       return  format.month+'/'+format.day
@@ -145,76 +146,36 @@ export default {
       return format.month+'-'+format.day+' '+format.hours+":"+format.minutes
     },
     getDateTime,
-    ...mapActions(weatherStore,['addCity','removeCity']),
     onEdit(cityId,action){
       if(action==='add'){
         this.visibleAdd=true
       }else{
         this.removeCity(cityId)
       }
-
-    },
-    async search () {
-      if (!this.words) {
-        return
-      }
-      let cities = await this.get('https://geoapi.qweather.com/v2/city/lookup?',{
-        location: this.words}
-      )
-      if (cities) {
-        this.searchList = cities.location
-      }
-
-    },//
-    async getNow(city){
-      let weather=await this.get('https://devapi.qweather.com/v7/weather/now?',{
-        location:city.id
-      })
-      return weather
-    },
-    async get24h(city){
-      let weather=await this.get('https://devapi.qweather.com/v7/weather/24h?',{
-        location:city.id
-      })
-      return weather
-    },
-    async get7d(city){
-      let weather=await this.get('https://devapi.qweather.com/v7/weather/7d?',{
-        location:city.id
-      })
-      return weather
-    },
-    async get (url, data) {
-      let result = await axios.get(url, {
-        params: {
-          ...data,
-          key:'10e0203ea2234e028301877d04d08ffc'
-        }
-      })
-      console.log(result)
-      if(result.status===200 && result.data.code==='200'){
-
-        return result.data
-      }else{
-        message.error('接口返回错误，请稍后再试！')
-        return false
-      }
     },
 
     async add(city){
       try{
-        city.weather=await this.getNow(city)
-        city.h24=await this.get24h(city)
-        city.d7=await this.get7d(city)
-        city.getTime=Date.now()
+        city=await this.reloadCityWeatherAll(city)
       }catch (e) {
         console.error(e)
+        message.error('数据请求失败,添加城市错误')
+        return
       }
       this.addCity(city)
       this.currentCity=city.id
       this.visibleAdd=false
     },
 
+    async onSearch () {
+      let rs = await this.search(this.words)
+      if(rs){
+        this.searchList = rs
+      }else{
+        message.error('接口返回错误')
+      }
+
+    }
   }
 }
 </script>

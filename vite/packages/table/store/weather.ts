@@ -1,4 +1,6 @@
 import {defineStore} from "pinia";
+import axios from "axios";
+import {message} from "ant-design-vue";
 
 // @ts-ignore
 export const weatherStore = defineStore('weather', {
@@ -14,6 +16,32 @@ export const weatherStore = defineStore('weather', {
     addCity(city) {
       this.cities.push(city)
     },
+
+    async reloadCityWeatherAll(city) {
+      try {
+        city.weather = await this.getNow(city)
+        city.h24 = await this.get24h(city)
+        city.d7 = await this.get7d(city)
+        city.getTime = Date.now()
+        return city
+      } catch (e) {
+        console.error(e)
+        throw e
+      }
+    },
+    async get(url, data) {
+      let result = await axios.get(url, {
+        params: {
+          ...data,
+          key: '10e0203ea2234e028301877d04d08ffc'
+        }
+      })
+      if (result.status === 200 && result.data.code === '200') {
+        return result.data
+      } else {
+        return false
+      }
+    },
     /**
      * 移除城市
      * @param cityId
@@ -23,6 +51,38 @@ export const weatherStore = defineStore('weather', {
         return city.id !== cityId
       })
     },
+    async getNow(city) {
+      let weather = await this.get('https://devapi.qweather.com/v7/weather/now?', {
+        location: city.id
+      })
+      return weather
+    },
+    async get24h(city) {
+      let weather = await this.get('https://devapi.qweather.com/v7/weather/24h?', {
+        location: city.id
+      })
+      return weather
+    },
+    async get7d(city) {
+      let weather = await this.get('https://devapi.qweather.com/v7/weather/7d?', {
+        location: city.id
+      })
+      return weather
+    },
+    async search(words) {
+      if (!words) {
+        return false
+      }
+      let cities = await this.get('https://geoapi.qweather.com/v2/city/lookup?', {
+          location: words
+        }
+      )
+      if (cities) {
+        return cities.location
+      } else {
+        return false
+      }
+    },//
   },
   persist: {
     enabled: true,
