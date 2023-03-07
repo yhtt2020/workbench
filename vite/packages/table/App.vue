@@ -13,6 +13,7 @@ import {mapActions, mapWritableState} from 'pinia'
 
 import {appStore} from './store'
 import Barrage from "./components/comp/Barrage.vue";
+import {weatherStore} from "./store/weather";
 
 let startX, startY, moveEndX, moveEndY, X, Y = 0
 const distX = 80 //滑动感知最小距离
@@ -35,6 +36,7 @@ export default {
       document.body.style.background = 'rgb(50,50,50)'
     }
     this.bindTouchEvents()
+    this.reloadAll()//刷新全部天气
   },
 
   computed: {
@@ -42,6 +44,7 @@ export default {
   },
   methods: {
     ...mapActions(appStore, ['setMusic','reset']),
+    ...mapActions(weatherStore,['reloadAll']),
     bindTouchEvents(){
       $(".a-container").on("touchstart",  (e) =>{
         startX = e.originalEvent.changedTouches[0].pageX,

@@ -16,7 +16,19 @@ export const weatherStore = defineStore('weather', {
     addCity(city) {
       this.cities.push(city)
     },
+    /**
+     * 刷新全部城市的天气
+     */
+     reloadAll(){
+      this.cities.forEach(async city=>{
+        city=await this.reloadCityWeatherAll(city)
+      })
+    },
 
+    /**
+     * 刷新某个城市的全部天气
+     * @param city
+     */
     async reloadCityWeatherAll(city) {
       try {
         city.weather = await this.getNow(city)
