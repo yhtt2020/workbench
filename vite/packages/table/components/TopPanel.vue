@@ -34,6 +34,7 @@ import { getDateTime } from '../../../src/util/dateTime'
 import { appStore } from '../store'
 import {mapWritableState,mapState} from 'pinia'
 import { paperStore } from '../store/paper'
+import { weatherStore } from '../store/weather'
 
 export default {
   name: 'TopPanel',
@@ -48,7 +49,7 @@ export default {
   },
   computed:{
     ...mapWritableState(appStore,['status','lockTimeout']),
-    ...mapState(appStore,['appData']),
+    ...mapState(weatherStore,['cities']),
     ...mapWritableState(paperStore,['settings']),
     lockTimeoutDisplay(){
       // if(this.lockTimeout>=60){
@@ -84,10 +85,10 @@ export default {
       return secTotime(this.lockTimeout)
     },
     city () {
-      return this.appData.weather.cities[0]
+      return this.cities[0]
     },
     hasWeather(){
-      return this.appData.weather.cities.length>0
+      return this.cities.length>0
     }
   },
   mounted () {
