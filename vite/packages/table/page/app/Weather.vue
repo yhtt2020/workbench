@@ -25,7 +25,7 @@
             </a-row>
           </div>
        </div>
-        <div class="card" style="padding: 0.1em 1.2em 1em">
+        <div class="card auto-height" style="padding: 0.1em 1.2em 1em;display: block;width: 100%">
           <div class="section">
             24小时天气
           </div>
@@ -42,7 +42,7 @@
           </vue-custom-scrollbar>
         </div>
 
-        <div class="card" style="padding: 0.1em 1.2em 1em;margin-top: 1em;margin-bottom: 3em">
+        <div class="card auto-height" style="padding: 0.1em 1.2em 1em;margin-top: 1em;margin-bottom: 3em;display: blockl;width: 100%">
           <div class="section" >
             多日预报
           </div>
