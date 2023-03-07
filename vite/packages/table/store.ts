@@ -21,13 +21,6 @@ export const appStore = defineStore('appStore', {
 
     lockTimeout: 300,//锁屏延迟
 
-    appData: {//应用数据
-      weather: {//天气
-        cities: [],//当前城市
-        lastUpdateTime: 0,//最后一次更新时间
-      }
-    },
-
     init: false,//是否已经初始化
 
     fullScreen: false,//是否是全屏模式
@@ -127,22 +120,7 @@ export const appStore = defineStore('appStore', {
 
 
 
-    /**
-     * 添加城市
-     * @param city
-     */
-    addCity(city) {
-      this.appData.weather.cities.push(city)
-    },
-    /**
-     * 移除城市
-     * @param cityId
-     */
-    removeCity(cityId) {
-      this.appData.weather.cities = this.appData.weather.cities.filter(city => {
-        return city.id !== cityId
-      })
-    },
+
     /**
      * 设置当前用户
      * @param userInfo
