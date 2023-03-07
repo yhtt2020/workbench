@@ -2,7 +2,7 @@
   <div id="display">
 
     <a-tabs v-model:activeKey="currentCity" type="editable-card" @edit="onEdit">
-      <a-tab-pane  v-for="city in appData.weather.cities" :key="city.id" :tab="city.name">
+      <a-tab-pane  v-for="city in cities" :key="city.id" :tab="city.name">
 
         <vue-custom-scrollbar :settings="outerSettings" style="position:relative;height:calc(100vh - 14em);  ">
         <div class="section" style="text-align: center">
@@ -86,6 +86,7 @@ import { appStore } from '../../store'
 import {mapWritableState,mapActions} from 'pinia'
 import { getDateTime } from  '../../../../src/util/dateTime.js'
 import Son from './Son.vue'
+import { weatherStore } from '../../store/weather'
 export default {
   name: 'Weather',
   components:{Son},
@@ -121,14 +122,14 @@ export default {
         document.getElementById('searchInput').focus()
       },300)
     }
-    if(this.appData.weather.cities.length){
-      this.currentCity=this.appData.weather.cities[0].id
+    if(this.cities.length){
+      this.currentCity=this.cities[0].id
     }
 
 
   },
   computed:{
-    ...mapWritableState(appStore, ['appData']),
+    ...mapWritableState(weatherStore,['cities','lastUpdateTime']),
   },
   methods: {
     getMonthAndDay(time){
@@ -144,7 +145,7 @@ export default {
       return format.month+'-'+format.day+' '+format.hours+":"+format.minutes
     },
     getDateTime,
-    ...mapActions(appStore,['addCity','removeCity']),
+    ...mapActions(weatherStore,['addCity','removeCity']),
     onEdit(cityId,action){
       if(action==='add'){
         this.visibleAdd=true
@@ -201,7 +202,6 @@ export default {
     },
 
     async add(city){
-      console.log(city)
       try{
         city.weather=await this.getNow(city)
         city.h24=await this.get24h(city)

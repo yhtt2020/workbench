@@ -1,7 +1,7 @@
 <template>
   <div @click="enterWeather" class="card pointer half" style="padding:1em;margin-bottom: 0">
     <!--    <iframe scrolling="no"  style="border: none;height: 196px;width: 100%" :src="src"></iframe>-->
-    <div v-if="!appData.weather.cities.length">
+    <div v-if="!cities.length">
       <div>
         <a-col style="text-align: center;margin-top:1em">
           <Icon style="width:5em;height:5em;margin-right:10px;vertical-align: middle" icon="icon_qingtian"></Icon>
@@ -50,9 +50,9 @@
 </template>
 <script>
 
-import { appStore } from '../../store'
 import { mapState } from 'pinia'
 import { getDateTime } from '../../../../src/util/dateTime'
+import { weatherStore } from '../../store/weather'
 
 export default {
   name: 'Weather',
@@ -63,9 +63,9 @@ export default {
     }
   },
   computed: {
-    ...mapState(appStore, ['appData']),
+    ...mapState(weatherStore, ['cities']),
     city () {
-      return this.appData.weather.cities[0]
+      return this.cities[0]
     }
   },
   mounted () {
