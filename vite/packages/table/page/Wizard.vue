@@ -64,25 +64,16 @@
     <div v-if="step===1 && mod==='bootstrap'">
       <div>启动器模式配置</div>
       <div>配置启动快捷键(如果与其他软件冲突，请修改）：</div>
-      <div style="text-align: center;margin-top: 1em">
-        呼出工作台快捷键
-        <a-input-group compact>
-          <a-input style="width: calc(100% - 200px)"  placeholder="按下快捷键" size="large" :value="shortKeysTable">
-          </a-input>
-          <a-button @click="toggleListenKey('table')" size="large" type="primary">
-            修改
-          </a-button>
-        </a-input-group>
-      </div>
-      <div style="text-align: center;margin-top: 2em">
-        呼出全局搜索快捷键
-        <a-input-group compact>
-        <a-input style="width: calc(100% - 200px)"   placeholder="按下快捷键" size="large" :value="shortKeysSearch">
-        </a-input>
-          <a-button @click="toggleListenKey('search')" size="large" type="primary">
-            修改
-          </a-button>
-        </a-input-group>
+      <div style="text-align: center">
+        <div style="text-align: center;margin-top: 1em">
+          呼出/隐藏工作台快捷键
+        </div>
+        <key-input placeholder="呼出/隐藏工作台快捷键" title="工作台" name="table" :value="shortKeysTable" @changeKeys="setTableKeys"></key-input>
+        <div style="text-align: center;margin-top: 1em">
+          呼出/隐藏全局搜索快捷键
+        </div>
+        <key-input placeholder="呼出/隐藏全局搜索快捷键" title="全局搜索" name="search" :value="shortKeysSearch" @changeKeys="setSearchKeys"></key-input>
+        <div style="margin-top: 1em">更多快捷键请后续在工作台[设置]-[键位]中修改</div>
       </div>
       <div class="panel" style="line-height: 1" v-if="!canTouch">
         <p>如果无法触摸，进行可进行屏幕触摸矫正。</p>
@@ -103,10 +94,7 @@
     </div>
 
   </div>
-  <div v-if="listening" style="position: fixed;width: 100vw;height: 100vh;left: 0;right: 0;text-align: center;bottom: 0;top: 0;background: rgba(21,21,21,0.93);line-height: 33vh;font-size: 3em">
-    请按下 {{this.currentListen==='table'?'启动器':'全局搜索'}} 快捷键<br>先按功能键（Ctrl、Shift、Alt再按其他键）<br>
-    当前键位 {{this.currentListen==='table'?this.shortKeysTable:this.shortKeysSearch}}
-  </div>
+
 </template>
 
 <script>
@@ -114,10 +102,12 @@ import ChooseScreen from './ChooseScreen.vue'
 import { appStore } from '../store'
 import {mapWritableState,mapActions} from 'pinia'
 import cp from 'child_process'
+import KeyInput from '../components/comp/KeyInput.vue'
 
 export default {
   name: 'Wizard',
   components:{
+    KeyInput,
     ChooseScreen
   },
   computed:{
@@ -172,60 +162,16 @@ export default {
     }
   },
   mounted () {
-    console.log('进入wizard')
-    document.onkeydown = (e) => {
 
-      // this.setKeyStatus(e.keyCode, true)
-
-    }
-    document.onkeyup = (e) => {
-      // this.setKeyStatus(e.keyCode, false)
-      // console.log(e)
-      // if(this.listening){
-      //   //return false
-      // }
-      if(this.listening && (e.ctrlKey||e.altKey||e.shiftKey)){
-        if(this.currentListen==='table'){
-          this.shortKeysTable = this.getKeys(e)
-        }else if(this.currentListen==='search'){
-          this.shortKeysSearch = this.getKeys(e)
-        }
-        if(this.shortKeysTable===this.shortKeysSearch){
-          if(this.currentListen==='table'){
-            this.shortKeysTable=''
-          }else{
-            this.shortKeysSearch=''
-          }
-        }
-        this.listening=false
-        e.preventDefault()
-    }
-
-    document.onkeypress=(e)=>{
-      console.log(e)
-
-      }
-
-    }
   },
   methods: {
     ...mapActions(appStore,['finishWizard']),
-    toggleListenKey(short){
-      this.listening=true
-      this.currentListen=short
+    setTableKeys(args){
+      this.shortKeysTable=args.keys
+      console.log(args,'接收到按键改变事件')
     },
-    setKeyStatus (keyCode, status) {
-      switch (keyCode) {
-        case 16:
-          this.shift = status
-          break
-        case 17:
-          this.ctrl = status
-          break
-        case 18:
-          this.alt = status
-          break
-      }
+    setSearchKeys(args){
+      this.shortKeysSearch=args.keys
     },
     async startAdjust () {
       await tsbApi.window.setAlwaysOnTop(false)

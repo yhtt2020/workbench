@@ -92,6 +92,12 @@
                 <div> 锁屏壁纸</div>
               </div>
             </a-col>
+            <a-col :span="6">
+              <div @click="basic" class="btn">
+                <Icon icon="shezhi" style="font-size: 2em"></Icon>
+                <div> 基础设置</div>
+              </div>
+            </a-col>
           </a-row>
           <div>
           </div>
@@ -163,6 +169,11 @@ export default {
     papersSettings(){
       this.$router.push({
         name:'papersSetting'
+      })
+    },
+    basic(){
+      this.$router.push({
+        name:'basicSetting'
       })
     },
     switchBarrage(value){

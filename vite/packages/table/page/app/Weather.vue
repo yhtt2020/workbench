@@ -19,7 +19,8 @@
                 </div>
               </a-col>
               <a-col :span="8">
-                <Icon icon="position"></Icon> {{city.adm2}}-{{city.name}}<br> <Icon style="margin-left: 2em" icon="shijian"></Icon> 发布于 {{ getObsTime(city.weather.now.obsTime)}}
+                <Icon icon="position"></Icon> {{city.adm2}}-{{city.name}}<br> <Icon style="margin-left: 2em" icon="shijian"></Icon>  {{ getObsTime(city.weather.now.obsTime)}} 发布
+
 
               </a-col>
             </a-row>
