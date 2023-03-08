@@ -12,8 +12,14 @@ if (!fs.existsSync(_path_dir)) {
   } catch (e) { dlog.error(err) }
 }
 // global.sharedPath = {extra:storage.getStoragePath()}   //remote官方建议弃用，全局变量在渲染进程中暂时没找到可以替换获取的方法，但是在主进程中全局electronGlobal对象能获取到
-global.sendIPCToMainWindow = function sendIPCToMainWindow (action, data) {
-  if (mainWindow && !mainWindow.isDestroyed()) { mainWindow.webContents.send(action, data || {}) }
+global.sendIPCToMainWindow = function sendIPCToMainWindow (action, data,createMainWindow=true) {
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    if(!createMainWindow){
+      //如果不要求创建主窗口，则直接返回，不做任何操作
+      return
+    }
+    mainWindow.webContents.send(action, data || {})
+  }
 }
 
 let guideModel = null

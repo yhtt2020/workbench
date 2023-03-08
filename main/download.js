@@ -283,7 +283,7 @@ function listenForDownloadHeaders (ses) {
       sendIPCToWindow(mainWindow, 'set-file-view', {
         url: details.url,
         isFileView
-      })
+      },false)
     }
 
     callback({ cancel: false })

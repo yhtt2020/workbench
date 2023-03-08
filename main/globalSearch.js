@@ -165,7 +165,6 @@ app.whenReady().then(async () => {
   })
 
   ipc.on('executeTableApp', async (event, args) => {
-    console.log('接收到启动应用的请求')
     let appInstance = await tableAppManager.executeApp({ app: args.app, position: args.position })
   })
 

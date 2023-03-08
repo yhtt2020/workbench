@@ -113,13 +113,22 @@ var saveWindowBounds = function() {
 	}
 }
 
-function sendIPCToWindow(window, action, data) {
-  console.log('接收到一个消息',action)
+/**
+ *
+ * @param window
+ * @param action
+ * @param data
+ * @param createWindow 如果窗口不存在，是否创建后发送，默认为是
+ */
+function sendIPCToWindow(window, action, data,createWindow=true) {
 	// if there are no windows, create a new one
 	if (!mainWindow) {
-		createWindow(function() {
-			mainWindow.webContents.send(action, data || {})
-		})
+    if(createWindow){
+      //如果是要求创建后再发的才发，不然就直接放弃了
+      createWindow(function() {
+        mainWindow.webContents.send(action, data || {})
+      })
+    }
 	} else {
 		mainWindow.webContents.send(action, data || {})
 	}

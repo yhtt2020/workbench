@@ -88,7 +88,6 @@ class TableAppManager {
   }
   closeAllApp(){
     this.runningApps.forEach(app=>{
-      console.log(app,'待关闭')
       this.closeApp(this.getName(app.name))
     })
   }
