@@ -12,7 +12,8 @@ const baseApi={
   screen:require('./screen.js'),//屏幕接口
   dialog:require('./dialog.js'),//对话框接口
   download:require('./download.js'),//下载接口
-  system:require('./system.js')//系统接口
+  system:require('./system.js'),//系统接口
+  settings:require('./settings')//设置接口
 }
 window.baseApi=baseApi
 module.exports=baseApi

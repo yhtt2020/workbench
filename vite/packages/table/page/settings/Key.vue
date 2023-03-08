@@ -32,6 +32,16 @@ export default {
       shortKeysSearch: 'alt+f',
     }
   },
+  async mounted () {
+    let keyMap = await tsbApi.settings.get('keyMap')
+    console.log(keyMap.table,'ke')
+    if (keyMap.table) {
+      this.shortKeysTable = keyMap.table
+    }
+    if (keyMap.globalSearch) {
+      this.shortKeysSearch = keyMap.globalSearch
+    }
+  },
   methods: {
     setTableKeys (args) {
 

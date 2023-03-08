@@ -104,7 +104,7 @@ import {mapWritableState,mapActions} from 'pinia'
 import cp from 'child_process'
 import KeyInput from '../components/comp/KeyInput.vue'
 import { message } from 'ant-design-vue'
-
+const {settings}=window.$models
 export default {
   name: 'Wizard',
   components:{
@@ -162,7 +162,14 @@ export default {
       ]
     }
   },
-  mounted () {
+  async mounted () {
+    let keyMap = await tsbApi.settings.get('keyMap')
+      if (keyMap.table) {
+        this.shortKeysTable = keyMap.table
+      }
+    if (keyMap.globalSearch) {
+      this.shortKeysSearch= keyMap.globalSearch
+    }
 
   },
   methods: {

@@ -43,6 +43,12 @@ class ApiHandler {
       }
     })
 
+    ApiHandler.on('settings','get',(event,args,instance)=>{
+      event.returnValue=settings.get(args.key)
+    })
+    ApiHandler.on('settings','set',(event,args,instance)=>{
+      event.returnValue=settings.set(args.key,args.value)
+    })
 
     ApiHandler.on('dialog','showOpenDialog',(event,args,instance)=>{
       console.log(args)
