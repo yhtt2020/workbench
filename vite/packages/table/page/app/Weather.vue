@@ -81,9 +81,7 @@
 </template>
 
 <script>
-import axios from 'axios'
 import { message } from 'ant-design-vue'
-import { appStore } from '../../store'
 import {mapWritableState,mapActions} from 'pinia'
 import { getDateTime } from  '../../../../src/util/dateTime.js'
 import Son from './Son.vue'

@@ -32,39 +32,47 @@ export default {
       return format.month + "月" + format.day + "日";
     },
     wertherEcharts() {
-      var myChart = echarts.init(document.getElementById("ec"));
+      var myChart = echarts.init(document.getElementById("ec"),'dark');
+
       myChart.setOption({
+
+        backgroundColor:'',
         tooltip: {
           trigger: "axis",
         },
 
         xAxis: {
+          axisTick:{
+            show:false
+          },
           type: "category",
-          boundaryGap: false,
+          boundaryGap: ['20%', '20%'],
           data: this.fxDate,
-          show: false,
+          show: true,
         },
         yAxis: {
+          splitLine:false,
           type: "value",
-          axisLabel: {
-            formatter: "{value} °C",
-          },
-
+          boundaryGap: ['20%', '20%'],
           show: false,
+
         },
 
         grid: {
           left: 80,
           right: 250,
+          width:'80%'
         },
 
         series: [
           {
             name: "最高温",
             type: "line",
+            smooth:true,
+            areaStyle: {},
             data: this.tempMax,
-            label: { show: true, fontSize: 15, color: "#FFFFFF" },
-            itemStyle: { color: "#FF9912" },
+            label: { show: true, fontSize: 15, color: "#FFFFFF" ,formatter:'{c}℃'},
+            itemStyle: { color: "#ffb95e" },
             // markLine: {
             //   data: [{ type: "average", name: "Avg" }],
             // },
@@ -72,14 +80,19 @@ export default {
           {
             name: "最低温",
             type: "line",
+            smooth:true,
+            areaStyle: {
+
+            },
             data: this.tempMin,
             label: {
               show: true,
               position: "bottom",
               fontSize: 15,
               color: "#FFFFFF",
+              formatter:'{c}℃'
             },
-            itemStyle: { color: "#00FFFF" },
+            itemStyle: { color: "#009dff" },
             // markLine: {
             //   data: [
             //     { type: "average", name: "Avg" },
