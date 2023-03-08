@@ -2,7 +2,7 @@
   <div>
     <div style="text-align: center;margin-left: -7em">
 
-      <div v-if="tab==='player'">
+      <div class="pointer" @click="enterMusic" v-if="tab==='player'">
         <a-avatar :class="{'playing':status.music.playing}" :size="120" :src="status.music.cover"
                   style="margin: 20px;border: 3px solid #6b6b6b"></a-avatar>
         <div style="font-size: 2.2em">{{ status.music.title }}</div>
@@ -44,8 +44,6 @@
             </a-col>
           </a-row>
         </div>
-
-
       </div>
     </div>
   </div>
@@ -118,6 +116,18 @@ export default {
         this.doAction('prompt')
       }
 
+    },
+    enterMusic(){
+      this.$router.push({
+        name:'app',
+        params:{
+          theme:'#242424',
+          name:'wyyMusic',
+          url:'https://music.163.com',
+          preload:'wyyMusic',
+          background:true,
+        }
+      })
     },
     doAction (action) {
       require('electron').ipcRenderer.send('wyyAction', { action })
