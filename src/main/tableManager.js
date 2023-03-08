@@ -8,7 +8,7 @@ class TableManager {
   async init () {
     if (global.tableWin === null) {
       let tableWinSetting = settings.get('tableWinSetting')
-
+      global.tableWin = {}//因为启动需要时间，如果不先设置一个变量，容易导致重复启动。
       global.tableWin = await windowManager.create({
         name:'table',
         windowOption: {

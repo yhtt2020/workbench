@@ -103,6 +103,7 @@ import { appStore } from '../store'
 import {mapWritableState,mapActions} from 'pinia'
 import cp from 'child_process'
 import KeyInput from '../components/comp/KeyInput.vue'
+import { message } from 'ant-design-vue'
 
 export default {
   name: 'Wizard',
@@ -166,9 +167,15 @@ export default {
   },
   methods: {
     ...mapActions(appStore,['finishWizard']),
-    setTableKeys(args){
-      this.shortKeysTable=args.keys
-      console.log(args,'接收到按键改变事件')
+    setTableKeys (args) {
+      let rs=ipc.sendSync('setTableShortcut',{shortcut:args.keys})
+      if(!rs){
+        message.error('设置快捷键失败，请更换快捷键')
+        return
+      }else{
+        message.success('快捷键设置成功')
+        this.shortKeysTable = args.keys
+      }
     },
     setSearchKeys(args){
       this.shortKeysSearch=args.keys
@@ -204,11 +211,6 @@ export default {
         this.steps=this.stepsBoot
       }
       this.step++
-    },
-    pressTable (e) {
-      this.currentListen='table'
-      this.listening=true
-      return false
     },
     finish(){
       this.finishWizard()

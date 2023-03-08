@@ -33,6 +33,7 @@ export default {
       if(this.listening && (e.ctrlKey||e.altKey||e.shiftKey)){
         this.shortKeys=this.getKeys(e)
         this.listening=false
+
         this.$emit('changeKeys',{keys:this.shortKeys})
         e.preventDefault()
       }
@@ -57,7 +58,7 @@ export default {
       if (e.shiftKey) {
         key += 'shift+'
       }
-      key += e.code
+      key += e.code.replaceAll('Key','')
       return key
     },
   }

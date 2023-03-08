@@ -30,7 +30,8 @@ var defaultKeyMap = {
   followLink: 'mod+enter',
   fillPassword: 'mod+\\',
   toggleTabAudio: 'shift+mod+m',
-  showHistory: 'shift+mod+h'
+  showHistory: 'shift+mod+h',
+  table:'alt+space'//呼出工作台
 }
 /* Utility function to override default mapping with user settings */
 function userKeyMap (settings) {
