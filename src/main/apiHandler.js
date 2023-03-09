@@ -229,6 +229,17 @@ class ApiHandler {
         instance.window.restore()
       }
     })
+
+    ApiHandler.onWindow('getSize', (event, args, instance) => {
+      if (instance.type === 'frameWindow') {
+        event.returnValue = instance.view.getSize()
+      } else if (instance.type === 'window') {
+        event.returnValue =instance.window.getSize()
+      }
+    })
+
+
+
     ApiHandler.onWindow('getBounds', (event, args, instance) => {
       if (instance.type === 'frameWindow') {
         event.returnValue = instance.frame.getBounds()

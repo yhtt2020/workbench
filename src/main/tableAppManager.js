@@ -71,6 +71,15 @@ class TableAppManager {
     return appInstance
   }
 
+  /**
+   * 同步位置
+   * @param name
+   * @param position
+   */
+  setBounds(name,position){
+    console.log('setbounds',name,position)
+    this.setViewPos(this.get(this.getName(name)).view,position)
+}
   setViewPos (view, position) {
     view.setBackgroundColor('#ccc')
     view.setBounds(position)
