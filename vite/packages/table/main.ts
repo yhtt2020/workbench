@@ -4,7 +4,6 @@ import 'ant-design-vue/dist/antd.css';
 import App from './App.vue'
 import {createRouter, createWebHashHistory} from 'vue-router'
 
-
 import {createPinia} from 'pinia'
 import piniaPersist from 'pinia-plugin-persist'
 

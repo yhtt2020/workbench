@@ -45,6 +45,9 @@
     border-width: 3px;
     border-radius: 4px; }
 
+.ant-slider-dot {
+  top: 0; }
+
 .dark {
   color: #b7b7b7; }
   .dark .key-button {
