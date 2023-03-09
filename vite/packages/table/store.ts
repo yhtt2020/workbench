@@ -51,45 +51,7 @@ export const appStore = defineStore('appStore', {
         title: ''
       }
     },
-    decks: [
-      {
-        id: 1,
-        title: '板子1',
-        children: [
-          {
-            icon: '',
-            cover: '',
-            title: '微信'
-          },
-          {
-            icon: '',
-            cover: '',
-            title: '微信'
-          }
-        ]
-      },
-      {
-        id: 2,
-        title: '板子1',
-        children: [
-          {
-            icon: '',
-            cover: '',
-            title: '微信'
-          },
-          {
-            icon: '',
-            cover: '',
-            title: '微信'
-          },
-          {
-            icon: '',
-            cover: '',
-            title: '微信'
-          }
-        ]
-      },
-    ]
+
 
   }),
   getters: {},

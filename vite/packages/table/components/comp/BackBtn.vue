@@ -8,13 +8,16 @@
 export default {
   name: 'BackBtn',
   props:['onClick'],
+  emits:['click'],
   mounted () {
 
   },methods:{
     click(){
       if(!this.onClick){
         this.$router.go(-1)
+        this.$emit('click')
       }else{
+        this.$emit('click')
         this.onClick()
       }
     }

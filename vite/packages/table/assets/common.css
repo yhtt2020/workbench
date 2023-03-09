@@ -31,21 +31,20 @@
   display: flex;
   align-items: center; }
 
-.ant-modal-body {
+.lg .ant-modal-body {
   font-size: 3em; }
-  .ant-modal-body svg {
+  .lg .ant-modal-body svg {
     font-size: 2em; }
-  .ant-modal-body .ant-modal-confirm-content {
+  .lg .ant-modal-body .ant-modal-confirm-content {
     font-size: 0.5em; }
-  .ant-modal-body .ant-btn {
+  .lg .ant-modal-body .ant-btn {
     font-size: 32px;
     height: auto;
     line-height: 1.5;
     margin-right: 20px;
     border-width: 3px;
     border-radius: 4px; }
-
-.ant-slider-dot {
+.lg .ant-slider-dot {
   top: 0; }
 
 .dark {

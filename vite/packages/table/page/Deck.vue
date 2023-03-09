@@ -52,7 +52,7 @@
     v-model:visible="visibleAdd"
     :title="null"
     width="100%"
-    wrap-class-name="full-modal"
+    wrap-class-name="full-modal lg-modal"
     :footer="null"
   >
     <DeckAdd @add="doAdd"></DeckAdd>
@@ -66,7 +66,9 @@ import { appStore } from '../store'
 import { mapWritableState } from 'pinia'
 import Template from '../../user/pages/Template.vue'
 import DeckAdd from './app/deck/DeckAdd.vue'
-import {message} from 'ant-design-vue'
+import { message } from 'ant-design-vue'
+import { deckStore } from '../store/deck'
+
 export default {
   name: 'Deck',
   components: {
@@ -98,7 +100,8 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(appStore, ['decks'])
+    ...mapWritableState(appStore, []),
+    ...mapWritableState(deckStore, ['decks'])
   },
   mounted () {
 
@@ -180,7 +183,7 @@ export default {
         cover: '',
         title: button.title,
         fn: button.fn,
-        id:button.id
+        id: button.id
       }
 
       this.decks[this.currentGridId].children.shift({
@@ -188,10 +191,10 @@ export default {
         cover: '',
         title: button.title,
         fn: button.fn,
-        id:button.id
+        id: button.id
       })
       // this.currentGrid.add(document.getElementById(button.id))
-      this.$nextTick(()=>{
+      this.$nextTick(() => {
         this.currentGrid.refreshItems()
       })
       message.success('添加按钮成功')

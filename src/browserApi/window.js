@@ -41,11 +41,11 @@ const windowApi = {
   async getSize(){
     return await sendSync('getSize')
   },
-  setSize(){
-    send('setSize',size)
+  setSize(width,height){
+    send('setSize', { width,height })
   },
-  setAlwaysOnTop(flag){
-    send('setAlwaysOnTop',{flag})
+  setAlwaysOnTop(flag,level){
+    send('setAlwaysOnTop',{flag,level})
   },
   async isAlwaysOnTop(){
    return await sendSync('isAlwaysOnTop')
