@@ -80,6 +80,18 @@ class TableAppManager {
     console.log('setbounds',name,position)
     this.setViewPos(this.get(this.getName(name)).view,position)
 }
+
+  /**
+   * 设置网页缩放
+   * @param name
+   * @param scale
+   */
+  setScale(name,scale){
+    this.get(this.getName(name)).view.webContents.setZoomFactor(Number((Number(scale)/100).toFixed(2)))
+  }
+  refresh(name){
+    this.get(this.getName(name)).view.webContents.reload()
+  }
   setViewPos (view, position) {
     view.setBackgroundColor('#ccc')
     view.setBounds(position)
