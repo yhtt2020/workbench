@@ -87,7 +87,7 @@ const TableAppManager = require('./src/main/tableAppManager.js')
 global.tableManager = new TableManager()
 app.whenReady().then(async () => {
   global.tableAppManager = new TableAppManager()
-  let registerTableShortcutResult=false
+  let registerTableShortcutResult = false
 
   /**
    * 获得一个键位
@@ -95,9 +95,9 @@ app.whenReady().then(async () => {
    * @param defaultValue
    * @returns {*}
    */
-  function getKeyMap(name,defaultValue){
+  function getKeyMap (name, defaultValue) {
     const keyMapModule = require('./js/util/keyMap.js')
-    const keyMap =keyMapModule.userKeyMap(settings.get('keyMap'))
+    const keyMap = keyMapModule.userKeyMap(settings.get('keyMap'))
     let key = defaultValue//默认快捷键为alt+space
     if (keyMap) {
       if (keyMap[name]) {
@@ -112,11 +112,11 @@ app.whenReady().then(async () => {
    * @param name
    * @param key
    */
-  function setKeyMap(name,key){
+  function setKeyMap (name, key) {
     const keyMapModule = require('./js/util/keyMap.js')
-    const keyMap =keyMapModule.userKeyMap(settings.get('keyMap'))
-    keyMap[name]=key
-    settings.set('keyMap',keyMap)
+    const keyMap = keyMapModule.userKeyMap(settings.get('keyMap'))
+    keyMap[name] = key
+    settings.set('keyMap', keyMap)
   }
 
   /**
@@ -124,12 +124,12 @@ app.whenReady().then(async () => {
    * @returns {Promise<void>}
    */
   async function registerTableShortcut () {
-    let key = getKeyMap('table','Alt+space')//默认快捷键为alt+space
+    let key = getKeyMap('table', 'Alt+space')//默认快捷键为alt+space
     let registerResult = await globalShortcut.register(key, async () => {
       await callTable()
     })
     if (registerResult === false) {
-      registerTableShortcutResult=false
+      registerTableShortcutResult = false
       let notification = new Notification({
         title: '工作台通知',
         body: '呼出工作台快捷键[' + key + ']被占用，请修改快捷键后使用。为您直接打开工作台。',
@@ -137,12 +137,13 @@ app.whenReady().then(async () => {
       })
       notification.show()
       await callTable(2)
-    }else{
-      registerTableShortcutResult=true
+    } else {
+      registerTableShortcutResult = true
     }
   }
+
   registerTableShortcut().then()//注册工作台的全局快捷键
-  ipc.on('setTableShortcut',async (e, a) => {
+  ipc.on('setTableShortcut', async (e, a) => {
     //接收到设置工作台快捷键的消息
     let rs = await globalShortcut.register(a.shortcut, async () => {
       await callTable()
@@ -151,9 +152,9 @@ app.whenReady().then(async () => {
     if (rs) {
       let oldKey = 'alt+space'
       //成功则更改快捷键设置
-      const keyMap = getKeyMap('table','alt+space')
+      const keyMap = getKeyMap('table', 'alt+space')
       oldKey = keyMap
-      setKeyMap('table',a.shortcut)//设置新快捷键
+      setKeyMap('table', a.shortcut)//设置新快捷键
       if (registerTableShortcutResult) {
         //如果之前注册是成功的，则取消，否则则不需要取消
         globalShortcut.unregister(oldKey)
@@ -164,11 +165,11 @@ app.whenReady().then(async () => {
       e.returnValue = false
     }
   })
-  ipc.on('setGlobalShortcut',(e,a)=>{
-    console.log('接收到设置全局快捷键的消息',a)
-    e.returnValue=true
+  ipc.on('setGlobalShortcut', (e, a) => {
+    e.returnValue = true
   })
-  async function callTable (tag=-1) {
+
+  async function callTable (tag = -1) {
     await tableManager.init()
     global.tableAppManager.setTableWin(tableManager.window)
   }
@@ -178,7 +179,7 @@ app.whenReady().then(async () => {
     callTable(1).then()//呼出工作台
   }
 
-  function registerSearch(){
+  function registerSearch () {
     // Register a 'CommandOrControl+X' shortcut listener.
     const keyMap = settings.get('keyMap')
     let quick = 'Alt+F'
@@ -200,6 +201,7 @@ app.whenReady().then(async () => {
       }
     })
   }
+
   registerSearch()
 
   ipc.on(ipcMessageMain.sidePanel.openGlobalSearch, () => {
@@ -229,8 +231,19 @@ app.whenReady().then(async () => {
     globalSearch.hide()
   })
 
+  ipc.on('syncTableAppBounds', (e, a) => {
+    tableAppManager.setBounds(a.app.name, a.bounds)
+  })
+
+  ipc.on('setTableAppScale', (e, a) => {
+    tableAppManager.setScale(a.app.name, a.scale)
+  })
   ipc.on('executeTableApp', async (event, args) => {
     let appInstance = await tableAppManager.executeApp({ app: args.app, position: args.position })
+  })
+
+  ipc.on('refreshTableApp', (e, a) => {
+    tableAppManager.refresh(a.app.name)
   })
 
   ipc.on('closeTableApp', (event, args) => {
@@ -240,8 +253,7 @@ app.whenReady().then(async () => {
     tableAppManager.hideApp(tableAppManager.getName(args.app.name))
   })
 
-  const ffi = require('ffi-napi');
-const key = require('../vite/packages/table/page/settings/Key.vue')
+  const ffi = require('ffi-napi')
 
   /**
    * 先定义一个函数, 用来在窗口中显示字符
@@ -249,18 +261,18 @@ const key = require('../vite/packages/table/page/settings/Key.vue')
    * @return {*} none
    */
   function showText (text) {
-    return new Buffer(text, 'ucs2').toString('binary');
-  };
+    return new Buffer(text, 'ucs2').toString('binary')
+  }
 // 通过ffi加载user32.dll
   const myUser32 = new ffi.Library('user32', {
     'GetSystemMetrics': // 声明这个dll中的一个函数
       [
         'int32', ['int32'], // 用json的格式罗列其返回类型和参数类型
       ],
-  });
+  })
 // 调用user32.dll中的MessageBoxW()函数, 弹出一个对话框
   const out = myUser32.GetSystemMetrics(94)
-  console.log(out);
+  console.log(out)
 
   ipc.handle('shell', (event, args) => {
     if (args.cmd) {
