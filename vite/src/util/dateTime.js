@@ -31,5 +31,15 @@ function getDateTime(date = new Date()) {
   dateTime.week = weeks[date.getDay() - 1];
   return dateTime;
 }
+function TransDate(s, e) {
+  let start = new Date(s).getTime();
+  let end = new Date(e).getTime();
+  var result = Math.abs(end - start);
+  var minute = result / 1000 / 60;
+  if (minute == 0 || isNaN(minute) || minute == null) {
+    return 0;
+  }
+  return Math.floor(result / (24 * 3600 * 1000));
+}
 
-export { getDateTime };
+export { getDateTime, TransDate };

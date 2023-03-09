@@ -7,7 +7,7 @@
         margin-right: 10px;
         vertical-align: middle;
       "
-      icon="fanqie"
+      icon="shezhi1"
     ></Icon>
     <span>添加小卡片</span>
   </div>
@@ -29,10 +29,10 @@
         style="
           width: 5em;
           height: 5em;
-          margin-right: 10px;
+
           vertical-align: middle;
         "
-        icon="fanqie"
+        :icon="item.icon"
       ></Icon>
       {{ item.cname }}
     </div>
@@ -40,15 +40,17 @@
 </template>
 
 <script>
+import { mapActions } from "pinia";
+import { appStore } from "../../../store";
 export default {
   name: "XtAddCard",
 
   data() {
     return {
       CardList: [
-        { name: "Calendar", cname: "日历" },
-        { name: "CountdownDay", cname: "倒数日" },
-        { name: "Clock", cname: "闹钟" },
+        { name: "Calendar", cname: "日历", icon: "rili3" },
+        { name: "CountdownDay", cname: "倒数日", icon: "rili2" },
+        { name: "Clock", cname: "闹钟", icon: "naozhong" },
       ],
     };
   },
@@ -56,9 +58,11 @@ export default {
   mounted() {},
 
   methods: {
+    ...mapActions(appStore, ["addCustomComponents"]),
     AddAssembly(item) {
       switch (item.name) {
         case "Calendar":
+          this.addCustomComponents(item.name);
           this.$router.push({
             name: "home",
             params: {

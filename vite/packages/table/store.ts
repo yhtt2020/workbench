@@ -178,13 +178,44 @@ export const appStore = defineStore("appStore", {
     setAppDate(value) {
       this.appDate = value;
     },
+
     addCountdownDay(value) {
       this.CountdownDay.push(value);
 
       //   this.saveCountdownDay();
     },
+    removeCountdownDay(index) {
+      this.CountdownDay.splice(index, 1);
+    },
     addClock(value) {
       this.ClockEvent.push(value);
+      this.sortClock();
+    },
+    sortClock() {
+      console.log(this.ClockEvent[0]);
+      //console.log(this.appDate.minutes);
+      console.log(this.appDate.hours);
+      this.ClockEvent.sort((v1, v2) => {
+        let value1 = v1.DateValue;
+        let value2 = v2.DateValue;
+        if (value1.hours === value2.hours) {
+          return value1.minutes - value2.minutes;
+        }
+        return value1.hours - value2.hours;
+      });
+      const a = this.ClockEvent.filter((value) => {
+        return (
+          value.DateValue.hours > this.appDate.hours ||
+          (value.DateValue.hours === this.appDate.hours &&
+            value.DateValue.minutes >= this.appDate.minutes)
+        );
+      });
+
+      if (a.length !== 0)
+        this.ClockEvent = [...a, ...this.ClockEvent.slice(0, -a.length)];
+    },
+    removeClock(index) {
+      this.ClockEvent.splice(index, 1);
     },
     //   saveCountdownDay() {
     //     this.save("CountdownDay", this.CountdownDay);
@@ -198,7 +229,6 @@ export const appStore = defineStore("appStore", {
     addCustomComponents(value) {
       if (this.customComponents.includes(value) !== false) return;
       this.customComponents.push(value);
-      console.log(this.customComponents);
     },
   },
 });
