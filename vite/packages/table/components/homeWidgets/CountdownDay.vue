@@ -1,9 +1,9 @@
 <template>
-  <div class="card content" style="" v-if="CountdownDay.length <= 0">
+  <div class="card content" style="" v-if="countdownDay.length <= 0">
     <Icon
       style="width: 2em; height: 2em"
       icon="gengduo1"
-      class="titleIcon"
+      class="title-icon"
     ></Icon>
 
     <a-empty :description="null" :image="simpleImage" />
@@ -19,32 +19,32 @@
         <Icon
           style="width: 1em; height: 1em"
           icon="gengduo1"
-          class="titleIcon"
+          class="title-icon"
         ></Icon>
       </div>
     </div>
     <div
-      class="card eventList"
-      v-for="item in CountdownDay.slice(0, 6)"
+      class="event-list"
+      v-for="item in countdownDay.slice(0, 6)"
       style="background-color: #3b3b3b"
     >
-      <div class="eventTitle">
-        <span class="text-more">{{ item.EventValue }}</span>
+      <div class="event-title">
+        <span class="text-more">{{ item.eventValue }}</span>
         <span class="event"
-          >{{ item.DateValue.year }}年{{ item.DateValue.month }}月{{
-            item.DateValue.day
+          >{{ item.dateValue.year }}年{{ item.dateValue.month }}月{{
+            item.dateValue.day
           }}日</span
         >
       </div>
       <span
         >{{
-          TransDate(
+          transDate(
             appDate.year + "-" + appDate.month + "-" + appDate.day,
-            item.DateValue.year +
+            item.dateValue.year +
               "-" +
-              item.DateValue.month +
+              item.dateValue.month +
               "-" +
-              item.DateValue.day
+              item.dateValue.day
           )
         }}天</span
       >
@@ -54,8 +54,8 @@
 
 <script>
 import { mapWritableState } from "pinia";
-import { appStore } from "../../store";
-import { TransDate } from "../../../../src/util/dateTime";
+import { tableStore } from "../../store";
+import { transDate } from "../../../../src/util/dateTime";
 export default {
   name: "CountdownDay",
   data() {
@@ -65,11 +65,11 @@ export default {
     };
   },
   computed: {
-    ...mapWritableState(appStore, ["appDate", "CountdownDay"]),
+    ...mapWritableState(tableStore, ["appDate", "countdownDay"]),
   },
   methods: {
     onPanelChange(value, mode) {},
-    TransDate,
+    transDate,
   },
 };
 </script>
@@ -78,12 +78,14 @@ export default {
 .content {
   position: relative;
 
-  .titleIcon {
+  .title-icon {
     position: absolute;
     right: 1em;
   }
 }
-.eventList {
+.event-list {
+  width: 17em;
+
   display: flex;
   padding: 0.2em 0.5em;
   flex-direction: row;
@@ -92,7 +94,7 @@ export default {
 
   margin-top: 0.7em;
 }
-.eventTitle {
+.event-title {
   display: flex;
   flex-direction: column;
   overflow: hidden; //文本超出隐藏

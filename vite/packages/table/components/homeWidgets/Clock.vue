@@ -1,14 +1,10 @@
 <template>
-  <div
-    class="card content"
-    style="height: 14.7em; margin-bottom: 1em; padding: 1em"
-    v-if="ClockEvent.length <= 0"
-  >
+  <div class="card content" v-if="clockEvent.length <= 0">
     <a-dropdown :trigger="['contextmenu']">
       <Icon
         style="width: 2em; height: 2em"
         icon="gengduo1"
-        class="titleIcon"
+        class="title-icon"
       ></Icon>
 
       <template #overlay>
@@ -21,29 +17,18 @@
     <div style="text-align: center; margin-top: 1em">暂无闹钟</div>
     <a-empty :description="null" :image="simpleImage" />
   </div>
-  <div
-    class="card content"
-    style="height: 14.7em; margin-bottom: 1em; padding: 1em"
-    v-else
-  >
+  <div class="card content" v-else>
     <Icon
       style="width: 2em; height: 2em"
       icon="gengduo1"
-      class="titleIcon"
+      class="title-icon"
     ></Icon>
     <div style="text-align: center; font-size: 1.5em">下一个闹钟</div>
     <div style="font-size: 3em; margin-top: 0.5em">
-      {{ ClockEvent[0].DateValue.hours }}:{{ ClockEvent[0].DateValue.minutes }}
+      {{ clockEvent[0].dateValue.hours }}:{{ clockEvent[0].dateValue.minutes }}
     </div>
-    <div
-      style="
-        font-size: 1.5em;
-        margin-top: 0.5em;
-        overflow: hidden; //文本超出隐藏
-        text-overflow: ellipsis;
-      "
-    >
-      {{ ClockEvent[0].EventValue }}
+    <div style="font-size: 1.5em; margin-top: 0.5em" class="text-more">
+      {{ clockEvent[0].eventValue }}
     </div>
   </div>
 </template>
@@ -51,7 +36,7 @@
 <script>
 import { Empty } from "ant-design-vue";
 import { mapWritableState } from "pinia";
-import { appStore } from "../../store";
+import { tableStore } from "../../store";
 export default {
   name: "Clock",
   data() {
@@ -60,7 +45,7 @@ export default {
     };
   },
   computed: {
-    ...mapWritableState(appStore, ["appDate", "ClockEvent"]),
+    ...mapWritableState(tableStore, ["appDate", "clockEvent"]),
   },
   methods: {
     onContextMenuClick(e) {
@@ -75,9 +60,12 @@ export default {
   position: relative;
   text-align: center;
 
-  .titleIcon {
+  .title-icon {
     position: absolute;
     right: 1em;
   }
+}
+.ant-dropdown-open {
+  border-radius: 100%;
 }
 </style>

@@ -21,9 +21,9 @@
         padding: 1em;
         margin: 1em;
       "
-      v-for="item in CardList"
+      v-for="item in cardList"
       :key="item.name"
-      @click="AddAssembly(item)"
+      @click="addAssembly(item)"
     >
       <Icon
         style="
@@ -41,16 +41,16 @@
 
 <script>
 import { mapActions } from "pinia";
-import { appStore } from "../../../store";
+import { tableStore } from "../../../store";
 export default {
-  name: "XtAddCard",
+  name: "AddCard",
 
   data() {
     return {
-      CardList: [
-        { name: "Calendar", cname: "日历", icon: "rili3" },
-        { name: "CountdownDay", cname: "倒数日", icon: "rili2" },
-        { name: "Clock", cname: "闹钟", icon: "naozhong" },
+      cardList: [
+        { name: "calendar", cname: "日历", icon: "rili3" },
+        { name: "countdownDay", cname: "倒数日", icon: "rili2" },
+        { name: "clock", cname: "闹钟", icon: "naozhong" },
       ],
     };
   },
@@ -58,10 +58,10 @@ export default {
   mounted() {},
 
   methods: {
-    ...mapActions(appStore, ["addCustomComponents"]),
-    AddAssembly(item) {
+    ...mapActions(tableStore, ["addCustomComponents"]),
+    addAssembly(item) {
       switch (item.name) {
-        case "Calendar":
+        case "calendar":
           this.addCustomComponents(item.name);
           this.$router.push({
             name: "home",
@@ -71,7 +71,7 @@ export default {
             },
           });
           break;
-        case "CountdownDay":
+        case "countdownDay":
           this.$router.push({
             name: "addCardSetting",
             params: {
@@ -80,7 +80,7 @@ export default {
             },
           });
           break;
-        case "Clock":
+        case "clock":
           this.$router.push({
             name: "addCardSetting",
             params: {

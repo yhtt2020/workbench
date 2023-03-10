@@ -2,12 +2,12 @@
   <div
     class="card content"
     style="height: 14em; margin-bottom: 1em"
-    v-if="CountdownDay.length <= 0"
+    v-if="countdownDay.length <= 0"
   >
     <Icon
       style="width: 2em; height: 2em"
       icon="gengduo1"
-      class="titleIcon"
+      class="title-icon"
     ></Icon>
     <div style="text-align: center; margin-top: 1em">暂无倒数日</div>
     <a-empty :description="null" :image="simpleImage" />
@@ -16,7 +16,7 @@
     <Icon
       style="width: 2em; height: 2em"
       icon="gengduo1"
-      class="titleIcon"
+      class="title-icon"
     ></Icon>
     <div
       style="
@@ -28,26 +28,26 @@
     >
       距离「
       <span class="text-more" style="flex: 1; width: 0">{{
-        CountdownDay[0].EventValue
+        countdownDay[0].eventValue
       }}</span
       >」还有
     </div>
     <div style="font-size: 3em; margin-top: 0.1em">
       {{
-        TransDate(
+        transDate(
           appDate.year + "-" + appDate.month + "-" + appDate.day,
-          CountdownDay[0].DateValue.year +
+          countdownDay[0].dateValue.year +
             "-" +
-            CountdownDay[0].DateValue.month +
+            countdownDay[0].dateValue.month +
             "-" +
-            CountdownDay[0].DateValue.day
+            countdownDay[0].dateValue.day
         )
       }}天
     </div>
     <div style="font-size: 1.5em; margin-top: 0.5em">
-      {{ CountdownDay[0].DateValue.year }}年{{
-        CountdownDay[0].DateValue.month
-      }}月{{ CountdownDay[0].DateValue.day }}日
+      {{ countdownDay[0].dateValue.year }}年{{
+        countdownDay[0].dateValue.month
+      }}月{{ countdownDay[0].dateValue.day }}日
     </div>
   </div>
 </template>
@@ -55,8 +55,8 @@
 <script>
 import { Empty } from "ant-design-vue";
 import { mapWritableState } from "pinia";
-import { appStore } from "../../store";
-import { TransDate } from "../../../../src/util/dateTime";
+import { tableStore } from "../../store";
+import { transDate } from "../../../../src/util/dateTime";
 export default {
   name: "SmallCountdownDay",
   data() {
@@ -65,9 +65,9 @@ export default {
     };
   },
   computed: {
-    ...mapWritableState(appStore, ["appDate", "CountdownDay"]),
+    ...mapWritableState(tableStore, ["appDate", "countdownDay"]),
   },
-  methods: { TransDate },
+  methods: { transDate },
 
   mounted() {},
 };
@@ -78,7 +78,7 @@ export default {
   position: relative;
   text-align: center;
 
-  .titleIcon {
+  .title-icon {
     position: absolute;
     right: 1em;
   }

@@ -4,16 +4,16 @@
       style="width: 5%; height: 2em; margin-right: 1%; vertical-align: middle"
       icon="shezhi1"
     ></Icon>
-    <span>「{{ title }}」设置</span>
+    <span style="margin-left: -1em">「{{ title }}」设置</span>
   </div>
-  <div class="card content" v-if="cardType === 'CountdownDay'">
+  <div class="card content" v-if="cardType === 'countdownDay'">
     <a-row>
       <a-col :span="10" style="border-right: 1px solid #454545; height: 100vh">
         <a-row> <a-col>卡片样式 </a-col></a-row>
         <a-row>
           <a-col>
             <a-radio-group
-              v-model:value="CountdownDayType"
+              v-model:value="countdownDayType"
               button-style="solid"
             >
               <a-radio-button value="大">大</a-radio-button>
@@ -24,21 +24,21 @@
         <a-row> <a-col>事件名字 </a-col></a-row>
         <a-row>
           <a-col>
-            <a-input v-model:value="EventValue" placeholder="请输入"
+            <a-input v-model:value="eventValue" placeholder="请输入"
           /></a-col>
         </a-row>
         <a-row> <a-col>日期 </a-col></a-row>
         <a-row>
           <div class="button">
             <a-date-picker
-              v-model:value="DateValue"
+              v-model:value="dateValue"
               :disabled-date="
                 (current) => {
                   return current && current < dayjs().endOf('day');
                 }
               "
             />
-            <a-button type="primary" @click="AddCard">添加</a-button>
+            <a-button type="primary" @click="addCard">添加</a-button>
           </div>
         </a-row>
       </a-col>
@@ -51,31 +51,31 @@
           style="position: relative; height: calc(100vh - 20em)"
           class="scroll"
         >
-          <a-row>
+          <a-row class="list">
             <div
-              class="card eventList"
-              v-for="(item, index) in CountdownDay"
+              class="event-list"
+              v-for="(item, index) in countdownDay"
               style="background-color: #3b3b3b"
             >
               <a-dropdown :trigger="['contextmenu']">
-                <div class="cardList">
-                  <div class="eventTitle">
-                    <span class="text-more">{{ item.EventValue }}</span>
+                <div class="card-list">
+                  <div class="event-title">
+                    <span class="text-more">{{ item.eventValue }}</span>
                     <span class="event"
-                      >{{ item.DateValue.year }}年{{ item.DateValue.month }}月{{
-                        item.DateValue.day
+                      >{{ item.dateValue.year }}年{{ item.dateValue.month }}月{{
+                        item.dateValue.day
                       }}日</span
                     >
                   </div>
                   <div>
                     {{
-                      TransDate(
+                      transDate(
                         appDate.year + "-" + appDate.month + "-" + appDate.day,
-                        item.DateValue.year +
+                        item.dateValue.year +
                           "-" +
-                          item.DateValue.month +
+                          item.dateValue.month +
                           "-" +
-                          item.DateValue.day
+                          item.dateValue.day
                       )
                     }}天
                   </div>
@@ -93,19 +93,19 @@
       </a-col>
     </a-row>
   </div>
-  <div class="card content" v-if="cardType === 'Clock'">
+  <div class="card content" v-if="cardType === 'clock'">
     <a-row>
       <a-col :span="10" style="border-right: 1px solid #454545; height: 100vh">
         <a-row> <a-col>事件名字 </a-col></a-row>
         <a-row>
           <a-col>
-            <a-input v-model:value="EventValue" placeholder="请输入"
+            <a-input v-model:value="eventValue" placeholder="请输入"
           /></a-col>
         </a-row>
         <a-row> <a-col>时间 </a-col></a-row>
         <a-row>
           <a-col :span="6" :xs="8">
-            <a-time-picker v-model:value="ClockDate" format="HH:mm"
+            <a-time-picker v-model:value="clockDate" format="HH:mm"
           /></a-col>
           <a-col :span="6" :xs="12" :offset="1">
             <a-radio-group v-model:value="clockType" button-style="solid">
@@ -116,7 +116,9 @@
         >
         <a-row>
           <a-col>
-            <a-button type="primary" @click="AddClock">设置</a-button></a-col
+            <a-button type="primary" @click="addSettingClock"
+              >设置</a-button
+            ></a-col
           ></a-row
         >
       </a-col>
@@ -129,21 +131,21 @@
           style="position: relative; height: calc(100vh - 20em)"
           class="scroll"
         >
-          <a-row>
+          <a-row class="list">
             <div
-              class="card eventList"
-              v-for="(item, index) in ClockEvent"
+              class="event-list"
+              v-for="(item, index) in clockEvent"
               style="background-color: #3b3b3b"
             >
               <a-dropdown :trigger="['contextmenu']">
-                <div class="cardList">
-                  <div class="eventTitle">
-                    <span class="text-more">{{ item.EventValue }}</span>
+                <div class="card-list">
+                  <div class="event-title">
+                    <span class="text-more">{{ item.eventValue }}</span>
                     <span class="event">{{ item.clockType }}</span>
                   </div>
                   <span
-                    >{{ item.DateValue.hours }}:{{
-                      item.DateValue.minutes
+                    >{{ item.dateValue.hours }}:{{
+                      item.dateValue.minutes
                     }}</span
                   >
                 </div>
@@ -163,8 +165,8 @@
 
 <script>
 import { mapWritableState, mapActions } from "pinia";
-import { appStore } from "../../../store";
-import { shijianc, TransDate } from "../../../util";
+import { tableStore } from "../../../store";
+import { timeStamp, transDate } from "../../../util";
 import { message } from "ant-design-vue";
 import dayjs from "dayjs";
 export default {
@@ -180,12 +182,12 @@ export default {
         wheelPropagation: true,
       },
       title: "",
-      CountdownDayType: "大",
+      countdownDayType: "大",
       clockType: "不重复",
 
-      EventValue: "",
-      DateValue: null,
-      ClockDate: null,
+      eventValue: "",
+      dateValue: null,
+      clockDate: null,
       flag: true,
     };
   },
@@ -198,20 +200,20 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(appStore, ["CountdownDay", "appDate", "ClockEvent"]),
+    ...mapWritableState(tableStore, ["countdownDay", "appDate", "clockEvent"]),
   },
   methods: {
     dayjs,
-    TransDate,
-    ...mapActions(appStore, [
+    transDate,
+    ...mapActions(tableStore, [
       "addCountdownDay",
       "addClock",
       "addCustomComponents",
       "removeCountdownDay",
       "removeClock",
     ]),
-    AddCard() {
-      if (this.EventValue === "" || this.DateValue === null) {
+    addCard() {
+      if (this.eventValue === "" || this.dateValue === null) {
         if (this.flag !== true) return;
         this.flag = false;
         setTimeout(() => {
@@ -221,18 +223,18 @@ export default {
         return;
       }
       this.addCustomComponents(
-        this.$route.params["name"] + this.CountdownDayType
+        this.$route.params["name"] + this.countdownDayType
       );
       this.addCountdownDay({
-        EventValue: this.EventValue,
-        DateValue: shijianc(this.DateValue.valueOf()),
+        eventValue: this.eventValue,
+        dateValue: timeStamp(this.dateValue.valueOf()),
       });
       this.$router.push({
         name: "home",
       });
     },
-    AddClock() {
-      if (this.EventValue === "" || this.ClockDate === null) {
+    addSettingClock() {
+      if (this.eventValue === "" || this.clockDate === null) {
         if (this.flag !== true) return;
         this.flag = false;
         setTimeout(() => {
@@ -243,8 +245,8 @@ export default {
       }
       this.addClock({
         clockType: this.clockType,
-        EventValue: this.EventValue,
-        DateValue: shijianc(this.ClockDate.valueOf()),
+        eventValue: this.eventValue,
+        dateValue: timeStamp(this.clockDate.valueOf()),
       });
       this.addCustomComponents(this.$route.params["name"]);
       this.$router.push({
@@ -262,19 +264,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.eventList {
+.event-list {
   padding: 0.2em 0.5em;
 
   width: 100%;
   margin-top: 0.5em;
-  .cardList {
+  .card-list {
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    .eventTitle {
+    .event-title {
       display: flex;
       flex-direction: column;
       width: 70%;
@@ -297,15 +299,15 @@ export default {
 .content {
   color: #dddddd;
   font-size: 1.3em;
-
+  width: calc(100vw - 10em);
   padding: 0;
-  margin: 0;
+  margin-top: 2em;
 }
 .ant-row {
   margin: 1em;
 }
 .scroll {
-  width: 55%;
+  width: 65%;
   @media screen and (max-width: 1100px) {
     width: 100%;
   }
@@ -325,5 +327,10 @@ export default {
     width: 14em;
     align-items: center;
   }
+}
+.list {
+  display: flex;
+  flex-direction: column;
+  margin-top: -0.5em;
 }
 </style>

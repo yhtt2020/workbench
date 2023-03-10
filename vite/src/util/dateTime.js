@@ -31,7 +31,7 @@ function getDateTime(date = new Date()) {
   dateTime.week = weeks[date.getDay() - 1];
   return dateTime;
 }
-function TransDate(s, e) {
+function transDate(s, e) {
   let start = new Date(s).getTime();
   let end = new Date(e).getTime();
   var result = Math.abs(end - start);
@@ -42,4 +42,4 @@ function TransDate(s, e) {
   return Math.floor(result / (24 * 3600 * 1000));
 }
 
-export { getDateTime, TransDate };
+export { getDateTime, transDate };
