@@ -34,9 +34,11 @@
     "spotlight.js": "^0.7.8",
     "unplugin-vue-components": "^0.20.1",
     "v-viewer": "^3.0.11",
+    "vcolorpicker": "^2.0.12",
     "vue": "^3.2.25",
     "vue-justified-layout": "^0.2.0",
     "vue-router": "4",
+    "vue3-resize": "^0.2.0",
     "vuex": "^4.0.2",
     "xgplayer": "^2.32.2"
   },

@@ -17,13 +17,13 @@
           <a-radio value="icon">
             图标按钮
           </a-radio>
-          <a-radio value="text">
+          <a-radio value="font">
             文字按钮
           </a-radio>
         </a-radio-group>
       </div>
 
-      <div v-if="type==='text'">
+      <div v-if="type==='font'">
         <div class="line">
           按钮文字： <a-input style="width: 20em" v-model:value="iconText" placeholder="输入文字"></a-input>
         </div>
@@ -31,8 +31,14 @@
          字体大小： <a-input-number placeholder="字体大小" v-model:value="iconFontSize"></a-input-number>
         </div>
         <div class="line">
+         文字颜色：  <colorPicker  v-model="color" />
+        </div>
+        <div class="line">
+         背景颜色： <colorPicker  v-model="bgColor" />
+        </div>
+        <div class="line">
           效果预览：
-          <div class="text-icon" :style="{'font-size':iconFontSize+'px'}">
+          <div class="text-icon" :style="{'font-size':iconFontSize+'px',color:this.color,'background':this.bgColor}">
             {{ iconText }}
           </div>
         </div>
@@ -62,7 +68,6 @@ import IconList from '../../../components/comp/IconList.vue'
 import CustomIcon from '../../../components/comp/CustomIcon.vue'
 import DeckAction from '../../../components/comp/DeckAction.vue'
 import { message } from 'ant-design-vue'
-
 export default {
   name: 'DeckAdd',
   emits: ['add'],
@@ -73,6 +78,8 @@ export default {
       iconFontSize:20,
       iconText: '',
       showIconList: false,
+      color:'#ffffff',
+      bgColor:'#0A83FDFF',
 
       icon: null,
       title: '',
@@ -91,18 +98,29 @@ export default {
         message.error('请输入按钮名称')
         return
       }
-      if (this.icon === null) {
-        message.error('请选择图标')
-        return
+      if(this.type==='icon'){
+        if (this.icon === null) {
+          message.error('请选择图标')
+          return
+        }
+      }else{
+        if(this.iconText===''){
+          message.error('请输入按钮文字')
+        }
       }
+
       let button = {
         title: this.title,
         icon: this.icon,
+        font:{
+          size:this.iconFontSize,
+          text:this.iconText,
+          color:this.color,
+          bgColor:this.bgColor
+        },
         fn: this.fn,
         id: Date.now(),
-        type: this.type,
-        iconFontSize:this.iconFontSize,
-        iconText:this.iconText,
+        type: this.type
       }
       this.$emit('add', button)
     }
@@ -116,17 +134,5 @@ export default {
   margin-bottom: 1em;
 }
 
-.text-icon {
-  display: inline-block;
-  width: 80px;
-  height: 80px;
-  background: #0a84ff;
-  color: white;
-  padding: 0.2em;
-  text-align: center;
-  border-radius: 0.2em;
-  overflow: hidden;
-  word-break: break-all;
 
-}
 </style>

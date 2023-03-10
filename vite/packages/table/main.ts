@@ -2,8 +2,9 @@ import {createApp} from 'vue'
 import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
 import App from './App.vue'
+import 'vcolorpicker/lib/style.css';
 import {createRouter, createWebHashHistory} from 'vue-router'
-
+import vcolorpicker from 'vcolorpicker'
 import {createPinia} from 'pinia'
 import piniaPersist from 'pinia-plugin-persist'
 
@@ -36,7 +37,7 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes
 })
-app.use(pinia).use(Antd).use(router).use(VueViewer).mount('#app')
+app.use(pinia).use(Antd).use(vcolorpicker).use(router).use(VueViewer).mount('#app')
 app.component('Icon', Icon)
 app.component('PanelButton', PanelButton)
 app.component('BackBtn', BackBtn)

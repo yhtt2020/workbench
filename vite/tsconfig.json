@@ -13,9 +13,10 @@
     "lib": ["esnext", "dom"],
     "skipLibCheck": true,
     "types": [
-      "pinia-plugin-persist"
+      "pinia-plugin-persist",
+     // "ts-api-types"
     ]
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "packages/**/*.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

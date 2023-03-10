@@ -3,15 +3,39 @@ import {defineStore} from "pinia";
 // @ts-ignore
 export const deckStore=defineStore('deck',{
   state:()=>({
-    decks:[
+
+    settings:{
+      iconSize:'middle'// small large
+    },
+    editing:false,//可编辑
+    deletedItems:[] as string[],
+    /**
+     * 临时性布局，一般是指拖动过程中的布局
+     */
+    layouts: {
+
+    },
+    /**
+     * 存储后的布局，一般是指确认之后的布局
+     */
+    defaultLayouts:{
+
+    },
+    grids:[
       {
-        id: 1,
-        title: '板子1',
+        id: "1",
+        title: '示例操作',
         children: [
           {
+            id:"1",
             icon: '',
+            type:'font',
+            font:{
+              text:'浏览器',
+              size:'20'
+            },
             cover: '',
-            title: '微信',
+            title: '打开内置浏览器',
             action:{
               name:'addTab',
               type:{
@@ -21,39 +45,44 @@ export const deckStore=defineStore('deck',{
 
               }
             }
-          },
-          {
-            icon: '',
-            cover: '',
-            title: '微信',
-            action:{
-
-            }
-          }
-        ]
-      },
-      {
-        id: 2,
-        title: '板子1',
-        children: [
-          {
-            icon: '',
-            cover: '',
-            title: '微信'
-          },
-          {
-            icon: '',
-            cover: '',
-            title: '微信'
-          },
-          {
-            icon: '',
-            cover: '',
-            title: '微信'
-          }
-        ]
-      },
-    ] as IDeck[]
+          }]
+      }
+      //     {
+      //       id:"2",
+      //       icon: '',
+      //       cover: '',
+      //       title: '微信',
+      //       action:{
+      //
+      //       }
+      //     }
+      //   ]
+      // },
+      // {
+      //   id: "2",
+      //   title: '板子1',
+      //   children: [
+      //     {
+      //       id:"3",
+      //       icon: '',
+      //       cover: '',
+      //       title: '微信'
+      //     },
+      //     {
+      //       id:"4",
+      //       icon: '',
+      //       cover: '',
+      //       title: '微信'
+      //     },
+      //     {
+      //       id:"5",
+      //       icon: '',
+      //       cover: '',
+      //       title: '微信'
+      //     }
+      //   ]
+      // },
+    ] as IGrid[]
   }),
   persist: {
     enabled: true,
@@ -77,14 +106,17 @@ declare interface IDeckAction{
   type:IDeckActionType,
   args:any //指令参数
 }
-declare interface IDeckItem{
+declare interface IWidget{
+  id:string,
   icon:string,
   cover: string,
+  type:string,
+  font:any,
   title: string,
   action:IDeckActionType
 }
-declare interface IDeck{
-  id:number,
+declare interface IGrid{
+  id:string,
   title:string,
-  children?:Array<IDeckItem>[],
+  children?:Array<IWidget>[],
 }
