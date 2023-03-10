@@ -78,6 +78,19 @@
     border-width: 0.15em !important;
     color: #7a7a7a; }
 
+.text-icon {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+  background: #0a84ff;
+  color: white;
+  padding: 0.2em;
+  text-align: center;
+  border-radius: 0.2em;
+  overflow: hidden;
+  word-break: break-all;
+  white-space: pre-wrap; }
+
 body {
   overflow: hidden; }
 
