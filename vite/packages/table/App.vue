@@ -13,55 +13,71 @@ import {mapActions, mapWritableState} from 'pinia'
 
 import {appStore} from './store'
 import Barrage from "./components/comp/Barrage.vue";
+import {weatherStore} from "./store/weather";
 
 let startX, startY, moveEndX, moveEndY, X, Y = 0
+const distX = 80 //滑动感知最小距离
+const distY = 80 //滑动感知最小距离
 export default {
   components: {Barrage},
+  data(){
+    return {
+      touchDownRoutes:['home','lock'],//支持下滑的页面的白名单
+      touchUpRoutes:['home','lock'],//支持下滑的页面的白名单
+      locale: zhCN
+    }
+  },
   async mounted() {
-
+    this.reset()//重置部分状态
     // this.getUserInfo()
     window.updateMusicStatusHandler = this.updateMusic
-    this.loadAll()
 
     if (this.settings.darkMod) {
       document.body.style.background = 'rgb(50,50,50)'
     }
-    const distX = 80
-    const distY = 80
-    $(".a-container").on("touchstart", function (e) {
-
-      startX = e.originalEvent.changedTouches[0].pageX,
-        startY = e.originalEvent.changedTouches[0].pageY;
-    });
-    $(".a-container").on("touchend", function (e) {
-      moveEndX = e.originalEvent.changedTouches[0].pageX,
-        moveEndY = e.originalEvent.changedTouches[0].pageY,
-        X = moveEndX - startX,
-        Y = moveEndY - startY;
-
-      if (X > distX) {
-        console.log("向右滑", distX);
-        //e.preventDefault();
-      } else if (X < -distX) {
-        console.log("向左滑", distX);
-        //e.preventDefault();
-      } else if (Y > distY) {
-        ipc.send('openGlobalSearch')
-        e.preventDefault();
-      } else if (Y < -distY) {
-        console.log("向上滑", distY);
-        //e.preventDefault();
-      } else {
-        console.log("just touch");
-      }
-    });
+    this.bindTouchEvents()
+    this.reloadAll()//刷新全部天气
   },
 
   computed: {
     ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo'])
   },
   methods: {
-    ...mapActions(appStore, ['setMusic', 'loadAll']),
+    ...mapActions(appStore, ['setMusic','reset']),
+    ...mapActions(weatherStore,['reloadAll']),
+    bindTouchEvents(){
+      $(".a-container").on("touchstart",  (e) =>{
+        startX = e.originalEvent.changedTouches[0].pageX,
+          startY = e.originalEvent.changedTouches[0].pageY;
+      });
+      $(".a-container").on("touchend",  (e)=> {
+        moveEndX = e.originalEvent.changedTouches[0].pageX,
+          moveEndY = e.originalEvent.changedTouches[0].pageY,
+          X = moveEndX - startX,
+          Y = moveEndY - startY;
+
+        if (X > distX) {
+          console.log("向右滑", distX);
+          //e.preventDefault();
+        } else if (X < -distX) {
+          console.log("向左滑", distX);
+          //e.preventDefault();
+        } else if (Y > distY && startY<=50) {
+          if(this.touchDownRoutes.indexOf(this.$route.name)>-1){
+            ipc.send('openGlobalSearch')
+            e.preventDefault();
+          }
+        } else if (Y < -distY) {
+          if(this.touchUpRoutes.indexOf(this.$route.name)>-1) {
+            this.$router.push({name:'status'})
+            e.preventDefault();
+          }
+          //e.preventDefault();
+        } else {
+          console.log("just touch");
+        }
+      });
+    },
     updateMusic(music) {
       this.setMusic(music)
     },
@@ -75,11 +91,6 @@ export default {
     // }
 
   },
-  data() {
-    return {
-      locale: zhCN
-    }
-  }
 }
 </script>
 

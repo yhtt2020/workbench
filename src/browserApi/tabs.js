@@ -13,7 +13,6 @@ const tabs={
   },
   setOnUrlChanged(callback){
     tabs.onUrlChanged=callback
-    console.log('设置监听')
     return ipcHelper.send('tabs','setOnUrlChanged')
   }
 }

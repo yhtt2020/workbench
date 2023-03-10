@@ -32,16 +32,7 @@ export default {
   },
   methods:{
     enterMusic(){
-      this.$router.push({
-        name:'app',
-        params:{
-          theme:'#242424',
-          name:'wyyMusic',
-          url:'https://music.163.com',
-          preload:'wyyMusic',
-          background:true,
-        }
-      })
+      this.$router.push('/music')
     }
   }
 }

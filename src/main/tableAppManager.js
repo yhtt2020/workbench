@@ -71,6 +71,27 @@ class TableAppManager {
     return appInstance
   }
 
+  /**
+   * 同步位置
+   * @param name
+   * @param position
+   */
+  setBounds(name,position){
+    console.log('setbounds',name,position)
+    this.setViewPos(this.get(this.getName(name)).view,position)
+}
+
+  /**
+   * 设置网页缩放
+   * @param name
+   * @param scale
+   */
+  setScale(name,scale){
+    this.get(this.getName(name)).view.webContents.setZoomFactor(Number((Number(scale)/100).toFixed(2)))
+  }
+  refresh(name){
+    this.get(this.getName(name)).view.webContents.reload()
+  }
   setViewPos (view, position) {
     view.setBackgroundColor('#ccc')
     view.setBounds(position)
@@ -88,7 +109,6 @@ class TableAppManager {
   }
   closeAllApp(){
     this.runningApps.forEach(app=>{
-      console.log(app,'待关闭')
       this.closeApp(this.getName(app.name))
     })
   }

@@ -8,15 +8,16 @@ class TableManager {
   async init () {
     if (global.tableWin === null) {
       let tableWinSetting = settings.get('tableWinSetting')
-
-      tableWin = await windowManager.create({
+      global.tableWin = {}//因为启动需要时间，如果不先设置一个变量，容易导致重复启动。
+      global.tableWin = await windowManager.create({
+        name:'table',
         windowOption: {
-          alwaysOnTop: true,
-          width: 960,
+          alwaysOnTop: false,
+          width: 1098,
           minimizable: false,
-          height: 540,
-          minWidth: 960,
-          minHeight: 540,
+          height: 618,
+          minWidth: 1098,
+          minHeight: 618,
           frame: false,
           backgroundColor: '#fff',
         },
@@ -54,12 +55,22 @@ class TableManager {
       tableWin.window.webContents.loadURL(render.getUrl('table.html'))
 
       tableWin.window.on('close', () => {
-        let tableWinSetting = {
-          bounds: this.window.getBounds(),
-          isMaximized: this.window.isMaximized()
-        }
-        settings.set('tableWinSetting', tableWinSetting)
+        this.saveBounds()
         global.tableWin = null
+      })
+
+      tableWin.window.on('resized',()=>{
+        this.saveBounds()
+      })
+
+      tableWin.window.on('moved',()=>{
+        this.saveBounds()
+      })
+      tableWin.window.on('leave-full-screen',()=>{
+        this.saveBounds()
+      })
+      tableWin.window.on('enter-full-screen',()=>{
+        this.saveBounds()
       })
 
     } else {
@@ -70,6 +81,14 @@ class TableManager {
         tableWin.window.focus()
       }
     }
+  }
+
+  saveBounds(){
+    let tableWinSetting = {
+      bounds: this.window.getBounds(),
+      isMaximized: this.window.isMaximized()
+    }
+    settings.set('tableWinSetting', tableWinSetting)
   }
 
   close () {

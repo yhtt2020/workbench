@@ -1,57 +1,52 @@
 <template>
-  <SecondPanel :search="true" :menus="menus" logo="https://up.apps.vip/logo/favicon.svg" @change-tab="changeTab"></SecondPanel>
+  <SecondPanel :search="true" :menus="menus" logo="https://up.apps.vip/logo/favicon.svg"
+               @change-tab="changeTab"></SecondPanel>
   <div v-show="currentIndex==='my'" @dragover.prevent="dragOver" @drop.prevent="drop" class="app-content">
-    <div v-if="apps.length===0" style="font-size: 2em;padding-top: 6em;text-align: center;">
+    <div v-if="myApps.length===0" style="font-size: 2em;padding-top: 6em;text-align: center;">
       <Icon style="color: #ccc;font-size: 2em;vertical-align: middle" icon="line-dragdroptuofang"></Icon>
       将应用拖放到此处，即可用于快捷启动
     </div>
-    <div v-if="apps.length===0" style="text-align: center">
+    <div v-if="myApps.length===0" style="text-align: center">
       <div @click="loadDeskIconApps" class="btn" style="font-size: 1.5em;width: 8em">导入桌面应用</div>
     </div>
     <div style="padding: 1em">
-      <div @click="open(app)" class="app" v-for="app in apps">
-        <a-avatar :size="50" shape="square" :src="app.icon"></a-avatar>
-        <br>
-        <div class="name">
-          {{ app.name }}
-        </div>
-      </div>
+      <MyApps></MyApps>
     </div>
   </div>
   <div class="app-content" v-if="currentIndex==='qing'">
-
+    <QingApps></QingApps>
   </div>
   <div class="app-content" v-if="currentIndex==='store'" style="padding:2em;">
-
-    <vue-custom-scrollbar  :settings="settings"  style="position:relative;height:calc(100vh - 14em);  border-radius: 8px;">
-    <div style="margin: auto;width: 95%;height: auto;text-align: center">
-      <div style="margin-bottom: 1em;font-size: 1.5em">
-        共 {{storeApps.length}} 应用
+    <vue-custom-scrollbar :settings="settings"
+                          style="position:relative;height:calc(100vh - 14em);  border-radius: 8px;">
+      <div style="margin: auto;width: 95%;height: auto;text-align: center">
+        <div style="margin-bottom: 1em;font-size: 1.5em">
+          共 {{ storeApps.length }} 应用
+        </div>
+        <div v-for="app in storeApps"
+             style="display: inline-block;width:660px;height: 130px;padding: 20px;margin-right:10px;margin-bottom:10px;background: #313131;border-radius: 10px;">
+          <a-row :gutter="20">
+            <a-col :span="5">
+              <a-avatar shape="square" :src="app.icon" style="margin-top: 10px" :size="80">
+              </a-avatar>
+            </a-col>
+            <a-col :span="13">
+              <div class="app-name" style="text-align: left">{{ app.name }}</div>
+              <div class="app-summary" style="text-align: left">
+                {{ app.summary }}
+              </div>
+            </a-col>
+            <a-col :span="6">
+              <div v-if="app.needInstall" class="btn">
+                安装
+              </div>
+              <div @click="executeApp(app.data)" v-else class="btn">
+                打开
+              </div>
+            </a-col>
+          </a-row>
+        </div>
       </div>
-      <div v-for="app in storeApps"
-           style="display: inline-block;width:660px;height: 130px;padding: 20px;margin-right:10px;margin-bottom:10px;background: #313131;border-radius: 10px;">
-        <a-row :gutter="20">
-          <a-col :span="5">
-            <a-avatar shape="square" :src="app.icon" style="margin-top: 10px" :size="80">
-            </a-avatar>
-          </a-col>
-          <a-col :span="13">
-            <div class="app-name"  style="text-align: left">{{ app.name }}</div>
-            <div class="app-summary"  style="text-align: left">
-              {{ app.summary }}
-            </div>
-          </a-col>
-          <a-col :span="6">
-            <div v-if="app.needInstall" class="btn">
-              安装
-            </div>
-            <div @click="executeApp(app.data)" v-else class="btn">
-              打开
-            </div>
-          </a-col>
-        </a-row>
-      </div>
-    </div>
     </vue-custom-scrollbar>
   </div>
 </template>
@@ -60,17 +55,21 @@
 import { mapWritableState, mapActions } from 'pinia'
 import { appStore } from '../store'
 import SecondPanel from '../components/SecondPanel.vue'
+import QingApps from '../components/QingApps.vue'
+import MyApps from '../components/MyApps.vue'
+import { appsStore } from '../store/apps'
 
 let fs = require('fs')
 export default {
   name: 'Apps',
-  components: { SecondPanel },
+  components: { MyApps, QingApps, SecondPanel },
   computed: {
-    ...mapWritableState(appStore, ['apps'])
+    ...mapWritableState(appStore, ['appData']),
+    ...mapWritableState(appsStore, ['myApps'])
   },
   data () {
     return {
-      settings:{
+      settings: {
         useBothWheelAxes: true,
         swipeEasing: true,
         suppressScrollY: false,
@@ -101,12 +100,12 @@ export default {
           summary: '一个B站数据监控的小插件，可以实时监测一个视频的热度走势，显示在副屏上。',
           needInstall: false,
           data: {
-            fullScreen:false,
+            fullScreen: false,
             theme: '#030c13',
             name: 'wallpapaer',
-            type:'system',//网页助手
-            route:JSON.stringify({
-              name:'bili',
+            type: 'system',//网页助手
+            route: JSON.stringify({
+              name: 'bili',
             })
           }
         },
@@ -132,6 +131,20 @@ export default {
             background: true,
             node: true,
             security: false
+          }
+        }, {
+          icon: 'https://a.apps.vip/icons/kook.png',
+          name: 'Kook',
+          summary: '在副屏上使用Kook，一个好用的开黑组团语音沟通工具',
+          needInstall: false,
+          data: {
+            theme: 'rgb(23,24,26)',
+            name: 'kook',
+            url: 'https://www.kookapp.cn/app/discover',
+            background: true,
+            node: false,
+            security: true,
+            fullScreen:false,
           }
         },
         {
@@ -170,7 +183,7 @@ export default {
           summary: '快速创建和管理你的待办。',
           needInstall: false,
           data: {
-            fullScreen:false,
+            fullScreen: false,
             theme: 'transparent',
             name: 'todo',
             url: 'https://a.apps.vip/todo',
@@ -184,6 +197,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(appsStore, ['addApps']),
     executeApp (appData) {
       this.$router.push({
         name: 'app',
@@ -193,7 +207,7 @@ export default {
     open (app) {
       require('electron').shell.openPath(app.path)
     },
-    ...mapActions(appStore, ['addApps']),
+
     async loadDeskIconApps () {
       const desktopApps = await ipc.sendSync('getDeskApps')
       this.desktopApps = desktopApps
@@ -203,7 +217,6 @@ export default {
 
     },
     changeTab (data) {
-      console.log(data, 'data')
       this.currentIndex = data.index
     },
     async drop (e) {
@@ -231,43 +244,4 @@ export default {
   border-radius: 8px;
 }
 
-.app {
-  display: inline-block;
-  width: 5em;
-  text-align: center;
-  vertical-align: text-top;
-  padding: 0.5em;
-  margin: 0.5em;
-  cursor: pointer;
-
-  &:hover {
-    background: #969696;
-    border-radius: 4px;
-
-  }
-
-  .name {
-    font-size: 0.8em;
-    word-break: break-all;
-  }
-}
-
-.app-name {
-  font-size: 1.3em;
-  font-weight: bold;
-  padding-top: 0.2em;
-  padding-bottom: 0.2em;
-
-}
-
-.btn {
-  width: 6em;
-  text-align: center;
-  background: #575757;
-  font-size: 1.2em;
-}
-
-.app-summary {
-  font-size: 1.1em;
-}
 </style>

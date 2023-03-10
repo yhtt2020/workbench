@@ -3,7 +3,7 @@
     <div>
       <div style="overflow-x: visible">
         <div class="card-wrapper">
-          <Dou></Dou>
+          <!--          <Dou></Dou>-->
           <Music></Music>
           <div style="display: inline-block;width: 21em;white-space: pre-wrap;vertical-align: text-top;">
             <Timer></Timer>
@@ -11,8 +11,8 @@
           </div>
 
           <Calendar></Calendar>
-          <Stock></Stock>
-         <AddMore></AddMore>
+          <!--          <Stock></Stock>-->
+          <!--         <AddMore></AddMore>-->
         </div>
       </div>
     </div>
@@ -36,21 +36,5 @@ export default {
 
 <style scoped lang="scss">
 
-.card-wrapper {
-  width: auto;
-  flex-wrap: nowrap;
-  white-space: nowrap;
-}
 
-.card {
-  width: 20em;
-  display: inline-block;
-  height: 30em;
-  padding: 1em;
-  margin-right: 1em;
-
-  .title {
-
-  }
-}
 </style>

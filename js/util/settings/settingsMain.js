@@ -12,8 +12,8 @@ var settings = {
       */
 
     /* eslint-disable no-inner-declarations */
-    function newFileWrite () {
-      return require('fs').promises.writeFile(settings.filePath, JSON.stringify(settings.list))
+    function newFileWrite (filename=settings.filePath) {
+      return require('fs').promises.writeFile(filename, JSON.stringify(settings.list))
     }
 
     function ongoingFileWrite () {
@@ -22,7 +22,12 @@ var settings = {
     /* eslint-enable no-inner-declarations */
 
     // eslint-disable-next-line no-return-assign
-    settings.fileWritePromise = ongoingFileWrite().then(newFileWrite).then(() => settings.fileWritePromise = null)
+    settings.fileWritePromise = ongoingFileWrite().then(newFileWrite).then(() => {
+      settings.fileWritePromise = null
+      //如果保存成功，则写一个备份
+      settings.fileWritePromise = ongoingFileWrite().then(()=>newFileWrite(settings.filePath+'.bk')).then(() => settings.fileWritePromise = null)
+    })
+
   },
   runChangeCallbacks (key) {
     settings.onChangeCallbacks.forEach(function (listener) {
@@ -60,14 +65,24 @@ var settings = {
     var fileData
     try {
       fileData = require('fs').readFileSync(settings.filePath, 'utf-8')
+      if (fileData) {
+        settings.list = JSON.parse(fileData)
+      }
     } catch (e) {
-      if (e.code !== 'ENOENT') {
-        console.warn(e)
+      try{
+        //读入失败，尝试读入备份文件
+        fileData = require('fs').readFileSync(settings.filePath+'.bk', 'utf-8')
+        if (fileData) {
+          settings.list = JSON.parse(fileData)
+        }
+      }catch (e) {
+        if (e.code !== 'ENOENT') {
+          console.warn(e)
+        }
+        settings.list={}//一旦上方的配置项读取错误，则自爆。
       }
     }
-    if (fileData) {
-      settings.list = JSON.parse(fileData)
-    }
+
 
     if(!global.settingsSetted){
       //只绑定一次，防止多次绑定产生并发

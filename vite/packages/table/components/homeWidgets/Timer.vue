@@ -1,5 +1,5 @@
 <template>
-  <div class="card" style="height: 14em;margin-bottom: 1em" >
+  <div class="card half" style="" >
     <a-row>
       <a-col>
         <Icon style="width:5em;height:5em;margin-right:10px;vertical-align: middle" icon="fanqie"></Icon>

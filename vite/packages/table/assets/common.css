@@ -2,7 +2,17 @@
 .card {
   border-radius: 8px;
   background: rgba(183, 183, 183, 0.63);
-  vertical-align: text-top; }
+  vertical-align: text-top;
+  width: 20em;
+  display: inline-block;
+  height: calc(100vh - 14em);
+  padding: 1em;
+  margin-right: 1em; }
+  .card.auto-height {
+    height: auto; }
+  .card.half {
+    height: calc((100vh - 14em - 1em) /2 );
+    margin-bottom: 1em; }
   .card .title {
     font-size: 2em; }
   .card .sub-card {
@@ -11,6 +21,15 @@
     padding: 1em;
     border-radius: .3em;
     font-size: 1.2em; }
+
+.card-wrapper {
+  width: auto;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  vertical-align: middle;
+  height: calc(100vh - 11em);
+  display: flex;
+  align-items: center; }
 
 .ant-modal-body {
   font-size: 3em; }
@@ -25,6 +44,9 @@
     margin-right: 20px;
     border-width: 3px;
     border-radius: 4px; }
+
+.ant-slider-dot {
+  top: 0; }
 
 .dark {
   color: #b7b7b7; }
@@ -127,7 +149,7 @@ body {
   background: rgba(0, 0, 0, 0.3);
   display: inline-block;
   border-radius: 0.5em; }
-  .btn:hover {
+  .btn:hover, .btn:active {
     background: rgba(0, 0, 0, 0.2);
     color: white; }
 
@@ -175,5 +197,14 @@ body {
   white-space: nowrap;
   word-break: break-all;
   overflow: hidden; }
+
+.line, .line-title {
+  margin-bottom: 1em;
+  padding-left: 1em; }
+
+.line-title {
+  padding-left: 0em;
+  font-size: 1.2em;
+  font-weight: bold; }
 
 /*# sourceMappingURL=common.css.map */
