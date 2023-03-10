@@ -17,7 +17,7 @@
       <PanelButton :active="tab==='todo'" @click="goApp" icon="daibanshixiang" title="待办"></PanelButton>
     </li>
     <li>
-      <PanelButton :active="tab==='deck'" @click="goTab('deck')" icon="kuaijie" title="Deck"></PanelButton>
+      <PanelButton :active="tab==='deck'" @click="goTab('deck')" icon="kuaijie1" title="Deck"></PanelButton>
     </li>
   </ul>
 </template>

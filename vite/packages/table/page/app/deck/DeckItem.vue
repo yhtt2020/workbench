@@ -3,7 +3,6 @@
     <svg v-if="item.type==='icon'" style="margin-top: 7px" :style="getStyle" class="icon group-icon" aria-hidden="true">
       <use v-bind:xlink:href="'#icon-'+item.icon.name"></use>
     </svg>
-
     <div class="text-icon" v-if="item.type==='font'" :style="{'font-size':item.font.size+'px',color:item.font.color,'background':item.font.bgColor}">
       {{ item.font.text }}
     </div>

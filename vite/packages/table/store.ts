@@ -26,6 +26,7 @@ export const appStore = defineStore('appStore', {
     fullScreen: false,//是否是全屏模式
 
     settings: {
+      openUrlBrowser:'builtin',//默认打开浏览器
       enableChat: true,//主界面显示聊天
       preventLock: false,//阻止锁屏
 

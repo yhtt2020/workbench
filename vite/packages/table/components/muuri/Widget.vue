@@ -65,7 +65,7 @@ export default {
     ...mapState(deckStore, ['editing', 'settings']),
     getClass () {
       let classList = {
-        muuriResizable: this.resizable != null ? this.resizable : this.$parent.resizable,
+        //muuriResizable: this.resizable != null ? this.resizable : this.$parent.resizable,
 
       }
       classList[this.settings.iconSize] = true

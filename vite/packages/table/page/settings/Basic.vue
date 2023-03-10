@@ -14,10 +14,10 @@
 <script>
 const menus = [
   {
-    title: '开机启动设置',
-    name: 'auto',
+    title: '通用设置',
+    name: 'common',
     route: {
-      name: 'auto'
+      name: 'common'
     }
   },
   {
@@ -43,6 +43,15 @@ export default {
       menus,
       currentMenu: 'key'
     }
+  },
+  mounted () {
+    // this.$router.replace({
+    //       name:'key'
+    //     })
+    //this.setMenu(this.menus[2])
+    // this.$router.push({
+    //   name:'key'
+    // })
   },
   methods: {
     setMenu (menu) {

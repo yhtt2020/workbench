@@ -1,5 +1,5 @@
 <template>
-  <vue-custom-scrollbar  @contextmenu.stop="showMenu(-1)" :settings="scrollbarSettings"
+  <vue-custom-scrollbar  @contextmenu.stop="showMenu(-1,undefined,'wrapper')" :settings="scrollbarSettings"
                         style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em)">
 
     <div style="width: auto;white-space: nowrap">
@@ -15,7 +15,7 @@
                  drag-enabled :get-item-width="getIconSize" :get-item-height="getIconSize"
                  v-model="grid.children"  >
             <template #item="{ item }">
-              <Widget  :w-id="item.id" :item="item"
+              <Widget @contextmenu.stop="showMenu(item.id,{item,grid},'item')"  :w-id="item.id" :item="item"
                        :uniqueKey="item.id"
                        :title="item.title"
                        :showDelete="true"
@@ -64,16 +64,29 @@
       </Widget>
     </div>
     <a-row :gutter="20">
-      <a-col v-if="currentGridId!==-1">
+      <a-col v-if="menuType==='grid'">
         <div  @click="add()" class="btn">
           <Icon style="font-size: 3em" icon="tianjia1"></Icon>
           <div>添加按钮</div>
         </div>
       </a-col>
+      <a-col v-if="menuType==='item'">
+        <div  @click="remove()" class="btn">
+          <Icon style="font-size: 3em" icon="shanchu"></Icon>
+          <div>删除按钮</div>
+        </div>
+      </a-col>
+
       <a-col>
         <div @click="addBoard" class="btn">
           <Icon style="font-size: 3em" icon="tianjiawenjianjia"></Icon>
           <div>添加分组</div>
+        </div>
+      </a-col>
+      <a-col v-if="menuType==='grid'">
+        <div  @click="removeGrid()" class="btn">
+          <Icon style="font-size: 3em" icon="shanchu"></Icon>
+          <div>删除分组</div>
         </div>
       </a-col>
       <a-col>
@@ -139,6 +152,7 @@ import { deckStore } from '../store/deck'
 import Widget from "../components/muuri/Widget.vue";
 import vuuri from '../components/vuuri/Vuuri.vue'
 import Prompt from '../components/comp/Prompt.vue'
+import {Modal} from 'ant-design-vue'
 export default {
   name: 'Deck',
   components: {
@@ -166,8 +180,14 @@ export default {
         cover: '',
         title: '微信'
       },
-      currentGridId: -1,
+      menuType:'',//菜单类型
+
+      currentGridId: -1,//当前菜单选中的grid
       currentGrid: {},
+
+      currentItemId:-1,//当前菜单的item
+      currentItem:{},
+
       cloneMap: [],
       menuVisible: false,
       visibleAdd: false
@@ -271,16 +291,39 @@ export default {
     onClose () {
       this.menuVisible = false
     },
+    remove(){
+      Modal.confirm({
+        content:"确定删除按钮【"+this.currentItem.title+'】？此操作不可还原。请谨慎操作。',
+        okText:'确认删除',
+        onOk:()=>{
+          this.currentGrid.children.splice(this.currentGrid.children.findIndex(item=>{
+            return item.id===this.currentItemId
+          }),1)
+          this.menuVisible=false
+        }
+      })
+
+    },
     add () {
       this.visibleAdd = true
      // this.currentGrid.add(document.getElementById('newItem').cloneNode(true))
     },
-    showMenu (id) {
+    showMenu (id,data,type='grid') {
       this.menuVisible = true
-      this.currentGridId = id
-      this.currentGrid =this.grids.find(g=>{
-        return g.id=== id
-      })
+      if(type==='grid'){
+        this.menuType='grid'
+        this.currentGridId = id
+        this.currentGrid =this.grids.find(g=>{
+          return g.id=== id
+        })
+      }else if(type==='item'){
+        this.menuType='item'
+        this.currentItemId = id
+        this.currentItem =data.item
+        this.currentGrid=data.grid
+      }else{
+        this.menuType='wrapper'
+      }
     },
     addBoard () {
       let grid = {

@@ -1,10 +1,25 @@
 <template>
- 内置浏览器设置
+ <div class="line-title">
+   内置浏览器设置
+ </div>
+  <div class="line">
+    默认打开网页使用：
+    <a-radio-group v-model:value="settings.openUrlBrowser">
+      <a-radio value="builtin">内嵌浏览器</a-radio>
+      <a-radio value="system">系统默认浏览器</a-radio>
+    </a-radio-group>
+  </div>
 </template>
 
 <script>
+import { appStore } from '../../store'
+import {mapWritableState} from 'pinia'
+
 export default {
-  name: 'Browser'
+  name: 'Browser',
+  computed:{
+    ...mapWritableState(appStore,['settings'])
+  }
 }
 </script>
 
