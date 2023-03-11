@@ -19,7 +19,7 @@
         width: 12em;
         margin-bottom: 1em;
         padding: 1em;
-        margin: 1em;
+        margin: 1em;cursor:pointer
       "
       v-for="item in cardList"
       :key="item.name"
@@ -37,7 +37,7 @@
       {{ item.cname }}
     </div>
   </div>
-  <CardDetail :cardType="cardType" v-if="show" @onBack="onBack"></CardDetail>
+<!--  <CardDetail :cardType="cardType" v-if="show" @onBack="onBack"></CardDetail>-->
 </template>
 
 <script>
@@ -67,34 +67,34 @@ export default {
       switch (item.name) {
         case "calendar":
           this.cardType=this.cardList[0];
-          // this.addCustomComponents(item.name);
-          // this.$router.push({
-          //   name: "home",
-          //   params: {
-          //     name: item.name,
-          //     cname: item.cname,
-          //   },
-          // });
+          this.addCustomComponents(item.name);
+          this.$router.push({
+            name: "home",
+            params: {
+              name: item.name,
+              cname: item.cname,
+            },
+          });
           break;
         case "countdownDay":
           this.cardType=this.cardList[1];
-          // this.$router.push({
-          //   name: "addCardSetting",
-          //   params: {
-          //     name: item.name,
-          //     cname: item.cname,
-          //   },
-          // });
+          this.$router.push({
+            name: "addCardSetting",
+            params: {
+              name: item.name,
+              cname: item.cname,
+            },
+          });
           break;
         case "clock":
           this.cardType=this.cardList[2];
-          // this.$router.push({
-          //   name: "addCardSetting",
-          //   params: {
-          //     name: item.name,
-          //     cname: item.cname,
-          //   },
-          // });
+          this.$router.push({
+            name: "addCardSetting",
+            params: {
+              name: item.name,
+              cname: item.cname,
+            },
+          });
           break;
       }
       this.show=true;

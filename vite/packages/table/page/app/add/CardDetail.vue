@@ -46,8 +46,10 @@ export default {
   methods:{
     onBack(){
       this.$emit("onBack")
+        this.show=true;
+      },
     }
-  }
+
 }
 </script>
 
@@ -114,7 +116,15 @@ export default {
 }
  .cartoon{
 
-  transform:scale(0.8) rotate3d(1,1,1,15deg);
-
+   animation-name: example;
+   animation-duration: 4s;
+   animation-iteration-count: infinite;
+}
+@keyframes example {
+  0% {transform:scale(0.8) rotate3d(1,1,0,0deg) }
+  25% {transform:scale(0.8) rotate3d(1,1,0,20deg) }
+  50% {transform:scale(0.8) rotate3d(1,1,0,0deg)}
+  75% {transform:scale(0.8) rotate3d(1,1,0,-20deg) }
+  100% {transform:scale(0.8) rotate3d(1,1,0,0deg) }
 }
 </style>
