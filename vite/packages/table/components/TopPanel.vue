@@ -1,23 +1,41 @@
 <template>
-  <a-row   class="top-panel drag" type="flex" :gutter="10">
-    <a-col :span="8"  >
-      <div   class="pointer no-drag text-more" style="display: inline-block" @click="enterMusic" v-if="  status.music && status.music.title">
-         <a-avatar style="margin-right: 0.5em" :size="24" :src="status.music.cover"></a-avatar> {{ status.music.title }} {{ status.music.singer }}
+  <a-row class="top-panel drag" type="flex" :gutter="10">
+    <a-col :span="8">
+      <div
+        class="pointer no-drag text-more"
+        style="display: inline-block"
+        @click="enterMusic"
+        v-if="status.music && status.music.title"
+      >
+        <a-avatar
+          style="margin-right: 0.5em"
+          :size="24"
+          :src="status.music.cover"
+        ></a-avatar>
+        {{ status.music.title }} {{ status.music.singer }}
       </div>
     </a-col>
-    <a-col  :span="8" style="text-align: center">
+    <a-col :span="8" style="text-align: center">
       <div @click="openGlobalSearch" class="input-box no-drag pointer">
         <Icon icon="sousuo"></Icon> 搜索 网页内容、标签（下滑)
-        <span style="float:right;padding-right: 10px">
-          <span style="margin-right: 3px" class="key-button">Alt</span><span  class="key-button">F</span>
+        <span style="float: right; padding-right: 10px">
+          <span style="margin-right: 3px" class="key-button">Alt</span
+          ><span class="key-button">F</span>
         </span>
       </div>
     </a-col>
-    <a-col  :span="8" style="text-align: right">
-      <span style="color: grey;font-size: 0.8em;margin-right: 1em" v-if="settings.tipLock && this.showLockTip">
-        {{lockTimeoutDisplay}}后锁屏
+    <a-col :span="8" style="text-align: right">
+      <span
+        style="color: grey; font-size: 0.8em; margin-right: 1em"
+        v-if="settings.tipLock && this.showLockTip"
+      >
+        {{ lockTimeoutDisplay }}后锁屏
       </span>
-     <span class="no-drag" v-if="!loading">{{ dateTime.month }}/{{ dateTime.day }} {{ dateTime.hours }}:{{ dateTime.minutes }} {{ dateTime.week }}
+      <span class="no-drag" v-if="!loading"
+        >{{ dateTime.month }}/{{ dateTime.day }} {{ dateTime.hours }}:{{
+          dateTime.minutes
+        }}
+        {{ dateTime.week }}
 
        <span v-if="hasWeather && city.weather">
           <i style="" :class="'qi-'+city.weather.now.icon+'-fill'"></i> {{ city.weather.now.temp }}℃
@@ -31,21 +49,21 @@
 
 <script >
 import { getDateTime } from '../../../src/util/dateTime'
-import { appStore } from '../store'
-import {mapWritableState,mapState} from 'pinia'
+import { appStore, tableStore} from '../store'
+import {mapWritableState,mapState,mapActions} from 'pinia'
 import { paperStore } from '../store/paper'
 import { weatherStore } from '../store/weather'
 
 export default {
-  name: 'TopPanel',
-  data(){
+  name: "TopPanel",
+  data() {
     return {
-      loading:true,
-      dateTime:{},
-      timer:null,
-      lockTimer:null,
-      showLockTip:false,
-    }
+      loading: true,
+      dateTime: {},
+      timer: null,
+      lockTimer: null,
+      showLockTip: false,
+    };
   },
   computed:{
     ...mapWritableState(appStore,['status','lockTimeout']),
@@ -87,9 +105,9 @@ export default {
     city () {
       return this.cities[0]
     },
-    hasWeather(){
-      return this.cities.length>0
-    }
+    hasWeather() {
+      return this.cities.length > 0;
+    },
   },
   mounted () {
     window.onblur=()=>{
@@ -105,6 +123,7 @@ export default {
     }
   },
   methods:{
+    ...mapActions(tableStore,["setAppDate"]),
     clearLockTimer(){
       clearInterval(this.lockTimer)
       this.lockTimer=null
@@ -129,24 +148,24 @@ export default {
     openGlobalSearch(){
       ipc.send('openGlobalSearch')
     },
-    getTime(){
-      this.dateTime=getDateTime()
+    getTime() {
+      this.dateTime = getDateTime();
+      this.setAppDate(this.dateTime);
     },
-    enterMusic(){
+    enterMusic() {
       this.$router.push({
-        name:'music'
-      })
-    }
-  }
-}
+        name: "music",
+      });
+    },
+  },
+};
 </script>
 
 <style scoped>
-.top-panel{
-  padding:.8em;
-
+.top-panel {
+  padding: 0.8em;
 }
-.input-box{
+.input-box {
   height: 2em;
   border-radius: 100px;
   border: 1px solid #c4c4c4;
