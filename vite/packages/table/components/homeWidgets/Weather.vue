@@ -1,9 +1,5 @@
 <template>
-  <div
-    @click="enterWeather"
-    class="card pointer half"
-    style="padding: 1em; margin-bottom: 0; height: 50%"
-  >
+  <div @click="enterWeather" class="card pointer half" style="padding:1em;margin-bottom: 0">
     <!--    <iframe scrolling="no"  style="border: none;height: 196px;width: 100%" :src="src"></iframe>-->
     <div v-if="!cities.length">
       <div>
@@ -83,9 +79,10 @@
   </div>
 </template>
 <script>
-import { mapState } from "pinia";
-import { getDateTime } from "../../../../src/util/dateTime";
-import { weatherStore } from "../../store/weather";
+
+import { mapState } from 'pinia'
+import { getDateTime } from '../../../../src/util/dateTime'
+import { weatherStore } from '../../store/weather'
 
 export default {
   name: "Weather",
@@ -96,10 +93,10 @@ export default {
     };
   },
   computed: {
-    ...mapState(weatherStore, ["cities"]),
-    city() {
-      return this.cities[0];
-    },
+    ...mapState(weatherStore, ['cities']),
+    city () {
+      return this.cities[0]
+    }
   },
   mounted() {
     this.today = getDateTime();

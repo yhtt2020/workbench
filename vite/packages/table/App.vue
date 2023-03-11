@@ -82,9 +82,61 @@ export default {
       "clockEvent",
       "appDate",
     ]),
-    ...mapWritableState(appStore, ["settings", "routeUpdateTime", "userInfo"]),
+    ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo'])
   },
-  watch: {
+  methods: {
+    ...mapActions(appStore, ['setMusic','reset']),
+    ...mapActions(weatherStore,['reloadAll']),
+    bindTouchEvents(){
+      $(".a-container").on("touchstart",  (e) =>{
+        startX = e.originalEvent.changedTouches[0].pageX,
+          startY = e.originalEvent.changedTouches[0].pageY;
+      });
+      $(".a-container").on("touchend",  (e)=> {
+        moveEndX = e.originalEvent.changedTouches[0].pageX,
+          moveEndY = e.originalEvent.changedTouches[0].pageY,
+          X = moveEndX - startX,
+          Y = moveEndY - startY;
+
+        if (X > distX) {
+          console.log("向右滑", distX);
+          //e.preventDefault();
+        } else if (X < -distX) {
+          console.log("向左滑", distX);
+          //e.preventDefault();
+        } else if (Y > distY && startY<=50) {
+          if(this.touchDownRoutes.indexOf(this.$route.name)>-1){
+            ipc.send('openGlobalSearch')
+            e.preventDefault();
+          }
+        } else if (Y < -distY) {
+          if(this.touchUpRoutes.indexOf(this.$route.name)>-1) {
+            this.$router.push({name:'status'})
+            e.preventDefault();
+          }
+          //e.preventDefault();
+        } else {
+          console.log("just touch");
+        }
+      });
+    },
+    updateMusic(music) {
+      this.setMusic(music);
+    },
+    ...mapActions(tableStore, ["removeClock"]),
+    // async getUserInfo() {
+    //   let rs = await tsbApi.user.get()
+    //   if (rs.status === 1) {
+    //     console.log(rs.data.user_info)
+    //     this.userInfo=rs.data.user_info
+    //   }
+    // }
+    handleOk() {
+    this.visible = false;
+    this.removeClock(0);
+    console.log(123);
+  },
+  },watch: {
     "appDate.minutes": {
       handler(newVal, oldVal) {
         try {
@@ -101,60 +153,6 @@ export default {
       deep: true,
       immediate: true,
     },
-  },
-  methods: {
-    ...mapActions(appStore, ["setMusic", "reset"]),
-    ...mapActions(weatherStore, ["reloadAll"]),
-    ...mapActions(tableStore, ["removeClock"]),
-    handleOk() {
-      this.visible = false;
-      this.removeClock(0);
-      console.log(123);
-    },
-    bindTouchEvents() {
-      $(".a-container").on("touchstart", (e) => {
-        (startX = e.originalEvent.changedTouches[0].pageX),
-          (startY = e.originalEvent.changedTouches[0].pageY);
-      });
-      $(".a-container").on("touchend", (e) => {
-        (moveEndX = e.originalEvent.changedTouches[0].pageX),
-          (moveEndY = e.originalEvent.changedTouches[0].pageY),
-          (X = moveEndX - startX),
-          (Y = moveEndY - startY);
-
-        if (X > distX) {
-          console.log("向右滑", distX);
-          //e.preventDefault();
-        } else if (X < -distX) {
-          console.log("向左滑", distX);
-          //e.preventDefault();
-        } else if (Y > distY && startY <= 50) {
-          if (this.touchDownRoutes.indexOf(this.$route.name) > -1) {
-            ipc.send("openGlobalSearch");
-            e.preventDefault();
-          }
-        } else if (Y < -distY) {
-          if (this.touchUpRoutes.indexOf(this.$route.name) > -1) {
-            this.$router.push({ name: "status" });
-            e.preventDefault();
-          }
-          //e.preventDefault();
-        } else {
-          console.log("just touch");
-        }
-      });
-    },
-    updateMusic(music) {
-      this.setMusic(music);
-    },
-    ...mapActions(appStore, []),
-    // async getUserInfo() {
-    //   let rs = await tsbApi.user.get()
-    //   if (rs.status === 1) {
-    //     console.log(rs.data.user_info)
-    //     this.userInfo=rs.data.user_info
-    //   }
-    // }
   },
 };
 </script>

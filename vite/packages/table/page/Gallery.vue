@@ -1,48 +1,79 @@
 <template>
-  <div class="main" style="text-align: center;padding-top: 3em">
-    <BackBtn :onClick="goLock"></BackBtn>
-    <div class="rotate-center" style="font-size: 2em;margin-bottom: 1em">
-      必应壁纸
+  <div id="galleryContainer" class="main" style="text-align: center;padding-top: 2em">
+    <BackBtn :onClick="goHome"></BackBtn>
+      <SecondPanel :search="true" :menus="menus" style="margin-top: 3em;margin-left: 3em;text-align: left" logo="https://a.apps.vip/wallpaper/favicon.png"
+                   @changeTab="changeTab"></SecondPanel>
+    <div id="parentScroller" style="margin-left: 15em">
+      <router-view></router-view>
     </div>
-    <div style="position: fixed;right: 2em;top: 2em"><span style="font-size: 3em" @click="play"><Icon icon="bofang"></Icon></span></div>
-    <vue-custom-scrollbar id="containerWrapper" :settings="settingsScroller" style="height: 80vh">
-      <!--            <lightgallery id="container"-->
-      <!--                          :settings="settings"-->
-      <!--                          :onInit="onInit"-->
-      <!--                          :onBeforeSlide="onBeforeSlide"-->
-      <!--            >-->
-      <!--              <a class="gallery-item" v-for="image in images" :data-lg-size='image.lgSize' :data-src="image.src"-->
-      <!--                 :data-sub-html='image.subHtml'>-->
-      <!--                <img-->
-      <!--                  class="img-responsive"-->
-      <!--                  :src="image.url"-->
-      <!--                />-->
-      <!--              </a>-->
-      <!--            </lightgallery>-->
-      <div data-fit="cover" class="spotlight-group" data-control="autofit,page,fullscreen,close,zoom" data-play="true"
-           data-autoslide="true" data-infinite="true" id="container">
-        <a class="spotlight " v-for="img  in bingImages" :data-lg-size='img.lgSize' :href="img.src">
-          <img :src="img.src" data-animation="my-rotate"/>
-        </a>
-      </div>
-    </vue-custom-scrollbar>
-
   </div>
 </template>
 
 <script>
 import justifiedGallery from 'justifiedGallery'
 
-import Spotlight from 'spotlight.js'
+
 import VueCustomScrollbar from '../../../src/components/vue-scrollbar.vue'
-import axios from 'axios'
+
+import SecondPanel from '../components/SecondPanel.vue'
 
 export default {
   name: 'Gallery',
   components: {
+    SecondPanel,
     VueCustomScrollbar,
   },
   data: () => ({
+    tab: '',
+    menus: [
+      {
+        index: 'm',
+        title: '我的收藏',
+        icon:'xihuan',
+        route:
+          {
+            name: 'my'
+          }
+      },
+      {
+        title: '必应壁纸',
+        index: 'b',
+        icon:'bing',
+        route:
+          {
+            name: 'bing',
+
+          }
+      },
+      {
+        title: 'Wallheaven',
+        index: 'w',
+        icon:'lu',
+        route:
+          {
+            name: 'wallheaven'
+          }
+      },
+      {
+        index: 'l',
+        title: '动态壁纸',
+        icon:'a-zujiantianchong_huaban1fuben7',
+        route:
+          {
+            name: 'lively'
+          }
+      },
+      {
+        index: 's',
+        title: '设置',
+        icon:'shezhi',
+        route:
+          {
+            name: 'papersSetting'
+          }
+      },
+
+    ],
     tmp: {
       width: 250,
       height: 400,
@@ -53,17 +84,15 @@ export default {
           Kyoto, Japan</a></p>`,
       url: 'https://images.unsplash.com/photo-1581894158358-5ecd2c518883?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=240&q=80'
     },
-    bingImages: [],//必应壁纸
+
     images: [],//当前相册图片
-    settingsScroller: {
-      useBothWheelAxes: true,
-      swipeEasing: true,
-      suppressScrollY: false,
-      suppressScrollX: true,
-      wheelPropagation: true
-    },
+
   }),
   async mounted () {
+    $('#galleryContainer').on('touchend',(e)=>{
+      e.stopPropagation();
+    })
+    this.$router.push({name:'my'})
     // justifiedGallery()
     // $('#container').justifiedGallery({
     //   captions: false,
@@ -71,65 +100,18 @@ export default {
     //   rowHeight: 180,
     //   margins: 5
     // })
-    justifiedGallery()
-    $('#container').justifiedGallery({
-      captions: false,
-      lastRow: 'hide',
-      rowHeight: 180,
-      margins: 5
-    })
-    $('#containerWrapper').scroll(() => {
-      if ($('#containerWrapper').scrollTop() + $('#containerWrapper').height() == $('#containerWrapper').height()) {
-        for (var i = 0; i < 5; i++) {
-          console.log('插入一个元素')
-          this.images.push(this.tmp)
-          this.$nextTick(() => {
-            $('#container').justifiedGallery('norewind')
-          })
-        }
-      }
-    })
 
-    this.getBingWallPaper((images) => {
-      //let animations = ['a-fadeout','a-fadeoutT', 'a-fadeoutR', 'a-fadeoutB', 'a-fadeoutL','a-rotateoutLT', 'a-rotateoutLB', 'a-rotateoutRT', 'a-rotateoutRB', 'a-flipout', 'a-flipoutX', 'a-flipoutY']
-      let animations = ['ani-gray','bowen','ani-rotate']
-      if (images) {
-        this.bingImages = images.map(img => {
-          let random = Math.random()
-          console.log(random, 'random')
-          let randomIndex = Math.floor((Math.random() * animations.length))
-          console.log(randomIndex)
-          let image = {
-            title: false,// img.title,
-            src: 'https://cn.bing.com' + img.url,
-            animation: animations[randomIndex]//['gray','rate'][(Math.random()*2).toFixed()]//''slide','fade','scale',
-          }
-          console.log(image, 'img')
-          return image
-        })
-        console.log(this.bingImages)
-      }
-    })
   },
   methods: {
-    goLock(){
+    changeTab (args) {
+      console.log(args)
+      this.$router.push(args.menu.route)
+      this.tab = args.index
+    },
+    goLock () {
       this.$router.push('/lock')
     },
-    getBingWallPaper (cb) {
-      const axios = require('axios')
-      let imagesResult = axios.get('https://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=8&mkt=zh-CN').then((imagesResult) => {
-        if (imagesResult.status === 200) {
-          let images = imagesResult.data.images
-          console.log(images)
-          cb(images)
 
-        } else {
-          cb(undefined)
-        }
-      }).catch((err) => {
-        cb(undefined)
-      })
-    },
     play () {
       window.Spotlight.show(this.bingImages, {
         control: 'autofit,page,fullscreen,close,zoom,prev,next',
@@ -146,6 +128,11 @@ export default {
     onBeforeSlide: () => {
       console.log('calling before slide')
     },
+    goHome(){
+      this.$router.push({
+        name:'home'
+      })
+    }
   },
 }
 </script>
@@ -158,44 +145,49 @@ export default {
 }
 </style>
 <style>
-.spl-pane > *{
+.spl-pane > * {
   filter: grayscale(0) blur(0);
   transform: rotate(0deg);
-  transition: all 4s ease-out,transform 3s linear;
+  transition: all 4s ease-out, transform 3s linear;
 }
-.spl-pane .ani-gray{
+
+.spl-pane .ani-gray {
   filter: grayscale(1) blur(5px);
   opacity: 0;
 }
 
-.spl-pane .ani-rotate{
+.spl-pane .ani-rotate {
   display: inline-block;
-  transform:rotate(360deg);
+  transform: rotate(360deg);
 }
 
 
- .spl-scene{
+.spl-scene {
   transition: transform 0.2s ease;
 }
+
 /* custom animation "visible state" (css context by custom classname "only-this-gallery" to apply these animation just on a specific gallery) */
- .spl-pane > *{
+.spl-pane > * {
   clip-path: circle(100% at center);
   transition: transform 0.35s ease,
   opacity 0.65s ease,
-  clip-path 0.8s ease,filter 3s ease-out;
+  clip-path 0.8s ease, filter 3s ease-out;
 }
+
 /* custom animation "hidden state" ("custom" is the name of the animation you pass as gallery option) */
 /* 波纹动画*/
 
 /* animation state when gallery is hidden */
-.spl-pane .bowen{
+.spl-pane .bowen {
   clip-path: circle(0px at center);
 }
+
 /* animation state when gallery will open */
-.spl-pane  {
+.spl-pane {
   clip-path: circle(100% at center);
   transition: clip-path 0.65s ease 0.15s;
 }
+
 /*.spl-pane > * {*/
 /*  transform: rotate(0deg);*/
 /*  transition: all 1s ease-out;*/

@@ -46,12 +46,12 @@
   </a-row>
 </template>
 
-<script>
-import { getDateTime } from "../../../src/util/dateTime";
-import { appStore, tableStore } from "../store";
-import { mapWritableState, mapState, mapActions } from "pinia";
-import { paperStore } from "../store/paper";
-import { weatherStore } from "../store/weather";
+<script >
+import { getDateTime } from '../../../src/util/dateTime'
+import { appStore, tableStore} from '../store'
+import {mapWritableState,mapState,mapActions} from 'pinia'
+import { paperStore } from '../store/paper'
+import { weatherStore } from '../store/weather'
 
 export default {
   name: "TopPanel",
@@ -64,86 +64,88 @@ export default {
       showLockTip: false,
     };
   },
-  computed: {
-    ...mapWritableState(appStore, ["status", "lockTimeout"]),
-    ...mapState(weatherStore, ["cities"]),
-    ...mapWritableState(paperStore, ["settings"]),
-    lockTimeoutDisplay() {
+  computed:{
+    ...mapWritableState(appStore,['status','lockTimeout']),
+    ...mapState(weatherStore,['cities']),
+    ...mapWritableState(paperStore,['settings']),
+    lockTimeoutDisplay(){
       // if(this.lockTimeout>=60){
       //   return ((this.lockTimeout/60).toFixed(0)-1)+'分'+this.lockTimeout % 60+'秒'
       // }else{
       //   return this.lockTimeout+'秒'
       // }
       function secTotime(s) {
-        var t = "";
-        if (s > -1) {
-          var hour = Math.floor(s / 3600);
-          var min = Math.floor(s / 60) % 60;
-          var sec = s % 60;
-          if (hour === 0) t = "";
-          else if (hour < 10) {
-            t = "0" + hour + "小时";
+        var t = '';
+        if(s > -1){
+          var hour = Math.floor(s/3600)
+          var min = Math.floor(s/60) % 60
+          var sec = s % 60
+          if(hour===0)
+            t=''
+            else
+          if(hour < 10) {
+            t = '0'+ hour + "小时"
           } else {
-            t = hour + "小时";
+            t = hour + "小时"
           }
-          if (min < 10) {
-            t += "0";
+          if(min < 10){
+            t += "0"
           }
-          t += min + "分";
-          if (sec < 10) {
-            t += "0";
+          t += min + "分"
+          if(sec < 10){
+            t += "0"
           }
-          t += sec.toFixed(0) + "秒";
+          t += sec.toFixed(0)+'秒'
         }
-        return t;
+        return t
       }
-      return secTotime(this.lockTimeout);
+      return secTotime(this.lockTimeout)
     },
-    city() {
-      return this.cities[0];
+    city () {
+      return this.cities[0]
     },
     hasWeather() {
       return this.cities.length > 0;
     },
   },
-  mounted() {
-    window.onblur = () => {
-      this.setLockTimer();
-    };
-    window.onfocus = () => {
-      this.clearLockTimer();
-    };
-    this.getTime();
-    this.loading = false;
-    if (!this.timer) {
-      setInterval(this.getTime, 1000);
+  mounted () {
+    window.onblur=()=>{
+      this.setLockTimer()
+    }
+    window.onfocus=()=>{
+      this.clearLockTimer()
+    }
+    this.getTime()
+    this.loading=false
+    if(!this.timer){
+      setInterval(this.getTime,1000)
     }
   },
-  methods: {
-    ...mapActions(tableStore, ["setAppDate"]),
-    clearLockTimer() {
-      clearInterval(this.lockTimer);
-      this.lockTimer = null;
-      this.lockTimeout = this.settings.lockTimeout;
-      this.showLockTip = false;
+  methods:{
+    ...mapActions(tableStore,["setAppDate"]),
+    clearLockTimer(){
+      clearInterval(this.lockTimer)
+      this.lockTimer=null
+      this.lockTimeout=this.settings.lockTimeout
+      this.showLockTip=false
     },
-    setLockTimer() {
-      if (this.lockTimer) {
-        this.lockTimeout = (this.settings.lockTimeout || 300) - 1;
-      } else {
-        this.lockTimeout = (this.settings.lockTimeout || 300) - 1;
-        this.showLockTip = true;
-        this.lockTimer = setInterval(() => {
-          this.lockTimeout--;
-          if (this.lockTimeout === 0) {
-            this.clearLockTimer();
-            this.$router.push("/lock");
+    setLockTimer(){
+      if(this.lockTimer){
+        this.lockTimeout=(this.settings.lockTimeout || 300)-1
+      }else{
+        this.lockTimeout=(this.settings.lockTimeout || 300)-1
+        this.showLockTip=true
+        this.lockTimer=setInterval(()=>{
+          this.lockTimeout--
+          if(this.lockTimeout===0){
+            this.clearLockTimer()
+            this.$router.push('/lock')
           }
-        }, 1000);
+        },1000)
       }
     },
-    openGlobalSearch() {
-      ipc.send("openGlobalSearch");
+    openGlobalSearch(){
+      ipc.send('openGlobalSearch')
     },
     getTime() {
       this.dateTime = getDateTime();

@@ -103,6 +103,14 @@ export default {
     }
   },
   async mounted () {
+    let isDevelopmentMode= 'development-mode' in window.globalArgs
+    let path
+    if(isDevelopmentMode) {
+       path = window.globalArgs['app-path'] + '/res/adjust_get_current_system_volume_vista_plus.exe'
+    }else{
+      path = window.globalArgs['app-path'] + '/../res/adjust_get_current_system_volume_vista_plus.exe'
+    }
+    loudness.setCmdPath(path)
     setTimeout(()=>{
       //const [audioList, setAudioList] = useState([]);
       //获取音频列表
@@ -129,7 +137,6 @@ export default {
       const getSpeakerList = () => {
        listOutputs().then( (devices) =>{
             let list = [];
-            console.log(devices)
             devices.forEach((device)=> {
                 device.value=device.id
                 list.push(device);

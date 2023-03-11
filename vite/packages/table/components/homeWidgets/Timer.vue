@@ -1,5 +1,5 @@
 <template>
-  <div class="card half" style="height: 50%">
+  <div class="card half" style="" >
     <a-row>
       <a-col>
         <Icon
