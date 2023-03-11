@@ -5,7 +5,7 @@
 
   <a-tabs style="margin-top: 4em" v-model:activeKey="activeTab" tab-position="left">
     <a-tab-pane :key="group.name" :tab="group.title" v-for="group in actionGroups">
-      <ActionBuilder :group="group" :actions="group.actions">
+      <ActionBuilder :key="'ab-'+resetActionBuilder" :ref="group.name" :group="group" :actions="group.actions">
       </ActionBuilder>
     </a-tab-pane>
     <a-tab-pane key="audio" tab="系统设置">
@@ -47,7 +47,7 @@
 
   </a-tabs>
   <div style="text-align: center">
-    <a-button type="primary">确认</a-button>
+    <a-button @click="addAction" type="primary">确认</a-button>
 
     <a-button @click="back">取消</a-button>
   </div>
@@ -61,7 +61,7 @@
 import BackBtn from '../comp/BackBtn.vue'
 import ActionBuilder from "./ActionBuilder.vue";
 import {ActionGroups} from "../../consts";
-
+import _ from 'lodash-es'
 /**
  * 添加一个新的Tab行为
  */
@@ -71,7 +71,8 @@ interface AAddTab {
   //builtin system table
   position: string,
   //current new
-  tab: string
+  tab: string,
+
 }
 
 
@@ -81,47 +82,35 @@ export default {
     return {
       current: '',//当前的
       activeTab: 'cmd',
-
+      resetActionBuilder:0,//用于重载组件
       actionGroups: ActionGroups,
-
-
-      menus: [
-        {
-          title: '浏览器',
-          index: 'browser'
-        },
-        {
-          title: '提示',
-          index: 'tip'
-        },
-        {
-          title: '音频',
-          index: 'sound'
-        }, {
-          title: '键鼠',
-          index: 'key'
-        }, {
-          title: '应用',
-          index: 'app'
-        }, {
-          title: '命令行',
-          index: 'console'
-        }
-      ]
     }
   },
+  emits:['click'],
   components: {ActionBuilder, BackBtn},
   computed: {},
   mounted() {
-    this.activeTab = this.actionGroups[0].name
+   this.reset()
   },
   methods: {
-
+    reset(){
+      this.actionGroups=_.cloneDeep(ActionGroups)
+      this.activeTab = this.actionGroups[0].name
+      this.resetActionBuilder=Date.now()
+    },
     change(tab) {
       console.log(tab)
     },
     back() {
       this.$emit('click')
+    },
+    addAction(){
+      let actionData=this.$refs[this.activeTab][0].getActionData()
+      if(!actionData){
+        return
+      }
+      this.$emit('click',actionData)
+      console.log(actionData)
     }
   }
 }

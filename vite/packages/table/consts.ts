@@ -26,6 +26,7 @@ let ActionGroups = [
         },
         inputs: [
           {
+            rules:[{required:true,message:'必须填写需要打开的网址'}],
             name: 'url',
             placeholder: '输入完整的带协议的的地址，例如https://www.apps.vip',
             title: '打开的网址',
@@ -71,6 +72,7 @@ let ActionGroups = [
         title: '创建标签组',
         name: 'addTask',
         inputs: [{
+          rules:[{required:true,message:'必须填写标签组名称'}],
           name: 'title',
           title: '名称',
           type: 'input',
@@ -116,7 +118,7 @@ let ActionGroups = [
   },
   {
     title: '命令行',
-    key: 'cmd',
+    name: 'cmd',
     color: '#999',
     actions: [
       {
@@ -128,10 +130,12 @@ let ActionGroups = [
             name: 'exe',
             title: '选择命令行工具：',
             type: 'file',
+            rules:[{required:true,message:'必须选择一个命令行工具'}],
             placeholder: '点击选择命令行工具'
           },
           {
             name: 'cm',
+            rules:[{required:true,message:'必须输入命令'}],
             title: '参数，回车换行，每行参数会顺序执行',
             type: 'textarea',
           }

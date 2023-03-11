@@ -11,3 +11,25 @@
   word-break: break-all;
   white-space: pre-wrap;
 }
+.action {
+  border-radius: 0.4em;
+  border: 1px solid #4f4f4f;
+  display: inline-block;
+  text-align: center;
+  border-left: 4px solid #0a84ff;
+  line-height: 2;
+  font-size: 1.1em;
+  padding: 0.3em 0.8em;
+  color: #111111;
+  margin-right: 1em;
+  margin-bottom: 1em;
+  background: #b9b9b9;
+  cursor: pointer;
+  &.active {
+    background: white;
+    font-weight: bold;
+  }
+
+
+}
+

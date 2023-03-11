@@ -1,17 +1,17 @@
 <template>
-  <div style="font-size: 18px;height: 500px;overflow: hidden">
+  <div style="font-size: 18px;height: 500px;overflow-y: auto">
     <h3 style="text-align: center;">添加自定义按钮</h3>
     <div v-if="tab==='icon'">
       <IconList @onSelect="setIcon"></IconList>
     </div>
     <div v-if="tab==='action'">
-      <DeckAction @click="this.tab='input'"></DeckAction>
+      <DeckAction ref="_deckAction" @click="doAddAction"></DeckAction>
     </div>
 
     <div v-if="tab==='input'">
 
       <div class="line preview" style="text-align: center">
-        <div class="line-title" style="padding: 1em;text-align: left">
+        <div class="line-title" style="padding: 1em;text-align: center;">
           效果预览
         </div>
         <div class="item-wrapper">
@@ -28,8 +28,8 @@
                       :icon="icon"></CustomIcon>
         </div>
         </div>
-        <div style="text-align: center;margin-top: 1em">
-          <a-button type="primary" @click="doAdd">添加</a-button>
+        <div style="text-align: center;margin-top: 1em;margin-right: 0">
+          <a-button type="primary" @click="doAdd" style="width: 8em">添加按钮</a-button>
         </div>
       </div>
       <div class="line-title">
@@ -75,7 +75,10 @@
       </div>
       <div class="line-title">功能</div>
       <div class="line">
-        <a-button @click="tab='action'">添加</a-button>
+        <div :style="{'border-left-color':data.group.color}" v-for="data in actions" class="action">
+          {{ data.action.title}}
+        </div>
+        <a-button @click="addAction" >添加</a-button>
       </div>
       <div></div>
     </div>
@@ -103,11 +106,24 @@ export default {
 
       icon: null,
       title: '',
-      fn: []//功能
+      actions: []//功能
     }
   },
   components: { DeckAction, CustomIcon, IconList },
   methods: {
+    addAction(){
+      this.tab='action'
+      this.$nextTick(()=>{
+        this.$refs._deckAction.reset()
+      })
+
+    },
+    doAddAction(actionData){
+      this.tab='input';
+      if(actionData){
+        this.actions.push(actionData)
+      }
+    },
     setIcon (icon) {
       console.log(icon)
       this.icon = icon
@@ -138,7 +154,7 @@ export default {
           color:this.color,
           bgColor:this.bgColor
         },
-        fn: this.fn,
+        actions: this.actions,
         id: Date.now(),
         type: this.type
       }
