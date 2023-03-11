@@ -2,47 +2,44 @@
   <div id="display">
 
     <a-tabs v-model:activeKey="currentCity" type="editable-card" @edit="onEdit" :destroyInactiveTabPane="true">
-      <a-tab-pane v-for="city in cities" :key="city.id" :tab="city.name">
+      <a-tab-pane  v-for="city in cities" :key="city.id" :tab="city.name" v-if="typeof city.weather !=='undefined'">
 
         <vue-custom-scrollbar :settings="outerSettings" style="position:relative;height:calc(100vh - 14em);  ">
           <div class="section" style="text-align: center">
             <div style="width: 40em;display: inline-block">
               <a-row style="">
 
-                <a-col :span="8" style="font-size: 2.5em">
-                  <i :class="'qi-' + city.weather.now.icon + '-fill'"></i> {{ city.weather.now.text }}
-                </a-col>
-                <a-col :span="8">
-                  <div style="font-size: 2em"> {{ city.weather.now.temp }} ℃</div>
-                  <div>
-                    风力 {{ city.weather.now.windScale }}级
-                  </div>
-                </a-col>
-                <a-col :span="8">
-                  <Icon icon="position"></Icon> {{ city.adm2 }}-{{ city.name }}<br>
-                  <Icon style="margin-left: 2em" icon="shijian"></Icon> {{ getObsTime(city.weather.now.obsTime) }} 发布
-
-
-                </a-col>
-              </a-row>
-            </div>
+              <a-col :span="8" style="font-size: 2.5em">
+                <i  :class="'qi-'+city.weather.now.icon+'-fill'"></i> {{city.weather.now.text}}
+              </a-col>
+              <a-col :span="8">
+                <div style="font-size: 2em"> {{city.weather.now.temp}} ℃</div>
+                <div>
+                  风力 {{city.weather.now.windScale}}级
+                </div>
+              </a-col>
+              <a-col :span="8">
+                <Icon icon="position"></Icon> {{city.adm2}}-{{city.name}}<br> <Icon style="margin-left: 2em" icon="shijian"></Icon>  {{ getObsTime(city.weather.now.obsTime)}} 发布
+              </a-col>
+            </a-row>
           </div>
-          <div class="card auto-height" style="padding: 0.1em 1.2em 1em;display: block;width: 100%">
-            <div class="section">
-              24小时天气
-            </div>
-            <vue-custom-scrollbar :settings="innerSettings" style="position:relative;width: 100%  ">
-              <a-row style="width: 150em;margin-bottom: 0.7em">
-                <a-col style="text-align: center" :span="1" v-for="w in city.h24.hourly">
-                  {{ getdHours(w.fxTime) }}:00
-                  <br>
-                  <i style="font-size: 1.2em" :class="'qi-' + w.icon + '-fill'"></i> {{ w.text }}
-                  <br>
-                  {{ w.temp }}℃
-                </a-col>
-              </a-row>
-            </vue-custom-scrollbar>
+       </div>
+        <div class="card auto-height" style="padding: 0.1em 1.2em 1em;display: block;width: 100%">
+          <div class="section">
+            24小时天气
           </div>
+          <vue-custom-scrollbar :settings="innerSettings" style="position:relative;width: 100%  ">
+          <a-row style="width: 150em;margin-bottom: 0.7em">
+            <a-col style="text-align: center" :span="1" v-for="w in city.h24.hourly">
+              {{getdHours(w.fxTime)}}:00
+              <br>
+              <i style="font-size: 1.2em" :class="'qi-'+w.icon+'-fill'"></i> {{w.text}}
+              <br>
+              {{w.temp}}℃
+            </a-col>
+          </a-row>
+          </vue-custom-scrollbar>
+        </div>
 
           <div class="card auto-height"
                style="padding: 0.1em 1.2em 1em;margin-top: 1em;margin-bottom: 3em;display: blockl;width: 100%">

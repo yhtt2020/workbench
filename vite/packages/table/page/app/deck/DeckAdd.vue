@@ -1,5 +1,5 @@
 <template>
-  <div style="font-size: 18px;height: 90vh;overflow: hidden">
+  <div style="font-size: 18px;height: 500px;overflow: hidden">
     <h3 style="text-align: center;">添加自定义按钮</h3>
     <div v-if="tab==='icon'">
       <IconList @onSelect="setIcon"></IconList>
@@ -86,7 +86,7 @@
 <script>
 import IconList from '../../../components/comp/IconList.vue'
 import CustomIcon from '../../../components/comp/CustomIcon.vue'
-import DeckAction from '../../../components/comp/DeckAction.vue'
+import DeckAction from '../../../components/deck/DeckAction.vue'
 import { message } from 'ant-design-vue'
 export default {
   name: 'DeckAdd',
