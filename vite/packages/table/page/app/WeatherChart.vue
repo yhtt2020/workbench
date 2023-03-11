@@ -5,7 +5,7 @@
 import * as echarts from "echarts";
 import { getDateTime } from "../../../../src/util/dateTime.js";
 export default {
-  name: "Son",
+  name: "WeatherChart",
   props: {
     daily: {
       type: Array,
@@ -20,9 +20,10 @@ export default {
     };
   },
   mounted() {
-    this.tempMin = this.daily.map((item) => item.tempMin);
-    this.tempMax = this.daily.map((item) => item.tempMax);
     this.fxDate = this.daily.map((item) => this.getMonthAndDay(item.fxDate));
+    this.tempMin = this.daily.map((item) => item.tempMin);
+    console.log(this.tempMin);
+    this.tempMax = this.daily.map((item) => item.tempMax);
     this.wertherEcharts();
   },
 
@@ -46,6 +47,11 @@ export default {
             show:false
           },
           type: "category",
+          boundaryGap: false,
+          // data: [],
+          data: this.fxDate,
+          show: false,
+
           boundaryGap: ['20%', '20%'],
           data: this.fxDate,
           show: true,
@@ -57,7 +63,6 @@ export default {
           show: false,
 
         },
-
         grid: {
           left: 80,
           right: 250,

@@ -13,6 +13,8 @@ import Status from '../page/Status.vue'
 import Index from '../page/Index.vue'
 import Home from '../page/Home.vue'
 import Browser from '../page/settings/Browser.vue'
+import AddCard from "../page/app/add/AddCard.vue"
+import CardSetting from "../page/app/add/CardSetting.vue"
 export default   [{
   path: '',
   name: 'index',
@@ -92,6 +94,15 @@ export default   [{
           component:Browser
         },
       ]
-    }
+    }, {
+      path: "/addCard",
+      name: "addCard",
+      component: AddCard,
+    },
+    {
+      path: "/setting",
+      name: "addCardSetting",
+      component: CardSetting,
+    },
   ]
 }]
