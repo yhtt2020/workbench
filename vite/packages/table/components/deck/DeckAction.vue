@@ -5,22 +5,9 @@
 
   <back-btn @click="back"></back-btn>
   <a-tabs style="margin-top: 4em" v-model:activeKey="activeTab" tab-position="left">
-    <a-tab-pane key="browser" tab="浏览器">
-      <div class="action">
-        打开网页
-      </div>
-      <div class="action">
-        创建新标签组
-      </div>
-      <div class="action">
-        打开密码管理器
-      </div>
-      <div class="action">
-        打开某个插件
-      </div>
-      <div class="action">
-        打开浏览器设置
-      </div>
+    <a-tab-pane :key="group.name" :tab="group.title" v-for="group in actionGroups">
+      <ActionBuilder :actions="group.actions">
+      </ActionBuilder>
     </a-tab-pane>
     <a-tab-pane key="tip" tab="提示">
       <div class="action">
@@ -81,7 +68,7 @@
       <div class="line">
         <a-input-group compact>
           <a-input style="width: calc(320px - 120px)" placeholder="选择命令行工具"></a-input>
-          <a-button type="primary" >浏览</a-button>
+          <a-button type="primary">浏览</a-button>
         </a-input-group>
       </div>
       <div class="line">
@@ -98,15 +85,35 @@
   </div>
 </template>
 
-<script>
-import SecondPanel from '../SecondPanel.vue'
-import BackBtn from './BackBtn.vue'
+<script lang="ts">
+import BackBtn from '../comp/BackBtn.vue'
+import ActionBuilder from "./ActionBuilder.vue";
+import {ActionGroups} from "../../consts";
+
+/**
+ * 添加一个新的Tab行为
+ */
+interface AAddTab {
+  //链接
+  url: string,
+  //builtin system table
+  position: string,
+  //current new
+  tab: string
+}
+
+
 
 export default {
   name: 'DeckAction',
-  data () {
+  data() {
     return {
-      activeTab:'cmd',
+      current: '',//当前的
+      activeTab: 'cmd',
+
+      actionGroups: ActionGroups,
+
+
       menus: [
         {
           title: '浏览器',
@@ -132,12 +139,14 @@ export default {
       ]
     }
   },
-  components: { BackBtn, SecondPanel },
+  components: {ActionBuilder, BackBtn},
+  computed: {},
   methods: {
-    change (tab) {
+
+    change(tab) {
       console.log(tab)
     },
-    back(){
+    back() {
       this.$emit('click')
     }
   }
@@ -145,9 +154,9 @@ export default {
 </script>
 
 <style scoped>
-.action{
- border-radius: 0.4em;
-  border:1px solid #4f4f4f;
+.action {
+  border-radius: 0.4em;
+  border: 1px solid #4f4f4f;
   display: inline-block;
   text-align: center;
   border-left: 4px solid #0a84ff;
@@ -159,5 +168,9 @@ export default {
   margin-bottom: 1em;
   background: #b9b9b9;
   cursor: pointer;
+}
+
+.active {
+  font-weight: bold;
 }
 </style>
