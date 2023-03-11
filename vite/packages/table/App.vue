@@ -65,7 +65,8 @@ export default {
     };
   },
   async mounted() {
-    this.reset(); //重置部分状态
+    document.body.classList.add('lg')
+    this.reset()//重置部分状态
     // this.getUserInfo()
     window.updateMusicStatusHandler = this.updateMusic;
 

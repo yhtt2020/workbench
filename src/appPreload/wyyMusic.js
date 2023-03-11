@@ -12,7 +12,7 @@ function frame () {
         $('.g-btmbar .btns .ply')[0].click()
         break
       case 'next':
-        $('.g-btmbar .btns .nxt')[0].click()
+        $('.g-btmbar .btns  .nxt')[0].click()
         break
       case 'prev':
         $('.g-btmbar .btns .prv')[0].click()

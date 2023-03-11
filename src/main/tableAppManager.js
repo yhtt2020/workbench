@@ -13,13 +13,29 @@ class TableAppManager {
     return 'table_app_' + name
   }
 
+  /**
+   * 确认运行，未运行则异步启动，直接返回当前状态
+   * @returns {boolean} 返回执行命令时刻的应用运行状态
+   * @param args 参数，需要提交app参数
+   */
+  ensureApp(args){
+    let appInstance=this.get(this.getName(args.app.name))
+    if(!appInstance){
+      this.executeApp({app: args.app ,silent:true}).then()
+      return false //告知未运行
+    }else{
+      return true
+    }
+  }
+
   async executeApp (args) {
 
-    //app args
-    let { app, position } = args
+    console.log('运行工作台应用',args)
+    //app args silent静默
+    let { app, position,silent } = args
     let view
     let appInstance=this.get(this.getName(app.name))
-    if(appInstance){
+    if(appInstance && !silent){
       //已经运行了
       this.showApp(appInstance.name,position)
       // this.tableWin.setBrowserView(view)//置入app
@@ -61,10 +77,13 @@ class TableAppManager {
           event.preventDefault()
         }
       })
-      this.tableWin.setBrowserView(view)//置入app
-      view.webContents.on('dom-ready',()=>{
-        this.setViewPos(appInstance.view, position)
-      })
+      if(!silent){//静默则不设置位置
+        this.tableWin.setBrowserView(view)//置入app
+        view.webContents.on('dom-ready',()=>{
+          this.setViewPos(appInstance.view, position)
+        })
+
+      }
       this.runningApps.push(app)
       this.runningAppsInstance.push(appInstance)
     }

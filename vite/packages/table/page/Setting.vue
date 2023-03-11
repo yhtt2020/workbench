@@ -173,7 +173,7 @@ export default {
     },
     basic(){
       this.$router.push({
-        name:'basicSetting'
+        name:'key'
       })
     },
     switchBarrage(value){

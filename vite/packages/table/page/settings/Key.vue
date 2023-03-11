@@ -1,5 +1,5 @@
 <template>
-  <div class="line-title">按键</div>
+  <div class="line-title">按键设置</div>
 
   <div style="text-align: left">
     <div class="line">
@@ -34,7 +34,6 @@ export default {
   },
   async mounted () {
     let keyMap = await tsbApi.settings.get('keyMap')
-    console.log(keyMap.table,'ke')
     if (keyMap.table) {
       this.shortKeysTable = keyMap.table
     }

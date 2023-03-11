@@ -1,35 +1,92 @@
 <template>
-  <vue-custom-scrollbar :settings="scrollbarSettings"
+  <vue-custom-scrollbar  @contextmenu.stop="showMenu(-1,undefined,'wrapper')" :settings="scrollbarSettings"
                         style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em)">
 
-    <div style="white-space: nowrap" @contextmenu.stop="showMenu(-1)">
-      <div style="min-height: 3em" @contextmenu.stop="showMenu(index)" :id="'board-'+board.id" class="grid"
-           v-for="(board,index) in decks">
-        <DeckItem :id="item.id" :item="item" v-for="item in board.children"></DeckItem>
+    <div style="width: auto;white-space: nowrap">
+      <div style="width: 20em;display: inline-block" v-for="(grid,index) in grids">
+        <h3 class="pointer" @click="showEditTitle(grid)">{{grid.title}}</h3>
+        <div  >
+          <!--      <div style="min-height: 3em" @contextmenu.stop="showMenu(index)" :id="'board-'+board.id" class="grid"-->
+          <!--           v-for="(board,index) in decks">-->
+          <!--        <DeckItem :id="item.id" :item="item" v-for="item in board.children"></DeckItem>-->
+          <!--      </div>-->
+
+          <vuuri group-id="grid.id" :ref="'grid'+grid.id" item-key="id"  class="grid" @contextmenu.stop="showMenu(grid.id)"
+                 drag-enabled :get-item-width="getIconSize" :get-item-height="getIconSize"
+                 v-model="grid.children"  >
+            <template #item="{ item }">
+              <Widget @contextmenu.stop="showMenu(item.id,{item,grid},'item')"  :w-id="item.id" :item="item"
+                       :uniqueKey="item.id"
+                       :title="item.title"
+                       :showDelete="true"
+                       :resizable="true"
+              >
+                <DeckItem :id="item.id" :item="item"></DeckItem>
+              </Widget>
+            </template>
+          </vuuri>
+
+
+
+
+          <!--      <Grid :value="grid" :ref="'grid'+grid.id" class="grid" :id="grid.id" @contextmenu.stop="showMenu(grid.id)" v-for="(grid,index) in grids" :draggable="true" :showDelete="true" :resizable="false">-->
+          <!--        <Widget  :w-id="widget.id" v-for="widget in grid.children"-->
+          <!--          :uniqueKey="widget.id"-->
+          <!--          :title="widget.title"-->
+          <!--          :showDelete="true"-->
+          <!--          :resizable="true"-->
+          <!--        >-->
+          <!--          <DeckItem :id="widget.id" :item="widget"></DeckItem>-->
+          <!--        </Widget>-->
+          <!--      </Grid>-->
+        </div>
       </div>
     </div>
+
   </vue-custom-scrollbar>
   <a-drawer
     :title="null"
     placement="bottom"
     :closable="true"
-    :visible="visible"
+    :visible="menuVisible"
     @close="onClose"
+    @getItemWidth="getIconSize"
+    @getItemHeight="getIconSize"
   >
     <div style="display: none">
-      <DeckItem id="newItem" :item="newItem"></DeckItem>
+      <Widget
+               :uniqueKey="newItem.id"
+               :title="newItem.title"
+               :showDelete="true"
+               :resizable="true"
+      >
+        <DeckItem :id="newItem.id" :item="newItem"></DeckItem>
+      </Widget>
     </div>
     <a-row :gutter="20">
-      <a-col>
-        <div v-if="currentGridId!==-1" @click="add()" class="btn">
+      <a-col v-if="menuType==='grid'">
+        <div  @click="add()" class="btn">
           <Icon style="font-size: 3em" icon="tianjia1"></Icon>
           <div>添加按钮</div>
         </div>
       </a-col>
+      <a-col v-if="menuType==='item'">
+        <div  @click="remove()" class="btn">
+          <Icon style="font-size: 3em" icon="shanchu"></Icon>
+          <div>删除按钮</div>
+        </div>
+      </a-col>
+
       <a-col>
         <div @click="addBoard" class="btn">
           <Icon style="font-size: 3em" icon="tianjiawenjianjia"></Icon>
           <div>添加分组</div>
+        </div>
+      </a-col>
+      <a-col v-if="menuType==='grid'">
+        <div  @click="removeGrid()" class="btn">
+          <Icon style="font-size: 3em" icon="shanchu"></Icon>
+          <div>删除分组</div>
         </div>
       </a-col>
       <a-col>
@@ -39,12 +96,35 @@
         </div>
       </a-col>
       <a-col>
-        <div @click="this.enableDrag=!this.enableDrag;this.visible=false" class="btn">
-          <Icon v-if="!this.enableDrag" style="font-size: 3em" icon="bofang"></Icon>
+        <div @click="this.editing=!this.editing;this.menuVisible=false" class="btn">
+          <Icon v-if="!this.editing" style="font-size: 3em" icon="bofang"></Icon>
           <Icon v-else style="font-size: 3em;color: orange" icon="tingzhi"></Icon>
-          <div><span v-if="!this.enableDrag">调整布局</span><span v-else style="color: orange">停止调整</span></div>
+          <div><span v-if="!this.editing">调整布局</span><span v-else style="color: orange">停止调整</span></div>
         </div>
       </a-col>
+    </a-row>
+    <a-row style="margin-top: 1em" :gutter="[20,20]">
+      <a-col>
+        <div @click="changeSize('large')"  class="btn">
+          <a-avatar shape="square">大</a-avatar>
+          <div>大图标</div>
+        </div>
+      </a-col>
+      <a-col>
+        <div @click="changeSize('middle')"  class="btn">
+          <a-avatar shape="square">中</a-avatar>
+          <div>中图标</div>
+        </div>
+      </a-col>
+      <a-col>
+        <div @click="changeSize('small')"  class="btn">
+          <a-avatar shape="square">小</a-avatar>
+          <div>小图标</div>
+        </div>
+      </a-col>
+
+
+
     </a-row>
 
   </a-drawer>
@@ -52,31 +132,42 @@
     v-model:visible="visibleAdd"
     :title="null"
     width="100%"
-    wrap-class-name="full-modal"
+    wrap-class-name="full-modal lg-modal"
     :footer="null"
   >
     <DeckAdd @add="doAdd"></DeckAdd>
   </a-modal>
+
+  <Prompt @cancel="this.visiblePromptTitle=false" content="请输入分组标题" title="编辑组标题" placeholder="输入标题" :visible="visiblePromptTitle" @change-value="changeTitle"></Prompt>
 </template>
 
 <script>
-import Muuri from 'muuri'
 import DeckItem from './app/deck/DeckItem.vue'
 import { appStore } from '../store'
 import { mapWritableState } from 'pinia'
 import Template from '../../user/pages/Template.vue'
 import DeckAdd from './app/deck/DeckAdd.vue'
-import {message} from 'ant-design-vue'
+import { message } from 'ant-design-vue'
+import { deckStore } from '../store/deck'
+import Widget from "../components/muuri/Widget.vue";
+import vuuri from '../components/vuuri/Vuuri.vue'
+import Prompt from '../components/comp/Prompt.vue'
+import {Modal} from 'ant-design-vue'
 export default {
   name: 'Deck',
   components: {
+    Prompt,
     DeckAdd,
     Template,
-    DeckItem
+    DeckItem,
+    Widget: Widget,
+    vuuri
   },
   data () {
     return {
-      enableDrag: false,
+      editGrid:null,
+      visiblePromptTitle:false,
+      displayGrids:[],
       scrollbarSettings: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -89,118 +180,199 @@ export default {
         cover: '',
         title: '微信'
       },
-      currentGridId: -1,
+      menuType:'',//菜单类型
+
+      currentGridId: -1,//当前菜单选中的grid
       currentGrid: {},
-      grids: [],
+
+      currentItemId:-1,//当前菜单的item
+      currentItem:{},
+
       cloneMap: [],
-      visible: false,
+      menuVisible: false,
       visibleAdd: false
     }
   },
   computed: {
-    ...mapWritableState(appStore, ['decks'])
+    ...mapWritableState(appStore, []),
+    ...mapWritableState(deckStore, ['grids','editing','settings']),
+
   },
   mounted () {
-
-    this.decks.forEach(board => {
-      this.initBoard(board)
-    })
+    //进来之后就把存储的部分和初始化部分完全脱钩，这样，可以随意变更按钮，并即时存储，而不会影响到我们界面上的部分。
+    //this.displayGrids=_.cloneDeep(this.grids)
+    //window.gridsSave=_.cloneDeep(this.grids)
+    // this.decks.forEach(board => {
+    //   this.initBoard(board)
+    // })
   },
   methods: {
-    initBoard (board) {
-      this.grids.push(new Muuri('#board-' + board.id, {
-          dragEnabled: true,
-          dragStartPredicate: (item, event) => {
-            // Prevent first item from being dragged.
-            if (!this.enableDrag) {
-              return false
-            }
-            // For other items use the default drag start predicate.
-            return Muuri.ItemDrag.defaultStartPredicate(item, event)
-          },
-          dragContainer: document.body,
-          dragSort: () => {
-            return this.grids
-          }
-        }).on('receive', (data) => {
-          console.log(data)
-          this.cloneMap[data.item._id] = {
-            item: data.item,
-            grid: data.fromGrid,
-            index: data.fromIndex
-          }
-        }).on('send', (data) => {
-          console.log(data)
-          delete this.cloneMap[data.item._id]
-        }).on('dragReleaseStart', (item) => {
-          console.log(item)
-          var cloneData = this.cloneMap[item._id]
-          if (cloneData) {
-            delete this.cloneMap[item._id]
+    showEditTitle(grid){
 
-            var clone = cloneData.item.getElement().cloneNode(true)
-            clone.setAttribute('class', 'item')
-            clone.children[0].setAttribute('style', '')
-            // var items = cloneData.grid.add(clone, { index: cloneData.index, active: false })
-            // cloneData.grid.show(items)
-          }
-        })
-      )
+      this.visiblePromptTitle=true;
+      this.editGrid=grid
+      console.log('show',this.visiblePromptTitle)
+    },
+    changeTitle(title){
+      if(title.value.length>0){
+        this.editGrid.title=title.value
+        this.visiblePromptTitle=false
+      }else{
+        message.error('请输入分组标题')
+      }
+
+    },
+    changeSize(size){
+      this.settings.iconSize=size;
+      this.menuVisible=false
+      console.log(this.$refs)
+      Object.keys(this.$refs).forEach(key=>{
+        this.$refs[key][0].update()
+      })
+
+    },
+    getIconSize(){
+      let width=80
+      switch(this.settings.iconSize){
+        case 'small':
+          width=40
+          break
+        case 'middle':
+          width=80
+          break
+        case 'large':
+          width=160
+          break
+        default:
+          width=80
+      }
+      return width +'px'
+    },
+    initBoard (board) {
+      // this.grids.push(new Muuri('#board-' + board.id, {
+      //     dragEnabled: true,
+      //     dragStartPredicate: (item, event) => {
+      //       // Prevent first item from being dragged.
+      //       if (!this.enableDrag) {
+      //         return false
+      //       }
+      //       // For other items use the default drag start predicate.
+      //       return Muuri.ItemDrag.defaultStartPredicate(item, event)
+      //     },
+      //     dragContainer: document.body,
+      //     dragSort: () => {
+      //       return this.grids
+      //     }
+      //   }).on('receive', (data) => {
+      //     console.log(data)
+      //     this.cloneMap[data.item._id] = {
+      //       item: data.item,
+      //       grid: data.fromGrid,
+      //       index: data.fromIndex
+      //     }
+      //   }).on('send', (data) => {
+      //     console.log(data)
+      //     delete this.cloneMap[data.item._id]
+      //   }).on('dragReleaseStart', (item) => {
+      //     console.log(item)
+      //     var cloneData = this.cloneMap[item._id]
+      //     if (cloneData) {
+      //       delete this.cloneMap[item._id]
+      //
+      //       var clone = cloneData.item.getElement().cloneNode(true)
+      //       clone.setAttribute('class', 'item')
+      //       clone.children[0].setAttribute('style', '')
+      //       // var items = cloneData.grid.add(clone, { index: cloneData.index, active: false })
+      //       // cloneData.grid.show(items)
+      //     }
+      //   })
+      // )
     },
     onClose () {
-      this.visible = false
+      this.menuVisible = false
+    },
+    remove(){
+      Modal.confirm({
+        content:"确定删除按钮【"+this.currentItem.title+'】？此操作不可还原。请谨慎操作。',
+        okText:'确认删除',
+        onOk:()=>{
+          this.currentGrid.children.splice(this.currentGrid.children.findIndex(item=>{
+            return item.id===this.currentItemId
+          }),1)
+          this.menuVisible=false
+        }
+      })
+
     },
     add () {
       this.visibleAdd = true
-      this.currentGrid.add(document.getElementById('newItem').cloneNode(true))
+     // this.currentGrid.add(document.getElementById('newItem').cloneNode(true))
     },
-    showMenu (id) {
-      this.visible = true
-      this.currentGridId = id
-      this.currentGrid = this.grids[id]
+    showMenu (id,data,type='grid') {
+      this.menuVisible = true
+      if(type==='grid'){
+        this.menuType='grid'
+        this.currentGridId = id
+        this.currentGrid =this.grids.find(g=>{
+          return g.id=== id
+        })
+      }else if(type==='item'){
+        this.menuType='item'
+        this.currentItemId = id
+        this.currentItem =data.item
+        this.currentGrid=data.grid
+      }else{
+        this.menuType='wrapper'
+      }
     },
     addBoard () {
-      let board = {
+      let grid = {
         id: Date.now(),
         title: '新组',
         children: []
       }
-      console.log(this.decks)
-      this.decks.push(board)
-      this.$nextTick(() => {
-        this.initBoard(board)
-      })
-      this.visible = false
+      console.log(this.grids)
+      this.grids.push(grid)
+      // this.$nextTick(() => {
+      //   this.initBoard(board)
+      // })
+      this.menuVisible = false
     },
     doAdd (button) {
       this.visibleAdd = false
-      this.visible = false
-      this.newItem = {
-        icon: button.icon,
-        cover: '',
-        title: button.title,
-        fn: button.fn,
-        id:button.id
-      }
+      this.menuVisible = false
+      this.newItem = button
 
-      this.decks[this.currentGridId].children.shift({
-        icon: button.icon,
-        cover: '',
-        title: button.title,
-        fn: button.fn,
-        id:button.id
-      })
+      this.$refs['grid'+this.currentGridId][0].update()
+      this.currentGrid.children.push(this.newItem)
+
+      // this.grids[this.currentGridId].children.shift({
+      //   icon: button.icon,
+      //   cover: '',
+      //   title: button.title,
+      //   fn: button.fn,
+      //   id: button.id
+      // })
+      // console.log(this.$refs)
+      // let refs=this.$refs['grid'+this.currentGridId]
+      // console.log(refs,'refs',refs[0],'refs0')
+      //
+      // let grid=refs[0]
+      // this.$nextTick(()=>{
+      //   grid.handleAdd(this.newItem)
+      // })
+
       // this.currentGrid.add(document.getElementById(button.id))
-      this.$nextTick(()=>{
-        this.currentGrid.refreshItems()
-      })
+      // this.$nextTick(() => {
+      //   this.currentGrid.refreshItems()
+      // })
       message.success('添加按钮成功')
     }
   }
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .grid {
   position: relative;
   width: 18em;
@@ -212,46 +384,39 @@ export default {
   margin: 1em;
 }
 
-.item {
-  display: block;
-  position: absolute;
-  width: 100px;
-  height: 100px;
-  margin: 10px;
-  z-index: 1;
-  background: rgba(0, 0, 0, 0.58);
-  color: #fff;
-  border-radius: 10px;
-  text-align: center;
-  cursor: pointer;
-}
-
-.item.muuri-item-dragging {
-  z-index: 3;
-}
-
-.item.muuri-item-releasing {
-  z-index: 2;
-}
-
-.item.muuri-item-hidden {
-  z-index: 0;
-}
-
-.item-content {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.item.muuri-item-dragging,
-.item.muuri-item-releasing {
-  opacity: 0.8
-}
 
 .btn {
   text-align: center;
 }
+
+  :deep(.muuri-grid) {
+    /* any styles to add on the muuri grid */
+  }
+
+:deep(.muuri-item ){
+    /* any styles to add on the item container */
+    /* only to override positioning */
+    margin: 5px;
+    .muuri-item-content {
+      /* add any markup you like */
+    }
+
+    &.muuri-item-dragging {
+    }
+
+    &.muuri-item-releasing {
+    }
+
+    &.muuri-item-hidden {
+    }
+  }
+
+  .muuri-item-placeholder {
+    /* shadow element behind the dragging element */
+  }
+
+
+
 </style>
 <style lang="scss">
 .full-modal {
@@ -280,4 +445,7 @@ export default {
     line-height: 2;
   }
 }
+
+
+
 </style>

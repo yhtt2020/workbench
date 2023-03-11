@@ -1,0 +1,122 @@
+import {defineStore} from "pinia";
+
+// @ts-ignore
+export const deckStore=defineStore('deck',{
+  state:()=>({
+
+    settings:{
+      iconSize:'middle'// small large
+    },
+    editing:false,//可编辑
+    deletedItems:[] as string[],
+    /**
+     * 临时性布局，一般是指拖动过程中的布局
+     */
+    layouts: {
+
+    },
+    /**
+     * 存储后的布局，一般是指确认之后的布局
+     */
+    defaultLayouts:{
+
+    },
+    grids:[
+      {
+        id: "1",
+        title: '示例操作',
+        children: [
+          {
+            id:"1",
+            icon: '',
+            type:'font',
+            font:{
+              text:'浏览器',
+              size:'20'
+            },
+            cover: '',
+            title: '打开内置浏览器',
+            action:{
+              name:'addTab',
+              type:{
+
+              },
+              args:{
+
+              }
+            }
+          }]
+      }
+      //     {
+      //       id:"2",
+      //       icon: '',
+      //       cover: '',
+      //       title: '微信',
+      //       action:{
+      //
+      //       }
+      //     }
+      //   ]
+      // },
+      // {
+      //   id: "2",
+      //   title: '板子1',
+      //   children: [
+      //     {
+      //       id:"3",
+      //       icon: '',
+      //       cover: '',
+      //       title: '微信'
+      //     },
+      //     {
+      //       id:"4",
+      //       icon: '',
+      //       cover: '',
+      //       title: '微信'
+      //     },
+      //     {
+      //       id:"5",
+      //       icon: '',
+      //       cover: '',
+      //       title: '微信'
+      //     }
+      //   ]
+      // },
+    ] as IGrid[]
+  }),
+  persist: {
+    enabled: true,
+    strategies: [{
+      // 自定义存储的 key，默认是 store.$id
+      // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
+      storage: localStorage,
+      // state 中的字段名，按组打包储存
+    }]
+  }
+})
+interface IDeckActionType{
+  name:string
+  alias:string
+}
+declare interface IDeckAction{
+  /**
+   * 名称
+   */
+  name:'',
+  type:IDeckActionType,
+  args:any //指令参数
+}
+declare interface IWidget{
+  id:string,
+  icon:string,
+  cover: string,
+  type:string,
+  font:any,
+  title: string,
+  action:IDeckActionType
+}
+declare interface IGrid{
+  id:string,
+  title:string,
+  children?:Array<IWidget>[],
+}

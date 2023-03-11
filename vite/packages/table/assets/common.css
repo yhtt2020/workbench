@@ -31,21 +31,20 @@
   display: flex;
   align-items: center; }
 
-.ant-modal-body {
+.lg .ant-modal-body {
   font-size: 3em; }
-  .ant-modal-body svg {
+  .lg .ant-modal-body svg {
     font-size: 2em; }
-  .ant-modal-body .ant-modal-confirm-content {
+  .lg .ant-modal-body .ant-modal-confirm-content {
     font-size: 0.5em; }
-  .ant-modal-body .ant-btn {
-    font-size: 32px;
+  .lg .ant-modal-body .ant-btn {
+    font-size: 16px;
     height: auto;
     line-height: 1.5;
     margin-right: 20px;
     border-width: 3px;
     border-radius: 4px; }
-
-.ant-slider-dot {
+.lg .ant-slider-dot {
   top: 0; }
 
 .dark {
@@ -78,6 +77,19 @@
     border-color: #3a3a39 !important;
     border-width: 0.15em !important;
     color: #7a7a7a; }
+
+.text-icon {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+  background: #0a84ff;
+  color: white;
+  padding: 0.2em;
+  text-align: center;
+  border-radius: 0.2em;
+  overflow: hidden;
+  word-break: break-all;
+  white-space: pre-wrap; }
 
 body {
   overflow: hidden; }

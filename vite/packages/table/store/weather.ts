@@ -1,6 +1,5 @@
 import {defineStore} from "pinia";
 import axios from "axios";
-import {message} from "ant-design-vue";
 
 // @ts-ignore
 export const weatherStore = defineStore('weather', {

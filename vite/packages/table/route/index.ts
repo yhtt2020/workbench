@@ -84,7 +84,7 @@ export default   [{
       component: BasicSetting,
       children: [
         {
-          path:'/key',
+          path:'',
           name:'key',
           component:Key
         },

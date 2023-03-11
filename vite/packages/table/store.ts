@@ -25,9 +25,10 @@ export const appStore = defineStore('appStore', {
 
       fullScreen: false, //是否是全屏模式
 
-      settings: {
-        enableChat: true, //主界面显示聊天
-        preventLock: false, //阻止锁屏
+    settings: {
+      openUrlBrowser:'builtin',//默认打开浏览器
+      enableChat: true,//主界面显示聊天
+      preventLock: false,//阻止锁屏
 
         enableBarrage: true, //启用弹幕
         barrage: {
@@ -43,56 +44,18 @@ export const appStore = defineStore('appStore', {
         attachScreen: null, //id,bounds
       },
 
-      routeUpdateTime: Date.now(), //用于更新滚动条
-      status: {
-        music: {
-          //存当前播放的音乐
-          notInit: true,
-          cover: "",
-          title: "",
-        },
-      },
-      decks: [
-        {
-          id: 1,
-          title: "板子1",
-          children: [
-            {
-              icon: "",
-              cover: "",
-              title: "微信",
-            },
-            {
-              icon: "",
-              cover: "",
-              title: "微信",
-            },
-          ],
-        },
-        {
-          id: 2,
-          title: "板子1",
-          children: [
-            {
-              icon: "",
-              cover: "",
-              title: "微信",
-            },
-            {
-              icon: "",
-              cover: "",
-              title: "微信",
-            },
-            {
-              icon: "",
-              cover: "",
-              title: "微信",
-            },
-          ],
-        },
-      ],
-    }),
-    getters: {},
+    routeUpdateTime: Date.now(),//用于更新滚动条
+    status: {
+      music: {//存当前播放的音乐
+        notInit: true,
+        cover: '',
+        title: ''
+      }
+    },
+
+
+  }),
+  getters: {},
 
   actions: {
     reset(){

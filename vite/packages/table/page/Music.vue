@@ -57,6 +57,8 @@
 import { mapWritableState, mapActions } from 'pinia'
 import { appStore } from '../store'
 import SecondPanel from '../components/SecondPanel.vue'
+import { SystemApps } from '../consts'
+import { message } from 'ant-design-vue'
 
 let fs = require('fs')
 export default {
@@ -66,8 +68,12 @@ export default {
     ...mapWritableState(appStore, ['apps', 'status'])
   },
   mounted () {
-    if (this.status.music.notInit) {
-
+    //确认自启动，如果未启动，则静默启动
+     let running=ipc.sendSync('ensureTableApp',{
+       app:SystemApps.wyyMusic
+     })
+    if(!running){
+      message.info('正在为您在后台启动网易云音乐网页版…')
     }
     //window.updateMusicStatusHandler = this.updateStatus
   },
@@ -120,13 +126,7 @@ export default {
     enterMusic(){
       this.$router.push({
         name:'app',
-        params:{
-          theme:'#242424',
-          name:'wyyMusic',
-          url:'https://music.163.com',
-          preload:'wyyMusic',
-          background:true,
-        }
+        params:SystemApps.wyyMusic
       })
     },
     doAction (action) {
