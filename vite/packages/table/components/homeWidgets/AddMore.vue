@@ -1,5 +1,5 @@
 <template>
-  <div class="card" style="height: 12em; text-align: center" @click="addCard">
+  <div class="card" style="height: 12em; text-align: center ;cursor:pointer" @click="addCard">
     <div class="title">
       <Icon
         style="
@@ -26,4 +26,6 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+
+</style>

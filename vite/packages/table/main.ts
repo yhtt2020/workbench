@@ -6,7 +6,7 @@ import 'vcolorpicker/lib/style.css';
 import {createRouter, createWebHashHistory} from 'vue-router'
 import vcolorpicker from 'vcolorpicker'
 import {createPinia} from 'pinia'
-
+import 'dayjs/locale/zh-cn';
 
 
 import vueCustomScrollbar from "../../src/components/vue-scrollbar.vue";
@@ -27,9 +27,9 @@ import VueViewer from "v-viewer";
 
 import $ from "jquery";
 
-
+import dayjs from 'dayjs';
 import routes from './route/route'
-
+dayjs.locale('zh-cn');
 
 const app = createApp(App)
 const pinia = createPinia()
