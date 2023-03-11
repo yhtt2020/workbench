@@ -1,9 +1,11 @@
 @import url(../../../node_modules/ant-design-vue/dist/antd.dark.css);
 .card {
+  max-height: 30em;
   border-radius: 8px;
   background: rgba(183, 183, 183, 0.63);
   vertical-align: text-top;
   width: 20em;
+  min-width: 20em;
   display: inline-block;
   height: calc(100vh - 14em);
   padding: 1em;
