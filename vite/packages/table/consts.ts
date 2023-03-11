@@ -13,6 +13,7 @@ let ActionGroups = [
   {
     title: '浏览器',
     name: 'browser',
+    color: '#0a84ff',
     actions: [
       {
         title: '打开网页',
@@ -79,30 +80,83 @@ let ActionGroups = [
       },
       {
         title: '打开密码管理器',
-        summary:'直接打开内置的密码管理器',
+        summary: '直接打开内置的密码管理器',
         name: 'openPwdManager'
       },
       {
         title: '打开浏览器设置',
-        summary:'直接打开浏览器的设置',
+        summary: '直接打开浏览器的设置',
         name: 'openSettings'
       }
     ]
   },
   {
-    title:'命令行',
-    key:'cmd',
-    actions:[
+    title: '提示',
+    name: 'tip',
+    color: 'orange',
+
+    actions: [
       {
-        title:'执行程序',
-        summary:'选择一个外部程序，并执行相应的指令，支持单行和多行，具体可查看<a>此处帮助</a>',
+        name: 'modal',
+        title: '模态弹窗',
+        summary: '弹窗提示',
+        defaultValue:{
+          closable:'true',
+        },
         inputs: [
           {
-            title:'选择命令行工具：',
-            type:'file',
+
+            name: 'closable',
+            type: 'switch',
+            title: '是否可关闭'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    title: '命令行',
+    key: 'cmd',
+    color: '#999',
+    actions: [
+      {
+        name: 'exe',
+        title: '执行程序',
+        summary: '选择一个外部程序，并执行相应的指令，支持单行和多行，具体可查看<a>此处帮助</a>',
+        inputs: [
+          {
+            name: 'exe',
+            title: '选择命令行工具：',
+            type: 'file',
+            placeholder: '点击选择命令行工具'
           },
           {
-            title:'参数，回车换行，每行参数会顺序执行',
+            name: 'cm',
+            title: '参数，回车换行，每行参数会顺序执行',
+            type: 'textarea',
+          }
+        ]
+      },
+      {
+        name: 'cmd',
+        title: '执行终端（CMD）程序',
+        summary: '直接执行系统的命令行，windows下执行命令提示符，mac、linux下执行终端（暂未支持这两个平台）',
+        inputs: [
+          {
+            name: 'cm',
+            title: '参数，回车换行，每行参数会顺序执行',
+            type: 'textarea',
+          }
+        ]
+      },
+      {
+        name: 'nircmd',
+        title: '执行nircmd的命令行',
+        summary: '直接执行工作台内置的nircmd，可查考此处的nircmd的命令，此操作不需要再安装nircmd，工作台自带了。',
+        inputs: [
+          {
+            name: 'cm',
+            title: '参数，回车换行，每行参数会顺序执行',
             type: 'textarea',
           }
         ]

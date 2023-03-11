@@ -1,5 +1,5 @@
 <template>
-  <div v-for="action in actions" :class="{active:isActive(action.name)}" @click="setActive(action.name)" class="action">
+  <div :style="{'border-left-color':group.color}" v-for="action in actions" :class="{active:isActive(action.name)}" @click="setActive(action.name)" class="action">
     {{ action.title }}
   </div>
   <div v-for="action in actions">
@@ -12,11 +12,27 @@
           <a-input  v-model:value="action.data[input.name]" :placeholder="input.placeholder"
                    :style="{width: input.width}"></a-input>
         </div>
+        <div class="line"   v-if="getShow(action,input,'switch')">{{ input.title }}：
+          <a-switch  v-model:checked="action.data[input.name]" ></a-switch>
+        </div>
         <div class="line" v-if="getShow(action,input,'radio')">{{ input.title }}：
             <a-radio-group v-model:value="action.data[input.name]">
               <a-radio v-for="option in input.options" :value="option.value">{{ option.name }}</a-radio>
             </a-radio-group>
         </div>
+
+        <div class="line" v-if="getShow(action,input,'file')">{{ input.title }}：
+          <a-input :placeholder="input.placeholder" @click="showOpenFileDialog(action,input)" style="width: 15em" v-model:value="action.data[input.name]"></a-input>
+        </div>
+        <template class="line" v-if="getShow(action,input,'textarea')">
+          <div class="line">
+            {{ input.title }}：
+          </div>
+          <div class="line">
+            <a-textarea :placeholder="input.placeholder"  v-model:value="action.data[input.name]"></a-textarea>
+          </div>
+        </template>
+
       </template>
     </div>
   </div>
@@ -28,14 +44,14 @@ import Template from '../../../user/pages/Template.vue'
 export default {
   name: 'ActionBuilder',
   components: { Template },
-  props: ['actions'],
+  props: ['actions','group'],
   data () {
     return {
       current: '',
     }
   },
   mounted () {
-    console.log(this.actions)
+    this.current=this.actions[0].name
     this.actions.forEach(action=>{
       action.data=action.defaultValue
       if(!action.data){
@@ -63,6 +79,16 @@ export default {
     setActive (key) {
       this.current = key
     },
+    async showOpenFileDialog(action,input){
+      let savePath= await tsbApi.dialog.showOpenDialog({title:'选择',message:'请选择文件',properties:[
+          'openFile ',
+        ]})
+      if(savePath){
+        action.data[input.name]=savePath[0]
+      }else{
+        console.log('取消选择')
+      }
+    }
   }
 }
 </script>
@@ -82,9 +108,11 @@ export default {
   margin-bottom: 1em;
   background: #b9b9b9;
   cursor: pointer;
+
 }
 
 .active {
+  background: white;
   font-weight: bold;
 }
 </style>

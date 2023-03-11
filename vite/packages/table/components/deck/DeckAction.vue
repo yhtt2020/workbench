@@ -3,16 +3,10 @@
 
   <!--  </SecondPanel>-->
 
-  <back-btn @click="back"></back-btn>
   <a-tabs style="margin-top: 4em" v-model:activeKey="activeTab" tab-position="left">
     <a-tab-pane :key="group.name" :tab="group.title" v-for="group in actionGroups">
-      <ActionBuilder :actions="group.actions">
+      <ActionBuilder :group="group" :actions="group.actions">
       </ActionBuilder>
-    </a-tab-pane>
-    <a-tab-pane key="tip" tab="提示">
-      <div class="action">
-        弹窗提示
-      </div>
     </a-tab-pane>
     <a-tab-pane key="audio" tab="系统设置">
       <div class="action">
@@ -50,37 +44,15 @@
         打开酷应用
       </div>
     </a-tab-pane>
-    <a-tab-pane key="cmd" tab="命令行">
-      <div class="action">
-        执行命令行程序
-      </div>
-      <div class="action">
-        执行cmd命令
-      </div>
-      <div class="action">
-        执行nircmd命令
-      </div>
-      <p>选择一个外部命令行工具，并执行相应的命令行，支持单行和多行，推荐使用nircmd之类的工具。具体可查看<a>此处帮助</a>。
-      </p>
-      <div class="line">
-        选择命令行工具
-      </div>
-      <div class="line">
-        <a-input-group compact>
-          <a-input style="width: calc(320px - 120px)" placeholder="选择命令行工具"></a-input>
-          <a-button type="primary">浏览</a-button>
-        </a-input-group>
-      </div>
-      <div class="line">
-        命令行
-      </div>
-      <div class="line">
-        <a-textarea placeholder="输入命令行"></a-textarea>
-      </div>
-    </a-tab-pane>
-  </a-tabs>
 
+  </a-tabs>
+  <div style="text-align: center">
+    <a-button type="primary">确认</a-button>
+
+    <a-button @click="back">取消</a-button>
+  </div>
   <div>
+
 
   </div>
 </template>
@@ -101,7 +73,6 @@ interface AAddTab {
   //current new
   tab: string
 }
-
 
 
 export default {
@@ -141,6 +112,9 @@ export default {
   },
   components: {ActionBuilder, BackBtn},
   computed: {},
+  mounted() {
+    this.activeTab = this.actionGroups[0].name
+  },
   methods: {
 
     change(tab) {
@@ -171,6 +145,7 @@ export default {
 }
 
 .active {
+  background: white;
   font-weight: bold;
 }
 </style>
