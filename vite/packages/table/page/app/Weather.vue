@@ -2,7 +2,7 @@
   <div id="display">
 
     <a-tabs v-model:activeKey="currentCity" type="editable-card" @edit="onEdit">
-      <a-tab-pane  v-for="city in cities" :key="city.id" :tab="city.name">
+      <a-tab-pane  v-for="city in cities" :key="city.id" :tab="city.name" v-if="typeof city.weather !=='undefined'">
 
         <vue-custom-scrollbar :settings="outerSettings" style="position:relative;height:calc(100vh - 14em);  ">
         <div class="section" style="text-align: center">
@@ -20,8 +20,6 @@
               </a-col>
               <a-col :span="8">
                 <Icon icon="position"></Icon> {{city.adm2}}-{{city.name}}<br> <Icon style="margin-left: 2em" icon="shijian"></Icon>  {{ getObsTime(city.weather.now.obsTime)}} 发布
-
-
               </a-col>
             </a-row>
           </div>

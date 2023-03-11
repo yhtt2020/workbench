@@ -19,7 +19,7 @@
       </span>
      <span class="no-drag" v-if="!loading">{{ dateTime.month }}/{{ dateTime.day }} {{ dateTime.hours }}:{{ dateTime.minutes }} {{ dateTime.week }}
 
-       <span v-if="hasWeather">
+       <span v-if="hasWeather && city.weather">
           <i style="" :class="'qi-'+city.weather.now.icon+'-fill'"></i> {{ city.weather.now.temp }}℃
        </span>
 
