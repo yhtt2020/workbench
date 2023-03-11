@@ -16,6 +16,7 @@
 
     <div style="text-align: center; margin-top: 1em">暂无闹钟</div>
     <a-empty :description="null" :image="simpleImage" />
+    <a-button type="primary" style="background: #676767;border: none">立即添加</a-button>
   </div>
   <div class="card content" v-else>
     <Icon
@@ -67,5 +68,10 @@ export default {
 }
 .ant-dropdown-open {
   border-radius: 100%;
+}
+[ant-click-animating-without-extra-node='true']::after, .ant-click-animating-node{
+ background:#676767 ;
+  box-shadow: #676767;
+  animation: none
 }
 </style>

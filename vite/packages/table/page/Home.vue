@@ -20,7 +20,7 @@
             <Weather></Weather>
           </div>
 
-          <Calendar></Calendar>
+
           <!--          <Stock></Stock>-->
           <!--         <AddMore></AddMore>-->
           <Stock></Stock>

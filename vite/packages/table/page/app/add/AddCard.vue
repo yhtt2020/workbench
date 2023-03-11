@@ -37,21 +37,25 @@
       {{ item.cname }}
     </div>
   </div>
+  <CardDetail :cardType="cardType" v-if="show" @onBack="onBack"></CardDetail>
 </template>
 
 <script>
 import { mapActions } from "pinia";
 import { tableStore } from "../../../store";
+import CardDetail from "./CardDetail.vue";
 export default {
   name: "AddCard",
-
+  components:{CardDetail},
   data() {
     return {
       cardList: [
-        { name: "calendar", cname: "日历", icon: "rili3" },
-        { name: "countdownDay", cname: "倒数日", icon: "rili2" },
-        { name: "clock", cname: "闹钟", icon: "naozhong" },
+        { name: "calendar", cname: "日历", icon: "rili3",detail:"追踪当月日期，查看临近节日" },
+        { name: "countdownDay", cname: "倒数日", icon: "rili2",detail:"设置你的纪念日、考试日等等" },
+        { name: "clock", cname: "闹钟", icon: "naozhong",detail:"设置你的闹钟" },
       ],
+      cardType:{},
+      show:false
     };
   },
 
@@ -62,35 +66,42 @@ export default {
     addAssembly(item) {
       switch (item.name) {
         case "calendar":
-          this.addCustomComponents(item.name);
-          this.$router.push({
-            name: "home",
-            params: {
-              name: item.name,
-              cname: item.cname,
-            },
-          });
+          this.cardType=this.cardList[0];
+          // this.addCustomComponents(item.name);
+          // this.$router.push({
+          //   name: "home",
+          //   params: {
+          //     name: item.name,
+          //     cname: item.cname,
+          //   },
+          // });
           break;
         case "countdownDay":
-          this.$router.push({
-            name: "addCardSetting",
-            params: {
-              name: item.name,
-              cname: item.cname,
-            },
-          });
+          this.cardType=this.cardList[1];
+          // this.$router.push({
+          //   name: "addCardSetting",
+          //   params: {
+          //     name: item.name,
+          //     cname: item.cname,
+          //   },
+          // });
           break;
         case "clock":
-          this.$router.push({
-            name: "addCardSetting",
-            params: {
-              name: item.name,
-              cname: item.cname,
-            },
-          });
+          this.cardType=this.cardList[2];
+          // this.$router.push({
+          //   name: "addCardSetting",
+          //   params: {
+          //     name: item.name,
+          //     cname: item.cname,
+          //   },
+          // });
           break;
       }
+      this.show=true;
     },
+    onBack(){
+      this.show=false;
+    }
   },
 };
 </script>

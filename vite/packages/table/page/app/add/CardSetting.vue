@@ -170,7 +170,7 @@ import { timeStamp, transDate } from "../../../util";
 import { message } from "ant-design-vue";
 import dayjs from "dayjs";
 export default {
-  name: "XtCardSetting",
+  name: "CardSetting",
 
   data() {
     return {

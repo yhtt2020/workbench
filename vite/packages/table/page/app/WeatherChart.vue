@@ -5,7 +5,7 @@
 import * as echarts from "echarts";
 import { getDateTime } from "../../../../src/util/dateTime.js";
 export default {
-  name: "Son",
+  name: "WeatherChart",
   props: {
     daily: {
       type: Array,

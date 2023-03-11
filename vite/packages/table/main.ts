@@ -6,7 +6,7 @@ import 'vcolorpicker/lib/style.css';
 import {createRouter, createWebHashHistory} from 'vue-router'
 import vcolorpicker from 'vcolorpicker'
 import {createPinia} from 'pinia'
-import piniaPersist from 'pinia-plugin-persist'
+
 
 
 import vueCustomScrollbar from "../../src/components/vue-scrollbar.vue";
@@ -18,7 +18,7 @@ import BackBtn from './components/comp/BackBtn.vue'
 
 
 import 'viewerjs/dist/viewer.css'
-import VueViewer from 'v-viewer'
+
 
 import piniaPersist from "pinia-plugin-persist";
 

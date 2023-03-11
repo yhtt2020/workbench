@@ -148,7 +148,7 @@ export default {
             this.visible = true;
           }
         } catch (err) {
-          console.log(err);
+
         }
       },
       deep: true,

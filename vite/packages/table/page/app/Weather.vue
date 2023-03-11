@@ -57,7 +57,7 @@
               </a-col>
             </a-row>
 
-            <Son :daily="city.d7.daily"></Son>
+            <WeatherChart :daily="city.d7.daily"></WeatherChart>
 
           </div>
         </vue-custom-scrollbar>
