@@ -242,6 +242,13 @@ app.whenReady().then(async () => {
     let appInstance = await tableAppManager.executeApp({ app: args.app, position: args.position })
   })
 
+  ipc.on('ensureTableApp',async(event,args)=>{
+    try{
+      event.returnValue= tableAppManager.ensureApp({app:args.app})
+    }catch (e) {
+      event.returnValue=false
+    }
+  })
   ipc.on('refreshTableApp', (e, a) => {
     tableAppManager.refresh(a.app.name)
   })
