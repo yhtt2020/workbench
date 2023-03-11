@@ -113,12 +113,22 @@ var saveWindowBounds = function() {
 	}
 }
 
-function sendIPCToWindow(window, action, data) {
+/**
+ *
+ * @param window
+ * @param action
+ * @param data
+ * @param createWindow 如果窗口不存在，是否创建后发送，默认为是
+ */
+function sendIPCToWindow(window, action, data,createWindow=true) {
 	// if there are no windows, create a new one
 	if (!mainWindow) {
-		createWindow(function() {
-			mainWindow.webContents.send(action, data || {})
-		})
+    if(createWindow){
+      //如果是要求创建后再发的才发，不然就直接放弃了
+      createWindow(function() {
+        mainWindow.webContents.send(action, data || {})
+      })
+    }
 	} else {
 		mainWindow.webContents.send(action, data || {})
 	}
@@ -591,20 +601,30 @@ async function appStart () {
   initFav()
   let showOnStart = await sqlDb.getConfig('system.user.showOnStart')
   if (!showOnStart) {
-    createWindow(function () {
-      mainWindow.webContents.on('did-finish-load', function () {
-        // if a URL was passed as a command line argument (probably because Min is set as the default browser on Linux), open it.
-        handleCommandLineArguments(process.argv)
-        // there is a URL from an "open-url" event (on Mac)
-        if (global.URLToOpen) {
-          // if there is a previously set URL to open (probably from opening a link on macOS), open it
-          sendIPCToWindow(mainWindow, 'addTab', {
-            url: global.URLToOpen
-          })
-          global.URLToOpen = null
-        }
+    let tableMod=settings.get('tableMod')
+    console.log(tableMod)
+    console.log(global.URLToOpen)
+    if((tableMod===undefined || tableMod==='table') && !global.URLToOpen){
+      console.log('因为没有设置，所以浏览器默认不启动')
+      //工作台模式，且没有要打开的网址
+      return
+    }else{
+      createWindow(function () {
+        mainWindow.webContents.on('did-finish-load', function () {
+          // if a URL was passed as a command line argument (probably because Min is set as the default browser on Linux), open it.
+          handleCommandLineArguments(process.argv)
+          // there is a URL from an "open-url" event (on Mac)
+          if (global.URLToOpen) {
+            // if there is a previously set URL to open (probably from opening a link on macOS), open it
+            sendIPCToWindow(mainWindow, 'addTab', {
+              url: global.URLToOpen
+            })
+            global.URLToOpen = null
+          }
+        })
       })
-    })
+    }
+
   } else {
     showUserWindow()
   }
@@ -723,7 +743,12 @@ app.whenReady().then(()=>{
       ipc.once('gotCurrentTab',(e,args)=>{
         callBack(args.data)
       })
-      sendIPCToWindow(mainWindow,'getCurrentTab')
+      if(mainWindow && !mainWindow.isDestroyed()){
+        //如果浏览器启动着
+        sendIPCToWindow(mainWindow,'getCurrentTab')
+      }else{
+        callBack({})//如果浏览器没启动，返回空对象
+      }
     }
     getCurrentTab((data)=>{
       e.returnValue=data

@@ -98,7 +98,13 @@ ipc.on('setSavePath', (event, args) => {
 })
 
 async function downloadHandler (event, item, webContents) {
-
+  let found=ApiHandler.downloadWebContents.find(wc=>{
+    return wc.id===webContents.id
+  })
+  if(found){
+    //如果是被监听了下载了，直接返回即可，不用处理
+    return
+  }
   var itemURL = item.getURL()
   var attachment = isAttachment(item.getContentDisposition())
 
@@ -277,7 +283,7 @@ function listenForDownloadHeaders (ses) {
       sendIPCToWindow(mainWindow, 'set-file-view', {
         url: details.url,
         isFileView
-      })
+      },false)
     }
 
     callback({ cancel: false })

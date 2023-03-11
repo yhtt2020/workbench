@@ -1,0 +1,19 @@
+{
+  "name": "loudness",
+  "version": "0.4.2",
+  "license": "MIT",
+  "repository": "LinusU/node-loudness",
+  "scripts": {
+    "test": "standard && mocha"
+  },
+  "dependencies": {
+    "execa": "^4.0.3"
+  },
+  "devDependencies": {
+    "mocha": "^8.1.1",
+    "standard": "^14.3.4"
+  },
+  "engines": {
+    "node": ">=10.13.0"
+  }
+}

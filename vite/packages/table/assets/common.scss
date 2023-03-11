@@ -89,7 +89,7 @@ body{
   background: rgba(0, 0, 0, 0.3);
   display: inline-block;
   border-radius: 0.5em;
-  &:hover {
+  &:hover ,&:active{
     background: rgba(0, 0, 0, 0.2);
     color: white;
   }
@@ -168,4 +168,15 @@ body.full-screen{
   white-space: nowrap;
   word-break: break-all;
   overflow: hidden;
+}
+
+
+.line,.line-title{
+  margin-bottom: 1em;
+  padding-left: 1em;
+}
+.line-title{
+  padding-left: 0em;
+  font-size: 1.2em;
+  font-weight: bold;
 }

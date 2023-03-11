@@ -247,7 +247,11 @@ class KdbxService {
 
 const kdbxService = new KdbxService()
 app.whenReady().then(() => {
-  kdbxService.prepareDb()
+  setTimeout(()=>{
+    //延迟准备密码库
+    kdbxService.prepareDb()
+  },3000)
+
 })
 
 ipc.handle('kdbxCredentialStoreSetPassword', async function (event, account) {

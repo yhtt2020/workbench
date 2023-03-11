@@ -177,6 +177,7 @@ const mobileMod = {
     )
 
     mobileWindow.on('closed', () => {
+      mobileViews[id].webContents.destroy() //销毁内部的网页
       mobileViews[id] = undefined
       mobileWindows[id] = undefined
       const found = mobiles.findIndex(mob => {
