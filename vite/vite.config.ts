@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+
 const path=require('path')
 // https://vitejs.dev/config/
 const pkg:string=__dirname
@@ -26,7 +27,8 @@ htmls.forEach(html=>{
   inputs[html]=getPath(html)
 })
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [vue(),require('tailwindcss'),
+    require('autoprefixer')],
   base:'./',
   build:{
     rollupOptions:{
