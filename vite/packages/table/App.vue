@@ -75,6 +75,7 @@ export default {
     }
     this.bindTouchEvents();
     this.reloadAll(); //刷新全部天气
+    //this.$router.push({name:'sensor'})
   },
 
   computed: {

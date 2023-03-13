@@ -156,7 +156,7 @@ let ActionGroups = [
       {
         name: 'nircmd',
         title: '执行nircmd的命令行',
-        summary: '直接执行工作台内置的nircmd，可查考此处的nircmd的命令，此操作不需要再安装nircmd，工作台自带了。',
+        summary: '直接执行工作台内置的nircmd，可查考此处的nircmd的命令，此操作不需要再安装nircmd，工作台自带了。点此查看nircmd的手册。',
         inputs: [
           {
             name: 'cm',

@@ -38,44 +38,50 @@ export default {
     }
   },
   methods:{
-    doActions(item){
-      if(this.editing){
+    async doActions (item) {
+      if (this.editing) {
         //如果正在编辑，则不触发任何状态
         return
       }
-      let done=[]
-      let success=[]
-      let failure=[]
-      let unknown=[]
-      if(item.actions){
+      let done = []
+      let success = []
+      let failure = []
+      let unknown = []
+      if (item.actions) {
         console.log(item.actions)
-        item.actions.forEach(action=>{
-          let handler=new ActionHandler(action)
-          let result=handler.doAction()
+        for (const action of item.actions) {
+          let handler = new ActionHandler(action)
+          let result = await handler.doAction()
           done.push(result)
-          if(result.status===1){
+          if (result.status === 1) {
             success.push(result)
-          }else if(result.status===0){
+          } else if (result.status === 0) {
             failure.push(result)
-          }else{
+          } else {
             unknown.push(result)
           }
-        })
-        if(failure.length===0){
-          if(unknown.length){
+        }
+        if (failure.length === 0) {
+          if (unknown.length) {
             message.success(`共为您执行${done.length}个动作，成功${success.length}个，未知${unknown.length}个`)
-          }else{
+          } else {
             message.success(`共为您成功执行${done.length}个动作`)
           }
 
-        }else{
-          if(success.length>0){
+        } else {
+          if (success.length > 0) {
             message.warn(`共为您执行${done.length}个动作，其中失败${failure.length}个，成功${success.length}，未知${unknown.length}个`)
-          }else{
+          } else {
             message.error(`共为您执行${done.length}个动作，其中失败${failure.length}个，成功${success.length}，未知${unknown.length}个`)
           }
         }
-      }else{
+        if(failure.length>0){
+          console.warn('打印失败日志：')
+          failure.forEach(f=>{
+            console.warn(f.message)
+          })
+        }
+      } else {
       }
     }
   }

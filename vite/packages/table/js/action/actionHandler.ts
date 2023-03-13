@@ -1,5 +1,7 @@
 import BrowserAction from "./browserAction";
 import ActionExecutor from "./actionExecutor";
+import CmdAction from './cmdAction'
+
 /**
  * 动作处理类，根据指令类型，分发处理指令，此类不做具体操作，只负责分发和返回结果
  */
@@ -18,15 +20,19 @@ class ActionHandler {
   /**
    * 处理一个指令
    */
-  doAction(): ActionResult {
+  async doAction(): ActionResult {
     let {action, args} = this
 
     let actionCommander: ActionExecutor
     switch (action.group.name) {
       case 'browser':
         actionCommander = new BrowserAction(action)
+        break
+      case 'cmd':
+        actionCommander = new CmdAction(action)
+        break
     }
-    return actionCommander.doAction()
+    return await actionCommander.doAction()
   }
 }
 

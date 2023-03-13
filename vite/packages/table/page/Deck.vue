@@ -95,12 +95,27 @@
           <div>设置</div>
         </div>
       </a-col>
+
       <a-col>
         <div @click="toggleEditing" class="btn">
           <Icon v-if="!this.editing" style="font-size: 3em" icon="bofang"></Icon>
           <Icon v-else style="font-size: 3em;color: orange" icon="tingzhi"></Icon>
           <div><span v-if="!this.editing">调整布局</span><span v-else style="color: orange">停止调整</span></div>
         </div>
+      </a-col>
+      <a-col>
+        <div class="btn">
+          <Icon style="font-size: 3em" icon="fenxiang"></Icon>
+          <div>分享方案</div>
+        </div>
+
+      </a-col>
+      <a-col>
+        <div class="btn">
+          <Icon style="font-size: 3em" icon="daoru"></Icon>
+          <div>导入方案</div>
+        </div>
+
       </a-col>
     </a-row>
     <a-row style="margin-top: 1em" :gutter="[20,20]">
@@ -128,7 +143,7 @@
     </a-row>
 
   </a-drawer>
-  <a-modal
+  <a-modal :key="addKey"
     v-model:visible="visibleAdd"
     :title="null"
     width="800px"
@@ -168,6 +183,7 @@ export default {
   },
   data () {
     return {
+      addKey:Date.now(),
       editGrid:null,
       visiblePromptTitle:false,
       displayGrids:[],
@@ -322,6 +338,7 @@ export default {
 
     },
     add () {
+      this.addKey=Date.now()
       this.visibleAdd = true
      // this.currentGrid.add(document.getElementById('newItem').cloneNode(true))
     },
