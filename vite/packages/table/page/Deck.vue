@@ -282,7 +282,7 @@ export default {
       //       var clone = cloneData.item.getElement().cloneNode(true)
       //       clone.setAttribute('class', 'item')
       //       clone.children[0].setAttribute('style', '')
-      //       // var items = cloneData.grid.add(clone, { index: cloneData.index, active: false })
+      //       // var items = cloneData.grid.card(clone, { index: cloneData.index, active: false })
       //       // cloneData.grid.show(items)
       //     }
       //   })
@@ -306,7 +306,7 @@ export default {
     },
     add () {
       this.visibleAdd = true
-     // this.currentGrid.add(document.getElementById('newItem').cloneNode(true))
+     // this.currentGrid.card(document.getElementById('newItem').cloneNode(true))
     },
     showMenu (id,data,type='grid') {
       this.menuVisible = true
@@ -362,7 +362,7 @@ export default {
       //   grid.handleAdd(this.newItem)
       // })
 
-      // this.currentGrid.add(document.getElementById(button.id))
+      // this.currentGrid.card(document.getElementById(button.id))
       // this.$nextTick(() => {
       //   this.currentGrid.refreshItems()
       // })
@@ -390,15 +390,15 @@ export default {
 }
 
   :deep(.muuri-grid) {
-    /* any styles to add on the muuri grid */
+    /* any styles to card on the muuri grid */
   }
 
 :deep(.muuri-item ){
-    /* any styles to add on the item container */
+    /* any styles to card on the item container */
     /* only to override positioning */
     margin: 5px;
     .muuri-item-content {
-      /* add any markup you like */
+      /* card any markup you like */
     }
 
     &.muuri-item-dragging {

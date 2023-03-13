@@ -313,7 +313,7 @@
         if (!targetModule.getChild(key)) {
           {
             console.warn(
-              "[vuex] trying to add a new module '" + key + "' on hot reloading, " +
+              "[vuex] trying to card a new module '" + key + "' on hot reloading, " +
               'manual reload is needed'
             );
           }
@@ -478,7 +478,7 @@
       .forEach(function (sub) { return sub(mutation, this$1.state); });
 
     if (
-      
+
       options && options.silent
     ) {
       console.warn(

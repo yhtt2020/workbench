@@ -9,7 +9,7 @@ export const addExtensionListener = (extensionId: string, name: string, callback
 
   if (listenerCount === 0) {
     // TODO: should these IPCs be batched in a microtask?
-    ipcRenderer.send('crx-add-listener', extensionId, name)
+    ipcRenderer.send('crx-card-listener', extensionId, name)
   }
 
   listenerMap.set(name, listenerCount + 1)

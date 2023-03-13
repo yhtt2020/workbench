@@ -19,6 +19,7 @@
       style="width: 2em; height: 2em"
       icon="gengduo1"
       class="title-icon"
+      @click="showDrawer"
     ></Icon>
     <div style="text-align: center; font-size: 1.5em">下一个闹钟</div>
     <div style="font-size: 3em; margin-top: 0.5em">
@@ -39,7 +40,7 @@
     @close="onClose"
   >
 
-
+123213
   </a-drawer>
 </template>
 

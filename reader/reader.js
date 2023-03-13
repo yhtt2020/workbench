@@ -275,7 +275,7 @@ function startReaderView (article, date) {
 
   // resize the frame once the page has loaded and the content height can be determined
   rframe.onload = function () {
-    /* add special handling for links */
+    /* card special handling for links */
     var links = rframe.contentDocument.querySelectorAll('a')
 
     if (links) {

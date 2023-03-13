@@ -2,12 +2,12 @@ const baseApi = require('./baseApi.js')
 
 const url = {
   navsList: '/app/browser/appUserList/list',
-  addNav: '/app/browser/appUserList/add',
+  addNav: '/app/browser/appUserList/card',
   delNav: '/app/browser/appUserList/delete',
   updateNav: '/app/browser/appUserList/update',
 
   appsList: '/app/browser/myApps/list',
-  addApp: '/app/browser/myApps/add',
+  addApp: '/app/browser/myApps/card',
   deleteApp: '/app/browser/myApps/delete',
   updateApp: '/app/browser/myApps/update'
 }
@@ -17,7 +17,7 @@ const userAppsApi = {
     await baseApi.init()
     return baseApi.axios(url.navsList)
   },
-  //add
+  //card
   async addAppUserNav(info) {
     await baseApi.init()
     return baseApi.axios(url.addNav, info)
@@ -42,7 +42,7 @@ const userAppsApi = {
     await baseApi.init()
     return baseApi.axios(url.appsList, data)
   },
-  //add
+  //card
   async addUserNavApps(info) {
     await baseApi.init()
     return baseApi.axios(url.addApp, info)

@@ -49,7 +49,7 @@ function buildLocalization () {
 
   let fileContents = 'var languages = ' + JSON.stringify(languages) + ';\n'
 
-  // add contents of localization.js (helper functions, ...)
+  // card contents of localization.js (helper functions, ...)
 
   fileContents += fs.readFileSync(path.join(__dirname, '../localization/localizationHelpers.js'))
 

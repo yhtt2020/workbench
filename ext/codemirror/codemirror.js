@@ -1796,7 +1796,7 @@
     return token
   }
 
-  // Build up the DOM representation for a single token, and add it to
+  // Build up the DOM representation for a single token, and card it to
   // the line map. Takes care to render special characters separately.
   function buildToken(builder, text, style, startStyle, endStyle, css, attributes) {
     if (!text) { return }
@@ -3961,7 +3961,7 @@
       finally { endOperation(cm); }
     }
   }
-  // Used to add methods to editor and doc instances, wrapping them in
+  // Used to card methods to editor and doc instances, wrapping them in
   // operations.
   function methodOp(f) {
     return function() {
@@ -4907,7 +4907,7 @@
       // Merge this change into the last event
       last = lst(cur.changes);
       if (cmp(change.from, change.to) == 0 && cmp(change.from, last.to) == 0) {
-        // Optimized case for simple insertion -- don't want to add
+        // Optimized case for simple insertion -- don't want to card
         // new changesets for every character typed
         last.to = changeEnd(change);
       } else {
@@ -5296,7 +5296,7 @@
     return {from: obj.from, to: obj.to, text: obj.text, origin: obj.origin}
   }
 
-  // Apply a change to a document, and add it to the document's
+  // Apply a change to a document, and card it to the document's
   // history, and propagating it to all linked documents.
   function makeChange(doc, change, ignoreReadOnly) {
     if (doc.cm) {
@@ -5371,7 +5371,7 @@
       } else { break }
     }
 
-    // Build up a reverse change object to add to the opposite history
+    // Build up a reverse change object to card to the opposite history
     // stack (redo when undoing, and vice versa).
     var antiChanges = [];
     pushSelectionToHistory(selAfter, dest);
@@ -8071,7 +8071,7 @@
   CodeMirror.defineInitHook = function (f) { return initHooks.push(f); };
 
   // Indent the given line. The how parameter can be "smart",
-  // "add"/null, "subtract", or "prev". When aggressive is false
+  // "card"/null, "subtract", or "prev". When aggressive is false
   // (typically set to true for forced single-line indents), empty
   // lines are not indented, and places where the mode returns Pass
   // are left alone.
@@ -9525,7 +9525,7 @@
     });
   };
 
-  // When an event has just come in that is likely to add or change
+  // When an event has just come in that is likely to card or change
   // something in the input textarea, we poll faster, to ensure that
   // the change appears on the screen quickly.
   TextareaInput.prototype.fastPoll = function () {

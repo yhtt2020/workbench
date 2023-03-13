@@ -334,7 +334,7 @@
 
   Output$3.prototype.add_new_line = function(force_newline) {
     // never newline at the start of file
-    // otherwise, newline only if we didn't just add one or we're forced
+    // otherwise, newline only if we didn't just card one or we're forced
     if (this.is_empty() ||
       (!force_newline && this.just_added_newline())) {
       return false;
@@ -2447,7 +2447,7 @@
           this._output.trim();
         }
 
-        // add the comma in front of the next token
+        // card the comma in front of the next token
         this.print_token_line_indentation(current_token);
         this._output.add_token(',');
         this._output.space_before_token = true;
@@ -3753,7 +3753,7 @@
           var variableOrRule = this._input.peekUntilAfter(/[: ,;{}()[\]\/='"]/g);
 
           if (variableOrRule.match(/[ :]$/)) {
-            // we have a variable or pseudo-class, add it and insert one space before continuing
+            // we have a variable or pseudo-class, card it and insert one space before continuing
             variableOrRule = this.eatString(": ").replace(/\s$/, '');
             this.print_string(variableOrRule);
             this._output.space_before_token = true;
@@ -5027,14 +5027,14 @@
       if (parser_token.tag_start_char === '{' && parser_token.tag_check === 'else') {
         this._tag_stack.indent_to_tag(['if', 'unless', 'each']);
         parser_token.indent_content = true;
-        // Don't add a newline if opening {{#if}} tag is on the current line
+        // Don't card a newline if opening {{#if}} tag is on the current line
         var foundIfOnCurrentLine = printer.current_line_has_match(/{{#if/);
         if (!foundIfOnCurrentLine) {
           printer.print_newline(false);
         }
       }
 
-      // Don't add a newline before elements that should remain where they are.
+      // Don't card a newline before elements that should remain where they are.
       if (parser_token.tag_name === '!--' && last_token.type === TOKEN.TAG_CLOSE &&
         last_tag_token.is_end_tag && parser_token.text.indexOf('\n') === -1) ; else {
         if (!(parser_token.is_inline_element || parser_token.is_unformatted)) {

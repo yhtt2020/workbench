@@ -37,16 +37,16 @@
       {{ item.cname }}
     </div>
   </div>
-  <CardDetail :cardType="cardType" v-if="show" @onBack="onBack"></CardDetail>
+  <CardPreview :cardType="cardType" v-if="show" @onBack="onBack"></CardPreview>
 </template>
 
 <script>
 import { mapActions } from "pinia";
 import { tableStore } from "../../../store";
-import CardDetail from "./CardDetail.vue";
+import CardPreview from "./CardPreview.vue";
 export default {
   name: "AddCard",
-  components:{CardDetail},
+  components:{CardPreview},
   data() {
     return {
       cardList: [

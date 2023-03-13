@@ -172,7 +172,7 @@ export class PopupView {
     }
 
     // For extension popups with a login form, the user may need to access a
-    // program outside of the app. Closing the popup would then add
+    // program outside of the app. Closing the popup would then card
     // inconvenience.
     if (!BrowserWindow.getFocusedWindow()) {
       debug('preventing close due to focus residing outside of the app')

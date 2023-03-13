@@ -37,7 +37,7 @@ import {mapActions} from "pinia";
 import {tableStore} from "../../../store";
 
 export default {
-  name: "CardDetail",
+  name: "CardPreview",
   props:{
     cardType:{
       type:Object,

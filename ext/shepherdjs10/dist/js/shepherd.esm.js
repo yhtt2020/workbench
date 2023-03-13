@@ -4889,7 +4889,7 @@ class Step extends Evented {
    * You can also always manually advance the Tour by calling `myTour.next()`.
    * @param {function} options.beforeShowPromise A function that returns a promise.
    * When the promise resolves, the rest of the `show` code for the step will execute.
-   * @param {Object[]} options.buttons An array of buttons to add to the step. These will be rendered in a
+   * @param {Object[]} options.buttons An array of buttons to card to the step. These will be rendered in a
    * footer below the main body text.
    * @param {function} options.buttons.button.action A function executed when the button is clicked on.
    * It is automatically bound to the `tour` the step is associated with, so things like `this.next` will
@@ -4908,13 +4908,13 @@ class Step extends Evented {
    * @param {boolean} options.canClickTarget A boolean, that when set to false, will set `pointer-events: none` on the target
    * @param {object} options.cancelIcon Options for the cancel icon
    * @param {boolean} options.cancelIcon.enabled Should a cancel “✕” be shown in the header of the step?
-   * @param {string} options.cancelIcon.label The label to add for `aria-label`
-   * @param {string} options.classes A string of extra classes to add to the step's content element.
+   * @param {string} options.cancelIcon.label The label to card for `aria-label`
+   * @param {string} options.classes A string of extra classes to card to the step's content element.
    * @param {string} options.highlightClass An extra class to apply to the `attachTo` element when it is
    * highlighted (that is, when its step is active). You can then target that selector in your CSS.
    * @param {string} options.id The string to use as the `id` for the step.
-   * @param {number} options.modalOverlayOpeningPadding An amount of padding to add around the modal overlay opening
-   * @param {number} options.modalOverlayOpeningRadius An amount of border radius to add around the modal overlay opening
+   * @param {number} options.modalOverlayOpeningPadding An amount of padding to card around the modal overlay opening
+   * @param {number} options.modalOverlayOpeningRadius An amount of border radius to card around the modal overlay opening
    * @param {object} options.popperOptions Extra options to pass to Popper
    * @param {boolean|Object} options.scrollTo Should the element be scrolled to when this step is shown? If true, uses the default `scrollIntoView`,
    * if an object, passes that object as the params to `scrollIntoView` i.e. `{behavior: 'smooth', block: 'center'}`
@@ -5701,7 +5701,7 @@ class Tour extends Evented {
    * @param {Object} options The options for the tour
    * @param {boolean} options.confirmCancel If true, will issue a `window.confirm` before cancelling
    * @param {string} options.confirmCancelMessage The message to display in the confirm dialog
-   * @param {string} options.classPrefix The prefix to add to the `shepherd-enabled` and `shepherd-target` class names as well as the `data-shepherd-step-id`.
+   * @param {string} options.classPrefix The prefix to card to the `shepherd-enabled` and `shepherd-target` class names as well as the `data-shepherd-step-id`.
    * @param {Object} options.defaultStepOptions Default options for Steps ({@link Step#constructor}), created through `addStep`
    * @param {boolean} options.exitOnEsc Exiting the tour with the escape key will be enabled unless this is explicitly
    * set to false.
@@ -5779,7 +5779,7 @@ class Tour extends Evented {
   }
   /**
    * Add multiple steps to the tour
-   * @param {Array<object> | Array<Step>} steps The steps to add to the tour
+   * @param {Array<object> | Array<Step>} steps The steps to card to the tour
    */
 
 

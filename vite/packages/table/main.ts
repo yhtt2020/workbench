@@ -7,7 +7,7 @@ import {createRouter, createWebHashHistory} from 'vue-router'
 import vcolorpicker from 'vcolorpicker'
 import {createPinia} from 'pinia'
 import 'dayjs/locale/zh-cn';
-import './index.css'
+//import './index.css'
 
 import vueCustomScrollbar from "../../src/components/vue-scrollbar.vue";
 
