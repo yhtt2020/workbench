@@ -1,4 +1,5 @@
 <template>
+
   <div @click="enterWeather" class="card pointer half" style="padding:1em;margin-bottom: 0">
     <!--    <iframe scrolling="no"  style="border: none;height: 196px;width: 100%" :src="src"></iframe>-->
     <div v-if="!cities.length">
@@ -39,7 +40,7 @@
         <a-col :span="7" style="text-align: center">
           <i
             style="font-size: 4em"
-            :class="'qi-' + city.weather.now.icon + '-fill'"
+            :class="'qi-' + city.now.icon + '-fill'"
           ></i>
         </a-col>
         <a-col :span="17" style="text-align: center">
@@ -47,7 +48,7 @@
             {{ today.month }}月{{ today.day }}日 {{ today.week }}
           </div>
           <div style="font-size: 1.5em">
-            {{ city.weather.now.text }} {{ city.weather.now.temp }}℃
+            {{ city.now.text }} {{ city.now.temp }}℃
           </div>
         </a-col>
       </a-row>
@@ -77,6 +78,7 @@
       </a-row>
     </div>
   </div>
+
 </template>
 <script>
 
