@@ -94,29 +94,3 @@ export const deckStore=defineStore('deck',{
     }]
   }
 })
-interface IDeckActionType{
-  name:string
-  alias:string
-}
-declare interface IDeckAction{
-  /**
-   * 名称
-   */
-  name:'',
-  type:IDeckActionType,
-  args:any //指令参数
-}
-declare interface IWidget{
-  id:string,
-  icon:string,
-  cover: string,
-  type:string,
-  font:any,
-  title: string,
-  action:IDeckActionType
-}
-declare interface IGrid{
-  id:string,
-  title:string,
-  children?:Array<IWidget>[],
-}

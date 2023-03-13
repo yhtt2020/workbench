@@ -1,6 +1,6 @@
 <template>
   <div
-    class="vue-muuri-item item"
+    class="vue-muuri-item item pointer"
     :class="getClass"
     :id="this.uniqueKey"
   >
@@ -98,10 +98,6 @@ export default {
   padding: 2%;
 }
 
-
-
-
-
 .muuriResizable {
   overflow: hidden;
   resize: both;
@@ -121,6 +117,9 @@ export default {
 
 .vue-muuri-item-content {
   text-align: center;
+  &:hover,&.active{
+    opacity: 0.8;
+  }
 }
 
 

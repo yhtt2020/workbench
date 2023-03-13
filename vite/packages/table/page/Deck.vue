@@ -144,7 +144,7 @@
 </template>
 
 <script>
-import DeckItem from './app/deck/DeckItem.vue'
+import DeckItem from '../components/muuri/DeckItem.vue'
 import { appStore } from '../store'
 import { mapWritableState } from 'pinia'
 import Template from '../../user/pages/Template.vue'
@@ -220,7 +220,6 @@ export default {
       this.key=Date.now()
     },
     showEditTitle(grid){
-
       this.visiblePromptTitle=true;
       this.editGrid=grid
     },
