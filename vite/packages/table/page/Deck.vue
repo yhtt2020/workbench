@@ -11,12 +11,12 @@
           <!--        <DeckItem :id="item.id" :item="item" v-for="item in board.children"></DeckItem>-->
           <!--      </div>-->
 
-          <vuuri group-id="grid.id" :ref="'grid'+grid.id" item-key="id"  class="grid" @contextmenu.stop="showMenu(grid.id)"
-                 drag-enabled :get-item-width="getIconSize" :get-item-height="getIconSize"
+          <vuuri :key="key" :drag-enabled="editing" group-id="grid.id" :ref="'grid'+grid.id" item-key="id"  class="grid" @contextmenu.stop="showMenu(grid.id)"
+                 :get-item-width="getIconSize" :get-item-height="getIconSize"
                  v-model="grid.children"  >
             <template #item="{ item }">
-              <Widget @contextmenu.stop="showMenu(item.id,{item,grid},'item')"  :w-id="item.id" :item="item"
-                       :uniqueKey="item.id"
+              <Widget @contextmenu.stop="showMenu(item.id,{item,grid},'item')"   :item="item"
+                       :uniqueKey="String(item.id)"
                        :title="item.title"
                        :showDelete="true"
                        :resizable="true"
@@ -96,7 +96,7 @@
         </div>
       </a-col>
       <a-col>
-        <div @click="this.editing=!this.editing;this.menuVisible=false" class="btn">
+        <div @click="toggleEditing" class="btn">
           <Icon v-if="!this.editing" style="font-size: 3em" icon="bofang"></Icon>
           <Icon v-else style="font-size: 3em;color: orange" icon="tingzhi"></Icon>
           <div><span v-if="!this.editing">调整布局</span><span v-else style="color: orange">停止调整</span></div>
@@ -163,7 +163,8 @@ export default {
     Template,
     DeckItem,
     Widget: Widget,
-    vuuri
+    vuuri,
+    key:Date.now()
   },
   data () {
     return {
@@ -198,7 +199,6 @@ export default {
   computed: {
     ...mapWritableState(appStore, []),
     ...mapWritableState(deckStore, ['grids','editing','settings']),
-
   },
   mounted () {
     //进来之后就把存储的部分和初始化部分完全脱钩，这样，可以随意变更按钮，并即时存储，而不会影响到我们界面上的部分。
@@ -209,6 +209,16 @@ export default {
     // })
   },
   methods: {
+    toggleEditing(){
+      this.editing=!this.editing
+      if(this.editing){
+        message.info('您可以直接拖拽图标调整位置，支持跨组调整')
+      }else{
+        message.info('已关闭拖拽调整')
+      }
+      this.menuVisible=false
+      this.key=Date.now()
+    },
     showEditTitle(grid){
 
       this.visiblePromptTitle=true;
@@ -230,6 +240,14 @@ export default {
         this.$refs[key][0].update()
       })
 
+    },
+    /**
+     * 手动刷新全部Grids
+     */
+    updateAllGrids(){
+      Object.keys(this.$refs).forEach(key=>{
+        this.$refs[key][0].update()
+      })
     },
     getIconSize(){
       let width=80
