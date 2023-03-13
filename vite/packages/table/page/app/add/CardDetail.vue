@@ -4,7 +4,7 @@
       <a-button type="primary" style="background: transparent;border: none;position: absolute;top: 1%;right: 3%;font-size: 2em" @click="onBack">x</a-button>
       <div>{{cardType.cname}}</div>
       <div>{{cardType.detail}}</div>
-      <div class="card cartoon" style="height: auto;">
+      <div class="card cartoon" style="height: auto;margin:0">
         <div style="border-bottom: 1px solid #777777">
           <a-calendar
             v-model:value="value"
@@ -26,12 +26,16 @@
           <a-col :span="12">4月5日~4月5日</a-col></a-row
         >
       </div>
+      <a-button type="primary" style="background: #2266D1;border: none" class="btn" @click="addCard()">添加</a-button>
     </a-card>
   </div>
 
 </template>
 
 <script>
+import {mapActions} from "pinia";
+import {tableStore} from "../../../store";
+
 export default {
   name: "CardDetail",
   props:{
@@ -44,10 +48,43 @@ export default {
     console.log(this.cardType)
   },
   methods:{
+    ...mapActions(tableStore, ["addCustomComponents"]),
     onBack(){
       this.$emit("onBack")
         this.show=true;
       },
+    addCard(){
+      switch (this.cardType.name) {
+        case "calendar":
+          this.addCustomComponents(this.cardType.name);
+          this.$router.push({
+            name: "home",
+            params: {
+              name: this.cardType.name,
+              cname: this.cardType.cname,
+            },
+          });
+          break;
+        case "countdownDay":
+          this.$router.push({
+            name: "addCardSetting",
+            params: {
+              name: this.cardType.name,
+              cname: this.cardType.cname,
+            },
+          });
+          break;
+        case "clock":
+          this.$router.push({
+            name: "addCardSetting",
+            params: {
+              name: this.cardType.name,
+              cname: this.cardType.cname,
+            },
+          });
+          break;
+      }
+    }
     }
 
 }
@@ -66,11 +103,21 @@ export default {
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translateX(-50%) translateY(-50%);
+  transform: translateX(-50%) translateY(-60%);
   display: flex;
   justify-content: center;
   text-align: center;
   perspective:1200px;
+  .btn{
+    position: absolute;
+    bottom: 1em;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    width: 10%;
+    line-height: 10%;
+
+  }
 }
 }
 :deep(.ant-picker-date-panel) {
@@ -124,7 +171,7 @@ export default {
   0% {transform:scale(0.8) rotate3d(1,1,0,0deg) }
   25% {transform:scale(0.8) rotate3d(1,1,0,20deg) }
   50% {transform:scale(0.8) rotate3d(1,1,0,0deg)}
-  75% {transform:scale(0.8) rotate3d(1,1,0,-20deg) }
+  75% {transform:scale(0.8) rotate3d(-1,-1,0,20deg) }
   100% {transform:scale(0.8) rotate3d(1,1,0,0deg) }
 }
 </style>

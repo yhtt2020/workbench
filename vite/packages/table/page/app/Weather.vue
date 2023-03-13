@@ -42,7 +42,7 @@
         </div>
 
           <div class="card auto-height"
-               style="padding: 0.1em 1.2em 1em;margin-top: 1em;margin-bottom: 3em;display: blockl;width: 100%">
+               style="padding: 0.1em 1.2em 1em;margin-top: 1em;margin-bottom: 3em;display: block;width: 100%">
             <div class="section">
               多日预报
             </div>

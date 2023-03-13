@@ -108,10 +108,10 @@
             <a-time-picker v-model:value="clockDate" format="HH:mm"
           /></a-col>
           <a-col :span="6" :xs="12" :offset="1">
-<!--            <a-radio-group v-model:value="clockType" button-style="solid">-->
-<!--              <a-radio-button value="不重复">不重复</a-radio-button>-->
-<!--              <a-radio-button value="每天">每天</a-radio-button>-->
-<!--            </a-radio-group>-->
+            <a-radio-group v-model:value="clockType" button-style="solid">
+              <a-radio-button value="不重复">不重复</a-radio-button>
+              <a-radio-button value="每天">每天</a-radio-button>
+            </a-radio-group>
           </a-col
           ></a-row
         >
