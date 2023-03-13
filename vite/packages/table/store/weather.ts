@@ -20,7 +20,7 @@ export const weatherStore = defineStore('weather', {
      */
      reloadAll(){
       this.cities.forEach(async city=>{
-        city=await this.reloadCityWeatherAll(city)
+        await this.reloadCityWeatherAll(city)
       })
     },
 
@@ -30,7 +30,8 @@ export const weatherStore = defineStore('weather', {
      */
     async reloadCityWeatherAll(city) {
       try {
-        city.weather = await this.getNow(city)
+        let nowData=await this.getNow(city)
+        city.now = nowData.now
         city.h24 = await this.get24h(city)
         city.d7 = await this.get7d(city)
         city.getTime = Date.now()
@@ -48,6 +49,7 @@ export const weatherStore = defineStore('weather', {
         }
       })
       if (result.status === 200 && result.data.code === '200') {
+        console.log(result.data)
         return result.data
       } else {
         return false

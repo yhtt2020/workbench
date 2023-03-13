@@ -37,8 +37,8 @@
         }}
         {{ dateTime.week }}
 
-       <span v-if="hasWeather && city.weather">
-          <i style="" :class="'qi-'+city.weather.now.icon+'-fill'"></i> {{ city.weather.now.temp }}℃
+       <span v-if="hasWeather && city.now">
+          <i style="" :class="'qi-'+city.now.icon+'-fill'"></i> {{ city.now.temp }}℃
        </span>
 
 

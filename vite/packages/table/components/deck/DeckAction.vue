@@ -3,16 +3,10 @@
 
   <!--  </SecondPanel>-->
 
-  <back-btn @click="back"></back-btn>
   <a-tabs style="margin-top: 4em" v-model:activeKey="activeTab" tab-position="left">
     <a-tab-pane :key="group.name" :tab="group.title" v-for="group in actionGroups">
-      <ActionBuilder :actions="group.actions">
+      <ActionBuilder :key="'ab-'+resetActionBuilder" :ref="group.name" :group="group" :actions="group.actions">
       </ActionBuilder>
-    </a-tab-pane>
-    <a-tab-pane key="tip" tab="提示">
-      <div class="action">
-        弹窗提示
-      </div>
     </a-tab-pane>
     <a-tab-pane key="audio" tab="系统设置">
       <div class="action">
@@ -50,37 +44,15 @@
         打开酷应用
       </div>
     </a-tab-pane>
-    <a-tab-pane key="cmd" tab="命令行">
-      <div class="action">
-        执行命令行程序
-      </div>
-      <div class="action">
-        执行cmd命令
-      </div>
-      <div class="action">
-        执行nircmd命令
-      </div>
-      <p>选择一个外部命令行工具，并执行相应的命令行，支持单行和多行，推荐使用nircmd之类的工具。具体可查看<a>此处帮助</a>。
-      </p>
-      <div class="line">
-        选择命令行工具
-      </div>
-      <div class="line">
-        <a-input-group compact>
-          <a-input style="width: calc(320px - 120px)" placeholder="选择命令行工具"></a-input>
-          <a-button type="primary">浏览</a-button>
-        </a-input-group>
-      </div>
-      <div class="line">
-        命令行
-      </div>
-      <div class="line">
-        <a-textarea placeholder="输入命令行"></a-textarea>
-      </div>
-    </a-tab-pane>
-  </a-tabs>
 
+  </a-tabs>
+  <div style="text-align: center">
+    <a-button @click="addAction" type="primary">确认</a-button>
+
+    <a-button @click="back">取消</a-button>
+  </div>
   <div>
+
 
   </div>
 </template>
@@ -89,7 +61,7 @@
 import BackBtn from '../comp/BackBtn.vue'
 import ActionBuilder from "./ActionBuilder.vue";
 import {ActionGroups} from "../../consts";
-
+import _ from 'lodash-es'
 /**
  * 添加一个新的Tab行为
  */
@@ -99,9 +71,9 @@ interface AAddTab {
   //builtin system table
   position: string,
   //current new
-  tab: string
-}
+  tab: string,
 
+}
 
 
 export default {
@@ -110,44 +82,35 @@ export default {
     return {
       current: '',//当前的
       activeTab: 'cmd',
-
+      resetActionBuilder:0,//用于重载组件
       actionGroups: ActionGroups,
-
-
-      menus: [
-        {
-          title: '浏览器',
-          index: 'browser'
-        },
-        {
-          title: '提示',
-          index: 'tip'
-        },
-        {
-          title: '音频',
-          index: 'sound'
-        }, {
-          title: '键鼠',
-          index: 'key'
-        }, {
-          title: '应用',
-          index: 'app'
-        }, {
-          title: '命令行',
-          index: 'console'
-        }
-      ]
     }
   },
+  emits:['click'],
   components: {ActionBuilder, BackBtn},
   computed: {},
+  mounted() {
+   this.reset()
+  },
   methods: {
-
+    reset(){
+      this.actionGroups=_.cloneDeep(ActionGroups)
+      this.activeTab = this.actionGroups[0].name
+      this.resetActionBuilder=Date.now()
+    },
     change(tab) {
       console.log(tab)
     },
     back() {
       this.$emit('click')
+    },
+    addAction(){
+      let actionData=this.$refs[this.activeTab][0].getActionData()
+      if(!actionData){
+        return
+      }
+      this.$emit('click',actionData)
+      console.log(actionData)
     }
   }
 }
@@ -171,6 +134,7 @@ export default {
 }
 
 .active {
+  background: white;
   font-weight: bold;
 }
 </style>

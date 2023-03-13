@@ -131,8 +131,10 @@
   <a-modal
     v-model:visible="visibleAdd"
     :title="null"
-    width="100%"
-    wrap-class-name="full-modal lg-modal"
+    width="800px"
+    centered
+    height="500px"
+    wrap-class-name="lg-modal"
     :footer="null"
   >
     <DeckAdd @add="doAdd"></DeckAdd>
@@ -211,7 +213,6 @@ export default {
 
       this.visiblePromptTitle=true;
       this.editGrid=grid
-      console.log('show',this.visiblePromptTitle)
     },
     changeTitle(title){
       if(title.value.length>0){
@@ -225,7 +226,6 @@ export default {
     changeSize(size){
       this.settings.iconSize=size;
       this.menuVisible=false
-      console.log(this.$refs)
       Object.keys(this.$refs).forEach(key=>{
         this.$refs[key][0].update()
       })

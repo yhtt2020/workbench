@@ -2,7 +2,7 @@
   <div id="display">
 
     <a-tabs v-model:activeKey="currentCity" type="editable-card" @edit="onEdit" :destroyInactiveTabPane="true">
-      <a-tab-pane  v-for="city in cities" :key="city.id" :tab="city.name" v-if="typeof city.weather !=='undefined'">
+      <a-tab-pane  v-for="city in cities" :key="city.id" :tab="city.name">
 
         <vue-custom-scrollbar :settings="outerSettings" style="position:relative;height:calc(100vh - 14em);  ">
           <div class="section" style="text-align: center">
@@ -10,16 +10,16 @@
               <a-row style="">
 
               <a-col :span="8" style="font-size: 2.5em">
-                <i  :class="'qi-'+city.weather.now.icon+'-fill'"></i> {{city.weather.now.text}}
+                <i  :class="'qi-'+city.now.icon+'-fill'"></i> {{city.now.text}}
               </a-col>
               <a-col :span="8">
-                <div style="font-size: 2em"> {{city.weather.now.temp}} ℃</div>
+                <div style="font-size: 2em"> {{city.now.temp}} ℃</div>
                 <div>
-                  风力 {{city.weather.now.windScale}}级
+                  风力 {{city.now.windScale}}级
                 </div>
               </a-col>
               <a-col :span="8">
-                <Icon icon="position"></Icon> {{city.adm2}}-{{city.name}}<br> <Icon style="margin-left: 2em" icon="shijian"></Icon>  {{ getObsTime(city.weather.now.obsTime)}} 发布
+                <Icon icon="position"></Icon> {{city.adm2}}-{{city.name}}<br> <Icon style="margin-left: 2em" icon="shijian"></Icon>  {{ getObsTime(city.now.obsTime)}} 发布
               </a-col>
             </a-row>
           </div>
