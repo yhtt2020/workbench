@@ -120,10 +120,10 @@ var saveWindowBounds = function() {
  * @param data
  * @param createWindow 如果窗口不存在，是否创建后发送，默认为是
  */
-function sendIPCToWindow(window, action, data,createWindow=true) {
+function sendIPCToWindow(window, action, data,needCreateWindow=true) {
 	// if there are no windows, create a new one
 	if (!mainWindow) {
-    if(createWindow){
+    if(needCreateWindow){
       //如果是要求创建后再发的才发，不然就直接放弃了
       createWindow(function() {
         mainWindow.webContents.send(action, data || {})
