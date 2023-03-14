@@ -8,7 +8,7 @@ let workerProcess
 if(isDevelopmentMode) {
   path = window.globalArgs['app-path'] + `/res/nir/${arch}/nircmdc.exe`
 }else{
-  path = window.globalArgs['app-path'] + `/../resnir/${arch}/nircmdc.exe`
+  path = window.globalArgs['app-path'] + `/../res/nir/${arch}/nircmdc.exe`
 }
 class CmdAction extends ActionExecutor {
   async doAction ():ActionExecutor {
@@ -31,7 +31,7 @@ class CmdAction extends ActionExecutor {
         case 'nircmd':
           for(let i=0;i<=cleanLines.length;i++){
             console.log('do' ,cleanLines[i])
-            message.push(await runExec(`${path} `+cleanLines[i],undefined))
+            message.push(await runExec(`"${path}" `+cleanLines[i],undefined))
           }
           result=1
           break
