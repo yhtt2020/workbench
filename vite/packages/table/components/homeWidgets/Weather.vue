@@ -34,48 +34,52 @@
       </div>
     </div>
     <div @click="enterWeather" v-else>
-      <Icon icon="position"></Icon>
-      {{ city.name }}
-      <a-row>
-        <a-col :span="7" style="text-align: center">
-          <i
-            style="font-size: 4em"
-            :class="'qi-' + city.now.icon + '-fill'"
-          ></i>
-        </a-col>
-        <a-col :span="17" style="text-align: center">
-          <div style="font-size: 1.5em; font-weight: bold; padding-top: 1em">
-            {{ today.month }}月{{ today.day }}日 {{ today.week }}
-          </div>
-          <div style="font-size: 1.5em">
-            {{ city.now.text }} {{ city.now.temp }}℃
-          </div>
-        </a-col>
-      </a-row>
-      <a-row style="margin-top: 1em">
-        <a-col :span="12" style="text-align: center">
-          <div style="font-size: 1.2em; font-weight: bold">明天</div>
-          <div style="font-size: 1.2em">
+      <template v-if="city.now">
+        <Icon icon="position"></Icon>
+        {{ city.name }}
+        <a-row>
+          <a-col :span="7" style="text-align: center">
             <i
-              style="font-size: 1.2em"
-              :class="'qi-' + city.d7.daily[1].iconDay + '-fill'"
+              style="font-size: 4em"
+              :class="'qi-' + city.now.icon + '-fill'"
             ></i>
-            {{ city.d7.daily[1].text }} {{ city.d7.daily[1].tempMin }}℃ ~
-            {{ city.d7.daily[1].tempMax }}℃
-          </div>
-        </a-col>
-        <a-col :span="12" style="text-align: center">
-          <div style="font-size: 1.2em; font-weight: bold">后天</div>
-          <div style="font-size: 1.2em">
-            <i
-              style="font-size: 1.2em"
-              :class="'qi-' + city.d7.daily[2].iconDay + '-fill'"
-            ></i>
-            {{ city.d7.daily[2].text }} {{ city.d7.daily[2].tempMin }}℃ ~
-            {{ city.d7.daily[2].tempMax }}℃
-          </div>
-        </a-col>
-      </a-row>
+          </a-col>
+          <a-col :span="17" style="text-align: center">
+            <div style="font-size: 1.5em; font-weight: bold; padding-top: 1em">
+              {{ today.month }}月{{ today.day }}日 {{ today.week }}
+            </div>
+            <div style="font-size: 1.5em">
+              {{ city.now.text }} {{ city.now.temp }}℃
+            </div>
+          </a-col>
+        </a-row>
+        <a-row style="margin-top: 1em">
+          <a-col :span="12" style="text-align: center">
+            <div style="font-size: 1.2em; font-weight: bold">明天</div>
+            <div style="font-size: 1.2em">
+              <i
+                style="font-size: 1.2em"
+                :class="'qi-' + city.d7.daily[1].iconDay + '-fill'"
+              ></i>
+              {{ city.d7.daily[1].text }} {{ city.d7.daily[1].tempMin }}℃ ~
+              {{ city.d7.daily[1].tempMax }}℃
+            </div>
+          </a-col>
+          <a-col :span="12" style="text-align: center">
+            <div style="font-size: 1.2em; font-weight: bold">后天</div>
+            <div style="font-size: 1.2em">
+              <i
+                style="font-size: 1.2em"
+                :class="'qi-' + city.d7.daily[2].iconDay + '-fill'"
+              ></i>
+              {{ city.d7.daily[2].text }} {{ city.d7.daily[2].tempMin }}℃ ~
+              {{ city.d7.daily[2].tempMax }}℃
+            </div>
+          </a-col>
+        </a-row>
+
+      </template>
+
     </div>
   </div>
 
