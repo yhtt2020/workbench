@@ -558,6 +558,11 @@ acorn@^8.7.1:
   resolved "https://registry.npmmirror.com/acorn/-/acorn-8.7.1.tgz"
   integrity sha512-Xx54uLJQZ19lKygFXOWsscKUbsBZW0CPykPhVQdhIeIwrbPmJzqeASDInc8nKBnp/JT6igTs82qPXz069H8I/A==
 
+aida64-to-json@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npmmirror.com/aida64-to-json/-/aida64-to-json-1.1.0.tgz#f4576599f52d2a89366c66555771e2b533ab88eb"
+  integrity sha512-rZdviTU7mam9GiiTxBFHYB3PTWfrD3qlFqp2hc03gKCQ6AhuB1zI4I9CLXS4NUCbjmZMttooLG05RUA/LxdMww==
+
 amdefine@>=0.0.4:
   version "1.0.1"
   resolved "https://registry.npmmirror.com/amdefine/-/amdefine-1.0.1.tgz"
@@ -1093,6 +1098,13 @@ fill-range@^7.0.1:
   dependencies:
     to-regex-range "^5.0.1"
 
+fps-stats@^0.2.6:
+  version "0.2.6"
+  resolved "https://registry.npmmirror.com/fps-stats/-/fps-stats-0.2.6.tgz#3e14b731aa6a1e6006e43fabc6bd94ccd054b0f0"
+  integrity sha512-LN+Z2YBmSXuTeSq/NLb/QjuuGk9snr1kn+/t4Pi0wwX8Hvx8PDd/MDIRrgRMNkQHfg2mIdhGvl/pYFawKrzYBQ==
+  dependencies:
+    request-animation-frame-shim "^0.1.0"
+
 fraction.js@^4.2.0:
   version "4.2.0"
   resolved "https://registry.npmmirror.com/fraction.js/-/fraction.js-4.2.0.tgz#448e5109a313a3527f5a3ab2119ec4cf0e0e2950"
@@ -1527,9 +1539,9 @@ postcss-value-parser@^4.0.0, postcss-value-parser@^4.2.0:
   resolved "https://registry.npmmirror.com/postcss-value-parser/-/postcss-value-parser-4.2.0.tgz#723c09920836ba6d3e5af019f92bc0971c02e514"
   integrity sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==
 
-postcss@^8.0.9, postcss@^8.4.14:
+postcss@^8.0.9, postcss@^8.4.14, postcss@^8.4.21:
   version "8.4.21"
-  resolved "https://registry.npmmirror.com/postcss/-/postcss-8.4.21.tgz"
+  resolved "https://registry.npmmirror.com/postcss/-/postcss-8.4.21.tgz#c639b719a57efc3187b13a1d765675485f4134f4"
   integrity sha512-tP7u/Sn/dVxK2NnruI4H9BG+x+Wxz6oeZ1cJ8P6G/PZY0IKk4k/63TDsQf2kQq3+qoJeLm2kIBUNlZe3zgb4Zg==
   dependencies:
     nanoid "^3.3.4"
@@ -1540,15 +1552,6 @@ postcss@^8.1.10, postcss@^8.4.13:
   version "8.4.14"
   resolved "https://registry.npmmirror.com/postcss/-/postcss-8.4.14.tgz"
   integrity sha512-E398TUmfAYFPBSdzgeieK2Y1+1cpdxJx8yXbK/m57nRhKSmk1GB2tO4lbLBtlkfPQTDKfe4Xqv1ASWPpayPEig==
-  dependencies:
-    nanoid "^3.3.4"
-    picocolors "^1.0.0"
-    source-map-js "^1.0.2"
-
-postcss@^8.4.21:
-  version "8.4.21"
-  resolved "https://registry.npmmirror.com/postcss/-/postcss-8.4.21.tgz#c639b719a57efc3187b13a1d765675485f4134f4"
-  integrity sha512-tP7u/Sn/dVxK2NnruI4H9BG+x+Wxz6oeZ1cJ8P6G/PZY0IKk4k/63TDsQf2kQq3+qoJeLm2kIBUNlZe3zgb4Zg==
   dependencies:
     nanoid "^3.3.4"
     picocolors "^1.0.0"
@@ -1602,6 +1605,11 @@ regenerator-runtime@^0.13.4:
   version "0.13.9"
   resolved "https://registry.npmmirror.com/regenerator-runtime/-/regenerator-runtime-0.13.9.tgz"
   integrity sha512-p3VT+cOEgxFsRRA9X4lkI1E+k2/CtnKtU4gcxyaCUreilL/vqI6CdZ3wxVUx3UOUg+gnUOQQcRI7BmSI656MYA==
+
+request-animation-frame-shim@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.npmmirror.com/request-animation-frame-shim/-/request-animation-frame-shim-0.1.0.tgz#3ed31daec65c35047d9db6f203b3d13d3c70c7a6"
+  integrity sha512-ndiBnkDkZNlnEmIRrWNO2SNvXupsVxQWbnDcdzb7Yd3b1pzrfXezaMdBDvny/MtX45U1aaHrzGW7cyRjgdV33g==
 
 resize-observer-polyfill@^1.5.1:
   version "1.5.1"
