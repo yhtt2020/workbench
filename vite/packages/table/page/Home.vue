@@ -17,7 +17,7 @@
             "
           >
             <Timer></Timer>
-<!--            <Weather></Weather>-->
+            <Weather></Weather>
           </div>
 
 
