@@ -17,43 +17,44 @@
             "
           >
             <Timer></Timer>
-            <Weather></Weather>
+<!--            <Weather></Weather>-->
           </div>
 
 
           <!--          <Stock></Stock>-->
           <!--         <AddMore></AddMore>-->
-          <Stock></Stock>
-          <CustomTimer
-            v-if="customComponents.includes('calendar')"
-          ></CustomTimer>
-          <div
-            style="
-              display: flex;
-              flex-direction: column;
-              justify-content: space-between;
-              width: 21em;
-              white-space: pre-wrap;
-              vertical-align: text-top;
-              height: 30em;
-            "
-            v-if="
-              customComponents.includes('countdownDay小') ||
-              customComponents.includes('clock')
-            "
-          >
-            <SmallCountdownDay
-              style="height: 50%"
-              v-if="customComponents.includes('countdownDay小')"
-            ></SmallCountdownDay>
-            <Clock
-              v-if="customComponents.includes('clock')"
-              style="height: 50%"
-            ></Clock>
-          </div>
-          <CountdownDay
-            v-if="customComponents.includes('countdownDay大')"
-          ></CountdownDay>
+<!--          <Stock></Stock>-->
+<!--          <CustomTimer-->
+<!--            v-if="customComponents.includes('calendar')"-->
+<!--          ></CustomTimer>-->
+<!--          <div-->
+<!--            style="-->
+<!--              display: flex;-->
+<!--              flex-direction: column;-->
+<!--              justify-content: space-between;-->
+<!--              width: 21em;-->
+<!--              white-space: pre-wrap;-->
+<!--              vertical-align: text-top;-->
+<!--              height: 30em;-->
+<!--            "-->
+<!--            v-if="-->
+<!--              customComponents.includes('smallCountdownDay') ||-->
+<!--              customComponents.includes('clock')-->
+<!--            "-->
+<!--          >-->
+<!--            <SmallCountdownDay-->
+<!--              style="height: 50%"-->
+<!--              v-if="customComponents.includes('smallCountdownDay')"-->
+<!--            ></SmallCountdownDay>-->
+<!--            <Clock-->
+<!--              v-if="customComponents.includes('clock')"-->
+<!--              style="height: 50%"-->
+<!--            ></Clock>-->
+<!--          </div>-->
+<!--          <CountdownDay-->
+<!--            v-if="customComponents.includes('countdownDay')"-->
+<!--          ></CountdownDay>-->
+          <div v-for="(item,index) in customComponents"><component :is="item" :customIndex="index"></component></div>
 
           <AddMore></AddMore>
         </div>

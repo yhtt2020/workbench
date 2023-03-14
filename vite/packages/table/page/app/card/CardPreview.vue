@@ -4,27 +4,11 @@
       <a-button type="primary" style="background: transparent;border: none;position: absolute;top: 1%;right: 3%;font-size: 2em" @click="onBack">x</a-button>
       <div>{{cardType.cname}}</div>
       <div>{{cardType.detail}}</div>
-      <div class="card cartoon" style="height: auto;margin:0">
-        <div style="border-bottom: 1px solid #777777">
-          <a-calendar
-            v-model:value="value"
-            :fullscreen="false"
-          >
-            <template #headerRender="{}">
-              <div class="title">
-                <Icon
-                  icon="rili3"
-                  style="height: 1.3em; width: 1.3em; margin-right: 0.1em"
-                ></Icon>
-                日历
-              </div>
-            </template>
-          </a-calendar>
-        </div>
-        <a-row style="font-size: 1.2em; line-height: 2.2em">
-          <a-col :span="12"><Icon icon="jieriyingxiao"></Icon> 清明节</a-col>
-          <a-col :span="12">4月5日~4月5日</a-col></a-row
-        >
+      <div class="card" style="height: auto;margin:0">
+        <img v-if="cardType.name==='countdownDay'" src="../../../static/countdownDay.png" style="width: 100%;height: 100%" alt="">
+        <img v-if="cardType.name==='customTimer'" src="../../../static/customTimer.png" style="width: 100%;height: 100%" alt="">
+        <img v-if="cardType.name==='clock'" src="../../../static/clock.png" style="width: 100%;height: 100%" alt="">
+        <img v-if="cardType.name==='smallCountdownDay'" src="../../../static/smallCountdownDay.png" style="width: 100%;height: 100%" alt="">
       </div>
       <a-button type="primary" style="background: #2266D1;border: none" class="btn" @click="addCard()">添加</a-button>
     </a-card>
@@ -35,7 +19,7 @@
 <script>
 import {mapActions} from "pinia";
 import {tableStore} from "../../../store";
-
+import { message } from "ant-design-vue";
 export default {
   name: "CardPreview",
   props:{
@@ -55,7 +39,7 @@ export default {
       },
     addCard(){
       switch (this.cardType.name) {
-        case "calendar":
+        case "customTimer":
           this.addCustomComponents(this.cardType.name);
           this.$router.push({
             name: "home",
@@ -64,8 +48,10 @@ export default {
               cname: this.cardType.cname,
             },
           });
+          message.info("添加成功！");
           break;
         case "countdownDay":
+          this.addCustomComponents(this.cardType.name);
           this.$router.push({
             name: "addCardSetting",
             params: {
@@ -74,7 +60,18 @@ export default {
             },
           });
           break;
+        case "smallCountdownDay":
+          this.addCustomComponents(this.cardType.name);
+          this.$router.push({
+            name: "addCardSetting",
+            params: {
+              name: this.cardType.name,
+              cname: "倒数日",
+            },
+          });
+          break;
         case "clock":
+          this.addCustomComponents(this.cardType.name);
           this.$router.push({
             name: "addCardSetting",
             params: {

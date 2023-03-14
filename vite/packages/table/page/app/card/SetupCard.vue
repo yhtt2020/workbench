@@ -9,18 +9,7 @@
   <div class="card content" v-if="cardType === 'countdownDay'">
     <a-row>
       <a-col :span="10" style="border-right: 1px solid #454545; height: 100vh">
-        <a-row> <a-col>卡片样式 </a-col></a-row>
-        <a-row>
-          <a-col>
-            <a-radio-group
-              v-model:value="countdownDayType"
-              button-style="solid"
-            >
-              <a-radio-button value="大">大</a-radio-button>
-              <a-radio-button value="小">小</a-radio-button>
-            </a-radio-group>
-          </a-col></a-row
-        >
+
         <a-row> <a-col>事件名字 </a-col></a-row>
         <a-row>
           <a-col>
@@ -76,6 +65,82 @@
                           item.dateValue.month +
                           "-" +
                           item.dateValue.day
+                      )
+                    }}天
+                  </div>
+                </div>
+
+                <template #overlay>
+                  <a-menu @click="(e) => onContextMenuClick(e, index)">
+                    <a-menu-item key="1">删除</a-menu-item>
+                  </a-menu>
+                </template>
+              </a-dropdown>
+            </div>
+          </a-row></vue-custom-scrollbar
+        >
+      </a-col>
+    </a-row>
+  </div>
+  <div class="card content" v-if="cardType === 'smallCountdownDay'">
+    <a-row>
+      <a-col :span="10" style="border-right: 1px solid #454545; height: 100vh">
+
+        <a-row> <a-col>事件名字 </a-col></a-row>
+        <a-row>
+          <a-col>
+            <a-input v-model:value="eventValue" placeholder="请输入"
+            /></a-col>
+        </a-row>
+        <a-row> <a-col>日期 </a-col></a-row>
+        <a-row>
+          <div class="button">
+            <a-date-picker
+              v-model:value="dateValue"
+              :disabled-date="
+                (current) => {
+                  return current && current < dayjs().endOf('day');
+                }
+              "
+            />
+            <a-button type="primary" @click="addCard">添加</a-button>
+          </div>
+        </a-row>
+      </a-col>
+      <a-col :span="14">
+        <a-row>
+          <a-col> 已添加的{{ title }}</a-col></a-row
+        >
+        <vue-custom-scrollbar
+          :settings="outerSettings"
+          style="position: relative; height: calc(100vh - 20em)"
+          class="scroll"
+        >
+          <a-row class="list">
+            <div
+              class="event-list"
+              v-for="(item, index) in countdownDay"
+              style="background-color: #3b3b3b"
+            >
+              <a-dropdown :trigger="['contextmenu']">
+                <div class="card-list">
+                  <div class="event-title">
+                    <span class="text-more">{{ item.eventValue }}</span>
+                    <span class="event"
+                    >{{ item.dateValue.year }}年{{ item.dateValue.month }}月{{
+                        item.dateValue.day
+                      }}日</span
+                    >
+                  </div>
+                  <div>
+                    {{
+                      transDate(
+                        appDate.year + "-" + appDate.month + "-" + appDate.day,
+                        item.dateValue.year +
+                        "-" +
+                        item.dateValue.month +
+                        "-" +
+                        item.dateValue.day
                       )
                     }}天
                   </div>
@@ -223,9 +288,6 @@ export default {
         }, 500);
         return;
       }
-      this.addCustomComponents(
-        this.$route.params["name"] + this.countdownDayType
-      );
       this.addCountdownDay({
         eventValue: this.eventValue,
         dateValue: timeStamp(this.dateValue.valueOf()),
@@ -233,6 +295,7 @@ export default {
       this.$router.push({
         name: "home",
       });
+      message.info("添加成功！");
     },
     addSettingClock() {
       if (this.eventValue === "" || this.clockDate === null) {
@@ -249,10 +312,10 @@ export default {
         eventValue: this.eventValue,
         dateValue: timeStamp(this.clockDate.valueOf()),
       });
-      this.addCustomComponents(this.$route.params["name"]);
       this.$router.push({
         name: "home",
       });
+      message.info("添加成功！");
     },
     onContextMenuClick(e, index) {
       this.removeCountdownDay(index);

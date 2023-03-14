@@ -36,6 +36,10 @@
       </div>
     </template></a-modal
   >
+  <audio controls="controls"  ref="audio" style="display: none">
+    <source src="./static/13227.mp3" type="audio/ogg">
+  </audio>
+
 </template>
 
 <script lang="ts">
@@ -62,6 +66,8 @@ export default {
       touchUpRoutes: ["home", "lock"], //支持下滑的页面的白名单
       locale: zhCN,
       visible: false,
+      dialogVisible: false,
+      aaa:'./13227.mp3'
     };
   },
   async mounted() {
@@ -75,6 +81,7 @@ export default {
     }
     this.bindTouchEvents();
     this.reloadAll(); //刷新全部天气
+
   },
 
   computed: {
@@ -135,8 +142,11 @@ export default {
     handleOk() {
     this.visible = false;
     this.removeClock(0);
-    console.log(123);
+      this.$refs.audio.pause();
+      this.$refs.audio.currentTime = 0;
   },
+
+
   },watch: {
     "appDate.minutes": {
       handler(newVal, oldVal) {
@@ -146,6 +156,7 @@ export default {
             this.appDate.hours === this.clockEvent[0].dateValue.hours
           ) {
             this.visible = true;
+            this.$refs.audio.play();
           }
         } catch (err) {
 
