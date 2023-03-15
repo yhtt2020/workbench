@@ -71,6 +71,12 @@
         </div>
       </a-col>
       <a-col v-if="menuType==='item'">
+        <div  @click="edit()" class="btn">
+          <Icon style="font-size: 3em" icon="shenqing"></Icon>
+          <div>编辑按钮</div>
+        </div>
+      </a-col>
+      <a-col v-if="menuType==='item'">
         <div  @click="remove()" class="btn">
           <Icon style="font-size: 3em" icon="shanchu"></Icon>
           <div>删除按钮</div>
@@ -152,7 +158,7 @@
     wrap-class-name="lg-modal"
     :footer="null"
   >
-    <DeckAdd @add="doAdd"></DeckAdd>
+    <DeckAdd :data="this.currentItem" @add="doAdd"></DeckAdd>
   </a-modal>
 
   <Prompt @cancel="this.visiblePromptTitle=false" content="请输入分组标题" title="编辑组标题" placeholder="输入标题" :visible="visiblePromptTitle" @change-value="changeTitle"></Prompt>
@@ -337,7 +343,12 @@ export default {
       })
 
     },
+    edit(){
+      this.addKey=Date.now()
+      this.visibleAdd = true
+    },
     add () {
+      this.currentItem=undefined
       this.addKey=Date.now()
       this.visibleAdd = true
      // this.currentGrid.card(document.getElementById('newItem').cloneNode(true))
@@ -375,32 +386,17 @@ export default {
     doAdd (button) {
       this.visibleAdd = false
       this.menuVisible = false
-      this.newItem = button
-
-      this.$refs['grid'+this.currentGridId][0].update()
-      this.currentGrid.children.push(this.newItem)
-
-      // this.grids[this.currentGridId].children.shift({
-      //   icon: button.icon,
-      //   cover: '',
-      //   title: button.title,
-      //   fn: button.fn,
-      //   id: button.id
-      // })
-      // console.log(this.$refs)
-      // let refs=this.$refs['grid'+this.currentGridId]
-      // console.log(refs,'refs',refs[0],'refs0')
-      //
-      // let grid=refs[0]
-      // this.$nextTick(()=>{
-      //   grid.handleAdd(this.newItem)
-      // })
-
-      // this.currentGrid.card(document.getElementById(button.id))
-      // this.$nextTick(() => {
-      //   this.currentGrid.refreshItems()
-      // })
-      message.success('添加按钮成功')
+      if(!this.currentItem){
+        this.newItem = button
+        this.$refs['grid'+this.currentGridId][0].update()
+        this.currentGrid.children.push(this.newItem)
+        message.success('添加按钮成功')
+      }else{
+        Object.keys(this.currentItem).forEach(key=>{
+          this.currentItem[key]=button[key]
+        })
+        message.success('修改按钮成功')
+      }
     }
   }
 }
