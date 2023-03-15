@@ -1,5 +1,5 @@
 <template>
-  <div class="card  content half" v-if="time.hours" style="display: flex;flex-direction: column;justify-content: space-between;height: 50%">
+  <div class="card  content half" v-if="countDowntime.hours" style="display: flex;flex-direction: column;justify-content: space-between;height: 50%">
     <Icon
       style="width: 1.5em; height: 1.5em;cursor:pointer"
       icon="gengduo1"
@@ -7,7 +7,7 @@
       @click="showDrawer"
     ></Icon>
     <div style="text-align: center; font-size: 1.5em">计时</div>
-    <div style="color: #FBAE17;font-size: 4em;font-weight:bolder"> {{time.hours+":" +time.minutes+":"+time.seconds}}</div>
+    <div style="color: #FBAE17;font-size: 4em;font-weight:bolder"> {{countDowntime.hours+":" +countDowntime.minutes+":"+countDowntime.seconds}}</div>
    <div style="display: flex;align-items: center;justify-content: space-between;padding: 0 6em;" >
      <Icon
        style="width: 3em; height: 3em;cursor:pointer;color: #FBAE17"
@@ -143,7 +143,7 @@ export default {
   },
   computed: {
     ...mapWritableState(tableStore, ["appDate", "clockEvent"]),
-    ...mapWritableState(countDownStore, ["countDowndate","time","countDownBtn"]),
+    ...mapWritableState(countDownStore, ["countDowndate","countDowntime","countDownBtn"]),
   },
 
   methods: {

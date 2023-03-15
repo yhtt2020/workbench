@@ -9,16 +9,36 @@
     </div>
 
   </div>
+  <div class=" card half count-downtime" v-if="countDowntime.hours">
+    <div class="left-time"> <Icon
+      style="width: 3em; height: 3em;cursor:pointer;color: #FBAE17"
+      icon="zanting"
+      @click="closeCountDown" v-show="!countDownBtn"
+    ></Icon>
+      <Icon
+        style="width: 3em; height: 3em;cursor:pointer;color: #FBAE17"
+        icon="bofang"
+        @click="startCountDown" v-show="countDownBtn"
+      ></Icon>
+      <Icon
+        style="width: 2em; height: 2em;cursor:pointer"
+        icon="guanbi1"
+        @click="deleteCountDown"
+      ></Icon></div>
+    <div class="right-time">
+      <span style="color: #FBAE17;text-align: center; font-size: 1.5em;margin-right: 1em">计时</span>
+      <span style="color: #FBAE17;font-size: 4em;font-weight:bolder"> {{countDowntime.hours+":" +countDowntime.minutes+":"+countDowntime.seconds}}</span>
+    </div>
 
+  </div>
 </template>
 
 <script>
 import Spotlight from 'spotlight.js'
-import { appStore } from '../store'
-import {mapState} from 'pinia'
+import {appStore, countDownStore} from '../store'
+import {mapActions, mapState, mapWritableState} from 'pinia'
 import { message } from 'ant-design-vue'
 import { paperStore } from '../store/paper'
-
 export default {
   name: 'Lock',
   data () {
@@ -61,9 +81,11 @@ export default {
     clearInterval(this.timer)
   },
   computed:{
-    ...mapState(paperStore,['myPapers','settings','activePapers'])
+    ...mapState(paperStore,['myPapers','settings','activePapers']),
+    ...mapWritableState(countDownStore, ["countDowndate","countDowntime","countDownBtn"]),
   },
   methods: {
+    ...mapActions(countDownStore,["setCountDown","stopCountDown","openCountDown","dCountDown"]),
     enterGallery(){
       window.Spotlight.close()
       this.$router.replace({
@@ -127,12 +149,21 @@ export default {
         title: false,
         onclose:()=>{this.enter(false)}
       })
-    }
+    },
+    closeCountDown(){
+      this.stopCountDown();
+    },
+    startCountDown(){
+      this.openCountDown();
+    },
+    deleteCountDown(){
+      this.dCountDown()
+    },
   }
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .time {
   font-size: 1.5em;
   color: white;
@@ -147,5 +178,27 @@ export default {
   /*background: rgba(0, 0, 0, 0.3);*/
   padding: 1em;
   border-radius: 2em;
+}
+.count-downtime{
+  display: flex;
+  flex-direction: row;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%);
+  align-items: center;
+  justify-content:space-between ;
+  height: 15%;
+  width: 30em;
+  z-index: 99999999999999999;
+  .left-time{
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .right-time{
+    flex: 3;
+  }
 }
 </style>

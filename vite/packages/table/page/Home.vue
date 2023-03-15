@@ -20,48 +20,16 @@
             <Weather></Weather>
           </div>
 
-
-          <!--          <Stock></Stock>-->
-          <!--         <AddMore></AddMore>-->
-<!--          <Stock></Stock>-->
-<!--          <CustomTimer-->
-<!--            v-if="customComponents.includes('calendar')"-->
-<!--          ></CustomTimer>-->
-<!--          <div-->
-<!--            style="-->
-<!--              display: flex;-->
-<!--              flex-direction: column;-->
-<!--              justify-content: space-between;-->
-<!--              width: 21em;-->
-<!--              white-space: pre-wrap;-->
-<!--              vertical-align: text-top;-->
-<!--              height: 30em;-->
-<!--            "-->
-<!--            v-if="-->
-<!--              customComponents.includes('smallCountdownDay') ||-->
-<!--              customComponents.includes('clock')-->
-<!--            "-->
-<!--          >-->
-<!--            <SmallCountdownDay-->
-<!--              style="height: 50%"-->
-<!--              v-if="customComponents.includes('smallCountdownDay')"-->
-<!--            ></SmallCountdownDay>-->
-<!--            <Clock-->
-<!--              v-if="customComponents.includes('clock')"-->
-<!--              style="height: 50%"-->
-<!--            ></Clock>-->
-<!--          </div>-->
-<!--          <CountdownDay-->
-<!--            v-if="customComponents.includes('countdownDay')"-->
-<!--          ></CountdownDay>-->
-<!--          <div v-for="(item,index) in customComponents"></div>-->
-          <vuuri  :drag-enabled="editing"  ref="grid"  class="grid"  item-key="id"
-                 :get-item-width="getIconSize" :get-item-height="getIconSize"
-                 v-model="customComponents"  >
-            <template #item="{ item }">
+          <div v-for="(item,index) in customComponents">
             <component :is="item" :customIndex="index"></component>
-            </template>
-          </vuuri>
+          </div>
+<!--          <vuuri  :drag-enabled="false"  ref="grid"  class="grid"  item-key="id"-->
+<!--                 :get-item-width="getIconSize" :get-item-height="getIconSize"-->
+<!--                 v-model="customComponents"  >-->
+<!--            <template #item="{ item }">-->
+<!--            <component :is="item" :customIndex="index"></component>-->
+<!--            </template>-->
+<!--          </vuuri>-->
           <AddMore></AddMore>
         </div>
       </div>
