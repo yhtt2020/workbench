@@ -164,6 +164,18 @@ let ActionGroups = [
             type: 'textarea',
           }
         ]
+      },
+      {
+        name:'svcmd',
+        title:'执行SoundVolume命令',
+        summary:'执行SoundVolumeView命令行工具，这个工具的音频设备操作能力比nircmd更强，可<a target="_blank" href="https://www.nirsoft.net/utils/sound_volume_view.html">参考此处</a>的命令。',
+        inputs: [
+          {
+            name: 'cm',
+            title: '参数，回车换行，每行参数会顺序执行',
+            type: 'textarea',
+          }
+        ]
       }
     ]
   }
