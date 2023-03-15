@@ -39,7 +39,7 @@ function autocompleteURL (input, url) {
   var possibleAutocompletions = [
     // we start with the domain, including any non-standard ports (such as localhost:8080)
     hostname + (urlObj.port ? ':' + urlObj.port : ''),
-    // if that doesn't match, try the hostname without the www instead. The regex requires a slash at the end, so we add one, run the regex, and then remove it
+    // if that doesn't match, try the hostname without the www instead. The regex requires a slash at the end, so we card one, run the regex, and then remove it
     (hostname + '/').replace(urlParser.startingWWWRegex, '$1').replace('/', ''),
     // then try the whole URL
     urlParser.prettyURL(url),

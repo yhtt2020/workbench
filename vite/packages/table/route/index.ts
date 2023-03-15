@@ -13,8 +13,8 @@ import Status from '../page/Status.vue'
 import Index from '../page/Index.vue'
 import Home from '../page/Home.vue'
 import Browser from '../page/settings/Browser.vue'
-import AddCard from "../page/app/add/AddCard.vue"
-import CardSetting from "../page/app/add/CardSetting.vue"
+import AddCard from "../page/app/card/AddCard.vue"
+import SetupCard from "../page/app/card/SetupCard.vue"
 import Sensor from '../page/Sensor.vue'
 export default   [{
   path: '',
@@ -108,7 +108,7 @@ export default   [{
     {
       path: "/setting",
       name: "addCardSetting",
-      component: CardSetting,
+      component: SetupCard,
     },
   ]
 }]

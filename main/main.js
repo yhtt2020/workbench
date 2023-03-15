@@ -569,7 +569,7 @@ app.on('second-instance', function(e, argv, workingDir) {
 			mainWindow.restore()
 		}
 		mainWindow.focus()
-		// add a tab with the new URL
+		// card a tab with the new URL
 		handleCommandLineArguments(argv)
 	}else{
     createWindow()

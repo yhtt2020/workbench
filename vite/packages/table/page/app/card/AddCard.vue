@@ -2,8 +2,8 @@
   <div class="title" style="height: 6em; width: 12em">
     <Icon
       style="
-        width: 5em;
-        height: 5em;
+        width: 3em;
+        height: 3em;
         margin-right: 10px;
         vertical-align: middle;
       "
@@ -19,7 +19,8 @@
         width: 12em;
         margin-bottom: 1em;
         padding: 1em;
-        margin: 1em;cursor:pointer
+        margin: 1em;
+        cursor:pointer;
       "
       v-for="item in cardList"
       :key="item.name"
@@ -29,7 +30,6 @@
         style="
           width: 5em;
           height: 5em;
-
           vertical-align: middle;
         "
         :icon="item.icon"
@@ -37,21 +37,22 @@
       {{ item.cname }}
     </div>
   </div>
-<!--  <CardDetail :cardType="cardType" v-if="show" @onBack="onBack"></CardDetail>-->
+  <CardPreview :cardType="cardType" v-if="show" @onBack="onBack"></CardPreview>
 </template>
 
 <script>
 import { mapActions } from "pinia";
 import { tableStore } from "../../../store";
-import CardDetail from "./CardDetail.vue";
+import CardPreview from "./CardPreview.vue";
 export default {
   name: "AddCard",
-  components:{CardDetail},
+  components:{CardPreview},
   data() {
     return {
       cardList: [
-        { name: "calendar", cname: "日历", icon: "rili3",detail:"追踪当月日期，查看临近节日" },
+        { name: "customTimer", cname: "日历", icon: "rili3",detail:"追踪当月日期，查看临近节日" },
         { name: "countdownDay", cname: "倒数日", icon: "rili2",detail:"设置你的纪念日、考试日等等" },
+        { name: "smallCountdownDay", cname: "小倒数日", icon: "rili2",detail:"设置你的纪念日、考试日等等" },
         { name: "clock", cname: "闹钟", icon: "naozhong",detail:"设置你的闹钟" },
       ],
       cardType:{},
@@ -65,36 +66,39 @@ export default {
     ...mapActions(tableStore, ["addCustomComponents"]),
     addAssembly(item) {
       switch (item.name) {
-        case "calendar":
+        case "customTimer":
           this.cardType=this.cardList[0];
-          this.addCustomComponents(item.name);
-          this.$router.push({
-            name: "home",
-            params: {
-              name: item.name,
-              cname: item.cname,
-            },
-          });
+          // this.addCustomComponents(item.name);
+          // this.$router.push({
+          //   name: "home",
+          //   params: {
+          //     name: item.name,
+          //     cname: item.cname,
+          //   },
+          // });
           break;
         case "countdownDay":
           this.cardType=this.cardList[1];
-          this.$router.push({
-            name: "addCardSetting",
-            params: {
-              name: item.name,
-              cname: item.cname,
-            },
-          });
+          // this.$router.push({
+          //   name: "addCardSetting",
+          //   params: {
+          //     name: item.name,
+          //     cname: item.cname,
+          //   },
+          // });
+          break;
+        case "smallCountdownDay":
+          this.cardType=this.cardList[2];
           break;
         case "clock":
-          this.cardType=this.cardList[2];
-          this.$router.push({
-            name: "addCardSetting",
-            params: {
-              name: item.name,
-              cname: item.cname,
-            },
-          });
+          this.cardType=this.cardList[3];
+          // this.$router.push({
+          //   name: "addCardSetting",
+          //   params: {
+          //     name: item.name,
+          //     cname: item.cname,
+          //   },
+          // });
           break;
       }
       this.show=true;

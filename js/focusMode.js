@@ -19,7 +19,7 @@ ipc.on('exitFocusMode', function () {
 
 // ipc.on('enterFirstGuide',()=>{
 //   isFocusMode = true
-//   document.body.classList.add('is-focus-mode')
+//   document.body.classList.card('is-focus-mode')
 //   isFirstGuideMode = true
 // })
 

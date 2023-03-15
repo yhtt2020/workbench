@@ -13859,7 +13859,7 @@
    * Creates a set object of `values`.
    *
    * @private
-   * @param {Array} values The values to add to the set.
+   * @param {Array} values The values to card to the set.
    * @returns {Object} Returns the new set.
    */
   var createSet$1 = !(Set$1 && (1 / setToArray$1(new Set$1([,-0]))[1]) == INFINITY) ? noop : function(values) {
@@ -24907,7 +24907,7 @@
    *  @param rule The validation rule.
    *  @param value The value of the field on the source object.
    *  @param source The source object being validated.
-   *  @param errors An array of errors that this rule may add
+   *  @param errors An array of errors that this rule may card
    *  validation errors to.
    *  @param options The validation options.
    *  @param options.messages The validation messages.

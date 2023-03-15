@@ -6996,7 +6996,7 @@
     el.plain = false;
   }
 
-  // add a raw attr (use this in preTransforms)
+  // card a raw attr (use this in preTransforms)
   function addRawAttr (el, name, value, range) {
     el.attrsMap[name] = value;
     el.attrsList.push(rangeSetItem({ name: name, value: value }, range));
@@ -10248,7 +10248,7 @@
               );
             }
           }
-          // add the component's children to its default slot
+          // card the component's children to its default slot
           var slots = el.scopedSlots || (el.scopedSlots = {});
           var ref$1 = getSlotName(slotBinding$1);
           var name$1 = ref$1.name;
@@ -10564,7 +10564,7 @@
           exp: branch0.if,
           block: branch0
         });
-        // 2. add radio else-if condition
+        // 2. card radio else-if condition
         var branch1 = cloneASTElement(el);
         getAndRemoveAttr(branch1, 'v-for', true);
         addRawAttr(branch1, 'type', 'radio');

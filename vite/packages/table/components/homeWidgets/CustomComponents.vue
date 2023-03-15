@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     onPanelChange(value, mode) {
-      console.log(value, mode);
+
     },
   },
 };

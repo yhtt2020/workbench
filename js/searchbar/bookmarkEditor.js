@@ -103,7 +103,7 @@ const bookmarkEditor = {
           places.toggleTag(bookmarkEditor.currentInstance.bookmark.url, tag)
         }))
       })
-      // add option for new tag
+      // card option for new tag
       var newTagInput = document.createElement('input')
       newTagInput.className = 'tag-input'
       newTagInput.placeholder = l('bookmarksAddTag')

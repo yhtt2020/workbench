@@ -2,10 +2,10 @@ const baseApi = require('./baseApi.js')
 
 const url = {
   userNavs: '/app/browser/appUserList/list',
-  addUserApp: '/app/browser/myApps/add',
+  addUserApp: '/app/browser/myApps/card',
 
   groupList: '/app/browser/group/list',
-  addGroupApp: '/app/browser/groupApps/add',
+  addGroupApp: '/app/browser/groupApps/card',
 }
 const navbarApi = {
   async getUserNavs () {

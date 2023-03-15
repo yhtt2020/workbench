@@ -757,7 +757,7 @@ Readability.prototype = {
 
   /**
    * Initialize a node with the readability object. Also checks the
-   * className/id for special names to add to its score.
+   * className/id for special names to card to its score.
    *
    * @param Element
    * @return void
@@ -982,7 +982,7 @@ Readability.prototype = {
 
       /**
        * Loop through all paragraphs, and assign a score to them based on how content-y they look.
-       * Then add their score to their parent node.
+       * Then card their score to their parent node.
        *
        * A score is determined by things like number of commas, class names, etc. Maybe eventually link density.
       **/
@@ -1009,7 +1009,7 @@ Readability.prototype = {
         // Add points for any commas within this paragraph.
         contentScore += innerText.split(",").length;
 
-        // For every 100 characters in this paragraph, add another point. Up to 3 points.
+        // For every 100 characters in this paragraph, card another point. Up to 3 points.
         contentScore += Math.min(Math.floor(innerText.length / 100), 3);
 
         // Initialize and score ancestors.
