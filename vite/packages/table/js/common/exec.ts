@@ -1,3 +1,4 @@
+import {arch} from "process";
 
 const {exec} = require('child_process')
 let workerProcess
@@ -54,6 +55,10 @@ export async function runExec(cmdStr, cmdPath) {
 
 }
 
+export async function runSoundVolume(cmd){
+  let path = getResPathJoin('nir', 'SoundVolumeView.exe')
+  return await runExec(`"${path}" ` + cmd, undefined)
+}
 
 /**
  * 运行nircmd

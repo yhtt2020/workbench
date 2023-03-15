@@ -1,7 +1,9 @@
-import {getResPath} from "../../common/exec";
-const  path =require('path');
+import {getResPath, getResPathJoin} from "../../common/exec";
+const  path = require('path');
 const { exec, ChildProcess } =require('child_process');
 
+//此类将外部的一个项目提取到了项目当中，进行了简化，防止这个包打包之后因为路径问题而无法使用。
+//https://github.com/JosephusPaye/win-audio-outputs
 
 interface CommandOutput {
   /**
@@ -61,7 +63,7 @@ export interface AudioOutput {
  * The path to the binary directory, where the executables are.
  */
 //const binDir = path.join(__dirname, '..', 'bin');
-const binDir=getResPath()
+const binDir=getResPathJoin('nir')
 /**
  * A Promise wrapper around child_process.exec()
  */
