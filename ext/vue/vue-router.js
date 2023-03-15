@@ -1567,7 +1567,7 @@
       // $flow-disable-line
       createRouteMap([route || parentOrRoute], pathList, pathMap, nameMap, parent);
 
-      // add aliases of parent
+      // card aliases of parent
       if (parent && parent.alias.length) {
         createRouteMap(
           // $flow-disable-line route is defined if parent is

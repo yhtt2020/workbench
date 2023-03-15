@@ -151,7 +151,7 @@ function getBangSearchResults (text, input, event) {
       })
   } else {
     resultsPromise = new Promise(function (resolve, reject) {
-      // autocomplete doesn't work if we attempt to autocomplete at the same time as the key is being pressed, so add a small delay (TODO fix this)
+      // autocomplete doesn't work if we attempt to autocomplete at the same time as the key is being pressed, so card a small delay (TODO fix this)
       setTimeout(function () {
         resolve([])
       }, 0)
@@ -201,7 +201,7 @@ function initialize () {
       var bang = getCustomBang(url)
 
       if ((!bang || !bang.isAction) && url.split(' ').length === 1 && !url.endsWith(' ')) {
-        // the bang is non-custom or a custom bang that requires search text, so add a space after it
+        // the bang is non-custom or a custom bang that requires search text, so card a space after it
         tabEditor.show(tabs.getSelected(), url + ' ')
         return true
       } else if (bang) {

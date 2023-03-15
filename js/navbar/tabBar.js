@@ -683,7 +683,7 @@ const tabBar = {
     // }
   },
   updateAll: function () {
-    const addBtnWrapper = document.getElementById('add-btn-wrapper')
+    const addBtnWrapper = document.getElementById('card-btn-wrapper')
     empty(tabBar.containerInner)
 
     tabBar.tabElementMap = {}
@@ -754,7 +754,7 @@ const tabBar = {
       slideFactorX: 25,
       slideFactorY: 25,
       invalid: function (el, handle) {
-        return el.id === 'add-btn-wrapper'
+        return el.id === 'card-btn-wrapper'
       },
       accepts: function (el, target, source, sibling) {
         return !(sibling === null)

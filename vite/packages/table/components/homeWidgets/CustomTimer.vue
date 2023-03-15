@@ -13,7 +13,14 @@
               style="height: 1.3em; width: 1.3em; margin-right: 0.1em"
             ></Icon>
             日历
+            <Icon
+            style="width: 1em; height: 1em;cursor:pointer;position: absolute;right: 0.5em"
+            icon="gengduo1"
+            class="title-icon"
+            @click="showDrawer"
+          ></Icon>
           </div>
+
         </template>
       </a-calendar>
     </div>
@@ -22,19 +29,61 @@
       <a-col :span="12">4月5日~4月5日</a-col></a-row
     >
   </div>
+  <a-drawer
+    :contentWrapperStyle="{ padding:10,marginLeft:'2.5%',
+    backgroundColor:'#1F1F1F',width: '95%',height:'11em',borderRadius:'5%'}"
+    :width="120"
+    :height="120"
+    class="drawer"
+    :closable="false"
+    placement="bottom"
+    :visible="visible"
+    @close="onClose"
+  >
+      <div class="option" @click="removeCalendar"><Icon
+        style="
+        width: 3em;
+        height: 3em;
+        vertical-align: middle;
+      "
+        icon="guanbi2"
+      ></Icon>删除</div>
+
+  </a-drawer>
 </template>
 
 <script>
+import {mapActions} from "pinia";
+import {tableStore} from "../../store";
+
 export default {
   name: "CustomTimer",
+  props:{
+    customIndex:{
+      type:Number,
+      default:0
+    }
+  },
   data() {
     return {
       status: "pause",
       value: null,
+      visible:false
     };
   },
   methods: {
     onPanelChange(value, mode) {},
+    ...mapActions(tableStore, ["removeCustomComponents"]),
+    showDrawer()  {
+      this.visible = true;
+    },
+    onClose() {
+      this.visible = false;
+    },
+    removeCalendar(){
+      this.removeCustomComponents(this.customIndex)
+      this.visible = false;
+    }
   },
 };
 </script>
@@ -65,6 +114,8 @@ export default {
 }
 .title {
   background: #363739;
+  font-size: 1.5em;
+  position: relative;
 }
 
 :deep(
@@ -80,5 +131,17 @@ export default {
   border: 1px solid red;
   border-radius: 100%;
   content: "";
+}
+.option{
+  background: #161616;
+  width: 8em;
+  height:100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10%;
+  margin-left: 1.8em;
+  cursor:pointer
 }
 </style>

@@ -84,7 +84,7 @@ const api = {
       AUTO_LOGIN: '/autologin',   //短说免登跳转路由
       CIRCLE: '/forum',    //短说圈子主页
       CIRCLE_SETTING: '/user/create-edit-forum', //短说圈子设置
-      CIRCLE_ADD_USER: '/user/add-user', //短说圈子添加成员
+      CIRCLE_ADD_USER: '/user/card-user', //短说圈子添加成员
       CIRCLE_INVITELINK : '/user/invite-link', //短说圈子邀请链接
     },
     group: {

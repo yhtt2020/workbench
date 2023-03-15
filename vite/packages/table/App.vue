@@ -36,6 +36,9 @@
       </div>
     </template></a-modal
   >
+  <audio controls="controls"  ref="clock" style="display: none">
+    <source src="./static/alarmClock.mp3" type="audio/ogg">
+  </audio>
 </template>
 
 <script lang="ts">
@@ -62,6 +65,7 @@ export default {
       touchUpRoutes: ["home", "lock"], //支持下滑的页面的白名单
       locale: zhCN,
       visible: false,
+      dialogVisible: false,
     };
   },
   async mounted() {
@@ -136,8 +140,11 @@ export default {
     handleOk() {
     this.visible = false;
     this.removeClock(0);
-    console.log(123);
+      this.$refs.clock.pause();
+      this.$refs.clock.currentTime = 0;
   },
+
+
   },watch: {
     "appDate.minutes": {
       handler(newVal, oldVal) {
@@ -147,6 +154,7 @@ export default {
             this.appDate.hours === this.clockEvent[0].dateValue.hours
           ) {
             this.visible = true;
+            this.$refs.clock.play();
           }
         } catch (err) {
 

@@ -135,7 +135,7 @@ const searchbarPlugins = {
   },
 
   register: function (name, object) {
-    // add the container
+    // card the container
     var container = document.createElement('div')
     container.classList.add('searchbar-plugin-container')
     container.setAttribute('data-plugin', name)

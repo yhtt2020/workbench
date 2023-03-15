@@ -9,7 +9,7 @@ var toolbar = require('toolbar/toolbar.js')
 const tabEditor = {
   container: document.getElementById('tab-editor'),
   input: document.getElementById('tab-editor-input'),
-  addButton: document.getElementById('add-btn-wrapper'),
+  addButton: document.getElementById('card-btn-wrapper'),
   tabsEl: document.getElementById('tabs'),
   star: null,
 

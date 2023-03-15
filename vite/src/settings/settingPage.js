@@ -238,7 +238,7 @@ const settingPage = {
                 value.contentTypes = []
               }
 
-              if (e.target.checked) { // add the item to the array
+              if (e.target.checked) { // card the item to the array
                 value.contentTypes.push(contentTypes[contentType])
               } else { // remove the item from the array
                 var idx = value.contentTypes.indexOf(contentTypes[contentType])
@@ -449,7 +449,7 @@ const settingPage = {
         searchEngineDropdown.appendChild(item)
       }
 
-      // add custom option
+      // card custom option
       item = document.createElement('option')
       item.textContent = '自定义'
       item.setAttribute('id','searchEngine_custom')

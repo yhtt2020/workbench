@@ -489,7 +489,7 @@ function matchOptions (filterOptions, input, contextParams, currentHost) {
 // easylist includes many filters with the same data and set of options, but that apply to different domains
 // as long as all the options except the domain list are the same, they can be merged
 // this is currently only used for leftAnchored, since that seems to be the only place where it makes a difference
-// note: must add check here when adding support for new options
+// note: must card check here when adding support for new options
 function maybeMergeDuplicateOptions (opt1, opt2) {
   if (opt1 === opt2) {
     return opt1
@@ -555,7 +555,7 @@ function parse (input, parserData, callback, options = {}) {
           object = parserData
         }
 
-        // add the filters to the appropriate category
+        // card the filters to the appropriate category
         if (parsedFilterData.leftAnchored) {
           if (parsedFilterData.rightAnchored) {
             object.bothAnchored.push(parsedFilterData)
@@ -565,7 +565,7 @@ function parse (input, parserData, callback, options = {}) {
         } else if (parsedFilterData.rightAnchored) {
           object.rightAnchored.addReverse(parsedFilterData.data, parsedFilterData.options)
         } else if (parsedFilterData.hostAnchored) {
-          /* add the filters to the object based on the last 6 characters of their domain.
+          /* card the filters to the object based on the last 6 characters of their domain.
             Domains can be just 5 characters long: the TLD is at least 2 characters,
             the . character adds one more character, and the domain name must be at least two
             characters long. However, slicing the last 6 characters of a 5-character string
