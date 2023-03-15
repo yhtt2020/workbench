@@ -723,13 +723,17 @@ class WindowManager {
       viewOption = {}
     }
     viewOption.windowOption = Object.assign(this.defaultViewPreferences, viewOption)
-    webPreferences.additionalArguments = [
+    if(!webPreferences.additionalArguments){
+      //不存在addtionalArguments则初始化一个空
+      webPreferences.additionalArguments=[]
+    }
+    webPreferences.additionalArguments = Object.assign([
       '--user-data-path=' + userDataPath,
       '--app-version=' + app.getVersion(),
       '--app-name=' + app.getName(),
       ...((isDevelopmentMode ? ['--development-mode'] : [])),
       '--name=' + name
-    ]
+    ],webPreferences.additionalArguments)
     let view = new BrowserView({
       webPreferences
     })
