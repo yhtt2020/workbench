@@ -29,7 +29,7 @@ export default {
     }
   },
   mounted() {
-    console.log(this.cardType)
+
   },
   methods:{
     ...mapActions(tableStore, ["addCustomComponents"]),

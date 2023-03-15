@@ -5,7 +5,7 @@
     <div style="width: auto;white-space: nowrap">
       <div style="width: 20em;display: inline-block" v-for="(grid,index) in grids">
         <h3 class="pointer" @click="showEditTitle(grid)">{{grid.title}}</h3>
-        <div  >
+        <div>
           <!--      <div style="min-height: 3em" @contextmenu.stop="showMenu(index)" :id="'board-'+board.id" class="grid"-->
           <!--           v-for="(board,index) in decks">-->
           <!--        <DeckItem :id="item.id" :item="item" v-for="item in board.children"></DeckItem>-->

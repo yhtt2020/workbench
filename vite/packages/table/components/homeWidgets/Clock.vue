@@ -63,60 +63,33 @@
     :visible="visible"
     @close="onClose"
   >
-
     <div style="display: flex;flex-direction: row;height: 100%">
       <div class="option" style="margin: 0" @click="onCountDown(3)"><Icon
-        style="
-        width: 3em;
-        height: 3em;
-        vertical-align: middle;
-      "
+        class="icon"
         icon="shijian3dian"
       ></Icon>3分钟</div>
       <div class="option" @click="onCountDown(10)"><Icon
-        style="
-        width: 3em;
-        height: 3em;
-        vertical-align: middle;
-      "
+        class="icon"
         icon="shijian3dian"
       ></Icon>10分钟</div>
       <div class="option"  @click="onCountDown(30)"><Icon
-        style="
-        width: 3em;
-        height: 3em;
-        vertical-align: middle;
-      "
+        class="icon"
         icon="shijian3dian"
       ></Icon>30分钟</div>
       <div class="option"  @click="onCountDown(300)"><Icon
-        style="
-        width: 3em;
-        height: 3em;
-        vertical-align: middle;
-      "
+        class="icon"
         icon="shijian3dian"
       ></Icon>自定义</div>
       <div class="option" @click="onSetup"><Icon
-      style="
-        width: 3em;
-        height: 3em;
-        vertical-align: middle;
-      "
+        class="icon"
       icon="shezhi1"
     ></Icon>设置</div>
       <div class="option" @click="removeClock"><Icon
-        style="
-        width: 3em;
-        height: 3em;
-        vertical-align: middle;
-      "
+        class="icon"
         icon="guanbi2"
       ></Icon>删除
-<!--        {{Math.floor(countDowndate / 1000 / 60 / 60 % 24)}}+":"+{{Math.floor( countDowndate / 1000 / 60 % 60)}}-->
-<!--        +":"+{{Math.floor( countDowndate / 1000 % 60)}}-->
-       </div></div>
-
+       </div>
+    </div>
   </a-drawer>
   <div v-show="custom" class="custom" >
     <div style=" background-color: rgba(0,0,0,0.7);
@@ -177,7 +150,7 @@ export default {
     ...mapActions(tableStore, ["removeCustomComponents"]),
     ...mapActions(countDownStore,["setCountDown","stopCountDown","openCountDown","dCountDown"]),
     onContextMenuClick(e) {
-      console.log(e);
+
     },
     showDrawer()  {
       this.visible = true;
@@ -211,12 +184,12 @@ export default {
     },closeCountDown(){
 
       this.stopCountDown();
-      console.log(this.countDownBtn)
+
     },
     startCountDown(){
 
       this.openCountDown();
-      console.log(this.countDownBtn)
+
     },
     deleteCountDown(){
       this.dCountDown()
@@ -265,7 +238,12 @@ export default {
   align-items: center;
   border-radius: 10%;
   margin-left: 1.8em;
-  cursor:pointer
+  cursor:pointer;
+  .icon{
+    width: 3em;
+    height: 3em;
+    vertical-align: middle;
+  }
 }
 .custom{
   background: #6a6a6a;

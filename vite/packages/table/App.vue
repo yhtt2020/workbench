@@ -36,10 +36,9 @@
       </div>
     </template></a-modal
   >
-  <audio controls="controls"  ref="audio" style="display: none">
-    <source src="./static/13227.mp3" type="audio/ogg">
+  <audio controls="controls"  ref="clock" style="display: none">
+    <source src="./static/sound.mp3" type="audio/ogg">
   </audio>
-
 </template>
 
 <script lang="ts">
@@ -67,7 +66,6 @@ export default {
       locale: zhCN,
       visible: false,
       dialogVisible: false,
-      aaa:'./13227.mp3'
     };
   },
   async mounted() {
@@ -142,8 +140,8 @@ export default {
     handleOk() {
     this.visible = false;
     this.removeClock(0);
-      this.$refs.audio.pause();
-      this.$refs.audio.currentTime = 0;
+      this.$refs.clock.pause();
+      this.$refs.clock.currentTime = 0;
   },
 
 
@@ -156,7 +154,7 @@ export default {
             this.appDate.hours === this.clockEvent[0].dateValue.hours
           ) {
             this.visible = true;
-            this.$refs.audio.play();
+            this.$refs.clock.play();
           }
         } catch (err) {
 

@@ -54,8 +54,14 @@
 <!--          <CountdownDay-->
 <!--            v-if="customComponents.includes('countdownDay')"-->
 <!--          ></CountdownDay>-->
-          <div v-for="(item,index) in customComponents"><component :is="item" :customIndex="index"></component></div>
-
+<!--          <div v-for="(item,index) in customComponents"></div>-->
+          <vuuri  :drag-enabled="editing"  ref="grid"  class="grid"  item-key="id"
+                 :get-item-width="getIconSize" :get-item-height="getIconSize"
+                 v-model="customComponents"  >
+            <template #item="{ item }">
+            <component :is="item" :customIndex="index"></component>
+            </template>
+          </vuuri>
           <AddMore></AddMore>
         </div>
       </div>
@@ -77,6 +83,7 @@ import Clock from "../components/homeWidgets/Clock.vue";
 import CountdownDay from "../components/homeWidgets/CountdownDay.vue";
 import { mapWritableState } from "pinia";
 import { tableStore } from "../store";
+import vuuri from '../components/vuuri/Vuuri.vue'
 export default {
   name: "Home",
   components: {
@@ -91,6 +98,7 @@ export default {
     SmallCountdownDay,
     Clock,
     CountdownDay,
+    vuuri
   },
 
   computed: {
@@ -105,12 +113,51 @@ export default {
     //   this.visible = true;
     // }
   },
+  methods: {
+    getIconSize(){
+      let width=80
+      switch(this.settings.iconSize){
+        case 'small':
+          width=40
+          break
+        case 'middle':
+          width=80
+          break
+        case 'large':
+          width=160
+          break
+        default:
+          width=80
+      }
+      return width +'px'
+    },},
+  watch:{
+    "customComponents": {
+      handler(newVal, oldVal) {
+        try {
+          this.$refs.grid.update()
+        }catch (e) {
 
-  methods: {},
+        }
+
+      },
+      deep: true,
+      immediate: true,
+    },
+  }
 };
 </script>
 
 <style scoped lang="scss">
-
+.grid {
+  position: relative;
+  width: 18em;
+  display: inline-block;
+  background: rgba(204, 204, 204, 0.3);
+  border: 5px solid transparent;
+  border-radius: 4px;
+  vertical-align: top;
+  margin: 1em;
+}
 
 </style>

@@ -240,43 +240,43 @@ export const countDownStore = defineStore(
         }
         this.countDowndate -=1000;
       }
-      fn();
+      this.regularTime();
       this.timer&&clearInterval(this.timer);
-       this.timer = setInterval(fn,1000)
+       this.timer = setInterval(this.regularTime,1000)
       this.countDownBtn = false
     },
       stopCountDown(){
        clearInterval(this.timer);
        this.countDownBtn=true
       },
-      openCountDown(){
-        let fn = ()=>{
-          if(this.countDowndate<=0){this.dCountDown()
-            return;}
+      regularTime(){
+        if(this.countDowndate<=0){this.dCountDown()
+          return;}
+        let h = parseInt(this.countDowndate / 1000 / 60 / 60 % 24)
+        let m = parseInt( this.countDowndate / 1000 / 60 % 60)
+        let s = parseInt( this.countDowndate / 1000 % 60)
 
-          let h = parseInt(this.countDowndate / 1000 / 60 / 60 % 24)
-          let m = parseInt( this.countDowndate / 1000 / 60 % 60)
-          let s = parseInt( this.countDowndate / 1000 % 60)
-
-          if(h<10){
-            this.time.hours = '0' + String(h)
-          }else {
-            this.time.hours = h
-          }
-          if (m < 10) {
-            this.time.minutes = "0" + String(m);
-          } else {
-            this.time.minutes = m;
-          }
-          if (s < 10) {
-            this.time.seconds = "0" + String(s);
-          } else {
-            this.time.seconds = s;
-          }
-          this.countDowndate -=1000;
+        if(h<10){
+          this.time.hours = '0' + String(h)
+        }else {
+          this.time.hours = h
         }
+        if (m < 10) {
+          this.time.minutes = "0" + String(m);
+        } else {
+          this.time.minutes = m;
+        }
+        if (s < 10) {
+          this.time.seconds = "0" + String(s);
+        } else {
+          this.time.seconds = s;
+        }
+        this.countDowndate -=1000;
+      },
+      openCountDown(){
+
         this.timer&&clearInterval(this.timer);
-        this.timer = setInterval(fn,1000);
+        this.timer = setInterval(this.regularTime,1000);
         this.countDownBtn=false;
       },
       dCountDown(){
