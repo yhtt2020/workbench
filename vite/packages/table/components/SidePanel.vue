@@ -50,7 +50,6 @@ export default {
             theme: 'transparent',
             name: 'todo',
             url: 'https://a.apps.vip/todo',
-            preload: 'app',
             background: true,
             node: true,
             security: true
