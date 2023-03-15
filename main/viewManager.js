@@ -553,16 +553,16 @@ ipc.on('callViewMethod', function (e, data) {
   if (result instanceof Promise) {
     result.then(function (result) {
       if (data.callId) {
-        mainWindow.webContents.send('async-call-result', { callId: data.callId, error: null, result })
+        sendIPCToMainWindow('async-call-result', { callId: data.callId, error: null, result },false)
       }
     })
     result.catch(function (error) {
       if (data.callId) {
-        mainWindow.webContents.send('async-call-result', { callId: data.callId, error, result: null })
+        sendIPCToMainWindow('async-call-result', { callId: data.callId, error, result: null },false)
       }
     })
   } else if (data.callId) {
-    mainWindow.webContents.send('async-call-result', { callId: data.callId, error, result })
+    sendIPCToMainWindow('async-call-result', { callId: data.callId, error, result },false)
   }
 })
 
