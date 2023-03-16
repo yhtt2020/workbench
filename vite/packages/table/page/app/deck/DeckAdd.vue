@@ -12,7 +12,7 @@
       <IconList @onSelect="setIcon"></IconList>
     </div>
     <div v-if="tab==='action'">
-      <DeckAction ref="_deckAction" @click="doAddAction"></DeckAction>
+      <DeckAction :data="editingAction" ref="_deckAction" @click="doAddAction"></DeckAction>
     </div>
 
     <div v-if="tab==='input'">
@@ -36,7 +36,10 @@
         </div>
         </div>
         <div style="text-align: center;margin-top: 1em;margin-right: 0">
-          <a-button type="primary" @click="doAdd" style="width: 8em">添加按钮</a-button>
+          <a-button v-if="!this.data" type="primary" @click="doAdd" style="width: 8em">添加按钮</a-button>
+          <a-button v-else type="primary" @click="doAdd">
+            保存按钮
+          </a-button>
         </div>
       </div>
       <div class="line-title">
@@ -82,11 +85,12 @@
       </div>
       <div class="line-title">功能</div>
       <div class="line">
-        <div :style="{'border-left-color':data.group.color}" v-for="(data,index) in actions" class="action">
+        <div  @click="editAction(data)" :style="{'border-left-color':data.group.color}" v-for="(data,index) in actions" class="action">
           {{ data.action.title}}
-           <Icon class="close-btn" @click="removeAction(index)"  style="font-size: 15px" icon="guanbi1"></Icon>
+           <Icon class="close-btn" @click.stop="removeAction(index)"  style="font-size: 15px" icon="guanbi1"></Icon>
         </div>
         <a-button @click="addAction" >添加</a-button>
+
       </div>
       <div></div>
     </div>
@@ -118,6 +122,9 @@ export default {
       actions: [],//功能
 
       id:0,
+
+      editingAction:{}//正在编辑中的action
+
     }
   },
   mounted () {
@@ -153,8 +160,17 @@ export default {
     removeAction(index){
       this.actions.splice(index,1)
     },
+    editAction(action){
+      this.tab='action'
+      this.editingAction=action
+      this.$nextTick(()=>{
+        this.$refs._deckAction.reset()
+
+      })
+    },
     addAction(){
       this.tab='action'
+      this.editingAction={}
       this.$nextTick(()=>{
         this.$refs._deckAction.reset()
       })
@@ -162,9 +178,21 @@ export default {
     },
     doAddAction(actionData){
       this.tab='input';
-      if(actionData){
-        this.actions.push(actionData)
+      if(this.editingAction){
+        if(actionData){
+         let foundIndex= this.actions.findIndex(a=>{
+            return a===this.editingAction
+          })
+          this.actions.splice(foundIndex,1)
+          this.actions.splice(foundIndex,0,actionData)
+          this.editingAction={}
+        }
+      }else{
+        if(actionData){
+          this.actions.push(actionData)
+        }
       }
+
     },
     setIcon (icon) {
       console.log(icon)

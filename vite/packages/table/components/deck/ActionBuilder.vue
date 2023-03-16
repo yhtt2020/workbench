@@ -65,6 +65,13 @@ export default {
     })
   },
   methods: {
+    setActionData(data){
+      this.current=data.name
+      let action = this.actions.find(ac => {
+        return ac.name === this.current
+      })
+      action.data=_.cloneDeep(data.args)
+    },
     getActionData () {
       let actionData = {}
       let action

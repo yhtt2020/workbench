@@ -84,13 +84,27 @@ export default {
       activeTab: 'cmd',
       resetActionBuilder:0,//用于重载组件
       actionGroups: ActionGroups,
+      actionData:{}//指令数据
     }
   },
+  props:['data'],
   emits:['click'],
   components: {ActionBuilder, BackBtn},
   computed: {},
   mounted() {
    this.reset()
+    if(this.data){
+      this.$nextTick(()=>{
+        this.activeTab=this.data.group.name
+        console.log(this.data.group.name)
+        this.$nextTick(()=>{
+          this.$refs[this.activeTab][0].setActionData(this.data)
+        })
+
+      })
+
+      //this.$refs[this.activeTab][0].setActionData(this.data)
+    }
   },
   methods: {
     reset(){
