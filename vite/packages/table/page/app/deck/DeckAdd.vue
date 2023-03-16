@@ -82,8 +82,9 @@
       </div>
       <div class="line-title">功能</div>
       <div class="line">
-        <div :style="{'border-left-color':data.group.color}" v-for="data in actions" class="action">
+        <div :style="{'border-left-color':data.group.color}" v-for="(data,index) in actions" class="action">
           {{ data.action.title}}
+           <Icon class="close-btn" @click="removeAction(index)"  style="font-size: 15px" icon="guanbi1"></Icon>
         </div>
         <a-button @click="addAction" >添加</a-button>
       </div>
@@ -149,6 +150,9 @@ export default {
   },
   components: { DeckAction, CustomIcon, IconList },
   methods: {
+    removeAction(index){
+      this.actions.splice(index,1)
+    },
     addAction(){
       this.tab='action'
       this.$nextTick(()=>{
@@ -228,6 +232,14 @@ export default {
   border-radius: 0.3em;
   svg{
     vertical-align: middle;
+  }
+}
+.close-btn{
+  &:hover{
+    background: red;
+    color:white;
+    border-radius: 2px;
+
   }
 }
 </style>
