@@ -701,13 +701,9 @@ const tabBar = {
       tabBar.setActiveTab(tabs.getSelected())
     }
     try{
-      if(typeof addBtnWrapper==='Node'){
-        tabBar.containerInner.appendChild(addBtnWrapper)
-      }else{
-        console.warn(addBtnWrapper,'addbtnwrapper is')
-      }
+      tabBar.containerInner.appendChild(addBtnWrapper)
     }catch (e) {
-      console.warn(e,'crash')
+      console.warn(e)
     }
 
 
