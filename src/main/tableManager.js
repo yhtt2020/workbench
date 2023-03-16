@@ -95,6 +95,7 @@ class TableManager {
   close () {
     global.tableAppManager.closeAllApp()
     global.tableWin.window.close()
+    global.tableWin=null
   }
 
   send (channel, args) {
