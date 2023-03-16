@@ -34,7 +34,7 @@
       </div>
     </div>
     <div @click="enterWeather" v-else>
-      <template v-if="city.now">
+      <template v-if="city.now && city.d7 && city.h24">
         <Icon icon="position"></Icon>
         {{ city.name }}
         <a-row>
@@ -78,6 +78,12 @@
           </a-col>
         </a-row>
 
+      </template>
+      <template v-else>
+        <div style="text-align: center;padding: 3em">
+        <Icon icon="tuichu" style="font-size: 32px"></Icon>
+          <div style="font-size: 16px;margin-top: 5px">天气服务暂时离线<br>请明日再试</div>
+        </div>
       </template>
 
     </div>
