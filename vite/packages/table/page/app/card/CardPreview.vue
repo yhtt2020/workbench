@@ -40,7 +40,7 @@ export default {
     addCard(){
       switch (this.cardType.name) {
         case "customTimer":
-          this.addCustomComponents(this.cardType.name);
+          this.addCustomComponents({name:this.cardType.name});
           this.$router.push({
             name: "home",
             params: {
@@ -51,7 +51,7 @@ export default {
           message.info("添加成功！");
           break;
         case "countdownDay":
-          this.addCustomComponents(this.cardType.name);
+          this.addCustomComponents({name:this.cardType.name});
           this.$router.push({
             name: "addCardSetting",
             params: {
@@ -61,7 +61,7 @@ export default {
           });
           break;
         case "smallCountdownDay":
-          this.addCustomComponents(this.cardType.name);
+          this.addCustomComponents({name:this.cardType.name});
           this.$router.push({
             name: "addCardSetting",
             params: {
@@ -71,7 +71,7 @@ export default {
           });
           break;
         case "clock":
-          this.addCustomComponents(this.cardType.name);
+          this.addCustomComponents({name:this.cardType.name});
           this.$router.push({
             name: "addCardSetting",
             params: {

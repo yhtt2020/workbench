@@ -1,42 +1,18 @@
 <template>
-  <div>
-    <div>
-      <div style="overflow-x: visible">
-        <div class="card-wrapper">
-          <!--          <Dou></Dou>-->
-          <Music></Music>
-          <div
-            style="
-              display: flex;
-              flex-direction: column;
-              justify-content: space-between;
-              width: 21em;
-              white-space: pre-wrap;
-              vertical-align: text-top;
-              height: 30em;
-            "
-          >
-            <Timer></Timer>
-            <Weather></Weather>
-          </div>
-
-          <div v-for="(item,index) in customComponents">
-            <component :is="item" :customIndex="index"></component>
-          </div>
-<!--          <vuuri  :drag-enabled="false"  ref="grid"  class="grid"  item-key="id"-->
-<!--                 :get-item-width="getIconSize" :get-item-height="getIconSize"-->
-<!--                 v-model="customComponents"  >-->
-<!--            <template #item="{ item }">-->
-<!--            <component :is="item" :customIndex="index"></component>-->
-<!--            </template>-->
-<!--          </vuuri>-->
+  <vue-custom-scrollbar  @contextmenu.stop="showMenu(-1,undefined,'wrapper')" :settings="scrollbarSettings"
+                         style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em)">
+    <div style="width: auto;white-space: nowrap">
           <AddMore></AddMore>
-        </div>
-      </div>
-    </div>
-  </div>
+          <vuuri :drag-enabled="true" v-model="customComponents" class="grid">
+          <template #item="{ item }">
+            <Widget style=""
+                    :showDelete="true"
+                    :resizable="true"
+            ><component :is="item.name" :customIndex="index" style="" ></component></Widget>
+          </template>
+        </vuuri></div>
+  </vue-custom-scrollbar>
 </template>
-
 <script>
 import Weather from "../components/homeWidgets/Weather.vue";
 import Calendar from "../components/homeWidgets/Calendar.vue";
@@ -52,6 +28,7 @@ import CountdownDay from "../components/homeWidgets/CountdownDay.vue";
 import { mapWritableState } from "pinia";
 import { tableStore } from "../store";
 import vuuri from '../components/vuuri/Vuuri.vue'
+import Widget from "../components/muuri/Widget.vue";
 export default {
   name: "Home",
   components: {
@@ -66,9 +43,9 @@ export default {
     SmallCountdownDay,
     Clock,
     CountdownDay,
-    vuuri
+    vuuri,
+    Widget
   },
-
   computed: {
     ...mapWritableState(tableStore, ["customComponents", "clockEvent"]),
   },
@@ -105,9 +82,7 @@ export default {
         try {
           this.$refs.grid.update()
         }catch (e) {
-
         }
-
       },
       deep: true,
       immediate: true,
@@ -115,17 +90,13 @@ export default {
   }
 };
 </script>
-
 <style scoped lang="scss">
 .grid {
   position: relative;
-  width: 18em;
-  display: inline-block;
-  background: rgba(204, 204, 204, 0.3);
+  width:auto;
   border: 5px solid transparent;
   border-radius: 4px;
   vertical-align: top;
   margin: 1em;
 }
-
 </style>
