@@ -1,6 +1,13 @@
 <template>
   <div style="font-size: 18px;height: 500px;overflow-y: auto">
-    <h3 style="text-align: center;">添加自定义按钮</h3>
+    <h3 style="text-align: center;">
+      <span v-if="!this.data">
+       添加自定义按钮
+      </span>
+      <span v-else>
+        编辑 - {{this.data.title}}
+      </span>
+    </h3>
     <div v-if="tab==='icon'">
       <IconList @onSelect="setIcon"></IconList>
     </div>
@@ -94,6 +101,7 @@ import { message } from 'ant-design-vue'
 export default {
   name: 'DeckAdd',
   emits: ['add'],
+  props:['data'],
   data () {
     return {
       tab: 'input',
@@ -106,7 +114,37 @@ export default {
 
       icon: null,
       title: '',
-      actions: []//功能
+      actions: [],//功能
+
+      id:0,
+    }
+  },
+  mounted () {
+    if(this.data){
+      /**
+       * {
+       *         title: this.title,
+       *         icon: this.icon,
+       *         font:{
+       *           size:this.iconFontSize,
+       *           text:this.iconText,
+       *           color:this.color,
+       *           bgColor:this.bgColor
+       *         },
+       *         actions: this.actions,
+       *         id: Date.now(),
+       *         type: this.type
+       */
+      this.title=this.data.title
+      this.icon=this.data.icon
+      this.iconFontSize=this.data.font.size
+      this.iconText=this.data.font.text
+      this.color=this.data.font.color
+      this.bgColor=this.data.font.bgColor
+      this.actions=this.data.actions
+      this.id=this.data.id
+      this.type=this.data.type
+      console.log(this.data,'data')
     }
   },
   components: { DeckAction, CustomIcon, IconList },
@@ -155,7 +193,7 @@ export default {
           bgColor:this.bgColor
         },
         actions: this.actions,
-        id: Date.now(),
+        id: this.id||Date.now(),
         type: this.type
       }
       this.$emit('add', button)

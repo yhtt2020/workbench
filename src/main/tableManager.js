@@ -81,6 +81,7 @@ class TableManager {
         tableWin.window.focus()
       }
     }
+    global.tableAppManager.setTableWin(tableWin.window)//更新tablewin
   }
 
   saveBounds(){

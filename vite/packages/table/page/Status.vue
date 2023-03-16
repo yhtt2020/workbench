@@ -81,7 +81,8 @@
 <script>
 const loudness = require('loudness')
 const brightness = require('brightness')
-const {listOutputs,setAsDefault} =require('@josephuspaye/win-audio-outputs')
+// const {listOutputs,setAsDefault} =require('@josephuspaye/win-audio-outputs')
+import {listOutputs,setAsDefault} from '../js/ext/audio/audio'
 export default {
   name: 'Status',
   data () {

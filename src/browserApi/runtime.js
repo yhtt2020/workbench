@@ -6,6 +6,7 @@ function send(channel,args={}){
 }
 let runtime={
   name:window.globalArgs['name'],
+  type:window.globalArgs['app-type']||'qing',//增加对轻应用，桌面应用的判断
   version:{
     'api':'1.0.0',
     'barrage':'1.0.0',
