@@ -1,4 +1,30 @@
 <template>
+  <a-result v-if="this.grids.length===0"
+    status="success"
+    title="使用快捷指令"
+    sub-title="快捷指令功能，我们又称之为Dreamdeck，此功能的使用需要有一定的计算机基础知识。"
+  >
+    <template #extra>
+      <a-button @click="initGrids" class="mr-10" key="console" type="primary">以示例方案启动</a-button>
+      <a-button disabled key="buy" @click="learn">学习（课程暂未上线）</a-button>
+    </template>
+
+    <div class="desc">
+      <p style="font-size: 16px">
+        <strong>您也可以通过多种方式导入别人分享的方案：</strong>
+      </p>
+      <p>
+        <close-circle-outlined :style="{ color: 'red' }" />
+        使用分享代码导入
+        <a @click="toggleImport">导入代码 &gt;</a>
+      </p>
+      <p>
+        <close-circle-outlined :style="{ color: 'red' }" />
+        从社区获得分享代码（此功能暂未上线，请耐心等待）
+        <a>从社区导入 &gt;</a>
+      </p>
+    </div>
+  </a-result>
   <div v-if="sharing" style="padding: 2em;padding-left: 4em;padding-bottom: 0">
     <h2>请选择您要分享的小组，勾选后，在底部选择需要分享的方式。</h2>
     <p>对于不希望分享的小组，可以不做勾选。</p>
@@ -104,11 +130,33 @@
       方案代码：
     </div>
     <div class="line">
-      <a-textarea ref="shareCode" style="width: 100%;height: 22em" :value="getShareJson()"></a-textarea>
+      <a-textarea style="width: 100%;height: 22em" :value="getShareJson()"></a-textarea>
     </div>
     <div class="line">
       <a-button class="mr-5" type="primary" @click="copyCode">复制分享代码</a-button>
       <a-button @click="saveFile">保存为文件</a-button>
+    </div>
+
+  </a-drawer>
+  <a-drawer
+    title="导入方案"
+    placement="right"
+    :closable="true"
+    v-model:visible="importMenuJsonVisible"
+    @close="onClose"
+  >
+    <div class="line">
+      导入的方案将被添加到最前面，您可以使用编辑布局自行调整位置。
+    </div>
+    <div class="line">
+      方案代码：
+    </div>
+    <div class="line">
+      <a-textarea placeholder="在此处粘贴分享代码，点击导入分享代码即可完成导入。" style="width: 100%;height: 22em" v-model:value="importJsonTxt"></a-textarea>
+    </div>
+    <div class="line">
+      <a-button :disabled="this.importJsonTxt===''" class="mr-5" type="primary" @click="importCode">导入分享代码</a-button>
+      <a-button @click="importFile">导入文件</a-button>
     </div>
 
   </a-drawer>
@@ -156,7 +204,7 @@
         </div>
       </a-col>
       <a-col v-if="menuType==='grid'">
-        <div  @click="removeGrid()" class="btn">
+        <div  @click="removeGrid(this.currentGridId)" class="btn">
           <Icon style="font-size: 3em" icon="shanchu"></Icon>
           <div>删除分组</div>
         </div>
@@ -183,7 +231,7 @@
 
       </a-col>
       <a-col>
-        <div class="btn">
+        <div class="btn" @click="toggleImport">
           <Icon style="font-size: 3em" icon="daoru"></Icon>
           <div>导入方案</div>
         </div>
@@ -233,7 +281,7 @@
 <script>
 import DeckItem from '../components/muuri/DeckItem.vue'
 import { appStore } from '../store'
-import { mapWritableState } from 'pinia'
+import { mapWritableState,mapActions } from 'pinia'
 import Template from '../../user/pages/Template.vue'
 import DeckAdd from './app/deck/DeckAdd.vue'
 import { message } from 'ant-design-vue'
@@ -263,6 +311,8 @@ export default {
       shareTo:'json',//json file com
       shareMenuComVisible:false,//显示分享抽屉菜单
       shareMenuJsonVisible:false,
+      importMenuJsonVisible:false,//导入功能
+      importJsonTxt:'',//导入的json文本
       shareData:{},
 
       key:Date.now(),
@@ -318,6 +368,38 @@ export default {
     // })
   },
   methods: {
+    ...mapActions(deckStore,['initGrids']),
+    importCode(){
+      if(this.importJsonTxt===''){
+        message.error('请粘贴分享代码后导入。')
+        return
+      }
+      let needImportGrids=[]
+      try{
+        needImportGrids=JSON.parse(this.importJsonTxt)
+
+        needImportGrids.forEach(g=>{
+          g.id=require('nanoid').nanoid(8)
+          console.log(g)
+          this.grids.unshift(g)
+        })
+        this.toggleImport()
+        message.success('为您成功导入'+needImportGrids.length+'个方案分组。')
+      }catch (e) {
+        message.error('导入失败，请检查代码。')
+      }
+
+    },
+    async importFile () {
+      let openPath = await tsbApi.dialog.showOpenDialog({
+        title: '选择导入的代码',
+        filters: [{ name: 'deck存档', extensions: ['deck'] }],
+      })
+      if(!openPath){
+        return
+      }
+      this.importJsonTxt=require('fs').readFileSync(openPath[0],'utf-8')
+    },
     copyCode(){
       require('electron').clipboard.writeText(this.getShareJson())
       this.toggleSharing()
@@ -364,6 +446,10 @@ export default {
     },
     getShareJson(){
       return JSON.stringify(this.selectedGrids)
+    },
+    toggleImport(){
+      this.importJsonTxt=''
+      this.importMenuJsonVisible=!this.importMenuJsonVisible
     },
     toggleSharing(){
       this.selectedGridIds={}
@@ -427,46 +513,7 @@ export default {
       }
       return width +'px'
     },
-    initBoard (board) {
-      // this.grids.push(new Muuri('#board-' + board.id, {
-      //     dragEnabled: true,
-      //     dragStartPredicate: (item, event) => {
-      //       // Prevent first item from being dragged.
-      //       if (!this.enableDrag) {
-      //         return false
-      //       }
-      //       // For other items use the default drag start predicate.
-      //       return Muuri.ItemDrag.defaultStartPredicate(item, event)
-      //     },
-      //     dragContainer: document.body,
-      //     dragSort: () => {
-      //       return this.grids
-      //     }
-      //   }).on('receive', (data) => {
-      //     console.log(data)
-      //     this.cloneMap[data.item._id] = {
-      //       item: data.item,
-      //       grid: data.fromGrid,
-      //       index: data.fromIndex
-      //     }
-      //   }).on('send', (data) => {
-      //     console.log(data)
-      //     delete this.cloneMap[data.item._id]
-      //   }).on('dragReleaseStart', (item) => {
-      //     console.log(item)
-      //     var cloneData = this.cloneMap[item._id]
-      //     if (cloneData) {
-      //       delete this.cloneMap[item._id]
-      //
-      //       var clone = cloneData.item.getElement().cloneNode(true)
-      //       clone.setAttribute('class', 'item')
-      //       clone.children[0].setAttribute('style', '')
-      //       // var items = cloneData.grid.card(clone, { index: cloneData.index, active: false })
-      //       // cloneData.grid.show(items)
-      //     }
-      //   })
-      // )
-    },
+
     onClose () {
       this.menuVisible = false
     },
@@ -509,6 +556,22 @@ export default {
       }else{
         this.menuType='wrapper'
       }
+    },
+    removeGrid(id){
+      Modal.confirm({
+        content:'是否确认删除分组？此操作无法恢复。',
+        okText:'确认删除',
+        onOk:()=>{
+          let foundIndex= this.grids.findIndex(g=>{
+            return g.id===id
+          })
+          if(foundIndex>-1){
+            this.grids.splice(foundIndex,1)
+          }
+          this.menuVisible=false
+        }
+      })
+
     },
     addBoard () {
       let grid = {

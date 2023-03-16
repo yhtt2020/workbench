@@ -22,7 +22,12 @@ export const deckStore=defineStore('deck',{
 
     },
     grids:[
-      {
+
+    ] as IGrid[]
+  }),
+  actions:{
+    initGrids(){
+      this.grids=[{
         id: "1",
         title: '示例操作',
         children: [
@@ -46,44 +51,9 @@ export const deckStore=defineStore('deck',{
               }
             }
           }]
-      }
-      //     {
-      //       id:"2",
-      //       icon: '',
-      //       cover: '',
-      //       title: '微信',
-      //       action:{
-      //
-      //       }
-      //     }
-      //   ]
-      // },
-      // {
-      //   id: "2",
-      //   title: '板子1',
-      //   children: [
-      //     {
-      //       id:"3",
-      //       icon: '',
-      //       cover: '',
-      //       title: '微信'
-      //     },
-      //     {
-      //       id:"4",
-      //       icon: '',
-      //       cover: '',
-      //       title: '微信'
-      //     },
-      //     {
-      //       id:"5",
-      //       icon: '',
-      //       cover: '',
-      //       title: '微信'
-      //     }
-      //   ]
-      // },
-    ] as IGrid[]
-  }),
+      }]
+    }
+  },
   persist: {
     enabled: true,
     strategies: [{
