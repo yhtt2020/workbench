@@ -62,7 +62,7 @@
 
       <div v-if="type==='font'">
         <div class="line">
-          按钮文字： <a-input style="width: 20em" v-model:value="iconText" placeholder="输入文字"></a-input>
+          按钮文字： <a-textarea style="width: 20em" v-model:value="iconText" placeholder="输入文字"></a-textarea>
         </div>
         <div class="line">
          字体大小： <a-input-number placeholder="字体大小" v-model:value="iconFontSize"></a-input-number>

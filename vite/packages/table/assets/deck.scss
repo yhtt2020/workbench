@@ -1,5 +1,4 @@
 .text-icon {
-  display: inline-block;
   width: 80px;
   height: 80px;
   background: #0a84ff;
@@ -10,6 +9,9 @@
   overflow: hidden;
   word-break: break-all;
   white-space: pre-wrap;
+  justify-content: center;
+  display: flex;
+  align-items: center;
 }
 .action {
   border-radius: 0.4em;
