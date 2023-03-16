@@ -232,7 +232,7 @@ for (var contentType in contentTypes) {
             value.contentTypes = []
           }
 
-          if (e.target.checked) { // card the item to the array
+          if (e.target.checked) { // add the item to the array
             value.contentTypes.push(contentTypes[contentType])
           } else { // remove the item from the array
             var idx = value.contentTypes.indexOf(contentTypes[contentType])
@@ -441,7 +441,7 @@ settings.onLoad(function () {
     searchEngineDropdown.appendChild(item)
   }
 
-  // card custom option
+  // add custom option
   item = document.createElement('option')
   item.textContent = 'custom'
   if (currentSearchEngine.custom) {

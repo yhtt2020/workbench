@@ -18,7 +18,7 @@ attribution: string - attribution text to display when the item is focused
 delete: function - a function to call to delete the result item when a left swipe is detected
 showDeleteButton - whether to show an [x] button that calls the delete function
 button: {icon: string, fn: function} a button that will appear to the right of the item (if showDeleteButton is false)
-classList: array - a list of classes to card to the item
+classList: array - a list of classes to add to the item
 fakeFocus - boolean - whether the item should appear to be focused,
 colorCircle - string - display a color circle with a given color
 opacity - number - the opacity of the item

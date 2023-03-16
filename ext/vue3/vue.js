@@ -7739,7 +7739,7 @@ var Vue = (function (exports) {
       staticCount: vnode.staticCount,
       shapeFlag: vnode.shapeFlag,
       // if the vnode is cloned with extra props, we can no longer assume its
-      // existing patch flag to be reliable and need to card the FULL_PROPS flag.
+      // existing patch flag to be reliable and need to add the FULL_PROPS flag.
       // note: preserve flag for fragments since they use the flag for children
       // fast paths only.
       patchFlag: extraProps && vnode.type !== Fragment
@@ -9457,7 +9457,7 @@ var Vue = (function (exports) {
     else {
       const [name, options] = parseName(rawName);
       if (nextValue) {
-        // card
+        // add
         const invoker = (invokers[rawName] = createInvoker(nextValue, instance));
         addEventListener(el, name, invoker, options);
       }
@@ -11291,7 +11291,7 @@ var Vue = (function (exports) {
       propsWithInjection = createObjectExpression([prop]);
     }
     else if (props.type === 14 /* JS_CALL_EXPRESSION */) {
-      // merged props... card ours
+      // merged props... add ours
       // only inject key to object literal if it's the first argument so that
       // if doesn't override user provided keys
       const first = props.arguments[0];
@@ -13637,7 +13637,7 @@ var Vue = (function (exports) {
   const transformFor = createStructuralDirectiveTransform('for', (node, dir, context) => {
     const { helper, removeHelper } = context;
     return processFor(node, dir, context, forNode => {
-      // create the loop render function expression now, and card the
+      // create the loop render function expression now, and add the
       // iterator on exit after all children have been traversed
       const renderExp = createCallExpression(helper(RENDER_LIST), [
         forNode.source
@@ -13978,7 +13978,7 @@ var Vue = (function (exports) {
         const parseResult = vFor.parseResult ||
           parseForExpression(vFor.exp, context);
         if (parseResult) {
-          // Render the dynamic slots as an array and card it to the createSlot()
+          // Render the dynamic slots as an array and add it to the createSlot()
           // args. The runtime knows how to handle it appropriately.
           dynamicSlots.push(createCallExpression(context.helper(RENDER_LIST), [
             parseResult.source,
@@ -14894,7 +14894,7 @@ var Vue = (function (exports) {
               (node.type === 1 /* ELEMENT */ &&
                 node.tagType === 0 /* ELEMENT */ &&
                 // #3756
-                // custom directives can potentially card DOM elements arbitrarily,
+                // custom directives can potentially add DOM elements arbitrarily,
                 // we need to avoid setting textContent of the element at runtime
                 // to avoid accidentally overwriting the DOM elements added
                 // by the user through custom directives.

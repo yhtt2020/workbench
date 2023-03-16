@@ -136,16 +136,16 @@ var TaskOverlayBuilder = {
         var taskActionContainer = document.createElement('div')
         taskActionContainer.className = 'task-action-container'
 
-        // card the collapse button
+        // add the collapse button
         var collapseButton = this.collapseButton(taskContainer, task)
         taskActionContainer.appendChild(collapseButton)
 
         // taskActionContainer.appendChild(this.taskIcon(task,taskIndex))
-        // card the input for the task name
+        // add the input for the task name
         var input = this.nameInputField(task, taskIndex)
         taskActionContainer.appendChild(input)
 
-        // card the delete button
+        // add the delete button
         var deleteButton = this.deleteButton(taskContainer, task)
         taskActionContainer.appendChild(deleteButton)
 

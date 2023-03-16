@@ -2,7 +2,7 @@ var ignoreButton = document.getElementById('ignore-button')
 var continueButton = document.getElementById('continueButton')
 
 ignoreButton.addEventListener('click', function () {
-  // card the domain to the exception list
+  // add the domain to the exception list
 
   settings.get('phishingWhitelist', function (value) {
     if (!value) {

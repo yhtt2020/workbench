@@ -109,7 +109,7 @@ const UsersSelect = {
       configModel.setShowOnStart(this.showOnStart)
     },
     goAddAccount () {
-      this.$router.push('/card')
+      this.$router.push('/add')
     },
     deleteAccount (uid) {
       antd.Modal.confirm({

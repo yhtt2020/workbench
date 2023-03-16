@@ -242,7 +242,7 @@ const sessionRestore = {
         return
       }
 
-      // card the saved tasks
+      // add the saved tasks
 
       data.state.tasks.forEach(function (task) {
         // restore the task item
@@ -302,7 +302,7 @@ const sessionRestore = {
                 webviews.update(tasks.getSelected().tabs.getSelected(), data.url)
                 tabEditor.hide()
               } else {
-                var surveyTab = tasks.getSelected().tabs.card({
+                var surveyTab = tasks.getSelected().tabs.add({
                   url: data.url
                 })
                 browserUI.addTab(surveyTab, {
@@ -331,8 +331,8 @@ const sessionRestore = {
       // tabState.initialize()
       //
       // // create a new tab with an explanation of what happened
-      // var newTask = tasks.card()
-      // var newSessionErrorTab = tasks.get(newTask).tabs.card({
+      // var newTask = tasks.add()
+      // var newSessionErrorTab = tasks.get(newTask).tabs.add({
       //   url: 'file://' + __dirname + '/pages/sessionRestoreError/index.html?backupLoc=' + encodeURIComponent(backupSavePath)
       // })
       //

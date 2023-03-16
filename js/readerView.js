@@ -141,7 +141,7 @@ var readerView = {
       readerView.updateButton(tab)
     })
 
-    // card a keyboard shortcut to enter reader mode
+    // add a keyboard shortcut to enter reader mode
 
     keybindings.defineShortcut('toggleReaderView', function () {
       if (readerView.isReader(tabs.getSelected())) {

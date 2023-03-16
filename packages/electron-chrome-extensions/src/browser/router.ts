@@ -42,7 +42,7 @@ class RoutingDelegate {
   private constructor() {
     ipcMain.handle('crx-msg', this.onRouterMessage)
     ipcMain.handle('crx-msg-remote', this.onRemoteMessage)
-    ipcMain.on('crx-card-listener', this.onAddListener)
+    ipcMain.on('crx-add-listener', this.onAddListener)
     ipcMain.on('crx-remove-listener', this.onRemoveListener)
   }
 

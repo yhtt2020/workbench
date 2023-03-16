@@ -12,14 +12,14 @@ data, we do one of two things:
 - If there's a single credentials match, we fill the input fields with that
   data.
 
-- If there's more than one match, we card a focus event listener on the
+- If there's more than one match, we add a focus event listener on the
   username/email fields that will display a small overlay div with available
   options. When user selects one of the options, we fill the input fields with
   credentials data from the selection.
 
 This code doesn't work with JS-based forms. We don't listen to all DOM changes,
 we expect the login form to be present in the HTML code at page load. We can
-card a MutationObserver to the document, or DOMNodeInserted listener, but I
+add a MutationObserver to the document, or DOMNodeInserted listener, but I
 wanted to keep it lightweight and not impact browser performace too much.
 */
 
@@ -278,11 +278,11 @@ function fillCredentials (credentials) {
 
 // Setup a focus/click listener on the username input fields.
 //
-// When those events happen, we card a small overlay with a list of matching
+// When those events happen, we add a small overlay with a list of matching
 // credentials. Clicking on an item in a list populates the input fields with
 // selected username/password pair.
 //
-// - element: input field to card a listener to
+// - element: input field to add a listener to
 // - credentials: an array of { username, password } objects
 
 // 设置一个焦点/单击用户名输入字段上的侦听器。

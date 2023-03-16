@@ -245,7 +245,7 @@ function closeTab (tabId) {
 //
 //   }
 //   // if(tasks.get(taskId).tabs.tabs.length===0){
-//   //   tasks.get(taskId).tabs.card()
+//   //   tasks.get(taskId).tabs.add()
 //   // }
 // }
 
@@ -611,7 +611,7 @@ ipc.on('openApps',function(){
 		//   name: '应用中心',
 		//   collapsed:false
 		// }
-		// tid=tasks.card(newTask)
+		// tid=tasks.add(newTask)
     //todo 暂时先去除一下防止打开多个的功能，等后面观察一下是否有必要加回来。加回来会导致一些不可预期的切换任务，导致用户懵逼
 		let newTab= {
 		  url: require('util/urlParser.js').getFileURL( __dirname + '/pages/apps/index.html') ,

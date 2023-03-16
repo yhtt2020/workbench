@@ -32,9 +32,9 @@ const regeditTool = {
     return new Promise((resolve, reject) => {
       // try {
       //   // eslint-disable-next-line max-len
-      //   // reg card HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run /v electron.app.Electron /t REG_SZ /d hello.exe /f
+      //   // reg add HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run /v electron.app.Electron /t REG_SZ /d hello.exe /f
       //   // reg delete HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run /v electron.app.Electron /f
-      //   const result =  regeditTool.child_process.exec(`reg card ${keyPath} /v ${name} /t ${type} /d ${value} /f`);
+      //   const result =  regeditTool.child_process.exec(`reg add ${keyPath} /v ${name} /t ${type} /d ${value} /f`);
       //   resolve(result);
       // } catch (error) {
       //   reject(error);

@@ -73,7 +73,7 @@ var navigationButtons = {
     //   https://github.com/minbrowser/min/pull/1665#issuecomment-868551126
     //   */
     //   if (navigationButtons.tabsList.scrollWidth <= navigationButtons.tabsList.clientWidth) {
-    //     navigationButtons.tabsList.classList.card('disable-scroll')
+    //     navigationButtons.tabsList.classList.add('disable-scroll')
     //   }
     // })
     //

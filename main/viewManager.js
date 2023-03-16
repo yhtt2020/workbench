@@ -141,7 +141,7 @@ async function createView(existingViewId, id, webPreferencesString, boundsString
     }
   })
 
-  view.webContents.removeAllListeners('-card-new-contents')
+  view.webContents.removeAllListeners('-add-new-contents')
 
   // view.webContents.on('devtools-opened',()=>{
   //   console.log('devtools-opends')
@@ -157,7 +157,7 @@ async function createView(existingViewId, id, webPreferencesString, boundsString
   //   // })
   // })
 
-  view.webContents.on('-card-new-contents', function (e, webContents, disposition, _userGesture, _left, _top, _width, _height, url, frameName, referrer, rawFeatures, postData) {
+  view.webContents.on('-add-new-contents', function (e, webContents, disposition, _userGesture, _left, _top, _width, _height, url, frameName, referrer, rawFeatures, postData) {
     if (!filterPopups(url)) {
       return
     }
@@ -553,16 +553,16 @@ ipc.on('callViewMethod', function (e, data) {
   if (result instanceof Promise) {
     result.then(function (result) {
       if (data.callId) {
-        mainWindow.webContents.send('async-call-result', { callId: data.callId, error: null, result })
+        sendIPCToMainWindow('async-call-result', { callId: data.callId, error: null, result },false)
       }
     })
     result.catch(function (error) {
       if (data.callId) {
-        mainWindow.webContents.send('async-call-result', { callId: data.callId, error, result: null })
+        sendIPCToMainWindow('async-call-result', { callId: data.callId, error, result: null },false)
       }
     })
   } else if (data.callId) {
-    mainWindow.webContents.send('async-call-result', { callId: data.callId, error, result })
+    sendIPCToMainWindow('async-call-result', { callId: data.callId, error, result },false)
   }
 })
 

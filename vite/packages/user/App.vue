@@ -56,7 +56,7 @@ export default {
     },
     goAddAccount () {
       this.currentTab={name:'add'}
-      this.$router.push('/card')
+      this.$router.push('/add')
     },
     goTemplate(){
       this.currentTab={name:'template'}

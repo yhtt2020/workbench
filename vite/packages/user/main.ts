@@ -16,7 +16,7 @@ const routes=[
 
   },
   {
-    path:'/card',component: AddAccount
+    path:'/add',component: AddAccount
   },
   {
     path:'/pwd',name:'pwd',component: EnterPwd
