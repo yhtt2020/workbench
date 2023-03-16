@@ -1,57 +1,123 @@
 <template>
-  <vue-custom-scrollbar  @contextmenu.stop="showMenu(-1,undefined,'wrapper')" :settings="scrollbarSettings"
-                        style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em)">
+  <div v-if="sharing" style="padding: 2em;padding-left: 4em;padding-bottom: 0">
+    <h2>请选择您要分享的小组，勾选后，在底部选择需要分享的方式。</h2>
+    <p>对于不希望分享的小组，可以不做勾选。</p>
+  </div>
+  <div v-if="sharing" class="sharing-bottom-panel" style="position: fixed;bottom: 0;padding: 2em;width: 100vw">
+    <a-row>
+      <a-col :span="12">
+        当前选中的组：
+        <span style="color: grey" v-if="selectedGrids.length===0">请选择希望分享的组!</span>
+        <a-tag v-for="grid in selectedGrids">
+          {{grid.title}}
+        </a-tag>
+      </a-col>
+      <a-col :span="7" class="text-right">
+        分享到：<a-select v-model:value="shareTo"><a-select-option value="json">代码</a-select-option><a-select-option disabled value="com">社区</a-select-option></a-select>
+      </a-col>
+      <a-col :span="5" style="text-align: right">
+        <a-button class="mr-5" type="primary" @click="ensureShare">分享</a-button>
+        <a-button @click="this.toggleSharing()">放弃分享</a-button>
+      </a-col>
+    </a-row>
+  </div>
+  <div :class="{sharing:sharing}" >
+    <vue-custom-scrollbar  @contextmenu.stop="showMenu(-1,undefined,'wrapper')" :settings="scrollbarSettings"
+                           style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em)">
 
-    <div style="width: auto;white-space: nowrap">
-      <div style="width: 20em;display: inline-block" v-for="(grid,index) in grids">
-        <h3 class="pointer" @click="showEditTitle(grid)">{{grid.title}}</h3>
-        <div>
-          <!--      <div style="min-height: 3em" @contextmenu.stop="showMenu(index)" :id="'board-'+board.id" class="grid"-->
-          <!--           v-for="(board,index) in decks">-->
-          <!--        <DeckItem :id="item.id" :item="item" v-for="item in board.children"></DeckItem>-->
-          <!--      </div>-->
+      <div style="width: auto;white-space: nowrap">
+        <div style="width: 20em;display: inline-block" v-for="(grid,index) in grids">
+          <h3 class="pointer" v-if="sharing" ><a-checkbox  v-model:checked="selectedGridIds[grid.id]">{{grid.title}}</a-checkbox></h3>
+          <h3 class="pointer" v-else @click="showEditTitle(grid)">{{grid.title}}</h3>
+          <div>
+            <!--      <div style="min-height: 3em" @contextmenu.stop="showMenu(index)" :id="'board-'+board.id" class="grid"-->
+            <!--           v-for="(board,index) in decks">-->
+            <!--        <DeckItem :id="item.id" :item="item" v-for="item in board.children"></DeckItem>-->
+            <!--      </div>-->
 
-          <vuuri :key="key" :drag-enabled="editing" group-id="grid.id" :ref="'grid'+grid.id" item-key="id"  class="grid" @contextmenu.stop="showMenu(grid.id)"
-                 :get-item-width="getIconSize" :get-item-height="getIconSize"
-                 v-model="grid.children"  >
-            <template #item="{ item }">
-              <Widget @contextmenu.stop="showMenu(item.id,{item,grid},'item')"   :item="item"
-                       :uniqueKey="String(item.id)"
-                       :title="item.title"
-                       :showDelete="true"
-                       :resizable="true"
-              >
-                <DeckItem :id="item.id" :item="item"></DeckItem>
-              </Widget>
-            </template>
-          </vuuri>
+            <vuuri :key="key" :drag-enabled="editing" group-id="grid.id" :ref="'grid'+grid.id" item-key="id"  class="grid" @contextmenu.stop="showMenu(grid.id)"
+                   :get-item-width="getIconSize" :get-item-height="getIconSize"
+                   v-model="grid.children"  >
+              <template #item="{ item }">
+                <Widget @contextmenu.stop="showMenu(item.id,{item,grid},'item')"   :item="item"
+                        :uniqueKey="String(item.id)"
+                        :title="item.title"
+                        :showDelete="true"
+                        :resizable="true"
+                >
+                  <DeckItem :id="item.id" :item="item"></DeckItem>
+                </Widget>
+              </template>
+            </vuuri>
 
 
 
 
-          <!--      <Grid :value="grid" :ref="'grid'+grid.id" class="grid" :id="grid.id" @contextmenu.stop="showMenu(grid.id)" v-for="(grid,index) in grids" :draggable="true" :showDelete="true" :resizable="false">-->
-          <!--        <Widget  :w-id="widget.id" v-for="widget in grid.children"-->
-          <!--          :uniqueKey="widget.id"-->
-          <!--          :title="widget.title"-->
-          <!--          :showDelete="true"-->
-          <!--          :resizable="true"-->
-          <!--        >-->
-          <!--          <DeckItem :id="widget.id" :item="widget"></DeckItem>-->
-          <!--        </Widget>-->
-          <!--      </Grid>-->
+            <!--      <Grid :value="grid" :ref="'grid'+grid.id" class="grid" :id="grid.id" @contextmenu.stop="showMenu(grid.id)" v-for="(grid,index) in grids" :draggable="true" :showDelete="true" :resizable="false">-->
+            <!--        <Widget  :w-id="widget.id" v-for="widget in grid.children"-->
+            <!--          :uniqueKey="widget.id"-->
+            <!--          :title="widget.title"-->
+            <!--          :showDelete="true"-->
+            <!--          :resizable="true"-->
+            <!--        >-->
+            <!--          <DeckItem :id="widget.id" :item="widget"></DeckItem>-->
+            <!--        </Widget>-->
+            <!--      </Grid>-->
+          </div>
         </div>
       </div>
+
+    </vue-custom-scrollbar>
+  </div>
+  <a-drawer
+    title="设置分享信息"
+    placement="right"
+    :closable="true"
+    v-model:visible="shareMenuComVisible"
+    @close="onClose"
+  >
+    <div class="line">
+     分享标题： <a-input v-model:value="shareData.title">      </a-input>
+
+    </div>
+    <div class="line">
+      分享描述：<a-input v-model:value="shareData.summary"></a-input>
+    </div>
+    <div class="line">
+      <a-button>确定</a-button>
     </div>
 
-  </vue-custom-scrollbar>
+  </a-drawer>
+  <a-drawer
+    title="导出方案"
+    placement="right"
+    :closable="true"
+    v-model:visible="shareMenuJsonVisible"
+    @close="onClose"
+  >
+    <div class="line">
+      请将下方文本发送给其他用户，其他用户粘贴导入后即可导入成功。<br>
+      注意：代码超过聊天工具可发送文本长度，可选择保存为文件，以发送文件方式分享。
+
+    </div>
+    <div class="line">
+      方案代码：
+    </div>
+    <div class="line">
+      <a-textarea ref="shareCode" style="width: 100%;height: 22em" :value="getShareJson()"></a-textarea>
+    </div>
+    <div class="line">
+      <a-button class="mr-5" type="primary" @click="copyCode">复制分享代码</a-button>
+      <a-button @click="saveFile">保存为文件</a-button>
+    </div>
+
+  </a-drawer>
   <a-drawer
     :title="null"
     placement="bottom"
     :closable="true"
-    :visible="menuVisible"
+    v-model:visible="menuVisible"
     @close="onClose"
-    @getItemWidth="getIconSize"
-    @getItemHeight="getIconSize"
   >
     <div style="display: none">
       <Widget
@@ -110,7 +176,7 @@
         </div>
       </a-col>
       <a-col>
-        <div class="btn">
+        <div class="btn" @click="toggleSharing">
           <Icon style="font-size: 3em" icon="fenxiang"></Icon>
           <div>分享方案</div>
         </div>
@@ -176,19 +242,31 @@ import Widget from "../components/muuri/Widget.vue";
 import vuuri from '../components/vuuri/Vuuri.vue'
 import Prompt from '../components/comp/Prompt.vue'
 import {Modal} from 'ant-design-vue'
+import BackBtn from '../components/comp/BackBtn.vue'
 export default {
   name: 'Deck',
   components: {
+    BackBtn,
     Prompt,
     DeckAdd,
     Template,
     DeckItem,
     Widget: Widget,
     vuuri,
-    key:Date.now()
+
   },
   data () {
     return {
+      //分享相关的组
+      selectedGridIds:{},//分享选中的组
+      sharing:false,//分享状态
+      shareTo:'json',//json file com
+      shareMenuComVisible:false,//显示分享抽屉菜单
+      shareMenuJsonVisible:false,
+      shareData:{},
+
+      key:Date.now(),
+
       addKey:Date.now(),
       editGrid:null,
       visiblePromptTitle:false,
@@ -219,8 +297,17 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(appStore, []),
+    ...mapWritableState(appStore, ['fullScreen']),
     ...mapWritableState(deckStore, ['grids','editing','settings']),
+    selectedGrids(){
+      let selectedIds=Object.keys(this.selectedGridIds).filter(key=>{
+        return this.selectedGridIds[key]
+      })
+      console.log(selectedIds)
+      return this.grids.filter(g=>{
+        return selectedIds.indexOf(String(g.id))>-1
+      })
+    }
   },
   mounted () {
     //进来之后就把存储的部分和初始化部分完全脱钩，这样，可以随意变更按钮，并即时存储，而不会影响到我们界面上的部分。
@@ -231,6 +318,59 @@ export default {
     // })
   },
   methods: {
+    copyCode(){
+      require('electron').clipboard.writeText(this.getShareJson())
+      this.toggleSharing()
+      this.shareMenuJsonVisible=false
+      message.success("已为您复制到剪切板，赶紧去分享给其他小伙伴吧！")
+    },
+    async saveFile () {
+      let savePath = await tsbApi.dialog.showSaveDialog({
+        title: '选择保存位置',
+        defaultPath: '我的分享.deck',
+        message: '选择保存分享代码位置',
+        filters: [{ name: 'deck存档', extensions: ['deck'] }],
+        properties: [
+          'createDirectory',
+          'showOverwriteConfirmation'
+        ]
+      })
+      const fs=require('fs')
+      if(!savePath){
+        return
+      }
+      fs.writeFile(savePath,this.getShareJson(),(err)=>{
+        if(!err){
+          message.success('导出成功。为您的分享精神点赞！')
+          require('electron').shell.showItemInFolder(savePath)
+          this.toggleSharing()
+          this.shareMenuJsonVisible=false
+          return
+        }else{
+          message.error('导出失败，请确认文件权限。')
+        }
+      })
+    },
+    ensureShare(){
+      if(this.selectedGrids.length===0){
+        message.error('您至少选择一个组。')
+        return
+      }
+      if(this.shareTo==='com'){
+        this.shareMenuComVisible=true
+      }else{
+        this.shareMenuJsonVisible=true
+      }
+    },
+    getShareJson(){
+      return JSON.stringify(this.selectedGrids)
+    },
+    toggleSharing(){
+      this.selectedGridIds={}
+      this.sharing=!this.sharing
+      this.fullScreen=this.sharing
+      this.menuVisible=false
+    },
     toggleEditing(){
       this.editing=!this.editing
       if(this.editing){
@@ -476,6 +616,8 @@ export default {
   }
 }
 
-
+.sharing{
+  padding: 4em;padding-top: 0em;
+}
 
 </style>
