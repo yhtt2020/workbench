@@ -170,7 +170,7 @@ export default {
     },
     addAction(){
       this.tab='action'
-      this.editingAction={}
+      this.editingAction=undefined
       this.$nextTick(()=>{
         this.$refs._deckAction.reset()
       })
