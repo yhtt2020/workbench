@@ -510,7 +510,7 @@ var VueRouter = (function (exports, vue) {
         // the length is off by one, we need to decrease it
         position: history.length - 1,
         replaced: true,
-        // don't card a scroll as the user may have an anchor and we want
+        // don't add a scroll as the user may have an anchor and we want
         // scrollBehavior to be triggered without a saved position
         scroll: null,
       }, true);
@@ -1285,7 +1285,7 @@ var VueRouter = (function (exports, vue) {
       for (const normalizedRecord of normalizedRecords) {
         let { path } = normalizedRecord;
         // Build up the path for nested routes if the child isn't an absolute
-        // route. Only card the / delimiter if the child path isn't empty and if the
+        // route. Only add the / delimiter if the child path isn't empty and if the
         // parent path doesn't have a trailing slash
         if (parent && path[0] !== '/') {
           let parentPath = parent.record.path;
@@ -1328,7 +1328,7 @@ var VueRouter = (function (exports, vue) {
         // if there was no original record, then the first one was not an alias and all
         // other alias (if any) need to reference this record when adding children
         originalRecord = originalRecord || matcher;
-        // TODO: card normalized records for more flexibility
+        // TODO: add normalized records for more flexibility
         // if (parent && isAliasRecord(originalRecord)) {
         //   parent.children.push(originalRecord)
         // }
@@ -1374,7 +1374,7 @@ var VueRouter = (function (exports, vue) {
       // console.log('END i is', { i })
       // while (i < matchers.length && matcher.score <= matchers[i].score) i++
       matchers.splice(i, 0, matcher);
-      // only card the original record to the name map
+      // only add the original record to the name map
       if (matcher.record.name && !isAliasRecord(matcher))
         matcherMap.set(matcher.record.name, matcher);
     }
@@ -1447,7 +1447,7 @@ var VueRouter = (function (exports, vue) {
         meta: mergeMetaFields(matched),
       };
     }
-    // card initial routes
+    // add initial routes
     routes.forEach(route => addRoute(route));
     return { addRoute, resolve, removeRoute, getRoutes, getRecordMatcher };
   }
@@ -2680,7 +2680,7 @@ var VueRouter = (function (exports, vue) {
         backgroundColor: DARK,
       });
     }
-    // card an id to be able to select it. Using the `path` is not possible because
+    // add an id to be able to select it. Using the `path` is not possible because
     // empty path children would collide with their parents
     let id = String(routeRecordId++);
     record.__vd_id = id;

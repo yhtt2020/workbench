@@ -4,19 +4,19 @@ var test = require('tape');
 var classes = require('../classes');
 
 test('classes exports the expected api', function (t) {
-  t.equal(typeof classes.add, 'function', 'classes.card is a method');
+  t.equal(typeof classes.add, 'function', 'classes.add is a method');
   t.equal(typeof classes.rm, 'function', 'classes.rm is a method');
   t.end();
 });
 
-test('classes can card a class', function (t) {
+test('classes can add a class', function (t) {
   var el = document.createElement('div');
   classes.add(el, 'gu-foo');
   t.equal(el.className, 'gu-foo', 'setting a class works');
   t.end();
 });
 
-test('classes can card a class to an element that already has classes', function (t) {
+test('classes can add a class to an element that already has classes', function (t) {
   var el = document.createElement('div');
   el.className = 'bar';
   classes.add(el, 'gu-foo');
@@ -24,7 +24,7 @@ test('classes can card a class to an element that already has classes', function
   t.end();
 });
 
-test('classes.card is a no-op if class already is in element', function (t) {
+test('classes.add is a no-op if class already is in element', function (t) {
   var el = document.createElement('div');
   el.className = 'gu-foo';
   classes.add(el, 'gu-foo');

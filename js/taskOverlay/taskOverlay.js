@@ -400,13 +400,13 @@ var taskOverlay = {
       }
 
       var newTask
-      // if dropping on "card task" button, create a new task
+      // if dropping on "add task" button, create a new task
       if (target === addTaskButton) {
         newTask = tasks.get(tasks.add())
         // remove from button, and re-create in overlay
         el.remove()
       } else {
-        // otherwise, find a source task to card this tab to
+        // otherwise, find a source task to add this tab to
         newTask = tasks.get(target.getAttribute('data-task'))
       }
 

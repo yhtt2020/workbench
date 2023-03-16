@@ -141,7 +141,7 @@ async function createView(existingViewId, id, webPreferencesString, boundsString
     }
   })
 
-  view.webContents.removeAllListeners('-card-new-contents')
+  view.webContents.removeAllListeners('-add-new-contents')
 
   // view.webContents.on('devtools-opened',()=>{
   //   console.log('devtools-opends')
@@ -157,7 +157,7 @@ async function createView(existingViewId, id, webPreferencesString, boundsString
   //   // })
   // })
 
-  view.webContents.on('-card-new-contents', function (e, webContents, disposition, _userGesture, _left, _top, _width, _height, url, frameName, referrer, rawFeatures, postData) {
+  view.webContents.on('-add-new-contents', function (e, webContents, disposition, _userGesture, _left, _top, _width, _height, url, frameName, referrer, rawFeatures, postData) {
     if (!filterPopups(url)) {
       return
     }

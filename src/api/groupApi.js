@@ -6,12 +6,12 @@ const url = {
   circleInfoById: '/app/browser/group/getCircleInfoById',
   groupList: '/app/browser/group/list',
   navsList: '/app/browser/appGroupList/list',
-  addNav: '/app/browser/appGroupList/card',
+  addNav: '/app/browser/appGroupList/add',
   updateNav: '/app/browser/appGroupList/update',
   delNav: '/app/browser/appGroupList/delete',
 
   appsList: '/app/browser/groupApps/list',
-  addApp: '/app/browser/groupApps/card',
+  addApp: '/app/browser/groupApps/add',
   deleteApp: '/app/browser/groupApps/delete',
   updateApp: '/app/browser/groupApps/update'
 }
@@ -77,7 +77,7 @@ const groupApi = {
     await baseApi.init()
     return baseApi.axios(url.appsList, data)
   },
-  //card
+  //add
   async addGroupNavApps(info) {
     await baseApi.init()
     return baseApi.axios(url.addApp, info)

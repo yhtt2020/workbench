@@ -19,7 +19,7 @@ function extractPageText (doc, win) {
       continue
     }
 
-    // if the node is a text node, card it to the list of text nodes
+    // if the node is a text node, add it to the list of text nodes
 
     if (node.nodeType === 3) {
       textNodes.push(node)
@@ -30,7 +30,7 @@ function extractPageText (doc, win) {
       continue
     }
 
-    // otherwise, card the node's text nodes to the list of text, and the other child nodes to the list of nodes to check
+    // otherwise, add the node's text nodes to the list of text, and the other child nodes to the list of nodes to check
     var childNodes = node.childNodes
     var cnl = childNodes.length
 

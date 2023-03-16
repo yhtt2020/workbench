@@ -136,7 +136,7 @@ const FontInspector = (function FontInspectorClosure() {
       });
       font.append(select, name, " ", download, " ", logIt, moreInfo);
       fonts.append(font);
-      // Somewhat of a hack, should probably card a hook for when the text layer
+      // Somewhat of a hack, should probably add a hook for when the text layer
       // is done rendering.
       setTimeout(() => {
         if (this.active) {

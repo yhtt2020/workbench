@@ -11,7 +11,7 @@ var languages = {
 */
 
 function getCurrentLanguage () {
-  // TODO card a setting to change the language to something other than the default
+  // TODO add a setting to change the language to something other than the default
 
   var language = 'en-US' // default
 

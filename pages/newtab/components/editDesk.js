@@ -96,7 +96,7 @@ Vue.component('createDesk', {
         return
       }
       this.visibleChange()
-      this.$emit('card-desk',{icon:this.desk.icon,name:this.desk.name})
+      this.$emit('add-desk',{icon:this.desk.icon,name:this.desk.name})
     },
     selectIcon(icon){
       console.log('set')

@@ -257,7 +257,7 @@ function fullTextPlacesSearch (searchText, callback) {
         doc.boost = 0
       }
 
-      // card boost when search terms appear close to each other
+      // add boost when search terms appear close to each other
 
       const indexList = docIndexes[doc.url]
       let totalWordDistanceBoost = 0

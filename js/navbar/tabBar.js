@@ -683,7 +683,7 @@ const tabBar = {
     // }
   },
   updateAll: function () {
-    const addBtnWrapper = document.getElementById('card-btn-wrapper')
+    const addBtnWrapper = document.getElementById('add-btn-wrapper')
     empty(tabBar.containerInner)
 
     tabBar.tabElementMap = {}
@@ -700,7 +700,17 @@ const tabBar = {
     if (tabs.getSelected()) {
       tabBar.setActiveTab(tabs.getSelected())
     }
-    tabBar.containerInner.appendChild(addBtnWrapper)
+    try{
+      if(typeof addBtnWrapper==='Node'){
+        tabBar.containerInner.appendChild(addBtnWrapper)
+      }else{
+        console.warn(addBtnWrapper,'addbtnwrapper is')
+      }
+    }catch (e) {
+      console.warn(e,'crash')
+    }
+
+
   },
 
   lockTab: function (id) {
@@ -754,7 +764,7 @@ const tabBar = {
       slideFactorX: 25,
       slideFactorY: 25,
       invalid: function (el, handle) {
-        return el.id === 'card-btn-wrapper'
+        return el.id === 'add-btn-wrapper'
       },
       accepts: function (el, target, source, sibling) {
         return !(sibling === null)

@@ -30,7 +30,7 @@ export default {
   name: 'Vuuri',
   props: {
     /**
-     * Optional class name to card to the grid. If not, one will be provided
+     * Optional class name to add to the grid. If not, one will be provided
      */
     className: {
       type: String,

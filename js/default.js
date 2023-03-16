@@ -32,7 +32,7 @@ if (navigator.maxTouchPoints > 0) {
 	document.body.classList.add('touch')
 }
 
-/* card classes so that the window state can be used in CSS */
+/* add classes so that the window state can be used in CSS */
 ipc.on('enter-full-screen', function() {
 	document.body.classList.add('fullscreen')
 })
