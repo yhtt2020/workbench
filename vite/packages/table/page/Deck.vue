@@ -56,7 +56,7 @@
                           style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em)">
 
       <div style="width: auto;white-space: nowrap">
-        <div style="width: 20em;display: inline-block" v-for="(grid,index) in grids">
+        <div :style="{width:getWidth(grid.cols)}" style="display: inline-block" v-for="(grid,index) in grids">
           <h3 class="pointer" v-if="sharing">
             <a-checkbox v-model:checked="selectedGridIds[grid.id]">{{ grid.title }}</a-checkbox>
           </h3>
@@ -70,7 +70,8 @@
             <!--        <DeckItem :id="item.id" :item="item" v-for="item in board.children"></DeckItem>-->
             <!--      </div>-->
 
-            <vuuri :key="key" :drag-enabled="editing" group-id="grid.id" :ref="'grid'+grid.id" item-key="id"
+            <vuuri :style={width:getVuuriWidth(grid.cols)} :key="key" :drag-enabled="editing" group-id="grid.id" :ref="'grid'+grid.id"
+                   item-key="id"
                    class="grid" @contextmenu.stop="showMenu(grid.id)"
                    :get-item-width="getIconSize" :get-item-height="getIconSize"
                    v-model="grid.children">
@@ -147,6 +148,39 @@
 
   </a-drawer>
   <a-drawer
+    title="修改组设置"
+    placement="right"
+    :closable="true"
+    v-model:visible="editGridVisible"
+    @close="onClose"
+  >
+    <div class="line">
+      <a-row :gutter="5">
+        <a-col>
+          <div @click="changeSize('large')" class="btn">
+            <a-avatar shape="square">大</a-avatar>
+            <div>大图标</div>
+          </div>
+        </a-col>
+        <a-col>
+          <div @click="changeSize('middle')" class="btn">
+            <a-avatar shape="square">中</a-avatar>
+            <div>中图标</div>
+          </div>
+        </a-col>
+        <a-col>
+          <div @click="changeSize('small')" class="btn">
+            <a-avatar shape="square">小</a-avatar>
+            <div>小图标</div>
+          </div>
+        </a-col>
+      </a-row>
+    </div>
+    <div class="line">
+      设置组宽度： <a-input-number style="width:130px" :min="1" step="1" addon-before="行数" v-model:value="currentGrid.cols" :defalut-value="2"></a-input-number>
+    </div>
+  </a-drawer>
+  <a-drawer
     title="导入方案"
     placement="right"
     :closable="true"
@@ -214,6 +248,12 @@
         </div>
       </a-col>
       <a-col v-if="menuType==='grid'">
+        <div @click="toggleEditGrid()" class="btn">
+          <Icon style="font-size: 3em" icon="shenqing"></Icon>
+          <div>编辑分组</div>
+        </div>
+      </a-col>
+      <a-col v-if="menuType==='grid'">
         <div @click="removeGrid(this.currentGridId)" class="btn">
           <Icon style="font-size: 3em" icon="shanchu"></Icon>
           <div>删除分组</div>
@@ -226,6 +266,9 @@
         </div>
       </a-col>
 
+
+    </a-row>
+    <a-row style="margin-top: 1em" :gutter="[20,20]">
       <a-col>
         <div @click="toggleEditing" class="btn">
           <Icon v-if="!this.editing" style="font-size: 3em" icon="bofang"></Icon>
@@ -246,26 +289,6 @@
           <div>导入方案</div>
         </div>
 
-      </a-col>
-    </a-row>
-    <a-row style="margin-top: 1em" :gutter="[20,20]">
-      <a-col>
-        <div @click="changeSize('large')" class="btn">
-          <a-avatar shape="square">大</a-avatar>
-          <div>大图标</div>
-        </div>
-      </a-col>
-      <a-col>
-        <div @click="changeSize('middle')" class="btn">
-          <a-avatar shape="square">中</a-avatar>
-          <div>中图标</div>
-        </div>
-      </a-col>
-      <a-col>
-        <div @click="changeSize('small')" class="btn">
-          <a-avatar shape="square">小</a-avatar>
-          <div>小图标</div>
-        </div>
       </a-col>
 
 
@@ -329,6 +352,8 @@ export default {
 
       key: Date.now(),
 
+      editGridVisible:false,
+
       addKey: Date.now(),
       editGrid: null,
       visiblePromptTitle: false,
@@ -380,6 +405,26 @@ export default {
     // })
   },
   methods: {
+    toggleEditGrid(){
+      if(!this.currentGrid.cols){
+        this.currentGrid.cols=2
+      }
+      this.editGridVisible=true
+    },
+    getWidth(col){
+      if(!col){
+        return '210px'
+      }else{
+        return col*90+20+'px'
+      }
+    },
+    getVuuriWidth(col){
+      if(!col){
+        return '200px'
+      }else{
+        return col*90+10+'px'
+      }
+    },
     ...mapActions(deckStore, ['initGrids']),
     importCode () {
       if (this.importJsonTxt === '') {
@@ -487,10 +532,10 @@ export default {
     moveGrid (step, index) {
       let tmp = this.grids[index]
       this.grids.splice(index, 1)
-      if(step===-1){
-        this.grids.splice(index +step,0, tmp)
-      }else{
-        this.grids.splice(index+1 ,0, tmp)
+      if (step === -1) {
+        this.grids.splice(index + step, 0, tmp)
+      } else {
+        this.grids.splice(index + 1, 0, tmp)
       }
     },
     showEditTitle (grid) {
@@ -603,7 +648,8 @@ export default {
       let grid = {
         id: Date.now(),
         title: '新组',
-        children: []
+        children: [],
+        cols:2
       }
       console.log(this.grids)
       this.grids.push(grid)
