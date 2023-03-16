@@ -56,23 +56,28 @@
                           style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em)">
 
       <div style="width: auto;white-space: nowrap">
-        <div :style="{width:getWidth(grid.cols)}" style="display: inline-block" v-for="(grid,index) in grids">
+        <div @contextmenu.stop="showMenu(grid.id)" :style="{width:getWidth(grid.cols)}" style="display: inline-block" v-for="(grid,index) in grids">
           <h3 class="pointer" v-if="sharing">
             <a-checkbox v-model:checked="selectedGridIds[grid.id]">{{ grid.title }}</a-checkbox>
           </h3>
           <h3 class="pointer" v-else>
             <span v-if="editing"><left-square-outlined v-if="index!==0" @click.stop="moveGrid(-1,index)" class="mr-3"/> <right-square-outlined
               v-if="index!==this.grids.length-1" @click.stop="moveGrid(1,index)"/></span>
-            <span @click="showEditTitle(grid)" class="pl-5"> {{ grid.title }}</span></h3>
+            <span @click.stop="showEditTitle(grid)" class="pl-5"> {{ grid.title }}</span></h3>
           <div>
             <!--      <div style="min-height: 3em" @contextmenu.stop="showMenu(index)" :id="'board-'+board.id" class="grid"-->
             <!--           v-for="(board,index) in decks">-->
             <!--        <DeckItem :id="item.id" :item="item" v-for="item in board.children"></DeckItem>-->
             <!--      </div>-->
+            <div style="text-align: center;padding-top: 0.6em;padding-bottom: 0.6em" v-if="grid.children.length===0" class="grid">
+              <h3>组内还未有任何按钮</h3>
+              <a-button size="large" type="primary" @click.stop="add(grid)"><plus-outlined />添加按钮</a-button>
+            </div>
 
-            <vuuri :style={width:getVuuriWidth(grid.cols)} :key="key" :drag-enabled="editing" group-id="grid.id" :ref="'grid'+grid.id"
+
+            <vuuri v-show="grid.children.length!==0" :style={width:getVuuriWidth(grid.cols)} :key="key" :drag-enabled="editing" group-id="grid.id" :ref="'grid'+grid.id"
                    item-key="id"
-                   class="grid" @contextmenu.stop="showMenu(grid.id)"
+                   class="grid"
                    :get-item-width="getIconSize" :get-item-height="getIconSize"
                    v-model="grid.children">
               <template #item="{ item }">
@@ -324,7 +329,7 @@ import vuuri from '../components/vuuri/Vuuri.vue'
 import Prompt from '../components/comp/Prompt.vue'
 import { Modal } from 'ant-design-vue'
 import BackBtn from '../components/comp/BackBtn.vue'
-import { LeftSquareOutlined, RightSquareOutlined } from '@ant-design/icons-vue'
+import { LeftSquareOutlined, RightSquareOutlined ,PlusOutlined} from '@ant-design/icons-vue'
 
 export default {
   name: 'Deck',
@@ -336,7 +341,7 @@ export default {
     DeckItem,
     Widget: Widget,
     vuuri,
-    LeftSquareOutlined, RightSquareOutlined
+    LeftSquareOutlined, RightSquareOutlined,PlusOutlined
   },
   data () {
     return {
@@ -605,7 +610,11 @@ export default {
       this.addKey = Date.now()
       this.visibleAdd = true
     },
-    add () {
+    add (currentGrid) {
+      if(currentGrid){
+        this.currentGrid=currentGrid
+        this.currentGridId=currentGrid.id
+      }
       this.currentItem = undefined
       this.addKey = Date.now()
       this.visibleAdd = true
