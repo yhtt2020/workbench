@@ -1,16 +1,19 @@
 <template>
-  <vue-custom-scrollbar  @contextmenu.stop="showMenu(-1,undefined,'wrapper')" :settings="scrollbarSettings"
-                         style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em)">
-    <div style="width: auto;white-space: nowrap">
-          <AddMore></AddMore>
-          <vuuri :drag-enabled="true" v-model="customComponents" class="grid">
+  <vue-custom-scrollbar   :settings="scrollbarSettings" style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em)">
+    <div style="white-space: nowrap;">
+      <div style="width: 25em;display: inline-block" v-for="(grid,index) in customComponents">
+        <div>
+          <vuuri group-id="grid.id" :drag-enabled="true" v-model="grid.children" class="grid" ref="grid">
           <template #item="{ item }">
-            <Widget style=""
+              <div style="display: inline-block" >
+                <Widget @contextmenu.stop="showMenu(item.id,{item,grid},'item')"   :item="item"
+                    :uniqueKey="String(item.id)"
                     :showDelete="true"
                     :resizable="true"
-            ><component :is="item.name" :customIndex="index" style="" ></component></Widget>
+            >
+            <component :is="item.name" :customIndex="item.id" ></component></Widget></div>
           </template>
-        </vuuri></div>
+          </vuuri></div></div><AddMore style="z-index: 9999999999;"></AddMore></div>
   </vue-custom-scrollbar>
 </template>
 <script>
@@ -27,10 +30,22 @@ import Clock from "../components/homeWidgets/Clock.vue";
 import CountdownDay from "../components/homeWidgets/CountdownDay.vue";
 import { mapWritableState } from "pinia";
 import { tableStore } from "../store";
-import vuuri from '../components/vuuri/Vuuri.vue'
+import vuuri from '../components/vuuriHome/Vuuri.vue'
 import Widget from "../components/muuri/Widget.vue";
 export default {
   name: "Home",
+  date(){
+    return{
+      scrollbarSettings: {
+        useBothWheelAxes: true,
+        swipeEasing: true,
+        suppressScrollY: true,
+        suppressScrollX: false,
+        wheelPropagation: true,
+        currentItemId:-1
+      },
+    }
+  },
   components: {
     Dou,
     AddMore,
@@ -59,28 +74,18 @@ export default {
     // }
   },
   methods: {
-    getIconSize(){
-      let width=80
-      switch(this.settings.iconSize){
-        case 'small':
-          width=40
-          break
-        case 'middle':
-          width=80
-          break
-        case 'large':
-          width=160
-          break
-        default:
-          width=80
+    showMenu (id,data,type='grid') {
+       if(type==='item'){
+        this.currentItemId = id
       }
-      return width +'px'
-    },},
+    }
+    },
+
   watch:{
     "customComponents": {
       handler(newVal, oldVal) {
         try {
-          this.$refs.grid.update()
+
         }catch (e) {
         }
       },
@@ -93,10 +98,15 @@ export default {
 <style scoped lang="scss">
 .grid {
   position: relative;
-  width:auto;
-  border: 5px solid transparent;
+  display: inline-block;
+  width: 60em;
+  background: rgba(204, 204, 204, 0.3);
+  border: 5px solid red;
+
   border-radius: 4px;
   vertical-align: top;
   margin: 1em;
+  left: 0px;
+  right: 0;
 }
 </style>

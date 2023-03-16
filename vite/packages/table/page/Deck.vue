@@ -3,7 +3,7 @@
                         style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em)">
 
     <div style="width: auto;white-space: nowrap">
-      <div style="width: 20em;display: inline-block" v-for="(grid,index) in grids">
+      <div style="width: 60em;display: inline-block" v-for="(grid,index) in grids">
         <h3 class="pointer" @click="showEditTitle(grid)">{{grid.title}}</h3>
         <div>
           <!--      <div style="min-height: 3em" @contextmenu.stop="showMenu(index)" :id="'board-'+board.id" class="grid"-->
