@@ -413,17 +413,17 @@ export default {
     },
     getWidth(col){
       if(!col){
-        return '210px'
-      }else{
-        return col*90+20+'px'
+        col=2
       }
+      return col*90+20+'px'
+
     },
     getVuuriWidth(col){
       if(!col){
-        return '200px'
-      }else{
-        return col*90+10+'px'
+        col=2
       }
+      return col*90+10+'px'
+
     },
     ...mapActions(deckStore, ['initGrids']),
     importCode () {

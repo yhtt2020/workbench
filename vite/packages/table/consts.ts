@@ -176,6 +176,18 @@ let ActionGroups = [
             type: 'textarea',
           }
         ]
+      },
+      {
+        name:'mmtcmd',
+        title:'执行MultiMonitorTool命令',
+        summary:'执行MultiMonitorTool命令行工具，这个工具主要用于操作显示器，可<a target="_blank" href="https://www.nirsoft.net/utils/multi_monitor_tool.html">参考此处</a>的命令。',
+        inputs: [
+          {
+            name: 'cm',
+            title: '参数，回车换行，每行参数会顺序执行',
+            type: 'textarea',
+          }
+        ]
       }
     ]
   }
