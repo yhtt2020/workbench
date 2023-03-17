@@ -715,14 +715,14 @@ class WindowManager {
     if (!webPreferences) {
       webPreferences = {}
     }
-    webPreferences = Object.assign(this.defaultWebPreferences, webPreferences)
+    webPreferences = Object.assign(_.cloneDeep(this.defaultWebPreferences), webPreferences)
     this.optionMap[name] = name
     let wenContents
     let instance
     if (!viewOption) {
       viewOption = {}
     }
-    viewOption.windowOption = Object.assign(this.defaultViewPreferences, viewOption)
+    viewOption.windowOption = Object.assign(_.cloneDeep(this.defaultViewPreferences), viewOption)
     if(!webPreferences.additionalArguments){
       //不存在addtionalArguments则初始化一个空
       webPreferences.additionalArguments=[]
