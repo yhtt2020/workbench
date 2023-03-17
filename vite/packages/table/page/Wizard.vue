@@ -113,9 +113,7 @@
         <ChooseScreen></ChooseScreen>
       </div>
 
-      <div class="screen-section" v-if="screenSettingTab==='scale'" style="margin-top: 1em"> 如遇工作台显示不自然，建议您设置屏幕缩放比
-        <br>
-
+      <div class="screen-section" v-if="screenSettingTab==='scale'" style="margin-top: 1em">
         <div style="color: #999">
           由于小尺寸的屏幕往往无法获得最佳的触摸体验，故建议设置屏幕缩放比。
         </div>
@@ -159,16 +157,16 @@
 
     </div>
     <div v-if="(step===1 && mod==='bootstrap') || (step===2 && mod==='second-screen')">
-      <div>开机自启动：<a-switch></a-switch></div>
-      <div>配置快捷键(如果与其他软件冲突，请修改）：</div>
+      <div><span style="font-weight: bold;color: white">开机自启动：</span><a-switch @change="setAutoRun" v-model:checked="isAutoRun"></a-switch> 可能会被安全软件拦截，请允许</div>
+      <div>快捷键：</div>
       <div style="text-align: center">
         <div style="text-align: center;margin-top: 1em">
-          呼出/隐藏工作台快捷键
+          呼出/隐藏工作台
         </div>
         <key-input placeholder="呼出/隐藏工作台快捷键" title="工作台" name="table" :value="shortKeysTable"
                    @changeKeys="setTableKeys"></key-input>
         <div style="text-align: center;margin-top: 1em">
-          呼出/隐藏全局搜索快捷键
+          呼出/隐藏全局搜索
         </div>
         <key-input placeholder="呼出/隐藏全局搜索快捷键" title="全局搜索" name="search" :value="shortKeysSearch"
                    @changeKeys="setSearchKeys"></key-input>
@@ -229,6 +227,7 @@ export default {
     return {
       screenSettingTab: 'none',
 
+      isAutoRun:false,
       ctrl: false,
       shift: false,
       alt: false,
@@ -283,10 +282,14 @@ export default {
     if (keyMap.globalSearch) {
       this.shortKeysSearch = keyMap.globalSearch
     }
+    this.isAutoRun=await tsbApi.settings.get('autoRun')
 
   },
   methods: {
     ...mapActions(appStore, ['finishWizard']),
+    async setAutoRun () {
+      await tsbApi.settings.setAutoRun( this.isAutoRun)
+    },
     openVideo(){
       ipc.send('addTab',{url:'https://www.bilibili.com/video/BV17t4y127no/?spm_id_from=333.337.search-card.all.click'})
     },

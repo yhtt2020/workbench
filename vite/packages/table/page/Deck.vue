@@ -57,10 +57,10 @@
 
       <div style="width: auto;white-space: nowrap">
         <div @contextmenu.stop="showMenu(grid.id)" :style="{width:getWidth(grid.cols)}" style="display: inline-block" v-for="(grid,index) in grids">
-          <h3 class="pointer" v-if="sharing">
+          <h3 class="pointer text-more" v-if="sharing" >
             <a-checkbox v-model:checked="selectedGridIds[grid.id]">{{ grid.title }}</a-checkbox>
           </h3>
-          <h3 class="pointer" v-else>
+          <h3 class="pointer text-more" v-else>
             <span v-if="editing"><left-square-outlined v-if="index!==0" @click.stop="moveGrid(-1,index)" class="mr-3"/> <right-square-outlined
               v-if="index!==this.grids.length-1" @click.stop="moveGrid(1,index)"/></span>
             <span @click.stop="showEditTitle(grid)" class="pl-5"> {{ grid.title }}</span></h3>
@@ -69,13 +69,13 @@
             <!--           v-for="(board,index) in decks">-->
             <!--        <DeckItem :id="item.id" :item="item" v-for="item in board.children"></DeckItem>-->
             <!--      </div>-->
-            <div style="text-align: center;padding-top: 0.6em;padding-bottom: 0.6em" v-if="grid.children.length===0" class="grid">
-              <h3>组内还未有任何按钮</h3>
-              <a-button size="large" type="primary" @click.stop="add(grid)"><plus-outlined />添加按钮</a-button>
+            <div :style={width:getVuuriWidth(grid.cols)} style="text-align: center;padding-top: 0.6em;padding-bottom: 0.6em" v-if="grid.children.length===0 && editing===false" class="grid">
+              <a-button style="max-width: 100%"  type="primary" @click.stop="add(grid)"><plus-outlined />添加</a-button>
             </div>
 
 
-            <vuuri v-show="grid.children.length!==0" :style={width:getVuuriWidth(grid.cols)} :key="key" :drag-enabled="editing" group-id="grid.id" :ref="'grid'+grid.id"
+            <vuuri v-show="grid.children.length!==0|| editing" :style={width:getVuuriWidth(grid.cols)} :key="key" :drag-enabled="editing" group-id="grid.id" :ref="'grid'+grid.id"
+                   style="min-height: 3em"
                    item-key="id"
                    class="grid"
                    :get-item-width="getIconSize" :get-item-height="getIconSize"
