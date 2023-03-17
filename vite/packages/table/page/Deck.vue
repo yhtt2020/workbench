@@ -240,6 +240,12 @@
         </div>
       </a-col>
       <a-col v-if="menuType==='item'">
+        <div @click="clone()" class="btn">
+          <Icon style="font-size: 3em" icon="fuzhi"></Icon>
+          <div>复制按钮</div>
+        </div>
+      </a-col>
+      <a-col v-if="menuType==='item'">
         <div @click="remove()" class="btn">
           <Icon style="font-size: 3em" icon="shanchu"></Icon>
           <div>删除按钮</div>
@@ -330,7 +336,7 @@ import Prompt from '../components/comp/Prompt.vue'
 import { Modal } from 'ant-design-vue'
 import BackBtn from '../components/comp/BackBtn.vue'
 import { LeftSquareOutlined, RightSquareOutlined ,PlusOutlined} from '@ant-design/icons-vue'
-
+import _ from 'lodash-es'
 export default {
   name: 'Deck',
   components: {
@@ -610,6 +616,17 @@ export default {
       this.addKey = Date.now()
       this.visibleAdd = true
     },
+    clone(){
+      let cloneItem=_.cloneDeep(this.currentItem)
+      cloneItem.id=require('nanoid').nanoid(8)
+      this.currentGrid.children.unshift(cloneItem)
+
+      console.log(this.currentGrid.children)
+      console.log(this.currentItem)
+      this.menuVisible=false
+      this.key+=1
+      message.success('复制按钮成功')
+    },
     add (currentGrid) {
       if(currentGrid){
         this.currentGrid=currentGrid
@@ -633,6 +650,7 @@ export default {
         this.currentItemId = id
         this.currentItem = data.item
         this.currentGrid = data.grid
+        this.currentGridId=data.grid.id
       } else {
         this.menuType = 'wrapper'
       }
