@@ -64,7 +64,7 @@
             <span v-if="editing"><span style="margin-left: 0.8em"><left-square-outlined v-if="index!==0" @click.stop="moveGrid(-1,index)" class="mr-3"/> <right-square-outlined
               v-if="index!==this.grids.length-1" @click.stop="moveGrid(1,index)"/></span>
             <span @click.stop="showEditTitle(grid)" class="pl-5"></span> {{ grid.title }}</span></h3>
-          <h3 v-else class="pointer text-more">
+          <h3 style="padding-left: 0.8em;margin-bottom: 0em" v-else class="pointer text-more">
             {{ grid.title }}
           </h3>
           <div >
@@ -429,7 +429,7 @@ export default {
       if(!col){
         col=2
       }
-      return col*90+20+'px'
+      return col*90+25+'px'
 
     },
     getVuuriWidth(col){
@@ -720,9 +720,9 @@ export default {
   position: relative;
   width: 18em;
   display: inline-block;
-  background: rgba(204, 204, 204, 0.3);
+  background: rgba(204, 204, 204, 0.08);
   border: 5px solid transparent;
-  border-radius: 4px;
+  border-radius: 8px;
   vertical-align: top;
   margin: 1em;
 }
