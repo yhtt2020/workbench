@@ -57,14 +57,17 @@
 
       <div style="width: auto;white-space: nowrap">
         <div @contextmenu.stop="showMenu(grid.id)" :style="{width:getWidth(grid.cols)}" style="display: inline-block" v-for="(grid,index) in grids">
-          <h3 class="pointer text-more" v-if="sharing" >
+          <h3 class=" pointer text-more" v-if="sharing" >
             <a-checkbox v-model:checked="selectedGridIds[grid.id]">{{ grid.title }}</a-checkbox>
           </h3>
-          <h3 class="pointer text-more" v-else>
-            <span v-if="editing"><left-square-outlined v-if="index!==0" @click.stop="moveGrid(-1,index)" class="mr-3"/> <right-square-outlined
+          <h3 class="pointer text-more" v-if="editing" >
+            <span v-if="editing"><span style="margin-left: 0.8em"><left-square-outlined v-if="index!==0" @click.stop="moveGrid(-1,index)" class="mr-3"/> <right-square-outlined
               v-if="index!==this.grids.length-1" @click.stop="moveGrid(1,index)"/></span>
-            <span @click.stop="showEditTitle(grid)" class="pl-5"> {{ grid.title }}</span></h3>
-          <div>
+            <span @click.stop="showEditTitle(grid)" class="pl-5"></span> {{ grid.title }}</span></h3>
+          <h3 v-else class="pointer text-more">
+            {{ grid.title }}
+          </h3>
+          <div >
             <!--      <div style="min-height: 3em" @contextmenu.stop="showMenu(index)" :id="'board-'+board.id" class="grid"-->
             <!--           v-for="(board,index) in decks">-->
             <!--        <DeckItem :id="item.id" :item="item" v-for="item in board.children"></DeckItem>-->
@@ -520,12 +523,20 @@ export default {
       this.importMenuJsonVisible = !this.importMenuJsonVisible
     },
     toggleSharing () {
+      if(this.editing){
+        //互斥
+        this.toggleEditing()
+      }
       this.selectedGridIds = {}
       this.sharing = !this.sharing
       this.fullScreen = this.sharing
       this.menuVisible = false
     },
     toggleEditing () {
+      if(this.sharing){
+        //互斥
+        this.toggleSharing()
+      }
       this.editing = !this.editing
       if (this.editing) {
         message.info('您可以直接拖拽图标调整位置，支持跨组调整')
