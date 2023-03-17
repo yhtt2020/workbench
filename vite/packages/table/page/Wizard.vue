@@ -1,23 +1,29 @@
 <template>
-  <h2  style="text-align: center;padding: 1em;-webkit-app-region:drag"><Icon icon="jurassic_nav" style="font-size: 1.2em"></Icon> 工作台使用向导</h2>
+  <h2 style="text-align: center;padding: 1em;-webkit-app-region:drag">
+    <Icon icon="jurassic_nav" style="font-size: 1.2em"></Icon>
+    工作台使用向导
+  </h2>
   <div
-    style="text-align: left;font-size: 1.2em;line-height: 2;width: 500px;margin: auto;position: relative;height: 80vh">
+    style="text-align: left;font-size: 1.2em;line-height: 2;width: 600px;margin: auto;position: relative;height: 80vh">
     <div style="padding: 0.5em">
       <a-steps :current="step" size="large">
         <a-step v-for="item in steps" :title="item.title"/>
       </a-steps>
     </div>
     <div v-if="step===0">
-      <div style="margin-bottom: 1em" v-if="true">
-        发现您正在使用多块屏幕。
-        <br>推荐使用副屏模式，获得最佳体验，后续可随时更改。
+      <div style="margin-bottom: 2em;margin-top:1em" v-if="true">
+        如果您正在使用副屏，则推荐您使用副屏模式获得最佳体验。
+        <div style="color:#999;font-size: 0.9em">
+          <bulb-filled /> 还没有扩展屏？
+          <br/><a @click="openVideo"><play-circle-filled /> 点击了解</a> Spacedesk | 把任意设备变成你的第二屏幕，手机、平板、电脑都可以！
+        </div>
       </div>
       <div style="margin-bottom: 1em" v-else>
         您当前仅有一块屏幕，无法启用副屏模式，您可在增添副屏后启用。<a>了解更多</a>
       </div>
       <a-row :gutter="20">
         <a-col :span="12">
-          <div v :class="{'active':mod==='second-screen'}" @click="this.mod='second-screen'" class="panel pointer">
+          <div :class="{'active':mod==='second-screen'}" @click="this.mod='second-screen'" class="panel pointer">
             <div class="title">
               <icon icon="touping" style="font-size: 1.2em"></icon>
               副屏模式
@@ -34,7 +40,7 @@
               启动器模式
             </div>
             <p>
-              通过默认快捷键<br>Alt+空格<br>呼出界面。
+              隐藏界面，通过默认快捷键<br>Alt+空格<br>呼出界面。
             </p></div>
         </a-col>
       </a-row>
@@ -42,38 +48,131 @@
 
     </div>
     <div v-if="step===1 && mod==='second-screen'">
-      <div>系统检测到您正在使用触摸屏</div>
-      <div>目前副屏是否已经可正确识别触摸？</div>
-      <div style="text-align: center;">
-        <a-switch v-model:checked="canTouch" checked-children="可正确触摸"
-                  un-checked-children="不可正常触摸"></a-switch>
+
+      <div v-if="screenSettingTab==='none'">
+
+        <a-row class="screen-section">
+          <a-col :span="20">
+            <div style="font-size: 1.3em">
+              <Icon icon="Touch"/>
+              副屏是否已经可正确识别触摸？
+            </div>
+            <div style="color: #999">异常情况：触摸副屏，反馈在主屏的情况。</div>
+          </a-col>
+          <a-col :span="4">
+            <a-button v-if="screenSettingTab!=='touch'" @click="screenSettingTab='touch'" type="primary"> 矫正屏幕
+            </a-button>
+          </a-col>
+        </a-row>
+        <a-row class="screen-section">
+          <a-col :span="20">
+            <div style="font-size: 1.3em">
+              <Icon icon="touping"/>
+              工作台是否显示在了您期望的屏幕上？
+            </div>
+          </a-col>
+          <a-col :span="4">
+            <a-button @click="screenSettingTab='choose'" type="primary">选择屏幕</a-button>
+          </a-col>
+        </a-row>
+        <a-row class="screen-section">
+          <a-col :span="20">
+            <div style="font-size: 1.3em">
+              <Icon icon="wenzidaxiao2"></Icon>
+              工作台界面显示不自然？
+            </div>
+            <div style="color: #999">异常情况：字体过小、难以触摸、边缘留白过大、显示不全。</div>
+          </a-col>
+          <a-col :span="4">
+            <a-button @click="screenSettingTab='scale'" type="primary">设置缩放</a-button>
+          </a-col>
+        </a-row>
+        <div></div>
       </div>
-      <div v-if="canTouch">选择显示的屏幕
-      <ChooseScreen></ChooseScreen>
+
+      <div v-if="screenSettingTab==='touch'">
+        <div class="screen-section" style="line-height: 2;margin-top: 3em" v-if="screenSettingTab==='touch'">
+          <p>
+            如果您点击副屏没有任何反馈（包括主屏和副屏），请先检查是否正确连接数据。不支持一线通的屏幕需要同时连接HDMI和USB，分别负责视频传输和数据传输。</p>
+          <p>矫正方法：</p>
+          <p>在非触摸屏上按下Enter键，在触摸屏上进行触摸。</p>
+          <p style="text-align: center">
+            <a-button class="mr-10" type="primary" size="large" @click="startAdjust">触摸矫正</a-button>
+            <a-button type="primary" size="large" @click="adjustPen">笔矫正</a-button>
+          </p>
+        </div>
+
       </div>
-      <div class="panel" style="line-height: 1;margin-top: 0.5em" v-if="!canTouch">
-        <p>如果无法触摸，进行可进行屏幕触摸矫正。</p>
-        <p>矫正方法：</p>
-        <p>在非触摸屏上按下Enter键，在触摸屏上进行触摸。</p>
-        <p style="text-align: center">
-          <a-button type="primary" size="large" @click="startAdjust">触摸矫正</a-button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <a-button type="primary" size="large" @click="adjustPen">笔矫正</a-button>
-        </p>
+
+
+      <div class="screen-section" style="height: 17em;margin-top: 2em" v-if="screenSettingTab==='choose'">选择您要显示工作台的屏幕，直接点击屏幕即可。
+        <a-button style="margin-bottom: 2em" v-if="canTouch" @click="canTouch=!canTouch" type="primary">
+          <Icon icon="touping"/>
+          矫正屏幕
+        </a-button>
+        <ChooseScreen></ChooseScreen>
       </div>
+
+      <div class="screen-section" v-if="screenSettingTab==='scale'" style="margin-top: 1em"> 如遇工作台显示不自然，建议您设置屏幕缩放比
+        <br>
+
+        <div style="color: #999">
+          由于小尺寸的屏幕往往无法获得最佳的触摸体验，故建议设置屏幕缩放比。
+        </div>
+        <div>
+          <div style="font-size: 1.2em">
+            当前
+          </div>
+          <div style="padding-left: 1em">
+            <div > 缩放比例：100%</div>
+            原始分辨率：
+            <Icon icon="kuandu"/>
+            宽 1920
+            <Icon icon="guanbi1"/>
+            <Icon icon="gaodu"/>
+            高 1080 <br>
+            缩放后分辨率：
+            <Icon icon="kuandu"/>
+            宽 1920
+            <Icon icon="guanbi1"/>
+            <Icon icon="gaodu"/>
+            高 1080
+          </div>
+          </div>
+
+        <div>
+          <div style="font-size: 1.2em">调节后</div>
+          <div style="padding-left: 1em">
+            调节缩放比例：175%<br>
+            调节后后分辨率：<span style="color:orangered"><Icon icon="kuandu"/>宽 1098（<Icon icon="tishi-xianxing"/>低于推荐值）</span>
+            <Icon icon="guanbi1"/>
+            <Icon icon="gaodu"/>
+            高 618
+
+            <a-slider></a-slider>
+          </div>
+
+
+        </div>
+      </div>
+
+
     </div>
-    <div v-if="step===1 && mod==='bootstrap'">
-      <div>启动器模式配置</div>
-      <div>配置启动快捷键(如果与其他软件冲突，请修改）：</div>
+    <div v-if="(step===1 && mod==='bootstrap') || (step===2 && mod==='second-screen')">
+      <div>开机自启动：<a-switch></a-switch></div>
+      <div>配置快捷键(如果与其他软件冲突，请修改）：</div>
       <div style="text-align: center">
         <div style="text-align: center;margin-top: 1em">
           呼出/隐藏工作台快捷键
         </div>
-        <key-input placeholder="呼出/隐藏工作台快捷键" title="工作台" name="table" :value="shortKeysTable" @changeKeys="setTableKeys"></key-input>
+        <key-input placeholder="呼出/隐藏工作台快捷键" title="工作台" name="table" :value="shortKeysTable"
+                   @changeKeys="setTableKeys"></key-input>
         <div style="text-align: center;margin-top: 1em">
           呼出/隐藏全局搜索快捷键
         </div>
-        <key-input placeholder="呼出/隐藏全局搜索快捷键" title="全局搜索" name="search" :value="shortKeysSearch" @changeKeys="setSearchKeys"></key-input>
-        <div style="margin-top: 1em">更多快捷键请后续在工作台[设置]-[键位]中修改</div>
+        <key-input placeholder="呼出/隐藏全局搜索快捷键" title="全局搜索" name="search" :value="shortKeysSearch"
+                   @changeKeys="setSearchKeys"></key-input>
+        <div style="margin-top: 1em">后续可在工作台 设置 中修改</div>
       </div>
       <div class="panel" style="line-height: 1" v-if="!canTouch">
         <p>如果无法触摸，进行可进行屏幕触摸矫正。</p>
@@ -85,12 +184,23 @@
       </div>
     </div>
 
+
     <div style="position: absolute;bottom: 1em;left: calc(50% - 8em)">
-      <a-button v-if="step!==0" @click="prevStep" style="" :disabled="!canTouch" size="large">上一步</a-button>
-      <a-button v-if="step!==2" @click="nextStep" style="margin-left: 6em" :disabled="!canTouch" size="large" type="primary">下一步
-      </a-button>
-      <a-button v-else @click="finish" style="margin-left: 6em"   size="large" type="primary">完成
-      </a-button>
+      <div v-if="screenSettingTab==='none'">
+        <a-button v-if="step!==0" @click="prevStep" style="" :disabled="!canTouch" size="large">上一步</a-button>
+        <a-button v-if="step!==2" @click="nextStep" style="margin-left: 6em" :disabled="!canTouch" size="large"
+                  type="primary">下一步
+        </a-button>
+        <a-button v-else @click="finish" style="margin-left: 6em" size="large" type="primary">完成
+        </a-button>
+      </div>
+      <div v-else class="pl-20">
+        <a-button @click="screenSettingTab='none'" type="primary" size="large">
+          <Icon class="mr-3" icon="yixuan"></Icon>
+          问题解决
+        </a-button>
+      </div>
+
     </div>
 
   </div>
@@ -100,27 +210,30 @@
 <script>
 import ChooseScreen from './ChooseScreen.vue'
 import { appStore } from '../store'
-import {mapWritableState,mapActions} from 'pinia'
+import { mapWritableState, mapActions } from 'pinia'
 import cp from 'child_process'
 import KeyInput from '../components/comp/KeyInput.vue'
 import { message } from 'ant-design-vue'
-const {settings}=window.$models
+import {BulbFilled,PlayCircleFilled} from '@ant-design/icons-vue'
+const { settings } = window.$models
 export default {
   name: 'Wizard',
-  components:{
+  components: {
     KeyInput,
-    ChooseScreen
+    ChooseScreen,BulbFilled,PlayCircleFilled
   },
-  computed:{
-    ...mapWritableState(appStore,['settings','init'])
+  computed: {
+    ...mapWritableState(appStore, ['settings', 'init'])
   },
   data () {
     return {
+      screenSettingTab: 'none',
+
       ctrl: false,
       shift: false,
       alt: false,
-      listening:false,
-      currentListen:'table',
+      listening: false,
+      currentListen: 'table',
       step: 0,
       canTouch: true,
       shortKeysTable: 'alt+space',
@@ -131,17 +244,17 @@ export default {
           title: '设置模式'
 
         }, {
-          title: '模式配置'
+          title: '基础配置'
         },
         {
           title: '完成'
         }
-      ],stepsBoot: [
+      ], stepsBoot: [
         {
           title: '设置模式'
 
         }, {
-          title: '模式配置'
+          title: '基础配置'
         },
         {
           title: '完成'
@@ -154,7 +267,7 @@ export default {
         }, {
           title: '屏幕设置'
         }, {
-          title: '模式配置'
+          title: '基础配置'
         },
         {
           title: '完成'
@@ -164,28 +277,31 @@ export default {
   },
   async mounted () {
     let keyMap = await tsbApi.settings.get('keyMap')
-      if (keyMap.table) {
-        this.shortKeysTable = keyMap.table
-      }
+    if (keyMap.table) {
+      this.shortKeysTable = keyMap.table
+    }
     if (keyMap.globalSearch) {
-      this.shortKeysSearch= keyMap.globalSearch
+      this.shortKeysSearch = keyMap.globalSearch
     }
 
   },
   methods: {
-    ...mapActions(appStore,['finishWizard']),
+    ...mapActions(appStore, ['finishWizard']),
+    openVideo(){
+      ipc.send('addTab',{url:'https://www.bilibili.com/video/BV17t4y127no/?spm_id_from=333.337.search-card.all.click'})
+    },
     setTableKeys (args) {
-      let rs=ipc.sendSync('setTableShortcut',{shortcut:args.keys})
-      if(!rs){
+      let rs = ipc.sendSync('setTableShortcut', { shortcut: args.keys })
+      if (!rs) {
         message.error('设置快捷键失败，请更换快捷键')
         return
-      }else{
+      } else {
         message.success('快捷键设置成功')
         this.shortKeysTable = args.keys
       }
     },
-    setSearchKeys(args){
-      this.shortKeysSearch=args.keys
+    setSearchKeys (args) {
+      this.shortKeysSearch = args.keys
     },
     async startAdjust () {
       await tsbApi.window.setAlwaysOnTop(false)
@@ -204,24 +320,24 @@ export default {
       })
     },
     prevStep () {
-      if(this.mod==='second-screen'){
-        this.steps=this.stepsSecond
-      }else{
-        this.steps=this.stepsBoot
+      if (this.mod === 'second-screen') {
+        this.steps = this.stepsSecond
+      } else {
+        this.steps = this.stepsBoot
       }
       this.step--
     },
     nextStep () {
-      if(this.mod==='second-screen'){
-        this.steps=this.stepsSecond
-      }else{
-        this.steps=this.stepsBoot
+      if (this.mod === 'second-screen') {
+        this.steps = this.stepsSecond
+      } else {
+        this.steps = this.stepsBoot
       }
       this.step++
     },
-    finish(){
+    finish () {
       this.finishWizard()
-      this.$router.replace({path:'/'})
+      this.$router.replace({ path: '/' })
     },
     getKeys (e) {
       let key = ''
@@ -248,6 +364,7 @@ export default {
   background: #3d3d3d;
   padding: 0.5em;
 
+  min-height: 10.5em;
 }
 
 .title {
@@ -258,6 +375,14 @@ export default {
 .active {
   border: 2px solid #0a84ff;
   background: rgba(116, 172, 239, 0.13);
+}
+
+.screen-section {
+  background: #3b3b3b;
+  padding: 1em;
+  border-radius: 0.4em;
+  color: #ffffff;
+  margin-bottom: 1em;
 }
 
 </style>
