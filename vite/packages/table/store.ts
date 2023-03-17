@@ -127,7 +127,7 @@ export const tableStore = defineStore(
         countdownDay: [],
         appDate: {},
         clockEvent: [],
-        customComponents: [],
+        customComponents: [{name:'Music',id:1},{name:'Weather',id:2},{name:'Timer',id:3}],
       };
     },
 

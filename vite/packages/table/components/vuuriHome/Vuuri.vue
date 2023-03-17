@@ -28,6 +28,9 @@ import { ItemKey, ItemSize, ItemDragHandle } from './constants'
 import { deckStore } from '../../store/deck'
 export default {
   name: 'Vuuri',
+  date(){
+    currentDragGrid:''
+  },
   props: {
     /**
      * Optional class name to add to the grid. If not, one will be provided
@@ -123,7 +126,7 @@ export default {
       /*
       * The generated Muuri Options object
       */
-      muuriOptions: {}
+      muuriOptions: { layout:{horizontal: true},}
     }
   },
   watch: {
@@ -246,6 +249,8 @@ export default {
           sortDuringScroll: false,
           syncAfterScroll: false,
         },
+        layout:{horizontal: true},
+
       }
     },
     /**
@@ -273,6 +278,9 @@ export default {
         if (event === GridEvent.dragEnd) {
           this.muuri.on(event, this._onDragEnd)
         }
+        if (event === GridEvent.dragReleaseEnd) {
+          this.muuri.on(event, this._onDragReleaseEnd)
+        }
       })
     },
     /**
@@ -292,6 +300,15 @@ export default {
      */
     _onDragStart (item) {
       GridStore.setDraggingGridItem(item)
+      this.currentDragGrid = item.getGrid()
+    },
+    _onDragReleaseEnd (item) {
+      if (this.currentDragGrid) {
+        console.log(this.currentDragGrid)
+        console.log(item)
+        this.muuri.send(item,this.currentDragGrid,-1)
+        this.currentDragGrid = null;
+      }
     },
     /**
      * Listener when item moves within the same grid
