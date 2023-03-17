@@ -50,6 +50,15 @@ class ApiHandler {
       event.returnValue=settings.set(args.key,args.value)
     })
 
+    ApiHandler.on('settings','setAutoRun',(event,args)=>{
+      event.returnValue=settings.set('autoRun',args)
+      require('electron').app.setLoginItemSettings({
+        openAtLogin:args,
+        path:process.execPath,
+        args:[]
+      })
+    })
+
     ApiHandler.on('dialog','showOpenDialog',(event,args,instance)=>{
       console.log(args)
       event.returnValue =  require('electron').dialog.showOpenDialogSync(instance.window||instance.view,args)
