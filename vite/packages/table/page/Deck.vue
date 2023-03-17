@@ -69,8 +69,8 @@
             <!--           v-for="(board,index) in decks">-->
             <!--        <DeckItem :id="item.id" :item="item" v-for="item in board.children"></DeckItem>-->
             <!--      </div>-->
-            <div :style={width:getVuuriWidth(grid.cols)} style="text-align: center;padding-top: 0.6em;padding-bottom: 0.6em" v-if="grid.children.length===0 && editing===false" class="grid">
-              <a-button style="max-width: 100%"  type="primary" @click.stop="add(grid)"><plus-outlined />添加</a-button>
+            <div :style={width:getVuuriWidth(grid.cols)} style="text-align: center;padding-top: 0.3em;padding-bottom: 0.3em" v-if="grid.children.length===0 && editing===false" class="grid">
+              <a-button block size="large" style="max-width: calc(100% - 0.6em)"  type="primary" @click.stop="add(grid)"><plus-outlined />添加</a-button>
             </div>
 
 
