@@ -1,19 +1,17 @@
 <template>
   <vue-custom-scrollbar id="wall-container-paper" :settings="settingsScroller" style="height: 80vh">
-    <a-row :gutter="[20,20]" id="wallImages" style="display: flex; align-items: center;">
-      <a-col :span="6" v-for="img  in list"  style="margin:16px;  width:301px;height: 170px;cursor: pointer;position: relative;" @click="openWallHeaven">
-        <img :src="img.src" alt="" style="border-radius: 12px;height: 100%;width:301px;object-fit: cover;" data-animation="my-rotate">
-        <div class="favorite-button"
-         @click.stop="addToMy(img)"
-         :style="{background:isInMyPapers(img)?'#009d00a8':''}"
-        >
-          <Icon v-if="!isInMyPapers(img)" icon="tianjia1" style="font-size: 20px;"></Icon>
-          <Icon v-else style="font-size: 20px;" icon="yiwancheng"></Icon>
-        </div>
-      </a-col>
-    </a-row>
+    <viewer :images="list">
+      <a-row :gutter="[20,20]" id="wallImages" style="display: flex; align-items: center;">
+        <a-col :span="6" v-for="img  in list"  style="margin:16px;  width:301px;height: 170px;cursor: pointer;position: relative;">
+          <img :src="img.src" alt="" style="border-radius: 12px;height: 100%;width:301px;object-fit: cover;" data-animation="my-rotate">
+          <div class="favorite-button" @click.stop="addToMy(img)" :style="{background:isInMyPapers(img)?'#009d00a8':''}">
+            <Icon v-if="!isInMyPapers(img)" icon="tianjia1" style="font-size: 20px;"></Icon>
+            <Icon v-else style="font-size: 20px;" icon="yiwancheng"></Icon>
+          </div>
+        </a-col>
+      </a-row>
+    </viewer>
   </vue-custom-scrollbar>
-  
 </template>
 
 <script>
@@ -70,17 +68,17 @@ export default defineComponent({
         console.log(url);
         if(!this.isLoading){
           this.isLoading = true
-          axios.get(url).then((res)=>{
+          axios.get(url).then( async (res)=>{
             if(res.status === 200){
               console.log(res.data.data);
-              let wallImg  = res.data.data
+              let wallImg  = await res.data.data
               let animations = ['ani-gray', 'bowen', 'ani-rotate']
               if(wallImg){
                  wallImg.forEach(img => {
                   let randomIndex = Math.floor((Math.random() * animations.length))
                   let image = {
                     title:false,
-                    src:img.path,
+                    src:img.thumbs.large,
                     animations:animations[randomIndex]
                   }
                   this.list.push(image)

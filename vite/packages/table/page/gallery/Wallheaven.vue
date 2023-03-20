@@ -8,20 +8,17 @@
   </div>
   <div class="wallheaven-tab">
     <a-radio-group v-model:value="purity" style="margin-right: 16px;">
-      <!--  :style="{ marginBottom: '8px' }" -->
       <a-radio-button value="SFW" style="border:none !important;background:rgba(255, 255, 255, 0.1) !important;border-top-left-radius: 8px;border-bottom-left-radius: 8px;">SFW</a-radio-button>
       <a-radio-button value="Sketchy" style="border:none !important;background:rgba(255, 255, 255, 0.1) !important;border-top-right-radius: 8px;border-bottom-right-radius: 8px;">Sketchy</a-radio-button>
     </a-radio-group>
-    <a-select ref="select" v-model:value="wallTypeValue"  style="width:200px;margin-right: 16px;" >
-      <!-- @change="wallSelectChange($event)" -->
+    <a-select ref="select" v-model:value="wallTypeValue"  style="width:200px;margin-right: 16px;" @change="wallSelectChange($event)" >
       <a-select-option value="date_added">最新</a-select-option>
       <a-select-option value="hot">最热</a-select-option>
       <a-select-option value="random">随机</a-select-option>
       <a-select-option value="toplist">热门列表</a-select-option>
       <a-select-option value="favorites">更多收藏</a-select-option>
     </a-select>
-    <a-select ref="select" v-model:value="wallSizeValue" style="width:200px;margin-right: 16px;" >
-      <!-- @change="getWallSelectValue($event)" -->
+    <a-select ref="select" v-model:value="wallSizeValue" style="width:200px;margin-right: 16px;"  @change="getWallSelectValue($event)">
      <a-select-option value>不限</a-select-option>
      <a-select-option value="1920x1080">1080p+</a-select-option>
      <a-select-option value="2560x1080">2k+</a-select-option>
@@ -46,6 +43,8 @@ import { SearchOutlined } from '@ant-design/icons-vue';
 import WallHot from './WallheavenItem/WallHot.vue';
 import WallAcg from './WallheavenItem/WallAcg.vue';
 import WallPeople from './WallheavenItem/WallPeople.vue'
+import { mapActions,mapState  } from 'pinia'
+import { wallStore } from '../../store/wallheaven'
 export default defineComponent({
   name: 'Wallheaven',
   components:{
@@ -78,21 +77,47 @@ export default defineComponent({
       purity: 'SFW',
       searchName:'',
       wallTypeValue:'hot',
-      wallSizeValue:'不限'
+      wallSizeValue:'',
+      categories:'111'
     }
   },
   mounted(){
      
   },
   methods:{
-      // wallheaven壁纸分类标题
-      wallTitleClick(item){
-        this.wallStatus = item.id
-      },
-      // 搜索功能
-      wallSearch(){
-          
-      },
+    ...mapActions(wallStore,['getWallPaperSearch']),
+    // wallheaven壁纸分类标题
+    wallTitleClick(item){
+      this.wallStatus = item.id
+      this.categories = item.categories
+      if(this.wallStatus == 0){
+        this.wallTypeValue = 'hot'
+      }else if(this.wallStatus == 1){
+        this.wallTypeValue = 'date_added'
+      }else if(this.wallStatus == 2){
+        this.wallTypeValue = 'date_added'
+      }
+    },
+    // 搜索功能
+    wallSearch(){
+      // &categories=111&purity=100&sorting=random&q=11
+      let searchObj = {
+        categories:`${this.categories}`,
+        purity:`${this.purity}`,
+        sorting:`${this.wallTypeValue}`,
+        atleast:`${this.wallSizeValue}`,
+        q:`${this.searchName}`,
+      }
+      this.getWallPaperSearch(searchObj)
+    },
+    wallSelectChange(e){
+      this.wallTypeValue = e
+    },
+    getWallSelectValue(e){
+      if(e !== ''){
+        this.wallSizeValue = e 
+      }
+    },
   },
   
 })
