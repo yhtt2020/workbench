@@ -1,3 +1,4 @@
+const Watch=require('./apiHander/watch')
 /**
  * 专用于拆分出api的处理方法，主要是绑定各种方法并进行处理
  */
@@ -17,11 +18,17 @@ class ApiHandler {
   static downloadWebContents=[]
   static downloadSession=[]
 
-  constructor () {
+  static handlers=[]
 
+  constructor () {
   }
 
   static bindIPC () {
+    ApiHandler.handlers.push(new Watch())
+    ApiHandler.handlers.forEach(handler=>{
+      console.log(handler.moduleName,'绑定IP————————————————————————————————————————————————————————')
+      handler.bindIPC()
+    })
     ipc.on('changeUrl', (e, a) => {
       ApiHandler.onUrlChanged.forEach(instance => {
         try {

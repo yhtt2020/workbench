@@ -188,7 +188,6 @@ app.whenReady().then(() => {
           ext: path.parse(_path).ext
         })
       })
-      console.log(filepaths)
       return filepaths
 
     }

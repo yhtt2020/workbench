@@ -1,6 +1,7 @@
 const messageModel = require('../model/messageModel')
 const api = require('../browserApi/baseApi')
 window.tsbApi=require('../browserApi/baseApi')
+window.tableApi=require('../tableApi/baseApi')
 const groupApi=require('../api/groupApi')
 let ipc=require('electron').ipcRenderer
 ipc.on('updateMusicStatus',(e,a)=>{

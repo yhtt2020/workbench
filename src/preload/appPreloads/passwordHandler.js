@@ -1,6 +1,5 @@
 const passwordHandler={
   getAutoFill(cb){
-    console.log('获取密码填充')
     const hostname = new URL(window.location.href).hostname
     let passwordModel=require('../../model/passwordModel.js')
     passwordModel.getConfiguredPasswordManager().then(async (manager) => {

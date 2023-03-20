@@ -35,12 +35,10 @@ class BrowserViewHandler{
     this.send('callViewMethod', { callId: callId, method: method, args: args })
   }
   send(event,args){
-    console.log('发送ipc',event,args)
     this.view.webContents.send(event,args)
   }
   //监听app单独的IPC信道
   static listenIPC(){
-    console.log('监听IPC')
     ipc.on('app.ipc',(event,args)=>{
       BrowserViewHandler.IPCEvents.forEach(e=>{
         if(e.id===event.sender.id && e.event===args.event){//找到发送者的id
@@ -60,11 +58,9 @@ class BrowserViewHandler{
    *
    */
   removeIPC(){
-    console.log('清理前',BrowserViewHandler.IPCEvents)
     BrowserViewHandler.IPCEvents=BrowserViewHandler.IPCEvents.filter(e=>{
       return e.id!==this.id
     })
-    console.log('清理后',BrowserViewHandler.IPCEvents)
   }
 
   ready(){
