@@ -338,13 +338,20 @@ class WindowManager {
     let instance
 
     windowOption.webPreferences = webPreferences
+    let additionalArguments=[]
+    if(webPreferences.additionalArguments){
+      //加入addtionalArguments
+      additionalArguments=webPreferences.additionalArguments
+    }
+
     windowOption = Object.assign(_.cloneDeep(this.defaultWindowPreferences), windowOption)
     windowOption.webPreferences.additionalArguments = [
       '--user-data-path=' + userDataPath,
       '--app-version=' + app.getVersion(),
       '--app-name=' + app.getName(),
       ...((isDevelopmentMode ? ['--development-mode'] : [])),
-      '--name=' + name
+      '--name=' + name,
+      ...additionalArguments
     ]
     let window = new BrowserWindow(windowOption)
     window.once('ready-to-show', () => {

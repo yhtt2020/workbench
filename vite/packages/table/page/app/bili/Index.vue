@@ -131,12 +131,13 @@
         </a-button>
       </a-input-group>
       <div class="line title">
-        视频基本信息：
+        任务基本信息：
       </div>
-      <div class="line" style="padding: 0.5em">
-        <div v-if="!videoInfo.title">
-          请点击“获取”按钮获得视频信息。
-        </div>
+      <div v-if="addTaskInfo.title" class="line">
+        {{ addTaskInfo.title }}
+      </div>
+      <div v-else class="line">
+        请点击“获取”按钮获得视频信息。
       </div>
       <div class="line title">
         更新频率
@@ -168,7 +169,7 @@
       </div>
 
       <div class="line" style="position: absolute;bottom: 1em;">
-        <a-button :disabled="!this.videoInfo.title" size="large" type="primary">
+        <a-button :disabled="!this.addTaskInfo.title" size="large" type="primary">
           确定
         </a-button>
       </div>
@@ -179,7 +180,7 @@
 </template>
 
 <script>
-import { message } from 'ant-design-vue'
+import { message,Modal } from 'ant-design-vue'
 import Vuuri from '../../../components/vuuri/Vuuri.vue'
 import Widget from '../../../components/muuri/Widget.vue'
 
@@ -236,7 +237,7 @@ export default {
       addVideoVisible: false,
       updateInterval: 15,
       addUrl: '',
-      videoInfo: {
+      addTaskInfo: {
         title: ''
       },
       watchTask: [],
@@ -256,10 +257,20 @@ export default {
         message.error('请输入视频链接')
       }
       this.currentTaskId = Date.now()
-      tableApi.watch.addTask({
+      message.info({content:'开始测试，正在等待测试结果',key:'test'})
+      tableApi.watch.testTask({
         id: this.currentTaskId,
         url: this.addUrl
-      })
+      },(data)=>{
+        this.addTaskInfo=data.data
+        message.success({content: '测试成功。' ,key:'test'})
+      },()=>{
+        this.addTaskInfo={}
+        Modal.info({'content':'测试未能成功返回，请稍后再试。'})
+      },()=>{
+        this.addTaskInfo={}
+        Modal.info({content:'测试超时，请稍后再试。',key:'test'})
+      },10)
     }
   }
 }

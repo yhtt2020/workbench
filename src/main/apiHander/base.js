@@ -5,6 +5,8 @@ class Base {
     this.moduleName = moduleName
   }
 
+
+
   /**
    * 挂载IPC
    */
