@@ -24,7 +24,7 @@
                         <img class="bili-cover" src="/img/cover.jpg"/>
                       </a-col>
                       <a-col :span="14">
-                        <div class="text-more">{{ item.data.title }}</div>
+                        <div class="text-more text-xs">{{ item.data.title }}</div>
                         <div>
                           <a-row class="text-xs" :gutter="10">
                             <a-col :span="8">
@@ -256,10 +256,9 @@ export default {
         message.error('请输入视频链接')
       }
       this.currentTaskId = Date.now()
-      ipc.send('addWatch', {
-        id: this.currentTaskId, url: this.addUrl, cb: (args) => {
-          //回调
-        }
+      tableApi.watch.addTask({
+        id: this.currentTaskId,
+        url: this.addUrl
       })
     }
   }
