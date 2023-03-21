@@ -30,6 +30,7 @@ class WatchTaskModel {
         t.integer('order')
         t.boolean('running')//运行中
         t.string('options')
+        t.string('last_data')//最后抓取的记录缓存
       })
       //await this.migrateDB()
       //todo 迁移

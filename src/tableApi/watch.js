@@ -3,8 +3,9 @@ const WatchTaskModel = require('../model/watchTaskModel')
 const DataModel = require('../model/watchDataModel')
 const taskModel = new WatchTaskModel()
 taskModel.initDb()
-const dataModel=new DataModel()
+const dataModel = new DataModel()
 dataModel.initDb()
+
 function send (channel, args = {}) {
   ipcHelper.send('watch', channel, JSON.parse(JSON.stringify(args)))
 }
@@ -36,21 +37,45 @@ const watch = {
     return await taskModel.add(task)
   },
 
-  async listAllTasks () {
-    let tasks= await taskModel.listAllTasks()
-    for (const task of tasks) {
-      let gotData=await dataModel.getLatestStart(task.nanoid)
-      if(gotData){
-        try{
-          task.data=JSON.parse(gotData.data)
-          task.last_execute_info=gotData
-        }catch (e) {
-          console.warn('数据转换失败',e)
-          task.data=null
-          task.last_execute_info=null
+  /**
+   * 获取到最新的任务信息，如果是重复的，则返回null 否则，返回一个包含data和last_execute_info的对象。
+   * @param task
+   * @returns {Promise<void>}
+   */
+  async getLatestData (task) {
+    let gotData = await dataModel.getLatestStart(task.nanoid)
+    let returnValue = {
+      data: null,
+      last_execute_info: null
+    }
+    if (gotData) {
+      try {
+        if (task.last_execute_info) {
+          if (task.last_execute_info.grab_time === gotData.grab_time) {
+            console.log('同一抓取时间，返回null')
+            return null
+          }
         }
+        returnValue.data = JSON.parse(gotData.data)
+        returnValue.last_execute_info = gotData
+        console.log(task.data, '更新成功')
+        return returnValue
+      } catch (e) {
+        console.warn('数据转换失败', e)
       }
-      console.log('获取到任务的封面数据',task.data)
+      return returnValue
+    }
+  },
+
+  async listAllTasks () {
+    let tasks = await taskModel.listAllTasks()
+    for (const task of tasks) {
+      let lastInfo = await watch.getLatestData(task)
+      if (lastInfo) {
+        task.data = lastInfo.data
+        task.last_execute_info = lastInfo.last_execute_info
+      }
+      console.log('获取到任务的封面数据', task.data)
     }
     return tasks
   },
