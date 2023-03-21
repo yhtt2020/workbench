@@ -43,10 +43,10 @@ const watch = {
    * @param onSuccess
    * @param onFailure
    * @param onTimeout
-   * @param timeOut
+   * @param timeout
    * @returns {Promise<any>}
    */
-  testTask (task, onSuccess, onFailure, onTimeout, timeOut = 10) {
+  testTask (task, onSuccess, onFailure, onTimeout, timeout = 10) {
     tests.push(task)
     task.onSuccess = onSuccess
     task.onFailure = onFailure
@@ -68,7 +68,7 @@ const watch = {
       } else {
         console.log('任务早已返回')
       }
-    }, timeOut * 1000)
+    }, timeout * 1000)
     send('testTask', { task: JSON.parse(JSON.stringify(task)) })
   }
 }
