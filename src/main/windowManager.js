@@ -35,12 +35,10 @@ class BrowserViewHandler{
     this.send('callViewMethod', { callId: callId, method: method, args: args })
   }
   send(event,args){
-    console.log('发送ipc',event,args)
     this.view.webContents.send(event,args)
   }
   //监听app单独的IPC信道
   static listenIPC(){
-    console.log('监听IPC')
     ipc.on('app.ipc',(event,args)=>{
       BrowserViewHandler.IPCEvents.forEach(e=>{
         if(e.id===event.sender.id && e.event===args.event){//找到发送者的id
@@ -60,11 +58,9 @@ class BrowserViewHandler{
    *
    */
   removeIPC(){
-    console.log('清理前',BrowserViewHandler.IPCEvents)
     BrowserViewHandler.IPCEvents=BrowserViewHandler.IPCEvents.filter(e=>{
       return e.id!==this.id
     })
-    console.log('清理后',BrowserViewHandler.IPCEvents)
   }
 
   ready(){
@@ -342,13 +338,20 @@ class WindowManager {
     let instance
 
     windowOption.webPreferences = webPreferences
+    let additionalArguments=[]
+    if(webPreferences.additionalArguments){
+      //加入addtionalArguments
+      additionalArguments=webPreferences.additionalArguments
+    }
+
     windowOption = Object.assign(_.cloneDeep(this.defaultWindowPreferences), windowOption)
     windowOption.webPreferences.additionalArguments = [
       '--user-data-path=' + userDataPath,
       '--app-version=' + app.getVersion(),
       '--app-name=' + app.getName(),
       ...((isDevelopmentMode ? ['--development-mode'] : [])),
-      '--name=' + name
+      '--name=' + name,
+      ...additionalArguments
     ]
     let window = new BrowserWindow(windowOption)
     window.once('ready-to-show', () => {
@@ -715,14 +718,14 @@ class WindowManager {
     if (!webPreferences) {
       webPreferences = {}
     }
-    webPreferences = Object.assign(this.defaultWebPreferences, webPreferences)
+    webPreferences = Object.assign(_.cloneDeep(this.defaultWebPreferences), webPreferences)
     this.optionMap[name] = name
     let wenContents
     let instance
     if (!viewOption) {
       viewOption = {}
     }
-    viewOption.windowOption = Object.assign(this.defaultViewPreferences, viewOption)
+    viewOption.windowOption = Object.assign(_.cloneDeep(this.defaultViewPreferences), viewOption)
     if(!webPreferences.additionalArguments){
       //不存在addtionalArguments则初始化一个空
       webPreferences.additionalArguments=[]

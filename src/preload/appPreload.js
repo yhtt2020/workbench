@@ -42,7 +42,6 @@ ipc.on('fileAssign',(event,args)=>{
   window.postMessage({
     eventName: "fileAssign",
     filePath:args.filePath})
-  console.log('请求处理文件关联',args)
 })
 
 ipc.invoke('appPreloadReady', tools.execDomain(location.href)).then(args => {

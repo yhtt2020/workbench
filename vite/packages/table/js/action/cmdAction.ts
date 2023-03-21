@@ -1,5 +1,5 @@
 import ActionExecutor from './actionExecutor'
-import {runNir, runExec, runSoundVolume} from '../common/exec'
+import {runNir, runExec, runSoundVolume, runMultiMonitorToolCmd} from '../common/exec'
 
 class CmdAction extends ActionExecutor {
   async doAction ():ActionExecutor {
@@ -35,6 +35,12 @@ class CmdAction extends ActionExecutor {
         case 'svcmd':
           for(let i=0;i<cleanLines.length;i++){
             message.push(await runSoundVolume(cleanLines[i]))
+          }
+          result=1
+          break
+        case 'mmtcmd':
+          for(let i=0;i<cleanLines.length;i++){
+            message.push(await runMultiMonitorToolCmd(cleanLines[i]))
           }
           result=1
           break

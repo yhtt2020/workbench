@@ -51,18 +51,19 @@
       <div class="line-title ">图标</div>
       <div class="line">
         <a-radio-group v-model:value="type">
-          <a-radio value="icon">
-            图标按钮
-          </a-radio>
           <a-radio value="font">
             文字按钮
           </a-radio>
+          <a-radio value="icon">
+            图标按钮
+          </a-radio>
+
         </a-radio-group>
       </div>
 
       <div v-if="type==='font'">
         <div class="line">
-          按钮文字： <a-input style="width: 20em" v-model:value="iconText" placeholder="输入文字"></a-input>
+          按钮文字： <a-textarea style="width: 20em" v-model:value="iconText" placeholder="输入文字"></a-textarea>
         </div>
         <div class="line">
          字体大小： <a-input-number placeholder="字体大小" v-model:value="iconFontSize"></a-input-number>
@@ -110,7 +111,7 @@ export default {
   data () {
     return {
       tab: 'input',
-      type: 'icon',
+      type: 'font',
       iconFontSize:20,
       iconText: '',
       showIconList: false,
@@ -170,7 +171,7 @@ export default {
     },
     addAction(){
       this.tab='action'
-      this.editingAction={}
+      this.editingAction=undefined
       this.$nextTick(()=>{
         this.$refs._deckAction.reset()
       })

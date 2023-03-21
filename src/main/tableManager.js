@@ -16,8 +16,8 @@ class TableManager {
           width: 1098,
           minimizable: false,
           height: 618,
-          minWidth: 1098,
-          minHeight: 618,
+          minWidth: 800,
+          minHeight: 550,
           frame: false,
           backgroundColor: '#fff',
         },
@@ -188,7 +188,6 @@ app.whenReady().then(() => {
           ext: path.parse(_path).ext
         })
       })
-      console.log(filepaths)
       return filepaths
 
     }

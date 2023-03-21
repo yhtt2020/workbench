@@ -41,7 +41,6 @@ ipc.on('returnIsDefaultBrowser', function (e, data) {
 })
 
 ipc.on('receiveSettingsData', function (e, data) {
-  console.log('收到bao')
   systemInfo = data.systemInfo
   window.postMessage({ message: 'receiveSettingsData', settings: data })
 })

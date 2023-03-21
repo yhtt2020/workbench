@@ -60,6 +60,12 @@ export async function runSoundVolume(cmd){
   return await runExec(`"${path}" ` + cmd, undefined)
 }
 
+export async function runMultiMonitorToolCmd(cmd){
+  const {arch} = require('process')
+  let path = getResPathJoin('MultiMonitorTool', arch, 'MultiMonitorTool.exe')
+  return await runExec(`"${path}" ` + cmd, undefined)
+}
+
 /**
  * 运行nircmd
  * @param cmd

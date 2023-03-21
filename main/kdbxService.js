@@ -128,13 +128,16 @@ class KdbxService {
    */
   async prepareDb () {
     const pm = settings.get('passwordManager')
-    let filePath = pm.filePath
-    if (!fs.existsSync(filePath)) {
-      console.warn('当前密码库不存在')
-      return []
+    if(pm){
+      //如果已经设置了pm
+      let filePath = pm.filePath
+      if (!fs.existsSync(filePath)) {
+        console.warn('当前密码库不存在')
+        return []
+      }
+      this.dbFile = filePath
+      this.currentCredential = this.credentialService.get(filePath) //获取当前凭证
     }
-    this.dbFile = filePath
-    this.currentCredential = this.credentialService.get(filePath) //获取当前凭证
   }
 
   /**

@@ -63,21 +63,13 @@
     </div>
     <div class="common-panel" style="display: inline-block">
       <PanelButton :onClick="openSetting" icon="shezhi" title="设置"></PanelButton>
-
       <PanelButton icon="yidongwenjianjia" :onClick="transFile" title="传文件"></PanelButton>
-    </div>
-    <div class="common-panel" style="display: inline-block">
       <PanelButton :onClick="openStatus" icon="tiaoduguanli" title="调整"></PanelButton>
       <PanelButton :onClick="setFullScreen" icon="daochu" title="全屏"></PanelButton>
-
-
-    </div>
-    <div class="common-panel" style="display: inline-block">
       <PanelButton icon="suoding" title="锁屏" :onClick="lock"></PanelButton>
-    </div>
-    <div class="common-panel" style="display: inline-block">
       <PanelButton :onClick="power" icon="tuichu" title="电源"></PanelButton>
     </div>
+
     <!--    <div style="display: inline-block">-->
     <!--      <a-row :gutter="10">-->
     <!--        <a-col :span="2">-->

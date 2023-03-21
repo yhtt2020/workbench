@@ -19,7 +19,7 @@ export const appStore = defineStore('appStore', {
 
       apps: [],
 
-      lockTimeout: 300, //锁屏延迟
+      lockTimeout: 1800, //锁屏延迟，默认改为半小时
 
       init: false, //是否已经初始化
 

@@ -1,3 +1,4 @@
+const Watch=require('./apiHander/watch')
 /**
  * 专用于拆分出api的处理方法，主要是绑定各种方法并进行处理
  */
@@ -17,11 +18,17 @@ class ApiHandler {
   static downloadWebContents=[]
   static downloadSession=[]
 
-  constructor () {
+  static handlers=[]
 
+  constructor () {
   }
 
   static bindIPC () {
+    ApiHandler.handlers.push(new Watch())
+    ApiHandler.handlers.forEach(handler=>{
+      console.log(handler.moduleName,'绑定IP————————————————————————————————————————————————————————')
+      handler.bindIPC()
+    })
     ipc.on('changeUrl', (e, a) => {
       ApiHandler.onUrlChanged.forEach(instance => {
         try {
@@ -48,6 +55,15 @@ class ApiHandler {
     })
     ApiHandler.on('settings','set',(event,args,instance)=>{
       event.returnValue=settings.set(args.key,args.value)
+    })
+
+    ApiHandler.on('settings','setAutoRun',(event,args)=>{
+      event.returnValue=settings.set('autoRun',args)
+      require('electron').app.setLoginItemSettings({
+        openAtLogin:args,
+        path:process.execPath,
+        args:[]
+      })
     })
 
     ApiHandler.on('dialog','showOpenDialog',(event,args,instance)=>{

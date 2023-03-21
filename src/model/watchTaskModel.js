@@ -1,7 +1,23 @@
 const SettingModel = require('./settingModel.js')
 const _ = require('lodash')
+let filename
+if (typeof window !=='undefined') {
+  window=require('./util').tools.getWindowArgs(window)
+  filename = window.globalArgs['user-data-path'] + '/db/db.sqlite'
+} else {
+  const path=require('path')
+  const app=require('electron').app
+  const isDevelopmentMode = process.argv.some(arg => arg === '--development-mode')
+  if (isDevelopmentMode) {
+    filename = path.join(app.getPath('userData') + '-development', 'db/watch.sqlite')
+  }else{
+    filename = path.join(app.getPath('userData'), 'db/watch.sqlite')
+  }
+}
 const { SqlDb } = require('../util/sqldb')
-const sqlDb = new SqlDb()
+const path = require('path')
+const { app } = require('electron')
+const sqlDb = new SqlDb(filename)
 let settingModel
 class WatchTaskModel {
   async initDb () {
@@ -24,7 +40,7 @@ class WatchTaskModel {
         t.integer('update_time')
         t.integer('order')
         t.integer('last_execute_time')
-        t.string('settings')
+        t.string('options')
       })
       //await this.migrateDB()
       //todo 迁移
@@ -32,6 +48,9 @@ class WatchTaskModel {
       //防止迁移失败导致未成功转入应用
       //await this.migrateDB()
     }
+  }
+  async add(task){
+
   }
 
 }

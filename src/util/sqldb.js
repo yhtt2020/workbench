@@ -17,11 +17,14 @@ if (typeof window !=='undefined') {
 
 class SqlDb {
   knex
-  constructor () {
+  constructor (dbPath) {
+    if(!dbPath){
+      dbPath=filename
+    }
     this.knex = knex({
       client: 'sqlite3',
       connection: {
-        filename: filename
+        filename: dbPath
       },
       useNullAsDefault: true
     })
