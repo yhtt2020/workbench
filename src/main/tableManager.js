@@ -33,6 +33,7 @@ class TableManager {
             '--app-version=' + app.getVersion(),
             '--app-name=' + app.getName(),
             '--app-path='+app.getPath('exe'),
+            '--app-dir_name='+__dirname,
             ...((isDevelopmentMode ? ['--development-mode'] : []))
           ]
         }
