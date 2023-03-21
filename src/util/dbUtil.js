@@ -13,11 +13,11 @@ const dbUtil={
       filename = window.globalArgs['user-data-path'] + '/db/'+dbName+'.sqlite'
     } else {
       const isDevelopmentMode = process.argv.some(arg => arg === '--development-mode')
-      if (isDevelopmentMode) {
-        filename = path.join(app.getPath('userData') + '-development', 'db/'+dbName+'.sqlite')
-      }else{
+      // if (isDevelopmentMode) {
+      //   filename = path.join(app.getPath('userData') + '-development', 'db/'+dbName+'.sqlite')
+      // }else{
         filename = path.join(app.getPath('userData'), 'db/'+dbName+'.sqlite')
-      }
+      // }
     }
     return filename
   }

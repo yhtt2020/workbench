@@ -8,6 +8,7 @@ class WatchTaskModel {
 
   async initDb () {
     this.db = new SqlDb('watch')
+    console.log(this.db,'初始化一个db')
     const watchDb = this.db
     let exists = await watchDb.knex.schema.hasTable('task')
     if (!exists) {
@@ -27,6 +28,7 @@ class WatchTaskModel {
         t.integer('create_time')
         t.integer('update_time')
         t.integer('order')
+        t.boolean('running')//运行中
         t.string('options')
       })
       //await this.migrateDB()
@@ -74,6 +76,10 @@ class WatchTaskModel {
 
   async listAllTasks () {
     return this.db.knex('task').select()
+  }
+
+  async startTask(nanoid){
+    return this.db.knex('task').where({nanoid:nanoid}).update({running:true})
   }
 
 }

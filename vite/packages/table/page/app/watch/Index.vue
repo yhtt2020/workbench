@@ -4,12 +4,14 @@
   </h1>
 
   <div>
-    <a-tabs v-model:activeKey="currentTab">
+    <a-tabs v-model:activeKey="currentTab" destroy-inactive-tab-pane="false">
       <a-tab-pane key="running" tab="运行中">
         <a-empty v-if="runningTasks.length===0" style="margin-top: 3em"
                  description="当前还没有正在监控中的任务"></a-empty>
         <div v-else>
-          <Vuuri :getItemWidth="()=>{return '250px'}" :getItemHeight="()=>{return '500px'}" class="monitor"
+          <vue-custom-scrollbar @contextmenu.stop="showMenu(-1,undefined,'wrapper')" :settings="scrollbarSettings"
+                                style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em)">
+          <Vuuri :options="{layout:{horizontal:true}}" :getItemWidth="()=>{return '250px'}" :getItemHeight="()=>{return '500px'}" class="monitor"
                  v-model="runningTasks">
             <template #item="{ item }">
               <Widget :uniqueKey="item.id">
@@ -98,13 +100,16 @@
               </Widget>
             </template>
           </Vuuri>
+          </vue-custom-scrollbar>
         </div>
       </a-tab-pane>
       <a-tab-pane key="other" tab="未运行">
         <a-empty v-if="stoppedTasks.length===0" style="margin-top: 3em"
                  description="当前没有待机状态的任务"></a-empty>
         <div v-else>
-          <Vuuri :getItemWidth="()=>{return '250px'}" :getItemHeight="()=>{return '500px'}" class="monitor"
+          <vue-custom-scrollbar @contextmenu.stop="showMenu(-1,undefined,'wrapper')" :settings="scrollbarSettings"
+                                style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em)">
+          <Vuuri :options="{layout:{horizontal:true}}" :getItemWidth="()=>{return '250px'}" :getItemHeight="()=>{return '500px'}" class="monitor"
                  v-model="stoppedTasks">
             <template #item="{ item }">
               <Widget :uniqueKey="item.id">
@@ -185,7 +190,7 @@
                         </span><span v-else>请点击运行</span>
                       </a-col>
                       <a-col :span="6">
-                       <a-button type="primary">
+                       <a-button @click="startTask(item)" type="primary">
                          <Icon class="text-xl" icon="bofang"></Icon>
                        </a-button>
 
@@ -197,6 +202,7 @@
               </Widget>
             </template>
           </Vuuri>
+          </vue-custom-scrollbar>
         </div>
       </a-tab-pane>
       <a-tab-pane key="taskTemplate" tab="任务模板">
@@ -247,7 +253,6 @@
             <a-input style="width: 400px" placeholder="输入任务名称" v-model:value="addTask.title"></a-input>
           </a-col>
         </a-row>
-
       </div>
       <div class="line">
         <a-row>
@@ -357,6 +362,13 @@ export default {
   },
   data () {
     return {
+      scrollbarSettings: {
+        useBothWheelAxes: true,
+        swipeEasing: true,
+        suppressScrollY: true,
+        suppressScrollX: false,
+        wheelPropagation: true
+      },
       addTask:{//添加任务表单
         title:'',
         url:''
@@ -371,31 +383,62 @@ export default {
       watchTask: [],
       currentTaskId: '',
 
-      tasks:[]
+      tasks:[],
+      runningTasks:[],//运行中的任务，需要单独一个数组，不然回被影响到
+      stoppedTasks:[]//停止的任务，这些任务都是要刷新分类的
     }
   },
   computed:{
-    runningTasks(){
-      return this.tasks.filter(task=>{
-        return task.running===1
-      })
-    },
-    stoppedTasks(){
-      return this.tasks.filter(task=>{
-        return !task.running
-      })
-    }
   },
   mounted () {
     this.loadAllTasks().then()
+    this.setUpTaskUpdateHandler()//挂载状态更新器
+  },
+  unmounted () {
+    tableApi.watch.setTaskUpdateHandler(null)//卸载处理器，防止不在这个页面上也执行这个处理方法
   },
   methods: {
+    sortTasks(){
+      this.runningTasks= this.tasks.filter(task=>{
+        return task.running
+      })
+      this.stoppedTasks= this.tasks.filter(task=>{
+        return !task.running
+      })
+    },
+
+    /**
+     * 设置任务状态更新处理方法
+     */
+    setUpTaskUpdateHandler(){
+      tableApi.watch.setTaskUpdateHandler(this.taskUpdateHandler)
+    },
+    /**
+     * 任务状态更新的处理器
+     * @param task
+     */
+    taskUpdateHandler(task){
+      this.tasks.forEach((t,index)=>{
+        if(t.nanoid===task.nanoid){
+          console.log('找出变化的任务',t,task)
+          this.tasks.splice(index,1)
+          this.tasks.splice(index,0,task)
+        }
+      })
+     this.sortTasks()
+    },
+    startTask(task){
+      tableApi.watch.startTask(task)
+    },
     async loadAllTasks () {
       let tasks = await tableApi.watch.listAllTasks()
+      console.log('刷新任务',tasks)
       tasks.forEach((task)=>{
         task.data={}
       })
       this.tasks=tasks
+
+      this.sortTasks()
     },
     addVideo () {
       this.addVideoVisible = true
@@ -480,6 +523,7 @@ export default {
 }
 
 .bili-card {
+  margin-right: 10px;
   background: linear-gradient(146deg, rgba(241, 94, 137, 0.82), rgba(255, 109, 151, 0.71));
   border-radius: 8px;
 }

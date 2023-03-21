@@ -1,9 +1,10 @@
 const ipcHelper = require('../browserApi/ipcHelper')
-const WatchTaskModel =require('../model/watchTaskModel')
-const taskModel=new WatchTaskModel()
+const WatchTaskModel = require('../model/watchTaskModel')
+const taskModel = new WatchTaskModel()
 taskModel.initDb()
+
 function send (channel, args = {}) {
-  ipcHelper.send('watch', channel, args)
+  ipcHelper.send('watch', channel, JSON.parse(JSON.stringify(args)))
 }
 
 async function sendSync (channel, args = {}) {
@@ -13,13 +14,27 @@ async function sendSync (channel, args = {}) {
 let tasks = []
 let tests = []//测试，测完即弃
 
+let onTaskUpdate
+
 const watch = {
 
-  async addTask (task,start=false) {
+  /**
+   * 设置任务状态更新handler用于执行回调
+   * @param cb
+   */
+  setTaskUpdateHandler (cb) {
+    onTaskUpdate = cb
+  },
+
+  async startTask (task) {
+    send('startTask', task)
+  },
+
+  async addTask (task, start = false) {
     return await taskModel.add(task)
   },
 
-  async listAllTasks(){
+  async listAllTasks () {
     return await taskModel.listAllTasks()
   },
   /**
@@ -38,19 +53,19 @@ const watch = {
     task.onTimeout = onTimeout
     setTimeout(() => {
       console.log('检测超时')
-      let index=-1
-      let tester=tests.find((t,i)=>{
-        if(String(t.id)===String(task.id)){
-          index=i
+      let index = -1
+      let tester = tests.find((t, i) => {
+        if (String(t.id) === String(task.id)) {
+          index = i
           return true
         }
       })
-      if(tester){
-        if(onTimeout){
+      if (tester) {
+        if (onTimeout) {
           onTimeout()
         }
-        tests.splice(index,1)
-      }else{
+        tests.splice(index, 1)
+      } else {
         console.log('任务早已返回')
       }
     }, timeOut * 1000)
@@ -72,7 +87,6 @@ ipc.on('testSuccess', (event, args) => {
     }
     tests.splice(index)
   }
-
 })
 ipc.on('testFailure', (event, args) => {
   let index
@@ -91,6 +105,13 @@ ipc.on('testFailure', (event, args) => {
     tests.splice(index)
   }
 
+})
+
+ipc.on('taskUpdate', (event, args) => {
+  if (onTaskUpdate) {
+    console.log('任务状态更新')
+    onTaskUpdate(args.task)
+  }
 })
 
 module.exports = watch
