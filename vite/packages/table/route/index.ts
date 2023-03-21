@@ -2,7 +2,7 @@ import BarrageSetting from '../page/settings/BarrageSetting.vue'
 import Deck from '../page/Deck.vue'
 import Setting from '../page/Setting.vue'
 import Weather from '../page/app/Weather.vue'
-import BiliIndex from '../page/app/bili/Index.vue'
+import Watch from '../page/app/watch/Index.vue'
 import LevelDetail from '../page/LevelDetail.vue'
 import BasicSetting from '../page/settings/Basic.vue'
 import Key from '../page/settings/Key.vue'
@@ -35,9 +35,9 @@ export default   [{
       ]
     },
     {
-      path:'/bili',
-      name:'bili',
-      component: BiliIndex
+      path:'/watch',
+      name:'watch',
+      component: Watch
     },
     {
       path:'/levelDetail',

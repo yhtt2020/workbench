@@ -1,5 +1,7 @@
 const ipcHelper = require('../browserApi/ipcHelper')
-
+const WatchTaskModel =require('../model/watchTaskModel')
+const taskModel=new WatchTaskModel()
+taskModel.initDb()
 function send (channel, args = {}) {
   ipcHelper.send('watch', channel, args)
 }
@@ -13,8 +15,12 @@ let tests = []//测试，测完即弃
 
 const watch = {
 
-  async addTask (task) {
-    return await send('addTask', { task })
+  async addTask (task,start=false) {
+    return await taskModel.add(task)
+  },
+
+  async listAllTasks(){
+    return await taskModel.listAllTasks()
   },
   /**
    * 测试任务，尝试获取回采集的数据，一般用于前台进行首次采集的测试，防止无法真正实现采集而导致添加错误任务。
@@ -22,6 +28,7 @@ const watch = {
    * @param onSuccess
    * @param onFailure
    * @param onTimeout
+   * @param timeOut
    * @returns {Promise<any>}
    */
   testTask (task, onSuccess, onFailure, onTimeout, timeOut = 10) {

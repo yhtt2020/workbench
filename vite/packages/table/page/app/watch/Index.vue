@@ -101,7 +101,103 @@
         </div>
       </a-tab-pane>
       <a-tab-pane key="other" tab="未运行">
+        <a-empty v-if="stoppedTasks.length===0" style="margin-top: 3em"
+                 description="当前没有待机状态的任务"></a-empty>
+        <div v-else>
+          <Vuuri :getItemWidth="()=>{return '250px'}" :getItemHeight="()=>{return '500px'}" class="monitor"
+                 v-model="stoppedTasks">
+            <template #item="{ item }">
+              <Widget :uniqueKey="item.id">
+                <div class="p-2 bili-card">
+                  <div class="text-more text-base mb-4 text-left" >
+                    <!--               <a-avatar :src="item.task.icon"></a-avatar> -->
+                    <Icon icon="bilibili" style="font-size: 20px;vertical-align: text-top"></Icon> {{ item.title }}
+                  </div>
+                  <div class="mb-3">
+                    <a-row>
+                      <a-col :span="10">
+                        <img v-if="item.cover" class="bili-cover" :src="item.cover "/>
+                        <a-avatar  v-else class="bili-cover" style="line-height: 1.3;padding-top: 0.4em">首次运行后<br/>自动获取</a-avatar>
+                      </a-col>
+                      <a-col :span="14">
+                        <div class="text-more text-xs">{{ item.data.title }}</div>
+                        <div>
+                          <a-row class="text-xs" :gutter="10">
+                            <a-col :span="8">
+                              <Icon icon="bofang"></Icon><br/> {{ item.data.play || '0' }}
+                            </a-col>
+                            <a-col :span="8">
+                              <Icon icon="dianzan"></Icon><br/>  {{ item.data.support || '0'}}
+                            </a-col>
+                            <a-col :span="8">
+                              <Icon icon="jinbi"></Icon> <br/>{{ item.data.coin || '0' }}
+                            </a-col>
+                          </a-row>
+                        </div>
+                      </a-col>
+                    </a-row>
+                  </div>
+                  <div class="mb-3">
+                    <div class="bili-tag" v-for="tag in item.tags" >{{tag}}</div>
+                  </div>
 
+                  <div v-if="0" class="mb-4">
+                    <a-row>
+                      <a-col :span="8">
+                        <div class="text-xs">今日票房</div>
+                        <div class="text-lg">5321</div>
+                      </a-col>
+                      <a-col :span="8">
+                        <div class="text-xs">全天预测
+                        </div>
+                        <div class="text-lg">
+                          1.5万
+                        </div>
+                      </a-col>
+                      <a-col :span="8">
+                        <div class="text-xs"> 当前在看</div>
+                        <div class="text-lg">23</div>
+                      </a-col>
+                    </a-row>
+                  </div>
+
+                  <div v-if="0" class="mb-4">
+                    <a-row>
+                      <a-col :span="6">
+                        <div class="stage">S4</div>
+                      </a-col>
+                      <a-col :span="16">
+                        <div>初级流量池：10-15万</div>
+                        <div>预测总播放量：4.5万</div>
+                      </a-col>
+                    </a-row>
+                  </div>
+                  <div class="text-xs action-button">
+                    <a-row>
+                      <a-col :span="6">
+                        已运行<br>
+                        {{ item.last_execute_times || '0' }}次
+                      </a-col>
+                      <a-col :span="12">
+                        {{ item.executed_time_length || '从未运行' }}
+                          <br> <span v-if="item.executed_time_length">
+                        刷新于 {{ item.last_execute_time }}
+                        </span><span v-else>请点击运行</span>
+                      </a-col>
+                      <a-col :span="6">
+                       <a-button type="primary">
+                         <Icon class="text-xl" icon="bofang"></Icon>
+                       </a-button>
+
+                      </a-col>
+                    </a-row>
+                  </div>
+                </div>
+
+              </Widget>
+            </template>
+          </Vuuri>
+        </div>
       </a-tab-pane>
       <a-tab-pane key="taskTemplate" tab="任务模板">
 
@@ -111,7 +207,7 @@
           创建任务
           <template #overlay>
             <a-menu @click="handleMenuClick">
-              <a-menu-item @click="addWatch" key="1">
+              <a-menu-item @click="test" key="1">
                 创建任务模板
               </a-menu-item>
             </a-menu>
@@ -121,55 +217,83 @@
     </a-tabs>
   </div>
 
-  <a-drawer class="no-drag" v-model:visible="addVideoVisible" style="overflow: hidden">
+  <a-drawer :width="600" class="no-drag" v-model:visible="addVideoVisible" style="overflow: hidden">
     <div style="margin:1em;overflow: hidden">
-      <a-input-group style="width: 30em;margin-bottom: 2em" compact>
-        <a-input v-model:value="addUrl" placeholder="PC端视频链接" style="width: calc(100% - 200px)">
-        </a-input>
-        <a-button @click="addWatch" type="primary">
-          获取
-        </a-button>
-      </a-input-group>
+      <div class="line-title">
+        任务信息
+      </div>
+      <div class="line">
+        <a-row>
+          <a-col :span="4">
+            网页URL：
+          </a-col>
+          <a-col :span="4">
+            <a-input-group style="width:538px;" compact>
+              <a-input v-model:value="addTask.url" placeholder="网页链接，http或https开头" style="width: calc(100% - 200px)">
+              </a-input>
+              <a-button @click="test" type="primary">
+                测试
+              </a-button>
+            </a-input-group>
+          </a-col>
+        </a-row>
+      </div>
+      <div class="line">
+        <a-row>
+          <a-col :span="4">
+            任务名称：
+          </a-col>
+          <a-col>
+            <a-input style="width: 400px" placeholder="输入任务名称" v-model:value="addTask.title"></a-input>
+          </a-col>
+        </a-row>
+
+      </div>
+      <div class="line">
+        <a-row>
+          <a-col :span="4">
+            更新频率：
+          </a-col>
+          <a-col>
+            <a-select style="width: 7em" v-model:value="addTask.interval">
+              <a-select-option value="15">
+                15秒钟
+              </a-select-option>
+              <a-select-option value="30">
+                30秒
+              </a-select-option>
+              <a-select-option value="60">
+                1分钟
+              </a-select-option>
+              <a-select-option value="300">
+                5分钟
+              </a-select-option>
+              <a-select-option value="600">
+                10分钟
+              </a-select-option>
+              <a-select-option value="1800">
+                30分钟
+              </a-select-option>
+              <a-select-option value="3600">
+                1小时
+              </a-select-option>
+            </a-select>
+          </a-col>
+        </a-row>
+
+      </div>
       <div class="line title">
-        任务基本信息：
+        测试结果：
       </div>
       <div v-if="addTaskInfo.title" class="line">
         {{ addTaskInfo.title }}
       </div>
       <div v-else class="line">
-        请点击“获取”按钮获得视频信息。
-      </div>
-      <div class="line title">
-        更新频率
-      </div>
-      <div class="line">
-        <a-select style="width: 7em" v-model:value="updateInterval">
-          <a-select-option value="15">
-            15秒钟
-          </a-select-option>
-          <a-select-option value="30">
-            30秒
-          </a-select-option>
-          <a-select-option value="60">
-            1分钟
-          </a-select-option>
-          <a-select-option value="300">
-            5分钟
-          </a-select-option>
-          <a-select-option value="600">
-            10分钟
-          </a-select-option>
-          <a-select-option value="1800">
-            30分钟
-          </a-select-option>
-          <a-select-option value="3600">
-            1小时
-          </a-select-option>
-        </a-select>
+        请点击“测试”按钮获得视频信息。
       </div>
 
       <div class="line" style="position: absolute;bottom: 1em;">
-        <a-button :disabled="!this.addTaskInfo.title" size="large" type="primary">
+        <a-button @click="doAddTask"   size="large" type="primary">
           确定
         </a-button>
       </div>
@@ -233,6 +357,10 @@ export default {
   },
   data () {
     return {
+      addTask:{//添加任务表单
+        title:'',
+        url:''
+      },
       currentTab: 'running',
       addVideoVisible: false,
       updateInterval: 15,
@@ -241,26 +369,73 @@ export default {
         title: ''
       },
       watchTask: [],
-      runningTasks: runningTasks,//正在运行中的任务
       currentTaskId: '',
+
+      tasks:[]
     }
   },
+  computed:{
+    runningTasks(){
+      return this.tasks.filter(task=>{
+        return task.running===1
+      })
+    },
+    stoppedTasks(){
+      return this.tasks.filter(task=>{
+        return !task.running
+      })
+    }
+  },
+  mounted () {
+    this.loadAllTasks().then()
+  },
   methods: {
-    addTemplate(){
-
+    async loadAllTasks () {
+      let tasks = await tableApi.watch.listAllTasks()
+      tasks.forEach((task)=>{
+        task.data={}
+      })
+      this.tasks=tasks
     },
     addVideo () {
       this.addVideoVisible = true
     },
-    addWatch () {
-      if (this.addUrl === '') {
-        message.error('请输入视频链接')
+    async doAddTask () {
+      let addTask = this.addTask
+      if (!addTask.title.trim()) {
+        message.error('必须输入一个标题')
+        return
+      }
+      if (!addTask.url.trim() && !addTask.title.startsWith('http')) {
+        message.error('必须输入正确的网址，建议输入后测试是否可正确获取。')
+        return
+      }
+
+      let result = await tableApi.watch.addTask({
+        title: addTask.title,
+        url: addTask.url,
+        interval: addTask.interval
+      })
+
+      if(result.status){
+        this.loadAllTasks().then()
+        message.success('添加任务成功。')
+      }else{
+        console.warn(result.info)
+        message.error('添加任务失败，请检查输入。')
+      }
+
+    },
+    test () {
+      if (this.addTask.url === '' || !this.addTask.url.startsWith('http')) {
+        message.error('请输入正确的网页链接')
+        return
       }
       this.currentTaskId = Date.now()
       message.info({content:'开始测试，正在等待测试结果',key:'test'})
       tableApi.watch.testTask({
         id: this.currentTaskId,
-        url: this.addUrl
+        url: this.addTask.url
       },(data)=>{
         this.addTaskInfo=data.data
         message.success({content: '测试成功。' ,key:'test'})
