@@ -75,7 +75,7 @@ class WatchTaskModel {
   }
 
   async listAllTasks () {
-    return this.db.knex('task').select()
+    return this.db.knex('task').orderBy('last_execute_time','desc').select()
   }
 
   async startTask(nanoid){

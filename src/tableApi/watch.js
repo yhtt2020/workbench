@@ -1,8 +1,10 @@
 const ipcHelper = require('../browserApi/ipcHelper')
 const WatchTaskModel = require('../model/watchTaskModel')
+const DataModel = require('../model/watchDataModel')
 const taskModel = new WatchTaskModel()
 taskModel.initDb()
-
+const dataModel=new DataModel()
+dataModel.initDb()
 function send (channel, args = {}) {
   ipcHelper.send('watch', channel, JSON.parse(JSON.stringify(args)))
 }
@@ -35,7 +37,22 @@ const watch = {
   },
 
   async listAllTasks () {
-    return await taskModel.listAllTasks()
+    let tasks= await taskModel.listAllTasks()
+    for (const task of tasks) {
+      let gotData=await dataModel.getLatestStart(task.nanoid)
+      if(gotData){
+        try{
+          task.data=JSON.parse(gotData.data)
+          task.last_execute_info=gotData
+        }catch (e) {
+          console.warn('数据转换失败',e)
+          task.data=null
+          task.last_execute_info=null
+        }
+      }
+      console.log('获取到任务的封面数据',task.data)
+    }
+    return tasks
   },
   /**
    * 测试任务，尝试获取回采集的数据，一般用于前台进行首次采集的测试，防止无法真正实现采集而导致添加错误任务。

@@ -18,25 +18,25 @@
                 <div class="p-2 bili-card">
                   <div class="text-more text-base mb-4 text-left" >
                     <!--               <a-avatar :src="item.task.icon"></a-avatar> -->
-                   <Icon icon="bilibili" style="font-size: 20px;vertical-align: text-top"></Icon> {{ item.title }}
+                   <Icon icon="bilibili" style="font-size: 20px;vertical-align: text-top"></Icon> {{ item.title || '-'}}
                   </div>
                   <div class="mb-3">
                     <a-row>
                       <a-col :span="10">
-                        <img class="bili-cover" src="/img/cover.jpg"/>
+                        <img class="bili-cover" :src="item.data.cover"/>
                       </a-col>
                       <a-col :span="14">
-                        <div class="text-more text-xs">{{ item.data.title }}</div>
+                        <div class="text-more text-xs" :title="item.data.title">{{ item.data.title || '-'}}</div>
                         <div>
                           <a-row class="text-xs" :gutter="10">
                             <a-col :span="8">
-                             <Icon icon="bofang"></Icon><br/> {{ item.data.play }}
+                             <Icon icon="bofang"></Icon><br/> {{ item.data.viewText || '-'}}
                             </a-col>
                             <a-col :span="8">
-                              <Icon icon="dianzan"></Icon><br/>  {{ item.data.support }}
+                              <Icon icon="dianzan"></Icon><br/>  {{ item.data.like || '-'}}
                             </a-col>
                             <a-col :span="8">
-                              <Icon icon="jinbi"></Icon> <br/>{{ item.data.coin }}
+                              <Icon icon="jinbi"></Icon> <br/>{{ item.data.coin || '-'}}
                             </a-col>
                           </a-row>
                         </div>
@@ -62,7 +62,7 @@
                       </a-col>
                       <a-col :span="8">
                         <div class="text-xs"> 当前在看</div>
-                        <div class="text-lg">23</div>
+                        <div class="text-lg">-</div>
                       </a-col>
                     </a-row>
                   </div>
@@ -86,7 +86,13 @@
                       </a-col>
                       <a-col :span="12">
                         1小时32分钟<br>
-                        刷新于 10：44
+                        <div v-if=" item.last_execute_info">
+                           {{ friendlyDate(item.last_execute_info.grab_time )}} 更新
+                        </div>
+                        <div v-else>
+                          未成功执行过
+                        </div>
+
                       </a-col>
                       <a-col :span="6">
                         <Icon class="text-xl" icon="zanting"></Icon>
@@ -116,7 +122,7 @@
                 <div class="p-2 bili-card">
                   <div class="text-more text-base mb-4 text-left" >
                     <!--               <a-avatar :src="item.task.icon"></a-avatar> -->
-                    <Icon icon="bilibili" style="font-size: 20px;vertical-align: text-top"></Icon> {{ item.title }}
+                    <Icon icon="bilibili" style="font-size: 20px;vertical-align: text-top"></Icon> {{ item.data.data.title }}
                   </div>
                   <div class="mb-3">
                     <a-row>
@@ -186,7 +192,7 @@
                       <a-col :span="12">
                         {{ item.executed_time_length || '从未运行' }}
                           <br> <span v-if="item.executed_time_length">
-                        刷新于 {{ item.last_execute_time }}
+                        刷新于 {{ friendlyDate(item.last_execute_time) }}
                         </span><span v-else>请点击运行</span>
                       </a-col>
                       <a-col :span="6">
@@ -313,6 +319,7 @@ import { message,Modal } from 'ant-design-vue'
 import Vuuri from '../../../components/vuuri/Vuuri.vue'
 import Widget from '../../../components/muuri/Widget.vue'
 
+
 const runningTasks = [
   {
     template: {
@@ -398,6 +405,9 @@ export default {
     tableApi.watch.setTaskUpdateHandler(null)//卸载处理器，防止不在这个页面上也执行这个处理方法
   },
   methods: {
+    friendlyDate(time){
+      return  tsbApi.util.friendlyDate(time)
+    },
     sortTasks(){
       this.runningTasks= this.tasks.filter(task=>{
         return task.running
@@ -420,7 +430,6 @@ export default {
     taskUpdateHandler(task){
       this.tasks.forEach((t,index)=>{
         if(t.nanoid===task.nanoid){
-          console.log('找出变化的任务',t,task)
           this.tasks.splice(index,1)
           this.tasks.splice(index,0,task)
         }
@@ -434,7 +443,12 @@ export default {
       let tasks = await tableApi.watch.listAllTasks()
       console.log('刷新任务',tasks)
       tasks.forEach((task)=>{
-        task.data={}
+        //无需处理了
+        if(!task.data){
+          task.data={
+            data:{}
+          }//重新处理一下data
+        }
       })
       this.tasks=tasks
 

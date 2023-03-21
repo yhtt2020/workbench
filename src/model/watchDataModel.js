@@ -27,7 +27,12 @@ class WatchTaskModel {
     }
   }
 
+  async updateLastExecuteTime(taskId){
+    await this.db.knex('task').where({nanoid:taskId}).update({last_execute_time:Date.now()})
+  }
+
   async add (taskId, data,type) {
+    this.updateLastExecuteTime(taskId).then()
     return await this.db.knex('data').insert({
       nanoid: nanoid(8),
       task_id: taskId,
@@ -38,6 +43,7 @@ class WatchTaskModel {
 
   }
   async addError (taskId, data,type) {
+    this.updateLastExecuteTime(taskId).then()
     return await this.db.knex('data').insert({
       nanoid: nanoid(8),
       task_id: taskId,
@@ -47,6 +53,17 @@ class WatchTaskModel {
       type
     })
 
+  }
+
+  async getLatestStart(taskId){
+    let records= await this.db.knex('data').whereNull('status').where({ task_id: taskId,type:'start' }).orderBy('grab_time','desc').limit(1).select()
+    if(records){
+      if(records.length===1){
+        return records[0]
+      }
+    }else{
+      return null
+    }
   }
 
 }
