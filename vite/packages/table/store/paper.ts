@@ -11,7 +11,7 @@ const DEFAULT_PAPERS_SETTINGS = {
   lockTimeout: 180,
   interval: 3,
   savePath: '',
-  tipLock: true//在状态栏提示多久锁屏
+  tipLock: true //在状态栏提示多久锁屏
 }
 // @ts-ignore
 export const paperStore = defineStore('paper', {
@@ -21,7 +21,8 @@ export const paperStore = defineStore('paper', {
     playingPaper: null,//播放中的壁纸
     settings: DEFAULT_PAPERS_SETTINGS,
     tipLock: true,//在状态栏提示还有多久进入锁屏
-    lockTimeout: 300
+    lockTimeout: 300,
+    wallHeavenList:[] // wallheaven数据
   }),
   actions:{
     /**
@@ -55,6 +56,11 @@ export const paperStore = defineStore('paper', {
         this.activePapers.splice(found, 1)
       }
     },
+    //更改wallheaven数据
+    // updateWallHeaven(data){
+    //   this.wallHeavenList.push(data)
+    //   console.log(this.wallHeavenList);
+    // },
   },
   persist: {
     enabled: true,
