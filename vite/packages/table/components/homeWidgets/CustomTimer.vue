@@ -1,13 +1,13 @@
 <template>
   <div class="card">
-    <div style="border-bottom: 1px solid #777777">
+    <div>
       <a-calendar
         v-model:value="value"
         :fullscreen="false"
         @panelChange="onPanelChange"
       >
         <template #headerRender="{}">
-          <div class="title">
+          <div class="timer-title">
             <Icon
               icon="rili3"
               style="height: 1.3em; width: 1.3em; margin-right: 0.1em"
@@ -112,7 +112,7 @@ export default {
 :deep(.ant-picker-cell .ant-picker-cell-inner) {
   border-radius: 100%;
 }
-.title {
+.timer-title {
   background: #363739;
   font-size: 1.5em;
   position: relative;
@@ -143,5 +143,8 @@ export default {
   border-radius: 10%;
   margin-left: 1.8em;
   cursor:pointer
+}
+:deep(.ant-picker-calendar){
+  background: transparent;
 }
 </style>
