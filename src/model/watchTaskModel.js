@@ -78,6 +78,9 @@ class WatchTaskModel {
     return this.db.knex('task').orderBy('last_execute_time','desc').select()
   }
 
+  async get(map){
+    return this.db.knex('task').where(map).first()
+  }
 
 
   async update(nanoid,data){

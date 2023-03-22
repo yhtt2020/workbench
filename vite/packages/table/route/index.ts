@@ -16,6 +16,7 @@ import Browser from '../page/settings/Browser.vue'
 import AddCard from "../page/app/card/AddCard.vue"
 import SetupCard from "../page/app/card/SetupCard.vue"
 import Sensor from '../page/Sensor.vue'
+import Dashboard from '../page/app/watch/Dashboard.vue'
 export default   [{
   path: '',
   name: 'index',
@@ -38,6 +39,11 @@ export default   [{
       path:'/watch',
       name:'watch',
       component: Watch
+    },
+    {
+      path:'/dashboard',
+      name:'dashboard',
+      component: Dashboard
     },
     {
       path:'/levelDetail',

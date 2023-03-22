@@ -7,14 +7,14 @@
   width: 20em;
   min-width: 20em;
   display: inline-block;
-  height: calc(100vh - 14em);
+  height: 420px;
   padding: 1em;
   margin-right: 1em; }
   .card.auto-height {
     height: auto; }
   .card.half {
-    height: calc((100vh - 14em - 1em) /2 );
-    margin-bottom: 1em; }
+    height: 203px;
+    margin-bottom: 14px; }
   .card .title {
     font-size: 2em; }
   .card .sub-card {

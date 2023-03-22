@@ -70,6 +70,16 @@ const watch = {
     }
   },
 
+  async getTask(map){
+    let task =await taskModel.get(map)
+    let lastInfo = await watch.getLatestData(task)
+    if (lastInfo) {
+      task.data = lastInfo.data
+      task.last_execute_info = lastInfo.last_execute_info
+    }
+    return task
+  },
+
   async listAllTasks () {
     let tasks = await taskModel.listAllTasks()
     for (const task of tasks) {
