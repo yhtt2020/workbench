@@ -40,7 +40,8 @@ export default {
     addCard(){
       switch (this.cardType.name) {
         case "customTimer":
-          this.addCustomComponents(this.cardType.name);
+         // this.addCustomComponents({id:Date.now(),children:[{name:this.cardType.name,id:Date.now()}]});
+          this.addCustomComponents({name:this.cardType.name,id:Date.now()});
           this.$router.push({
             name: "home",
             params: {
@@ -51,7 +52,8 @@ export default {
           message.info("添加成功！");
           break;
         case "countdownDay":
-          this.addCustomComponents(this.cardType.name);
+          //this.addCustomComponents({id:Date.now(),children:[{name:this.cardType.name,id:Date.now()}]});
+          this.addCustomComponents({name:this.cardType.name,id:Date.now()});
           this.$router.push({
             name: "addCardSetting",
             params: {
@@ -61,7 +63,8 @@ export default {
           });
           break;
         case "smallCountdownDay":
-          this.addCustomComponents(this.cardType.name);
+         // this.addCustomComponents({id:Date.now(),children:[{name:this.cardType.name,id:Date.now()}]});
+          this.addCustomComponents({name:this.cardType.name,id:Date.now()});
           this.$router.push({
             name: "addCardSetting",
             params: {
@@ -71,7 +74,8 @@ export default {
           });
           break;
         case "clock":
-          this.addCustomComponents(this.cardType.name);
+          //this.addCustomComponents({id:Date.now(),children:[{name:this.cardType.name,id:Date.now()}]});
+          this.addCustomComponents({name:this.cardType.name,id:Date.now()});
           this.$router.push({
             name: "addCardSetting",
             params: {

@@ -1,5 +1,5 @@
 <template>
-  <div class="card  content half" v-if="countDowntime.hours" style="display: flex;flex-direction: column;justify-content: space-between;height: 50%">
+  <div class="card  content half" v-if="countDowntime.hours" style="display: flex;flex-direction: column;justify-content: space-between;height: 15em;">
     <Icon
       style="width: 1.5em; height: 1.5em;cursor:pointer"
       icon="gengduo1"
@@ -26,7 +26,7 @@
      ></Icon>
    </div>
   </div>
-  <div class="card content half" v-else-if="clockEvent.length <= 0">
+  <div class="card content half" style="height: 15em;" v-else-if="clockEvent.length <= 0">
       <Icon
         style="width: 1.5em; height: 1.5em;cursor:pointer"
         icon="gengduo1"
@@ -257,7 +257,7 @@ export default {
   left: 35%;
 
   width: 30%;
-  height: 50%;
+
   border-radius: 10%;
   z-index: 999;
 }
