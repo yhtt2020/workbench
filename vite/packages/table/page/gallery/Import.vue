@@ -35,8 +35,58 @@
 </template>
 
 <script>
+import { appStore } from '../../store'
+import {mapWritableState,mapActions} from 'pinia'
+import { paperStore } from '../../store/paper'
 export default {
-  name: 'Import'
+  name: 'Import',
+  data(){
+     return{
+       copyPath:''
+     }
+  },
+  computed:{
+    ...mapWritableState(paperStore,['settings'])
+  },
+  methods:{
+    // 选择本地需要导入的文件
+    async importFile(){
+      let openPath = await tsbApi.dialog.showOpenDialog({
+        title: '选择导入的代码',
+        filters: [{ name: '图片', extensions: ['png','jpg','jpeg','bmp','gif'] },{name:'视频',extensions:['mp4','mpeg','avi','rmvb']},{name:'全部',extensions:['*']}],
+      })
+      if(!openPath){
+        return 
+      }else{
+        let savePath = await tsbApi.dialog.showOpenDialog({
+          title: '选择目录', message: '请选择下载壁纸的目录', properties: [
+          'openDirectory', 'createDirectory',
+          ]
+        })
+        if (!savePath){
+          return
+        }else{
+          console.log(this.settings.savePath);
+          console.log(openPath[0]);
+          // this.settings.savePath = openPath[0]
+          // const fs = require('fs')
+          // fs.copyFileSync(openPath[0],this.settings.savePath)
+          // 最后引入文件
+
+        }
+      }
+    },
+    // 导入网络资源文件
+    importNetworkFile(){
+       
+    },
+    // 文件拖拽
+    dragOver(){},
+    drop(e){
+      let importFile = e.dataTransfer.files
+    },
+    
+  }
 }
 </script>
 
