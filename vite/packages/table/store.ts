@@ -127,7 +127,7 @@ export const tableStore = defineStore(
         countdownDay: [],
         appDate: {},
         clockEvent: [],
-        customComponents: [],
+        customComponents: [{name:'Music',id:1},{name:'Weather',id:2},{name:'Timer',id:3}],
       };
     },
 
@@ -182,23 +182,20 @@ export const tableStore = defineStore(
       //   },
       addCustomComponents(value) {
         //if (this.customComponents.includes(value)) return;
+
+
         this.customComponents.push(value);
+
       },
       removeCustomComponents(customIndex) {
-
-        this.customComponents.splice(customIndex,1);
+        this.customComponents.splice( this.customComponents.findIndex(item=>{
+          return item.id===customIndex
+        }),1)
+        // this.customComponents.splice(customIndex,1);
 
       },
     },
-    persist: {
-      enabled: true,
-      strategies: [{
-        // 自定义存储的 key，默认是 store.$id
-        // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-        storage: localStorage,
-        // state 中的字段名，按组打包储存
-      }]
-    }
+
   },
   {}
 );
