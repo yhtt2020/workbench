@@ -99,7 +99,6 @@ export default defineComponent({
       }
     })
     this.getPeopleList(this.page)
-    console.log($('.viewer-canvas img'));
   },
   methods:{
     ...mapActions(paperStore,['addToMyPaper']),
@@ -131,7 +130,7 @@ export default defineComponent({
           }
         }
        }).catch(err=>{
-          // console.log(err);
+           
         })
       }
     },
@@ -139,7 +138,6 @@ export default defineComponent({
     wallSearch(){
       this.list = []
       let searchUrl = `https://wallhaven.cc/api/v1/search?&categories=${this.search.categories}&purity=${this.search.purity=='SFW' ? '100':'010' }&sorting=${this.search.sorting}${this.wallSizeValue === ''? '':`&atleast=${this.wallSizeValue}`}${this.searchName !=='' ?`&q=${this.searchName}`:''}&page=${this.page}`
-      console.log(searchUrl);
       if (!this.isLoading) {
         this.isLoading = true;
         axios.get(searchUrl).then(async (res) => {
@@ -184,12 +182,6 @@ export default defineComponent({
       return image.src===img.src
       })>-1
     },
-    // 处理图片加载失败
-    // handlerError(e){
-    //   console.log(e,'图片加载失败');
-    //   // console.log(e.target.data-source);
-    //   // e.target.src = this.imageError
-    // },
   }
 })
 </script>

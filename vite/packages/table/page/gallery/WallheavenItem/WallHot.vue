@@ -132,7 +132,6 @@ export default defineComponent({
     getSearchData(){
       this.list = []
       let searchUrl = `https://wallhaven.cc/api/v1/search?&categories=${this.search.categories}&purity=${this.search.purity=='SFW' ? '100':'010' }&sorting=${this.search.sorting}${this.wallSizeValue === ''? '':`&atleast=${this.wallSizeValue}`}${this.searchName !=='' ?`&q=${this.searchName}`:''}&page=${this.page}`
-      console.log(searchUrl);
       if (!this.isLoading) {
         this.isLoading = true;
         axios.get(searchUrl).then(async (res) => {

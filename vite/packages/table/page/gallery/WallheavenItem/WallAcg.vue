@@ -104,9 +104,7 @@ export default defineComponent({
     ...mapActions(paperStore,['addToMyPaper']),
     // 动漫数据加载
     getAnimeList(page){
-      // console.log(page);
       let url = `https://wallhaven.cc/api/v1/search?&categories=${this.search.categories}&purity=${this.search.purity == 'SFW' ? '100' :'010'}&sorting=${this.search.sorting}&page=${page}`
-      console.log(url);
       if(!this.isLoading){
           this.isLoading = true
           // 数据请求业务
@@ -139,7 +137,6 @@ export default defineComponent({
     wallSearch(){
       this.list = []
       let searchUrl = `https://wallhaven.cc/api/v1/search?&categories=${this.search.categories}&purity=${this.search.purity=='SFW' ? '100':'010' }&sorting=${this.search.sorting}${this.wallSizeValue === ''? '':`&atleast=${this.wallSizeValue}`}${this.searchName !=='' ?`&q=${this.searchName}`:''}&page=${this.page}`
-      console.log(searchUrl);
       if (!this.isLoading) {
         this.isLoading = true;
         axios.get(searchUrl).then(async (res) => {
