@@ -26,13 +26,11 @@
     <a-button type="ghost" class="search-button" @click="wallSearch">搜索</a-button>
   </div>
   <vue-custom-scrollbar id="wall-container-paper" :settings="settingsScroller" style="height: 80vh">
-    <div v-if="list.length == 0" class="flex align-center justify-center" style="height: 80vh">
-      <a-empty description="未找到图片信息"/>
-    </div>
-    <viewer :images="list" :options="options" ref="acgRef" v-else>
+    <a-spin  v-if="isLoading"/>
+    <viewer :images="list" :options="options" ref="peopleRef" v-else-if="list.length !== 0">
       <a-row :gutter="[20,20]" id="wallImages" style="margin-right: 1em">
         <a-col class="image-wrapper " v-for="img in list" :span="6" style="">
-          <img  class="image-item pointer" :src="img.src" :data-source="img.path" style="position: relative">
+          <img  class="image-item pointer" :src="img.src"  :data-source="img.path"  :alt="img.resolution"  style="position: relative">
           <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
             <div @click.stop="addToMy(img)" class="bottom-actions pointer" :style="{background:isInMyPapers(img)?'#009d00a8':''}">
               <Icon v-if="!isInMyPapers(img)" icon="tianjia1"></Icon>
@@ -41,7 +39,10 @@
           </div>
         </a-col>
       </a-row>
-    </viewer>
+    </viewer> 
+    <div v-else class="flex align-center justify-center" style="height: 80vh">
+      <a-empty description="未找到图片信息"/>
+    </div>
   </vue-custom-scrollbar>
 </template>
 
@@ -120,6 +121,7 @@ export default defineComponent({
                     title:false,
                     src:img.thumbs.large,
                     path:img.path,
+                    resolution:img.resolution,
                     animations:animations[randomIndex]
                   }
                   this.list.push(image)
@@ -150,6 +152,7 @@ export default defineComponent({
                   title: false,
                   src: img.thumbs.large,
                   path: img.path,
+                  resolution:img.resolution,
                   animations: animations[randomIndex],
                 };
                 this.list.push(image);
