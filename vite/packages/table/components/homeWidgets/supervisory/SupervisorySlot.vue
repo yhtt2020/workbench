@@ -69,13 +69,13 @@ export default {
   width: 20em;
   min-width: 20em;
   display: inline-block;
-  height: calc(100vh - 14em);
+  height: 420px;
   padding: 3em 13px .5em 13px ;
   margin-right: 1em;
   position: relative;
   &.small{
-   height:200px;
-   margin-bottom: 20px;
+    height: 203px;
+   margin-bottom: 14px;
  }
   &.big{
 
@@ -85,12 +85,12 @@ export default {
     display: flex;
     width: 35%;
     align-items: center;
-    left: .5em;
-    top: 0.5em;
+    left: 13px;
+    top: 8px;
 
     .title-icon{
-      width: 2em;
-      height: 2em;
+      width: 18px;
+      height:18px;
     }
     :last-child{
       margin-left: .5em;
@@ -100,8 +100,8 @@ export default {
     position: absolute;
     align-items: center;
     display: flex;
-    right: 1em;
-    top: 1em;
+    right: 13px;
+    top: 8px;
     .title-icon{
     width: 1.5em;
     height: 1.5em;

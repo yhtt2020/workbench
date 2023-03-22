@@ -127,7 +127,7 @@ export const tableStore = defineStore(
         countdownDay: [],
         appDate: {},
         clockEvent: [],
-        customComponents: [{name:'SmallCPUCard',id:12},{name:'InternalList',id:7},
+        customComponents: [{name:'SmallCPUCard',id:12},{name:'SmallGPUCard',id:34},
           {name:'CPUFourCard',id:6},{name:'CPULineChart',id:0},{name:'Music',id:1},
           {name:'Weather',id:2},{name:'Timer',id:3}],
         aidaData:null,

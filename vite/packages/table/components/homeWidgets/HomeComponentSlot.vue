@@ -1,14 +1,14 @@
 <template>
-    <div :class="options.className" :style="{pointerEvents:(editing?'none':'')}">
-      <div class="left-title" v-if="options.icon&&options.title!==''">
-        <Icon :icon="options.icon" class="title-icon"></Icon>
+  <div :class="options.className" :style="{pointerEvents:(editing?'none':'')}">
+    <div class="left-title">
+      <Icon :icon="options.icon" class="title-icon"></Icon>
       <div style="font-size: 1em">{{options.title}}</div>
-      </div>
-      <div class="right-title" @click.stop="showDrawer">
-        <Icon icon="gengduo1" class="title-icon" style="cursor:pointer"></Icon>
-      </div>
-      <slot></slot>
     </div>
+    <div class="right-title" @click.stop="showDrawer">
+      <Icon icon="gengduo1" class="title-icon" style="cursor:pointer"></Icon>
+    </div>
+    <slot></slot>
+  </div>
   <a-drawer
     :contentWrapperStyle="{ padding:10,marginLeft:'2.5%',
     backgroundColor:'#1F1F1F',width: '95%',height:'11em',borderRadius:'5%'}"
@@ -69,13 +69,13 @@ export default {
   width: 20em;
   min-width: 20em;
   display: inline-block;
-  height: calc(100vh - 14em);
+  height: 420px;
   padding: 3em 13px .5em 13px ;
   margin-right: 1em;
   position: relative;
   &.small{
-    height:200px;
-    margin-bottom: 20px;
+    height: 203px;
+    margin-bottom: 14px;
   }
   &.big{
 
@@ -85,12 +85,12 @@ export default {
     display: flex;
     width: 35%;
     align-items: center;
-    left: .5em;
+    left: 13px;
     top: 0.5em;
 
     .title-icon{
-      width: 2em;
-      height: 2em;
+      width: 18px;
+      height:18px;
     }
     :last-child{
       margin-left: .5em;
@@ -100,13 +100,13 @@ export default {
     position: absolute;
     align-items: center;
     display: flex;
-    right: 1em;
+    right: 13px;
     top: 1em;
     .title-icon{
-    width: 1.5em;
-    height: 1.5em;
+      width: 1.5em;
+      height: 1.5em;
       color: #818181;
-  }
+    }
   }
 
 }

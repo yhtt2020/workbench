@@ -1,30 +1,33 @@
 <template>
 <SupervisorySlot :options="options">
   <div class="top-content">
-    <div><span>70%</span>
+    <div><span>{{CPUGPUData.SCPUUTI.value}}%</span>
       <span>
-      <Icon icon="CPU" class="icon"></Icon>CPU</span></div>
+      <Icon icon="CPU" class="icon"></Icon>CPU</span>
+    </div>
 
-    <div style="margin-left: 13px"><span>99%</span>
+    <div style="margin-left: 13px">
+      <span>{{CPUGPUData.SGPU1UTI.value}}%</span>
       <span>
-      <Icon icon="CPU" class="icon"></Icon>GPU</span></div>
+      <Icon icon="GPU" class="icon"></Icon>GPU</span></div>
 
-    <div><span>50%</span>
+    <div><span>{{CPUGPUData.SMEMUTI.value}}%</span>
       <span>
       <Icon icon="neicun" class="icon"></Icon>内存</span></div>
 
-    <div style="margin-left: 13px"><span>166</span>
+    <div style="margin-left: 13px"><span>{{CPUGPUData.SRTSSFPS.value}}</span>
       <span>
       <Icon icon="youxishoubing" class="icon"></Icon>FPS</span></div>
     <div>
       <div>
         <Icon icon="xiazai" class="icon" style="color: #5CBBFF;"></Icon>
         <span>下载</span>
-        <span>12.7MB/S</span></div>
+        <span>{{lastDown}}</span></div>
 
-     <div> <Icon icon="shangchuan" class="icon" style="color: #52C41A;"></Icon>
+     <div>
+       <Icon icon="shangchuan" class="icon" style="color: #52C41A;"></Icon>
        <span>上传</span>
-       <span>34.1KB/S</span>
+       <span>{{lastUp}}</span>
      </div>
    </div>
   </div>
@@ -33,6 +36,8 @@
 
 <script>
 import SupervisorySlot from "./SupervisorySlot.vue";
+import {mapWritableState} from "pinia";
+import {tableStore} from "../../../store";
 export default {
   name: "CPUFourCard",
   data(){
@@ -40,14 +45,46 @@ export default {
       options:{
         className:'card',
         title:'性能',
-        icon:'xingneng'
+        icon:'gaoxingneng'
       },
+      CPUGPUData:{
+        SCPUUTI:{value:"-"},
+        SGPU1UTI:{value:"-"},
+        SMEMUTI:{value:"-"},
+        SRTSSFPS:{value:"-"},
+      },
+      down:'-',
+      up:'-'
   }
   },
-
   components:{
     SupervisorySlot
-  }
+  },
+  computed:{
+    ...mapWritableState(tableStore, ["aidaData"]),
+    lastDown(){
+      return this.down < 1000 ? this.down +'KB/S' : this.down<1024000?(this.down/1024).toFixed(2) + 'MB/S':(this.down/1024/1024).toFixed(2) + 'GB/S'
+    },
+    lastUp(){
+      return this.up < 1000 ? this.up +'KB/S' : this.up<1024000?(this.up/1024).toFixed(2) + 'MB/S':(this.up/1024/1024).toFixed(2) + 'GB/S'
+    }
+  },
+  watch: {
+    "aidaData": {
+      handler(newVal, oldVal) {
+        this.CPUGPUData=this.aidaData;
+        const NIC= Object.keys(this.aidaData).reduce((newData, key) => {
+          if (key.includes('SNIC')&&this.aidaData[key].value!=='0.0') {
+            if(this.aidaData[key].label.includes('Down')) this.down = this.aidaData[key].value
+            if(this.aidaData[key].label.includes('Up')) this.up = this.aidaData[key].value
+            newData[key] = this.aidaData[key];
+          }
+          return newData;
+        }, {});
+      },
+      deep: true,
+    },
+  },
 }
 </script>
 
@@ -95,8 +132,8 @@ export default {
       }
     }
   }.icon{
-     width: 1.5em;
-     height: 1.5em;
+       width: 18px;
+       height:18px;
   margin-right: .5em;
    }
 }

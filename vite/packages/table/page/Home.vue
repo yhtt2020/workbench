@@ -65,6 +65,7 @@ import CPULineChart from "../components/homeWidgets/supervisory/CPULineChart.vue
 import CPUFourCard from "../components/homeWidgets/supervisory/CPUFourCard.vue";
 import InternalList from "../components/homeWidgets/supervisory/InternalList.vue";
 import SmallCPUCard from "../components/homeWidgets/supervisory/SmallCPUCard.vue";
+import SmallGPUCard from "../components/homeWidgets/supervisory/SmallGPUCard.vue";
 const readAida64 = require('aida64-to-json')
 export default {
   name: "Home",
@@ -79,7 +80,8 @@ export default {
         suppressScrollY: true,
         suppressScrollX: false,
         wheelPropagation: true,
-        currentItemId:-1
+        currentItemId:-1,
+        timer:null
       },
     }
   },
@@ -100,24 +102,25 @@ export default {
     CPULineChart,
     CPUFourCard,
     InternalList,
-    SmallCPUCard
+    SmallCPUCard,
+    SmallGPUCard
   },
   computed: {
     ...mapWritableState(tableStore, ["customComponents", "clockEvent"]),
     ...mapWritableState(tableStore, ["aidaData"]),
   },
   created() {
-    readAida64().then(res => {
-      this.setAidaData(res)
-      //this.data=JSON.stringify(res, null, '\t')
-    })
-    setInterval(()=>{
+   this.timer= setInterval(()=>{
       readAida64().then(res => {
-        console.log(res)
         this.setAidaData(res)
         //this.data=JSON.stringify(res, null, '\t')
       })
     },1000)
+  },
+  unmounted() {
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
   },
   methods: {
     ...mapActions(tableStore, ["setAidaData"]),

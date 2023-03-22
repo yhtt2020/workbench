@@ -14,7 +14,7 @@
       <div class="cpu" style="margin-top: .5em">
         <div class="cpu-number">
           <div>
-            <Icon icon="CPU" class="icon"></Icon>
+            <Icon icon="GPU" class="icon"></Icon>
             <span>GPU</span>
           </div>
           <span style="font-weight:700">{{CPUData.SGPU1UTI.value}}%</span></div>
@@ -54,14 +54,27 @@
           <span>网速</span>
         </div>
       </div>
-        <div class="cpu-number" style="margin-top: .5em">
-          <Icon icon="xiazai" class="icon" style="color: #5CBBFF;"></Icon>
-          <span>下载</span>
-          <span>12.7MB/S</span>
-          <Icon icon="shangchuan" class="icon" style="color: #52C41A;"></Icon>
-          <span>上传</span>
-          <span>34.1KB/S</span>
+        <div class="cpu" style="margin-top: 5px">
+          <div class="cpu-number">
+            <div>
+              <Icon icon="xiazai" class="icon" style="color: #5CBBFF;"></Icon>
+              <span>下载</span>
+            </div>
+            <span style="font-weight:700">{{lastDown}}</span>
+          </div>
         </div>
+
+        <div class="cpu"  style="margin-top: 5px">
+          <div class="cpu-number">
+            <div>
+              <Icon icon="shangchuan" class="icon" style="color:  #52C41A;"></Icon>
+              <span>上传</span>
+            </div>
+            <span style="font-weight:700">{{lastUp}}</span>
+          </div>
+        </div>
+
+
     </div>
 
     </div>
@@ -76,13 +89,14 @@ import {CPUOption,GPUOption} from './echartOptions'
 import * as echarts from "echarts";
 import {mapWritableState} from "pinia";
 import {tableStore} from "../../../store";
+import {filterObjKeys} from '../../../util'
 export default {
   data(){
     return {
       options:{
         className:'card',
         title:'性能',
-        icon:'xingneng'
+        icon:'gaoxingneng'
       },
       CPUOption,
       GPUOption,
@@ -92,7 +106,10 @@ export default {
         SMEMUTI:{value:"-"},
         SDSK1ACT:{value:"-"},
       },
-      CPUlist:[120,120,120,120,120]
+      CPUList:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      GPUList:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      down:'-',
+      up:'-'
     }
   },
 
@@ -102,6 +119,12 @@ export default {
   },
   computed:{
     ...mapWritableState(tableStore, ["aidaData"]),
+    lastDown(){
+      return this.down < 1000 ? this.down +'KB/S' : this.down<1024000?(this.down/1024).toFixed(2) + 'MB/S':(this.down/1024/1024).toFixed(2) + 'GB/S'
+    },
+    lastUp(){
+      return this.up < 1000 ? this.up +'KB/S' : this.up<1024000?(this.up/1024).toFixed(2) + 'MB/S':(this.up/1024/1024).toFixed(2) + 'GB/S'
+    }
   },
   mounted() {
     this.CPUEcharts();
@@ -110,10 +133,24 @@ export default {
     "aidaData": {
       handler(newVal, oldVal) {
       this.CPUData=this.aidaData;
-      this.CPUlist.push(this.CPUData.SCPUUTI.value)
-        this.CPUlist.shift();
+      this.CPUList.push(this.CPUData.SCPUUTI.value)
+      this.CPUList.shift();
+      this.GPUList.push(this.CPUData.SGPU1UTI.value)
+      this.GPUList.shift();
+      //console.log(this.aidaData)
 
-        this.CPUEcharts()
+        const NIC= Object.keys(this.aidaData).reduce((newData, key) => {
+            if (key.includes('SNIC')&&this.aidaData[key].value!=='0.0') {
+              if(this.aidaData[key].label.includes('Down')) this.down = this.aidaData[key].value
+              if(this.aidaData[key].label.includes('Up')) this.up = this.aidaData[key].value
+              newData[key] = this.aidaData[key];
+            }
+          return newData;
+        }, {});
+
+      // const NIC= this.aidaData.filter(item => item.label.indexOf(NIC))
+      //   console.log(NIC)
+      this.CPUEcharts()
       },
       deep: true,
     },
@@ -125,7 +162,7 @@ export default {
         title: {
           text: ''
         },
-        animation:false,  
+        animation:false,
         backgroundColor:'transparent',
         legend: {
           data: ['normal'],
@@ -158,7 +195,7 @@ export default {
             emphasis: {
               focus: 'series'
             },
-            data: this.CPUlist,
+            data: this.CPUList,
             itemStyle : {
               normal : {
                 color:'#1890FF'
@@ -189,7 +226,73 @@ export default {
         ]
       })
     let myGpuChart = echarts.init(document.getElementById("gpu"),'dark');
-    myGpuChart.setOption(GPUOption)}
+    myGpuChart.setOption({
+      animation:false,
+      title: {
+        text: ''
+      },
+      backgroundColor:'transparent',
+      legend: {
+        data: ['normal'],
+      },
+      grid:{ // 让图表占满容器
+        top:"0px",
+        left:"0px",
+        right:"0px",
+        bottom:"0px"
+      },
+      xAxis: [
+        {
+          type: 'category',
+          boundaryGap: false,
+          data: []
+        }
+      ],
+      yAxis: [
+        {
+          type: 'value',
+          show:false
+        },
+
+      ],
+      series: [
+        {
+          name: 'Email',
+          type: 'line',
+          stack: 'Total',
+          emphasis: {
+            focus: 'series'
+          },
+          data: this.GPUList,
+          itemStyle : {
+            normal : {
+              color:'#1890FF'
+            },
+
+          },
+          areaStyle: {
+            color: {
+              type: 'linear',
+              x: 0,
+              y: 0,
+              x2: 0,
+              y2: 1,
+              colorStops: [  // 渐变颜色
+                {
+                  offset: 0,
+                  color: '#404D61',
+                },
+                {
+                  offset: 1,
+                  color: '#404D61',
+                },
+              ],
+              global: false,
+            },
+          },
+        },
+      ]
+    })}
   }
 }
 </script>
@@ -216,8 +319,8 @@ export default {
   }
   }
   .icon{
-    width: 2em;
-    height: 2em;
+    width: 18px;
+    height:18px;
   }
 }
 .echarts {
