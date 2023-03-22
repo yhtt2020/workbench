@@ -358,7 +358,11 @@ class WindowManager {
       if (options.onReadyToShow) {
         options.onReadyToShow(window)
       }
-      window.show()
+      if(windowOption.show){
+        //只有窗体参数为show，才真正show出来，否则不做处理，自行show
+        window.show()
+      }
+
     })
 
     if (process.platform === 'darwin' && windowOption.frame===false) {

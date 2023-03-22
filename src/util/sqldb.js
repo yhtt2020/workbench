@@ -6,7 +6,6 @@ class SqlDb {
   knex
   constructor (dbName='db') {
     const dbPath = dbUtil.getDbPath(dbName)
-    console.log(dbPath,'需要初始化一个 dbpath= 的数据库')
     this.knex = knex({
       client: 'sqlite3',
       connection: {

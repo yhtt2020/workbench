@@ -61,7 +61,6 @@ class WatchTaskModel {
       last_execute_time: null,
       options: JSON.stringify(task.options || {})
     }
-    console.log(addTask)
     try {
       let result = await this.db.knex('task').insert(addTask)
       if (result) {
@@ -78,6 +77,8 @@ class WatchTaskModel {
   async listAllTasks () {
     return this.db.knex('task').orderBy('last_execute_time','desc').select()
   }
+
+
 
   async startTask(nanoid){
     return this.db.knex('task').where({nanoid:nanoid}).update({running:true})

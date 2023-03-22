@@ -28,6 +28,7 @@ class WatchTaskModel {
   }
 
   async updateLastExecute(taskId,data){
+    await this.db.knex('task').where({nanoid:taskId}).increment('executed_times')
     await this.db.knex('task').where({nanoid:taskId}).update({last_execute_time:Date.now(),last_data:JSON.stringify(data)})
   }
 

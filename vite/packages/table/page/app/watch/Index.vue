@@ -90,7 +90,7 @@
                       <a-row>
                         <a-col :span="6">
                           已运行<br>
-                          32次
+                          {{item.executed_times}}次
                         </a-col>
                         <a-col :span="12">
                           1小时32分钟<br>
