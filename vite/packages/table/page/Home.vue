@@ -16,7 +16,7 @@
 <!--          </vuuri></div></div>-->
       <vuuri group-id="grid.id" :drag-enabled="editing" v-model="customComponents" :key="key" class="grid" ref="grid">
         <template #item="{ item }">
-        <component :is="item.name" :customIndex="item.id" ></component>
+        <component :is="item.name" :customIndex="item.id" :style="{pointerEvents:(editing?'none':'')}" :editing="editing" ></component>
         </template>
       </vuuri>
       <AddMore style="z-index: 9999999999;"></AddMore></div>
@@ -56,11 +56,17 @@ import CustomTimer from "../components/homeWidgets/CustomTimer.vue";
 import SmallCountdownDay from "../components/homeWidgets/SmallCountdownDay.vue";
 import Clock from "../components/homeWidgets/Clock.vue";
 import CountdownDay from "../components/homeWidgets/CountdownDay.vue";
-import { mapWritableState } from "pinia";
+import {mapActions, mapWritableState} from "pinia";
 import { tableStore } from "../store";
 import vuuri from '../components/vuuriHome/Vuuri.vue'
 import Widget from "../components/muuri/Widget.vue";
 import {message} from "ant-design-vue";
+import CPULineChart from "../components/homeWidgets/supervisory/CPULineChart.vue";
+import CPUFourCard from "../components/homeWidgets/supervisory/CPUFourCard.vue";
+import InternalList from "../components/homeWidgets/supervisory/InternalList.vue";
+import SmallCPUCard from "../components/homeWidgets/supervisory/SmallCPUCard.vue";
+import SmallGPUCard from "../components/homeWidgets/supervisory/SmallGPUCard.vue";
+const readAida64 = require('aida64-to-json')
 export default {
   name: "Home",
   data(){
@@ -74,7 +80,8 @@ export default {
         suppressScrollY: true,
         suppressScrollX: false,
         wheelPropagation: true,
-        currentItemId:-1
+        currentItemId:-1,
+        timer:null
       },
     }
   },
@@ -91,15 +98,32 @@ export default {
     Clock,
     CountdownDay,
     vuuri,
-    Widget
+    Widget,
+    CPULineChart,
+    CPUFourCard,
+    InternalList,
+    SmallCPUCard,
+    SmallGPUCard
   },
   computed: {
     ...mapWritableState(tableStore, ["customComponents", "clockEvent"]),
+    ...mapWritableState(tableStore, ["aidaData"]),
   },
-  mounted() {
-
+  created() {
+   this.timer= setInterval(()=>{
+      readAida64().then(res => {
+        this.setAidaData(res)
+        //this.data=JSON.stringify(res, null, '\t')
+      })
+    },1000)
+  },
+  unmounted() {
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
   },
   methods: {
+    ...mapActions(tableStore, ["setAidaData"]),
     showMenu () {
       this.menuVisible = true
     },
@@ -133,5 +157,7 @@ export default {
     height: 44em;
   }
 }
-
+.btn{
+  text-align: center;
+}
 </style>

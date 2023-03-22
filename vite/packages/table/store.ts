@@ -127,11 +127,18 @@ export const tableStore = defineStore(
         countdownDay: [],
         appDate: {},
         clockEvent: [],
-        customComponents: [{name:'Music',id:1},{name:'Weather',id:2},{name:'Timer',id:3}],
+        customComponents: [{name:'SmallCPUCard',id:12},{name:'SmallGPUCard',id:34},
+          {name:'CPUFourCard',id:6},{name:'CPULineChart',id:0},{name:'Music',id:1},
+          {name:'Weather',id:2},{name:'Timer',id:3}],
+        aidaData:null,
+
       };
     },
 
     actions: {
+      setAidaData(value){
+        this.aidaData = value;
+      },
       setAppDate(value) {
         this.appDate = value;
       },
@@ -171,15 +178,7 @@ export const tableStore = defineStore(
       removeClock(index) {
         this.clockEvent.splice(index, 1);
       },
-      //   saveCountdownDay() {
-      //     this.save("CountdownDay", this.CountdownDay);
-      //   },
-      //   loadCountdownDay() {
-      //     let CountdownDay = JSON.parse(localStorage.getItem("CountdownDay"));
-      //     if (CountdownDay) {
-      //       this.CountdownDay = CountdownDay;
-      //     }
-      //   },
+
       addCustomComponents(value) {
         //if (this.customComponents.includes(value)) return;
 

@@ -127,3 +127,12 @@ export const myStore={
   }
 }
 
+export function filterObjKeys(obj, keys) {
+  return Object.keys(obj).reduce((newData, key) => {
+    if (keys.includes(key)) {
+      newData[key] = obj[key];
+    }
+    return newData;
+  }, {});
+}
+

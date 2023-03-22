@@ -1,51 +1,76 @@
 <template>
   <div class="mask">
     <a-card style="width: 60%" class="card-content">
-      <a-button type="primary" style="background: transparent;border: none;position: absolute;top: 1%;right: 3%;font-size: 2em" @click="onBack">x</a-button>
-      <div>{{cardType.cname}}</div>
-      <div>{{cardType.detail}}</div>
-      <div class="card" style="height: auto;margin:0">
-        <img v-if="cardType.name==='countdownDay'" src="../../../static/countdownDay.png" style="width: 100%;height: 100%" alt="">
-        <img v-if="cardType.name==='customTimer'" src="../../../static/customTimer.png" style="width: 100%;height: 100%" alt="">
-        <img v-if="cardType.name==='clock'" src="../../../static/clock.png" style="width: 100%;height: 100%" alt="">
-        <img v-if="cardType.name==='smallCountdownDay'" src="../../../static/smallCountdownDay.png" style="width: 100%;height: 100%" alt="">
+      <div>{{ cardType.cname }}</div>
+      <div>{{ cardType.detail }}</div>
+      <div class="card" style="height: auto;margin:0;transform: scale(0.9)">
+        <a-carousel arrows v-if="cardType.name === 'countdownDay'||cardType.name === 'supervisory'" :after-change="imgChang" >
+          <template #prevArrow>
+            <div class="custom-slick-arrow" style="left: 10px; z-index: 1">
+              <left-circle-outlined />
+            </div>
+          </template>
+          <template #nextArrow>
+            <div class="custom-slick-arrow" style="right: 10px">
+              <right-circle-outlined />
+            </div>
+          </template>
+
+          <img :src="'/img/homeComponent/'+i+'.png'" style="width: 100%;height: 100%" alt="" v-for="i in cardType.images">
+        </a-carousel>
+        <div v-else style="display: table-cell;">
+          <img :src="'/img/homeComponent/'+cardType.images+'.png'" style="width: 100%;height: 100%;vertical-align: middle" alt="" >
+        </div>
       </div>
-      <a-button type="primary" style="background: #2266D1;border: none" class="btn" @click="addCard()">添加</a-button>
+      <div class="btn">
+        <a-button type="primary" style="background: #2266D1;border: none;"  @click="addCard()">添加</a-button>
+        <a-button type="primary" style="background: #2266D1;border: none;"  @click="onBack">取消</a-button>
+      </div>
     </a-card>
   </div>
-
 </template>
 
 <script>
-import {mapActions} from "pinia";
-import {tableStore} from "../../../store";
+import { mapActions } from "pinia";
+import { tableStore } from "../../../store";
 import { message } from "ant-design-vue";
+import { LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
 export default {
-  name: "CardPreview",
-  props:{
-    cardType:{
-      type:Object,
-      default:()=>{}
+  data () {
+    return {
+      visibility:false,
+      carouselIndex:0
     }
   },
-  mounted() {
-
+  components:{
+    LeftCircleOutlined,
+    RightCircleOutlined
   },
-  methods:{
+  name: "CardPreview",
+  props: {
+    cardType: {
+      type: Object,
+      default: () => { }
+    }
+  },
+  methods: {
     ...mapActions(tableStore, ["addCustomComponents"]),
-    onBack(){
+    imgChang(i){
+     this.carouselIndex = i;
+    },
+    onBack () {
       this.$emit("onBack")
-        this.show=true;
-      },
-    addCard(){
-      switch (this.cardType.name) {
+      this.show = true;
+    },
+    addCard () {
+      switch (this.cardType.images[this.carouselIndex]) {
         case "customTimer":
-         // this.addCustomComponents({id:Date.now(),children:[{name:this.cardType.name,id:Date.now()}]});
-          this.addCustomComponents({name:this.cardType.name,id:Date.now()});
+          // this.addCustomComponents({id:Date.now(),children:[{name:this.cardType.name,id:Date.now()}]});
+          this.addCustomComponents({ name:this.cardType.images[this.carouselIndex], id: Date.now() });
           this.$router.push({
             name: "home",
             params: {
-              name: this.cardType.name,
+              name: this.cardType.images[this.carouselIndex],
               cname: this.cardType.cname,
             },
           });
@@ -53,126 +78,127 @@ export default {
           break;
         case "countdownDay":
           //this.addCustomComponents({id:Date.now(),children:[{name:this.cardType.name,id:Date.now()}]});
-          this.addCustomComponents({name:this.cardType.name,id:Date.now()});
+          this.addCustomComponents({ name: this.cardType.images[this.carouselIndex], id: Date.now() });
           this.$router.push({
             name: "addCardSetting",
             params: {
-              name: this.cardType.name,
+              name: this.cardType.images[this.carouselIndex],
               cname: this.cardType.cname,
             },
           });
           break;
         case "smallCountdownDay":
-         // this.addCustomComponents({id:Date.now(),children:[{name:this.cardType.name,id:Date.now()}]});
-          this.addCustomComponents({name:this.cardType.name,id:Date.now()});
+          // this.addCustomComponents({id:Date.now(),children:[{name:this.cardType.name,id:Date.now()}]});
+          this.addCustomComponents({ name: this.cardType.images[this.carouselIndex], id: Date.now() });
           this.$router.push({
             name: "addCardSetting",
             params: {
-              name: this.cardType.name,
+              name: this.cardType.images[this.carouselIndex],
               cname: "倒数日",
             },
           });
           break;
         case "clock":
           //this.addCustomComponents({id:Date.now(),children:[{name:this.cardType.name,id:Date.now()}]});
-          this.addCustomComponents({name:this.cardType.name,id:Date.now()});
+          this.addCustomComponents({ name:this.cardType.images[this.carouselIndex], id: Date.now() });
           this.$router.push({
             name: "addCardSetting",
             params: {
-              name: this.cardType.name,
+              name: this.cardType.images[this.carouselIndex],
               cname: this.cardType.cname,
             },
           });
           break;
       }
     }
-    }
+  }
 
 }
 </script>
 
 <style lang="scss" scoped>
-.mask{
-  background-color: rgba(0,0,0,0.7);
+.mask {
+  background-color: rgba(0, 0, 0, 0.7);
   position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
-
-.card-content {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translateX(-50%) translateY(-60%);
-  display: flex;
-  justify-content: center;
-  text-align: center;
-  perspective:1200px;
-  .btn{
+  z-index: 9999999999;
+  .card-content {
+    z-index: 9999999999;
     position: absolute;
-    bottom: 1em;
     left: 50%;
-    transform: translateX(-50%);
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+
     text-align: center;
-    width: 10%;
-    line-height: 10%;
 
-  }
-}
-}
-:deep(.ant-picker-date-panel) {
-  background: #363739;
-}
-:deep(.ant-picker-calendar-date-value) {
-  border-radius: 100%;
 
-  &:hover {
-    background: red;
-    border-radius: 100%;
+    .btn {
+      background: transparent;
+      width: 100%;
+      display: flex;
+      justify-content: space-evenly;
+      padding: 0 200px;
+    }
   }
-}
-:deep(.ant-picker-cell-selected) {
-  background: #363739;
-}
-:deep(
-    .ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner
-  ) {
-  background: red;
-  border-radius: 100%;
-}
-:deep(.ant-picker-cell .ant-picker-cell-inner) {
-  border-radius: 100%;
 }
 .title {
   background: #363739;
 }
+.ant-carousel :deep(.slick-slide) {
+  text-align: center;
+  height: 26em;
+  line-height: 26em;
+  background: transparent;
+  overflow: hidden;
+}
 
-:deep(
-    .ant-picker-cell-in-view.ant-picker-cell-today
-      .ant-picker-cell-inner::before
-  ) {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+.ant-carousel :deep(.slick-arrow.custom-slick-arrow) {
+  width: 25px;
+  height: 25px;
+  font-size: 25px;
+  color: #fff;
+  background-color: rgba(31, 45, 61, 0.11);
+  opacity: 0.3;
   z-index: 1;
-  border: 1px solid red;
-  border-radius: 100%;
-  content: "";
 }
- .cartoon{
+.ant-carousel :deep(.custom-slick-arrow:before) {
+  display: none;
+}
+.ant-carousel :deep(.custom-slick-arrow:hover) {
+  opacity: 0.5;
+}
 
-   animation-name: example;
-   animation-duration: 4s;
-   animation-iteration-count: infinite;
+.ant-carousel :deep(.slick-slide h3) {
+  color: #fff;
 }
+
+.cartoon {
+
+  animation-name: example;
+  animation-duration: 4s;
+  animation-iteration-count: infinite;
+}
+
 @keyframes example {
-  0% {transform:scale(0.8) rotate3d(1,1,0,0deg) }
-  25% {transform:scale(0.8) rotate3d(1,1,0,20deg) }
-  50% {transform:scale(0.8) rotate3d(1,1,0,0deg)}
-  75% {transform:scale(0.8) rotate3d(-1,-1,0,20deg) }
-  100% {transform:scale(0.8) rotate3d(1,1,0,0deg) }
-}
-</style>
+  0% {
+    transform: scale(0.8) rotate3d(1, 1, 0, 0deg)
+  }
+
+  25% {
+    transform: scale(0.8) rotate3d(1, 1, 0, 20deg)
+  }
+
+  50% {
+    transform: scale(0.8) rotate3d(1, 1, 0, 0deg)
+  }
+
+  75% {
+    transform: scale(0.8) rotate3d(-1, -1, 0, 20deg)
+  }
+
+  100% {
+    transform: scale(0.8) rotate3d(1, 1, 0, 0deg)}
+}</style>
