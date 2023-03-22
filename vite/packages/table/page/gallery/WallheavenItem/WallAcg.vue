@@ -27,12 +27,12 @@
   </div>
   <vue-custom-scrollbar id="wall-container-paper" :settings="settingsScroller" style="height: 80vh">
     <div v-if="list.length == 0" class="flex align-center justify-center" style="height: 80vh">
-      <a-empty :image="simpleImage" description="未找到图片信息"/>
+      <a-empty description="未找到图片信息"/>
     </div>
-    <viewer :images="list" v-else>
+    <viewer :images="list" :options="options" ref="acgRef" v-else>
       <a-row :gutter="[20,20]" id="wallImages" style="margin-right: 1em">
         <a-col class="image-wrapper " v-for="img in list" :span="6" style="">
-          <img  class="image-item pointer" :src="img.src" style="position: relative">
+          <img  class="image-item pointer" :src="img.src" :data-source="img.path" style="position: relative">
           <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
             <div @click.stop="addToMy(img)" class="bottom-actions pointer" :style="{background:isInMyPapers(img)?'#009d00a8':''}">
               <Icon v-if="!isInMyPapers(img)" icon="tianjia1"></Icon>
@@ -76,6 +76,9 @@ export default defineComponent({
       list: [],
       wallSizeValue:'',
       searchName:'',
+      options:{
+        url: 'data-source',
+      }
     };
   },
   computed:{
@@ -118,6 +121,7 @@ export default defineComponent({
                   let image = {
                     title:false,
                     src:img.thumbs.large,
+                    path:img.path,
                     animations:animations[randomIndex]
                   }
                   this.list.push(image)

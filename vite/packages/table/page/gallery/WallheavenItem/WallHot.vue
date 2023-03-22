@@ -28,10 +28,10 @@
   </div>
   <vue-custom-scrollbar id="wall-container-paper" :settings="settingsScroller" style="height: 80vh">
     <a-empty  v-if="list.length == 0"/>
-    <viewer :images="list" v-else>
+    <viewer :images="list" v-else  ref="hotImage" :options="options">
       <a-row :gutter="[20,20]" id="wallImages" style="margin-right: 1em">
-        <a-col class="image-wrapper " v-for="img in list" :span="6" style="">
-          <img  class="image-item pointer" :src="img.src" style="position: relative">
+        <a-col class="image-wrapper " v-for="img in list" :key="img" :span="6" style="">
+          <img  class="image-item pointer" :src="img.src" :data-source="img.path" style="position: relative">
           <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
             <div @click.stop="addToMy(img)" class="bottom-actions pointer" :style="{background:isInMyPapers(img)?'#009d00a8':''}">
               <Icon v-if="!isInMyPapers(img)" icon="tianjia1"></Icon>
@@ -72,8 +72,12 @@ export default defineComponent({
       page: 1,
       isLoading: false,
       list: [],
+      viewerList:[],
       wallSizeValue:'',
       searchName:'',
+      options:{
+        url: 'data-source',
+      }
     };
   },
   computed: {

@@ -27,10 +27,10 @@
   </div>
   <vue-custom-scrollbar id="wall-container-paper" :settings="settingsScroller" style="height: 80vh">
     <a-empty  v-if="list.length == 0"/>
-    <viewer :images="list" v-else>
+    <viewer :images="list" :options="options" ref="peopleRef" v-else>
       <a-row :gutter="[20,20]" id="wallImages" style="margin-right: 1em">
         <a-col class="image-wrapper " v-for="img in list" :span="6" style="">
-          <img  class="image-item pointer" :src="img.src" style="position: relative">
+          <img  class="image-item pointer" :src="img.src"  :data-source="img.path"  style="position: relative">
           <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
             <div @click.stop="addToMy(img)" class="bottom-actions pointer" :style="{background:isInMyPapers(img)?'#009d00a8':''}">
               <Icon v-if="!isInMyPapers(img)" icon="tianjia1"></Icon>
@@ -48,10 +48,14 @@ import { defineComponent,ref } from 'vue';
 import axios from 'axios';
 import { mapActions,mapState  } from 'pinia'
 import { paperStore } from '../../../store/paper'
+import { SearchOutlined } from "@ant-design/icons-vue";
 import justifiedGallery from 'justifiedGallery'
 
 export default defineComponent({
   name:'WallPeople',
+  components:{
+    SearchOutlined
+  },
   data(){
     return{
       search: {
@@ -70,13 +74,17 @@ export default defineComponent({
       isLoading:false,
       list: [],
       wallSizeValue:'',
-      searchName:''
+      searchName:'',
+      options:{
+        url: 'data-source',
+      },
+      imageError:''
     }
   },
   computed:{
     ...mapState(paperStore,['myPapers']),
   },
-   mounted(){
+  mounted(){
     justifiedGallery()
     $('#wall-img-container').justifiedGallery({
       captions: false,
@@ -91,29 +99,31 @@ export default defineComponent({
       }
     })
     this.getPeopleList(this.page)
-   },
-   methods:{
+    console.log($('.viewer-canvas img'));
+  },
+  methods:{
     ...mapActions(paperStore,['addToMyPaper']),
     getPeopleList(page){
       let url = `https://wallhaven.cc/api/v1/search?&categories=${this.search.categories}&purity=${this.search.purity == 'SFW' ? '100' :'010'}&sorting=${this.search.sorting}&page=${page}`
-      // console.log(url);
       if(!this.isLoading){
        this.isLoading = true
        axios.get(url,{timeout:5000}).then((res)=>{
         if(res.status === 200){
-          // console.log(res.data.data);
+          console.log(res.data.data);
           let wallImg  = res.data.data
           let animations = ['ani-gray', 'bowen', 'ani-rotate']
           if(wallImg){
             wallImg.forEach(img => {
              let randomIndex = Math.floor((Math.random() * animations.length))
-             console.log();
              let image = {
               title:false,
               src:img.thumbs.large,
+              path:img.path,
+              error:img.thumbs.original,
               animations:animations[randomIndex]
              }
              this.list.push(image)
+             this.imageError = image.error
             });
             this.$nextTick(()=>{
               this.isLoading = false
@@ -121,9 +131,7 @@ export default defineComponent({
           }
         }
        }).catch(err=>{
-        if(err.code === '403'){
-          console.log(err);
-        }
+          // console.log(err);
         })
       }
     },
@@ -145,9 +153,11 @@ export default defineComponent({
                   title: false,
                   src: img.thumbs.large,
                   path: img.path,
+                  error:img.thumbs.original,
                   animations: animations[randomIndex],
                 };
                 this.list.push(image);
+                this.imageError = image.error
               });
               this.$nextTick(() => {
                 this.isLoading = false;
@@ -173,8 +183,14 @@ export default defineComponent({
       return this.myPapers.findIndex(img=>{
       return image.src===img.src
       })>-1
-    }
-   }
+    },
+    // 处理图片加载失败
+    // handlerError(e){
+    //   console.log(e,'图片加载失败');
+    //   // console.log(e.target.data-source);
+    //   // e.target.src = this.imageError
+    // },
+  }
 })
 </script>
 
