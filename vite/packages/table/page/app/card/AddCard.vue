@@ -50,10 +50,10 @@ export default {
   data() {
     return {
       cardList: [
-        { name: "customTimer", cname: "日历", icon: "rili3",detail:"追踪当月日期，查看临近节日" },
-        { name: "countdownDay", cname: "倒数日", icon: "rili2",detail:"设置你的纪念日、考试日等等" },
-        { name: "smallCountdownDay", cname: "小倒数日", icon: "rili2",detail:"设置你的纪念日、考试日等等" },
-        { name: "clock", cname: "闹钟", icon: "naozhong",detail:"设置你的闹钟" },
+        { name: "customTimer", cname: "日历", icon: "rili3",detail:"追踪当月日期，查看临近节日" ,images:['customTimer']},
+        { name: "countdownDay", cname: "倒数日", icon: "rili2",detail:"设置你的纪念日、考试日等等" ,images:['countdownDay','smallCountdownDay']},
+        { name: "clock", cname: "闹钟", icon: "naozhong",detail:"设置你的闹钟",images:['clock'] },
+        { name: "supervisory", cname: "性能", icon: "xingneng",detail:'监控系统状态，查看游戏帧数',images:['CPULineChart','CPUFourCard','InternalList','SmallCPUCard']}
       ],
       cardType:{},
       show:false
@@ -68,37 +68,15 @@ export default {
       switch (item.name) {
         case "customTimer":
           this.cardType=this.cardList[0];
-          // this.addCustomComponents(item.name);
-          // this.$router.push({
-          //   name: "home",
-          //   params: {
-          //     name: item.name,
-          //     cname: item.cname,
-          //   },
-          // });
           break;
         case "countdownDay":
           this.cardType=this.cardList[1];
-          // this.$router.push({
-          //   name: "addCardSetting",
-          //   params: {
-          //     name: item.name,
-          //     cname: item.cname,
-          //   },
-          // });
-          break;
-        case "smallCountdownDay":
-          this.cardType=this.cardList[2];
           break;
         case "clock":
+          this.cardType=this.cardList[2];
+          break;
+        case "supervisory":
           this.cardType=this.cardList[3];
-          // this.$router.push({
-          //   name: "addCardSetting",
-          //   params: {
-          //     name: item.name,
-          //     cname: item.cname,
-          //   },
-          // });
           break;
       }
       this.show=true;
