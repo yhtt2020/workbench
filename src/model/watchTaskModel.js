@@ -80,6 +80,9 @@ class WatchTaskModel {
 
 
 
+  async update(nanoid,data){
+    return this.db.knex('task').where({nanoid}).update(data)
+  }
   async startTask(nanoid){
     return this.db.knex('task').where({nanoid:nanoid}).update({running:true})
   }

@@ -22,6 +22,7 @@ class TaskHandler {
   constructor (props) {
     this.test = props.test
     this.start = props.start
+    this.timeouts=props.timeouts
     this.intervals = props.intervals
     this.taskId = t.globalArgs['task-id']
 
@@ -58,7 +59,10 @@ class TaskHandler {
       if (this.timeouts.length > 0) {
         this.timeouts.forEach(item => {
           setTimeout(() => {
-            this.saveData(item.fn, 'timeout').then()
+            let data=item.fn()
+            if(data){
+              this.saveData(data, 'timeout').then()
+            }
           }, item.timeout)
         })
 

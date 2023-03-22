@@ -7,6 +7,8 @@ class Watch extends Base {
   tasks = []
   taskInstances = [] //任务实例
 
+  taskIntervals = []//计时器
+
   tests = []
 
   constructor () {
@@ -15,13 +17,18 @@ class Watch extends Base {
 
   bindIPC () {
     taskModel.initDb().then(() => {
-     this.autoRunTasks()
+      this.autoRunTasks()
     })
     this.on('addTask', (event, args, instance) => {
       console.log(args)
     })
     this.on('testTask', (event, args, instance) => {
       this.runTest(args.task, instance)
+    })
+    this.on('stopTask',(event,args,instance)=>{
+      this.stopTask(args)
+      args.running=false
+      event.reply('taskUpdate', { task: args })
     })
 
     this.on('startTask', (event, args, instance) => {
@@ -66,16 +73,16 @@ class Watch extends Base {
     //todo 删除test
   }
 
-  autoRunTasks(){
+  autoRunTasks () {
     taskModel.listAllTasks().then(tasks => {
       tasks.forEach((task) => {
-        if(task.running){
+        if (task.running) {
           this.runTask(task, {
             background: true,
             muted: true,
             additionalArguments: ['--task-id=' + task.nanoid]
           }).then(r => {
-            console.log('后台静音执行任务'+task.nanoid)
+            console.log('后台静音执行任务' + task.nanoid)
           })
         }
       })
@@ -139,12 +146,47 @@ class Watch extends Base {
       //设置静音
       window.webContents.setAudioMuted(true)
     }
+    window.on('close', (e) => {
+      //关闭仅隐藏，除非触发关闭任务
+      window.hide()
+      e.preventDefault()
+    })
+
+    this.taskIntervals[task.nanoid] = setInterval(() => {
+      window.webContents.reload()
+    }, task.interval * 1000)
     // window.setMenu(null)
     // window.webContents.openDevTools()
+    taskInstance.task=task
     this.taskInstances.push(taskInstance)
 
   }
 
+  async stopTask (task) {
+    let taskInstance = this.findInstance(task.nanoid)
+    if (taskInstance) {
+      console.log(task, '关闭任务')
+      let window = taskInstance.window
+      window.destroy()//强制关闭
+      clearInterval(this.taskIntervals[task.nanoid])//移除定时任务
+      this.taskInstances.splice(this.taskInstances.findIndex(t=>{
+        //移除instance
+        return t.task.nanoid===task.nanoid
+      }),1)
+      await taskModel.update(task.nanoid, { running: false })
+    }
+  }
+
+  /**
+   * 找到任务实例
+   * @param nanoid
+   * @returns {*}
+   */
+  findInstance(nanoid){
+    return this.taskInstances.find(t => {
+      return t.task.nanoid === nanoid
+    })
+  }
   getName (name) {
     return 'task.' + name
   }

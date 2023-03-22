@@ -75,6 +75,16 @@ if(!window.location.href.endsWith('iframe.html')){
       }
 
     },
+    timeouts:[
+      {
+        fn:()=>{
+          //自动清理掉无用的视频部分，以提升性能
+          $('video').remove()
+          return null
+        },
+        timeout:1000
+      }
+    ],
     start: () => {
       try {
         let data = getData()

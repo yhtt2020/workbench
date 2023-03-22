@@ -33,6 +33,9 @@ const watch = {
     send('startTask', task)
   },
 
+  async stopTask(task){
+    send('stopTask', task)
+  },
   async addTask (task, start = false) {
     return await taskModel.add(task)
   },

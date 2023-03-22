@@ -90,7 +90,7 @@
                       <a-row>
                         <a-col :span="6">
                           已运行<br>
-                          {{item.executed_times}}次
+                          {{ item.executed_times }}次
                         </a-col>
                         <a-col :span="12">
                           1小时32分钟<br>
@@ -102,10 +102,10 @@
                           </div>
 
                         </a-col>
-                        <a-col :span="6">
+                        <a-col  :span="6">
+                          <a-button @click="stopTask(item)" type="primary">
                           <Icon class="text-xl" icon="zanting"></Icon>
-                          <br>
-                          暂停
+                          </a-button>
                         </a-col>
                       </a-row>
                     </div>
@@ -132,12 +132,12 @@
                     <div class="text-more text-base mb-4 text-left">
                       <!--               <a-avatar :src="item.task.icon"></a-avatar> -->
                       <Icon icon="bilibili" style="font-size: 20px;vertical-align: text-top"></Icon>
-                      {{ item.data.data.title }}
+                      {{ item.title }}
                     </div>
                     <div class="mb-3">
                       <a-row>
                         <a-col :span="10">
-                          <img v-if="item.cover" class="bili-cover" :src="item.cover "/>
+                          <img v-if="item.data.cover" class="bili-cover" :src="item.data.cover "/>
                           <a-avatar v-else class="bili-cover" style="line-height: 1.3;padding-top: 0.4em">
                             首次运行后<br/>自动获取
                           </a-avatar>
@@ -148,11 +148,11 @@
                             <a-row class="text-xs" :gutter="10">
                               <a-col :span="8">
                                 <Icon icon="bofang"></Icon>
-                                <br/> {{ item.data.play || '0' }}
+                                <br/> {{ item.data.viewText || '0' }}
                               </a-col>
                               <a-col :span="8">
                                 <Icon icon="dianzan"></Icon>
-                                <br/> {{ item.data.support || '0' }}
+                                <br/> {{ item.data.like || '0' }}
                               </a-col>
                               <a-col :span="8">
                                 <Icon icon="jinbi"></Icon>
@@ -202,13 +202,15 @@
                       <a-row>
                         <a-col :span="6">
                           已运行<br>
-                          {{ item.last_execute_times || '0' }}次
+                          {{ item.executed_times || '0' }}次
                         </a-col>
                         <a-col :span="12">
-                          {{ item.executed_time_length || '从未运行' }}
-                          <br> <span v-if="item.executed_time_length">
-                        刷新于 {{ friendlyDate(item.last_execute_time) }}
-                        </span><span v-else>请点击运行</span>
+                          <div style="line-height: 35px" v-if=" item.last_execute_info">
+                            {{ friendlyDate(item.last_execute_info.grab_time) }} 停止
+                          </div>
+                          <div v-else>
+                            未成功执行过
+                          </div>
                         </a-col>
                         <a-col :span="6">
                           <a-button @click="startTask(item)" type="primary">
@@ -456,6 +458,9 @@ export default {
     startTask (task) {
       tableApi.watch.startTask(task)
     },
+    stopTask (task) {
+      tableApi.watch.stopTask(task)
+    },
     cleanTaskIntervals () {
       try {
         let keys = Object.keys(this.taskIntervals)
@@ -469,24 +474,43 @@ export default {
     },
     setupInterval (task) {
       this.taskIntervals[task.nanoid] = setInterval(() => {
-        if(task){
+        if (task) {
           //只有当任务还存在的时候才执行
           this.updateTaskLatestData(task).then()
         }
       }, task.interval * 1000)
     },
+    updateTask (id, info) {
+      this.tasks.forEach((t, index) => {
+        if (t.nanoid === id) {
+          this.tasks.splice(index, 1)
+          let replace = Object.assign(t, info)
+          this.tasks.splice(index, 0, replace)
+        }
+      })
+      this.runningTasks.forEach((t, index) => {
+        //去更新运行中的任务信息
+        if (t.nanoid === id) {
+          this.runningTasks.splice(index, 1)
+          let replace = Object.assign(t, info)
+          this.runningTasks.splice(index, 0, replace)
+        }
+      })
+
+      this.stoppedTasks.forEach((t, index) => {
+        if (t.nanoid === id) {
+          this.stoppedTasks.splice(index, 1)
+          let replace = Object.assign(t, info)
+          this.stoppedTasks.splice(index, 0, replace)
+        }
+      })
+    },
 
     async updateTaskLatestData (task) {
-      let lastInfo=await tableApi.watch.getLatestData(task)
-      if(lastInfo){
-        console.log('抓到了task的数据，准备更新',task,lastInfo)
-        this.runningTasks.forEach(t=>{
-          //去更新运行中的任务信息
-          if(t.nanoid===task.nanoid){
-            t.data=lastInfo.data
-            t.last_execute_info=lastInfo.last_execute_info
-          }
-        })
+      let lastInfo = await tableApi.watch.getLatestData(task)
+      if (lastInfo) {
+        console.log('抓到了task的数据，准备更新', task, lastInfo)
+        this.updateTask(task.nanoid, lastInfo)
       }
     },
     async loadAllTasks () {
