@@ -345,14 +345,15 @@ class WindowManager {
     }
 
     windowOption = Object.assign(_.cloneDeep(this.defaultWindowPreferences), windowOption)
-    windowOption.webPreferences.additionalArguments = [
-      '--user-data-path=' + userDataPath,
-      '--app-version=' + app.getVersion(),
-      '--app-name=' + app.getName(),
-      ...((isDevelopmentMode ? ['--development-mode'] : [])),
-      '--name=' + name,
-      ...additionalArguments
-    ]
+    windowOption.webPreferences.additionalArguments =Object.assign(additionalArguments,
+      [
+        '--user-data-path=' + userDataPath,
+        '--app-version=' + app.getVersion(),
+        '--app-name=' + app.getName(),
+        ...((isDevelopmentMode ? ['--development-mode'] : [])),
+        '--name=' + name
+      ])
+    windowOption.webPreferences.additionalArguments=additionalArguments
     let window = new BrowserWindow(windowOption)
     window.once('ready-to-show', () => {
       if (options.onReadyToShow) {
