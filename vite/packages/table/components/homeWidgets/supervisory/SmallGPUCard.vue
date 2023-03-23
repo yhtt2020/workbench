@@ -67,8 +67,13 @@ export default {
   watch: {
     "aidaData": {
       handler(newVal, oldVal) {
-        this.GPUData=this.aidaData;
-        this.GPUList.push(this.GPUData.SGPU1UTI.value)
+        Object.keys(this.GPUData).reduce((newData, key) => {
+          if (this.aidaData.hasOwnProperty(key)) {
+            this.GPUData[key] = this.aidaData[key]
+          }
+          return newData;
+        }, {});
+        this.GPUData.SGPU1UTI.value&& this.GPUList.push(this.GPUData.SGPU1UTI.value)
         this.GPUList.shift();
         this.initCanvas()
       },

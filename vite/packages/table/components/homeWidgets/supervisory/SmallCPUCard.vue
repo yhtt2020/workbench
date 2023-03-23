@@ -67,8 +67,14 @@ export default {
   watch: {
     "aidaData": {
       handler(newVal, oldVal) {
-        this.CPUData=this.aidaData;
-        this.CPUList.push(this.CPUData.SCPUUTI.value)
+
+        Object.keys(this.CPUData).reduce((newData, key) => {
+          if (this.aidaData.hasOwnProperty(key)) {
+            this.CPUData[key] = this.aidaData[key]
+          }
+          return newData;
+        }, {});
+        this.CPUData.SCPUUTI.value&&  this.CPUList.push(this.CPUData.SCPUUTI.value)
         this.CPUList.shift();
         this.initCanvas()
       },

@@ -72,7 +72,12 @@ export default {
   watch: {
     "aidaData": {
       handler(newVal, oldVal) {
-        this.CPUGPUData=this.aidaData;
+        Object.keys(this.CPUGPUData).reduce((newData, key) => {
+          if (this.aidaData.hasOwnProperty(key)) {
+            this.CPUGPUData[key] = this.aidaData[key]
+          }
+          return newData;
+        }, {});
         const NIC= Object.keys(this.aidaData).reduce((newData, key) => {
           if (key.includes('SNIC')&&this.aidaData[key].value!=='0.0') {
             if(this.aidaData[key].label.includes('Down')) this.down = this.aidaData[key].value

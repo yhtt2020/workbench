@@ -132,11 +132,16 @@ export default {
   watch: {
     "aidaData": {
       handler(newVal, oldVal) {
-      this.CPUData=this.aidaData;
-      this.CPUList.push(this.CPUData.SCPUUTI.value)
-      this.CPUList.shift();
-      this.GPUList.push(this.CPUData.SGPU1UTI.value)
-      this.GPUList.shift();
+        Object.keys(this.CPUData).reduce((newData, key) => {
+          if (this.aidaData.hasOwnProperty(key)) {
+            this.CPUData[key] = this.aidaData[key]
+          }
+          return newData;
+        }, {});
+        this.CPUData.SCPUUTI.value&&this.CPUList.push(this.CPUData.SCPUUTI.value)
+        this.CPUList.shift();
+        this.CPUData.SGPU1UTI.value&&this.GPUList.push(this.CPUData.SGPU1UTI.value)
+        this.GPUList.shift();
       //console.log(this.aidaData)
 
         const NIC= Object.keys(this.aidaData).reduce((newData, key) => {
