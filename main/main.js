@@ -602,10 +602,7 @@ async function appStart () {
   let showOnStart = await sqlDb.getConfig('system.user.showOnStart')
   if (!showOnStart) {
     let tableMod=settings.get('tableMod')
-    console.log(tableMod)
-    console.log(global.URLToOpen)
     if((tableMod===undefined || tableMod==='table') && !global.URLToOpen){
-      console.log('因为没有设置，所以浏览器默认不启动')
       //工作台模式，且没有要打开的网址
       return
     }else{
