@@ -113,8 +113,8 @@ export default {
    this.timer= setInterval(()=>{
       readAida64().then(res => {
         Object.keys(res).reduce((newData, key) => {
-          if (key==="CPU Diode") res.TCPUPKG = res[key]
-          if (key==="GPU Diode") res.TGPU1DIO = res[key]
+          if (key==="TCPUDIO") res.TCPUPKG = res[key]
+          if (key==="TGPUDIO") res.TGPU1DIO = res[key]
           return newData;
         }, {});
         this.setAidaData(res)

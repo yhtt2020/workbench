@@ -89,7 +89,7 @@ import {CPUOption,GPUOption} from './echartOptions'
 import * as echarts from "echarts";
 import {mapWritableState} from "pinia";
 import {tableStore} from "../../../store";
-import {filterObjKeys} from '../../../util'
+import {filterObjKeys, netWorkDownUp} from '../../../util'
 export default {
   data(){
     return {
@@ -132,29 +132,17 @@ export default {
   watch: {
     "aidaData": {
       handler(newVal, oldVal) {
-        Object.keys(this.CPUData).reduce((newData, key) => {
-          if (this.aidaData.hasOwnProperty(key)) {
-            this.CPUData[key] = this.aidaData[key]
-          }
-          return newData;
-        }, {});
+        filterObjKeys(this.CPUData,this.aidaData)
         this.CPUData.SCPUUTI.value&&this.CPUList.push(this.CPUData.SCPUUTI.value)
         this.CPUList.shift();
         this.CPUData.SGPU1UTI.value&&this.GPUList.push(this.CPUData.SGPU1UTI.value)
         this.GPUList.shift();
-      //console.log(this.aidaData)
 
-        const NIC= Object.keys(this.aidaData).reduce((newData, key) => {
-            if (key.includes('SNIC')&&this.aidaData[key].value!=='0.0') {
-              if(this.aidaData[key].label.includes('Down')) this.down = this.aidaData[key].value
-              if(this.aidaData[key].label.includes('Up')) this.up = this.aidaData[key].value
-              newData[key] = this.aidaData[key];
-            }
-          return newData;
-        }, {});
 
-      // const NIC= this.aidaData.filter(item => item.label.indexOf(NIC))
-      //   console.log(NIC)
+        const {down,up} =  netWorkDownUp(this.aidaData)
+        this.down = down
+        this.up = up
+
       this.CPUEcharts()
       },
       deep: true,

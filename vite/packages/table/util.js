@@ -127,12 +127,21 @@ export const myStore={
   }
 }
 
-export function filterObjKeys(obj, keys) {
-  return Object.keys(obj).reduce((newData, key) => {
-    if (keys.includes(key)) {
-      newData[key] = obj[key];
+export function filterObjKeys(obj1, obj2) {
+  return Object.keys(obj1).map( i=> {
+    if (obj2.hasOwnProperty(i)) {
+      obj1[i] = obj2[i]
     }
-    return newData;
-  }, {});
+  });
 }
 
+export  function netWorkDownUp(obj){
+  const a = {down:"-",up:"-"}
+  Object.keys(obj).map(i => {
+    if (i.includes('SNIC')&&obj[i].value!=='0.0') {
+      if(obj[i].label.includes('Down')&&obj[i].label.includes('Rate')) a.down = obj[i].value
+      if(obj[i].label.includes('Up')&&obj[i].label.includes('Rate')) a.up = obj[i].value
+    }
+  })
+  return a
+}

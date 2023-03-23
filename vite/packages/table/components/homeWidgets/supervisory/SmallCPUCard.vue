@@ -41,6 +41,7 @@
 import SupervisorySlot from "./SupervisorySlot.vue";
 import {mapWritableState} from "pinia";
 import {tableStore} from "../../../store";
+import {filterObjKeys} from "../../../util";
 export default {
   name: "SmallCPUCard",
   data(){
@@ -67,13 +68,7 @@ export default {
   watch: {
     "aidaData": {
       handler(newVal, oldVal) {
-
-        Object.keys(this.CPUData).reduce((newData, key) => {
-          if (this.aidaData.hasOwnProperty(key)) {
-            this.CPUData[key] = this.aidaData[key]
-          }
-          return newData;
-        }, {});
+        filterObjKeys(this.CPUData,this.aidaData)
         this.CPUData.SCPUUTI.value&&  this.CPUList.push(this.CPUData.SCPUUTI.value)
         this.CPUList.shift();
         this.initCanvas()

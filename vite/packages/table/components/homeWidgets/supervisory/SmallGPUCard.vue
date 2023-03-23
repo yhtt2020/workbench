@@ -40,6 +40,7 @@
 import SupervisorySlot from "./SupervisorySlot.vue";
 import {mapWritableState} from "pinia";
 import {tableStore} from "../../../store";
+import {filterObjKeys} from "../../../util";
 
 export default {
   name: "SmallGPUCard",
@@ -67,12 +68,7 @@ export default {
   watch: {
     "aidaData": {
       handler(newVal, oldVal) {
-        Object.keys(this.GPUData).reduce((newData, key) => {
-          if (this.aidaData.hasOwnProperty(key)) {
-            this.GPUData[key] = this.aidaData[key]
-          }
-          return newData;
-        }, {});
+        filterObjKeys(this.GPUData,this.aidaData)
         this.GPUData.SGPU1UTI.value&& this.GPUList.push(this.GPUData.SGPU1UTI.value)
         this.GPUList.shift();
         this.initCanvas()

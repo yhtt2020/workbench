@@ -38,6 +38,7 @@
 import SupervisorySlot from "./SupervisorySlot.vue";
 import {mapWritableState} from "pinia";
 import {tableStore} from "../../../store";
+import {filterObjKeys, netWorkDownUp} from "../../../util";
 export default {
   name: "CPUFourCard",
   data(){
@@ -72,20 +73,10 @@ export default {
   watch: {
     "aidaData": {
       handler(newVal, oldVal) {
-        Object.keys(this.CPUGPUData).reduce((newData, key) => {
-          if (this.aidaData.hasOwnProperty(key)) {
-            this.CPUGPUData[key] = this.aidaData[key]
-          }
-          return newData;
-        }, {});
-        const NIC= Object.keys(this.aidaData).reduce((newData, key) => {
-          if (key.includes('SNIC')&&this.aidaData[key].value!=='0.0') {
-            if(this.aidaData[key].label.includes('Down')) this.down = this.aidaData[key].value
-            if(this.aidaData[key].label.includes('Up')) this.up = this.aidaData[key].value
-            newData[key] = this.aidaData[key];
-          }
-          return newData;
-        }, {});
+        filterObjKeys(this.CPUGPUData,this.aidaData)
+        const {down,up} =  netWorkDownUp(this.aidaData)
+        this.down = down
+        this.up = up
       },
       deep: true,
     },
