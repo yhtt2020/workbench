@@ -15,8 +15,8 @@
                    :getItemHeight="()=>{return '500px'}" class="monitor"
                    v-model="runningTasks">
               <template #item="{ item }">
-                <Widget :uniqueKey="item.id">
-                  <div class="p-2 bili-card">
+                <Widget :uniqueKey="item.nanoid">
+                  <div  @click="goDashboard(item.nanoid)" class="p-2 bili-card">
                     <div class="text-more text-base mb-4 text-left">
                       <!--               <a-avatar :src="item.task.icon"></a-avatar> -->
                       <Icon icon="bilibili" style="font-size: 20px;vertical-align: text-top"></Icon>
@@ -103,7 +103,7 @@
 
                         </a-col>
                         <a-col  :span="6">
-                          <a-button @click="stopTask(item)" type="primary">
+                          <a-button @click.stop="stopTask(item)" type="primary">
                           <Icon class="text-xl" icon="zanting"></Icon>
                           </a-button>
                         </a-col>
@@ -460,6 +460,14 @@ export default {
     },
     stopTask (task) {
       tableApi.watch.stopTask(task)
+    },
+    goDashboard(nanoid){
+      this.$router.push({
+        name:'dashboard',
+        params:{
+          nanoid:nanoid
+        }
+      })
     },
     cleanTaskIntervals () {
       try {
