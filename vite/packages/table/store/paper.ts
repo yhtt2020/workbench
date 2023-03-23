@@ -25,6 +25,12 @@ export const paperStore = defineStore('paper', {
   }),
   actions:{
     /**
+     * 重置全部壁纸设置
+     */
+    resetPapersSettings() {
+      this.settings = DEFAULT_PAPERS_SETTINGS
+    },
+    /**
      * 添加到我的壁纸
      * @param image
      */

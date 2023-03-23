@@ -98,7 +98,7 @@ export default {
     }
   },
   methods:{
-    ...mapActions(appStore,['resetPapersSettings']),
+    ...mapActions(paperStore,['resetPapersSettings']),
     async showSaveDialog(){
       let savePath= await tsbApi.dialog.showOpenDialog({title:'选择目录',message:'请选择下载壁纸的目录',properties:[
         'openDirectory','createDirectory',

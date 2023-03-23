@@ -62,12 +62,7 @@ export const appStore = defineStore('appStore', {
       this.fullScreen=false
     },
 
-    /**
-     * 重置全部壁纸设置
-     */
-    resetPapersSettings() {
-      this.appData.papers.settings = DEFAULT_PAPERS_SETTINGS
-    },
+
 
       /**
        * 结束新手引导
