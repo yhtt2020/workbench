@@ -87,7 +87,7 @@ export default {
       prompt: '',
       tab: 'player',
       currentIndex: 'my',
-      showPrompt:true,
+      showPrompt:false,
       menus: [{
         title: '我的应用',
         index: 'my',
