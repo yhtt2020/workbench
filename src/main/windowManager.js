@@ -341,19 +341,19 @@ class WindowManager {
     let additionalArguments=[]
     if(webPreferences.additionalArguments){
       //加入addtionalArguments
-      additionalArguments=webPreferences.additionalArguments
+      additionalArguments=_.cloneDeep(webPreferences.additionalArguments)
     }
 
     windowOption = Object.assign(_.cloneDeep(this.defaultWindowPreferences), windowOption)
-    windowOption.webPreferences.additionalArguments =Object.assign(additionalArguments,
-      [
-        '--user-data-path=' + userDataPath,
-        '--app-version=' + app.getVersion(),
-        '--app-name=' + app.getName(),
-        ...((isDevelopmentMode ? ['--development-mode'] : [])),
-        '--name=' + name
-      ])
-    windowOption.webPreferences.additionalArguments=additionalArguments
+    windowOption.webPreferences.additionalArguments =[
+      '--user-data-path=' + userDataPath,
+      '--app-version=' + app.getVersion(),
+      '--app-name=' + app.getName(),
+      ...((isDevelopmentMode ? ['--development-mode'] : [])),
+      '--name=' + name
+    ].concat(additionalArguments)
+
+    console.log(windowOption,'得到的windowOption')
     let window = new BrowserWindow(windowOption)
     window.once('ready-to-show', () => {
       if (options.onReadyToShow) {

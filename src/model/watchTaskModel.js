@@ -8,7 +8,6 @@ class WatchTaskModel {
 
   async initDb () {
     this.db = new SqlDb('watch')
-    console.log(this.db,'初始化一个db')
     const watchDb = this.db
     let exists = await watchDb.knex.schema.hasTable('task')
     if (!exists) {
