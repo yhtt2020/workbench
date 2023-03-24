@@ -54,27 +54,27 @@
                 <a-row class="text-l" :gutter="10">
                   <a-col :span="4">
                     <Icon icon="bofang"></Icon>
-                    {{ data.view || '-' }}
+                    {{ format(data.view) }}
                   </a-col>
                   <a-col :span="4">
                     <Icon icon="dianzan"></Icon>
-                    {{ data.like || '-' }}
+                    {{ format(data.like )}}
                   </a-col>
                   <a-col :span="4">
                     <Icon icon="jinbi"></Icon>
-                    {{ data.coin || '-' }}
+                    {{ format(data.coin ) }}
                   </a-col>
                   <a-col :span="4">
                     <Icon icon="jinbi"></Icon>
-                    {{ data.totalReply || '-' }}
+                    {{ format(data.totalReply)}}
                   </a-col>
                   <a-col :span="4">
                     <Icon icon="star"></Icon>
-                    {{ data.dm || '-' }}
+                    {{ format(data.dm) }}
                   </a-col>
                   <a-col :span="4">
                     <Icon icon="jinbi"></Icon>
-                    {{ data.collect || '-' }}
+                    {{ format(data.collect)}}
                   </a-col>
                 </a-row>
               </div>
@@ -145,7 +145,7 @@
           <a-row class="text-center">
             <a-col :span="3">
               <div>累计票房</div>
-              <div> {{ data.view || '-' }}</div>
+              <div> {{ format(data.view)}}</div>
             </a-col>
             <a-col :span="3">
               <div>首日票房</div>
@@ -158,13 +158,13 @@
             <a-col :span="3">
               <div>点赞</div>
               <div>
-                {{ data.like || '-' }} <span>{{ getRate(data.like,data.view) }}%</span> <Arrow type="like" :value="getRate(data.like,data.view)"></Arrow>
+                {{ format(data.like) }} <span>{{ getRate(data.like,data.view) }}%</span> <Arrow type="like" :value="getRate(data.like,data.view)"></Arrow>
               </div>
             </a-col>
             <a-col :span="3">
               <div>投币</div>
               <div>
-                {{ data.coin || '-' }} <span>{{ getRate(data.coin,data.view) }}%</span>  <Arrow type="coin" :value="getRate(data.coin,data.view)"></Arrow>
+                {{ format(data.coin) }} <span>{{ getRate(data.coin,data.view) }}%</span>  <Arrow type="coin" :value="getRate(data.coin,data.view)"></Arrow>
               </div>
             </a-col>
             <a-col :span="3">
@@ -172,7 +172,7 @@
                 弹幕
               </div>
               <div>
-                {{ data.dm || '-' }} <span>{{ getRate(data.dm,data.view) }}%</span> <Arrow type="dm" :value="getRate(data.dm,data.view)"></Arrow>
+                {{ format(data.dm) }} <span>{{ getRate(data.dm,data.view) }}%</span> <Arrow type="dm" :value="getRate(data.dm,data.view)"></Arrow>
               </div>
             </a-col>
             <a-col :span="3">
@@ -180,13 +180,13 @@
                 收藏
               </div>
               <div>
-                {{ data.collect || '-' }} <span>{{ getRate(data.collect,data.view) }}%</span> <Arrow type="collect" :value="getRate(data.collect,data.view)"></Arrow>
+                {{ format(data.collect) }} <span>{{ getRate(data.collect,data.view) }}%</span> <Arrow type="collect" :value="getRate(data.collect,data.view)"></Arrow>
               </div>
             </a-col>
             <a-col :span="3">
               <div>转发</div>
               <div>
-                {{ data.share || '-' }} <span>{{ getRate(data.share,data.view) }}%</span> <Arrow type="share" :value="getRate(data.share,data.view)"></Arrow>
+                {{ format(data.share) }} <span>{{ getRate(data.share,data.view) }}%</span> <Arrow type="share" :value="getRate(data.share,data.view)"></Arrow>
               </div>
             </a-col>
             <a-col :span="3"></a-col>
@@ -360,7 +360,6 @@ export default {
     }
   },
   mounted () {
-
     tableApi.watch.getTask({ nanoid: this.$route.params['nanoid'] }).then(task => {
       this.task = task
       this.data=task.data
@@ -368,6 +367,14 @@ export default {
     })
   },
   methods: {
+    format(num){
+      if(Number(num)>0){
+        return (Number(num)).toLocaleString()
+      }else{
+        return '-'
+      }
+
+    },
     getRate:dataHelper.getRate,
 
     showTask(){

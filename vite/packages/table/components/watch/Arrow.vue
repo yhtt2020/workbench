@@ -1,7 +1,7 @@
 <template>
   <a-tooltip :title="'大盘标准：'+getStand +'%'">
-    <span v-if="stand" style="color: red">↑</span>
-    <span v-else style="color: green">↓</span>
+    <span v-if="stand" style="color: rgba(255,116,116,0.85)">↑</span>
+    <span v-else style="color: #2baf2b">↓</span>
   </a-tooltip>
 
 </template>
