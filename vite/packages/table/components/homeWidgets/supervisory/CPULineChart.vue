@@ -1,7 +1,7 @@
 <template>
   <SupervisorySlot :options="options">
     <div class="content">
-      <div class="cpu">
+      <div class="cpu" style="margin-top: 0">
         <div class="cpu-number">
           <div>
           <Icon icon="CPU" class="icon"></Icon>
@@ -11,7 +11,7 @@
       </div>
       <div id="cpu" ref="cpuChart" class="echarts"></div>
 
-      <div class="cpu" style="margin-top: .5em">
+      <div class="cpu">
         <div class="cpu-number">
           <div>
             <Icon icon="GPU" class="icon"></Icon>
@@ -21,7 +21,7 @@
       </div>
       <div id="gpu" ref="gpuChart"  class="echarts"></div>
 
-      <div class="cpu" style="margin-top: .5em">
+      <div class="cpu" >
         <div class="cpu-number">
           <div>
             <Icon icon="neicun" class="icon"></Icon>
@@ -34,7 +34,7 @@
         '100%': '#348FFF',
       }"/>
 
-      <div class="cpu" style="margin-top: .5em">
+      <div class="cpu" >
       <div class="cpu-number">
         <div>
           <Icon icon="cipanio" class="icon"></Icon>
@@ -47,14 +47,14 @@
         '100%': '#FF9035',
       }"/>
 
-      <div class="cpu" style="margin-top: .5em;flex-direction: column">
+      <div class="cpu" style="margin-top: 13px;flex-direction: column">
       <div class="cpu-number">
         <div>
           <Icon icon="wangluo" class="icon"></Icon>
           <span>网速</span>
         </div>
       </div>
-        <div class="cpu" style="margin-top: 5px">
+        <div class="cpu">
           <div class="cpu-number">
             <div>
               <Icon icon="xiazai" class="icon" style="color: #5CBBFF;"></Icon>
@@ -64,7 +64,7 @@
           </div>
         </div>
 
-        <div class="cpu"  style="margin-top: 5px">
+        <div class="cpu" >
           <div class="cpu-number">
             <div>
               <Icon icon="shangchuan" class="icon" style="color:  #52C41A;"></Icon>
@@ -294,8 +294,8 @@ export default {
 .content{
 
   .cpu{
-
     display: flex;
+    margin-top: 10px;
   .cpu-number{
     display: flex;
     width: 100%;

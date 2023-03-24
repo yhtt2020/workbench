@@ -97,7 +97,7 @@ export default {
   display: inline-block;
   height: 420px;
   padding: 3em 13px .5em 13px ;
-  margin-right: 1em;
+  margin-right: 14px;
   position: relative;
   &.small{
     height: 203px;

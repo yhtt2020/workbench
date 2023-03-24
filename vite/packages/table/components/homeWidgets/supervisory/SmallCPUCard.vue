@@ -1,7 +1,7 @@
 <template>
   <SupervisorySlot :options="options">
     <div class="content">
-      <div><a-progress type="circle"  stroke-color="#FF9C00" :percent="CPUData.SCPUUTI.value" strokeWidth="8">
+      <div><a-progress type="circle"  stroke-color="#FF9C00" :percent="CPUData.SCPUUTI.value" strokeWidth="8" :width="105">
         <template #format="percent">
             <div style="color:#E0E0E0;font-weight: 700">{{CPUData.SCPUUTI.value}}%</div>
             <div style="color:#ACACAC;font-size: .5em;margin-top: 1em">负载</div>

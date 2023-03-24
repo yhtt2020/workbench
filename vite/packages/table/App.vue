@@ -151,7 +151,7 @@ export default {
         try {
           if (
             this.appDate.minutes === this.clockEvent[0].dateValue.minutes &&
-            this.appDate.hours === this.clockEvent[0].dateValue.hours
+            this.appDate.hours === this.clockEvent[0].dateValue.hours&&this.clockEvent[0].flag===undefined
           ) {
             this.visible = true;
             this.$refs.clock.play();
