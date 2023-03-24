@@ -28,13 +28,7 @@ const globalSearchMod = {
           devTools: true,
           preload: path.join(__dirname, '/src/preload/searchPreload.js'),
           nodeIntegration: true,
-          contextIsolation: false,
-          additionalArguments: [
-            '--user-data-path=' + userDataPath,
-            '--app-version=' + app.getVersion(),
-            '--app-name=' + app.getName(),
-            ...((isDevelopmentMode ? ['--development-mode'] : []))
-          ]
+          contextIsolation: false
         }
       })
     } else {
@@ -54,13 +48,7 @@ const globalSearchMod = {
         webPreferences: {
           devTools: true,
           nodeIntegration: true,
-          contextIsolation: false,
-          additionalArguments: [
-            '--user-data-path=' + userDataPath,
-            '--app-version=' + app.getVersion(),
-            '--app-name=' + app.getName(),
-            ...((isDevelopmentMode ? ['--development-mode'] : []))
-          ]
+          contextIsolation: false
         }
       })
     }
@@ -172,7 +160,6 @@ app.whenReady().then(async () => {
   async function callTable (tag = -1) {
     tableManager.init().then(()=>{
       global.tableAppManager.setTableWin(tableManager.window)
-      tableManager.window.show()
     })
   }
 

@@ -108,7 +108,7 @@ export default {
       })
     },
     loadLivelyPapers(){
-      let fs=require('fs-extra')
+      let fs=window.fs
       let path=require('path')
       let videos=fs.readdirSync(require('path').join(this.settings.savePath,'lively'))
       this.livelyPapers= videos.map(v=>{

@@ -148,12 +148,8 @@ async function openPwdManager (args) {
         webSecurity: false,
         preload: ___dirname + '/src/preload/keePreload.js',
         additionalArguments: [
-          '--user-data-path=' + userDataPath,
-          '--app-version=' + app.getVersion(),
-          '--app-name=' + app.getName(),
           '--site-url=' + siteUrl,
           '--site-title=' + title,
-          ...((isDevelopmentMode ? ['--development-mode'] : []))
         ]
       }
     })

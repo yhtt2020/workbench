@@ -29,12 +29,8 @@ class TableManager {
           sandbox: false,
           contextIsolation: false,
           additionalArguments: [
-            '--user-data-path=' + userDataPath,
-            '--app-version=' + app.getVersion(),
-            '--app-name=' + app.getName(),
             '--app-path='+app.getPath('exe'),
             '--app-dir_name='+__dirname,
-            ...((isDevelopmentMode ? ['--development-mode'] : []))
           ]
         }
       })
@@ -119,14 +115,6 @@ app.whenReady().then(() => {
           frame: false,
           backgroundColor: '#fff',
 
-        },
-        webPreferences: {
-          additionalArguments: [
-            '--user-data-path=' + userDataPath,
-            '--app-version=' + app.getVersion(),
-            '--app-name=' + app.getName(),
-            ...((isDevelopmentMode ? ['--development-mode'] : []))
-          ]
         }
       })
       let webContents = tansWin.window.webContents

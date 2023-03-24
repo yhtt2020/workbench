@@ -123,6 +123,7 @@ class Watch extends Base {
     let name = task.nanoid || task.id   //如果是测试任务，是没有nanoid的，优先使用nanoid
     let taskInstance = await global.windowManager.create({
       name: this.getName(name),
+      show:false,//不显示
       windowOption: {
         width: 1200,
         height: 1000,

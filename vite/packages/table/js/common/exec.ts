@@ -1,16 +1,15 @@
 import {arch} from "process";
 
 const {exec} = require('child_process')
-const iconv=require('iconv-lite')
+const iconv=window.iconv
 let workerProcess
 const path=require('path')
 export function getResPath() {
   let isDevelopmentMode = 'development-mode' in window.globalArgs
   if (isDevelopmentMode) {
-    console.log(window.globalArgs['app-dir_name'])
     return window.globalArgs['app-dir_name'] + `/../../res`
   } else {
-    return path.dirname(window.globalArgs['app-path']) + `/../res`
+    return path.dirname(window.globalArgs['app-dir_name']) + `/../../res`
   }
 }
 

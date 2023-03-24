@@ -322,6 +322,7 @@ class WindowManager {
       mod,
       existingWindowId,
       name,
+      show,
       windowOption,
       viewOption,
       webPreferences,
@@ -359,10 +360,10 @@ class WindowManager {
       if (options.onReadyToShow) {
         options.onReadyToShow(window)
       }
-      if(windowOption.show){
-        //只有窗体参数为show，才真正show出来，否则不做处理，自行show
-        window.show()
-      }
+     if(show || typeof (show)==='undefined'){
+       //未设置show或者明确定义为show，则自动显示
+       window.show()
+     }
 
     })
 
