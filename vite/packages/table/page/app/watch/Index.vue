@@ -75,16 +75,8 @@
                       </a-row>
                     </div>
 
-                    <div class="mb-4">
-                      <a-row>
-                        <a-col :span="6">
-                          <div class="stage">S4</div>
-                        </a-col>
-                        <a-col :span="16">
-                          <div>初级流量池：10-15万</div>
-                          <div>预测总播放量：4.5万</div>
-                        </a-col>
-                      </a-row>
+                    <div class="mb-4" v-if="item.stage">
+                     <BiliStage :stage="item.stage"></BiliStage>
                     </div>
                     <div class="text-xs action-button">
                       <a-row>
@@ -128,7 +120,7 @@
                    v-model="stoppedTasks">
               <template #item="{ item }">
                 <Widget :uniqueKey="item.id">
-                  <div class="p-2 bili-card">
+                  <div @click="goDashboard(item.nanoid)" class="p-2 bili-card">
                     <div class="text-more text-base mb-4 text-left">
                       <!--               <a-avatar :src="item.task.icon"></a-avatar> -->
                       <Icon icon="bilibili" style="font-size: 20px;vertical-align: text-top"></Icon>
@@ -187,16 +179,8 @@
                       </a-row>
                     </div>
 
-                    <div v-if="0" class="mb-4">
-                      <a-row>
-                        <a-col :span="6">
-                          <div class="stage">S4</div>
-                        </a-col>
-                        <a-col :span="16">
-                          <div>初级流量池：10-15万</div>
-                          <div>预测总播放量：4.5万</div>
-                        </a-col>
-                      </a-row>
+                    <div class="mb-4" v-if="item.stage">
+                      <BiliStage :stage="item.stage"></BiliStage>
                     </div>
                     <div class="text-xs action-button">
                       <a-row>
@@ -213,7 +197,7 @@
                           </div>
                         </a-col>
                         <a-col :span="6">
-                          <a-button @click="startTask(item)" type="primary">
+                          <a-button @click.stop="startTask(item)" type="primary">
                             <Icon class="text-xl" icon="bofang"></Icon>
                           </a-button>
 
@@ -221,7 +205,6 @@
                       </a-row>
                     </div>
                   </div>
-
                 </Widget>
               </template>
             </Vuuri>
@@ -336,6 +319,8 @@
 import { message, Modal } from 'ant-design-vue'
 import Vuuri from '../../../components/vuuri/Vuuri.vue'
 import Widget from '../../../components/muuri/Widget.vue'
+import bili from '../../../js/watch/bili'
+import BiliStage from '../../../components/watch/BiliStage.vue'
 
 const runningTasks = [
   {
@@ -381,6 +366,7 @@ const runningTasks = [
 export default {
   name: 'Index',
   components: {
+    BiliStage,
     Widget,
     Vuuri,
   },
@@ -529,9 +515,16 @@ export default {
         //无需处理了
         if (!task.data) {
           task.data = {
-            data: {}
+            data: {
+              stage:{
+                data:{}
+              }
+            }
           }//重新处理一下data
+        }else{
+          task.stage=bili.guessStage(task.data.view)
         }
+
       })
       this.tasks = tasks
 
@@ -625,15 +618,7 @@ export default {
   border-radius: 8px;
 }
 
-.stage {
-  transform: rotate(30deg);
-  background: #487cff;
-  border-radius: 4px;
-  width: 30px;
-  display: inline-block;
-  margin-top: 0.6em;
-  font-weight: bold;
-}
+
 
 .bili-tag {
   display: inline-block;

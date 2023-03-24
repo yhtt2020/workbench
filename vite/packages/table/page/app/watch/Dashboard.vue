@@ -57,15 +57,15 @@
                   </a-col>
                   <a-col :span="4">
                     <Icon icon="dianzan"></Icon>
-                    {{ format(data.like )}}
+                    {{ format(data.like) }}
                   </a-col>
                   <a-col :span="4">
                     <Icon icon="jinbi"></Icon>
-                    {{ format(data.coin ) }}
+                    {{ format(data.coin) }}
                   </a-col>
                   <a-col :span="4">
                     <Icon icon="jinbi"></Icon>
-                    {{ format(data.totalReply)}}
+                    {{ format(data.totalReply) }}
                   </a-col>
                   <a-col :span="4">
                     <Icon icon="star"></Icon>
@@ -73,7 +73,7 @@
                   </a-col>
                   <a-col :span="4">
                     <Icon icon="jinbi"></Icon>
-                    {{ format(data.collect)}}
+                    {{ format(data.collect) }}
                   </a-col>
                 </a-row>
               </div>
@@ -144,7 +144,7 @@
           <a-row class="text-center">
             <a-col :span="3">
               <div>累计票房</div>
-              <div> {{ format(data.view)}}</div>
+              <div> {{ format(data.view) }}</div>
             </a-col>
             <a-col :span="3">
               <div>首日票房</div>
@@ -157,13 +157,15 @@
             <a-col :span="3">
               <div>点赞</div>
               <div>
-                {{ format(data.like) }} <span>{{ getRate(data.like,data.view) }}%</span> <Arrow type="like" :value="getRate(data.like,data.view)"></Arrow>
+                {{ format(data.like) }} <span>{{ getRate(data.like, data.view) }}%</span>
+                <Arrow type="like" :value="getRate(data.like,data.view)"></Arrow>
               </div>
             </a-col>
             <a-col :span="3">
               <div>投币</div>
               <div>
-                {{ format(data.coin) }} <span>{{ getRate(data.coin,data.view) }}%</span>  <Arrow type="coin" :value="getRate(data.coin,data.view)"></Arrow>
+                {{ format(data.coin) }} <span>{{ getRate(data.coin, data.view) }}%</span>
+                <Arrow type="coin" :value="getRate(data.coin,data.view)"></Arrow>
               </div>
             </a-col>
             <a-col :span="3">
@@ -171,7 +173,8 @@
                 弹幕
               </div>
               <div>
-                {{ format(data.dm) }} <span>{{ getRate(data.dm,data.view) }}%</span> <Arrow type="dm" :value="getRate(data.dm,data.view)"></Arrow>
+                {{ format(data.dm) }} <span>{{ getRate(data.dm, data.view) }}%</span>
+                <Arrow type="dm" :value="getRate(data.dm,data.view)"></Arrow>
               </div>
             </a-col>
             <a-col :span="3">
@@ -179,13 +182,15 @@
                 收藏
               </div>
               <div>
-                {{ format(data.collect) }} <span>{{ getRate(data.collect,data.view) }}%</span> <Arrow type="collect" :value="getRate(data.collect,data.view)"></Arrow>
+                {{ format(data.collect) }} <span>{{ getRate(data.collect, data.view) }}%</span>
+                <Arrow type="collect" :value="getRate(data.collect,data.view)"></Arrow>
               </div>
             </a-col>
             <a-col :span="3">
               <div>转发</div>
               <div>
-                {{ format(data.share) }} <span>{{ getRate(data.share,data.view) }}%</span> <Arrow type="share" :value="getRate(data.share,data.view)"></Arrow>
+                {{ format(data.share) }} <span>{{ getRate(data.share, data.view) }}%</span>
+                <Arrow type="share" :value="getRate(data.share,data.view)"></Arrow>
               </div>
             </a-col>
             <a-col :span="3"></a-col>
@@ -233,20 +238,20 @@
               <h3 class="mb-4">猜测流量池</h3>
               <a-row>
                 <a-col :span="4">
-                  <div class="text-xl">S4</div>
+                  <div :style="{background: stage.data.bg}" class="text-xl stage">S{{stage.no}}</div>
                 </a-col>
-                <a-col :span="9">
+                <a-col :span="14">
                   <div>
                     <div>
-                      初级流量池：10-15万
+                      {{ stage.data.name }}流量池：{{formatWan(stage.data.show[0])}}-{{formatWan(stage.data.show[1])}}
                     </div>
                     <div>
-                      预测阶段播放量：3000
+                      预测阶段播放量：{{formatWan(stage.data.view) }}
                     </div>
                   </div>
                 </a-col>
-                <a-col :span="9">
-                  <a-button type="primary" @click="visibleStages=true">查看参考</a-button>
+                <a-col :span="6">
+                  <a-button type="primary" @click="visibleStages=true">参考</a-button>
                   <a-drawer placement="right" v-model:visible="visibleStages">
               <pre>
 1.初始流量池：200-500
@@ -291,7 +296,7 @@
                 <a-col :span="8">
                   <div>票房得分</div>
                   <div class="text-xl">
-                   ?
+                    ?
                   </div>
                 </a-col>
               </a-row>
@@ -339,6 +344,8 @@ import { Modal } from 'ant-design-vue'
 import BackBtn from '../../../components/comp/BackBtn.vue'
 import dataHelper from '../../../js/watch/dataHelper'
 import Arrow from '../../../components/watch/Arrow.vue'
+import bili from '../../../js/watch/bili'
+
 export default {
   name: 'Dashboard',
   components: { Arrow, BackBtn },
@@ -347,7 +354,12 @@ export default {
       task: {
         data: {},
       },
-      data:{},
+      data: {},
+      stage: {
+        data:{
+          show:[100,200]
+        }
+      },
       visibleStages: false,
       outerSettings: {
         useBothWheelAxes: true,
@@ -361,26 +373,16 @@ export default {
   mounted () {
     tableApi.watch.getTask({ nanoid: this.$route.params['nanoid'] }).then(task => {
       this.task = task
-      this.data=task.data
+      this.data = task.data
+      this.stage = this.guessStage(task.data.view)
       console.log(task)
     })
   },
   methods: {
-    format(num){
-      if(String(num).indexOf('万')>-1){
-        //已经是格式化文本
-        return num
-      }
-      if(Number(num)>0){
-        return (Number(num)).toLocaleString()
-      }else{
-        return '-'
-      }
+    format:dataHelper.format,
+    getRate: dataHelper.getRate,
 
-    },
-    getRate:dataHelper.getRate,
-
-    showTask(){
+    showTask () {
       tableApi.watch.showTask(this.task)
     },
     stopTask () {
@@ -393,7 +395,9 @@ export default {
       Modal.info({
         content: '暂时还不支持分享'
       })
-    }
+    },
+    guessStage:bili.guessStage,
+    formatWan:bili.formatWan
   }
 }
 </script>
@@ -403,5 +407,16 @@ export default {
   width: 160px;
   height: 100px;
   border-radius: 6px;
+}
+.stage {
+  transform: rotate(30deg);
+  background: #487cff;
+  color: white;
+  border-radius: 4px;
+  width: 50px;
+  text-align: center;
+  display: inline-block;
+  margin-top: 0.3em;
+  font-weight: bold;
 }
 </style>

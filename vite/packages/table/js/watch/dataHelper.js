@@ -1,4 +1,11 @@
 const dataHelper={
+  /**
+   * 获得比例，自动修正带万数据
+   * @param num
+   * @param total
+   * @param fix
+   * @returns {string}
+   */
   getRate(num,total,fix=1){
     if(typeof num ==='undefined' || typeof total==='undefined'){
       return '-'
@@ -14,8 +21,6 @@ const dataHelper={
     if(total.indexOf('万')>-1){
       total=Number(total)*10000
     }
-    console.log(num)
-    console.log(total)
     return (num/total*100).toFixed(fix)
   },
 
@@ -27,7 +32,24 @@ const dataHelper={
       return true
     }
     return value>standard[type]
-  }
+  },
+  /**
+   * 格式化，千+逗号
+   * @param num
+   * @returns {*|string}
+   */
+  format (num) {
+    if (String(num).indexOf('万') > -1) {
+      //已经是格式化文本
+      return num
+    }
+    if (Number(num) > 0) {
+      return (Number(num)).toLocaleString()
+    } else {
+      return '-'
+    }
+
+  },
 }
 
 export default dataHelper
