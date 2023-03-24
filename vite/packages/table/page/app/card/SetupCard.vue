@@ -401,7 +401,7 @@ export default {
   flex-direction: column;
   margin-top: -0.5em;
 }
-.ant-picker-header{
+:deep(.ant-picker-header){
   -webkit-app-region: no-drag;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="card  content half" v-if="countDowntime.hours" style="display: flex;flex-direction: column;justify-content: space-between;height: 15em;">
+  <div class="card  content small" v-if="countDowntime.hours" style="display: flex;flex-direction: column;justify-content: space-between;">
     <Icon
       style="width: 1.5em; height: 1.5em;cursor:pointer"
       icon="gengduo1"
@@ -26,7 +26,7 @@
      ></Icon>
    </div>
   </div>
-  <div class="card content half" style="height: 15em;" v-else-if="clockEvent.length <= 0">
+  <div class="card content small" v-else-if="clockEvent.length <= 0">
       <Icon
         style="width: 1.5em; height: 1.5em;cursor:pointer"
         icon="gengduo1"
@@ -37,7 +37,7 @@
     <a-empty :description="null" :image="simpleImage" />
     <a-button type="primary" style="background: #676767;border: none" @click="onSetup">立即添加</a-button>
   </div>
-  <div class="card content half" v-else>
+  <div class="card content small" v-else>
     <Icon
       style="width: 1.5em; height: 1.5em;cursor:pointer"
       icon="gengduo1"
@@ -189,6 +189,23 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.card{
+  max-height:30em;
+  border-radius: 8px;
+  vertical-align: text-top;
+
+  width: 20em;
+  min-width: 20em;
+  display: inline-block;
+  height: 420px;
+  padding: 10px 13px .5em 13px ;
+  margin-right: 14px;
+  position: relative;
+  &.small{
+    height: 203px;
+    margin-bottom: 14px;
+  }
+}
 .content {
   position: relative;
   text-align: center;

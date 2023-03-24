@@ -3,7 +3,7 @@
   <div class="top-content">
     <div><span>{{CPUGPUData.SCPUUTI.value}}%</span>
       <span>
-      <Icon icon="CPU" class="icon"></Icon>CPU</span>
+      <Icon icon="CPU" class="icon" ></Icon>CPU</span>
     </div>
 
     <div style="margin-left: 13px">
@@ -24,15 +24,18 @@
   </a-tooltip></span>
        </span>
     </div>
-    <div>
+    <div class="buttom" style="border-radius: 5px">
       <div>
-        <Icon icon="xiazai" class="icon" style="color: #5CBBFF;"></Icon>
-        <span>下载</span>
-        <span>{{lastDown}}</span></div>
+        <div> <Icon icon="xiazai" class="icon" style="color: #5CBBFF;"></Icon>
+          <span>下载</span></div>
+
+        <span>{{lastDown}}</span>
+      </div>
 
      <div>
-       <Icon icon="shangchuan" class="icon" style="color: #52C41A;"></Icon>
-       <span>上传</span>
+       <div><Icon icon="shangchuan" class="icon" style="color: #52C41A;"></Icon>
+         <span>上传</span></div>
+
        <span>{{lastUp}}</span>
      </div>
    </div>
@@ -97,8 +100,9 @@ export default {
   height: 95%;
   width: 100%;
   align-items: center;
+  margin-top: -8px;
 
-  div{
+  >div{
     width: calc((100% - 13px) / 2);
     margin-top: 13px;
     height: 120.5px;
@@ -115,29 +119,43 @@ export default {
     >span:first-child{
       font-size: 2.5em;
       font-weight: 700;
+
     }
   }
   >div:last-child{
-    height: 6em;
-    width: 18em;
-    border-radius: 5%;
-    >div{
-      display: flex;
-      flex-direction: row;
-      justify-content: space-evenly;
-      align-items: center;
-      width: 100%;
-      margin: 0;
+    height: 90px;
+    width: 100%;
 
-      >span:nth-child(2){
-        margin-right: 8em;
-      }
-    }
-  }.icon{
+
+
+  }
+  .icon{
        width: 18px;
        height:18px;
   margin-right: .5em;
    }
 }
+.buttom{
+    display: flex;
+    flex-direction: column;
+  >div{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+    align-items: center;
+    height: 100%;
+    padding: 0 10px;
+    line-height: 100%;
+    vertical-align: bottom;
+    >div{
+      display: flex;
+      align-items: center;
+    }
+    >:nth-child(2){
+      font-weight: 700;
+    }
 
+  }
+}
 </style>
