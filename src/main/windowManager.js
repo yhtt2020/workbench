@@ -10,7 +10,7 @@ const _ = require('lodash')
 let settingModel
 const  DEFAULT_WEB_PREFERENCE = {
   nodeIntegration: false,
-  nodeIntegrationInSubFrames: true,
+  nodeIntegrationInSubFrames: false,
   scrollBounce: true,
   safeDialogs: true,
   safeDialogsMessage: '阻止此页面弹窗',
@@ -724,14 +724,14 @@ class WindowManager {
     if (!webPreferences) {
       webPreferences = {}
     }
-    webPreferences = Object.assign(_.cloneDeep(this.defaultWebPreferences), webPreferences)
+    webPreferences = Object.assign(_.cloneDeep(DEFAULT_WEB_PREFERENCE), webPreferences)
     this.optionMap[name] = name
     let wenContents
     let instance
     if (!viewOption) {
       viewOption = {}
     }
-    viewOption.windowOption = Object.assign(_.cloneDeep(this.defaultViewPreferences), viewOption)
+    viewOption.windowOption = Object.assign(_.cloneDeep(DEFAULT_WEB_PREFERENCE), viewOption)
     if(!webPreferences.additionalArguments){
       //不存在addtionalArguments则初始化一个空
       webPreferences.additionalArguments=[]

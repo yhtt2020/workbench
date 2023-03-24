@@ -1,7 +1,19 @@
+const path = require('path')
 
-const path = require("path");
+export function fixHttp (str, ssl = true) {
+  if (!str) {
+    return ''
+  } else {
+    if (str.startsWith('//')) {
+      str = ssl ? 'https:'+str : 'http:'+str
+      return str
+    } else {
+      return str
+    }
+  }
+}
 
-export function formatSeconds(value) {
+export function formatSeconds (value) {
   //  秒
   let second = parseInt(value)
   //  分
@@ -31,9 +43,9 @@ export function formatSeconds(value) {
       //  }
     }
   }
-  let result =''
+  let result = ''
   if (second > 0) {
-    result= '' + parseInt(second) + '秒'
+    result = '' + parseInt(second) + '秒'
   }
   if (minute > 0) {
     result = '' + parseInt(minute) + '分' + result
@@ -47,124 +59,124 @@ export function formatSeconds(value) {
   return result
 }
 
-
-export function getLogo(logo, local_dir, fileProtocol = true) {
-  if (logo === "local") {
-    return (fileProtocol ? "file://" : "") + path.join(local_dir, "logo.png");
+export function getLogo (logo, local_dir, fileProtocol = true) {
+  if (logo === 'local') {
+    return (fileProtocol ? 'file://' : '') + path.join(local_dir, 'logo.png')
   } else {
-    return logo;
+    return logo
   }
 }
 
-export function getBgColorFromEntry(entry) {
-  let color = "black";
+export function getBgColorFromEntry (entry) {
+  let color = 'black'
   if (entry) {
-    color = entry.bgColor;
+    color = entry.bgColor
   }
-  return color;
+  return color
 }
-export function timeStamp(time) {
-  let date = new Date(time);
-  let dateTime = {};
+
+export function timeStamp (time) {
+  let date = new Date(time)
+  let dateTime = {}
   let weeks = [
-    "星期一",
-    "星期二",
-    "星期三",
-    "星期四",
-    "星期五",
-    "星期六",
-    "星期日",
-  ];
-  dateTime.year = date.getFullYear();
-  dateTime.month = date.getMonth() + 1;
-  dateTime.day = date.getDate();
-  dateTime.hours = date.getHours();
+    '星期一',
+    '星期二',
+    '星期三',
+    '星期四',
+    '星期五',
+    '星期六',
+    '星期日',
+  ]
+  dateTime.year = date.getFullYear()
+  dateTime.month = date.getMonth() + 1
+  dateTime.day = date.getDate()
+  dateTime.hours = date.getHours()
 
-  let minutes = date.getMinutes();
+  let minutes = date.getMinutes()
 
-  let seconds = date.getSeconds();
+  let seconds = date.getSeconds()
 
   if (minutes < 10) {
-    dateTime.minutes = "0" + String(minutes);
+    dateTime.minutes = '0' + String(minutes)
   } else {
-    dateTime.minutes = minutes;
+    dateTime.minutes = minutes
   }
   if (seconds < 10) {
-    dateTime.seconds = "0" + String(seconds);
+    dateTime.seconds = '0' + String(seconds)
   } else {
-    dateTime.seconds = seconds;
+    dateTime.seconds = seconds
   }
-  dateTime.week = weeks[date.getDay() - 1];
-  return dateTime;
+  dateTime.week = weeks[date.getDay() - 1]
+  return dateTime
 }
-export function getDateTime(date = new Date()) {
-  let dateTime = {};
+
+export function getDateTime (date = new Date()) {
+  let dateTime = {}
   let weeks = [
-    "星期一",
-    "星期二",
-    "星期三",
-    "星期四",
-    "星期五",
-    "星期六",
-    "星期日",
-  ];
-  dateTime.year = date.getFullYear();
-  dateTime.month = date.getMonth() + 1;
-  dateTime.day = date.getDate();
-  dateTime.hours = date.getHours();
+    '星期一',
+    '星期二',
+    '星期三',
+    '星期四',
+    '星期五',
+    '星期六',
+    '星期日',
+  ]
+  dateTime.year = date.getFullYear()
+  dateTime.month = date.getMonth() + 1
+  dateTime.day = date.getDate()
+  dateTime.hours = date.getHours()
 
-  let minutes = date.getMinutes();
+  let minutes = date.getMinutes()
 
-  let seconds = date.getSeconds();
+  let seconds = date.getSeconds()
 
   if (minutes < 10) {
-    dateTime.minutes = "0" + String(minutes);
+    dateTime.minutes = '0' + String(minutes)
   } else {
-    dateTime.minutes = minutes;
+    dateTime.minutes = minutes
   }
   if (seconds < 10) {
-    dateTime.seconds = "0" + String(seconds);
+    dateTime.seconds = '0' + String(seconds)
   } else {
-    dateTime.seconds = seconds;
+    dateTime.seconds = seconds
   }
-  dateTime.week = weeks[date.getDay() - 1];
-  return dateTime;
+  dateTime.week = weeks[date.getDay() - 1]
+  return dateTime
 }
-export function transDate(s, e) {
-  let start = new Date(s).getTime();
-  let end = new Date(e).getTime();
-  var result = Math.abs(end - start);
-  var minute = result / 1000 / 60;
+
+export function transDate (s, e) {
+  let start = new Date(s).getTime()
+  let end = new Date(e).getTime()
+  var result = Math.abs(end - start)
+  var minute = result / 1000 / 60
   if (minute == 0 || isNaN(minute) || minute == null) {
-    return 0;
+    return 0
   }
-  return Math.floor(result / (24 * 3600 * 1000));
+  return Math.floor(result / (24 * 3600 * 1000))
 }
 
-
-
-export const myStore={
-  save(key, value) {
+export const myStore = {
+  save (key, value) {
     localStorage.setItem(key, JSON.stringify(value))
   }, /**
    * 读入一个app的数据
    * @param $app
    */
-  loadAppData($app,defaultValue){
-    let saved=localStorage.getItem('appData.'+$app)
-    if(saved) {
-      let data= JSON.parse(saved)
+  loadAppData ($app, defaultValue) {
+    let saved = localStorage.getItem('appData.' + $app)
+    if (saved) {
+      let data = JSON.parse(saved)
       return data
-    }else{
+    } else {
       return defaultValue
     }
   },
   /**
    * 读入全部的设置
    */
-  loadSettings(defaultValue){
-    let saved=localStorage.getItem('settings')
-    if(saved) {
+  loadSettings (defaultValue) {
+    let saved = localStorage.getItem('settings')
+    if (saved) {
       try {
         return JSON.parse(saved)
       } catch (e) {
@@ -175,20 +187,20 @@ export const myStore={
   }
 }
 
-export function filterObjKeys(obj1, obj2) {
-  return Object.keys(obj1).map( i=> {
+export function filterObjKeys (obj1, obj2) {
+  return Object.keys(obj1).map(i => {
     if (obj2.hasOwnProperty(i)) {
       obj1[i] = obj2[i]
     }
-  });
+  })
 }
 
-export  function netWorkDownUp(obj){
-  const a = {down:0,up:0}
+export function netWorkDownUp (obj) {
+  const a = { down: 0, up: 0 }
   Object.keys(obj).map(i => {
-    if (i.includes('SNIC')&&obj[i].value!=='0.0') {
-      if(obj[i].label.includes('Down')&&obj[i].label.includes('Rate')) a.down = obj[i].value
-      if(obj[i].label.includes('Up')&&obj[i].label.includes('Rate')) a.up = obj[i].value
+    if (i.includes('SNIC') && obj[i].value !== '0.0') {
+      if (obj[i].label.includes('Down') && obj[i].label.includes('Rate')) a.down = obj[i].value
+      if (obj[i].label.includes('Up') && obj[i].label.includes('Rate')) a.up = obj[i].value
     }
   })
   return a

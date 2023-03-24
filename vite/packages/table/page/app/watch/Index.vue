@@ -25,7 +25,7 @@
                     <div class="mb-3">
                       <a-row>
                         <a-col :span="10">
-                          <img v-if="item.data.cover" class="bili-cover" :src="item.data.cover"/>
+                          <img v-if="item.data.cover" class="bili-cover" :src="fixHttp(item.data.cover+'@320w_200h')"/>
                           <a-avatar v-else class="bili-cover" style="line-height: 1.3;padding-top: 0.4em">
                             首次运行后<br/>自动获取
                           </a-avatar>
@@ -126,7 +126,7 @@
                     <div class="mb-3">
                       <a-row>
                         <a-col :span="10">
-                          <img v-if="item.data.cover" class="bili-cover" :src="item.data.cover "/>
+                          <img v-if="item.data.cover" class="bili-cover" :src="fixHttp(item.data.cover+'@320w_200h')"/>
                           <a-avatar v-else class="bili-cover" style="line-height: 1.3;padding-top: 0.4em">
                             首次运行后<br/>自动获取
                           </a-avatar>
@@ -314,7 +314,7 @@ import Vuuri from '../../../components/vuuri/Vuuri.vue'
 import Widget from '../../../components/muuri/Widget.vue'
 import bili from '../../../js/watch/bili'
 import BiliStage from '../../../components/watch/BiliStage.vue'
-import { formatSeconds } from '../../../util'
+import { formatSeconds,fixHttp } from '../../../util'
 
 const runningTasks = [
   {
@@ -411,6 +411,7 @@ export default {
     clearInterval(this.updateExecutedTimer)
   },
   methods: {
+    fixHttp:fixHttp,
     updateExecutedTime(){
       this.runningTasks.forEach(task=>{
         task.executed_time_until_now=this.formatSeconds((Date.now()-task.last_execute_time)/1000)

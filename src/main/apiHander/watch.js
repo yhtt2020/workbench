@@ -139,6 +139,7 @@ class Watch extends Base {
         frame: true
       },
       webPreferences: {
+        autoplayPolicy:false,
         preload: true ? ___dirname + '/src/watchPreload/' + 'bili.js' : taskPreload, //默认使用tsApi
         sandbox: false,
         partition: 'persist:webcontent',

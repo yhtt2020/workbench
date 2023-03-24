@@ -42,7 +42,7 @@
         <div class="p-3">
           <a-row class="mb-5" :gutter="[20,10]">
             <a-col :md="5">
-              <img class="cover" :src="data.cover+'@320w_200h'">
+              <img class="cover" :src="fixHttp(data.cover+'@320w_200h')">
             </a-col>
             <a-col :md="16">
               <div class="mb-2" style="color:#999">任务：{{ task.title }} &nbsp; &nbsp;{{
@@ -349,7 +349,7 @@ import BackBtn from '../../../components/comp/BackBtn.vue'
 import dataHelper from '../../../js/watch/dataHelper'
 import Arrow from '../../../components/watch/Arrow.vue'
 import bili from '../../../js/watch/bili'
-import { formatSeconds } from '../../../util'
+import { fixHttp, formatSeconds } from '../../../util'
 export default {
   name: 'Dashboard',
   components: { Arrow, BackBtn },
@@ -391,6 +391,7 @@ export default {
     clearInterval(this.updateExecutedTimer)
   },
   methods: {
+    fixHttp:fixHttp,
     updateExecutedTime(){
       this.task.executed_time_until_now=this.formatSeconds((Date.now()-this.task.last_execute_time)/1000)
     },
