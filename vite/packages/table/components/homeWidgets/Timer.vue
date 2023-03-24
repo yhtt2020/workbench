@@ -1,5 +1,5 @@
 <template>
-  <div class="card half" style="" >
+  <div class="card small" style="" >
     <a-row>
       <a-col>
         <Icon
@@ -58,5 +58,22 @@ export default {
   display: inline-block;
   border: 1px solid #363636;
   background: #494949;
+}
+.card{
+  max-height:30em;
+  border-radius: 8px;
+  vertical-align: text-top;
+
+  width: 20em;
+  min-width: 20em;
+  display: inline-block;
+  height: 420px;
+  padding: 3em 13px .5em 13px ;
+  margin-right: 14px;
+  position: relative;
+  &.small{
+    height: 203px;
+    margin-bottom: 14px;
+  }
 }
 </style>
