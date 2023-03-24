@@ -62,8 +62,8 @@ class WatchTaskModel {
 
   }
 
-  async getLatestStart(taskId){
-    let records= await this.db.knex('data').whereNull('status').where({ task_id: taskId,type:'start' }).orderBy('grab_time','desc').limit(1).select()
+  async getLatestStart(taskId,type){
+    let records= await this.db.knex('data').whereNull('status').where({ task_id: taskId,type}).orderBy('grab_time','desc').limit(1).select()
     if(records){
       if(records.length===1){
         return records[0]

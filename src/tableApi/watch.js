@@ -21,6 +21,11 @@ let onTaskUpdate
 
 const watch = {
 
+  showTask(task){
+    send('showTask',task)
+
+  },
+
   /**
    * 设置任务状态更新handler用于执行回调
    * @param cb
@@ -46,7 +51,7 @@ const watch = {
    * @returns {Promise<void>}
    */
   async getLatestData (task) {
-    let gotData = await dataModel.getLatestStart(task.nanoid)
+    let gotData = await dataModel.getLatestStart(task.nanoid,'timeout')
     let returnValue = {
       data: null,
       last_execute_info: null

@@ -30,6 +30,9 @@ class Watch extends Base {
       args.running=false
       event.reply('taskUpdate', { task: args })
     })
+    this.on('showTask',(event,args)=>{
+      this.showTask(args)
+    })
 
     this.on('startTask', (event, args, instance) => {
       console.log(args, '接收到启动任务的命令')
@@ -105,6 +108,10 @@ class Watch extends Base {
         '--task-id=' + task.id
       ]
     })
+  }
+
+  showTask(task){
+    this.findInstance(task.nanoid).window.show()
   }
 
   /**

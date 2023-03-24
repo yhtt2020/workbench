@@ -24,6 +24,9 @@ if(!window.location.href.endsWith('iframe.html')){
     //收藏
     let collect = $('.video-toolbar-v1 .collect .info-text').text()
 
+    let share=$('.share-wrap .info-text').text()
+
+
     //封面
     let cover = $('head meta[itemprop=image]').attr('content').replace('@100w_100h_1c.png', '')
     //封面320*200
@@ -36,6 +39,7 @@ if(!window.location.href.endsWith('iframe.html')){
 
     //评论数
     let totalReply = $('.total-reply').text()
+
 
     //拼装作者
     let author = {
@@ -51,6 +55,7 @@ if(!window.location.href.endsWith('iframe.html')){
       pudate,
       like,
       coin,
+      share,
       collect,
       totalReply,
       cover,
@@ -80,15 +85,16 @@ if(!window.location.href.endsWith('iframe.html')){
         fn:()=>{
           //自动清理掉无用的视频部分，以提升性能
           $('video').remove()
-          return null
+
+          let data=getData()
+          return data
         },
-        timeout:1000
+        timeout:5000
       }
     ],
     start: () => {
       try {
-        let data = getData()
-        return data
+        return null //不抓取开始时机
       } catch (e) {
         console.warn('未能抓到数据')
       }
