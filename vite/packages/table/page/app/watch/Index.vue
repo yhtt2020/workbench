@@ -34,18 +34,15 @@
                           <div class="text-more text-xs" :title="item.data.title">{{ item.data.title || '-' }}</div>
                           <div>
                             <a-row class="text-xs" :gutter="10">
-                              <a-col :span="8">
+                              <a-col :span="12">
                                 <Icon icon="bofang"></Icon>
                                 <br/> {{ item.data.viewText || '-' }}
                               </a-col>
-                              <a-col :span="8">
+                              <a-col :span="12">
                                 <Icon icon="dianzan"></Icon>
                                 <br/> {{ item.data.like || '-' }}
                               </a-col>
-                              <a-col :span="8">
-                                <Icon icon="jinbi"></Icon>
-                                <br/>{{ item.data.coin || '-' }}
-                              </a-col>
+
                             </a-row>
                           </div>
                         </a-col>
@@ -138,17 +135,13 @@
                           <div class="text-more text-xs">{{ item.data.title }}</div>
                           <div>
                             <a-row class="text-xs" :gutter="10">
-                              <a-col :span="8">
+                              <a-col :span="12">
                                 <Icon icon="bofang"></Icon>
                                 <br/> {{ item.data.viewText || '0' }}
                               </a-col>
-                              <a-col :span="8">
+                              <a-col :span="12">
                                 <Icon icon="dianzan"></Icon>
                                 <br/> {{ item.data.like || '0' }}
-                              </a-col>
-                              <a-col :span="8">
-                                <Icon icon="jinbi"></Icon>
-                                <br/>{{ item.data.coin || '0' }}
                               </a-col>
                             </a-row>
                           </div>

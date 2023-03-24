@@ -116,9 +116,10 @@ export default {
     ...mapWritableState(tableStore, ["aidaData"]),
   },
   mounted () {
+    //this.customComponents=[{name:'Music',id:2},{name:'Weather',id:3},{name:'Timer',id:4}]//重置
     if(this.customComponents.length>0){
       if( typeof this.customComponents[0] ==='string'){
-        this.customComponents=[]
+        this.customComponents=[{name:'Music',id:2},{name:'Weather',id:3},{name:'Timer',id:4}]
       }
     }
   },
