@@ -9,7 +9,7 @@
         </div>
           <span style="font-weight:700">{{CPUData.SCPUUTI.value}}%</span></div>
       </div>
-      <div id="cpu" class="echarts"></div>
+      <div id="cpu" ref="cpuChart" class="echarts"></div>
 
       <div class="cpu" style="margin-top: .5em">
         <div class="cpu-number">
@@ -19,7 +19,7 @@
           </div>
           <span style="font-weight:700">{{CPUData.SGPU1UTI.value}}%</span></div>
       </div>
-      <div id="gpu" class="echarts"></div>
+      <div id="gpu" ref="gpuChart"  class="echarts"></div>
 
       <div class="cpu" style="margin-top: .5em">
         <div class="cpu-number">
@@ -89,7 +89,7 @@ import {CPUOption,GPUOption} from './echartOptions'
 import * as echarts from "echarts";
 import {mapWritableState} from "pinia";
 import {tableStore} from "../../../store";
-import {filterObjKeys} from '../../../util'
+import {filterObjKeys, netWorkDownUp} from '../../../util'
 export default {
   data(){
     return {
@@ -108,8 +108,8 @@ export default {
       },
       CPUList:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
       GPUList:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-      down:'-',
-      up:'-'
+      down:0,
+      up:0
     }
   },
 
@@ -132,37 +132,25 @@ export default {
   watch: {
     "aidaData": {
       handler(newVal, oldVal) {
-        Object.keys(this.CPUData).reduce((newData, key) => {
-          if (this.aidaData.hasOwnProperty(key)) {
-            this.CPUData[key] = this.aidaData[key]
-          }
-          return newData;
-        }, {});
-        this.CPUData.SCPUUTI.value&&this.CPUList.push(this.CPUData.SCPUUTI.value)
-        this.CPUList.shift();
-        this.CPUData.SGPU1UTI.value&&this.GPUList.push(this.CPUData.SGPU1UTI.value)
-        this.GPUList.shift();
-      //console.log(this.aidaData)
-
-        const NIC= Object.keys(this.aidaData).reduce((newData, key) => {
-            if (key.includes('SNIC')&&this.aidaData[key].value!=='0.0') {
-              if(this.aidaData[key].label.includes('Down')) this.down = this.aidaData[key].value
-              if(this.aidaData[key].label.includes('Up')) this.up = this.aidaData[key].value
-              newData[key] = this.aidaData[key];
-            }
-          return newData;
-        }, {});
-
-      // const NIC= this.aidaData.filter(item => item.label.indexOf(NIC))
-      //   console.log(NIC)
-      this.CPUEcharts()
+        filterObjKeys(this.CPUData,this.aidaData)
+        if(this.CPUData.SCPUUTI.value!=="-") {
+        this.CPUList.push(this.CPUData.SCPUUTI.value)
+        this.CPUList.shift();}
+        if(this.CPUData.SGPU1UTI.value!=="-") {
+         this.GPUList.push(this.CPUData.SGPU1UTI.value)
+         this.GPUList.shift();
+         }
+        const {down,up} =  netWorkDownUp(this.aidaData)
+        this.down = down
+        this.up = up
+        this.CPUEcharts()
       },
       deep: true,
     },
   },
   methods:{
     CPUEcharts() {
-      let myChart = echarts.init(document.getElementById("cpu"),'dark');
+      let myChart = echarts.init(this.$refs.cpuChart);
       myChart.setOption({
         title: {
           text: ''
@@ -230,7 +218,7 @@ export default {
           },
         ]
       })
-    let myGpuChart = echarts.init(document.getElementById("gpu"),'dark');
+    let myGpuChart = echarts.init(this.$refs.gpuChart);
     myGpuChart.setOption({
       animation:false,
       title: {

@@ -64,8 +64,45 @@ export default {
     },
     addCard () {
       switch (this.cardType.images[this.carouselIndex]) {
+        case "CPUFourCard":
+          this.addCustomComponents({ name:this.cardType.images[this.carouselIndex], id: Date.now() });
+          this.$router.push({
+            name: "home",
+            params: {
+              name: this.cardType.images[this.carouselIndex],
+              cname: this.cardType.cname,
+            },
+          }); message.info("添加成功！");
+          break;
+        case "SmallCPUCard":
+          this.addCustomComponents({ name:this.cardType.images[this.carouselIndex], id: Date.now() });
+          this.$router.push({
+            name: "home",
+            params: {
+              name: this.cardType.images[this.carouselIndex],
+              cname: this.cardType.cname,
+            },
+          });   message.info("添加成功！"); break;
+        case "SmallGPUCard":
+          this.addCustomComponents({ name:this.cardType.images[this.carouselIndex], id: Date.now() });
+          this.$router.push({
+            name: "home",
+            params: {
+              name: this.cardType.images[this.carouselIndex],
+              cname: this.cardType.cname,
+            },
+          });  message.info("添加成功！");  break;
+
+        case "CPULineChart":
+          this.addCustomComponents({ name:this.cardType.images[this.carouselIndex], id: Date.now() });
+          this.$router.push({
+            name: "home",
+            params: {
+              name: this.cardType.images[this.carouselIndex],
+              cname: this.cardType.cname,
+            },
+          });  message.info("添加成功！");  break;
         case "customTimer":
-          // this.addCustomComponents({id:Date.now(),children:[{name:this.cardType.name,id:Date.now()}]});
           this.addCustomComponents({ name:this.cardType.images[this.carouselIndex], id: Date.now() });
           this.$router.push({
             name: "home",
@@ -77,38 +114,47 @@ export default {
           message.info("添加成功！");
           break;
         case "countdownDay":
-          //this.addCustomComponents({id:Date.now(),children:[{name:this.cardType.name,id:Date.now()}]});
+          this.addCustomComponents({ name: this.cardType.images[this.carouselIndex], id: Date.now() });
+          // this.$router.push({
+          //   name: "addCardSetting",
+          //   params: {
+          //     name: this.cardType.images[this.carouselIndex],
+          //     cname: this.cardType.cname,
+          //   },
+          // });
+          // break;
+          this.$router.push({
+          name: "home",
+            params: {
+          name: this.cardType.images[this.carouselIndex],
+            cname: this.cardType.cname,
+        },
+      });
+      message.info("添加成功！");
+      break;
+        case "smallCountdownDay":
           this.addCustomComponents({ name: this.cardType.images[this.carouselIndex], id: Date.now() });
           this.$router.push({
-            name: "addCardSetting",
+            name: "home",
             params: {
               name: this.cardType.images[this.carouselIndex],
               cname: this.cardType.cname,
             },
           });
-          break;
-        case "smallCountdownDay":
-          // this.addCustomComponents({id:Date.now(),children:[{name:this.cardType.name,id:Date.now()}]});
-          this.addCustomComponents({ name: this.cardType.images[this.carouselIndex], id: Date.now() });
-          this.$router.push({
-            name: "addCardSetting",
-            params: {
-              name: this.cardType.images[this.carouselIndex],
-              cname: "倒数日",
-            },
-          });
+          message.info("添加成功！");
           break;
         case "clock":
-          //this.addCustomComponents({id:Date.now(),children:[{name:this.cardType.name,id:Date.now()}]});
           this.addCustomComponents({ name:this.cardType.images[this.carouselIndex], id: Date.now() });
           this.$router.push({
-            name: "addCardSetting",
+            name: "home",
             params: {
               name: this.cardType.images[this.carouselIndex],
               cname: this.cardType.cname,
             },
           });
+          message.info("添加成功！");
           break;
+
       }
     }
   }

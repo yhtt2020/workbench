@@ -30,7 +30,7 @@
       }"/>
 
         <div>CPU</div>
-        <canvas id='myCPUCanvas' style='width:130px;height:40px'> </canvas>
+        <canvas id='myCPUCanvas' ref="myCPUCanvas"  style='width:130px;height:40px'> </canvas>
 
       </div>
     </div>
@@ -41,6 +41,7 @@
 import SupervisorySlot from "./SupervisorySlot.vue";
 import {mapWritableState} from "pinia";
 import {tableStore} from "../../../store";
+import {filterObjKeys} from "../../../util";
 export default {
   name: "SmallCPUCard",
   data(){
@@ -67,13 +68,7 @@ export default {
   watch: {
     "aidaData": {
       handler(newVal, oldVal) {
-
-        Object.keys(this.CPUData).reduce((newData, key) => {
-          if (this.aidaData.hasOwnProperty(key)) {
-            this.CPUData[key] = this.aidaData[key]
-          }
-          return newData;
-        }, {});
+        filterObjKeys(this.CPUData,this.aidaData)
         this.CPUData.SCPUUTI.value&&  this.CPUList.push(this.CPUData.SCPUUTI.value)
         this.CPUList.shift();
         this.initCanvas()
@@ -83,7 +78,7 @@ export default {
   },
   methods:{
     initCanvas() {
-      let canvas = document.getElementById('myCPUCanvas');
+      let canvas = this.$refs.myCPUCanvas;
       let ctx = canvas.getContext('2d');
       let x = 0;
       this.CPUList.forEach((i,index) => {

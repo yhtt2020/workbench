@@ -21,10 +21,8 @@
     @close="onClose"
   >
     <div style="display: flex;flex-direction: row;height: 100%">
-      <div class="option" @click="onSetup">
-        <Icon class="icon" icon="shezhi1"></Icon>设置
-      </div>
-      <div class="option" @click="removeClock">
+
+      <div class="option" @click="removeCard">
         <Icon class="icon" icon="guanbi2"></Icon>删除
       </div>
     </div>
@@ -32,6 +30,9 @@
 </template>
 
 <script>
+import {mapActions} from "pinia";
+import {tableStore} from "../../../store";
+
 export default {
   data(){
     return {
@@ -47,13 +48,22 @@ export default {
     editing:{
       type:Boolean,
       default:false
+    },
+    customIndex:{
+      type:Number,
+      default:0
     }
   },
   methods:{
+    ...mapActions(tableStore, ["removeCustomComponents"]),
     showDrawer()  {
       this.visible = true;
     },
     onClose() {
+      this.visible = false;
+    },
+    removeCard(){
+      this.removeCustomComponents(this.customIndex)
       this.visible = false;
     },
   }
@@ -65,7 +75,7 @@ export default {
   max-height:30em;
   border-radius: 8px;
   vertical-align: text-top;
-  background:  linear-gradient(#2B2B2B, #3E3E3E);
+
   width: 20em;
   min-width: 20em;
   display: inline-block;
