@@ -6,7 +6,7 @@
     ></Icon>
     <span style="margin-left: -1em">「{{ title }}」设置</span>
   </div>
-  <div class="card content" v-if="cardType === 'countdownDay'">
+  <div class="card content" v-if="cardType === 'countdownDay'" >
     <a-row>
       <a-col :span="10" style="border-right: 1px solid #454545; height: 100vh">
 
@@ -21,6 +21,7 @@
           <div class="button">
             <a-date-picker
               v-model:value="dateValue"
+
               :disabled-date="
                 (current) => {
                   return current && current < dayjs().endOf('day');
@@ -169,15 +170,15 @@
         </a-row>
         <a-row> <a-col>时间 </a-col></a-row>
         <a-row>
-          <a-col :span="6" :xs="8">
+          <a-col :span="6" :xs="4" >
             <a-time-picker v-model:value="clockDate" format="HH:mm"
-          /></a-col>
-<!--          <a-col :span="6" :xs="12" :offset="1">-->
-<!--            <a-radio-group v-model:value="clockType" button-style="solid">-->
-<!--              <a-radio-button value="不重复">不重复</a-radio-button>-->
-<!--              <a-radio-button value="每天">每天</a-radio-button>-->
-<!--            </a-radio-group>-->
-<!--          </a-col>-->
+                           /></a-col>
+          <a-col :span="6" :xs="16" :offset="1">
+            <a-radio-group v-model:value="clockType" button-style="solid">
+              <a-radio-button value="不重复">不重复</a-radio-button>
+              <a-radio-button value="每天">每天</a-radio-button>
+            </a-radio-group>
+          </a-col>
         </a-row>
         <a-row>
           <a-col>
@@ -254,6 +255,7 @@ export default {
       dateValue: null,
       clockDate: null,
       flag: true,
+      customIndex:0
     };
   },
 
@@ -262,6 +264,7 @@ export default {
       // console.log(this.$route.params);
       this.title = this.$route.params["cname"];
       this.cardType = this.$route.params["name"];
+      this.customIndex = this.$route.params["customIndex"];
     }
   },
   computed: {
@@ -290,6 +293,7 @@ export default {
       this.addCountdownDay({
         eventValue: this.eventValue,
         dateValue: timeStamp(this.dateValue.valueOf()),
+        customIndex:this.customIndex
       });
       this.$router.push({
         name: "home",
@@ -320,7 +324,7 @@ export default {
       this.removeCountdownDay(index);
     },
     onClockMenuClick(e, index) {
-      this.removeClock(index);
+      this.removeClock(index,1);
     },
   },
 };
@@ -381,6 +385,7 @@ export default {
   height: 5em;
   width: 8em;
   justify-content: space-between;
+
   button {
     width: 6em;
   }
@@ -395,5 +400,8 @@ export default {
   display: flex;
   flex-direction: column;
   margin-top: -0.5em;
+}
+.ant-picker-header{
+  -webkit-app-region: no-drag;
 }
 </style>

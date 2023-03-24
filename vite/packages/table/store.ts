@@ -127,9 +127,7 @@ export const tableStore = defineStore(
         countdownDay: [],
         appDate: {},
         clockEvent: [],
-        customComponents: [{name:'SmallCPUCard',id:12},{name:'SmallGPUCard',id:34},
-          {name:'CPUFourCard',id:6},{name:'CPULineChart',id:0},{name:'Music',id:1},
-          {name:'Weather',id:2},{name:'Timer',id:3}],
+        customComponents: [],
         aidaData:null,
 
       };
@@ -141,21 +139,57 @@ export const tableStore = defineStore(
       },
       setAppDate(value) {
         this.appDate = value;
+
       },
 
       addCountdownDay(value) {
         this.countdownDay.push(value);
-
+        console.log(this.countdownDay)
+        this.sortCountdown()
         //   this.saveCountdownDay();
+      },
+      sortCountdown() {
+        this.countdownDay.sort((v1, v2) => {
+          let value1 = v1.dateValue;
+          let value2 = v2.dateValue;
+          if (value1.year === value2.year) {
+            if(value1.month === value2.month)return value1.day - value2.day;
+            return value1.month - value2.month;
+          }
+          return value1.year - value2.year;
+        });
+        const a = this.countdownDay.filter((value) => {
+          return (
+            value.dateValue.year > this.appDate.year ||
+            (value.dateValue.year === this.appDate.year &&
+              value.dateValue.month >= this.appDate.month)|| (value.dateValue.year === this.appDate.year &&
+              value.dateValue.day >= this.appDate.day&&value.dateValue.month === this.appDate.month)
+          );
+        });
+
+        if (a.length !== 0)
+          this.countdownDay = [...a, ...this.countdownDay.slice(0, -a.countdownDay)];
       },
       removeCountdownDay(index) {
         this.countdownDay.splice(index, 1);
       },
       addClock(value) {
         this.clockEvent.push(value);
-        this.sortClock();
+        // if(this.clockEvent[this.clockEvent.length-1].clockType==='每天'&&this.clockEvent[this.clockEvent.length-1].dateValue.dateValue.hours===this.appDate.hours&&
+        //   this.clockEvent[this.clockEvent.length-1].dateValue.dateValue.minutes===this.appDate.minutes){
+        //   this.everySortClock()
+        // }else{
+          this.sortClock();
+        console.log( this.clockEvent)
+        //}
+
       },
       sortClock() {
+        for (let i = 0; i < this.clockEvent.length; i++) {
+          if(this.clockEvent[i].dateValue.hours !== this.appDate.hours &&this.clockEvent[i].flag===true||
+            this.clockEvent[i].dateValue.minutes !== this.appDate.minutes&&this.clockEvent[i].flag===true)
+            this.clockEvent[i].flag=undefined;
+        }
         this.clockEvent.sort((v1, v2) => {
           let value1 = v1.dateValue;
           let value2 = v2.dateValue;
@@ -166,36 +200,64 @@ export const tableStore = defineStore(
         });
         const a = this.clockEvent.filter((value) => {
           return (
-            value.dateValue.hours > this.appDate.hours ||
+            (value.dateValue.hours > this.appDate.hours) ||
             (value.dateValue.hours === this.appDate.hours &&
               value.dateValue.minutes >= this.appDate.minutes)
           );
         });
-
-        if (a.length !== 0)
+      const b = this.clockEvent.filter((value) => {
+        return (value.flag===true);
+      });
+if(a.length!==0)
           this.clockEvent = [...a, ...this.clockEvent.slice(0, -a.length)];
-      },
-      removeClock(index) {
-        this.clockEvent.splice(index, 1);
-      },
+        for (let i = 0; i < b.length; i++) {
+        let e = this.clockEvent.shift()
+          this.clockEvent.push(e)
+        }
 
+      },
+      removeClock(index,n) {
+        console.log(this.clockEvent)
+            if (this.clockEvent[0].clockType!=='每天'||n===1)
+            {
+              this.clockEvent.splice(index, 1);
+            }
+            else{
+              const a = this.clockEvent.shift()
+              a.flag = true;
+              this.sortClock()
+              this.clockEvent.push(a)
+
+            }
+
+      },
       addCustomComponents(value) {
         //if (this.customComponents.includes(value)) return;
-
-
+        console.log(value)
         this.customComponents.push(value);
-
       },
       removeCustomComponents(customIndex) {
+        console.log(customIndex)
         this.customComponents.splice( this.customComponents.findIndex(item=>{
           return item.id===customIndex
         }),1)
         // this.customComponents.splice(customIndex,1);
 
       },
-    },
+
 
   },
+    persist: {
+      enabled: true,
+      strategies: [{
+        // 自定义存储的 key，默认是 store.$id
+        // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
+        storage: localStorage,
+        // state 中的字段名，按组打包储存
+      }]
+    }
+  },
+
   {}
 );
 export const countDownStore = defineStore(

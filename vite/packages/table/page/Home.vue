@@ -19,7 +19,7 @@
         <component :is="item.name" :customIndex="item.id" :style="{pointerEvents:(editing?'none':'')}" :editing="editing" ></component>
         </template>
       </vuuri>
-      <AddMore style="z-index: 9999999999;"></AddMore></div>
+     </div>
   </vue-custom-scrollbar>
 
   <a-drawer
@@ -39,6 +39,12 @@
           <Icon v-if="!this.editing" style="font-size: 3em" icon="bofang"></Icon>
           <Icon v-else style="font-size: 3em;color: orange" icon="tingzhi"></Icon>
           <div><span v-if="!this.editing">调整布局</span><span v-else style="color: orange">停止调整</span></div>
+        </div>
+      </a-col>
+      <a-col>
+        <div @click="addCard" class="btn">
+          <Icon style="font-size: 3em" icon="tianjia1"></Icon>
+          <div><span>添加卡片</span></div>
         </div>
       </a-col>
     </a-row>
@@ -112,14 +118,15 @@ export default {
   created() {
    this.timer= setInterval(()=>{
       readAida64().then(res => {
-        Object.keys(res).reduce((newData, key) => {
-          if (key==="TCPUDIO") res.TCPUPKG = res[key]
-          if (key==="TGPUDIO") res.TGPU1DIO = res[key]
-          return newData;
-        }, {});
+        Object.keys(res).map(i => {
+          if (i==="TCPUDIO") res.TCPUPKG = res[i]
+          if (i==="TGPUDIO") res.TGPU1DIO = res[i]
+        });
         this.setAidaData(res)
-        console.log(res)
+       // console.log(res)
         //this.data=JSON.stringify(res, null, '\t')
+      }).catch(err=> {
+        clearInterval(this.timer)
       })
     },1000)
   },
@@ -130,6 +137,9 @@ export default {
   },
   methods: {
     ...mapActions(tableStore, ["setAidaData"]),
+    addCard() {
+      this.$router.push({ name: "addCard" });
+    },
     showMenu () {
       this.menuVisible = true
     },

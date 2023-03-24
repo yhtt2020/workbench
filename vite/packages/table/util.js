@@ -136,7 +136,7 @@ export function filterObjKeys(obj1, obj2) {
 }
 
 export  function netWorkDownUp(obj){
-  const a = {down:"-",up:"-"}
+  const a = {down:0,up:0}
   Object.keys(obj).map(i => {
     if (i.includes('SNIC')&&obj[i].value!=='0.0') {
       if(obj[i].label.includes('Down')&&obj[i].label.includes('Rate')) a.down = obj[i].value

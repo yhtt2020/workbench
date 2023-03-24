@@ -9,7 +9,7 @@
         </div>
           <span style="font-weight:700">{{CPUData.SCPUUTI.value}}%</span></div>
       </div>
-      <div id="cpu" class="echarts"></div>
+      <div id="cpu" ref="cpuChart" class="echarts"></div>
 
       <div class="cpu" style="margin-top: .5em">
         <div class="cpu-number">
@@ -19,7 +19,7 @@
           </div>
           <span style="font-weight:700">{{CPUData.SGPU1UTI.value}}%</span></div>
       </div>
-      <div id="gpu" class="echarts"></div>
+      <div id="gpu" ref="gpuChart"  class="echarts"></div>
 
       <div class="cpu" style="margin-top: .5em">
         <div class="cpu-number">
@@ -108,8 +108,8 @@ export default {
       },
       CPUList:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
       GPUList:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-      down:'-',
-      up:'-'
+      down:0,
+      up:0
     }
   },
 
@@ -133,24 +133,24 @@ export default {
     "aidaData": {
       handler(newVal, oldVal) {
         filterObjKeys(this.CPUData,this.aidaData)
-        this.CPUData.SCPUUTI.value&&this.CPUList.push(this.CPUData.SCPUUTI.value)
-        this.CPUList.shift();
-        this.CPUData.SGPU1UTI.value&&this.GPUList.push(this.CPUData.SGPU1UTI.value)
-        this.GPUList.shift();
-
-
+        if(this.CPUData.SCPUUTI.value!=="-") {
+        this.CPUList.push(this.CPUData.SCPUUTI.value)
+        this.CPUList.shift();}
+        if(this.CPUData.SGPU1UTI.value!=="-") {
+         this.GPUList.push(this.CPUData.SGPU1UTI.value)
+         this.GPUList.shift();
+         }
         const {down,up} =  netWorkDownUp(this.aidaData)
         this.down = down
         this.up = up
-
-      this.CPUEcharts()
+        this.CPUEcharts()
       },
       deep: true,
     },
   },
   methods:{
     CPUEcharts() {
-      let myChart = echarts.init(document.getElementById("cpu"),'dark');
+      let myChart = echarts.init(this.$refs.cpuChart);
       myChart.setOption({
         title: {
           text: ''
@@ -218,7 +218,7 @@ export default {
           },
         ]
       })
-    let myGpuChart = echarts.init(document.getElementById("gpu"),'dark');
+    let myGpuChart = echarts.init(this.$refs.gpuChart);
     myGpuChart.setOption({
       animation:false,
       title: {

@@ -7,7 +7,7 @@
     <div class="right-title" @click.stop="showDrawer">
       <Icon icon="gengduo1" class="title-icon" style="cursor:pointer"></Icon>
     </div>
-    <slot></slot>
+    <slot :customIndex="customIndex"></slot>
   </div>
   <a-drawer
     :contentWrapperStyle="{ padding:10,marginLeft:'2.5%',
@@ -24,7 +24,7 @@
       <div class="option" @click="onSetup">
         <Icon class="icon" icon="shezhi1"></Icon>设置
       </div>
-      <div class="option" @click="removeClock">
+      <div class="option" @click="removeCard">
         <Icon class="icon" icon="guanbi2"></Icon>删除
       </div>
     </div>
@@ -32,13 +32,17 @@
 </template>
 
 <script>
+import {mapActions} from "pinia";
+import {tableStore} from "../../store";
+
 export default {
   data(){
     return {
       visible:false,
     }
   },
-  name: "SupervisorySlot",
+  name: "HomeComponentSlot",
+
   props:{
     options: {
       type: Object,
@@ -47,14 +51,36 @@ export default {
     editing:{
       type:Boolean,
       default:false
+    },
+    customIndex:{
+      type:Number,
+      default:0
     }
   },
   methods:{
+    ...mapActions(tableStore, ["removeCustomComponents"]),
     showDrawer()  {
       this.visible = true;
     },
     onClose() {
       this.visible = false;
+    },
+    removeCard(){
+      this.removeCustomComponents(this.customIndex)
+      this.visible = false;
+    },
+    onSetup(){
+      switch (this.options.title){
+        case "倒数日":
+          this.$router.push({
+            name: "addCardSetting",
+            params: {
+              name: 'countdownDay',
+              cname: '倒数日',
+            },
+          });break;
+      }
+
     },
   }
 }
@@ -65,7 +91,7 @@ export default {
   max-height:30em;
   border-radius: 8px;
   vertical-align: text-top;
-  background:  linear-gradient(#2B2B2B, #3E3E3E);
+
   width: 20em;
   min-width: 20em;
   display: inline-block;
@@ -86,7 +112,7 @@ export default {
     width: 35%;
     align-items: center;
     left: 13px;
-    top: 0.5em;
+    top: 8px;
 
     .title-icon{
       width: 18px;
@@ -101,7 +127,7 @@ export default {
     align-items: center;
     display: flex;
     right: 13px;
-    top: 1em;
+    top: 8px;
     .title-icon{
       width: 1.5em;
       height: 1.5em;

@@ -17,7 +17,13 @@
 
     <div style="margin-left: 13px"><span>{{CPUGPUData.SRTSSFPS.value}}</span>
       <span>
-      <Icon icon="youxishoubing" class="icon"></Icon>FPS</span></div>
+      <Icon icon="youxishoubing" class="icon"></Icon><span style="position: relative">FPS
+        <a-tooltip v-if="CPUGPUData.SRTSSFPS.value==0">
+    <template #title>需要游戏运行在前台且打开RTSS方可读取到</template>
+    <Icon icon="tishi-xianxing" style="height: 10px;width: 10px;position: absolute;top: 0;right: -17px"></Icon>
+  </a-tooltip></span>
+       </span>
+    </div>
     <div>
       <div>
         <Icon icon="xiazai" class="icon" style="color: #5CBBFF;"></Icon>
@@ -54,8 +60,8 @@ export default {
         SMEMUTI:{value:"-"},
         SRTSSFPS:{value:"-"},
       },
-      down:'-',
-      up:'-'
+      down:0,
+      up:0
   }
   },
   components:{

@@ -30,7 +30,7 @@
       }"/>
 
         <div>CPU</div>
-        <canvas id='myCPUCanvas' style='width:130px;height:40px'> </canvas>
+        <canvas id='myCPUCanvas' ref="myCPUCanvas"  style='width:130px;height:40px'> </canvas>
 
       </div>
     </div>
@@ -78,7 +78,7 @@ export default {
   },
   methods:{
     initCanvas() {
-      let canvas = document.getElementById('myCPUCanvas');
+      let canvas = this.$refs.myCPUCanvas;
       let ctx = canvas.getContext('2d');
       let x = 0;
       this.CPUList.forEach((i,index) => {

@@ -30,7 +30,7 @@
       }"/>
 
         <div>GPU</div>
-        <canvas id='myGPUCanvas' style='width:130px;height:40px'> </canvas>
+        <canvas id='myGPUCanvas' ref="myGPUCanvas" style='width:130px;height:40px'> </canvas>
       </div>
     </div>
   </SupervisorySlot>
@@ -69,6 +69,14 @@ export default {
     "aidaData": {
       handler(newVal, oldVal) {
         filterObjKeys(this.GPUData,this.aidaData)
+
+        if(this.GPUData.TGPU1DIO.value==="-"){
+          for (let i = 0; i <Object.keys(this.aidaData).length ; i++) {
+            if(Object.keys(this.aidaData)[i]==="TCPUGTC")
+              this.GPUData.TGPU1DIO.value=this.aidaData.TCPUGTC.value
+          }
+        }
+
         this.GPUData.SGPU1UTI.value&& this.GPUList.push(this.GPUData.SGPU1UTI.value)
         this.GPUList.shift();
         this.initCanvas()
@@ -78,7 +86,7 @@ export default {
   },
   methods:{
     initCanvas() {
-      let canvas = document.getElementById('myGPUCanvas');
+      let canvas = this.$refs.myGPUCanvas
       let ctx = canvas.getContext('2d');
       let x = 0;
       this.GPUList.forEach((i,index) => {

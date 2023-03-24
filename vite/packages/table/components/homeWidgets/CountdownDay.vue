@@ -1,30 +1,12 @@
 <template>
-  <div class="card content" style="display: flex;flex-direction: column;justify-content: space-between;padding: 8em 0;align-items: center" v-if="countdownDay.length <= 0">
-    <Icon
-      style="width: 2em; height: 2em;cursor:pointer"
-      icon="gengduo1"
-      class="title-icon"
-      @click="showDrawer"
-    ></Icon>
-
+  <HomeComponentSlot :options="options" :customIndex="customIndex">
+    <div class="content" style="display: flex;flex-direction: column;justify-content: space-between;padding: 8em 0;align-items: center" v-if="countdownDay.length <= 0">
     <a-empty :description="null" :image="simpleImage" />
-    <a-button type="primary" style="background: #676767;border: none;width: 30%" @click="onSetup">立即添加</a-button>
-  </div>
-  <div class="card content" v-else>
+    <a-button type="primary" style="background: #676767;border: none;width: 40%" @click="onSetup">立即添加</a-button>
+    </div>
+    <div class="content" v-else>
     <div style="border-bottom: 1px solid #777777">
-      <div style="font-size: 1.5em">
-        <Icon
-          icon="rili2"
-          style="height: 1.3em; width: 1.3em; margin-right: 0.1em"
-        ></Icon>
-        倒数日
-        <Icon
-          style="width: 1em; height: 1em;cursor:pointer"
-          icon="gengduo1"
-          class="title-icon"
-          @click="showDrawer"
-        ></Icon>
-      </div>
+
     </div>
     <div
       class="event-list"
@@ -34,60 +16,64 @@
       <div class="event-title">
         <span class="text-more">{{ item.eventValue }}</span>
         <span class="event"
-          >{{ item.dateValue.year }}年{{ item.dateValue.month }}月{{
+        >{{ item.dateValue.year }}年{{ item.dateValue.month }}月{{
             item.dateValue.day
           }}日</span
         >
       </div>
       <span
-        >{{
+      >{{
           transDate(
             appDate.year + "-" + appDate.month + "-" + appDate.day,
             item.dateValue.year +
-              "-" +
-              item.dateValue.month +
-              "-" +
-              item.dateValue.day
+            "-" +
+            item.dateValue.month +
+            "-" +
+            item.dateValue.day
           )
         }}天</span
       >
     </div>
   </div>
-  <a-drawer
-    :contentWrapperStyle="{ padding:10,marginLeft:'2.5%',
-    backgroundColor:'#1F1F1F',width: '95%',height:'11em',borderRadius:'5%'}"
-    :width="120"
-    :height="120"
-    class="drawer"
-    :closable="false"
-    placement="bottom"
-    :visible="visible"
-    @close="onClose"
-  >
-    <div style="display: flex;flex-direction: row;height: 100%"><div class="option" style="margin: 0" @click="onSetup"><Icon
-      style="
-        width: 3em;
-        height: 3em;
-        vertical-align: middle;
-      "
-      icon="shezhi1"
-    ></Icon>设置</div>
-      <div class="option" @click="removeCountdownDay"><Icon
-        style="
-        width: 3em;
-        height: 3em;
-        vertical-align: middle;
-      "
-        icon="guanbi2"
-      ></Icon>删除</div></div>
+  </HomeComponentSlot>
 
-  </a-drawer>
+
+<!--  <a-drawer-->
+<!--    :contentWrapperStyle="{ padding:10,marginLeft:'2.5%',-->
+<!--    backgroundColor:'#1F1F1F',width: '95%',height:'11em',borderRadius:'5%'}"-->
+<!--    :width="120"-->
+<!--    :height="120"-->
+<!--    class="drawer"-->
+<!--    :closable="false"-->
+<!--    placement="bottom"-->
+<!--    :visible="visible"-->
+<!--    @close="onClose"-->
+<!--  >-->
+<!--    <div style="display: flex;flex-direction: row;height: 100%"><div class="option" style="margin: 0" @click="onSetup"><Icon-->
+<!--      style="-->
+<!--        width: 3em;-->
+<!--        height: 3em;-->
+<!--        vertical-align: middle;-->
+<!--      "-->
+<!--      icon="shezhi1"-->
+<!--    ></Icon>设置</div>-->
+<!--      <div class="option" @click="removeCountdownDay"><Icon-->
+<!--        style="-->
+<!--        width: 3em;-->
+<!--        height: 3em;-->
+<!--        vertical-align: middle;-->
+<!--      "-->
+<!--        icon="guanbi2"-->
+<!--      ></Icon>删除</div></div>-->
+
+<!--  </a-drawer>-->
 </template>
 
 <script>
 import {mapActions, mapWritableState} from "pinia";
 import { tableStore } from "../../store";
 import { transDate } from "../../../../src/util/dateTime";
+import HomeComponentSlot from "./HomeComponentSlot.vue";
 export default {
   name: "CountdownDay",
   props:{
@@ -96,11 +82,19 @@ export default {
       default:0
     }
   },
+  components:{
+    HomeComponentSlot
+  },
   data() {
     return {
+      options:{
+        className:'card',
+        title:'倒数日',
+        icon:'rili2'
+      },
       status: "pause",
       value: null,
-      visible:false
+      visible:false,
     };
   },
   computed: {
@@ -144,7 +138,7 @@ export default {
   }
 }
 .event-list {
-  width: 17em;
+  width: 100%;
 
   display: flex;
   padding: 0.2em 0.5em;
