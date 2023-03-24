@@ -38,6 +38,7 @@ class Watch extends Base {
       console.log(args, '接收到启动任务的命令')
       let task = args
       this.runTask(task, {
+        background:true,
         additionalArguments: ['--task-id=' + task.nanoid]
       }).then(async () => {
         await taskModel.startTask(task.nanoid) //修改数据库
@@ -166,6 +167,7 @@ class Watch extends Base {
     // window.setMenu(null)
     // window.webContents.openDevTools()
     taskInstance.task=task
+    await taskModel.update(task.nanoid, { last_execute_time: Date.now() })
     this.taskInstances.push(taskInstance)
 
   }

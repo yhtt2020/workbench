@@ -18,6 +18,7 @@ class WatchTaskModel {
         t.string('type')//数据类型， start interval timeout
         t.string('data')//抓取到的数据 失败则写失败原因
         t.string('status')//失败error 成功不写值
+        t.string('key')
       })
       //await this.migrateDB()
       //todo 迁移
@@ -32,17 +33,23 @@ class WatchTaskModel {
     await this.db.knex('task').where({nanoid:taskId}).update({last_execute_time:Date.now(),last_data:JSON.stringify(data)})
   }
 
-  async add (taskId, data,type) {
+  async add (taskId, data,type,key) {
     if(type==='start'){
       //只更新start，不更新interval
       this.updateLastExecute(taskId,data).then()
+    }
+    if(key){
+      await this.db.knex('data').where({task_id:taskId,key:key}).del()
+    }else{
+      key=null
     }
     return await this.db.knex('data').insert({
       nanoid: nanoid(8),
       task_id: taskId,
       grab_time: Date.now(),
       data: JSON.stringify(data),
-      type
+      type,
+      key
     })
 
   }

@@ -1,7 +1,7 @@
 let $ = require('cash-dom')
 const { TaskHandler, utils } = require('./base')
 const clean = utils.clean
-if(!window.location.href.endsWith('iframe.html')){
+if (!window.location.href.endsWith('iframe.html')) {
   //因为B站还会加载一个frame，这个是不需要注入代码的
   function getData () {
     //标题
@@ -24,8 +24,7 @@ if(!window.location.href.endsWith('iframe.html')){
     //收藏
     let collect = $('.video-toolbar-v1 .collect .info-text').text()
 
-    let share=$('.share-wrap .info-text').text()
-
+    let share = $('.share-wrap .info-text').text()
 
     //封面
     let cover = $('head meta[itemprop=image]').attr('content').replace('@100w_100h_1c.png', '')
@@ -40,6 +39,7 @@ if(!window.location.href.endsWith('iframe.html')){
     //评论数
     let totalReply = $('.total-reply').text()
 
+    let duration = $('.bpx-player-ctrl-time-duration').text()
 
     //拼装作者
     let author = {
@@ -56,6 +56,7 @@ if(!window.location.href.endsWith('iframe.html')){
       like,
       coin,
       share,
+      duration,
       collect,
       totalReply,
       cover,
@@ -66,6 +67,8 @@ if(!window.location.href.endsWith('iframe.html')){
     return data
   }
 
+  let doGrab = null
+  let getOnline = null
   window.taskHandler = new TaskHandler({
     test: () => {
       try {
@@ -80,16 +83,38 @@ if(!window.location.href.endsWith('iframe.html')){
       }
 
     },
-    timeouts:[
+    timeouts: [
       {
-        fn:()=>{
+        fn: () => {
           //自动清理掉无用的视频部分，以提升性能
-          $('video').remove()
-
-          let data=getData()
-          return data
+          //$('video').remove()
+          if(doGrab){
+            doGrab()
+          }
         },
-        timeout:5000
+        timeout: 5000
+      },
+      {
+        fn: () => {
+          let timer = setInterval(() => {
+            try {
+              $('video').remove()
+              // $('html').on('keydown',"body",()=>{
+              // })
+              // let e=new Event('keydown')
+              // e.keyCode=40
+              // $('html body').trigger(e)
+              // console.log('模拟视频点击成功')
+              // //clearInterval(timer)
+            } catch (e) {
+              console.log(e)
+              console.log('视频还不存在，无法删除')
+            }
+          }, 1000)
+          //$('.bpx-player-row-dm-wrap').remove()
+
+        },
+        timeout: 200
       }
     ],
     start: () => {
@@ -103,14 +128,24 @@ if(!window.location.href.endsWith('iframe.html')){
     intervals: [
       {
         fn: () => {
-          let online = $('.bpx-player-video-info-online b').text()
-          return { online: online }
+          if(getOnline){
+            getOnline()
+          }
         },
         interval: 10 * 1000
       }
     ]
 
   })
+
+  doGrab = () => {
+    let data = getData()
+    window.taskHandler.saveData(data, 'timeout', '').then(r => {})
+  }
+  getOnline = () => {
+    let online = $('.bpx-player-video-info-online b').text()
+    window.taskHandler.saveData({ online: online }, 'interval', 'online').then(r => {})
+  }
   taskHandler.init()
 }
 

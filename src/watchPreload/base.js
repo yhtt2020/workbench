@@ -28,10 +28,15 @@ class TaskHandler {
 
   }
 
-  async saveData (data, type) {
+  async saveData (data, type,key) {
+    if(!data){
+      console.warn('data为空，不存储')
+      return
+    }
     console.log('欣然收下采集到的数据', data)
+
     if (data) {
-      await dataModel.add(this.taskId, data, type)
+      await dataModel.add(this.taskId, data, type,key)
     } else {
       await dataModel.addError(this.taskId, {}, type)
     }

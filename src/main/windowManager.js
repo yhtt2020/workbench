@@ -8,7 +8,25 @@ const SettingModel=require('../model/settingModel.js')
 const _ = require('lodash')
 
 let settingModel
-
+const  DEFAULT_WEB_PREFERENCE = {
+  nodeIntegration: false,
+  nodeIntegrationInSubFrames: true,
+  scrollBounce: true,
+  safeDialogs: true,
+  safeDialogsMessage: '阻止此页面弹窗',
+  preload: path.join(__dirname, 'src/browserApi/apiPreload.js'),
+  contextIsolation: true,
+  sandbox: true,
+  backgroundColor: '#2e2c29',
+  acceptFirstMouse: true,
+  enableRemoteModule: false,
+  allowPopups: false,
+  // partition: partition || 'persist:webcontent',
+  enableWebSQL: false,
+  autoplayPolicy: ((settings.get('enableAutoplay') || settings.get('enableAutoplay') === undefined) ? 'no-user-gesture-required' : 'user-gesture-required'),
+  // match Chrome's default for anti-fingerprinting purposes (Electron defaults to 0)
+  minimumFontSize: 6
+}
 class BrowserViewHandler{
   asyncCallbacks
   view
@@ -240,25 +258,7 @@ class WindowManager {
     hasShadow:true,
     show:false
   }
-  defaultWebPreferences = {
-    nodeIntegration: false,
-    nodeIntegrationInSubFrames: true,
-    scrollBounce: true,
-    safeDialogs: true,
-    safeDialogsMessage: '阻止此页面弹窗',
-    preload: path.join(__dirname, 'src/browserApi/apiPreload.js'),
-    contextIsolation: true,
-    sandbox: true,
-    backgroundColor: '#2e2c29',
-    acceptFirstMouse: true,
-    enableRemoteModule: false,
-    allowPopups: false,
-    // partition: partition || 'persist:webcontent',
-    enableWebSQL: false,
-    autoplayPolicy: ((settings.get('enableAutoplay') || settings.get('enableAutoplay') === undefined) ? 'no-user-gesture-required' : 'user-gesture-required'),
-    // match Chrome's default for anti-fingerprinting purposes (Electron defaults to 0)
-    minimumFontSize: 6
-  }
+
   MOD = {
     WITH_CONTROLLER: 1,
     NO_CONTROLLER: 2,
@@ -334,7 +334,7 @@ class WindowManager {
     } = options
     let webContents
     if (webPreferences)
-      webPreferences =Object.assign( _.cloneDeep(this.defaultWebPreferences), webPreferences)
+      webPreferences =Object.assign( _.cloneDeep(DEFAULT_WEB_PREFERENCE), webPreferences)
     this.optionMap[name] = name
     let instance
 
@@ -345,7 +345,7 @@ class WindowManager {
       additionalArguments=_.cloneDeep(webPreferences.additionalArguments)
     }
 
-    windowOption = Object.assign(_.cloneDeep(this.defaultWindowPreferences), windowOption)
+    windowOption = Object.assign(_.cloneDeep(DEFAULT_WEB_PREFERENCE), windowOption)
     windowOption.webPreferences.additionalArguments =[
       '--user-data-path=' + userDataPath,
       '--app-version=' + app.getVersion(),
@@ -450,13 +450,13 @@ class WindowManager {
       defaultBounds,
       onDomReady
     } = options
-    frameWebPreferences =Object.assign( _.cloneDeep(this.defaultWebPreferences), frameWebPreferences)
+    frameWebPreferences =Object.assign( _.cloneDeep(DEFAULT_WEB_PREFERENCE), frameWebPreferences)
     frameWebPreferences.webSecurity=false
     if (frameWebPreferences) {
       windowOption.webPreferences = frameWebPreferences
     }
 
-    windowOption =  Object.assign(_.cloneDeep(this.defaultWindowPreferences), windowOption)
+    windowOption =  Object.assign(_.cloneDeep(DEFAULT_WEB_PREFERENCE), windowOption)
     let appWindow = new BrowserWindow(windowOption)
     appWindow.on('ready-to-show', () => {
       if (onReadyToShow) {

@@ -44,36 +44,40 @@
             <a-col :md="5">
               <img class="cover" :src="data.cover+'@320w_200h'">
             </a-col>
-            <a-col :md="14">
+            <a-col :md="16">
               <div class="mb-2" style="color:#999">任务：{{ task.title }} &nbsp; &nbsp;{{
                   data.pudate || '-'
                 }}
               </div>
               <div>
-                <a-row class="text-l" :gutter="10">
-                  <a-col :span="4">
-                    <Icon icon="bofang"></Icon>
-                    {{ format(data.view) }}
+                <a-row class="text-l" :gutter="[10,10]">
+                  <a-col :span="6">
+                    <Icon title="播放" icon="bofang"></Icon>
+                    {{ format(data.viewText) }}
                   </a-col>
-                  <a-col :span="4">
-                    <Icon icon="dianzan"></Icon>
+                  <a-col :span="6">
+                    <Icon title="点赞" icon="dianzan"></Icon>
                     {{ format(data.like) }}
                   </a-col>
-                  <a-col :span="4">
-                    <Icon icon="jinbi"></Icon>
+                  <a-col :span="6">
+                    <Icon title="投币" icon="jinbi"></Icon>
                     {{ format(data.coin) }}
                   </a-col>
-                  <a-col :span="4">
-                    <Icon icon="jinbi"></Icon>
+                  <a-col :span="6">
+                    <Icon title="收藏" icon="shoucang"></Icon>
+                    {{ format(data.collect) }}
+                  </a-col>
+                  <a-col :span="6">
+                    <Icon title="评论" icon="xiaoxi"></Icon>
                     {{ format(data.totalReply) }}
                   </a-col>
-                  <a-col :span="4">
-                    <Icon icon="star"></Icon>
+                  <a-col :span="6">
+                    <Icon title="弹幕" icon="shouqi"></Icon>
                     {{ format(data.dm) }}
                   </a-col>
-                  <a-col :span="4">
-                    <Icon icon="jinbi"></Icon>
-                    {{ format(data.collect) }}
+                  <a-col :span="6">
+                    <Icon title="转发" icon="fenxiang"></Icon>
+                    {{ format(data.share) }}
                   </a-col>
                 </a-row>
               </div>
@@ -345,7 +349,7 @@ import BackBtn from '../../../components/comp/BackBtn.vue'
 import dataHelper from '../../../js/watch/dataHelper'
 import Arrow from '../../../components/watch/Arrow.vue'
 import bili from '../../../js/watch/bili'
-
+import { formatSeconds } from '../../../util'
 export default {
   name: 'Dashboard',
   components: { Arrow, BackBtn },
@@ -368,7 +372,9 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
+      updateExecutedTimer:null
     }
+
   },
   mounted () {
     tableApi.watch.getTask({ nanoid: this.$route.params['nanoid'] }).then(task => {
@@ -377,8 +383,18 @@ export default {
       this.stage = this.guessStage(task.data.view)
       console.log(task)
     })
+    this.updateExecutedTimer=setInterval(()=>{
+      this.updateExecutedTime()
+    },1000)
+  },
+  unmounted () {
+    clearInterval(this.updateExecutedTimer)
   },
   methods: {
+    updateExecutedTime(){
+      this.task.executed_time_until_now=this.formatSeconds((Date.now()-this.task.last_execute_time)/1000)
+    },
+    formatSeconds:formatSeconds,
     format:dataHelper.format,
     getRate: dataHelper.getRate,
 

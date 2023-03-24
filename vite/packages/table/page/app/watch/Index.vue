@@ -20,7 +20,7 @@
                     <div class="text-more text-base mb-4 text-left">
                       <!--               <a-avatar :src="item.task.icon"></a-avatar> -->
                       <Icon icon="bilibili" style="font-size: 20px;vertical-align: text-top"></Icon>
-                      {{ item.title || '-' }}
+                      {{ item.title || '-' }} <span style="float:right"><Icon icon="shijian"></icon> {{formatSeconds(item.interval)}}</span>
                     </div>
                     <div class="mb-3">
                       <a-row>
@@ -85,7 +85,7 @@
                           {{ item.executed_times }}次
                         </a-col>
                         <a-col :span="12">
-                          1小时32分钟<br>
+                          {{ item.executed_time_until_now }}<br>
                           <div v-if=" item.last_execute_info">
                             {{ friendlyDate(item.last_execute_info.grab_time) }} 更新
                           </div>
@@ -124,7 +124,7 @@
                     <div class="text-more text-base mb-4 text-left">
                       <!--               <a-avatar :src="item.task.icon"></a-avatar> -->
                       <Icon icon="bilibili" style="font-size: 20px;vertical-align: text-top"></Icon>
-                      {{ item.title }}
+                      {{ item.title }} <span style="float:right"><Icon icon="shijian"></icon> {{formatSeconds(item.interval)}}</span>
                     </div>
                     <div class="mb-3">
                       <a-row>
@@ -321,6 +321,7 @@ import Vuuri from '../../../components/vuuri/Vuuri.vue'
 import Widget from '../../../components/muuri/Widget.vue'
 import bili from '../../../js/watch/bili'
 import BiliStage from '../../../components/watch/BiliStage.vue'
+import { formatSeconds } from '../../../util'
 
 const runningTasks = [
   {
@@ -397,19 +398,32 @@ export default {
       runningTasks: [],//运行中的任务，需要单独一个数组，不然回被影响到
       stoppedTasks: [],//停止的任务，这些任务都是要刷新分类的
 
+      updateExecutedTimer:null,
+
       taskIntervals: {}//任务自动刷新数据的interval 用于更新数据 ,id=>timer
+
     }
   },
   computed: {},
   mounted () {
     this.loadAllTasks().then()
     this.setUpTaskUpdateHandler()//挂载状态更新器
+    this.updateExecutedTimer=setInterval(()=>{
+      this.updateExecutedTime()
+    },1000)
   },
   unmounted () {
     tableApi.watch.setTaskUpdateHandler(null)//卸载处理器，防止不在这个页面上也执行这个处理方法
     this.cleanTaskIntervals()
+    clearInterval(this.updateExecutedTimer)
   },
   methods: {
+    updateExecutedTime(){
+      this.runningTasks.forEach(task=>{
+        task.executed_time_until_now=this.formatSeconds((Date.now()-task.last_execute_time)/1000)
+      })
+    },
+    formatSeconds:formatSeconds,
     friendlyDate (time) {
       return tsbApi.util.friendlyDate(time)
     },
@@ -442,6 +456,7 @@ export default {
       this.sortTasks()
     },
     startTask (task) {
+      task.last_execute_time=Date.now()
       tableApi.watch.startTask(task)
     },
     stopTask (task) {
