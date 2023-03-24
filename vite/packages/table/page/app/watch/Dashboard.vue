@@ -37,15 +37,14 @@
         </a-col>
       </a-row>
     </div>
-    <vue-custom-scrollbar :settings="outerSettings" style="position:relative;height:calc(100vh - 14em);  ">
+    <vue-custom-scrollbar :settings="outerSettings" style="position:relative;height:calc(100vh - 18em);  ">
       <div style="max-width: 900px;margin:auto">
         <div class="p-3">
           <a-row class="mb-5" :gutter="[20,10]">
             <a-col :md="5">
               <img class="cover" :src="data.cover+'@320w_200h'">
             </a-col>
-            <a-col :md="11">
-
+            <a-col :md="14">
               <div class="mb-2" style="color:#999">任务：{{ task.title }} &nbsp; &nbsp;{{
                   data.pudate || '-'
                 }}
@@ -368,6 +367,10 @@ export default {
   },
   methods: {
     format(num){
+      if(String(num).indexOf('万')>-1){
+        //已经是格式化文本
+        return num
+      }
       if(Number(num)>0){
         return (Number(num)).toLocaleString()
       }else{
