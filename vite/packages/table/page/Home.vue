@@ -115,6 +115,13 @@ export default {
     ...mapWritableState(tableStore, ["customComponents", "clockEvent"]),
     ...mapWritableState(tableStore, ["aidaData"]),
   },
+  mounted () {
+    if(this.customComponents.length>0){
+      if( typeof this.customComponents[0] ==='string'){
+        this.customComponents=[]
+      }
+    }
+  },
   created() {
    this.timer= setInterval(()=>{
       readAida64().then(res => {
