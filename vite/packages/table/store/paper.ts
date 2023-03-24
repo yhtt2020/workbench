@@ -22,14 +22,15 @@ export const paperStore = defineStore('paper', {
     settings: DEFAULT_PAPERS_SETTINGS,
     tipLock: true,//在状态栏提示还有多久进入锁屏
     lockTimeout: 300,
-    wallHeavenList:[] // wallheaven数据
   }),
   actions:{
     /**
      * 添加到我的壁纸
      * @param image
      */
-    addToMyPaper(image) {
+    addToMyPaper(image: { src: any; }) {
+      console.log(image);
+      
       let found = this.myPapers.findIndex(img => {
         if (img.src === image.src)
           return true
@@ -61,6 +62,11 @@ export const paperStore = defineStore('paper', {
     //   this.wallHeavenList.push(data)
     //   console.log(this.wallHeavenList);
     // },
+
+    // 将第一次选中的目录文件保存
+    saveFirstPath(path: any){
+      this.selectPath = path
+    }
   },
   persist: {
     enabled: true,

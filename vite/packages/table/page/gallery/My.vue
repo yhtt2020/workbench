@@ -19,7 +19,7 @@
     <viewer :images="myPapers">
       <a-row :gutter="[20,20]" id="bingImages" style="margin-right: 1em">
         <a-col @click="this.visibleImport=true" class="image-wrapper " :span="6" style="">
-          <a-avatar    class="image-item pointer"   style="font-size:2em;position: relative;line-height:118px;height: 118px;background: rgba(10,10,10,0.31)">
+          <a-avatar    class="image-item pointer"   style="font-size:2em;position: relative;line-height:144.2px;height: 144.2px;background: rgba(10,10,10,0.31)">
             <Icon  style="font-size: 1.3em;vertical-align: text-bottom" icon="tianjiawenjianjia"></Icon> 导入
           </a-avatar>
         </a-col>
@@ -143,7 +143,11 @@ export default {
         progress: false,
         title: false
       })
-    }
+    },
+    // 下载壁纸
+    add(){
+      
+    },
   }
 }
 </script>
