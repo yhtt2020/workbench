@@ -206,9 +206,9 @@ export default {
 
 @media screen and (max-height: 1021px) {
   #scrollerBar {
-    height: 460px;
+    height: 438px;
     .grid {
-      height: 450px;
+      height: 438px;
     }
   }
 }
