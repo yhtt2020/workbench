@@ -181,14 +181,15 @@ export default {
     transform: translateX(-50%) translateY(-50%);
 
     text-align: center;
-
-
+    display: flex;
+    align-items: center;
+    justify-content: center;
     .btn {
       background: transparent;
-      width: 100%;
+      width: 300px;
       display: flex;
       justify-content: space-evenly;
-      padding: 0 200px;
+
     }
   }
 }

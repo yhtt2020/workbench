@@ -1,7 +1,7 @@
 <template>
   <SupervisorySlot :options="options">
     <div class="content">
-      <div class="cpu" style="margin-top: 0">
+      <div class="cpu" style="margin-top: 4px">
         <div class="cpu-number">
           <div>
           <Icon icon="CPU" class="icon"></Icon>
