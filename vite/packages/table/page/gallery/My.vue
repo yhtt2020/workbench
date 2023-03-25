@@ -16,7 +16,7 @@
   </div>
   <div>
     <vue-custom-scrollbar  id="containerWrapper" :settings="settingsScroller" style="height: 80vh">
-    <viewer :images="myPapers">
+     <viewer :images="myPapers">
       <a-row :gutter="[20,20]" id="bingImages" style="margin-right: 1em">
         <a-col @click="this.visibleImport=true" class="image-wrapper " :span="6" style="">
           <a-avatar    class="image-item pointer"   style="font-size:2em;position: relative;line-height:144.2px;height: 144.2px;background: rgba(10,10,10,0.31)">
@@ -33,7 +33,8 @@
           </div>
         </a-col>
       </a-row>
-    </viewer></vue-custom-scrollbar>
+     </viewer>
+    </vue-custom-scrollbar>
   </div>
   <a-drawer v-model:visible="visibleMenu" placement="bottom">
     <a-row :gutter="20" style="text-align: center">
@@ -49,6 +50,12 @@
           <Icon style="font-size: 3em" icon="xiazai"></Icon>
           <div>下载该壁纸</div>
         </div>
+      </a-col>
+      <a-col :span="2">
+         <div class="btn" @click="del()">
+           <Icon icon="guanbi2" style="font-size: 3em"></Icon>
+           <div>删除该壁纸</div>
+         </div>
       </a-col>
     </a-row>
   </a-drawer>
@@ -95,7 +102,6 @@ export default {
     showMenu(item){
       this.currentPaper=item
       this.visibleMenu=true
-
     },
     setDesktopPaper(){
       Modal.confirm({
@@ -108,15 +114,15 @@ export default {
       })
     },
     loadLivelyPapers(){
-      let fs=require('fs-extra')
-      let path=require('path')
-      let videos=fs.readdirSync(require('path').join(this.settings.savePath,'lively'))
-      this.livelyPapers= videos.map(v=>{
-        return {
-          src:path.join(this.settings.savePath,'lively',v),
-          srcProtocol:'file://'+path.join(this.settings.savePath,'lively',v),
-        }
-      })
+      // let fs=require('fs-extra')
+      // let path=require('path')
+      // let videos=fs.readdirSync(require('path').join(this.settings.savePath,'lively'))
+      // this.livelyPapers= videos.map(v=>{
+      //   return {
+      //     src:path.join(this.settings.savePath,'lively',v),
+      //     srcProtocol:'file://'+path.join(this.settings.savePath,'lively',v),
+      //   }
+      // })
     },
     isInActive(image){
       return this.activePapers.findIndex(img=>{
@@ -147,6 +153,13 @@ export default {
     // 下载壁纸
     add(){
       
+    },
+    // 删除壁纸
+    del(){
+      if(this.myPapers.indexOf(this.currentPaper) !== -1){
+        this.myPapers.splice(this.myPapers.indexOf(this.currentPaper),1)
+        this.visibleMenu = false
+      }
     },
   }
 }

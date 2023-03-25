@@ -22,6 +22,7 @@ export const paperStore = defineStore('paper', {
     settings: DEFAULT_PAPERS_SETTINGS,
     tipLock: true,//在状态栏提示还有多久进入锁屏
     lockTimeout: 300,
+    livePaper:[], // 我的动态壁纸收藏
   }),
   actions:{
     /**
@@ -29,11 +30,9 @@ export const paperStore = defineStore('paper', {
      * @param image
      */
     addToMyPaper(image: { src: any; }) {
-      console.log(image);
-      
       let found = this.myPapers.findIndex(img => {
         if (img.src === image.src)
-          return true
+        return true
       })
       if (found === -1) {
         this.myPapers.push(image)
@@ -57,16 +56,15 @@ export const paperStore = defineStore('paper', {
         this.activePapers.splice(found, 1)
       }
     },
+    //  添加我的动态壁纸
+    addToMyLivePaper(image){
+       
+    },
     //更改wallheaven数据
     // updateWallHeaven(data){
     //   this.wallHeavenList.push(data)
     //   console.log(this.wallHeavenList);
     // },
-
-    // 将第一次选中的目录文件保存
-    saveFirstPath(path: any){
-      this.selectPath = path
-    }
   },
   persist: {
     enabled: true,

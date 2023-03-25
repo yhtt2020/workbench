@@ -29,10 +29,12 @@
         </div>
 
         <div style="position: absolute;right: 0;top: -10px ;padding: 10px;z-index: 999">
-          <div v-if="getWidth(item)===100 && item.percent===undefined " style="" class="bottom-actions "
-          >
+          <div v-if="getWidth(item)===100 && item.percent===undefined " style="cursor: pointer;" class="bottom-actions ">
             <Icon icon="xiazai"></Icon>
           </div>
+          <!-- <div v-if="getWidth(item)!==100 && item.percent === undefined ">
+            <Icon  icon="tianjia1"></Icon>
+          </div> -->
           <div v-if="item.percent && item.percent!==100" style="padding: 10px;">
             <a-spin style="color: white"/>
           </div>
