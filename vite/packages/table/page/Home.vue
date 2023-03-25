@@ -2,7 +2,7 @@
   <div
     style="display: flex; align-items: center;flex-direction: row;justify-content: center;height: calc( 100vh - 11em)">
     <vue-custom-scrollbar key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"
-                          style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;">
+                          style="position:relative;  border-radius: 8px;">
       <div style="white-space: nowrap;">
         <!--      <div style="width: 43em;display: inline-block;" v-for="(grid,index) in customComponents">-->
         <!--        <div>-->
@@ -201,14 +201,13 @@ export default {
       height: 880px;
     }
   }
-
 }
-
 @media screen and (max-height: 1021px) {
   #scrollerBar {
-    height: 460px;
+    height: 438px;
+
     .grid {
-      height: 450px;
+      height: 438px;
     }
   }
 }
@@ -216,18 +215,73 @@ export default {
 </style>
 <style lang="scss">
 .home-widgets {
-  .muuri-item{
-    width:280px ;
+  .muuri-item {
+    width: 280px;
   }
-  .muuri-item{
+
+  .muuri-item {
     margin: 6px;
   }
+
   .card {
     border: 0;
     height: 420px;
-    &.small{
+
+    &.small {
       height: 204px;
     }
+  }
+}
+</style>
+<style lang="scss">
+@media screen and (max-height: 610px) {
+  #scrollerBar {
+    zoom: 0.88;
+    width: calc(100vw + 4em);
+  }
+}
+
+@media screen and (min-height: 610px) and (max-height: 710px) {
+  #scrollerBar {
+    zoom: 1;
+    width: calc(100vw - 9em);
+  }
+}
+@media screen and (min-height: 711px) and (max-height: 810px) {
+  #scrollerBar {
+    zoom: 1.2;
+    width: calc(100vw - 9em);
+  }
+}
+
+@media screen and (min-height: 811px) and (max-height: 910px) {
+  #scrollerBar {
+    zoom: 1.4;
+    width: calc(100vw - 9em);
+  }
+}
+@media screen and (min-height: 911px) and (max-height: 1020px) {
+  #scrollerBar {
+    zoom: 1.7;
+    width: calc(100vw - 9em);
+  }
+}
+@media screen and (min-height: 1021px) and (max-height: 1220px) {
+  #scrollerBar {
+    zoom: 1;
+    width: calc(100vw - 9em);
+  }
+}
+@media screen and (min-height: 1221px) and (max-height: 1320px) {
+  #scrollerBar {
+    zoom: 1.1;
+    width: calc(100vw - 9em);
+  }
+}
+@media screen and (min-height: 1321px) and (max-height: 2880px) {
+  #scrollerBar {
+    zoom: 1.4;
+    width: calc(100vw - 9em);
   }
 }
 </style>
