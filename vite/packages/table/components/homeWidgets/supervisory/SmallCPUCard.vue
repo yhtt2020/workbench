@@ -14,7 +14,7 @@
           <span>温度</span>
           <span style="font-weight:700">{{CPUData.TCPUPKG.value}}℃</span></div>
       </div>
-        <a-progress :showInfo="false" status="active" :percent="CPUData.TCPUPKG.value" :stroke-color="{
+        <a-progress :showInfo="false" :status="CPUData.TCPUPKG.value=='-'?'':'active'"  :percent="CPUData.TCPUPKG.value" :stroke-color="{
         '0%': '#60BFFF',
         '100%': '#348FFF',
       }"/>
@@ -24,7 +24,7 @@
             <span>内存</span>
             <span style="font-weight:700">{{CPUData.SMEMUTI.value}}%</span></div>
         </div>
-        <a-progress :showInfo="false" status="active" :percent="CPUData.SMEMUTI.value" :stroke-color="{
+        <a-progress :showInfo="false" :status="CPUData.SMEMUTI.value=='-'?'':'active'" :percent="CPUData.SMEMUTI.value" :stroke-color="{
         '0%': '#60BFFF',
         '100%': '#348FFF',
       }"/>

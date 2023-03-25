@@ -14,7 +14,7 @@
             <span>温度</span>
             <span style="font-weight:700">{{GPUData.TGPU1DIO.value}}℃</span></div>
         </div>
-        <a-progress :showInfo="false" status="active" :percent="GPUData.TGPU1DIO.value" :stroke-color="{
+        <a-progress :showInfo="false" :status="GPUData.TGPU1DIO.value=='-'?'':'active'" :percent="GPUData.TGPU1DIO.value" :stroke-color="{
         '0%': '#60BFFF',
         '100%': '#348FFF',
       }"/>
@@ -24,7 +24,7 @@
             <span>内存</span>
             <span style="font-weight:700">{{GPUData.SMEMUTI.value}}%</span></div>
         </div>
-        <a-progress :showInfo="false" status="active" :percent="GPUData.SMEMUTI.value" :stroke-color="{
+        <a-progress :showInfo="false" :status="GPUData.SMEMUTI.value=='-'?'':'active'" :percent="GPUData.SMEMUTI.value" :stroke-color="{
         '0%': '#60BFFF',
         '100%': '#348FFF',
       }"/>

@@ -79,13 +79,9 @@ export default {
       return this.up < 1000 ? this.up +'KB/S' : this.up<1024000?(this.up/1024).toFixed(2) + 'MB/S':(this.up/1024/1024).toFixed(2) + 'GB/S'
     }
   },
-  updated() {
-    console.log('页面刷新')
-  },
   watch: {
     "aidaData": {
       handler(newVal, oldVal) {
-        console.log('监听')
         filterObjKeys(this.CPUGPUData,this.aidaData)
         const {down,up} =  netWorkDownUp(this.aidaData)
         this.down = down
