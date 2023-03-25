@@ -76,6 +76,7 @@ if (!window.location.href.endsWith('iframe.html')) {
         if (!data.title) {
           return undefined
         }
+        console.log(data)
         return data
       } catch (e) {
         console.log('抓取测试失败', e)
@@ -105,7 +106,7 @@ if (!window.location.href.endsWith('iframe.html')) {
               // e.keyCode=40
               // $('html body').trigger(e)
               // console.log('模拟视频点击成功')
-              // //clearInterval(timer)
+              clearInterval(timer)
             } catch (e) {
               console.log(e)
               console.log('视频还不存在，无法删除')
@@ -114,7 +115,7 @@ if (!window.location.href.endsWith('iframe.html')) {
           //$('.bpx-player-row-dm-wrap').remove()
 
         },
-        timeout: 200
+        timeout: 2000
       }
     ],
     start: () => {

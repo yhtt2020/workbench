@@ -45,6 +45,14 @@ const watch = {
     return await taskModel.add(task)
   },
 
+  async delTask(task){
+    if(task.running){
+      //运行中，先干掉
+      send('stopTask',task)
+    }
+    return await taskModel.del(task)
+  },
+
   /**
    * 获取到最新的任务信息，如果是重复的，则返回null 否则，返回一个包含data和last_execute_info的对象。
    * @param task
@@ -124,6 +132,7 @@ const watch = {
         if (onTimeout) {
           onTimeout()
         }
+        send('closeTest',{id:task.id}) //关闭任务
         tests.splice(index, 1)
       } else {
         console.log('任务早已返回')

@@ -15,12 +15,18 @@
               </a-button>
             </a-col>
             <a-col :span="{sm:24,md:12}">
-              <a-dropdown-button @click="handleButtonClick">
-                <Icon class="mr-3" icon="zanting"></Icon>
-                暂停
+              <a-dropdown-button :type="!task.running?'primary':''" @click="handleButtonClick">
+                <template v-if="task.running">
+                  <Icon class="mr-3" icon="zanting"></Icon>
+                  暂停
+                </template>
+                <template v-else>
+                  <Icon class="mr-3" icon="bofang"></Icon>
+                  启动
+                </template>
                 <template #overlay>
                   <a-menu @click="handleMenuClick">
-                    <a-menu-item @click="showTask" key="1">
+                    <a-menu-item v-if="task.running" @click="showTask" key="1">
                       显示运行中网页
                     </a-menu-item>
                     <a-menu-item @click="openUrl" key="2">
@@ -37,94 +43,160 @@
         </a-col>
       </a-row>
     </div>
-    <vue-custom-scrollbar :settings="outerSettings" style="position:relative;height:calc(100vh - 18em);  ">
+    <vue-custom-scrollbar :settings="outerSettings" style="position:relative;height:calc(100vh - 21em);  ">
       <div style="max-width: 900px;margin:auto">
         <div class="p-3">
           <a-row class="mb-5" :gutter="[20,10]">
             <a-col :md="5">
               <img class="cover" :src="fixHttp(data.cover+'@320w_200h')">
             </a-col>
-            <a-col :md="16">
+            <a-col :md="18">
               <div class="mb-2" style="color:#999">任务：{{ task.title }} &nbsp; &nbsp;{{
                   data.pudate || '-'
                 }}
               </div>
               <div>
-                <a-row class="text-l" :gutter="[10,10]">
-                  <a-col :span="6">
-                    <Icon title="播放" icon="bofang"></Icon>
-                    {{ format(data.viewText) }}
+                <a-row>
+                  <a-col :span="6" class="pt-7 text-center">
+                    <div
+                      style="background: #555;line-height:30px;width: 100px;border-radius: 6px;display: inline-block">
+                      <Icon title="播放" icon="bofang"></Icon>
+                      总播放
+                      <div>
+                        <span class="text-white text-lg ml-2">{{ format(data.viewText) }}</span>
+                      </div>
+                    </div>
+
                   </a-col>
-                  <a-col :span="6">
-                    <Icon title="点赞" icon="dianzan"></Icon>
-                    {{ format(data.like) }}
-                  </a-col>
-                  <a-col :span="6">
-                    <Icon title="投币" icon="jinbi"></Icon>
-                    {{ format(data.coin) }}
-                  </a-col>
-                  <a-col :span="6">
-                    <Icon title="收藏" icon="shoucang"></Icon>
-                    {{ format(data.collect) }}
-                  </a-col>
-                  <a-col :span="6">
-                    <Icon title="评论" icon="xiaoxi"></Icon>
-                    {{ format(data.totalReply) }}
-                  </a-col>
-                  <a-col :span="6">
-                    <Icon title="弹幕" icon="shouqi"></Icon>
-                    {{ format(data.dm) }}
-                  </a-col>
-                  <a-col :span="6">
-                    <Icon title="转发" icon="fenxiang"></Icon>
-                    {{ format(data.share) }}
+                  <a-col :offset="2">
+                    <a-row class="text-l" :gutter="[10,15]">
+                      <a-col :span="8">
+                        <Icon title="点赞" icon="dianzan"></Icon>
+                        点赞<br/>
+                        <span class="text-white  ml-2">{{ format(data.like) }}</span>
+                      </a-col>
+                      <a-col :span="8">
+                        <Icon title="投币" icon="jinbi"></Icon>
+                        投币 <br>
+                        <span class="text-white  ml-2">{{ format(data.coin) }}</span>
+                      </a-col>
+                      <a-col :span="8">
+                        <Icon title="收藏" icon="shoucang"></Icon>
+                        收藏 <br>
+                        <span class="text-white  ml-2">{{ format(data.collect) }}</span>
+                      </a-col>
+                      <a-col :span="8">
+                        <Icon title="弹幕" icon="shouqi"></Icon>
+                        弹幕 <br>
+                        <span class="text-white  ml-2">{{ format(data.dm) }}</span>
+                      </a-col>
+                      <a-col :span="8">
+                        <Icon title="评论" icon="xiaoxi"></Icon>
+                        评论 <br>
+                        <span class="text-white  ml-2">{{ format(data.totalReply) }}</span>
+                      </a-col>
+                      <a-col :span="8">
+                        <Icon title="转发" icon="fenxiang"></Icon>
+                        分享<br>
+                        <span class="text-white ml-2">{{ format(data.share) }}</span>
+                      </a-col>
+                    </a-row>
                   </a-col>
                 </a-row>
+
               </div>
             </a-col>
 
           </a-row>
           <div class="mb-5">
 
-            <a-row>
-              <a-col :span="3">
-                作品成就：
-              </a-col>
-              <a-col :span="21">
-                <div class="w-24 bg-indigo-500 px-1 py-1 text-white text-center font-extrabold rounded-full">播放破千
-                </div>
-              </a-col>
-            </a-row>
+            <!--            <a-row>-->
+            <!--              <a-col :span="3">-->
+            <!--                作品成就：-->
+            <!--              </a-col>-->
+            <!--              <a-col :span="21">-->
+            <!--                <div class="w-24 bg-indigo-500 px-1 py-1 text-white text-center font-extrabold rounded-full">播放破千-->
+            <!--                </div>-->
+            <!--              </a-col>-->
+            <!--            </a-row>-->
 
           </div>
         </div>
 
 
         <div style="background: #2d2d2d;" class="p-4 rounded-md mb-5">
-          <h3 class="mb-4">实时票房</h3>
-          <a-row class="text-center mb-3">
-            <a-col :span="3">
-              <div>今日票房</div>
-              <div>?</div>
+          <h3 class="mb-4">
+            <icon icon="diannao"/>
+            实时票房
+          </h3>
+          <!--          <a-row class="text-center mb-3">-->
+          <!--            <a-col :span="3">-->
+          <!--              <div>今日票房</div>-->
+          <!--              <div>?</div>-->
+          <!--            </a-col>-->
+          <!--            <a-col :span="3">-->
+          <!--              <div>当前在看</div>-->
+          <!--              <div>?</div>-->
+          <!--            </a-col>-->
+          <!--            <a-col :span="3">-->
+          <!--              <div>今日预估</div>-->
+          <!--              <div>?</div>-->
+          <!--            </a-col>-->
+          <!--            <a-col :span="3">-->
+          <!--              <div>点赞</div>-->
+          <!--              <div>-->
+          <!--                ? <span>?%</span>↓-->
+          <!--              </div>-->
+          <!--            </a-col>-->
+          <!--            <a-col :span="3">-->
+          <!--              <div>投币</div>-->
+          <!--              <div>-->
+          <!--                384 <span>?%</span> ↑-->
+          <!--              </div>-->
+          <!--            </a-col>-->
+          <!--            <a-col :span="3">-->
+          <!--              <div>-->
+          <!--                收藏-->
+          <!--              </div>-->
+          <!--              <div>-->
+          <!--                ? <span>?%</span>-->
+          <!--              </div>-->
+          <!--            </a-col>-->
+          <!--            <a-col :span="3">-->
+          <!--              <div>转发</div>-->
+          <!--              <div>-->
+          <!--                ? <span>?%</span>-->
+          <!--              </div>-->
+
+
+          <!--            </a-col>-->
+          <!--            <a-col :span="3"></a-col>-->
+          <!--          </a-row>-->
+          <a-row class="text-center">
+            <a-col :span="4">
+              <div>累计票房</div>
+              <div class="text-white text-lg"> {{ format(data.view) }}</div>
             </a-col>
-            <a-col :span="3">
-              <div>当前在看</div>
-              <div>?</div>
-            </a-col>
-            <a-col :span="3">
-              <div>今日预估</div>
-              <div>?</div>
-            </a-col>
+            <!--            <a-col :span="3">-->
+            <!--              <div>首日票房</div>-->
+            <!--              <div>?</div>-->
+            <!--            </a-col>-->
+            <!--            <a-col :span="3">-->
+            <!--              <div>前3日票房</div>-->
+            <!--              <div>? 万</div>-->
+            <!--            </a-col>-->
             <a-col :span="3">
               <div>点赞</div>
               <div>
-                ? <span>?%</span>↓
+                <span class="text-white mr-1">{{ format(data.like) }}</span> <span>{{ data.rate.like }}%</span>
+                <Arrow type="like" :value="data.rate.like"></Arrow>
               </div>
             </a-col>
             <a-col :span="3">
               <div>投币</div>
               <div>
-                384 <span>?%</span> ↑
+                <span class="text-white mr-1">{{ format(data.coin) }}</span> <span>{{ data.rate.coin }}%</span>
+                <Arrow type="coin" :value=" data.rate.coin"></Arrow>
               </div>
             </a-col>
             <a-col :span="3">
@@ -132,44 +204,8 @@
                 收藏
               </div>
               <div>
-                ? <span>?%</span>
-              </div>
-            </a-col>
-            <a-col :span="3">
-              <div>转发</div>
-              <div>
-                ? <span>?%</span>
-              </div>
-
-
-            </a-col>
-            <a-col :span="3"></a-col>
-          </a-row>
-          <a-row class="text-center">
-            <a-col :span="3">
-              <div>累计票房</div>
-              <div> {{ format(data.view) }}</div>
-            </a-col>
-            <a-col :span="3">
-              <div>首日票房</div>
-              <div>?</div>
-            </a-col>
-            <a-col :span="3">
-              <div>前3日票房</div>
-              <div>? 万</div>
-            </a-col>
-            <a-col :span="3">
-              <div>点赞</div>
-              <div>
-                {{ format(data.like) }} <span>{{ getRate(data.like, data.view) }}%</span>
-                <Arrow type="like" :value="getRate(data.like,data.view)"></Arrow>
-              </div>
-            </a-col>
-            <a-col :span="3">
-              <div>投币</div>
-              <div>
-                {{ format(data.coin) }} <span>{{ getRate(data.coin, data.view) }}%</span>
-                <Arrow type="coin" :value="getRate(data.coin,data.view)"></Arrow>
+                <span class="text-white mr-1">{{ format(data.collect) }}</span> <span>{{ data.rate.collect }}%</span>
+                <Arrow type="collect" :value=" data.rate.collect"></Arrow>
               </div>
             </a-col>
             <a-col :span="3">
@@ -177,24 +213,26 @@
                 弹幕
               </div>
               <div>
-                {{ format(data.dm) }} <span>{{ getRate(data.dm, data.view) }}%</span>
-                <Arrow type="dm" :value="getRate(data.dm,data.view)"></Arrow>
+                <span class="text-white mr-1">{{ format(data.dm) }}</span> <span>{{ data.rate.dm }}%</span>
+                <Arrow type="dm" :value=" data.rate.dm"></Arrow>
               </div>
             </a-col>
             <a-col :span="3">
               <div>
-                收藏
+                评论
               </div>
               <div>
-                {{ format(data.collect) }} <span>{{ getRate(data.collect, data.view) }}%</span>
-                <Arrow type="collect" :value="getRate(data.collect,data.view)"></Arrow>
+                <span class="text-white mr-1">{{ format(data.totalReply) }}</span> <span>{{ data.rate.reply }}%</span>
+                <Arrow type="dm" :value="data.rate.reply"></Arrow>
               </div>
             </a-col>
+
+
             <a-col :span="3">
               <div>转发</div>
               <div>
-                {{ format(data.share) }} <span>{{ getRate(data.share, data.view) }}%</span>
-                <Arrow type="share" :value="getRate(data.share,data.view)"></Arrow>
+                <span class="text-white mr-1">{{ format(data.share) }}</span> <span>{{ data.rate.share }}%</span>
+                <Arrow type="share" :value=" data.rate.share"></Arrow>
               </div>
             </a-col>
             <a-col :span="3"></a-col>
@@ -202,56 +240,81 @@
         </div>
 
 
-        <div style="background: #2d2d2d;" class="p-4 rounded-md mb-5">
-          <h3 class="mb-4">分时票房</h3>
+        <!--        <div style="background: #2d2d2d;" class="p-4 rounded-md mb-5">-->
+        <!--          <h3 class="mb-4">分时票房</h3>-->
 
-        </div>
+        <!--        </div>-->
 
-        <div style="background: #2d2d2d;" class="p-4 rounded-md mb-5">
-          <a-row :gutter="40">
+        <div style="background: #2d2d2d;" class="p-4 rounded-md mb-5 ">
+          <a-row :gutter="40" class="">
             <a-col :span="12">
-              <h3 class="mb-4">实时预测总票房</h3>
-              <a-row>
-                <a-col :span="4">
+              <h3 class="mb-4">
+                <icon icon="yiwen-xianxing"/>
+                预测总票房
+              </h3>
+              <a-row class="text-center" :gutter="[10,10]">
+                <a-col :span="8">
                   <div>总票房</div>
-                  <div>?</div>
+                  <div class="text-lg text-white">{{ caculateData.view }}</div>
                 </a-col>
-                <a-col :span="4">
-                  <div>总点赞</div>
-                  <div>?</div>
+                <a-col :span="16">
+                  <a-row :gutter="[10,10]">
+                    <a-col :span="8">
+                      <div>总点赞</div>
+                      <div class="text-white">{{ caculateData.like }}</div>
+                    </a-col>
+                    <a-col :span="8">
+                      <div>总投币</div>
+                      <div class="text-white">{{ caculateData.coin }}</div>
+                    </a-col>
+                    <a-col :span="8">
+                      <div>总收藏</div>
+                      <div class="text-white">
+                        {{ caculateData.collect }}
+                      </div>
+                    </a-col>
+                    <a-col :span="8">
+                      <div>总弹幕</div>
+                      <div class="text-white">
+                        {{ caculateData.dm }}
+                      </div>
+                    </a-col>
+                    <a-col :span="8">
+                      <div>总评论</div>
+                      <div class="text-white">
+                        {{ caculateData.reply }}
+                      </div>
+                    </a-col>
+                    <a-col :span="8">
+                      <div>总转发</div>
+                      <div class="text-white">
+                        {{ caculateData.share }}
+                      </div>
+                    </a-col>
+                  </a-row>
                 </a-col>
-                <a-col :span="4">
-                  <div>总投币</div>
-                  <div>?万</div>
-                </a-col>
-                <a-col :span="4">
-                  <div>总收藏</div>
-                  <div>
-                    ? <span>?%</span>↓
-                  </div>
-                </a-col>
-                <a-col :span="4">
-                  <div>总转发</div>
-                  <div>
-                    ? <span>?%</span> ↑
-                  </div>
-                </a-col>
+
               </a-row>
             </a-col>
             <a-col :span="12">
               <h3 class="mb-4">猜测流量池</h3>
               <a-row>
                 <a-col :span="4">
-                  <div :style="{background: stage.data.bg}" class="text-xl stage">S{{stage.no}}</div>
+                  <div :style="{background: stage.data.bg}" class="text-xl stage">S{{ stage.no }}</div>
                 </a-col>
                 <a-col :span="14">
                   <div>
                     <div>
-                      {{ stage.data.name }}流量池：{{formatWan(stage.data.show[0])}}-{{formatWan(stage.data.show[1])}}
+                      {{
+                        stage.data.name
+                      }}流量池：<span class="text-white">{{
+                        formatWan(stage.data.show[0])
+                      }}-{{ formatWan(stage.data.show[1]) }}</span>
                     </div>
                     <div>
-                      预测阶段播放量：{{formatWan(stage.data.view) }}
+                      预测阶段播放量：<span class="text-white">{{ formatWan(stage.data.view) }}</span>
                     </div>
+
                   </div>
                 </a-col>
                 <a-col :span="6">
@@ -273,9 +336,26 @@
                 </a-col>
 
               </a-row>
+              <div class="text-lg mt-2">
+                <span v-if="stage.condition==='pre'"> <Icon style="font-size: 40px;vertical-align: middle"
+                                                            icon="gaoxingneng"/>  正在 <strong
+                  class="text-white">预热</strong> 阶段</span>
+                <span v-if="stage.condition==='in'"><Icon style="font-size: 40px;vertical-align: middle;color: white"
+                                                          icon="xingneng"/> 正在 <strong
+                  class="text-white">推送</strong> 阶段</span>
+              </div>
+              <div class="pl-11" v-if="stage.condition==='in'">
+                <icon icon="tishi-xianxing"/>
+                此阶段主要是分发流量，相对比较平稳
+              </div>
+              <div class="pl-11" v-if="stage.condition==='pre'">
+                <icon icon="tishi-xianxing"/>
+                此阶段如果无法达成流量目标，可能导致推送停止
+              </div>
             </a-col>
 
           </a-row>
+
 
         </div>
 
@@ -283,51 +363,46 @@
 
           <a-row :gutter="40">
             <a-col :span="12">
-              <h3 class="mb-4">作品评分</h3>
+              <h3 class="mb-4">
+                <icon icon="xingneng2"/>
+                作品评分
+              </h3>
               <a-row class="text-center">
                 <a-col :span="8">
                   <div>作品质量度</div>
                   <div class="text-xl">
-                    ?
+                    {{ score.quality }}
                   </div>
                 </a-col>
-                <a-col :span="8">
-                  <div>流量力度</div>
-                  <div class="text-xl">
-                    ?
-                  </div>
-                </a-col>
+                <!--                <a-col :span="8">-->
+                <!--                  <div>流量力度</div>-->
+                <!--                  <div class="text-xl">-->
+                <!--                    ?-->
+                <!--                  </div>-->
+                <!--                </a-col>-->
                 <a-col :span="8">
                   <div>票房得分</div>
                   <div class="text-xl">
-                    ?
+                    {{ score.view }}
                   </div>
                 </a-col>
               </a-row>
             </a-col>
             <a-col :span="12">
-              <h3 class="mb-4">综合得分</h3>
+              <h3 class="mb-4">作品评价 <span class="float-right text-sm">仅供参考</span></h3>
               <a-row>
-                <a-col :span="4">
-                  <div class="text-xl">5.3</div>
-                  <div class="text-xl">
-                    c
-                  </div>
-                </a-col>
-                <a-col :span="20">
+                <a-col :span="24">
                   <div>
-                    <div>
-                      · 点赞率低于4%，几乎没有爆款可能
+                    <template v-if="suggestions.length===0">
+                      暂无评价
+                    </template>
+                    <div v-else>
+                      <div v-for="suggest in suggestions">
+                        {{suggest.title}}
+                      </div>
                     </div>
-                    <div>
-                      · 首日达成播放过低， 流量池推进速度过慢
-                    </div>
-                    <div>
-                      · 实时在看过低，需要再升级
-                    </div>
-
-
                   </div>
+
                 </a-col>
 
               </a-row>
@@ -350,18 +425,24 @@ import dataHelper from '../../../js/watch/dataHelper'
 import Arrow from '../../../components/watch/Arrow.vue'
 import bili from '../../../js/watch/bili'
 import { fixHttp, formatSeconds } from '../../../util'
+import Template from '../../../../user/pages/Template.vue'
+
 export default {
   name: 'Dashboard',
-  components: { Arrow, BackBtn },
+  components: { Template, Arrow, BackBtn },
   data () {
     return {
       task: {
-        data: {},
+        data: {
+          rate: {}
+        },
       },
-      data: {},
+      data: {
+        rate: {}
+      },
       stage: {
-        data:{
-          show:[100,200]
+        data: {
+          show: [100, 200]
         }
       },
       visibleStages: false,
@@ -372,7 +453,7 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
-      updateExecutedTimer:null
+      updateExecutedTimer: null
     }
 
   },
@@ -380,24 +461,101 @@ export default {
     tableApi.watch.getTask({ nanoid: this.$route.params['nanoid'] }).then(task => {
       this.task = task
       this.data = task.data
+      let data = this.data
+
+      data.num = {}
+      Object.keys(data).forEach(key => {
+        data.num[key] = this.convertWan(data[key])
+      })
+
+      data.rate = {}
+      data.rate.like = this.getRate(data.like, data.view)
+      data.rate.dm = this.getRate(data.dm, data.view)
+      data.rate.collect = this.getRate(data.collect, data.view)
+      data.rate.share = this.getRate(data.share, data.view)
+      data.rate.coin = this.getRate(data.coin, data.view)
+      data.rate.reply = this.getRate(data.totalReply, data.view)
+
       this.stage = this.guessStage(task.data.view)
       console.log(task)
     })
-    this.updateExecutedTimer=setInterval(()=>{
+    this.updateExecutedTimer = setInterval(() => {
       this.updateExecutedTime()
-    },1000)
+    }, 1000)
   },
   unmounted () {
     clearInterval(this.updateExecutedTimer)
   },
-  methods: {
-    fixHttp:fixHttp,
-    updateExecutedTime(){
-      this.task.executed_time_until_now=this.formatSeconds((Date.now()-this.task.last_execute_time)/1000)
+  computed: {
+    suggestions () {
+      let suggestion = []
+      let data=this.data
+      let score = this.score
+      if (data.rate.like < 4) {
+        suggestion.push({
+          title: `· 点赞率过低， ${this.data.rate.like} % 小于基准 4%，可能限制作品的播放上限`
+        })
+      }
+      if (score.quality < 7) {
+        suggestion.push({
+          title: `· 作品质量度过低，${this.score.quality} 小于 7 ，随机成分较大`
+        })
+      }
+
+      if (score.quality > 9) {
+        suggestion.push({
+          title: ` · 作品质量度非常优秀，${score.quality} 远超同类作品`
+        })
+      }
+
+      if (score.view < 6) {
+        suggestion.push(`· 作品票房得分过低，努力提升粉丝数推动票房成长`)
+      }
+      return suggestion
     },
-    formatSeconds:formatSeconds,
-    format:dataHelper.format,
+    caculateData () {
+      let data = {}
+      let view = this.stage.data.view
+      let videoRate = this.data.rate
+      data.view = this.format(view)
+      Object.keys(this.data.rate).forEach(key => {
+        data[key] = this.format(view * videoRate[key] / 100)
+      })
+      return data
+    },
+    score () {
+      let score = {}
+      let data = this.data
+      if (!data) {
+        return 0
+      }
+      let num = data.num
+      if (!num) {
+        return 0
+      }
+      score.quality = ((num.coin * 0.4 + num.collect * 0.3 + num.dm * 0.4 + num.totalReply * 0.4 + num.view * 0.25 + num.like * 0.4 + num.share * 0.6) / num.view / 0.4 * 10).toFixed(1)
+      score.view = (((this.stage.no) / 8) * 10).toFixed(1)
+      return score
+    }
+  },
+  methods: {
+    handleButtonClick () {
+      if (!this.task.running) {
+        tableApi.watch.startTask(this.task)
+        this.task.running = true
+      } else {
+        tableApi.watch.stopTask(this.task)
+        this.task.running = false
+      }
+    },
+    fixHttp: fixHttp,
+    updateExecutedTime () {
+      this.task.executed_time_until_now = this.formatSeconds((Date.now() - this.task.last_execute_time) / 1000)
+    },
+    formatSeconds: formatSeconds,
+    format: dataHelper.format,
     getRate: dataHelper.getRate,
+    convertWan: dataHelper.convertWan,
 
     showTask () {
       tableApi.watch.showTask(this.task)
@@ -413,8 +571,8 @@ export default {
         content: '暂时还不支持分享'
       })
     },
-    guessStage:bili.guessStage,
-    formatWan:bili.formatWan
+    guessStage: bili.guessStage,
+    formatWan: bili.formatWan
   }
 }
 </script>
@@ -425,6 +583,7 @@ export default {
   height: 100px;
   border-radius: 6px;
 }
+
 .stage {
   transform: rotate(30deg);
   background: #487cff;
