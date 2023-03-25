@@ -236,7 +236,7 @@ export default {
 <style lang="scss">
 @media screen and (max-height: 510px) {
   #scrollerBar {
-    zoom: 0.728;
+    zoom: 0.718;
     width: calc(100vw + 40em);
   }
 }
