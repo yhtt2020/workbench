@@ -6,11 +6,11 @@
       <a-row>
         <a-col>
           <div @click="shutdown" class="power-btn">关机</div>
-          <div class="power-btn">注销</div>
+          <div @click="logout" class="power-btn">注销</div>
         </a-col>
         <a-col>
           <div @click="reboot" class="power-btn">重启</div>
-          <div class="power-btn">休眠</div>
+          <div @click="sleep" class="power-btn">休眠</div>
         </a-col>
       </a-row>
     </div>
@@ -25,6 +25,7 @@
 <script>
 import BackBtn from '../components/comp/BackBtn.vue'
 import { Modal, message } from 'ant-design-vue'
+import { runNir } from '../js/common/exec'
 
 const execShell = require('child_process').exec
 export default {
@@ -47,6 +48,27 @@ export default {
               message.error('关机失败，请确认软件权限。')
             }
           })
+        }
+      })
+    },
+    logout () {
+      Modal.confirm({
+        content: '注销系统？',
+        onOk () {
+          let shell = 'shutdown -l'
+          let command = execShell(shell, (err, stdout, stderr) => {
+            if (err || stderr) {
+              message.error('注销失败，请确认软件权限。')
+            }
+          })
+        }
+      })
+    },
+    sleep () {
+      Modal.confirm({
+        content: '休眠系统？',
+        onOk () {
+          runNir('standby')
         }
       })
     },

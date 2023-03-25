@@ -24,10 +24,14 @@
         </template>
       </a-calendar>
     </div>
-    <a-row style="font-size: 1.2em; line-height: 2.2em">
+    <a-row style="font-size: 1.2em; line-height: 2em">
       <a-col :span="12"><Icon icon="jieriyingxiao"></Icon> 清明节</a-col>
-      <a-col :span="12">4月5日~4月5日</a-col></a-row
-    >
+      <a-col :span="12">4月5日~4月5日</a-col>
+      <a-col :span="12"><Icon icon="jieriyingxiao"></Icon> 劳动节</a-col>
+      <a-col :span="12">4月29日~5月3日</a-col>
+      <a-col :span="12"><Icon icon="jieriyingxiao"></Icon> 端午节</a-col>
+      <a-col :span="12">6月22日~6月24日</a-col>
+    </a-row>
   </div>
   <a-drawer
     :contentWrapperStyle="{ padding:10,marginLeft:'2.5%',
@@ -89,18 +93,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.card{
-  max-height:30em;
-  border-radius: 8px;
-  vertical-align: text-top;
-
-  width: 20em;
-  min-width: 20em;
-  display: inline-block;
-  height: 420px;
-  padding: 10px 13px .5em 13px ;
-  margin-right: 14px;
-  position: relative;}
 :deep(.ant-picker-date-panel) {
   background: #363739;
 }

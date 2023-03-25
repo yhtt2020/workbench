@@ -96,16 +96,16 @@ export default {
       storeApps: [
         {
           icon: 'https://s1.hdslb.com/bfs/static/jinkela/popular/assets/icon_popular.png',
-          name: 'B站数据小助手',
-          summary: '一个B站数据监控的小插件，可以实时监测一个视频的热度走势，显示在副屏上。',
+          name: '网页数据监控小助手',
+          summary: '一个用于检测网页数据的工具，可以实时监测一个网页数据动态，并组织成可视化的报表，目前支持B站视频数据追踪。',
           needInstall: false,
           data: {
             fullScreen: false,
             theme: '#030c13',
-            name: 'wallpapaer',
+            name: 'watch',
             type: 'system',//网页助手
             route: JSON.stringify({
-              name: 'bili',
+              name: 'watch',
             })
           }
         },

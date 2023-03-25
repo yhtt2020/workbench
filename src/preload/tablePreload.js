@@ -9,7 +9,11 @@ ipc.on('updateMusicStatus',(e,a)=>{
     window.updateMusicStatusHandler(a)
   }
 })
-
+window.loudness=require('loudness')
+window.iconv=require('iconv-lite')
+window.brightness=require('brightness')
+window.readAida64=require('aida64-to-json')
+window.fs=require('fs-extra')
 window.$models = {
   appModel:require('../model/appModel'),
   messageModel

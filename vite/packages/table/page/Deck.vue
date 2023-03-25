@@ -56,28 +56,40 @@
                           style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em)">
 
       <div style="width: auto;white-space: nowrap">
-        <div @contextmenu.stop="showMenu(grid.id)" :style="{width:getWidth(grid.cols)}" style="display: inline-block" v-for="(grid,index) in grids">
-          <h3 class=" pointer text-more" v-if="sharing" >
+        <div @contextmenu.stop="showMenu(grid.id)" :style="{width:getWidth(grid.cols)}" style="display: inline-block"
+             v-for="(grid,index) in grids">
+          <h3 class="pointer text-more" v-if="sharing">
             <a-checkbox v-model:checked="selectedGridIds[grid.id]">{{ grid.title }}</a-checkbox>
           </h3>
-          <h3 class="pointer text-more" v-if="editing" >
-            <span v-if="editing"><span style="margin-left: 0.8em"><left-square-outlined v-if="index!==0" @click.stop="moveGrid(-1,index)" class="mr-3"/> <right-square-outlined
+          <template v-else>
+            <h3 class="pointer text-more" v-if="editing">
+            <span v-if="editing"><span style="margin-left: 0.8em"><left-square-outlined v-if="index!==0"
+                                                                                        @click.stop="moveGrid(-1,index)"
+                                                                                        class="mr-3"/> <right-square-outlined
               v-if="index!==this.grids.length-1" @click.stop="moveGrid(1,index)"/></span>
-            <span @click.stop="showEditTitle(grid)" class="pl-5"></span> {{ grid.title }}</span></h3>
-          <h3 style="padding-left: 0.8em;margin-bottom: 0em" v-else class="pointer text-more">
-            {{ grid.title }}
-          </h3>
-          <div >
+            <span  class="pl-5"></span> {{ grid.title }}</span></h3>
+            <h3 @click.stop="showEditTitle(grid)" style="padding-left: 0.8em;margin-bottom: 0em" v-else class="pointer text-more">
+              {{ grid.title }}
+            </h3>
+          </template>
+
+          <div>
             <!--      <div style="min-height: 3em" @contextmenu.stop="showMenu(index)" :id="'board-'+board.id" class="grid"-->
             <!--           v-for="(board,index) in decks">-->
             <!--        <DeckItem :id="item.id" :item="item" v-for="item in board.children"></DeckItem>-->
             <!--      </div>-->
-            <div :style={width:getVuuriWidth(grid.cols)} style="text-align: center;padding-top: 0.3em;padding-bottom: 0.3em" v-if="grid.children.length===0 && editing===false" class="grid">
-              <a-button block size="large" style="max-width: calc(100% - 0.6em)"  type="primary" @click.stop="add(grid)"><plus-outlined />添加</a-button>
+            <div :style={width:getVuuriWidth(grid.cols)}
+                 style="text-align: center;padding-top: 0.3em;padding-bottom: 0.3em"
+                 v-if="grid.children.length===0 && editing===false" class="grid">
+              <a-button block size="large" style="max-width: calc(100% - 0.6em)" type="primary" @click.stop="add(grid)">
+                <plus-outlined/>
+                添加
+              </a-button>
             </div>
 
 
-            <vuuri v-show="grid.children.length!==0|| editing" :style={width:getVuuriWidth(grid.cols)} :key="key" :drag-enabled="editing" group-id="grid.id" :ref="'grid'+grid.id"
+            <vuuri v-show="grid.children.length!==0|| editing" :style={width:getVuuriWidth(grid.cols)} :key="key"
+                   :drag-enabled="editing" group-id="grid.id" :ref="'grid'+grid.id"
                    style="min-height: 3em"
                    item-key="id"
                    class="grid"
@@ -185,7 +197,9 @@
       </a-row>
     </div>
     <div class="line">
-      设置组宽度： <a-input-number style="width:130px" :min="1" step="1" addon-before="行数" v-model:value="currentGrid.cols" :defalut-value="2"></a-input-number>
+      设置组宽度：
+      <a-input-number style="width:130px" :min="1" step="1" addon-before="行数" v-model:value="currentGrid.cols"
+                      :defalut-value="2"></a-input-number>
     </div>
   </a-drawer>
   <a-drawer
@@ -338,8 +352,9 @@ import vuuri from '../components/vuuri/Vuuri.vue'
 import Prompt from '../components/comp/Prompt.vue'
 import { Modal } from 'ant-design-vue'
 import BackBtn from '../components/comp/BackBtn.vue'
-import { LeftSquareOutlined, RightSquareOutlined ,PlusOutlined} from '@ant-design/icons-vue'
+import { LeftSquareOutlined, RightSquareOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import _ from 'lodash-es'
+
 export default {
   name: 'Deck',
   components: {
@@ -350,7 +365,7 @@ export default {
     DeckItem,
     Widget: Widget,
     vuuri,
-    LeftSquareOutlined, RightSquareOutlined,PlusOutlined
+    LeftSquareOutlined, RightSquareOutlined, PlusOutlined
   },
   data () {
     return {
@@ -366,7 +381,7 @@ export default {
 
       key: Date.now(),
 
-      editGridVisible:false,
+      editGridVisible: false,
 
       addKey: Date.now(),
       editGrid: null,
@@ -419,24 +434,24 @@ export default {
     // })
   },
   methods: {
-    toggleEditGrid(){
-      if(!this.currentGrid.cols){
-        this.currentGrid.cols=2
+    toggleEditGrid () {
+      if (!this.currentGrid.cols) {
+        this.currentGrid.cols = 2
       }
-      this.editGridVisible=true
+      this.editGridVisible = true
     },
-    getWidth(col){
-      if(!col){
-        col=2
+    getWidth (col) {
+      if (!col) {
+        col = 2
       }
-      return col*90+25+'px'
+      return col * 90 + 25 + 'px'
 
     },
-    getVuuriWidth(col){
-      if(!col){
-        col=2
+    getVuuriWidth (col) {
+      if (!col) {
+        col = 2
       }
-      return col*90+10+'px'
+      return col * 90 + 10 + 'px'
 
     },
     ...mapActions(deckStore, ['initGrids']),
@@ -523,7 +538,7 @@ export default {
       this.importMenuJsonVisible = !this.importMenuJsonVisible
     },
     toggleSharing () {
-      if(this.editing){
+      if (this.editing) {
         //互斥
         this.toggleEditing()
       }
@@ -533,7 +548,7 @@ export default {
       this.menuVisible = false
     },
     toggleEditing () {
-      if(this.sharing){
+      if (this.sharing) {
         //互斥
         this.toggleSharing()
       }
@@ -627,21 +642,21 @@ export default {
       this.addKey = Date.now()
       this.visibleAdd = true
     },
-    clone(){
-      let cloneItem=_.cloneDeep(this.currentItem)
-      cloneItem.id=require('nanoid').nanoid(8)
+    clone () {
+      let cloneItem = _.cloneDeep(this.currentItem)
+      cloneItem.id = require('nanoid').nanoid(8)
       this.currentGrid.children.unshift(cloneItem)
 
       console.log(this.currentGrid.children)
       console.log(this.currentItem)
-      this.menuVisible=false
-      this.key+=1
+      this.menuVisible = false
+      this.key += 1
       message.success('复制按钮成功')
     },
     add (currentGrid) {
-      if(currentGrid){
-        this.currentGrid=currentGrid
-        this.currentGridId=currentGrid.id
+      if (currentGrid) {
+        this.currentGrid = currentGrid
+        this.currentGridId = currentGrid.id
       }
       this.currentItem = undefined
       this.addKey = Date.now()
@@ -661,7 +676,7 @@ export default {
         this.currentItemId = id
         this.currentItem = data.item
         this.currentGrid = data.grid
-        this.currentGridId=data.grid.id
+        this.currentGridId = data.grid.id
       } else {
         this.menuType = 'wrapper'
       }
@@ -687,7 +702,7 @@ export default {
         id: Date.now(),
         title: '新组',
         children: [],
-        cols:2
+        cols: 2
       }
       console.log(this.grids)
       this.grids.push(grid)

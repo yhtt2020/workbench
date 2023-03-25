@@ -189,23 +189,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.card{
-  max-height:30em;
-  border-radius: 8px;
-  vertical-align: text-top;
-
-  width: 20em;
-  min-width: 20em;
-  display: inline-block;
-  height: 420px;
-  padding: 10px 13px .5em 13px ;
-  margin-right: 14px;
-  position: relative;
-  &.small{
-    height: 203px;
-    margin-bottom: 14px;
-  }
-}
 .content {
   position: relative;
   text-align: center;

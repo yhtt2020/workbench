@@ -28,13 +28,7 @@ const globalSearchMod = {
           devTools: true,
           preload: path.join(__dirname, '/src/preload/searchPreload.js'),
           nodeIntegration: true,
-          contextIsolation: false,
-          additionalArguments: [
-            '--user-data-path=' + userDataPath,
-            '--app-version=' + app.getVersion(),
-            '--app-name=' + app.getName(),
-            ...((isDevelopmentMode ? ['--development-mode'] : []))
-          ]
+          contextIsolation: false
         }
       })
     } else {
@@ -54,13 +48,7 @@ const globalSearchMod = {
         webPreferences: {
           devTools: true,
           nodeIntegration: true,
-          contextIsolation: false,
-          additionalArguments: [
-            '--user-data-path=' + userDataPath,
-            '--app-version=' + app.getVersion(),
-            '--app-name=' + app.getName(),
-            ...((isDevelopmentMode ? ['--development-mode'] : []))
-          ]
+          contextIsolation: false
         }
       })
     }
@@ -170,8 +158,9 @@ app.whenReady().then(async () => {
   })
 
   async function callTable (tag = -1) {
-    await tableManager.init()
-    global.tableAppManager.setTableWin(tableManager.window)
+    tableManager.init().then(()=>{
+      global.tableAppManager.setTableWin(tableManager.window)
+    })
   }
 
   let tableMod = settings.get('tableMod')
@@ -260,26 +249,8 @@ app.whenReady().then(async () => {
     tableAppManager.hideApp(tableAppManager.getName(args.app.name))
   })
 
-  const ffi = require('ffi-napi')
 
-  /**
-   * 先定义一个函数, 用来在窗口中显示字符
-   * @param {String} text
-   * @return {*} none
-   */
-  function showText (text) {
-    return new Buffer(text, 'ucs2').toString('binary')
-  }
-// 通过ffi加载user32.dll
-  const myUser32 = new ffi.Library('user32', {
-    'GetSystemMetrics': // 声明这个dll中的一个函数
-      [
-        'int32', ['int32'], // 用json的格式罗列其返回类型和参数类型
-      ],
-  })
-// 调用user32.dll中的MessageBoxW()函数, 弹出一个对话框
-  const out = myUser32.GetSystemMetrics(94)
-  console.log(out)
+
 
   ipc.handle('shell', (event, args) => {
     if (args.cmd) {

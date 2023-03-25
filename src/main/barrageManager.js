@@ -93,12 +93,6 @@ class BarrageManager {
         },
         webPreferences: {
           preload: (__dirname + '/../preload/barragePreload.js'),
-          additionalArguments: [
-            '--user-data-path=' + app.getPath('userData'),
-            '--app-version=' + app.getVersion(),
-            '--app-name=' + app.getName(),
-            ...((isDevelopmentMode ? ['--development-mode'] : [])),
-          ],
           sandbox: false
         },
         rememberBounds: true,

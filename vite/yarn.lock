@@ -558,11 +558,6 @@ acorn@^8.7.1:
   resolved "https://registry.npmmirror.com/acorn/-/acorn-8.7.1.tgz"
   integrity sha512-Xx54uLJQZ19lKygFXOWsscKUbsBZW0CPykPhVQdhIeIwrbPmJzqeASDInc8nKBnp/JT6igTs82qPXz069H8I/A==
 
-aida64-to-json@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.npmmirror.com/aida64-to-json/-/aida64-to-json-1.1.0.tgz#f4576599f52d2a89366c66555771e2b533ab88eb"
-  integrity sha512-rZdviTU7mam9GiiTxBFHYB3PTWfrD3qlFqp2hc03gKCQ6AhuB1zI4I9CLXS4NUCbjmZMttooLG05RUA/LxdMww==
-
 amdefine@>=0.0.4:
   version "1.0.1"
   resolved "https://registry.npmmirror.com/amdefine/-/amdefine-1.0.1.tgz"

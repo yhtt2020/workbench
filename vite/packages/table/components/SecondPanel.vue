@@ -45,7 +45,6 @@ export default {
   },
   methods: {
     change (e, menu) {
-      console.log(e,menu)
       this.activeIndex = menu.index
       this.$emit('changeTab', {
         index: menu.index,

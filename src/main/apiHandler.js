@@ -26,7 +26,6 @@ class ApiHandler {
   static bindIPC () {
     ApiHandler.handlers.push(new Watch())
     ApiHandler.handlers.forEach(handler=>{
-      console.log(handler.moduleName,'绑定IP————————————————————————————————————————————————————————')
       handler.bindIPC()
     })
     ipc.on('changeUrl', (e, a) => {

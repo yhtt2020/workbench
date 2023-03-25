@@ -63,20 +63,20 @@ export default {
         }
         if (failure.length === 0) {
           if (unknown.length) {
-            message.success(`共为您执行${done.length}个动作，成功${success.length}个，未知${unknown.length}个`)
+            message.success({content:`共为您执行${done.length}个动作，成功${success.length}个，未知${unknown.length}个`,key:'action'})
           } else {
-            message.success(`共为您成功执行${done.length}个动作`)
+            message.success({content:`共为您成功执行${done.length}个动作`,key:'action'})
           }
 
         } else {
           if (success.length > 0) {
-            message.warn(`共为您执行${done.length}个动作，其中失败${failure.length}个，成功${success.length}，未知${unknown.length}个`)
+            message.warn({content:`共为您执行${done.length}个动作，其中失败${failure.length}个，成功${success.length}，未知${unknown.length}个`,key:'action'})
           } else {
-            message.error(`共为您执行${done.length}个动作，其中失败${failure.length}个，成功${success.length}，未知${unknown.length}个`)
+            message.error({content:`共为您执行${done.length}个动作，其中失败${failure.length}个，成功${success.length}，未知${unknown.length}个`,key:'action'})
           }
         }
         if(failure.length>0){
-          console.warn('打印失败日志：')
+          console.warn({content:'打印失败日志：',key:'action'})
           failure.forEach(f=>{
             console.warn(f.message)
           })

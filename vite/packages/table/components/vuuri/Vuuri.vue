@@ -130,7 +130,6 @@ export default {
     modelValue: {
       deep: true,
       handler (newItems, oldValue) {
-        console.log('检测到变化')
         if (!this.internallySet) {
           this._sync(newItems, this.copiedItems)
         }
@@ -155,7 +154,6 @@ export default {
      * Manually update the items in the muuri grid
      */
     update () {
-      console.log('触发一次更新', this.modelValue)
       this.$nextTick(() => {
         this.muuri
           .refreshItems()
