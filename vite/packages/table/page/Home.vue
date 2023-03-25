@@ -234,10 +234,23 @@ export default {
 }
 </style>
 <style lang="scss">
-@media screen and (max-height: 610px) {
+@media screen and (max-height: 510px) {
+  #scrollerBar {
+    zoom: 0.728;
+    width: calc(100vw + 40em);
+  }
+}
+@media screen and (min-height: 511px) and (max-height: 550px) {
+  #scrollerBar {
+    zoom: 0.78;
+    width: calc(100vw +  24em);
+  }
+}
+
+@media screen and (min-height: 551px) and (max-height: 610px) {
   #scrollerBar {
     zoom: 0.88;
-    width: calc(100vw + 4em);
+    width: calc(100vw + 8em);
   }
 }
 
