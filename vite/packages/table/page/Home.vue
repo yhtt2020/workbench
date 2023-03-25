@@ -123,7 +123,7 @@ export default {
           if (i==="TGPUDIO") res.TGPU1DIO = res[i]
         });
         this.setAidaData(res)
-       // console.log(res)
+        console.log(res)
         //this.data=JSON.stringify(res, null, '\t')
       }).catch(err=> {
         clearInterval(this.timer)
@@ -164,14 +164,12 @@ export default {
   position: relative;
   display: inline-block;
   width: 43em;
-  height: 45em;
+  height: 440px;
   border-radius: 4px;
   vertical-align: top;
   left: 0px;
   right: 0;
-  @media screen and (max-width: 1100px) {
-    height: 44em;
-  }
+
 }
 .btn{
   text-align: center;

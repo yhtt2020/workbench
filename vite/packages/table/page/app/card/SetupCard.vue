@@ -8,7 +8,7 @@
   </div>
   <div class="card content" v-if="cardType === 'countdownDay'" >
     <a-row>
-      <a-col :span="10" style="border-right: 1px solid #454545; height: 100vh">
+      <a-col :span="10" style="border-right: 1px solid #454545; height: calc(100vh - 16em)">
 
         <a-row> <a-col>事件名字 </a-col></a-row>
         <a-row>
@@ -85,7 +85,7 @@
   </div>
   <div class="card content" v-if="cardType === 'smallCountdownDay'">
     <a-row>
-      <a-col :span="10" style="border-right: 1px solid #454545; height: 100vh">
+      <a-col :span="10" style="border-right: 1px solid #454545; height: calc(100vh - 16em)">
 
         <a-row> <a-col>事件名字 </a-col></a-row>
         <a-row>
@@ -160,9 +160,14 @@
     </a-row>
   </div>
   <div class="card content" v-if="cardType === 'clock'">
+
     <a-row>
-      <a-col :span="10" style="border-right: 1px solid #454545; height: 100vh">
-        <a-row> <a-col>事件名字 </a-col></a-row>
+      <a-col :span="10" style="border-right: 1px solid #454545; height: calc(100vh - 16em)">
+        <vue-custom-scrollbar
+          :settings="outerSettings"
+          style="position: relative; height: calc(100vh - 16em)"
+          class="scroll"
+        >   <a-row> <a-col>闹钟名字 </a-col></a-row>
         <a-row>
           <a-col>
             <a-input v-model:value="eventValue" placeholder="请输入"
@@ -170,23 +175,32 @@
         </a-row>
         <a-row> <a-col>时间 </a-col></a-row>
         <a-row>
-          <a-col :span="6" :xs="4" >
+
             <a-time-picker v-model:value="clockDate" format="HH:mm"
-                           /></a-col>
-          <a-col :span="6" :xs="16" :offset="1">
-            <a-radio-group v-model:value="clockType" button-style="solid">
-              <a-radio-button value="不重复">不重复</a-radio-button>
-              <a-radio-button value="每天">每天</a-radio-button>
-            </a-radio-group>
-          </a-col>
+                           />
+
+
+
         </a-row>
+        <a-row>
+
+
+
+          <a-radio-group v-model:value="clockType" button-style="solid">
+            <a-radio-button value="不重复">不重复</a-radio-button>
+            <a-radio-button value="每天">每天</a-radio-button>
+          </a-radio-group>
+
+        </a-row>
+
         <a-row>
           <a-col>
             <a-button type="primary" @click="addSettingClock"
               >设置</a-button
             ></a-col
-          ></a-row
-        >
+          >
+        </a-row>
+        </vue-custom-scrollbar>
       </a-col>
       <a-col :span="14">
         <a-row>
