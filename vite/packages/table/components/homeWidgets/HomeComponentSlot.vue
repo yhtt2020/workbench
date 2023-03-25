@@ -1,12 +1,13 @@
 <template>
   <div :class="options.className" :style="{pointerEvents:(editing?'none':'')}">
-    <div class="left-title">
+    <div class="content-title">  <div class="left-title">
       <Icon :icon="options.icon" class="title-icon"></Icon>
       <div style="font-size: 1em">{{options.title}}</div>
     </div>
-    <div class="right-title" @click.stop="showDrawer">
-      <Icon icon="gengduo1" class="title-icon" style="cursor:pointer"></Icon>
-    </div>
+      <div class="right-title" @click.stop="showDrawer">
+        <Icon icon="gengduo1" class="title-icon" style="cursor:pointer"></Icon>
+      </div></div>
+
     <slot :customIndex="customIndex"></slot>
   </div>
   <a-drawer
@@ -87,17 +88,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.card{
-  &.big{
-
-  }
+.content-title{
+  display: flex;
+  justify-content: space-between;
   .left-title{
-    position: absolute;
+
     display: flex;
     width: 35%;
     align-items: center;
-    left: 13px;
-    top: 8px;
+
 
     .title-icon{
       width: 18px;
@@ -108,11 +107,10 @@ export default {
     }
   }
   .right-title{
-    position: absolute;
+
     align-items: center;
     display: flex;
-    right: 13px;
-    top: 8px;
+
     .title-icon{
       width: 1.5em;
       height: 1.5em;

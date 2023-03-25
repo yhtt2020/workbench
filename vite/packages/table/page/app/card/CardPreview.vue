@@ -3,15 +3,15 @@
     <a-card style="width: 60%" class="card-content">
       <div>{{ cardType.cname }}</div>
       <div>{{ cardType.detail }}</div>
-      <div class="card" style="height: auto;margin:0;transform: scale(0.9)">
+      <div class="card" style="height: auto;margin:0;transform: scale(0.9);">
         <a-carousel arrows v-if="cardType.name === 'countdownDay'||cardType.name === 'supervisory'" :after-change="imgChang" >
           <template #prevArrow>
-            <div class="custom-slick-arrow" style="left: 10px; z-index: 1">
+            <div class="custom-slick-arrow" style="left: -80px; z-index: 1">
               <left-circle-outlined />
             </div>
           </template>
           <template #nextArrow>
-            <div class="custom-slick-arrow" style="right: 10px">
+            <div class="custom-slick-arrow" style="right: -80px">
               <right-circle-outlined />
             </div>
           </template>
@@ -53,6 +53,8 @@ export default {
       default: () => { }
     }
   },
+
+
   methods: {
     ...mapActions(tableStore, ["addCustomComponents"]),
     imgChang(i){
@@ -179,14 +181,15 @@ export default {
     transform: translateX(-50%) translateY(-50%);
 
     text-align: center;
-
-
+    display: flex;
+    align-items: center;
+    justify-content: center;
     .btn {
       background: transparent;
-      width: 100%;
+      width: 300px;
       display: flex;
       justify-content: space-evenly;
-      padding: 0 200px;
+
     }
   }
 }

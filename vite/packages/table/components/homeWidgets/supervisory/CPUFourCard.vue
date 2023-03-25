@@ -100,7 +100,7 @@ export default {
   height: 95%;
   width: 100%;
   align-items: center;
-  margin-top: -8px;
+  margin-top: 0px;
 
   >div{
     width: calc((100% - 13px) / 2);

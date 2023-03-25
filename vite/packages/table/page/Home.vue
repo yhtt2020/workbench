@@ -147,6 +147,15 @@ export default {
         //this.data=JSON.stringify(res, null, '\t')
       }).catch(err => {
         clearInterval(this.timer)
+        this.setAidaData({
+          SGPU1UTI:{value:"-"},
+          TGPU1DIO:{value:"-"},
+          SMEMUTI:{value:"-"},
+          SCPUUTI:{value:"-"},
+          TCPUPKG:{value:"-"},
+          SRTSSFPS:{value:"-"},
+          SDSK1ACT:{value:"-"},
+          })
       })
     }, 1000)
   },
@@ -217,6 +226,7 @@ export default {
 .home-widgets {
   .muuri-item {
     width: 280px;
+    padding: 0;
   }
 
   .muuri-item {

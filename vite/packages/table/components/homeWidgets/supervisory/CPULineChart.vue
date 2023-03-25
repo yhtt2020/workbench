@@ -1,7 +1,7 @@
 <template>
   <SupervisorySlot :options="options">
     <div class="content">
-      <div class="cpu" style="margin-top: 0">
+      <div class="cpu" style="margin-top: 4px">
         <div class="cpu-number">
           <div>
           <Icon icon="CPU" class="icon"></Icon>
@@ -29,7 +29,7 @@
           </div>
           <span style="font-weight:700">{{ CPUData.SMEMUTI.value }}%</span></div>
       </div>
-      <a-progress :showInfo="false" status="active" :percent="CPUData.SMEMUTI.value" :stroke-color="{
+      <a-progress :showInfo="false" :status="CPUData.SMEMUTI.value=='-'?'':'active'" :percent="CPUData.SMEMUTI.value" :stroke-color="{
         '0%': '#60BFFF',
         '100%': '#348FFF',
       }"/>
@@ -42,7 +42,7 @@
         </div>
         <span style="font-weight:700">{{ CPUData.SDSK1ACT.value }}%</span></div>
     </div>
-      <a-progress :showInfo="false" status="active" :percent="CPUData.SDSK1ACT.value" :stroke-color="{
+      <a-progress :showInfo="false" :status="CPUData.SDSK1ACT.value=='-'?'':'active'" :percent="CPUData.SDSK1ACT.value" :stroke-color="{
         '0%': '#FFD061',
         '100%': '#FF9035',
       }"/>
