@@ -24,7 +24,7 @@
           </a-avatar>
         </a-col>
         <a-col class="image-wrapper " v-for="img in myPapers" :span="6" style="">
-          <img @contextmenu.stop="showMenu(img)"  class="image-item pointer" :src="img.src" style="position: relative">
+          <img @contextmenu.stop="showMenu(img)" @error="deleteAll(img)" class="image-item pointer" :src="img.src" style="position: relative">
           <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
             <div @click.stop="addToActive(img)" class="bottom-actions pointer" :style="{background:isInActive(img)?'rgba(255,0,0,0.66)':''}">
             <Icon v-if="!isInActive(img)" icon="tianjia1"></Icon>
@@ -60,7 +60,7 @@
     </a-row>
   </a-drawer>
   <a-drawer v-model:visible="visibleImport" placement="right">
-     <Import ></Import>
+     <Import :del="del"></Import>
   </a-drawer>
 </template>
 
@@ -114,15 +114,15 @@ export default {
       })
     },
     loadLivelyPapers(){
-      // let fs=require('fs-extra')
-      // let path=require('path')
-      // let videos=fs.readdirSync(require('path').join(this.settings.savePath,'lively'))
-      // this.livelyPapers= videos.map(v=>{
-      //   return {
-      //     src:path.join(this.settings.savePath,'lively',v),
-      //     srcProtocol:'file://'+path.join(this.settings.savePath,'lively',v),
-      //   }
-      // })
+      let fs=require('fs-extra')
+      let path=require('path')
+      let videos=fs.readdirSync(require('path').join(this.settings.savePath,'lively'))
+      this.livelyPapers= videos.map(v=>{
+        return {
+          src:path.join(this.settings.savePath,'lively',v),
+          srcProtocol:'file://'+path.join(this.settings.savePath,'lively',v),
+        }
+      })
     },
     isInActive(image){
       return this.activePapers.findIndex(img=>{
@@ -161,6 +161,10 @@ export default {
         this.visibleMenu = false
       }
     },
+    // 删除有问题的图片
+    deleteAll(img){
+      this.myPapers.indexOf(img) !== -1 ? this.myPapers.splice(this.myPapers.indexOf(img),1):''
+    }
   }
 }
 </script>
