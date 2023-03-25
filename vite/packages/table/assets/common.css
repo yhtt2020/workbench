@@ -3,7 +3,8 @@
   border-radius: 8px;
   background: rgba(183, 183, 183, 0.63);
   vertical-align: text-top;
-  min-width: 20em;
+  width: 280px;
+  min-width: 280px;
   display: inline-block;
   padding: 1em; }
   .card.auto-height {
