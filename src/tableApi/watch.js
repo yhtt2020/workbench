@@ -86,8 +86,8 @@ const watch = {
     }
   },
 
-  async getTaskData(map){
-    let data=await dataModel.get(map)
+  async getTaskData(map,limit=100){
+    let data=await dataModel.get(map,limit)
     return data
   },
 

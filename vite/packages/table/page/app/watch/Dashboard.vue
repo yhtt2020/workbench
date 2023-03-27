@@ -545,7 +545,7 @@ export default {
   },
   methods: {
     async getData () {
-      let data = await tableApi.watch.getTaskData({ task_id: this.task.nanoid, type: 'interval' })
+      let data = await tableApi.watch.getTaskData({ task_id: this.task.nanoid, type: 'interval' },10000)
       let chartData=[]
       try{
         chartData=data.map(d=>{
@@ -553,7 +553,7 @@ export default {
             time:d.grab_time,
             online:JSON.parse(d.data).online
           }
-        },500)
+        })
       }catch (e) {
         console.warn(e)
       }
