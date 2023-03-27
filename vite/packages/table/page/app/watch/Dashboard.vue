@@ -47,14 +47,15 @@
       </a-row>
     </div>
     <vue-custom-scrollbar :settings="outerSettings" style="position:relative;height:calc(100vh - 21em);  ">
-      <div style="max-width: 900px;margin:auto">
+      <div id="report" style="max-width: 900px;margin:auto;background: #323232">
         <div class="p-3">
           <a-row class="mb-5" :gutter="[20,10]">
             <a-col :md="5">
-              <img class="cover" :src="fixHttp(data.cover+'@320w_200h')">
+              <img crossorigin="anonymous" class="cover" :src="fixHttp(data.cover+'@320w_200h')">
             </a-col>
             <a-col :md="18">
-              <div class="mb-2" style="color:#999">任务：{{ task.title }} &nbsp; &nbsp;{{
+              <div class="mb-2" style="color:#999"><span data-html2canvas-ignore>任务：{{ task.title }} </span>&nbsp;
+                &nbsp;发布于 {{
                   data.pudate || '-'
                 }}
               </div>
@@ -244,11 +245,14 @@
 
 
         <div style="background: #2d2d2d;" class="p-4 rounded-md mb-5">
-          <h3 class="mb-4"><Icon icon="gupiao"/> 热度走势</h3>
+          <h3 class="mb-4">
+            <Icon icon="gupiao"/>
+            热度走势
+          </h3>
           <p class="ml-5">热度监控数据主要来自于同时在线观看人数，每30秒获得一次在线数据并更新到图表上。</p>
           <div>
 
-            <OnlineChart :data="chartData" ></OnlineChart>
+            <OnlineChart :data="chartData"></OnlineChart>
           </div>
 
         </div>
@@ -305,29 +309,30 @@
               </a-row>
             </a-col>
             <a-col :span="12">
-              <h3 class="mb-4">猜测流量池</h3>
-              <a-row>
-                <a-col :span="4">
-                  <div :style="{background: stage.data.bg}" class="text-xl stage">S{{ stage.no }}</div>
-                </a-col>
-                <a-col :span="14">
-                  <div>
+              <div data-html2canvas-ignore>
+                <h3 class="mb-4">猜测流量池</h3>
+                <a-row>
+                  <a-col :span="4">
+                    <div :style="{background: stage.data.bg}" class="text-xl stage">S{{ stage.no }}</div>
+                  </a-col>
+                  <a-col :span="14">
                     <div>
-                      {{
-                        stage.data.name
-                      }}流量池：<span class="text-white">{{
-                        formatWan(stage.data.show[0])
-                      }}-{{ formatWan(stage.data.show[1]) }}</span>
-                    </div>
-                    <div>
-                      预测阶段播放量：<span class="text-white">{{ formatWan(stage.data.view) }}</span>
-                    </div>
+                      <div>
+                        {{
+                          stage.data.name
+                        }}流量池：<span class="text-white">{{
+                          formatWan(stage.data.show[0])
+                        }}-{{ formatWan(stage.data.show[1]) }}</span>
+                      </div>
+                      <div>
+                        预测阶段播放量：<span class="text-white">{{ formatWan(stage.data.view) }}</span>
+                      </div>
 
-                  </div>
-                </a-col>
-                <a-col :span="6">
-                  <a-button type="primary" @click="visibleStages=true">参考</a-button>
-                  <a-drawer placement="right" v-model:visible="visibleStages">
+                    </div>
+                  </a-col>
+                  <a-col :span="6">
+                    <a-button type="primary" @click="visibleStages=true">参考</a-button>
+                    <a-drawer placement="right" v-model:visible="visibleStages">
               <pre>
 1.初始流量池：200-500
 2.千人流量池：3K-5K
@@ -338,28 +343,31 @@
 7.热门流量池：500W-1200W
 8.全站推荐
               </pre>
-                  </a-drawer>
+                    </a-drawer>
 
 
-                </a-col>
+                  </a-col>
 
-              </a-row>
-              <div class="text-lg mt-2">
+                </a-row>
+                <div class="text-lg mt-2">
                 <span v-if="stage.condition==='pre'"> <Icon style="font-size: 40px;vertical-align: middle"
                                                             icon="gaoxingneng"/>  正在 <strong
                   class="text-white">预热</strong> 阶段</span>
-                <span v-if="stage.condition==='in'"><Icon style="font-size: 40px;vertical-align: middle;color: white"
-                                                          icon="xingneng"/> 正在 <strong
-                  class="text-white">推送</strong> 阶段</span>
+                  <span v-if="stage.condition==='in'"><Icon style="font-size: 40px;vertical-align: middle;color: white"
+                                                            icon="xingneng"/> 正在 <strong
+                    class="text-white">推送</strong> 阶段</span>
+                </div>
+                <div class="pl-11" v-if="stage.condition==='in'">
+                  <icon icon="tishi-xianxing"/>
+                  此阶段主要是分发流量，相对比较平稳
+                </div>
+                <div class="pl-11" v-if="stage.condition==='pre'">
+                  <icon icon="tishi-xianxing"/>
+                  此阶段如果无法达成流量目标，可能导致推送停止
+                </div>
               </div>
-              <div class="pl-11" v-if="stage.condition==='in'">
-                <icon icon="tishi-xianxing"/>
-                此阶段主要是分发流量，相对比较平稳
-              </div>
-              <div class="pl-11" v-if="stage.condition==='pre'">
-                <icon icon="tishi-xianxing"/>
-                此阶段如果无法达成流量目标，可能导致推送停止
-              </div>
+
+
             </a-col>
 
           </a-row>
@@ -401,9 +409,9 @@
               <a-row>
                 <a-col :span="24">
                   <div>
-                    <template v-if="suggestions.length===0">
+                    <div v-if="suggestions.length===0">
                       暂无评价
-                    </template>
+                    </div>
                     <div v-else>
                       <div v-for="suggest in suggestions">
                         {{ suggest.title }}
@@ -423,7 +431,17 @@
     </vue-custom-scrollbar>
   </div>
 
-
+  <div>
+    <a-image
+      :width="200"
+      :style="{ display: 'none' }"
+      :preview="{
+        previewVisible,
+        onVisibleChange: setVisible,
+      }"
+      src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+    />
+  </div>
 </template>
 
 <script>
@@ -435,18 +453,22 @@ import bili from '../../../js/watch/bili'
 import { fixHttp, formatSeconds } from '../../../util'
 import Template from '../../../../user/pages/Template.vue'
 import OnlineChart from './OnlineChart.vue'
+import html2canvas from 'html2canvas'
+import viewer from 'viewerjs'
 
 export default {
   name: 'Dashboard',
   components: { OnlineChart, Template, Arrow, BackBtn },
   data () {
     return {
-      intervalDataTimer:null,
-      onlineData:[],
-      chartData:[],
+      previewVisible: false,
+
+      intervalDataTimer: null,
+      onlineData: [],
+      chartData: [],
       // chartKey:Date.now(),
 
-      nanoid:'',
+      nanoid: '',
       task: {
         data: {
           rate: {}
@@ -475,12 +497,12 @@ export default {
   mounted () {
     let nanoid = this.$route.params['nanoid']
     console.log(nanoid)
-    this.nanoid=nanoid
-    this.loadTaskInfo(nanoid,()=>{
+    this.nanoid = nanoid
+    this.loadTaskInfo(nanoid, () => {
       this.getData()
-      this.intervalDataTimer=setInterval(()=>{
+      this.intervalDataTimer = setInterval(() => {
         this.getData()
-      },30000)
+      }, 30000)
 
     })
     this.updateExecutedTimer = setInterval(() => {
@@ -514,7 +536,9 @@ export default {
       }
 
       if (score.view < 6) {
-        suggestion.push(`· 作品票房得分过低，努力提升粉丝数推动票房成长`)
+        suggestion.push({
+          title: `· 作品票房得分过低，努力提升粉丝数推动票房成长`
+        })
       }
       return suggestion
     },
@@ -544,26 +568,29 @@ export default {
     }
   },
   methods: {
+    setVisible (visible) {
+      this.previewVisible = visible
+    },
     async getData () {
-      let data = await tableApi.watch.getTaskData({ task_id: this.task.nanoid, type: 'interval' },10000)
-      let chartData=[]
-      try{
-        chartData=data.map(d=>{
+      let data = await tableApi.watch.getTaskData({ task_id: this.task.nanoid, type: 'interval' }, 10000)
+      let chartData = []
+      try {
+        chartData = data.map(d => {
           return {
-            time:d.grab_time,
-            online:JSON.parse(d.data).online
+            time: d.grab_time,
+            online: JSON.parse(d.data).online
           }
         })
-      }catch (e) {
+      } catch (e) {
         console.warn(e)
       }
-      this.onlineData=data
-      this.chartData=chartData
+      this.onlineData = data
+      this.chartData = chartData
       //this.chartKey=Date.now()
       console.log(chartData, '获得interval数据')
     },
-    loadTaskInfo (nanoid,cb) {
-      tableApi.watch.getTask({nanoid:nanoid}).then(task => {
+    loadTaskInfo (nanoid, cb) {
+      tableApi.watch.getTask({ nanoid: nanoid }).then(task => {
         this.task = task
         this.data = task.data
         let data = this.data
@@ -583,7 +610,7 @@ export default {
 
         this.stage = this.guessStage(task.data.view)
         console.log(task)
-        if(cb) cb(task)
+        if (cb) cb(task)
       })
     },
     handleButtonClick () {
@@ -617,7 +644,20 @@ export default {
     },
     share () {
       Modal.info({
-        content: '暂时还不支持分享'
+        content: '点击生成报告',
+        onOk: () => {//allowTaint: true,
+          html2canvas(document.querySelector('#report'), { useCORS: true }).then(canvas => {
+            document.querySelector('#report').appendChild(canvas)
+            let ctx = canvas.getContext('2d')
+            var img = new Image()
+            img.onload = function () {
+              console.log(img, 'draw')
+              ctx.drawImage(this, 0, 0, 60, 60)
+            }
+            img.src = '/icons/logo128.png'
+            this.setVisible(true)
+          })
+        }
       })
     },
     guessStage: bili.guessStage,

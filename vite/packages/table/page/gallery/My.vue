@@ -55,6 +55,7 @@
   <a-drawer v-model:visible="visibleImport" placement="right">
      <Import ></Import>
   </a-drawer>
+
 </template>
 
 <script>
@@ -69,6 +70,7 @@ export default {
   name: 'My',
   data(){
     return{
+
       visibleMenu:false,
       visibleImport:false,
       settingsScroller: {
@@ -91,6 +93,7 @@ export default {
     }
   },
   methods:{
+
     ...mapActions(paperStore,['addToActive']),
     showMenu(item){
       this.currentPaper=item

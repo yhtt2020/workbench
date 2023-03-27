@@ -6,6 +6,7 @@
 
 import * as echarts from 'echarts'
 import _ from 'lodash-es'
+import { getDateTime } from '../../../util'
 
 export default {
   name: 'OnlineChart',
@@ -55,7 +56,8 @@ export default {
     },
     formatData () {
       this.xData = this.data.map(d => {
-        return new Date(d.time).toLocaleString()
+        const time=getDateTime(new Date(d.time))
+        return time.month+'/'+time.day+' '+time.hours+':'+time.minutes
       })
       this.yData = this.data.map(d => {
         return this.formatOnline(d.online)
@@ -75,12 +77,8 @@ export default {
         toolbox: {
           show: true,
           feature: {
-            dataZoom: {
-              yAxisIndex: 'none'
-            },
-            dataView: { readOnly: false },
             magicType: { type: ['line', 'bar'] },
-            restore: {},
+
             saveAsImage: {}
           }
         },
@@ -96,7 +94,7 @@ export default {
         yAxis: {
           splitLine: false,
           type: 'value',
-          boundaryGap: ['20%', '20%'],
+         // boundaryGap: ['20%', '20%'],
           show: true,
 
         },
@@ -133,22 +131,6 @@ export default {
             markLine: {
               data: [
                 { type: 'average', name: 'Avg' },
-                [
-                  {
-                    symbol: 'none',
-                    x: '90%',
-                    yAxis: 'max'
-                  },
-                  {
-                    symbol: 'circle',
-                    label: {
-                      position: 'start',
-                      formatter: 'Max'
-                    },
-                    type: 'max',
-                    name: '最高点'
-                  }
-                ]
               ]
             }
             // markLine: {
