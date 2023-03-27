@@ -60,7 +60,7 @@
     </a-row>
   </a-drawer>
   <a-drawer v-model:visible="visibleImport" placement="right">
-     <Import :del="del"></Import>
+     <Import :loadStaticPaper="loadStaticPaper"></Import>
   </a-drawer>
 </template>
 
@@ -70,7 +70,8 @@ import { appStore } from '../../store'
 import Import from './Import.vue'
 import {message,Modal} from 'ant-design-vue'
 import Spotlight from 'spotlight.js'
-import path from 'path'
+const fs=require('fs-extra')
+const path=require('path')
 import { paperStore } from '../../store/paper'
 export default {
   name: 'My',
@@ -86,7 +87,8 @@ export default {
         wheelPropagation: true
       },
       livelyPapers:[],
-      currentPaper:null//当前壁纸，显示菜单用
+      currentPaper:null,//当前壁纸，显示菜单用
+      staticPaper:[],
     }
   },
   components:{Import},
@@ -94,11 +96,12 @@ export default {
     ...mapWritableState(paperStore,['settings','activePapers','myPapers'])
   },mounted () {
     if(this.settings.savePath){
-      this.loadLivelyPapers()
+      this.loadLivelyPapers(),
+      this.loadStaticPaper()
     }
   },
   methods:{
-    ...mapActions(paperStore,['addToActive']),
+    ...mapActions(paperStore,['addToActive','addToMyPaper']),
     showMenu(item){
       this.currentPaper=item
       this.visibleMenu=true
@@ -114,8 +117,6 @@ export default {
       })
     },
     loadLivelyPapers(){
-      let fs=require('fs-extra')
-      let path=require('path')
       let videos=fs.readdirSync(require('path').join(this.settings.savePath,'lively'))
       this.livelyPapers= videos.map(v=>{
         return {
@@ -151,11 +152,10 @@ export default {
       })
     },
     // 下载壁纸
-    add(){
-      
-    },
+    add(){},
     // 删除壁纸
     del(){
+      fs.removeSync(`${this.myPapers[this.myPapers.indexOf(this.currentPaper)].src.split("//")[1]}`)
       if(this.myPapers.indexOf(this.currentPaper) !== -1){
         this.myPapers.splice(this.myPapers.indexOf(this.currentPaper),1)
         this.visibleMenu = false
@@ -164,6 +164,27 @@ export default {
     // 删除有问题的图片
     deleteAll(img){
       this.myPapers.indexOf(img) !== -1 ? this.myPapers.splice(this.myPapers.indexOf(img),1):''
+    },
+    loadStaticPaper(){
+      const staticDir = path.join(path.join(this.settings.savePath),'static')
+      // 判断文件目录是否存在 
+      fs.pathExists(staticDir).then((exists)=>{
+        if(exists){
+          // 存在读取指定壁纸目录
+          let promptPaper = fs.readdirSync(staticDir)
+          promptPaper.forEach(el=>{
+            let image = {
+              title:false,
+              src:`file://${staticDir}/${el}`
+            }
+            this.addToMyPaper(image)
+          })
+        }else{
+          this.$emit('error') 
+        }
+      }).catch(err=>{
+        console.log(err);
+      })
     }
   }
 }

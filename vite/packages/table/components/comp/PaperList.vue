@@ -26,9 +26,9 @@ export default {
   mounted () {
   },
   methods:{
-    ...mapActions(paperStore,['addToMyPaper']),
+    ...mapActions(paperStore,['removeToMyPaper']),
     addToMy(img){
-      this.addToMyPaper(img)
+      this.removeToMyPaper(img)
     },
     isInMyPapers(image){
       return this.myPapers.findIndex(img=>{

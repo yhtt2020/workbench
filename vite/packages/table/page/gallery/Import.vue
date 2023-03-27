@@ -42,22 +42,19 @@ const fs = require('fs-extra')
 const path = require('path')
 export default {
   name: 'Import',
+  data(){
+    return{}
+  },
   props:{
-    del:{
+    loadStaticPaper:{
       type:Function
     }
   },
-  data(){
-     return{
-       copyFile:'',
-     }
-  },
   computed:{
-    ...mapWritableState(paperStore,['settings','myPapers'])
+    ...mapWritableState(paperStore,['settings'])
   },
   mounted(){},
   methods:{
-    ...mapActions(paperStore,['addToMyPaper','saveFirstPath']),
     //选择本地按钮的导入方式
     async importFile(){
       if(this.settings.savePath){
@@ -77,7 +74,7 @@ export default {
             if(imgReg.test(openPath[i])){
               // 将选中的文件复制到指定的文件夹中
               fs.copySync(openPath[i],`${staticDir}\\${openPath[i].split("\\")[openPath[i].split("\\").length -1]}`)
-              this.isReadDir(staticDir)
+              this.loadStaticPaper()
             }else if(videoReg.test(openPath[i])){
               // 将动态的文件复制到指定存放的动态文件目录中
             }
@@ -107,11 +104,11 @@ export default {
         fileArr.forEach(el=>{
           if(imgReg.test(el)){
             fs.copySync(el,`${staticDir}\\${el.split("\\")[el.split("\\").length -1]}`)
-            this.isReadDir(staticDir)
+            this.loadStaticPaper()
+          }else if(videoReg.test(el)){
+            // 将动态壁纸复制到指定动态壁纸文件夹中
           }
-          
         })
-
       }else{
         this.setDirPrompt()
       }
@@ -119,7 +116,7 @@ export default {
     // 设置指定目录的创建
     setDirPrompt(){
       Modal.confirm({
-        content:'未设置壁纸保存目录,需要设置壁纸保存地址',
+        content:'未设置壁纸保存目录,需要设置壁纸保存文件夹',
         okText:'确定',
         onOk: async()=>{
           let savePath =  await tsbApi.dialog.showOpenDialog({
@@ -135,27 +132,7 @@ export default {
         }
       });
     },
-    // 读取文件是否存在
-    isReadDir(staticDir){  // ,livelyDir暂时不需要后期导入视频壁纸
-       // 判断指定文件是否存在
-       fs.pathExists(staticDir).then((exists)=>{
-          if(exists){
-            // 存在读取指定壁纸目录
-            let promptPaper = fs.readdirSync(staticDir)
-            promptPaper.forEach(el=>{
-            let image = {
-              title:false,
-              src:`file://${staticDir}/${el}`
-            }
-              this.addToMyPaper(image)
-            })
-          }else{
-           this.$emit('error') 
-          }
-        }).catch(err=>{
-          console.log(err);
-        })
-    }
+    
   }
 }
 </script>
