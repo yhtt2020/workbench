@@ -60,7 +60,7 @@
     </a-row>
   </a-drawer>
   <a-drawer v-model:visible="visibleImport" placement="right">
-     <Import :loadStaticPaper="loadStaticPaper"></Import>
+     <Import :del="del"></Import>
   </a-drawer>
 </template>
 
@@ -155,7 +155,7 @@ export default {
     add(){},
     // 删除壁纸
     del(){
-      fs.removeSync(`${this.myPapers[this.myPapers.indexOf(this.currentPaper)].src.split("//")[1]}`)
+      fs.removeSync(`${this.myPapers[this.myPapers.indexOf(this.currentPaper)].src.split('//')[1]}`)
       if(this.myPapers.indexOf(this.currentPaper) !== -1){
         this.myPapers.splice(this.myPapers.indexOf(this.currentPaper),1)
         this.visibleMenu = false
