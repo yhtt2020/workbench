@@ -86,6 +86,10 @@ class Watch extends Base {
       }
     })
 
+    this.on('refreshTask',(event,args)=>{
+      this.refreshTask(args.nanoid)
+    })
+
     //来自渲染进程
     ipc.on('api.watch.testFailure', (event, args) => {
       let index = -1
@@ -121,6 +125,18 @@ class Watch extends Base {
         }
       })
     })
+  }
+
+  /**
+   * 刷新任务
+   * @param nanoid
+   * @returns {Promise<void>}
+   */
+  async refreshTask(nanoid){
+    let instance =this.findInstance(nanoid)
+    if(instance){
+      instance.window.webContents.reload()
+    }
   }
 
   /**
@@ -210,11 +226,13 @@ class Watch extends Base {
       e.preventDefault()
     })
 
-    if(this.interval && type!=='test'){
+    if(task.interval && type!=='test'){
       this.taskIntervals[task.nanoid] = setInterval(() => {
         window.webContents.reload()
       }, task.interval * 1000)
     }
+
+
     // window.setMenu(null)
     // window.webContents.openDevTools()
     taskInstance.task=task

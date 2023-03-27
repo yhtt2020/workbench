@@ -44,6 +44,9 @@ const watch = {
   async addTask (task, start = false) {
     return await taskModel.add(task)
   },
+  refreshTask(task){
+    send('refreshTask',task)
+  },
 
   async delTask(task){
     if(task.running){
@@ -81,6 +84,11 @@ const watch = {
       }
       return returnValue
     }
+  },
+
+  async getTaskData(map){
+    let data=await dataModel.get(map)
+    return data
   },
 
   async getTask(map){

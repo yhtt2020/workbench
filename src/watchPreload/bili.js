@@ -145,7 +145,7 @@ if (!window.location.href.endsWith('iframe.html')) {
   }
   getOnline = () => {
     let online = $('.bpx-player-video-info-online b').text()
-    window.taskHandler.saveData({ online: online }, 'interval', 'online').then(r => {})
+    window.taskHandler.saveData({ online: online }, 'interval').then(r => {})
   }
   taskHandler.init()
 }
