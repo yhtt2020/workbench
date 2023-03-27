@@ -22,7 +22,7 @@ import Bing from '../page/gallery/Bing.vue'
 import Lively from '../page/gallery/Lively.vue'
 import Wallheaven from '../page/gallery/Wallheaven.vue'
 import PapersSetting from '../page/gallery/Setting.vue'
-
+import PickingPaper from '../page/gallery/Picking.vue'
 import index from './index'
 
 const routes = [
@@ -64,6 +64,11 @@ const routes = [
         path:'/setting',
         name:'papersSetting',
         component: PapersSetting
+      },
+      {
+        path:'/picking',
+        name:'PickingPaper',
+        component:PickingPaper
       }
     ]
   },

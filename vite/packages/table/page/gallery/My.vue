@@ -1,6 +1,6 @@
 <template>
   <div class="rotate-center" style="font-size: 2em;margin-bottom: 1em">
-    我的收藏 {{myPapers.length}}
+    我的收藏 {{mergedArr.length}}
   </div>
   <div>
   </div>
@@ -16,8 +16,13 @@
   </div>
 
   <vue-custom-scrollbar  id="containerWrapper" :settings="settingsScroller" style="height: 80vh">
-    <viewer :images="myPapers">
-     <a-row :gutter="[20,20]" id="bingImages" style="margin-right: 1em">
+    <viewer :images="mergedArr">
+      <div v-for="item in mergedArr">
+         <div v-if="fileExtension === 'jpg' || fileExtension === 'png' || fileExtension === 'jpeg' || fileExtension === 'bmp' || fileExtension === 'gif' ">
+          {{ item.src }}
+         </div>
+      </div>
+     <!-- <a-row :gutter="[20,20]" id="bingImages" style="margin-right: 1em">
        <a-col @click="this.visibleImport=true" class="image-wrapper " :span="6" style="">
          <a-avatar    class="image-item pointer"   style="font-size:2em;position: relative;line-height:144.2px;height: 144.2px;background: rgba(10,10,10,0.31)">
            <Icon  style="font-size: 1.3em;vertical-align: text-bottom" icon="tianjiawenjianjia"></Icon> 导入
@@ -32,7 +37,7 @@
            </div>
          </div>
        </a-col>
-     </a-row>
+     </a-row> -->
     </viewer>
    </vue-custom-scrollbar>
 
@@ -89,17 +94,25 @@ export default {
       },
       livelyPapers:[],
       currentPaper:null,//当前壁纸，显示菜单用
-      staticPaper:[],
       paperTime:'',
       livelyTime:'',
-      // 图片和视频数据合并
-      combined:[]
+      fileTypePath:''
     }
   },
   components:{Import},
   computed:{
-    ...mapWritableState(paperStore,['settings','activePapers','myPapers'])
-  },mounted () {
+    ...mapWritableState(paperStore,['settings','activePapers','myPapers']),
+    mergedArr(){
+      return [...this.myPapers,...this.livelyPapers].sort((a,b)=>{
+        return new Date(a.time) - new Date(b.time);
+      })
+    },
+    fileExtension() {
+      return this.fileTypePath.split('.').pop();
+    }
+
+  },
+  mounted () {
     if(this.settings.savePath){
       this.loadLivelyPapers()
       this.loadStaticPaper()

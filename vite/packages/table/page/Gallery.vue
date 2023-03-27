@@ -55,6 +55,14 @@ export default {
           }
       },
       {
+        index:'p',
+        title:'拾光壁纸',
+        icon:'',
+        route:{
+          name:'PickingPaper'
+        }
+      },
+      {
         index: 'l',
         title: '动态壁纸',
         icon:'a-zujiantianchong_huaban1fuben7',
