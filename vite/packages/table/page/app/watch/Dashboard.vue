@@ -26,6 +26,9 @@
                 </template>
                 <template #overlay>
                   <a-menu @click="handleMenuClick">
+                    <a-menu-item v-if="task.running" @click="refresh" key="1">
+                      立即刷新
+                    </a-menu-item>
                     <a-menu-item v-if="task.running" @click="showTask" key="1">
                       显示运行中网页
                     </a-menu-item>
@@ -240,10 +243,15 @@
         </div>
 
 
-        <!--        <div style="background: #2d2d2d;" class="p-4 rounded-md mb-5">-->
-        <!--          <h3 class="mb-4">分时票房</h3>-->
+        <div style="background: #2d2d2d;" class="p-4 rounded-md mb-5">
+          <h3 class="mb-4"><Icon icon="gupiao"/> 热度走势</h3>
+          <p class="ml-5">热度监控数据主要来自于同时在线观看人数，每30秒获得一次在线数据并更新到图表上。</p>
+          <div>
 
-        <!--        </div>-->
+            <OnlineChart :data="chartData" ></OnlineChart>
+          </div>
+
+        </div>
 
         <div style="background: #2d2d2d;" class="p-4 rounded-md mb-5 ">
           <a-row :gutter="40" class="">
@@ -398,7 +406,7 @@
                     </template>
                     <div v-else>
                       <div v-for="suggest in suggestions">
-                        {{suggest.title}}
+                        {{ suggest.title }}
                       </div>
                     </div>
                   </div>
@@ -426,12 +434,19 @@ import Arrow from '../../../components/watch/Arrow.vue'
 import bili from '../../../js/watch/bili'
 import { fixHttp, formatSeconds } from '../../../util'
 import Template from '../../../../user/pages/Template.vue'
+import OnlineChart from './OnlineChart.vue'
 
 export default {
   name: 'Dashboard',
-  components: { Template, Arrow, BackBtn },
+  components: { OnlineChart, Template, Arrow, BackBtn },
   data () {
     return {
+      intervalDataTimer:null,
+      onlineData:[],
+      chartData:[],
+      // chartKey:Date.now(),
+
+      nanoid:'',
       task: {
         data: {
           rate: {}
@@ -458,30 +473,20 @@ export default {
 
   },
   mounted () {
-    tableApi.watch.getTask({ nanoid: this.$route.params['nanoid'] }).then(task => {
-      this.task = task
-      this.data = task.data
-      let data = this.data
+    let nanoid = this.$route.params['nanoid']
+    console.log(nanoid)
+    this.nanoid=nanoid
+    this.loadTaskInfo(nanoid,()=>{
+      this.getData()
+      this.intervalDataTimer=setInterval(()=>{
+        this.getData()
+      },30000)
 
-      data.num = {}
-      Object.keys(data).forEach(key => {
-        data.num[key] = this.convertWan(data[key])
-      })
-
-      data.rate = {}
-      data.rate.like = this.getRate(data.like, data.view)
-      data.rate.dm = this.getRate(data.dm, data.view)
-      data.rate.collect = this.getRate(data.collect, data.view)
-      data.rate.share = this.getRate(data.share, data.view)
-      data.rate.coin = this.getRate(data.coin, data.view)
-      data.rate.reply = this.getRate(data.totalReply, data.view)
-
-      this.stage = this.guessStage(task.data.view)
-      console.log(task)
     })
     this.updateExecutedTimer = setInterval(() => {
       this.updateExecutedTime()
     }, 1000)
+
   },
   unmounted () {
     clearInterval(this.updateExecutedTimer)
@@ -489,7 +494,7 @@ export default {
   computed: {
     suggestions () {
       let suggestion = []
-      let data=this.data
+      let data = this.data
       let score = this.score
       if (data.rate.like < 4) {
         suggestion.push({
@@ -539,6 +544,48 @@ export default {
     }
   },
   methods: {
+    async getData () {
+      let data = await tableApi.watch.getTaskData({ task_id: this.task.nanoid, type: 'interval' })
+      let chartData=[]
+      try{
+        chartData=data.map(d=>{
+          return {
+            time:d.grab_time,
+            online:JSON.parse(d.data).online
+          }
+        },500)
+      }catch (e) {
+        console.warn(e)
+      }
+      this.onlineData=data
+      this.chartData=chartData
+      //this.chartKey=Date.now()
+      console.log(chartData, '获得interval数据')
+    },
+    loadTaskInfo (nanoid,cb) {
+      tableApi.watch.getTask({nanoid:nanoid}).then(task => {
+        this.task = task
+        this.data = task.data
+        let data = this.data
+
+        data.num = {}
+        Object.keys(data).forEach(key => {
+          data.num[key] = this.convertWan(data[key])
+        })
+
+        data.rate = {}
+        data.rate.like = this.getRate(data.like, data.view)
+        data.rate.dm = this.getRate(data.dm, data.view)
+        data.rate.collect = this.getRate(data.collect, data.view)
+        data.rate.share = this.getRate(data.share, data.view)
+        data.rate.coin = this.getRate(data.coin, data.view)
+        data.rate.reply = this.getRate(data.totalReply, data.view)
+
+        this.stage = this.guessStage(task.data.view)
+        console.log(task)
+        if(cb) cb(task)
+      })
+    },
     handleButtonClick () {
       if (!this.task.running) {
         tableApi.watch.startTask(this.task)
@@ -556,7 +603,9 @@ export default {
     format: dataHelper.format,
     getRate: dataHelper.getRate,
     convertWan: dataHelper.convertWan,
-
+    refresh () {
+      tableApi.watch.refreshTask(this.task)
+    },
     showTask () {
       tableApi.watch.showTask(this.task)
     },
