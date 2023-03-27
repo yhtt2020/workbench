@@ -14,28 +14,29 @@
                                 icon="bofang"></Icon></span><span  style="font-size:1.2em">激活壁纸（{{activePapers.length}}）</span>
     </div>
   </div>
-  <div>
-    <vue-custom-scrollbar  id="containerWrapper" :settings="settingsScroller" style="height: 80vh">
-     <viewer :images="myPapers">
-      <a-row :gutter="[20,20]" id="bingImages" style="margin-right: 1em">
-        <a-col @click="this.visibleImport=true" class="image-wrapper " :span="6" style="">
-          <a-avatar    class="image-item pointer"   style="font-size:2em;position: relative;line-height:144.2px;height: 144.2px;background: rgba(10,10,10,0.31)">
-            <Icon  style="font-size: 1.3em;vertical-align: text-bottom" icon="tianjiawenjianjia"></Icon> 导入
-          </a-avatar>
-        </a-col>
-        <a-col class="image-wrapper " v-for="img in myPapers" :span="6" style="">
-          <img @contextmenu.stop="showMenu(img)" @error="deleteAll(img)" class="image-item pointer" :src="img.src" style="position: relative">
-          <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
-            <div @click.stop="addToActive(img)" class="bottom-actions pointer" :style="{background:isInActive(img)?'rgba(255,0,0,0.66)':''}">
+
+  <vue-custom-scrollbar  id="containerWrapper" :settings="settingsScroller" style="height: 80vh">
+    <viewer :images="myPapers">
+     <a-row :gutter="[20,20]" id="bingImages" style="margin-right: 1em">
+       <a-col @click="this.visibleImport=true" class="image-wrapper " :span="6" style="">
+         <a-avatar    class="image-item pointer"   style="font-size:2em;position: relative;line-height:144.2px;height: 144.2px;background: rgba(10,10,10,0.31)">
+           <Icon  style="font-size: 1.3em;vertical-align: text-bottom" icon="tianjiawenjianjia"></Icon> 导入
+         </a-avatar>
+       </a-col>
+       <a-col class="image-wrapper " v-for="img in myPapers" :span="6" style="">
+         <img @contextmenu.stop="showMenu(img)" @error="deleteAll(img)" class="image-item pointer" :src="img.src" style="position: relative">
+         <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
+           <div @click.stop="addToActive(img)" class="bottom-actions pointer" :style="{background:isInActive(img)?'rgba(255,0,0,0.66)':''}">
             <Icon v-if="!isInActive(img)" icon="tianjia1"></Icon>
             <Icon v-else style="" icon="yiwancheng"></Icon>
-          </div>
-          </div>
-        </a-col>
-      </a-row>
-     </viewer>
-    </vue-custom-scrollbar>
-  </div>
+           </div>
+         </div>
+       </a-col>
+     </a-row>
+    </viewer>
+   </vue-custom-scrollbar>
+
+
   <a-drawer v-model:visible="visibleMenu" placement="bottom">
     <a-row :gutter="20" style="text-align: center">
       <a-col :span="4">
@@ -60,7 +61,7 @@
     </a-row>
   </a-drawer>
   <a-drawer v-model:visible="visibleImport" placement="right">
-     <Import :del="del"></Import>
+     <Import :loadStaticPaper="loadStaticPaper"></Import>
   </a-drawer>
 </template>
 
@@ -89,6 +90,10 @@ export default {
       livelyPapers:[],
       currentPaper:null,//当前壁纸，显示菜单用
       staticPaper:[],
+      paperTime:'',
+      livelyTime:'',
+      // 图片和视频数据合并
+      combined:[]
     }
   },
   components:{Import},
@@ -96,7 +101,7 @@ export default {
     ...mapWritableState(paperStore,['settings','activePapers','myPapers'])
   },mounted () {
     if(this.settings.savePath){
-      this.loadLivelyPapers(),
+      this.loadLivelyPapers()
       this.loadStaticPaper()
     }
   },
@@ -117,12 +122,20 @@ export default {
       })
     },
     loadLivelyPapers(){
-      let videos=fs.readdirSync(require('path').join(this.settings.savePath,'lively'))
-      this.livelyPapers= videos.map(v=>{
-        return {
-          src:path.join(this.settings.savePath,'lively',v),
-          srcProtocol:'file://'+path.join(this.settings.savePath,'lively',v),
-        }
+      let videos=fs.readdirSync(path.join(this.settings.savePath,'lively'))
+      videos.filter(el=>{
+        const livePath = path.join(path.join(this.settings.savePath,'lively'),el)
+        this.getFileCreatedTime(livePath).then(createTime=>{
+          const returnTime = this.changeTime(createTime) 
+          let livelyItem = {
+           src:path.join(livePath),
+           srcProtocol:'file://'+ livePath,
+           time:returnTime
+          }
+          this.livelyPapers.push(livelyItem)
+        }).catch(err=>{
+          console.log(err);
+        })
       })
     },
     isInActive(image){
@@ -173,9 +186,15 @@ export default {
           // 存在读取指定壁纸目录
           let promptPaper = fs.readdirSync(staticDir)
           promptPaper.forEach(el=>{
+            this.getFileCreatedTime(path.join(`${staticDir}/${el}`)).then(createTime=>{
+              this.paperTime = this.changeTime(createTime)
+            }).catch(err=>{
+              console.log(err);
+            })
             let image = {
               title:false,
-              src:`file://${staticDir}/${el}`
+              src:`file://${staticDir}/${el}`,
+              time:this.paperTime
             }
             this.addToMyPaper(image)
           })
@@ -185,7 +204,38 @@ export default {
       }).catch(err=>{
         console.log(err);
       })
-    }
+    },
+
+    // 获取文件时间
+    async getFileCreatedTime(filePath){
+      try {
+       const stats = await fs.stat(filePath);
+       return stats.birthtime;
+      }catch(err) {
+      console.error(err);
+      }
+    },
+    // 时间转换
+    changeTime(msec){
+      let datetime = new Date(msec);
+      let year = datetime.getFullYear();
+      let month = datetime.getMonth();
+      let date = datetime.getDate();
+      let hour = datetime.getHours();
+      let minute = datetime.getMinutes();
+      let second = datetime.getSeconds();
+      return year + 
+                 '/' + 
+                 ((month + 1) >= 10 ? (month + 1) : '0' + (month + 1)) + 
+                 '/' + 
+                 ((date + 1) < 10 ? '0' + date : date) + 
+                 ' ' + 
+                 ((hour + 1) < 10 ? '0' + hour : hour) +
+                 ':' + 
+                 ((minute + 1) < 10 ? '0' + minute : minute) + 
+                 ':' + 
+                 ((second + 1) < 10 ? '0' + second : second);
+    },
   }
 }
 </script>
