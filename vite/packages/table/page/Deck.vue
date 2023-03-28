@@ -198,7 +198,7 @@
     </div>
     <div class="line">
       设置组宽度：
-      <a-input-number style="width:130px" :min="1" step="1" addon-before="行数" v-model:value="currentGrid.cols"
+      <a-input-number style="width:130px" :min="1" step="1" addon-before="列数" v-model:value="currentGrid.cols"
                       :defalut-value="2"></a-input-number>
     </div>
   </a-drawer>
