@@ -49,7 +49,10 @@ body{
     font-size: 0.6em;
   }
 }
-
+.card-list-icon{
+  width: 20px;
+  height: 20px;
+}
 .drag{
   -webkit-app-region:drag
 }
@@ -59,7 +62,28 @@ body{
 .bottom-panel{
   .item{}
 }
-
+.middle-button{
+  width: 120px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(42, 42, 42, 1);
+}
+.small-button{
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.65);
+}
+.big-button{
+  width: 120px;
+  height: 56px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.65);
+}
+.home-blur{
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(8px);
+}
 .key-button{
   border: 1px solid #c1c1c1;
   border-radius: 4px;

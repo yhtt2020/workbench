@@ -1,47 +1,43 @@
 <template>
-  <SupervisorySlot :options="options">
+  <HomeComponentSlot :options="options">
     <div class="content">
-      <div><a-progress type="circle"  stroke-color="#FF9C00" :percent="GPUData.SGPU1UTI.value" strokeWidth="8" :width="105">
+      <div><a-progress type="circle"  stroke-color="#FF9C00" :percent="GPUData.SGPU1UTI.value" strokeWidth="10" :width="105" style="margin-top: 28px">
         <template #format="percent">
-          <div style="color:#E0E0E0;font-weight: 700">{{GPUData.SGPU1UTI.value}}%</div>
-          <div style="color:#ACACAC;font-size: .5em;margin-top: 1em">负载</div>
+          <div style="color:#E0E0E0;font-size: 24px;font-weight: 700;">{{GPUData.SGPU1UTI.value}}%</div>
+          <div style="color:#ACACAC;font-size: 14px;margin-top: 6px">负载</div>
         </template>
       </a-progress>
       </div>
-      <div>
-        <div class="cpu" style="margin-top: .1em">
+      <div class="right-content">
+        <div class="cpu">
           <div class="cpu-number">
             <span>温度</span>
-            <span style="font-weight:700">{{GPUData.TGPU1DIO.value}}℃</span></div>
+            <span style="font-weight: 700;">{{GPUData.TGPU1DIO.value}}℃</span></div>
         </div>
         <a-progress :showInfo="false" :status="GPUData.TGPU1DIO.value=='-'?'':'active'" :percent="GPUData.TGPU1DIO.value" :stroke-color="{
         '0%': '#60BFFF',
         '100%': '#348FFF',
       }"/>
 
-        <div class="cpu" style="margin-top: .1em">
+        <div class="cpu" style="margin-top: 13px">
           <div class="cpu-number">
-            <span>内存</span>
-            <span style="font-weight:700">{{GPUData.SMEMUTI.value}}%</span></div>
+            <span>显存</span>
+            <span style="font-weight: 700;">{{GPUStorage}}GB</span></div>
         </div>
-        <a-progress :showInfo="false" :status="GPUData.SMEMUTI.value=='-'?'':'active'" :percent="GPUData.SMEMUTI.value" :stroke-color="{
-        '0%': '#60BFFF',
-        '100%': '#348FFF',
-      }"/>
 
-        <div>GPU</div>
-        <canvas id='myGPUCanvas' ref="myGPUCanvas" style='width:130px;height:40px'> </canvas>
+
+        <div style="margin-top: 13px">GPU</div>
+        <canvas id='myGPUCanvas' ref="myGPUCanvas" style='width:130px;height:40px;margin-top: 5px'> </canvas>
       </div>
     </div>
-  </SupervisorySlot>
+  </HomeComponentSlot>
 </template>
 
 <script>
-import SupervisorySlot from "./SupervisorySlot.vue";
 import {mapWritableState} from "pinia";
 import {tableStore} from "../../../store";
 import {filterObjKeys} from "../../../util";
-
+import HomeComponentSlot from "../HomeComponentSlot.vue";
 export default {
   name: "SmallGPUCard",
   data(){
@@ -49,21 +45,26 @@ export default {
       options:{
         className:'card small',
         title:'GPU',
-        icon:'gaoxingneng'
+        icon:'gaoxingneng',
+        type:'smallGPUCard'
       },
       GPUData:{
         SGPU1UTI:{value:"-"},
         TGPU1DIO:{value:"-"},
         SMEMUTI:{value:"-"},
+        SGPU1USEDDEMEM:{value:0}
       },
       GPUList:[999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999,999],
     }
   },
   components:{
-    SupervisorySlot
+    HomeComponentSlot
   },
   computed:{
     ...mapWritableState(tableStore, ["aidaData"]),
+    GPUStorage() {
+      return this.GPUData.SGPU1USEDDEMEM.value>0?(this.GPUData.SGPU1USEDDEMEM.value / 1000).toFixed(2):this.GPUData.SGPU1USEDDEMEM.value
+    }
   },
   watch: {
     "aidaData": {
@@ -95,15 +96,13 @@ export default {
         ctx.fillRect(x ,0,12,12);
         let y= 0;
         let bcolor = 100;
-        if(parseInt(this.GPUList[index])>=0&&parseInt(this.GPUList[index])<=12.5)bcolor = 8;
-        if(parseInt(this.GPUList[index])>12.5&&parseInt(this.GPUList[index])<=25)bcolor =7;
-        if(parseInt(this.GPUList[index])>25&&parseInt(this.GPUList[index])<=37.5)bcolor =6;
-        if(parseInt(this.GPUList[index])>37.5&&parseInt(this.GPUList[index])<=50)bcolor =5;
-        if(parseInt(this.GPUList[index])>50&&parseInt(this.GPUList[index])<=62.5)bcolor =4;
-        if(parseInt(this.GPUList[index])>62.5&&parseInt(this.GPUList[index])<=75)bcolor =3;
-        if(parseInt(this.GPUList[index])>75&&parseInt(this.GPUList[index])<=87.5)bcolor =2;
-        if(parseInt(this.GPUList[index])>87.5&&parseInt(this.GPUList[index])<=100)bcolor=1;
-        for (let i = 1;i<=8;i++){
+        if(parseInt(this.GPUList[index])>=0&&parseInt(this.GPUList[index])<=16)bcolor =6;
+        if(parseInt(this.GPUList[index])>16&&parseInt(this.GPUList[index])<=32)bcolor =5;
+        if(parseInt(this.GPUList[index])>32&&parseInt(this.GPUList[index])<=48)bcolor =4;
+        if(parseInt(this.GPUList[index])>48&&parseInt(this.GPUList[index])<=64)bcolor =3;
+        if(parseInt(this.GPUList[index])>64&&parseInt(this.GPUList[index])<=80)bcolor =2;
+        if(parseInt(this.GPUList[index])>80&&parseInt(this.GPUList[index])<=100)bcolor =1;
+        for (let i = 1;i<=6;i++){
           if(bcolor<=i){
             ctx.fillStyle="#3B8FFA";
           }else{
@@ -129,15 +128,14 @@ export default {
 .content{
   display: flex;
   flex-direction: row;
-  align-items: center;
+  justify-content: space-between;
   height: 100%;
-  div:first-child{
-    flex: 1;
-  }
-  div:last-child{
-    flex: 1;
+  font-weight: 400;
+  .right-content{
+    margin-top: 8px;
   }
 }
+
 .cpu{
   display: flex;
   .cpu-number{

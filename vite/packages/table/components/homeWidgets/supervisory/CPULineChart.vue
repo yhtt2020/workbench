@@ -1,7 +1,7 @@
 <template>
-  <SupervisorySlot :options="options">
+  <HomeComponentSlot :options="options">
     <div class="content">
-      <div class="cpu" style="margin-top: 4px">
+      <div class="cpu">
         <div class="cpu-number">
           <div>
           <Icon icon="CPU" class="icon"></Icon>
@@ -14,7 +14,7 @@
       <div class="cpu">
         <div class="cpu-number">
           <div>
-            <Icon icon="GPU" class="icon"></Icon>
+            <Icon icon="xianka" class="icon"></Icon>
             <span>GPU</span>
           </div>
           <span style="font-weight:700">{{CPUData.SGPU1UTI.value}}%</span></div>
@@ -34,18 +34,18 @@
         '100%': '#348FFF',
       }"/>
 
-      <div class="cpu" >
-      <div class="cpu-number">
-        <div>
-          <Icon icon="cipanio" class="icon"></Icon>
-          <span>磁盘</span>
-        </div>
-        <span style="font-weight:700">{{ CPUData.SDSK1ACT.value }}%</span></div>
-    </div>
-      <a-progress :showInfo="false" :status="CPUData.SDSK1ACT.value=='-'?'':'active'" :percent="CPUData.SDSK1ACT.value" :stroke-color="{
-        '0%': '#FFD061',
-        '100%': '#FF9035',
-      }"/>
+<!--      <div class="cpu" >-->
+<!--      <div class="cpu-number">-->
+<!--        <div>-->
+<!--          <Icon icon="cipanio" class="icon"></Icon>-->
+<!--          <span>磁盘</span>-->
+<!--        </div>-->
+<!--        <span style="font-weight:700">{{ CPUData.SDSK1ACT.value }}%</span></div>-->
+<!--    </div>-->
+<!--      <a-progress :showInfo="false" :status="CPUData.SDSK1ACT.value=='-'?'':'active'" :percent="CPUData.SDSK1ACT.value" :stroke-color="{-->
+<!--        '0%': '#FFD061',-->
+<!--        '100%': '#FF9035',-->
+<!--      }"/>-->
 
       <div class="cpu" style="margin-top: 13px;flex-direction: column">
       <div class="cpu-number">
@@ -80,7 +80,7 @@
     </div>
 
 
-  </SupervisorySlot>
+  </HomeComponentSlot>
 </template>
 
 <script>
@@ -90,13 +90,15 @@ import * as echarts from "echarts";
 import {mapWritableState} from "pinia";
 import {tableStore} from "../../../store";
 import {filterObjKeys, netWorkDownUp} from '../../../util'
+import HomeComponentSlot from "../HomeComponentSlot.vue";
 export default {
   data(){
     return {
       options:{
         className:'card',
         title:'性能',
-        icon:'gaoxingneng'
+        icon:'gaoxingneng',
+        type:'CPULineChart'
       },
       CPUOption,
       GPUOption,
@@ -115,7 +117,7 @@ export default {
 
   name: "CPULineChart",
   components:{
-    SupervisorySlot
+    HomeComponentSlot
   },
   computed:{
     ...mapWritableState(tableStore, ["aidaData"]),
@@ -295,7 +297,9 @@ export default {
 
   .cpu{
     display: flex;
-    margin-top: 10px;
+    margin-top: 13px;
+    font-size: 16px;
+    font-weight: 400;
   .cpu-number{
     display: flex;
     width: 100%;
@@ -307,13 +311,14 @@ export default {
       align-items: center;
       width: 23%;
       justify-content: space-between;
-      font-weight: 500;
+
+      vertical-align: middle;
     }
   }
   }
   .icon{
-    width: 18px;
-    height:18px;
+    width: 20px;
+    height: 20px;
   }
 }
 .echarts {

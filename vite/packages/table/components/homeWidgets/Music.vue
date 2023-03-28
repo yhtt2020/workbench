@@ -31,7 +31,8 @@ export default {
       options:{
         className:'card',
         title:'网易云',
-        icon:'wangyiyunyinle'
+        icon:'wangyiyunyinle',
+        type:'music'
       },
     }
   },

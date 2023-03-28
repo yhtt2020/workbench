@@ -1,12 +1,12 @@
 <template>
-<SupervisorySlot :options="options">
+<HomeComponentSlot :options="options">
   <div class="top-content">
     <div><span>{{CPUGPUData.SCPUUTI.value}}%</span>
       <span>
       <Icon icon="CPU" class="icon" ></Icon>CPU</span>
     </div>
 
-    <div style="margin-left: 13px">
+    <div>
       <span>{{CPUGPUData.SGPU1UTI.value}}%</span>
       <span>
       <Icon icon="GPU" class="icon"></Icon>GPU</span></div>
@@ -15,7 +15,7 @@
       <span>
       <Icon icon="neicun" class="icon"></Icon>内存</span></div>
 
-    <div style="margin-left: 13px"><span>{{CPUGPUData.SRTSSFPS.value}}</span>
+    <div><span>{{CPUGPUData.SRTSSFPS.value}}</span>
       <span>
       <Icon icon="youxishoubing" class="icon"></Icon><span style="position: relative">FPS
         <a-tooltip v-if="CPUGPUData.SRTSSFPS.value==0">
@@ -40,14 +40,14 @@
      </div>
    </div>
   </div>
-</SupervisorySlot>
+</HomeComponentSlot>
 </template>
 
 <script>
-import SupervisorySlot from "./SupervisorySlot.vue";
 import {mapWritableState} from "pinia";
 import {tableStore} from "../../../store";
 import {filterObjKeys, netWorkDownUp} from "../../../util";
+import HomeComponentSlot from "../HomeComponentSlot.vue";
 export default {
   name: "CPUFourCard",
   data(){
@@ -55,7 +55,8 @@ export default {
       options:{
         className:'card',
         title:'性能',
-        icon:'gaoxingneng'
+        icon:'gaoxingneng',
+        type:'CPUFourCard'
       },
       CPUGPUData:{
         SCPUUTI:{value:"-"},
@@ -68,7 +69,7 @@ export default {
   }
   },
   components:{
-    SupervisorySlot
+    HomeComponentSlot
   },
   computed:{
     ...mapWritableState(tableStore, ["aidaData"]),
@@ -100,12 +101,13 @@ export default {
   height: 95%;
   width: 100%;
   align-items: center;
+  justify-content: space-between;
   margin-top: 0px;
 
   >div{
-    width: calc((100% - 13px) / 2);
-    margin-top: 13px;
-    height: 120.5px;
+    width: 120px;
+    margin-top: 12px;
+    height: 120px;
     background: #2B2B2B;
     display: flex;
     flex-direction: column;
@@ -130,8 +132,8 @@ export default {
 
   }
   .icon{
-       width: 18px;
-       height:18px;
+       width: 20px;
+       height:20px;
   margin-right: .5em;
    }
 }
