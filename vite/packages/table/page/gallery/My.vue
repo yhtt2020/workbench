@@ -17,27 +17,36 @@
 
   <vue-custom-scrollbar  id="containerWrapper" :settings="settingsScroller" style="height: 80vh">
     <viewer :images="mergedArr">
-      <div v-for="item in mergedArr">
-         <div v-if="fileExtension === 'jpg' || fileExtension === 'png' || fileExtension === 'jpeg' || fileExtension === 'bmp' || fileExtension === 'gif' ">
-          {{ item.src }}
-         </div>
-      </div>
-     <!-- <a-row :gutter="[20,20]" id="bingImages" style="margin-right: 1em">
+     <a-row :gutter="[20,20]" id="bingImages" style="margin-right: 1em">
        <a-col @click="this.visibleImport=true" class="image-wrapper " :span="6" style="">
-         <a-avatar    class="image-item pointer"   style="font-size:2em;position: relative;line-height:144.2px;height: 144.2px;background: rgba(10,10,10,0.31)">
+         <a-avatar    class="image-item pointer"   style="font-size:2em;position: relative; line-height: 144.20px; height: 144.2px; background: rgba(10,10,10,0.31)">
            <Icon  style="font-size: 1.3em;vertical-align: text-bottom" icon="tianjiawenjianjia"></Icon> 导入
          </a-avatar>
        </a-col>
-       <a-col class="image-wrapper " v-for="img in myPapers" :span="6" style="">
-         <img @contextmenu.stop="showMenu(img)" @error="deleteAll(img)" class="image-item pointer" :src="img.src" style="position: relative">
-         <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
-           <div @click.stop="addToActive(img)" class="bottom-actions pointer" :style="{background:isInActive(img)?'rgba(255,0,0,0.66)':''}">
-            <Icon v-if="!isInActive(img)" icon="tianjia1"></Icon>
-            <Icon v-else style="" icon="yiwancheng"></Icon>
+       <a-col class="image-wrapper " v-for="img in mergedArr" :span="6" style="">
+        <div v-show="fileType(img.src) === 'image'">
+          <img @contextmenu.stop="showMenu(img)" @error="deleteAll(img)" class="image-item pointer" :src="img.src" style="position: relative">
+          <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
+            <div @click.stop="addToActive(img)" class="bottom-actions pointer" :style="{background:isInActive(img)?'rgba(255,0,0,0.66)':''}">
+             <Icon v-if="!isInActive(img)" icon="tianjia1"></Icon>
+             <Icon v-else style="" icon="yiwancheng"></Icon>
+            </div>
+          </div> 
+        </div>
+         <div v-show="fileType(img.src) === 'video'">
+           <div>
+            <img @contextmenu.stop="visibleMenu=true" class="image-item pointer"
+            :src="img.img_src" style="position: relative">
+            <div style="background: rgb(0 0 0 / 20%); width: 4em; height: 4em; border-radius:50%; position: absolute; top: 50%; left: 50%;transform: translate(-50%,-50%);">
+              <div @click="previewVideo(img)" class="play-icon pointer" style="">
+                <Icon icon="bofang" style="font-size:3em;margin-top: 8px"></Icon>
+              </div>
+            </div>
+            <div id="mse"></div>
            </div>
          </div>
        </a-col>
-     </a-row> -->
+     </a-row>
     </viewer>
    </vue-custom-scrollbar>
 
@@ -68,6 +77,17 @@
   <a-drawer v-model:visible="visibleImport" placement="right">
      <Import :loadStaticPaper="loadStaticPaper"></Import>
   </a-drawer>
+
+<div v-show="previewVideoVisible" style="position: fixed;left: 0;right: 0;top: 0;bottom: 0;z-index:9999999"
+  id="previwer">
+ <div id="actions" style="position: fixed;right: 2em;top: 2em;z-index: 9999999999;">
+  <div @click="closePreview" class="btn pointer" style="background: rgba(0,0,0,0.76);min-width: 4em;">
+   <Icon icon="guanbi1" style="font-size: 2em"></Icon>
+  </div>
+ </div>
+
+ <div id="my-mse"></div>
+</div>
 </template>
 
 <script>
@@ -79,6 +99,8 @@ import Spotlight from 'spotlight.js'
 const fs=require('fs-extra')
 const path=require('path')
 import { paperStore } from '../../store/paper'
+import Player from 'xgplayer/dist/simple_player'
+
 export default {
   name: 'My',
   data(){
@@ -96,7 +118,7 @@ export default {
       currentPaper:null,//当前壁纸，显示菜单用
       paperTime:'',
       livelyTime:'',
-      fileTypePath:''
+      previewVideoVisible:false,
     }
   },
   components:{Import},
@@ -106,17 +128,22 @@ export default {
       return [...this.myPapers,...this.livelyPapers].sort((a,b)=>{
         return new Date(a.time) - new Date(b.time);
       })
-    },
-    fileExtension() {
-      return this.fileTypePath.split('.').pop();
-    }
-
+    },  
   },
   mounted () {
     if(this.settings.savePath){
       this.loadLivelyPapers()
       this.loadStaticPaper()
     }
+    $('#previwer').mousemove(() => {
+      $('#actions').show()
+      if (this.timer) {
+        clearTimeout(this.timer)
+      }
+      this.timer = setTimeout(() => {
+        $('#actions').fadeOut()
+      }, 5000)
+    })
   },
   methods:{
     ...mapActions(paperStore,['addToActive','addToMyPaper']),
@@ -140,8 +167,10 @@ export default {
         const livePath = path.join(path.join(this.settings.savePath,'lively'),el)
         this.getFileCreatedTime(livePath).then(createTime=>{
           const returnTime = this.changeTime(createTime) 
+          const imgFileName = path.join(path.join(this.settings.savePath,'lively'),el).split("\\")[path.join(path.join(this.settings.savePath,'lively'),el).split("\\").length - 1].split(".")[0]
           let livelyItem = {
            src:path.join(livePath),
+           img_src:`https://up.apps.vip/lively/${imgFileName}.jpg`,
            srcProtocol:'file://'+ livePath,
            time:returnTime
           }
@@ -181,11 +210,15 @@ export default {
     add(){},
     // 删除壁纸
     del(){
-      fs.removeSync(`${this.myPapers[this.myPapers.indexOf(this.currentPaper)].src.split('//')[1]}`)
-      if(this.myPapers.indexOf(this.currentPaper) !== -1){
-        this.myPapers.splice(this.myPapers.indexOf(this.currentPaper),1)
-        this.visibleMenu = false
-      }
+      console.log();
+      // this.mergedArr.filter(el=>{
+      //   console.log(el.src);
+      // })
+      // fs.removeSync(`${this.myPapers[this.myPapers.indexOf(this.currentPaper)].src.split('//')[1]}`)
+      // if(this.myPapers.indexOf(this.currentPaper) !== -1){
+      //   this.myPapers.splice(this.myPapers.indexOf(this.currentPaper),1)
+      //   this.visibleMenu = false
+      // }
     },
     // 删除有问题的图片
     deleteAll(img){
@@ -206,6 +239,7 @@ export default {
             })
             let image = {
               title:false,
+              srcProtocol:'',
               src:`file://${staticDir}/${el}`,
               time:this.paperTime
             }
@@ -249,6 +283,49 @@ export default {
                  ':' + 
                  ((second + 1) < 10 ? '0' + second : second);
     },
+    // 判断文件类型
+    fileType(src){
+      if(src.endsWith('.jpg') || src.endsWith('.png') || src.endsWith('.gif') || src.endsWith('.jpeg') || src.endsWith('.bmp')){
+        return 'image';  
+      }else if (src.endsWith('.mp4') || src.endsWith('.avi') || src.endsWith('.mpeg') || src.endsWith('.rmvb')) {
+        return 'video';
+      }
+    },
+    // 视频播放
+    previewVideo(img){
+      $('#actions').show()
+      this.timer = setTimeout(() => {
+        $('#actions').fadeOut()
+      }, 5000)
+      this.previewVideoVisible = true
+      if (window.$xgplayer) {
+        window.$xgplayer.destroy()
+      }
+      const url = `${img.srcProtocol}`
+      window.$xgplayer = new Player({
+        id: 'my-mse',
+        url: url,
+        // fitVideoSize: 'fixWidth',
+        fitVideoSize: 'fixWidth',
+        // width:300,
+        // height:300,
+        loop: true,
+        fluid: true,
+        videoInit: true,
+        autoplay: true
+      })
+    },
+
+    closePreview () {
+      this.previewVideoVisible = false
+      if (window.$xgplayer) {
+        window.$xgplayer.destroy()
+        window.$xgplayer = null
+      }
+    },
+   
+
+    
   }
 }
 </script>

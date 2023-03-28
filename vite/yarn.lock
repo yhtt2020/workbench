@@ -281,6 +281,11 @@
     "@uppy/utils" "^4.1.2"
     nanoid "^3.1.25"
 
+"@videojs-player/vue@1.x":
+  version "1.0.0"
+  resolved "https://registry.npmmirror.com/@videojs-player/vue/-/vue-1.0.0.tgz#df7db677b43b2d9b6872e71cd0eb2238cc19a8fd"
+  integrity sha512-WonTezRfKu3fYdQLt/ta+nuKH6gMZUv8l40Jke/j4Lae7IqeO/+lLAmBnh3ni88bwR+vkFXIlZ2Ci7VKInIYJg==
+
 "@vitejs/plugin-vue@^2.3.3":
   version "2.3.3"
   resolved "https://registry.npmmirror.com/@vitejs/plugin-vue/-/plugin-vue-2.3.3.tgz"
@@ -2000,6 +2005,13 @@ vue-types@^3.0.0:
   integrity sha512-IwUC0Aq2zwaXqy74h4WCvFCUtoV0iSWr0snWnE9TnU18S66GAQyqQbRf2qfJtUuiFsBf6qp0MEwdonlwznlcrw==
   dependencies:
     is-plain-object "3.0.1"
+
+vue-video-player@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.npmmirror.com/vue-video-player/-/vue-video-player-6.0.0.tgz#fc51581b4b0437e5efd7e30388f18d900e27573d"
+  integrity sha512-WP47OtefsjMEReRCIKIL3tRRgH/PyNm8ELjsbYgr/WWrYAj5Ih9Adzkzp+ylYOI/v57jJ4O7O4XkbXBCmsTqNw==
+  dependencies:
+    "@videojs-player/vue" "1.x"
 
 vue3-resize@^0.2.0:
   version "0.2.0"

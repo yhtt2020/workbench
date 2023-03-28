@@ -16,9 +16,6 @@
         <div @click="previewVideo(item)" class="play-icon pointer">
           <Icon icon="bofang" style="font-size:3em;margin-top: 8px"></Icon>
         </div>
-        <div>
-
-        </div>
         <div @click="previewVideo(item)" style="border-radius: 6px;overflow: hidden;position: relative">
           <div :style="{width:getWidth(item)+'%'}"
                style="background: rgb(0 0 0 / 20%);height: 100%; position: absolute;z-index: 3;right: 0;">

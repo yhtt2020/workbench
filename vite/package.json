@@ -42,6 +42,7 @@
     "vue": "^3.2.25",
     "vue-justified-layout": "^0.2.0",
     "vue-router": "4",
+    "vue-video-player": "^6.0.0",
     "vue3-resize": "^0.2.0",
     "vuex": "^4.0.2",
     "xgplayer": "^2.32.2"
