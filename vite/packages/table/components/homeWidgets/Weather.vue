@@ -1,6 +1,6 @@
 <template>
-
-  <div @click="enterWeather" class="card pointer small" style="padding:1em;">
+  <HomeComponentSlot :options="options">
+  <div @click="enterWeather">
     <!--    <iframe scrolling="no"  style="border: none;height: 196px;width: 100%" :src="src"></iframe>-->
     <div v-if="!cities.length">
       <div>
@@ -35,8 +35,6 @@
     </div>
     <div @click="enterWeather" v-else>
       <template v-if="city.now && city.d7 && city.h24">
-        <Icon icon="position"></Icon>
-        {{ city.name }}
         <a-row>
           <a-col :span="7" style="text-align: center">
             <i
@@ -88,21 +86,31 @@
 
     </div>
   </div>
-
+  </HomeComponentSlot>
 </template>
 <script>
 
 import { mapState } from 'pinia'
 import { getDateTime } from '../../../../src/util/dateTime'
 import { weatherStore } from '../../store/weather'
-
+import HomeComponentSlot from "./HomeComponentSlot.vue";
 export default {
   name: "Weather",
   data() {
     return {
       src: "https://a.apps.vip/weather/weather.html",
       today: "",
+      options:{
+        className:'card small',
+        title:'',
+        icon:'',
+        type:'weather',
+
+      },
     };
+  },
+  components:{
+    HomeComponentSlot
   },
   computed: {
     ...mapState(weatherStore, ['cities']),
@@ -112,6 +120,8 @@ export default {
   },
   mounted() {
     this.today = getDateTime();
+    if(this.city)this.options.title = this.city.name;
+    if(this.cities.length)this.options.icon = 'position';
   },
   methods: {
     enterWeather() {

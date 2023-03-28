@@ -27,7 +27,10 @@
       </div>
     </vue-custom-scrollbar>
   </div>
-
+  <transition name="fade">
+<div class="home-blur" style="position: fixed;top: 0;right: 0;left: 0;bottom: 0;z-index: 999" v-if="custom">
+  <AddCard @setCustom="setCustom"></AddCard></div>
+  </transition>
 
   <a-drawer
     :contentWrapperStyle="{ padding:10,marginLeft:'2.5%',
@@ -79,7 +82,7 @@ import CPUFourCard from '../components/homeWidgets/supervisory/CPUFourCard.vue'
 import InternalList from '../components/homeWidgets/supervisory/InternalList.vue'
 import SmallCPUCard from '../components/homeWidgets/supervisory/SmallCPUCard.vue'
 import SmallGPUCard from '../components/homeWidgets/supervisory/SmallGPUCard.vue'
-
+import AddCard from "./app/card/AddCard.vue";
 const readAida64 = window.readAida64
 export default {
   name: 'Home',
@@ -97,7 +100,8 @@ export default {
         currentItemId: -1,
         timer: null
       },
-      scrollbar: Date.now()
+      scrollbar: Date.now(),
+      custom:false
     }
   },
   components: {
@@ -118,7 +122,8 @@ export default {
     CPUFourCard,
     InternalList,
     SmallCPUCard,
-    SmallGPUCard
+    SmallGPUCard,
+    AddCard
   },
   computed: {
     ...mapWritableState(tableStore, ['customComponents', 'clockEvent']),
@@ -131,7 +136,7 @@ export default {
     //this.customComponents=[{name:'Music',id:2},{name:'Weather',id:3},{name:'Timer',id:4}]//重置
     if (this.customComponents.length > 0) {
       if (typeof this.customComponents[0] === 'string') {
-        this.customComponents = [{ name: 'Music', id: 2 }, { name: 'Weather', id: 3 }, { name: 'Timer', id: 4 }]
+        this.customComponents = []
       }
     }
   },
@@ -167,7 +172,8 @@ export default {
   methods: {
     ...mapActions(tableStore, ['setAidaData']),
     addCard () {
-      this.$router.push({ name: 'addCard' })
+      this.custom=true;
+      this.menuVisible = false
     },
     showMenu () {
       this.menuVisible = true
@@ -185,10 +191,22 @@ export default {
       this.menuVisible = false
       this.key = Date.now()
     },
+    setCustom(){
+      this.custom=false;
+    }
   },
 }
 </script>
 <style scoped lang="scss">
+
+:deep(ant-modal-body){
+  font-size: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
 .grid {
   position: relative;
   display: inline-block;
@@ -221,8 +239,25 @@ export default {
   }
 }
 
+
+.fade-enter-active {
+  animation: bounce-in .5s;
+}
+.fade-leave-active {
+  animation: bounce-in .5s reverse;
+}
+@keyframes bounce-in {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
 </style>
 <style lang="scss">
+
 .home-widgets {
   .muuri-item {
     width: 280px;
@@ -234,16 +269,19 @@ export default {
   }
 
   .card {
+    position: relative;
     border: 0;
     height: 420px;
 
     &.small {
       height: 204px;
     }
+
   }
 }
 </style>
 <style lang="scss">
+
 @media screen and (max-height: 610px) {
   #scrollerBar {
     zoom: 0.88;

@@ -106,15 +106,16 @@ export default   [{
           component:Browser
         },
       ]
-    }, {
-      path: "/addCard",
-      name: "addCard",
-      component: AddCard,
-    },
-    {
-      path: "/setting",
-      name: "addCardSetting",
-      component: SetupCard,
     },
   ]
-}]
+}, {
+  path: "/addCard",
+  name: "addCard",
+  component: AddCard,
+},
+  {
+    path: "/setting",
+    name: "addCardSetting",
+    component: SetupCard,
+  },
+]

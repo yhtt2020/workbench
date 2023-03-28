@@ -1,13 +1,14 @@
 <template>
   <div :class="options.className" :style="{pointerEvents:(editing?'none':'')}">
-    <div class="content-title">  <div class="left-title">
+    <div :class="options.noTitle===true?'no-title':'content-title'">
+      <div class="left-title" v-if="options.noTitle!==true">
       <Icon :icon="options.icon" class="title-icon"></Icon>
-      <div style="font-size: 1em">{{options.title}}</div>
+      <div>{{options.title}}</div>
     </div>
       <div class="right-title" @click.stop="showDrawer">
         <Icon icon="gengduo1" class="title-icon" style="cursor:pointer"></Icon>
-      </div></div>
-
+      </div>
+    </div>
     <slot :customIndex="customIndex"></slot>
   </div>
   <a-drawer
@@ -22,7 +23,7 @@
     @close="onClose"
   >
     <div style="display: flex;flex-direction: row;height: 100%">
-      <div class="option" @click="onSetup">
+      <div class="option" @click="onSetup" v-if="!options.type">
         <Icon class="icon" icon="shezhi1"></Icon>设置
       </div>
       <div class="option" @click="removeCard">
@@ -67,6 +68,7 @@ export default {
       this.visible = false;
     },
     removeCard(){
+      console.log(this.customIndex)
       this.removeCustomComponents(this.customIndex)
       this.visible = false;
     },
@@ -88,7 +90,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.no-title{
+  .title-icon{
+    width: 24px;
+    height: 24px;
+    color: #818181;
+  }
+  .right-title{
+   position: absolute;
+    top: 1em;
+    right: 1em;
+  }
+}
 .content-title{
+  font-size: 16px;
   display: flex;
   justify-content: space-between;
   .left-title{
@@ -99,8 +114,8 @@ export default {
 
 
     .title-icon{
-      width: 18px;
-      height:18px;
+      width: 24px;
+      height: 24px;
     }
     :last-child{
       margin-left: .5em;
@@ -112,8 +127,8 @@ export default {
     display: flex;
 
     .title-icon{
-      width: 1.5em;
-      height: 1.5em;
+      width: 24px;
+      height: 24px;
       color: #818181;
     }
   }

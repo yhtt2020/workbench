@@ -122,7 +122,7 @@ export const tableStore = defineStore(
         countdownDay: [],
         appDate: {},
         clockEvent: [],
-        customComponents: [{name:'Music',id:2},{name:'Weather',id:3},{name:'Timer',id:4}],
+        customComponents: [],
         aidaData:null,
 
       };
@@ -232,7 +232,6 @@ if(a.length!==0)
         this.customComponents.push(value);
       },
       removeCustomComponents(customIndex) {
-        console.log(customIndex)
         this.customComponents.splice( this.customComponents.findIndex(item=>{
           return item.id===customIndex
         }),1)
