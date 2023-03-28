@@ -1,18 +1,20 @@
 <template>
   <div class="top-title drag">
     <div class="left-title pointer no-drag" @click="onBack">
-    <Icon icon="xiangzuo"></Icon>
+    <Icon icon="xiangzuo" style="height: 24px;width: 24px"></Icon>
     <span>返回</span>
     </div>
-    <a-input v-model:value="selectContent" class="no-drag" placeholder="搜索" @change="select" style="height: 100%;border-radius: 10px;width:400px;background: #363738">
+    <a-input v-model:value="selectContent" class="no-drag" placeholder="搜索" @change="select" style="height: 100%;
+   width: 400px;border-radius: 12px;background: rgba(42, 42, 42, 0.6);">
       <template #prefix>
         <Icon icon="sousuo"></Icon>
       </template>
     </a-input>
   </div>
   <vue-custom-scrollbar key="scrollbar" id="addScroll"  :settings="scrollbarSettings"
-                        style="position:relative;  border-radius: 8px;height: calc(100vh - 8em)">
+                        style="position:relative;  border-radius: 8px;height: 100vh">
   <CardPreview :cardType="item"   v-for="item in filterList"></CardPreview>
+    <div style="height: 650px"></div>
   </vue-custom-scrollbar>
 </template>
 
@@ -103,7 +105,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-    margin-top: 10px;
+    margin-top: 16px;
     margin-left: -20px;
 
 }
@@ -112,17 +114,20 @@ export default {
   align-items: center;
   margin-top: 20px;
   margin-left: 20px;
-  height: 40px;
+  height: 48px;
   width: calc(50vw + 200px);
   justify-content: space-between;
   .left-title{
-    width: 80px;
-    border-radius: 5px;
-    background:#363738;
+    font-size: 18px;
+    font-weight: 400;
+    width: 100px;
+    height: 48px;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
+    padding: 0 19px 0 10px;
     align-items: center;
-    height: 100%;
+    border-radius: 12px;
+    background: rgba(42, 42, 42, 1);
   }
 }
 .content {
