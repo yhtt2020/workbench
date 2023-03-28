@@ -74,10 +74,14 @@ export default {
       height:100
     })
     tsbApi.barrage.init()
+
     tsbApi.barrage.setOnUrlChanged((url)=>{
-      this.changeUrl(url)
+      if(this.settings.barrage.browserLink){
+        this.changeUrl(url)
+      }
     }) //挂载url变化事件
-    this.pageUrl = (await tsbApi.tabs.current()).sourceUrl
+
+    this.pageUrl ='table'// (await tsbApi.tabs.current()).sourceUrl
     this.getList()
     window.$manager = manager
     window.$manager.reload=this.getList
