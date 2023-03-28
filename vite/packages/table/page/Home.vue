@@ -198,15 +198,6 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-
-:deep(ant-modal-body){
-  font-size: 0;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
 .grid {
   position: relative;
   display: inline-block;
@@ -257,7 +248,6 @@ export default {
 }
 </style>
 <style lang="scss">
-
 .home-widgets {
   .muuri-item {
     width: 280px;
@@ -276,16 +266,27 @@ export default {
     &.small {
       height: 204px;
     }
-
   }
 }
 </style>
 <style lang="scss">
+@media screen and (max-height: 510px) {
+  #scrollerBar {
+    zoom: 0.718;
+    width: calc(100vw + 40em);
+  }
+}
+@media screen and (min-height: 511px) and (max-height: 550px) {
+  #scrollerBar {
+    zoom: 0.78;
+    width: calc(100vw +  24em);
+  }
+}
 
-@media screen and (max-height: 610px) {
+@media screen and (min-height: 551px) and (max-height: 610px) {
   #scrollerBar {
     zoom: 0.88;
-    width: calc(100vw + 4em);
+    width: calc(100vw + 8em);
   }
 }
 

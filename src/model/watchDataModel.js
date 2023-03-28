@@ -28,13 +28,17 @@ class WatchTaskModel {
     }
   }
 
+  async get(map,limit=100){
+    return this.db.knex('data').where(map).orderBy('grab_time','desc').limit(limit).select()
+  }
+
   async updateLastExecute(taskId,data){
     await this.db.knex('task').where({nanoid:taskId}).increment('executed_times')
     await this.db.knex('task').where({nanoid:taskId}).update({last_execute_time:Date.now(),last_data:JSON.stringify(data)})
   }
 
   async add (taskId, data,type,key) {
-    if(type==='start'){
+    if(type!=='interval'){
       //只更新start，不更新interval
       this.updateLastExecute(taskId,data).then()
     }

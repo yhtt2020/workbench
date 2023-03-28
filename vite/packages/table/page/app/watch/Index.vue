@@ -9,14 +9,14 @@
         <a-empty v-if="runningTasks.length===0" style="margin-top: 3em"
                  description="当前还没有正在监控中的任务"></a-empty>
         <div v-else>
-          <vue-custom-scrollbar @contextmenu.stop="showMenu(-1,undefined,'wrapper')" :settings="scrollbarSettings"
+          <vue-custom-scrollbar :settings="scrollbarSettings"
                                 style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em)">
-            <Vuuri :options="{layout:{horizontal:true}}" :getItemWidth="()=>{return '250px'}"
+            <Vuuri :key="runningTasksKey" :options="{layout:{horizontal:true}}" :getItemWidth="()=>{return '250px'}"
                    :getItemHeight="()=>{return '500px'}" class="monitor"
                    v-model="runningTasks">
               <template #item="{ item }">
                 <Widget :uniqueKey="item.nanoid">
-                  <div  @click="goDashboard(item.nanoid)" class="p-2 bili-card">
+                  <div @contextmenu.stop="showMenu(item)"   @click="goDashboard(item.nanoid)" class="p-2 bili-card">
                     <div class="text-more text-base mb-4 text-left">
                       <!--               <a-avatar :src="item.task.icon"></a-avatar> -->
                       <Icon icon="bilibili" style="font-size: 20px;vertical-align: text-top"></Icon>
@@ -48,29 +48,29 @@
                         </a-col>
                       </a-row>
                     </div>
-                    <div class="mb-3">
-                      <div class="bili-tag" v-for="tag in item.tags">{{ tag }}</div>
-                    </div>
+<!--                    <div class="mb-3">-->
+<!--                      <div class="bili-tag" v-for="tag in item.tags">{{ tag }}</div>-->
+<!--                    </div>-->
 
-                    <div class="mb-4">
-                      <a-row>
-                        <a-col :span="8">
-                          <div class="text-xs">今日票房</div>
-                          <div class="text-lg">5321</div>
-                        </a-col>
-                        <a-col :span="8">
-                          <div class="text-xs">全天预测
-                          </div>
-                          <div class="text-lg">
-                            1.5万
-                          </div>
-                        </a-col>
-                        <a-col :span="8">
-                          <div class="text-xs"> 当前在看</div>
-                          <div class="text-lg">-</div>
-                        </a-col>
-                      </a-row>
-                    </div>
+<!--                    <div class="mb-4">-->
+<!--                      <a-row>-->
+<!--                        <a-col :span="8">-->
+<!--                          <div class="text-xs">今日票房</div>-->
+<!--                          <div class="text-lg">5321</div>-->
+<!--                        </a-col>-->
+<!--                        <a-col :span="8">-->
+<!--                          <div class="text-xs">全天预测-->
+<!--                          </div>-->
+<!--                          <div class="text-lg">-->
+<!--                            1.5万-->
+<!--                          </div>-->
+<!--                        </a-col>-->
+<!--                        <a-col :span="8">-->
+<!--                          <div class="text-xs"> 当前在看</div>-->
+<!--                          <div class="text-lg">-</div>-->
+<!--                        </a-col>-->
+<!--                      </a-row>-->
+<!--                    </div>-->
 
                     <div class="mb-4" v-if="item.stage">
                      <BiliStage :stage="item.stage"></BiliStage>
@@ -110,14 +110,14 @@
         <a-empty v-if="stoppedTasks.length===0" style="margin-top: 3em"
                  description="当前没有待机状态的任务"></a-empty>
         <div v-else>
-          <vue-custom-scrollbar @contextmenu.stop="showMenu(-1,undefined,'wrapper')" :settings="scrollbarSettings"
+          <vue-custom-scrollbar :settings="scrollbarSettings"
                                 style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em)">
-            <Vuuri :options="{layout:{horizontal:true}}" :getItemWidth="()=>{return '250px'}"
+            <Vuuri :key="stoppedTasksKey" :options="{layout:{horizontal:true}}" :getItemWidth="()=>{return '250px'}"
                    :getItemHeight="()=>{return '500px'}" class="monitor"
                    v-model="stoppedTasks">
               <template #item="{ item }">
                 <Widget :uniqueKey="item.id">
-                  <div @click="goDashboard(item.nanoid)" class="p-2 bili-card">
+                  <div @contextmenu.stop="showMenu(item)" @click="goDashboard(item.nanoid)" class="p-2 bili-card">
                     <div class="text-more text-base mb-4 text-left">
                       <!--               <a-avatar :src="item.task.icon"></a-avatar> -->
                       <Icon icon="bilibili" style="font-size: 20px;vertical-align: text-top"></Icon>
@@ -222,7 +222,7 @@
     </a-tabs>
   </div>
 
-  <a-drawer :width="600" class="no-drag" v-model:visible="addVideoVisible" style="overflow: hidden">
+  <a-drawer :width="600" class="no-drag" v-model:visible="addTaskVisible" style="overflow: hidden">
     <div style="margin:1em;overflow: hidden">
       <div class="line-title">
         任务信息
@@ -260,10 +260,10 @@
             更新频率：
           </a-col>
           <a-col>
-            <a-select style="width: 7em" v-model:value="addTask.interval">
-              <a-select-option value="15">
-                15秒钟
-              </a-select-option>
+            <a-select style="width: 7em" default-value="300" v-model:value="addTask.interval">
+<!--              <a-select-option value="15">-->
+<!--                15秒钟-->
+<!--              </a-select-option>-->
               <a-select-option value="30">
                 30秒
               </a-select-option>
@@ -283,6 +283,9 @@
                 1小时
               </a-select-option>
             </a-select>
+            <div class="mt-1">
+              更新频率越小，越吃电脑性能，推荐每5-10分钟更新一次。
+            </div>
           </a-col>
         </a-row>
 
@@ -306,6 +309,41 @@
     </div>
 
   </a-drawer>
+
+  <a-drawer
+    :title="null"
+    placement="bottom"
+    :closable="true"
+    v-model:visible="menuVisible"
+    @close="onClose"
+  >
+    <a-row :gutter="20">
+      <template  v-if="currentTask">
+        <a-col>
+          <div @click="delTask" class="btn">
+            <Icon style="font-size: 3em" icon="shanchu"></Icon>
+            <div>删除任务</div>
+          </div>
+        </a-col>
+        <a-col>
+          <div @click="editTask" class="btn">
+            <Icon style="font-size: 3em" icon="shenqing"></Icon>
+            <div>编辑任务</div>
+          </div>
+        </a-col>
+      </template>
+
+    </a-row>
+    <a-row style="margin-top: 1em" :gutter="[20,20]">
+      <a-col>
+        <div @click="toggleEditing" class="btn">
+          <Icon   style="font-size: 3em" icon="shezhi"></Icon>
+          <div><span >设置</span></div>
+        </div>
+      </a-col>
+    </a-row>
+
+  </a-drawer>
 </template>
 
 <script>
@@ -315,48 +353,6 @@ import Widget from '../../../components/muuri/Widget.vue'
 import bili from '../../../js/watch/bili'
 import BiliStage from '../../../components/watch/BiliStage.vue'
 import { formatSeconds,fixHttp } from '../../../util'
-
-const runningTasks = [
-  {
-    template: {
-      name: 'B站数据监控',
-      icon: ''
-    },
-    id: '21312132',
-    title: '第五期视频数据监控',
-    data: {
-      url: 'https://www.bilibili.com/video/BV1Tc411E75d/?vd_source=2b7e342ffb60104849f5db6262bb1e0b',
-      cover: 'https://i0.hdslb.com/bfs/archive/5cba2bf8a22e79c6e2d4d0ef17b15eafdca9cf1d.jpg@320w_200h',
-      title: '副屏操作系统，支持快捷指令化身超级控制台！闲置手机、平板终于能派上用场了',
-      play: '2.3万',
-      support: '1754',
-      coin: '913',
-      collection: '1082',
-      share: '47',
-      online: 9,
-      prompt: 146,
-      author: '玩屏开发者皮克斯'
-    },
-    tags: [
-      '破万', '热门', '活动'
-    ],
-    current: {
-      today: 5321,
-      forecast: '1.5万',
-      online: 23
-    },
-    suggest: {
-      stage: 'S4',
-      poolTitle: '初级流量池：10-15万',
-      forecastTotal: '4.5万'
-    },
-    info: {
-      startedTime: 92,
-      times: 32,
-      lastUpdate: '12:32'
-    }
-  }
-]
 export default {
   name: 'Index',
   components: {
@@ -375,10 +371,11 @@ export default {
       },
       addTask: {//添加任务表单
         title: '',
-        url: ''
+        url: '',
+        interval:'300',
       },
       currentTab: 'running',
-      addVideoVisible: false,
+      addTaskVisible: false,
       updateInterval: 15,
       addUrl: '',
       addTaskInfo: {
@@ -393,8 +390,12 @@ export default {
 
       updateExecutedTimer:null,
 
-      taskIntervals: {}//任务自动刷新数据的interval 用于更新数据 ,id=>timer
+      taskIntervals: {},//任务自动刷新数据的interval 用于更新数据 ,id=>timer
 
+      currentTask:null,
+      menuVisible:false,
+      stoppedTasksKey:Date.now(),
+      runningTasksKey:Date.now()
     }
   },
   computed: {},
@@ -411,7 +412,54 @@ export default {
     clearInterval(this.updateExecutedTimer)
   },
   methods: {
+    showMenu(task){
+      this.currentTask=task
+      this.menuVisible=true
+    },
+    delTask(){
+      this.menuVisible=false
+      if(!this.currentTask){
+        console.warn('不存在任务',this.currentTask)
+        return
+      }
+      Modal.confirm({
+        content:'是否删除任务？这将导致关于此任务的所有统计数据丢失。此操作不可恢复。',
+        centered:true,
+        onOk:async () => {
+          let rs=await tableApi.watch.delTask(this.currentTask)
+          if(rs){
+            this.removeFromTasks(this.currentTask.nanoid)
+            message.success('删除任务成功')
+          }else{
+            message.error('删除任务失败，数据库操作失败')
+          }
+        }
+      })
+    },
     fixHttp:fixHttp,
+    removeFromTasks(taskId){
+      let foundTasks=this.tasks.findIndex(t=>{
+        return t.nanoid===taskId
+      })
+      if(foundTasks>-1){
+        this.tasks.splice(foundTasks,1)
+      }
+      let foundRunningTask= this.runningTasks.findIndex(t=>{
+        return t.nanoid===taskId
+      })
+      if(foundRunningTask>-1){
+        this.runningTasks.splice(foundRunningTask,1)
+        this.runningTasksKey=Date.now()
+      }
+
+      let foundStoppedTask=this.stoppedTasks.findIndex(t=>{
+        return t.nanoid===taskId
+      })
+      if(foundStoppedTask>-1){
+        this.stoppedTasks.splice(foundStoppedTask,1)
+        this.stoppedTasksKey=Date.now()
+      }
+    },
     updateExecutedTime(){
       this.runningTasks.forEach(task=>{
         task.executed_time_until_now=this.formatSeconds((Date.now()-task.last_execute_time)/1000)
@@ -457,6 +505,7 @@ export default {
       tableApi.watch.stopTask(task)
     },
     goDashboard(nanoid){
+      console.log('go',nanoid)
       this.$router.push({
         name:'dashboard',
         params:{
@@ -476,6 +525,10 @@ export default {
       }
     },
     setupInterval (task) {
+      if(!task.interval){
+        console.warn('task的interval不存在，默认赋值10s')
+        task.interval=10
+      }
       this.taskIntervals[task.nanoid] = setInterval(() => {
         if (task) {
           //只有当任务还存在的时候才执行
@@ -498,6 +551,7 @@ export default {
           let replace = Object.assign(t, info)
           this.runningTasks.splice(index, 0, replace)
         }
+        this.runningTasksKey=Date.now()//刷新
       })
 
       this.stoppedTasks.forEach((t, index) => {
@@ -540,7 +594,7 @@ export default {
       this.sortTasks()
     },
     addVideo () {
-      this.addVideoVisible = true
+      this.addTaskVisible = true
     },
     async doAddTask () {
       let addTask = this.addTask
@@ -561,6 +615,7 @@ export default {
 
       if (result.status) {
         this.loadAllTasks().then()
+        this.addTaskVisible=false
         message.success('添加任务成功。')
       } else {
         console.warn(result.info)
@@ -574,7 +629,7 @@ export default {
         return
       }
       this.currentTaskId = Date.now()
-      message.info({ content: '开始测试，正在等待测试结果', key: 'test' })
+      message.info({ content: '开始测试', key: 'test' })
       tableApi.watch.testTask({
         id: this.currentTaskId,
         url: this.addTask.url
@@ -583,7 +638,7 @@ export default {
         message.success({ content: '测试成功。', key: 'test' })
       }, () => {
         this.addTaskInfo = {}
-        Modal.info({ 'content': '测试未能成功返回，请稍后再试。' })
+        Modal.info({ 'content': '测试未能成功返回，请稍后再试。', key: 'test' })
       }, () => {
         this.addTaskInfo = {}
         Modal.info({ content: '测试超时，请稍后再试。', key: 'test' })

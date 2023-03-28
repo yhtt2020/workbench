@@ -65,4 +65,22 @@ export default {
 .item {
   margin: 8px;
 }
+
+@media screen and (max-height: 510px) {
+  .side-panel {
+    zoom:0.82;
+    margin-top: 3.5em;
+  }
+}
+@media screen and (min-height: 511px) and (max-height: 550px) {
+  .side-panel{
+    zoom:0.9;
+
+  }
+}
+@media screen and (min-height: 551px) and (max-height: 610px) {
+  .side-panel {
+    zoom: 0.9;
+  }
+}
 </style>

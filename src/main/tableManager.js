@@ -17,7 +17,7 @@ class TableManager {
           minimizable: false,
           height: 618,
           minWidth: 800,
-          minHeight: 550,
+          minHeight: 480,
           frame: false,
           backgroundColor: '#fff',
         },

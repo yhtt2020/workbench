@@ -1,4 +1,4 @@
-const dataHelper={
+const dataHelper = {
   /**
    * 获得比例，自动修正带万数据
    * @param num
@@ -6,32 +6,33 @@ const dataHelper={
    * @param fix
    * @returns {string}
    */
-  getRate(num,total,fix=1){
-    if(typeof num ==='undefined' || typeof total==='undefined'){
+  getRate (num, total, fix = 1) {
+    if (typeof num === 'undefined' || typeof total === 'undefined') {
       return '-'
     }
-    console.log(num)
-    if(num.indexOf('万')>-1){
-      num= num.replace('万','')
-      num=Number(num)*10000
-    }else {
-      total=total.replace('万','')
-      num=Number(num)
+    num = dataHelper.convertWan(num)
+    total = dataHelper.convertWan(total)
+    return (num / total * 100).toFixed(fix)
+  },
+
+  convertWan (num) {
+     num = String(num)
+    if (num.indexOf('万') > -1) {
+      num = num.replace('万', '')
+      num = Number(num) * 10000
     }
-    if(total.indexOf('万')>-1){
-      total=Number(total)*10000
-    }
-    return (num/total*100).toFixed(fix)
+
+    return Number(num)
   },
 
   /**
    * 是否高于标准水平，返回true是，返回false否
    */
-  aboveStandard(type,value,standard){
-    if(!standard[type]){
+  aboveStandard (type, value, standard) {
+    if (!standard[type]) {
       return true
     }
-    return value>standard[type]
+    return value > standard[type]
   },
   /**
    * 格式化，千+逗号

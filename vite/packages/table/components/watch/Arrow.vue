@@ -13,8 +13,8 @@ let standard = {
   coin: 1,
   dm: 1,
   collect: 1,
-  share: 1,
-  reply: 1
+  share: 0.2,
+  reply: 0.5
 }
 export default {
   name: 'Arrow',
