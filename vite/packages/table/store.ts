@@ -227,10 +227,9 @@ export const tableStore = defineStore(
         this.customComponents.push(value);
       },
       removeCustomComponents(customIndex) {
-        console.log(customIndex)
-        this.customComponents.splice(this.customComponents.findIndex(item => {
-          return item.id === customIndex
-        }), 1)
+        this.customComponents.splice( this.customComponents.findIndex(item=>{
+          return item.id===customIndex
+        }),1)
         // this.customComponents.splice(customIndex,1);
 
       },
