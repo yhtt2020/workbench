@@ -68,6 +68,7 @@ import Music from '../components/homeWidgets/Music.vue'
 import Stock from '../components/homeWidgets/Stock.vue'
 import AddMore from '../components/homeWidgets/AddMore.vue'
 import Dou from '../components/homeWidgets/Dou.vue'
+import Fish from '../components/homeWidgets/Fish.vue'
 import CustomTimer from '../components/homeWidgets/CustomTimer.vue'
 import SmallCountdownDay from '../components/homeWidgets/SmallCountdownDay.vue'
 import Clock from '../components/homeWidgets/Clock.vue'
@@ -116,6 +117,7 @@ export default {
     SmallCountdownDay,
     Clock,
     CountdownDay,
+    Fish,
     vuuri,
     Widget,
     CPULineChart,

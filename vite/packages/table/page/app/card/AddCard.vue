@@ -33,7 +33,7 @@ export default {
         { name: "music", cname: "网易云", icon: "naozhong",detail:"快捷播放，我的喜欢，我的歌单",images:['music'] },
         { name: "timer", cname: "番茄钟", icon: "naozhong",detail:"快速开启番茄钟时刻，记录每天专注成果",images:['timer'] },
         { name: "weather", cname: "天气", icon: "naozhong",detail:"查看某地当前的天气状况和预报",images:['weather'] },
-
+        { name: "fish", cname: "木鱼", icon: "naozhong",detail:"休闲减压神器，积攒功德",images:['fish'] },
       ],
       cardType:{},
       show:false,
@@ -55,7 +55,7 @@ export default {
         { name: "music", cname: "网易云", icon: "naozhong",detail:"快捷播放，我的喜欢，我的歌单",images:['music'] },
         { name: "timer", cname: "番茄钟", icon: "naozhong",detail:"快速开启番茄钟时刻，记录每天专注成果",images:['timer'] },
         { name: "weather", cname: "天气", icon: "naozhong",detail:"查看某地当前的天气状况和预报",images:['weather'] },
-
+        { name: "fish", cname: "木鱼", icon: "naozhong",detail:"休闲减压神器，积攒功德",images:['fish'] },
       ]
     };
   },
@@ -86,7 +86,6 @@ export default {
       this.$emit('setCustom',false)
     },
     select(){
-      console.log(this.selectContent)
     this.filterList = this.cardList.filter(i =>{
       return i.cname.includes(this.selectContent)
     })
