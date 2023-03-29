@@ -40,7 +40,7 @@
 <script>
 import {mapWritableState} from "pinia";
 import {tableStore} from "../../../store";
-import {filterObjKeys} from "../../../util";
+import {filterObjKeys,initCanvas} from "../../../util";
 import HomeComponentSlot from "../HomeComponentSlot.vue";
 export default {
   name: "SmallCPUCard",
@@ -72,45 +72,47 @@ export default {
         filterObjKeys(this.CPUData,this.aidaData)
         this.CPUData.SCPUUTI.value&&  this.CPUList.push(this.CPUData.SCPUUTI.value)
         this.CPUList.shift();
-        this.initCanvas()
+        this.initCanvas('myCPUCanvas',this.CPUList,6,12,"#515151","#3B8FFA")
       },
       deep: true,
     },
   },
   methods:{
-    initCanvas() {
-      let canvas = this.$refs.myCPUCanvas;
-      let ctx = canvas.getContext('2d');
-      let x = 0;
-      this.CPUList.forEach((i,index) => {
+    initCanvas,
+    // initCanvas() {
+    //   let canvas = this.$refs.myCPUCanvas;
+    //   let ctx = canvas.getContext('2d');
+    //   let x = 0;
+    //   this.CPUList.forEach((i,index) => {
+    //
+    //     ctx.fillStyle="#515151";
+    //     ctx.fillRect(x ,0,12,12);
+    //     let y= 0;
+    //     let bcolor = 100;
+    //     if(parseInt(this.CPUList[index])>=0&&parseInt(this.CPUList[index])<=16)bcolor = 6;
+    //     if(parseInt(this.CPUList[index])>16&&parseInt(this.CPUList[index])<=32)bcolor =5;
+    //     if(parseInt(this.CPUList[index])>32&&parseInt(this.CPUList[index])<=48)bcolor =4;
+    //     if(parseInt(this.CPUList[index])>48&&parseInt(this.CPUList[index])<=64)bcolor =3;
+    //     if(parseInt(this.CPUList[index])>64&&parseInt(this.CPUList[index])<=80)bcolor =2;
+    //     if(parseInt(this.CPUList[index])>80&&parseInt(this.CPUList[index])<=100)bcolor =1;
+    //
+    //     for (let i = 1;i<=6;i++){
+    //       if(bcolor<=i){
+    //         ctx.fillStyle="#3B8FFA";
+    //       }else{
+    //         ctx.fillStyle="#515151";
+    //       }
+    //
+    //       ctx.fillRect(x ,y,12,12);
+    //       y+=6;
+    //       y+=12;
+    //     }
+    //     x+=6;
+    //     x+= 12;
+    //   })
+    //
+    // }
 
-        ctx.fillStyle="#515151";
-        ctx.fillRect(x ,0,12,12);
-        let y= 0;
-        let bcolor = 100;
-        if(parseInt(this.CPUList[index])>=0&&parseInt(this.CPUList[index])<=16)bcolor = 6;
-        if(parseInt(this.CPUList[index])>16&&parseInt(this.CPUList[index])<=32)bcolor =5;
-        if(parseInt(this.CPUList[index])>32&&parseInt(this.CPUList[index])<=48)bcolor =4;
-        if(parseInt(this.CPUList[index])>48&&parseInt(this.CPUList[index])<=64)bcolor =3;
-        if(parseInt(this.CPUList[index])>64&&parseInt(this.CPUList[index])<=80)bcolor =2;
-        if(parseInt(this.CPUList[index])>80&&parseInt(this.CPUList[index])<=100)bcolor =1;
-
-        for (let i = 1;i<=6;i++){
-          if(bcolor<=i){
-            ctx.fillStyle="#3B8FFA";
-          }else{
-            ctx.fillStyle="#515151";
-          }
-
-          ctx.fillRect(x ,y,12,12);
-          y+=6;
-          y+=12;
-        }
-        x+=6;
-        x+= 12;
-      })
-
-    }
   }
 }
 </script>

@@ -205,3 +205,32 @@ export function netWorkDownUp (obj) {
   })
   return a
 }
+
+export function  initCanvas(refName,list,size,width,color,activeColor) {
+  let canvas = this.$refs[refName]
+  let ctx = canvas.getContext('2d');
+  let x = 0;
+  list.forEach((i,index) => {
+    ctx.fillStyle=color;
+    ctx.fillRect(x ,0,width,width);
+    let y= 0;
+    let bcolor = 100;
+    for (let j = 0; j < size; j++) {
+      if(parseInt(i)>=100/size*j&&parseInt(i)<=100/size*(j+1))bcolor =size - j;
+    }
+    for (let k = 1;k<=size;k++){
+      if(bcolor<=k){
+        ctx.fillStyle=activeColor;
+      }else{
+        ctx.fillStyle=color;
+      }
+
+      ctx.fillRect(x ,y,width,width);
+      y+=width /2;
+      y+=width;
+    }
+    x+=width / 2;
+    x+= width;
+  })
+
+}
