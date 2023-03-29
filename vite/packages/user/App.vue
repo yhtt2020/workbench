@@ -44,6 +44,10 @@ export default {
     window.ipc.on('loginCallback',async (e, args) => {
       message.success('成功添加帐号。')
       this.users = await userModel.getAll()
+      this.users.forEach(user=>{
+        const date=new Date(user.expire_time)
+        user.expire_time_text=date.getFullYear()+'/'+(date.getMonth()+1)+'/'+date.getDate()
+      })
       this.enterAccount({ uid: args.data.userInfo.uid })
     })
   },
