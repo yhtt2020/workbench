@@ -11,7 +11,7 @@
       <div class="line">
         <div>有幸认识你，同好的你。</div>
         <icon icon="yonghu"/>
-        在线：32人
+        在线：- 人
       </div>
       <div class="line">发表弹幕</div>
       <a-input placeholder="和大家说句话吧~"></a-input>

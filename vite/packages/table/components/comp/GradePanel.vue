@@ -41,7 +41,7 @@
               ><span>
                                    全网排名:<span style="font-size: 20px"> {{ badge.rank }}</span>
 </span></div>
-              <div v-else>全网排名: 超过{{ grade.percentage }}%的用户</div>
+              <div v-else>全网排名: 超过{{ (grade.percentage).toFixed(2) }}%的用户</div>
 
             </div>
             <div class="text-grey" style="line-height: 2">升级剩余时长: {{ remainHour }}小时{{ remainMinute }}分</div>
@@ -73,7 +73,7 @@
 
 <script>
 import { defineComponent } from 'vue'
-import {mapState} from 'pinia'
+import {mapState,mapActions} from 'pinia'
 import {message,Modal} from 'ant-design-vue'
 import { appStore } from '../../store'
 export default defineComponent( {
@@ -145,6 +145,7 @@ export default defineComponent( {
     }
   },
   mounted () {
+    this.getUserInfo()
     this.onlineGrade=this.userInfo.onlineGrade
     this.grade=this.userInfo.onlineGradeExtra
     let lv = this.grade.lv
@@ -156,6 +157,7 @@ export default defineComponent( {
   },
 
   methods: {
+    ...mapActions(appStore,['getUserInfo']),
     getBadge () {
       if(!this.grade.rank){
         return this.badge.t9999
