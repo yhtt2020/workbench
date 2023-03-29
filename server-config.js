@@ -60,7 +60,7 @@ const appConfig = {
 if(localNode && isDevelopmentMode){
   //本地环境下的配置项重置
   config.NODE_SERVER_BASE_URL = 'http://test.com:8001'
-  appConfig.client_id=10003
+  appConfig.client_id=10008
 }
 
 //cgz本地开发
