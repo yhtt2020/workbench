@@ -17,8 +17,9 @@
               <a-col>
                 <a-avatar :src="userInfo.avatar" :size="50">{{ userInfo.nickname }}</a-avatar>
               </a-col>
-              <a-col>
-                <div style="padding-top: 0.2em">
+              <a-col style="position: relative">
+                <span  ref="minute" class="tip" >+1</span>
+                <div style="padding-top: 0.2em;">
                   <span style="font-size: 0.8em;">等级</span> {{ lvInfo.lv }}级 <br>
                   <span>
                     <a-tooltip>
@@ -26,10 +27,10 @@
                               style="width:4em"/>
                   <template #title>
                     <thunderbolt-filled class="thunder" style="color: rgba(255,140,44,0.98);vertical-align: middle"/>
-                    <span
-                      style="color: #f3f3f3;font-size: 12px;vertical-align: middle">{{
-                        lvInfo.remainHour
-                      }}小时{{ lvInfo.remainMinute }}分后升级</span>
+  <span
+    style="color: #f3f3f3;font-size: 12px;vertical-align: middle">{{
+      lvInfo.remainHour
+    }}小时{{ lvInfo.remainMinute }}分后升级</span>
                   </template>
                 </a-tooltip>
               </span>
@@ -141,6 +142,7 @@ import { appStore } from '../store'
 import { mapWritableState, mapActions } from 'pinia'
 import Template from '../../user/pages/Template.vue'
 import { ThunderboltFilled } from '@ant-design/icons-vue'
+import { Modal } from 'ant-design-vue'
 const { messageModel }=window.$models
 export default {
   name: 'BottomPanel',
@@ -151,10 +153,12 @@ export default {
       visibleTrans: false,
       full: false,
       lvInfo: {},
+      timer:null,
       messages:[]
     }
   },
   mounted () {
+    this.setMinute()
     this.lastTime=Number(localStorage.getItem('lastBarrageMessageTime'))
     this.loadMessages()
     setInterval( ()=>{
@@ -182,6 +186,27 @@ export default {
   },
   methods: {
     ...mapActions(appStore, ['setUser']),
+    setMinute(){
+      setInterval(()=>{
+        this.$refs.minute.classList.add('move')
+        this.lvInfo.remainMinute--
+        if(this.lvInfo.remainMinute<=0){
+          this.lvInfo.remainHour--
+          this.lvInfo.remainMinute=59
+        }
+        if(this.lvInfo.remainHour===0){
+          ipc.send('getDetailUserInfo')
+          Modal.info({
+            title:'升级提示',
+            content:'恭喜您等级提升',
+          })
+        }
+
+       this.timer= setTimeout(()=>{
+          this.$refs.minute.classList.remove('move')
+        },1000)
+      },60100)
+    },
     async loadMessages(){
       this.messages=await messageModel.allList()
       this.messages.forEach(mes=>{
@@ -391,6 +416,31 @@ export default {
   }
   .user{
     width: 12.5em;
+  }
+}
+.tip{
+  position: absolute;
+  top: 0;
+  right: -25px;
+  opacity: 0;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 100px;
+  width: 30px;
+  text-align: center;
+  line-height: 15px;
+}
+.move{
+
+  animation: moveUp 0.8s;
+}
+@keyframes moveUp {
+  from {
+    top: 20px;
+    opacity: 100;
+  }
+  to {
+    top: -10px;
+    opacity: 0;
   }
 }
 </style>
