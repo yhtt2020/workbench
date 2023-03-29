@@ -1210,15 +1210,12 @@ async function showUserWindow (args) {
         sandbox: false,
         webSecurity: false,
         additionalArguments: [
-          '--user-data-path=' + userDataPath,
-          '--app-version=' + app.getVersion(),
-          '--app-name=' + app.getName(),
-          ...((isDevelopmentMode ? ['--development-mode'] : [])),
           ...formatArgs
         ]
       },
       url: render.getUrl('user.html')
     })
+   userWindow.webContents.openDevTools()
     userWindow = userWindowInstance.window
 
     function computeBounds (parentBounds, selfBounds) {
