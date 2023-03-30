@@ -74,6 +74,9 @@ export const appStore = defineStore('appStore', {
       this.status.music.cover = status.cover.replace("34y34", "120y120"); //修正封面
     },
 
+    getUserInfo(){
+      ipc.send('getDetailUserInfo')
+    },
 
     /**
      * 设置当前用户

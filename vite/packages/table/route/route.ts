@@ -22,6 +22,7 @@ import Bing from '../page/gallery/Bing.vue'
 import Lively from '../page/gallery/Lively.vue'
 import Wallheaven from '../page/gallery/Wallheaven.vue'
 import PapersSetting from '../page/gallery/Setting.vue'
+import Code from '../page/Code.vue'
 
 import index from './index'
 
@@ -32,8 +33,12 @@ const routes = [
     name: 'lock',
     component: Lock,
     children: [
-
     ]
+  },
+  {
+    path:'/code',
+    name:'code',
+    component: Code
   },
   {
     path: '/gallery',

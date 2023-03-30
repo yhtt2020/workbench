@@ -67,6 +67,16 @@ export default {
     };
   },
   async mounted() {
+    if(!this.code){
+      //开发阶段可注释这里的跳转代码
+      this.$router.push('/code')
+      return
+    }
+    if (!this.init) {
+      console.log(this.settings)
+      this.$router.push('/wizard')
+      return
+    }
     document.body.classList.add('lg')
     this.reset()//重置部分状态
     this.sortClock()
@@ -87,7 +97,7 @@ export default {
       "clockEvent",
       "appDate",
     ]),
-    ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo'])
+    ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo','init'])
   },
   methods: {
     ...mapActions(appStore, ['setMusic','reset']),
