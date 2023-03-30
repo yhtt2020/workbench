@@ -11,7 +11,7 @@ const DEFAULT_PAPERS_SETTINGS = {
   lockTimeout: 180,
   interval: 3,
   savePath: '',
-  tipLock: true //在状态栏提示多久锁屏
+  tipLock: true//在状态栏提示多久锁屏
 }
 // @ts-ignore
 export const paperStore = defineStore('paper', {
@@ -21,39 +21,30 @@ export const paperStore = defineStore('paper', {
     playingPaper: null,//播放中的壁纸
     settings: DEFAULT_PAPERS_SETTINGS,
     tipLock: true,//在状态栏提示还有多久进入锁屏
-    lockTimeout: 300,
-    livePaper:[], // 我的动态壁纸收藏
+    lockTimeout: 300
   }),
   actions:{
     /**
-     * 添加到我的壁纸 解决获取本地指定目录文件数据刷新显示和隐藏
+     * 重置全部壁纸设置
+     */
+    resetPapersSettings() {
+      this.settings = DEFAULT_PAPERS_SETTINGS
+    },
+    /**
+     * 添加到我的壁纸
      * @param image
      */
-    addToMyPaper(image: { src: any; }) {
-      let found = this.myPapers.findIndex((img: { src: any; }) => {
+    addToMyPaper(image) {
+      let found = this.myPapers.findIndex(img => {
         if (img.src === image.src)
-        return true
-      })
-      if (found === -1) {
-        this.myPapers.push(image)
-      } else {
-        return
-      }
-    },
-    /***
-     * 移除我的壁纸
-     * 
-    */
-    removeToMyPaper(image: { src: any; }){
-      let found = this.myPapers.findIndex((img: { src: any; }) => {
-        if (img.src === image.src)
-        return true
+          return true
       })
       if (found === -1) {
         this.myPapers.push(image)
       } else {
         this.myPapers.splice(found, 1)
-      }  
+      }
+      // this.saveAppData('papers')
     },
     /**
      * 将壁纸添加到激活的壁纸
@@ -70,15 +61,6 @@ export const paperStore = defineStore('paper', {
         this.activePapers.splice(found, 1)
       }
     },
-    //  添加我的动态壁纸
-    addToMyLivePaper(image){
-       
-    },
-    //更改wallheaven数据
-    // updateWallHeaven(data){
-    //   this.wallHeavenList.push(data)
-    //   console.log(this.wallHeavenList);
-    // },
   },
   persist: {
     enabled: true,
