@@ -36,9 +36,7 @@
       </div>
     </template></a-modal
   >
-  <audio controls="controls"  ref="clock" style="display: none">
-    <source src="/sound/alarmClock.mp3" type="audio/ogg">
-  </audio>
+  <audio ref="clock" src="/sound/alarmClock.mp3"></audio>
 </template>
 
 <script lang="ts">
