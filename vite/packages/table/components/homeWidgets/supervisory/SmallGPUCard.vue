@@ -36,7 +36,7 @@
 <script>
 import {mapWritableState} from "pinia";
 import {tableStore} from "../../../store";
-import {filterObjKeys} from "../../../util";
+import {filterObjKeys,initCanvas} from "../../../util";
 import HomeComponentSlot from "../HomeComponentSlot.vue";
 export default {
   name: "SmallGPUCard",
@@ -80,44 +80,13 @@ export default {
 
         this.GPUData.SGPU1UTI.value&& this.GPUList.push(this.GPUData.SGPU1UTI.value)
         this.GPUList.shift();
-        this.initCanvas()
+        this.initCanvas('myGPUCanvas',this.GPUList,6,12,"#515151","#3B8FFA")
       },
       deep: true,
     },
   },
   methods:{
-    initCanvas() {
-      let canvas = this.$refs.myGPUCanvas
-      let ctx = canvas.getContext('2d');
-      let x = 0;
-      this.GPUList.forEach((i,index) => {
-
-        ctx.fillStyle="#515151";
-        ctx.fillRect(x ,0,12,12);
-        let y= 0;
-        let bcolor = 100;
-        if(parseInt(this.GPUList[index])>=0&&parseInt(this.GPUList[index])<=16)bcolor =6;
-        if(parseInt(this.GPUList[index])>16&&parseInt(this.GPUList[index])<=32)bcolor =5;
-        if(parseInt(this.GPUList[index])>32&&parseInt(this.GPUList[index])<=48)bcolor =4;
-        if(parseInt(this.GPUList[index])>48&&parseInt(this.GPUList[index])<=64)bcolor =3;
-        if(parseInt(this.GPUList[index])>64&&parseInt(this.GPUList[index])<=80)bcolor =2;
-        if(parseInt(this.GPUList[index])>80&&parseInt(this.GPUList[index])<=100)bcolor =1;
-        for (let i = 1;i<=6;i++){
-          if(bcolor<=i){
-            ctx.fillStyle="#3B8FFA";
-          }else{
-            ctx.fillStyle="#515151";
-          }
-
-          ctx.fillRect(x ,y,12,12);
-          y+=6;
-          y+=12;
-        }
-        x+=6;
-        x+= 12;
-      })
-
-    }
+    initCanvas
   }
 }
 </script>

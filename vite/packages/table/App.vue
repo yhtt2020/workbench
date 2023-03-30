@@ -71,6 +71,7 @@ export default {
   async mounted() {
     document.body.classList.add('lg')
     this.reset()//重置部分状态
+    this.sortClock()
     // this.getUserInfo()
     window.updateMusicStatusHandler = this.updateMusic;
 
@@ -93,6 +94,7 @@ export default {
   methods: {
     ...mapActions(appStore, ['setMusic','reset']),
     ...mapActions(weatherStore,['reloadAll']),
+    ...mapActions(tableStore, ['sortClock']),
     bindTouchEvents(){
       $(".a-container").on("touchstart",  (e) =>{
         startX = e.originalEvent.changedTouches[0].pageX,
