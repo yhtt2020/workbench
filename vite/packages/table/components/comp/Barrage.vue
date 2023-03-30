@@ -12,14 +12,23 @@ export default {
   data(){
     return{
       sendBarragesCount:{},//用于屏蔽弹幕的数组，最终会存入localStorage ,nanoid:times
-      filteredBarrages:[]//已经被屏蔽的
+      filteredBarrages:[],//已经被屏蔽的
+      timer:null
     }
+
 
   },
   computed:{
     ...mapState(appStore,['settings'])
   },
   async mounted () {
+    window.loadBarrage=this.changeUrl
+    this.timer=setInterval(()=>{
+      this.changeUrl('table').then()
+    },180000)
+    this.$router.afterEach((to, from) => {
+      this.changeUrl('table').then()
+    })
     this.filteredBarrages =JSON.parse(localStorage.getItem('filteredBarrages')) || []
     this.sendBarragesCount =JSON.parse(localStorage.getItem('sendBarragesCount')) || {}
     let that = this
@@ -93,6 +102,9 @@ export default {
     })
     manager.start()
     manager.show()
+  },
+  unmounted () {
+    clearInterval(this.timer)
   },
   methods:{
     async changeUrl(url) {
@@ -200,6 +212,7 @@ export default {
   padding-right: 15px;
   vertical-align: middle;
   line-height: 28px;
+  z-index: 999;
 }
 
 .barrage-avatar {
