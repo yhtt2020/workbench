@@ -27,10 +27,10 @@
   }
 }
 .ps .ps__rail-x:hover, .ps .ps__rail-y:hover, .ps .ps__rail-x:focus, .ps .ps__rail-y:focus, .ps .ps__rail-x.ps--clicking, .ps .ps__rail-y.ps--clicking{
-  background: #3e3e3e;
+  background: rgba(62, 62, 62, 0.29) !important;;
 }
-.ps__rail-y:hover > .ps__thumb-y, .ps__rail-y:focus > .ps__thumb-y, .ps__rail-y.ps--clicking .ps__thumb-y{
-  background: #545454;
+.ps__rail-y:hover > .ps__thumb-y, .ps__rail-y:focus > .ps__thumb-y, .ps__rail-y.ps--clicking .ps__thumb-y, .ps__thumb-x{
+  background: #5d5d5d !important;
 }
 .ps__rail-y,.ps__rail-x{
   border-radius: 400px;
