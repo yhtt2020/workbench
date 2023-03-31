@@ -465,7 +465,7 @@ export default {
         needImportGrids = JSON.parse(this.importJsonTxt)
 
         needImportGrids.forEach(g => {
-          g.id = require('nanoid').nanoid(8)
+          g.id = window.$models.nanoid.nanoid(8)
           console.log(g)
           this.grids.unshift(g)
         })
@@ -645,7 +645,7 @@ export default {
     },
     clone () {
       let cloneItem = _.cloneDeep(this.currentItem)
-      cloneItem.id = require('nanoid').nanoid(8)
+      cloneItem.id = window.$models.nanoid.nanoid(8)
       this.currentGrid.children.unshift(cloneItem)
 
       console.log(this.currentGrid.children)
