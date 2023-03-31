@@ -46,6 +46,7 @@ import { mapActions, mapWritableState } from "pinia";
 import { appStore, tableStore } from "./store";
 import Barrage from "./components/comp/Barrage.vue";
 import { weatherStore } from "./store/weather";
+import {codeStore} from "./store/code";
 
 let startX,
   startY,
@@ -67,11 +68,17 @@ export default {
     };
   },
   async mounted() {
-    if(!this.code){
-      //开发阶段可注释这里的跳转代码
+    if(!this.myCode){
+      //注释此处的代码跳过激活码验证
       this.$router.push('/code')
       return
     }
+    this.verify(rs=>{
+      if(!rs){
+        this.$router.push('/code')
+        return
+      }
+    })
     if (!this.init) {
       console.log(this.settings)
       this.$router.push('/wizard')
@@ -97,12 +104,14 @@ export default {
       "clockEvent",
       "appDate",
     ]),
-    ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo','init'])
+    ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo','init']),
+    ...mapWritableState(codeStore,['myCode'])
   },
   methods: {
     ...mapActions(appStore, ['setMusic','reset']),
     ...mapActions(weatherStore,['reloadAll']),
     ...mapActions(tableStore, ['sortClock']),
+    ...mapActions(codeStore,['verify']),
     bindTouchEvents(){
       $(".a-container").on("touchstart",  (e) =>{
         startX = e.originalEvent.changedTouches[0].pageX,

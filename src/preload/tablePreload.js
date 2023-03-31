@@ -16,7 +16,8 @@ window.readAida64 = require('aida64-to-json')
 window.fs = require('fs-extra')
 window.$models = {
   appModel: require('../model/appModel'),
-  messageModel
+  messageModel,
+  axios: require('axios')
 }
 window.$models.appModel.initDb()
 window.$apis = {
@@ -29,14 +30,23 @@ tsbApi.barrage.setOnUrlChanged((a) => {
   }
 })
 let si = require('systeminformation')
-
+const crypto = require('crypto')
 window.getSerialNum=async () => {
-  let staticData = await si.getStaticData()
-  let serial = {
-    baseboardSerial: staticData.baseboard.serial,
+  try{
+    // console.log('尝试获取机器码')
+    // let s = (await si.diskLayout())[0]
+    // console.log(s,'ddd')
+    // let serial = {
+    //   baseboardSerial: s,
+    // }
+    // console.log(s)
+    let serial=tsbApi.runtime.clientId
+    let crypto=require('crypto')
+    let serialHash=crypto.createHash('sha256').update(JSON.stringify(serial)).digest('hex')
+    return serialHash
+  }catch (e) {
+   console.error(e)
   }
-  let crypto=require('crypto')
-  let serialHash=crypto.createHash('sha256').update(JSON.stringify(serial)).digest('hex')
-  return serialHash
+
 }
 

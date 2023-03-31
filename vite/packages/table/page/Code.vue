@@ -2,7 +2,7 @@
   <div style="background: #333;width: 100vw;height: 100vw;" class="p-10 drag">
     <div class="no-drag" style="width: 600px;margin: auto">
       <h3 style="text-align: center;font-size: 1.5em">欢迎参与想天工作台抢先体验</h3>
-      <p>目前我们尚未完全面向大众开发，必须使用邀请码方可体验产品。</p>
+      <p>目前我们尚未完全面向大众开放，必须使用邀请码方可体验产品。</p>
       <p>
         您可通过以下多种途径获得邀请码：
       </p>
@@ -34,34 +34,66 @@
 </template>
 
 <script>
-import { message } from 'ant-design-vue'
-import {axios} from 'axios'
+import { message, Modal } from 'ant-design-vue'
+import { appStore } from '../store'
+import { mapWritableState,mapActions } from 'pinia'
+import { codeStore } from '../store/code'
+
 export default {
   name: 'Code',
   data () {
     return {
-      code: '',
-      loading:false,
-      serialNum:''
+      loading: false,
+      serialHash: '',
+      code:''
     }
   },
   async mounted () {
-    await window.getSerialNum().then((s)=>{
-      this.serialNum=s
-      console.log(this.serialNum)
+    window.getSerialNum().then((s) => {
+      this.serialHash = s
     })
-
-
+  },
+  computed: {
+    ...mapWritableState(codeStore, ['myCode'])
   },
   methods: {
+    ...mapActions(codeStore, ['active']),
     checkCode () {
       if (this.code === '') {
         message.error('请输入邀请码')
         return
       }
-      this.loading=true
-      //axios.post('')
-      this.loading=false
+      if(!this.serialHash){
+        message.error('未能或得到机器码')
+        return
+      }
+      if (this.code.length !== 16) {
+        message.error('激活码长度错误')
+        return
+      }
+      this.loading = true
+      console.log(this.serialHash)
+      this.active( this.code, this.serialHash).then(rs => {
+        console.log(rs)
+        this.loading = false
+        if (rs.code !== 1000) {
+          message.error('激活码无效，请重试')
+          return
+        } else {
+          this.myCode=this.code
+          Modal.success({
+            centered: true,
+            content: '激活成功，欢迎来到EA阶段，点击开始体验',
+            onOk: () => {
+              this.$router.push({ path: '/wizard' })
+            }
+          })
+          return
+        }
+      }).catch(e => {
+        this.loading = false
+        message.error('服务器无响应，请稍后再试')
+      })
     }
   }
 }
