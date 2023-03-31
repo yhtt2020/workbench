@@ -27,7 +27,7 @@
       <viewer :images="pickDataList">
         <a-row :gutter="[20,20]" id="pick-images" style="margin-right: 1em">
           <a-col class="image-wrapper " v-for="img in pickDataList" :span="6" style="">
-            <img  class="image-item pointer" :src="img.imgurl"  :data-source="img.thumburl"  :alt="img.resolution"  style="position: relative">
+            <img  class="image-item pointer" :src="img.thumburl"  :data-source="img.imgurl"  :alt="img.resolution"  style="position: relative">
             <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
               <div @click.stop="addToMy(img)" class="bottom-actions pointer" :style="{background:isInMyPapers(img)?'#009d00a8':''}">
                 <Icon v-if="!isInMyPapers(img)" icon="tianjia1"></Icon>
