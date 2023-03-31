@@ -16,9 +16,6 @@
         <div @click="previewVideo(item)" class="play-icon pointer">
           <Icon icon="bofang" style="font-size:3em;margin-top: 8px"></Icon>
         </div>
-        <div>
-
-        </div>
         <div @click="previewVideo(item)" style="border-radius: 6px;overflow: hidden;position: relative">
           <div :style="{width:getWidth(item)+'%'}"
                style="background: rgb(0 0 0 / 20%);height: 100%; position: absolute;z-index: 3;right: 0;">
@@ -29,10 +26,12 @@
         </div>
 
         <div style="position: absolute;right: 0;top: -10px ;padding: 10px;z-index: 999">
-          <div v-if="getWidth(item)===100 && item.percent===undefined " style="" class="bottom-actions "
-          >
+          <div v-if="getWidth(item)===100 && item.percent===undefined " style="cursor: pointer;" class="bottom-actions ">
             <Icon icon="xiazai"></Icon>
           </div>
+          <!-- <div v-if="getWidth(item)!==100 && item.percent === undefined ">
+            <Icon  icon="tianjia1"></Icon>
+          </div> -->
           <div v-if="item.percent && item.percent!==100" style="padding: 10px;">
             <a-spin style="color: white"/>
           </div>

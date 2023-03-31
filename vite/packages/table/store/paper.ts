@@ -42,10 +42,27 @@ export const paperStore = defineStore('paper', {
       if (found === -1) {
         this.myPapers.push(image)
       } else {
-        this.myPapers.splice(found, 1)
+        return
       }
       // this.saveAppData('papers')
     },
+
+    /***
+     * 移除我的壁纸
+     * 
+    */
+    removeToMyPaper(image: { src: any; }){
+      let found = this.myPapers.findIndex((img: { src: any; }) => {
+        if (img.src === image.src)
+        return true
+      })
+      if (found === -1) {
+        this.myPapers.push(image)
+      } else {
+        this.myPapers.splice(found, 1)
+      }  
+    },
+
     /**
      * 将壁纸添加到激活的壁纸
      * @param image
