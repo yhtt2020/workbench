@@ -52,9 +52,24 @@
       <a-input @keyup.enter="postBarrage" v-model:value="postContent" placeholder="和大家说句话吧~"></a-input>
     </div>
 
-    <div class="card mr-3" style="width: 400px;padding: 1em;display: inline-block;vertical-align: top">
-      <GradePanel></GradePanel>
+    <div class="mr-3" style="display:inline-block ;width: 400px;white-space: pre-wrap;vertical-align: top">
+      <div class="card mb-3" style="width: 400px">
+        <div>
+          反馈问题？提交Bug？进入想天浏览器官方版块。
+         <div class="pointer p-1 mt-2" @click="goUrl('https://s.apps.vip/forum?id=3')">
+           <a-avatar class="mr-2" src="https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/8befa3834d2eb29e75685563ef513215.png?imageMogr2/crop/260x260/gravity/center"></a-avatar>
+
+           想天工作台
+         <a-button size="small" style="float: right" type="primary">访问社区</a-button>
+         </div>
+        </div>
+      </div>
+      <div class="card " style="width: 400px;padding: 1em;display: inline-block;vertical-align: top">
+
+        <GradePanel></GradePanel>
+      </div>
     </div>
+
     <div class="mr-3" style="width: 400px;display: inline-block;vertical-align: top;white-space: pre-wrap">
       <div class="card half" style="width: 400px;padding: 1em;display: inline-block;margin-bottom: 1em">
         <ComPanel></ComPanel>
@@ -107,6 +122,9 @@ export default {
     this.loadBarrages().then()
   },
   methods: {
+    goUrl(url){
+      ipc.send('addTab',{url:url})
+    },
     async loadBarrages () {
       tsbApi.barrage.getList(this.CONST.CHANNEL.PUBLIC, 'table').then(rs => {
         console.log(rs)
