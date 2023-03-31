@@ -49,29 +49,38 @@ export default {
     }
   },
   async mounted () {
-    window.getSerialNum().then((s) => {
-      this.serialHash = s
-    })
+   this.getSerialNum()
   },
   computed: {
     ...mapWritableState(codeStore, ['myCode'])
   },
   methods: {
     ...mapActions(codeStore, ['active']),
+    getSerialNum(cb){
+      window.getSerialNum().then((s) => {
+        this.serialHash = s
+        if(cb)
+          cb()
+      })
+    },
     checkCode () {
+      this.loading = true
+      if(!this.serialHash){
+       this.getSerialNum(()=>{
+         this.checkCode()
+         return
+       })
+      }
       if (this.code === '') {
         message.error('请输入邀请码')
         return
       }
-      if(!this.serialHash){
-        message.error('未能或得到机器码')
-        return
-      }
+
       if (this.code.length !== 16) {
         message.error('激活码长度错误')
         return
       }
-      this.loading = true
+
       console.log(this.serialHash)
       this.active( this.code, this.serialHash).then(rs => {
         console.log(rs)
@@ -83,6 +92,7 @@ export default {
           this.myCode=this.code
           let timer=setTimeout(()=>{
             this.$router.push({ path: '/wizard' })
+
           },10000)
           Modal.success({
             centered: true,
