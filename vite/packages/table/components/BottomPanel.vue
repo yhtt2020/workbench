@@ -193,17 +193,16 @@ export default {
         this.lvInfo.remainMinute--
         if(this.lvInfo.remainMinute<=0){
           this.lvInfo.remainHour--
+          if(this.lvInfo.remainHour<0 &&  this.tipped===false){
+            this.tipped=true
+            ipc.send('getDetailUserInfo')
+            Modal.info({
+              title:'升级提示',
+              content:'恭喜您等级提升',
+            })
+          }
           this.lvInfo.remainMinute=59
         }
-        if(this.lvInfo.remainHour<0 &&  this.tipped===false){
-          this.tipped=true
-          ipc.send('getDetailUserInfo')
-          Modal.info({
-            title:'升级提示',
-            content:'恭喜您等级提升',
-          })
-        }
-
        this.timer= setTimeout(()=>{
           this.$refs.minute.classList.remove('move')
         },1000)
