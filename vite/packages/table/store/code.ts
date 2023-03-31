@@ -1,8 +1,6 @@
 import {defineStore} from "pinia";
-import {message} from "ant-design-vue";
-
 const {axios} = window.$models
-const server = 'http://test.com:8001'
+const server = 'https://wad.apps.vip/api'
 const activeUrl = server + '/app/activeCode'
 const verifyUrl = server + '/app/verifyCode'
 const createUrl = server + '/app/createCodes'

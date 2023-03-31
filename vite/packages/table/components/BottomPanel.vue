@@ -154,7 +154,8 @@ export default {
       full: false,
       lvInfo: {},
       timer:null,
-      messages:[]
+      messages:[],
+      tipped:false,
     }
   },
   mounted () {
@@ -194,7 +195,8 @@ export default {
           this.lvInfo.remainHour--
           this.lvInfo.remainMinute=59
         }
-        if(this.lvInfo.remainHour===0){
+        if(this.lvInfo.remainHour<0 &&  this.tipped===false){
+          this.tipped=true
           ipc.send('getDetailUserInfo')
           Modal.info({
             title:'升级提示',
@@ -205,7 +207,7 @@ export default {
        this.timer= setTimeout(()=>{
           this.$refs.minute.classList.remove('move')
         },1000)
-      },60100)
+      },60000)
     },
     async loadMessages(){
       this.messages=await messageModel.allList()
