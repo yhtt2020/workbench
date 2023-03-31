@@ -168,11 +168,11 @@ export default {
           $manager.send(this.filterBarrages(this.barrages))//进行前置过滤
           $manager.start()
         } else {
-          message.error('获取弹幕接口返回错误，可能是服务器正在维护，请稍后再试。')
+          message.error({content:'获取弹幕接口返回错误，可能是服务器正在维护，请稍后再试。',key:'barrage'})
         }
       } catch (e) {
         console.error(e)
-        message.error('获取弹幕意外错误。')
+        message.error({content:'获取弹幕意外错误。',key:'barrage'})
       }
     },
   }
