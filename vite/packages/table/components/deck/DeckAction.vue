@@ -8,42 +8,42 @@
       <ActionBuilder :key="'ab-'+resetActionBuilder" :ref="group.name" :group="group" :actions="group.actions">
       </ActionBuilder>
     </a-tab-pane>
-    <a-tab-pane key="audio" tab="系统设置">
-      <div class="action">
-        调大音量
-      </div>
-      <div class="action">
-        调小音量
-      </div>
-      <div class="action">
-        静音
-      </div>
-      <div class="action">
-        调高亮度
-      </div>
-      <div class="action">
-        调低亮度
-      </div>
-    </a-tab-pane>
-    <a-tab-pane key="keys" tab="键鼠">
-      <div class="action">
-        模拟鼠标
-      </div>
-      <div class="action">
-        模拟按键
-      </div>
-    </a-tab-pane>
-    <a-tab-pane key="app" tab="应用">
-      <div class="action">
-        打开系统内应用
-      </div>
-      <div class="action">
-        打开轻应用
-      </div>
-      <div class="action">
-        打开酷应用
-      </div>
-    </a-tab-pane>
+<!--    <a-tab-pane key="audio" tab="系统设置">-->
+<!--      <div class="action">-->
+<!--        调大音量-->
+<!--      </div>-->
+<!--      <div class="action">-->
+<!--        调小音量-->
+<!--      </div>-->
+<!--      <div class="action">-->
+<!--        静音-->
+<!--      </div>-->
+<!--      <div class="action">-->
+<!--        调高亮度-->
+<!--      </div>-->
+<!--      <div class="action">-->
+<!--        调低亮度-->
+<!--      </div>-->
+<!--    </a-tab-pane>-->
+<!--    <a-tab-pane key="keys" tab="键鼠">-->
+<!--      <div class="action">-->
+<!--        模拟鼠标-->
+<!--      </div>-->
+<!--      <div class="action">-->
+<!--        模拟按键-->
+<!--      </div>-->
+<!--    </a-tab-pane>-->
+<!--    <a-tab-pane key="app" tab="应用">-->
+<!--      <div class="action">-->
+<!--        打开系统内应用-->
+<!--      </div>-->
+<!--      <div class="action">-->
+<!--        打开轻应用-->
+<!--      </div>-->
+<!--      <div class="action">-->
+<!--        打开酷应用-->
+<!--      </div>-->
+<!--    </a-tab-pane>-->
 
   </a-tabs>
   <div style="text-align: center">

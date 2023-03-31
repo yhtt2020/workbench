@@ -12,6 +12,9 @@ const settings={
   },
   async set(key,value){
     return await sendSync('set', { key,value })
+  },
+  setAutoRun(value){
+    send('setAutoRun',value)
   }
 }
 

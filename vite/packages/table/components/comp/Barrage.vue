@@ -12,14 +12,23 @@ export default {
   data(){
     return{
       sendBarragesCount:{},//用于屏蔽弹幕的数组，最终会存入localStorage ,nanoid:times
-      filteredBarrages:[]//已经被屏蔽的
+      filteredBarrages:[],//已经被屏蔽的
+      timer:null
     }
+
 
   },
   computed:{
     ...mapState(appStore,['settings'])
   },
   async mounted () {
+    window.loadBarrage=this.changeUrl
+    this.timer=setInterval(()=>{
+      this.changeUrl('table').then()
+    },180000)
+    this.$router.afterEach((to, from) => {
+      this.changeUrl('table').then()
+    })
     this.filteredBarrages =JSON.parse(localStorage.getItem('filteredBarrages')) || []
     this.sendBarragesCount =JSON.parse(localStorage.getItem('sendBarragesCount')) || {}
     let that = this
@@ -74,10 +83,14 @@ export default {
       height:100
     })
     tsbApi.barrage.init()
+
     tsbApi.barrage.setOnUrlChanged((url)=>{
-      this.changeUrl(url)
+      if(this.settings.barrage.browserLink){
+        this.changeUrl(url)
+      }
     }) //挂载url变化事件
-    this.pageUrl = (await tsbApi.tabs.current()).sourceUrl
+
+    this.pageUrl ='table'// (await tsbApi.tabs.current()).sourceUrl
     this.getList()
     window.$manager = manager
     window.$manager.reload=this.getList
@@ -89,6 +102,9 @@ export default {
     })
     manager.start()
     manager.show()
+  },
+  unmounted () {
+    clearInterval(this.timer)
   },
   methods:{
     async changeUrl(url) {
@@ -152,11 +168,11 @@ export default {
           $manager.send(this.filterBarrages(this.barrages))//进行前置过滤
           $manager.start()
         } else {
-          message.error('获取弹幕接口返回错误，可能是服务器正在维护，请稍后再试。')
+          message.error({content:'获取弹幕接口返回错误，可能是服务器正在维护，请稍后再试。',key:'barrage'})
         }
       } catch (e) {
         console.error(e)
-        message.error('获取弹幕意外错误。')
+        message.error({content:'获取弹幕意外错误。',key:'barrage'})
       }
     },
   }
@@ -196,6 +212,7 @@ export default {
   padding-right: 15px;
   vertical-align: middle;
   line-height: 28px;
+  z-index: 999;
 }
 
 .barrage-avatar {

@@ -1,42 +1,44 @@
 <template>
-  <div class="card half" style="" >
-    <a-row>
-      <a-col>
-        <Icon
-          style="
-            width: 5em;
-            height: 5em;
-            margin-right: 10px;
+  <HomeComponentSlot :options="options">
+        <div class="timer-content">
+          <Icon
+            style="
+           width: 56px;
+            height: 56px;
             vertical-align: middle;
+            color: black;
           "
-          icon="fanqie"
-        ></Icon>
-      </a-col>
-      <a-col style="text-align: center">
-        <div style="font-size: 1.5em; font-weight: bold">番茄钟</div>
-        <div style="font-size: 1.5em">今日番茄：0</div>
-      </a-col>
-    </a-row>
-    <a-row style="margin-top: 0.5em; text-align: center">
-      <div
-        class="btn"
-        @click="start"
-        style="
-          font-size: 1.3em;
-          font-weight: bold;
-          margin-top: 0.4em;
-          width: 12em;
-        "
-      >
-        开始一个番茄
-      </div>
-    </a-row>
-  </div>
+            icon="fanqie1"
+          ></Icon>
+          <div style="margin-top:20px;font-size: 18px;font-weight: 400;color: rgba(255, 255, 255, 0.85);">今日番茄：0</div>
+          <div
+            class="middle-button timer-btn"
+            @click="start"
+          >
+            立即开始
+          </div>
+        </div>
+  </HomeComponentSlot>
 </template>
 
 <script>
+import HomeComponentSlot from "./HomeComponentSlot.vue";
 export default {
   name: "Timer",
+  data(){
+    return {
+      options:{
+        className:'card small',
+        title:'',
+        icon:'',
+        type:'timer',
+        noTitle:true
+      },
+    }
+  },
+  components:{
+    HomeComponentSlot
+  },
   methods: {
     start() {
       this.$router.push("/tomatoStart");
@@ -46,17 +48,22 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.btn {
-  margin: auto;
+.timer-btn {
+  margin-top: 25px;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 48px;
+  text-align: center;
   &:hover {
     background: #676767;
     font-weight: bold;
     cursor: pointer;
   }
-  border-radius: 6px;
-  padding: 1em;
-  display: inline-block;
-  border: 1px solid #363636;
-  background: #494949;
+
+}
+.timer-content{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 </style>

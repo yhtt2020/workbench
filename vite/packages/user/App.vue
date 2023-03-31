@@ -29,6 +29,10 @@ export default {
   },
   async mounted() {
     this.users = await userModel.getAll()
+    this.users.forEach(user=>{
+      const date=new Date(user.expire_time)
+      user.expire_time_text=date.getFullYear()+'/'+(date.getMonth()+1)+'/'+date.getDate()
+    })
     this.loaded = true
     if (window.globalArgs['tip']) {
       this.tip = window.globalArgs['tip']
@@ -40,6 +44,10 @@ export default {
     window.ipc.on('loginCallback',async (e, args) => {
       message.success('成功添加帐号。')
       this.users = await userModel.getAll()
+      this.users.forEach(user=>{
+        const date=new Date(user.expire_time)
+        user.expire_time_text=date.getFullYear()+'/'+(date.getMonth()+1)+'/'+date.getDate()
+      })
       this.enterAccount({ uid: args.data.userInfo.uid })
     })
   },
@@ -156,15 +164,16 @@ export default {
             <a-col flex="auto">
               <div class="text-more" :style="{'padding-top':!user.is_current?'4px':''}" style="width: 70px">{{ user.user_info.nickname }}</div>
               <div class="current-tag" v-if="user.is_current">
-               <span style="color: orangered" v-if="user.expired">
-                 已过期
-               </span>
-                <span v-else>
+                <span v-if="!user.expired">
                   登录中
                 </span>
+                <span v-else>已失效</span>
               </div>
             </a-col>
           </a-row>
+            <div  style="font-size: 0.8em">
+             <span v-if="user.expired">已于</span><span v-else>将于</span>  {{user.expire_time_text}}过期
+            </div>
         </li>
           <template #overlay>
             <a-menu>

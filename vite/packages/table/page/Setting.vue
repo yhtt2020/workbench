@@ -1,7 +1,9 @@
 <template>
-  <vue-custom-scrollbar  :settings="scrollbarSettings" style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em)">
+  <vue-custom-scrollbar :settings="scrollbarSettings"
+                        style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em)">
     <div style="width: auto;    white-space: nowrap;">
-      <div style="margin: 2em;margin-right: 1em;background: #282828;padding:1em;border-radius: 0.5em;width:20em;display: inline-block">
+      <div
+        style="margin: 2em;margin-right: 1em;background: #282828;padding:1em;border-radius: 0.5em;width:20em;display: inline-block">
         <h3>快速开关功能</h3>
         <a-row :gutter="[20,20]" style="font-size: 1.2em;text-align: center">
           <a-col :span="12">
@@ -12,25 +14,25 @@
             </div>
           </a-col>
           <a-col :span="12">
-            <div  class="btn">
+            <div class="btn">
               聊天<br>
               <a-switch v-model:checked="settings.enableChat"></a-switch>
             </div>
           </a-col>
           <a-col :span="12">
-            <div  class="btn">
+            <div class="btn">
               免打扰模式<br>
               <a-switch></a-switch>
             </div>
           </a-col>
           <a-col :span="12">
-            <div  class="btn">
+            <div class="btn">
               浅色模式<br>
               <a-switch></a-switch>
             </div>
           </a-col>
           <a-col :span="12">
-            <div  class="btn">
+            <div class="btn">
               静音<br>
               <a-switch></a-switch>
             </div>
@@ -62,7 +64,7 @@
             <a-col :span="6">
               <div @click="chooseScreen" class="btn">
                 <Icon icon="touping" style="font-size: 2em"></Icon>
-               <div> 选择屏幕</div>
+                <div> 选择屏幕</div>
               </div>
             </a-col>
           </a-row>
@@ -71,7 +73,7 @@
         </div>
         <div style="margin: 2em;background: #282828;padding:1em;border-radius: 0.5em;width: 40em;">
           <h3>其他</h3>
-          <a-row style="font-size: 1.2em;text-align: center">
+          <a-row style="font-size: 1.2em;text-align: center" :gutter="[10,10]">
             <a-col :span="6">
               <div @click="wizard" class="btn">
                 <Icon icon="jurassic_nav" style="font-size: 2em"></Icon>
@@ -98,6 +100,18 @@
                 <div> 基础设置</div>
               </div>
             </a-col>
+            <a-col :span="6">
+              <div @click="verifyCode" class="btn">
+                <Icon icon="shezhi" style="font-size: 2em"></Icon>
+                <div> 验证激活码</div>
+              </div>
+            </a-col>
+            <a-col v-if="userInfo && userInfo.uid==='4'" :span="6">
+              <div @click="createCodes" class="btn">
+                <Icon icon="shezhi" style="font-size: 2em"></Icon>
+                <div> 生成激活码</div>
+              </div>
+            </a-col>
           </a-row>
           <div>
           </div>
@@ -117,30 +131,53 @@
     @ok="()=>{this.visibleChooseScreen=false}"
   >
     <div style="zoom: 1.5;font-size: 16px;padding-top: 5em;text-align: center">
-      <div style="width: 500px;overflow: visible;display: inline-block"><ChooseScreen></ChooseScreen></div>
+      <div style="width: 500px;overflow: visible;display: inline-block">
+        <ChooseScreen></ChooseScreen>
+      </div>
     </div>
 
   </a-modal>
 </template>
 
 <script>
-import cp from 'child_process'
 import ChooseScreen from './ChooseScreen.vue'
 import { appStore } from '../store'
-import {mapWritableState} from 'pinia'
+import { mapWritableState } from 'pinia'
+import { message } from 'ant-design-vue'
+import {mapActions} from 'pinia'
+import { codeStore } from '../store/code'
 
 export default {
   name: 'Setting',
   components: { ChooseScreen },
-  data(){
+  data () {
     return {
-      visibleChooseScreen:false
+      visibleChooseScreen: false
     }
   },
-  computed:{
-    ...mapWritableState(appStore,['settings'])
+  mounted () {
+    console.log(this.userInfo)
   },
-  methods:{
+  computed: {
+    ...mapWritableState(appStore, ['settings']),
+    ...mapWritableState(appStore,['userInfo'])
+  },
+  methods: {
+    ...mapActions(codeStore, ['verify', 'create']),
+    verifyCode () {
+       this.verify(rs=>{
+         if (rs) {
+           message.success('激活码有效')
+         } else {
+           message.error('激活码无效')
+         }
+       })
+    },
+    async createCodes () {
+      this.create().then(rs=>{
+        message.success('生成激活码10个')
+      })
+    },
     async setTouch () {
       await tsbApi.window.setAlwaysOnTop(false)
       let cp = require('child_process')
@@ -155,31 +192,31 @@ export default {
         await tsbApi.window.setAlwaysOnTop(true)
       })
     },
-    chooseScreen(){
-      this.visibleChooseScreen=true
+    chooseScreen () {
+      this.visibleChooseScreen = true
     },
-    wizard(){
+    wizard () {
       this.$router.push('/wizard')
     },
-    barrage(){
+    barrage () {
       this.$router.push({
-        path:'/barrage'
+        path: '/barrage'
       })
     },
-    papersSettings(){
+    papersSettings () {
       this.$router.push({
-        name:'papersSetting'
+        name: 'papersSetting'
       })
     },
-    basic(){
+    basic () {
       this.$router.push({
-        name:'key'
+        name: 'key'
       })
     },
-    switchBarrage(value){
-      if(value){
+    switchBarrage (value) {
+      if (value) {
         window.$manager.show()
-      }else{
+      } else {
         window.$manager.hidden()
       }
     }

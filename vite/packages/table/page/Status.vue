@@ -1,88 +1,94 @@
-<template >
-  <div v-if="loaded" >
-    <vue-custom-scrollbar  :settings="scrollbarSettings" style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em)">
-    <div style="width: auto;    white-space: nowrap;">
-      <div style="display: inline-block;vertical-align: top">
-        <div style="margin: 2em;background: #282828;padding:2em;border-radius: 0.5em;width: 40em;">
-          <h3>音量</h3>
-          <a-row>
-            <a-col :span="3">
-              <div style="cursor: pointer" v-if="!muted" @click="setMuted">
-                <Icon icon="yinliang" style="font-size: 3em"></Icon>
-              </div>
-              <div style="cursor: pointer" v-else @click="cancelMuted">
-                <Icon icon="jingyin" style="font-size: 3em"></Icon>
-              </div>
-            </a-col>
-            <a-col :span="21">
-              <a-slider @after-change="setVol" v-model:value="vol"></a-slider>
-            </a-col>
-          </a-row>
-          <div>
+<template>
+  <div v-if="loaded">
+    <vue-custom-scrollbar :settings="scrollbarSettings"
+                          style="position:relative;width:calc(100vw - 9em);  border-radius: 8px;height: calc(100vh - 12em)">
+      <div style="width: auto;    white-space: nowrap;">
+        <div style="display: inline-block;vertical-align: top">
+          <div style="margin: 2em;background: #282828;padding:2em;border-radius: 0.5em;width: 40em;">
+            <h3>音量</h3>
+            <a-row>
+              <a-col :span="3">
+                <div style="cursor: pointer" v-if="!muted" @click="setMuted">
+                  <Icon icon="yinliang" style="font-size: 3em"></Icon>
+                </div>
+                <div style="cursor: pointer" v-else @click="cancelMuted">
+                  <Icon icon="jingyin" style="font-size: 3em"></Icon>
+                </div>
+              </a-col>
+              <a-col :span="21">
+                <a-slider @after-change="setVol" v-model:value="vol"></a-slider>
+              </a-col>
+            </a-row>
+            <div>
+            </div>
+          </div>
+          <div style="margin: 2em;background: #282828;padding:2em;border-radius: 0.5em;width: 40em;">
+            <h3>屏幕亮度</h3>
+            <a-row>
+              <a-col :span="3">
+                <div>
+                  <Icon icon="icon_qingtian" style="font-size: 3em;filter: grayscale(100%)"></Icon>
+                </div>
+              </a-col>
+              <a-col :span="21">
+                <a-slider @after-change="setBright" v-model:value="bright"></a-slider>
+                <p style="margin-top:1em;font-size: 1.2em;padding-left: 0.3em">
+                  调整屏幕亮度需要用到高权限接口，可能造成安全软件误报。</p>
+              </a-col>
+            </a-row>
+
+
+            <div>
+
+            </div>
           </div>
         </div>
-        <div style="margin: 2em;background: #282828;padding:2em;border-radius: 0.5em;width: 40em;">
-          <h3>屏幕亮度</h3>
-          <a-row>
-            <a-col :span="3">
-              <div>
-                <Icon icon="icon_qingtian" style="font-size: 3em;filter: grayscale(100%)"></Icon>
-              </div>
-            </a-col>
-            <a-col :span="21">
-              <a-slider @after-change="setBright" v-model:value="bright"></a-slider>
-              <p style="margin-top:1em;font-size: 1.2em;padding-left: 0.3em">
-                调整屏幕亮度需要用到高权限接口，可能造成安全软件误报。</p>
-            </a-col>
-          </a-row>
 
-
-          <div>
-
-          </div>
-        </div>
-      </div>
-
-    <div style="display: inline-block;">
-      <div style="margin: 2em;background: #282828;padding:2em;border-radius: 0.5em;width: 20em;vertical-align: top">
-        <h3>音频输出设备</h3>
-            <div v-for="audio in audioList" >
+        <div style="display: inline-block;">
+          <div style="margin: 2em;background: #282828;padding:2em;border-radius: 0.5em;width: 20em;vertical-align: top">
+            <h3>音频输出设备</h3>
+            <div v-for="audio in audioList">
               <div @click="setAudio(audio)" class="audio" :class="{'active':audio.isDefaultForMultimedia}">
-                <Icon icon="yinlianglabashengyin" style="font-size: 1.2em"></Icon> {{audio.name}} <span v-if="audio.deviceId==='default'">当前</span>
+                <Icon icon="yinlianglabashengyin" style="font-size: 1.2em"></Icon>
+                {{ audio.name }} <span v-if="audio.deviceId==='default'">当前</span>
               </div>
             </div>
-        <div>
+            <div>
+            </div>
+          </div>
+          <audio id="speakerAudio" src='/sound/gua.mp3'>
+            您的浏览器暂不支持音频播放
+          </audio>
         </div>
-      </div>
-      <audio id="speakerAudio" src='/sound/gua.mp3'     >
-        您的浏览器暂不支持音频播放
-      </audio>
-    </div>
-      <div style="display: inline-block;vertical-align: top">
-      <div style="margin: 2em;background: #282828;padding:2em;border-radius: 0.5em;width: 40em;vertical-align: top;">
-        <h3>音频输入设备</h3>
-            <div v-for="audio in micList" >
+        <div style="display: inline-block;vertical-align: top">
+          <div
+            style="margin: 2em;background: #282828;padding:2em;border-radius: 0.5em;width: 40em;vertical-align: top;">
+            <h3>音频输入设备</h3>
+            <div v-for="audio in micList">
               <div @click="setAudio(audio)" class="audio" :class="{'active':audio.deviceId==='default'}">
-                <Icon icon="maikefeng" style="font-size: 1.2em"></Icon> {{audio.label}} <span v-if="audio.deviceId==='default'">当前</span>
+                <Icon icon="maikefeng" style="font-size: 1.2em"></Icon>
+                {{ audio.label }} <span v-if="audio.deviceId==='default'">当前</span>
               </div>
             </div>
 
+          </div>
         </div>
       </div>
-    </div>
 
-    <div>
-    </div>
+      <div>
+      </div>
     </vue-custom-scrollbar>
   </div>
 
 </template>
 
 <script>
-const loudness = require('loudness')
-const brightness = require('brightness')
+const loudness = window.loudness
+const brightness = window.brightness
+import { getResPathJoin } from '../js/common/exec'
 // const {listOutputs,setAsDefault} =require('@josephuspaye/win-audio-outputs')
-import {listOutputs,setAsDefault} from '../js/ext/audio/audio'
+import { listOutputs, setAsDefault } from '../js/ext/audio/audio'
+
 export default {
   name: 'Status',
   data () {
@@ -91,11 +97,11 @@ export default {
       vol: 50,
       bright: 50,
       timer: null,
-      loaded:false,
-      audioList:[],
-      micList:[],
+      loaded: false,
+      audioList: [],
+      micList: [],
       scrollbarSettings: {
-        useBothWheelAxes:true,
+        useBothWheelAxes: true,
         swipeEasing: true,
         suppressScrollY: true,
         suppressScrollX: false,
@@ -104,15 +110,10 @@ export default {
     }
   },
   async mounted () {
-    let isDevelopmentMode= 'development-mode' in window.globalArgs
-    let path
-    if(isDevelopmentMode) {
-       path = window.globalArgs['app-path'] + '/res/adjust_get_current_system_volume_vista_plus.exe'
-    }else{
-      path = window.globalArgs['app-path'] + '/../res/adjust_get_current_system_volume_vista_plus.exe'
-    }
+    let isDevelopmentMode = 'development-mode' in window.globalArgs
+    let path = getResPathJoin('adjust_get_current_system_volume_vista_plus.exe')
     loudness.setCmdPath(path)
-    setTimeout(()=>{
+    setTimeout(() => {
       //const [audioList, setAudioList] = useState([]);
       //获取音频列表
       // const getSpeakerList = () => {
@@ -136,31 +137,30 @@ export default {
       //     });
       // };
       const getSpeakerList = () => {
-       listOutputs().then( (devices) =>{
-            let list = [];
-            devices.forEach((device)=> {
-                device.value=device.id
-                list.push(device);
-              // }else if(device.kind==='audioinput'){
-              //   this.micList.push(device)
-              // }
-            });
-            this.audioList=list
-            console.log(list)
+        listOutputs().then((devices) => {
+          let list = []
+          devices.forEach((device) => {
+            device.value = device.id
+            list.push(device)
+            // }else if(device.kind==='audioinput'){
+            //   this.micList.push(device)
+            // }
           })
+          this.audioList = list
+          console.log(list)
+        })
           .catch(function (err) {
-            console.log(err.name + ': ' + err.message);
-          });
-      };
+            console.log(err.name + ': ' + err.message)
+          })
+      }
       getSpeakerList()
-    },0)
-    this.loaded=true
+    }, 0)
+    this.loaded = true
     await this.getVals()
 
     this.timer = setInterval(() => {
       this.getVals()
     }, 2000)
-
 
   },
   beforeUnmount () {
@@ -168,18 +168,18 @@ export default {
   },
   methods: {
     async getSpeakerList () {
-      listOutputs().then( (devices) =>{
-        let list = [];
-        devices.forEach((device)=> {
-          device.value=device.id
-          list.push(device);
-        });
-        this.audioList=list
+      listOutputs().then((devices) => {
+        let list = []
+        devices.forEach((device) => {
+          device.value = device.id
+          list.push(device)
+        })
+        this.audioList = list
         console.log(list)
       })
         .catch(function (err) {
-          console.log(err.name + ': ' + err.message);
-        });
+          console.log(err.name + ': ' + err.message)
+        })
     },
     async getVals () {
       this.muted = await loudness.getMuted()
@@ -195,14 +195,14 @@ export default {
       await brightness.set((Number(this.bright) / 100))
       console.log((Number(this.bright) / 100).toFixed(1))
     },
-    async setAudio(audio){
+    async setAudio (audio) {
       await setAsDefault(audio)
-      audio.isDefaultForMultimedia=true
+      audio.isDefaultForMultimedia = true
       this.gua()
-     // navigator.mediaDevices.selectAudioOutput()
+      // navigator.mediaDevices.selectAudioOutput()
     },
-    async gua(){
-      let audioSpeaker=document.getElementById('speakerAudio')
+    async gua () {
+      let audioSpeaker = document.getElementById('speakerAudio')
       await this.getSpeakerList()
       // console.log(audioSpeaker)
       // let re=new RegExp("")
@@ -223,9 +223,9 @@ export default {
       this.muted = false
       this.gua()
     },
-    async shell(cmd,cb){
-      let rs=await ipc.invoke('shell', { cmd })
-      if(rs){
+    async shell (cmd, cb) {
+      let rs = await ipc.invoke('shell', { cmd })
+      if (rs) {
         cb(rs)
       }
     }
@@ -234,7 +234,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.audio{
+.audio {
   border-radius: 0.2em;
   padding: 0.5em;
   font-size: 1.2em;
@@ -243,12 +243,13 @@ export default {
   word-break: break-all;
   white-space: pre-wrap;
 
-  &.active{
+  &.active {
     background: #565656;
     border-radius: 3px;
     font-weight: bold;
   }
-  &:hover{
+
+  &:hover {
     background: rgba(86, 84, 84, 0.62);
   }
 }

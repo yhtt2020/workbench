@@ -584,7 +584,6 @@ class AppManager {
           safeDialogsMessage: false,
           partition: null,
           additionalArguments: [
-            '--user-data-path=' + userDataPath,
             ...additionalArguments,
           ]
         },

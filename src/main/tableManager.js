@@ -17,7 +17,7 @@ class TableManager {
           minimizable: false,
           height: 618,
           minWidth: 800,
-          minHeight: 550,
+          minHeight: 480,
           frame: false,
           backgroundColor: '#fff',
         },
@@ -29,11 +29,8 @@ class TableManager {
           sandbox: false,
           contextIsolation: false,
           additionalArguments: [
-            '--user-data-path=' + userDataPath,
-            '--app-version=' + app.getVersion(),
-            '--app-name=' + app.getName(),
             '--app-path='+app.getPath('exe'),
-            ...((isDevelopmentMode ? ['--development-mode'] : []))
+            '--app-dir_name='+__dirname,
           ]
         }
       })
@@ -118,14 +115,6 @@ app.whenReady().then(() => {
           frame: false,
           backgroundColor: '#fff',
 
-        },
-        webPreferences: {
-          additionalArguments: [
-            '--user-data-path=' + userDataPath,
-            '--app-version=' + app.getVersion(),
-            '--app-name=' + app.getName(),
-            ...((isDevelopmentMode ? ['--development-mode'] : []))
-          ]
         }
       })
       let webContents = tansWin.window.webContents
@@ -188,7 +177,6 @@ app.whenReady().then(() => {
           ext: path.parse(_path).ext
         })
       })
-      console.log(filepaths)
       return filepaths
 
     }

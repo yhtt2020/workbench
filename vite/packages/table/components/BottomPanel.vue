@@ -1,6 +1,6 @@
 <template>
   <div class="bottom-panel" style="position: fixed;padding:10px;bottom:0;width: 100vw;text-align: center">
-    <div class="common-panel" style="display: inline-block;vertical-align: top">
+    <div class="common-panel user" style="display: inline-block;vertical-align: top">
       <div v-if="!userInfo">
         <div @click="login" style="padding: 0.5em">
           <a-avatar :size="54">未登录</a-avatar>
@@ -12,13 +12,14 @@
       </div>
       <div v-else :style="{width:settings.enableChat?'23em':'11em'}">
         <a-row class="pointer" @click="levelDetail">
-          <a-col  :span="settings.enableChat?10:24" style="padding: 0.6em;position:relative;">
+          <a-col class="user-info"  :span="settings.enableChat?10:24" style="padding: 0.6em;position:relative;">
             <a-row  style="text-align: left" :gutter="10">
               <a-col>
                 <a-avatar :src="userInfo.avatar" :size="50">{{ userInfo.nickname }}</a-avatar>
               </a-col>
-              <a-col>
-                <div style="padding-top: 0.2em">
+              <a-col style="position: relative">
+                <span  ref="minute" class="tip" >+1</span>
+                <div style="padding-top: 0.2em;">
                   <span style="font-size: 0.8em;">等级</span> {{ lvInfo.lv }}级 <br>
                   <span>
                     <a-tooltip>
@@ -26,10 +27,10 @@
                               style="width:4em"/>
                   <template #title>
                     <thunderbolt-filled class="thunder" style="color: rgba(255,140,44,0.98);vertical-align: middle"/>
-                    <span
-                      style="color: #f3f3f3;font-size: 12px;vertical-align: middle">{{
-                        lvInfo.remainHour
-                      }}小时{{ lvInfo.remainMinute }}分后升级</span>
+  <span
+    style="color: #f3f3f3;font-size: 12px;vertical-align: middle">{{
+      lvInfo.remainHour
+    }}小时{{ lvInfo.remainMinute }}分后升级</span>
                   </template>
                 </a-tooltip>
               </span>
@@ -53,7 +54,7 @@
 
 
           </a-col>
-          <a-col v-if="settings.enableChat" :span="14" style="text-align: left;padding-top: 0.5em;line-height: 1.75">
+          <a-col class="chat" v-if="settings.enableChat" :span="14" style="text-align: left;padding-top: 0.5em;line-height: 1.75">
             <div class="pointer" @click.stop="enterIM">
               <div v-for="message in messages" class="text-more">{{message.title}}：{{message.body}}</div>
             </div>
@@ -141,6 +142,7 @@ import { appStore } from '../store'
 import { mapWritableState, mapActions } from 'pinia'
 import Template from '../../user/pages/Template.vue'
 import { ThunderboltFilled } from '@ant-design/icons-vue'
+import { Modal } from 'ant-design-vue'
 const { messageModel }=window.$models
 export default {
   name: 'BottomPanel',
@@ -151,16 +153,20 @@ export default {
       visibleTrans: false,
       full: false,
       lvInfo: {},
-      messages:[]
+      timer:null,
+      messages:[],
+      tipped:false,
     }
   },
   mounted () {
+    this.setMinute()
     this.lastTime=Number(localStorage.getItem('lastBarrageMessageTime'))
     this.loadMessages()
     setInterval( ()=>{
       this.loadMessages()
     },10000)
     ipc.on('userInfo', (event, args) => {
+      this.tipped=false
       this.loading = false
 
       let lvInfo = {}
@@ -182,6 +188,27 @@ export default {
   },
   methods: {
     ...mapActions(appStore, ['setUser']),
+    setMinute(){
+      setInterval(()=>{
+        this.$refs.minute.classList.add('move')
+        this.lvInfo.remainMinute--
+        if(this.lvInfo.remainMinute<=0){
+          this.lvInfo.remainHour--
+          if(this.lvInfo.remainHour<0 &&  this.tipped===false){
+            this.tipped=true
+            ipc.send('getDetailUserInfo')
+            Modal.info({
+              title:'升级提示',
+              content:'恭喜您等级提升',
+            })
+          }
+          this.lvInfo.remainMinute=59
+        }
+       this.timer= setTimeout(()=>{
+          this.$refs.minute.classList.remove('move')
+        },1000)
+      },60000)
+    },
     async loadMessages(){
       this.messages=await messageModel.allList()
       this.messages.forEach(mes=>{
@@ -345,6 +372,77 @@ export default {
   100% {
     opacity: 0.5;
     filter: alpha(opacity=50);
+  }
+}
+
+
+@media screen and (max-height: 510px) {
+  .bottom-panel {
+    zoom:0.9;
+
+  }
+  .chat{
+    display: none;
+  }
+  .user-info{
+    width: 100%;
+  }
+  .user{
+    width: 12.5em;
+  }
+}
+@media screen and (min-height: 511px) and (max-height: 550px) {
+  .bottom-panel{
+    zoom:0.9;
+
+  }
+  .chat{
+    display: none;
+  }
+  .user-info{
+    width: 100%;
+  }
+  .user{
+    width: 12.5em;
+  }
+}
+@media screen and (min-height: 551px) and (max-height: 610px) {
+  .bottom-panel {
+    zoom: 0.9;
+  }
+  .chat{
+    display: none;
+  }
+  .user-info{
+    width: 100%;
+  }
+  .user{
+    width: 12.5em;
+  }
+}
+.tip{
+  position: absolute;
+  top: 0;
+  right: -25px;
+  opacity: 0;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 100px;
+  width: 30px;
+  text-align: center;
+  line-height: 15px;
+}
+.move{
+
+  animation: moveUp 0.8s;
+}
+@keyframes moveUp {
+  from {
+    top: 20px;
+    opacity: 100;
+  }
+  to {
+    top: -10px;
+    opacity: 0;
   }
 }
 </style>

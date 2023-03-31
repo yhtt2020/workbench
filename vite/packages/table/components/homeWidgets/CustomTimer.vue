@@ -1,75 +1,50 @@
 <template>
-  <div class="card">
-    <div style="border-bottom: 1px solid #777777">
+  <HomeComponentSlot :options="options">
+    <div>
       <a-calendar
         v-model:value="value"
         :fullscreen="false"
         @panelChange="onPanelChange"
       >
         <template #headerRender="{}">
-          <div class="title">
-            <Icon
-              icon="rili3"
-              style="height: 1.3em; width: 1.3em; margin-right: 0.1em"
-            ></Icon>
-            日历
-            <Icon
-            style="width: 1em; height: 1em;cursor:pointer;position: absolute;right: 0.5em"
-            icon="gengduo1"
-            class="title-icon"
-            @click="showDrawer"
-          ></Icon>
+          <div class="timer-title" style="display: none">
           </div>
-
         </template>
       </a-calendar>
     </div>
-    <a-row style="font-size: 1.2em; line-height: 2.2em">
+    <a-row style="font-size: 1.2em; line-height: 2em">
       <a-col :span="12"><Icon icon="jieriyingxiao"></Icon> 清明节</a-col>
-      <a-col :span="12">4月5日~4月5日</a-col></a-row
-    >
-  </div>
-  <a-drawer
-    :contentWrapperStyle="{ padding:10,marginLeft:'2.5%',
-    backgroundColor:'#1F1F1F',width: '95%',height:'11em',borderRadius:'5%'}"
-    :width="120"
-    :height="120"
-    class="drawer"
-    :closable="false"
-    placement="bottom"
-    :visible="visible"
-    @close="onClose"
-  >
-      <div class="option" @click="removeCalendar"><Icon
-        style="
-        width: 3em;
-        height: 3em;
-        vertical-align: middle;
-      "
-        icon="guanbi2"
-      ></Icon>删除</div>
+      <a-col :span="12">4月5日~4月5日</a-col>
+      <a-col :span="12"><Icon icon="jieriyingxiao"></Icon> 劳动节</a-col>
+      <a-col :span="12">4月29日~5月3日</a-col>
+      <a-col :span="12"><Icon icon="jieriyingxiao"></Icon> 端午节</a-col>
+      <a-col :span="12">6月22日~6月24日</a-col>
+    </a-row>
+  </HomeComponentSlot>
 
-  </a-drawer>
 </template>
 
 <script>
 import {mapActions} from "pinia";
 import {tableStore} from "../../store";
-
+import HomeComponentSlot from "./HomeComponentSlot.vue";
 export default {
   name: "CustomTimer",
-  props:{
-    customIndex:{
-      type:Number,
-      default:0
-    }
-  },
   data() {
     return {
       status: "pause",
       value: null,
-      visible:false
+      visible:false,
+      options:{
+        className:'card',
+        title:'日历',
+        icon:'rili3',
+        type:'customTimer'
+      },
     };
+  },
+  components:{
+    HomeComponentSlot
   },
   methods: {
     onPanelChange(value, mode) {},
@@ -112,7 +87,7 @@ export default {
 :deep(.ant-picker-cell .ant-picker-cell-inner) {
   border-radius: 100%;
 }
-.title {
+.timer-title {
   background: #363739;
   font-size: 1.5em;
   position: relative;
@@ -143,5 +118,8 @@ export default {
   border-radius: 10%;
   margin-left: 1.8em;
   cursor:pointer
+}
+:deep(.ant-picker-calendar){
+  background: transparent;
 }
 </style>

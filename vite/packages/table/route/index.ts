@@ -2,7 +2,7 @@ import BarrageSetting from '../page/settings/BarrageSetting.vue'
 import Deck from '../page/Deck.vue'
 import Setting from '../page/Setting.vue'
 import Weather from '../page/app/Weather.vue'
-import BiliIndex from '../page/app/bili/Index.vue'
+import Watch from '../page/app/watch/Index.vue'
 import LevelDetail from '../page/LevelDetail.vue'
 import BasicSetting from '../page/settings/Basic.vue'
 import Key from '../page/settings/Key.vue'
@@ -16,6 +16,8 @@ import Browser from '../page/settings/Browser.vue'
 import AddCard from "../page/app/card/AddCard.vue"
 import SetupCard from "../page/app/card/SetupCard.vue"
 import Sensor from '../page/Sensor.vue'
+import Dashboard from '../page/app/watch/Dashboard.vue'
+import CPUIndex from '../page/app/CPUIndex.vue'
 export default   [{
   path: '',
   name: 'index',
@@ -35,9 +37,14 @@ export default   [{
       ]
     },
     {
-      path:'/bili',
-      name:'bili',
-      component: BiliIndex
+      path:'/watch',
+      name:'watch',
+      component: Watch
+    },
+    {
+      path:'/dashboard',
+      name:'dashboard',
+      component: Dashboard
     },
     {
       path:'/levelDetail',
@@ -100,15 +107,16 @@ export default   [{
           component:Browser
         },
       ]
-    }, {
-      path: "/addCard",
-      name: "addCard",
-      component: AddCard,
     },
     {
       path: "/setting",
       name: "addCardSetting",
       component: SetupCard,
-    },
+    },{
+    path:"/CPUIndex",
+      name:'CPUIndex',
+      component: CPUIndex
+    }
   ]
-}]
+}
+]

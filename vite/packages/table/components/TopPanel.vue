@@ -125,24 +125,29 @@ export default {
   methods:{
     ...mapActions(tableStore,["setAppDate"]),
     clearLockTimer(){
-      clearInterval(this.lockTimer)
-      this.lockTimer=null
-      this.lockTimeout=this.settings.lockTimeout
-      this.showLockTip=false
+      if(this.lockTimer){
+        clearInterval(this.lockTimer)
+        this.lockTimer=null
+        this.lockTimeout=this.settings.lockTimeout
+        this.showLockTip=false
+      }
     },
     setLockTimer(){
-      if(this.lockTimer){
-        this.lockTimeout=(this.settings.lockTimeout || 300)-1
-      }else{
-        this.lockTimeout=(this.settings.lockTimeout || 300)-1
-        this.showLockTip=true
-        this.lockTimer=setInterval(()=>{
-          this.lockTimeout--
-          if(this.lockTimeout===0){
-            this.clearLockTimer()
-            this.$router.push('/lock')
-          }
-        },1000)
+      if(this.settings.enable){
+        //只有启用了锁屏才会触发这个效果
+        if(this.lockTimer){
+          this.lockTimeout=(this.settings.lockTimeout || 300)-1
+        }else{
+          this.lockTimeout=(this.settings.lockTimeout || 300)-1
+          this.showLockTip=true
+          this.lockTimer=setInterval(()=>{
+            this.lockTimeout--
+            if(this.lockTimeout===0){
+              this.clearLockTimer()
+              this.$router.push('/lock')
+            }
+          },1000)
+        }
       }
     },
     openGlobalSearch(){

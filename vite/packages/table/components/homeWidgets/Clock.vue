@@ -1,5 +1,5 @@
 <template>
-  <div class="card  content half" v-if="countDowntime.hours" style="display: flex;flex-direction: column;justify-content: space-between;height: 50%">
+  <div class="card  content small" v-if="countDowntime.hours" style="display: flex;flex-direction: column;justify-content: space-between;">
     <Icon
       style="width: 1.5em; height: 1.5em;cursor:pointer"
       icon="gengduo1"
@@ -26,7 +26,7 @@
      ></Icon>
    </div>
   </div>
-  <div class="card content half" v-else-if="clockEvent.length <= 0">
+  <div class="card content small" v-else-if="clockEvent.length <= 0">
       <Icon
         style="width: 1.5em; height: 1.5em;cursor:pointer"
         icon="gengduo1"
@@ -37,7 +37,7 @@
     <a-empty :description="null" :image="simpleImage" />
     <a-button type="primary" style="background: #676767;border: none" @click="onSetup">立即添加</a-button>
   </div>
-  <div class="card content half" v-else>
+  <div class="card content small" v-else>
     <Icon
       style="width: 1.5em; height: 1.5em;cursor:pointer"
       icon="gengduo1"
@@ -91,33 +91,15 @@
        </div>
     </div>
   </a-drawer>
-  <div v-show="custom" class="custom" >
-    <div style=" background-color: rgba(0,0,0,0.7);
-                position: fixed;
-                top: 0;
-                bottom: 0;
-                left: 0;
-                right: 0;"></div>
-    <Icon
-      style="
-        width: 2em;
-        height: 2em;
-        vertical-align: middle;
-        position: absolute;
-        right: 1em;
-        top: 2em;
-        cursor:pointer
-      "
-      @click="closeCustom"
-      icon="guanbi1"
-    ></Icon>
-    <div style="color: white;z-index: 333">自定义倒计时</div>
-    <a-space direction="vertical">
-    <a-time-picker v-model:value="value1" size="large" />
-    </a-space>
-    <a-button type="primary" @click="addCustom">开始倒计时</a-button>
-  </div>
-
+    <a-modal v-model:visible="custom" title="" @ok="handleOk" :footer="null" style="font-size: 8px" :maskClosable="false">
+      <div style="display: flex;flex-direction: column;align-items: center">
+        <div style="color: white;">自定义倒计时</div>
+        <a-space direction="vertical" style="margin: 14px">
+          <a-time-picker v-model:value="value1" size="large" />
+        </a-space>
+        <a-button type="primary" @click="addCustom" style="margin: 14px">开始倒计时</a-button>
+      </div>
+    </a-modal>
 </template>
 
 <script>
@@ -257,7 +239,7 @@ export default {
   left: 35%;
 
   width: 30%;
-  height: 50%;
+
   border-radius: 10%;
   z-index: 999;
 }

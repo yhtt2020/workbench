@@ -22,6 +22,7 @@
     "codemirror": "^6.0.1",
     "echarts": "^5.4.1",
     "fs-extra": "^11.1.1",
+    "html2canvas": "^1.4.1",
     "jquery": "^3.6.3",
     "justifiedGallery": "^3.8.1",
     "lightgallery": "^2.7.1",

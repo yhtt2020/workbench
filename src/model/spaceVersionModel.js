@@ -86,7 +86,6 @@ const spaceVersionModel = {
       return await this.restoreLocal(spaceId, versionId)
     } else {
       return await this.restoreCloud(spaceId, versionId)
-      console.log('是云空间', this.activeSpace)
     }
   },
   /**
@@ -152,7 +151,6 @@ const spaceVersionModel = {
       let backupSpace = await backupSpaceModel.getSpace(spaceId)
       let user = await userModel.get({ uid: backupSpace.uid })
       user.clientId=await userModel.getClientId()
-      console.log(`user`,user)
       cloudSpaceModel.setUser(user)
       let spaceRs = await cloudSpaceModel.getSpace(spaceId)
       let cloudSpace

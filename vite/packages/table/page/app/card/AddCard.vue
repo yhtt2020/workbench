@@ -1,43 +1,21 @@
 <template>
-  <div class="title" style="height: 6em; width: 12em">
-    <Icon
-      style="
-        width: 3em;
-        height: 3em;
-        margin-right: 10px;
-        vertical-align: middle;
-      "
-      icon="shezhi1"
-    ></Icon>
-    <span>添加小卡片</span>
-  </div>
-  <div class="content">
-    <div
-      class="card item"
-      style="
-        height: 12em;
-        width: 12em;
-        margin-bottom: 1em;
-        padding: 1em;
-        margin: 1em;
-        cursor:pointer;
-      "
-      v-for="item in cardList"
-      :key="item.name"
-      @click="addAssembly(item)"
-    >
-      <Icon
-        style="
-          width: 5em;
-          height: 5em;
-          vertical-align: middle;
-        "
-        :icon="item.icon"
-      ></Icon>
-      {{ item.cname }}
+  <div class="top-title drag">
+    <div class="left-title pointer no-drag" @click="onBack">
+    <Icon icon="xiangzuo" style="height: 24px;width: 24px"></Icon>
+    <span>返回</span>
     </div>
+    <a-input v-model:value="selectContent" class="no-drag" placeholder="搜索" @change="select" style="height: 100%;
+   width: 400px;border-radius: 12px;background: rgba(42, 42, 42, 0.6);">
+      <template #prefix>
+        <Icon icon="sousuo"></Icon>
+      </template>
+    </a-input>
   </div>
-  <CardPreview :cardType="cardType" v-if="show" @onBack="onBack"></CardPreview>
+  <vue-custom-scrollbar key="scrollbar" id="addScroll"  :settings="scrollbarSettings"
+                        style="position:relative;  border-radius: 8px;height: 100vh">
+  <CardPreview :cardType="item"   v-for="item in filterList"></CardPreview>
+    <div style="height: 650px"></div>
+  </vue-custom-scrollbar>
 </template>
 
 <script>
@@ -50,13 +28,37 @@ export default {
   data() {
     return {
       cardList: [
-        { name: "customTimer", cname: "日历", icon: "rili3",detail:"追踪当月日期，查看临近节日" },
-        { name: "countdownDay", cname: "倒数日", icon: "rili2",detail:"设置你的纪念日、考试日等等" },
-        { name: "smallCountdownDay", cname: "小倒数日", icon: "rili2",detail:"设置你的纪念日、考试日等等" },
-        { name: "clock", cname: "闹钟", icon: "naozhong",detail:"设置你的闹钟" },
+        { name: "customTimer", cname: "日历", icon: "rili3",detail:"追踪当月日期，查看临近节日" ,images:['customTimer']},
+        { name: "countdownDay", cname: "倒数日", icon: "rili2",detail:"设置你的纪念日、考试日等等" ,images:['countdownDay','smallCountdownDay']},
+        { name: "clock", cname: "闹钟", icon: "naozhong",detail:"设置你的闹钟",images:['clock'] },
+        { name: "supervisory", cname: "性能", icon: "xingneng",detail:'监控系统状态，查看游戏帧数',images:['CPULineChart','CPUFourCard','SmallCPUCard','SmallGPUCard']},
+        { name: "music", cname: "网易云", icon: "naozhong",detail:"快捷播放，我的喜欢，我的歌单",images:['music'] },
+        { name: "timer", cname: "番茄钟", icon: "naozhong",detail:"快速开启番茄钟时刻，记录每天专注成果",images:['timer'] },
+        { name: "weather", cname: "天气", icon: "naozhong",detail:"查看某地当前的天气状况和预报",images:['weather'] },
+        { name: "fish", cname: "木鱼", icon: "naozhong",detail:"休闲减压神器，积攒功德",images:['fish'] },
       ],
       cardType:{},
-      show:false
+      show:false,
+      scrollbarSettings: {
+        useBothWheelAxes: true,
+        swipeEasing: true,
+        suppressScrollY: false,
+        suppressScrollX: true,
+        wheelPropagation: true,
+        currentItemId: -1,
+        timer: null
+      },
+      selectContent:null,
+      filterList:[
+        { name: "customTimer", cname: "日历", icon: "rili3",detail:"追踪当月日期，查看临近节日" ,images:['customTimer']},
+        { name: "countdownDay", cname: "倒数日", icon: "rili2",detail:"设置你的纪念日、考试日等等" ,images:['countdownDay','smallCountdownDay']},
+        { name: "clock", cname: "闹钟", icon: "naozhong",detail:"设置你的闹钟",images:['clock'] },
+        { name: "supervisory", cname: "性能", icon: "xingneng",detail:'监控系统状态，查看游戏帧数',images:['CPULineChart','CPUFourCard','SmallCPUCard','SmallGPUCard']},
+        { name: "music", cname: "网易云", icon: "naozhong",detail:"快捷播放，我的喜欢，我的歌单",images:['music'] },
+        { name: "timer", cname: "番茄钟", icon: "naozhong",detail:"快速开启番茄钟时刻，记录每天专注成果",images:['timer'] },
+        { name: "weather", cname: "天气", icon: "naozhong",detail:"查看某地当前的天气状况和预报",images:['weather'] },
+        { name: "fish", cname: "木鱼", icon: "naozhong",detail:"休闲减压神器，积攒功德",images:['fish'] },
+      ]
     };
   },
 
@@ -68,51 +70,64 @@ export default {
       switch (item.name) {
         case "customTimer":
           this.cardType=this.cardList[0];
-          // this.addCustomComponents(item.name);
-          // this.$router.push({
-          //   name: "home",
-          //   params: {
-          //     name: item.name,
-          //     cname: item.cname,
-          //   },
-          // });
           break;
         case "countdownDay":
           this.cardType=this.cardList[1];
-          // this.$router.push({
-          //   name: "addCardSetting",
-          //   params: {
-          //     name: item.name,
-          //     cname: item.cname,
-          //   },
-          // });
-          break;
-        case "smallCountdownDay":
-          this.cardType=this.cardList[2];
           break;
         case "clock":
+          this.cardType=this.cardList[2];
+          break;
+        case "supervisory":
           this.cardType=this.cardList[3];
-          // this.$router.push({
-          //   name: "addCardSetting",
-          //   params: {
-          //     name: item.name,
-          //     cname: item.cname,
-          //   },
-          // });
           break;
       }
       this.show=true;
     },
     onBack(){
-      this.show=false;
+
+      this.$emit('setCustom',false)
+    },
+    select(){
+    this.filterList = this.cardList.filter(i =>{
+      return i.cname.includes(this.selectContent)
+    })
     }
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.title {
-  font-size: 20px;
+:deep(.lg .ant-modal-body) {
+  font-size: 0em;
+}
+#addScroll{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+    margin-top: 16px;
+    margin-left: -20px;
+
+}
+.top-title{
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  margin-left: 20px;
+  height: 48px;
+  width: calc(50vw + 200px);
+  justify-content: space-between;
+  .left-title{
+    font-size: 18px;
+    font-weight: 400;
+    width: 100px;
+    height: 48px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 19px 0 10px;
+    align-items: center;
+    border-radius: 12px;
+    background: rgba(42, 42, 42, 1);
+  }
 }
 .content {
   display: flex;
@@ -123,5 +138,10 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+.input-box {
+  height: 2em;
+  border-radius: 100px;
+  border: 1px solid #c4c4c4;
 }
 </style>

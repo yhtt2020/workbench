@@ -31,7 +31,7 @@ export default {
   background: rgba(0, 0, 0, 0.3);
   display: inline-block;
   border-radius: 0.5em;
-  position: fixed;
+  position: absolute;
   left: 2em;
   top: 2em;
   z-index: 999;

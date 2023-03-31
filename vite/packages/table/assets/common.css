@@ -1,20 +1,21 @@
 @import url(../../../node_modules/ant-design-vue/dist/antd.dark.css);
 .card {
-  max-height: 30em;
   border-radius: 8px;
   background: rgba(183, 183, 183, 0.63);
   vertical-align: text-top;
-  width: 20em;
-  min-width: 20em;
+  width: 280px;
+  min-width: 280px;
   display: inline-block;
-  height: calc(100vh - 14em);
-  padding: 1em;
-  margin-right: 1em; }
+  padding: 1em; }
   .card.auto-height {
     height: auto; }
-  .card.half {
-    height: calc((100vh - 14em - 1em) /2 );
-    margin-bottom: 1em; }
+  .card.add-list {
+    width: 476px;
+    height: 520px;
+    margin-left: 17px;
+    margin-bottom: 17px;
+    border-radius: 12px;
+    background: rgba(33, 33, 33, 0.6) !important; }
   .card .title {
     font-size: 2em; }
   .card .sub-card {
@@ -33,6 +34,9 @@
   display: flex;
   align-items: center; }
 
+.ant-picker-dropdown {
+  -webkit-app-region: no-drag; }
+
 .lg .ant-modal-body {
   font-size: 3em; }
   .lg .ant-modal-body svg {
@@ -48,6 +52,16 @@
     border-radius: 4px; }
 .lg .ant-slider-dot {
   top: 0; }
+
+.ps .ps__rail-x:hover, .ps .ps__rail-y:hover, .ps .ps__rail-x:focus, .ps .ps__rail-y:focus, .ps .ps__rail-x.ps--clicking, .ps .ps__rail-y.ps--clicking {
+  background: rgba(62, 62, 62, 0.29) !important; }
+
+.ps__rail-y:hover > .ps__thumb-y, .ps__rail-y:focus > .ps__thumb-y, .ps__rail-y.ps--clicking .ps__thumb-y, .ps__thumb-x {
+  background: #5d5d5d !important; }
+
+.ps__rail-y, .ps__rail-x {
+  border-radius: 400px;
+  z-index: 99; }
 
 .dark {
   color: #b7b7b7; }
@@ -114,6 +128,7 @@
     font-weight: bold; }
 
 body {
+  background-color: #323232;
   overflow: hidden; }
 
 .bottom-panel .item {
@@ -148,11 +163,37 @@ body {
   .common-panel .title {
     font-size: 0.6em; }
 
+.card-list-icon {
+  width: 20px;
+  height: 20px; }
+
 .drag {
   -webkit-app-region: drag; }
 
 .no-drag {
   -webkit-app-region: no-drag; }
+
+.middle-button {
+  width: 120px;
+  height: 48px;
+  border-radius: 12px;
+  background: #2a2a2a; }
+
+.small-button {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.65); }
+
+.big-button {
+  width: 120px;
+  height: 56px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.65); }
+
+.home-blur {
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(8px); }
 
 .key-button {
   border: 1px solid #c1c1c1;

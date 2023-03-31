@@ -1,27 +1,15 @@
 const knex = require('knex')
 const { nanoid } = require('nanoid')
-let filename
-if (typeof window !=='undefined') {
-   window=require('./util').tools.getWindowArgs(window)
-  filename = window.globalArgs['user-data-path'] + '/db/db.sqlite'
-} else {
-  const path=require('path')
-  const app=require('electron').app
-  const isDevelopmentMode = process.argv.some(arg => arg === '--development-mode')
-  if (isDevelopmentMode) {
-    filename = path.join(app.getPath('userData') + '-development', 'db/db.sqlite')
-  }else{
-    filename = path.join(app.getPath('userData'), 'db/db.sqlite')
-  }
-}
+const dbUtil=require('../util/dbUtil')
 
 class SqlDb {
   knex
-  constructor () {
+  constructor (dbName='db') {
+    const dbPath = dbUtil.getDbPath(dbName)
     this.knex = knex({
       client: 'sqlite3',
       connection: {
-        filename: filename
+        filename: dbPath
       },
       useNullAsDefault: true
     })
@@ -29,7 +17,7 @@ class SqlDb {
   }
 
   /**
-   * 便捷操作config的方法
+   * 便捷操作config的方法，仅限默认db使用
    * @param key 键名 三段式包名结构，参考system.space.currentUser
    * @param defaultValue
    */
@@ -49,7 +37,7 @@ class SqlDb {
   }
 
   /**
-   * 设置一个设置值
+   * 设置一个设置值，仅限默认db
    * @param key 键名 三段式包名结构，参考system.space.currentUser [system or app].[模块].[名称]
    * @param value
    * @param remark

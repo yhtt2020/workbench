@@ -51,12 +51,13 @@
       <div class="line-title ">图标</div>
       <div class="line">
         <a-radio-group v-model:value="type">
-          <a-radio value="icon">
-            图标按钮
-          </a-radio>
           <a-radio value="font">
             文字按钮
           </a-radio>
+          <a-radio value="icon">
+            图标按钮
+          </a-radio>
+
         </a-radio-group>
       </div>
 
@@ -110,7 +111,7 @@ export default {
   data () {
     return {
       tab: 'input',
-      type: 'icon',
+      type: 'font',
       iconFontSize:20,
       iconText: '',
       showIconList: false,

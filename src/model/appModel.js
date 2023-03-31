@@ -720,7 +720,6 @@ const appModel = {
       json.url = json.debug_url
     }
     json.is_debug = true
-    console.log(json)
     return await appModel.install(json.url, json)
   },
 
@@ -959,11 +958,6 @@ const appModel = {
   async getDefaultUserSetting(id){
     //let app=await this.get({nanoid:id})此方法会导致循环嵌套，内存泄漏
     let app=await sqlDb.knex('app').where({nanoid:id}).first()
-    console.log('app.optimize',app.optimize,'default=',{
-      autoRun:false,
-      keepRunning:false,
-      showInSideBar:false
-    })
     let defaultSetting={
       auth: app.auth || defaultAuth,
       window:app.window || defaultWindow,

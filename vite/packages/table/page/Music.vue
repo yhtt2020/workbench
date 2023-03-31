@@ -1,56 +1,60 @@
 <template>
-  <div>
-    <div style="text-align: center;margin-left: -7em">
+  <div style="padding: 1em">
+    <div class="music-player-wrapper" style="text-align: center;display: flex;align-items: center;height: calc(100vh - 11em );width: 100%">
+      <a-row :gutter="[20]" style="width:100%">
+        <a-col :span="showPrompt?12:24"  style="display: flex;align-items: center;justify-content: center">
+          <div class="music-player" style="width: 400px;height: 410px;display: inline-block">
+            <div class="pointer" @click="enterMusic" >
+              <a-avatar :class="{'playing':status.music.playing}" :size="120" :src="status.music.cover"
+                        style="margin: 16px;border: 3px solid #6b6b6b"></a-avatar>
+            </div>
+            <div style="font-size: 1.8em">{{ status.music.title }}</div>
+            <div style="font-size: 1.1em;color: #7c7c7c" class="singer">
+              {{ status.music.singer }}
+            </div>
+            <div  style="width: 400px;margin: auto" class="player">
+              <a-slider v-model:value="status.music.percent"/>
+            </div>
+            <div style="font-size: 1.5em">
+              {{ status.music.progress }} / {{ status.music.total }}
+            </div>
+            <div :style="{zoom:tab==='player'?1:0.5}" style="text-align: center;margin-top: .8em">
+              <div style="width: 250px;margin: auto">
+                <a-row>
+                  <a-col @click="doAction('prev')" :span="8" style="padding-top: 1em">
+                    <Icon class="player-icon" icon="shangyishou"></Icon>
 
-      <div class="pointer" @click="enterMusic" v-if="tab==='player'">
-        <a-avatar :class="{'playing':status.music.playing}" :size="120" :src="status.music.cover"
-                  style="margin: 20px;border: 3px solid #6b6b6b"></a-avatar>
-        <div style="font-size: 2.2em">{{ status.music.title }}</div>
-        <div style="font-size: 1.1em;color: #7c7c7c" class="singer">
-          {{ status.music.singer }}
-        </div>
-      </div>
-      <div v-show="tab==='prompt'">
-        <div>
-          <div v-html="prompt" id="prompt" class="listlyric j-flag"></div>
-        </div>
+                  </a-col>
+                  <a-col @click="doAction('pause')" v-if="status.music.playing" :span="8">
 
-      </div>
-      <div v-show="tab==='player'" style="width: 400px;margin: auto" class="player">
-        <a-slider v-model:value="status.music.percent"/>
-      </div>
-      <div style="font-size: 2em">
-        {{ status.music.progress }} / {{ status.music.total }}
-      </div>
-      <div :style="{zoom:tab==='player'?1:0.5}" style="text-align: center;margin-top: 2em">
-        <div style="width: 250px;margin: auto">
-          <a-row>
-            <a-col @click="doAction('prev')" :span="8" style="padding-top: 1em">
-              <Icon class="player-icon" icon="shangyishou"></Icon>
+                    <Icon class="player-icon" style="font-size: 6em" icon="zanting"></Icon>
 
-            </a-col>
-            <a-col @click="doAction('pause')" v-if="status.music.playing" :span="8">
+                  </a-col>
+                  <a-col @click="doAction('play')" v-else :span="8">
 
-              <Icon class="player-icon" style="font-size: 6em" icon="zanting"></Icon>
+                    <Icon class="player-icon" style="font-size: 6em" icon="bofang"></Icon>
 
-            </a-col>
-            <a-col @click="doAction('play')" v-else :span="8">
+                  </a-col>
+                  <a-col @click="doAction('next')" :span="8" style="padding-top: 1em">
+                    <Icon class="player-icon" icon="xiayishou"></Icon>
+                  </a-col>
+                </a-row>
+              </div>
+            </div>
+          </div>
 
-              <Icon class="player-icon" style="font-size: 6em" icon="bofang"></Icon>
-
-            </a-col>
-            <a-col @click="doAction('next')" :span="8" style="padding-top: 1em">
-              <Icon class="player-icon" icon="xiayishou"></Icon>
-            </a-col>
-          </a-row>
-        </div>
-      </div>
+        </a-col>
+        <a-col :span="12" v-if="showPrompt" style="align-items: center;display: flex">
+          <div style="background: rgba(0,0,0,0.11);border-radius: 1em;height: 360px;display: flex;align-items: center;">
+            <div v-html="prompt" id="prompt" class="listlyric j-flag"></div>
+          </div>
+        </a-col>
+      </a-row>
     </div>
   </div>
-  <div @click="showPrompt" style="position:fixed;right: 3em;top: 43vh">
+  <div @click="togglePrompt" style="position:fixed;right: 3em;top: 43vh;z-index: 99">
     <Icon icon="zimu" style="font-size: 4em"></Icon>
   </div>
-
 </template>
 
 <script>
@@ -73,7 +77,7 @@ export default {
        app:SystemApps.wyyMusic
      })
     if(!running){
-      message.info('正在为您在后台启动网易云音乐网页版…')
+      //不再提示 message.info('正在为您在后台启动网易云音乐网页版…')
     }
     //window.updateMusicStatusHandler = this.updateStatus
   },
@@ -83,6 +87,7 @@ export default {
       prompt: '',
       tab: 'player',
       currentIndex: 'my',
+      showPrompt:false,
       menus: [{
         title: '我的应用',
         index: 'my',
@@ -114,14 +119,11 @@ export default {
     }
   },
   methods: {
-    showPrompt () {
-      if (this.tab === 'prompt') {
-        this.tab = 'player'
-      } else {
-        this.tab = 'prompt'
+    togglePrompt () {
+      if(!this.showPrompt){
         this.doAction('prompt')
       }
-
+      this.showPrompt=!this.showPrompt
     },
     enterMusic(){
       this.$router.push({
@@ -245,17 +247,34 @@ export default {
 }
 
 .listlyric {
+
   text-align: center;
-  zoom: 1.4;
+  zoom: 1.3;
   top: 0;
   z-index: 4;
   margin: auto;
-  height: 219px;
+  height: 250px;
   width: 354px;
   overflow: hidden;
   scroll-behavior: smooth;
-  margin-bottom: 1em;
 }
 
+@media screen  and (max-height: 618px){
+  .music-player-wrapper {
+    zoom: 0.8;
+    margin-top: 1em;
+  }
+}
+@media screen  and (min-height: 618px) and (max-height:800px){
+  .music-player-wrapper {
+    zoom: 1;
+  }
+}
 
+@media screen and (min-height: 801px) and (max-height:2800px) {
+  .music-player-wrapper {
+    zoom: 1.3;
+    margin-top:-6em;
+  }
+}
 </style>

@@ -602,6 +602,4 @@ global.renderPage = {
   }
 }
 
-console.log(render.getUrl('settings.html',{domain:'zt.xiangtian.ren'}),'2222222')
-
 render.init()

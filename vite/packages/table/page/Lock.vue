@@ -37,7 +37,7 @@
 import Spotlight from 'spotlight.js'
 import {appStore, countDownStore} from '../store'
 import {mapActions, mapState, mapWritableState} from 'pinia'
-import { message } from 'ant-design-vue'
+import { message,Modal } from 'ant-design-vue'
 import { paperStore } from '../store/paper'
 export default {
   name: 'Lock',
@@ -119,7 +119,7 @@ export default {
         this.$router.replace({
           name:'my'
         })
-        message.error('请添加我的壁纸后重新锁屏。')
+        Modal.error({content:'请添加我的壁纸后重新锁屏。'})
         return
       }
       window.Spotlight.show(this.myPapers, {
@@ -137,7 +137,7 @@ export default {
         this.$router.replace({
           name:'my'
         })
-        message.error('请激活壁纸后重新使用激活壁纸模式。')
+        Modal.error({content:'请激活壁纸后重新使用激活壁纸模式。'})
         return
       }
       window.Spotlight.show(this.activePapers, {
@@ -199,6 +199,9 @@ export default {
   }
   .right-time{
     flex: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 </style>

@@ -36,9 +36,7 @@
       </div>
     </template></a-modal
   >
-  <audio controls="controls"  ref="clock" style="display: none">
-    <source src="./static/alarmClock.mp3" type="audio/ogg">
-  </audio>
+  <audio ref="clock" src="/sound/alarmClock.mp3"></audio>
 </template>
 
 <script lang="ts">
@@ -48,6 +46,7 @@ import { mapActions, mapWritableState } from "pinia";
 import { appStore, tableStore } from "./store";
 import Barrage from "./components/comp/Barrage.vue";
 import { weatherStore } from "./store/weather";
+import {codeStore} from "./store/code";
 
 let startX,
   startY,
@@ -69,8 +68,25 @@ export default {
     };
   },
   async mounted() {
+    if(!this.myCode){
+      //注释此处的代码跳过激活码验证
+      this.$router.push('/code')
+      return
+    }
+    this.verify(rs=>{
+      if(!rs){
+        this.$router.push('/code')
+        return
+      }
+    })
+    if (!this.init) {
+      console.log(this.settings)
+      this.$router.push('/wizard')
+      return
+    }
     document.body.classList.add('lg')
     this.reset()//重置部分状态
+    this.sortClock()
     // this.getUserInfo()
     window.updateMusicStatusHandler = this.updateMusic;
 
@@ -88,11 +104,14 @@ export default {
       "clockEvent",
       "appDate",
     ]),
-    ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo'])
+    ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo','init']),
+    ...mapWritableState(codeStore,['myCode'])
   },
   methods: {
     ...mapActions(appStore, ['setMusic','reset']),
     ...mapActions(weatherStore,['reloadAll']),
+    ...mapActions(tableStore, ['sortClock']),
+    ...mapActions(codeStore,['verify']),
     bindTouchEvents(){
       $(".a-container").on("touchstart",  (e) =>{
         startX = e.originalEvent.changedTouches[0].pageX,
@@ -151,10 +170,11 @@ export default {
         try {
           if (
             this.appDate.minutes === this.clockEvent[0].dateValue.minutes &&
-            this.appDate.hours === this.clockEvent[0].dateValue.hours
+            this.appDate.hours === this.clockEvent[0].dateValue.hours&&this.clockEvent[0].flag===undefined
           ) {
             this.visible = true;
-            this.$refs.clock.play();
+            setTimeout(()=>{  this.$refs.clock.play();},10)
+
           }
         } catch (err) {
 
