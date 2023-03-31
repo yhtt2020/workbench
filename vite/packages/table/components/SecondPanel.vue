@@ -4,13 +4,13 @@
     <div v-if="close" style="margin-bottom: 1em">
       <div class="btn"><Icon icon="close"></Icon></div>
     </div>
-    <div v-if="logo" style="padding-left: 1em">
+    <div v-if="logo" style="padding-left: 1em;margin-bottom:2em;">
       <a-avatar shape="square" :size="50" :src="logo">
       </a-avatar>
     </div>
-    <div v-if="search" style="margin-top: 2.5em;margin-bottom:2em">
+    <!-- <div v-if="search" style="margin-top: 2.5em;margin-bottom:2em">
       <a-input-search style="width: 8em;margin-left: 1em" placeholder="搜索"></a-input-search>
-    </div>
+    </div> -->
     <div @click="change($event,menu)" class="menu" :class="{'active':activeIndex===menu.index}"
          v-for="(menu,index) in menus">
      <Icon v-if="menu.icon" :icon="menu.icon"></Icon>  {{ menu.title }}

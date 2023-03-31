@@ -1,5 +1,3 @@
-
-
 import Lock from '../page/Lock.vue'
 import Power from '../page/Power.vue'
 
@@ -22,8 +20,8 @@ import Bing from '../page/gallery/Bing.vue'
 import Lively from '../page/gallery/Lively.vue'
 import Wallheaven from '../page/gallery/Wallheaven.vue'
 import PapersSetting from '../page/gallery/Setting.vue'
+import PickingPaper from '../page/gallery/Picking.vue'
 import Code from '../page/Code.vue'
-
 import index from './index'
 
 const routes = [
@@ -69,6 +67,11 @@ const routes = [
         path:'/setting',
         name:'papersSetting',
         component: PapersSetting
+      },
+      {
+        path:'/picking',
+        name:'PickingPaper',
+        component:PickingPaper
       }
     ]
   },
