@@ -20,7 +20,7 @@
 
 <div>
   <vue-custom-scrollbar  id="containerWrapper" :settings="settingsScroller" style="height: 80vh">
-    <viewer :images="mergedArr">
+    <viewer :images="mergedArr" :options="options">
       <a-row :gutter="[20,20]" id="bingImages" style="margin-right: 1em">
         <a-col @click="this.visibleImport=true" class="image-wrapper " :span="6" style="">
           <a-avatar    class="image-item pointer"   style="font-size:2em;position: relative; line-height: 144.20px; height: 144.2px; background: rgba(10,10,10,0.31)">
@@ -28,7 +28,7 @@
           </a-avatar>
         </a-col>
         <a-col class="image-wrapper " v-for="img in mergedArr" :span="6" style="">
-          <img @contextmenu.stop="showMenu(img)" @error="deleteAll(img)" class="image-item pointer" :src="img.src" style="position: relative">
+          <img @contextmenu.stop="showMenu(img)" @error="deleteAll(img)" :data-source="img.path ? img.path : img.src"  class="image-item pointer" :src="img.src" style="position: relative">
           <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
             <div @click.stop="addToActive(img)" class="bottom-actions pointer" :style="{background:isInActive(img)?'rgba(255,0,0,0.66)':''}">
              <Icon v-if="!isInActive(img)" icon="tianjia1"></Icon>
@@ -124,6 +124,9 @@ export default {
       paperTime:'',
       livelyTime:'',
       previewVideoVisible:false,
+      options:{
+        url: 'data-source',
+      }
     }
   },
   components:{Import},
@@ -140,6 +143,7 @@ export default {
       this.loadLivelyPapers()
       this.loadStaticPaper()
     }
+    console.log(this.myPapers);
     $('#previwer').mousemove(() => {
       $('#actions').show()
       if (this.timer) {
