@@ -136,7 +136,9 @@ export default {
             this.hideAdmin=true
           }
           message.success('弹幕发送成功')
-          window.loadBarrage('table')
+          setTimeout(()=>{
+            window.loadBarrage('table')
+          },3000)
         } else {
           message.error('弹幕发送失败，失败原因：' + rs)
         }
