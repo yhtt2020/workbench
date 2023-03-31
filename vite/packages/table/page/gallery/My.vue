@@ -34,9 +34,9 @@
              <Icon v-if="!isInActive(img)" icon="tianjia1"></Icon>
              <Icon v-else style="" icon="yiwancheng"></Icon>
             </div>
-          </div> 
+          </div>
           <!-- <div v-show="fileType(img.src) === 'image'">
-          
+
           </div>
           <div v-show="fileType(img.src) === 'video'">
             <div>
@@ -101,7 +101,7 @@ import { appStore } from '../../store'
 import Import from './Import.vue'
 import {message,Modal} from 'ant-design-vue'
 import Spotlight from 'spotlight.js'
-const fs=require('fs-extra')
+const fs=window.$models.fs
 const path=require('path')
 import { paperStore } from '../../store/paper'
 import Player from 'xgplayer/dist/simple_player'
@@ -133,7 +133,7 @@ export default {
       return [...this.myPapers,...this.livelyPapers].sort((a,b)=>{
         return new Date(a.time) - new Date(b.time);
       })
-    },  
+    },
   },
   mounted () {
     if(this.settings.savePath){
@@ -172,7 +172,7 @@ export default {
       videos.filter(el=>{
         const livePath = path.join(path.join(this.settings.savePath,'lively'),el)
         this.getFileCreatedTime(livePath).then(createTime=>{
-          const returnTime = this.changeTime(createTime) 
+          const returnTime = this.changeTime(createTime)
           const imgFileName = path.join(path.join(this.settings.savePath,'lively'),el).split("\\")[path.join(path.join(this.settings.savePath,'lively'),el).split("\\").length - 1].split(".")[0]
           let livelyItem = {
            src:path.join(livePath),
@@ -229,7 +229,7 @@ export default {
     },
     loadStaticPaper(){
       const staticDir = path.join(path.join(this.settings.savePath),'static')
-      // 判断文件目录是否存在 
+      // 判断文件目录是否存在
       fs.pathExists(staticDir).then((exists)=>{
         if(exists){
           // 存在读取指定壁纸目录
@@ -249,7 +249,7 @@ export default {
             this.addToMyPaper(image)
           })
         }else{
-          this.$emit('error') 
+          this.$emit('error')
         }
       }).catch(err=>{
         console.log(err);
