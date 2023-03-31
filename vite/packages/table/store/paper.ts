@@ -53,7 +53,7 @@ export const paperStore = defineStore('paper', {
     */
     removeToMyPaper(image: { src: any; }){
       let found = this.myPapers.findIndex((img: { src: any; }) => {
-        if (img.src === image.src)
+        if (img.src === image.src )
         return true
       })
       if (found === -1) {

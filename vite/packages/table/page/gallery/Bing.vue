@@ -85,11 +85,9 @@ export default {
       this.isLoading=true
       const axios = require('axios')
       let url=`https://cn.bing.com/HPImageArchive.aspx?format=js&idx=${page}&n=8`
-      console.log(url)
       let imagesResult = axios.get(url).then((imagesResult) => {
         if (imagesResult.status === 200) {
           let images = imagesResult.data.images
-          console.log(images)
           //let animations = ['a-fadeout','a-fadeoutT', 'a-fadeoutR', 'a-fadeoutB', 'a-fadeoutL','a-rotateoutLT', 'a-rotateoutLB', 'a-rotateoutRT', 'a-rotateoutRB', 'a-flipout', 'a-flipoutX', 'a-flipoutY']
           let animations = ['ani-gray', 'bowen', 'ani-rotate']
           if (images) {

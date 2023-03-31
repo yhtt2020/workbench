@@ -28,7 +28,7 @@
           </a-avatar>
         </a-col>
         <a-col class="image-wrapper " v-for="img in mergedArr" :span="6" style="">
-          <img @contextmenu.stop="showMenu(img)" @error="deleteAll(img)" :data-source="img.path ? img.path : img.src"  class="image-item pointer" :src="img.src" style="position: relative">
+          <img @contextmenu.stop="showMenu(img)" @error="deleteAll(img)" :data-source="img.path ? img.path : img.thumburl ? img.imgurl : img.src" :alt="img.resolution"  class="image-item pointer" :src="img.src ? img.src : img.thumburl" style="position: relative">
           <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
             <div @click.stop="addToActive(img)" class="bottom-actions pointer" :style="{background:isInActive(img)?'rgba(255,0,0,0.66)':''}">
              <Icon v-if="!isInActive(img)" icon="tianjia1"></Icon>
