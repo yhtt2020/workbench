@@ -166,6 +166,7 @@ export default {
       this.loadMessages()
     },10000)
     ipc.on('userInfo', (event, args) => {
+      this.tipped=false
       this.loading = false
 
       let lvInfo = {}
