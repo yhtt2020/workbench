@@ -103,7 +103,7 @@ export default defineComponent({
     this.getWallheavenHotList(this.page);
   },
   methods: {
-    ...mapActions(paperStore, ["addToMyPaper"]),
+    ...mapActions(paperStore, ["removeToMyPaper"]),
     // 获取初始化数据
     getWallheavenHotList(page) {
       let url = `https://wallhaven.cc/api/v1/search?&categories=${this.search.categories}&purity=${this.search.purity == "SFW" ? "100" : "010"}&sorting=${this.search.sorting }&page=${page}`;
@@ -172,7 +172,7 @@ export default defineComponent({
     },
     // 添加收藏
     addToMy(img) {
-      this.addToMyPaper(img);
+      this.removeToMyPaper(img);
     },
     isInMyPapers(image) {
       return (

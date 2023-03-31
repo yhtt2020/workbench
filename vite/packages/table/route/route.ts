@@ -1,5 +1,3 @@
-
-
 import Lock from '../page/Lock.vue'
 import Power from '../page/Power.vue'
 

@@ -104,7 +104,7 @@ export default defineComponent({
     this.getPeopleList(this.page)
   },
   methods:{
-    ...mapActions(paperStore,['addToMyPaper']),
+    ...mapActions(paperStore,['removeToMyPaper']),
     getPeopleList(page){
       let url = `https://wallhaven.cc/api/v1/search?&categories=${this.search.categories}&purity=${this.search.purity == 'SFW' ? '100' :'010'}&sorting=${this.search.sorting}&page=${page}`
       if(!this.isLoading){
@@ -182,7 +182,7 @@ export default defineComponent({
     },
     // 添加收藏
     addToMy(img){
-      this.addToMyPaper(img)
+      this.removeToMyPaper(img)
     },
     isInMyPapers(image){
       return this.myPapers.findIndex(img=>{

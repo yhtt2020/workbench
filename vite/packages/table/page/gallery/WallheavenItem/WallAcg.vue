@@ -102,7 +102,7 @@ export default defineComponent({
     this.getAnimeList(this.page)
   },
   methods:{
-    ...mapActions(paperStore,['addToMyPaper']),
+    ...mapActions(paperStore,['removeToMyPaper']),
     // 动漫数据加载
     getAnimeList(page){
       let url = `https://wallhaven.cc/api/v1/search?&categories=${this.search.categories}&purity=${this.search.purity == 'SFW' ? '100' :'010'}&sorting=${this.search.sorting}&page=${page}`
@@ -175,7 +175,7 @@ export default defineComponent({
     },
     // 添加收藏
     addToMy(img){
-      this.addToMyPaper(img)
+      this.removeToMyPaper(img)
     },
     isInMyPapers(image){
       return this.myPapers.findIndex(img=>{
