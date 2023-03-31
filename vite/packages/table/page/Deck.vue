@@ -472,6 +472,7 @@ export default {
         this.toggleImport()
         message.success('为您成功导入' + needImportGrids.length + '个方案分组。')
       } catch (e) {
+        console.warn(e)
         message.error('导入失败，请检查代码。')
       }
 
