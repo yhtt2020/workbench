@@ -81,12 +81,17 @@ export default {
           return
         } else {
           this.myCode=this.code
+          let timer=setTimeout(()=>{
+            this.$router.push({ path: '/wizard' })
+          },10000)
           Modal.success({
             centered: true,
-            content: '激活成功，欢迎来到EA阶段，点击开始体验',
+            content: '激活成功，欢迎来到EA阶段，点击“发车”开始体验，10秒后自动进入。',
             onOk: () => {
+              clearTimeout(timer)
               this.$router.push({ path: '/wizard' })
-            }
+            },
+            okText:"发车"
           })
           return
         }
