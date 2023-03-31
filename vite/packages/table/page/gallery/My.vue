@@ -2,20 +2,24 @@
   <div class="rotate-center" style="font-size: 2em;margin-bottom: 1em">
     我的收藏 {{myPapers.length}}
   </div>
-  <div>
-  </div>
+
   <div class="pointer" style="position: fixed;right: 2em;top: 2em">
-   <div  @click="playAll" style="display: inline-block;margin-right: 1em">
-      <span><Icon style="font-size: 2em;vertical-align: top"
-                                icon="bofang"></Icon></span><span  style="font-size:1.2em">轮播全部</span>
-   </div>
+    <div  @click="playAll" style="display: inline-block;margin-right: 1em">
+      <span>
+        <Icon style="font-size: 2em;vertical-align: top" icon="bofang"></Icon>
+      </span>
+      <span  style="font-size:1.2em">轮播全部</span>
+    </div>
     <div  @click="playActive" style="display: inline-block">
-      <span><Icon style="font-size: 2em;vertical-align: top"
-                                icon="bofang"></Icon></span><span  style="font-size:1.2em">激活壁纸（{{activePapers.length}}）</span>
+      <span>
+        <Icon style="font-size: 2em;vertical-align: top" icon="bofang"></Icon>
+      </span>
+      <span  style="font-size:1.2em">激活壁纸（{{activePapers.length}}）</span>
     </div>
   </div>
-  <div>
-    <vue-custom-scrollbar  id="containerWrapper" :settings="settingsScroller" style="height: 80vh">
+
+<div>
+  <vue-custom-scrollbar  id="containerWrapper" :settings="settingsScroller" style="height: 80vh">
     <viewer :images="myPapers">
       <a-row :gutter="[20,20]" id="bingImages" style="margin-right: 1em">
         <a-col @click="this.visibleImport=true" class="image-wrapper " :span="6" style="">
@@ -23,7 +27,7 @@
             <Icon  style="font-size: 1.3em;vertical-align: text-bottom" icon="tianjiawenjianjia"></Icon> 导入
           </a-avatar>
         </a-col>
-        <a-col class="image-wrapper " v-for="img in myPapers" :span="6" style="">
+        <!-- <a-col class="image-wrapper " v-for="img in myPapers" :span="6" style="">
           <img @contextmenu.stop="showMenu(img)"  class="image-item pointer" :src="img.src" style="position: relative">
           <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
             <div @click.stop="addToActive(img)" class="bottom-actions pointer" :style="{background:isInActive(img)?'rgba(255,0,0,0.66)':''}">
@@ -31,10 +35,12 @@
             <Icon v-else style="" icon="yiwancheng"></Icon>
           </div>
           </div>
-        </a-col>
+        </a-col> -->
       </a-row>
-    </viewer></vue-custom-scrollbar>
-  </div>
+    </viewer>
+   </vue-custom-scrollbar>
+</div>
+
   <a-drawer v-model:visible="visibleMenu" placement="bottom">
     <a-row :gutter="20" style="text-align: center">
       <a-col :span="4">
@@ -42,19 +48,28 @@
           <Icon style="font-size: 3em" icon="tianjia1"></Icon>
           <div>设置为桌面壁纸</div>
         </div>
-
       </a-col>
+
       <a-col>
         <div  @click="add()" class="btn">
           <Icon style="font-size: 3em" icon="xiazai"></Icon>
           <div>下载该壁纸</div>
         </div>
       </a-col>
+
+      <a-col :span="2">
+        <div class="btn" @click="del()">
+          <Icon icon="guanbi2" style="font-size: 3em"></Icon>
+          <div>删除该壁纸</div>
+        </div>
+      </a-col>
     </a-row>
   </a-drawer>
+
   <a-drawer v-model:visible="visibleImport" placement="right">
-     <Import ></Import>
+    <Import ></Import>
   </a-drawer>
+
 
 </template>
 
@@ -146,7 +161,15 @@ export default {
         progress: false,
         title: false
       })
-    }
+    },
+
+    // 删除壁纸
+    del(){
+      if(this.myPapers.indexOf(this.currentPaper) !== -1){
+        this.myPapers.splice(this.myPapers.indexOf(this.currentPaper),1)
+        this.visibleMenu = false
+      }
+    },
   }
 }
 </script>
