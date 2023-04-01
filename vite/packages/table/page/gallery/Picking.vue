@@ -43,7 +43,27 @@
   </a-drawer>
 
   <a-drawer v-model:visible="pickInfoShow" title="信息" style="text-align: center !important;">
-
+      <div class="flex w-full   justify-center items-center flex-col">
+          <div class="w-60" style="margin: 0 auto;">
+            <div class="flex" style="margin-bottom: 12px;">
+              <span style="margin-right: 30px;">壁纸源</span>
+              <span>ONE • 一个</span>
+            </div>
+            <div class="flex" style="margin-bottom: 12px;">
+              <span style="margin-right: 30px;">简介</span>
+              <span>复杂的世界里，一个就够了</span>
+            </div>
+            <div class="flex items-center">
+              <span style="margin-right: 30px;">官网</span>
+              <span class="w-40 h-12 flex items-center rounded-lg cursor-pointer justify-center bg-black bg-opacity-10">
+                访问官网
+              </span>
+            </div>
+          </div>
+      </div>
+      <template #footer>
+        <span>「拾光壁纸」提供技术支持</span> 
+      </template>
   </a-drawer>
 </template>
 
@@ -74,7 +94,7 @@ export default {
     ...mapState(paperStore, ["myPapers"]),
   },
   mounted(){
-    // this.getPickPaperData(this.pickFilterValue)
+    this.getPickPaperData(this.pickFilterValue)
     justifiedGallery();
     // $("#container").justifiedGallery({
     //   captions: false,
@@ -98,6 +118,7 @@ export default {
     },
     getPickPaperData(val){
       const url = `https://api.nguaduot.cn${val}?&date=20500101&score=99999999`
+      console.log(url);
       if(!this.isLoading){
         this.isLoading = true
         axios.get(url).then(res=>{
@@ -147,5 +168,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+::v-deep.ant-drawer-footer{
+  border-top: none !important;
+}
 </style>
