@@ -159,6 +159,11 @@ export default {
   transition: all 4s ease-out, transform 3s linear;
 }
 
+.spl-pane>*{
+  top:0 !important;
+  left: 0 !important;
+}
+
 .spl-pane .ani-gray {
   filter: grayscale(1) blur(5px);
   opacity: 0;

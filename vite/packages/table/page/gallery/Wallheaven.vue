@@ -110,8 +110,8 @@
       <div v-if="isLoading === false && hotHeavenList.length === 0" class="flex align-center justify-center" style="height: 80vh">
         <a-empty description="未找到图片信息"/>
       </div> 
-    </template>
-    <template v-if="wallStatus === 1">
+     </template>
+     <template v-if="wallStatus === 1">
       <a-spin  v-if="isLoading"/>
       <viewer :images="acgHeavenList" :options="options" ref="peopleRef" >
         <a-row :gutter="[20,20]" id="wallImages" style="margin-right: 1em">

@@ -201,14 +201,14 @@ export default {
       })>-1
     },
     playAll(){
-      // console.log(this.mergedArr);
       window.Spotlight.show(this.mergedArr,{
         control: 'autofit,page,fullscreen,close,zoom,prev,next',
         play: true,
         autoslide: true,
         infinite: true,
         progress: false,
-        title: false
+        title: false,
+        fullscreen:true,
       })
     },
     playActive(){
@@ -223,12 +223,30 @@ export default {
       })
     },
 
+
     // 删除壁纸
     del(){
-      if(this.myPapers.indexOf(this.currentPaper) !== -1){
-        this.myPapers.splice(this.myPapers.indexOf(this.currentPaper),1)
-        this.visibleMenu = false
-      }
+      // if(this.myPapers.indexOf(this.currentPaper) !== -1){
+      //   this.myPapers.splice(this.myPapers.indexOf(this.currentPaper),1)
+      //   this.visibleMenu = false
+      // }  
+      // this.mergedArr.forEach(el=>{
+      //   console.log(el[3]);
+      //   // if(this.fileImageExtension(el)){
+      //   //   console.log(el.src);
+      //   // }else{
+      //   //    if(el.src){
+      //   //     // console.log(el[this.myPapers].src);
+      //   //     console.log(el[this.myPapers.indexOf(this.currentPaper)]);
+      //   //     // const staticDir = path.join(path.join(this.settings.savePath),'static')
+      //   //     // fs.removeSync(path.join(staticDir,`${this.myPapers[this.myPapers.indexOf(this.currentPaper)].src.split("//")[1].split('\\')[this.myPapers[this.myPapers.indexOf(this.currentPaper)].src.split("//")[1].split('\\').length-1].split('/')[this.myPapers[this.myPapers.indexOf(this.currentPaper)].src.split("//")[1].split('\\')[this.myPapers[this.myPapers.indexOf(this.currentPaper)].src.split("//")[1].split('\\').length-1].split('/').length-1]}`))
+             
+      //   //    }else{
+      //   //     return
+      //   //    }
+      //   // }
+      // }) 
+        
     },
     // 下载壁纸
     add(){},

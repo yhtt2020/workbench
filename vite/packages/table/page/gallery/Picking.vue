@@ -82,13 +82,13 @@ export default {
     //   rowHeight: 180,
     //   margins: 5,
     // });
-    $("#pick-wrapper").scroll(() => {
-      if ($("#pick-wrapper").scrollTop() +  $("#pick-wrapper").height() + 20 >= $("#pick-images").prop("scrollHeight") && this.isLoading === false) {
-        this.getPickPaperData(this.page);
-      }
-    });
-    this.getPickPaperData(this.page ++)
-    this.getPickPaperData(this.page ++)
+    // $("#pick-wrapper").scroll(() => {
+    //   if ($("#pick-wrapper").scrollTop() +  $("#pick-wrapper").height() + 20 >= $("#pick-images").prop("scrollHeight") && this.isLoading === false) {
+    //     this.getPickPaperData(this.page);
+    //   }
+    // });
+    // this.getPickPaperData(this.page ++)
+    // this.getPickPaperData(this.page ++)
   },
   methods:{
     ...mapActions(paperStore, ["removeToMyPaper"]),
@@ -96,8 +96,8 @@ export default {
       this.pickFilterValue = e
       this.getPickPaperData(this.pickFilterValue)
     },
-    getPickPaperData(page){
-      const url = `https://api.nguaduot.cn${this.pickFilterValue}?no=${page}&date=20500101&score=99999999`
+    getPickPaperData(val){
+      const url = `https://api.nguaduot.cn${val}?&date=20500101&score=99999999`
       if(!this.isLoading){
         this.isLoading = true
         axios.get(url).then(res=>{
