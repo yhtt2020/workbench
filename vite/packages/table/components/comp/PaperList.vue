@@ -28,7 +28,11 @@ export default {
   methods:{
     ...mapActions(paperStore,['removeToMyPaper']),
     addToMy(img){
-      this.removeToMyPaper(img)
+      let image = {
+        src:img.src,
+        path:img.src
+      }
+      this.removeToMyPaper(image)
     },
     isInMyPapers(image){
       return this.myPapers.findIndex(img=>{

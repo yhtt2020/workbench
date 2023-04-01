@@ -1,6 +1,6 @@
 <template>
   <div class="rotate-center" style="font-size: 2em;margin-bottom: 1em">
-    我的收藏 {{myPapers.length}}
+    我的收藏 {{this.mergedArr.length}}
   </div>
 
   <div class="pointer" style="position: fixed;right: 2em;top: 2em">
@@ -28,28 +28,31 @@
           </a-avatar>
         </a-col>
         <a-col class="image-wrapper " v-for="img in mergedArr" :span="6" style="">
-          <img @contextmenu.stop="showMenu(img)" @error="deleteAll(img)" :data-source="img.path ? img.path : img.thumburl ? img.imgurl : img.src" :alt="img.resolution"  class="image-item pointer" :src="img.src ? img.src : img.thumburl" style="position: relative">
-          <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
-            <div @click.stop="addToActive(img)" class="bottom-actions pointer" :style="{background:isInActive(img)?'rgba(255,0,0,0.66)':''}">
-             <Icon v-if="!isInActive(img)" icon="tianjia1"></Icon>
-             <Icon v-else style="" icon="yiwancheng"></Icon>
-            </div>
-          </div> 
-          <!-- <div v-show="fileType(img.src) === 'image'">
-          
-          </div>
-          <div v-show="fileType(img.src) === 'video'">
-            <div>
-             <img @contextmenu.stop="visibleMenu=true" class="image-item del-image pointer"
-             :src="img.img_src"  @click="delImageSrc(img.src)" style="position: relative">
-             <div style="background: rgb(0 0 0 / 20%); width: 4em; height: 4em; border-radius:50%; position: absolute; top: 50%; left: 50%;transform: translate(-50%,-50%);">
-               <div @click="previewVideo(img)" class="play-icon pointer" style="">
-                 <Icon icon="bofang" style="font-size:3em;margin-top: 8px"></Icon>
-               </div>
+          <div v-show="fileImageExtension(img) === false">
+            <img @contextmenu.stop="showMenu(img)" @error="deleteAll(img)" :data-source="img.path" :alt="img.resolution"  class="image-item pointer" :src="img.src" style="position: relative">
+            <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
+             <div @click.stop="addToActive(img)" class="bottom-actions pointer" :style="{background:isInActive(img)?'rgba(255,0,0,0.66)':''}">
+              <Icon v-if="!isInActive(img)" icon="tianjia1"></Icon>
+              <Icon v-else style="" icon="yiwancheng"></Icon>
              </div>
-             <div id="mse"></div>
-            </div>
-          </div> -->
+            </div>  
+          </div>
+          <div v-show="fileImageExtension(img) === true">
+            <div>
+              <img @contextmenu.stop="visibleMenu=true" class="image-item del-image pointer"
+              :src="img.img_src"  @click="delImageSrc(img.src)" style="position: relative">
+              <div @click="previewVideo(img)" class="play-icon pointer" style="">
+               <Icon icon="bofang" style="font-size:3em;margin-top: 8px"></Icon>
+              </div>
+              <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
+               <div @click.stop="addToActive(img)" class="bottom-actions pointer" :style="{background:isInActive(img)?'rgba(255,0,0,0.66)':''}">
+                <Icon v-if="!isInActive(img)" icon="tianjia1"></Icon>
+                <Icon v-else style="" icon="yiwancheng"></Icon>
+               </div>
+               </div>  
+              <div id="mse"></div>
+             </div>
+          </div>
         </a-col>
       </a-row>
     </viewer>
@@ -136,7 +139,9 @@ export default {
       return [...this.myPapers,...this.livelyPapers].sort((a,b)=>{
         return new Date(a.time) - new Date(b.time);
       })
-    },  
+    }, 
+    
+ 
   },
   mounted () {
     if(this.settings.savePath){
@@ -196,17 +201,18 @@ export default {
       })>-1
     },
     playAll(){
-      window.Spotlight.show(this.myPapers, {
-          control: 'autofit,page,fullscreen,close,zoom,prev,next',
-          play: true,
-          autoslide: true,
-          infinite: true,
-          progress: false,
-          title: false
-        })
+      // console.log(this.mergedArr);
+      window.Spotlight.show(this.mergedArr,{
+        control: 'autofit,page,fullscreen,close,zoom,prev,next',
+        play: true,
+        autoslide: true,
+        infinite: true,
+        progress: false,
+        title: false
+      })
     },
     playActive(){
-      console.log('active')
+      // console.log('active')
       window.Spotlight.show(this.activePapers, {
         control: 'autofit,page,fullscreen,close,zoom,prev,next',
         play: true,
@@ -313,10 +319,31 @@ export default {
       }
     },
 
+    // 判断文件是否为图片
+    fileImageExtension(filePath){
+      const fileExtensions = filePath.src.split('.').pop()
+      const extensions = ['mp4','mpeg','avi','rmvb']
+      if(extensions.indexOf(fileExtensions) !== -1){
+        return true
+      }else{
+        return false
+      }
+    }
   }
 }
 </script>
 
 <style scoped>
-
+.play-icon {
+  position: absolute;
+  z-index: 999;
+  background: rgba(0, 0, 0, 0.51);
+  text-align: center;
+  width: 4em;
+  height: 4em;
+  left: 50%;
+  top: 50%;
+  border-radius: 100px;
+  transform: translate(-50%, -50%);
+}
 </style>

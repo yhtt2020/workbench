@@ -23,21 +23,19 @@
   </div>
 
   <vue-custom-scrollbar  id="pick-wrapper" :settings="settingsScroller" style="height: 80vh">
-    <div data-fit="cover" class="spotlight-group" data-control="autofit,page,fullscreen,close,zoom" data-play="true" data-autoslide="true" data-infinite="true" id="container">
-      <viewer :images="pickDataList">
-        <a-row :gutter="[20,20]" id="pick-images" style="margin-right: 1em">
-          <a-col class="image-wrapper " v-for="img in pickDataList" :span="6" style="">
-            <img  class="image-item pointer" :src="img.thumburl"  :data-source="img.imgurl"  :alt="img.resolution"  style="position: relative">
-            <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
-              <div @click.stop="addToMy(img)" class="bottom-actions pointer" :style="{background:isInMyPapers(img)?'#009d00a8':''}">
-                <Icon v-if="!isInMyPapers(img)" icon="tianjia1"></Icon>
-                <Icon v-else style="" icon="yiwancheng"></Icon>
-              </div>
+    <viewer :images="pickDataList" :options="options">
+      <a-row :gutter="[20,20]" id="pick-images" style="margin-right: 1em">
+        <a-col class="image-wrapper " v-for="img in pickDataList" :span="6" style="">
+          <img  class="image-item pointer" :src="img.src"  :data-source="img.path"  :alt="img.resolution"  style="position: relative">
+          <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
+            <div @click.stop="addToMy(img)" class="bottom-actions pointer" :style="{background:isInMyPapers(img)?'#009d00a8':''}">
+              <Icon v-if="!isInMyPapers(img)" icon="tianjia1"></Icon>
+              <Icon v-else style="" icon="yiwancheng"></Icon>
             </div>
-          </a-col>
-        </a-row>
-      </viewer>
-    </div>
+          </div>
+        </a-col>
+      </a-row>
+    </viewer>
   </vue-custom-scrollbar>
 
   <a-drawer v-model:visible="pickFilterShow" title="筛选" style="text-align: center !important;">
@@ -68,29 +66,29 @@ export default {
       pickInfoShow:false,
       options:{
         url: 'data-source',
-      }
+      },
+      isLoading:false,
     }
   },
   computed: {
     ...mapState(paperStore, ["myPapers"]),
   },
   mounted(){
-    this.getPickPaperData(this.pickFilterValue)
-    // justifiedGallery();
+    // this.getPickPaperData(this.pickFilterValue)
+    justifiedGallery();
     // $("#container").justifiedGallery({
     //   captions: false,
     //   lastRow: "hide",
     //   rowHeight: 180,
     //   margins: 5,
     // });
-    // $("#pick-wrapper").scroll(() => {
-    //   if ($("#pick-wrapper").scrollTop() +  $("#pick-wrapper").height() + 20 >= $("#pick-images").prop("scrollHeight") && this.isLoading === false) {
-    //     this.page = this.page + 1;
-    //     this.getPickPaperData(this.page);
-    //   }
-    // });
-    // this.getPickPaperData(this.page ++)
-    // this.getPickPaperData(this.page ++)
+    $("#pick-wrapper").scroll(() => {
+      if ($("#pick-wrapper").scrollTop() +  $("#pick-wrapper").height() + 20 >= $("#pick-images").prop("scrollHeight") && this.isLoading === false) {
+        this.getPickPaperData(this.page);
+      }
+    });
+    this.getPickPaperData(this.page ++)
+    this.getPickPaperData(this.page ++)
   },
   methods:{
     ...mapActions(paperStore, ["removeToMyPaper"]),
@@ -98,13 +96,34 @@ export default {
       this.pickFilterValue = e
       this.getPickPaperData(this.pickFilterValue)
     },
-    getPickPaperData(val){
-      const url = `https://api.nguaduot.cn${val}?score=100`
-      axios.get(url).then(res=>{
-        this.pickDataList = res.data.data
-      }).catch(err=>{
-        return
-      })
+    getPickPaperData(page){
+      const url = `https://api.nguaduot.cn${this.pickFilterValue}?no=${page}&date=20500101&score=99999999`
+      if(!this.isLoading){
+        this.isLoading = true
+        axios.get(url).then(res=>{
+          let pickImageData = res.data.data
+          let animations = ["ani-gray", "bowen", "ani-rotate"]
+          if(pickImageData){
+            pickImageData.forEach(img => {
+              let randomIndex = Math.floor(Math.random() * animations.length);
+              const image = {
+                title: false,
+                src: img.thumburl,
+                path: img.imgurl,
+                resolution:img.size,
+                animations: animations[randomIndex],
+              };
+              this.pickDataList.push(image)
+            })
+            this.$nextTick(() => {
+              this.isLoading = false;
+            });
+          }
+        }).catch(err=>{
+          return
+        })
+      }
+      
     },
     openFilter(){
       this.pickFilterShow = true

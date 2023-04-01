@@ -92,66 +92,63 @@
   </template>
 
   <vue-custom-scrollbar id="wall-container-paper" :settings="settingsScroller" style="height: 80vh">
-    <div data-fit="cover" class="spotlight-group" data-control="autofit,page,fullscreen,close,zoom" data-play="true"
-         data-autoslide="true" data-infinite="true" id="container">
-         <template v-if="wallStatus === 0">
-          <a-spin  v-if="isLoading"/>
-          <viewer :images="hotHeavenList" :options="options" ref="peopleRef" >
-            <a-row :gutter="[20,20]" id="wallImages" style="margin-right: 1em">
-              <a-col class="image-wrapper " v-for="img in hotHeavenList" :span="6" style="">
-                <img  class="image-item pointer" :src="img.src"  :data-source="img.path"  :alt="img.resolution"  style="position: relative">
-                <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
-                  <div @click.stop="addToMy(img)" class="bottom-actions pointer" :style="{background:isInMyPapers(img)?'#009d00a8':''}">
-                    <Icon v-if="!isInMyPapers(img)" icon="tianjia1"></Icon>
-                    <Icon v-else style="" icon="yiwancheng"></Icon>
-                  </div>
-                </div>
-              </a-col>
-            </a-row>
-          </viewer> 
-          <div v-if="isLoading === false && hotHeavenList.length === 0" class="flex align-center justify-center" style="height: 80vh">
-            <a-empty description="未找到图片信息"/>
-          </div>
-         </template>
-         <template v-if="wallStatus === 1">
-          <a-spin  v-if="isLoading"/>
-          <viewer :images="acgHeavenList" :options="options" ref="peopleRef" >
-            <a-row :gutter="[20,20]" id="wallImages" style="margin-right: 1em">
-              <a-col class="image-wrapper " v-for="img in acgHeavenList" :span="6" style="">
-                <img  class="image-item pointer" :src="img.src"  :data-source="img.path"  :alt="img.resolution"  style="position: relative">
-                <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
-                  <div @click.stop="addToMy(img)" class="bottom-actions pointer" :style="{background:isInMyPapers(img)?'#009d00a8':''}">
-                    <Icon v-if="!isInMyPapers(img)" icon="tianjia1"></Icon>
-                    <Icon v-else style="" icon="yiwancheng"></Icon>
-                  </div>
-                </div>
-              </a-col>
-            </a-row>
-          </viewer> 
-          <div v-if="isLoading === false && acgHeavenList.length === 0" class="flex align-center justify-center" style="height: 80vh">
-            <a-empty description="未找到图片信息"/>
-          </div>
-         </template>
-         <template v-if="wallStatus === 2">
-          <a-spin  v-if="isLoading"/>
-          <viewer :images="peopleHeavenList" :options="options" ref="peopleRef" >
-            <a-row :gutter="[20,20]" id="wallImages" style="margin-right: 1em">
-              <a-col class="image-wrapper " v-for="img in peopleHeavenList" :span="6" style="">
-                <img  class="image-item pointer" :src="img.src"  :data-source="img.path"  :alt="img.resolution"  style="position: relative">
-                <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
-                  <div @click.stop="addToMy(img)" class="bottom-actions pointer" :style="{background:isInMyPapers(img)?'#009d00a8':''}">
-                    <Icon v-if="!isInMyPapers(img)" icon="tianjia1"></Icon>
-                    <Icon v-else style="" icon="yiwancheng"></Icon>
-                  </div>
-                </div>
-              </a-col>
-            </a-row>
-          </viewer> 
-          <div v-if="isLoading === false &&  peopleHeavenList.length === 0" class="flex align-center justify-center" style="height: 80vh">
-            <a-empty description="未找到图片信息"/>
-          </div>
-         </template>
-    </div>
+    <template v-if="wallStatus === 0">
+      <a-spin  v-if="isLoading"/>
+      <viewer :images="hotHeavenList" :options="options" >
+        <a-row :gutter="[20,20]" id="wallImages" style="margin-right: 1em">
+          <a-col class="image-wrapper " v-for="img in hotHeavenList" :span="6" style="">
+            <img  class="image-item pointer" :src="img.src"  :data-source="img.path"  :alt="img.resolution"  style="position: relative">
+            <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
+              <div @click.stop="addToMy(img)" class="bottom-actions pointer" :style="{background:isInMyPapers(img)?'#009d00a8':''}">
+                <Icon v-if="!isInMyPapers(img)" icon="tianjia1"></Icon>
+                <Icon v-else style="" icon="yiwancheng"></Icon>
+              </div>
+            </div>
+          </a-col>
+        </a-row>
+      </viewer> 
+      <div v-if="isLoading === false && hotHeavenList.length === 0" class="flex align-center justify-center" style="height: 80vh">
+        <a-empty description="未找到图片信息"/>
+      </div> 
+    </template>
+    <template v-if="wallStatus === 1">
+      <a-spin  v-if="isLoading"/>
+      <viewer :images="acgHeavenList" :options="options" ref="peopleRef" >
+        <a-row :gutter="[20,20]" id="wallImages" style="margin-right: 1em">
+          <a-col class="image-wrapper " v-for="img in acgHeavenList" :span="6" style="">
+            <img  class="image-item pointer" :src="img.src"  :data-source="img.path"  :alt="img.resolution"  style="position: relative">
+            <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
+              <div @click.stop="addToMy(img)" class="bottom-actions pointer" :style="{background:isInMyPapers(img)?'#009d00a8':''}">
+                <Icon v-if="!isInMyPapers(img)" icon="tianjia1"></Icon>
+                <Icon v-else style="" icon="yiwancheng"></Icon>
+              </div>
+            </div>
+          </a-col>
+        </a-row>
+      </viewer> 
+      <div v-if="isLoading === false && acgHeavenList.length === 0" class="flex align-center justify-center" style="height: 80vh">
+        <a-empty description="未找到图片信息"/>
+      </div>
+    </template>
+    <template v-if="wallStatus === 2">
+      <a-spin  v-if="isLoading"/>
+      <viewer :images="peopleHeavenList" :options="options" ref="peopleRef" >
+        <a-row :gutter="[20,20]" id="wallImages" style="margin-right: 1em">
+          <a-col class="image-wrapper " v-for="img in peopleHeavenList" :span="6" style="">
+            <img  class="image-item pointer" :src="img.src"  :data-source="img.path"  :alt="img.resolution"  style="position: relative">
+            <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
+              <div @click.stop="addToMy(img)" class="bottom-actions pointer" :style="{background:isInMyPapers(img)?'#009d00a8':''}">
+                <Icon v-if="!isInMyPapers(img)" icon="tianjia1"></Icon>
+                <Icon v-else style="" icon="yiwancheng"></Icon>
+              </div>
+            </div>
+          </a-col>
+        </a-row>
+      </viewer> 
+      <div v-if="isLoading === false &&  peopleHeavenList.length === 0" class="flex align-center justify-center" style="height: 80vh">
+        <a-empty description="未找到图片信息"/>
+      </div>
+    </template>
   </vue-custom-scrollbar>
 </template>
 
@@ -162,6 +159,7 @@ import axios from "axios";
 import justifiedGallery from 'justifiedGallery'
 import { paperStore } from "../../store/paper";
 import { mapActions, mapState } from "pinia";
+import Spotlight from 'spotlight.js'
 
 export default defineComponent({
   name: 'Wallheaven',
@@ -227,12 +225,8 @@ export default defineComponent({
   },
   mounted(){
     justifiedGallery()
-    $('#container').justifiedGallery({
-      captions: false,
-      lastRow: 'hide',
-      rowHeight: 180,
-      margins: 5
-    })
+    console.log($('#wall-container').justifiedGallery());
+    
     $('#wall-container-paper').scroll(() => {
       if ($('#wall-container-paper').scrollTop() +$('#wall-container-paper').height()+20>= $('#wallImages').prop('scrollHeight') && this.isLoading===false) {
         this.page=this.page+1
