@@ -97,6 +97,7 @@ export default {
                 let image = {
                   title: false,// img.title,
                   src: 'https://cn.bing.com' + img.url,
+                  path: 'https://cn.bing.com' + img.url,
                   animation: animations[randomIndex]//['gray','rate'][(Math.random()*2).toFixed()]//''slide','fade','scale',
                 }
               this.bingImages.push(image)

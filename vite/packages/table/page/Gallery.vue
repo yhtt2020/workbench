@@ -162,6 +162,9 @@ export default {
 .spl-pane>*{
   top:0 !important;
   left: 0 !important;
+  width:100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
 }
 
 .spl-pane .ani-gray {

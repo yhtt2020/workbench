@@ -201,7 +201,13 @@ export default {
       })>-1
     },
     playAll(){
-      window.Spotlight.show(this.mergedArr,{
+      const playArr = []
+      this.mergedArr.map(el=>{
+          playArr.push({
+            src:el.path
+          })
+      })
+      window.Spotlight.show(playArr,{
         control: 'autofit,page,fullscreen,close,zoom,prev,next',
         play: true,
         autoslide: true,
@@ -212,8 +218,14 @@ export default {
       })
     },
     playActive(){
-      // console.log('active')
-      window.Spotlight.show(this.activePapers, {
+      console.log(this.activePapers);
+      const playArr = []
+      this.activePapers.map(el=>{
+        playArr.push({
+          src:el.path
+        })
+      })
+      window.Spotlight.show(playArr, {
         control: 'autofit,page,fullscreen,close,zoom,prev,next',
         play: true,
         autoslide: true,
