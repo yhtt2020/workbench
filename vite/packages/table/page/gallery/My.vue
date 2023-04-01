@@ -40,7 +40,7 @@
           <div v-show="fileImageExtension(img) === true">
             <div>
               <img @contextmenu.stop="visibleMenu=true" class="image-item del-image pointer"
-              :src="img.img_src"  :data-source="img.img_src" style="position: relative">
+              :src="img.img_src"  :data-source="img.path" style="position: relative">
               <div @click="previewVideo(img)" class="play-icon pointer" style="">
                <Icon icon="bofang" style="font-size:3em;margin-top: 8px"></Icon>
               </div>
@@ -186,6 +186,7 @@ export default {
           let livelyItem = {
            src:path.join(livePath),
            img_src:`https://up.apps.vip/lively/${imgFileName}.jpg`,
+           path:`https://up.apps.vip/lively/${imgFileName}.jpg`,
            srcProtocol:'file://'+ livePath,
            time:returnTime
           }
