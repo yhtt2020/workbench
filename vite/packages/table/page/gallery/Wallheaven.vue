@@ -225,8 +225,6 @@ export default defineComponent({
   },
   mounted(){
     justifiedGallery()
-    console.log($('#wall-container').justifiedGallery());
-    
     $('#wall-container-paper').scroll(() => {
       if ($('#wall-container-paper').scrollTop() +$('#wall-container-paper').height()+20>= $('#wallImages').prop('scrollHeight') && this.isLoading===false) {
         this.page=this.page+1
