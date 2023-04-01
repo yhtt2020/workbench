@@ -8,9 +8,9 @@
   </div>
   <template v-if="wallStatus === 0">
     <div class="wallheaven-tab">
-      <a-radio-group v-model:value="purity" style="margin-right: 16px;">
-        <a-radio-button value="SFW" style="border:none !important;background:rgba(255, 255, 255, 0.1) !important;border-top-left-radius: 8px;border-bottom-left-radius: 8px;">SFW</a-radio-button>
-        <a-radio-button value="Sketchy" style="border:none !important;background:rgba(255, 255, 255, 0.1) !important;border-top-right-radius: 8px;border-bottom-right-radius: 8px;">Sketchy</a-radio-button>
+      <a-radio-group v-model:value="dataObj.purity" style="margin-right: 16px;"  @change="getPurity($event)">
+        <a-radio-button value="100" style="border:none !important;background:rgba(255, 255, 255, 0.1) !important;border-top-left-radius: 8px;border-bottom-left-radius: 8px;">SFW</a-radio-button>
+        <a-radio-button value="010" style="border:none !important;background:rgba(255, 255, 255, 0.1) !important;border-top-right-radius: 8px;border-bottom-right-radius: 8px;">Sketchy</a-radio-button>
       </a-radio-group>
       <a-select ref="select" v-model:value="hotSorting"  style="width:200px;margin-right: 16px;" @change="wallSelectChange($event)">
         <a-select-option value="date_added">最新</a-select-option>
@@ -19,14 +19,14 @@
         <a-select-option value="toplist">热门列表</a-select-option>
         <a-select-option value="favorites">更多收藏</a-select-option>
       </a-select>
-      <a-select ref="select" v-model:value="this.searchObj.wallSizeValue" style="width:200px;margin-right: 16px;" @change="getWallSelectValue($event)">
+      <a-select ref="select" v-model:value="searchObj.wallSizeValue" style="width:200px;margin-right: 16px;" @change="getWallSelectValue($event)">
        <a-select-option value>不限</a-select-option>
        <a-select-option value="1920x1080">1080p+</a-select-option>
        <a-select-option value="2560x1080">2k+</a-select-option>
        <a-select-option value="3840x2160">4k+</a-select-option>
        <a-select-option value="7680x4320">8k+</a-select-option>
       </a-select>
-      <a-input v-model:value="this.searchObj.searchName" placeholder="搜索" style="border:none !important;">
+      <a-input v-model:value="searchObj.searchName" placeholder="搜索" style="border:none !important;">
         <template #prefix>
           <SearchOutlined style="cursor: pointer;color: rgba(255, 255, 255, 0.4);"/>
         </template>
@@ -36,9 +36,9 @@
   </template>
   <template v-if="wallStatus === 1">
     <div class="wallheaven-tab">
-      <a-radio-group v-model:value="purity" style="margin-right: 16px;">
-        <a-radio-button value="SFW" style="border:none !important;background:rgba(255, 255, 255, 0.1) !important;border-top-left-radius: 8px;border-bottom-left-radius: 8px;">SFW</a-radio-button>
-        <a-radio-button value="Sketchy" style="border:none !important;background:rgba(255, 255, 255, 0.1) !important;border-top-right-radius: 8px;border-bottom-right-radius: 8px;">Sketchy</a-radio-button>
+      <a-radio-group v-model:value="dataObj.purity" style="margin-right: 16px;"  @change="getPurity($event)">
+        <a-radio-button value="100" style="border:none !important;background:rgba(255, 255, 255, 0.1) !important;border-top-left-radius: 8px;border-bottom-left-radius: 8px;">SFW</a-radio-button>
+        <a-radio-button value="010" style="border:none !important;background:rgba(255, 255, 255, 0.1) !important;border-top-right-radius: 8px;border-bottom-right-radius: 8px;">Sketchy</a-radio-button>
       </a-radio-group>
       <a-select ref="select" v-model:value="acgSorting"  style="width:200px;margin-right: 16px;" @change="wallSelectChange($event)">
         <a-select-option value="date_added">最新</a-select-option>
@@ -47,14 +47,14 @@
         <a-select-option value="toplist">热门列表</a-select-option>
         <a-select-option value="favorites">更多收藏</a-select-option>
       </a-select>
-      <a-select ref="select" v-model:value="this.searchObj.wallSizeValue" style="width:200px;margin-right: 16px;" @change="getWallSelectValue($event)">
+      <a-select ref="select" v-model:value="searchObj.wallSizeValue" style="width:200px;margin-right: 16px;" @change="getWallSelectValue($event)">
        <a-select-option value>不限</a-select-option>
        <a-select-option value="1920x1080">1080p+</a-select-option>
        <a-select-option value="2560x1080">2k+</a-select-option>
        <a-select-option value="3840x2160">4k+</a-select-option>
        <a-select-option value="7680x4320">8k+</a-select-option>
       </a-select>
-      <a-input v-model:value="this.searchObj.searchName" placeholder="搜索" style="border:none !important;">
+      <a-input v-model:value="searchObj.searchName" placeholder="搜索" style="border:none !important;">
         <template #prefix>
           <SearchOutlined style="cursor: pointer;color: rgba(255, 255, 255, 0.4);"/>
         </template>
@@ -64,9 +64,9 @@
   </template>
   <template v-if="wallStatus === 2">
     <div class="wallheaven-tab">
-      <a-radio-group v-model:value="purity" style="margin-right: 16px;">
-        <a-radio-button value="SFW" style="border:none !important;background:rgba(255, 255, 255, 0.1) !important;border-top-left-radius: 8px;border-bottom-left-radius: 8px;">SFW</a-radio-button>
-        <a-radio-button value="Sketchy" style="border:none !important;background:rgba(255, 255, 255, 0.1) !important;border-top-right-radius: 8px;border-bottom-right-radius: 8px;">Sketchy</a-radio-button>
+      <a-radio-group v-model:value="dataObj.purity" style="margin-right: 16px;" @change="getPurity($event)">
+        <a-radio-button value="100" style="border:none !important;background:rgba(255, 255, 255, 0.1) !important;border-top-left-radius: 8px;border-bottom-left-radius: 8px;">SFW</a-radio-button>
+        <a-radio-button value="010" style="border:none !important;background:rgba(255, 255, 255, 0.1) !important;border-top-right-radius: 8px;border-bottom-right-radius: 8px;">Sketchy</a-radio-button>
       </a-radio-group>
       <a-select ref="select" v-model:value="peopleSorting"  style="width:200px;margin-right: 16px;" @change="wallSelectChange($event)">
         <a-select-option value="date_added">最新</a-select-option>
@@ -75,14 +75,14 @@
         <a-select-option value="toplist">热门列表</a-select-option>
         <a-select-option value="favorites">更多收藏</a-select-option>
       </a-select>
-      <a-select ref="select" v-model:value="this.searchObj.wallSizeValue" style="width:200px;margin-right: 16px;" @change="getWallSelectValue($event)">
+      <a-select ref="select" v-model:value="searchObj.wallSizeValue" style="width:200px;margin-right: 16px;" @change="getWallSelectValue($event)">
        <a-select-option value>不限</a-select-option>
        <a-select-option value="1920x1080">1080p+</a-select-option>
        <a-select-option value="2560x1080">2k+</a-select-option>
        <a-select-option value="3840x2160">4k+</a-select-option>
        <a-select-option value="7680x4320">8k+</a-select-option>
       </a-select>
-      <a-input v-model:value="this.searchObj.searchName" placeholder="搜索" style="border:none !important;">
+      <a-input v-model:value="searchObj.searchName" placeholder="搜索" style="border:none !important;">
         <template #prefix>
           <SearchOutlined style="cursor: pointer;color: rgba(255, 255, 255, 0.4);"/>
         </template>
@@ -207,7 +207,7 @@ export default defineComponent({
       isLoading:false,
       dataObj:{
         categories:'111',
-        purity:this.purity === "SFW" ? "100":'101',
+        purity:'100',
         sorting:'hot',
       },
       searchObj:{
@@ -296,6 +296,14 @@ export default defineComponent({
     },
     getSearchData(){
       let searchUrl = `https://wallhaven.cc/api/v1/search?&categories=${this.dataObj.categories}&purity=${this.dataObj.purity}${this.searchObj.wallSizeValue === '' ? '':`&atleast=${this.searchObj.wallSizeValue}`}${this.wallStatus === 0 ? `&sorting=${this.hotSorting}` : this.wallStatus === 1 ? `&sorting=${this.acgSorting}`: this.wallStatus === 2 ? `&sorting=${this.peopleSorting}` : ''}${this.searchObj.searchName !=='' ?`&q=${this.searchObj.searchName}`:''}&page=${this.page}`
+      console.log(searchUrl);
+      if(this.wallStatus === 0){
+        this.hotHeavenList = [];
+      }else if(this.wallStatus === 1){
+        this.acgHeavenList = []
+      }else if(this.wallStatus === 2){
+        this.peopleHeavenList = []
+      }
       if(!this.isLoading){
          this.isLoading = true
          axios.get(searchUrl).then(async res=>{
@@ -335,6 +343,10 @@ export default defineComponent({
         this.searchObj.wallSizeValue = e 
       }
     },
+    getPurity(e){
+      console.log(e.target.value);
+      this.dataObj.purity = e.target.value
+    }
 
   }
 })
