@@ -74,6 +74,7 @@ export default   [{
     },
     {
       path:'/deck',
+      name:'deck',
       component: Deck
     },{
       path:'/status',

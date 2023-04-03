@@ -90,7 +90,8 @@ export default {
       options:{
         className:'card',
         title:'倒数日',
-        icon:'rili2'
+        icon:'rili2',
+        type:'countdownDay'
       },
       status: "pause",
       value: null,

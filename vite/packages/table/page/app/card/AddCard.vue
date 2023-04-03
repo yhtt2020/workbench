@@ -4,7 +4,7 @@
     <Icon icon="xiangzuo" style="height: 24px;width: 24px"></Icon>
     <span>返回</span>
     </div>
-    <a-input v-model:value="selectContent" class="no-drag" placeholder="搜索" @change="select" style="height: 100%;
+    <a-input v-model:value="selectContent" class="no-drag" placeholder="搜索"  style="height: 100%;
    width: 400px;border-radius: 12px;background: rgba(42, 42, 42, 0.6);">
       <template #prefix>
         <Icon icon="sousuo"></Icon>
@@ -48,22 +48,16 @@ export default {
         currentItemId: -1,
         timer: null
       },
-      selectContent:null,
-      filterList:[
-        { name: "customTimer", cname: "日历", icon: "rili3",detail:"追踪当月日期，查看临近节日" ,images:['customTimer']},
-        { name: "countdownDay", cname: "倒数日", icon: "rili2",detail:"设置你的纪念日、考试日等等" ,images:['countdownDay','smallCountdownDay']},
-        { name: "clock", cname: "闹钟", icon: "naozhong",detail:"设置你的闹钟",images:['clock'] },
-        { name: "supervisory", cname: "性能", icon: "xingneng",detail:'监控系统状态，查看游戏帧数',images:['CPULineChart','CPUFourCard','SmallCPUCard','SmallGPUCard']},
-        { name: "music", cname: "网易云", icon: "naozhong",detail:"快捷播放，我的喜欢，我的歌单",images:['music'] },
-        { name: "timer", cname: "番茄钟", icon: "naozhong",detail:"快速开启番茄钟时刻，记录每天专注成果",images:['timer'] },
-        { name: "weather", cname: "天气", icon: "naozhong",detail:"查看某地当前的天气状况和预报",images:['weather'] },
-
-      ]
+      selectContent:'',
     };
   },
 
   mounted() {},
-
+  computed:{
+    filterList(){
+      return this.cardList.filter(i =>{return i.cname.includes(this.selectContent)} )
+    }
+  },
   methods: {
     ...mapActions(tableStore, ["addCustomComponents"]),
     addAssembly(item) {
@@ -87,12 +81,7 @@ export default {
 
       this.$emit('setCustom',false)
     },
-    select(){
-      console.log(this.selectContent)
-    this.filterList = this.cardList.filter(i =>{
-      return i.cname.includes(this.selectContent)
-    })
-    }
+
   },
 };
 </script>
@@ -112,8 +101,8 @@ export default {
 .top-title{
   display: flex;
   align-items: center;
-  margin-top: 20px;
-  margin-left: 20px;
+  margin-top: 24px;
+  margin-left: 24px;
   height: 48px;
   width: calc(50vw + 200px);
   justify-content: space-between;

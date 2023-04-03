@@ -1,5 +1,5 @@
 <template>
-  <div class="bottom-panel" style="position: fixed;padding:10px;bottom:0;width: 100vw;text-align: center">
+  <div class="bottom-panel flex flex-row items-center justify-center" style="position: fixed;padding:10px;bottom:0;width: 100vw;text-align: center" @contextmenu.stop="showMenu">
     <div class="common-panel user" style="display: inline-block;vertical-align: top">
       <div v-if="!userInfo">
         <div @click="login" style="padding: 0.5em">
@@ -61,15 +61,35 @@
         </a-row>
       </div>
     </div>
-    <div class="common-panel" style="display: inline-block">
-      <PanelButton :onClick="openSetting" icon="shezhi" title="设置"></PanelButton>
-      <PanelButton icon="yidongwenjianjia" :onClick="transFile" title="传文件"></PanelButton>
-      <PanelButton :onClick="openStatus" icon="tiaoduguanli" title="调整"></PanelButton>
-      <PanelButton :onClick="setFullScreen" icon="daochu" title="全屏"></PanelButton>
-      <PanelButton icon="suoding" title="锁屏" :onClick="lock"></PanelButton>
-      <PanelButton :onClick="power" icon="tuichu" title="电源"></PanelButton>
-    </div>
+<!--    <div class="common-panel" style="display: inline-block">-->
+<!--      <PanelButton :onClick="openSetting" icon="shezhi" title="设置"></PanelButton>-->
+<!--      <PanelButton icon="yidongwenjianjia" :onClick="transFile" title="传文件"></PanelButton>-->
+<!--      <PanelButton :onClick="openStatus" icon="tiaoduguanli" title="调整"></PanelButton>-->
+<!--      <PanelButton :onClick="setFullScreen" icon="daochu" title="全屏"></PanelButton>-->
+<!--      <PanelButton icon="suoding" title="锁屏" :onClick="lock"></PanelButton>-->
+<!--      <PanelButton :onClick="power" icon="tuichu" title="电源"></PanelButton>-->
+<!--    </div>-->
+    <div class="w-1/2 flex flex-row  items-center px-2" style="background: #282828;border-radius: 8px">
 
+      <ScrolX :height="75" style="display: flex; flex-direction: row">
+        <div v-if="navigationList.length<=0" style="height: 68px;">
+
+        </div>
+        <div class="pointer" style="white-space: nowrap;display: inline-block" v-for="item in navigationList" @click="clickNavigation(item)" v-else>
+              <div style="width: 75px;height: 75px;display: flex;justify-content: center;align-items: center;" v-if="item.type==='systemApp'">
+                <Icon :icon="item.icon" style="width: 32px;height: 32px;color:rgba(255, 255, 255, 0.4);" ></Icon>
+              </div>
+          <div v-else style="width: 75px;height: 75px;display: flex;justify-content: center;align-items: center;">
+            <a-avatar :size="40"  shape="square" :src="item.icon" ></a-avatar>
+          </div>
+
+        </div>
+      </ScrolX>
+
+    <div style="border-left: 1px solid rgba(255, 255, 255, 0.4);width: 62px;" class="flex justify-center items-center mx-2 h-2/3 pointer">
+      <Icon icon="appstore-fill" style="width: 48px;height: 48px;color: white" @click="appChange"></Icon>
+    </div>
+  </div>
     <!--    <div style="display: inline-block">-->
     <!--      <a-row :gutter="10">-->
     <!--        <a-col :span="2">-->
@@ -132,26 +152,68 @@
 
     </iframe>
   </div>
+  <a-drawer
+    :contentWrapperStyle="{backgroundColor:'#1F1F1F',height:'11em'}"
+    :width="120"
+    :height="120"
+    class="drawer"
+    :closable="false"
+    placement="bottom"
+    :visible="menuVisible"
+    @close="onClose"
+  >
+    <a-row style="margin-top: 1em" :gutter="[20,20]">
+      <a-col>
+        <div @click="editNavigation" class="btn">
+          <Icon style="font-size: 3em" icon="tianjia1"></Icon>
+          <div><span>编辑</span></div>
+        </div>
+      </a-col>
+    </a-row>
+  </a-drawer>
 
+  <transition name="fade">
+    <div class="home-blur fixed inset-0" style="z-index: 999" v-if="quick">
+      <EditNavigation @setQuick="setQuick"></EditNavigation>
+    </div>
+  </transition>
+  <transition name="fade">
+    <div class="home-blur fixed inset-0" style="z-index: 999" v-if="changeFlag" @click="closeChangeApp">
+      <ChangeApp @closeChangeApp="closeChangeApp" :full="full" @setFull="setFull"></ChangeApp>
+    </div>
+  </transition>
 </template>
 
 <script>
 import PanelButton from './PanelButton.vue'
-import { appStore } from '../store'
+import {appStore, tableStore} from '../store'
 import { mapWritableState, mapActions } from 'pinia'
 import Template from '../../user/pages/Template.vue'
 import { ThunderboltFilled } from '@ant-design/icons-vue'
+import EditNavigation from './bottomPanel/EditNavigation.vue'
+import ChangeApp from './bottomPanel/ChangeApp.vue'
+import ScrolX from "./ScrolX.vue";
 const { messageModel }=window.$models
 export default {
   name: 'BottomPanel',
-  components: { Template, PanelButton, ThunderboltFilled },
+  components: { Template, PanelButton, ThunderboltFilled,EditNavigation,ChangeApp,ScrolX},
   data () {
     return {
       lastTime:0,
       visibleTrans: false,
       full: false,
       lvInfo: {},
-      messages:[]
+      messages:[],
+     menuVisible: false,
+      quick:false,
+      scrollbarSettings: {
+        useBothWheelAxes: true,
+        swipeEasing: true,
+        suppressScrollY: true,
+        suppressScrollX: false,
+        wheelPropagation: true,
+      },
+      changeFlag:false
     }
   },
   mounted () {
@@ -178,10 +240,33 @@ export default {
     ipc.send('getDetailUserInfo')
   },
   computed: {
-    ...mapWritableState(appStore, ['userInfo','settings'])
+    ...mapWritableState(appStore, ['userInfo','settings']),
+    ...mapWritableState(tableStore, ['navigationList'])
   },
   methods: {
     ...mapActions(appStore, ['setUser']),
+    setFull(value){
+        this.full = value
+    },
+    appChange(){
+      this.changeFlag = true
+    },
+    closeChangeApp(){
+      this.changeFlag = false
+    },
+    showMenu () {
+      this.menuVisible = true
+    },
+    onClose () {
+      this.menuVisible = false
+    },
+    editNavigation(){
+      this.quick = true
+      this.menuVisible = false
+    },
+    setQuick(){
+      this.quick = false
+    },
     async loadMessages(){
       this.messages=await messageModel.allList()
       this.messages.forEach(mes=>{
@@ -293,6 +378,34 @@ export default {
           security: true
         }
       })
+    },
+    clickNavigation(item){
+        switch (item.type){
+          case 'systemApp':if(item.event==='fullscreen'){
+            if (this.full) {
+              this.full = false
+              tsbApi.window.setFullScreen(false)
+            } else {
+              this.full = true
+              tsbApi.window.setFullScreen(true)
+            }
+          }else if(item.event==='/status'){
+            if (this.$route.path === '/status') {
+              this.$router.go(-1)
+            } else {
+              this.$router.push({ path: '/status' })
+            }
+          }else{
+            this.$router.push({ name: item.event })
+          }break;
+          case 'coolApp':  this.$router.push({
+            name: 'app',
+            params: item.data
+          });break;
+          case 'localApp': require('electron').shell.openPath(item.path);break;
+          case 'lightApp': ipc.send('executeAppByPackage',{package:item.package});break;
+          default: require('electron').shell.openPath(item.path);
+        }
     }
   }
 }
@@ -302,6 +415,9 @@ export default {
 </style>
 <style scoped>
 
+.btn {
+  text-align: center;
+}
 .status-text {
   font-size: 1.5em;
   line-height: 3em;

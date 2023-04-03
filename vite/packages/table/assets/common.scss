@@ -206,3 +206,18 @@ body.full-screen{
   font-size: 1.2em;
   font-weight: bold;
 }
+.fade-enter-active {
+  animation: bounce-in .5s;
+}
+.fade-leave-active {
+  animation: bounce-in .5s reverse;
+}
+@keyframes bounce-in {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}

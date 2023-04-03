@@ -1,9 +1,8 @@
 <template>
   <div class="card  content small" v-if="countDowntime.hours" style="display: flex;flex-direction: column;justify-content: space-between;">
     <Icon
-      style="width: 1.5em; height: 1.5em;cursor:pointer"
       icon="gengduo1"
-      class="title-icon"
+      class="title-icon pointer"
       @click="showDrawer"
     ></Icon>
     <div style="text-align: center; font-size: 1.5em">计时</div>
@@ -28,9 +27,8 @@
   </div>
   <div class="card content small" v-else-if="clockEvent.length <= 0">
       <Icon
-        style="width: 1.5em; height: 1.5em;cursor:pointer"
         icon="gengduo1"
-        class="title-icon"
+        class="title-icon pointer"
         @click="showDrawer"
       ></Icon>
     <div style="text-align: center; margin-top: 1em">暂无闹钟</div>
@@ -39,9 +37,8 @@
   </div>
   <div class="card content small" v-else>
     <Icon
-      style="width: 1.5em; height: 1.5em;cursor:pointer"
       icon="gengduo1"
-      class="title-icon"
+      class="title-icon pointer"
       @click="showDrawer"
     ></Icon>
     <div style="text-align: center; font-size: 1.5em">下一个闹钟</div>
@@ -53,8 +50,7 @@
     </div>
   </div>
   <a-drawer
-    :contentWrapperStyle="{ padding:10,marginLeft:'2.5%',
-    backgroundColor:'#1F1F1F',width: '95%',height:'11em',borderRadius:'5%'}"
+    :contentWrapperStyle="{  backgroundColor:'#1F1F1F',height:'11em'}"
     :width="120"
     :height="120"
     class="drawer"
@@ -196,6 +192,10 @@ export default {
   .title-icon {
     position: absolute;
     right: 1em;
+    color: #818181;
+      width: 24px;
+      height: 24px;
+
   }
 
 }

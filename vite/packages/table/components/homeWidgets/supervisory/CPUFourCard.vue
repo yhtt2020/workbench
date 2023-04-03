@@ -3,25 +3,29 @@
   <div class="top-content">
     <div><span>{{CPUGPUData.SCPUUTI.value}}%</span>
       <span>
-      <Icon icon="CPU" class="icon" ></Icon>CPU</span>
+      <Icon icon="cpu" class="icon" ></Icon>CPU</span>
     </div>
 
     <div>
       <span>{{CPUGPUData.SGPU1UTI.value}}%</span>
       <span>
-      <Icon icon="GPU" class="icon"></Icon>GPU</span></div>
+      <Icon icon="xianka" class="icon"></Icon>GPU</span></div>
 
-    <div><span>{{CPUGPUData.SMEMUTI.value}}%</span>
+    <div>
+      <span>{{CPUGPUData.SMEMUTI.value}}%</span>
       <span>
       <Icon icon="neicun" class="icon"></Icon>内存</span></div>
 
-    <div><span>{{CPUGPUData.SRTSSFPS.value}}</span>
+    <div style="position: relative">
+      <span>{{CPUGPUData.SRTSSFPS.value}}</span>
+      <a-tooltip v-if="CPUGPUData.SRTSSFPS.value==0" :arrowPointAtCenter="true">
+      <template #title>需要游戏运行在前台且打开RTSS方可读取到</template>
+      <Icon v-zoom icon="tishi-xianxing" style="height: 24px;width: 24px;position: absolute;top: 12px;right: 12px;color: orange;margin: 0"></Icon>
+    </a-tooltip>
       <span>
-      <Icon icon="youxishoubing" class="icon"></Icon><span style="position: relative">FPS
-        <a-tooltip v-if="CPUGPUData.SRTSSFPS.value==0">
-    <template #title>需要游戏运行在前台且打开RTSS方可读取到</template>
-    <Icon icon="tishi-xianxing" style="height: 10px;width: 10px;position: absolute;top: 0;right: -17px"></Icon>
-  </a-tooltip></span>
+      <Icon icon="game" class="icon"></Icon>
+        <span>FPS
+      </span>
        </span>
     </div>
     <div class="buttom" style="border-radius: 5px">
@@ -68,6 +72,25 @@ export default {
       up:0
   }
   },
+  // directives: {
+  //   zoom: {
+  //     created: (element) =>{
+      //  element.getBoundingClientRectBak = element.getBoundingClientRect;
+        // element.getBoundingClientRect = function () {
+        //   const rect = element.getBoundingClientRectBak()
+        //    var zoom = window.getComputedStyle(document.getElementById('scrollerBar')).zoom
+        //   console.log(zoom)
+        //   var scrollTop = document.getElementById('scrollerBar').getBoundingClientRect().top;
+        //
+        //   var scrollLeft = document.getElementById('scrollerBar').getBoundingClientRect().left;
+        //   console.log(scrollLeft)
+        //   var offsetScrollTop = scrollTop - (scrollTop / zoom);
+        //   var offsetScrollLeft = scrollLeft - (scrollLeft / zoom);
+        //   return new DOMRect(rect.x - offsetScrollLeft,rect.y - offsetScrollTop)
+        // }
+      //}
+    //}
+ // },
   components:{
     HomeComponentSlot
   },
@@ -95,6 +118,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .top-content{
   display: flex;
   flex-wrap: wrap;

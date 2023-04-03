@@ -93,7 +93,8 @@ export default {
       options:{
         className:'card small',
         title:'倒数日',
-        icon:'rili2'
+        icon:'rili2',
+        type:'smallCountDownDay'
       },
     };
   },

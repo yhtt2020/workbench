@@ -4,7 +4,7 @@
       <div class="cpu">
         <div class="cpu-number">
           <div>
-          <Icon icon="CPU" class="icon"></Icon>
+          <Icon icon="cpu" class="icon"></Icon>
           <span>CPU</span>
         </div>
           <span style="font-weight:700">{{CPUData.SCPUUTI.value}}%</span></div>

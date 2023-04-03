@@ -21,7 +21,7 @@
                class="grid home-widgets" ref="grid">
           <template #item="{ item }">
             <component :is="item.name" :customIndex="item.id" :style="{pointerEvents:(editing?'none':'')}"
-                       :editing="editing"></component>
+                       :editing="editing" :runAida64="runAida64"></component>
           </template>
         </vuuri>
       </div>
@@ -33,8 +33,7 @@
   </transition>
 
   <a-drawer
-    :contentWrapperStyle="{ padding:10,marginLeft:'2.5%',
-    backgroundColor:'#1F1F1F',width: '95%',height:'11em',borderRadius:'5%'}"
+    :contentWrapperStyle="{   backgroundColor:'#1F1F1F',height:'11em'}"
     :width="120"
     :height="120"
     class="drawer"
@@ -83,6 +82,7 @@ import InternalList from '../components/homeWidgets/supervisory/InternalList.vue
 import SmallCPUCard from '../components/homeWidgets/supervisory/SmallCPUCard.vue'
 import SmallGPUCard from '../components/homeWidgets/supervisory/SmallGPUCard.vue'
 import AddCard from "./app/card/AddCard.vue";
+import {runExec} from "../js/common/exec";
 const readAida64 = window.readAida64
 export default {
   name: 'Home',
@@ -98,10 +98,13 @@ export default {
         suppressScrollX: false,
         wheelPropagation: true,
         currentItemId: -1,
-        timer: null
+
       },
       scrollbar: Date.now(),
-      custom:false
+      timer: null,
+      reserveTimer:null,
+      custom:false,
+      runAida64:true,
     }
   },
   components: {
@@ -141,28 +144,7 @@ export default {
     }
   },
   created () {
-    this.timer = setInterval(() => {
-      readAida64().then(res => {
-        Object.keys(res).map(i => {
-          if (i === 'TCPUDIO') res.TCPUPKG = res[i]
-          if (i === 'TGPUDIO') res.TGPU1DIO = res[i]
-        })
-        this.setAidaData(res)
-        // console.log(res)
-        //this.data=JSON.stringify(res, null, '\t')
-      }).catch(err => {
-        clearInterval(this.timer)
-        this.setAidaData({
-          SGPU1UTI:{value:"-"},
-          TGPU1DIO:{value:"-"},
-          SMEMUTI:{value:"-"},
-          SCPUUTI:{value:"-"},
-          TCPUPKG:{value:"-"},
-          SRTSSFPS:{value:"-"},
-          SDSK1ACT:{value:"-"},
-          })
-      })
-    }, 1000)
+  this.startAida()
   },
   unmounted () {
     if (this.timer) {
@@ -170,6 +152,7 @@ export default {
     }
   },
   methods: {
+    runExec,
     ...mapActions(tableStore, ['setAidaData']),
     addCard () {
       this.custom=true;
@@ -193,7 +176,41 @@ export default {
     },
     setCustom(){
       this.custom=false;
-    }
+    },
+    startAida(){
+      this.timer = setInterval(() => {
+        readAida64().then(res => {
+          this.runAida64= true;
+          Object.keys(res).map(i => {
+            if (i === 'TCPUDIO') res.TCPUPKG = res[i]
+            if (i === 'TGPUDIO') res.TGPU1DIO = res[i]
+          })
+          this.setAidaData(res)
+          // console.log(res)
+          //this.data=JSON.stringify(res, null, '\t')
+        }).catch(err => {
+          this.runAida64=false
+          clearInterval(this.timer)
+          this.reserveTimer = setInterval(()=>{
+            readAida64().then(res=>{
+              this.runAida64= true;
+              clearInterval(this.reserveTimer)
+              this.startAida()
+            }).catch(err=>{})
+          },10000)
+          this.setAidaData({
+            SGPU1UTI:{value:"-"},
+            TGPU1DIO:{value:"-"},
+            SMEMUTI:{value:"-"},
+            SCPUUTI:{value:"-"},
+            TCPUPKG:{value:"-"},
+            SRTSSFPS:{value:"-"},
+            SDSK1ACT:{value:"-"},
+          })
+        })
+      }, 1000)
+    },
+
   },
 }
 </script>
@@ -231,21 +248,7 @@ export default {
 }
 
 
-.fade-enter-active {
-  animation: bounce-in .5s;
-}
-.fade-leave-active {
-  animation: bounce-in .5s reverse;
-}
-@keyframes bounce-in {
-  0% {
-    opacity: 0;
-  }
 
-  100% {
-    opacity: 1;
-  }
-}
 </style>
 <style lang="scss">
 .home-widgets {
@@ -275,11 +278,17 @@ export default {
     zoom: 0.718;
     width: calc(100vw + 40em);
   }
+  .ant-tooltip{
+    zoom: 0.718;
+  }
 }
 @media screen and (min-height: 511px) and (max-height: 550px) {
   #scrollerBar {
     zoom: 0.78;
     width: calc(100vw +  24em);
+  }
+  .ant-tooltip{
+    zoom: 0.78;
   }
 }
 
@@ -287,6 +296,9 @@ export default {
   #scrollerBar {
     zoom: 0.88;
     width: calc(100vw + 8em);
+  }
+  .ant-tooltip{
+    zoom: 0.88;
   }
 }
 
@@ -301,6 +313,9 @@ export default {
     zoom: 1.2;
     width: calc(100vw - 9em);
   }
+  .ant-tooltip{
+    zoom: 1.2;
+  }
 }
 
 @media screen and (min-height: 811px) and (max-height: 910px) {
@@ -308,11 +323,17 @@ export default {
     zoom: 1.4;
     width: calc(100vw - 9em);
   }
+  .ant-tooltip{
+    zoom: 1.4;
+  }
 }
 @media screen and (min-height: 911px) and (max-height: 1020px) {
   #scrollerBar {
     zoom: 1.7;
     width: calc(100vw - 9em);
+  }
+  .ant-tooltip{
+    zoom: 1.7;
   }
 }
 @media screen and (min-height: 1021px) and (max-height: 1220px) {
@@ -320,17 +341,24 @@ export default {
     zoom: 1;
     width: calc(100vw - 9em);
   }
+
 }
 @media screen and (min-height: 1221px) and (max-height: 1320px) {
   #scrollerBar {
     zoom: 1.1;
     width: calc(100vw - 9em);
   }
+  .ant-tooltip{
+    zoom: 1.1;
+  }
 }
 @media screen and (min-height: 1321px) and (max-height: 2880px) {
   #scrollerBar {
     zoom: 1.4;
     width: calc(100vw - 9em);
+  }
+  .ant-tooltip{
+    zoom: 1.4;
   }
 }
 </style>

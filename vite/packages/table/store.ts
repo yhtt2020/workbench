@@ -5,8 +5,6 @@ import {myStore} from './util.js'
 // import _ from 'lodash-es';
 // const {appModel, devAppModel} = window.$models
 
-
-
 // @ts-ignore
 export const appStore = defineStore('appStore', {
   state: () => ({
@@ -124,11 +122,14 @@ export const tableStore = defineStore(
         clockEvent: [],
         customComponents: [],
         aidaData:null,
-
+        navigationList:[]
       };
     },
 
     actions: {
+      setNavigationList(item){
+        this.navigationList.push(item)
+      },
       setAidaData(value){
         this.aidaData = value;
       },
@@ -139,7 +140,6 @@ export const tableStore = defineStore(
 
       addCountdownDay(value) {
         this.countdownDay.push(value);
-        console.log(this.countdownDay)
         this.sortCountdown()
         //   this.saveCountdownDay();
       },
@@ -175,7 +175,6 @@ export const tableStore = defineStore(
         //   this.everySortClock()
         // }else{
           this.sortClock();
-        console.log( this.clockEvent)
         //}
 
       },
@@ -212,7 +211,6 @@ if(a.length!==0)
 
       },
       removeClock(index,n) {
-        console.log(this.clockEvent)
             if (this.clockEvent[0].clockType!=='每天'||n===1)
             {
               this.clockEvent.splice(index, 1);
@@ -228,8 +226,9 @@ if(a.length!==0)
       },
       addCustomComponents(value) {
         //if (this.customComponents.includes(value)) return;
-        console.log(value)
+
         this.customComponents.push(value);
+
       },
       removeCustomComponents(customIndex) {
         this.customComponents.splice( this.customComponents.findIndex(item=>{

@@ -352,4 +352,21 @@ body {
   font-weight: bold;
 }
 
+.fade-enter-active {
+  animation: bounce-in 0.5s;
+}
+
+.fade-leave-active {
+  animation: bounce-in 0.5s reverse;
+}
+
+@keyframes bounce-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 /*# sourceMappingURL=common.css.map */
