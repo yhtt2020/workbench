@@ -1,71 +1,75 @@
 <template>
-  <div style="margin-left:11.5em; width: calc(100vw - 20.5em);">
-    <div class="card mr-3" style="height: calc(100vh - 13em) ;width: calc(100vw - 20.5em);">
+  <vueCustomScrollbar :settings="scrollbarSettings"
+                      style="margin-left:11.5em; width: calc(100vw - 20.5em);height: calc(100vh - 11em);padding: 15px;">
+    <div class="card mr-3" style="width: calc(100vw - 20.5em);height: auto">
       <div class="line-title">
         邀请好友
       </div>
-      <p>目前想天工作台仍然在测试阶段，并未面向大众公开下载使用。如果您的好友对此类软件有兴趣，可通过下方生成邀请码，赠与对方。</p>
+      <p>
+        目前想天工作台仍然在测试阶段，并未面向大众公开下载使用。如果您的好友对此类软件有兴趣，可通过下方生成邀请码，赠与对方。</p>
       <p>兑换比例方式：每200小时可兑换1枚邀请码。 <br>
-        您的在线总时长：<strong class="text-green-400">{{ totalHours }}</strong> 小时，总计可兑换：<strong class="text-red-400">{{ canExchange }}</strong>，已兑换：<strong class="text-green-400">{{exchanged}}</strong>，剩余：<strong class="text-red-400">{{ leave }}</strong>。   <a-button type="primary">兑换1枚</a-button></p>
+        您的在线总时长：<strong class="text-green-400">{{ totalHours }}</strong> 小时，总计可兑换：<strong
+          class="text-red-400">{{ canExchange }}</strong>，已兑换：<strong class="text-green-400">{{ exchanged }}</strong>，剩余：<strong
+          class="text-red-400">{{ leave }}</strong>。
+        <a-button type="primary" @click="confirmExchange" :disabled="leave===0">兑换1枚</a-button>
+      </p>
 
-      <a-table :dataSource="codes" :columns="columns" >
-        <template #bodyCell="{ column, record }">
-          <template v-if="column.key === 'create_time'">
-              {{friendlyDate(record.create_time) }}
+      <a-table :pagination="false" :dataSource="codes" :columns="columns">
+        <template #bodyCell="{ column, record,index }">
+          <template v-if="column.key === 'createTime'">
+            {{ friendlyDate(record.createTime) }}
           </template>
-          <template v-else-if="column.key === 'update_time'">
-            <span v-if="record.create_time!==record.update_time">
-              {{friendlyDate(record.update_time) }}
+          <template v-else-if="column.key === 'updateTime'">
+            <span v-if="record.createTime!==record.updateTime">
+              {{ friendlyDate(record.updateTime) }}
             </span>
             <span v-else>未使用</span>
           </template>
           <template v-else-if="column.key === 'key'">
-            <span >
-              {{record.key }} <a-tag>复制</a-tag>
+            <span>
+              {{ record.key }} <a-tag class="pointer" @click="copy(record.key)">复制</a-tag>
             </span>
           </template>
           <template v-else-if="column.key === 'status'">
             <a-tag color="green" v-if="record.status===1">有效</a-tag>
             <a-tag color="geekblue" v-else-if="record.status===2">已使用</a-tag>
           </template>
+          <template v-else-if="column.key==='index'">
+            {{index+1}}
+          </template>
         </template>
       </a-table>
     </div>
 
-  </div>
-
+  </vueCustomScrollbar>>
 </template>
 
 <script>
 import { appStore } from '../../store'
-import {mapState} from 'pinia'
+import { mapState,mapActions } from 'pinia'
 import Template from '../../../user/pages/Template.vue'
+import { Modal,message } from 'ant-design-vue'
+import { codeStore } from '../../store/code'
 
 export default {
   name: 'Invite',
   components: { Template },
 
-  data(){
-    return{
-      codes:[{
-        id:1,
-        key:'mcltf***0JMeqoJ',
-        status:1,
-        create_time:Date.now(),
-        update_time:Date.now()
+  data () {
+    return {
+      scrollbarSettings: {
+        useBothWheelAxes: true,
+        swipeEasing: true,
+        suppressScrollY: false,
+        suppressScrollX: true,
+        wheelPropagation: true
       },
-        {
-          id:2,
-          key:'52i****7IUshEhc',
-          status:2,
-          create_time:Date.now(),
-          update_time:Date.now()+23
-        }],
-      columns:[
+      codes: [],
+      columns: [
         {
           title: '序号',
-          dataIndex: 'id',
-          key: 'id',
+          dataIndex: 'index',
+          key: 'index',
         },
         {
           title: '邀请码',
@@ -79,40 +83,75 @@ export default {
         },
         {
           title: '生成日期',
-          dataIndex: 'create_time',
-          key: 'create_time',
+          dataIndex: 'createTime',
+          key: 'createTime',
         },
         {
           title: '使用日期',
-          dataIndex: 'update_time',
-          key: 'update_time',
+          dataIndex: 'updateTime',
+          key: 'updateTime',
         },
       ]
     }
   },
-  computed:{
-    ...mapState(appStore,['userInfo']),
-    totalHours(){
+  mounted () {
+    this.loadCodes().then()
+  },
+  computed: {
+    ...mapState(appStore, ['userInfo']),
+    totalHours () {
       console.log(this.userInfo.onlineGradeExtra)
       return (this.userInfo.onlineGradeExtra.cumulativeHours)
     },
-    canExchange(){
-      return (this.userInfo.onlineGradeExtra.cumulativeHours/200).toFixed(0)
+    canExchange () {
+      return (this.userInfo.onlineGradeExtra.cumulativeHours / 200).toFixed(0)
     },
-    exchanged(){
+    exchanged () {
       return this.codes.length
     },
-    leave(){
-      return this.canExchange-this.exchanged
+    leave () {
+      return this.canExchange - this.exchanged
+    },
+
+
+  },
+  methods: {
+    ...mapActions(codeStore, ['exchange','listCodes']),
+    friendlyDate: tsbApi.util.friendlyDate,
+    copy(text){
+      require('electron').clipboard.writeText(text)
+      message.success('复制邀请码成功。')
+    },
+    async loadCodes(){
+      let rs=await this.listCodes()
+      if(rs.status){
+        this.codes=rs.data
+      }
+    },
+    confirmExchange () {
+      Modal.confirm({
+        content: '确认使用200小时在线时长兑换1枚邀请码？此操作无法撤回。兑换并不会减少你的在线时长以及影响你的在线等级，请放心。',
+        okText: '确认兑换',
+        onOk: async () => {
+          let rs = await this.exchange()
+          if (rs.status) {
+            rs.data.forEach(item=>{
+              this.codes.unshift(item)
+            })
+
+            message.success('兑换成功。')
+          }else{
+            message.error('兑换失败，您已无法兑换邀请码。')
+          }
+        }
+      })
     }
-  },methods:{
-    friendlyDate:tsbApi.util.friendlyDate
   }
 }
 </script>
 
 <style scoped>
-.card{
+.card {
   background: #252525;
 }
 </style>
