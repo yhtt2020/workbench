@@ -232,7 +232,6 @@ export default defineComponent({
        }
     })
     this.getWallHeavenData(this.page++)
-    this.getWallHeavenData(this.page++)
   },
   methods:{
     ...mapActions(paperStore, ["removeToMyPaper"]),
@@ -363,6 +362,9 @@ export default defineComponent({
     user-select: none;
     padding: 11.87px 28px 11px 28px;
     margin-right: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .wallheaven-active {
     background: rgba(255, 255, 255, 0.15);

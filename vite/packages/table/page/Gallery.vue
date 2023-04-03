@@ -1,12 +1,24 @@
 <template>
-  <div id="galleryContainer" class="main" style="text-align: center;padding-top: 2em">
+  <div id="galleryContainer" class="w-full flex">
+    <div class="w-2/12 flex flex-col" style="border-right: 1px solid rgba(255, 255, 255, 0.1);">
+        <div :onClick="goHome" class="w-24 h-12 text-2xl cursor-pointer bg-black rounded-lg flex bg-opacity-10 justify-center items-center">
+           <Icon icon="xiangzuo"></Icon> 
+           <span>返回</span>
+        </div>
+        <SecondPanel :search="true" :menus="menus" style="margin-top: 3em;margin-left: 3em;text-align: left" logo="https://a.apps.vip/wallpaper/favicon.png"
+        @changeTab="changeTab"></SecondPanel>
+    </div>
+    <div id="parentScroller" class="w-10/12"  style="margin-left: 1em">
+     <router-view></router-view>
+    </div>
+  </div>
+  <!-- class="main" -->
+  <!-- <div id="galleryContainer"  style="text-align: center;padding-top: 2em">
     <BackBtn :onClick="goHome"></BackBtn>
       <SecondPanel :search="true" :menus="menus" style="margin-top: 3em;margin-left: 3em;text-align: left" logo="https://a.apps.vip/wallpaper/favicon.png"
                    @changeTab="changeTab"></SecondPanel>
-    <div id="parentScroller" style="margin-left: 15em">
-      <router-view></router-view>
-    </div>
-  </div>
+   
+  </div> -->
 </template>
 
 <script>
@@ -100,7 +112,8 @@ export default {
     $('#galleryContainer').on('touchend',(e)=>{
       e.stopPropagation();
     })
-    this.$router.push({name:'my'})
+    // console.log(this.$route.params);
+    // this.$router.push({path:'/gallery/my'})
     // justifiedGallery()
     // $('#container').justifiedGallery({
     //   captions: false,

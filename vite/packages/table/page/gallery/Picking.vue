@@ -39,7 +39,7 @@
   </vue-custom-scrollbar>
 
   <a-drawer v-model:visible="pickFilterShow" title="筛选" style="text-align: center !important;">
-     
+
   </a-drawer>
 
   <a-drawer v-model:visible="pickInfoShow" title="信息" style="text-align: center !important;">
@@ -55,14 +55,14 @@
             </div>
             <div class="flex items-center">
               <span style="margin-right: 30px;">官网</span>
-              <span class="w-40 h-12 flex items-center rounded-lg cursor-pointer justify-center bg-black bg-opacity-10">
+              <span class="w-40 h-12 flex items-center rounded-lg cursor-pointer justify-center bg-black bg-opacity-10" @click="toOfficialWebsite">
                 访问官网
               </span>
             </div>
           </div>
       </div>
       <template #footer>
-        <span>「拾光壁纸」提供技术支持</span> 
+        <span>「拾光壁纸」提供技术支持</span>
       </template>
   </a-drawer>
 </template>
@@ -94,36 +94,36 @@ export default {
     ...mapState(paperStore, ["myPapers"]),
   },
   mounted(){
-    this.getPickPaperData(this.pickFilterValue)
+    this.getPickPaperData(this.pickFilterValue);
     justifiedGallery();
-    // $("#container").justifiedGallery({
-    //   captions: false,
-    //   lastRow: "hide",
-    //   rowHeight: 180,
-    //   margins: 5,
-    // });
-    // $("#pick-wrapper").scroll(() => {
-    //   if ($("#pick-wrapper").scrollTop() +  $("#pick-wrapper").height() + 20 >= $("#pick-images").prop("scrollHeight") && this.isLoading === false) {
-    //     this.getPickPaperData(this.page);
-    //   }
-    // });
+    $("#container").justifiedGallery({
+      captions: false,
+      lastRow: "hide",
+      rowHeight: 180,
+      margins: 5,
+    });
+    $("#pick-wrapper").scroll(() => {
+      if ($("#pick-wrapper").scrollTop() +  $("#pick-wrapper").height() + 20 >= $("#pick-images").prop("scrollHeight") && this.isLoading === false) {
+        // this.getPickPaperData(this.page);
+      }
+    });
     // this.getPickPaperData(this.page ++)
     // this.getPickPaperData(this.page ++)
   },
   methods:{
     ...mapActions(paperStore, ["removeToMyPaper"]),
     pickFilterChange(e){
-      this.pickFilterValue = e
+      this.pickFilterValue = e;
       this.getPickPaperData(this.pickFilterValue)
     },
     getPickPaperData(val){
-      const url = `https://api.nguaduot.cn${val}?&date=20500101&score=99999999`
+      const url = `https://api.nguaduot.cn${val}?&date=20500101&score=99999999`;
       console.log(url);
       if(!this.isLoading){
-        this.isLoading = true
+        this.isLoading = true;
         axios.get(url).then(res=>{
-          let pickImageData = res.data.data
-          let animations = ["ani-gray", "bowen", "ani-rotate"]
+          let pickImageData = res.data.data;
+          let animations = ["ani-gray", "bowen", "ani-rotate"];
           if(pickImageData){
             pickImageData.forEach(img => {
               let randomIndex = Math.floor(Math.random() * animations.length);
@@ -135,7 +135,7 @@ export default {
                 animations: animations[randomIndex],
               };
               this.pickDataList.push(image)
-            })
+            });
             this.$nextTick(() => {
               this.isLoading = false;
             });
@@ -144,7 +144,7 @@ export default {
           return
         })
       }
-      
+
     },
     openFilter(){
       this.pickFilterShow = true
@@ -162,6 +162,10 @@ export default {
           return image.src === img.src;
         }) > -1
       );
+    },
+    // 点击跳转官网
+    toOfficialWebsite(){
+      window.location.href = "www.baidu.com"
     },
   }
 }

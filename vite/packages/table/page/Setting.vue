@@ -205,7 +205,7 @@ export default {
     },
     papersSettings () {
       this.$router.push({
-        name:'gallery'
+        name:'my'
       })
     },
     basic () {
