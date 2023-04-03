@@ -1,6 +1,6 @@
 <template>
   <div class="rotate-center" style="font-size: 2em;margin-bottom: 1em">
-    我的收藏 {{myPapers.length}}
+    我的收藏 {{this.mergedArr.length}}
   </div>
 
   <div class="pointer" style="position: fixed;right: 2em;top: 2em">
@@ -20,7 +20,7 @@
 
 <div>
   <vue-custom-scrollbar  id="containerWrapper" :settings="settingsScroller" style="height: 80vh">
-    <viewer :images="mergedArr">
+    <viewer :images="mergedArr" :options="options">
       <a-row :gutter="[20,20]" id="bingImages" style="margin-right: 1em">
         <a-col @click="this.visibleImport=true" class="image-wrapper " :span="6" style="">
           <a-avatar    class="image-item pointer"   style="font-size:2em;position: relative; line-height: 144.20px; height: 144.2px; background: rgba(10,10,10,0.31)">
@@ -28,28 +28,31 @@
           </a-avatar>
         </a-col>
         <a-col class="image-wrapper " v-for="img in mergedArr" :span="6" style="">
-          <img @contextmenu.stop="showMenu(img)" @error="deleteAll(img)" class="image-item pointer" :src="img.src" style="position: relative">
-          <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
-            <div @click.stop="addToActive(img)" class="bottom-actions pointer" :style="{background:isInActive(img)?'rgba(255,0,0,0.66)':''}">
-             <Icon v-if="!isInActive(img)" icon="tianjia1"></Icon>
-             <Icon v-else style="" icon="yiwancheng"></Icon>
-            </div>
-          </div> 
-          <!-- <div v-show="fileType(img.src) === 'image'">
-          
-          </div>
-          <div v-show="fileType(img.src) === 'video'">
-            <div>
-             <img @contextmenu.stop="visibleMenu=true" class="image-item del-image pointer"
-             :src="img.img_src"  @click="delImageSrc(img.src)" style="position: relative">
-             <div style="background: rgb(0 0 0 / 20%); width: 4em; height: 4em; border-radius:50%; position: absolute; top: 50%; left: 50%;transform: translate(-50%,-50%);">
-               <div @click="previewVideo(img)" class="play-icon pointer" style="">
-                 <Icon icon="bofang" style="font-size:3em;margin-top: 8px"></Icon>
-               </div>
+          <div v-show="fileImageExtension(img) === false">
+            <img @contextmenu.stop="showMenu(img)" @error="deleteAll(img)" :data-source="img.path ? img.path : img.src" :alt="img.resolution"  class="image-item pointer" :src="img.src" style="position: relative">
+            <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
+             <div @click.stop="addToActive(img)" class="bottom-actions pointer" :style="{background:isInActive(img)?'rgba(255,0,0,0.66)':''}">
+              <Icon v-if="!isInActive(img)" icon="tianjia1"></Icon>
+              <Icon v-else style="" icon="yiwancheng"></Icon>
              </div>
-             <div id="mse"></div>
-            </div>
-          </div> -->
+            </div>  
+          </div>
+          <div v-show="fileImageExtension(img) === true">
+            <div>
+              <img @contextmenu.stop="visibleMenu=true" class="image-item del-image pointer"
+              :src="img.img_src"  :data-source="img.path" style="position: relative">
+              <div @click="previewVideo(img)" class="play-icon pointer" style="">
+               <Icon icon="bofang" style="font-size:3em;margin-top: 8px"></Icon>
+              </div>
+              <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
+               <div @click.stop="addToActive(img)" class="bottom-actions pointer" :style="{background:isInActive(img)?'rgba(255,0,0,0.66)':''}">
+                <Icon v-if="!isInActive(img)" icon="tianjia1"></Icon>
+                <Icon v-else style="" icon="yiwancheng"></Icon>
+               </div>
+               </div>  
+              <div id="mse"></div>
+             </div>
+          </div>
         </a-col>
       </a-row>
     </viewer>
@@ -124,6 +127,9 @@ export default {
       paperTime:'',
       livelyTime:'',
       previewVideoVisible:false,
+      options:{
+        url: 'data-source',
+      }
     }
   },
   components:{Import},
@@ -133,13 +139,16 @@ export default {
       return [...this.myPapers,...this.livelyPapers].sort((a,b)=>{
         return new Date(a.time) - new Date(b.time);
       })
-    },  
+    }, 
+    
+ 
   },
   mounted () {
     if(this.settings.savePath){
       this.loadLivelyPapers()
       this.loadStaticPaper()
     }
+    console.log(this.myPapers);
     $('#previwer').mousemove(() => {
       $('#actions').show()
       if (this.timer) {
@@ -177,6 +186,7 @@ export default {
           let livelyItem = {
            src:path.join(livePath),
            img_src:`https://up.apps.vip/lively/${imgFileName}.jpg`,
+           path:`https://up.apps.vip/lively/${imgFileName}.jpg`,
            srcProtocol:'file://'+ livePath,
            time:returnTime
           }
@@ -192,18 +202,31 @@ export default {
       })>-1
     },
     playAll(){
-      window.Spotlight.show(this.myPapers, {
-          control: 'autofit,page,fullscreen,close,zoom,prev,next',
-          play: true,
-          autoslide: true,
-          infinite: true,
-          progress: false,
-          title: false
-        })
+      const playArr = []
+      this.mergedArr.map(el=>{
+          playArr.push({
+            src:el.path
+          })
+      })
+      window.Spotlight.show(playArr,{
+        control: 'autofit,page,fullscreen,close,zoom,prev,next',
+        play: true,
+        autoslide: true,
+        infinite: true,
+        progress: false,
+        title: false,
+        fullscreen:true,
+      })
     },
     playActive(){
-      console.log('active')
-      window.Spotlight.show(this.activePapers, {
+      console.log(this.activePapers);
+      const playArr = []
+      this.activePapers.map(el=>{
+        playArr.push({
+          src:el.path
+        })
+      })
+      window.Spotlight.show(playArr, {
         control: 'autofit,page,fullscreen,close,zoom,prev,next',
         play: true,
         autoslide: true,
@@ -213,12 +236,30 @@ export default {
       })
     },
 
+
     // 删除壁纸
     del(){
-      if(this.myPapers.indexOf(this.currentPaper) !== -1){
-        this.myPapers.splice(this.myPapers.indexOf(this.currentPaper),1)
-        this.visibleMenu = false
-      }
+      // if(this.myPapers.indexOf(this.currentPaper) !== -1){
+      //   this.myPapers.splice(this.myPapers.indexOf(this.currentPaper),1)
+      //   this.visibleMenu = false
+      // }  
+      // this.mergedArr.forEach(el=>{
+      //   console.log(el[3]);
+      //   // if(this.fileImageExtension(el)){
+      //   //   console.log(el.src);
+      //   // }else{
+      //   //    if(el.src){
+      //   //     // console.log(el[this.myPapers].src);
+      //   //     console.log(el[this.myPapers.indexOf(this.currentPaper)]);
+      //   //     // const staticDir = path.join(path.join(this.settings.savePath),'static')
+      //   //     // fs.removeSync(path.join(staticDir,`${this.myPapers[this.myPapers.indexOf(this.currentPaper)].src.split("//")[1].split('\\')[this.myPapers[this.myPapers.indexOf(this.currentPaper)].src.split("//")[1].split('\\').length-1].split('/')[this.myPapers[this.myPapers.indexOf(this.currentPaper)].src.split("//")[1].split('\\')[this.myPapers[this.myPapers.indexOf(this.currentPaper)].src.split("//")[1].split('\\').length-1].split('/').length-1]}`))
+             
+      //   //    }else{
+      //   //     return
+      //   //    }
+      //   // }
+      // }) 
+        
     },
     // 下载壁纸
     add(){},
@@ -309,10 +350,31 @@ export default {
       }
     },
 
+    // 判断文件是否为图片
+    fileImageExtension(filePath){
+      const fileExtensions = filePath.src.split('.').pop()
+      const extensions = ['mp4','mpeg','avi','rmvb']
+      if(extensions.indexOf(fileExtensions) !== -1){
+        return true
+      }else{
+        return false
+      }
+    }
   }
 }
 </script>
 
 <style scoped>
-
+.play-icon {
+  position: absolute;
+  z-index: 999;
+  background: rgba(0, 0, 0, 0.51);
+  text-align: center;
+  width: 4em;
+  height: 4em;
+  left: 50%;
+  top: 50%;
+  border-radius: 100px;
+  transform: translate(-50%, -50%);
+}
 </style>
