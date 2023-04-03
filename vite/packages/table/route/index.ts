@@ -3,7 +3,10 @@ import Deck from '../page/Deck.vue'
 import Setting from '../page/Setting.vue'
 import Weather from '../page/app/Weather.vue'
 import Watch from '../page/app/watch/Index.vue'
-import LevelDetail from '../page/LevelDetail.vue'
+import Social from '../page/Social.vue'
+import Com from '../page/social/Com.vue'
+import SocialMy from '../page/social/My.vue'
+import Invite from '../page/social/Invite.vue'
 import BasicSetting from '../page/settings/Basic.vue'
 import Key from '../page/settings/Key.vue'
 import Apps from '../page/Apps.vue'
@@ -25,7 +28,8 @@ import PickingPaper from '../page/gallery/Picking.vue'
 import Lively from '../page/gallery/Lively.vue'
 import PapersSetting from '../page/gallery/Setting.vue'
 import My from '../page/gallery/My.vue'
-export default   [{
+
+export default [{
   path: '',
   name: 'index',
   component: Index,
@@ -39,24 +43,39 @@ export default   [{
       path: '/app',
       name: 'app',
       component: AppFrame,
-      children:[
-
-      ]
+      children: []
     },
     {
-      path:'/watch',
-      name:'watch',
+      path: '/watch',
+      name: 'watch',
       component: Watch
     },
     {
-      path:'/dashboard',
-      name:'dashboard',
+      path: '/dashboard',
+      name: 'dashboard',
       component: Dashboard
     },
     {
-      path:'/levelDetail',
-      name:'levelDetail',
-      component: LevelDetail
+      path: '/social',
+      name: 'social',
+      component: Social,
+      children: [
+        {
+          path: '',
+          name: 'com',
+          component: Com,
+        },
+        {
+          path: '/my',
+          name: 'socialMy',
+          component: SocialMy,
+        },
+        {
+          path: '/invite',
+          name: 'invite',
+          component: Invite,
+        }
+      ]
     },
     {
       path: '/apps',
@@ -65,8 +84,8 @@ export default   [{
 
     },
     {
-      path:'/barrage',
-      name:'barrageSetting',
+      path: '/barrage',
+      name: 'barrageSetting',
       component: BarrageSetting
     },
     {
@@ -75,43 +94,43 @@ export default   [{
       component: Music
     },
     {
-      path:'/weather',
-      name:'weather',
+      path: '/weather',
+      name: 'weather',
       component: Weather
     },
     {
-      path:'/deck',
+      path: '/deck',
       component: Deck
-    },{
-      path:'/status',
-      name:'status',
+    }, {
+      path: '/status',
+      name: 'status',
       component: Status
     },
     {
-      path:'/sensor',
-      name:'sensor',
+      path: '/sensor',
+      name: 'sensor',
       component: Sensor
     },
     {
-      path:'/setting',
-      name:'setting',
+      path: '/setting',
+      name: 'setting',
       component: Setting,
 
     },
     {
-      path:'/basicSetting',
-      name:'basicSetting',
+      path: '/basicSetting',
+      name: 'basicSetting',
       component: BasicSetting,
       children: [
         {
-          path:'',
-          name:'key',
-          component:Key
+          path: '',
+          name: 'key',
+          component: Key
         },
         {
-          path:'/browser',
-          name:'browser',
-          component:Browser
+          path: '/browser',
+          name: 'browser',
+          component: Browser
         },
       ]
     },
@@ -119,47 +138,47 @@ export default   [{
       path: "/setting",
       name: "addCardSetting",
       component: SetupCard,
-    },{
-    path:"/CPUIndex",
-      name:'CPUIndex',
+    }, {
+      path: "/CPUIndex",
+      name: 'CPUIndex',
       component: CPUIndex
     },
     {
       path: '/gallery',
       name: 'gallery',
       component: Gallery,
-      children:[
+      children: [
         {
-          path:'',
-          name:'my',
+          path: '',
+          name: 'my',
           component: My
         },
         {
-          path:'',
-          name:'bing',
-          component:Bing
+          path: '',
+          name: 'bing',
+          component: Bing
         },
         {
-          path:'',
-          name:'wallheaven',
+          path: '',
+          name: 'wallheaven',
           component: Wallheaven
         },
         {
-          path:'',
-          name:'PickingPaper',
-          component:PickingPaper
+          path: '',
+          name: 'PickingPaper',
+          component: PickingPaper
         },
         {
-          path:'',
-          name:'lively',
+          path: '',
+          name: 'lively',
           component: Lively
         },
         {
-          path:'',
-          name:'papersSetting',
+          path: '',
+          name: 'papersSetting',
           component: PapersSetting
         },
-        
+
       ]
     }
   ]
