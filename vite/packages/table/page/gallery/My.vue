@@ -2,8 +2,7 @@
   <div class="rotate-center" style="font-size: 2em;margin-bottom: 1em">
     我的收藏 {{this.mergedArr.length}}
   </div>
-
-  <div class="pointer" style="position: fixed;right: 2em;top: 2em">
+  <div class="pointer" style="position: fixed;right: 2em;top: 4em">
     <div  @click="playAll" style="display: inline-block;margin-right: 1em">
       <span>
         <Icon style="font-size: 2em;vertical-align: top" icon="bofang"></Icon>
@@ -283,8 +282,8 @@ export default {
             })
             let image = {
               title:false,
-              srcProtocol:'',
               src:`file://${staticDir}/${el}`,
+              path:`file://${staticDir}/${el}`,
               time:this.paperTime
             }
             this.addToMyPaper(image)

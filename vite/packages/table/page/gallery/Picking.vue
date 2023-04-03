@@ -165,7 +165,7 @@ export default {
     },
     // 点击跳转官网
     toOfficialWebsite(){
-      window.location.href = "www.baidu.com"
+      ipc.send('addTab',{url:'https://app.nguaduot.cn/timeline'})
     },
   }
 }

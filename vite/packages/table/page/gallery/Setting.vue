@@ -3,7 +3,7 @@
     锁屏设置
 
   </div>
-  <div class="pointer" style="position: fixed;right: 2em;top: 2em">
+  <div class="pointer" style="position: fixed;right: 2em;top: 4em">
     <div  @click="resetPapersSettings" style="display: inline-block;margin-right: 1em">
       <span><Icon style="font-size: 2em;vertical-align: top"
                   icon="shuaxin"></Icon></span><span  style="font-size:1.2em"> 重置全部设置</span>
