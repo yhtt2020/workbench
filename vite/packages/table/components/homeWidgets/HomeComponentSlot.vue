@@ -1,5 +1,5 @@
 <template>
-  <div :class="options.className" :style="{pointerEvents:(editing?'none':'')}" @click="onCPUIndex"  @mouseleave="onMouseOut"   @mouseenter="onMouseOver">
+  <div class=" gradient gradient--14" :class="options.className" :style="{pointerEvents:(editing?'none':'')}" @click="onCPUIndex"  @mouseleave="onMouseOut"   @mouseenter="onMouseOver">
     <div style="position: absolute;top: 0;left: 0;right: 0;bottom: 0;border-radius: 12px;z-index: 888;padding: 1em; backdrop-filter: blur(8px)"
          v-show="showTip"   v-if="(options.type.includes('CPU')&&runAida64===false)||(options.type.includes('GPU')&&runAida64===false)"
      >
@@ -147,114 +147,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.title-icon{
-  width: 24px;
-  height: 24px;
-}
-.no-title{
-  .title-icon{
-    color: #818181;
-  }
-  .right-title{
-   position: absolute;
-    top: 1em;
-    right: 1em;
-  }
-}
 
-.content-small{
-  display: flex;
-   flex-direction: column;
-  position: absolute;
-  font-size: 16px;
-  >span:first-child {
-    font-size: 16px;
-    font-weight: 400;
-    letter-spacing: 0px;
-    line-height: 0px;
-    color: rgba(255, 255, 255, 0.6);
-  }
-  >span:nth-child(2) {
-    margin-top: 14px;
-    font-size: 18px;
-    font-weight: 400;
-  }
-  >span:nth-child(4) {
-    margin-top: 30px;
-    font-size: 16px;
-    font-weight: 400;
-    letter-spacing: 0px;
-    line-height: 0px;
-    color: rgba(255, 255, 255, 0.6);
-  }
-  >span:nth-child(5) {
-    margin-top: 14px;
-    font-size: 18px;
-    font-weight: 400;
-  }
-  >span:nth-child(7) {
-    margin-top: 30px;
-    font-size: 16px;
-    font-weight: 400;
-    letter-spacing: 0px;
-    line-height: 0px;
-    color: rgba(255, 255, 255, 0.6);
-  }
-  top:25%;
-  left: 50%;
-  align-items: center;
-  transform: translateX(-50%);
-   }
-.content-title{
-  font-size: 16px;
-  display: flex;
-  justify-content: space-between;
-  .left-title{
 
-    display: flex;
-    width: 35%;
-    align-items: center;
 
-    :last-child{
-      margin-left: .5em;
-    }
-  }
-  .right-title{
-
-    align-items: center;
-    display: flex;
-    .title-icon{
-      color: #818181;
-    }
-  }
-
-}
-.option{
-  background: #161616;
-  width: 8em;
-  height:100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10%;
-  margin-left: 1.8em;
-  cursor:pointer;
-  .icon{
-    width: 3em;
-    height: 3em;
-    vertical-align: middle;
-  }
-}
-.slot-btn{
-  width: 120px;
-  height: 48px;
-  border-radius: 12px;
-  background: rgba(42, 42, 42, 1);
-  font-size: 18px;
-  color: rgba(255, 255, 255, 0.85);
-  text-align: center;
-  line-height: 48px;
-  margin-top: 14px;
-}
 </style>

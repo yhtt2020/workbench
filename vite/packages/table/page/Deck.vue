@@ -198,7 +198,7 @@
     </div>
     <div class="line">
       设置组宽度：
-      <a-input-number style="width:130px" :min="1" step="1" addon-before="行数" v-model:value="currentGrid.cols"
+      <a-input-number style="width:130px" :min="1" step="1" addon-before="列数" v-model:value="currentGrid.cols"
                       :defalut-value="2"></a-input-number>
     </div>
   </a-drawer>
@@ -465,13 +465,14 @@ export default {
         needImportGrids = JSON.parse(this.importJsonTxt)
 
         needImportGrids.forEach(g => {
-          g.id = require('nanoid').nanoid(8)
+          g.id = window.$models.nanoid.nanoid(8)
           console.log(g)
           this.grids.unshift(g)
         })
         this.toggleImport()
         message.success('为您成功导入' + needImportGrids.length + '个方案分组。')
       } catch (e) {
+        console.warn(e)
         message.error('导入失败，请检查代码。')
       }
 
@@ -644,7 +645,7 @@ export default {
     },
     clone () {
       let cloneItem = _.cloneDeep(this.currentItem)
-      cloneItem.id = require('nanoid').nanoid(8)
+      cloneItem.id = window.$models.nanoid.nanoid(8)
       this.currentGrid.children.unshift(cloneItem)
 
       console.log(this.currentGrid.children)

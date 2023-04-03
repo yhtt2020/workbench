@@ -26,19 +26,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.back-btn {
-  padding: 0.8em;
-  background: rgba(0, 0, 0, 0.3);
-  display: inline-block;
-  border-radius: 0.5em;
-  position: absolute;
-  left: 2em;
-  top: 2em;
-  z-index: 999;
-  cursor: pointer;
-  &:hover {
-    background: rgba(0, 0, 0, 0.2);
-    color: white;
-  }
-}
+
 </style>

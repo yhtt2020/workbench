@@ -10,7 +10,7 @@ const util={
       let time = time1 - time2
       let result = null
       if (time < 0) {
-        result = `<span style="color: black;font-weight: bold">刚刚</span>`
+        result = `刚刚`
       } else if (time / day >= 3) {
         result = (date.getMonth()+1) + '月' + date.getDate() + '日 ' + date.getHours() + ':' + date.getMinutes()
       } else if (time / day >= 2) {

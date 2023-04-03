@@ -1,51 +1,63 @@
 <template>
-  <div style="color: white;padding-left: 20px;padding-right: 20px;margin-top: 20px">
+  <div style="color: white;padding-left: 20px;padding-right: 20px;margin-top: 10px">
     <a-row>
       <a-col :span="24">
         <a-row>
-          <a-col :span="10" style="text-align: right">
-            <a-avatar style="position: relative;cursor: pointer" :size="60"
-                      :src="userInfo.avatar">
-            </a-avatar>
-          </a-col>
-          <a-col :span="14" style="padding-left: 20px">
-            <div style="font-size: 16px;font-weight: bold">{{ userInfo.nickname }}</div>
-            <div class="live-grade" style="cursor:pointer;">
-              <div class="ts-grade flex justify-start align-center" style="margin-top: 4px" v-if="grade.lv > 0">
-                <div class="ts-grade-crown" v-for="item in userInfo.onlineGradeIcons.crown">
-                  <img :src="item.icon" alt="" style="width: 20px; height: 20px">
+          <a-col :span="14">
+            <a-row>
+              <a-col :span="6" style="text-align: right">
+                <a-avatar style="position: relative;cursor: pointer" :size="50"
+                          :src="userInfo.avatar">
+                </a-avatar>
+              </a-col>
+              <a-col :span="18" style="padding-left: 20px">
+                <div style="font-size: 16px;font-weight: bold">{{ userInfo.nickname }}</div>
+                <div class="live-grade" style="cursor:pointer;">
+                  <div class="ts-grade flex justify-start align-center" style="margin-top: 4px" v-if="grade.lv > 0">
+                    <div class="ts-grade-crown" v-for="item in userInfo.onlineGradeIcons.crown">
+                      <img :src="item.icon" alt="" style="width: 20px; height: 20px">
+                    </div>
+                    <div class="ts-grade-sun" v-for="item in userInfo.onlineGradeIcons.sun">
+                      <img :src="item.icon" alt="" style="width: 20px; height: 20px">
+                    </div>
+                    <div class="ts-grade-moon" v-for="item in userInfo.onlineGradeIcons.moon">
+                      <img :src="item.icon" alt="" style="width: 20px; height: 20px">
+                    </div>
+                    <div class="ts-grade-star" v-for="item in userInfo.onlineGradeIcons.star">
+                      <img :src="item.icon" alt="" style="width: 20px; height: 20px">
+                    </div>
+                  </div>
+                  <div v-else class="ts-grade flex justify-start align-center" style="margin-top: 4px; color: #B6B6B6">
+                    剩余{{ remainHour }}小时{{ remainMinute }}分达到1级
+                  </div>
                 </div>
-                <div class="ts-grade-sun" v-for="item in userInfo.onlineGradeIcons.sun">
-                  <img :src="item.icon" alt="" style="width: 20px; height: 20px">
-                </div>
-                <div class="ts-grade-moon" v-for="item in userInfo.onlineGradeIcons.moon">
-                  <img :src="item.icon" alt="" style="width: 20px; height: 20px">
-                </div>
-                <div class="ts-grade-star" v-for="item in userInfo.onlineGradeIcons.star">
-                  <img :src="item.icon" alt="" style="width: 20px; height: 20px">
-                </div>
-              </div>
-              <div v-else class="ts-grade flex justify-start align-center" style="margin-top: 4px; color: #B6B6B6">
-                剩余{{ remainHour }}小时{{ remainMinute }}分达到1级
-              </div>
-            </div>
-          </a-col>
+              </a-col>
 
-        </a-row>
-        <a-row>
-          <div class="arrow-box" style="width:100%;line-height: 3">
-            <div class="" style="line-height: 2;margin-bottom: 5px">在线等级: <span
-              style="font-size: 20px">{{ grade.lv }}</span>级
+            </a-row>
+          </a-col>
+          <a-col :span="10">
+            <div class="p-1" style="line-height: 2;background: #333;border-radius: 8px;text-align: center">
+              在线等级: <span style="font-size: 18px">{{ grade.lv }}</span>级
               <div v-if="badge.rank < 300"
-                   style="margin-top:7px;border-radius: 6px;padding: 2px 5px;position: absolute;display: inline-block;right: 65px;line-height: 18px"
+                   style="border-radius: 6px;line-height: 18px;padding-bottom:7px"
               ><span>
-                                   全网排名:<span style="font-size: 20px"> {{ badge.rank }}</span>
+                                   全球排名:<span style="font-size: 20px;"> {{ badge.rank }}</span>
 </span></div>
-              <div v-else>全网排名: 超过{{ grade.percentage }}%的用户</div>
+              <div v-else> 超过{{ (grade.percentage).toFixed(2) }}%的用户</div>
 
             </div>
+          </a-col>
+        </a-row>
+
+        <a-row>
+          <div class="arrow-box" style="width:100%;line-height: 2">
+
             <div class="text-grey" style="line-height: 2">升级剩余时长: {{ remainHour }}小时{{ remainMinute }}分</div>
-            <div class="tip text-grey">距离上一名 ： {{ distance }}  <span class="text-button" :disabled="this.times===0" @click="use" type="primary" style="margin-left:20px;margin-top: 10px">查看（{{ times }}次）</span></div>
+            <div class="tip text-grey">距离上一名 ： {{ distance }} <span class="text-button" :disabled="this.times===0"
+                                                                         @click="use" type="primary"
+                                                                         style="margin-left:20px;margin-top: 10px">查看（{{
+                times
+              }}次）</span></div>
             <div class="text-grey" style="line-height: 2">累计在线时长:
               {{ grade.cumulativeHours }}小时{{ grade.cumulativeMinutes }}分
             </div>
@@ -73,24 +85,24 @@
 
 <script>
 import { defineComponent } from 'vue'
-import {mapState} from 'pinia'
-import {message,Modal} from 'ant-design-vue'
+import { mapState, mapActions } from 'pinia'
+import { message, Modal } from 'ant-design-vue'
 import { appStore } from '../../store'
-export default defineComponent( {
+
+export default defineComponent({
   name: 'grade-panel',
-  props: {
-  },
-  computed:{
-      ...mapState(appStore,['userInfo']),
-    getPath(){
-        return 'file://' +window.globalArgs['app-dir_name']+'/../../icons/badge/'
+  props: {},
+  computed: {
+    ...mapState(appStore, ['userInfo']),
+    getPath () {
+      return 'file://' + window.globalArgs['app-dir_name'] + '/../../icons/badge/'
     }
   },
   data () {
     return {
 
-      grade:{},
-      onlineGrade:{},
+      grade: {},
+      onlineGrade: {},
       remainHour: '',
       remainMinute: '',
       times: 2,
@@ -145,8 +157,9 @@ export default defineComponent( {
     }
   },
   mounted () {
-    this.onlineGrade=this.userInfo.onlineGrade
-    this.grade=this.userInfo.onlineGradeExtra
+    this.getUserInfo()
+    this.onlineGrade = this.userInfo.onlineGrade
+    this.grade = this.userInfo.onlineGradeExtra
     let lv = this.grade.lv
     let section = this.gradeTableGenerate(64)[lv + 1]
     let remain = section[0] * 60 - this.grade.cumulativeMinute
@@ -156,8 +169,9 @@ export default defineComponent( {
   },
 
   methods: {
+    ...mapActions(appStore, ['getUserInfo']),
     getBadge () {
-      if(!this.grade.rank){
+      if (!this.grade.rank) {
         return this.badge.t9999
       }
       let rank = this.grade.rank
@@ -239,56 +253,59 @@ export default defineComponent( {
 })
 </script>
 <style scoped lang="scss">
-.ts-grade-crown,.ts-grade-moon,.ts-grade-star,.ts-grade-sun{
+.ts-grade-crown, .ts-grade-moon, .ts-grade-star, .ts-grade-sun {
   display: inline-block;
 }
+
 .rank {
   width: 380px;
   height: 75px;
   margin-left: 10px;
 
-.head {
-//width: 60px;
-//height: 55px;
-  margin-left: 10px;
-  border-radius: 50%;
-//background-color: #5586F8;
+  .head {
+    //width: 60px;
+    //height: 55px;
+    margin-left: 10px;
+    border-radius: 50%;
+    //background-color: #5586F8;
+  }
+
+  .button {
+    .work {
+      width: 75px;
+      height: 25px;
+      background-color: #F5F5F5;
+      border-radius: 6px;
+      margin-left: 75px;
+      text-align: center;
+      line-height: 25px;
+    }
+
+    .play {
+      margin-left: 10px;
+      width: 75px;
+      height: 25px;
+      border: 1px solid #F5F5F5;
+      border-radius: 6px;
+      text-align: center;
+      line-height: 25px;
+      color: #F5F5F5;
+    }
+  }
+
 }
 
-.button {
-.work {
-  width: 75px;
-  height: 25px;
-  background-color: #F5F5F5;
-  border-radius: 6px;
-  margin-left: 75px;
-  text-align: center;
-  line-height: 25px;
-}
+.box-extra {
+  position: absolute;
+  right: 10px;
 
-.play {
-  margin-left: 10px;
-  width: 75px;
-  height: 25px;
-  border: 1px solid #F5F5F5;
-  border-radius: 6px;
-  text-align: center;
-  line-height: 25px;
-  color: #F5F5F5;
-}
-}
-
-}
-
-.box-extra{
-  position:absolute;
-  right:10px;
-  svg{
-    path{
-      fill:white
+  svg {
+    path {
+      fill: white
     }
   }
 }
+
 .badge-box {
   border: 4px solid #c3c3c3;
   border-radius: 4px;
@@ -297,6 +314,7 @@ export default defineComponent( {
   padding-top: 10px;
   margin-top: 10px;
 }
+
 .badge-box .badge-num {
   bottom: 12px;
   background-color: rgb(64, 116, 231);

@@ -1,10 +1,8 @@
 <template>
-  <div class="card  content small" v-if="countDowntime.hours" style="display: flex;flex-direction: column;justify-content: space-between;">
-    <Icon
-      icon="gengduo1"
-      class="title-icon pointer"
-      @click="showDrawer"
-    ></Icon>
+  <div class="card  gradient gradient--14  content small" v-if="countDowntime.hours" style="display: flex;flex-direction: column;justify-content: space-between;">
+    <div class="right-title" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
+      <Icon icon="gengduo1" class="title-icon" style="cursor:pointer"></Icon>
+    </div>
     <div style="text-align: center; font-size: 1.5em">计时</div>
     <div style="color: #FBAE17;font-size: 4em;font-weight:bolder"> {{countDowntime.hours+":" +countDowntime.minutes+":"+countDowntime.seconds}}</div>
    <div style="display: flex;align-items: center;justify-content: space-between;padding: 0 6em;" >
@@ -25,22 +23,18 @@
      ></Icon>
    </div>
   </div>
-  <div class="card content small" v-else-if="clockEvent.length <= 0">
-      <Icon
-        icon="gengduo1"
-        class="title-icon pointer"
-        @click="showDrawer"
-      ></Icon>
+  <div class="card  gradient gradient--14 content small" v-else-if="clockEvent.length <= 0">
+    <div class="right-title" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
+      <Icon icon="gengduo1" class="title-icon" style="cursor:pointer"></Icon>
+    </div>
     <div style="text-align: center; margin-top: 1em">暂无闹钟</div>
     <a-empty :description="null" :image="simpleImage" />
     <a-button type="primary" style="background: #676767;border: none" @click="onSetup">立即添加</a-button>
   </div>
-  <div class="card content small" v-else>
-    <Icon
-      icon="gengduo1"
-      class="title-icon pointer"
-      @click="showDrawer"
-    ></Icon>
+  <div class="card  gradient gradient--14 content small" v-else>
+    <div class="right-title" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
+      <Icon icon="gengduo1" class="title-icon" style="cursor:pointer"></Icon>
+    </div>
     <div style="text-align: center; font-size: 1.5em">下一个闹钟</div>
     <div style="font-size: 3em; margin-top: 0.5em">
       {{ clockEvent[0].dateValue.hours }}:{{ clockEvent[0].dateValue.minutes }}
@@ -210,23 +204,7 @@ export default {
 .drawer{
   margin: 10em;
 }
-.option{
-  background: #161616;
-  width: 8em;
-  height:100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10%;
-  margin-left: 1.8em;
-  cursor:pointer;
-  .icon{
-    width: 3em;
-    height: 3em;
-    vertical-align: middle;
-  }
-}
+
 .custom{
   background: #6a6a6a;
   display: flex;

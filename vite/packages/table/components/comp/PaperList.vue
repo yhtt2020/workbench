@@ -1,8 +1,8 @@
 <template>
-  <viewer :images="list">
+  <viewer :images="list" :options="options">
     <a-row :gutter="[20,20]" id="bingImages" style="margin-right: 1em">
       <a-col class="image-wrapper " v-for="img in list" :span="6" style="">
-        <img  class="image-item pointer" :src="img.src" style="position: relative">
+        <img  class="image-item pointer" :src="img.src" :data-source="img.path" style="position: relative">
         <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
           <div @click.stop="addToMy(img)" class="bottom-actions pointer" :style="{background:isInMyPapers(img)?'#009d00a8':''}">
             <Icon v-if="!isInMyPapers(img)" icon="tianjia1"></Icon>
@@ -22,13 +22,24 @@ import { paperStore } from '../../store/paper'
 export default {
   name: 'PaperList',
   props:['list'],
+  data(){
+    return{
+      options:{
+        url: 'data-source',
+      }
+    }
+  },
 
   mounted () {
   },
   methods:{
-    ...mapActions(paperStore,['addToMyPaper']),
+    ...mapActions(paperStore,['removeToMyPaper']),
     addToMy(img){
-      this.addToMyPaper(img)
+      let image = {
+        src:img.src,
+        path:img.src
+      }
+      this.removeToMyPaper(image)
     },
     isInMyPapers(image){
       return this.myPapers.findIndex(img=>{

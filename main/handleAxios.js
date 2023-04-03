@@ -14,11 +14,24 @@ if (!fs.existsSync(_path_dir)) {
 // global.sharedPath = {extra:storage.getStoragePath()}   //remote官方建议弃用，全局变量在渲染进程中暂时没找到可以替换获取的方法，但是在主进程中全局electronGlobal对象能获取到
 global.sendIPCToMainWindow = function sendIPCToMainWindow (action, data,createMainWindow=true) {
   if (mainWindow && !mainWindow.isDestroyed()) {
+    //如果主窗体存在
+    mainWindow.webContents.send(action, data || {})
+  }else{
+    console.log('因为主窗体不存在，所以要判断是否要创建')
     if(!createMainWindow){
       //如果不要求创建主窗口，则直接返回，不做任何操作
       return
     }
-    mainWindow.webContents.send(action, data || {})
+    createWindow(function() {
+      mainWindow.webContents.on('did-finish-load', function () {
+        if(global.URLToOpen){
+          mainWindow.webContents.send('addTab',{url:global.URLToOpen})
+          global.URLToOpen=''
+        }
+        // if a URL was passed as a command line argument (probably because Min is set as the default browser on Linux), open it.
+        mainWindow.webContents.send(action, data || {})
+      })
+    })
   }
 }
 

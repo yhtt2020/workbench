@@ -27,11 +27,6 @@ export default {
   name: 'Index',
   components: { BottomPanel, TopPanel, SidePanel },
   mounted () {
-    if (!this.init) {
-      console.log(this.settings)
-      this.$router.push('/wizard')
-      return
-    }
     this.$router.afterEach((to, from) => {
       this.routeUpdateTime = Date.now()
     })

@@ -1,37 +1,103 @@
-.card{
-  &.auto-height{
-    height: auto;
-  }
-  &.half{
-  }
+@import "linear";
+.card {
+
   border-radius: 8px;
-  background: rgba(183, 183, 183, 0.63);
   vertical-align: text-top;
-  width:280px;
+  width: 280px;
   min-width: 280px;
   display: inline-block;
   padding: 1em;
-  &.add-list{
+
+  &:hover {
+    .right-title {
+      display: inline-block;
+    }
+  }
+  .right-title {
+    display: none;
+  }
+  .right-title {
+    position: absolute;
+    top: 1em;
+    right: 1em;
+  }
+  .no-title {
+    .title-icon {
+      width: 24px;
+      height: 24px;
+      color: #818181;
+    }
+
+
+  }
+
+  .content-title {
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+
+    .left-title {
+
+      display: flex;
+      width: 35%;
+      align-items: center;
+
+
+      .title-icon {
+        width: 24px;
+        height: 24px;
+      }
+
+      :last-child {
+        margin-left: .5em;
+      }
+    }
+
+
+  }
+
+  .content {
+    position: relative;
+    text-align: center;
+
+    .title-icon {
+      position: absolute;
+      right: 1em;
+    }
+
+  }
+
+  &.auto-height {
+    height: auto;
+  }
+
+  &.half {
+  }
+
+  &.add-list {
     width: 476px;
     height: 520px;
     margin-left: 17px;
     margin-bottom: 17px;
     border-radius: 12px;
-    background: rgba(33, 33, 33, 0.6)!important;
+    background: rgba(33, 33, 33, 0.6) !important;
   }
-  .title{
+
+  .title {
     font-size: 2em;
   }
-  .sub-card{
+
+  .sub-card {
     text-align: center;
     background: #3b3b3b;
     padding: 1em;
     border-radius: .3em;
-    font-size:1.2em;
+    font-size: 1.2em;
   }
+
 }
 
-.card-wrapper{
+.card-wrapper {
   width: auto;
   flex-wrap: nowrap;
   white-space: nowrap;
@@ -39,6 +105,25 @@
   height: calc(100vh - 11em);
   display: flex;
   align-items: center;
+
 }
 
 
+.option {
+  background: #161616;
+  width: 8em;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10%;
+  margin-left: 1.8em;
+  cursor: pointer;
+
+  .icon {
+    width: 3em;
+    height: 3em;
+    vertical-align: middle;
+  }
+}

@@ -1,9 +1,10 @@
-import { defineStore } from "pinia";
+import {defineStore} from "pinia";
 import * as util from "util";
 import {nanoid} from 'nanoid'
 import {myStore} from './util.js'
 // import _ from 'lodash-es';
 // const {appModel, devAppModel} = window.$models
+
 
 // @ts-ignore
 export const appStore = defineStore('appStore', {
@@ -15,32 +16,32 @@ export const appStore = defineStore('appStore', {
     },
 
 
-      apps: [],
+    apps: [],
 
-      lockTimeout: 1800, //锁屏延迟，默认改为半小时
+    lockTimeout: 1800, //锁屏延迟，默认改为半小时
 
-      init: false, //是否已经初始化
+    init: false, //是否已经初始化
 
-      fullScreen: false, //是否是全屏模式
+    fullScreen: false, //是否是全屏模式
 
     settings: {
-      openUrlBrowser:'builtin',//默认打开浏览器
+      openUrlBrowser: 'builtin',//默认打开浏览器
       enableChat: true,//主界面显示聊天
       preventLock: false,//阻止锁屏
 
-        enableBarrage: true, //启用弹幕
-        barrage: {
-          height: 100, //单个轨道的高度
-          limit: 10, //单个屏幕允许的数量
-          repeat: 3, //重复次数
-          direction: "left",
-          browserLink: true, //和浏览器联动
-        }, //弹幕设置
-        ui: {}, //ui设置
-        showButtonTitle: false,
-        darkMod: true, //深色模式
-        attachScreen: null, //id,bounds
-      },
+      enableBarrage: true, //启用弹幕
+      barrage: {
+        height: 100, //单个轨道的高度
+        limit: 10, //单个屏幕允许的数量
+        repeat: 3, //重复次数
+        direction: "left",
+        browserLink: true, //和浏览器联动
+      }, //弹幕设置
+      ui: {}, //ui设置
+      showButtonTitle: false,
+      darkMod: true, //深色模式
+      attachScreen: null, //id,bounds
+    },
 
     routeUpdateTime: Date.now(),//用于更新滚动条
     status: {
@@ -56,25 +57,26 @@ export const appStore = defineStore('appStore', {
   getters: {},
 
   actions: {
-    reset(){
-      this.fullScreen=false
+    reset() {
+      this.fullScreen = false
     },
 
 
-
-      /**
-       * 结束新手引导
-       */
-      finishWizard() {
-        this.init = true;
+    /**
+     * 结束新手引导
+     */
+    finishWizard() {
+      this.init = true;
     },
 
-      setMusic(status) {
-        this.status.music = status;
-        this.status.music.cover = status.cover.replace("34y34", "120y120"); //修正封面
-      },
+    setMusic(status) {
+      this.status.music = status;
+      this.status.music.cover = status.cover.replace("34y34", "120y120"); //修正封面
+    },
 
-
+    getUserInfo(){
+      ipc.send('getDetailUserInfo')
+    },
 
     /**
      * 设置当前用户
@@ -120,8 +122,8 @@ export const tableStore = defineStore(
         countdownDay: [],
         appDate: {},
         clockEvent: [],
-        customComponents: [],
-        aidaData:null,
+        customComponents: [{name: 'Music', id: 2}, {name: 'Weather', id: 3}, {name: 'Timer', id: 4}],
+        aidaData: null,
         navigationList:[]
       };
     },
@@ -130,7 +132,7 @@ export const tableStore = defineStore(
       setNavigationList(item){
         this.navigationList.push(item)
       },
-      setAidaData(value){
+      setAidaData(value) {
         this.aidaData = value;
       },
       setAppDate(value) {
@@ -148,7 +150,7 @@ export const tableStore = defineStore(
           let value1 = v1.dateValue;
           let value2 = v2.dateValue;
           if (value1.year === value2.year) {
-            if(value1.month === value2.month)return value1.day - value2.day;
+            if (value1.month === value2.month) return value1.day - value2.day;
             return value1.month - value2.month;
           }
           return value1.year - value2.year;
@@ -157,8 +159,8 @@ export const tableStore = defineStore(
           return (
             value.dateValue.year > this.appDate.year ||
             (value.dateValue.year === this.appDate.year &&
-              value.dateValue.month >= this.appDate.month)|| (value.dateValue.year === this.appDate.year &&
-              value.dateValue.day >= this.appDate.day&&value.dateValue.month === this.appDate.month)
+              value.dateValue.month >= this.appDate.month) || (value.dateValue.year === this.appDate.year &&
+              value.dateValue.day >= this.appDate.day && value.dateValue.month === this.appDate.month)
           );
         });
 
@@ -180,9 +182,9 @@ export const tableStore = defineStore(
       },
       sortClock() {
         for (let i = 0; i < this.clockEvent.length; i++) {
-          if(this.clockEvent[i].dateValue.hours !== this.appDate.hours &&this.clockEvent[i].flag===true||
-            this.clockEvent[i].dateValue.minutes !== this.appDate.minutes&&this.clockEvent[i].flag===true)
-            this.clockEvent[i].flag=undefined;
+          if (this.clockEvent[i].dateValue.hours !== this.appDate.hours && this.clockEvent[i].flag === true ||
+            this.clockEvent[i].dateValue.minutes !== this.appDate.minutes && this.clockEvent[i].flag === true)
+            this.clockEvent[i].flag = undefined;
         }
         this.clockEvent.sort((v1, v2) => {
           let value1 = v1.dateValue;
@@ -199,29 +201,27 @@ export const tableStore = defineStore(
               value.dateValue.minutes >= this.appDate.minutes)
           );
         });
-      const b = this.clockEvent.filter((value) => {
-        return (value.flag===true);
-      });
-if(a.length!==0)
+        const b = this.clockEvent.filter((value) => {
+          return (value.flag === true);
+        });
+        if (a.length !== 0)
           this.clockEvent = [...a, ...this.clockEvent.slice(0, -a.length)];
         for (let i = 0; i < b.length; i++) {
-        let e = this.clockEvent.shift()
+          let e = this.clockEvent.shift()
           this.clockEvent.push(e)
         }
 
       },
-      removeClock(index,n) {
-            if (this.clockEvent[0].clockType!=='每天'||n===1)
-            {
-              this.clockEvent.splice(index, 1);
-            }
-            else{
-              const a = this.clockEvent.shift()
-              a.flag = true;
-              this.sortClock()
-              this.clockEvent.push(a)
+      removeClock(index, n) {
+            if (this.clockEvent[0].clockType!=='每天'||n===1){
+          this.clockEvent.splice(index, 1);
+        } else {
+          const a = this.clockEvent.shift()
+          a.flag = true;
+          this.sortClock()
+          this.clockEvent.push(a)
 
-            }
+        }
 
       },
       addCustomComponents(value) {
@@ -239,7 +239,7 @@ if(a.length!==0)
       },
 
 
-  },
+    },
     persist: {
       enabled: true,
       strategies: [{
@@ -257,43 +257,45 @@ export const countDownStore = defineStore(
   "countDownStore",
   {
     state: () => {
-      return{
-        countDowndate:0,
-        hours:0,
-        minutes:0,
-        seconds:0,
-        countDowntime:{},
-        timer:null,
-        countDownBtn:false
+      return {
+        countDowndate: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        countDowntime: {},
+        timer: null,
+        countDownBtn: false
       }
 
     },
 
     actions: {
-    setCountDown(value){
-      this.hours = value.hours;
-      this.minutes = value.minutes;
-      this.seconds = value.seconds;
-      this.countDowndate = this.hours*3600000+this.minutes*60000+this.seconds*1000
-      this.regularTime();
-      this.timer&&clearInterval(this.timer);
-       this.timer = setInterval(this.regularTime,1000)
-      this.countDownBtn = false
-    },
-      stopCountDown(){
-       clearInterval(this.timer);
-       this.countDownBtn=true
+      setCountDown(value) {
+        this.hours = value.hours;
+        this.minutes = value.minutes;
+        this.seconds = value.seconds;
+        this.countDowndate = this.hours * 3600000 + this.minutes * 60000 + this.seconds * 1000
+        this.regularTime();
+        this.timer && clearInterval(this.timer);
+        this.timer = setInterval(this.regularTime, 1000)
+        this.countDownBtn = false
       },
-      regularTime(){
-        if(this.countDowndate<0){this.dCountDown()
-          return;}
+      stopCountDown() {
+        clearInterval(this.timer);
+        this.countDownBtn = true
+      },
+      regularTime() {
+        if (this.countDowndate < 0) {
+          this.dCountDown()
+          return;
+        }
         let h = parseInt(this.countDowndate / 1000 / 60 / 60 % 24)
-        let m = parseInt( this.countDowndate / 1000 / 60 % 60)
-        let s = parseInt( this.countDowndate / 1000 % 60)
+        let m = parseInt(this.countDowndate / 1000 / 60 % 60)
+        let s = parseInt(this.countDowndate / 1000 % 60)
 
-        if(h<10){
+        if (h < 10) {
           this.countDowntime.hours = '0' + String(h)
-        }else {
+        } else {
           this.countDowntime.hours = h
         }
         if (m < 10) {
@@ -306,17 +308,17 @@ export const countDownStore = defineStore(
         } else {
           this.countDowntime.seconds = s;
         }
-        this.countDowndate -=1000;
+        this.countDowndate -= 1000;
       },
-      openCountDown(){
+      openCountDown() {
 
-        this.timer&&clearInterval(this.timer);
-        this.timer = setInterval(this.regularTime,1000);
-        this.countDownBtn=false;
+        this.timer && clearInterval(this.timer);
+        this.timer = setInterval(this.regularTime, 1000);
+        this.countDownBtn = false;
       },
-      dCountDown(){
-        this.timer&&clearInterval(this.timer);
-        this.countDowntime={};
+      dCountDown() {
+        this.timer && clearInterval(this.timer);
+        this.countDowntime = {};
       }
     },
   },

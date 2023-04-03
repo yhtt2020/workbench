@@ -21,6 +21,7 @@
     "autoprefixer": "^10.4.14",
     "codemirror": "^6.0.1",
     "echarts": "^5.4.1",
+    "html2canvas": "^1.4.1",
     "jquery": "^3.6.3",
     "justifiedGallery": "^3.8.1",
     "lightgallery": "^2.7.1",
@@ -41,6 +42,7 @@
     "vue": "^3.2.25",
     "vue-justified-layout": "^0.2.0",
     "vue-router": "4",
+    "vue-video-player": "^6.0.0",
     "vue3-resize": "^0.2.0",
     "vuex": "^4.0.2",
     "xgplayer": "^2.32.2"

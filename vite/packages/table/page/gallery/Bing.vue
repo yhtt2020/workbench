@@ -1,7 +1,7 @@
 <template>
-  <div class="rotate-center" style="font-size: 2em;margin-bottom: 1em">
+  <!-- <div class="rotate-center" style="font-size: 2em;margin-bottom: 1em">
     必应壁纸
-  </div>
+  </div> -->
   <vue-custom-scrollbar  id="containerWrapper" :settings="settingsScroller" style="height: 80vh">
     <!--            <lightgallery id="container"-->
     <!--                          :settings="settings"-->
@@ -85,11 +85,9 @@ export default {
       this.isLoading=true
       const axios = require('axios')
       let url=`https://cn.bing.com/HPImageArchive.aspx?format=js&idx=${page}&n=8`
-      console.log(url)
       let imagesResult = axios.get(url).then((imagesResult) => {
         if (imagesResult.status === 200) {
           let images = imagesResult.data.images
-          console.log(images)
           //let animations = ['a-fadeout','a-fadeoutT', 'a-fadeoutR', 'a-fadeoutB', 'a-fadeoutL','a-rotateoutLT', 'a-rotateoutLB', 'a-rotateoutRT', 'a-rotateoutRB', 'a-flipout', 'a-flipoutX', 'a-flipoutY']
           let animations = ['ani-gray', 'bowen', 'ani-rotate']
           if (images) {
@@ -99,6 +97,7 @@ export default {
                 let image = {
                   title: false,// img.title,
                   src: 'https://cn.bing.com' + img.url,
+                  path: 'https://cn.bing.com' + img.url,
                   animation: animations[randomIndex]//['gray','rate'][(Math.random()*2).toFixed()]//''slide','fade','scale',
                 }
               this.bingImages.push(image)

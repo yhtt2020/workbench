@@ -1,0 +1,37 @@
+{
+	"name": "新项目",
+	"options": null,
+	"author": "",
+	"open_source": null,
+	"csv_url": null,
+	"os_summary": null,
+	"site": "",
+	"package": "www.iqiyi.com",
+	"preload": "",
+	"debug_url": null,
+	"url": "https://www.iqiyi.com",
+	"logo": "file://D:\\password\\browser\\logo.png?t=1677220666931",
+	"summary": "用几句话介绍一下您的应用",
+	"type": "web",
+	"auth": {
+		"base": {},
+		"api": {},
+		"ability": {}
+	},
+	"window": {
+		"defaultType": "frameWindow",
+		"frameWindow": {
+			"enable": true,
+			"width": 1000,
+			"height": 800,
+			"controllers": {
+				"goBack": true,
+				"goForward": true,
+				"refresh": true,
+				"home": true
+			}
+		}
+	},
+	"theme_color": "#f1f1f1",
+	"file_assign": ""
+}

@@ -21,7 +21,7 @@
           <img :src="'/img/homeComponent/'+i+'.png'" style="" alt="" v-for="i in cardType.images">
         </a-carousel>
         <div class="one-img" v-else>
-          <img :src="'/img/homeComponent/'+cardType.images+'.png'" style="height: 100%" alt="" >
+          <img  :src="'/img/homeComponent/'+cardType.images+'.png'" style="height: 100%;border-radius: 8px" alt="" >
         </div>
       </div>
     <div class="add-button pointer" @click="addCard">
