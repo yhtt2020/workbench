@@ -12,81 +12,108 @@
         </template>
       </a-calendar>
     </div>
-    <a-row style="font-size: 1.2em; line-height: 2em">
-      <a-col :span="12"><Icon icon="jieriyingxiao"></Icon> 清明节</a-col>
-      <a-col :span="12">4月5日~4月5日</a-col>
-      <a-col :span="12"><Icon icon="jieriyingxiao"></Icon> 劳动节</a-col>
-      <a-col :span="12">4月29日~5月3日</a-col>
-      <a-col :span="12"><Icon icon="jieriyingxiao"></Icon> 端午节</a-col>
-      <a-col :span="12">6月22日~6月24日</a-col>
-    </a-row>
+    <div style="font-size: 1.2em; line-height: 2em">
+      <a-row class="festival">
+        <a-col :span="11">
+          <Icon icon="jieriyingxiao"></Icon>
+          清明节
+        </a-col>
+        <a-col :span="13">4月5日~4月5日</a-col>
+      </a-row>
+      <a-row class="festival">
+        <a-col :span="11">
+          <Icon icon="jieriyingxiao"></Icon>
+          劳动节
+        </a-col>
+        <a-col :span="13">4月29日~5月3日</a-col>
+      </a-row>
+      <a-row class="festival">
+        <a-col :span="11">
+          <Icon icon="jieriyingxiao"></Icon>
+          端午节
+        </a-col>
+        <a-col :span="13">6月22日~6月24日</a-col>
+      </a-row>
+    </div>
+
   </HomeComponentSlot>
 
 </template>
 
 <script>
-import {mapActions} from "pinia";
-import {tableStore} from "../../store";
-import HomeComponentSlot from "./HomeComponentSlot.vue";
+import { mapActions } from 'pinia'
+import { tableStore } from '../../store'
+import HomeComponentSlot from './HomeComponentSlot.vue'
+
 export default {
-  name: "CustomTimer",
-  data() {
+  name: 'CustomTimer',
+  data () {
     return {
-      status: "pause",
+      status: 'pause',
       value: null,
-      visible:false,
-      options:{
-        className:'card',
-        title:'日历',
-        icon:'rili3',
-        type:'customTimer'
+      visible: false,
+      options: {
+        className: 'card',
+        title: '日历',
+        icon: 'rili3',
+        type: 'customTimer'
       },
-    };
+    }
   },
-  components:{
+  components: {
     HomeComponentSlot
   },
   methods: {
-    onPanelChange(value, mode) {},
-    ...mapActions(tableStore, ["removeCustomComponents"]),
-    showDrawer()  {
-      this.visible = true;
+    onPanelChange (value, mode) {},
+    ...mapActions(tableStore, ['removeCustomComponents']),
+    showDrawer () {
+      this.visible = true
     },
-    onClose() {
-      this.visible = false;
+    onClose () {
+      this.visible = false
     },
-    removeCalendar(){
+    removeCalendar () {
       this.removeCustomComponents(this.customIndex)
-      this.visible = false;
+      this.visible = false
     }
   },
-};
+}
 </script>
-
+<style>
+.ant-picker-calendar .ant-picker-panel {
+  border-top: none;
+}
+</style>
 <style scoped lang="scss">
 :deep(.ant-picker-date-panel) {
-  background: #363739;
+  background: transparent;
 }
+
 :deep(.ant-picker-calendar-date-value) {
   border-radius: 100%;
+  color: white;
 
   &:hover {
     background: red;
     border-radius: 100%;
   }
 }
+
 :deep(.ant-picker-cell-selected) {
   background: #363739;
 }
+
 :deep(
     .ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner
   ) {
   background: red;
   border-radius: 100%;
 }
+
 :deep(.ant-picker-cell .ant-picker-cell-inner) {
   border-radius: 100%;
 }
+
 .timer-title {
   background: #363739;
   font-size: 1.5em;
@@ -107,19 +134,21 @@ export default {
   border-radius: 100%;
   content: "";
 }
-.option{
-  background: #161616;
-  width: 8em;
-  height:100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10%;
-  margin-left: 1.8em;
-  cursor:pointer
+
+:deep(.ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-calendar-date-value,ant-picker-cell-inner ant-picker-calendar-date ant-picker-calendar-date-today) {
+  color: white;
+  z-index: 2;
 }
-:deep(.ant-picker-calendar){
+
+:deep(.ant-picker-calendar) {
   background: transparent;
 }
+
+.festival {
+  padding-left: 4px;
+  padding-right: 4px;
+  border-radius: 4px;
+  margin-bottom: 2px;
+}
+
 </style>

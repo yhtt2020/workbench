@@ -43,7 +43,7 @@
             ></i>
           </a-col>
           <a-col :span="17" style="text-align: center">
-            <div style="font-size: 1.5em; font-weight: bold; padding-top: 1em">
+            <div style="font-size: 1.5em; font-weight: bold; padding-top: .8em">
               {{ today.month }}月{{ today.day }}日 {{ today.week }}
             </div>
             <div style="font-size: 1.5em">
@@ -51,7 +51,7 @@
             </div>
           </a-col>
         </a-row>
-        <a-row style="margin-top: 1em">
+        <a-row style="margin-top: .5em">
           <a-col :span="12" style="text-align: center">
             <div style="font-size: 1.2em; font-weight: bold">明天</div>
             <div style="font-size: 1.2em">

@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-    <div style="border-bottom: 1px solid #777777">
+    <div>
       <a-calendar
         v-model:value="value"
         :fullscreen="false"
@@ -19,8 +19,7 @@
     </div>
     <a-row style="font-size: 1.2em; line-height: 2.2em">
       <a-col :span="12"><Icon icon="jieriyingxiao"></Icon> 清明节</a-col>
-      <a-col :span="12">4月5日~4月5日</a-col></a-row
-    >
+      <a-col :span="12">4月5日~4月5日</a-col></a-row>
   </div>
 </template>
 
