@@ -38,7 +38,7 @@
           </div>
           <div v-show="fileImageExtension(img) === true">
             <div>
-              <img @contextmenu.stop="visibleMenu=true" class="image-item del-image pointer"
+              <img @contextmenu.stop="showMenu(img)" class="image-item del-image pointer"
               :src="img.img_src"  :data-source="img.path" style="position: relative">
               <div @click="previewVideo(img)" class="play-icon pointer" style="">
                <Icon icon="bofang" style="font-size:3em;margin-top: 8px"></Icon>
@@ -163,7 +163,6 @@ export default {
     showMenu(item){
       this.currentPaper=item
       this.visibleMenu=true
-
     },
     setDesktopPaper(){
       Modal.confirm({
@@ -234,39 +233,42 @@ export default {
         title: false
       })
     },
-
-
-    // 删除壁纸
-    del(){
-      // if(this.myPapers.indexOf(this.currentPaper) !== -1){
-      //   this.myPapers.splice(this.myPapers.indexOf(this.currentPaper),1)
-      //   this.visibleMenu = false
-      // }  
-      // this.mergedArr.forEach(el=>{
-      //   console.log(el[3]);
-      //   // if(this.fileImageExtension(el)){
-      //   //   console.log(el.src);
-      //   // }else{
-      //   //    if(el.src){
-      //   //     // console.log(el[this.myPapers].src);
-      //   //     console.log(el[this.myPapers.indexOf(this.currentPaper)]);
-      //   //     // const staticDir = path.join(path.join(this.settings.savePath),'static')
-      //   //     // fs.removeSync(path.join(staticDir,`${this.myPapers[this.myPapers.indexOf(this.currentPaper)].src.split("//")[1].split('\\')[this.myPapers[this.myPapers.indexOf(this.currentPaper)].src.split("//")[1].split('\\').length-1].split('/')[this.myPapers[this.myPapers.indexOf(this.currentPaper)].src.split("//")[1].split('\\')[this.myPapers[this.myPapers.indexOf(this.currentPaper)].src.split("//")[1].split('\\').length-1].split('/').length-1]}`))
-             
-      //   //    }else{
-      //   //     return
-      //   //    }
-      //   // }
-      // }) 
-        
-    },
     // 下载壁纸
     add(){},
 
-     // 删除有问题的图片
-     deleteAll(img){
+    // 删除壁纸
+    del(){
+      const extensions = ['mp4','mpeg','avi','rmvb']
+      if(extensions.indexOf(this.currentPaper.src.split('.')[1]) !== -1){
+        fs.removeSync(path.join(this.currentPaper.src))
+      }else{
+        const imageExtensions = ['jpg','jpeg','gif','bmp','png']
+        if(this.currentPaper.src.split('//')[0] === 'file:' && imageExtensions.indexOf(this.currentPaper.src.split('.')[1]) !== -1){
+          fs.removeSync(path.join(this.currentPaper.src.split('//')[1])) 
+          if(this.myPapers.indexOf(this.currentPaper) !== -1){
+           this.myPapers.splice(this.myPapers.indexOf(this.currentPaper),1)
+           this.visibleMenu = false
+          }
+        }else{
+          if(this.myPapers.indexOf(this.currentPaper) !== -1){
+           this.myPapers.splice(this.myPapers.indexOf(this.currentPaper),1)
+           this.visibleMenu = false
+          } 
+        }
+         
+      }
+      if(this.settings.savePath){
+        this.loadLivelyPapers()
+        this.loadStaticPaper()
+      }
+      this.visibleMenu = false
+    },
+
+    // 删除有问题的图片
+    deleteAll(img){
       this.myPapers.indexOf(img) !== -1 ? this.myPapers.splice(this.myPapers.indexOf(img),1):''
     },
+
     loadStaticPaper(){
       const staticDir = path.join(path.join(this.settings.savePath),'static')
       // 判断文件目录是否存在 
@@ -305,6 +307,7 @@ export default {
       console.error(err);
       }
     },
+
     // 时间转换
     changeTime(msec){
       let datetime = new Date(msec);
@@ -316,6 +319,7 @@ export default {
       let second = datetime.getSeconds();
       return year +  '/' + ((month + 1) >= 10 ? (month + 1) : '0' + (month + 1)) +  '/' + ((date + 1) < 10 ? '0' + date : date) + ' ' +  ((hour + 1) < 10 ? '0' + hour : hour) + ':' + ((minute + 1) < 10 ? '0' + minute : minute) +  ':' +  ((second + 1) < 10 ? '0' + second : second);
     },
+
     // 视频播放
     previewVideo(img){
       $('#actions').show()
