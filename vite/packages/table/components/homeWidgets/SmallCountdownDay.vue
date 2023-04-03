@@ -12,9 +12,8 @@
     <div
       style="
         text-align: center;
-        margin-top: 0.7em;
         display: flex;
-        font-size: 1.5em;
+        font-size: 1.2em;
         max-width: 80%;
         margin: 0 auto;
       "
@@ -92,8 +91,8 @@ export default {
       myCountdownDay:{},
       options:{
         className:'card small',
-        title:'倒数日',
-        icon:'rili2'
+        title:'',
+        icon:''
       },
     };
   },
@@ -137,25 +136,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.content {
-  position: relative;
-  text-align: center;
 
-  .title-icon {
-    position: absolute;
-    right: 1em;
-  }
-}
-.option{
-  background: #161616;
-  width: 8em;
-  height:100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10%;
-  margin-left: 1.8em;
-  cursor:pointer
-}
+
 </style>

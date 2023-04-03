@@ -126,7 +126,14 @@ function sendIPCToWindow(window, action, data,needCreateWindow=true) {
     if(needCreateWindow){
       //如果是要求创建后再发的才发，不然就直接放弃了
       createWindow(function() {
-        mainWindow.webContents.send(action, data || {})
+        if(global.URLToOpen){
+          mainWindow.webContents.send('addTab',{url:global.URLToOpen})
+          global.URLToOpen=''
+        }
+        mainWindow.webContents.on('did-finish-load', function () {
+          // if a URL was passed as a command line argument (probably because Min is set as the default browser on Linux), open it.
+          mainWindow.webContents.send(action, data || {})
+        })
       })
     }
 	} else {
@@ -543,7 +550,8 @@ app.on('ready', async function () {
 
 })
 function handleUrlOpen(url){
-  if (appIsReady) {
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    //从应用准备好，改为主窗体准备好
     sendIPCToWindow(mainWindow, 'addTab', {
       url: url
     })
@@ -555,6 +563,8 @@ function handleUrlOpen(url){
     }
   } else {
     global.URLToOpen = url // this will be handled later in the createWindow callback
+
+
   }
 }
 app.on('open-url', function(e, url) {

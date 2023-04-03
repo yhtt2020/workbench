@@ -83,7 +83,6 @@ export default {
 
     getBingWallPaper (page) {
       this.isLoading=true
-      const axios = require('axios')
       let url=`https://cn.bing.com/HPImageArchive.aspx?format=js&idx=${page}&n=8`
       let imagesResult = axios.get(url).then((imagesResult) => {
         if (imagesResult.status === 200) {
