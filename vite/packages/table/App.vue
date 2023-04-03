@@ -91,7 +91,7 @@ export default {
     window.updateMusicStatusHandler = this.updateMusic;
 
     if (this.settings.darkMod) {
-      document.body.style.background = "rgb(50,50,50)";
+      document.body.style.background = "#191919";
     }
     this.bindTouchEvents();
     this.reloadAll(); //刷新全部天气

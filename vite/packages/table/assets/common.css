@@ -84,9 +84,9 @@
   --gradient-end-text: '#FAF8F9'; }
 
 .gradient--14 {
-  --gradient-start: #2f2f2f;
+  --gradient-start: #333333;
   --gradient-start-text: '#121317';
-  --gradient-end: #4b4b4b;
+  --gradient-end: #212121;
   --gradient-end-text: '#323B42'; }
 
 .gradient {
