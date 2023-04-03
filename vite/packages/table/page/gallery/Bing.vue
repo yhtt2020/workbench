@@ -1,7 +1,7 @@
 <template>
-  <div class="rotate-center" style="font-size: 2em;margin-bottom: 1em">
+  <!-- <div class="rotate-center" style="font-size: 2em;margin-bottom: 1em">
     必应壁纸
-  </div>
+  </div> -->
   <vue-custom-scrollbar  id="containerWrapper" :settings="settingsScroller" style="height: 80vh">
     <!--            <lightgallery id="container"-->
     <!--                          :settings="settings"-->

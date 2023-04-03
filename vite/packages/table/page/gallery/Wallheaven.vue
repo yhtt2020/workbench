@@ -93,7 +93,9 @@
 
   <vue-custom-scrollbar id="wall-container-paper" :settings="settingsScroller" style="height: 80vh">
     <template v-if="wallStatus === 0">
-      <a-spin  v-if="isLoading"/>
+      <div  style="display: flex; align-items: center; justify-content: center;">
+        <a-spin  v-if="isLoading" />
+      </div>
       <viewer :images="hotHeavenList" :options="options" >
         <a-row :gutter="[20,20]" id="wallImages" style="margin-right: 1em">
           <a-col class="image-wrapper " v-for="img in hotHeavenList" :span="6" style="">
@@ -112,7 +114,9 @@
       </div> 
      </template>
      <template v-if="wallStatus === 1">
-      <a-spin  v-if="isLoading"/>
+      <div  style="display: flex; align-items: center; justify-content: center;">
+        <a-spin  v-if="isLoading" />
+      </div>
       <viewer :images="acgHeavenList" :options="options" ref="peopleRef" >
         <a-row :gutter="[20,20]" id="wallImages" style="margin-right: 1em">
           <a-col class="image-wrapper " v-for="img in acgHeavenList" :span="6" style="">
@@ -131,7 +135,9 @@
       </div>
     </template>
     <template v-if="wallStatus === 2">
-      <a-spin  v-if="isLoading"/>
+      <div  style="display: flex; align-items: center; justify-content: center;">
+        <a-spin  v-if="isLoading" />
+      </div>
       <viewer :images="peopleHeavenList" :options="options" ref="peopleRef" >
         <a-row :gutter="[20,20]" id="wallImages" style="margin-right: 1em">
           <a-col class="image-wrapper " v-for="img in peopleHeavenList" :span="6" style="">
@@ -434,11 +440,13 @@ export default defineComponent({
   color: rgb(234, 234, 234);
   font-size: 1.2em;
   width: 2em;
-
   height: 2em;
   line-height: 2em;
   background: rgba(0, 0, 0, 0.42);
   border-radius: 0px 6px 0px 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .image-item {
   object-fit: cover;
