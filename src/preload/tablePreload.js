@@ -17,7 +17,9 @@ window.fs = require('fs-extra')
 window.$models = {
   appModel: require('../model/appModel'),
   messageModel,
-  axios: require('axios')
+  axios: require('axios'),
+  nanoid:require('nanoid'),
+  fs:require('fs-extra')
 }
 window.$models.appModel.initDb()
 window.$apis = {

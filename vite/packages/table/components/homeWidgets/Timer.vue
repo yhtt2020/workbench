@@ -1,6 +1,6 @@
 <template>
   <HomeComponentSlot :options="options">
-        <div class="timer-content">
+        <div class="timer-content ">
           <Icon
             style="
            width: 56px;
@@ -59,7 +59,6 @@ export default {
     font-weight: bold;
     cursor: pointer;
   }
-
 }
 .timer-content{
   display: flex;

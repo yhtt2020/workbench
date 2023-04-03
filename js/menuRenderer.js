@@ -85,6 +85,8 @@ module.exports = {
     })
 
     ipc.on('addTab', function (e, data) {
+      console.log('接收到addtab',e,data)
+      //todo 此处的判断还不是很稳妥，虽然大部分的情况下是可以打开了，但还是有失败率
       /* new tabs can't be created in modal mode */
       if (modalMode.enabled()) {
         return

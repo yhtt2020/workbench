@@ -38,7 +38,7 @@
 import {mapActions, mapWritableState} from 'pinia'
 import { paperStore } from '../../store/paper'
 import {message,Modal} from 'ant-design-vue'
-const fs = require('fs-extra')
+const fs = window.$models.fs
 const path = require('path')
 export default {
   name: 'Import',
@@ -122,7 +122,7 @@ export default {
         okText:'确定',
         onOk: async()=>{
           let savePath =  await tsbApi.dialog.showOpenDialog({
-           title: '选择目录', message: '请选择下载壁纸的目录', 
+           title: '选择目录', message: '请选择下载壁纸的目录',
            properties: ['openDirectory', 'createDirectory',]
           })
           this.settings.savePath = savePath[0]
@@ -134,7 +134,7 @@ export default {
         }
       });
     },
-    
+
   }
 }
 </script>

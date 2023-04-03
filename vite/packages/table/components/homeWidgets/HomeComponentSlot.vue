@@ -1,5 +1,5 @@
 <template>
-  <div :class="options.className" :style="{pointerEvents:(editing?'none':'')}" @click="onCPUIndex">
+  <div class=" gradient gradient--14" :class="options.className" :style="{pointerEvents:(editing?'none':'')}" @click="onCPUIndex">
     <div :class="options.noTitle===true?'no-title':'content-title'">
       <div class="left-title" v-if="options.noTitle!==true">
       <Icon :icon="options.icon" class="title-icon"></Icon>
@@ -95,65 +95,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.no-title{
-  .title-icon{
-    width: 24px;
-    height: 24px;
-    color: #818181;
-  }
-  .right-title{
-   position: absolute;
-    top: 1em;
-    right: 1em;
-  }
-}
-.content-title{
-  font-size: 16px;
-  display: flex;
-  justify-content: space-between;
-  .left-title{
-
-    display: flex;
-    width: 35%;
-    align-items: center;
 
 
-    .title-icon{
-      width: 24px;
-      height: 24px;
-    }
-    :last-child{
-      margin-left: .5em;
-    }
-  }
-  .right-title{
 
-    align-items: center;
-    display: flex;
-
-    .title-icon{
-      width: 24px;
-      height: 24px;
-      color: #818181;
-    }
-  }
-
-}
-.option{
-  background: #161616;
-  width: 8em;
-  height:100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10%;
-  margin-left: 1.8em;
-  cursor:pointer;
-  .icon{
-    width: 3em;
-    height: 3em;
-    vertical-align: middle;
-  }
-}
 </style>
