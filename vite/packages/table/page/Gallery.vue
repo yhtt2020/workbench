@@ -1,30 +1,35 @@
 <template>
-  <div id="galleryContainer" class="w-full flex">
-    <div class="w-2/12 flex flex-col" style="border-right: 1px solid rgba(255, 255, 255, 0.1);">
-        <div :onClick="goHome" class="w-24 h-12 text-2xl cursor-pointer bg-black rounded-lg flex bg-opacity-10 justify-center items-center">
+  <a-layout>
+    <a-layout-sider width="175px"  style=" border-right: 1px solid rgba(255, 255, 255, 0.1) !important;">
+      <div style="width:175px; border-right: 1px solid rgba(255, 255, 255, 0.1);">
+        <div :onClick="goHome" class="w-36 h-12 text-2xl cursor-pointer bg-black rounded-lg flex bg-opacity-10 justify-center items-center" style="margin-bottom: 12px;">
            <Icon icon="xiangzuo"></Icon> 
            <span>返回</span>
         </div>
-        <SecondPanel :search="true" :menus="menus" style="margin-top: 3em;margin-left: 3em;text-align: left" logo="https://a.apps.vip/wallpaper/favicon.png"
-        @changeTab="changeTab"></SecondPanel>
-    </div>
-    <div id="parentScroller" class="w-10/12"  style="margin-left: 1em">
-     <router-view></router-view>
-    </div>
-  </div>
+        <div class="menu"  :class="{'active':activeIndex == menu.index}" v-for="(menu) in menus" @click="change(menu)">
+          <Icon v-if="menu.icon" :icon="menu.icon" style=" font-size: 1.319em;"></Icon> 
+          <span style="margin-left: 0.1em;"> {{ menu.title }}</span>
+        </div>
+      </div>
+    </a-layout-sider>
+    <a-layout style="margin-left: 1em;">
+      <div id="parentScroller"   style="width: 100%; margin-left: 1em">
+       <router-view></router-view>
+      </div>
+    </a-layout>
+  </a-layout>
   <!-- class="main" -->
   <!-- <div id="galleryContainer"  style="text-align: center;padding-top: 2em">
     <BackBtn :onClick="goHome"></BackBtn>
       <SecondPanel :search="true" :menus="menus" style="margin-top: 3em;margin-left: 3em;text-align: left" logo="https://a.apps.vip/wallpaper/favicon.png"
                    @changeTab="changeTab"></SecondPanel>
-   
   </div> -->
 </template>
 
 <script>
 import justifiedGallery from 'justifiedGallery'
-
-
+import { paperStore } from "../store/paper";
+import { mapActions, mapState } from "pinia";
 import VueCustomScrollbar from '../../../src/components/vue-scrollbar.vue'
 
 import SecondPanel from '../components/SecondPanel.vue'
@@ -35,6 +40,7 @@ export default {
     SecondPanel,
     VueCustomScrollbar,
   },
+
   data: () => ({
     tab: '',
     menus: [
@@ -106,12 +112,13 @@ export default {
     },
 
     images: [],//当前相册图片
-
+    activeIndex: 'm',
   }),
   async mounted () {
     $('#galleryContainer').on('touchend',(e)=>{
       e.stopPropagation();
     })
+    // this.activeIndex = this.menus[0].index
     // console.log(this.$route.params);
     // this.$router.push({path:'/gallery/my'})
     // justifiedGallery()
@@ -124,10 +131,14 @@ export default {
 
   },
   methods: {
-    changeTab (args) {
-      console.log(args)
-      this.$router.push(args.menu.route)
-      this.tab = args.index
+    // changeTab (args) {
+    //   console.log(args)
+    //   this.$router.push(args.menu.route)
+    //   this.tab = args.index
+    // },
+    change(menu){
+      this.activeIndex = menu.index
+      this.$router.push(menu.route)
     },
     goLock () {
       this.$router.push('/lock')
@@ -164,6 +175,28 @@ export default {
 .gallery-item {
   margin: 5px;
 }
+.ant-layout{
+  background: none !important;
+}
+.ant-layout-sider{
+  background: none !important;
+}
+.menu {
+    &:hover {
+      background: #696969;
+    }
+    width: 8em;
+    padding-left: 1em;
+    font-size: 1.3em;
+    height: 3em;
+    line-height: 3em;
+    border-radius: 0.3em;
+    cursor: pointer;
+    margin-bottom: 0.5em;
+}
+.active {
+  background: #595959;
+}
 </style>
 <style>
 .spl-pane > * {
@@ -177,7 +210,7 @@ export default {
   left: 0 !important;
   width:100% !important;
   height: 100% !important;
-  object-fit: contain !important;
+  object-fit: cover !important;
 }
 
 .spl-pane .ani-gray {

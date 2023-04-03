@@ -21,7 +21,7 @@ export const paperStore = defineStore('paper', {
     playingPaper: null,//播放中的壁纸
     settings: DEFAULT_PAPERS_SETTINGS,
     tipLock: true,//在状态栏提示还有多久进入锁屏
-    lockTimeout: 300
+    lockTimeout: 300,
   }),
   actions:{
     /**
