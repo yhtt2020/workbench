@@ -254,7 +254,6 @@ export default {
            this.visibleMenu = false
           } 
         }
-         
       }
       if(this.settings.savePath){
         this.loadLivelyPapers()
