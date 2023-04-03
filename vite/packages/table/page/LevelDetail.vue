@@ -180,6 +180,6 @@ export default {
   font-size: 0.8em;
 }
 .card{
-  background: #3a3a3a;
+  background: #252525;
 }
 </style>
