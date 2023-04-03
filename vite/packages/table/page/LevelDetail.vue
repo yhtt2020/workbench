@@ -179,4 +179,7 @@ export default {
 .barrage-time {
   font-size: 0.8em;
 }
+.card{
+  background: #252525;
+}
 </style>

@@ -82,6 +82,7 @@ export default {
 <style>
 .ant-picker-calendar .ant-picker-panel {
   border-top: none;
+  background: none;
 }
 </style>
 <style scoped lang="scss">
