@@ -12,43 +12,67 @@
           </div>
        </div>
        <div class="w-48 h-12 flex items-center">
-          <div class="w-2/5 h-12 flex items-center rounded-lg cursor-pointer justify-center bg-black bg-opacity-10">
+          <div class="w-2/5 h-12 flex items-center rounded-lg cursor-pointer justify-center bg-black bg-opacity-10" @click="openFilter">
             <Icon icon="filter" style="font-size: 1.715em;"></Icon>
             <span style="font-size: 1.15em;">筛选</span>
           </div>
-          <div class="w-12 h-12 flex items-center rounded-lg cursor-pointer justify-center bg-black bg-opacity-10" style="margin-left: 12px;">
+          <div class="w-12 h-12 flex items-center rounded-lg cursor-pointer justify-center bg-black bg-opacity-10" @click="openInfo" style="margin-left: 12px;">
             <InfoCircleOutlined style="font-size: 1.715em;"/>
           </div>
        </div>
   </div>
 
-  <vue-custom-scrollbar  id="containerWrapper" :settings="settingsScroller" style="height: 80vh">
-    <viewer :images="pickDataList">
-      <a-row :gutter="[20,20]" id="bingImages" style="margin-right: 1em">
+  <vue-custom-scrollbar  id="pick-wrapper" :settings="settingsScroller" style="height: 80vh">
+    <viewer :images="pickDataList" :options="options">
+      <a-row :gutter="[20,20]" id="pick-images" style="margin-right: 1em">
         <a-col class="image-wrapper " v-for="img in pickDataList" :span="6" style="">
-          <img @contextmenu.stop="showMenu(img)"  class="image-item pointer" :src="img.thumburl" style="position: relative">
+          <img  class="image-item pointer" :src="img.src"  :data-source="img.path"  :alt="img.resolution"  style="position: relative">
           <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
-            <div  class="bottom-actions pointer" >
-              <Icon  icon="tianjia1"></Icon>
+            <div @click.stop="addToMy(img)" class="bottom-actions pointer" :style="{background:isInMyPapers(img)?'#009d00a8':''}">
+              <Icon v-if="!isInMyPapers(img)" icon="tianjia1"></Icon>
+              <Icon v-else style="" icon="yiwancheng"></Icon>
             </div>
           </div>
-          <!-- 
-            <div  class="bottom-actions pointer" >
-              @click.stop="addToActive(img)":style="{background:isInActive(img)?'rgba(255,0,0,0.66)':''}"
-            
-            v-if="!isInActive(img)"
-            <Icon v-else style="" icon="yiwancheng"></Icon>
-          </div>
-          </div> -->
         </a-col>
       </a-row>
     </viewer>
   </vue-custom-scrollbar>
+
+  <a-drawer v-model:visible="pickFilterShow" title="筛选" style="text-align: center !important;">
+
+  </a-drawer>
+
+  <a-drawer v-model:visible="pickInfoShow" title="信息" style="text-align: center !important;">
+      <div class="flex w-full   justify-center items-center flex-col">
+          <div class="w-60" style="margin: 0 auto;">
+            <div class="flex" style="margin-bottom: 12px;">
+              <span style="margin-right: 30px;">壁纸源</span>
+              <span>ONE • 一个</span>
+            </div>
+            <div class="flex" style="margin-bottom: 12px;">
+              <span style="margin-right: 30px;">简介</span>
+              <span>复杂的世界里，一个就够了</span>
+            </div>
+            <div class="flex items-center">
+              <span style="margin-right: 30px;">官网</span>
+              <span class="w-40 h-12 flex items-center rounded-lg cursor-pointer justify-center bg-black bg-opacity-10" @click="toOfficialWebsite">
+                访问官网
+              </span>
+            </div>
+          </div>
+      </div>
+      <template #footer>
+        <span>「拾光壁纸」提供技术支持</span>
+      </template>
+  </a-drawer>
 </template>
 
 <script>
 import axios from 'axios';
 import {InfoCircleOutlined} from '@ant-design/icons-vue'
+import { paperStore } from "../../store/paper";
+import { mapActions, mapState } from "pinia";
+import justifiedGallery from "justifiedGallery";
 export default {
   name:'Picking',
   components:{
@@ -58,29 +82,97 @@ export default {
     return{
       pickFilterValue:'/glutton/journal',
       pickDataList:[],
-
+      pickFilterShow:false,
+      pickInfoShow:false,
+      options:{
+        url: 'data-source',
+      },
+      isLoading:false,
     }
   },
+  computed: {
+    ...mapState(paperStore, ["myPapers"]),
+  },
   mounted(){
-    this.getPickPaperData(this.pickFilterValue)
+    this.getPickPaperData(this.pickFilterValue);
+    justifiedGallery();
+    $("#container").justifiedGallery({
+      captions: false,
+      lastRow: "hide",
+      rowHeight: 180,
+      margins: 5,
+    });
+    $("#pick-wrapper").scroll(() => {
+      if ($("#pick-wrapper").scrollTop() +  $("#pick-wrapper").height() + 20 >= $("#pick-images").prop("scrollHeight") && this.isLoading === false) {
+        // this.getPickPaperData(this.page);
+      }
+    });
+    // this.getPickPaperData(this.page ++)
+    // this.getPickPaperData(this.page ++)
   },
   methods:{
+    ...mapActions(paperStore, ["removeToMyPaper"]),
     pickFilterChange(e){
-      this.pickFilterValue = e
+      this.pickFilterValue = e;
       this.getPickPaperData(this.pickFilterValue)
     },
     getPickPaperData(val){
-      const url = `https://api.nguaduot.cn${val}?score=100`
-      axios.get(url).then(res=>{
-        this.pickDataList = res.data.data
-      }).catch(err=>{
-        return
-      })
-    }
+      const url = `https://api.nguaduot.cn${val}?&date=20500101&score=99999999`;
+      console.log(url);
+      if(!this.isLoading){
+        this.isLoading = true;
+        axios.get(url).then(res=>{
+          let pickImageData = res.data.data;
+          let animations = ["ani-gray", "bowen", "ani-rotate"];
+          if(pickImageData){
+            pickImageData.forEach(img => {
+              let randomIndex = Math.floor(Math.random() * animations.length);
+              const image = {
+                title: false,
+                src: img.thumburl,
+                path: img.imgurl,
+                resolution:img.size,
+                animations: animations[randomIndex],
+              };
+              this.pickDataList.push(image)
+            });
+            this.$nextTick(() => {
+              this.isLoading = false;
+            });
+          }
+        }).catch(err=>{
+          return
+        })
+      }
+
+    },
+    openFilter(){
+      this.pickFilterShow = true
+    },
+    openInfo(){
+      this.pickInfoShow = true
+    },
+    // 添加收藏
+    addToMy(img) {
+      this.removeToMyPaper(img);
+    },
+    isInMyPapers(image) {
+      return (
+        this.myPapers.findIndex((img) => {
+          return image.src === img.src;
+        }) > -1
+      );
+    },
+    // 点击跳转官网
+    toOfficialWebsite(){
+      window.location.href = "www.baidu.com"
+    },
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
+::v-deep.ant-drawer-footer{
+  border-top: none !important;
+}
 </style>

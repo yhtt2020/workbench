@@ -1,18 +1,17 @@
 <template>
-
   <div class="second-panel"  :class="{'large':this.size==='large','small':this.size==='small'}" id="secondPanel" style="">
-    <div v-if="close" style="margin-bottom: 1em">
+    <!-- <div v-if="close" style="margin-bottom: 1em">
       <div class="btn"><Icon icon="close"></Icon></div>
     </div>
     <div v-if="logo" style="padding-left: 1em;margin-bottom:2em;">
       <a-avatar shape="square" :size="50" :src="logo">
       </a-avatar>
-    </div>
+    </div> -->
     <!-- <div v-if="search" style="margin-top: 2.5em;margin-bottom:2em">
       <a-input-search style="width: 8em;margin-left: 1em" placeholder="搜索"></a-input-search>
     </div> -->
-    <div @click="change($event,menu)" class="menu" :class="{'active':activeIndex===menu.index}"
-         v-for="(menu,index) in menus">
+    <div @click="change($event,menu)" class="menu " :class="{'active':activeIndex===menu.index}"
+         v-for="(menu) in menus">
      <Icon v-if="menu.icon" :icon="menu.icon"></Icon>  {{ menu.title }}
     </div>
   </div>
@@ -40,6 +39,7 @@ export default {
   },
   mounted () {
     this.panel = document.getElementById('secondPanel')
+    // console.log(this.menus[0].index);
     this.activeIndex = this.menus[0].index
     //this.panel.style.marginTop = -this.panel.offsetHeight / 2-20 + 'px'
   },
