@@ -246,12 +246,10 @@ export default {
           fs.removeSync(path.join(this.currentPaper.src.split('//')[1])) 
           if(this.myPapers.indexOf(this.currentPaper) !== -1){
            this.myPapers.splice(this.myPapers.indexOf(this.currentPaper),1)
-           this.visibleMenu = false
           }
         }else{
           if(this.myPapers.indexOf(this.currentPaper) !== -1){
            this.myPapers.splice(this.myPapers.indexOf(this.currentPaper),1)
-           this.visibleMenu = false
           } 
         }
       }
