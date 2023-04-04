@@ -26,16 +26,17 @@
             <span v-else>未使用</span>
           </template>
           <template v-else-if="column.key === 'key'">
-            <span>
-              {{ record.key }} <a-tag class="pointer" @click="copy(record.key)">复制</a-tag>
+            <span style="padding-left: 2px;padding-right: 2px" class="mr-3" :style="{background:isMarked(record.key)?'#35ad03':'transparent',textDecoration:record.status===2?'line-through':'none'}">
+              {{ record.key }}
             </span>
+            <a-tag class="pointer" @click="copy(record.key)">复制</a-tag> <a-tag class="pointer" @click="mark(record.key)">标记</a-tag>
           </template>
           <template v-else-if="column.key === 'status'">
             <a-tag color="green" v-if="record.status===1">有效</a-tag>
             <a-tag color="geekblue" v-else-if="record.status===2">已使用</a-tag>
           </template>
           <template v-else-if="column.key==='index'">
-            {{index+1}}
+            {{codes.length-index}}
           </template>
         </template>
       </a-table>
@@ -57,6 +58,7 @@ export default {
 
   data () {
     return {
+      marked:[],
       scrollbarSettings: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -122,11 +124,43 @@ export default {
       require('electron').clipboard.writeText(text)
       message.success('复制邀请码成功。')
     },
+    mark(key){
+      let found =this.marked.indexOf(key)
+      let mark=false
+      if(found>-1){
+        this.marked.splice(found,1)
+        mark=false
+      }else{
+        this.marked.push(key)
+        mark=true
+      }
+      localStorage.setItem('marked',JSON.stringify(this.marked))
+      if(mark){
+        message.success({content:'已为您标记此邀请码，再次标记取消',key:'mark'})
+      }else{
+        message.success({content:'已为您取消标记',key:'mark'})
+      }
+
+    },
     async loadCodes(){
       let rs=await this.listCodes()
       if(rs.status){
         this.codes=rs.data
       }
+      let marked
+      try{
+        marked=JSON.parse(localStorage.getItem('marked'))
+      }catch (e) {
+        marked=[]
+      }
+
+      if(marked===null){
+        marked=[]
+      }
+      this.marked=marked
+    },
+    isMarked(key){
+      return this.marked.indexOf(key)>-1
     },
     confirmExchange () {
       Modal.confirm({
