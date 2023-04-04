@@ -72,22 +72,22 @@
 <!--    </div>-->
     <div class="w-1/2 flex flex-row  items-center px-2" style="background: #282828;border-radius: 8px">
 
-      <ScrolX :height="75" style="display: flex; flex-direction: row">
+      <ScrolX :height="75" class="flex flex-row pt-2">
         <div v-if="navigationList.length<=0" style="height: 68px;">
 
         </div>
-        <div class="pointer" style="white-space: nowrap;display: inline-block" v-for="item in navigationList" @click="clickNavigation(item)" v-else>
-              <div style="width: 75px;height: 75px;display: flex;justify-content: center;align-items: center;" v-if="item.type==='systemApp'">
+        <div class="pointer mr-3" style="white-space: nowrap;display: inline-block" v-for="item in navigationList" @click="clickNavigation(item)" v-else>
+              <div style="width: 45px;height: 45px;background: rgba(33, 33, 33, 1);" v-if="item.type==='systemApp'" class="flex justify-center items-center rounded-xl">
                 <Icon :icon="item.icon" style="width: 32px;height: 32px;color:rgba(255, 255, 255, 0.4);" ></Icon>
               </div>
-          <div v-else style="width: 75px;height: 75px;display: flex;justify-content: center;align-items: center;">
+          <div v-else style="width: 45px;height: 45px;" class="flex justify-center items-center">
             <a-avatar :size="40"  shape="square" :src="item.icon" ></a-avatar>
           </div>
 
         </div>
       </ScrolX>
 
-    <div style="border-left: 1px solid rgba(255, 255, 255, 0.4);width: 62px;" class="flex justify-center items-center mx-2 h-2/3 pointer">
+    <div style="border-left: 1px solid rgba(255, 255, 255, 0.4);width: 62px;" class="flex justify-center items-center mx-2 h-2/3 pointer pl-2">
       <Icon icon="appstore-fill" style="width: 48px;height: 48px;color: white" @click="appChange"></Icon>
     </div>
   </div>

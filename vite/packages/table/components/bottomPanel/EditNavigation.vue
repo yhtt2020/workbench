@@ -10,19 +10,19 @@
     <span>快捷导航栏</span>
     <span>点击添加更多快捷方式，支持长安拖拽排序，左右滑动查看更多</span>
     <div class="nav-list">
-        <ScrolX :height="56">
-        <div style="white-space: nowrap;">
-          <vuuri group-id="bottom" :drag-enabled="true" v-model="navigationList" :key="key"
-                 class="grid bottom-edit" ref="grid">
-            <template #item="{ item }">
-
+        <ScrolX :height="56" class="pr-2">
+        <div style="white-space: nowrap;" id="navList" class="flex flex-row items-center">
+        <a-dropdown v-for="(item,index) in navigationList" class="mr-6" :key="navigationList.name" :trigger="['contextmenu']">
                 <div style="width: 56px;height: 56px;display: flex;justify-content: center;align-items: center;background:rgb(42, 42, 42);border-radius: 12px" v-if="item.type==='systemApp'">
                   <Icon :icon="item.icon" style="width: 32px;height: 32px;color:rgba(255, 255, 255, 0.4);" ></Icon>
                 </div>
               <a-avatar :size="40" shape="square" :src="item.icon" v-else></a-avatar>
-            </template>
-          </vuuri>
-
+          <template #overlay>
+            <a-menu>
+              <a-menu-item @click="deleteEdit(index)">删除</a-menu-item>
+            </a-menu>
+          </template>
+        </a-dropdown>
         </div>
     </ScrolX>
       <Icon icon="tianjia" style="width: 56px;height: 56px;color:rgba(255, 255, 255, 0.4);"  class="pointer mr-2" @click="addEdit"></Icon>
@@ -32,6 +32,14 @@
     </div>
   </div>
   </transition>
+<!--  <div v-show="rubbish" class="absolute bottom-10 h-1/4 w-1/3 left-1/2 -translate-x-1/2 border-dashed rounded-xl " id="navListRubbish">-->
+<!--    </div>-->
+
+<!--  <div v-show="rubbish" class="absolute h-1/4 w-1/3 bottom-10 left-1/2 -translate-x-1/2 flex justify-center items-center">-->
+<!--    <Icon icon="delete-fill" style="width:18px;height:18px;" class="mr-2"></Icon>-->
+<!--    拖到此处删除-->
+<!--  </div>-->
+
   <transition name="fade">
   <div class="add-navigation" v-if="editFlag" >
       <div>添加导航</div>
@@ -69,8 +77,9 @@
             <Icon icon="tianjia2" style="width:18px;height:18px;" class="mr-2"></Icon>
             添加快捷方式
           </div>
-          <div class="flex flex-row w-full justify-start mt-4 -ml-4">
-              <div v-for="(item,index) in dropList" class="flex flex-col ml-4">
+          <ScrolX :height="66">
+          <div class="flex flex-row w-full justify-start mt-4 -ml-8 pt-4">
+              <div v-for="(item,index) in dropList" class="flex  ml-4">
                 <a-badge>
                   <template #count>
                     <Icon icon="guanbi2" style="height: 24px;width: 24px;color: crimson" @click="deleteDropList(index)" class="pointer"></Icon>
@@ -80,6 +89,7 @@
                 </a-badge>
               </div>
           </div>
+          </ScrolX>
           <div @click="clickRightListItem(dropList)" class="pointer flex justify-center items-center mt-2 w-24 h-12 rounded-xl  " style="background: rgb(42, 42, 42);color: rgba(255, 255, 255, 0.85);">
            确定添加
           </div>
@@ -97,6 +107,7 @@ import listItem from "./listItem.vue";
 import {mapActions, mapWritableState} from "pinia";
 import {tableStore} from "../../store";
 import ScrolX from '../ScrolX.vue'
+import Sortable from 'sortablejs';
 const {appModel}=window.$models
 export default {
   name: "EditNavigation",
@@ -121,6 +132,7 @@ export default {
       editFlag:false,
       activeItem:0,
       avtiveRightItem:0,
+      rubbish:false,
       nowClassify:'systemApp',
       navClassify:[{name:'systemApp',cname:'系统应用'},{name:'coolApp',cname:'酷应用'},
         {name:'tableApp',cname:'桌面应用'},{name:'localApp',cname:'本地应用'},{name:'lightApp',cname:'轻应用'},
@@ -288,8 +300,62 @@ export default {
   created() {
     this.loadDeskIconApps()
   },
+  mounted() {
+    this.$nextTick(()=>{
+      this.rowDrop()
+    })
+  },
   methods:{
-    ...mapActions(tableStore, ['setNavigationList']),
+    ...mapActions(tableStore, ['setNavigationList','sortNavigationList','removeNavigationList']),
+     rowDrop()  {
+       var that = this
+       var drop = document.getElementById('navList')
+       var dropRubbish = document.getElementById('navListRubbish')
+       Sortable.create(drop, {
+        group: 'navigation',
+        animation: 150,
+     onUpdate:function(event){
+
+       var newIndex = event.newIndex,
+         oldIndex = event.oldIndex
+     let  newItem = drop.children[newIndex]
+     let  oldItem = drop.children[oldIndex]
+
+       // 先删除移动的节点
+       drop.removeChild(newItem)
+       // 再插入移动的节点到原有节点，还原了移动的操作
+       if(newIndex > oldIndex) {
+         drop.insertBefore(newItem,oldItem)
+       } else {
+         drop.insertBefore(newItem,oldItem.nextSibling)
+       }
+       that.sortNavigationList(event)
+     },
+         // onChoose: function (/**Event*/evt) {
+         //   that.rubbish=true
+         // },
+         // onUnchoose: function(/**Event*/evt) {
+         //    that.rubbish=false
+         // },
+         // onRemove: function (/**Event*/event) {
+         //     that.removeNavigationList(event)
+         // },
+      });
+       // Sortable.create(dropRubbish, {
+       //   group: 'navigation',
+       //   animation: 150,
+       //   onAdd: function (/**Event*/evt) {
+       //     let newIndex = evt.newIndex,
+       //       oldIndex = evt.oldIndex
+       //     let  newItem = dropRubbish.children[newIndex]
+       //     dropRubbish.removeChild(newItem)
+       //
+       //   },
+       // });
+    },
+    deleteEdit(index){
+      this.removeNavigationList(index)
+    },
     deleteDropList(index){
       this.dropList.splice(index,1)
     },

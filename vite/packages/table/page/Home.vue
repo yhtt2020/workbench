@@ -146,6 +146,7 @@ export default {
     }
   },
   created () {
+    this.navigationList = []
   this.startAida()
   },
   unmounted () {
