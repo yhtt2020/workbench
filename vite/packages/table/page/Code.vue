@@ -57,11 +57,14 @@ export default {
   methods: {
     ...mapActions(codeStore, ['active']),
     getSerialNum(cb){
-      window.getSerialNum().then((s) => {
-        this.serialHash = s
-        if(cb)
-          cb()
-      })
+      let serial=localStorage.getItem('serial')
+      if(serial===null){
+        serial=window.$models.nanoid.nanoid(8)
+        localStorage.setItem('serial',serial)
+      }
+      this.serialHash=serial
+      if(cb)
+        cb()
     },
     checkCode () {
       this.loading = true
