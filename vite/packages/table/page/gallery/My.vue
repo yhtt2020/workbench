@@ -257,6 +257,12 @@ export default {
         this.loadLivelyPapers()
         this.loadStaticPaper()
       }
+      this.activePapers.some(el=>{
+        if(el.src === this.currentPaper.src){
+          this.activePapers.splice(el.src,1)
+          this.visibleMenu = false
+        }
+      })
       this.visibleMenu = false
     },
 
