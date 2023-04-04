@@ -12,17 +12,19 @@
     <div class="nav-list">
         <ScrolX :height="56" class="pr-2">
         <div style="white-space: nowrap;" id="navList" class="flex flex-row items-center">
-        <a-dropdown v-for="(item,index) in navigationList" class="mr-6" :key="navigationList.name" :trigger="['contextmenu']">
+        <div v-for="(item,index) in navigationList" class="mr-6" :key="navigationList.name">
+          <a-dropdown  :trigger="['contextmenu']">
                 <div style="width: 56px;height: 56px;display: flex;justify-content: center;align-items: center;background:rgb(42, 42, 42);border-radius: 12px" v-if="item.type==='systemApp'">
                   <Icon :icon="item.icon" style="width: 32px;height: 32px;color:rgba(255, 255, 255, 0.4);" ></Icon>
                 </div>
               <a-avatar :size="40" shape="square" :src="item.icon" v-else></a-avatar>
-          <template #overlay>
-            <a-menu>
-              <a-menu-item @click="deleteEdit(index)">删除</a-menu-item>
-            </a-menu>
-          </template>
-        </a-dropdown>
+            <template #overlay>
+              <a-menu>
+                <a-menu-item @click="deleteEdit(index)">删除</a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
+        </div>
         </div>
     </ScrolX>
       <Icon icon="tianjia" style="width: 56px;height: 56px;color:rgba(255, 255, 255, 0.4);"  class="pointer mr-2" @click="addEdit"></Icon>
