@@ -237,6 +237,14 @@ export default {
 
     // 删除壁纸
     del(){
+      // 删除激活壁纸
+      const delIndex =  this.activePapers.findIndex(el=>{
+         return this.currentPaper.src === el.src
+      }) > -1
+      if(delIndex === true){
+        this.activePapers.splice(this.currentPaper.src,1)
+      }
+      // 删除收藏的壁纸
       const extensions = ['mp4','mpeg','avi','rmvb']
       if(extensions.indexOf(this.currentPaper.src.split('.')[1]) !== -1){
         fs.removeSync(path.join(this.currentPaper.src))
@@ -257,12 +265,6 @@ export default {
         this.loadLivelyPapers()
         this.loadStaticPaper()
       }
-      this.activePapers.some(el=>{
-        if(el.src === this.currentPaper.src){
-          this.activePapers.splice(el.src,1)
-          this.visibleMenu = false
-        }
-      })
       this.visibleMenu = false
     },
 
