@@ -5,7 +5,7 @@
     </div>
     <Barrage></Barrage>
   </a-config-provider>
-  <a-modal v-model:visible="visible" @ok="handleOk" @cancel="handleOk">
+  <a-modal v-model:visible="visible" centered @ok="handleOk" @cancel="handleOk">
     <template #modalRender="{}">
       <div
         style="
@@ -34,18 +34,18 @@
           {{ clockEvent[0].eventValue }}
         </div>
       </div>
-    </template></a-modal
-  >
-  <audio ref="clock" src="/sound/alarmClock.mp3"></audio>
+    </template>
+  </a-modal>
+  <audio ref="clock" src="/sound/clock.mp3"></audio>
 </template>
 
 <script lang="ts">
 import zhCN from "ant-design-vue/es/locale/zh_CN";
-import { mapActions, mapWritableState } from "pinia";
+import {mapActions, mapWritableState} from "pinia";
 
-import { appStore, tableStore } from "./store";
+import {appStore, tableStore} from "./store";
 import Barrage from "./components/comp/Barrage.vue";
-import { weatherStore } from "./store/weather";
+import {weatherStore} from "./store/weather";
 import {codeStore} from "./store/code";
 
 let startX,
@@ -57,7 +57,7 @@ let startX,
 const distX = 80; //滑动感知最小距离
 const distY = 80; //滑动感知最小距离
 export default {
-  components: { Barrage },
+  components: {Barrage},
   data() {
     return {
       touchDownRoutes: ["home", "lock"], //支持下滑的页面的白名单
@@ -68,13 +68,13 @@ export default {
     };
   },
   async mounted() {
-    if(!this.myCode){
+    if (!this.myCode) {
       //注释此处的代码跳过激活码验证
       this.$router.push('/code')
       return
     }
-    this.verify(rs=>{
-      if(!rs){
+    this.verify(rs => {
+      if (!rs) {
         this.$router.push('/code')
         return
       }
@@ -104,20 +104,20 @@ export default {
       "clockEvent",
       "appDate",
     ]),
-    ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo','init']),
-    ...mapWritableState(codeStore,['myCode'])
+    ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo', 'init']),
+    ...mapWritableState(codeStore, ['myCode'])
   },
   methods: {
-    ...mapActions(appStore, ['setMusic','reset']),
-    ...mapActions(weatherStore,['reloadAll']),
+    ...mapActions(appStore, ['setMusic', 'reset']),
+    ...mapActions(weatherStore, ['reloadAll']),
     ...mapActions(tableStore, ['sortClock']),
-    ...mapActions(codeStore,['verify']),
-    bindTouchEvents(){
-      $(".a-container").on("touchstart",  (e) =>{
+    ...mapActions(codeStore, ['verify']),
+    bindTouchEvents() {
+      $(".a-container").on("touchstart", (e) => {
         startX = e.originalEvent.changedTouches[0].pageX,
           startY = e.originalEvent.changedTouches[0].pageY;
       });
-      $(".a-container").on("touchend",  (e)=> {
+      $(".a-container").on("touchend", (e) => {
         moveEndX = e.originalEvent.changedTouches[0].pageX,
           moveEndY = e.originalEvent.changedTouches[0].pageY,
           X = moveEndX - startX,
@@ -129,14 +129,14 @@ export default {
         } else if (X < -distX) {
           console.log("向左滑", distX);
           //e.preventDefault();
-        } else if (Y > distY && startY<=50) {
-          if(this.touchDownRoutes.indexOf(this.$route.name)>-1){
+        } else if (Y > distY && startY <= 50) {
+          if (this.touchDownRoutes.indexOf(this.$route.name) > -1) {
             ipc.send('openGlobalSearch')
             e.preventDefault();
           }
         } else if (Y < -distY) {
-          if(this.touchUpRoutes.indexOf(this.$route.name)>-1) {
-            this.$router.push({name:'status'})
+          if (this.touchUpRoutes.indexOf(this.$route.name) > -1) {
+            this.$router.push({name: 'status'})
             e.preventDefault();
           }
           //e.preventDefault();
@@ -157,24 +157,27 @@ export default {
     //   }
     // }
     handleOk() {
-    this.visible = false;
-    this.removeClock(0);
-      this.$refs.clock.pause();
-      this.$refs.clock.currentTime = 0;
-  },
+      this.visible = false;
+      setTimeout(() => {
+        this.removeClock(0);
+        this.$refs.clock.pause();
+        this.$refs.clock.currentTime = 0;
+      }, 1000)
+    },
 
 
-  },watch: {
+  }, watch: {
     "appDate.minutes": {
       handler(newVal, oldVal) {
         try {
           if (
             this.appDate.minutes === this.clockEvent[0].dateValue.minutes &&
-            this.appDate.hours === this.clockEvent[0].dateValue.hours&&this.clockEvent[0].flag===undefined
+            this.appDate.hours === this.clockEvent[0].dateValue.hours && this.clockEvent[0].flag === undefined
           ) {
             this.visible = true;
-            setTimeout(()=>{  this.$refs.clock.play();},10)
-
+            setTimeout(() => {
+              this.$refs.clock.play();
+            }, 500)
           }
         } catch (err) {
 

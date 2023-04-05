@@ -261,7 +261,6 @@ export default defineComponent({
          this.isLoading = true
          axios.get(url).then(async res=>{
            let wallImageData = res.data.data
-           console.log(wallImageData);
            let animations = ["ani-gray", "bowen", "ani-rotate"];
            if (wallImageData){
             wallImageData.forEach(img => {
@@ -301,7 +300,6 @@ export default defineComponent({
     },
     getSearchData(){
       let searchUrl = `https://wallhaven.cc/api/v1/search?&categories=${this.dataObj.categories}&purity=${this.dataObj.purity}${this.searchObj.wallSizeValue === '' ? '':`&atleast=${this.searchObj.wallSizeValue}`}${this.wallStatus === 0 ? `&sorting=${this.hotSorting}` : this.wallStatus === 1 ? `&sorting=${this.acgSorting}`: this.wallStatus === 2 ? `&sorting=${this.peopleSorting}` : ''}${this.searchObj.searchName !=='' ?`&q=${this.searchObj.searchName}`:''}&page=${this.page}`
-      console.log(searchUrl);
       if(this.wallStatus === 0){
         this.hotHeavenList = [];
       }else if(this.wallStatus === 1){
@@ -313,7 +311,6 @@ export default defineComponent({
          this.isLoading = true
          axios.get(searchUrl).then(async res=>{
            let searchImageData = res.data.data
-           console.log(searchImageData);
            let animations = ["ani-gray", "bowen", "ani-rotate"];
            if (searchImageData){
             searchImageData.forEach(img => {
@@ -349,7 +346,6 @@ export default defineComponent({
       }
     },
     getPurity(e){
-      console.log(e.target.value);
       this.dataObj.purity = e.target.value
     }
 

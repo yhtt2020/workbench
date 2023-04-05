@@ -11,13 +11,13 @@
         </div>
       </div>
       <div v-else :style="{width:settings.enableChat?'23em':'11em'}">
-        <a-row class="pointer" @click="levelDetail">
+        <a-row class="pointer" @click="social">
           <a-col class="user-info"  :span="settings.enableChat?10:24" style="padding: 0.6em;position:relative;">
             <a-row  style="text-align: left" :gutter="10">
               <a-col>
                 <a-avatar :src="userInfo.avatar" :size="50">{{ userInfo.nickname }}</a-avatar>
               </a-col>
-              <a-col style="position: relative">
+              <a-col @click.stop="goMy()" style="position: relative">
                 <span  ref="minute" class="tip" >+1</span>
                 <div style="padding-top: 0.2em;">
                   <span style="font-size: 0.8em;">等级</span> {{ lvInfo.lv }}级 <br>
@@ -192,15 +192,18 @@ import { mapWritableState, mapActions } from 'pinia'
 import Template from '../../user/pages/Template.vue'
 import { ThunderboltFilled } from '@ant-design/icons-vue'
 import { Modal } from 'ant-design-vue'
+import SidePanel from './SidePanel.vue'
+import SecondPanel from './SecondPanel.vue'
 const { messageModel }=window.$models
 import EditNavigation from './bottomPanel/EditNavigation.vue'
 import ChangeApp from './bottomPanel/ChangeApp.vue'
 import ScrolX from "./ScrolX.vue";
 export default {
   name: 'BottomPanel',
-  components: { Template, PanelButton, ThunderboltFilled,EditNavigation,ChangeApp,ScrolX},
+  components: { SecondPanel, SidePanel, Template, PanelButton, ThunderboltFilled,EditNavigation,ChangeApp,ScrolX},
   data () {
     return {
+
       lastTime:0,
       visibleTrans: false,
       full: false,
@@ -250,6 +253,9 @@ export default {
     ...mapWritableState(tableStore, ['navigationList'])
   },
   methods: {
+    goMy(){
+      this.$router.push({name:"socialMy"})
+    },
     ...mapActions(appStore, ['setUser']),
     setFull(value){
       this.full = value
@@ -353,8 +359,8 @@ export default {
         this.$router.push({ path: '/status' })
       }
     },
-    levelDetail(){
-      this.$router.push({ name: 'levelDetail' })
+    social(){
+      this.$router.push({ path: '/social/' })
     },
     power () {
       this.$router.push({ path: '/power' })

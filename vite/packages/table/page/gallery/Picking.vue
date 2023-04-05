@@ -23,6 +23,9 @@
   </div>
 
   <vue-custom-scrollbar  id="pick-wrapper" :settings="settingsScroller" style="height: 80vh">
+    <div  style="display: flex; align-items: center; justify-content: center;">
+      <a-spin  v-if="isLoading" />
+    </div>
     <viewer :images="pickDataList" :options="options">
       <a-row :gutter="[20,20]" id="pick-images" style="margin-right: 1em">
         <a-col class="image-wrapper " v-for="img in pickDataList" :span="6" style="">
@@ -38,15 +41,15 @@
     </viewer>
   </vue-custom-scrollbar>
 
-  <a-drawer v-model:visible="pickFilterShow" title="筛选" style="text-align: center !important;">
-
+  <a-drawer v-model:visible="pickFilterShow" title="筛选" style="text-align: center !important;" class="no-drag">
+     
   </a-drawer>
 
-  <a-drawer v-model:visible="pickInfoShow" title="信息" style="text-align: center !important;">
+  <a-drawer v-model:visible="pickInfoShow" title="信息" style="text-align: center !important;" class="no-drag">
       <div class="flex w-full   justify-center items-center flex-col">
-          <div class="w-60" style="margin: 0 auto;">
+          <div class="w-60" style="margin: 50%;">
             <div class="flex" style="margin-bottom: 12px;">
-              <span style="margin-right: 30px;">壁纸源</span>
+              <span style="margin-right: 16px;">壁纸源</span>
               <span>ONE • 一个</span>
             </div>
             <div class="flex" style="margin-bottom: 12px;">
@@ -94,19 +97,20 @@ export default {
     ...mapState(paperStore, ["myPapers"]),
   },
   mounted(){
-    this.getPickPaperData(this.pickFilterValue);
-    justifiedGallery();
-    $("#container").justifiedGallery({
-      captions: false,
-      lastRow: "hide",
-      rowHeight: 180,
-      margins: 5,
-    });
-    $("#pick-wrapper").scroll(() => {
-      if ($("#pick-wrapper").scrollTop() +  $("#pick-wrapper").height() + 20 >= $("#pick-images").prop("scrollHeight") && this.isLoading === false) {
-        // this.getPickPaperData(this.page);
-      }
-    });
+    // this.getPickPaperData(this.pickFilterValue);
+    // justifiedGallery();
+    // $("#container").justifiedGallery({
+    //   captions: false,
+    //   lastRow: "hide",
+    //   rowHeight: 180,
+    //   margins: 5,
+    // });
+    // $("#pick-wrapper").scroll(() => {
+    //   if ($("#pick-wrapper").scrollTop() +  $("#pick-wrapper").height() + 20 >= $("#pick-images").prop("scrollHeight") && this.isLoading === false) {
+    //     // this.getPickPaperData(this.page);
+        
+    //   }
+    // });
     // this.getPickPaperData(this.page ++)
     // this.getPickPaperData(this.page ++)
   },
@@ -117,11 +121,12 @@ export default {
       this.getPickPaperData(this.pickFilterValue)
     },
     getPickPaperData(val){
-      const url = `https://api.nguaduot.cn${val}?&date=20500101&score=99999999`;
+      const url = `https://api.nguaduot.cn${val}`;
       console.log(url);
       if(!this.isLoading){
         this.isLoading = true;
         axios.get(url).then(res=>{
+          console.log(res.data.data);
           let pickImageData = res.data.data;
           let animations = ["ani-gray", "bowen", "ani-rotate"];
           if(pickImageData){
@@ -144,7 +149,6 @@ export default {
           return
         })
       }
-
     },
     openFilter(){
       this.pickFilterShow = true
