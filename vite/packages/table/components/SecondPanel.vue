@@ -1,15 +1,13 @@
 <template>
   <div class="second-panel"  :class="{'large':this.size==='large','small':this.size==='small'}" id="secondPanel" style="">
-    <!-- <div v-if="close" style="margin-bottom: 1em">
-      <div class="btn"><Icon icon="close"></Icon></div>
+    <div  style="margin-bottom:2em;" v-if="gallery === true">
+      <div :onClick="goHome"  class="second-panel-back  bg-white cursor-pointer bg-opacity-10 rounded-lg flex items-center " style="padding: 0.5em 1em;">
+        <span>
+          <Icon icon="xiangzuo" style="font-size: 2em; margin-right: 0.2em;"></Icon>
+        </span>
+        <span style="font-size: 1.75em;">返回</span>
+      </div>
     </div>
-    <div v-if="logo" style="padding-left: 1em;margin-bottom:2em;">
-      <a-avatar shape="square" :size="50" :src="logo">
-      </a-avatar>
-    </div> -->
-    <!-- <div v-if="search" style="margin-top: 2.5em;margin-bottom:2em">
-      <a-input-search style="width: 8em;margin-left: 1em" placeholder="搜索"></a-input-search>
-    </div> -->
     <div @click="change($event,menu)" class="menu" :class="{'active':current(menu)}"
          v-for="(menu) in menus">
      <Icon v-if="menu.icon" :icon="menu.icon"></Icon>  {{ menu.title }}
@@ -26,7 +24,9 @@ export default {
     'size',
     'search',
     'close',
-    'back'
+    'back',
+    'goHome',
+    'gallery'
   ],
   emits: [
     'changeTab'
@@ -96,4 +96,5 @@ export default {
     margin-bottom: 0.5em;
   }
 }
+
 </style>

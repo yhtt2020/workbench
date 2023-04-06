@@ -1,28 +1,27 @@
 <template>
-<!-- class="main"  text-align: center;-->
-<div id="galleryContainer"  style="padding-top: 2em;width:100%;">
-  <div class="w-auto flex">
-     <div class="float-left">
-       <div :onClick="goHome" class="w-36 h-12 text-2xl cursor-pointer bg-white rounded-lg flex bg-opacity-10 justify-center items-center" style="margin-bottom: 12px;">
-        <Icon icon="xiangzuo"></Icon> 
-        <span>返回</span>
-       </div>
-       <div class="menu"  :class="{'active':activeIndex == menu.index}" v-for="(menu) in menus" @click="change(menu)">
-        <Icon v-if="menu.icon" :icon="menu.icon" style=" font-size: 1.319em;"></Icon> 
-        <span style="margin-left: 0.5em;"> {{ menu.title }}</span>
-       </div> 
-     </div>
-     <div id="parentScroller" style="margin-left: 5em;width:100%;">
+  <div id="galleryContainer"  style="text-align: center;padding-top: 2em">
+    <SecondPanel :search="true" :goHome="goHome" :menus="menus" :gallery="gallery" style="padding: 1em; margin-top: 3em;text-align: left; border-right: 1px solid rgba(255, 255, 255, 0.1);"  @changeTab="changeTab"></SecondPanel> 
+    <div id="parentScroller" style="margin-left: 15em">
       <router-view></router-view>
-     </div>
+    </div>
   </div>
-</div>
 </template>
 
+
 <script>
-import { defineComponent,ref } from 'vue';
-export default defineComponent({
-  name:'Gallery',
+import justifiedGallery from 'justifiedGallery'
+
+
+import VueCustomScrollbar from '../../../src/components/vue-scrollbar.vue'
+
+import SecondPanel from '../components/SecondPanel.vue'
+
+export default {
+  name: 'Gallery',
+  components: {
+    SecondPanel,
+    VueCustomScrollbar,
+  },
   data: () => ({
     tab: '',
     menus: [
@@ -94,22 +93,32 @@ export default defineComponent({
     },
 
     images: [],//当前相册图片
-    activeIndex: '',
+    gallery:true,
   }),
-  mounted(){
+  async mounted () {
     $('#galleryContainer').on('touchend',(e)=>{
       e.stopPropagation();
     })
-    this.activeIndex = this.menus[0].index
+    // this.$router.push({name:'my'})
+    // justifiedGallery()
+    // $('#container').justifiedGallery({
+    //   captions: false,
+    //   lastRow: 'hide',
+    //   rowHeight: 180,
+    //   margins: 5
+    // })
+
   },
-  methods:{
-    change(menu){
-      this.activeIndex = menu.index
-      this.$router.push(menu.route)
+  methods: {
+    changeTab (args) {
+      console.log(args)
+      this.$router.push(args.menu.route)
+      this.tab = args.index
     },
     goLock () {
       this.$router.push('/lock')
     },
+
     play () {
       window.Spotlight.show(this.bingImages, {
         control: 'autofit,page,fullscreen,close,zoom,prev,next',
@@ -120,22 +129,20 @@ export default defineComponent({
         title: false
       })
     },
-    goHome(){
-      this.$router.push({
-        name:'home'
-      })
-    },
     onInit: () => {
       console.log('lightGallery has been initialized')
     },
     onBeforeSlide: () => {
       console.log('calling before slide')
     },
+    goHome(){
+      this.$router.push({
+        name:'home'
+      })
+    }
   },
-
-})
+}
 </script>
-
 <style lang="scss" scoped>
 @import 'justifiedGallery/dist/css/justifiedGallery.min.css';
 .float-left{
