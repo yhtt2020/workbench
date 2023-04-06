@@ -355,7 +355,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .wallheaven-header {
-  width: auto;
+  width: 100%;
   padding-bottom: 32px;
   .wallheaven-item {
     font-size: 16px;
@@ -375,7 +375,7 @@ export default defineComponent({
 }
 
 .wallheaven-tab {
-  width: auto;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
