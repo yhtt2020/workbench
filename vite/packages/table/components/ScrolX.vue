@@ -47,7 +47,7 @@ export default {
   overflow-x: hidden;
 
   .sxd-rebox {
-    transform: rotate(90deg) rotateX(180deg);
+    transform: rotateZ(90deg) rotateX(180deg);
     transform-origin: left top;
   }
 }

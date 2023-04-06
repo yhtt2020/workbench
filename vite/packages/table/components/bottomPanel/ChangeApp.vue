@@ -32,7 +32,7 @@
       </div>
       </div>
     </div>
-    <div class="w-80 flex flex-row absolute bottom-4 left-1/2 -translate-x-1/2">
+    <div class="w-96 justify-between flex flex-row absolute bottom-8 left-1/2 -translate-x-1/2">
       <div style="width: 56px;height: 56px" class="flex justify-center items-center" v-for="item in listData">
         <Icon :icon="item.icon" style="width: 32px;height: 32px;color:white;" class="pointer" @click.stop="clickListItem(item)"></Icon>
       </div>
@@ -99,9 +99,9 @@ export default {
 .open-app,.last-app{
   max-width: 430px;
 }
-@media screen and (max-height: 600px) and (min-width: 1030px) {
+@media screen and (max-height: 600px) and (min-width: 880px) {
   .open-app,.last-app{
-    max-width: 330px;
+    max-width: 280px;
   }
 }
 

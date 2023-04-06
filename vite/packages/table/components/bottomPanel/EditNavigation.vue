@@ -147,7 +147,7 @@ export default {
     }
   },
   computed:{
-    ...mapWritableState(tableStore, ['navigationList']),
+    ...mapWritableState(tableStore, ['navigationList','routeParams']),
     filterList(){
       return this.ClassifyData.filter(i =>{return i.type === this.nowClassify&&i.name.includes(this.selectContent)})
     }
@@ -250,6 +250,7 @@ export default {
     },
     onBack(){
       this.$emit('setQuick')
+      this.routeParams.url&& setTimeout(()=>{this.$router.push({name: 'app', params: this.routeParams})},400)
     },
     addEdit(){
       this.editFlag = true;

@@ -43,7 +43,7 @@ const router = createRouter({
   routes
 })
 router.beforeEach((to,from,next) =>{
-  to.params.url&&tableStore().setRouteParams(to.params)
+  tableStore().setRouteParams(to.params)
   next()
 })
 

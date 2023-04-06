@@ -262,9 +262,11 @@ export default {
       this.full = value
     },
     appChange(){
+      this.routeParams.url&&ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
       this.changeFlag = true
     },
     closeChangeApp(){
+      this.routeParams.url&& setTimeout(()=>{this.$router.push({name: 'app', params: this.routeParams})},400)
       this.changeFlag = false
     },
     showMenu () {
