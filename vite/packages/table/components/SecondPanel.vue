@@ -57,9 +57,7 @@ export default {
 
 <style scoped lang="scss">
 .second-panel {
-  &.small{
-
-  }
+  &.small{}
   height: auto;
   border-radius: 6px;
   position: fixed;

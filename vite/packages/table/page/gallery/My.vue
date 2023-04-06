@@ -17,9 +17,9 @@
   </div>
   <div @click="this.visibleImport=true" class="bg-white bg-opacity-5 rounded-lg list-hover" style="display: inline-block;margin-right: 1em;padding: 10px;">
      <span>
-      <Icon  style="font-size: 2em;vertical-align: top" icon="tianjiawenjianjia"></Icon>
+      <Icon  style="font-size: 2em;vertical-align: top;margin-right: 0.2em;" icon="tianjiawenjianjia"></Icon>
      </span>
-     <span style="font-size:1.2em">导入</span>
+     <span style="font-size:1.2em;">导入</span>
   </div>
 </div>
 

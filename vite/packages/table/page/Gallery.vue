@@ -1,18 +1,18 @@
 <template>
 <!-- class="main"  text-align: center;-->
-<div id="galleryContainer"  style="padding-top: 2em;">
+<div id="galleryContainer"  style="padding-top: 2em;width:100%;">
   <div class="w-auto flex">
      <div class="float-left">
-       <div :onClick="goHome" class="w-36 h-12 text-2xl cursor-pointer bg-black rounded-lg flex bg-opacity-10 justify-center items-center" style="margin-bottom: 12px;">
+       <div :onClick="goHome" class="w-36 h-12 text-2xl cursor-pointer bg-white rounded-lg flex bg-opacity-10 justify-center items-center" style="margin-bottom: 12px;">
         <Icon icon="xiangzuo"></Icon> 
         <span>返回</span>
        </div>
        <div class="menu"  :class="{'active':activeIndex == menu.index}" v-for="(menu) in menus" @click="change(menu)">
         <Icon v-if="menu.icon" :icon="menu.icon" style=" font-size: 1.319em;"></Icon> 
-        <span style="margin-left: 0.1em;"> {{ menu.title }}</span>
+        <span style="margin-left: 0.5em;"> {{ menu.title }}</span>
        </div> 
      </div>
-     <div id="parentScroller" style="margin-left: 5em">
+     <div id="parentScroller" style="margin-left: 5em;width:100%;">
       <router-view></router-view>
      </div>
   </div>
@@ -157,4 +157,66 @@ export default defineComponent({
   cursor: pointer;
   margin-bottom: 0.5em;
 }
+</style>
+
+<style>
+.spl-pane > * {
+  filter: grayscale(0) blur(0);
+  transform: rotate(0deg);
+  transition: all 4s ease-out, transform 3s linear;
+}
+
+.spl-pane>*{
+  top:0 !important;
+  left: 0 !important;
+  width:100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+.spl-pane .ani-gray {
+  filter: grayscale(1) blur(5px);
+  opacity: 0;
+}
+
+.spl-pane .ani-rotate {
+  display: inline-block;
+  transform: rotate(360deg);
+}
+
+
+.spl-scene {
+  transition: transform 0.2s ease;
+}
+
+/* custom animation "visible state" (css context by custom classname "only-this-gallery" to apply these animation just on a specific gallery) */
+.spl-pane > * {
+  clip-path: circle(100% at center);
+  transition: transform 0.35s ease,
+  opacity 0.65s ease,
+  clip-path 0.8s ease, filter 3s ease-out;
+}
+
+/* custom animation "hidden state" ("custom" is the name of the animation you pass as gallery option) */
+/* 波纹动画*/
+
+/* animation state when gallery is hidden */
+.spl-pane .bowen {
+  clip-path: circle(0px at center);
+}
+
+/* animation state when gallery will open */
+.spl-pane {
+  clip-path: circle(100% at center);
+  transition: clip-path 0.65s ease 0.15s;
+}
+
+/*.spl-pane > * {*/
+/*  transform: rotate(0deg);*/
+/*  transition: all 1s ease-out;*/
+/*}*/
+
+/*.spl-pane .my-rotate {*/
+/*  transform: rotate(180deg)*/
+/*}*/
 </style>

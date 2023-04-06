@@ -1,26 +1,59 @@
 <template>
-  <div class="flex w-full justify-between items-center" style="margin-bottom: 16px;">
-    <div class="w-96 h-12 flex items-center">
-       <div class="w-80 h-12 bg-black bg-opacity-10 rounded-lg flex items-center ">
-           <div class="w-20 h-12 flex items-center justify-center" style="border-right: 1px solid rgba(255, 255, 255, 0.1);">壁纸源</div>
-           <a-select class="w-full" :bordered="false" v-model:value="pickFilterValue" @change="pickFilterChange($event)">
-             <!-- <a-select-option value="">ONE ? 一个</a-select-option> -->
-             <a-select-option value="/timeline/v2">拾光</a-select-option>
-             <a-select-option value="/glutton/journal">贪食鬼</a-select-option>
-             <a-select-option value="/wallhaven/v2">wallhaven</a-select-option>
-           </a-select>
+<div class="flex w-full justify-between items-center" style="margin-bottom: 16px;">
+  <div class="w-96 h-12 flex items-center">
+    <div class="w-80 h-12 bg-white bg-opacity-10 rounded-lg flex items-center ">
+        <div class="w-20 h-12 flex items-center justify-center" style="border-right: 1px solid rgba(255, 255, 255, 0.1);">壁纸源</div>
+          <a-select class="w-full" :bordered="false" v-model:value="pickFilterValue" @change="pickFilterChange($event)">
+            <!-- <a-select-option value="">ONE ? 一个</a-select-option> -->
+            <a-select-option value="/timeline/v2">拾光</a-select-option>
+            <a-select-option value="/glutton/journal">贪食鬼</a-select-option>
+            <a-select-option value="/wallhaven/v2">wallhaven</a-select-option>
+          </a-select>
        </div>
     </div>
-    <div class="w-48 h-12 flex items-center">
-       <div class="w-2/5 h-12 flex items-center rounded-lg cursor-pointer justify-center bg-black bg-opacity-10" @click="openFilter">
+  <div class="w-48 h-12 flex items-center">
+       <div class="w-2/5 h-12 flex items-center rounded-lg cursor-pointer justify-center bg-white bg-opacity-10" @click="openFilter">
          <Icon icon="filter" style="font-size: 1.715em;"></Icon>
          <span style="font-size: 1.15em;">筛选</span>
        </div>
-       <div class="w-12 h-12 flex items-center rounded-lg cursor-pointer justify-center bg-black bg-opacity-10" @click="openInfo" style="margin-left: 12px;">
+       <div class="w-12 h-12 flex items-center rounded-lg cursor-pointer justify-center bg-white bg-opacity-10" @click="openInfo" style="margin-left: 12px;">
          <InfoCircleOutlined style="font-size: 1.715em;"/>
        </div>
-    </div>
+  </div>
 </div>
+
+<vue-custom-scrollbar  id="pick-wrapper" :settings="settingsScroller" style="height: 80vh">
+  
+</vue-custom-scrollbar>
+
+<a-drawer v-model:visible="pickFilterShow" title="筛选" style="text-align: center !important;" class="no-drag">
+     
+</a-drawer>
+
+<a-drawer v-model:visible="pickInfoShow" title="信息" style="text-align: center !important;" class="no-drag">
+    <div class="flex w-full   justify-center items-center flex-col">
+        <div class="w-60" style="margin: 50%;">
+          <div class="flex" style="margin-bottom: 12px;">
+            <span style="margin-right: 16px;">壁纸源</span>
+            <span>ONE ? 一个</span>
+          </div>
+          <div class="flex" style="margin-bottom: 12px;">
+            <span style="margin-right: 30px;">简介</span>
+            <span>复杂的世界里，一个就够了</span>
+          </div>
+          <div class="flex items-center">
+            <span style="margin-right: 30px;">官网</span>
+            <span class="w-40 h-12 flex items-center rounded-lg cursor-pointer justify-center bg-white bg-opacity-10" @click="toOfficialWebsite">
+              访问官网
+            </span>
+          </div>
+        </div>
+    </div>
+    <template #footer>
+      <span>「拾光壁纸」提供技术支持</span>
+    </template>
+</a-drawer>
+
 </template>
 
 <script>
@@ -46,6 +79,7 @@ export default defineComponent({
       this.getPickingData(e)
     }
   },
+
   setup() {
     const pickFilterValue = ref('/timeline/v2')
     const pickInfoShow = ref(false)
