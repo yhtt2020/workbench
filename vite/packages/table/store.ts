@@ -124,11 +124,15 @@ export const tableStore = defineStore(
         clockEvent: [],
         customComponents: [{name: 'Music', id: 2}, {name: 'Weather', id: 3}, {name: 'Timer', id: 4}],
         aidaData: null,
-        navigationList:[]
+        navigationList:[],
+        routeParams:{}
       };
     },
 
     actions: {
+      setRouteParams(value){
+        this.routeParams=value
+      },
       removeNavigationList(index){
         this.navigationList.splice(index,1)
       },

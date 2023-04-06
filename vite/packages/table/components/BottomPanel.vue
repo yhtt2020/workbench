@@ -84,7 +84,6 @@
           <div v-else style="width: 45px;height: 45px;" class="flex justify-center items-center">
             <a-avatar :size="40"  shape="square" :src="item.icon" ></a-avatar>
           </div>
-
         </div>
         </div>
       </ScrolX>
@@ -249,7 +248,7 @@ export default {
   },
   computed: {
     ...mapWritableState(appStore, ['userInfo','settings']),
-    ...mapWritableState(tableStore, ['navigationList'])
+    ...mapWritableState(tableStore, ['navigationList','routeParams'])
   },
   methods: {
     ...mapActions(appStore, ['setUser']),
@@ -263,9 +262,11 @@ export default {
       this.changeFlag = false
     },
     showMenu () {
+      this.routeParams.url&&ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
       this.menuVisible = true
     },
     onClose () {
+      this.routeParams.url&&this.$router.push({name: 'app', params: this.routeParams})
       this.menuVisible = false
     },
     editNavigation(){

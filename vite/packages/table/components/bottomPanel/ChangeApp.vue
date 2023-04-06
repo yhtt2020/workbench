@@ -29,10 +29,8 @@
             <div class="text-xs">{{item.appType}}</div>
           </div>
         </div>
-
       </div>
       </div>
-
     </div>
     <div class="w-80 flex flex-row absolute bottom-4 left-1/2 -translate-x-1/2">
       <div style="width: 56px;height: 56px" class="flex justify-center items-center" v-for="item in listData">
@@ -90,7 +88,6 @@ export default {
   },
   methods:{
     clickListItem(item){
-      console.log(item)
         item.fn();
         this.$emit('closeChangeApp')
     }
