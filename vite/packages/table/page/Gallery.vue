@@ -111,7 +111,6 @@ export default {
   },
   methods: {
     changeTab (args) {
-      console.log(args)
       this.$router.push(args.menu.route)
       this.tab = args.index
     },

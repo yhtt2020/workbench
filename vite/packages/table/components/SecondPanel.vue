@@ -50,15 +50,12 @@ export default {
       if(menu.route){
         return this.$route.name===menu.route.name || this.$route.path===menu.route.path
       }else{
-        console.log(this.activeIndex,menu.index)
         return this.activeIndex===menu.index
       }
 
     },
     change (e, menu) {
       this.activeIndex = menu.index
-      console.log(this.activeIndex)
-      console.log(this.activeIndex)
       this.$emit('changeTab', {
         index: menu.index,
         menu: menu,
@@ -71,7 +68,9 @@ export default {
 
 <style scoped lang="scss">
 .second-panel {
-  &.small{}
+  &.small{
+    
+  }
   height: auto;
   border-radius: 6px;
   position: fixed;
