@@ -22,7 +22,14 @@
 </div>
 
 <vue-custom-scrollbar  id="pick-wrapper" :settings="settingsScroller" style="height: 80vh">
-   
+   <div id="pick-images">
+   <a-row :gutter="[20,20]" id="bingImages" style="margin-right: 1em">
+    <a-col class="image-wrapper " v-for="img in pickImageData" :span="6" style="">
+       <img :src="img.thumburl" alt="" style="width:100px;height:100px;">
+    </a-col>
+   </a-row>
+    
+   </div>
 </vue-custom-scrollbar>
 
 <a-drawer v-model:visible="pickFilterShow" title="筛选" style="text-align: center !important;" class="no-drag">
@@ -92,22 +99,51 @@ export default defineComponent({
       isLoading:false,
       pickChecked:false,
       classOption:[],
+      settingsScroller: {
+        useBothWheelAxes: true,
+        swipeEasing: true,
+        suppressScrollY: false,
+        suppressScrollX: true,
+        wheelPropagation: true
+      },
+      pickImageData:[]
     }
   },
   mounted() {
     $("#pick-wrapper").scroll(()=>{
       if ($("#pick-wrapper").scrollTop() +  $("#pick-wrapper").height() + 20 >= $("#pick-images").prop("scrollHeight") && this.isLoading === false) {
-        console.log($("#pick-wrapper").height());
+        // console.log($("#pick-wrapper").height());
+         this.getPickingData($("#pick-wrapper").height())
       }
     })
+    this.getPickingData($("#pick-wrapper").height())
     this.getClassOption()
   },
   methods:{
     // 获取拾光壁纸数据
-    // getPickingData(v){
-    //   const apiUrl = `https://api.nguaduot.cn/${v}`
-    //   console.log(apiUrl);
-    // },
+    getPickingData(v){
+      const apiUrl = `https://api.nguaduot.cn/${this.pickFilterValue}`
+      const newTime = new Date()
+      const dateTime =  this.formatDateTime(newTime)
+      console.log(dateTime);
+      const params = {
+        order:`${this.filterValue}`,
+        no:`${v}`,
+        date:'',
+        score:`${v}`,
+      }
+      axios.get(apiUrl).then(res=>{
+         this.pickImageData = res.data.data
+      })
+
+      // const pickHeight = document.querySelector('#pick-wrapper')
+      // console.log(pickHeight);
+      
+     
+      // // console.log(params);
+      
+      
+    },
     // 获取拾光壁纸分类
     getClassOption(){
        const apiUrl = 'https://api.nguaduot.cn/timeline/cate'
@@ -120,8 +156,22 @@ export default defineComponent({
     },
     // 重置筛选
     restFilter(){
-      
+
     },
+
+   formatDateTime (date) {
+     var y = date.getFullYear();
+     var m = date.getMonth() + 1;
+     m = m < 10 ? ('0' + m) : m;
+     var d = date.getDate();
+     d = d < 10 ? ('0' + d) : d;
+     var h = date.getHours();
+     var minute = date.getMinutes();
+     minute = minute < 10 ? ('0' + minute) : minute;
+     // return y + '-' + m + '-' + d+' '+h+':'+minute;
+     return y + '-' + m + '-' + d
+   }
+
   },
 
   setup() {
@@ -147,6 +197,7 @@ export default defineComponent({
         }
     ])
     const filterIndex = ref('D') 
+    const filterValue = ref('date')
     // 右侧打开拾光壁纸官网信息
     const openInfo = () =>{
       pickInfoShow.value = true
@@ -158,6 +209,7 @@ export default defineComponent({
 
     const filterOptionClick = (item) =>{
       filterIndex.value = item.index
+      filterValue.value = item.value
     }
 
     // 跳转至拾光壁纸官网
@@ -172,6 +224,7 @@ export default defineComponent({
       pickFilterValue,
       pickInfoShow,
       pickFilterShow,
+      filterValue,
       classValue,
       filterOption,
       filterIndex,
