@@ -1,4 +1,9 @@
 //系统应用变量
+const Server={
+  baseUrl:'https://wad.apps.vip/api',
+  //baseUrl:'http://localhost:8001'
+}
+
 const SystemApps = {
   //网易云音乐
   wyyMusic: {
@@ -265,4 +270,4 @@ let ActionGroups = [
     ]
   }
 ]
-export {SystemApps, ActionGroups}
+export {SystemApps, ActionGroups,Server}

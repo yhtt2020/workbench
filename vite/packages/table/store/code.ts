@@ -1,15 +1,31 @@
 import {defineStore} from "pinia";
+import {Server} from '../consts'
 const {axios} = window.$models
-const server = 'https://wad.apps.vip/api'
+const server = Server.baseUrl
+//const server='http://localhost:8001'
 const activeUrl = server + '/app/activeCode'
 const verifyUrl = server + '/app/verifyCode'
 const createUrl = server + '/app/createCodes'
+const exchangeUrl= server+'/app/exchangeCode'
+const listUrl= server+'/app/listCodes'
+const getConfig = async () => {
+  let token;
+  const res = await window.tsbApi.user.get()
+  token = res.data.token
+
+  return {
+    headers: {
+      'Authorization': token
+    }
+  }
+}
 // @ts-ignore
 export const codeStore = defineStore('code', {
   state: () => ({
     myCode: ''//我的激活码
   }),
   actions: {
+
     async active(code, serialHash) {
       return axios.post(activeUrl, {key: code, serialHash: serialHash})
     },
@@ -20,6 +36,39 @@ export const codeStore = defineStore('code', {
       }).catch(e => {
         this.loading = false
       })
+    },
+
+    async listCodes(){
+      let rs=await axios.post(listUrl,undefined,await getConfig())
+      console.log(await getConfig(),rs,'请求结果')
+      if(rs.code!==1000){
+        console.warn(rs)
+        return {
+          status:0
+        }
+      }else{
+        return {
+          status:1,
+          data:rs.data
+        }
+      }
+    },
+    async exchange(num=1){
+      console.log('准备发起请求')
+      console.log(exchangeUrl,'请求结果')
+      let rs=await axios.post(exchangeUrl,{num},await getConfig())
+      console.log(await getConfig(),rs,'请求结果')
+      if(rs.code!==1000){
+        console.warn(rs)
+        return {
+          status:0
+        }
+      }else{
+        return {
+          status:1,
+          data:rs.data
+        }
+      }
     },
 
     async verify(cb) {
