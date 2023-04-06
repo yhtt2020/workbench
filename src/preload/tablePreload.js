@@ -42,10 +42,15 @@ window.getSerialNum=async () => {
     //   baseboardSerial: s,
     // }
     // console.log(s)
-    let serial=tsbApi.runtime.clientId
-    let crypto=require('crypto')
-    let serialHash=crypto.createHash('sha256').update(JSON.stringify(serial)).digest('hex')
-    return serialHash
+    let serial=localStorage.getItem('serial')
+    if(serial===null){
+      //去生成
+      serial=tsbApi.runtime.clientId
+      let crypto=require('crypto')
+      serial=crypto.createHash('sha256').update(JSON.stringify(serial)).digest('hex')
+      localStorage.setItem('serial',serial)
+    }
+    return serial
   }catch (e) {
    console.error(e)
   }

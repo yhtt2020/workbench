@@ -10,8 +10,8 @@
     <!-- <div v-if="search" style="margin-top: 2.5em;margin-bottom:2em">
       <a-input-search style="width: 8em;margin-left: 1em" placeholder="搜索"></a-input-search>
     </div> -->
-    <div @click="change($event,menu)" class="menu" :class="{'active':activeIndex === menu.index}"
-         v-for="(menu,index) in menus">
+    <div @click="change($event,menu)" class="menu" :class="{'active':current(menu)}"
+         v-for="(menu) in menus">
      <Icon v-if="menu.icon" :icon="menu.icon"></Icon>  {{ menu.title }}
     </div>
   </div>
@@ -42,9 +42,23 @@ export default {
     this.activeIndex = this.menus[0].index
     //this.panel.style.marginTop = -this.panel.offsetHeight / 2-20 + 'px'
   },
+  computed:{
+
+  },
   methods: {
+    current(menu){
+      if(menu.route){
+        return this.$route.name===menu.route.name || this.$route.path===menu.route.path
+      }else{
+        console.log(this.activeIndex,menu.index)
+        return this.activeIndex===menu.index
+      }
+
+    },
     change (e, menu) {
       this.activeIndex = menu.index
+      console.log(this.activeIndex)
+      console.log(this.activeIndex)
       this.$emit('changeTab', {
         index: menu.index,
         menu: menu,
