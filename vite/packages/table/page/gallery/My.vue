@@ -2,7 +2,7 @@
 <div class="rotate-center" style="font-size: 2em;margin-bottom: 1em">
     我的收藏 {{ myPapers.length }}  
 </div>
-<div class="pointer" style="position: fixed;right: 2em;top: 6em">
+<div class="pointer" style="position: fixed;right: 2em;top: 5.5em">
   <div @click="playAll" class="bg-white bg-opacity-5 rounded-lg list-hover"  style="display: inline-block;margin-right: 1em;padding: 10px;">
     <span>
       <Icon style="font-size: 2em;vertical-align: top" icon="bofang"></Icon>
@@ -367,5 +367,8 @@ export default defineComponent({
 }
 .list-hover:hover{
   background: rgba(255, 255, 255, 0.2);
+}
+.rotate-center{
+  text-align: left !important;
 }
 </style>
