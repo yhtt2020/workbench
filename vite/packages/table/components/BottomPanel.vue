@@ -72,7 +72,8 @@
 <!--    </div>-->
     <div class="w-1/2 flex flex-row  items-center px-2" style="background: #282828;border-radius: 8px">
 
-      <ScrolX :height="75" class="flex flex-row pt-2">
+      <ScrolX :height="75" class="pt-2">
+        <div style="white-space: nowrap;"  class="flex flex-row items-center">
         <div v-if="navigationList.length<=0" style="height: 68px;">
 
         </div>
@@ -84,6 +85,7 @@
             <a-avatar :size="40"  shape="square" :src="item.icon" ></a-avatar>
           </div>
 
+        </div>
         </div>
       </ScrolX>
 
