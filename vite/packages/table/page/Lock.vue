@@ -122,7 +122,14 @@ export default {
         Modal.error({content:'请添加我的壁纸后重新锁屏。'})
         return
       }
-      window.Spotlight.show(this.myPapers, {
+      let LockArr = []
+      this.myPapers.map(el=>{
+         let image = {
+          src:el.path
+         }
+         LockArr.push(image)
+      })
+      window.Spotlight.show(LockArr, {
         control: 'autofit,fullscreen,close,zoom,prev,next',
         play: true,
         autoslide: true,

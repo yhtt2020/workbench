@@ -78,7 +78,20 @@ export const paperStore = defineStore('paper', {
         this.activePapers.splice(found, 1)
       }
     },
+
+    // 将本地数据存储在myPaper
+    addToStaticPaper(image: any){
+      let found = this.myPapers.findIndex(img=>{
+        if(img.src === image.src) return true
+      })
+      if (found === -1) {
+        this.myPapers.push(image)
+      } else {
+        return
+      }
+    },
   },
+
   persist: {
     enabled: true,
     strategies: [{
