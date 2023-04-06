@@ -1481,7 +1481,7 @@ app.whenReady().then(() => {
     appManager.closeApp(args.nanoid)
   })
   ipc.on('getAppRunningInfo', async (event, args) => {
-    SidePanel.send('updateRunningInfo', {
+    event.reply('updateRunningInfo', {
       nanoid: args.nanoid,
       'info': await appManager.getAppRunningInfo(args.nanoid)
     })
@@ -1496,7 +1496,7 @@ app.whenReady().then(() => {
     }
     let image = appManager.capture(saApp.windowId)
     if (!!image)
-      SidePanel.send('updateAppCapture', { nanoid: saApp.saApp.nanoid, captureSrc: image })
+      event.reply('updateAppCapture', { nanoid: saApp.saApp.nanoid, captureSrc: image })
   })
   /**
    * 获取到全部正在运行的app清单
@@ -1508,7 +1508,7 @@ app.whenReady().then(() => {
       runningApps.push(window.saApp.nanoid)
       windows.push(window.saApp.windowId)
     })
-    SidePanel.send('updateRunningApps', { runningApps: runningApps, windows: windows })
+    event.reply('updateRunningApps', { runningApps: runningApps, windows: windows })
   })
   ipc.on(ipcMessageMain.saApps.deleteApp, (event, args) => {
     let appId = args.nanoid
