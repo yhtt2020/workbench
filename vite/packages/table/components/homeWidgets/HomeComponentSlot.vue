@@ -51,7 +51,7 @@
     @close="onClose"
   >
     <div style="display: flex;flex-direction: row;height: 100%">
-      <div class="option" @click="onSetup" v-if="!options.type">
+      <div class="option" @click="onSetup" v-if="options.type.includes('downDay')">
         <Icon class="icon" icon="shezhi1"></Icon>设置
       </div>
       <div class="option" @click="removeCard">

@@ -1,5 +1,5 @@
 <template>
-  <div class="bottom-panel flex flex-row items-center justify-center" style="position: fixed;padding:10px;bottom:0;width: 100vw;text-align: center" @contextmenu.stop="showMenu">
+  <div class="bottom-panel flex flex-row items-center justify-center w-full p-2" style="text-align: center" @contextmenu.stop="showMenu">
     <div class="common-panel user" style="display: inline-block;vertical-align: top">
       <div v-if="!userInfo">
         <div @click="login" style="padding: 0.5em">
@@ -70,14 +70,14 @@
 <!--      <PanelButton icon="suoding" title="锁屏" :onClick="lock"></PanelButton>-->
 <!--      <PanelButton :onClick="power" icon="tuichu" title="电源"></PanelButton>-->
 <!--    </div>-->
-    <div class="w-1/2 flex flex-row  items-center relative" style="background: #282828;border-radius: 8px; height: 73px;overflow: hidden;">
-        <div style="overflow: hidden;overflow-x: auto; bottom: -20px;"
-             class="flex flex-row items-center  flex-nowrap absolute left-4 top-0 right-20" ref="content">
-        <div v-if="navigationList.length<=0" style="height: 68px;">
+    <div class=" flex flex-row  items-center " style="background: #282828;border-radius: 8px; height: 73px;overflow: hidden;">
+        <div style="overflow: hidden;overflow-x: auto;"
+             class="flex flex-row items-center  flex-nowrap scroll-content" ref="content">
+        <div v-if="navigationList.length<=0" style="height: 56px;">
 
         </div>
         <div class="pointer mr-3" style="white-space: nowrap;display: inline-block" v-for="item in navigationList" @click="clickNavigation(item)" v-else>
-              <div style="width: 45px;height: 45px;background: rgba(33, 33, 33, 1);" v-if="item.type==='systemApp'" class="flex justify-center items-center rounded-xl">
+              <div style="width: 56px;height:56px;background: rgba(33, 33, 33, 1);" v-if="item.type==='systemApp'" class="flex justify-center items-center rounded-xl">
                 <Icon :icon="item.icon" style="width: 32px;height: 32px;color:rgba(255, 255, 255, 0.4);" ></Icon>
               </div>
           <div v-else style="width: 45px;height: 45px;" class="flex justify-center items-center">
@@ -87,7 +87,7 @@
         </div>
 
 
-    <div style="border-left: 1px solid rgba(255, 255, 255, 0.4);width: 62px;" class="flex justify-center items-center  h-2/3 pointer absolute right-0">
+    <div style="border-left: 1px solid rgba(255, 255, 255, 0.4);width: 62px;" class="flex justify-center items-center  h-2/3 pointer ">
       <Icon icon="appstore-fill" style="width: 48px;height: 48px;color: white" @click="appChange"></Icon>
     </div>
   </div>
@@ -220,10 +220,18 @@ export default {
         suppressScrollX: false,
         wheelPropagation: true,
       },
-      changeFlag:false
+      changeFlag:false,
+      screenWidth: document.body.clientWidth
     }
   },
   mounted () {
+    const that = this
+    window.onresize = function() {
+      return function(){
+        window.screenWidth = document.body.clientWidth;
+        that.screenWidth = window.screenWidth
+      }()
+    }
     let content = this.$refs.content
     content.addEventListener('wheel',(event) => {
       console.log(event.deltaY)
@@ -258,6 +266,21 @@ export default {
     ...mapWritableState(appStore, ['userInfo','settings']),
     ...mapWritableState(tableStore, ['navigationList','routeParams'])
   },
+  watch: {
+    screenWidth : {
+      handler(){
+        this.$nextTick(()=>{
+          if(this.$refs.content.offsetHeight-this.$refs.content.clientHeight>0){
+            this.$refs.content.style.marginTop='17px'
+          }else{
+            this.$refs.content.style.marginTop='0px'
+          }
+        })
+
+      },
+      immediate: true
+    }
+  },
   methods: {
     goMy(){
       this.$router.push({name:"socialMy"})
@@ -275,6 +298,7 @@ export default {
       this.changeFlag = false
     },
     showMenu () {
+      console.log(document.body.scrollHeight > (window.innerHeight || document.documentElement.clientHeight))
       this.routeParams.url&&ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
       this.menuVisible = true
     },
@@ -577,5 +601,9 @@ export default {
     opacity: 0;
   }
 }
+.scroll-content::-webkit-scrollbar { width: 0 !important }
+.scroll-content { -ms-overflow-style: none; }
+.scroll-content { overflow: -moz-scrollbars-none; }
+
 
 </style>
