@@ -83,6 +83,7 @@
     </div>
     <div id="my-mse"></div>
 </div> 
+
 </template>
 
 <script>
@@ -199,21 +200,14 @@ export default defineComponent({
     },
 
     playAll(){
-      const playArr = []
-      this.myPapers.map(el=>{
-          playArr.push({
-            src:el.path
-          })
-      })
-      window.Spotlight.show(playArr,{
+       window.Spotlight.show(this.myPapers,{
         control: 'autofit,page,fullscreen,close,zoom,prev,next',
         play: true,
         autoslide: true,
         infinite: true,
         progress: false,
-        title: false,
-        fullscreen:true,
-      })
+        title: false
+       })
     },
 
     playActive(){
