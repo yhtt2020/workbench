@@ -4,7 +4,9 @@ import {myStore} from '../util.js'
 export const appsStore = defineStore('apps', {
   state: () => ({
     myApps:[],
-    qingApps:[]
+    qingApps:[],
+    runningApps:[],//运行中的apps
+    runningAppsInfo:{},
   }),
   actions:{
     loadData(){

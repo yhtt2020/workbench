@@ -47,7 +47,8 @@ import {appStore, tableStore} from "./store";
 import Barrage from "./components/comp/Barrage.vue";
 import {weatherStore} from "./store/weather";
 import {codeStore} from "./store/code";
-
+import {appsStore} from "./store/apps";
+const {appModel} =window.$models
 let startX,
   startY,
   moveEndX,
@@ -68,6 +69,21 @@ export default {
     };
   },
   async mounted() {
+    ipc.on('updateRunningApps', async (event, args) => {
+      this.runningApps = args.runningApps
+      this.runningAppsInfo = {}
+      for (const app of args.runningApps) {
+        this.runningAppsInfo[app] = await appModel.get({nanoid: app})
+        console.log(await appModel.get({nanoid: app}))
+        this.runningAppsInfo[app].windowId = args.windows[args.runningApps.indexOf(app)]
+        ipc.send('getAppRunningInfo', {nanoid: app})
+      }
+    })
+    ipc.on('updateRunningInfo',  (event, args) =>{
+      let app = this.runningAppsInfo[args.nanoid]
+      app.capture = args.info.capture + '?t=' + Date.now()
+      app.memoryUsage = args.info.memoryUsage
+    })
     if (!this.myCode) {
       //注释此处的代码跳过激活码验证
       this.$router.push('/code')
@@ -105,7 +121,8 @@ export default {
       "appDate",
     ]),
     ...mapWritableState(appStore, ['settings', 'routeUpdateTime', 'userInfo', 'init']),
-    ...mapWritableState(codeStore, ['myCode'])
+    ...mapWritableState(codeStore, ['myCode']),
+    ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo'])
   },
   methods: {
     ...mapActions(appStore, ['setMusic', 'reset']),
