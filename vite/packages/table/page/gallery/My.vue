@@ -83,6 +83,7 @@
     </div>
     <div id="my-mse"></div>
 </div> 
+
 </template>
 
 <script>
@@ -199,21 +200,14 @@ export default defineComponent({
     },
 
     playAll(){
-      const playArr = []
-      this.myPapers.map(el=>{
-          playArr.push({
-            src:el.path
-          })
-      })
-      window.Spotlight.show(playArr,{
+       window.Spotlight.show(this.myPapers,{
         control: 'autofit,page,fullscreen,close,zoom,prev,next',
         play: true,
         autoslide: true,
         infinite: true,
         progress: false,
-        title: false,
-        fullscreen:true,
-      })
+        title: false
+       })
     },
 
     playActive(){
@@ -275,11 +269,11 @@ export default defineComponent({
           this.myPapers.splice(this.myPapers.indexOf(this.currentPaper),1)
         }
       }else{
-        this.activePapers.filter(img =>{
-          if(img.path ===  this.currentPaper.path){
-            this.activePapers.splice(this.currentPaper.path,1)
-          }
+        const findIndex =  this.activePapers.findIndex(img=>{
+          if(img.src === this.currentPaper.src) 
+          return true
         })
+        this.activePapers.splice(findIndex,1)
         if(this.currentPaper.src.split('//')[0] === 'file:' && imageExtensions.indexOf(this.currentPaper.src.split('.')[1]) !== -1){
           fs.removeSync(path.join(this.currentPaper.src.split('//')[1])) 
           if(this.myPapers.indexOf(this.currentPaper) !== -1){

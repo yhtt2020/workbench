@@ -109,6 +109,7 @@ export default {
   object-fit: cover;
   width: 100%;
   border-radius: 6px;
+  aspect-ratio: 16/9;
 }
 .viewer-toolbar > ul{
 li{
