@@ -95,5 +95,8 @@ export default {
     margin-bottom: 0.5em;
   }
 }
+.second-panel-back:hover{
+  background: rgba(255, 255, 255, 0.25);
+}
 
 </style>
