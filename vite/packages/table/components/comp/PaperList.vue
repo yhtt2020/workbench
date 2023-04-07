@@ -2,7 +2,7 @@
   <viewer :images="list" :options="options">
     <a-row :gutter="[20,20]" id="bingImages" style="margin-right: 1em">
       <a-col class="image-wrapper " v-for="img in list" :span="6" style="">
-        <img  class="image-item pointer" :src="img.src" :data-source="img.path" style="position: relative">
+        <img @contextmenu.prevent="paperShowMenu(img)"  class="image-item pointer" :src="img.src" :data-source="img.path" style="position: relative">
         <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
           <div @click.stop="addToMy(img)" class="bottom-actions pointer" :style="{background:isInMyPapers(img)?'#009d00a8':''}">
             <Icon v-if="!isInMyPapers(img)" icon="tianjia1"></Icon>
@@ -12,13 +12,30 @@
       </a-col>
     </a-row>
   </viewer>
+<a-drawer v-model:visible="visibleMenu" placement="bottom">
+  <a-row :gutter="20" style="text-align: center">
+    <a-col :span="4">
+      <div @click="setDesktopPaper" class="btn">
+        <Icon style="font-size: 3em" icon="tianjia1"></Icon>
+        <div>设置为桌面壁纸</div>
+      </div>
+    </a-col>
+
+    <a-col>
+      <div  @click="add()" class="btn">
+        <Icon style="font-size: 3em" icon="xiazai"></Icon>
+        <div>下载该壁纸</div>
+      </div>
+    </a-col>
+  </a-row>
+</a-drawer>
 </template>
 
 <script>
 import { mapActions,mapState  } from 'pinia'
 import { appStore} from '../../store'
 import { paperStore } from '../../store/paper'
-
+import {message,Modal} from 'ant-design-vue'
 export default {
   name: 'PaperList',
   props:['list'],
@@ -26,7 +43,9 @@ export default {
     return{
       options:{
         url: 'data-source',
-      }
+      },
+      visibleMenu:false,
+      paperCurrent:null
     }
   },
 
@@ -45,7 +64,23 @@ export default {
       return this.myPapers.findIndex(img=>{
         return image.src===img.src
       })>-1
-    }
+    },
+    paperShowMenu(item){
+      this.paperCurrent = item
+      this.visibleMenu = true
+    },
+    setDesktopPaper(){
+      Modal.confirm({
+        content:'确定将此壁纸设置为系统桌面壁纸？注意，此处设置不是工作台的壁纸。',
+        okText:'设置桌面壁纸',
+        onOk:()=>{
+          message.info('正在为您下载并设桌面壁纸')
+          tsbApi.system.setPaper(this.paperCurrent.src)
+          this.visibleMenu = false
+        }
+      })
+    },
+    add(){}
   },
   computed:{
     ...mapState(paperStore,['myPapers']),
