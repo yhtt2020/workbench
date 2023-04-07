@@ -370,6 +370,7 @@ export const tableStore = defineStore(
       addCountdownDay(value) {
         this.countdownDay.push(value);
         this.sortCountdown()
+        console.log(this.countdownDay)
         //   this.saveCountdownDay();
       },
       sortCountdown() {
@@ -382,6 +383,7 @@ export const tableStore = defineStore(
           }
           return value1.year - value2.year;
         });
+        console.log(this.countdownDay)
         const a = this.countdownDay.filter((value) => {
           return (
             value.dateValue.year > this.appDate.year ||
@@ -390,9 +392,11 @@ export const tableStore = defineStore(
               value.dateValue.day >= this.appDate.day && value.dateValue.month === this.appDate.month)
           );
         });
-
+        for (let i = 0; i < a.length; i++) {
+          a[i].type = 'noOver'
+        }
         if (a.length !== 0)
-          this.countdownDay = [...a, ...this.countdownDay.slice(0, -a.countdownDay)];
+          this.countdownDay = [...a, ...this.countdownDay.slice(0, -a.length)];
       },
       removeCountdownDay(index) {
         this.countdownDay.splice(index, 1);
