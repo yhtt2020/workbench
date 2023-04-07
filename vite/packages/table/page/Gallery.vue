@@ -44,15 +44,15 @@ export default {
 
           }
       },
-      {
-        title: 'Wallheaven',
-        index: 'w',
-        icon:'lu',
-        route:
-          {
-            name: 'wallheaven'
-          }
-      },
+      // {
+      //   title: 'Wallheaven',
+      //   index: 'w',
+      //   icon:'lu',
+      //   route:
+      //     {
+      //       name: 'wallheaven'
+      //     }
+      // },
       {
         index:'p',
         title:'拾光壁纸',
@@ -111,7 +111,6 @@ export default {
   },
   methods: {
     changeTab (args) {
-      console.log(args)
       this.$router.push(args.menu.route)
       this.tab = args.index
     },

@@ -3,14 +3,13 @@
   <div class="w-96 h-12 flex items-center">
     <div class="w-80 h-12 bg-white bg-opacity-10 rounded-lg flex items-center ">
         <div class="w-20 h-12 flex items-center justify-center" style="border-right: 1px solid rgba(255, 255, 255, 0.1);">壁纸源</div>
-          <a-select class="w-full" :bordered="false" v-model:value="pickFilterValue" @change="pickFilterChange($event)">
-            <!-- <a-select-option value="">ONE ? 一个</a-select-option> -->
+        <a-select class="w-full" :bordered="false" v-model:value="pickFilterValue" @change="pickFilterChange($event)">
             <a-select-option value="/timeline/v2">拾光</a-select-option>
             <a-select-option value="/glutton/journal">贪食鬼</a-select-option>
             <a-select-option value="/wallhaven/v2">wallhaven</a-select-option>
-          </a-select>
-       </div>
+        </a-select>
     </div>
+  </div>
   <div class="w-48 h-12 flex items-center">
        <div class="w-2/5 h-12 flex items-center rounded-lg cursor-pointer justify-center bg-white bg-opacity-10" @click="openFilter">
          <Icon icon="filter" style="font-size: 1.715em;"></Icon>
@@ -23,11 +22,49 @@
 </div>
 
 <vue-custom-scrollbar  id="pick-wrapper" :settings="settingsScroller" style="height: 80vh">
-   
+  <viewer :images="pickImageData" :options="options" >
+    <div  style="display: flex; align-items: center; justify-content: center;">
+      <a-spin  v-if="isLoading" />
+    </div>
+    <a-row :gutter="[20,20]" id="pick-images" ref="pickRef" style="margin-right: 1em">
+      <a-col class="image-wrapper " v-for="img in pickImageData" :span="6" style="">
+         <img  class="image-item pointer" :src="img.src"  :data-source="img.path"  :alt="img.resolution"  style="position: relative">
+         <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
+          <div @click.stop="addToMy(img)"  class="bottom-actions pointer" :style="{background:isInMyPapers(img)?'#009d00a8':''}">
+            <Icon v-if="!isInMyPapers(img)" icon="tianjia1"></Icon>
+            <Icon v-else style="" icon="yiwancheng"></Icon>
+          </div>
+        </div>
+      </a-col>
+    </a-row>
+  </viewer>
 </vue-custom-scrollbar>
 
 <a-drawer v-model:visible="pickFilterShow" title="筛选" style="text-align: center !important;" class="no-drag">
-     
+  <div class="w-full h-12  flex rounded-lg" style="border:1px solid rgba(255, 255, 255, 0.1);margin-bottom:1.714289em;">
+     <div class="w-1/3 h-100 flex items-center justify-center filter-item" :class="filterIndex === item.index ? 'active':''"  v-for="item in filterOption" @click="filterOptionClick(item)" style="border-right:1px solid rgba(255, 255, 255, 0.1);">
+        {{ item.title }}
+     </div>
+  </div>
+  <div class="w-full h-12  flex items-center justify-between" style="margin-bottom:1.714289em;">
+    <span>分类</span>
+    <div class="w-60  bg-white bg-opacity-10 rounded-lg flex items-center ">
+        <a-select class="w-full" :bordered="false" v-model:value="classValue" @change="filterClassValue($event)">
+            <a-select-option v-for="item in classOption" :value="item.id">
+              {{ item.name }}
+            </a-select-option>
+        </a-select>
+    </div>
+  </div>
+  <div class="w-full h-12  flex items-center justify-between" style="margin-bottom:1.714289em;">
+   <span>筛选选</span>
+   <a-switch v-model:checked="pickChecked" />
+  </div>
+  <div class="w-full flex items-center justify-center">
+   <div @click="restFilter" class="w-28 h-12  flex items-center justify-center  rounded-lg cursor-pointer  bg-white bg-opacity-10">
+    <span>重置筛选</span>
+   </div>
+  </div>
 </a-drawer>
 
 <a-drawer v-model:visible="pickInfoShow" title="信息" style="text-align: center !important;" class="no-drag">
@@ -60,39 +97,147 @@
 import { defineComponent,ref } from 'vue';
 import {InfoCircleOutlined} from '@ant-design/icons-vue'
 import axios from 'axios';
+import { paperStore } from "../../store/paper";
+import { mapActions, mapState } from "pinia";
 export default defineComponent({
   name:'Picking',
   components:{
     InfoCircleOutlined
   },
+  computed: {
+    ...mapState(paperStore, ["myPapers"]),
+  },
   data(){
     return{
       isLoading:false,
+      pickChecked:false,
+      classOption:[],
+      settingsScroller: {
+        useBothWheelAxes: true,
+        swipeEasing: true,
+        suppressScrollY: false,
+        suppressScrollX: true,
+        wheelPropagation: true
+      },
+      pickImageData:[],
+      pickHeight:80000,
+      options:{
+        url: 'data-source',
+      }
     }
   },
   mounted() {
     $("#pick-wrapper").scroll(()=>{
       if ($("#pick-wrapper").scrollTop() +  $("#pick-wrapper").height() + 20 >= $("#pick-images").prop("scrollHeight") && this.isLoading === false) {
-        console.log($("#pick-wrapper").height());
+        this.pickHeight = this.pickHeight + 1000
+        this.getPickingData(this.pickFilterValue,this.pickHeight)
       }
     })
+    this.getPickingData(this.pickFilterValue,this.pickHeight)
+    this.getClassOption()
   },
   methods:{
+    ...mapActions(paperStore, ["removeToMyPaper"]),
     // 获取拾光壁纸数据
-    getPickingData(v){
-      const apiUrl = `https://api.nguaduot.cn/${v}`
-      console.log(apiUrl);
+    getPickingData(vl,vh){
+      const apiUrl = `https://api.nguaduot.cn${vl}`
+      const newTime = new Date()
+      const dateTime =  this.formatDateTime(newTime)
+      const params = {
+        order:`${this.filterValue}`,
+        no:`${vh}`,
+        date:`${dateTime}`,
+        score:`${vh}`,
+      }
+      if(!this.isLoading){
+        this.isLoading = true
+        axios.get(apiUrl,{params:params}).then(async res=>{
+          let pickImage = res.data.data
+          let animations = ["ani-gray", "bowen", "ani-rotate"];
+          if(pickImage){
+            pickImage.forEach(img=>{
+              let randomIndex = Math.floor(Math.random() * animations.length);
+              const image = {
+                title:false,
+                src:img.thumburl,
+                path:img.imgurl,
+                resolution:img.size,
+                animations: animations[randomIndex],
+              }
+              this.pickImageData.push(image)
+            })
+            this.$nextTick(() => {
+              this.isLoading = false;
+            });
+          }
+        })  
+      }
+    },
+    // 获取拾光壁纸分类
+    getClassOption(){
+       const apiUrl = 'https://api.nguaduot.cn/timeline/cate'
+       axios.get(apiUrl).then(res=>{
+          this.classOption = res.data.data
+       })
     },
     pickFilterChange(e){
       this.pickFilterValue = e
-      this.getPickingData(e)
-    }
+      this.getPickingData(e,this.pickHeight)
+    },
+    // 重置筛选
+    restFilter(){
+      this.filterValue = 'date'
+      this.pickChecked = false
+      this.classValue = 'landscape'
+      this.filterIndex = 'D'
+    },
+
+   formatDateTime (date) {
+     var y = date.getFullYear();
+     var m = date.getMonth() + 1;
+     m = m < 10 ? ('0' + m) : m;
+     var d = date.getDate();
+     d = d < 10 ? ('0' + d) : d;
+     return y+m+d 
+   },
+
+   addToMy(img){
+    this.removeToMyPaper(img);
+   },
+
+   isInMyPapers(image) {
+      return (
+        this.myPapers.findIndex((img) => {
+          return image.src === img.src;
+        }) > -1
+      );
+   },
   },
 
   setup() {
-    const pickFilterValue = ref('/timeline/v2')
+    const pickFilterValue = ref('/glutton/journal')
     const pickInfoShow = ref(false)
     const pickFilterShow = ref(false)
+    let classValue = ref('landscape')
+    const filterOption = ref([
+        {
+          index:'D',
+          title:'最新',
+          value:'date'
+        },
+        {
+          index:'S',
+          title:'趋势',
+          value:'score'
+        },
+        {
+          index:'R',
+          title:'随机',
+          value:'random'
+        }
+    ])
+    let filterIndex = ref('D') 
+    let filterValue = ref('date')
     // 右侧打开拾光壁纸官网信息
     const openInfo = () =>{
       pickInfoShow.value = true
@@ -101,30 +246,51 @@ export default defineComponent({
     const openFilter = () =>{
       pickFilterShow.value = true
     }
+
+    const filterOptionClick = (item) =>{
+      filterIndex.value = item.index
+      filterValue.value = item.value
+    }
+
     // 跳转至拾光壁纸官网
     const toOfficialWebsite = () =>{
       ipc.send('addTab',{url:'https://app.nguaduot.cn/timeline'})
+    }
+    // 获取分类参数
+    const filterClassValue = (e) =>{
+      classValue.value = e
     }
     return{
       pickFilterValue,
       pickInfoShow,
       pickFilterShow,
+      filterValue,
+      classValue,
+      filterOption,
+      filterIndex,
       openInfo,
       toOfficialWebsite,
-      openFilter
+      openFilter,
+      filterClassValue,
+      filterOptionClick
     }
   }
 })
 </script>
 
 <style lang="scss" scoped>
-.pick-container{
-   width: auto;
-   background: pink;
+.filter-item:nth-of-type(3){
+  border: none !important;
 }
-.center-loading{
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.active{
+  background: rgba(77, 77, 77, 1);
+  &:nth-of-type(1){
+    border-top-left-radius: 0.5em;
+    border-bottom-left-radius: 0.5em;
+  }
+  &:nth-of-type(3){
+    border-top-right-radius: 0.5em;
+    border-bottom-right-radius: 0.5em;
+  }
 }
 </style>
