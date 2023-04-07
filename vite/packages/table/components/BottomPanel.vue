@@ -70,13 +70,13 @@
 <!--      <PanelButton icon="suoding" title="锁屏" :onClick="lock"></PanelButton>-->
 <!--      <PanelButton :onClick="power" icon="tuichu" title="电源"></PanelButton>-->
 <!--    </div>-->
-    <div class=" flex flex-row  items-center " style="background: #282828;border-radius: 8px; height: 73px;overflow: hidden;">
+    <div class=" flex flex-row  items-center pl-2" style="background: #282828;border-radius: 8px; height: 73px;overflow: hidden;">
         <div style="overflow: hidden;overflow-x: auto;"
-             class="flex flex-row items-center  flex-nowrap scroll-content" ref="content">
+             class="flex flex-row items-center  flex-nowrap scroll-content mr-2" ref="content">
         <div v-if="navigationList.length<=0" style="height: 56px;">
 
         </div>
-        <div class="pointer mr-3" style="white-space: nowrap;display: inline-block" v-for="item in navigationList" @click="clickNavigation(item)" v-else>
+        <div class="pointer mr-3 mr-6" style="white-space: nowrap;display: inline-block" v-for="item in navigationList" @click="clickNavigation(item)" v-else>
               <div style="width: 56px;height:56px;background: rgba(33, 33, 33, 1);" v-if="item.type==='systemApp'" class="flex justify-center items-center rounded-xl">
                 <Icon :icon="item.icon" style="width: 32px;height: 32px;color:rgba(255, 255, 255, 0.4);" ></Icon>
               </div>
@@ -87,7 +87,7 @@
         </div>
 
 
-    <div style="border-left: 1px solid rgba(255, 255, 255, 0.4);width: 62px;" class="flex justify-center items-center  h-2/3 pointer ">
+    <div style="border-left: 1px solid rgba(255, 255, 255, 0.2);" class="flex justify-center items-center  h-2/3 pointer w-20">
       <Icon icon="appstore-fill" style="width: 48px;height: 48px;color: white" @click="appChange"></Icon>
     </div>
   </div>
@@ -221,20 +221,23 @@ export default {
         wheelPropagation: true,
       },
       changeFlag:false,
-      screenWidth: document.body.clientWidth
+      //screenWidth: document.body.clientWidth
     }
   },
   mounted () {
-    const that = this
-    window.onresize = function() {
-      return function(){
-        window.screenWidth = document.body.clientWidth;
-        that.screenWidth = window.screenWidth
-      }()
-    }
+    this.checkScroll()
+    // const that = this
+    // window.onresize = function() {
+    //   return function(){
+    //     window.screenWidth = document.body.clientWidth;
+    //     that.screenWidth = window.screenWidth
+    //   }()
+    // }
+    window.addEventListener('resize',()=>{
+      this.checkScroll()
+    })
     let content = this.$refs.content
     content.addEventListener('wheel',(event) => {
-      console.log(event.deltaY)
       event.preventDefault();
       content.scrollLeft += event.deltaY
     })
@@ -267,21 +270,33 @@ export default {
     ...mapWritableState(tableStore, ['navigationList','routeParams'])
   },
   watch: {
-    screenWidth : {
+    navigationList : {
       handler(){
-        this.$nextTick(()=>{
-          if(this.$refs.content.offsetHeight-this.$refs.content.clientHeight>0){
-            this.$refs.content.style.marginTop='17px'
-          }else{
-            this.$refs.content.style.marginTop='0px'
-          }
-        })
+            this.checkScroll()
+        // this.$nextTick(()=>{
+        //   console.log(this.$refs.content.offsetHeight-this.$refs.content.clientHeight>0)
+        //   if(this.$refs.content.offsetHeight-this.$refs.content.clientHeight>0){
+        //     this.$refs.content.style.marginTop='17px'
+        //   }else{
+        //     this.$refs.content.style.marginTop='0px'
+        //   }
+        // })
 
       },
-      immediate: true
+      immediate: true,
+      deep:true
     }
   },
   methods: {
+    checkScroll(){
+      this.$nextTick(()=>{
+        if(this.$refs.content.offsetHeight-this.$refs.content.clientHeight>0){
+          this.$refs.content.style.marginTop='17px'
+        }else{
+          this.$refs.content.style.marginTop='0px'
+        }
+      })
+    },
     goMy(){
       this.$router.push({name:"socialMy"})
     },
@@ -462,7 +477,13 @@ export default {
             } else {
               this.$router.push({ path: '/status' })
             }
-          }else{
+          }else if(item.data){
+            this.$router.push({
+              name: 'app',
+              params: item.data
+            })
+          }
+          else{
             this.$router.push({ name: item.event })
           }break;
           case 'coolApp':  this.$router.push({
@@ -601,9 +622,6 @@ export default {
     opacity: 0;
   }
 }
-.scroll-content::-webkit-scrollbar { width: 0 !important }
-.scroll-content { -ms-overflow-style: none; }
-.scroll-content { overflow: -moz-scrollbars-none; }
 
 
 </style>

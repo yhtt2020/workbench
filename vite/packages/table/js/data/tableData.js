@@ -129,7 +129,7 @@ export default {
         vm.$router.push({ path: '/lock' })}
     },{
       type:'systemApp',
-      icon:'laptop',
+      icon:'desktop',
       name:'设备设置',
       event:'status',
       fn:()=>{
@@ -178,7 +178,47 @@ export default {
       icon:'thunderbolt',
       name:'快捷指令',
       event:'deck',
-    }
+    },{
+      type:'systemApp',
+      icon:'shangchuan',
+      name:'文件传输',
+      event:'fileHelper',
+      data:{
+          theme: '#2c2c2c',
+          name: 'fileHelper',
+          url: 'https://szfilehelper.weixin.qq.com/',
+          preload: 'fileHelper',
+          background: false,
+      }
+    },
+    {
+      type:'systemApp',
+      icon:'yingyongzhongxin',
+      name:'应用管理',
+      event:'apps',
+    },
+    {
+      type:'systemApp',
+      icon:'yinle1',
+      name:'音乐',
+      event:'music',
+    },
+    {
+      type:'systemApp',
+      icon:'daibanshixiang',
+      name:'待办',
+      event:'home',
+      data:
+        {
+          fullScreen: false,
+          theme: 'transparent',
+          name: 'todo',
+          url: 'https://a.apps.vip/todo',
+          background: true,
+          node: true,
+          security: true
+        }
+    },
   ]
 }
 

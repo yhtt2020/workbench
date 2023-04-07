@@ -10,12 +10,12 @@
     <span>快捷导航栏</span>
     <span>点击添加更多快捷方式，支持长安拖拽排序，左右滑动查看更多</span>
     <div class="nav-list">
-        <div style="height: 73px;overflow: hidden;" class="pr-2 relative w-full">
-        <div style="overflow: hidden;overflow-x: auto; bottom: -17px;" id="navList"
-             class="flex flex-row items-center absolute top-0 left-2 right-6" ref="content">
+        <div style="height: 73px;overflow: hidden;" class="flex flex-row  items-center pl-2 w-full">
+        <div style="overflow: hidden;overflow-x: auto;" id="navList"
+             class="flex flex-row items-center  flex-nowrap scroll-content mr-2" ref="content">
         <div v-for="(item,index) in navigationList" class="mr-6" :key="navigationList.name">
           <a-dropdown  :trigger="['contextmenu']">
-                <div style="width: 56px;height: 56px;display: flex;justify-content: center;align-items: center;background:rgb(42, 42, 42);border-radius: 12px" v-if="item.type==='systemApp'">
+                <div style="width: 56px;height: 56px;display: flex;justify-content: center;align-items: center;background: rgba(33, 33, 33, 1);border-radius: 12px" v-if="item.type==='systemApp'">
                   <Icon :icon="item.icon" style="width: 32px;height: 32px;color:rgba(255, 255, 255, 0.4);" ></Icon>
                 </div>
               <a-avatar :size="40" shape="square" :src="item.icon" v-else></a-avatar>
@@ -29,8 +29,8 @@
         </div>
     </div>
       <Icon icon="tianjia" style="width: 56px;height: 56px;color:rgba(255, 255, 255, 0.4);"  class="pointer mr-2" @click="addEdit"></Icon>
-      <div style="border-left: 1px solid rgba(255, 255, 255, 0.4);width: 62px;display: flex;justify-content: end;margin-right: 24px">
-        <Icon icon="appstore-fill" style="width: 48px;height: 48px;color: white"></Icon>
+      <div style="border-left: 1px solid rgba(255, 255, 255, 0.4);" class="flex justify-center items-center  h-2/3 pointer w-20">
+        <Icon icon="appstore-fill" style="width: 48px;height: 48px;"></Icon>
       </div>
     </div>
   </div>
@@ -47,7 +47,7 @@
   <div class="add-navigation" v-if="editFlag" >
       <div>添加导航</div>
       <div @click="closeAdd" class="pointer">
-        <Icon icon="guanbi" style="width:18px;height:18px;color: rgba(255, 255, 255, 0.85);" ></Icon>
+        <Icon icon="guanbi" class="no-drag" style="width:18px;height:18px;color: rgba(255, 255, 255, 0.85);" ></Icon>
       </div>
     <div class="add-navigation-content flex flex-row">
       <div class="left-content">
@@ -162,11 +162,16 @@ export default {
     this.loadDeskIconApps()
   },
   mounted() {
+    this.checkScroll()
+    window.addEventListener('resize',()=>{
+      this.checkScroll()
+    })
     let content = this.$refs.content
     content.addEventListener('wheel',(event) => {
       event.preventDefault();
       content.scrollLeft += event.deltaY
     })
+
     this.$nextTick(()=>{
       this.rowDrop()
     })
@@ -218,6 +223,15 @@ export default {
        //
        //   },
        // });
+    },
+    checkScroll(){
+      this.$nextTick(()=>{
+        if(this.$refs.content.offsetHeight-this.$refs.content.clientHeight>0){
+          this.$refs.content.style.marginTop='17px'
+        }else{
+          this.$refs.content.style.marginTop='0px'
+        }
+      })
     },
     deleteEdit(index){
       this.removeNavigationList(index)
@@ -282,7 +296,16 @@ export default {
 
 
     }
-  }
+  },
+  watch: {
+    navigationList : {
+      handler(){
+        this.checkScroll()
+      },
+      immediate: true,
+      deep:true
+    }
+  },
 }
 </script>
 <style lang="scss">
@@ -354,7 +377,7 @@ export default {
     width: 70%;
     height: 80px;
     border-radius: 12px;
-    background: rgba(33, 33, 33, 1);
+    background: rgb(40, 40, 40);
   }
 }
 .add-navigation{
