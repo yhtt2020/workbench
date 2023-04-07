@@ -9,13 +9,13 @@
   </div>
 
   <div class="line">
-    当前缩放比例（输入后回车确认）：
-    <a-input-number @pressEnter="setZoomFactor(this.inputZoom)" v-model:value="inputZoom"></a-input-number>
+    缩放比例（输入后回车确认）：
+    <a-input-number :min="30" :max="500" @pressEnter="inputEnter" v-model:value="inputZoom"></a-input-number>
     %<br>
   </div>
   <div class="line">
 
-    当前分辨率：<span :class="{'unfit':fitWidth.status!==0}"><Icon icon="kuandu"/>宽 {{ currentWidth }} <template
+    分辨率：<span :class="{'unfit':fitWidth.status!==0}"><Icon icon="kuandu"/>宽 {{ currentWidth }} <template
     v-if="fitWidth.status!==0">（<Icon icon="tishi-xianxing"/>
 
              <span v-if="fitWidth.status===-1">低</span><span
@@ -29,7 +29,7 @@
                 <span v-if="fitHeight.status===-1">低</span><span
           v-if="fitHeight.status===1">高</span>于推荐值{{ fitHeight.suggest }}）</template></span>
 
-    <a-slider @afterChange="setZoomFactor" :min="50" :max="500" v-model:value="newZoom"></a-slider>
+    <a-slider @afterChange="setZoomFactor" :min="30" :max="500" v-model:value="newZoom"></a-slider>
   </div>
 </template>
 
@@ -59,9 +59,19 @@ export default {
     this.getSize()
   },
   methods: {
+    inputEnter(){
+      if(!this.inputZoom){
+        this.inputZoom=30
+      }
+      this.newZoom=this.inputZoom
+      this.setZoomFactor(this.inputZoom)
+    },
     async reset () {
+      this.showRestore=false
       await tsbApi.window.setZoomFactor(1)
       setTimeout(() => {
+        this.clearTimer()
+        this.timeout=10
         this.settings.zoomFactor = 100
         this.newZoom = 100
         this.oldZoom = 100
@@ -85,6 +95,7 @@ export default {
       this.settings.zoomFactor = this.newZoom
       this.oldZoom=this.settings.zoomFactor
       this.newZoom=this.settings.zoomFactor
+      this.timeout=10
       this.showRestore=false
     },
     clearTimer () {
