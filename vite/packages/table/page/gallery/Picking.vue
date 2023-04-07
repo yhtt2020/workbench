@@ -22,14 +22,22 @@
 </div>
 
 <vue-custom-scrollbar  id="pick-wrapper" :settings="settingsScroller" style="height: 80vh">
-   <div id="pick-images">
-   <a-row :gutter="[20,20]" id="bingImages" style="margin-right: 1em">
-    <a-col class="image-wrapper " v-for="img in pickImageData" :span="6" style="">
-       <img :src="img.thumburl" alt="" style="width:100px;height:100px;">
-    </a-col>
-   </a-row>
-    
-   </div>
+  <viewer :images="pickImageData" :options="options" >
+    <div  style="display: flex; align-items: center; justify-content: center;">
+      <a-spin  v-if="isLoading" />
+    </div>
+    <a-row :gutter="[20,20]" id="pick-images" ref="pickRef" style="margin-right: 1em">
+      <a-col class="image-wrapper " v-for="img in pickImageData" :span="6" style="">
+         <img  class="image-item pointer" :src="img.src"  :data-source="img.path"  :alt="img.resolution"  style="position: relative">
+         <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
+          <div @click.stop="addToMy(img)"  class="bottom-actions pointer" :style="{background:isInMyPapers(img)?'#009d00a8':''}">
+            <Icon v-if="!isInMyPapers(img)" icon="tianjia1"></Icon>
+            <Icon v-else style="" icon="yiwancheng"></Icon>
+          </div>
+        </div>
+      </a-col>
+    </a-row>
+  </viewer>
 </vue-custom-scrollbar>
 
 <a-drawer v-model:visible="pickFilterShow" title="筛选" style="text-align: center !important;" class="no-drag">
@@ -53,7 +61,7 @@
    <a-switch v-model:checked="pickChecked" />
   </div>
   <div class="w-full flex items-center justify-center">
-   <div  @click="restFilter" class="w-28 h-12  flex items-center justify-center  rounded-lg cursor-pointer  bg-white bg-opacity-10">
+   <div @click="restFilter" class="w-28 h-12  flex items-center justify-center  rounded-lg cursor-pointer  bg-white bg-opacity-10">
     <span>重置筛选</span>
    </div>
   </div>
@@ -89,10 +97,15 @@
 import { defineComponent,ref } from 'vue';
 import {InfoCircleOutlined} from '@ant-design/icons-vue'
 import axios from 'axios';
+import { paperStore } from "../../store/paper";
+import { mapActions, mapState } from "pinia";
 export default defineComponent({
   name:'Picking',
   components:{
     InfoCircleOutlined
+  },
+  computed: {
+    ...mapState(paperStore, ["myPapers"]),
   },
   data(){
     return{
@@ -106,43 +119,59 @@ export default defineComponent({
         suppressScrollX: true,
         wheelPropagation: true
       },
-      pickImageData:[]
+      pickImageData:[],
+      pickHeight:80000,
+      options:{
+        url: 'data-source',
+      }
     }
   },
   mounted() {
     $("#pick-wrapper").scroll(()=>{
       if ($("#pick-wrapper").scrollTop() +  $("#pick-wrapper").height() + 20 >= $("#pick-images").prop("scrollHeight") && this.isLoading === false) {
-        // console.log($("#pick-wrapper").height());
-         this.getPickingData($("#pick-wrapper").height())
+        this.pickHeight = this.pickHeight + 1000
+        this.getPickingData(this.pickFilterValue,this.pickHeight)
       }
     })
-    this.getPickingData($("#pick-wrapper").height())
+    this.getPickingData(this.pickFilterValue,this.pickHeight)
     this.getClassOption()
   },
   methods:{
+    ...mapActions(paperStore, ["removeToMyPaper"]),
     // 获取拾光壁纸数据
-    getPickingData(v){
-      const apiUrl = `https://api.nguaduot.cn/${this.pickFilterValue}`
+    getPickingData(vl,vh){
+      const apiUrl = `https://api.nguaduot.cn${vl}`
       const newTime = new Date()
       const dateTime =  this.formatDateTime(newTime)
-      console.log(dateTime);
       const params = {
         order:`${this.filterValue}`,
-        no:`${v}`,
-        date:'',
-        score:`${v}`,
+        no:`${vh}`,
+        date:`${dateTime}`,
+        score:`${vh}`,
       }
-      axios.get(apiUrl).then(res=>{
-         this.pickImageData = res.data.data
-      })
-
-      // const pickHeight = document.querySelector('#pick-wrapper')
-      // console.log(pickHeight);
-      
-     
-      // // console.log(params);
-      
-      
+      if(!this.isLoading){
+        this.isLoading = true
+        axios.get(apiUrl,{params:params}).then(async res=>{
+          let pickImage = res.data.data
+          let animations = ["ani-gray", "bowen", "ani-rotate"];
+          if(pickImage){
+            pickImage.forEach(img=>{
+              let randomIndex = Math.floor(Math.random() * animations.length);
+              const image = {
+                title:false,
+                src:img.thumburl,
+                path:img.imgurl,
+                resolution:img.size,
+                animations: animations[randomIndex],
+              }
+              this.pickImageData.push(image)
+            })
+            this.$nextTick(() => {
+              this.isLoading = false;
+            });
+          }
+        })  
+      }
     },
     // 获取拾光壁纸分类
     getClassOption(){
@@ -153,10 +182,14 @@ export default defineComponent({
     },
     pickFilterChange(e){
       this.pickFilterValue = e
+      this.getPickingData(e,this.pickHeight)
     },
     // 重置筛选
     restFilter(){
-
+      this.filterValue = 'date'
+      this.pickChecked = false
+      this.classValue = 'landscape'
+      this.filterIndex = 'D'
     },
 
    formatDateTime (date) {
@@ -165,20 +198,27 @@ export default defineComponent({
      m = m < 10 ? ('0' + m) : m;
      var d = date.getDate();
      d = d < 10 ? ('0' + d) : d;
-     var h = date.getHours();
-     var minute = date.getMinutes();
-     minute = minute < 10 ? ('0' + minute) : minute;
-     // return y + '-' + m + '-' + d+' '+h+':'+minute;
-     return y + '-' + m + '-' + d
-   }
+     return y+m+d 
+   },
 
+   addToMy(img){
+    this.removeToMyPaper(img);
+   },
+
+   isInMyPapers(image) {
+      return (
+        this.myPapers.findIndex((img) => {
+          return image.src === img.src;
+        }) > -1
+      );
+   },
   },
 
   setup() {
-    const pickFilterValue = ref('/timeline/v2')
+    const pickFilterValue = ref('/glutton/journal')
     const pickInfoShow = ref(false)
     const pickFilterShow = ref(false)
-    const classValue = ref('landscape')
+    let classValue = ref('landscape')
     const filterOption = ref([
         {
           index:'D',
@@ -196,8 +236,8 @@ export default defineComponent({
           value:'random'
         }
     ])
-    const filterIndex = ref('D') 
-    const filterValue = ref('date')
+    let filterIndex = ref('D') 
+    let filterValue = ref('date')
     // 右侧打开拾光壁纸官网信息
     const openInfo = () =>{
       pickInfoShow.value = true
