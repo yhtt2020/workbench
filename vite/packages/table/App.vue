@@ -69,6 +69,7 @@ export default {
     };
   },
   async mounted() {
+    await tsbApi.window.setZoomFactor(+this.settings.zoomFactor/100)//根据设置进行缩放比的强制调整
     ipc.on('updateRunningApps', async (event, args) => {
       this.runningApps = args.runningApps
       this.runningAppsInfo = {}

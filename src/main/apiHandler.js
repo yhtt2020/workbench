@@ -253,7 +253,21 @@ class ApiHandler {
       }
     })
 
+    ApiHandler.onWindow('getZoomFactor', (event, args, instance) => {
+      if (instance.type === 'frameWindow') {
+        event.returnValue = instance.view.webContents.getZoomFactor()
+      } else if (instance.type === 'window') {
+        event.returnValue = instance.window.webContents.getZoomFactor()
+      }
+    })
 
+    ApiHandler.onWindow('setZoomFactor', (event, args, instance) => {
+      if (instance.type === 'frameWindow') {
+        instance.view.webContents.setZoomFactor(args)
+      } else if (instance.type === 'window') {
+        instance.window.webContents.setZoomFactor(args)
+      }
+    })
 
     ApiHandler.onWindow('getBounds', (event, args, instance) => {
       if (instance.type === 'frameWindow') {

@@ -28,7 +28,7 @@
     <viewer :images="myPapers" :options="options">
       <a-row :gutter="[20,20]" id="bingImages" style="margin-right: 1em">
         <a-col class="image-wrapper " v-for="img in myPapers" :span="6" style="">
-          <img @contextmenu.stop="showMenu(img)" @error="deleteAll(img)" :data-source="img.path" :alt="img.resolution" class="image-item pointer" :src="fileImageExtension(img) === true ? img.path : img.src" style="position: relative">
+          <img @contextmenu.prevent="showMenu(img)" @error="deleteAll(img)" :data-source="img.path" :alt="img.resolution" class="image-item pointer" :src="fileImageExtension(img) === true ? img.path : img.src" style="position: relative">
           <div @click="previewVideo(img)" v-if="fileImageExtension(img) === true" class="play-icon pointer" style="">
             <Icon icon="bofang" style="font-size:3em;margin-top: 8px"></Icon>
           </div>
@@ -96,7 +96,6 @@ const path=require('path')
 import { paperStore } from '../../store/paper'
 import Player from 'xgplayer/dist/simple_player'
 import {defineComponent ,ref} from 'vue'
-
 
 export default defineComponent({
   name:'My',
@@ -188,7 +187,8 @@ export default defineComponent({
         okText:'设置桌面壁纸',
         onOk:()=>{
           message.info('正在为您下载并设桌面壁纸')
-          tsbApi.system.setPaper(this.currentPaper.src)
+          tsbApi.system.setPaper(this.currentPaper.path)
+          this.visibleMenu= false
         }
       })
     },
