@@ -70,10 +70,9 @@
 <!--      <PanelButton icon="suoding" title="锁屏" :onClick="lock"></PanelButton>-->
 <!--      <PanelButton :onClick="power" icon="tuichu" title="电源"></PanelButton>-->
 <!--    </div>-->
-    <div class="w-1/2 flex flex-row  items-center px-2" style="background: #282828;border-radius: 8px">
-
-      <ScrolX :height="75" class="pt-2">
-        <div style="white-space: nowrap;"  class="flex flex-row items-center">
+    <div class="w-1/2 flex flex-row  items-center relative" style="background: #282828;border-radius: 8px; height: 73px;overflow: hidden;">
+        <div style="overflow: hidden;overflow-x: auto; bottom: -20px;"
+             class="flex flex-row items-center  flex-nowrap absolute left-4 top-0 right-20" ref="content">
         <div v-if="navigationList.length<=0" style="height: 68px;">
 
         </div>
@@ -86,9 +85,9 @@
           </div>
         </div>
         </div>
-      </ScrolX>
 
-    <div style="border-left: 1px solid rgba(255, 255, 255, 0.4);width: 62px;" class="flex justify-center items-center mx-2 h-2/3 pointer pl-2">
+
+    <div style="border-left: 1px solid rgba(255, 255, 255, 0.4);width: 62px;" class="flex justify-center items-center  h-2/3 pointer absolute right-0">
       <Icon icon="appstore-fill" style="width: 48px;height: 48px;color: white" @click="appChange"></Icon>
     </div>
   </div>
@@ -225,6 +224,12 @@ export default {
     }
   },
   mounted () {
+    let content = this.$refs.content
+    content.addEventListener('wheel',(event) => {
+      console.log(event.deltaY)
+      event.preventDefault();
+      content.scrollLeft += event.deltaY
+    })
     this.setMinute()
     this.lastTime=Number(localStorage.getItem('lastBarrageMessageTime'))
     this.loadMessages()
@@ -572,4 +577,5 @@ export default {
     opacity: 0;
   }
 }
+
 </style>

@@ -10,8 +10,9 @@
     <span>快捷导航栏</span>
     <span>点击添加更多快捷方式，支持长安拖拽排序，左右滑动查看更多</span>
     <div class="nav-list">
-        <ScrolX :height="56" class="pr-2">
-        <div style="white-space: nowrap;" id="navList" class="flex flex-row items-center">
+        <div style="height: 73px;overflow: hidden;" class="pr-2 relative w-full">
+        <div style="white-space: nowrap;overflow: hidden;overflow-x: auto; bottom: -17px;" id="navList"
+             class="flex flex-row items-center absolute top-0 left-2 right-6" ref="content">
         <div v-for="(item,index) in navigationList" class="mr-6" :key="navigationList.name">
           <a-dropdown  :trigger="['contextmenu']">
                 <div style="width: 56px;height: 56px;display: flex;justify-content: center;align-items: center;background:rgb(42, 42, 42);border-radius: 12px" v-if="item.type==='systemApp'">
@@ -26,7 +27,7 @@
           </a-dropdown>
         </div>
         </div>
-    </ScrolX>
+    </div>
       <Icon icon="tianjia" style="width: 56px;height: 56px;color:rgba(255, 255, 255, 0.4);"  class="pointer mr-2" @click="addEdit"></Icon>
       <div style="border-left: 1px solid rgba(255, 255, 255, 0.4);width: 62px;display: flex;justify-content: end;margin-right: 24px">
         <Icon icon="appstore-fill" style="width: 48px;height: 48px;color: white"></Icon>
@@ -161,6 +162,12 @@ export default {
     this.loadDeskIconApps()
   },
   mounted() {
+    let content = this.$refs.content
+    content.addEventListener('wheel',(event) => {
+      console.log(event.deltaY)
+      event.preventDefault();
+      content.scrollLeft += event.deltaY
+    })
     this.$nextTick(()=>{
       this.rowDrop()
     })
