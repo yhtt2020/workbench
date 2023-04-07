@@ -44,15 +44,15 @@ export default {
 
           }
       },
-      {
-        title: 'Wallheaven',
-        index: 'w',
-        icon:'lu',
-        route:
-          {
-            name: 'wallheaven'
-          }
-      },
+      // {
+      //   title: 'Wallheaven',
+      //   index: 'w',
+      //   icon:'lu',
+      //   route:
+      //     {
+      //       name: 'wallheaven'
+      //     }
+      // },
       {
         index:'p',
         title:'拾光壁纸',

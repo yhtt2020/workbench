@@ -1,16 +1,15 @@
 <template>
   <div class="second-panel"  :class="{'large':this.size==='large','small':this.size==='small'}" id="secondPanel" style="">
     <div  style="margin-bottom:2em;" v-if="gallery === true">
-      <div :onClick="goHome"  class="second-panel-back  bg-white cursor-pointer bg-opacity-10 rounded-lg flex items-center " style="padding: 0.5em 1em;">
-        <span>
-          <Icon icon="xiangzuo" style="font-size: 2em; margin-right: 0.2em;"></Icon>
-        </span>
-        <span style="font-size: 1.75em;">返回</span>
+      <div :onClick="goHome"  class="second-panel-back bg-white bg-opacity-10 ">
+        <Icon icon="xiangzuo" style="margin-right: 0.2em;"></Icon>
+        <span style="margin-left: 0.5em;font-size: 1em;">返回</span>
       </div>
     </div>
     <div @click="change($event,menu)" class="menu" :class="{'active':current(menu)}"
          v-for="(menu) in menus">
-     <Icon v-if="menu.icon" :icon="menu.icon"></Icon>  {{ menu.title }}
+     <Icon v-if="menu.icon" :icon="menu.icon"></Icon>
+     <span style="margin-left: 0.5em;font-size: 1em;">{{ menu.title }}</span>
     </div>
   </div>
 </template>
@@ -95,8 +94,18 @@ export default {
     margin-bottom: 0.5em;
   }
 }
-.second-panel-back:hover{
-  background: rgba(255, 255, 255, 0.25);
+.second-panel-back{
+  width: 8em;
+  padding-left: 1em;
+  font-size: 1.3em;
+  height: 3em;
+  line-height: 3em;
+  border-radius: 0.3em;
+  cursor: pointer;
+  margin-bottom: 0.5em;
+  &:hover {
+    background: #696969;
+  } 
 }
 
 </style>
