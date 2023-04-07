@@ -117,31 +117,7 @@
         <div style="color: #999">
           如果您不确定需要缩放多少尺寸，可在后期设置界面重新调整。
         </div>
-
-
-
-        <div>
-          <div style="font-size: 1.2em">调整</div>
-          <div style="padding-left: 1em">
-            当前缩放比例：<a-input-number @change="setZoomFactor" v-model:value="settings.zoomFactor"></a-input-number>%<br>
-            当前分辨率：<span :class="{'unfit':fitWidth.status!==0}" ><Icon icon="kuandu"/>宽 {{ currentWidth }} <template v-if="fitWidth.status!==0">（<Icon icon="tishi-xianxing"/>
-
-             <span v-if="fitWidth.status===-1">低</span><span v-if="fitWidth.status===1">高</span>于推荐值）</template></span>
-            <Icon icon="guanbi1"/>
-
-
-            <span :class="{'unfit':fitHeight.status!==0}" ><Icon icon="gaodu"/>
-            高 {{ currentHeight }}  <template v-if="fitHeight.status!==0">（<Icon icon="tishi-xianxing"/>
-
-                <span v-if="fitHeight.status===-1">低</span><span v-if="fitHeight.status===1">高</span>于推荐值{{fitHeight.suggest}}）</template></span>
-
-            <a-slider @change="setZoomFactor" :min="50" :max="500" v-model:value="settings.zoomFactor"></a-slider>
-          </div>
-
-        <div class="no-drag" style="position:fixed;left: 1em;top: 1em;background: #333;border-radius:3px;padding: 8px 14px 8px 14px">
-          当前窗口分辨率：{{currentWidth}} * {{currentHeight}}
-          <a-button @click="restore" type="primary" class="ml-3">还原</a-button></div>
-        </div>
+        <ZoomUI></ZoomUI>
       </div>
 
 
@@ -203,10 +179,12 @@ import cp from 'child_process'
 import KeyInput from '../components/comp/KeyInput.vue'
 import { message } from 'ant-design-vue'
 import {BulbFilled,PlayCircleFilled} from '@ant-design/icons-vue'
+import ZoomUI from '../components/comp/ZoomUI.vue'
 const { settings } = window.$models
 export default {
   name: 'Wizard',
   components: {
+    ZoomUI,
     KeyInput,
     ChooseScreen,BulbFilled,PlayCircleFilled
   },
