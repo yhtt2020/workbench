@@ -210,7 +210,7 @@ export default {
     },
     basic () {
       this.$router.push({
-        name: 'key'
+        name: 'common'
       })
     },
     switchBarrage (value) {

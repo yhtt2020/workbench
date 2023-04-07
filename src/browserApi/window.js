@@ -71,6 +71,20 @@ const windowApi = {
    */
   detach(){
     send('detach')
+  },
+  /**
+   * 设置缩放倍率，更改缩放倍数。 缩放系数是缩放百分比除以 100，即 300% = 3.0。系数必须大于0.0。
+   * @param factor
+   */
+  setZoomFactor(factor){
+    send('setZoomFactor',factor)
+  },
+  /**
+   * 返回number 1.2
+   * @returns {Promise<any>}
+   */
+  async getZoomFactor(){
+    return await sendSync('getZoomFactor')
   }
 }
 
